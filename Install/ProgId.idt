@@ -1,0 +1,7 @@
+ProgId	ProgId_Parent	Class_	Description	Icon_	IconIndex	ISAttributes
+s255	S255	S38	L255	S72	I2	I4
+ProgId	ProgId
+MGA.AddOn.MetaMAid		{5938FAE1-F58A-4FBC-8028-5A39BE280890}	MGA.AddOn.MetaMAid			
+MGA.Interpreter.GMEMerge		{FFB720E0-4E92-4A01-A792-29518F09B60C}	MGA.Interpreter.GMEMerge			
+MGA.Interpreter.NamespaceConfig		{633DC0FE-841F-4194-B29F-CCE836D9DFB4}	MGA.Interpreter.NamespaceConfig			
+PARTBROWSER.PartBrowserCtrl.1		{1FF57057-D598-4FC2-8F9D-708F59B9C017}	PartBrowser Control			

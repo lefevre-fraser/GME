@@ -1,0 +1,13 @@
+ObjectName	Property	Value	IncludeInBuild
+S50	S50	S0	I2
+ISObjectProperty	ObjectName	Property
+ACCESS97_ENG	Database		
+ACCESS97_ENG	HelpFile		
+ACCESS97_ENG	Icon		
+ACCESS97_ENG	ShortcutObject		
+ACCESS97_ENG	Splash		
+ACCESS97_ENG	Switch		
+ACCESS97_ENG	System		
+ACCESS97_ENG	TitleBar		
+ACCESS97_ENG	UserProfile		
+ACCESS97_ENG	WorkgroupFile		

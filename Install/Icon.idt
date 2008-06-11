@@ -1,0 +1,16 @@
+Name	Data	ISBuildSourcePath	ISIconIndex
+s72	V0	S255	I2
+Icon	Name
+ARPPRODUCTICON.exe		<ISProjectFolder>\gme\gme\res\GME.ico	0
+NewShortcut1.exe		<ISProjectFolder>\gme\gme\release\GME.exe	0
+NewShortcut10_D44ABD2FD3B44EB6898F47FD4CDDBA08.exe		<ISProjectFolder>\tools\modelmigrate\frontend\release\ModelMigrate.exe	0
+NewShortcut2.pdf		<ISProjectFolder>\doc\GME2000 Users Manual.pdf	0
+NewShortcut3.pdf		<ISProjectFolder>\doc\The Generic Modeling Environment.pdf	0
+NewShortcut4.pdf		<ISProjectFolder>\doc\developer\Mga.pdf	0
+NewShortcut5.pdf		<ISProjectFolder>\doc\gme manual and user guide\GME Manual and User Guide.pdf	0
+NewShortcut6.pdf		<ISProjectFolder>\doc\minitutorials\Tutorial 1.pdf	0
+NewShortcut7.pdf		<ISProjectFolder>\doc\minitutorials\Tutorial 1.pdf	0
+NewShortcut8.pdf		<ISProjectFolder>\doc\minitutorials\Tutorial 1.pdf	0
+NewShortcut9.html		<ISProjectFolder>\doc\tutorial\Intro.html	0
+UninstallShortcut_D44ABD2FD3B44EB6898F47FD4CDDBA08		C:\WINDOWS\SYSTEM32\msiexec.exe	0
+UninstallShortcut_D44ABD2FD3B44EB6898F47FD4CDDBA08_1		<SystemFolder>\msiexec.exe	0

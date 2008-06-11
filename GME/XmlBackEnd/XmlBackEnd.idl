@@ -1,0 +1,64 @@
+// XmlBackEnd.idl : IDL source for XmlBackEnd.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (XmlBackEnd.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+import "Core.idl";
+import "svauto.idl";
+	
+[
+	uuid(09107441-E750-4516-B6D0-DE6358FDBA9B),
+	version(1.0),
+	helpstring("XmlBackEnd 1.0 Type Library")
+]
+library XMLBACKENDLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	
+	[
+		uuid(F729BE0C-ACE5-470B-8F98-DAE52D6A5949),
+		helpstring("CoreXmlFile Class")
+	]
+	coclass CoreXmlFile
+	{
+		[default] interface ICoreStorage;
+		interface ISupportErrorInfo;
+	};
+
+
+	[
+		uuid(0C398158-C207-406D-8402-8D45274E5F85),
+		helpstring("SvnExec Class")
+	]
+	coclass SvnExec
+	{
+		[default] interface ISvnExec;
+	};
+
+
+	[
+		uuid(5CDD4F2C-3CFF-419A-A7C7-B1C9E9962ABC),
+		helpstring("SvnTester Class")
+	]
+	coclass SvnTester
+	{
+		[default] interface ISvnTester;
+	};
+
+
+	[
+		uuid(3176E8E1-80FA-43DB-9974-70C514A04718),
+		helpstring("SvnWorkBench Class")
+	]
+	coclass SvnWorkBench
+	{
+		[default] interface ISvnWorkBench;
+	};
+
+};

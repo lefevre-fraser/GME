@@ -1,0 +1,38 @@
+#!/bin/sh
+echo createerrtab: creating $2 from $1
+sed  $1 -n -e >$2 \
+"
+1{
+i\\
+// $2\\
+// Error table file automatically generated from $1\\
+// Genarated: `date` by bash script $0\\
+\\
+
+p
+}
+/\\/\\/[ \\t][ \\t]*MGAERRORTABLE[ \\t][ \\t]*BEGIN/{
+	i\\
+	const struct errtab MgaErrTab[]= {
+: loop
+	n
+	s/\\/\\/[ \\t][ \\t]*MGAERRORTABLE[ \\t][ \\t]*END/xxx/
+	t close
+	y/	/ /
+	s/^ *\\[helpstring[ \\t]*(/(/
+	t do
+	b loop
+: do
+	N
+	y/	\\
+/  /
+	s/( *\\(\"[^\"]*\"\\)[]) ]*\\([^ =]*\\).*/{\\2,	L\\1},/
+	p
+	b loop
+: close
+	i\\
+	{0}};
+	q
+}
+"
+exit 0

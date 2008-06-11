@@ -1,0 +1,309 @@
+Changes to the GME2000 User Interface by Peter Volgyesi from 09/01/2000
+=======================================================================
+
+09/18/02
+--------
+
+	- TODO: Smart ordering of enum attrs. in attr. panel (Peter)
+	- TODO: GRATIS should include python (Akos)
+
+	
+	- TODO: After constraint syntax error mouse remains in invalid state
+	- CONF???: "For kind" resize error in ObjectInspector
+	- CONF???: Switch layout is messed up in autorouter and nameloc pref
+	
+	- FIXED: InstallShield messagebox (Update/recompile/reregister interpreters).
+	- FIXED: Deprecated gen prefs in SF2000Meta
+	- FIXED: Windows taskbar/Close (in minimized state) -> GME dies
+	- FIXED: README update (date, BON update and recompile)
+
+09/13/02 - 09/17/02
+-------------------
+
+	- FIXED: Copy/paste to/from (multiline) edit boxes in Attr. Panel (Sandeep)
+	- FIXED: Multiline attrs: value/string loss (eg. Constraints) (Tamas)
+	- FIXED: Put gui.cfg into distribution (SF2000 Demo)
+	- FIXED: ObjectInspector (CTRL-D) hint (Akos) -> Now the DEL button and a new context menu do the same job
+	- FIXED: Inherited attr. color scheme (invisible if selected) (Akos)
+	- FIXED: Smaller help msg area in attr. panel (Akos)
+	- FIXED: Undo after attr. editing -> error message (Akos) -> Small problem: CTRL-Z works only if a view is active
+	- FIXED: Aspectproxy error in metameta (crash) (Akos) -> It was a generic undo handling problem in ObjectInspector
+	- FIXED: OCL Syntax checker does not find CM (Akos)
+	- FIXED: SF2000 demo file location problems (Akos)
+	- FIXED: SF2000 demo Run/MGK demo -> nothing happens (Akos)
+	- FIXED: Enforce default value for enum attr. in MetaGME2000 (Tamas)
+	- FIXED: Sometimes vertical sizes are messed up in the Attr. Panel (Tamas)
+	- FIXED: Invalid assertions inBuilder2000.cpp (Bubba)
+	- FIXED: Copy to constraint attr., click on other attr, scroll up/down (see ANS. below, so I am not 100% sure)
+	- ANS: Multiple selection in Attr. Panel (It is not a bug, but...) (Tamas)
+	- ANS: InstallShield Custom Option (GME entry is blank) -> IT IS NOT BLANK, BUT GRAY (Managed by InstallShield) (Akos)
+
+09/12/02
+--------
+	- FIXED: Tree browser mod: inheritance tree displays everything from ArcheType
+
+----------- GAP --------------
+
+09/26/01
+--------
+	- Change in IMgaComponent(Ex) interfaces (propreties->methods)
+	- Change in install scripts (.xmp filenames)
+
+09/25/01
+--------
+	- MetaInterp. bugfix: crash with idiot metarefs (reported by Sandeep)
+	- Attribute & preference dialog reposition after change (scroll back to original pos.)
+	- MetaInterp. bugfix: inheritance with sets
+
+09/12/01
+--------
+	- Connection router preferences
+	- DB saveproject bug fixed
+
+08/23/01
+--------
+	- SF2000 interpreter fixed
+	- Everything is registered systemwide
+	- Bitmaps in the UML sample decorator & in MetaDecorator are DIBs
+	- Creating references does not add "Ref" postfix to the original name
+
+08/15/01
+--------
+	- public release
+
+08/14/01
+--------
+	- MetaGME2000 is ported to the new BON
+	- SF2000 is ported to the new BON
+
+08/13/01
+--------
+	- '*' key is disabled on the meta pane in ActiveBrowser
+	- IMgaComponentEx is included in GmeLib.idl
+	- MetaDecorator: align class sizes to gme_model_grid
+	- MetaGME2000: sorting attributes in decorator
+	- All of the metagme2000 projects are in a common workspace
+	- Decorator: get_IsInstance bug workaround
+	- [BUGFIX]	aspect change after AspectSync bug fixed
+
+08/11/01
+--------
+	- MetaGME2000: messagebox if registration of the new paradigm has failed
+	- [BUGFIX] serious memory leak in gme2000view (children)
+	- [BUGFIX] Autoroute problem with overlapped (imported) models fixed
+
+08/10/01
+--------
+	- Icon/Porticon/Decorator preferences in the Preference Manager + background color for models
+	- MetaGME2000: decorator for FCOs in metameta & interpreter handles decorator attr.
+					icon/porticon for models
+					Mga.Decorator.MetaDecorator for all objects in the meta environment
+	- [BUGFIX] screwed up initial views are fixed (OnActiveView)
+	- [BUGFIX] decorator parameter parsing bug fixed
+	- Creating default decorator in case of custom decorator error
+	- Decorator params are set up before initizalie()
+
+08/09/01
+--------
+	- [BUGFIX] allFonts memory leak bug fixed
+	- [BUGFIX] MetaGME2000 kindaspect for modelreferences
+	- [BUGFIX] aspectmapping for modelreferences pointing to root folder (now opens the referred in proprer aspect)
+	- [BUGFIX] MetaGME2000 duplicate metarefs are deleted from the registry now
+	- MetaDecorator ready
+
+08/08/01
+	- Internal release
+--------
+
+08/06/01
+--------
+	- MetaGME2000: atoms/sets/refs/connections now are allowed as rootfolder/direct folder objects
+
+08/03/01
+--------
+	- [BUGFIX] erase background bug fixed (garbage during scroll in zoom mode)
+	- [BUGFIX] InterfaceVersion.h is now included in the distribution
+
+08/02/01
+--------
+	- [BUGFIX] MetaGME2000: duplicate metarefs bug fixed
+08/02/01
+--------
+	- [BUGFIX] MetaGME2000: Aspectmapping for references
+	- MetaGME2000: rename/correct .dsw & .dsp files
+	- [BUGFIX] BoxDecorator: unititilized m_portNum fixed (models in partbrowser screwed up)
+	- [BUGFIX] decorStr string parsing problem fixed in GuiObject.cpp
+
+
+08/01/01
+--------
+	- Internal release (user defined drawing, interface versions, non-modal attrib/pref. dialogs)
+
+*****************
+* GAP, Sorry....
+*****************
+
+09/29/2000
+----------
+	- connection labels (4+1) with label format strings
+	- object pref. panel modification: label settings
+	- multiline attributes + attribute panel modification
+
+10/01/2000
+----------
+	- multiline attribute checkbox fix (top position)
+	- correct multiline number (based on font metrics)
+
+10/05/2000
+----------
+	- namelabel position setting migrated to preferences box
+	- properties dialog used from MgaUtil, own implementation deleted
+		(What about the attribute dialog ???)
+
+10/08/2000
+----------
+	- autorouter preferences implemented on the UI (preferences dialog)
+
+10/09/2000
+----------
+	- scope bug fixed in ARprefs & namepos settings (need some redesign...)
+	- jumping objects (between aspects) bug fixed (pendig requests HACK)
+
+10/13/2000
+----------
+	- fix in PendingObjectPosRequest: check for deleted/zombi objects
+	- preferences (AR & namepos) redesigned (news pref classes added)
+	- nameposition registry value syntax modified (still reads old format)
+
+10/17/2000
+----------
+	- FIX: position screwed while object dragging from part browser (not perfect, but much better now)
+	- mouse tracking rectangle move on grid
+	- FIX: in pending object requests
+	- FIX: SetPreferences (uninitialized contextSelection attribute -> crash)
+	- FIX: duplicated defs in resource.h
+
+10/18/2000
+----------
+	- FIX: BeginTransaction-s (RW bit) reviewed (caused crash while aspect changing, etc.)
+	- Context help and help contents features used from MgaUtil now (MGALauncher modified a bit)
+	- Help on folders shows now the help about ModelBrowser
+	- FIX: diamond heads with solid brush/pen drawing
+
+10/24/2000
+----------
+	- AR preferences box cosmetics
+	- FIX: double toolbar temporary workaround
+
+10/25/2000
+----------
+	- Default registry values reviewed and correctly handled (need some additional support from MGALib in the future)
+		Default values:
+			COLOR_PREF = GME_GREY_COLOR (= "C0C0C0")
+			NAME_COLOR_PREF = GME_BLACK_COLOR (= "000000")
+			MODEL_BORDER_COLOR_PREF = GME_BLACK_COLOR (= "000000")
+			PORT_NAME_COLOR_PREF = GME_BLACK_COLOR (= "000000")
+			NAME_POS_PREF = GME_SOUTH (= "S")
+			AUTOROUTER_PREF = all directions (= "neswNESW")
+			CONN_LINE_TYPE_PREF = PS_SOLID (= "solid")
+			CONN_SRC_END_STRYLE_PREF = GME_BUTT_END (= "butt")
+			CONN_DST_END_STRYLE_PREF = GME_BUTT_END (= "butt")
+			HELP_PREF = empty string ( = "")
+			Connection labels = empty string ( = "")
+	- PendingObjects rules again... (FIX: deleted objects from outside, etc. ModelBrowser)
+	- GridPlacement corrected (resizing/changing objects while dragging)
+
+10/26/2000
+----------
+	- PendingObjects FIX (We are now deleting pending requests from ~CGuiObject)
+
+10/27/2000
+----------
+	- Problem in the MGA registry routines found (caused position bug in GME), quick FIX
+	- References now have autorouter pref setting
+
+11/01/2000
+----------
+	- OpenProject changes current directory
+
+11/02/2000
+----------
+	- Decorator pre alfa (experimental) implementation
+
+11/02/2000
+----------
+	- Partialy visible connection bug workaround (FIX)
+
+11/08/2000
+----------
+	- OnUpdate show base type bug FIX
+
+02/08/2001
+----------
+	- Custom drawing prepreprealpha
+
+02/14/2001
+----------
+	- Enhanced inplace rename feature in ActiveBrowser
+	- Read-only/no access icons in ActiveBrowser
+
+02/19/2001
+----------
+	- MetaGME2000 bugfixes: FCOs can have namepos attribute, inheritance between sets bug fixed
+
+02/20/2001
+----------
+	- MetaGME2000 bugfixes: multiple base and subclass bug with proxies fixed, multiple part bug fixed
+
+03/15/2001
+----------
+	- Registry Browser
+	- "Unable to refresh model bug" fixed
+
+03/19/2001
+----------
+	- Aspect Sync added
+	- Hittest on references bug FIXED
+
+03/21/2001
+----------
+	- Memory leaks fixed (mostly) in GME (CGuiMetaBase) and in Core (CBinCoreFile)
+
+03/22/2001
+----------
+	- Paranoid cheking for duplicate names in MetaInterpreter
+	- New registry icons
+	- Partly visible connections problems FIXED
+	- Direct connections between models support
+
+03/22/2001
+----------
+	- Sets/Refs/Models can act as ports support + Update Meta
+	- "Priority for selected" feature in AspectSync
+	- Transparent icons in ActiveBrowser
+	- select and show Browser clicked object 
+
+
+03/29/2001
+----------
+	- Register new paradigm from the MetaInterpreter
+	- Import XML into projectless GME will create new project
+	- SourceSafe hiearchy was restructured
+
+03/29/2001
+----------
+	- MessageBeep removed from autorouter
+
+03/30/2001
+----------
+	- Victory! "Sticky Objects" bug eliminated. FIXED
+
+04/03/2001
+----------
+	- Multiline attr. CR/LF problem with XML import/export FIXED
+	- Interpreter Run FIXED (there were problems with interpreters written in Python)
+
+04/25/2001
+----------
+	- Multiple objects do not try reference redirection any more
+	- Not trying to create refs to conns (fixes self connection problem, however, ref redirection with self-connection still does not work))

@@ -1,0 +1,66 @@
+// MgaDecorator.idl : IDL source for MgaDecorator.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (MgaDecorator.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+#ifndef MGAIDL_IMPORTED
+import "mga.idl";
+#endif
+
+#define MGADECORATORIDL_IMPORTED
+
+
+// Error codes
+typedef enum decorator_error {
+[helpstring("Specified parameter name is unknown")]
+	E_DECORATOR_UNKNOWN_PARAMETER	=	0x80737001,
+[helpstring("Initialization with null pointer to MgaProject or MgaMetaPart")]
+	E_DECORATOR_INIT_WITH_NULL	=	0x80737002,
+[helpstring("Decorator is not initialized. Call Initialize() before use it.")]
+	E_DECORATOR_UNINITIALIZED	=	0x80737003,
+[helpstring("Object location is not initialized. Call SetLocation() before calling this function.")]
+	E_DECORATOR_LOCISNOTSET = 0x80737004,
+[helpstring("Specified port (based on IMgaFCO) not found.")]
+	E_DECORATOR_PORTNOTFOUND	=	0x80737005
+} decorator_error;
+
+// Feature codes
+typedef unsigned long feature_code;
+const unsigned long F_RESIZABLE	= 1<<0;
+const unsigned long	F_MOUSEEVENTS =	1<<1;
+const unsigned long	F_HASLABEL =	1<<2;
+const unsigned long	F_HASSTATE = 1<<3;
+const unsigned long	F_HASPORTS = 1<<4;
+const unsigned long	F_ANIMATION = 1<<5;
+const unsigned long	F_IMGPATH = 1<<6;
+const unsigned long	F_RESIZEAFTERMOD = 1<<7;
+
+	[
+		object,
+		uuid(1E13054E-5AD1-41EB-8FF1-C3901D99FDCC),
+		helpstring("IMgaDecorator Interface"),
+		pointer_default(unique)
+	]
+	interface IMgaDecorator : IUnknown
+	{
+		[id(1), helpstring("method Initialize")] HRESULT Initialize([in] IMgaProject* project, [in] IMgaMetaPart *meta, [in] IMgaFCO *obj);
+		[id(2), helpstring("method Destroy")] HRESULT Destroy();
+		[id(3), helpstring("method GetMnemonic")] HRESULT GetMnemonic([out] BSTR *mnemonic);
+		[id(4), helpstring("method GetFeatures")] HRESULT GetFeatures([out] feature_code *features);
+		[id(5), helpstring("method SetParam")] HRESULT SetParam([in] BSTR name, [in] VARIANT value);
+		[id(6), helpstring("method GetParam")] HRESULT GetParam([in] BSTR name, [out] VARIANT *value);
+		[id(7), helpstring("method SetActive")] HRESULT SetActive([in] VARIANT_BOOL isActive);
+		[id(8), helpstring("method GetPreferredSize")] HRESULT GetPreferredSize([out] long* sizex, [out] long* sizey);
+		[id(9), helpstring("method SetLocation")] HRESULT SetLocation([in] long sx, [in] long sy, [in] long ex, [in] long ey);
+		[id(10), helpstring("method GetLocation")] HRESULT GetLocation([out] long *sx, [out] long *sy, [out] long *ex, [out] long *ey);
+		[id(11), helpstring("method GetLabelLocation")] HRESULT GetLabelLocation([out] long *sx, [out] long *sy, [out] long *ex, [out] long *ey);
+		[id(12), helpstring("method GetPortLocation")] HRESULT GetPortLocation([in] IMgaFCO *fco, [out] long *sx, [out] long *sy, [out] long *ex, [out] long *ey);
+		[id(13), helpstring("method GetPorts")] HRESULT GetPorts([out, retval] IMgaFCOs **portFCOs);
+		[id(14), helpstring("method Draw")] HRESULT Draw([in] HDC hdc);
+		[id(15), helpstring("method SaveState")] HRESULT SaveState();
+		// TODO: Mouse events
+	};

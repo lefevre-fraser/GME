@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE test SYSTEM "GMETest.dtd">
+
+<test name="MyTEST" startapp="c:\GME\GME\Debug\GME.exe">
+	<mainmenu cmd="fil/open"/>   
+	<wait millisecs="1000"/>
+
+	 <dialog caption="Open">
+		<button caption="Next"/>  
+	</dialog>
+
+	<wait millisecs="3000"/>
+
+	<dialog caption="Open">
+		<edit caption="file nam@1" setvalue="c:\temp\aa"/>  
+		<wait millisecs="1000"/>
+		<button caption="Cancel"/>  	
+	</dialog>
+
+	<mainmenu cmd="fil/import"/>   
+
+	<dialog caption="Open">
+		<edit caption="file nam@1" setvalue="c:\temp\bb"/>  
+		<button caption="Open"/>  	
+	</dialog>
+
+	<dialog caption="GME">
+		<button caption="OK"/>  	
+	</dialog>
+
+	<mainmenu cmd="fil/exit"/>   
+
+	<dialog caption="GME">
+		<button caption="YES"/>  	
+	</dialog>
+
+</test>

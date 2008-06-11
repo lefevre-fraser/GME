@@ -1,0 +1,25 @@
+HKCR
+{
+	Mga.XmlBackEnd.SvnTester.1 = s 'SvnTester Class'
+	{
+		CLSID = s '{5CDD4F2C-3CFF-419A-A7C7-B1C9E9962ABC}'
+	}
+	Mga.XmlBackEnd.SvnTester = s 'SvnTester Class'
+	{
+		CLSID = s '{5CDD4F2C-3CFF-419A-A7C7-B1C9E9962ABC}'
+		CurVer = s 'Mga.XmlBackEnd.SvnTester.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {5CDD4F2C-3CFF-419A-A7C7-B1C9E9962ABC} = s 'SvnTester Class'
+		{
+			ProgID = s 'Mga.XmlBackEnd.SvnTester.1'
+			VersionIndependentProgID = s 'Mga.XmlBackEnd.SvnTester'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Both'
+			}
+		}
+	}
+}

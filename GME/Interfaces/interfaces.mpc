@@ -1,0 +1,68 @@
+// -*- MPC -*-
+// $Id: interfaces.mpc,v 1.6 2004/10/28 02:35:38 dhinton Exp $
+
+
+// Just Interfaces
+project (MPC_Interfaces): midl {
+
+  custom_only=1
+
+  after +=
+  libs +=
+
+  midlflags += -I .
+
+  MIDL_Files {
+    midlflags += -h "Core.h" -iid "Core_i.c" -Oicf
+    Core.idl
+  }
+
+  MIDL_Files {
+    midlflags += -h "Gme.h" -iid "Gme_i.c" -Oicf
+    Gme.idl
+  }
+
+  MIDL_Files {
+    midlflags += -h "Meta.h" -iid "Meta_i.c" -Oicf
+    Meta.idl
+  }
+
+  MIDL_Files {
+    midlflags += -h "Mga.h" -iid "Mga_i.c" -Oicf
+    Mga.idl
+  }
+
+  MIDL_Files {
+    midlflags += -h "MgaDecorator.h" -iid "MgaDecorator_i.c" -Oicf
+    MgaDecorator.idl
+  }
+
+  MIDL_Files {
+    midlflags += -h "MgaUtil.h" -iid "MgaUtil_i.c" -Oicf
+    MgaUtil.idl
+  }
+
+  MIDL_Files {
+    midlflags += -h "Parser.h" -iid "Parser_i.c" -Oicf
+    Parser.idl
+  }
+
+  Source_Files {
+  }
+
+  Header_Files {
+    InterfaceColl.h
+    InterfaceVersion.h
+    Core.h
+    Gme.h
+    Meta.h
+    Mga.h
+    MgaDecorator.h
+    MgaUtil.h
+    Parser.h
+  }
+
+  Resource_Files {
+  }
+}
+

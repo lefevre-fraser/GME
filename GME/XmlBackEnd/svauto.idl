@@ -1,0 +1,75 @@
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+
+[
+	object,
+	uuid(195A5A09-F67C-4B7E-A864-1662A08A213B),
+	dual,
+	nonextensible,
+	helpstring("ISvnExec Interface"),
+	pointer_default(unique)
+]
+interface ISvnExec : IDispatch{
+	[id(1), helpstring("method TryLock")] HRESULT TryLock(BSTR path, [out,retval] VARIANT_BOOL* success);
+	[id(2), helpstring("method UnLock")] HRESULT UnLock(BSTR path, [out,retval] VARIANT_BOOL* success);
+	[id(3), helpstring("method AddLockableProperty")] HRESULT AddLockableProperty(BSTR path);
+	[id(4), helpstring("method GetLatest")] HRESULT GetLatest(BSTR path);
+	[id(5), helpstring("method LightCheckOut")] HRESULT LightCheckOut(BSTR path, BSTR localDir);
+	[id(6), helpstring("method Commit")] HRESULT Commit(BSTR path, VARIANT_BOOL keepLocked);
+	[id(7), helpstring("method Add")] HRESULT Add(BSTR path, VARIANT_BOOL recursive);
+	[id(8), helpstring("method SrvMkDir")] HRESULT SrvMkDir(BSTR path);
+	[id(9), helpstring("method Resolve")] HRESULT Resolve(BSTR path, VARIANT_BOOL recursive);
+	[id(10), helpstring("method CleanUp")] HRESULT CleanUp(BSTR path);
+	[id(11), helpstring("method Status")] HRESULT Status(BSTR path, VARIANT_BOOL provideStatusMessage, [out,retval] BSTR* statusMessage);
+	[id(12), helpstring("method Info")] HRESULT Info(BSTR url, VARIANT_BOOL recursive, VARIANT_BOOL provideInfoMessage, [out] BSTR* infoMsg, [out] BSTR* author, [out] BSTR* lockOwner);
+	[id(13), helpstring("method IsVersioned")] HRESULT IsVersioned(BSTR path, VARIANT_BOOL isDir, VARIANT_BOOL suppressErrorMsg, [out, retval] VARIANT_BOOL* isVersioned);
+	[id(14), helpstring("method IsLocked")] HRESULT IsLocked(BSTR path, [out] VARIANT_BOOL* isLocked, [out] BSTR* lockHolder);
+	[id(15), helpstring("method Init")] HRESULT Init(BSTR username, BSTR password);
+	[id(16), helpstring("method Logging")] HRESULT Logging(VARIANT_BOOL onoff, BSTR logfile);
+	[id(17), helpstring("method ReplaceUserName")] HRESULT ReplaceUserName(BSTR userName);
+	[id(18), helpstring("method IsUpToDate")] HRESULT IsUpToDate( BSTR path, [out, retval] VARIANT_BOOL* upToDate);
+	[id(19), helpstring("method BulkUnLock")] HRESULT BulkUnLock( VARIANT pathVector, [out, retval] VARIANT_BOOL* success);
+};
+
+
+
+[
+	object,
+	uuid(D6503222-9EDC-4208-982A-0D66DD02C527),
+	dual,
+	nonextensible,
+	helpstring("ISvnTester Interface"),
+	pointer_default(unique)
+]
+interface ISvnTester : IDispatch {
+	[id(1), helpstring("method info")]    HRESULT info    ([in] BSTR url,  [in] VARIANT_BOOL byAPI, [in] VARIANT_BOOL recursive, [out,retval] BSTR* resultMsg);
+	[id(2), helpstring("method status")]  HRESULT status  ([in] BSTR path, [in] VARIANT_BOOL byAPI, [in] VARIANT_BOOL onserver, [out,retval] BSTR* resultMsg);
+	[id(3), helpstring("method cleanup")] HRESULT cleanup ([in] BSTR path, [in] VARIANT_BOOL byAPI, [out,retval] BSTR* resultMsg);
+	[id(4), helpstring("method resolve")] HRESULT resolve ([in] BSTR path, [in] VARIANT_BOOL byAPI, [in] VARIANT_BOOL recursive);
+	[id(5), helpstring("method commit")]  HRESULT commit  ([in] BSTR path, [in] VARIANT_BOOL byAPI, [in] VARIANT_BOOL recursive);
+	[id(6), helpstring("method checkout")] HRESULT checkout([in] BSTR url, [in] BSTR path, [in] VARIANT_BOOL byAPI, [in] VARIANT_BOOL recursive);
+	[id(7), helpstring("method add")]     HRESULT add     ([in] BSTR path, [in] VARIANT_BOOL byAPI, [in] VARIANT_BOOL recursive);
+	[id(8), helpstring("method propset")] HRESULT propset ([in] BSTR path, [in] BSTR propname, [in] BSTR propval, [in] VARIANT_BOOL byAPI, [in] VARIANT_BOOL recursive);
+	[id(9), helpstring("method lock")]    HRESULT lock    ([in] BSTR path, [in] VARIANT_BOOL force, [in] VARIANT_BOOL byAPI);
+	[id(10), helpstring("method unlock")] HRESULT unlock  ([in] BSTR path, [in] VARIANT_BOOL force, [in] VARIANT_BOOL byAPI);
+	[id(11), helpstring("method update")] HRESULT update  ([in] BSTR path, [in] VARIANT_BOOL byAPI);
+	[id(12), helpstring("method testSubversionSettingsDir")] HRESULT testSubversionSettingsDir( [out, retval] BSTR* resultMsg);
+	[id(13), helpstring("method testSubversionSettingsDlg")] HRESULT testSubversionSettingsDlg();
+};
+
+
+[
+	object,
+	uuid(0A7E51CB-9118-4BD5-BBB6-084254944260),
+	dual,
+	nonextensible,
+	helpstring("ISvnWorkBench Interface"),
+	pointer_default(unique)
+]
+interface ISvnWorkBench : IDispatch{
+	[id(1), helpstring("method ShowDlg")] HRESULT ShowWorkBenchDlg(void);
+	[id(2), helpstring("method SetClues")] HRESULT SetClues(BSTR connString);
+	[id(3), helpstring("method ShowResultDlg")] HRESULT ShowResultDlg(BSTR result);
+};

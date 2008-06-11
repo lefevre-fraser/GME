@@ -1,0 +1,197 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "1 TYPELIB ""ComponentLib.tlb""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "Interpreter Module\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "Interpreter\0"
+            VALUE "LegalCopyright", "Copyright 2000\0"
+            VALUE "OriginalFilename", "Interpreter.DLL\0"
+            VALUE "ProductName", "Interpreter Module\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "OLESelfRegister", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_BLCFGDIALOG DIALOG DISCARDABLE  0, 0, 194, 249
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Blaster Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,137,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,137,24,50,14
+    EDITTEXT        IDC_DEPTHLIMIT,7,7,26,12,ES_AUTOHSCROLL
+    LTEXT           "Recursive creation limit",IDC_STATIC,35,9,76,9
+    LTEXT           "Log checkpoint frequency",IDC_STATIC,35,29,86,10
+    EDITTEXT        IDC_CHKPTFRQ,7,26,25,12,ES_AUTOHSCROLL
+    CONTROL         "Use fully qualified names in log",IDC_FQNAMES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,44,112,10
+    CONTROL         "Use explicit checkpoints in log",IDC_USEEXPCHKPTS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,60,111,10
+    EDITTEXT        IDC_FILENAME,7,228,125,14,ES_AUTOHSCROLL
+    LTEXT           "Log file name",IDC_STATIC,7,218,104,10
+    PUSHBUTTON      "Browse...",IDC_BROWSE,137,228,50,14
+    CONTROL         "Use unique object names",IDC_USEUIDS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,78,94,8
+    CONTROL         "Delete all objects when done",IDC_DELETEALL,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,94,107,10
+    CONTROL         "Perform blast testing",IDC_BLASTON,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,108,79,10
+    CONTROL         "Perform random testing",IDC_RANDOMON,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,123,88,10
+    EDITTEXT        IDC_RANDCOUNT,7,138,25,12,ES_AUTOHSCROLL
+    LTEXT           "Random test limit",IDC_STATIC,36,140,76,8
+    CONTROL         "Generate new pattern",IDC_GENPATTERN,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,13,170,83,8
+    CONTROL         "Use existing pattern",IDC_USEPATTERN,"Button",
+                    BS_AUTORADIOBUTTON,103,170,78,8
+    EDITTEXT        IDC_PATTFILE,7,200,125,13,ES_AUTOHSCROLL
+    LTEXT           "Pattern file name",IDC_PATTFILENAME,7,188,106,9
+    PUSHBUTTON      "Browse...",IDC_PATTBROWSE,137,200,50,14
+    GROUPBOX        "Pattern Selection",IDC_RGROUP,7,158,180,27
+END
+
+IDD_DIALOG1 DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_BLCFGDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 187
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 242
+    END
+
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PROJNAME            "Component"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+1 TYPELIB "ComponentLib.tlb"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

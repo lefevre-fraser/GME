@@ -1,0 +1,758 @@
+// GmeDlg.cpp : implementation file
+//
+//#undef _NO_SCRIPT_GUIDS
+
+#include "stdafx.h"
+#include "MgaUtil.h"
+#include "GmeDlg.h"
+#include "DirDialog.h"
+#include "comcat.h"
+//#include "basetyps.h"
+const GUID CATID_ActiveScript = { 0xf0b7a1a1, 0x9847, 0x11cf, { 0x8f, 0x20, 0x0, 0x80, 0x5f, 0x2c, 0xd0, 0x64} };
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+/*static*/ const char * CGmeDlg::m_strZWidth   = "Fit Width";
+/*static*/ const char * CGmeDlg::m_strZHeight  = "Fit Height";
+/*static*/ const char * CGmeDlg::m_strZAll     = "Fit All";
+
+/*static*/ const char * CGmeDlg::m_strFmtStrg  = "%g";
+/*static*/ const char * CGmeDlg::m_strFmtStrf  = "%f";
+/*static*/ const char * CGmeDlg::m_strFmtStrE  = "%E";
+/*static*/ const char * CGmeDlg::m_strFmtStre  = "%e";
+/*static*/ const char * CGmeDlg::m_strFmtStrg2  = "%.12g"; // the default one
+/*static*/ const char * CGmeDlg::m_strFmtStrf2  = "%lf";
+
+/////////////////////////////////////////////////////////////////////////////
+// CGmeDlg dialog
+
+
+CGmeDlg::CGmeDlg(CWnd* pParent /*=NULL*/)
+	: CDialog(CGmeDlg::IDD, pParent)
+{
+	//{{AFX_DATA_INIT(CGmeDlg)
+	m_iconpath = _T("");
+	m_sysiconpath = _T("");
+	m_multipleview = FALSE;
+	m_enablelogging = TRUE;
+	m_autosave_dir = _T("");
+	m_autosave_enabled = FALSE;
+	m_autosave_freq = 0;
+	m_autosave_dest = -1;
+	m_ext_enable = FALSE;
+	m_ext_editor = _T("");
+	m_labelavoidance = FALSE;
+	m_sendOverObj = FALSE;
+	m_timeStamps = FALSE;
+	m_navigationHistory = FALSE;
+	//}}AFX_DATA_INIT
+	m_scriptEngine = _T("JScript");
+}
+
+
+void CGmeDlg::DoDataExchange(CDataExchange* pDX)
+{
+	CDialog::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(CGmeDlg)
+	DDX_Control(pDX, IDC_LIST1, m_ScriptEgines);
+	DDX_Text(pDX, IDC_ICONPATH, m_iconpath);
+	DDX_Text(pDX, IDC_SYSICONPATH, m_sysiconpath);
+	DDX_Check(pDX, IDC_MULTIPLE_OPEN, m_multipleview);
+	DDX_Check(pDX, IDC_EVENT_LOGGING, m_enablelogging);
+	DDX_Text(pDX, IDC_AUTOSAVE_DIR, m_autosave_dir);
+	DDX_Check(pDX, IDC_AUTOSAVE_ENABLED, m_autosave_enabled);
+	DDX_Text(pDX, IDC_AUTOSAVE_FREQ, m_autosave_freq);
+	DDX_Radio(pDX, IDC_AUTOSAVE_SAME_DIR, m_autosave_dest);
+	DDX_Check(pDX, IDC_EXT_ENABLE, m_ext_enable);
+	DDX_Text(pDX, IDC_EXT_EDITOR, m_ext_editor);
+	DDX_Check(pDX, IDC_LABELAVOIDANCE, m_labelavoidance);
+	DDX_Check(pDX, IDC_SENDOVEROBJECT, m_sendOverObj);
+	DDX_Check(pDX, IDC_TIMESTAMPING, m_timeStamps);
+	DDX_Check(pDX, IDC_NAVIGATIONHISTORY, m_navigationHistory);
+	//}}AFX_DATA_MAP
+}
+
+
+BEGIN_MESSAGE_MAP(CGmeDlg, CDialog)
+	//{{AFX_MSG_MAP(CGmeDlg)
+	ON_BN_CLICKED(IDC_ADDICONPATH, OnAddIconPath)
+	ON_BN_CLICKED(IDC_ADDSYSICONPATH, OnAddsysiconpath)
+	ON_BN_CLICKED(IDC_AUTOSAVE_DIR_BUTTON, OnAutosaveDirButton)
+	ON_BN_CLICKED(IDC_AUTOSAVE_ENABLED, OnAutosaveEnabled)
+	ON_BN_CLICKED(IDC_AUTOSAVE_SAME_DIR, OnAutosaveSameDir)
+	ON_BN_CLICKED(IDC_AUTOSAVE_DEDICATED_DIR, OnAutosaveDedicatedDir)
+	ON_BN_CLICKED(IDC_EXT_BUTTON, OnExtButton)
+	ON_BN_CLICKED(IDC_EXT_ENABLE, OnExtEnable)
+	//}}AFX_MSG_MAP
+	ON_CBN_SELCHANGE(IDC_ZOOMS, OnCbnSelchangeZooms)
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// CGmeDlg message handlers
+
+static char icofilter[] = "Icon files (*.ico;*.bmp)|*.ico;*.bmp|All Files (*.*)|*.*||";
+static char bakfilter[] = "Backup files (*.bak)|*.bak|All Files (*.*)|*.*||";
+static char exefilter[] = "Executable files (*.exe)|*.exe|All Files (*.*)|*.*||";
+
+//AFX_MANAGE_STATE( AfxGetStaticModuleState()); 
+
+
+CString CGmeDlg::getDirectory( const CString& text = "Specify the icons directory")
+{
+	BROWSEINFO bi;
+	TCHAR szDir[MAX_PATH];
+	CString Dir = "";
+	LPITEMIDLIST pidl;
+	LPMALLOC pMalloc;	
+	OleInitialize(NULL);
+	if (SUCCEEDED(SHGetMalloc(&pMalloc)))
+	{
+		ZeroMemory(&bi,sizeof(bi));
+		bi.hwndOwner = NULL;
+		bi.pszDisplayName = 0;
+		bi.lpszTitle = text;
+		bi.pidlRoot = 0;
+		bi.ulFlags = /*BIF_BROWSEINCLUDEFILES |*/ BIF_RETURNONLYFSDIRS | BIF_STATUSTEXT | BIF_EDITBOX | BIF_VALIDATE ;
+		bi.lpfn = NULL;
+		//Displays a dialog box that enables the user to select a shell folder
+		pidl = SHBrowseForFolder(&bi) ;
+		if (pidl)
+		{
+			// Converts an item identifier list to a file system path
+			if (!SHGetPathFromIDList(pidl,szDir))
+			{
+				pMalloc->Free(pidl) ;
+				pMalloc->Release() ;
+			}
+			pMalloc->Free(pidl);
+			pMalloc->Release();
+		}
+		else
+		{	// Selected 'Not to save'
+			return "";
+		}
+		Dir = szDir;
+		//Dir += "\\";
+	}
+	// end of getting directory info 
+	return Dir;
+}
+
+void CGmeDlg::OnAddIconPath() 
+{
+	//CDirDialog dlg(NULL, icofilter, NULL);
+	//dlg.DoModal();
+	//CString path = dlg.GetPath();
+	CString path = getDirectory();
+
+	GetDlgItem(IDC_ICONPATH)->GetWindowText(m_iconpath);
+
+	if( !m_iconpath.IsEmpty() && !path.IsEmpty() )
+		m_iconpath += ';';
+
+	m_iconpath += path;
+
+	GetDlgItem(IDC_ICONPATH)->SetWindowText(m_iconpath);
+}
+
+
+void CGmeDlg::OnAddsysiconpath() 
+{
+	//CDirDialog dlg(NULL, icofilter, NULL);
+	//dlg.DoModal();
+	//CString path = dlg.GetPath();
+	CString path = getDirectory();
+
+	GetDlgItem(IDC_SYSICONPATH)->GetWindowText(m_sysiconpath);
+
+	if( !m_sysiconpath.IsEmpty() && !path.IsEmpty() )
+		m_sysiconpath += ';';
+
+	m_sysiconpath += path;
+
+	GetDlgItem(IDC_SYSICONPATH)->SetWindowText(m_sysiconpath);
+}
+
+void CGmeDlg::fillScripEngineList()
+{
+	// enumerate ScriptEngines -> m_scriptEngines ??
+	// set the current to m_scriptEngine
+    CATID               ourCatID;
+    CComPtr<ICatInformation>    pCatInformation;
+    CComPtr<IEnumCLSID>          pEnumGUID;
+    HRESULT             hResult = S_OK;
+
+
+	m_ScriptEgines.InsertColumn( 0, "", LVCFMT_LEFT, 205, -1 );
+    memcpy(&ourCatID, &CATID_ActiveScript, sizeof(ourCatID));
+//    memcpy(&ourCatID, &CATID_ActiveScriptParse, sizeof(ourCatID));
+
+	hResult = pCatInformation.CoCreateInstance(CLSID_StdComponentCategoriesMgr);
+
+    hResult = pCatInformation->EnumClassesOfCategories(
+        1, &ourCatID, ((ULONG) -1), NULL, &pEnumGUID);
+
+	int index = 0;
+	bool sel = false;
+    while (1)
+    {
+        CLSID       ourCLSID;
+        ULONG       lCount = 0;
+		BSTR		str;
+
+        hResult = pEnumGUID->Next(1, &ourCLSID, &lCount);
+
+        if (lCount == 0)
+            break;
+
+        hResult = ProgIDFromCLSID(ourCLSID, &str);
+
+        {
+            USES_CONVERSION;
+
+            LPCTSTR pszString = OLE2CT(str);
+			
+			LVITEM lvItem;
+			lvItem.mask = LVIF_PARAM | LVIF_STATE | LVIF_TEXT;  
+			if	(!m_scriptEngine.Compare(pszString))
+			{
+				lvItem.state = LVIS_SELECTED;
+				sel = true;
+			}
+			else
+				lvItem.state = 0;
+			lvItem.stateMask = LVIS_SELECTED;
+
+			lvItem.iItem = index++;
+			lvItem.iSubItem = 0;
+			lvItem.lParam = lvItem.iItem;
+
+			lvItem.pszText = (char*)pszString;
+			int ret = m_ScriptEgines.InsertItem( &lvItem );
+        }
+    }
+	if (!sel)
+	{
+		LVITEM lvItem;
+		lvItem.mask = LVIF_STATE; 
+		lvItem.state = LVIS_SELECTED;
+		lvItem.stateMask = LVIS_SELECTED;
+		lvItem.iItem = 0;
+		lvItem.iSubItem = 0;
+		int ret1 = m_ScriptEgines.SetItem( &lvItem );
+	}
+}
+
+BOOL CGmeDlg::OnInitDialog() 
+{
+	MSGTRY
+	{
+		ASSERT( registrar == NULL );
+		COMTHROW( registrar.CoCreateInstance(OLESTR("MGA.MgaRegistrar")) );
+		ASSERT( registrar != NULL );
+
+		// Icons
+		COMTHROW( registrar->get_IconPath(REGACCESS_USER, PutOut(m_iconpath)) );
+		COMTHROW( registrar->get_IconPath(REGACCESS_SYSTEM, PutOut(m_sysiconpath)) );
+
+		m_isave = m_iconpath;
+		m_sysisave = m_sysiconpath;
+		if(registrar->put_IconPath(REGACCESS_TEST, CComBSTR("XXX")) != S_OK) {
+			GetDlgItem(IDC_SYSICONPATH)->EnableWindow(false);
+			GetDlgItem(IDC_ADDSYSICONPATH)->EnableWindow(false);
+		}
+
+		// Multiview
+		VARIANT_BOOL enabledmv;
+		COMTHROW( registrar->get_ShowMultipleView(REGACCESS_USER, &enabledmv) );
+		m_multipleview = (enabledmv == VARIANT_FALSE) ? FALSE : TRUE;
+
+		// Logging
+		VARIANT_BOOL enablelogging;
+		COMTHROW( registrar->get_EventLoggingEnabled(REGACCESS_USER, &enablelogging) );
+		m_enablelogging = (enablelogging == VARIANT_FALSE) ? FALSE : TRUE;
+
+		// Autosave
+		VARIANT_BOOL autosaveenable;
+		COMTHROW( registrar->get_AutosaveEnabled(REGACCESS_USER, &autosaveenable) );
+		m_autosave_enabled = (autosaveenable == VARIANT_FALSE) ? FALSE : TRUE;
+
+		long autosavefreq;
+		COMTHROW( registrar->get_AutosaveFreq(REGACCESS_USER, &autosavefreq) );
+		m_autosave_freq = (int)autosavefreq;
+
+		VARIANT_BOOL autosaveusedir;
+		COMTHROW( registrar->get_AutosaveUseDir(REGACCESS_USER, &autosaveusedir) );
+		m_autosave_dest = (autosaveusedir == VARIANT_FALSE) ? 0 : 1;
+
+		COMTHROW( registrar->get_AutosaveDir(REGACCESS_USER, PutOut(m_autosave_dir)) );
+		
+		// External Editor
+		VARIANT_BOOL extenable;
+		COMTHROW( registrar->get_ExternalEditorEnabled(REGACCESS_USER, &extenable) );
+		m_ext_enable = (extenable == VARIANT_FALSE) ? FALSE : TRUE;
+
+		COMTHROW( registrar->get_ExternalEditor(REGACCESS_USER, PutOut(m_ext_editor)) );
+
+		// Autorouter
+		VARIANT_BOOL labelavoidance;
+		COMTHROW( registrar->get_LabelAvoidance(REGACCESS_USER, &labelavoidance) );
+		m_labelavoidance = (labelavoidance == VARIANT_FALSE) ? FALSE : TRUE;
+
+		// Script
+		COMTHROW( registrar->get_ScriptEngine(REGACCESS_USER, PutOut(m_scriptEngine)) );
+		if (m_scriptEngine == "")
+			m_scriptEngine = _T("JScript");
+
+		// Zoom
+		// COMMENT:
+		// commented out until GMEView and other classes are capable of drawing at once in ZOOM_WIDTH,Z_HEIGHT,Z_ALL mode
+		//int zoomvals[] = {ZOOM_MIN, 10, 25, 50, 75, ZOOM_NO, 150, 200, 300, ZOOM_MAX,ZOOM_WIDTH,ZOOM_HEIGHT,ZOOM_ALL,0};
+		int zoomvals[] = {ZOOM_MIN, 10, 25, 50, 75, ZOOM_NO, 150, 200, 300, ZOOM_MAX,0};
+		fillZoomComboBox( zoomvals);
+
+		CString set_val = getZoomValueFromReg();
+		setZoomValue( set_val);
+
+		// Send OverObject Notification?
+		VARIANT_BOOL send_over_obj;
+		COMTHROW( registrar->GetMouseOverNotify(REGACCESS_USER, &send_over_obj) );
+		m_sendOverObj = (send_over_obj == VARIANT_FALSE) ? FALSE : TRUE;
+
+		// format string pref
+		fillFmtStrComboBox();
+
+		// Console Timestamping
+		VARIANT_BOOL console_timestamps;
+		COMTHROW( registrar->GetTimeStamping( REGACCESS_USER, &console_timestamps));
+		m_timeStamps = ( console_timestamps == VARIANT_FALSE) ? FALSE : TRUE;
+
+		// History maintained
+		VARIANT_BOOL history_maintained;
+		COMTHROW( registrar->GetNavigation( REGACCESS_USER, &history_maintained));
+		m_navigationHistory = ( history_maintained == VARIANT_FALSE) ? FALSE : TRUE;
+
+		// Undo queue size
+		fillUndoComboBox();
+	}
+	MSGCATCH("Error while initializing GmeDlg",;)
+
+	AutosaveControlManager();
+	ExtControlManager();
+	CDialog::OnInitDialog();
+	fillScripEngineList();
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CGmeDlg::OnOK() 
+{
+	CDialog::OnOK();
+
+	ASSERT( registrar != NULL );
+	// Icons
+	if(m_iconpath.Compare(m_isave)) COMTHROW( registrar->put_IconPath(REGACCESS_USER, PutInBstr(m_iconpath)) );
+	if(m_sysiconpath.Compare(m_sysisave)) COMTHROW( registrar->put_IconPath(REGACCESS_SYSTEM, PutInBstr(m_sysiconpath)) );
+	
+	// Multiview
+	VARIANT_BOOL enabledmv = (m_multipleview == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
+	COMTHROW( registrar->put_ShowMultipleView(REGACCESS_USER, enabledmv) );
+	
+	// Logging
+	VARIANT_BOOL enablelogging = (m_enablelogging == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
+	COMTHROW( registrar->put_EventLoggingEnabled(REGACCESS_USER, enablelogging) );
+
+	// Autosave
+	VARIANT_BOOL autosaveenable = (m_autosave_enabled == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
+	COMTHROW( registrar->put_AutosaveEnabled(REGACCESS_USER, autosaveenable) );
+
+	long autosavefreq = m_autosave_freq;
+	COMTHROW( registrar->put_AutosaveFreq(REGACCESS_USER, autosavefreq) );
+
+	VARIANT_BOOL autosaveusedir = (m_autosave_dest == 1) ? VARIANT_TRUE : VARIANT_FALSE;
+	COMTHROW( registrar->put_AutosaveUseDir(REGACCESS_USER, autosaveusedir) );
+
+	COMTHROW( registrar->put_AutosaveDir(REGACCESS_USER, PutInBstr(m_autosave_dir)) );
+
+	// External Editor
+	VARIANT_BOOL extenable = (m_ext_enable == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
+	COMTHROW( registrar->put_ExternalEditorEnabled(REGACCESS_USER, extenable) );
+
+	COMTHROW( registrar->put_ExternalEditor(REGACCESS_USER, PutInBstr(m_ext_editor)) );
+
+	// Autorouter
+	VARIANT_BOOL labelavoidance = (m_labelavoidance == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
+	COMTHROW( registrar->put_LabelAvoidance(REGACCESS_USER, labelavoidance) );
+
+	// ScriptEngine
+	// m_scriptEngine <- current item from m_scriptEngines ??
+	POSITION pos = m_ScriptEgines.GetFirstSelectedItemPosition();
+	if (pos != NULL)
+	{
+		int nItem = m_ScriptEgines.GetNextSelectedItem(pos);
+		m_scriptEngine = m_ScriptEgines.GetItemText(nItem, 0);
+	}
+	COMTHROW( registrar->put_ScriptEngine(REGACCESS_USER, PutInBstr(m_scriptEngine)) );
+
+	// Zoom
+	CString val_sel = getZoomValue();
+	COMTHROW( registrar->SetDefZoomLevel( REGACCESS_USER, PutInBstr(val_sel)));
+
+	// Send Mouse Over Object Notification
+	VARIANT_BOOL send_over_obj = (m_sendOverObj == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
+	COMTHROW( registrar->SetMouseOverNotify(REGACCESS_USER, send_over_obj) );
+
+	// format string
+	CString fmt_sel = getFmtStrValue();
+	COMTHROW( registrar->SetRealNmbFmtStr(REGACCESS_USER, PutInBstr(fmt_sel)));
+
+	// console timestamping
+	VARIANT_BOOL console_timestamping = ( m_timeStamps == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
+	COMTHROW( registrar->SetTimeStamping( REGACCESS_USER, console_timestamping) );
+
+	// History maintained
+	VARIANT_BOOL enable_navigation = ( m_navigationHistory == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
+	COMTHROW( registrar->SetNavigation( REGACCESS_USER, enable_navigation) );
+
+	// Undo queue size
+	CString undo_queue_size = getUndoQueueSizeValue();
+	COMTHROW( registrar->SetUndoQueueSize( REGACCESS_USER, PutInBstr( undo_queue_size)) );
+}
+
+
+
+void CGmeDlg::OnAutosaveDirButton() 
+{
+	//CDirDialog dlg(NULL, bakfilter, NULL);
+
+	//dlg.DoModal();
+	UpdateData(TRUE);
+	//m_autosave_dir = dlg.GetPath();
+	m_autosave_dir = getDirectory("Select output directory for autosave");
+	UpdateData(FALSE);
+}
+
+void CGmeDlg::OnAutosaveEnabled() 
+{
+	UpdateData(TRUE);
+	AutosaveControlManager();
+}
+
+void CGmeDlg::OnAutosaveSameDir() 
+{
+	UpdateData(TRUE);
+	AutosaveControlManager();
+}
+
+void CGmeDlg::OnAutosaveDedicatedDir() 
+{
+	UpdateData(TRUE);
+	AutosaveControlManager();
+}
+
+void CGmeDlg::AutosaveControlManager()
+{
+	// NOTE: we assume, that the exchange data members are
+	// holding valid data. So, please call UpdateData if needed 
+	// prior calling this
+
+	BOOL freqEnabled = FALSE;
+	BOOL sameDirEnabled = FALSE;
+	BOOL dedicatedDirEnabled = FALSE;
+	BOOL dirEnabled = FALSE;
+	BOOL dirButtonEnabled = FALSE;
+
+	if (m_autosave_enabled) {
+		freqEnabled = TRUE;
+		sameDirEnabled = TRUE;
+		dedicatedDirEnabled = TRUE;
+		if (m_autosave_dest == 1) {
+			dirEnabled = TRUE;
+			dirButtonEnabled = TRUE;
+		}
+	}
+
+	GetDlgItem(IDC_AUTOSAVE_FREQ)->EnableWindow(freqEnabled);
+	GetDlgItem(IDC_AUTOSAVE_SAME_DIR)->EnableWindow(sameDirEnabled);
+	GetDlgItem(IDC_AUTOSAVE_DEDICATED_DIR)->EnableWindow(dedicatedDirEnabled);
+	GetDlgItem(IDC_AUTOSAVE_DIR)->EnableWindow(dirEnabled);
+	GetDlgItem(IDC_AUTOSAVE_DIR_BUTTON)->EnableWindow(dirButtonEnabled);
+}
+
+void CGmeDlg::ExtControlManager()
+{
+	// NOTE: we assume, that the exchange data members are
+	// holding valid data. So, please call UpdateData if needed 
+	// prior calling this
+	GetDlgItem(IDC_EXT_EDITOR)->EnableWindow(m_ext_enable);
+	GetDlgItem(IDC_EXT_BUTTON)->EnableWindow(m_ext_enable);
+}
+
+void CGmeDlg::OnExtButton() 
+{
+	UpdateData(TRUE);
+	CFileDialog dlg(TRUE, NULL, m_ext_editor, OFN_HIDEREADONLY, exefilter, NULL);
+	if (dlg.DoModal() == IDOK) {
+		m_ext_editor = dlg.GetPathName();
+		UpdateData(FALSE);
+	}
+}
+
+void CGmeDlg::OnExtEnable() 
+{
+	UpdateData(TRUE);
+	ExtControlManager();
+}
+
+CString CGmeDlg::getUndoQueueSizeValue()
+{
+	CString res( "10");
+	CWnd* combo = 0;
+	combo = GetDlgItem(IDC_UNDOSIZE);
+	if( combo)
+	{
+		CEdit* edit = 0;
+		edit = (CEdit*)( combo->GetDlgItem(1001));
+		if( edit)
+		{
+			char buff[100];
+			edit->GetLine(0, buff, sizeof(buff)-1);
+			int value = atoi( buff);
+			if( value > 0 && value < 100) // above 0 and below 100
+				res = buff;
+		}
+	}
+	return res;
+}
+
+CString CGmeDlg::getUndoQueueSizeFromReg()
+{
+	CString queuesize;
+	COMTHROW( registrar->GetUndoQueueSize( REGACCESS_USER, PutOut( queuesize)) );
+	if( queuesize.IsEmpty())
+		queuesize = "10";
+
+	return queuesize;
+}
+
+void CGmeDlg::fillUndoComboBox()
+{
+	CComboBox* sz_list = 0;
+	sz_list = (CComboBox*)GetDlgItem(IDC_UNDOSIZE);
+	sz_list->AddString("1");
+	sz_list->AddString("10");
+
+	CString regv = getUndoQueueSizeFromReg();
+	int pos = sz_list->FindStringExact( -1, regv);
+	if( pos == CB_ERR)
+		sz_list->InsertString( -1, regv);
+	sz_list->SelectString( -1, regv);
+
+}
+
+void CGmeDlg::fillZoomComboBox(int *list)
+{
+	if (!list) return;
+
+	// supposed it is sorted, copy the values into the member
+	for( int i=0; list[i] != 0 && i < MAX_ZOOM-1; ++i)
+	{
+		m_zoomList[i] = list[i];
+	}
+	if( i <= MAX_ZOOM-1) m_zoomList[i] = 0;
+
+	// transform the integer values to strings, and add to the comboBox
+	CComboBox* zoom = 0;
+	zoom = (CComboBox*)GetDlgItem(IDC_ZOOMS);
+	for( int k=0; m_zoomList[k] != 0; ++k)
+	{
+		CString str;
+		if (m_zoomList[k] > 0)
+		{
+			char buff[100];
+			itoa(m_zoomList[k], buff, 10);
+			str = buff;
+			str += "%";
+		}
+		/*else	// commented out for a while (see COMMENT above)
+		{
+			switch (m_zoomList[k])
+			{
+			case ZOOM_WIDTH:
+				str = m_strZWidth;
+				break;
+			case ZOOM_HEIGHT:
+				str = m_strZHeight;
+				break;
+			case ZOOM_ALL:
+				str = m_strZAll;
+				break;
+			}
+		}*/
+		zoom->AddString(str);
+	}
+}
+
+void CGmeDlg::setZoomValue(CString& val )
+{
+	CWnd* zoom = 0;
+	zoom = GetDlgItem(IDC_ZOOMS);
+	if( zoom) 
+	{
+		CEdit* edit = 0;
+		edit = (CEdit*)(zoom->GetDlgItem(1001));
+		if( edit) 
+		{
+			edit->ReplaceSel( val);
+		}
+	}
+}
+
+CString CGmeDlg::getZoomValue()
+{
+	CString res("100");
+	CWnd* zoom = 0;
+	zoom = GetDlgItem(IDC_ZOOMS);
+	if (zoom)
+	{
+		CEdit* edit = 0;
+		edit = (CEdit*)(zoom->GetDlgItem(1001));
+		if (edit)
+		{
+			char buff[100];
+			edit->GetLine(0, buff, sizeof(buff)-1);
+
+			int zv = 0;
+			/* for now accept only positive numbers, commented out, see COMMENT above
+			if( strcmp( m_strZWidth, buff) == 0)
+				zv = ZOOM_WIDTH;
+			else if( strcmp( m_strZHeight, buff) == 0)
+				zv = ZOOM_HEIGHT;
+			else if( strcmp( m_strZAll, buff) == 0)
+				zv = ZOOM_ALL;
+			else
+			{
+				int l = _stscanf( buff, _T("%d"), &zv);
+				if( l != 1 || zv < ZOOM_MIN || zv > ZOOM_MAX)
+					zv = 100;
+			}
+			
+			if( !zv || zv > 0 && zv < ZOOM_MIN || zv > 0 && zv > ZOOM_MAX 
+				|| zv < 0 && zv != ZOOM_WIDTH && zv != ZOOM_HEIGHT && zv != ZOOM_ALL) 
+				zv = 100;
+			*/
+
+			int l = _stscanf( buff, _T("%d"), &zv);
+			if( l != 1 || zv < ZOOM_MIN || zv > ZOOM_MAX)
+				zv = 100;
+
+			itoa(zv, buff, 10);
+			res = buff;
+		}
+	}
+	return res;
+}
+
+CString CGmeDlg::getZoomValueFromReg()
+{
+	CString def_zoom;
+	CComBSTR bs_def_zoom;
+	COMTHROW( registrar->GetDefZoomLevel( REGACCESS_USER, &bs_def_zoom));
+	if( bs_def_zoom) 
+		CopyTo( bs_def_zoom, def_zoom);
+
+	int level = 100;
+	int zv = 0;
+	int l = _stscanf( (LPCTSTR) def_zoom, _T("%d"), &zv);
+	if( l == 1 && zv )
+		level = zv;
+
+	CString str;
+	if (level > 0)
+	{
+		char buff[100];
+		itoa(level, buff, 10);
+		str = buff;
+		str += "%";
+	}
+	/*else // for now do not accept: ZOOM_WIDTH, ZOOM_HEIGHT, ZOOM_ALL values from the registry, see COMMENT above
+	{
+		switch (level)
+		{
+		case ZOOM_WIDTH:
+			str = m_strZWidth;
+			break;
+		case ZOOM_HEIGHT:
+			str = m_strZHeight;
+			break;
+		case ZOOM_ALL:
+			str = m_strZAll;
+			break;
+		}
+	}*/
+	
+	if( str.IsEmpty())
+		str = "100%";
+	return str;
+}
+void CGmeDlg::OnCbnSelchangeZooms()
+{
+	// TODO: Add your control notification handler code here
+}
+
+CString CGmeDlg::getFmtStrFromReg()
+{
+	CString fmt_str;
+	CComBSTR bs_fmt_str;
+	COMTHROW( registrar->GetRealNmbFmtStr( REGACCESS_USER, &bs_fmt_str));
+	if( bs_fmt_str) 
+		CopyTo( bs_fmt_str, fmt_str);
+
+	if( fmt_str.IsEmpty())
+		fmt_str = m_strFmtStrg2;
+
+	return fmt_str;
+}
+
+CString CGmeDlg::getFmtStrValue()
+{
+	CString res( m_strFmtStrg2);
+	CWnd* combo = 0;
+	combo = GetDlgItem(IDC_CMBFMTSTRS);
+	if( combo)
+	{
+		CEdit* edit = 0;
+		edit = (CEdit*)( combo->GetDlgItem(1001));
+		if( edit)
+		{
+			char buff[100];
+			edit->GetLine(0, buff, sizeof(buff)-1);
+			res = buff;
+		}
+	}
+	return res;
+}
+
+void CGmeDlg::fillFmtStrComboBox()
+{
+	CComboBox*  fmtBox = 0;
+	fmtBox = (CComboBox*)GetDlgItem(IDC_CMBFMTSTRS);
+	fmtBox->AddString( m_strFmtStrg);
+	fmtBox->AddString( m_strFmtStrf);
+	fmtBox->AddString( m_strFmtStre);
+	fmtBox->AddString( m_strFmtStrE);
+	fmtBox->AddString( m_strFmtStrg2);
+	fmtBox->AddString( m_strFmtStrf2);
+
+	CString regv = getFmtStrFromReg();
+	int pos = fmtBox->FindStringExact( -1, regv);
+	if( pos == CB_ERR)
+		fmtBox->InsertString( -1, regv);
+	fmtBox->SelectString( -1, regv);
+}
+

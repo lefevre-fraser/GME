@@ -1,0 +1,26 @@
+HKCR
+{
+	Mga.MgaRegistrar.1 = s 'MgaRegistrar Class'
+	{
+		CLSID = s '{F1D6BB06-42EE-11D4-B3F4-005004D38590}'
+	}
+	Mga.MgaRegistrar = s 'MgaRegistrar Class'
+	{
+		CLSID = s '{F1D6BB06-42EE-11D4-B3F4-005004D38590}'
+		CurVer = s 'Mga.MgaRegistrar.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {F1D6BB06-42EE-11D4-B3F4-005004D38590} = s 'MgaRegistrar Class'
+		{
+			ProgID = s 'Mga.MgaRegistrar.1'
+			VersionIndependentProgID = s 'Mga.MgaRegistrar'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{461F30AE-3BF0-11D4-B3F0-005004D38590}'
+		}
+	}
+}

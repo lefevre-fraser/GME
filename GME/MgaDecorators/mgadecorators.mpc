@@ -1,0 +1,79 @@
+// -*- MPC -*-
+// $Id: mgadecorators.mpc,v 1.10 2004/10/28 01:21:31 dhinton Exp $
+
+
+// MgaDecorators.dll
+project (MPC_MgaDecorators): mfc, midl {
+  sharedname = MgaDecorators
+  libout = ../Lib
+
+  after += MPC_Interfaces MPC_Meta MPC_Mga
+  libs += cimage jpeg png zlib
+  libpaths += ../Lib
+  includes += ../Interfaces \
+              ../Common \
+              ../include/STLport \
+              ../include/gifhelp \
+              . \
+              ../Lib
+
+  MIDL_Files {
+    midlflags += -tlb "MgaDecoratorLib.tlb" -h "MgaDecoratorLib.h" -iid "MgaDecoratorLib_i.c" -Oicf
+    MgaDecoratorLib.idl
+  }
+
+  Source_Files {
+    BitmapUtil.cpp
+    BoxDecorator.cpp
+    ../Common/CommonError.cpp
+    ../Common/CommonMfc.cpp
+    ../Common/CommonSmart.cpp
+    DecoratorDefs.cpp
+    DecoratorUtil.cpp
+    Dibapi.cpp
+    DIBRead.cpp
+    MgaDecorators.cpp
+    MgaDecorators.def
+    MgaDecorators.rc
+    StdAfx.cpp
+    StereotypeDecorators.cpp
+  }
+
+  Header_Files {
+    BitmapUtil.h
+    BoxDecorator.h
+    ../Common/CommonError.h
+    ../Common/CommonMfc.h
+    ../Common/CommonSmart.h
+    DecoratorDefs.h
+    DecoratorUtil.h
+    DIBapi.h
+    Resource.h
+    StdAfx.h
+    StereotypeDecorators.h
+  }
+
+  Resource_Files {
+    res/atom.bmp
+    res/atomport.bmp
+    BoxDecorator.rgs
+    res/icon_instance.bmp
+    res/icon_instance_disabled.bmp
+    res/icon_reference.bmp
+    res/icon_reference_disabled.bmp
+    res/icon_subtype.bmp
+    res/icon_subtype_disabled.bmp
+    res/icon_type.bmp
+    res/icon_type_disabled.bmp
+    res/model.bmp
+    res/modelport.bmp
+    res/nullref.bmp
+    res/reference.bmp
+    res/referenceport.bmp
+    res/refport.bmp
+    res/reftonull.bmp
+    res/Set.bmp
+    res/setport.bmp
+  }
+}
+

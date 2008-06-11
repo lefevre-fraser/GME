@@ -1,0 +1,347 @@
+#!/usr/bin/python
+#
+# Copyright (c) 2006 ISIS, Vanderbilt Univeristy 
+#
+# Author: Peter Volgyesi (peter.volgyesi@vanderbilt.edu)
+#
+"""GME Build System - central module"""
+
+import sys
+import os, os.path
+import getopt
+from prefs import prefs
+import tools
+import win32com
+
+
+#
+# Constants
+#
+GME_ROOT = os.path.normpath(os.path.abspath("../.."))
+
+#
+# Build steps
+#
+
+def check_prerequisites():
+    "Check prerequisites (required tools, etc.)"
+    # Test for Visual Studio.NET 2003
+    try:
+        tools.test_VS()
+    except:
+        print "Visual Studio.NET 2003 is not installed!"
+        raise
+    
+    # Test for zip utility
+    try:
+        tools.test_zip()
+    except:
+        print "ZIP utility cannot be found!"
+        raise
+    
+    # Test for InstallShield
+    try:
+        tools.test_IS()
+    except:
+        print "InstallShield Developer 8 is not installed!"
+        raise
+    
+    # Test for CVS
+    try:
+        tools.test_CVS()
+    except:
+        print "Warning: CVS client cannot be found! You won't be able to check in & tag releases"
+
+
+def update_version_str():
+    "Update version strings in source files"
+    pass
+
+def compile_GME():
+    "Compile GME core components"
+    sln_file = os.path.join(GME_ROOT, "GME", "GME.sln");
+    tools.build_VS( sln_file, os.path.join("Gme", "Gme.vcproj"), "Release" )
+    cmd_dir = os.path.join(GME_ROOT, "GME");
+    tools.system( "regrelease.bat >NUL", cmd_dir)
+
+
+def compile_meta():
+    "Compile MetaGME components"
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "MetaGME.sln");
+    tools.build_VS( sln_file, os.path.join("MetaDecorator", "MetaDecorator.vcproj"), "Release" )
+    tools.build_VS( sln_file, os.path.join("MetaInterpreter2004", "MetaGME2004.vcproj"), "Release" )
+    tools.build_VS( sln_file, os.path.join("BonExtension", "BonExt.vcproj"), "Release" )
+    tools.build_VS( sln_file, os.path.join("MONTraverser", "MONTraverserBON2Component.vcproj"), "Release" )
+    tools.build_VS( sln_file, os.path.join("NamespaceConfigure", "NamespaceConfig.vcproj"), "Release" )
+    tools.build_VS( sln_file, os.path.join("MetaMAid", "MetaMAid.vcproj"), "Release" )
+    cmd_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME");
+    tools.system( "regrelease.bat >NUL", cmd_dir)
+
+
+def compile_BON():
+    "Compile C++ component support (BON)"
+    sln_file = os.path.join(GME_ROOT, "SDK", "BON", "tools", "ComponentTools.sln");
+    tools.build_VS( sln_file, os.path.join("CreateNewComponent", "CreateNewComponent.vcproj"), "Release" )
+
+	
+def compile_JBON():
+    "Compile Java component support (JBON)"
+    sln_file = os.path.join(GME_ROOT, "Java", "native", "JavaSupport.sln");
+    tools.build_VS( sln_file, os.path.join("Jaut", "JAUT.vcproj"), "Release" )
+    tools.build_VS( sln_file, os.path.join("JavaCompRunner", "JavaCompRunner.vcproj"), "Release" )
+    tools.build_VS( sln_file, os.path.join("JavaCompRegister", "JavaCompRegister.vcproj"), "Release" )
+
+	
+def compile_tools():
+    "Compile external tool components"
+    
+    # Table Editor
+    sln_file = os.path.join(GME_ROOT, "Tools", "GMETableEditor", "Component.sln");
+    tools.build_VS( sln_file, "Component.vcproj", "Release" )
+    
+    # Auto Layout
+    sln_file = os.path.join(GME_ROOT, "Tools", "AutoLayout", "AutoLayout.sln");
+    tools.build_VS( sln_file, "AutoLayout.vcproj", "Release" )
+    
+    # Model Migrate
+    sln_file = os.path.join(GME_ROOT, "Tools", "ModelMigrate", "ModelMigrate.sln");
+    tools.build_VS( sln_file, os.path.join("FrontEnd", "FrontEnd.vcproj"), "Release" )
+    
+    # GME Merge
+    sln_file = os.path.join(GME_ROOT, "Tools", "GMEMerge", "GMEMergeComponent.sln");
+    tools.build_VS( sln_file, "GMEMergeComponent.vcproj", "Release" )
+    
+    # Pattern Processor
+    sln_file = os.path.join(GME_ROOT, "SDK", "PatProcessor", "BONComponent.sln");
+    tools.build_VS( sln_file, "BONComponent.vcproj", "Release" )
+    
+    
+
+
+def compile_samples():
+    "Compile sample components"
+    
+    # SF Paradigm
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2Interpreter", "BON2Component.sln");
+    tools.build_VS( sln_file, "SFInterpreterBON2Component.vcproj", "Release" )
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2SFExample", "Bon2Component.sln");
+    tools.build_VS( sln_file, "BON2SFSampleBON2Component.vcproj", "Release" )
+    
+    # HFSM Paradigm
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "HFSM", "interpreter", "BONComponent.sln");
+    tools.build_VS( sln_file, "BONComponent.vcproj", "Release" )
+    
+    # UML Paradigm
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "UML", "decorator", "UMLDecorator.sln");
+    tools.build_VS( sln_file, "UMLDecorator.vcproj", "Release" )
+    
+
+def zip_decorkit():
+    "Create DecoratorKit.zip"
+    zip_dir = os.path.join(GME_ROOT, "SDK", "DecorKit")
+    tools.zip(zip_dir, "DecoratorKit.zip", "packagefiles.lst")
+
+
+def zip_dispatchSDK():
+    "Create DispatchComponents.zip"
+    zip_dir = os.path.join(GME_ROOT, "SDK", "DispatchSDK")
+    tools.zip(zip_dir, "DispatchComponents.zip", "packagefiles.lst")
+
+
+def zip_metainterpreter():
+    "Create MetaInterpreter2004.zip"
+    zip_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "MetaInterpreter2004")
+    tools.zip(zip_dir, "MetaInterpreter2004.zip", "packagefiles.lst")
+
+
+def zip_metainterpreter_framework():
+    "Create MetaInterpreterFramework.zip"
+    zip_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "MetaInterpreterFramework")
+    tools.zip(zip_dir, "MetaInterpreterFramework.zip", "packagefiles.lst")
+
+
+def generate_meta_files():
+    "Generate meta files (mta/mga)"
+    meta_root = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "Paradigm")
+    meta_file = os.path.join(meta_root, "MetaGME.xmp")
+    tools.xmp2mta(meta_file, "MetaGME")
+    meta_file = os.path.join(meta_root, "MetaGME-model.xme")
+    tools.xme2mga(meta_file, "MetaGME")
+
+
+def generate_sample_files():
+    "Generate sample files (mta/mga)"
+    samples_root = os.path.join(GME_ROOT, "Paradigms")
+    
+    # SF Paradigm
+    sample_file = os.path.join(samples_root, "SF", "SFMeta.xme")
+    tools.xme2mga(sample_file, "MetaGME")
+    sample_file = os.path.join(samples_root, "SF", "SF.xmp")
+    tools.xmp2mta(sample_file, "SF") 
+    sample_file = os.path.join(samples_root, "SF", "SFDemo.xme")
+    tools.xme2mga(sample_file, "SF")
+
+    # HFSM Paradigm
+    sample_file = os.path.join(samples_root, "HFSM", "HFSM-Meta.xme")
+    tools.xme2mga(sample_file, "MetaGME")
+    sample_file = os.path.join(samples_root, "HFSM", "HFSM.xmp")
+    tools.xmp2mta(sample_file, "HFSM") 
+    sample_file = os.path.join(samples_root, "HFSM", "HFSM-Demo01.xme")
+    tools.xme2mga(sample_file, "HFSM")
+    sample_file = os.path.join(samples_root, "HFSM", "HFSM-Demo02.xme")
+    tools.xme2mga(sample_file, "HFSM")
+    
+    # UML Paradigm
+    sample_file = os.path.join(samples_root, "UML", "UMLMeta.xme")
+    tools.xme2mga(sample_file, "MetaGME")
+    sample_file = os.path.join(samples_root, "UML", "UML.xmp")
+    tools.xmp2mta(sample_file, "UML")
+
+
+def build_msi():
+    "Build InstallShield Project (msi)"
+    IS_vars = {}
+    # ISvars: , GuidStrMetaGME, GuidStrSF, GuidStrUML, GuidStrHFSM
+
+    IS_vars["ProductVersion"] = prefs["version_string"]
+    IS_vars["GuidStrMetaGME"] = tools.query_GUID("MetaGME")
+    IS_vars["GuidStrSF"] = tools.query_GUID("SF")
+    IS_vars["GuidStrUML"] = tools.query_GUID("UML")
+    IS_vars["GuidStrHFSM"] = tools.query_GUID("HFSM")
+    tools.build_IS(os.path.join(GME_ROOT, "Install.isv"), "FullConfig", "Release", IS_vars)
+
+
+def copy_msi():
+    "Copy the install image to the root directory"
+    pass
+
+
+def tag_repository():
+    "Check in and Tag CVS repository (only for releases)"
+    pass
+
+
+def do_step(num, step):
+    "Executing one building step given in param 'step'"
+    print str(num) + ".", step.__doc__, "..."
+    step()
+
+
+#
+# Main entry point
+#
+
+build_steps = [
+    check_prerequisites,
+    update_version_str,
+    compile_GME,
+    compile_meta,
+    compile_BON, 
+    compile_JBON,
+    compile_tools,
+    compile_samples, 
+    zip_decorkit, 
+    zip_dispatchSDK, 
+    zip_metainterpreter, 
+    zip_metainterpreter_framework, 
+    generate_meta_files,
+    generate_sample_files, 
+    build_msi,
+    copy_msi,
+    tag_repository
+    ]
+
+start_step = 0
+end_step = len(build_steps)-1
+
+usage = """
+usage: %s [OPTION]...
+Build an installation image (msi) for GME.
+
+  -h, --help          display help (this message) and exit
+  -v, --verbose       verbose output (default: %s)
+  -r, --release       build a regular release (default: %s)
+  -c, --clean         clean projects before building them (default: %s)
+  -s, --start=NUM     start at build step 'NUM' (default: %d)
+  -e, --end=NUM       stop at build step 'NUM' (default: %d)
+  -i, --include=NUM   include build step 'NUM' explicitly
+  -x, --exclude=NUM   exclude build step 'NUM' explicitly
+  
+  -V, --version=MAJOR.MINOR.PATCHLEVEL
+                      set build version (default: %d.%d.%d)
+
+\tBuild steps:
+
+\t%s
+""" % (sys.argv[0],
+       prefs["verbose"],
+       prefs["release"],
+       prefs["clean"],
+       start_step,
+       end_step,
+       prefs["version_major"],
+       prefs["version_minor"],
+       prefs["version_patch"],
+       "\n\t".join([str(build_steps.index(s)) + ": " + s.__doc__ for s in build_steps])
+       )
+
+try:
+    opts, args = getopt.getopt(sys.argv[1:], 'hvrcs:e:i:x:V:',
+                               ["help", "verbose", "release", "clean",
+                                "start=", "end=", "include=", "exclude=",
+                                "version="])
+    include_steps = []
+    exclude_steps = []
+    for opt, val in opts:
+        if opt in ("-h", "--help"):
+            print usage
+            sys.exit()
+        if opt in ("-v", "--verbose"):
+            prefs["verbose"] = True
+        if opt in ("-r", "--release"):
+            prefs["release"] = True
+        if opt in ("-c", "--clean"):
+            prefs["clean"] = True
+        if opt in ("-s", "--start"):
+            start_step = int(val)
+        if opt in ("-e", "--end"):
+            end_step = int(val)
+        if opt in ("-i", "--include"):
+            step = int(val)
+            if val not in include_steps:
+                include_steps.append(step)
+        if opt in ("-x", "--exclude"):
+            step = int(val)
+            if val not in exclude_steps:
+                exclude_steps.append(step)
+        if opt in ("-V", "--version"):
+            (M, m, p) = val.split(".")
+            prefs["version_major"] = int(M)
+            prefs["version_minor"] = int(m)
+            prefs["version_patch"] = int(p)
+            
+except (getopt.GetoptError, ValueError, AttributeError), e:
+    print e
+    print usage
+    sys.exit(2)
+    
+prefs["version_string"] = ".".join([str(prefs["version_major"]),
+                                   str(prefs["version_minor"]),
+                                   str(prefs["version_patch"])])
+
+print "Building GME version " + prefs["version_string"], prefs["release"] and "RELEASE" or "TEST"
+
+try:
+    for i in range(len(build_steps)):
+        if i in include_steps:
+            do_step(i, build_steps[i])
+            continue
+        if i in exclude_steps:
+            continue
+        if start_step <= i and i <= end_step:
+            do_step(i, build_steps[i])
+
+    print "Build SUCCEEDED."
+except:
+    print "!!! Build FAILED !!!"
+    raise

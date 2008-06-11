@@ -1,0 +1,96 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BonExt", "BonExtension\BonExt.vcproj", "{9D73053A-B452-4F0C-9954-679EC82FDD9A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8789990A-1CEB-457D-9E99-C718A6D89781} = {8789990A-1CEB-457D-9E99-C718A6D89781}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MONTraverser", "MONTraverser\MONTraverserBON2Component.vcproj", "{50CCEF55-B621-42AF-8C79-EA9D97D3AF0A}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaDecorator", "MetaDecorator\MetaDecorator.vcproj", "{8789990A-1CEB-457D-9E99-C718A6D89781}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaGME2004", "MetaInterpreter2004\MetaGME2004.vcproj", "{19E47A7E-B569-4E9B-BD77-FE9E310098EB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8789990A-1CEB-457D-9E99-C718A6D89781} = {8789990A-1CEB-457D-9E99-C718A6D89781}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Paradigm", "Paradigm\Paradigm.vcproj", "{E0F4960A-05DD-483D-92EE-F5CBB354FE43}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NamespaceConfig", "NamespaceConfigure\NamespaceConfig.vcproj", "{A915BA20-6F11-437A-B668-8368F4A88B46}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaMAid", "MetaMAid\MetaMAid.vcproj", "{26535D0F-DB18-4C54-BA49-EC1C65823D83}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8789990A-1CEB-457D-9E99-C718A6D89781} = {8789990A-1CEB-457D-9E99-C718A6D89781}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuRep", "QuRep\QuRepComponent.vcproj", "{C27B35CF-08FE-4B91-9EB4-78A8583A23D4}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaGME2008", "MetaInterpreter2008\MetaGME8.vcproj", "{98080516-B915-4681-8D08-102D4B4AA59E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BonXtender8", "BonExtension8\BonXtender8.vcproj", "{DF66F798-BCC9-44D0-9FFB-1148C353DDD7}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{9D73053A-B452-4F0C-9954-679EC82FDD9A}.Debug.ActiveCfg = Debug|Win32
+		{9D73053A-B452-4F0C-9954-679EC82FDD9A}.Debug.Build.0 = Debug|Win32
+		{9D73053A-B452-4F0C-9954-679EC82FDD9A}.Release.ActiveCfg = Release|Win32
+		{9D73053A-B452-4F0C-9954-679EC82FDD9A}.Release.Build.0 = Release|Win32
+		{50CCEF55-B621-42AF-8C79-EA9D97D3AF0A}.Debug.ActiveCfg = Debug|Win32
+		{50CCEF55-B621-42AF-8C79-EA9D97D3AF0A}.Debug.Build.0 = Debug|Win32
+		{50CCEF55-B621-42AF-8C79-EA9D97D3AF0A}.Release.ActiveCfg = Release|Win32
+		{50CCEF55-B621-42AF-8C79-EA9D97D3AF0A}.Release.Build.0 = Release|Win32
+		{8789990A-1CEB-457D-9E99-C718A6D89781}.Debug.ActiveCfg = Debug|Win32
+		{8789990A-1CEB-457D-9E99-C718A6D89781}.Debug.Build.0 = Debug|Win32
+		{8789990A-1CEB-457D-9E99-C718A6D89781}.Release.ActiveCfg = Release|Win32
+		{8789990A-1CEB-457D-9E99-C718A6D89781}.Release.Build.0 = Release|Win32
+		{19E47A7E-B569-4E9B-BD77-FE9E310098EB}.Debug.ActiveCfg = Debug|Win32
+		{19E47A7E-B569-4E9B-BD77-FE9E310098EB}.Debug.Build.0 = Debug|Win32
+		{19E47A7E-B569-4E9B-BD77-FE9E310098EB}.Release.ActiveCfg = Release|Win32
+		{19E47A7E-B569-4E9B-BD77-FE9E310098EB}.Release.Build.0 = Release|Win32
+		{E0F4960A-05DD-483D-92EE-F5CBB354FE43}.Debug.ActiveCfg = Debug|Win32
+		{E0F4960A-05DD-483D-92EE-F5CBB354FE43}.Debug.Build.0 = Debug|Win32
+		{E0F4960A-05DD-483D-92EE-F5CBB354FE43}.Release.ActiveCfg = Release|Win32
+		{E0F4960A-05DD-483D-92EE-F5CBB354FE43}.Release.Build.0 = Release|Win32
+		{A915BA20-6F11-437A-B668-8368F4A88B46}.Debug.ActiveCfg = Debug|Win32
+		{A915BA20-6F11-437A-B668-8368F4A88B46}.Debug.Build.0 = Debug|Win32
+		{A915BA20-6F11-437A-B668-8368F4A88B46}.Release.ActiveCfg = Release|Win32
+		{A915BA20-6F11-437A-B668-8368F4A88B46}.Release.Build.0 = Release|Win32
+		{26535D0F-DB18-4C54-BA49-EC1C65823D83}.Debug.ActiveCfg = Debug|Win32
+		{26535D0F-DB18-4C54-BA49-EC1C65823D83}.Debug.Build.0 = Debug|Win32
+		{26535D0F-DB18-4C54-BA49-EC1C65823D83}.Release.ActiveCfg = Release|Win32
+		{26535D0F-DB18-4C54-BA49-EC1C65823D83}.Release.Build.0 = Release|Win32
+		{C27B35CF-08FE-4B91-9EB4-78A8583A23D4}.Debug.ActiveCfg = Debug|Win32
+		{C27B35CF-08FE-4B91-9EB4-78A8583A23D4}.Debug.Build.0 = Debug|Win32
+		{C27B35CF-08FE-4B91-9EB4-78A8583A23D4}.Release.ActiveCfg = Release|Win32
+		{C27B35CF-08FE-4B91-9EB4-78A8583A23D4}.Release.Build.0 = Release|Win32
+		{98080516-B915-4681-8D08-102D4B4AA59E}.Debug.ActiveCfg = Debug|Win32
+		{98080516-B915-4681-8D08-102D4B4AA59E}.Debug.Build.0 = Debug|Win32
+		{98080516-B915-4681-8D08-102D4B4AA59E}.Release.ActiveCfg = Release|Win32
+		{98080516-B915-4681-8D08-102D4B4AA59E}.Release.Build.0 = Release|Win32
+		{DF66F798-BCC9-44D0-9FFB-1148C353DDD7}.Debug.ActiveCfg = Debug|Win32
+		{DF66F798-BCC9-44D0-9FFB-1148C353DDD7}.Debug.Build.0 = Debug|Win32
+		{DF66F798-BCC9-44D0-9FFB-1148C353DDD7}.Release.ActiveCfg = Release|Win32
+		{DF66F798-BCC9-44D0-9FFB-1148C353DDD7}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

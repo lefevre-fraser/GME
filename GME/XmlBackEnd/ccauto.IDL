@@ -1,0 +1,3179 @@
+// Generated .IDL file (by the OLE/COM Object Viewer)
+// 
+// typelib filename: ccauto.dll
+
+[
+  uuid(B22C7EFA-5A5E-11D3-B1CD-00C04F8ECE2F),
+  version(5.0),
+  helpstring("ClearCase Automation Library 5.0"),
+  helpfile("cc_cal.chm"),
+  helpcontext(0x00000064)
+]
+library ClearCase
+{
+    // TLib :     // TLib : OLE Automation : {00020430-0000-0000-C000-000000000046}
+    importlib("stdole2.tlb");
+
+    // Forward declare all types defined in this typelib
+    interface IClearCase;
+    interface ICCActivity;
+    interface ICCVOBObject;
+    interface ICCAttribute;
+    interface ICCAttributeType;
+    interface ICCLock;
+    interface ICCHistoryRecord;
+    interface ICCVOB;
+    interface ICCAttributeTypes;
+    interface ICCBranchType;
+    interface ICCVersion;
+    interface ICCFile;
+    interface ICCView;
+    interface ICCStream;
+    interface ICCUCMObject;
+    interface ICCProjectVOB;
+    interface ICCBaseline;
+    interface ICCActivities;
+    interface ICCComponent;
+    interface ICCElement;
+    interface ICCCheckedOutFile;
+    interface ICCTrigger;
+    interface ICCTriggerType;
+    interface ICCTriggerTypeBuilder;
+    interface ICCHyperlinkType;
+    interface ICCLabelType;
+    interface ICCTriggers;
+    interface ICCStreams;
+    interface ICCComponents;
+    interface ICCFolder;
+    interface ICCProjects;
+    interface ICCProject;
+    interface ICCProjectPolicy;
+    interface ICCBaselines;
+    interface ICCFolders;
+    interface ICCViews;
+    interface ICCBranch;
+    interface ICCVersions;
+    interface ICCLabel;
+    interface ICCLabels;
+    interface ICCBranches;
+    interface ICCBranchTypes;
+    interface ICCHyperlink;
+    interface ICCHyperlinkTypes;
+    interface ICCLabelTypes;
+    interface ICCLocks;
+    interface ICCTriggerTypes;
+    interface ICCAttributes;
+    interface ICCHistoryRecords;
+    interface ICCHyperlinks;
+    interface ICCCheckedOutFiles;
+    interface ICCCheckedOutFileQuery;
+    interface ICCElements;
+    interface ICCVOBs;
+    interface ICCBaselineComparison;
+    interface ICCProjectVOBs;
+    interface IClearTool;
+
+	typedef [uuid(B22C7EC8-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Legal instance constraint values for MetaDataTypes"), helpcontext(0x00001fa4)]
+	enum {
+        ccConstraint_None = 0,
+        ccConstraint_PerElement = 1,
+        ccConstraint_PerBranch = 2,
+        ccConstraint_PerVersion = 3
+    } CCTypeConstraint;
+
+	typedef [uuid(B22C7EDD-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Legal scope values for MetaDataTypes"), helpcontext(0x00001fa4)]
+    enum {
+        ccScope_Ordinary = 0,
+        ccScope_LocalCopy = 1,
+        ccScope_Global = 2
+    } CCTypeScope;
+
+	typedef [uuid(B22C7ED5-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Specifies whether or not the checkout operation reserves the branch"), helpcontext(0x00001fa4)]
+    enum {
+        ccReserved = 0,
+        ccUnreserved = 1,
+        ccTryReserved = 2
+    } CCReservedState;
+
+    typedef [uuid(B22C7ED4-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Specifies the version selection behavior for the checkout operation"), helpcontext(0x00001fa4)]
+    enum {
+        ccVersion_Default = 0,
+        ccVersion_SpecificVersion = 1
+    } CCVersionToCheckOut;
+
+	typedef [uuid(B22C7F2F-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Label status"), helpcontext(0x00001fa4)]
+    enum {
+        ccLabelStatus_Unlabeled = 0,
+        ccLabelStatus_Incremental = 1,
+        ccLabelStatus_Full = 2
+    } CCLabelStatus;
+
+	typedef [uuid(B22C7ED8-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Specifies whether to keep or remove the contents of the checked-out file"), helpcontext(0x00001fa4)]
+    enum {
+        ccKeep = 0,
+        ccRemove = 1
+    } CCKeepState;
+
+	typedef [uuid(B22C7EEF-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("When trigger fires, relative to operation"), helpcontext(0x00001fa4)]
+    enum {
+        ccFiring_PreOp = 1,
+        ccFiring_PostOp = 2
+    } CCTriggerFiring;
+
+    typedef [uuid(B22C7EF1-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Kinds of Trigger Types"), helpcontext(0x00001fa4)]
+    enum {
+        ccKind_Type = 0,
+        ccKind_Element = 1,
+        ccKind_AllElement = 2,
+        ccKind_UCM = 3,
+        ccKind_AllUCM = 4
+    } CCKindOfTrigger;
+
+	typedef [uuid(B22C7EF0-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Kinds of operations that cause triggers to fire"), helpcontext(0x00001fa4)]
+    enum {
+        ccOp_MODIFY_TYPE = 1,
+        ccOp_MODIFY_ELEM = 2,
+        ccOp_MODIFY_DATA = 3,
+        ccOp_MODIFY_MD = 4,
+        ccOp_mktype = 5,
+        ccOp_rmtype = 6,
+        ccOp_rntype = 7,
+        ccOp_lock = 8,
+        ccOp_unlock = 9,
+        ccOp_checkout = 10,
+        ccOp_mkelem = 11,
+        ccOp_mkbranch = 12,
+        ccOp_checkin = 13,
+        ccOp_rmelem = 14,
+        ccOp_rmbranch = 15,
+        ccOp_rmver = 16,
+        ccOp_rmname = 17,
+        ccOp_chtype = 18,
+        ccOp_mklabel = 19,
+        ccOp_mkattr = 20,
+        ccOp_mkhlink = 21,
+        ccOp_mktrigger = 22,
+        ccOp_rmlabel = 23,
+        ccOp_rmattr = 24,
+        ccOp_rmhlink = 25,
+        ccOp_rmtrigger = 26,
+        ccOp_uncheckout = 27,
+        ccOp_protect = 30,
+        ccOp_lnname = 32,
+        ccOp_mkslink = 33,
+        ccOp_reserve = 37,
+        ccOp_unreserve = 41,
+        ccOp_chevent = 44,
+        ccOp_chmaster = 49,
+        ccOp_mkactivity = 58,
+        ccOp_UCM = 88,
+        ccOp_deliver_start = 89,
+        ccOp_deliver_complete = 90,
+        ccOp_deliver_cancel = 91,
+        ccOp_rebase_start = 92,
+        ccOp_rebase_complete = 93,
+        ccOp_rebase_cancel = 94,
+        ccOp_setactivity = 95,
+        ccOp_mkstream = 96,
+        ccOp_mkbl = 99
+    } CCTriggerOperationKind;
+
+	typedef [uuid(B22C7EDB-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Valid values to specify how to interpret a path in a query"), helpcontext(0x00001fa4)]
+    enum {
+        ccSelection_Path = 0,
+        ccSelection_SubTreeRoot = 1,
+        ccSelection_Directory = 2,
+        ccSelection_AllInVOB = 3,
+        ccSelection_AllVOBs = 4
+    } CCPath_Selection;
+
+    [
+      uuid(B22C7EFB-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Top-level ClearCase object class"),
+      helpcontext(0x00000ce4)
+    ]
+    coclass Application {
+        [default] interface IClearCase;
+    };
+
+    [
+      odl,
+      uuid(B22C7EC6-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Top-level interface to all ClearCase objects"),
+      helpcontext(0x00000ce4),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface IClearCase : IDispatch {
+        [id(0x00000001), propget, helpstring("Gets the activity identified by this activity selector"), helpcontext(0x00000ce5)]
+        HRESULT Activity(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCActivity** pActivity);
+        [id(0x00000002), propget, helpstring("Gets an empty collection of attributes"), helpcontext(0x00000ce6)]
+        HRESULT AttributesEmpty([out, retval] ICCAttributes** pAttributes);
+        [id(0x00000003), propget, helpstring("Gets an empty collection of attribute types"), helpcontext(0x00000ce7)]
+        HRESULT AttributeTypesEmpty([out, retval] ICCAttributeTypes** pAttributeTypes);
+        [id(0x00000004), propget, helpstring("Gets an empty collection of branches"), helpcontext(0x00000ce8)]
+        HRESULT BranchesEmpty([out, retval] ICCBranches** pBranches);
+        [id(0x00000005), propget, helpstring("Gets an empty collection of branch types"), helpcontext(0x00000ce9)]
+        HRESULT BranchTypesEmpty([out, retval] ICCBranchTypes** pBranchTypes);
+        [id(0x00000006), propget, helpstring("Gets the checked-out file with this path"), helpcontext(0x00000cea)]
+        HRESULT CheckedOutFile(
+                        [in] BSTR Path, 
+                        [out, retval] ICCCheckedOutFile** pCheckedOutFile);
+        [id(0x00000007), propget, helpstring("Gets an empty collection of checked-out files"), helpcontext(0x00000ceb)]
+        HRESULT CheckedOutFilesEmpty([out, retval] ICCCheckedOutFiles** pCheckedOutFiles);
+        [id(0x00000008), helpstring("Checks for/acquires a ClearCase license for the current user and host. Fails if license cannot be acquired."), helpcontext(0x00000cec)]
+        HRESULT CheckLicense();
+        [id(0x00000009), helpstring("Gets an empty CheckedOutFile query object for finding checked-out files"), helpcontext(0x00000ced)]
+        HRESULT CreateCheckedOutFileQuery([out, retval] ICCCheckedOutFileQuery** pCheckedOutFileQuery);
+        [id(0x0000000a), helpstring("Creates an element at the specified path"), helpcontext(0x00000cee)]
+        HRESULT CreateElement(
+                        [in] BSTR Path, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL SetMaster, 
+                        [in, optional] VARIANT ElementTypeName, 
+                        [out, retval] ICCCheckedOutFile** pCheckedOutFile);
+        [id(0x0000000b), propget, helpstring("Gets the element associated with this path"), helpcontext(0x00000cef)]
+        HRESULT Element(
+                        [in] BSTR Path, 
+                        [out, retval] ICCElement** pElement);
+        [id(0x0000000c), propget, helpstring("Gets an empty collection of elements"), helpcontext(0x00000cf0)]
+        HRESULT ElementsEmpty([out, retval] ICCElements** pElements);
+        [id(0x0000000d), propget, helpstring("Gets an empty collection of history records"), helpcontext(0x00000cf1)]
+        HRESULT HistoryRecordsEmpty([out, retval] ICCHistoryRecords** pHistoryRecords);
+        [id(0x0000000e), propget, helpstring("Gets the specified hyperlink"), helpcontext(0x00000cf2)]
+        HRESULT Hyperlink(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCHyperlink** pHyperlink);
+        [id(0x0000000f), propget, helpstring("Gets an empty collection of hyperlinks"), helpcontext(0x00000cf3)]
+        HRESULT HyperlinksEmpty([out, retval] ICCHyperlinks** pHyperlinks);
+        [id(0x00000010), propget, helpstring("Gets an empty collection of hyperlink types"), helpcontext(0x00000cf4)]
+        HRESULT HyperlinkTypesEmpty([out, retval] ICCHyperlinkTypes** pHyperlinkTypes);
+        [id(0x00000011), propput, helpstring("Sets whether or not the client application's user interface is a web browser"), helpcontext(0x00000cf5)]
+        HRESULT IsWebGUI([in] VARIANT_BOOL rhs);
+        [id(0x00000012), propget, helpstring("Gets an empty collection of labels"), helpcontext(0x00000cf6)]
+        HRESULT LabelsEmpty([out, retval] ICCLabels** pLabels);
+        [id(0x00000013), propget, helpstring("Gets an empty collection of label types"), helpcontext(0x00000cf7)]
+        HRESULT LabelTypesEmpty([out, retval] ICCLabelTypes** pLabelTypes);
+        [id(0x00000014), propget, helpstring("Gets an empty collection of locks"), helpcontext(0x00000cf8)]
+        HRESULT LocksEmpty([out, retval] ICCLocks** pLocks);
+        [id(0x00000015), helpstring("Cause all prompts to abort"), helpcontext(0x00000cf9)]
+        HRESULT SetAbortPrompts();
+        [id(0x00000016), propget, helpstring("Gets an empty collection of triggers"), helpcontext(0x00000cfa)]
+        HRESULT TriggersEmpty([out, retval] ICCTriggers** pTrigger);
+        [id(0x00000017), propget, helpstring("Gets an empty collection of trigger types"), helpcontext(0x00000cfb)]
+        HRESULT TriggerTypesEmpty([out, retval] ICCTriggerTypes** pTriggerTypes);
+        [id(0x00000018), propget, helpstring("Gets the version associated with the path"), helpcontext(0x00000cfc)]
+        HRESULT Version(
+                        [in] VARIANT Path, 
+                        [out, retval] ICCVersion** pVersion);
+        [id(0x00000019), propget, helpstring("Gets an empty collection of versions"), helpcontext(0x00000cfd)]
+        HRESULT VersionsEmpty([out, retval] ICCVersions** pVersions);
+        [id(0x0000001a), propget, helpstring("Gets the specified view"), helpcontext(0x00000cfe)]
+        HRESULT View(
+                        [in, optional, defaultvalue("")] BSTR Identifier, 
+                        [out, retval] ICCView** pView);
+        [id(0x0000001b), propget, helpstring("Gets the collection of views in the specified region"), helpcontext(0x00000cff)]
+        HRESULT Views(
+                        [in, optional, defaultvalue(-1)] VARIANT_BOOL FailIfErrors, 
+                        [in, optional, defaultvalue("")] BSTR Region, 
+                        [out, retval] ICCViews** pViews);
+        [id(0x0000001c), propget, helpstring("Gets an empty collection of views"), helpcontext(0x00000d00)]
+        HRESULT ViewsEmpty([out, retval] ICCViews** pViews);
+        [id(0x0000001d), propget, helpstring("Gets the specified VOB"), helpcontext(0x00000d01)]
+        HRESULT VOB(
+                        [in] BSTR Identifier, 
+                        [out, retval] ICCVOB** pVOB);
+        [id(0x0000001e), propget, helpstring("Gets the collection of VOBs in the specified region"), helpcontext(0x00000d02)]
+        HRESULT VOBs(
+                        [in, optional, defaultvalue(-1)] VARIANT_BOOL FailIfErrors, 
+                        [in, optional, defaultvalue("")] BSTR Region, 
+                        [out, retval] ICCVOBs** pVOBs);
+        [id(0x0000001f), propget, helpstring("Gets an empty collection of VOBs"), helpcontext(0x00000d03)]
+        HRESULT VOBsEmpty([out, retval] ICCVOBs** pVOBs);
+        [id(0x00000020), propget, helpstring("Gets an empty collection of activities"), helpcontext(0x00000d04)]
+        HRESULT ActivitiesEmpty([out, retval] ICCActivities** pActivities);
+        [id(0x00000021), propget, helpstring("Gets the activity associated with this version"), helpcontext(0x00000d12)]
+        HRESULT ActivityOfVersion(
+                        [in] ICCVersion* pVersion, 
+                        [out, retval] ICCActivity** pActivity);
+        [id(0x00000022), propget, helpstring("Gets a particular baseline in the specified project VOB"), helpcontext(0x00000d05)]
+        HRESULT Baseline(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCBaseline** pBaseline);
+        [id(0x00000023), propget, helpstring("Gets an empty collection of baselines"), helpcontext(0x00000d06)]
+        HRESULT BaselinesEmpty([out, retval] ICCBaselines** pBaselines);
+        [id(0x00000024), propget, helpstring("Gets a particular component in the specified project VOB"), helpcontext(0x00000d07)]
+        HRESULT Component(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCComponent** pComponent);
+        [id(0x00000025), propget, helpstring("Gets an empty collection of components"), helpcontext(0x00000d08)]
+        HRESULT ComponentsEmpty([out, retval] ICCComponents** pComponents);
+        [id(0x00000026), helpstring("Gets an empty CCBaselineComparison object for comparing baselines"), helpcontext(0x00000d09)]
+        HRESULT CreateBaselineComparison([out, retval] ICCBaselineComparison** pBaselineComparison);
+        [id(0x00000027), propget, helpstring("Gets a particular folder in the specified project VOB"), helpcontext(0x00000d0a)]
+        HRESULT Folder(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCFolder** pFolder);
+        [id(0x00000028), propget, helpstring("Gets an empty collection of folders"), helpcontext(0x00000d0b)]
+        HRESULT FoldersEmpty([out, retval] ICCFolders** pFolders);
+        [id(0x00000029), propget, helpstring("Gets whether or not the current host is a ClearCase LT installation"), helpcontext(0x00000d13)]
+        HRESULT IsClearCaseLT([out, retval] VARIANT_BOOL* pIsClearCaseLT);
+        [id(0x0000002a), propget, helpstring("Gets whether or not the current host is a ClearCase LT client installation"), helpcontext(0x00000d14)]
+        HRESULT IsClearCaseLTClient([out, retval] VARIANT_BOOL* pIsClearCaseLTClient);
+        [id(0x0000002b), propget, helpstring("Gets whether or not the current host is a ClearCase LT server installation"), helpcontext(0x00000d15)]
+        HRESULT IsClearCaseLTServer([out, retval] VARIANT_BOOL* pIsClearCaseLTServer);
+        [id(0x0000002c), propget, helpstring("Gets a particular project in the specified project VOB"), helpcontext(0x00000d0c)]
+        HRESULT Project(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCProject** pProject);
+        [id(0x0000002d), propget, helpstring("Gets an empty collection of projects"), helpcontext(0x00000d0d)]
+        HRESULT ProjectsEmpty([out, retval] ICCProjects** pProjects);
+        [id(0x0000002e), propget, helpstring("Gets the specified project VOB"), helpcontext(0x00000d0e)]
+        HRESULT ProjectVOB(
+                        [in] BSTR Identifier, 
+                        [out, retval] ICCProjectVOB** pProjectVOB);
+        [id(0x0000002f), propget, helpstring("Gets an empty collection of project VOBs"), helpcontext(0x00000d0f)]
+        HRESULT ProjectVOBsEmpty([out, retval] ICCProjectVOBs** pProjectVOBs);
+        [id(0x00000030), propget, helpstring("Gets a particular stream in the specified project VOB"), helpcontext(0x00000d10)]
+        HRESULT Stream(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCStream** pStream);
+        [id(0x00000031), propget, helpstring("Gets an empty collection of streams"), helpcontext(0x00000d11)]
+        HRESULT StreamsEmpty([out, retval] ICCStreams** pStreams);
+        [id(0x00000032), propget, hidden]
+        HRESULT UniversalSelector(
+                        [in] ICCVOBObject* pVOBObject, 
+                        [out, retval] BSTR* pUniversalSelector);
+    };
+
+    [
+      odl,
+      uuid(B22C7EF9-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to an activity"),
+      helpcontext(0x0000044c),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCActivity : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the name of this activity"), helpcontext(0x00000452)]
+        HRESULT Name([out, retval] BSTR* pName);
+        [id(0x00000033), propget, helpstring("Gets the versions in this activity's change set"), helpcontext(0x0000044d)]
+        HRESULT ChangeSet(
+                        [in] ICCView* pNameResolverView, 
+                        [in, optional, defaultvalue(-1)] VARIANT_BOOL FailIfErrors, 
+                        [out, retval] ICCVersions** pVersions);
+        [id(0x00000034), helpstring("Locks this activity"), helpcontext(0x0000044e)]
+        HRESULT CreateLock(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Obsolete, 
+                        [in, optional] VARIANT ExemptUsersStringArray);
+        [id(0x00000035), propget, helpstring("Gets the headline of this activity"), helpcontext(0x0000044f)]
+        HRESULT Headline([out, retval] BSTR* pHeadline);
+        [id(0x00000036), propget, helpstring("Gets the lock on this activity"), helpcontext(0x00000450)]
+        HRESULT Lock([out, retval] ICCLock** pLock);
+        [id(0x00000037), propget, helpstring("Gets the master replica for this activity"), helpcontext(0x00000451)]
+        HRESULT Master([out, retval] BSTR* pReplica);
+        [id(0x00000038), propget, helpstring("Gets a 'best guess' view for resolving the names of versions in a change set"), helpcontext(0x00000453)]
+        HRESULT NameResolverView([out, retval] ICCView** pNameResolverView);
+        [id(0x00000039), helpstring("Sets the master replica for this activity"), helpcontext(0x00000454)]
+        HRESULT SetMaster(
+                        [in] BSTR Replica, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003a), propget, helpstring("Gets the VOB containing this activity"), helpcontext(0x00000455)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+        [id(0x0000003b), propget, helpstring("Gets the ClearQuest record ID of this activity"), helpcontext(0x0000045c)]
+        HRESULT ClearQuestRecordID([out, retval] BSTR* pClearQuestRecordID);
+        [id(0x0000003c), propget, helpstring("Gets the group to which this activity belongs"), helpcontext(0x00000456)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x0000003d), propget, helpstring("Gets whether or not this activity has a (non-empty) change set"), helpcontext(0x00000457)]
+        HRESULT HasChangeSet([out, retval] VARIANT_BOOL* pHasChangeSet);
+        [id(0x0000003e), propget, helpstring("Gets the owner of this activity"), helpcontext(0x00000458)]
+        HRESULT Owner([out, retval] BSTR* pOwner);
+        [id(0x0000003f), helpstring("Sets the group to which this activity belongs"), helpcontext(0x00000459)]
+        HRESULT SetGroup(
+                        [in] BSTR NewGroup, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000040), helpstring("Sets the headline of this activity"), helpcontext(0x0000045d)]
+        HRESULT SetHeadline(
+                        [in] BSTR NewHeadline, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000041), helpstring("Sets the name of this activity"), helpcontext(0x0000045e)]
+        HRESULT SetName(
+                        [in] BSTR NewName, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000042), helpstring("Sets the owner of this activity"), helpcontext(0x0000045a)]
+        HRESULT SetOwner(
+                        [in] BSTR NewOwner, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000043), propget, helpstring("Gets the containing stream of this activity"), helpcontext(0x0000045b)]
+        HRESULT Stream([out, retval] ICCStream** pStream);
+    };
+
+    [
+      odl,
+      uuid(B22C7EC9-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a VOB object"),
+      helpcontext(0x00000c80),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCVOBObject : IDispatch {
+        [id(0x00000001), propget, helpstring("Gets an attribute of the specified type on this VOB object"), helpcontext(0x00000c81)]
+        HRESULT Attribute(
+                        [in] BSTR AttributeType, 
+                        [out, retval] ICCAttribute** pAttribute);
+        [id(0x00000002), propget, helpstring("Gets the collection of attributes associated with this VOB object"), helpcontext(0x00000c82)]
+        HRESULT Attributes([out, retval] ICCAttributes** pAttributes);
+        [id(0x00000003), propget, helpstring("Gets/Sets the comment associated with the creation record of this VOB object"), helpcontext(0x00000c83)]
+        HRESULT Comment([out, retval] BSTR* pComment);
+        [id(0x00000003), propput, helpstring("Gets/Sets the comment associated with the creation record of this VOB object"), helpcontext(0x00000c83)]
+        HRESULT Comment([in] BSTR pComment);
+        [id(0x00000004), propget, helpstring("Gets the creation record for the VOB object"), helpcontext(0x00000c84)]
+        HRESULT CreationRecord([out, retval] ICCHistoryRecord** pHistoryRecord);
+        [id(0x00000005), propget, helpstring("Gets the collection of history records for this object"), helpcontext(0x00000c85)]
+        HRESULT HistoryRecords(
+                        [in] ICCBranchType* pICCBranchType, 
+                        [in, optional, defaultvalue("12:00:00 AM")] DATE Since, 
+                        [in, optional, defaultvalue("")] BSTR User, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Minor, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL ExcludeCheckOutEvents, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Recurse, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL DirectoryOnly, 
+                        [out, retval] ICCHistoryRecords** pHistoryRecords);
+        [id(0x00000006), propget, helpstring("Gets the collection of hyperlinks associated with this VOB object"), helpcontext(0x00000c86)]
+        HRESULT Hyperlinks(
+                        [in, optional, defaultvalue("")] BSTR HyperlinkType, 
+                        [out, retval] ICCHyperlinks** pHyperlinks);
+        [id(0x00000007), propget, helpstring("Gets the object identifier for the VOB object"), helpcontext(0x00000c87)]
+        HRESULT OID([out, retval] BSTR* pOID);
+        [id(0x00000008), propget, helpstring("Gets the VOB family UUID for the VOB of this VOB object"), helpcontext(0x00000c88)]
+        HRESULT VOBFamilyUUID([out, retval] BSTR* pVOBFamilyUUID);
+    };
+
+    [
+      odl,
+      uuid(B22C7EED-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to an attribute"),
+      helpcontext(0x000004b0),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCAttribute : IDispatch {
+        [id(0x00000001), helpstring("Removes the attribute from its VOB object"), helpcontext(0x000004b1)]
+        HRESULT Remove([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000002), helpstring("Sets or resets the value of this attribute"), helpcontext(0x000004b2)]
+        HRESULT SetValue(
+                        [in] VARIANT Value, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000003), propget, helpstring("Gets the attribute type of this attribute"), helpcontext(0x000004b3)]
+        HRESULT Type([out, retval] ICCAttributeType** pType);
+        [id(0x00000004), propget, helpstring("Gets the value of this attribute"), helpcontext(0x000004b4)]
+        HRESULT Value([out, retval] VARIANT* pValue);
+        [id(0x00000005), propget, helpstring("Gets the VOB containing the object having this attribute"), helpcontext(0x000004b5)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7EEB-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to an attribute type"),
+      helpcontext(0x00000514),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCAttributeType : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the name of the attribute type"), helpcontext(0x00000520)]
+        HRESULT Name([out, retval] BSTR* pName);
+        [id(0x00000033), helpstring("Applies an instance of this attribute type to a VOB object"), helpcontext(0x00000515)]
+        HRESULT Apply(
+                        [in] ICCVOBObject* pVOBObject, 
+                        [in, optional] VARIANT Value, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Replace, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Recurse);
+        [id(0x00000034), propget, helpstring("Gets the constraint for this attribute type (for example, one per element)"), helpcontext(0x00000516)]
+        HRESULT Constraint([out, retval] CCTypeConstraint* pConstraint);
+        [id(0x00000035), helpstring("Locks this attribute type"), helpcontext(0x00000517)]
+        HRESULT CreateLock(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Obsolete, 
+                        [in, optional] VARIANT ExemptUsersStringArray);
+        [id(0x00000036), propget, helpstring("Gets the default value of this attribute type"), helpcontext(0x00000518)]
+        HRESULT DefaultValue([out, retval] VARIANT* pDefaultValue);
+        [id(0x00000037), propget, helpstring("Gets the array of enumerated values for this attribute type"), helpcontext(0x00000519)]
+        HRESULT EnumValuesArray([out, retval] VARIANT* pEnumValuesArray);
+        [id(0x00000038), propget, helpstring("Gets the group to which this attribute type belongs"), helpcontext(0x0000051a)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x00000039), propget, helpstring("Gets whether this attribute type is shared or can be mastered"), helpcontext(0x0000051b)]
+        HRESULT HasSharedMastership([out, retval] VARIANT_BOOL* pHasShared);
+        [id(0x0000003a), propget, helpstring("Gets the lock on this attribute type"), helpcontext(0x0000051c)]
+        HRESULT Lock([out, retval] ICCLock** pLock);
+        [id(0x0000003b), propget, helpstring("Specifies whether or not the lower value is in the range of legal values"), helpcontext(0x0000051d)]
+        HRESULT LowerIsInRange([out, retval] VARIANT_BOOL* pLowerIsInRange);
+        [id(0x0000003c), propget, helpstring("Gets the lower value of this attribute type"), helpcontext(0x0000051e)]
+        HRESULT LowerValue([out, retval] VARIANT* pLowerValue);
+        [id(0x0000003d), propget, helpstring("Gets the master replica for this attribute type"), helpcontext(0x0000051f)]
+        HRESULT Master([out, retval] BSTR* pReplica);
+        [id(0x0000003e), propget, helpstring("Gets the number of enumerated values for this attribute type"), helpcontext(0x00000521)]
+        HRESULT NumberOfEnumValues([out, retval] long* pNumberOfEnumValues);
+        [id(0x0000003f), propget, helpstring("Gets the owner of this attribute type"), helpcontext(0x00000522)]
+        HRESULT Owner([out, retval] BSTR* pOwner);
+        [id(0x00000040), helpstring("Removes this attribute type from the VOB"), helpcontext(0x00000523)]
+        HRESULT RemoveType(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL RemoveAllInstances, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000041), propget, helpstring("Gets the scope of this attribute type (for example, local to this VOB)"), helpcontext(0x00000524)]
+        HRESULT Scope([out, retval] CCTypeScope* pScope);
+        [id(0x00000042), helpstring("Sets the constraint for this attribute type (for example, one per element)"), helpcontext(0x00000525)]
+        HRESULT SetConstraint(
+                        [in] CCTypeConstraint NewConstraint, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000043), helpstring("Sets the default value of this attribute type"), helpcontext(0x00000526)]
+        HRESULT SetDefaultValue(
+                        [in, optional] VARIANT DefaultValue, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000044), helpstring("Sets the array of enumerated values for this attribute type"), helpcontext(0x00000527)]
+        HRESULT SetEnumValuesArray(
+                        [in, optional] VARIANT EnumValuesArray, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000045), helpstring("Sets the group to which this attribute type belongs"), helpcontext(0x00000528)]
+        HRESULT SetGroup(
+                        [in] BSTR NewGroup, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000046), helpstring("Sets the lower value for this attribute type"), helpcontext(0x00000529)]
+        HRESULT SetLowerValue(
+                        [in, optional] VARIANT LowerValue, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL LowerIsInRange, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000047), helpstring("Sets the master replica for this attribute type"), helpcontext(0x0000052a)]
+        HRESULT SetMaster(
+                        [in] BSTR Replica, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000048), helpstring("Changes the name of this attribute type and all instances of the attribute type"), helpcontext(0x0000052b)]
+        HRESULT SetName(
+                        [in] BSTR NewName, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000049), helpstring("Sets the owner of this attribute type"), helpcontext(0x0000052c)]
+        HRESULT SetOwner(
+                        [in] BSTR NewOwner, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000004a), helpstring("Sets the scope for this attribute type (for example, local to this VOB)"), helpcontext(0x0000052d)]
+        HRESULT SetScope(
+                        [in] VARIANT_BOOL Global, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Acquire, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000004b), helpstring("Sets the upper value for this attribute type"), helpcontext(0x0000052e)]
+        HRESULT SetUpperValue(
+                        [in, optional] VARIANT UpperValue, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL UpperIsInRange, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000004c), helpstring("Sets the type of value for this attribute type"), helpcontext(0x0000052f)]
+        HRESULT SetValueType(
+                        [in] long ValueType, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000004d), helpstring("Sets the mastership of this attribute type to shared"), helpcontext(0x00000530)]
+        HRESULT ShareMastership([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000004e), propget, helpstring("Specifies whether or not the upper value is in the range of legal values"), helpcontext(0x00000531)]
+        HRESULT UpperIsInRange([out, retval] VARIANT_BOOL* pUpperIsInRange);
+        [id(0x0000004f), propget, helpstring("Gets the upper value of this attribute type"), helpcontext(0x00000532)]
+        HRESULT UpperValue([out, retval] VARIANT* pUpperValue);
+        [id(0x00000050), propget, helpstring("Gets the value type of this attribute type"), helpcontext(0x00000533)]
+        HRESULT ValueType([out, retval] long* pValueType);
+        [id(0x00000051), propget, helpstring("Gets the VOB containing this attribute type"), helpcontext(0x00000534)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+        
+    [
+      odl,
+      uuid(B22C7EF7-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a lock on a VOB object"),
+      helpcontext(0x000009c4),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCLock : IDispatch {
+        [id(0x00000001), propget, helpstring("Gets the creation record for this lock"), helpcontext(0x000009c5)]
+        HRESULT CreationRecord([out, retval] ICCHistoryRecord** pHistoryRecord);
+        [id(0x00000002), propget, helpstring("Gets the array of users exempt from this lock"), helpcontext(0x000009c6)]
+        HRESULT ExemptUsersStringArray([out, retval] VARIANT* pExemptUsersStringArray);
+        [id(0x00000003), propget, helpstring("Gets whether or not the locked object is marked as obsolete"), helpcontext(0x000009c7)]
+        HRESULT IsObsolete([out, retval] VARIANT_BOOL* pIsObsolete);
+        [id(0x00000004), propget, helpstring("Gets the object held by this lock"), helpcontext(0x000009c8)]
+        HRESULT LockedObject([out, retval] ICCVOBObject** pLockedObject);
+        [id(0x00000005), propget, helpstring("Gets the number of users exempted from this lock"), helpcontext(0x000009c9)]
+        HRESULT NumberOfExemptUsers([out, retval] long* pNumberOfExemptUsers);
+        [id(0x00000006), helpstring("Removes this lock"), helpcontext(0x000009ca)]
+        HRESULT Remove([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000007), helpstring("Sets the array of users exempted from this lock"), helpcontext(0x000009cb)]
+        HRESULT SetExemptUsersStringArray(
+                        [in, optional] VARIANT ExemptUsersStringArray, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000008), helpstring("Sets whether or not the locked object is marked as obsolete"), helpcontext(0x000009cc)]
+        HRESULT SetObsolete(
+                        [in] VARIANT_BOOL IsObsolete, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000009), propget, helpstring("Gets the VOB in which this lock resides"), helpcontext(0x000009cd)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7ECF-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a history (event) record on a VOB object"),
+      helpcontext(0x000007d0),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCHistoryRecord : IDispatch {
+        [id(0x00000001), propget, helpstring("Gets the login name of the user who performed the operation indicated by this history record"), helpcontext(0x000007d7)]
+        HRESULT UserLoginName([out, retval] BSTR* pUserLoginName);
+        [id(0x00000002), propget, helpstring("Gets the full name of the user who performed the operation indicated by this history record"), helpcontext(0x000007d6)]
+        HRESULT UserFullName([out, retval] BSTR* pUserFullName);
+        [id(0x00000003), propget, helpstring("Gets the name of the login group that performed the operation indicated by this history record"), helpcontext(0x000007d4)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x00000004), propget, helpstring("Gets/Sets the comment associated with the operation indicated by this history record"), helpcontext(0x000007d1)]
+        HRESULT Comment([out, retval] BSTR* pComment);
+        [id(0x00000004), propput, helpstring("Gets/Sets the comment associated with the operation indicated by this history record"), helpcontext(0x000007d1)]
+        HRESULT Comment([in] BSTR pComment);
+        [id(0x00000005), propget, helpstring("Gets the name of the host machine from which the operation indicated by this history record was executed"), helpcontext(0x000007d5)]
+        HRESULT Host([out, retval] BSTR* pHost);
+        [id(0x00000006), propget, helpstring("Gets an indication of the type of operation that was executed"), helpcontext(0x000007d3)]
+        HRESULT EventKind([out, retval] BSTR* pEventKind);
+        [id(0x00000007), propget, helpstring("Gets the date and time the operation was executed"), helpcontext(0x000007d2)]
+        HRESULT Date([out, retval] DATE* pDate);
+        [id(0x00000008), propget, helpstring("Gets the VOB containing the object to which the operation was applied"), helpcontext(0x000007d8)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7ECB-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a VOB"),
+      helpcontext(0x00000c1c),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCVOB : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the VOB-tag name"), helpcontext(0x00000c3d)]
+        HRESULT TagName([out, retval] BSTR* pTagName);
+        [id(0x00000032), propget, helpstring("Gets the activity identified by this activity selector"), helpcontext(0x00000c1d)]
+        HRESULT Activity(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCActivity** pActivity);
+        [id(0x00000033), propget, helpstring("Gets the array of the VOB's supplementary groups"), helpcontext(0x00000c1e)]
+        HRESULT AdditionalGroupsStringArray([out, retval] VARIANT* pAdditionalGroupsStringArray);
+        [id(0x00000034), propget, helpstring("Gets an existing attribute type"), helpcontext(0x00000c1f)]
+        HRESULT AttributeType(
+                        [in] BSTR Name, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Local, 
+                        [out, retval] ICCAttributeType** pType);
+        [id(0x00000035), propget, helpstring("Gets all existing attribute types in the VOB"), helpcontext(0x00000c20)]
+        HRESULT AttributeTypes(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Local, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL IncludeObsoletes, 
+                        [out, retval] ICCAttributeTypes** pEnum);
+        [id(0x00000036), propget, helpstring("Gets an existing branch type"), helpcontext(0x00000c21)]
+        HRESULT BranchType(
+                        [in] BSTR Name, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Local, 
+                        [out, retval] ICCBranchType** pType);
+        [id(0x00000037), propget, helpstring("Gets all existing branch types in the VOB"), helpcontext(0x00000c22)]
+        HRESULT BranchTypes(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Local, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL IncludeObsoletes, 
+                        [out, retval] ICCBranchTypes** pEnum);
+        [id(0x00000038), helpstring("Creates a new attribute type"), helpcontext(0x00000c23)]
+        HRESULT CreateAttributeType(
+                        [in] BSTR Name, 
+                        [in, optional, defaultvalue(8)] long ValueType, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Shared, 
+                        [in, optional, defaultvalue(0)] CCTypeConstraint Constraint, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Global, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Acquire, 
+                        [out, retval] ICCAttributeType** pType);
+        [id(0x00000039), helpstring("Creates a new branch type"), helpcontext(0x00000c24)]
+        HRESULT CreateBranchType(
+                        [in] BSTR Name, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(1)] CCTypeConstraint Constraint, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Global, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Acquire, 
+                        [out, retval] ICCBranchType** pType);
+        [id(0x0000003a), helpstring("Creates a new hyperlink type"), helpcontext(0x00000c25)]
+        HRESULT CreateHyperlinkType(
+                        [in] BSTR Name, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Shared, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Global, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Acquire, 
+                        [out, retval] ICCHyperlinkType** pType);
+        [id(0x0000003b), helpstring("Creates a new label type"), helpcontext(0x00000c26)]
+        HRESULT CreateLabelType(
+                        [in] BSTR Name, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Shared, 
+                        [in, optional, defaultvalue(1)] CCTypeConstraint Constraint, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Global, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Acquire, 
+                        [out, retval] ICCLabelType** pType);
+        [id(0x0000003c), helpstring("Locks this VOB"), helpcontext(0x00000c27)]
+        HRESULT CreateLock(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Obsolete, 
+                        [in, optional] VARIANT ExemptUsersStringArray);
+        [id(0x0000003d), helpstring("Gets an empty trigger type builder for the creation of a new trigger type"), helpcontext(0x00000c28)]
+        HRESULT CreateTriggerTypeBuilder([out, retval] ICCTriggerTypeBuilder** pTriggerTypeBuilder);
+        [id(0x0000003e), propget, helpstring("Gets the group to which this VOB belongs"), helpcontext(0x00000c29)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x0000003f), propget, helpstring("Gets whether or not this VOB has MSDOS text mode enabled"), helpcontext(0x00000c2a)]
+        HRESULT HasMSDOSTextMode([out, retval] VARIANT_BOOL* pHasMSDOSTextMode);
+        [id(0x00000040), propget, helpstring("Gets the host on which the storage area for this VOB resides"), helpcontext(0x00000c2b)]
+        HRESULT Host([out, retval] BSTR* pHost);
+        [id(0x00000041), propget, helpstring("Gets the specified hyperlink"), helpcontext(0x00000c2c)]
+        HRESULT Hyperlink(
+                        [in] BSTR IDString, 
+                        [out, retval] ICCHyperlink** pHyperlink);
+        [id(0x00000042), propget, helpstring("Gets an existing hyperlink type"), helpcontext(0x00000c2d)]
+        HRESULT HyperlinkType(
+                        [in] BSTR Name, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Local, 
+                        [out, retval] ICCHyperlinkType** pType);
+        [id(0x00000043), propget, helpstring("Gets all existing hyperlink types in this VOB"), helpcontext(0x00000c2e)]
+        HRESULT HyperlinkTypes(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Local, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL IncludeObsoletes, 
+                        [out, retval] ICCHyperlinkTypes** pEnum);
+        [id(0x00000044), propget, helpstring("Gets/Sets whether or not the VOB is mounted."), helpcontext(0x00000c2f)]
+        HRESULT IsMounted([out, retval] VARIANT_BOOL* pIsMounted);
+        [id(0x00000044), propput, helpstring("Gets/Sets whether or not the VOB is mounted."), helpcontext(0x00000c2f)]
+        HRESULT IsMounted([in] VARIANT_BOOL pIsMounted);
+        [id(0x00000045), propput, helpstring("Sets whether or not the VOB is mounted persistently (mounted automatically after a reboot)"), helpcontext(0x00000c30)]
+        HRESULT IsPersistent([in] VARIANT_BOOL rhs);
+        [id(0x00000046), propget, helpstring("Gets whether or not this VOB is replicated"), helpcontext(0x00000c31)]
+        HRESULT IsReplicated([out, retval] VARIANT_BOOL* pIsReplicated);
+        [id(0x00000047), propget, helpstring("Gets an existing label type"), helpcontext(0x00000c32)]
+        HRESULT LabelType(
+                        [in] BSTR Name, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Local, 
+                        [out, retval] ICCLabelType** pType);
+        [id(0x00000048), propget, helpstring("Gets all existing label types in this VOB"), helpcontext(0x00000c33)]
+        HRESULT LabelTypes(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Local, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL IncludeObsoletes, 
+                        [out, retval] ICCLabelTypes** pEnum);
+        [id(0x00000049), propget, helpstring("Gets the lock on this VOB or fails if none"), helpcontext(0x00000c34)]
+        HRESULT Lock([out, retval] ICCLock** pLock);
+        [id(0x0000004a), propget, helpstring("Gets a collection of all the locks in this VOB"), helpcontext(0x00000c35)]
+        HRESULT Locks(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL IncludeObsoletes, 
+                        [out, retval] ICCLocks** pLocks);
+        [id(0x0000004b), propget, helpstring("Gets the master replica for this VOB"), helpcontext(0x00000c36)]
+        HRESULT Master([out, retval] BSTR* pReplica);
+        [id(0x0000004c), propget, helpstring("Gets the number of supplementary groups for this VOB"), helpcontext(0x00000c37)]
+        HRESULT NumberOfAdditionalGroups([out, retval] long* pNumberOfAdditionalGroups);
+        [id(0x0000004d), propget, helpstring("Gets the number of replica names for the VOB family of this VOB, if this VOB is replicated"), helpcontext(0x00000c38)]
+        HRESULT NumberOfReplicas([out, retval] long* pNumberOfReplicas);
+        [id(0x0000004e), propget, helpstring("Gets the owner of the VOB"), helpcontext(0x00000c39)]
+        HRESULT Owner([out, retval] BSTR* pOwner);
+        [id(0x0000004f), helpstring("Sets the ownership and group information for this VOB"), helpcontext(0x00000c3a)]
+        HRESULT Protect(
+                        [in, optional, defaultvalue("")] BSTR NewOwner, 
+                        [in, optional, defaultvalue("")] BSTR NewGroup, 
+                        [in, optional] VARIANT GroupsToAddStringArray, 
+                        [in, optional] VARIANT GroupsToRemoveStringArray);
+        [id(0x00000050), propget, helpstring("Gets the array of replica names for the VOB family of this VOB, if this VOB is replicated"), helpcontext(0x00000c3b)]
+        HRESULT ReplicasStringArray([out, retval] VARIANT* pReplicasStringArray);
+        [id(0x00000051), helpstring("Sets the master replica for this VOB"), helpcontext(0x00000c3c)]
+        HRESULT SetMaster(
+                        [in] BSTR Replica, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000052), propget, helpstring("Gets the replica name for this VOB, if the VOB is replicated"), helpcontext(0x00000c3e)]
+        HRESULT ThisReplica([out, retval] BSTR* pReplica);
+        [id(0x00000053), propget, helpstring("Gets an existing trigger type"), helpcontext(0x00000c3f)]
+        HRESULT TriggerType(
+                        [in] BSTR Name, 
+                        [out, retval] ICCTriggerType** pType);
+        [id(0x00000054), propget, helpstring("Gets all existing trigger types in this VOB"), helpcontext(0x00000c40)]
+        HRESULT TriggerTypes(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL IncludeObsoletes, 
+                        [out, retval] ICCTriggerTypes** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EEC-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of attribute types"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCAttributeTypes : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular attribute type in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCAttributeType** pItem);
+        [id(0x00000001), helpstring("Adds an attribute type to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCAttributeType* pAttributeType);
+        [id(0x00000002), propget, helpstring("Gets the number of attribute types in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular attribute type from the collection"), helpcontext(0x000003e9)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EE7-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a branch type"),
+      helpcontext(0x000005dc),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCBranchType : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the name of the branch type"), helpcontext(0x000005e4)]
+        HRESULT Name([out, retval] BSTR* pName);
+        [id(0x00000033), helpstring("Creates an instance of this branch type (a branch) sprouting from the specified version and checks out the branch"), helpcontext(0x000005dd)]
+        HRESULT Apply(
+                        [in] ICCVersion* pVersion, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [out, retval] ICCCheckedOutFile** pCheckedOutFile);
+        [id(0x00000034), helpstring("Creates an instance of this branch type (a branch) sprouting from the specified version without checking out the branch"), helpcontext(0x000005de)]
+        HRESULT ApplyNoCheckOut(
+                        [in] ICCVersion* pVersion, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000035), propget, helpstring("Gets the constraint for this branch type (for example, one per element)"), helpcontext(0x000005df)]
+        HRESULT Constraint([out, retval] CCTypeConstraint* pConstraint);
+        [id(0x00000036), helpstring("Locks this branch type"), helpcontext(0x000005e0)]
+        HRESULT CreateLock(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Obsolete, 
+                        [in, optional] VARIANT ExemptUsersStringArray);
+        [id(0x00000037), propget, helpstring("Gets the group to which this branch type belongs"), helpcontext(0x000005e1)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x00000038), propget, helpstring("Gets the lock on this branch type"), helpcontext(0x000005e2)]
+        HRESULT Lock([out, retval] ICCLock** pLock);
+        [id(0x00000039), propget, helpstring("Gets the master replica for this branch type"), helpcontext(0x000005e3)]
+        HRESULT Master([out, retval] BSTR* pReplica);
+        [id(0x0000003a), propget, helpstring("Gets the owner of this branch type"), helpcontext(0x000005e5)]
+        HRESULT Owner([out, retval] BSTR* pOwner);
+        [id(0x0000003b), helpstring("Removes this branch type from VOB"), helpcontext(0x000005e6)]
+        HRESULT RemoveType(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL RemoveAllInstances, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003c), propget, helpstring("Gets the scope of this branch type (for example, local to this VOB)"), helpcontext(0x000005e7)]
+        HRESULT Scope([out, retval] CCTypeScope* pScope);
+        [id(0x0000003d), helpstring("Sets the constraint for this branch type (for example, one per element)"), helpcontext(0x000005e8)]
+        HRESULT SetConstraint(
+                        [in] CCTypeConstraint NewConstraint, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003e), helpstring("Sets the group to which this branch type belongs"), helpcontext(0x000005e9)]
+        HRESULT SetGroup(
+                        [in] BSTR NewGroup, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003f), helpstring("Sets the master replica for this branch type"), helpcontext(0x000005ea)]
+        HRESULT SetMaster(
+                        [in] BSTR Replica, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000040), helpstring("Changes the name of this branch type and all instances of the branch type"), helpcontext(0x000005eb)]
+        HRESULT SetName(
+                        [in] BSTR NewName, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000041), helpstring("Sets the owner of this branch type"), helpcontext(0x000005ec)]
+        HRESULT SetOwner(
+                        [in] BSTR NewOwner, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000042), helpstring("Sets the scope of this branch type (for example, local to this VOB)"), helpcontext(0x000005ed)]
+        HRESULT SetScope(
+                        [in] VARIANT_BOOL Global, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Acquire, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000043), propget, helpstring("Gets the VOB containing this branch type"), helpcontext(0x000005ee)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7ED6-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a version"),
+      helpcontext(0x00000b54),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCVersion : ICCFile {
+        [id(0x00000065), propget, helpstring("Gets the branch for this version"), helpcontext(0x00000b55)]
+        HRESULT Branch([out, retval] ICCBranch** pBranch);
+        [id(0x00000066), helpstring("Checks out this version"), helpcontext(0x00000b56)]
+        HRESULT CheckOut(
+                        [in] CCReservedState ReservedState, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL UseHijacked, 
+                        [in, optional, defaultvalue(0)] CCVersionToCheckOut Version, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL MustBeLatest, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL PreserveTime, 
+                        [out, retval] ICCCheckedOutFile** pCheckedOutFile);
+        [id(0x00000067), propget, helpstring("Gets this version's element"), helpcontext(0x00000b57)]
+        HRESULT Element([out, retval] ICCElement** pElement);
+        [id(0x00000068), propget, helpstring("Gets the version's identifier string"), helpcontext(0x00000b58)]
+        HRESULT Identifier([out, retval] BSTR* pIdentifier);
+        [id(0x00000069), propget, helpstring("Gets whether or not this object represents a checked-out file"), helpcontext(0x00000b59)]
+        HRESULT IsCheckedOut([out, retval] VARIANT_BOOL* pIsCheckedOut);
+        [id(0x0000006a), propget, helpstring("Gets whether or not this version is different from its predecessor"), helpcontext(0x00000b5a)]
+        HRESULT IsDifferent([out, retval] VARIANT_BOOL* pIsDifferent);
+        [id(0x0000006b), propget, helpstring("Gets whether or not this version is hijacked"), helpcontext(0x00000b5b)]
+        HRESULT IsHijacked([out, retval] VARIANT_BOOL* pIsHijacked);
+        [id(0x0000006c), propget, helpstring("Gets whether or not this version is the latest on its branch"), helpcontext(0x00000b5c)]
+        HRESULT IsLatest([out, retval] VARIANT_BOOL* pIsLatest);
+        [id(0x0000006d), propget, helpstring("Gets a label of a specific type for this version"), helpcontext(0x00000b5d)]
+        HRESULT Label(
+                        [in] BSTR LabelType, 
+                        [out, retval] ICCLabel** pLabel);
+        [id(0x0000006e), propget, helpstring("Gets the collection of labels associated with this version"), helpcontext(0x00000b5e)]
+        HRESULT Labels([out, retval] ICCLabels** pLabels);
+        [id(0x0000006f), propget, helpstring("Gets the current view's version of this version's parent directory"), helpcontext(0x00000b5f)]
+        HRESULT Parent([out, retval] ICCVersion** pParent);
+        [id(0x00000070), propget, helpstring("Gets this version's predecessor version"), helpcontext(0x00000b60)]
+        HRESULT Predecessor([out, retval] ICCVersion** pPredecessor);
+        [id(0x00000071), helpstring("WARNING! This is a potentially destructive operation.  Use with caution.  Removes irretrievably the version (equivalent to cleartool rmver"), helpcontext(0x00000b61)]
+        HRESULT RemoveVersion(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL DataOnly, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL EvenIfBranches, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL EvenIfLabels, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL EvenIfAttributes, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL EvenIfHyperlinks);
+        [id(0x00000072), propget, helpstring("Gets any branches sprouting from this version"), helpcontext(0x00000b62)]
+        HRESULT SubBranches([out, retval] ICCBranches** pBranches);
+        [id(0x00000073), propget, helpstring("Gets this version's version number"), helpcontext(0x00000b63)]
+        HRESULT VersionNumber([out, retval] long* pVersionNumber);
+    };
+
+    [
+      odl,
+      uuid(B22C7ED1-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a file"),
+      helpcontext(0x0000076c),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCFile : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the path to this file system object"), helpcontext(0x00000770)]
+        HRESULT Path([out, retval] BSTR* pPath);
+        [id(0x00000033), propget, helpstring("Gets the VOB-extended path of this file system object"), helpcontext(0x0000076d)]
+        HRESULT ExtendedPath([out, retval] BSTR* pExtendedPath);
+        [id(0x00000034), propget, helpstring("Gets the VOB-extended path of this file system object in the given view"), helpcontext(0x0000076e)]
+        HRESULT ExtendedPathInView(
+                        [in] ICCView* pView, 
+                        [out, retval] BSTR* pExtendedPath);
+        [id(0x00000035), propget, helpstring("Gets whether or not this file system object is a directory"), helpcontext(0x0000076f)]
+        HRESULT IsDirectory([out, retval] VARIANT_BOOL* pIsDirectory);
+        [id(0x00000036), propget, helpstring("Gets the path to this file system object in the given view"), helpcontext(0x00000771)]
+        HRESULT PathInView(
+                        [in] ICCView* pView, 
+                        [out, retval] BSTR* pPath);
+        [id(0x00000037), propget, helpstring("Gets the view used to resolve this file system object"), helpcontext(0x00000772)]
+        HRESULT View([out, retval] ICCView** pView);
+        [id(0x00000038), propget, helpstring("Gets the VOB containing this file system object"), helpcontext(0x00000773)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7ECD-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a view"),
+      helpcontext(0x00000bb8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCView : IDispatch {
+        [id(00000000), propget, helpstring("Gets the view-tag name"), helpcontext(0x00000bbf)]
+        HRESULT TagName([out, retval] BSTR* pTagName);
+        [id(0x00000001), propget, helpstring("Gets/Sets whether or not this view builds non-shareable DOs"), helpcontext(0x00000bb9)]
+        HRESULT BuildsNonShareableDOs([out, retval] VARIANT_BOOL* pBuildsNonShareableDOs);
+        [id(0x00000001), propput, helpstring("Gets/Sets whether or not this view builds non-shareable DOs"), helpcontext(0x00000bb9)]
+        HRESULT BuildsNonShareableDOs([in] VARIANT_BOOL pBuildsNonShareableDOs);
+        [id(0x00000002), propget, helpstring("Gets/Sets the config spec for this view"), helpcontext(0x00000bba)]
+        HRESULT ConfigSpec([out, retval] BSTR* pConfigSpec);
+        [id(0x00000002), propput, helpstring("Gets/Sets the config spec for this view"), helpcontext(0x00000bba)]
+        HRESULT ConfigSpec([in] BSTR pConfigSpec);
+        [id(0x00000003), propget, helpstring("Gets a displayable form of the config spec for this view"), helpcontext(0x00000bbb)]
+        HRESULT DisplayableConfigSpec([out, retval] BSTR* pConfigSpec);
+        [id(0x00000004), propget, helpstring("Gets the host on which the storage area for this view resides"), helpcontext(0x00000bbc)]
+        HRESULT Host([out, retval] BSTR* pHost);
+        [id(0x00000005), propget, helpstring("Gets/Sets whether or not the view is active on the local machine"), helpcontext(0x00000bbd)]
+        HRESULT IsActive([out, retval] VARIANT_BOOL* pIsActive);
+        [id(0x00000005), propput, helpstring("Gets/Sets whether or not the view is active on the local machine"), helpcontext(0x00000bbd)]
+        HRESULT IsActive([in] VARIANT_BOOL pIsActive);
+        [id(0x00000006), propget, helpstring("Gets whether or not this view is a snapshot view"), helpcontext(0x00000bbe)]
+        HRESULT IsSnapShot([out, retval] VARIANT_BOOL* pIsSnapShot);
+        [id(0x00000007), propget, helpstring("Gets the current activity of this view"), helpcontext(0x00000bc0)]
+        HRESULT CurrentActivity([out, retval] ICCActivity** pActivity);
+        [id(0x00000008), propget, helpstring("Gets whether or not this view is a UCM view"), helpcontext(0x00000bc1)]
+        HRESULT IsUCMView([out, retval] VARIANT_BOOL* pIsUCMView);
+        [id(0x00000009), helpstring("Sets the activity of this view"), helpcontext(0x00000bc2)]
+        HRESULT SetActivity(
+                        [in] ICCActivity* NewActivity, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000000a), propget, helpstring("Gets the stream to which this view is attached"), helpcontext(0x00000bc3)]
+        HRESULT Stream([out, retval] ICCStream** pStream);
+    };
+
+    [
+      odl,
+      uuid(B22C7F2D-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a UCM stream"),
+      helpcontext(0x00001004),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCStream : ICCUCMObject {
+        [id(0x00000065), propget, helpstring("Gets the activities in this stream"), helpcontext(0x00001005)]
+        HRESULT Activities([out, retval] ICCActivities** pActivities);
+        [id(0x00000066), propget, helpstring("Gets the baselines created in this stream for a particular component"), helpcontext(0x00001006)]
+        HRESULT Baselines(
+                        [in] ICCComponent* Component, 
+                        [out, retval] ICCBaselines** pBaselines);
+        [id(0x00000067), helpstring("Creates an activity in this stream"), helpcontext(0x00001007)]
+        HRESULT CreateActivity(
+                        [in, optional, defaultvalue("")] BSTR Headline, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue("")] BSTR Name, 
+                        [out, retval] ICCActivity** pActivity);
+        [id(0x00000068), propget, helpstring("Gets the foundation baseline in this stream for the specified component"), helpcontext(0x00001008)]
+        HRESULT FoundationBaseline(
+                        [in] ICCComponent* Component, 
+                        [out, retval] ICCBaseline** pFoundationBaseline);
+        [id(0x00000069), propget, helpstring("Gets the foundation baselines in this stream for all components"), helpcontext(0x00001009)]
+        HRESULT FoundationBaselines([out, retval] ICCBaselines** pFoundationBaselines);
+        [id(0x0000006a), propget, helpstring("Gets whether or not there are any activities associated with this stream"), helpcontext(0x0000100a)]
+        HRESULT HasActivities([out, retval] VARIANT_BOOL* pHasActivities);
+        [id(0x0000006b), propget, helpstring("Gets whether or not this stream is the integration stream for the project"), helpcontext(0x0000100b)]
+        HRESULT IsIntegrationStream([out, retval] VARIANT_BOOL* pIsIntegrationStream);
+        [id(0x0000006c), propget, helpstring("Gets the latest baseline in this stream for the specified component"), helpcontext(0x0000100c)]
+        HRESULT LatestBaseline(
+                        [in] ICCComponent* Component, 
+                        [out, retval] ICCBaseline** pLatestBaseline);
+        [id(0x0000006d), propget, helpstring("Gets the latest baselines in this stream for all components"), helpcontext(0x0000100d)]
+        HRESULT LatestBaselines([out, retval] ICCBaselines** pLatestBaselines);
+        [id(0x0000006e), propget, helpstring("Gets the containing project for this stream"), helpcontext(0x0000100e)]
+        HRESULT Project([out, retval] ICCProject** pProject);
+        [id(0x0000006f), propget, helpstring("Gets the set of views associated with this stream"), helpcontext(0x0000100f)]
+        HRESULT Views(
+                        [in, optional, defaultvalue("")] BSTR Owner, 
+                        [out, retval] ICCViews** pViews);
+    };
+
+    [
+      odl,
+      uuid(B22C7F31-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a UCM object"),
+      helpcontext(0x00000e10),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCUCMObject : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the name of this UCM object"), helpcontext(0x00000e11)]
+        HRESULT Name([out, retval] BSTR* pName);
+        [id(0x00000033), helpstring("Locks this UCM object"), helpcontext(0x00000e12)]
+        HRESULT CreateLock(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Obsolete, 
+                        [in, optional] VARIANT ExemptUsersStringArray);
+        [id(0x00000034), propget, helpstring("Gets the group to which this UCM object belongs"), helpcontext(0x00000e13)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x00000035), propget, helpstring("Gets the lock on this UCM object"), helpcontext(0x00000e14)]
+        HRESULT Lock([out, retval] ICCLock** pLock);
+        [id(0x00000036), propget, helpstring("Gets the master replica for this UCM object"), helpcontext(0x00000e15)]
+        HRESULT Master([out, retval] BSTR* pReplica);
+        [id(0x00000037), propget, helpstring("Gets the owner of this UCM object"), helpcontext(0x00000e16)]
+        HRESULT Owner([out, retval] BSTR* pOwner);
+        [id(0x00000038), propget, helpstring("Gets the project VOB containing this UCM object"), helpcontext(0x00000e17)]
+        HRESULT ProjectVOB([out, retval] ICCProjectVOB** pProjectVOB);
+        [id(0x00000039), helpstring("Sets the group to which this UCM object belongs"), helpcontext(0x00000e18)]
+        HRESULT SetGroup(
+                        [in] BSTR NewGroup, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003a), helpstring("Sets the master replica for this UCM object"), helpcontext(0x00000e19)]
+        HRESULT SetMaster(
+                        [in] BSTR Replica, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003b), helpstring("Sets the owner of this UCM object"), helpcontext(0x00000e1a)]
+        HRESULT SetOwner(
+                        [in] BSTR NewOwner, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003c), propget, helpstring("Gets the title of this UCM object"), helpcontext(0x00000e1b)]
+        HRESULT Title([out, retval] BSTR* pTitle);
+    };
+
+    [
+      odl,
+      uuid(B22C7F27-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a UCM project VOB"),
+      helpcontext(0x00000dac),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCProjectVOB : ICCVOB {
+        [id(0x00000065), propget, helpstring("Gets a particular baseline in the project VOB"), helpcontext(0x00000dad)]
+        HRESULT Baseline(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCBaseline** pBaseline);
+        [id(0x00000066), propget, helpstring("Gets a particular component in the project VOB"), helpcontext(0x00000dae)]
+        HRESULT Component(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCComponent** pComponent);
+        [id(0x00000067), propget, helpstring("Gets all components in the project VOB"), helpcontext(0x00000daf)]
+        HRESULT Components([out, retval] ICCComponents** pComponents);
+        [id(0x00000068), propget, helpstring("Gets the default promotion level in the project VOB"), helpcontext(0x00000db0)]
+        HRESULT DefaultPromotionLevel([out, retval] BSTR* pDefaultPromotionLevel);
+        [id(0x00000069), propget, helpstring("Gets a particular folder in the project VOB"), helpcontext(0x00000db1)]
+        HRESULT Folder(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCFolder** pFolder);
+        [id(0x0000006a), propget, helpstring("Gets the number of promotion levels in the project VOB"), helpcontext(0x00000db2)]
+        HRESULT NumberOfPromotionLevels([out, retval] long* pNumberOfPromotionLevels);
+        [id(0x0000006b), propget, helpstring("Gets a particular project in the project VOB"), helpcontext(0x00000db3)]
+        HRESULT Project(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCProject** pProject);
+        [id(0x0000006c), propget, helpstring("Gets all projects in the project VOB"), helpcontext(0x00000db4)]
+        HRESULT Projects([out, retval] ICCProjects** pProjects);
+        [id(0x0000006d), propget, helpstring("Gets all promotion levels defined in the project VOB"), helpcontext(0x00000db5)]
+        HRESULT PromotionLevelsStringArray([out, retval] VARIANT* pPromotionLevelsStringArray);
+        [id(0x0000006e), propget, helpstring("Gets the root folder of the project hierarchy in the project VOB"), helpcontext(0x00000db6)]
+        HRESULT RootFolder([out, retval] ICCFolder** pRootFolder);
+        [id(0x0000006f), propget, helpstring("Gets a particular stream in the project VOB"), helpcontext(0x00000db7)]
+        HRESULT Stream(
+                        [in] BSTR Selector, 
+                        [out, retval] ICCStream** pStream);
+    };
+
+    [
+      odl,
+      uuid(B22C7F2C-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a UCM baseline"),
+      helpcontext(0x00000fa0),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCBaseline : ICCUCMObject {
+        [id(0x00000065), propget, helpstring("Gets the activities included in this baseline"), helpcontext(0x00000fa1)]
+        HRESULT Activities([out, retval] ICCActivities** pActivities);
+        [id(0x00000066), propget, helpstring("Gets the component containing this baseline"), helpcontext(0x00000fa2)]
+        HRESULT Component([out, retval] ICCComponent** pComponent);
+        [id(0x00000067), propget, helpstring("Gets the label status for this baseline"), helpcontext(0x00000fa3)]
+        HRESULT LabelStatus([out, retval] CCLabelStatus* pLabelStatus);
+        [id(0x00000068), propget, helpstring("Gets the promotion level for this baseline"), helpcontext(0x00000fa4)]
+        HRESULT PromotionLevel([out, retval] BSTR* pPromotionLevel);
+        [id(0x00000069), propget, helpstring("Gets the stream in which this baseline was created"), helpcontext(0x00000fa5)]
+        HRESULT Stream([out, retval] ICCStream** pStream);
+        [id(0x0000006a), propget, helpstring("Gets the streams for which this baseline serves as a foundation"), helpcontext(0x00000fa6)]
+        HRESULT UsedByStreams([out, retval] ICCStreams** pUsedByStreams);
+    };
+
+    [
+      odl,
+      uuid(B22C7F30-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of activities"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCActivities : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular activity in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCActivity** pItem);
+        [id(0x00000001), helpstring("Adds an activity to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCActivity* pActivity);
+        [id(0x00000002), propget, helpstring("Gets the number of activities in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular activity from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7F2B-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a UCM component"),
+      helpcontext(0x00000f3c),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCComponent : ICCUCMObject {
+        [id(0x00000065), propget, helpstring("Gets the root directory of this component"), helpcontext(0x00000f3d)]
+        HRESULT RootDirectoryElement([out, retval] ICCElement** pElement);
+    };
+
+    [
+      odl,
+      uuid(B22C7ED2-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to an element"),
+      helpcontext(0x00000708),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCElement : ICCFile {
+        [id(0x00000065), propget, helpstring("Gets the version of the element checked out to the associated view"), helpcontext(0x00000709)]
+        HRESULT CheckedOutFile([out, retval] ICCCheckedOutFile** pCheckedOutFile);
+        [id(0x00000066), helpstring("Locks this element"), helpcontext(0x0000070a)]
+        HRESULT CreateLock(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Obsolete, 
+                        [in, optional] VARIANT ExemptUsersStringArray);
+        [id(0x00000067), propget, helpstring("Gets the element type of this element"), helpcontext(0x0000070b)]
+        HRESULT ElementType([out, retval] BSTR* pElementType);
+        [id(0x00000068), propget, helpstring("Gets the group to which this element belongs"), helpcontext(0x0000070c)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x00000069), propget, helpstring("Gets the lock on this element"), helpcontext(0x0000070d)]
+        HRESULT Lock([out, retval] ICCLock** pLock);
+        [id(0x0000006a), propget, helpstring("Gets the master replica for this element"), helpcontext(0x0000070e)]
+        HRESULT Master([out, retval] BSTR* pReplica);
+        [id(0x0000006b), helpstring("Moves this element to another directory; the directory must be checked-out"), helpcontext(0x0000070f)]
+        HRESULT Move(
+                        [in] ICCElement* pNewParent, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000006c), propget, helpstring("Gets the owner of the element"), helpcontext(0x00000710)]
+        HRESULT Owner([out, retval] BSTR* pOwner);
+        [id(0x0000006d), propget, helpstring("Gets this element's parent directory element"), helpcontext(0x00000711)]
+        HRESULT Parent([out, retval] ICCElement** pParent);
+        [id(0x0000006e), propget, helpstring("Gets the permissions of the element"), helpcontext(0x00000712)]
+        HRESULT Permissions([out, retval] long* pPermissions);
+        [id(0x0000006f), helpstring("WARNING! This is a potentially destructive operation.  Use with caution.  Removes irretrievably this element (removes ALL versions)."), helpcontext(0x00000713)]
+        HRESULT RemoveElement([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000070), helpstring("Removes the name of this element from its parent directory (version)"), helpcontext(0x00000714)]
+        HRESULT RemoveName(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(-1)] VARIANT_BOOL DirectoryMustBeCheckedOut);
+        [id(0x00000071), helpstring("Renames this element"), helpcontext(0x00000715)]
+        HRESULT Rename(
+                        [in] BSTR NewName, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000072), helpstring("Sets the group to which this element belongs"), helpcontext(0x00000716)]
+        HRESULT SetGroup(
+                        [in] BSTR NewGroup, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000073), helpstring("Sets the master replica for this element"), helpcontext(0x00000717)]
+        HRESULT SetMaster(
+                        [in] BSTR Replica, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000074), helpstring("Sets the owner of this element"), helpcontext(0x00000718)]
+        HRESULT SetOwner(
+                        [in] BSTR NewOwner, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000075), helpstring("Sets the permissions for this element"), helpcontext(0x00000719)]
+        HRESULT SetPermissions(
+                        [in] long NewPermissions, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000076), propget, helpstring("Gets a named trigger attached to this file or directory element"), helpcontext(0x0000071a)]
+        HRESULT Trigger(
+                        [in] BSTR TriggerType, 
+                        [out, retval] ICCTrigger** pTrigger);
+        [id(0x00000077), propget, helpstring("Gets the collection of triggers attached to this file or directory element"), helpcontext(0x0000071b)]
+        HRESULT Triggers([out, retval] ICCTriggers** pTriggers);
+        [id(0x00000078), propget, helpstring("Gets the particular version of this element specified by the version selector"), helpcontext(0x0000071c)]
+        HRESULT Version(
+                        [in, optional, defaultvalue("")] BSTR Selector, 
+                        [out, retval] ICCVersion** pVersion);
+    };
+
+    [
+      odl,
+      uuid(B22C7ED9-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a checked-out file object"),
+      helpcontext(0x00000640),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCCheckedOutFile : ICCVersion {
+        [id(0x000000c9), propget, helpstring("Gets the view to which this file is checked out"), helpcontext(0x00000641)]
+        HRESULT ByView([out, retval] ICCView** pByView);
+        [id(0x000000ca), helpstring("Checks in the file"), helpcontext(0x00000642)]
+        HRESULT CheckIn(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL EvenIfIdentical, 
+                        [in, optional, defaultvalue("")] BSTR FromPath, 
+                        [in, optional, defaultvalue(0)] CCKeepState KeepState, 
+                        [out, retval] ICCVersion** pNewVersion);
+        [id(0x000000cb), propget, helpstring("Gets whether or not this checkout is reserved"), helpcontext(0x00000643)]
+        HRESULT IsReserved([out, retval] VARIANT_BOOL* pIsReserved);
+        [id(0x000000cc), helpstring("Changes the status of this checkout to reserved"), helpcontext(0x00000644)]
+        HRESULT Reserve([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x000000cd), helpstring("Cancels the checkout for this file"), helpcontext(0x00000645)]
+        HRESULT UnCheckOut(
+                        [in] CCKeepState KeepState, 
+                        [out, retval] ICCVersion** pPredVersion);
+        [id(0x000000ce), helpstring("Changes the status of this checkout to unreserved"), helpcontext(0x00000646)]
+        HRESULT UnReserve([in, optional, defaultvalue("")] BSTR Comment);
+    };
+    
+    [
+      odl,
+      uuid(B22C7EF5-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to an element trigger"),
+      helpcontext(0x00000a28),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCTrigger : IDispatch {
+        [id(0x00000001), propget, helpstring("Gets whether this trigger is on the attached list of its element"), helpcontext(0x00000a29)]
+        HRESULT IsOnAttachedList([out, retval] VARIANT_BOOL* pIsOnAttachedList);
+        [id(0x00000002), propget, helpstring("Gets whether this trigger is on the inheritance list of an element, if element is a directory element"), helpcontext(0x00000a2a)]
+        HRESULT IsOnInheritanceList([out, retval] VARIANT_BOOL* pIsOnInheritanceList);
+        [id(0x00000003), helpstring("Removes this trigger from the element(s) to which it is attached"), helpcontext(0x00000a2b)]
+        HRESULT Remove(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Recurse, 
+                        [in, optional] VARIANT DirectoryListsSubset);
+        [id(0x00000004), propget, helpstring("Gets the trigger type of this element trigger"), helpcontext(0x00000a2c)]
+        HRESULT Type([out, retval] ICCTriggerType** pType);
+        [id(0x00000005), propget, helpstring("Gets the VOB containing this element trigger"), helpcontext(0x00000a2d)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7EF3-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a trigger type"),
+      helpcontext(0x00000a8c),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCTriggerType : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the name of the trigger type"), helpcontext(0x00000a98)]
+        HRESULT Name([out, retval] BSTR* pName);
+        [id(0x00000033), propget, helpstring("Gets an array of action/value pairs for this trigger type (that is, a type followed by one or two values)"), helpcontext(0x00000a8d)]
+        HRESULT ActionsArray([out, retval] VARIANT* pActionsArray);
+        [id(0x00000034), helpstring("Applies an instance of this trigger type to an element"), helpcontext(0x00000a8e)]
+        HRESULT Apply(
+                        [in] ICCElement* pElement, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Force, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Recurse, 
+                        [in, optional] VARIANT DirectoryListsSubset);
+        [id(0x00000035), helpstring("Gets a trigger type builder for changing the parameters of this trigger type"), helpcontext(0x00000a8f)]
+        HRESULT CreateBuilderFromType([out, retval] ICCTriggerTypeBuilder** pTriggerTypeBuilder);
+        [id(0x00000036), helpstring("Locks this trigger type"), helpcontext(0x00000a90)]
+        HRESULT CreateLock(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Obsolete, 
+                        [in, optional] VARIANT ExemptUsersStringArray);
+        [id(0x00000037), propget, helpstring("Gets the users for whom this trigger type does not fire"), helpcontext(0x00000a92)]
+        HRESULT ExemptUsersStringArray([out, retval] VARIANT* pExemptUsersStringArray);
+        [id(0x00000038), propget, helpstring("Gets the trigger type firing order: before or after the operation (pre-op or post-op)"), helpcontext(0x00000a93)]
+        HRESULT Firing([out, retval] CCTriggerFiring* pFiring);
+        [id(0x00000039), propget, helpstring("Gets the group to which this trigger type belongs"), helpcontext(0x00000a94)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x0000003a), propget, helpstring("Gets the inclusion list for this type trigger type"), helpcontext(0x00000a95)]
+        HRESULT InclusionsArray([out, retval] VARIANT* pInclusionsArray);
+        [id(0x0000003b), propget, helpstring("Gets the kind of this trigger type"), helpcontext(0x00000a96)]
+        HRESULT KindOfTrigger([out, retval] CCKindOfTrigger* pKind);
+        [id(0x0000003c), propget, helpstring("Gets the lock on this trigger type"), helpcontext(0x00000a97)]
+        HRESULT Lock([out, retval] ICCLock** pLock);
+        [id(0x0000003d), propget, helpstring("Gets the number of actions for this trigger type"), helpcontext(0x00000a99)]
+        HRESULT NumberOfActions([out, retval] long* pNumberOfActions);
+        [id(0x0000003e), propget, helpstring("Gets the number of users for whom this trigger type does not fire"), helpcontext(0x00000a9a)]
+        HRESULT NumberOfExemptUsers([out, retval] long* pNumberOfExemptUsers);
+        [id(0x0000003f), propget, helpstring("Gets the number of inclusions for this type trigger type"), helpcontext(0x00000a9b)]
+        HRESULT NumberOfInclusions([out, retval] long* pNumberOfInclusions);
+        [id(0x00000040), propget, helpstring("Gets the number of operations kinds which fire this trigger type"), helpcontext(0x00000a9c)]
+        HRESULT NumberOfOperationKinds([out, retval] long* pNumberOfOperationKinds);
+        [id(0x00000041), propget, helpstring("Gets the number of restrictions for this element trigger type"), helpcontext(0x00000a9d)]
+        HRESULT NumberOfRestrictions([out, retval] long* pNumberOfRestrictions);
+        [id(0x00000042), propget, helpstring("Gets an array of kinds of operations for which this trigger type fires"), helpcontext(0x00000a9e)]
+        HRESULT OperationKindsArray([out, retval] VARIANT* pOperationKindsArray);
+        [id(0x00000043), propget, helpstring("Gets the owner of this trigger type"), helpcontext(0x00000a9f)]
+        HRESULT Owner([out, retval] BSTR* pOwner);
+        [id(0x00000044), propget, helpstring("Gets whether or not debug printing happens when the trigger fires"), helpcontext(0x00000a91)]
+        HRESULT DebugPrinting([out, retval] VARIANT_BOOL* pDebugPrinting);
+        [id(0x00000045), helpstring("Removes this trigger type from the VOB"), helpcontext(0x00000aa0)]
+        HRESULT RemoveType(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL RemoveAllInstances, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL IgnorePreopTriggers, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000046), propget, helpstring("Gets the restriction list for this element trigger type"), helpcontext(0x00000aa1)]
+        HRESULT RestrictionsArray([out, retval] VARIANT* pRestrictionsArray);
+        [id(0x00000047), helpstring("Sets the users for whom this trigger type does not fire"), helpcontext(0x00000aa3)]
+        HRESULT SetExemptUsersStringArray(
+                        [in, optional] VARIANT ExemptUsersStringArray, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000048), helpstring("Sets the group to which this trigger type belongs"), helpcontext(0x00000aa4)]
+        HRESULT SetGroup(
+                        [in] BSTR NewGroup, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000049), helpstring("Change the name of this trigger type and all instances of the trigger type"), helpcontext(0x00000aa5)]
+        HRESULT SetName(
+                        [in] BSTR NewName, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000004a), helpstring("Sets the owner of this trigger type"), helpcontext(0x00000aa6)]
+        HRESULT SetOwner(
+                        [in] BSTR NewOwner, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000004b), helpstring("Sets whether or not debug printing happens when trigger fires"), helpcontext(0x00000aa2)]
+        HRESULT SetDebugPrinting(
+                        [in] VARIANT_BOOL NewDebugPrinting, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000004c), propget, helpstring("Gets the VOB containing this trigger type"), helpcontext(0x00000aa7)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7EF2-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a trigger type builder"),
+      helpcontext(0x00000af0),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCTriggerTypeBuilder : IDispatch {
+        [id(00000000), propget, helpstring("Gets/Sets the name of this trigger type"), helpcontext(0x00000b01)]
+        HRESULT Name([out, retval] BSTR* pName);
+        [id(00000000), propput, helpstring("Gets/Sets the name of this trigger type"), helpcontext(0x00000b01)]
+        HRESULT Name([in] BSTR pName);
+        [id(0x00000001), propget, helpstring("Gets an array of action/value pairs for this trigger type (that is, a type followed by one or two values)"), helpcontext(0x00000af1)]
+        HRESULT ActionsArray([out, retval] VARIANT* pActionsArray);
+        [id(0x00000002), helpstring("Adds an exec string action"), helpcontext(0x00000af2)]
+        HRESULT AddExecAction([in] BSTR Action);
+        [id(0x00000003), helpstring("Adds an exec UNIX string action"), helpcontext(0x00000af3)]
+        HRESULT AddExecUNIXAction([in] BSTR Action);
+        [id(0x00000004), helpstring("Adds an exec Windows string action"), helpcontext(0x00000af4)]
+        HRESULT AddExecWinAction([in] BSTR Action);
+        [id(0x00000005), helpstring("Adds a make attribute action"), helpcontext(0x00000af5)]
+        HRESULT AddMkattrAction(
+                        [in] ICCAttributeType* pAttributeType, 
+                        [in] VARIANT Value);
+        [id(0x00000006), helpstring("Adds a make hyperlink 'from' action"), helpcontext(0x00000af6)]
+        HRESULT AddMkhlinkFromAction(
+                        [in] ICCHyperlinkType* pHyperlinkType, 
+                        [in] BSTR FromPath);
+        [id(0x00000007), helpstring("Adds an make hyperlink 'to' action"), helpcontext(0x00000af7)]
+        HRESULT AddMkhlinkToAction(
+                        [in] ICCHyperlinkType* pHyperlinkType, 
+                        [in] BSTR ToPath);
+        [id(0x00000008), helpstring("Adds a make label action"), helpcontext(0x00000af8)]
+        HRESULT AddMklabelAction([in] ICCLabelType* pLabelType);
+        [id(0x00000009), helpstring("Creates the new trigger type"), helpcontext(0x00000af9)]
+        HRESULT Create(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [out, retval] ICCTriggerType** pTriggerType);
+        [id(0x0000000a), propget, helpstring("Gets/Sets whether or not debug printing happens when trigger fires"), helpcontext(0x00000afa)]
+        HRESULT DebugPrinting([out, retval] VARIANT_BOOL* pDebugPrinting);
+        [id(0x0000000a), propput, helpstring("Gets/Sets whether or not debug printing happens when trigger fires"), helpcontext(0x00000afa)]
+        HRESULT DebugPrinting([in] VARIANT_BOOL pDebugPrinting);
+        [id(0x0000000b), propget, helpstring("Gets/Sets the users for whom this trigger type does not fire"), helpcontext(0x00000afb)]
+        HRESULT ExemptUsersStringArray([out, retval] VARIANT* pExemptUsersStringArray);
+        [id(0x0000000b), propput, helpstring("Gets/Sets the users for whom this trigger type does not fire"), helpcontext(0x00000afb)]
+        HRESULT ExemptUsersStringArray([in] VARIANT pExemptUsersStringArray);
+        [id(0x0000000c), helpstring("Adds a kind of operation that fires this trigger type"), helpcontext(0x00000afc)]
+        HRESULT FireOn([in] CCTriggerOperationKind OperationKind);
+        [id(0x0000000d), propget, helpstring("Gets/Sets the trigger type firing order: before or after the operation (pre-op or post-op)"), helpcontext(0x00000afd)]
+        HRESULT Firing([out, retval] CCTriggerFiring* pFiring);
+        [id(0x0000000d), propput, helpstring("Gets/Sets the trigger type firing order: before or after the operation (pre-op or post-op)"), helpcontext(0x00000afd)]
+        HRESULT Firing([in] CCTriggerFiring pFiring);
+        [id(0x0000000e), helpstring("Adds an item to the type inclusion list for this type trigger type"), helpcontext(0x00000afe)]
+        HRESULT IncludeOn([in] VARIANT InclusionType);
+        [id(0x0000000f), propget, helpstring("Gets the inclusion list for this type trigger type"), helpcontext(0x00000aff)]
+        HRESULT InclusionsArray([out, retval] VARIANT* pInclusionsArray);
+        [id(0x00000010), propget, helpstring("Gets/Sets the kind of this trigger type"), helpcontext(0x00000b00)]
+        HRESULT KindOfTrigger([out, retval] CCKindOfTrigger* pKind);
+        [id(0x00000010), propput, helpstring("Gets/Sets the kind of this trigger type"), helpcontext(0x00000b00)]
+        HRESULT KindOfTrigger([in] CCKindOfTrigger pKind);
+        [id(0x00000011), propget, helpstring("Gets the number of actions for this trigger type"), helpcontext(0x00000b02)]
+        HRESULT NumberOfActions([out, retval] long* pNumberOfActions);
+        [id(0x00000012), propget, helpstring("Gets the number of users for whom this trigger type does not fire"), helpcontext(0x00000b03)]
+        HRESULT NumberOfExemptUsers([out, retval] long* pNumberOfExemptUsers);
+        [id(0x00000013), propget, helpstring("Gets the number of inclusions for this type trigger type"), helpcontext(0x00000b04)]
+        HRESULT NumberOfInclusions([out, retval] long* pNumberOfInclusions);
+        [id(0x00000014), propget, helpstring("Gets the number of operations kinds which fire this trigger type"), helpcontext(0x00000b05)]
+        HRESULT NumberOfOperationKinds([out, retval] long* pNumberOfOperationKinds);
+        [id(0x00000015), propget, helpstring("Gets the number of restrictions for this element trigger type"), helpcontext(0x00000b06)]
+        HRESULT NumberOfRestrictions([out, retval] long* pNumberOfRestrictions);
+        [id(0x00000016), propget, helpstring("Gets an array of kinds of operations for which this trigger type fires"), helpcontext(0x00000b07)]
+        HRESULT OperationKindsArray([out, retval] VARIANT* pOperationKindsArray);
+        [id(0x00000017), helpstring("Removes the numbered action from trigger firing actions"), helpcontext(0x00000b08)]
+        HRESULT RemoveAction([in] long index);
+        [id(0x00000018), helpstring("Removes the item from the type inclusion list for this type trigger type"), helpcontext(0x00000b09)]
+        HRESULT RemoveInclusion([in] VARIANT InclusionType);
+        [id(0x00000019), helpstring("Sets the trigger type not to fire on this kind of operation"), helpcontext(0x00000b0a)]
+        HRESULT RemoveOperationKind([in] CCTriggerOperationKind OperationKind);
+        [id(0x0000001a), helpstring("Removes the item from the type restriction list for this element trigger type"), helpcontext(0x00000b0b)]
+        HRESULT RemoveRestriction([in] VARIANT RestrictionType);
+        [id(0x0000001b), helpstring("Redefines the trigger type represented by this builder"), helpcontext(0x00000b0c)]
+        HRESULT Replace(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [out, retval] ICCTriggerType** pTriggerType);
+        [id(0x0000001c), helpstring("Adds the item to the type restriction list for this element trigger type"), helpcontext(0x00000b0d)]
+        HRESULT RestrictBy([in] VARIANT RestrictionType);
+        [id(0x0000001d), propget, helpstring("Gets the restriction list for this element trigger type"), helpcontext(0x00000b0e)]
+        HRESULT RestrictionsArray([out, retval] VARIANT* pRestrictionsArray);
+        [id(0x0000001e), propget, helpstring("Gets the VOB containing this trigger type"), helpcontext(0x00000b0f)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7EDF-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a hyperlink type"),
+      helpcontext(0x00000898),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCHyperlinkType : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the name of this hyperlink type"), helpcontext(0x0000089f)]
+        HRESULT Name([out, retval] BSTR* pName);
+        [id(0x00000033), helpstring("Applies an instance of this hyperlink type to a VOB object"), helpcontext(0x00000899)]
+        HRESULT Apply(
+                        [in] ICCVOBObject* pFromObject, 
+                        [in] BSTR FromText, 
+                        [in] ICCVOBObject* pToObject, 
+                        [in, optional, defaultvalue("")] BSTR ToText, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Unidirectional, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000034), helpstring("Locks this hyperlink type"), helpcontext(0x0000089a)]
+        HRESULT CreateLock(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Obsolete, 
+                        [in, optional] VARIANT ExemptUsersStringArray);
+        [id(0x00000035), propget, helpstring("Gets the group to which this hyperlink type belongs"), helpcontext(0x0000089b)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x00000036), propget, helpstring("Gets whether this hyperlink type is shared or can be mastered"), helpcontext(0x0000089c)]
+        HRESULT HasSharedMastership([out, retval] VARIANT_BOOL* pHasShared);
+        [id(0x00000037), propget, helpstring("Gets the lock on this hyperlink type"), helpcontext(0x0000089d)]
+        HRESULT Lock([out, retval] ICCLock** pLock);
+        [id(0x00000038), propget, helpstring("Gets the master replica for this hyperlink type"), helpcontext(0x0000089e)]
+        HRESULT Master([out, retval] BSTR* pReplica);
+        [id(0x00000039), propget, helpstring("Gets the owner of this hyperlink type"), helpcontext(0x000008a0)]
+        HRESULT Owner([out, retval] BSTR* pOwner);
+        [id(0x0000003a), helpstring("Removes this hyperlink type from the VOB"), helpcontext(0x000008a1)]
+        HRESULT RemoveType(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL RemoveAllInstances, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003b), propget, helpstring("Gets the scope for this hyperlink type (for example, local to this VOB)"), helpcontext(0x000008a2)]
+        HRESULT Scope([out, retval] CCTypeScope* pScope);
+        [id(0x0000003c), helpstring("Sets the group to which this hyperlink type belongs"), helpcontext(0x000008a3)]
+        HRESULT SetGroup(
+                        [in] BSTR NewGroup, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003d), helpstring("Sets the master replica for this hyperlink type"), helpcontext(0x000008a4)]
+        HRESULT SetMaster(
+                        [in] BSTR Replica, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003e), helpstring("Changes the name of this hyperlink type"), helpcontext(0x000008a5)]
+        HRESULT SetName(
+                        [in] BSTR NewName, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003f), helpstring("Sets the owner of this hyperlink type"), helpcontext(0x000008a6)]
+        HRESULT SetOwner(
+                        [in] BSTR NewOwner, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000040), helpstring("Sets the scope for this hyperlink type (for example, local to this VOB)"), helpcontext(0x000008a7)]
+        HRESULT SetScope(
+                        [in] VARIANT_BOOL Global, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Acquire, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000041), helpstring("Sets the mastership of this hyperlink type to shared"), helpcontext(0x000008a8)]
+        HRESULT ShareMastership([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000042), propget, helpstring("Gets the VOB containing this hyperlink type"), helpcontext(0x000008a9)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+        [id(0x00000043), propget, hidden, helpstring("Gets the array of attribute types for this hyperlink type")]
+        HRESULT _AttributeTypesObjectArray([out, retval] VARIANT* pAttributeTypesObjectArray);
+        [id(0x00000044), propget, hidden, helpstring("Gets the number of attribute types for this hyperlink type")]
+        HRESULT _NumberOfAttributeTypes([out, retval] long* pNumberOfAttributeTypes);
+        [id(0x00000045), hidden, helpstring("Resets the array of attribute types for this hyperlink type")]
+        HRESULT _SetAttributeTypesObjectArray(
+                        [in, optional] VARIANT AttributeTypesObjectArray, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+    };
+    
+    [
+      odl,
+      uuid(B22C7EE3-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a label type"),
+      helpcontext(0x00000960),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCLabelType : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the name of the label type"), helpcontext(0x00000968)]
+        HRESULT Name([out, retval] BSTR* pName);
+        [id(0x00000033), helpstring("Applies an instance of this label type to a version object"), helpcontext(0x00000961)]
+        HRESULT Apply(
+                        [in] ICCVersion* pVersion, 
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Replace, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Recurse);
+        [id(0x00000034), propget, helpstring("Gets the constraint for this label type (for example, one per branch)"), helpcontext(0x00000962)]
+        HRESULT Constraint([out, retval] CCTypeConstraint* pConstraint);
+        [id(0x00000035), helpstring("Locks this label type"), helpcontext(0x00000963)]
+        HRESULT CreateLock(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Obsolete, 
+                        [in, optional] VARIANT ExemptUsersStringArray);
+        [id(0x00000036), propget, helpstring("Sets the group to which this label type belongs"), helpcontext(0x00000964)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x00000037), propget, helpstring("Gets whether label type is shared or can be mastered"), helpcontext(0x00000965)]
+        HRESULT HasSharedMastership([out, retval] VARIANT_BOOL* pHasShared);
+        [id(0x00000038), propget, helpstring("Gets the lock on this label type"), helpcontext(0x00000966)]
+        HRESULT Lock([out, retval] ICCLock** pLock);
+        [id(0x00000039), propget, helpstring("Gets the master replica for this label type"), helpcontext(0x00000967)]
+        HRESULT Master([out, retval] BSTR* pReplica);
+        [id(0x0000003a), propget, helpstring("Gets the owner of this label type"), helpcontext(0x00000969)]
+        HRESULT Owner([out, retval] BSTR* pOwner);
+        [id(0x0000003b), helpstring("Removes this label type from the VOB"), helpcontext(0x0000096a)]
+        HRESULT RemoveType(
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL RemoveAllInstances, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003c), propget, helpstring("Gets the scope of the label type (for example, local to this VOB)"), helpcontext(0x0000096b)]
+        HRESULT Scope([out, retval] CCTypeScope* pScope);
+        [id(0x0000003d), helpstring("Sets the constraint for this label type (for example, one per branch)"), helpcontext(0x0000096c)]
+        HRESULT SetConstraint(
+                        [in] CCTypeConstraint NewConstraint, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003e), helpstring("Sets the group to which this label type belongs"), helpcontext(0x0000096d)]
+        HRESULT SetGroup(
+                        [in] BSTR NewGroup, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003f), helpstring("Sets the master replica for this label type"), helpcontext(0x0000096e)]
+        HRESULT SetMaster(
+                        [in] BSTR Replica, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000040), helpstring("Change the name of this label type and all instances of the label type"), helpcontext(0x0000096f)]
+        HRESULT SetName(
+                        [in] BSTR NewName, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000041), helpstring("Sets the owner of this label type"), helpcontext(0x00000970)]
+        HRESULT SetOwner(
+                        [in] BSTR NewOwner, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000042), helpstring("Sets the scope of this label type (for example, local to this VOB)"), helpcontext(0x00000971)]
+        HRESULT SetScope(
+                        [in] VARIANT_BOOL Global, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Acquire, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000043), helpstring("Sets the mastership of this label type to shared"), helpcontext(0x00000972)]
+        HRESULT ShareMastership([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000044), propget, helpstring("Gets the VOB containing this label type"), helpcontext(0x00000973)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+       
+    [
+      odl,
+      uuid(B22C7EF6-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of element triggers"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCTriggers : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular trigger in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCTrigger** pItem);
+        [id(0x00000001), helpstring("Adds a trigger to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCTrigger* pTrigger);
+        [id(0x00000002), propget, helpstring("Gets the number of triggers in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular trigger from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+    
+
+    [
+      odl,
+      uuid(B22C7F45-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of streams"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCStreams : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular stream in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCStream** pItem);
+        [id(0x00000001), helpstring("Adds a stream to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCStream* pStream);
+        [id(0x00000002), propget, helpstring("Gets the number of streams in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular stream from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0x00000004), propget, helpstring("Gets any errors encountered accessing items while initializing the collection"), helpcontext(0x000003eb)]
+        HRESULT InitErrors([out, retval] BSTR* pInitErrors);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7F43-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of components"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCComponents : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular component in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCComponent** pItem);
+        [id(0x00000001), helpstring("Adds a component to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCComponent* pComponent);
+        [id(0x00000002), propget, helpstring("Gets the number of components in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular component from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0x00000004), propget, helpstring("Gets any errors encountered accessing items while initializing the collection"), helpcontext(0x000003eb)]
+        HRESULT InitErrors([out, retval] BSTR* pInitErrors);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7F2A-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a UCM folder"),
+      helpcontext(0x00000ed8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCFolder : ICCUCMObject {
+        [id(0x00000065), propget, helpstring("Gets whether or not this folder is the root of the project hierarchy in its project VOB"), helpcontext(0x00000ed9)]
+        HRESULT IsRootFolder([out, retval] VARIANT_BOOL* pIsRootFolder);
+        [id(0x00000066), propget, helpstring("Gets the containing folder of this folder"), helpcontext(0x00000eda)]
+        HRESULT ParentFolder([out, retval] ICCFolder** pParentFolder);
+        [id(0x00000067), propget, helpstring("Gets the projects contained in this folder"), helpcontext(0x00000edb)]
+        HRESULT Projects([out, retval] ICCProjects** pProjects);
+        [id(0x00000068), propget, helpstring("Gets the folders contained in this folder"), helpcontext(0x00000edc)]
+        HRESULT SubFolders([out, retval] ICCFolders** pSubFolders);
+    };
+
+    [
+      odl,
+      uuid(B22C7F41-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of projects"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCProjects : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular project in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCProject** pItem);
+        [id(0x00000001), helpstring("Adds a project to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCProject* pProject);
+        [id(0x00000002), propget, helpstring("Gets the number of projects in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular project from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0x00000004), propget, helpstring("Gets any errors encountered accessing items while initializing the collection"), helpcontext(0x000003eb)]
+        HRESULT InitErrors([out, retval] BSTR* pInitErrors);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7F29-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a UCM project"),
+      helpcontext(0x00000e74),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCProject : ICCUCMObject {
+        [id(0x00000065), propget, helpstring("Gets the name of the ClearQuest database linked to this project"), helpcontext(0x00000e7f)]
+        HRESULT ClearQuestDatabaseName([out, retval] BSTR* pDatabaseName);
+        [id(0x00000066), propget, helpstring("Gets the development streams of this project"), helpcontext(0x00000e75)]
+        HRESULT DevelopmentStreams(
+                        [in, optional, defaultvalue("")] BSTR Owner, 
+                        [out, retval] ICCStreams** pDevelopmentStreams);
+        [id(0x00000067), propget, helpstring("Gets whether or not there are any streams associated with this project"), helpcontext(0x00000e76)]
+        HRESULT HasStreams([out, retval] VARIANT_BOOL* pHasStreams);
+        [id(0x00000068), propget, helpstring("Gets the integration stream of this project"), helpcontext(0x00000e77)]
+        HRESULT IntegrationStream([out, retval] ICCStream** pIntegrationStream);
+        [id(0x00000069), propget, helpstring("Gets whether or not this project is 'CRM enabled'; in other words, is linked to a ClearQuest database"), helpcontext(0x00000e78)]
+        HRESULT IsCRMEnabled([out, retval] VARIANT_BOOL* pIsCRMEnabled);
+        [id(0x0000006a), propget, helpstring("Gets the set of components that can be modified by this project"), helpcontext(0x00000e79)]
+        HRESULT ModifiableComponents([out, retval] ICCComponents** pComponents);
+        [id(0x0000006b), propget, helpstring("Gets the folder containing this project"), helpcontext(0x00000e7a)]
+        HRESULT ParentFolder([out, retval] ICCFolder** pParentFolder);
+        [id(0x0000006c), propget, helpstring("Gets the policy settings associated with this project"), helpcontext(0x00000e7b)]
+        HRESULT Policy([out, retval] ICCProjectPolicy** pPolicy);
+        [id(0x0000006d), propget, helpstring("Gets this project's list of recommended baselines"), helpcontext(0x00000e7c)]
+        HRESULT RecommendedBaselines([out, retval] ICCBaselines** pBaselines);
+        [id(0x0000006e), propget, helpstring("Gets the minimum promotion level a baseline must have in order to be a recommended baseline in a rebase operation"), helpcontext(0x00000e7d)]
+        HRESULT RequiredPromotionLevel([out, retval] BSTR* pRequiredPromotionLevel);
+        [id(0x0000006f), propget, helpstring("Gets the streams of this project"), helpcontext(0x00000e7e)]
+        HRESULT Streams(
+                        [in, optional, defaultvalue("")] BSTR Owner, 
+                        [out, retval] ICCStreams** pStreams);
+    };
+
+    [
+      odl,
+      uuid(B22C7F28-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to project policy settings"),
+      helpcontext(0x00001068),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCProjectPolicy : IDispatch {
+        [id(0x00000001), propget, helpstring("Do not allow delivery from a development stream that has checkouts"), helpcontext(0x000010cd)]
+        HRESULT DeliverRequireCheckin([out, retval] VARIANT_BOOL* pDeliverRequireCheckin);
+        [id(0x00000001), propput, helpstring("Do not allow delivery from a development stream that has checkouts"), helpcontext(0x000010cd)]
+        HRESULT DeliverRequireCheckin([in] VARIANT_BOOL pDeliverRequireCheckin);
+        [id(0x00000002), propget, helpstring("Require a development stream to be based on the current recommended baselines before it can be used to deliver changes to the integration stream"), helpcontext(0x000010ce)]
+        HRESULT DeliverRequireRebase([out, retval] VARIANT_BOOL* pDeliverRequireRebase);
+        [id(0x00000002), propput, helpstring("Require a development stream to be based on the current recommended baselines before it can be used to deliver changes to the integration stream"), helpcontext(0x000010ce)]
+        HRESULT DeliverRequireRebase([in] VARIANT_BOOL pDeliverRequireRebase);
+        [id(0x00000003), propget, helpstring("Recommend snapshot views for development work on UNIX platforms"), helpcontext(0x000010cf)]
+        HRESULT UNIXDevelopmentSnapshot([out, retval] VARIANT_BOOL* pUNIXDevelopmentSnapshot);
+        [id(0x00000003), propput, helpstring("Recommend snapshot views for development work on UNIX platforms"), helpcontext(0x000010cf)]
+        HRESULT UNIXDevelopmentSnapshot([in] VARIANT_BOOL pUNIXDevelopmentSnapshot);
+        [id(0x00000004), propget, helpstring("Recommend snapshot views for integration work on UNIX platforms"), helpcontext(0x000010d0)]
+        HRESULT UNIXIntegrationSnapshot([out, retval] VARIANT_BOOL* pUNIXIntegrationSnapshot);
+        [id(0x00000004), propput, helpstring("Recommend snapshot views for integration work on UNIX platforms"), helpcontext(0x000010d0)]
+        HRESULT UNIXIntegrationSnapshot([in] VARIANT_BOOL pUNIXIntegrationSnapshot);
+        [id(0x00000005), propget, helpstring("Recommend snapshot views for development work on Windows platforms"), helpcontext(0x000010d1)]
+        HRESULT WinDevelopmentSnapshot([out, retval] VARIANT_BOOL* pWinDevelopmentSnapshot);
+        [id(0x00000005), propput, helpstring("Recommend snapshot views for development work on Windows platforms"), helpcontext(0x000010d1)]
+        HRESULT WinDevelopmentSnapshot([in] VARIANT_BOOL pWinDevelopmentSnapshot);
+        [id(0x00000006), propget, helpstring("Recommend snapshot views for integration work on Windows platforms"), helpcontext(0x000010d2)]
+        HRESULT WinIntegrationSnapshot([out, retval] VARIANT_BOOL* pWinIntegrationSnapshot);
+        [id(0x00000006), propput, helpstring("Recommend snapshot views for integration work on Windows platforms"), helpcontext(0x000010d2)]
+        HRESULT WinIntegrationSnapshot([in] VARIANT_BOOL pWinIntegrationSnapshot);
+    };
+
+    [
+      odl,
+      uuid(B22C7F44-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of baselines"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCBaselines : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular baseline in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCBaseline** pItem);
+        [id(0x00000001), helpstring("Adds a baseline to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCBaseline* pBaseline);
+        [id(0x00000002), propget, helpstring("Gets the number of baselines in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular baseline from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0x00000004), propget, helpstring("Gets any errors encountered accessing items while initializing the collection"), helpcontext(0x000003eb)]
+        HRESULT InitErrors([out, retval] BSTR* pInitErrors);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7F42-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of folders"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCFolders : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular folder in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCFolder** pItem);
+        [id(0x00000001), helpstring("Adds a folder to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCFolder* pFolder);
+        [id(0x00000002), propget, helpstring("Gets the number of folders in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular folder from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0x00000004), propget, helpstring("Gets any errors encountered accessing items while initializing the collection"), helpcontext(0x000003eb)]
+        HRESULT InitErrors([out, retval] BSTR* pInitErrors);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7ECE-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of views"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCViews : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular view in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCView** pItem);
+        [id(0x00000001), helpstring("Adds a view to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCView* pView);
+        [id(0x00000002), propget, helpstring("Gets the number of views in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular view from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0x00000004), propget, helpstring("Gets any errors encountered accessing items while initializing the collection"), helpcontext(0x000003eb)]
+        HRESULT InitErrors([out, retval] BSTR* pInitErrors);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EE9-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a branch"),
+      helpcontext(0x00000578),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCBranch : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the path of this branch"), helpcontext(0x0000057f)]
+        HRESULT Path([out, retval] BSTR* pPath);
+        [id(0x00000033), propget, helpstring("Gets the version from which this branch sprouts"), helpcontext(0x00000579)]
+        HRESULT BranchPointVersion([out, retval] ICCVersion** pVersion);
+        [id(0x00000034), helpstring("Locks this branch"), helpcontext(0x0000057a)]
+        HRESULT CreateLock(
+                        [in, optional, defaultvalue("")] BSTR Comment, 
+                        [in, optional, defaultvalue(0)] VARIANT_BOOL Obsolete, 
+                        [in, optional] VARIANT ExemptUsersStringArray);
+        [id(0x00000035), propget, helpstring("Gets this branch's element"), helpcontext(0x0000057b)]
+        HRESULT Element([out, retval] ICCElement** pElement);
+        [id(0x00000036), propget, helpstring("Gets the latest version on this branch"), helpcontext(0x0000057c)]
+        HRESULT LatestVersion([out, retval] ICCVersion** pVersion);
+        [id(0x00000037), propget, helpstring("Gets the lock on this branch"), helpcontext(0x0000057d)]
+        HRESULT Lock([out, retval] ICCLock** pLock);
+        [id(0x00000038), propget, helpstring("Gets the master replica for this branch"), helpcontext(0x0000057e)]
+        HRESULT Master([out, retval] BSTR* pReplica);
+        [id(0x00000039), helpstring("Removes the branch from its branch point version"), helpcontext(0x00000580)]
+        HRESULT Remove([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003a), helpstring("Requests that the master replica for this branch be set to the current VOB replica"), helpcontext(0x00000581)]
+        HRESULT RequestMaster([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003b), helpstring("Sets the master replica for this branch"), helpcontext(0x00000582)]
+        HRESULT SetMaster(
+                        [in] BSTR Replica, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003c), propget, helpstring("Gets the branch type of this branch"), helpcontext(0x00000583)]
+        HRESULT Type([out, retval] ICCBranchType** pType);
+        [id(0x0000003d), propget, helpstring("Gets a collection of all versions along this branch"), helpcontext(0x00000584)]
+        HRESULT Versions([out, retval] ICCVersions** pVersions);
+        [id(0x0000003e), propget, helpstring("Gets the VOB containing this branch"), helpcontext(0x00000585)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7ED7-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of versions"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCVersions : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular version in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCVersion** pItem);
+        [id(0x00000001), helpstring("Adds a version to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCVersion* pVersion);
+        [id(0x00000002), propget, helpstring("Gets the number of versions in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular version from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0x00000004), propget, helpstring("Gets any errors encountered accessing items while initializing the collection"), helpcontext(0x000003eb)]
+        HRESULT InitErrors([out, retval] BSTR* pInitErrors);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+    
+    [
+      odl,
+      uuid(B22C7EE5-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a label"),
+      helpcontext(0x000008fc),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCLabel : IDispatch {
+        [id(0x00000001), helpstring("Removes the label from its version"), helpcontext(0x000008fd)]
+        HRESULT Remove([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000002), propget, helpstring("Gets the label type of this label"), helpcontext(0x000008fe)]
+        HRESULT Type([out, retval] ICCLabelType** pType);
+        [id(0x00000003), propget, helpstring("Gets the VOB containing the labeled version"), helpcontext(0x000008ff)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7EE6-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of labels"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCLabels : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular label in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCLabel** pItem);
+        [id(0x00000001), helpstring("Adds a label to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCLabel* pLabel);
+        [id(0x00000002), propget, helpstring("Gets the number of labels in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular label from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EEA-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of branches"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCBranches : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular branch in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCBranch** pItem);
+        [id(0x00000001), helpstring("Adds a branch to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCBranch* pBranch);
+        [id(0x00000002), propget, helpstring("Gets the number of branches in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular branch from the collection"), helpcontext(0x000003ec)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EE8-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of branch types"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCBranchTypes : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular branch type in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCBranchType** pItem);
+        [id(0x00000001), helpstring("Adds a branch type to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCBranchType* pBranchType);
+        [id(0x00000002), propget, helpstring("Gets the number of branch types in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular branch type from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EE1-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a hyperlink"),
+      helpcontext(0x00000834),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCHyperlink : ICCVOBObject {
+        [id(00000000), propget, helpstring("Gets the string identifying the hyperlink (type-name@id@vob-selector)"), helpcontext(0x00000838)]
+        HRESULT IDString([out, retval] BSTR* pIDString);
+        [id(0x00000033), propget, helpstring("Gets the from-object of the hyperlink"), helpcontext(0x00000835)]
+        HRESULT FromObject([out, retval] ICCVOBObject** pFromObject);
+        [id(0x00000034), propget, helpstring("Gets the from-text on the from-object of the hyperlink"), helpcontext(0x00000836)]
+        HRESULT FromText([out, retval] BSTR* pFromText);
+        [id(0x00000035), propget, helpstring("Gets the group to which this hyperlink belongs"), helpcontext(0x00000837)]
+        HRESULT Group([out, retval] BSTR* pGroup);
+        [id(0x00000036), propget, helpstring("Gets the master replica for this hyperlink"), helpcontext(0x00000839)]
+        HRESULT Master([out, retval] BSTR* pReplica);
+        [id(0x00000037), propget, helpstring("Gets the owner of this hyperlink"), helpcontext(0x0000083a)]
+        HRESULT Owner([out, retval] BSTR* pOwner);
+        [id(0x00000038), helpstring("Remove the hyperlink from the objects to which it is attached"), helpcontext(0x0000083b)]
+        HRESULT Remove([in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x00000039), helpstring("Sets the group to which this hyperlink belongs"), helpcontext(0x0000083c)]
+        HRESULT SetGroup(
+                        [in] BSTR NewGroup, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003a), helpstring("Sets the master replica for the hyperlink"), helpcontext(0x0000083d)]
+        HRESULT SetMaster(
+                        [in] BSTR Replica, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003b), helpstring("Sets the owner of this hyperlink"), helpcontext(0x0000083e)]
+        HRESULT SetOwner(
+                        [in] BSTR NewOwner, 
+                        [in, optional, defaultvalue("")] BSTR Comment);
+        [id(0x0000003c), propget, helpstring("Gets the to-object of the hyperlink"), helpcontext(0x0000083f)]
+        HRESULT ToObject([out, retval] ICCVOBObject** pToObject);
+        [id(0x0000003d), propget, helpstring("Gets the to-text on the to-object of the hyperlink"), helpcontext(0x00000840)]
+        HRESULT ToText([out, retval] BSTR* pToText);
+        [id(0x0000003e), propget, helpstring("Gets the hyperlink type of this hyperlink"), helpcontext(0x00000841)]
+        HRESULT Type([out, retval] ICCHyperlinkType** pType);
+        [id(0x0000003f), propget, helpstring("Gets whether or not the hyperlink object can be navigated only in one direction (from-object -> to-object)"), helpcontext(0x00000842)]
+        HRESULT Unidirectional([out, retval] VARIANT_BOOL* pUnidirectional);
+        [id(0x00000040), propget, helpstring("Gets the VOB containing this hyperlink"), helpcontext(0x00000843)]
+        HRESULT VOB([out, retval] ICCVOB** pVOB);
+    };
+
+    [
+      odl,
+      uuid(B22C7EE0-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of hyperlink types"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCHyperlinkTypes : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular hyperlink type in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCHyperlinkType** pItem);
+        [id(0x00000001), helpstring("Adds a hyperlink type to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCHyperlinkType* pHyperlinkType);
+        [id(0x00000002), propget, helpstring("Gets the number of hyperlink types in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular hyperlink type from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EE4-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of label types"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCLabelTypes : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular label type in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCLabelType** pItem);
+        [id(0x00000001), helpstring("Adds a label type to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCLabelType* pLabelType);
+        [id(0x00000002), propget, helpstring("Gets the number of label types in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular label type from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EF8-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of locks"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCLocks : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular lock in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCLock** pItem);
+        [id(0x00000001), helpstring("Adds a lock to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCLock* pLock);
+        [id(0x00000002), propget, helpstring("Gets the number of locks in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular lock from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EF4-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of trigger types"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCTriggerTypes : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular trigger type in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCTriggerType** pItem);
+        [id(0x00000001), helpstring("Adds a trigger type to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCTriggerType* pTriggerType);
+        [id(0x00000002), propget, helpstring("Gets the number of trigger types in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular trigger type from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EEE-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of attributes"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCAttributes : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular attribute in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCAttribute** pItem);
+        [id(0x00000001), helpstring("Adds an attribute to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCAttribute* pAttribute);
+        [id(0x00000002), propget, helpstring("Gets the number of attributes in the collection"), helpcontext(0x000003ed)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular attribute from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7ED0-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of history records"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCHistoryRecords : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular history record in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCHistoryRecord** pItem);
+        [id(0x00000001), helpstring("Adds a history record to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCHistoryRecord* pHistoryRecord);
+        [id(0x00000002), propget, helpstring("Gets the number of history records in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular history record from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EE2-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of hyperlinks"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCHyperlinks : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular hyperlink in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCHyperlink** pItem);
+        [id(0x00000001), helpstring("Adds a hyperlink to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCHyperlink* pHyperlink);
+        [id(0x00000002), propget, helpstring("Gets the number of hyperlinks in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular hyperlink from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EDA-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of checked-out files"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCCheckedOutFiles : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular checked-out file in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCCheckedOutFile** pItem);
+        [id(0x00000001), helpstring("Adds a checked-out file to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCCheckedOutFile* pCheckedOutFile);
+        [id(0x00000002), propget, helpstring("Gets the number of checked-out files in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular checked-out file from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7EDC-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a checked-out file query object"),
+      helpcontext(0x000006a4),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCCheckedOutFileQuery : IDispatch {
+        [id(0x00000001), helpstring("Applies the checked-out file query after its properties are set"), helpcontext(0x000006a5)]
+        HRESULT Apply([out, retval] ICCCheckedOutFiles** pCheckedOutFiles);
+        [id(0x00000002), propget, helpstring("Restricts the collection to checked-out files on branches of the specified type"), helpcontext(0x000006a6)]
+        HRESULT BranchType([out, retval] BSTR* pBranchType);
+        [id(0x00000002), propput, helpstring("Restricts the collection to checked-out files on branches of the specified type"), helpcontext(0x000006a6)]
+        HRESULT BranchType([in] BSTR pBranchType);
+        [id(0x00000003), propget, helpstring("Includes in the collection checkouts in all replicas of the VOB containing the specified paths (like -areplicas)"), helpcontext(0x000006a7)]
+        HRESULT ExamineAllReplicas([out, retval] VARIANT_BOOL* pExamineAllReplicas);
+        [id(0x00000003), propput, helpstring("Includes in the collection checkouts in all replicas of the VOB containing the specified paths (like -areplicas)"), helpcontext(0x000006a7)]
+        HRESULT ExamineAllReplicas([in] VARIANT_BOOL pExamineAllReplicas);
+        [id(0x00000004), propget, helpstring("Includes in the collection the specified paths, subject to intepretation as specified by PathSelects"), helpcontext(0x000006a8)]
+        HRESULT PathArray([out, retval] VARIANT* PathArray);
+        [id(0x00000004), propput, helpstring("Includes in the collection the specified paths, subject to intepretation as specified by PathSelects"), helpcontext(0x000006a8)]
+        HRESULT PathArray([in] VARIANT PathArray);
+        [id(0x00000005), propget, helpstring("Specifies which checked-out files are selected by a path in a checked-out file query"), helpcontext(0x000006a9)]
+        HRESULT PathSelects([out, retval] CCPath_Selection* pSelection);
+        [id(0x00000005), propput, helpstring("Specifies which checked-out files are selected by a path in a checked-out file query"), helpcontext(0x000006a9)]
+        HRESULT PathSelects([in] CCPath_Selection pSelection);
+        [id(0x00000006), propget, helpstring("Restricts the collection to files checked out in the current view"), helpcontext(0x000006aa)]
+        HRESULT UseCurrentView([out, retval] VARIANT_BOOL* pUseCurrentView);
+        [id(0x00000006), propput, helpstring("Restricts the collection to files checked out in the current view"), helpcontext(0x000006aa)]
+        HRESULT UseCurrentView([in] VARIANT_BOOL pUseCurrentView);
+        [id(0x00000007), propget, helpstring("Restricts the collection to files checked out by the specified user"), helpcontext(0x000006ab)]
+        HRESULT User([out, retval] BSTR* pUser);
+        [id(0x00000007), propput, helpstring("Restricts the collection to files checked out by the specified user"), helpcontext(0x000006ab)]
+        HRESULT User([in] BSTR pUser);
+    };
+    
+    [
+      odl,
+      uuid(B22C7ED3-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of elements"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCElements : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular element in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCElement** pItem);
+        [id(0x00000001), helpstring("Adds an element to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCElement* pElement);
+        [id(0x00000002), propget, helpstring("Gets the number of elements in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular element from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7ECC-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of VOBs"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCVOBs : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular VOB in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCVOB** pItem);
+        [id(0x00000001), helpstring("Adds a VOB to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCVOB* pVOB);
+        [id(0x00000002), propget, helpstring("Gets the number of VOBs in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular VOB from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0x00000004), propget, helpstring("Gets any errors encountered accessing items while initializing the collection"), helpcontext(0x000003eb)]
+        HRESULT InitErrors([out, retval] BSTR* pInitErrors);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      odl,
+      uuid(B22C7F2E-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to an object for comparing UCM baselines and streams"),
+      helpcontext(0x00001068),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCBaselineComparison : IDispatch {
+        [id(0x00000001), propget, helpstring("Gets the activities in baseline (or stream) one, but not in baseline (or stream) two"), helpcontext(0x00001069)]
+        HRESULT ActivitiesInOneButNotTwo([out, retval] ICCActivities** pActivities);
+        [id(0x00000002), propget, helpstring("Gets the activities in baseline (or stream) two, but not in baseline (or stream) one"), helpcontext(0x0000106a)]
+        HRESULT ActivitiesInTwoButNotOne([out, retval] ICCActivities** pActivities);
+        [id(0x00000003), propget, helpstring("Gets/sets the first baseline to compare"), helpcontext(0x0000106b)]
+        HRESULT BaselineOne([out, retval] ICCBaseline** pBaselineOne);
+        [id(0x00000003), propput, helpstring("Gets/sets the first baseline to compare"), helpcontext(0x0000106b)]
+        HRESULT BaselineOne([in] ICCBaseline* pBaselineOne);
+        [id(0x00000004), propget, helpstring("Gets/sets the second baseline to compare"), helpcontext(0x0000106c)]
+        HRESULT BaselineTwo([out, retval] ICCBaseline** pBaselineTwo);
+        [id(0x00000004), propput, helpstring("Gets/sets the second baseline to compare"), helpcontext(0x0000106c)]
+        HRESULT BaselineTwo([in] ICCBaseline* pBaselineTwo);
+        [id(0x00000005), propget, helpstring("Gets the activities that appear in both baselines (or streams), but are different in each"), helpcontext(0x0000106d)]
+        HRESULT ChangedActivities([out, retval] ICCActivities** pActivities);
+        [id(0x00000006), helpstring("Invokes the comparison operation"), helpcontext(0x0000106f)]
+        HRESULT Compare();
+        [id(0x00000007), propget, helpstring("Gets/sets the first stream to compare"), helpcontext(0x00001070)]
+        HRESULT StreamOne([out, retval] ICCStream** pStreamOne);
+        [id(0x00000007), propput, helpstring("Gets/sets the first stream to compare"), helpcontext(0x00001070)]
+        HRESULT StreamOne([in] ICCStream* pStreamOne);
+        [id(0x00000008), propget, helpstring("Gets/sets the second stream to compare"), helpcontext(0x00001071)]
+        HRESULT StreamTwo([out, retval] ICCStream** pStreamTwo);
+        [id(0x00000008), propput, helpstring("Gets/sets the second stream to compare"), helpcontext(0x00001071)]
+        HRESULT StreamTwo([in] ICCStream* pStreamTwo);
+        [id(0x00000009), propget, helpstring("Gets the versions in baseline (or stream) one, but not in baseline (or stream) two"), helpcontext(0x00001072)]
+        HRESULT VersionsInOneButNotTwo([out, retval] ICCVersions** pVersions);
+        [id(0x0000000a), propget, helpstring("Gets the versions in baseline (or stream) two, but not in baseline (or stream) one"), helpcontext(0x00001073)]
+        HRESULT VersionsInTwoButNotOne([out, retval] ICCVersions** pVersions);
+    };
+
+    [
+      odl,
+      uuid(B22C7F40-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to a collection of project VOBs"),
+      helpcontext(0x000003e8),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface ICCProjectVOBs : IDispatch {
+        [id(00000000), propget, helpstring("Gets a particular project VOB in the collection"), helpcontext(0x000003ec)]
+        HRESULT Item(
+                        [in] long index, 
+                        [out, retval] ICCProjectVOB** pItem);
+        [id(0x00000001), helpstring("Adds a project VOB to the collection"), helpcontext(0x000003e9)]
+        HRESULT Add([in] ICCProjectVOB* pProjectVOB);
+        [id(0x00000002), propget, helpstring("Gets the number of project VOBs in the collection"), helpcontext(0x000003ea)]
+        HRESULT Count([out, retval] long* pCount);
+        [id(0x00000003), helpstring("Removes a particular project VOB from the collection"), helpcontext(0x000003ee)]
+        HRESULT Remove([in] long index);
+        [id(0xfffffffc), propget]
+        HRESULT _NewEnum([out, retval] IDispatch** pEnum);
+    };
+
+    [
+      uuid(B22C7EFC-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Cleartool subcommand executor"),
+      helpcontext(0x00000d48)
+    ]
+    coclass ClearTool {
+        [default] interface IClearTool;
+    };
+
+    [
+      odl,
+      uuid(B22C7EC7-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Cleartool subcommand executor"),
+      helpcontext(0x00000d48),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface IClearTool : IDispatch {
+        [id(00000000), helpstring("Executes a cleartool subcommand"), helpcontext(0x00000d49)]
+        HRESULT CmdExec(
+                        [in] BSTR CommandString, 
+                        [out, retval] BSTR* CommandOutput);
+        [id(0x00000001), hidden]
+        HRESULT CmdExecOld(
+                        [in] BSTR CommandString, 
+                        [out, retval] BSTR* CommandOutput);
+    };
+
+    [
+      uuid(B22C7EFD-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("VOB class"),
+      helpcontext(0x00000c1c),
+      noncreatable
+    ]
+    coclass CCVOB {
+        [default] interface ICCVOB;
+    };
+
+    [
+      uuid(B22C7EFE-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of VOBs"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCVOBs {
+        [default] interface ICCVOBs;
+    };
+
+    [
+      uuid(B22C7EFF-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("View class"),
+      helpcontext(0x00000bb8),
+      noncreatable
+    ]
+    coclass CCView {
+        [default] interface ICCView;
+    };
+
+    [
+      uuid(B22C7F00-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of views"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCViews {
+        [default] interface ICCViews;
+    };
+
+    [
+      uuid(B22C7F01-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("History (event) record class"),
+      helpcontext(0x000007d0),
+      noncreatable
+    ]
+    coclass CCHistoryRecord {
+        [default] interface ICCHistoryRecord;
+    };
+
+    [
+      uuid(B22C7F02-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of history (event) records on a VOB object"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCHistoryRecords {
+        [default] interface ICCHistoryRecords;
+    };
+
+    [
+      uuid(B22C7F03-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("VOB object class"),
+      helpcontext(0x00000c80),
+      noncreatable
+    ]
+    coclass CCVOBObject {
+        [default] interface ICCVOBObject;
+    };
+
+    [
+      uuid(B22C7F04-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("File class"),
+      helpcontext(0x0000076c),
+      noncreatable
+    ]
+    coclass CCFile {
+        [default] interface ICCFile;
+    };
+
+    [
+      uuid(B22C7F05-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Element class"),
+      helpcontext(0x00000708),
+      noncreatable
+    ]
+    coclass CCElement {
+        [default] interface ICCElement;
+    };
+
+    [
+      uuid(B22C7F06-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of element objects"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCElements {
+        [default] interface ICCElements;
+    };
+
+    [
+      uuid(B22C7F07-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Version class"),
+      helpcontext(0x00000b54),
+      noncreatable
+    ]
+    coclass CCVersion {
+        [default] interface ICCVersion;
+    };
+
+    [
+      uuid(B22C7F08-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of version objects"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCVersions {
+        [default] interface ICCVersions;
+    };
+
+    [
+      uuid(B22C7F09-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Checked-out file class"),
+      helpcontext(0x00000640),
+      noncreatable
+    ]
+    coclass CCCheckedOutFile {
+        [default] interface ICCCheckedOutFile;
+    };
+
+    [
+      uuid(B22C7F0A-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of checked-out files"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCCheckedOutFiles {
+        [default] interface ICCCheckedOutFiles;
+    };
+
+    [
+      uuid(B22C7F0B-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Checked-out file query class"),
+      helpcontext(0x000006a4),
+      noncreatable
+    ]
+    coclass CCCheckedOutFileQuery {
+        [default] interface ICCCheckedOutFileQuery;
+    };
+
+    [
+      uuid(B22C7F0C-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Hyperlink class"),
+      helpcontext(0x00000834),
+      noncreatable
+    ]
+    coclass CCHyperlink {
+        [default] interface ICCHyperlink;
+    };
+
+    [
+      uuid(B22C7F0D-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of hyperlinks"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCHyperlinks {
+        [default] interface ICCHyperlinks;
+    };
+
+    [
+      uuid(B22C7F0E-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Hyperlink type class"),
+      helpcontext(0x00000898),
+      noncreatable
+    ]
+    coclass CCHyperlinkType {
+        [default] interface ICCHyperlinkType;
+    };
+
+    [
+      uuid(B22C7F0F-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of hyperlink types"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCHyperlinkTypes {
+        [default] interface ICCHyperlinkTypes;
+    };
+
+    [
+      uuid(B22C7F10-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Label class"),
+      helpcontext(0x000008fc),
+      noncreatable
+    ]
+    coclass CCLabel {
+        [default] interface ICCLabel;
+    };
+
+    [
+      uuid(B22C7F11-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of labels"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCLabels {
+        [default] interface ICCLabels;
+    };
+
+    [
+      uuid(B22C7F12-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Class to manipulate the label types on a VOB object"),
+      helpcontext(0x00000960),
+      noncreatable
+    ]
+    coclass CCLabelType {
+        [default] interface ICCLabelType;
+    };
+
+    [
+      uuid(B22C7F13-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of label types"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCLabelTypes {
+        [default] interface ICCLabelTypes;
+    };
+
+    [
+      uuid(B22C7F14-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Branch class"),
+      helpcontext(0x00000578),
+      noncreatable
+    ]
+    coclass CCBranch {
+        [default] interface ICCBranch;
+    };
+
+    [
+      uuid(B22C7F15-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of branches"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCBranches {
+        [default] interface ICCBranches;
+    };
+
+    [
+      uuid(B22C7F16-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Class to manipulate the branches on a VOB object"),
+      helpcontext(0x000005dc),
+      noncreatable
+    ]
+    coclass CCBranchType {
+        [default] interface ICCBranchType;
+    };
+
+    [
+      uuid(B22C7F17-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of branch types"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCBranchTypes {
+        [default] interface ICCBranchTypes;
+    };
+
+    [
+      uuid(B22C7F18-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Attribute class"),
+      helpcontext(0x000004b0),
+      noncreatable
+    ]
+    coclass CCAttribute {
+        [default] interface ICCAttribute;
+    };
+
+    [
+      uuid(B22C7F19-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of attributes"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCAttributes {
+        [default] interface ICCAttributes;
+    };
+
+    [
+      uuid(B22C7F1A-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Class to manipulate the attribute types on a VOB object"),
+      helpcontext(0x00000514),
+      noncreatable
+    ]
+    coclass CCAttributeType {
+        [default] interface ICCAttributeType;
+    };
+
+    [
+      uuid(B22C7F1B-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of attribute types"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCAttributeTypes {
+        [default] interface ICCAttributeTypes;
+    };
+
+    [
+      uuid(B22C7F1C-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Trigger class"),
+      helpcontext(0x00000a28),
+      noncreatable
+    ]
+    coclass CCTrigger {
+        [default] interface ICCTrigger;
+    };
+
+    [
+      uuid(B22C7F1D-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of triggers"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCTriggers {
+        [default] interface ICCTriggers;
+    };
+
+    [
+      uuid(B22C7F1E-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Class to manipulate the trigger types on a VOB object"),
+      helpcontext(0x00000a8c),
+      noncreatable
+    ]
+    coclass CCTriggerType {
+        [default] interface ICCTriggerType;
+    };
+
+    [
+      uuid(B22C7F1F-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of trigger types"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCTriggerTypes {
+        [default] interface ICCTriggerTypes;
+    };
+
+    [
+      uuid(B22C7F20-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Class to set parameters for creating a new trigger type"),
+      helpcontext(0x00000af0),
+      noncreatable
+    ]
+    coclass CCTriggerTypeBuilder {
+        [default] interface ICCTriggerTypeBuilder;
+    };
+
+    [
+      uuid(B22C7F21-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Class to manipulate locks on a VOB object"),
+      helpcontext(0x000009c4),
+      noncreatable
+    ]
+    coclass CCLock {
+        [default] interface ICCLock;
+    };
+
+    [
+      uuid(B22C7F22-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of locks"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCLocks {
+        [default] interface ICCLocks;
+    };
+
+    [
+      uuid(B22C7F23-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Activity class"),
+      helpcontext(0x0000044c),
+      noncreatable
+    ]
+    coclass CCActivity {
+        [default] interface ICCActivity;
+    };
+
+    typedef [uuid(B22C7F24-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Types of trigger actions"), helpcontext(0x00001fa4)]
+    enum {
+        ccAction_Exec = 0,
+        ccAction_ExecUNIX = 1,
+        ccAction_ExecWin = 2,
+        ccAction_Mklabel = 3,
+        ccAction_Mkattr = 4,
+        ccAction_MkhlinkTo = 5,
+        ccAction_MkhlinkFrom = 6
+    } CCTriggerActionType;
+
+    typedef [uuid(B22C7F25-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Inclusion list wild cards"), helpcontext(0x00001fa4)]
+    enum {
+        ccAll_ElementTypes = 13,
+        ccAll_BranchTypes = 14,
+        ccAll_AttributeTypes = 15,
+        ccAll_HyperlinkTypes = 16,
+        ccAll_TriggerTypes = 17,
+        ccAll_LabelTypes = 20
+    } CCTriggerTypesAll;
+
+    typedef [uuid(B22C7F26-5A5E-11D3-B1CD-00C04F8ECE2F), helpstring("Trigger lists for apply and remove trigger operations"), helpcontext(0x00001fa4)]
+    enum {
+        ccSubset_Both = 0,
+        ccSubset_NotInheritance = 1,
+        ccSubset_NotAttached = 2
+    } CCTriggerDirectorySubset;
+
+    [
+      uuid(B22C7F47-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of activities"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCActivities {
+        [default] interface ICCActivities;
+    };
+
+    [
+      uuid(B22C7F32-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Project VOB class"),
+      helpcontext(0x00000dac),
+      noncreatable
+    ]
+    coclass CCProjectVOB {
+        [default] interface ICCProjectVOB;
+    };
+
+    [
+      uuid(B22C7F33-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of project VOBs"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCProjectVOBs {
+        [default] interface ICCProjectVOBs;
+    };
+
+    [
+      uuid(B22C7F48-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("UCM object class"),
+      helpcontext(0x00000e10),
+      noncreatable
+    ]
+    coclass CCUCMObject {
+        [default] interface ICCUCMObject;
+    };
+
+    [
+      uuid(B22C7F34-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Project class"),
+      helpcontext(0x00000e74),
+      noncreatable
+    ]
+    coclass CCProject {
+        [default] interface ICCProject;
+    };
+
+    [
+      uuid(B22C7F35-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of projects"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCProjects {
+        [default] interface ICCProjects;
+    };
+
+    [
+      uuid(B22C7F37-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Folder class"),
+      helpcontext(0x00000ed8),
+      noncreatable
+    ]
+    coclass CCFolder {
+        [default] interface ICCFolder;
+    };
+
+    [
+      uuid(B22C7F38-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of folders"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCFolders {
+        [default] interface ICCFolders;
+    };
+
+    [
+      uuid(B22C7F39-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Component class"),
+      helpcontext(0x00000f3c),
+      noncreatable
+    ]
+    coclass CCComponent {
+        [default] interface ICCComponent;
+    };
+
+    [
+      uuid(B22C7F3A-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of components"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCComponents {
+        [default] interface ICCComponents;
+    };
+
+    [
+      uuid(B22C7F3B-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Baseline class"),
+      helpcontext(0x00000fa0),
+      noncreatable
+    ]
+    coclass CCBaseline {
+        [default] interface ICCBaseline;
+    };
+
+    [
+      uuid(B22C7F3C-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of baselines"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCBaselines {
+        [default] interface ICCBaselines;
+    };
+
+    [
+      uuid(B22C7F3D-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Stream class"),
+      helpcontext(0x00001004),
+      noncreatable
+    ]
+    coclass CCStream {
+        [default] interface ICCStream;
+    };
+
+    [
+      uuid(B22C7F3E-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Collection of streams"),
+      helpcontext(0x000003e8),
+      noncreatable
+    ]
+    coclass CCStreams {
+        [default] interface ICCStreams;
+    };
+
+    [
+      uuid(B22C7F3F-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Class for comparing baselines"),
+      helpcontext(0x00001068),
+      noncreatable
+    ]
+    coclass CCBaselineComparison {
+        [default] interface ICCBaselineComparison;
+    };
+
+    [
+      uuid(B22C7F46-5A5E-11D3-B1CD-00C04F8ECE2F),
+      helpstring("Interface to project policy settings"),
+      helpcontext(0x000010cc),
+      noncreatable
+    ]
+    coclass CCProjectPolicy {
+        [default] interface ICCProjectPolicy;
+    };
+};

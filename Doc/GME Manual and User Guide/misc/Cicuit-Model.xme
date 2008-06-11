@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project SYSTEM "mga.dtd">
+
+<project guid="{00000000-0000-0000-0000-000000000000}" cdate="Tue Jan 28 12:21:03 2003" mdate="Wed Jan 29 15:25:31 2003" metaguid="{C6A7DB73-DEAD-BEEF-FEED-DAD000000001}" metaname="Circuit-Meta">
+	<name>CircuitModel</name>
+	<comment></comment>
+	<author></author>
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x5" kind="RootFolder">
+		<name>CircuitModel</name>
+		<folder id="id-006a-00000004" relid="0x5" childrelidcntr="0x2" libref="MGA=D:\Work\GME2003Manual\New\misc\CircuitLibrary.mga" kind="RootFolder">
+			<name>MGA=D:\Work\GME2003Manual\New\misc\CircuitLibrary.mga</name>
+			<regnode name="ConstraintDefinitions">
+				<value></value>
+				<regnode name="meta::Circuit::Constraint_to_OR">
+					<value></value>
+					<regnode name="EventMask" isopaque="yes">
+						<value>0</value>
+					</regnode>
+					<regnode name="Description" isopaque="yes">
+						<value>Dummy constraint to OR</value>
+					</regnode>
+					<regnode name="Priority" isopaque="yes">
+						<value>2</value>
+					</regnode>
+					<regnode name="Depth" isopaque="yes">
+						<value>1</value>
+					</regnode>
+					<regnode name="Expression" isopaque="yes">
+						<value>true</value>
+					</regnode>
+				</regnode>
+			</regnode>
+			<regnode name="ConstraintManagerSettings">
+				<value></value>
+				<regnode name="ShortCircuitLogicalOperators" isopaque="yes">
+					<value>yes</value>
+				</regnode>
+				<regnode name="ShortCircuitIterators" isopaque="yes">
+					<value>yes</value>
+				</regnode>
+				<regnode name="Tracking" isopaque="yes">
+					<value>yes</value>
+				</regnode>
+				<regnode name="ViolationCount" isopaque="yes">
+					<value>-2</value>
+				</regnode>
+				<regnode name="ModelDepth" isopaque="yes">
+					<value>1</value>
+				</regnode>
+			</regnode>
+			<model id="id-0065-0000000b" kind="Circuit" relid="0x1" childrelidcntr="0xd">
+				<name>OR</name>
+				<regnode name="ConstraintEnabling">
+					<value></value>
+					<regnode name="meta::Circuit::Constraint_to_OR" isopaque="yes">
+						<value>yes</value>
+					</regnode>
+				</regnode>
+				<connection id="id-0068-00000042" kind="Link" role="Link" relid="0x4">
+					<name>Link</name>
+					<regnode name="autorouterPref" isopaque="yes">
+						<value>E</value>
+					</regnode>
+					<connpoint role="src" target="id-0066-00000046"/>
+					<connpoint role="dst" target="id-0066-00000044"/>
+				</connection>
+				<connection id="id-0068-00000041" kind="Link" role="Link" relid="0x5">
+					<name>Link</name>
+					<regnode name="autorouterPref" isopaque="yes">
+						<value>Ew</value>
+					</regnode>
+					<connpoint role="src" target="id-0066-00000045"/>
+					<connpoint role="dst" target="id-0066-00000044"/>
+				</connection>
+				<connection id="id-0068-00000040" kind="IO_Gate" role="IO_Gate" relid="0x7">
+					<name>IO_Gate</name>
+					<regnode name="autorouterPref" isopaque="yes">
+						<value>Ew</value>
+					</regnode>
+					<connpoint role="src" target="id-0066-00000043"/>
+					<connpoint role="dst" target="id-0066-00000046"/>
+				</connection>
+				<connection id="id-0068-0000003f" kind="IO_Gate" role="IO_Gate" relid="0x9">
+					<name>IO_Gate</name>
+					<regnode name="autorouterPref" isopaque="yes">
+						<value>Ew</value>
+					</regnode>
+					<connpoint role="src" target="id-0066-00000042"/>
+					<connpoint role="dst" target="id-0066-00000045"/>
+				</connection>
+				<connection id="id-0068-0000003e" kind="Link" role="Link" relid="0xc">
+					<name>Link</name>
+					<regnode name="autorouterPref" isopaque="yes">
+						<value>E</value>
+					</regnode>
+					<connpoint role="src" target="id-0066-00000044"/>
+					<connpoint role="dst" target="id-0066-00000041"/>
+				</connection>
+				<connection id="id-0068-0000003d" kind="IO_Gate" role="IO_Gate" relid="0xd">
+					<name>IO_Gate</name>
+					<regnode name="autorouterPref" isopaque="yes">
+						<value>Ew</value>
+					</regnode>
+					<connpoint role="dst" target="id-0066-00000040"/>
+					<connpoint role="src" target="id-0066-00000041"/>
+				</connection>
+				<atom id="id-0066-00000046" kind="NOT" role="NOT" relid="0x1">
+					<name>NOT</name>
+					<regnode name="PartRegs">
+						<value></value>
+						<regnode name="Aspect">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>275,79</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000045" kind="NOT" role="NOT" relid="0x2">
+					<name>NOT</name>
+					<regnode name="PartRegs">
+						<value></value>
+						<regnode name="Aspect">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>268,177</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000044" kind="AND" role="AND" relid="0x3">
+					<name>AND</name>
+					<regnode name="PartRegs">
+						<value></value>
+						<regnode name="Aspect">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>394,128</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000043" kind="IO" role="IO" relid="0x6">
+					<name>A</name>
+					<regnode name="PartRegs">
+						<value></value>
+						<regnode name="Aspect">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>149,72</value>
+							</regnode>
+						</regnode>
+					</regnode>
+				</atom>
+				<atom id="id-0066-00000042" kind="IO" role="IO" relid="0x8">
+					<name>B</name>
+					<regnode name="PartRegs">
+						<value></value>
+						<regnode name="Aspect">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>149,170</value>
+							</regnode>
+						</regnode>
+					</regnode>
+				</atom>
+				<atom id="id-0066-00000041" kind="NOT" role="NOT" relid="0xa">
+					<name>NOT</name>
+					<regnode name="PartRegs">
+						<value></value>
+						<regnode name="Aspect">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>485,121</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000040" kind="IO" role="IO" relid="0xb">
+					<name>AorB</name>
+					<regnode name="PartRegs">
+						<value></value>
+						<regnode name="Aspect">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>578,116</value>
+							</regnode>
+						</regnode>
+					</regnode>
+				</atom>
+			</model>
+		</folder>
+		<regnode name="ConstraintDefinitions">
+			<value></value>
+			<regnode name="meta::Circuit::Constraint_to_XOR">
+				<value></value>
+				<regnode name="Expression" isopaque="yes">
+					<value>true</value>
+				</regnode>
+				<regnode name="Depth" isopaque="yes">
+					<value>1</value>
+				</regnode>
+				<regnode name="Priority" isopaque="yes">
+					<value>1</value>
+				</regnode>
+				<regnode name="Description" isopaque="yes">
+					<value>Dummy Constraint to XOR</value>
+				</regnode>
+				<regnode name="EventMask" isopaque="yes">
+					<value>0</value>
+				</regnode>
+			</regnode>
+		</regnode>
+		<regnode name="ConstraintManagerSettings">
+			<value></value>
+			<regnode name="ModelDepth" isopaque="yes">
+				<value>1</value>
+			</regnode>
+			<regnode name="ViolationCount" isopaque="yes">
+				<value>-2</value>
+			</regnode>
+			<regnode name="Tracking" isopaque="yes">
+				<value>yes</value>
+			</regnode>
+			<regnode name="ShortCircuitIterators" isopaque="yes">
+				<value>yes</value>
+			</regnode>
+			<regnode name="ShortCircuitLogicalOperators" isopaque="yes">
+				<value>yes</value>
+			</regnode>
+		</regnode>
+		<model id="id-0065-00000008" kind="Circuit" relid="0x4" childrelidcntr="0x2">
+			<name>NewCircuit</name>
+			<model id="id-0065-0000000e" kind="Circuit" role="Circuit" derivedfrom="id-0065-0000000b" isinstance="yes" isprimary="yes" relid="0x2" childrelidcntr="0x0">
+				<name>OR</name>
+				<regnode name="PartRegs">
+					<value></value>
+					<regnode name="Aspect">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>337,119</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<connection isbound="yes" id="id-0068-00000054" kind="IO_Gate" role="IO_Gate" derivedfrom="id-0068-0000003d" isinstance="yes" isprimary="no">
+					<name>IO_Gate</name>
+				</connection>
+				<connection isbound="yes" id="id-0068-00000053" kind="Link" role="Link" derivedfrom="id-0068-0000003e" isinstance="yes" isprimary="no">
+					<name>Link</name>
+				</connection>
+				<connection isbound="yes" id="id-0068-00000052" kind="IO_Gate" role="IO_Gate" derivedfrom="id-0068-0000003f" isinstance="yes" isprimary="no">
+					<name>IO_Gate</name>
+				</connection>
+				<connection isbound="yes" id="id-0068-00000051" kind="IO_Gate" role="IO_Gate" derivedfrom="id-0068-00000040" isinstance="yes" isprimary="no">
+					<name>IO_Gate</name>
+				</connection>
+				<connection isbound="yes" id="id-0068-00000050" kind="Link" role="Link" derivedfrom="id-0068-00000041" isinstance="yes" isprimary="no">
+					<name>Link</name>
+				</connection>
+				<connection isbound="yes" id="id-0068-0000004f" kind="Link" role="Link" derivedfrom="id-0068-00000042" isinstance="yes" isprimary="no">
+					<name>Link</name>
+				</connection>
+				<atom id="id-0066-0000005b" kind="AND" role="AND" derivedfrom="id-0066-00000044" isinstance="yes" isprimary="no">
+					<name>AND</name>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-0000005a" kind="NOT" role="NOT" derivedfrom="id-0066-00000045" isinstance="yes" isprimary="no">
+					<name>NOT</name>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000059" kind="NOT" role="NOT" derivedfrom="id-0066-00000046" isinstance="yes" isprimary="no">
+					<name>NOT</name>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000058" kind="IO" role="IO" derivedfrom="id-0066-00000040" isinstance="yes" isprimary="no">
+					<name>AorB</name>
+				</atom>
+				<atom id="id-0066-00000057" kind="NOT" role="NOT" derivedfrom="id-0066-00000041" isinstance="yes" isprimary="no">
+					<name>NOT</name>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000056" kind="IO" role="IO" derivedfrom="id-0066-00000042" isinstance="yes" isprimary="no">
+					<name>B</name>
+				</atom>
+				<atom id="id-0066-00000055" kind="IO" role="IO" derivedfrom="id-0066-00000043" isinstance="yes" isprimary="no">
+					<name>A</name>
+				</atom>
+			</model>
+		</model>
+		<model id="id-0065-00000001" kind="Circuit" relid="0x1" childrelidcntr="0x18">
+			<name>XOR</name>
+			<atom id="id-0066-00000021" kind="IO" role="IO" relid="0x7">
+				<name>A</name>
+				<regnode name="PartRegs">
+					<value></value>
+					<regnode name="Aspect">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>72,51</value>
+						</regnode>
+					</regnode>
+				</regnode>
+			</atom>
+			<atom id="id-0066-00000020" kind="NOT" role="NOT" relid="0x6">
+				<name>NOT</name>
+				<regnode name="PartRegs">
+					<value></value>
+					<regnode name="Aspect">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>205,177</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="Multiplicity" status="meta">
+					<value>2</value>
+				</attribute>
+			</atom>
+			<atom id="id-0066-0000001f" kind="NOT" role="NOT" relid="0x5">
+				<name>NOT</name>
+				<regnode name="PartRegs">
+					<value></value>
+					<regnode name="Aspect">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>212,65</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="Multiplicity" status="meta">
+					<value>2</value>
+				</attribute>
+			</atom>
+			<atom id="id-0066-0000001e" kind="AND" role="AND" relid="0x4">
+				<name>AND</name>
+				<regnode name="PartRegs">
+					<value></value>
+					<regnode name="Aspect">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>331,191</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="Multiplicity" status="meta">
+					<value>2</value>
+				</attribute>
+			</atom>
+			<atom id="id-0066-0000001d" kind="AND" role="AND" relid="0x3">
+				<name>AND</name>
+				<regnode name="PartRegs">
+					<value></value>
+					<regnode name="Aspect">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>331,65</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="Multiplicity" status="meta">
+					<value>2</value>
+				</attribute>
+			</atom>
+			<connection id="id-0068-0000001e" kind="Link" role="Link" relid="0xf">
+				<name>Link</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>Ee</value>
+				</regnode>
+				<connpoint role="dst" target="id-0066-0000001d"/>
+				<connpoint role="src" target="id-0066-00000020"/>
+			</connection>
+			<connection id="id-0068-0000001d" kind="Link" role="Link" relid="0xe">
+				<name>Link</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>s</value>
+				</regnode>
+				<connpoint role="dst" target="id-0066-0000001e"/>
+				<connpoint role="src" target="id-0066-0000001f"/>
+			</connection>
+			<connection id="id-0068-0000001c" kind="Link" role="Link" relid="0xd">
+				<name>Link</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>E</value>
+				</regnode>
+				<connpoint role="dst" target="id-0066-0000001d"/>
+				<connpoint role="src" target="id-0066-0000001f"/>
+			</connection>
+			<connection id="id-0068-0000001b" kind="Link" role="Link" relid="0xc">
+				<name>Link</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>E</value>
+				</regnode>
+				<connpoint role="dst" target="id-0066-0000001e"/>
+				<connpoint role="src" target="id-0066-00000020"/>
+			</connection>
+			<connection id="id-0068-0000001a" kind="IO_Gate" role="IO_Gate" relid="0xb">
+				<name>IO_Gate</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>Ew</value>
+				</regnode>
+				<connpoint role="dst" target="id-0066-00000020"/>
+				<connpoint role="src" target="id-0066-00000022"/>
+			</connection>
+			<connection id="id-0068-00000019" kind="IO_Gate" role="IO_Gate" relid="0xa">
+				<name>IO_Gate</name>
+				<connpoint role="dst" target="id-0066-0000001f"/>
+				<connpoint role="src" target="id-0066-00000021"/>
+			</connection>
+			<model id="id-0065-0000000d" kind="Circuit" role="Circuit" derivedfrom="id-0065-0000000b" isinstance="no" isprimary="yes" relid="0x18" childrelidcntr="0x0">
+				<name>OR</name>
+				<regnode name="PartRegs">
+					<value></value>
+					<regnode name="Aspect">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>456,77</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<connection isbound="yes" id="id-0068-0000004e" kind="IO_Gate" role="IO_Gate" derivedfrom="id-0068-0000003d" isinstance="no" isprimary="no">
+					<name>IO_Gate</name>
+				</connection>
+				<connection isbound="yes" id="id-0068-0000004d" kind="Link" role="Link" derivedfrom="id-0068-0000003e" isinstance="no" isprimary="no">
+					<name>Link</name>
+				</connection>
+				<connection isbound="yes" id="id-0068-0000004c" kind="IO_Gate" role="IO_Gate" derivedfrom="id-0068-0000003f" isinstance="no" isprimary="no">
+					<name>IO_Gate</name>
+				</connection>
+				<connection isbound="yes" id="id-0068-0000004b" kind="IO_Gate" role="IO_Gate" derivedfrom="id-0068-00000040" isinstance="no" isprimary="no">
+					<name>IO_Gate</name>
+				</connection>
+				<connection isbound="yes" id="id-0068-0000004a" kind="Link" role="Link" derivedfrom="id-0068-00000041" isinstance="no" isprimary="no">
+					<name>Link</name>
+				</connection>
+				<connection isbound="yes" id="id-0068-00000049" kind="Link" role="Link" derivedfrom="id-0068-00000042" isinstance="no" isprimary="no">
+					<name>Link</name>
+				</connection>
+				<atom id="id-0066-00000054" kind="AND" role="AND" derivedfrom="id-0066-00000044" isinstance="no" isprimary="no">
+					<name>AND</name>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000053" kind="NOT" role="NOT" derivedfrom="id-0066-00000045" isinstance="no" isprimary="no">
+					<name>NOT</name>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000052" kind="NOT" role="NOT" derivedfrom="id-0066-00000046" isinstance="no" isprimary="no">
+					<name>NOT</name>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000051" kind="IO" role="IO" derivedfrom="id-0066-00000040" isinstance="no" isprimary="no">
+					<name>AorB</name>
+				</atom>
+				<atom id="id-0066-00000050" kind="NOT" role="NOT" derivedfrom="id-0066-00000041" isinstance="no" isprimary="no">
+					<name>NOT</name>
+					<attribute kind="Multiplicity" status="meta">
+						<value>2</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-0000004f" kind="IO" role="IO" derivedfrom="id-0066-00000042" isinstance="no" isprimary="no">
+					<name>B</name>
+				</atom>
+				<atom id="id-0066-0000004e" kind="IO" role="IO" derivedfrom="id-0066-00000043" isinstance="no" isprimary="no">
+					<name>A</name>
+				</atom>
+			</model>
+			<atom id="id-0066-00000023" kind="IO" role="IO" relid="0x9">
+				<name>AxB</name>
+				<regnode name="PartRegs">
+					<value></value>
+					<regnode name="Aspect">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>618,128</value>
+						</regnode>
+					</regnode>
+				</regnode>
+			</atom>
+			<atom id="id-0066-00000022" kind="IO" role="IO" relid="0x8">
+				<name>B</name>
+				<regnode name="PartRegs">
+					<value></value>
+					<regnode name="Aspect">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>60,158</value>
+						</regnode>
+					</regnode>
+				</regnode>
+			</atom>
+		</model>
+	</folder>
+</project>

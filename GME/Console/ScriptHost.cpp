@@ -1,0 +1,249 @@
+// ScriptHost.cpp : Implementation of CScriptHost
+#include "stdafx.h"
+#include "Console.h"
+#include "ScriptHost.h"
+#include "ConsoleCtl.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// CScriptHost
+
+
+STDMETHODIMP CScriptHost::InitEngine(void* console, BSTR engineProgid)
+{
+	// register app and project 
+	try
+	{
+		m_console = (CConsoleCtrl*)console;
+		_bstr_t newprogid(engineProgid);
+		if (m_enginePID == newprogid)
+			return S_OK;
+		if (m_iscript != NULL)
+		{
+			COMTHROW(m_iscript->Close());
+			m_iscript.Release();
+		}
+		m_enginePID = newprogid;
+		COMTHROW(m_iscript.CreateInstance((BSTR)m_enginePID));
+		m_iscriptParse = m_iscript;
+		IActiveScriptSitePtr scs(this);
+		COMTHROW(m_iscript->SetScriptSite(scs));
+		COMTHROW(m_iscriptParse->InitNew());
+		if (m_gmeptr != NULL)
+		{
+			_bstr_t project("project");
+			_bstr_t gme("gme");
+			_bstr_t this_model("it");
+			COMTHROW(m_iscript->AddNamedItem(gme, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
+			if( m_mgaproj != NULL) COMTHROW(m_iscript->AddNamedItem(project, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
+			if( m_actMod  != NULL) COMTHROW(m_iscript->AddNamedItem(this_model, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
+		}
+		COMTHROW(m_iscript->SetScriptState(SCRIPTSTATE_CONNECTED));
+	}
+	catch(hresult_exception &e) 
+	{ 
+		return e.hr;
+	}
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::ProcessString(BSTR input)
+{
+// app = new ActiveXObject("Gme.Application"); app.ConsoleContents = "kaka maka";
+//	_bstr_t str1("GMEapp = new ActiveXObject(\"Gme.Application\"); ");
+//	_bstr_t str2("GMEapp.ConsoleContents = \"kaka maka\"");
+//	_bstr_t str2("GMEapp.ConsoleClear();");
+//	_bstr_t str2("GMEapp.CloseProject();");
+//	_bstr_t strx("app = new ActiveXObject(\"GME.Application\"); app.CreateProject(\"MetaGME\", \"MGA=C:\\OCL_TEST\\kakamaka.mga\");");
+//	_bstr_t str = str1 + str2;
+
+	try
+	{
+		COMTHROW(m_iscriptParse->ParseScriptText(input, NULL, NULL, NULL, 0, 0, 
+			SCRIPTTEXT_ISPERSISTENT, NULL, NULL));
+	}
+	catch(hresult_exception &e) 
+	{ 
+		m_console->Message( "Input parsing failed!", MSG_ERROR);
+		return e.hr;
+	}
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::GetLCID(/*[out]*/ LCID *plcid)
+{
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::GetItemInfo(
+                /*[in]*/  LPCOLESTR pstrName,
+                /*[in]*/  DWORD     dwReturnMask,
+                /*[out]*/ IUnknown  **ppiunkItem,
+                /*[out]*/ ITypeInfo **ppti)
+{
+	if (!m_gmeptr)
+		return E_FAIL;
+	if (dwReturnMask&SCRIPTINFO_IUNKNOWN)
+	{
+		if (m_gmeptr && (_bstr_t)pstrName == _bstr_t("gme"))
+		{
+			CComPtr<IUnknown> punk(m_gmeptr);
+			((IUnknown*)punk)->AddRef(); 
+			*ppiunkItem = punk;
+		}
+		else if (m_mgaproj && (_bstr_t)pstrName == _bstr_t("project"))
+		{
+			CComPtr<IUnknown> punk(m_mgaproj);
+			((IUnknown*)punk)->AddRef(); 
+			*ppiunkItem = punk;
+		}
+		else if (m_actMod && (_bstr_t)pstrName == _bstr_t("it"))
+		{
+			CComPtr<IUnknown> punk(m_actMod);
+			((IUnknown*)punk)->AddRef(); 
+			*ppiunkItem = punk;
+		}
+	}
+	if (dwReturnMask&SCRIPTINFO_ITYPEINFO)
+	{
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::GetDocVersionString(/*[out]*/ BSTR      *pbstrVersion)
+{
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::OnScriptTerminate(
+                /*[in]*/  const VARIANT     *pvarResult,
+                /*[in]*/  const EXCEPINFO   *pexcepinfo)
+{
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::OnStateChange(
+                /*[in]*/  SCRIPTSTATE       ssScriptState)
+{
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::OnScriptError(
+                /*[in]*/  IActiveScriptError *pscripterror)
+{
+	try
+	{
+		IActiveScriptErrorPtr perr(pscripterror);
+
+		EXCEPINFO expinfo;
+		COMTHROW(perr->GetExceptionInfo(&expinfo));
+		DWORD	sc;
+		ULONG	line = 0;
+		LONG	ch = 0;
+		COMTHROW(perr->GetSourcePosition(&sc, &line, &ch));
+
+		// write to console 
+		CString desc = expinfo.bstrDescription;
+		// make the error description html readable
+		desc.Replace( "<", "&lt;");		// replacing <
+		desc.Replace( ">", "&gt;");		// >
+		desc.Replace("\r\n", "<br>");	// 0d0a newlines
+		desc.Replace("\n", "<br>");		// 0a newlines
+
+		char err[5000];
+		sprintf(err, "Scripting Error at Position: %d Line: %u<br>%s", ch, line, desc);
+		m_console->Message((LPCTSTR)err, MSG_ERROR);
+	}
+	catch(hresult_exception &e) 
+	{ 
+		return e.hr;
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::OnEnterScript(void)
+{
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::OnLeaveScript(void)
+{
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::SetGMEApp(IDispatch *gmeapp)
+{
+
+	if (m_gmeptr == NULL  &&  gmeapp == NULL)
+		return S_OK;
+	try
+	{
+		m_gmeptr.Release();
+		if (gmeapp == NULL)
+		{
+			// release other pointers
+			m_mgaproj.Release();
+			m_actMod.Release();
+
+			// delete names 
+			if (m_iscript != NULL)
+			{
+				COMTHROW(m_iscript->Close());
+				m_iscript.Release();
+			}
+			COMTHROW(m_iscript.CreateInstance((BSTR)m_enginePID));
+			m_iscriptParse = m_iscript;
+			IActiveScriptSitePtr scs(this);
+			COMTHROW(m_iscript->SetScriptSite(scs));
+			COMTHROW(m_iscriptParse->InitNew());
+			COMTHROW(m_iscript->SetScriptState(SCRIPTSTATE_CONNECTED));
+			return S_OK;
+		}
+
+		CComPtr<IDispatch> gip(gmeapp);
+		COMTHROW(gip.QueryInterface(&m_gmeptr));
+
+		_bstr_t gme("gme");
+		COMTHROW(m_iscript->AddNamedItem(gme, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
+		COMTHROW(m_iscript->SetScriptState(SCRIPTSTATE_CONNECTED));
+	}
+	catch(hresult_exception &e) 
+	{ 
+		return e.hr;
+	}
+	return S_OK;
+}
+
+STDMETHODIMP CScriptHost::SetGMEProj(IDispatch *gmeapp)
+{
+
+	if (m_gmeptr == NULL  &&  gmeapp == NULL)
+		return S_OK;
+	try
+	{
+		m_mgaproj.Release();
+		m_actMod.Release();
+
+		if (gmeapp == NULL) // means close project
+		{
+			return S_OK;
+		}
+
+		COMTHROW(m_gmeptr->get_MgaProject(&m_mgaproj));
+
+		COMTHROW( m_gmeptr->get_OleIt( &m_actMod ));
+
+		_bstr_t project("project");
+		_bstr_t this_model("it");
+		COMTHROW(m_iscript->AddNamedItem(project, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
+		COMTHROW(m_iscript->AddNamedItem(this_model, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
+		COMTHROW(m_iscript->SetScriptState(SCRIPTSTATE_CONNECTED));
+	}
+	catch(hresult_exception &e) 
+	{ 
+		return e.hr;
+	}
+
+	return S_OK;
+}

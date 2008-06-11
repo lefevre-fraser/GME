@@ -1,0 +1,63 @@
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+import "Parser.idl";
+import "MgaUtil.idl";
+import "Gme.idl";
+
+// --------------------------- Parser Library
+
+[
+	uuid(70C41B15-E3CE-11D3-B37A-005004D38590),
+	version(1.0),
+	helpstring("MGA Parser Type Library")
+]
+library PARSERLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	importlib("..\Mga\MgaLib.tlb");
+
+	[
+		uuid(70C41B25-E3CE-11D3-B37A-005004D38590),
+		helpstring("MetaParser Class")
+	]
+	coclass MetaParser
+	{
+		[default] interface IMetaParser;
+		interface ISupportErrorInfo;
+		interface IMgaVersionInfo;
+	};
+
+	[
+		uuid(A5D0DAE7-16EE-11D4-B3C2-005004D38590),
+		helpstring("MgaDumper Class")
+	]
+	coclass MgaDumper
+	{
+		[default] interface IMgaDumper;
+		interface IMgaVersionInfo;
+	};
+
+	[
+		uuid(94D6FB54-1F7C-11D4-B3D0-005004D38590),
+		helpstring("MgaParser Class")
+	]
+	coclass MgaParser
+	{
+		[default] interface IMgaParser;
+		interface IMgaVersionInfo;
+	};
+
+	[
+		uuid(2C9DF78A-92C2-4994-8AAC-BFA8007BBCD7),
+		helpstring("MgaXslt Class")
+	]
+	coclass MgaXslt
+	{
+		[default] interface IMgaXslt;
+		interface IMgaVersionInfo;
+	};
+};

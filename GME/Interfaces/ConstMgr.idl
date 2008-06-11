@@ -1,0 +1,27 @@
+// ConstraintMgr.idl : IDL source for ConstraintMgr.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (ConstraintMgr.tlb) and marshalling code.
+xcccc
+import "oaidl.idl";
+import "ocidl.idl";
+import "mga.idl";
+	[
+		object,
+		uuid(8CA5323B-622F-11D4-A008-004854807711),
+		dual,
+		helpstring("IConstMgr Interface"),
+		pointer_default(unique)
+	]
+	interface IConstMgr : IDispatch
+	{
+		[id(1), helpstring("method Check")] HRESULT Check(IMgaObject *o);
+		[id(2), helpstring("method CheckAll")] HRESULT CheckAll();
+		[id(3), helpstring("method Initialize")] HRESULT Initialize(IMgaProject *p);
+		[id(4), helpstring("method SetEnabled")] HRESULT SetEnabled([in] VARIANT_BOOL enabled);
+		[id(5), helpstring("method GetViolator")] HRESULT GetViolator([out] IMgaObject ** obj, [out] IMgaConstraint ** constraint);
+		[id(6), propget, helpstring("property InteractiveMode")] HRESULT InteractiveMode([out, retval] VARIANT_BOOL * enabled);
+		[id(6), propput, helpstring("property InteractiveMode")] HRESULT InteractiveMode([in] VARIANT_BOOL enabled);
+	};
+

@@ -1,0 +1,494 @@
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Arpad Bakay">
+   <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+   <title>Lesson 3 -- Building Interpreters</title>
+</head>
+<body text="#000066" 
+      bgcolor="#FFFFCC" 
+      link="#0000EE" 
+      vlink="#551A8B" 
+      alink="#FF0000">
+
+<center>
+<b><u><font size=+2>Lesson 3
+<br>Building Interpreters
+</font></u></b>
+</center>
+<p>
+
+<br><a href="#intro">Introduction to Lesson 3</a>
+<br><a href="#3.1">3.1 The Builder Object Network (BON)</a>
+<br><a href="#3.2">3.2 Creating a new component</a>
+<br><a href="#3.3">3.3 Writing the interpreter code</a>
+<p><br>
+
+
+<a name=intro></a>
+<b><u><font size="+1">Introduction to Lesson 3</font></u></b>
+<p>
+
+For some GME applications, the only motivation for a modeling project is the 
+desire to describe a system in a structured way and to use the description as a 
+form of interpersonal communication. Usually, however, we also want the computer 
+to be able to <i>process</i> data from the model automatically. Typical 
+processing tasks range from the simple to the sophisticated:
+
+<ul>
+ <li>
+  running queries, generating lists, and writing reports based on the contents 
+  of the model
+ <li>
+  generating program code or system configuration
+ <li>
+  building models automatically from information provided by another data source 
+  (e.g. a database)
+ <li>
+  using the models as a data exchange format to integrate tools that are 
+  incompatible with each other
+</ul>
+
+A common theme for all these applications is that they require programmatic 
+access to the GME model information. To meet this requirement, GME 
+provides several ways to create programs that access its data. The most popular 
+technique is writing a GME interpreter. Interpreters are not standalone 
+progams; they are components (usually DLLs) that are loaded and executed by GME 
+upon a user's request. Other types of programs that can access model data are 
+<i>standalone applications</i> (which can be executed without the GME GUI) 
+and other integrated components that serve different purposes (<i>Plugins</i> 
+and <i>AddOns</i>).
+<p>
+
+There are also different technologies available to access GME data:
+
+<ul>
+ <li>
+  Most GME components are built for the <b>Builder Object Network (BON)</b>, a 
+  framework which is relatively easy to use and is still powerful enough for 
+  most applications. BON provides a network of C++ objects. Each of these 
+  represents an object in the GME model database. C++ methods provide convenient 
+  read/write access to the objects' properties, attributes, and relations.
+ <li>
+  GME is a COM/DCOM-based architecture. Therefore, <b>COM</b> is the primary 
+  interface used to access GME data. It is also the most efficient interface. 
+  However, in addition to COM programming, it requires taking care of the full 
+  GME interface protocol, including transactions, territories, event 
+  handling, etc.
+ <li>
+  The <b>GME Unified Data Model</b> module (<b>UDM-GME</b>) is an 
+  experimental technology; it creates interpreters that use an automatically 
+  generated paradigm-dependent programmatic interface.
+</ul>
+
+This lesson discusses the process of building a Builder Object Network-based 
+interpreter. The application domain and paradigm are those used in the 
+<a href="Lesson2.html">previous lesson</a>. Our interpreter will complete a 
+simple task: it will print out a list of all routers, along with their ports and 
+IP addresses.
+<p><br>
+
+
+
+<hr width="80%">
+<br><a name="3.1"></a>
+<b><u><font size=+1>3.1 The Builder Object Network (BON)</font></u></b>
+<p>
+
+As mentioned above, the job of the Builder Object Network is to instantiate C++ 
+objects for each of the objects in the GME model tree. Access to the 
+objects, and to the relationships between them, are available through methods 
+that act on these objects. Class names and method names are often 
+self-explanatory: CBuilderAtom, CBuilderConnection, GetAttribute( ), 
+SetAttribute( ), GetChildren( ), GetParent( ), CreateNewAtom( ), etc. The main 
+BON header file, Builder.h, is the authentic repository of the BON 
+interfaces.
+<p><br>
+
+
+<center>
+<img SRC="L3/F1/Fig3_1.gif">
+<br><b>Fig 3.1 Classes in the Builder Object Network</b>
+</center>
+<p><br>
+
+
+The BON class hierarchy is shown in Fig 3.1. Many of the classes are organized 
+into a hierarchy with the common baseclass <b>CBuilderObject</b>. This class 
+represents the common functionality available for all FCOs, while the 
+specialized versions provide object-type specific methods. <b>CBuilderAtom</b>, 
+<b>CBuilderModel</b>, and <b>CBuilderConnection</b> represent atoms, models, 
+and connections, all well-known from the previous lessons. 
+<b>CBuilderReference</b> (along with the specialized versions, 
+CBuilderAtomReference and CBuilderModelReference) and <b>CBuilderSet</b> 
+represent references and sets, which are discussed in <a href="Lesson4.html">
+Lesson 4</a>. <b>CBuilderReferencePort</b> is a pseudo-object that is only 
+present in the BON.
+<p>
+
+Two other classes are "outsiders" to the CBuilderObject hierarchy. 
+<b>CBuilder</b> represents the modeling project as a whole. It provides access 
+to the root folder and to other folders, as well as to project-wide settings 
+(such as GetProjectName( )). <b>CBuilderFolder</b> represents folders and is 
+capable of navigating the folder hierarchy and accessing root FCOs.
+<p>
+
+This tutorial does not attempt to explain the entire BON interface. Most methods 
+listed in Builder.h are self-explanatory. However, the GME User's Manual 
+does contain a detailed description of the Builder Object Network.
+<p>
+
+Looking at the Builder.h file, it is obvious that this framework relies 
+quite heavily on certain data types and templates not listed in Fig 3.1, such as 
+<i>CString</i>, <i>CTypedPtrList&lt;></i>, <i>CTypedPtrMap&lt;></i>, etc. These 
+are not defined by the framework, but by MFC, a popular class library provided 
+with Microsoft Visual Studio. Please consult the MS Visual Studio / MFC 
+documentation for help with these data types. Also, you will notice that a 
+typical instruction pattern is used to navigate the collection attributes:
+
+<blockquote><tt><b>
+POSITION pos = <i>list.</i>GetHeadPosition(); 
+while(pos) { <i>process</i>(list.GetNext(pos)); }
+</b></tt></blockquote>
+
+The Builder Object Network also provides an <b>optional user-defined subclassing 
+mechanism</b> based on the factory design pattern [ref]. BON classes allow 
+subclassing, and user-defined subclasses can be registered into the BON <i>class 
+factory</i>. When this happens, the object network is not built from the 
+predefined classes in Fig 3.1, but from the user's own subclasses, which include 
+additional functionality.
+<p>
+
+The Builder Object Network is provided as part of a <b>convenient framework</b>, 
+which includes a set of <b>tools</b> (or "wizards") that help the user to set up 
+a component development project. Thanks to this framework, the process of 
+creating an interpreter is both easy and quick. Even casual component developers 
+can build meaningful interpreters within 30-60 minutes.
+<p>
+
+Let's see if this is true... 
+<p><br>
+
+
+<hr width="80%">
+<br><a name="3.2"></a>
+<b><u><font size=+1>3.2 Creating a new component</font></u></b> 
+<p><br>
+
+
+<b><u>3.2.1 Generate a workspace</u></b> 
+<p>
+
+The easiest way to create components is to use <b>CreateNewComponent.exe</b>, a 
+program that generates and initializes a ready-to compile Visual Studio 
+workspace (Fig 3.1). You can start it from the \SDK directory of the GME 
+folder (e.g. Program Files\GME\SDK\CreateNewComponent.exe) 
+<p><br>
+
+
+<center>
+<img SRC="L3/F2/Fig3_2_new.jpg">
+<br><b>Fig 3.2 CreateNewComponent.exe</b>
+</center>
+<p><br>
+
+
+This program unpacks the necessary files for the selected component technology. 
+Specify Builder Object Network and a suitable directory, and click OK. A message 
+box reports the number of files extracted, and a second program, 
+<b>ConfigureComponent.exe</b>, is initialized just before CreateNewComponent 
+terminates. 
+<p><br>
+
+
+<b><u>3.2.2 Specify information</u></b> 
+<p>
+
+<b>ConfigureComponent.exe</b> (shown in Fig 3.3) is actually one of the files 
+that was extracted in the previous step. It specifies the identification and 
+registration information for the new component. While CreateNewComponent is 
+normally used just once during this process, ConfigureComponent can be run again 
+whenever something needs to be changed. 
+<p><br>
+
+
+<center>
+<img SRC="L3/F3/Fig3_3.gif">
+<br><b>Fig 3.3 ConfigureComponent.exe</b> 
+</center>
+<p><br>
+
+
+Many of the fields in ConfigureComponent are automatically generated from the 
+component name, so we will only need to specify four things: 
+
+<ul>
+ <li>
+  The component name, a unique name without spaces (it may be the name of the 
+  paradigm, if this component is going to be its principal interpreter)
+ <li>
+  The paradigm(s) that the component will be associated with (make sure that the 
+  demo paradigm "networking" is on the list)
+ <li>
+  The "Display Icon on GME Toolbar" option (enable this if you want to make the 
+  component available on the toolbar in the GME GUI)
+ <li>
+  The path of the GME interface files (this only needs to be specified if 
+  GME is not installed in the standard location)
+</ul>
+
+Click the "Generate" button. The program creates ComponentConfig.h, the last 
+file missing from the set of component source files. 
+<p><br>
+
+
+<b><u>3.2.3 Execute the component</u></b> 
+<p>
+
+Open the Visual Studio workspace, "<b>BONComponent.dsw</b>". 
+<p>
+
+A source file, Component.cpp, is opened along with the workspace. Most of the 
+other files in the project are not meant to be modified (and are protected with 
+a read-only attribute). But this file and its header, Component.h, are just 
+"skeletons", code modules that we will modify in order to implement the specific 
+component logic. 
+<p>
+
+Let us test the component as it currently exists. Execute "Build" (F7). The 
+project should compile smoothly. (If a problem occurs, the most likely cause is 
+that the GME interface directory is not specified correctly.) 
+<p>
+
+Since the component is not a standalone program, it cannot be executed directly. 
+Start GME and open a project based on the "networking" paradigm. If "networking" 
+was contained in the "Paradigms" field in ConfigureComponent, the interpreter 
+should be immediately available. There are several ways to start it: 
+
+<ol>
+ <li>
+  From the File/Interpret submenu
+ <li>
+  Through the generic interpreter button ("<b><i>i</i></b>") in the GME 
+  toolbar
+ <li>
+  Through the "Interpret" item in the context menus in the GME diagram 
+  windows or tree browser
+ <li>
+  Through the component-specific toolbar button (if this option was enabled 
+  during ConfigureComponent).
+</ol>
+
+(Note: When using methods #2 or #3, you may need to handle an additional "Select 
+Interpreter" dialog if more than one interpreter is activated for the current 
+paradigm.) 
+<p>
+
+Upon execution, the interpreter displays a message box containing the name of 
+the root folder, exactly as dictated in the <tt>CComponent::InvokeEx</tt> method 
+in the Component.cpp file. We will implement the interpreter by changing this 
+method and possibly extending CComponent. 
+<p><br>
+
+
+<hr width="80%">
+<br><a name="3.3"></a>
+<b><u><font size=+1>3.3 Writing the interpreter code</font></u></b> 
+<p>
+
+The framework has been set up, and the interpreter is running correctly. Our 
+final task consists of writing the crucial portion of the interpreter code. Like 
+any other program, the difficulty of this task depends on the complexity of the 
+functionality. Most interpreters implement at least two typical functions: 
+
+<ul>
+ <li>
+  <b><i>Navigating the object network</i></b> - usually, traversing all or part 
+  of the tree. Containment is the most frequently used relationship for 
+  traversal, although other relationships (inheritance, references, or 
+  connections) also provide the ability to navigate in both directions. If the 
+  paradigm is recursive, traversal is also implemented by a potentially 
+  recursive chain of method calls.
+  <br>
+  Navigation can begin from several different points, all of which are passed to 
+  <tt>CComponent::InvokeEx</tt> as parameters. These points are:
+
+  <ul>
+   <li>
+    The CBuilder object, which represents the entire project and provides access 
+    to the root folder, the hierarchy of subfolders (see <a href="Lesson4.html">
+    Lesson 4</a>), and the FCOs contained in them.
+   <li>
+    The focus object (if non-null), i.e. the model from which the interpreter 
+    was executed.
+   <li>
+    The list of selected objects, which is created only when the interpreter is 
+    started from the context menu; otherwise, the list is empty.
+  </ul>
+
+  The most frequently used methods for navigation are: 
+
+  <ul>
+   <li>
+    <i>GetRootFolder( )</i>, <i>GetFolders( )</i>, and <i>GetFolder(name)</i> in 
+    the CBuilder class
+   <li>
+    <i>GetSubFolders( )</i>, <i>GetRootModels( )</i>, and 
+    <i>GetRootModel(name)</i> in the CBuilderFolder class
+   <li>
+    <i>GetChildren( )</i>, <i>GetAtoms( )</i>, <i>GetModels( )</i>, 
+    <i>GetReferences( )</i>, <i>GetSets( )</i>, and <i>GetConnections( )</i> in 
+    the CBuilderModel class, along with the variations on these methods that 
+    filter the objects by kindname
+   <li>
+    <i>GetInConnections( )</i>, <i>GetInConnectedObjects( )</i>, 
+    <i>GetDirectInConnections( )</i>, and similar functions for navigating 
+    connections, plus <i>GetType( )</i> and <i>GetDerivedObjects( )</i> for 
+    navigating inheritance, all in the CBuilderObject class
+  </ul>
+
+  Consult Builder.h for a full list of methods. 
+
+ <li>
+  <b><i>Querying or modifying individual objects</i></b> - accessing object 
+  properties (e.g. name, position), attributes, metainformation, or 
+  associations. The function of interpreters typically involves printing out 
+  object data in some particular order and format, just like this example. The 
+  most frequently used methods for this function are in the CBuilderObject 
+  class. They are:
+
+  <ul>
+   <li>
+    <i>GetAttribute( )</i> and <i>SetAttribute( ) </i>in several variations, 
+    depending on attribute data type
+   <li>
+    <i>GetName( )</i>, <i>SetName( )</i>, <i>GetLocation( )</i>, and 
+    <i>SetLocation( )</i> for accessing properties
+   <li>
+    <i>GetRegistryValue( ) </i>and <i>SetRegistryValue( ) </i>for accessing 
+    visualization information
+   <li>
+    <i>GetKindName( )</i>, <i>GetPartName( )</i>, and 
+    <i>GetAttributeNames( )</i> for accessing metainformation
+  </ul>
+</ul>
+
+The operation of this particular interpreter should not depend on the focus 
+object or on selected objects (which may be NULL in certain situations). 
+Therefore, we must traverse the object tree through the root of the object 
+hierarchy. The paradigm does not allow subfolders, so it is relatively easy to 
+travel through all the root models in the diagram.
+
+<blockquote><tt>
+#include &lt;fstream.h>
+<br>static ofstream outf;
+<br>
+<br>void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, 
+CBuilderObjectList &amp;selected, long param) {
+<br>&nbsp;&nbsp;&nbsp; outf.open("netlist.lst");
+<br>&nbsp;&nbsp;&nbsp; outf &lt;&lt; "Router list for network" &lt;&lt; 
+builder.GetRootFolder()->GetName() &lt;&lt; endl;
+<br>&nbsp;&nbsp;&nbsp; const CBuilderModelList *diags = 
+builder.GetRootFolder()->GetRootModels();
+<br>&nbsp;&nbsp;&nbsp; POSITION pos = diags->GetHeadPosition();
+<br>&nbsp;&nbsp;&nbsp; while(pos) {
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CBuilderModel *diagram = 
+diags->GetNext(pos);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProcessDiagram(diagram);
+<br>&nbsp;&nbsp;&nbsp; }
+<br>&nbsp;&nbsp;&nbsp; outf.close();
+<br>}
+</tt></blockquote>
+
+<tt>InvokeEx</tt> demonstrates the basic tricks of traversing the BON network: 
+accessing child objects and iterating through collections. The only difference 
+between it and <tt>CComponent::ProcessDiagram</tt> is that the latter is 
+recursive and processes different children in a different way.
+
+<blockquote><tt>
+void CComponent::ProcessDiagram(CBuilderModel *d) {
+<br>&nbsp;&nbsp;&nbsp; ASSERT(d->GetKindName() == "NetDiagram");
+<br>&nbsp;&nbsp;&nbsp; const CBuilderModelList *diags = 
+d->GetModels("NetDiagram");
+<br>&nbsp;&nbsp;&nbsp; POSITION pos = diags->GetHeadPosition();
+<br>&nbsp;&nbsp;&nbsp; while(pos) ProcessDiagram(diags->GetNext(pos)); // 
+recursion
+<br>
+<br>&nbsp;&nbsp;&nbsp; const CBuilderModelList *routers = 
+d->GetModels("Router");
+<br>&nbsp;&nbsp;&nbsp; pos = routers->GetHeadPosition();
+<br>&nbsp;&nbsp;&nbsp; while(pos) ProcessRouter(routers->GetNext(pos));
+<br>}
+</tt></blockquote>
+
+<tt>ProcessDiagram</tt> is fairly complex, even though we managed to squeeze the 
+iteration loops into a single line. Together, the two methods above provide a 
+nearly complete implementation of the "traversal" function of the interpreter, 
+the part that locates routers in the hierarchy. The <tt>ProcessRouter</tt> 
+method takes care of the rest; it implements the "node processing" function, as 
+well as some minimal traversal into the ports of a router.
+
+<blockquote><tt>
+void CComponent::ProcessRouter(CBuilderModel *r) {
+<br>&nbsp;&nbsp;&nbsp; ASSERT(r->GetKindName() == "Router");
+<br>&nbsp;&nbsp;&nbsp; CString fam;
+<br>&nbsp;&nbsp;&nbsp; r->GetAttribute("Family", fam);
+<br>&nbsp;&nbsp;&nbsp; outf &lt;&lt; "\tRouter " &lt;&lt; r->GetName() &lt;&lt; 
+" (" &lt;&lt; fam &lt;&lt; ")" &lt;&lt; endl;
+<br>
+<br>&nbsp;&nbsp;&nbsp; const CBuilderAtomList *ports = r->GetAtoms("Port");
+<br>&nbsp;&nbsp;&nbsp; POSITION pos = ports->GetHeadPosition();
+<br>&nbsp;&nbsp;&nbsp; while(pos) {
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CBuilderAtom *port = ports->GetNext(pos);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CString iftype, ipaddr;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+int ifspeed;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+port->GetAttribute("IFType", iftype);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+port->GetAttribute("IFSpeed", ifspeed);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+port->GetAttribute("IPAddress", ipaddr);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+outf &lt;&lt; "\t\tPort " &lt;&lt; port->GetName();
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+outf &lt;&lt; "(" &lt;&lt; iftype &lt;&lt; "; "&lt;&lt; ifspeed &lt;&lt; "Kbps), 
+Addr: " &lt;&lt; ipaddr &lt;&lt; endl;
+<br>&nbsp;&nbsp;&nbsp; }
+<br>}
+</tt></blockquote>
+
+Do not forget to add <tt>ProcessDiagram</tt> and <tt>ProcessRouter</tt> to the 
+CComponent declaration in Component.h. It is not particularly useful to define 
+these functions as methods; normal C-style functions will suffice. The same is 
+true for our static file variable <tt>outf</tt>, which could just as well have 
+been declared as a CComponent (static or non-static) member.
+<p>
+
+The compilation should run smoothly unless there are typos in your code. If you 
+encounter assertions when running the interpreter for the first time, make sure 
+that you used the exact same names (kindnames, rolenames and attribute names) in 
+your paradigm that you are using in your interpreter code. For reference, here 
+are my copies of <a href="L3/Component.cpp">Component.cpp</a> and 
+<a href="L3/Component.h">Component.h</a>.
+<p>
+
+After running the interpreter and verifying that it works, check the time. In 
+less than 30 minutes, we have built our first interpreter!
+<p><br>
+
+<center>
+<hr width="80%">
+<table><tr><td>
+<a href="Lesson2.html">&lt;&lt; Previous Lesson</a> 
+</td><td width=50></td><td>
+<a href="Intro.html#toc">Complete List</a> 
+</td><td width=50></td><td>
+<a href="Lesson4.html">Next Lesson >></a>
+</td></tr></table>
+</center>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+Usage notes for the Blaster MGA exerciser tool
+==============================================
+
+Overview
+--------
+
+The Blaster is a paradigm-independent test program designed to maximally test
+the functionality of the Meta and Mga layers of GME.  The Blaster can
+perform two kinds of tests.  Blast testing attempts to create and manipulate
+every possible object defined by a paradigm.  Random testing randomly selects
+an FCO from a project and performs a random action upon it, which can include
+such actions as creating a child, setting or clearing an attribute, moving or
+copying its children, directing a reference, etc.
+
+Configuration file (blastcfg.txt)
+---------------------------------
+
+This file must be placed in the working directory.
+
+Configuration parameters:
+
+saveFrequency: the log file is saved to disk and the current transaction is 
+	committed after every saveFrequency log entries have been written
+depthLimit: controls the depth of recursion allowed when performing a blast test
+useFQNames: determines if the log information specifies the fully qualified 
+	names of objects
+useUIDs: determines if a unique ID number is appended to the name of every 
+	object created during testing
+deleteWhenDone: determines if all objects in the project are deleted at the 
+	conclusion of testing
+testBlast: determines a blast test will be performed
+testRandom: determines if random testing will be performed
+testTypesAndInstances: if blast testing, determines if subtypes and instances 
+	will be created
+randCount: the number of random testing actions that the Blaster will
+	attempt to perform
+genPattern: if true, a new random pattern will be generated and saved to the 
+	pattern file.  if false, the existing pattern file will be used.
+emailResults: if true, emails the result summary to the addresses specified 
+	by emailAddresses
+emailAddresses: comma-separated list of email addresses that should receive 
+	result summaries
+
+Example config file:
+
+saveFrequency=10
+depthLimit=2
+useFQNames=true
+useUIDs=true
+deleteWhenDone=false
+testBlast=false
+testRandom=true
+testTypesAndInstances=true
+randCount=2000
+genPattern=false
+emailResults=true
+emailAddresses=cytiv@home.com
+
+
+ComponentTester
+---------------
+
+The ComponentTester is used to create a new project or open an existing project 
+and then invoke the Blaster on it.
+
+Usage: ComponentTester <projectname> Blaster-i
+	Flags: -p<paradigm>: create new project using paradigm
+Example - create a new project: ComponentTester -pFDL3 fdl3-test.mga Blaster-i
+Example - open an existing project: ComponentTester fdl3-test.mga Blaster-i
+
+This ComponentTester is a specially modified version of the one that Arpad
+originally created.
+
+
+Blaster DLL
+-----------
+
+The Blaster DLL contains the actual test code.  It was originally a BON-based
+interpreter, but the BON has been cut out of it and now only raw COM is used.
+
+
+Batch file (runblaster.bat)
+---------------------------
+
+The batch file is used to launch the ComponentTester multiple times so that 
+multiple paradigms may be tested.
+
+
+Scheduling the Blaster
+----------------------
+
+The file Windows Scheduler.zip contains a freeware program for scheduling
+programs.  Just configure it to run runblaster.bat at the desired time.
+
+
+Mailing the results of the tests
+--------------------------------
+
+If emailResults is true, the Blaster will use the Simple MAPI interface to
+email the recipients specified by emailAddresses with a message of success
+or failure upon termination of the Blaster.  In the case of failure, the
+HRESULT error code and the offending source line will be included.  If the
+Blaster catches an exception from another component, error code 0x87658000
+will be used.
+
+To use the result emailing feature, MS Outlook must be running and must be 
+configured with an SMTP server.  Outlook should also be set to send 
+outgoing messages immediately.
+
+
+Log file (<projectname>-blastlog.txt)
+-------------------------------------
+
+The log file is a text file that tracks all actions performed by the Blaster.
+If the testing fails, an error message should be written to the log.
+
+
+Pattern file (<projectname>-pattern.txt)
+----------------------------------------
+
+The pattern file is a text file containing a series of random numbers that 
+can be used to play back a previous random test sequence.  When random
+testing is performed and genPattern is true, this file will be generated.
+When random testing is performed and genPattern is false, the Blaster will
+use this file to repeat that test sequence.
+
+I recommend the following strategy.  First, create a new project and run
+only blast testing.  Save a copy of the resulting mga file.  Then
+run only random testing on the project with the genPattern option set
+to true.  If an error occurs, you can run random testing on the saved copy
+of the project with genPattern set to false to reproduce the error.
+
+
+Miscellaneous notes
+-------------------
+
+The Meta, Mga, and Core components usually assert whenever an error occurs.
+This will cause a dialog to pop up and will pause testing.  Register the
+release versions of these DLLs if you do not wish to monitor the testing.
+
+The Blaster may also be launched from GME as an interpreter.  If you
+choose to run the Blaster in this way, make sure to disable the constraint
+manager first.
+
+In order to make random tests reproducible, the Blaster must sort all
+MGA collections that it works with.  This can cause a very long delay at the
+start of the random test process because every object in the project must
+be put into a sorted list.
+
+Objects that implement IMgaObject are usually sorted by object ID.  However,
+this method does not guarantee reproducible sorts because object IDs are not
+necessarily generated in any order.  A stronger but much slower method is to
+sort these objects by fully-qualified name.  To enable this, un-comment
+#define ID_BY_NAME at the top of Component.cpp.
+
+Random testing is designed to be performed on a project that has already been blasted.
+It will not work on a new, empty project.
+
+Currently, the FDL3 paradigm cannot be blast tested using types and instances 
+without running out of memory and crashing.
+
+Future work
+-----------
+
+Random deletions - DeleteRandomFCO function implemented but not in use 
+due to bugs.  Needs to be changed so that deleted children of an object are
+removed from the allFCOs_list or only leaves are allowed to be deleted.
+
+Exception handling - can't seem to catch hresult_exceptions thrown from Meta,
+Mga, and Core layers and extract their error codes; have to use catch(...)
+
+Even if an error occurs, the current transaction should be committed and the
+project saved to disk before aborting.  This does not always happen with the
+current setup.
+
+The only types and instances testing done is the creation of a subtype and an
+instance of every root model at the end of a blast test.  Further testing
+could involve deriving types from subtypes, placing derived types and instances
+in places other than in folders, and creating types and instances before the end
+of the blast phase.
+
+During random testing, I occasionally get an E_NOTFOUND message from the Core
+layer when I select a random FCO.  I have not been able to track down the
+cause yet.
+
+COMVERIFY probably needs to be converted into a regular function instead of a
+macro, because the macro cannot be lengthened much more without exceeding
+the compiler limit on exception states.

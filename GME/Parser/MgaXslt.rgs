@@ -1,0 +1,26 @@
+HKCR
+{
+	Mga.MgaXslt.1 = s 'MgaXslt Class'
+	{
+		CLSID = s '{2C9DF78A-92C2-4994-8AAC-BFA8007BBCD7}'
+	}
+	Mga.MgaXslt = s 'MgaXslt Class'
+	{
+		CLSID = s '{2C9DF78A-92C2-4994-8AAC-BFA8007BBCD7}'
+		CurVer = s 'Mga.MgaXslt.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {2C9DF78A-92C2-4994-8AAC-BFA8007BBCD7} = s 'MgaXslt Class'
+		{
+			ProgID = s 'Mga.MgaXslt.1'
+			VersionIndependentProgID = s 'Mga.MgaXslt'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{461F30AE-3BF0-11D4-B3F0-005004D38590}'
+		}
+	}
+}

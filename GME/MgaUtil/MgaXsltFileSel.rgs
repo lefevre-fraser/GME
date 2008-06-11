@@ -1,0 +1,26 @@
+HKCR
+{
+	Mga.MgaXsltFileSel.1 = s 'MgaXsltFileSel Class'
+	{
+		CLSID = s '{0B989673-7179-46ba-9352-D1EDB0222B7E}'
+	}
+	Mga.MgaXsltFileSel = s 'MgaXsltFileSel Class'
+	{
+		CLSID = s '{0B989673-7179-46ba-9352-D1EDB0222B7E}'
+		CurVer = s 'Mga.MgaXsltFileSel.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {0B989673-7179-46ba-9352-D1EDB0222B7E} = s 'MgaXsltFileSel Class'
+		{
+			ProgID = s 'Mga.MgaXsltFileSel.1'
+			VersionIndependentProgID = s 'Mga.MgaXsltFileSel'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{461F30AE-3BF0-11D4-B3F0-005004D38590}'
+		}
+	}
+}

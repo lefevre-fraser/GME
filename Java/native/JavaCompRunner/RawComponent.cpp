@@ -1,0 +1,259 @@
+///////////////////////////////////////////////////////////////////////////
+// RawComponent.cpp, the main RAW COM component implementation file
+// This is the file (along with its header RawComponent.h)
+// that the component implementor is expected to modify in the first place
+//
+///////////////////////////////////////////////////////////////////////////
+#include "stdafx.h"
+#include "ComHelp.h"
+#include "GMECOM.h"
+#include "CommonError.h"
+#include "ComponentConfig.h"
+#include "RawComponent.h"
+#include "ComponentDll.h"
+
+
+RawComponent::RawComponent()
+{  
+    m_javaVMDll    = NULL;
+    m_createJavaVM = NULL;
+    m_env          = NULL;
+    m_jvm          = NULL;
+}
+
+RawComponent::~RawComponent()
+{
+    unloadJavaVM();
+}
+
+void RawComponent::loadJavaVM()
+{
+    unloadJavaVM();
+
+    char          classPath[2000];
+    char          memory[100];
+    char          memory_buf[200];
+    char          buf[2000];
+    unsigned long bufSize;
+    HKEY          regkey;
+    DWORD         type;
+
+    // query classpath from registry
+    RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", 0, KEY_EXECUTE, &regkey);
+    type = REG_SZ;
+    bufSize = 2000;
+    RegQueryValueEx(regkey, "JavaClassPath", NULL, &type, (LPBYTE)classPath, &bufSize );
+    RegCloseKey(regkey);
+
+    // query java memory
+    sprintf( memory, "" );
+    RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", 0, KEY_EXECUTE, &regkey);
+    type = REG_SZ;
+    bufSize = 100;
+    RegQueryValueEx(regkey, "JavaMemory", NULL, &type, (LPBYTE)memory, &bufSize );
+    RegCloseKey(regkey);
+
+    // query jvm.dll path from registry
+    RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\JavaSoft\\Java Runtime Environment", 0, KEY_EXECUTE, &regkey);
+    type = REG_SZ;        
+	bufSize = 2000;
+    RegQueryValueEx(regkey, "CurrentVersion", NULL, &type, (LPBYTE)buf, &bufSize );
+    RegCloseKey(regkey);
+    char javaVersionPath[2000];
+    sprintf( javaVersionPath, "SOFTWARE\\JavaSoft\\Java Runtime Environment\\%s", buf );
+    RegOpenKeyEx(HKEY_LOCAL_MACHINE, javaVersionPath, 0, KEY_EXECUTE, &regkey);
+    bufSize = 2000;
+    type    = REG_SZ;
+    buf[0] = 0;
+    RegQueryValueEx(regkey, "RuntimeLib", NULL, &type, (LPBYTE)buf, &bufSize );
+    RegCloseKey(regkey);
+    if( strlen(buf)==0 )
+    {        
+        AfxMessageBox("Error loading java. Cannot query jvm.dll path from registry.");
+        unloadJavaVM();
+        return;
+    }    
+
+    // load jvm.dll
+    m_javaVMDll = LoadLibrary(buf);
+    if(m_javaVMDll == NULL)
+    {
+        AfxMessageBox("Error loading java. Cannot find jvm.dll.");
+        unloadJavaVM();
+        return;
+    }
+
+    // Retrieve address of functions
+    m_createJavaVM      = (P_JNI_CreateJavaVM)        GetProcAddress(m_javaVMDll, "JNI_CreateJavaVM");
+    m_getCreatedJavaVMs = (P_JNI_GetCreatedJavaVMs)   GetProcAddress(m_javaVMDll, "JNI_GetCreatedJavaVMs");
+    if(m_createJavaVM == NULL || m_getCreatedJavaVMs == NULL )
+    {
+        AfxMessageBox("Error loading java. Invalid jvm.dll.");
+        unloadJavaVM();
+        return;
+    }
+
+    // find java vm or create it if not found
+    jsize           machineNum;
+    jsize           buflen = 1;
+    JavaVMInitArgs  args;
+    JavaVMOption    options[2];
+
+    sprintf(buf, "-Djava.class.path=%s", classPath);
+	options[0].optionString = buf;
+
+    args.version = JNI_VERSION_1_2;
+    if( strlen(memory) > 0 )
+    {
+        args.nOptions = 2;
+        sprintf(memory_buf, "-Xmx%s", memory);
+	    options[1].optionString = memory_buf;
+    }
+    else
+        args.nOptions = 1;
+
+    args.options = options;
+	args.ignoreUnrecognized = JNI_FALSE;
+
+    int res = (*m_getCreatedJavaVMs)(&m_jvm,buflen,&machineNum);
+    if( res == 0 && machineNum>0 )
+        res = m_jvm->AttachCurrentThread((void **)&m_env,&args);
+    else
+        res = (*m_createJavaVM)(&m_jvm, (void**)&m_env, &args);
+    if(res != 0)
+    {
+        char buf[200];
+        sprintf(buf, "Error loading java. Cannot create java virtual machine. Error code: %d", res);
+        AfxMessageBox(buf);
+        unloadJavaVM();
+        return;
+    }
+}
+    
+void RawComponent::unloadJavaVM()
+{
+    if(m_javaVMDll != NULL)
+    {
+        FreeLibrary(m_javaVMDll);
+        m_javaVMDll = NULL;
+    }
+    m_createJavaVM      = NULL;
+    m_getCreatedJavaVMs = NULL;
+}
+
+
+
+// this method is called after all the generic initialization is done
+// this should be empty, unless application-specific initialization is needed
+STDMETHODIMP RawComponent::Initialize(struct IMgaProject *) 
+{
+	return S_OK;
+}
+
+// this is the obsolete component interface
+// this present implementation either tries to call InvokeEx, or returns an error;
+STDMETHODIMP RawComponent::Invoke(IMgaProject* gme, IMgaFCOs *models, long param)
+{
+#ifdef SUPPORT_OLD_INVOKE
+	CComPtr<IMgaFCO> focus;
+	CComVariant parval = param;
+	return InvokeEx(gme, focus, selected, parvar);
+#else
+	if(interactive) {
+		AfxMessageBox("This component does not support the obsolete invoke mechanism");
+	}
+	return E_MGA_NOT_SUPPORTED;
+#endif
+}
+
+
+// This is the main component method for interpereters and plugins.
+// May als be used in case of invokeable addons
+STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
+									 IMgaFCOs *selectedobjs,  long param)
+{
+	COMTRY 
+    {
+		CComPtr<IMgaTerritory> terr;
+		COMTHROW(project->CreateTerritory(NULL, &terr));
+		COMTHROW(project->BeginTransaction(terr));
+		try 
+        {
+            // load java VM
+            loadJavaVM();
+
+            CComponentApp * app = (CComponentApp*)AfxGetApp();
+
+            // call the java interpreter
+            jclass    entryClass  = m_env->FindClass("org/isis/gme/bon/ComponentInvoker");
+            jmethodID entryMethod = m_env->GetStaticMethodID(entryClass, "invokeEx", "(Ljava/lang/String;Ljava/lang/String;IIII)V");
+            m_env->CallStaticVoidMethod(entryClass, entryMethod, 
+                m_env->NewStringUTF(this->m_javaClassPath.c_str()), 
+                m_env->NewStringUTF(this->m_javaClass.c_str()), project, currentobj, selectedobjs, param);
+
+            /*jclass    entryClass  = app->m_env->FindClass("org/isis/gme/bon/ComponentInvoker");
+            jmethodID entryMethod = app->m_env->GetStaticMethodID(entryClass, "invokeEx", "(Ljava/lang/String;Ljava/lang/String;IIII)V");
+            app->m_env->CallStaticVoidMethod(entryClass, entryMethod, 
+                app->m_env->NewStringUTF(this->m_javaClassPath.c_str()), 
+                app->m_env->NewStringUTF(this->m_javaClass.c_str()), project, currentobj, selectedobjs, param);*/
+
+            //app->m_env->CallStaticVoidMethod(entryClass, entryMethod, NULL, NULL, project, currentobj, 
+              //          selectedobjs, param);
+
+			COMTHROW(project->CommitTransaction());
+		}	
+        catch(...) 
+        {
+            AfxMessageBox("Internal error while executing java interpreter.");
+            project->AbortTransaction(); 
+            throw;
+        }
+	}
+    COMCATCH(;);
+}
+
+// GME currently does not use this function
+// you only need to implement it if other invokation mechanisms are used
+STDMETHODIMP RawComponent::ObjectsInvokeEx( IMgaProject *project,  IMgaObject *currentobj,  IMgaObjects *selectedobjs,  long param) 
+{
+	if(interactive) {
+		AfxMessageBox("Tho ObjectsInvoke method is not implemented");
+	}
+	return E_MGA_NOT_SUPPORTED;
+}
+
+
+// implement application specific parameter-mechanism in these functions:
+STDMETHODIMP RawComponent::get_ComponentParameter(BSTR name, VARIANT *pVal)
+{
+	return S_OK;
+}
+
+STDMETHODIMP RawComponent::put_ComponentParameter(BSTR name, VARIANT newVal) 
+{
+	return S_OK;
+}
+
+
+#ifdef GME_ADDON
+
+// these two functions are the main 
+STDMETHODIMP RawComponent::GlobalEvent(globalevent_enum event) 
+{ 
+	if(event == GLOBALEVENT_UNDO) {
+		AfxMessageBox("UNDO!!");
+	}
+	return S_OK; 
+}
+
+STDMETHODIMP RawComponent::ObjectEvent(IMgaObject * obj, unsigned long eventmask, VARIANT v) 
+{
+	if(eventmask & OBJEVENT_CREATED) {
+		CComBSTR objID;
+		COMTHROW(obj->get_ID(&objID));
+		AfxMessageBox( "Object created! ObjID: " + CString(objID)); 
+	}		
+	return S_OK;
+}
+
+#endif

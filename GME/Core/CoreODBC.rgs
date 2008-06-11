@@ -1,0 +1,26 @@
+HKCR
+{
+	Mga.CoreODBC.1 = s 'CoreODBC Class'
+	{
+		CLSID = s '{7281C47A-3E09-11D3-B2F7-005004D38590}'
+	}
+	Mga.CoreODBC = s 'CoreODBC Class'
+	{
+		CLSID = s '{7281C47A-3E09-11D3-B2F7-005004D38590}'
+		CurVer = s 'Mga.CoreODBC.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {7281C47A-3E09-11D3-B2F7-005004D38590} = s 'CoreODBC Class'
+		{
+			ProgID = s 'Mga.CoreODBC.1'
+			VersionIndependentProgID = s 'Mga.CoreODBC'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{9E9AAACF-28B8-11D3-B36C-0060082DF884}'
+		}
+	}
+}

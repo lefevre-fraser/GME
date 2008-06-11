@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GMEMergeComponent", "GMEMergeComponent.vcproj", "{690EC135-ECE6-4AD7-B566-3D4FDC6B7067}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{690EC135-ECE6-4AD7-B566-3D4FDC6B7067}.Debug.ActiveCfg = Debug|Win32
+		{690EC135-ECE6-4AD7-B566-3D4FDC6B7067}.Debug.Build.0 = Debug|Win32
+		{690EC135-ECE6-4AD7-B566-3D4FDC6B7067}.Release.ActiveCfg = Release|Win32
+		{690EC135-ECE6-4AD7-B566-3D4FDC6B7067}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

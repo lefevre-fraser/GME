@@ -1,0 +1,260 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "1 TYPELIB ""Search.tlb""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "ISIS, Vanderbilt University"
+            VALUE "FileDescription", "Search ActiveX Control Module"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "Search"
+            VALUE "LegalCopyright", "Copyright (C) 2002"
+            VALUE "OriginalFilename", "Search.OCX"
+            VALUE "ProductName", "Search ActiveX Control Module"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ABOUTDLL            ICON                    "Search.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_SEARCH              BITMAP                  "SearchCtl.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX_SEARCH DIALOG  34, 22, 260, 38
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About GME Search Control"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDI_ABOUTDLL,IDC_STATIC,10,10,21,20
+    LTEXT           "GME Search Control, Version 1.0",IDC_STATIC,40,10,170,8
+    LTEXT           "Copyright (C) 2002, ISIS, Vanderbilt University",
+                    IDC_STATIC,40,20,170,8
+    DEFPUSHBUTTON   "OK",IDOK,221,7,32,14,WS_GROUP
+END
+
+IDD_PROPPAGE_SEARCH DIALOG  0, 0, 250, 62
+STYLE DS_SETFONT | WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "There are no properties for this control",IDC_STATIC,64,
+                    27,120,8
+END
+
+IDD_SEARCH_DIALOG DIALOGEX 0, 0, 237, 233
+STYLE DS_SETFONT | WS_CHILD | WS_VISIBLE
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_EDITNAME,55,16,78,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDITROLE,55,31,77,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDITKIND,55,45,77,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDITATTRNAME,172,15,52,13,ES_AUTOHSCROLL
+    COMBOBOX        IDC_COMBOTYPE,171,30,51,112,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDITATTRVALU,171,47,52,14,ES_AUTOHSCROLL
+    CONTROL         "Model",IDC_CHECKMOD,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,21,75,43,9
+    CONTROL         "Atom",IDC_CHECKATM,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,95,75,39,11
+    CONTROL         "Set",IDC_CHECKSET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    165,75,32,12
+    CONTROL         "Reference",IDC_CHECKREF,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,21,87,49,11
+    CONTROL         "Special:",IDC_CHECKSPLSEARCH,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,77,87,39,11
+    LTEXT           "NULL References",IDC_STATICREF,117,88,111,8
+    CONTROL         "Match Whole Word Only",IDC_CHECKFULLWORD,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,65,104,94,10
+    CONTROL         "Match Case",IDC_CHECK_CASESENS,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,161,104,54,10
+    CONTROL         "Locate in Browser",IDC_CHECK_LOCATE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,65,115,96,10
+    PUSHBUTTON      "&Search",IDC_BUTTON_GO,10,107,50,14
+    CONTROL         "List1",IDC_LISTRESULTS,"SysListView32",LVS_REPORT | 
+                    WS_BORDER | WS_TABSTOP,7,126,223,100
+    LTEXT           "Name:",IDC_STATICNAME,29,18,22,8
+    GROUPBOX        "Search Criteria",IDC_STATICCRIT,7,7,223,58
+    LTEXT           "Role Name:",IDC_STATICROLE,13,32,41,9
+    LTEXT           "Kind Name:",IDC_STATICKIND,13,47,40,9
+    LTEXT           "Attribute:",IDC_STATICATTRNAME,141,18,30,9
+    LTEXT           "Type:",IDC_STATICATTRTYPE,150,33,20,9
+    LTEXT           "Value:",IDC_STATICATTRVALU,148,49,21,9
+    GROUPBOX        "Search For",IDC_STATICFOR,7,65,223,35
+    CONTROL         "Progress1",IDC_PROGRESSSEARCH,"msctls_progress32",NOT 
+                    WS_VISIBLE | WS_BORDER,16,162,199,20
+    CONTROL         "Scoped Search",IDC_CHECK_SCOPED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,161,115,65,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX_SEARCH, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 253
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 31
+    END
+
+    IDD_PROPPAGE_SEARCH, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 243
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_SEARCH_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 230
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 226
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_SEARCH_DIALOG DLGINIT
+BEGIN
+    IDC_COMBOTYPE, 0x403, 7, 0
+0x7453, 0x6972, 0x676e, "\000" 
+    IDC_COMBOTYPE, 0x403, 8, 0
+0x6e49, 0x6574, 0x6567, 0x0072, 
+    IDC_COMBOTYPE, 0x403, 6, 0
+0x6c46, 0x616f, 0x0074, 
+    IDC_COMBOTYPE, 0x403, 8, 0
+0x6f42, 0x6c6f, 0x6165, 0x006e, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_SEARCH              "GME Search Control"
+    IDS_SEARCH_PPG          "GME Search Property Page"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_SEARCH_PPG_CAPTION  "General"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+1 TYPELIB "Search.tlb"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

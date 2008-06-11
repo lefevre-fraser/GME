@@ -1,0 +1,132 @@
+// -*- MPC -*-
+// $Id: mgautil.mpc,v 1.11 2004/10/28 01:21:31 dhinton Exp $
+
+
+// MgaUtil.dll
+project (MPC_MgaUtil): mfc, midl {
+  sharedname = MgaUtil
+  libout = ../Lib
+
+  after += MPC_Meta MPC_Mga
+  lit_libs += imagehlp htmlhelp
+  libpaths += ../lib
+  includes += ../Interfaces \
+              ../Common \
+              ../include/STLport \
+              ../include/htmlhelp \
+              . \
+              ../Lib
+
+  MIDL_Files {
+    midlflags += -I "../Interfaces" -tlb "MgaUtilLib.tlb" -h "MgaUtilLib.h" -iid "MgaUtilLib_i.c" -Oicf
+    MgaUtilLib.idl
+  }
+
+  Source_Files {
+    AnnotationAspectList.cpp
+    AnnotationBrowserDlg.cpp
+    AnnotationList.cpp
+    AnnotationNode.cpp
+    AnnotationPanel.cpp
+    ClosureDlg.cpp
+    ClosureKindSel.cpp
+    ClosureRes.cpp
+    ClosureSmart.cpp
+    colorbtn.cpp
+    ../Common/CommonError.cpp
+    ../Common/CommonMfc.cpp
+    ../Common/CommonSmart.cpp
+    CompDlg.cpp
+    CompInfoDlg.cpp
+    ComponentProxy.cpp
+    ConnPropertiesDlg.cpp
+    DialogList.cpp
+    DirDialog.cpp
+    FolderPropertiesDlg.cpp
+    GmeDlg.cpp
+    MakeClosure.cpp
+    MetaDlg.cpp
+    MetaPurgeDialog.cpp
+    MgaClosure.cpp
+    MgaEventLogger.cpp
+    MgaLauncher.cpp
+    MgaProgressDlg.cpp
+    MgaRegistrar.cpp
+    MgaResolver.cpp
+    MgaUtil.def
+    MgaUtil.rc
+    MgaUtilApp.cpp
+    PropertiesDlg.cpp
+    RegBrwNode.cpp
+    RegistryBrowserDlg.cpp
+    RegistryPanel.cpp
+    RegistryTree.cpp
+    SplitterBar.cpp
+    StdAfx.cpp
+    XsltDial.cpp
+    XsltFileSel.cpp
+  }
+
+  Header_Files {
+    AnnotationAspectList.h
+    AnnotationBrowserDlg.h
+    AnnotationList.h
+    AnnotationNode.h
+    AnnotationPanel.h
+    ClosureDlg.h
+    ClosureRes.h
+    colorbtn.h
+    ComHelp.h
+    CompDlg.h
+    CompInfoDlg.h
+    ComponentProxy.h
+    ConnPropertiesDlg.h
+    DialogList.h
+    DirDialog.h
+    FolderPropertiesDlg.h
+    GmeDlg.h
+    MakeClosure.h
+    MetaDlg.h
+    MetaPurgeDialog.h
+    MgaClosure.h
+    MgaEventLogger.h
+    MgaLauncher.h
+    MgaProgressDlg.h
+    MgaRegistrar.h
+    MgaResolver.h
+    MgaUtilApp.h
+    MgaUtilLib.h
+    PropertiesDlg.h
+    RegBrwNode.h
+    RegistryBrowserDlg.h
+    RegistryPanel.h
+    RegistryTree.h
+    Resource.h
+    SplitterBar.h
+    StdAfx.h
+    XsltDial.h
+    XslFileSel.h    
+  }
+
+  Resource_Files {
+    res/AddOnStatus.bmp
+    res/colorbtn.rc2
+    res/CompImageList.bmp
+    ComponentProxy.rgs
+    res/iconn_reghere.ico
+    res/icon/reginherit.ico
+    res/icon_reginvalid.ico
+    res/icon_regmeta.ico
+    res/icon_regundef.ico
+    mgaclosure.rgs
+    MgaEventLogger.rgs
+    MgaLauncher.rgs
+    MgaProgressDlg.rgs
+    MgaRegistrar.rgs
+    MgaResolver.rgs
+    res/MgaUtil.rc2
+    MgaUtilLib.rgs
+    MgaXsltFileSel.rgs
+  }
+}
+

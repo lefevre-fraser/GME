@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="D501123A-99C8-45DF-A612-74CA83B098E4" name="GMEBuild" kpf_version="2">
+<preference-set id="">
+</preference-set>
+<file url="build.py" id="F16E7F0B-AEED-4F66-A696-FDB9CDF784C3" name="build.py">
+</file>
+<file url="prefs.py" id="529C4DA3-A3B0-41C6-969B-787E76DCC0CA" name="prefs.py">
+</file>
+<file url="tools.py" id="D585E55D-4128-44EA-9D01-28155C0F6FD5" name="tools.py">
+</file>
+</project>

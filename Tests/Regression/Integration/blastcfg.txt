@@ -1,0 +1,12 @@
+saveFrequency=10
+depthLimit=2
+useFQNames=true
+useUIDs=true
+deleteWhenDone=true
+testBlast=true
+testRandom=false
+testTypesAndInstances=false
+randCount=2000
+genPattern=false
+emailResults=false
+emailAddresses=brianw@isis.vanderbilt.edu

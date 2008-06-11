@@ -1,0 +1,166 @@
+--- //d/GME/GME/GMEApp.cpp.occorig	Mon Jan 21 20:44:22 2002
++++ //d/GME/GME/GMEApp.cpp	Wed Feb 27 19:47:43 2002
+@@ -124,11 +124,14 @@
+ class CGMECommandLineInfo : public CCommandLineInfo {
+ public:
+  	bool bNoProtect, bOpenLast;
++	bool bCmdFile;
++	CString CmdFile;
+  	CGMECommandLineInfo() : bNoProtect(false), bOpenLast(false) { ; }
+ 
+ 	virtual void ParseParam(const char* pszParam, BOOL bFlag, BOOL bLast) {
+ 		if(bFlag && !strcmp(pszParam, "d")) bNoProtect = true;
+  		else if(bFlag && !strcmp(pszParam, "l")) bOpenLast = true;
++ 		else if(bFlag && !strcmp(pszParam, "c")) bCmdFile = true;
+ 		else if(bFlag && !strcmp(pszParam, "REGSERVER")) {
+ 			char c[200];
+ 			GetModuleFileName(NULL, c, sizeof(c));
+@@ -142,6 +145,10 @@
+ 			if(hr == S_OK) { AfxMessageBox("Unregistered"); exit(0); }
+ 			else { AfxMessageBox("Unregistration error: " + hr); exit(-1); }
+ 		}
++		else if(bCmdFile) {
++			CmdFile = pszParam;			
++			bCmdFile = false;
++		}
+ 		else CCommandLineInfo::ParseParam(pszParam, bFlag, bLast);
+ 	}
+ 
+@@ -329,9 +336,14 @@
+ 
+ 	GetBitmapPath();
+ 
++	if(!cmdInfo.CmdFile.IsEmpty()) {
++		extern void Automate(CWnd *, CString);
++		Automate(pMainFrame, cmdInfo.CmdFile);
++	}
+ 	return TRUE;
+ }
+ 
++
+ BOOL CGMEApp::PreTranslateMessage(MSG* pMsg)
+ {
+ 	// CG: The following lines were added by the Splash Screen component.
+--- //d/GME/GME/GME.dsp.occorig	Tue Jan 22 21:43:47 2002
++++ //d/GME/GME/GME.dsp	Mon Mar 11 16:11:16 2002
+@@ -54,7 +54,7 @@
+ # ADD BSC32 /nologo
+ LINK32=link.exe
+ # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
+-# ADD LINK32 /nologo /subsystem:windows /map /debug /machine:I386
++# ADD LINK32 xerces-c_1.lib /nologo /subsystem:windows /map /debug /machine:I386 /libpath:"../lib"
+ 
+ !ELSEIF  "$(CFG)" == "GME - Win32 Debug"
+ 
+@@ -80,7 +80,7 @@
+ # ADD BSC32 /nologo
+ LINK32=link.exe
+ # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+-# ADD LINK32 /nologo /subsystem:windows /map /debug /machine:I386 /pdbtype:sept
++# ADD LINK32 xerces-c_1.lib /nologo /subsystem:windows /map /debug /machine:I386 /pdbtype:sept /libpath:"../lib"
+ 
+ !ENDIF 
+ 
+@@ -101,6 +101,11 @@
+ # End Source File
+ # Begin Source File
+ 
++SOURCE=.\Animator.cpp
++# ADD CPP /I "../Include/xerces"
++# End Source File
++# Begin Source File
++
+ SOURCE=.\AutoRoute\ArEdgeLs.cpp
+ 
+ !IF  "$(CFG)" == "GME - Win32 Release"
+@@ -147,6 +152,11 @@
+ # End Source File
+ # Begin Source File
+ 
++SOURCE=.\Automate.cpp
++# ADD CPP /I "../Include/xerces"
++# End Source File
++# Begin Source File
++
+ SOURCE=.\AutoRoute\AutoRouter.cpp
+ 
+ !IF  "$(CFG)" == "GME - Win32 Release"
+@@ -365,6 +375,11 @@
+ 
+ SOURCE=.\SyncObjsListCtrl.cpp
+ # End Source File
++# Begin Source File
++
++SOURCE=.\XMLUtil.cpp
++# ADD CPP /I "../Include/xerces"
++# End Source File
+ # End Group
+ # Begin Group "Header Files"
+ 
+@@ -395,6 +410,10 @@
+ # End Source File
+ # Begin Source File
+ 
++SOURCE=.\Automate.h
++# End Source File
++# Begin Source File
++
+ SOURCE=.\AutoRoute\AutoRouter.h
+ # End Source File
+ # Begin Source File
+@@ -696,18 +715,26 @@
+ # End Source File
+ # Begin Source File
+ 
++SOURCE=.\GMETester.dtd
++# End Source File
++# Begin Source File
++
+ SOURCE=.\ReadMe.txt
+ # End Source File
+ # Begin Source File
+ 
+ SOURCE=..\RequestedFeatureList.txt
+ # End Source File
++# Begin Source File
++
++SOURCE=.\Test1.xml
++# End Source File
++# Begin Source File
++
++SOURCE=.\Test2.xml
++# End Source File
+ # End Target
+ # End Project
+-# Section GME : {72ADFD78-2C39-11D0-9903-00A0C91BC942}
+-# 	1:10:IDB_SPLASH:112
+-# 	2:21:SplashScreenInsertKey:4.0
+-# End Section
+ # Section GME : {5C402C89-C848-11D3-9A6E-00902721DB65}
+ # 	2:5:Class:CActiveBrowser
+ # 	2:10:HeaderFile:activebrowser.h
+@@ -721,4 +748,8 @@
+ # 	1:17:ID_INDICATOR_TIME:103
+ # 	2:2:BH:
+ # 	2:17:ID_INDICATOR_TIME:ID_INDICATOR_TIME
++# End Section
++# Section GME : {72ADFD78-2C39-11D0-9903-00A0C91BC942}
++# 	1:10:IDB_SPLASH:112
++# 	2:21:SplashScreenInsertKey:4.0
+ # End Section
+--- //d/GME/GME/GME.rc.occorig	Tue Jan 22 21:43:47 2002
++++ //d/GME/GME/GME.rc	Wed Feb 27 19:21:23 2002
+@@ -795,6 +795,13 @@
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ //
++// DTD
++//
++
++GMETEST.DTD             DTD     DISCARDABLE     "GMETester.dtd"
++
++/////////////////////////////////////////////////////////////////////////////
++//
+ // String Table
+ //
+ 

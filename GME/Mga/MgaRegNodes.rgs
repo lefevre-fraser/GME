@@ -1,0 +1,26 @@
+HKCR
+{
+	Mga.MgaRegNodes.1 = s 'MgaRegNodes Class'
+	{
+		CLSID = s '{c795ed20-c1fd-11d3-9ad2-00aa00b6fe26}'
+	}
+	Mga.MgaRegNodes = s 'MgaRegNodes Class'
+	{
+		CLSID = s '{c795ed20-c1fd-11d3-9ad2-00aa00b6fe26}'
+		CurVer = s 'Mga.MgaRegNodes.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {c795ed20-c1fd-11d3-9ad2-00aa00b6fe26} = s 'MgaRegNodes Class'
+		{
+			ProgID = s 'Mga.MgaRegNodes.1'
+			VersionIndependentProgID = s 'Mga.MgaRegNodes'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}'
+		}
+	}
+}

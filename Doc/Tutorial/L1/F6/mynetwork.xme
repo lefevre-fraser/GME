@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project SYSTEM "mga.dtd">
+
+<project guid="{00000000-0000-0000-0000-000000000000}" cdate="Thu Mar 11 19:34:05 2004" mdate="Thu Mar 11 19:34:05 2004" metaguid="{91BE0991-DEAD-BEEF-FEED-DAD000000000}" metaname="networking">
+	<name>mynetwork</name>
+	<comment></comment>
+	<author></author>
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x1" kind="RootFolder">
+		<name>mynetwork</name>
+		<model id="id-0065-00000001" kind="NetDiagram" relid="0x1" childrelidcntr="0x5">
+			<name>NewNetDiagram</name>
+			<model id="id-0065-00000002" kind="Router" role="Router" relid="0x1" childrelidcntr="0x3">
+				<name>inetgw</name>
+				<regnode name="PartRegs" isopaque="yes">
+					<value></value>
+					<regnode name="Connectivity" isopaque="yes">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>226,86</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="Family" status="meta">
+					<value>Other</value>
+				</attribute>
+				<atom id="id-0066-00000003" kind="Port" role="Port" relid="0x1">
+					<name>E0</name>
+					<regnode name="PartRegs" isopaque="yes">
+						<value></value>
+						<regnode name="Connectivity" isopaque="yes">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>23,58</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="IFSpeed" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="IFType" status="meta">
+						<value>Ethernet</value>
+					</attribute>
+					<attribute kind="IPAddress" status="meta">
+						<value>0.0.0.0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000004" kind="Port" role="Port" relid="0x2">
+					<name>E1</name>
+					<regnode name="PartRegs" isopaque="yes">
+						<value></value>
+						<regnode name="Connectivity" isopaque="yes">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>23,142</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="IFSpeed" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="IFType" status="meta">
+						<value>Ethernet</value>
+					</attribute>
+					<attribute kind="IPAddress" status="meta">
+						<value>0.0.0.0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000005" kind="Port" role="Port" relid="0x3">
+					<name>S0</name>
+					<regnode name="PartRegs" isopaque="yes">
+						<value></value>
+						<regnode name="Connectivity" isopaque="yes">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>485,107</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="IFSpeed" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="IFType" status="meta">
+						<value>Ethernet</value>
+					</attribute>
+					<attribute kind="IPAddress" status="meta">
+						<value>0.0.0.0</value>
+					</attribute>
+				</atom>
+			</model>
+			<atom id="id-0066-00000001" kind="Host" role="Host" relid="0x3">
+				<name>mailhost</name>
+				<regnode name="PartRegs" isopaque="yes">
+					<value></value>
+					<regnode name="Connectivity" isopaque="yes">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>32,95</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="IPAddress" status="meta">
+					<value>0.0.0.0</value>
+				</attribute>
+			</atom>
+			<atom id="id-0066-00000002" kind="Network" role="Network" relid="0x2">
+				<name>Network</name>
+				<regnode name="PartRegs" isopaque="yes">
+					<value></value>
+					<regnode name="Connectivity" isopaque="yes">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>130,95</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="NetMask" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NetworkAddress" status="meta">
+					<value></value>
+				</attribute>
+			</atom>
+			<connection id="id-0068-00000001" kind="Connection" role="Connection" relid="0x4">
+				<name>Connection</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>Ew</value>
+				</regnode>
+				<connpoint role="src" target="id-0066-00000001"/>
+				<connpoint role="dst" target="id-0066-00000002"/>
+			</connection>
+			<connection id="id-0068-00000002" kind="Connection" role="Connection" relid="0x5">
+				<name>Connection</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>e</value>
+				</regnode>
+				<connpoint role="dst" target="id-0066-00000002"/>
+				<connpoint role="src" target="id-0066-00000004"/>
+			</connection>
+		</model>
+	</folder>
+</project>

@@ -1,0 +1,102 @@
+// -*- MPC -*-
+// $Id: meta.mpc,v 1.8 2004/10/28 01:21:31 dhinton Exp $
+
+
+// Meta.dll
+project (MPC_Meta): mfc, midl {
+  sharedname = Meta
+  libout = ../Lib
+
+  after += MPC_Core MPC_Interfaces
+  libs += Core
+  libpaths += ../lib
+  includes += ../Interfaces \
+              ../Common \
+              ../include/STLport \
+              ../Lib
+
+  MIDL_Files {
+    midlflags += -I "..\Interfaces" -tlb ".\MetaLib.tlb" -h "MetaLib.h" -iid "MetaLib_i.c" -Oicf
+    MetaLib.idl
+  }
+
+
+  Source_Files {
+    CoreMetaDefines.cpp
+    Meta.cpp
+    Meta.def
+    Meta.rc
+    MetaUtilities.cpp
+    MgaMetaAspect.cpp
+    MgaMetaAtom.cpp
+    MgaMetaAttribute.cpp
+    MgaMetaBase.cpp
+    MgaMetaConnection.cpp
+    MgaMetaConnJoint.cpp
+    MgaMetaConstraint.cpp
+    MgaMetaEnumItem.cpp
+    MgaMetaFCO.cpp
+    MgaMetaFolder.cpp
+    MgaMetaModel.cpp
+    MgaMetaPart.cpp
+    MgaMetaPointerItem.cpp
+    MgaMetaPointerSpec.cpp
+    MgaMetaProject.cpp
+    MgaMetaReference.cpp
+    MgaMetaRegNode.cpp
+    MgaMetaRole.cpp
+    MgaMetaSet.cpp
+    StdAfx.cpp
+  }
+
+  Header_Files {
+    CoreMetaDefines.h
+    MetaLib.h
+    MetaUtilities.h
+    MgaMetaAspect.h
+    MgaMetaAtom.h
+    MgaMetaAttribute.h
+    MgaMetaBase.h
+    MgaMetaConnection.h
+    MgaMetaConnJoint.h
+    MgaMetaConstraint.h
+    MgaMetaEnumItem.h
+    MgaMetaFCO.h
+    MgaMetaFolder.h
+    MgaMetaModel.h
+    MgaMetaPart.h
+    MgaMetaPointerItem.h
+    MgaMetaPointerSpec.h
+    MgaMetaProject.h
+    MgaMetaReference.h
+    MgaMetaRegNode.h
+    MgaMetaRole.h
+    MgaMetaSet.h
+    Resource.h
+    StdAfx.h
+
+  }
+
+  Resource_Files {
+    MgaMetaAspect.rgs
+    MgaMetaAtom.rgs
+    MgaMetaAttribute.rgs
+    MgaMetaConnection.rgs
+    MgaMetaConnJoint.rgs
+    MgaMetaConstraint.rgs
+    MgaMetaEnumItem.rgs
+    MgaMetaFCOs.rgs
+    MgaMetaFolder.rgs
+    MgaMetaModel.rgs
+    MgaMetaPart.rgs
+    MgaMetaPointerItem.rgs
+    MgaMetaPointerSpec.rgs
+    MgaMetaProject.rgs
+    MgaMetaReference.rgs
+    MgaMetaRegNode.rgs
+    MgaMetaRole.rgs
+    MgaMetaRoles.rgs
+    MgsMetaSet.rgs
+  }
+}
+

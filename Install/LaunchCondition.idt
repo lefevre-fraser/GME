@@ -1,0 +1,5 @@
+Condition	Description
+s255	l255
+LaunchCondition	Condition
+AdminUser	##ID_STRING9##
+VersionNT	##ID_STRING37##

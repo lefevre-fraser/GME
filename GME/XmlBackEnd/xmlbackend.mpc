@@ -1,0 +1,63 @@
+// -*- MPC -*-
+// $Id: xmlbackend.mpc,v 1.9 2004/10/28 16:31:37 dhinton Exp $
+
+
+// XmlBackEnd.dll
+project (MPC_XmlBackEnd): mfc, midl {
+  sharedname = XmlBackEnd
+  libout = ../Lib
+
+  after += MPC_Core MPC_Interfaces
+  libs += xerces-c_2
+  libpaths += ../Lib
+  includes += . \
+              ../Include/STLport \
+              ../Include/ODBC \
+              ../Include/repository \
+              ../Include \
+              ../Interfaces \
+              ../Common \
+              ../Gme \
+              ../Core \
+              ../Lib
+
+  specific(vc6,vc71){
+    midl_includes += ../Interfaces
+    midl_defines +=
+    midl_flags +=
+    macros += _MBCS _WINDLL
+  }
+
+  MIDL_Files {
+    midlflags += -I ..\Interfaces -tlb ".\XmlBackEnd.tlb" -h "XmlBackEnd.h" -iid "XmlBackEnd_i.c" -Oicf
+    XmlBackEnd.idl
+  }
+
+  Source_Files {
+    ccauto.IDL
+    ../Common/CommonError.cpp
+    ../Common/CommonSmart.cpp
+    CoreXmlFile.cpp
+    FilesInUseDetailsDlg.cpp
+    FilesInUseDlg.cpp
+    StdAfx.cpp
+    VSSLoginDlg.cpp
+    XmlBackEnd.cpp
+    XmlBackEnd.def
+    XmlBackEnd.rc
+  }
+
+  Header_Files {
+    ccauto.h
+    CoreXmlFile.h
+    Resource.h
+    StdAfx.h
+    VSSLoginDlg.h
+    XmlBackEnd.h
+  }
+
+  Resource_Files {
+    CoreXmlFile.rgs
+  }
+}
+

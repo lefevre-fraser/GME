@@ -1,0 +1,71 @@
+// -*- MPC -*-
+// $Id: core.mpc,v 1.15 2004/10/28 15:56:10 dhinton Exp $
+
+
+// Core.dll
+project (MPC_Core): mfc, midl {
+  sharedname = Core
+  libout = ../Lib
+
+  after += MPC_Interfaces
+  lit_libs += odbc32 odbccp32
+  libpaths += ../Lib
+  includes += ../Include/repository \
+              ../Include/ODBC \
+              ../Interfaces \
+              ../Include/STLport \
+              ../Common \
+              ../Gme \
+              ../Lib
+
+  MIDL_Files {
+    midlflags += -I ..\Interfaces -tlb ".\CoreLib.tlb" -h "CoreLib.h" -iid "CoreLib_i.c" -Oicf
+    CoreLib.idl
+  }
+
+  Source_Files {
+    Core.cpp
+    Core.def
+    Core.rc
+    CoreAttribute.cpp
+    CoreBinFile.cpp
+    CoreMetaAttribute.cpp
+    CoreMetaObject.cpp
+    CoreMetaProject.cpp
+    CoreObject.cpp
+    CoreODBC.cpp
+    CoreProject.cpp
+    CoreRepository.cpp
+    CoreTerritory.cpp
+    CoreUtilities.cpp
+    StdAfx.cpp
+  }
+
+  Header_Files {
+    CoreLib.h
+    CoreAttribute.h
+    CoreBinFile.h
+    CoreMetaAttribute.h
+    CoreMetaObject.h
+    CoreMetaProject.h
+    CoreObject.h
+    CoreODBC.h
+    CoreProject.h
+    CoreRepository.h
+    CoreTerritory.h
+    CoreTransactionItem.h
+    CoreUtilities.h
+    Resource.h
+    StdAfx.h
+  }
+
+  Resource_Files {
+    CoreBinFile.rgs
+    CoreMetaProject.rgs
+    CoreODBC.rgs
+    CoreProject.rgs
+    CoreRepository.rgs
+    MetaStaticProject.rgs
+  }
+}
+

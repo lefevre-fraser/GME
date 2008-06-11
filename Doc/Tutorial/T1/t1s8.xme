@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project SYSTEM "mga.dtd">
+
+<project guid="{00000000-0000-0000-0000-000000000000}" cdate="Thu Mar 11 20:05:07 2004" mdate="Thu Mar 11 20:05:07 2004" metaguid="{8EC8E7A4-DEAD-BEEF-FEED-DAD000000000}" metaname="FSM-Meta">
+	<name>ATM</name>
+	<comment></comment>
+	<author></author>
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x1" kind="RootFolder">
+		<name>ATM</name>
+		<model id="id-0065-00000001" kind="State" relid="0x1" childrelidcntr="0x14">
+			<name>ATM</name>
+			<model id="id-0065-00000002" kind="State" role="State" relid="0x4" childrelidcntr="0x0">
+				<name>PINcodeTest</name>
+				<regnode name="PartRegs" isopaque="yes">
+					<value></value>
+					<regnode name="FSM" isopaque="yes">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>58,359</value>
+						</regnode>
+					</regnode>
+				</regnode>
+			</model>
+			<model id="id-0065-00000003" kind="State" role="State" relid="0x5" childrelidcntr="0x0">
+				<name>AccountChecking</name>
+				<regnode name="PartRegs" isopaque="yes">
+					<value></value>
+					<regnode name="FSM" isopaque="yes">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>51,513</value>
+						</regnode>
+					</regnode>
+				</regnode>
+			</model>
+			<model id="id-0065-00000004" kind="State" role="State" relid="0x2" childrelidcntr="0x0">
+				<name>ReceiptPrinted</name>
+				<regnode name="PartRegs" isopaque="yes">
+					<value></value>
+					<regnode name="FSM" isopaque="yes">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>344,156</value>
+						</regnode>
+					</regnode>
+				</regnode>
+			</model>
+			<model id="id-0065-00000005" kind="State" role="State" relid="0x7" childrelidcntr="0x0">
+				<name>CashEjected</name>
+				<regnode name="PartRegs" isopaque="yes">
+					<value></value>
+					<regnode name="FSM" isopaque="yes">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>358,492</value>
+						</regnode>
+					</regnode>
+				</regnode>
+			</model>
+			<model id="id-0065-00000006" kind="State" role="State" relid="0x6" childrelidcntr="0x0">
+				<name>WaitingForPrint</name>
+				<regnode name="PartRegs" isopaque="yes">
+					<value></value>
+					<regnode name="FSM" isopaque="yes">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>358,352</value>
+						</regnode>
+					</regnode>
+				</regnode>
+			</model>
+			<model id="id-0065-00000007" kind="State" role="State" relid="0x1" childrelidcntr="0x0">
+				<name>Ready</name>
+				<regnode name="PartRegs" isopaque="yes">
+					<value></value>
+					<regnode name="FSM" isopaque="yes">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>65,156</value>
+						</regnode>
+					</regnode>
+				</regnode>
+			</model>
+			<connection id="id-0068-00000001" kind="Transition" role="Transition" relid="0x10">
+				<name>Transition</name>
+				<attribute kind="Condition">
+					<value>Incorrect PIN code</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Please Enter your PIN code again</value>
+				</attribute>
+				<connpoint role="dst" target="id-0065-00000002"/>
+				<connpoint role="src" target="id-0065-00000002"/>
+			</connection>
+			<connection id="id-0068-00000002" kind="Transition" role="Transition" relid="0xe">
+				<name>Transition</name>
+				<attribute kind="Condition">
+					<value>No Receipt</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Thank You</value>
+				</attribute>
+				<connpoint role="src" target="id-0065-00000006"/>
+				<connpoint role="dst" target="id-0065-00000007"/>
+			</connection>
+			<connection id="id-0068-00000003" kind="Transition" role="Transition" relid="0x14">
+				<name>Transition</name>
+				<attribute kind="Condition">
+					<value>Receipt still in output</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Please take your receipt</value>
+				</attribute>
+				<connpoint role="src" target="id-0065-00000004"/>
+				<connpoint role="dst" target="id-0065-00000004"/>
+			</connection>
+			<connection id="id-0068-00000004" kind="Transition" role="Transition" relid="0x8">
+				<name>Transition</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>Sn</value>
+				</regnode>
+				<attribute kind="Condition">
+					<value>Card Inserted</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Please Enter your PIN code</value>
+				</attribute>
+				<connpoint role="dst" target="id-0065-00000002"/>
+				<connpoint role="src" target="id-0065-00000007"/>
+			</connection>
+			<connection id="id-0068-00000005" kind="Transition" role="Transition" relid="0x11">
+				<name>Transition</name>
+				<attribute kind="Condition">
+					<value>Bad Amount</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Please select a different amount</value>
+				</attribute>
+				<connpoint role="dst" target="id-0065-00000003"/>
+				<connpoint role="src" target="id-0065-00000003"/>
+			</connection>
+			<connection id="id-0068-00000006" kind="Transition" role="Transition" relid="0x12">
+				<name>Transition</name>
+				<attribute kind="Condition">
+					<value>Cash still in output</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Please Take your Cash</value>
+				</attribute>
+				<connpoint role="dst" target="id-0065-00000005"/>
+				<connpoint role="src" target="id-0065-00000005"/>
+			</connection>
+			<connection id="id-0068-00000007" kind="Transition" role="Transition" relid="0x13">
+				<name>Transition</name>
+				<attribute kind="Condition">
+					<value>Waiting for answer</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Would you like to pint a receipt</value>
+				</attribute>
+				<connpoint role="dst" target="id-0065-00000006"/>
+				<connpoint role="src" target="id-0065-00000006"/>
+			</connection>
+			<connection id="id-0068-00000008" kind="Transition" role="Transition" relid="0x9">
+				<name>Transition</name>
+				<attribute kind="Condition">
+					<value>Correct PIN Code</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Please Select an Amount</value>
+				</attribute>
+				<connpoint role="src" target="id-0065-00000002"/>
+				<connpoint role="dst" target="id-0065-00000003"/>
+			</connection>
+			<connection id="id-0068-00000009" kind="Transition" role="Transition" relid="0xa">
+				<name>Transition</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>w</value>
+				</regnode>
+				<attribute kind="Condition">
+					<value>Good Amount</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Cash Dispensed</value>
+				</attribute>
+				<connpoint role="src" target="id-0065-00000003"/>
+				<connpoint role="dst" target="id-0065-00000005"/>
+			</connection>
+			<connection id="id-0068-0000000a" kind="Transition" role="Transition" relid="0xc">
+				<name>Transition</name>
+				<attribute kind="Condition">
+					<value>Receipt Required</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Receipt Printed</value>
+				</attribute>
+				<connpoint role="dst" target="id-0065-00000004"/>
+				<connpoint role="src" target="id-0065-00000006"/>
+			</connection>
+			<connection id="id-0068-0000000b" kind="Transition" role="Transition" relid="0xb">
+				<name>Transition</name>
+				<attribute kind="Condition">
+					<value>Cash Taken</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Would you like to print a receipt?</value>
+				</attribute>
+				<connpoint role="src" target="id-0065-00000005"/>
+				<connpoint role="dst" target="id-0065-00000006"/>
+			</connection>
+			<connection id="id-0068-0000000c" kind="Transition" role="Transition" relid="0xd">
+				<name>Transition</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>e</value>
+				</regnode>
+				<attribute kind="Condition">
+					<value>Receipt Taken</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Thank You</value>
+				</attribute>
+				<connpoint role="src" target="id-0065-00000004"/>
+				<connpoint role="dst" target="id-0065-00000007"/>
+			</connection>
+			<connection id="id-0068-0000000d" kind="Transition" role="Transition" relid="0xf">
+				<name>Transition</name>
+				<attribute kind="Condition">
+					<value>No Use</value>
+				</attribute>
+				<attribute kind="Output">
+					<value>Please Insert your Card</value>
+				</attribute>
+				<connpoint role="dst" target="id-0065-00000007"/>
+				<connpoint role="src" target="id-0065-00000007"/>
+			</connection>
+		</model>
+	</folder>
+</project>

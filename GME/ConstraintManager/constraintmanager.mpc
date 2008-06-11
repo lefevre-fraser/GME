@@ -1,0 +1,136 @@
+// -*- MPC -*-
+// $Id: constraintmanager.mpc,v 1.11 2004/10/28 01:21:30 dhinton Exp $
+
+
+// ConstraintManager.dll
+project (MPC_ConstraintManager): mfc, midl {
+  sharedname = ConstraintManager
+  libout = ../Lib
+
+  after += MPC_Core MPC_Interfaces MPC_Meta MPC_Mga
+  libs += 
+  libpaths += ../Lib
+  includes += ../Interfaces \
+              ../Common \
+              ../include/STLport \
+              . \
+              ../Lib
+
+  macros += _MBCS
+
+  MIDL_Files {
+    midlflags += -I "../interfaces" -tlb ".\ConstraintManager.tlb" -h "ConstraintManager.h" -iid "ConstraintManager_i.c" -Oicf
+    ConstraintManager.idl
+  }
+
+  Source_Files {
+    AParser.cpp
+    ATokenBuffer.cpp
+    ../Common/CommonError.cpp
+    ../Common/CommonSmart.cpp
+    ConstraintManager.cpp
+    ConstraintManager.def
+    ConstraintManager.rc
+    ConstraintMgr.cpp
+    DLexerBase.cpp
+    ExpressionChecker.cpp
+    GMEConstraintBrowserDialog.cpp
+    GMEConstraintEx.cpp
+    GMEConstraintPropertiesDialog.cpp
+    GMEConstraintTreeCtrl.cpp
+    GMESmallMessageBox.cpp
+    GMESyntacticSemanticDialog.cpp
+    GMEViolationDialog.cpp
+    ocl.cpp
+    OCLCommon.cpp
+    OCLCommonEx.cpp
+    OclConstraint.cpp
+    OCLContext.cpp
+    OCLException.cpp
+    OCLFactory.cpp
+    OCLFeature.cpp
+    OCLFeatureImplementation.cpp
+    OCLGMECMFacade.cpp
+    OCLGMEECFacade.cpp
+    OCLLexer.cpp
+    OCLObject.cpp
+    OCLObjectExBasic.cpp
+    OCLObjectExGME.cpp
+    OCLParser.cpp
+    OCLParserStatic.cpp
+    OCLRefCount.cpp
+    OCLSignature.cpp
+    OCLTree.cpp
+    OCLType.cpp
+    OCLTypeExBasic.cpp
+    OCLTypeExGMECM.cpp
+    OCLTypeExGMEEC.cpp
+    Regexp.cpp
+    StdAfx.cpp
+    TokenEx.cpp
+    TreeCtrlEx.cpp
+  }
+
+  Header_Files {
+    AFXIMPL.h
+    ConstraintManager.h
+    ConstraintMgr.h
+    ExpressionChecker.h
+    GMEConstraintBrowserDialog.h
+    GMEConstraintEx.h
+    GMEConstraintPropertiesDialog.h
+    GMECosntraintTreeCtrl.h
+    GMESmallMessageBox.h
+    GMESyntacticSemanticDialog.h
+    GMEViolationDialog.h
+    OCLCommon.h
+    OCLCommonEx.h
+    OCLConfig.h
+    OclConstraint.h
+    OCLContext.h
+    OCLException.h
+    OCLFactory.h
+    OCLFeature.h
+    OCLFeatureImplementation.h
+    OCLFormalParameter.h
+    OCLGMECMFacade.h
+    OCLGMEECFacade.h
+    OCLLexer.h
+    OCLObject.h
+    OCLObjectExBasic.h
+    OCLObjectExGME.h
+    OCLParser.h
+    OCLParserStatic.h
+    OCLRefCount.h
+    OCLSignature.h
+    OCLTokens.h
+    OCLTree.h
+    OCLType.h
+    OCLTypeExBasic.h
+    OCLTypeExGMECM.h
+    OCLTypeExGMEEC.h
+    OclViolation.h
+    Regexp.h
+    Resource.h
+    Solve4786.h
+    StdAfx.h
+    TokenEx.h
+    TreeCtrlEx.h
+  }
+
+  Resource_Files {
+    check_icons.bmp
+    constraint_icons.gmp
+    ConstraintMgr.rgs
+    constraintstate_icons.bmp
+    ec_icon.ico
+    error.ico
+    error_icons.bmp
+    expand.ico
+    ExpressionChecker.rgs
+    line_icons.bmp
+    tree_icons.bmp
+    warning_ico
+  }
+}
+
