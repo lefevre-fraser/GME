@@ -29,7 +29,7 @@ typedef CTypedPtrList<CPtrList, CRect *>	CRectList;
 CPartBrowserPane::CPartBrowserPane():
 	mgaProject(NULL),
 	mgaMetaModel(NULL),
-	currenAspectIndex(-1),
+	currentAspectIndex(-1),
 	omitPaintMessages(true)
 {
 	backgroundColor = ::GetSysColor(COLOR_APPWORKSPACE);
@@ -98,11 +98,11 @@ bool CPartBrowserPane::IsPartDisplayable(CComPtr<IMgaMetaPart> metaPart, bool de
 
 bool CPartBrowserPane::FindObject(CPoint &pt, PartWithDecorator& pdt)
 {
-	if (currenAspectIndex < 0 || pdts.size() <= 0)
+	if (currentAspectIndex < 0 || pdts.size() <= 0)
 		return NULL;
 
 	try {
-		std::vector<PartWithDecorator> pdtv = pdts[currenAspectIndex];
+		std::vector<PartWithDecorator> pdtv = pdts[currentAspectIndex];
 		// calculate the maximum size
 		for (std::vector<PartWithDecorator>::iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
 			ASSERT((*ii).decorator != NULL);
@@ -165,7 +165,7 @@ void CPartBrowserPane::DestroyDecorators(void)
 		for (std::vector<PartWithDecorator>::iterator jj = (*ii).begin(); jj != (*ii).end(); ++jj) {
 			(*jj).decorator->Destroy();
 			(*jj).decorator.Release();
-			// (*jj).part.Release();
+			(*jj).part.Release();
 		}
 		(*ii).clear();
 	}
@@ -174,12 +174,12 @@ void CPartBrowserPane::DestroyDecorators(void)
 
 void CPartBrowserPane::Resize(CRect r)
 {
-	if (!mgaMetaModel || currenAspectIndex < 0 || pdts.size() <= 0)
+	if (!mgaMetaModel || currentAspectIndex < 0 || pdts.size() <= 0 || currentAspectIndex >= pdts.size())
 		return;
 
 	bool oldOmitPaintMessages = omitPaintMessages;
 	omitPaintMessages = true;
-	ChangeAspect(currenAspectIndex);
+	ChangeAspect(currentAspectIndex);
 	omitPaintMessages = oldOmitPaintMessages;
 
 	const int leftMargin = 10;
@@ -206,7 +206,7 @@ void CPartBrowserPane::Resize(CRect r)
 	CPoint pt = CPoint(leftStartPos, topMargin);
 
 	try {
-		std::vector<PartWithDecorator> pdtv = pdts[currenAspectIndex];
+		std::vector<PartWithDecorator> pdtv = pdts[currentAspectIndex];
 		// calculate the maximum size
 		for (std::vector<PartWithDecorator>::iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
 			ASSERT((*ii).decorator != NULL);
@@ -275,11 +275,15 @@ void CPartBrowserPane::Resize(CRect r)
 
 void CPartBrowserPane::SetCurrentProject(CComPtr<IMgaProject> project)
 {
+	if (mgaProject != NULL)
+		mgaProject.Release();
 	mgaProject = project;
 }
 
 void CPartBrowserPane::SetMetaModel(CComPtr<IMgaMetaModel> meta)
 {
+	if (mgaMetaModel != NULL)
+		mgaMetaModel.Release();
 	mgaMetaModel = meta;
 
 	DestroyDecorators();
@@ -313,11 +317,11 @@ void CPartBrowserPane::SetBgColor(COLORREF bgColor)
 
 void CPartBrowserPane::ChangeAspect(int index)
 {
-	if (currenAspectIndex == index)
+	if (currentAspectIndex == index)
 		return;
 
-	currenAspectIndex = index;
-	if (currenAspectIndex < 0 || pdts.size() <= 0)
+	currentAspectIndex = index;
+	if (currentAspectIndex < 0 || pdts.size() <= 0)
 		return;
 
 	// create a DC for text metric
@@ -331,7 +335,7 @@ void CPartBrowserPane::ChangeAspect(int index)
 	maxSize.cy = 10;
 
 	try {
-		std::vector<PartWithDecorator> pdtv = pdts[currenAspectIndex];
+		std::vector<PartWithDecorator> pdtv = pdts[currentAspectIndex];
 		// calculate the maximum size
 		for (std::vector<PartWithDecorator>::iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
 			ASSERT((*ii).part != NULL);
@@ -395,9 +399,9 @@ void CPartBrowserPane::OnPaint()
 	CPaintDC dc(this); // device context for painting
 	dc.SetWindowOrg(0, parent->GetScrollPosition ());
 
-	if (pdts.size() > 0 && currenAspectIndex >= 0) {
+	if (pdts.size() > 0 && currentAspectIndex >= 0) {
 		try {
-			std::vector<PartWithDecorator> pdtv = pdts[currenAspectIndex];
+			std::vector<PartWithDecorator> pdtv = pdts[currentAspectIndex];
 			for (std::vector<PartWithDecorator>::iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
 				ASSERT((*ii).decorator != NULL);
 				COMTHROW((*ii).decorator->Draw(dc.m_hDC));

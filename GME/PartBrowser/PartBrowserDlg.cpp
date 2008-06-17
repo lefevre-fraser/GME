@@ -37,12 +37,16 @@ void CPartBrowserDlg::DoDataExchange(CDataExchange* pDX)
 
 void CPartBrowserDlg::SetCurrentProject(CComPtr<IMgaProject> project)
 {
+	if (mgaProject != NULL)
+		mgaProject.Release();
 	mgaProject = project;
 	partFrame.GetPane().SetCurrentProject(project);
 }
 
 void CPartBrowserDlg::SetMetaModel(CComPtr<IMgaMetaModel> meta)
 {
+	if (mgaMetaModel != NULL)
+		mgaMetaModel.Release();
 	mgaMetaModel = meta;
 	partFrame.GetPane().SetMetaModel(meta);
 

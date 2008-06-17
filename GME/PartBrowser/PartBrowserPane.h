@@ -38,7 +38,7 @@ protected:
 	CComPtr<IMgaMetaModel>	mgaMetaModel;
 	COLORREF				backgroundColor;
 	std::vector<std::vector<PartWithDecorator> >	pdts;
-	int						currenAspectIndex;
+	int						currentAspectIndex;
 	CSize					maxSize;
 	bool					omitPaintMessages;
 	CFont					txtMetricFont;
