@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Tue May 06 14:02:46 2008
+/* at Fri Jun 20 10:23:49 2008
  */
 /* Compiler settings for .\PartBrowser.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)

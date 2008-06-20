@@ -30,7 +30,7 @@ guaranteed.
 1. Release Notes
 ************************************************
 
-Release Notes of Release r8.5.20
+Release Notes of Release r8.6.20
 --------------------------------
   - TBD
 

@@ -2,7 +2,7 @@
 #define _GMEVERSION_H_
 
 #define GME_VERSION_MAJOR	8		// MAJOR = Last two digits of Year
-#define GME_VERSION_MINOR	5		// MINOR = Month
+#define GME_VERSION_MINOR	6		// MINOR = Month
 #define GME_VERSION_PLEVEL	20		// PATCH LEVEL = Day
 
 #define _VERSION_STRING2(x)	#x 
