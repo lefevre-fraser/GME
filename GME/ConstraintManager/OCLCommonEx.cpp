@@ -333,7 +333,8 @@ namespace OclCommonEx {
 	void AddAssociation( OclMeta::TypeManager* pManager, OclMeta::Association* pAssociation, OclMeta::AssociationVector& vecAssociations, bool bCantBeSet )
 	{
 		OclMeta::Association* pAssociationFound = NULL;
-		for ( unsigned int i = 0 ; i < vecAssociations.size() ; i++ )
+		unsigned int i;
+		for ( i = 0 ; i < vecAssociations.size() ; i++ )
 			if ( pAssociation->IsIdentical( *vecAssociations[ i ] ) ) {
 				pAssociationFound = vecAssociations[ i ];
 				break;

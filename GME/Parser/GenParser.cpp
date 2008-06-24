@@ -14,15 +14,15 @@
 XmlStr::XmlStr(const XMLCh* const input)
 {
 	resize(GetCharLength(input, -1));
-	CopyTo(input, -1, begin(), length());
+	CopyTo(input, -1, &(operator[](0)), length());
 	ASSERT( operator[](length()-1) == 0 );
-	pop_back();
+	erase( length() - 1); // was: pop_back();
 }
 
 XmlStr::XmlStr(const XMLCh* const input, unsigned int len)
 {
 	resize(GetCharLength(input, len));
-	CopyTo(input, len, begin(), length());
+	CopyTo(input, len, &(operator[](0)), length());
 }
 
 void CGenParser::SetErrorInfo2(HRESULT hr)
@@ -85,7 +85,7 @@ InputSource *CGenParser::resolveEntity(const XMLCh* const publicId, const XMLCh*
 		if( a <= 0 )
 			break;
 
-		if( stricmp(filename + a, "PARSER.DLL") != 0 )
+		if( _stricmp(filename + a, "PARSER.DLL") != 0 )
 			break;
 
 		strcpy(filename + a, sysid.c_str());
@@ -137,11 +137,11 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 
 		XmlStr namestr(name);
 
-		elements.push_back();
+		elements.push_back(element_type());
 		elements.back().name = namestr;
 		elements.back().begin = counter;
 
-		for(index = 0; !elementfuncs[index].name.empty(); index++)
+		for(unsigned int index = 0; !elementfuncs[index].name.empty(); index++)
 		{
 			if( namestr == elementfuncs[index].name )
 			{

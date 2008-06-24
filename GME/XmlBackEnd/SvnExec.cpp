@@ -328,8 +328,6 @@ STDMETHODIMP CSvnExec::IsUpToDate(BSTR p_path, VARIANT_BOOL* p_upToDate)
 STDMETHODIMP CSvnExec::BulkUnLock( VARIANT p_pathVec, VARIANT_BOOL* p_ptrSuccess)
 {
 	std::vector< std::string> vec;
-	long i, j, min; 
-	BSTR BSTRTemp;
 	BSTR HUGEP *pBSTR;
 	HRESULT hr;
 

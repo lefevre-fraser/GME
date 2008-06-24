@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2000,2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -15,7 +16,7 @@
  */
 
 /*
- * $Id: XMLHTTPRequest.cpp,v 1.1 2008/02/19 20:16:27 zolmol Exp $
+ * $Id: XMLHTTPRequest.cpp 568078 2007-08-21 11:43:25Z amassari $
  */
 
 #include "stdafx.h"
@@ -740,7 +741,7 @@ HWND CXMLHttpRequest::GetParentWindow()
 	if (S_OK != hr)
 		return hWnd;
 
-	long lWnd = 0;
+	SHANDLE_PTR lWnd = 0;
 	hr = pWB->get_HWND(&lWnd);
 	if (S_OK != hr)
 		return hWnd;
@@ -749,7 +750,7 @@ HWND CXMLHttpRequest::GetParentWindow()
 }
 
 void CALLBACK  CXMLHttpRequest::InternetStatusCallback(HINTERNET hInternet,
-													DWORD dwContext,
+													DWORD_PTR dwContext,
 													DWORD dwInternetStatus,
 													LPVOID lpvStatusInformation,
 													DWORD dwStatusInformationLength)

@@ -12,6 +12,7 @@
 #include <list>
 #include <vector>
 #include <map>
+#include <exception>
 
 
 class CompareCComObj
@@ -37,7 +38,7 @@ public:
 	CMgaParser()
 		: m_maintainGuids( false)
 	{ 
-		m_resolveDerFuncPtr = CMgaParser::ResolveDerivation;
+		m_resolveDerFuncPtr = &CMgaParser::ResolveDerivation;
 	}
 
 DECLARE_REGISTRY_RESOURCEID(IDR_MGAPARSER)
@@ -81,7 +82,7 @@ public:
 	std::list<range_type> ranges;
 
 	int skip_element_level;
-	class pass_exception : public exception
+	class pass_exception : public std::exception
 	{
 	};
 
@@ -143,7 +144,7 @@ public:
 	//void RegisterReadOnlyStatus( const attributes_type &attributes);
 	bool GetIntendedReadOnlyFlag( bool *p_isReadOnly);
 
-	typedef std::hash_map<std::string, CComBstrObj> id_lookup_type;
+	typedef stdext::hash_map<std::string, CComBstrObj> id_lookup_type;
 	typedef id_lookup_type::iterator id_lookup_iterator;
 
 	id_lookup_type id_lookup;

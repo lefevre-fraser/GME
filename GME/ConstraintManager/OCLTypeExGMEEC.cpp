@@ -913,7 +913,7 @@ namespace OclGmeEC
 		OclCommonEx::FCOVector vecParents;
 		OclCommonEx::GetInheritances( spFCO, "Normal", true, vecParents );
 		OclCommonEx::GetInheritances( spFCO, "Implementation", true, vecParents );
-		for ( i = 0 ; i < vecParents.size() ; i++ )
+		for ( unsigned int i = 0 ; i < vecParents.size() ; i++ )
 			GetAttributeObjects( strName, vecParents[ i ].p, vecFeatures, vecExamined );
 
 		CComPtr<IMgaFCOs> spRefs;

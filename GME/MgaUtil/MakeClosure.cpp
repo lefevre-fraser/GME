@@ -358,8 +358,8 @@ void CMakeClosure::procFolder( IMgaFolder *folder)
 
 	if ( m_bFolderContainment)
 	{
-		insertNew( folder, IMgaFolder::get_ChildFolders);
-		insertNew( folder, IMgaFolder::get_ChildFCOs);
+		insertNew( folder, &IMgaFolder::get_ChildFolders);
+		insertNew( folder, &IMgaFolder::get_ChildFCOs);
 	}
 }
 
@@ -370,7 +370,7 @@ void CMakeClosure::procModel( IMgaModel *model)
 
 	if ( m_bContainment)
 	{
-		insertNew( model, IMgaModel::get_ChildFCOs);
+		insertNew( model, &IMgaModel::get_ChildFCOs);
 	}
 }
 
@@ -1290,7 +1290,7 @@ void CMakeClosure::autoWrap()
 	// checks if the common root is among the selected objects
 	// ?indicates if the common root of the objects is a selected object itself
 	bool are_all_seld_children_of_common_root = true; 
-	for( l = 0; l < k; ++l)
+	for( unsigned int l = 0; l < k; ++l)
 	{
 		// this happens when one of the sel objs is the grandparent/parent of all other sel objs
 		// in this case the common_root is a selected object
@@ -1304,7 +1304,7 @@ void CMakeClosure::autoWrap()
 
 
 	// inserting the objects which stay between the common root and the top objects in the containment hierarchy
-	for( l = 0; l < k; ++l)
+	for( unsigned int l = 0; l < k; ++l)
 	{
 		std::string rest_of_path = path_map[ l];
 		rest_of_path = rest_of_path.substr( common_path.length() + 1, rest_of_path.length() - common_path.length() - 1); 

@@ -171,7 +171,7 @@ bool CmdClient::unLock( const std::string& p_file)
 bool CmdClient::bulkUnLock( const std::vector< std::string>& p_vect)
 {
 	std::string files_concat;
-	for( int i = 0; i < p_vect.size(); ++i)
+	for( std::vector< std::string>::size_type i = 0; i < p_vect.size(); ++i)
 	{
 		if( !files_concat.empty())
 			files_concat += " ";

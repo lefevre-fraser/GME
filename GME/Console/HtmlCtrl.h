@@ -18,7 +18,7 @@
 class CConsoleCtl;
 
 class CHtmlCtrl : public CHtmlView
-{
+{		
 public:
 	CHtmlCtrl();
 	~CHtmlCtrl() { }

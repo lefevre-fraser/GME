@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <hash_map>
 
 #ifndef MGA_COMMONSMART_H
 #include "CommonSmart.h"
@@ -23,21 +24,27 @@ inline void CopyTo(const std::string::const_iterator i, int l, CComVariant &a){}
 inline void CopyTo(BSTR b, std::string::iterator i, int l) {}
 inline void CopyTo(VARIANT &v, std::string::iterator i, int l) {}
 */
-inline void CopyTo(const std::string &s, BSTR *b) { CopyTo( s.begin(), s.length(), b); }
-inline void CopyTo(const std::string &s, VARIANT *v) { CopyTo(s.begin(), s.length(), v); }
-inline void CopyTo(const std::string &s, CComBstrObj &a) { CopyTo(s.begin(), s.length(), a); }
-inline void CopyTo(const std::string &s, CComVariant &a) { CopyTo(s.begin(), s.length(), a); }
+inline void CopyTo(const std::string &s, BSTR *b) { CopyTo( s.c_str(), s.length(), b); }
+inline void CopyTo(const std::string &s, VARIANT *v) { CopyTo(s.c_str(), s.length(), v); }
+inline void CopyTo(const std::string &s, CComBstrObj &a) { CopyTo(s.c_str(), s.length(), a); }
+inline void CopyTo(const std::string &s, CComVariant &a) { CopyTo(s.c_str(), s.length(), a); }
 
 inline void CopyTo(BSTR b, std::string &s)
 {
-	s.resize(GetCharLength(b));
-	CopyTo(b, s.begin(), s.length());
+	int l = GetCharLength(b);
+	char *tmp = (char*)malloc(l);
+	CopyTo(b, tmp, l);
+	s.assign(tmp, l);
+	free(tmp);
 }
 
 inline void CopyTo(VARIANT &v, std::string &s)
 {
-	s.resize(GetCharLength(v));
-	CopyTo(v, s.begin(), s.length());
+	int l = GetCharLength(v);
+	char *tmp = (char*)malloc(l);
+	CopyTo(v, tmp, l);
+	s.assign(tmp, l);
+	free(tmp);
 }
 
 void vFormat(std::string &s, const char *format, va_list args);
@@ -50,11 +57,11 @@ inline void Format(std::string &s, const char *format, ...)
 	vFormat(s, format, args);
 }
 
-typedef std::vector<wchar_t>::iterator bstr_iterator;
-typedef std::vector<wchar_t>::const_iterator bstr_const_iterator;
+typedef wchar_t* bstr_iterator;
+typedef const wchar_t* bstr_const_iterator;
 
-inline bstr_const_iterator begin(BSTR p) { return p; }
-inline bstr_const_iterator end(BSTR p) { return p ? p + SysStringLen(p) : 0; }
+inline bstr_const_iterator begin(BSTR p) { return reinterpret_cast<wchar_t*>(p); }
+inline bstr_const_iterator end(BSTR p) { return reinterpret_cast<wchar_t*>(p) ? (reinterpret_cast<wchar_t*>(p) + SysStringLen(p)) : 0; }
 
 inline void CopyTo(bstr_const_iterator i, bstr_const_iterator e, CComBstrObj &b)
 {
@@ -66,20 +73,20 @@ inline void CopyTo(bstr_const_iterator i, bstr_const_iterator e, CComBstrObj &b)
 
 typedef std::vector<unsigned char> bindata;
 
-inline void CopyTo(const bindata &b, VARIANT *p) { CopyTo(b.begin(), b.end(), p); }
-inline void CopyTo(const bindata &b, CComVariant &a) { CopyTo(b.begin(), b.end(), a); }
+inline void CopyTo(const bindata &b, VARIANT *p) { CopyTo(&b[0], (&b[0]) + b.size(), p); }
+inline void CopyTo(const bindata &b, CComVariant &a) { CopyTo(&b[0], (&b[0]) + b.size(), a); }
 
 inline void CopyTo(VARIANT &v, bindata &b)
 {
 	if( v.vt == (VT_I4 | VT_ARRAY) )
 	{
-		b.resize(4 * GetArrayLength(v));
-		CopyTo(v, (long*)b.begin(), (long*)b.end());
+		b.resize(sizeof(long) * GetArrayLength(v));
+		CopyTo(v, (long*)&b[0], (long*)((&b[0]) + b.size()) );
 	}
 	else
 	{
 		b.resize(GetArrayLength(v));
-		CopyTo(v, b.begin(), b.end());
+		CopyTo(v, &b[0], (&b[0]) + b.size());
 	}
 }
 
@@ -88,48 +95,39 @@ inline void MoveTo(SAFEARRAY *p, std::vector<CComBstrObj> &bstrobjs)
 	ASSERT( p != NULL );
 
 	bstrobjs.resize(GetArrayLength(p));
-	MoveTo(p, bstrobjs.begin(), bstrobjs.end());
+	MoveTo(p, &bstrobjs[0], (&bstrobjs[0]) + bstrobjs.size());
 }
 
 inline void MoveTo(std::vector<CComBstrObj> &bstrobjs, SAFEARRAY **p)
 {
 	ASSERT( p != NULL && *p == NULL );
 
-	MoveTo(bstrobjs.begin(), bstrobjs.end(), p);
+	MoveTo(&bstrobjs[0], (&bstrobjs[0]) + bstrobjs.size(), p);
 }
 
 inline void CopyTo(const std::vector<CComBstrObj> &bstrobjs, SAFEARRAY **p)
 {
 	ASSERT( p != NULL && *p == NULL );
 
-	CopyTo(bstrobjs.begin(), bstrobjs.end(), p);
+	CopyTo(&bstrobjs[0], (&bstrobjs[0]) + bstrobjs.size(), p);
 }
 
 inline void CopyTo(const std::vector<GUID> &guids, SAFEARRAY **p)
 {
 	ASSERT( p != NULL && *p == NULL );
 
-	CopyTo(guids.begin(), guids.end(), p);
+	CopyTo(&guids[0], (&guids[0]) + guids.size(), p);
 }
 
 // --------------------------- STL function objects
 
-template<class T>
-struct ptr_hashfunc
+template <class T>
+struct ptr_compare : public stdext::hash_compare<T>
 {
-	size_t operator()(const T *ptr) const { return (size_t)ptr; }
-};
-
-template<class T>
-struct ptr_equalkey
-{
-	bool operator()(const T *a, const T *b) const { return a == b; }
-};
-
-template<class T>
-struct ptr_compare
-{
+	size_t operator()(const T* p) const { return (size_t) p; }
 	bool operator()(const T *a, const T *b) const { return a < b; }
+
+	// both hashing and comparing must be implemented here
 };
 
 // --------------------------- Iterator
@@ -190,7 +188,7 @@ void CopyTo( TYPENAME_ELEM2COLL(ELEM) *p, std::vector< CComObjPtr<ELEM> > &q)
 
 	q.insert(q.begin(), count, CComObjPtr<ELEM>());
 
-	COMTHROW( p->GetAll(count, (ELEM**)q.begin()) );
+	COMTHROW( p->GetAll(count, (ELEM**)&q[0]) );
 }
 
 template<class ELEM>

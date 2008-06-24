@@ -53,7 +53,7 @@ void CModelPropertiesDlgBar::writeNumToEdit(CEdit *edit, int kk)
 	}
 	char buff[100];
 	edit->SetSel(0, -1);
-	itoa(kk, buff, 10);
+	_itoa(kk, buff, 10);
 	CString str = buff;
 	str += "%";
 	edit->ReplaceSel(str);
@@ -106,7 +106,8 @@ void CModelPropertiesDlgBar::SetZoomList(int *list)
 	// supposed it is sorted
 	if (!list)
 		return;
-	for (int i=0; list[i] && i<MAX_ZOOM-1; i++)
+	int i;
+	for (i=0; list[i] && i<MAX_ZOOM-1; i++)
 	{
 		m_zoomlist[i] = list[i];
 	}
@@ -118,7 +119,7 @@ void CModelPropertiesDlgBar::SetZoomList(int *list)
 		if (m_zoomlist[k] > 0)
 		{
 			char buff[100];
-			itoa(m_zoomlist[k], buff, 10);
+			_itoa(m_zoomlist[k], buff, 10);
 			str = buff;
 			str += "%";
 		}
@@ -163,7 +164,8 @@ void CModelPropertiesDlgBar::NextZoomVal(int &kk)
 	kk = atoi(buff);
 	if (!kk)
 		kk = 100;
-	for (int i=0; m_zoomlist[i]  &&  m_zoomlist[i]<=kk; i++);
+	int i;
+	for (i=0; m_zoomlist[i]  &&  m_zoomlist[i]<=kk; i++);
 	if (m_zoomlist[i])
 	{
 		kk = m_zoomlist[i];
@@ -185,7 +187,8 @@ void CModelPropertiesDlgBar::PrevZoomVal(int &kk)
 	kk = atoi(buff);
 	if (!kk)
 		kk = 100;
-	for (int i=0; m_zoomlist[i]  &&  m_zoomlist[i]<kk; i++);
+	int i;
+	for (i=0; m_zoomlist[i]  &&  m_zoomlist[i]<kk; i++);
 	if (m_zoomlist[i]  &&  i)
 	{
 		kk = m_zoomlist[i-1];

@@ -74,8 +74,10 @@ public:
 	// and unregister themselves.
 
 public:
-	typedef std::hash_map<metaref_type, IMgaMetaBase*, 
-		metaid_hashfunc, metaid_equalkey> metaobj_lookup_type;
+	typedef stdext::hash_map< metaref_type
+	                        , IMgaMetaBase*
+	                        , metaid_hashfunc
+	                        > metaobj_lookup_type;
 	typedef metaobj_lookup_type::iterator metaobj_lookup_iterator;
 
 	metaobj_lookup_type metaobj_lookup;

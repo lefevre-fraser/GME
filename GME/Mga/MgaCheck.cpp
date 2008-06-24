@@ -48,7 +48,7 @@ void get_absmetapath(CoreObj &t, CComBSTR &abspath) {
 	}
 	else mr = t[ATTRID_META];
 	OLECHAR buf[20];
-	swprintf(buf, OLESTR(" %ld"), mr);
+	swprintf(buf, 20, OLESTR(" %ld"), mr);
 	COMTHROW(abspath.Append(buf));
 }
 
@@ -64,7 +64,7 @@ void get_relmetapath(CoreObj &t, CComBSTR &relpath, CoreObj &pathbeg) {
 	}
 	get_relmetapath(parent, relpath, pathbeg);
 	OLECHAR buf[20];
-	swprintf(buf, OLESTR(" %ld"), mr);
+	swprintf(buf, 20, OLESTR(" %ld"), mr);
 	COMTHROW(relpath.Append(buf));
 }
 
@@ -97,7 +97,7 @@ HRESULT FCO::GetRelMetaPath(IMgaFCO *begfco, BSTR *rp, IMgaFCOs *refs) {
 				{
 					metaref_type mr = curp[ATTRID_META];
 					OLECHAR buf[20];
-					swprintf(buf, OLESTR(" %ld"), mr);
+					swprintf(buf, 20, OLESTR(" %ld"), mr);
 					COMTHROW(relpath.Append(buf));
 				}
 			}
@@ -404,7 +404,7 @@ HRESULT FCO::PutReadOnlyAccess( VARIANT_BOOL pReadOnly)
 	COMTRY_IN_TRANSACTION {
 		CHECK_INBOOLPAR(pReadOnly);
 
-		change_mode( self, pReadOnly);
+		change_mode( self, pReadOnly == VARIANT_TRUE);
 		COMTHROW(Check());
 
 	} COMCATCH_IN_TRANSACTION(;);
@@ -415,7 +415,7 @@ HRESULT FCO::PutReadOnlyAccessWithPropagate( VARIANT_BOOL pReadOnly)
 	COMTRY_IN_TRANSACTION {
 		CHECK_INBOOLPAR(pReadOnly);
 
-		change_mode_rec( self, pReadOnly);
+		change_mode_rec( self, pReadOnly == VARIANT_TRUE);
 		COMTHROW(Check());
 
 	} COMCATCH_IN_TRANSACTION(;);

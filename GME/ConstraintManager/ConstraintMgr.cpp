@@ -186,10 +186,10 @@ STDMETHODIMP CConstraintMgr::Initialize( IMgaProject *p )
 	m_spEventSink->cm = this;
 
 	m_spAddOn = NULL;
-	COMTHROW( m_spProject->CreateAddOn( m_spEventSink, &m_spAddOn ) );
-	COMTHROW( m_spAddOn->put_EventMask( 0xFFFFFFFF ) );
 
 	COMTRY {
+		COMTHROW( m_spProject->CreateAddOn( m_spEventSink, &m_spAddOn ) );
+		COMTHROW( m_spAddOn->put_EventMask( 0xFFFFFFFF ) );
 
 		CComPtr<IMgaTerritory> spTerritory;
 		COMTHROW( m_spProject->CreateTerritory( NULL, &spTerritory ) );
@@ -211,7 +211,7 @@ STDMETHODIMP CConstraintMgr::Initialize( IMgaProject *p )
 			CSyntacticSemanticDialog dlgErrors;
 			for ( unsigned int i = 0 ; i < vecConstraintFunctions.size() ; i++ )
 				dlgErrors.AddItem( vecConstraintFunctions[ i ] );
-			for ( i = 0 ; i < vecConstraints.size() ; i++ )
+			for ( unsigned int i = 0 ; i < vecConstraints.size() ; i++ )
 				dlgErrors.AddItem( vecConstraints[ i ] );
 			dlgErrors.DoModal();
 		}

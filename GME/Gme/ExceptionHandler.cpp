@@ -360,7 +360,7 @@ BOOL							ExceptionHandler::m_gotVersionInfo;
 BOOL							ExceptionHandler::m_wow64Process;
 HANDLE							ExceptionHandler::m_hProcess;
 CRITICAL_SECTION				ExceptionHandler::m_crashDumpLock;
-bool							ExceptionHandler::m_createMinidump = true;
+BOOL							ExceptionHandler::m_createMinidump = TRUE;
 TCHAR							ExceptionHandler::m_szMinidumpDir[MAX_PATH];
 MINIDUMP_TYPE					ExceptionHandler::m_minidumpType = MiniDumpNormal;
 HMODULE							ExceptionHandler::m_hDbgHelpDll = NULL;

@@ -1,9 +1,9 @@
-/* Copyright 2000-2005 The Apache Software Foundation or its licensors, as
- * applicable.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/* Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -689,6 +689,7 @@ APR_DECLARE(apr_status_t) apr_file_info_get(apr_finfo_t *finfo,
  * Truncate the file's length to the specified offset
  * @param fp The file to truncate
  * @param offset The offset to truncate to.
+ * @remark The read/write file offset is repositioned to offset.
  */
 APR_DECLARE(apr_status_t) apr_file_trunc(apr_file_t *fp, apr_off_t offset);
 

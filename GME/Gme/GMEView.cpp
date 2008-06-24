@@ -3,9 +3,8 @@
 
 #include "stdafx.h"
 #include "GMEApp.h"
-#include <slist>
 #include <math.h>
-
+#include <algorithm>
 #include "GMEstd.h"
 
 #include "GuiMeta.h"

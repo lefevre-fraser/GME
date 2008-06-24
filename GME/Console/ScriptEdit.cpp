@@ -111,12 +111,14 @@ void CScriptEdit::OnKeyUp( UINT nChar, UINT /*nRepCnt*/, UINT /*nFlags*/ )
 		// echo
 		m_console->Message((LPCTSTR)inp, MSG_NORMAL);
 		// check if inp already exists
-		for (int k=0; k<(int) m_inputlist.size(); k++)
+		int k;
+		for (k=0; k<(int) m_inputlist.size(); k++)
 		{
 			if (m_inputlist[k] == inp)
 			{
 				// shift m_inputlist[k..size - 1] by 1 to the left, to have preserve 'recentness'
-				for( int l  = k; l < (int) m_inputlist.size() - 1; ++l)
+				int l;
+				for( l  = k; l < (int) m_inputlist.size() - 1; ++l)
 					m_inputlist[l] = m_inputlist[l + 1];
 				m_inputlist[ l] = inp; // last element
 				break;

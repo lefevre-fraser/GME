@@ -485,19 +485,17 @@ struct BSTR_equalkey
 	}
 };
 
-struct metaid_hashfunc
+struct metaid_hashfunc : public stdext::hash_compare<metaref_type>
 {
 	size_t operator()(metaref_type metaref) const
 	{
 		return metaref;
 	}
-};
-
-struct metaid_equalkey
-{
 	bool operator()(metaref_type id1, metaref_type id2) const
 	{
-		return id1 == id2;
+		// this must be < logic
+		//return id1 == id2;
+		return id1 < id2;
 	}
 };
 

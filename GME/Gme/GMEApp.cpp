@@ -181,7 +181,7 @@ bool CheckInterfaceVersions()	{
 		HRESULT hr = CoInitialize(NULL);
 #endif // DCOM
 		char hrbuf[20];
-		if(hr != S_OK) AfxMessageBox(CString("Coinitialize failure. Err: #") + ltoa(hr,hrbuf,16));
+		if(hr != S_OK) AfxMessageBox(CString("Coinitialize failure. Err: #") + _ltoa(hr,hrbuf,16));
 		for(LPCOLESTR *p = components; *p; p++) {
 			MgaInterfaceVersion verid = MgaInterfaceVersion_None;
 			CComPtr<IUnknown> unk;
@@ -407,7 +407,7 @@ BOOL CGMEApp::EmergencySave(EmergencySaveMode saveMode)
 			if ((p == -1) || embackupname.Find('\\', p) != -1)
 				p = embackupname.GetLength();
 			CString emcode("-emergency");
-			static emnum;
+			static int emnum;
 			char emfield[10];
 			sprintf(emfield, "%d", ++emnum);
 			emcode += emfield;
@@ -1847,34 +1847,6 @@ void CGMEApp::OnFileImportxml()
 		}
 		MSGCATCH("Error importing XML file",;)
 
-		if ( keep_on)
-		{
-			keep_on = false;
-			int answer = AfxMessageBox("Do you want to apply an XSLT script on the .xme file?",MB_YESNO | MB_ICONQUESTION);
-			if( answer == IDYES) 
-			{
-				try
-				{
-					CComObjPtr<IMgaXsltFileSel> xslt;
-					COMTHROW( xslt.CoCreateInstance( L"Mga.MgaXsltFileSel"));
-					ASSERT( xslt != NULL );
-
-					CComBstrObj result;
-					HRESULT hr = xslt->StartXslt( PutInBstr( file_name.GetBuffer( file_name.GetLength())), PutOut(result));
-					if ( hr == S_OK)
-					{
-						CopyTo( result, new_file_name);
-						//AfxMessageBox("Continuing to Import XML...");
-						CMainFrame::theInstance->m_console.Message( "Continuing to Import XML...", 1);
-						keep_on = true;
-					}
-				} 
-				catch( ...)
-				{ 
-					keep_on = false;
-				}
-			}
-		}
 	} // while keep_on
 
 	if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));
@@ -2552,34 +2524,6 @@ void CGMEApp::ImportDroppedFile( const CString& fname)
 			keep_on = false;
 		}
 		MSGCATCH("Error importing XML file",;)
-
-		if ( keep_on)
-		{
-			keep_on = false;
-			int answer = AfxMessageBox("Do you want to apply an XSLT script on the .xme file?",MB_YESNO | MB_ICONQUESTION);
-			if( answer == IDYES) 
-			{
-				try
-				{
-					CComObjPtr<IMgaXsltFileSel> xslt;
-					COMTHROW( xslt.CoCreateInstance( L"Mga.MgaXsltFileSel"));
-					ASSERT( xslt != NULL );
-
-					CComBstrObj result;
-					HRESULT hr = xslt->StartXslt( PutInBstr( file_name.GetBuffer( file_name.GetLength())), PutOut(result));
-					if ( hr == S_OK)
-					{
-						CopyTo( result, file_name);
-						AfxMessageBox("Continuing to Import XML...");
-						keep_on = true;
-					}
-				} 
-				catch( ...)
-				{ 
-					keep_on = false;
-				}
-			}
-		}
 	} // while keep_on
 
 	if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));

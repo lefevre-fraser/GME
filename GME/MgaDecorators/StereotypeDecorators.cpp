@@ -871,7 +871,7 @@ ModelDecorator::~ModelDecorator()
 {
 	for ( unsigned int i = 0 ; i < m_vecLeftPorts.size() ; i++ )
 		delete m_vecLeftPorts[ i ];
-	for ( i = 0 ; i < m_vecRightPorts.size() ; i++ )
+	for ( unsigned int i = 0 ; i < m_vecRightPorts.size() ; i++ )
 		delete m_vecRightPorts[ i ];
 }
 
@@ -957,7 +957,7 @@ void ModelDecorator::orderPorts( std::vector<PortDecorator*>& vecPorts )
 		lMax = max( lMax, vecPorts[ i ]->getInnerPosition().x );
 	}
 
-	for ( i = 0 ; i < vecPorts.size() ; i++ ) {
+	for ( unsigned int i = 0 ; i < vecPorts.size() ; i++ ) {
 		PreferenceMap mapPrefs;
 		mapPrefs[ PREF_LABELCOLOR ] = PreferenceVariant( m_crPortText );
 		mapPrefs[ PREF_LABELLENGTH ] = PreferenceVariant( (long) m_iMaxPortTextLength );
@@ -1015,7 +1015,7 @@ void ModelDecorator::setBoxLocation( const CRect& cRect )
 		lY += HEIGHT_PORT + GAP_PORT;
 	}
 	lY = ( m_Rect.Height() - m_vecRightPorts.size() * ( HEIGHT_PORT + GAP_PORT ) + GAP_PORT ) / 2;
-	for ( i = 0 ; i < m_vecRightPorts.size() ; i++ ) {
+	for ( unsigned int i = 0 ; i < m_vecRightPorts.size() ; i++ ) {
 		m_vecRightPorts[ i ]->setBoxLocation( CRect( cRect.Width() - GAP_XMODELPORT - WIDTH_PORT, lY, cRect.Width() - GAP_XMODELPORT, lY + HEIGHT_PORT ) );
 		lY += HEIGHT_PORT + GAP_PORT;
 	}
@@ -1026,7 +1026,7 @@ void ModelDecorator::setActive( bool bActive )
 	TypeableDecorator::setActive( bActive );
 	for ( unsigned int i = 0 ; i < m_vecLeftPorts.size() ; i++ )
 		m_vecLeftPorts[ i ]->setActive( bActive );
-	for ( i = 0 ; i < m_vecRightPorts.size() ; i++ )
+	for ( unsigned int i = 0 ; i < m_vecRightPorts.size() ; i++ )
 		m_vecRightPorts[ i ]->setActive( bActive );
 }
 
@@ -1043,7 +1043,7 @@ PortDecorator* ModelDecorator::getPort( CComPtr<IMgaFCO> spFCO ) const
 	for ( unsigned int i = 0 ; i < m_vecLeftPorts.size() ; i++ )
 		if ( m_vecLeftPorts[ i ]->getFCO() == spFCO )
 			return m_vecLeftPorts[ i ];
-	for ( i = 0 ; i < m_vecRightPorts.size() ; i++ )
+	for ( unsigned int i = 0 ; i < m_vecRightPorts.size() ; i++ )
 		if ( m_vecRightPorts[ i ]->getFCO() == spFCO )
 			return m_vecRightPorts[ i ];
 	return NULL;
@@ -1081,7 +1081,7 @@ void ModelDecorator::drawBackground( CDC* pDC ) const
 	CPoint ptOrigin = pDC->OffsetViewportOrg( (long) ( cRect.left * ( (double) cExtentD.cx / cExtentL.cx ) ), (long) ( cRect.top * ( (double) cExtentD.cy / cExtentL.cy ) ) );
 	for ( unsigned int i = 0 ; i < m_vecLeftPorts.size() ; i++ )
 		m_vecLeftPorts[ i ]->draw( pDC );
-	for ( i = 0 ; i < m_vecRightPorts.size() ; i++ )
+	for ( unsigned int i = 0 ; i < m_vecRightPorts.size() ; i++ )
 		m_vecRightPorts[ i ]->draw( pDC );
 	pDC->SetViewportOrg( ptOrigin );
 }

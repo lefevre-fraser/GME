@@ -1,9 +1,9 @@
-/* Copyright 2000-2005 The Apache Software Foundation or its licensors, as
- * applicable.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/* Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -59,7 +59,9 @@
  * and the POSIX string handling API
  */
 #if defined(_MSC_VER) && _MSC_VER >= 1400
+#ifndef _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_DEPRECATE
+#endif
 #pragma warning(disable: 4996)
 #endif
 
@@ -109,7 +111,7 @@
 
 #define APR_INLINE __inline
 #define APR_HAS_INLINE          1
-#ifndef __attribute__
+#if !defined(__GNUC__) && !defined(__attribute__)
 #define __attribute__(__x)
 #endif
 
@@ -356,13 +358,19 @@ typedef  int         apr_socklen_t;
 /* XXX These simply don't belong here, perhaps in apr_portable.h
  * based on some APR_HAVE_PID/GID/UID?
  */
+#ifndef __GNUC__
 typedef  int         pid_t;
+#endif
 typedef  int         uid_t;
 typedef  int         gid_t;
 
 /* Mechanisms to properly type numeric literals */
 
+#ifndef __GNUC__
 #define APR_INT64_C(val) (val##i64)
+#else
+#define APR_INT64_C(val) (val##LL)
+#endif
 
 
 #if APR_HAVE_IPV6
@@ -523,13 +531,6 @@ struct iovec {
  */
 #if defined(_MSC_VER) && _MSC_VER >= 1200
 #pragma warning(pop)
-#endif
-
-/* Ignore Microsoft's interpretation of secure development 
- * and their opinion of the POSIX standard string handling API
- */
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-#define _CRT_SECURE_NO_DEPRECATE
 #pragma warning(disable: 4996)
 #endif
 

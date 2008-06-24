@@ -210,7 +210,7 @@ void CConstraintPropertiesDialog::FillContextCombo( objtype_enum eType )
 		vecKinds.push_back( OclCommonEx::GetObjectName( vecMetas[ i ].p ) );
 	std::sort( vecKinds.begin(), vecKinds.end() );
 
-	for ( i = 0 ; i < vecKinds.size() ; i++ )
+	for ( unsigned int i = 0 ; i < vecKinds.size() ; i++ )
 		InsertItem( eType, "meta::" + OclCommonEx::Convert( vecKinds[ i ] ) );
 }
 

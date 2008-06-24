@@ -1605,7 +1605,7 @@ void ObjDetachAndMerge( CMgaProject *mgaproject, CoreObj orig, CoreObj &nobj, co
 					}
 					case ATTRID_LASTRELID:
 					{
-						unsigned long old_val = nobj[ai];
+						// unsigned long old_val = nobj[ai];
 						// the old value 'nobj[ai]' contains only the number of the plain objects
 						// this is a temp value (the correct value is inserted upon exit)
 						//nobj[ai] = 0L;

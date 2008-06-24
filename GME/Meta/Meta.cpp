@@ -209,7 +209,7 @@ HRESULT check_location_compatibility(IMgaMetaBase *newobj, IMgaMetaBase *oldobj)
 	if((hr = newobj->get_MetaProject(&p)) != S_OK) return hr;
 	if(!oldobj) {
 		//if(p->Open != CMgaMetaProject::Open) return E_SAMEPROJECT;
-		if(IMgaMetaProject::Open != CMgaMetaProject::Open) return E_SAMEPROJECT;
+		if(&IMgaMetaProject::Open != &CMgaMetaProject::Open) return E_SAMEPROJECT;
 	}
 	else {
 		if((hr = oldobj->get_MetaProject(&p2)) != S_OK) return hr;

@@ -1,51 +1,67 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="9.00"
 	Name="Common"
-	SccProjectName=""
-	SccLocalPath=""
-	Keyword="MakeFileProj">
+	ProjectGUID="{BEF31E1E-BB02-4687-A543-A6AD5D522869}"
+	Keyword="MakeFileProj"
+	TargetFrameworkVersion="131072"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\Debug"
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="10"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
 				TypeLibraryName=".\Debug/Common.tlb"
-				HeaderFileName=""/>
+				HeaderFileName=""
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\Release"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="10"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
 				TypeLibraryName=".\Release/Common.tlb"
-				HeaderFileName=""/>
+				HeaderFileName=""
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -53,46 +69,60 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+			>
 			<File
-				RelativePath=".\CommonError.cpp">
+				RelativePath=".\CommonError.cpp"
+				>
 			</File>
 			<File
-				RelativePath="CommonMfc.cpp">
+				RelativePath="CommonMfc.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\CommonSmart.cpp">
+				RelativePath=".\CommonSmart.cpp"
+				>
 			</File>
 			<File
-				RelativePath="CommonStl.cpp">
+				RelativePath="CommonStl.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl">
+			Filter="h;hpp;hxx;hm;inl"
+			>
 			<File
-				RelativePath="CommonCollection.h">
+				RelativePath="CommonCollection.h"
+				>
 			</File>
 			<File
-				RelativePath="CommonComponent.h">
+				RelativePath="CommonComponent.h"
+				>
 			</File>
 			<File
-				RelativePath="CommonError.h">
+				RelativePath="CommonError.h"
+				>
 			</File>
 			<File
-				RelativePath="CommonMfc.h">
+				RelativePath="CommonMfc.h"
+				>
 			</File>
 			<File
-				RelativePath="CommonMgaTrukk.h">
+				RelativePath="CommonMgaTrukk.h"
+				>
 			</File>
 			<File
-				RelativePath="CommonSmart.h">
+				RelativePath="CommonSmart.h"
+				>
 			</File>
 			<File
-				RelativePath="CommonStl.h">
+				RelativePath="CommonStl.h"
+				>
 			</File>
 			<File
-				RelativePath="CommonVersionInfo.h">
+				RelativePath="CommonVersionInfo.h"
+				>
 			</File>
 		</Filter>
 	</Files>

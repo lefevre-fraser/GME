@@ -37,8 +37,8 @@ private:
 	bool newlevel, newobjtype, newrole, newkind, newname;
 	unsigned long levels;
 	unsigned long objtypes;
-	typedef std::hash_set<CComBSTRNoAt, CComBSTR_hashfunc> BSTRhash;
-	typedef std::hash_set<metaref_type, metaref_hashfunc> mrefhash;
+	typedef stdext::hash_set<CComBSTRNoAt, CComBSTR_hashfunc> BSTRhash;
+	typedef stdext::hash_set<metaref_type, metaref_hashfunc> mrefhash;
 	mrefhash rolenums, kindnums;
 	BSTRhash rolenames, kindnames, names;
 	CMgaProject *mgaproject;

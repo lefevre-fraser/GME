@@ -88,15 +88,3 @@ interface IMgaParser : IDispatch
 
 };
 
-[
-	object,
-	uuid(FDE29236-8F66-489d-AE5A-CC789A6E51D6),
-	helpstring("IMgaXslt Interface"),
-	pointer_default(unique)
-]
-interface IMgaXslt : IDispatch
-{
-	[helpstring("method ApplyXslt")]
-	HRESULT ApplyXslt( [in] BSTR stylesheet, [in] BSTR infile, [in] BSTR outfile, [out] BSTR * error);
-
-};

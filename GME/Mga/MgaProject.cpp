@@ -569,9 +569,9 @@ STDMETHODIMP CMgaProject::Close(VARIANT_BOOL abort)
 		ASSERT(("Project is closed but transaction is active", !baseterr));
 		return S_OK;
 	}
-	if(baseterr) COMTHROW(AbortTransaction());
 	
 	COMTRY {
+		if(baseterr) COMTHROW(AbortTransaction());
 		{
 			CComPtr<IMgaTerritory> t;
 			COMTHROW(CreateTerritory(NULL, &t));
@@ -1135,14 +1135,15 @@ STDMETHODIMP CMgaProject::RegisterClient(BSTR name, IDispatch *OLEServer, IMgaCl
 STDMETHODIMP CMgaProject::GetClientByName(BSTR name, IMgaClient **pVal) {
 	COMTRY {
 		CHECK_INSTRPAR(name);
-		for(clientcoll::iterator j = allclients.begin(); j != allclients.end(); j++) {
+		clientcoll::iterator j;
+		for(j = allclients.begin(); j != allclients.end(); j++) {
 			CComPtr< CMgaClient > client(*j);
 			if (client->name == name) {
 				*pVal = client.Detach();
 				break;
 			}
 		}
-		if(j== allclients.end()) COMTHROW(E_MGA_NAME_NOT_FOUND);
+		if(j == allclients.end()) COMTHROW(E_MGA_NAME_NOT_FOUND);
 	}
     COMCATCH(;);
 }
@@ -1202,7 +1203,7 @@ void CMgaProject::StartAutoAddOns() {
 	if(p)  {
 		std::vector<CComBstrObj> vec;
 		vec.resize(p);
-		CopyTo(progids, vec.begin(), vec.end());
+		CopyTo(progids, &vec[0], (&vec[0])+vec.size());
 		inautoaddoncreate = true;
 		CComBSTR errs;
 		for(std::vector<CComBstrObj>::iterator i = vec.begin(); i < vec.end(); i++) {
@@ -1615,59 +1616,63 @@ STDMETHODIMP CMgaProject::FlushUndoQueue() {
 STDMETHODIMP CMgaProject::UpdateSourceControlInfo( BSTR param)
 {
 	CComPtr<IMgaTerritory> lm;
-	COMTHROW(CreateTerritory(NULL, &lm));
-	COMTHROW(BeginTransaction(lm, TRANSACTION_GENERAL));
+	COMTRY {
+		COMTHROW(CreateTerritory(NULL, &lm));
+		COMTHROW(BeginTransaction(lm, TRANSACTION_GENERAL));
 
-	// hack: core will recognize this action as a source control status update
-	CComBSTR hack_str = "UpdateSourceControlInfo";
-	CComBSTR para_str( param);
-	if( para_str.Length() > 0)
-		hack_str.Append( para_str);
-	CoreObj  dataroot;
-	COMTHROW(dataproject->get_RootObject(&dataroot.ComPtr()));
-	dataroot[ATTRID_MDATE] = hack_str;
+		// hack: core will recognize this action as a source control status update
+		CComBSTR hack_str = "UpdateSourceControlInfo";
+		CComBSTR para_str( param);
+		if( para_str.Length() > 0)
+			hack_str.Append( para_str);
+		CoreObj  dataroot;
+		COMTHROW(dataproject->get_RootObject(&dataroot.ComPtr()));
+		dataroot[ATTRID_MDATE] = hack_str;
 
-	COMTHROW(CommitTransaction());
-
-	return S_OK;
+		COMTHROW(CommitTransaction());
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaProject::SourceControlActiveUsers()
 {
 	CComPtr<IMgaTerritory> lm;
-	COMTHROW(CreateTerritory(NULL, &lm));
-	COMTHROW(BeginTransaction(lm, TRANSACTION_GENERAL));
+	COMTRY {
+		COMTHROW(CreateTerritory(NULL, &lm));
+		COMTHROW(BeginTransaction(lm, TRANSACTION_GENERAL));
 
-	// hack: core will recognize this value as a command, will show a dlg with user names
-	CComBSTR hack_str = "ShowActiveUsers";
+		// hack: core will recognize this value as a command, will show a dlg with user names
+		CComBSTR hack_str = "ShowActiveUsers";
 
-	CoreObj  dataroot;
-	COMTHROW(dataproject->get_RootObject(&dataroot.ComPtr()));
-	dataroot[ATTRID_MDATE] = hack_str;
+		CoreObj  dataroot;
+		COMTHROW(dataproject->get_RootObject(&dataroot.ComPtr()));
+		dataroot[ATTRID_MDATE] = hack_str;
 
-	COMTHROW(CommitTransaction());
+		COMTHROW(CommitTransaction());
 
-	return S_OK;
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaProject::SourceControlObjectOwner( BSTR p_optionalID)
 {
 	CComPtr<IMgaTerritory> lm;
-	COMTHROW(CreateTerritory(NULL, &lm));
-	COMTHROW(BeginTransaction(lm, TRANSACTION_GENERAL));
+	COMTRY {
+		COMTHROW(CreateTerritory(NULL, &lm));
+		COMTHROW(BeginTransaction(lm, TRANSACTION_GENERAL));
 
-	// hack: core will recognize this value as a command, will show a dlg with owneruser
-	CComBSTR hack_str = "WhoControlsThisObj";
-	CComBSTR para_str( p_optionalID);
-	if( para_str.Length() > 0)
-		hack_str.Append( para_str);
-	CoreObj  dataroot;
-	COMTHROW(dataproject->get_RootObject(&dataroot.ComPtr()));
-	dataroot[ATTRID_MDATE] = hack_str;
+		// hack: core will recognize this value as a command, will show a dlg with owneruser
+		CComBSTR hack_str = "WhoControlsThisObj";
+		CComBSTR para_str( p_optionalID);
+		if( para_str.Length() > 0)
+			hack_str.Append( para_str);
+		CoreObj  dataroot;
+		COMTHROW(dataproject->get_RootObject(&dataroot.ComPtr()));
+		dataroot[ATTRID_MDATE] = hack_str;
 
-	COMTHROW(CommitTransaction());
-
-	return S_OK;
+		COMTHROW(CommitTransaction());
+	}
+	COMCATCH(;)
 }
 
 void CMgaProject::ObjMark(IMgaObject *s, long mask) {
@@ -1748,22 +1753,26 @@ CComBSTR CMgaProject::prefixWNmspc( CComBSTR pKindname)
 }
 
 STDMETHODIMP CMgaProject::CheckCollection(IMgaFCOs *coll) {
-	MGACOLL_ITERATE(IMgaFCO, coll) {
-		HRESULT s;
-		if((s = MGACOLL_ITER->CheckProject(this)) != S_OK) return s;
+	COMTRY {
+		MGACOLL_ITERATE(IMgaFCO, coll) {
+			HRESULT s;
+			if((s = MGACOLL_ITER->CheckProject(this)) != S_OK) return s;
+		}
+		MGACOLL_ITERATE_END;
 	}
-	MGACOLL_ITERATE_END;
-	return S_OK;
+	COMCATCH(;)
 }
 
 // by ZolMol
 STDMETHODIMP CMgaProject::CheckFolderCollection(IMgaFolders *coll) {
-	MGACOLL_ITERATE(IMgaFolder, coll) {
-		HRESULT s;
-		if((s = MGACOLL_ITER->CheckProject(this)) != S_OK) return s;
+	COMTRY {
+		MGACOLL_ITERATE(IMgaFolder, coll) {
+			HRESULT s;
+			if((s = MGACOLL_ITER->CheckProject(this)) != S_OK) return s;
+		}
+		MGACOLL_ITERATE_END;
 	}
-	MGACOLL_ITERATE_END;
-	return S_OK;
+	COMCATCH(;)
 }
 
 

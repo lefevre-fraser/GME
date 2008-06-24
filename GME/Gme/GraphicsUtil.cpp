@@ -65,7 +65,7 @@ void CArrowHead::Draw(CDC *pDC,CPoint &tip, bool bPen )
 
 	if ( bPen ) {
 		pDC->MoveTo(path[0] + tip);
-		for (i = 1; i<segments; i++) {
+		for (int i = 1; i<segments; i++) {
 			pDC->LineTo(path[i] + tip);
 		}
 		pDC->LineTo( path[ 0 ] + tip );

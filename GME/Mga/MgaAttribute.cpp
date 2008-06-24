@@ -750,7 +750,7 @@ STDMETHODIMP CMgaRegNode::get_SubNodes( VARIANT_BOOL virtuals, IMgaRegNodes **pV
 			fco->CheckRead();
 			CHECK_OUTPTRPAR(pVal);
 			long dummy;
-			std::hash_set<CComBSTRNoAt, CComBSTR_hashfunc> match;
+			stdext::hash_set<CComBSTRNoAt, CComBSTR_hashfunc> match;
 			CoreObj s = fco->self;
 			if(!s.IsFCO()) virtuals = VARIANT_FALSE;
 			CREATEEXCOLLECTION_FOR(MgaRegNode,q);
@@ -950,7 +950,7 @@ STDMETHODIMP CMgaPart::SetGmeAttrs(BSTR icon,long x,long y) {
 			if(icon != NULL) COMTHROW(put_RegistryValue(CComBSTR("Icon"), icon));
 			if(x >= 0 && y >= 0) {
 				OLECHAR bbc[40];
-				swprintf(bbc, OLESTR("%ld,%ld"), x, y);
+				swprintf(bbc, 40, OLESTR("%ld,%ld"), x, y);
 				CComBSTR bb(bbc);
 				COMTHROW(put_RegistryValue(CComBSTR("Position"), bb));
 			}

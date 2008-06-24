@@ -26,8 +26,9 @@
  * with Purdue University and AHPCRC, University of Minnesota
  * 1989-1998
  */
-#include "forcelib.h"
-
+// See http://support.microsoft.com/kb/148652
+//#include "forcelib.h"
+#include "stdafx.h"
 typedef int ANTLRTokenType;	// fool AToken.h into compiling
 
 class ANTLRParser;					/* MR1 */

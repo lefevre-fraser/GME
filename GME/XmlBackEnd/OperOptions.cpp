@@ -207,7 +207,7 @@ void OperatingOptions::loadSettings( const std::string& p_folder, const std::str
 			}
 			else if( 0 == line.find( "DirNamesHashedVal"))
 			{
-				int stoi = 0.;
+				int stoi = 0;
 				std::string v = parseStr( line, "DirNamesHashedVal");
 				if( 1 == sscanf( v.c_str(), "%u", &stoi) && stoi >= 0)
 					m_dirNamesHashVal = stoi;

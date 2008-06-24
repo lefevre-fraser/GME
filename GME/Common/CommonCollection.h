@@ -105,7 +105,7 @@ struct CopyDispVariantFromObj
 template<class ITFTYPE>
 struct CopyDispVariantFromItf
 {
-	static HRESULT copy(VARIANT *p, ITFTYPE **q)
+	static HRESULT copy(VARIANT *p, ITFTYPE *const * q)
 	{
 		ASSERT( p != NULL && q != NULL);
 
@@ -285,7 +285,7 @@ public:
 		if(pos == 0) pos = m_coll.size();
 		else pos--;
 		if((unsigned long)pos > m_coll.size()) return E_FAIL;
-		GETALL_COPYTYPE::destroy(m_coll.begin()+pos);
+		GETALL_COPYTYPE::destroy(&(m_coll[0])+pos);
 		m_coll.erase(m_coll.begin()+pos);
 		return S_OK;
 	}
@@ -316,7 +316,7 @@ void GetAll(COLLITF *coll, std::vector< CComObjPtr<ITFTYPE> > &ret)
 	ret.clear();
 	ret.insert(ret.begin(), count, NULL);
 
-	COMTHROW( coll->GetAll(count, (ITFTYPE**)ret.begin()) );
+	COMTHROW( coll->GetAll(count, (ITFTYPE**)&ret[0]) );
 }
 
 inline HRESULT check_location_compatibility(IUnknown *, IUnknown *) { return S_OK; }

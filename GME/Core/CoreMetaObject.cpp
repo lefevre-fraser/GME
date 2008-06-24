@@ -136,7 +136,8 @@ STDMETHODIMP CCoreMetaObject::AddClassID(guid_type classid)
 {
 	COMTRY
 	{
-		classids.push_back();
+		GUID null_classid; memset( &null_classid, 0, sizeof( null_classid));
+		classids.push_back(null_classid);
 		try
 		{
 			CopyTo(classid, classids.back());

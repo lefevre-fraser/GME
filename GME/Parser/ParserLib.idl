@@ -51,13 +51,4 @@ library PARSERLib
 		interface IMgaVersionInfo;
 	};
 
-	[
-		uuid(2C9DF78A-92C2-4994-8AAC-BFA8007BBCD7),
-		helpstring("MgaXslt Class")
-	]
-	coclass MgaXslt
-	{
-		[default] interface IMgaXslt;
-		interface IMgaVersionInfo;
-	};
 };

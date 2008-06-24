@@ -32,7 +32,8 @@ void CRecentConnStrList::Add(LPCTSTR lpszConnName)
 	ASSERT(AfxIsValidString(lpszConnName));
 
 	// update the MRU list, if an existing MRU string matches conn name
-	for (int iMRU = 0; iMRU < m_nSize-1; iMRU++)
+	int iMRU;
+	for (iMRU = 0; iMRU < m_nSize-1; iMRU++)
 	{
 		if (lstrcmp(m_arrNames[iMRU], lpszConnName) == 0)
 			break;      // iMRU will point to matching entry
@@ -54,7 +55,8 @@ void CRecentConnStrList::Remove(int nIndex)
 	ASSERT(nIndex < m_nSize);
 
 	m_arrNames[nIndex].Empty();
-	for (int iMRU = nIndex; iMRU < m_nSize-1; iMRU++)
+	int iMRU;
+	for (iMRU = nIndex; iMRU < m_nSize-1; iMRU++)
 		m_arrNames[iMRU] = m_arrNames[iMRU+1];
 
 	ASSERT(iMRU < m_nSize);
@@ -97,7 +99,7 @@ void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI,bool enable)
 
 	CString strName;
 	CString strTemp;
-	for (iMRU = 0; iMRU < m_nSize; iMRU++)
+	for (int iMRU = 0; iMRU < m_nSize; iMRU++)
 	{
 		if (!GetDisplayName(strName, iMRU))
 			break;

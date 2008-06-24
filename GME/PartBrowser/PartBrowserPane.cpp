@@ -174,7 +174,7 @@ void CPartBrowserPane::DestroyDecorators(void)
 
 void CPartBrowserPane::Resize(CRect r)
 {
-	if (!mgaMetaModel || currentAspectIndex < 0 || pdts.size() <= 0 || currentAspectIndex >= pdts.size())
+	if (!mgaMetaModel || currentAspectIndex < 0 || pdts.size() <= 0 || currentAspectIndex >= (int)pdts.size())
 		return;
 
 	bool oldOmitPaintMessages = omitPaintMessages;

@@ -868,9 +868,9 @@ void CCoreProject::BeginFinalTr()
 	COMTHROW( storage->BeginTransaction() );
 
 	ASSERT( undos.size() <= m_maxUndoStep );
-	undos.push_front();
+	undos.push_front(undo_type());
 
-	transactions.push_front();
+	transactions.push_front(transaction_type());
 	transactions.front().readonly = false;
 }
 
@@ -1002,7 +1002,7 @@ void CCoreProject::BeginNestedTr()
 		++i;
 	}
 
-	transactions.push_front();
+	transactions.push_front(transaction_type());
 	transactions.front().readonly = false;
 }
 
@@ -1091,7 +1091,7 @@ void CCoreProject::TryUndoTransaction()
 		ASSERT( storage );
 		COMTHROW( storage->BeginTransaction() );
 
-		transactions.push_front();
+		transactions.push_front(transaction_type());
 		transactions.front().readonly = true;
 
 		ASSERT( !undos.empty() );
@@ -1161,7 +1161,7 @@ void CCoreProject::TryRedoTransaction()
 		ASSERT( storage );
 		COMTHROW( storage->BeginTransaction() );
 
-		transactions.push_front();
+		transactions.push_front(transaction_type());
 		transactions.front().readonly = true;
 
 		undo_items_iterator i = undos.back().begin();
@@ -1229,7 +1229,7 @@ void CCoreProject::TryDiscardLastItem()
 		ASSERT( storage );
 		COMTHROW( storage->BeginTransaction() );
 
-		transactions.push_front();
+		transactions.push_front(transaction_type());
 		transactions.front().readonly = true;
 
 		undo_items_iterator i = undos.back().begin();

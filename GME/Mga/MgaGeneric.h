@@ -9,7 +9,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 = false);
 #define ATTRID_LINKREF_MIN 600
 
 #ifdef DEBUG
-static inline _gen_rangetest(attrid_type s) { ASSERT(s < ATTRID_COLLECTION); return s; }  
+static inline attrid_type _gen_rangetest(attrid_type s) { ASSERT(s < ATTRID_COLLECTION); return s; }  
 #else
 #define _gen_rangetest(s) s
 #endif

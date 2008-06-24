@@ -170,7 +170,7 @@ HRESULT FCO::get_ID(ID_type *pVal) {
 		OLECHAR t[20];
 		objid_type ss;
 		COMTHROW(self->get_ObjID(&ss));
-		swprintf(t,OLESTR("id-%04lx-%08lx"),GetMetaID(self), ss);
+		swprintf(t, 20, OLESTR("id-%04lx-%08lx"),GetMetaID(self), ss);
 		*pVal = CComBSTR(t).Detach();
 	} COMCATCH(;);
 }
@@ -426,7 +426,7 @@ void  FCO::initialname() {
 			}
 			if(freenum) {
 				OLECHAR p[10];
-				swprintf(p,L"-%d",freenum);
+				swprintf(p, 10, L"-%d",freenum);
 				nname.Append(p);
 			}
 		}
@@ -783,7 +783,7 @@ HRESULT FCO::get_Registry(VARIANT_BOOL virtuals, IMgaRegNodes **pVal) {
 		CREATEEXCOLLECTION_FOR(MgaRegNode,q);
 		CoreObj s = self;
 		if(!s.IsFCO()) virtuals = VARIANT_FALSE;
-		std::hash_set<CComBSTRNoAt, CComBSTR_hashfunc> match;
+		stdext::hash_set<CComBSTRNoAt, CComBSTR_hashfunc> match;
 		do {
 			CoreObjs children = s[ATTRID_REGNOWNER+ATTRID_COLLECTION];
 			ITERATE_THROUGH(children) {

@@ -39,7 +39,6 @@
 #include "MetaParser.h"
 #include "MgaDumper.h"
 #include "MgaParser.h"
-#include "MgaXslt.h"
 
 #ifdef _MERGE_PROXYSTUB
 extern "C" HINSTANCE hProxyDll;
@@ -51,7 +50,6 @@ BEGIN_OBJECT_MAP(ObjectMap)
 OBJECT_ENTRY(CLSID_MetaParser, CMetaParser)
 OBJECT_ENTRY(CLSID_MgaDumper, CMgaDumper)
 OBJECT_ENTRY(CLSID_MgaParser, CMgaParser)
-OBJECT_ENTRY(CLSID_MgaXslt, CMgaXslt)
 END_OBJECT_MAP()
 
 /////////////////////////////////////////////////////////////////////////////

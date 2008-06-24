@@ -6,6 +6,7 @@
 #include <list>//slist
 #include <hash_map>
 #include <vector>
+#include <algorithm>
 
 class CCoreBinFile;
 
@@ -33,6 +34,7 @@ typedef binattrs_type::iterator binattrs_iterator;
 
 template<valtype_enum VALTYPE>
 class BinAttr;
+
 
 // --------------------------- BinObject
 
@@ -69,11 +71,26 @@ public:
 	bool HasEmptyPointers() const;
 };
 
-typedef std::hash_map<metaobjidpair_type, BinObject, 
-	metaobjidpair_hashfunc, metaobjidpair_equalkey> objects_type;
+typedef stdext::hash_map< metaobjidpair_type
+                        , BinObject
+                        , metaobjid2pair_hashfunc
+                        > objects_type;
 typedef objects_type::iterator objects_iterator;
 
 extern objects_iterator no_object;
+//bool p2 = a._Mycont == no_object._Mycont; // good
+//bool p0 = a == binfile->objects.end();    // wrong
+//bool p1 = no_object == binfile->objects.end();//wrong
+// if a == 0 && no_object == 0 the ASSERT( a == no_object) gives a no compatible iterator message
+//
+// comparison of an invalid (null or simply default constructed) iterator 
+// like no_object with a valid iterator in MS STL is cumbersome,  because
+// MS STL asserts in debug mode, asserting 'non-compatible iterator comparisons'.
+// Since no_object is null, its container is null too, which
+// will fire the assertion on any 'myobj_iter == no_object;' expression.
+// Thus this small test will replace the old expression:
+#define EQUAL_WITH_NO_OBJECT( x) ( x._Mycont == 0)
+
 
 // --------------------------- CCoreBinFile
 
@@ -163,8 +180,10 @@ public:
 // ------- Attribute
 
 public:
-	typedef std::hash_map< BinAttrBase*, CComVariant, 
-		ptr_hashfunc<BinAttrBase>, ptr_equalkey<BinAttrBase> > undos_type;
+	typedef stdext::hash_map< BinAttrBase*
+	                        , CComVariant
+	                        , ptr_compare<BinAttrBase>
+	                        > undos_type;
 	typedef undos_type::iterator undos_iterator;
 
 	undos_type undos;
@@ -178,7 +197,7 @@ public:
 	objects_type objects;
 	objects_iterator opened_object;
 
-	typedef std::hash_map<metaid_type, objid_type> maxobjids_type;
+	typedef stdext::hash_map<metaid_type, objid_type> maxobjids_type;
 	typedef maxobjids_type::iterator maxobjids_iterator;
 
 	maxobjids_type maxobjids;
@@ -322,6 +341,36 @@ public:
 	virtual void Write(CCoreBinFile *binfile) const { }
 	virtual void Read(CCoreBinFile *binfile) { a = 0; }
 };
+// --------------------------- BinAttr<VALTYPE_COLLECTION>
+
+template<>
+class BinAttr<VALTYPE_COLLECTION> : public BinAttrBase
+{
+public:
+	std::vector<objects_iterator> a;
+
+	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_COLLECTION; }
+	virtual void Set(CCoreBinFile *binfile, VARIANT p) { ASSERT(false); }
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const
+	{
+		ASSERT( p != NULL && p->vt == VT_EMPTY );
+
+		std::vector<metaobjidpair_type> idpairs;
+
+		std::vector<objects_iterator>::const_iterator i = a.begin();
+		std::vector<objects_iterator>::const_iterator e = a.end();
+		while( i != e )
+		{
+			idpairs.push_back( (*i)->first );
+
+			++i;
+		}
+
+		CopyTo(idpairs, p);
+	}
+	virtual void Write(CCoreBinFile *binfile) const { }
+	virtual void Read(CCoreBinFile *binfile) { }
+};
 
 // --------------------------- BinAttr<VALTYPE_POINTER>
 
@@ -338,8 +387,8 @@ public:
 	void Set(CCoreBinFile *binfile, objects_iterator b)
 	{
 		ASSERT( binfile != NULL );
-		ASSERT( a == no_object );
-		ASSERT( b != no_object && b != binfile->objects.end() );
+		ASSERT( EQUAL_WITH_NO_OBJECT( a)); // was: ASSERT( a == no_object)
+		ASSERT( !EQUAL_WITH_NO_OBJECT( b) &&  b != binfile->objects.end()); // was: ASSERT( b != no_object && b != binfile->objects.end() );
 
 		binfile->modified = true;
 
@@ -363,7 +412,7 @@ public:
 
 	virtual void Set(CCoreBinFile *binfile, VARIANT p)
 	{
-		if( a != no_object )
+		if( !EQUAL_WITH_NO_OBJECT( a))
 		{
 			BinAttrBase *base = a->second.Find(attrid + ATTRID_COLLECTION);
 			ASSERT( base != NULL );
@@ -397,7 +446,7 @@ public:
 	}
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const
 	{
-		if( a == no_object )
+		if(EQUAL_WITH_NO_OBJECT( a))
 		{
 			metaobjidpair_type idpair;
 			idpair.metaid = METAID_NONE;
@@ -410,7 +459,7 @@ public:
 
 	virtual void Write(CCoreBinFile *binfile) const
 	{
-		if( a == no_object )
+		if(EQUAL_WITH_NO_OBJECT( a))
 		{
 			binfile->write((metaid_type)METAID_NONE);
 		}
@@ -426,7 +475,7 @@ public:
 
 	virtual void Read(CCoreBinFile *binfile)
 	{
-		ASSERT( a == no_object );
+		ASSERT( EQUAL_WITH_NO_OBJECT( a));
 
 		metaid_type metaid;
 		binfile->read(metaid);
@@ -438,10 +487,10 @@ public:
 
 			ASSERT( objid != OBJID_NONE );
 
-			binfile->resolvelist.push_front();
+			binfile->resolvelist.push_front(CCoreBinFile::resolve_type());
 			CCoreBinFile::resolve_type &b = binfile->resolvelist.front();
 
-			ASSERT( binfile->opened_object != no_object );
+			ASSERT( !EQUAL_WITH_NO_OBJECT( binfile->opened_object));
 
 			b.obj = binfile->opened_object;
 			b.attrid = attrid;
@@ -451,35 +500,5 @@ public:
 	}
 };
 
-// --------------------------- BinAttr<VALTYPE_COLLECTION>
-
-template<>
-class BinAttr<VALTYPE_COLLECTION> : public BinAttrBase
-{
-public:
-	std::vector<objects_iterator> a;
-
-	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_COLLECTION; }
-	virtual void Set(CCoreBinFile *binfile, VARIANT p) { ASSERT(false); }
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const
-	{
-		ASSERT( p != NULL && p->vt == VT_EMPTY );
-
-		std::vector<metaobjidpair_type> idpairs;
-
-		std::vector<objects_iterator>::const_iterator i = a.begin();
-		std::vector<objects_iterator>::const_iterator e = a.end();
-		while( i != e )
-		{
-			idpairs.push_back( (*i)->first );
-
-			++i;
-		}
-
-		CopyTo(idpairs, p);
-	}
-	virtual void Write(CCoreBinFile *binfile) const { }
-	virtual void Read(CCoreBinFile *binfile) { }
-};
 
 #endif//MGA_COREBINFILE_H

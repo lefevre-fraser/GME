@@ -14,8 +14,10 @@ class CCoreLockAttribute;
 
 // --------------------------- typedefs
 
-typedef std::hash_map< CComObjPtr<CCoreLockAttribute>, locking_type, 
-	ptr_hashfunc<CCoreLockAttribute>, ptr_equalkey<CCoreLockAttribute> > lockmap_type;
+typedef stdext::hash_map< CComObjPtr<CCoreLockAttribute>
+                        , locking_type
+                        , ptr_compare<CCoreLockAttribute> 
+                        > lockmap_type;
 typedef lockmap_type::iterator lockmap_iterator;
 
 typedef std::list<lockmap_type> lockmaps_type;

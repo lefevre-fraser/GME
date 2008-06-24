@@ -105,7 +105,7 @@ namespace OclGmeCM
 							vecFeatures.push_back( new OclMeta::Attribute( signature.GetName(), CreateReturnType( vecFunctions[ i ]->GetReturnType() ), new ConstraintAttribute( m_pFacade->GetProject(), vecFunctions[ i ] ), true, true ) );
 				}
 				vecFunctions = m_pFacade->m_vecUserConstraintFunctions;
-				for ( i = 0 ; i < vecFunctions.size() ; i++ ) {
+				for (  unsigned int i = 0 ; i < vecFunctions.size() ; i++ ) {
 					if ( vecFunctions[ i ]->IsValid() && m_pFacade->GetTreeManager()->GetTypeManager()->IsTypeA( signature.GetTypeName(), vecFunctions[ i ]->GetContextType() ) >= 0 )
 						if ( vecFunctions[ i ]->GetName() == signature.GetName() && vecFunctions[ i ]->GetStereotype() == Ocl::Constraint::CS_ATTRIBUTEDEF )
 							vecFeatures.push_back( new OclMeta::Attribute( signature.GetName(), CreateReturnType( vecFunctions[ i ]->GetReturnType() ), new ConstraintAttribute( m_pFacade->GetProject(), vecFunctions[ i ] ), true, true ) );
@@ -121,7 +121,7 @@ namespace OclGmeCM
 							vecFeatures.push_back( new OclMeta::Method( signature.GetName(), CreateFormalParameters( vecFunctions[ i ]->GetFormalParameters() ), CreateReturnType( vecFunctions[ i ]->GetReturnType() ), new ConstraintMethod( m_pFacade->GetProject(), vecFunctions[ i ] ), true, true ) );
 				}
 				vecFunctions = m_pFacade->m_vecUserConstraintFunctions;
-				for ( i = 0 ; i < vecFunctions.size() ; i++ ) {
+				for ( unsigned int i = 0 ; i < vecFunctions.size() ; i++ ) {
 					if ( vecFunctions[ i ]->IsValid() && m_pFacade->GetTreeManager()->GetTypeManager()->IsTypeA( signature.GetTypeName(), vecFunctions[ i ]->GetContextType() ) >= 0 )
 						if ( vecFunctions[ i ]->GetName() == signature.GetName() && vecFunctions[ i ]->GetStereotype() == Ocl::Constraint::CS_ATTRIBUTEDEF )
 							vecFeatures.push_back( new OclMeta::Method( signature.GetName(), CreateFormalParameters( vecFunctions[ i ]->GetFormalParameters() ), CreateReturnType( vecFunctions[ i ]->GetReturnType() ), new ConstraintMethod( m_pFacade->GetProject(), vecFunctions[ i ] ), true, true ) );
@@ -352,7 +352,7 @@ namespace OclGmeCM
 		// Check All
 
 		OclGme::SpConstraintFunction spC;
-		for ( i = 0 ; i < vecSucceededs.size() ; i ++ ) {
+		for ( unsigned int i = 0 ; i < vecSucceededs.size() ; i ++ ) {
 			OclTree::TypeContextStack context;
 			context.AddVariable( "project", TypeSeq( 1, "gme::Project" ) );
 			spC = vecSucceededs[ i ];
@@ -366,7 +366,7 @@ namespace OclGmeCM
 		vecSucceededs.clear();
 		DependencySetVector vecDependencySets;
 
-		for ( i = 0 ; i < vecFounds.size() ; i ++ )
+		for ( unsigned int i = 0 ; i < vecFounds.size() ; i ++ )
 			if ( vecFounds[ i ]->GetState() == Ocl::Constraint::CS_CHECK_SUCCEEDED ) {
 				vecSucceededs.push_back( vecFounds[ i ] );
 				vecDependencySets.push_back( vecFounds[ i ]->GetDependencySet() );
@@ -375,7 +375,7 @@ namespace OclGmeCM
 		// Collect all Error Dependencies
 
 		StringVector vecErrors;
-		for ( i = 0 ; i < vecFaileds.size() ; i++ ) {
+		for ( unsigned int i = 0 ; i < vecFaileds.size() ; i++ ) {
 			std::string strSignature;
 			try {
 				strSignature = GetSignature( vecFaileds[ i ] );
@@ -386,7 +386,7 @@ namespace OclGmeCM
 			vecErrors.push_back( strSignature );
 		}
 
-		for ( i = 0 ; i < vecErrors.size() ; i++ ) {
+		for (  unsigned int i = 0 ; i < vecErrors.size() ; i++ ) {
 			for ( unsigned int j = 0 ; j < vecDependencySets.size() ; j++ ) {
 				OclMeta::DependencySet::iterator it = OclMeta::Dependency::LookUp( vecDependencySets[ j ], vecErrors[ i ] );
 				if ( it != vecDependencySets[ j ].end() ) {
@@ -400,7 +400,7 @@ namespace OclGmeCM
 
 		// Set result dependencies
 
-		for ( i = 0 ; i < vecSucceededs.size() ; i++ )
+		for ( unsigned int i = 0 ; i < vecSucceededs.size() ; i++ )
 			if ( vecSucceededs[ i ]->SetDependencyResult( vecDependencySets[ i ] ) == Ocl::Constraint::CS_CHECK_DEPENDENCY_FAILED )
 				vecFaileds.push_back( vecSucceededs[ i ] );
 
@@ -409,13 +409,13 @@ namespace OclGmeCM
 		vecFounds = vecSucceededs;
 		vecSucceededs.clear();
 
-		for ( i = 0 ; i < vecFounds.size() ; i ++ )
+		for ( unsigned int i = 0 ; i < vecFounds.size() ; i ++ )
 			if ( vecFounds[ i ]->GetState() == Ocl::Constraint::CS_CHECK_DEPENDENCY_SUCCEEDED )
 				vecSucceededs.push_back( vecFounds[ i ] );
 
 		// Complete vecFounds
 
-		for ( i = 0 ; i < vecFaileds.size() ; i ++ )
+		for ( unsigned int i = 0 ; i < vecFaileds.size() ; i ++ )
 			vecFounds.push_back( vecFaileds[ i ] );
 	}
 
@@ -545,7 +545,7 @@ namespace OclGmeCM
 
 		// Collect User Constraints
 
-		for ( i = 0 ; i < m_vecUserConstraints.size() ; i++ ) {
+		for ( unsigned int i = 0 ; i < m_vecUserConstraints.size() ; i++ ) {
 			if ( m_vecUserConstraints[ i ]->IsValid() ) {
 				if ( strKind == m_vecUserConstraints[ i ]->GetContextType() ) {
 					OclGme::Constraint::EnableInfo eInfo = m_vecUserConstraints[ i ]->GetEnableInfo( spObject );
@@ -600,7 +600,7 @@ namespace OclGmeCM
 						return true;
 					}
 				}
-				for ( i = 0 ; i < m_vecMetaConstraintFunctions.size() ; i++ ) 
+				for ( unsigned int i = 0 ; i < m_vecMetaConstraintFunctions.size() ; i++ ) 
 				{
 					bool valid = m_vecMetaConstraintFunctions[ i ]->IsValid();
 					std::string fname = m_vecMetaConstraintFunctions[ i ]->GetName();// GetFullName();

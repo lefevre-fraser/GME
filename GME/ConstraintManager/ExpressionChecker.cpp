@@ -54,7 +54,7 @@ STDMETHODIMP CExpressionChecker::ObjectsInvokeEx( IMgaProject *p, IMgaObject *o,
 			CSyntacticSemanticDialog dlgErrors( AfxGetApp()->m_pActiveWnd );
 			for ( unsigned int i = 0 ; i < vecConstraintFunctions.size() ; i++ )
 				dlgErrors.AddItem( vecConstraintFunctions[ i ] );
-			for ( i = 0 ; i < vecConstraints.size() ; i++ )
+			for ( unsigned int i = 0 ; i < vecConstraints.size() ; i++ )
 				dlgErrors.AddItem( vecConstraints[ i ] );
 			dlgErrors.DoModal();
 		}
@@ -157,16 +157,13 @@ STDMETHODIMP CExpressionChecker::Initialize( IMgaProject *p )
 	m_spEventSink->ec = this;
 
 	m_spAddOn = NULL;
-	COMTHROW( m_spProject->CreateAddOn( m_spEventSink, &m_spAddOn ) );
-	COMTHROW( m_spAddOn->put_EventMask( 0xFFFFFFFF ) );
-
 	COMTRY {
+		COMTHROW( m_spProject->CreateAddOn( m_spEventSink, &m_spAddOn ) );
+		COMTHROW( m_spAddOn->put_EventMask( 0xFFFFFFFF ) );
 
 		m_Facade.Initialize( p );
-
 	} COMCATCH( ASSERT( 0 ); )
 
-	return S_OK;
 }
 
 STDMETHODIMP CExpressionChecker::Enable( VARIANT_BOOL enabled )

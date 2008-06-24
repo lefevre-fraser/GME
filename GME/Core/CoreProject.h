@@ -45,8 +45,10 @@ typedef undo_items_type undo_type;
 typedef std::list<undo_type> undos_type;
 typedef undos_type::iterator undos_iterator;
 
-typedef std::hash_map<metaobjidpair_type, CCoreObject*, 
-	metaobjidpair_hashfunc, metaobjidpair_equalkey> object_lookup_type;
+typedef stdext::hash_map< metaobjidpair_type
+                        , CCoreObject*
+                        , metaobjid2pair_hashfunc
+                        > object_lookup_type;
 typedef object_lookup_type::iterator object_lookup_iterator;
 
 typedef std::list< CComObjPtr<CCoreTerritory> > pushed_territorys_type;//slist

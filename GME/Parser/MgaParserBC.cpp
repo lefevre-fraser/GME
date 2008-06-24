@@ -43,7 +43,7 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 		//by zolmol
 		m_maintainGuids = false; // do not preserve guids found in data pasted
 		m_target = target;
-		m_resolveDerFuncPtr = CMgaParser::ResolveClosure1Derivation;
+		m_resolveDerFuncPtr = &CMgaParser::ResolveClosure1Derivation;
 		//m_clVer = 1;
 		m_clVerStr = "1";//end
 
@@ -87,7 +87,7 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 			pass_count = 1;
 
 			ranges.clear();
-			ranges.push_front();
+			ranges.push_front(range_type());
 			ranges.front().begin = 1;
 			ranges.front().end = (counter_type)-1;
 			ranges.front().previous.name = "start";
@@ -144,7 +144,7 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 		CloseAll();
 		// in case we rethrew the [probably MGA originated] exception 
 		// we have set into errorinfo the location info
-		if( m_GME) COMTHROW( m_GME->ConsoleMessage( errorinfo, MSG_ERROR));
+		if( m_GME) m_GME->ConsoleMessage( errorinfo, MSG_ERROR);
 		clear_GME( m_GME);
 
 		ASSERT( FAILED(e.hr) );

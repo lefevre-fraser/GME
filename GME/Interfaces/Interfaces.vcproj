@@ -1,51 +1,67 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="9.00"
 	Name="Interfaces"
-	SccProjectName=""
-	SccLocalPath=""
-	Keyword="MakeFileProj">
+	ProjectGUID="{A9BA4850-C3D5-45DC-98B3-C29EC9FD54EB}"
+	Keyword="MakeFileProj"
+	TargetFrameworkVersion="131072"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="."
 			IntermediateDirectory="."
 			ConfigurationType="10"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
 				TypeLibraryName="./Interfaces.tlb"
-				HeaderFileName=""/>
+				HeaderFileName=""
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="."
 			IntermediateDirectory="."
 			ConfigurationType="10"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
 				TypeLibraryName="./Interfaces.tlb"
-				HeaderFileName=""/>
+				HeaderFileName=""
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -53,187 +69,229 @@
 	<Files>
 		<Filter
 			Name="Interface Files"
-			Filter="*.idl">
+			Filter="*.idl"
+			>
 			<File
-				RelativePath="Core.idl">
+				RelativePath="Core.idl"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="Core.h"
-						InterfaceIdentifierFileName="Core_i.c"/>
+						InterfaceIdentifierFileName="Core_i.c"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="Core.h"
-						InterfaceIdentifierFileName="Core_i.c"/>
+						InterfaceIdentifierFileName="Core_i.c"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Gme.idl">
+				RelativePath="Gme.idl"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="Gme.h"
-						InterfaceIdentifierFileName="Gme_i.c"/>
+						InterfaceIdentifierFileName="Gme_i.c"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="Gme.h"
-						InterfaceIdentifierFileName="Gme_i.c"/>
+						InterfaceIdentifierFileName="Gme_i.c"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Meta.idl">
+				RelativePath="Meta.idl"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="Meta.h"
-						InterfaceIdentifierFileName="Meta_i.c"/>
+						InterfaceIdentifierFileName="Meta_i.c"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="Meta.h"
-						InterfaceIdentifierFileName="Meta_i.c"/>
+						InterfaceIdentifierFileName="Meta_i.c"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Mga.idl">
+				RelativePath="Mga.idl"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="Mga.h"
-						InterfaceIdentifierFileName="Mga_i.c"/>
+						InterfaceIdentifierFileName="Mga_i.c"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="Mga.h"
-						InterfaceIdentifierFileName="Mga_i.c"/>
+						InterfaceIdentifierFileName="Mga_i.c"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MgaDecorator.idl">
+				RelativePath="MgaDecorator.idl"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="MgaDecorator.h"
-						InterfaceIdentifierFileName="MgaDecorator_i.c"/>
+						InterfaceIdentifierFileName="MgaDecorator_i.c"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="MgaDecorator.h"
-						InterfaceIdentifierFileName="MgaDecorator_i.c"/>
+						InterfaceIdentifierFileName="MgaDecorator_i.c"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MgaUtil.idl">
+				RelativePath="MgaUtil.idl"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="MgaUtil.h"
-						InterfaceIdentifierFileName="MgaUtil_i.c"/>
+						InterfaceIdentifierFileName="MgaUtil_i.c"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="MgaUtil.h"
-						InterfaceIdentifierFileName="MgaUtil_i.c"/>
+						InterfaceIdentifierFileName="MgaUtil_i.c"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Parser.idl">
+				RelativePath="Parser.idl"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="Parser.h"
-						InterfaceIdentifierFileName="Parser_i.c"/>
+						InterfaceIdentifierFileName="Parser_i.c"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						GenerateStublessProxies="TRUE"
+						GenerateStublessProxies="true"
 						TypeLibraryName=""
 						HeaderFileName="Parser.h"
-						InterfaceIdentifierFileName="Parser_i.c"/>
+						InterfaceIdentifierFileName="Parser_i.c"
+					/>
 				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="*.h">
+			Filter="*.h"
+			>
 			<File
-				RelativePath="InterfaceColl.h">
+				RelativePath="InterfaceColl.h"
+				>
 			</File>
 			<File
-				RelativePath="InterfaceVersion.h">
+				RelativePath="InterfaceVersion.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Builder"
-			Filter="">
+			>
 			<File
-				RelativePath="..\IFChecksumProg\IFChecksumProg.exe">
+				RelativePath="..\IFChecksumProg\IFChecksumProg.exe"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="&quot;$(InputPath)&quot; InterfaceVersion.h InterfaceVersion.trg
-"
+						CommandLine="&quot;$(InputPath)&quot; InterfaceVersion.h InterfaceVersion.trg&#x0D;&#x0A;"
 						AdditionalDependencies="Core.idl;Meta.idl;Mga.idl;MgaUtil.idl;MgaDecorator.idl;Gme.idl;Parser.idl;"
-						Outputs="InterfaceVersion.trg"/>
+						Outputs="InterfaceVersion.trg"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="&quot;$(InputPath)&quot; InterfaceVersion.h InterfaceVersion.trg
-"
+						CommandLine="&quot;$(InputPath)&quot; InterfaceVersion.h InterfaceVersion.trg&#x0D;&#x0A;"
 						AdditionalDependencies="Core.idl;Meta.idl;Mga.idl;MgaUtil.idl;MgaDecorator.idl;Gme.idl;Parser.idl;"
-						Outputs="InterfaceVersion.trg"/>
+						Outputs="InterfaceVersion.trg"
+					/>
 				</FileConfiguration>
 			</File>
 		</Filter>

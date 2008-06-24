@@ -3,7 +3,7 @@
 #include "Parser.h"
 #include "MgaDumper.h"
 #include "Transcoder.h"
-
+#include <algorithm>
 
 #define FLUSH_LIMIT			1000
 
@@ -213,7 +213,7 @@ STDMETHODIMP CMgaDumper::DumpFCOs(IMgaProject *proj, IMgaFCOs *p, IMgaFolders *f
 		CComObjPtr<IMgaMetaProject> metaproject;
 		COMTHROW( project->get_RootMeta(PutOut(metaproject)) );
 		ASSERT( metaproject != NULL );
-		if( metaproject) Attr("paradigmnamehint", metaproject, IMgaMetaProject::get_Name);
+		if( metaproject) Attr("paradigmnamehint", metaproject, &IMgaMetaProject::get_Name);
 
 		CComObjPtrVector<IMgaFolder>::iterator fi = m_selFolders.begin();
 		while( fi != m_selFolders.end() )
@@ -285,7 +285,7 @@ inline void CMgaDumper::StartElem(const char *name)
 		elems.back().inbody = true;
 	}
 
-	elems.push_back();
+	elems.push_back(elem());
 	elems.back().name = name;
 	elems.back().inbody = false;
 	elems.back().indata = false;
@@ -481,9 +481,9 @@ void CMgaDumper::Dump(IMgaProject *project)
 	CopyTo(guid, PutOut(bstr));
 	Attr("guid", bstr);
 
-	Attr("cdate", project, IMgaProject::get_CreateTime);
-	Attr("mdate", project, IMgaProject::get_ChangeTime);
-	Attr("version", project, IMgaProject::get_Version);
+	Attr("cdate", project, &IMgaProject::get_CreateTime);
+	Attr("mdate", project, &IMgaProject::get_ChangeTime);
+	Attr("version", project, &IMgaProject::get_Version);
 
 	CComObjPtr<IMgaMetaProject> metaproject;
 	COMTHROW( project->get_RootMeta(PutOut(metaproject)) );
@@ -495,21 +495,21 @@ void CMgaDumper::Dump(IMgaProject *project)
 	CopyTo(variant, guid);
 	CopyTo(guid, PutOut(bstr));
 	Attr("metaguid", bstr);
-	Attr("metaversion", metaproject, IMgaMetaProject::get_Version);
-	Attr("metaname", metaproject, IMgaMetaProject::get_Name);
+	Attr("metaversion", metaproject, &IMgaMetaProject::get_Version);
+	Attr("metaname", metaproject, &IMgaMetaProject::get_Name);
 	
 
 
 	StartElem("name");
-	Data(project, IMgaProject::get_Name);
+	Data(project, &IMgaProject::get_Name);
 	EndElem();
 
 	StartElem("comment");
-	Data(project, IMgaProject::get_Comment);
+	Data(project, &IMgaProject::get_Comment);
 	EndElem();
 
 	StartElem("author");
-	Data(project, IMgaProject::get_Author);
+	Data(project, &IMgaProject::get_Author);
 	EndElem();
 
 	CComObjPtr<IMgaFolder> folder;
@@ -525,7 +525,7 @@ void CMgaDumper::Dump(IMgaFolder *folder)
 
 	StartElem("folder");
 
-	Attr("id", folder, IMgaFolder::get_ID);
+	Attr("id", folder, &IMgaFolder::get_ID);
 
 	if( m_closureDump && m_v2)
 	{
@@ -543,15 +543,15 @@ void CMgaDumper::Dump(IMgaFolder *folder)
 		}
 
 
-		Attr( "closurename", folder, IMgaFolder::get_Name);
+		Attr( "closurename", folder, &IMgaFolder::get_Name);
 
 	}
 
 	if(dumpversion >= 1) {
 		if( m_dumpRelids)
 		{
-			LAttr("relid", folder, IMgaFolder::get_RelID);
-			LAttr("childrelidcntr", folder, IMgaFolder::get_ChildRelIDCounter);
+			LAttr("relid", folder, &IMgaFolder::get_RelID);
+			LAttr("childrelidcntr", folder, &IMgaFolder::get_ChildRelIDCounter);
 		}
 
 		CComBstrObj libname;
@@ -565,7 +565,7 @@ void CMgaDumper::Dump(IMgaFolder *folder)
 
 	CComObjPtr<IMgaMetaFolder> metafolder;
 	COMTHROW( folder->get_MetaFolder(PutOut(metafolder)) );
-	Attr("kind", metafolder, IMgaMetaFolder::get_Name);
+	Attr("kind", metafolder, &IMgaMetaFolder::get_Name);
 
 	if( m_dumpGuids) // this is true if Project is dumped and mgaversion of project is 2
 	{
@@ -582,12 +582,12 @@ void CMgaDumper::Dump(IMgaFolder *folder)
 	}
 
 	StartElem("name");
-	Data(folder, IMgaFolder::get_Name);
+	Data(folder, &IMgaFolder::get_Name);
 	EndElem();
 
 	DumpConstraints(folder);
 
-	Dump(folder, IMgaFolder::get_ChildFolders);
+	Dump(folder, &IMgaFolder::get_ChildFolders);
 
 	// dumping the regnodes
 	CComObjPtrVector<IMgaRegNode> v;
@@ -604,7 +604,7 @@ void CMgaDumper::Dump(IMgaFolder *folder)
 		++i;
 	}
 
-	Dump(folder, IMgaFolder::get_ChildFCOs);
+	Dump(folder, &IMgaFolder::get_ChildFCOs);
 
 	EndElem();
 }
@@ -615,7 +615,7 @@ void CMgaDumper::Dump(IMgaRegNode *regnode)
 
 	StartElem("regnode");
 
-	Attr("name", regnode, IMgaRegNode::get_Name);
+	Attr("name", regnode, &IMgaRegNode::get_Name);
 
 	VARIANT_BOOL b;
 	COMTHROW( regnode->get_Opacity(&b) );
@@ -629,7 +629,7 @@ void CMgaDumper::Dump(IMgaRegNode *regnode)
 		Attr("status", "undefined");
 
 	StartElem("value");
-	Data(regnode, IMgaRegNode::get_Value);
+	Data(regnode, &IMgaRegNode::get_Value);
 	EndElem();
 
 	// dumping the subnodes
@@ -728,16 +728,16 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 
 	if( dump_attrs )
 	{
-		Attr("id", fco, IMgaFCO::get_ID);
+		Attr("id", fco, &IMgaFCO::get_ID);
 
 		CComObjPtr<IMgaMetaFCO> metafco;
 		COMTHROW( fco->get_Meta(PutOut(metafco)) );
-		Attr("kind", metafco, IMgaMetaFCO::get_Name);
+		Attr("kind", metafco, &IMgaMetaFCO::get_Name);
 
 		CComObjPtr<IMgaMetaRole> role;
 		COMTHROW( fco->get_MetaRole(PutOut(role)) );
 		if( role != NULL )
-			Attr("role", role, IMgaMetaRole::get_Name);
+			Attr("role", role, &IMgaMetaRole::get_Name);
 
 		if( m_dumpGuids) // this is true if Project is dumped and mgaversion of project is 2
 		{
@@ -761,7 +761,7 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 			if( guid_str != 0 && guid_str.Length() == GLOBAL_ID_LEN) // using { 8-4-4-4-12} form
 				Attr( "closureguid", guid_str);
 
-			Attr( "closurename", fco, IMgaFCO::get_Name);
+			Attr( "closurename", fco, &IMgaFCO::get_Name);
 
 		}
 
@@ -772,7 +772,7 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 		if(derivedfrom != NULL )
 		{
 			if (CheckInClosure(derivedfrom)) {
-				Attr("derivedfrom", derivedfrom, IMgaFCO::get_ID);
+				Attr("derivedfrom", derivedfrom, &IMgaFCO::get_ID);
 
 				VARIANT_BOOL b;
 
@@ -837,7 +837,7 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 			}
 		}
 		if(prim && (dumpversion >= 1) && (!lost_basetype) && m_dumpRelids)
-			LAttr("relid", fco, IMgaFCO::get_RelID);
+			LAttr("relid", fco, &IMgaFCO::get_RelID);
 
 		VARIANT_BOOL readonly;
 		COMTHROW( fco->HasReadOnlyAccess( &readonly));
@@ -847,7 +847,7 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 	if( dump_name )
 	{
 		StartElem("name");
-		Data(fco, IMgaFCO::get_Name);
+		Data(fco, &IMgaFCO::get_Name);
 		EndElem();
 	}
 
@@ -870,7 +870,7 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 			++i;
 		}
 
-		Dump(fco, IMgaFCO::get_Attributes);
+		Dump(fco, &IMgaFCO::get_Attributes);
 	}
 }
 
@@ -881,10 +881,10 @@ void CMgaDumper::Dump(IMgaModel *model)
 	StartElem("model");
 
 	DumpFCO(model, true, false, false);	
-	if(dumpversion >= 1 && m_dumpRelids) LAttr("childrelidcntr", model, IMgaModel::get_ChildRelIDCounter);
+	if(dumpversion >= 1 && m_dumpRelids) LAttr("childrelidcntr", model, &IMgaModel::get_ChildRelIDCounter);
 	DumpFCO(model, false, true, true);	
 
-	Dump(model, IMgaModel::get_ChildFCOs);
+	Dump(model, &IMgaModel::get_ChildFCOs);
 
 	EndElem();
 }
@@ -924,11 +924,11 @@ void CMgaDumper::Dump(IMgaConstraint *constraint)
 	StartElem("constraint");
 
 	StartElem("name");
-	Data(constraint, IMgaConstraint::get_Name);
+	Data(constraint, &IMgaConstraint::get_Name);
 	EndElem();
 
 	StartElem("value");
-	Data(constraint, IMgaConstraint::get_Expression);
+	Data(constraint, &IMgaConstraint::get_Expression);
 	EndElem();
 
 	EndElem();
@@ -942,7 +942,7 @@ void CMgaDumper::Dump(IMgaAttribute *attribute)
 	
 	CComObjPtr<IMgaMetaAttribute> metaattr;
 	COMTHROW( attribute->get_Meta(PutOut(metaattr)) );
-	Attr("kind", metaattr, IMgaMetaAttribute::get_Name);
+	Attr("kind", metaattr, &IMgaMetaAttribute::get_Name);
 
 	long status;
 	COMTHROW( attribute->get_Status(&status) );
@@ -1050,7 +1050,7 @@ void CMgaDumper::Dump(IMgaReference *reference)
 	if( fco != NULL)
 	{
 		if( CheckInClosure( fco)) // regular dump or the fco is really in the closure
-			Attr("referred", fco, IMgaFCO::get_ID);
+			Attr("referred", fco, &IMgaFCO::get_ID);
 		
 		if( m_closureDump)
 		{
@@ -1133,7 +1133,7 @@ void CMgaDumper::Dump(IMgaConnection *connection)
 
 	DumpFCO(connection);
 
-	if(!skipdump) Dump(connection, IMgaConnection::get_ConnPoints);
+	if(!skipdump) Dump(connection, &IMgaConnection::get_ConnPoints);
 
 	EndElem();
 }
@@ -1191,7 +1191,7 @@ void CMgaDumper::Dump(IMgaConnPoint *connpoint)
 
 	StartElem("connpoint");
 
-	Attr("role", connpoint, IMgaConnPoint::get_ConnRole);
+	Attr("role", connpoint, &IMgaConnPoint::get_ConnRole);
 	
 	CComObjPtr<IMgaFCO> target;
 	COMTHROW( connpoint->get_Target(PutOut(target)) );
@@ -1214,7 +1214,7 @@ void CMgaDumper::Dump(IMgaConnPoint *connpoint)
 		}
 	}
 
-	Attr("target", target, IMgaFCO::get_ID);
+	Attr("target", target, &IMgaFCO::get_ID);
 
 	if( m_closureDump)
 	{

@@ -65,11 +65,14 @@ public:
 
 	STDMETHOD(get_Name)(BSTR *p)
 	{ /*return E_NOTIMPL;*/
+		HRESULT hr;
 		CHECK_OUT(p);
 		CComPtr<IMgaMetaRole> pRole;
-		COMTHROW(((IMgaMetaPart *) this)->get_Role(&pRole));
-		COMTHROW(pRole->get_Name(p));
-		return S_OK;
+		hr = ((IMgaMetaPart *) this)->get_Role(&pRole);
+		if (SUCCEEDED(hr)) {
+			hr = pRole->get_Name(p);
+		}
+		return hr;
 	}
 
 	STDMETHOD(put_Name)(BSTR p)

@@ -436,7 +436,7 @@ void CMgaMetaProject::CreatePathItems(bstr_const_iterator i, bstr_const_iterator
 		if( k == metaobj_lookup.end() )
 			COMTHROW(E_INVALID_PATH);
 
-		pathitems.push_back();
+		pathitems.push_back(pathitem_type());
 		
 		COMTHROW( k->second->get_Name(PutOut(pathitems.back().continual_name)) );
 
@@ -471,7 +471,7 @@ void CMgaMetaProject::CreateJointPaths(BSTR paths, jointpaths_type &jointpaths)
 		bstr_const_iterator j = std::find(i, e, L' ');
 		bstr_const_iterator k = std::find(j, e, L',');
 
-		jointpaths.push_back();
+		jointpaths.push_back(jointpath_type());
 		CopyTo(i, j, jointpaths.back().ptrspec_name);
 
 		CreatePathItems(j, k, jointpaths.back().pathitems);

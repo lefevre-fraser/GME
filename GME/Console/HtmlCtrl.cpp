@@ -47,8 +47,16 @@ END_MESSAGE_MAP()
 // CHtmlCtrl diagnostics
 
 #ifdef _DEBUG
+//
+// MFC manages/stores states in statically linked (small) stubs
+// Also, it updates the current module state for window message dispatch
+// In this case, message is sent to the hosted IE window (so the module state won't be changed to our DLL), 
+// which calls CHtmlView through COM. For some reason CHtmlView does not update module state when called trhough COM, 
+// and eventually it calls MFC functions (only this one in our case) which will not find the (correct) module state
+//
 void CHtmlCtrl::AssertValid() const
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 	CHtmlView::AssertValid();
 }
 

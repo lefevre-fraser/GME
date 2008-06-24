@@ -6,14 +6,20 @@
 #if !defined(AFX_STDAFX_H__270B4F89_B17C_11D3_9AD1_00AA00B6FE26__INCLUDED_)
 #define AFX_STDAFX_H__270B4F89_B17C_11D3_9AD1_00AA00B6FE26__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
-#define STRICT
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0400
+#ifndef _SECURE_ATL
+#define _SECURE_ATL 1
 #endif
+
+#ifndef VC_EXTRALEAN
+#define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
+#endif
+
+#include "targetver.h"
+
+#define _CRT_SECURE_NO_WARNINGS
+
 #define _ATL_APARTMENT_THREADED
 
 #include <atlbase.h>
@@ -23,7 +29,6 @@ extern CComModule _Module;
 #include <atlcom.h>
 #pragma warning(push,3)
 
-#include <stl_user_config.h>
 
 #include <list>//slist
 #include <string>

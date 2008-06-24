@@ -92,7 +92,7 @@ class ExceptionHandler
 	static BOOL							m_wow64Process;
 	static HANDLE						m_hProcess;
 	static CRITICAL_SECTION				m_crashDumpLock;
-	static bool							m_createMinidump;
+	static BOOL							m_createMinidump;
 	static TCHAR						m_szMinidumpDir[MAX_PATH];
 	static MINIDUMP_TYPE				m_minidumpType;
 

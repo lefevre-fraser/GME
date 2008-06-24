@@ -250,7 +250,8 @@ void DeriveTreeTask::_DoWithDeriveds(CoreObj self, std::vector<CoreObj> *peers) 
 			if(peercnt) {
 				CoreObj r = ITER.FollowChain(ATTRID_FCOPARENT, selfdepth);
 				std::vector<CoreObj> subpeers(peercnt);
-				for(int i = 0; i < internalpeercnt; i++) {			// first the internals
+				int i;
+				for(i = 0; i < internalpeercnt; i++) {			// first the internals
 					GetDerivedEquivalent((*peers)[i], r, subpeers[i], peerdepths[i]);
 				}
 				for(; i < peercnt; i++) subpeers[i] = (*peers)[i];  // the rest are externals
@@ -293,7 +294,8 @@ void DeriveTreeTask::DoWithDeriveds(CoreObj self, std::vector<CoreObj> *peers) {
 				ASSERT(r);
 				peercnt = (*peers).size();
 				peerdepths.reserve(peercnt);   // only internalpeercnt will be used, but we do not know that number yet
-				for(int i = 0; i < peercnt-endreserve; i++) {
+				int i;
+				for(i = 0; i < peercnt-endreserve; i++) {
 					int l;
 					CoreObj r2;
 					if((*peers)[i] == NULL) break;

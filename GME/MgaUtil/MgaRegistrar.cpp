@@ -941,7 +941,8 @@ STDMETHODIMP CMgaRegistrar::get_Paradigms(regaccessmode_enum mode, VARIANT *name
 					if( err == ERROR_NO_MORE_ITEMS )
 						break;
 					ERRTHROW( err );
-					for(int j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes, system copy is ignored
+					int j;
+					for(j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes, system copy is ignored
 						if(!ret[j].CompareNoCase(name)) break;
 					}
 					if(j != retlen) continue;
@@ -1261,7 +1262,8 @@ STDMETHODIMP CMgaRegistrar::QueryParadigmAllGUIDs(BSTR parname, VARIANT *guidstr
 					if( err == ERROR_NO_MORE_ITEMS )
 						break;
 					ERRTHROW( err );
-					for(int j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
+					int j;
+					for(j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
 						if(!ret[j].CompareNoCase(name)) break;
 					}
 					if(j != retlen) continue;
@@ -1270,7 +1272,8 @@ STDMETHODIMP CMgaRegistrar::QueryParadigmAllGUIDs(BSTR parname, VARIANT *guidstr
 				}
 				else {
 					CString name = QueryValue(par, "GUID");
-					for(int j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
+					int j;
+					for(j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
 						if(!ret[j].CompareNoCase(name)) break;
 					}
 					if(j == retlen) ret.Add(name);
@@ -1640,7 +1643,8 @@ STDMETHODIMP CMgaRegistrar::get_Components(regaccessmode_enum mode, VARIANT *pro
 					if( err == ERROR_NO_MORE_ITEMS )
 						break;
 					ERRTHROW( err );
-					for(int j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
+					int j;
+					for(j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
 						if(!ret[j].CompareNoCase(name)) break;
 					}
 					if(j != retlen) continue;
@@ -2018,8 +2022,8 @@ STDMETHODIMP CMgaRegistrar::get_AssociatedComponents(BSTR paradigm,
 						if( assocs.QueryValue( paradigm2, NULL, NULL, &count) != ERROR_SUCCESS ) continue;
 					}
 
-
-					for(int j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
+					int j;
+					for(j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
 						if(!ret[j].CompareNoCase(name)) break;
 					}
 					if(j != retlen) continue;
@@ -2111,8 +2115,9 @@ STDMETHODIMP CMgaRegistrar::get_AssociatedParadigms(BSTR progid, regaccessmode_e
 					CComBSTR cs;
 					CComVariant guid;
 					if(QueryParadigm(CComBSTR(name), &cs, &guid, REGACCESS_SYSTEM) != S_OK) continue;
-
-					for(int j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
+					
+					int j;
+					for(j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
 						if(!ret[j].CompareNoCase(name)) break;
 					}
 					if(j != retlen) continue;
@@ -2264,7 +2269,7 @@ STDMETHODIMP CMgaRegistrar::IsAssociated(BSTR progid, BSTR paradigm,
 			can = VARIANT_FALSE;
 			const OLECHAR *p = wcstok(pars, L" \n\t");
 			while(p) {
-				if(!wcsicmp(p, paradigm)) {
+				if(!_wcsicmp(p, paradigm)) {
 					can = VARIANT_TRUE;
 					break;
 				}

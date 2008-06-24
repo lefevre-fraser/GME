@@ -499,7 +499,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 
 		m_lstObjects.DeleteAllItems();
 
-		for ( i = 0 ; i < vi.vecVariables.size() ; i++ ) {
+		for ( unsigned int i = 0 ; i < vi.vecVariables.size() ; i++ ) {
 
 			// Add Variable
 
@@ -660,7 +660,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 
 		OclTree::ViolationVector vecViolations = m_vecRecords[ m_iSelectedConstraint ].vecViolations;
 
-		for ( i = 0 ; i < vecViolations.size() ; i++ ) {
+		for ( unsigned int i = 0 ; i < vecViolations.size() ; i++ ) {
 			OclTree::Violation vi = vecViolations[ i ];
 
 			// Add Line

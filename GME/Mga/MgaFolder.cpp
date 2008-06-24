@@ -552,7 +552,7 @@ void str_scan_name( OLECHAR ** p_ptr, int len_of, CComBSTR& p_name, CComBSTR& p_
 		++pi;--len_of;
 	}
 
-	int f = id.find( str_to_find1);
+	std::string::size_type f = id.find( str_to_find1);
 	if( std::string::npos == f) // kind not found
 	{
 		p_name = id.c_str(); // only name is present
@@ -563,7 +563,7 @@ void str_scan_name( OLECHAR ** p_ptr, int len_of, CComBSTR& p_name, CComBSTR& p_
 		p_name = id.substr( 0, f).c_str(); // f might be 0, so p_name might be ""
 		id = id.substr( f + strlen( str_to_find1));
 
-		int k = id.find( str_to_find2);
+		std::string::size_type k = id.find( str_to_find2);
 		if( std::string::npos == k) // relid not found
 		{
 			p_kind = id.c_str(); // the remaining part is the kind
@@ -977,7 +977,7 @@ HRESULT FCO::GetSourceControlInfo( long* p_scInfo)
 /* Only the real reference ones, does not work for XREFS */
 
 
-typedef std::hash_set<CoreObj, coreobj_hashfunc, coreobj_eqfunc> coreobjset;
+typedef stdext::hash_set<CoreObj, coreobj_hashfunc> coreobjset;
 
 void EnumRefs(CoreObj &self, coreobjset fcoset, EXCOLLECTIONTYPE_FOR(MgaFCO) *q) {
 	metaid_type n = GetMetaID(self);

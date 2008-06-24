@@ -69,23 +69,23 @@ void CCertificateDlg::OnBnClickedOk()
 	CButton* rdo2 = (CButton*) GetDlgItem( IDC_RADIO2);
 	CButton* rdo3 = (CButton*) GetDlgItem( IDC_RADIO3);
 
-	m_response = Response::PermanentAccept;
+	m_response = PermanentAccept;
 	if( rdo1 && rdo1->GetCheck() == BST_CHECKED)
-		m_response = Response::PermanentAccept;
+		m_response = PermanentAccept;
 	else if( rdo2 && rdo2->GetCheck() == BST_CHECKED)
-		m_response = Response::TemoraryAccept;
+		m_response = TemoraryAccept;
 	else if( rdo3 && rdo3->GetCheck() == BST_CHECKED)
-		m_response = Response::Reject;
+		m_response = Reject;
 	else
 	{
 		AfxMessageBox( "Before closing the dialog please select one option from Reject, Temporary Accept and Permanent Accept!"); 
 		return;
 	}
 	//"Would you like to reject the certificate? It will not allow connections to the server.", 
-	if( m_response == Response::Reject && IDNO == AfxMessageBox( "Warning: Rejecting the certificate will cause connections to this server to fail. Continue?", MB_YESNO))
+	if( m_response == Reject && IDNO == AfxMessageBox( "Warning: Rejecting the certificate will cause connections to this server to fail. Continue?", MB_YESNO))
 		return;
 
-	if( !m_permAcceptEnabled && m_response == Response::PermanentAccept)
+	if( !m_permAcceptEnabled && m_response == PermanentAccept)
 	{
 		AfxMessageBox( "Permanent accept is not a valid option!"); 
 		return;

@@ -1,6 +1,8 @@
 
 #include "stdafx.h"
 
+#include <algorithm>
+
 #include "CoreObject.h"
 #include "CoreAttribute.h"
 #include "CoreProject.h"
@@ -368,7 +370,7 @@ void CCoreObject::CreateAggregates()
 			(void**)PutOut(aggregated)) );
 		ASSERT( aggregated != NULL );
 
-		aggregates.push_front();
+		aggregates.push_front(CComObjPtr<IUnknown>(0));
 		MoveTo(aggregated, aggregates.front());
 
 		++i;

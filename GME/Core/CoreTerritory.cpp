@@ -13,7 +13,7 @@
 CCoreTerritory::CCoreTerritory()
 {
 	status = 0;
-	lockmaps.push_front();
+	lockmaps.push_front( lockmap_type());
 }
 
 CCoreTerritory *CCoreTerritory::Create(CCoreProject *project)
@@ -69,8 +69,9 @@ STDMETHODIMP CCoreTerritory::get_Attributes(ICoreAttributes **p)
 		CComObjPtr<COMTYPE> q;
 		CreateComObject(q);
 
-		typedef std::hash_set< CCoreLockAttribute*, ptr_hashfunc<CCoreLockAttribute>, 
-			ptr_equalkey<CCoreLockAttribute> > join_type;
+		typedef stdext::hash_set< CCoreLockAttribute*
+		                        , ptr_compare<CCoreLockAttribute>
+		                        > join_type;
 
 		join_type join;
 
@@ -108,8 +109,9 @@ STDMETHODIMP CCoreTerritory::Clear()
 
 	COMTRY
 	{
-		typedef std::hash_set< CCoreLockAttribute*, ptr_hashfunc<CCoreLockAttribute>, 
-			ptr_equalkey<CCoreLockAttribute> > join_type;
+		typedef stdext::hash_set< CCoreLockAttribute*
+		                        , ptr_compare<CCoreLockAttribute>
+		                        > join_type;
 
 		join_type join;
 
@@ -204,7 +206,7 @@ void CCoreTerritory::SetLockingCore(CCoreLockAttribute *attribute,
 			SetStatusFlag(CORETERRITORY_FINAL);
 		}
 
-		lockmaps.push_front();
+		lockmaps.push_front(lockmap_type());
 
 		project->RegisterTransactionItem(this);
 		SetStatusFlag(CORETERRITORY_DIRTY);

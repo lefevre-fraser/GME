@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <algorithm>
 #include <stdio.h>
 #include <io.h>
 #include <stdlib.h>
@@ -430,7 +431,7 @@ void XmlAttrBinary::fromString(const char * str)
 
 void XmlAttrBinary::toString(std::string& str) const
 {
-    bin2string( m_value.begin(), m_value.size(), str );
+    bin2string( &m_value[0], m_value.size(), str );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2515,7 +2516,7 @@ void CCoreXmlFile::resetSourceControlForAll()
 			containers.push_back( obj );
 	}
 
-	for( it=containers.begin(); it!=containers.end(); ++it )
+	for( XmlObjVecIter it=containers.begin(); it!=containers.end(); ++it )
 	{
 		resetSourceControlInfo( *it );
 		resetSourceControlStat( *it, false );
@@ -3694,7 +3695,7 @@ void CCoreXmlFile::readXMLFile( const char * fileName, UnresolvedPointerVec& poi
 			{
 				might_be_ok = true;
 				DOMNode * node = list->item(i);
-				if( node->getNodeType() == DOMNode::NodeType::TEXT_NODE)
+				if( node->getNodeType() == DOMNode::TEXT_NODE)
 				{
 					DOMText * txt  = (DOMText*) node;
 					const XMLCh* p = txt->getData();
@@ -4946,8 +4947,8 @@ void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 		try {
 			doc_e = doc->getDocumentElement();
 		}
-		catch( const XMLException& e) { doc_e = 0; }
-		catch( const DOMException& e) { doc_e = 0; }
+		catch( const XMLException& ) { doc_e = 0; }
+		catch( const DOMException& ) { doc_e = 0; }
 		catch( ... )                  { doc_e = 0; }
 
 		if( doc_e == NULL)
@@ -5432,7 +5433,7 @@ void ProtectList::purgeProtList( CTime& p_lastSyncTime)
 		for( int i = (int) list->getLength() - 1; i >= 0 ; --i)
 		{
 			DOMNode * node = list->item(i);
-			if( node->getNodeType() == DOMNode::NodeType::TEXT_NODE)
+			if( node->getNodeType() == DOMNode::TEXT_NODE)
 			{
 				DOMText * txt  = (DOMText*) node;
 
@@ -6694,7 +6695,7 @@ void fillUpVariantArray( const std::vector< std::string>& p_files, VARIANT *pStr
 
 	BSTR *theStrings;
 	SafeArrayAccessData( pSA, (void**) &theStrings);
-	for( int i = 0; i < p_files.size(); ++i)
+	for( std::vector< std::string>::size_type i = 0; i < p_files.size(); ++i)
 	{
 		theStrings[i] = CComBSTR( p_files[i].c_str());
 	}
@@ -6740,7 +6741,7 @@ void useArrayOfStrings( VARIANT strings)
 		SafeArrayAccessData( pSA, (void**)&bstrArray);
 
 		// read each item
-		for( int i = 0; i < pSA->rgsabound->cElements; ++i)
+		for( ULONG i = 0; i < pSA->rgsabound->cElements; ++i)
 		{
 			CComBSTR temp = bstrArray[i];
 		}
@@ -6784,7 +6785,7 @@ bool CCoreXmlFile::bulkCommitSVN( const std::string& p_dir, bool p_noUnlock /* =
 {
 	if( m_svnByAPI)
 	{
-		bool sc = m_comSvn->Commit( CComBSTR( p_dir.c_str()), p_noUnlock? VARIANT_TRUE: VARIANT_FALSE);
+		m_comSvn->Commit( CComBSTR( p_dir.c_str()), p_noUnlock? VARIANT_TRUE: VARIANT_FALSE);
 		if( !p_noUnlock) // if noUnlock was not requested, then a file should be unlocked after commit
 			// except, when it was not changed: in this case it needs a manual unlock
 		{
@@ -6827,7 +6828,7 @@ bool CCoreXmlFile::bulkCommitSVN( const std::string& p_dir, bool p_noUnlock /* =
 	}
 	else  // cmd line implementation here
 	{
-		bool sc = m_cmdSvn->commit( p_dir, false, p_noUnlock);
+		m_cmdSvn->commit( p_dir, false, p_noUnlock);
 		if( !p_noUnlock) // if noUnlock was not requested, then a file should be unlocked after commit
 			// except, when it was not changed: in this case it needs a manual unlock
 		{
@@ -7017,7 +7018,7 @@ void CCoreXmlFile::updateSourceControlInfo( XmlObject * container )
 		bool ismodbyothers = false;
 		try {
 			ismodbyothers = fileModifiedByOthers( container); // might throw in VSS case for orphans
-		} catch( hresult_exception& e)
+		} catch( hresult_exception& )
 		{
 			ismodbyothers = false;
 			newfile = true;
@@ -7187,7 +7188,7 @@ bool CCoreXmlFile::filesModifiedByOthersV3( XmlObjSet& p_readOnlyFiles, XmlObjSe
 			bool ret = false;
 			try {
 				ret = fileModifiedByOthers( obj);
-			} catch( hresult_exception& e) {
+			} catch( hresult_exception& ) {
 				ret = false;
 				std::string link = makelink( obj);
 				sendMsg( std::string( "Orphan found: ") + link, MSG_ERROR);

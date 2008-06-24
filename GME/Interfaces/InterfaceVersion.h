@@ -5,10 +5,10 @@
 // CHECKSUM Core.idl = B6534C3E
 // CHECKSUM Meta.idl = DF870113
 // CHECKSUM Mga.idl = 534AEB6A
-// CHECKSUM MgaUtil.idl = 39997A64
+// CHECKSUM MgaUtil.idl = 16B2520E
 // CHECKSUM MgaDecorator.idl = E2851BB1
 // CHECKSUM Gme.idl = 9D59DDB0
-// CHECKSUM Parser.idl = EE6FC409
+// CHECKSUM Parser.idl = 1EAAB0F2
 
 
 // if you ever change these version numbers manually:
@@ -17,6 +17,6 @@
 //  -- keep them in sync
 //  -- never decrease it
 cpp_quote("#ifndef INTERFACE_VERSION")
-cpp_quote("#define INTERFACE_VERSION 0x000200A3")
+cpp_quote("#define INTERFACE_VERSION 0x000200A4")
 cpp_quote("#endif //INTERFACE_VERSION")
-#define INTERFACE_VERSION 0x000200A3
+#define INTERFACE_VERSION 0x000200A4

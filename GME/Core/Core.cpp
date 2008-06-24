@@ -128,7 +128,7 @@ HRESULT check_location_compatibility(ICoreMetaObject *newobj, ICoreMetaObject *o
 		if(!oldobj) {
 			COMTHROW(newobj->get_Project(&proj1));
 			//instead of proj1->get_Name
-			if( CCoreMetaProject::get_Name != ICoreMetaProject::get_Name) return E_SAMEPROJECT;
+			if( &CCoreMetaProject::get_Name != &ICoreMetaProject::get_Name) return E_SAMEPROJECT;
 		}
 		else {
 			COMTHROW(oldobj->get_Project(&proj2));
@@ -155,7 +155,7 @@ HRESULT check_location_compatibility(ICoreObject *newobj, ICoreObject *oldobj) {
 		if(!oldobj) {
 			COMTHROW(newobj->get_Project(&proj1));
 			//instead of proj1->OpenProject
-			if( CCoreProject::OpenProject != ICoreProject::OpenProject) return E_SAMEPROJECT;
+			if( &CCoreProject::OpenProject != &ICoreProject::OpenProject) return E_SAMEPROJECT;
 		}
 		else {
 			COMTHROW(oldobj->get_Project(&proj2));

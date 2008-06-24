@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -15,23 +16,7 @@
  */
 
 /*
- * $Log: XMLSchemaDescription.hpp,v $
- * Revision 1.2  2008/02/19 20:16:27  zolmol
- * Xerces2.7 includes checkin.
- *
- * Revision 1.4  2004/09/08 13:55:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/10/14 15:17:47  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.2  2003/07/31 17:03:19  peiyongz
- * locationHint incrementally added
- *
- * Revision 1.1  2003/06/20 18:37:39  peiyongz
- * Stateless Grammar Pool :: Part I
- *
- * $Id: XMLSchemaDescription.hpp,v 1.2 2008/02/19 20:16:27 zolmol Exp $
+ * $Id: XMLSchemaDescription.hpp 568078 2007-08-21 11:43:25Z amassari $
  *
  */
 

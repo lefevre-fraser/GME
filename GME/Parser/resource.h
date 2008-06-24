@@ -8,7 +8,6 @@
 #define IDR_MGADUMPER                   205
 #define EDFDTD                          206
 #define MGADTD                          207
-#define IDR_MGAXSLT                     208
 
 // Next default values for new objects
 // 

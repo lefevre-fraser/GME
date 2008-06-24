@@ -82,8 +82,9 @@ void CMgaParser::findFCOWithGUID( CComObjPtr<IMgaObject> prev, const std::string
 		COMTHROW( m->get_ChildFCOs( PutOut( chld)));
 	else if (f)
 		COMTHROW( f->get_ChildFCOs( PutOut( chld)));
-	
-	for( unsigned int i = 0; i < chld.size(); ++i)
+
+	unsigned int i;
+	for( i = 0; i < chld.size(); ++i)
 	{
 		CComBSTR bstr;
 		COMTHROW( chld[i]->get_RegistryValue( CComBSTR( PREV_GLOBAL_ID_STR), &bstr));
@@ -135,14 +136,20 @@ void CMgaParser::findFCOWithGUIDInTree( CComObjPtr<IMgaObject> pParent, const st
 			CComObjPtrVector<IMgaFolder> fols;
 			COMTHROW( qF->get_ChildFolders( PutOut( fols)));
 			// append the children folders to the end of queue
-			queue.insert( queue.end(), fols.begin(), fols.end());
+			for( CComObjPtrVector<IMgaFolder>::const_iterator it = fols.begin(); it != fols.end(); ++it)
+				queue.insert( queue.end(), CComObjPtr<IMgaObject>( *it));
+			// there was a migration issue with:
+			//queue.insert( queue.end(), fols.begin(), fols.end());
 
 			COMTHROW( qF->get_ChildFCOs( PutOut( chld)));
 		}
 		else if ( qM) COMTHROW( qM->get_ChildFCOs( PutOut( chld)));
 
 		// append the children fcos to the end of queue
-		queue.insert( queue.end(), chld.begin(), chld.end());
+		for( CComObjPtrVector<IMgaFCO>::const_iterator it = chld.begin(); it != chld.end(); ++it)
+			queue.insert( queue.end(), CComObjPtr<IMgaObject>( *it));
+		// there was a migration issue with:
+		//queue.insert( queue.end(), chld.begin(), chld.end());
 
 		++curr_i;
 	}
@@ -639,8 +646,8 @@ bool CMgaParser::isNeedFor2ndStep()
 
 void CMgaParser::tryToFindMissedReferreds()
 {
-	std::map< CComObjPtr<IMgaFCO>, std::string >::iterator it = m_notFoundReferredObject.begin();
-	std::map< CComObjPtr<IMgaFCO>, std::string >::iterator itend = m_notFoundReferredObject.end();
+	std::map< CComObjPtr<IMgaFCO>, std::string, CompareCComObj >::iterator it = m_notFoundReferredObject.begin();
+	std::map< CComObjPtr<IMgaFCO>, std::string, CompareCComObj >::iterator itend = m_notFoundReferredObject.end();
 	for( ; it != itend; ++it)
 	{
 		if( !it->first) continue;

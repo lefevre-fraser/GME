@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -15,7 +16,7 @@
  */
 
 /*
- * $Id: xml4com.idl,v 1.1 2008/02/19 20:16:27 zolmol Exp $
+ * $Id: xml4com.idl 569031 2007-08-23 15:05:28Z amassari $
  */
 
 // This file will be processed by the MIDL tool to
@@ -29,8 +30,8 @@ import "oaidl.idl";
 	//  Format for version is major.minor
 	//  no support for additional parts (like 1.5.2)
 	//  Use 1.60 for subsequent release
-	version(2.70),
-	helpstring("Xerces XML Parser 2.7.0")
+	version(2.80),
+	helpstring("Xerces XML Parser 2.8.0")
 ]
 library Xerces
 {
@@ -68,7 +69,7 @@ library Xerces
 	//       then you most probably do not have a recent
 	//        Microsoft Platform SDK in your include path
 	//
-	//    See http://xml.apache.org/xerces-c/build.html#BuildCOM
+	//    See http://xerces.apache.org/xerces-c/build.html#BuildCOM
 	import "xmldom.idl";
 	
 	[

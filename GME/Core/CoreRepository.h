@@ -218,8 +218,9 @@ public:
 		std::vector<objid_type> returned;
 	};
 
-	typedef std::hash_map< metaid_type, objid_gen_type, std::hash<metaid_type>,
-		std::equal_to<metaid_type> > objid_gens_type;
+	typedef stdext::hash_map< metaid_type
+	                        , objid_gen_type
+	                        > objid_gens_type;
 	typedef objid_gens_type::iterator objid_gens_iterator;
 
 	objid_gens_type start_gens;

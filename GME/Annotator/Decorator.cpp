@@ -140,9 +140,9 @@ STDMETHODIMP CDecorator::GetPorts(IMgaFCOs **portFCOs)
 {
 	VERIFY_INIT;
 	CComPtr<IMgaFCOs> coll;
-	COMTHROW(coll.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
+	HRESULT hr = coll.CoCreateInstance(OLESTR("Mga.MgaFCOs"));
 	*portFCOs = coll.Detach();
-	return S_OK;
+	return hr;
 }
 
 

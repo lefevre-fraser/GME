@@ -48,46 +48,48 @@ STDMETHODIMP CBoxDecorator::Initialize( IMgaProject *pProject, IMgaMetaPart *pPa
 {
 	AFX_MANAGE_STATE( AfxGetStaticModuleState() );
 
-	Decorator::getFacilities().loadPathes( pProject, true );
+	COMTRY {
+		Decorator::getFacilities().loadPathes( pProject, true );
 
-	m_spProject = pProject;
-	m_spPart = pPart;
-	m_spFCO = pFCO;
+		m_spProject = pProject;
+		m_spPart = pPart;
+		m_spFCO = pFCO;
 
-	if ( m_spProject && m_spPart ) {
-		objtype_enum eType;
-		if ( m_spFCO )
-			COMTHROW( m_spFCO->get_ObjType( &eType ) );
-		else {
-			CComPtr<IMgaMetaRole> spRole;
-			COMTHROW( m_spPart->get_Role( &spRole ) );
+		if ( m_spProject && m_spPart ) {
+			objtype_enum eType;
+			if ( m_spFCO )
+				COMTHROW( m_spFCO->get_ObjType( &eType ) );
+			else {
+				CComPtr<IMgaMetaRole> spRole;
+				COMTHROW( m_spPart->get_Role( &spRole ) );
 
-			CComPtr<IMgaMetaFCO> spMetaFCO;
-			COMTHROW( spRole->get_Kind( &spMetaFCO ) );
+				CComPtr<IMgaMetaFCO> spMetaFCO;
+				COMTHROW( spRole->get_Kind( &spMetaFCO ) );
 
-			COMTHROW( spMetaFCO->get_ObjType( &eType ) );
+				COMTHROW( spMetaFCO->get_ObjType( &eType ) );
+			}
+			switch ( eType ) {
+				case OBJTYPE_ATOM :
+					m_pDecorator = new Decorator::AtomDecorator( m_spPart, m_spFCO );
+					break;
+				case OBJTYPE_SET :
+					m_pDecorator = new Decorator::SetDecorator( m_spPart, m_spFCO );
+					break;
+				case OBJTYPE_MODEL :
+					m_pDecorator = new Decorator::ModelDecorator( m_spPart, m_spFCO );
+					break;
+				case OBJTYPE_REFERENCE :
+					m_pDecorator = new Decorator::ReferenceDecorator( m_spPart, m_spFCO );
+					break;
+			}
+			if ( m_pDecorator ) {
+				Decorator::PreferenceMap mapPrefs;
+				m_pDecorator->initialize( mapPrefs );
+			}
+
 		}
-		switch ( eType ) {
-			case OBJTYPE_ATOM :
-				m_pDecorator = new Decorator::AtomDecorator( m_spPart, m_spFCO );
-				break;
-			case OBJTYPE_SET :
-				m_pDecorator = new Decorator::SetDecorator( m_spPart, m_spFCO );
-				break;
-			case OBJTYPE_MODEL :
-				m_pDecorator = new Decorator::ModelDecorator( m_spPart, m_spFCO );
-				break;
-			case OBJTYPE_REFERENCE :
-				m_pDecorator = new Decorator::ReferenceDecorator( m_spPart, m_spFCO );
-				break;
-		}
-		if ( m_pDecorator ) {
-			Decorator::PreferenceMap mapPrefs;
-			m_pDecorator->initialize( mapPrefs );
-		}
-
 	}
-	return S_OK;
+	COMCATCH(;)
 }
 
 STDMETHODIMP CBoxDecorator::Destroy()
@@ -231,28 +233,29 @@ STDMETHODIMP CBoxDecorator::GetPortLocation( IMgaFCO *pFCO, long *sx, long *sy, 
 STDMETHODIMP CBoxDecorator::GetPorts( IMgaFCOs **portFCOs )
 {
 	VERIFY_INITIALIZATION
+	
+	COMTRY {
+		CComPtr<IMgaFCOs> spFCOs;
+		COMTHROW( spFCOs.CoCreateInstance( OLESTR( "Mga.MgaFCOs") ) );
 
-	CComPtr<IMgaFCOs> spFCOs;
-	COMTHROW( spFCOs.CoCreateInstance( OLESTR( "Mga.MgaFCOs") ) );
+		std::vector<Decorator::PortDecorator*>	vecPorts;
+		switch ( m_pDecorator->getType() ) {
+			case OBJTYPE_MODEL :
+				vecPorts = ( (Decorator::ModelDecorator*) m_pDecorator )->getPorts();
+				break;
+			case OBJTYPE_REFERENCE :
+				Decorator::DecoratorBase* pReferenced = ( (Decorator::ReferenceDecorator*) m_pDecorator )->getReferenced();
+				if ( pReferenced && pReferenced->getType() == OBJTYPE_MODEL )
+					vecPorts = ( (Decorator::ModelDecorator*) pReferenced )->getPorts();
+				break;
+		}
 
-	std::vector<Decorator::PortDecorator*>	vecPorts;
-	switch ( m_pDecorator->getType() ) {
-		case OBJTYPE_MODEL :
-			vecPorts = ( (Decorator::ModelDecorator*) m_pDecorator )->getPorts();
-			break;
-		case OBJTYPE_REFERENCE :
-			Decorator::DecoratorBase* pReferenced = ( (Decorator::ReferenceDecorator*) m_pDecorator )->getReferenced();
-			if ( pReferenced && pReferenced->getType() == OBJTYPE_MODEL )
-				vecPorts = ( (Decorator::ModelDecorator*) pReferenced )->getPorts();
-			break;
+		for ( unsigned int i = 0 ; i < vecPorts.size() ; i++ )
+			COMTHROW( spFCOs->Append( vecPorts[ i ]->getFCO() ) );
+
+		*portFCOs = spFCOs.Detach();
 	}
-
-	for ( unsigned int i = 0 ; i < vecPorts.size() ; i++ )
-		COMTHROW( spFCOs->Append( vecPorts[ i ]->getFCO() ) );
-
-	*portFCOs = spFCOs.Detach();
-
-	return S_OK;
+	COMCATCH(;)
 }
 
 

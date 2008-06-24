@@ -79,12 +79,11 @@ public:
 	afx_msg void SetContents(LPCTSTR lpszNewValue);
 	afx_msg void Message(LPCTSTR str, short type);
 	afx_msg void Clear();
-	//}}AFX_DISPATCH
-	DECLARE_DISPATCH_MAP()
-
 	afx_msg void SetGMEApp(IDispatch *disp);
 	afx_msg void SetGMEProj(IDispatch *disp);
 	afx_msg void AboutBox();
+	//}}AFX_DISPATCH
+	DECLARE_DISPATCH_MAP()
 
 // Event maps
 	//{{AFX_EVENT(CConsoleCtrl)

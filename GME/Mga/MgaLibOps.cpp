@@ -544,7 +544,7 @@ HRESULT FCO::doAttach( BSTR libname, VARIANT_BOOL ungroup, IMgaFolder **f) {
 
 		// 'self' here is the rootfolder of the project
 		Typedefs::LIBMAP top_libs;
-		LibWorker lw( mgaproject, libname, ungroup);
+		LibWorker lw( mgaproject, libname, ungroup == VARIANT_TRUE);
 		SearchTool::m_optimized = lw.isOptimized();
 		LibImgHelper::recordLibs( false, self, top_libs); // consider existing toplibs only (self = project)
 		
@@ -746,7 +746,7 @@ HRESULT FCO::doRefresh( BSTR libname, VARIANT_BOOL ungroup, long *ptrNumOfErrors
 				COMTHROW(E_MGA_OP_REFUSED);
 			}
 
-			LibWorker lw( mgaproject, libname, ungroup);
+			LibWorker lw( mgaproject, libname, ungroup  == VARIANT_TRUE);
 			SearchTool::m_optimized = lw.isOptimized();
 
 			// examining toplevel libraries in project

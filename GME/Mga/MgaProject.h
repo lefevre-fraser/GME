@@ -200,7 +200,7 @@ public:
 
 	typedef std::queue<FCOPtr>	objcoll;
 	objcoll changedobjs, notifyobjs, temporalobjs;
-	typedef std::hash_set<FCOPtr, FCOPtr_hashfunc> objhash;
+	typedef stdext::hash_set<FCOPtr, FCOPtr_hashfunc> objhash;
 	objhash deferredchecks;
 	bool checkoff;
 	bool checkofftemporary;

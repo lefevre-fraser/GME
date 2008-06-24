@@ -26,7 +26,9 @@
  * with Purdue University and AHPCRC, University of Minnesota
  * 1989-1998
  */
-#include "forcelib.h"
+// See http://support.microsoft.com/kb/148652
+//#include "forcelib.h"
+#include "stdafx.h"
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>//z!
@@ -52,8 +54,8 @@ enum ANTLRTokenType { TER_HATES_CPP=0, ITS_TOO_COMPLICATED=9999};	    // MR1
 #include ATOKENBUFFER_H
 #include APARSER_H
 
-static const zzINF_DEF_TOKEN_BUFFER_SIZE = 2000;
-static const zzINF_BUFFER_TOKEN_CHUNK_SIZE = 1000;
+static const int zzINF_DEF_TOKEN_BUFFER_SIZE = 2000;
+static const int zzINF_BUFFER_TOKEN_CHUNK_SIZE = 1000;
 
                  /* L o o k a h e a d  M a c r o s */
 

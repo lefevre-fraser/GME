@@ -560,7 +560,8 @@ void CGmeDlg::fillZoomComboBox(int *list)
 	if (!list) return;
 
 	// supposed it is sorted, copy the values into the member
-	for( int i=0; list[i] != 0 && i < MAX_ZOOM-1; ++i)
+	int i;
+	for( i = 0; list[i] != 0 && i < MAX_ZOOM-1; ++i)
 	{
 		m_zoomList[i] = list[i];
 	}
@@ -575,7 +576,7 @@ void CGmeDlg::fillZoomComboBox(int *list)
 		if (m_zoomList[k] > 0)
 		{
 			char buff[100];
-			itoa(m_zoomList[k], buff, 10);
+			_itoa(m_zoomList[k], buff, 10);
 			str = buff;
 			str += "%";
 		}
@@ -651,7 +652,7 @@ CString CGmeDlg::getZoomValue()
 			if( l != 1 || zv < ZOOM_MIN || zv > ZOOM_MAX)
 				zv = 100;
 
-			itoa(zv, buff, 10);
+			_itoa(zv, buff, 10);
 			res = buff;
 		}
 	}
@@ -676,7 +677,7 @@ CString CGmeDlg::getZoomValueFromReg()
 	if (level > 0)
 	{
 		char buff[100];
-		itoa(level, buff, 10);
+		_itoa(level, buff, 10);
 		str = buff;
 		str += "%";
 	}

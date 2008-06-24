@@ -660,7 +660,7 @@ namespace OclMeta
 		char signoStr[100];
 		std::string signo = signature.Print();
 #ifdef _WIN32
-		itoa(level, signoStr, 10);  
+		_itoa(level, signoStr, 10);  
 #else
 		sprintf( signoStr, "%d", level );
 #endif

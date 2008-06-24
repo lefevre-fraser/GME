@@ -65,7 +65,7 @@ STDMETHODIMP CSvnTester::info(BSTR p_url, VARIANT_BOOL p_byAPI, VARIANT_BOOL p_r
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -138,7 +138,7 @@ STDMETHODIMP CSvnTester::status(BSTR p_path, VARIANT_BOOL p_byAPI, VARIANT_BOOL 
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -191,7 +191,7 @@ STDMETHODIMP CSvnTester::cleanup(BSTR p_path, VARIANT_BOOL p_byAPI, BSTR* p_ptrR
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -239,7 +239,7 @@ STDMETHODIMP CSvnTester::resolve(BSTR p_path, VARIANT_BOOL p_byAPI, VARIANT_BOOL
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -287,7 +287,7 @@ STDMETHODIMP CSvnTester::commit(BSTR p_path, VARIANT_BOOL p_byAPI, VARIANT_BOOL 
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -340,7 +340,7 @@ STDMETHODIMP CSvnTester::checkout(BSTR p_url, BSTR p_path, VARIANT_BOOL p_byAPI,
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -388,7 +388,7 @@ STDMETHODIMP CSvnTester::add(BSTR p_path, VARIANT_BOOL p_byAPI, VARIANT_BOOL p_r
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -436,7 +436,7 @@ STDMETHODIMP CSvnTester::propset(BSTR p_path, BSTR p_propname, BSTR p_propval, V
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -484,7 +484,7 @@ STDMETHODIMP CSvnTester::lock(BSTR p_path, VARIANT_BOOL p_force, VARIANT_BOOL p_
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -532,7 +532,7 @@ STDMETHODIMP CSvnTester::unlock(BSTR p_path, VARIANT_BOOL p_force, VARIANT_BOOL 
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -580,7 +580,7 @@ STDMETHODIMP CSvnTester::update(BSTR p_path, VARIANT_BOOL p_byAPI)
 		}
 		return S_OK;
 
-	}catch(hresult_exception &e) {
+	}catch(hresult_exception &) {
 		ASSERT( 0);
 		return E_FAIL;
 	}
@@ -730,7 +730,7 @@ STDMETHODIMP CSvnTester::testSubversionSettingsDir(BSTR* p_resultMsg)
 		CopyTo( str_res, &res);
 		*p_resultMsg = res.Detach();
 	}
-	catch(hresult_exception &e) {
+	catch(hresult_exception &) {
 		CopyTo( str_res, &res);
 		*p_resultMsg = res.Detach();
 

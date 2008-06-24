@@ -77,7 +77,7 @@ END_MESSAGE_MAP()
 				SelectAllItems( hItem2, bSelect );
 			SetItemState( hItem, ( bSelect ) ? TVIS_SELECTED : 0, TVIS_SELECTED );
 		}
-		hItem = GetFirstVisibleItem();
+		HTREEITEM hItem = GetFirstVisibleItem();
 		if ( hItem )
 			SelectItemEx( hItem, bSelect );
 	}

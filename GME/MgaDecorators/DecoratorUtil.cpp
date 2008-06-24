@@ -597,7 +597,7 @@ void Facilities::drawBox( CDC* pDC, const CRect& cRect, COLORREF crColor, int iD
 
 	CR_DIVIDE = 25;
 	int CR_MULTI = (int) ( (double) 70 / iDepth );
-	for ( i = 0 ; i < iDepth ; i++ ) {
+	for ( int i = 0 ; i < iDepth ; i++ ) {
 		CPen* pPrevoius = pDC->SelectObject( pThis->getPen( shiftColor( crColor, - i * CR_MULTI ) ) );
 		pDC->MoveTo( cRect.left + i, cRect.top + i );
 		pDC->LineTo( cRect.right - i, cRect.top + i );
@@ -607,7 +607,7 @@ void Facilities::drawBox( CDC* pDC, const CRect& cRect, COLORREF crColor, int iD
 		}
 		pDC->SelectObject( pThis->getPen( shiftColor( crColor, i * 10 ) ) );
 		pDC->LineTo( cRect.left + i, cRect.bottom - i );
-		for ( j = 0 ; j < CR_DIVIDE ; j++ ) {
+		for ( int j = 0 ; j < CR_DIVIDE ; j++ ) {
 			pDC->SelectObject( pThis->getPen( shiftColor( crColor, i * CR_MULTI - i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
 			pDC->LineTo( cRect.left + i, ( j == CR_DIVIDE - 1 ) ? cRect.top + i : cRect.bottom - i - ( cRect.Height() - i * 2 ) / CR_DIVIDE * ( j + 1 ) );
 		}

@@ -1,287 +1,398 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="9.00"
 	Name="PartBrowser"
 	ProjectGUID="{EC447287-A21A-4DE2-822A-55F20A5805D4}"
 	RootNamespace="PartBrowser"
-	Keyword="MFCActiveXProj">
+	Keyword="MFCActiveXProj"
+	TargetFrameworkVersion="131072"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="2"
-			CharacterSet="2">
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="true"
+				TypeLibraryName="$(IntDir)/$(ProjectName).tlb"
+				HeaderFileName="$(ProjectName)idl.h"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../Common,../Interfaces"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				TreatWChar_tAsBuiltInType="TRUE"
-				UsePrecompiledHeader="3"
+				TreatWChar_tAsBuiltInType="true"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="4"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="$(IntDir)"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/PartBrowser.ocx"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\GME\GMESRC\GME\Gme\Debug"
 				ModuleDefinitionFile=".\PartBrowser.def"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				SubSystem="2"
 				LargeAddressAware="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/PartBrowser.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="TRUE"
-				TypeLibraryName="$(IntDir)/$(ProjectName).tlb"
-				HeaderFileName="$(ProjectName)idl.h"/>
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Performing registration"
-				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"
-				AdditionalIncludeDirectories="$(IntDir)"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="2"
-			CharacterSet="2">
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="false"
+				TypeLibraryName="$(IntDir)/$(ProjectName).tlb"
+				HeaderFileName="$(ProjectName)idl.h"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../Common,../Interfaces"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL"
 				RuntimeLibrary="2"
-				TreatWChar_tAsBuiltInType="TRUE"
-				UsePrecompiledHeader="3"
+				TreatWChar_tAsBuiltInType="true"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="$(IntDir)"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/PartBrowser.ocx"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\PartBrowser.def"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				SubSystem="2"
 				LargeAddressAware="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/PartBrowser.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="FALSE"
-				TypeLibraryName="$(IntDir)/$(ProjectName).tlb"
-				HeaderFileName="$(ProjectName)idl.h"/>
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Performing registration"
-				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"
-				AdditionalIncludeDirectories="$(IntDir)"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{0B16B893-5512-48B8-B764-EE72C522EAD8}"
-			Name="Core"/>
+			RelativePathToProject=".\Core\Core.vcproj"
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{3ED3216E-B64C-4D0B-881F-68BFF2CB3E83}"
-			Name="Meta"/>
+			RelativePathToProject=".\Meta\Meta.vcproj"
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{86DAEF74-2527-41E5-82CE-52C31C5BBE8E}"
-			Name="Mga"/>
+			RelativePathToProject=".\Mga\Mga.vcproj"
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}"
-			Name="MgaDecorators"/>
+			RelativePathToProject=".\MgaDecorators\MgaDecorators.vcproj"
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{CA09AB5C-BFAC-4152-AE0B-D5AFC400A5E7}"
-			Name="MgaUtil"/>
+			RelativePathToProject=".\MgaUtil\MgaUtil.vcproj"
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{73A7151A-1044-417B-ACC8-88C48F0AFDCC}"
-			Name="Parser"/>
+			RelativePathToProject=".\Parser\Parser.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
 			<File
-				RelativePath="..\Common\CommonError.cpp">
+				RelativePath="..\Common\CommonError.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\Common\CommonSmart.cpp">
+				RelativePath="..\Common\CommonSmart.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\Gme\GMEOLEData.cpp">
+				RelativePath="..\Gme\GMEOLEData.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\GMEActiveBrowser\MgaObjectEventList.cpp">
+				RelativePath="..\GMEActiveBrowser\MgaObjectEventList.cpp"
+				>
 			</File>
 			<File
-				RelativePath="..\GMEActiveBrowser\ObjectEventWrapper.cpp">
+				RelativePath="..\GMEActiveBrowser\ObjectEventWrapper.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowser.cpp">
+				RelativePath=".\PartBrowser.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowser.def">
+				RelativePath=".\PartBrowser.def"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowser.idl">
+				RelativePath=".\PartBrowser.idl"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						AdditionalIncludeDirectories="..\Interfaces"/>
+						AdditionalIncludeDirectories="..\Interfaces"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCMIDLTool"
-						AdditionalIncludeDirectories="..\Interfaces"/>
+						AdditionalIncludeDirectories="..\Interfaces"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\PartBrowserCtrl.cpp">
+				RelativePath=".\PartBrowserCtrl.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserDlg.cpp">
+				RelativePath=".\PartBrowserDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserPane.cpp">
+				RelativePath=".\PartBrowserPane.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserPaneFrame.cpp">
+				RelativePath=".\PartBrowserPaneFrame.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserPropPage.cpp">
+				RelativePath=".\PartBrowserPropPage.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp">
+				RelativePath=".\stdafx.cpp"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
+						UsePrecompiledHeader="1"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
+						UsePrecompiledHeader="1"
+					/>
 				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
 			<File
-				RelativePath="..\Gme\GMEOLEData.h">
+				RelativePath="..\Gme\GMEOLEData.h"
+				>
 			</File>
 			<File
-				RelativePath="..\GMEActiveBrowser\MgaObjectEventList.h">
+				RelativePath="..\GMEActiveBrowser\MgaObjectEventList.h"
+				>
 			</File>
 			<File
-				RelativePath="..\GMEActiveBrowser\ObjectEventWrapper.h">
+				RelativePath="..\GMEActiveBrowser\ObjectEventWrapper.h"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowser.h">
+				RelativePath=".\PartBrowser.h"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserCtrl.h">
+				RelativePath=".\PartBrowserCtrl.h"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserDlg.h">
+				RelativePath=".\PartBrowserDlg.h"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserPane.h">
+				RelativePath=".\PartBrowserPane.h"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserPaneFrame.h">
+				RelativePath=".\PartBrowserPaneFrame.h"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserPropPage.h">
+				RelativePath=".\PartBrowserPropPage.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Resource.h">
+				RelativePath=".\Resource.h"
+				>
 			</File>
 			<File
-				RelativePath=".\stdafx.h">
+				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\targetver.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
 			<File
-				RelativePath=".\PartBrowser.ico">
+				RelativePath=".\PartBrowser.ico"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowser.rc">
+				RelativePath=".\PartBrowser.rc"
+				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserCtrl.bmp">
+				RelativePath=".\PartBrowserCtrl.bmp"
+				>
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\ReadMe.txt">
+			RelativePath=".\ReadMe.txt"
+			>
 		</File>
 	</Files>
 	<Globals>

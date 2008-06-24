@@ -525,7 +525,7 @@ namespace OclBasic
 		void operator()()
 		{
 			DECL_REAL( dArg, GetArgument( 0 ) );
-			SetResult( CREATE_INTEGER( GetTypeManager(), floor( dArg ) ) );
+			SetResult( CREATE_INTEGER( GetTypeManager(), (long)floor( dArg ) ) );
 		}
 	};
 
@@ -534,7 +534,7 @@ namespace OclBasic
 		void operator()()
 		{
 			DECL_REAL( dArg, GetArgument( 0 ) );
-			long lFloor = floor( dArg );
+			long lFloor = (long)floor( dArg );
 			SetResult( CREATE_INTEGER( GetTypeManager(), lFloor + ( ( lFloor + 0.5 <= dArg && dArg >= 0 ) ? 1 : 0 ) ) );
 		}
 	};
@@ -573,7 +573,7 @@ namespace OclBasic
 		void operator()()
 		{
 			DECL_REAL( dThis, GetThis() );
-			SetResult( CREATE_INTEGER( GetTypeManager(), floor( dThis ) ) );
+			SetResult( CREATE_INTEGER( GetTypeManager(), (long)floor( dThis ) ) );
 		}
 	};
 
@@ -582,7 +582,7 @@ namespace OclBasic
 		void operator()()
 		{
 			DECL_REAL( dThis, GetThis() );
-			long lFloor = floor( dThis );
+			long lFloor = (long)floor( dThis );
 			SetResult( CREATE_INTEGER( GetTypeManager(), lFloor + ( ( lFloor + 0.5 <= dThis && dThis >= 0 ) ? 1 : 0 ) ) );
 		}
 	};

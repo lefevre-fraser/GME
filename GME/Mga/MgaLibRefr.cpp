@@ -1055,7 +1055,8 @@ bool RefreshManager::verifyChain( const CComPtr<IMgaModel>& pM, const CComPtr<IM
 		if( next) hr = next->get_ParentModel( &par);
 		if( SUCCEEDED( hr) && COM_EQUAL( par, pM))
 		{
-			for( long i = 2; ret && i <= c; ++i)
+			long i;
+			for( i = 2; ret && i <= c; ++i)
 			{
 				CComPtr<IMgaFCO> chain_elem;
 				sref_chain->get_Item( i, &chain_elem);
@@ -1939,7 +1940,7 @@ void RefreshManager::copyNewArrivals( CoreObj& p_adaptiveObj, std::vector< CoreO
 			p_refs.push_back( std::make_pair( nobjs[i], oldobj));
 	}
 
-	for(i = 0; i < cnt; ++i)
+	for( unsigned int i = 0; i < cnt; ++i)
 	{
 		ObjTreeReconnect( nobjs[i], crealist);
 	}
@@ -1952,7 +1953,7 @@ void RefreshManager::copyNewArrivals( CoreObj& p_adaptiveObj, std::vector< CoreO
 	coreobjhash newcrealist;
 	shiftlist(crealist, newcrealist);
 
-	for(i = 0; i < cnt; ++i)
+	for( unsigned int i = 0; i < cnt; ++i)
 	{
 		ObjTreeCheckRelations( m_mgaproject, nobjs[i], newcrealist);
 	}

@@ -112,17 +112,21 @@ public:
 // Operations and STL-derived datatypes defined on CoreObj
 // ----------------------------------------
 
-struct coreobj_hashfunc {
-	size_t operator()(const CoreObj &ob) const	{		return (size_t)ob.p;	}
-};
-struct coreobj_eqfunc {
-	bool operator()(const CoreObj &oba,const CoreObj &obb) const	{	
-		return COM_EQUAL(const_cast<CoreObj &>(oba), const_cast<CoreObj &>(obb));	
+struct coreobj_hashfunc : public stdext::hash_compare<CoreObj> 
+{
+	size_t operator()(const CoreObj &ob) const	
+	{
+		return (size_t)ob.p;
+	}
+	bool operator()(const CoreObj &oba,const CoreObj &obb) const
+	{	
+		// must be < logic, [ implemented based on COM_EQUAL's invokation ]
+		return static_cast<IUnknown*>( const_cast<CoreObj&>( oba)) < static_cast<IUnknown*>( const_cast<CoreObj&>( obb));
 	}
 };
 
-typedef std::hash_map<CoreObj, CoreObj, coreobj_hashfunc, coreobj_eqfunc> coreobjpairhash;
-typedef std::hash_map<CoreObj, int, coreobj_hashfunc, coreobj_eqfunc> coreobjhash;
+typedef stdext::hash_map<CoreObj, CoreObj, coreobj_hashfunc> coreobjpairhash;
+typedef stdext::hash_map<CoreObj,     int, coreobj_hashfunc> coreobjhash;
 
 
 
@@ -174,8 +178,16 @@ public:
 	~FCOPtr();
 };
 
-struct FCOPtr_hashfunc {
-	size_t operator()(const FCOPtr &ob) const	{		return (((int)ob.p) % 19);	}
+struct FCOPtr_hashfunc : public stdext::hash_compare<FCOPtr>
+{
+	size_t operator()(const FCOPtr &ob) const
+	{
+		return reinterpret_cast<size_t>(ob.p) % 19;//return reinterpret_cast<size_t>( reinterpret_cast<size_t>(ob.p) % 19); // 64 bt
+	}
+	bool operator()(const FCOPtr &p_ob1, const FCOPtr &p_ob2) const
+	{
+		return p_ob1 < p_ob2;
+	}
 };
 
 

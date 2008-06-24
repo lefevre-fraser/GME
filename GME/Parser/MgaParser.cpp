@@ -52,7 +52,7 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 
 		CopyTo(filename, xmlfile);
 
-		m_resolveDerFuncPtr = CMgaParser::ResolveDerivation;
+		m_resolveDerFuncPtr = &CMgaParser::ResolveDerivation;
 		try
 		{
 			XMLPlatformUtils::Initialize();
@@ -70,7 +70,7 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 			pass_count = 1;
 
 			ranges.clear();
-			ranges.push_front();
+			ranges.push_front(range_type());
 			ranges.front().begin = 1;
 			ranges.front().end = (counter_type)-1;
 			ranges.front().previous.name = "start";
@@ -127,7 +127,7 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 		CloseAll();
 		// in case we rethrew the [probably MGA originated] exception 
 		// we have set into errorinfo the location info
-		if( m_GME) COMTHROW( m_GME->ConsoleMessage( errorinfo, MSG_ERROR));
+		if( m_GME) m_GME->ConsoleMessage( errorinfo, MSG_ERROR);
 		clear_GME( m_GME);
 
 		ASSERT( FAILED(e.hr) );
@@ -186,7 +186,7 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 
 		CopyTo(filename, xmlfile);
 
-		m_resolveDerFuncPtr = CMgaParser::ResolveDerivation;
+		m_resolveDerFuncPtr = &CMgaParser::ResolveDerivation;
 		try
 		{
 			XMLPlatformUtils::Initialize();
@@ -204,7 +204,7 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 			pass_count = 1;
 
 			ranges.clear();
-			ranges.push_front();
+			ranges.push_front(range_type());
 			ranges.front().begin = 1;
 			ranges.front().end = (counter_type)-1;
 			skip_element_level = 0;
@@ -270,7 +270,7 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 		CloseAll();
 		// in case we rethrew the [probably MGA originated] exception 
 		// we have set into errorinfo the location info
-		if( m_GME) COMTHROW( m_GME->ConsoleMessage( errorinfo, MSG_ERROR));
+		if( m_GME) m_GME->ConsoleMessage( errorinfo, MSG_ERROR);
 		clear_GME( m_GME);
 
 		ASSERT( FAILED(e.hr) );
@@ -318,7 +318,7 @@ STDMETHODIMP CMgaParser::GetXMLInfo(BSTR filename, BSTR *paradigm, BSTR* parvers
 			pass_count = 1;
 
 			ranges.clear();
-			ranges.push_front();
+			ranges.push_front(range_type());
 			ranges.front().begin = 1;
 			ranges.front().end = (counter_type)-1;
 			skip_element_level = 0;
@@ -445,7 +445,7 @@ void CMgaParser::startElement(const XMLCh* const name, AttributeList& attributes
 		{
 			ASSERT( skip_element_level == 0 );
 
-			ranges.push_back();
+			ranges.push_back(range_type());
 			ranges.back().begin = elements.back().begin;
 			elements.pop_back();
 			ranges.back().previous = elements.back();
@@ -479,7 +479,7 @@ void CMgaParser::endElement(const XMLCh* const name)
 		{
 			ASSERT( skip_element_level == 0 );
 
-			ranges.push_back();
+			ranges.push_back(range_type());
 			ranges.back().begin = elements.back().begin;
 			ranges.back().end = elements.back().end;
 			elements.pop_back();
@@ -497,7 +497,7 @@ void CMgaParser::endElement(const XMLCh* const name)
 		// no more ranges, skip everything
 		if( ranges.empty() )
 		{
-			ranges.push_back();
+			ranges.push_back(range_type());
 			ranges.back().begin = (counter_type)-1;
 			ranges.back().end = (counter_type)-1;
 		}
@@ -1688,7 +1688,7 @@ STDMETHODIMP CMgaParser::GetClipXMLInfo(BSTR filename, IMgaObject *target, VARIA
 			pass_count = 1;
 
 			ranges.clear();
-			ranges.push_front();
+			ranges.push_front(range_type());
 			ranges.front().begin = 1;
 			ranges.front().end = (counter_type)-1;
 			skip_element_level = 0;

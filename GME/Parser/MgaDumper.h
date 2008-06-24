@@ -126,7 +126,7 @@ public:
 		COMTHROW( (q->*func)(&value) );
 
 		char buf[16] = "0x";
-		ltoa(value,buf+2, 16);
+		_ltoa(value,buf+2, 16);
 
 		Attr(name, buf);
 	}

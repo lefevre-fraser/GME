@@ -5,14 +5,20 @@
 #if !defined(AFX_STDAFX_H__6DE09E50_EB29_43FD_A37B_A41FA6758CA0__INCLUDED_)
 #define AFX_STDAFX_H__6DE09E50_EB29_43FD_A37B_A41FA6758CA0__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
-#define STRICT
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0400
+#ifndef _SECURE_ATL
+#define _SECURE_ATL 1
 #endif
+
+#ifndef VC_EXTRALEAN
+#define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
+#endif
+
+#include "targetver.h"
+
+#define _CRT_SECURE_NO_WARNINGS
+
 #define _ATL_APARTMENT_THREADED
 
 #include <afxwin.h>
@@ -26,7 +32,6 @@ extern CComModule _Module;
 
 #define _NOTHREADS
 
-#include <stl_user_config.h>
 #include "SvnConfig.h"
 
 #include "CoreLib.h"

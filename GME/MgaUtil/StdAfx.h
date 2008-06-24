@@ -6,17 +6,25 @@
 #if !defined(AFX_STDAFX_H__461F30A9_3BF0_11D4_B3F0_005004D38590__INCLUDED_)
 #define AFX_STDAFX_H__461F30A9_3BF0_11D4_B3F0_005004D38590__INCLUDED_
 
-# if _MSC_VER > 1000
-#  pragma once
-# endif // _MSC_VER > 1000
+#pragma once
 
-#define STRICT
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0400
+#ifndef _SECURE_ATL
+#define _SECURE_ATL 1
 #endif
 
-#define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers //zolmol7
- 
+#ifndef VC_EXTRALEAN
+#define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
+#endif
+
+#include "targetver.h"
+
+#define _CRT_SECURE_NO_WARNINGS
+
+//#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
+
+// turns off MFC's hiding of some common and often safely ignored warning messages
+#define _AFX_ALL_WARNINGS
+
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
 
@@ -58,8 +66,6 @@ extern CComModule _Module;
  chSTR2(__LINE__) ") : PRAGMA-- " #desc )
 
 ///////////////////////////////////////////////////////////////////
-
-#include <stl_user_config.h>
 
 #include <vector>
 #include <list>

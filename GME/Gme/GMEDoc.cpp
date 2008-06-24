@@ -15,7 +15,6 @@
 #include "Parser.h"
 #include "ChildFrm.h"
 
-#include "slist"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

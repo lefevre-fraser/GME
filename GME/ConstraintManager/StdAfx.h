@@ -5,14 +5,26 @@
 #if !defined(AFX_STDAFX_H__B08088DA_93F4_4F85_ACD8_CF02148B472A__INCLUDED_)
 #define AFX_STDAFX_H__B08088DA_93F4_4F85_ACD8_CF02148B472A__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
-#define STRICT
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0400
+#ifndef _SECURE_ATL
+#define _SECURE_ATL 1
 #endif
+
+#ifndef VC_EXTRALEAN
+#define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
+#endif
+
+#include "targetver.h"
+
+// Defined in project settings (because the ANTLR generated stuff does not include stdafx.h) 
+//#define _CRT_SECURE_NO_WARNINGS
+
+//#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
+
+// turns off MFC's hiding of some common and often safely ignored warning messages
+#define _AFX_ALL_WARNINGS
+
 #define _ATL_APARTMENT_THREADED
 
 #include <afxwin.h>
@@ -34,7 +46,6 @@ extern CComModule _Module;
 
 #define XASSERT(x) if(!(x)) COMTHROW( ((x), -1))
 
-#include <stl_user_config.h>
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

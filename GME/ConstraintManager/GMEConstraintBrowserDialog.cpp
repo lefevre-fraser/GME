@@ -521,7 +521,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 	{
 		for ( unsigned int i = 0 ; i < m_pFacade->m_vecMetaConstraints.size() ; i++ )
 			AddConstraint( m_pFacade->m_vecMetaConstraints[ i ] );
-		for ( i = 0 ; i < m_pFacade->m_vecUserConstraints.size() ; i++ )
+		for ( unsigned int i = 0 ; i < m_pFacade->m_vecUserConstraints.size() ; i++ )
 			AddConstraint( m_pFacade->m_vecUserConstraints[ i ] );
 
 		m_treeConstraints.SortItemChildren( TVI_ROOT );
@@ -632,7 +632,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 
 		OclCommonEx::ObjectVector vecObjects;
 		OclCommonEx::GetKindObjects( m_pFacade->GetProject(), strKind, vecObjects );
-		for ( i = 0 ; i < vecObjects.size() ; i++ ) {
+		for ( unsigned int i = 0 ; i < vecObjects.size() ; i++ ) {
 			CComQIPtr<IMgaFCO> spFCO = vecObjects[ i ].p;
 			if ( spFCO.p ) {
 				CComPtr<IMgaFCO> spArche;

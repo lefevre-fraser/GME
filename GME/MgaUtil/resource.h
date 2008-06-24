@@ -86,7 +86,6 @@
 #define IDD_FOLDERPROPERTIES_DIALOG     2057
 #define IDD_ANNOTATION_BROWSER          2058
 #define IDD_XSLTDIAL                    2059
-#define IDR_MGAXSLTFILESEL              2060
 #define IDD_CLOSUREDLG                  2063
 #define IDR_MGACLOSURE                  2064
 #define IDD_CLOSURERES                  2065

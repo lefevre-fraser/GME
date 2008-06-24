@@ -158,14 +158,14 @@ int GPromptImpl::askTrust(const char *question, bool maySave)
 	if( dlg.DoModal() == IDOK)
 	{
 		CCertificateDlg::Response rp = dlg.getResp();
-		if( rp == CCertificateDlg::Response::PermanentAccept)
-			return Prompter::PrompUserPass::AcceptPermanently;
-		else if( rp == CCertificateDlg::Response::TemoraryAccept)
-			return Prompter::PrompUserPass::AcceptTemporary;
+		if( rp == CCertificateDlg::PermanentAccept)
+			return Prompter::AcceptPermanently;
+		else if( rp == CCertificateDlg::TemoraryAccept)
+			return Prompter::AcceptTemporary;
 		else
-			return Prompter::PrompUserPass::Reject;
+			return Prompter::Reject;
 	}
-	return Prompter::PrompUserPass::Reject;
+	return Prompter::Reject;
 }
 
 bool GPromptImpl::prompt(const char *p_realm, const char *p_username, bool p_maySave)
@@ -215,11 +215,11 @@ TextPromptImpl::TextPromptImpl()
 
 std::string TextPromptImpl::readcnf( const EntryType& p_type)
 {
-	if( p_type == EntryType::UserName)
+	if( p_type == UserName)
 	{
 		return "username";
 	}
-	else if( p_type == EntryType::Password)
+	else if( p_type == Password)
 	{
 		return m_pWord.size() > 0 ? m_pWord : "<<no pw?>>";
 	}
@@ -238,7 +238,7 @@ std::string TextPromptImpl::username()
 	if( m_uName.size() > 0 && m_uName != "-")  // the default value
 		return m_uName;
 
-	return readcnf( EntryType::UserName);
+	return readcnf( UserName);
 }
 
 std::string TextPromptImpl::password()
@@ -308,16 +308,14 @@ int TextPromptImpl::askTrust(const char *question, bool maySave)
 	char answer = (s_answer.size() > 0)? s_answer[0]: ' ';
 	if( answer == 't' || answer == 'T')
 	{
-		return 
-			Prompter::PrompUserPass::AcceptTemporary;
+		return Prompter::AcceptTemporary;
 	}
 	else if(maySave && (answer == 'p' || answer == 'P'))
 	{
-		return 
-			Prompter::PrompUserPass::AcceptPermanently;
+		return Prompter::AcceptPermanently;
 	}
 	else
-		return Prompter::PrompUserPass::Reject;
+		return Prompter::Reject;
 }
 
 bool TextPromptImpl::prompt(const char *p_realm, const char *p_username, bool p_maySave)
@@ -566,11 +564,11 @@ svn_error_t*   Prompter::CallbackHelpers::ssl_server_trust_prompt(
 
 	switch( that->askTrust( question.c_str(), may_save ? true : false))
 	{
-	case PrompUserPass::AcceptTemporary:
+	case AcceptTemporary:
 		*cred_p = ret;
 		ret->may_save = FALSE;
 		break;
-	case PrompUserPass::AcceptPermanently:
+	case AcceptPermanently:
 		*cred_p = ret;
 		ret->may_save = TRUE;
 		ret->accepted_failures = failures;

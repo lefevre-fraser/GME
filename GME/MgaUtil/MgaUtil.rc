@@ -717,7 +717,6 @@ IDR_MGAREGISTRAR        REGISTRY                "MgaRegistrar.rgs"
 IDR_MGALAUNCHER         REGISTRY                "MgaLauncher.rgs"
 IDR_MGAPROGRESSDLG      REGISTRY                "MgaProgressDlg.rgs"
 IDR_COMPONENTPROXY      REGISTRY                "ComponentProxy.rgs"
-IDR_MGAXSLTFILESEL      REGISTRY                "MgaXsltFileSel.rgs"
 IDR_MGACLOSURE          REGISTRY                "MgaClosure.rgs"
 IDR_MGAEVENTLOGGER      REGISTRY                "MgaEventLogger.rgs"
 

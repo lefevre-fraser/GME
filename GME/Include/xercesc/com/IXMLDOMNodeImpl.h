@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2001,2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -15,7 +16,7 @@
  */
 
 /*
- * $Id: IXMLDOMNodeImpl.h,v 1.1 2008/02/19 20:16:27 zolmol Exp $
+ * $Id: IXMLDOMNodeImpl.h 569031 2007-08-23 15:05:28Z amassari $
  */
 
 #ifndef ___ixmldomnodeimpl_h___
@@ -35,9 +36,9 @@ XERCES_CPP_NAMESPACE_USE
 //      on the Directories tab on the dialog displayed after selecting Tools Options
 //      from the Visual Studio IDE.
 //
-//   See http://xml.apache.org/xerces-c/build.html#BuildCOM
+//   See http://xerces.apache.org/xerces-c/build.html#BuildCOM
 #ifndef __IXMLDOMNode_INTERFACE_DEFINED__
-#error "xerces-dom requires an MSXML.H compatible with IE5 or later.  See http://xml.apache.org/xerces-c/build.html#BuildCOM for directions to correct this problem."
+#error "xerces-dom requires an MSXML.H compatible with IE5 or later.  See http://xerces.apache.org/xerces-c/build.html#BuildCOM for directions to correct this problem."
 #endif
 
 

@@ -11,8 +11,6 @@
 
 #include "ModelPropertiesDlgBar.h"
 
-#define _countof(array) (sizeof(array)/sizeof(array[0]))
-
 class CChildFrame : public CMDIChildWnd
 {
 	DECLARE_DYNCREATE(CChildFrame)

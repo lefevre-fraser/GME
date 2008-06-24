@@ -13,42 +13,46 @@ const wchar_t* CMgaClosure::m_projLastClosureNode = L"lastClosureId";
 STDMETHODIMP CMgaClosure::GetLastClosureId( IMgaProject* p_project, long* p_pMarkWith)
 {
 	AFX_MANAGE_STATE( AfxGetStaticModuleState());
-	if( !p_pMarkWith) return E_INVALID_USAGE;
-	if( !p_project)   return E_INVALID_USAGE;
 
-	CComObjPtr<IMgaFolder> rf;
-	COMTHROW( p_project->get_RootFolder( PutOut( rf)));
+	COMTRY {
+		if( !p_pMarkWith) return E_INVALID_USAGE;
+		if( !p_project)   return E_INVALID_USAGE;
 
-	CString cst0;
-	COMTHROW( rf->get_RegistryValue( CComBSTR( m_projLastClosureNode), PutOut( cst0)));
-	
-	int t_val = -1;
-	if( 1 == _stscanf( (LPCTSTR) cst0, "%i", &t_val))
-	{
-		*p_pMarkWith = t_val;
+		CComObjPtr<IMgaFolder> rf;
+		COMTHROW( p_project->get_RootFolder( PutOut( rf)));
+
+		CString cst0;
+		COMTHROW( rf->get_RegistryValue( CComBSTR( m_projLastClosureNode), PutOut( cst0)));
+		
+		int t_val = -1;
+		if( 1 == _stscanf( (LPCTSTR) cst0, "%i", &t_val))
+		{
+			*p_pMarkWith = t_val;
+		}
+		else
+		{
+			*p_pMarkWith = -1;
+		}
 	}
-	else
-	{
-		*p_pMarkWith = -1;
-	}
-
-	return S_OK;
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaClosure::PutLastClosureId( IMgaProject* p_project, long p_iMarkWith)
 {
 	AFX_MANAGE_STATE( AfxGetStaticModuleState());
-	if( !p_project)  return E_INVALID_USAGE;
-	if( p_iMarkWith == -1) return E_INVALID_USAGE;
+	COMTRY {
+		if( !p_project)  return E_INVALID_USAGE;
+		if( p_iMarkWith == -1) return E_INVALID_USAGE;
 
-	CComObjPtr<IMgaFolder> rf;
-	COMTHROW( p_project->get_RootFolder( PutOut( rf)));
+		CComObjPtr<IMgaFolder> rf;
+		COMTHROW( p_project->get_RootFolder( PutOut( rf)));
 
-	CString cst;
-	cst.Format( "%i", p_iMarkWith);
+		CString cst;
+		cst.Format( "%i", p_iMarkWith);
 
-	COMTHROW( rf->put_RegistryValue( CComBSTR( m_projLastClosureNode), CComBSTR( cst)));
-	return S_OK;
+		COMTHROW( rf->put_RegistryValue( CComBSTR( m_projLastClosureNode), CComBSTR( cst)));
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaClosure::SelectiveClosureDlg

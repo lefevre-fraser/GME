@@ -53,10 +53,10 @@ BEGIN_DISPATCH_MAP(CConsoleCtrl, COleControl)
 	DISP_FUNCTION(CConsoleCtrl, "Message", Message, VT_EMPTY, VTS_BSTR VTS_I2)
 	DISP_FUNCTION(CConsoleCtrl, "Clear", Clear, VT_EMPTY, VTS_NONE)
 	DISP_DEFVALUE(CConsoleCtrl, "Contents")
-	//}}AFX_DISPATCH_MAP
 	DISP_FUNCTION(CConsoleCtrl, "SetGMEApp", SetGMEApp, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION(CConsoleCtrl, "SetGMEProj", SetGMEProj, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION_ID(CConsoleCtrl, "AboutBox", DISPID_ABOUTBOX, AboutBox, VT_EMPTY, VTS_NONE)
+	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
 
@@ -219,10 +219,13 @@ CRect centered( const CRect& p_rcIn, int p_vertic_size, int p_horiz_size, int p_
 void CConsoleCtrl::OnDraw(
 			CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
+
 	const int vertic_size   = 26;
 	const int horiz_size    = 26;
 	const int bt_size       = 20;
 	const int prnx_size     = 19; // width of the prev/next buttons
+
 
 	if (m_browser.GetSafeHwnd()) {
 		bool  anything_loaded = !m_edit.GetLoadedScript().IsEmpty();
@@ -300,7 +303,6 @@ void CConsoleCtrl::OnDraw(
 		m_edit.MoveWindow(rcRemain, TRUE);
 	}
 	else {
-		AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 		CBrush brush (RGB(255,255,255));
 		pdc->FillRect (rcBounds, &brush);
 
@@ -360,6 +362,7 @@ void CConsoleCtrl::OnResetState()
 
 void CConsoleCtrl::AboutBox()
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 	CDialog dlgAbout(IDD_ABOUTBOX_CONSOLE);
 	dlgAbout.DoModal();
 }
@@ -367,11 +370,13 @@ void CConsoleCtrl::AboutBox()
 /////////////////////////////////////////////////////////////////////////////
 void CConsoleCtrl::SetGMEApp(IDispatch *disp)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 	m_edit.SetGMEApp(disp);
 }
 
 void CConsoleCtrl::SetGMEProj(IDispatch *disp)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 	m_edit.SetGMEProj(disp);
 }
 
@@ -466,6 +471,8 @@ static const TCHAR* icons[] = {
 
 void CConsoleCtrl::Message(LPCTSTR str, short type) 
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
+
 	if (type < MSG_NORMAL || type > MSG_ERROR) {
 		type = MSG_ERROR;
 	}
@@ -517,11 +524,13 @@ void CConsoleCtrl::Message(LPCTSTR str, short type)
 
 void CConsoleCtrl::Clear() 
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 	m_browser.LoadFromResource("BLANK.HTML");
 }
 
 BSTR CConsoleCtrl::GetContents() 
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 	CComBSTR contents;
 	
     CComPtr<IDispatch> pDispatch = m_browser.GetHtmlDocument();
@@ -546,6 +555,7 @@ BSTR CConsoleCtrl::GetContents()
 
 void CConsoleCtrl::SetContents(LPCTSTR lpszNewValue) 
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 	CComBSTR contents(lpszNewValue);
 	
     CComPtr<IDispatch> pDispatch = m_browser.GetHtmlDocument();

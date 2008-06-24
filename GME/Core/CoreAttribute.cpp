@@ -825,7 +825,7 @@ void CCoreDataAttrBase<DATA>::InsertFrontValue(VARIANT &v)
 	if( limited_size(values, 2) == 1 )
 	{
 		LockSelfTry();
-		values.push_front();
+		values.push_front(value_type());
 		try
 		{
 			CopyTo(v, values.front());
@@ -840,7 +840,7 @@ void CCoreDataAttrBase<DATA>::InsertFrontValue(VARIANT &v)
 	}
 	else
 	{
-		values.push_front();
+		values.push_front(value_type());
 		try
 		{
 			CopyTo(v, values.front());
@@ -964,7 +964,7 @@ void CCoreDataAttrBase<long>::Dump()
 
 CCorePointerAttrBase::CCorePointerAttrBase()
 {
-	backref = NULL;
+	backref = objects_iterator(); // was: backref = NULL;
 }
 
 #ifdef _DEBUG
@@ -972,7 +972,7 @@ CCorePointerAttrBase::CCorePointerAttrBase()
 CCorePointerAttrBase::~CCorePointerAttrBase()
 {
 	ASSERT( values.empty() );
-	ASSERT( backref == objects_iterator(NULL) );
+	ASSERT( INVALID_ITERATOR( backref));
 }
 
 
@@ -1079,7 +1079,7 @@ void CCorePointerAttrBase::StorageCopyTo(const VARIANT &v, CComObjPtr<CCoreColle
 
 void CCorePointerAttrBase::InsertIntoCollection()
 {
-	ASSERT( backref == objects_iterator(NULL) );
+	ASSERT( INVALID_ITERATOR( backref));
 	ASSERT( !values.empty() );
 
 	if( values.front() != NULL )
@@ -1096,7 +1096,7 @@ void CCorePointerAttrBase::RemoveFromCollection()
 {
 	ASSERT( !values.empty() );
 
-	if( backref != objects_iterator(NULL) )
+	if( !INVALID_ITERATOR( backref))
 	{
 		ASSERT( values.front() != NULL );
 
@@ -1104,7 +1104,7 @@ void CCorePointerAttrBase::RemoveFromCollection()
 		ASSERT( IsValidIterator(collection, backref) );
 
 		collection.erase( backref );
-		backref = NULL;
+		backref = objects_iterator(); // was: backref = NULL;
 	}
 	else
 		ASSERT( values.front() == NULL );

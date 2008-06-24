@@ -22,6 +22,8 @@ struct metaobjidpair_hashfunc
 	}
 };
 
+
+
 struct metaobjidpair_equalkey
 {
 	bool operator()(const metaobjidpair_type &a, const metaobjidpair_type &b) const
@@ -45,11 +47,24 @@ struct metaobjidpair_less
 	}
 };
 
+struct metaobjid2pair_hashfunc : public stdext::hash_compare<metaobjidpair_type, metaobjidpair_less>
+{
+	size_t operator()(const metaobjidpair_type &idpair) const
+	{
+		return (((size_t)idpair.metaid) << 8) + ((size_t)idpair.objid);
+	}
+	bool operator()(const metaobjidpair_type &a, const metaobjidpair_type &b) const
+	{
+		// implement < logic here !!!
+		return metaobjidpair_less()( a, b);	
+	}
+};
+
 inline void CopyTo(const metaobjidpair_type &idpair, VARIANT *v)
 { CopyTo((long*)&idpair, (long*)&idpair + 2, v); }
 
 inline void CopyTo(const std::vector<metaobjidpair_type> &idpairs, VARIANT *v)
-{ CopyTo((long*)idpairs.begin(), (long*)idpairs.end(), v); }
+{ CopyTo((long*)&idpairs[0], (long*)(&idpairs[0] + idpairs.size()), v); }
 
 inline void CopyTo(const VARIANT &v, metaobjidpair_type &idpair)
 {

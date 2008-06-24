@@ -17,6 +17,11 @@
 #include <list>
 #include <set>
 
+// comparison of an invalid (null or simply default constructed) iterator 
+// with a valid iterator in MS STL is cumbersome. See EQUAL_WITH_NO_OBJECT in CoreBinFile.h 
+// for explanation for a macro similar to this
+#define INVALID_ITERATOR( x) ( x._Mycont == 0)
+
 class CCoreProject;
 class CCoreLockAttribute;
 class CCoreCollectionAttribute;

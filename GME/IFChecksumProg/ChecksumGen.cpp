@@ -1,5 +1,5 @@
 #pragma warning( disable : 4786 ) 
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
@@ -92,7 +92,8 @@ int main(int argc, char **argv) {
 		}
 		else if(strncmp(buf, "#define INTERFACEVERSION_INCLUDED", line_end-buf) == 0);
 		else {
-			for(int i = 0; isspace(buf[i]); i++);
+			int i;
+			for(i = 0; isspace(buf[i]); i++);
 			if(buf[i] != '\0') {
 					fprintf(stderr, "File format error at line %d: %s\n", line, buf);
 					return -1;

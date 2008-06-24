@@ -130,7 +130,7 @@ BOOL CSyntacticSemanticDialog::OnInitDialog()
 	for ( int i = 0 ; i < iFunctions ; i++ )
 		AddConstraintRow( i );
 
-	for ( i = 0 ; i < (int) m_vecConstraints.size() ; i++ )
+	for ( unsigned int i = 0 ; i < (int) m_vecConstraints.size() ; i++ )
 		AddConstraintRow( i + iFunctions );
 
 	m_lstConstraints.SetColumnWidth( 0, LVSCW_AUTOSIZE_USEHEADER );
@@ -367,7 +367,7 @@ void CSyntacticSemanticDialog::OnClickConstraintsColumn( NMHDR* pNMHDR, LRESULT*
 		m_lstErrors.DeleteAllItems();
 
 		OclCommon::ExceptionPool poolExceptions = ( iPos >= iFunctions ) ? m_vecConstraints[ iPos - iFunctions ]->GetExceptions() : m_vecConstraintFunctions[ iPos ]->GetExceptions();
-		for ( i = 0 ; i < poolExceptions.Size() ; i++ ) {
+		for ( int i = 0 ; i < poolExceptions.Size() ; i++ ) {
 			OclCommon::Exception ex = poolExceptions.GetAt( i );
 
 			// Add Code

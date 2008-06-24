@@ -286,12 +286,28 @@ public:
 // ----------------------------------------
 // FCO
 // ----------------------------------------
-struct terr_hashfunc {
-	size_t operator()(const IMgaTerritory *ob) const {		return (((int)ob) % 5);	}
+struct terr_hashfunc : public stdext::hash_compare<IMgaTerritory *> 
+{
+	size_t operator()(const IMgaTerritory *p_ob) const
+	{
+		return reinterpret_cast<size_t>( p_ob) % 5;//return (((int)p_ob) % 5);// 64 bt
+	}
+	bool operator()(const IMgaTerritory *p_ob1, const IMgaTerritory *p_ob2) const 
+	{
+		return p_ob1 < p_ob2;
+	}
 };
 
-struct cp_hashfunc {
-	size_t operator()(const objid_type ob) const {		return (((int)ob) % 5);	}
+struct cp_hashfunc : public stdext::hash_compare<objid_type> 
+{
+	size_t operator()(const objid_type p_ob) const
+	{
+		return (((int)p_ob) % 5);
+	}
+	bool operator()(const objid_type p_ob1, const objid_type p_ob2) const 
+	{
+		return p_ob1 < p_ob2;
+	}
 };
 
 
@@ -328,16 +344,16 @@ public:
 	   ~NoAddRefCoreObj() { Detach(); }
 	}  self;
 
-	typedef std::hash_map<CMgaTerritory*, CMgaAtom*, terr_hashfunc> pubfcohash;
+	typedef stdext::hash_map<CMgaTerritory*, CMgaAtom*, terr_hashfunc> pubfcohash;
 	pubfcohash pubfcos;
 	CMgaProject *mgaproject;
 	bool simpleconn();
 	partpool ppool;
 	attrpool apool;
 	regnpool rpool;
-	typedef std::hash_map<objid_type, CMgaConnPoint *, cp_hashfunc> cphash;
+	typedef stdext::hash_map<objid_type, CMgaConnPoint *, cp_hashfunc> cphash;
 	cphash connpointhash;
-	typedef std::hash_map<objid_type, CMgaConstraint *, cp_hashfunc> cshash;
+	typedef stdext::hash_map<objid_type, CMgaConstraint *, cp_hashfunc> cshash;
 	cshash constrainthash;
 
 	FCO();
@@ -639,17 +655,29 @@ void CoreObjMark(CoreObj const &o, long mask);
 
 
 
-struct CComBSTR_hashfunc {
-	size_t operator()(const CComBSTR &ob) const	{	
+struct CComBSTR_hashfunc : public stdext::hash_compare<CComBSTR> 
+{
+	size_t operator()(const CComBSTR &p_ob) const
+	{
 		OLECHAR c = 0;
-		for(unsigned int i = 0; i < ob.Length(); i+= 3)	c += ob[i];
+		for(unsigned int i = 0; i < p_ob.Length(); i+= 3) c += p_ob[i];
 		return c % 5;	
+	}
+	bool operator()(const CComBSTR &p_ob1, const CComBSTR &p_ob2) const
+	{
+		return p_ob1 < p_ob2;
 	}
 };
 
-struct metaref_hashfunc {
-	size_t operator()(const metaref_type &ob) const	{	
-		return ob % 5;	
+struct metaref_hashfunc : public stdext::hash_compare<metaref_type>
+{
+	size_t operator()(const metaref_type &p_ob) const
+	{
+		return p_ob % 5;
+	}
+	bool operator()(const metaref_type &p_ob1, const metaref_type &p_ob2) const
+	{
+		return p_ob1 < p_ob2;
 	}
 };
 

@@ -16,7 +16,6 @@
 #include "MgaClosure.h"
 #include "MgaEventLogger.h"
 #include "ComponentProxy.h"
-#include "XsltFileSel.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -84,7 +83,6 @@ OBJECT_ENTRY(CLSID_MgaRegistrar, CMgaRegistrar)
 OBJECT_ENTRY(CLSID_MgaLauncher, CMgaLauncher)
 OBJECT_ENTRY(CLSID_MgaProgressDlg, CMgaProgressDlg)
 OBJECT_ENTRY(CLSID_ComponentProxy, CComponentProxy)
-OBJECT_ENTRY(CLSID_MgaXsltFileSel, CXsltFileSel)
 OBJECT_ENTRY(CLSID_MgaClosure, CMgaClosure)
 OBJECT_ENTRY(CLSID_MgaEventLogger, CMgaEventLogger)
 END_OBJECT_MAP()

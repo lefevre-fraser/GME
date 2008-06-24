@@ -75,7 +75,7 @@ STDMETHODIMP CMetaParser::Parse(BSTR filename, BSTR connection)
 				sum += 1;    // compensate for meta bug in registering MetaID-s (January 2002)
 //
 				OLECHAR buf[40];
-				swprintf(buf,L"{%08X-DEAD-BEEF-FEED-DAD00000000%c}",sum, foundconstraints?'1':'0');
+				swprintf(buf, 40, L"{%08X-DEAD-BEEF-FEED-DAD00000000%c}",sum, foundconstraints?'1':'0');
 				CComBstrObj bstr(buf);
 				
 				GUID guid;
@@ -193,8 +193,8 @@ void CMetaParser::StartParadigm(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", metaproject, IMgaMetaProject::put_Name);
-		Attr(i, "version", metaproject, IMgaMetaProject::put_Version);
+		Attr(i, "name", metaproject, &IMgaMetaProject::put_Name);
+		Attr(i, "version", metaproject, &IMgaMetaProject::put_Version);
 		
 		/*  New Paradigm GUID logic */	
 		if( i->first == "guid" )
@@ -212,8 +212,8 @@ void CMetaParser::StartParadigm(const attributes_type &attributes)
 			explicitguid = true;
 		}
 
-		Attr(i, "cdate", metaproject, IMgaMetaProject::put_CreatedAt);
-		Attr(i, "mdate", metaproject, IMgaMetaProject::put_ModifiedAt);
+		Attr(i, "cdate", metaproject, &IMgaMetaProject::put_CreatedAt);
+		Attr(i, "mdate", metaproject, &IMgaMetaProject::put_ModifiedAt);
 
 		++i;
 	}
@@ -284,8 +284,8 @@ void CMetaParser::StartFolder(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", folder, IMgaMetaFolder::put_Name);
-		Attr(i, "metaref", folder, IMgaMetaFolder::put_MetaRef);
+		Attr(i, "name", folder, &IMgaMetaFolder::put_Name);
+		Attr(i, "metaref", folder, &IMgaMetaFolder::put_MetaRef);
 
 		++i;
 	}
@@ -403,8 +403,8 @@ void CMetaParser::StartAtom(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", atom, IMgaMetaAtom::put_Name);
-		Attr(i, "metaref", atom, IMgaMetaAtom::put_MetaRef);
+		Attr(i, "name", atom, &IMgaMetaAtom::put_Name);
+		Attr(i, "metaref", atom, &IMgaMetaAtom::put_MetaRef);
 		++i;
 	}
 	COMTHROW(atom->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
@@ -434,8 +434,8 @@ void CMetaParser::StartConnection(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", conn, IMgaMetaConnection::put_Name);
-		Attr(i, "metaref", conn, IMgaMetaConnection::put_MetaRef);
+		Attr(i, "name", conn, &IMgaMetaConnection::put_Name);
+		Attr(i, "metaref", conn, &IMgaMetaConnection::put_MetaRef);
 		++i;
 	}
 	COMTHROW(conn->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
@@ -504,7 +504,7 @@ void CMetaParser::StartPointerItem(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "desc", item, IMgaMetaPointerItem::put_Desc);
+		Attr(i, "desc", item, &IMgaMetaPointerItem::put_Desc);
 
 		++i;
 	}
@@ -534,8 +534,8 @@ void CMetaParser::StartReference(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", reference, IMgaMetaReference::put_Name);
-		Attr(i, "metaref", reference, IMgaMetaReference::put_MetaRef);
+		Attr(i, "name", reference, &IMgaMetaReference::put_Name);
+		Attr(i, "metaref", reference, &IMgaMetaReference::put_MetaRef);
 		++i;
 	}
 	COMTHROW(reference->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
@@ -565,8 +565,8 @@ void CMetaParser::StartSet(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", set, IMgaMetaSet::put_Name);
-		Attr(i, "metaref", set, IMgaMetaSet::put_MetaRef);
+		Attr(i, "name", set, &IMgaMetaSet::put_Name);
+		Attr(i, "metaref", set, &IMgaMetaSet::put_MetaRef);
 
 		++i;
 	}
@@ -597,8 +597,8 @@ void CMetaParser::StartModel(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", model, IMgaMetaModel::put_Name);
-		Attr(i, "metaref", model, IMgaMetaModel::put_MetaRef);
+		Attr(i, "name", model, &IMgaMetaModel::put_Name);
+		Attr(i, "metaref", model, &IMgaMetaModel::put_MetaRef);
 
 		++i;
 	}
@@ -695,9 +695,9 @@ void CMetaParser::StartAttrDef(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", attr, IMgaMetaAttribute::put_Name);
-		Attr(i, "defvalue", attr, IMgaMetaAttribute::put_DefaultValue);
-		Attr(i, "metaref", attr, IMgaMetaAttribute::put_MetaRef);
+		Attr(i, "name", attr, &IMgaMetaAttribute::put_Name);
+		Attr(i, "defvalue", attr, &IMgaMetaAttribute::put_DefaultValue);
+		Attr(i, "metaref", attr, &IMgaMetaAttribute::put_MetaRef);
 
 		if( i->first == "valuetype" )
 		{
@@ -740,8 +740,8 @@ void CMetaParser::StartEnumItem(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "dispname", item, IMgaMetaEnumItem::put_DisplayedName);
-		Attr(i, "value", item, IMgaMetaEnumItem::put_Value);
+		Attr(i, "dispname", item, &IMgaMetaEnumItem::put_DisplayedName);
+		Attr(i, "value", item, &IMgaMetaEnumItem::put_Value);
 
 		++i;
 	}
@@ -773,8 +773,8 @@ void CMetaParser::StartRole2(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", role, IMgaMetaRole::put_Name);
-		Attr(i, "metaref", role, IMgaMetaRole::put_MetaRef);
+		Attr(i, "name", role, &IMgaMetaRole::put_Name);
+		Attr(i, "metaref", role, &IMgaMetaRole::put_MetaRef);
 
 		++i;
 	}
@@ -798,8 +798,8 @@ void CMetaParser::StartAspect2(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", aspect, IMgaMetaAspect::put_Name);
-		Attr(i, "metaref", aspect, IMgaMetaAspect::put_MetaRef);
+		Attr(i, "name", aspect, &IMgaMetaAspect::put_Name);
+		Attr(i, "metaref", aspect, &IMgaMetaAspect::put_MetaRef);
 
 		if( i->first == "attributes" )
 		{
@@ -861,8 +861,8 @@ void CMetaParser::StartPart2(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "kindaspect", part, IMgaMetaPart::put_KindAspect);
-		Attr(i, "metaref", part, IMgaMetaPart::put_MetaRef);
+		Attr(i, "kindaspect", part, &IMgaMetaPart::put_KindAspect);
+		Attr(i, "metaref", part, &IMgaMetaPart::put_MetaRef);
 
 		if( i->first == "primary" )
 		{
@@ -913,7 +913,7 @@ void CMetaParser::StartRegNode(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "value", regnode, IMgaMetaRegNode::put_Value);
+		Attr(i, "value", regnode, &IMgaMetaRegNode::put_Value);
 
 		++i;
 	}
@@ -937,10 +937,10 @@ void CMetaParser::StartConstraint(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", c, IMgaMetaConstraint::put_Name);
-		Attr(i, "eventmask", c, IMgaMetaConstraint::put_EventMask);
-		Attr(i, "priority", c, IMgaMetaConstraint::put_Priority);
-		Attr(i, "defdfornamesp", c, IMgaMetaConstraint::SetDefinedForNamespace);
+		Attr(i, "name", c, &IMgaMetaConstraint::put_Name);
+		Attr(i, "eventmask", c, &IMgaMetaConstraint::put_EventMask);
+		Attr(i, "priority", c, &IMgaMetaConstraint::put_Priority);
+		Attr(i, "defdfornamesp", c, &IMgaMetaConstraint::SetDefinedForNamespace);
 
 		if( i->first == "depth" )
 		{

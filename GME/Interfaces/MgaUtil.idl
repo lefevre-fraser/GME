@@ -598,20 +598,6 @@ interface IMgaComponentProxy : IUnknown
 
 [
 	object,
-	uuid(4B3E98D4-96AF-4640-B947-7555E2E6A60B),
-	helpstring("IMgaXsltFileSel Interface"),
-	pointer_default(unique)
-]
-interface IMgaXsltFileSel : IUnknown
-{
-	[helpstring("method StartXslt")]
-	HRESULT StartXslt( [in] BSTR in_f, [out] BSTR *out_f);
-
-};
-
-
-[
-	object,
 	uuid(74348E5A-C76D-4c2e-88D5-D968C01CE432),
 	dual,
 	helpstring("IMgaClosure Interface"),

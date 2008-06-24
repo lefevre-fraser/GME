@@ -370,7 +370,7 @@ std::string CCoreRepository::GetToken(ICoreMetaAttribute *p)
 inline GUID CCoreRepository::GetGUID(short cat, long index)
 {
 	ASSERT( metaprojectid.size() == sizeof(GUID) );
-	GUID ret = *(GUID*)metaprojectid.begin();
+	GUID ret = *(GUID*)&metaprojectid[0];
 
 	ret.Data1 += index;
 	ret.Data2 += cat;
@@ -383,7 +383,7 @@ inline OBJID CCoreRepository::GetOBJID(long index, long localid)
 	ASSERT( metaprojectid.size() == sizeof(GUID) );
 
 	OBJID ret;
-	ret.Lineage = *(GUID*)metaprojectid.begin();
+	ret.Lineage = *(GUID*)&metaprojectid[0];
 
 	ret.Lineage.Data1 += index;
 	ret.Uniquifier = localid;
@@ -396,8 +396,8 @@ inline void CCoreRepository::ReadGUID(const bindata &input, short &cat, long &in
 	ASSERT( metaprojectid.size() == 16 );
 	ASSERT( input.size() == 16 );
 
-	GUID &base = *(GUID*)metaprojectid.begin();
-	GUID &guid = *(GUID*)input.begin();
+	GUID &base = *(GUID*)&metaprojectid[0];
+	GUID &guid = *(GUID*)&input[0];
 
 	if( memcmp(&base.Data3, &guid.Data3, sizeof(base.Data3) + sizeof(guid.Data4)) != 0 )
 		HR_THROW(E_REPOSITORY_DATA);
@@ -411,8 +411,8 @@ inline void CCoreRepository::ReadOBJID(const bindata &input, long &index, long &
 	ASSERT( metaprojectid.size() == 16 );
 	ASSERT( input.size() == 20 );
 
-	GUID &base = *(GUID*)metaprojectid.begin();
-	OBJID &objid = *(OBJID*)input.begin();
+	GUID &base = *(GUID*)&metaprojectid[0];
+	OBJID &objid = *(OBJID*)&input[0];
 
 	if( memcmp(&base.Data2, &objid.Lineage.Data2, 
 		sizeof(base.Data2) + sizeof(base.Data3) + sizeof(base.Data4)) != 0 )
@@ -850,7 +850,7 @@ IInterfaceDef *CCoreRepository::GetCollInterfaceDef(ICoreMetaAttribute *metaattr
 	colldefs_iterator i = FindCollDef(attrid);
 	if( i == colldefs.end() )
 	{
-		colldefs.push_front();
+		colldefs.push_front(colldef_type());
 
 		colldefs.front().attrid = attrid;
 		colldefs.front().metaattribute = metaattribute;
@@ -1375,7 +1375,7 @@ STDMETHODIMP CCoreRepository::get_AttributeValue(VARIANT *p)
 				AddIDPair(objcol, 1, idpairs);
 			else
 			{
-				idpairs.push_back();
+				idpairs.push_back( metaobjidpair_type());
 				idpairs.back().metaid = METAID_NONE;
 				idpairs.back().objid = OBJID_NONE;
 			}
@@ -1606,7 +1606,7 @@ void CCoreRepository::AddIDPair(IObjectCol *objcol, long i, std::vector<metaobji
 	long index, localid;
 	ReadOBJID(repobjid2, index, localid);
 
-	idpairs.push_back();
+	idpairs.push_back(metaobjidpair_type());
 	idpairs.back().metaid = index;
 	idpairs.back().objid = localid;
 }

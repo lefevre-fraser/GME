@@ -194,7 +194,7 @@ namespace OclGmeEC
 		for ( unsigned int i = 0 ; i < vecAssociated.size() ; i++ )
 			GetAllObjectsConsideredAsContext( vecAssociated[ i ].p, vecFCOs, vecExamined );
 
-		for ( i = 0 ; i < vecFCOs.size() ; i++ ) {
+		for ( unsigned int i = 0 ; i < vecFCOs.size() ; i++ ) {
 			std::string strType = OclCommonEx::GetObjectName( vecFCOs[ i ].p );
 			if ( strType.empty() ) {
 				char chNum[ 100 ];

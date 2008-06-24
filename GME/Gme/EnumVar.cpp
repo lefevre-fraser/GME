@@ -83,7 +83,7 @@ static void CopyVariantArray(VARIANT* pDest, VARIANT* pSrc, int nCount)
 {
 	for (int i = 0; i < nCount; ++i)
 		VariantInit(&pDest[i]);
-	for (i = 0; i < nCount; ++i)
+	for (int i = 0; i < nCount; ++i)
 	{
 		SCODE sc = GetScode(VariantCopy(&pDest[i], &pSrc[i]));
 		if (sc != NOERROR)

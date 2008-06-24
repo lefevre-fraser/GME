@@ -20,19 +20,19 @@
 #else
 	#ifndef _UNICODE
 		#ifdef _DEBUG
-			#pragma comment(lib, "mfc71d.lib")
-			#pragma comment(lib, "mfcs71d.lib")
+			#pragma comment(lib, "mfc" _MFC_FILENAME_VER "d.lib")
+			#pragma comment(lib, "mfcs" _MFC_FILENAME_VER "d.lib")
 		#else
-			#pragma comment(lib, "mfc71.lib")
-			#pragma comment(lib, "mfcs71.lib")
+			#pragma comment(lib, "mfc" _MFC_FILENAME_VER ".lib")
+			#pragma comment(lib, "mfcs" _MFC_FILENAME_VER ".lib")
 		#endif
 	#else
 		#ifdef _DEBUG
-			#pragma comment(lib, "mfc71ud.lib")
-			#pragma comment(lib, "mfcs71ud.lib")
+			#pragma comment(lib, "mfc" _MFC_FILENAME_VER "ud.lib")
+			#pragma comment(lib, "mfcs" _MFC_FILENAME_VER "ud.lib")
 		#else
-			#pragma comment(lib, "mfc71u.lib")
-			#pragma comment(lib, "mfcs71u.lib")
+			#pragma comment(lib, "mfc" _MFC_FILENAME_VER "u.lib")
+			#pragma comment(lib, "mfcs" _MFC_FILENAME_VER "u.lib")
 		#endif
 	#endif
 #endif
@@ -62,11 +62,13 @@
 #pragma comment(lib, "kernel32.lib")
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "msimg32.lib")
 #pragma comment(lib, "comdlg32.lib")
 #pragma comment(lib, "winspool.lib")
 #pragma comment(lib, "advapi32.lib")
 #pragma comment(lib, "shell32.lib")
 #pragma comment(lib, "comctl32.lib")
+#pragma comment(lib, "shlwapi.lib")
 
 // force inclusion of NOLIB.OBJ for /disallowlib directives
 #pragma comment(linker, "/include:__afxForceEXCLUDE")

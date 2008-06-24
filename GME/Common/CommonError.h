@@ -11,7 +11,7 @@
 
 // --------------------------- hresult_exception
 
-class hresult_exception : public exception
+class hresult_exception : public std::exception
 {
 public:
 	hresult_exception() throw();

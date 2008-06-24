@@ -85,7 +85,7 @@ public:
 	void noGarbageCollectTokens()	{ _deleteTokens=0; }
 	void garbageCollectTokens()		{ _deleteTokens=1; }
 
-	virtual bufferSize() { return buffer_size; }
+	virtual int bufferSize() { return buffer_size; }
 	virtual int minTokens() { return k; }
 	virtual void setMinTokens(int k_new) { k = k_new; }
 

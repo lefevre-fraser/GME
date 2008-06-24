@@ -4,6 +4,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <stdio.h>
+#include <algorithm>
 
 #include "../Common/CommonCollection.h"
 #include "../Common/CommonMgaTrukk.h"
@@ -45,7 +46,7 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 		m_maintainGuids = false; // do not preserve guids found in data pasted
 		m_mergeAllowed = (options & MERGE) != 0;
 		m_target = target;
-		m_resolveDerFuncPtr = CMgaParser::ResolveClosure4Derivation;
+		m_resolveDerFuncPtr = &CMgaParser::ResolveClosure4Derivation;
 		m_clVerStr = "4";//end
 
 		project_prefs = project_prefs_orig | MGAPREF_IGNORECONNCHECKS;
@@ -75,7 +76,7 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 			pass_count = 1;
 
 			ranges.clear();
-			ranges.push_front();
+			ranges.push_front(range_type());
 			ranges.front().begin = 1;
 			ranges.front().end = (counter_type)-1;
 			ranges.front().previous.name = "start";
@@ -146,7 +147,7 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 		CloseAll();
 		// in case we rethrew the [probably MGA originated] exception 
 		// we have set into errorinfo the location info
-		if( m_GME) COMTHROW( m_GME->ConsoleMessage( errorinfo, MSG_ERROR));
+		if( m_GME) m_GME->ConsoleMessage( errorinfo, MSG_ERROR);
 		clear_GME( m_GME);
 
 		ASSERT( FAILED(e.hr) );
@@ -490,7 +491,8 @@ bool CMgaParser::findConnectionEnd
 		findFCOWithGUID( CComObjPtr<IMgaObject>( pPrev), guid_closure_ref_vec[0], next_obj);
 
 		// we will build up the collection of references
-		for( unsigned int i = 0; next_obj != 0 && i < guid_closure_ref_vec.size(); ++i)
+		unsigned int i;
+		for( i = 0; next_obj != 0 && i < guid_closure_ref_vec.size(); ++i)
 		{
 			// we don't have to deal with name_closure_ref_vec[i] except if i == 0
 			// just inquire the referred object by next_obj reference
@@ -545,7 +547,8 @@ bool CMgaParser::findConnectionEnd
 		if( nx_obj) COMTHROW( nx_obj.QueryInterface( next_obj));
 
 		// we will build up the collection of references
-		for( unsigned int i = 0; next_obj != 0 && i < name_closure_ref_vec.size(); ++i)
+		unsigned int i;
+		for( i = 0; next_obj != 0 && i < name_closure_ref_vec.size(); ++i)
 		{
 			// we don't have to deal with name_closure_ref_vec[i] except if i == 0
 			// just inquire the referred object by next_obj reference
