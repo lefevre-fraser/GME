@@ -305,6 +305,7 @@ osig_atom.bmp	SFIcons	OSIG-A~1.BMP|osig-atom.bmp	0				1	<ISProjectFolder>\paradi
 osig_port.bmp	SFIcons	OSIG-P~1.BMP|osig-port.bmp	0				1	<ISProjectFolder>\paradigms\sf\icons\osig-port.bmp	1
 outparam_atom.bmp	SFIcons	OUTPAR~1.BMP|outparam-atom.bmp	0				1	<ISProjectFolder>\paradigms\sf\icons\outparam-atom.bmp	1
 outparam_port.bmp	SFIcons	OUTPAR~1.BMP|outparam-port.bmp	0				1	<ISProjectFolder>\paradigms\sf\icons\outparam-port.bmp	1
+PanningView.ocx	PanningView.ocx	PANNIN~1.OCX|PanningView.ocx	0				1	<ISProjectFolder>\gme\panningview\release\PanningView.ocx	1
 param.bmp	SFIcons	param.bmp	0				1	<ISProjectFolder>\paradigms\sf\icons\param.bmp	1
 Parser.dll	Parser.dll	Parser.dll	0				1	<ISProjectFolder>\gme\parser\release\Parser.dll	1
 Parser.idl	Interfaces	Parser.idl	0				1	<ISProjectFolder>\gme\interfaces\Parser.idl	1

@@ -56,6 +56,7 @@ MONTraverserSource	{D5D84137-C173-46AE-92A0-20A315F0191B}	INSTALLDIR_PARADIGMS_M
 NamespaceConfig.dll	{2F4C9531-59C3-4A5B-960F-F44626593097}	INSTALLDIR_PARADIGMS_METAGME	8		NamespaceConfig.dll	20	This component consists of a Windows dynamic link library.			/LogFile=	/LogFile=	/LogFile=	/LogFile=
 ObjectInspector.ocx	{A533F844-0A6B-46EF-A4FC-76626DA16C11}	INSTALLDIR	8		ObjectInspector.ocx	20	This component consists of a custom control.						
 OnlineHelp	{1C524480-599D-4F6C-BFF9-C75C71EADA29}	INSTALLDIR_DOC	8		GME_Manual_and_User_Guide.ch1	17	This component consists of a Windows Help file and Help contents.						
+PanningView.ocx	{7901DFC1-600F-4779-BAD9-5D2ED491320D}	INSTALLDIR	8		PanningView.ocx	20	This component consists of a custom control.			/LogFile=	/LogFile=	/LogFile=	/LogFile=
 Parser.dll	{DA6D307B-FF23-4222-BE84-9FE9913B799A}	INSTALLDIR	8		Parser.dll	20	This component consists of a Windows dynamic link library.						
 PartBrowser.ocx	{7CDA00A1-A4F3-4934-A56A-F268456974E9}	INSTALLDIR	8		PartBrowser.ocx	17	This component consists of a custom control.			/LogFile=	/LogFile=	/LogFile=	/LogFile=
 PatProcessor.dll	{963969E5-EA72-4F50-B449-6DF705F65E10}	INSTALLDIR_SDK_PAT	8		PatProcessor.dll	20	This component consists of a Windows dynamic link library.						

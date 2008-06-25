@@ -34,6 +34,7 @@ GMEApplication	MONTraverser.dll
 GMEApplication	NamespaceConfig.dll
 GMEApplication	ObjectInspector.ocx
 GMEApplication	OnlineHelp
+GMEApplication	PanningView.ocx
 GMEApplication	Parser.dll
 GMEApplication	PartBrowser.ocx
 GMEApplication	ReadmeFiles
