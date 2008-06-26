@@ -64,7 +64,17 @@ inline void CopyTo(const metaobjidpair_type &idpair, VARIANT *v)
 { CopyTo((long*)&idpair, (long*)&idpair + 2, v); }
 
 inline void CopyTo(const std::vector<metaobjidpair_type> &idpairs, VARIANT *v)
-{ CopyTo((long*)&idpairs[0], (long*)(&idpairs[0] + idpairs.size()), v); }
+{ 
+	if(idpairs.empty())
+	{
+		long*pnull=NULL;
+		CopyTo(pnull,pnull, v); 
+	}
+	else
+	{
+		CopyTo((long*)&idpairs[0], (long*)(&idpairs[0] + idpairs.size()), v); 
+	}
+}
 
 inline void CopyTo(const VARIANT &v, metaobjidpair_type &idpair)
 {

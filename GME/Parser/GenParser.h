@@ -6,6 +6,12 @@
 
 XERCES_CPP_NAMESPACE_USE
 
+template<class DERIVED>
+struct CGenParserFunc ;
+
+class CMetaParser;
+
+
 // --------------------------- XmlStr
 
 class XmlStr : public std::string
@@ -18,12 +24,16 @@ public:
 
 // --------------------------- CGenParser
 
-struct CGenParserFunc_Base;
+//struct CGenParserFunc_Base;
 
 class CGenParser : public HandlerBase
 {
 public:
-	CGenParser() : locator(NULL), elementfuncs(NULL), err_line(0), err_column(0) { }
+	typedef std::vector< std::pair<std::string, std::string> > attributes_type;
+	typedef attributes_type::const_iterator attributes_iterator;
+
+
+	CGenParser() : locator(NULL),/* elementfuncs(NULL),*/ err_line(0), err_column(0) { }
 
 // ------- Erros
 
@@ -48,14 +58,17 @@ public:
     virtual void fatalError(const SAXParseException& exception);
 
 	virtual void setDocumentLocator(const Locator *const locator);
+	virtual void fireStartFunction(const std::string& name, const attributes_type& attributes) = 0;
+	virtual void fireEndFunction(const std::string& name) = 0;
 
 public:
 	const Locator *locator;
 
 // ------- Attributes
 
-	typedef std::vector< std::pair<std::string, std::string> > attributes_type;
-	typedef attributes_type::const_iterator attributes_iterator;
+
+	
+
 
 	static const std::string *GetByNameX(const attributes_type &attributes, const char *name);
 
@@ -115,7 +128,9 @@ public:
 // ------- ElementFuncs
 
 public:
-	CGenParserFunc_Base *elementfuncs;
+
+	// Used to be: CGenParserFunc_Base *elementfuncs;
+	//CGenParserFunc <CMetaParser> *elementfuncs;
 
 	void StartNone(const attributes_type &attributes) { }
 	void EndNone() { }
@@ -178,7 +193,7 @@ public:
 };
 
 // --------------------------- CGenParserFunc
-
+/*
 struct CGenParserFunc_Base
 {
 	CGenParserFunc_Base(const char *n) : name(n) { }
@@ -188,16 +203,20 @@ struct CGenParserFunc_Base
 	virtual void Start(CGenParser *parser, const CGenParser::attributes_type &attributes) = 0;
 	virtual void End(CGenParser *parser) = 0;
 };
-
+*/
 template<class DERIVED>
-struct CGenParserFunc : public CGenParserFunc_Base
+struct CGenParserFunc //: public CGenParserFunc_Base
 {
 	typedef void (DERIVED::*StartFunc)(const CGenParser::attributes_type &);
 	typedef void (DERIVED::*EndFunc)();
 
+	CGenParserFunc(const char *n) : name(n) { }
+
+	std::string name;
+
 	virtual void Start(CGenParser *parser, const CGenParser::attributes_type &attributes)
 	{ 
-		(static_cast<DERIVED*>(parser)->*start)(attributes); 
+		(static_cast<DERIVED*>(parser)->*start)(attributes);  
 	}
 
 	virtual void End(CGenParser *parser)
@@ -206,7 +225,7 @@ struct CGenParserFunc : public CGenParserFunc_Base
 	}
 
 	CGenParserFunc(const char *n, StartFunc s, EndFunc e) : 
-		CGenParserFunc_Base(n), start(s), end(e) { }
+		name(n), start(s), end(e) { }
 
 	StartFunc start;
 	EndFunc end;

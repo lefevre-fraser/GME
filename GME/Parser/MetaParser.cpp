@@ -9,7 +9,7 @@
 #include <fstream>//fstream.h
 // --------------------------- CMetaParser
 
-CMetaParser::CMetaParser()
+CMetaParser::CMetaParser():currentPass(FIRST_PASS)
 {
 }
 
@@ -47,7 +47,9 @@ STDMETHODIMP CMetaParser::Parse(BSTR filename, BSTR connection)
 				parser.setErrorHandler(this);
 				parser.setEntityResolver(this);
 
-				elementfuncs = elementfuncs_firstpass;
+				
+				//elementfuncs = elementfuncs_firstpass;
+				currentPass = FIRST_PASS;
 				parser.parse(xmlfile.c_str());
 			}
 
@@ -58,7 +60,9 @@ STDMETHODIMP CMetaParser::Parse(BSTR filename, BSTR connection)
 				parser.setErrorHandler(this);
 				parser.setEntityResolver(this);
 
-				elementfuncs = elementfuncs_secondpass;
+				
+				//elementfuncs = elementfuncs_secondpass;
+				currentPass = SECOND_PASS;
 				parser.parse(xmlfile.c_str());
 			}
 			if (!explicitguid) {
@@ -142,6 +146,63 @@ const std::string CMetaParser::GetNextToken(std::string::const_iterator &i,
 
 	return std::string(i, e);
 }
+
+
+void CMetaParser::fireStartFunction(const std::string & namestr, const attributes_type& attributes)
+{
+	if(currentPass == FIRST_PASS)
+	{
+		for(unsigned int index = 0; !elementfuncs_firstpass[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_firstpass[index].name )
+				{
+					elementfuncs_firstpass[index].Start(this, attributes);
+					break;
+				}
+		}
+	}
+	else
+	{
+		for(unsigned int index = 0; !elementfuncs_secondpass[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_secondpass[index].name )
+				{
+					elementfuncs_secondpass[index].Start(this, attributes);
+					break;
+				}
+		}
+
+	}
+}
+
+
+void CMetaParser::fireEndFunction(const std::string & namestr)
+{
+	if(currentPass == FIRST_PASS)
+	{
+		for(unsigned int index = 0; !elementfuncs_firstpass[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_firstpass[index].name )
+				{
+					elementfuncs_firstpass[index].End(this);
+					break;
+				}
+		}
+	}
+	else
+	{
+		for(unsigned int index = 0; !elementfuncs_secondpass[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_secondpass[index].name )
+				{
+					elementfuncs_secondpass[index].End(this);
+					break;
+				}
+		}
+
+	}
+}
+
 
 // ------- ElementFuncs
 

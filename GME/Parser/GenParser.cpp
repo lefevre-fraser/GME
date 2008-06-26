@@ -8,6 +8,7 @@
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework\MemBufInputSource.hpp>
 #include <stdio.h>
+#include <string>
 
 // --------------------------- XmlStr
 
@@ -140,7 +141,7 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 		elements.push_back(element_type());
 		elements.back().name = namestr;
 		elements.back().begin = counter;
-
+/*
 		for(unsigned int index = 0; !elementfuncs[index].name.empty(); index++)
 		{
 			if( namestr == elementfuncs[index].name )
@@ -149,6 +150,9 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 				break;
 			}
 		}
+		*/
+	
+	fireStartFunction(namestr, attributes);
 	}
 	catch(hresult_exception &)
 	{
@@ -168,6 +172,7 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 	}
 }
 
+
 void CGenParser::endElement(const XMLCh* const name)
 {
 	try
@@ -180,7 +185,7 @@ void CGenParser::endElement(const XMLCh* const name)
 //	ASSERT( elements.back().name == namestr );
 
 		elements.back().end = counter;
-
+/*
 		for(int index = 0; !elementfuncs[index].name.empty(); index++)
 		{
 			if( namestr == elementfuncs[index].name )
@@ -189,6 +194,9 @@ void CGenParser::endElement(const XMLCh* const name)
 				break;
 			}
 		}
+		*/
+
+		fireEndFunction(namestr);
 
 		elements.pop_back();
 	}

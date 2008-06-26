@@ -125,11 +125,11 @@ STDMETHODIMP CMgaTerritory::Destroy() {
 				coreterr = NULL;   // release CoreTerritory object
 				handler = NULL;	// release sink
 				rwhandler = NULL;	// release sink
-				break;
+				return S_OK;
 			}
 			
 		}
-		if(i == end) ASSERT(false);	// not found among project territories
+		ASSERT(false);	// not found among project territories
 	} COMCATCH(;)
 }
 
@@ -169,11 +169,11 @@ STDMETHODIMP CMgaAddOn::Destroy() {
 				mgaproject->alladdons.erase(i);
 				if(mgaproject->alladdons.empty()) mgaproject->reserveterr = NULL;   // release 
 				handler = NULL;	// release sink
-				break;
+				return S_OK;
 			}
 			
 		}
-		if(i == end) ASSERT(("addon not found among project addons",false));	
+		ASSERT(("addon not found among project addons",false));	
 		active = false;
 	} COMCATCH(;)
 }

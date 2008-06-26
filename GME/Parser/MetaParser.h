@@ -19,6 +19,8 @@ class ATL_NO_VTABLE CMetaParser :
 	public IMgaVersionInfoImpl,
 	public CGenParser
 {
+	enum pass_type{FIRST_PASS,SECOND_PASS};
+	pass_type currentPass;
 	bool foundconstraints;
 	bool explicitguid;
 public:
@@ -81,6 +83,8 @@ public:
 	void StartEnumItem(const attributes_type &attributes);
 	void StartConstraint(const attributes_type &attributes);
 	void EndConstraint();
+	void fireStartFunction(const std::string& name, const attributes_type& attributes);
+	void fireEndFunction(const std::string& name);
 };
 
 #endif//MGA_METAPARSER_H

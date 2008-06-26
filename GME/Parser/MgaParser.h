@@ -70,6 +70,8 @@ public:
 public:
 	virtual void startElement(const XMLCh* const name, AttributeList& attributes);
     virtual void endElement(const XMLCh* const name);
+	void fireStartFunction(const std::string& name, const attributes_type& attributes);
+	void fireEndFunction(const std::string& name);
 
 	struct range_type
 	{
@@ -103,6 +105,9 @@ public:
 
 public:
 	typedef CGenParserFunc<CMgaParser> elementfunc;
+
+	enum FUNC_TABLE_STATE{MGA,MGA_INFO,BC_MGA,SC_MGA, CLIP_MGA_INFO};
+	FUNC_TABLE_STATE funcTableState;
 
 	static elementfunc elementfuncs_mga[];
 	static elementfunc elementfuncs_mgainfo[];

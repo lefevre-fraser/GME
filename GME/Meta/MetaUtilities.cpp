@@ -22,9 +22,12 @@ void CCoreObjectPtr::GetCollectionValue(attrid_type attrid, coreobjects_type &re
 	COMTHROW( coll->get_Count(&count) );
 	ASSERT( count >= 0 );
 
-	ret.insert(ret.begin(), count, CCoreObjectPtr());
-
-	COMTHROW( coll->GetAll(count, (ICoreObject**)&ret[0]) );
+	if(count!=0)
+	{
+		// Used to be: ret.insert(ret.begin(), count, CCoreObjectPtr());
+		ret.resize(count);
+		COMTHROW( coll->GetAll(count, (ICoreObject**)&ret[0]) );
+	}
 }
 
 void CCoreObjectPtr::GetStringValue(attrid_type attrid, BSTR *ret) const
@@ -126,10 +129,12 @@ void CCoreObjectPtr::LoadCollectionValue(attrid_type attrid, coreobjects_type &r
 	long count = 0;
 	COMTHROW( coll->get_Count(&count) );
 	ASSERT( count >= 0 );
-
-	ret.insert(ret.begin(), count, CCoreObjectPtr());
-
-	COMTHROW( coll->GetAll(count, (ICoreObject**)&ret[0]) );
+	
+	if(count!=0)
+	{
+		ret.insert(ret.begin(), count, CCoreObjectPtr());
+		COMTHROW( coll->GetAll(count, (ICoreObject**)&ret[0]) );
+	}
 }
 
 // ------- Put

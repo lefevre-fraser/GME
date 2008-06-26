@@ -80,7 +80,8 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 			parser.setErrorHandler(this);
 			parser.setEntityResolver(this);
 
-			elementfuncs = elementfuncs_bcmga;
+			//elementfuncs = elementfuncs_bcmga;
+			funcTableState = BC_MGA;
 
 			// manual first pass
 

@@ -63,7 +63,9 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 			parser.setErrorHandler(this);
 			parser.setEntityResolver(this);
 
-			elementfuncs = elementfuncs_mga;
+			// Now it is delegated to fireStartFunction
+			//elementfuncs = elementfuncs_mga;
+			funcTableState = MGA;
 
 			// manual first pass
 
@@ -197,7 +199,10 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 			parser.setErrorHandler(this);
 			parser.setEntityResolver(this);
 
-			elementfuncs = elementfuncs_mga;
+			// Now it is fireStart/End Function
+			//elementfuncs = elementfuncs_mga;
+
+			funcTableState = MGA;
 
 			// we do the first pass manually
 
@@ -313,7 +318,9 @@ STDMETHODIMP CMgaParser::GetXMLInfo(BSTR filename, BSTR *paradigm, BSTR* parvers
 			parser.setErrorHandler(this);
 			parser.setEntityResolver(this);
 
-			elementfuncs = elementfuncs_mgainfo;
+			//elementfuncs = elementfuncs_mgainfo;
+			funcTableState = MGA_INFO;
+
 
 			pass_count = 1;
 
@@ -574,6 +581,138 @@ void CMgaParser::RegisterLookup(const attributes_type &attributes, IMgaObject *o
 	
 	readonly_stack.push_back( perm_present); // we insert a value anyway into the stack
 }
+
+void CMgaParser::fireStartFunction(const std::string& namestr, const attributes_type& attributes)
+{
+	if(funcTableState == MGA)
+	{
+		for(unsigned int index = 0; !elementfuncs_mga[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_mga[index].name )
+				{
+					elementfuncs_mga[index].Start(this, attributes);
+					break;
+				}
+		}
+	}
+	else if (funcTableState == MGA_INFO)
+	{
+		for(unsigned int index = 0; !elementfuncs_mgainfo[index].name.empty(); index++)
+		{
+			if( namestr == elementfuncs_mgainfo[index].name )
+				{
+					elementfuncs_mgainfo[index].Start(this, attributes);
+					break;
+				}
+		}
+
+	}
+	else if (funcTableState == BC_MGA)
+	{
+		for(unsigned int index = 0; !elementfuncs_bcmga[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_bcmga[index].name )
+				{
+					elementfuncs_bcmga[index].Start(this, attributes);
+					break;
+				}
+		}
+
+	}
+	else if(funcTableState == SC_MGA)
+	{
+		for(unsigned int index = 0; !elementfuncs_scmga[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_scmga[index].name )
+				{
+					elementfuncs_scmga[index].Start(this, attributes);
+					break;
+				}
+		}
+
+	}
+	else /* CLIP_MGA_INFO*/
+	{
+		for(unsigned int index = 0; !elementfuncs_clipmgainfo[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_clipmgainfo[index].name )
+				{
+					elementfuncs_clipmgainfo[index].Start(this, attributes);
+					break;
+				}
+		}
+
+	}
+
+}
+
+
+void CMgaParser::fireEndFunction(const std::string& namestr)
+{
+	if(funcTableState == MGA)
+	{
+		for(unsigned int index = 0; !elementfuncs_mga[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_mga[index].name )
+				{
+					elementfuncs_mga[index].End(this);
+					break;
+				}
+		}
+	}
+	else if (funcTableState == MGA_INFO)
+	{
+		for(unsigned int index = 0; !elementfuncs_mgainfo[index].name.empty(); index++)
+		{
+			if( namestr == elementfuncs_mgainfo[index].name )
+				{
+					elementfuncs_mgainfo[index].End(this);
+					break;
+				}
+		}
+
+	}
+	else if (funcTableState == BC_MGA)
+	{
+		for(unsigned int index = 0; !elementfuncs_bcmga[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_bcmga[index].name )
+				{
+					elementfuncs_bcmga[index].End(this);
+					break;
+				}
+		}
+
+	}
+	else if(funcTableState == SC_MGA)
+	{
+		for(unsigned int index = 0; !elementfuncs_scmga[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_scmga[index].name )
+				{
+					elementfuncs_scmga[index].End(this);
+					break;
+				}
+		}
+
+	}
+	else /* CLIP_MGA_INFO*/
+	{
+		for(unsigned int index = 0; !elementfuncs_clipmgainfo[index].name.empty(); index++)
+		{
+				if( namestr == elementfuncs_clipmgainfo[index].name )
+				{
+					elementfuncs_clipmgainfo[index].End(this);
+					break;
+				}
+		}
+
+	}
+
+}
+
+
+
 
 CMgaParser::elementfunc CMgaParser::elementfuncs_mga[] = 
 {
@@ -1683,7 +1822,8 @@ STDMETHODIMP CMgaParser::GetClipXMLInfo(BSTR filename, IMgaObject *target, VARIA
 			parser.setErrorHandler(this);
 			parser.setEntityResolver(this);
 
-			elementfuncs = elementfuncs_clipmgainfo;
+			//elementfuncs = elementfuncs_clipmgainfo;
+			funcTableState = CLIP_MGA_INFO;
 
 			pass_count = 1;
 

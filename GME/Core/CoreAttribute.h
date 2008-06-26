@@ -353,7 +353,7 @@ public:
 // ------- Methods
 
 public:
-	bool IsEmpty() const NOTHROW { return backref == objects_iterator(NULL); }
+	bool IsEmpty() const NOTHROW { return INVALID_ITERATOR(backref); } // used to be: return backref == objects_iterator(NULL);
 	bool IsLoaded() const NOTHROW { return !values.empty(); }
 
 	// does not load, only compares

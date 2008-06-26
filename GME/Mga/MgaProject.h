@@ -311,10 +311,10 @@ public:
 				if(*i == this) {
 					mgaproject->allclients.erase(i);
 					active = false;
-					break;
+					return S_OK;
 				}
 			}
-			if(i == end) ASSERT(("Client was not found among project clients",false));	
+		    ASSERT(("Client was not found among project clients",false));	
 		} COMCATCH(;);
 	}
 };

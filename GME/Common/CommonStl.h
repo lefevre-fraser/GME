@@ -73,7 +73,18 @@ inline void CopyTo(bstr_const_iterator i, bstr_const_iterator e, CComBstrObj &b)
 
 typedef std::vector<unsigned char> bindata;
 
-inline void CopyTo(const bindata &b, VARIANT *p) { CopyTo(&b[0], (&b[0]) + b.size(), p); }
+inline void CopyTo(const bindata &b, VARIANT *p) 
+{
+	if(b.empty())
+	{
+		unsigned char* pnull=NULL;
+		CopyTo(pnull,pnull, p);
+	}
+	else
+	{
+		CopyTo(&b[0], (&b[0]) + b.size(), p); 
+	}
+}
 inline void CopyTo(const bindata &b, CComVariant &a) { CopyTo(&b[0], (&b[0]) + b.size(), a); }
 
 inline void CopyTo(VARIANT &v, bindata &b)
@@ -85,8 +96,15 @@ inline void CopyTo(VARIANT &v, bindata &b)
 	}
 	else
 	{
-		b.resize(GetArrayLength(v));
-		CopyTo(v, &b[0], (&b[0]) + b.size());
+		if(GetArrayLength(v)==0)
+		{
+			b.clear();
+		}
+		else
+		{
+			b.resize(GetArrayLength(v));
+			CopyTo(v, &b[0], (&b[0]) + b.size());
+		}
 	}
 }
 
@@ -116,7 +134,15 @@ inline void CopyTo(const std::vector<GUID> &guids, SAFEARRAY **p)
 {
 	ASSERT( p != NULL && *p == NULL );
 
-	CopyTo(&guids[0], (&guids[0]) + guids.size(), p);
+	if(guids.empty())
+	{
+		GUID* pnull=NULL;
+		CopyTo(pnull,pnull,p);
+	}
+	else
+	{
+		CopyTo(&guids[0], (&guids[0]) + guids.size(), p);
+	}
 }
 
 // --------------------------- STL function objects
