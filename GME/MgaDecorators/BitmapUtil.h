@@ -183,7 +183,7 @@ class BitmapDIB
 		BitmapDIB( const CString& strName );
 		BitmapDIB( const CString& strName, COLORREF crColor, bool bIsTransparent );
 		BitmapDIB( const CString& strName, COLORREF crTransparentColor, COLORREF crBackgroundColor );
-		~BitmapDIB();
+		virtual ~BitmapDIB();
 
 	public :
 		virtual bool isInitialized() const;

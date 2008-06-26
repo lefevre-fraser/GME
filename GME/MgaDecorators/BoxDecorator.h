@@ -39,9 +39,9 @@ class ATL_NO_VTABLE CBoxDecorator :
 		Decorator::DecoratorBase*	m_pDecorator;
 		bool							m_bLocationSet;
 
-		static int m_nOfInits;
+	/*	static int m_nOfInits;
 		static GdiplusStartupInput  m_gdiplusStartupInput; // needed for GDI+
-		static ULONG_PTR m_gdiplusToken;
+		static ULONG_PTR m_gdiplusToken;*/
 
 	public:
 		CBoxDecorator();

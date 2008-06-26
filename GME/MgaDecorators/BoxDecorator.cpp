@@ -9,9 +9,7 @@
 #include "DecoratorUtil.h"
 #include "StereotypeDecorators.h"
 
-int						CBoxDecorator::m_nOfInits = 0;
-GdiplusStartupInput		CBoxDecorator::m_gdiplusStartupInput; // needed for GDI+ initialization
-ULONG_PTR				CBoxDecorator::m_gdiplusToken;
+
 
 //################################################################################################
 //
@@ -30,18 +28,11 @@ ULONG_PTR				CBoxDecorator::m_gdiplusToken;
 CBoxDecorator::CBoxDecorator()
 	: m_spProject( NULL ), m_spPart( NULL ), m_spFCO( NULL ), m_pDecorator( NULL ), m_bLocationSet( false )
 {
-	if( m_nOfInits++ == 0)
-	{
-		VERIFY(GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, NULL)==Ok);
-	}
 }
 
 CBoxDecorator::~CBoxDecorator()
 {
-	if( --m_nOfInits == 0)
-	{
-		GdiplusShutdown(m_gdiplusToken);
-	}
+
 }
 
 STDMETHODIMP CBoxDecorator::Initialize( IMgaProject *pProject, IMgaMetaPart *pPart, IMgaFCO *pFCO )

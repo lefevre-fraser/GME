@@ -30,6 +30,8 @@
 #include "ExceptionHandler.h"
 #include "EmergencySaveDlg.h"
 #include "CrashTest.h"
+#include <Gdiplus.h>
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -457,12 +459,21 @@ BOOL CGMEApp::EmergencySave(EmergencySaveMode saveMode)
 
 int CGMEApp::Run()
 {
+
 #if !defined(ADDCRASHTESTMENU)
 	if(bNoProtect) {
 		return CWinApp::Run();
 	} else {
 #endif
+
+			Gdiplus::GdiplusStartupInput  gdiplusStartupInput; // needed for GDI+
+			ULONG_PTR gdiplusToken;
+
+
 		__try {
+			// Tihamer: Initializing GDI+
+			VERIFY(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL)==Gdiplus::Ok);
+
 			return CWinApp::Run();
 		}
 		__except(ExceptionHandler::UnhandledExceptionFilterOfMain(GetExceptionCode(), GetExceptionInformation())) {
@@ -475,12 +486,17 @@ int CGMEApp::Run()
 				CGMEDoc::theInstance->OnCloseDocument(true);
 			}
 			EndWaitCursor();
+
+			// Closing GDI+
+			Gdiplus::GdiplusShutdown(gdiplusToken);
 			return -1;
 			// End by Peter
 		}
 #if !defined(ADDCRASHTESTMENU)
 	}
 #endif
+	// Closing GDI+
+	Gdiplus::GdiplusShutdown(gdiplusToken);
 }
 
 /////////////////////////////////////////////////////////////////////////////

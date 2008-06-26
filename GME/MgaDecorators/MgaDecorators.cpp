@@ -23,9 +23,7 @@ END_OBJECT_MAP()
 class CMgaDecoratorsApp : public CWinApp
 {
 public:
-		int m_nOfInits;
-		GdiplusStartupInput  m_gdiplusStartupInput; // needed for GDI+
-		ULONG_PTR m_gdiplusToken;
+	
 
 // Overrides
 	// ClassWizard generated virtual function overrides
