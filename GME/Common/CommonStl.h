@@ -212,9 +212,13 @@ void CopyTo( TYPENAME_ELEM2COLL(ELEM) *p, std::vector< CComObjPtr<ELEM> > &q)
 	COMTHROW( p->get_Count(&count) );
 	ASSERT( count >= 0 );
 
-	q.insert(q.begin(), count, CComObjPtr<ELEM>());
+	if(count > 0)
+	{
+		//q.insert(q.begin(), count, CComObjPtr<ELEM>());
+		q.resize(count);
 
-	COMTHROW( p->GetAll(count, (ELEM**)&q[0]) );
+		COMTHROW( p->GetAll(count, (ELEM**)&q[0]) );
+	}
 }
 
 template<class ELEM>

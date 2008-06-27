@@ -826,7 +826,7 @@ std::string FCO::dumpGeneralPref()
 		//tok.Split(prefs, _T("\n"), prefArr);
 		tok.split( prefs, _T("\n"), prefArr);
 		//for (int i = 0; i < prefArr.GetSize(); i++) {
-		for (int i = 0; i < prefArr.size(); i++) {
+		for (std::vector< std::string >::size_type i = 0; i < prefArr.size(); i++) {
 			//CStringArray prefPair;
 			std::vector< std::string > prefPair;
 			//tok.Split(prefArr[i], _T("="), prefPair);

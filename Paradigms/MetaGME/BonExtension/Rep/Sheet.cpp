@@ -25,14 +25,14 @@ Sheet::Sheet()
 	m_folderList(),
 	m_attributeList()
 {
-	for( unsigned int i = 0; i < FCO::INHERITANCE_TYPE::NUMBER_OF_INHERITANCES; ++i)
+	for( unsigned int i = 0; i < FCO::NUMBER_OF_INHERITANCES; ++i)
 		m_numberOfCliques[ i ] = 0;
 }
 
 
 Sheet::~Sheet()
 {
-	for( unsigned int i = 0; i < FCO::INHERITANCE_TYPE::NUMBER_OF_INHERITANCES; ++i)
+	for( unsigned int i = 0; i < FCO::NUMBER_OF_INHERITANCES; ++i)
 		m_numberOfCliques[ i ] = 0;
 	m_theOnlyInstance = 0;
 	

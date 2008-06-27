@@ -317,9 +317,10 @@ STDMETHODIMP CDecorator::GetPorts(IMgaFCOs **portFCOs)
 {
 	VERIFY_INIT;
 	CComPtr<IMgaFCOs> coll;
-	COMTHROW(coll.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
-	*portFCOs = coll.Detach();
-	return S_OK;
+	HRESULT hr=coll.CoCreateInstance(OLESTR("Mga.MgaFCOs"));
+	if(hr==S_OK)
+		*portFCOs = coll.Detach();
+	return hr;
 }
 
 
@@ -341,7 +342,7 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 			dc.SelectObject(d_util.GetBrush(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
 			dc.Ellipse(m_sx, m_sy, m_ex, m_ey);
 			if (InPartBrowser()) {
-				CPoint namePos(m_sx + scalex * m_namePos.x, m_sy + scaley * m_namePos.y);
+				CPoint namePos(m_sx + (long)(scalex * m_namePos.x), (long)(m_sy + scaley * m_namePos.y));
 				d_util.DrawText(&dc, m_name, namePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
 			}
 		}
@@ -356,7 +357,7 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 				m_bitmap.DrawTransparent(&dc, cpt.x, cpt.y, META_TRANSPARENT_COLOR, !m_isActive, GME_GRAYED_OUT_COLOR);
 				//m_bitmap.Draw(&dc, cpt.x, cpt.y);
 			}
-			CPoint namePos(m_sx + scalex * m_namePos.x, m_sy + scaley * m_namePos.y);
+			CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
 			d_util.DrawText(&dc, m_name, namePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
 		}
 		break;
@@ -375,7 +376,7 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 			dc.EndPath();
 			dc.StrokeAndFillPath();
 			if (InPartBrowser()) {
-				CPoint namePos(m_sx + scalex * m_namePos.x, m_sy + scaley * m_namePos.y);
+				CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
 				d_util.DrawText(&dc, m_name, namePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
 			}
 		}
@@ -406,13 +407,13 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 				}
 				int cx = m_sx + ((m_ex - m_sx)/2);
 				int cy = m_sy + (2*(m_ey - m_sy)/3);
-				int rx = scalex * META_INHERITANCE_RADIUS;
-				int ry = scaley * META_INHERITANCE_RADIUS;
+				int rx = (long)(scalex * META_INHERITANCE_RADIUS);
+				int ry = (long)(scaley * META_INHERITANCE_RADIUS);
 				CRect rect(cx - rx + 1, cy - ry + 1, cx + rx, cy + ry);
 				dc.Ellipse(&rect);
 			}
 			if (InPartBrowser()) {
-				CPoint namePos(m_sx + scalex * m_namePos.x, m_sy + scaley * m_namePos.y);
+				CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
 				d_util.DrawText(&dc, m_name, namePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
 			}
 		}
@@ -424,31 +425,31 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 			dc.SelectObject(d_util.GetBrush(META_CLASS_BGCOLOR));
 			dc.SelectObject(d_util.GetPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
 			dc.Rectangle(m_sx, m_sy, m_ex, m_ey);
-			dc.MoveTo(m_sx + scalex * m_sepLoc.left, m_sy + scaley * m_sepLoc.top);
-			dc.LineTo(m_sx + scalex * m_sepLoc.right, m_sy + scaley * m_sepLoc.bottom);
+			dc.MoveTo(m_sx + (long)(scalex * m_sepLoc.left), m_sy + (long)(scaley * m_sepLoc.top));
+			dc.LineTo(m_sx + (long)(scalex * m_sepLoc.right), m_sy + (long)(scaley * m_sepLoc.bottom));
 
 			// Draw labels
 			if (IsReal()) {
-				CPoint namePos(m_sx + scalex * m_namePos.x, m_sy + scaley * m_namePos.y);
+				CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
 				d_util.DrawText(&dc, m_name, namePos, d_util.GetFont(m_isAbstract ? GME_ABSTRACT_FONT: GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_CENTER);
 			}
-			CPoint stereotypePos(m_sx + scalex * m_stereotypePos.x, m_sy + scaley * m_stereotypePos.y);
+			CPoint stereotypePos(m_sx + (long)(scalex * m_stereotypePos.x), m_sy + (long)(scaley * m_stereotypePos.y));
 			d_util.DrawText(&dc, META_STEREOTYPE_LEFT + m_stereotype + META_STEREOTYPE_RIGHT, stereotypePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_CENTER);
 			
 			// Draw attributes
 			POSITION pos = m_attrs.GetHeadPosition();
 			while (pos) {
 				CMetaAttr *attr = m_attrs.GetNext(pos);
-				CPoint anamePos(m_sx + scalex * attr->m_namePos.x,  m_sy + scaley * attr->m_namePos.y);
+				CPoint anamePos(m_sx + (long)(scalex * attr->m_namePos.x),  m_sy + (long)(scaley * attr->m_namePos.y));
 				d_util.DrawText(&dc, attr->m_name + META_ATTRIBUTE_SEP, anamePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_LEFT);
-				CPoint typePos(m_sx + scalex * attr->m_typePos.x,  m_sy + scaley * attr->m_typePos.y);
+				CPoint typePos(m_sx + (long)(scalex * attr->m_typePos.x),  m_sy + (long)(scaley * attr->m_typePos.y));
 				d_util.DrawText(&dc, attr->m_type, typePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_RIGHT);
 			}
 			// Draw Proxy Sign
 			if (m_shape == CLASSPROXY && m_bitmap.IsValid()) {
 				CPoint cpt;
-				cpt.x = m_sx + scalex * m_proxySignPos.x;
-				cpt.y = m_sy + scaley * m_proxySignPos.y;
+				cpt.x = m_sx + (long)(scalex * m_proxySignPos.x);
+				cpt.y = m_sy + (long)(scaley * m_proxySignPos.y);
 				m_bitmap.DrawTransparent(&dc, cpt.x, cpt.y, META_TRANSPARENT_COLOR, !m_isActive, GME_GRAYED_OUT_COLOR);
 			}
 		}
@@ -600,8 +601,8 @@ void CDecorator::CalcRelPositions()
 		break;
 	case EQUIVALENCE:
 		{
-			m_calcSize.cx = META_EQUIVALENCE_WIDTH;
-			m_calcSize.cy = META_EQUIVALENCE_HEIGHT;
+			m_calcSize.cx = (long)META_EQUIVALENCE_WIDTH;
+			m_calcSize.cy = (long)META_EQUIVALENCE_HEIGHT;
 			if (InPartBrowser()) {
 				m_namePos.x = m_calcSize.cx / 2;
 				m_namePos.y = m_calcSize.cy;
@@ -613,7 +614,7 @@ void CDecorator::CalcRelPositions()
 	case INTINHERITANCE:
 		{
 			m_calcSize.cx = META_INHERITANCE_WIDTH;
-			m_calcSize.cy = META_INHERITANCE_HEIGHT;
+			m_calcSize.cy = (long)META_INHERITANCE_HEIGHT;
 			if (InPartBrowser()) {
 				m_namePos.x = m_calcSize.cx / 2;
 				m_namePos.y = m_calcSize.cy;

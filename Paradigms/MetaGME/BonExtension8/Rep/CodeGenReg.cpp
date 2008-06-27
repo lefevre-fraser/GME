@@ -78,7 +78,7 @@
 	src += indent(s_ind + 1) +   "const int len = " + len_str + ";\n";
 	src += indent(s_ind + 1) +   "std::set<BON::Object> kinds_vec[ len];\n";
 	
-	for( int k = 0; k < kind_vec.size(); ++k)
+	for( std::vector< std::string>::size_type k = 0; k < kind_vec.size(); ++k)
 	{
 		char k_s[10]; sprintf( k_s, "%i", k); std::string k_str( k_s);
 		src += indent(s_ind + 1) + "kinds_vec[" + k_str + "] = FolderImpl::getChildObjects";
@@ -204,7 +204,7 @@
 	src += indent(s_ind + 1) +   "const int len = " + len_str + ";\n";
 	src += indent(s_ind + 1) +   "std::set<BON::FCO> roles_vec[ len];\n";
 	
-	for( int k = 0; k < roles.size(); ++k)
+	for( std::vector< std::string >::size_type k = 0; k < roles.size(); ++k)
 	{
 		char k_s[10]; sprintf( k_s, "%i", k); std::string k_str( k_s);
 		src += indent(s_ind + 1) + "roles_vec[" + k_str + "] = ModelImpl::getChildFCOsAs";

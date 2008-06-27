@@ -112,7 +112,7 @@ void CAspectSpecDlg::GetAspects( int rowID, CStringList &aspects)
 {
 	aspects.RemoveAll();
 	CString role_name = "N/A", kind_asp = "N/A", is_prim;
-	void * ptr;
+	const void * ptr;
 	GetEntry( rowID, role_name, kind_asp, is_prim, ptr);
 	if ( role_name == "N/A") 
 		global_vars.err << MSG_ERROR << "Internal error: GetEntry failed. Empty rolename\n";

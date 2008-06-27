@@ -59,7 +59,7 @@ public:
 
 // Implementation
 public:
-	void GetEntry(int entryNum, CString& name, CString& dispname, CString& kind, const void * &ptr);
+	void GetEntry(int entryNum, CString& name, CString& dispname, CString& kind);
 
 	void GetNames(int num, CString& curname, CStringList& names);
 	void GetDispNames( int num, CString& curdispname, CStringList& dispnames);

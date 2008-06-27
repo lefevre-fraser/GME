@@ -59,7 +59,7 @@ public:
 
 protected:
 	std::vector< FCO *> Sheet::sortBasedOnLevels();
-	int m_numberOfCliques[FCO::INHERITANCE_TYPE::NUMBER_OF_INHERITANCES]; // stores the number of cliques from inheritance point of view
+	int m_numberOfCliques[FCO::NUMBER_OF_INHERITANCES]; // stores the number of cliques from inheritance point of view
 	                                                                      // this may be different from INTERFACE and IMPLEMENTATION point of view
 	typedef std::vector<FCO*>::iterator FCO_Iterator;
 	typedef std::vector<Any*>::iterator Any_Iterator;

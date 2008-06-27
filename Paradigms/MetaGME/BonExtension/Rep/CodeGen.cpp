@@ -239,7 +239,8 @@
 		}
 		else if ( count == 1)
 		{
-			for( int k = 0; k < desc.size() && desc[k]->isAbstract(); ++k) { }
+			int k;
+			for( k = 0; k < desc.size() && desc[k]->isAbstract(); ++k) { }
 			if ( k >= desc.size()) throw("Index out of bound during dumpRoleGetter");
 
 			method_name = ModelRep::roleGetterMethodName2( desc[k], role, false, diff_nmsp);
@@ -334,7 +335,7 @@
 
 			/* addition on 2/2/2004
 			*/
-			for( k = 0; k < desc.size(); ++k)
+			for(int k = 0; k < desc.size(); ++k)
 			{
 				if ( !desc[k]->isAbstract())
 				{

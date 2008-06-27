@@ -30,8 +30,10 @@
 
 namespace BON
 {
-	enum ExtensionType { ET_None = 0, ET_MetaKind = 1, ET_Kind = 2, ET_Role = 3 };
+	
+	enum ExtensionType {EXT_None = 0, EXT_MetaKind = 1, EXT_Kind = 2, EXT_Role = 3};
 	typedef std::pair<ExtensionType,int> ExtensionInfo;
+	
 
 	void				splitKinds( const std::string& strKinds, std::vector<std::string>& vecKinds );
 

@@ -24,14 +24,14 @@ Sheet::Sheet()
 	m_folderList(),
 	m_attributeList()
 {
-	for( unsigned int i = 0; i < FCO::INHERITANCE_TYPE::NUMBER_OF_INHERITANCES; ++i)
+	for( unsigned int i = 0; i < FCO::NUMBER_OF_INHERITANCES; ++i)
 		m_numberOfCliques[ i ] = 0;
 }
 
 
 Sheet::~Sheet()
 {
-	for( unsigned int i = 0; i < FCO::INHERITANCE_TYPE::NUMBER_OF_INHERITANCES; ++i)
+	for( unsigned int i = 0; i < FCO::NUMBER_OF_INHERITANCES; ++i)
 		m_numberOfCliques[ i ] = 0;
 	m_theOnlyInstance = 0;
 	
@@ -618,7 +618,7 @@ bool Sheet::doInheritance( FCO::INHERITANCE_TYPE inh_type)
 	// initially will contain the roots
 	std::list<unsigned int> elements, elements_backup;
 	std::vector<int> level( node_vec.size());
-	for( int reset_i = 0; reset_i < node_vec.size(); ++reset_i)
+	for( std::vector<int>::size_type reset_i = 0; reset_i < node_vec.size(); ++reset_i)
 		level[reset_i] = -1;
 
 	
@@ -633,7 +633,7 @@ bool Sheet::doInheritance( FCO::INHERITANCE_TYPE inh_type)
 			level[i] = 0; // the roots are placed on "level 0"
 		}
 
-	if (elements.size() < m_numberOfCliques[ inh_type]) // because from each clique there must be at least 1 root
+	if ((int)elements.size() < m_numberOfCliques[ inh_type]) // because from each clique there must be at least 1 root
 	{
 		TO("Circle found in model");
 		global_vars.err << "Circle found in model\n";

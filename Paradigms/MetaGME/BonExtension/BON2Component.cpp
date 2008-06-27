@@ -117,7 +117,7 @@ void Component::scanSubFolders( const std::set<Folder>& subfolders, std::set<Fol
 	if (subfolders.empty()) return;
 
 	result.insert( subfolders.begin(), subfolders.end());
-	std::set<Folder>::iterator sub_it = subfolders.begin();
+	std::set<Folder>::const_iterator sub_it = subfolders.begin();
 	for( ; sub_it != subfolders.end(); ++sub_it)
 		scanSubFolders( (*sub_it)->getChildFolders(), result);
 }

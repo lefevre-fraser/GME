@@ -43,7 +43,7 @@ void Console::sendMsg( const std::string& p_msg, msgtype_enum p_type)
 }
 
 //static 
-Console::ssendMsg( const std::string& p_msg, msgtype_enum p_type)
+void Console::ssendMsg( const std::string& p_msg, msgtype_enum p_type)
 {
 	//GMEAppPtr p_gme = getGME( 0);
 	GMEAppPtr p;

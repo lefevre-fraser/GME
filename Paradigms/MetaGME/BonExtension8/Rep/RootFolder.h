@@ -45,7 +45,7 @@ protected:
 
 private: // forbiding copy
 	RootFolder( const RootFolder&);
-	operator=( const RootFolder&);
+	void operator=( const RootFolder&);
 
 };
 #endif //ROOTFOLDER_H

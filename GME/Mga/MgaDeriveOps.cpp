@@ -293,7 +293,7 @@ void DeriveTreeTask::DoWithDeriveds(CoreObj self, std::vector<CoreObj> *peers) {
 				GetRootOfDeriv(self, r, &selfdepth);
 				ASSERT(r);
 				peercnt = (*peers).size();
-				peerdepths.reserve(peercnt);   // only internalpeercnt will be used, but we do not know that number yet
+				peerdepths.resize(peercnt);   // only internalpeercnt will be used, but we do not know that number yet
 				int i;
 				for(i = 0; i < peercnt-endreserve; i++) {
 					int l;

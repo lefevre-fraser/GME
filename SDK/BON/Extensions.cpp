@@ -22,9 +22,11 @@
 #pragma warning ( disable : 4503 )
 
 #include "stdafx.h"
-#include "Extensions.h"
+
 #include "BONImpl.h"
 #include "Bon2component.h"
+#include "Extensions.h"
+
 
 #ifndef NAMESPACE_PREF
     #define NAMESPACE_PREF ""
@@ -108,20 +110,20 @@ namespace BON
 			exc << strKind.c_str();
 			ASSERTTHROW( exc);
 		}
-		ExtensionType exType = ET_None;
+		ExtensionType exType = EXT_None;
 		if ( eType != OT_Null && eOType != eType || eType == OT_Null && eOType == OT_Folder )
 			return exType;
 		for ( int i = 0 ; i < vecKinds.size() ; i++ ) {
 			 if ( ! strRole.empty() && ( vecKinds[ i ] == strRole || (strNamespacePref.empty()?"" : strNamespacePref + "::") + vecKinds[i] == strRole)) { 
-			 	return ET_Role;
+			 	return EXT_Role;
 			 }
 			 else if ( vecKinds[ i ] == strKind || (strNamespacePref.empty()?"" : strNamespacePref + "::") + vecKinds[ i ] == strKind) {
-				if ( exType <= ET_MetaKind )
-					exType = ET_Kind;
+				if ( exType <= EXT_MetaKind )
+					exType = EXT_Kind;
 			}
 			else if ( isMetaKindMatched( vecKinds[ i ], strBEType )  ) {
-				if ( exType == ET_None )
-					exType = ET_MetaKind;
+				if ( exType == EXT_None )
+					exType = EXT_MetaKind;
 			}
 		}
 		return exType;
@@ -184,7 +186,7 @@ namespace BON
 
 	ObjectImpl* ExtensionManager::createImpl( ObjectType eOType, const std::string& strKind, const std::string& strRole )
 	{
-		ExtensionType eType = ET_None;
+		ExtensionType eType = EXT_None;
 		int iLevel = 0;
 		int iCnt = 0;
 		int iFuncNum = 0;
@@ -192,26 +194,26 @@ namespace BON
 			ExtensionInfo eInfo = (*vecKindFunctions[ i ].first)( eOType, strKind, strRole );
 			int iDo = 0; // 0 - Do Nothing, 1 - Type Change, 2 - Type Equal
 			switch ( eInfo.first ) {
-				case ET_Role : {
-					if ( eType != ET_Role )
+				case EXT_Role : {
+					if ( eType != EXT_Role )
 						iDo = 1;
 					else
 						iDo = 2;
 					break;
 				}
-				case ET_Kind : {
-					if ( eType < ET_Kind )
+				case EXT_Kind : {
+					if ( eType < EXT_Kind )
 						iDo = 1;
 					else
-						if ( eType == ET_Kind )
+						if ( eType == EXT_Kind )
 							iDo = 2;
 					break;
 				}
-				case ET_MetaKind : {
-					if ( eType < ET_MetaKind )
+				case EXT_MetaKind : {
+					if ( eType < EXT_MetaKind )
 						iDo = 1;
 					else
-						if ( eType == ET_MetaKind )
+						if ( eType == EXT_MetaKind )
 							iDo = 2;
 					break;
 				}
@@ -231,27 +233,28 @@ namespace BON
 		}
 
 
-		if ( eType != ET_None ) {
+		if ( eType != EXT_None ) {
 			if ( iCnt != 1 ) {
 				switch ( eType ) {
-					case ET_Role : {
+					case EXT_Role : {
 						Util::Exception exc( "Implementations are ambiguous for Role [?]!");//, "s", 
 						exc << strRole.c_str();
 						ASSERTTHROW( exc);
 						break;
 					}
-					case ET_Kind : {
+					case EXT_Kind : {
 						Util::Exception exc( "Implementations are ambiguous for Kind [?]!");// "s", 
 						exc << strKind.c_str();
 						ASSERTTHROW( exc);
 						break;
 					}
-					case ET_MetaKind : {
+					case EXT_MetaKind : {
 						Util::Exception exc( "Implementations are ambiguous for MetaKind [?]!");//, "s", 
 						exc << toString( eOType ).c_str();
 						ASSERTTHROW( exc );
 						break;
 					}
+					default:;
 				}
 			}
 			return (*vecKindFunctions[ iFuncNum ].second)();

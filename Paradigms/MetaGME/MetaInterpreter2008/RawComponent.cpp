@@ -107,9 +107,10 @@ void RawComponent::scanProject( IMgaProject* project)
 		// folders->AppendAll( subfolders); 
 		long c = 0;
 		if( subfolders) COMTHROW( subfolders->get_Count( &c));
-		CComPtr<IMgaFolder> ch;
+		
 		for( long i = 1; i <= c; ++i)
 		{
+			CComPtr<IMgaFolder> ch;
 			COMTHROW( subfolders->get_Item( i, &ch));
 			COMTHROW( folders->Append( ch));
 		}

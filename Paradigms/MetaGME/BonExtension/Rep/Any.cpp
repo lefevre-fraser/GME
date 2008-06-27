@@ -688,7 +688,7 @@ std::string Any::getUserPart()
 
 void Any::makeBackup()
 {
-	if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERCLASS) // 
+	if( global_vars.m_outputMethod == Globals::PERCLASS) // 
 	{
 		std::string dirname = getValidNmspc();
 		std::string fname   = getName();
@@ -714,7 +714,7 @@ void Any::makeBackup()
 
 void Any::initOutS()
 {
-	if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERCLASS) // 
+	if( global_vars.m_outputMethod == Globals::PERCLASS) // 
 	{
 		std::string dirname = getValidNmspc();
 		std::string fname   = getName();
@@ -757,7 +757,7 @@ void Any::initOutS()
 
 void Any::initOutH( std::string& resu)
 {
-	if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERCLASS) // 
+	if( global_vars.m_outputMethod == Globals::PERCLASS) // 
 	{
 		std::string dirname = getValidNmspc();
 		std::string fname   = getName();
@@ -806,7 +806,7 @@ void Any::initOutH( std::string& resu)
 
 void Any::finiOutS()
 {
-	if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERCLASS) // 
+	if( global_vars.m_outputMethod == Globals::PERCLASS) // 
 	{
 		m_sStream.close();
 	}
@@ -814,7 +814,7 @@ void Any::finiOutS()
 
 void Any::finiOutH()
 {
-	if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERCLASS) // 
+	if( global_vars.m_outputMethod == Globals::PERCLASS) // 
 	{
 		m_hStream << "#endif" << std::endl;
 		m_hStream.close();
@@ -823,15 +823,15 @@ void Any::finiOutH()
 
 void Any::sendOutH( const std::string& content)
 {
-	if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::ALLTOGETHER) // one file policy
+	if( global_vars.m_outputMethod == Globals::ALLTOGETHER) // one file policy
 	{
 		DMP_H( content);
 	}
-	else if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERCLASS) // 
+	else if( global_vars.m_outputMethod == Globals::PERCLASS) // 
 	{
 		m_hStream << content;//dmp( "this->getname", content);
 	}
-	else if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERNAMESPACE) // 
+	else if( global_vars.m_outputMethod == Globals::PERNAMESPACE) // 
 	{
 		//dmp( "this->getnamespace", content);
 	}
@@ -839,15 +839,15 @@ void Any::sendOutH( const std::string& content)
 
 void Any::sendOutS( const std::string& content)
 {
-	if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::ALLTOGETHER) // one file policy
+	if( global_vars.m_outputMethod == Globals::ALLTOGETHER) // one file policy
 	{
 		DMP_S( content);
 	}
-	else if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERCLASS) // 
+	else if( global_vars.m_outputMethod == Globals::PERCLASS) // 
 	{
 		m_sStream << content;//dmp( "this->getname", content);
 	}
-	else if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERNAMESPACE) // 
+	else if( global_vars.m_outputMethod == Globals::PERNAMESPACE) // 
 	{
 		//dmp( "this->getnamespace", content);
 	}

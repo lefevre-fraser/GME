@@ -323,7 +323,7 @@ void Dumper::dumpGlobalMOF()
 
 void Dumper::initOutFiles( std::vector<FCO*>& s, std::string& resu)
 {
-	if( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERCLASS)
+	if( global_vars.m_outputMethod == Globals::PERCLASS)
 	{ 
 		// first make a backup of every file ( move )
 		
@@ -836,7 +836,7 @@ bool Dumper::build()
 	if( _templGt == Yes_Str)            { m_bGenTemplates = TRUE;       m_bGenRegular = TRUE;  }
 	else if( _templGt == Only_Str)      { m_bGenTemplates = TRUE;       m_bGenRegular = FALSE; }
 	else                                { m_bGenTemplates = FALSE;      m_bGenRegular = TRUE;  }
-	global_vars.m_outputMethod     = _outSepF == Yes_Str ? Globals::OUTPUTMETHOD_ENUM::PERCLASS : Globals::OUTPUTMETHOD_ENUM::ALLTOGETHER;
+	global_vars.m_outputMethod     = _outSepF == Yes_Str ? Globals::PERCLASS : Globals::ALLTOGETHER;
 	global_vars.m_namespace_name   = _tgtNmsp.empty() ? global_vars.m_namespace_name : _tgtNmsp; // overwrite the project namespace setting if option found
 	
 	if( !global_vars.silent_mode) // show dialog only in verbose mode
@@ -859,7 +859,7 @@ bool Dumper::build()
 		opt.m_specAcceptRetVal  = m_iSpecAcceptRetVal;
 		opt.m_version60         = m_bGenTemplVersion6;
 		opt.m_whichStyle        = m_bGenRegular && m_bGenTemplates ? 2 : m_bGenTemplates?1:0;
-		opt.m_methodOfOutput    = global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERCLASS ? 1 : 0;
+		opt.m_methodOfOutput    = global_vars.m_outputMethod == Globals::PERCLASS ? 1 : 0;
 		opt.m_namespaceName     = global_vars.m_namespace_name.c_str();
 
 		if ( opt.DoModal() != IDOK) return 2;
@@ -876,7 +876,7 @@ bool Dumper::build()
 		m_bGenRegular         = opt.m_whichStyle != 1; // 0 or 2
 		m_bGenTemplates       = opt.m_whichStyle > 0;  // 1 or 2 ( = both)
 
-		global_vars.m_outputMethod   = opt.m_methodOfOutput == 0 ? Globals::OUTPUTMETHOD_ENUM::ALLTOGETHER: Globals::OUTPUTMETHOD_ENUM::PERCLASS;
+		global_vars.m_outputMethod   = opt.m_methodOfOutput == 0 ? Globals::ALLTOGETHER: Globals::PERCLASS;
 		global_vars.m_namespace_name = opt.m_namespaceName.IsEmpty() ? "std" : (LPCTSTR) opt.m_namespaceName;
 
 		// save options to registry
@@ -889,7 +889,7 @@ bool Dumper::build()
 		optRn->getChild( Dumper::m_strSpecAcceptRetVal      )->setValue( m_iSpecAcceptRetVal == 1 ? "1" : "0");
 		optRn->getChild( Dumper::m_strVCVersion6            )->setValue( m_bGenTemplVersion6  ? Yes_Str : No_Str);
 		optRn->getChild( Dumper::m_strTemplateGetter        )->setValue( m_bGenTemplates && m_bGenRegular ? Yes_Str : m_bGenTemplates ? Only_Str : No_Str);
-		optRn->getChild( Dumper::m_strOutputInSeparateFile  )->setValue( global_vars.m_outputMethod == Globals::OUTPUTMETHOD_ENUM::PERCLASS ? Yes_Str : No_Str);
+		optRn->getChild( Dumper::m_strOutputInSeparateFile  )->setValue( global_vars.m_outputMethod == Globals::PERCLASS ? Yes_Str : No_Str);
 		optRn->getChild( Dumper::m_strTgtNamespace          )->setValue( global_vars.m_namespace_name);
 
 		global_vars.output_directory_name = "";

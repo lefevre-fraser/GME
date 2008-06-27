@@ -383,7 +383,7 @@ namespace Util
 			while( cur)
 			{
 				if( !path.empty()) 
-					path.insert( 0, '/');
+					path.insert( 0,1, '/');
 
 				std::string nm = Util::name( cur);
 				path.insert( 0, nm.c_str());

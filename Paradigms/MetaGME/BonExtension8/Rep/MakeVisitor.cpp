@@ -57,7 +57,7 @@ void MakeVisitor::addEntity( Any::KIND_TYPE kind, const ClassAndNamespace& ent)
 std::string MakeVisitor::dumpVisitorHeader()
 {
 	std::string short_form_header_file;
-	int pos = global_vars.header_file_name.rfind( '\\');
+	std::string::size_type pos = global_vars.header_file_name.rfind( '\\');
 	if ( pos != std::string::npos)
 	{
 		if ( pos + 1 < global_vars.header_file_name.length())

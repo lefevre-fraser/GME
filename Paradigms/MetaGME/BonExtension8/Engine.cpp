@@ -546,7 +546,7 @@ void RawComponent::storeRelation( Relation& p_rel)
 {
 	m_relations.push_back( p_rel);
 
-	char buff[256];
+	//char buff[256];
 	//sprintf( buff, "0x%x Rp: 0x%x Pf: 0x%x", (long) p_ent.m_pointer, (long) p_ent.m_respPointer, (long) p_ent.m_parentFolder);
 	//m_console.sendMsg( buff, MSG_INFO);
 
@@ -564,7 +564,7 @@ void RawComponent::storeEquivRelation( Relation& p_rel)
 {
 	m_equivRelations.push_back( p_rel);
 
-	char buff[256];
+	//char buff[256];
 	//sprintf( buff, "0x%x Rp: 0x%x Pf: 0x%x", (long) p_ent.m_pointer, (long) p_ent.m_respPointer, (long) p_ent.m_parentFolder);
 	//m_console.sendMsg( buff, MSG_INFO);
 

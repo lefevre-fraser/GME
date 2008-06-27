@@ -1,130 +1,131 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="9.00"
 	Name="Paradigm"
-	SccProjectName=""
-	SccLocalPath="">
+	ProjectGUID="{E0F4960A-05DD-483D-92EE-F5CBB354FE43}"
+	RootNamespace="Paradigm"
+	TargetFrameworkVersion="131072"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\Release"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\Release/Paradigm.tlb"
+				HeaderFileName=""
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				StringPooling="TRUE"
-				RuntimeLibrary="4"
-				EnableFunctionLevelLinking="TRUE"
-				UsePrecompiledHeader="2"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Release/Paradigm.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"/>
+				SuppressStartupBanner="true"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile=".\Release/Paradigm.exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\Release/Paradigm.pdb"
 				SubSystem="1"
-				TargetMachine="1"/>
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"
-				TypeLibraryName=".\Release/Paradigm.tlb"
-				HeaderFileName=""/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\Debug"
 			IntermediateDirectory=".\Debug"
-			ConfigurationType="1"
+			ConfigurationType="10"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
 			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="5"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/Paradigm.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
-				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="4"/>
+				Name="VCPreBuildEventTool"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				OutputFile=".\Debug/Paradigm.exe"
-				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/Paradigm.pdb"
-				SubSystem="1"
-				TargetMachine="1"/>
+				Name="VCCustomBuildTool"
+			/>
 			<Tool
 				Name="VCMIDLTool"
 				TypeLibraryName=".\Debug/Paradigm.tlb"
-				HeaderFileName=""/>
+				HeaderFileName=""
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -132,97 +133,127 @@
 	<Files>
 		<Filter
 			Name="icons"
-			Filter="">
+			>
 			<File
-				RelativePath="icons\aspect.bmp">
+				RelativePath="icons\aspect.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\aspectproxy.bmp">
+				RelativePath="icons\aspectproxy.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\atom.bmp">
+				RelativePath="icons\atom.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\atomproxy.bmp">
+				RelativePath="icons\atomproxy.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\attribute.bmp">
+				RelativePath="icons\attribute.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\booleanattribute.bmp">
+				RelativePath="icons\booleanattribute.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\connection.bmp">
+				RelativePath="icons\connection.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\connectionproxy.bmp">
+				RelativePath="icons\connectionproxy.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\connector.bmp">
+				RelativePath="icons\connector.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\constraint.bmp">
+				RelativePath="icons\constraint.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\dynAttr.bmp">
+				RelativePath="icons\dynAttr.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\enumattribute.bmp">
+				RelativePath="icons\enumattribute.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\equiv.bmp">
+				RelativePath="icons\equiv.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\fco.bmp">
+				RelativePath="icons\fco.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\fcoproxy.bmp">
+				RelativePath="icons\fcoproxy.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\fieldattribute.bmp">
+				RelativePath="icons\fieldattribute.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\folder.bmp">
+				RelativePath="icons\folder.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\folderproxy.bmp">
+				RelativePath="icons\folderproxy.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\impinheritance.bmp">
+				RelativePath="icons\impinheritance.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\Inheritance.bmp">
+				RelativePath="icons\Inheritance.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\intinheritance.bmp">
+				RelativePath="icons\intinheritance.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\model.bmp">
+				RelativePath="icons\model.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\modelproxy.bmp">
+				RelativePath="icons\modelproxy.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\privinheritance.bmp">
+				RelativePath="icons\privinheritance.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\reference.bmp">
+				RelativePath="icons\reference.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\referenceproxy.bmp">
+				RelativePath="icons\referenceproxy.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\set.bmp">
+				RelativePath="icons\set.bmp"
+				>
 			</File>
 			<File
-				RelativePath="icons\setproxy.bmp">
+				RelativePath="icons\setproxy.bmp"
+				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="MetaGME-model.xml">
+			RelativePath="MetaGME-model.xml"
+			>
 		</File>
 		<File
-			RelativePath="MetaGME.xmp">
+			RelativePath="MetaGME.xmp"
+			>
 		</File>
 	</Files>
 	<Globals>

@@ -40,7 +40,7 @@ END_MESSAGE_MAP()
 
 
 
-void NameSpecDlg::GetEntry(int rowID, CString& name, CString& dispname, CString& kind, const void * &ptr)
+void NameSpecDlg::GetEntry(int rowID, CString& name, CString& dispname, CString& kind)
 {
 	m_nmlist.GetRow(rowID, name, dispname, kind);
 }
@@ -137,8 +137,8 @@ void NameSpecDlg::OnOK()
 	DEFNAMES_MAP::iterator it = m_dn.begin();
 	for( int k = 0; k < m_lastID && it != m_dn.end(); ++k, ++it)
 	{
-		CString name, dispname, kind; void * ptr;
-		GetEntry( k, name, dispname, kind, ptr);
+		CString name, dispname, kind; 
+		GetEntry( k, name, dispname, kind);
 		BON::FCO fco = it->first;
 		std::string newsel_name = (LPCTSTR) name;
 		std::string newsel_dispname = (LPCTSTR) dispname;

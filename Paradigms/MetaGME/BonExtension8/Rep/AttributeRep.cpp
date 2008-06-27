@@ -238,7 +238,7 @@ Method EnumAttributeRep::createMethodForAttr( FCO * container)
 
 	src = CodeGen::indent(0) + "{\n";
 	src += CodeGen::indent(1) + "std::string val = FCOImpl::getAttribute(\"" + getName() + "\")->getStringValue();\n";
-	for( i = 0; i < m_noOfItems; ++i)
+	for(int i = 0; i < m_noOfItems; ++i)
 	{
 		std::string item_i = m_itemsVal[i] + '_' + EnumAttributeRep::enumTypeName( this);
 		if ( !Any::checkIfValidName( item_i))

@@ -239,7 +239,7 @@ std::string EnumAttributeRep::doDumpAttr(const std::string& owner)
 	std::string m_ref = getMetaRef( owner);
 	std::string viewable = isViewable()?"": " viewable = \"no\"";
 	mmm += indStr() + "<attrdef name=\"" + getName() + "\" metaref = \"" + m_ref + "\"" + viewable + " valuetype = \"enum\" defvalue = \"";
-	if( m_noOfDefault < m_itemsVal.size())
+	if( m_noOfDefault < (int)m_itemsVal.size())
 		mmm += m_itemsVal[m_noOfDefault];
 	else
 		global_vars.err << MSG_ERROR << "Error: Default enumitem not found in vector of enumerated items. Please check: " << getPtr() << ".\n";

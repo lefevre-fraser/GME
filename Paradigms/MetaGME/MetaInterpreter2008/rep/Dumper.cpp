@@ -1530,7 +1530,7 @@ bool Dumper::build()
 	//tok.Split(card, ",", ORs);
 	tok.split( card, ",", ORs);
 	//for (int i = 0; i < ORs.GetSize(); i++) {
-	for (int i = 0; i < ORs.size(); i++) {
+	for (std::vector< std::string >::size_type i = 0; i < ORs.size(); i++) {
 		//CStringArray bounds;
 		std::vector< std::string > bounds;
 		//tok.Split(ORs[i], "..", bounds);
