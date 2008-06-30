@@ -8,6 +8,7 @@
 
 #define _ATL_APARTMENT_THREADED
 #define  _CRT_SECURE_NO_WARNINGS
+#include "targetver.h"
 #include <afxwin.h>
 #include <afxdisp.h>
 #include <algorithm>

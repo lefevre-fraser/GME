@@ -6,6 +6,7 @@
 #include "AttributeRep.h"
 #include "FCO.h"
 
+#include <algorithm>
 #include "globals.h"
 #include "Dumper.h"
 extern Globals global_vars;

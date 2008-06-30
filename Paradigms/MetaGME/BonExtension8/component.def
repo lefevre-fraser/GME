@@ -1,6 +1,6 @@
 ; Interpreter.def : Declares the module parameters.
 
-LIBRARY      "BonXtender8Component.DLL"
+LIBRARY      "BonXtender8.dll"
 
 EXPORTS
 	DllCanUnloadNow     PRIVATE

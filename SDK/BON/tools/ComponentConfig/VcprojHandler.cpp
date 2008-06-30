@@ -621,7 +621,8 @@ int VcprojHandler::doCompRenameAndGmeRelocate
 				{
 					CString r = rp;
 					bool found = false;
-					for( unsigned int j = 0; !found && j < m_gmeSourceFiles.size(); ++j)
+					unsigned int j;
+					for( j = 0; !found && j < m_gmeSourceFiles.size(); ++j)
 					{
 						CString mmm = m_gmeSourceFiles[j].c_str();
 						if( -1 != r.Find( m_gmeSourceFiles[j].c_str()))

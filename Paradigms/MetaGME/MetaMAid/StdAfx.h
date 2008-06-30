@@ -7,6 +7,9 @@
 
 
 #define _ATL_APARTMENT_THREADED
+#define _CRT_SECURE_NO_WARNINGS
+
+#include "targetver.h"
 
 #include <afxwin.h>
 #include <afxdisp.h>
@@ -16,6 +19,7 @@
 //something, but do not change the name of _Module
 extern CComModule _Module;
 #include <atlcom.h>
+
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

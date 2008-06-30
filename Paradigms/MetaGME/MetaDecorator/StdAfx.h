@@ -6,7 +6,8 @@
 #define AFX_STDAFX_H__8B8917B1_B409_43D6_9604_73055641403B__INCLUDED_
 
 #define _ATL_APARTMENT_THREADED
-
+#define _CRT_SECURE_NO_WARNINGS
+#include "targetver.h"
 #include <afxwin.h>
 #include <afxdisp.h>
 #include <afxdlgs.h>

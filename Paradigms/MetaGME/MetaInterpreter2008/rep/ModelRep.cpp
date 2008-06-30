@@ -529,7 +529,7 @@ std::string ModelRep::doDump()
 				else
 					role_lines_to_dump.push_back( role_line);
 			}
-		++it;
+		// ++it;
 	}
 	StringLex lex;
 	std::sort( role_lines_to_dump.begin(), role_lines_to_dump.end(), lex);

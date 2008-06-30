@@ -760,6 +760,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\SDK\BON\Utils.h"
 				>
 			</File>

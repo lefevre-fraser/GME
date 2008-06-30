@@ -124,13 +124,15 @@ LRESULT CALLBACK WindowProcNew(HWND hwnd,UINT message, WPARAM wParam, LPARAM lPa
 					//If the user has entered something like "c:\\windows\\\\system"
 					//this is invalid but _access returns valid if this string is passed to
 					//it. So before giving it to _access validate it.
-					for (int i = 0; i < cstrPath.GetLength() - 1; i++)
+					int i;
+					for (i = 0; i < cstrPath.GetLength() - 1; i++)
+					{
 						if (cstrPath[i] == '\\' && cstrPath[i+1] == '\\')
 						{
 							AfxMessageBox("Invalid Folder", MB_OK | MB_ICONHAND);
 							return NULL;
 						}
-					
+					}
 					//If user has entered a trailing backslash remove it
 					//e.g. "c:\\windows\\system\\" --> "c:\\windows\\system"
 					if (cstrPath[i] == '\\')

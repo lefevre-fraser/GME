@@ -4,7 +4,7 @@
 #include "BONImpl.h"
 #include "Sheet.h"
 #include "logger.h"
-
+#include <algorithm>
 #include "globals.h"
 extern Globals global_vars;
 

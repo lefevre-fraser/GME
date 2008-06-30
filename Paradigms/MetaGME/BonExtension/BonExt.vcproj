@@ -51,7 +51,7 @@
 				AdditionalOptions="/Zm200 /Zm200 "
 				Optimization="0"
 				AdditionalIncludeDirectories=".\,rep,gui,..\..\..\sdk\BON"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL;BUILDER_OBJECT_NETWORK_V2;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL;BUILDER_OBJECT_NETWORK_V2"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
@@ -81,7 +81,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="Debug/BonExtender2004.dll"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\GME\Lib"
 				ModuleDefinitionFile=".\Component.def"
@@ -1547,6 +1547,10 @@
 			</File>
 			<File
 				RelativePath="StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\targetver.h"
 				>
 			</File>
 			<File

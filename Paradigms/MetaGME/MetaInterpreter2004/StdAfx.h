@@ -6,17 +6,21 @@
 #define AFX_STDAFX_H__C4EFDDFC_C095_4509_B571_632F0986D162__INCLUDED_
 
 #define _ATL_APARTMENT_THREADED
+#define _CRT_SECURE_NO_WARNINGS
 
+#include "targetver.h"
 #include <afxwin.h>
 #include <afxdisp.h>
 
-#include <algorithm>
+
 
 #include <atlbase.h>
 //You may derive a class from CComModule and use it if you want to override
 //something, but do not change the name of _Module
 extern CComModule _Module;
 #include <atlcom.h>
+
+
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
