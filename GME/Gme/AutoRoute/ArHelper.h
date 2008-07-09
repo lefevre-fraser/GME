@@ -2,6 +2,26 @@
 #ifndef __ARHELPER_H
 #define __ARHELPER_H
 
+template<class T>
+class CComPtr2 : public CComPtr<T>
+{
+public:
+	CComPtr2(const CComPtr<T>& ptr):CComPtr<T>(ptr)
+	{}
+
+	T** operator&() throw()
+	{
+		//ATLASSERT(p==NULL);
+		return &p;
+	}
+
+	~CComPtr2() throw()
+	{
+		if (p)
+			p->Release();
+	}
+};
+
 
 // --------------------------- CRect && CPoint
 

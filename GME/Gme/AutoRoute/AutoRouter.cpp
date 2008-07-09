@@ -3,7 +3,8 @@
 
 #include "GuiMeta.h"
 #include "GuiObject.h"
-#include "ArGraph.h"
+#include "AutoRouterGraph.h"
+#include "AutoRouterPort.h"
 #include "AutoRouter.h"
 
 #include "GMEView.h"
@@ -12,21 +13,25 @@
 
 CAutoRouter::CAutoRouter()
 {
-	router = new CArGraph();
-	ASSERT( router != NULL );
+	//todo vt:
+	COMTHROW(CAutoRouterGraph::CreateInstance(&router));
 }
 
 CAutoRouter::~CAutoRouter()
 {
 	ASSERT( router != NULL );
-	delete router;
+
+	router->Destroy();
 }
 
 void CAutoRouter::AutoRoute()
 {
 	if(CGMEView::IsHugeModel())
 		return;
-	routeret = router->AutoRoute();
+	 
+	long res;
+	router->AutoRoute(&res);
+	routeret = res;
 }
 
 void CAutoRouter::AutoRoute(CGuiFcoList &fcos)
@@ -52,17 +57,21 @@ void CAutoRouter::Clear(CGuiFcoList &fcos)
 		CGuiFco *fco = fcos.GetNext(pos);
 		CGuiConnection *conn = dynamic_cast<CGuiConnection *>(fco);
 		if(conn) {
-			conn->SetRouterPath(0);
+			CComPtr<IAutoRouterPath> path;
+			conn->SetRouterPath(path);
 		}
 		else {
 			CGuiObject *obj = dynamic_cast<CGuiObject *>(fco);
 			VERIFY(obj);
 			if (obj->IsVisible()) {
-				obj->SetRouterBox(0);
-				obj->SetRouterNameBox(0);
+				CComPtr<IAutoRouterBox> box1;
+				CComPtr<IAutoRouterBox> box2;
+				obj->SetRouterBox(box1);
+				obj->SetRouterNameBox(box2);
 				POSITION ppos = obj->GetPorts().GetHeadPosition();
 				while (ppos) {
-					obj->GetPorts().GetNext(ppos)->SetRouterPort(0) ;
+					CComPtr<IAutoRouterPort> port;
+					obj->GetPorts().GetNext(ppos)->SetRouterPort(port) ;
 				}
 			}
 		}
@@ -90,7 +99,7 @@ void CAutoRouter::AddObjects(CGuiFcoList &fcos)
 		AddFco(conns.GetNext(pos));
 }
 
-void CAutoRouter::SetPortPreferences(CArPort * portBox,CGuiPort * port)
+void CAutoRouter::SetPortPreferences(CComPtr<IAutoRouterPort> portBox,CGuiPort * port)
 {
 
 	if(CGMEView::IsHugeModel())
@@ -119,7 +128,7 @@ void CAutoRouter::SetPortPreferences(CArPort * portBox,CGuiPort * port)
 	portBox->SetAttributes(attr);
 }
 
-void CAutoRouter::SetPathPreferences(CArPath *path, CGuiConnection *conn)
+void CAutoRouter::SetPathPreferences(CComPtr<IAutoRouterPath> path, CGuiConnection *conn)
 {
 	if(CGMEView::IsHugeModel())
 		return;
@@ -174,30 +183,32 @@ void CAutoRouter::AddObject(CGuiObject *object)
 	if(CGMEView::IsHugeModel())
 		return;
 
-	CArBox *box;
-	box = router->CreateBox();
-	CRect loc = object->GetLocation();
-	box->SetRect(loc);
+	CComPtr<IAutoRouterBox> box;
+	COMTHROW(router->CreateBox(&box));
 
-	CArBox *nameBox = NULL;
+	CRect loc = object->GetLocation();
+	box->SetRect(loc.left, loc.top, loc.right, loc.bottom);
+
+	CComPtr<IAutoRouterBox> nameBox;
 	if (theApp.labelAvoidance) {
-		nameBox = router->CreateBox();
+		COMTHROW(router->CreateBox(&nameBox));
 		CRect nameLoc = object->GetNameLocation();
-		nameBox->SetRect(nameLoc);
+		nameBox->SetRect(nameLoc.left, nameLoc.top, nameLoc.right, nameLoc.bottom);
 	}
 
 	CGuiPortList &ports = object->GetPorts();
 	POSITION pos = ports.GetHeadPosition();
 	while(pos) {
 		CGuiPort *port = ports.GetNext(pos);
-		CArPort *portBox = box->CreatePort();
+		CComPtr<IAutoRouterPort> portBox; 
+		COMTHROW(box->CreatePort(&portBox));
 		// real ports most obey the rule that the only dir allowed is
 		// the one on which side of their parent they are laid out
 		portBox->SetLimitedDirs( port->IsRealPort());
-		portBox->SetRect(port->GetLocation() + loc.TopLeft());
+		CRect r = port->GetLocation() + loc.TopLeft();
+		portBox->SetRect(r.left, r.top, r.right, r.bottom);
 		SetPortPreferences(portBox,port);
 		port->SetRouterPort(portBox);
-		// ????? box->SetAtomicPort(portBox);
 		box->Add(portBox);
 	}
 
@@ -228,12 +239,17 @@ void CAutoRouter::AddConnection(CGuiConnection *conn)
 		return;
 	if(!(conn->IsVisible()))
 		return;
-	CArPort *asrc = conn->srcPort->GetRouterPort();
-	CArPort *adst = conn->dstPort->GetRouterPort();
-	CArPath *path = router->AddPath(asrc,adst);
+	CComPtr<IAutoRouterPort> asrc = conn->srcPort->GetRouterPort();
+	CComPtr<IAutoRouterPort> adst = conn->dstPort->GetRouterPort();
+	CComPtr<IAutoRouterPath> path; 
+
+	COMTHROW(router->AddPath(asrc, adst, &path));
+
 	SetPathPreferences(path, conn);
 	conn->SetRouterPath(path);
-	path->SetExtPtr(conn);
+	//hack no 1: this is a little hack: 
+	//only the address is needed, thus it should be void*
+	path->SetExtPtr((long)(conn));
 }
 
 void CAutoRouter::DeleteObjects(CGuiObjectList &objs)
@@ -254,44 +270,41 @@ void CAutoRouter::DeleteObject(CGuiObject *object)
 	if(CGMEView::IsHugeModel())
 		return;
 	if (object->IsVisible()) {
-		router->Delete(object->GetRouterBox());
+		router->DeleteBox(object->GetRouterBox());
+
 		if (theApp.labelAvoidance) {
-			CArBox *nameBox = object->GetRouterNameBox();
-			if (nameBox) {
-				router->Delete(nameBox);
+			CComPtr<IAutoRouterBox> nameBox = object->GetRouterNameBox();
+			if (nameBox.p) {
+				router->DeleteBox(nameBox);
 			}
 		}
-		object->SetRouterBox(0);
-		object->SetRouterNameBox(0);
+
+		CComPtr<IAutoRouterBox> box1;
+		CComPtr<IAutoRouterBox> box2;
+		object->SetRouterBox(box1);
+		object->SetRouterNameBox(box2);
 		ClearRouterPorts(object->GetPorts());
 	}
-}
-
-void CAutoRouter::DeleteObject(CGuiPort *port)
-{
-	if(CGMEView::IsHugeModel())
-		return;
-	CArPort *portBox = port->GetRouterPort();
-	CArBox *box = portBox->GetOwner();
-	box->Delete(portBox);
-	port->SetRouterPort(0);
 }
 
 void CAutoRouter::ClearRouterPorts(CGuiPortList &portList)
 {
 	POSITION pos = portList.GetHeadPosition();
 	while(pos)
-		portList.GetNext(pos)->SetRouterPort(0);
+	{
+		CComPtr<IAutoRouterPort> port;
+		portList.GetNext(pos)->SetRouterPort(port);
+	}
 }
-
 
 void CAutoRouter::DeleteConnection(CGuiConnection *conn)
 {
 	if(CGMEView::IsHugeModel())
 		return;
-	if(conn->GetRouterPath()) {
-		router->Delete(conn->GetRouterPath());
-		conn->SetRouterPath(0);
+	if(conn->GetRouterPath().p) {
+		router->DeletePath(conn->GetRouterPath());
+		CComPtr<IAutoRouterPath> path;
+		conn->SetRouterPath(path);
 	}
 }
 
@@ -300,8 +313,21 @@ CGuiConnection *CAutoRouter::FindConnection(CPoint &pt) const
 {
 	if(CGMEView::IsHugeModel())
 		return 0;
-	CArPath *path = router->GetPathAt(pt,3);
-	return path ? ((CGuiConnection *)(path->GetExtPtr())) : 0;
+
+	CComPtr<IAutoRouterPath> path;
+	router->GetPathAt(pt.x,pt.y,3,&path);
+
+	if (path.p != NULL)
+	{
+		//hack no 2: this is the same hack as in hack no 1.
+		long address;
+		path->GetExtPtr(&address);
+		return (CGuiConnection*)(address);
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 void CAutoRouter::NudgeObjects(CGuiObjectList &objectList,int right,int down)
@@ -312,111 +338,16 @@ void CAutoRouter::NudgeObjects(CGuiObjectList &objectList,int right,int down)
 	POSITION pos = objectList.GetHeadPosition();
 	while(pos) {
 		CGuiObject *obj = objectList.GetNext(pos);
-		router->ShiftBy(obj->GetRouterBox(),offs);
+
+		router->ShiftBy(obj->GetRouterBox(),offs.cx, offs.cy);
+
 		if (theApp.labelAvoidance) {
-			CArBox *nameBox = obj->GetRouterNameBox();
-			if (nameBox) {
-				router->ShiftBy(nameBox,offs);
+			CComPtr<IAutoRouterBox> nameBox = obj->GetRouterNameBox();
+			if (nameBox.p) {
+				router->ShiftBy(nameBox,offs.cx, offs.cy);
 			}
 			
 		}
 	}
 	AutoRoute();
 }
-
-// --- Autoroute debug
-/*
-SArEdge* CAutoRouter::GetArEdgeAt(CPoint point)
-{
-}
-*/
-/*
-void CAutoRouter::ArAutoRoute()
-{
-	router->AutoRoute();
-}
-
-void CAutoRouter::ArConnect()
-{
-	router->ConnectAllDisconnectedPaths();
-}
-
-void CAutoRouter::ArUnconnect()
-{
-	router->DisconnectAll();
-}
-
-void CAutoRouter::ArSimplify()
-{
-	router->SimplifyPaths();
-}
-
-#include "GMEDoc.h"
-
-void CAutoRouter::ArCheck(CGMEView* view)
-{
-	ASSERT( view != NULL );
-
-	CEdtModel* base = view->currentModel;
-	CEdtObjectList& objects = view->currentModel->GetModels();
-	CGMEDoc* doc = view->GetDocument();
- 
-	srand( (unsigned)time( NULL ) );
-
-	for(int i = 0; i < 100000; i++)
-	{
-		POSITION pos = objects.GetHeadPosition();
-		while( pos )
-		{
-			CEdtObject* o = objects.GetNext(pos);
-			modelGrid.Reset(o);
-			o->SetModelPosition(CPoint(10+(rand()%400), 10+(rand()%400)));
-		}
-
-		view->AutoRoute();
-
-		if( routeret == -1 )
-			break;
-	}
-
-	doc->SetModifiedFlag(TRUE);
-	view->Invalidate();
-}
-
-void CAutoRouter::ArLeft()
-{
-	if( !router->vertical.Block_ScanForward() )
-		MessageBeep(MB_ICONEXCLAMATION);
-}
-
-void CAutoRouter::ArRight()
-{
-	if( !router->vertical.Block_ScanBackward() )
-		MessageBeep(MB_ICONEXCLAMATION);
-}
-
-void CAutoRouter::ArUp()
-{
-	if( !router->horizontal.Block_ScanForward() )
-		MessageBeep(MB_ICONEXCLAMATION);
-}
-
-void CAutoRouter::ArDown()
-{
-	if( !router->horizontal.Block_ScanBackward() )
-		MessageBeep(MB_ICONEXCLAMATION);
-}
-
-void CAutoRouter::ArHorizontal()
-{
-	if( !router->horizontal.Block_SwitchWrongs() )
-		MessageBeep(MB_ICONEXCLAMATION);
-}
-
-void CAutoRouter::ArVertical()
-{
-	if( !router->vertical.Block_SwitchWrongs() )
-		MessageBeep(MB_ICONEXCLAMATION);
-}
-
-*/

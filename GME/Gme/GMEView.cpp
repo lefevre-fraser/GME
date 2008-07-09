@@ -1802,6 +1802,8 @@ void CGMEView::Reset(bool doInvalidate)
 		pos = connections.GetHeadPosition();
 		while(pos) {
 			CGuiConnection *conn = connections.GetNext(pos);
+			//vt THIS MIGHT BE UNNECESSARY
+			conn->RemoveFromRouter(router);
 			delete conn;
 		}
 

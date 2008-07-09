@@ -2,10 +2,13 @@
 import "oaidl.idl";
 import "ocidl.idl";
 
+
+//--------------------------------------------------------------------------------------------
+// --------------------------- Meta Library
 import "Mga.idl";
 import "Gme.idl";
 
-// --------------------------- Meta Library
+
 
 [
 	uuid(0ADEEC71-D83A-11D3-B36B-005004CC8592),
@@ -81,5 +84,37 @@ library GmeLib
 	{
 		[default] interface IGMEOLEColl;
 		interface ISupportErrorInfo;
+	};
+	[
+		uuid(DA19317A-4CDE-4331-98E7-9DF0DC04DF1E),
+		helpstring("AutoRouterPort Class")
+	]
+	coclass AutoRouterPort
+	{
+		[default] interface IAutoRouterPort;
+	};
+	[
+		uuid(7ED29520-4A10-4411-B91C-D75B6ED303F4),
+		helpstring("AutoRouterBox Class")
+	]
+	coclass AutoRouterBox
+	{
+		[default] interface IAutoRouterBox;
+	};
+	[
+		uuid(37CBF476-97B8-4365-BFCD-8C331E16B713),
+		helpstring("AutoRouterGraph Class")
+	]
+	coclass AutoRouterGraph
+	{
+		[default] interface IAutoRouterGraph;
+	};
+	[
+		uuid(8B81AE9D-482F-4A2F-815F-E9F990BBD3C4),
+		helpstring("AutoRouterPath Class")
+	]
+	coclass AutoRouterPath
+	{
+		[default] interface IAutoRouterPath;
 	};
 };

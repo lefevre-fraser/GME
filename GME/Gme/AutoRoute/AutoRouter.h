@@ -1,10 +1,10 @@
 #ifndef GME_AutoRouter_h
 #define GME_AutoRouter_h
 
-class CArBox;
-class CArPort;
-class CArPath;
-class CArGraph;
+class CAutoRouterBox;
+class CAutoRouterPort;
+class CAutoRouterPath;
+class CAutoRouterGraph;
 
 typedef CList<CPoint, CPoint&>	CPointList;
 
@@ -13,8 +13,10 @@ public:
 	CAutoRouter();
 	~CAutoRouter();
 
+	friend CAutoRouterGraph;
+
 public:
-	CArGraph *router;
+	CComPtr<IAutoRouterGraph> router;
 	int routeret;
 
 public:
@@ -22,8 +24,8 @@ public:
 	void AutoRoute(CGuiFcoList &fcos);
 	void Fill(CGuiFcoList &fcos);
 	void Clear(CGuiFcoList &fcos);
-	void SetPortPreferences(CArPort *portBox,CGuiPort *object);
-	void SetPathPreferences(CArPath *path, CGuiConnection *conn);
+	void SetPortPreferences(CComPtr<IAutoRouterPort> portBox, CGuiPort *object);
+	void SetPathPreferences(CComPtr<IAutoRouterPath> path, CGuiConnection *conn);
 	void AddObjects(CGuiFcoList &fcos);
 	void AddFco(CGuiFco *fco);
 	void AddCompound(CGuiCompound *compound);
@@ -32,7 +34,7 @@ public:
 	void AddConnection(CGuiConnection *conn);
 	void DeleteObjects(CGuiObjectList &objectList);
 	void DeleteObject(CGuiObject *model);
-	void DeleteObject(CGuiPort *port);
+	//void DeleteObject(CGuiPort *port);
 	void ClearRouterPorts(CGuiPortList &portList);
 	void DeleteConnection(CGuiConnection *conn);
 	CGuiConnection *FindConnection(CPoint &pt) const;

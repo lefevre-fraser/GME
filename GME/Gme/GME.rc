@@ -1429,6 +1429,16 @@ IDC_ZOOM_CURSOR         CURSOR                  "res\\cur00006.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// REGISTRY
+//
+
+IDR_AUTOROUTERPORT      REGISTRY                "AutoRoute/AutoRouterPort.rgs"
+IDR_AUTOROUTERBOX       REGISTRY                "AutoRoute/AutoRouterBox.rgs"
+IDR_AUTOROUTERGRAPH     REGISTRY                "AutoRoute/AutoRouterGraph.rgs"
+IDR_AUTOROUTERPATH      REGISTRY                "AutoRoute/AutoRouterPath.rgs"
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 

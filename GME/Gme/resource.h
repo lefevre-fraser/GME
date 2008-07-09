@@ -18,6 +18,10 @@
 #define IDP_OLE_INIT_FAILED             111
 #define IDB_SPLASH                      112
 #define ID_PROPERTYCOMBO                113
+#define IDR_AUTOROUTERPORT              115
+#define IDR_AUTOROUTERBOX               116
+#define IDR_AUTOROUTERGRAPH             117
+#define IDR_AUTOROUTERPATH              118
 #define IDR_MAINFRAME                   128
 #define IDR_GMETYPE                     130
 #define IDR_TOOLBAR_MODE                131
@@ -452,6 +456,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        221
 #define _APS_NEXT_COMMAND_VALUE         33086
 #define _APS_NEXT_CONTROL_VALUE         1128
-#define _APS_NEXT_SYMED_VALUE           115
+#define _APS_NEXT_SYMED_VALUE           119
 #endif
 #endif

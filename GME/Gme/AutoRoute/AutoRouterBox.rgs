@@ -1,0 +1,23 @@
+HKCR
+{
+	GME.AutoRouterBox.1 = s 'AutoRouterBox Class'
+	{
+		CLSID = s '{7ED29520-4A10-4411-B91C-D75B6ED303F4}'
+	}
+	GME.AutoRouterBox = s 'AutoRouterBox Class'
+	{
+		CLSID = s '{7ED29520-4A10-4411-B91C-D75B6ED303F4}'
+		CurVer = s 'GME.AutoRouterBox.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {7ED29520-4A10-4411-B91C-D75B6ED303F4} = s 'AutoRouterBox Class'
+		{
+			ProgID = s 'GME.AutoRouterBox.1'
+			VersionIndependentProgID = s 'GME.AutoRouterBox'
+			ForceRemove 'Programmable'
+			LocalServer32 = s '%MODULE%'
+			'TypeLib' = s '{0ADEEC71-D83A-11D3-B36B-005004CC8592}'
+		}
+	}
+}

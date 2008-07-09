@@ -395,6 +395,26 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\AutoRoute\AutoRouterBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterEdge.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterGraph.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterPath.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterPort.cpp"
+				>
+			</File>
+			<File
 				RelativePath="ChildFrm.cpp"
 				>
 				<FileConfiguration
@@ -1763,6 +1783,26 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AutoRoute\AutoRouterBox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterEdge.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterGraph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterPath.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterPort.h"
+				>
+			</File>
+			<File
 				RelativePath="ChildFrm.h"
 				>
 			</File>
@@ -2013,6 +2053,22 @@
 			</File>
 			<File
 				RelativePath="res\atomport.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterBox.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterGraph.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterPath.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\AutoRoute\AutoRouterPort.rgs"
 				>
 			</File>
 			<File

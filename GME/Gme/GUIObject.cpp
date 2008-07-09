@@ -11,8 +11,9 @@
 #include "GuiObject.h"
 #include "ModelGrid.h"
 
-#include "AutoRoute/ArGraph.h"
+#include "AutoRoute/AutoRouterGraph.h"
 #include "AutoRoute/AutoRouter.h"
+#include "AutoRoute/AutoRouterPath.h"
 
 #include "GMEEventLogger.h"
 
@@ -2095,8 +2096,11 @@ void CGuiConnectionLabelSet::Draw(CDC *pDC,COLORREF color, CGuiConnection *conn)
 // Non-virtual methods of CGuiConnection
 ////////////////////////////////////////////////
 
-CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView *vw,int numAsp,bool resolve) : CGuiFco(pt,role,vw,numAsp), routerPath(0), visible(0), src(0), srcPort(0), dst(0), dstPort(0), autorouterPrefs(0),selected(false)
+CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView *vw,int numAsp,bool resolve) : CGuiFco(pt,role,vw,numAsp), visible(0), src(0), srcPort(0), dst(0), dstPort(0), autorouterPrefs(0),selected(false)
 {
+	CComPtr<IAutoRouterPath> dummy;
+	routerPath = dummy;
+
 	if(resolve)
 		Resolve();
 	{
@@ -2318,14 +2322,56 @@ void CGuiConnection::Draw(CDC *pDC)
 	VERIFY(dst->IsVisible());
 
 	CPointList tmpPoints;
-	if(!routerPath) {
+	if(!routerPath.p) {
 		CPoint start = srcPort->GetLocation().CenterPoint() + src->GetLocation().TopLeft();
 		CPoint end   = dstPort->GetLocation().CenterPoint() + dst->GetLocation().TopLeft();
 		tmpPoints.AddHead(start);
 		tmpPoints.AddTail(end);
 	}
 
-	const CPointList &points = routerPath ? routerPath->GetPointList() : tmpPoints;
+
+	//retrieve data from AutoRouter
+	CPointList normalPoints;
+
+	//if not NULL
+	if (routerPath.p)
+	{
+		//CAutoRouterPath* p = static_cast<CAutoRouterPath*>(routerPath.p);
+
+		//There was a problem with uninitialized safearrays, so create a dummy:
+		SAFEARRAY *pArr;
+		SAFEARRAYBOUND bound[1];
+		bound[0].lLbound =  0;
+		bound[0].cElements = 2;
+
+		pArr = SafeArrayCreate(VT_I4,1,bound);
+
+		COMTHROW(routerPath->GetPointList(&pArr));
+
+		//one dim., long elements
+		if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
+		{
+			//length
+			long elementNum = (pArr)->rgsabound[0].cElements;
+			
+			//lock it before use
+			SafeArrayLock(pArr);
+			long* pArrElements = (long*) (pArr)->pvData;
+			
+			for (int i=0; i<elementNum/2;i++)
+			{
+				CPoint p(pArrElements[2*i], pArrElements[2*i+1]);
+				normalPoints.AddTail(p);
+			}
+
+			SafeArrayUnlock(pArr);
+
+			//clear memory
+			SafeArrayDestroy(pArr);
+		}
+	}
+
+	const CPointList &points = routerPath.p ? normalPoints : tmpPoints;
 
 	graphics.DrawConnection(pDC,points,grayedOut ? GME_GRAYED_OUT_COLOR : color,lineType,srcStyle,dstStyle,true,selected? 1: 0);
 

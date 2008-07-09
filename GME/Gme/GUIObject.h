@@ -37,10 +37,10 @@ public:
 public:
 	void InitPorts();
 	
-	CArBox *GetRouterBox()							{ return routerBox; }
-	void SetRouterBox(CArBox *rbox)					{ routerBox = rbox; }
-	CArBox *GetRouterNameBox()						{ return routerNameBox; }
-	void SetRouterNameBox(CArBox *rnbox)			{ routerNameBox = rnbox; }
+	CComPtr<IAutoRouterBox> GetRouterBox()							{ return routerBox; }
+	void SetRouterBox(CComPtr<IAutoRouterBox> rbox)					{ routerBox = rbox; }
+	CComPtr<IAutoRouterBox> GetRouterNameBox()						{ return routerNameBox; }
+	void SetRouterNameBox(CComPtr<IAutoRouterBox> rnbox)			{ routerNameBox = rnbox; }
 
 	const CRect& GetLocation()						{ return loc; }
 	const CRect& GetNameLocation()					{ return nameLoc; }
@@ -62,8 +62,8 @@ private:
 	unsigned long	features;
 	CRect	loc;
 	CRect	nameLoc;
-	CArBox *routerBox;
-	CArBox *routerNameBox;
+	CComPtr<IAutoRouterBox> routerBox;
+	CComPtr<IAutoRouterBox> routerNameBox;
 };
 
 class CGuiPort : public CGuiBase
@@ -81,8 +81,8 @@ public:
 	bool IsVisible();
 	void SetVisible(bool v);
 	CRect GetLocation();
-	CArPort *GetRouterPort()					{ return routerPort; }
-	void SetRouterPort(CArPort *port)			{ routerPort = port; }
+	CComPtr<IAutoRouterPort> GetRouterPort()					{ return routerPort; }
+	void SetRouterPort(CComPtr<IAutoRouterPort> port)			{ routerPort = port; }
 	CString GetInfoText()						{ return name; }
 	bool IsRealPort();
 
@@ -94,7 +94,7 @@ public:
 
 private:
 	bool* autorouterPrefs;
-	CArPort *routerPort;
+	CComPtr<IAutoRouterPort> routerPort;
 };
 
 class CGuiAnnotator : public CGuiBase
@@ -222,10 +222,10 @@ public:
 	CGuiAspect *GetCurrentAspect()						{ return guiAspects[parentAspect]; }
 	CGuiPort *FindPort(CPoint &pt);
 	CGuiPort *FindPort(CComPtr<IMgaFCO> mgaFco);
-	CArBox *GetRouterBox()								{ return GetCurrentAspect()->GetRouterBox(); }
-	CArBox *GetRouterNameBox()							{ return GetCurrentAspect()->GetRouterNameBox(); }
-	void SetRouterBox(CArBox *rbox)						{ GetCurrentAspect()->SetRouterBox(rbox) ; }
-	void SetRouterNameBox(CArBox *rnbox)				{ GetCurrentAspect()->SetRouterNameBox(rnbox) ; }
+	CComPtr<IAutoRouterBox> GetRouterBox()								{ return GetCurrentAspect()->GetRouterBox(); }
+	CComPtr<IAutoRouterBox>  GetRouterNameBox()							{ return GetCurrentAspect()->GetRouterNameBox(); }
+	void SetRouterBox(CComPtr<IAutoRouterBox> rbox)						{ GetCurrentAspect()->SetRouterBox(rbox) ; }
+	void SetRouterNameBox(CComPtr<IAutoRouterBox> rnbox)				{ GetCurrentAspect()->SetRouterNameBox(rnbox) ; }
 	void ReadAllLocations();
 	void WriteLocation(int aspect = -1);
 	bool IsHotspotEnabled()							{ return isHotspotEnabled; }
@@ -360,8 +360,8 @@ public:
 	virtual ~CGuiConnection() { delete labelset;  delete visible; delete [] autorouterPrefs;}
 
 	void RefreshAttributeCache();
-	CArPath *GetRouterPath()				{ return routerPath; }
-	void SetRouterPath(CArPath *path) 		{ routerPath = path; }
+	CComPtr<IAutoRouterPath> GetRouterPath()				{ return routerPath; }
+	void SetRouterPath(CComPtr<IAutoRouterPath> path) 		{ routerPath = path; }
 	void GrayOutEndPoints();
 	void ToggleSelect()                     { selected = !selected; }
 	void Resolve();
@@ -380,7 +380,7 @@ public:
 	CMapStringToString	attributeCache;
 
 private:	
-	CArPath *routerPath;
+	CComPtr<IAutoRouterPath> routerPath;
 	CGuiConnectionLabelSet	*labelset;
 	bool *visible;
 	int lineType;
