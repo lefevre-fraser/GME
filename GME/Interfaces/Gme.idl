@@ -396,3 +396,108 @@ interface IMgaVersionInfo : IUnknown
 	[propget, helpstring("property version")]
 	HRESULT version([out, retval] MgaInterfaceVersion_enum *pVal);
 };
+
+//-------------------------------------------------------------------------------
+//typedef enum eardir_enum
+//{	Dir_None_	= -1,
+//	Dir_Top_,
+//	Dir_Right_,
+//	Dir_Bottom_,
+//	Dir_Left_,
+//	Dir_Skew_
+//} 	eardir_enum;
+
+interface IAutoRouterBox;
+
+[
+	object,
+	uuid(87C3FC61-A245-4958-BACE-31313724D56A),
+	dual,
+	nonextensible,
+	helpstring("IAutoRouterPort Interface"),
+	pointer_default(unique)
+]
+interface IAutoRouterPort : IDispatch{
+	//[id(1)] HRESULT CanHaveStartEndPointOn([in] eardir_enum dir, [in] long isstart, [out,retval] long* result);
+	//[id(2)] HRESULT CanHaveStartEndPoint([in] long isstart, [out,retval] long* result);
+	//[id(3)] HRESULT CanHaveStartEndPointHorizontal([in] long ishorizontal, [out,retval] long* result);
+	//[id(4)] HRESULT IsConnectToCenter([out,retval] long* result);
+	//[id(5)] HRESULT GetStartEndDirTo([in] long pointX,[in] long pointY, [in] long isstart, [in] eardir_enum notthis, [out,retval] eardir_enum* result);
+
+	//[id(6)] HRESULT CanCreateStartEndPointAt([in] long pointX,[in] long pointY, [in] long isstart, [in] long nearness, [out,retval] long* result);
+	//[id(7)] HRESULT CreateStartEndPointAt([in] long pointX,[in] long pointY, [in] long isstart, [out,retval] long* resultPointX, [out,retval] long* resultPointY);
+	//[id(8)] HRESULT CreateStartEndPointOn([in] eardir_enum dir, [out,retval] long* resultPointX, [out,retval] long* resultPointY);
+	//[id(9)] HRESULT CreateStartEndPointTo([in] long pointX,[in] long pointY, [in] long isstart, [out,retval] long* resultPointX, [out,retval] long* resultPointY);
+
+	//[id(10)] HRESULT SetAttributes([in] long attr);
+	//[id(11)] HRESULT GetAttributes([out,retval] long* result);
+	//[id(12)] HRESULT HasLimitedDirs([out,retval] long* result);
+	//[id(13)] HRESULT SetLimitedDirs([in] long p_ltd);
+
+	[id(1)] HRESULT GetOwner([out,retval] IAutoRouterBox** result);
+	[id(2)] HRESULT SetRect([in] long p1, [in] long p2, [in] long p3, [in] long p4);
+	[id(3)] HRESULT SetAttributes([in] long attr);
+	[id(4)] HRESULT SetLimitedDirs([in] long p_ltd);
+};
+
+interface IAutoRouterGraph;
+[
+	object,
+	uuid(6E17FD46-787A-4510-A43B-B416451F86FE),
+	dual,
+	nonextensible,
+	helpstring("IAutoRouterBox Interface"),
+	pointer_default(unique)
+]
+interface IAutoRouterBox : IDispatch{
+	[id(1)] HRESULT GetOwner([out,retval] IAutoRouterGraph** result);
+	[id(2)] HRESULT CreatePort([out,retval] IAutoRouterPort** result);
+	[id(3)] HRESULT Add([in] IAutoRouterPort* port);
+	[id(4)] HRESULT Delete([in] IAutoRouterPort* port);
+	[id(5)] HRESULT SetRect([in] long p1, [in] long p2, [in] long p3, [in] long p4);
+
+	[id(6)] HRESULT Destroy();
+};
+
+interface IAutoRouterPath;
+
+[
+	object,
+	uuid(C86D598D-C58B-4D17-93EC-8C3BF1157073),
+	dual,
+	nonextensible,
+	helpstring("IAutoRouterGraph Interface"),
+	pointer_default(unique)
+]
+interface IAutoRouterGraph : IDispatch{
+	[id(1)] HRESULT CreateBox([out, retval] IAutoRouterBox** result);
+	[id(2)] HRESULT Add([in] IAutoRouterBox* box);
+	[id(3)] HRESULT DeleteBox([in] IAutoRouterBox* box);
+	[id(4)] HRESULT ShiftBy([in] IAutoRouterBox* box, [in] long sizeX, [in] long sizeY);
+
+	[id(5)] HRESULT AutoRoute([out, retval] long* result);
+	[id(6)] HRESULT DeletePath([in] IAutoRouterPath* path);
+	[id(7)] HRESULT DeleteAll();
+	[id(8)] HRESULT GetPathAt([in] long pointX, [in] long pointY, [in] long nearness, [out, retval]  IAutoRouterPath** result);
+	[id(9)] HRESULT AddPath([in] IAutoRouterPort* startport,[in] IAutoRouterPort* endport, [out, retval]  IAutoRouterPath** result);
+
+	[id(10)] HRESULT Destroy();
+};
+[
+	object,
+	uuid(E472E1BB-9953-447E-BBE2-378C0DCB85E4),
+	dual,
+	nonextensible,
+	helpstring("IAutoRouterPath Interface"),
+	pointer_default(unique)
+]
+interface IAutoRouterPath : IDispatch{
+	[id(1)] HRESULT GetOwner([out,retval] IAutoRouterGraph** result);
+	[id(2)] HRESULT SetEndDir([in] long arpath_end);
+	[id(3)] HRESULT SetStartDir([in] long arpath_start);
+	[id(4)] HRESULT GetExtPtr([out, retval] long* address);
+	[id(5)] HRESULT SetExtPtr([in] long address);
+	[id(6)] HRESULT GetPointList([out, retval] SAFEARRAY(long) *pArr);
+
+	[id(7)] HRESULT Destroy();
+};
