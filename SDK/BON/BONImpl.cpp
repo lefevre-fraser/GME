@@ -3668,7 +3668,16 @@ namespace BON
 			return m_pType;
 		m_bAllTypeFCOs = true;
 		FCOPtr spFCO;
-		COMTHROW( getFCOI()->get_DerivedFrom( spFCO.Addr() ) );
+		VARIANT_BOOL vbInstance;
+		COMTHROW( getFCOI()->get_IsInstance( &vbInstance ) );
+		if (vbInstance) {
+			COMTHROW( getFCOI()->get_Type( spFCO.Addr() ) );
+		}
+		else
+		{
+			COMTHROW( getFCOI()->get_BaseType( spFCO.Addr() ) );
+		}
+		
 		if ( spFCO ) {
 			m_pType = FCOImpl::attachI( spFCO, ObjectImpl::m_pProject, getObjectMeta() );
 			m_pType->onRetrievedAsType( this, false );
