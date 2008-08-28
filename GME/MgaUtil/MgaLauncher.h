@@ -53,6 +53,7 @@ public:
 	STDMETHOD(RegistryBrowser)(IMgaObject * obj);
 	STDMETHOD(AnnotationBrowser)(IMgaObject * obj, IMgaRegNode * focus);
 
+	
 	STDMETHOD(RunComponent)(BSTR progid, IMgaProject *project, IMgaFCO *focusobj, IMgaFCOs *selectedobjs, long param);
 // ------- Helper functions
 
@@ -60,7 +61,7 @@ public:
 	static CString PruneConnectionString(const CString &conn);
 
 private:
-
+	//int CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodName, CComPtr<IMgaProject> param);
 };
 
 #endif//MGA_MGALAUNCHER_H

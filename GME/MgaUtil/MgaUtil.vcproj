@@ -188,7 +188,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="imagehlp.lib htmlhelp.lib"
+				AdditionalDependencies="imagehlp.lib htmlhelp.lib MSCorEE.lib"
 				ShowProgress="0"
 				OutputFile=".\Debug/MgaUtil.dll"
 				LinkIncremental="2"
