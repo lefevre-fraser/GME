@@ -144,7 +144,7 @@ namespace BonExtension.Generators
         private string generateContainmentForInterface(FCO current)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat(Model.Template.ContainmentInterface, current.memberType);
+            sb.AppendFormat(Model.Template.ContainmentInterface, current.className);
 
             return sb.ToString();
         }
