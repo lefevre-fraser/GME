@@ -360,7 +360,7 @@ int CCompDlg::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodN
     DWORD lastError = 0;
     lastError = RegOpenKeyEx(HKEY_LOCAL_MACHINE,TEXT("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727"),0,KEY_QUERY_VALUE,&key);
     if(lastError!=ERROR_SUCCESS) {
-        _putts(TEXT("Error opening HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727"));
+        AfxMessageBox("Error opening HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727");
         return 1;
     }
 
@@ -371,7 +371,7 @@ int CCompDlg::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodN
  
     if(lastError!=ERROR_SUCCESS) {
         RegCloseKey(key);
-        _putts(TEXT("Error querying HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727\\Install"));
+        AfxMessageBox("Error querying HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727\\Install");
         return 2;
     }
 
@@ -379,9 +379,9 @@ int CCompDlg::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodN
 
     // Was Install DWORD key value == 1 ??
     if(data[0]==1)
-        _putts(TEXT(".NET Framework v2.0.50727 is installed"));
+        ;//_putts(TEXT(".NET Framework v2.0.50727 is installed"));
     else {
-        _putts(TEXT(".NET Framework v2.0.50727 is NOT installed"));
+        AfxMessageBox(".NET Framework v2.0.50727 is NOT installed");
         return 3;
     } 
 
@@ -397,11 +397,14 @@ int CCompDlg::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodN
                                                        (void **)&pHost);
 
     if (!SUCCEEDED(hr)) {
-        _tprintf(TEXT("CorBindToRuntimeEx failed 0x%x\n"),hr);
+		CString csTemp;
+		long lVal = (long)hr;
+		csTemp.Format( "CorBindToRuntimeEx failed:  %f", lVal );
+		AfxMessageBox(csTemp);
         return 1;
     }
  
-    _putts(TEXT("Loaded version 2.0.50727 of the CLR\n"));
+    //_putts(TEXT("Loaded version 2.0.50727 of the CLR\n"));
  
     pHost->Start(); // Start the CLR
 
@@ -458,7 +461,9 @@ int CCompDlg::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodN
     }
     catch(_com_error& error) 
 	{
-        _tprintf(TEXT("ERROR: %s\n"),(_TCHAR*)error.Description());
+		CString csTemp;
+		csTemp.Format( "ERROR: %s", (_TCHAR*)error.Description() );
+		AfxMessageBox(csTemp);
         goto exit;
     }
 
