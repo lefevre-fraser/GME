@@ -168,9 +168,11 @@ namespace {0}
             if (current.HasChildren)
             {
                 //and add all of the children
-                foreach (FCO child in current.ChildrenRecursive)
+                foreach (DerivedWithKind child in current.ChildrenRecursive)
                 {
-                    inner.AppendFormat(Model.Template.ContainmentInner, child.className, child.ProperClassName, child.memberType);
+                    if (child.Type == DerivedWithKind.InhType.General ||
+                        child.Type == DerivedWithKind.InhType.Interface)
+                        inner.AppendFormat(Model.Template.ContainmentInner, child.Rel.className, child.Rel.ProperClassName, child.Rel.memberType);
                 }
             }
 

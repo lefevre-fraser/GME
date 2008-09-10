@@ -98,10 +98,14 @@ namespace BonExtension.Generators
             sb.Append(generateOwnMembers(ref names, ref forInterface));
 
             //genarate parents' attributes:
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                if (parent is Set)
-                    sb.Append((parent as Set).GenerateMembers(ref names, ref forInterface));
+                if (parent.Rel is Set)
+                {
+                    if (parent.Type == DerivedWithKind.InhType.General ||
+                        parent.Type == DerivedWithKind.InhType.Implementation)
+                        sb.Append((parent.Rel as Set).GenerateMembers(ref names, ref forInterface));
+                }
             }
 
             return sb.ToString();
@@ -133,9 +137,11 @@ namespace BonExtension.Generators
             if (current.HasChildren)
             {
                 //and add all of the children
-                foreach (FCO child in current.ChildrenRecursive)
+                foreach (DerivedWithKind child in current.ChildrenRecursive)
                 {
-                    inner.AppendFormat(Set.Template.SetMemberInner, child.className, child.ProperClassName, child.memberType);
+                    if (child.Type == DerivedWithKind.InhType.General ||
+                        child.Type == DerivedWithKind.InhType.Interface)
+                        inner.AppendFormat(Set.Template.SetMemberInner, child.Rel.className, child.Rel.ProperClassName, child.Rel.memberType);
                 }
             }
 
@@ -171,10 +177,11 @@ namespace BonExtension.Generators
 
             string baseInterfaces = (this.HasChildren) ? className : baseInterfaceName;
 
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                baseInterfaces = baseInterfaces + ", " + parent.Name;
-            }
+                if (parent.Type != DerivedWithKind.InhType.Implementation)
+                    baseInterfaces = baseInterfaces + ", " + parent.Rel.Name;
+            } 
 
             sb.AppendFormat(
                 FCO.Template.Class,
@@ -193,10 +200,11 @@ namespace BonExtension.Generators
 
             baseInterfaces = baseInterfaceName;
 
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                baseInterfaces = baseInterfaces + ", " + parent.Name;
-            }
+                if (parent.Type != DerivedWithKind.InhType.Implementation)
+                    baseInterfaces = baseInterfaces + ", " + parent.Rel.Name;
+            } 
 
             if (this.HasChildren)
             {

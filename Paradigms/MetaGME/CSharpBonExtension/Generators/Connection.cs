@@ -79,10 +79,11 @@ namespace BonExtension.Generators
 
             string baseInterfaces = (this.HasChildren) ? className : baseInterfaceName;
 
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                baseInterfaces = baseInterfaces + ", " + parent.Name;
-            }
+                if (parent.Type != DerivedWithKind.InhType.Implementation)
+                    baseInterfaces = baseInterfaces + ", " + parent.Rel.Name;
+            } 
 
             sb.AppendFormat(
                 FCO.Template.Class,
@@ -101,10 +102,11 @@ namespace BonExtension.Generators
 
             baseInterfaces = baseInterfaceName;
 
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                baseInterfaces = baseInterfaces + ", " + parent.Name;
-            }
+                if (parent.Type != DerivedWithKind.InhType.Implementation)
+                    baseInterfaces = baseInterfaces + ", " + parent.Rel.Name;
+            } 
 
             if (this.HasChildren)
             {
@@ -257,10 +259,14 @@ namespace BonExtension.Generators
             sb.Append(generateOwnConnects(ref alreadyGenerated, ref forInterface));
 
             //genarate parents' stuff:
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                if (parent is Connection)
-                    sb.Append((parent as Connection).GenerateConnects(ref alreadyGenerated, ref forInterface));
+                if (parent.Rel is Connection)
+                {
+                    if (parent.Type == DerivedWithKind.InhType.General ||
+                        parent.Type == DerivedWithKind.InhType.Interface)
+                        sb.Append((parent.Rel as Connection).GenerateConnects(ref alreadyGenerated, ref forInterface));
+                }
             }
 
             return sb.ToString();

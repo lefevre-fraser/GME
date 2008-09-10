@@ -215,8 +215,8 @@ namespace {0}
 
 
 
-        #region Inheritance
-        internal override IEnumerable<FCO> Parents
+        #region Inheritance        
+        internal override IEnumerable<DerivedWithKind> Parents
         {
             get
             {
@@ -225,7 +225,8 @@ namespace {0}
                     MGALib.IMgaFCO fco = mgaObject as MGALib.IMgaFCO;
                     foreach (MGALib.IMgaConnPoint conn in fco.PartOfConns)
                     {
-                        if (conn.Owner.Meta.Name == "DerivedInheritance")
+                        if (conn.Owner.Meta.Name.Contains("Derived") &&
+                            conn.Owner.Meta.Name.Contains("Inheritance"))
                         {
                             foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
@@ -234,23 +235,30 @@ namespace {0}
                                     //we have found an inheritance: connOther.target
                                     foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
                                     {
-                                        if (conn2.Owner.Meta.Name == "BaseInheritance")
+                                        if (conn2.Owner.Meta.Name.Contains("Base") &&
+                                            conn2.Owner.Meta.Name.Contains("Inheritance"))
                                         {
                                             foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                             {
                                                 if (connOther2.target.ID != conn2.target.ID)
                                                 {
+                                                    DerivedWithKind.InhType type = DerivedWithKind.InhType.General;
+                                                    if (conn2.Owner.Meta.Name.Contains("Int"))
+                                                        type = DerivedWithKind.InhType.Interface;
+                                                    else if (conn2.Owner.Meta.Name.Contains("Imp"))
+                                                        type = DerivedWithKind.InhType.Implementation;
+
                                                     if (connOther2.target.MetaBase.Name.Contains("Proxy"))
                                                     {
                                                         if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                            yield return Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO;
+                                                            yield return new DerivedWithKind(Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO, type);
                                                         else
                                                             GME.CSharp.BonExtender.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
                                                     }
                                                     else
                                                     {
                                                         if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
-                                                            yield return Object.ElementsByName[connOther2.target.Name] as FCO;
+                                                            yield return new DerivedWithKind(Object.ElementsByName[connOther2.target.Name] as FCO, type);
                                                         else
                                                         {
                                                             //TODO
@@ -269,7 +277,7 @@ namespace {0}
                 }
             }
         }
-        internal IEnumerable<FCO> Children
+        internal IEnumerable<DerivedWithKind> Children
         {
             get
             {
@@ -278,7 +286,8 @@ namespace {0}
                     MGALib.IMgaFCO fco = mgaObject as MGALib.IMgaFCO;
                     foreach (MGALib.IMgaConnPoint conn in fco.PartOfConns)
                     {
-                        if (conn.Owner.Meta.Name == "BaseInheritance")
+                        if (conn.Owner.Meta.Name.Contains("Base") &&
+                            conn.Owner.Meta.Name.Contains("Inheritance"))
                         {
                             foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
@@ -287,23 +296,31 @@ namespace {0}
                                     //we have found an inheritance: connOther.target
                                     foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
                                     {
-                                        if (conn2.Owner.Meta.Name == "DerivedInheritance")
+                                        if (conn2.Owner.Meta.Name.Contains("Derived") &&
+                                            conn2.Owner.Meta.Name.Contains("Inheritance"))
                                         {
                                             foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                             {
                                                 if (connOther2.target.ID != conn2.target.ID)
                                                 {
+                                                    DerivedWithKind.InhType type = DerivedWithKind.InhType.General;
+                                                    if (conn2.Owner.Meta.Name.Contains("Int"))
+                                                        type = DerivedWithKind.InhType.Interface;
+                                                    else if (conn2.Owner.Meta.Name.Contains("Imp"))
+                                                        type = DerivedWithKind.InhType.Implementation;
+
+
                                                     if (connOther2.target.MetaBase.Name.Contains("Proxy"))
                                                     {
                                                         if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                            yield return Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO;
+                                                            yield return new DerivedWithKind( Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO, type);
                                                         else
                                                             GME.CSharp.BonExtender.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
                                                     }
                                                     else
                                                     {
                                                         if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
-                                                            yield return Object.ElementsByName[connOther2.target.Name] as FCO;
+                                                            yield return new DerivedWithKind( Object.ElementsByName[connOther2.target.Name] as FCO, type);
                                                         else
                                                         {
                                                             //todo
@@ -323,17 +340,17 @@ namespace {0}
             }
         }
 
-        internal IEnumerable<FCO> ChildrenRecursive
+        internal IEnumerable<DerivedWithKind> ChildrenRecursive
         {
             get 
             {
-                foreach (FCO child in Children)
+                foreach (DerivedWithKind child in Children)
                 {
                     yield return child;
                 }
-                foreach (FCO child in Children)
+                foreach (DerivedWithKind child in Children)
                 {
-                    foreach (FCO child2 in child.ChildrenRecursive)
+                    foreach (DerivedWithKind child2 in child.Rel.ChildrenRecursive)
                     {
                         yield return child2;
                     }
@@ -345,9 +362,10 @@ namespace {0}
         {
             get
             {
-                foreach (FCO item in Children)
+                foreach (DerivedWithKind item in Children)
                 {
-                    return true;
+                    if (item.Type != DerivedWithKind.InhType.Implementation)
+                        return true;
                 }
                 return false;
             }
@@ -362,9 +380,11 @@ namespace {0}
             sb.Append(generateOwnAttributes(ref names, ref forInterface));
 
             //genarate parents' attributes:
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                sb.Append(parent.GenerateAttributes(ref names, ref forInterface));
+                if (parent.Type == DerivedWithKind.InhType.General ||
+                    parent.Type == DerivedWithKind.InhType.Implementation)
+                    sb.Append(parent.Rel.GenerateAttributes(ref names, ref forInterface));
             }            
 
             return sb.ToString();
@@ -430,7 +450,7 @@ namespace {0}
                                     {
                                         if (attr.Meta.Name == "MenuItems")
                                         {
-                                            string[] items = attr.Value.ToString().Split('\n');
+                                            string[] items = attr.Value.ToString().Split(new char[]{'\n'}, StringSplitOptions.RemoveEmptyEntries);
                                             foreach (string s in items)
                                             {
                                                 stuff.Append(s);
@@ -591,9 +611,11 @@ namespace {0}
             sb.Append(generateOwnConnections(ref names, ref forInterface));
 
             //genarate parents' attributes:
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                sb.Append(parent.GenerateConnections(ref names, ref forInterface));
+                if (parent.Type == DerivedWithKind.InhType.General ||
+                    parent.Type == DerivedWithKind.InhType.Interface)
+                    sb.Append(parent.Rel.GenerateConnections(ref names, ref forInterface));
             }
 
             return sb.ToString();
@@ -625,9 +647,11 @@ namespace {0}
             if (current.HasChildren)
             {
                 //and add all of the children
-                foreach (FCO child in current.ChildrenRecursive)
+                foreach (DerivedWithKind child in current.ChildrenRecursive)
                 {
-                    inner.AppendFormat(FCO.Template.ConnectionInner, child.className, child.ProperClassName, "IMgaConnection");
+                    if (child.Type == DerivedWithKind.InhType.General ||
+                        child.Type == DerivedWithKind.InhType.Interface)
+                        inner.AppendFormat(FCO.Template.ConnectionInner, child.Rel.className, child.Rel.ProperClassName, "IMgaConnection");
                 }
             }
 
@@ -755,9 +779,11 @@ namespace {0}
             sb.Append(generateOwnRelationships(ref names, ref forInterface));
 
             //generate parents' relations:
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                sb.Append(parent.GenerateRelationships(ref names, ref forInterface));
+                if (parent.Type == DerivedWithKind.InhType.General ||
+                    parent.Type == DerivedWithKind.InhType.Interface)
+                    sb.Append(parent.Rel.GenerateRelationships(ref names, ref forInterface));
             }
 
             return sb.ToString();
@@ -788,9 +814,11 @@ namespace {0}
             if (current.HasChildren)
             {
                 //and add all of the children
-                foreach (FCO child in current.ChildrenRecursive)
+                foreach (DerivedWithKind child in current.ChildrenRecursive)
                 {
-                    inner.AppendFormat(FCO.Template.RelationshipInner, child.className, child.ProperClassName, child.memberType);
+                    if (child.Type == DerivedWithKind.InhType.General ||
+                        child.Type == DerivedWithKind.InhType.Interface)
+                        inner.AppendFormat(FCO.Template.RelationshipInner, child.Rel.className, child.Rel.ProperClassName, child.Rel.memberType);
                 }
             }
 
@@ -824,9 +852,10 @@ namespace {0}
 
             string baseInterfaces = (this.HasChildren) ? className : baseInterfaceName;
 
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                baseInterfaces = baseInterfaces + ", " + parent.Name;
+                if (parent.Type != DerivedWithKind.InhType.Implementation)
+                    baseInterfaces = baseInterfaces + ", " + parent.Rel.Name;
             } 
 
             sb.AppendFormat(
@@ -846,10 +875,11 @@ namespace {0}
 
             baseInterfaces = baseInterfaceName;
 
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                baseInterfaces = baseInterfaces + ", " + parent.Name;
-            }
+                if (parent.Type != DerivedWithKind.InhType.Implementation)
+                    baseInterfaces = baseInterfaces + ", " + parent.Rel.Name;
+            } 
 
             if (this.HasChildren)
             {
@@ -858,16 +888,16 @@ namespace {0}
                 {
                     //have to generate interface as well
                     sb.AppendFormat(
-                    FCO.Template.Interface,
-                    namespaceName,
-                    className,
-                    baseInterfaces,
-                    memberType,
-                    GenerateCommon(),
-                    sbAttrib.ToString(),
-                    sbConns.ToString(),
-                    sbRels.ToString(),
-                    "");
+                        FCO.Template.Interface,
+                        namespaceName,
+                        className,
+                        baseInterfaces,
+                        memberType,
+                        GenerateCommon(),
+                        sbAttrib.ToString(),
+                        sbConns.ToString(),
+                        sbRels.ToString(),
+                        "");
                 }
             }
 

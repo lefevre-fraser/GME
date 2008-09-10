@@ -170,9 +170,24 @@ namespace {0}
             }
         }
 
-        internal virtual IEnumerable<FCO> Parents
+        public class DerivedWithKind
         {
-            get { return new List<FCO>();}
+            public enum InhType
+            {
+                General, Implementation, Interface
+            }
+            public FCO Rel;
+            public InhType Type;
+            public DerivedWithKind(FCO rel, InhType type)
+            {
+                this.Rel = rel;
+                this.Type = type;
+            }
+        }
+
+        internal virtual IEnumerable<DerivedWithKind> Parents
+        {
+            get { return new List<DerivedWithKind>(); }
         }
 
         internal virtual bool HasChildren
@@ -242,10 +257,14 @@ namespace {0}
             sb.Append(generateOwnCreateNews(ref containers, realCurrentObject));
 
             //genarate parents' attributes:
-            foreach (FCO parent in this.Parents)
+            foreach (DerivedWithKind parent in this.Parents)
             {
-                if (parent is FCO)
-                    sb.Append((parent as FCO).GenerateCreateNews(ref containers, realCurrentObject));
+                if (parent.Rel is FCO)
+                {
+                    if (parent.Type == DerivedWithKind.InhType.General ||
+                        parent.Type == DerivedWithKind.InhType.Interface)
+                        sb.Append((parent.Rel as FCO).GenerateCreateNews(ref containers, realCurrentObject));
+                }
             }
 
             return sb.ToString();
