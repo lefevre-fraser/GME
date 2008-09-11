@@ -662,24 +662,36 @@ void CColourPopup::SetWindowSize()
    }
 
     // Need to check it'll fit on screen: Too far right?
-    CSize ScreenSize(::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN));
-    if (m_WindowRect.right > ScreenSize.cx)
-        m_WindowRect.OffsetRect(-(m_WindowRect.right - ScreenSize.cx), 0);
+	//
+	// Beware of multi monitor systems! GetSystemMetrics(SM_CYSCREEN) and GetSystemMetrics(SM_CXSCREEN) is just for the primary screen!
+	// We will use the dimensions of the virtual screen area (composed by the multiple monitor),
+	// but we assume rectangular area, so if the area is composed by different resolution monitors this safety code
+	// can be also misleading, but 99% it will be good. For more info see MSDN chapters about multiple monitor displays:
+	// http://msdn.microsoft.com/en-us/library/ms534611(VS.85).aspx
 
-    // Too far left?
-    if (m_WindowRect.left < 0)
-        m_WindowRect.OffsetRect( -m_WindowRect.left, 0);
+	int virtualScreenLeft	= GetSystemMetrics(SM_XVIRTUALSCREEN);
+	int virtualScreenTop	= GetSystemMetrics(SM_YVIRTUALSCREEN);
+	int virtualScreenRight	= virtualScreenLeft + GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	int virtualScreenBottom	= virtualScreenTop + GetSystemMetrics(SM_CYVIRTUALSCREEN);
 
-    // Bottom falling out of screen?
-    if (m_WindowRect.bottom > ScreenSize.cy)
-    {
-        CRect ParentRect;
-        m_pParent->GetWindowRect(ParentRect);
-        m_WindowRect.OffsetRect(0, -(ParentRect.Height() + m_WindowRect.Height()));
-    }
+	// Too far right?
+	if (m_WindowRect.right > virtualScreenRight)
+		m_WindowRect.OffsetRect(virtualScreenRight - m_WindowRect.right, 0);
 
-    // Set the window size and position
-    MoveWindow(m_WindowRect, TRUE);
+	// Too far left?
+	if (m_WindowRect.left < virtualScreenLeft)
+		m_WindowRect.OffsetRect(virtualScreenLeft - m_WindowRect.left, 0);
+
+	// Too far top?
+	if (m_WindowRect.top < virtualScreenTop)
+		m_WindowRect.OffsetRect(virtualScreenTop - m_WindowRect.top, 0);
+
+	// Bottom falling out of screen?
+	if (m_WindowRect.bottom > virtualScreenBottom)
+		m_WindowRect.OffsetRect(virtualScreenBottom - m_WindowRect.bottom, 0);
+
+	// Set the window size and position
+	MoveWindow(m_WindowRect, TRUE);
 }
 
 void CColourPopup::CreateToolTips()

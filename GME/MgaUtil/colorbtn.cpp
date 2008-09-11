@@ -406,39 +406,50 @@ BOOL CColorBtnDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-    RECT r,r2;
-	
+	RECT r, r2;
+
 	parent->GetWindowRect(&r);
-    
-    // Move the dialog to be below the button
 
-    SetWindowPos(NULL,r.left,r.bottom,0,0,SWP_NOSIZE|SWP_NOZORDER);
+	// Move the dialog to be below the button
 
-    GetWindowRect(&r2);
+	SetWindowPos(NULL, r.left, r.bottom, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-    // Check to see if the dialog has a portion outside the
-    // screen, if so, adjust.
-    
-    if (r2.bottom > GetSystemMetrics(SM_CYSCREEN))
-    {   
-        r2.top = r.top-(r2.bottom-r2.top);        
-    }
+	GetWindowRect(&r2);
 
-    if (r2.right > GetSystemMetrics(SM_CXSCREEN))
-    {
-        r2.left = GetSystemMetrics(SM_CXSCREEN) - (r2.right-r2.left);
-    }
+	// Check to see if the dialog has a portion outside the screen, if so, adjust.
+	//
+	// Beware of multi monitor systems! GetSystemMetrics(SM_CYSCREEN) and GetSystemMetrics(SM_CXSCREEN) is just for the primary screen!
+	// We will use the dimensions of the virtual screen area (composed by the multiple monitors),
+	// but we assume rectangular area, so if the area is composed by different resolution monitors this safety code
+	// can be also misleading, but 99% it will be good. For more info see MSDN chapters about multiple monitor displays:
+	// http://msdn.microsoft.com/en-us/library/ms534611(VS.85).aspx
 
-    SetWindowPos(NULL,r2.left,r2.top,0,0,SWP_NOSIZE|SWP_NOZORDER);
+	int virtualScreenLeft	= GetSystemMetrics(SM_XVIRTUALSCREEN);
+	int virtualScreenTop	= GetSystemMetrics(SM_YVIRTUALSCREEN);
+	int virtualScreenRight	= virtualScreenLeft + GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	int virtualScreenBottom	= virtualScreenTop + GetSystemMetrics(SM_CYVIRTUALSCREEN);
+	if (r2.bottom > virtualScreenBottom) {
+		r2.top = virtualScreenBottom - (r2.bottom - r2.top);
+	}
+	if (r2.top < virtualScreenTop)
+		r2.top = virtualScreenTop;
 
-    // Capture the mouse, this allows the dialog to close when
-    // the user clicks outside.
+	if (r2.right > virtualScreenRight) {
+		r2.left = virtualScreenRight - (r2.right - r2.left);
+	}
+	if (r2.left < virtualScreenLeft)
+		r2.left = virtualScreenLeft;
 
-    // Remember that the dialog has no "close" button.
+	SetWindowPos(NULL, r2.left, r2.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-    SetCapture();
-	
-	return TRUE; 
+	// Capture the mouse, this allows the dialog to close when
+	// the user clicks outside.
+
+	// Remember that the dialog has no "close" button.
+
+	SetCapture();
+
+	return TRUE;
 }
 
 
