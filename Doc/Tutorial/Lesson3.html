@@ -69,20 +69,28 @@ There are also different technologies available to access GME data:
   most applications. BON provides a network of C++ objects. Each of these 
   represents an object in the GME model database. C++ methods provide convenient 
   read/write access to the objects' properties, attributes, and relations.
+ </li>
  <li>
   GME is a COM/DCOM-based architecture. Therefore, <b>COM</b> is the primary 
   interface used to access GME data. It is also the most efficient interface. 
   However, in addition to COM programming, it requires taking care of the full 
   GME interface protocol, including transactions, territories, event 
   handling, etc.
+ </li>
  <li>
   The <b>GME Unified Data Model</b> module (<b>UDM-GME</b>) is an 
   experimental technology; it creates interpreters that use an automatically 
   generated paradigm-dependent programmatic interface.
+ </li>
+ <li>
+  <b>Builder Object Network II (BON II)</b> is a newer way to write C++ based interpreters. 
+  BON II scales better than BON in case of large models, because
+  an intelligent fetch mechanism only fetch objects just one time and on-demand.
+ </li>
 </ul>
 
 This lesson discusses the process of building a Builder Object Network-based 
-interpreter. The application domain and paradigm are those used in the 
+interpreter (not the BON II). The application domain and paradigm are those used in the 
 <a href="Lesson2.html">previous lesson</a>. Our interpreter will complete a 
 simple task: it will print out a list of all routers, along with their ports and 
 IP addresses.
@@ -187,15 +195,15 @@ folder (e.g. Program Files\GME\SDK\CreateNewComponent.exe)
 
 
 <center>
-<img SRC="L3/F2/Fig3_2_new.jpg">
+<img SRC="L3/F2/Fig3_2.png">
 <br><b>Fig 3.2 CreateNewComponent.exe</b>
 </center>
 <p><br>
 
-
+Select Builder Object Network (beware: you should change it from BON II, which
+is the default setting) radio button, specify a suitable directory, and click OK. 
 This program unpacks the necessary files for the selected component technology. 
-Specify Builder Object Network and a suitable directory, and click OK. A message 
-box reports the number of files extracted, and a second program, 
+A message box reports the number of files extracted, and a second program, 
 <b>ConfigureComponent.exe</b>, is initialized just before CreateNewComponent 
 terminates. 
 <p><br>
@@ -213,7 +221,7 @@ whenever something needs to be changed.
 
 
 <center>
-<img SRC="L3/F3/Fig3_3.gif">
+<img SRC="L3/F3/Fig3_3.png">
 <br><b>Fig 3.3 ConfigureComponent.exe</b> 
 </center>
 <p><br>
@@ -245,7 +253,7 @@ file missing from the set of component source files.
 <b><u>3.2.3 Execute the component</u></b> 
 <p>
 
-Open the Visual Studio workspace, "<b>BONComponent.dsw</b>". 
+Open the Visual Studio Solution file (Visual Studio .NET 2003 or newer), "<b>BONComponent.sln</b>". 
 <p>
 
 A source file, Component.cpp, is opened along with the workspace. Most of the 
