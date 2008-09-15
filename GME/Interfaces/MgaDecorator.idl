@@ -25,7 +25,15 @@ typedef enum decorator_error {
 [helpstring("Object location is not initialized. Call SetLocation() before calling this function.")]
 	E_DECORATOR_LOCISNOTSET = 0x80737004,
 [helpstring("Specified port (based on IMgaFCO) not found.")]
-	E_DECORATOR_PORTNOTFOUND	=	0x80737005
+	E_DECORATOR_PORTNOTFOUND	=	0x80737005,
+[helpstring("In case of new decorator interface use the new InitializeEx and supply parent HWND.")]
+	E_DECORATOR_USING_DEPRECATED_INIT	= 0x80737006,
+[helpstring("Not implemented method.")]
+	E_DECORATOR_NOT_IMPLEMENTED	= 0x80737007,
+[helpstring("Event handled / consumed.")]
+	S_DECORATOR_EVENT_HANDLED	= 0x00737001,
+[helpstring("Event not handled.")]
+	S_DECORATOR_EVENT_NOT_HANDLED	= 0x00737002
 } decorator_error;
 
 // Feature codes
@@ -42,25 +50,88 @@ const unsigned long	F_RESIZEAFTERMOD = 1<<7;
 	[
 		object,
 		uuid(1E13054E-5AD1-41EB-8FF1-C3901D99FDCC),
+		oleautomation,
 		helpstring("IMgaDecorator Interface"),
 		pointer_default(unique)
 	]
 	interface IMgaDecorator : IUnknown
 	{
-		[id(1), helpstring("method Initialize")] HRESULT Initialize([in] IMgaProject* project, [in] IMgaMetaPart *meta, [in] IMgaFCO *obj);
+		[id(1), helpstring("method Initialize")] HRESULT Initialize([in] IMgaProject* project, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj);
 		[id(2), helpstring("method Destroy")] HRESULT Destroy();
-		[id(3), helpstring("method GetMnemonic")] HRESULT GetMnemonic([out] BSTR *mnemonic);
-		[id(4), helpstring("method GetFeatures")] HRESULT GetFeatures([out] feature_code *features);
+		[id(3), helpstring("method GetMnemonic")] HRESULT GetMnemonic([out] BSTR* mnemonic);
+		[id(4), helpstring("method GetFeatures")] HRESULT GetFeatures([out] feature_code* features);
 		[id(5), helpstring("method SetParam")] HRESULT SetParam([in] BSTR name, [in] VARIANT value);
-		[id(6), helpstring("method GetParam")] HRESULT GetParam([in] BSTR name, [out] VARIANT *value);
+		[id(6), helpstring("method GetParam")] HRESULT GetParam([in] BSTR name, [out] VARIANT* value);
 		[id(7), helpstring("method SetActive")] HRESULT SetActive([in] VARIANT_BOOL isActive);
 		[id(8), helpstring("method GetPreferredSize")] HRESULT GetPreferredSize([out] long* sizex, [out] long* sizey);
 		[id(9), helpstring("method SetLocation")] HRESULT SetLocation([in] long sx, [in] long sy, [in] long ex, [in] long ey);
-		[id(10), helpstring("method GetLocation")] HRESULT GetLocation([out] long *sx, [out] long *sy, [out] long *ex, [out] long *ey);
-		[id(11), helpstring("method GetLabelLocation")] HRESULT GetLabelLocation([out] long *sx, [out] long *sy, [out] long *ex, [out] long *ey);
-		[id(12), helpstring("method GetPortLocation")] HRESULT GetPortLocation([in] IMgaFCO *fco, [out] long *sx, [out] long *sy, [out] long *ex, [out] long *ey);
-		[id(13), helpstring("method GetPorts")] HRESULT GetPorts([out, retval] IMgaFCOs **portFCOs);
+		[id(10), helpstring("method GetLocation")] HRESULT GetLocation([out] long* sx, [out] long* sy, [out] long* ex, [out] long* ey);
+		[id(11), helpstring("method GetLabelLocation")] HRESULT GetLabelLocation([out] long* sx, [out] long* sy, [out] long* ex, [out] long* ey);
+		[id(12), helpstring("method GetPortLocation")] HRESULT GetPortLocation([in] IMgaFCO* fco, [out] long* sx, [out] long* sy, [out] long* ex, [out] long* ey);
+		[id(13), helpstring("method GetPorts")] HRESULT GetPorts([out, retval] IMgaFCOs** portFCOs);
 		[id(14), helpstring("method Draw")] HRESULT Draw([in] HDC hdc);
 		[id(15), helpstring("method SaveState")] HRESULT SaveState();
-		// TODO: Mouse events
+	};
+
+	[
+		object,
+		uuid(1D63D045-28C9-4902-8E5F-46F4AC1F8C5B),
+		oleautomation,
+		helpstring("IMgaNewDecoratorEvents Interface"),
+		pointer_default(unique)
+	]
+	interface IMgaNewDecoratorEvents : IUnknown
+	{
+		[id(1), helpstring("method Refresh needed")] HRESULT Refresh();
+		[id(2), helpstring("method the editing operation is canceled")] HRESULT OperationCanceled();
+		[id(3), helpstring("method CursorChanged")] HRESULT CursorChanged([in] LONG newCursorID);
+		[id(4), helpstring("method CursorRestored")] HRESULT CursorRestored();
+
+		[id(5), helpstring("method TitleEditingStarted")] HRESULT TitleEditingStarted([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(6), helpstring("method TitleEditingFinished")] HRESULT TitleEditingFinished([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(7), helpstring("method TitleChanged")] HRESULT TitleChanged([in] BSTR newTitle);
+		[id(8), helpstring("method TitleMovingStarted")] HRESULT TitleMovingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(9), helpstring("method TitleMoving")] HRESULT TitleMoving([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(10), helpstring("method TitleMovingFinished")] HRESULT TitleMovingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(11), helpstring("method TitleMoved")] HRESULT TitleMoved([in] LONG nType, [in] LONG x, [in] LONG y);
+		[id(12), helpstring("method TitleResizingStarted")] HRESULT TitleResizingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(13), helpstring("method TitleResizing")] HRESULT TitleResizing([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(14), helpstring("method TitleResizingFinished")] HRESULT TitleResizingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(15), helpstring("method TitleResized")] HRESULT TitleResized([in] LONG nType, [in] LONG cx, [in] LONG cy);
+
+		[id(16), helpstring("method WindowMovingStarted")] HRESULT WindowMovingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(17), helpstring("method WindowMoving")] HRESULT WindowMoving([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(18), helpstring("method WindowMovingFinished")] HRESULT WindowMovingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(19), helpstring("method WindowMoved")] HRESULT WindowMoved([in] LONG nType, [in] LONG x, [in] LONG y);
+
+		[id(20), helpstring("method WindowResizingStarted")] HRESULT WindowResizingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(21), helpstring("method WindowResizing")] HRESULT WindowResizing([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(22), helpstring("method WindowResizingFinished")] HRESULT WindowResizingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(23), helpstring("method WindowResized")] HRESULT WindowResized([in] LONG nType, [in] LONG cx, [in] LONG cy);
+	};
+
+	[
+		object,
+		uuid(2BEAD76C-126E-405D-AAC6-B9CA39067006),
+		oleautomation,
+		helpstring("IMgaNewDecorator Interface"),
+		pointer_default(unique)
+	]
+	interface IMgaNewDecorator : IMgaDecorator
+	{
+		[id(20), helpstring("method InitializeEx")] HRESULT InitializeEx([in] IMgaProject* project, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj, [in] IMgaNewDecoratorEvents* eventSink, [in] ULONGLONG parentWnd);
+		[id(21), helpstring("method SetSelected")] HRESULT SetSelected([in] VARIANT_BOOL isSelected);
+		[id(22), helpstring("method MouseMoved")] HRESULT MouseMoved([in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(23), helpstring("method MouseLeftButtonDown")] HRESULT MouseLeftButtonDown([in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(24), helpstring("method MouseLeftButtonUp")] HRESULT MouseLeftButtonUp([in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(25), helpstring("method MouseLeftButtonDoubleClick")] HRESULT MouseLeftButtonDoubleClick([in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(26), helpstring("method MouseRightButtonDown")] HRESULT MouseRightButtonDown([in] ULONGLONG hCtxMenu, [in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(27), helpstring("method MouseRightButtonUp")] HRESULT MouseRightButtonUp([in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(28), helpstring("method MouseRightButtonDoubleClick")] HRESULT MouseRightButtonDoubleClick([in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(29), helpstring("method MouseMiddleButtonDown")] HRESULT MouseMiddleButtonDown([in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(30), helpstring("method MouseMiddleButtonUp")] HRESULT MouseMiddleButtonUp([in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(31), helpstring("method MouseMiddleButtonDoubleClick")] HRESULT MouseMiddleButtonDoubleClick([in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(32), helpstring("method MouseWheelTurned")] HRESULT MouseWheelTurned([in] ULONG nFlags, [in] LONG distance, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(33), helpstring("method MenuItemSelected")] HRESULT MenuItemSelected([in] ULONG menuItemId, [in] ULONG nFlags, [in] LONG lpointx, [in] LONG lpointy, [in] LONG dpointx, [in] LONG dpointy, [in] LONG zoomPercent);
+		[id(34), helpstring("method OperationCanceled")] HRESULT OperationCanceled();
 	};
