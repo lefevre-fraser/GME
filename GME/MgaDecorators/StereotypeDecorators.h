@@ -14,66 +14,10 @@
 #include "mga.h"
 #include <vector>
 #include <map>
+#include "PreferenceVariant.h"
 
 namespace Decorator
 {
-	enum ELocation;
-	enum ECoordRefPoint;
-	class BitmapBase;
-	class BackgroundTile;
-	typedef std::vector<BackgroundTile> TileVector;
-
-	struct PreferenceVariant;
-
-	typedef std::map<CString,PreferenceVariant> PreferenceMap;
-
-//################################################################################################
-//
-//	STRUCT : PreferenceVariant
-//
-//################################################################################################
-
-	struct PreferenceVariant
-	{
-		typedef enum {
-			PVV_Boolean = 0,
-			PVV_String,
-			PVV_Long,
-			PVV_Double,
-			PVV_Color,
-			PVV_Bitmap,
-			PVV_Tiles,
-			PVV_Location
-		} Type;
-
-		typedef union {
-			bool bValue;
-			long lValue;
-			double dValue;
-			CString* pstrValue;
-			COLORREF crValue;
-			BitmapBase* pBitmap;
-			TileVector* pTiles;
-			ELocation eLocation;
-		} Value;
-
-		Type eType;
-		Value uValue;
-
-		PreferenceVariant( bool bValue = false );
-		PreferenceVariant( long lvalue );
-		PreferenceVariant( double dValue );
-		PreferenceVariant( const CString& strValue );
-		PreferenceVariant( COLORREF crValue );
-		PreferenceVariant( ELocation eLocation );
-		PreferenceVariant( BitmapBase* pBitmap );
-		PreferenceVariant( TileVector* pTiles );
-
-		PreferenceVariant( const PreferenceVariant& pv );
-		PreferenceVariant& operator=( const PreferenceVariant& pv );
-		~PreferenceVariant();
-	};
-
 //################################################################################################
 //
 //	CLASS : DecoratorBase
@@ -84,25 +28,25 @@ namespace Decorator
 	{
 		protected :
 			CComPtr<IMgaFCO>			m_spFCO;
-			CComPtr<IMgaMetaPart>	m_spPart;
-			objtype_enum					m_eType;
+			CComPtr<IMgaMetaPart>		m_spPart;
+			objtype_enum				m_eType;
 			BitmapBase*					m_pBitmap;
-			TileVector*						m_pTileVector;
-			CRect							m_Rect;
-			CString							m_strName;
-			std::vector<CString>				m_vecName;
-			ELocation						m_eNameLocation;
-			bool							m_bNameEnabled;
-			long							m_iNameWrapCount;
+			TileVector*					m_pTileVector;
+			CRect						m_Rect;
+			CString						m_strName;
+			std::vector<CString>		m_vecName;
+			ELocation					m_eNameLocation;
+			bool						m_bNameEnabled;
+			long						m_iNameWrapCount;
 			COLORREF					m_crName;
-			bool							m_bHasViolation;
-			bool							m_bActive;
-			int								m_iFontKey;
-			int								m_iMaxTextLength;
-			long							m_lBorderWidth;
-			bool							m_bReferenced;
+			bool						m_bHasViolation;
+			bool						m_bActive;
+			int							m_iFontKey;
+			int							m_iMaxTextLength;
+			long						m_lBorderWidth;
+			bool						m_bReferenced;
 			COLORREF					m_crOverlay;
-			bool							m_bOverlay;
+			bool						m_bOverlay;
 			COLORREF					m_crBorder;
 
 		protected :
@@ -115,14 +59,14 @@ namespace Decorator
 			CRect					getLocation() const;
 			virtual void 			setActive( bool bActive );
 			void					setReferenced();
-			CComPtr<IMgaFCO>	getFCO() const;
+			CComPtr<IMgaFCO>		getFCO() const;
 			objtype_enum			getType() const;
 			virtual CSize			getPreferredSize() const;
 			virtual void			setBoxLocation( const CRect& cRect );
 			virtual CRect			getBoxLocation( bool bWithBorder = false ) const;
 			virtual CPoint			getLabelPosition() const;
 			virtual CRect			getLabelLocation() const;
-			ECoordRefPoint		getAlignment() const;
+			ECoordRefPoint			getAlignment() const;
 			long					getBorderWidth( bool bActive = true ) const;
 
 			void 					draw( CDC* pDC ) const;
@@ -143,9 +87,9 @@ namespace Decorator
 		: public DecoratorBase
 	{
 		private :
-			CPoint	m_ptInner;
-			bool	m_bInsideContainer;
-			ELocation m_eAdjust;
+			CPoint		m_ptInner;
+			bool		m_bInsideContainer;
+			ELocation	m_eAdjust;
 
 		public :
 			PortDecorator( CComPtr<IMgaFCO> spFCO, const CPoint& ptInner );
@@ -229,7 +173,7 @@ namespace Decorator
 		private :
 			std::vector<PortDecorator*>		m_vecLeftPorts;
 			std::vector<PortDecorator*>		m_vecRightPorts;
-			CComPtr<IMgaMetaAspect>	m_spAspect;
+			CComPtr<IMgaMetaAspect>			m_spAspect;
 			long							m_iMaxPortTextLength;
 			COLORREF						m_crPortText;
 			bool							m_bPrtLabInside;
@@ -244,7 +188,7 @@ namespace Decorator
 			virtual void				setBoxLocation( const CRect& cRect );
 			virtual void 				setActive( bool bActive );
 			std::vector<PortDecorator*>	getPorts() const;
-			PortDecorator*			getPort( CComPtr<IMgaFCO> ) const;
+			PortDecorator*				getPort( CComPtr<IMgaFCO> ) const;
 
 			virtual void				drawBackground( CDC* pDC ) const;
 
@@ -264,7 +208,7 @@ namespace Decorator
 		: public TypeableDecorator
 	{
 		private :
-			DecoratorBase*	m_pReferenced;
+			DecoratorBase*		m_pReferenced;
 			bool 				m_bIconRequired;
 
 		public :
@@ -275,7 +219,7 @@ namespace Decorator
 			virtual CSize			getPreferredSize() const;
 			virtual void			setBoxLocation( const CRect& cRect );
 			virtual void 			setActive( bool bActive );
-			DecoratorBase*		getReferenced() const;
+			DecoratorBase*			getReferenced() const;
 
 			virtual void			drawBackground( CDC* pDC ) const;
 			virtual void			drawIcons( CDC* pDC ) const;

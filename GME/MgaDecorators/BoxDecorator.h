@@ -33,15 +33,11 @@ class ATL_NO_VTABLE CBoxDecorator :
 {
 	private :
 		CComPtr<IMgaProject> 		m_spProject;
-		CComPtr<IMgaMetaPart> 			m_spPart;
+		CComPtr<IMgaMetaPart> 		m_spPart;
 		CComPtr<IMgaFCO> 			m_spFCO;
 
 		Decorator::DecoratorBase*	m_pDecorator;
-		bool							m_bLocationSet;
-
-	/*	static int m_nOfInits;
-		static GdiplusStartupInput  m_gdiplusStartupInput; // needed for GDI+
-		static ULONG_PTR m_gdiplusToken;*/
+		bool						m_bLocationSet;
 
 	public:
 		CBoxDecorator();

@@ -4,6 +4,7 @@
 //
 #define IDS_PROJNAME                    100
 #define IDR_BOXDECORATOR                101
+#define IDR_NEWBOXDECORATOR             102
 #define IDB_DEFAULTREFTONULL            159
 #define IDB_REFERENCE                   159
 #define IDB_DEFAULTATOM                 160
@@ -20,6 +21,7 @@
 #define IDB_DEFAULTMODELPORT            176
 #define IDB_MODELPORT                   176
 #define IDB_ICON_TYPE                   201
+#define IDC_TEXTEDIT                    201
 #define IDB_ICON_SUBTYPE                202
 #define IDB_ICON_INSTANCE               203
 #define IDB_ICON_REFERENCE              204
@@ -28,14 +30,17 @@
 #define IDB_ICON_REFERENCE_DIS          207
 #define IDB_ICON_SUBTYPE_DIS            208
 #define IDB_ICON_TYPE_DIS               209
+#define IDD_INPLACEEDITDIALOG           210
+#define IDI_CANCEL                      212
+#define IDI_OK                          213
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        210
+#define _APS_NEXT_RESOURCE_VALUE        214
 #define _APS_NEXT_COMMAND_VALUE         32768
-#define _APS_NEXT_CONTROL_VALUE         201
-#define _APS_NEXT_SYMED_VALUE           103
+#define _APS_NEXT_CONTROL_VALUE         202
+#define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif

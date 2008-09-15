@@ -32,7 +32,6 @@ CBoxDecorator::CBoxDecorator()
 
 CBoxDecorator::~CBoxDecorator()
 {
-
 }
 
 STDMETHODIMP CBoxDecorator::Initialize( IMgaProject *pProject, IMgaMetaPart *pPart, IMgaFCO *pFCO )

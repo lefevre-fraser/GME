@@ -1,0 +1,26 @@
+HKCR
+{
+	Mga.MgaNewDecorator.1 = s 'MgaNewDecorator Class'
+	{
+		CLSID = s '{F42CEA82-01DE-47A0-828E-C9A707E864E6}'
+	}
+	Mga.MgaNewDecorator = s 'MgaNewDecorator Class'
+	{
+		CLSID = s '{F42CEA82-01DE-47A0-828E-C9A707E864E6}'
+		CurVer = s 'Mga.MgaNewDecorator.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {F42CEA82-01DE-47A0-828E-C9A707E864E6} = s 'MgaNewDecorator Class'
+		{
+			ProgID = s 'Mga.MgaNewDecorator.1'
+			VersionIndependentProgID = s 'Mga.MgaNewDecorator'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{F5D9A9A0-5A1C-40B8-9EEF-4890FEECC8CD}'
+		}
+	}
+}

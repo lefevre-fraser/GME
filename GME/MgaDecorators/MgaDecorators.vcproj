@@ -57,6 +57,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;OLD_DECORATOR_LOOKANDFEEL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile=".\Debug/MgaDecorators.pch"
@@ -163,6 +164,7 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile=".\Release/MgaDecorators.pch"
@@ -398,6 +400,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\DecoratorExceptions.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DecoratorInterface.cpp"
+				>
+			</File>
+			<File
 				RelativePath="DecoratorUtil.cpp"
 				>
 				<FileConfiguration
@@ -560,6 +570,18 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\NewBoxDecorator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewBoxDecoratorImpl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PreferenceVariant.cpp"
+				>
+			</File>
+			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -615,6 +637,94 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<Filter
+				Name="Parts"
+				>
+				<File
+					RelativePath=".\Parts\AtomBitmapPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\BitmapAndLabelPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\BitmapPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\BoxCompositePart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\CompositePart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\InPlaceEditDialog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\LabelPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\ModelComplexPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\PartBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\PartInterface.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\PortBitmapPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\PortLabelPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\PortPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\ReferenceBitmapPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\ResizablePart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\ResizeLogic.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\SetBitmapPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\TextPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\TypeableBitmapPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\TypeableLabelPart.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\VectorPart.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -645,11 +755,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DecoratorExceptions.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DecoratorInterface.h"
+				>
+			</File>
+			<File
 				RelativePath="DecoratorUtil.h"
 				>
 			</File>
 			<File
 				RelativePath="DIBAPI.H"
+				>
+			</File>
+			<File
+				RelativePath=".\NewBoxDecorator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewBoxDecoratorImpl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PreferenceVariant.h"
 				>
 			</File>
 			<File
@@ -668,6 +798,94 @@
 				RelativePath=".\targetver.h"
 				>
 			</File>
+			<Filter
+				Name="Parts"
+				>
+				<File
+					RelativePath=".\Parts\AtomBitmapPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\BitmapAndLabelPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\BitmapPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\BoxCompositePart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\CompositePart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\InPlaceEditDialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\LabelPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\ModelComplexPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\PartBase.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\PartInterface.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\PortBitmapPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\PortLabelPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\PortPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\ReferenceBitmapPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\ResizablePart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\ResizeLogic.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\SetBitmapPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\TextPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\TypeableBitmapPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\TypeableLabelPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Parts\VectorPart.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -683,6 +901,10 @@
 			</File>
 			<File
 				RelativePath="BoxDecorator.rgs"
+				>
+			</File>
+			<File
+				RelativePath="res\cancel.ico"
 				>
 			</File>
 			<File
@@ -726,7 +948,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NewBoxDecorator.rgs"
+				>
+			</File>
+			<File
 				RelativePath="res\nullref.bmp"
+				>
+			</File>
+			<File
+				RelativePath="res\ok.ico"
 				>
 			</File>
 			<File

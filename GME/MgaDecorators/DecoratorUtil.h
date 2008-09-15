@@ -40,15 +40,15 @@ namespace Decorator
 	class Facilities
 	{
 		private :
-			CComPtr<IMgaProject>		m_spProject;
-			std::vector<CString> 				m_vecPathes;
+			CComPtr<IMgaProject>			m_spProject;
+			std::vector<CString> 			m_vecPathes;
 			bool							m_bArePathesValid;
 			CString							m_strParadigmPath;
 			CString							m_strProjectPath;
 
 			std::map<CString,BitmapBase*>	m_mapBitmaps;
 			std::map<CString,TileVector*>	m_mapTileVectors;
-			std::map<int,SFont*>				m_mapFonts;
+			std::map<int,SFont*>			m_mapFonts;
 			std::map<CString,CPen*>			m_mapPens;
 
 		public :

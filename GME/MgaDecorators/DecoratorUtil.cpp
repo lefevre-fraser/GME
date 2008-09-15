@@ -102,7 +102,13 @@ Facilities::Facilities()
 	createFont( FONT_TYPE, "Arial", true, 12 );
 	createFont( FONT_PORT_OUTSIDE, "Arial", false, 11);
 
-	TileVector* pTileVector = new TileVector( 1, BackgroundTile() );
+	TileVector* pTileVector = new TileVector();
+
+	RefPoint rpTL2( RefCoord( CRP_BEGIN, 0 ), RefCoord( CRP_BEGIN, 0 ) );
+	RefPoint rpBR2( RefCoord( CRP_END, 0 ), RefCoord( CRP_END, 0 ) );
+	pTileVector->push_back( BackgroundTile( rpTL2, rpBR2, rpTL2, rpBR2, FT_STRETCH, FT_STRETCH ) );
+
+//	TileVector* pTileVector = new TileVector( 1, BackgroundTile() );
 	addTileVector( TILE_ATOMDEFAULT, pTileVector );
 
 	pTileVector = new TileVector();

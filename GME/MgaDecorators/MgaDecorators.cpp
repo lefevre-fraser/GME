@@ -12,18 +12,19 @@
 
 #include "MgaDecoratorLib_i.c"
 #include "BoxDecorator.h"
+#include "NewBoxDecoratorImpl.h"
 
 
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
 OBJECT_ENTRY(CLSID_BoxDecorator, CBoxDecorator)
+OBJECT_ENTRY(CLSID_NewBoxDecorator, CNewBoxDecoratorImpl)
 END_OBJECT_MAP()
 
 class CMgaDecoratorsApp : public CWinApp
 {
 public:
-	
 
 // Overrides
 	// ClassWizard generated virtual function overrides

@@ -96,6 +96,7 @@ END
 //
 
 IDR_BOXDECORATOR        REGISTRY DISCARDABLE    "BoxDecorator.rgs"
+IDR_NEWBOXDECORATOR     REGISTRY DISCARDABLE    "NewBoxDecorator.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -118,6 +119,46 @@ IDB_ICON_INSTANCE_DIS   BITMAP  DISCARDABLE     "res\\icon_instance_disabled.bmp
 IDB_ICON_REFERENCE_DIS  BITMAP  DISCARDABLE     "res\\icon_reference_disabled.bmp"
 IDB_ICON_SUBTYPE_DIS    BITMAP  DISCARDABLE     "res\\icon_subtype_disabled.bmp"
 IDB_ICON_TYPE_DIS       BITMAP  DISCARDABLE     "res\\icon_type_disabled.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_INPLACEEDITDIALOG DIALOGEX 0, 0, 75, 16
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+EXSTYLE WS_EX_TOPMOST
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_TEXTEDIT,0,0,75,16,ES_AUTOHSCROLL | NOT WS_BORDER
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_INPLACEEDITDIALOG, DIALOG
+    BEGIN
+        RIGHTMARGIN, 74
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_CANCEL              ICON                    "res\\cancel.ico"
+IDI_OK                  ICON                    "res\\ok.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
