@@ -401,18 +401,18 @@ void CGuiMetaModel::InitParts()
 		CGuiObject *guiObj = 0;
 		if(tp == OBJTYPE_MODEL) {
 			guiObj = new CGuiModel(nil,mmRole,NULL,NumberOfAspects());
-			((CGuiModel *)guiObj)->InitObject();
+			((CGuiModel *)guiObj)->InitObject(NULL);
 			((CGuiModel *)guiObj)->SetAspect(0);
 			CSize s;
 		}
 		else if(tp == OBJTYPE_REFERENCE) {
 			guiObj = new CGuiReference(nil,mmRole,NULL,NumberOfAspects(),nil,nil);
-			((CGuiReference *)guiObj)->InitObject();
+			((CGuiReference *)guiObj)->InitObject(NULL);
 			((CGuiReference *)guiObj)->SetAspect(0);
 		}
 		else if(tp != OBJTYPE_CONNECTION) {
 			guiObj = new CGuiObject(nil,mmRole,NULL,NumberOfAspects());
-			((CGuiObject *)guiObj)->InitObject();
+			((CGuiObject *)guiObj)->InitObject(NULL);
 			((CGuiObject *)guiObj)->SetAspect(0);
 		}
 		if(!guiObj)

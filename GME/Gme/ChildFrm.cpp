@@ -91,6 +91,7 @@ int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO: Change the value of CG_ID_VIEW_MODELPROPERTIESBAR to an appropriate value:
 	//   1. Open the file resource.h
 	// CG: The following block was inserted by the 'Dialog Bar' component
+#if !defined(ACTIVEXGMEVIEW)
 	{
 		// Initialize dialog bar propBar
 		if (!propBar.Create(this, CG_IDD_MODELPROPERTIESBAR,
@@ -105,6 +106,7 @@ int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 //		int zoomvals[] = {ZOOM_NO, 150, 200, 250, 300, 350, 400, 0}; // for test
 		propBar.SetZoomList(zoomvals);
 	}
+#endif
 
 	return 0;
 }

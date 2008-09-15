@@ -17,6 +17,7 @@
 #include "ChildFrm.h"
 #include "GMEDoc.h"
 #include "GMEView.h"
+#include "GMEChildFrame.h"
 #include "GMEBrowser.h"
 #include "GMEObjectInspector.h"
 #include <locale.h>
@@ -45,6 +46,8 @@ static char THIS_FILE[] = __FILE__;
 #include "Splash.h"
 
 CComModule _Module;
+
+
 /////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////
@@ -277,7 +280,11 @@ BOOL CGMEApp::InitInstance()
 		IDR_GMETYPE,
 		RUNTIME_CLASS(CGMEDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
+#if !defined(ACTIVEXGMEVIEW)
 		RUNTIME_CLASS(CGMEView));
+#else
+		RUNTIME_CLASS(CGMEChildFrame));
+#endif
 	pDocTemplate->SetContainerInfo(IDR_GMETYPE_CNTR_IP);
 	AddDocTemplate(pDocTemplate);
 
@@ -294,7 +301,7 @@ BOOL CGMEApp::InitInstance()
 		return FALSE;
 	m_pMainWnd = pMainFrame;
 
-#ifdef _DEBUG
+#if !defined(ADDCRASHTESTMENU) && defined(_DEBUG)
 	bNoProtect = true;
 #else
 	bNoProtect = cmdInfo.bNoProtect;
@@ -444,14 +451,6 @@ BOOL CGMEApp::EmergencySave(EmergencySaveMode saveMode)
 		miniDumpMsg.LoadString(IDS_CRASHDUMP_INFO);
 		EmergencySaveDlg cdl(NULL);
 		cdl.SetStrings(emergencySaveMsg, miniDumpMsg);
-		if (cdl.DoModal() == IDOK) {
-			if (cdl.ShouldWriteMiniDump())
-				OutputDebugString("Should write Minidump\n");
-			else
-				OutputDebugString("Should not write Minidump\n");
-		} else {
-			OutputDebugString("Escaped\n");
-		}
 		return cdl.ShouldWriteMiniDump();
 	}
 	return TRUE;
@@ -459,21 +458,16 @@ BOOL CGMEApp::EmergencySave(EmergencySaveMode saveMode)
 
 int CGMEApp::Run()
 {
+	Gdiplus::GdiplusStartupInput  gdiplusStartupInput; // needed for GDI+
+	ULONG_PTR gdiplusToken;
 
-#if !defined(ADDCRASHTESTMENU)
+	// Tihamer: Initializing GDI+
+	VERIFY(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL)==Gdiplus::Ok);
+
 	if(bNoProtect) {
 		return CWinApp::Run();
 	} else {
-#endif
-
-			Gdiplus::GdiplusStartupInput  gdiplusStartupInput; // needed for GDI+
-			ULONG_PTR gdiplusToken;
-
-
 		__try {
-			// Tihamer: Initializing GDI+
-			VERIFY(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL)==Gdiplus::Ok);
-
 			return CWinApp::Run();
 		}
 		__except(ExceptionHandler::UnhandledExceptionFilterOfMain(GetExceptionCode(), GetExceptionInformation())) {
@@ -492,9 +486,7 @@ int CGMEApp::Run()
 			return -1;
 			// End by Peter
 		}
-#if !defined(ADDCRASHTESTMENU)
 	}
-#endif
 	// Closing GDI+
 	Gdiplus::GdiplusShutdown(gdiplusToken);
 }
@@ -574,7 +566,7 @@ void CGMEApp::CloseProject(bool updateStatusBar)
 	
 	if( CMainFrame::theInstance != NULL ) {
 		CMainFrame::theInstance->StopAutosaveTimer();
-		CMainFrame::theInstance->SetPartBrowser(NULL);
+		CMainFrame::theInstance->SetPartBrowserMetaModel(NULL);
 		CMainFrame::theInstance->SetPartBrowserBg(::GetSysColor(COLOR_APPWORKSPACE));
 	}
 
@@ -2355,6 +2347,7 @@ void CGMEApp::RunComponent(const CString &compname)
 		COMTHROW(selfcos.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
 		CMDIChildWnd *pChild  = CMainFrame::theInstance->MDIGetActive();
 		if (pChild) {
+#if !defined (ACTIVEXGMEVIEW)
 			CGMEView *view = (CGMEView*)pChild->GetActiveView();
 			if (view) {
 				COMTHROW(view->currentModel.QueryInterface(&focus));
@@ -2364,6 +2357,7 @@ void CGMEApp::RunComponent(const CString &compname)
 					COMTHROW(selfcos->Append(gfco->mgaFco));
 				}
 			}
+#endif
 		}
 
 		if(theApp.bNoProtect) COMTHROW( launcher->put_Parameter(CComVariant(true)));
@@ -2705,12 +2699,14 @@ void CGMEApp::SetCompFiltering( bool pOn)
 		CMDIChildWnd *pChild  = CMainFrame::theInstance->MDIGetActive();
 		if( pChild) 
 		{
+#if !defined (ACTIVEXGMEVIEW)
 			CGMEView *view = (CGMEView*)pChild->GetActiveView();
 			if( view && view->guiMeta)
 			{
 				found = true;
 				this->UpdateCompList4CurrentKind( view->guiMeta->name);
 			}
+#endif
 		}
 
 		if( !found)

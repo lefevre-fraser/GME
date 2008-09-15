@@ -15,6 +15,7 @@
 #include "GuiObject.h"
 #include "AspectSyncDlg.h"
 #include "ScrollZoomView.h"
+#include "DecoratorEventSink.h"
 #include <list>
 
 class CViewDriver;
@@ -31,21 +32,22 @@ protected: // create from serialization only
 	DECLARE_DYNCREATE(CGMEView)
 
 private:
-	bool m_preview;
-	CGuiMetaAspect *m_prevcurrasp;
-	int m_scalePrnPages;
-	int m_currPrnNumAsp;
-	int m_fullPrnAspNum;
-	POSITION m_prnpos;
-	unsigned int m_lastPrnPage;
-	unsigned long m_findNextAlreadyAchieved;
-	void setZoomPoint(int curzoom, CPoint point);
-	bool getNamePositionVal( CComPtr<IMgaFCO>& ccpMgaFCO, int *valRet);
-	void setNamePositionVal( CComPtr<IMgaFCO>& ccpMgaFCO, int val);
-	void changeNamePosition( int w);
-	void updateNamePositionMenuItem( CCmdUI* pCmdUI, int this_val );
-	bool askUserAndDetachIfNeeded( CComPtr<IMgaFCO>& mgafco);
-	CGuiObject* helpMeFindNextObject( bool p_secondFind);
+	bool			m_preview;
+	CGuiMetaAspect*	m_prevcurrasp;
+	int				m_scalePrnPages;
+	int				m_currPrnNumAsp;
+	int				m_fullPrnAspNum;
+	POSITION		m_prnpos;
+	unsigned int	m_lastPrnPage;
+	unsigned long	m_findNextAlreadyAchieved;
+
+	void			SetZoomPoint(int curzoom, CPoint point);
+	bool			GetNamePositionVal(CComPtr<IMgaFCO>& ccpMgaFCO, int *valRet);
+	void			SetNamePositionVal(CComPtr<IMgaFCO>& ccpMgaFCO, int val);
+	void			ChangeNamePosition(int w);
+	void			UpdateNamePositionMenuItem(CCmdUI* pCmdUI, int this_val);
+	bool			AskUserAndDetachIfNeeded(CComPtr<IMgaFCO>& mgafco);
+	CGuiObject*		HelpMeFindNextObject(bool p_secondFind);
 
 public:
 	bool m_isActive;
@@ -57,209 +59,237 @@ public:
 public:
 	void PrepareAspectPrn(CPrintInfo* pInfo);
 	bool ChangePrnAspect(CString aspect);
-	void SaveCurrAsp() { m_prevcurrasp = currentAspect;}
-	CGuiMetaAspect* GetSavedAsp() {CGuiMetaAspect *ret = m_prevcurrasp; m_prevcurrasp = NULL; return ret;}
-	bool IsPreview() {return m_preview;}
-	void SetPreview(bool set) {m_preview = set;}
+	void SaveCurrAsp() { m_prevcurrasp = currentAspect; }
+	CGuiMetaAspect* GetSavedAsp() { CGuiMetaAspect *ret = m_prevcurrasp; m_prevcurrasp = NULL; return ret; }
+	bool IsPreview() { return m_preview; }
+	void SetPreview(bool set) { m_preview = set; }
 
 // Attributes
 public:
-	static int inTransaction;
-	static bool inRWTransaction;
-	static bool inEventHandler;
-	static int instanceCount;
-	static bool offScreenCreated;
-	static CDC *offScreen;
-	static CBitmap *ofsbmp;
-	static HCURSOR autoconnectCursor;
-	static HCURSOR autoconnect2Cursor;
-	static HCURSOR disconnectCursor;
-	static HCURSOR disconnect2Cursor;
-	static HCURSOR setCursor;
-	static HCURSOR set2Cursor;
-	static HCURSOR zoomCursor;
-	static HCURSOR visualCursor;
-	static HCURSOR editCursor;
-	static bool derivedDrop;
-	static bool instanceDrop;
+	static int				inTransaction;
+	static bool				inRWTransaction;
+	static bool				inEventHandler;
+	static int				instanceCount;
+	static bool				offScreenCreated;
+	static CDC*				offScreen;
+	static CBitmap*			ofsbmp;
+	static HCURSOR			autoconnectCursor;
+	static HCURSOR			autoconnect2Cursor;
+	static HCURSOR			disconnectCursor;
+	static HCURSOR			disconnect2Cursor;
+	static HCURSOR			setCursor;
+	static HCURSOR			set2Cursor;
+	static HCURSOR			zoomCursor;
+	static HCURSOR			visualCursor;
+	static HCURSOR			editCursor;
+	static bool				derivedDrop;
+	static bool				instanceDrop;
 
-	COleDropTarget dropTarget;
-	bool inDrag;
-	CGMEDataDescriptor dragDesc;
-	DROPEFFECT prevDropEffect;
-	CRect dragRect;
-	CPoint dragPoint;
-	CPoint dragOffset;
-	CPoint contextMenuLocation;
+	// === Start of decorator operation specific variables ===
+	bool					isCursorChangedByDecorator;
+	CRect					originalRect;
+	bool					inNewDecoratorOperation;
+	bool					inOpenedDecoratorTransaction;
+	bool					isContextInitiatedOperation;
+	bool					isMultiInputLevelOperation;
+	bool					skipFirstButtonUp;
+	bool					shouldCommitOperation;
+	bool					doTheResize;
+	CGuiObject*				objectInDecoratorOperation;
+	struct ContextClickState {
+		UINT		nFlags;
+		CPoint		lpoint;
+		CPoint		dpoint;
+	};
+	ContextClickState		ctxClkSt;
+	CGuiObject*				selectionOfContext;
+	// === End of decorator operation specific variables ===
+	COleDropTarget			dropTarget;
+	bool					inDrag;
+	CGMEDataDescriptor		dragDesc;
+	DROPEFFECT				prevDropEffect;
+	CRect					dragRect;
+	CPoint					dragPoint;
+	CPoint					dragOffset;
+	CPoint					contextMenuLocation;
 
-	CComPtr<IMgaTerritory> terry;
-	CComPtr<IMgaModel> currentModel;
-	CComBSTR           currentModId;
-	CComPtr<IMgaFCO> baseType;			// currentModel's baseType (or type in case of an instance)
-	CComPtr<IMgaModel> parent;
-	CComPtr<CViewDriver> driver;
-	CGuiMetaModel *guiMeta;
-	CGuiMetaAspect *currentAspect;
-	CGuiFco *contextSelection;
-	CGuiAnnotator *contextAnnotation;
-	CGuiSet *currentSet;
-	CGuiPort *contextPort;
-	CString currentSetID;
+	CComPtr<IMgaTerritory>	terry;
+	CComPtr<IMgaModel>		currentModel;
+	CComBSTR				currentModId;
+	CComPtr<IMgaFCO>		baseType;			// currentModel's baseType (or type in case of an instance)
+	CComPtr<IMgaModel>		parent;
+	CComPtr<CViewDriver>	driver;
+	CGuiMetaModel*			guiMeta;
+	CGuiMetaAspect*			currentAspect;
+	CGuiFco*				contextSelection;
+	CGuiAnnotator*			contextAnnotation;
+	CGuiSet*				currentSet;
+	CGuiPort*				contextPort;
+	CString					currentSetID;
 
-	bool tmpConnectMode;
-	CGuiObject *connSrc;
-	CGuiPort *connSrcPort;
-	int		  connSrcHotSide;
-	CGuiObject *connTmp;
-	CGuiPort *connTmpPort;
-	int		  connTmpHotSide;
+	bool					tmpConnectMode;
+	CGuiObject*				connSrc;
+	CGuiPort*				connSrcPort;
+	int						connSrcHotSide;
+	CGuiObject*				connTmp;
+	CGuiPort*				connTmpPort;
+	int						connTmpHotSide;
 
-	CGuiObject *lastObject;
-	CGuiPort   *lastPort;
-	CGuiObject *dragSource;
+	CGuiObject*				lastObject;
+	CGuiPort*				lastPort;
+	CGuiObject*				dragSource;
 
-	bool isType;
-	bool isSubType;
-	CString name;
-	CString kindName;
-	CString kindDisplayedName;
-	CString path;
+	bool					isType;
+	bool					isSubType;
+	CString					name;
+	CString					kindName;
+	CString					kindDisplayedName;
+	CString					path;
 
-//	int	zoomIdx;
-	int m_zoomVal;
+//	int						zoomIdx;
+	int						m_zoomVal;
 
-	bool drawGrid;
-	bool alive;
+	bool					drawGrid;
+	bool					alive;
 
-	unsigned long	animRefCnt;
-	UINT			timerID;
+	unsigned long			animRefCnt;
+	UINT					timerID;
 
 
-	CAutoRouter router;
-	CGuiFcoList children;
-	CGuiConnectionList connections;
-	CGuiAnnotatorList annotators;
-	CGuiObjectList selected;
-	CGuiAnnotatorList selectedAnnotations;
-	bool validGuiObjects;
-	CStringList newObjectIDs;			// after paste(drop) keep track of new objects for selection after reset
+	CAutoRouter				router;
+	CGuiFcoList				children;
+	CGuiConnectionList		connections;
+	CGuiAnnotatorList		annotators;
+	CGuiObjectList			selected;
+	CGuiAnnotatorList		selectedAnnotations;
+	bool					validGuiObjects;
+	CStringList				newObjectIDs;			// after paste(drop) keep track of new objects for selection after reset
 
-	bool needsReset;
-	bool initDone;
-	COLORREF	bgColor;
-	CChildFrame *frame;
-	CPendingRequestList	pendingRequests;
+	bool					needsReset;
+	bool					initDone;
+	COLORREF				bgColor;
+	CChildFrame*			frame;
+	CPendingRequestList		pendingRequests;
 
-	CGMEDoc* GetDocument();
+	CGMEDoc*				GetDocument();
 
 // Operations
 public:
-	CComPtr<IMgaModel> &GetCurrentModel()	{ return currentModel; }
-	void CreateGuiObjects(CComPtr<IMgaFCOs> &fcos,CGuiFcoList &objList,CGuiConnectionList &connList);
-	void CreateGuiObjects();
-	void CreateAnnotators(CComPtr<IMgaRegNodes> &regNodes, CGuiAnnotatorList &annList);
-	void CreateAnnotators();
-	bool SendOpenModelEvent();
-	bool SendCloseModelEvent();
-	bool SendSelecEvent4Object( CGuiObject* selection);
-	bool SendUnselEvent4Object( CGuiObject* selection);
-	bool SendSelecEvent4List( CGuiObjectList* pSelectedList);
-	bool SendUnselEvent4List( CGuiObjectList* pSelectedList);
-	bool SendMouseOver4Object( CGuiObject * object);
-	bool SendNow();
-	bool FollowLine( CGuiConnection *guiConn, bool reverse, bool tryPort);
-	bool FollowLine( CGuiObject* guiObj, bool reverse, bool tryPort);
-	bool FollowLine( CGuiPort* guiPort, bool reverse, bool tryPort);
-	std::list<CGuiObject*> m_lstSelect;
-	std::list<CGuiObject*> m_lstUnselect;
-	void Reset(bool doInvalidate = false);
-	void ResetPartBrowser();
-	void ResetParent();
-	void InitSets();
-	void CreateOffScreen(CDC *dc);
-	void Invalidate(bool thorough = false);
-	void SetProperties();
-	void SetTypeNameProperty();
-	void SetNameProperty();
-	void GetNameProperty(CString &txt);
-	void SetKindNameProperty();
-	int GetAspectProperty();
-	void SetAspectProperty(int ind);
-	void SetTypeProperty(bool type);
-	void ModeChange();
-	void IncrementalAutoRoute();
-	void AutoRoute();
-	void DrawConnections(CDC* pDC);
-	void PrintHeader(CDC* pDC, CPrintInfo* pInfo);
-	void PrintHeaderRect(CDC* pDC, CRect &rectDraw);
-	void PrintMultiLineText(CDC *pDC, CString txt,int x,int &y,int ry,int xwidth);
+	CComPtr<IMgaModel>&		GetCurrentModel() { return currentModel; }
+	void					CreateGuiObjects(CComPtr<IMgaFCOs>& fcos, CGuiFcoList& objList, CGuiConnectionList& connList);
+	void					CreateGuiObjects();
+	void					CreateAnnotators(CComPtr<IMgaRegNodes>& regNodes, CGuiAnnotatorList& annList);
+	void					CreateAnnotators();
+	bool					SendOpenModelEvent();
+	bool					SendCloseModelEvent();
+	bool					SendSelecEvent4Object(CGuiObject* selection);
+	bool					SendUnselEvent4Object(CGuiObject* selection);
+	bool					SendSelecEvent4List(CGuiObjectList* pSelectedList);
+	bool					SendUnselEvent4List(CGuiObjectList* pSelectedList);
+	bool					SendMouseOver4Object(CGuiObject* object);
+	bool					SendNow(bool onlyDecoratorNotification = false);
+	bool					FollowLine(CGuiConnection* guiConn, bool reverse, bool tryPort);
+	bool					FollowLine(CGuiObject* guiObj, bool reverse, bool tryPort);
+	bool					FollowLine(CGuiPort* guiPort, bool reverse, bool tryPort);
+	std::list<CGuiObject*>	m_lstSelect;
+	std::list<CGuiObject*>	m_lstUnselect;
+	void					Reset(bool doInvalidate = false);
+	void					ResetPartBrowser();
+	void					ResetParent();
+	void					InitSets();
+	void					CreateOffScreen(CDC* dc);
+	void					Invalidate(bool thorough = false);
+	void					SetProperties();
+	void					SetTypeNameProperty();
+	void					SetNameProperty();
+	void					GetNameProperty(CString& txt);
+	void					SetKindNameProperty();
+	int						GetAspectProperty();
+	void					SetAspectProperty(int ind);
+	void					SetTypeProperty(bool type);
+	void					ModeChange();
+	void					IncrementalAutoRoute();
+	void					AutoRoute();
+	void					DrawConnections(CDC* pDC);
+	void					PrintHeader(CDC* pDC, CPrintInfo* pInfo);
+	void					PrintHeaderRect(CDC* pDC, CRect& rectDraw);
+	void					PrintMultiLineText(CDC* pDC, CString txt, int x, int& y, int ry, int xwidth);
 
-	void CoordinateTransfer(CPoint &point) const;
-	CGuiObject *FindFirstObject();
-	CGuiObject *FindNextObject();
-	CGuiObject *FindObject(CPoint &pt);
-	CGuiAnnotator *FindAnnotation(CPoint &pt);
-	bool FindObjects(CRect &rect,CGuiObjectList &objectList);
-	bool FindAnnotations(CRect &rect,CGuiAnnotatorList &annotatorList);
-	bool DeleteObjects(CGuiObjectList &objectList);
-	void DeleteAnnotations(CGuiAnnotatorList &annotatorList);
-	bool DeleteConnection(CGuiConnection *guiConn,bool checkAspect = true);
-	void DisconnectAll(CGuiObject *end,CGuiPort *endPort,bool onlyVisible = true);
-	void FindConnections(CGuiObject *end,CGuiPort *endPort,CGuiConnectionList &guiConn);
-	void FindConnections(CGuiObject *end1,CGuiPort *end1Port,CGuiObject *end2,CGuiPort *end2Port,CGuiConnectionList &guiConn);
-	void GrayOutNonInternalConnections();
-	void FillModelGrid();
-	void SetObjectLocation(CComPtr<IMgaFCO> &child,CComPtr<IMgaMetaRole> &mmRole,CPoint pt);
-	void SetScroll();
-	void SetCenterObject(CComPtr<IMgaFCO> obj);
-	void InsertNewPart(CString roleName,CPoint pt);
-	void GetRefereeChain(IMgaFCOs *,IMgaFCO *);
-	bool Connect(CGuiObject *src,CGuiPort *srcPort,int srcHotSide,CGuiObject *dst,CGuiPort *dstPort,int dstHotSide, bool nosticky);
-	void ResolveConnections();
-	void BeginTransaction(transactiontype_enum mode = TRANSACTION_GENERAL);
-	void CommitTransaction();
-	void AbortTransaction(HRESULT hr);
-	void PasteAnnotations(CComPtr<IMgaModel> &targetModel, CComPtr<IMgaRegNodes> &regNodes, CComPtr<IMgaRegNodes> &newRegNodes,bool isMove);
-	void CopyRegTree(CComPtr<IMgaRegNode> &regNode, CComPtr<IMgaRegNode> &newNode);
-	bool DoPasteItem(COleDataObject* pDataObject,bool drag = false,bool move = false,bool reference = false,bool derive = false,bool instance = false,bool closure = false,bool merge = false,CGuiObject *ref = 0,CPoint pt = CPoint(0,0));
-	bool DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,bool reference,bool derive,bool instance,CGuiObject *ref,CPoint pt);
-	void MakeSureGUIDIsUniqueForSmartCopy( CComPtr<IMgaFCO>& fco);
-	void ChangeAspect(CString aspName, bool p_eraseStack = true);
-	void ChangeAspect(int ind);
-	CString &GetAspectName(int ind);
-	void SetName();
-	void RetrievePath();
-	void SetBgColor();
-	void ShowHelp(CComPtr<IMgaFCO> fco);
-	void ShowModel(CComPtr<IMgaModel> model,CString *aspect = 0);
-	void GetModelInContext(CComPtr<IMgaModel> &model);
-	void FindDerivedFrom(CComPtr<IMgaModel> model,CComPtr<IMgaModel> &type);
-	void ChangeAttrPrefObjs(CGuiObjectList &objlist);
-	void ChangeAttrPrefFco(CGuiFco *guiFco);
-	void ChangeAttrPrefFco();
-    void ShowProperties(CGuiFco *guiFco);
-	void ShowProperties();
-	void ShowAttributes(CGuiFco *guiFco);
-	void ShowAttributes();
-	void ShowPreferences(CGuiFco *guiFco);
-	void ShowPreferences();
-	void FillAttributeDescs(CComPtr<IMgaFCO> fco, CGuiMetaAttributeList &guiMetaAttrs,CGuiDepCtrlDescList &list);
-	bool CheckBeforeDeleteObjects(CGuiObjectList &objectList,CString &txt);
-	void ZoomOut(CPoint point);
-	void ZoomIn(CPoint point);
-	void ZoomRect(CRect srect);
-	void ZoomToFCOs(CRect rect);
-	void ShowRegistryBrowser(CComPtr<IMgaFCO> fco);
-	void ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> focus);
-	void SyncAspects(CGuiMetaAspect* srcAspect, CGuiMetaAspectList& dstAspects, CGuiObjectList& movingObjects, CGuiObjectList& sedentaryObjects, bool priorityForSrcVisible, bool priorityForSelected);
-	void SyncOnGrid(CGuiObject *obj, int aspectIndexFrom, int aspectIndexTo);
-	void ClearConnSpecs();
-	void RunComponent(CString compname);
+	void					CoordinateTransfer(CPoint& point) const;
+	CGuiObject*				FindFirstObject();
+	CGuiObject*				FindNextObject();
+	CGuiObject*				FindObject(CPoint& pt, bool lookNearToo = false, bool lookForLabel = false);
+	CGuiAnnotator*			FindAnnotation(CPoint& pt);
+	bool					FindObjects(CRect& rect, CGuiObjectList& objectList);
+	bool					FindAnnotations(CRect& rect, CGuiAnnotatorList& annotatorList);
+	bool					DeleteObjects(CGuiObjectList& objectList);
+	void					DeleteAnnotations(CGuiAnnotatorList& annotatorList);
+	bool					DeleteConnection(CGuiConnection* guiConn,bool checkAspect = true);
+	void					DisconnectAll(CGuiObject* end, CGuiPort* endPort, bool onlyVisible = true);
+	void					FindConnections(CGuiObject* end, CGuiPort* endPort, CGuiConnectionList& guiConn);
+	void					FindConnections(CGuiObject* end1, CGuiPort* end1Port, CGuiObject* end2, CGuiPort* end2Port,
+											CGuiConnectionList& guiConn);
+	void					GrayOutNonInternalConnections();
+	void					FillModelGrid();
+	void					SetObjectLocation(CComPtr<IMgaFCO>& child, CComPtr<IMgaMetaRole>& mmRole, CPoint pt);
+	void					SetScroll();
+	void					SetCenterObject(CComPtr<IMgaFCO> obj);
+	void					InsertNewPart(CString roleName, CPoint pt);
+	void					GetRefereeChain(IMgaFCOs* refChain, IMgaFCO* fco);
+	bool					Connect(CGuiObject* src, CGuiPort* srcPort, int srcHotSide, CGuiObject* dst, CGuiPort* dstPort,
+									int dstHotSide, bool nosticky);
+	void					ResolveConnections();
+	void					BeginTransaction(transactiontype_enum mode = TRANSACTION_GENERAL);
+	void					CommitTransaction();
+	void					AbortTransaction(HRESULT hr);
+	void					PasteAnnotations(CComPtr<IMgaModel>& targetModel, CComPtr<IMgaRegNodes>& regNodes,
+											 CComPtr<IMgaRegNodes>& newRegNodes, bool isMove);
+	void					CopyRegTree(CComPtr<IMgaRegNode>& regNode, CComPtr<IMgaRegNode>& newNode);
+	bool					DoPasteItem(COleDataObject* pDataObject, bool drag = false, bool move = false, bool reference = false,
+										bool derive = false, bool instance = false, bool closure = false, bool merge = false,
+										CGuiObject* ref = 0, CPoint pt = CPoint(0, 0));
+	bool					DoPasteNative(COleDataObject* pDataObject, bool drag, bool move, bool reference, bool derive,
+										  bool instance, CGuiObject* ref, CPoint pt);
+	void					MakeSureGUIDIsUniqueForSmartCopy(CComPtr<IMgaFCO>& fco);
+	void					ChangeAspect(CString aspName, bool p_eraseStack = true);
+	void					ChangeAspect(int ind);
+	CString&				GetAspectName(int ind);
+	void					SetName();
+	void					RetrievePath();
+	void					SetBgColor();
+	void					ShowHelp(CComPtr<IMgaFCO> fco);
+	void					ShowModel(CComPtr<IMgaModel> model, CString* aspect = 0);
+	void					GetModelInContext(CComPtr<IMgaModel>& model);
+	void					FindDerivedFrom(CComPtr<IMgaModel> model, CComPtr<IMgaModel>& type);
+	void					ChangeAttrPrefObjs(CGuiObjectList& objlist);
+	void					ChangeAttrPrefFco(CGuiFco* guiFco);
+	void					ChangeAttrPrefFco();
+	void					ShowProperties(CGuiFco* guiFco);
+	void					ShowProperties();
+	void					ShowAttributes(CGuiFco* guiFco);
+	void					ShowAttributes();
+	void					ShowPreferences(CGuiFco* guiFco);
+	void					ShowPreferences();
+	void					FillAttributeDescs(CComPtr<IMgaFCO> fco, CGuiMetaAttributeList& guiMetaAttrs, CGuiDepCtrlDescList& list);
+	bool					CheckBeforeDeleteObjects(CGuiObjectList& objectList, CString& txt);
+	void					ZoomOut(CPoint point);
+	void					ZoomIn(CPoint point);
+	void					ZoomRect(CRect srect);
+	void					ZoomToFCOs(CRect rect);
+	void					ShowRegistryBrowser(CComPtr<IMgaFCO> fco);
+	void					ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> focus);
+	void					SyncAspects(CGuiMetaAspect* srcAspect, CGuiMetaAspectList& dstAspects, CGuiObjectList& movingObjects,
+										CGuiObjectList& sedentaryObjects, bool priorityForSrcVisible, bool priorityForSelected);
+	void					SyncOnGrid(CGuiObject *obj, int aspectIndexFrom, int aspectIndexTo);
+	void					ClearConnSpecs();
+	void					RunComponent(CString compname);
+	void					SetEditCursor(void);
+	void					CancelDecoratorOperation(bool notify = true);
 
-	virtual int OnToolHitTest( CPoint point, TOOLINFO* pTI ) const;
+	virtual int				OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
 
-	static bool IsHugeModel()	{ return false; } // HACK
-	static CGMEView *GetActiveView();
+	static bool				IsHugeModel()	{ return false; } // HACK
+	static CGMEView*		GetActiveView();
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -291,8 +321,8 @@ public:
 #endif
 
 protected:
-	void SwapAutoRouterPref( const CString& strPref );
-	void SetAllAutoRouterPref( bool bSrc, bool bClear );
+	void SwapAutoRouterPref(const CString& strPref);
+	void SetAllAutoRouterPref(bool bSrc, bool bClear);
 
 // Generated message map functions
 public:
@@ -309,9 +339,10 @@ protected:
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	afx_msg void OnKillfocusNameProp();
 	afx_msg void OnSelChangeAspectProp();
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnViewParent();
 	afx_msg void OnUpdateViewParent(CCmdUI* pCmdUI);
 	afx_msg void OnViewGrid();
@@ -428,6 +459,7 @@ protected:
 	afx_msg void OnCntxConnect();
 	afx_msg void OnUpdateCntxConnect(CCmdUI* pCmdUI);
 	afx_msg void OnResetSticky();
+	afx_msg void OnNcMouseMove(UINT nHitTest, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnUpdateCntxInsertannotation(CCmdUI* pCmdUI);

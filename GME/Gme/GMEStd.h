@@ -14,7 +14,7 @@
 /*
 	ATTENTION !
 
-	There is a similar file in MgaDecorators ! (DecoratorStd.h)
+	There is a similar file in Annotator and MgaDecorators (DecoratorStd.h) and in GMEView (GMEViewStd.h)
 	Modify/extend this file carefully !
 */
 typedef enum { GME_EDIT_MODE, GME_AUTOCONNECT_MODE, GME_DISCONNECT_MODE, GME_SET_MODE, GME_ZOOM_MODE, GME_VISUAL_MODE, GME_SHORTAUTOCONNECT_MODE, GME_SHORTDISCONNECT_MODE } GMEModeCode;
@@ -72,6 +72,8 @@ typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FON
 
 
 #define GME_DYN_MENU_MINID			0x1001
+#define DECORATOR_CTX_MENU_MINID	0x2001
+#define DECORATOR_CTX_MENU_MAXID	0x2101
 
 //#define GME_MAX_ZOOM_PERCENT		300
 //#define GME_MIN_ZOOM_PERCENT		10

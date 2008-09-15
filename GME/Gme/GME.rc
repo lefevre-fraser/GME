@@ -1158,6 +1158,17 @@ BEGIN
                     172,76
 END
 
+IDD_CHILDFRAME_DIALOG DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_CHILDFRAMECTRL1,
+                    "{1758EDFF-969C-4f6e-AF81-E8AF07A33799}",WS_TABSTOP,7,7,
+                    172,76
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

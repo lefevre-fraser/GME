@@ -48,6 +48,7 @@ bool CGMEOLEAspect::AmIValid() {
 	if (CGMEDoc::theInstance) {
 		POSITION pos = CGMEDoc::theInstance->GetFirstViewPosition();
 		while (pos) {
+#if !defined (ACTIVEXGMEVIEW)
 			CGMEView* view = (CGMEView*)(CGMEDoc::theInstance->GetNextView(pos));
 			ASSERT(view);
 			if (view == m_view) {
@@ -60,6 +61,7 @@ bool CGMEOLEAspect::AmIValid() {
 					}
 				}
 			}
+#endif
 		}
 	}
 	return false;

@@ -14,6 +14,7 @@
 #include "GMEEventLogger.h"
 #include "Parser.h"
 #include "ChildFrm.h"
+#include "GMEChildFrame.h"
 
 
 #ifdef _DEBUG
@@ -509,11 +510,17 @@ DROPEFFECT CGMEDoc::DoDragDrop(CGuiObject *guiObj, CGMEDataDescriptor* desc,
 	return de;
 }
 
-CGMEView *CGMEDoc::FindView(CComPtr<IMgaModel> model)
+#if !defined (ACTIVEXGMEVIEW)
+CGMEView
+#else
+CGMEChildFrame
+#endif
+*CGMEDoc::FindView(CComPtr<IMgaModel> model)
 {
 	if(model != 0) {
 		POSITION pos = GetFirstViewPosition();
 		while (pos != NULL) {
+#if !defined (ACTIVEXGMEVIEW)
 			CGMEView* view = (CGMEView *)GetNextView(pos);
 			VARIANT_BOOL b; 
 			// COMTHROW(model->get_IsEqual(view->GetCurrentModel(), &b));  Territory problems
@@ -521,8 +528,31 @@ CGMEView *CGMEDoc::FindView(CComPtr<IMgaModel> model)
 			view->BeginTransaction(TRANSACTION_READ_ONLY);
 			COMTHROW(view->GetCurrentModel()->get_IsEqual(model, &b));
 			view->CommitTransaction();
-			if(b) 
+			if(b)
 				return view;
+#else
+			CGMEChildFrame* pView = (CGMEChildFrame *)GetNextView(pos);
+			VARIANT_BOOL b;
+			long status;
+			COMTHROW(theApp.mgaProject->get_ProjectStatus(&status));
+			bool inTrans = (status & 0x08L) != 0;
+			CComPtr<IMgaTerritory> terr;
+			if (!inTrans) {
+				COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr));
+				COMTHROW(theApp.mgaProject->BeginTransaction(terr, TRANSACTION_READ_ONLY));
+			} else {
+				COMTHROW(theApp.mgaProject->get_ActiveTerritory(&terr));
+			}
+
+			CComPtr<IMgaModel> mgaModel = pView->GetMgaModel();
+			if (mgaModel)
+				COMTHROW(mgaModel->get_IsEqual(model, &b));
+			if (!inTrans) {
+				theApp.mgaProject->CommitTransaction();
+			}
+			if (mgaModel && b)
+				return pView;
+#endif
 		}
 	}
 	return 0;
@@ -532,12 +562,14 @@ void CGMEDoc::InvalidateAllViews(bool thorough,bool /*fullAutoRoute*/)
 {
 	POSITION pos = GetFirstViewPosition();
 	while (pos != NULL) {
+#if !defined (ACTIVEXGMEVIEW)
 		CGMEView* pView = (CGMEView *)GetNextView(pos);
 /*
 		if(!pView->IsIconic())
 			fullAutoRoute ? pView->AutoRoute() : pView->IncrementalAutoRoute();
 */
 		pView->Invalidate(thorough);
+#endif
 	}
 	if(thorough) {
 		CMDIFrameWnd *pFrame = (CMDIFrameWnd*)AfxGetApp()->m_pMainWnd;
@@ -640,7 +672,11 @@ void CGMEDoc::ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent)
 		}
 	}
 	if (model) {
+#if !defined (ACTIVEXGMEVIEW)
 		CGMEView *view  = NULL;
+#else
+		CGMEChildFrame* view = NULL;
+#endif
 
 		if (!theApp.multipleView) {
 			view = FindView(model);
@@ -648,7 +684,9 @@ void CGMEDoc::ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent)
 				SetNextToView(model,"", fco);
 			}
 			else {
+#if !defined (ACTIVEXGMEVIEW)
 				view->SetCenterObject(fco);
+#endif
 				if( theApp.isHistoryEnabled())
 				{
 					//clear history
@@ -659,8 +697,8 @@ void CGMEDoc::ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent)
 		else {
 			SetNextToView(model,"", fco);
 		}
-		
-		CMainFrame::theInstance->CreateNewView(view);
+
+		CMainFrame::theInstance->CreateNewView(view, model);
 		// PETER: This is needed to get the focus (SetFocus does not work, since it uses SendMessage())
 		::PostMessage(CMainFrame::theInstance->GetSafeHwnd(), WM_SETFOCUS, 0, 0);
 	}
@@ -722,20 +760,27 @@ void CGMEDoc::ResetAllViews()
 	POSITION pos = GetFirstViewPosition();
 	if(pos) {
 		while (pos != NULL) {
+#if !defined (ACTIVEXGMEVIEW)
 			CGMEView* pView = (CGMEView *)GetNextView(pos);
 			pView->Reset(true);
+#endif
 		}
 //		InvalidateAllViews(true);
 	}
 }
 
-void CGMEDoc::ChangeAspects(CString aspName)
+void CGMEDoc::ChangeAspects(int index, CString aspName)
 {
 	POSITION pos = GetFirstViewPosition();
-	if(pos) {
+	if (pos) {
 		while (pos != NULL) {
+#if defined(ACTIVEXGMEVIEW)
+			CGMEChildFrame* pView = (CGMEChildFrame *)GetNextView(pos);
+			pView->ChangeAspect(index);
+#else
 			CGMEView* pView = (CGMEView *)GetNextView(pos);
 			pView->ChangeAspect(aspName);
+#endif
 		}
 	}
 }
@@ -744,8 +789,10 @@ void CGMEDoc::ViewModeChange()
 {
 	POSITION pos = GetFirstViewPosition();
 	while (pos != NULL) {
+#if !defined (ACTIVEXGMEVIEW)
 		CGMEView* pView = (CGMEView *)GetNextView(pos);
 		pView->ModeChange();
+#endif
 	}
 
 	// make sure that the currently open model has the focus
@@ -919,6 +966,7 @@ void CGMEDoc::OnCloseDocument(bool suppressErrors)
 	m_isClosing = true;
 	POSITION pos = GetFirstViewPosition();
 	while (pos) {
+#if !defined (ACTIVEXGMEVIEW)
 		CGMEView* view = dynamic_cast<CGMEView*>(GetNextView(pos));
 		ASSERT(view);
 		bool canClose = view->SendCloseModelEvent();
@@ -926,6 +974,7 @@ void CGMEDoc::OnCloseDocument(bool suppressErrors)
 			// View cannot be closed, eg.: constraint violations
 			return;
 		}
+#endif
 	}
 
 	CDocument::OnCloseDocument();
@@ -1029,21 +1078,25 @@ void CGMEDoc::clearForwHistory() // could be called: userAction
 
 void CGMEDoc::closeActiveWnd()
 {
+#if !defined (ACTIVEXGMEVIEW)
 	CGMEView* v = CGMEView::GetActiveView();
 	if( !v) return;
 	v->alive = false;
 	v->frame->sendEvent = true;
 	v->frame->PostMessage(WM_CLOSE);
+#endif
 }
 
 void CGMEDoc::closeAllWnd()
 {
 	POSITION pos = GetFirstViewPosition();
 	while (pos != NULL) {
+#if !defined (ACTIVEXGMEVIEW)
 		CGMEView* v = (CGMEView *) GetNextView( pos);
 		v->alive = false;
 		v->frame->sendEvent = true;
 		v->frame->SendMessage(WM_CLOSE);
+#endif
 	}
 }
 
@@ -1053,6 +1106,7 @@ void CGMEDoc::closeAllButActiveWnd()
 
 	POSITION pos = GetFirstViewPosition();
 	while (pos != NULL) {
+#if !defined (ACTIVEXGMEVIEW)
 		CGMEView* v = (CGMEView *) GetNextView( pos);
 		if( v != actv)
 		{
@@ -1060,25 +1114,31 @@ void CGMEDoc::closeAllButActiveWnd()
 			v->frame->sendEvent = true;
 			v->frame->SendMessage(WM_CLOSE);
 		}
+#endif
 	}
 }
 
 void CGMEDoc::cycleAspect()
 {
+#if !defined (ACTIVEXGMEVIEW)
 	CGMEView* actv = CGMEView::GetActiveView();
 	if( actv)
 		actv->CycleAspect();
+#endif
 }
 
 void CGMEDoc::cycleAllAspects()
 {
+#if !defined (ACTIVEXGMEVIEW)
 	CGMEView* actv = CGMEView::GetActiveView();
 	if( actv)
 		actv->CycleAllAspects();
+#endif
 }
 
 void CGMEDoc::cycleViews()
 {
+#if !defined (ACTIVEXGMEVIEW)
 	CGMEView* nexv = 0;
 	CGMEView* actv = CGMEView::GetActiveView();
 	POSITION pos = GetFirstViewPosition();
@@ -1096,9 +1156,10 @@ void CGMEDoc::cycleViews()
 	if( nexv)
 	{
 		//nexv->SetFocus();
-		CMainFrame::theInstance->CreateNewView( nexv);
+		CMainFrame::theInstance->CreateNewView( nexv, nexv->GetCurrentModel());
 		::PostMessage(CMainFrame::theInstance->GetSafeHwnd(), WM_SETFOCUS, 0, 0);
 	}
+#endif
 }
 
 void CGMEDoc::tellHistorian( CComBSTR& modid, CString asp)
@@ -1214,18 +1275,24 @@ void CGMEDoc::presentModel( LPCTSTR p_objectId, LPCTSTR p_aspectName)
 	}
 
 	ASSERT( model);
+#if !defined (ACTIVEXGMEVIEW)
 	CGMEView *view  = FindView(model);
+#else
+	CGMEChildFrame* view = FindView(model);
+#endif
 	if( !view)
 	{
 		SetNextToView( model, p_aspectName, CComPtr<IMgaFCO>()); // p_aspectName used here
 	}
+#if !defined (ACTIVEXGMEVIEW)
 	else if( view->currentAspect && view->currentAspect->name != p_aspectName)
 	{
 		view->ChangeAspect( p_aspectName, false);
 	}
+#endif
 
 	// PETER: This is needed to get the focus (SetFocus does not work, since it uses SendMessage())
-	CMainFrame::theInstance->CreateNewView( view);
+	CMainFrame::theInstance->CreateNewView(view, model);
 	::PostMessage(CMainFrame::theInstance->GetSafeHwnd(), WM_SETFOCUS, 0, 0);
 }
 

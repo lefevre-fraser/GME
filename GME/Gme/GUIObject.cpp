@@ -17,6 +17,10 @@
 
 #include "GMEEventLogger.h"
 
+// === from DecoratorDefs.h ===
+static const char* PREF_PREFERREDSIZE			= "preferredSize";
+
+
 CModelGrid modelGrid;
 
 /////////////////////////////// Helper functions /////////////////////////////////
@@ -1019,7 +1023,7 @@ CGuiObject::CGuiObject(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView
 	}
 }
 
-void CGuiObject::InitObject()
+void CGuiObject::InitObject(CWnd* viewWnd)
 {
 	try {
 		CComPtr<IMgaMetaParts> mmParts;
@@ -1038,7 +1042,7 @@ void CGuiObject::InitObject()
 			VERIFY(guiMetaAsp->index < numParentAspects);
 			CString decoratorStr;
 			GetDecoratorStr(decoratorStr);
-			InitAspect(guiMetaAsp->index,mmPart,decoratorStr);
+			InitAspect(guiMetaAsp->index, mmPart, decoratorStr, viewWnd);
 		}
 		MGACOLL_ITERATE_END;
 
@@ -1087,7 +1091,7 @@ CGuiObject::~CGuiObject()
 	guiAspects.RemoveAll();
 }
 
-void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &decorStr)
+void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &decorStr, CWnd* viewWnd)
 {
 	VERIFY(asp < numParentAspects);
 	CGuiMetaAspect *metaAspect = GetKindAspect(metaPart);
@@ -1162,8 +1166,28 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 		progId = GME_DEFAULT_DECORATOR;
 	}
 	CComPtr<IMgaDecorator> decor;
+#if defined (TRYNEWDECORATORS)
+	CComPtr<IMgaNewDecorator> newDecor;
+#endif
+
 	try {
+		bool newDecoratorCreated = false;
+#if defined (TRYNEWDECORATORS)
+		CComPtr<IMgaNewDecoratorEvents> newDecorEventSink;
+		if (progId == GME_DEFAULT_DECORATOR) {
+			COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.MgaNewDecorator")));
+			newDecoratorCreated = true;
+			CDecoratorEventSink* cNewDecorEventSink = new CDecoratorEventSink();
+			HRESULT hr = cNewDecorEventSink->QuerySinkInterface((void**) &newDecorEventSink);
+			if (hr == S_OK) {
+				cNewDecorEventSink->SetView(view);
+				cNewDecorEventSink->SetGuiObject(this);
+			}
+			decor = CComQIPtr<IMgaDecorator>(newDecor);
+		} else
+#endif
 		COMTHROW(decor.CoCreateInstance(PutInBstr(progId)));
+
 		POSITION ppos = params.GetHeadPosition();
 		POSITION vpos = values.GetHeadPosition();
 		while (ppos && vpos) {
@@ -1171,6 +1195,11 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 			CComVariant value(values.GetNext(vpos));
 			COMTHROW(decor->SetParam(param, value));
 		}
+#if defined (TRYNEWDECORATORS)
+		if (newDecoratorCreated)
+			COMTHROW(newDecor->InitializeEx(theApp.mgaProject, metaPart, mgaFco, newDecorEventSink, (ULONGLONG)viewWnd->m_hWnd));
+		else
+#endif
 		COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
 	}
 	catch (hresult_exception &e) {
@@ -1238,6 +1267,17 @@ void CGuiObject::SetAllSizes(CSize &s, bool doMga)
 	for(int i = 0; i < numParentAspects; i++)
 		if(guiAspects[i] != NULL)
 			SetSize(s,i,doMga);
+}
+
+void CGuiObject::SetLocation(CRect &r, int aspect, bool doMga, bool savePreferredSize)
+{
+	if(aspect < 0)
+		aspect = parentAspect;
+	VERIFY(aspect >= 0);
+	VERIFY(guiAspects[aspect] != NULL);
+	guiAspects[aspect]->SetLocation(r);
+	if(IsReal() && doMga)
+		WriteLocation(aspect, savePreferredSize);
 }
 
 CSize CGuiObject::GetNativeSize(int aspect)
@@ -1372,7 +1412,7 @@ void CGuiObject::ReadAllLocations()
 	}
 }
 
-void CGuiObject::WriteLocation(int aspect)
+void CGuiObject::WriteLocation(int aspect, bool savePreferredSize)
 {
 	VERIFY(IsReal());
 	if(aspect < 0)
@@ -1387,8 +1427,18 @@ void CGuiObject::WriteLocation(int aspect)
 		CComPtr<IMgaMetaAspect> mAspect;
 		mBase.QueryInterface(&mAspect);
 		COMTHROW(mgaFco->get_Part(mAspect,&part));
-		CPoint pt = guiAspects[aspect]->GetLocation().TopLeft();
-		COMTHROW(part->SetGmeAttrs(0,pt.x,pt.y));
+		CRect r = guiAspects[aspect]->GetLocation();
+		// Save position part
+		CPoint pt = r.TopLeft();
+		COMTHROW(part->SetGmeAttrs(0, pt.x, pt.y));
+		// Save preferred size part
+		CSize size(r.Width(), r.Height());
+		if (savePreferredSize && size.cx >= 0 && size.cy >= 0) {
+			OLECHAR bbc[40];
+			swprintf(bbc, OLESTR("%ld,%ld"), size.cx, size.cy);
+			CComBSTR bb(bbc);
+			COMTHROW(part->put_RegistryValue(CComBSTR(PREF_PREFERREDSIZE), bb));
+		}
 		view->CommitTransaction();
 	}
 	catch(hresult_exception &e) {
@@ -1404,9 +1454,24 @@ void CGuiObject::GrayOutNeighbors()
 	ResetFlags(neighbors);
 }
 
+bool CGuiObject::IsInside(CPoint &pt, bool lookNearToo)
+{
+	CRect loc = GetLocation();
+	if (lookNearToo)
+		loc.InflateRect(3, 3);
+	return (loc.PtInRect(pt) == TRUE);
+}
 
+bool CGuiObject::IsLabelInside(CPoint &pt, bool lookNearToo)
+{
+	CRect loca = GetLocation();
+	CRect loc = GetNameLocation();
+	if (lookNearToo)
+		loc.InflateRect(3, 3);
+	return (loc.PtInRect(pt) == TRUE);
+}
 
-CGuiPort *CGuiObject::FindPort(CPoint &pt)
+CGuiPort *CGuiObject::FindPort(CPoint &pt, bool lookNearToo)
 {
 	CGuiPort *found = 0;
 	CSize     foundSize(0,0);
@@ -1414,18 +1479,24 @@ CGuiPort *CGuiObject::FindPort(CPoint &pt)
 	POSITION pos = GetCurrentAspect()->GetPortList().GetHeadPosition();
 	while(pos) {
 		CGuiPort *port = GetCurrentAspect()->GetPortList().GetNext(pos);
-		CRect r = port->GetLocation() + GetLocation().TopLeft();
-		if(r.PtInRect(pt)) {
-			CSize psize = port->GetLocation().Size();
-			if (found) {
-				if (psize.cx < foundSize.cx && psize.cy < foundSize.cy ) {
+		// The last one in the list is weird one: fco is the object's fco, skip that.
+		// See CGuiAspect::InitPorts
+		if (!mgaFco.IsEqualObject(port->mgaFco)) {
+			CRect r = port->GetLocation() + GetLocation().TopLeft();
+			CRect rInflated = r;
+			rInflated.InflateRect(3, 3);
+			if (r.PtInRect(pt) == TRUE || lookNearToo && rInflated.PtInRect(pt) == TRUE) {
+				CSize psize = port->GetLocation().Size();
+				if (found) {
+					if (psize.cx < foundSize.cx && psize.cy < foundSize.cy ) {
+						foundSize = psize;
+						found = port;
+					}
+				}
+				else {
 					foundSize = psize;
 					found = port;
 				}
-			}
-			else {
-				foundSize = psize;
-				found = port;
 			}
 		}
 	}
@@ -1587,6 +1658,28 @@ void CGuiObject::ShiftModels(CGuiObjectList &objList,CPoint &shiftBy)
 		obj->SetCenter(point);
 		modelGrid.Set(obj);
 	}
+}
+
+void CGuiObject::ResizeObject(const CRect& newLocation, bool doMga)
+{
+	CGMEEventLogger::LogGMEEvent("CGuiObject::ResizeObject\n");
+
+/*	if (GetView() != modelGrid.GetSource()) {
+		// if the view where the object was moved and the view of the grid 
+		// do not correspond, we must clear & update the grid.
+		// possible because if a port is moved inside a model, then the model
+		// is redrawn as well, and modelGrid is a global variable.
+		// clearing only the grid would be too dangerous, would allow any movement
+		// because other objects will disappear from the radar
+		// but a Clear with a FillModelGrid will do the correct update
+		modelGrid.Clear();
+		GetView()->FillModelGrid();
+	}
+	modelGrid.Reset(this);*/
+
+	VERIFY(IsVisible());
+	SetLocation((CRect)newLocation, -1, doMga, true);
+//	modelGrid.Set(this);
 }
 
 bool CGuiObject::NudgeObjects(CGuiObjectList &modelList,int right,int down)
@@ -2373,7 +2466,8 @@ void CGuiConnection::Draw(CDC *pDC)
 
 	const CPointList &points = routerPath.p ? normalPoints : tmpPoints;
 
-	graphics.DrawConnection(pDC,points,grayedOut ? GME_GRAYED_OUT_COLOR : color,lineType,srcStyle,dstStyle,true,selected? 1: 0);
+	graphics.DrawConnection(pDC, points, grayedOut ? GME_GRAYED_OUT_COLOR : color, lineType, srcStyle, dstStyle,
+							true, view->m_zoomVal > ZOOM_NO, selected ? 1: 0);
 
 	POSITION pos = points.GetHeadPosition();
 	CPoint start = points.GetNext(pos);

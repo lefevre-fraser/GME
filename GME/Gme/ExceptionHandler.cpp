@@ -445,7 +445,7 @@ void ExceptionHandler::UnhandledExceptionFilterCore (const char* msg, PEXCEPTION
 	if (m_createMinidump) {
 		LoadDbgHelpDll();
 		GenerateUserStreamData(msg, pExp);
-		TRACE0(m_UserCrashData);
+//		TRACE0(m_UserCrashData);
 		TCHAR generatedFileName[MAX_PATH];
 		GenerateFileName(generatedFileName);
 		GenerateMiniDump(pExp, generatedFileName);

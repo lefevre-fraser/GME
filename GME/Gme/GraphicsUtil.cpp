@@ -86,41 +86,41 @@ CGraphics::CGraphics()
 	GetPen(GME_BLACK_COLOR		);
 	GetPen(GME_WHITE_COLOR		);
 	GetPen(GME_GREY_COLOR		);
-	GetPen(GME_BACKGROUND_COLOR	,false, true);
-	GetPen(GME_BORDER_COLOR		,false, true);
-	GetPen(GME_MODEL_COLOR		,false, true);
-	GetPen(GME_NAME_COLOR		,false, true);
-	GetPen(GME_PORTNAME_COLOR	,false, true);
-	GetPen(GME_CONNECTION_COLOR	,false, true);
-	GetPen(GME_GRAYED_OUT_COLOR	,false, true);
-	GetPen(GME_GRID_COLOR		,false, true);
-	GetPen(GME_BLACK_COLOR		,false, true);
-	GetPen(GME_WHITE_COLOR		,false, true);
-	GetPen(GME_GREY_COLOR		,false, true);
+	GetPen(GME_BACKGROUND_COLOR	, false, true);
+	GetPen(GME_BORDER_COLOR		, false, true);
+	GetPen(GME_MODEL_COLOR		, false, true);
+	GetPen(GME_NAME_COLOR		, false, true);
+	GetPen(GME_PORTNAME_COLOR	, false, true);
+	GetPen(GME_CONNECTION_COLOR	, false, true);
+	GetPen(GME_GRAYED_OUT_COLOR	, false, true);
+	GetPen(GME_GRID_COLOR		, false, true);
+	GetPen(GME_BLACK_COLOR		, false, true);
+	GetPen(GME_WHITE_COLOR		, false, true);
+	GetPen(GME_GREY_COLOR		, false, true);
 
-	GetPen(GME_BACKGROUND_COLOR	,true,true);
-	GetPen(GME_BORDER_COLOR		,true,true);
-	GetPen(GME_MODEL_COLOR		,true,true);
-	GetPen(GME_NAME_COLOR		,true,true);
-	GetPen(GME_PORTNAME_COLOR	,true,true);
-	GetPen(GME_CONNECTION_COLOR	,true,true);
-	GetPen(GME_GRAYED_OUT_COLOR	,true,true);
-	GetPen(GME_GRID_COLOR		,true,true);
-	GetPen(GME_BLACK_COLOR		,true,true);
-	GetPen(GME_WHITE_COLOR		,true,true);
-	GetPen(GME_GREY_COLOR		,true,true);
+	GetPen(GME_BACKGROUND_COLOR	, true, true);
+	GetPen(GME_BORDER_COLOR		, true, true);
+	GetPen(GME_MODEL_COLOR		, true, true);
+	GetPen(GME_NAME_COLOR		, true, true);
+	GetPen(GME_PORTNAME_COLOR	, true, true);
+	GetPen(GME_CONNECTION_COLOR	, true, true);
+	GetPen(GME_GRAYED_OUT_COLOR	, true, true);
+	GetPen(GME_GRID_COLOR		, true, true);
+	GetPen(GME_BLACK_COLOR		, true, true);
+	GetPen(GME_WHITE_COLOR		, true, true);
+	GetPen(GME_GREY_COLOR		, true, true);
 
-	GetPen(GME_BACKGROUND_COLOR	,true,false);
-	GetPen(GME_BORDER_COLOR		,true,false);
-	GetPen(GME_MODEL_COLOR		,true,false);
-	GetPen(GME_NAME_COLOR		,true,false);
-	GetPen(GME_PORTNAME_COLOR	,true,false);
-	GetPen(GME_CONNECTION_COLOR	,true,false);
-	GetPen(GME_GRAYED_OUT_COLOR	,true,false);
-	GetPen(GME_GRID_COLOR		,true,false);
-	GetPen(GME_BLACK_COLOR		,true,false);
-	GetPen(GME_WHITE_COLOR		,true,false);
-	GetPen(GME_GREY_COLOR		,true,false);
+	GetPen(GME_BACKGROUND_COLOR	, true, false);
+	GetPen(GME_BORDER_COLOR		, true, false);
+	GetPen(GME_MODEL_COLOR		, true, false);
+	GetPen(GME_NAME_COLOR		, true, false);
+	GetPen(GME_PORTNAME_COLOR	, true, false);
+	GetPen(GME_CONNECTION_COLOR	, true, false);
+	GetPen(GME_GRAYED_OUT_COLOR	, true, false);
+	GetPen(GME_GRID_COLOR		, true, false);
+	GetPen(GME_BLACK_COLOR		, true, false);
+	GetPen(GME_WHITE_COLOR		, true, false);
+	GetPen(GME_GREY_COLOR		, true, false);
 
 	CreateFonts(normalFonts,FW_LIGHT);
 	CreateFonts(semiboldFonts,FW_NORMAL);
@@ -140,6 +140,7 @@ CGraphics::~CGraphics()
 {
 	DeletePens(pens);
 	DeletePens(dashPens);
+	DeletePens(dashMagnifiedPens);
 	DeletePens(printPens);
 	DeletePens(dashPrintPens);
 	DeleteBrushes(brushes);
@@ -203,14 +204,14 @@ CFont *CGraphics::GetFont(int kindsize, bool bold, bool semibold)
 	return bold ? boldFonts[kindsize] : (semibold ? semiboldFonts[kindsize] : normalFonts[kindsize]);
 }
 
-CPen *CGraphics::GetPen(COLORREF color, bool isPrinting, bool dash, int width /* = 1 */)
+CPen *CGraphics::GetPen(COLORREF color, bool isPrinting, bool dash, bool isViewMagnified, int width /* = 1 */)
 {
 	LOGBRUSH logb = {BS_SOLID, 0, 0};
 	DWORD dashstyle[2] = {4, 2};
 	DWORD solidstyle[2] = {4, 0};
 	// print real dashed line
 	CPen *pen = 0;
-	if( width != 1 || !((dash ? (isPrinting? dashPrintPens: dashPens) : (isPrinting? printPens: pens)).Lookup((void *)color,pen))) {
+	if( width != 1 || !((dash ? (isPrinting? dashPrintPens: isViewMagnified ? dashMagnifiedPens : dashPens) : (isPrinting? printPens: pens)).Lookup((void *)color,pen))) {
 		pen = new CPen();
 //		pen->CreatePen((dash ? PS_DOT : PS_SOLID),1,color);
 //		pen->CreatePen((dash ? (isPrinting? PS_DASH: PS_DOT) : PS_SOLID),1,color);
@@ -218,11 +219,11 @@ CPen *CGraphics::GetPen(COLORREF color, bool isPrinting, bool dash, int width /*
 //		pen->CreatePen((dash ? (isPrinting? PS_USERSTYLE|PS_GEOMETRIC: PS_DOT|PS_GEOMETRIC) : 
 //			PS_SOLID|PS_GEOMETRIC), (isPrinting? 5: 1),
 //			&logb, (dash && isPrinting)? 2: 0, (dash && isPrinting)? dashstyle: NULL);
-		pen->CreatePen((dash ? (isPrinting? PS_USERSTYLE|PS_GEOMETRIC: PS_DOT) : 
+		pen->CreatePen((dash ? (isPrinting? PS_USERSTYLE|PS_GEOMETRIC: isViewMagnified ? PS_DASH|PS_GEOMETRIC : PS_DOT) : 
 			(isPrinting? PS_USERSTYLE|PS_GEOMETRIC: PS_SOLID|PS_GEOMETRIC)), (isPrinting? 1: width),
 				&logb, (isPrinting)? 2: 0, (isPrinting)? (dash? dashstyle: solidstyle): NULL);
 		if( width == 1) // only if regular
-		(dash ? (isPrinting? dashPrintPens: dashPens) : (isPrinting? printPens: pens)).SetAt((void *)color,pen);
+		(dash ? (isPrinting? dashPrintPens: isViewMagnified ? dashMagnifiedPens : dashPens) : (isPrinting? printPens: pens)).SetAt((void *)color,pen);
 	}
 	ASSERT(pen);
 	return pen;
@@ -258,8 +259,8 @@ void CGraphics::DrawGrid(CDC *pDC,int xSpace,int ySpace,int maxx,int maxy,COLORR
 }
 
 #pragma warning ( disable : 4100 ) // Unreferenced formal param
-void CGraphics::DrawConnection(CDC *pDC,const CPointList &points,COLORREF color,int lineType,
-							   int srcEnd,int dstEnd,bool mark,int lineStyle /* = 0 */)
+void CGraphics::DrawConnection(CDC *pDC, const CPointList &points, COLORREF color, int lineType,
+							   int srcEnd, int dstEnd, bool mark, bool isViewMagnified, int lineStyle /* = 0 */)
 {
 	if( points.GetCount()==0 )
 		return;
@@ -273,7 +274,8 @@ void CGraphics::DrawConnection(CDC *pDC,const CPointList &points,COLORREF color,
 	// the color has to be altered a little bit, because the predefined PenMap has color at its key 
 	// so it will confuse this bold Pen with already existing pens
 	//CPen *pen = GetPen(color, pDC->IsPrinting()!=FALSE, lineType > 0);
-	CPen *pen = GetPen(/*lineStyle > 0? (color+0x0f0f0f):*/ color, pDC->IsPrinting()!=FALSE, lineType > 0, lineStyle > 0? 5: 1);
+	CPen *pen = GetPen(/*lineStyle > 0? (color+0x0f0f0f):*/ color, pDC->IsPrinting() != FALSE, lineType > 0,
+					   isViewMagnified, lineStyle > 0 ? 5: 1);
 	CPen *oldpen = pDC->SelectObject(pen);
 	CBrush *brush = GetBrush(color);
 	CBrush *oldbrush = pDC->SelectObject(brush);

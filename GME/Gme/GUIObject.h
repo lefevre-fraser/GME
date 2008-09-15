@@ -47,7 +47,7 @@ public:
 	void SetLocation(const CRect& location);
 	CComPtr<IMgaDecorator> GetDecorator()			{ return decorator; }
 	int	GetIndex()									{ return index; }
-	CGuiPortList &GetPortList()				{ return ports; }
+	CGuiPortList &GetPortList()						{ return ports; }
 	CGuiObject* GetParent()							{ return parent; }
 	
 public:
@@ -198,13 +198,15 @@ protected:
 
 class CGuiObject : public CGuiFco
 {
+friend class CDecoratorEventSink;
+
 public:
 	CGuiObject(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView *vw,int numAsp);					// regular objects
 	virtual ~CGuiObject();
-	void InitObject();									// Need this because of virtual functions
+	void InitObject(CWnd* viewWnd);								// Need this because of virtual functions
 
 public:
-	void InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &decorStr);
+	void InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &decorStr, CWnd* viewWnd);
 	void GetDecoratorStr(CString &str);
 	const CRect& GetLocation(int aspect = -1)			{ aspect = (aspect < 0) ? parentAspect : aspect;  return guiAspects[aspect]->GetLocation(); }
 	const CRect& GetNameLocation(int aspect = -1)		{ aspect = (aspect < 0) ? parentAspect : aspect;  return guiAspects[aspect]->GetNameLocation(); }
@@ -213,6 +215,7 @@ public:
 	void SetCenter(CPoint &pt,int aspect = -1, bool doMga = true);
 	void SetSize(CSize &s,int aspect = -1,bool doMga = true);
 	void SetAllSizes(CSize &s, bool doMga = true);
+	void SetLocation(CRect &r, int aspect = -1, bool doMga = true, bool savePreferredSize = false);
 	CSize GetNativeSize(int aspect = -1);
 	void SetAllSizesToNative();							// Used by non real objects
 	int	MapAspect(int parent)							{ return guiAspects[parent] ? guiAspects[parent]->GetIndex() : -1; }
@@ -220,19 +223,20 @@ public:
 	void GetRelationsInOut(CGuiConnectionList &list, bool inOrOut);
 	CGuiPortList &GetPorts()							{ VERIFY(GetCurrentAspect()); return GetCurrentAspect()->GetPortList(); }
 	CGuiAspect *GetCurrentAspect()						{ return guiAspects[parentAspect]; }
-	CGuiPort *FindPort(CPoint &pt);
+	CGuiPort *FindPort(CPoint &pt, bool lookNearToo = false);
 	CGuiPort *FindPort(CComPtr<IMgaFCO> mgaFco);
 	CComPtr<IAutoRouterBox> GetRouterBox()								{ return GetCurrentAspect()->GetRouterBox(); }
 	CComPtr<IAutoRouterBox>  GetRouterNameBox()							{ return GetCurrentAspect()->GetRouterNameBox(); }
 	void SetRouterBox(CComPtr<IAutoRouterBox> rbox)						{ GetCurrentAspect()->SetRouterBox(rbox) ; }
 	void SetRouterNameBox(CComPtr<IAutoRouterBox> rnbox)				{ GetCurrentAspect()->SetRouterNameBox(rnbox) ; }
 	void ReadAllLocations();
-	void WriteLocation(int aspect = -1);
-	bool IsHotspotEnabled()							{ return isHotspotEnabled; }
+	void WriteLocation(int aspect = -1, bool savePreferredSize = false);
+	bool IsHotspotEnabled() const						{ return isHotspotEnabled; }
 
 public:
 	void GrayOutNeighbors();
-	bool IsInside(CPoint &pt)							{ return (GetLocation().PtInRect(pt) != 0); }
+	bool IsInside(CPoint &pt, bool lookNearToo = false);
+	bool IsLabelInside(CPoint &pt, bool lookNearToo = false);
 
 	void IncrementAnimRefCnt();
 	void DecrementAnimRefCnt();
@@ -244,6 +248,7 @@ public:
 	static void MoveObjects(CGuiObjectList &objectList,CPoint &pt);
 	static void FindUpperLeft(CGuiObjectList &objs,int &left,int &top);
 	static void ShiftModels(CGuiObjectList &objList,CPoint &shiftBy);
+	void ResizeObject(const CRect& newLocation, bool doMga = true);
 	static bool NudgeObjects(CGuiObjectList &modelList,int right,int down);
 	static CGuiObject *FindObject(CComPtr<IMgaFCO> &fco,CGuiFcoList &fcoList);
 	static void GetRectList(CGuiObjectList &objList,CRectList &rects);

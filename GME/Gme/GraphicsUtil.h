@@ -21,6 +21,7 @@ public:
 public:
 	CPenTable pens;
 	CPenTable dashPens;
+	CPenTable dashMagnifiedPens;
 	CPenTable dashPrintPens;
 	CPenTable printPens;
 	CBrushTable brushes;
@@ -36,7 +37,7 @@ public:
 	CArrowHead *rightHalfArrows[GME_DIRECTION_NUM];
 
 public:
-	CPen *GetPen(COLORREF color, bool isPrinting = false, bool dash = false, int width = 1);
+	CPen *GetPen(COLORREF color, bool isPrinting = false, bool dash = false, bool isViewMagnified = false, int width = 1);
 	CBrush *GetBrush(COLORREF color);
 	CFont *GetFont(GMEFontKind kind);
 	CFont *GetFont(int kindsize, bool bold = false, bool semibold = false);
@@ -46,7 +47,8 @@ public:
 	void DrawMark(CDC *pDC,int x1,int x2,int y1,int y2);
 	void DrawGrid(CDC *pDC,int xSpace,int ySpace,int maxx,int maxy,COLORREF color = GME_GRID_COLOR);
 	void DrawArrow(CDC *pDC,CPoint &beforeLast,CPoint &last, int iEnd );
-	void DrawConnection(CDC *pDC,const CPointList &points,COLORREF color,int lineType,int srcEnd,int dstEnd,bool mark,int lineStyle = 0);
+	void DrawConnection(CDC *pDC, const CPointList &points, COLORREF color, int lineType, int srcEnd, int dstEnd,
+						bool mark, bool isViewMagnified, int lineStyle = 0);
 	void DrawText(CDC *pDC,CString &txt,CPoint &pt,CFont *font,COLORREF color,int align);
 
 };

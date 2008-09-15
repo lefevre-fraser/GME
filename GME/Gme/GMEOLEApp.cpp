@@ -536,9 +536,11 @@ void CGMEOLEApp::GridShow(BOOL show)
 	CMDIChildWnd *pChild  = CMainFrame::theInstance->MDIGetActive();
 	if (pChild) 
 	{
+#if !defined (ACTIVEXGMEVIEW)
 		CGMEView *view = (CGMEView*)pChild->GetActiveView();
 		if (view) 
 			view->ShowGrid(show==TRUE);
+#endif
 	}
 }
 

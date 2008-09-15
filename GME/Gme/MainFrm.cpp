@@ -7,6 +7,7 @@
 #include "GMEstd.h"
 #include "MainFrm.h"
 #include "GMEDoc.h"
+#include "GMEChildFrame.h"
 #include "Splash.h"
 #include "GMEEventLogger.h"
 #include "..\XmlBackEnd\svauto.h"
@@ -489,7 +490,7 @@ void CMainFrame::ActivateView(CView *view)
 		frame->ActivateFrame(frame->IsIconic() ? SW_SHOWNORMAL : -1);
 }
 
-void CMainFrame::CreateNewView(CView *view)
+void CMainFrame::CreateNewView(CView *view, CComPtr<IMgaModel>& model)
 {
 	CMultiDocTemplate *docTemplate = theApp.pDocTemplate;
 	if(view != 0) {
@@ -505,6 +506,58 @@ void CMainFrame::CreateNewView(CView *view)
 			return;
 		}
 		docTemplate->InitialUpdateFrame(pFrame,pDocument);
+
+#if defined(ACTIVEXGMEVIEW)
+		CMainFrame* pMainFrame = (CMainFrame*)theApp.m_pMainWnd;
+		// Get the active MDI child window.
+		CMDIChildWnd* pChild = (CMDIChildWnd*)pMainFrame->GetActiveFrame();
+		// or CMDIChildWnd *pChild = pFrame->MDIGetActive();
+		// Get the active view attached to the active MDI child window.
+		CGMEChildFrame* pView = (CGMEChildFrame*)pChild->GetActiveView();
+		pView->SetProject(theApp.mgaProject);
+
+		m_partBrowser.SetProject(theApp.mgaProject);
+		try {
+			long status;
+			COMTHROW(theApp.mgaProject->get_ProjectStatus(&status));
+			bool inTrans = (status & 0x08L) != 0;
+			CComPtr<IMgaTerritory> terr;
+			if (!inTrans) {
+				COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr));
+				COMTHROW(theApp.mgaProject->BeginTransaction(terr, TRANSACTION_READ_ONLY));
+			} else {
+				COMTHROW(theApp.mgaProject->get_ActiveTerritory(&terr));
+			}
+
+			CComPtr<IMgaFCO> modelFco;
+			COMTHROW(terr->OpenFCO(model, &modelFco));
+			CComQIPtr<IMgaModel> model2 = modelFco;
+
+			status = OBJECT_ZOMBIE;
+			COMTHROW(model2->get_Status(&status));
+			if (status == OBJECT_EXISTS) {
+				CComPtr<IMgaMetaFCO> ccpMetaFCO;
+				COMTHROW(model2->get_Meta(&ccpMetaFCO));
+				CComQIPtr<IMgaMetaModel> metaModel = ccpMetaFCO;
+				metaref_type metaid;
+				COMTHROW(metaModel->get_MetaRef(&metaid));
+				CGuiMetaModel* guiMeta = CGuiMetaProject::theInstance->GetGuiMetaModel(metaid);
+				m_partBrowser.SetMetaModel(guiMeta);
+				pView->SetMetaModel(guiMeta);
+				pView->ChangeAspect(0);
+				m_partBrowser.SetBgColor(RGB(0xFF, 0xFF, 0xFF));
+				m_partBrowser.ChangeAspect(0);
+				m_partBrowser.RePaint();
+			}
+
+			if (!inTrans) {
+				theApp.mgaProject->CommitTransaction();
+			}
+		} catch(...) {
+			ASSERT(0);
+		}
+		pView->SetModel(model);
+#endif
 	}
 }
 
@@ -664,6 +717,63 @@ void CMainFrame::OnUpdateEditSearch(CCmdUI* pCmdUI)
 		// will set focus back to search window (like in VStudio).
 		// allows for easy 'Find Next'-like functionality
 		);
+}
+
+
+void CMainFrame::SetGMEViewMetaModel(CGuiMetaModel* meta)
+{
+	CDocument* pDocument = CGMEDoc::theInstance;
+	POSITION pos = pDocument->GetFirstViewPosition();
+	if (pos) {
+		while (pos != NULL) {
+#if defined(ACTIVEXGMEVIEW)
+			CGMEChildFrame* pView = (CGMEChildFrame*) pDocument->GetNextView(pos);
+			pView->SetMetaModel(meta);
+#endif
+		}
+	}
+}
+
+void CMainFrame::ChangeGMEViewAspect(int ind)
+{
+	CDocument* pDocument = CGMEDoc::theInstance;
+	POSITION pos = pDocument->GetFirstViewPosition();
+	if (pos) {
+		while (pos != NULL) {
+#if defined(ACTIVEXGMEVIEW)
+			CGMEChildFrame* pView = (CGMEChildFrame*) pDocument->GetNextView(pos);
+			pView->ChangeAspect(ind);
+#endif
+		}
+	}
+}
+
+void CMainFrame::CycleGMEViewAspect()
+{
+	CDocument* pDocument = CGMEDoc::theInstance;
+	POSITION pos = pDocument->GetFirstViewPosition();
+	if (pos) {
+		while (pos != NULL) {
+#if defined(ACTIVEXGMEVIEW)
+			CGMEChildFrame* pView = (CGMEChildFrame*) pDocument->GetNextView(pos);
+			pView->CycleAspect();
+#endif
+		}
+	}
+}
+
+void CMainFrame::GMEViewInvalidate()
+{
+	CDocument* pDocument = CGMEDoc::theInstance;
+	POSITION pos = pDocument->GetFirstViewPosition();
+	if (pos) {
+		while (pos != NULL) {
+#if defined(ACTIVEXGMEVIEW)
+			CGMEChildFrame* pView = (CGMEChildFrame*) pDocument->GetNextView(pos);
+			pView->Invalidate();
+#endif
+		}
+	}
 }
 
 

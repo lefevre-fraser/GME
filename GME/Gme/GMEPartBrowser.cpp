@@ -187,6 +187,6 @@ void CGMEPartBrowser::OnAspectChangedGmePartBrowserCtrl(LONG index)
 		CGuiMetaAspect* am = guiMetaModel->FindAspect(index);
 		VERIFY(am);
 		CString aspName = am->name;
-		CGMEDoc::theInstance->ChangeAspects(aspName);
+		CGMEDoc::theInstance->ChangeAspects(index, aspName);
 	}
 }

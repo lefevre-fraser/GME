@@ -83,6 +83,7 @@
 #define IDR_CRASH_TEST_MENU             218
 #define IDD_EMERGENCY_DIALOG            219
 #define IDD_PANNING_WINDOW_DIALOG       220
+#define IDD_CHILDFRAME_DIALOG           221
 #define IDC_NAME                        1000
 #define IDC_TYPENAME                    1001
 #define IDC_KINDNAME                    1002
@@ -193,6 +194,7 @@
 #define IDC_STATIC_SVN_SECTION1         1115
 #define IDC_PARTBROWSERCTRL1            1116
 #define IDC_PANNINGWINDOWCTRL1          1117
+#define IDC_CHILDFRAMECTRL1             1118
 #define IDC_LIST1                       1124
 #define IDC_EMERGENCY_INFO_STATIC       1125
 #define IDC_MINIDUMP_INFO_STATIC        1126
@@ -453,7 +455,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        221
+#define _APS_NEXT_RESOURCE_VALUE        224
 #define _APS_NEXT_COMMAND_VALUE         33086
 #define _APS_NEXT_CONTROL_VALUE         1128
 #define _APS_NEXT_SYMED_VALUE           119

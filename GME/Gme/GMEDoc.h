@@ -12,9 +12,10 @@
 #include "GMEStd.h"
 #include "GuiObject.h"
 #include "GMEOLEData.h"
-//#include "MGAUtil_i.h"
 #include <list>
 #include <string>
+
+class CGMEChildFrame;
 
 class CGMEDoc : public CDocument
 {
@@ -42,7 +43,11 @@ public:
 	void InvalidateAllViews(bool thorough = false, bool fullAutoRoute = false);
 	void ResetAllViews();
 	void ViewModeChange();
+#if !defined (ACTIVEXGMEVIEW)
 	CGMEView *FindView(CComPtr<IMgaModel> model);
+#else
+	CGMEChildFrame *FindView(CComPtr<IMgaModel> model);
+#endif
 
 	class Historian
 	{
@@ -127,7 +132,7 @@ public:
 	void ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent = FALSE);
 	void ShowObject(LPCTSTR objectID);
 	void ResetNextToView()													{ nextToView = 0; }
-	void ChangeAspects(CString aspName);
+	void ChangeAspects(int index, CString aspName);
 
 	static bool CreateFcoList(CGuiObjectList* list,CComPtr<IMgaFCOs> &fcos,CGMEView *view);
 	static bool CreateFcoList2(CGuiFcoList* list,CComPtr<IMgaFCOs> &fcos,CGMEView *view, long *howmany, bool* array[8]);

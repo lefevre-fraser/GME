@@ -27,6 +27,8 @@
 
 #if defined(_DEBUG)
 #define ADDCRASHTESTMENU
+#define TRYNEWDECORATORS
+//#define ACTIVEXGMEVIEW
 #endif
 
 #include <afxwin.h>         // MFC core and standard components

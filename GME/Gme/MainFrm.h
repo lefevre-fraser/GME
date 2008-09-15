@@ -47,18 +47,22 @@ public:
 // Operations
 public:
 	void ActivateView(CView *view);
-	void CreateNewView(CView *view = 0);
+	void CreateNewView(CView *view, CComPtr<IMgaModel>& model);
 	void DestroyView(CView *view);
 	void WriteStatusZoom(int zoomPct);
 	void WriteStatusParadigm(const char *txt);
 	void WriteStatusMode(const char *txt);
 	void WriteStatusText(int pane,const char *txt);
 	void UpdateTitle(LPCTSTR title);
-	void SetPartBrowser(CGuiMetaModel *meta)		{ m_partBrowser.SetMetaModel(meta); }
-	void SetPartBrowserBg(COLORREF bgColor)			{ m_partBrowser.SetBgColor(bgColor); m_partBrowser.RePaint(); }
-	void ResetPartBrowser()							{ m_partBrowser.RePaint(); }
-	void ChangePartBrowserAspect(int ind)			{ m_partBrowser.ChangeAspect(ind); }
-	void CyclePartBrowserAspect()					{ m_partBrowser.CycleAspect(); }
+	void SetPartBrowserMetaModel(CGuiMetaModel* meta)	{ m_partBrowser.SetMetaModel(meta); }
+	void SetPartBrowserBg(COLORREF bgColor)				{ m_partBrowser.SetBgColor(bgColor); m_partBrowser.RePaint(); }
+	void RePaintPartBrowser()							{ m_partBrowser.RePaint(); }
+	void ChangePartBrowserAspect(int ind)				{ m_partBrowser.ChangeAspect(ind); }
+	void CyclePartBrowserAspect()						{ m_partBrowser.CycleAspect(); }
+	void SetGMEViewMetaModel(CGuiMetaModel* meta);
+	void ChangeGMEViewAspect(int ind);
+	void CycleGMEViewAspect();
+	void GMEViewInvalidate();
 	BOOL CMainFrame::VerifyBarState(LPCTSTR lpszProfileName);
 	void OnDeleteDCForPanningVindowCtrl(CDC* bCDC);
 	void ShowObjectInspector();

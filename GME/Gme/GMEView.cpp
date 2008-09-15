@@ -264,6 +264,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_WM_SETCURSOR()
 	ON_EN_KILLFOCUS(IDC_NAME, OnKillfocusNameProp)
 	ON_CBN_SELCHANGE(IDC_ASPECT, OnSelChangeAspectProp)
+	ON_WM_LBUTTONUP()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_RBUTTONDOWN()
 	ON_WM_LBUTTONDBLCLK()
@@ -414,6 +415,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_CNTX_CONNECT, OnCntxConnect)
 	ON_UPDATE_COMMAND_UI(ID_CNTX_CONNECT, OnUpdateCntxConnect)
 	ON_COMMAND(ID_RESET_STICKY, OnResetSticky)
+	ON_WM_NCMOUSEMOVE()
 	ON_WM_MOUSEMOVE()
 	ON_WM_TIMER()
 	ON_UPDATE_COMMAND_UI(ID_CNTX_INSERTANNOTATION, OnUpdateCntxInsertannotation)
@@ -482,66 +484,80 @@ END_MESSAGE_MAP()
 
 CGMEView::CGMEView()
 {
-	m_isActive = false;
-	m_preview = false;
-	m_scalePrnPages = 1;
-	m_currPrnNumAsp = 0;
-	m_fullPrnAspNum = 1;
-	m_prevcurrasp = NULL;
-	m_prnpos = NULL;
-	m_lastPrnPage = 0;
-	m_zoomVal = ZOOM_NO;
-	m_refreshpannwin = false;
+	m_isActive						= false;
+	m_preview						= false;
+	m_scalePrnPages					= 1;
+	m_currPrnNumAsp					= 0;
+	m_fullPrnAspNum					= 1;
+	m_prevcurrasp					= NULL;
+	m_prnpos						= NULL;
+	m_lastPrnPage					= 0;
+	m_zoomVal						= ZOOM_NO;
+	m_refreshpannwin				= false;
 
-	initDone = false;
-	inTransaction = 0;
+	initDone						= false;
+	inTransaction					= 0;
 
-	autoconnectCursor = AfxGetApp()->LoadCursor(IDC_AUTOCONNECT_CURSOR);
-	autoconnect2Cursor = AfxGetApp()->LoadCursor(IDC_AUTOCONNECT2_CURSOR);
-	disconnectCursor = AfxGetApp()->LoadCursor(IDC_DISCONNECT_CURSOR);
-	disconnect2Cursor = AfxGetApp()->LoadCursor(IDC_DISCONNECT2_CURSOR);
-	setCursor = AfxGetApp()->LoadCursor(IDC_SET_CURSOR);
-	set2Cursor = AfxGetApp()->LoadCursor(IDC_SET2_CURSOR);
-	zoomCursor = AfxGetApp()->LoadCursor(IDC_ZOOM_CURSOR);
-	visualCursor = AfxGetApp()->LoadCursor(IDC_VISUAL_CURSOR);
-	editCursor = LoadCursor(0,IDC_ARROW);
+	autoconnectCursor				= AfxGetApp()->LoadCursor(IDC_AUTOCONNECT_CURSOR);
+	autoconnect2Cursor				= AfxGetApp()->LoadCursor(IDC_AUTOCONNECT2_CURSOR);
+	disconnectCursor				= AfxGetApp()->LoadCursor(IDC_DISCONNECT_CURSOR);
+	disconnect2Cursor				= AfxGetApp()->LoadCursor(IDC_DISCONNECT2_CURSOR);
+	setCursor						= AfxGetApp()->LoadCursor(IDC_SET_CURSOR);
+	set2Cursor						= AfxGetApp()->LoadCursor(IDC_SET2_CURSOR);
+	zoomCursor						= AfxGetApp()->LoadCursor(IDC_ZOOM_CURSOR);
+	visualCursor					= AfxGetApp()->LoadCursor(IDC_VISUAL_CURSOR);
+	editCursor						= LoadCursor(0,IDC_ARROW);
 
-	drawGrid = false;
-	contextMenuLocation = CPoint(0,0);
+	drawGrid						= false;
 
-	prevDropEffect = DROPEFFECT_NONE;
-	inDrag = false;
+	isCursorChangedByDecorator		= false;
+	originalRect.SetRectEmpty();
+	inNewDecoratorOperation			= false;
+	inOpenedDecoratorTransaction	= false;
+	isContextInitiatedOperation		= false;
+	isMultiInputLevelOperation		= false;
+	skipFirstButtonUp				= false;
+	shouldCommitOperation			= false;
+	doTheResize						= false;
+	objectInDecoratorOperation		= NULL;
+	selectionOfContext				= NULL;
 
-	guiMeta = 0;
-	currentAspect = 0;
-	currentSet = 0;
-	lastObject = 0;
-	lastPort   = 0;
-	dragSource = 0;
+	prevDropEffect					= DROPEFFECT_NONE;
+	inDrag							= false;
+	contextMenuLocation				= CPoint(0,0);
 
-	needsReset = false;
-	alive = true;
+	guiMeta							= 0;
+	currentAspect					= 0;
+	currentSet						= 0;
+	lastObject						= 0;
+	lastPort						= 0;
+	dragSource						= 0;
+
+	needsReset						= false;
+	alive							= true;
 
 	instanceCount++;
 
-	animRefCnt = 0;
-	timerID = 0;
+	animRefCnt						= 0;
+	timerID							= 0;
 
-	driver = new CComObject<CViewDriver>;
-	driver->view = this;
+	driver							= new CComObject<CViewDriver>;
+	driver->view					= this;
 
-	contextSelection = 0;
-	contextAnnotation = 0;
-	contextPort = 0;
+	contextSelection				= 0;
+	contextAnnotation				= 0;
+	contextPort						= 0;
 
-	tmpConnectMode = false;
+	tmpConnectMode					= false;
 	ClearConnSpecs();
 }
 
 CGMEView::~CGMEView()
 {
 	// a good idea to release ptrs
-	baseType.Release();parent.Release();currentModel.Release();
+	baseType.Release();
+	parent.Release();
+	currentModel.Release();
 
 	if(--instanceCount <= 0) {
 		// update & disable some components
@@ -551,7 +567,7 @@ CGMEView::~CGMEView()
 		delete ofsbmp;
 		offScreenCreated = false;
 		if( CMainFrame::theInstance != NULL ) {
-			CMainFrame::theInstance->SetPartBrowser(NULL);
+			CMainFrame::theInstance->SetPartBrowserMetaModel(NULL);
 			CMainFrame::theInstance->SetPartBrowserBg(::GetSysColor(COLOR_APPWORKSPACE));
 		}
 	}
@@ -1491,14 +1507,15 @@ bool CGMEView::SendUnselEvent4List( CGuiObjectList* pUnselection)
 	return ok;
 }
 
-bool CGMEView::SendNow()
+bool CGMEView::SendNow(bool onlyDecoratorNotification)
 {
 	if( m_lstSelect.empty() && m_lstUnselect.empty())
 		return false;
 
 	bool ok = true;
 	try {
-		BeginTransaction();
+		if (!onlyDecoratorNotification)
+			BeginTransaction();
 
 		std::list<CGuiObject*>::iterator it;
 		for( it = m_lstUnselect.begin(); it != m_lstUnselect.end(); ++it)
@@ -1508,8 +1525,16 @@ bool CGMEView::SendNow()
 			{
 				long oStatus;
 				COMTHROW(pUnselection->mgaFco->get_Status(&oStatus));
-				if(oStatus == OBJECT_EXISTS) // make sure it has not been deleted since then
-					COMTHROW( pUnselection->mgaFco->SendEvent(OBJEVENT_DESELECT));
+				if(oStatus == OBJECT_EXISTS) {	// make sure it has not been deleted since then
+					if (!onlyDecoratorNotification)
+						COMTHROW( pUnselection->mgaFco->SendEvent(OBJEVENT_DESELECT));
+#if defined TRYNEWDECORATORS
+					// Sending decorator events just for efficinecy
+					CComQIPtr<IMgaNewDecorator> newDecorator(pUnselection->GetCurrentAspect()->GetDecorator());
+					if (newDecorator)
+						HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
+#endif
+				}
 			}
 		}
 
@@ -1520,18 +1545,29 @@ bool CGMEView::SendNow()
 			{
 				long oStatus;
 				COMTHROW(pSelection->mgaFco->get_Status(&oStatus));
-				if(oStatus == OBJECT_EXISTS)
-					COMTHROW( pSelection->mgaFco->SendEvent(OBJEVENT_SELECT));
+				if (oStatus == OBJECT_EXISTS) {
+					if (!onlyDecoratorNotification)
+						COMTHROW( pSelection->mgaFco->SendEvent(OBJEVENT_SELECT));
+#if defined TRYNEWDECORATORS
+					// Sending decorator events just for efficinecy
+					CComQIPtr<IMgaNewDecorator> newDecorator(pSelection->GetCurrentAspect()->GetDecorator());
+					if (newDecorator)
+						HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
+#endif
+				}
 			}
 		}
 
-		m_lstSelect.clear();
-		m_lstUnselect.clear();
+		if (!onlyDecoratorNotification) {
+			m_lstSelect.clear();
+			m_lstUnselect.clear();
 
-		CommitTransaction();
+			CommitTransaction();
+		}
 	}
 	catch(hresult_exception &e) {
-		AbortTransaction(e.hr);
+		if (!onlyDecoratorNotification)
+			AbortTransaction(e.hr);
 		ok = false;
 	}
 	return ok;
@@ -1539,11 +1575,13 @@ bool CGMEView::SendNow()
 
 void CGMEView::ResetParent()
 {
+#if !defined (ACTIVEXGMEVIEW)
 	CGMEView *parentView = GetDocument()->FindView(parent);
 	if(parentView) {
 		parentView->Reset();
 		parentView->Invalidate();
 	}
+#endif
 }
 
 // ??
@@ -1559,7 +1597,7 @@ void CGMEView::CreateGuiObjects(CComPtr<IMgaFCOs> &fcos,CGuiFcoList &objList,CGu
 		CGuiFco *guiFco;
 		if(tp == OBJTYPE_MODEL) {
 			guiFco = new CGuiModel(fco,role,this,guiMeta->NumberOfAspects());
-			((CGuiModel *)guiFco)->InitObject();
+			((CGuiModel *)guiFco)->InitObject(this);
 			((CGuiModel *)guiFco)->SetAspect(currentAspect->index);
 		}
 		else if(tp == OBJTYPE_REFERENCE) {
@@ -1594,19 +1632,19 @@ void CGMEView::CreateGuiObjects(CComPtr<IMgaFCOs> &fcos,CGuiFcoList &objList,CGu
 			
 			if(rtp == OBJTYPE_MODEL) {
 				guiFco = new CGuiCompoundReference(fco,role,this,guiMeta->NumberOfAspects(),refd,termRefd);
-				((CGuiCompoundReference *)guiFco)->InitObject();
+				((CGuiCompoundReference *)guiFco)->InitObject(this);
 				((CGuiCompoundReference *)guiFco)->SetAspect(currentAspect->index);
 			}
 			else {
 				guiFco = new CGuiReference(fco,role,this,guiMeta->NumberOfAspects(),refd,termRefd);
-				((CGuiReference *)guiFco)->InitObject();
+				((CGuiReference *)guiFco)->InitObject(this);
 				((CGuiReference *)guiFco)->SetAspect(currentAspect->index);
 			}
 			
 		}
 		else if(tp == OBJTYPE_SET) {
 			guiFco = new CGuiSet(fco,role,this,guiMeta->NumberOfAspects());
-			((CGuiSet *)guiFco)->InitObject();
+			((CGuiSet *)guiFco)->InitObject(this);
 			((CGuiSet *)guiFco)->SetAspect(currentAspect->index);
 			if(!currentSetID.IsEmpty()) {
 				CComBSTR bstr;
@@ -1622,7 +1660,7 @@ void CGMEView::CreateGuiObjects(CComPtr<IMgaFCOs> &fcos,CGuiFcoList &objList,CGu
 		}
 		else {
 			guiFco = new CGuiObject(fco,role,this,guiMeta->NumberOfAspects());
-			((CGuiObject *)guiFco)->InitObject();
+			((CGuiObject *)guiFco)->InitObject(this);
 			((CGuiObject *)guiFco)->SetAspect(currentAspect->index);
 		}
 		guiFco->SetAspect(currentAspect->index);
@@ -1717,9 +1755,9 @@ void CGMEView::CreateAnnotators()
 void CGMEView::ResetPartBrowser()
 {
 	guiMeta->ResetParts();
-	CMainFrame::theInstance->SetPartBrowser(guiMeta);
+	CMainFrame::theInstance->SetPartBrowserMetaModel(guiMeta);
 	CMainFrame::theInstance->SetPartBrowserBg(bgColor);
-	CMainFrame::theInstance->ResetPartBrowser();
+	CMainFrame::theInstance->RePaintPartBrowser();
 }
 
 
@@ -1948,6 +1986,25 @@ void CGMEView::Reset(bool doInvalidate)
 	AutoRoute();
 
 	EndWaitCursor();
+
+#if defined TRYNEWDECORATORS
+	SendNow(true);
+
+	POSITION pos = selected.GetHeadPosition();
+	while (pos) {
+		CGuiObject* go = selected.GetNext(pos);
+		if (go && go->mgaFco) {
+			long oStatus;
+			COMTHROW(go->mgaFco->get_Status(&oStatus));
+			if (oStatus == OBJECT_EXISTS) {	// make sure it has not been deleted since then
+				// Sending decorator events just for efficinecy
+				CComQIPtr<IMgaNewDecorator> newDecorator(go->GetCurrentAspect()->GetDecorator());
+				if (newDecorator)
+					HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
+			}
+		}
+	}
+#endif
 }
 
 void CGMEView::InitSets()
@@ -2115,7 +2172,7 @@ void CGMEView::SetBgColor()
 				bgColor = ::GetSysColor(COLOR_WINDOW);
 			}
 			CMainFrame::theInstance->SetPartBrowserBg(bgColor);
-			CMainFrame::theInstance->ResetPartBrowser();
+			CMainFrame::theInstance->RePaintPartBrowser();
 			CommitTransaction();
 		}
 		catch(hresult_exception &e) {
@@ -2127,7 +2184,7 @@ void CGMEView::SetBgColor()
 // prevous zoom value : curzoom
 // new zoom value stored in m_zoomVal
 // point : win client coordinates - this image point has to be centered
-void CGMEView::setZoomPoint(int curzoom, CPoint point)
+void CGMEView::SetZoomPoint(int curzoom, CPoint point)
 {
 	CRect clientW(0,0,0,0);
 	GetClientRect(&clientW);
@@ -2169,7 +2226,7 @@ void CGMEView::ZoomIn(CPoint point)
 	if (curzoom == m_zoomVal)
 		return;
 
-	setZoomPoint(curzoom, point);
+	SetZoomPoint(curzoom, point);
 }
 
 void CGMEView::ZoomOut(CPoint point)
@@ -2184,7 +2241,7 @@ void CGMEView::ZoomOut(CPoint point)
 	if (curzoom == m_zoomVal)
 		return;
 
-	setZoomPoint(curzoom, point);
+	SetZoomPoint(curzoom, point);
 }
 
 void CGMEView::ShowHelp(CComPtr<IMgaFCO> fco)
@@ -2210,6 +2267,7 @@ void CGMEView::ShowModel(CComPtr<IMgaModel> model,CString *aspect)
 {
 	// FIX for JIRA bug: GME-135
 	if( !model) return;
+#if !defined (ACTIVEXGMEVIEW)
 	// endFIX
 	CString newAspect = aspect ? *aspect : currentAspect->name;
 	CGMEDoc *doc = GetDocument();
@@ -2219,12 +2277,13 @@ void CGMEView::ShowModel(CComPtr<IMgaModel> model,CString *aspect)
 		doc->SetNextToView(model,newAspect, fakeObj);
 	else
 		view->ChangeAspect(newAspect);
-	CMainFrame::theInstance->CreateNewView(view);
+	CMainFrame::theInstance->CreateNewView(view, model);
 	if( theApp.isHistoryEnabled())
 	{
 		doc->tellHistorian( model, newAspect);
 		doc->clearForwHistory();
 	}
+#endif
 }
 
 void CGMEView::GetModelInContext(CComPtr<IMgaModel> &model)
@@ -2557,15 +2616,15 @@ CGuiObject *CGMEView::FindFirstObject()
 {
 	m_findNextAlreadyAchieved = 0; // reset the currently achieved minimum level to its default
 
-	return helpMeFindNextObject( false);
+	return HelpMeFindNextObject( false);
 }
 
 CGuiObject *CGMEView::FindNextObject()
 {
-	return helpMeFindNextObject( true);
+	return HelpMeFindNextObject( true);
 }
 
-CGuiObject *CGMEView::helpMeFindNextObject( bool p_secondFind)
+CGuiObject *CGMEView::HelpMeFindNextObject( bool p_secondFind)
 {
 	CGuiObject*      first     = 0;
 	unsigned long    first_abs = 0; // distance square from (0,0)
@@ -2608,15 +2667,22 @@ CGuiObject *CGMEView::helpMeFindNextObject( bool p_secondFind)
 	return first;
 }
 
-CGuiObject *CGMEView::FindObject(CPoint &pt)
+CGuiObject *CGMEView::FindObject(CPoint &pt, bool lookNearToo, bool lookForLabel)
 {
 	POSITION pos = children.GetHeadPosition();
 	while(pos) {
 		CGuiObject *obj = dynamic_cast<CGuiObject *>(children.GetNext(pos));
-		if(obj && obj->IsVisible() && obj->IsInside(pt))
-			return obj;
+		if(obj && obj->IsVisible()) {
+			if (!lookForLabel) {
+				if (obj->IsInside(pt, lookNearToo))
+					return obj;
+			} else {
+				if (obj->IsLabelInside(pt, lookNearToo))
+					return obj;
+			}
+		}
 	}
-	return 0;
+	return NULL;
 }
 
 CGuiAnnotator *CGMEView::FindAnnotation(CPoint &pt)
@@ -2813,7 +2879,7 @@ bool CGMEView::DeleteObjects(CGuiObjectList &objectList)
 			// making sure that the fco was not deleted previously in the loop due to a dependency 
 			if(oStatus == OBJECT_EXISTS) {
 				// throws E_MGA_MUST_ABORT if user selects CANCEL
-				brw_refresh_needed = askUserAndDetachIfNeeded( obj->mgaFco); // detach the dependents if needed
+				brw_refresh_needed = AskUserAndDetachIfNeeded(obj->mgaFco); // detach the dependents if needed
 				COMTHROW(obj->mgaFco->DestroyObject());
 				COMTHROW(obj->mgaFco->Close());
 			}
@@ -3803,8 +3869,11 @@ BOOL CGMEView::OnEraseBkgnd(CDC* pDC)
 //	return CScrollZoomView::OnEraseBkgnd(pDC);
 }
 
-BOOL CGMEView::OnSetCursor(CWnd* /*pWnd*/, UINT /*nHitTest*/, UINT /*message*/)
+BOOL CGMEView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
+	if (isCursorChangedByDecorator)
+		return TRUE;
+
 	if( GetFocus() != this )
 		SetCursor(editCursor);
 	else {
@@ -3927,6 +3996,81 @@ bool CGMEView::ChangePrnAspect(CString aspName)
 	return true;
 }
 
+void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnLButtonUp in " + path + name + "\r\n");
+
+	CPoint ppoint = point;
+	if (!tmpConnectMode) {
+		CPoint trackPoint = point;
+		CoordinateTransfer(point);
+
+		CGMEDoc* doc = GetDocument();
+		switch(doc->GetEditMode()) {
+		case GME_EDIT_MODE:
+			{
+				CGMEEventLogger::LogGMEEvent("    mode=GME_EDIT_MODE\r\n");
+
+#if defined TRYNEWDECORATORS
+				CGMEView* self = const_cast<CGMEView*> (this);
+				CGuiObject*	object	= self		? self->FindObject(point, true) : 0;
+//				CGuiPort*	port	= object	? object->FindPort(point, true) : 0;
+
+				if (isContextInitiatedOperation && skipFirstButtonUp) {
+					skipFirstButtonUp = false;
+				} else if (inNewDecoratorOperation) {
+					CComQIPtr<IMgaNewDecorator> newDecorator(objectInDecoratorOperation->GetCurrentAspect()->GetDecorator());
+					if (newDecorator) {
+						HRESULT retVal = newDecorator->MouseLeftButtonUp(nFlags, point.x, point.y, ppoint.x, ppoint.y, m_zoomVal);
+						if (retVal == S_DECORATOR_EVENT_HANDLED) {
+							if (inOpenedDecoratorTransaction) {
+								if (shouldCommitOperation) {
+									if (doTheResize) {
+										objectInDecoratorOperation->ResizeObject(objectInDecoratorOperation->GetLocation(), true);
+										doTheResize = false;
+									}
+									CommitTransaction();
+									shouldCommitOperation = false;
+									objectInDecoratorOperation = NULL;
+								} else {
+									AbortTransaction(S_OK);
+								}
+								inOpenedDecoratorTransaction = false;
+								isContextInitiatedOperation = false;
+								isMultiInputLevelOperation = false;
+							}
+							break;
+						} else if (retVal != S_OK &&
+								   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+								   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+						{
+							CancelDecoratorOperation();
+							COMTHROW(retVal);
+						}
+					}
+				} else if (object) {
+					CComQIPtr<IMgaNewDecorator> newDecorator(object->GetCurrentAspect()->GetDecorator());
+					if (newDecorator) {
+						HRESULT retVal = newDecorator->MouseLeftButtonUp(nFlags, point.x, point.y, ppoint.x, ppoint.y, m_zoomVal);
+						if (retVal != S_OK &&
+							retVal != S_DECORATOR_EVENT_HANDLED &&
+							retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+							retVal != E_DECORATOR_NOT_IMPLEMENTED)
+						{
+							CancelDecoratorOperation();
+							COMTHROW(retVal);
+						}
+						if (inNewDecoratorOperation)
+							objectInDecoratorOperation = object;
+					}
+				}
+#endif
+			}	//case
+		}	// switch
+	}	// if (!tmpConnectMode)
+	CScrollZoomView::OnLButtonUp(nFlags, ppoint);
+}
+
 void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnLButtonDown in "+path+name+"\r\n");
@@ -3954,11 +4098,106 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 		case GME_EDIT_MODE:
 			{
 				CGMEEventLogger::LogGMEEvent("    mode=GME_EDIT_MODE\r\n");
-				CGuiObject *selection = FindObject(point);
-				CGuiAnnotator *annotation = selection ? NULL : FindAnnotation(point);
-				CGuiConnection *connection = router.FindConnection(point);
 
- 	 	 	 	POSITION alreadySelected = 0;
+#if defined TRYNEWDECORATORS
+				CGMEView* self = const_cast<CGMEView*> (this);
+				CGuiObject*	object	= self		? self->FindObject(point, true) : 0;
+//				CGuiPort*	port	= object	? object->FindPort(point, true) : 0;
+				if (object == NULL)
+					object = self ? self->FindObject(point, true, true) : 0;
+
+				if (isContextInitiatedOperation || inNewDecoratorOperation) {
+					if (isContextInitiatedOperation) {
+						if (::GetCapture() != NULL)
+							::ReleaseCapture();
+						inNewDecoratorOperation = true;
+					}
+					if (isContextInitiatedOperation && !skipFirstButtonUp) {
+						CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+						return;
+					}
+					CComQIPtr<IMgaNewDecorator> newDecorator(objectInDecoratorOperation->GetCurrentAspect()->GetDecorator());
+					if (newDecorator) {
+						HRESULT retVal = newDecorator->MouseLeftButtonDown(nFlags, point.x, point.y, ppoint.x, ppoint.y, m_zoomVal);
+						if (retVal == S_DECORATOR_EVENT_HANDLED) {
+							if (inOpenedDecoratorTransaction) {
+								if (shouldCommitOperation) {
+									CommitTransaction();
+									shouldCommitOperation = false;
+									objectInDecoratorOperation = NULL;
+									inOpenedDecoratorTransaction = false;
+									isContextInitiatedOperation = false;
+									isMultiInputLevelOperation = false;
+								} else if (!isMultiInputLevelOperation) {
+									AbortTransaction(S_OK);
+									inOpenedDecoratorTransaction = false;
+									isContextInitiatedOperation = false;
+									isMultiInputLevelOperation = false;
+								}
+							}
+						} else if (retVal != S_OK &&
+								   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+								   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+						{
+							CancelDecoratorOperation();
+							COMTHROW(retVal);
+						}
+						CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+						return;
+					}
+				} else if (object) {
+					CComQIPtr<IMgaNewDecorator> newDecorator(object->GetCurrentAspect()->GetDecorator());
+					if (newDecorator) {
+						HRESULT retVal = newDecorator->MouseLeftButtonDown(nFlags, point.x, point.y, ppoint.x, ppoint.y, m_zoomVal);
+						if (retVal == S_DECORATOR_EVENT_HANDLED) {
+							if (inOpenedDecoratorTransaction) {
+								if (shouldCommitOperation) {
+									CommitTransaction();
+									shouldCommitOperation = false;
+									objectInDecoratorOperation = NULL;
+									inOpenedDecoratorTransaction = false;
+									isContextInitiatedOperation = false;
+									isMultiInputLevelOperation = false;
+									CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+									return;
+								} else if (!inNewDecoratorOperation) {
+									AbortTransaction(S_OK);
+									inOpenedDecoratorTransaction = false;
+									isContextInitiatedOperation = false;
+									isMultiInputLevelOperation = false;
+									CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+									return;
+								} else {
+									if (::GetCapture() != NULL)
+										::ReleaseCapture();
+								}
+							}
+						} else if (retVal != S_OK &&
+								   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+								   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+						{
+							CancelDecoratorOperation();
+							COMTHROW(retVal);
+						}
+						if (inNewDecoratorOperation)
+							objectInDecoratorOperation = object;
+					}
+				}
+				if (inNewDecoratorOperation) {
+					CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+					return;
+				}
+#endif
+
+				CGuiObject* selection = FindObject(point);
+#if defined TRYNEWDECORATORS
+				if (selection == NULL)	// select with label
+					selection = FindObject(point, false, true);
+#endif
+				CGuiAnnotator* annotation = selection ? NULL : FindAnnotation(point);
+				CGuiConnection* connection = router.FindConnection(point);
+
+				POSITION alreadySelected = 0;
 				if((selection != 0) || (annotation != 0)) {
 					if (selection) {
 						CGMEEventLogger::LogGMEEvent("    LButton over "+selection->GetName()+" "+selection->GetID()+"\r\n"); 
@@ -4297,9 +4536,48 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnLButtonDblClk in "+path+name+"\r\n");
-	if(GetDocument()->GetEditMode() == GME_EDIT_MODE) {
-		CoordinateTransfer(point);
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnLButtonDblClk in " + path + name + "\r\n");
+	CPoint ppoint = point;
+	if (GetDocument()->GetEditMode() == GME_EDIT_MODE) {
+		CoordinateTransfer(point);	// DPtoLP
+
+#if defined TRYNEWDECORATORS
+		CGMEView* self = const_cast<CGMEView*> (this);
+		CGuiObject*	object	= self ? self->FindObject(point, true, true) : 0;
+		if (object == NULL)	// not label of the object but can be some port label inside the object
+			object = self ? self->FindObject(point, true, false) : 0;
+
+		if (object) {
+			CComQIPtr<IMgaNewDecorator> newDecorator(object->GetCurrentAspect()->GetDecorator());
+			if (newDecorator) {
+				HRESULT retVal = newDecorator->MouseLeftButtonDoubleClick(nFlags, point.x, point.y, ppoint.x, ppoint.y, m_zoomVal);
+				if (retVal == S_DECORATOR_EVENT_HANDLED) {
+					if (inOpenedDecoratorTransaction) {
+						if (shouldCommitOperation) {
+							CommitTransaction();
+							shouldCommitOperation = false;
+							objectInDecoratorOperation = NULL;
+						} else {
+							AbortTransaction(S_OK);
+						}
+						inOpenedDecoratorTransaction = false;
+						isContextInitiatedOperation = false;
+						isMultiInputLevelOperation = false;
+					}
+					CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
+					return;
+				} else if (retVal != S_OK &&
+						   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+						   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+				{
+					CancelDecoratorOperation();
+					COMTHROW(retVal);
+				}
+			}
+		} else {
+			CancelDecoratorOperation();
+		}
+#endif
 
 		CGuiObject *selection = FindObject(point);
 		CGuiAnnotator *annotation = FindAnnotation(point);
@@ -4327,7 +4605,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 					}
 					catch(hresult_exception e) {
 						AbortTransaction(e.hr);
-						CScrollZoomView::OnLButtonDblClk(nFlags, point);
+						CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 					}
 					if(referred) {
 						if(FAILED(obj.QueryInterface(&model))) {		// it is a root
@@ -4388,9 +4666,11 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			}
 			if(model != 0) {
 				ShowModel(model,&aspectName);
+#if !defined (ACTIVEXGMEVIEW)
 				CGMEView *view = CGMEDoc::theInstance->FindView(model);
 				if(view)
 					view->SetCenterObject(referred);
+#endif
 			}
 		}
 		else if (annotation) {
@@ -4400,7 +4680,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			ShowAnnotationBrowser(fcoToShow, annotation->rootNode);
 		}
 	}
-	CScrollZoomView::OnLButtonDblClk(nFlags, point);
+	CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 }
 
 void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
@@ -4411,8 +4691,13 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 	CoordinateTransfer(local);
 	contextMenuLocation = local;
 
+	CGMEDoc* doc = GetDocument();
 	contextPort = 0;
 	contextSelection = FindObject(local);
+#if defined TRYNEWDECORATORS
+	if (contextSelection == NULL && doc->GetEditMode() == GME_EDIT_MODE)
+		contextSelection = FindObject(local, false, true);
+#endif
 	if( dynamic_cast<CGuiObject*>( contextSelection)) {
 		CGuiPort *port = dynamic_cast<CGuiObject*>( contextSelection)->FindPort( local);
 		if(port && port->IsRealPort()) {
@@ -4433,7 +4718,6 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 	else if(contextAnnotation)
 		CGMEEventLogger::LogGMEEvent("    RButton over "+contextAnnotation->GetName()+"\r\n");
 
-	CGMEDoc *doc = GetDocument();
 	switch(doc->GetEditMode()) {
 	case GME_SET_MODE:
 		{
@@ -4506,8 +4790,12 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 			ClientToScreen(&global);
 
 			// new selection logic 8/2/00
+			CGuiObject* selection = FindObject(local);
+#if defined TRYNEWDECORATORS
+			if (selection == NULL)
+				selection = FindObject(local, false, true);
+#endif
 			{
-				CGuiObject *selection = FindObject(local);
 				CGuiAnnotator *annotation = selection ? NULL : FindAnnotation(local);
 
 	 	 	 	POSITION alreadySelected = 0;
@@ -4559,12 +4847,27 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				}
 			}
 			else if(contextSelection) {
+				HMENU decoratorAdditionalMenu = ::CreatePopupMenu();
+				CComQIPtr<IMgaNewDecorator> newDecorator(selection->GetCurrentAspect()->GetDecorator());
+				HRESULT retVal = S_OK;
+				if (newDecorator)
+					retVal = newDecorator->MouseRightButtonDown((ULONGLONG)decoratorAdditionalMenu, nFlags, point.x, point.y, ppoint.x, ppoint.y, m_zoomVal);
 				CMenu menu;
-				menu.LoadMenu(dynamic_cast<CGuiConnection *>(contextSelection) ? IDR_CONNCONTEXT_MENU : IDR_CONTEXT_MENU);
-				menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
-													global.x,global.y,GetParent());
-			}
-			else if (contextAnnotation) {
+				menu.LoadMenu(dynamic_cast<CGuiConnection*> (contextSelection) ? IDR_CONNCONTEXT_MENU : IDR_CONTEXT_MENU);
+				CMenu* subMenu = menu.GetSubMenu(0);
+				if (::GetMenuItemCount(decoratorAdditionalMenu) > 0) {
+					subMenu->InsertMenu(0, MF_BYPOSITION | MF_SEPARATOR, 0, "");
+					subMenu->InsertMenu(0, MF_BYPOSITION | MF_POPUP | MF_ENABLED, (UINT_PTR)(decoratorAdditionalMenu), "Special Edit");
+				}
+				UINT cmdId = (UINT)subMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
+															global.x,global.y,GetParent());
+				// Save state for possible later use, see OnCmdMsg
+				ctxClkSt.nFlags = nFlags;
+				ctxClkSt.lpoint = point;
+				ctxClkSt.dpoint = ppoint;
+				selectionOfContext = selection;
+				::DestroyMenu(decoratorAdditionalMenu);
+			} else if (contextAnnotation) {
 				CMenu menu;
 				menu.LoadMenu(IDR_ANNCONTEXT_MENU);
 				menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
@@ -4620,7 +4923,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 		}
 		break;
 	}
-	CScrollZoomView::OnRButtonDown(nFlags, point);
+	CScrollZoomView::OnRButtonDown(nFlags, ppoint);
 	this->SendNow();
 }
 
@@ -4936,6 +5239,9 @@ void CGMEView::OnEditNudgeup()
 
 BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)
 {
+	if (nID == ID_EDIT_CANCEL && inNewDecoratorOperation)	// capture ESC for decorator operation cancel
+		CancelDecoratorOperation();
+
 	if(CGuiMetaProject::theInstance->CmdIDInRange(nID))	{
 		if(nCode == CN_COMMAND && pHandlerInfo == NULL) {
 			CString label;
@@ -4954,6 +5260,46 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 			CCmdUI *pUI = (CCmdUI *)pExtra;
 			pUI->Enable(isType);
 			return true;
+		}
+	} else if (nID >= DECORATOR_CTX_MENU_MINID && nID < DECORATOR_CTX_MENU_MAXID) {
+		if (nCode == CN_UPDATE_COMMAND_UI && pExtra != NULL) {
+			CCmdUI* pUI = (CCmdUI*) pExtra;
+			pUI->Enable(isType);
+			return true;
+		} else if (nCode == CN_COMMAND && selectionOfContext != NULL) {
+			// Send command using saved state
+			CComQIPtr<IMgaNewDecorator> newDecorator(selectionOfContext->GetCurrentAspect()->GetDecorator());
+			if (newDecorator) {
+				isContextInitiatedOperation = true;
+				objectInDecoratorOperation = selectionOfContext;
+				HRESULT retVal = newDecorator->MenuItemSelected(nID, ctxClkSt.nFlags, ctxClkSt.lpoint.x, ctxClkSt.lpoint.y,
+																ctxClkSt.dpoint.x, ctxClkSt.dpoint.y, m_zoomVal);
+				if (retVal == S_DECORATOR_EVENT_HANDLED) {
+					if (inOpenedDecoratorTransaction) {
+						if (!isMultiInputLevelOperation) {
+							if (shouldCommitOperation) {
+								CommitTransaction();
+								shouldCommitOperation = false;
+								objectInDecoratorOperation = NULL;
+							} else {
+								AbortTransaction(S_OK);
+							}
+							inOpenedDecoratorTransaction = false;
+							isContextInitiatedOperation = false;
+							isMultiInputLevelOperation = false;
+						}
+					} else {
+						isMultiInputLevelOperation = true;
+						skipFirstButtonUp = true;
+					}
+				} else if (retVal != S_OK &&
+							retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+							retVal != E_DECORATOR_NOT_IMPLEMENTED)
+				{
+					CancelDecoratorOperation();
+					COMTHROW(retVal);
+				}
+			}
 		}
 	}
 	return CScrollZoomView::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
@@ -5583,7 +5929,7 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 		ClearConnSpecs();
 		if(guiMeta) {
 			theApp.UpdateCompList4CurrentKind( guiMeta->name);
-			CMainFrame::theInstance->SetPartBrowser(guiMeta);
+			CMainFrame::theInstance->SetPartBrowserMetaModel(guiMeta);
 			CMainFrame::theInstance->SetPartBrowserBg(bgColor);
 			CMainFrame::theInstance->ChangePartBrowserAspect(currentAspect->index);
 		}
@@ -5703,6 +6049,42 @@ void CGMEView::RunComponent(CString compname)
 		}
 	}
 	MSGCATCH("Error while trying to run the interpreter",;)
+}
+
+void CGMEView::SetEditCursor(void)
+{
+	SetCursor(editCursor);
+	isCursorChangedByDecorator = false;
+}
+
+void CGMEView::CancelDecoratorOperation(bool notify)
+{
+	if (inNewDecoratorOperation) {
+		if (::GetCapture() != NULL)
+			::ReleaseCapture();
+		shouldCommitOperation = false;
+		if (originalRect.IsRectEmpty() == FALSE) {
+			objectInDecoratorOperation->ResizeObject(originalRect, false);
+			Invalidate();
+			originalRect.SetRectEmpty();
+		}
+		inNewDecoratorOperation = false;
+		if (isCursorChangedByDecorator)
+			SetEditCursor();
+		if (notify && objectInDecoratorOperation != NULL) {
+			CComQIPtr<IMgaNewDecorator> newDecorator(objectInDecoratorOperation->GetCurrentAspect()->GetDecorator());
+			if (newDecorator)
+				HRESULT retVal = newDecorator->OperationCanceled();
+		}
+		objectInDecoratorOperation = NULL;
+		isContextInitiatedOperation = false;
+		isMultiInputLevelOperation = false;
+		skipFirstButtonUp = false;
+	}
+	if (inOpenedDecoratorTransaction) {
+		AbortTransaction(S_OK);
+		inOpenedDecoratorTransaction = false;
+	}
 }
 
 void CGMEView::OnConncntxProperties()
@@ -7016,14 +7398,19 @@ void CGMEView::OnResetSticky()
 	}
 }
 
+void CGMEView::OnNcMouseMove(UINT nHitTest, CPoint point)
+{
+	if (nHitTest != HTCLIENT && !inNewDecoratorOperation && isCursorChangedByDecorator)
+		SetEditCursor();
+}
+
 void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 {
-	// send notification if requested by the user // introd by ZolMol on 2005/11
-	if( theApp.isMouseOverNotifyEnabled()/* && GetDocument()->GetEditMode() == GME_EDIT_MODE*/) {
-		CGMEView *self = const_cast<CGMEView *>(this);
-		CPoint point(screenpoint);
-		CoordinateTransfer(point);
+	CGMEView *self = const_cast<CGMEView *>(this);
+	CPoint point(screenpoint);
+	CoordinateTransfer(point);
 
+	if( theApp.isMouseOverNotifyEnabled()/* && GetDocument()->GetEditMode() == GME_EDIT_MODE*/) {
 		//static CGuiObject *lastObject = 0;
 		CGuiObject *object = self  ?self->FindObject(point):0;
 		CGuiPort   *port   = object?object->FindPort(point):0;
@@ -7035,12 +7422,53 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 		lastPort   = port;
 	}
 
+	{ // new decorator notification logic
+		//static CGuiObject* lastObject = 0;
+		CGuiObject*	object	= self		? self->FindObject(point, true) : 0;
+		CGuiPort*	port	= object	? object->FindPort(point, true) : 0;
+		if (object == NULL)
+			object = self ? self->FindObject(point, true, true) : 0;
+
+		if (inNewDecoratorOperation) {
+			CComQIPtr<IMgaNewDecorator> newDecorator(objectInDecoratorOperation->GetCurrentAspect()->GetDecorator());
+			if (newDecorator) {
+				HRESULT retVal = newDecorator->MouseMoved(nFlags, point.x, point.y, screenpoint.x, screenpoint.y, m_zoomVal);
+				if (retVal == S_DECORATOR_EVENT_HANDLED) {
+					CScrollZoomView::OnMouseMove(nFlags, screenpoint);
+					return;
+				} else if (retVal != S_OK &&
+							retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+							retVal != E_DECORATOR_NOT_IMPLEMENTED)
+				{
+					CancelDecoratorOperation();
+					COMTHROW(retVal);
+				}
+			}
+		} else if (object != NULL) {
+			if (GetDocument()->GetEditMode() == GME_EDIT_MODE) {
+				CComQIPtr<IMgaNewDecorator> newDecorator(object->GetCurrentAspect()->GetDecorator());
+				if (newDecorator) {
+					HRESULT retVal = newDecorator->MouseMoved(nFlags, point.x, point.y, screenpoint.x, screenpoint.y, m_zoomVal);
+					if (retVal == S_DECORATOR_EVENT_HANDLED) {
+						CScrollZoomView::OnMouseMove(nFlags, screenpoint);
+						return;
+					} else if (retVal != S_OK &&
+							   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+							   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+					{
+						CancelDecoratorOperation();
+						COMTHROW(retVal);
+					}
+				}
+			}
+		} else {
+			if (isCursorChangedByDecorator)
+				SetEditCursor();
+		}
+	}
+
 	if (GetDocument()->GetEditMode() == GME_VISUAL_MODE)
 	{
-		CGMEView *self = const_cast<CGMEView *>(this);
-		CPoint point(screenpoint);
-		CoordinateTransfer(point);
-
 		CGuiObject *object = self? self->FindObject(point): 0;
 		// if object found, curr_Connection will be 0
 		CGuiConnection        *curr_Connection = object? 0: router.FindConnection( point);
@@ -7054,10 +7482,6 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 		} 
 	}
 	if ((GetDocument()->GetEditMode() == GME_AUTOCONNECT_MODE || GetDocument()->GetEditMode() == GME_SHORTAUTOCONNECT_MODE) || (tmpConnectMode)) {
-		CGMEView *self = const_cast<CGMEView *>(this);
-		CPoint point(screenpoint);
-		CoordinateTransfer(point);
-
 		CGuiObject *object = self->FindObject(point);
 		if(object) {
 			CRect rect = object->GetLocation();
@@ -7420,7 +7844,7 @@ void CGMEView::ZoomRect(CRect srect)
 // prevous zoom value : curzoom
 // new zoom value stored in m_zoomVal
 // point : win client coordinates - this image point has to be centered
-	setZoomPoint(curzoom, point);
+	SetZoomPoint(curzoom, point);
 	Invalidate();
 }
 
@@ -7468,7 +7892,7 @@ void CGMEView::ZoomToFCOs(CRect srect)
 // prevous zoom value : curzoom
 // new zoom value stored in m_zoomVal
 // point : win client coordinates - this image point has to be centered
-	setZoomPoint(curzoom, point);
+	SetZoomPoint(curzoom, point);
 	Invalidate();
 }
 
@@ -7534,7 +7958,7 @@ LRESULT CGMEView::OnZoom(WPARAM, LPARAM lParam)
 		point.x = (expoint.x < client.Width())? point.x = expoint.x/2 :point.x = client.Width()/2;
 		point.y = (expoint.y < client.Height())? point.y = expoint.y/2 :point.y = client.Height()/2;
 		
-		setZoomPoint(curzoom, point);
+		SetZoomPoint(curzoom, point);
 		frame->propBar.SetZoomVal(m_zoomVal);
 		CMainFrame::theInstance->WriteStatusZoom(m_zoomVal);
 		Invalidate();
@@ -7593,39 +8017,39 @@ LRESULT CGMEView::OnPannScroll(WPARAM wParam, LPARAM lParam)
 
 void CGMEView::OnCntxNamePositionNorth()
 {
-	changeNamePosition(0);
+	ChangeNamePosition(0);
 }
 void CGMEView::OnCntxNamePositionEast()
 {
-	changeNamePosition(2);
+	ChangeNamePosition(2);
 }
 void CGMEView::OnCntxNamePositionSouth()
 {
-	changeNamePosition(4);
+	ChangeNamePosition(4);
 }
 void CGMEView::OnCntxNamePositionWest()
 {
-	changeNamePosition(6);
+	ChangeNamePosition(6);
 }
 void CGMEView::OnUpdateCntxNamePositionNorth( CCmdUI* pCmdUI )
 {
-	updateNamePositionMenuItem( pCmdUI, 0);
+	UpdateNamePositionMenuItem( pCmdUI, 0);
 }
 void CGMEView::OnUpdateCntxNamePositionEast( CCmdUI* pCmdUI )
 {
-	updateNamePositionMenuItem( pCmdUI, 2);
+	UpdateNamePositionMenuItem( pCmdUI, 2);
 }
 void CGMEView::OnUpdateCntxNamePositionSouth( CCmdUI* pCmdUI )
 {
-	updateNamePositionMenuItem( pCmdUI, 4);
+	UpdateNamePositionMenuItem( pCmdUI, 4);
 }
 void CGMEView::OnUpdateCntxNamePositionWest( CCmdUI* pCmdUI )
 {
-	updateNamePositionMenuItem( pCmdUI, 6);
+	UpdateNamePositionMenuItem( pCmdUI, 6);
 }
-void CGMEView::updateNamePositionMenuItem( CCmdUI* pCmdUI, int p_this_value )
+void CGMEView::UpdateNamePositionMenuItem( CCmdUI* pCmdUI, int p_this_value)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::updateNamePositionMenuItem\r\n");
+	CGMEEventLogger::LogGMEEvent("CGMEView::UpdateNamePositionMenuItem\r\n");
 
 	ASSERT(p_this_value == 0 || p_this_value == 2 || p_this_value == 4 || p_this_value == 6);
 
@@ -7647,7 +8071,7 @@ void CGMEView::updateNamePositionMenuItem( CCmdUI* pCmdUI, int p_this_value )
 			int v( -1);
 
 			if( obj && obj->mgaFco)
-				res = getNamePositionVal( obj->mgaFco, &v);
+				res = GetNamePositionVal( obj->mgaFco, &v);
 
 			if( first_value)
 			{
@@ -7662,16 +8086,16 @@ void CGMEView::updateNamePositionMenuItem( CCmdUI* pCmdUI, int p_this_value )
 	catch(hresult_exception &e) {
 		all_equal = false;
 		AbortTransaction(e.hr);
-		CGMEEventLogger::LogGMEEvent("CGMEView::updateNamePositionMenuItem - Unable to get NamePosition preference value.\r\n");
+		CGMEEventLogger::LogGMEEvent("CGMEView::UpdateNamePositionMenuItem - Unable to get NamePosition preference value.\r\n");
 	}
 
 	// set the radiobutton like icon on/off based on the all_equal
 	pCmdUI->SetRadio( all_equal);
 }
 
-void CGMEView::changeNamePosition( int p_val)
+void CGMEView::ChangeNamePosition( int p_val)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::changeNamePosition\r\n");
+	CGMEEventLogger::LogGMEEvent("CGMEView::ChangeNamePosition\r\n");
 
 	try {
 		BeginTransaction();
@@ -7679,23 +8103,23 @@ void CGMEView::changeNamePosition( int p_val)
 		while(pos) {
 			CGuiObject *obj = selected.GetNext(pos);
 			if( obj && obj->mgaFco)
-				setNamePositionVal( obj->mgaFco, p_val);
+				SetNamePositionVal( obj->mgaFco, p_val);
 		}
 
 		CommitTransaction();
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		CGMEEventLogger::LogGMEEvent("CGMEView::changeNamePosition - Unable to change NamePosition preference value.\r\n");
+		CGMEEventLogger::LogGMEEvent("CGMEView::ChangeNamePosition - Unable to change NamePosition preference value.\r\n");
 	}
 }
 
 // 
 // code below has to be in sync with the objectinspector's preference.cpp
 //
-void CGMEView::setNamePositionVal( CComPtr<IMgaFCO>& p_ccpMgaFCO, int val)
+void CGMEView::SetNamePositionVal(CComPtr<IMgaFCO>& p_ccpMgaFCO, int val)
 {	
-	CGMEEventLogger::LogGMEEvent("CGMEView::setNamePositionVal\r\n");
+	CGMEEventLogger::LogGMEEvent("CGMEView::SetNamePositionVal\r\n");
 
 	ASSERT( p_ccpMgaFCO);
 	if( !p_ccpMgaFCO) return;
@@ -7709,7 +8133,7 @@ void CGMEView::setNamePositionVal( CComPtr<IMgaFCO>& p_ccpMgaFCO, int val)
 	COMTHROW(p_ccpMgaFCO->put_RegistryValue(bstrRegPath,bstrValue));
 }
 
-bool CGMEView::getNamePositionVal( CComPtr<IMgaFCO>& p_ccpMgaFCO, int *p_valRet)
+bool CGMEView::GetNamePositionVal(CComPtr<IMgaFCO>& p_ccpMgaFCO, int* p_valRet)
 {	
 	ASSERT( p_ccpMgaFCO);
 	ASSERT( p_valRet);
@@ -7773,7 +8197,7 @@ bool CGMEView::getNamePositionVal( CComPtr<IMgaFCO>& p_ccpMgaFCO, int *p_valRet)
 	else
 	{
 		ASSERT(("Undocumented(and undesired) MGA feature",false));
-		CGMEEventLogger::LogGMEEvent("CGMEView::getNamePositionVal: Undocumented(and undesired) MGA feature\r\n");
+		CGMEEventLogger::LogGMEEvent("CGMEView::GetNamePositionVal: Undocumented(and undesired) MGA feature\r\n");
 		strRegValue="";
 	}
 
@@ -7788,7 +8212,7 @@ bool CGMEView::getNamePositionVal( CComPtr<IMgaFCO>& p_ccpMgaFCO, int *p_valRet)
 	return true;
 }
 
-bool CGMEView::askUserAndDetachIfNeeded( CComPtr<IMgaFCO>& mgaFco)
+bool CGMEView::AskUserAndDetachIfNeeded( CComPtr<IMgaFCO>& mgaFco)
 {
 	// check whether dependends of mgaFco exist
 	CComPtr<IMgaFCOs> der_objs;
