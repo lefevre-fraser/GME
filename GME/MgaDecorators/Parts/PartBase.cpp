@@ -146,62 +146,62 @@ void PartBase::SetSelected(bool bIsSelected)
 	m_bSelected = bIsSelected;
 }
 
-bool PartBase::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MouseRightButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseRightButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MouseMiddleButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseMiddleButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MouseMiddleButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseMiddleButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MouseWheelTurned(UINT nFlags, short distance, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MouseWheelTurned(UINT nFlags, short distance, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }
 
-bool PartBase::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PartBase::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }

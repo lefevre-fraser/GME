@@ -59,17 +59,6 @@ protected:
 	CPoint				m_previousMousePosition;
 	HCURSOR				m_originalCursor;
 	bool				m_bCursorSaved;
-	bool				m_bInitiatedFromContextMenu;
-
-	struct OperationState {
-		UINT		nFlags;
-		CPoint		lpoint;
-		CPoint		dpoint;
-		long		zoomPercent;
-		CRect		targetLocation;
-		ResizeType	resizeType;
-	};
-	OperationState		m_savedStateForContextMenuOperation;
 
 public:
 	ResizeLogic(PartBase* pPart);
@@ -89,11 +78,9 @@ public:
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
-	virtual bool	MouseMoved					(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);
-	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);
-	virtual bool	MouseLeftButtonUp			(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);
-	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);
-	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);
+	virtual bool	MouseMoved					(UINT nFlags, const CPoint& point, HDC transformHDC);
+	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& point, HDC transformHDC);
+	virtual bool	MouseLeftButtonUp			(UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
 
 	ResizeType		DeterminePotentialResize	(CPoint cursorPoint);

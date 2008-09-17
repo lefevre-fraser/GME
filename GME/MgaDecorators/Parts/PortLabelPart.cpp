@@ -48,48 +48,48 @@ void PortLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMet
 	LabelPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 
-bool PortLabelPart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PortLabelPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_bInsideContainer)
 		m_offsetPositions = true;
 
-	bool handled = LabelPart::MouseMoved(nFlags, lpoint, dpoint, zoomPercent);
+	bool handled = LabelPart::MouseMoved(nFlags, point, transformHDC);
 
 	m_offsetPositions = false;
 
 	return handled;
 }
 
-bool PortLabelPart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PortLabelPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_bInsideContainer)
 		m_offsetPositions = true;
 
-	bool handled = LabelPart::MouseLeftButtonDown(nFlags, lpoint, dpoint, zoomPercent);
+	bool handled = LabelPart::MouseLeftButtonDown(nFlags, point, transformHDC);
 
 	m_offsetPositions = false;
 
 	return handled;
 }
 
-bool PortLabelPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PortLabelPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_bInsideContainer)
 		m_offsetPositions = true;
 
-	bool handled = LabelPart::MouseRightButtonDown(hCtxMenu, nFlags, lpoint, dpoint, zoomPercent);
+	bool handled = LabelPart::MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC);
 
 	m_offsetPositions = false;
 
 	return handled;
 }
 
-bool PortLabelPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool PortLabelPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_bInsideContainer)
 		m_offsetPositions = true;
 
-	bool handled = LabelPart::MenuItemSelected(menuItemId, nFlags, lpoint, dpoint, zoomPercent);
+	bool handled = LabelPart::MenuItemSelected(menuItemId, nFlags, point, transformHDC);
 
 	m_offsetPositions = false;
 

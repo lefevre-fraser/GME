@@ -72,18 +72,18 @@ public:
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 	virtual void	SetSelected					(bool bIsSelected);
-	virtual bool	MouseMoved					(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MouseLeftButtonUp			(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MouseLeftButtonDoubleClick	(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MouseRightButtonUp			(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MouseRightButtonDoubleClick	(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MouseMiddleButtonDown		(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MouseMiddleButtonUp			(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MouseWheelTurned			(UINT nFlags, short distance, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
-	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent);	// default (no) implementation
+	virtual bool	MouseMoved					(UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MouseLeftButtonUp			(UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MouseLeftButtonDoubleClick	(UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MouseRightButtonUp			(UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MouseRightButtonDoubleClick	(UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MouseMiddleButtonDown		(UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MouseMiddleButtonUp			(UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MouseWheelTurned			(UINT nFlags, short distance, const CPoint& point, HDC transformHDC);	// default (no) implementation
+	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
 	virtual bool	OperationCanceledByGME		(void);										// default (no) implementation
 
 // =============== resembles IMgaNewDecoratorEvents

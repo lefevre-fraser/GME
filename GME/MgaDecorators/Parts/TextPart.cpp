@@ -178,13 +178,13 @@ void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 	m_vecText = getFacilities().wrapString(m_strText, m_iTextWrapCount, m_iMaxTextLength);
 }
 
-bool TextPart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool TextPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_bActive && m_bSelected) {
 		CRect ptRect = GetLabelLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
-		if (ptRect.PtInRect(lpoint)) {
+		if (ptRect.PtInRect(point)) {
 			HCURSOR wantedCursor = LoadCursor(NULL, IDC_IBEAM);
 			m_originalCursor = SetCursor(wantedCursor);
 			CursorChanged((long)IDC_IBEAM);
@@ -206,17 +206,15 @@ bool TextPart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dpoin
 	}
 
 	return false;
-//	return resizeLogic.MouseMoved(nFlags, lpoint, dpoint, zoomPercent);
 }
 
-bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_bActive && m_bSelected) {
-//		CPoint pt = GetTextPosition();	// TODO
 		CRect ptRect = GetLabelLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
-		if (!ptRectInflated.PtInRect(lpoint))
+		if (!ptRectInflated.PtInRect(point))
 			return false;
 
 		bool isPermanentCWnd = true;
@@ -227,22 +225,25 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoi
 		}
 
 		CDC dc;
-		dc.CreateCompatibleDC(NULL);
+		dc.Attach(transformHDC);
 		// font scaling
 		CFont* originalFont = getFacilities().getFont(m_iFontKey)->pFont;
 		LOGFONT lf;
 		originalFont->GetLogFont(&lf);
-		lf.lfHeight = (long)(lf.lfHeight * (double)zoomPercent / 100.0);
+		CSize windowExt = dc.GetWindowExt();
+		CSize viewPortExt = dc.GetViewportExt();
+		ASSERT(viewPortExt.cx / windowExt.cx == viewPortExt.cy / windowExt.cy);
+		double zoom = (double)viewPortExt.cx / (double)windowExt.cx;
+		lf.lfHeight = (long)(lf.lfHeight * zoom);
 		CFont* scaled_font = new CFont();
 		scaled_font->CreateFontIndirect(&lf);
 		// end font scaling
 		dc.SelectObject(scaled_font);
 		// Do scaling and offset because of possible zoom and horizontal/vertical scrolling
 		CSize cSize = dc.GetTextExtent(m_strText);
-		CRect scaledRect = ptRect.MulDiv(zoomPercent, 100);
-		CPoint scaledLogicalPoint((long)(lpoint.x * (double)zoomPercent / 100.0), (long)(lpoint.y * (double)zoomPercent / 100.0));
-		CPoint editTopLeft = scaledRect.TopLeft() - (scaledLogicalPoint - dpoint);
-		CRect editLocation(editTopLeft, cSize);
+		POINT editLeftTopPt = { ptRect.left, ptRect.top };
+		BOOL success = ::LPtoDP(transformHDC, &editLeftTopPt, 1);
+		CRect editLocation(editLeftTopPt, cSize);
 
 		CInPlaceEditDialog inPlaceEditDlg(cWnd);
 		inPlaceEditDlg.SetText(m_strText);
@@ -275,14 +276,14 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoi
 	return false;
 }
 
-bool TextPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool TextPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_bActive && m_bSelected) {
 //		CPoint pt = GetTextPosition();	// TODO
 		CRect ptRect = GetLabelLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
-		if (ptRectInflated.PtInRect(lpoint)) {
+		if (ptRectInflated.PtInRect(point)) {
 			::AppendMenu(hCtxMenu, MF_STRING | MF_ENABLED, CTX_MENU_ID_RENAME, CTX_MENU_STR_RENAME);
 			return true;
 		}
@@ -291,10 +292,10 @@ bool TextPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& l
 	return false;
 }
 
-bool TextPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool TextPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (menuItemId == CTX_MENU_ID_RENAME)	// simulate left click -> starting text editing action
-		return MouseLeftButtonDown(nFlags, lpoint, dpoint, zoomPercent);
+		return MouseLeftButtonDown(nFlags, point, transformHDC);
 
 	return false;
 }

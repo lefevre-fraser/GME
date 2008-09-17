@@ -3,7 +3,6 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-//#include "gmeactivebrowser.h"
 #include "ObjectEventWrapper.h"
 
 #ifdef _DEBUG

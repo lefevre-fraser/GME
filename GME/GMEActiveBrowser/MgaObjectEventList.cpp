@@ -3,7 +3,6 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-//#include "gmeactivebrowser.h"
 #include "MgaObjectEventList.h"
 
 #ifdef _DEBUG

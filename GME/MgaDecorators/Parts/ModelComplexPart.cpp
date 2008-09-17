@@ -262,11 +262,11 @@ void ModelComplexPart::SetSelected(bool bIsSelected)
 	TypeableBitmapPart::SetSelected(bIsSelected);
 }
 
-bool ModelComplexPart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseMoved(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseMoved(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -278,7 +278,7 @@ bool ModelComplexPart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoin
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseMoved(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseMoved(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -294,7 +294,7 @@ bool ModelComplexPart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoin
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseMoved(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseMoved(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -311,11 +311,11 @@ bool ModelComplexPart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoin
 	return false;
 }
 
-bool ModelComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseLeftButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseLeftButtonDown(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -327,7 +327,7 @@ bool ModelComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, co
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseLeftButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseLeftButtonDown(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -343,7 +343,7 @@ bool ModelComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, co
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseLeftButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseLeftButtonDown(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -360,11 +360,11 @@ bool ModelComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, co
 	return false;
 }
 
-bool ModelComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseLeftButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseLeftButtonUp(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -376,7 +376,7 @@ bool ModelComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, cons
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseLeftButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseLeftButtonUp(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -392,7 +392,7 @@ bool ModelComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, cons
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseLeftButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseLeftButtonUp(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -409,11 +409,11 @@ bool ModelComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, cons
 	return false;
 }
 
-bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseLeftButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseLeftButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -425,7 +425,7 @@ bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& lpo
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseLeftButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseLeftButtonDoubleClick(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -441,7 +441,7 @@ bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& lpo
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseLeftButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseLeftButtonDoubleClick(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -458,11 +458,11 @@ bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& lpo
 	return false;
 }
 
-bool ModelComplexPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseRightButtonDown(hCtxMenu, nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -474,7 +474,7 @@ bool ModelComplexPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const C
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseRightButtonDown(hCtxMenu, nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -490,7 +490,7 @@ bool ModelComplexPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const C
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseRightButtonDown(hCtxMenu, nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -507,11 +507,11 @@ bool ModelComplexPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const C
 	return false;
 }
 
-bool ModelComplexPart::MouseRightButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseRightButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseRightButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseRightButtonUp(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -523,7 +523,7 @@ bool ModelComplexPart::MouseRightButtonUp(UINT nFlags, const CPoint& lpoint, con
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseRightButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseRightButtonUp(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -539,7 +539,7 @@ bool ModelComplexPart::MouseRightButtonUp(UINT nFlags, const CPoint& lpoint, con
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseRightButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseRightButtonUp(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -556,11 +556,11 @@ bool ModelComplexPart::MouseRightButtonUp(UINT nFlags, const CPoint& lpoint, con
 	return false;
 }
 
-bool ModelComplexPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseRightButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseRightButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -572,7 +572,7 @@ bool ModelComplexPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& lp
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseRightButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseRightButtonDoubleClick(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -588,7 +588,7 @@ bool ModelComplexPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& lp
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseRightButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseRightButtonDoubleClick(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -605,11 +605,11 @@ bool ModelComplexPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& lp
 	return false;
 }
 
-bool ModelComplexPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseMiddleButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseMiddleButtonDown(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -621,7 +621,7 @@ bool ModelComplexPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& lpoint, 
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseMiddleButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseMiddleButtonDown(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -637,7 +637,7 @@ bool ModelComplexPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& lpoint, 
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseMiddleButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseMiddleButtonDown(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -654,11 +654,11 @@ bool ModelComplexPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& lpoint, 
 	return false;
 }
 
-bool ModelComplexPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseMiddleButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseMiddleButtonUp(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -670,7 +670,7 @@ bool ModelComplexPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& lpoint, co
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseMiddleButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseMiddleButtonUp(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -686,7 +686,7 @@ bool ModelComplexPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& lpoint, co
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseMiddleButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseMiddleButtonUp(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -703,11 +703,11 @@ bool ModelComplexPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& lpoint, co
 	return false;
 }
 
-bool ModelComplexPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseMiddleButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseMiddleButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -719,7 +719,7 @@ bool ModelComplexPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& l
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseMiddleButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseMiddleButtonDoubleClick(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -735,7 +735,7 @@ bool ModelComplexPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& l
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseMiddleButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseMiddleButtonDoubleClick(nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -752,11 +752,11 @@ bool ModelComplexPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& l
 	return false;
 }
 
-bool ModelComplexPart::MouseWheelTurned(UINT nFlags, short distance, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MouseWheelTurned(UINT nFlags, short distance, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseWheelTurned(nFlags, distance, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseWheelTurned(nFlags, distance, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -768,7 +768,7 @@ bool ModelComplexPart::MouseWheelTurned(UINT nFlags, short distance, const CPoin
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseWheelTurned(nFlags, distance, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseWheelTurned(nFlags, distance, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -784,7 +784,7 @@ bool ModelComplexPart::MouseWheelTurned(UINT nFlags, short distance, const CPoin
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MouseWheelTurned(nFlags, distance, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MouseWheelTurned(nFlags, distance, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -801,11 +801,11 @@ bool ModelComplexPart::MouseWheelTurned(UINT nFlags, short distance, const CPoin
 	return false;
 }
 
-bool ModelComplexPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ModelComplexPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MenuItemSelected(menuItemId, nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MenuItemSelected(menuItemId, nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -817,7 +817,7 @@ bool ModelComplexPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoi
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MenuItemSelected(menuItemId, nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MenuItemSelected(menuItemId, nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {
@@ -833,7 +833,7 @@ bool ModelComplexPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoi
 	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
-				if ((*ii)->MenuItemSelected(menuItemId, nFlags, lpoint, dpoint, zoomPercent))
+				if ((*ii)->MenuItemSelected(menuItemId, nFlags, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {

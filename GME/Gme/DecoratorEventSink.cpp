@@ -114,7 +114,6 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::TitleEditingStarted(LONG left, LON
 	pThis->m_view->BeginTransaction();
 	pThis->m_view->inNewDecoratorOperation = true;
 	pThis->m_view->inOpenedDecoratorTransaction = true;
-	pThis->m_view->isMultiInputLevelOperation = false;
 	pThis->m_view->shouldCommitOperation = false;
 
 	return S_OK;
@@ -229,7 +228,6 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::WindowResizingStarted(LONG nType, 
 	pThis->m_view->BeginTransaction();
 	pThis->m_view->inNewDecoratorOperation = true;
 	pThis->m_view->inOpenedDecoratorTransaction = true;
-	pThis->m_view->isMultiInputLevelOperation = true;
 	pThis->m_view->shouldCommitOperation = false;
 	pThis->m_view->originalRect = CRect(left, top, right, bottom);
 
@@ -252,7 +250,6 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::WindowResizingFinished(LONG nType,
 	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
 
 	pThis->m_view->inNewDecoratorOperation = false;
-	pThis->m_view->isMultiInputLevelOperation = false;
 	pThis->m_view->originalRect.SetRectEmpty();
 
 	return S_OK;

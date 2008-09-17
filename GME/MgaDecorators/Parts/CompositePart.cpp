@@ -364,12 +364,12 @@ void CompositePart::SetSelected(bool bIsSelected)
 	}
 }
 
-bool CompositePart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseMoved(nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseMoved(nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -388,12 +388,12 @@ bool CompositePart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& 
 	return false;
 }
 
-bool CompositePart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseLeftButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseLeftButtonDown(nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -412,12 +412,12 @@ bool CompositePart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const
 	return false;
 }
 
-bool CompositePart::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseLeftButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseLeftButtonUp(nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -436,12 +436,12 @@ bool CompositePart::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, const C
 	return false;
 }
 
-bool CompositePart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseLeftButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseLeftButtonDoubleClick(nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -460,12 +460,12 @@ bool CompositePart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& lpoint
 	return false;
 }
 
-bool CompositePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseRightButtonDown(hCtxMenu, nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -484,12 +484,12 @@ bool CompositePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoi
 	return false;
 }
 
-bool CompositePart::MouseRightButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseRightButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseRightButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseRightButtonUp(nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -508,12 +508,12 @@ bool CompositePart::MouseRightButtonUp(UINT nFlags, const CPoint& lpoint, const 
 	return false;
 }
 
-bool CompositePart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseRightButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseRightButtonDoubleClick(nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -532,12 +532,12 @@ bool CompositePart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& lpoin
 	return false;
 }
 
-bool CompositePart::MouseMiddleButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseMiddleButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseMiddleButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseMiddleButtonDown(nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -556,12 +556,12 @@ bool CompositePart::MouseMiddleButtonDown(UINT nFlags, const CPoint& lpoint, con
 	return false;
 }
 
-bool CompositePart::MouseMiddleButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseMiddleButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseMiddleButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseMiddleButtonUp(nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -580,12 +580,12 @@ bool CompositePart::MouseMiddleButtonUp(UINT nFlags, const CPoint& lpoint, const
 	return false;
 }
 
-bool CompositePart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseMiddleButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseMiddleButtonDoubleClick(nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -604,12 +604,12 @@ bool CompositePart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& lpoi
 	return false;
 }
 
-bool CompositePart::MouseWheelTurned(UINT nFlags, short distance, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MouseWheelTurned(UINT nFlags, short distance, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MouseWheelTurned(nFlags, distance, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MouseWheelTurned(nFlags, distance, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {
@@ -628,12 +628,12 @@ bool CompositePart::MouseWheelTurned(UINT nFlags, short distance, const CPoint& 
 	return false;
 }
 
-bool CompositePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool CompositePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		try {
-			if ((*ii)->MenuItemSelected(menuItemId, nFlags, lpoint, dpoint, zoomPercent))
+			if ((*ii)->MenuItemSelected(menuItemId, nFlags, point, transformHDC))
 				return true;
 		}
 		catch(hresult_exception& e) {

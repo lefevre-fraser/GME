@@ -50,18 +50,18 @@ public:
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd) = 0;
 	virtual void	SetSelected					(bool bIsSelected) = 0;
-	virtual bool	MouseMoved					(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MouseLeftButtonUp			(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MouseLeftButtonDoubleClick	(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MouseRightButtonUp			(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MouseRightButtonDoubleClick	(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MouseMiddleButtonDown		(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MouseMiddleButtonUp			(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MouseWheelTurned			(UINT nFlags, short distance, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
-	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent) = 0;
+	virtual bool	MouseMoved					(UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MouseLeftButtonUp			(UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MouseLeftButtonDoubleClick	(UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MouseRightButtonUp			(UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MouseRightButtonDoubleClick	(UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MouseMiddleButtonDown		(UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MouseMiddleButtonUp			(UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MouseWheelTurned			(UINT nFlags, short distance, const CPoint& point, HDC transformHDC) = 0;
+	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC) = 0;
 	virtual bool	OperationCanceledByGME		(void) = 0;
 
 

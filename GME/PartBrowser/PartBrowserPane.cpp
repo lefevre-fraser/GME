@@ -145,6 +145,7 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				CComPtr<IMgaDecorator> decorator;
 				CComBSTR decoratorProgId = GetDecoratorProgId(mFco);
 				COMTHROW(decorator.CoCreateInstance(PutInBstr(decoratorProgId)));
+				// TODO: initialize new decorator
 				COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
 				COMTHROW(decorator->SetLocation(0, 0, 0, 0));
 				tuple.decorator = decorator;
@@ -174,7 +175,7 @@ void CPartBrowserPane::DestroyDecorators(void)
 
 void CPartBrowserPane::Resize(CRect r)
 {
-	if (!mgaMetaModel || currentAspectIndex < 0 || pdts.size() <= 0 || currentAspectIndex >= (int)pdts.size())
+	if (!mgaMetaModel || currentAspectIndex < 0 || pdts.size() <= 0 || currentAspectIndex >= pdts.size())
 		return;
 
 	bool oldOmitPaintMessages = omitPaintMessages;

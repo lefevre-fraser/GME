@@ -123,64 +123,64 @@ void NewBoxDecorator::SetSelected(bool bIsSelected)
 	m_part->SetSelected(bIsSelected);
 }
 
-bool NewBoxDecorator::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseMoved(nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MouseMoved(nFlags, point, transformHDC);
 }
 
-bool NewBoxDecorator::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseLeftButtonDown(nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MouseLeftButtonDown(nFlags, point, transformHDC);
 }
 
-bool NewBoxDecorator::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseLeftButtonUp(nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MouseLeftButtonUp(nFlags, point, transformHDC);
 }
 
-bool NewBoxDecorator::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseLeftButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MouseLeftButtonDoubleClick(nFlags, point, transformHDC);
 }
 
-bool NewBoxDecorator::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseRightButtonDown(hCtxMenu, nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC);
 }
 
-bool NewBoxDecorator::MouseRightButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseRightButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseRightButtonUp(nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MouseRightButtonUp(nFlags, point, transformHDC);
 }
 
-bool NewBoxDecorator::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseRightButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MouseRightButtonDoubleClick(nFlags, point, transformHDC);
 }
 
-bool NewBoxDecorator::MouseMiddleButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseMiddleButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseMiddleButtonDown(nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MouseMiddleButtonDown(nFlags, point, transformHDC);
 }
 
-bool NewBoxDecorator::MouseMiddleButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseMiddleButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseMiddleButtonUp(nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MouseMiddleButtonUp(nFlags, point, transformHDC);
 }
 
-bool NewBoxDecorator::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseMiddleButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MouseMiddleButtonDoubleClick(nFlags, point, transformHDC);
 }
 
-bool NewBoxDecorator::MouseWheelTurned(UINT nFlags, short distance, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MouseWheelTurned(UINT nFlags, short distance, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MouseWheelTurned(nFlags, distance, lpoint, dpoint, zoomPercent);
+	return m_part->MouseWheelTurned(nFlags, distance, point, transformHDC);
 }
 
-bool NewBoxDecorator::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool NewBoxDecorator::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return m_part->MenuItemSelected(menuItemId, nFlags, lpoint, dpoint, zoomPercent);
+	return m_part->MenuItemSelected(menuItemId, nFlags, point, transformHDC);
 }
 
 bool NewBoxDecorator::OperationCanceledByGME(void)

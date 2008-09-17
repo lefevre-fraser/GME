@@ -35,7 +35,6 @@ void ResizeLogic::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPar
 	m_resizeFeatures			= Resizeable;
 	m_targetLocation.SetRectEmpty();
 	m_bCursorSaved				= false;
-	m_bInitiatedFromContextMenu	= false;
 }
 
 void ResizeLogic::Destroy(void)
@@ -60,11 +59,11 @@ void ResizeLogic::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaP
 	Initialize(pProject, pPart, pFCO);
 }
 
-bool ResizeLogic::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ResizeLogic::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_parentPart->IsActive()) {
 		m_targetLocation = m_parentPart->GetLocation();
-		ResizeType resizeTypeCandidate = DeterminePotentialResize(lpoint);
+		ResizeType resizeTypeCandidate = DeterminePotentialResize(point);
 		HRESULT retVal = S_OK;
 		if (m_resizeState == NotInResize) {
 			if (resizeTypeCandidate != NotInResize) {
@@ -75,8 +74,8 @@ bool ResizeLogic::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dp
 				RestoreCursor();
 			}
 		} else {
-			long deltax = lpoint.x - m_previousMousePosition.x;
-			long deltay = lpoint.y - m_previousMousePosition.y;
+			long deltax = point.x - m_previousMousePosition.x;
+			long deltay = point.y - m_previousMousePosition.y;
 			// Change size/m_targetLocation
 			switch(m_resizeState) {
 				case RightEdgeResize:			m_targetLocation.InflateRect(0,			0,			deltax,	0		);	break;
@@ -93,7 +92,7 @@ bool ResizeLogic::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dp
 				m_parentPart->WindowMoving(nFlags, m_targetLocation);
 			else
 				m_parentPart->WindowResizing(nFlags, m_targetLocation);
-			m_previousMousePosition = lpoint;
+			m_previousMousePosition = point;
 			return true;
 		}
 	} else {
@@ -103,20 +102,13 @@ bool ResizeLogic::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dp
 	return false;
 }
 
-bool ResizeLogic::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ResizeLogic::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_parentPart->IsActive() && m_resizeState == NotInResize) {
-		ResizeType resizeTypeCandidate =
-			m_bInitiatedFromContextMenu ? m_savedStateForContextMenuOperation.resizeType : DeterminePotentialResize(lpoint);
+		ResizeType resizeTypeCandidate = DeterminePotentialResize(point);
 		if (resizeTypeCandidate != NotInResize) {
-			if (m_bInitiatedFromContextMenu) {
-				m_targetLocation = m_savedStateForContextMenuOperation.targetLocation;
-				m_originalMousePosition = m_savedStateForContextMenuOperation.lpoint;
-				m_previousMousePosition = m_savedStateForContextMenuOperation.lpoint;
-			} else {
-				m_originalMousePosition = lpoint;
-				m_previousMousePosition = lpoint;
-			}
+			m_originalMousePosition = point;
+			m_previousMousePosition = point;
 			m_originalLocation = m_targetLocation;
 			m_resizeState = resizeTypeCandidate;
 			if (resizeTypeCandidate == MoveOperation)
@@ -130,7 +122,7 @@ bool ResizeLogic::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const C
 	return false;
 }
 
-bool ResizeLogic::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ResizeLogic::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_parentPart->IsActive() && m_resizeState != NotInResize) {
 		if (m_resizeState == MoveOperation) {
@@ -146,36 +138,6 @@ bool ResizeLogic::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, const CPo
 		}
 		m_resizeState = NotInResize;
 		RestoreCursor();
-		m_bInitiatedFromContextMenu = false;
-		return true;
-	}
-
-	return false;
-}
-
-bool ResizeLogic::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
-{
-	if (m_parentPart->IsActive() && m_resizeState == NotInResize) {
-		ResizeType resizeTypeCandidate = DeterminePotentialResize(lpoint);
-		if (resizeTypeCandidate != NotInResize) {
-			m_savedStateForContextMenuOperation.resizeType = resizeTypeCandidate;
-			::AppendMenu(hCtxMenu, MF_STRING | MF_ENABLED, CTX_MENU_ID_RESIZE, CTX_MENU_STR_RESIZE);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool ResizeLogic::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
-{
-	if (menuItemId == CTX_MENU_ID_RESIZE) {
-		m_bInitiatedFromContextMenu = true;
-		m_savedStateForContextMenuOperation.nFlags = nFlags;
-		m_savedStateForContextMenuOperation.lpoint = lpoint;
-		m_savedStateForContextMenuOperation.dpoint = dpoint;
-		m_savedStateForContextMenuOperation.zoomPercent = zoomPercent;
-		::SetCapture(m_parentWnd);
 		return true;
 	}
 
@@ -188,7 +150,6 @@ bool ResizeLogic::OperationCanceledByGME(void)
 		m_resizeState = NotInResize;
 		RestoreCursor();
 		m_targetLocation = m_originalLocation;
-		m_bInitiatedFromContextMenu = false;
 	}
 	return true;
 }

@@ -101,29 +101,19 @@ void ResizablePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMet
 	PartBase::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 
-bool ResizablePart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ResizablePart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return resizeLogic.MouseMoved(nFlags, lpoint, dpoint, zoomPercent);
+	return resizeLogic.MouseMoved(nFlags, point, transformHDC);
 }
 
-bool ResizablePart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ResizablePart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return resizeLogic.MouseLeftButtonDown(nFlags, lpoint, dpoint, zoomPercent);
+	return resizeLogic.MouseLeftButtonDown(nFlags, point, transformHDC);
 }
 
-bool ResizablePart::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ResizablePart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	return resizeLogic.MouseLeftButtonUp(nFlags, lpoint, dpoint, zoomPercent);
-}
-
-bool ResizablePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
-{
-	return resizeLogic.MouseRightButtonDown(hCtxMenu, nFlags, lpoint, dpoint, zoomPercent);
-}
-
-bool ResizablePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
-{
-	return resizeLogic.MenuItemSelected(menuItemId, nFlags, lpoint, dpoint, zoomPercent);
+	return resizeLogic.MouseLeftButtonUp(nFlags, point, transformHDC);
 }
 
 bool ResizablePart::OperationCanceledByGME(void)

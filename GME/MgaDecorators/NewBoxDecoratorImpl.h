@@ -73,18 +73,18 @@ public:
 	// =============== INewBoxDecorator
 	STDMETHOD( InitializeEx )					( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO, /*[in]*/ IMgaNewDecoratorEvents* eventSink, /*[in]*/ ULONGLONG parentWnd );
 	STDMETHOD( SetSelected )					( /*[in]*/ VARIANT_BOOL bIsSelected );
-	STDMETHOD( MouseMoved )						( /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MouseLeftButtonDown )			( /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MouseLeftButtonUp )				( /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MouseLeftButtonDoubleClick )		( /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MouseRightButtonDown )			( /*[in]*/ ULONGLONG hCtxMenu, /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MouseRightButtonUp )				( /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MouseRightButtonDoubleClick )	( /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MouseMiddleButtonDown )			( /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MouseMiddleButtonUp )			( /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MouseMiddleButtonDoubleClick )	( /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MouseWheelTurned )				( /*[in]*/ ULONG nFlags, /*[in]*/ LONG distance, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
-	STDMETHOD( MenuItemSelected )				( /*[in]*/ ULONG menuItemId, /*[in]*/ ULONG nFlags, /*[in]*/ LONG lpointx, /*[in]*/ LONG lpointy, /*[in]*/ LONG dpointx, /*[in]*/ LONG dpointy, /*[in]*/ LONG zoomPercent );
+	STDMETHOD( MouseMoved )						( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MouseLeftButtonDown )			( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MouseLeftButtonUp )				( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MouseLeftButtonDoubleClick )		( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MouseRightButtonDown )			( /*[in]*/ ULONGLONG hCtxMenu, /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MouseRightButtonUp )				( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MouseRightButtonDoubleClick )	( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MouseMiddleButtonDown )			( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MouseMiddleButtonUp )			( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MouseMiddleButtonDoubleClick )	( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MouseWheelTurned )				( /*[in]*/ ULONG nFlags, /*[in]*/ LONG distance, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
+	STDMETHOD( MenuItemSelected )				( /*[in]*/ ULONG menuItemId, /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
 	STDMETHOD( OperationCanceled )				( void );
 };
 

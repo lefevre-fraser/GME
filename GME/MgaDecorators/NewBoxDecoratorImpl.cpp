@@ -333,11 +333,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseMoved(ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseMoved(nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseMoved(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -351,11 +351,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseMoved(ULONG nFlags, LONG lpointx, LONG l
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseLeftButtonDown(nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseLeftButtonDown(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -369,11 +369,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG lpoint
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseLeftButtonUp(nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseLeftButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -387,11 +387,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG lpointx,
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseLeftButtonDoubleClick(nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseLeftButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -405,11 +405,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseRightButtonDown((HMENU) hCtxMenu, nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseRightButtonDown((HMENU) hCtxMenu, nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -423,11 +423,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULON
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseRightButtonUp(nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseRightButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -441,11 +441,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG lpointx
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseRightButtonDoubleClick(nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseRightButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -459,11 +459,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LON
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseMiddleButtonDown(nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseMiddleButtonDown(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -477,11 +477,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG lpoi
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseMiddleButtonUp(nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseMiddleButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -495,11 +495,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG lpoint
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseMiddleButtonDoubleClick(nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseMiddleButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -513,11 +513,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LO
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseWheelTurned(nFlags, (short)distance, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MouseWheelTurned(nFlags, (short)distance, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -531,11 +531,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance,
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG lpointx, LONG lpointy, LONG dpointx, LONG dpointy, LONG zoomPercent)
+STDMETHODIMP CNewBoxDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MenuItemSelected(menuItemId, nFlags, CPoint(lpointx, lpointy), CPoint(dpointx, dpointy), zoomPercent))
+		if (m_pNewDecorator->MenuItemSelected(menuItemId, nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;

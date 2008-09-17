@@ -318,11 +318,11 @@ void ReferenceBitmapPart::SetSelected(bool bIsSelected)
 	TypeableBitmapPart::SetSelected(bIsSelected);
 }
 
-bool ReferenceBitmapPart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseMoved(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseMoved(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -332,17 +332,17 @@ bool ReferenceBitmapPart::MouseMoved(UINT nFlags, const CPoint& lpoint, const CP
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseMoved(nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseMoved(nFlags, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseLeftButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseLeftButtonDown(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -352,17 +352,17 @@ bool ReferenceBitmapPart::MouseLeftButtonDown(UINT nFlags, const CPoint& lpoint,
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseLeftButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseLeftButtonDown(nFlags, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseLeftButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseLeftButtonUp(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -372,17 +372,17 @@ bool ReferenceBitmapPart::MouseLeftButtonUp(UINT nFlags, const CPoint& lpoint, c
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseLeftButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseLeftButtonUp(nFlags, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseLeftButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseLeftButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -392,17 +392,17 @@ bool ReferenceBitmapPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& 
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseLeftButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseLeftButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseRightButtonDown(hCtxMenu, nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -412,17 +412,17 @@ bool ReferenceBitmapPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, cons
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseRightButtonDown(hCtxMenu, nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MouseRightButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseRightButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseRightButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseRightButtonUp(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -432,17 +432,17 @@ bool ReferenceBitmapPart::MouseRightButtonUp(UINT nFlags, const CPoint& lpoint, 
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseRightButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseRightButtonUp(nFlags, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseRightButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseRightButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -452,17 +452,17 @@ bool ReferenceBitmapPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint&
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseRightButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseRightButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseMiddleButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseMiddleButtonDown(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -472,17 +472,17 @@ bool ReferenceBitmapPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& lpoin
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseMiddleButtonDown(nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseMiddleButtonDown(nFlags, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseMiddleButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseMiddleButtonUp(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -492,17 +492,17 @@ bool ReferenceBitmapPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& lpoint,
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseMiddleButtonUp(nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseMiddleButtonUp(nFlags, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseMiddleButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseMiddleButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -512,17 +512,17 @@ bool ReferenceBitmapPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseMiddleButtonDoubleClick(nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseMiddleButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MouseWheelTurned(UINT nFlags, short distance, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MouseWheelTurned(UINT nFlags, short distance, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MouseWheelTurned(nFlags, distance, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MouseWheelTurned(nFlags, distance, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -532,17 +532,17 @@ bool ReferenceBitmapPart::MouseWheelTurned(UINT nFlags, short distance, const CP
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MouseWheelTurned(nFlags, distance, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MouseWheelTurned(nFlags, distance, point, transformHDC))
 			return true;
 
 	return false;
 }
 
-bool ReferenceBitmapPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& lpoint, const CPoint& dpoint, long zoomPercent)
+bool ReferenceBitmapPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
-		if (TypeableBitmapPart::MenuItemSelected(menuItemId, nFlags, lpoint, dpoint, zoomPercent))
+		if (TypeableBitmapPart::MenuItemSelected(menuItemId, nFlags, point, transformHDC))
 			return true;
 	}
 	catch(hresult_exception& e) {
@@ -552,7 +552,7 @@ bool ReferenceBitmapPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const C
 		retVal = e.GetHResult();
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		if (m_referencedPart->MenuItemSelected(menuItemId, nFlags, lpoint, dpoint, zoomPercent))
+		if (m_referencedPart->MenuItemSelected(menuItemId, nFlags, point, transformHDC))
 			return true;
 
 	return false;

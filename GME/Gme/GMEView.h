@@ -91,8 +91,6 @@ public:
 	bool					inNewDecoratorOperation;
 	bool					inOpenedDecoratorTransaction;
 	bool					isContextInitiatedOperation;
-	bool					isMultiInputLevelOperation;
-	bool					skipFirstButtonUp;
 	bool					shouldCommitOperation;
 	bool					doTheResize;
 	CGuiObject*				objectInDecoratorOperation;
