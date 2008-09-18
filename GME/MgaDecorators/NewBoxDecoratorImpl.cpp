@@ -51,7 +51,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPar
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	if (!m_bInitCallFromEx)
+	if (pFCO && !m_bInitCallFromEx)
 		return E_DECORATOR_USING_DEPRECATED_INIT;
 
 	return S_OK;

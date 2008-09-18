@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// Decorator Event Sink implementation
+// Decorator Event Sink implementation for PartBrowser
 //	DecoratorEventSink.h
 //
 //################################################################################################
 
-#if !defined(AFX_DECORATOREVENTSINK_H__EB95C56D_04BC_47c9_A71B_305184F5FC44__INCLUDED_)
-#define AFX_DECORATOREVENTSINK_H__EB95C56D_04BC_47c9_A71B_305184F5FC44__INCLUDED_
+#if !defined(AFX_DECORATOREVENTSINK_H__9829B754_62D2_4bad_A70D_E5F22160A529__INCLUDED_)
+#define AFX_DECORATOREVENTSINK_H__9829B754_62D2_4bad_A70D_E5F22160A529__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -15,12 +15,8 @@
 #include "StdAfx.h"
 #include "mga.h"
 #include "MgaDecorator.h"
-#include "GmeLib.h"
 #include "resource.h"
 
-
-class CGMEView;
-class CGuiObject;
 
 //################################################################################################
 //
@@ -41,8 +37,6 @@ public:
 
 // Operations
 public:
-	void SetView(CGMEView* view) { m_view = view; }
-	void SetGuiObject(CGuiObject* guiObject) { m_guiObject = guiObject; }
 	HRESULT QuerySinkInterface(void** ppv);
 
 // Overrides
@@ -53,8 +47,6 @@ public:
 	~CDecoratorEventSink();
 
 protected:
-	CGMEView*					m_view;
-	CGuiObject*					m_guiObject;
 
 	// Generated message map functions
 	//{{AFX_MSG(CDecoratorEventSink)
@@ -100,4 +92,4 @@ public:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_DECORATOREVENTSINK_H__EB95C56D_04BC_47c9_A71B_305184F5FC44__INCLUDED_)
+#endif // !defined(AFX_DECORATOREVENTSINK_H__9829B754_62D2_4bad_A70D_E5F22160A529__INCLUDED_)

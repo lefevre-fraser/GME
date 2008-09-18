@@ -23,26 +23,28 @@ TextPart::TextPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	PartBase(pPart, eventSink),
 	resizeLogic(NULL)
 {
-	resizeLogic.SetParentPart(this);
+	if (m_spFCO)
+		resizeLogic.SetParentPart(this);
 }
 
 TextPart::~TextPart()
 {
-	resizeLogic.Destroy();
 }
 
 void TextPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
 {
 	// TODO: initialize text location somehow
 	textPosition.SetRectEmpty();
-	resizeLogic.SetResizeFeatures(ResizeLogic::Resizeable | /* TODO: temp ResizeLogic::Movable |*/ ResizeLogic::DrawSelectionRectangle);
+	if (m_spFCO)
+		resizeLogic.SetResizeFeatures(ResizeLogic::Resizeable | /* TODO: temp ResizeLogic::Movable |*/ ResizeLogic::DrawSelectionRectangle);
 
 	PartBase::Initialize(pProject, pPart, pFCO);
 }
 
 void TextPart::Destroy(void)
 {
-	resizeLogic.Destroy();
+	if (m_spFCO)
+		resizeLogic.Destroy();
 	OperationCanceledByGME();
 }
 
@@ -83,14 +85,16 @@ void TextPart::Draw(CDC* pDC)
 									 "",
 									 false);
 	}
-	resizeLogic.Draw(pDC);
+	if (m_spFCO)
+		resizeLogic.Draw(pDC);
 }
 
 // New functions
 void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 							HWND parentWnd, PreferenceMap& preferences)
 {
-	resizeLogic.InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	if (m_spFCO)
+		resizeLogic.InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	PartBase::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	// Get Text
@@ -210,7 +214,7 @@ bool TextPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 
 bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_bActive && m_bSelected) {
+	if (m_spFCO && m_bActive && m_bSelected) {
 		CRect ptRect = GetLabelLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
@@ -278,7 +282,7 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 
 bool TextPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_bActive && m_bSelected) {
+	if (m_spFCO && m_bActive && m_bSelected) {
 //		CPoint pt = GetTextPosition();	// TODO
 		CRect ptRect = GetLabelLocation();
 		CRect ptRectInflated = ptRect;
@@ -304,7 +308,10 @@ bool TextPart::OperationCanceledByGME(void)
 {
 	// destroy inplace edit window and stuff if needed
 	// can't happen currently because of Modal dialog style
-	return resizeLogic.OperationCanceledByGME();
+	if (m_spFCO)
+		return resizeLogic.OperationCanceledByGME();
+
+	return false;
 }
 
 long	TextPart::GetLongest(void) const

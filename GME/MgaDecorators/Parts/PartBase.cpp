@@ -21,7 +21,13 @@ namespace Decorator {
 PartBase::PartBase(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	m_parentPart	(pPart),
 	m_eventSink		(eventSink),
-	m_bActive		(true)
+	m_parentWnd		(NULL),
+	m_viewDC		(NULL),
+	m_bHasViolation	(false),
+	m_bActive		(true),
+	m_bSelected		(false),
+	m_lBorderWidth	(0),
+	m_bReferenced	(false)
 {
 }
 

@@ -7,6 +7,7 @@
 #include "..\Interfaces\MgaDecorator.h"
 #include "..\Annotator\AnnotationDefs.h"
 #include "..\Gme\GMEOLEData.h"
+#include "DecoratorEventSink.h"
 #include "Gme_i.c"
 
 
@@ -143,9 +144,28 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				CComPtr<IMgaMetaFCO> mFco;
 				COMTHROW(mmRole->get_Kind(&mFco));
 				CComPtr<IMgaDecorator> decorator;
+#if defined (TRYNEWDECORATORS)
+				CComPtr<IMgaNewDecorator> newDecorator;
+#endif
 				CComBSTR decoratorProgId = GetDecoratorProgId(mFco);
+
+				bool newDecoratorCreated = false;
+#if defined (TRYNEWDECORATORS)
+				CComPtr<IMgaNewDecoratorEvents> newDecorEventSink;
+				if (decoratorProgId == GME_DEFAULT_DECORATOR) {
+					COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.MgaNewDecorator")));
+					newDecoratorCreated = true;
+					CDecoratorEventSink* cNewDecorEventSink = new CDecoratorEventSink();
+					HRESULT hr = cNewDecorEventSink->QuerySinkInterface((void**) &newDecorEventSink);
+					decorator = CComQIPtr<IMgaDecorator>(newDecorator);
+				} else
+#endif
 				COMTHROW(decorator.CoCreateInstance(PutInBstr(decoratorProgId)));
-				// TODO: initialize new decorator
+#if defined (TRYNEWDECORATORS)
+				if (newDecoratorCreated)
+					COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, newDecorEventSink, (ULONGLONG)m_hWnd));
+				else
+#endif
 				COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
 				COMTHROW(decorator->SetLocation(0, 0, 0, 0));
 				tuple.decorator = decorator;

@@ -172,7 +172,7 @@ void ReferenceBitmapPart::SaveState()
 
 // New functions
 void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
-								 HWND parentWnd, PreferenceMap& preferences)
+									   HWND parentWnd, PreferenceMap& preferences)
 {
 	bool model_ref = false;
 	PartBase* pReferenced = NULL;
@@ -219,9 +219,11 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 	preferences[PREF_TYPEINFOSHOWN]	= PreferenceVariant(false);
 	preferences[PREF_TYPESHOWN]		= PreferenceVariant(false);
 
-	pReferenced->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);	// TODO: is this needed?
 
 	if (pReferenced) {
+		pReferenced->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+
 		m_referencedPart = pReferenced;
 		PreferenceMap mapRefPrefs;
 

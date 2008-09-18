@@ -20,6 +20,10 @@
 // turns off MFC's hiding of some common and often safely ignored warning messages
 #define _AFX_ALL_WARNINGS
 
+#if defined(_DEBUG)
+// also change it in GME/StdAfx.h
+#define TRYNEWDECORATORS
+#endif
 
 #include <afxctl.h>         // MFC support for ActiveX Controls
 #include <afxext.h>         // MFC extensions
