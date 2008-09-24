@@ -12,10 +12,6 @@
 #include "DecoratorInterface.h"
 
 
-int						CNewBoxDecoratorImpl::m_nOfInits = 0;
-GdiplusStartupInput		CNewBoxDecoratorImpl::m_gdiplusStartupInput; // needed for GDI+ initialization
-ULONG_PTR				CNewBoxDecoratorImpl::m_gdiplusToken;
-
 //################################################################################################
 //
 // CLASS : CNewBoxDecoratorImpl
@@ -35,16 +31,10 @@ CNewBoxDecoratorImpl::CNewBoxDecoratorImpl():
 	m_bLocationSet		(false),
 	m_bInitCallFromEx	(false)
 {
-	if (m_nOfInits++ == 0) {
-		VERIFY(GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, NULL) == Ok);
-	}
 }
 
 CNewBoxDecoratorImpl::~CNewBoxDecoratorImpl()
 {
-	if (--m_nOfInits == 0) {
-		GdiplusShutdown(m_gdiplusToken);
-	}
 }
 
 STDMETHODIMP CNewBoxDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)

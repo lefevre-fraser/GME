@@ -5,6 +5,7 @@
 
 class CGMEView;
 class CModelGrid;
+class CDecoratorEventSink;
 
 extern CModelGrid modelGrid;
 
@@ -30,7 +31,8 @@ protected:
 class CGuiAspect : public CGuiBase
 {
 public:
-	CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind, int pind, const CComPtr<IMgaDecorator>& decor);
+	CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind, int pind, const CComPtr<IMgaDecorator>& decor,
+			   CDecoratorEventSink* decorEventSink);
 	virtual ~CGuiAspect();
 
 
@@ -51,17 +53,18 @@ public:
 	CGuiObject* GetParent()							{ return parent; }
 	
 public:
-	CGuiObject *parent;
-	CGuiMetaAspect *guiMeta;
+	CGuiObject*				parent;
+	CGuiMetaAspect*			guiMeta;
 
 private:
-	int parentIndex;
-	int index;
-	CGuiPortList ports;
+	int						parentIndex;
+	int						index;
+	CGuiPortList			ports;
 	CComPtr<IMgaDecorator>	decorator;
-	unsigned long	features;
-	CRect	loc;
-	CRect	nameLoc;
+	CDecoratorEventSink*	decoratorEventSink;
+	unsigned long			features;
+	CRect					loc;
+	CRect					nameLoc;
 	CComPtr<IAutoRouterBox> routerBox;
 	CComPtr<IAutoRouterBox> routerNameBox;
 };

@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by MgaDecorators.rc
 //
 #define IDS_PROJNAME                    100
@@ -31,8 +31,6 @@
 #define IDB_ICON_SUBTYPE_DIS            208
 #define IDB_ICON_TYPE_DIS               209
 #define IDD_INPLACEEDITDIALOG           210
-#define IDI_CANCEL                      212
-#define IDI_OK                          213
 
 // Next default values for new objects
 // 

@@ -10,6 +10,7 @@
 #include "GuiMeta.h"
 #include "GuiObject.h"
 #include "ModelGrid.h"
+#include "DecoratorEventSink.h"
 
 #include "AutoRoute/AutoRouterGraph.h"
 #include "AutoRoute/AutoRouter.h"
@@ -103,7 +104,16 @@ void SetCenterNoMga(CRect &location,CPoint pt)
 ////////////////////////////////////
 // Non-virtual methods of CGuiAspect
 ////////////////////////////////////
-CGuiAspect::CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind,int pind, const CComPtr<IMgaDecorator>& decor) : guiMeta(meta), parent(p), index(ind), parentIndex(pind), decorator(decor), routerBox(0), routerNameBox(0)
+CGuiAspect::CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind,int pind, const CComPtr<IMgaDecorator>& decor,
+					   CDecoratorEventSink* decorEventSink):
+	guiMeta(meta),
+	parent(p),
+	index(ind),
+	parentIndex(pind),
+	decorator(decor),
+	decoratorEventSink(decorEventSink),
+	routerBox(0),
+	routerNameBox(0)
 {
 	try {
 		COMTHROW(decor->GetFeatures(&features));
@@ -124,6 +134,8 @@ CGuiAspect::CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind,int pind, cons
 CGuiAspect::~CGuiAspect()
 {
 	COMTHROW(decorator->Destroy());
+	if (decoratorEventSink != NULL)
+		delete decoratorEventSink;
 	POSITION pos = ports.GetHeadPosition();
 	while(pos) {
 		delete ports.GetNext(pos);
@@ -1170,18 +1182,19 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 	CComPtr<IMgaNewDecorator> newDecor;
 #endif
 
+	CDecoratorEventSink* decoratorEventSink = NULL;
 	try {
 		bool newDecoratorCreated = false;
 #if defined (TRYNEWDECORATORS)
-		CComPtr<IMgaNewDecoratorEvents> newDecorEventSink;
+		CComPtr<IMgaNewDecoratorEvents> decoratorEventSinkIface;
 		if (progId == GME_DEFAULT_DECORATOR) {
 			COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.MgaNewDecorator")));
 			newDecoratorCreated = true;
-			CDecoratorEventSink* cNewDecorEventSink = new CDecoratorEventSink();
-			HRESULT hr = cNewDecorEventSink->QuerySinkInterface((void**) &newDecorEventSink);
+			decoratorEventSink = new CDecoratorEventSink();
+			HRESULT hr = decoratorEventSink->QuerySinkInterface((void**) &decoratorEventSinkIface);
 			if (hr == S_OK) {
-				cNewDecorEventSink->SetView(view);
-				cNewDecorEventSink->SetGuiObject(this);
+				decoratorEventSink->SetView(view);
+				decoratorEventSink->SetGuiObject(this);
 			}
 			decor = CComQIPtr<IMgaDecorator>(newDecor);
 		} else
@@ -1197,7 +1210,7 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 		}
 #if defined (TRYNEWDECORATORS)
 		if (newDecoratorCreated)
-			COMTHROW(newDecor->InitializeEx(theApp.mgaProject, metaPart, mgaFco, newDecorEventSink, (ULONGLONG)viewWnd->m_hWnd));
+			COMTHROW(newDecor->InitializeEx(theApp.mgaProject, metaPart, mgaFco, decoratorEventSinkIface, (ULONGLONG)viewWnd->m_hWnd));
 		else
 #endif
 		COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
@@ -1221,7 +1234,7 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 			throw hresult_exception(e.hr);
 		}
 	}
-	guiAspects[asp] = new CGuiAspect(metaAspect, this, metaAspect->index, asp, decor);
+	guiAspects[asp] = new CGuiAspect(metaAspect, this, metaAspect->index, asp, decor, decoratorEventSink);
 	parentAspect = 0;
 }
 

@@ -9,6 +9,9 @@
 
 #include <vector>
 
+class CDecoratorEventSink;
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CPartBrowserPane window
 
@@ -19,6 +22,7 @@ public:
 	struct PartWithDecorator {
 		CComPtr<IMgaMetaPart>	part;
 		CComPtr<IMgaDecorator>	decorator;
+		CDecoratorEventSink*	decorEventSink;
 	};
 
 	CPartBrowserPane();

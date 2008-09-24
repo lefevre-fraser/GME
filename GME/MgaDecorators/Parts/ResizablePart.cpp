@@ -22,8 +22,7 @@ ResizablePart::ResizablePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> ev
 	PartBase(pPart, eventSink),
 	resizeLogic(NULL)
 {
-	if (m_spFCO)
-		resizeLogic.SetParentPart(this);
+	resizeLogic.SetParentPart(this);
 }
 
 ResizablePart::~ResizablePart()

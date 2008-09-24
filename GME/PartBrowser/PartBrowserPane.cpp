@@ -136,8 +136,9 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 		MGACOLL_ITERATE(IMgaMetaPart, metaParts) {
 			metaPart = MGACOLL_ITER;
 			if (IsPartDisplayable(metaPart)) {
-				PartWithDecorator tuple;
-				tuple.part = metaPart;
+				PartWithDecorator triple;
+				triple.part = metaPart;
+				triple.decorEventSink = NULL;
 
 				CComPtr<IMgaMetaRole> mmRole;
 				COMTHROW(metaPart->get_Role(&mmRole));
@@ -151,26 +152,26 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 
 				bool newDecoratorCreated = false;
 #if defined (TRYNEWDECORATORS)
-				CComPtr<IMgaNewDecoratorEvents> newDecorEventSink;
+				CComPtr<IMgaNewDecoratorEvents> decorEventSinkIface;
 				if (decoratorProgId == GME_DEFAULT_DECORATOR) {
 					COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.MgaNewDecorator")));
 					newDecoratorCreated = true;
-					CDecoratorEventSink* cNewDecorEventSink = new CDecoratorEventSink();
-					HRESULT hr = cNewDecorEventSink->QuerySinkInterface((void**) &newDecorEventSink);
+					triple.decorEventSink = new CDecoratorEventSink();
+					HRESULT hr = triple.decorEventSink->QuerySinkInterface((void**) &decorEventSinkIface);
 					decorator = CComQIPtr<IMgaDecorator>(newDecorator);
 				} else
 #endif
 				COMTHROW(decorator.CoCreateInstance(PutInBstr(decoratorProgId)));
 #if defined (TRYNEWDECORATORS)
 				if (newDecoratorCreated)
-					COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, newDecorEventSink, (ULONGLONG)m_hWnd));
+					COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, decorEventSinkIface, (ULONGLONG)m_hWnd));
 				else
 #endif
 				COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
 				COMTHROW(decorator->SetLocation(0, 0, 0, 0));
-				tuple.decorator = decorator;
+				triple.decorator = decorator;
 
-				pdt.push_back(tuple);
+				pdt.push_back(triple);
 			}
 		}
 		MGACOLL_ITERATE_END;
@@ -187,6 +188,8 @@ void CPartBrowserPane::DestroyDecorators(void)
 			(*jj).decorator->Destroy();
 			(*jj).decorator.Release();
 			(*jj).part.Release();
+			if ((*jj).decorEventSink != NULL)
+				delete (*jj).decorEventSink;
 		}
 		(*ii).clear();
 	}

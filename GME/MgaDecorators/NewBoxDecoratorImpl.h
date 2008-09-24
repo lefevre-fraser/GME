@@ -36,10 +36,6 @@ protected:
 	HWND						m_HWnd;
 	bool						isPermanentCWnd;
 
-	static int m_nOfInits;
-	static GdiplusStartupInput  m_gdiplusStartupInput; // needed for GDI+
-	static ULONG_PTR m_gdiplusToken;
-
 public:
 	CNewBoxDecoratorImpl();
 	~CNewBoxDecoratorImpl();

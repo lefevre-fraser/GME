@@ -23,8 +23,7 @@ TextPart::TextPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	PartBase(pPart, eventSink),
 	resizeLogic(NULL)
 {
-	if (m_spFCO)
-		resizeLogic.SetParentPart(this);
+	resizeLogic.SetParentPart(this);
 }
 
 TextPart::~TextPart()

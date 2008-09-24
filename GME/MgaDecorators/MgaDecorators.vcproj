@@ -904,10 +904,6 @@
 				>
 			</File>
 			<File
-				RelativePath="res\cancel.ico"
-				>
-			</File>
-			<File
 				RelativePath="res\icon_instance.bmp"
 				>
 			</File>
@@ -953,10 +949,6 @@
 			</File>
 			<File
 				RelativePath="res\nullref.bmp"
-				>
-			</File>
-			<File
-				RelativePath="res\ok.ico"
 				>
 			</File>
 			<File

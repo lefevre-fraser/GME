@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -27,18 +27,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""winres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "1 TYPELIB ""MgaDecoratorLib.tlb""\r\n"
     "\0"
@@ -47,7 +47,6 @@ END
 #endif    // APSTUDIO_INVOKED
 
 
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -70,15 +69,13 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "MgaDecorators Module\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "MgaDecorators\0"
-            VALUE "LegalCopyright", "Copyright 2000-2004\0"
-            VALUE "OriginalFilename", "MgaDecorators.DLL\0"
-            VALUE "ProductName", "MgaDecorators Module\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
-            VALUE "OLESelfRegister", "\0"
+            VALUE "FileDescription", "MgaDecorators Module"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "MgaDecorators"
+            VALUE "LegalCopyright", "Copyright 2000-2004"
+            VALUE "OriginalFilename", "MgaDecorators.DLL"
+            VALUE "ProductName", "MgaDecorators Module"
+            VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
     BLOCK "VarFileInfo"
@@ -87,38 +84,36 @@ BEGIN
     END
 END
 
-#endif    // !_MAC
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // REGISTRY
 //
 
-IDR_BOXDECORATOR        REGISTRY DISCARDABLE    "BoxDecorator.rgs"
-IDR_NEWBOXDECORATOR     REGISTRY DISCARDABLE    "NewBoxDecorator.rgs"
+IDR_BOXDECORATOR        REGISTRY                "BoxDecorator.rgs"
+IDR_NEWBOXDECORATOR     REGISTRY                "NewBoxDecorator.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDB_ATOM                BITMAP  DISCARDABLE     "res\\atom.bmp"
-IDB_ATOMPORT            BITMAP  DISCARDABLE     "res\\atomport.bmp"
-IDB_REFERENCEPORT       BITMAP  DISCARDABLE     "res\\referenceport.bmp"
-IDB_SETPORT             BITMAP  DISCARDABLE     "res\\setport.bmp"
-IDB_REFERENCE           BITMAP  DISCARDABLE     "res\\reference.bmp"
-IDB_SET                 BITMAP  DISCARDABLE     "res\\set.bmp"
-IDB_MODELPORT           BITMAP  DISCARDABLE     "res\\modelport.bmp"
-IDB_ICON_TYPE           BITMAP  DISCARDABLE     "res\\icon_type.bmp"
-IDB_ICON_SUBTYPE        BITMAP  DISCARDABLE     "res\\icon_subtype.bmp"
-IDB_ICON_INSTANCE       BITMAP  DISCARDABLE     "res\\icon_instance.bmp"
-IDB_ICON_REFERENCE      BITMAP  DISCARDABLE     "res\\icon_reference.bmp"
-IDB_MODEL               BITMAP  DISCARDABLE     "res\\model.bmp"
-IDB_ICON_INSTANCE_DIS   BITMAP  DISCARDABLE     "res\\icon_instance_disabled.bmp"
-IDB_ICON_REFERENCE_DIS  BITMAP  DISCARDABLE     "res\\icon_reference_disabled.bmp"
-IDB_ICON_SUBTYPE_DIS    BITMAP  DISCARDABLE     "res\\icon_subtype_disabled.bmp"
-IDB_ICON_TYPE_DIS       BITMAP  DISCARDABLE     "res\\icon_type_disabled.bmp"
+IDB_ATOM                BITMAP                  "res\\atom.bmp"
+IDB_ATOMPORT            BITMAP                  "res\\atomport.bmp"
+IDB_REFERENCEPORT       BITMAP                  "res\\referenceport.bmp"
+IDB_SETPORT             BITMAP                  "res\\setport.bmp"
+IDB_REFERENCE           BITMAP                  "res\\reference.bmp"
+IDB_SET                 BITMAP                  "res\\set.bmp"
+IDB_MODELPORT           BITMAP                  "res\\modelport.bmp"
+IDB_ICON_TYPE           BITMAP                  "res\\icon_type.bmp"
+IDB_ICON_SUBTYPE        BITMAP                  "res\\icon_subtype.bmp"
+IDB_ICON_INSTANCE       BITMAP                  "res\\icon_instance.bmp"
+IDB_ICON_REFERENCE      BITMAP                  "res\\icon_reference.bmp"
+IDB_MODEL               BITMAP                  "res\\model.bmp"
+IDB_ICON_INSTANCE_DIS   BITMAP                  "res\\icon_instance_disabled.bmp"
+IDB_ICON_REFERENCE_DIS  BITMAP                  "res\\icon_reference_disabled.bmp"
+IDB_ICON_SUBTYPE_DIS    BITMAP                  "res\\icon_subtype_disabled.bmp"
+IDB_ICON_TYPE_DIS       BITMAP                  "res\\icon_type_disabled.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -152,20 +147,10 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_CANCEL              ICON                    "res\\cancel.ico"
-IDI_OK                  ICON                    "res\\ok.ico"
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_PROJNAME            "MgaDecorators"
 END

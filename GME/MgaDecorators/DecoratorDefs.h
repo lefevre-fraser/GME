@@ -107,9 +107,9 @@ namespace Decorator
 	static const char* TILE_PORTDEFAULT		= "$TILE$Port_Default";
 
 	static const char* CTX_MENU_STR_RENAME			= "Rename";
-	static const char* CTX_MENU_STR_RESIZE			= "Resize";
+	static const char* CTX_MENU_STR_RESETSIZE		= "Reset to original size";
 	static const unsigned int CTX_MENU_ID_RENAME	= DECORATOR_CTX_MENU_MINID + 0;
-	static const unsigned int CTX_MENU_ID_RESIZE	= DECORATOR_CTX_MENU_MINID + 1;
+	static const unsigned int CTX_MENU_ID_RESETSIZE	= DECORATOR_CTX_MENU_MINID + 1;
 
 	struct SFont
 	{

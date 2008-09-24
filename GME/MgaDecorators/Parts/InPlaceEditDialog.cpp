@@ -42,13 +42,6 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-/*	m_hOKIcon = LoadIcon(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_OK));
-	CButton* okButton = (CButton*)GetDlgItem(IDOK);
-	okButton->SetIcon(m_hOKIcon);
-	m_hCancelIcon = LoadIcon(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_CANCEL));
-	CButton* cancelButton = (CButton*)GetDlgItem(IDCANCEL);
-	cancelButton->SetIcon(m_hCancelIcon);*/
-
 	CRect rectInResource = GetWindowSizeFromResource();
 	long width = (long)(m_initialRect.Width() * 1.50) + 4;
 	long height = (long)(m_initialRect.Height()) + 4;
@@ -81,12 +74,6 @@ void CInPlaceEditDialog::OnDestroy()
 	ReleaseCapture();
 
 	CDialog::OnDestroy();
-
-	// destroy icons if they were loaded
-/*	if (m_hOKIcon != NULL)
-		DestroyIcon(m_hOKIcon);
-	if (m_hCancelIcon != NULL)
-		DestroyIcon(m_hCancelIcon);*/
 }
 
 void CInPlaceEditDialog::OnBnClickedCancel()
@@ -185,17 +172,6 @@ CRect CInPlaceEditDialog::GetWindowSizeFromResource(void) const
 
 	// if the dialog resource resides in a DLL ...
 	//
-/*	HINSTANCE hExeResourceHandle;
-	HINSTANCE hModule;
-
-	if (strDllName != NULL) {
-		hExeResourceHandle = AfxGetResourceHandle();
-
-		hModule= ::LoadLibrary(strDllName);
-		ASSERT(hModule);
-
-		AfxSetResourceHandle(hModule);
-	}*/
 
 	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(IDD_INPLACEEDITDIALOG),
 											RT_DIALOG);
@@ -248,11 +224,6 @@ CRect CInPlaceEditDialog::GetWindowSizeFromResource(void) const
 		::UnlockResource(hDlgInit);
 		::FreeResource(hDlgInit);
 	}
-
-/*	if(strDllName != NULL) {
-		AfxSetResourceHandle(hExeResourceHandle);
-		::FreeLibrary(hModule);
-	}*/
 
 	return rectSize;
 }

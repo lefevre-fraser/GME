@@ -42,8 +42,6 @@ public:
 	afx_msg void OnEnChangeTextedit();
 	//}}AFX_MSG
 
-//	HICON	m_hOKIcon;
-//	HICON	m_hCancelIcon;
 	CWnd*	m_parentCWnd;
 	HWND	m_parentHWnd;
 	CRect	m_initialRect;

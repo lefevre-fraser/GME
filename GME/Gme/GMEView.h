@@ -15,7 +15,6 @@
 #include "GuiObject.h"
 #include "AspectSyncDlg.h"
 #include "ScrollZoomView.h"
-#include "DecoratorEventSink.h"
 #include <list>
 
 class CViewDriver;
