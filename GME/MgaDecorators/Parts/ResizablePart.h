@@ -27,6 +27,7 @@ class ResizablePart: public PartBase
 public:
 	CRect			location;
 	ResizeLogic		resizeLogic;
+	bool			m_readCustomSize;
 
 	ResizablePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~ResizablePart();
@@ -47,6 +48,8 @@ public:
 	virtual bool	MouseMoved					(UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MouseLeftButtonUp			(UINT nFlags, const CPoint& point, HDC transformHDC);
+	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC);
+	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
 
 	virtual void	WindowResizing				(UINT nSide, CRect& location);

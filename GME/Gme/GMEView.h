@@ -91,7 +91,6 @@ public:
 	bool					inOpenedDecoratorTransaction;
 	bool					isContextInitiatedOperation;
 	bool					shouldCommitOperation;
-	bool					doTheResize;
 	CGuiObject*				objectInDecoratorOperation;
 	struct ContextClickState {
 		UINT		nFlags;

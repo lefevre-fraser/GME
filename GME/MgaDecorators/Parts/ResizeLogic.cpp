@@ -144,6 +144,38 @@ bool ResizeLogic::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transf
 	return false;
 }
 
+bool ResizeLogic::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
+{
+	if (m_parentPart->IsActive()) {
+		CRect ptRect = m_parentPart->GetLocation();
+		if (ptRect.PtInRect(point)) {
+			::AppendMenu(hCtxMenu, MF_STRING | MF_ENABLED, CTX_MENU_ID_RESETSIZE, CTX_MENU_STR_RESETSIZE);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool ResizeLogic::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
+{
+	if (menuItemId == CTX_MENU_ID_RESETSIZE) {
+		CRect pRect = m_parentPart->GetLocation();
+		CSize normalPreferredSize = m_parentPart->GetPreferredSize();
+		long deltax = normalPreferredSize.cx - pRect.Width();
+		long deltay = normalPreferredSize.cy - pRect.Height();
+		if (deltax != 0 || deltay != 0) {
+			m_parentPart->WindowResizingStarted(nFlags, pRect);
+			pRect.InflateRect(0, 0, deltax, deltay);
+			m_parentPart->WindowResizing(nFlags, pRect);
+			m_parentPart->WindowResized(nFlags, CSize(deltax, deltay));
+			m_parentPart->WindowResizingFinished(nFlags, pRect);
+		}
+	}
+
+	return false;
+}
+
 bool ResizeLogic::OperationCanceledByGME(void)
 {
 	if (m_resizeState != NotInResize) {
@@ -154,7 +186,7 @@ bool ResizeLogic::OperationCanceledByGME(void)
 	return true;
 }
 
-ResizeLogic::ResizeType ResizeLogic::DeterminePotentialResize(CPoint cursorPoint)
+ResizeLogic::ResizeType ResizeLogic::DeterminePotentialResize(CPoint cursorPoint) const
 {
 	// Topleft corner
 	CRect cornerRect(m_targetLocation.left, m_targetLocation.top, m_targetLocation.left + 1, m_targetLocation.top + 1);

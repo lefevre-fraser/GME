@@ -516,7 +516,6 @@ CGMEView::CGMEView()
 	inOpenedDecoratorTransaction	= false;
 	isContextInitiatedOperation		= false;
 	shouldCommitOperation			= false;
-	doTheResize						= false;
 	objectInDecoratorOperation		= NULL;
 	selectionOfContext				= NULL;
 
@@ -4023,10 +4022,6 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 						if (retVal == S_DECORATOR_EVENT_HANDLED) {
 							if (inOpenedDecoratorTransaction) {
 								if (shouldCommitOperation) {
-									if (doTheResize) {
-										objectInDecoratorOperation->ResizeObject(objectInDecoratorOperation->GetLocation(), true);
-										doTheResize = false;
-									}
 									CommitTransaction();
 									shouldCommitOperation = false;
 									objectInDecoratorOperation = NULL;
@@ -6059,7 +6054,7 @@ void CGMEView::CancelDecoratorOperation(bool notify)
 			::ReleaseCapture();
 		shouldCommitOperation = false;
 		if (originalRect.IsRectEmpty() == FALSE) {
-			objectInDecoratorOperation->ResizeObject(originalRect, false);
+			objectInDecoratorOperation->ResizeObject(originalRect);
 			Invalidate();
 			originalRect.SetRectEmpty();
 		}

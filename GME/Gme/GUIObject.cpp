@@ -18,9 +18,6 @@
 
 #include "GMEEventLogger.h"
 
-// === from DecoratorDefs.h ===
-static const char* PREF_PREFERREDSIZE			= "preferredSize";
-
 
 CModelGrid modelGrid;
 
@@ -1282,7 +1279,7 @@ void CGuiObject::SetAllSizes(CSize &s, bool doMga)
 			SetSize(s,i,doMga);
 }
 
-void CGuiObject::SetLocation(CRect &r, int aspect, bool doMga, bool savePreferredSize)
+void CGuiObject::SetLocation(CRect &r, int aspect, bool doMga/*, bool savePreferredSize*/)
 {
 	if(aspect < 0)
 		aspect = parentAspect;
@@ -1290,7 +1287,7 @@ void CGuiObject::SetLocation(CRect &r, int aspect, bool doMga, bool savePreferre
 	VERIFY(guiAspects[aspect] != NULL);
 	guiAspects[aspect]->SetLocation(r);
 	if(IsReal() && doMga)
-		WriteLocation(aspect, savePreferredSize);
+		WriteLocation(aspect/*, savePreferredSize*/);
 }
 
 CSize CGuiObject::GetNativeSize(int aspect)
@@ -1425,7 +1422,7 @@ void CGuiObject::ReadAllLocations()
 	}
 }
 
-void CGuiObject::WriteLocation(int aspect, bool savePreferredSize)
+void CGuiObject::WriteLocation(int aspect)
 {
 	VERIFY(IsReal());
 	if(aspect < 0)
@@ -1444,14 +1441,6 @@ void CGuiObject::WriteLocation(int aspect, bool savePreferredSize)
 		// Save position part
 		CPoint pt = r.TopLeft();
 		COMTHROW(part->SetGmeAttrs(0, pt.x, pt.y));
-		// Save preferred size part
-		CSize size(r.Width(), r.Height());
-		if (savePreferredSize && size.cx >= 0 && size.cy >= 0) {
-			OLECHAR bbc[40];
-			swprintf(bbc, OLESTR("%ld,%ld"), size.cx, size.cy);
-			CComBSTR bb(bbc);
-			COMTHROW(part->put_RegistryValue(CComBSTR(PREF_PREFERREDSIZE), bb));
-		}
 		view->CommitTransaction();
 	}
 	catch(hresult_exception &e) {
@@ -1673,7 +1662,7 @@ void CGuiObject::ShiftModels(CGuiObjectList &objList,CPoint &shiftBy)
 	}
 }
 
-void CGuiObject::ResizeObject(const CRect& newLocation, bool doMga)
+void CGuiObject::ResizeObject(const CRect& newLocation/*, bool doMga*/)
 {
 	CGMEEventLogger::LogGMEEvent("CGuiObject::ResizeObject\n");
 
@@ -1691,7 +1680,7 @@ void CGuiObject::ResizeObject(const CRect& newLocation, bool doMga)
 	modelGrid.Reset(this);*/
 
 	VERIFY(IsVisible());
-	SetLocation((CRect)newLocation, -1, doMga, true);
+	SetLocation((CRect)newLocation, -1, false/*doMga, true*/);
 //	modelGrid.Set(this);
 }
 

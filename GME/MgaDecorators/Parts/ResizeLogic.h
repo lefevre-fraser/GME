@@ -81,9 +81,14 @@ public:
 	virtual bool	MouseMoved					(UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MouseLeftButtonUp			(UINT nFlags, const CPoint& point, HDC transformHDC);
+	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC);
+	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
 
-	ResizeType		DeterminePotentialResize	(CPoint cursorPoint);
+	ResizeType		DeterminePotentialResize	(CPoint cursorPoint) const;
+	bool			IsSizeChanged				(void) const { return m_targetLocation.EqualRect(m_originalLocation) == FALSE; };
+	CRect			GetOriginalLocation			(void) const { return m_originalLocation; };
+
 private:
 	void			ChangeCursorForm			(ResizeType resizeType, bool notify = true);
 	void			RestoreCursor				(void);

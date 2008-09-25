@@ -558,7 +558,8 @@
 				>
 			</File>
 			<File
-				RelativePath="DecoratorEventSink.cpp">
+				RelativePath="DecoratorEventSink.cpp"
+				>
 			</File>
 			<File
 				RelativePath="DynMenu.cpp"
@@ -726,10 +727,12 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="GMEChildFrame.cpp">
+				RelativePath="GMEChildFrame.cpp"
+				>
 			</File>
 			<File
-				RelativePath="GMEChildFrameWrapper.cpp">
+				RelativePath="GMEChildFrameWrapper.cpp"
+				>
 			</File>
 			<File
 				RelativePath="GMEConsole.cpp"

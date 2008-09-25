@@ -20,7 +20,8 @@ namespace Decorator {
 
 ResizablePart::ResizablePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	PartBase(pPart, eventSink),
-	resizeLogic(NULL)
+	resizeLogic(NULL),
+	m_readCustomSize(true)
 {
 	resizeLogic.SetParentPart(this);
 }
@@ -55,15 +56,38 @@ CSize ResizablePart::GetPreferredSize(void) const
 	long cx = 0;
 	long cy = 0;
 
-	if (m_spFCO) {
+	if (m_readCustomSize && m_spFCO) {
 		COMTRY {
 			CComPtr<IMgaMetaAspect> mAspect;
 			COMTHROW(m_spPart->get_ParentAspect(&mAspect));
-			CComPtr<IMgaPart> part;
-			COMTHROW(m_spFCO->get_Part(mAspect, &part));
-			CComBSTR regName(PREF_PREFERREDSIZE);
+
+			long status;
+			COMTHROW(m_spProject->get_ProjectStatus(&status));
+			bool inTrans = (status & 0x08L) != 0;
+			CComPtr<IMgaTerritory> terr;
+			if (!inTrans) {
+				COMTHROW(m_spProject->CreateTerritory(NULL, &terr));
+				COMTHROW(m_spProject->BeginTransaction(terr, TRANSACTION_READ_ONLY));
+			} else {
+				COMTHROW(m_spProject->get_ActiveTerritory(&terr));
+			}
+
 			CComBSTR bstrVal;
-			COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+			CComPtr<IMgaFCO> terrFco;
+			COMTHROW(terr->OpenFCO(m_spFCO, &terrFco));
+			status = OBJECT_ZOMBIE;
+			COMTHROW(terrFco->get_Status(&status));
+			if (status == OBJECT_EXISTS) {
+				CComPtr<IMgaPart> part;
+				COMTHROW(terrFco->get_Part(mAspect, &part));
+				CComBSTR regName(PREF_PREFERREDSIZE);
+				COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+			}
+
+			if (!inTrans) {
+				m_spProject->CommitTransaction();
+			}
+
 			CString sizeStr;
 			CopyTo(bstrVal, sizeStr);
 			if (!sizeStr.IsEmpty())
@@ -131,8 +155,29 @@ bool ResizablePart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC tran
 	return false;
 }
 
+bool ResizablePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
+{
+	if (m_spFCO && m_bActive && ResizablePart::GetPreferredSize() != CSize(0, 0))
+		return resizeLogic.MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC);
+
+	return false;
+}
+
+bool ResizablePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
+{
+	bool handled = false;
+	if (m_spFCO) {
+		m_readCustomSize = false;
+		handled = resizeLogic.MenuItemSelected(menuItemId, nFlags, point, transformHDC);
+		m_readCustomSize = true;
+	}
+
+	return handled;
+}
+
 bool ResizablePart::OperationCanceledByGME(void)
 {
+	SetLocation(resizeLogic.GetOriginalLocation());
 	if (m_spFCO)
 		return resizeLogic.OperationCanceledByGME();
 
@@ -148,6 +193,53 @@ void ResizablePart::WindowResizing(UINT nSide, CRect& location)
 void ResizablePart::WindowResizingFinished(UINT nSide, CRect& location)
 {
 	SetLocation(location);
+	if (m_spFCO && resizeLogic.IsSizeChanged()) {
+		COMTRY {
+			CComPtr<IMgaMetaAspect> mAspect;
+			COMTHROW(m_spPart->get_ParentAspect(&mAspect));
+
+			long status;
+			COMTHROW(m_spProject->get_ProjectStatus(&status));
+			bool inTrans = (status & 0x08L) != 0;
+			CComPtr<IMgaTerritory> terr;
+			if (!inTrans) {
+				COMTHROW(m_spProject->CreateTerritory(NULL, &terr));
+				COMTHROW(m_spProject->BeginTransaction(terr, TRANSACTION_GENERAL));
+			} else {
+				COMTHROW(m_spProject->get_ActiveTerritory(&terr));
+			}
+
+			CComBSTR bstrVal;
+			CComPtr<IMgaFCO> terrFco;
+			COMTHROW(terr->OpenFCO(m_spFCO, &terrFco));
+			status = OBJECT_ZOMBIE;
+			COMTHROW(terrFco->get_Status(&status));
+			if (status == OBJECT_EXISTS) {
+				CComPtr<IMgaPart> part;
+				COMTHROW(terrFco->get_Part(mAspect, &part));
+
+				CPoint pt = location.TopLeft();
+				COMTHROW(part->SetGmeAttrs(0, pt.x, pt.y));
+				// Save preferred size part
+				CSize size(location.Width(), location.Height());
+				if (size.cx >= 0 && size.cy >= 0) {
+					OLECHAR bbc[40];
+					swprintf(bbc, OLESTR("%ld,%ld"), size.cx, size.cy);
+					CComBSTR bb(bbc);
+					COMTHROW(part->put_RegistryValue(CComBSTR(PREF_PREFERREDSIZE), bb));
+				}
+			}
+
+			if (!inTrans) {
+				m_spProject->CommitTransaction();
+			}
+		}
+		catch(hresult_exception &e)
+		{
+			ASSERT(FAILED(e.hr));
+			SetErrorInfo(e.hr);
+		}
+	}
 	PartBase::WindowResizingFinished(nSide, location);
 }
 

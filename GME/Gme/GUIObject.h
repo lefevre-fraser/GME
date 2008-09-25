@@ -218,7 +218,7 @@ public:
 	void SetCenter(CPoint &pt,int aspect = -1, bool doMga = true);
 	void SetSize(CSize &s,int aspect = -1,bool doMga = true);
 	void SetAllSizes(CSize &s, bool doMga = true);
-	void SetLocation(CRect &r, int aspect = -1, bool doMga = true, bool savePreferredSize = false);
+	void SetLocation(CRect &r, int aspect = -1, bool doMga = true);
 	CSize GetNativeSize(int aspect = -1);
 	void SetAllSizesToNative();							// Used by non real objects
 	int	MapAspect(int parent)							{ return guiAspects[parent] ? guiAspects[parent]->GetIndex() : -1; }
@@ -233,7 +233,7 @@ public:
 	void SetRouterBox(CComPtr<IAutoRouterBox> rbox)						{ GetCurrentAspect()->SetRouterBox(rbox) ; }
 	void SetRouterNameBox(CComPtr<IAutoRouterBox> rnbox)				{ GetCurrentAspect()->SetRouterNameBox(rnbox) ; }
 	void ReadAllLocations();
-	void WriteLocation(int aspect = -1, bool savePreferredSize = false);
+	void WriteLocation(int aspect = -1);
 	bool IsHotspotEnabled() const						{ return isHotspotEnabled; }
 
 public:
@@ -251,7 +251,7 @@ public:
 	static void MoveObjects(CGuiObjectList &objectList,CPoint &pt);
 	static void FindUpperLeft(CGuiObjectList &objs,int &left,int &top);
 	static void ShiftModels(CGuiObjectList &objList,CPoint &shiftBy);
-	void ResizeObject(const CRect& newLocation, bool doMga = true);
+	void ResizeObject(const CRect& newLocation);
 	static bool NudgeObjects(CGuiObjectList &modelList,int right,int down);
 	static CGuiObject *FindObject(CComPtr<IMgaFCO> &fco,CGuiFcoList &fcoList);
 	static void GetRectList(CGuiObjectList &objList,CRectList &rects);

@@ -238,7 +238,7 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::WindowResizing(LONG nSide, LONG le
 {
 	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
 
-	pThis->m_guiObject->ResizeObject(CRect(left, top, right, bottom), false);
+	pThis->m_guiObject->ResizeObject(CRect(left, top, right, bottom));
 	pThis->m_view->Invalidate();
 	pThis->m_view->shouldCommitOperation = false;
 
@@ -249,6 +249,7 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::WindowResizingFinished(LONG nType,
 {
 	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
 
+	pThis->m_guiObject->ResizeObject(CRect(left, top, right, bottom));
 	pThis->m_view->inNewDecoratorOperation = false;
 	pThis->m_view->originalRect.SetRectEmpty();
 
@@ -260,7 +261,6 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::WindowResized(LONG nType, LONG cx,
 	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
 
 	pThis->m_view->shouldCommitOperation = true;
-	pThis->m_view->doTheResize = true;
 
 	return S_OK;
 }
