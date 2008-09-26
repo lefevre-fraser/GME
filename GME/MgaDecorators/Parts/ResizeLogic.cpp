@@ -171,6 +171,7 @@ bool ResizeLogic::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& p
 			m_parentPart->WindowResized(nFlags, CSize(deltax, deltay));
 			m_parentPart->WindowResizingFinished(nFlags, pRect);
 		}
+		return true;
 	}
 
 	return false;

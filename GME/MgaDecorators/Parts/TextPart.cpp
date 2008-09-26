@@ -254,8 +254,8 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 		inPlaceEditDlg.SetParentWnd(m_parentWnd, cWnd);
 		inPlaceEditDlg.SetFont(scaled_font);
 
-		TitleEditingStarted(editLocation);
 		if (inPlaceEditDlg.DoModal() == IDOK) {
+			TitleEditingStarted(editLocation);
 			m_strText = inPlaceEditDlg.GetText();
 			// transaction operation begin
 			CComBSTR bstr;
@@ -263,8 +263,8 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 			COMTHROW(m_spFCO->put_Name(bstr));
 			// transaction operation end
 			TitleChanged(m_strText);
+			TitleEditingFinished(editLocation);
 		}
-		TitleEditingFinished(editLocation);
 		delete scaled_font;
 		scaled_font = NULL;
 

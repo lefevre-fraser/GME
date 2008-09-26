@@ -4161,6 +4161,11 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 									if (::GetCapture() != NULL)
 										::ReleaseCapture();
 								}
+							} else {
+								if (inNewDecoratorOperation)
+									objectInDecoratorOperation = object;
+								CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+								return;
 							}
 						} else if (retVal != S_OK &&
 								   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&

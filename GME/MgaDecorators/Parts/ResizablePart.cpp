@@ -65,27 +65,29 @@ CSize ResizablePart::GetPreferredSize(void) const
 			COMTHROW(m_spProject->get_ProjectStatus(&status));
 			bool inTrans = (status & 0x08L) != 0;
 			CComPtr<IMgaTerritory> terr;
+			CComBSTR bstrVal;
+			CComPtr<IMgaPart> part;
 			if (!inTrans) {
 				COMTHROW(m_spProject->CreateTerritory(NULL, &terr));
 				COMTHROW(m_spProject->BeginTransaction(terr, TRANSACTION_READ_ONLY));
-			} else {
-				COMTHROW(m_spProject->get_ActiveTerritory(&terr));
-			}
 
-			CComBSTR bstrVal;
-			CComPtr<IMgaFCO> terrFco;
-			COMTHROW(terr->OpenFCO(m_spFCO, &terrFco));
-			status = OBJECT_ZOMBIE;
-			COMTHROW(terrFco->get_Status(&status));
-			if (status == OBJECT_EXISTS) {
-				CComPtr<IMgaPart> part;
-				COMTHROW(terrFco->get_Part(mAspect, &part));
+				CComPtr<IMgaFCO> terrFco;
+				COMTHROW(terr->OpenFCO(m_spFCO, &terrFco));
+				status = OBJECT_ZOMBIE;
+				COMTHROW(terrFco->get_Status(&status));
+				if (status == OBJECT_EXISTS) {
+					COMTHROW(terrFco->get_Part(mAspect, &part));
+					CComBSTR regName(PREF_PREFERREDSIZE);
+					COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+				}
+
+				m_spProject->CommitTransaction();
+			} else {
+//				COMTHROW(m_spProject->get_ActiveTerritory(&terr));
+
+				COMTHROW(m_spFCO->get_Part(mAspect, &part));
 				CComBSTR regName(PREF_PREFERREDSIZE);
 				COMTHROW(part->get_RegistryValue(regName, &bstrVal));
-			}
-
-			if (!inTrans) {
-				m_spProject->CommitTransaction();
 			}
 
 			CString sizeStr;

@@ -79,12 +79,16 @@ void CInPlaceEditDialog::OnDestroy()
 void CInPlaceEditDialog::OnBnClickedCancel()
 {
 	// TODO: Add your control notification handler code here
+	ReleaseCapture();
+
 	OnCancel();
 }
 
 void CInPlaceEditDialog::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
+	ReleaseCapture();
+
 	OnOK();
 }
 
@@ -101,8 +105,8 @@ void CInPlaceEditDialog::OnLButtonDown(UINT nFlags, CPoint point)
 	GetWindowRect(&r);
 
 	if (!PtInRect(&r, p)) {
-		// If the user clicked outside of the dialog, close.
-		EndDialog(IDCANCEL);
+		// If the user clicked outside of the dialog, close (and apply changes).
+		OnBnClickedOk();	// Windows Explorer default behavior
 	} else {
 		// inside the dialog. Since this window
 		// has the mouse captured, its children
