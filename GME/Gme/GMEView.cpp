@@ -4675,6 +4675,10 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			currentModel.QueryInterface(&fcoToShow);
 			ShowAnnotationBrowser(fcoToShow, annotation->rootNode);
 		}
+		else {
+			OnViewParent();	// double click on model background brings up the parent model
+							// user requested standard behavior
+		}
 	}
 	CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 }

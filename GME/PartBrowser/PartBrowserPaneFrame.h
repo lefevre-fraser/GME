@@ -61,6 +61,7 @@ protected:
 	//{{AFX_MSG(CPartBrowserPaneFrame)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg BOOL OnMouseWheel(UINT fFlags, short zDelta, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

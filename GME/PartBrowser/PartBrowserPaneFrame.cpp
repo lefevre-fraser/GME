@@ -40,6 +40,7 @@ void CPartBrowserPaneFrame::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CPartBrowserPaneFrame, CDialog)
 	//{{AFX_MSG_MAP(CPartBrowserPaneFrame)
 	ON_WM_VSCROLL()
+	ON_WM_MOUSEWHEEL()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -172,4 +173,31 @@ void CPartBrowserPaneFrame::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* /*pSc
 	SetScrollPos(SB_VERT, scrollPos);
 
 //	CDialog::OnVScroll(nSBCode, nPos, pScrollBar);
+}
+
+BOOL CPartBrowserPaneFrame::OnMouseWheel(UINT fFlags, short zDelta, CPoint point)
+{
+	UNUSED_ALWAYS(point);
+
+	// we don't handle anything but scrolling just now
+	if (fFlags & (MK_SHIFT | MK_CONTROL))
+		return FALSE;
+
+	// if we have a vertical scroll bar, the wheel scrolls that
+	// if we have _only_ a horizontal scroll bar, the wheel scrolls that
+	// otherwise, don't do any work at all
+
+	DWORD dwStyle = GetStyle();
+	CScrollBar* pBar = GetScrollBarCtrl(SB_VERT);
+	BOOL bHasVertBar = ((pBar != NULL) && pBar->IsWindowEnabled()) ||
+						(dwStyle & WS_VSCROLL);
+
+	if (bHasVertBar) {
+		OnVScroll(zDelta < 0 ? SB_LINEDOWN : SB_LINEUP, 0, NULL);
+
+		UpdateWindow();
+		return TRUE;
+	}
+
+	return FALSE;
 }
