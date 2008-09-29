@@ -5,6 +5,7 @@
 //
 //################################################################################################
 
+#include "StdAfx.h"
 #include "DecoratorUtil.h"
 
 #include "DecoratorDefs.h"

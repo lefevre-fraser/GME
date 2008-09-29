@@ -5,6 +5,7 @@
 //
 //################################################################################################
 
+#include "StdAfx.h"
 #include "DecoratorDefs.h"
 
 namespace Decorator
