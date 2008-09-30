@@ -10,7 +10,7 @@
 
 
 #include "../StdAfx.h"
-#include "../MgaDecoratorLib.h"
+#include "MgaDecorator.h"
 #include "mga.h"
 #include "../DecoratorDefs.h"
 #include "../DecoratorUtil.h"

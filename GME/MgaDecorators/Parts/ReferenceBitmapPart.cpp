@@ -298,7 +298,7 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 			BitmapBase* pBitmap = NULL;
 #ifndef OLD_DECORATOR_LOOKANDFEEL
 			if (m_bOverlay)
-				pBitmap = getFacilities().getBitmapB(strIcon, m_crOverlay)
+				pBitmap = getFacilities().getBitmapB(strIcon, m_crOverlay);
 			else
 				pBitmap = getFacilities().getBitmap( strIcon );
 #else
