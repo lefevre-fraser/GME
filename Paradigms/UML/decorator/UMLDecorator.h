@@ -6,10 +6,9 @@
 #ifndef __UMLDECORATOR_H_
 #define __UMLDECORATOR_H_
 
-#include "DecorCOM.h"
 #include "resource.h"       // main symbols
 #include "decoratorstd.h"
-#include "decorutil.h"
+#include "DecoratorUtil.h"
 #include "MaskedBitmap.h"
 
 #define  UML_STEREOTYPE_LEFT		"<<"

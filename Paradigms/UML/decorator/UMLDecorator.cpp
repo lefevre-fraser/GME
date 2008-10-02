@@ -3,6 +3,8 @@
 // 12/06/2002 - modified by Ed Willink, Thales Research and Technology (abstract classes)
 //
 #include "stdafx.h"
+#define __Meta_h__
+#define __Mga_h__
 #include "UMLDecoratorLib.h"
 #include "UMLDecorator.h"
 #include "DecoratorStd.h"
@@ -11,141 +13,143 @@
 #define VERIFY_INIT   { if (!m_isInitialized) return E_DECORATOR_UNINITIALIZED; }
 #define VERIFY_LOCSET { if (!m_isLocSet) return E_DECORATOR_LOCISNOTSET; }
 
-CDecorUtil	decorutil;
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CUMLDecorator
 STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart, IMgaFCO *obj)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
-	GetMetaFCO(metaPart, m_metaFco);
-	m_mgaFco = obj;		// obj == NULL, if we are in the PartBrowser
-	
-	if (!m_metaFco) {
-		return E_DECORATOR_INIT_WITH_NULL;
-	}
-	else {
-		m_isInitialized = true;
-	}	
-	
-	if (SetupInheritance()) {
-		if(!GetColorPreference(m_color,COLOR_PREF)) {
-			m_color = GME_BLACK_COLOR;
-		}
-		m_name = UML_INHERITANCE_NAME;
-		return S_OK;
-	}
 
-	if (SetupConstraint()) {
-		if (m_mgaFco) {
-			CComBSTR bstr;
-			COMTHROW(m_mgaFco->get_Name(&bstr));
-			m_name = bstr;
+	COMTRY {
+		GetMetaFCO(metaPart, m_metaFco);
+		m_mgaFco = obj;		// obj == NULL, if we are in the PartBrowser
+		
+		if (!m_metaFco) {
+			return E_DECORATOR_INIT_WITH_NULL;
 		}
 		else {
-			m_name = UML_CONSTRAINT_NAME;
-		}
-		return S_OK;
-	}
-
-	if (SetupConstraintDefinition()) {
-		if (m_mgaFco) {
-			CComBSTR bstr;
-			COMTHROW(m_mgaFco->get_Name(&bstr));
-			m_name = bstr;
-		}
-		else {
-			m_name = UML_CONSTRAINT_DEFINITION_NAME;
-		}
-		return S_OK;
-	}
-
-	if (SetupConnector()) {
-		if(!GetColorPreference(m_color,COLOR_PREF)) {
-			m_color = GME_BLACK_COLOR;
-		}
-		m_name = UML_CONNECTOR_NAME;
-		return S_OK;
-	}
-
-	if (m_mgaFco) {
-		objtype_enum	objtype;
-		COMTHROW(m_mgaFco->get_ObjType(&objtype));
-		if (objtype == OBJTYPE_REFERENCE) {
-			m_copyBitmap.ReadFromResource(IDB_BITMAP_COPY);
-			m_isCopy = true;
-			CComPtr<IMgaFCO> mgaFco = m_mgaFco;
-			while(objtype == OBJTYPE_REFERENCE) {
-				CComPtr<IMgaReference> ref;
-				COMTHROW(mgaFco.QueryInterface(&ref));
-				mgaFco = NULL;
-				COMTHROW(ref->get_Referred(&mgaFco));
-				if (mgaFco) {
-					COMTHROW(mgaFco->get_ObjType(&objtype));
-				}
-				else {
-					objtype = OBJTYPE_NULL;
-				}
+			m_isInitialized = true;
+		}	
+		
+		if (SetupInheritance()) {
+			if(!GetColorPreference(m_color,COLOR_PREF)) {
+				m_color = GME_BLACK_COLOR;
 			}
-			if (objtype == OBJTYPE_NULL) {
-				m_stereotype.Empty();
-				m_attrs.RemoveAll();
+			m_name = UML_INHERITANCE_NAME;
+			return S_OK;
+		}
+
+		if (SetupConstraint()) {
+			if (m_mgaFco) {
+				CComBSTR bstr;
+				COMTHROW(m_mgaFco->get_Name(&bstr));
+				m_name = bstr;
 			}
 			else {
-				if (!GetAttribute(m_stereotype, UML_STEREOTYPE_ATTR, mgaFco)) {
+				m_name = UML_CONSTRAINT_NAME;
+			}
+			return S_OK;
+		}
+
+		if (SetupConstraintDefinition()) {
+			if (m_mgaFco) {
+				CComBSTR bstr;
+				COMTHROW(m_mgaFco->get_Name(&bstr));
+				m_name = bstr;
+			}
+			else {
+				m_name = UML_CONSTRAINT_DEFINITION_NAME;
+			}
+			return S_OK;
+		}
+
+		if (SetupConnector()) {
+			if(!GetColorPreference(m_color,COLOR_PREF)) {
+				m_color = GME_BLACK_COLOR;
+			}
+			m_name = UML_CONNECTOR_NAME;
+			return S_OK;
+		}
+
+		if (m_mgaFco) {
+			objtype_enum	objtype;
+			COMTHROW(m_mgaFco->get_ObjType(&objtype));
+			if (objtype == OBJTYPE_REFERENCE) {
+				m_copyBitmap.ReadFromResource(IDB_BITMAP_COPY);
+				m_isCopy = true;
+				CComPtr<IMgaFCO> mgaFco = m_mgaFco;
+				while(objtype == OBJTYPE_REFERENCE) {
+					CComPtr<IMgaReference> ref;
+					COMTHROW(mgaFco.QueryInterface(&ref));
+					mgaFco = NULL;
+					COMTHROW(ref->get_Referred(&mgaFco));
+					if (mgaFco) {
+						COMTHROW(mgaFco->get_ObjType(&objtype));
+					}
+					else {
+						objtype = OBJTYPE_NULL;
+					}
+				}
+				if (objtype == OBJTYPE_NULL) {
+					m_stereotype.Empty();
+					m_attrs.RemoveAll();
+				}
+				else {
+					if (!GetAttribute(m_stereotype, UML_STEREOTYPE_ATTR, mgaFco)) {
+						m_stereotype.Empty();
+					}
+					bool isAbstract;
+					if (GetAttribute(isAbstract, UML_ABSTRACT_ATTR, mgaFco) && isAbstract) {
+						m_isAbstract = true;
+					}
+					CollectAttributes(mgaFco);
+				}
+			}
+			else {
+				m_isCopy = false;
+				if (!GetAttribute(m_stereotype, UML_STEREOTYPE_ATTR)) {
 					m_stereotype.Empty();
 				}
+				CComPtr<IMgaFCO> fco;
 				bool isAbstract;
-				if (GetAttribute(isAbstract, UML_ABSTRACT_ATTR, mgaFco) && isAbstract) {
+				if (GetAttribute(isAbstract, UML_ABSTRACT_ATTR, fco) && isAbstract) {
 					m_isAbstract = true;
 				}
-				CollectAttributes(mgaFco);
+				CollectAttributes();
 			}
+			CComBSTR bstr;
+			COMTHROW(m_mgaFco->get_Name(&bstr));
+			m_name = bstr;
 		}
 		else {
-			m_isCopy = false;
-			if (!GetAttribute(m_stereotype, UML_STEREOTYPE_ATTR)) {
-				m_stereotype.Empty();
+			objtype_enum objtype;
+			COMTHROW(m_metaFco->get_ObjType(&objtype));
+			if (objtype == OBJTYPE_REFERENCE) {
+				m_copyBitmap.ReadFromResource(IDB_BITMAP_COPY);
+				m_isCopy = true;
 			}
-			CComPtr<IMgaFCO> fco;
-			bool isAbstract;
-			if (GetAttribute(isAbstract, UML_ABSTRACT_ATTR, fco) && isAbstract) {
-				m_isAbstract = true;
+			else {
+				m_isCopy = false;
 			}
-			CollectAttributes();
+			m_stereotype.Empty();
+			CComBSTR bstr;
+			COMTHROW(m_metaFco->get_DisplayedName(&bstr));
+			if (bstr.Length() == 0 ) {
+				bstr.Empty();
+				COMTHROW(m_metaFco->get_Name(&bstr));
+			}
+			m_name = bstr;
 		}
-		CComBSTR bstr;
-		COMTHROW(m_mgaFco->get_Name(&bstr));
-		m_name = bstr;
-	}
-	else {
-		objtype_enum objtype;
-		COMTHROW(m_metaFco->get_ObjType(&objtype));
-		if (objtype == OBJTYPE_REFERENCE) {
-			m_copyBitmap.ReadFromResource(IDB_BITMAP_COPY);
-			m_isCopy = true;
-		}
-		else {
-			m_isCopy = false;
-		}
-		m_stereotype.Empty();
-		CComBSTR bstr;
-		COMTHROW(m_metaFco->get_DisplayedName(&bstr));
-		if (bstr.Length() == 0 ) {
-			bstr.Empty();
-			COMTHROW(m_metaFco->get_Name(&bstr));
-		}
-		m_name = bstr;
-	}
 
-	if(!GetColorPreference(m_color,COLOR_PREF)) {
-		m_color = GME_BLACK_COLOR;
-	}
-	if(!GetColorPreference(m_nameColor,NAME_COLOR_PREF)) {
-		m_nameColor = GME_BLACK_COLOR;
-	}
-	CalcRelPositions();
+		if(!GetColorPreference(m_color,COLOR_PREF)) {
+			m_color = GME_BLACK_COLOR;
+		}
+		if(!GetColorPreference(m_nameColor,NAME_COLOR_PREF)) {
+			m_nameColor = GME_BLACK_COLOR;
+		}
+		CalcRelPositions();
+	} COMCATCH(;);
+
 	return S_OK;
 }
 
@@ -244,9 +248,11 @@ STDMETHODIMP CUMLDecorator::GetPortLocation(IMgaFCO *fco, long *sx, long *sy, lo
 STDMETHODIMP CUMLDecorator::GetPorts(IMgaFCOs **portFCOs)
 {
 	VERIFY_INIT;
-	CComPtr<IMgaFCOs> coll;
-	COMTHROW(coll.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
-	*portFCOs = coll.Detach();
+	COMTRY {
+		CComPtr<IMgaFCOs> coll;
+		COMTHROW(coll.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
+		*portFCOs = coll.Detach();
+	} COMCATCH(;);
 	return S_OK;
 }
 
@@ -265,7 +271,7 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 	double scaley = ((double)(m_ey - m_sy)) / (m_calcSize.cy);
 
 	if (m_isInheritance) {
-		dc.SelectObject(decorutil.GetPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
+		dc.SelectObject(DecoratorSDK::getFacilities().getPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
 		dc.SelectStockObject(NULL_BRUSH);
 		dc.BeginPath();
 		dc.MoveTo(m_sx, m_ey);
@@ -276,19 +282,29 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 		dc.StrokeAndFillPath();
 		if (!m_mgaFco) {
 			CPoint namePos(m_sx + ((m_ex - m_sx) / 2), m_ey);
-			decorutil.DrawText(&dc, m_name, namePos, decorutil.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_color : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
+			DecoratorSDK::getFacilities().drawText(&dc,
+													m_name,
+													namePos,
+													DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+													(m_isActive ? m_color : GME_GRAYED_OUT_COLOR),
+													TA_TOP | TA_CENTER);
 		}
 		dc.Detach();
 		return S_OK;
 	}
 
 	if (m_isConnector) {
-		dc.SelectObject(decorutil.GetPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
-		dc.SelectObject(decorutil.GetBrush(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
+		dc.SelectObject(DecoratorSDK::getFacilities().getPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
+		dc.SelectObject(DecoratorSDK::getFacilities().getBrush(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
 		dc.Ellipse(m_sx, m_sy, m_ex, m_ey);
 		if (!m_mgaFco) {
 			CPoint namePos(m_sx + ((m_ex - m_sx) / 2), m_ey);
-			decorutil.DrawText(&dc, m_name, namePos, decorutil.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_color : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
+			DecoratorSDK::getFacilities().drawText(&dc,
+													m_name,
+													namePos,
+													DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+													(m_isActive ? m_color : GME_GRAYED_OUT_COLOR),
+													TA_TOP | TA_CENTER);
 		}
 		dc.Detach();
 		return S_OK;
@@ -297,7 +313,12 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 	if (m_isConstraint && m_constraintBitmap.IsValid()) {
 		m_constraintBitmap.DrawTransparent(&dc, m_sx, m_sy, UML_TRANSPARENT_COLOR, !m_isActive, GME_GRAYED_OUT_COLOR);
 		CPoint namePos(m_sx + ((m_ex - m_sx) / 2), m_ey);
-		decorutil.DrawText(&dc, m_name, namePos, decorutil.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_color : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
+		DecoratorSDK::getFacilities().drawText(&dc,
+												m_name,
+												namePos,
+												DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+												(m_isActive ? m_color : GME_GRAYED_OUT_COLOR),
+												TA_TOP | TA_CENTER);
 		dc.Detach();
 		return S_OK;
 	}
@@ -305,41 +326,66 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 	if (m_isConstraintDefinition && m_constraintDefBitmap.IsValid()) {
 		m_constraintDefBitmap.DrawTransparent(&dc, m_sx, m_sy, UML_TRANSPARENT_COLOR, !m_isActive, GME_GRAYED_OUT_COLOR);
 		CPoint namePos(m_sx + ((m_ex - m_sx) / 2), m_ey);
-		decorutil.DrawText(&dc, m_name, namePos, decorutil.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_color : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
+		DecoratorSDK::getFacilities().drawText(&dc,
+												m_name,
+												namePos,
+												DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+												(m_isActive ? m_color : GME_GRAYED_OUT_COLOR),
+												TA_TOP | TA_CENTER);
 		dc.Detach();
 		return S_OK;
 	}
 
 	// Draw lines
-	dc.SelectObject(decorutil.GetPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
+	dc.SelectObject(DecoratorSDK::getFacilities().getPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
 	dc.SelectStockObject(NULL_BRUSH);
 	dc.Rectangle(m_sx, m_sy, m_ex, m_ey);
-	dc.MoveTo(m_sx + scalex * m_sepLoc.left, m_sy + scaley * m_sepLoc.top);
-	dc.LineTo(m_sx + scalex * m_sepLoc.right, m_sy + scaley * m_sepLoc.bottom);
+	dc.MoveTo(static_cast<long> (m_sx + scalex * m_sepLoc.left), static_cast<long> (m_sy + scaley * m_sepLoc.top));
+	dc.LineTo(static_cast<long> (m_sx + scalex * m_sepLoc.right), static_cast<long> (m_sy + scaley * m_sepLoc.bottom));
 
 	// Draw labels
-	CPoint namePos(m_sx + scalex * m_namePos.x, m_sy + scaley * m_namePos.y);
-	decorutil.DrawText(&dc, m_name, namePos, decorutil.GetFont(m_isAbstract ? GME_ABSTRACT_FONT: GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_CENTER);
+	CPoint namePos(static_cast<long> (m_sx + scalex * m_namePos.x), static_cast<long> (m_sy + scaley * m_namePos.y));
+	DecoratorSDK::getFacilities().drawText(&dc,
+											m_name,
+											namePos,
+											DecoratorSDK::getFacilities().getFont(m_isAbstract ? DecoratorSDK::FONT_ABSTRACT: DecoratorSDK::FONT_PORTNAME)->pFont,
+											(m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR),
+											TA_BOTTOM | TA_CENTER);
 	if (!m_stereotype.IsEmpty()) {
-		CPoint stereotypePos(m_sx + scalex * m_stereotypePos.x, m_sy + scaley * m_stereotypePos.y);
-		decorutil.DrawText(&dc, UML_STEREOTYPE_LEFT + m_stereotype + UML_STEREOTYPE_RIGHT, stereotypePos, decorutil.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GREY_COLOR), TA_BOTTOM | TA_CENTER);
+		CPoint stereotypePos(static_cast<long> (m_sx + scalex * m_stereotypePos.x), static_cast<long> (m_sy + scaley * m_stereotypePos.y));
+		DecoratorSDK::getFacilities().drawText(&dc,
+												UML_STEREOTYPE_LEFT + m_stereotype + UML_STEREOTYPE_RIGHT,
+												stereotypePos,
+												DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+												(m_isActive ? m_nameColor : GME_GREY_COLOR),
+												TA_BOTTOM | TA_CENTER);
 	}
 	
 	POSITION pos = m_attrs.GetHeadPosition();
 	while (pos) {
 		CUMLAttr *attr = m_attrs.GetNext(pos);
-		CPoint anamePos(m_sx + scalex * attr->m_namePos.x,  m_sy + scaley * attr->m_namePos.y);
-		decorutil.DrawText(&dc, attr->m_name + UML_ATTRIBUTE_SEP, anamePos, decorutil.GetFont(GME_PORTNAME_FONT), (m_isActive ? (m_isCopy ? UML_GREY_COLOR : m_nameColor) : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_LEFT);
-		CPoint typePos(m_sx + scalex * attr->m_typePos.x,  m_sy + scaley * attr->m_typePos.y);
-		decorutil.DrawText(&dc, attr->m_type, typePos, decorutil.GetFont(GME_PORTNAME_FONT), (m_isActive ? (m_isCopy ? UML_GREY_COLOR : m_nameColor) : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_RIGHT);
+		CPoint anamePos(static_cast<long> (m_sx + scalex * attr->m_namePos.x), static_cast<long> (m_sy + scaley * attr->m_namePos.y));
+		DecoratorSDK::getFacilities().drawText(&dc,
+												attr->m_name + UML_ATTRIBUTE_SEP,
+												anamePos,
+												DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+												(m_isActive ? (m_isCopy ? UML_GREY_COLOR : m_nameColor) : GME_GRAYED_OUT_COLOR),
+												TA_BOTTOM | TA_LEFT);
+		CPoint typePos(static_cast<long> (m_sx + scalex * attr->m_typePos.x), static_cast<long> (m_sy + scaley * attr->m_typePos.y));
+		DecoratorSDK::getFacilities().drawText(&dc,
+												attr->m_type,
+												typePos,
+												DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+												(m_isActive ? (m_isCopy ? UML_GREY_COLOR : m_nameColor) : GME_GRAYED_OUT_COLOR),
+												TA_BOTTOM | TA_RIGHT);
 
 	}
 
 	// Draw Copy Sign
 	if (m_isCopy && m_copyBitmap.IsValid()) {
 		CPoint cpt = m_copySignPos;
-		cpt.x = m_sx + scalex * m_copySignPos.x;
-		cpt.y = m_sy + scaley * m_copySignPos.y;
+		cpt.x = static_cast<long> (m_sx + scalex * m_copySignPos.x);
+		cpt.y = static_cast<long> (m_sy + scaley * m_copySignPos.y);
 		m_copyBitmap.DrawTransparent(&dc, cpt.x, cpt.y, UML_TRANSPARENT_COLOR, !m_isActive, GME_GRAYED_OUT_COLOR);
 	}
 
@@ -382,7 +428,7 @@ void CUMLDecorator::CalcRelPositions(CDC *pDC)
 	CDC	dc;
 	
 	dc.Attach(pDC ? pDC->m_hDC : GetDC(NULL));			// Trick
-	CFont *oldfont = dc.SelectObject(decorutil.GetFont(GME_PORTNAME_FONT));
+	CFont *oldfont = dc.SelectObject(DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont);
 	
 	ext = dc.GetTextExtent(m_name);
 	maxWidth = max(maxWidth, ext.cx);
@@ -577,8 +623,8 @@ bool CUMLDecorator::SetupInheritance()
 		CString name(bstr);
 		if (name == UML_INHERITANCE_NAME) {
 			m_isInheritance = true;
-			m_calcSize.cx = UML_INHERITANCE_WIDTH;
-			m_calcSize.cy = UML_INHERITANCE_HEIGHT;
+			m_calcSize.cx = static_cast<long> (UML_INHERITANCE_WIDTH);
+			m_calcSize.cy = static_cast<long> (UML_INHERITANCE_HEIGHT);
 			return true;
 		}
 	}

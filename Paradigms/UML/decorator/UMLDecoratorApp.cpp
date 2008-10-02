@@ -8,6 +8,8 @@
 #include "stdafx.h"
 #include "resource.h"
 #include <initguid.h>
+#define __Meta_h__
+#define __Mga_h__
 #include "UMLDecoratorLib.h"
 
 #include "UMLDecoratorLib_i.c"

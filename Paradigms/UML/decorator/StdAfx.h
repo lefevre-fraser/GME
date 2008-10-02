@@ -5,18 +5,9 @@
 #if !defined(AFX_STDAFX_H__8B8917B1_B409_43D6_9604_73055641403B__INCLUDED_)
 #define AFX_STDAFX_H__8B8917B1_B409_43D6_9604_73055641403B__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
-
-
-#define STRICT
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0400
-#endif
 #define _ATL_APARTMENT_THREADED
-
+#define _CRT_SECURE_NO_WARNINGS
+#include "targetver.h"
 #include <afxwin.h>
 #include <afxdisp.h>
 #include <afxdlgs.h>
@@ -29,6 +20,9 @@
 //something, but do not change the name of _Module
 extern CComModule _Module;
 #include <atlcom.h>
+
+#include "CommonError.h"
+#include "CommonMgaTrukk.h"
 
 #include <stdio.h>
 

@@ -30,7 +30,7 @@ typedef enum { DSAtom, DSSet, DSNullRef, DSRefToNull, DSAtomPort, DSModelPort, D
 #define GME_MODEL_WIDTH				113
 #define GME_LEFTPORT_MARGIN			100
 #define GME_MODEL_HEIGHT			70
-#define GME_3D_BORDER_SIZE			3
+//#define GME_3D_BORDER_SIZE			3
 
 #define GME_NORTH					0			// Must match PopupPropDlg radiobutton stuff!
 #define GME_NORTHEAST				1
