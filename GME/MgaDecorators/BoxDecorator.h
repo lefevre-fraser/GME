@@ -15,7 +15,7 @@
 #include "mga.h"
 #include "resource.h"
 
-namespace Decorator
+namespace DecoratorSDK
 {
 	class DecoratorBase;
 };
@@ -32,12 +32,12 @@ class ATL_NO_VTABLE CBoxDecorator :
 	public CComCoClass<CBoxDecorator, &CLSID_BoxDecorator>
 {
 	private :
-		CComPtr<IMgaProject> 		m_spProject;
-		CComPtr<IMgaMetaPart> 		m_spPart;
-		CComPtr<IMgaFCO> 			m_spFCO;
+		CComPtr<IMgaProject> 			m_spProject;
+		CComPtr<IMgaMetaPart> 			m_spPart;
+		CComPtr<IMgaFCO> 				m_spFCO;
 
-		Decorator::DecoratorBase*	m_pDecorator;
-		bool						m_bLocationSet;
+		DecoratorSDK::DecoratorBase*	m_pDecorator;
+		bool							m_bLocationSet;
 
 	public:
 		CBoxDecorator();

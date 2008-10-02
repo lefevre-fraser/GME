@@ -11,10 +11,10 @@
 
 #include "StdAfx.h"
 #include "DecoratorInterface.h"
-#include "Parts/PartInterface.h"
+#include "PartInterface.h"
 
 
-namespace Decorator {
+namespace DecoratorSDK {
 
 //################################################################################################
 //
@@ -67,36 +67,8 @@ public:
 	virtual bool	MouseWheelTurned			(UINT nFlags, short distance, const CPoint& point, HDC transformHDC);
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
-
-// =============== resembles IMgaNewDecoratorEvents
-/*	virtual void	Refresh						(void);
-	virtual void	OperationCanceledByDecorator(void);
-	virtual void	CursorChanged				(long newCursorID);
-	virtual void	CursorRestored				(void);
-
-	virtual void	TitleEditingStarted			(CRect& location);
-	virtual void	TitleEditingFinished		(CRect& location);
-	virtual void	TitleChanged				(CString& newTitle);
-	virtual void	TitleMovingStarted			(UINT nType, CRect& location);
-	virtual void	TitleMoving					(UINT nSide, CRect& location);
-	virtual void	TitleMovingFinished			(UINT nType, CRect& location);
-	virtual void	TitleMoved					(UINT nType, CPoint& point);
-	virtual void	TitleResizingStarted		(UINT nType, CRect& location);
-	virtual void	TitleResizing				(UINT nSide, CRect& location);
-	virtual void	TitleResizingFinished		(UINT nType, CRect& locatiot);
-	virtual void	TitleResized				(UINT nType, CSize& size);
-
-	virtual void	WindowMovingStarted			(UINT nType, CRect& location);
-	virtual void	WindowMoving				(UINT nSide, CRect& location);
-	virtual void	WindowMovingFinished		(UINT nType, CRect& location);
-	virtual void	WindowMoved					(UINT nType, CPoint& point);
-
-	virtual void	WindowResizingStarted		(UINT nType, CRect& location);
-	virtual void	WindowResizing				(UINT nSide, CRect& location);
-	virtual void	WindowResizingFinished		(UINT nType, CRect& location);
-	virtual void	WindowResized				(UINT nType, CSize& size);*/
 };
 
-}; // namespace Decorator
+}; // namespace DecoratorSDK
 
 #endif //__NEWBOXDECORATOR_H_

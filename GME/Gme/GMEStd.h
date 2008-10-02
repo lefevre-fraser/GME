@@ -14,7 +14,7 @@
 /*
 	ATTENTION !
 
-	There is a similar file in Annotator and MgaDecorators (DecoratorStd.h) and in GMEView (GMEViewStd.h)
+	There is a similar file in Annotator, MgaDecorators, SDK/DecoratorLib (DecoratorStd.h) and in GMEView (GMEViewStd.h)
 	Modify/extend this file carefully !
 */
 typedef enum { GME_EDIT_MODE, GME_AUTOCONNECT_MODE, GME_DISCONNECT_MODE, GME_SET_MODE, GME_ZOOM_MODE, GME_VISUAL_MODE, GME_SHORTAUTOCONNECT_MODE, GME_SHORTDISCONNECT_MODE } GMEModeCode;

@@ -6,6 +6,7 @@
 	ProjectGUID="{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}"
 	RootNamespace="MgaDecorators"
 	Keyword="AtlProj"
+	AssemblyReferenceSearchPaths="&quot;..\Lib&quot;;&quot;..\..\SDK\DecoratorLib\Debug&quot;"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -53,7 +54,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Common;..\Interfaces"
+				AdditionalIncludeDirectories="../Common;..\Interfaces;..\..\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;OLD_DECORATOR_LOOKANDFEEL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -83,7 +84,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdiplus.lib"
+				AdditionalDependencies="gdiplus.lib DecoratorLib.lib"
 				OutputFile=".\Debug/MgaDecorators.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -157,9 +158,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="1"
-				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../Common;..\Interfaces"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				AdditionalIncludeDirectories="../Common;..\Interfaces;..\..\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;OLD_DECORATOR_LOOKANDFEEL"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -189,7 +190,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdiplus.lib"
+				AdditionalDependencies="gdiplus.lib DecoratorLib.lib"
 				OutputFile=".\Release/MgaDecorators.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -237,34 +238,6 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
-			<File
-				RelativePath="BitmapUtil.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						UsePrecompiledHeader="0"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
 			<File
 				RelativePath="BoxDecorator.cpp"
 				>
@@ -347,122 +320,6 @@
 			</File>
 			<File
 				RelativePath="..\common\CommonSmart.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="DecoratorDefs.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						UsePrecompiledHeader="0"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\DecoratorExceptions.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DecoratorInterface.cpp"
-				>
-			</File>
-			<File
-				RelativePath="DecoratorUtil.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						UsePrecompiledHeader="0"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Dibapi.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="DIBRead.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -578,10 +435,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PreferenceVariant.cpp"
-				>
-			</File>
-			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -609,131 +462,11 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="StereotypeDecorators.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						UsePrecompiledHeader="0"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<Filter
-				Name="Parts"
-				>
-				<File
-					RelativePath=".\Parts\AtomBitmapPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\BitmapAndLabelPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\BitmapPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\BoxCompositePart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\CompositePart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\InPlaceEditDialog.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\LabelPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\ModelComplexPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\PartBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\PartInterface.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\PortBitmapPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\PortLabelPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\PortPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\ReferenceBitmapPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\ResizablePart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\ResizeLogic.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\SetBitmapPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\TextPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\TypeableBitmapPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\TypeableLabelPart.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\VectorPart.cpp"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
-			<File
-				RelativePath="BitmapUtil.h"
-				>
-			</File>
 			<File
 				RelativePath="BoxDecorator.h"
 				>
@@ -751,35 +484,11 @@
 				>
 			</File>
 			<File
-				RelativePath="DecoratorDefs.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DecoratorExceptions.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DecoratorInterface.h"
-				>
-			</File>
-			<File
-				RelativePath="DecoratorUtil.h"
-				>
-			</File>
-			<File
-				RelativePath="DIBAPI.H"
-				>
-			</File>
-			<File
 				RelativePath=".\NewBoxDecorator.h"
 				>
 			</File>
 			<File
 				RelativePath=".\NewBoxDecoratorImpl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PreferenceVariant.h"
 				>
 			</File>
 			<File
@@ -791,112 +500,20 @@
 				>
 			</File>
 			<File
-				RelativePath="StereotypeDecorators.h"
-				>
-			</File>
-			<File
 				RelativePath=".\targetver.h"
 				>
 			</File>
-			<Filter
-				Name="Parts"
-				>
-				<File
-					RelativePath=".\Parts\AtomBitmapPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\BitmapAndLabelPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\BitmapPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\BoxCompositePart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\CompositePart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\InPlaceEditDialog.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\LabelPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\ModelComplexPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\PartBase.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\PartInterface.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\PortBitmapPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\PortLabelPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\PortPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\ReferenceBitmapPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\ResizablePart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\ResizeLogic.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\SetBitmapPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\TextPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\TypeableBitmapPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\TypeableLabelPart.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Parts\VectorPart.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 			<File
-				RelativePath="res\atom.bmp"
+				RelativePath=".\res\atom.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\atomport.bmp"
+				RelativePath=".\res\atomport.bmp"
 				>
 			</File>
 			<File
@@ -904,43 +521,43 @@
 				>
 			</File>
 			<File
-				RelativePath="res\icon_instance.bmp"
+				RelativePath=".\res\icon_instance.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\icon_instance_disabled.bmp"
+				RelativePath=".\res\icon_instance_disabled.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\icon_reference.bmp"
+				RelativePath=".\res\icon_reference.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\icon_reference_disabled.bmp"
+				RelativePath=".\res\icon_reference_disabled.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\icon_subtype.bmp"
+				RelativePath=".\res\icon_subtype.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\icon_subtype_disabled.bmp"
+				RelativePath=".\res\icon_subtype_disabled.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\icon_type.bmp"
+				RelativePath=".\res\icon_type.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\icon_type_disabled.bmp"
+				RelativePath=".\res\icon_type_disabled.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\model.bmp"
+				RelativePath=".\res\model.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\modelport.bmp"
+				RelativePath=".\res\modelport.bmp"
 				>
 			</File>
 			<File
@@ -948,31 +565,19 @@
 				>
 			</File>
 			<File
-				RelativePath="res\nullref.bmp"
+				RelativePath=".\res\reference.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\reference.bmp"
+				RelativePath=".\res\referenceport.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\referenceport.bmp"
+				RelativePath=".\res\set.bmp"
 				>
 			</File>
 			<File
-				RelativePath="res\refport.bmp"
-				>
-			</File>
-			<File
-				RelativePath="res\reftonull.bmp"
-				>
-			</File>
-			<File
-				RelativePath="res\Set.bmp"
-				>
-			</File>
-			<File
-				RelativePath="res\setport.bmp"
+				RelativePath=".\res\setport.bmp"
 				>
 			</File>
 		</Filter>

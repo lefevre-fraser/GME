@@ -7,10 +7,10 @@
 
 #include "StdAfx.h"
 #include "NewBoxDecorator.h"
-#include "Parts/BoxCompositePart.h"
+#include "BoxCompositePart.h"
 
 
-namespace Decorator {
+namespace DecoratorSDK {
 
 //################################################################################################
 //
@@ -187,121 +187,5 @@ bool NewBoxDecorator::OperationCanceledByGME(void)
 {
 	return m_part->OperationCanceledByGME();
 }
-/*
-void NewBoxDecorator::Refresh(void)
-{
-	m_eventSink->Refresh();
-}
 
-void NewBoxDecorator::CursorChanged(long newCursorID)
-{
-	m_eventSink->CursorChanged(newCursorID);
-}
-
-void NewBoxDecorator::CursorRestored(void)
-{
-	m_eventSink->CursorRestored();
-}
-
-void NewBoxDecorator::OperationCanceledByDecorator(void)
-{
-	m_eventSink->OperationCanceled();
-}
-
-void NewBoxDecorator::TitleEditingStarted(CRect& location)
-{
-	m_eventSink->TitleEditingStarted(location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::TitleEditingFinished(CRect& location)
-{
-	m_eventSink->TitleEditingFinished(location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::TitleChanged(CString& newTitle)
-{
-	CComBSTR newTitleBStr(newTitle);
-	m_eventSink->TitleChanged(newTitleBStr);
-}
-
-void NewBoxDecorator::TitleMovingStarted(UINT nType, CRect& location)
-{
-	m_eventSink->TitleMovingStarted(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::TitleMoving(UINT nSide, CRect& location)
-{
-	m_eventSink->TitleMoving(nSide, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::TitleMovingFinished(UINT nType, CRect& location)
-{
-	m_eventSink->TitleMovingFinished(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::TitleMoved(UINT nType, CPoint& point)
-{
-	m_eventSink->TitleMoved(nType, point.x, point.y);
-}
-
-void NewBoxDecorator::TitleResizingStarted(UINT nType, CRect& location)
-{
-	m_eventSink->TitleResizingStarted(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::TitleResizing(UINT nSide, CRect& location)
-{
-	m_eventSink->TitleResizing(nSide, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::TitleResizingFinished(UINT nType, CRect& location)
-{
-	m_eventSink->TitleResizingFinished(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::TitleResized(UINT nType, CSize& size)
-{
-	m_eventSink->TitleResized(nType, size.cx, size.cy);
-}
-
-void NewBoxDecorator::WindowMovingStarted(UINT nType, CRect& location)
-{
-	m_eventSink->WindowMovingStarted(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::WindowMoving(UINT nSide, CRect& location)
-{
-	m_eventSink->WindowMoving(nSide, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::WindowMovingFinished(UINT nType, CRect& location)
-{
-	m_eventSink->WindowMovingFinished(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::WindowMoved(UINT nType, CPoint& point)
-{
-	m_eventSink->WindowMoved(nType, point.x, point.y);
-}
-
-void NewBoxDecorator::WindowResizingStarted(UINT nType, CRect& location)
-{
-	m_eventSink->WindowResizingStarted(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::WindowResizing(UINT nSide, CRect& location)
-{
-	m_eventSink->WindowResizing(nSide, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::WindowResizingFinished(UINT nType, CRect& location)
-{
-	m_eventSink->WindowResizingFinished(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void NewBoxDecorator::WindowResized(UINT nType, CSize& size)
-{
-	m_eventSink->WindowResized(nType, size.cx, size.cy);
-}
-*/
-}; // namespace Decorator
+}; // namespace DecoratorSDK

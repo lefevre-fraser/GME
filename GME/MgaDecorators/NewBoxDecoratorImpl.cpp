@@ -290,7 +290,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 
 	HRESULT retVal = S_OK;
 	try {
-		Decorator::NewBoxDecorator* newBoxDecorator = new Decorator::NewBoxDecorator(CComPtr<IMgaNewDecoratorEvents>(eventSink));
+		DecoratorSDK::NewBoxDecorator* newBoxDecorator = new DecoratorSDK::NewBoxDecorator(CComPtr<IMgaNewDecoratorEvents>(eventSink));
 		m_pNewDecorator = newBoxDecorator;
 
 		newBoxDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),

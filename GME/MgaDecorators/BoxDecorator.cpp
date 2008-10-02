@@ -39,7 +39,7 @@ STDMETHODIMP CBoxDecorator::Initialize( IMgaProject *pProject, IMgaMetaPart *pPa
 	AFX_MANAGE_STATE( AfxGetStaticModuleState() );
 
 	COMTRY {
-		Decorator::getFacilities().loadPathes( pProject, true );
+		DecoratorSDK::getFacilities().loadPathes( pProject, true );
 
 		m_spProject = pProject;
 		m_spPart = pPart;
@@ -60,20 +60,20 @@ STDMETHODIMP CBoxDecorator::Initialize( IMgaProject *pProject, IMgaMetaPart *pPa
 			}
 			switch ( eType ) {
 				case OBJTYPE_ATOM :
-					m_pDecorator = new Decorator::AtomDecorator( m_spPart, m_spFCO );
+					m_pDecorator = new DecoratorSDK::AtomDecorator( m_spPart, m_spFCO );
 					break;
 				case OBJTYPE_SET :
-					m_pDecorator = new Decorator::SetDecorator( m_spPart, m_spFCO );
+					m_pDecorator = new DecoratorSDK::SetDecorator( m_spPart, m_spFCO );
 					break;
 				case OBJTYPE_MODEL :
-					m_pDecorator = new Decorator::ModelDecorator( m_spPart, m_spFCO );
+					m_pDecorator = new DecoratorSDK::ModelDecorator( m_spPart, m_spFCO );
 					break;
 				case OBJTYPE_REFERENCE :
-					m_pDecorator = new Decorator::ReferenceDecorator( m_spPart, m_spFCO );
+					m_pDecorator = new DecoratorSDK::ReferenceDecorator( m_spPart, m_spFCO );
 					break;
 			}
 			if ( m_pDecorator ) {
-				Decorator::PreferenceMap mapPrefs;
+				DecoratorSDK::PreferenceMap mapPrefs;
 				m_pDecorator->initialize( mapPrefs );
 			}
 
@@ -184,15 +184,15 @@ STDMETHODIMP CBoxDecorator::GetPortLocation( IMgaFCO *pFCO, long *sx, long *sy, 
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
 
-	Decorator::PortDecorator* pPort = NULL;
+	DecoratorSDK::PortDecorator* pPort = NULL;
 	switch ( m_pDecorator->getType() ) {
 		case OBJTYPE_MODEL :
-			pPort = ( (Decorator::ModelDecorator*) m_pDecorator )->getPort( pFCO );
+			pPort = ( (DecoratorSDK::ModelDecorator*) m_pDecorator )->getPort( pFCO );
 			break;
 		case OBJTYPE_REFERENCE :
-			Decorator::DecoratorBase* pReferenced = ( (Decorator::ReferenceDecorator*) m_pDecorator )->getReferenced();
+			DecoratorSDK::DecoratorBase* pReferenced = ( (DecoratorSDK::ReferenceDecorator*) m_pDecorator )->getReferenced();
 			if ( pReferenced && pReferenced->getType() == OBJTYPE_MODEL )
-				pPort = ( (Decorator::ModelDecorator*) pReferenced )->getPort( pFCO );
+				pPort = ( (DecoratorSDK::ModelDecorator*) pReferenced )->getPort( pFCO );
 			break;
 	}
 	if ( pPort ) {
@@ -228,15 +228,15 @@ STDMETHODIMP CBoxDecorator::GetPorts( IMgaFCOs **portFCOs )
 		CComPtr<IMgaFCOs> spFCOs;
 		COMTHROW( spFCOs.CoCreateInstance( OLESTR( "Mga.MgaFCOs") ) );
 
-		std::vector<Decorator::PortDecorator*>	vecPorts;
+		std::vector<DecoratorSDK::PortDecorator*>	vecPorts;
 		switch ( m_pDecorator->getType() ) {
 			case OBJTYPE_MODEL :
-				vecPorts = ( (Decorator::ModelDecorator*) m_pDecorator )->getPorts();
+				vecPorts = ( (DecoratorSDK::ModelDecorator*) m_pDecorator )->getPorts();
 				break;
 			case OBJTYPE_REFERENCE :
-				Decorator::DecoratorBase* pReferenced = ( (Decorator::ReferenceDecorator*) m_pDecorator )->getReferenced();
+				DecoratorSDK::DecoratorBase* pReferenced = ( (DecoratorSDK::ReferenceDecorator*) m_pDecorator )->getReferenced();
 				if ( pReferenced && pReferenced->getType() == OBJTYPE_MODEL )
-					vecPorts = ( (Decorator::ModelDecorator*) pReferenced )->getPorts();
+					vecPorts = ( (DecoratorSDK::ModelDecorator*) pReferenced )->getPorts();
 				break;
 		}
 
