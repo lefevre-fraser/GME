@@ -4,6 +4,8 @@
 
 #include "CommonError.cpp"
 
+static long stereotypeCharacterType = 1;
+
 #define VERIFY_INIT   { if (!m_isInitialized) return E_DECORATOR_UNINITIALIZED; }
 #define VERIFY_LOCSET { if (!m_isLocSet) return E_DECORATOR_LOCISNOTSET; }
 
@@ -11,7 +13,6 @@
 #pragma message( "TODO: problems with printing" )
 #pragma message( "TODO: collect equivalent classes..." )
 
-CDecoratorUtil	d_util;
 
 struct ShapePair {
 	char*	  kind;
@@ -338,12 +339,15 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 	switch (m_shape) {
 		case CONNECTOR:
 		{
-			dc.SelectObject(d_util.GetPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
-			dc.SelectObject(d_util.GetBrush(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
+			dc.SelectObject(DecoratorSDK::getFacilities().getPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
+			dc.SelectObject(DecoratorSDK::getFacilities().getBrush(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
 			dc.Ellipse(m_sx, m_sy, m_ex, m_ey);
 			if (InPartBrowser()) {
 				CPoint namePos(m_sx + (long)(scalex * m_namePos.x), (long)(m_sy + scaley * m_namePos.y));
-				d_util.DrawText(&dc, m_name, namePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
+				DecoratorSDK::getFacilities().drawText(&dc, m_name, namePos,
+														DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+														(m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR),
+														TA_TOP | TA_CENTER);
 			}
 		}
 		break;
@@ -358,15 +362,20 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 				//m_bitmap.Draw(&dc, cpt.x, cpt.y);
 			}
 			CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
-			d_util.DrawText(&dc, m_name, namePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
+			DecoratorSDK::getFacilities().drawText(&dc,
+													m_name,
+													namePos,
+													DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+													(m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR),
+													TA_TOP | TA_CENTER);
 		}
 		break;
 	case EQUIVALENCE:
 		{
 			int cx = m_sx + ((m_ex - m_sx) /2);
 			int cy = m_sy + ((m_ey - m_sy) /2);
-			dc.SelectObject(d_util.GetBrush(META_CLASS_BGCOLOR));
-			dc.SelectObject(d_util.GetPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
+			dc.SelectObject(DecoratorSDK::getFacilities().getBrush(META_CLASS_BGCOLOR));
+			dc.SelectObject(DecoratorSDK::getFacilities().getPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
 			dc.BeginPath();
 			dc.MoveTo(m_sx, cy);
 			dc.LineTo(cx, m_ey);
@@ -377,7 +386,12 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 			dc.StrokeAndFillPath();
 			if (InPartBrowser()) {
 				CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
-				d_util.DrawText(&dc, m_name, namePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
+				DecoratorSDK::getFacilities().drawText(&dc,
+														m_name,
+														namePos,
+														DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+														(m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR),
+														TA_TOP | TA_CENTER);
 			}
 		}
 		break;
@@ -385,8 +399,8 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 	case IMPINHERITANCE:
 	case INTINHERITANCE:
 		{
-			dc.SelectObject(d_util.GetBrush(META_CLASS_BGCOLOR));
-			dc.SelectObject(d_util.GetPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
+			dc.SelectObject(DecoratorSDK::getFacilities().getBrush(META_CLASS_BGCOLOR));
+			dc.SelectObject(DecoratorSDK::getFacilities().getPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
 			dc.BeginPath();
 			dc.MoveTo(m_sx, m_ey);
 			dc.LineTo(m_ex, m_ey);
@@ -396,7 +410,7 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 			dc.StrokeAndFillPath();
 
 			if (m_shape == IMPINHERITANCE || m_shape == INTINHERITANCE) {
-				dc.SelectObject(d_util.GetBrush(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
+				dc.SelectObject(DecoratorSDK::getFacilities().getBrush(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
 				/* Looks awful
 				if (m_shape == IMPINHERITANCE) {
 					dc.SelectStockObject(NULL_PEN);
@@ -414,7 +428,12 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 			}
 			if (InPartBrowser()) {
 				CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
-				d_util.DrawText(&dc, m_name, namePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_TOP | TA_CENTER);
+				DecoratorSDK::getFacilities().drawText(&dc,
+														m_name,
+														namePos,
+														DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+														(m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR),
+														TA_TOP | TA_CENTER);
 			}
 		}
 		break;
@@ -422,8 +441,8 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 	case CLASSPROXY:
 		{
 			// Draw lines
-			dc.SelectObject(d_util.GetBrush(META_CLASS_BGCOLOR));
-			dc.SelectObject(d_util.GetPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
+			dc.SelectObject(DecoratorSDK::getFacilities().getBrush(META_CLASS_BGCOLOR));
+			dc.SelectObject(DecoratorSDK::getFacilities().getPen(m_isActive ? m_color : GME_GRAYED_OUT_COLOR));
 			dc.Rectangle(m_sx, m_sy, m_ex, m_ey);
 			dc.MoveTo(m_sx + (long)(scalex * m_sepLoc.left), m_sy + (long)(scaley * m_sepLoc.top));
 			dc.LineTo(m_sx + (long)(scalex * m_sepLoc.right), m_sy + (long)(scaley * m_sepLoc.bottom));
@@ -431,19 +450,39 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 			// Draw labels
 			if (IsReal()) {
 				CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
-				d_util.DrawText(&dc, m_name, namePos, d_util.GetFont(m_isAbstract ? GME_ABSTRACT_FONT: GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_CENTER);
+				DecoratorSDK::getFacilities().drawText(&dc,
+														m_name,
+														namePos,
+														DecoratorSDK::getFacilities().getFont(m_isAbstract ? DecoratorSDK::FONT_ABSTRACT: DecoratorSDK::FONT_PORTNAME)->pFont,
+														(m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR),
+														TA_BOTTOM | TA_CENTER);
 			}
 			CPoint stereotypePos(m_sx + (long)(scalex * m_stereotypePos.x), m_sy + (long)(scaley * m_stereotypePos.y));
-			d_util.DrawText(&dc, META_STEREOTYPE_LEFT + m_stereotype + META_STEREOTYPE_RIGHT, stereotypePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_CENTER);
+			DecoratorSDK::getFacilities().drawText(&dc,
+													(stereotypeCharacterType ? META_STEREOTYPE_LEFTB : META_STEREOTYPE_LEFTA) + m_stereotype + (stereotypeCharacterType ? META_STEREOTYPE_RIGHTB : META_STEREOTYPE_RIGHTA),
+													stereotypePos,
+													DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+													(m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR),
+													TA_BOTTOM | TA_CENTER);
 			
 			// Draw attributes
 			POSITION pos = m_attrs.GetHeadPosition();
 			while (pos) {
 				CMetaAttr *attr = m_attrs.GetNext(pos);
 				CPoint anamePos(m_sx + (long)(scalex * attr->m_namePos.x),  m_sy + (long)(scaley * attr->m_namePos.y));
-				d_util.DrawText(&dc, attr->m_name + META_ATTRIBUTE_SEP, anamePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_LEFT);
+				DecoratorSDK::getFacilities().drawText(&dc,
+														attr->m_name + META_ATTRIBUTE_SEP,
+														anamePos,
+														DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+														(m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR),
+														TA_BOTTOM | TA_LEFT);
 				CPoint typePos(m_sx + (long)(scalex * attr->m_typePos.x),  m_sy + (long)(scaley * attr->m_typePos.y));
-				d_util.DrawText(&dc, attr->m_type, typePos, d_util.GetFont(GME_PORTNAME_FONT), (m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR), TA_BOTTOM | TA_RIGHT);
+				DecoratorSDK::getFacilities().drawText(&dc,
+														attr->m_type,
+														typePos,
+														DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
+														(m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR),
+														TA_BOTTOM | TA_RIGHT);
 			}
 			// Draw Proxy Sign
 			if (m_shape == CLASSPROXY && m_bitmap.IsValid()) {
@@ -629,12 +668,12 @@ void CDecorator::CalcRelPositions()
 			CDC	dc;
 			
 			dc.Attach(GetDC(NULL));			// Trick
-			CFont *oldfont = dc.SelectObject(d_util.GetFont(GME_PORTNAME_FONT));
+			CFont *oldfont = dc.SelectObject(DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont);
 			
 			if (IsReal()) {
 				CFont *normfont;
 				if (m_isAbstract) {
-					normfont = dc.SelectObject(d_util.GetFont(GME_ABSTRACT_FONT));
+					normfont = dc.SelectObject(DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_ABSTRACT)->pFont);
 				}
 				ext = dc.GetTextExtent(m_name);
 				maxWidth = max(maxWidth, ext.cx);
@@ -652,7 +691,7 @@ void CDecorator::CalcRelPositions()
 				maxHeight = max(maxHeight, ext.cy);
 			}
 
-			ext = dc.GetTextExtent(META_STEREOTYPE_LEFT + m_stereotype + META_STEREOTYPE_RIGHT);
+			ext = dc.GetTextExtent((stereotypeCharacterType ? META_STEREOTYPE_LEFTB : META_STEREOTYPE_LEFTA) + m_stereotype + (stereotypeCharacterType ? META_STEREOTYPE_RIGHTB : META_STEREOTYPE_RIGHTA));
 			maxWidth = max(maxWidth, ext.cx);
 			maxHeight = max(maxHeight, ext.cy);
 			

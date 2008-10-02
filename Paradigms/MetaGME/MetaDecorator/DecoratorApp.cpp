@@ -8,6 +8,8 @@
 #include "stdafx.h"
 #include <initguid.h>
 #include "Resource.h"
+#define __Meta_h__
+#define __Mga_h__
 #include "DecoratorLib.h"
 #include "DecoratorConfig.h"
 #include "DecoratorLib_i.c"
