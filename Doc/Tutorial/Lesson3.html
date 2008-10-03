@@ -388,22 +388,22 @@ hierarchy. The paradigm does not allow subfolders, so it is relatively easy to
 travel through all the root models in the diagram.
 
 <blockquote><tt>
-#include &lt;fstream.h>
-<br>static ofstream outf;
+#include &lt;fstream&gt;
+<br>static std::ofstream outf;
 <br>
-<br>void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, 
+<br>vvoid CComponent::InvokeEx(CBuilder &amp;builder, CBuilderObject* focus, 
 CBuilderObjectList &amp;selected, long param) {
 <br>&nbsp;&nbsp;&nbsp; outf.open("netlist.lst");
-<br>&nbsp;&nbsp;&nbsp; outf &lt;&lt; "Router list for network" &lt;&lt; 
+br>&nbsp;&nbsp;&nbsp; outf &lt;&lt; "Router list for network" &lt;&lt; 
 builder.GetRootFolder()->GetName() &lt;&lt; endl;
-<br>&nbsp;&nbsp;&nbsp; const CBuilderModelList *diags = 
+<br>&&nbsp;&nbsp;&nbsp; const CBuilderModelList* diags = 
 builder.GetRootFolder()->GetRootModels();
 <br>&nbsp;&nbsp;&nbsp; POSITION pos = diags->GetHeadPosition();
-<br>&nbsp;&nbsp;&nbsp; while(pos) {
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CBuilderModel *diagram = 
+br>&nbsp;&nbsp;&nbsp; while(pos) {
+<br>&&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CBuilderModel* diagram = 
 diags->GetNext(pos);
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProcessDiagram(diagram);
-<br>&nbsp;&nbsp;&nbsp; }
+br>&nbsp;&nbsp;&nbsp; }
 <br>&nbsp;&nbsp;&nbsp; outf.close();
 <br>}
 </tt></blockquote>
@@ -414,20 +414,21 @@ between it and <tt>CComponent::ProcessDiagram</tt> is that the latter is
 recursive and processes different children in a different way.
 
 <blockquote><tt>
-void CComponent::ProcessDiagram(CBuilderModel *d) {
+vvoid CComponent::ProcessDiagram(CBuilderModel* d) {
 <br>&nbsp;&nbsp;&nbsp; ASSERT(d->GetKindName() == "NetDiagram");
-<br>&nbsp;&nbsp;&nbsp; const CBuilderModelList *diags = 
+br>&&nbsp;&nbsp;&nbsp; const CBuilderModelList* diags = 
 d->GetModels("NetDiagram");
 <br>&nbsp;&nbsp;&nbsp; POSITION pos = diags->GetHeadPosition();
-<br>&nbsp;&nbsp;&nbsp; while(pos) ProcessDiagram(diags->GetNext(pos)); // 
+br>&&nbsp;&nbsp;&nbsp; while(pos)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProcessDiagram(diags->GetNext(pos)); // 
 recursion
 <br>
-<br>&nbsp;&nbsp;&nbsp; const CBuilderModelList *routers = 
-d->GetModels("Router");
-<br>&nbsp;&nbsp;&nbsp; pos = routers->GetHeadPosition();
-<br>&nbsp;&nbsp;&nbsp; while(pos) ProcessRouter(routers->GetNext(pos));
+<br>&nbsp;&nbsp;&nbsp; const CBuilderModelList* routers = 
+d->GetModels("Router"); <br>&nbsp;&nbsp;&nbsp; pos = routers->GetHeadPosition();
+br>&n&nbsp;&nbsp;&nbsp; while(pos)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProcessRouter(routers->GetNext(pos));
 <br>}
-</tt></blockquote>
+tt></blockquote>
 
 <tt>ProcessDiagram</tt> is fairly complex, even though we managed to squeeze the 
 iteration loops into a single line. Together, the two methods above provide a 
@@ -437,36 +438,26 @@ method takes care of the rest; it implements the "node processing" function, as
 well as some minimal traversal into the ports of a router.
 
 <blockquote><tt>
-void CComponent::ProcessRouter(CBuilderModel *r) {
+vovoid CComponent::ProcessRouter(CBuilderModel* r) {
 <br>&nbsp;&nbsp;&nbsp; ASSERT(r->GetKindName() == "Router");
-<br>&nbsp;&nbsp;&nbsp; CString fam;
+r>&nbsp;&nbsp;&nbsp; CString fam;
 <br>&nbsp;&nbsp;&nbsp; r->GetAttribute("Family", fam);
 <br>&nbsp;&nbsp;&nbsp; outf &lt;&lt; "\tRouter " &lt;&lt; r->GetName() &lt;&lt; 
 " (" &lt;&lt; fam &lt;&lt; ")" &lt;&lt; endl;
 <br>
 <br>&nbsp;&nbsp;&nbsp; const CBuilderAtomList *ports = r->GetAtoms("Port");
 <br>&nbsp;&nbsp;&nbsp; POSITION pos = ports->GetHeadPosition();
-<br>&nbsp;&nbsp;&nbsp; while(pos) {
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-CBuilderAtom *port = ports->GetNext(pos);
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-CString iftype, ipaddr;
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-int ifspeed;
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-port->GetAttribute("IFType", iftype);
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-port->GetAttribute("IFSpeed", ifspeed);
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-port->GetAttribute("IPAddress", ipaddr);
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-outf &lt;&lt; "\t\tPort " &lt;&lt; port->GetName();
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-outf &lt;&lt; "(" &lt;&lt; iftype &lt;&lt; "; "&lt;&lt; ifspeed &lt;&lt; "Kbps), 
+<br>&n&nbsp;&nbsp;&nbsp; while(pos) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CBuilderAtom *port = ports->GetNext(pos);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CString iftype, ipaddr;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int ifspeed;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port->GetAttribute("IFType", iftype);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port->GetAttribute("IFSpeed", ifspeed);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port->GetAttribute("IPAddress", ipaddr);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outf &lt;&lt; "\t\tPort " &lt;&lt; port->GetName();
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outf &lt;&lt; "(" &lt;&lt; iftype &lt;&lt; "; "&lt;&lt; ifspeed &lt;&lt; "Kbps), 
 Addr: " &lt;&lt; ipaddr &lt;&lt; endl;
-<br>&nbsp;&nbsp;&nbsp; }
-<br>}
-</tt></blockquote>
+<br>&nbsp;&nbsp;&nbsp; }<br>}
+tt></blockquote>
 
 Do not forget to add <tt>ProcessDiagram</tt> and <tt>ProcessRouter</tt> to the 
 CComponent declaration in Component.h. It is not particularly useful to define 
