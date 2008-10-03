@@ -93,7 +93,7 @@ CSize ReferenceBitmapPart::GetPreferredSize(void) const
 {
 	if (m_referencedPart != NULL) {
 		CSize plSize = m_referencedPart->GetPreferredSize();
-		return plSize + CSize(TypeableBitmapPart::m_lBorderWidth * 2, TypeableBitmapPart::m_lBorderWidth * 2);
+		return plSize + CSize(m_lBorderWidth * 2, m_lBorderWidth * 2);
 	} else {
 		return TypeableBitmapPart::GetPreferredSize();
 	}
@@ -177,8 +177,8 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 	bool model_ref = false;
 	PartBase* pReferenced = NULL;
 	CComPtr<IMgaFCO> spReferenced;
-	if (TypeableBitmapPart::m_spFCO) {
-		CComQIPtr<IMgaReference> spReference = TypeableBitmapPart::m_spFCO;
+	if (m_spFCO) {
+		CComQIPtr<IMgaReference> spReference = m_spFCO;
 
 		CComObjPtr<IMgaFCOs> visitedRefs;
 		COMTHROW(visitedRefs.CoCreateInstance(L"Mga.MgaFCOs"));
@@ -232,26 +232,26 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 
 		if (m_pBitmap->getName() != createResString(IDB_REFERENCE)) {
 			mapRefPrefs[PREF_ICON] = PreferenceVariant(m_pBitmap->getName());
-			TypeableBitmapPart::m_lBorderWidth = 0;
+			m_lBorderWidth = 0;
 			objtype_enum eType;
 			COMTHROW(spReferenced->get_ObjType(&eType));
 			mapRefPrefs[PREF_TILES] = PreferenceVariant(getFacilities().getTileVector((eType == OBJTYPE_MODEL) ? TILE_PORTDEFAULT : TILE_ATOMDEFAULT));
 		} else {
-			TypeableBitmapPart::m_lBorderWidth = 2;
+			m_lBorderWidth = 2;
 		}
 
 		mapRefPrefs[PREF_TYPESHOWN] = PreferenceVariant(false);
 
 		COLORREF crPortLabel;
-		if (getFacilities().getPreference(TypeableBitmapPart::m_spFCO, PREF_PORTLABELCOLOR, crPortLabel))
+		if (getFacilities().getPreference(m_spFCO, PREF_PORTLABELCOLOR, crPortLabel))
 			mapRefPrefs[PREF_PORTLABELCOLOR] = PreferenceVariant(crPortLabel);
 
-		if (getFacilities().getPreference(TypeableBitmapPart::m_spFCO, PREF_BORDERCOLOR, m_crBorder))
+		if (getFacilities().getPreference(m_spFCO, PREF_BORDERCOLOR, m_crBorder))
 			mapRefPrefs[PREF_BORDERCOLOR] = PreferenceVariant(m_crBorder);
 		else
 			getFacilities().getPreference(spReferenced, PREF_BORDERCOLOR, m_crBorder);
 
-		if (TypeableBitmapPart::m_spFCO && model_ref) {
+		if (m_spFCO && model_ref) {
 			// these values will be get from the old PrefMap: preferences or from the m_spFCO's registry (most likely)
 			bool port_label_inside;
 			long port_label_length;
@@ -261,14 +261,14 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 			if (it != preferences.end()) // the mapRefs map is not expected to contain the value
 				port_label_inside = it->second.uValue.bValue;
 			else // the object's registry may contain it
-				getFacilities().getPreference(TypeableBitmapPart::m_spFCO, PREF_PORTLABELINSIDE, port_label_inside);
+				getFacilities().getPreference(m_spFCO, PREF_PORTLABELINSIDE, port_label_inside);
 
 			it = preferences.find(PREF_PORTLABELLENGTH);
 			if (it != preferences.end()) {
 				port_label_length = it->second.uValue.lValue;
 			} else {
 				// if not found in registry use MAX_PORT_LENGTH
-				if (!getFacilities().getPreference(TypeableBitmapPart::m_spFCO, PREF_PORTLABELLENGTH, port_label_length))
+				if (!getFacilities().getPreference(m_spFCO, PREF_PORTLABELLENGTH, port_label_length))
 					port_label_length = MAX_PORT_LENGTH; // the default value in Preferences
 			}
 
@@ -283,13 +283,13 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 		pReferenced->InitializeEx(pProject, pPart, spReferenced, parentWnd, mapRefPrefs);
 		pReferenced->SetReferenced(true);
 	} else {
-		TypeableBitmapPart::m_lBorderWidth = 0;
+		m_lBorderWidth = 0;
 		CString strIcon;
-		if (TypeableBitmapPart::m_spFCO) {
-			getFacilities().getPreference(TypeableBitmapPart::m_spFCO, PREF_NULLREFICON, strIcon);
+		if (m_spFCO) {
+			getFacilities().getPreference(m_spFCO, PREF_NULLREFICON, strIcon);
 		} else {
 			CComPtr<IMgaMetaRole> spRole;
-			COMTHROW(TypeableBitmapPart::m_spPart->get_Role(&spRole));
+			COMTHROW(m_spPart->get_Role(&spRole));
 			CComPtr<IMgaMetaFCO> spMetaFCO;
 			COMTHROW(spRole->get_Kind(&spMetaFCO));
 			getFacilities().getPreference(spMetaFCO, PREF_NULLREFICON, strIcon);
@@ -590,7 +590,7 @@ void ReferenceBitmapPart::DrawBackground(CDC* pDC)
 #ifndef OLD_DECORATOR_LOOKANDFEEL
 		TypeableBitmapPart::DrawBackground(pDC);
 #else
-		if (TypeableBitmapPart::m_bActive) {
+		if (m_bActive) {
 			TypeableBitmapPart::DrawBackground(pDC);
 		} else {
 			CRect cRect = TypeableBitmapPart::GetBoxLocation(false);
@@ -614,8 +614,8 @@ void ReferenceBitmapPart::DrawIcons(CDC* pDC)
 	else
 		TypeableBitmapPart::DrawIcons(pDC);
 
-	if (false /*m_bIconRequired*/) {
-		BitmapBase* pBitmap = getFacilities().getBitmap(createResString((TypeableBitmapPart::m_bActive) ? IDB_ICON_REFERENCE : IDB_ICON_REFERENCE_DIS));
+	if (/*false*/ m_spFCO && m_bIconRequired) {
+		BitmapBase* pBitmap = getFacilities().getBitmap(createResString((m_bActive) ? IDB_ICON_REFERENCE : IDB_ICON_REFERENCE_DIS));
 		CRect cRect = TypeableBitmapPart::GetBoxLocation(false);
 		cRect.left += GAP_LABEL;
 		cRect.top += GAP_LABEL;
@@ -629,8 +629,8 @@ void ReferenceBitmapPart::SetBoxLocation(const CRect& cRect)
 {
 	TypeableBitmapPart::SetBoxLocation(cRect);
 	if (m_referencedPart != NULL) {
-		CRect cRect2 = TypeableBitmapPart::m_Rect;
-		cRect2.DeflateRect(TypeableBitmapPart::m_lBorderWidth, TypeableBitmapPart::m_lBorderWidth);
+		CRect cRect2 = m_Rect;
+		cRect2.DeflateRect(m_lBorderWidth, m_lBorderWidth);
 		m_referencedPart->SetBoxLocation(cRect2);
 	}
 }

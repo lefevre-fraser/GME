@@ -32,6 +32,10 @@ BEGIN_MESSAGE_MAP(CInPlaceEditDialog, CDialog)
 	ON_BN_CLICKED(IDOK, OnBnClickedOk)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
+	ON_WM_LBUTTONDBLCLK()
+	ON_WM_MOUSEMOVE()
+	ON_WM_SETCURSOR()
+	ON_WM_MOUSEACTIVATE()
 	ON_EN_CHANGE(IDC_TEXTEDIT, OnEnChangeTextedit)
 END_MESSAGE_MAP()
 
@@ -140,6 +144,58 @@ void CInPlaceEditDialog::OnLButtonUp(UINT nFlags, CPoint point)
 		child->SendMessage(WM_LBUTTONUP, nFlags, MAKELPARAM(point.x, point.y));
 
 	CDialog::OnLButtonUp(nFlags, point);
+}
+
+void CInPlaceEditDialog::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+	// See notes for OnLButtonDown.
+	CWnd *child = ChildWindowFromPoint(point, CWP_ALL);
+
+	if (child && child != this)
+		child->SendMessage(WM_LBUTTONDBLCLK, nFlags, MAKELPARAM(point.x, point.y));
+
+	CDialog::OnLButtonDblClk(nFlags, point);
+}
+
+void CInPlaceEditDialog::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// See notes for OnLButtonDown.
+	CWnd *child = ChildWindowFromPoint(point, CWP_ALL);
+
+	if (child && child != this)
+		child->SendMessage(WM_MOUSEMOVE, nFlags, MAKELPARAM(point.x, point.y));
+
+	CDialog::OnMouseMove(nFlags, point);
+}
+
+BOOL CInPlaceEditDialog::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+{
+	POINT cursorPos;
+	BOOL succ = ::GetCursorPos(&cursorPos);
+	ScreenToClient(&cursorPos);
+
+	// See notes for OnLButtonDown.
+	CWnd *child = ChildWindowFromPoint(cursorPos, CWP_ALL);
+
+	if (child && child != this)
+		return child->SendMessage(WM_SETCURSOR, (WPARAM)(child->m_hWnd), MAKELPARAM(nHitTest, message));
+
+	return CDialog::OnSetCursor(pWnd, nHitTest, message);
+}
+
+afx_msg int CInPlaceEditDialog::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
+{
+	POINT cursorPos;
+	BOOL succ = ::GetCursorPos(&cursorPos);
+	ScreenToClient(&cursorPos);
+
+	// See notes for OnLButtonDown.
+	CWnd *child = ChildWindowFromPoint(cursorPos, CWP_ALL);
+
+	if (child && child != this)
+		return child->SendMessage(WM_MOUSEACTIVATE, (WPARAM)(pDesktopWnd->m_hWnd), MAKELPARAM(nHitTest, message));
+
+	return CDialog::OnMouseActivate(pDesktopWnd, nHitTest, message);
 }
 
 void CInPlaceEditDialog::OnEnChangeTextedit()

@@ -912,16 +912,16 @@ void ModelComplexPart::DrawBackground(CDC* pDC)
 	if (m_pBitmap->getName() != createResString(IDB_MODEL) && TypeableBitmapPart::m_bActive) {
 		TypeableBitmapPart::DrawBackground(pDC);
 	} else {
-		int iDepth = (TypeableBitmapPart::m_bReferenced) ? 2 : ((TypeableBitmapPart::m_iTypeInfo == 3) ? 4 : 7);
-		getFacilities().drawBox(pDC, cRect, (!TypeableBitmapPart::m_bActive) ? COLOR_LIGHTGRAY : (TypeableBitmapPart::m_bOverlay) ? TypeableBitmapPart::m_crOverlay : COLOR_GRAY, iDepth);
+		int iDepth = (m_bReferenced) ? 2 : ((m_iTypeInfo == 3) ? 4 : 7);
+		getFacilities().drawBox(pDC, cRect, (!m_bActive) ? COLOR_LIGHTGRAY : (m_bOverlay) ? m_crOverlay : COLOR_GRAY, iDepth);
 		CRect cRect2 = cRect;
 		cRect2.InflateRect(1, 1);
-		getFacilities().drawRect(pDC, cRect2, (TypeableBitmapPart::m_bActive) ? TypeableBitmapPart::m_crBorder : COLOR_GRAY);
+		getFacilities().drawRect(pDC, cRect2, (m_bActive) ? m_crBorder : COLOR_GRAY);
 		/* Commented out // inner border for Types, and Referenced models // Requested by Akos
-		if (TypeableBitmapPart::m_iTypeInfo != 3 || TypeableBitmapPart::m_bReferenced) {
+		if (m_iTypeInfo != 3 || m_bReferenced) {
 			cRect2 = cRect;
 			cRect2.DeflateRect(iDepth, iDepth);
-			getFacilities().drawRect(pDC, cRect2, (TypeableBitmapPart::m_bActive) ? TypeableBitmapPart::m_crBorder : COLOR_GRAY);
+			getFacilities().drawRect(pDC, cRect2, (m_bActive) ? m_crBorder : COLOR_GRAY);
 		}
 		*/
 	}
@@ -950,15 +950,15 @@ struct PortPartData {
 void ModelComplexPart::LoadPorts(void)
 {
 	CComPtr<IMgaMetaAspect>	spParentAspect;
-	COMTHROW(TypeableBitmapPart::m_spPart->get_ParentAspect(&spParentAspect));
+	COMTHROW(m_spPart->get_ParentAspect(&spParentAspect));
 
-	CComQIPtr<IMgaModel> spModel = TypeableBitmapPart::m_spFCO;
+	CComQIPtr<IMgaModel> spModel = m_spFCO;
 	CComPtr<IMgaMetaFCO> spMetaFCO;
 	COMTHROW(spModel->get_Meta(&spMetaFCO));
 	CComQIPtr<IMgaMetaModel> spMetaModel = spMetaFCO;
 
 	CComBSTR bstrAspect;
-	COMTHROW(TypeableBitmapPart::m_spPart->get_KindAspect(&bstrAspect));
+	COMTHROW(m_spPart->get_KindAspect(&bstrAspect));
 	if (bstrAspect.Length() == 0) {
 		bstrAspect.Empty();
 		COMTHROW( spParentAspect->get_Name(&bstrAspect));
@@ -1004,7 +1004,7 @@ void ModelComplexPart::LoadPorts(void)
 						// zolmol, in case regnodes are not present or invalid will throw otherwise
 						if(spPart->GetGmeAttrs(0, &lX, &lY) != S_OK)
 							ASSERT(0);
-						PortPart* portPart = new PortPart(static_cast<TypeableBitmapPart*> (this), TypeableBitmapPart::m_eventSink, CPoint(lX, lY));
+						PortPart* portPart = new PortPart(static_cast<TypeableBitmapPart*> (this), m_eventSink, CPoint(lX, lY));
 						PortPartData* partData = new PortPartData(portPart, spMetaPart, MGACOLL_ITER);
 						vecPorts.push_back(partData);
 					} else {
