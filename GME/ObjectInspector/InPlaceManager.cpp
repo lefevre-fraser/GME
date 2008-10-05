@@ -200,24 +200,30 @@ void CInPlaceManager::DisplaySingleLineEdit(CRect rectBound)
 	}
 }
 
-void CInPlaceManager::DisplayColorCombo(CRect rectBound, COLORREF crCol)
+void CInPlaceManager::DisplayColorCombo(CRect rectBound, bool rightSideClick)
 {
-
 	m_pInspectorList->ClientToScreen(rectBound);
 
-	CColourPopup*p=
-	new CColourPopup(CPoint(rectBound.left, rectBound.top),      // Point to display popup
-                     crCol,							             // Selected colour
-                     m_pInspectorList,                           // parent
-                    _T("Default"),								 // "Default" text area
-					_T("More Colors.."));						 // Custom Text
+	CListItem &ListItem= m_pInspectorList->m_ListItemArray.ElementAt(m_nCurrentIndex);
 
-	// Align right
-	CRect rectWnd;
-	p->GetWindowRect(rectWnd);
-	int nXOffset=rectBound.right-rectWnd.right;
-	p->SetWindowPos(NULL,rectWnd.left+nXOffset,rectBound.top,0,0,SWP_NOSIZE |SWP_NOZORDER|SWP_SHOWWINDOW);
-	p->SetWindowSize();
+	CColourPopup dlg(m_pInspectorList);
+	dlg.SetParameters(rectBound,				// rect to display popup
+					  ListItem.Value.colorVal,	// Selected colour
+					  rightSideClick,			// summoned by arrow button click or right side click
+					  _T("Default"),			// "Default" text area
+					  _T("More Colors.."));		// Custom Text
+
+	if(dlg.DoModal()==IDOK)
+	{
+		ListItem.Value.SetColorValue(dlg.GetSelectedColor());
+		ListItem.SetDirty();
+
+		m_pInspectorList->NotifyParent(m_nCurrentIndex);
+
+		m_pInspectorList->Invalidate();
+	}
+
+	m_pInspectorList->SetFocus();
 }
 
 
@@ -494,7 +500,7 @@ void CInPlaceManager::OnClickEditorButton()
 	
 }
 
-void CInPlaceManager::OnClickArrowButton()
+void CInPlaceManager::OnClickArrowButton(bool rightSideClick)
 {
 
 	CRect rectArrow;
@@ -522,8 +528,8 @@ void CInPlaceManager::OnClickArrowButton()
 
 	case ITEMDATA_BOOLEAN:
 		{
-				rectWnd.bottom+=2*INSP_COMBOBOX_LINE_HEIGHT + 2; // +INSP_COMBOBOX_OFFSET;
-				DisplayCombo(rectWnd);
+			rectWnd.bottom+=2*INSP_COMBOBOX_LINE_HEIGHT + 2; // +INSP_COMBOBOX_OFFSET;
+			DisplayCombo(rectWnd);
 		}break;
 	case ITEMDATA_FIXED_LIST:
 		{
@@ -534,7 +540,7 @@ void CInPlaceManager::OnClickArrowButton()
 
 	case ITEMDATA_COLOR:
 		{
-			DisplayColorCombo(rectWnd,ListItem.Value.colorVal);
+			DisplayColorCombo(rectWnd, rightSideClick);
 		}break;
 
 	default:
@@ -543,6 +549,9 @@ void CInPlaceManager::OnClickArrowButton()
 			ASSERT(0);
 		}
 	}
+
+	if(::IsWindowVisible(m_ArrowButton.GetSafeHwnd()) )
+		m_ArrowButton.Invalidate();
 }
 
 
@@ -609,18 +618,6 @@ void CInPlaceManager::DisplayCombo(CRect rectBound)
 	}
 
 	m_pInspectorList->SetFocus();
-}
-
-void CInPlaceManager::OnColorComboSelectEnd(COLORREF crColor)
-{
-	CListItem &ListItem= m_pInspectorList->m_ListItemArray.ElementAt(m_nCurrentIndex);
-	ListItem.Value.SetColorValue(crColor);
-
-	ListItem.SetDirty();
-
-	m_pInspectorList->NotifyParent(m_nCurrentIndex);
-
-	m_pInspectorList->Invalidate();
 }
 
 void CInPlaceManager::OnEditMultiLineEnd()
@@ -731,8 +728,19 @@ void CInPlaceManager::OnEditSingleLineEnd()
 }
 
 
-void CInPlaceManager::OnRightItemClick(int nIndex, CRect rectInPlace)
+bool CInPlaceManager::OnRightItemClick(int nIndex, CRect rectInPlace)
 {
+	// User request: color and direction selection popups and other popup should pop up not only by the
+	//				 arrow click, but the right side line click too
+	if(::IsWindowVisible(m_ArrowButton.GetSafeHwnd()) )
+	{
+		if (nIndex == m_nCurrentIndex) {
+			OnClickArrowButton(true);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 

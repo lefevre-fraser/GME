@@ -19,11 +19,10 @@ class CInPlaceManager
 public:
 	void OnEditEnd();
 
-	void OnRightItemClick(int nIndex,CRect rectInPlace);
+	bool OnRightItemClick(int nIndex,CRect rectInPlace);
 	void OnEditSingleLineEnd();
 	void OnEditMultiLineEnd();
-	void OnColorComboSelectEnd(COLORREF crColor);
-	void OnClickArrowButton();
+	void OnClickArrowButton(bool rightSideClick);
 	void OnClickEditorButton();
 
 	void ShowInPlace(CRect rectInPlace, int nIndex);
@@ -50,7 +49,7 @@ private:
 	void DisplayEditorButton(CRect rectBound);
 	void DisplayMultilineEdit(CRect rectBound);
 	void DisplaySingleLineEdit(CRect rectBound);
-	void DisplayColorCombo(CRect rectBound, COLORREF);
+	void DisplayColorCombo(CRect rectBound, bool rightSideClick);
 
 	void HideArrowButton();
 	void HideEditorButton();

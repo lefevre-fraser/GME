@@ -60,7 +60,6 @@ public:
 
 	 afx_msg void OnArrowClicked();
 	 afx_msg void OnEditorClicked();
-	 afx_msg LONG OnColorComboSelEndOK(UINT lParam, LONG wParam);
 	 afx_msg LONG OnEditEndOK(UINT lParam, LONG wParam);
 // Implementation
 public:
@@ -73,7 +72,7 @@ public:
 	bool FindByKey(DWORD,CListItem&);
 	bool FindByKey(DWORD, DWORD, CListItem&);
 
-	void OnRightSideClick(CPoint point);
+	bool OnRightSideClick(CPoint point);
 	void OnPlusMinusClick(CPoint point);
 	void DoCollapseExpand(int);
 	void ResetContent();

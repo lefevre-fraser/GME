@@ -41,7 +41,6 @@ BEGIN_MESSAGE_MAP(CInspectorList, CListBox)
 	ON_WM_RBUTTONDOWN()
 	ON_BN_CLICKED(IDC_ARROW_BUTTON, OnArrowClicked)
 	ON_BN_CLICKED(IDC_EDITOR_BUTTON, OnEditorClicked)
-	ON_MESSAGE(CPN_SELENDOK, OnColorComboSelEndOK)
 	ON_MESSAGE(MSG_EDIT_END_OK, OnEditEndOK)
 	ON_COMMAND(ID_LISTCONTEXT_RESETTODEFAULT, OnListContextResetToDefault)
 	//}}AFX_MSG_MAP
@@ -365,7 +364,8 @@ void CInspectorList::OnLButtonDown(UINT nFlags, CPoint point)
 	{
 		OnPlusMinusClick(point);
 	}
-	OnRightSideClick(point);
+	if (OnRightSideClick(point))
+		return;
 
 	if(point.x>=(int)m_Settings.m_nDivider-INSP_MOUSE_RADIUS &&
 		point.x<=(int)m_Settings.m_nDivider+INSP_MOUSE_RADIUS)
@@ -505,7 +505,7 @@ void CInspectorList::OnSelChange()
 void CInspectorList::OnArrowClicked()
 {
 
-	m_InPlaceManager.OnClickArrowButton();
+	m_InPlaceManager.OnClickArrowButton(false);
 
 }
 
@@ -820,7 +820,7 @@ void CInspectorList::OnPlusMinusClick(CPoint point)
 }
 
 
-void CInspectorList::OnRightSideClick(CPoint point)
+bool CInspectorList::OnRightSideClick(CPoint point)
 {
 	BOOL bOutside;
 	int nIndex=ItemFromPoint(point,bOutside);
@@ -835,9 +835,11 @@ void CInspectorList::OnRightSideClick(CPoint point)
 
 		if(rectRight.PtInRect(point))
 		{
-			m_InPlaceManager.OnRightItemClick(nIndex, rectRight);
+			return m_InPlaceManager.OnRightItemClick(nIndex, rectRight);
 		}
 	}
+
+	return false;
 }
 
 
@@ -864,16 +866,6 @@ void CInspectorList::SetHelp(int nIndex)
 		CListItem ListItem=m_ListItemArray.GetAt(nIndex);
 		pInspectorDlg->SetHelp(ListItem.strName,ListItem.strToolTip);
 	}
-}
-
-
-LONG CInspectorList::OnColorComboSelEndOK(UINT lParam, LONG /*wParam*/)
-{
-	COLORREF crNewColor = (COLORREF) lParam;
-
-	m_InPlaceManager.OnColorComboSelectEnd(crNewColor);
-
-	return TRUE;
 }
 
 
