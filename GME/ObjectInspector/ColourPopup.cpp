@@ -787,7 +787,7 @@ void CColourPopup::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
         return;
     }
 
-    CWnd::OnKeyDown(nChar, nRepCnt, nFlags);
+    CDialog::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
 void CColourPopup::OnPaint() 
@@ -838,7 +838,7 @@ void CColourPopup::OnMouseMove(UINT nFlags, CPoint point)
         // In range? If not, default and exit
         if (nNewSelection < 0 || nNewSelection >= m_nNumColours)
         {
-            CWnd::OnMouseMove(nFlags, point);
+            CDialog::OnMouseMove(nFlags, point);
             return;
         }
     }
@@ -848,13 +848,13 @@ void CColourPopup::OnMouseMove(UINT nFlags, CPoint point)
     if (nNewSelection != m_nCurrentSel)
         ChangeSelection(nNewSelection);
 
-    CWnd::OnMouseMove(nFlags, point);
+    CDialog::OnMouseMove(nFlags, point);
 }
 
 // End selection on LButtonUp
 void CColourPopup::OnLButtonUp(UINT nFlags, CPoint point) 
 {
-    CWnd::OnLButtonUp(nFlags, point);
+    CDialog::OnLButtonUp(nFlags, point);
 
 	if (!m_bFirstMouseMsgReceived) {
 		m_bFirstMouseMsgReceived = true;
@@ -873,12 +873,12 @@ void CColourPopup::OnLButtonUp(UINT nFlags, CPoint point)
 BOOL CColourPopup::OnQueryNewPalette() 
 {
     Invalidate();    
-    return CWnd::OnQueryNewPalette();
+    return CDialog::OnQueryNewPalette();
 }
 
 void CColourPopup::OnPaletteChanged(CWnd* pFocusWnd) 
 {
-    CWnd::OnPaletteChanged(pFocusWnd);
+    CDialog::OnPaletteChanged(pFocusWnd);
 
     if (pFocusWnd->GetSafeHwnd() != GetSafeHwnd())
         Invalidate();
@@ -894,7 +894,7 @@ void CColourPopup::EndDialog(int nResult)
 // For tooltips
 BOOL CColourPopup::PreTranslateMessage(MSG* pMsg) 
 {
-//    m_ToolTip.RelayEvent(pMsg);
+    m_ToolTip.RelayEvent(pMsg);
 
     // Fix (Adrian Roman): Sometimes if the picker loses focus it is never destroyed
 	if (GetCapture()->GetSafeHwnd() != m_hWnd)
