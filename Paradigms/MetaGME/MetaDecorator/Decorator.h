@@ -10,7 +10,6 @@
 #define __Mga_h__
 #include "DecoratorLib.h"
 #include "DecoratorUtil.h"
-#include "MaskedBitmap.h"
 
 typedef enum {NULLSHAPE, CLASS, CLASSPROXY, CONNECTOR, CONSTRAINT, EQUIVALENCE, INHERITANCE, INTINHERITANCE, IMPINHERITANCE, CONSTRAINTFUNC } ShapeCode;
 
@@ -146,7 +145,7 @@ protected:
 	COLORREF	m_nameColor;
 
 	ShapeCode	m_shape;
-	CMaskedBitmap		m_bitmap;					// for proxies or constraints
+	DecoratorSDK::BitmapBase*	m_bitmap;					// for proxies or constraints
 	CRect		m_sepLoc;
 	CSize		m_calcSize;
 	CPoint		m_proxySignPos;

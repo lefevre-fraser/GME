@@ -19,6 +19,16 @@ namespace DecoratorSDK
 
 //################################################################################################
 //
+// BITFLAGS : OpCode
+//
+//################################################################################################
+
+const unsigned int OC_NOOP			= 0;
+const unsigned int OC_GREY			= 1;
+const unsigned int OC_TRANSPARENT	= 2;
+
+//################################################################################################
+//
 // ENUMERATION : ECoordRefPoint
 //
 //################################################################################################
@@ -131,7 +141,7 @@ typedef std::vector<BackgroundTile> TileVector;
 
 class BitmapBase
 {
-	private :
+	protected :
 		bool 		m_bHasTransparentColor;
 		COLORREF	m_crTransparentColor;
 		bool		m_bHasBackgroundColor;
@@ -151,8 +161,8 @@ class BitmapBase
 		virtual ~BitmapBase();
 
 		CString getName() const;
-		long getWidth() const;
-		long getHeight() const;
+		virtual long getWidth() const;
+		virtual long getHeight() const;
 		virtual bool isInitialized() const = 0;
 
 		bool hasTransparentColor() const;
@@ -163,7 +173,7 @@ class BitmapBase
 		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const = 0;
 		void draw( CDC* pDC, const CRect& cRect, const TileVector& vecTiles ) const;
 
-	private :
+	protected :
 		void setName( const CString& strName );
 };
 
@@ -191,6 +201,41 @@ class BitmapDIB
 
 	private :
 		void load( const CString& strName );
+};
+
+//################################################################################################
+//
+// CLASS : BitmapMasked
+//
+//################################################################################################
+
+class BitmapMasked
+	: public BitmapBase
+{
+	private :
+		LPBYTE			m_pBits;
+		LPBITMAPINFO	m_pBMI;
+		CPalette*		m_pPalette;
+
+	public :
+		BitmapMasked( const CString& strName, COLORREF crTransparentColor, COLORREF crGrayColor );
+		BitmapMasked( UINT nResID, COLORREF crTransparentColor, COLORREF crGrayColor );
+		virtual ~BitmapMasked();
+
+	public :
+		virtual bool isInitialized() const;
+		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const;
+
+		virtual long getWidth() const;
+		virtual long getHeight() const;
+	private :
+		DWORD Read(CFile& file, BOOL bFromResource = FALSE );
+		DWORD ReadFromResource(UINT nResID);
+		WORD NumColors(  BITMAPINFOHEADER& bmiHeader ) const;
+		void Free();
+		BOOL CreatePalette();
+		void drawTransparent (CDC* pDC, const CRect &rect, COLORREF clrTransparency, bool bGray, COLORREF grayColor) const;
+		void draw (CDC* pDC, const CRect &rect) const;
 };
 
 //################################################################################################

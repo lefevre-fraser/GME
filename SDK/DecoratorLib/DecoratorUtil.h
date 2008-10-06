@@ -63,6 +63,8 @@ namespace DecoratorSDK
 			BitmapBase* getBitmapT( const CString& strName, COLORREF crTransparent );
 			BitmapBase* getBitmapB( const CString& strName, COLORREF crBackground );
 			BitmapBase* getBitmapTB( const CString& strName, COLORREF crTransparent, COLORREF crBackground );
+			BitmapBase* getMaskedBitmap( const CString& strName, COLORREF crTransparent, COLORREF crBackground );
+			BitmapBase* getMaskedBitmap( UINT nResID, COLORREF crTransparent, COLORREF crBackground );
 
 			void addTileVector( const CString& strName, TileVector* vecTiles );
 			TileVector* getTileVector( const CString& strName ) const;
@@ -106,7 +108,8 @@ namespace DecoratorSDK
 			std::vector<CString> wrapString( const CString& str, int iWrap, int iMax );
 
 		private :
-			BitmapBase* getBitmap( const CString& strName, bool bhasTC, COLORREF crTC, bool bhasBC, COLORREF crBC );
+			BitmapBase* getBitmap( const CString& strName, bool bhasTC, COLORREF crTC, bool bhasBC, COLORREF crBC,
+								   bool masked = false, UINT nResID = 0 );
 
 	};
 

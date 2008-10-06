@@ -46,4 +46,25 @@ HGLOBAL   WINAPI  CopyHandle (HGLOBAL h);
 BOOL      WINAPI  SaveDIB (HDIB hDib, CFile& file);
 HDIB      WINAPI  ReadDIBFile(CFile& file);
 
+
+//////////////////////////////////////////////////////////////////////////
+// DIB support defines
+#define BMIH_SIZE sizeof BITMAPINFOHEADER
+#define BMIF_SIZE sizeof BITMAPFILEHEADER
+
+/* DIB constants */
+#define PALVERSION   0x300
+
+/* Dib Header Marker - used in writing DIBs to files */
+#define DIB_HEADER_MARKER   ((WORD) ('M' << 8) | 'B')
+
+// WIDTHBYTES performs DWORD-aligning of DIB scanlines.  The "bits"
+// parameter is the bit count for the scanline (biWidth * biBitCount),
+// and this macro returns the number of DWORD-aligned bytes needed
+// to hold those bits.
+#define WIDTHBYTES(bits)    (((bits) + 31) / 32 * 4)
+
+/////////////////////////////////////////////////////////////////////////////
+
+
 #endif //!_INC_DIBAPI

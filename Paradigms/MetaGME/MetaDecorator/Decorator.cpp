@@ -1,6 +1,7 @@
 // UMLDecorator.cpp : Implementation of CUMLDecorator
 #include "stdafx.h"
 #include "Decorator.h"
+#include "BitmapUtil.h"
 
 #include "CommonError.cpp"
 
@@ -112,15 +113,15 @@ STDMETHODIMP CDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart
 	// Init bitmap
 	if (m_shape == CLASSPROXY) {
 		AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
-		m_bitmap.ReadFromResource(IDB_BITMAP_PROXY);
+		m_bitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_PROXY, META_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
 	}
 	else if (m_shape == CONSTRAINT) {
 		AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
-		m_bitmap.ReadFromResource(IDB_BITMAP_CONSTRAINT);
+		m_bitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_CONSTRAINT, META_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
 	}
 	else if (m_shape == CONSTRAINTFUNC) {
 		AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
-		m_bitmap.ReadFromResource(IDB_BITMAP_CONSTRAINTFUNC);
+		m_bitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_CONSTRAINTFUNC, META_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
 	}
 
 	// Get Name
@@ -354,11 +355,16 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 	case CONSTRAINT:
 	case CONSTRAINTFUNC:
 		{
-			if (m_bitmap.IsValid()) {
+			if (m_bitmap->isInitialized()) {
 				CPoint cpt;
 				cpt.x = m_sx + ((m_calcSize.cx - (m_ex - m_sx))/2);
 				cpt.y = m_sy + ((m_calcSize.cy - (m_ey - m_sy))/2);
-				m_bitmap.DrawTransparent(&dc, cpt.x, cpt.y, META_TRANSPARENT_COLOR, !m_isActive, GME_GRAYED_OUT_COLOR);
+
+				CRect destRect(cpt.x, cpt.y, cpt.x + m_bitmap->getWidth(), cpt.y + m_bitmap->getHeight());
+				UINT opCode = DecoratorSDK::OC_TRANSPARENT;
+				if (!m_isActive)
+					opCode |= DecoratorSDK::OC_GREY;
+				m_bitmap->draw(&dc, CRect(), destRect, opCode);
 				//m_bitmap.Draw(&dc, cpt.x, cpt.y);
 			}
 			CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
@@ -485,11 +491,16 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 														TA_BOTTOM | TA_RIGHT);
 			}
 			// Draw Proxy Sign
-			if (m_shape == CLASSPROXY && m_bitmap.IsValid()) {
+			if (m_shape == CLASSPROXY && m_bitmap->isInitialized()) {
 				CPoint cpt;
 				cpt.x = m_sx + (long)(scalex * m_proxySignPos.x);
 				cpt.y = m_sy + (long)(scaley * m_proxySignPos.y);
-				m_bitmap.DrawTransparent(&dc, cpt.x, cpt.y, META_TRANSPARENT_COLOR, !m_isActive, GME_GRAYED_OUT_COLOR);
+
+				CRect destRect(cpt.x, cpt.y, cpt.x + m_bitmap->getWidth(), cpt.y + m_bitmap->getHeight());
+				UINT opCode = DecoratorSDK::OC_TRANSPARENT;
+				if (!m_isActive)
+					opCode |= DecoratorSDK::OC_GREY;
+				m_bitmap->draw(&dc, CRect(), destRect, opCode);
 			}
 		}
 		break;
@@ -631,9 +642,9 @@ void CDecorator::CalcRelPositions()
 		break;
 	case CONSTRAINT:
 	case CONSTRAINTFUNC:
-		if (m_bitmap.IsValid()) {
-			m_calcSize.cx = m_bitmap.Width();
-			m_calcSize.cy = m_bitmap.Height();
+		if (m_bitmap->isInitialized()) {
+			m_calcSize.cx = m_bitmap->getWidth();
+			m_calcSize.cy = m_bitmap->getHeight();
 			m_namePos.x = m_calcSize.cx / 2;
 			m_namePos.y = m_calcSize.cy;
 		}
@@ -731,11 +742,11 @@ void CDecorator::CalcRelPositions()
 			}
 
 
-			if (m_shape == CLASSPROXY && m_bitmap.IsValid()) {
+			if (m_shape == CLASSPROXY && m_bitmap->isInitialized()) {
 				ypos += META_DECORATOR_MARGINY;
 				m_proxySignPos.x = xleftpos;
 				m_proxySignPos.y = ypos;
-				ypos += m_bitmap.Height();
+				ypos += m_bitmap->getHeight();
 			}
 			else if (m_attrs.GetCount() ==0) {
 				ypos += META_DECORATOR_MINATTRSIZE;

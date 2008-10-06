@@ -7,6 +7,7 @@
 #define __Mga_h__
 #include "UMLDecoratorLib.h"
 #include "UMLDecorator.h"
+#include "BitmapUtil.h"
 #include "DecoratorStd.h"
 #include "TokenEx.h"
 
@@ -75,7 +76,7 @@ STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaP
 			objtype_enum	objtype;
 			COMTHROW(m_mgaFco->get_ObjType(&objtype));
 			if (objtype == OBJTYPE_REFERENCE) {
-				m_copyBitmap.ReadFromResource(IDB_BITMAP_COPY);
+				m_copyBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_COPY, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
 				m_isCopy = true;
 				CComPtr<IMgaFCO> mgaFco = m_mgaFco;
 				while(objtype == OBJTYPE_REFERENCE) {
@@ -125,7 +126,7 @@ STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaP
 			objtype_enum objtype;
 			COMTHROW(m_metaFco->get_ObjType(&objtype));
 			if (objtype == OBJTYPE_REFERENCE) {
-				m_copyBitmap.ReadFromResource(IDB_BITMAP_COPY);
+				m_copyBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_COPY, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
 				m_isCopy = true;
 			}
 			else {
@@ -310,8 +311,13 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 		return S_OK;
 	}
 
-	if (m_isConstraint && m_constraintBitmap.IsValid()) {
-		m_constraintBitmap.DrawTransparent(&dc, m_sx, m_sy, UML_TRANSPARENT_COLOR, !m_isActive, GME_GRAYED_OUT_COLOR);
+	if (m_isConstraint && m_constraintBitmap->isInitialized()) {
+		CRect destRect(m_sx, m_sy, m_sx + m_constraintBitmap->getWidth(), m_sy + m_constraintBitmap->getHeight());
+		UINT opCode = DecoratorSDK::OC_TRANSPARENT;
+		if (!m_isActive)
+			opCode |= DecoratorSDK::OC_GREY;
+		m_constraintBitmap->draw(&dc, CRect(), destRect, opCode);
+
 		CPoint namePos(m_sx + ((m_ex - m_sx) / 2), m_ey);
 		DecoratorSDK::getFacilities().drawText(&dc,
 												m_name,
@@ -323,8 +329,13 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 		return S_OK;
 	}
 
-	if (m_isConstraintDefinition && m_constraintDefBitmap.IsValid()) {
-		m_constraintDefBitmap.DrawTransparent(&dc, m_sx, m_sy, UML_TRANSPARENT_COLOR, !m_isActive, GME_GRAYED_OUT_COLOR);
+	if (m_isConstraintDefinition && m_constraintDefBitmap->isInitialized()) {
+		CRect destRect(m_sx, m_sy, m_sx + m_constraintDefBitmap->getWidth(), m_sy + m_constraintDefBitmap->getHeight());
+		UINT opCode = DecoratorSDK::OC_TRANSPARENT;
+		if (!m_isActive)
+			opCode |= DecoratorSDK::OC_GREY;
+		m_constraintDefBitmap->draw(&dc, CRect(), destRect, opCode);
+
 		CPoint namePos(m_sx + ((m_ex - m_sx) / 2), m_ey);
 		DecoratorSDK::getFacilities().drawText(&dc,
 												m_name,
@@ -382,11 +393,15 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 	}
 
 	// Draw Copy Sign
-	if (m_isCopy && m_copyBitmap.IsValid()) {
+	if (m_isCopy && m_copyBitmap->isInitialized()) {
 		CPoint cpt = m_copySignPos;
 		cpt.x = static_cast<long> (m_sx + scalex * m_copySignPos.x);
 		cpt.y = static_cast<long> (m_sy + scaley * m_copySignPos.y);
-		m_copyBitmap.DrawTransparent(&dc, cpt.x, cpt.y, UML_TRANSPARENT_COLOR, !m_isActive, GME_GRAYED_OUT_COLOR);
+		CRect destRect(cpt.x, cpt.y, cpt.x + m_copyBitmap->getWidth(), cpt.y + m_copyBitmap->getHeight());
+		UINT opCode = DecoratorSDK::OC_TRANSPARENT;
+		if (!m_isActive)
+			opCode |= DecoratorSDK::OC_GREY;
+		m_copyBitmap->draw(&dc, CRect(), destRect, opCode);
 	}
 
 	dc.Detach();
@@ -481,11 +496,11 @@ void CUMLDecorator::CalcRelPositions(CDC *pDC)
 		ypos += UML_DECORATOR_GAPY;
 	}
 
-	if (m_isCopy && m_copyBitmap.IsValid()) {
+	if (m_isCopy && m_copyBitmap->isInitialized()) {
 		ypos += UML_DECORATOR_MARGINY;
 		m_copySignPos.x = xleftpos;
 		m_copySignPos.y = ypos;
-		ypos += m_copyBitmap.Height();
+		ypos += m_copyBitmap->getHeight();
 	}
 	else if (m_attrs.GetCount() == 0){
 		ypos += UML_DECORATOR_MINATTRSIZE;
@@ -642,10 +657,10 @@ bool CUMLDecorator::SetupConstraint()
 		CString name(bstr);
 		if (name == UML_CONSTRAINT_NAME) {
 			m_isConstraint = true;
-			m_constraintBitmap.ReadFromResource(IDB_BITMAP_CONSTRAINT);
-			if (m_constraintBitmap.IsValid()) {
-				m_calcSize.cx = m_constraintBitmap.Width();
-				m_calcSize.cy = m_constraintBitmap.Height();
+			m_constraintBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_CONSTRAINT, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
+			if (m_constraintBitmap->isInitialized()) {
+				m_calcSize.cx = m_constraintBitmap->getWidth();
+				m_calcSize.cy = m_constraintBitmap->getHeight();
 				return true;
 			}
 		}
@@ -664,10 +679,10 @@ bool CUMLDecorator::SetupConstraintDefinition()
 		CString name(bstr);
 		if (name == UML_CONSTRAINT_DEFINITION_NAME) {
 			m_isConstraintDefinition = true;
-			m_constraintDefBitmap.ReadFromResource(IDB_BITMAP_CDEFINITION);
-			if (m_constraintDefBitmap.IsValid()) {
-				m_calcSize.cx = m_constraintDefBitmap.Width();
-				m_calcSize.cy = m_constraintDefBitmap.Height();
+			m_constraintDefBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_CDEFINITION, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
+			if (m_constraintDefBitmap->isInitialized()) {
+				m_calcSize.cx = m_constraintDefBitmap->getWidth();
+				m_calcSize.cy = m_constraintDefBitmap->getHeight();
 				return true;
 			}
 		}

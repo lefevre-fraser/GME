@@ -9,7 +9,6 @@
 #include "resource.h"       // main symbols
 #include "decoratorstd.h"
 #include "DecoratorUtil.h"
-#include "MaskedBitmap.h"
 
 #define  UML_STEREOTYPE_LEFT		"<<"
 #define  UML_STEREOTYPE_RIGHT		">>"
@@ -100,9 +99,9 @@ protected:
 	CSize	m_calcSize;
 	CPoint	m_copySignPos;
 	CRect	m_sepLoc;
-	CMaskedBitmap m_copyBitmap;
-	CMaskedBitmap m_constraintBitmap;
-	CMaskedBitmap m_constraintDefBitmap;
+	DecoratorSDK::BitmapBase* m_copyBitmap;
+	DecoratorSDK::BitmapBase* m_constraintBitmap;
+	DecoratorSDK::BitmapBase* m_constraintDefBitmap;
 
 	COLORREF	m_color;
 	COLORREF	m_nameColor;

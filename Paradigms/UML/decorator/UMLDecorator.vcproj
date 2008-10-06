@@ -224,32 +224,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="MaskedBitmap.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -422,10 +396,6 @@
 			</File>
 			<File
 				RelativePath="DecoratorStd.h"
-				>
-			</File>
-			<File
-				RelativePath="MaskedBitmap.h"
 				>
 			</File>
 			<File

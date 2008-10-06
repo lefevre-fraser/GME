@@ -417,9 +417,18 @@ EPrefStatus Facilities::getPreferenceStatus( CComPtr<IMgaFCO> spFCO, const CStri
 	}
 }
 
-BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF crTC, bool bHasBC, COLORREF crBC )
+BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF crTC, bool bHasBC, COLORREF crBC,
+								   bool masked, UINT nResID )
 {
 	CString strID( strName );
+	if ( masked ) {
+		if (nResID != 0) {
+			char chBuffer[ 10 ];
+			_ultoa( nResID, chBuffer, 10 );
+			strID += chBuffer;
+		}
+		strID += "<Masked>";
+	}
 	if ( bHasTC ) {
 		char chBuffer[ 10 ];
 		_ultoa( crTC, chBuffer, 16 );
@@ -434,6 +443,20 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 	std::map<CString,BitmapBase*>::iterator it = m_mapBitmaps.find( strID );
 	if ( it != m_mapBitmaps.end() )
 		return it->second;
+
+	if (masked) {
+		BitmapMasked* pBMP = NULL;
+		if ( nResID != NULL )
+			pBMP = new BitmapMasked( nResID, crBC, false );
+		else
+			pBMP = new BitmapMasked( strName, crTC, crBC );
+		if ( pBMP->isInitialized() ) {
+			m_mapBitmaps.insert( std::map<CString,BitmapBase*>::value_type( strID, pBMP ) );
+			return pBMP;
+		}
+		delete pBMP;
+		return NULL;
+	}
 
 	CString strExt, strEx2;
 	if ( strName.GetLength() >= 4 ) {
@@ -520,6 +543,16 @@ BitmapBase* Facilities::getBitmapB( const CString& strName, COLORREF crBackgroun
 BitmapBase* Facilities::getBitmapTB( const CString& strName, COLORREF crTransparent, COLORREF crBackground )
 {
 	return getBitmap( strName, true, crTransparent, true, crBackground );
+}
+
+BitmapBase* Facilities::getMaskedBitmap( const CString& strName, COLORREF crTransparent, COLORREF crBackground )
+{
+	return getBitmap( strName, true, crTransparent, true, crBackground, true );
+}
+
+BitmapBase* Facilities::getMaskedBitmap( UINT nResID, COLORREF crTransparent, COLORREF crBackground )
+{
+	return getBitmap( "", true, crTransparent, true, crBackground, true, nResID );
 }
 
 void Facilities::addTileVector( const CString& strName, TileVector* vecTiles )
