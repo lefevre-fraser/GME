@@ -128,7 +128,7 @@ void ResizablePart::Draw(CDC* pDC)
 void ResizablePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 								 HWND parentWnd, PreferenceMap& preferences)
 {
-	if (m_spFCO)
+	if (pFCO)
 		resizeLogic.InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	PartBase::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }

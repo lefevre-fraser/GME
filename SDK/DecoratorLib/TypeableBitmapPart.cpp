@@ -32,6 +32,8 @@ TypeableBitmapPart::~TypeableBitmapPart()
 void TypeableBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 									  HWND parentWnd, PreferenceMap& preferences)
 {
+	BitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+
 	if (m_spFCO) {
 		PreferenceMap::iterator it = preferences.find(PREF_TYPEINFOSHOWN);
 		if (it != preferences.end()) {
@@ -59,8 +61,6 @@ void TypeableBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IM
 			}
 		}
 	}
-
-	BitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	// TypeInheritance Bitmap and Tiles
 
