@@ -10,8 +10,10 @@
 #include "decoratorstd.h"
 #include "DecoratorUtil.h"
 
-#define  UML_STEREOTYPE_LEFT		"<<"
-#define  UML_STEREOTYPE_RIGHT		">>"
+#define  UML_STEREOTYPE_LEFTA		L"<<"
+#define  UML_STEREOTYPE_RIGHTA		L">>"
+#define  UML_STEREOTYPE_LEFTB		L"\u226A "
+#define  UML_STEREOTYPE_RIGHTB		L" \u226B"
 #define  UML_STEREOTYPE_ATTR		"Stereotype"
 #define	 UML_ABSTRACT_ATTR		    "IsAbstract"
 #define	 UML_ATTRIBUTES_ATTR		"Attributes"
