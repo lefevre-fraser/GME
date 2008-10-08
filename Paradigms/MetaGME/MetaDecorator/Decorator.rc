@@ -96,6 +96,7 @@ END
 //
 
 IDR_DECORATOR           REGISTRY DISCARDABLE    "Decorator.rgs"
+IDR_NEWDECORATOR        REGISTRY DISCARDABLE    "NewDecorator.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -115,6 +116,37 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_PROJNAME            "Decorator"
 END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_INPLACEEDITDIALOG DIALOGEX 0, 0, 75, 16
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+EXSTYLE WS_EX_TOPMOST
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_TEXTEDIT,0,0,75,16,ES_AUTOHSCROLL | NOT WS_BORDER
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_INPLACEEDITDIALOG, DIALOG
+    BEGIN
+        RIGHTMARGIN, 74
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////

@@ -326,6 +326,18 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\MetaCompositePart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewMetaDecorator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewMetaDecoratorImpl.cpp"
+				>
+			</File>
+			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -369,6 +381,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MetaCompositePart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewMetaDecorator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewMetaDecoratorImpl.h"
+				>
+			</File>
+			<File
 				RelativePath="Resource.h"
 				>
 			</File>
@@ -394,6 +418,10 @@
 			</File>
 			<File
 				RelativePath="Decorator.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\NewDecorator.rgs"
 				>
 			</File>
 			<File

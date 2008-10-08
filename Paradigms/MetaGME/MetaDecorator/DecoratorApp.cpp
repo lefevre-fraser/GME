@@ -20,6 +20,7 @@ CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
 OBJECT_ENTRY(CLSID_Decorator, CDecorator)
+OBJECT_ENTRY(CLSID_NewMetaDecorator, CDecorator)
 END_OBJECT_MAP()
 
 class CDecoratorApp : public CWinApp
@@ -93,7 +94,16 @@ STDAPI DllRegisterServer(void)
 		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
 		{0, 0}
 	};
-	return _Module.UpdateRegistryFromResourceD( IDR_DECORATOR, TRUE, regMap );
+	_Module.UpdateRegistryFromResourceD( IDR_DECORATOR, TRUE, regMap );
+
+	_ATL_REGMAP_ENTRY regMap2[] = {
+		{CONSTOLESTR("NEWCOCLASS_PROGID"), CONSTOLESTR(NEWCOCLASS_PROGID)},
+		{CONSTOLESTR("NEWCOCLASS_NAME"), CONSTOLESTR(NEWCOCLASS_NAME)},
+		{CONSTOLESTR("NEWCOCLASS_UUID"), CONSTOLESTR(NEWCOCLASS_UUID)},
+		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
+		{0, 0}
+	};
+	return _Module.UpdateRegistryFromResourceD( IDR_NEWDECORATOR, TRUE, regMap2 );
 	/* All the classes are registered here. We do not use the register functions in the classes themselves
 	if ( SUCCEEDED( hr ) )
     {
@@ -117,7 +127,16 @@ STDAPI DllUnregisterServer(void)
 		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
 		{0, 0}
 	};
-	return _Module.UpdateRegistryFromResourceD( IDR_DECORATOR, TRUE, regMap );
+	_Module.UpdateRegistryFromResourceD( IDR_DECORATOR, TRUE, regMap );
+
+	_ATL_REGMAP_ENTRY regMap2[] = {
+		{CONSTOLESTR("NEWCOCLASS_PROGID"), CONSTOLESTR(NEWCOCLASS_PROGID)},
+		{CONSTOLESTR("NEWCOCLASS_NAME"), CONSTOLESTR(NEWCOCLASS_NAME)},
+		{CONSTOLESTR("NEWCOCLASS_UUID"), CONSTOLESTR(NEWCOCLASS_UUID)},
+		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
+		{0, 0}
+	};
+	return _Module.UpdateRegistryFromResourceD( IDR_NEWDECORATOR, TRUE, regMap2 );
 	/* All the classes are registered here. We do not use the register functions in the classes themselves
 	if ( SUCCEEDED( hr ) )
     {
