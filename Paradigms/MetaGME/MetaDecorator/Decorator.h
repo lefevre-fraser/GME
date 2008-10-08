@@ -161,9 +161,6 @@ private:
 	bool InPartBrowser()			{ return (m_mgaFco == NULL) ; }
 	bool IsReal()					{ return (m_mgaFco != NULL) ; }
 	bool GetMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco);
-	bool GetPreference(CString &val, const CString &path);
-	bool GetPreference(int &val, const CString &path, bool hex = false);
-	bool GetColorPreference(COLORREF &color, const CString &path);
 	bool GetAttribute(CString &val, const CString &attrname, CComPtr<IMgaFCO> mgaFco = NULL);
 	bool GetAttribute(bool &val, const CString &attrname, CComPtr<IMgaFCO> mgaFco = NULL);
 	void CalcRelPositions();

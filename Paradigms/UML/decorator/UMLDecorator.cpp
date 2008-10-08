@@ -35,7 +35,7 @@ STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaP
 		}	
 		
 		if (SetupInheritance()) {
-			if(!GetColorPreference(m_color,COLOR_PREF)) {
+			if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, COLOR_PREF, m_color)) {
 				m_color = GME_BLACK_COLOR;
 			}
 			m_name = UML_INHERITANCE_NAME;
@@ -67,7 +67,7 @@ STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaP
 		}
 
 		if (SetupConnector()) {
-			if(!GetColorPreference(m_color,COLOR_PREF)) {
+			if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, COLOR_PREF, m_color)) {
 				m_color = GME_BLACK_COLOR;
 			}
 			m_name = UML_CONNECTOR_NAME;
@@ -144,10 +144,10 @@ STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaP
 			m_name = bstr;
 		}
 
-		if(!GetColorPreference(m_color,COLOR_PREF)) {
+		if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, COLOR_PREF, m_color)) {
 			m_color = GME_BLACK_COLOR;
 		}
-		if(!GetColorPreference(m_nameColor,NAME_COLOR_PREF)) {
+		if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, NAME_COLOR_PREF, m_nameColor)) {
 			m_nameColor = GME_BLACK_COLOR;
 		}
 		CalcRelPositions();
@@ -567,40 +567,6 @@ bool CUMLDecorator::GetAttribute(bool &val, const CString &attrname, CComPtr<IMg
 	}
 	val = (vval == VARIANT_TRUE);
 	return true;
-}
-
-bool CUMLDecorator::GetPreference(CString &val,const CString &path)
-{
-	CComBSTR pathBstr(path);
-	CComBSTR bstrVal;
-	if (m_mgaFco) {
-		COMTHROW(m_mgaFco->get_RegistryValue(pathBstr,&bstrVal));
-	}
-	else {
-		COMTHROW(m_metaFco->get_RegistryValue(pathBstr,&bstrVal));
-	}
-	val = bstrVal;
-	return !val.IsEmpty();
-}
-
-bool CUMLDecorator::GetPreference(int &val,const CString &path,bool hex)
-{
-	CString strVal;
-	GetPreference(strVal, path);
-	return (sscanf(strVal,hex ? "%x" : "%d",&val) == 1);
-}
-
-bool CUMLDecorator::GetColorPreference(unsigned long &color, const CString &path)
-{
-	int i;
-	if(GetPreference(i,path,true)) {
-		unsigned int r = (i & 0xff0000) >> 16;
-		unsigned int g = (i & 0xff00) >> 8;
-		unsigned int b = i & 0xff;
-		color = RGB(r,g,b);
-		return true;
-	}
-	return false;
 }
 
 void CUMLDecorator::CollectAttributes(CComPtr<IMgaFCO> mgaFco)

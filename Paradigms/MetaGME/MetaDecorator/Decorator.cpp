@@ -147,10 +147,10 @@ STDMETHODIMP CDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart
 		return e.hr;
 	}
 
-	if(!GetColorPreference(m_color,COLOR_PREF)) {
+	if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, COLOR_PREF, m_color)) {
 		m_color = GME_BLACK_COLOR;
 	}
-	if(!GetColorPreference(m_nameColor,NAME_COLOR_PREF)) {
+	if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, NAME_COLOR_PREF, m_nameColor)) {
 		m_nameColor = GME_BLACK_COLOR;
 	}
 	if (IsReal() && ( (m_shape == CLASS) || (m_shape == CLASSPROXY) ) ) {
@@ -552,40 +552,6 @@ bool CDecorator::GetMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaM
 		metaFco = NULL;
 	}
 	return (metaFco != NULL);
-}
-
-bool CDecorator::GetPreference(CString &val,const CString &path)
-{
-	CComBSTR pathBstr(path);
-	CComBSTR bstrVal;
-	if (IsReal()) {
-		COMTHROW(m_mgaFco->get_RegistryValue(pathBstr,&bstrVal));
-	}
-	else {
-		COMTHROW(m_metaFco->get_RegistryValue(pathBstr,&bstrVal));
-	}
-	val = bstrVal;
-	return !val.IsEmpty();
-}
-
-bool CDecorator::GetPreference(int &val,const CString &path,bool hex)
-{
-	CString strVal;
-	GetPreference(strVal, path);
-	return (sscanf(strVal,hex ? "%x" : "%d",&val) == 1);
-}
-
-bool CDecorator::GetColorPreference(unsigned long &color, const CString &path)
-{
-	int i;
-	if(GetPreference(i,path,true)) {
-		unsigned int r = (i & 0xff0000) >> 16;
-		unsigned int g = (i & 0xff00) >> 8;
-		unsigned int b = i & 0xff;
-		color = RGB(r,g,b);
-		return true;
-	}
-	return false;
 }
 
 bool CDecorator::GetAttribute(CString &val, const CString &attrname, CComPtr<IMgaFCO> mgaFco)

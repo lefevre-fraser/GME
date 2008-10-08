@@ -15,8 +15,9 @@
 #include "mga.h"
 #include "resource.h"
 
-
+namespace DecoratorSDK {
 class DecoratorInterface;
+};
 
 //################################################################################################
 //
@@ -30,11 +31,9 @@ class ATL_NO_VTABLE CNewBoxDecoratorImpl :
 	public CComCoClass<CNewBoxDecoratorImpl, &CLSID_NewBoxDecorator>
 {
 protected:
-	DecoratorInterface*			m_pNewDecorator;
-	bool						m_bLocationSet;
-	bool						m_bInitCallFromEx;
-	HWND						m_HWnd;
-	bool						isPermanentCWnd;
+	DecoratorSDK::DecoratorInterface*	m_pNewDecorator;
+	bool								m_bLocationSet;
+	bool								m_bInitCallFromEx;
 
 public:
 	CNewBoxDecoratorImpl();
