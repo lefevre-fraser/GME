@@ -16,6 +16,28 @@
 
 namespace DecoratorSDK {
 
+class VectorCommand {
+public:
+	enum Codes {
+		BeginPath			= 0,
+		EndPath				= 1,
+		StrokeAndFillPath	= 2,
+		MoveTo				= 3,
+		LineTo				= 4,
+		Rectangle			= 5
+	};
+
+	enum CoordinateConstants {
+		LeftMost			= LONG_MAX - 1,
+		RightMost			= LONG_MAX - 2,
+		TopMost				= LONG_MAX - 3,
+		BottomMost			= LONG_MAX - 4
+	};
+
+	CRect		coords;
+	long		code;
+};
+
 //################################################################################################
 //
 // CLASS : VectorPart
@@ -24,17 +46,18 @@ namespace DecoratorSDK {
 
 class VectorPart: public ResizablePart
 {
-	std::vector<CRect>		lines;
+	CRect						m_Extents;
+	std::vector<VectorCommand>	m_Commands;
 
 public:
 	VectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~VectorPart();
 
-	void			SetLines					(std::vector<CRect> pLine) { lines = pLine; };
-	void			AddLine						(const CRect& line) { lines.push_back(line); };
-	long			GetLineNumber				(void) const { return (long)lines.size(); };
-	void			RemoveLine					(long index);
-	CRect			GetLine						(long index) const;
+	void			SetExtents					(const CRect& extents) { m_Extents = extents; };
+	void			AddCommand					(const VectorCommand& cmd) { m_Commands.push_back(cmd); };
+	long			GetCommandNumber			(void) const { return (long)m_Commands.size(); };
+	void			RemoveCommand				(long index);
+	VectorCommand	GetCommand					(long index) const;
 
 // =============== resembles IMgaNewDecorator
 public:
@@ -45,6 +68,10 @@ public:
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
+
+private:
+	CRect	ResolveCoordinateConstants			(const CRect& rect);
+	long	ResolveCoordinate					(long coord);
 };
 
 }; // namespace DecoratorSDK

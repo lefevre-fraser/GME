@@ -15,6 +15,8 @@
 #include "PreferenceVariant.h"
 
 
+namespace DecoratorSDK {
+
 //################################################################################################
 //
 // CLASS : DecoratorInterface
@@ -65,5 +67,7 @@ public:
 	virtual bool	OperationCanceledByGME		(void) = 0;
 
 };
+
+};	// namespace DecoratorSDK
 
 #endif //__DECORATORINTERFACE_H_

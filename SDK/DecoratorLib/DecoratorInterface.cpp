@@ -9,6 +9,8 @@
 #include "DecoratorInterface.h"
 
 
+namespace DecoratorSDK {
+
 //################################################################################################
 //
 // CLASS : DecoratorInterface
@@ -22,3 +24,5 @@ DecoratorInterface::DecoratorInterface()
 DecoratorInterface::~DecoratorInterface()
 {
 }
+
+};	// namespace DecoratorSDK
