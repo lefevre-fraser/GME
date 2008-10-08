@@ -224,6 +224,14 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\NewUMLDecorator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewUMLDecoratorImpl.cpp"
+				>
+			</File>
+			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -276,6 +284,10 @@
 						BrowseInformation="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\UMLCompositePart.cpp"
+				>
 			</File>
 			<File
 				RelativePath="UMLDecorator.cpp"
@@ -399,6 +411,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NewUMLDecorator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewUMLDecoratorImpl.h"
+				>
+			</File>
+			<File
 				RelativePath="Resource.h"
 				>
 			</File>
@@ -412,6 +432,10 @@
 			</File>
 			<File
 				RelativePath="TokenEx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UMLCompositePart.h"
 				>
 			</File>
 			<File
@@ -432,6 +456,10 @@
 			</File>
 			<File
 				RelativePath="copy.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewUMLDecorator.rgs"
 				>
 			</File>
 			<File

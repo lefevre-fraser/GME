@@ -3,19 +3,21 @@
 // Used by UMLDecorator.rc
 //
 #define IDS_PROJNAME                    100
-#define IDR_BOXDECORATOR                101
 #define IDR_UMLDECORATOR                101
-#define IDB_DEFAULTREFTONULL            159
+#define IDR_NEWUMLDECORATOR             102
+/*#define IDB_DEFAULTREFTONULL            159
 #define IDB_DEFAULTATOM                 160
 #define IDB_DEFAULTSET                  161
 #define IDB_DEFAULTNULLREF              166
 #define IDB_DEFAULTATOMPORT             173
 #define IDB_DEFAULTREFPORT              174
 #define IDB_DEFAULTSETPORT              175
-#define IDB_DEFAULTMODELPORT            176
+#define IDB_DEFAULTMODELPORT            176*/
 #define IDB_BITMAP_COPY                 204
 #define IDB_BITMAP_CONSTRAINT           207
 #define IDB_BITMAP_CDEFINITION          208
+#define IDC_TEXTEDIT                    201
+#define IDD_INPLACEEDITDIALOG           210
 
 // Next default values for new objects
 // 
