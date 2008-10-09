@@ -333,12 +333,17 @@ bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spM
 	CopyTo( strName, bstrPath );
 	CComBSTR bstrValue;
 
-	if (spFCO)
-		COMTHROW( spFCO->get_RegistryValue( bstrPath, &bstrValue ) );
-	else if (spMetaFCO)
-		COMTHROW( spMetaFCO->get_RegistryValue( bstrPath, &bstrValue ) );
-	else
-		ASSERT(true);
+	try {
+		if (spFCO)
+			COMTHROW( spFCO->get_RegistryValue( bstrPath, &bstrValue ) );
+		else if (spMetaFCO)
+			COMTHROW( spMetaFCO->get_RegistryValue( bstrPath, &bstrValue ) );
+		else
+			ASSERT(true);
+	}
+	catch (hresult_exception &) {
+		bstrValue.Empty();
+	}
 
 	CString strValueT;
 	CopyTo( bstrValue, strValueT );
@@ -411,6 +416,49 @@ EPrefStatus Facilities::getPreferenceStatus( CComPtr<IMgaFCO> spFCO, const CStri
 		case -1 : return PS_META;
 		default : return PS_INHERITED;
 	}
+}
+
+bool Facilities::getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, CString& strValue ) const
+{
+	if (!spFCO) {
+		return false;
+	}
+	CComBSTR attrname;
+	CopyTo( strName, attrname );
+	CComBSTR bstrValue;
+
+	try {
+		COMTHROW(spFCO->get_StrAttrByName(attrname, &bstrValue));
+	}
+	catch (hresult_exception &) {
+		bstrValue.Empty();
+	}
+
+	CString strValueT;
+	CopyTo( bstrValue, strValueT );
+	if ( ! strValueT.IsEmpty() )
+		strValue = strValueT;
+	return ! strValueT.IsEmpty();
+}
+
+bool Facilities::getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, bool& bValue ) const
+{
+	if (!spFCO) {
+		return false;
+	}
+	CComBSTR attrname;
+	CopyTo( strName, attrname );
+	VARIANT_BOOL vval;
+
+	try {
+		COMTHROW(spFCO->get_BoolAttrByName(attrname, &vval));
+	}
+	catch (hresult_exception &) {
+		return false;
+	}
+
+	bValue = (vval == VARIANT_TRUE);
+	return true;
 }
 
 BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF crTC, bool bHasBC, COLORREF crBC,

@@ -161,8 +161,6 @@ private:
 	bool InPartBrowser()			{ return (m_mgaFco == NULL) ; }
 	bool IsReal()					{ return (m_mgaFco != NULL) ; }
 	bool GetMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco);
-	bool GetAttribute(CString &val, const CString &attrname, CComPtr<IMgaFCO> mgaFco = NULL);
-	bool GetAttribute(bool &val, const CString &attrname, CComPtr<IMgaFCO> mgaFco = NULL);
 	void CalcRelPositions();
 	void CollectAttributes(const CComPtr<IMgaFCO> &fco);
 	void SortAttributes();

@@ -98,11 +98,11 @@ STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaP
 					m_attrs.RemoveAll();
 				}
 				else {
-					if (!GetAttribute(m_stereotype, UML_STEREOTYPE_ATTR, mgaFco)) {
+					if (!DecoratorSDK::getFacilities().getAttribute(mgaFco ? mgaFco : m_mgaFco, UML_STEREOTYPE_ATTR, m_stereotype)) {
 						m_stereotype.Empty();
 					}
 					bool isAbstract;
-					if (GetAttribute(isAbstract, UML_ABSTRACT_ATTR, mgaFco) && isAbstract) {
+					if (DecoratorSDK::getFacilities().getAttribute(mgaFco ? mgaFco : m_mgaFco, UML_ABSTRACT_ATTR, isAbstract) && isAbstract) {
 						m_isAbstract = true;
 					}
 					CollectAttributes(mgaFco);
@@ -110,12 +110,11 @@ STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaP
 			}
 			else {
 				m_isCopy = false;
-				if (!GetAttribute(m_stereotype, UML_STEREOTYPE_ATTR)) {
+				if (!DecoratorSDK::getFacilities().getAttribute(m_mgaFco, UML_STEREOTYPE_ATTR, m_stereotype)) {
 					m_stereotype.Empty();
 				}
-				CComPtr<IMgaFCO> fco;
 				bool isAbstract;
-				if (GetAttribute(isAbstract, UML_ABSTRACT_ATTR, fco) && isAbstract) {
+				if (DecoratorSDK::getFacilities().getAttribute(m_mgaFco, UML_ABSTRACT_ATTR, isAbstract) && isAbstract) {
 					m_isAbstract = true;
 				}
 				CollectAttributes();
@@ -529,53 +528,13 @@ bool CUMLDecorator::GetMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IM
 	return (metaFco != NULL);
 }
 
-bool CUMLDecorator::GetAttribute(CString &val, const CString &attrname, CComPtr<IMgaFCO> mgaFco)
-{
-	if (!mgaFco) {
-		mgaFco = m_mgaFco;
-	}
-	if (!mgaFco) {
-		return false;
-	}
-	CComBSTR attr(attrname);
-	CComBSTR bstrVal;
-	try {
-		COMTHROW(mgaFco->get_StrAttrByName(attr,&bstrVal));
-	}
-	catch (hresult_exception &) {
-		bstrVal.Empty();
-	}
-	val = bstrVal;
-	return !val.IsEmpty();
-}
-
-bool CUMLDecorator::GetAttribute(bool &val, const CString &attrname, CComPtr<IMgaFCO> mgaFco)
-{
-	if (!mgaFco) {
-		mgaFco = m_mgaFco;
-	}
-	if (!mgaFco) {
-		return false;
-	}
-	CComBSTR attr(attrname);
-	VARIANT_BOOL vval;
-	try {
-		COMTHROW(mgaFco->get_BoolAttrByName(attr,&vval));
-	}
-	catch (hresult_exception &) {
-		return false;
-	}
-	val = (vval == VARIANT_TRUE);
-	return true;
-}
-
 void CUMLDecorator::CollectAttributes(CComPtr<IMgaFCO> mgaFco)
 {
 	if (!mgaFco) {
 		mgaFco = m_mgaFco;
 	}
 	CString attrStr;
-	if (GetAttribute(attrStr, UML_ATTRIBUTES_ATTR, mgaFco)) {
+	if (DecoratorSDK::getFacilities().getAttribute(mgaFco, UML_ATTRIBUTES_ATTR, attrStr)) {
 		CStringArray	attrPairs;
 		CTokenEx		tok;
 		tok.Split(attrStr, "\n", attrPairs);

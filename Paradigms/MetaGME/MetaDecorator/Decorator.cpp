@@ -554,46 +554,6 @@ bool CDecorator::GetMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaM
 	return (metaFco != NULL);
 }
 
-bool CDecorator::GetAttribute(CString &val, const CString &attrname, CComPtr<IMgaFCO> mgaFco)
-{
-	if (!mgaFco) {
-		mgaFco = m_mgaFco;
-	}
-	if (!mgaFco) {
-		return false;
-	}
-	CComBSTR attr(attrname);
-	CComBSTR bstrVal;
-	try {
-		COMTHROW(mgaFco->get_StrAttrByName(attr,&bstrVal));
-	}
-	catch (hresult_exception &) {
-		bstrVal.Empty();
-	}
-	val = bstrVal;
-	return !val.IsEmpty();
-}
-
-bool CDecorator::GetAttribute(bool &val, const CString &attrname, CComPtr<IMgaFCO> mgaFco)
-{
-	if (!mgaFco) {
-		mgaFco = m_mgaFco;
-	}
-	if (!mgaFco) {
-		return false;
-	}
-	CComBSTR attr(attrname);
-	VARIANT_BOOL vval;
-	try {
-		COMTHROW(mgaFco->get_BoolAttrByName(attr,&vval));
-	}
-	catch (hresult_exception &) {
-		return false;
-	}
-	val = (vval == VARIANT_TRUE);
-	return true;
-}
-
 void CDecorator::CalcRelPositions()
 {
 	switch (m_shape) {
@@ -768,7 +728,7 @@ void CDecorator::SetupClass()
 				// Figure out isAbstract
 				if (m_showAbstract) {
 					bool isAbstract;
-					if (GetAttribute(isAbstract, META_ABSTRACT_ATTR, fco) && isAbstract) {
+					if (DecoratorSDK::getFacilities().getAttribute(fco ? fco : m_mgaFco, META_ABSTRACT_ATTR, isAbstract) && isAbstract) {
 						m_isAbstract = true;
 					}
 				}
