@@ -191,7 +191,7 @@ void CScrollZoomView::SetScaleToFitSize(SIZE sizeTotal)
 	// Note: It is possible to set sizeTotal members to negative values to
 	//  effectively invert either the X or Y axis.
 
-	ASSERT(m_hWnd != NULL);
+	ASSERT(m_hWnd != NULL && FromHandlePermanent(m_hWnd) != NULL);	// See comment about this at a later FromHandlePermanent
 	m_nMapMode = MM_SCALETOFIT;     // special internal value
 	m_totalLog = sizeTotal;
 
@@ -212,7 +212,7 @@ void CScrollZoomView::SetScaleToFitSize(SIZE sizeTotal)
 	GetClientRect(rectT);
 	m_totalDev = rectT.Size();
 
-	if (m_hWnd != NULL)
+	if (m_hWnd != NULL && FromHandlePermanent(m_hWnd) != NULL)	// See comment about this at a later FromHandlePermanent
 	{
 		// window has been created, invalidate
 		UpdateBars();
@@ -272,11 +272,16 @@ void CScrollZoomView::SetScrollSizes(int nMapMode, SIZE sizeTotal, int scalePerc
 
 	if (m_hWnd != NULL)
 	{
-		// set scroll position after zoom
-		// window has been created, invalidate now
-		UpdateBars();
-		if (nOldMapMode != m_nMapMode)
-			Invalidate(TRUE);
+		// trick to overcome MFC9.0 AssertValid ASSERT (MFC9.0 became more strict, pickyer, probably this was present before also):
+		// sometimes m_hWnd != NULL, but not valid, because HWND is missing from the permanent and the temporary map also,
+		// so we basically query pMap->LookupPermanent(m_hWnd) here with the FromHandlePermanent call
+		if (FromHandlePermanent(m_hWnd) != NULL) {
+			// set scroll position after zoom
+			// window has been created, invalidate now
+			UpdateBars();
+			if (nOldMapMode != m_nMapMode)
+				Invalidate(TRUE);
+		}
 	}
 }
 

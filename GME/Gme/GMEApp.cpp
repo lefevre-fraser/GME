@@ -451,7 +451,10 @@ BOOL CGMEApp::EmergencySave(EmergencySaveMode saveMode)
 		miniDumpMsg.LoadString(IDS_CRASHDUMP_INFO);
 		EmergencySaveDlg cdl(NULL);
 		cdl.SetStrings(emergencySaveMsg, miniDumpMsg);
-		return cdl.ShouldWriteMiniDump();
+		if (cdl.DoModal() == IDOK) {
+			return cdl.ShouldWriteMiniDump();
+		}
+		return FALSE;
 	}
 	return TRUE;
 }
