@@ -279,71 +279,67 @@ std::vector<CString> Facilities::getPathes() const
 
 bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, const CString& strName, CString& strValue ) const
 {
-	CComBSTR bstrPath;
-	CopyTo( strName, bstrPath );
-	CComBSTR bstrValue;
-
-	COMTHROW( spFCO->get_RegistryValue( bstrPath, &bstrValue ) );
-	CString strValueT;
-	CopyTo( bstrValue, strValueT );
-	if ( ! strValueT.IsEmpty() )
-		strValue = strValueT;
-	return ! strValueT.IsEmpty();
+	return getPreference(spFCO, NULL, strName, strValue);
 }
 
 bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, const CString& strName, long& lValue, bool bInHexa ) const
 {
-	CString strValue;
-	if ( ! getPreference( spFCO, strName, strValue ) )
-		return false;
-	long lValueT;
-	if ( ! Convert( strValue, lValueT, bInHexa ) )
-		return false;
-	lValue = lValueT;
-	return true;
+	return getPreference(spFCO, NULL, strName, lValue, bInHexa);
 }
 
 bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, const CString& strName, COLORREF& crValue ) const
 {
-	CString strValue;
-	if ( ! getPreference( spFCO, strName, strValue ) )
-		return false;
-	COLORREF crValueT;
-	if ( ! Convert( strValue, crValueT ) )
-		return false;
-	crValue = crValueT;
-	return true;
+	return getPreference(spFCO, NULL, strName, crValue);
 }
 
 bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, const CString& strName, ELocation& eValue ) const
 {
-	CString strValue;
-	if ( ! getPreference( spFCO, strName, strValue ) )
-		return false;
-	ELocation eValueT;
-	if ( ! Convert( strValue, eValueT ) )
-		return false;
-	eValue = eValueT;
-	return true;
+	return getPreference(spFCO, NULL, strName, eValue);
 }
 
 bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, const CString& strName, bool& bValue ) const
 {
-	CString strValue;
-	if ( ! getPreference( spFCO, strName, strValue ) )
-		return false;
-	strValue.MakeLower();
-	bValue = ( strValue == "t" || strValue == "true" || strValue == "1" );
-	return true;
+	return getPreference(spFCO, NULL, strName, bValue);
 }
 
-bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spFCO, const CString& strName, CString& strValue ) const
+bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, CString& strValue ) const
+{
+	return getPreference(NULL, spMetaFCO, strName, strValue);
+}
+
+bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, long& lValue, bool bInHexa ) const
+{
+	return getPreference(NULL, spMetaFCO, strName, lValue, bInHexa);
+}
+
+bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, COLORREF& crValue ) const
+{
+	return getPreference(NULL, spMetaFCO, strName, crValue);
+}
+
+bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, ELocation& eValue ) const
+{
+	return getPreference(NULL, spMetaFCO, strName, eValue);
+}
+
+bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, bool& bValue ) const
+{
+	return getPreference(NULL, spMetaFCO, strName, bValue);
+}
+
+bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, CString& strValue ) const
 {
 	CComBSTR bstrPath;
 	CopyTo( strName, bstrPath );
 	CComBSTR bstrValue;
 
-	COMTHROW( spFCO->get_RegistryValue( bstrPath, &bstrValue ) );
+	if (spFCO)
+		COMTHROW( spFCO->get_RegistryValue( bstrPath, &bstrValue ) );
+	else if (spMetaFCO)
+		COMTHROW( spMetaFCO->get_RegistryValue( bstrPath, &bstrValue ) );
+	else
+		ASSERT(true);
+
 	CString strValueT;
 	CopyTo( bstrValue, strValueT );
 	if ( ! strValueT.IsEmpty() )
@@ -351,10 +347,10 @@ bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spFCO, const CString& strNa
 	return ! strValueT.IsEmpty();
 }
 
-bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spFCO, const CString& strName, long& lValue, bool bInHexa ) const
+bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, long& lValue, bool bInHexa ) const
 {
 	CString strValue;
-	if ( ! getPreference( spFCO, strName, strValue ) )
+	if ( ! getPreference( spFCO, spMetaFCO, strName, strValue ) )
 		return false;
 	long lValueT;
 	if ( ! Convert( strValue, lValueT, bInHexa ) )
@@ -363,10 +359,10 @@ bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spFCO, const CString& strNa
 	return true;
 }
 
-bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spFCO, const CString& strName, COLORREF& crValue ) const
+bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, COLORREF& crValue ) const
 {
 	CString strValue;
-	if ( ! getPreference( spFCO, strName, strValue ) )
+	if ( ! getPreference( spFCO, spMetaFCO, strName, strValue ) )
 		return false;
 	COLORREF crValueT;
 	if ( ! Convert( strValue, crValueT ) )
@@ -375,10 +371,10 @@ bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spFCO, const CString& strNa
 	return true;
 }
 
-bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spFCO, const CString& strName, ELocation& eValue ) const
+bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, ELocation& eValue ) const
 {
 	CString strValue;
-	if ( ! getPreference( spFCO, strName, strValue ) )
+	if ( ! getPreference( spFCO, spMetaFCO, strName, strValue ) )
 		return false;
 		ELocation eValueT;
 	if ( ! Convert( strValue, eValueT ) )
@@ -387,54 +383,14 @@ bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spFCO, const CString& strNa
 	return true;
 }
 
-bool Facilities::getPreference( CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, bool& bValue ) const
+bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, bool& bValue ) const
 {
 	CString strValue;
-	if ( ! getPreference( spMetaFCO, strName, strValue ) )
+	if ( ! getPreference( spFCO, spMetaFCO, strName, strValue ) )
 		return false;
 	strValue.MakeLower();
 	bValue = strValue == "t" || strValue == "true" || strValue == "1";
 	return true;
-}
-
-bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, CString& strValue ) const
-{
-	if (spFCO)
-		return getPreference(spFCO, strName, strValue);
-
-	return getPreference(spMetaFCO, strName, strValue);
-}
-
-bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, long& lValue, bool bInHexa ) const
-{
-	if (spFCO)
-		return getPreference(spFCO, strName, lValue, bInHexa);
-
-	return getPreference(spMetaFCO, strName, lValue, bInHexa);
-}
-
-bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, COLORREF& crValue ) const
-{
-	if (spFCO)
-		return getPreference(spFCO, strName, crValue);
-
-	return getPreference(spMetaFCO, strName, crValue);
-}
-
-bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, ELocation& eValue ) const
-{
-	if (spFCO)
-		return getPreference(spFCO, strName, eValue);
-
-	return getPreference(spMetaFCO, strName, eValue);
-}
-
-bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spMetaFCO, const CString& strName, bool& bValue ) const
-{
-	if (spFCO)
-		return getPreference(spFCO, strName, bValue);
-
-	return getPreference(spMetaFCO, strName, bValue);
 }
 
 EPrefStatus Facilities::getPreferenceStatus( CComPtr<IMgaFCO> spFCO, const CString& strName ) const
