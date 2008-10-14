@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AttributePart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\BitmapAndLabelPart.cpp"
 				>
 			</File>
@@ -189,6 +193,10 @@
 			</File>
 			<File
 				RelativePath=".\BoxCompositePart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ClassComplexPart.cpp"
 				>
 			</File>
 			<File
@@ -233,6 +241,10 @@
 			</File>
 			<File
 				RelativePath=".\DIBRead.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ImageAndLabelPart.cpp"
 				>
 			</File>
 			<File
@@ -324,6 +336,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\VectorAndLabelPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\VectorPart.cpp"
 				>
 			</File>
@@ -335,6 +351,10 @@
 			>
 			<File
 				RelativePath=".\AtomBitmapPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AttributePart.h"
 				>
 			</File>
 			<File
@@ -351,6 +371,10 @@
 			</File>
 			<File
 				RelativePath=".\BoxCompositePart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ClassComplexPart.h"
 				>
 			</File>
 			<File
@@ -395,6 +419,10 @@
 			</File>
 			<File
 				RelativePath=".\DIBAPI.H"
+				>
+			</File>
+			<File
+				RelativePath=".\ImageAndLabelPart.h"
 				>
 			</File>
 			<File
@@ -475,6 +503,10 @@
 			</File>
 			<File
 				RelativePath=".\TypeableLabelPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VectorAndLabelPart.h"
 				>
 			</File>
 			<File

@@ -37,7 +37,6 @@ protected:
 	// Members
 	ResizeLogic					resizeLogic;
 	CRect						location;
-	CRect						textPosition;
 
 	HCURSOR						m_originalCursor;
 	bool						m_bCursorSaved;
@@ -61,7 +60,6 @@ public:
 	virtual void			Destroy				(void);
 	virtual feature_code	GetFeatures			(void) const;
 	virtual CSize			GetPreferredSize	(void) const;
-	virtual void			Draw				(CDC* pDC);
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
@@ -73,7 +71,8 @@ public:
 
 	virtual long	GetLongest					(void) const;
 protected:
-	virtual CPoint	GetTextPosition				(void) const;
+	virtual CPoint	GetTextPosition				(void) const = 0;
+	virtual CRect	GetTextLocation				(void) const = 0;
 };
 
 }; // namespace DecoratorSDK

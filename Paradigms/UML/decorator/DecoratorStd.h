@@ -56,5 +56,32 @@ typedef enum { DSAtom, DSSet, DSNullRef, DSRefToNull, DSAtomPort, DSModelPort, D
 #define ICON_PREF					"icon"
 #define PORTICON_PREF				"porticon"
 
+#define  UML_STEREOTYPE_LEFTA		L"<<"
+#define  UML_STEREOTYPE_RIGHTA		L">>"
+#define  UML_STEREOTYPE_LEFTB		L"\u226A "
+#define  UML_STEREOTYPE_RIGHTB		L" \u226B"
+#define  UML_STEREOTYPE_ATTR		"Stereotype"
+#define  UML_ABSTRACT_ATTR			"IsAbstract"
+#define  UML_ATTRIBUTES_ATTR		"Attributes"
+#define  UML_ATTRIBUTE_SEP			" : "
+#define  UML_INHERITANCE_NAME		"Inheritance"
+#define  UML_CONSTRAINT_NAME		"Constraint"
+#define  UML_CONSTRAINT_DEFINITION_NAME "ConstraintDefinition"
+#define  UML_CONNECTOR_NAME			"Connector"
+
+#define  UML_DECORATOR_MARGINX		6
+#define  UML_DECORATOR_MARGINY		4
+#define  UML_DECORATOR_GAPY			0
+#define  UML_DECORATOR_MINATTRSIZE	13
+
+#define  UML_INHERITANCE_WIDTH		24
+#define  UML_INHERITANCE_HEIGHT		0.866 * UML_INHERITANCE_WIDTH
+#define  UML_CONNECTOR_WIDTH		6
+#define  UML_CONNECTOR_HEIGHT		UML_CONNECTOR_WIDTH
+
+#define  UML_GREY_COLOR				RGB(0xc0, 0xc0, 0xc0)
+#define  UML_WHITE_COLOR			RGB(0xFF, 0xFF, 0xFF)
+#define  UML_TRANSPARENT_COLOR		RGB(0xFF, 0xFF, 0xFF)
+
 
 #endif	//DECORATOR_STD_H

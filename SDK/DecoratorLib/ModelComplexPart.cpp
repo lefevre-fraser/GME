@@ -65,12 +65,12 @@ feature_code ModelComplexPart::GetFeatures(void) const
 	feature_code featureCodes = 0;
 
 	for (std::vector<PortPart*>::const_iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
-		feature_code referencedFeatureCodes = (*ii)->GetFeatures();
-		featureCodes |= referencedFeatureCodes;
+		feature_code portFeatureCodes = (*ii)->GetFeatures();
+		featureCodes |= portFeatureCodes;
 	}
 	for (std::vector<PortPart*>::const_iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
-		feature_code referencedFeatureCodes = (*ii)->GetFeatures();
-		featureCodes |= referencedFeatureCodes;
+		feature_code portFeatureCodes = (*ii)->GetFeatures();
+		featureCodes |= portFeatureCodes;
 	}
 
 	feature_code partFeatureCodes = TypeableBitmapPart::GetFeatures();

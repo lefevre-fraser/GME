@@ -153,8 +153,16 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				bool newDecoratorCreated = false;
 #if defined (TRYNEWDECORATORS)
 				CComPtr<IMgaNewDecoratorEvents> decorEventSinkIface;
-				if (decoratorProgId == GME_DEFAULT_DECORATOR) {
-					COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.MgaNewDecorator")));
+				if (decoratorProgId == GME_DEFAULT_DECORATOR ||
+					decoratorProgId == "Mga.UMLDecorator" /*||
+					decoratorProgId == "Mga.Decoator.MetaDecorator"*/)
+				{
+					if (decoratorProgId == GME_DEFAULT_DECORATOR)
+						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.NewBoxDecorator")));
+					else if (decoratorProgId == "Mga.UMLDecorator")
+						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.NewUMLDecorator")));
+/*					else if (decoratorProgId == "Mga.Decoator.MetaDecorator")
+						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.Decoator.NewMetaDecorator")));*/
 					newDecoratorCreated = true;
 					triple.decorEventSink = new CDecoratorEventSink();
 					HRESULT hr = triple.decorEventSink->QuerySinkInterface((void**) &decorEventSinkIface);
@@ -198,7 +206,7 @@ void CPartBrowserPane::DestroyDecorators(void)
 
 void CPartBrowserPane::Resize(CRect r)
 {
-	if (!mgaMetaModel || currentAspectIndex < 0 || pdts.size() <= 0 || currentAspectIndex >= pdts.size())
+	if (!mgaMetaModel || currentAspectIndex < 0 || pdts.size() <= 0 || currentAspectIndex >= (int)pdts.size())
 		return;
 
 	bool oldOmitPaintMessages = omitPaintMessages;

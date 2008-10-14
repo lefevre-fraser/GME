@@ -1184,8 +1184,16 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 		bool newDecoratorCreated = false;
 #if defined (TRYNEWDECORATORS)
 		CComPtr<IMgaNewDecoratorEvents> decoratorEventSinkIface;
-		if (progId == GME_DEFAULT_DECORATOR) {
-			COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.MgaNewDecorator")));
+		if (progId == GME_DEFAULT_DECORATOR ||
+			progId == "Mga.UMLDecorator" /*||
+			progId == "Mga.Decoator.MetaDecorator"*/)
+		{
+			if (progId == GME_DEFAULT_DECORATOR)
+				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.NewBoxDecorator")));
+			else if (progId == "Mga.UMLDecorator")
+				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.NewUMLDecorator")));
+/*			else if (progId == "Mga.Decoator.MetaDecorator")
+				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.Decoator.NewMetaDecorator")));*/
 			newDecoratorCreated = true;
 			decoratorEventSink = new CDecoratorEventSink();
 			HRESULT hr = decoratorEventSink->QuerySinkInterface((void**) &decoratorEventSinkIface);

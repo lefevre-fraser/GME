@@ -32,8 +32,6 @@ TextPart::~TextPart()
 
 void TextPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
 {
-	// TODO: initialize text location somehow
-	textPosition.SetRectEmpty();
 	if (m_spFCO)
 		resizeLogic.SetResizeFeatures(ResizeLogic::Resizeable | /* TODO: temp ResizeLogic::Movable |*/ ResizeLogic::DrawSelectionRectangle);
 
@@ -55,37 +53,6 @@ feature_code TextPart::GetFeatures(void) const
 CSize TextPart::GetPreferredSize(void) const
 {
 	return CSize(0, 0);
-}
-
-void TextPart::Draw(CDC* pDC)
-{
-	if (m_bTextEnabled) {
-		ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
-		int iAlign = 0;
-		switch (eAlign) {
-			case CRP_BEGIN:		iAlign = TA_LEFT;	break;
-			case CRP_CENTER:	iAlign = TA_CENTER;	break;
-			case CRP_END:
-			default:			iAlign = TA_RIGHT;	break;
-		}
-		iAlign |= TA_TOP;
-
-		int iLabelSize = getFacilities().getFont(m_iFontKey)->iSize;
-		CPoint pt = GetTextPosition();
-		for (unsigned int i = 0; i < m_vecText.size(); i++)
-			getFacilities().drawText(pDC,
-									 m_vecText[i],
-									 CPoint(pt.x, pt.y + i * iLabelSize),
-									 getFacilities().getFont(m_iFontKey)->pFont,
-									 (m_bActive) ? m_crText : COLOR_GRAY,
-									 iAlign,
-									 m_iMaxTextLength,
-									 "",
-									 "",
-									 false);
-	}
-	if (m_spFCO)
-		resizeLogic.Draw(pDC);
 }
 
 // New functions
@@ -159,7 +126,6 @@ void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 	}
 
 	// Text's Enabled
-
 	if (m_spFCO) {
 		if (!getFacilities().getPreference(m_spFCO, textStatusVariableName, m_bTextEnabled))
 			m_bTextEnabled = true;
@@ -282,7 +248,6 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 bool TextPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_spFCO && m_bActive && m_bSelected) {
-//		CPoint pt = GetTextPosition();	// TODO
 		CRect ptRect = GetLabelLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
@@ -322,44 +287,6 @@ long	TextPart::GetLongest(void) const
 			maxv = ilen;
 	}
 	return maxv;
-}
-
-CPoint	TextPart::GetTextPosition(void) const
-{
-	CPoint pt;
-	CRect cRect = GetLocation();	// GetBoxLocation(true)
-	int iLabelSize = getFacilities().getFont(m_iFontKey)->iSize * m_vecText.size();
-	switch(m_eTextLocation) {
-		case L_NORTH:
-		case L_NORTHWEST:
-		case L_NORTHEAST:
-			pt.y = cRect.top - iLabelSize - GAP_LABEL;
-			break;
-		case L_SOUTH:
-		case L_SOUTHWEST:
-		case L_SOUTHEAST:
-			pt.y = cRect.bottom + GAP_LABEL;
-			break;
-		default:
-			pt.y = cRect.CenterPoint().y - iLabelSize / 2;
-			break;
-	}
-	switch(m_eTextLocation) {
-		case L_WEST:
-		case L_NORTHWEST:
-		case L_SOUTHWEST:
-			pt.x = cRect.left - GAP_LABEL;
-			break;
-		case L_NORTH:
-		case L_CENTER:
-		case L_SOUTH:
-			pt.x = cRect.CenterPoint().x;
-			break;
-		default:
-			pt.x = cRect.right + GAP_LABEL;
-			break;
-	}
-	return pt;
 }
 
 }; // namespace DecoratorSDK

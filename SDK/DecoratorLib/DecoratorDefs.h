@@ -70,7 +70,10 @@ namespace DecoratorSDK
 	static const char* PREF_INSTANCEICON			= "instanceIcon";
 	static const char* PREF_NULLREFICON				= "nullRefIcon";
 	static const char* PREF_OVERLAYCOLOR			= "color";
+	static const char* PREF_COLOR					= "color";
 	static const char* PREF_LABELCOLOR				= "nameColor";
+	static const char* PREF_TRANSPARENTCOLOR		= "transparentColor";
+	static const char* PREF_GRAYEDOUTCOLOR			= "grayedOutColor";
 	static const char* PREF_PORTLABELCOLOR			= "portColor";
 	static const char* PREF_PORTLABELINSIDE 		= "portLabelInside";
 	static const char* PREF_TYPESHOWN				= "isTypeShown";
@@ -94,6 +97,7 @@ namespace DecoratorSDK
 	static const char* PREF_VIOLATED				= "isViolated";
 
 	static const char* PREF_PREFERREDSIZE			= "preferredSize";
+	static const char* PREF_ISMASKEDBITMAP			= "isMaskedBitmap";
 
 	static const int FONT_LABEL			= 0;
 	static const int FONT_PORT			= 1;
@@ -113,6 +117,17 @@ namespace DecoratorSDK
 	static const COLORREF COLOR_GRAY 			= RGB( 0xB0, 0xB0, 0xB0 );
 	static const COLORREF COLOR_LIGHTGRAY		= RGB( 0xF3, 0xF3, 0xF3 );
 	static const COLORREF COLOR_RED 			= RGB( 0xFF, 0x00, 0x00 );
+
+	static const COLORREF COLOR_BKGND			= RGB( 0xff, 0xff, 0xff );
+	static const COLORREF COLOR_BORDER			= RGB( 0x00, 0x00, 0x00 );
+	static const COLORREF COLOR_MODEL			= RGB( 0xc0, 0xc0, 0xc0 );
+	static const COLORREF COLOR_NAME			= RGB( 0x00, 0x00, 0x00 );
+	static const COLORREF COLOR_PORTNAME		= RGB( 0x60, 0x60, 0x60 );
+	static const COLORREF COLOR_CONNECTION 		= RGB( 0x00, 0x00, 0x00 );
+	static const COLORREF COLOR_GRID			= RGB( 0xd0, 0xd0, 0xd0 );
+	static const COLORREF COLOR_WHITE			= RGB( 0xff, 0xff, 0xff );
+	static const COLORREF COLOR_GREY			= RGB( 0xc0, 0xc0, 0xc0 );
+	static const COLORREF COLOR_GRAYED_OUT		= RGB( 0xde, 0xde, 0xde );
 
 	static const int MAX_LABEL_LENGTH		= 64;
 	static const int MAX_TYPE_LENGTH		= 90;

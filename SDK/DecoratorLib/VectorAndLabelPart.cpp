@@ -1,13 +1,13 @@
 //################################################################################################
 //
-// Bitmap and label composite part class (decorator part)
-//	BitmapAndLabelPart.cpp
+// Vector and label composite part class (decorator part)
+//	VectorAndLabelPart.cpp
 //
 //################################################################################################
 
 #include "StdAfx.h"
-#include "BitmapAndLabelPart.h"
-#include "TypeableBitmapPart.h"
+#include "VectorAndLabelPart.h"
+#include "VectorPart.h"
 #include "LabelPart.h"
 #include "DecoratorExceptions.h"
 
@@ -16,16 +16,16 @@ namespace DecoratorSDK {
 
 //################################################################################################
 //
-// CLASS : BitmapAndLabelPart
+// CLASS : VectorAndLabelPart
 //
 //################################################################################################
 
-BitmapAndLabelPart::BitmapAndLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
+VectorAndLabelPart::VectorAndLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	ImageAndLabelPart(pPart, eventSink)
 {
 }
 
-BitmapAndLabelPart::~BitmapAndLabelPart()
+VectorAndLabelPart::~VectorAndLabelPart()
 {
 	for (std::vector<PartBase*>::iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		if ((*ii) != NULL) {
@@ -35,20 +35,20 @@ BitmapAndLabelPart::~BitmapAndLabelPart()
 	m_compositeParts.clear();
 }
 
-void BitmapAndLabelPart::AddBitmapPart(TypeableBitmapPart* part)
+void VectorAndLabelPart::AddVectorPart(VectorPart* part)
 {
 	AddImagePart(part);
 }
 
-TypeableBitmapPart* BitmapAndLabelPart::GetBitmapPart(void) const
+VectorPart* VectorAndLabelPart::GetVectorPart(void) const
 {
 	ASSERT(m_compositeParts.size() >= 1);
 #ifdef _DEBUG
-	TypeableBitmapPart* part = dynamic_cast<TypeableBitmapPart*> (GetImagePart());
+	VectorPart* part = dynamic_cast<VectorPart*> (GetImagePart());
 	ASSERT(part != NULL);
 	return part;
 #else
-	return static_cast<TypeableBitmapPart*> (GetImagePart());
+	return static_cast<VectorPart*> (GetImagePart());
 #endif
 }
 

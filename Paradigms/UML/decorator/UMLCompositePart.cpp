@@ -8,6 +8,12 @@
 #include "StdAfx.h"
 #include "UMLCompositePart.h"
 
+#include "Resource.h"
+#include "DecoratorStd.h"
+#include "InheritanceVectorPart.h"
+#include "ConnectorVectorPart.h"
+#include "ConstraintBitmapPart.h"
+
 #include "ModelComplexPart.h"
 #include "TypeableLabelPart.h"
 #include "ReferenceBitmapPart.h"
@@ -26,7 +32,7 @@ namespace UMLDecor {
 //################################################################################################
 
 UMLCompositePart::UMLCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
-	BitmapAndLabelPart(pPart, eventSink)
+	ImageAndLabelPart(pPart, eventSink)
 {
 }
 
@@ -36,34 +42,6 @@ UMLCompositePart::~UMLCompositePart()
 
 CRect UMLCompositePart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
 {
-	DecoratorSDK::PortPart* pPortPart = NULL;
-	DecoratorSDK::ModelComplexPart* modelComplexPart = dynamic_cast<DecoratorSDK::ModelComplexPart*> (GetBitmapPart());
-	DecoratorSDK::ReferenceBitmapPart* refrenceBitmapPart = NULL;
-	if (modelComplexPart != NULL) {
-		pPortPart = modelComplexPart->GetPort(fco);
-	} else {
-		refrenceBitmapPart = dynamic_cast<DecoratorSDK::ReferenceBitmapPart*> (GetBitmapPart());
-		if (refrenceBitmapPart != NULL) {
-			DecoratorSDK::ModelComplexPart* referencedModelPart = dynamic_cast<DecoratorSDK::ModelComplexPart*> (refrenceBitmapPart->GetReferenced());
-			if (referencedModelPart != NULL)
-				pPortPart = referencedModelPart->GetPort(fco);
-		}
-	}
-	if (pPortPart) {
-		CRect location = pPortPart->GetLocation();
-
-		// if a reference has an icon specified for itself 
-		// then it is not surrounded by a black rectangle.
-		// if it doesn't have an icon, then the icon of the
-		// referred element is used, and it is surrounded
-		// that's why we shift port locations only if
-		// the surrounding rectangle is there (borderwidth > 0)
-		if (GetBitmapPart()->GetBorderWidth(false) > 0 && refrenceBitmapPart)	// HACK
-			location.OffsetRect(2, 2);
-
-		return location;
-	}
-
 	throw PortNotFoundException();
 }
 
@@ -71,31 +49,8 @@ bool UMLCompositePart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 {
 	CComPtr<IMgaFCOs> spFCOs;
 	COMTHROW(spFCOs.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
-
-	std::vector<DecoratorSDK::PortPart*>	vecPorts;
-	DecoratorSDK::PortPart* pPortPart = NULL;
-	DecoratorSDK::ModelComplexPart* modelComplexPart = dynamic_cast<DecoratorSDK::ModelComplexPart*> (GetBitmapPart());
-	DecoratorSDK::ReferenceBitmapPart* refrenceBitmapPart = NULL;
-	bool modelFound = false;
-	if (modelComplexPart != NULL) {
-		vecPorts = modelComplexPart->GetPorts();
-		modelFound = true;
-	} else {
-		refrenceBitmapPart = dynamic_cast<DecoratorSDK::ReferenceBitmapPart*> (GetBitmapPart());
-		if (refrenceBitmapPart != NULL) {
-			DecoratorSDK::ModelComplexPart* referencedModelPart = dynamic_cast<DecoratorSDK::ModelComplexPart*> (refrenceBitmapPart->GetReferenced());
-			if (referencedModelPart != NULL) {
-				vecPorts = referencedModelPart->GetPorts();
-				modelFound = true;
-			}
-		}
-	}
-
-	for (unsigned int i = 0; i < vecPorts.size(); i++)
-		COMTHROW(spFCOs->Append(vecPorts[i]->GetFCO()));
-
 	portFCOs = spFCOs.Detach();
-	return modelFound;
+	return false;
 }
 
 CRect UMLCompositePart::GetLabelLocation(void) const
@@ -123,42 +78,108 @@ CRect UMLCompositePart::GetLabelLocation(void) const
 void UMLCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 									HWND parentWnd, DecoratorSDK::PreferenceMap& preferences)
 {
+	DecoratorSDK::getFacilities().getMetaFCO(pPart, m_spMetaFCO);
 	HRESULT retVal = S_OK;
-	if (pProject && pPart) {
-		objtype_enum eType;
-		if (pFCO) {
-			COMTHROW(pFCO->get_ObjType(&eType));
-		} else {
-			CComPtr<IMgaMetaRole> spRole;
-			COMTHROW(pPart->get_Role(&spRole));
+	try {
+		if (pProject && pPart) {
+			ASSERT(m_spMetaFCO);
+			CComBSTR bstr;
+			COMTHROW(m_spMetaFCO->get_Name(&bstr));
+			CString name(bstr);
+			if (name == UML_INHERITANCE_NAME) {
+				AddImagePart(new InheritanceVectorPart(this, m_eventSink));
+				if (!pFCO)
+					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (name == UML_CONNECTOR_NAME) {
+				AddImagePart(new ConnectorVectorPart(this, m_eventSink));
+				if (!pFCO)
+					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (name == UML_CONSTRAINT_NAME) {
+				AddImagePart(new ConstraintBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINT, DecoratorSDK::COLOR_BKGND, DecoratorSDK::COLOR_GRAYED_OUT));
+				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (name == UML_CONSTRAINT_DEFINITION_NAME) {
+				AddImagePart(new ConstraintBitmapPart(this, m_eventSink, IDB_BITMAP_CDEFINITION, DecoratorSDK::COLOR_BKGND, DecoratorSDK::COLOR_GRAYED_OUT));
+				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else {	// This should be a class
+/*				if (pFCO) {
+					objtype_enum objtype;
+					COMTHROW(pFCO->get_ObjType(&objtype));
+					if (objtype == OBJTYPE_REFERENCE) {
+						m_copyBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_COPY, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
+						m_isCopy = true;
+						CComPtr<IMgaFCO> mgaFco = pFCO;
+						while(objtype == OBJTYPE_REFERENCE) {
+							CComPtr<IMgaReference> ref;
+							COMTHROW(mgaFco.QueryInterface(&ref));
+							mgaFco = NULL;
+							COMTHROW(ref->get_Referred(&mgaFco));
+							if (mgaFco) {
+								COMTHROW(mgaFco->get_ObjType(&objtype));
+							} else {
+								objtype = OBJTYPE_NULL;
+							}
+						}
+						if (objtype == OBJTYPE_NULL) {
+							m_stereotype.Empty();
+							m_attrs.RemoveAll();
+						} else {
+							if (!DecoratorSDK::getFacilities().getAttribute(mgaFco ? mgaFco : m_mgaFco, UML_STEREOTYPE_ATTR, m_stereotype)) {
+								m_stereotype.Empty();
+							}
+							bool isAbstract;
+							if (DecoratorSDK::getFacilities().getAttribute(mgaFco ? mgaFco : m_mgaFco, UML_ABSTRACT_ATTR, isAbstract) && isAbstract) {
+								m_isAbstract = true;
+							}
+							CollectAttributes(mgaFco);
+						}
+					} else {
+						m_isCopy = false;
+						if (!DecoratorSDK::getFacilities().getAttribute(m_mgaFco, UML_STEREOTYPE_ATTR, m_stereotype)) {
+							m_stereotype.Empty();
+						}
+						bool isAbstract;
+						if (DecoratorSDK::getFacilities().getAttribute(m_mgaFco, UML_ABSTRACT_ATTR, isAbstract) && isAbstract) {
+							m_isAbstract = true;
+						}
+						CollectAttributes();
+					}
+					CComBSTR bstr;
+					COMTHROW(m_mgaFco->get_Name(&bstr));
+					m_name = bstr;
+				} else {
+					objtype_enum objtype;
+					COMTHROW(m_metaFco->get_ObjType(&objtype));
+					if (objtype == OBJTYPE_REFERENCE) {
+						m_copyBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_COPY, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
+						m_isCopy = true;
+					} else {
+						m_isCopy = false;
+					}
+					m_stereotype.Empty();
+					CComBSTR bstr;
+					COMTHROW(m_metaFco->get_DisplayedName(&bstr));
+					if (bstr.Length() == 0 ) {
+						bstr.Empty();
+						COMTHROW(m_metaFco->get_Name(&bstr));
+					}
+					m_name = bstr;
+				}
 
-			CComPtr<IMgaMetaFCO> spMetaFCO;
-			COMTHROW(spRole->get_Kind(&spMetaFCO));
+				if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, COLOR_PREF, m_color)) {
+					m_color = GME_BLACK_COLOR;
+				}
+				if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, NAME_COLOR_PREF, m_nameColor)) {
+					m_nameColor = GME_BLACK_COLOR;
+				}
+				CalcRelPositions();*/
 
-			COMTHROW(spMetaFCO->get_ObjType(&eType));
+				AddImagePart(new DecoratorSDK::AtomBitmapPart(this, m_eventSink));
+				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			}
 		}
-		switch (eType) {
-			case OBJTYPE_ATOM: {
-					AddBitmapPart(new DecoratorSDK::AtomBitmapPart(this, m_eventSink));
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-				}
-				break;
-			case OBJTYPE_SET: {
-					AddBitmapPart(new DecoratorSDK::SetBitmapPart(this, m_eventSink));
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-				}
-				break;
-			case OBJTYPE_MODEL: {
-					AddBitmapPart(new DecoratorSDK::ModelComplexPart(this, m_eventSink));
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-				}
-				break;
-			case OBJTYPE_REFERENCE: {
-					AddBitmapPart(new DecoratorSDK::ReferenceBitmapPart(this, m_eventSink));
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-				}
-				break;
-		}
+	}
+	catch (hresult_exception &) {
+		retVal = E_UNEXPECTED;
 	}
 
 	CompositePart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);

@@ -140,7 +140,15 @@ BitmapBase::BitmapBase( const CString& strName, COLORREF crColor, bool bIsTransp
 
 BitmapBase::BitmapBase( const CString& strName, COLORREF crTransparentColor, COLORREF crBackgroundColor )
 	: m_lWidth( 0 ), m_lHeight( 0 ), m_bHasTransparentColor( true ),
-	m_crTransparentColor( ( crTransparentColor ) ), m_bHasBackgroundColor( true ), m_crBackgroundColor( crBackgroundColor )
+	m_crTransparentColor( crTransparentColor ), m_bHasBackgroundColor( true ), m_crBackgroundColor( crBackgroundColor )
+{
+	setName( strName );
+}
+
+BitmapBase::BitmapBase( const CString& strName, COLORREF crTransparentColor, COLORREF crGrayedColor, bool isMasked )
+	: m_lWidth( 0 ), m_lHeight( 0 ), m_bHasTransparentColor( true ),
+	m_crTransparentColor( crTransparentColor ), m_bHasBackgroundColor( false ), m_bHasGrayedColor( true ),
+	m_crGrayedColor( crGrayedColor )
 {
 	setName( strName );
 }
@@ -198,7 +206,7 @@ void BitmapBase::setSize( long lWidth, long lHeight )
 	m_lHeight = lHeight;
 }
 
-void BitmapBase::draw( CDC* pDC, const CRect& cRect, const TileVector& vecTiles ) const
+void BitmapBase::draw( CDC* pDC, const CRect& cRect, const TileVector& vecTiles, DWORD dwModifierFlags ) const
 {
 	for ( unsigned long i = 0 ; i < vecTiles.size() ; i++ ) {
 
@@ -266,7 +274,8 @@ void BitmapBase::draw( CDC* pDC, const CRect& cRect, const TileVector& vecTiles 
 						break;
 				}
 
-				draw( pDC, CRect( srcTopLeft.x, srcTopLeft.y, lSrcRight, lSrcBottom ), CRect( lDstLeft, lDstTop, lDstRight, lDstBottom ), SRCCOPY );
+				draw( pDC, CRect( srcTopLeft.x, srcTopLeft.y, lSrcRight, lSrcBottom ),
+					  CRect( lDstLeft, lDstTop, lDstRight, lDstBottom ), SRCCOPY, dwModifierFlags );
 			}
 		}
 	}
@@ -319,7 +328,7 @@ BitmapDIB::~BitmapDIB()
 	}
 }
 
-void BitmapDIB::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const
+void BitmapDIB::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode, DWORD dwModifierFlags ) const
 {
 	if ( isInitialized() ) {
 		CRect srcRectCopy = srcRect;
@@ -375,17 +384,19 @@ bool BitmapDIB::isInitialized() const
 //################################################################################################
 
 BitmapMasked::BitmapMasked( const CString& strName, COLORREF crTransparentColor, COLORREF crGrayColor ):
-	BitmapBase( strName, crTransparentColor, crGrayColor ),
+	BitmapBase( strName, crTransparentColor, crGrayColor, true ),
 	m_pBits(0),
 	m_pBMI(0),
 	m_pPalette(0)
 {
 	CFile bitmapFile(strName, CFile::modeRead);
 	Read( bitmapFile );
+
+	setSize( getWidth(), getHeight());
 }
 
 BitmapMasked::BitmapMasked( UINT nResID, COLORREF crTransparentColor, COLORREF crGrayColor )
-	: BitmapBase( "" , crTransparentColor, crGrayColor ),
+	: BitmapBase( "" , crTransparentColor, crGrayColor, true ),
 	m_pBits(0),
 	m_pBMI(0),
 	m_pPalette(0)
@@ -394,6 +405,8 @@ BitmapMasked::BitmapMasked( UINT nResID, COLORREF crTransparentColor, COLORREF c
 	_ultoa( nResID, chBuffer, 10 );
 	setName(chBuffer);
 	ReadFromResource( nResID );
+
+	setSize( getWidth(), getHeight());
 }
 
 BitmapMasked::~BitmapMasked()
@@ -406,12 +419,12 @@ bool BitmapMasked::isInitialized() const
 	return m_pBMI != NULL;
 }
 
-void BitmapMasked::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const
+void BitmapMasked::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode, DWORD dwModifierFlags ) const
 {
 	if ( isInitialized() ) {
-		bool bGray = (dwOpCode & OC_GREY) != 0;
-		if ((dwOpCode & OC_TRANSPARENT) != 0)
-			drawTransparent (pDC, dstRect, m_crTransparentColor, bGray, m_crBackgroundColor);
+		bool bGray = (dwModifierFlags & MF_GREYED) != 0;
+		if ((dwModifierFlags & MF_TRANSPARENT) != 0)
+			drawTransparent (pDC, dstRect, m_crTransparentColor, bGray, m_crGrayedColor);
 		else
 			draw (pDC, dstRect);
 	}
@@ -793,7 +806,7 @@ BitmapGen::~BitmapGen()
 	}
 }
 
-void BitmapGen::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const
+void BitmapGen::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode, DWORD dwModifierFlags ) const
 {
 	ASSERT( m_pImage);
 	Graphics graphics(pDC->m_hDC);
@@ -904,7 +917,7 @@ BitmapRES::~BitmapRES()
 	m_pBitmap = NULL;
 }
 
-void BitmapRES::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const
+void BitmapRES::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode, DWORD dwModifierFlags ) const
 {
 	Graphics graphics(pDC->m_hDC);
 	graphics.SetPageUnit( UnitPixel);
@@ -914,10 +927,17 @@ void BitmapRES::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWOR
 void BitmapRES::load( UINT uiID )
 {
 	// create a GDI+ Bitmap from the resource
-	m_pBitmap = new Bitmap(::AfxGetResourceHandle() /*::AfxGetInstanceHandle()*/, (WCHAR*) MAKEINTRESOURCE( uiID));
+	HINSTANCE hInstance1 = ::AfxGetInstanceHandle();
+	HINSTANCE hInstance2 = ::AfxGetResourceHandle();
+	HINSTANCE hInstance = AfxFindResourceHandle(MAKEINTRESOURCE(uiID), RT_BITMAP);
+
+	m_pBitmap = new Bitmap(hInstance, (WCHAR*) MAKEINTRESOURCE( uiID));
 	if( !m_pBitmap) {
 		m_pBitmap = NULL;
 		return;
+	}
+	if (m_pBitmap->GetLastStatus() != Ok) {
+		ASSERT(true);
 	}
 
 	setSize( m_pBitmap->GetWidth(), m_pBitmap->GetHeight());

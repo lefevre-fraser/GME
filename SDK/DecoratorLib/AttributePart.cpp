@@ -1,23 +1,23 @@
 //################################################################################################
 //
-// Label part class (decorator part)
-//	LabelPart.cpp
+// Attribute part class (decorator part)
+//	AttributePart.cpp
 //
 //################################################################################################
 
 #include "StdAfx.h"
-#include "LabelPart.h"
+#include "AttributePart.h"
 
 
 namespace DecoratorSDK {
 
 //################################################################################################
 //
-// CLASS : LabelPart
+// CLASS : AttributePart
 //
 //################################################################################################
 
-LabelPart::LabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
+AttributePart::AttributePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	TextPart(pPart, eventSink)
 {
 	textStringVariableName		= PREF_LABEL;
@@ -29,34 +29,11 @@ LabelPart::LabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink)
 	textWrapStatusVariableName	= PREF_LABELWRAP;
 }
 
-LabelPart::~LabelPart()
+AttributePart::~AttributePart()
 {
 }
 
-CRect LabelPart::GetLabelLocation(void) const
-{
-	CPoint pt = GetTextPosition();
-	ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
-
-	CDC dc;
-	dc.CreateCompatibleDC(NULL);
-	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
-	CSize cSize(0,0);
-	for (unsigned int i = 0 ; i < m_vecText.size(); i++) {
-		CSize tmpSize = dc.GetTextExtent(m_vecText[i]);
-		cSize.cy += tmpSize.cy;
-		cSize.cx = max(cSize.cx, tmpSize.cx);
-	}
-
-	if (eAlign == CRP_CENTER)
-		pt.x -= cSize.cx / 2;
-	else if (eAlign == CRP_END)
-		pt.x -= cSize.cx;
-
-	return CRect(pt.x, pt.y, pt.x + cSize.cx, pt.y + cSize.cy);
-}
-
-void LabelPart::Draw(CDC* pDC)
+void AttributePart::Draw(CDC* pDC)
 {
 	if (m_bTextEnabled) {
 		ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
@@ -69,12 +46,12 @@ void LabelPart::Draw(CDC* pDC)
 		}
 		iAlign |= TA_TOP;
 
-		int iLabelSize = getFacilities().getFont(m_iFontKey)->iSize;
+		int iAttributeSize = getFacilities().getFont(m_iFontKey)->iSize;
 		CPoint pt = GetTextPosition();
 		for (unsigned int i = 0; i < m_vecText.size(); i++)
 			getFacilities().drawText(pDC,
 									 m_vecText[i],
-									 CPoint(pt.x, pt.y + i * iLabelSize),
+									 CPoint(pt.x, pt.y + i * iAttributeSize),
 									 getFacilities().getFont(m_iFontKey)->pFont,
 									 (m_bActive) ? m_crText : COLOR_GRAY,
 									 iAlign,
@@ -87,16 +64,16 @@ void LabelPart::Draw(CDC* pDC)
 		resizeLogic.Draw(pDC);
 }
 
-CPoint	LabelPart::GetTextPosition(void) const
+CPoint	AttributePart::GetTextPosition(void) const
 {
 	CPoint pt;
 	CRect cRect = GetLocation();	// GetBoxLocation(true)
-	int iLabelSize = getFacilities().getFont(m_iFontKey)->iSize * m_vecText.size();
+	int iAttributeSize = getFacilities().getFont(m_iFontKey)->iSize * m_vecText.size();
 	switch(m_eTextLocation) {
 		case L_NORTH:
 		case L_NORTHWEST:
 		case L_NORTHEAST:
-			pt.y = cRect.top - iLabelSize - GAP_LABEL;
+			pt.y = cRect.top - iAttributeSize - GAP_LABEL;
 			break;
 		case L_SOUTH:
 		case L_SOUTHWEST:
@@ -104,7 +81,7 @@ CPoint	LabelPart::GetTextPosition(void) const
 			pt.y = cRect.bottom + GAP_LABEL;
 			break;
 		default:
-			pt.y = cRect.CenterPoint().y - iLabelSize / 2;
+			pt.y = cRect.CenterPoint().y - iAttributeSize / 2;
 			break;
 	}
 	switch(m_eTextLocation) {
@@ -125,9 +102,27 @@ CPoint	LabelPart::GetTextPosition(void) const
 	return pt;
 }
 
-CRect LabelPart::GetTextLocation(void) const
+CRect AttributePart::GetTextLocation(void) const
 {
-	return GetLabelLocation();
+	CPoint pt = GetTextPosition();
+	ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
+
+	CDC dc;
+	dc.CreateCompatibleDC(NULL);
+	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
+	CSize cSize(0,0);
+	for (unsigned int i = 0 ; i < m_vecText.size(); i++) {
+		CSize tmpSize = dc.GetTextExtent(m_vecText[i]);
+		cSize.cy += tmpSize.cy;
+		cSize.cx = max(cSize.cx, tmpSize.cx);
+	}
+
+	if (eAlign == CRP_CENTER)
+		pt.x -= cSize.cx / 2;
+	else if (eAlign == CRP_END)
+		pt.x -= cSize.cx;
+
+	return CRect(pt.x, pt.y, pt.x + cSize.cx, pt.y + cSize.cy);
 }
 
 }; // namespace DecoratorSDK

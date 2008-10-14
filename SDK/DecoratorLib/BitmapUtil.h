@@ -23,9 +23,9 @@ namespace DecoratorSDK
 //
 //################################################################################################
 
-const unsigned int OC_NOOP			= 0;
-const unsigned int OC_GREY			= 1;
-const unsigned int OC_TRANSPARENT	= 2;
+const unsigned int MF_NOOP			= 0;
+const unsigned int MF_GREYED		= 1;
+const unsigned int MF_TRANSPARENT	= 2;
 
 //################################################################################################
 //
@@ -146,6 +146,8 @@ class BitmapBase
 		COLORREF	m_crTransparentColor;
 		bool		m_bHasBackgroundColor;
 		COLORREF	m_crBackgroundColor;
+		bool		m_bHasGrayedColor;
+		COLORREF	m_crGrayedColor;
 		long 		m_lWidth;
 		long 		m_lHeight;
 		CString		m_strName;
@@ -154,6 +156,7 @@ class BitmapBase
 		BitmapBase( const CString& strName );
 		BitmapBase( const CString& strName, COLORREF crColor, bool bIsTransparent );
 		BitmapBase( const CString& strName, COLORREF crTransparentColor, COLORREF crBackgroundColor );
+		BitmapBase( const CString& strName, COLORREF crTransparentColor, COLORREF crGrayedColor, bool isMasked );
 
 		void setSize( long lWidth, long lHeight );
 
@@ -170,8 +173,9 @@ class BitmapBase
 		COLORREF getTransparentColor() const;
 		COLORREF getBackgroundColor() const;
 
-		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const = 0;
-		void draw( CDC* pDC, const CRect& cRect, const TileVector& vecTiles ) const;
+		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode,
+						   DWORD dwModifierFlags = MF_NOOP ) const = 0;
+		void draw( CDC* pDC, const CRect& cRect, const TileVector& vecTiles, DWORD dwModifierFlags = MF_NOOP ) const;
 
 	protected :
 		void setName( const CString& strName );
@@ -197,7 +201,8 @@ class BitmapDIB
 
 	public :
 		virtual bool isInitialized() const;
-		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const;
+		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode,
+						   DWORD dwModifierFlags = MF_NOOP ) const;
 
 	private :
 		void load( const CString& strName );
@@ -224,7 +229,8 @@ class BitmapMasked
 
 	public :
 		virtual bool isInitialized() const;
-		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const;
+		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode,
+						   DWORD dwModifierFlags = MF_NOOP ) const;
 
 		virtual long getWidth() const;
 		virtual long getHeight() const;
@@ -260,7 +266,8 @@ class BitmapGen
 
 	public :
 		virtual bool isInitialized() const;
-		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const;
+		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode,
+						   DWORD dwModifierFlags = MF_NOOP ) const;
 
 	private :
 		void load( const CString& strName );
@@ -286,7 +293,8 @@ class BitmapRES
 
 	public :
 		virtual bool isInitialized() const;
-		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode ) const;
+		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode,
+						   DWORD dwModifierFlags = MF_NOOP ) const;
 
 	private :
 		void load( UINT uiID );

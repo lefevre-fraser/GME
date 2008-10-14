@@ -96,6 +96,8 @@ namespace DecoratorSDK
 			bool getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, CString& strValue ) const;
 			bool getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, bool& bValue ) const;
 
+			bool getMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco) const;
+
 			void drawText( CDC* pDC, const CString& strText, const CPoint& cpTopLeft,  CFont* pFont, COLORREF crColor,
 							int iAlign, int iLength = -1, const CString& strPre = "", const CString& strPost = "",
 							bool bPeriods = true ) const;

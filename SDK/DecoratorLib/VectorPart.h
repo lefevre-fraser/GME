@@ -16,6 +16,99 @@
 
 namespace DecoratorSDK {
 
+//################################################################################################
+//
+// CLASS : CoordinateConstants
+//
+//################################################################################################
+
+enum CoordinateConstants
+{
+	ZeroConstant		= 0,
+	LeftMost			= 1,
+	TopMost				= 2,
+	RightMost			= 3,
+	BottomMost			= 4
+};
+
+enum CoordinateOperations
+{
+	CoordAdd			= 0,
+	CoordSubstract		= 1,
+	CoordDivide			= 2,
+	CoordMultiply		= 3
+};
+
+//################################################################################################
+//
+// CLASS : CoordCommand
+//
+//################################################################################################
+
+class CoordCommand {
+public:
+	CoordCommand() {};
+	virtual ~CoordCommand() {};
+
+	virtual long	ResolveCoordinate	(const CRect& extents) const { return 0; };
+};
+
+//################################################################################################
+//
+// CLASS : NopCoordCommand
+//
+//################################################################################################
+
+class NopCoordCommand: public CoordCommand {
+	CoordinateConstants	m_CoordConst;
+
+public:
+	NopCoordCommand(): CoordCommand() {};
+	virtual ~NopCoordCommand() {};
+};
+
+//################################################################################################
+//
+// CLASS : SimpleCoordCommand
+//
+//################################################################################################
+
+class SimpleCoordCommand: public CoordCommand {
+	CoordinateConstants	m_CoordConst;
+
+public:
+	SimpleCoordCommand(CoordinateConstants coordConst): CoordCommand(), m_CoordConst(coordConst) {};
+	virtual ~SimpleCoordCommand() {};
+
+	virtual long	ResolveCoordinate	(const CRect& extents) const;
+};
+
+//################################################################################################
+//
+// CLASS : ComplexCoordCommand
+//
+//################################################################################################
+
+class ComplexCoordCommand: public CoordCommand {
+	std::vector<CoordinateConstants>	m_coordConstList;
+	std::vector<double>					m_coordWeightList;
+	std::vector<CoordinateOperations>	m_coordOperationList;
+
+public:
+	ComplexCoordCommand(CoordinateConstants coordConst);
+	virtual ~ComplexCoordCommand();
+
+	void AddCommand(CoordinateConstants constant, double weight, CoordinateOperations operation);
+
+	virtual long	ResolveCoordinate	(const CRect& extents) const;
+};
+
+//################################################################################################
+//
+// CLASS : VectorCommand
+//
+//################################################################################################
+
 class VectorCommand {
 public:
 	enum Codes {
@@ -24,18 +117,25 @@ public:
 		StrokeAndFillPath	= 2,
 		MoveTo				= 3,
 		LineTo				= 4,
-		Rectangle			= 5
+		Rectangle			= 5,
+		Ellipse				= 6
 	};
 
-	enum CoordinateConstants {
-		LeftMost			= LONG_MAX - 1,
-		RightMost			= LONG_MAX - 2,
-		TopMost				= LONG_MAX - 3,
-		BottomMost			= LONG_MAX - 4
-	};
+public:
+	VectorCommand(long code):
+		m_Code(code) {};
+	VectorCommand(const CoordCommand* sxCmd, const CoordCommand* syCmd, long code):
+		m_Code(code) { m_CoordCmds.push_back(sxCmd); m_CoordCmds.push_back(syCmd); };
+	VectorCommand(const CoordCommand* sxCmd, const CoordCommand* syCmd, const CoordCommand* exCmd, const CoordCommand* eyCmd, long code):
+		m_Code(code) { m_CoordCmds.push_back(sxCmd); m_CoordCmds.push_back(syCmd); m_CoordCmds.push_back(exCmd); m_CoordCmds.push_back(eyCmd); };
+	virtual ~VectorCommand();
 
-	CRect		coords;
-	long		code;
+	CRect	GetResolvedCoords	(const CRect& extents) const;
+	long	GetCode				(void) const { return m_Code; };
+
+protected:
+	std::vector<const CoordCommand*>	m_CoordCmds;
+	long								m_Code;
 };
 
 //################################################################################################
@@ -46,8 +146,14 @@ public:
 
 class VectorPart: public ResizablePart
 {
+	// Preference variable name strings
+	CString						penColorVariableName;
+	CString						burshColorVariableName;
+
 	CRect						m_Extents;
 	std::vector<VectorCommand>	m_Commands;
+	COLORREF					m_crPen;
+	COLORREF					m_crBrush;
 
 public:
 	VectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
@@ -64,14 +170,15 @@ public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);
 	virtual feature_code	GetFeatures			(void) const;
+	virtual void			SetLocation			(const CRect& location);
 	virtual void			Draw				(CDC* pDC);
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 
-private:
-	CRect	ResolveCoordinateConstants			(const CRect& rect);
-	long	ResolveCoordinate					(long coord);
+protected:
+	virtual void	SetBrush					(CDC* pDC);
+	virtual void	SetPen						(CDC* pDC);
 };
 
 }; // namespace DecoratorSDK

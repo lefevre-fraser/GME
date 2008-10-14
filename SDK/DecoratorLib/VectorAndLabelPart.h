@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// Bitmap and label composite part class (decorator part)
-//	BitmapAndLabelPart.h
+// Vector and label composite part class (decorator part)
+//	VectorAndLabelPart.h
 //
 //################################################################################################
 
-#ifndef __BITMAPANDLABELPART_H_
-#define __BITMAPANDLABELPART_H_
+#ifndef __VECTORANDLABELPART_H_
+#define __VECTORANDLABELPART_H_
 
 
 #include "StdAfx.h"
@@ -16,25 +16,25 @@
 
 namespace DecoratorSDK {
 
-class TypeableBitmapPart;
+class VectorPart;
 
 //################################################################################################
 //
-// CLASS : BitmapAndLabelPart
+// CLASS : VectorAndLabelPart
 //
 //################################################################################################
 
-class BitmapAndLabelPart: public ImageAndLabelPart
+class VectorAndLabelPart: public ImageAndLabelPart
 {
 public:
-	BitmapAndLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
-	virtual ~BitmapAndLabelPart();
+	VectorAndLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	virtual ~VectorAndLabelPart();
 
 public:
-	virtual void				AddBitmapPart	(TypeableBitmapPart* part);
-	virtual TypeableBitmapPart*	GetBitmapPart	(void) const;
+	virtual void				AddVectorPart	(VectorPart* part);
+	virtual VectorPart*			GetVectorPart	(void) const;
 };
 
 }; // namespace DecoratorSDK
 
-#endif //__BITMAPANDLABELPART_H_
+#endif //__VECTORANDLABELPART_H_

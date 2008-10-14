@@ -461,6 +461,25 @@ bool Facilities::getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, b
 	return true;
 }
 
+bool Facilities::getMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco) const
+{
+	if (!metaPart) {
+		return false;
+	}
+
+	metaFco = NULL;
+	CComPtr<IMgaMetaRole> metaRole;
+	try {
+		COMTHROW(metaPart->get_Role(&metaRole));
+		VERIFY(metaRole);
+		COMTHROW(metaRole->get_Kind(&metaFco));
+	}
+	catch (hresult_exception &) {
+		metaFco = NULL;
+	}
+	return (metaFco != NULL);
+}
+
 BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF crTC, bool bHasBC, COLORREF crBC,
 								   bool masked, UINT nResID )
 {
@@ -491,7 +510,7 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 	if (masked) {
 		BitmapMasked* pBMP = NULL;
 		if ( nResID != NULL )
-			pBMP = new BitmapMasked( nResID, crBC, false );
+			pBMP = new BitmapMasked( nResID, crTC, crBC );
 		else
 			pBMP = new BitmapMasked( strName, crTC, crBC );
 		if ( pBMP->isInitialized() ) {

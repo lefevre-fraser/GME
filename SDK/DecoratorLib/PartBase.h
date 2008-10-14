@@ -35,6 +35,7 @@ protected:
 	CComPtr<IMgaProject>			m_spProject;
 	CComPtr<IMgaMetaPart>			m_spPart;
 	CComPtr<IMgaFCO>				m_spFCO;
+	CComPtr<IMgaMetaFCO>			m_spMetaFCO;
 	HWND							m_parentWnd;
 	HDC								m_viewDC;
 

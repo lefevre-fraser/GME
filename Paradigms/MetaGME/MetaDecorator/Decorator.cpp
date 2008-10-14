@@ -79,7 +79,7 @@ STDMETHODIMP CDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart
 {
 	m_mgaFco = obj;		// obj == NULL, if we are in the PartBrowser
 	
-	if (!GetMetaFCO(metaPart, m_metaFco)) {
+	if (!DecoratorSDK::getFacilities().getMetaFCO(metaPart, m_metaFco)) {
 		return E_DECORATOR_INIT_WITH_NULL;
 	}
 	else {
@@ -361,10 +361,10 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 				cpt.y = m_sy + ((m_calcSize.cy - (m_ey - m_sy))/2);
 
 				CRect destRect(cpt.x, cpt.y, cpt.x + m_bitmap->getWidth(), cpt.y + m_bitmap->getHeight());
-				UINT opCode = DecoratorSDK::OC_TRANSPARENT;
+				UINT modifFlags = DecoratorSDK::MF_TRANSPARENT;
 				if (!m_isActive)
-					opCode |= DecoratorSDK::OC_GREY;
-				m_bitmap->draw(&dc, CRect(), destRect, opCode);
+					modifFlags |= DecoratorSDK::MF_GREYED;
+				m_bitmap->draw(&dc, CRect(), destRect, SRCCOPY, modifFlags);
 				//m_bitmap.Draw(&dc, cpt.x, cpt.y);
 			}
 			CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
@@ -497,10 +497,10 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 				cpt.y = m_sy + (long)(scaley * m_proxySignPos.y);
 
 				CRect destRect(cpt.x, cpt.y, cpt.x + m_bitmap->getWidth(), cpt.y + m_bitmap->getHeight());
-				UINT opCode = DecoratorSDK::OC_TRANSPARENT;
+				UINT modifFlags = DecoratorSDK::MF_TRANSPARENT;
 				if (!m_isActive)
-					opCode |= DecoratorSDK::OC_GREY;
-				m_bitmap->draw(&dc, CRect(), destRect, opCode);
+					modifFlags |= DecoratorSDK::MF_GREYED;
+				m_bitmap->draw(&dc, CRect(), destRect, SRCCOPY, modifFlags);
 			}
 		}
 		break;
@@ -534,24 +534,6 @@ CDecorator::~CDecorator()
 	while (pos) {
 		delete m_attrs.GetNext(pos);
 	}
-}
-
-bool CDecorator::GetMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco)
-{
-	if (!metaPart) {
-		return false;
-	}
-
-	metaFco = NULL;
-	CComPtr<IMgaMetaRole> metaRole;
-	try {
-		COMTHROW(metaPart->get_Role(&metaRole));
-		COMTHROW(metaRole->get_Kind(&metaFco));
-	}
-	catch (hresult_exception &) {
-		metaFco = NULL;
-	}
-	return (metaFco != NULL);
 }
 
 void CDecorator::CalcRelPositions()

@@ -1,20 +1,20 @@
 HKCR
 {
-	Mga.MgaNewDecorator.1 = s 'MgaNewDecorator Class'
+	Mga.NewBoxDecorator.1 = s 'NewBoxDecorator Class'
 	{
 		CLSID = s '{F42CEA82-01DE-47A0-828E-C9A707E864E6}'
 	}
-	Mga.MgaNewDecorator = s 'MgaNewDecorator Class'
+	Mga.NewBoxDecorator = s 'NewBoxDecorator Class'
 	{
 		CLSID = s '{F42CEA82-01DE-47A0-828E-C9A707E864E6}'
-		CurVer = s 'Mga.MgaNewDecorator.1'
+		CurVer = s 'Mga.NewBoxDecorator.1'
 	}
 	NoRemove CLSID
 	{
-		ForceRemove {F42CEA82-01DE-47A0-828E-C9A707E864E6} = s 'MgaNewDecorator Class'
+		ForceRemove {F42CEA82-01DE-47A0-828E-C9A707E864E6} = s 'NewBoxDecorator Class'
 		{
-			ProgID = s 'Mga.MgaNewDecorator.1'
-			VersionIndependentProgID = s 'Mga.MgaNewDecorator'
+			ProgID = s 'Mga.NewBoxDecorator.1'
+			VersionIndependentProgID = s 'Mga.NewBoxDecorator'
 			ForceRemove 'Programmable'
 			InprocServer32 = s '%MODULE%'
 			{

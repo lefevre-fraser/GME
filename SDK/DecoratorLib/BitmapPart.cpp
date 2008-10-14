@@ -18,7 +18,9 @@ namespace DecoratorSDK {
 //################################################################################################
 
 BitmapPart::BitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
-	ResizablePart(pPart, eventSink)
+	ResizablePart	(pPart, eventSink),
+	m_pBitmap		(NULL),
+	m_pTileVector	(NULL)
 {
 }
 
@@ -82,18 +84,37 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 			m_bOverlay = getFacilities().getPreference(spMetaFCO, PREF_OVERLAYCOLOR, m_crOverlay);
 	}
 
+	// Check if we should create masked bitmap
+	bool bMasked = false;
+	it = preferences.find(PREF_ISMASKEDBITMAP);
+	if (it != preferences.end())
+		bMasked = true;
+
 	// Bitmap
 	m_pBitmap = NULL;
 	it = preferences.find(PREF_ICON);
 	if (it != preferences.end()) {
+		if (!bMasked) {
 #ifndef OLD_DECORATOR_LOOKANDFEEL
-		if (m_bOverlay)
-			m_pBitmap = getFacilities().getBitmapB(*it->second.uValue.pstrValue, m_crOverlay);
-		else
-			m_pBitmap = getFacilities().getBitmap(*it->second.uValue.pstrValue);
+			if (m_bOverlay)
+				m_pBitmap = getFacilities().getBitmapB(*it->second.uValue.pstrValue, m_crOverlay);
+			else
+				m_pBitmap = getFacilities().getBitmap(*it->second.uValue.pstrValue);
 #else
-		m_pBitmap = getFacilities().getBitmap(*it->second.uValue.pstrValue);
+			m_pBitmap = getFacilities().getBitmap(*it->second.uValue.pstrValue);
 #endif
+		} else {
+			UINT bitmapResID = (UINT)(it->second.uValue.lValue);
+			COLORREF crTransparent = COLOR_WHITE;
+			it = preferences.find(PREF_TRANSPARENTCOLOR);
+			if (it != preferences.end())
+				crTransparent = it->second.uValue.crValue;
+			COLORREF crGayedOut = COLOR_GRAYED_OUT;
+			it = preferences.find(PREF_GRAYEDOUTCOLOR);
+			if (it != preferences.end())
+				crGayedOut = it->second.uValue.crValue;
+			m_pBitmap = getFacilities().getMaskedBitmap(bitmapResID, crTransparent, crGayedOut );
+		}
 		m_pTileVector = preferences.find(PREF_TILES)->second.uValue.pTiles;
 	}
 	if (!m_pBitmap) {

@@ -67,7 +67,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 
 STDMETHODIMP CNewUMLDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 {
-	*pFeatureCodes = F_RESIZABLE | F_HASLABEL | F_HASPORTS;
+	*pFeatureCodes = F_HASLABEL;
 
 	return S_OK;
 }

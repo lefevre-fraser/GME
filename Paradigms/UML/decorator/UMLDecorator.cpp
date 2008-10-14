@@ -24,7 +24,7 @@ STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaP
 	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 
 	COMTRY {
-		GetMetaFCO(metaPart, m_metaFco);
+		DecoratorSDK::getFacilities().getMetaFCO(metaPart, m_metaFco);
 		m_mgaFco = obj;		// obj == NULL, if we are in the PartBrowser
 		
 		if (!m_metaFco) {
@@ -314,10 +314,10 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 
 	if (m_isConstraint && m_constraintBitmap->isInitialized()) {
 		CRect destRect(m_sx, m_sy, m_sx + m_constraintBitmap->getWidth(), m_sy + m_constraintBitmap->getHeight());
-		UINT opCode = DecoratorSDK::OC_TRANSPARENT;
+		UINT modifFlags = DecoratorSDK::MF_TRANSPARENT;
 		if (!m_isActive)
-			opCode |= DecoratorSDK::OC_GREY;
-		m_constraintBitmap->draw(&dc, CRect(), destRect, opCode);
+			modifFlags |= DecoratorSDK::MF_GREYED;
+		m_constraintBitmap->draw(&dc, CRect(), destRect, SRCCOPY, modifFlags);
 
 		CPoint namePos(m_sx + ((m_ex - m_sx) / 2), m_ey);
 		DecoratorSDK::getFacilities().drawText(&dc,
@@ -332,10 +332,10 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 
 	if (m_isConstraintDefinition && m_constraintDefBitmap->isInitialized()) {
 		CRect destRect(m_sx, m_sy, m_sx + m_constraintDefBitmap->getWidth(), m_sy + m_constraintDefBitmap->getHeight());
-		UINT opCode = DecoratorSDK::OC_TRANSPARENT;
+		UINT modifFlags = DecoratorSDK::MF_TRANSPARENT;
 		if (!m_isActive)
-			opCode |= DecoratorSDK::OC_GREY;
-		m_constraintDefBitmap->draw(&dc, CRect(), destRect, opCode);
+			modifFlags |= DecoratorSDK::MF_GREYED;
+		m_constraintDefBitmap->draw(&dc, CRect(), destRect, SRCCOPY, modifFlags);
 
 		CPoint namePos(m_sx + ((m_ex - m_sx) / 2), m_ey);
 		DecoratorSDK::getFacilities().drawText(&dc,
@@ -399,10 +399,10 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 		cpt.x = static_cast<long> (m_sx + scalex * m_copySignPos.x);
 		cpt.y = static_cast<long> (m_sy + scaley * m_copySignPos.y);
 		CRect destRect(cpt.x, cpt.y, cpt.x + m_copyBitmap->getWidth(), cpt.y + m_copyBitmap->getHeight());
-		UINT opCode = DecoratorSDK::OC_TRANSPARENT;
+		UINT modifFlags = DecoratorSDK::MF_TRANSPARENT;
 		if (!m_isActive)
-			opCode |= DecoratorSDK::OC_GREY;
-		m_copyBitmap->draw(&dc, CRect(), destRect, opCode);
+			modifFlags |= DecoratorSDK::MF_GREYED;
+		m_copyBitmap->draw(&dc, CRect(), destRect, SRCCOPY, modifFlags);
 	}
 
 	dc.Detach();
@@ -512,20 +512,6 @@ void CUMLDecorator::CalcRelPositions(CDC *pDC)
 		dc.SelectObject(oldfont);
 		dc.Detach();
 	}
-}
-
-bool CUMLDecorator::GetMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco)
-{
-	metaFco = NULL;
-	if (!metaPart) {
-		return false;
-	}
-	CComPtr<IMgaMetaRole> metaRole;
-	COMTHROW(metaPart->get_Role(&metaRole));
-	VERIFY(metaRole);
-
-	COMTHROW(metaRole->get_Kind(&metaFco));
-	return (metaFco != NULL);
 }
 
 void CUMLDecorator::CollectAttributes(CComPtr<IMgaFCO> mgaFco)

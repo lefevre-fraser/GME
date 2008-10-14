@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="UMLDecorator"
 	ProjectGUID="{FCD04E3B-691C-461F-92F2-BE3E01F78582}"
+	RootNamespace="UMLDecorator"
 	Keyword="MFCProj"
 	TargetFrameworkVersion="131072"
 	>
@@ -224,6 +225,18 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\ConnectorVectorPart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ConstraintBitmapPart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\InheritanceVectorPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\NewUMLDecorator.cpp"
 				>
 			</File>
@@ -403,11 +416,23 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath=".\ConnectorVectorPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ConstraintBitmapPart.h"
+				>
+			</File>
+			<File
 				RelativePath="DecoratorConfig.h"
 				>
 			</File>
 			<File
 				RelativePath="DecoratorStd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InheritanceVectorPart.h"
 				>
 			</File>
 			<File
