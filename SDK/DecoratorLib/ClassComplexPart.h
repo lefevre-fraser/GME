@@ -73,8 +73,6 @@ public:
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
 
-	virtual void	DrawBackground				(CDC* pDC);
-
 	virtual void	CollectAttributes			(CComPtr<IMgaFCO> mgaFco = NULL);
 	virtual void	CalcRelPositions			(CDC *pDC = NULL);
 	virtual void	SetBoxLocation				(const CRect& cRect);

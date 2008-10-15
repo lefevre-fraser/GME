@@ -22,6 +22,8 @@ namespace DecoratorSDK {
 ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	VectorPart					(pPart, eventSink),
 
+	m_LabelPart					(NULL),
+	m_StereotypePart			(NULL),
 	m_crAttributeText			(COLOR_BLACK),
 	m_iLongestTextLength		(0),
 	m_iShortestTextLength		(LONG_MAX)
@@ -35,7 +37,8 @@ ClassComplexPart::~ClassComplexPart()
 void ClassComplexPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
 {
 	m_LabelPart->Initialize(pProject, pPart, pFCO);
-	m_StereotypePart->Initialize(pProject, pPart, pFCO);
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->Initialize(pProject, pPart, pFCO);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->Initialize(pProject, pPart, pFCO);
 	}
@@ -45,7 +48,8 @@ void ClassComplexPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMe
 void ClassComplexPart::Destroy()
 {
 	m_LabelPart->Destroy();
-	m_StereotypePart->Destroy();
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->Destroy();
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->Destroy();
 	}
@@ -63,8 +67,10 @@ feature_code ClassComplexPart::GetFeatures(void) const
 
 	feature_code labelFeatureCodes = m_LabelPart->GetFeatures();
 	featureCodes |= labelFeatureCodes;
-	feature_code stereotypeFeatureCodes = m_StereotypePart->GetFeatures();
-	featureCodes |= stereotypeFeatureCodes;
+	if (m_StereotypePart != NULL) {
+		feature_code stereotypeFeatureCodes = m_StereotypePart->GetFeatures();
+		featureCodes |= stereotypeFeatureCodes;
+	}
 
 	for (std::vector<AttributePart*>::const_iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		feature_code attrubuteFeatureCodes = (*ii)->GetFeatures();
@@ -80,7 +86,8 @@ feature_code ClassComplexPart::GetFeatures(void) const
 void ClassComplexPart::SetParam(const CString& strName, VARIANT vValue)
 {
 	m_LabelPart->SetParam(strName, vValue);
-	m_StereotypePart->SetParam(strName, vValue);
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->SetParam(strName, vValue);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetParam(strName, vValue);
 	}
@@ -101,7 +108,8 @@ bool ClassComplexPart::GetParam(const CString& strName, VARIANT* pvValue)
 void ClassComplexPart::SetActive(bool bIsActive)
 {
 	m_LabelPart->SetActive(bIsActive);
-	m_StereotypePart->SetActive(bIsActive);
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->SetActive(bIsActive);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetActive(bIsActive);
 	}
@@ -143,13 +151,14 @@ CSize ClassComplexPart::GetPreferredSize(void) const
 
 void ClassComplexPart::SetLocation(const CRect& location)
 {
-	// TODO
 	m_LabelPart->SetLocation(location);
-	m_StereotypePart->SetLocation(location);
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->SetLocation(location);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetLocation(location);
 	}
 	VectorPart::SetLocation(location);
+	CalcRelPositions();
 }
 
 CRect ClassComplexPart::GetLocation(void) const
@@ -170,13 +179,21 @@ CRect ClassComplexPart::GetLabelLocation(void) const
 
 void ClassComplexPart::Draw(CDC* pDC)
 {
+	CalcRelPositions(pDC);
+	m_LabelPart->Draw(pDC);
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->Draw(pDC);
+	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
+		(*ii)->Draw(pDC);
+	}
 	VectorPart::Draw(pDC);
 }
 
 void ClassComplexPart::SaveState()
 {
 	m_LabelPart->SaveState();
-	m_StereotypePart->SaveState();
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->SaveState();
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SaveState();
 	}
@@ -235,7 +252,8 @@ void ClassComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 void ClassComplexPart::SetSelected(bool bIsSelected)
 {
 	m_LabelPart->SetSelected(bIsSelected);
-	m_StereotypePart->SetSelected(bIsSelected);
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->SetSelected(bIsSelected);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetSelected(bIsSelected);
 	}
@@ -267,7 +285,7 @@ bool ClassComplexPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transfor
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseMoved(nFlags, point, transformHDC))
 				return true;
@@ -324,7 +342,7 @@ bool ClassComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseLeftButtonDown(nFlags, point, transformHDC))
 				return true;
@@ -381,7 +399,7 @@ bool ClassComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC t
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseLeftButtonUp(nFlags, point, transformHDC))
 				return true;
@@ -438,7 +456,7 @@ bool ClassComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& poi
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseLeftButtonDoubleClick(nFlags, point, transformHDC))
 				return true;
@@ -495,7 +513,7 @@ bool ClassComplexPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const C
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC))
 				return true;
@@ -552,7 +570,7 @@ bool ClassComplexPart::MouseRightButtonUp(UINT nFlags, const CPoint& point, HDC 
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseRightButtonUp(nFlags, point, transformHDC))
 				return true;
@@ -609,7 +627,7 @@ bool ClassComplexPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& po
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseRightButtonDoubleClick(nFlags, point, transformHDC))
 				return true;
@@ -666,7 +684,7 @@ bool ClassComplexPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& point, H
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseMiddleButtonDown(nFlags, point, transformHDC))
 				return true;
@@ -723,7 +741,7 @@ bool ClassComplexPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& point, HDC
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseMiddleButtonUp(nFlags, point, transformHDC))
 				return true;
@@ -780,7 +798,7 @@ bool ClassComplexPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& p
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseMiddleButtonDoubleClick(nFlags, point, transformHDC))
 				return true;
@@ -837,7 +855,7 @@ bool ClassComplexPart::MouseWheelTurned(UINT nFlags, short distance, const CPoin
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MouseWheelTurned(nFlags, distance, point, transformHDC))
 				return true;
@@ -894,7 +912,7 @@ bool ClassComplexPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoi
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->MenuItemSelected(menuItemId, nFlags, point, transformHDC))
 				return true;
@@ -951,7 +969,7 @@ bool ClassComplexPart::OperationCanceledByGME(void)
 			retVal = e.GetHResult();
 		}
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_StereotypePart->OperationCanceledByGME())
 				return true;
@@ -983,38 +1001,6 @@ bool ClassComplexPart::OperationCanceledByGME(void)
 	return false;
 }
 
-void ClassComplexPart::DrawBackground(CDC* pDC)
-{
-/*	CSize cExtentD = pDC->GetViewportExt();
-	CSize cExtentL = pDC->GetWindowExt();
-	CRect cRect = TypeableBitmapPart::GetBoxLocation(false);
-	cRect.BottomRight() -= CPoint(1, 1);
-
-#ifndef OLD_DECORATOR_LOOKANDFEEL
-	TypeableBitmapPart::DrawBackground(pDC);
-#else
-	if (m_pBitmap->getName() != createResString(IDB_MODEL) && TypeableBitmapPart::m_bActive) {
-		TypeableBitmapPart::DrawBackground(pDC);
-	} else {
-		int iDepth = (m_bReferenced) ? 2 : ((m_iTypeInfo == 3) ? 4 : 7);
-		getFacilities().drawBox(pDC, cRect, (!m_bActive) ? COLOR_LIGHTGRAY : (m_bOverlay) ? m_crOverlay : COLOR_GRAY, iDepth);
-		CRect cRect2 = cRect;
-		cRect2.InflateRect(1, 1);
-		getFacilities().drawRect(pDC, cRect2, (m_bActive) ? m_crBorder : COLOR_GRAY);
-	}
-#endif
-
-	cRect.BottomRight() += CPoint(1, 1);
-	CPoint ptOrigin = pDC->OffsetViewportOrg((long) (cRect.left * ((double) cExtentD.cx / cExtentL.cx)), (long) (cRect.top * ((double) cExtentD.cy / cExtentL.cy)));
-	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
-		(*ii)->Draw(pDC);
-	}
-	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
-		(*ii)->Draw(pDC);
-	}
-	pDC->SetViewportOrg(ptOrigin);*/
-}
-
 void ClassComplexPart::CollectAttributes(CComPtr<IMgaFCO> mgaFco)
 {
 }
@@ -1042,7 +1028,8 @@ void ClassComplexPart::SetBoxLocation(const CRect& cRect)
 void ClassComplexPart::SetReferenced(bool referenced)
 {
 	m_LabelPart->SetReferenced(referenced);
-	m_StereotypePart->SetReferenced(referenced);
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->SetReferenced(referenced);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetReferenced(referenced);
 	}
@@ -1052,7 +1039,8 @@ void ClassComplexPart::SetReferenced(bool referenced)
 void ClassComplexPart::SetParentPart(PartBase* pPart)
 {
 	m_LabelPart->SetParentPart(pPart);
-	m_StereotypePart->SetParentPart(pPart);
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->SetParentPart(pPart);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetParentPart(pPart);
 	}

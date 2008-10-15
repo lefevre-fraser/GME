@@ -112,10 +112,11 @@ namespace DecoratorSDK
 			void draw3DBox( CDC* pDC, const CRect& rect, COLORREF brColor, COLORREF color, bool special = false);
 			void drawFlatBox( CDC* pDC, const CRect& rect, COLORREF brColor, COLORREF color);
 			COLORREF shiftColor( COLORREF crColor, int iShift ) const;
-			COLORREF getDarkBorderColor(COLORREF color);
-			COLORREF getLightBorderColor(COLORREF color);
+			COLORREF getDarkBorderColor(COLORREF color) const;
+			COLORREF getLightBorderColor(COLORREF color) const;
 
-			std::vector<CString> wrapString( const CString& str, int iWrap, int iMax );
+			std::vector<CString> wrapString( const CString& str, int iWrap, int iMax ) const;
+			CString getStereotyped( const CString& str ) const;
 
 		private :
 			BitmapBase* getBitmap( const CString& strName, bool bhasTC, COLORREF crTC, bool bhasBC, COLORREF crBC,

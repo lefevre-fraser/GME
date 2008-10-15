@@ -153,7 +153,7 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				bool newDecoratorCreated = false;
 #if defined (TRYNEWDECORATORS)
 				CComPtr<IMgaNewDecoratorEvents> decorEventSinkIface;
-				if (decoratorProgId == GME_DEFAULT_DECORATOR ||
+				if (decoratorProgId == GME_DEFAULT_DECORATOR /*||
 					decoratorProgId == "Mga.UMLDecorator" /*||
 					decoratorProgId == "Mga.Decoator.MetaDecorator"*/)
 				{
@@ -161,8 +161,8 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.NewBoxDecorator")));
 					else if (decoratorProgId == "Mga.UMLDecorator")
 						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.NewUMLDecorator")));
-/*					else if (decoratorProgId == "Mga.Decoator.MetaDecorator")
-						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.Decoator.NewMetaDecorator")));*/
+					else if (decoratorProgId == "Mga.Decoator.MetaDecorator")
+						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.Decoator.NewMetaDecorator")));
 					newDecoratorCreated = true;
 					triple.decorEventSink = new CDecoratorEventSink();
 					HRESULT hr = triple.decorEventSink->QuerySinkInterface((void**) &decorEventSinkIface);

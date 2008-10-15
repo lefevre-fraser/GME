@@ -56,10 +56,6 @@ typedef enum { DSAtom, DSSet, DSNullRef, DSRefToNull, DSAtomPort, DSModelPort, D
 #define ICON_PREF					"icon"
 #define PORTICON_PREF				"porticon"
 
-#define  UML_STEREOTYPE_LEFTA		L"<<"
-#define  UML_STEREOTYPE_RIGHTA		L">>"
-#define  UML_STEREOTYPE_LEFTB		L"\u226A "
-#define  UML_STEREOTYPE_RIGHTB		L" \u226B"
 #define  UML_STEREOTYPE_ATTR		"Stereotype"
 #define  UML_ABSTRACT_ATTR			"IsAbstract"
 #define  UML_ATTRIBUTES_ATTR		"Attributes"
@@ -75,7 +71,7 @@ typedef enum { DSAtom, DSSet, DSNullRef, DSRefToNull, DSAtomPort, DSModelPort, D
 #define  UML_DECORATOR_MINATTRSIZE	13
 
 #define  UML_INHERITANCE_WIDTH		24
-#define  UML_INHERITANCE_HEIGHT		0.866 * UML_INHERITANCE_WIDTH
+#define  UML_INHERITANCE_HEIGHT		(0.866 * UML_INHERITANCE_WIDTH)
 #define  UML_CONNECTOR_WIDTH		6
 #define  UML_CONNECTOR_HEIGHT		UML_CONNECTOR_WIDTH
 

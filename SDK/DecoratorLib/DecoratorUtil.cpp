@@ -12,6 +12,8 @@
 #include "MgaUtil.h"
 #include "BitmapUtil.h"
 
+static long stereotypeCharacterType = 1;
+
 namespace DecoratorSDK
 {
 	Facilities facilities;
@@ -849,7 +851,7 @@ COLORREF Facilities::shiftColor( COLORREF crColor, int iShift ) const
 	return RGB( iR, iG, iB );
 }
 
-COLORREF Facilities::getLightBorderColor(COLORREF color)
+COLORREF Facilities::getLightBorderColor(COLORREF color) const
 {
 	int b = (color & 0xff0000) >> 16;
 	int g = (color & 0xff00) >> 8;
@@ -860,7 +862,7 @@ COLORREF Facilities::getLightBorderColor(COLORREF color)
 	return RGB(r,g,b);
 }
 
-COLORREF Facilities::getDarkBorderColor(COLORREF color)
+COLORREF Facilities::getDarkBorderColor(COLORREF color) const
 {
 	int b = (color & 0xff0000) >> 16;
 	int g = (color & 0xff00) >> 8;
@@ -871,7 +873,7 @@ COLORREF Facilities::getDarkBorderColor(COLORREF color)
 	return RGB(r,g,b);
 }
 
-std::vector<CString> Facilities::wrapString( const CString& strIn, int iWrap, int iMax )
+std::vector<CString> Facilities::wrapString( const CString& strIn, int iWrap, int iMax ) const
 {
 	std::vector<CString> vecOut;
 	CString str = strIn;
@@ -913,6 +915,16 @@ std::vector<CString> Facilities::wrapString( const CString& strIn, int iWrap, in
 		}
 	}
 	return vecOut;
+}
+
+CString Facilities::getStereotyped( const CString& strIn ) const
+{
+	CString str;
+	if (stereotypeCharacterType)
+		str = str + STEREOTYPE_LEFTB + strIn + STEREOTYPE_RIGHTB;
+	else
+		str = str + STEREOTYPE_LEFTA + strIn + STEREOTYPE_RIGHTA;
+	return str;
 }
 
 }; // namespace DecoratorSDK

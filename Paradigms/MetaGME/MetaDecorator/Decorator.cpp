@@ -5,8 +5,6 @@
 
 #include "CommonError.cpp"
 
-static long stereotypeCharacterType = 1;
-
 #define VERIFY_INIT   { if (!m_isInitialized) return E_DECORATOR_UNINITIALIZED; }
 #define VERIFY_LOCSET { if (!m_isLocSet) return E_DECORATOR_LOCISNOTSET; }
 
@@ -465,7 +463,7 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 			}
 			CPoint stereotypePos(m_sx + (long)(scalex * m_stereotypePos.x), m_sy + (long)(scaley * m_stereotypePos.y));
 			DecoratorSDK::getFacilities().drawText(&dc,
-													(stereotypeCharacterType ? META_STEREOTYPE_LEFTB : META_STEREOTYPE_LEFTA) + m_stereotype + (stereotypeCharacterType ? META_STEREOTYPE_RIGHTB : META_STEREOTYPE_RIGHTA),
+													DecoratorSDK::getFacilities().getStereotyped(m_stereotype),
 													stereotypePos,
 													DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
 													(m_isActive ? m_nameColor : GME_GRAYED_OUT_COLOR),
@@ -610,7 +608,7 @@ void CDecorator::CalcRelPositions()
 				maxHeight = max(maxHeight, ext.cy);
 			}
 
-			ext = dc.GetTextExtent((stereotypeCharacterType ? META_STEREOTYPE_LEFTB : META_STEREOTYPE_LEFTA) + m_stereotype + (stereotypeCharacterType ? META_STEREOTYPE_RIGHTB : META_STEREOTYPE_RIGHTA));
+			ext = dc.GetTextExtent(DecoratorSDK::getFacilities().getStereotyped(m_stereotype));
 			maxWidth = max(maxWidth, ext.cx);
 			maxHeight = max(maxHeight, ext.cy);
 			

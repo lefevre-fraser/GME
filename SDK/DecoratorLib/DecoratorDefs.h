@@ -151,6 +151,14 @@ namespace DecoratorSDK
 	static const unsigned int CTX_MENU_ID_RENAME	= DECORATOR_CTX_MENU_MINID + 0;
 	static const unsigned int CTX_MENU_ID_RESETSIZE	= DECORATOR_CTX_MENU_MINID + 1;
 
+	static const char* STEREOTYPE_LEFTA				= "<<";
+	static const char* STEREOTYPE_RIGHTA			= ">>";
+	static const wchar_t* STEREOTYPE_LEFTB			= L"\u226A ";
+	static const wchar_t* STEREOTYPE_RIGHTB			= L" \u226B";
+	static const char* ABSTRACT_ATTR				= "IsAbstract";
+	static const char* ATTRIBUTES_ATTR				= "Attributes";
+	static const char* ATTRIBUTE_SEP				= " : ";
+
 	struct SFont
 	{
 		CFont*		pFont;

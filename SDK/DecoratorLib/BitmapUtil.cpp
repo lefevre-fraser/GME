@@ -384,10 +384,10 @@ bool BitmapDIB::isInitialized() const
 //################################################################################################
 
 BitmapMasked::BitmapMasked( const CString& strName, COLORREF crTransparentColor, COLORREF crGrayColor ):
-	BitmapBase( strName, crTransparentColor, crGrayColor, true ),
-	m_pBits(0),
-	m_pBMI(0),
-	m_pPalette(0)
+	BitmapBase	( strName, crTransparentColor, crGrayColor, true ),
+	m_pBits		(NULL),
+	m_pBMI		(NULL),
+	m_pPalette	(NULL)
 {
 	CFile bitmapFile(strName, CFile::modeRead);
 	Read( bitmapFile );
@@ -395,11 +395,11 @@ BitmapMasked::BitmapMasked( const CString& strName, COLORREF crTransparentColor,
 	setSize( getWidth(), getHeight());
 }
 
-BitmapMasked::BitmapMasked( UINT nResID, COLORREF crTransparentColor, COLORREF crGrayColor )
-	: BitmapBase( "" , crTransparentColor, crGrayColor, true ),
-	m_pBits(0),
-	m_pBMI(0),
-	m_pPalette(0)
+BitmapMasked::BitmapMasked( UINT nResID, COLORREF crTransparentColor, COLORREF crGrayColor ):
+	BitmapBase	( "" , crTransparentColor, crGrayColor, true ),
+	m_pBits		(NULL),
+	m_pBMI		(NULL),
+	m_pPalette	(NULL)
 {
 	char chBuffer[10];
 	_ultoa( nResID, chBuffer, 10 );
@@ -452,6 +452,7 @@ DWORD BitmapMasked::Read(CFile& file, BOOL bFromResource)
 {
 	DWORD dwReadBytes = 0;
 	DWORD dwLength = (DWORD) file.GetLength();
+	ASSERT ( dwLength > 0 );
 	
 	// Ensures no memory leaks will occur
 	Free();
@@ -475,6 +476,8 @@ DWORD BitmapMasked::Read(CFile& file, BOOL bFromResource)
 	
 	DWORD dwPalSize = NumColors( bmiHeader ) * sizeof RGBQUAD;
 	m_pBMI = (LPBITMAPINFO) new BYTE[BMIH_SIZE + dwPalSize];
+	if (m_pBMI == NULL)
+		return 0;
 	memcpy( m_pBMI, &bmiHeader, BMIH_SIZE );
 	// read palette data
 	if( file.Read( m_pBMI->bmiColors, dwPalSize ) != dwPalSize )
@@ -484,7 +487,7 @@ DWORD BitmapMasked::Read(CFile& file, BOOL bFromResource)
 	
 	// Go read the bits.
 	m_pBits = new BYTE[ dwLength - dwReadBytes ];
-	if (m_pBits == 0)
+	if (m_pBits == NULL)
 		return 0;
 	
 	if (file.Read( m_pBits, dwLength - dwReadBytes ) != (dwLength - dwReadBytes))
@@ -514,8 +517,10 @@ DWORD BitmapMasked::ReadFromResource(UINT nResID)
 	if (hbmres)
 	{
 		DWORD	dwResSize = SizeofResource( hModule, hbmres );
+		ASSERT( dwResSize > 0 );
 		file.Attach( (LPBYTE)LockResource( hGlob = LoadResource(hModule, hbmres) ), dwResSize );
 		dwResult = Read(file, TRUE);
+		ASSERT( dwResult == dwResSize );
 		file.Detach();
 		DeleteObject( hGlob );
 	}
@@ -537,6 +542,9 @@ WORD  BitmapMasked::NumColors( BITMAPINFOHEADER& bmiHeader ) const
 	case 8:
 		return 256;
 	default:
+		ASSERT(true);
+	case 24:
+	case 32:
 		return 0;
 	}
 }

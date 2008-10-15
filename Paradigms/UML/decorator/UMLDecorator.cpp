@@ -11,8 +11,6 @@
 #include "DecoratorStd.h"
 #include "TokenEx.h"
 
-static long stereotypeCharacterType = 1;
-
 #define VERIFY_INIT   { if (!m_isInitialized) return E_DECORATOR_UNINITIALIZED; }
 #define VERIFY_LOCSET { if (!m_isLocSet) return E_DECORATOR_LOCISNOTSET; }
 
@@ -366,7 +364,7 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 	if (!m_stereotype.IsEmpty()) {
 		CPoint stereotypePos(static_cast<long> (m_sx + scalex * m_stereotypePos.x), static_cast<long> (m_sy + scaley * m_stereotypePos.y));
 		DecoratorSDK::getFacilities().drawText(&dc,
-												(stereotypeCharacterType ? UML_STEREOTYPE_LEFTB : UML_STEREOTYPE_LEFTA) + m_stereotype + (stereotypeCharacterType ? UML_STEREOTYPE_RIGHTB : UML_STEREOTYPE_RIGHTA),
+												DecoratorSDK::getFacilities().getStereotyped(m_stereotype),
 												stereotypePos,
 												DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont,
 												(m_isActive ? m_nameColor : GME_GREY_COLOR),
@@ -451,7 +449,7 @@ void CUMLDecorator::CalcRelPositions(CDC *pDC)
 	maxHeight = max(maxHeight, ext.cy);
 
 	if (!m_stereotype.IsEmpty()) {
-		ext = dc.GetTextExtent((stereotypeCharacterType ? UML_STEREOTYPE_LEFTB : UML_STEREOTYPE_LEFTA) + m_stereotype + (stereotypeCharacterType ? UML_STEREOTYPE_RIGHTB : UML_STEREOTYPE_RIGHTA));
+		ext = dc.GetTextExtent(DecoratorSDK::getFacilities().getStereotyped(m_stereotype));
 		maxWidth = max(maxWidth, ext.cx);
 		maxHeight = max(maxHeight, ext.cy);
 	}

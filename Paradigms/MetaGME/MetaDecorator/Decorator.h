@@ -19,10 +19,6 @@ typedef CTypedPtrList<CPtrList, CMetaAttr *>		CMetaAttrList;
 #define	 META_DEFAULT_SHOWABSTRACT		true
 #define	 META_DEFAULT_SHOWATTRIBUTES	true
 
-#define  META_STEREOTYPE_LEFTA		L"<<"
-#define  META_STEREOTYPE_RIGHTA		L">>"
-#define  META_STEREOTYPE_LEFTB		L"\u226A "
-#define  META_STEREOTYPE_RIGHTB		L" \u226B"
 #define  META_ATTRIBUTE_SEP			" : "
 
 #define	 META_DECORATOR_MARGINX		6
