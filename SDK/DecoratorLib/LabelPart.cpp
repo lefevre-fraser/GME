@@ -125,9 +125,19 @@ CPoint	LabelPart::GetTextPosition(void) const
 	return pt;
 }
 
-CRect LabelPart::GetTextLocation(void) const
+void LabelPart::SetTextPosition(const CPoint& position)
 {
-	return GetLabelLocation();
+	// This doesn't make sense in case of box label decorator:
+	// Label text location is computed automatically from box location and text alignment, see above
+}
+
+void LabelPart::ExecuteOperation(void)
+{
+	// transaction operation begin
+	CComBSTR bstr;
+	CopyTo(m_strText, bstr);
+	COMTHROW(m_spFCO->put_Name(bstr));
+	// transaction operation end
 }
 
 }; // namespace DecoratorSDK

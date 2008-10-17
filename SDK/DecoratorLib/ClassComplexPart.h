@@ -12,9 +12,11 @@
 #include "StdAfx.h"
 #include "VectorPart.h"
 
-#include "LabelPart.h"
-#include "TextPart.h"
+#include "ClassLabelPart.h"
+#include "StereoLabelPart.h"
 #include "AttributePart.h"
+#include "BitmapPart.h"
+
 
 namespace DecoratorSDK {
 
@@ -27,13 +29,26 @@ namespace DecoratorSDK {
 class ClassComplexPart: public VectorPart
 {
 protected:
-	LabelPart*					m_LabelPart;
-	TextPart*					m_StereotypePart;
+	ClassLabelPart*				m_LabelPart;
+	StereoLabelPart*			m_StereotypePart;
 	std::vector<AttributePart*>	m_AttributeParts;
+	BitmapPart*					m_copySignPart;
 
+	bool						m_isCopy;
+	long						m_SeparatorLoc;
+	CSize						m_calcSize;
 	COLORREF					m_crAttributeText;
-	long						m_iLongestTextLength;
-	long						m_iShortestTextLength;
+	long						m_lMaxTextWidth;
+	long						m_lMaxTextHeight;
+	long						m_lMinTextWidth;
+	long						m_lMinTextHeight;
+
+	long						m_DecoratorMarginX;
+	long						m_DecoratorMarginY;
+	long						m_DecoratorGapY;
+	long						m_DecoratorMinAttrSize;
+
+	std::vector<DecoratorSDK::CoordCommand*>	coordCommands;
 
 public:
 	ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
@@ -73,8 +88,10 @@ public:
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
 
-	virtual void	CollectAttributes			(CComPtr<IMgaFCO> mgaFco = NULL);
-	virtual void	CalcRelPositions			(CDC *pDC = NULL);
+	virtual void	SetBrush					(CDC* pDC);
+
+	virtual void	CollectAttributes			(CComPtr<IMgaFCO> mgaFco = NULL) = 0;
+	virtual void	CalcRelPositions			(CDC* pDC = NULL);
 	virtual void	SetBoxLocation				(const CRect& cRect);
 	virtual void	SetReferenced				(bool referenced);
 	virtual void	SetParentPart				(PartBase* pPart);

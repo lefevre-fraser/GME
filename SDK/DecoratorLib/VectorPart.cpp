@@ -114,6 +114,7 @@ VectorPart::VectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSin
 
 VectorPart::~VectorPart()
 {
+	RemoveAllCommands();
 }
 
 void VectorPart::RemoveCommand(long index)

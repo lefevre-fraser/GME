@@ -13,6 +13,7 @@
 #include "InheritanceVectorPart.h"
 #include "ConnectorVectorPart.h"
 #include "ConstraintBitmapPart.h"
+#include "UMLClassPart.h"
 
 #include "ModelComplexPart.h"
 #include "TypeableLabelPart.h"
@@ -100,81 +101,9 @@ void UMLCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 			} else if (name == UML_CONSTRAINT_DEFINITION_NAME) {
 				AddImagePart(new ConstraintBitmapPart(this, m_eventSink, IDB_BITMAP_CDEFINITION, DecoratorSDK::COLOR_BKGND, DecoratorSDK::COLOR_GRAYED_OUT));
 				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-			} else {	// This should be a class
-/*				if (pFCO) {
-					objtype_enum objtype;
-					COMTHROW(pFCO->get_ObjType(&objtype));
-					if (objtype == OBJTYPE_REFERENCE) {
-						m_copyBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_COPY, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
-						m_isCopy = true;
-						CComPtr<IMgaFCO> mgaFco = pFCO;
-						while(objtype == OBJTYPE_REFERENCE) {
-							CComPtr<IMgaReference> ref;
-							COMTHROW(mgaFco.QueryInterface(&ref));
-							mgaFco = NULL;
-							COMTHROW(ref->get_Referred(&mgaFco));
-							if (mgaFco) {
-								COMTHROW(mgaFco->get_ObjType(&objtype));
-							} else {
-								objtype = OBJTYPE_NULL;
-							}
-						}
-						if (objtype == OBJTYPE_NULL) {
-							m_stereotype.Empty();
-							m_attrs.RemoveAll();
-						} else {
-							if (!DecoratorSDK::getFacilities().getAttribute(mgaFco ? mgaFco : m_mgaFco, UML_STEREOTYPE_ATTR, m_stereotype)) {
-								m_stereotype.Empty();
-							}
-							bool isAbstract;
-							if (DecoratorSDK::getFacilities().getAttribute(mgaFco ? mgaFco : m_mgaFco, UML_ABSTRACT_ATTR, isAbstract) && isAbstract) {
-								m_isAbstract = true;
-							}
-							CollectAttributes(mgaFco);
-						}
-					} else {
-						m_isCopy = false;
-						if (!DecoratorSDK::getFacilities().getAttribute(m_mgaFco, UML_STEREOTYPE_ATTR, m_stereotype)) {
-							m_stereotype.Empty();
-						}
-						bool isAbstract;
-						if (DecoratorSDK::getFacilities().getAttribute(m_mgaFco, UML_ABSTRACT_ATTR, isAbstract) && isAbstract) {
-							m_isAbstract = true;
-						}
-						CollectAttributes();
-					}
-					CComBSTR bstr;
-					COMTHROW(m_mgaFco->get_Name(&bstr));
-					m_name = bstr;
-				} else {
-					objtype_enum objtype;
-					COMTHROW(m_metaFco->get_ObjType(&objtype));
-					if (objtype == OBJTYPE_REFERENCE) {
-						m_copyBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_COPY, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
-						m_isCopy = true;
-					} else {
-						m_isCopy = false;
-					}
-					m_stereotype.Empty();
-					CComBSTR bstr;
-					COMTHROW(m_metaFco->get_DisplayedName(&bstr));
-					if (bstr.Length() == 0 ) {
-						bstr.Empty();
-						COMTHROW(m_metaFco->get_Name(&bstr));
-					}
-					m_name = bstr;
-				}
-
-				if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, COLOR_PREF, m_color)) {
-					m_color = GME_BLACK_COLOR;
-				}
-				if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, NAME_COLOR_PREF, m_nameColor)) {
-					m_nameColor = GME_BLACK_COLOR;
-				}
-				CalcRelPositions();*/
-
-				AddImagePart(new DecoratorSDK::AtomBitmapPart(this, m_eventSink));
-				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else {	// This must be a class
+				AddImagePart(new UMLClassPart(this, m_eventSink));
+//				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			}
 		}
 	}

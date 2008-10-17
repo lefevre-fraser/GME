@@ -99,6 +99,12 @@ namespace DecoratorSDK
 	static const char* PREF_PREFERREDSIZE			= "preferredSize";
 	static const char* PREF_ISMASKEDBITMAP			= "isMaskedBitmap";
 
+	static const char* PREF_DECORATOR_MARGINX		= "decoratorMarginX";
+	static const char* PREF_DECORATOR_MARGINY		= "decoratorMarginY";
+	static const char* PREF_DECORATOR_GAPY			= "decoratorGapY";
+	static const char* PREF_DECORATOR_MINATTRSIZE	= "decoratorMinAttrSize";
+	static const char* PREF_TEXTOVERRIDE			= "textOverride";
+
 	static const int FONT_LABEL			= 0;
 	static const int FONT_PORT			= 1;
 	static const int FONT_TYPE			= 2;
@@ -128,6 +134,7 @@ namespace DecoratorSDK
 	static const COLORREF COLOR_WHITE			= RGB( 0xff, 0xff, 0xff );
 	static const COLORREF COLOR_GREY			= RGB( 0xc0, 0xc0, 0xc0 );
 	static const COLORREF COLOR_GRAYED_OUT		= RGB( 0xde, 0xde, 0xde );
+	static const COLORREF COLOR_TRANSPARENT		= RGB( 0xff, 0xff, 0xff );
 
 	static const int MAX_LABEL_LENGTH		= 64;
 	static const int MAX_TYPE_LENGTH		= 90;
@@ -151,13 +158,18 @@ namespace DecoratorSDK
 	static const unsigned int CTX_MENU_ID_RENAME	= DECORATOR_CTX_MENU_MINID + 0;
 	static const unsigned int CTX_MENU_ID_RESETSIZE	= DECORATOR_CTX_MENU_MINID + 1;
 
-	static const char* STEREOTYPE_LEFTA				= "<<";
-	static const char* STEREOTYPE_RIGHTA			= ">>";
-	static const wchar_t* STEREOTYPE_LEFTB			= L"\u226A ";
-	static const wchar_t* STEREOTYPE_RIGHTB			= L" \u226B";
-	static const char* ABSTRACT_ATTR				= "IsAbstract";
-	static const char* ATTRIBUTES_ATTR				= "Attributes";
-	static const char* ATTRIBUTE_SEP				= " : ";
+	static const char* STEREOTYPE_LEFTA		= "<<";
+	static const char* STEREOTYPE_RIGHTA	= ">>";
+	static const wchar_t* STEREOTYPE_LEFTB	= L"\u226A ";
+	static const wchar_t* STEREOTYPE_RIGHTB	= L" \u226B";
+	static const char* ABSTRACT_ATTR		= "IsAbstract";
+	static const char* ATTRIBUTES_ATTR		= "Attributes";
+	static const char* ATTRIBUTE_SEP		= " : ";
+
+	static const int DECORATOR_MARGINX		= 6;
+	static const int DECORATOR_MARGINY		= 4;
+	static const int DECORATOR_GAPY			= 0;
+	static const int DECORATOR_MINATTRSIZE	= 13;
 
 	struct SFont
 	{

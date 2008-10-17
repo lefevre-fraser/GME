@@ -153,7 +153,7 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				bool newDecoratorCreated = false;
 #if defined (TRYNEWDECORATORS)
 				CComPtr<IMgaNewDecoratorEvents> decorEventSinkIface;
-				if (decoratorProgId == GME_DEFAULT_DECORATOR /*||
+				if (decoratorProgId == GME_DEFAULT_DECORATOR ||
 					decoratorProgId == "Mga.UMLDecorator" /*||
 					decoratorProgId == "Mga.Decoator.MetaDecorator"*/)
 				{

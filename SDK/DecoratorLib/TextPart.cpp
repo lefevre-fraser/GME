@@ -64,33 +64,36 @@ void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 	PartBase::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	// Get Text
-	PreferenceMap::iterator it = preferences.find(textStringVariableName);
-	bool bTextDefined = it != preferences.end();
-	if (bTextDefined)
-		m_strText = *it->second.uValue.pstrValue;
+	PreferenceMap::iterator it = preferences.find(DecoratorSDK::PREF_TEXTOVERRIDE);
+	if (it == preferences.end()) {
+		it = preferences.find(textStringVariableName);
+		bool bTextDefined = (it != preferences.end());
+		if (bTextDefined)
+			m_strText = *it->second.uValue.pstrValue;
 
-	CComBSTR bstrText;
-	CComPtr<IMgaMetaFCO> spMetaFCO;
-	if (!m_spFCO) {
-		CComPtr<IMgaMetaRole> spRole;
-		COMTHROW(m_spPart->get_Role(&spRole));
-		COMTHROW(spRole->get_Kind(&spMetaFCO));
+		CComBSTR bstrText;
+		CComPtr<IMgaMetaFCO> spMetaFCO;
+		if (!m_spFCO) {
+			CComPtr<IMgaMetaRole> spRole;
+			COMTHROW(m_spPart->get_Role(&spRole));
+			COMTHROW(spRole->get_Kind(&spMetaFCO));
 
-		if (!bTextDefined) {
-			COMTHROW(spRole->get_DisplayedName(&bstrText));
-			if (bstrText.Length() == 0) {
-				bstrText.Empty();
-				COMTHROW(spMetaFCO->get_Name(&bstrText));
+			if (!bTextDefined) {
+				COMTHROW(spRole->get_DisplayedName(&bstrText));
+				if (bstrText.Length() == 0) {
+					bstrText.Empty();
+					COMTHROW(spMetaFCO->get_Name(&bstrText));
+				}
 			}
+		} else {
+			if (!bTextDefined)
+				COMTHROW(m_spFCO->get_Name(&bstrText));
 		}
-	} else {
 		if (!bTextDefined)
-			COMTHROW(m_spFCO->get_Name(&bstrText));
-	}
-	if (!bTextDefined)
-		CopyTo(bstrText, m_strText);
-	if (m_strText == "Condition") {
-		m_strText = "Condition";
+			CopyTo(bstrText, m_strText);
+		if (m_strText == "Condition") {
+			m_strText = "Condition";
+		}
 	}
 
 	// Text's Font
@@ -224,9 +227,7 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 			TitleEditingStarted(editLocation);
 			m_strText = inPlaceEditDlg.GetText();
 			// transaction operation begin
-			CComBSTR bstr;
-			CopyTo(m_strText, bstr);
-			COMTHROW(m_spFCO->put_Name(bstr));
+			ExecuteOperation();
 			// transaction operation end
 			TitleChanged(m_strText);
 			TitleEditingFinished(editLocation);
@@ -278,7 +279,7 @@ bool TextPart::OperationCanceledByGME(void)
 	return false;
 }
 
-long	TextPart::GetLongest(void) const
+long TextPart::GetLongest(void) const
 {
 	long maxv = 0;
 	for (unsigned int i = 0; i < m_vecText.size(); i++) {
@@ -287,6 +288,11 @@ long	TextPart::GetLongest(void) const
 			maxv = ilen;
 	}
 	return maxv;
+}
+
+CRect TextPart::GetTextLocation(void) const
+{
+	return GetLabelLocation();
 }
 
 }; // namespace DecoratorSDK

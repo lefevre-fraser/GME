@@ -70,9 +70,12 @@ public:
 	virtual bool	OperationCanceledByGME		(void);
 
 	virtual long	GetLongest					(void) const;
-protected:
+
+	virtual void	SetText						(const CString& text) { m_strText = text; };
 	virtual CPoint	GetTextPosition				(void) const = 0;
-	virtual CRect	GetTextLocation				(void) const = 0;
+	virtual void	SetTextPosition				(const CPoint& position) = 0;
+	virtual CRect	GetTextLocation				(void) const;
+	virtual void	ExecuteOperation			(void) = 0;
 };
 
 }; // namespace DecoratorSDK

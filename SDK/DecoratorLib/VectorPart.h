@@ -85,6 +85,22 @@ public:
 
 //################################################################################################
 //
+// CLASS : AbsoluteCoordCommand
+//
+//################################################################################################
+
+class AbsoluteCoordCommand: public CoordCommand {
+	long	m_Coord;
+
+public:
+	AbsoluteCoordCommand(long coord): CoordCommand(), m_Coord(coord) {};
+	virtual ~AbsoluteCoordCommand() {};
+
+	virtual long	ResolveCoordinate	(const CRect& extents) const { return m_Coord; };
+};
+
+//################################################################################################
+//
 // CLASS : ComplexCoordCommand
 //
 //################################################################################################
@@ -163,6 +179,7 @@ public:
 	void			AddCommand					(const VectorCommand& cmd) { m_Commands.push_back(cmd); };
 	long			GetCommandNumber			(void) const { return (long)m_Commands.size(); };
 	void			RemoveCommand				(long index);
+	void			RemoveAllCommands			(void) { m_Commands.clear(); };
 	VectorCommand	GetCommand					(long index) const;
 
 // =============== resembles IMgaNewDecorator

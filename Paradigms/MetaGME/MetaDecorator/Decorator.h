@@ -155,7 +155,6 @@ protected:
 
 private:
 	bool InPartBrowser()			{ return (m_mgaFco == NULL) ; }
-	bool IsReal()					{ return (m_mgaFco != NULL) ; }
 	void CalcRelPositions();
 	void CollectAttributes(const CComPtr<IMgaFCO> &fco);
 	void SortAttributes();

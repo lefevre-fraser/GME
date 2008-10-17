@@ -880,7 +880,7 @@ std::vector<CString> Facilities::wrapString( const CString& strIn, int iWrap, in
 	str.TrimLeft();
 	str.TrimRight();
 	iWrap = min( iMax, iWrap );
-	if ( iWrap == 0 )
+	if ( iWrap == 0 || iWrap == -1 )
 		vecOut.push_back( str );
 	else {
 		while ( ! str.IsEmpty() ) {

@@ -103,7 +103,6 @@ IDR_NEWUMLDECORATOR     REGISTRY DISCARDABLE    "NewUMLDecorator.rgs"
 // Bitmap
 //
 
-IDB_BITMAP_COPY         BITMAP  DISCARDABLE     "copy.bmp"
 IDB_BITMAP_CONSTRAINT   BITMAP  DISCARDABLE     "constraint.bmp"
 IDB_BITMAP_CDEFINITION  BITMAP  DISCARDABLE     "constraintdefinition.bmp"
 
@@ -123,6 +122,7 @@ IDB_ICON_INSTANCE_DIS   BITMAP                  "res\\icon_instance_disabled.bmp
 IDB_ICON_REFERENCE_DIS  BITMAP                  "res\\icon_reference_disabled.bmp"
 IDB_ICON_SUBTYPE_DIS    BITMAP                  "res\\icon_subtype_disabled.bmp"
 IDB_ICON_TYPE_DIS       BITMAP                  "res\\icon_type_disabled.bmp"
+IDB_REFERENCE_SIGN      BITMAP                  "res\\referencesign.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

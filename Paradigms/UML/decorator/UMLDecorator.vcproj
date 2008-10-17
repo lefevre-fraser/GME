@@ -299,6 +299,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\UMLAttributePart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\UMLClassPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\UMLCompositePart.cpp"
 				>
 			</File>
@@ -460,6 +468,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UMLAttributePart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UMLClassPart.h"
+				>
+			</File>
+			<File
 				RelativePath=".\UMLCompositePart.h"
 				>
 			</File>
@@ -477,10 +493,6 @@
 			</File>
 			<File
 				RelativePath="constraintdefinition.bmp"
-				>
-			</File>
-			<File
-				RelativePath="copy.bmp"
 				>
 			</File>
 			<File

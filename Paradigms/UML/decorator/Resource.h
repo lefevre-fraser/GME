@@ -30,12 +30,12 @@
 #define IDB_ICON_REFERENCE_DIS          207
 #define IDB_ICON_SUBTYPE_DIS            208
 #define IDB_ICON_TYPE_DIS               209
+#define IDB_REFERENCE_SIGN              210
 
-#define IDB_BITMAP_COPY                 210
 #define IDB_BITMAP_CONSTRAINT           211
 #define IDB_BITMAP_CDEFINITION          212
 #define IDC_TEXTEDIT                    201
-#define IDD_INPLACEEDITDIALOG           210
+#define IDD_INPLACEEDITDIALOG           211
 
 // Next default values for new objects
 // 

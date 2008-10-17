@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ClassLabelPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\GME\Common\CommonError.cpp"
 				>
 			</File>
@@ -320,6 +324,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\StereoLabelPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\StereotypeDecorators.cpp"
 				>
 			</File>
@@ -375,6 +383,10 @@
 			</File>
 			<File
 				RelativePath=".\ClassComplexPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ClassLabelPart.h"
 				>
 			</File>
 			<File
@@ -486,6 +498,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\StereoLabelPart.h"
+				>
+			</File>
+			<File
 				RelativePath=".\StereotypeDecorators.h"
 				>
 			</File>
@@ -581,6 +597,10 @@
 			</File>
 			<File
 				RelativePath=".\res\referenceport.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\referencesign.bmp"
 				>
 			</File>
 			<File

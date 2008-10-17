@@ -24,35 +24,55 @@ ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEven
 
 	m_LabelPart					(NULL),
 	m_StereotypePart			(NULL),
+	m_copySignPart				(NULL),
+
+	m_isCopy					(false),
 	m_crAttributeText			(COLOR_BLACK),
-	m_iLongestTextLength		(0),
-	m_iShortestTextLength		(LONG_MAX)
+	m_lMaxTextWidth				(0),
+	m_lMaxTextHeight			(0),
+	m_lMinTextWidth				(LONG_MAX),
+	m_lMinTextHeight			(LONG_MAX),
+
+	m_DecoratorMarginX			(DECORATOR_MARGINX),
+	m_DecoratorMarginY			(DECORATOR_MARGINY),
+	m_DecoratorGapY				(DECORATOR_GAPY),
+	m_DecoratorMinAttrSize		(DECORATOR_MINATTRSIZE)
 {
 }
 
 ClassComplexPart::~ClassComplexPart()
 {
+	for(unsigned long i = 0; i < coordCommands.size(); i++) {
+		delete coordCommands[i];
+	}
+	coordCommands.clear();
 }
 
 void ClassComplexPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
 {
-	m_LabelPart->Initialize(pProject, pPart, pFCO);
+	if (m_LabelPart != NULL)
+		m_LabelPart->Initialize(pProject, pPart, pFCO);
 	if (m_StereotypePart != NULL)
 		m_StereotypePart->Initialize(pProject, pPart, pFCO);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->Initialize(pProject, pPart, pFCO);
 	}
+	if (m_copySignPart != NULL)
+		m_copySignPart->Initialize(pProject, pPart, pFCO);
 	VectorPart::Initialize(pProject, pPart, pFCO);
 }
 
 void ClassComplexPart::Destroy()
 {
-	m_LabelPart->Destroy();
+	if (m_LabelPart != NULL)
+		m_LabelPart->Destroy();
 	if (m_StereotypePart != NULL)
 		m_StereotypePart->Destroy();
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->Destroy();
 	}
+	if (m_copySignPart != NULL)
+		m_copySignPart->Destroy();
 	VectorPart::Destroy();
 }
 
@@ -65,8 +85,10 @@ feature_code ClassComplexPart::GetFeatures(void) const
 {
 	feature_code featureCodes = 0;
 
-	feature_code labelFeatureCodes = m_LabelPart->GetFeatures();
-	featureCodes |= labelFeatureCodes;
+	if (m_LabelPart != NULL) {
+		feature_code labelFeatureCodes = m_LabelPart->GetFeatures();
+		featureCodes |= labelFeatureCodes;
+	}
 	if (m_StereotypePart != NULL) {
 		feature_code stereotypeFeatureCodes = m_StereotypePart->GetFeatures();
 		featureCodes |= stereotypeFeatureCodes;
@@ -77,6 +99,11 @@ feature_code ClassComplexPart::GetFeatures(void) const
 		featureCodes |= attrubuteFeatureCodes;
 	}
 
+	if (m_copySignPart != NULL) {
+		feature_code copySignFeatureCodes = m_copySignPart->GetFeatures();
+		featureCodes |= copySignFeatureCodes;
+	}
+
 	feature_code partFeatureCodes = VectorPart::GetFeatures();
 	featureCodes |= partFeatureCodes;
 
@@ -85,12 +112,15 @@ feature_code ClassComplexPart::GetFeatures(void) const
 
 void ClassComplexPart::SetParam(const CString& strName, VARIANT vValue)
 {
-	m_LabelPart->SetParam(strName, vValue);
+	if (m_LabelPart != NULL)
+		m_LabelPart->SetParam(strName, vValue);
 	if (m_StereotypePart != NULL)
 		m_StereotypePart->SetParam(strName, vValue);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetParam(strName, vValue);
 	}
+	if (m_copySignPart != NULL)
+		m_copySignPart->SetParam(strName, vValue);
 	VectorPart::SetParam(strName, vValue);
 }
 
@@ -107,12 +137,15 @@ bool ClassComplexPart::GetParam(const CString& strName, VARIANT* pvValue)
 
 void ClassComplexPart::SetActive(bool bIsActive)
 {
-	m_LabelPart->SetActive(bIsActive);
+	if (m_LabelPart != NULL)
+		m_LabelPart->SetActive(bIsActive);
 	if (m_StereotypePart != NULL)
 		m_StereotypePart->SetActive(bIsActive);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetActive(bIsActive);
 	}
+	if (m_copySignPart != NULL)
+		m_copySignPart->SetActive(bIsActive);
 	VectorPart::SetActive(bIsActive);
 }
 
@@ -122,43 +155,20 @@ CSize ClassComplexPart::GetPreferredSize(void) const
 	if (size.cx * size.cy != 0)
 		return size;
 
-/*	if (m_LeftPorts.empty() && m_RightPorts.empty()) {
-		if (!m_pBitmap || m_pBitmap->getName() == createResString(IDB_MODEL)) {
-			return CSize(WIDTH_MODEL, HEIGHT_MODEL);
-		} else {
-			return VectorPart::GetPreferredSize();
-		}
-	}
-
-	LOGFONT logFont;
-	getFacilities().getFont(FONT_PORT)->pFont->GetLogFont(&logFont);
-	long lWidth = 0;
-	if (m_bPortLabelInside) {
-		ASSERT(m_iLongestPortTextLength >= 0 && m_iLongestPortTextLength <= 1000);
-		ASSERT(m_iMaxPortTextLength >= 0 && m_iMaxPortTextLength <= 1000);
-		ASSERT(m_iMaxPortTextLength); // m_iMaxPortTextLength > 0 !!! since
-		long lw = min(m_iMaxPortTextLength, m_iLongestPortTextLength);
-		lWidth = (24 + 5 * (lw - 3) + GAP_LABEL + WIDTH_PORT + GAP_XMODELPORT) * 2 + GAP_PORTLABEL;
-	} else {
-		lWidth = (8 * 3 + GAP_LABEL + WIDTH_PORT + GAP_XMODELPORT) * 2 + GAP_PORTLABEL;
-	}
-
-	long lHeight = GAP_YMODELPORT * 2 +
-					max(m_LeftPorts.size(), m_RightPorts.size()) * (HEIGHT_PORT + GAP_PORT) - GAP_PORT;
-*/
-	return CSize(WIDTH_MODEL, HEIGHT_MODEL);
+	ASSERT(m_calcSize.cx > 0 && m_calcSize.cy > 0);
+	return m_calcSize;
 }
 
 void ClassComplexPart::SetLocation(const CRect& location)
 {
-	m_LabelPart->SetLocation(location);
+	if (m_LabelPart != NULL)
+		m_LabelPart->SetLocation(location);
 	if (m_StereotypePart != NULL)
 		m_StereotypePart->SetLocation(location);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetLocation(location);
 	}
 	VectorPart::SetLocation(location);
-	CalcRelPositions();
 }
 
 CRect ClassComplexPart::GetLocation(void) const
@@ -180,23 +190,29 @@ CRect ClassComplexPart::GetLabelLocation(void) const
 void ClassComplexPart::Draw(CDC* pDC)
 {
 	CalcRelPositions(pDC);
-	m_LabelPart->Draw(pDC);
+	if (m_LabelPart != NULL)
+		m_LabelPart->Draw(pDC);
 	if (m_StereotypePart != NULL)
 		m_StereotypePart->Draw(pDC);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->Draw(pDC);
 	}
+	if (m_copySignPart != NULL)
+		m_copySignPart->Draw(pDC);
 	VectorPart::Draw(pDC);
 }
 
 void ClassComplexPart::SaveState()
 {
-	m_LabelPart->SaveState();
+	if (m_LabelPart != NULL)
+		m_LabelPart->SaveState();
 	if (m_StereotypePart != NULL)
 		m_StereotypePart->SaveState();
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SaveState();
 	}
+	if (m_copySignPart != NULL)
+		m_copySignPart->SaveState();
 	VectorPart::SaveState();
 }
 
@@ -204,59 +220,46 @@ void ClassComplexPart::SaveState()
 void ClassComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 									HWND parentWnd, PreferenceMap& preferences)
 {
-/*	preferences[PREF_ICONDEFAULT]	= PreferenceVariant(createResString(IDB_MODEL));
-	preferences[PREF_TILESDEFAULT]	= PreferenceVariant(getFacilities().getTileVector(TILE_MODELDEFAULT));
-	preferences[PREF_TILESUNDEF]	= PreferenceVariant(getFacilities().getTileVector(TILE_PORTDEFAULT));
+	PreferenceMap::iterator it;
 
-	if (pFCO) {
-		PreferenceMap::iterator it = preferences.find(PREF_PORTLABELCOLOR);
-		if (it != preferences.end())
-			m_crPortText = it->second.uValue.crValue;
-		else
-			getFacilities().getPreference(pFCO, PREF_PORTLABELCOLOR, m_crPortText);
+	it = preferences.find(PREF_DECORATOR_MARGINX);
+	if (it != preferences.end())
+		m_DecoratorMarginX = it->second.uValue.lValue;
+	it = preferences.find(PREF_DECORATOR_MARGINY);
+	if (it != preferences.end())
+		m_DecoratorMarginY = it->second.uValue.lValue;
+	it = preferences.find(PREF_DECORATOR_GAPY);
+	if (it != preferences.end())
+		m_DecoratorGapY = it->second.uValue.lValue;
+	it = preferences.find(PREF_DECORATOR_MINATTRSIZE);
+	if (it != preferences.end())
+		m_DecoratorMinAttrSize = it->second.uValue.lValue;
 
-		it = preferences.find(PREF_PORTLABELINSIDE);
-		if (it != preferences.end())
-			m_bPortLabelInside = it->second.uValue.bValue;
-		else
-			getFacilities().getPreference(pFCO, PREF_PORTLABELINSIDE, m_bPortLabelInside);
+	// TODO: some common initializations here too
 
-		long o = m_iMaxPortTextLength;
-		it = preferences.find(PREF_PORTLABELLENGTH);
-		if (it != preferences.end()) {
-			m_iMaxPortTextLength = it->second.uValue.lValue;
-		} else {
-			if (getFacilities().getPreference(pFCO, PREF_PORTLABELLENGTH, m_iMaxPortTextLength))
-				m_iMaxPortTextLength = abs(m_iMaxPortTextLength);	//convert any negative value to positive
-			else	//if not found in registry
-				m_iMaxPortTextLength = MAX_PORT_LENGTH;	// the default value in Preferences
-		}
-		if (m_iMaxPortTextLength == 0)	// if 0 it means it has to show all way long
-			m_iMaxPortTextLength = 999;	// so we set a huge value
-
-		it = preferences.find(PREF_BORDERCOLOR);
-		if (it != preferences.end())
-			m_crBorder = it->second.uValue.crValue;
-		else
-			getFacilities().getPreference(pFCO, PREF_BORDERCOLOR, m_crBorder);
-
-		TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
-	} else {
-		TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	if (m_LabelPart != NULL)
+		m_LabelPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	if (m_StereotypePart != NULL)
+		m_StereotypePart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
+		(*ii)->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	}
-
-	if (m_LeftPorts.empty() && m_RightPorts.empty())
-		m_pTileVector = getFacilities().getTileVector(TILE_ATOMDEFAULT);*/
+	if (m_copySignPart != NULL)
+		m_copySignPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 
 void ClassComplexPart::SetSelected(bool bIsSelected)
 {
-	m_LabelPart->SetSelected(bIsSelected);
+	if (m_LabelPart != NULL)
+		m_LabelPart->SetSelected(bIsSelected);
 	if (m_StereotypePart != NULL)
 		m_StereotypePart->SetSelected(bIsSelected);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetSelected(bIsSelected);
 	}
+	if (m_copySignPart != NULL)
+		m_copySignPart->SetSelected(bIsSelected);
 	VectorPart::SetSelected(bIsSelected);
 }
 
@@ -273,7 +276,7 @@ bool ClassComplexPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transfor
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseMoved(nFlags, point, transformHDC))
 				return true;
@@ -330,7 +333,7 @@ bool ClassComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseLeftButtonDown(nFlags, point, transformHDC))
 				return true;
@@ -387,7 +390,7 @@ bool ClassComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC t
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseLeftButtonUp(nFlags, point, transformHDC))
 				return true;
@@ -444,7 +447,7 @@ bool ClassComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& poi
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseLeftButtonDoubleClick(nFlags, point, transformHDC))
 				return true;
@@ -501,7 +504,7 @@ bool ClassComplexPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const C
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC))
 				return true;
@@ -558,7 +561,7 @@ bool ClassComplexPart::MouseRightButtonUp(UINT nFlags, const CPoint& point, HDC 
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseRightButtonUp(nFlags, point, transformHDC))
 				return true;
@@ -615,7 +618,7 @@ bool ClassComplexPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& po
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseRightButtonDoubleClick(nFlags, point, transformHDC))
 				return true;
@@ -672,7 +675,7 @@ bool ClassComplexPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& point, H
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseMiddleButtonDown(nFlags, point, transformHDC))
 				return true;
@@ -729,7 +732,7 @@ bool ClassComplexPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& point, HDC
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseMiddleButtonUp(nFlags, point, transformHDC))
 				return true;
@@ -786,7 +789,7 @@ bool ClassComplexPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& p
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseMiddleButtonDoubleClick(nFlags, point, transformHDC))
 				return true;
@@ -843,7 +846,7 @@ bool ClassComplexPart::MouseWheelTurned(UINT nFlags, short distance, const CPoin
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MouseWheelTurned(nFlags, distance, point, transformHDC))
 				return true;
@@ -900,7 +903,7 @@ bool ClassComplexPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoi
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->MenuItemSelected(menuItemId, nFlags, point, transformHDC))
 				return true;
@@ -957,7 +960,7 @@ bool ClassComplexPart::OperationCanceledByGME(void)
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
 		try {
 			if (m_LabelPart->OperationCanceledByGME())
 				return true;
@@ -997,53 +1000,164 @@ bool ClassComplexPart::OperationCanceledByGME(void)
 				break;
 		}
 	}
+	if (m_copySignPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
+		try {
+			if (m_copySignPart->OperationCanceledByGME())
+				return true;
+		}
+		catch(hresult_exception& e) {
+			retVal = e.hr;
+		}
+		catch(DecoratorException& e) {
+			retVal = e.GetHResult();
+		}
+	}
 
 	return false;
 }
 
-void ClassComplexPart::CollectAttributes(CComPtr<IMgaFCO> mgaFco)
+void ClassComplexPart::SetBrush(CDC* pDC)
 {
+	pDC->SelectStockObject(NULL_BRUSH);
 }
 
-void ClassComplexPart::CalcRelPositions(CDC *pDC)
+void ClassComplexPart::CalcRelPositions(CDC* pDC)
 {
+	m_lMaxTextWidth			= 0;
+	m_lMaxTextHeight		= 0;
+	m_lMinTextWidth			= LONG_MAX;
+	m_lMinTextHeight		= LONG_MAX;
+
+	CDC	dc;
+
+	dc.Attach(pDC ? pDC->m_hDC : GetDC(NULL));			// Trick
+	CFont* oldfont = dc.SelectObject(DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont);
+
+	if (m_LabelPart != NULL) {
+		CRect labelLoc = m_LabelPart->GetTextLocation();
+		m_lMaxTextWidth = max(m_lMaxTextWidth, labelLoc.Width());
+		m_lMaxTextHeight = max(m_lMaxTextHeight, labelLoc.Height());
+	}
+
+	if (m_StereotypePart != NULL) {
+		CRect stereoLoc = m_StereotypePart->GetTextLocation();
+		m_lMaxTextWidth = max(m_lMaxTextWidth, stereoLoc.Width());
+		m_lMaxTextHeight = max(m_lMaxTextHeight, stereoLoc.Height());
+	}
+
+	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
+		CSize extent = (*ii)->GetTextSize(&dc);
+		m_lMaxTextWidth = max(m_lMaxTextWidth, extent.cx);
+		m_lMaxTextHeight = max(m_lMaxTextHeight, extent.cy);
+	}
+
+	int xcenterpos = (2 * m_DecoratorMarginX + m_lMaxTextWidth) / 2; 
+	int	xleftpos = m_DecoratorMarginX;
+	int	xrightpos = m_DecoratorMarginX + m_lMaxTextWidth;
+	int ypos = m_DecoratorMarginY;
+
+	CPoint offset = GetLocation().TopLeft();
+	CPoint pos;
+
+	if (m_LabelPart != NULL) {
+		ypos += m_lMaxTextHeight;
+
+		pos = CPoint(xcenterpos, ypos);
+		pos.Offset(offset);
+		m_LabelPart->SetTextPosition(pos);
+	}
+
+	if (m_StereotypePart != NULL) {
+		ypos += m_DecoratorGapY;
+		ypos += m_lMaxTextHeight;
+
+		pos = CPoint(xcenterpos, ypos);
+		pos.Offset(offset);
+		m_StereotypePart->SetTextPosition(pos);
+	}
+
+	ypos += m_DecoratorMarginY;
+	m_SeparatorLoc = ypos + offset.y;
+
+	RemoveAllCommands();
+	if (coordCommands.size() > 0) {
+		ASSERT(coordCommands.size() == 5);
+		coordCommands.pop_back();	// Delete the AbsoulteCommand (the separator location)
+	} else {
+		coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::LeftMost));
+		coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::TopMost));
+		coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::RightMost));
+		coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::BottomMost));
+	}
+	AddCommand(DecoratorSDK::VectorCommand(coordCommands[0], coordCommands[1], coordCommands[2], coordCommands[3], DecoratorSDK::VectorCommand::Rectangle));
+	coordCommands.push_back(new DecoratorSDK::AbsoluteCoordCommand(m_SeparatorLoc));
+	AddCommand(DecoratorSDK::VectorCommand(coordCommands[0], coordCommands[4], DecoratorSDK::VectorCommand::MoveTo));
+	AddCommand(DecoratorSDK::VectorCommand(coordCommands[2], coordCommands[4], DecoratorSDK::VectorCommand::LineTo));
+
+	ypos += m_DecoratorMarginY;
+
+	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
+		ypos += m_lMaxTextHeight;
+		pos = CPoint(xleftpos, ypos);
+		pos.Offset(offset);
+		(*ii)->SetNamePosition(pos);
+		pos = CPoint(xrightpos, ypos);
+		pos.Offset(offset);
+		(*ii)->SetTypePosition(pos);
+		ypos += m_DecoratorGapY;
+	}
+
+	if (m_isCopy && m_copySignPart) {
+		ypos += m_DecoratorMarginY;
+		CRect loc = m_copySignPart->GetLocation();
+		pos = CPoint(xleftpos, ypos);
+		pos.Offset(offset);
+		loc.MoveToXY(pos);
+		m_copySignPart->SetLocation(loc);
+		ypos += loc.Height();
+	} else if (m_AttributeParts.size() == 0){
+		ypos += m_DecoratorMinAttrSize;
+	}
+	m_calcSize.cx = xrightpos + m_DecoratorMarginX;
+	m_calcSize.cy = ypos + m_DecoratorMarginY;
+
+	if (pDC) {
+		dc.SelectObject(oldfont);
+		dc.Detach();
+	}
 }
 
 void ClassComplexPart::SetBoxLocation(const CRect& cRect)
 {
-/*	TypeableBitmapPart::SetBoxLocation(cRect);
-	long lY = (m_Rect.Height() - m_LeftPorts.size() * (HEIGHT_PORT + GAP_PORT) + GAP_PORT) / 2;
-
-	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
-		(*ii)->SetBoxLocation(CRect(GAP_XMODELPORT, lY, GAP_XMODELPORT + WIDTH_PORT, lY + HEIGHT_PORT));
-		lY += HEIGHT_PORT + GAP_PORT;
-	}
-	lY = (m_Rect.Height() - m_RightPorts.size() * (HEIGHT_PORT + GAP_PORT) + GAP_PORT) / 2;
-	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
-		(*ii)->SetBoxLocation(CRect(cRect.Width() - GAP_XMODELPORT - WIDTH_PORT, lY, cRect.Width() - GAP_XMODELPORT, lY + HEIGHT_PORT));
-		lY += HEIGHT_PORT + GAP_PORT;
-	}*/
+	VectorPart::SetBoxLocation(cRect);
+	CalcRelPositions();
 }
 
 void ClassComplexPart::SetReferenced(bool referenced)
 {
-	m_LabelPart->SetReferenced(referenced);
+	if (m_LabelPart != NULL)
+		m_LabelPart->SetReferenced(referenced);
 	if (m_StereotypePart != NULL)
 		m_StereotypePart->SetReferenced(referenced);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetReferenced(referenced);
 	}
+	if (m_copySignPart != NULL)
+		m_copySignPart->SetReferenced(referenced);
 	VectorPart::SetReferenced(referenced);
 }
 
 void ClassComplexPart::SetParentPart(PartBase* pPart)
 {
-	m_LabelPart->SetParentPart(pPart);
+	if (m_LabelPart != NULL)
+		m_LabelPart->SetParentPart(pPart);
 	if (m_StereotypePart != NULL)
 		m_StereotypePart->SetParentPart(pPart);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->SetParentPart(pPart);
 	}
+	if (m_copySignPart != NULL)
+		m_copySignPart->SetParentPart(pPart);
 	VectorPart::SetParentPart(pPart);
 }
 

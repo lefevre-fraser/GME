@@ -1184,7 +1184,7 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 		bool newDecoratorCreated = false;
 #if defined (TRYNEWDECORATORS)
 		CComPtr<IMgaNewDecoratorEvents> decoratorEventSinkIface;
-		if (progId == GME_DEFAULT_DECORATOR /*||
+		if (progId == GME_DEFAULT_DECORATOR ||
 			progId == "Mga.UMLDecorator" /*||
 			progId == "Mga.Decoator.MetaDecorator"*/)
 		{

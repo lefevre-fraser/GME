@@ -124,7 +124,7 @@ STDMETHODIMP CDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart
 
 	// Get Name
 	try {
-		if (IsReal()) {
+		if (!InPartBrowser()) {
 			CComBSTR bstr;
 			COMTHROW(m_mgaFco->get_Name(&bstr));
 			m_name = bstr;
@@ -151,7 +151,7 @@ STDMETHODIMP CDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart
 	if (!DecoratorSDK::getFacilities().getPreference(m_mgaFco, m_metaFco, NAME_COLOR_PREF, m_nameColor)) {
 		m_nameColor = GME_BLACK_COLOR;
 	}
-	if (IsReal() && ( (m_shape == CLASS) || (m_shape == CLASSPROXY) ) ) {
+	if (!InPartBrowser() && ( (m_shape == CLASS) || (m_shape == CLASSPROXY) ) ) {
 		SetupClass();
 	}
 	CalcRelPositions();
@@ -452,7 +452,7 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 			dc.LineTo(m_sx + (long)(scalex * m_sepLoc.right), m_sy + (long)(scaley * m_sepLoc.bottom));
 
 			// Draw labels
-			if (IsReal()) {
+			if (!InPartBrowser()) {
 				CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
 				DecoratorSDK::getFacilities().drawText(&dc,
 														m_name,
@@ -587,7 +587,7 @@ void CDecorator::CalcRelPositions()
 			dc.Attach(GetDC(NULL));			// Trick
 			CFont *oldfont = dc.SelectObject(DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont);
 			
-			if (IsReal()) {
+			if (!InPartBrowser()) {
 				CFont *normfont;
 				if (m_isAbstract) {
 					normfont = dc.SelectObject(DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_ABSTRACT)->pFont);
@@ -611,14 +611,14 @@ void CDecorator::CalcRelPositions()
 			ext = dc.GetTextExtent(DecoratorSDK::getFacilities().getStereotyped(m_stereotype));
 			maxWidth = max(maxWidth, ext.cx);
 			maxHeight = max(maxHeight, ext.cy);
-			
+
 
 			int xcenterpos = (2 * META_DECORATOR_MARGINX + maxWidth) / 2; 
 			int	xleftpos = META_DECORATOR_MARGINX;
 			int	xrightpos = META_DECORATOR_MARGINX + maxWidth;
 			int ypos = META_DECORATOR_MARGINY;
 
-			if (IsReal()) {
+			if (!InPartBrowser()) {
 				m_namePos.x = xcenterpos;
 				m_namePos.y = (ypos +=maxHeight);
 

@@ -45,16 +45,8 @@ typedef enum { DSAtom, DSSet, DSNullRef, DSRefToNull, DSAtomPort, DSModelPort, D
 
 #define GME_NAME_DISPLAY_LNG		64
 
-#define HELP_PREF					"help"
 #define COLOR_PREF					"color"
-#define CONN_LINE_TYPE_PREF			"lineType"
-#define MODEL_BACKGROUND_COLOR_PREF	"backgroundColor"
-#define MODEL_BORDER_COLOR_PREF		"borderColor"
-#define PORT_NAME_COLOR_PREF		"portColor"
 #define NAME_COLOR_PREF				"nameColor"
-#define NAME_POS_PREF				"namePosition"
-#define ICON_PREF					"icon"
-#define PORTICON_PREF				"porticon"
 
 #define  UML_STEREOTYPE_ATTR		"Stereotype"
 #define  UML_ABSTRACT_ATTR			"IsAbstract"

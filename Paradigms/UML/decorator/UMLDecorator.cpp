@@ -76,7 +76,7 @@ STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaP
 			objtype_enum	objtype;
 			COMTHROW(m_mgaFco->get_ObjType(&objtype));
 			if (objtype == OBJTYPE_REFERENCE) {
-				m_copyBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_COPY, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
+				m_copyBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_REFERENCE_SIGN, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
 				m_isCopy = true;
 				CComPtr<IMgaFCO> mgaFco = m_mgaFco;
 				while(objtype == OBJTYPE_REFERENCE) {
@@ -125,7 +125,7 @@ STDMETHODIMP CUMLDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaP
 			objtype_enum objtype;
 			COMTHROW(m_metaFco->get_ObjType(&objtype));
 			if (objtype == OBJTYPE_REFERENCE) {
-				m_copyBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_BITMAP_COPY, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
+				m_copyBitmap = DecoratorSDK::getFacilities().getMaskedBitmap(IDB_REFERENCE_SIGN, UML_TRANSPARENT_COLOR, GME_GRAYED_OUT_COLOR);
 				m_isCopy = true;
 			}
 			else {

@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// Label part class (decorator part)
-//	LabelPart.h
+// Class label part class (decorator part)
+//	ClassLabelPart.h
 //
 //################################################################################################
 
-#ifndef __LABELPART_H_
-#define __LABELPART_H_
+#ifndef __CLASSLABELPART_H_
+#define __CLASSLABELPART_H_
 
 
 #include "StdAfx.h"
@@ -17,24 +17,27 @@ namespace DecoratorSDK {
 
 //################################################################################################
 //
-// CLASS : LabelPart
+// CLASS : ClassLabelPart
 //
 //################################################################################################
 
-class LabelPart: public TextPart
+class ClassLabelPart: public TextPart
 {
+protected:
+	CPoint		m_labelPosition;
+
 public:
-	LabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
-	virtual ~LabelPart();
+	ClassLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	virtual ~ClassLabelPart();
 
 	virtual CRect	GetLabelLocation			(void) const;
 	virtual void	Draw						(CDC* pDC);
 
 	virtual CPoint	GetTextPosition				(void) const;
-	virtual void	SetTextPosition				(const CPoint& position);
+	virtual void	SetTextPosition				(const CPoint& pos);
 	virtual void	ExecuteOperation			(void);
 };
 
 }; // namespace DecoratorSDK
 
-#endif //__LABELPART_H_
+#endif //__CLASSLABELPART_H_
