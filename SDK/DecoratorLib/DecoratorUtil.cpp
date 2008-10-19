@@ -1,6 +1,6 @@
 //################################################################################################
 //
-// Mga Decorator Base
+// DecoratorLib Utility Facility
 //	DecoratorUtil.cpp
 //
 //################################################################################################
@@ -460,6 +460,45 @@ bool Facilities::getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, b
 	}
 
 	bValue = (vval == VARIANT_TRUE);
+	return true;
+}
+
+bool Facilities::setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, const CString& strValue ) const
+{
+	if (!spFCO) {
+		return false;
+	}
+	CComBSTR attrname;
+	CopyTo( strName, attrname );
+	CComBSTR bstrValue;
+	CopyTo( strValue, bstrValue );
+
+	try {
+		COMTHROW(spFCO->put_StrAttrByName(attrname, bstrValue));
+	}
+	catch (hresult_exception &) {
+		return false;
+	}
+
+	return true;
+}
+
+bool Facilities::setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, bool bValue ) const
+{
+	if (!spFCO) {
+		return false;
+	}
+	CComBSTR attrname;
+	CopyTo( strName, attrname );
+	VARIANT_BOOL vval = bValue ? VARIANT_TRUE : VARIANT_FALSE;
+
+	try {
+		COMTHROW(spFCO->put_BoolAttrByName(attrname, vval));
+	}
+	catch (hresult_exception &) {
+		return false;
+	}
+
 	return true;
 }
 

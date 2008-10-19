@@ -24,18 +24,17 @@ namespace DecoratorSDK {
 class StereoLabelPart: public TextPart
 {
 protected:
-	CPoint		m_labelPosition;
+	long		m_labelRelYPosition;	// bottom of the text because of the bottom alignment
 
 public:
 	StereoLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~StereoLabelPart();
 
-	virtual CRect	GetLabelLocation			(void) const;
 	virtual void	Draw						(CDC* pDC);
 
 	virtual CPoint	GetTextPosition				(void) const;
-	virtual void	SetTextPosition				(const CPoint& pos);
-	virtual void	ExecuteOperation			(void);
+	virtual void	SetTextRelYPosition			(long relYPosition) { m_labelRelYPosition = relYPosition; };
+	virtual CRect	GetTextLocation				(void) const;
 };
 
 }; // namespace DecoratorSDK

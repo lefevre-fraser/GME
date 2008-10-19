@@ -55,6 +55,11 @@ CSize TextPart::GetPreferredSize(void) const
 	return CSize(0, 0);
 }
 
+CRect TextPart::GetLabelLocation(void) const
+{
+	return GetTextLocation();
+}
+
 // New functions
 void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 							HWND parentWnd, PreferenceMap& preferences)
@@ -153,7 +158,7 @@ void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 bool TextPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_bActive && m_bSelected) {
-		CRect ptRect = GetLabelLocation();
+		CRect ptRect = GetTextLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
 		if (ptRect.PtInRect(point)) {
@@ -183,7 +188,7 @@ bool TextPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_spFCO && m_bActive && m_bSelected) {
-		CRect ptRect = GetLabelLocation();
+		CRect ptRect = GetTextLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
 		if (!ptRectInflated.PtInRect(point))
@@ -225,11 +230,11 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 
 		if (inPlaceEditDlg.DoModal() == IDOK) {
 			TitleEditingStarted(editLocation);
-			m_strText = inPlaceEditDlg.GetText();
+			CString newString = inPlaceEditDlg.GetText();
 			// transaction operation begin
-			ExecuteOperation();
+			ExecuteOperation(newString);
 			// transaction operation end
-			TitleChanged(m_strText);
+			TitleChanged(newString);
 			TitleEditingFinished(editLocation);
 		}
 		delete scaled_font;
@@ -249,7 +254,7 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 bool TextPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (m_spFCO && m_bActive && m_bSelected) {
-		CRect ptRect = GetLabelLocation();
+		CRect ptRect = GetTextLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
 		if (ptRectInflated.PtInRect(point)) {
@@ -288,11 +293,6 @@ long TextPart::GetLongest(void) const
 			maxv = ilen;
 	}
 	return maxv;
-}
-
-CRect TextPart::GetTextLocation(void) const
-{
-	return GetLabelLocation();
 }
 
 }; // namespace DecoratorSDK

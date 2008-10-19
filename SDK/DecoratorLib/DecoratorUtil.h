@@ -1,6 +1,6 @@
 //################################################################################################
 //
-// Mga Decorator Base
+// DecoratorLib Utility Facility
 //	DecoratorUtil.h
 //
 //################################################################################################
@@ -95,6 +95,8 @@ namespace DecoratorSDK
 
 			bool getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, CString& strValue ) const;
 			bool getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, bool& bValue ) const;
+			bool setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, const CString& strValue ) const;
+			bool setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, bool bValue ) const;
 
 			bool getMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco) const;
 
@@ -126,4 +128,4 @@ namespace DecoratorSDK
 
 }; // namespace DecoratorSDK
 
-#endif // Decorator_h
+#endif // DecoratorUtil_h

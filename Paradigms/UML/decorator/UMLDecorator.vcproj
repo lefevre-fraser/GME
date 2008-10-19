@@ -418,6 +418,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\UMLStereoLabelPart.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -483,6 +487,10 @@
 				RelativePath="UMLDecorator.h"
 				>
 			</File>
+			<File
+				RelativePath=".\UMLStereoLabelPart.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resources"
@@ -497,6 +505,10 @@
 			</File>
 			<File
 				RelativePath=".\NewUMLDecorator.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\res\referencesign.bmp"
 				>
 			</File>
 			<File

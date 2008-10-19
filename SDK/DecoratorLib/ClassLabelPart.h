@@ -24,18 +24,21 @@ namespace DecoratorSDK {
 class ClassLabelPart: public TextPart
 {
 protected:
-	CPoint		m_labelPosition;
+	long		m_labelRelYPosition;	// bottom of the text because of the bottom alignment
+	bool		m_bIsAbstract;
 
 public:
-	ClassLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	ClassLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, bool bIsAbstract);
 	virtual ~ClassLabelPart();
 
-	virtual CRect	GetLabelLocation			(void) const;
 	virtual void	Draw						(CDC* pDC);
+	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
+												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 
 	virtual CPoint	GetTextPosition				(void) const;
-	virtual void	SetTextPosition				(const CPoint& pos);
-	virtual void	ExecuteOperation			(void);
+	virtual void	SetTextRelYPosition			(long relYPosition) { m_labelRelYPosition = relYPosition; };
+	virtual CRect	GetTextLocation				(void) const;
+	virtual void	ExecuteOperation			(const CString& newString);
 };
 
 }; // namespace DecoratorSDK

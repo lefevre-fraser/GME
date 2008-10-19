@@ -40,7 +40,7 @@ public:
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 
 	virtual CPoint	GetTextPosition				(void) const;
-	virtual CRect	GetLabelLocation			(void) const;
+	virtual CRect	GetTextLocation				(void) const;
 };
 
 }; // namespace DecoratorSDK

@@ -36,9 +36,10 @@ AttributePart::~AttributePart()
 void AttributePart::Draw(CDC* pDC)
 {
 	if (m_bTextEnabled) {
+		CRect loc = GetLocation();
 		getFacilities().drawText(pDC,
 								 m_strText + ATTRIBUTE_SEP,
-								 m_namePosition,
+								 CPoint(loc.left + DECORATOR_MARGINX, loc.top + m_textRelYPosition),
 								 getFacilities().getFont(m_iFontKey)->pFont,
 								 (m_bActive) ? m_crText : COLOR_GREY,
 								 TA_BOTTOM | TA_LEFT,
@@ -48,7 +49,7 @@ void AttributePart::Draw(CDC* pDC)
 								 false);
 		getFacilities().drawText(pDC,
 								 m_strType,
-								 m_typePosition,
+								 CPoint(loc.right - DECORATOR_MARGINX, loc.top + m_textRelYPosition),
 								 getFacilities().getFont(m_iFontKey)->pFont,
 								 (m_bActive) ? m_crText : COLOR_GREY,
 								 TA_BOTTOM | TA_RIGHT,
@@ -63,34 +64,22 @@ void AttributePart::Draw(CDC* pDC)
 
 CPoint	AttributePart::GetTextPosition(void) const
 {
-	return m_namePosition;
-}
-
-void AttributePart::SetTextPosition(const CPoint& pos)
-{
-	SetNamePosition(pos);
+	return GetTextLocation().TopLeft();
 }
 
 CRect AttributePart::GetTextLocation(void) const
 {
-	CPoint pt = GetTextPosition();
+	CRect loc = GetLocation();
 
 	CDC dc;
 	dc.CreateCompatibleDC(NULL);
 	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
 	CSize cSize = dc.GetTextExtent(DecoratorSDK::getFacilities().getStereotyped(m_strText));
 
-	return CRect(pt.x, pt.y, pt.x + cSize.cx, pt.y + cSize.cy);
-}
-
-void AttributePart::ExecuteOperation(void)
-{
-	// TODO
-	// transaction operation begin
-/*	CComBSTR bstr;
-	CopyTo(m_strText, bstr);
-	COMTHROW(m_spFCO->put_Name(bstr));*/
-	// transaction operation end
+	return CRect(loc.left + DECORATOR_MARGINX,
+				 loc.top + m_textRelYPosition - cSize.cy,
+				 loc.left + DECORATOR_MARGINX + cSize.cx,
+				 loc.top + m_textRelYPosition);
 }
 
 CSize AttributePart::GetNameSize(CDC* pDC) const

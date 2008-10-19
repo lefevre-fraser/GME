@@ -60,6 +60,7 @@ public:
 	virtual void			Destroy				(void);
 	virtual feature_code	GetFeatures			(void) const;
 	virtual CSize			GetPreferredSize	(void) const;
+	virtual CRect			GetLabelLocation	(void) const;
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
@@ -73,9 +74,9 @@ public:
 
 	virtual void	SetText						(const CString& text) { m_strText = text; };
 	virtual CPoint	GetTextPosition				(void) const = 0;
-	virtual void	SetTextPosition				(const CPoint& position) = 0;
-	virtual CRect	GetTextLocation				(void) const;
-	virtual void	ExecuteOperation			(void) = 0;
+	virtual void	SetTextRelYPosition			(long relYPosition) = 0;
+	virtual CRect	GetTextLocation				(void) const = 0;
+	virtual void	ExecuteOperation			(const CString& newString) = 0;
 };
 
 }; // namespace DecoratorSDK

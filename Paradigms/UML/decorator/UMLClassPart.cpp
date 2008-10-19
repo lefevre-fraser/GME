@@ -12,7 +12,7 @@
 #include "DecoratorStd.h"
 #include "TokenEx.h"
 #include "ClassLabelPart.h"
-#include "StereoLabelPart.h"
+#include "UMLStereoLabelPart.h"
 #include "UMLAttributePart.h"
 #include "BitmapPart.h"
 
@@ -42,7 +42,6 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 		DecoratorSDK::getFacilities().getMetaFCO(pPart, m_spMetaFCO);
 		preferences[DecoratorSDK::PREF_LABELFONT]		= DecoratorSDK::PreferenceVariant((long)DecoratorSDK::FONT_PORTNAME);
 		preferences[DecoratorSDK::PREF_LABELLENGTH]		= DecoratorSDK::PreferenceVariant((long)-1);
-//		preferences[DecoratorSDK::PREF_LABELLOCATION]	= DecoratorSDK::PreferenceVariant((long)0);
 		preferences[DecoratorSDK::PREF_LABELENABLED]	= DecoratorSDK::PreferenceVariant(true);
 		preferences[DecoratorSDK::PREF_LABELWRAP]		= DecoratorSDK::PreferenceVariant((long)0);
 		preferences[DecoratorSDK::PREF_TEXTOVERRIDE]	= DecoratorSDK::PreferenceVariant(true);
@@ -69,33 +68,29 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 					CString strStereotype;
 					if (DecoratorSDK::getFacilities().getAttribute(mgaFco ? mgaFco : m_spFCO, UML_STEREOTYPE_ATTR, strStereotype)) {
 						if (!strStereotype.IsEmpty()) {
-							m_StereotypePart = new DecoratorSDK::StereoLabelPart(this, m_eventSink);
+							m_StereotypePart = new UMLStereoLabelPart(this, m_eventSink, mgaFco ? mgaFco : m_spFCO);
 							m_StereotypePart->SetText(strStereotype);
 						}
 					}
 
 					DecoratorSDK::getFacilities().getAttribute(mgaFco ? mgaFco : m_spFCO, UML_ABSTRACT_ATTR, isAbstract);
-					if (isAbstract)
-						preferences[DecoratorSDK::PREF_LABELFONT] = DecoratorSDK::PreferenceVariant((long)DecoratorSDK::FONT_ABSTRACT);
 					CollectAttributes(mgaFco);
 				}
 			} else {
 				CString strStereotype;
 				if (DecoratorSDK::getFacilities().getAttribute(m_spFCO, UML_STEREOTYPE_ATTR, strStereotype)) {
 					if (!strStereotype.IsEmpty()) {
-						m_StereotypePart = new DecoratorSDK::StereoLabelPart(this, m_eventSink);
+						m_StereotypePart = new UMLStereoLabelPart(this, m_eventSink, m_spFCO);
 						m_StereotypePart->SetText(strStereotype);
 					}
 				}
 
 				DecoratorSDK::getFacilities().getAttribute(m_spFCO, UML_ABSTRACT_ATTR, isAbstract);
-				if (isAbstract)
-					preferences[DecoratorSDK::PREF_LABELFONT] = DecoratorSDK::PreferenceVariant((long)DecoratorSDK::FONT_ABSTRACT);
 				CollectAttributes();
 			}
 			CComBSTR bstr;
 			COMTHROW(m_spFCO->get_Name(&bstr));
-			m_LabelPart = new DecoratorSDK::ClassLabelPart(this, m_eventSink);
+			m_LabelPart = new DecoratorSDK::ClassLabelPart(this, m_eventSink, isAbstract);
 			m_LabelPart->SetText(CString(bstr));
 		} else {
 			objtype_enum objtype;
@@ -109,7 +104,7 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 				bstr.Empty();
 				COMTHROW(m_spMetaFCO->get_Name(&bstr));
 			}
-			m_LabelPart = new DecoratorSDK::ClassLabelPart(this, m_eventSink);
+			m_LabelPart = new DecoratorSDK::ClassLabelPart(this, m_eventSink, false);
 			m_LabelPart->SetText(CString(bstr));
 		}
 
@@ -153,10 +148,27 @@ void UMLClassPart::CollectAttributes(CComPtr<IMgaFCO> mgaFco)
 				attrPair[0].TrimRight();
 				attrPair[1].TrimLeft();
 				attrPair[1].TrimRight();
-				m_AttributeParts.push_back(new UMLAttributePart(this, m_eventSink, attrPair[0], attrPair[1]));
+				m_AttributeParts.push_back(new UMLAttributePart(this, m_eventSink, attrPair[0], attrPair[1], mgaFco));
 			}
 		}
 	}
+}
+
+void UMLClassPart::ModifyAttributes(CComPtr<IMgaFCO> mgaFco)
+{
+	CString attrPairs;
+	for (std::vector<DecoratorSDK::AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
+		if (!attrPairs.IsEmpty())
+			attrPairs += '\n';
+		CString attrName = (*ii)->GetName();
+		CString attrType = (*ii)->GetType();
+		CString attrPair = attrName;
+		if (attrType != "unknown") {
+			attrPair += ':' + attrType;
+		}
+		attrPairs += attrPair;
+	}
+	DecoratorSDK::getFacilities().setAttribute(mgaFco, UML_ATTRIBUTES_ATTR, attrPairs);
 }
 
 void UMLClassPart::CreateCopyBitmapPart(DecoratorSDK::PreferenceMap& preferences)

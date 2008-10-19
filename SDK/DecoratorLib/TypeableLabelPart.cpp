@@ -29,36 +29,6 @@ TypeableLabelPart::~TypeableLabelPart()
 {
 }
 
-CRect TypeableLabelPart::GetLabelLocation(void) const
-{
-	CRect cRect = LabelPart::GetLabelLocation();
-
-	if (m_bTypeNameEnabled && (m_iTypeInfo == 3 || m_iTypeInfo == 2)) {
-		LOGFONT logFont;
-		getFacilities().getFont(FONT_TYPE)->pFont->GetLogFont(&logFont);
-		ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
-
-		CSize cSize(logFont.lfWidth * m_strTypeName.GetLength(), logFont.lfHeight);
-		cRect.bottom += cSize.cy + GAP_LABEL;
-		if (cSize.cx > cRect.Width()) {
-			switch (eAlign) {
-				case CRP_BEGIN :
-					cRect.right += cSize.cx - cRect.Width();
-					break;
-				case CRP_CENTER :
-					cRect.left -= (cSize.cx - cRect.Width()) / 2;
-					cRect.right += (cSize.cx - cRect.Width()) / 2;
-					break;
-				case CRP_END :
-					cRect.left -= cSize.cx - cRect.Width();
-					break;
-			}
-		}
-	}
-
-	return cRect;
-}
-
 void TypeableLabelPart::Draw(CDC* pDC)
 {
 	LabelPart::Draw(pDC);
@@ -154,6 +124,36 @@ CPoint	TypeableLabelPart::GetTextPosition(void) const
 		}
 	}
 	return pt;
+}
+
+CRect TypeableLabelPart::GetTextLocation(void) const
+{
+	CRect cRect = LabelPart::GetTextLocation();
+
+	if (m_bTypeNameEnabled && (m_iTypeInfo == 3 || m_iTypeInfo == 2)) {
+		LOGFONT logFont;
+		getFacilities().getFont(FONT_TYPE)->pFont->GetLogFont(&logFont);
+		ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
+
+		CSize cSize(logFont.lfWidth * m_strTypeName.GetLength(), logFont.lfHeight);
+		cRect.bottom += cSize.cy + GAP_LABEL;
+		if (cSize.cx > cRect.Width()) {
+			switch (eAlign) {
+				case CRP_BEGIN :
+					cRect.right += cSize.cx - cRect.Width();
+					break;
+				case CRP_CENTER :
+					cRect.left -= (cSize.cx - cRect.Width()) / 2;
+					cRect.right += (cSize.cx - cRect.Width()) / 2;
+					break;
+				case CRP_END :
+					cRect.left -= cSize.cx - cRect.Width();
+					break;
+			}
+		}
+	}
+
+	return cRect;
 }
 
 }; // namespace DecoratorSDK

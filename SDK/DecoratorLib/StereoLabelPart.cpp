@@ -34,25 +34,14 @@ StereoLabelPart::~StereoLabelPart()
 {
 }
 
-CRect StereoLabelPart::GetLabelLocation(void) const
-{
-	CPoint pt = GetTextPosition();
-
-	CDC dc;
-	dc.CreateCompatibleDC(NULL);
-	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
-	CSize cSize = dc.GetTextExtent(DecoratorSDK::getFacilities().getStereotyped(m_strText));
-
-	return CRect(pt.x, pt.y, pt.x + cSize.cx, pt.y + cSize.cy);
-}
-
 void StereoLabelPart::Draw(CDC* pDC)
 {
 	if (m_bTextEnabled) {
-		CPoint pt = GetTextPosition();
+		CRect loc = GetLocation();
+		long centerline = (loc.left + loc.right) / 2;
 		getFacilities().drawText(pDC,
 								 DecoratorSDK::getFacilities().getStereotyped(m_strText),
-								 CPoint(pt.x, pt.y),
+								 CPoint(centerline, loc.top + m_labelRelYPosition),
 								 getFacilities().getFont(m_iFontKey)->pFont,
 								 (m_bActive) ? m_crText : COLOR_GREY,
 								 TA_BOTTOM | TA_CENTER,
@@ -67,19 +56,23 @@ void StereoLabelPart::Draw(CDC* pDC)
 
 CPoint	StereoLabelPart::GetTextPosition(void) const
 {
-	return m_labelPosition;
+	return GetLabelLocation().TopLeft();
 }
 
-void StereoLabelPart::SetTextPosition(const CPoint& pos)
+CRect StereoLabelPart::GetTextLocation(void) const
 {
-	m_labelPosition = pos;
-}
+	CRect loc = GetLocation();
 
-void StereoLabelPart::ExecuteOperation(void)
-{
-	// transaction operation begin
-	// TODO
-	// transaction operation end
+	CDC dc;
+	dc.CreateCompatibleDC(NULL);
+	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
+	CSize cSize = dc.GetTextExtent(DecoratorSDK::getFacilities().getStereotyped(m_strText));
+
+	long centerline = (loc.left + loc.right) / 2;
+	return CRect(centerline - cSize.cx / 2,
+				 loc.top + m_labelRelYPosition - cSize.cy,
+				 centerline + cSize.cx / 2,
+				 loc.top + m_labelRelYPosition);
 }
 
 }; // namespace DecoratorSDK

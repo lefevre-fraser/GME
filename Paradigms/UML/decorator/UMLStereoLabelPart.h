@@ -1,39 +1,39 @@
 //################################################################################################
 //
-// UML attribute part class (decorator part)
-//	UMLAttributePart.h
+// UML stereo label part class (decorator part)
+//	UMLStereoLabelPart.h
 //
 //################################################################################################
 
-#ifndef __UMLATTRIBUTEPART_H_
-#define __UMLATTRIBUTEPART_H_
+#ifndef __UMLSTEREOLABELPART_H_
+#define __UMLSTEREOLABELPART_H_
 
 
 #include "StdAfx.h"
-#include "AttributePart.h"
+#include "StereoLabelPart.h"
 
 
 namespace UMLDecor {
 
 //################################################################################################
 //
-// CLASS : UMLAttributePart
+// CLASS : StereoLabelPart
 //
 //################################################################################################
 
-class UMLAttributePart: public DecoratorSDK::AttributePart
+class UMLStereoLabelPart: public DecoratorSDK::StereoLabelPart
 {
 protected:
 	CComPtr<IMgaFCO>	m_spActualFCO;
+	long				m_labelRelYPosition;	// bottom of the text because of the bottom alignment
 
 public:
-	UMLAttributePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink,
-					 const CString& nameStr, const CString& typeStr, CComPtr<IMgaFCO>& pFCO);
-	virtual ~UMLAttributePart();
+	UMLStereoLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, CComPtr<IMgaFCO>& pFCO);
+	virtual ~UMLStereoLabelPart();
 
 	virtual void	ExecuteOperation			(const CString& newString);
 };
 
 }; // namespace UMLDecor
 
-#endif //__UMLATTRIBUTEPART_H_
+#endif //__UMLSTEREOLABELPART_H_

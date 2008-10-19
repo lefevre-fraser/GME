@@ -26,7 +26,6 @@ ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEven
 	m_StereotypePart			(NULL),
 	m_copySignPart				(NULL),
 
-	m_isCopy					(false),
 	m_crAttributeText			(COLOR_BLACK),
 	m_lMaxTextWidth				(0),
 	m_lMaxTextHeight			(0),
@@ -234,8 +233,6 @@ void ClassComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 	it = preferences.find(PREF_DECORATOR_MINATTRSIZE);
 	if (it != preferences.end())
 		m_DecoratorMinAttrSize = it->second.uValue.lValue;
-
-	// TODO: some common initializations here too
 
 	if (m_LabelPart != NULL)
 		m_LabelPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
@@ -1057,23 +1054,18 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	int ypos = m_DecoratorMarginY;
 
 	CPoint offset = GetLocation().TopLeft();
-	CPoint pos;
 
 	if (m_LabelPart != NULL) {
 		ypos += m_lMaxTextHeight;
 
-		pos = CPoint(xcenterpos, ypos);
-		pos.Offset(offset);
-		m_LabelPart->SetTextPosition(pos);
+		m_LabelPart->SetTextRelYPosition(ypos);
 	}
 
 	if (m_StereotypePart != NULL) {
 		ypos += m_DecoratorGapY;
 		ypos += m_lMaxTextHeight;
 
-		pos = CPoint(xcenterpos, ypos);
-		pos.Offset(offset);
-		m_StereotypePart->SetTextPosition(pos);
+		m_StereotypePart->SetTextRelYPosition(ypos);
 	}
 
 	ypos += m_DecoratorMarginY;
@@ -1098,24 +1090,19 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		ypos += m_lMaxTextHeight;
-		pos = CPoint(xleftpos, ypos);
-		pos.Offset(offset);
-		(*ii)->SetNamePosition(pos);
-		pos = CPoint(xrightpos, ypos);
-		pos.Offset(offset);
-		(*ii)->SetTypePosition(pos);
+		(*ii)->SetTextRelYPosition(ypos);
+		(*ii)->SetTextRelYPosition(ypos);
 		ypos += m_DecoratorGapY;
 	}
 
-	if (m_isCopy && m_copySignPart) {
+	if (m_copySignPart) {
 		ypos += m_DecoratorMarginY;
-		CRect loc = m_copySignPart->GetLocation();
-		pos = CPoint(xleftpos, ypos);
+		CSize iconSize = m_copySignPart->GetPreferredSize();
+		CPoint pos = CPoint(xleftpos, ypos);
 		pos.Offset(offset);
-		loc.MoveToXY(pos);
-		m_copySignPart->SetLocation(loc);
-		ypos += loc.Height();
-	} else if (m_AttributeParts.size() == 0){
+		m_copySignPart->SetLocation(CRect(pos, iconSize));
+		ypos += iconSize.cy;
+	} else if (m_AttributeParts.size() == 0) {
 		ypos += m_DecoratorMinAttrSize;
 	}
 	m_calcSize.cx = xrightpos + m_DecoratorMarginX;

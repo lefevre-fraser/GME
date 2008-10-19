@@ -330,6 +330,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MetaDecoratorUtil.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\NewMetaDecorator.cpp"
 				>
 			</File>
@@ -385,6 +389,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MetaDecoratorUtil.h"
+				>
+			</File>
+			<File
 				RelativePath=".\NewMetaDecorator.h"
 				>
 			</File>
@@ -409,11 +417,11 @@
 			Name="Resources"
 			>
 			<File
-				RelativePath="constraint.bmp"
+				RelativePath=".\res\constraint.bmp"
 				>
 			</File>
 			<File
-				RelativePath="constraintfunc.bmp"
+				RelativePath=".\res\constraintfunc.bmp"
 				>
 			</File>
 			<File
@@ -425,7 +433,7 @@
 				>
 			</File>
 			<File
-				RelativePath="proxy.bmp"
+				RelativePath=".\res\referencesign.bmp"
 				>
 			</File>
 		</Filter>

@@ -5,33 +5,7 @@
 #define IDS_PROJNAME                    100
 #define IDR_UMLDECORATOR                101
 #define IDR_NEWUMLDECORATOR             102
-
-#define IDB_DEFAULTREFTONULL            159
-#define IDB_REFERENCE                   159
-#define IDB_DEFAULTATOM                 160
-#define IDB_ATOM                        160
-#define IDB_DEFAULTSET                  161
-#define IDB_SET                         161
-#define IDB_DEFAULTNULLREF              166
-#define IDB_DEFAULTATOMPORT             173
-#define IDB_ATOMPORT                    173
-#define IDB_DEFAULTREFPORT              174
-#define IDB_REFERENCEPORT               174
-#define IDB_DEFAULTSETPORT              175
-#define IDB_SETPORT                     175
-#define IDB_DEFAULTMODELPORT            176
-#define IDB_MODELPORT                   176
-#define IDB_ICON_TYPE                   201
-#define IDB_ICON_SUBTYPE                202
-#define IDB_ICON_INSTANCE               203
-#define IDB_ICON_REFERENCE              204
-#define IDB_MODEL                       205
-#define IDB_ICON_INSTANCE_DIS           206
-#define IDB_ICON_REFERENCE_DIS          207
-#define IDB_ICON_SUBTYPE_DIS            208
-#define IDB_ICON_TYPE_DIS               209
 #define IDB_REFERENCE_SIGN              210
-
 #define IDB_BITMAP_CONSTRAINT           211
 #define IDB_BITMAP_CDEFINITION          212
 #define IDC_TEXTEDIT                    201

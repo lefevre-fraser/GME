@@ -57,9 +57,9 @@ bool UMLCompositePart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 CRect UMLCompositePart::GetLabelLocation(void) const
 {
 	HRESULT retVal = S_OK;
-	// The second part is the label
 	std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin();
-	 ++ii;
+	if (m_compositeParts.size() > 1)
+		++ii;	// we expect that the second part is the label if there's more than one part
 	if (ii != m_compositeParts.end()) {
 		try {
 			return (*ii)->GetLabelLocation();
@@ -103,7 +103,7 @@ void UMLCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else {	// This must be a class
 				AddImagePart(new UMLClassPart(this, m_eventSink));
-//				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+				// The UMLClassPart handles the label also
 			}
 		}
 	}

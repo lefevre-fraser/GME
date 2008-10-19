@@ -33,11 +33,11 @@ public:
 	virtual ~TypeableLabelPart();
 
 	virtual void	Draw						(CDC* pDC);
-	virtual CRect	GetLabelLocation			(void) const;
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 
 	virtual CPoint	GetTextPosition				(void) const;
+	virtual CRect	GetTextLocation				(void) const;
 };
 
 }; // namespace DecoratorSDK

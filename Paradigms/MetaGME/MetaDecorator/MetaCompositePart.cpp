@@ -36,34 +36,6 @@ MetaCompositePart::~MetaCompositePart()
 
 CRect MetaCompositePart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
 {
-	DecoratorSDK::PortPart* pPortPart = NULL;
-	DecoratorSDK::ModelComplexPart* modelComplexPart = dynamic_cast<DecoratorSDK::ModelComplexPart*> (GetBitmapPart());
-	DecoratorSDK::ReferenceBitmapPart* refrenceBitmapPart = NULL;
-	if (modelComplexPart != NULL) {
-		pPortPart = modelComplexPart->GetPort(fco);
-	} else {
-		refrenceBitmapPart = dynamic_cast<DecoratorSDK::ReferenceBitmapPart*> (GetBitmapPart());
-		if (refrenceBitmapPart != NULL) {
-			DecoratorSDK::ModelComplexPart* referencedModelPart = dynamic_cast<DecoratorSDK::ModelComplexPart*> (refrenceBitmapPart->GetReferenced());
-			if (referencedModelPart != NULL)
-				pPortPart = referencedModelPart->GetPort(fco);
-		}
-	}
-	if (pPortPart) {
-		CRect location = pPortPart->GetLocation();
-
-		// if a reference has an icon specified for itself 
-		// then it is not surrounded by a black rectangle.
-		// if it doesn't have an icon, then the icon of the
-		// referred element is used, and it is surrounded
-		// that's why we shift port locations only if
-		// the surrounding rectangle is there (borderwidth > 0)
-		if (GetBitmapPart()->GetBorderWidth(false) > 0 && refrenceBitmapPart)	// HACK
-			location.OffsetRect(2, 2);
-
-		return location;
-	}
-
 	throw PortNotFoundException();
 }
 
@@ -71,39 +43,16 @@ bool MetaCompositePart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 {
 	CComPtr<IMgaFCOs> spFCOs;
 	COMTHROW(spFCOs.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
-
-	std::vector<DecoratorSDK::PortPart*>	vecPorts;
-	DecoratorSDK::PortPart* pPortPart = NULL;
-	DecoratorSDK::ModelComplexPart* modelComplexPart = dynamic_cast<DecoratorSDK::ModelComplexPart*> (GetBitmapPart());
-	DecoratorSDK::ReferenceBitmapPart* refrenceBitmapPart = NULL;
-	bool modelFound = false;
-	if (modelComplexPart != NULL) {
-		vecPorts = modelComplexPart->GetPorts();
-		modelFound = true;
-	} else {
-		refrenceBitmapPart = dynamic_cast<DecoratorSDK::ReferenceBitmapPart*> (GetBitmapPart());
-		if (refrenceBitmapPart != NULL) {
-			DecoratorSDK::ModelComplexPart* referencedModelPart = dynamic_cast<DecoratorSDK::ModelComplexPart*> (refrenceBitmapPart->GetReferenced());
-			if (referencedModelPart != NULL) {
-				vecPorts = referencedModelPart->GetPorts();
-				modelFound = true;
-			}
-		}
-	}
-
-	for (unsigned int i = 0; i < vecPorts.size(); i++)
-		COMTHROW(spFCOs->Append(vecPorts[i]->GetFCO()));
-
 	portFCOs = spFCOs.Detach();
-	return modelFound;
+	return false;
 }
 
 CRect MetaCompositePart::GetLabelLocation(void) const
 {
 	HRESULT retVal = S_OK;
-	// The second part is the label
 	std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin();
-	 ++ii;
+	if (m_compositeParts.size() > 1)
+		++ii;	// we expect that the second part is the label if there's more than one part
 	if (ii != m_compositeParts.end()) {
 		try {
 			return (*ii)->GetLabelLocation();
@@ -125,6 +74,32 @@ void MetaCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 {
 	HRESULT retVal = S_OK;
 	if (pProject && pPart) {
+/*		m_spFCO = obj;		// obj == NULL, if we are in the PartBrowser
+		
+		if (!DecoratorSDK::getFacilities().getMetaFCO(metaPart, m_metaFco)) {
+			return E_DECORATOR_INIT_WITH_NULL;
+		} else {
+			m_isInitialized = true;
+		}	
+
+		// Get ShapeCode
+		try {
+			CComBSTR bstr;
+			COMTHROW(m_metaFco->get_Name(&bstr));
+			m_stereotype = bstr;
+
+			m_shape = MetaDecor::GetDecorUtils().GetShapeCode(m_stereotype);
+			if (m_shape == NULLSHAPE) {
+				m_isInitialized = false;
+				return E_METADECORATOR_KINDNOTSUPPORTED;
+			}
+		}
+		catch (hresult_exception &e) {
+			m_isInitialized = false;
+			return e.hr;
+		}*/
+
+
 		objtype_enum eType;
 		if (pFCO) {
 			COMTHROW(pFCO->get_ObjType(&eType));

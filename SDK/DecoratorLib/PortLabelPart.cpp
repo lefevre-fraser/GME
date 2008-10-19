@@ -106,9 +106,9 @@ CPoint PortLabelPart::GetTextPosition(void) const
 	return pt;
 }
 
-CRect PortLabelPart::GetLabelLocation(void) const
+CRect PortLabelPart::GetTextLocation(void) const
 {
-	CRect r = LabelPart::GetLabelLocation();
+	CRect r = LabelPart::GetTextLocation();
 	if (m_offsetPositions)
 		r += m_parentPart->GetParent()->GetLocation().TopLeft();
 	return r;

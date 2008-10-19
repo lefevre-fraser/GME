@@ -333,7 +333,6 @@ void BitmapDIB::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWOR
 	if ( isInitialized() ) {
 		CRect srcRectCopy = srcRect;
 		CRect dstRectCopy = dstRect;
-		// TODO: geryScale
 		::PaintDIB( pDC->m_hDC, &dstRectCopy, m_hDIB, &srcRectCopy, NULL );
 	}
 }

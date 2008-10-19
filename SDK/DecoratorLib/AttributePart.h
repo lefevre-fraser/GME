@@ -25,8 +25,7 @@ class AttributePart: public TextPart
 {
 protected:
 	CString			m_strType;
-	CPoint			m_namePosition;
-	CPoint			m_typePosition;
+	long			m_textRelYPosition;	// bottom of the text because of the bottom alignment
 
 public:
 	AttributePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
@@ -35,17 +34,16 @@ public:
 	virtual void	Draw						(CDC* pDC);
 
 	virtual CPoint	GetTextPosition				(void) const;
-	virtual void	SetTextPosition				(const CPoint& position);
+	virtual void	SetTextRelYPosition			(long relYPosition) { m_textRelYPosition = relYPosition; };
 	virtual CRect	GetTextLocation				(void) const;
-	virtual void	ExecuteOperation			(void);
 
 	virtual CSize	GetNameSize					(CDC* pDC) const;
 	virtual CSize	GetTypeSize					(CDC* pDC) const;
 	virtual CSize	GetTextSize					(CDC* pDC) const;
-	virtual void	SetNamePosition				(const CPoint& namePosition) { m_namePosition = namePosition; };
-	virtual void	SetTypePosition				(const CPoint& typePosition) { m_typePosition = typePosition; };
 	virtual void	SetName						(const CString& nameStr) { m_strText = nameStr; };
 	virtual void	SetType						(const CString& typeStr) { m_strType = typeStr; };
+	virtual CString	GetName						(void) const { return m_strText; };
+	virtual CString	GetType						(void) const { return m_strType; };
 };
 
 }; // namespace DecoratorSDK

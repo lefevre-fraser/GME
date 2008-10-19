@@ -34,7 +34,6 @@ protected:
 	std::vector<AttributePart*>	m_AttributeParts;
 	BitmapPart*					m_copySignPart;
 
-	bool						m_isCopy;
 	long						m_SeparatorLoc;
 	CSize						m_calcSize;
 	COLORREF					m_crAttributeText;

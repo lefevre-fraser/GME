@@ -8,6 +8,8 @@
 #include "StdAfx.h"
 #include "UMLAttributePart.h"
 
+#include "UMLClassPart.h"
+
 
 namespace UMLDecor {
 
@@ -18,23 +20,26 @@ namespace UMLDecor {
 //################################################################################################
 
 UMLAttributePart::UMLAttributePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink,
-								   const CString& nameStr, const CString& typeStr):
-	AttributePart(pPart, eventSink)
+								   const CString& nameStr, const CString& typeStr, CComPtr<IMgaFCO>& pFCO):
+	AttributePart(pPart, eventSink),
+	m_spActualFCO(pFCO)
 {
 	SetName(nameStr);
 	SetType(typeStr);
-	// TODO
-/*	textStringVariableName		= PREF_LABEL;
-	textFontVariableName		= PREF_LABELFONT;
-	textMaxLengthVariableName	= PREF_LABELLENGTH;
-	textColorVariableName		= PREF_LABELCOLOR;
-	textLocationVariableName	= PREF_LABELLOCATION;
-	textStatusVariableName		= PREF_LABELENABLED;
-	textWrapStatusVariableName	= PREF_LABELWRAP;*/
 }
 
 UMLAttributePart::~UMLAttributePart()
 {
+}
+
+void UMLAttributePart::ExecuteOperation(const CString& newString)
+{
+	// transaction operation begin
+	m_strText = newString;
+	UMLClassPart* umlClassPart = dynamic_cast<UMLClassPart*> (GetParent());
+	ASSERT(umlClassPart != NULL);
+	umlClassPart->ModifyAttributes(m_spActualFCO);
+	// transaction operation end
 }
 
 }; // namespace UMLDecor

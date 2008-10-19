@@ -103,25 +103,8 @@ IDR_NEWUMLDECORATOR     REGISTRY DISCARDABLE    "NewUMLDecorator.rgs"
 // Bitmap
 //
 
-IDB_BITMAP_CONSTRAINT   BITMAP  DISCARDABLE     "constraint.bmp"
-IDB_BITMAP_CDEFINITION  BITMAP  DISCARDABLE     "constraintdefinition.bmp"
-
-IDB_ATOM                BITMAP                  "res\\atom.bmp"
-IDB_ATOMPORT            BITMAP                  "res\\atomport.bmp"
-IDB_REFERENCEPORT       BITMAP                  "res\\referenceport.bmp"
-IDB_SETPORT             BITMAP                  "res\\setport.bmp"
-IDB_REFERENCE           BITMAP                  "res\\reference.bmp"
-IDB_SET                 BITMAP                  "res\\set.bmp"
-IDB_MODELPORT           BITMAP                  "res\\modelport.bmp"
-IDB_ICON_TYPE           BITMAP                  "res\\icon_type.bmp"
-IDB_ICON_SUBTYPE        BITMAP                  "res\\icon_subtype.bmp"
-IDB_ICON_INSTANCE       BITMAP                  "res\\icon_instance.bmp"
-IDB_ICON_REFERENCE      BITMAP                  "res\\icon_reference.bmp"
-IDB_MODEL               BITMAP                  "res\\model.bmp"
-IDB_ICON_INSTANCE_DIS   BITMAP                  "res\\icon_instance_disabled.bmp"
-IDB_ICON_REFERENCE_DIS  BITMAP                  "res\\icon_reference_disabled.bmp"
-IDB_ICON_SUBTYPE_DIS    BITMAP                  "res\\icon_subtype_disabled.bmp"
-IDB_ICON_TYPE_DIS       BITMAP                  "res\\icon_type_disabled.bmp"
+IDB_BITMAP_CONSTRAINT   BITMAP  DISCARDABLE     "res\\constraint.bmp"
+IDB_BITMAP_CDEFINITION  BITMAP  DISCARDABLE     "res\\constraintdefinition.bmp"
 IDB_REFERENCE_SIGN      BITMAP                  "res\\referencesign.bmp"
 
 /////////////////////////////////////////////////////////////////////////////

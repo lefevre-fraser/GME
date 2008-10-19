@@ -7,9 +7,10 @@
 #define IDR_NEWDECORATOR                102
 #define IDC_TEXTEDIT                    201
 #define IDD_INPLACEEDITDIALOG           211
-#define IDB_BITMAP_PROXY                205
-#define IDB_BITMAP_CONSTRAINT           206
-#define IDB_BITMAP_CONSTRAINTFUNC       208
+#define IDB_BITMAP_PROXY                210
+#define IDB_REFERENCE_SIGN              210
+#define IDB_BITMAP_CONSTRAINT           211
+#define IDB_BITMAP_CONSTRAINTFUNC       212
 
 // Next default values for new objects
 // 

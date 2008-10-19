@@ -27,12 +27,12 @@ public:
 	LabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~LabelPart();
 
-	virtual CRect	GetLabelLocation			(void) const;
 	virtual void	Draw						(CDC* pDC);
 
 	virtual CPoint	GetTextPosition				(void) const;
-	virtual void	SetTextPosition				(const CPoint& position);
-	virtual void	ExecuteOperation			(void);
+	virtual void	SetTextRelYPosition			(long relYPosition) {};	// This doesn't make sense in case of box label decorator: label text location is computed automatically from box location and text alignment
+	virtual CRect	GetTextLocation				(void) const;
+	virtual void	ExecuteOperation			(const CString& newString);
 };
 
 }; // namespace DecoratorSDK

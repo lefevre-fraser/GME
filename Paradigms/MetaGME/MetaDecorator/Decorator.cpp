@@ -4,6 +4,7 @@
 #include "BitmapUtil.h"
 
 #include "CommonError.cpp"
+#include "MetaDecoratorUtil.h"
 
 #define VERIFY_INIT   { if (!m_isInitialized) return E_DECORATOR_UNINITIALIZED; }
 #define VERIFY_LOCSET { if (!m_isLocSet) return E_DECORATOR_LOCISNOTSET; }
@@ -12,64 +13,6 @@
 #pragma message( "TODO: problems with printing" )
 #pragma message( "TODO: collect equivalent classes..." )
 
-
-struct ShapePair {
-	char*	  kind;
-	ShapeCode shape;
-};
-
-const static ShapePair shapeMap[] = {
-	{META_ATOM_KIND, CLASS},
-	{META_ATOMPROXY_KIND, CLASSPROXY},
-	{META_MODEL_KIND, CLASS},
-	{META_MODELPROXY_KIND, CLASSPROXY},
-	{META_REFERENCE_KIND, CLASS},
-	{META_REFERENCEPROXY_KIND, CLASSPROXY},
-	{META_SET_KIND, CLASS},
-	{META_SETPROXY_KIND, CLASSPROXY},
-	{META_CONNECTION_KIND, CLASS},
-	{META_CONNECTIONPROXY_KIND, CLASSPROXY},
-	{META_FCO_KIND, CLASS},
-	{META_FCOPROXY_KIND, CLASSPROXY},
-	{META_FOLDER_KIND, CLASS},
-	{META_FOLDERPROXY_KIND, CLASSPROXY},
-	{META_ASPECT_KIND, CLASS},
-	{META_ASPECTPROXY_KIND, CLASSPROXY},
-	{META_BOOLEANATTR_KIND, CLASS},
-	{META_ENUMATTR_KIND, CLASS},
-	{META_FIELDATTR_KIND, CLASS},
-
-	{META_CONSTRAINT_KIND, CONSTRAINT},
-	{META_CONSTRAINTFUNC_KIND, CONSTRAINTFUNC},
-
-	{META_CONNECTOR_KIND, CONNECTOR},
-
-	{META_EQUIVALENCE_KIND, EQUIVALENCE},
-	{META_SAMEFOLDER_KIND, EQUIVALENCE},
-	{META_SAMEASPECT_KIND, EQUIVALENCE},
-
-	{META_INHERITANCE_KIND, INHERITANCE},
-	{META_IMPINHERITANCE_KIND, IMPINHERITANCE},
-	{META_INTINHERITANCE_KIND, INTINHERITANCE},
-
-	{NULL,NULLSHAPE}
-};
-
-const char *fcos[] = {
-	META_ATOM_KIND,
-	META_ATOMPROXY_KIND,
-	META_MODEL_KIND,
-	META_MODELPROXY_KIND,
-	META_REFERENCE_KIND,
-	META_REFERENCEPROXY_KIND,
-	META_SET_KIND,
-	META_SETPROXY_KIND,
-	META_CONNECTION_KIND,
-	META_CONNECTIONPROXY_KIND,
-	META_FCO_KIND,
-	META_FCOPROXY_KIND,
-	NULL
-};
 
 /////////////////////////////////////////////////////////////////////////////
 // CDecorator
@@ -90,14 +33,7 @@ STDMETHODIMP CDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart
 		COMTHROW(m_metaFco->get_Name(&bstr));
 		m_stereotype = bstr;
 
-		int i = 0;
-		while(shapeMap[i].kind) {
-			if (shapeMap[i].kind == m_stereotype) {
-				m_shape = shapeMap[i].shape;
-				break;
-			}
-			i++;
-		}
+		m_shape = MetaDecor::GetDecorUtils().GetShapeCode(m_stereotype);
 		if (m_shape == NULLSHAPE) {
 			m_isInitialized = false;
 			return E_METADECORATOR_KINDNOTSUPPORTED;
@@ -262,7 +198,6 @@ STDMETHODIMP CDecorator::GetPreferredSize(long* sizex, long* sizey)
 	if (m_shape == CLASS || m_shape == CLASSPROXY) {
 		*sizex = ((m_calcSize.cx + ((2*GME_GRID_SIZE) - 1)) / (2*GME_GRID_SIZE)) * (2*GME_GRID_SIZE);
 		*sizey = m_calcSize.cy;
-		// *sizey = ((m_calcSize.cy + ((2*GME_GRID_SIZE) - 1)) / (2*GME_GRID_SIZE)) * (2*GME_GRID_SIZE);
 	}
 	else {
 		*sizex = m_calcSize.cx;
@@ -669,14 +604,7 @@ void CDecorator::CalcRelPositions()
 void CDecorator::SetupClass()
 {
 	int i = 0;
-	bool bRealFco = false;
-	while(fcos[i]) {
-		if (m_stereotype == fcos[i]) {
-			bRealFco = true;
-			break;
-		}
-		i++;
-	}
+	bool bRealFco = MetaDecor::GetDecorUtils().IsFCO(m_stereotype);
 	if (!bRealFco) {
 		return;
 	}

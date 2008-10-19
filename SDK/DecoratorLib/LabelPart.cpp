@@ -33,29 +33,6 @@ LabelPart::~LabelPart()
 {
 }
 
-CRect LabelPart::GetLabelLocation(void) const
-{
-	CPoint pt = GetTextPosition();
-	ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
-
-	CDC dc;
-	dc.CreateCompatibleDC(NULL);
-	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
-	CSize cSize(0,0);
-	for (unsigned int i = 0 ; i < m_vecText.size(); i++) {
-		CSize tmpSize = dc.GetTextExtent(m_vecText[i]);
-		cSize.cy += tmpSize.cy;
-		cSize.cx = max(cSize.cx, tmpSize.cx);
-	}
-
-	if (eAlign == CRP_CENTER)
-		pt.x -= cSize.cx / 2;
-	else if (eAlign == CRP_END)
-		pt.x -= cSize.cx;
-
-	return CRect(pt.x, pt.y, pt.x + cSize.cx, pt.y + cSize.cy);
-}
-
 void LabelPart::Draw(CDC* pDC)
 {
 	if (m_bTextEnabled) {
@@ -125,17 +102,35 @@ CPoint	LabelPart::GetTextPosition(void) const
 	return pt;
 }
 
-void LabelPart::SetTextPosition(const CPoint& position)
+CRect LabelPart::GetTextLocation(void) const
 {
-	// This doesn't make sense in case of box label decorator:
-	// Label text location is computed automatically from box location and text alignment, see above
+	CPoint pt = GetTextPosition();
+	ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
+
+	CDC dc;
+	dc.CreateCompatibleDC(NULL);
+	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
+	CSize cSize(0,0);
+	for (unsigned int i = 0 ; i < m_vecText.size(); i++) {
+		CSize tmpSize = dc.GetTextExtent(m_vecText[i]);
+		cSize.cy += tmpSize.cy;
+		cSize.cx = max(cSize.cx, tmpSize.cx);
+	}
+
+	if (eAlign == CRP_CENTER)
+		pt.x -= cSize.cx / 2;
+	else if (eAlign == CRP_END)
+		pt.x -= cSize.cx;
+
+	return CRect(pt.x, pt.y, pt.x + cSize.cx, pt.y + cSize.cy);
 }
 
-void LabelPart::ExecuteOperation(void)
+void LabelPart::ExecuteOperation(const CString& newString)
 {
 	// transaction operation begin
+	m_strText = newString;
 	CComBSTR bstr;
-	CopyTo(m_strText, bstr);
+	CopyTo(newString, bstr);
 	COMTHROW(m_spFCO->put_Name(bstr));
 	// transaction operation end
 }
