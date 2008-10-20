@@ -236,11 +236,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DiamondVectorPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Dibapi.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\DIBRead.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EllipseVectorPart.cpp"
 				>
 			</File>
 			<File
@@ -253,6 +261,10 @@
 			</File>
 			<File
 				RelativePath=".\LabelPart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MaskedBitmapPart.cpp"
 				>
 			</File>
 			<File
@@ -329,6 +341,10 @@
 			</File>
 			<File
 				RelativePath=".\TextPart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TriangleVectorPart.cpp"
 				>
 			</File>
 			<File
@@ -422,7 +438,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DiamondVectorPart.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DIBAPI.H"
+				>
+			</File>
+			<File
+				RelativePath=".\EllipseVectorPart.h"
 				>
 			</File>
 			<File
@@ -435,6 +459,10 @@
 			</File>
 			<File
 				RelativePath=".\LabelPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MaskedBitmapPart.h"
 				>
 			</File>
 			<File
@@ -503,6 +531,10 @@
 			</File>
 			<File
 				RelativePath=".\TextPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TriangleVectorPart.h"
 				>
 			</File>
 			<File

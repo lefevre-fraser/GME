@@ -154,15 +154,15 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 #if defined (TRYNEWDECORATORS)
 				CComPtr<IMgaNewDecoratorEvents> decorEventSinkIface;
 				if (decoratorProgId == GME_DEFAULT_DECORATOR ||
-					decoratorProgId == "Mga.UMLDecorator" /*||
-					decoratorProgId == "Mga.Decoator.MetaDecorator"*/)
+					decoratorProgId == "Mga.UMLDecorator" ||
+					decoratorProgId == "Mga.Decorator.MetaDecorator")
 				{
 					if (decoratorProgId == GME_DEFAULT_DECORATOR)
 						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.NewBoxDecorator")));
 					else if (decoratorProgId == "Mga.UMLDecorator")
 						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.NewUMLDecorator")));
-					else if (decoratorProgId == "Mga.Decoator.MetaDecorator")
-						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.Decoator.NewMetaDecorator")));
+					else if (decoratorProgId == "Mga.Decorator.MetaDecorator")
+						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.Decorator.NewMetaDecorator")));
 					newDecoratorCreated = true;
 					triple.decorEventSink = new CDecoratorEventSink();
 					HRESULT hr = triple.decorEventSink->QuerySinkInterface((void**) &decorEventSinkIface);

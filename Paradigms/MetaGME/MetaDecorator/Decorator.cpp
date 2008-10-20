@@ -297,7 +297,7 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 				UINT modifFlags = DecoratorSDK::MF_TRANSPARENT;
 				if (!m_isActive)
 					modifFlags |= DecoratorSDK::MF_GREYED;
-				m_bitmap->draw(&dc, CRect(), destRect, SRCCOPY, modifFlags);
+				m_bitmap->draw(&dc, CRect(0,0,0,0), destRect, SRCCOPY, modifFlags);
 				//m_bitmap.Draw(&dc, cpt.x, cpt.y);
 			}
 			CPoint namePos(m_sx + (long)(scalex * m_namePos.x), m_sy + (long)(scaley * m_namePos.y));
@@ -433,7 +433,7 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 				UINT modifFlags = DecoratorSDK::MF_TRANSPARENT;
 				if (!m_isActive)
 					modifFlags |= DecoratorSDK::MF_GREYED;
-				m_bitmap->draw(&dc, CRect(), destRect, SRCCOPY, modifFlags);
+				m_bitmap->draw(&dc, CRect(0,0,0,0), destRect, SRCCOPY, modifFlags);
 			}
 		}
 		break;

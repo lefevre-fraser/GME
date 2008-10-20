@@ -32,7 +32,6 @@ ResizablePart::~ResizablePart()
 
 void ResizablePart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
 {
-	location.SetRectEmpty();
 	if (m_spFCO)
 		resizeLogic.SetResizeFeatures(ResizeLogic::Resizeable);
 

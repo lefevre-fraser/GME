@@ -315,7 +315,7 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 		UINT modifFlags = DecoratorSDK::MF_TRANSPARENT;
 		if (!m_isActive)
 			modifFlags |= DecoratorSDK::MF_GREYED;
-		m_constraintBitmap->draw(&dc, CRect(), destRect, SRCCOPY, modifFlags);
+		m_constraintBitmap->draw(&dc, CRect(0,0,0,0), destRect, SRCCOPY, modifFlags);
 
 		CPoint namePos(m_sx + ((m_ex - m_sx) / 2), m_ey);
 		DecoratorSDK::getFacilities().drawText(&dc,
@@ -333,7 +333,7 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 		UINT modifFlags = DecoratorSDK::MF_TRANSPARENT;
 		if (!m_isActive)
 			modifFlags |= DecoratorSDK::MF_GREYED;
-		m_constraintDefBitmap->draw(&dc, CRect(), destRect, SRCCOPY, modifFlags);
+		m_constraintDefBitmap->draw(&dc, CRect(0,0,0,0), destRect, SRCCOPY, modifFlags);
 
 		CPoint namePos(m_sx + ((m_ex - m_sx) / 2), m_ey);
 		DecoratorSDK::getFacilities().drawText(&dc,
@@ -400,7 +400,7 @@ STDMETHODIMP CUMLDecorator::Draw(HDC hdc)
 		UINT modifFlags = DecoratorSDK::MF_TRANSPARENT;
 		if (!m_isActive)
 			modifFlags |= DecoratorSDK::MF_GREYED;
-		m_copyBitmap->draw(&dc, CRect(), destRect, SRCCOPY, modifFlags);
+		m_copyBitmap->draw(&dc, CRect(0,0,0,0), destRect, SRCCOPY, modifFlags);
 	}
 
 	dc.Detach();

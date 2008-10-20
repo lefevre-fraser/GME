@@ -25,7 +25,6 @@ namespace DecoratorSDK {
 class ResizablePart: public PartBase
 {
 public:
-	CRect			location;
 	ResizeLogic		resizeLogic;
 	bool			m_readCustomSize;
 

@@ -78,10 +78,7 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 		m_bOverlay = true;
 		m_crOverlay = it->second.uValue.crValue;
 	} else {
-		if (pFCO)
-			m_bOverlay = getFacilities().getPreference(pFCO, PREF_OVERLAYCOLOR, m_crOverlay);
-		else
-			m_bOverlay = getFacilities().getPreference(spMetaFCO, PREF_OVERLAYCOLOR, m_crOverlay);
+		m_bOverlay = getFacilities().getPreference(pFCO, spMetaFCO, PREF_OVERLAYCOLOR, m_crOverlay);
 	}
 
 	// Check if we should create masked bitmap
@@ -119,13 +116,8 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	}
 	if (!m_pBitmap) {
 		CString strIcon;
-		if (pFCO) {
-			getFacilities().getPreference(pFCO, PREF_ICON, strIcon);
-			m_pTileVector = preferences.find(PREF_TILESUNDEF)->second.uValue.pTiles;
-		} else {
-			getFacilities().getPreference(spMetaFCO, PREF_ICON, strIcon);
-			m_pTileVector = preferences.find(PREF_TILESUNDEF)->second.uValue.pTiles;
-		}
+		getFacilities().getPreference(pFCO, spMetaFCO, PREF_ICON, strIcon);
+		m_pTileVector = preferences.find(PREF_TILESUNDEF)->second.uValue.pTiles;
 		if (!strIcon.IsEmpty()) {
 #ifndef OLD_DECORATOR_LOOKANDFEEL
 			if (m_bOverlay)

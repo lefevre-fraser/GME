@@ -165,6 +165,18 @@ void VectorPart::Draw(CDC* pDC)
 			case VectorCommand::LineTo:				pDC->LineTo((*ii).GetResolvedCoords(m_Extents).TopLeft());	break;
 			case VectorCommand::Rectangle:			pDC->Rectangle((*ii).GetResolvedCoords(m_Extents));			break;
 			case VectorCommand::Ellipse:			pDC->Ellipse((*ii).GetResolvedCoords(m_Extents));			break;
+			case VectorCommand::SelectPen: {
+					CRect colors = (*ii).GetResolvedCoords(m_Extents);
+					pDC->SelectObject(getFacilities().getPen((COLORREF)(m_bActive ? colors.left : colors.top)));
+				}
+				break;
+			case VectorCommand::SelectBrush: {
+					CRect colors = (*ii).GetResolvedCoords(m_Extents);
+					pDC->SelectObject(getFacilities().getBrush((COLORREF)(m_bActive ? colors.left : colors.top)));
+				}
+				break;
+			case VectorCommand::SelectNullBrush:	pDC->SelectStockObject(NULL_BRUSH);							break;
+			default: ASSERT(true);
 		}
 	}
 	ResizablePart::Draw(pDC);

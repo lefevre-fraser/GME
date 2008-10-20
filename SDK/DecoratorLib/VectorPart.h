@@ -134,12 +134,17 @@ public:
 		MoveTo				= 3,
 		LineTo				= 4,
 		Rectangle			= 5,
-		Ellipse				= 6
+		Ellipse				= 6,
+		SelectBrush			= 7,
+		SelectPen			= 8,
+		SelectNullBrush		= 9
 	};
 
 public:
 	VectorCommand(long code):
 		m_Code(code) {};
+	VectorCommand(const CoordCommand* sxCmd, long code):
+		m_Code(code) { m_CoordCmds.push_back(sxCmd); };
 	VectorCommand(const CoordCommand* sxCmd, const CoordCommand* syCmd, long code):
 		m_Code(code) { m_CoordCmds.push_back(sxCmd); m_CoordCmds.push_back(syCmd); };
 	VectorCommand(const CoordCommand* sxCmd, const CoordCommand* syCmd, const CoordCommand* exCmd, const CoordCommand* eyCmd, long code):

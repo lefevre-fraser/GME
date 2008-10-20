@@ -254,7 +254,7 @@ CRect CompositePart::GetLocation(void) const
 	if (retVal != S_OK)
 		throw DecoratorException((DecoratorExceptionCode)retVal);
 
-	return CRect();
+	return CRect(0,0,0,0);
 }
 
 CRect CompositePart::GetLabelLocation(void) const
@@ -279,7 +279,7 @@ CRect CompositePart::GetLabelLocation(void) const
 	if (retVal != S_OK)
 		throw DecoratorException((DecoratorExceptionCode)retVal);
 
-	return CRect();
+	return CRect(0,0,0,0);
 }
 
 CRect CompositePart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
@@ -304,7 +304,7 @@ CRect CompositePart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
 	if (retVal != S_OK)
 		throw DecoratorException((DecoratorExceptionCode)retVal);
 
-	return CRect();
+	return CRect(0,0,0,0);
 }
 
 bool CompositePart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const

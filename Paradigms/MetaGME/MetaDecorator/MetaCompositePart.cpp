@@ -8,13 +8,14 @@
 #include "StdAfx.h"
 #include "MetaCompositePart.h"
 
-#include "ModelComplexPart.h"
+#include "Resource.h"
+#include "MaskedBitmapPart.h"
 #include "TypeableLabelPart.h"
-#include "ReferenceBitmapPart.h"
-#include "PortPart.h"
-#include "AtomBitmapPart.h"
-#include "SetBitmapPart.h"
+#include "EllipseVectorPart.h"
+#include "InheritanceVectorPart.h"
+#include "DiamondVectorPart.h"
 #include "DecoratorExceptions.h"
+#include "MetaDecoratorUtil.h"
 
 
 namespace MetaDecor {
@@ -73,67 +74,86 @@ void MetaCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 									 HWND parentWnd, DecoratorSDK::PreferenceMap& preferences)
 {
 	HRESULT retVal = S_OK;
-	if (pProject && pPart) {
-/*		m_spFCO = obj;		// obj == NULL, if we are in the PartBrowser
-		
-		if (!DecoratorSDK::getFacilities().getMetaFCO(metaPart, m_metaFco)) {
-			return E_DECORATOR_INIT_WITH_NULL;
-		} else {
-			m_isInitialized = true;
-		}	
+	try {
+		if (!DecoratorSDK::getFacilities().getMetaFCO(pPart, m_spMetaFCO))
+			throw DecoratorException((DecoratorExceptionCode)E_DECORATOR_INIT_WITH_NULL);
+		if (pProject && pPart) {
+			m_spFCO = pFCO;		// pFCO == NULL, if we are in the PartBrowser
 
-		// Get ShapeCode
-		try {
 			CComBSTR bstr;
-			COMTHROW(m_metaFco->get_Name(&bstr));
-			m_stereotype = bstr;
+			COMTHROW(m_spMetaFCO->get_Name(&bstr));
+			CString name(bstr);
 
-			m_shape = MetaDecor::GetDecorUtils().GetShapeCode(m_stereotype);
-			if (m_shape == NULLSHAPE) {
-				m_isInitialized = false;
-				return E_METADECORATOR_KINDNOTSUPPORTED;
+			// Get ShapeCode
+			ShapeCode shape = MetaDecor::GetDecorUtils().GetShapeCode(name);
+			if (shape == NULLSHAPE) {
+				throw DecoratorException((DecoratorExceptionCode)E_METADECORATOR_KINDNOTSUPPORTED);
+			} else if (shape == CONNECTOR) {
+				AddImagePart(new DecoratorSDK::EllipseVectorPart(this, m_eventSink,
+																 static_cast<long> (2 * META_CONNECTOR_RAIDUS),
+																 static_cast<long> (2 * META_CONNECTOR_RAIDUS)));
+				if (!pFCO)
+					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (shape == CONSTRAINT) {
+				AddImagePart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINT, DecoratorSDK::COLOR_TRANSPARENT, DecoratorSDK::COLOR_GRAYED_OUT));
+				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (shape == CONSTRAINTFUNC) {
+				AddImagePart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINTFUNC, DecoratorSDK::COLOR_TRANSPARENT, DecoratorSDK::COLOR_GRAYED_OUT));
+				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (shape == INHERITANCE) {
+				AddImagePart(new InheritanceVectorPart(this, m_eventSink,
+													   static_cast<long> (META_INHERITANCE_WIDTH),
+													   static_cast<long> (META_INHERITANCE_HEIGHT),
+													   NormalInheritance));
+				if (!pFCO)
+					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (shape == IMPINHERITANCE) {
+				AddImagePart(new InheritanceVectorPart(this, m_eventSink,
+													   static_cast<long> (META_INHERITANCE_WIDTH),
+													   static_cast<long> (META_INHERITANCE_HEIGHT),
+													   ImplementationInheritance));
+				if (!pFCO)
+					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (shape == INTINHERITANCE) {
+				AddImagePart(new InheritanceVectorPart(this, m_eventSink,
+													   static_cast<long> (META_INHERITANCE_WIDTH),
+													   static_cast<long> (META_INHERITANCE_HEIGHT),
+													   InterfaceInheritance));
+				if (!pFCO)
+					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else {
+//			} else if (shape == EQUIVALENCE) {
+				AddImagePart(new DecoratorSDK::DiamondVectorPart(this, m_eventSink,
+																 static_cast<long> (META_EQUIVALENCE_WIDTH),
+																 static_cast<long> (META_EQUIVALENCE_HEIGHT)));
+				if (!pFCO)
+					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			}
+
+
+
+/*			if (name == UML_INHERITANCE_NAME) {
+				AddImagePart(new InheritanceVectorPart(this, m_eventSink));
+				if (!pFCO)
+					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (name == UML_CONNECTOR_NAME) {
+				AddImagePart(new ConnectorVectorPart(this, m_eventSink));
+				if (!pFCO)
+					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (name == UML_CONSTRAINT_NAME) {
+				AddImagePart(new ConstraintBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINT, DecoratorSDK::COLOR_BKGND, DecoratorSDK::COLOR_GRAYED_OUT));
+				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else if (name == UML_CONSTRAINT_DEFINITION_NAME) {
+				AddImagePart(new ConstraintBitmapPart(this, m_eventSink, IDB_BITMAP_CDEFINITION, DecoratorSDK::COLOR_BKGND, DecoratorSDK::COLOR_GRAYED_OUT));
+				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+			} else {	// This must be a class
+				AddImagePart(new UMLClassPart(this, m_eventSink));
+				// The UMLClassPart handles the label also
+			}*/
 		}
-		catch (hresult_exception &e) {
-			m_isInitialized = false;
-			return e.hr;
-		}*/
-
-
-		objtype_enum eType;
-		if (pFCO) {
-			COMTHROW(pFCO->get_ObjType(&eType));
-		} else {
-			CComPtr<IMgaMetaRole> spRole;
-			COMTHROW(pPart->get_Role(&spRole));
-
-			CComPtr<IMgaMetaFCO> spMetaFCO;
-			COMTHROW(spRole->get_Kind(&spMetaFCO));
-
-			COMTHROW(spMetaFCO->get_ObjType(&eType));
-		}
-		switch (eType) {
-			case OBJTYPE_ATOM: {
-					AddBitmapPart(new DecoratorSDK::AtomBitmapPart(this, m_eventSink));
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-				}
-				break;
-			case OBJTYPE_SET: {
-					AddBitmapPart(new DecoratorSDK::SetBitmapPart(this, m_eventSink));
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-				}
-				break;
-			case OBJTYPE_MODEL: {
-					AddBitmapPart(new DecoratorSDK::ModelComplexPart(this, m_eventSink));
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-				}
-				break;
-			case OBJTYPE_REFERENCE: {
-					AddBitmapPart(new DecoratorSDK::ReferenceBitmapPart(this, m_eventSink));
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-				}
-				break;
-		}
+	}
+	catch (hresult_exception& e) {
+		throw DecoratorException((DecoratorExceptionCode)e.hr);
 	}
 
 	CompositePart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);

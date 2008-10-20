@@ -173,10 +173,12 @@ void CGuiAspect::SetLocation(const CRect& location)
 		sy = min(sy, location.bottom-1);
 		ey = max(ey, location.top+1);
 		*/
-		sx = min(sx, location.right+1);
-		ex = max(ex, location.left-1);
-		sy = min(sy, location.bottom+1);
-		ey = max(ey, location.top-1);
+		if (sx != 0 && ex != 0 && sy != 0 && ey != 0) {
+			sx = min(sx, location.right+1);
+			ex = max(ex, location.left-1);
+			sy = min(sy, location.bottom+1);
+			ey = max(ey, location.top-1);
+		}
 		nameLoc.SetRect(sx, sy, ex, ey);
 	} catch (hresult_exception &) {
 			ASSERT(false);
@@ -1185,15 +1187,15 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 #if defined (TRYNEWDECORATORS)
 		CComPtr<IMgaNewDecoratorEvents> decoratorEventSinkIface;
 		if (progId == GME_DEFAULT_DECORATOR ||
-			progId == "Mga.UMLDecorator" /*||
-			progId == "Mga.Decoator.MetaDecorator"*/)
+			progId == "Mga.UMLDecorator" ||
+			progId == "Mga.Decorator.MetaDecorator")
 		{
 			if (progId == GME_DEFAULT_DECORATOR)
 				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.NewBoxDecorator")));
 			else if (progId == "Mga.UMLDecorator")
 				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.NewUMLDecorator")));
-			else if (progId == "Mga.Decoator.MetaDecorator")
-				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.Decoator.NewMetaDecorator")));
+			else if (progId == "Mga.Decorator.MetaDecorator")
+				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.Decorator.NewMetaDecorator")));
 			newDecoratorCreated = true;
 			decoratorEventSink = new CDecoratorEventSink();
 			HRESULT hr = decoratorEventSink->QuerySinkInterface((void**) &decoratorEventSinkIface);

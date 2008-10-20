@@ -326,6 +326,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\InheritanceVectorPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MetaCompositePart.cpp"
 				>
 			</File>
@@ -382,6 +386,10 @@
 			</File>
 			<File
 				RelativePath="DecoratorStd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InheritanceVectorPart.h"
 				>
 			</File>
 			<File

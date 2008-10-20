@@ -41,10 +41,10 @@ ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEven
 
 ClassComplexPart::~ClassComplexPart()
 {
-	for(unsigned long i = 0; i < coordCommands.size(); i++) {
-		delete coordCommands[i];
+	for(unsigned long i = 0; i < m_coordCommands.size(); i++) {
+		delete m_coordCommands[i];
 	}
-	coordCommands.clear();
+	m_coordCommands.clear();
 }
 
 void ClassComplexPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
@@ -1030,30 +1030,55 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	dc.Attach(pDC ? pDC->m_hDC : GetDC(NULL));			// Trick
 	CFont* oldfont = dc.SelectObject(DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont);
 
+	long numberOfGaps = 0;
+	long heightPreEstimation = m_DecoratorMarginY;
 	if (m_LabelPart != NULL) {
 		CRect labelLoc = m_LabelPart->GetTextLocation();
 		m_lMaxTextWidth = max(m_lMaxTextWidth, labelLoc.Width());
 		m_lMaxTextHeight = max(m_lMaxTextHeight, labelLoc.Height());
+		heightPreEstimation += m_lMaxTextHeight;
 	}
 
 	if (m_StereotypePart != NULL) {
 		CRect stereoLoc = m_StereotypePart->GetTextLocation();
 		m_lMaxTextWidth = max(m_lMaxTextWidth, stereoLoc.Width());
 		m_lMaxTextHeight = max(m_lMaxTextHeight, stereoLoc.Height());
+		numberOfGaps++;
+		heightPreEstimation += m_DecoratorGapY;
+		heightPreEstimation += m_lMaxTextHeight;
 	}
+	heightPreEstimation += m_DecoratorMarginY;
+	heightPreEstimation++;	// separator
+	heightPreEstimation += m_DecoratorMarginY;
 
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		CSize extent = (*ii)->GetTextSize(&dc);
 		m_lMaxTextWidth = max(m_lMaxTextWidth, extent.cx);
 		m_lMaxTextHeight = max(m_lMaxTextHeight, extent.cy);
+		numberOfGaps++;
+		heightPreEstimation += m_lMaxTextHeight;
+		heightPreEstimation += m_DecoratorGapY;
 	}
+
+	if (m_copySignPart) {
+		heightPreEstimation += m_DecoratorMarginY;
+		CSize iconSize = m_copySignPart->GetPreferredSize();
+		heightPreEstimation += iconSize.cy;
+	} else if (m_AttributeParts.size() == 0) {
+		heightPreEstimation += m_DecoratorMinAttrSize;
+	}
+	heightPreEstimation += m_DecoratorMarginY;
+
+	CRect location = GetLocation();
+	CPoint offset = GetLocation().TopLeft();
+
+	long gapSizeModify = (location.IsRectEmpty() || numberOfGaps == 0) ? 0 : (location.Height() - heightPreEstimation) / numberOfGaps;
+	long stretchedGapSize = m_DecoratorGapY + gapSizeModify;
 
 	int xcenterpos = (2 * m_DecoratorMarginX + m_lMaxTextWidth) / 2; 
 	int	xleftpos = m_DecoratorMarginX;
 	int	xrightpos = m_DecoratorMarginX + m_lMaxTextWidth;
 	int ypos = m_DecoratorMarginY;
-
-	CPoint offset = GetLocation().TopLeft();
 
 	if (m_LabelPart != NULL) {
 		ypos += m_lMaxTextHeight;
@@ -1062,7 +1087,7 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	}
 
 	if (m_StereotypePart != NULL) {
-		ypos += m_DecoratorGapY;
+		ypos += stretchedGapSize;
 		ypos += m_lMaxTextHeight;
 
 		m_StereotypePart->SetTextRelYPosition(ypos);
@@ -1072,19 +1097,19 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	m_SeparatorLoc = ypos + offset.y;
 
 	RemoveAllCommands();
-	if (coordCommands.size() > 0) {
-		ASSERT(coordCommands.size() == 5);
-		coordCommands.pop_back();	// Delete the AbsoulteCommand (the separator location)
+	if (m_coordCommands.size() > 0) {
+		ASSERT(m_coordCommands.size() == 5);
+		m_coordCommands.pop_back();	// Delete the AbsoulteCommand (the separator location)
 	} else {
-		coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::LeftMost));
-		coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::TopMost));
-		coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::RightMost));
-		coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::BottomMost));
+		m_coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::LeftMost));
+		m_coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::TopMost));
+		m_coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::RightMost));
+		m_coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::BottomMost));
 	}
-	AddCommand(DecoratorSDK::VectorCommand(coordCommands[0], coordCommands[1], coordCommands[2], coordCommands[3], DecoratorSDK::VectorCommand::Rectangle));
-	coordCommands.push_back(new DecoratorSDK::AbsoluteCoordCommand(m_SeparatorLoc));
-	AddCommand(DecoratorSDK::VectorCommand(coordCommands[0], coordCommands[4], DecoratorSDK::VectorCommand::MoveTo));
-	AddCommand(DecoratorSDK::VectorCommand(coordCommands[2], coordCommands[4], DecoratorSDK::VectorCommand::LineTo));
+	AddCommand(DecoratorSDK::VectorCommand(m_coordCommands[0], m_coordCommands[1], m_coordCommands[2], m_coordCommands[3], DecoratorSDK::VectorCommand::Rectangle));
+	m_coordCommands.push_back(new DecoratorSDK::AbsoluteCoordCommand(m_SeparatorLoc));
+	AddCommand(DecoratorSDK::VectorCommand(m_coordCommands[0], m_coordCommands[4], DecoratorSDK::VectorCommand::MoveTo));
+	AddCommand(DecoratorSDK::VectorCommand(m_coordCommands[2], m_coordCommands[4], DecoratorSDK::VectorCommand::LineTo));
 
 	ypos += m_DecoratorMarginY;
 
@@ -1092,7 +1117,7 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 		ypos += m_lMaxTextHeight;
 		(*ii)->SetTextRelYPosition(ypos);
 		(*ii)->SetTextRelYPosition(ypos);
-		ypos += m_DecoratorGapY;
+		ypos += stretchedGapSize;
 	}
 
 	if (m_copySignPart) {

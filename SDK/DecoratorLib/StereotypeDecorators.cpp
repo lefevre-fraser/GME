@@ -130,10 +130,7 @@ void DecoratorBase::initialize( PreferenceMap& mapPrefs )
 		m_crOverlay = it->second.uValue.crValue;
 	}
 	else
-		if ( m_spFCO )
-			m_bOverlay = getFacilities().getPreference( m_spFCO, PREF_OVERLAYCOLOR, m_crOverlay );
-		else
-			m_bOverlay = getFacilities().getPreference( spMetaFCO, PREF_OVERLAYCOLOR, m_crOverlay );
+		m_bOverlay = getFacilities().getPreference( m_spFCO, spMetaFCO, PREF_OVERLAYCOLOR, m_crOverlay );
 
 	// Bitmap and Tiles
 
@@ -149,14 +146,8 @@ void DecoratorBase::initialize( PreferenceMap& mapPrefs )
 	}
 	if ( ! m_pBitmap ) {
 		CString strIcon;
-		if ( m_spFCO ) {
-			getFacilities().getPreference( m_spFCO, PREF_ICON, strIcon );
-			m_pTileVector = mapPrefs.find( PREF_TILESUNDEF )->second.uValue.pTiles;
-		}
-		else {
-			getFacilities().getPreference( spMetaFCO, PREF_ICON, strIcon );
-			m_pTileVector = mapPrefs.find( PREF_TILESUNDEF )->second.uValue.pTiles;
-		}
+		getFacilities().getPreference( m_spFCO, spMetaFCO, PREF_ICON, strIcon );
+		m_pTileVector = mapPrefs.find( PREF_TILESUNDEF )->second.uValue.pTiles;
 		if ( ! strIcon.IsEmpty() ) {
 			#ifndef OLD_DECORATOR_LOOKANDFEEL
 				m_pBitmap = ( m_bOverlay ) ? getFacilities().getBitmapB( strIcon, m_crOverlay ) : getFacilities().getBitmap( strIcon );

@@ -1,32 +1,35 @@
 //################################################################################################
 //
-// Inheritance vector part decorator class
-//	VectorPart.h
+// Ellipse vector part decorator class
+//	EllipseVectorPart.h
 //
 //################################################################################################
 
-#ifndef __INHERITANCEVECTORPART_H_
-#define __INHERITANCEVECTORPART_H_
+#ifndef __ELLIPSEVECTORPART_H_
+#define __ELLIPSEVECTORPART_H_
 
 
 #include "StdAfx.h"
 #include "VectorPart.h"
-#include "InheritanceVectorPart.h"
 
+
+namespace DecoratorSDK {
 
 //################################################################################################
 //
-// CLASS : InheritanceVectorPart
+// CLASS : EllipseVectorPart
 //
 //################################################################################################
 
-class InheritanceVectorPart: public DecoratorSDK::VectorPart
+class EllipseVectorPart: public VectorPart
 {
-	std::vector<DecoratorSDK::CoordCommand*>	coordCommands;
+	long						m_ellipseWidth;
+	long						m_ellipseHeight;
+	std::vector<CoordCommand*>	m_coordCommands;
 
 public:
-	InheritanceVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
-	virtual ~InheritanceVectorPart();
+	EllipseVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, long ellipseWidth, long ellipseHeight);
+	virtual ~EllipseVectorPart();
 
 // =============== resembles IMgaNewDecorator
 public:
@@ -35,9 +38,9 @@ public:
 	virtual CSize			GetPreferredSize	(void) const;
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
-												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, DecoratorSDK::PreferenceMap& preferences);
-
-	virtual void	SetBrush					(CDC* pDC);
+												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 };
 
-#endif //__INHERITANCEVECTORPART_H_
+}; // namespace DecoratorSDK
+
+#endif //__ELLIPSEVECTORPART_H_

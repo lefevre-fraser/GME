@@ -1,32 +1,36 @@
 //################################################################################################
 //
-// Connector vector part decorator class
-//	VectorPart.h
+// Diamond vector part decorator class
+//	DiamondVectorPart.h
 //
 //################################################################################################
 
-#ifndef __CONNECTORVECTORPART_H_
-#define __CONNECTORVECTORPART_H_
+#ifndef __DIAMONDVECTORPART_H_
+#define __DIAMONDVECTORPART_H_
 
 
 #include "StdAfx.h"
 #include "VectorPart.h"
-#include "ConnectorVectorPart.h"
 
+
+namespace DecoratorSDK {
 
 //################################################################################################
 //
-// CLASS : ConnectorVectorPart
+// CLASS : DiamondVectorPart
 //
 //################################################################################################
 
-class ConnectorVectorPart: public DecoratorSDK::VectorPart
+class DiamondVectorPart: public VectorPart
 {
-	std::vector<DecoratorSDK::CoordCommand*>	coordCommands;
+protected:
+	long						m_diamondWidth;
+	long						m_diamondHeight;
+	std::vector<CoordCommand*>	m_coordCommands;
 
 public:
-	ConnectorVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
-	virtual ~ConnectorVectorPart();
+	DiamondVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, long diamondWidth, long diamondHeight);
+	virtual ~DiamondVectorPart();
 
 // =============== resembles IMgaNewDecorator
 public:
@@ -35,7 +39,11 @@ public:
 	virtual CSize			GetPreferredSize	(void) const;
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
-												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, DecoratorSDK::PreferenceMap& preferences);
+												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
+
+	virtual void	SetBrush					(CDC* pDC);
 };
 
-#endif //__CONNECTORVECTORPART_H_
+}; // namespace DecoratorSDK
+
+#endif //__DIAMONDVECTORPART_H_

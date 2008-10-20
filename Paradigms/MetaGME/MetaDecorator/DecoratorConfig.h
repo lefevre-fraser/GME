@@ -13,7 +13,7 @@
 #define COCLASS_NAME "MGA Decorator CoClass (MetaDecorator)"
 #define COCLASS_PROGID "MGA.Decorator.MetaDecorator"
 #define NEWCOCLASS_UUID "764947C7-A4CE-4a22-B02C-7E99948C26C6"
-#define NEWCOCLASS_NAME "MGA NewMetaDecorator"
+#define NEWCOCLASS_NAME "MGA NewDecorator CoClass (NewMetaDecorator)"
 #define NEWCOCLASS_PROGID "MGA.Decorator.NewMetaDecorator"
 
 #define CONSTOLESTR(X)		OLESTR(X)

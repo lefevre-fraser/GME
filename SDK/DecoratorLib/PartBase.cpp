@@ -29,6 +29,7 @@ PartBase::PartBase(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	m_lBorderWidth	(0),
 	m_bReferenced	(false)
 {
+	m_Rect.SetRectEmpty();
 }
 
 PartBase::~PartBase()
@@ -108,12 +109,12 @@ CRect PartBase::GetLocation(void) const
 
 CRect PartBase::GetLabelLocation(void) const
 {
-	return CRect();	// empty
+	return CRect(0,0,0,0);	// empty
 }
 
 CRect PartBase::GetPortLocation(CComPtr<IMgaFCO>& pFCO) const
 {
-	return CRect();	// empty
+	return CRect(0,0,0,0);	// empty
 }
 
 bool PartBase::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const

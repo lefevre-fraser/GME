@@ -14,13 +14,14 @@
 #include "DecoratorConfig.h"
 #include "DecoratorLib_i.c"
 #include "Decorator.h"
+#include "NewMetaDecoratorImpl.h"
 
 
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
 OBJECT_ENTRY(CLSID_Decorator, CDecorator)
-OBJECT_ENTRY(CLSID_NewMetaDecorator, CDecorator)
+OBJECT_ENTRY(CLSID_NewMetaDecorator, CNewMetaDecoratorImpl)
 END_OBJECT_MAP()
 
 class CDecoratorApp : public CWinApp

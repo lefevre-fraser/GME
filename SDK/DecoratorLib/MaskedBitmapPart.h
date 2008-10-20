@@ -1,25 +1,27 @@
 //################################################################################################
 //
-// Constraint Bitmap part class (decorator part)
-//	ConstraintBitmapPart.h
+// Masked Bitmap part class (decorator part)
+//	MaskedBitmapPart.h
 //
 //################################################################################################
 
-#ifndef __CONSTRAINTBITMAPPART_H_
-#define __CONSTRAINTBITMAPPART_H_
+#ifndef __MASKEDBITMAPPART_H_
+#define __MASKEDBITMAPPART_H_
 
 
 #include "StdAfx.h"
 #include "BitmapPart.h"
 
 
+namespace DecoratorSDK {
+
 //################################################################################################
 //
-// CLASS : ConstraintBitmapPart
+// CLASS : MaskedBitmapPart
 //
 //################################################################################################
 
-class ConstraintBitmapPart: public DecoratorSDK::BitmapPart
+class MaskedBitmapPart: public BitmapPart
 {
 protected:
 	long		m_lBitmapResID;
@@ -27,9 +29,9 @@ protected:
 	COLORREF	m_crGrayedOut;
 
 public:
-	ConstraintBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, long bitmapResID,
-						 COLORREF transparentColor, COLORREF grayedOutColor);
-	virtual ~ConstraintBitmapPart();
+	MaskedBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, long bitmapResID,
+					 COLORREF transparentColor, COLORREF grayedOutColor);
+	virtual ~MaskedBitmapPart();
 
 // =============== resembles IMgaNewDecorator
 public:
@@ -38,9 +40,11 @@ public:
 	virtual feature_code	GetFeatures			(void) const;
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
-												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, DecoratorSDK::PreferenceMap& preferences);
+												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 
 	virtual void			DrawBackground		(CDC* pDC);
 };
 
-#endif //__CONSTRAINTBITMAPPART_H_
+}; // namespace DecoratorSDK
+
+#endif //__MASKEDBITMAPPART_H_
