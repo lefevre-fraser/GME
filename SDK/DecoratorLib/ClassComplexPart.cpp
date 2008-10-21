@@ -1077,8 +1077,11 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	CRect location = GetLocation();
 	CPoint offset = GetLocation().TopLeft();
 
-	long gapSizeModify = (location.IsRectEmpty() || numberOfGaps == 0) ? 0 : (location.Height() - heightPreEstimation) / numberOfGaps;
-	long stretchedGapSize = m_DecoratorGapY + gapSizeModify;
+	long stretchedGapSize = m_DecoratorGapY;
+	if (m_spFCO) {	// stretch logic only should work outside of PartBrowser
+		long gapSizeModify = (location.IsRectEmpty() || numberOfGaps == 0) ? 0 : (location.Height() - heightPreEstimation) / numberOfGaps;
+		stretchedGapSize += gapSizeModify;
+	}
 
 	int xcenterpos = (2 * m_DecoratorMarginX + m_lMaxTextWidth) / 2; 
 	int	xleftpos = m_DecoratorMarginX;

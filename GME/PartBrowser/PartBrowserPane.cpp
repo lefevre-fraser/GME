@@ -271,7 +271,7 @@ void CPartBrowserPane::Resize(CRect r)
 			}
 
 			// set the location (based on center: pt is the center)
-			COMTHROW((*ii).decorator->SetLocation(pt.x - size.cx / 2, pt.y - size.cy / 2, pt.x + size.cx / 2, pt.y + size.cy / 2));
+			COMTHROW((*ii).decorator->SetLocation(pt.x - (size.cx - size.cx / 2), pt.y - (size.cy - size.cy / 2), pt.x + size.cx / 2, pt.y + size.cy / 2));
 
 			if (++objColumn >= objNumInRow) {
 				objColumn = 0;

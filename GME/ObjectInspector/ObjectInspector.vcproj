@@ -1192,19 +1192,11 @@
 				>
 			</File>
 			<File
-				RelativePath="res\NOTE01.ICO"
-				>
-			</File>
-			<File
 				RelativePath="ObjectInspector.ico"
 				>
 			</File>
 			<File
 				RelativePath="ObjectInspectorCtl.bmp"
-				>
-			</File>
-			<File
-				RelativePath="res\WORDUNDR.BMP"
 				>
 			</File>
 		</Filter>
