@@ -330,11 +330,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MetaAttributePart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MetaClassPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MetaCompositePart.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\MetaDecoratorUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MetaStereoLabelPart.cpp"
 				>
 			</File>
 			<File
@@ -393,11 +405,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MetaAttributePart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MetaClassPart.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MetaCompositePart.h"
 				>
 			</File>
 			<File
 				RelativePath=".\MetaDecoratorUtil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MetaStereoLabelPart.h"
 				>
 			</File>
 			<File

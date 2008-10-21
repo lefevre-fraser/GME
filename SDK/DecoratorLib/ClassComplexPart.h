@@ -48,7 +48,6 @@ protected:
 	long						m_DecoratorMinAttrSize;
 
 	std::vector<DecoratorSDK::CoordCommand*>	m_coordCommands;
-
 public:
 	ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~ClassComplexPart();
@@ -94,6 +93,7 @@ public:
 	virtual void	SetBoxLocation				(const CRect& cRect);
 	virtual void	SetReferenced				(bool referenced);
 	virtual void	SetParentPart				(PartBase* pPart);
+	void			SortAttributes				(void);
 };
 
 }; // namespace DecoratorSDK

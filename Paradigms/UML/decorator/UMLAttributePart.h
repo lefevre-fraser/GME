@@ -32,6 +32,7 @@ public:
 	virtual ~UMLAttributePart();
 
 	virtual void	ExecuteOperation			(const CString& newString);
+	virtual bool	IsLesser					(const AttributePart* other);
 };
 
 }; // namespace UMLDecor

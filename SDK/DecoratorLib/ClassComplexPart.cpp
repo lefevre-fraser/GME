@@ -41,7 +41,12 @@ ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEven
 
 ClassComplexPart::~ClassComplexPart()
 {
-	for(unsigned long i = 0; i < m_coordCommands.size(); i++) {
+	unsigned long i = 0;
+	for (i = 0; i < m_AttributeParts.size(); i++) {
+		delete m_AttributeParts[i];
+	}
+	m_AttributeParts.clear();
+	for(i = 0; i < m_coordCommands.size(); i++) {
 		delete m_coordCommands[i];
 	}
 	m_coordCommands.clear();
@@ -1171,6 +1176,22 @@ void ClassComplexPart::SetParentPart(PartBase* pPart)
 	if (m_copySignPart != NULL)
 		m_copySignPart->SetParentPart(pPart);
 	VectorPart::SetParentPart(pPart);
+}
+
+struct AttributeLess
+{
+	bool operator()(AttributePart* papA, AttributePart* papB)
+	{
+		return papA->IsLesser(papB);
+	};
+};
+
+void ClassComplexPart::SortAttributes(void)
+{
+	if (m_AttributeParts.size() < 2)
+		return;
+
+	std::sort(m_AttributeParts.begin(), m_AttributeParts.end(), AttributeLess());
 }
 
 }; // namespace DecoratorSDK

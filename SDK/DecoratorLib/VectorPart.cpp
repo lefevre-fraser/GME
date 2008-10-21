@@ -176,6 +176,7 @@ void VectorPart::Draw(CDC* pDC)
 				}
 				break;
 			case VectorCommand::SelectNullBrush:	pDC->SelectStockObject(NULL_BRUSH);							break;
+			case VectorCommand::SelectNullPen:		pDC->SelectStockObject(NULL_PEN);							break;
 			default: ASSERT(true);
 		}
 	}

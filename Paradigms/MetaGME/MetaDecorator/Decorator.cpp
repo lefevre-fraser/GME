@@ -171,7 +171,6 @@ STDMETHODIMP CDecorator::GetParam(BSTR name, VARIANT* value)
 		CComVariant	variantval;
 		variantval.Attach(value);
 		variantval = (m_showAttributes ? META_PARAM_VAL_TRUE : META_PARAM_VAL_FALSE);
-		
 	}
 	else if (!param.CompareNoCase(META_PARAM_SHOWABSTRACT)) {
 		CComVariant	variantval;
@@ -603,7 +602,6 @@ void CDecorator::CalcRelPositions()
 
 void CDecorator::SetupClass()
 {
-	int i = 0;
 	bool bRealFco = MetaDecor::GetDecorUtils().IsFCO(m_stereotype);
 	if (!bRealFco) {
 		return;

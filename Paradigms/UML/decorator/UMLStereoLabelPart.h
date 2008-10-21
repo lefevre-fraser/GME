@@ -17,7 +17,7 @@ namespace UMLDecor {
 
 //################################################################################################
 //
-// CLASS : StereoLabelPart
+// CLASS : UMLStereoLabelPart
 //
 //################################################################################################
 
@@ -25,7 +25,6 @@ class UMLStereoLabelPart: public DecoratorSDK::StereoLabelPart
 {
 protected:
 	CComPtr<IMgaFCO>	m_spActualFCO;
-	long				m_labelRelYPosition;	// bottom of the text because of the bottom alignment
 
 public:
 	UMLStereoLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, CComPtr<IMgaFCO>& pFCO);

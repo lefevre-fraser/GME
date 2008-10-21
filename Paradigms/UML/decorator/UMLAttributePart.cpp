@@ -38,8 +38,14 @@ void UMLAttributePart::ExecuteOperation(const CString& newString)
 	m_strText = newString;
 	UMLClassPart* umlClassPart = dynamic_cast<UMLClassPart*> (GetParent());
 	ASSERT(umlClassPart != NULL);
-	umlClassPart->ModifyAttributes(m_spActualFCO);
+	umlClassPart->ModifyAttributes(m_spActualFCO);	// Had to assemble attribute string also from the other attributes, so pass this to the parent
 	// transaction operation end
+}
+
+bool UMLAttributePart::IsLesser(const AttributePart* other)
+{
+	// dummy implementation, not used
+	return false;
 }
 
 }; // namespace UMLDecor

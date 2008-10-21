@@ -137,7 +137,8 @@ public:
 		Ellipse				= 6,
 		SelectBrush			= 7,
 		SelectPen			= 8,
-		SelectNullBrush		= 9
+		SelectNullBrush		= 9,
+		SelectNullPen		= 10
 	};
 
 public:

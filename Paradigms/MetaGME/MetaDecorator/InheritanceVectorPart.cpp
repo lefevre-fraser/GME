@@ -59,9 +59,12 @@ void InheritanceVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr
 		unsigned long size = m_coordCommands.size();
 		AddCommand(DecoratorSDK::VectorCommand(m_coordCommands[size - 2], m_coordCommands[size - 1], DecoratorSDK::VectorCommand::SelectBrush));
 
-		if (m_inheritanceType == InterfaceInheritance) {
+		if (m_inheritanceType == InterfaceInheritance)
 			AddCommand(DecoratorSDK::VectorCommand(DecoratorSDK::VectorCommand::SelectNullBrush));
-		}
+
+		// Looks awful
+//		if (m_inheritanceType == ImplementationInheritance)
+//			AddCommand(DecoratorSDK::VectorCommand(DecoratorSDK::VectorCommand::SelectNullPen));
 
 		// Add four coordinates for the inner circle boundaries
 		DecoratorSDK::ComplexCoordCommand* ellipseLeft = new DecoratorSDK::ComplexCoordCommand(DecoratorSDK::LeftMost);

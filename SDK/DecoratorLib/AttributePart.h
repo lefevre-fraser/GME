@@ -44,6 +44,8 @@ public:
 	virtual void	SetType						(const CString& typeStr) { m_strType = typeStr; };
 	virtual CString	GetName						(void) const { return m_strText; };
 	virtual CString	GetType						(void) const { return m_strType; };
+
+	virtual bool	IsLesser					(const AttributePart* other) = 0;
 };
 
 }; // namespace DecoratorSDK

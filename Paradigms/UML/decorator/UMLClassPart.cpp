@@ -116,9 +116,9 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 		DecoratorSDK::getFacilities().getPreference(m_spFCO, m_spMetaFCO, DecoratorSDK::PREF_LABELCOLOR, nameColor);
 		preferences[DecoratorSDK::PREF_LABELCOLOR] = DecoratorSDK::PreferenceVariant(nameColor);
 	}
-	catch(hresult_exception &e)
+	catch(hresult_exception& e)
 	{
-		ASSERT( FAILED(e.hr) );
+		ASSERT(FAILED(e.hr));
 		SetErrorInfo(e.hr);
 	}
 

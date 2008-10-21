@@ -14,6 +14,7 @@
 #include "EllipseVectorPart.h"
 #include "InheritanceVectorPart.h"
 #include "DiamondVectorPart.h"
+#include "MetaClassPart.h"
 #include "DecoratorExceptions.h"
 #include "MetaDecoratorUtil.h"
 
@@ -82,10 +83,10 @@ void MetaCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 
 			CComBSTR bstr;
 			COMTHROW(m_spMetaFCO->get_Name(&bstr));
-			CString name(bstr);
+			CString stereotypeName(bstr);
 
 			// Get ShapeCode
-			ShapeCode shape = MetaDecor::GetDecorUtils().GetShapeCode(name);
+			ShapeCode shape = MetaDecor::GetDecorUtils().GetShapeCode(stereotypeName);
 			if (shape == NULLSHAPE) {
 				throw DecoratorException((DecoratorExceptionCode)E_METADECORATOR_KINDNOTSUPPORTED);
 			} else if (shape == CONNECTOR) {
@@ -121,35 +122,16 @@ void MetaCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 													   InterfaceInheritance));
 				if (!pFCO)
 					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-			} else {
-//			} else if (shape == EQUIVALENCE) {
+			} else if (shape == EQUIVALENCE) {
 				AddImagePart(new DecoratorSDK::DiamondVectorPart(this, m_eventSink,
 																 static_cast<long> (META_EQUIVALENCE_WIDTH),
 																 static_cast<long> (META_EQUIVALENCE_HEIGHT)));
 				if (!pFCO)
 					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-			}
-
-
-
-/*			if (name == UML_INHERITANCE_NAME) {
-				AddImagePart(new InheritanceVectorPart(this, m_eventSink));
-				if (!pFCO)
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-			} else if (name == UML_CONNECTOR_NAME) {
-				AddImagePart(new ConnectorVectorPart(this, m_eventSink));
-				if (!pFCO)
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-			} else if (name == UML_CONSTRAINT_NAME) {
-				AddImagePart(new ConstraintBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINT, DecoratorSDK::COLOR_BKGND, DecoratorSDK::COLOR_GRAYED_OUT));
-				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-			} else if (name == UML_CONSTRAINT_DEFINITION_NAME) {
-				AddImagePart(new ConstraintBitmapPart(this, m_eventSink, IDB_BITMAP_CDEFINITION, DecoratorSDK::COLOR_BKGND, DecoratorSDK::COLOR_GRAYED_OUT));
-				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else {	// This must be a class
-				AddImagePart(new UMLClassPart(this, m_eventSink));
-				// The UMLClassPart handles the label also
-			}*/
+				AddImagePart(new MetaClassPart(this, m_eventSink, shape, stereotypeName));
+				// The MetaClassPart handles the label also
+			}
 		}
 	}
 	catch (hresult_exception& e) {
