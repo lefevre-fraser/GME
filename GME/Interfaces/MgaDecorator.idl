@@ -108,6 +108,9 @@ const unsigned long	F_RESIZEAFTERMOD = 1<<7;
 		[id(21), helpstring("method WindowResizing")] HRESULT WindowResizing([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
 		[id(22), helpstring("method WindowResizingFinished")] HRESULT WindowResizingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
 		[id(23), helpstring("method WindowResized")] HRESULT WindowResized([in] LONG nType, [in] LONG cx, [in] LONG cy);
+
+		[id(24), helpstring("method GeneralOperationStarted")] HRESULT GeneralOperationStarted([in] ULONGLONG operationData);
+		[id(25), helpstring("method GeneralOperationFinished")] HRESULT GeneralOperationFinished([in] ULONGLONG operationData);
 	};
 
 	[

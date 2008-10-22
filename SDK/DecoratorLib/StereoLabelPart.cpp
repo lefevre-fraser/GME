@@ -20,7 +20,6 @@ namespace DecoratorSDK {
 StereoLabelPart::StereoLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	TextPart(pPart, eventSink)
 {
-	// TODO
 	textStringVariableName		= "";	// disable
 	textFontVariableName		= PREF_LABELFONT;
 	textMaxLengthVariableName	= PREF_LABELLENGTH;

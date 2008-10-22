@@ -230,3 +230,17 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::WindowResized(LONG nType, LONG cx,
 
 	return S_OK;
 }
+
+STDMETHODIMP CDecoratorEventSink::XEventSink::GeneralOperationStarted(ULONGLONG operationData)
+{
+	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::XEventSink::GeneralOperationFinished(ULONGLONG operationData)
+{
+	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
+
+	return S_OK;
+}

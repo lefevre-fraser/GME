@@ -84,6 +84,9 @@ public:
 		STDMETHOD( WindowResizing )					( /*[in]*/ LONG nSide, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
 		STDMETHOD( WindowResizingFinished )			( /*[in]*/ LONG nType, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
 		STDMETHOD( WindowResized )					( /*[in]*/ LONG nType, /*[in]*/ LONG cx, /*[in]*/ LONG cy );
+
+		STDMETHOD( GeneralOperationStarted )		( /*[in]*/ ULONGLONG operationData );
+		STDMETHOD( GeneralOperationFinished )		( /*[in]*/ ULONGLONG operationData );
 	END_INTERFACE_PART(EventSink)
 };
 

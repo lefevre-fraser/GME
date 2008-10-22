@@ -337,6 +337,16 @@ void PartBase::WindowResized(UINT nType, CSize& size)
 	m_eventSink->WindowResized(nType, size.cx, size.cy);
 }
 
+void PartBase::GeneralOperationStarted(void* operationData)
+{
+	m_eventSink->GeneralOperationStarted((ULONGLONG)operationData);
+}
+
+void PartBase::GeneralOperationFinished(void* operationData)
+{
+	m_eventSink->GeneralOperationFinished((ULONGLONG)operationData);
+}
+
 ECoordRefPoint PartBase::GetAlignment(ELocation loc) const
 {
 	switch (loc) {

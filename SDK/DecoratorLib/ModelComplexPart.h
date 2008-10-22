@@ -28,6 +28,7 @@ class ModelComplexPart: public TypeableBitmapPart
 protected:
 	std::vector<PortPart*>		m_LeftPorts;
 	std::vector<PortPart*>		m_RightPorts;
+	BitmapPart*					m_expandPart;
 	long						m_iMaxPortTextLength;
 	COLORREF					m_crPortText;
 	bool						m_bPortLabelInside;

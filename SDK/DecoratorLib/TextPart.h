@@ -45,6 +45,7 @@ protected:
 	std::vector<CString>		m_vecText;
 	ELocation					m_eTextLocation;
 	bool						m_bTextEnabled;
+	bool						m_bTextEditable;
 	long						m_iTextWrapCount;
 	COLORREF					m_crText;
 	int							m_iFontKey;

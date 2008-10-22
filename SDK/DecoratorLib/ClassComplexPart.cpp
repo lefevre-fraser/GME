@@ -41,11 +41,17 @@ ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEven
 
 ClassComplexPart::~ClassComplexPart()
 {
+	if (m_LabelPart != NULL)
+		delete m_LabelPart;
+	if (m_StereotypePart != NULL)
+		delete m_StereotypePart;
 	unsigned long i = 0;
 	for (i = 0; i < m_AttributeParts.size(); i++) {
 		delete m_AttributeParts[i];
 	}
 	m_AttributeParts.clear();
+	if (m_copySignPart != NULL)
+		delete m_copySignPart;
 	for(i = 0; i < m_coordCommands.size(); i++) {
 		delete m_coordCommands[i];
 	}
@@ -101,11 +107,6 @@ feature_code ClassComplexPart::GetFeatures(void) const
 	for (std::vector<AttributePart*>::const_iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		feature_code attrubuteFeatureCodes = (*ii)->GetFeatures();
 		featureCodes |= attrubuteFeatureCodes;
-	}
-
-	if (m_copySignPart != NULL) {
-		feature_code copySignFeatureCodes = m_copySignPart->GetFeatures();
-		featureCodes |= copySignFeatureCodes;
 	}
 
 	feature_code partFeatureCodes = VectorPart::GetFeatures();
@@ -246,8 +247,11 @@ void ClassComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	}
-	if (m_copySignPart != NULL)
+	if (m_copySignPart != NULL) {
+		preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(false);
 		m_copySignPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+		preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(true);
+	}
 	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 

@@ -115,6 +115,8 @@ public:
 	virtual void	WindowResizingFinished		(UINT nType, CRect& location);
 	virtual void	WindowResized				(UINT nType, CSize& size);
 
+	virtual void	GeneralOperationStarted		(void* operationData);
+	virtual void	GeneralOperationFinished	(void* operationData);
 
 // === Helper functions ===
 	virtual ECoordRefPoint	GetAlignment		(ELocation loc) const;

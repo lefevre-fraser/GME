@@ -576,6 +576,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\collapse.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\expand.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\res\icon_instance.bmp"
 				>
 			</File>

@@ -96,6 +96,8 @@ namespace DecoratorSDK
 
 	static const char* PREF_VIOLATED				= "isViolated";
 
+	static const char* PREF_ITEMEDITABLE			= "itemEditable";
+	static const char* PREF_ITEMRESIZABLE			= "itemResizable";
 	static const char* PREF_PREFERREDSIZE			= "preferredSize";
 	static const char* PREF_ISMASKEDBITMAP			= "isMaskedBitmap";
 

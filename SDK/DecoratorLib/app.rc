@@ -78,6 +78,8 @@ IDB_ICON_REFERENCE_DIS  BITMAP                  "res\\icon_reference_disabled.bm
 IDB_ICON_SUBTYPE_DIS    BITMAP                  "res\\icon_subtype_disabled.bmp"
 IDB_ICON_TYPE_DIS       BITMAP                  "res\\icon_type_disabled.bmp"
 IDB_REFERENCE_SIGN      BITMAP                  "res\\referencesign.bmp"
+IDB_EXPAND_SIGN         BITMAP                  "res\\expandsign.bmp"
+IDB_COLLAPSE_SIGN       BITMAP                  "res\\collapsesign.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

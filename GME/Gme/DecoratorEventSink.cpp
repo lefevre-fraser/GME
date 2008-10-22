@@ -264,3 +264,25 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::WindowResized(LONG nType, LONG cx,
 
 	return S_OK;
 }
+
+STDMETHODIMP CDecoratorEventSink::XEventSink::GeneralOperationStarted(ULONGLONG operationData)
+{
+	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
+
+	pThis->m_view->BeginTransaction();
+	pThis->m_view->inNewDecoratorOperation = true;
+	pThis->m_view->inOpenedDecoratorTransaction = true;
+	pThis->m_view->shouldCommitOperation = false;
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::XEventSink::GeneralOperationFinished(ULONGLONG operationData)
+{
+	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
+
+	pThis->m_view->inNewDecoratorOperation = false;
+	pThis->m_view->shouldCommitOperation = true;
+
+	return S_OK;
+}

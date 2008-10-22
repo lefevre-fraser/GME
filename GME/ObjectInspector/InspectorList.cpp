@@ -731,7 +731,7 @@ void CInspectorList::UpdateItem(const CListItem &srcListItem, CListItem &dstList
 	dstListItem.CopyWithNoState(srcListItem);
 
 
-	// Unfortunatelly, Windows does send MeasureItem message only once - Volgyesi
+	// Unfortunately, Windows sends MeasureItem message only once - Volgyesi
 	if(srcListItem.Value.dataType==ITEMDATA_STRING)
 	{
 		int nLineNum=srcListItem.Value.cLineNum;

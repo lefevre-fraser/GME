@@ -30,6 +30,8 @@ ReferenceBitmapPart::ReferenceBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecorat
 
 ReferenceBitmapPart::~ReferenceBitmapPart()
 {
+	if (m_referencedPart != NULL)
+		delete m_referencedPart;
 }
 
 void ReferenceBitmapPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)

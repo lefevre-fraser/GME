@@ -25,8 +25,9 @@ namespace DecoratorSDK {
 class ResizablePart: public PartBase
 {
 public:
+	bool			m_bResizable;		// Disabling resizability
+	bool			m_bReadCustomSize;	// for temporary use, when you want to determine intended size
 	ResizeLogic		resizeLogic;
-	bool			m_readCustomSize;
 
 	ResizablePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~ResizablePart();

@@ -20,8 +20,16 @@ namespace DecoratorSDK {
 //################################################################################################
 
 TextPart::TextPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
-	PartBase(pPart, eventSink),
-	resizeLogic(NULL)
+	PartBase			(pPart, eventSink),
+	resizeLogic			(NULL),
+	m_bCursorSaved		(false),
+	m_eTextLocation		(L_SOUTH),
+	m_bTextEnabled		(true),	// ?
+	m_bTextEditable		(true),
+	m_iTextWrapCount	(0),
+	m_crText			(COLOR_BLACK),
+	m_iFontKey			(FONT_LABEL),
+	m_iMaxTextLength	(MAX_LABEL_LENGTH)
 {
 	resizeLogic.SetParentPart(this);
 }
@@ -47,7 +55,7 @@ void TextPart::Destroy(void)
 
 feature_code TextPart::GetFeatures(void) const
 {
-	return F_RESIZABLE | F_MOUSEEVENTS | F_HASLABEL;
+	return m_bTextEditable ? F_MOUSEEVENTS : 0 | F_HASLABEL;
 }
 
 CSize TextPart::GetPreferredSize(void) const
@@ -64,12 +72,17 @@ CRect TextPart::GetLabelLocation(void) const
 void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 							HWND parentWnd, PreferenceMap& preferences)
 {
+	// Check if editability is disabled/enabled
+	PreferenceMap::iterator it = preferences.find(PREF_ITEMEDITABLE);
+	if (it != preferences.end())
+		m_bTextEditable = it->second.uValue.bValue;
+
 	if (m_spFCO)
 		resizeLogic.InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	PartBase::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	// Get Text
-	PreferenceMap::iterator it = preferences.find(DecoratorSDK::PREF_TEXTOVERRIDE);
+	it = preferences.find(DecoratorSDK::PREF_TEXTOVERRIDE);
 	if (it == preferences.end()) {
 		it = preferences.find(textStringVariableName);
 		bool bTextDefined = (it != preferences.end());
@@ -157,7 +170,7 @@ void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 
 bool TextPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_bActive && m_bSelected) {
+	if (m_bActive && m_bSelected && m_bTextEditable) {
 		CRect ptRect = GetTextLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
@@ -187,7 +200,7 @@ bool TextPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 
 bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_spFCO && m_bActive && m_bSelected) {
+	if (m_spFCO && m_bActive && m_bSelected && m_bTextEditable) {
 		CRect ptRect = GetTextLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
@@ -253,7 +266,7 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 
 bool TextPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_spFCO && m_bActive && m_bSelected) {
+	if (m_spFCO && m_bActive && m_bSelected && m_bTextEditable) {
 		CRect ptRect = GetTextLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);

@@ -32,27 +32,9 @@ void MetaStereoLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 									   HWND parentWnd, DecoratorSDK::PreferenceMap& preferences)
 {
 	DecoratorSDK::getFacilities().getMetaFCO(pPart, m_spMetaFCO);
+	preferences[DecoratorSDK::PREF_ITEMEDITABLE] = DecoratorSDK::PreferenceVariant(false);
 	StereoLabelPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
-}
-
-bool MetaStereoLabelPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	return false;
-}
-
-bool MetaStereoLabelPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	return false;
-}
-
-bool MetaStereoLabelPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	return false;
-}
-
-bool MetaStereoLabelPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	return false;
+	preferences[DecoratorSDK::PREF_ITEMEDITABLE] = DecoratorSDK::PreferenceVariant(true);
 }
 
 void MetaStereoLabelPart::ExecuteOperation(const CString& newString)
