@@ -27,7 +27,7 @@ namespace UMLDecor {
 //################################################################################################
 
 UMLCompositePart::UMLCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
-	ImageAndLabelPart(pPart, eventSink)
+	ObjectAndTextPart(pPart, eventSink)
 {
 }
 
@@ -81,29 +81,29 @@ void UMLCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 			COMTHROW(m_spMetaFCO->get_Name(&bstr));
 			CString name(bstr);
 			if (name == UML_INHERITANCE_NAME) {
-				AddImagePart(new DecoratorSDK::TriangleVectorPart(this, m_eventSink,
-																  static_cast<long> (UML_INHERITANCE_WIDTH),
-																  static_cast<long> (UML_INHERITANCE_HEIGHT)));
+				AddObjectPart(new DecoratorSDK::TriangleVectorPart(this, m_eventSink,
+																   static_cast<long> (UML_INHERITANCE_WIDTH),
+																   static_cast<long> (UML_INHERITANCE_HEIGHT)));
 				if (!pFCO)
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (name == UML_CONNECTOR_NAME) {
-				AddImagePart(new DecoratorSDK::EllipseVectorPart(this, m_eventSink,
-																 static_cast<long> (UML_CONNECTOR_WIDTH),
-																 static_cast<long> (UML_CONNECTOR_HEIGHT)));
+				AddObjectPart(new DecoratorSDK::EllipseVectorPart(this, m_eventSink,
+																  static_cast<long> (UML_CONNECTOR_WIDTH),
+																  static_cast<long> (UML_CONNECTOR_HEIGHT)));
 				if (!pFCO)
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (name == UML_CONSTRAINT_NAME) {
-				AddImagePart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINT,
-																DecoratorSDK::COLOR_TRANSPARENT,
-																DecoratorSDK::COLOR_GRAYED_OUT));
-				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+				AddObjectPart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINT,
+																 DecoratorSDK::COLOR_TRANSPARENT,
+																 DecoratorSDK::COLOR_GRAYED_OUT));
+				AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (name == UML_CONSTRAINT_DEFINITION_NAME) {
-				AddImagePart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CDEFINITION,
-																DecoratorSDK::COLOR_TRANSPARENT,
-																DecoratorSDK::COLOR_GRAYED_OUT));
-				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+				AddObjectPart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CDEFINITION,
+																 DecoratorSDK::COLOR_TRANSPARENT,
+																 DecoratorSDK::COLOR_GRAYED_OUT));
+				AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else {	// This must be a class
-				AddImagePart(new UMLClassPart(this, m_eventSink));
+				AddObjectPart(new UMLClassPart(this, m_eventSink));
 				// The UMLClassPart handles the label also
 			}
 		}

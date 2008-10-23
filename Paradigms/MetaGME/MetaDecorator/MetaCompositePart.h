@@ -10,7 +10,7 @@
 
 
 #include "StdAfx.h"
-#include "BitmapAndLabelPart.h"
+#include "ObjectAndTextPart.h"
 
 
 namespace MetaDecor {
@@ -21,7 +21,7 @@ namespace MetaDecor {
 //
 //################################################################################################
 
-	class MetaCompositePart: public DecoratorSDK::BitmapAndLabelPart
+	class MetaCompositePart: public DecoratorSDK::ObjectAndTextPart
 {
 public:
 	MetaCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);

@@ -10,7 +10,7 @@
 
 
 #include "StdAfx.h"
-#include "ImageAndLabelPart.h"
+#include "ObjectAndTextPart.h"
 
 
 namespace UMLDecor {
@@ -21,7 +21,7 @@ namespace UMLDecor {
 //
 //################################################################################################
 
-	class UMLCompositePart: public DecoratorSDK::ImageAndLabelPart
+	class UMLCompositePart: public DecoratorSDK::ObjectAndTextPart
 {
 public:
 	UMLCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);

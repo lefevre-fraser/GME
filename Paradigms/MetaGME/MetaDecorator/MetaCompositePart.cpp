@@ -28,7 +28,7 @@ namespace MetaDecor {
 //################################################################################################
 
 MetaCompositePart::MetaCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
-	BitmapAndLabelPart(pPart, eventSink)
+	ObjectAndTextPart(pPart, eventSink)
 {
 }
 
@@ -90,46 +90,46 @@ void MetaCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 			if (shape == NULLSHAPE) {
 				throw DecoratorException((DecoratorExceptionCode)E_METADECORATOR_KINDNOTSUPPORTED);
 			} else if (shape == CONNECTOR) {
-				AddImagePart(new DecoratorSDK::EllipseVectorPart(this, m_eventSink,
-																 static_cast<long> (2 * META_CONNECTOR_RAIDUS),
-																 static_cast<long> (2 * META_CONNECTOR_RAIDUS)));
+				AddObjectPart(new DecoratorSDK::EllipseVectorPart(this, m_eventSink,
+																  static_cast<long> (2 * META_CONNECTOR_RAIDUS),
+																  static_cast<long> (2 * META_CONNECTOR_RAIDUS)));
 				if (!pFCO)
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (shape == CONSTRAINT) {
-				AddImagePart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINT, DecoratorSDK::COLOR_TRANSPARENT, DecoratorSDK::COLOR_GRAYED_OUT));
-				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+				AddObjectPart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINT, DecoratorSDK::COLOR_TRANSPARENT, DecoratorSDK::COLOR_GRAYED_OUT));
+				AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (shape == CONSTRAINTFUNC) {
-				AddImagePart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINTFUNC, DecoratorSDK::COLOR_TRANSPARENT, DecoratorSDK::COLOR_GRAYED_OUT));
-				AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+				AddObjectPart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINTFUNC, DecoratorSDK::COLOR_TRANSPARENT, DecoratorSDK::COLOR_GRAYED_OUT));
+				AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (shape == INHERITANCE) {
-				AddImagePart(new InheritanceVectorPart(this, m_eventSink,
-													   static_cast<long> (META_INHERITANCE_WIDTH),
-													   static_cast<long> (META_INHERITANCE_HEIGHT),
-													   NormalInheritance));
+				AddObjectPart(new InheritanceVectorPart(this, m_eventSink,
+														static_cast<long> (META_INHERITANCE_WIDTH),
+														static_cast<long> (META_INHERITANCE_HEIGHT),
+														NormalInheritance));
 				if (!pFCO)
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (shape == IMPINHERITANCE) {
-				AddImagePart(new InheritanceVectorPart(this, m_eventSink,
-													   static_cast<long> (META_INHERITANCE_WIDTH),
-													   static_cast<long> (META_INHERITANCE_HEIGHT),
-													   ImplementationInheritance));
+				AddObjectPart(new InheritanceVectorPart(this, m_eventSink,
+														static_cast<long> (META_INHERITANCE_WIDTH),
+														static_cast<long> (META_INHERITANCE_HEIGHT),
+														ImplementationInheritance));
 				if (!pFCO)
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (shape == INTINHERITANCE) {
-				AddImagePart(new InheritanceVectorPart(this, m_eventSink,
-													   static_cast<long> (META_INHERITANCE_WIDTH),
-													   static_cast<long> (META_INHERITANCE_HEIGHT),
-													   InterfaceInheritance));
+				AddObjectPart(new InheritanceVectorPart(this, m_eventSink,
+														static_cast<long> (META_INHERITANCE_WIDTH),
+														static_cast<long> (META_INHERITANCE_HEIGHT),
+														InterfaceInheritance));
 				if (!pFCO)
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (shape == EQUIVALENCE) {
-				AddImagePart(new DecoratorSDK::DiamondVectorPart(this, m_eventSink,
-																 static_cast<long> (META_EQUIVALENCE_WIDTH),
-																 static_cast<long> (META_EQUIVALENCE_HEIGHT)));
+				AddObjectPart(new DecoratorSDK::DiamondVectorPart(this, m_eventSink,
+																  static_cast<long> (META_EQUIVALENCE_WIDTH),
+																  static_cast<long> (META_EQUIVALENCE_HEIGHT)));
 				if (!pFCO)
-					AddLabelPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
+					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else {	// This must be a class
-				AddImagePart(new MetaClassPart(this, m_eventSink, shape, stereotypeName));
+				AddObjectPart(new MetaClassPart(this, m_eventSink, shape, stereotypeName));
 				// The MetaClassPart handles the label also
 			}
 		}
