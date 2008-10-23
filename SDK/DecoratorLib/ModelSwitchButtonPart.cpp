@@ -33,56 +33,9 @@ void ModelSwitchButtonPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr
 										 HWND parentWnd, PreferenceMap& preferences)
 {
 	bool bExpanded = false;
-
-	if (pFCO) {
-		COMTRY {
-			CComPtr<IMgaMetaAspect> mAspect;
-			COMTHROW(pPart->get_ParentAspect(&mAspect));
-
-			long status;
-			COMTHROW(pProject->get_ProjectStatus(&status));
-			bool inTrans = (status & 0x08L) != 0;
-			CComPtr<IMgaTerritory> terr;
-			CComBSTR bstrVal;
-			CComPtr<IMgaPart> part;
-			if (!inTrans) {
-				COMTHROW(pProject->CreateTerritory(NULL, &terr));
-				COMTHROW(pProject->BeginTransaction(terr, TRANSACTION_READ_ONLY));
-
-				CComPtr<IMgaFCO> terrFco;
-				COMTHROW(terr->OpenFCO(pFCO, &terrFco));
-				status = OBJECT_ZOMBIE;
-				COMTHROW(terrFco->get_Status(&status));
-				if (status == OBJECT_EXISTS) {
-					COMTHROW(terrFco->get_Part(mAspect, &part));
-					CComBSTR regName(PREF_ISMODELEXPANDED);
-					COMTHROW(part->get_RegistryValue(regName, &bstrVal));
-				}
-
-				pProject->CommitTransaction();
-			} else {
-//				COMTHROW(pProject->get_ActiveTerritory(&terr));
-
-				COMTHROW(pFCO->get_Part(mAspect, &part));
-				CComBSTR regName(PREF_ISMODELEXPANDED);
-				COMTHROW(part->get_RegistryValue(regName, &bstrVal));
-			}
-
-			CString boolStr;
-			CopyTo(bstrVal, boolStr);
-			if (boolStr == "1")
-				bExpanded = true;
-			else
-				bExpanded = false;
-		}
-		catch(hresult_exception &e)
-		{
-			ASSERT(FAILED(e.hr));
-			SetErrorInfo(e.hr);
-		}
-	}
-
-	getFacilities().getPreference(pFCO, PREF_ISMODELEXPANDED, bExpanded);
+	PreferenceMap::iterator it = preferences.find(PREF_ISMODELEXPANDED);
+	if (it != preferences.end())
+		bExpanded = it->second.uValue.bValue;
 
 	m_lBitmapResID = bExpanded ? IDB_COLLAPSE_SIGN : IDB_EXPAND_SIGN;
 

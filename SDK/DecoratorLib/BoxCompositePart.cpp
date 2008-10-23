@@ -8,7 +8,7 @@
 #include "StdAfx.h"
 #include "BoxCompositePart.h"
 
-#include "ModelComplexPart.h"
+#include "ModelSwitchPart.h"
 #include "TypeableLabelPart.h"
 #include "ReferenceBitmapPart.h"
 #include "PortPart.h"
@@ -26,7 +26,7 @@ namespace DecoratorSDK {
 //################################################################################################
 
 BoxCompositePart::BoxCompositePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
-	BitmapAndLabelPart(pPart, eventSink)
+	ObjectAndTextPart(pPart, eventSink)
 {
 }
 
@@ -36,7 +36,7 @@ BoxCompositePart::~BoxCompositePart()
 
 CRect BoxCompositePart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
 {
-	CRect portLocation = GetBitmapPart()->GetPortLocation(fco);
+	CRect portLocation = GetObjectPart()->GetPortLocation(fco);
 	if (!portLocation.IsRectEmpty()) {
 		// if a reference has an icon specified for itself 
 		// then it is not surrounded by a black rectangle.
@@ -44,7 +44,7 @@ CRect BoxCompositePart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
 		// referred element is used, and it is surrounded
 		// that's why we shift port locations only if
 		// the surrounding rectangle is there (borderwidth > 0)
-		if (GetBitmapPart()->GetBorderWidth(false) > 0 && m_eType == OBJTYPE_REFERENCE)	// HACK
+		if (GetObjectPart()->GetBorderWidth(false) > 0 && m_eType == OBJTYPE_REFERENCE)	// HACK
 			portLocation.OffsetRect(2, 2);
 
 		return portLocation;
@@ -93,23 +93,23 @@ void BoxCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 		}
 		switch (m_eType) {
 			case OBJTYPE_ATOM: {
-					AddBitmapPart(new AtomBitmapPart(this, m_eventSink));
-					AddLabelPart(new TypeableLabelPart(this, m_eventSink));
+					AddObjectPart(new AtomBitmapPart(this, m_eventSink));
+					AddTextPart(new TypeableLabelPart(this, m_eventSink));
 				}
 				break;
 			case OBJTYPE_SET: {
-					AddBitmapPart(new SetBitmapPart(this, m_eventSink));
-					AddLabelPart(new TypeableLabelPart(this, m_eventSink));
+					AddObjectPart(new SetBitmapPart(this, m_eventSink));
+					AddTextPart(new TypeableLabelPart(this, m_eventSink));
 				}
 				break;
 			case OBJTYPE_MODEL: {
-					AddBitmapPart(new ModelComplexPart(this, m_eventSink));
-					AddLabelPart(new TypeableLabelPart(this, m_eventSink));
+					AddObjectPart(new ModelSwitchPart(this, m_eventSink));
+					AddTextPart(new TypeableLabelPart(this, m_eventSink));
 				}
 				break;
 			case OBJTYPE_REFERENCE: {
-					AddBitmapPart(new ReferenceBitmapPart(this, m_eventSink));
-					AddLabelPart(new TypeableLabelPart(this, m_eventSink));
+					AddObjectPart(new ReferenceBitmapPart(this, m_eventSink));
+					AddTextPart(new TypeableLabelPart(this, m_eventSink));
 				}
 				break;
 		}

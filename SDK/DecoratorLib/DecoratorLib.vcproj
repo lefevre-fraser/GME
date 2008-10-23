@@ -180,10 +180,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BitmapAndLabelPart.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\BitmapPart.cpp"
 				>
 			</File>
@@ -252,10 +248,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ImageAndLabelPart.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\InPlaceEditDialog.cpp"
 				>
 			</File>
@@ -273,6 +265,18 @@
 			</File>
 			<File
 				RelativePath=".\ModelSwitchButtonPart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ModelSwitchPart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ModelTransparentPart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ObjectAndTextPart.cpp"
 				>
 			</File>
 			<File
@@ -382,10 +386,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BitmapAndLabelPart.h"
-				>
-			</File>
-			<File
 				RelativePath=".\BitmapPart.h"
 				>
 			</File>
@@ -454,10 +454,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ImageAndLabelPart.h"
-				>
-			</File>
-			<File
 				RelativePath=".\InPlaceEditDialog.h"
 				>
 			</File>
@@ -475,6 +471,18 @@
 			</File>
 			<File
 				RelativePath=".\ModelSwitchButtonPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ModelSwitchPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ModelTransparentPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ObjectAndTextPart.h"
 				>
 			</File>
 			<File

@@ -9,7 +9,7 @@
 #include "ReferenceBitmapPart.h"
 #include "AtomBitmapPart.h"
 #include "SetBitmapPart.h"
-#include "ModelComplexPart.h"
+#include "ModelSwitchPart.h"
 #include "DecoratorExceptions.h"
 
 
@@ -225,7 +225,7 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 					break;
 				case OBJTYPE_MODEL:
 					model_ref = true;
-					pReferenced = new ModelComplexPart(this, m_eventSink);
+					pReferenced = new ModelSwitchPart(this, m_eventSink);
 					break;
 			}
 		}

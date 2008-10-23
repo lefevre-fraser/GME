@@ -22,7 +22,6 @@ namespace DecoratorSDK {
 ModelComplexPart::ModelComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	TypeableBitmapPart			(pPart, eventSink),
 
-	m_expandPart				(NULL),
 	m_iMaxPortTextLength		(MAX_PORT_LENGTH),
 	m_crPortText				(COLOR_BLACK),
 	m_bPortLabelInside			(true),
@@ -44,8 +43,6 @@ ModelComplexPart::~ModelComplexPart()
 		}
 	}
 	m_RightPorts.clear();
-	if (m_expandPart != NULL)
-		delete m_expandPart;
 }
 
 void ModelComplexPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
@@ -56,8 +53,6 @@ void ModelComplexPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMe
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->Initialize(pProject, pPart, pFCO);
 	}
-	if (m_expandPart != NULL)
-		m_expandPart->Initialize(pProject, pPart, pFCO);
 	TypeableBitmapPart::Initialize(pProject, pPart, pFCO);
 }
 
@@ -69,8 +64,6 @@ void ModelComplexPart::Destroy()
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->Destroy();
 	}
-	if (m_expandPart != NULL)
-		m_expandPart->Destroy();
 	TypeableBitmapPart::Destroy();
 }
 
@@ -106,8 +99,6 @@ void ModelComplexPart::SetParam(const CString& strName, VARIANT vValue)
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->SetParam(strName, vValue);
 	}
-	if (m_expandPart != NULL)
-		m_expandPart->SetParam(strName, vValue);
 	TypeableBitmapPart::SetParam(strName, vValue);
 }
 
@@ -130,8 +121,6 @@ void ModelComplexPart::SetActive(bool bIsActive)
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->SetActive(bIsActive);
 	}
-	if (m_expandPart != NULL)
-		m_expandPart->SetActive(bIsActive);
 	TypeableBitmapPart::SetActive(bIsActive);
 }
 
@@ -186,7 +175,7 @@ CRect ModelComplexPart::GetLocation(void) const
 
 CRect ModelComplexPart::GetLabelLocation(void) const
 {
-	CRect labelLocation;
+	CRect labelLocation(0,0,0,0);
 	try {
 		labelLocation = TypeableBitmapPart::GetLabelLocation();
 	}
@@ -235,8 +224,6 @@ bool ModelComplexPart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 void ModelComplexPart::Draw(CDC* pDC)
 {
 	TypeableBitmapPart::Draw(pDC);
-	if (m_expandPart != NULL)
-		m_expandPart->Draw(pDC);
 }
 
 void ModelComplexPart::SaveState()
@@ -247,8 +234,6 @@ void ModelComplexPart::SaveState()
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->SaveState();
 	}
-	if (m_expandPart != NULL)
-		m_expandPart->SaveState();
 	TypeableBitmapPart::SaveState();
 }
 
@@ -295,9 +280,6 @@ void ModelComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 		TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 		LoadPorts();
-
-		m_expandPart = new ModelSwitchButtonPart(this, m_eventSink);
-		m_expandPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	} else {
 		TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	}
@@ -314,26 +296,12 @@ void ModelComplexPart::SetSelected(bool bIsSelected)
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->SetSelected(bIsSelected);
 	}
-	if (m_expandPart != NULL)
-		m_expandPart->SetSelected(bIsSelected);
 	TypeableBitmapPart::SetSelected(bIsSelected);
 }
 
 bool ModelComplexPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseMoved(nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseMoved(nFlags, point, transformHDC))
 			return true;
@@ -383,18 +351,6 @@ bool ModelComplexPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transfor
 bool ModelComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseLeftButtonDown(nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseLeftButtonDown(nFlags, point, transformHDC))
 			return true;
@@ -444,18 +400,6 @@ bool ModelComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC
 bool ModelComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseLeftButtonUp(nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseLeftButtonUp(nFlags, point, transformHDC))
 			return true;
@@ -505,18 +449,6 @@ bool ModelComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC t
 bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseLeftButtonDoubleClick(nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseLeftButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
@@ -566,18 +498,6 @@ bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& poi
 bool ModelComplexPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC))
 			return true;
@@ -627,18 +547,6 @@ bool ModelComplexPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const C
 bool ModelComplexPart::MouseRightButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseRightButtonUp(nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseRightButtonUp(nFlags, point, transformHDC))
 			return true;
@@ -688,18 +596,6 @@ bool ModelComplexPart::MouseRightButtonUp(UINT nFlags, const CPoint& point, HDC 
 bool ModelComplexPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseRightButtonDoubleClick(nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseRightButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
@@ -749,18 +645,6 @@ bool ModelComplexPart::MouseRightButtonDoubleClick(UINT nFlags, const CPoint& po
 bool ModelComplexPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseMiddleButtonDown(nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseMiddleButtonDown(nFlags, point, transformHDC))
 			return true;
@@ -810,18 +694,6 @@ bool ModelComplexPart::MouseMiddleButtonDown(UINT nFlags, const CPoint& point, H
 bool ModelComplexPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseMiddleButtonUp(nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseMiddleButtonUp(nFlags, point, transformHDC))
 			return true;
@@ -871,18 +743,6 @@ bool ModelComplexPart::MouseMiddleButtonUp(UINT nFlags, const CPoint& point, HDC
 bool ModelComplexPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseMiddleButtonDoubleClick(nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseMiddleButtonDoubleClick(nFlags, point, transformHDC))
 			return true;
@@ -932,18 +792,6 @@ bool ModelComplexPart::MouseMiddleButtonDoubleClick(UINT nFlags, const CPoint& p
 bool ModelComplexPart::MouseWheelTurned(UINT nFlags, short distance, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MouseWheelTurned(nFlags, distance, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MouseWheelTurned(nFlags, distance, point, transformHDC))
 			return true;
@@ -993,18 +841,6 @@ bool ModelComplexPart::MouseWheelTurned(UINT nFlags, short distance, const CPoin
 bool ModelComplexPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->MenuItemSelected(menuItemId, nFlags, point, transformHDC))
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
 	try {
 		if (TypeableBitmapPart::MenuItemSelected(menuItemId, nFlags, point, transformHDC))
 			return true;
@@ -1094,18 +930,6 @@ bool ModelComplexPart::OperationCanceledByGME(void)
 			}
 			if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
 				break;
-		}
-	}
-	if (m_expandPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_expandPart->OperationCanceledByGME())
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
 		}
 	}
 
@@ -1293,11 +1117,6 @@ void ModelComplexPart::SetBoxLocation(const CRect& cRect)
 		(*ii)->SetBoxLocation(CRect(cRect.Width() - GAP_XMODELPORT - WIDTH_PORT, lY, cRect.Width() - GAP_XMODELPORT, lY + HEIGHT_PORT));
 		lY += HEIGHT_PORT + GAP_PORT;
 	}
-	if (m_expandPart != NULL) {
-		CSize iconSize = m_expandPart->GetPreferredSize();
-		CPoint pos = CPoint(cRect.left + (cRect.right - cRect.left) / 2, cRect.top - iconSize.cy / 2);
-		m_expandPart->SetLocation(CRect(pos, iconSize));
-	}
 }
 
 void ModelComplexPart::SetReferenced(bool referenced)
@@ -1308,8 +1127,6 @@ void ModelComplexPart::SetReferenced(bool referenced)
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->SetReferenced(referenced);
 	}
-	if (m_expandPart != NULL)
-		m_expandPart->SetReferenced(referenced);
 	TypeableBitmapPart::SetReferenced(referenced);
 }
 
@@ -1321,8 +1138,6 @@ void ModelComplexPart::SetParentPart(PartBase* pPart)
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->SetParentPart(pPart);
 	}
-	if (m_expandPart != NULL)
-		m_expandPart->SetParentPart(pPart);
 	TypeableBitmapPart::SetParentPart(pPart);
 }
 

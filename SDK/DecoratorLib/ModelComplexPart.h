@@ -12,7 +12,6 @@
 #include "StdAfx.h"
 #include "TypeableBitmapPart.h"
 #include "PortPart.h"
-#include "ModelSwitchButtonPart.h"
 
 
 namespace DecoratorSDK {
@@ -30,7 +29,6 @@ class ModelComplexPart: public TypeableBitmapPart
 protected:
 	std::vector<PortPart*>		m_LeftPorts;
 	std::vector<PortPart*>		m_RightPorts;
-	ModelSwitchButtonPart*		m_expandPart;
 	long						m_iMaxPortTextLength;
 	COLORREF					m_crPortText;
 	bool						m_bPortLabelInside;

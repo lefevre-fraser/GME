@@ -10,7 +10,7 @@
 
 
 #include "StdAfx.h"
-#include "BitmapAndLabelPart.h"
+#include "ObjectAndTextPart.h"
 
 
 namespace DecoratorSDK {
@@ -21,7 +21,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-class PortPart: public BitmapAndLabelPart
+class PortPart: public ObjectAndTextPart
 {
 public:
 	PortPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, const CPoint& ptInner);

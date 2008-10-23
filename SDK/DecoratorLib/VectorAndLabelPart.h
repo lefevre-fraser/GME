@@ -10,7 +10,7 @@
 
 
 #include "StdAfx.h"
-#include "ImageAndLabelPart.h"
+#include "ObjectAndTextPart.h"
 #include <vector>
 
 
@@ -24,7 +24,7 @@ class VectorPart;
 //
 //################################################################################################
 
-class VectorAndLabelPart: public ImageAndLabelPart
+class VectorAndLabelPart: public ObjectAndTextPart
 {
 public:
 	VectorAndLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);

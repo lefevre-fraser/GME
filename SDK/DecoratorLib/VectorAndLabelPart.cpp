@@ -21,7 +21,7 @@ namespace DecoratorSDK {
 //################################################################################################
 
 VectorAndLabelPart::VectorAndLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
-	ImageAndLabelPart(pPart, eventSink)
+	ObjectAndTextPart(pPart, eventSink)
 {
 }
 
@@ -37,18 +37,18 @@ VectorAndLabelPart::~VectorAndLabelPart()
 
 void VectorAndLabelPart::AddVectorPart(VectorPart* part)
 {
-	AddImagePart(part);
+	AddObjectPart(part);
 }
 
 VectorPart* VectorAndLabelPart::GetVectorPart(void) const
 {
 	ASSERT(m_compositeParts.size() >= 1);
 #ifdef _DEBUG
-	VectorPart* part = dynamic_cast<VectorPart*> (GetImagePart());
+	VectorPart* part = dynamic_cast<VectorPart*> (GetObjectPart());
 	ASSERT(part != NULL);
 	return part;
 #else
-	return static_cast<VectorPart*> (GetImagePart());
+	return static_cast<VectorPart*> (GetObjectPart());
 #endif
 }
 
