@@ -12,6 +12,8 @@
 #include "StdAfx.h"
 #include "TypeableBitmapPart.h"
 #include "PortPart.h"
+#include "ModelSwitchButtonPart.h"
+
 
 namespace DecoratorSDK {
 
@@ -28,7 +30,7 @@ class ModelComplexPart: public TypeableBitmapPart
 protected:
 	std::vector<PortPart*>		m_LeftPorts;
 	std::vector<PortPart*>		m_RightPorts;
-	BitmapPart*					m_expandPart;
+	ModelSwitchButtonPart*		m_expandPart;
 	long						m_iMaxPortTextLength;
 	COLORREF					m_crPortText;
 	bool						m_bPortLabelInside;
@@ -52,6 +54,8 @@ public:
 	virtual void			SetLocation			(const CRect& location);
 	virtual CRect			GetLocation			(void) const;
 	virtual CRect			GetLabelLocation	(void) const;
+	virtual CRect			GetPortLocation		(CComPtr<IMgaFCO>& fco) const;
+	virtual bool			GetPorts			(CComPtr<IMgaFCOs>& portFCOs) const;
 	virtual void			Draw				(CDC* pDC);
 	virtual void			SaveState			(void);
 
@@ -79,8 +83,8 @@ public:
 	virtual void	SetBoxLocation				(const CRect& cRect);
 	virtual void	SetReferenced				(bool referenced);
 	virtual void	SetParentPart				(PartBase* pPart);
-	std::vector<PortPart*>	GetPorts			(void);
-	PortPart*		GetPort						(CComPtr<IMgaFCO> spFCO);
+protected:
+	PortPart*		GetPort						(CComPtr<IMgaFCO> spFCO) const;
 };
 
 }; // namespace DecoratorSDK

@@ -248,11 +248,6 @@ STDMETHODIMP CUMLDecorator::GetPortLocation(IMgaFCO *fco, long *sx, long *sy, lo
 STDMETHODIMP CUMLDecorator::GetPorts(IMgaFCOs **portFCOs)
 {
 	VERIFY_INIT;
-	COMTRY {
-		CComPtr<IMgaFCOs> coll;
-		COMTHROW(coll.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
-		*portFCOs = coll.Detach();
-	} COMCATCH(;);
 	return S_OK;
 }
 

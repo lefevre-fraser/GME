@@ -34,9 +34,6 @@ public:
 
 	virtual void	CollectAttributes			(CComPtr<IMgaFCO> mgaFco = NULL);
 	void			ModifyAttributes			(CComPtr<IMgaFCO> mgaFco);
-
-protected:
-	void			CreateCopyBitmapPart		(DecoratorSDK::PreferenceMap& preferences);
 };
 
 }; // namespace UMLDecor

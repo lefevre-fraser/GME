@@ -15,7 +15,7 @@
 #include "ClassLabelPart.h"
 #include "StereoLabelPart.h"
 #include "AttributePart.h"
-#include "BitmapPart.h"
+#include "MaskedBitmapPart.h"
 
 
 namespace DecoratorSDK {
@@ -32,7 +32,7 @@ protected:
 	ClassLabelPart*				m_LabelPart;
 	StereoLabelPart*			m_StereotypePart;
 	std::vector<AttributePart*>	m_AttributeParts;
-	BitmapPart*					m_copySignPart;
+	MaskedBitmapPart*			m_copySignPart;
 
 	long						m_SeparatorLoc;
 	CSize						m_calcSize;

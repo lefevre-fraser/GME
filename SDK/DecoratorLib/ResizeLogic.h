@@ -45,8 +45,6 @@ public:
 	};
 
 protected:
-	static const int	sensitivityDistance;	// in pixels
-
 	PartBase*			m_parentPart;
 	HWND				m_parentWnd;
 

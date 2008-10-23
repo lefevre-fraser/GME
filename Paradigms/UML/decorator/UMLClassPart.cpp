@@ -11,10 +11,8 @@
 #include "Resource.h"
 #include "DecoratorStd.h"
 #include "TokenEx.h"
-#include "ClassLabelPart.h"
 #include "UMLStereoLabelPart.h"
 #include "UMLAttributePart.h"
-#include "BitmapPart.h"
 
 
 namespace UMLDecor {
@@ -51,7 +49,9 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 			objtype_enum objtype = OBJTYPE_NULL;
 			COMTHROW(m_spFCO->get_ObjType(&objtype));
 			if (objtype == OBJTYPE_REFERENCE) {
-				CreateCopyBitmapPart(preferences);
+				m_copySignPart = new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_REFERENCE_SIGN,
+																	DecoratorSDK::COLOR_TRANSPARENT,
+																	DecoratorSDK::COLOR_GRAYED_OUT);
 				CComPtr<IMgaFCO> mgaFco = m_spFCO;
 				while(objtype == OBJTYPE_REFERENCE) {
 					CComPtr<IMgaReference> ref;
@@ -96,7 +96,9 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 			objtype_enum objtype;
 			COMTHROW(m_spMetaFCO->get_ObjType(&objtype));
 			if (objtype == OBJTYPE_REFERENCE) {
-				CreateCopyBitmapPart(preferences);
+				m_copySignPart = new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_REFERENCE_SIGN,
+																	DecoratorSDK::COLOR_TRANSPARENT,
+																	DecoratorSDK::COLOR_GRAYED_OUT);
 			}
 			CComBSTR bstr;
 			COMTHROW(m_spMetaFCO->get_DisplayedName(&bstr));
@@ -169,22 +171,6 @@ void UMLClassPart::ModifyAttributes(CComPtr<IMgaFCO> mgaFco)
 		attrPairs += attrPair;
 	}
 	DecoratorSDK::getFacilities().setAttribute(mgaFco, UML_ATTRIBUTES_ATTR, attrPairs);
-}
-
-void UMLClassPart::CreateCopyBitmapPart(DecoratorSDK::PreferenceMap& preferences)
-{
-	preferences[DecoratorSDK::PREF_ISMASKEDBITMAP]		= DecoratorSDK::PreferenceVariant(true);
-
-	preferences[DecoratorSDK::PREF_ICONDEFAULT]			= DecoratorSDK::PreferenceVariant(DecoratorSDK::createResString(IDB_ATOM));
-	preferences[DecoratorSDK::PREF_TILESDEFAULT]		= DecoratorSDK::PreferenceVariant(DecoratorSDK::getFacilities().getTileVector(DecoratorSDK::TILE_ATOMDEFAULT));
-	preferences[DecoratorSDK::PREF_TILESUNDEF]			= DecoratorSDK::PreferenceVariant(DecoratorSDK::getFacilities().getTileVector(DecoratorSDK::TILE_ATOMDEFAULT));
-	preferences[DecoratorSDK::PREF_TILES]				= DecoratorSDK::PreferenceVariant(DecoratorSDK::getFacilities().getTileVector(DecoratorSDK::TILE_ATOMDEFAULT));
-
-	preferences[DecoratorSDK::PREF_ICON]				= DecoratorSDK::PreferenceVariant((long)IDB_REFERENCE_SIGN);
-	preferences[DecoratorSDK::PREF_TRANSPARENTCOLOR]	= DecoratorSDK::PreferenceVariant(DecoratorSDK::COLOR_TRANSPARENT);
-	preferences[DecoratorSDK::PREF_GRAYEDOUTCOLOR]		= DecoratorSDK::PreferenceVariant(DecoratorSDK::COLOR_GRAYED_OUT);
-
-	m_copySignPart = new DecoratorSDK::BitmapPart(this, m_eventSink);
 }
 
 }; // namespace UMLDecor

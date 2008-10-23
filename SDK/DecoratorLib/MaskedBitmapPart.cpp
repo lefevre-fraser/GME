@@ -44,7 +44,13 @@ feature_code MaskedBitmapPart::GetFeatures(void) const
 void MaskedBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 										HWND parentWnd, PreferenceMap& preferences)
 {
+	bool bResizeable = true;
+	PreferenceMap::iterator it = preferences.find(PREF_ITEMRESIZABLE);
+	if (it != preferences.end())
+		bResizeable = it->second.uValue.bValue;
+
 	preferences[PREF_ISMASKEDBITMAP]	= PreferenceVariant(true);
+	preferences[PREF_ITEMRESIZABLE]		= PreferenceVariant(false);
 
 	preferences[PREF_ICONDEFAULT]		= PreferenceVariant(createResString(IDB_ATOM));
 	preferences[PREF_TILESDEFAULT]		= PreferenceVariant(getFacilities().getTileVector(TILE_ATOMDEFAULT));
@@ -55,6 +61,8 @@ void MaskedBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 	preferences[PREF_TRANSPARENTCOLOR]	= PreferenceVariant(m_crTransparent);
 	preferences[PREF_GRAYEDOUTCOLOR]	= PreferenceVariant(m_crGrayedOut);
 	BitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	preferences[PREF_ISMASKEDBITMAP]	= PreferenceVariant(false);
+	preferences[PREF_ITEMRESIZABLE]		= PreferenceVariant(bResizeable);
 }
 
 void MaskedBitmapPart::DrawBackground(CDC* pDC)

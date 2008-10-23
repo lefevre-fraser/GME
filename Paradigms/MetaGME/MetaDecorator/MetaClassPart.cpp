@@ -10,12 +10,11 @@
 
 #include "Resource.h"
 #include "DecoratorStd.h"
-#include "ClassLabelPart.h"
 #include "MetaStereoLabelPart.h"
 #include "MetaAttributePart.h"
 #include "MetaStereoLabelPart.h"
-#include "BitmapPart.h"
 #include "DecoratorExceptions.h"
+#include "MetaDecoratorUtil.h"
 #include <algorithm>
 
 
@@ -152,8 +151,11 @@ void MetaClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMet
 		m_StereotypePart = new MetaStereoLabelPart(this, m_eventSink);
 		m_StereotypePart->SetText(m_stereotypeName);
 
-		if (m_shape == CLASSPROXY)
-			CreateCopyBitmapPart(preferences);
+		if (m_shape == CLASSPROXY) {
+			m_copySignPart = new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_REFERENCE_SIGN,
+																DecoratorSDK::COLOR_TRANSPARENT,
+																DecoratorSDK::COLOR_GRAYED_OUT);
+		}
 
 		// TODO: stereo label
 
@@ -230,22 +232,6 @@ void MetaClassPart::CollectAttributes(CComPtr<IMgaFCO> mgaFco)
 		} MGACOLL_ITERATE_END;
 
 	} MGACOLL_ITERATE_END;
-}
-
-void MetaClassPart::CreateCopyBitmapPart(DecoratorSDK::PreferenceMap& preferences)
-{
-	preferences[DecoratorSDK::PREF_ISMASKEDBITMAP]		= DecoratorSDK::PreferenceVariant(true);
-
-	preferences[DecoratorSDK::PREF_ICONDEFAULT]			= DecoratorSDK::PreferenceVariant(DecoratorSDK::createResString(IDB_ATOM));
-	preferences[DecoratorSDK::PREF_TILESDEFAULT]		= DecoratorSDK::PreferenceVariant(DecoratorSDK::getFacilities().getTileVector(DecoratorSDK::TILE_ATOMDEFAULT));
-	preferences[DecoratorSDK::PREF_TILESUNDEF]			= DecoratorSDK::PreferenceVariant(DecoratorSDK::getFacilities().getTileVector(DecoratorSDK::TILE_ATOMDEFAULT));
-	preferences[DecoratorSDK::PREF_TILES]				= DecoratorSDK::PreferenceVariant(DecoratorSDK::getFacilities().getTileVector(DecoratorSDK::TILE_ATOMDEFAULT));
-
-	preferences[DecoratorSDK::PREF_ICON]				= DecoratorSDK::PreferenceVariant((long)IDB_REFERENCE_SIGN);
-	preferences[DecoratorSDK::PREF_TRANSPARENTCOLOR]	= DecoratorSDK::PreferenceVariant(DecoratorSDK::COLOR_TRANSPARENT);
-	preferences[DecoratorSDK::PREF_GRAYEDOUTCOLOR]		= DecoratorSDK::PreferenceVariant(DecoratorSDK::COLOR_GRAYED_OUT);
-
-	m_copySignPart = new DecoratorSDK::BitmapPart(this, m_eventSink);
 }
 
 }; // namespace MetaDecor

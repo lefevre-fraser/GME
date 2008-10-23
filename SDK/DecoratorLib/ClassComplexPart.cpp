@@ -247,11 +247,8 @@ void ClassComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		(*ii)->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	}
-	if (m_copySignPart != NULL) {
-		preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(false);
+	if (m_copySignPart != NULL)
 		m_copySignPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
-		preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(true);
-	}
 	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 

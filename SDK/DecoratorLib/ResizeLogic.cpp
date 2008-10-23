@@ -18,8 +18,6 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-const int	ResizeLogic::sensitivityDistance = 6;
-
 ResizeLogic::ResizeLogic(PartBase* pPart):
 	m_parentPart(pPart)
 {
@@ -191,50 +189,50 @@ ResizeLogic::ResizeType ResizeLogic::DeterminePotentialResize(CPoint cursorPoint
 {
 	// Topleft corner
 	CRect cornerRect(m_targetLocation.left, m_targetLocation.top, m_targetLocation.left + 1, m_targetLocation.top + 1);
-	cornerRect.InflateRect(sensitivityDistance, sensitivityDistance);
+	cornerRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
 	if (cornerRect.PtInRect(cursorPoint))
 		return TopLeftCornerResize;
 	// Topright corner
 	cornerRect.SetRect(m_targetLocation.right - 1, m_targetLocation.top, m_targetLocation.right, m_targetLocation.top + 1);
-	cornerRect.InflateRect(sensitivityDistance, sensitivityDistance);
+	cornerRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
 	if (cornerRect.PtInRect(cursorPoint))
 		return TopRightCornerResize;
 	// Bottomright corner
 	cornerRect.SetRect(m_targetLocation.right - 1, m_targetLocation.bottom - 1, m_targetLocation.right, m_targetLocation.bottom);
-	cornerRect.InflateRect(sensitivityDistance, sensitivityDistance);
+	cornerRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
 	if (cornerRect.PtInRect(cursorPoint))
 		return BottomRightCornerResize;
 	// Bottomleft corner
 	cornerRect.SetRect(m_targetLocation.left, m_targetLocation.bottom - 1, m_targetLocation.left + 1, m_targetLocation.bottom);
-	cornerRect.InflateRect(sensitivityDistance, sensitivityDistance);
+	cornerRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
 	if (cornerRect.PtInRect(cursorPoint))
 		return BottomLeftCornerResize;
 
 	// Left edge
 	cornerRect.SetRect(m_targetLocation.left, m_targetLocation.top, m_targetLocation.left + 1, m_targetLocation.bottom);
-	cornerRect.InflateRect(sensitivityDistance, sensitivityDistance);
+	cornerRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
 	if (cornerRect.PtInRect(cursorPoint))
 		return LeftEdgeResize;
 	// Top edge
 	cornerRect.SetRect(m_targetLocation.left, m_targetLocation.top, m_targetLocation.right, m_targetLocation.top + 1);
-	cornerRect.InflateRect(sensitivityDistance, sensitivityDistance);
+	cornerRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
 	if (cornerRect.PtInRect(cursorPoint))
 		return TopEdgeResize;
 	// Right edge
 	cornerRect.SetRect(m_targetLocation.right - 1, m_targetLocation.top, m_targetLocation.right, m_targetLocation.bottom);
-	cornerRect.InflateRect(sensitivityDistance, sensitivityDistance);
+	cornerRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
 	if (cornerRect.PtInRect(cursorPoint))
 		return RightEdgeResize;
 	// Bottom edge
 	cornerRect.SetRect(m_targetLocation.left, m_targetLocation.bottom - 1, m_targetLocation.right, m_targetLocation.bottom);
-	cornerRect.InflateRect(sensitivityDistance, sensitivityDistance);
+	cornerRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
 	if (cornerRect.PtInRect(cursorPoint))
 		return BottomEdgeResize;
 
 	// Inside rect: move operation possible
 	if ((m_resizeFeatures & Movable) != 0) {
 		cornerRect = m_targetLocation;
-		cornerRect.InflateRect(-sensitivityDistance, -sensitivityDistance);
+		cornerRect.InflateRect(-DECORATOR_SENSITIVITYDISTANCE, -DECORATOR_SENSITIVITYDISTANCE);
 		if (cornerRect.PtInRect(cursorPoint))
 			return MoveOperation;
 	}

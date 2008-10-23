@@ -272,6 +272,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ModelSwitchButtonPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PartBase.cpp"
 				>
 			</File>
@@ -467,6 +471,10 @@
 			</File>
 			<File
 				RelativePath=".\ModelComplexPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ModelSwitchButtonPart.h"
 				>
 			</File>
 			<File

@@ -81,6 +81,14 @@ bool ReferenceBitmapPart::GetParam(const CString& strName, VARIANT* pvValue)
 	}
 	catch(UnknownParameterException&) {
 	}
+	if (m_referencedPart != NULL) {
+		try {
+			if (m_referencedPart->GetParam(strName, pvValue))
+				return true;
+		}
+		catch(UnknownParameterException&) {
+		}
+	}
 	return false;
 }
 
@@ -128,29 +136,37 @@ CRect ReferenceBitmapPart::GetLabelLocation(void) const
 
 CRect ReferenceBitmapPart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
 {
-	CRect portLocation;
-	try {
-		portLocation = TypeableBitmapPart::GetPortLocation(fco);
-	}
-	catch(PortNotFoundException&) {
-		if (m_referencedPart != NULL)
+	CRect portLocation(0,0,0,0);
+	if (m_referencedPart != NULL) {
+		try {
 			portLocation = m_referencedPart->GetPortLocation(fco);
+		}
+		catch(PortNotFoundException&) {
+		}
+	}
+	if (portLocation.IsRectEmpty()) {
+		try {
+			portLocation = TypeableBitmapPart::GetPortLocation(fco);
+		}
+		catch(PortNotFoundException&) {
+		}
 	}
 	return portLocation;
 }
 
 bool ReferenceBitmapPart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 {
+	if (m_referencedPart != NULL) {
+		try {
+			if (m_referencedPart->GetPorts(portFCOs))
+				return true;
+		}
+		catch(PortNotFoundException&) {
+		}
+	}
 	try {
 		if (TypeableBitmapPart::GetPorts(portFCOs))
 			return true;
-	}
-	catch(PortNotFoundException&) {
-	}
-	try {
-		if (m_referencedPart != NULL)
-			if (m_referencedPart->GetPorts(portFCOs))
-				return true;
 	}
 	catch(PortNotFoundException&) {
 	}

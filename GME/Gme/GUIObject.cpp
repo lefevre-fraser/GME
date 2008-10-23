@@ -146,13 +146,15 @@ void CGuiAspect::InitPorts()
 {
 	CComPtr<IMgaFCOs> portFcos;
 	COMTHROW(decorator->GetPorts(&portFcos));
-	CComPtr<IMgaFCO> fco;
-	MGACOLL_ITERATE(IMgaFCO,portFcos) {
-		fco = MGACOLL_ITER;
-		CGuiPort *p = new CGuiPort(this,fco);
-		ports.AddTail(p);
+	if (portFcos) {
+		CComPtr<IMgaFCO> fco;
+		MGACOLL_ITERATE(IMgaFCO,portFcos) {
+			fco = MGACOLL_ITER;
+			CGuiPort *p = new CGuiPort(this,fco);
+			ports.AddTail(p);
+		}
+		MGACOLL_ITERATE_END;
 	}
-	MGACOLL_ITERATE_END;
 	CGuiPort *p = new CGuiPort(this,parent->mgaFco);
 	ports.AddTail(p);
 

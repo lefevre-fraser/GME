@@ -100,6 +100,7 @@ namespace DecoratorSDK
 	static const char* PREF_ITEMRESIZABLE			= "itemResizable";
 	static const char* PREF_PREFERREDSIZE			= "preferredSize";
 	static const char* PREF_ISMASKEDBITMAP			= "isMaskedBitmap";
+	static const char* PREF_ISMODELEXPANDED			= "isModelExpanded";
 
 	static const char* PREF_DECORATOR_MARGINX		= "decoratorMarginX";
 	static const char* PREF_DECORATOR_MARGINY		= "decoratorMarginY";
@@ -155,23 +156,28 @@ namespace DecoratorSDK
 	static const char* TILE_MODELDEFAULT	= "$TILE$Model_Default";
 	static const char* TILE_PORTDEFAULT		= "$TILE$Port_Default";
 
-	static const char* CTX_MENU_STR_RENAME			= "Rename";
-	static const char* CTX_MENU_STR_RESETSIZE		= "Reset to original size";
-	static const unsigned int CTX_MENU_ID_RENAME	= DECORATOR_CTX_MENU_MINID + 0;
-	static const unsigned int CTX_MENU_ID_RESETSIZE	= DECORATOR_CTX_MENU_MINID + 1;
+	static const char* CTX_MENU_STR_RENAME				= "Rename";
+	static const char* CTX_MENU_STR_RESETSIZE			= "Reset to original size";
+	static const char* CTX_MENU_STR_EXPANDMODEL			= "Expand model";
+	static const char* CTX_MENU_STR_COLLAPSEMODEL		= "Collapse model";
+	static const unsigned int CTX_MENU_ID_RENAME		= DECORATOR_CTX_MENU_MINID + 0;
+	static const unsigned int CTX_MENU_ID_RESETSIZE		= DECORATOR_CTX_MENU_MINID + 1;
+	static const unsigned int CTX_MENU_ID_EXPANDMODEL	= DECORATOR_CTX_MENU_MINID + 2;
+	static const unsigned int CTX_MENU_ID_COLLAPSEMODEL	= DECORATOR_CTX_MENU_MINID + 3;
 
-	static const char* STEREOTYPE_LEFTA		= "<<";
-	static const char* STEREOTYPE_RIGHTA	= ">>";
-	static const wchar_t* STEREOTYPE_LEFTB	= L"\u226A ";
-	static const wchar_t* STEREOTYPE_RIGHTB	= L" \u226B";
-	static const char* ABSTRACT_ATTR		= "IsAbstract";
-	static const char* ATTRIBUTES_ATTR		= "Attributes";
-	static const char* ATTRIBUTE_SEP		= " : ";
+	static const char* STEREOTYPE_LEFTA				= "<<";
+	static const char* STEREOTYPE_RIGHTA			= ">>";
+	static const wchar_t* STEREOTYPE_LEFTB			= L"\u226A ";
+	static const wchar_t* STEREOTYPE_RIGHTB			= L" \u226B";
+	static const char* ABSTRACT_ATTR				= "IsAbstract";
+	static const char* ATTRIBUTES_ATTR				= "Attributes";
+	static const char* ATTRIBUTE_SEP				= " : ";
 
-	static const int DECORATOR_MARGINX		= 6;
-	static const int DECORATOR_MARGINY		= 4;
-	static const int DECORATOR_GAPY			= 0;
-	static const int DECORATOR_MINATTRSIZE	= 13;
+	static const int DECORATOR_MARGINX				= 6;
+	static const int DECORATOR_MARGINY				= 4;
+	static const int DECORATOR_GAPY					= 0;
+	static const int DECORATOR_MINATTRSIZE			= 13;
+	static const int DECORATOR_SENSITIVITYDISTANCE	= 6;
 
 	struct SFont
 	{

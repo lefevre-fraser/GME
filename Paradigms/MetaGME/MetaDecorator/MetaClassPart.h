@@ -12,7 +12,7 @@
 #include "StdAfx.h"
 #include "ClassComplexPart.h"
 
-#include "MetaDecoratorUtil.h"
+#include "DecoratorStd.h"
 
 
 namespace MetaDecor {
@@ -45,9 +45,6 @@ public:
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, DecoratorSDK::PreferenceMap& preferences);
 
 	virtual void	CollectAttributes			(CComPtr<IMgaFCO> mgaFco = NULL);
-
-protected:
-	void			CreateCopyBitmapPart		(DecoratorSDK::PreferenceMap& preferences);
 };
 
 }; // namespace MetaDecor

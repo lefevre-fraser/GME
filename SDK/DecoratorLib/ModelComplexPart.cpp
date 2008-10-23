@@ -207,6 +207,31 @@ CRect ModelComplexPart::GetLabelLocation(void) const
 	return labelLocation;
 }
 
+CRect ModelComplexPart::GetPortLocation(CComPtr<IMgaFCO>& pFCO) const
+{
+	CRect portLocation(0,0,0,0);
+	PortPart* pPortPart = GetPort(pFCO);
+	if (pPortPart != NULL)
+		portLocation = pPortPart->GetLocation();
+	return portLocation;
+}
+
+bool ModelComplexPart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
+{
+	CComPtr<IMgaFCOs> spFCOs;
+	COMTHROW(spFCOs.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
+
+	for (std::vector<PortPart*>::const_iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
+		COMTHROW(spFCOs->Append((*ii)->GetFCO()));
+	}
+	for (std::vector<PortPart*>::const_iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
+		COMTHROW(spFCOs->Append((*ii)->GetFCO()));
+	}
+
+	portFCOs = spFCOs.Detach();
+	return true;
+}
+
 void ModelComplexPart::Draw(CDC* pDC)
 {
 	TypeableBitmapPart::Draw(pDC);
@@ -271,23 +296,8 @@ void ModelComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 
 		LoadPorts();
 
-		{
-			preferences[PREF_ISMASKEDBITMAP]	= PreferenceVariant(true);
-			preferences[PREF_ITEMRESIZABLE]		= PreferenceVariant(false);
-
-			preferences[PREF_ICONDEFAULT]		= PreferenceVariant(createResString(IDB_ATOM));
-			preferences[PREF_TILESDEFAULT]		= PreferenceVariant(getFacilities().getTileVector(TILE_ATOMDEFAULT));
-			preferences[PREF_TILESUNDEF]		= PreferenceVariant(getFacilities().getTileVector(TILE_ATOMDEFAULT));
-			preferences[PREF_TILES]				= PreferenceVariant(getFacilities().getTileVector(TILE_ATOMDEFAULT));
-
-			preferences[PREF_ICON]				= PreferenceVariant((long)IDB_EXPAND_SIGN);
-			preferences[PREF_TRANSPARENTCOLOR]	= PreferenceVariant(COLOR_TRANSPARENT);
-			preferences[PREF_GRAYEDOUTCOLOR]	= PreferenceVariant(COLOR_GRAYED_OUT);
-
-			m_expandPart = new BitmapPart(this, m_eventSink);
-			m_expandPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
-			preferences[PREF_ITEMRESIZABLE]		= PreferenceVariant(true);
-		}
+		m_expandPart = new ModelSwitchButtonPart(this, m_eventSink);
+		m_expandPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	} else {
 		TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	}
@@ -1316,23 +1326,14 @@ void ModelComplexPart::SetParentPart(PartBase* pPart)
 	TypeableBitmapPart::SetParentPart(pPart);
 }
 
-std::vector<PortPart*> ModelComplexPart::GetPorts()
+PortPart* ModelComplexPart::GetPort(CComPtr<IMgaFCO> spFCO) const
 {
-	std::vector<PortPart*> vecPorts(m_LeftPorts);
-	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
-		vecPorts.push_back(*ii);
-	}
-	return vecPorts;
-}
-
-PortPart* ModelComplexPart::GetPort(CComPtr<IMgaFCO> spFCO)
-{
-	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
+	for (std::vector<PortPart*>::const_iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 		if (spFCO == (*ii)->GetFCO()) {
 			return (*ii);
 		}
 	}
-	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
+	for (std::vector<PortPart*>::const_iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		if (spFCO == (*ii)->GetFCO()) {
 			return (*ii);
 		}
