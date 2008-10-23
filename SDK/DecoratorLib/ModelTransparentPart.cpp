@@ -148,6 +148,9 @@ void ModelTransparentPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<
 									HWND parentWnd, PreferenceMap& preferences)
 {
 	// TODO
+	preferences[PREF_ICONDEFAULT]	= PreferenceVariant(createResString(IDB_MODEL));
+	preferences[PREF_TILESDEFAULT]	= PreferenceVariant(getFacilities().getTileVector(TILE_MODELDEFAULT));
+	preferences[PREF_TILESUNDEF]	= PreferenceVariant(getFacilities().getTileVector(TILE_PORTDEFAULT));
 	TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 
@@ -237,6 +240,7 @@ bool ModelTransparentPart::OperationCanceledByGME(void)
 
 void ModelTransparentPart::DrawBackground(CDC* pDC)
 {
+	TypeableBitmapPart::DrawBackground(pDC);
 	// TODO
 }
 
