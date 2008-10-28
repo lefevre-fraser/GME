@@ -107,6 +107,10 @@ namespace DecoratorSDK
 	static const char* PREF_DECORATOR_GAPY			= "decoratorGapY";
 	static const char* PREF_DECORATOR_MINATTRSIZE	= "decoratorMinAttrSize";
 	static const char* PREF_TEXTOVERRIDE			= "textOverride";
+	static const char* PREF_ROUNDEDGE				= "roundEdge";
+	static const char* PREF_EDGERADIUS				= "edgeRadius";
+	static const char* PREF_CASTSHADOW				= "castShadow";
+	static const char* PREF_SHADOWTHICKNESS			= "shadowThickness";
 
 	static const int FONT_LABEL			= 0;
 	static const int FONT_PORT			= 1;
@@ -126,6 +130,7 @@ namespace DecoratorSDK
 	static const COLORREF COLOR_GRAY 			= RGB( 0xB0, 0xB0, 0xB0 );
 	static const COLORREF COLOR_LIGHTGRAY		= RGB( 0xF3, 0xF3, 0xF3 );
 	static const COLORREF COLOR_RED 			= RGB( 0xFF, 0x00, 0x00 );
+	static const COLORREF COLOR_BLUE 			= RGB( 0x00, 0x00, 0xFF );
 
 	static const COLORREF COLOR_BKGND			= RGB( 0xff, 0xff, 0xff );
 	static const COLORREF COLOR_BORDER			= RGB( 0x00, 0x00, 0x00 );
@@ -151,6 +156,7 @@ namespace DecoratorSDK
 	static const int WIDTH_BORDERMODELBOX	= 7;
 	static const int WIDTH_MODELSIDE		= 100;
 	static const int GME_3D_BORDER_SIZE		= 3;
+	static const double INHERITANCE_RATIO	= 0.86602540378443864676372317075294;
 
 	static const char* TILE_ATOMDEFAULT		= "$TILE$Atom_Default";
 	static const char* TILE_MODELDEFAULT	= "$TILE$Model_Default";

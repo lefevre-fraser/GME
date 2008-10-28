@@ -26,7 +26,6 @@ class DiamondVectorPart: public VectorPart
 protected:
 	long						m_diamondWidth;
 	long						m_diamondHeight;
-	std::vector<CoordCommand*>	m_coordCommands;
 
 public:
 	DiamondVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, long diamondWidth, long diamondHeight);

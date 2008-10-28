@@ -27,10 +27,6 @@ TriangleVectorPart::TriangleVectorPart(PartBase* pPart, CComPtr<IMgaNewDecorator
 
 TriangleVectorPart::~TriangleVectorPart()
 {
-	for(unsigned long i = 0; i < m_coordCommands.size(); i++) {
-		delete m_coordCommands[i];
-	}
-	m_coordCommands.clear();
 }
 
 CSize TriangleVectorPart::GetPreferredSize(void) const
@@ -45,20 +41,24 @@ void TriangleVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 {
 	VectorPart::Initialize(pProject, pPart, pFCO);
 
-	m_coordCommands.push_back(new SimpleCoordCommand(LeftMost));
-	m_coordCommands.push_back(new SimpleCoordCommand(TopMost));
-	m_coordCommands.push_back(new SimpleCoordCommand(RightMost));
-	m_coordCommands.push_back(new SimpleCoordCommand(BottomMost));
-	ComplexCoordCommand* triangletip = new ComplexCoordCommand(LeftMost);
+	SimpleCoordCommand* leftMost		= new SimpleCoordCommand(LeftMost);
+	SimpleCoordCommand* topMost			= new SimpleCoordCommand(TopMost);
+	SimpleCoordCommand* rightMost		= new SimpleCoordCommand(RightMost);
+	SimpleCoordCommand* bottomMost		= new SimpleCoordCommand(BottomMost);
+	ComplexCoordCommand* triangletip	= new ComplexCoordCommand(LeftMost);
 	triangletip->AddCommand(RightMost, 0.5, CoordAdd);
 	triangletip->AddCommand(LeftMost, 0.5, CoordSubstract);
+	m_coordCommands.push_back(leftMost);
+	m_coordCommands.push_back(topMost);
+	m_coordCommands.push_back(rightMost);
+	m_coordCommands.push_back(bottomMost);
 	m_coordCommands.push_back(triangletip);
 
 	AddCommand(VectorCommand(VectorCommand::BeginPath));
-	AddCommand(VectorCommand(m_coordCommands[0], m_coordCommands[3], VectorCommand::MoveTo));	// Left Bottom
-	AddCommand(VectorCommand(m_coordCommands[2], m_coordCommands[3], VectorCommand::LineTo));	// Right Bottom
-	AddCommand(VectorCommand(m_coordCommands[4], m_coordCommands[1], VectorCommand::LineTo));	// CenterX Top
-	AddCommand(VectorCommand(m_coordCommands[0], m_coordCommands[3], VectorCommand::LineTo));	// Left Bottom
+	AddCommand(VectorCommand(leftMost,		bottomMost,	VectorCommand::MoveTo));
+	AddCommand(VectorCommand(rightMost,		bottomMost,	VectorCommand::LineTo));
+	AddCommand(VectorCommand(triangletip,	topMost,	VectorCommand::LineTo));
+	AddCommand(VectorCommand(leftMost,		bottomMost,	VectorCommand::LineTo));
 	AddCommand(VectorCommand(VectorCommand::EndPath));
 	AddCommand(VectorCommand(VectorCommand::StrokeAndFillPath));
 }

@@ -27,10 +27,6 @@ EllipseVectorPart::EllipseVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEv
 
 EllipseVectorPart::~EllipseVectorPart()
 {
-	for(unsigned long i = 0; i < m_coordCommands.size(); i++) {
-		delete m_coordCommands[i];
-	}
-	m_coordCommands.clear();
 }
 
 CSize EllipseVectorPart::GetPreferredSize(void) const
@@ -45,12 +41,16 @@ void EllipseVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaM
 {
 	VectorPart::Initialize(pProject, pPart, pFCO);
 
-	m_coordCommands.push_back(new SimpleCoordCommand(LeftMost));
-	m_coordCommands.push_back(new SimpleCoordCommand(TopMost));
-	m_coordCommands.push_back(new SimpleCoordCommand(RightMost));
-	m_coordCommands.push_back(new SimpleCoordCommand(BottomMost));
+	SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
+	SimpleCoordCommand* topMost		= new SimpleCoordCommand(TopMost);
+	SimpleCoordCommand* rightMost	= new SimpleCoordCommand(RightMost);
+	SimpleCoordCommand* bottomMost	= new SimpleCoordCommand(BottomMost);
+	m_coordCommands.push_back(leftMost);
+	m_coordCommands.push_back(topMost);
+	m_coordCommands.push_back(rightMost);
+	m_coordCommands.push_back(bottomMost);
 
-	AddCommand(VectorCommand(m_coordCommands[0], m_coordCommands[1], m_coordCommands[2], m_coordCommands[3], VectorCommand::Ellipse));
+	AddCommand(VectorCommand(leftMost, topMost, rightMost, bottomMost, VectorCommand::Ellipse));
 }
 
 // New functions

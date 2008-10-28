@@ -32,7 +32,7 @@ class CGuiAspect : public CGuiBase
 {
 public:
 	CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind, int pind, const CComPtr<IMgaDecorator>& decor,
-			   CDecoratorEventSink* decorEventSink);
+			   CComPtr<IMgaNewDecorator> newDecor, CDecoratorEventSink* decorEventSink);
 	virtual ~CGuiAspect();
 
 
@@ -61,6 +61,7 @@ private:
 	int						index;
 	CGuiPortList			ports;
 	CComPtr<IMgaDecorator>	decorator;
+	CComPtr<IMgaNewDecorator>	newDecorator;
 	CDecoratorEventSink*	decoratorEventSink;
 	unsigned long			features;
 	CRect					loc;

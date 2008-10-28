@@ -10,8 +10,6 @@
 #include "BoxCompositePart.h"
 
 
-namespace DecoratorSDK {
-
 //################################################################################################
 //
 // CLASS : NewBoxDecorator
@@ -110,9 +108,9 @@ void NewBoxDecorator::SaveState()
 
 // New functions
 void NewBoxDecorator::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
-									HWND parentWnd)
+								   HWND parentWnd)
 {
-	BoxCompositePart* boxComposite = new BoxCompositePart(NULL, m_eventSink);
+	DecoratorSDK::BoxCompositePart* boxComposite = new DecoratorSDK::BoxCompositePart(NULL, m_eventSink);
 	m_part = boxComposite;
 
 	boxComposite->InitializeEx(pProject, pPart, pFCO, parentWnd);
@@ -187,5 +185,3 @@ bool NewBoxDecorator::OperationCanceledByGME(void)
 {
 	return m_part->OperationCanceledByGME();
 }
-
-}; // namespace DecoratorSDK

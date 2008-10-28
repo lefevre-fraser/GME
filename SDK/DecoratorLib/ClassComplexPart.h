@@ -47,7 +47,6 @@ protected:
 	long						m_DecoratorGapY;
 	long						m_DecoratorMinAttrSize;
 
-	std::vector<DecoratorSDK::CoordCommand*>	m_coordCommands;
 public:
 	ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~ClassComplexPart();

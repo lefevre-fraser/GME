@@ -12,7 +12,7 @@
 #include "DecoratorStd.h"
 #include "TriangleVectorPart.h"
 #include "EllipseVectorPart.h"
-#include "MaskedBitmapPart.h"
+#include "ConstraintVectorPart.h"
 #include "UMLClassPart.h"
 #include "TypeableLabelPart.h"
 #include "DecoratorExceptions.h"
@@ -93,14 +93,16 @@ void UMLCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 				if (!pFCO)
 					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (name == UML_CONSTRAINT_NAME) {
-				AddObjectPart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CONSTRAINT,
-																 DecoratorSDK::COLOR_TRANSPARENT,
-																 DecoratorSDK::COLOR_GRAYED_OUT));
+				AddObjectPart(new DecoratorSDK::ConstraintVectorPart(this, m_eventSink, DecoratorSDK::COLOR_RED,
+																	 UML_CONSTRAINT_THICKNESS,
+																	 static_cast<long> (UML_CONSTRAINT_WIDTH),
+																	 static_cast<long> (UML_CONSTRAINT_HEIGHT)));
 				AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (name == UML_CONSTRAINT_DEFINITION_NAME) {
-				AddObjectPart(new DecoratorSDK::MaskedBitmapPart(this, m_eventSink, IDB_BITMAP_CDEFINITION,
-																 DecoratorSDK::COLOR_TRANSPARENT,
-																 DecoratorSDK::COLOR_GRAYED_OUT));
+				AddObjectPart(new DecoratorSDK::ConstraintVectorPart(this, m_eventSink, DecoratorSDK::COLOR_BLUE,
+																	 UML_CONSTRAINT_THICKNESS,
+																	 static_cast<long> (UML_CONSTRAINT_WIDTH),
+																	 static_cast<long> (UML_CONSTRAINT_HEIGHT)));
 				AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else {	// This must be a class
 				AddObjectPart(new UMLClassPart(this, m_eventSink));

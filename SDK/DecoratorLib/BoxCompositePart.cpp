@@ -8,7 +8,7 @@
 #include "StdAfx.h"
 #include "BoxCompositePart.h"
 
-#include "ModelSwitchPart.h"
+#include "ModelComplexPart.h"
 #include "TypeableLabelPart.h"
 #include "ReferenceBitmapPart.h"
 #include "PortPart.h"
@@ -103,7 +103,7 @@ void BoxCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 				}
 				break;
 			case OBJTYPE_MODEL: {
-					AddObjectPart(new ModelSwitchPart(this, m_eventSink));
+					AddObjectPart(new ModelComplexPart(this, m_eventSink));
 					AddTextPart(new TypeableLabelPart(this, m_eventSink));
 				}
 				break;

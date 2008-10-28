@@ -508,8 +508,10 @@ DWORD BitmapMasked::ReadFromResource(UINT nResID)
 {
 	DWORD	dwResult = 0;
 	HMODULE hModule = AfxFindResourceHandle(MAKEINTRESOURCE(nResID), RT_BITMAP);
+	ASSERT(hModule != NULL);
 	// Load	from resource
 	HRSRC	hbmres = FindResource(hModule, MAKEINTRESOURCE(nResID), RT_BITMAP );
+	ASSERT(hbmres != NULL);
 	CMemFile file; 
 	HGLOBAL	hGlob;
 	
@@ -927,19 +929,17 @@ BitmapRES::~BitmapRES()
 void BitmapRES::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode, DWORD dwModifierFlags ) const
 {
 	Graphics graphics(pDC->m_hDC);
-	graphics.SetPageUnit( UnitPixel);
-	graphics.DrawImage( m_pBitmap, dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
+	graphics.SetPageUnit(UnitPixel);
+	graphics.DrawImage(m_pBitmap, dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
 }
 
 void BitmapRES::load( UINT uiID )
 {
 	// create a GDI+ Bitmap from the resource
-	HINSTANCE hInstance1 = ::AfxGetInstanceHandle();
-	HINSTANCE hInstance2 = ::AfxGetResourceHandle();
-	HINSTANCE hInstance = AfxFindResourceHandle(MAKEINTRESOURCE(uiID), RT_BITMAP);
-
-	m_pBitmap = new Bitmap(hInstance, (WCHAR*) MAKEINTRESOURCE( uiID));
-	if( !m_pBitmap) {
+	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(uiID), RT_BITMAP);
+	ASSERT(hInst != NULL);
+	m_pBitmap = new Bitmap(hInst, (WCHAR*) MAKEINTRESOURCE( uiID));
+	if (!m_pBitmap) {
 		m_pBitmap = NULL;
 		return;
 	}
@@ -947,7 +947,7 @@ void BitmapRES::load( UINT uiID )
 		ASSERT(true);
 	}
 
-	setSize( m_pBitmap->GetWidth(), m_pBitmap->GetHeight());
+	setSize(m_pBitmap->GetWidth(), m_pBitmap->GetHeight());
 }
 
 bool BitmapRES::isInitialized() const

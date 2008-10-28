@@ -14,18 +14,16 @@
 #include "PartInterface.h"
 
 
-namespace DecoratorSDK {
-
 //################################################################################################
 //
 // CLASS : NewBoxDecorator
 //
 //################################################################################################
 
-class NewBoxDecorator: public DecoratorInterface
+class NewBoxDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
-	PartInterface*						m_part;
+	DecoratorSDK::PartInterface*		m_part;
 	CComPtr<IMgaNewDecoratorEvents>		m_eventSink;
 
 public:
@@ -68,7 +66,5 @@ public:
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
 };
-
-}; // namespace DecoratorSDK
 
 #endif //__NEWBOXDECORATOR_H_

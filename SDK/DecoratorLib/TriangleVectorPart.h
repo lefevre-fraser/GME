@@ -26,7 +26,6 @@ class TriangleVectorPart: public VectorPart
 protected:
 	long						m_triangleWidth;
 	long						m_triangleHeight;
-	std::vector<CoordCommand*>	m_coordCommands;
 
 public:
 	TriangleVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, long triangleWidth, long triangleHeight);

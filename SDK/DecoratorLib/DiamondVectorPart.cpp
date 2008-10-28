@@ -27,10 +27,6 @@ DiamondVectorPart::DiamondVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEv
 
 DiamondVectorPart::~DiamondVectorPart()
 {
-	for(unsigned long i = 0; i < m_coordCommands.size(); i++) {
-		delete m_coordCommands[i];
-	}
-	m_coordCommands.clear();
 }
 
 CSize DiamondVectorPart::GetPreferredSize(void) const
@@ -45,25 +41,28 @@ void DiamondVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaM
 {
 	VectorPart::Initialize(pProject, pPart, pFCO);
 
-	m_coordCommands.push_back(new SimpleCoordCommand(LeftMost));
-	m_coordCommands.push_back(new SimpleCoordCommand(TopMost));
-	m_coordCommands.push_back(new SimpleCoordCommand(RightMost));
-	m_coordCommands.push_back(new SimpleCoordCommand(BottomMost));
-	ComplexCoordCommand* centerx = new ComplexCoordCommand(LeftMost);
+	SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
+	SimpleCoordCommand* topMost		= new SimpleCoordCommand(TopMost);
+	SimpleCoordCommand* rightMost	= new SimpleCoordCommand(RightMost);
+	SimpleCoordCommand* bottomMost	= new SimpleCoordCommand(BottomMost);
+	ComplexCoordCommand* centerx	= new ComplexCoordCommand(LeftMost, 0.5);
 	centerx->AddCommand(RightMost, 0.5, CoordAdd);
-	centerx->AddCommand(LeftMost, 0.5, CoordSubstract);
-	m_coordCommands.push_back(centerx);
-	ComplexCoordCommand* centery = new ComplexCoordCommand(TopMost);
+	ComplexCoordCommand* centery	= new ComplexCoordCommand(TopMost, 0.5);
 	centery->AddCommand(BottomMost, 0.5, CoordAdd);
-	centery->AddCommand(TopMost, 0.5, CoordSubstract);
+
+	m_coordCommands.push_back(leftMost);
+	m_coordCommands.push_back(topMost);
+	m_coordCommands.push_back(rightMost);
+	m_coordCommands.push_back(bottomMost);
+	m_coordCommands.push_back(centerx);
 	m_coordCommands.push_back(centery);
 
 	AddCommand(VectorCommand(VectorCommand::BeginPath));
-	AddCommand(VectorCommand(m_coordCommands[0], m_coordCommands[5], VectorCommand::MoveTo));	// Left CenterY
-	AddCommand(VectorCommand(m_coordCommands[4], m_coordCommands[3], VectorCommand::LineTo));	// CenterX Bottom
-	AddCommand(VectorCommand(m_coordCommands[2], m_coordCommands[5], VectorCommand::LineTo));	// Right CenterY
-	AddCommand(VectorCommand(m_coordCommands[4], m_coordCommands[1], VectorCommand::LineTo));	// CenterX Top
-	AddCommand(VectorCommand(m_coordCommands[0], m_coordCommands[5], VectorCommand::LineTo));	// Left CenterY
+	AddCommand(VectorCommand(leftMost,	centery,	VectorCommand::MoveTo));
+	AddCommand(VectorCommand(centerx,	bottomMost,	VectorCommand::LineTo));
+	AddCommand(VectorCommand(rightMost,	centery,	VectorCommand::LineTo));
+	AddCommand(VectorCommand(centerx,	topMost,	VectorCommand::LineTo));
+	AddCommand(VectorCommand(leftMost,	centery,	VectorCommand::LineTo));
 	AddCommand(VectorCommand(VectorCommand::EndPath));
 	AddCommand(VectorCommand(VectorCommand::StrokeAndFillPath));
 }

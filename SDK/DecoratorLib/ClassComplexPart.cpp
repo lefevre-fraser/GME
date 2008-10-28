@@ -52,10 +52,6 @@ ClassComplexPart::~ClassComplexPart()
 	m_AttributeParts.clear();
 	if (m_copySignPart != NULL)
 		delete m_copySignPart;
-	for(i = 0; i < m_coordCommands.size(); i++) {
-		delete m_coordCommands[i];
-	}
-	m_coordCommands.clear();
 }
 
 void ClassComplexPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
@@ -1034,7 +1030,7 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	CDC	dc;
 
 	dc.Attach(pDC ? pDC->m_hDC : GetDC(NULL));			// Trick
-	CFont* oldfont = dc.SelectObject(DecoratorSDK::getFacilities().getFont(DecoratorSDK::FONT_PORTNAME)->pFont);
+	CFont* oldfont = dc.SelectObject(getFacilities().getFont(FONT_PORTNAME)->pFont);
 
 	long numberOfGaps = 0;
 	long heightPreEstimation = m_DecoratorMarginY;
@@ -1105,20 +1101,96 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	ypos += m_DecoratorMarginY;
 	m_SeparatorLoc = ypos + offset.y;
 
-	RemoveAllCommands();
+	bool roundEdge = true;
+	long edgeRadius = 9;
 	if (m_coordCommands.size() > 0) {
-		ASSERT(m_coordCommands.size() == 5);
-		m_coordCommands.pop_back();	// Delete the AbsoulteCommand (the separator location)
+		ASSERT(GetCommandNumber() >= 2);
+		RemoveLastCommand(2);	// Remove the last commands
+		delete m_coordCommands[m_coordCommands.size() - 1];	// Delete the AbsoulteCommand (the separator location)
+		m_coordCommands.pop_back();
 	} else {
-		m_coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::LeftMost));
-		m_coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::TopMost));
-		m_coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::RightMost));
-		m_coordCommands.push_back(new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::BottomMost));
+		SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
+		SimpleCoordCommand* topMost		= new SimpleCoordCommand(TopMost);
+		SimpleCoordCommand* rightMost	= new SimpleCoordCommand(RightMost);
+		SimpleCoordCommand* bottomMost	= new SimpleCoordCommand(BottomMost);
+
+		m_coordCommands.push_back(leftMost);
+		m_coordCommands.push_back(topMost);
+		m_coordCommands.push_back(rightMost);
+		m_coordCommands.push_back(bottomMost);
+
+		AddCommand(VectorCommand::BeginPath);
+		if (roundEdge) {
+			ComplexCoordCommand* leftoRadius = new ComplexCoordCommand(LeftMost);
+			leftoRadius->AddCommand(OneConstant, edgeRadius, CoordAdd);
+			ComplexCoordCommand* topoRadius = new ComplexCoordCommand(TopMost);
+			topoRadius->AddCommand(OneConstant, edgeRadius, CoordAdd);
+			ComplexCoordCommand* rightoRadius = new ComplexCoordCommand(RightMost);
+			rightoRadius->AddCommand(OneConstant, edgeRadius, CoordSubstract);
+			ComplexCoordCommand* bottomoRadius = new ComplexCoordCommand(BottomMost);
+			bottomoRadius->AddCommand(OneConstant, edgeRadius, CoordSubstract);
+			AbsoluteCoordCommand* radiusCommand = new AbsoluteCoordCommand(edgeRadius);
+			SimpleCoordCommand* angle0Command = new SimpleCoordCommand(ZeroConstant);
+			AbsoluteCoordCommand* angle90Command = new AbsoluteCoordCommand(90);
+			AbsoluteCoordCommand* angle180Command = new AbsoluteCoordCommand(180);
+			AbsoluteCoordCommand* angle270Command = new AbsoluteCoordCommand(270);
+
+			m_coordCommands.push_back(leftoRadius);
+			m_coordCommands.push_back(topoRadius);
+			m_coordCommands.push_back(rightoRadius);
+			m_coordCommands.push_back(bottomoRadius);
+			m_coordCommands.push_back(radiusCommand);
+			m_coordCommands.push_back(angle0Command);
+			m_coordCommands.push_back(angle90Command);
+			m_coordCommands.push_back(angle180Command);
+			m_coordCommands.push_back(angle270Command);
+
+			std::vector<const CoordCommand*> m_arcParams;
+			AddCommand(VectorCommand(leftoRadius, topMost, VectorCommand::MoveTo));
+			m_arcParams.push_back(leftoRadius);
+			m_arcParams.push_back(topoRadius);
+			m_arcParams.push_back(radiusCommand);
+			m_arcParams.push_back(angle90Command);
+			m_arcParams.push_back(angle90Command);
+			AddCommand(VectorCommand(m_arcParams, VectorCommand::AngleArc));
+			AddCommand(VectorCommand(leftMost, bottomoRadius, VectorCommand::LineTo));
+			m_arcParams[0] = leftoRadius;
+			m_arcParams[1] = bottomoRadius;
+			m_arcParams[2] = radiusCommand;
+			m_arcParams[3] = angle180Command;
+			m_arcParams[4] = angle90Command;
+			AddCommand(VectorCommand(m_arcParams, VectorCommand::AngleArc));
+			AddCommand(VectorCommand(rightoRadius, bottomMost, VectorCommand::LineTo));
+			m_arcParams[0] = rightoRadius;
+			m_arcParams[1] = bottomoRadius;
+			m_arcParams[2] = radiusCommand;
+			m_arcParams[3] = angle270Command;
+			m_arcParams[4] = angle90Command;
+			AddCommand(VectorCommand(m_arcParams, VectorCommand::AngleArc));
+			AddCommand(VectorCommand(rightMost, topoRadius, VectorCommand::LineTo));
+			m_arcParams[0] = rightoRadius;
+			m_arcParams[1] = topoRadius;
+			m_arcParams[2] = radiusCommand;
+			m_arcParams[3] = angle0Command;
+			m_arcParams[4] = angle90Command;
+			AddCommand(VectorCommand(m_arcParams, VectorCommand::AngleArc));
+			AddCommand(VectorCommand(leftoRadius, topMost, VectorCommand::LineTo));
+		} else {
+//			AddCommand(VectorCommand(leftMost, topMost, rightMost, bottomMost, VectorCommand::Rectangle));
+			AddCommand(VectorCommand(leftMost, topMost, VectorCommand::MoveTo));
+			AddCommand(VectorCommand(leftMost, bottomMost, VectorCommand::LineTo));
+			AddCommand(VectorCommand(rightMost, bottomMost, VectorCommand::LineTo));
+			AddCommand(VectorCommand(rightMost, topMost, VectorCommand::LineTo));
+			AddCommand(VectorCommand(leftMost, topMost, VectorCommand::LineTo));
+		}
+		AddCommand(VectorCommand::EndPath);
+		AddCommand(VectorCommand::StrokeAndFillPath);
 	}
-	AddCommand(DecoratorSDK::VectorCommand(m_coordCommands[0], m_coordCommands[1], m_coordCommands[2], m_coordCommands[3], DecoratorSDK::VectorCommand::Rectangle));
-	m_coordCommands.push_back(new DecoratorSDK::AbsoluteCoordCommand(m_SeparatorLoc));
-	AddCommand(DecoratorSDK::VectorCommand(m_coordCommands[0], m_coordCommands[4], DecoratorSDK::VectorCommand::MoveTo));
-	AddCommand(DecoratorSDK::VectorCommand(m_coordCommands[2], m_coordCommands[4], DecoratorSDK::VectorCommand::LineTo));
+
+	AbsoluteCoordCommand* sepLocCoordCmd = new AbsoluteCoordCommand(m_SeparatorLoc);
+	m_coordCommands.push_back(sepLocCoordCmd);
+	AddCommand(VectorCommand(m_coordCommands[0], sepLocCoordCmd, VectorCommand::MoveTo));
+	AddCommand(VectorCommand(m_coordCommands[2], sepLocCoordCmd, VectorCommand::LineTo));
 
 	ypos += m_DecoratorMarginY;
 

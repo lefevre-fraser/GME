@@ -128,8 +128,10 @@ void CInPlaceEditDialog::OnLButtonDown(UINT nFlags, CPoint point)
 
 		CWnd *child = ChildWindowFromPoint(point);
 
-		if (child && child != this)
+		if (child && child != this) {
 			child->SendMessage(WM_LBUTTONDOWN, nFlags, MAKELPARAM(point.x, point.y));
+			return;
+		}
 	}
 
 	CDialog::OnLButtonDown(nFlags, point);
@@ -142,8 +144,8 @@ void CInPlaceEditDialog::OnLButtonUp(UINT nFlags, CPoint point)
 
 	if (child && child != this)
 		child->SendMessage(WM_LBUTTONUP, nFlags, MAKELPARAM(point.x, point.y));
-
-	CDialog::OnLButtonUp(nFlags, point);
+	else
+		CDialog::OnLButtonUp(nFlags, point);
 }
 
 void CInPlaceEditDialog::OnLButtonDblClk(UINT nFlags, CPoint point)
@@ -153,8 +155,8 @@ void CInPlaceEditDialog::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 	if (child && child != this)
 		child->SendMessage(WM_LBUTTONDBLCLK, nFlags, MAKELPARAM(point.x, point.y));
-
-	CDialog::OnLButtonDblClk(nFlags, point);
+	else
+		CDialog::OnLButtonDblClk(nFlags, point);
 }
 
 void CInPlaceEditDialog::OnMouseMove(UINT nFlags, CPoint point)
@@ -164,8 +166,8 @@ void CInPlaceEditDialog::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (child && child != this)
 		child->SendMessage(WM_MOUSEMOVE, nFlags, MAKELPARAM(point.x, point.y));
-
-	CDialog::OnMouseMove(nFlags, point);
+	else
+		CDialog::OnMouseMove(nFlags, point);
 }
 
 BOOL CInPlaceEditDialog::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
@@ -179,11 +181,11 @@ BOOL CInPlaceEditDialog::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 
 	if (child && child != this)
 		return child->SendMessage(WM_SETCURSOR, (WPARAM)(child->m_hWnd), MAKELPARAM(nHitTest, message));
-
-	return CDialog::OnSetCursor(pWnd, nHitTest, message);
+	else
+		return CDialog::OnSetCursor(pWnd, nHitTest, message);
 }
 
-afx_msg int CInPlaceEditDialog::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
+int CInPlaceEditDialog::OnMouseActivate(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	POINT cursorPos;
 	BOOL succ = ::GetCursorPos(&cursorPos);
@@ -193,9 +195,9 @@ afx_msg int CInPlaceEditDialog::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest
 	CWnd *child = ChildWindowFromPoint(cursorPos, CWP_ALL);
 
 	if (child && child != this)
-		return child->SendMessage(WM_MOUSEACTIVATE, (WPARAM)(pDesktopWnd->m_hWnd), MAKELPARAM(nHitTest, message));
-
-	return CDialog::OnMouseActivate(pDesktopWnd, nHitTest, message);
+		return child->SendMessage(WM_MOUSEACTIVATE, (WPARAM)(child->m_hWnd), MAKELPARAM(nHitTest, message));
+	else
+		return CDialog::OnMouseActivate(pWnd, nHitTest, message);
 }
 
 void CInPlaceEditDialog::OnEnChangeTextedit()
@@ -233,14 +235,11 @@ CRect CInPlaceEditDialog::GetWindowSizeFromResource(void) const
 	// if the dialog resource resides in a DLL ...
 	//
 
-	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(IDD_INPLACEEDITDIALOG),
-											RT_DIALOG);
+	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(IDD_INPLACEEDITDIALOG), RT_DIALOG);
 
 	ASSERT(hInst != NULL);
 
-	HRSRC hRsrc = ::FindResource(hInst,
-								 MAKEINTRESOURCE(IDD_INPLACEEDITDIALOG),
-								 RT_DIALOG);
+	HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(IDD_INPLACEEDITDIALOG), RT_DIALOG);
 	ASSERT(hRsrc != NULL);
 
 	HGLOBAL hTemplate = ::LoadResource(hInst, hRsrc);
@@ -255,9 +254,7 @@ CRect CInPlaceEditDialog::GetWindowSizeFromResource(void) const
 	HGLOBAL hDlgInit = NULL;
 	CDialog dlg;
 
-	HRSRC hsDlgInit = ::FindResource(hInst,
-									 MAKEINTRESOURCE(IDD_INPLACEEDITDIALOG),
-									 RT_DLGINIT);
+	HRSRC hsDlgInit = ::FindResource(hInst, MAKEINTRESOURCE(IDD_INPLACEEDITDIALOG), RT_DLGINIT);
 	if (hsDlgInit != NULL) {
 		// load it
 		hDlgInit = ::LoadResource(hInst, hsDlgInit);

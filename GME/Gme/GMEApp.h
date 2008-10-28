@@ -48,7 +48,6 @@ public:
 	CMultiDocTemplate* pDocTemplate;
 	CComPtr<IMgaProject> mgaProject;
 	CComPtr<IMgaClient> mgaClient;
-	CComPtr<IDispatch>  mOleApp;
 	CComPtr<IMgaMetaProject> mgaMetaProject;
 //  dynamic menus
 	CStringArray plugins, interpreters, addons;

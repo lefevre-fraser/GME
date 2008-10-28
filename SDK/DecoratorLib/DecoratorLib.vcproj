@@ -21,10 +21,11 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			UseOfMFC="1"
+			UseOfMFC="2"
 			UseOfATL="2"
 			CharacterSet="2"
 			ManagedExtensions="0"
+			EnableManagedIncrementalBuild="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -47,7 +48,7 @@
 				AdditionalIncludeDirectories="..\..\GME\Common;..\..\GME\Interfaces"
 				PreprocessorDefinitions="WIN32;_DEBUG;OLD_DECORATOR_LOOKANDFEEL"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				BrowseInformation="1"
 				WarningLevel="3"
@@ -87,11 +88,12 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			UseOfMFC="1"
+			UseOfMFC="2"
 			UseOfATL="2"
 			CharacterSet="2"
 			ManagedExtensions="0"
 			WholeProgramOptimization="1"
+			EnableManagedIncrementalBuild="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -112,7 +114,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\GME\Common;..\..\GME\Interfaces"
 				PreprocessorDefinitions="WIN32;NDEBUG;OLD_DECORATOR_LOOKANDFEEL"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -216,6 +218,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ConstraintFunctionVectorPart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ConstraintVectorPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DecoratorDefs.cpp"
 				>
 			</File>
@@ -248,7 +258,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\InheritanceVectorPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\InPlaceEditDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\InPlaceNativeDialog.cpp"
 				>
 			</File>
 			<File
@@ -426,6 +444,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ConstraintFunctionVectorPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ConstraintVectorPart.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DecoratorDefs.h"
 				>
 			</File>
@@ -454,7 +480,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\InheritanceVectorPart.h"
+				>
+			</File>
+			<File
 				RelativePath=".\InPlaceEditDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InPlaceNativeDialog.h"
 				>
 			</File>
 			<File

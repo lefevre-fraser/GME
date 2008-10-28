@@ -28,7 +28,8 @@ enum CoordinateConstants
 	LeftMost			= 1,
 	TopMost				= 2,
 	RightMost			= 3,
-	BottomMost			= 4
+	BottomMost			= 4,
+	OneConstant			= 5
 };
 
 enum CoordinateOperations
@@ -111,7 +112,7 @@ class ComplexCoordCommand: public CoordCommand {
 	std::vector<CoordinateOperations>	m_coordOperationList;
 
 public:
-	ComplexCoordCommand(CoordinateConstants coordConst);
+	ComplexCoordCommand(CoordinateConstants coordConst, double weight = 1.0, CoordinateOperations operation = CoordAdd);
 	virtual ~ComplexCoordCommand();
 
 	void AddCommand(CoordinateConstants constant, double weight, CoordinateOperations operation);
@@ -135,10 +136,12 @@ public:
 		LineTo				= 4,
 		Rectangle			= 5,
 		Ellipse				= 6,
-		SelectBrush			= 7,
-		SelectPen			= 8,
-		SelectNullBrush		= 9,
-		SelectNullPen		= 10
+		Polygon				= 7,
+		AngleArc			= 8,
+		SelectBrush			= 9,
+		SelectPen			= 10,
+		SelectNullBrush		= 11,
+		SelectNullPen		= 12
 	};
 
 public:
@@ -150,9 +153,12 @@ public:
 		m_Code(code) { m_CoordCmds.push_back(sxCmd); m_CoordCmds.push_back(syCmd); };
 	VectorCommand(const CoordCommand* sxCmd, const CoordCommand* syCmd, const CoordCommand* exCmd, const CoordCommand* eyCmd, long code):
 		m_Code(code) { m_CoordCmds.push_back(sxCmd); m_CoordCmds.push_back(syCmd); m_CoordCmds.push_back(exCmd); m_CoordCmds.push_back(eyCmd); };
+	VectorCommand(std::vector<const CoordCommand*> cmds, long code):
+		m_Code(code), m_CoordCmds(cmds) {};
 	virtual ~VectorCommand();
 
 	CRect	GetResolvedCoords	(const CRect& extents) const;
+	std::vector<long>			GetResolvedValues(const CRect& extents) const;
 	long	GetCode				(void) const { return m_Code; };
 
 protected:
@@ -172,10 +178,19 @@ class VectorPart: public ResizablePart
 	CString						penColorVariableName;
 	CString						burshColorVariableName;
 
+protected:
 	CRect						m_Extents;
 	std::vector<VectorCommand>	m_Commands;
 	COLORREF					m_crPen;
 	COLORREF					m_crBrush;
+	bool						m_bOriginalPenSaved;
+	CPen*						m_originalPen;
+	bool						m_bOriginalBrushSaved;
+	CBrush*						m_originalBrush;
+	COLORREF					m_shadowStartColor;
+	COLORREF					m_shadowEndColor;
+
+	std::vector<CoordCommand*>	m_coordCommands;
 
 public:
 	VectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
@@ -184,8 +199,10 @@ public:
 	void			SetExtents					(const CRect& extents) { m_Extents = extents; };
 	void			AddCommand					(const VectorCommand& cmd) { m_Commands.push_back(cmd); };
 	long			GetCommandNumber			(void) const { return (long)m_Commands.size(); };
+	void			RemoveLastCommand			(long cmdCount = 1);
 	void			RemoveCommand				(long index);
 	void			RemoveAllCommands			(void) { m_Commands.clear(); };
+	void			DisposeCoordCommands		(void);
 	VectorCommand	GetCommand					(long index) const;
 
 // =============== resembles IMgaNewDecorator
@@ -202,6 +219,8 @@ public:
 protected:
 	virtual void	SetBrush					(CDC* pDC);
 	virtual void	SetPen						(CDC* pDC);
+	void			PolyDraw					(CDC* pDC, const LPPOINT lppt, const LPBYTE lpbTypes, int cCount) const;
+	void			OffsetPolyPoints			(const LPPOINT lppt, int cCount, int offset) const;
 };
 
 }; // namespace DecoratorSDK

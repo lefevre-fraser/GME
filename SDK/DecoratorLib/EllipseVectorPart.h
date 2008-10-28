@@ -25,7 +25,6 @@ class EllipseVectorPart: public VectorPart
 {
 	long						m_ellipseWidth;
 	long						m_ellipseHeight;
-	std::vector<CoordCommand*>	m_coordCommands;
 
 public:
 	EllipseVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, long ellipseWidth, long ellipseHeight);

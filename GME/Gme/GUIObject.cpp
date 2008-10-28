@@ -102,12 +102,13 @@ void SetCenterNoMga(CRect &location,CPoint pt)
 // Non-virtual methods of CGuiAspect
 ////////////////////////////////////
 CGuiAspect::CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind,int pind, const CComPtr<IMgaDecorator>& decor,
-					   CDecoratorEventSink* decorEventSink):
+					   CComPtr<IMgaNewDecorator> newDecor, CDecoratorEventSink* decorEventSink):
 	guiMeta(meta),
 	parent(p),
 	index(ind),
 	parentIndex(pind),
 	decorator(decor),
+	newDecorator(newDecor),
 	decoratorEventSink(decorEventSink),
 	routerBox(0),
 	routerNameBox(0)
@@ -130,7 +131,14 @@ CGuiAspect::CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind,int pind, cons
 
 CGuiAspect::~CGuiAspect()
 {
-	COMTHROW(decorator->Destroy());
+	if (newDecorator) {
+		COMTHROW(newDecorator->Destroy());
+		newDecorator = NULL;
+		decorator = NULL;
+	} else {
+		COMTHROW(decorator->Destroy());
+		decorator = NULL;
+	}
 	if (decoratorEventSink != NULL)
 		delete decoratorEventSink;
 	POSITION pos = ports.GetHeadPosition();
@@ -1179,13 +1187,10 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 		progId = GME_DEFAULT_DECORATOR;
 	}
 	CComPtr<IMgaDecorator> decor;
-#if defined (TRYNEWDECORATORS)
 	CComPtr<IMgaNewDecorator> newDecor;
-#endif
 
 	CDecoratorEventSink* decoratorEventSink = NULL;
 	try {
-		bool newDecoratorCreated = false;
 #if defined (TRYNEWDECORATORS)
 		CComPtr<IMgaNewDecoratorEvents> decoratorEventSinkIface;
 		if (progId == GME_DEFAULT_DECORATOR ||
@@ -1198,7 +1203,6 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.NewUMLDecorator")));
 			else if (progId == "Mga.Decorator.MetaDecorator")
 				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.Decorator.NewMetaDecorator")));
-			newDecoratorCreated = true;
 			decoratorEventSink = new CDecoratorEventSink();
 			HRESULT hr = decoratorEventSink->QuerySinkInterface((void**) &decoratorEventSinkIface);
 			if (hr == S_OK) {
@@ -1217,12 +1221,10 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 			CComVariant value(values.GetNext(vpos));
 			COMTHROW(decor->SetParam(param, value));
 		}
-#if defined (TRYNEWDECORATORS)
-		if (newDecoratorCreated)
+		if (newDecor)
 			COMTHROW(newDecor->InitializeEx(theApp.mgaProject, metaPart, mgaFco, decoratorEventSinkIface, (ULONGLONG)viewWnd->m_hWnd));
 		else
-#endif
-		COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
+			COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
 	}
 	catch (hresult_exception &e) {
 		try {
@@ -1243,7 +1245,7 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 			throw hresult_exception(e.hr);
 		}
 	}
-	guiAspects[asp] = new CGuiAspect(metaAspect, this, metaAspect->index, asp, decor, decoratorEventSink);
+	guiAspects[asp] = new CGuiAspect(metaAspect, this, metaAspect->index, asp, decor, newDecor, decoratorEventSink);
 	parentAspect = 0;
 }
 

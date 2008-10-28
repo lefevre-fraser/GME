@@ -978,6 +978,7 @@ void ModelComplexPart::DrawBackground(CDC* pDC)
 struct PortPartData {
 	PortPartData(PortPart* pD, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO):
 		portPart(pD), spPart(pPart), spFCO(pFCO) {};
+	~PortPartData() { spPart.Release(); spFCO.Release(); };
 
 	PortPart*				portPart;
 	CComPtr<IMgaMetaPart>	spPart;
