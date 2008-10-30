@@ -7,7 +7,6 @@
 #include "mainfrm.h"
 #include "GMEDoc.h"
 #include "GMEView.h"
-#include "sizecbar.h"
 #include "GMEConsole.h"
 #include "guimeta.h"
 

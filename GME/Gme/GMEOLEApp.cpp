@@ -593,30 +593,30 @@ LPDISPATCH CGMEOLEApp::GetPanels()
 	// PRECONDITIONS: None
 
 	CGMEOLEColl* coll = new CGMEOLEColl();
-/*@@@
+
 	CGMEOLEPanel* panel = new CGMEOLEPanel();
-	panel->SetParams( &CMainFrame::theInstance->m_browser, _T("Browser"));
+	panel->SetParams( &CMainFrame::theInstance->m_browser, _T("Browser"), CMainFrame::theInstance->m_browser.GetInterface());
 	coll->Add(panel->GetIDispatch(FALSE));
 	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
 
 	panel = new CGMEOLEPanel();
-	panel->SetParams( &CMainFrame::theInstance->m_objectInspector, _T("Attribute Panel"));
+	panel->SetParams( &CMainFrame::theInstance->m_objectInspector, _T("Attribute Panel"), CMainFrame::theInstance->m_objectInspector.GetInterface());
 	coll->Add(panel->GetIDispatch(FALSE));
 	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
 
 	panel = new CGMEOLEPanel();
-	panel->SetParams( &CMainFrame::theInstance->m_console, _T("Console"));
+	panel->SetParams( &CMainFrame::theInstance->m_console, _T("Console"), CMainFrame::theInstance->m_console.GetInterface());
 	coll->Add(panel->GetIDispatch(FALSE));
 	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
 
 	panel = new CGMEOLEPanel();
-	panel->SetParams( &CMainFrame::theInstance->m_partBrowser, _T("Part Browser"));
+	panel->SetParams( &CMainFrame::theInstance->m_partBrowser, _T("Part Browser"), CMainFrame::theInstance->m_partBrowser.GetInterface());
 	coll->Add(panel->GetIDispatch(FALSE));
 	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
 
 	// terge 
 	panel = new CGMEOLEPanel();
-	panel->SetParams( &CMainFrame::theInstance->m_panningWindow, _T("Panning Window"));
+	panel->SetParams( &CMainFrame::theInstance->m_panningWindow, _T("Panning Window"), CMainFrame::theInstance->m_panningWindow.GetInterface());
 	coll->Add(panel->GetIDispatch(FALSE));
 	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
 
@@ -639,7 +639,7 @@ LPDISPATCH CGMEOLEApp::GetPanels()
 	panel->SetParams( &CMainFrame::theInstance->m_wndComponentBar, _T("Component Toolbar"));
 	coll->Add(panel->GetIDispatch(FALSE));	
 	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
-@@@@*/
+
 	return coll->GetIDispatch(FALSE);
 }
 

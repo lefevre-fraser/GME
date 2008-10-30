@@ -104,7 +104,7 @@ void CGMEOLEPanel::SetVisible(BOOL bNewValue)
 	
 	PRECONDITION_VALID_PANEL
 
-	CMainFrame::theInstance->ShowControlBar(m_control, bNewValue, FALSE);
+	CMainFrame::theInstance->ShowPane(m_control, bNewValue, FALSE, FALSE);
 }
 
 IDispatch* CGMEOLEPanel::GetInterface()
@@ -112,11 +112,12 @@ IDispatch* CGMEOLEPanel::GetInterface()
 	CGMEEventLogger::LogGMEEvent("CGMEOLEPanel::GetInterface()\r\n");
 	
 	PRECONDITION_VALID_PANEL
-
+/*
 	IDispatch* interf = NULL;
 	CSizingControlBar * scb = dynamic_cast<CSizingControlBar *>( m_control);
 	if( scb) interf = scb->GetInterface();
-	return interf;
+	*/
+	return m_interf;
 }
 
 void CGMEOLEPanel::SetInterface(IDispatch* intf)

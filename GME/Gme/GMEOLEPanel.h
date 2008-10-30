@@ -22,7 +22,7 @@ public:
 
 // Operations
 public:
-	void SetParams(CControlBar *control, CString name) { m_control = control; m_name = name;}
+	void SetParams(CPane *control, CString name, IDispatch* interf = NULL){m_control = control;  m_name = name; m_interf = interf;}
 
 // Overrides
 public:
@@ -30,8 +30,9 @@ public:
 
 // Implementation
 protected:
-	CControlBar	*m_control;
+	CPane	*m_control;
 	CString	m_name;
+	IDispatch* m_interf;
 
 	virtual ~CGMEOLEPanel();
 
