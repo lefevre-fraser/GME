@@ -8,7 +8,6 @@
 #include "mainfrm.h"
 #include "GMEDoc.h"
 #include "GMEView.h"
-#include "sizecbar.h"
 #include "GMEPartBrowser.h"
 #include "GuiMeta.h"
 

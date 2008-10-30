@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "GMEPanningWindow.h"
-#include "sizecbar.h"
 #include "GMEApp.h"
 #include "MainFrm.h"
 
