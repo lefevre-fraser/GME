@@ -13,7 +13,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CGMEBrowser dialog
 
-class CGMEBrowser : public CSizingControlBar
+class CGMEBrowser : public CDockablePane
 {
 // Construction
 public:

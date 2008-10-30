@@ -36,14 +36,14 @@ void CGMEObjectInspector::DoDataExchange(CDataExchange* pDX)
 
 
 
-BEGIN_MESSAGE_MAP(CGMEObjectInspector, CSizingControlBar)
+BEGIN_MESSAGE_MAP(CGMEObjectInspector, CDockablePane)
 	//{{AFX_MSG_MAP(CGMEObjectInspector)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-BEGIN_EVENTSINK_MAP(CGMEObjectInspector, CSizingControlBar)
+BEGIN_EVENTSINK_MAP(CGMEObjectInspector, CDockablePane)
     //{{AFX_EVENTSINK_MAP(CGMEBrowser)
 	ON_EVENT(CGMEObjectInspector, IDC_OBJECT_INSPECTOR_CTRL, 1 /* RootFolderNameChanged */, OnRootFolderNameChangedGmeActiveBrowserCtrl, VTS_NONE)
 	//}}AFX_EVENTSINK_MAP
@@ -51,28 +51,28 @@ END_EVENTSINK_MAP()
 
 int CGMEObjectInspector::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
-	if (CSizingControlBar::OnCreate(lpCreateStruct) == -1)
+	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 	
 	if(!m_ObjectInspector.Create("ObjectInspector",WS_CHILD | WS_VISIBLE,CRect(0,0,230,300),this,IDC_OBJECT_INSPECTOR_CTRL))
 		return -1;
 
-	/*
+	/* @@@
     m_szFloat = CSize(500,165); 
 	m_szHorz = CSize(100,165);
     m_szVert = CSize(120,400);
-*/	
+
 	m_szFloat = CSize(400,600); 
 	m_szHorz = CSize(800,165);
     m_szVert = CSize(120,400);
 
-	
+*/	
 	return 0;
 }
 
 void CGMEObjectInspector::OnSize(UINT nType, int cx, int cy) 
 {
-	CSizingControlBar::OnSize(nType, cx, cy);
+	CDockablePane::OnSize(nType, cx, cy);
 
 	CRect rc;
 	GetClientRect(rc);	
@@ -138,7 +138,7 @@ BOOL CGMEObjectInspector::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
-	return CSizingControlBar::PreTranslateMessage(pMsg);
+	return CDockablePane::PreTranslateMessage(pMsg);
 }
 
 

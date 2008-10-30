@@ -17,9 +17,9 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CChildFrame
 
-IMPLEMENT_DYNCREATE(CChildFrame, CMDIChildWnd)
+IMPLEMENT_DYNCREATE(CChildFrame, CMDIChildWndEx)
 
-BEGIN_MESSAGE_MAP(CChildFrame, CMDIChildWnd)
+BEGIN_MESSAGE_MAP(CChildFrame, CMDIChildWndEx)
 	ON_WM_CREATE()
 	ON_COMMAND_EX(CG_ID_VIEW_MODELPROPERTIESBAR, OnBarCheck)
 	ON_UPDATE_COMMAND_UI(CG_ID_VIEW_MODELPROPERTIESBAR, OnUpdateControlBarMenu)
@@ -47,7 +47,7 @@ BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
 
-	if( !CMDIChildWnd::PreCreateWindow(cs) )
+	if( !CMDIChildWndEx::PreCreateWindow(cs) )
 		return FALSE;
 
 	return TRUE;
@@ -61,12 +61,12 @@ BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 #ifdef _DEBUG
 void CChildFrame::AssertValid() const
 {
-	CMDIChildWnd::AssertValid();
+	CMDIChildWndEx::AssertValid();
 }
 
 void CChildFrame::Dump(CDumpContext& dc) const
 {
-	CMDIChildWnd::Dump(dc);
+	CMDIChildWndEx::Dump(dc);
 }
 
 #endif //_DEBUG
@@ -76,7 +76,7 @@ void CChildFrame::Dump(CDumpContext& dc) const
 
 int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	if (CMDIChildWnd::OnCreate(lpCreateStruct) == -1)
+	if (CMDIChildWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
 	// TODO: Add a menu item that will toggle the visibility of the
@@ -119,9 +119,9 @@ void CChildFrame::OnClose()
 	sendEvent = true;
 
 	if(doClose)
-		CMDIChildWnd::OnClose();
+		CMDIChildWndEx::OnClose();
 
-	// CMDIChildWnd::OnClose: when the last ChildWnd is closed
+	// CMDIChildWndEx::OnClose: when the last ChildWnd is closed
 	// the document is considered closed and the title changes to Paradigm
 	// that's why we call this:
 	theApp.UpdateMainTitle();
@@ -129,7 +129,7 @@ void CChildFrame::OnClose()
 
 void CChildFrame::OnSize(UINT nType, int cx, int cy)
 {
-	CMDIChildWnd::OnSize(nType, cx, cy);
+	CMDIChildWndEx::OnSize(nType, cx, cy);
 
 	// it is necessary to change the title manually especially
 	// when the first childwnd is created

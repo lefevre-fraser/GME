@@ -42,7 +42,7 @@
 #ifndef _AFX_NO_AFXCMN_SUPPORT
 #include <afxcmn.h>			// MFC support for Windows Common Controls
 #endif // _AFX_NO_AFXCMN_SUPPORT
-
+#include <afxcontrolbars.h>
 #include "mfcdual.h"
 
 #include <atlbase.h>

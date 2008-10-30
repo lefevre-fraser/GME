@@ -12,7 +12,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-class CGMEObjectInspector : public CSizingControlBar  
+class CGMEObjectInspector : public CDockablePane  
 {
 public:
 

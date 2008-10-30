@@ -15,6 +15,7 @@
 #include "resource.h"       // main symbols
 #include <set>
 #include <map>
+
 #define ID_FILE_PLUGINMENU 40000
 
 
@@ -36,7 +37,7 @@ struct IMgaMetaProject;
 class CGuiMetaProject;
 class CGuiPreferenceManager;
 
-class CGMEApp : public CWinApp
+class CGMEApp : public CWinAppEx
 {
 	friend class CGMEOLEApp;
 	friend class ExceptionHandler;
@@ -53,6 +54,9 @@ public:
 	CStringArray plugins, interpreters, addons;
     CStringArray pluginTooltips, interpreterTooltips, addonToolTips;
 	bool dynmenus_need_refresh;
+
+	// Application look
+	UINT  m_nAppLook;
 
 	CComPtr<IMgaComponentEx> mgaConstMgr;
 	CGuiMetaProject *guiMetaProject;

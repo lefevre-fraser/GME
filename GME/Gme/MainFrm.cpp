@@ -48,9 +48,9 @@ afx_msg BOOL CComponentBar::OnTT(UINT, NMHDR * pNMHDR, LRESULT * ) {
 
 
 
-IMPLEMENT_DYNCREATE(CComponentBar, CToolBar)
+IMPLEMENT_DYNCREATE(CComponentBar, CMFCToolBar)
 
-BEGIN_MESSAGE_MAP(CComponentBar, CToolBar)
+BEGIN_MESSAGE_MAP(CComponentBar, CMFCToolBar)
 	ON_NOTIFY_EX( TTN_NEEDTEXT, 0, OnTT )
 END_MESSAGE_MAP()
 
@@ -60,9 +60,9 @@ END_MESSAGE_MAP()
 
 CMainFrame *CMainFrame::theInstance = 0;
 
-IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWnd)
+IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
 
-BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
+BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TIME, OnUpdateTime)
 	//{{AFX_MSG_MAP(CMainFrame)
 	ON_WM_CREATE()
@@ -90,6 +90,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_CLEARCONSOLE, OnUpdateViewClearConsole)
 	ON_WM_CLOSE()
 	ON_WM_DROPFILES()
+	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnUpdateApplicationLook)
+	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnApplicationLook)
 //}}AFX_MSG_MAP
 	// By making the Menu IDs that same as the ToolBar IDs
 	// we can leverage off of code that is already provided
@@ -123,6 +125,7 @@ CMainFrame::CMainFrame()
 {
 	theInstance = this;	
 	m_autosaveTimerID = NULL;
+	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_WIN_2000);
 }
 
 CMainFrame::~CMainFrame()
@@ -188,14 +191,12 @@ void CMainFrame::clearMgaProj()
 void CMainFrame::OnClose()
 {
 	clearGmeOleApp();
-	CFrameWnd::OnClose();
+	CMDIFrameWndEx::OnClose();
 }
 
-int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int CMainFrame::CreateToolBars()
 {
-	if (CMDIFrameWnd::OnCreate(lpCreateStruct) == -1)
-		return -1;
-
+	
 	// 3 separate TOOLBARs are created
 	//#define AFX_IDW_CONTROLBAR_FIRST        0xE800 = 59392
 	//#define AFX_IDW_CONTROLBAR_LAST         0xE8FF
@@ -229,7 +230,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // fail to create
 	}
 
-	m_wndToolBarMain.SetBarStyle(m_wndToolBarMain.GetBarStyle()
+	m_wndToolBarMain.SetPaneStyle(m_wndToolBarMain.GetPaneStyle()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 
 
@@ -247,7 +248,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
-	m_wndToolBarWins.SetBarStyle( m_wndToolBarWins.GetBarStyle()
+	m_wndToolBarWins.SetPaneStyle( m_wndToolBarWins.GetPaneStyle()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 	
 	// -- User-defined Component ToolBar
@@ -263,9 +264,61 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create component toolbar\n");
 		return -1;      // fail to create
 	}
-	m_wndComponentBar.SetBarStyle(m_wndComponentBar.GetBarStyle()
+	m_wndComponentBar.SetPaneStyle(m_wndComponentBar.GetPaneStyle()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 	m_wndComponentBar.SetBorders( 5, 0, 5, 0);
+
+
+	// --- Docking ---
+	// Toolbars are dockable to any side of the frame
+	m_wndToolBarMain.SetWindowText(_T("Standard"));
+	m_wndToolBarMain.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndToolBarWins.SetWindowText(_T("Windows"));
+	m_wndToolBarWins.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndComponentBar.SetWindowText(_T("Components"));
+	m_wndComponentBar.EnableDocking(CBRS_ALIGN_ANY);
+
+	DockPane(&m_wndToolBarMain,AFX_IDW_DOCKBAR_TOP);
+
+	// place next to the main toolbar
+	DockPane(&m_wndToolBarWins, AFX_IDW_DOCKBAR_TOP);
+
+	// place next to the wins toolbar
+	DockPane(&m_wndComponentBar, AFX_IDW_DOCKBAR_TOP);
+
+
+	return 0;
+}
+
+
+int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CMDIFrameWndEx::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// Creating tabs for the MDI Children (documents)
+	CMDITabInfo mdiTabParams;
+	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_VS2005; // other styles available...
+	mdiTabParams.m_bActiveTabCloseButton = TRUE;      // set to FALSE to place close button at right of tab area
+	mdiTabParams.m_bTabIcons = FALSE;    // set to TRUE to enable document icons on MDI taba
+	mdiTabParams.m_bAutoColor = TRUE;    // set to FALSE to disable auto-coloring of MDI tabs
+	mdiTabParams.m_bDocumentMenu = TRUE; // enable the document menu at the right edge of the tab area
+	EnableMDITabbedGroups(TRUE, mdiTabParams);
+
+
+	// Set the visual manager and style based on persisted value
+	OnApplicationLook(theApp.m_nAppLook);
+
+
+	// Enable enhanced windows management dialog
+//	@@@ EnableWindowsDialog(ID_WINDOW_MANAGER, _T("Model windows..."), TRUE);
+
+	EnableDocking(CBRS_ALIGN_ANY);
+	EnableAutoHidePanes(CBRS_ALIGN_ANY);
+
+	// enable Visual Studio 2005 style docking window behavior
+	CDockingManager::SetDockingMode(DT_SMART);
+
 
 	// STATUS BAR
 	if (!m_wndStatusBar.Create(this) ||
@@ -276,76 +329,71 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // fail to create
 	}
 
+	// TOOLBARS
+	if(CreateToolBars())
+	{
+		return -1;
+	}
 
 
 	// PART BROWSER
-	if (!m_partBrowser.Create(_T("Part Browser"), this, CSize(80, 80),
-		TRUE, ID_PARTBROWSER))
+	if (!m_partBrowser.Create(_T("Part Browser"), this, CSize(240,480),
+		TRUE, ID_PARTBROWSER, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT| CBRS_FLOAT_MULTI))
 	{
 			TRACE0("Failed to create part browser\n");
 			return -1;	// fail to create
 	}
-	m_partBrowser.SetBarStyle(m_partBrowser.GetBarStyle() |
-		CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-
 	m_partBrowser.EnableDocking(CBRS_ALIGN_ANY);
 
 
 	// terge 
 	// PANNING WINDOW
-	if (!m_panningWindow.Create(_T("Panning Window"), this, CSize(80, 80),
-		TRUE, ID_PANNWIN))
+	if (!m_panningWindow.Create(_T("Panning Window"), this, CSize(240, 160),
+		TRUE, ID_PANNWIN, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("Failed to create panning Window\n");
 		return -1;      // fail to create
 	}
-	m_panningWindow.SetBarStyle(m_panningWindow.GetBarStyle() |
-		CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-
+	
 	m_panningWindow.EnableDocking(CBRS_ALIGN_ANY);
 
 
-	// GME ACTIVE BROWSER
-	if (!m_browser.Create(_T("GME Browser"), this, CSize(80, 80),
-        	TRUE, ID_GMEBROWSER))
+	// GME ACTIVE BROWSER TREE
+	if (!m_browser.Create(_T("GME Browser"), this, CSize(240, 80),
+        	TRUE, ID_GMEBROWSER, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("Failed to create browser\n");
 		return -1;      // fail to create
 	}
-	m_browser.SetBarStyle(m_browser.GetBarStyle() |
-        CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-
+	
 	m_browser.EnableDocking(CBRS_ALIGN_ANY);
-
-
+	
 
 	// OBJECT INSPECTOR
-	if(!m_objectInspector.Create(_T("Object Inspector"), this, CSize(80, 80),
-		TRUE,IDD_OBJECT_INSPECTOR_DIALOG))
+	if(!m_objectInspector.Create(_T("Object Inspector"), this, CSize(240, 160),
+		TRUE,IDD_OBJECT_INSPECTOR_DIALOG, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
 	{
         TRACE0("Failed to create Object Inspector\n");
         return -1;      // fail to create
 	}
-	m_objectInspector.SetBarStyle(m_objectInspector.GetBarStyle() |
-        CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-
+	
 	m_objectInspector.EnableDocking(CBRS_ALIGN_ANY);
 
+
+
 	// CONSOLE
-	if(!m_console.Create(_T("Console"), this, CSize(80, 80),
-		TRUE,IDD_CONSOLE_DIALOG))
+	if(!m_console.Create(_T("Console"), this, CSize(80, 160),
+		TRUE,IDD_CONSOLE_DIALOG, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
 	{
         TRACE0("Failed to create Console\n");
         return -1;      // fail to create
 	}
-	m_console.SetBarStyle(m_console.GetBarStyle() |
-        CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 
 	m_console.EnableDocking(CBRS_ALIGN_ANY);
 
 
 
-	// SEARCH
+	// SEARCH - Modal Dialog
 	if(!m_search.Create(MAKEINTRESOURCE(CGMESearch::IDD), this))
 	{
         TRACE0("Failed to create Search Control\n");
@@ -353,64 +401,19 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 
-	EnableDocking(CBRS_ALIGN_ANY);
-	//m_pFloatingFrameClass = RUNTIME_CLASS(CSCBMiniDockFrameWnd);
-	// by commenting out the line above we rely on the standard MFC class
-	// CMiniDockFrameWnd which allows us to undock/float/redock toolbars
-	// again and again without having to deal with this process
+	// --- Docking ---
 
-	// Toolbars are dockable to any side of the frame
-	m_wndToolBarMain.SetWindowText(_T("Standard"));
-	m_wndToolBarMain.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndToolBarWins.SetWindowText(_T("Windows"));
-	m_wndToolBarWins.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndComponentBar.SetWindowText(_T("Components"));
-	m_wndComponentBar.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_browser, AFX_IDW_DOCKBAR_RIGHT);
+	
+	DockPane(&m_partBrowser, AFX_IDW_DOCKBAR_LEFT);
 
-	DockControlBar(&m_wndToolBarMain,AFX_IDW_DOCKBAR_TOP);
+	m_panningWindow.DockToWindow(&m_partBrowser, CBRS_ALIGN_BOTTOM);
+	
+	
+	m_objectInspector.DockToWindow(&m_browser,CBRS_ALIGN_BOTTOM);
 
-	CRect rd;
-	RecalcLayout(TRUE);
-	m_wndToolBarMain.GetWindowRect(rd);
-	rd.OffsetRect(rd.Width(), 0);
+	DockPane(&m_console,AFX_IDW_DOCKBAR_BOTTOM);
 
-	// place next to the main toolbar
-	DockControlBar(&m_wndToolBarWins, AFX_IDW_DOCKBAR_TOP, rd);
-
-	RecalcLayout(TRUE);
-	m_wndToolBarWins.GetWindowRect(rd);
-	rd.OffsetRect(rd.Width(), 0);
-
-	// place next to the wins toolbar
-	DockControlBar(&m_wndComponentBar, AFX_IDW_DOCKBAR_TOP, rd);
-
-	DockControlBar(&m_browser, AFX_IDW_DOCKBAR_RIGHT);
-
-	// terge 
-	DockControlBar(&m_partBrowser, AFX_IDW_DOCKBAR_BOTTOM);
-	RecalcLayout(TRUE);
-	CRect rc;
-	m_partBrowser.GetWindowRect(rc);
-	rc.OffsetRect(rc.Width(), 0);
-	DockControlBar(&m_panningWindow, AFX_IDW_DOCKBAR_BOTTOM, rc);
-	RecalcLayout(TRUE);
-	m_panningWindow.GetWindowRect(rc);
-	rc.OffsetRect(rc.Width(), 0);
-	DockControlBar(&m_objectInspector,AFX_IDW_DOCKBAR_BOTTOM,rc);
-
-	RecalcLayout(TRUE);
-	m_objectInspector.GetWindowRect(rc);
-	rc.OffsetRect(0, rc.Height());
-	DockControlBar(&m_console,AFX_IDW_DOCKBAR_BOTTOM,rc);
-
-
-	// RecalcLayout(TRUE);
-	CString sProfile = _T("GMEDockingState");
-	if (VerifyBarState(sProfile))
-	{
-		CSizingControlBar::GlobalLoadState(sProfile);
-		LoadBarState(sProfile);
-	}
 
 
 	// CG: The following block was inserted by 'Status Bar' component.
@@ -441,7 +444,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
-	if( !CMDIFrameWnd::PreCreateWindow(cs) )
+	if( !CMDIFrameWndEx::PreCreateWindow(cs) )
 		return FALSE;
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
@@ -455,12 +458,12 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 #ifdef _DEBUG
 void CMainFrame::AssertValid() const
 {
-	CMDIFrameWnd::AssertValid();
+	CMDIFrameWndEx::AssertValid();
 }
 
 void CMainFrame::Dump(CDumpContext& dc) const
 {
-	CMDIFrameWnd::Dump(dc);
+	CMDIFrameWndEx::Dump(dc);
 }
 
 #endif //_DEBUG
@@ -634,12 +637,12 @@ BOOL CMainFrame::InitStatusBar(UINT *pIndicators, int nSize, int nSeconds)
 
 void CMainFrame::OnViewPartbrowser() 
 {
-	ShowControlBar(&m_partBrowser, !m_partBrowser.IsVisible(), FALSE);
+	ShowPane(&m_partBrowser, !m_partBrowser.IsVisible(), FALSE, FALSE);
 }
 
 void CMainFrame::OnViewPannWin() 
 {
-	ShowControlBar(&m_panningWindow, !m_panningWindow.IsVisible(), FALSE);
+	ShowPane(&m_panningWindow, !m_panningWindow.IsVisible(), FALSE, FALSE);
 	CMDIChildWnd* fwin = MDIGetActive(NULL);
 	if (!fwin)
 		return;
@@ -664,7 +667,7 @@ void CMainFrame::OnUpdateViewPannWin(CCmdUI* pCmdUI)
 
 void CMainFrame::OnViewBrowser() 
 {
-	ShowControlBar(&m_browser, !m_browser.IsVisible(), FALSE);
+	ShowPane(&m_browser, !m_browser.IsVisible(), FALSE, TRUE);
 }
 
 void CMainFrame::OnUpdateViewBrowser(CCmdUI* pCmdUI) 
@@ -675,7 +678,7 @@ void CMainFrame::OnUpdateViewBrowser(CCmdUI* pCmdUI)
 
 void CMainFrame::OnViewAttributes() 
 {
-	ShowControlBar(&m_objectInspector, !m_objectInspector.IsVisible(), FALSE);
+	ShowPane(&m_objectInspector, !m_objectInspector.IsVisible(), FALSE, FALSE);
 }
 
 void CMainFrame::OnUpdateViewAttributes(CCmdUI* pCmdUI) 
@@ -687,7 +690,7 @@ void CMainFrame::OnUpdateViewAttributes(CCmdUI* pCmdUI)
 
 void CMainFrame::OnViewConsole() 
 {
-	ShowControlBar(&m_console, !m_console.IsVisible(), FALSE);
+	ShowPane(&m_console, !m_console.IsVisible(), FALSE, FALSE);
 }
 
 void CMainFrame::OnUpdateViewConsole(CCmdUI* pCmdUI) 
@@ -823,17 +826,13 @@ void CMainFrame::OnDeleteDCForPanningVindowCtrl(CDC* bCDC)
 }
 
 BOOL CMainFrame::DestroyWindow() 
-{
-	CString sProfile = _T("GMEDockingState");
-	CSizingControlBar::GlobalSaveState(sProfile);
-	SaveBarState(sProfile);
-
-	return CMDIFrameWnd::DestroyWindow();
+{	
+	return CMDIFrameWndEx::DestroyWindow();
 }
 
 void CMainFrame::ShowObjectInspector()
 {
-    ShowControlBar(&m_objectInspector, TRUE, FALSE);
+    ShowPane(&m_objectInspector, TRUE, FALSE, TRUE);
 }
 
 void CMainFrame::ShowFindDlg()
@@ -853,7 +852,7 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 		theApp.Autosave();
 	}
 	
-	CMDIFrameWnd::OnTimer(nIDEvent);
+	CMDIFrameWndEx::OnTimer(nIDEvent);
 }
 
 
@@ -877,7 +876,7 @@ void CMainFrame::StopAutosaveTimer()
 
 void CMainFrame::OnDestroy() 
 {
-	CMDIFrameWnd::OnDestroy();
+	CMDIFrameWndEx::OnDestroy();
 	
 	StopAutosaveTimer();
 }
@@ -1201,7 +1200,7 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 	if (pMsg->message == WM_RBUTTONDOWN)
 	{
 		CWnd* pWnd = CWnd::FromHandlePermanent(pMsg->hwnd);
-		CToolBar* pBar = DYNAMIC_DOWNCAST(CToolBar, pWnd);
+		CMFCToolBar* pBar = DYNAMIC_DOWNCAST(CMFCToolBar, pWnd);
 
 		if (pBar != NULL)
 		 {
@@ -1223,7 +1222,7 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 			}
 		}
 	}
-	return CMDIFrameWnd::PreTranslateMessage(pMsg);
+	return CMDIFrameWndEx::PreTranslateMessage(pMsg);
 }
 
 
@@ -1247,4 +1246,70 @@ void CMainFrame::OnBtnHome()
 void CMainFrame::OnUpdateBtnHome(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable( theApp.isHistoryEnabled() && CGMEDoc::theInstance && CGMEDoc::theInstance->m_historian.isEnabledHome());
+}
+
+void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)
+{
+	pCmdUI->SetRadio(theApp.m_nAppLook == pCmdUI->m_nID);
+}
+
+
+void CMainFrame::OnApplicationLook(UINT id)
+{
+	CWaitCursor wait;
+
+	theApp.m_nAppLook = id;
+
+	switch (theApp.m_nAppLook)
+	{
+	case ID_VIEW_APPLOOK_WIN_2000:
+		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManager));
+		break;
+
+	case ID_VIEW_APPLOOK_OFF_XP:
+		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOfficeXP));
+		break;
+
+	case ID_VIEW_APPLOOK_WIN_XP:
+		CMFCVisualManagerWindows::m_b3DTabsXPTheme = TRUE;
+		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
+		break;
+
+	case ID_VIEW_APPLOOK_OFF_2003:
+		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2003));
+		CDockingManager::SetDockingMode(DT_SMART);
+		break;
+
+	case ID_VIEW_APPLOOK_VS_2005:
+		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerVS2005));
+		CDockingManager::SetDockingMode(DT_SMART);
+		break;
+
+	default:
+		switch (theApp.m_nAppLook)
+		{
+		case ID_VIEW_APPLOOK_OFF_2007_BLUE:
+			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_LunaBlue);
+			break;
+
+		case ID_VIEW_APPLOOK_OFF_2007_BLACK:
+			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_ObsidianBlack);
+			break;
+
+		case ID_VIEW_APPLOOK_OFF_2007_SILVER:
+			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Silver);
+			break;
+
+		case ID_VIEW_APPLOOK_OFF_2007_AQUA:
+			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Aqua);
+			break;
+		}
+
+		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
+		CDockingManager::SetDockingMode(DT_SMART);
+	}
+
+	RedrawWindow(NULL, NULL, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
+
+	theApp.WriteInt(_T("ApplicationLook"), theApp.m_nAppLook);
 }

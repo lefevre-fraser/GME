@@ -32,7 +32,7 @@ CGMEPartBrowser::CGMEPartBrowser():
 }
 
 
-BEGIN_MESSAGE_MAP(CGMEPartBrowser, CSizingControlBar)
+BEGIN_MESSAGE_MAP(CGMEPartBrowser, CDockablePane)
 	//{{AFX_MSG_MAP(CGMEPartBrowser)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
@@ -41,7 +41,7 @@ BEGIN_MESSAGE_MAP(CGMEPartBrowser, CSizingControlBar)
 END_MESSAGE_MAP()
 
 
-BEGIN_EVENTSINK_MAP(CGMEPartBrowser, CSizingControlBar)
+BEGIN_EVENTSINK_MAP(CGMEPartBrowser, CDockablePane)
 	//{{AFX_EVENTSINK_MAP(CGMEPartBrowser)
 	ON_EVENT(CGMEPartBrowser, IDC_PARTBROWSERCTRL1, 1 /* AspectChanged */, OnAspectChangedGmePartBrowserCtrl, VTS_I4)
 	//}}AFX_EVENTSINK_MAP
@@ -52,7 +52,7 @@ END_EVENTSINK_MAP()
 
 int CGMEPartBrowser::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	if (CSizingControlBar::OnCreate(lpCreateStruct) == -1)
+	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
 	if (!m_PartBrowserWrapper.Create("PartBrowser", WS_CHILD | WS_VISIBLE, CRect(0, 0, 300, 150), this, IDC_PARTBROWSERCTRL1))
@@ -64,17 +64,13 @@ int CGMEPartBrowser::OnCreate(LPCREATESTRUCT lpCreateStruct)
 			return -1;
 	m_PartBrowserWrapper.SetFont(&m_font);
 
-	m_szFloat = CSize(500,165); 
-	m_szHorz = CSize(100,165);
-	m_szVert = CSize(120,400);
-
 	return 0;
 }
 
 
 void CGMEPartBrowser::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 {
-	CSizingControlBar::OnUpdateCmdUI(pTarget, bDisableIfNoHndler);
+	CDockablePane::OnUpdateCmdUI(pTarget, bDisableIfNoHndler);
 
 	UpdateDialogControls(pTarget, bDisableIfNoHndler);
 }
@@ -82,7 +78,7 @@ void CGMEPartBrowser::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 
 void CGMEPartBrowser::OnSize(UINT nType, int cx, int cy)
 {
-	CSizingControlBar::OnSize(nType, cx, cy);
+	CDockablePane::OnSize(nType, cx, cy);
 
 	CRect rc;
 	GetClientRect(rc);
@@ -132,7 +128,7 @@ BOOL CGMEPartBrowser::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
-	return CSizingControlBar::PreTranslateMessage(pMsg);
+	return CDockablePane::PreTranslateMessage(pMsg);
 }
 
 
@@ -177,7 +173,7 @@ void CGMEPartBrowser::CycleAspect()
 void CGMEPartBrowser::RePaint(void)
 {
 	m_PartBrowserWrapper.RePaint();
-	CSizingControlBar::PostMessage(WM_PAINT);
+	CDockablePane::PostMessage(WM_PAINT); // @@@ Tihamer: SHOULD NOT BE INVALIDATE HERE?
 }
 
 

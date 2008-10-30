@@ -18,7 +18,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CGMEPanningWindow window
 
-class CGMEPanningWindow : public CSizingControlBar
+class CGMEPanningWindow : public CDockablePane
 {
 // Construction
 public:

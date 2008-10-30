@@ -11,7 +11,7 @@
 
 #include "ModelPropertiesDlgBar.h"
 
-class CChildFrame : public CMDIChildWnd
+class CChildFrame : public CMDIChildWndEx
 {
 	DECLARE_DYNCREATE(CChildFrame)
 public:

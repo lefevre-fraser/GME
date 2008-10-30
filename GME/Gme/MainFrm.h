@@ -16,18 +16,19 @@
 #include "GMESearch.h"
 #include "GMEPanningWindow.h"
 #include "GMEOLEApp.h"
+
 // #include "..\include\stl\string"
 //#include <string>
 
 
 // Tooltip helper for components
-class CComponentBar : public CToolBar {
+class CComponentBar : public CMFCToolBar {
 	DECLARE_DYNCREATE(CComponentBar)
 	afx_msg BOOL OnTT(UINT, NMHDR * pNMHDR, LRESULT * );
 	DECLARE_MESSAGE_MAP()
 };
 
-class CMainFrame : public CMDIFrameWnd
+class CMainFrame : public CMDIFrameWndEx
 {
 	friend void CGMEApp::UpdateComponentLists(bool restart_addons);
 	friend class CGMEOLEApp;
@@ -100,9 +101,9 @@ public:
 
 
 protected:  // control bar embedded members
-	CStatusBar			m_wndStatusBar;
-	CToolBar			m_wndToolBarMain;
-	CToolBar			m_wndToolBarWins;
+	CMFCStatusBar			m_wndStatusBar;
+	CMFCToolBar			m_wndToolBarMain;
+	CMFCToolBar			m_wndToolBarWins;
 	CComponentBar		m_wndComponentBar;
 	CDialogBar			m_wndDlgBar;
 	CGMEPartBrowser		m_partBrowser;
@@ -141,6 +142,7 @@ protected:
 	afx_msg void OnUpdateViewClearConsole( CCmdUI* pCmdUI);
 	afx_msg void CMainFrame::OnClose();
 	afx_msg void OnDropFiles(HDROP);
+	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 
 	afx_msg void OnBtnBack();
 	afx_msg void OnBtnHome();
@@ -150,6 +152,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
 	BOOL InitStatusBar(UINT *pIndicators, int nSize, int nSeconds);
+	int CreateToolBars();
+	void OnApplicationLook(UINT id);
 //	IMgaObject*	modelFindByPath(IMgaModel *model,  const wstring& strPath);
 //	IMgaObject*	folderFindByPath(IMgaFolder* folder, const wstring& strPath);
 

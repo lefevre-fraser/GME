@@ -593,7 +593,7 @@ LPDISPATCH CGMEOLEApp::GetPanels()
 	// PRECONDITIONS: None
 
 	CGMEOLEColl* coll = new CGMEOLEColl();
-
+/*@@@
 	CGMEOLEPanel* panel = new CGMEOLEPanel();
 	panel->SetParams( &CMainFrame::theInstance->m_browser, _T("Browser"));
 	coll->Add(panel->GetIDispatch(FALSE));
@@ -639,7 +639,7 @@ LPDISPATCH CGMEOLEApp::GetPanels()
 	panel->SetParams( &CMainFrame::theInstance->m_wndComponentBar, _T("Component Toolbar"));
 	coll->Add(panel->GetIDispatch(FALSE));	
 	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
-
+@@@@*/
 	return coll->GetIDispatch(FALSE);
 }
 

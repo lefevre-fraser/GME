@@ -27,8 +27,8 @@ protected: // create from serialization only
 public:
 	static CGMEDoc *theInstance;
 	bool     m_isClosing;
-	CToolBar modeBar;
-	CToolBar naviBar;
+	CMFCToolBar modeBar;
+	CMFCToolBar naviBar;
 	GMEModeCode editMode;
 
 	CComPtr<IMgaModel> nextToView;

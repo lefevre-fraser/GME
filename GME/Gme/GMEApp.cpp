@@ -297,8 +297,11 @@ BOOL CGMEApp::InitInstance()
 
 	// create main MDI Frame window
 	CMainFrame* pMainFrame = new CMainFrame;
-	if (!pMainFrame->LoadFrame(IDR_MAINFRAME))
+	if (!pMainFrame || !pMainFrame->LoadFrame(IDR_MAINFRAME))
+	{
+		delete pMainFrame;
 		return FALSE;
+	}
 	m_pMainWnd = pMainFrame;
 
 #if !defined(ADDCRASHTESTMENU) && defined(_DEBUG)
@@ -716,7 +719,7 @@ void CGMEApp::FindConstraintManager() {
 
 
 void CGMEApp::UpdateComponentLists(bool restart_addons) {
-		ClearDisabledComps();	
+		/*ClearDisabledComps();	
 		plugins .RemoveAll();
         pluginTooltips.RemoveAll();
 		interpreters.RemoveAll();
@@ -852,7 +855,7 @@ void CGMEApp::UpdateComponentLists(bool restart_addons) {
 													LR_DEFAULTCOLOR);
 // TODO:					FreeResource(hg);
 				 }
-*/
+*//*
 				}
 			}
 			else {				  //    simple filename
@@ -875,6 +878,8 @@ void CGMEApp::UpdateComponentLists(bool restart_addons) {
 			cb.ShowWindow(SW_SHOW);
 		
 		imlist.Detach();
+
+		@@@@*/
 }
 
 void CGMEApp::UpdateDynMenus(CMenu *filemenu)   {

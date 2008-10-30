@@ -121,7 +121,7 @@ void CGMEBrowser::FocusItem(BSTR Id)
 	m_GMEActiveBrowser.FocusItem(Id);
 }
 
-BEGIN_MESSAGE_MAP(CGMEBrowser, CSizingControlBar)
+BEGIN_MESSAGE_MAP(CGMEBrowser, CDockablePane)
 	//{{AFX_MSG_MAP(CGMEBrowser)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
@@ -133,23 +133,23 @@ END_MESSAGE_MAP()
 
 int CGMEBrowser::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
-	if (CSizingControlBar::OnCreate(lpCreateStruct) == -1)
+	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
 	if(!m_GMEActiveBrowser.Create("ttt",WS_CHILD | WS_VISIBLE,CRect(0,0,100,100),this,IDC_GME_ACTIVE_BROWSER_CTRL))
 		return -1;
 
-	m_szMin = CSize(200,200);
+/*	m_szMin = CSize(200,200);
     m_szFloat = CSize(350,600); 
 	m_szHorz = CSize(300,200);
     m_szVert = CSize(250,300);
-	
+*/	
 	return 0;
 }
 
 void CGMEBrowser::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 {
-	CSizingControlBar::OnUpdateCmdUI(pTarget, bDisableIfNoHndler);
+	CDockablePane::OnUpdateCmdUI(pTarget, bDisableIfNoHndler);
 
 	UpdateDialogControls(pTarget, bDisableIfNoHndler);
 }
@@ -157,14 +157,14 @@ void CGMEBrowser::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 
 void CGMEBrowser::OnSize(UINT nType, int cx, int cy) 
 {
-	CSizingControlBar::OnSize(nType, cx, cy);
+	CDockablePane::OnSize(nType, cx, cy);
 	
 	CRect rc;
 	GetClientRect(rc);	
 	m_GMEActiveBrowser.MoveWindow(rc);
 }
 
-BEGIN_EVENTSINK_MAP(CGMEBrowser, CSizingControlBar)
+BEGIN_EVENTSINK_MAP(CGMEBrowser, CDockablePane)
     //{{AFX_EVENTSINK_MAP(CGMEBrowser)
 	ON_EVENT(CGMEBrowser, IDC_GME_ACTIVE_BROWSER_CTRL, 1 /* DblClickMgaObject */, OnDblClickMgaObjectGmeActiveBrowserCtrl, VTS_UNKNOWN)
 	ON_EVENT(CGMEBrowser, IDC_GME_ACTIVE_BROWSER_CTRL, 2 /* ShowAttributes */, OnShowAttributesGmeActiveBrowserCtrl, VTS_UNKNOWN)

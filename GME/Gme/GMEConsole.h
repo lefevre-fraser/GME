@@ -13,7 +13,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CGMEConsole dialog
 
-class CGMEConsole : public CSizingControlBar
+class CGMEConsole : public CDockablePane
 {
 // Construction
 public:

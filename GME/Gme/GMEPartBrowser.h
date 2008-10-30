@@ -19,7 +19,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CGMEPartBrowser window
 
-class CGMEPartBrowser : public CSizingControlBar
+class CGMEPartBrowser : public CDockablePane
 {
 // Construction
 public:

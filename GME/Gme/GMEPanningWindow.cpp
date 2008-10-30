@@ -27,7 +27,7 @@ CGMEPanningWindow::CGMEPanningWindow()
 }
 
 
-BEGIN_MESSAGE_MAP(CGMEPanningWindow, CSizingControlBar)
+BEGIN_MESSAGE_MAP(CGMEPanningWindow, CDockablePane)
 	//{{AFX_MSG_MAP(CGMEPanningWindow)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
@@ -36,7 +36,7 @@ BEGIN_MESSAGE_MAP(CGMEPanningWindow, CSizingControlBar)
 END_MESSAGE_MAP()
 
 
-BEGIN_EVENTSINK_MAP(CGMEPanningWindow, CSizingControlBar)
+BEGIN_EVENTSINK_MAP(CGMEPanningWindow, CDockablePane)
 	//{{AFX_EVENTSINK_MAP(CGMEPanningWindow)
 	ON_EVENT(CGMEPanningWindow, IDC_PANNINGWINDOWCTRL1, 1 /* DeleteDeviceContext */, OnDeleteDeviceContextGmePanningVindowCtrl, VTS_UI8)
 	//}}AFX_EVENTSINK_MAP
@@ -48,24 +48,24 @@ END_EVENTSINK_MAP()
 int CGMEPanningWindow::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
 	lpCreateStruct->cx = lpCreateStruct->cy = 150;
-	if (CSizingControlBar::OnCreate(lpCreateStruct) == -1)
+	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
 	if (!m_PanningWindowWrapper.Create("PanningWindow", WS_CHILD | WS_VISIBLE, CRect(0, 0, 150, 150), this, IDC_PANNINGWINDOWCTRL1))
 		return -1;
-
+/* @@@@
 	m_szMin = CSize(120,120);
     m_szFloat = CSize(250,250); 
 	m_szHorz = CSize(170,170);
     m_szVert = CSize(170,170);
-
+*/
 	return 0;
 }
 
 
 void CGMEPanningWindow::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 {
-	CSizingControlBar::OnUpdateCmdUI(pTarget, bDisableIfNoHndler);
+	CDockablePane::OnUpdateCmdUI(pTarget, bDisableIfNoHndler);
 
 	UpdateDialogControls(pTarget, bDisableIfNoHndler);
 }
@@ -74,7 +74,7 @@ void CGMEPanningWindow::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndle
 void CGMEPanningWindow::OnSize(UINT nType, int cx, int cy)
 {
 	cx = cy = 100;
-	CSizingControlBar::OnSize(nType, cx, cy);
+	CDockablePane::OnSize(nType, cx, cy);
 
 	CRect rc;
 	GetClientRect(rc);
@@ -124,7 +124,7 @@ BOOL CGMEPanningWindow::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 
-	return CSizingControlBar::PreTranslateMessage(pMsg);
+	return CDockablePane::PreTranslateMessage(pMsg);
 }
 
 
