@@ -57,6 +57,10 @@ extern CComModule _Module;
 #include "CommonMfc.h"
 #include "CommonMgaTrukk.h"
 
+#pragma comment(linker,"/manifestdependency:\"type='win32'  name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
+
+
 #define WM_USER_ZOOM			(WM_USER+111)
 #define WM_PANN_SCROLL			(WM_USER+112)
 #define WM_USER_PANNREFRESH		(WM_USER+113)
