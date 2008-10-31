@@ -37,18 +37,10 @@ CPartBrowserPane::CPartBrowserPane():
 	txtMetricFont.CreateFont(fontSizes[GME_NAME_FONT], 0, 0, 0, true, 0, 0, 0, ANSI_CHARSET,
 							 OUT_DEVICE_PRECIS, CLIP_DEFAULT_PRECIS,
 							 PROOF_QUALITY, FF_SWISS, "Arial");
-
-	try {
-		COMTHROW(dummyDecorator.CoCreateInstance(PutInBstr(GME_DEFAULT_DECORATOR)));
-	}
-	catch (hresult_exception&) {
-	}
 }
 
 CPartBrowserPane::~CPartBrowserPane()
 {
-	dummyDecorator->Destroy();
-	dummyDecorator.Release();
 	txtMetricFont.DeleteObject();
 }
 

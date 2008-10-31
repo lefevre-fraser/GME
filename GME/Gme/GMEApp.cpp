@@ -464,11 +464,16 @@ BOOL CGMEApp::EmergencySave(EmergencySaveMode saveMode)
 
 int CGMEApp::Run()
 {
-	Gdiplus::GdiplusStartupInput  gdiplusStartupInput; // needed for GDI+
+	Gdiplus::GdiplusStartupInput  gdiplusStartupInput;
+	Gdiplus::GdiplusStartupOutput  gdiplusStartupOutput;
 	ULONG_PTR gdiplusToken;
+	ULONG_PTR gdiplusHookToken;
 
 	// Tihamer: Initializing GDI+
-	VERIFY(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL)==Gdiplus::Ok);
+	// See "Special CWinApp Services" MSDN topic http://msdn.microsoft.com/en-us/library/001tckck.aspx
+	gdiplusStartupInput.SuppressBackgroundThread = TRUE;
+	VERIFY(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, &gdiplusStartupOutput) == Gdiplus::Ok);
+	gdiplusStartupOutput.NotificationHook(&gdiplusHookToken);
 
 	if(bNoProtect) {
 		return CWinApp::Run();
@@ -494,6 +499,7 @@ int CGMEApp::Run()
 		}
 	}
 	// Closing GDI+
+	gdiplusStartupOutput.NotificationUnhook(gdiplusHookToken);
 	Gdiplus::GdiplusShutdown(gdiplusToken);
 }
 

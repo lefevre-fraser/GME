@@ -46,10 +46,6 @@ protected:
 	CSize					maxSize;
 	bool					omitPaintMessages;
 	CFont					txtMetricFont;
-	// To avoid GdiplusShutdown by BoxDecorator (see Mga BoxDecorator constructor/destructor),
-	// beause this frees up all memory behind m_mapBitmaps cache (see BitmapUtils.cpp,hpp -> crash
-	// TODO: maybe cache flush should be done in BoxDecorator Destructor with the GdiplusShutdown
-	CComPtr<IMgaDecorator>	dummyDecorator;
 
 public:
 // Operations
