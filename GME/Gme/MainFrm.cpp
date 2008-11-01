@@ -234,6 +234,13 @@ int CMainFrame::CreateToolBars()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 
 
+	m_wndToolBarMain.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
+	
+	// Enable toolbar and docking window menu replacement
+	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."), ID_VIEW_TOOLBAR);
+
+
+
 	// -- Window Arrangement ToolBar
 	if( !m_wndToolBarWins.CreateEx( this
 		, TBSTYLE_FLAT
@@ -250,6 +257,8 @@ int CMainFrame::CreateToolBars()
 
 	m_wndToolBarWins.SetPaneStyle( m_wndToolBarWins.GetPaneStyle()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
+	
+	m_wndToolBarWins.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
 	
 	// -- User-defined Component ToolBar
 	if( !m_wndComponentBar.CreateEx(this
@@ -269,6 +278,8 @@ int CMainFrame::CreateToolBars()
 	m_wndComponentBar.SetBorders( 5, 0, 5, 0);
 
 
+	m_wndComponentBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
+
 	// --- Docking ---
 	// Toolbars are dockable to any side of the frame
 	m_wndToolBarMain.SetWindowText(_T("Standard"));
@@ -278,13 +289,13 @@ int CMainFrame::CreateToolBars()
 	m_wndComponentBar.SetWindowText(_T("Components"));
 	m_wndComponentBar.EnableDocking(CBRS_ALIGN_ANY);
 
-	DockPane(&m_wndToolBarMain,AFX_IDW_DOCKBAR_TOP);
+	DockPane(&m_wndToolBarMain/*,AFX_IDW_DOCKBAR_TOP*/);
 
 	// place next to the main toolbar
-	DockPane(&m_wndToolBarWins, AFX_IDW_DOCKBAR_TOP);
+	DockPane(&m_wndToolBarWins/*, AFX_IDW_DOCKBAR_TOP*/);
 
 	// place next to the wins toolbar
-	DockPane(&m_wndComponentBar, AFX_IDW_DOCKBAR_TOP);
+	DockPane(&m_wndComponentBar/*, AFX_IDW_DOCKBAR_TOP*/);
 
 
 	return 0;
@@ -308,16 +319,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// Set the visual manager and style based on persisted value
 	OnApplicationLook(theApp.m_nAppLook);
-
-
-	// Enable enhanced windows management dialog
-//	@@@ EnableWindowsDialog(ID_WINDOW_MANAGER, _T("Model windows..."), TRUE);
-
+	
 	EnableDocking(CBRS_ALIGN_ANY);
-	EnableAutoHidePanes(CBRS_ALIGN_ANY);
 
-	// enable Visual Studio 2005 style docking window behavior
-	CDockingManager::SetDockingMode(DT_SMART);
 
 
 	// STATUS BAR
@@ -329,11 +333,40 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // fail to create
 	}
 
+	
+	// MENU BAR
+	if (!m_wndMenuBar.Create(this))
+	{
+		TRACE0("Failed to create menubar\n");
+		return -1;      // fail to create
+	}
+
+	m_wndMenuBar.SetPaneStyle(m_wndMenuBar.GetPaneStyle() | CBRS_SIZE_DYNAMIC | CBRS_TOOLTIPS | CBRS_FLYBY);
+	m_wndMenuBar.EnableDocking(CBRS_ALIGN_TOP);
+	DockPane(&m_wndMenuBar, AFX_IDW_DOCKBAR_TOP);
+	
+	// prevent the menu bar from taking the focus on activation
+	CMFCPopupMenu::SetForceMenuFocus(FALSE);
+
 	// TOOLBARS
 	if(CreateToolBars())
 	{
 		return -1;
 	}
+
+
+		// Enable enhanced windows management dialog
+//	@@@ EnableWindowsDialog(ID_WINDOW_MANAGER, _T("Model windows..."), TRUE);
+
+	
+
+
+	// enable Visual Studio 2005 style docking window behavior
+	CDockingManager::SetDockingMode(DT_SMART);
+
+	// enable Visual Studio 2005 style docking window auto-hide behavior
+	EnableAutoHidePanes(CBRS_ALIGN_ANY);
+
 
 
 	// PART BROWSER

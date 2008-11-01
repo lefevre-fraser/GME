@@ -228,19 +228,10 @@ BEGIN
 			END
 		END
 
-		POPUP "&Toolbars"
-        BEGIN
-            MENUITEM "&Standard",                   IDW_TOOLBAR_MAIN
-            MENUITEM "&Windows",                    IDW_TOOLBAR_WINS
-            MENUITEM "&Component",                  IDW_TOOLBAR_DUMMY
-            MENUITEM "&Navigator",                  IDW_TOOLBAR_NAVIG
-        END
-        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
-        MENUITEM "&Part Browser",               ID_VIEW_PARTBROWSER
-        MENUITEM "&Browser",                    ID_VIEW_BROWSER
-        MENUITEM "&Attribute Panel",            ID_VIEW_ATTRIBUTES
-        MENUITEM "Pa&nning Window",             ID_VIEW_PANNWIN
-        MENUITEM "&Console",                    ID_VIEW_CONSOLE
+		POPUP "&Toolbars and Docking Windows"
+    	BEGIN
+			MENUITEM "<placeholder>",           ID_VIEW_TOOLBAR
+		END      
         MENUITEM SEPARATOR
         MENUITEM "Cl&ear Console",              ID_VIEW_CLEARCONSOLE
         POPUP "&Multi-User"

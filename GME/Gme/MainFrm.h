@@ -101,9 +101,12 @@ public:
 
 
 protected:  // control bar embedded members
-	CMFCStatusBar			m_wndStatusBar;
+	CMFCStatusBar		m_wndStatusBar;
 	CMFCToolBar			m_wndToolBarMain;
 	CMFCToolBar			m_wndToolBarWins;
+	CMFCMenuBar			m_wndMenuBar;
+
+
 	CComponentBar		m_wndComponentBar;
 	CDialogBar			m_wndDlgBar;
 	CGMEPartBrowser		m_partBrowser;
