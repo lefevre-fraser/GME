@@ -121,7 +121,7 @@ protected:
 	afx_msg void OnUpdateTime(CCmdUI* pCmdUI);
 	//{{AFX_MSG(CMainFrame)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnViewPartbrowser();
+	/* @@@afx_msg void OnViewPartbrowser();
 	afx_msg void OnViewPannWin();
 	afx_msg void OnUpdateViewPannWin(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewPartbrowser(CCmdUI* pCmdUI);
@@ -129,12 +129,14 @@ protected:
 	afx_msg void OnUpdateViewBrowser(CCmdUI* pCmdUI);
 	afx_msg void OnViewAttributes();
 	afx_msg void OnUpdateViewAttributes(CCmdUI* pCmdUI);
+	afx_msg void OnViewConsole();
+	afx_msg void OnUpdateViewConsole(CCmdUI* pCmdUI);
+
+	*/
 	afx_msg void OnEditSearch();
 	afx_msg void OnUpdateEditSearch(CCmdUI* pCmdUI);
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnDestroy();
-	afx_msg void OnViewConsole();
-	afx_msg void OnUpdateViewConsole(CCmdUI* pCmdUI);
 	afx_msg void OnViewMultiUserRefreshSourceControl();
 	afx_msg void OnUpdateViewMultiUserRefreshSourceControl(CCmdUI* pCmdUI);
 	afx_msg void OnViewMultiUserActiveUsers();
@@ -151,6 +153,10 @@ protected:
 	afx_msg void OnBtnHome();
 	afx_msg void OnUpdateBtnBack(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBtnHome(CCmdUI* pCmdUI);
+
+	afx_msg void OnWindowManager();
+	afx_msg void OnViewCustomize();
+
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

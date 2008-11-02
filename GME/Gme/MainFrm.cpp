@@ -46,6 +46,10 @@ afx_msg BOOL CComponentBar::OnTT(UINT, NMHDR * pNMHDR, LRESULT * ) {
 	;
 }
 
+const int  iMaxUserToolbars = 10;
+const UINT uiFirstUserToolBarId = AFX_IDW_CONTROLBAR_FIRST + 40;
+const UINT uiLastUserToolBarId = uiFirstUserToolBarId + iMaxUserToolbars - 1;
+
 
 
 IMPLEMENT_DYNCREATE(CComponentBar, CMFCToolBar)
@@ -66,7 +70,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TIME, OnUpdateTime)
 	//{{AFX_MSG_MAP(CMainFrame)
 	ON_WM_CREATE()
-	ON_COMMAND(ID_VIEW_PARTBROWSER, OnViewPartbrowser)
+	/*@@@ ON_COMMAND(ID_VIEW_PARTBROWSER, OnViewPartbrowser)
 	ON_COMMAND(ID_VIEW_PANNWIN, OnViewPannWin)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PANNWIN, OnUpdateViewPannWin)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PARTBROWSER, OnUpdateViewPartbrowser)
@@ -74,12 +78,14 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_BROWSER, OnUpdateViewBrowser)
 	ON_COMMAND(ID_VIEW_ATTRIBUTES, OnViewAttributes)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ATTRIBUTES, OnUpdateViewAttributes)
+	ON_COMMAND(ID_VIEW_CONSOLE, OnViewConsole)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_CONSOLE, OnUpdateViewConsole)
+	*/
 	ON_COMMAND(ID_EDIT_SEARCH, OnEditSearch)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_SEARCH, OnUpdateEditSearch)
 	ON_WM_TIMER()
 	ON_WM_DESTROY()
-	ON_COMMAND(ID_VIEW_CONSOLE, OnViewConsole)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_CONSOLE, OnUpdateViewConsole)
+	
 	ON_COMMAND(ID_VIEW_REFRESH_SOURCECONTROL, OnViewMultiUserRefreshSourceControl)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_REFRESH_SOURCECONTROL, OnUpdateViewMultiUserRefreshSourceControl)
 	ON_COMMAND(ID_MULTIUSER_ACTIVEUSERS, OnViewMultiUserActiveUsers)
@@ -92,6 +98,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_DROPFILES()
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnUpdateApplicationLook)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnApplicationLook)
+	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
+	ON_COMMAND(ID_VIEW_CUSTOMIZE, &CMainFrame::OnViewCustomize)
 //}}AFX_MSG_MAP
 	// By making the Menu IDs that same as the ToolBar IDs
 	// we can leverage off of code that is already provided
@@ -297,6 +305,9 @@ int CMainFrame::CreateToolBars()
 	// place next to the wins toolbar
 	DockPane(&m_wndComponentBar/*, AFX_IDW_DOCKBAR_TOP*/);
 
+	// Allow user-defined toolbars operations:
+	InitUserToolbars(NULL, uiFirstUserToolBarId, uiLastUserToolBarId);
+
 
 	return 0;
 }
@@ -355,8 +366,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 
-		// Enable enhanced windows management dialog
-//	@@@ EnableWindowsDialog(ID_WINDOW_MANAGER, _T("Model windows..."), TRUE);
+	// Enable enhanced windows management dialog
+	EnableWindowsDialog(ID_WINDOW_MANAGER, _T("Model windows..."), TRUE);
 
 	
 
@@ -668,6 +679,8 @@ BOOL CMainFrame::InitStatusBar(UINT *pIndicators, int nSize, int nSeconds)
 	return m_wndStatusBar.SetIndicators(pIndicators, nSize);
 }
 
+
+/* @@@@
 void CMainFrame::OnViewPartbrowser() 
 {
 	ShowPane(&m_partBrowser, !m_partBrowser.IsVisible(), FALSE, FALSE);
@@ -732,6 +745,8 @@ void CMainFrame::OnUpdateViewConsole(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(m_console.IsVisible());	
 }
 
+
+*/
 void CMainFrame::OnEditSearch() 
 {
 	m_search.ShowWindow(SW_SHOWNORMAL);
@@ -1345,4 +1360,17 @@ void CMainFrame::OnApplicationLook(UINT id)
 	RedrawWindow(NULL, NULL, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
 
 	theApp.WriteInt(_T("ApplicationLook"), theApp.m_nAppLook);
+}
+
+
+void CMainFrame::OnWindowManager()
+{
+	ShowWindowsDialog();
+}
+
+void CMainFrame::OnViewCustomize()
+{
+	CMFCToolBarsCustomizeDialog* pDlgCust = new CMFCToolBarsCustomizeDialog(this, TRUE /* scan menus */);
+	pDlgCust->EnableUserDefinedToolbars();
+	pDlgCust->Create();
 }
