@@ -173,6 +173,11 @@ private:
 //	IMgaObject*	modelFindByPath(IMgaModel *model,  const wstring& strPath);
 //	IMgaObject*	folderFindByPath(IMgaFolder* folder, const wstring& strPath);
 
+public:
+	afx_msg void OnWindowNewhorizontaltabgroup();
+	afx_msg void OnWindowNewverticaltabgroup();
+	afx_msg void OnWindowMovetoprevioustabgroup();
+	afx_msg void OnWindowMovetonexttabgroup();
 };
 
 /////////////////////////////////////////////////////////////////////////////

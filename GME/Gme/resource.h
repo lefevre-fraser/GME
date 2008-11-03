@@ -12,6 +12,7 @@
 #define ID_INDICATOR_PARADIGM           105
 #define ID_INDICATOR_TIME               106
 #define CG_IDD_MODELPROPERTIESBAR       107
+#define IDS_STRING107                   107
 #define CG_ID_VIEW_MODELPROPERTIESBAR   108
 #define ID_PARTBROWSER                  109
 #define ID_GMEBROWSER                   110
@@ -472,6 +473,11 @@
 #define ID_TOOLS_EXTERNAL_TOOLS         33092
 #define ID_FILE_RUNINTERPRETER          33093
 #define ID_TOOLS_RUNPLUG                33094
+#define ID_WINDOW_NEWHORIZONTALTABGROUP 33095
+#define ID_WINDOW_NEWVERTICALTABGROUP   33096
+#define ID_WINDOW_MOVETOPREVIOUSTABGROUP 33097
+#define ID_WINDOW_MOVETONEXTTABGROUP    33098
+#define ID_TOOLS_A                      33099
 #define IDW_TOOLBAR_MAIN                0xE820
 #define IDW_TOOLBAR_WINS                0xE821
 #define IDW_TOOLBAR_DUMMY               0xE822
@@ -484,7 +490,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        224
-#define _APS_NEXT_COMMAND_VALUE         33095
+#define _APS_NEXT_COMMAND_VALUE         33100
 #define _APS_NEXT_CONTROL_VALUE         1128
 #define _APS_NEXT_SYMED_VALUE           119
 #endif

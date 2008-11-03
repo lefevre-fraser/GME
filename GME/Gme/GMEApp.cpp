@@ -267,6 +267,7 @@ BOOL CGMEApp::InitInstance()
 	// Enabling user tools
 	EnableUserTools(ID_TOOLS_EXTERNAL_TOOLS, ID_USER_TOOL1, ID_USER_TOOL10, RUNTIME_CLASS(CUserTool)/*, IDR_MENU_ARGS, IDR_MENU_DIRS*/);
 
+	InitContextMenuManager();
 
 	// Change the registry key under which our settings are stored.
 	// TODO: You should modify this string to be something appropriate

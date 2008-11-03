@@ -347,13 +347,6 @@ BEGIN
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
         MENUITEM "&Full Screen",                ID_VIEW_FULLSCREEN
     END
-    POPUP "&Window"
-    BEGIN
-        MENUITEM "&Cascade",                    ID_WINDOW_CASCADE
-        MENUITEM "Tile &Horizontal",            ID_WINDOW_TILE_HORZ
-        MENUITEM "Tile &Vertical",              ID_WINDOW_TILE_VERT
-        MENUITEM "&Arrange Icons",              ID_WINDOW_ARRANGE
-    END
     POPUP "&Tools"
     BEGIN
         POPUP "&Check Constraints"
@@ -380,6 +373,13 @@ BEGIN
         MENUITEM "<External Tools>",            ID_TOOLS_EXTERNAL_TOOLS
         MENUITEM SEPARATOR
         MENUITEM "&Options...",                 ID_FILE_SETTINGS
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "New &Horizontal Tab Group",   ID_WINDOW_NEWHORIZONTALTABGROUP
+        MENUITEM "New &Vertical Tab Group",     ID_WINDOW_NEWVERTICALTABGROUP
+        MENUITEM "Move to &Previous Tab Group", ID_WINDOW_MOVETOPREVIOUSTABGROUP
+        MENUITEM "Move to &Next Tab Group",     ID_WINDOW_MOVETONEXTTABGROUP
     END
     POPUP "&Help"
     BEGIN
@@ -1364,6 +1364,7 @@ STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "GME"
     IDR_GMETYPE             "\nGME\nGME\n\n\nGME.Project\nGME Project"
+    ID_WINDOW_MANAGER       """Manages the currently open windows\nWindow List"""
 END
 
 STRINGTABLE 

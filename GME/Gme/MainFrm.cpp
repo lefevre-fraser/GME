@@ -121,6 +121,10 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_BUTTON33022, OnBtnHome)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON33020, OnUpdateBtnBack)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON33022, OnUpdateBtnHome)
+	ON_COMMAND(ID_WINDOW_NEWHORIZONTALTABGROUP, &CMainFrame::OnWindowNewhorizontaltabgroup)
+	ON_COMMAND(ID_WINDOW_NEWVERTICALTABGROUP, &CMainFrame::OnWindowNewverticaltabgroup)
+	ON_COMMAND(ID_WINDOW_MOVETOPREVIOUSTABGROUP, &CMainFrame::OnWindowMovetoprevioustabgroup)
+	ON_COMMAND(ID_WINDOW_MOVETONEXTTABGROUP, &CMainFrame::OnWindowMovetonexttabgroup)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -1390,25 +1394,7 @@ void CMainFrame::OnViewFullScreen()
 	ShowFullScreen();
 }
 
-void CMainFrame::OnMdiMoveToNextGroup()
-{
-	MDITabMoveToNextGroup();
-}
 
-void CMainFrame::OnMdiMoveToPrevGroup()
-{
-	MDITabMoveToNextGroup(FALSE);
-}
-
-void CMainFrame::OnMdiNewHorzTabGroup()
-{
-	MDITabNewGroup(FALSE);
-}
-
-void CMainFrame::OnMdiNewVertGroup()
-{
-	MDITabNewGroup();
-}
 /*
 
 void CMainFrame::OnHelpKeyboardmap()
@@ -1433,3 +1419,24 @@ LRESULT CMainFrame::OnToolbarCreateNew(WPARAM wp,LPARAM lp)
 	pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
 	return lres;
 }
+
+void CMainFrame::OnWindowNewhorizontaltabgroup()
+{
+	MDITabNewGroup(FALSE);
+}
+
+void CMainFrame::OnWindowNewverticaltabgroup()
+{
+	MDITabNewGroup();
+}
+
+void CMainFrame::OnWindowMovetoprevioustabgroup()
+{
+	MDITabMoveToNextGroup(FALSE);
+}
+
+void CMainFrame::OnWindowMovetonexttabgroup()
+{
+	MDITabMoveToNextGroup();
+}
+
