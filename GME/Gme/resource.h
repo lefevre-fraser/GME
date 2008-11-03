@@ -15,16 +15,28 @@
 #define CG_ID_VIEW_MODELPROPERTIESBAR   108
 #define ID_PARTBROWSER                  109
 #define ID_GMEBROWSER                   110
-#define IDP_OLE_INIT_FAILED             111
+#define ID_USER_TOOL1                   110
+#define ID_USER_TOOL2                   111
 #define IDB_SPLASH                      112
+#define ID_USER_TOOL3                   112
 #define ID_PROPERTYCOMBO                113
+#define ID_USER_TOOL4                   113
+#define ID_USER_TOOL5                   114
 #define IDR_AUTOROUTERPORT              115
+#define ID_USER_TOOL6                   115
 #define IDR_AUTOROUTERBOX               116
+#define ID_USER_TOOL7                   116
 #define IDR_AUTOROUTERGRAPH             117
+#define ID_USER_TOOL8                   117
 #define IDR_AUTOROUTERPATH              118
+#define ID_USER_TOOL9                   118
+#define ID_USER_TOOL10                  119
+#define IDP_OLE_INIT_FAILED             120
+#define ID_VIEW_CUSTOMIZE               126
 #define IDR_MAINFRAME                   128
 #define IDR_GMETYPE                     130
 #define IDR_TOOLBAR_MODE                131
+#define ID_WINDOW_MANAGER               131
 #define IDB_TYPEMARK_BITMAP             132
 #define IDB_INSTANCEMARK_BITMAP         133
 #define IDC_AUTOCONNECT_CURSOR          134
@@ -73,13 +85,22 @@
 #define IDD_NEW_MULTIUSER_PROJ_DLG      208
 #define IDD_CONSOLE_DIALOG              209
 #define IDR_TOOLBAR_MAIN                210
+#define ID_VIEW_APPLOOK_WIN_2000        210
 #define IDR_TOOLBAR_WINS                211
+#define ID_VIEW_APPLOOK_OFF_XP          211
 #define IDR_MYTOOLBARS_MENU             212
+#define ID_VIEW_APPLOOK_WIN_XP          212
 #define IDR_TOOLBAR_NAVIG               213
+#define ID_VIEW_APPLOOK_OFF_2003        213
 #define IDD_PART_BROWSER_DIALOG         214
+#define ID_VIEW_APPLOOK_VS_2005         214
+#define ID_VIEW_APPLOOK_OFF_2007_BLUE   215
 #define IDD_CONNECTIVITYDIALOG          216
+#define ID_VIEW_APPLOOK_OFF_2007_BLACK  216
 #define IDR_PORTCONTEXT_MENU            217
+#define ID_VIEW_APPLOOK_OFF_2007_SILVER 217
 #define IDR_CRASH_TEST_MENU             218
+#define ID_VIEW_APPLOOK_OFF_2007_AQUA   218
 #define IDD_EMERGENCY_DIALOG            219
 #define IDD_PANNING_WINDOW_DIALOG       220
 #define IDD_CHILDFRAME_DIALOG           221
@@ -200,20 +221,6 @@
 #define IDD_PRINT_DIALOG                1538
 #define IDD_PRINTSETUP_DIALOG           1539
 #define IDD_PARADIGMPROPERTIES_DIALOG   1540
-
-#define ID_VIEW_CUSTOMIZE				126
-#define ID_WINDOW_MANAGER				131
-#define ID_VIEW_APPLOOK_WIN_2000		210
-#define ID_VIEW_APPLOOK_OFF_XP			211
-#define ID_VIEW_APPLOOK_WIN_XP			212
-#define ID_VIEW_APPLOOK_OFF_2003		213
-#define ID_VIEW_APPLOOK_VS_2005			214
-#define ID_VIEW_APPLOOK_OFF_2007_BLUE	215
-#define ID_VIEW_APPLOOK_OFF_2007_BLACK	216
-#define ID_VIEW_APPLOOK_OFF_2007_SILVER	217
-#define ID_VIEW_APPLOOK_OFF_2007_AQUA	218
-
-
 #define ID_CANCEL_EDIT_CNTR             32768
 #define ID_MODE_EDIT                    32769
 #define ID_MODE_AUTOCONNECT             32770
@@ -457,6 +464,14 @@
 #define ID_CRASHTEST_ILLEGALREADINCRUNTIME 33083
 #define ID_CRASHTEST_ILLEGALCODEREAD    33084
 #define ID_CRASHTEST_DIVIDEBYZERO       33085
+#define ID_VIEW_FULLSCREEN              33086
+#define ID_Menu33087                    33087
+#define ID_TOOLS_TEST                   33089
+#define ID_TOOLS_TEST33090              33090
+#define ID_TOOLS_                       33091
+#define ID_TOOLS_EXTERNAL_TOOLS         33092
+#define ID_FILE_RUNINTERPRETER          33093
+#define ID_TOOLS_RUNPLUG                33094
 #define IDW_TOOLBAR_MAIN                0xE820
 #define IDW_TOOLBAR_WINS                0xE821
 #define IDW_TOOLBAR_DUMMY               0xE822
@@ -469,7 +484,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        224
-#define _APS_NEXT_COMMAND_VALUE         33086
+#define _APS_NEXT_COMMAND_VALUE         33095
 #define _APS_NEXT_CONTROL_VALUE         1128
 #define _APS_NEXT_SYMED_VALUE           119
 #endif

@@ -264,7 +264,8 @@ BOOL CGMEApp::InitInstance()
 	// Enable assigning shortcut keys to the menus
 	InitKeyboardManager();
 
-	
+	// Enabling user tools
+	EnableUserTools(ID_TOOLS_EXTERNAL_TOOLS, ID_USER_TOOL1, ID_USER_TOOL10, RUNTIME_CLASS(CUserTool)/*, IDR_MENU_ARGS, IDR_MENU_DIRS*/);
 
 
 	// Change the registry key under which our settings are stored.

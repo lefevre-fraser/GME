@@ -100,6 +100,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnApplicationLook)
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
 	ON_COMMAND(ID_VIEW_CUSTOMIZE, &CMainFrame::OnViewCustomize)
+	ON_COMMAND(ID_VIEW_FULLSCREEN, OnViewFullScreen)
+	ON_REGISTERED_MESSAGE(AFX_WM_CREATETOOLBAR, OnToolbarCreateNew)
 //}}AFX_MSG_MAP
 	// By making the Menu IDs that same as the ToolBar IDs
 	// we can leverage off of code that is already provided
@@ -123,7 +125,10 @@ END_MESSAGE_MAP()
 
 static UINT indicators[] =
 {
-	ID_SEPARATOR
+	ID_SEPARATOR,           // status line indicator
+	ID_INDICATOR_CAPS,
+	ID_INDICATOR_NUM,
+	ID_INDICATOR_SCRL,
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -245,7 +250,7 @@ int CMainFrame::CreateToolBars()
 	m_wndToolBarMain.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
 	
 	// Enable toolbar and docking window menu replacement
-	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."), ID_VIEW_TOOLBAR);
+	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."), ID_VIEW_TOOLBAR, FALSE, TRUE);
 
 
 
@@ -343,7 +348,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
 	}
-
+	
+	CMFCToolBar::EnableQuickCustomization();
 	
 	// MENU BAR
 	if (!m_wndMenuBar.Create(this))
@@ -483,6 +489,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// CG: The following line was added by the Splash Screen component.
 	CSplashWnd::ShowSplashScreen(this);
+
+	// Adding full screen functionality
+	EnableFullScreenMode(ID_VIEW_FULLSCREEN);
+
 	return 0;
 }
 
@@ -1373,4 +1383,53 @@ void CMainFrame::OnViewCustomize()
 	CMFCToolBarsCustomizeDialog* pDlgCust = new CMFCToolBarsCustomizeDialog(this, TRUE /* scan menus */);
 	pDlgCust->EnableUserDefinedToolbars();
 	pDlgCust->Create();
+}
+
+void CMainFrame::OnViewFullScreen()
+{
+	ShowFullScreen();
+}
+
+void CMainFrame::OnMdiMoveToNextGroup()
+{
+	MDITabMoveToNextGroup();
+}
+
+void CMainFrame::OnMdiMoveToPrevGroup()
+{
+	MDITabMoveToNextGroup(FALSE);
+}
+
+void CMainFrame::OnMdiNewHorzTabGroup()
+{
+	MDITabNewGroup(FALSE);
+}
+
+void CMainFrame::OnMdiNewVertGroup()
+{
+	MDITabNewGroup();
+}
+/*
+
+void CMainFrame::OnHelpKeyboardmap()
+{
+	CMFCKeyMapDialog dlg(this, TRUE ); // Enable Print
+	dlg.DoModal();
+}
+
+*/
+
+LRESULT CMainFrame::OnToolbarCreateNew(WPARAM wp,LPARAM lp)
+{
+	LRESULT lres = CMDIFrameWndEx::OnToolbarCreateNew(wp,lp);
+	if (lres == 0)
+	{
+		return 0;
+	}
+
+	CMFCToolBar* pUserToolbar = (CMFCToolBar*) lres;
+	ASSERT_VALID(pUserToolbar);
+
+	pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
+	return lres;
 }

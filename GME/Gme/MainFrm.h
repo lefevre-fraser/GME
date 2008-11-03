@@ -133,6 +133,7 @@ protected:
 	afx_msg void OnUpdateViewConsole(CCmdUI* pCmdUI);
 
 	*/
+	afx_msg void OnViewFullScreen();
 	afx_msg void OnEditSearch();
 	afx_msg void OnUpdateEditSearch(CCmdUI* pCmdUI);
 	afx_msg void OnTimer(UINT nIDEvent);
@@ -156,6 +157,12 @@ protected:
 
 	afx_msg void OnWindowManager();
 	afx_msg void OnViewCustomize();
+
+	afx_msg void OnMdiMoveToNextGroup();
+	afx_msg void OnMdiMoveToPrevGroup();
+	afx_msg void OnMdiNewHorzTabGroup();
+	afx_msg void OnMdiNewVertGroup();
+	LRESULT OnToolbarCreateNew(WPARAM wp,LPARAM lp);
 
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
