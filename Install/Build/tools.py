@@ -33,9 +33,9 @@ def toolmsg(str):
     if prefs['verbose']:
         print "\t" + str + "..."
 
-def test_CVS():
-    "Test for CVS client. Raises exception if not found."
-    system("cvs -v >NUL")
+def test_SVN():
+    "Test for SVN client. Raises exception if not found."
+    system("svn -v >NUL")
 
 
 def test_zip():
@@ -77,30 +77,34 @@ def system(command, dirname=None):
 
 
 def test_VS():
-    "Test for Microsoft Visual Studio.NET 2003. Raises exception if not found."
+    "Test for Microsoft Visual Studio 2008. Raises exception if not found."
     toolmsg("Trying to create VisualStudio.DTE object")
-    win32com.client.Dispatch("VisualStudio.DTE.7.1")
+    win32com.client.Dispatch("VisualStudio.DTE.9.0")
 
 
-def build_VS(sln_path, project_name, config_name):
+def build_VS(sln_path, config_name, project_name=""):
     """
-    Builds a Microsoft Visual Studio.NET 2003 project.
-    It cleans the project before building it if the global 'clean' preference
+    Builds a Microsoft Visual Studio 2008 project or entire solution.
+    It cleans the project/solution before building it if the global 'clean' preference
     is set.
     params
         sln_path     : full path to the solution (.sln) file
-	project_name : relative path to the project (.vcproj) file
-	config_name  : name of the build configuration (e.g.: "Release")
+        project_name : (optional) relative path to the project (.vcproj) file
+        config_name  : name of the build configuration (e.g.: "Release")
     """
     msg = "Cleaning and " * prefs['clean']
     msg += "Compiling " + sln_path + " [" + project_name + "] (" + config_name + ") "
     toolmsg(msg)
-    DTE = win32com.client.Dispatch("VisualStudio.DTE.7.1")
+    DTE = win32com.client.Dispatch("VisualStudio.DTE.9.0")
     DTE.Solution.Open( sln_path )
     builder = DTE.Solution.SolutionBuild
     if prefs['clean']:
         builder.Clean(1)
-    builder.BuildProject(config_name, project_name, 1)
+    if (project_name):
+        builder.BuildProject(config_name, project_name, 1)
+    else:
+        builder.SolutionConfigurations.Item(config_name).Activate
+        builder.Build(1);
     failed = builder.LastBuildInfo
     DTE.Quit()
     if failed > 0:
@@ -154,39 +158,39 @@ def query_GUID(paradigm ):
     return regsitrar.ParadigmGUIDString(2, paradigm)
 
 
-def test_IS():
-    "Test for InstallShield Developer 8. Raises exception if not found."
-    toolmsg("Trying to create ISWiAutomation.ISWiProject object")
-    win32com.client.Dispatch("ISWiAutomation.ISWiProject")
-    
-def build_IS(isv_file, config, release, properties):
-    """
-    Builds an InstallShield Developer 8 project.
-    params
-        isv_file : full path to the InstallShield project (.isv)
-        config   : name of the configuration to be built
-        release  : name of the build configuration (e.g.: "Release")
-        properties : dictionary of properties to set for the project at build time
-    """
-    toolmsg("Building " + isv_file + " - " + config + " - " + release)
-    ism_file = os.path.splitext(isv_file)[0] + ".ism"
-    ISWiProject = win32com.client.Dispatch( "ISWiAutomation.ISWiProject" )
-    ISWiProject.ImportProject(ism_file, isv_file)
-    ISWiProject.CloseProject()
-    
-    ISWiProject.OpenProject(ism_file)
-    for property in properties.keys():
-        ISProperty = ISWiProject.ISWiProperties.Item(property)
-        ISProperty.Value = properties[property]
-        toolmsg("\tSet property " + ISProperty.Name + " = " + ISProperty.Value)
-        
-    ISConfig = ISWiProject.ISWiProductConfigs.Item(config)
-    ISRelease = ISConfig.ISWiReleases.Item(release)
-    ISRelease.Build()
-    ISWiProject.CloseProject()
-    
-    if ISRelease.BuildWarningCount > 0:
-        toolmsg("Warnings found (%d)! Check logfile for details." % (ISRelease.BuildWarningCount))
-    if ISRelease.BuildErrorCount > 0:
-        raise BuildException, "InstallShield error(s) occured"
+#def test_IS():
+#    "Test for InstallShield Developer 8. Raises exception if not found."
+#    toolmsg("Trying to create ISWiAutomation.ISWiProject object")
+#    win32com.client.Dispatch("ISWiAutomation.ISWiProject")
+#    
+#def build_IS(isv_file, config, release, properties):
+#    """
+#    Builds an InstallShield Developer 8 project.
+#    params
+#        isv_file : full path to the InstallShield project (.isv)
+#        config   : name of the configuration to be built
+#        release  : name of the build configuration (e.g.: "Release")
+#        properties : dictionary of properties to set for the project at build time
+#    """
+#    toolmsg("Building " + isv_file + " - " + config + " - " + release)
+#    ism_file = os.path.splitext(isv_file)[0] + ".ism"
+#    ISWiProject = win32com.client.Dispatch( "ISWiAutomation.ISWiProject" )
+#    ISWiProject.ImportProject(ism_file, isv_file)
+#    ISWiProject.CloseProject()
+#    
+#    ISWiProject.OpenProject(ism_file)
+#    for property in properties.keys():
+#        ISProperty = ISWiProject.ISWiProperties.Item(property)
+#        ISProperty.Value = properties[property]
+#        toolmsg("\tSet property " + ISProperty.Name + " = " + ISProperty.Value)
+#        
+#    ISConfig = ISWiProject.ISWiProductConfigs.Item(config)
+#    ISRelease = ISConfig.ISWiReleases.Item(release)
+#    ISRelease.Build()
+#    ISWiProject.CloseProject()
+#    
+#    if ISRelease.BuildWarningCount > 0:
+#        toolmsg("Warnings found (%d)! Check logfile for details." % (ISRelease.BuildWarningCount))
+#    if ISRelease.BuildErrorCount > 0:
+#        raise BuildException, "InstallShield error(s) occured"
         
