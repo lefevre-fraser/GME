@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.IO;
+using Microsoft.Win32;
 
 namespace BonExtension.Generators
 {
@@ -72,6 +73,12 @@ namespace BonExtension.Generators
                 }
                 content = content.Replace("##4##", sb.ToString());
 
+                content = content.Replace("##5##", General.GetTypeLibID("MGA Core Type Library"));
+                content = content.Replace("##6##", General.GetTypeLibID("GME Type Library"));
+                content = content.Replace("##7##", General.GetTypeLibID("MGA Meta Type Library"));
+                content = content.Replace("##8##", General.GetTypeLibID("MGA Mga Type Library"));
+                content = content.Replace("##9##", General.GetTypeLibID("MGA Utilities Type Library"));
+
                 Directory.CreateDirectory(System.IO.Path.Combine(General.Path, General.ClassName));
                 using (TextWriter tw = new StreamWriter(System.IO.Path.Combine(General.Path, General.ClassName) + "\\" + General.ClassName + ".csproj"))
                 {
@@ -79,7 +86,42 @@ namespace BonExtension.Generators
                 }
             }
         }
+        private static string GetTypeLibID(string typeLibName)
+        {
+            try
+            {
+                RegistryKey key = Registry.ClassesRoot.OpenSubKey("TypeLib");
+                foreach (string typelibID in key.GetSubKeyNames())
+                {
+                    RegistryKey regTypeLib = key.OpenSubKey(typelibID);
 
+                    foreach (string strVersion in regTypeLib.GetSubKeyNames())
+                    {
+                        RegistryKey regVersion = regTypeLib.OpenSubKey(strVersion);
+
+                        foreach (string strValueName in regVersion.GetValueNames())
+                        {
+                            if (strValueName == "PrimaryInteropAssemblyName")
+                            {
+                            }
+                            else
+                            {
+                                string name = (string)regVersion.GetValue(strValueName);
+                                if (name == typeLibName)
+                                {
+                                    return typelibID;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+
+            }
+            return "00000000-0000-0000-0000-000000000000";
+        }
         private static void assemblyInfo()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
