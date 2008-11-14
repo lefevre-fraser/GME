@@ -39,17 +39,20 @@ namespace DecoratorSDK
 	class Facilities
 	{
 		private :
-			CComPtr<IMgaProject>			m_spProject;
-			std::vector<CString> 			m_vecPathes;
-			bool							m_bArePathesValid;
-			CString							m_strParadigmPath;
-			CString							m_strProjectPath;
+			CComPtr<IMgaProject>				m_spProject;
+			std::vector<CString> 				m_vecPathes;
+			bool								m_bArePathesValid;
+			CString								m_strParadigmPath;
+			CString								m_strProjectPath;
 
-			std::map<CString,BitmapBase*>	m_mapBitmaps;
-			std::map<CString,TileVector*>	m_mapTileVectors;
-			std::map<int,SFont*>			m_mapFonts;
-			std::map<CString,CPen*>			m_mapPens;
-			std::map<CString,CBrush*>		m_mapBrushes;
+			std::map<CString,BitmapBase*>			m_mapBitmaps;
+			std::map<CString,TileVector*>			m_mapTileVectors;
+			std::map<int,SFont*>					m_mapFonts;
+			std::map<int,GdipFont*>					m_mapGdipFonts;
+			std::map<CString,CPen*>					m_mapPens;
+			std::map<CString,CBrush*>				m_mapBrushes;
+			std::map<CString,Gdiplus::Pen*>			m_mapGdipPens;
+			std::map<CString,Gdiplus::SolidBrush*>	m_mapGdipBrushes;
 
 		public :
 			Facilities();
@@ -70,10 +73,9 @@ namespace DecoratorSDK
 			TileVector* getTileVector( const CString& strName ) const;
 
 			void createFont( int iFontKey, const CString& strKind, int iBoldness, bool bItalics, int iSize );
-			SFont* getFont( int iFontKey ) const;
-
-			CPen* getPen( COLORREF crColor, int iWidth = 1, bool bDashed = false );
-			CBrush* getBrush( COLORREF crColor );
+			GdipFont* GetFont( int iFontKey ) const;
+			Gdiplus::Pen* GetPen( COLORREF crColor, int iWidth = 1 );
+			Gdiplus::SolidBrush* GetBrush( COLORREF crColor );
 
 			bool getPreference( CComPtr<IMgaFCO> spFCO, const CString& strName, CString& strValue ) const;
 			bool getPreference( CComPtr<IMgaFCO> spFCO, const CString& strName, long& lValue, bool bInHexa = false ) const;
@@ -100,25 +102,30 @@ namespace DecoratorSDK
 
 			bool getMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco) const;
 
-			void drawText( CDC* pDC, const CString& strText, const CPoint& cpTopLeft,  CFont* pFont, COLORREF crColor,
-							int iAlign, int iLength = -1, const CString& strPre = "", const CString& strPost = "",
-							bool bPeriods = true ) const;
-			void drawCenteredText( CDC* pDC, const CString& strText, RECT r, CFont* pFont, COLORREF crColor ) const;
-			void drawLeftText( CDC* pDC, const CString& strText, RECT r, CFont* pFont, COLORREF crColor ) const;
-			void drawLeftMultiText( CDC* pDC, const CString& strText, RECT r, CFont* pFont, COLORREF crColor ) const;
-			void drawRightText( CDC* pDC, const CString& strText, RECT r, CFont* pFont, COLORREF crColor ) const;
-			void drawRect( CDC* pDC, const CRect& cRect, COLORREF crColor, int iWidth = 1 ) const;
-			void drawBox( CDC* pDC, const CRect& cRect, COLORREF crColor, int iDepth ) const;
-			void draw3DBox( CDC* pDC, const CRect& rect, int borderSize, COLORREF brColor, COLORREF modelColor,
-							bool special = false);
-			void draw3DBox( CDC* pDC, const CRect& rect, COLORREF brColor, COLORREF color, bool special = false);
-			void drawFlatBox( CDC* pDC, const CRect& rect, COLORREF brColor, COLORREF color);
+			CSize MeasureText( Gdiplus::Graphics* gdip, GdipFont* pFont, const CString& strText);
+			CSize MeasureText( Gdiplus::Graphics* gdip, Gdiplus::Font* pFont, const CString& strText);
+			void DrawString( Gdiplus::Graphics* gdip, const CString& strText, const CRect& crBounds, GdipFont* pFont,
+							 COLORREF crColor, int iAlign, int iLength = -1, const CString& strPre = "",
+							 const CString& strPost = "", bool bPeriods = true ) const;
+			void DrawString( Gdiplus::Graphics* gdip, const CString& strText, const CRect& crBounds, Gdiplus::Font* pFont,
+							 COLORREF crColor, int iAlign, int iLength = -1, const CString& strPre = "",
+							 const CString& strPost = "", bool bPeriods = true ) const;
+			void DrawRect( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iWidth = 1 ) const;
+			void DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iDepth ) const;
 			COLORREF shiftColor( COLORREF crColor, int iShift ) const;
-			COLORREF getDarkBorderColor(COLORREF color) const;
-			COLORREF getLightBorderColor(COLORREF color) const;
 
 			std::vector<CString> wrapString( const CString& str, int iWrap, int iMax ) const;
 			CString getStereotyped( const CString& str ) const;
+
+			// for backward compatibility with StereotypeDecorators
+			SFont* getFont( int iFontKey ) const;
+			CPen* getPen( COLORREF crColor, int iWidth = 1, bool bDashed = false );
+			CBrush* getBrush( COLORREF crColor );
+			void drawText( CDC* pDC, const CString& strText, const CPoint& cpTopLeft,  CFont* pFont, COLORREF crColor,
+							int iAlign, int iLength = -1, const CString& strPre = "", const CString& strPost = "",
+							bool bPeriods = true ) const;
+			void drawRect( CDC* pDC, const CRect& cRect, COLORREF crColor, int iWidth = 1 ) const;
+			void drawBox( CDC* pDC, const CRect& cRect, COLORREF crColor, int iDepth ) const;
 
 		private :
 			BitmapBase* getBitmap( const CString& strName, bool bhasTC, COLORREF crTC, bool bhasBC, COLORREF crBC,

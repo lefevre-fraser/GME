@@ -1,0 +1,26 @@
+HKCR
+{
+	'%NEWCOCLASS_PROGID%.1' = s '%NEWCOCLASS_NAME%'
+	{
+		CLSID = s '{%NEWCOCLASS_UUID%}'
+	}
+	'%NEWCOCLASS_PROGID%' = s '%NEWCOCLASS_NAME%'
+	{
+		CLSID = s '{%NEWCOCLASS_UUID%}' 
+		CurVer = s '%NEWCOCLASS_PROGID%.1'
+	}
+	NoRemove 'CLSID'
+	{
+		ForceRemove '{%NEWCOCLASS_UUID%}' = s '%NEWCOCLASS_NAME%'
+		{
+			'ProgID' = s '%NEWCOCLASS_PROGID%.1'
+			'VersionIndependentProgID' = s '%NEWCOCLASS_PROGID%'
+			ForceRemove 'Programmable'
+			'InprocServer32' = s '%MODULE%'
+			{
+				val 'ThreadingModel' = s 'Apartment'
+			}
+			'TypeLib' = s '{%TYPELIB_UUID%}'
+		}
+	}
+}

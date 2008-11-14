@@ -29,9 +29,9 @@ TypeableLabelPart::~TypeableLabelPart()
 {
 }
 
-void TypeableLabelPart::Draw(CDC* pDC)
+void TypeableLabelPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	LabelPart::Draw(pDC);
+	LabelPart::Draw(pDC, gdip);
 
 	if (m_bTypeNameEnabled && (m_iTypeInfo == 3 || m_iTypeInfo == 2)) {
 		ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
@@ -43,18 +43,20 @@ void TypeableLabelPart::Draw(CDC* pDC)
 			default:			iAlign = TA_RIGHT;	break;
 		}
 		iAlign |= TA_TOP;
-		CPoint pt = GetTextPosition();
-		pt.y += GAP_LABEL + getFacilities().getFont(FONT_LABEL)->iSize * m_vecText.size();
+		CRect cRect = GetTextLocation(pDC, gdip);
+		int iLabelSize = getFacilities().GetFont(FONT_LABEL)->iSize;
+		long yPos = cRect.top + GAP_LABEL + iLabelSize * m_vecText.size();
 
-		getFacilities().drawText(pDC,
-								 m_strTypeName,
-								 pt,
-								 getFacilities().getFont(FONT_TYPE)->pFont,
-								 (m_bActive) ? m_crText : COLOR_GRAY,
-								 iAlign,
-								 MAX_TYPE_LENGTH,
-								 "[ ",
-								 " ]");
+		getFacilities().DrawString(gdip,
+								   m_strTypeName,
+								   CRect(cRect.left - GAP_LABEL, yPos,
+										 cRect.right + GAP_LABEL, yPos + iLabelSize),
+								   getFacilities().GetFont(FONT_TYPE),
+								   (m_bActive) ? m_crText : COLOR_GRAY,
+								   iAlign,
+								   MAX_TYPE_LENGTH,
+								   "[ ",
+								   " ]");
 	}
 }
 
@@ -105,9 +107,9 @@ void TypeableLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 	LabelPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 
-CPoint	TypeableLabelPart::GetTextPosition(void) const
+CPoint	TypeableLabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	CPoint pt = LabelPart::GetTextPosition();
+	CPoint pt = LabelPart::GetTextPosition(pDC, gdip);
 	if (m_bTypeNameEnabled && (m_iTypeInfo == 3 || m_iTypeInfo == 2)) {
 		int iLabelSize = getFacilities().getFont(FONT_TYPE)->iSize;
 		switch(m_eTextLocation) {
@@ -126,9 +128,9 @@ CPoint	TypeableLabelPart::GetTextPosition(void) const
 	return pt;
 }
 
-CRect TypeableLabelPart::GetTextLocation(void) const
+CRect TypeableLabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	CRect cRect = LabelPart::GetTextLocation();
+	CRect cRect = LabelPart::GetTextLocation(pDC, gdip);
 
 	if (m_bTypeNameEnabled && (m_iTypeInfo == 3 || m_iTypeInfo == 2)) {
 		LOGFONT logFont;

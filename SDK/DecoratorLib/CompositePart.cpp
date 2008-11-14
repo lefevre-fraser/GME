@@ -332,10 +332,10 @@ bool CompositePart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 }
 
 
-void CompositePart::Draw(CDC* pDC)
+void CompositePart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	for (std::vector<PartBase*>::iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
-		(*ii)->Draw(pDC);
+		(*ii)->Draw(pDC, gdip);
 	}
 }
 
@@ -348,7 +348,7 @@ void CompositePart::SaveState()
 
 // New functions
 void CompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
-									  HWND parentWnd, PreferenceMap& preferences)
+								 HWND parentWnd, PreferenceMap& preferences)
 {
 	PartBase::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	for (std::vector<PartBase*>::iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {

@@ -96,9 +96,9 @@ void NewBoxDecorator::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 	m_part->GetPorts(portFCOs);
 }
 
-void NewBoxDecorator::Draw(CDC* pDC)
+void NewBoxDecorator::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	m_part->Draw(pDC);
+	m_part->Draw(pDC, gdip);
 }
 
 void NewBoxDecorator::SaveState()

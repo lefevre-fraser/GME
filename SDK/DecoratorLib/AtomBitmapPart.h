@@ -32,7 +32,7 @@ public:
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 
-	virtual void	DrawBackground				(CDC* pDC);
+	virtual void	DrawBackground				(CDC* pDC, Gdiplus::Graphics* gdip);
 };
 
 }; // namespace DecoratorSDK

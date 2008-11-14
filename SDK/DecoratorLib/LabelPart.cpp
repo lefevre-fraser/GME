@@ -33,7 +33,7 @@ LabelPart::~LabelPart()
 {
 }
 
-void LabelPart::Draw(CDC* pDC)
+void LabelPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	if (m_bTextEnabled) {
 		ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
@@ -46,25 +46,27 @@ void LabelPart::Draw(CDC* pDC)
 		}
 		iAlign |= TA_TOP;
 
-		int iLabelSize = getFacilities().getFont(m_iFontKey)->iSize;
-		CPoint pt = GetTextPosition();
+		DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+		int iLabelSize = pFont->iSize;
+		CRect cRect = GetTextLocation(pDC, gdip);
 		for (unsigned int i = 0; i < m_vecText.size(); i++)
-			getFacilities().drawText(pDC,
-									 m_vecText[i],
-									 CPoint(pt.x, pt.y + i * iLabelSize),
-									 getFacilities().getFont(m_iFontKey)->pFont,
-									 (m_bActive) ? m_crText : COLOR_GRAY,
-									 iAlign,
-									 m_iMaxTextLength,
-									 "",
-									 "",
-									 false);
+			getFacilities().DrawString(gdip,
+									   m_vecText[i],
+									   CRect(cRect.left - GAP_LABEL, cRect.top + i * iLabelSize,
+											 cRect.right + GAP_LABEL, cRect.top + (i + 1) * iLabelSize),
+									   pFont,
+									   (m_bActive) ? m_crText : COLOR_GRAY,
+									   iAlign,
+									   m_iMaxTextLength,
+									   "",
+									   "",
+									   false);
 	}
 	if (m_spFCO)
-		resizeLogic.Draw(pDC);
+		resizeLogic.Draw(pDC, gdip);
 }
 
-CPoint	LabelPart::GetTextPosition(void) const
+CPoint	LabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
 	CPoint pt;
 	CRect cRect = GetLocation();	// GetBoxLocation(true)
@@ -102,17 +104,16 @@ CPoint	LabelPart::GetTextPosition(void) const
 	return pt;
 }
 
-CRect LabelPart::GetTextLocation(void) const
+CRect LabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	CPoint pt = GetTextPosition();
+	CPoint pt = GetTextPosition(pDC, gdip);
 	ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
 
-	CDC dc;
-	dc.CreateCompatibleDC(NULL);
-	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
-	CSize cSize(0,0);
+	DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+
+	CSize cSize(0, 0);
 	for (unsigned int i = 0 ; i < m_vecText.size(); i++) {
-		CSize tmpSize = dc.GetTextExtent(m_vecText[i]);
+		CSize tmpSize = getFacilities().MeasureText(gdip, pFont, m_vecText[i]);
 		cSize.cy += tmpSize.cy;
 		cSize.cx = max(cSize.cx, tmpSize.cx);
 	}

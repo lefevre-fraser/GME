@@ -30,11 +30,6 @@ MaskedBitmapPart::~MaskedBitmapPart()
 {
 }
 
-void MaskedBitmapPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
-{
-	BitmapPart::Initialize(pProject, pPart, pFCO);
-}
-
 feature_code MaskedBitmapPart::GetFeatures(void) const
 {
 	return F_RESIZABLE | F_MOUSEEVENTS;
@@ -65,13 +60,13 @@ void MaskedBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 	preferences[PREF_ITEMRESIZABLE]		= PreferenceVariant(bResizeable);
 }
 
-void MaskedBitmapPart::DrawBackground(CDC* pDC)
+void MaskedBitmapPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	CRect cRect = GetBoxLocation(false);
 	UINT modifFlags = MF_TRANSPARENT;
 	if (!m_bActive)
 		modifFlags |= MF_GREYED;
-	m_pBitmap->draw(pDC, cRect, *m_pTileVector, modifFlags);
+	m_pBitmap->draw(gdip, pDC, cRect, *m_pTileVector, modifFlags);
 }
 
 }; // namespace DecoratorSDK

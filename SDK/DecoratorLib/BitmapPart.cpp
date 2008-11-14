@@ -28,11 +28,6 @@ BitmapPart::~BitmapPart()
 {
 }
 
-void BitmapPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
-{
-	ResizablePart::Initialize(pProject, pPart, pFCO);
-}
-
 feature_code BitmapPart::GetFeatures(void) const
 {
 	// TODO: it depends, if it is resizable
@@ -48,13 +43,13 @@ CSize BitmapPart::GetPreferredSize(void) const
 	return CSize(m_pBitmap->getWidth() + GetBorderWidth(false) * 2, m_pBitmap->getHeight() + GetBorderWidth(false) * 2);
 }
 
-void BitmapPart::Draw(CDC* pDC)
+void BitmapPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	DrawBorder(pDC);
-	DrawBackground(pDC);
-	DrawIcons(pDC);
+	DrawBorder(pDC, gdip);
+	DrawBackground(pDC, gdip);
+	DrawIcons(pDC, gdip);
 
-	return ResizablePart::Draw(pDC);
+	return ResizablePart::Draw(pDC, gdip);
 }
 
 // New functions
@@ -144,24 +139,24 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 }
 
 
-void BitmapPart::DrawBorder(CDC* pDC)
+void BitmapPart::DrawBorder(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	if (m_lBorderWidth != 0)
-		getFacilities().drawRect(pDC, GetBoxLocation(true), (m_bActive) ? m_crBorder : COLOR_GRAY, m_lBorderWidth);
+		getFacilities().DrawRect(gdip, GetBoxLocation(true), (m_bActive) ? m_crBorder : COLOR_GRAY, m_lBorderWidth);
 	if (m_bHasViolation && m_bActive)
-		getFacilities().drawRect(pDC, GetBoxLocation(true), COLOR_RED, WIDTH_BORDERVIOLATION);
+		getFacilities().DrawRect(gdip, GetBoxLocation(true), COLOR_RED, WIDTH_BORDERVIOLATION);
 }
 
-void BitmapPart::DrawBackground(CDC* pDC)
+void BitmapPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	CRect cRect = GetBoxLocation(false);
 	if (m_bActive)
-		m_pBitmap->draw(pDC, cRect, *m_pTileVector);
+		m_pBitmap->draw(gdip, pDC, cRect, *m_pTileVector);
 	else
-		getFacilities().drawRect(pDC, cRect, COLOR_GRAY, 2);
+		getFacilities().DrawRect(gdip, cRect, COLOR_GRAY, 2);
 }
 
-void BitmapPart::DrawIcons(CDC* pDC)
+void BitmapPart::DrawIcons(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 }
 

@@ -40,14 +40,6 @@ CRect UMLCompositePart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
 	throw PortNotFoundException();
 }
 
-bool UMLCompositePart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
-{
-	CComPtr<IMgaFCOs> spFCOs;
-	COMTHROW(spFCOs.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
-	portFCOs = spFCOs.Detach();
-	return false;
-}
-
 CRect UMLCompositePart::GetLabelLocation(void) const
 {
 	HRESULT retVal = S_OK;

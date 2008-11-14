@@ -36,4 +36,15 @@ library DecoratorLib
 		interface IMgaVersionInfo;
 	};
 
+	[
+		uuid(NEWCOCLASS_UUID),
+		helpstring(NEWCOCLASS_NAME)
+	]
+	coclass NewAnnotatorDecorator
+	{
+		[default] interface IMgaNewDecorator;
+		[default, source] interface IMgaNewDecoratorEvents;
+		interface IMgaVersionInfo;
+	};
+
 };

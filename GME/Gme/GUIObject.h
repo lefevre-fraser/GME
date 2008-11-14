@@ -6,6 +6,7 @@
 class CGMEView;
 class CModelGrid;
 class CDecoratorEventSink;
+class CAnnotatorEventSink;
 
 extern CModelGrid modelGrid;
 
@@ -112,7 +113,7 @@ public:
 	void SetAspect(int a)							{ parentAspect = (a < numParentAspects ? a : 0); }
 	bool IsVisible(int aspect = -1);
 	bool IsSpecial()                                { return special; }
-	void Draw(CDC * pDC);
+	void Draw(Gdiplus::Graphics* gdip, CDC* pDC);
 	void GrayOut(bool set = true);
 
 	const CRect& GetLocation(int aspect = -1);
@@ -132,17 +133,19 @@ public:
 	static int  Hide( CComPtr<IMgaRegNode> &mRootNode);
 
 public:
-	CComPtr<IMgaRegNode> rootNode;
+	CComPtr<IMgaRegNode>		rootNode;
 
 protected:
-	CComPtr<IMgaModel>	model;
-	int numParentAspects;
-	int parentAspect;
-	bool grayedOut;
-	CGMEView *view;
-	CComPtr<IMgaDecorator>	*decorators;
-	CRect	*locations;
-	bool special;
+	CComPtr<IMgaModel>			model;
+	int							numParentAspects;
+	int							parentAspect;
+	bool						grayedOut;
+	CGMEView*					view;
+	CComPtr<IMgaDecorator>*		decorators;
+	CComPtr<IMgaNewDecorator>*	newDecorators;
+	CAnnotatorEventSink*		annotatorEventSinks;
+	CRect*						locations;
+	bool						special;
 
 };
 
@@ -179,7 +182,7 @@ public:
 	virtual CGuiMetaAttributeList *GetMetaAttributes();
 	virtual void RemoveFromRouter(CAutoRouter &router) = 0;
 	virtual bool IsVisible(int aspect = -1) = 0;
-	virtual void Draw(CDC * pDC) = 0;
+	virtual void Draw(Gdiplus::Graphics* gdip, CDC* pDC) = 0;
 	virtual void GrayOut(bool set = true)			{ grayedOut = set; }
 
 public:
@@ -259,7 +262,7 @@ public:
 
 	virtual bool IsVisible(int aspect = -1)				{ return guiAspects[(aspect < 0 ? parentAspect : aspect)] != NULL; }
 	virtual void RemoveFromRouter(CAutoRouter &router)	{ router.DeleteObject(this); }
-	virtual void Draw(CDC *pDC);
+	virtual void Draw(Gdiplus::Graphics* gdip, CDC* pDC);
 	virtual void GrayOut(bool set);
 	virtual CGuiMetaAspect *GetKindAspect(CComPtr<IMgaMetaPart> metaPart);
 
@@ -345,8 +348,8 @@ private:
 public:
 	void SetLabel(CString &l);
 	void SetPrimary(bool prim)	{ primary = prim; }
-	void SetLocation(CPoint &endPoint,CPoint &nextPoint,CRect &box);
-	void Draw(CDC *pDC,COLORREF color, CGuiConnection *conn);
+	void SetLocation(CPoint& endPoint, CPoint& nextPoint, CRect& box);
+	void Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection* conn);
 };
 
 class CGuiConnectionLabelSet {
@@ -356,9 +359,9 @@ public:
 private:
 	CGuiConnectionLabel labels[GME_CONN_LABEL_NUM];
 public:
-	void SetLabel(int index,CString &label);
-	void SetLocation(int index,CPoint &endPoint,CPoint &nextPoint,CRect &box);
-	void Draw(CDC *pDC,COLORREF color, CGuiConnection *conn);
+	void SetLabel(int index, CString& label);
+	void SetLocation(int index, CPoint& endPoint, CPoint& nextPoint, CRect& box);
+	void Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection* conn);
 };
 
 
@@ -379,7 +382,7 @@ public:
 
 	virtual bool IsVisible(int aspect = -1)				{ return visible && visible[aspect < 0 ? parentAspect : aspect];  }
 	virtual void RemoveFromRouter(CAutoRouter &router);
-	virtual void Draw(CDC *pDC);
+	virtual void Draw(Gdiplus::Graphics* gdip, CDC *pDC);
 
 public:
 	CGuiObject *src;

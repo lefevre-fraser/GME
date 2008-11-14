@@ -118,20 +118,31 @@ VectorCommand::~VectorCommand()
 //################################################################################################
 
 VectorPart::VectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
-	ResizablePart			(pPart, eventSink),
-	m_bOriginalPenSaved		(false),
-	m_originalPen			(NULL),
-	m_bOriginalBrushSaved	(false),
-	m_originalBrush			(NULL)
+	ResizablePart				(pPart, eventSink),
+	m_mainPath					(NULL),
+	m_shadowPath				(NULL),
+	m_bInMainPathDefinition		(false),
+	m_bInShadowPathDefinition	(false),
+	m_bShadowCasted				(false),
+	m_bShadowEnabled			(true)
 {
 	penColorVariableName	= PREF_COLOR;
-	burshColorVariableName	= PREF_COLOR;
+	brushColorVariableName	= PREF_BORDERCOLOR;
+	borderColorVariableName	= PREF_BORDERCOLOR;
 }
 
 VectorPart::~VectorPart()
 {
 	RemoveAllCommands();
 	DisposeCoordCommands();
+	if (m_mainPath != NULL) {
+		delete m_mainPath;
+		m_mainPath = NULL;
+	}
+	if (m_shadowPath != NULL) {
+		delete m_shadowPath;
+		m_shadowPath = NULL;
+	}
 }
 
 void VectorPart::RemoveCommand(long index)
@@ -147,7 +158,7 @@ void VectorPart::RemoveCommand(long index)
 
 void VectorPart::RemoveLastCommand(long cmdCount)
 {
-	ASSERT(cmdCount > 1);
+	ASSERT(cmdCount >= 1);
 	ASSERT(cmdCount <= GetCommandNumber());
 	for (long i = 0; i < cmdCount; i++)
 		m_Commands.pop_back();
@@ -167,11 +178,6 @@ VectorCommand VectorPart::GetCommand(long index) const
 	return m_Commands[index];
 }
 
-void VectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
-{
-	ResizablePart::Initialize(pProject, pPart, pFCO);
-}
-
 feature_code VectorPart::GetFeatures(void) const
 {
 	// TODO: it depends, if it is resizable
@@ -184,120 +190,233 @@ void VectorPart::SetLocation(const CRect& location)
 	ResizablePart::SetLocation(location);
 }
 
-void VectorPart::Draw(CDC* pDC)
+void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	SetPen(pDC);
-	SetBrush(pDC);
+	COLORREF penColor = m_bActive ? m_crPen : COLOR_GRAYED_OUT;
+	m_CurrentPen = DecoratorSDK::getFacilities().GetPen(penColor);
+
+	COLORREF brushColor = m_bActive ? m_crBrush : COLOR_GRAYED_OUT;
+	m_CurrentBrush = DecoratorSDK::getFacilities().GetBrush(brushColor);
 
 	for(std::vector<VectorCommand>::iterator ii = m_Commands.begin(); ii != m_Commands.end(); ++ii) {
-		switch((*ii).GetCode()) {
-			case VectorCommand::BeginPath:			pDC->BeginPath();											break;
-			case VectorCommand::StrokeAndFillPath:	pDC->StrokeAndFillPath();									break;
-			case VectorCommand::MoveTo:				pDC->MoveTo((*ii).GetResolvedCoords(m_Extents).TopLeft());	break;
-			case VectorCommand::LineTo:				pDC->LineTo((*ii).GetResolvedCoords(m_Extents).TopLeft());	break;
-			case VectorCommand::Rectangle:			pDC->Rectangle((*ii).GetResolvedCoords(m_Extents));			break;
-			case VectorCommand::Ellipse:			pDC->Ellipse((*ii).GetResolvedCoords(m_Extents));			break;
-			case VectorCommand::Polygon: {
+		long cmdCode = (*ii).GetCode();
+		switch(cmdCode) {
+			case VectorCommand::DrawLine: {
+					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					gdip->DrawLine(m_CurrentPen, rc.left, rc.top, rc.right, rc.bottom);
+				}
+				break;
+			case VectorCommand::DrawRectangle: {
+					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					gdip->DrawRectangle(m_CurrentPen, rc.left, rc.top, rc.Width(), rc.Height());
+				}
+				break;
+			case VectorCommand::DrawEllipse: {
+					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					gdip->DrawEllipse(m_CurrentPen, rc.left, rc.top, rc.Width(), rc.Height());
+				}
+				break;
+			case VectorCommand::DrawPolygon: {
 					std::vector<long> points = (*ii).GetResolvedValues(m_Extents);
-					unsigned long coordNum = points.size() / 2;
-					POINT* ppoints = new POINT[coordNum];
-					for (unsigned long i = 0; i < coordNum; i++) {
-						ppoints[i].x = points[2 * i];
-						ppoints[i].y = points[2 * i + 1];
-					}
-					pDC->Polygon(ppoints, coordNum);
+					long coordNum = static_cast<long> (points.size() / 2);
+					Gdiplus::Point* ppoints = new Gdiplus::Point[coordNum];
+					for (long i = 0; i < coordNum; i++)
+						ppoints[i] = Gdiplus::Point(points[2 * i], points[2 * i + 1]);
+					gdip->DrawPolygon(m_CurrentPen, ppoints, coordNum);
 					delete [] ppoints;
 				}
 				break;
-			case VectorCommand::AngleArc: {
-					std::vector<long> values = (*ii).GetResolvedValues(m_Extents);
-					pDC->AngleArc(values[0], values[1], values[2], (float)values[3], (float)values[4]);
+			case VectorCommand::FillRectangle: {
+					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					gdip->FillRectangle(m_CurrentBrush, rc.left, rc.top, rc.Width(), rc.Height());
+				}
+				break;
+			case VectorCommand::FillEllipse: {
+					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					gdip->FillEllipse(m_CurrentBrush, rc.left, rc.top, rc.Width(), rc.Height());
+				}
+				break;
+			case VectorCommand::FillPolygon: {
+					std::vector<long> points = (*ii).GetResolvedValues(m_Extents);
+					long coordNum = static_cast<long> (points.size() / 2);
+					Gdiplus::Point* ppoints = new Gdiplus::Point[coordNum];
+					for (long i = 0; i < coordNum; i++)
+						ppoints[i] = Gdiplus::Point(points[2 * i], points[2 * i + 1]);
+					gdip->FillPolygon(m_CurrentBrush, ppoints, coordNum);
+					delete [] ppoints;
 				}
 				break;
 			case VectorCommand::SelectPen: {
 					std::vector<long> colors = (*ii).GetResolvedValues(m_Extents);
-					pDC->SelectObject(getFacilities().getPen((COLORREF)(m_bActive ? colors[0] : colors[1])));
+					ASSERT(colors.size() == 2);
+					COLORREF penColor = m_bActive ? colors[0] : colors[1];
+					m_CurrentPen = DecoratorSDK::getFacilities().GetPen(penColor);
 				}
 				break;
 			case VectorCommand::SelectBrush: {
 					std::vector<long> colors = (*ii).GetResolvedValues(m_Extents);
-					pDC->SelectObject(getFacilities().getBrush((COLORREF)(m_bActive ? colors[0] : colors[1])));
+					ASSERT(colors.size() == 2);
+					COLORREF brushColor = m_bActive ? colors[0] : colors[1];
+					m_CurrentBrush = DecoratorSDK::getFacilities().GetBrush(brushColor);
 				}
 				break;
-			case VectorCommand::SelectNullBrush:	pDC->SelectStockObject(NULL_BRUSH);							break;
-			case VectorCommand::SelectNullPen:		pDC->SelectStockObject(NULL_PEN);							break;
+			case VectorCommand::BeginPath: {
+					ASSERT(m_mainPath == NULL);
+					if (m_mainPath != NULL)
+						delete m_mainPath;
+					m_mainPath = new Gdiplus::GraphicsPath();
+					m_bInMainPathDefinition = true;
+				}
+				break;
 			case VectorCommand::EndPath: {
-					pDC->EndPath();
+					ASSERT(m_mainPath != NULL);
+					m_bInMainPathDefinition = false;
+				}
+				break;
+			case VectorCommand::BeginShadowPath:
+				{
+					ASSERT(m_shadowPath == NULL && m_bInMainPathDefinition == false);
+					if (m_shadowPath != NULL)
+						delete m_shadowPath;
+					m_shadowPath = new Gdiplus::GraphicsPath();
+					m_bInShadowPathDefinition = true;
+				}
+				break;
+			case VectorCommand::EndShadowPath:
+			case VectorCommand::CopyShadowPath: {
+					ASSERT(m_shadowPath != NULL || cmdCode == VectorCommand::CopyShadowPath);
+					if (cmdCode == VectorCommand::CopyShadowPath) {
+						if (m_shadowPath != NULL)
+							delete m_shadowPath;
+						m_shadowPath = new Gdiplus::GraphicsPath();
+						m_shadowPath->AddPath(m_mainPath, FALSE);
+					}
+					m_bInShadowPathDefinition = false;
+				}
+				break;
+			case VectorCommand::CastShadowPath: {
+					long shadowThickness = 0;
+					std::vector<long> points = (*ii).GetResolvedValues(m_Extents);
+					if (points.size() > 0)
+						shadowThickness = points[0];
+					else
+						shadowThickness = 9;
+					if (shadowThickness > 0 && m_bShadowEnabled) {
+						if (m_shadowPath == NULL) {
+							m_shadowPath = new Gdiplus::GraphicsPath();
+							m_shadowPath->AddPath(m_mainPath, FALSE);
+						}
+						Gdiplus::Matrix shadowTranslationMatrix;
+						shadowTranslationMatrix.Translate(static_cast<float> (shadowThickness), static_cast<float> (shadowThickness));
+						m_shadowPath->Transform(&shadowTranslationMatrix);
 
-					bool bCastShadow = false;
-					long shadowThickness = 9;
-					if (bCastShadow && m_spFCO) {
-						// Find out how many points are in the path. Note that
-						// for long strings or complex fonts, this number might be
-						// gigantic!
-						int nNumPts = pDC->GetPath(NULL, NULL, 0);
-						if (nNumPts > 0) {
-							// Allocate memory to hold points and stroke types from
-							// the path.
-							LPPOINT lpPoints = new POINT[nNumPts];
-							if (lpPoints == NULL)
-								return;
-							LPBYTE lpTypes = new BYTE[nNumPts];
-							if (lpTypes == NULL) {
-								delete [] lpPoints;
-								return;
-							}
+						Gdiplus::PathGradientBrush shadowPathGradientBrush(m_shadowPath);
+						m_shadowStartColor = m_bActive ? m_crPen : COLOR_GRAYED_OUT;
 
-							// Now that we have the memory, really get the path data.
-							nNumPts = pDC->GetPath(lpPoints, lpTypes, nNumPts);
-							if (nNumPts != -1) {
-								CRect rgnExtents = m_Extents;
-								rgnExtents.InflateRect(shadowThickness + 1, shadowThickness + 1);
-								CRgn rgn;
-								rgn.CreateRectRgn(rgnExtents.left, rgnExtents.top, rgnExtents.right, rgnExtents.bottom);
-								pDC->SelectClipRgn(&rgn);
-								pDC->SelectClipPath(RGN_DIFF);
+						// Set blend factors and positions for the path gradient brush.
+						Gdiplus::Color shadowStartColor = Gdiplus::Color(255,
+																		 GetRValue(m_shadowStartColor),
+																		 GetGValue(m_shadowStartColor),
+																		 GetBValue(m_shadowStartColor));
+						Gdiplus::Color shadowBlendedColor = Gdiplus::Color(128,
+																		   GetRValue(m_shadowStartColor),
+																		   GetGValue(m_shadowStartColor),
+																		   GetBValue(m_shadowStartColor));
+						Gdiplus::Color shadowEndColor = Gdiplus::Color(0,
+																	   GetRValue(m_shadowStartColor),
+																	   GetGValue(m_shadowStartColor),
+																	   GetBValue(m_shadowStartColor));
+						Gdiplus::Color presetColors[] = {
+														shadowEndColor,
+														shadowBlendedColor,
+														shadowStartColor };
+						float shadowBorder = static_cast<float> (shadowThickness / (m_Extents.Width() / 2.0));
+						if (shadowBorder > 1.0)
+							shadowBorder = 1.0;
+						float interpolationPositions[] = {
+							0.0f,
+							shadowBorder,
+							1.0f };
+						shadowPathGradientBrush.SetInterpolationColors(presetColors, interpolationPositions, 3);
 
-								CPen* oldPen = NULL;
-								m_shadowStartColor = m_bActive ? m_crPen : COLOR_GRAYED_OUT;
-								COLORREF shadowColor;
-								OffsetPolyPoints(lpPoints, nNumPts, shadowThickness - 1);
-								for (long j = 0; j < shadowThickness; j++) {
-									shadowColor = RGB(((shadowThickness - j) * GetRValue(m_shadowEndColor) + j * GetRValue(m_shadowStartColor)) / shadowThickness,
-													  ((shadowThickness - j) * GetGValue(m_shadowEndColor) + j * GetGValue(m_shadowStartColor)) / shadowThickness,
-													  ((shadowThickness - j) * GetBValue(m_shadowEndColor) + j * GetBValue(m_shadowStartColor)) / shadowThickness);
-									CPen* savePen = pDC->SelectObject(DecoratorSDK::getFacilities().getPen(shadowColor, j == shadowThickness - 1 ? 1 : 2));
-									if (j == 0)
-										oldPen = savePen;
-									OffsetPolyPoints(lpPoints, nNumPts, -1);
-									pDC->PolyDraw(lpPoints, lpTypes, nNumPts);
-
-									// If it worked, draw the lines. Win95 and Win98 don't support
-									// the PolyDraw API, so we use our own member function to do
-									// similar work. If you're targeting only Windows NT, you can
-									// use the PolyDraw() API and avoid the COutlineView::PolyDraw()
-									// member function.
-//									PolyDraw(pDC, lpPoints, lpTypes, nNumPts);
-								}
-								pDC->SelectClipRgn(NULL);
-								pDC->SelectObject(oldPen);
-							}
-
-							// Release the memory we used
-							delete [] lpPoints;
-							delete [] lpTypes;
+						gdip->FillPath(&shadowPathGradientBrush, m_shadowPath);
+					}
+					m_bShadowCasted = true;
+				}
+				break;
+			case VectorCommand::FillPath:
+			case VectorCommand::StrokePath:
+			case VectorCommand::StrokeAndFillPath: {
+					if (cmdCode == VectorCommand::FillPath || cmdCode == VectorCommand::StrokeAndFillPath) {
+						std::vector<long> colors = (*ii).GetResolvedValues(m_Extents);
+						ASSERT(colors.size() == 0 || colors.size() == 2);
+						if (m_bShadowCasted || colors.size() == 2) {
+							Gdiplus::SolidBrush* fillBrush = NULL;
+							if (colors.size() == 2)
+								fillBrush = DecoratorSDK::getFacilities().GetBrush((COLORREF)(m_bActive ? colors[0] : colors[1]));
+							else
+								fillBrush = DecoratorSDK::getFacilities().GetBrush(m_shadowEndColor);
+							gdip->FillPath(fillBrush, m_mainPath);
 						}
 					}
+					if (cmdCode == VectorCommand::StrokePath || cmdCode == VectorCommand::StrokeAndFillPath) {
+						COLORREF penColor = m_bActive ? m_crPen : COLOR_GRAYED_OUT;
+						Gdiplus::Pen* strokePen = DecoratorSDK::getFacilities().GetPen(penColor);
+						gdip->DrawPath(strokePen, m_mainPath);
+					}
+				}
+				break;
+			case VectorCommand::AddLineToPath: {
+					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					if (m_bInMainPathDefinition)
+						m_mainPath->AddLine(rc.left, rc.top, rc.right, rc.bottom);
+					if (m_bInShadowPathDefinition)
+						m_shadowPath->AddLine(rc.left, rc.top, rc.right, rc.bottom);
+				}
+				break;
+			case VectorCommand::AddEllipseToPath: {
+					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					if (m_bInMainPathDefinition)
+						m_mainPath->AddEllipse(rc.left, rc.top, rc.Width(), rc.Height());
+					if (m_bInShadowPathDefinition)
+						m_shadowPath->AddEllipse(rc.left, rc.top, rc.Width(), rc.Height());
+				}
+				break;
+			case VectorCommand::AddPolygonToPath: {
+					std::vector<long> points = (*ii).GetResolvedValues(m_Extents);
+					long coordNum = static_cast<long> (points.size() / 2);
+					Gdiplus::Point* ppoints = new Gdiplus::Point[coordNum];
+					for (long i = 0; i < coordNum; i++)
+						ppoints[i] = Gdiplus::Point(points[2 * i], points[2 * i + 1]);
+					if (m_bInMainPathDefinition)
+						m_mainPath->AddPolygon(ppoints, coordNum);
+					if (m_bInShadowPathDefinition)
+						m_shadowPath->AddPolygon(ppoints, coordNum);
+					delete [] ppoints;
+				}
+				break;
+			case VectorCommand::AddArcToPath: {
+					std::vector<long> values = (*ii).GetResolvedValues(m_Extents);
+					ASSERT(values.size() == 6);
+					if (m_bInMainPathDefinition)
+						m_mainPath->AddArc(values[0], values[1], values[2], values[3], (float)values[4], (float)values[5]);
+					if (m_bInShadowPathDefinition)
+						m_shadowPath->AddArc(values[0], values[1], values[2], values[3], (float)values[4], (float)values[5]);
 				}
 				break;
 			default: ASSERT(true);
 		}
 	}
+	if (m_mainPath != NULL) {
+		delete m_mainPath;
+		m_mainPath = NULL;
+	}
+	if (m_shadowPath != NULL) {
+		delete m_shadowPath;
+		m_shadowPath = NULL;
+	}
 
-	pDC->SelectObject(m_originalPen);
-	pDC->SelectObject(m_originalBrush);
-
-	ResizablePart::Draw(pDC);
+	ResizablePart::Draw(pDC, gdip);
 }
 
 // New functions
@@ -317,8 +436,8 @@ void VectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	}
 
 	// Brush's Color
-	m_crBrush = COLOR_BLACK;
-	it = preferences.find(burshColorVariableName);
+	m_crBrush = COLOR_WHITE;
+	it = preferences.find(brushColorVariableName);
 	if (it != preferences.end()) {
 		m_crBrush = it->second.uValue.crValue;
 	} else {
@@ -326,92 +445,17 @@ void VectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	}
 
 	m_shadowEndColor = COLOR_WHITE;
-	it = preferences.find(PREF_BORDERCOLOR);
+	it = preferences.find(borderColorVariableName);
 	if (it != preferences.end()) {
 		m_shadowEndColor = it->second.uValue.crValue;
 	} else {
-		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_BORDERCOLOR, m_shadowEndColor);
-	}
-}
-
-void VectorPart::SetPen(CDC* pDC)
-{
-	CPen* oldPen = pDC->SelectObject(DecoratorSDK::getFacilities().getPen(m_bActive ? m_crPen : COLOR_GRAYED_OUT));
-	if (!m_bOriginalPenSaved) {
-		m_originalPen = oldPen;
-		m_bOriginalPenSaved = true;
-	}
-}
-
-void VectorPart::SetBrush(CDC* pDC)
-{
-	CBrush* oldBrush = pDC->SelectObject(DecoratorSDK::getFacilities().getBrush(m_bActive ? m_crBrush : COLOR_GRAYED_OUT));
-	if (!m_bOriginalBrushSaved) {
-		m_originalBrush = oldBrush;
-		m_bOriginalBrushSaved = true;
-	}
-}
-
-void VectorPart::PolyDraw(CDC* pDC, const LPPOINT lppt, const LPBYTE lpbTypes, int cCount) const
-{
-	int nIndex;
-	LPPOINT pptLastMoveTo = NULL;
-
-	// for each of the points we have...
-	for (nIndex = 0; nIndex < cCount; nIndex++) {
-		switch(lpbTypes[nIndex]) {
-		// React to information from the path by drawing the data
-		// we received. For each of the points, record our own
-		// "last active point" so we can close figures, lines, and
-		// Beziers.
-
-		case PT_MOVETO:
-			if (pptLastMoveTo != NULL && nIndex > 0)
-				pDC->LineTo(pptLastMoveTo->x, pptLastMoveTo->y);
-			pDC->MoveTo(lppt[nIndex].x, lppt[nIndex].y);
-			pptLastMoveTo = &lppt[nIndex];
-			break;
-
-		case PT_LINETO | PT_CLOSEFIGURE:
-			pDC->LineTo(lppt[nIndex].x, lppt[nIndex].y);
-			if (pptLastMoveTo != NULL)
-				pDC->LineTo(pptLastMoveTo->x, pptLastMoveTo->y);
-			pptLastMoveTo = NULL;
-			break;
-
-		case PT_LINETO:
-			pDC->LineTo(lppt[nIndex].x, lppt[nIndex].y);
-			break;
-
-		case PT_BEZIERTO | PT_CLOSEFIGURE:
-			ASSERT(nIndex + 2 <= cCount);
-			pDC->PolyBezierTo(&lppt[nIndex], 3);
-			nIndex += 2;
-			if (pptLastMoveTo != NULL)
-				pDC->LineTo(pptLastMoveTo->x, pptLastMoveTo->y);
-			pptLastMoveTo = NULL;
-			break;
-
-		case PT_BEZIERTO:
-			ASSERT(nIndex + 2 <= cCount);
-			pDC->PolyBezierTo(&lppt[nIndex], 3);
-			nIndex += 2;
-			break;
-		}
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, borderColorVariableName, m_shadowEndColor);
 	}
 
-	// If the figure was never closed and should be,
-	// close it now.
-	if (pptLastMoveTo != NULL && nIndex > 1)
-		pDC->LineTo(pptLastMoveTo->x, pptLastMoveTo->y);
-}
-
-void VectorPart::OffsetPolyPoints(const LPPOINT lppt, int cCount, int offset) const
-{
-	for (int nIndex = 0; nIndex < cCount; nIndex++) {
-		lppt[nIndex].x = lppt[nIndex].x + offset;
-		lppt[nIndex].y = lppt[nIndex].y + offset;
-	}
+	m_bShadowEnabled = true;
+	it = preferences.find(PREF_ITEMSHADOWCAST);
+	if (it != preferences.end())
+		m_bShadowEnabled = it->second.uValue.bValue;
 }
 
 }; // namespace DecoratorSDK

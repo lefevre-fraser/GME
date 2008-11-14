@@ -200,8 +200,11 @@ CRect ModelComplexPart::GetPortLocation(CComPtr<IMgaFCO>& pFCO) const
 {
 	CRect portLocation(0,0,0,0);
 	PortPart* pPortPart = GetPort(pFCO);
-	if (pPortPart != NULL)
+	if (pPortPart != NULL) {
 		portLocation = pPortPart->GetLocation();
+		CPoint offset = GetLocation().TopLeft();
+		portLocation.OffsetRect(-offset.x, -offset.y);
+	}
 	return portLocation;
 }
 
@@ -221,9 +224,9 @@ bool ModelComplexPart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 	return true;
 }
 
-void ModelComplexPart::Draw(CDC* pDC)
+void ModelComplexPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	TypeableBitmapPart::Draw(pDC);
+	TypeableBitmapPart::Draw(pDC, gdip);
 }
 
 void ModelComplexPart::SaveState()
@@ -936,7 +939,7 @@ bool ModelComplexPart::OperationCanceledByGME(void)
 	return false;
 }
 
-void ModelComplexPart::DrawBackground(CDC* pDC)
+void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	CSize cExtentD = pDC->GetViewportExt();
 	CSize cExtentL = pDC->GetWindowExt();
@@ -944,35 +947,36 @@ void ModelComplexPart::DrawBackground(CDC* pDC)
 	cRect.BottomRight() -= CPoint(1, 1);
 
 #ifndef OLD_DECORATOR_LOOKANDFEEL
-	TypeableBitmapPart::DrawBackground(pDC);
+	TypeableBitmapPart::DrawBackground(pDC, gdip);
 #else
 	if (m_pBitmap->getName() != createResString(IDB_MODEL) && TypeableBitmapPart::m_bActive) {
-		TypeableBitmapPart::DrawBackground(pDC);
+		TypeableBitmapPart::DrawBackground(pDC, gdip);
 	} else {
 		int iDepth = (m_bReferenced) ? 2 : ((m_iTypeInfo == 3) ? 4 : 7);
-		getFacilities().drawBox(pDC, cRect, (!m_bActive) ? COLOR_LIGHTGRAY : (m_bOverlay) ? m_crOverlay : COLOR_GRAY, iDepth);
+		getFacilities().DrawBox(gdip, cRect, (!m_bActive) ? COLOR_LIGHTGRAY : (m_bOverlay) ? m_crOverlay : COLOR_GRAY, iDepth);
 		CRect cRect2 = cRect;
 		cRect2.InflateRect(1, 1);
-		getFacilities().drawRect(pDC, cRect2, (m_bActive) ? m_crBorder : COLOR_GRAY);
+		getFacilities().DrawRect(gdip, cRect2, (m_bActive) ? m_crBorder : COLOR_GRAY);
 		/* Commented out // inner border for Types, and Referenced models // Requested by Akos
 		if (m_iTypeInfo != 3 || m_bReferenced) {
 			cRect2 = cRect;
 			cRect2.DeflateRect(iDepth, iDepth);
-			getFacilities().drawRect(pDC, cRect2, (m_bActive) ? m_crBorder : COLOR_GRAY);
+			getFacilities().drawRect(gdip, cRect2, (m_bActive) ? m_crBorder : COLOR_GRAY);
 		}
 		*/
 	}
 #endif
 
+
 	cRect.BottomRight() += CPoint(1, 1);
-	CPoint ptOrigin = pDC->OffsetViewportOrg((long) (cRect.left * ((double) cExtentD.cx / cExtentL.cx)), (long) (cRect.top * ((double) cExtentD.cy / cExtentL.cy)));
+//	CPoint ptOrigin = pDC->OffsetViewportOrg((long) (cRect.left * ((double) cExtentD.cx / cExtentL.cx)), (long) (cRect.top * ((double) cExtentD.cy / cExtentL.cy)));
 	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
-		(*ii)->Draw(pDC);
+		(*ii)->Draw(pDC, gdip);
 	}
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
-		(*ii)->Draw(pDC);
+		(*ii)->Draw(pDC, gdip);
 	}
-	pDC->SetViewportOrg(ptOrigin);
+//	pDC->SetViewportOrg(ptOrigin);
 }
 
 struct PortPartData {
@@ -1110,12 +1114,16 @@ void ModelComplexPart::SetBoxLocation(const CRect& cRect)
 	long lY = (m_Rect.Height() - m_LeftPorts.size() * (HEIGHT_PORT + GAP_PORT) + GAP_PORT) / 2;
 
 	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
-		(*ii)->SetBoxLocation(CRect(GAP_XMODELPORT, lY, GAP_XMODELPORT + WIDTH_PORT, lY + HEIGHT_PORT));
+		CRect boxRect = CRect(GAP_XMODELPORT, lY, GAP_XMODELPORT + WIDTH_PORT, lY + HEIGHT_PORT);
+		boxRect.OffsetRect(cRect.TopLeft());
+		(*ii)->SetBoxLocation(boxRect);
 		lY += HEIGHT_PORT + GAP_PORT;
 	}
 	lY = (m_Rect.Height() - m_RightPorts.size() * (HEIGHT_PORT + GAP_PORT) + GAP_PORT) / 2;
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
-		(*ii)->SetBoxLocation(CRect(cRect.Width() - GAP_XMODELPORT - WIDTH_PORT, lY, cRect.Width() - GAP_XMODELPORT, lY + HEIGHT_PORT));
+		CRect boxRect = CRect(cRect.Width() - GAP_XMODELPORT - WIDTH_PORT, lY, cRect.Width() - GAP_XMODELPORT, lY + HEIGHT_PORT);
+		boxRect.OffsetRect(cRect.TopLeft());
+		(*ii)->SetBoxLocation(boxRect);
 		lY += HEIGHT_PORT + GAP_PORT;
 	}
 }

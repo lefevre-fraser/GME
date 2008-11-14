@@ -37,9 +37,11 @@ CSize EllipseVectorPart::GetPreferredSize(void) const
 	return CSize(m_ellipseWidth, m_ellipseHeight);
 }
 
-void EllipseVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
+// New functions
+void EllipseVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
+									 HWND parentWnd, PreferenceMap& preferences)
 {
-	VectorPart::Initialize(pProject, pPart, pFCO);
+	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
 	SimpleCoordCommand* topMost		= new SimpleCoordCommand(TopMost);
@@ -50,14 +52,26 @@ void EllipseVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaM
 	m_coordCommands.push_back(rightMost);
 	m_coordCommands.push_back(bottomMost);
 
-	AddCommand(VectorCommand(leftMost, topMost, rightMost, bottomMost, VectorCommand::Ellipse));
-}
+	AddCommand(VectorCommand(VectorCommand::BeginPath));
+	AddCommand(VectorCommand(leftMost, topMost, rightMost, bottomMost, VectorCommand::AddEllipseToPath));
+	AddCommand(VectorCommand(VectorCommand::EndPath));
+	AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
+	AddCommand(VectorCommand(VectorCommand::CastShadowPath));
 
-// New functions
-void EllipseVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
-									 HWND parentWnd, PreferenceMap& preferences)
-{
-	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	bool bColor = false;
+	COLORREF crColor = COLOR_BLACK;
+	PreferenceMap::iterator it = preferences.find(PREF_COLOR);
+	if (it != preferences.end()) {
+		bColor = true;
+		crColor = it->second.uValue.crValue;
+	} else {
+		bColor = getFacilities().getPreference(pFCO, m_spMetaFCO, PREF_COLOR, crColor);
+	}
+	AbsoluteCoordCommand* colorCmd = new AbsoluteCoordCommand(crColor);
+	AbsoluteCoordCommand* grayedCmd = new AbsoluteCoordCommand(COLOR_GRAYED_OUT);
+	m_coordCommands.push_back(colorCmd);
+	m_coordCommands.push_back(grayedCmd);
+	AddCommand(VectorCommand(colorCmd, grayedCmd, VectorCommand::StrokeAndFillPath));
 }
 
 }; // namespace DecoratorSDK

@@ -41,7 +41,7 @@ void ResizablePart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaP
 
 void ResizablePart::Destroy(void)
 {
-	if (m_spFCO)
+	if (m_bResizable)
 		resizeLogic.Destroy();
 	OperationCanceledByGME();
 }
@@ -56,7 +56,7 @@ CSize ResizablePart::GetPreferredSize(void) const
 	long cx = 0;
 	long cy = 0;
 
-	if (m_bResizable && m_bReadCustomSize && m_spFCO) {
+	if (m_bResizable && m_bReadCustomSize) {
 		COMTRY {
 			CComPtr<IMgaMetaAspect> mAspect;
 			COMTHROW(m_spPart->get_ParentAspect(&mAspect));
@@ -109,8 +109,7 @@ CSize ResizablePart::GetPreferredSize(void) const
 void ResizablePart::SetLocation(const CRect& location)
 {
 	PartBase::SetLocation(location);
-	if (m_spFCO)
-		resizeLogic.SetResizeTargetLocation(location);
+	resizeLogic.SetResizeTargetLocation(location);
 }
 
 CRect ResizablePart::GetLocation(void) const
@@ -118,10 +117,10 @@ CRect ResizablePart::GetLocation(void) const
 	return PartBase::GetLocation();
 }
 
-void ResizablePart::Draw(CDC* pDC)
+void ResizablePart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	if (m_spFCO && m_bResizable)
-		resizeLogic.Draw(pDC);
+	if (m_bResizable)
+		resizeLogic.Draw(pDC, gdip);
 }
 
 // New functions
@@ -140,7 +139,7 @@ void ResizablePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMet
 
 bool ResizablePart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_spFCO && m_bResizable)
+	if (m_bResizable)
 		return resizeLogic.MouseMoved(nFlags, point, transformHDC);
 
 	return false;
@@ -148,7 +147,7 @@ bool ResizablePart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHD
 
 bool ResizablePart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_spFCO && m_bResizable)
+	if (m_bResizable)
 		return resizeLogic.MouseLeftButtonDown(nFlags, point, transformHDC);
 
 	return false;
@@ -156,7 +155,7 @@ bool ResizablePart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC tr
 
 bool ResizablePart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_spFCO && m_bResizable)
+	if (m_bResizable)
 		return resizeLogic.MouseLeftButtonUp(nFlags, point, transformHDC);
 
 	return false;
@@ -164,7 +163,7 @@ bool ResizablePart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC tran
 
 bool ResizablePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_spFCO && m_bActive && ResizablePart::GetPreferredSize() != CSize(0, 0))
+	if (m_bResizable && m_bActive && ResizablePart::GetPreferredSize() != CSize(0, 0))
 		return resizeLogic.MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC);
 
 	return false;
@@ -173,7 +172,7 @@ bool ResizablePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoi
 bool ResizablePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	bool handled = false;
-	if (m_spFCO) {
+	if (m_bResizable) {
 		m_bReadCustomSize = false;
 		handled = resizeLogic.MenuItemSelected(menuItemId, nFlags, point, transformHDC);
 		m_bReadCustomSize = true;
@@ -185,7 +184,7 @@ bool ResizablePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint&
 bool ResizablePart::OperationCanceledByGME(void)
 {
 	SetLocation(resizeLogic.GetOriginalLocation());
-	if (m_spFCO)
+	if (m_bResizable)
 		return resizeLogic.OperationCanceledByGME();
 
 	return false;
@@ -202,7 +201,7 @@ void ResizablePart::WindowResizingFinished(UINT nSide, CRect& location)
 {
 	ASSERT(m_bResizable);
 	SetLocation(location);
-	if (m_spFCO && resizeLogic.IsSizeChanged()) {
+	if (m_bResizable && resizeLogic.IsSizeChanged()) {
 		COMTRY {
 			CComPtr<IMgaMetaAspect> mAspect;
 			COMTHROW(m_spPart->get_ParentAspect(&mAspect));

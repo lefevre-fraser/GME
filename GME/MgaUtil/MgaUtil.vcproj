@@ -370,6 +370,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\AnnotationUtil.cpp"
+				>
+			</File>
+			<File
 				RelativePath="ClosureDlg.cpp"
 				>
 				<FileConfiguration
@@ -1334,6 +1338,10 @@
 			</File>
 			<File
 				RelativePath="AnnotationPanel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AnnotationUtil.h"
 				>
 			</File>
 			<File

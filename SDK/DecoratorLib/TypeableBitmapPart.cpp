@@ -103,9 +103,9 @@ void TypeableBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IM
 }
 
 
-void TypeableBitmapPart::DrawIcons(CDC* pDC)
+void TypeableBitmapPart::DrawIcons(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	BitmapPart::DrawIcons(pDC);
+	BitmapPart::DrawIcons(pDC, gdip);
 
 	if (m_bTypeIconEnabled && m_iTypeInfo != 0) {
 		CRect cRect = GetBoxLocation(false);
@@ -115,10 +115,10 @@ void TypeableBitmapPart::DrawIcons(CDC* pDC)
 		else
 			strRes = createResString((m_iTypeInfo == 1) ? IDB_ICON_TYPE_DIS : (m_iTypeInfo == 2) ? IDB_ICON_SUBTYPE_DIS : IDB_ICON_INSTANCE_DIS);
 		BitmapBase* pBitmap = getFacilities().getBitmap(strRes);
-		int width = (cRect.Width() - pBitmap->getWidth()) /2;
-		int height = (cRect.Height() - pBitmap->getHeight()) /2;
+		int width = (cRect.Width() - pBitmap->getWidth()) / 2;
+		int height = (cRect.Height() - pBitmap->getHeight()) / 2;
 		CRect rDest(cRect.left + width, cRect.top + height, cRect.left + width + pBitmap->getWidth(), cRect.top + height + pBitmap->getHeight());
-		pBitmap->draw(pDC, rDest, TileVector(1, BackgroundTile()));
+		pBitmap->draw(gdip, pDC, rDest, TileVector(1, BackgroundTile()));
 	}
 }
 

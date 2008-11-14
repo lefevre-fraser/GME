@@ -652,12 +652,17 @@ void CGMEView::DoPannWinRefresh()
 	pannDC->SetViewportExt(target.Width(), target.Height());
 
 	{
+		Gdiplus::Graphics gdipGraphics(pannDC->m_hDC);
+		gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
+		gdipGraphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+		gdipGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+
 		// draw the image
 		POSITION pos = annotators.GetHeadPosition();
 			while (pos) {
 			CGuiAnnotator *annotator = annotators.GetNext(pos);
 			if (annotator->IsVisible()) {
-				annotator->Draw(pannDC);
+				annotator->Draw(&gdipGraphics, pannDC);
 			}
 		}
 
@@ -667,7 +672,7 @@ void CGMEView::DoPannWinRefresh()
 			if(fco->IsVisible()) {
 				CGuiConnection *conn = dynamic_cast<CGuiConnection *>(fco);
 				if(!conn)
-					fco->Draw(pannDC);
+					fco->Draw(&gdipGraphics, pannDC);
 			}
 		}
 	}
@@ -679,14 +684,24 @@ void CGMEView::DoPannWinRefresh()
 
 void CGMEView::OnDraw(CDC* pDC)
 {
-	CGMEDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-
-	CDC *onScreen = pDC;
+	onScreen = pDC;
 	if(!onScreen->IsPrinting()  &&  !IsPreview()) { 
 		pDC = offScreen; 
 		OnPrepareDC(pDC);
 	}
+
+	Gdiplus::Graphics gdip(pDC->m_hDC);
+	gdip.SetPageUnit(Gdiplus::UnitPixel);
+	gdip.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+	gdip.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+
+	OnDraw(&gdip, pDC);
+}
+
+void CGMEView::OnDraw(Gdiplus::Graphics* gdip, CDC* pDC)
+{
+	CGMEDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
 
 	if(drawGrid && !pDC->IsPrinting() && !IsPreview() && /// zoomIdx >= GME_ZOOM_LEVEL_MED) 
 			m_zoomVal >= ZOOM_NO)
@@ -702,8 +717,8 @@ void CGMEView::OnDraw(CDC* pDC)
 //		s.cy = s.cy + END_SCROLL_OFFSET;
 		CRect rect;
 		GetClientRect(&rect);
-		graphics.DrawGrid(pDC,GME_GRID_SIZE,GME_GRID_SIZE,
-				max(s.cx,rect.right),max(s.cy,rect.bottom));
+		graphics.DrawGrid(gdip, GME_GRID_SIZE, GME_GRID_SIZE,
+						  max(s.cx,rect.right), max(s.cy,rect.bottom));
 	}
 
 	 /*
@@ -734,20 +749,20 @@ void CGMEView::OnDraw(CDC* pDC)
 	while (pos) {
 		CGuiAnnotator *annotator = annotators.GetNext(pos);
 		if (annotator->IsVisible()) {
-			annotator->Draw(pDC);
+			annotator->Draw(gdip, pDC);
 		}
 	}
 
 	pos = children.GetHeadPosition();
-	while(pos) {
-		CGuiFco *fco = children.GetNext(pos);
-		if(fco->IsVisible()) {
-			CGuiConnection *conn = dynamic_cast<CGuiConnection *>(fco);
-			if(!conn)
-				fco->Draw(pDC);
+	while (pos) {
+		CGuiFco* fco = children.GetNext(pos);
+		if (fco->IsVisible()) {
+			CGuiConnection* conn = dynamic_cast<CGuiConnection*> (fco);
+			if (!conn)
+				fco->Draw(gdip, pDC);
 		}
 	}
-	DrawConnections(pDC);
+	DrawConnections(gdip, pDC);
 
 	if(pDoc->GetEditMode() == GME_EDIT_MODE || pDoc->GetEditMode() == GME_SET_MODE) {
 		if( ( (selected.GetCount() > 0) || (selectedAnnotations.GetCount() > 0) ) 
@@ -782,13 +797,11 @@ void CGMEView::OnDraw(CDC* pDC)
 		if (connSrc) {
 			CRect rect = connSrc->GetLocation();
 			if (connSrcPort) {
-					rect = connSrcPort->GetLocation() + rect.TopLeft();
+				rect = connSrcPort->GetLocation() + rect.TopLeft();
 			}
-			CPen xorpen(PS_SOLID, GME_CONNSELECT_WIDTH, GME_DARKRED_COLOR);
-			CPen *oldpen = pDC->SelectObject(&xorpen);
-			CGdiObject *oldbrush = pDC->SelectStockObject(NULL_BRUSH);
-			// pDC->SetROP2(R2_XORPEN);
-			pDC->Rectangle(&rect);
+			Gdiplus::Pen* xorPen = graphics.GetGdipPen2(gdip, GME_DARKRED_COLOR, false, m_zoomVal > ZOOM_NO, GME_CONNSELECT_WIDTH);
+			gdip->DrawRectangle(xorPen, rect.left, rect.top, rect.Width(), rect.Height());
+
 			if ((connSrcHotSide != GME_CENTER) && (!connSrcPort)) {
 				CPoint hotSpot;
 				switch (connSrcHotSide) {
@@ -809,24 +822,21 @@ void CGMEView::OnDraw(CDC* pDC)
 					hotSpot.y = rect.CenterPoint().y;
 					break;
 				}
-				CBrush xorbrush(GME_DARKRED_COLOR);
-				pDC->SelectObject(&xorbrush);
-				pDC->Rectangle(hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
-				// pDC->Ellipse(hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
-				pDC->SelectObject(oldbrush);
+				Gdiplus::Brush* xorBrush = graphics.GetGdipBrush(GME_DARKRED_COLOR);
+				gdip->FillRectangle(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
+				//gdip->FillEllipse(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
 			}
-			pDC->SelectObject(oldpen);
+			if (GME_CONNSELECT_WIDTH > 1)
+				delete xorPen;
 		}
 		if (connTmp) {
 			CRect rect = connTmp->GetLocation();
 			if (connTmpPort) {
-					rect = connTmpPort->GetLocation() + rect.TopLeft();
+				rect = connTmpPort->GetLocation() + rect.TopLeft();
 			}
-			CPen xorpen(PS_SOLID, GME_CONNSELECT_WIDTH, GME_RED_COLOR);
-			CPen *oldpen = pDC->SelectObject(&xorpen);
-			CGdiObject *oldbrush = pDC->SelectStockObject(NULL_BRUSH);
-			// pDC->SetROP2(R2_XORPEN);
-			pDC->Rectangle(&rect);
+			Gdiplus::Pen* xorPen = graphics.GetGdipPen2(gdip, GME_RED_COLOR, false, m_zoomVal > ZOOM_NO, GME_CONNSELECT_WIDTH);
+			gdip->DrawRectangle(xorPen, rect.left, rect.top, rect.Width(), rect.Height());
+
 			if ((connTmpHotSide != GME_CENTER) && (!connTmpPort)) {
 				CPoint hotSpot;
 				switch (connTmpHotSide) {
@@ -847,13 +857,12 @@ void CGMEView::OnDraw(CDC* pDC)
 					hotSpot.y = rect.CenterPoint().y;
 					break;
 				}
-				CBrush xorbrush(GME_RED_COLOR);
-				pDC->SelectObject(&xorbrush);
-				pDC->Rectangle(hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
-				// pDC->Ellipse(hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
+				Gdiplus::Brush* xorBrush = graphics.GetGdipBrush(GME_RED_COLOR);
+				gdip->FillRectangle(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
+				//gdip->FillEllipse(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
 			}
-			pDC->SelectObject(oldbrush);
-			pDC->SelectObject(oldpen);
+			if (GME_CONNSELECT_WIDTH > 1)
+				delete xorPen;
 		}
 	}
 
@@ -993,18 +1002,16 @@ void CGMEView::OnInitialUpdate()
 
 #define LOGOSIZE		64 // 115
 
-void CGMEView::PrintMultiLineText(CDC *pDC, CString txt,int x,int &y,int ry,int xwidth)
+void CGMEView::PrintMultiLineText(Gdiplus::Graphics* gdip, CDC *pDC, CString txt, int x, int &y, int ry, int xwidth)
 {
-	CFont *font = graphics.GetFont(GME_PORTNAME_FONT);
-	pDC->SelectObject(font);
-
-	int incr = 2;
+	Gdiplus::Font* font = graphics.GetGdipFont(GME_PORTNAME_FONT);
 	CPoint pt(x,y);
-	CSize size = pDC->GetTextExtent(txt);
+	CSize size = graphics.MeasureText(gdip, txt, pt, font);
 	if(size.cx < xwidth) {
-		graphics.DrawText(pDC,txt,pt,font,GME_BLACK_COLOR,TA_LEFT | TA_BOTTOM );
+		graphics.DrawGdipText(gdip, txt, pt, font, GME_BLACK_COLOR, TA_LEFT | TA_BOTTOM);
 	}
 	else {
+		int incr = 2;
 		int lng = txt.GetLength();
 		int width = incr;
 		for(int start = 0; start < lng; start += width ) {
@@ -1014,7 +1021,7 @@ void CGMEView::PrintMultiLineText(CDC *pDC, CString txt,int x,int &y,int ry,int 
 				if(start + width >= lng)
 					printIt = true;
 				else {
-					CSize size = pDC->GetTextExtent(cur);
+					CSize size = graphics.MeasureText(gdip, cur, pt, font);
 					if(size.cx > xwidth) {
 						width -= incr;
 						cur = txt.Mid(start,width);
@@ -1022,7 +1029,7 @@ void CGMEView::PrintMultiLineText(CDC *pDC, CString txt,int x,int &y,int ry,int 
 					}
 				}
 				if(printIt) {
-					graphics.DrawText(pDC,cur,pt,font,GME_BLACK_COLOR,TA_LEFT | TA_BOTTOM);
+					graphics.DrawGdipText(gdip, cur, pt, font, GME_BLACK_COLOR, TA_LEFT | TA_BOTTOM);
 					pt.y += (int)(ry / 12);
 					break;
 				}
@@ -1033,12 +1040,12 @@ void CGMEView::PrintMultiLineText(CDC *pDC, CString txt,int x,int &y,int ry,int 
 	y = pt.y + (int)(ry / 25);
 }
 
-void CGMEView::PrintHeader(CDC* pDC, CPrintInfo* pInfo)
+void CGMEView::PrintHeader(Gdiplus::Graphics* gdip, CDC* pDC, CPrintInfo* pInfo)
 {
-	PrintHeaderRect(pDC, pInfo->m_rectDraw);
+	PrintHeaderRect(gdip, pDC, pInfo->m_rectDraw);
 }
 
-void CGMEView::PrintHeaderRect(CDC* pDC, CRect &rectDraw)
+void CGMEView::PrintHeaderRect(Gdiplus::Graphics* gdip, CDC* pDC, CRect &rectDraw)
 {
 	/*const static*/ int logdpi = 140;
 	int savedID = pDC->SaveDC();
@@ -1078,15 +1085,15 @@ void CGMEView::PrintHeaderRect(CDC* pDC, CRect &rectDraw)
 	int txty = gap * 6 ;
 	int xx = LOGOSIZE/4 + 20;
 
-	PrintMultiLineText(pDC,line1,xx,txty,logdpi,rectDraw.Width() - xx);
+	PrintMultiLineText(gdip,pDC,line1,xx,txty,logdpi,rectDraw.Width() - xx);
 
 	txty += 4 * gap;
 
 	CPoint pt = CPoint(LOGOSIZE /4  + 20,txty);
-// ??	PrintMultiLineText(pDC, line2, LOGOSIZE /4  + 20, txty, logdpi, rectDraw.Width() - xx);
-	graphics.DrawText(pDC,line2,pt,graphics.GetFont(GME_PORTNAME_FONT),GME_BLACK_COLOR,TA_LEFT | TA_BOTTOM);
+// ??	PrintMultiLineText(gdip, pDC, line2, LOGOSIZE /4  + 20, txty, logdpi, rectDraw.Width() - xx);
+	graphics.DrawGdipText(gdip,line2,pt,graphics.GetGdipFont(GME_PORTNAME_FONT),GME_BLACK_COLOR,TA_LEFT | TA_BOTTOM);
 //	pt = CPoint(rectDraw.right-gap * 2,LOGOSIZE + 20);
-//	graphics.DrawText(pDC,tim,pt,graphics.GetFont(GME_PORTNAME_FONT),GME_BLACK_COLOR,TA_RIGHT | TA_BOTTOM);
+//	graphics.DrawGdipText(gdip,tim,pt,graphics.GetGdipFont(GME_PORTNAME_FONT),GME_BLACK_COLOR,TA_RIGHT | TA_BOTTOM);
 
 
 	CBitmap logo;
@@ -1241,9 +1248,14 @@ void CGMEView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 	CGmePrintDialog* pdlg = (CGmePrintDialog*)(pInfo->m_pPD);
 	int headerY = 0;
 
+	Gdiplus::Graphics gdip(pDC->m_hDC);
+	gdip.SetPageUnit(Gdiplus::UnitPixel);
+	gdip.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+	gdip.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+
 	if (pdlg->HasHeader())
 	{
-		PrintHeader(pDC,pInfo);
+		PrintHeader(&gdip, pDC, pInfo);
 		headerY = pInfo->m_rectDraw.top;
 	}
 	// setup the DC according to the current page number - multipage
@@ -1254,7 +1266,7 @@ void CGMEView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 	line--; // starts with 0
 	col--;
 
-	{ 
+	{
 		pDC->SetMapMode(MM_ISOTROPIC);
 		CRect extent, objext, annext;
 		CGuiObject::GetExtent(children,objext);
@@ -1276,7 +1288,7 @@ void CGMEView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 		pDC->SetViewportOrg((int)(-wpage*col), (int)(-(hpage-devheader)*line) +devheader);
 	}
 
-	OnDraw(pDC);
+	OnDraw(&gdip, pDC);
 
 	// restore Aspect
 	if (pInfo->m_pPD->m_pd.nMaxPage == pInfo->m_nCurPage  && m_currPrnNumAsp == m_fullPrnAspNum)
@@ -2319,13 +2331,13 @@ void CGMEView::FindDerivedFrom(CComPtr<IMgaModel> model,CComPtr<IMgaModel> &type
 	}
 }
 
-void CGMEView::DrawConnections(CDC* pDC)
+void CGMEView::DrawConnections(Gdiplus::Graphics* gdip, CDC* pDC)
 {
 	POSITION pos = connections.GetHeadPosition();
-	while(pos) {
-		CGuiConnection *conn = connections.GetNext(pos);
-		if(conn->IsVisible()) {
-			conn->Draw(pDC);
+	while (pos) {
+		CGuiConnection* conn = connections.GetNext(pos);
+		if (conn->IsVisible()) {
+			conn->Draw(gdip, pDC);
 		}
 	}
 }
@@ -7842,7 +7854,13 @@ void CGMEView::OnPrintMetafile()
 	}
 
 	cDC.m_bPrinting = TRUE;		// HACK by Peter (c)
-	OnDraw(&cDC);
+
+	Gdiplus::Graphics gdip(cDC.m_hDC);
+	gdip.SetPageUnit(Gdiplus::UnitPixel);
+	gdip.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+	gdip.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+
+	OnDraw(&gdip, &cDC);
 
 	HENHMETAFILE hEmf = cDC.CloseEnhanced();
 	if ( hEmf ) {

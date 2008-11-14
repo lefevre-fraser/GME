@@ -98,9 +98,9 @@ void NewUMLDecorator::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 	m_part->GetPorts(portFCOs);
 }
 
-void NewUMLDecorator::Draw(CDC* pDC)
+void NewUMLDecorator::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	m_part->Draw(pDC);
+	m_part->Draw(pDC, gdip);
 }
 
 void NewUMLDecorator::SaveState()

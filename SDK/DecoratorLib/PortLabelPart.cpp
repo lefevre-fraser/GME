@@ -50,8 +50,8 @@ void PortLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMet
 
 bool PortLabelPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_bInsideContainer)
-		m_offsetPositions = true;
+//	if (m_bInsideContainer)
+//		m_offsetPositions = true;
 
 	bool handled = LabelPart::MouseMoved(nFlags, point, transformHDC);
 
@@ -62,8 +62,8 @@ bool PortLabelPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHD
 
 bool PortLabelPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_bInsideContainer)
-		m_offsetPositions = true;
+//	if (m_bInsideContainer)
+//		m_offsetPositions = true;
 
 	bool handled = LabelPart::MouseLeftButtonDown(nFlags, point, transformHDC);
 
@@ -74,8 +74,8 @@ bool PortLabelPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC tr
 
 bool PortLabelPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_bInsideContainer)
-		m_offsetPositions = true;
+//	if (m_bInsideContainer)
+//		m_offsetPositions = true;
 
 	bool handled = LabelPart::MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC);
 
@@ -86,8 +86,8 @@ bool PortLabelPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoi
 
 bool PortLabelPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_bInsideContainer)
-		m_offsetPositions = true;
+//	if (m_bInsideContainer)
+//		m_offsetPositions = true;
 
 	bool handled = LabelPart::MenuItemSelected(menuItemId, nFlags, point, transformHDC);
 
@@ -96,21 +96,21 @@ bool PortLabelPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint&
 	return handled;
 }
 
-CPoint PortLabelPart::GetTextPosition(void) const
+CPoint PortLabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
 	int d = (m_eAdjust == L_EAST)? 1: -1;
-	CPoint pt = LabelPart::GetTextPosition();
+	CPoint pt = LabelPart::GetTextPosition(pDC, gdip);
 	if (!m_bInsideContainer)
 		pt += CPoint(d * 7, -7);
 
 	return pt;
 }
 
-CRect PortLabelPart::GetTextLocation(void) const
+CRect PortLabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	CRect r = LabelPart::GetTextLocation();
-	if (m_offsetPositions)
-		r += m_parentPart->GetParent()->GetLocation().TopLeft();
+	CRect r = LabelPart::GetTextLocation(pDC, gdip);
+//	if (m_offsetPositions)
+//		r += m_parentPart->GetParent()->GetLocation().TopLeft();
 	return r;
 }
 

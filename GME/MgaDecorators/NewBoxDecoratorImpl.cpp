@@ -256,10 +256,14 @@ STDMETHODIMP CNewBoxDecoratorImpl::Draw(HDC hdc)
 
 	CDC dc;
 	dc.Attach(hdc);
+	Gdiplus::Graphics gdipGraphics(hdc);
+	gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
+	gdipGraphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+	gdipGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
 
 	HRESULT retVal = S_OK;
 	try {
-		m_pNewDecorator->Draw(&dc);
+		m_pNewDecorator->Draw(&dc, &gdipGraphics);
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;

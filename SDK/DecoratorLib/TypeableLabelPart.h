@@ -32,12 +32,12 @@ public:
 	TypeableLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~TypeableLabelPart();
 
-	virtual void	Draw						(CDC* pDC);
+	virtual void	Draw						(CDC* pDC, Gdiplus::Graphics* gdip);
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 
-	virtual CPoint	GetTextPosition				(void) const;
-	virtual CRect	GetTextLocation				(void) const;
+	virtual CPoint	GetTextPosition				(CDC* pDC, Gdiplus::Graphics* gdip) const;
+	virtual CRect	GetTextLocation				(CDC* pDC, Gdiplus::Graphics* gdip) const;
 };
 
 }; // namespace DecoratorSDK

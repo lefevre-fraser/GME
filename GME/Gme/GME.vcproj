@@ -259,6 +259,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\AnnotatorEventSink.cpp"
+				>
+			</File>
+			<File
 				RelativePath="AutoRoute\ArEdgeLs.cpp"
 				>
 				<FileConfiguration
@@ -1720,6 +1724,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath=".\AnnotatorEventSink.h"
+				>
+			</File>
 			<File
 				RelativePath="AutoRoute\ArEdgeLs.h"
 				>

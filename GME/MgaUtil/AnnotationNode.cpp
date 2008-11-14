@@ -7,6 +7,7 @@
 #include "AnnotationNode.h"
 #include "..\Annotator\AnnotationDefs.h"
 #include "AnnotationBrowserDlg.h"
+#include "AnnotationUtil.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -134,7 +135,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 			COMTHROW(lfNode->get_Value(&bstr));
 		}
 		CString str(bstr);
-		if (!LogfontDecode(str, &m_logfont)) {
+		if (!CAnnotationUtil::LogfontDecode(str, &m_logfont)) {
 			throw hresult_exception();
 		}
 	} 
@@ -363,7 +364,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 	if (memcmp(&m_logfont, &defFont, sizeof(LOGFONT)) != 0) {
 		try {
 			CString str;
-			LogfontEncode(str, &m_logfont);
+			CAnnotationUtil::LogfontEncode(str, &m_logfont);
 			CComBSTR bstr(str);
 			CComPtr<IMgaRegNode> lfNode;
 			CComBSTR lfName(AN_FONT_PREF);
@@ -463,54 +464,11 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 
 void CAnnotationNode::InitializeClass()
 {
-		memset(&defFont, 0, sizeof(LOGFONT));
-		defFont.lfHeight = -MulDiv(AN_DEFAULT_FONT_HEIGHT, GetDeviceCaps(::GetWindowDC(NULL), LOGPIXELSY), 72);
-		_tcsncpy(defFont.lfFaceName, AN_DEFAULT_FONT_FACE, LF_FACESIZE);
-		defFont.lfPitchAndFamily = FF_DONTCARE | DEFAULT_PITCH;
-		defFont.lfQuality = DEFAULT_QUALITY;
-		defFont.lfClipPrecision  = CLIP_DEFAULT_PRECIS;
-		defFont.lfOutPrecision = OUT_DEFAULT_PRECIS;
-		defFont.lfCharSet = ANSI_CHARSET;
-		defFont.lfItalic  = FALSE;
-		defFont.lfUnderline = FALSE;
-		defFont.lfStrikeOut = FALSE;
-		defFont.lfWeight = FW_DONTCARE;
-		defFont.lfWidth = 0;
+	CAnnotationUtil::FillLogFontWithDefault(&defFont);
 
-		defColor = AN_DEFAULT_COLOR;
+	defColor = AN_DEFAULT_COLOR;
 
-		defBgcolor = AN_DEFAULT_BGCOLOR;
+	defBgcolor = AN_DEFAULT_BGCOLOR;
 
-		classIsInitialized = true;
-}
-
-void CAnnotationNode::LogfontEncode(CString &str, const LOGFONT * lfp)
-{	
-	TCHAR buff[6];
-	buff[5] = _T('0');
-
-	str.Empty();
-	for (int i = 0; i < sizeof(LOGFONT); i++) {
-		unsigned int ch = ((const unsigned char *)lfp)[i];
-		_sntprintf(buff, 5, _T("%02x "), ch);
-		str += buff;
-	}
-}
-
-bool CAnnotationNode::LogfontDecode(const CString &str, LOGFONT * lfp)
-{
-	int i = 0;
-	int pos = 0;
-	int epos = 0;
-	epos = str.Find(_T(' '), pos);
-	while (epos > 0) {
-		unsigned int ch;
-		if (_stscanf(str.Mid(pos,epos-pos), _T("%2x"), &ch) != 1) {
-			return false;
-		}
-		((unsigned char *)lfp)[i++] = ch;
-		pos = epos+1;
-		epos = str.Find(_T(' '), pos);
-	}
-	return (i == sizeof(LOGFONT));
+	classIsInitialized = true;
 }

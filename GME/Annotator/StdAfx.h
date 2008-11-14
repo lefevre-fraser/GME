@@ -41,8 +41,6 @@ extern CComModule _Module;
 
 #include "..\Common\CommonError.h"
 
-#include "DecoratorLib.h"
-
 
 
 //{{AFX_INSERT_LOCATION}}

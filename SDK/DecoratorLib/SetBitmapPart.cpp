@@ -38,20 +38,20 @@ void SetBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMet
 }
 
 
-void SetBitmapPart::DrawBackground(CDC* pDC)
+void SetBitmapPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 #ifndef OLD_DECORATOR_LOOKANDFEEL
-	TypeableBitmapPart::DrawBackground(pDC);
+	TypeableBitmapPart::DrawBackground(pDC, gdip);
 #else
 	if (m_bActive) {
-		TypeableBitmapPart::DrawBackground(pDC);
+		TypeableBitmapPart::DrawBackground(pDC, gdip);
 	} else {
 		CRect cRect = GetBoxLocation(false);
 		int iDepth = (m_bReferenced) ? 2 : 7;
-		getFacilities().drawBox(pDC, cRect, COLOR_LIGHTGRAY, iDepth);
-		getFacilities().drawRect(pDC, cRect, COLOR_GRAY);
+		getFacilities().DrawBox(gdip, cRect, COLOR_LIGHTGRAY, iDepth);
+		getFacilities().DrawRect(gdip, cRect, COLOR_GRAY);
 		cRect.DeflateRect(iDepth, iDepth);
-		getFacilities().drawRect(pDC, cRect, COLOR_GRAY);
+		getFacilities().DrawRect(gdip, cRect, COLOR_GRAY);
 	}
 #endif
 }

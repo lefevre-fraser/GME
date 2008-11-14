@@ -35,24 +35,26 @@ ClassLabelPart::~ClassLabelPart()
 {
 }
 
-void ClassLabelPart::Draw(CDC* pDC)
+void ClassLabelPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	if (m_bTextEnabled) {
 		CRect loc = GetLocation();
-		long centerline = (loc.left + loc.right) / 2;
-		getFacilities().drawText(pDC,
-								 m_strText,
-								 CPoint(centerline, loc.top + m_labelRelYPosition),
-								 getFacilities().getFont(m_iFontKey)->pFont,
-								 (m_bActive) ? m_crText : COLOR_GRAYED_OUT,
-								 TA_BOTTOM | TA_CENTER,
-								 m_iMaxTextLength,
-								 "",
-								 "",
-								 false);
+		DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+		CSize size = getFacilities().MeasureText(gdip, pFont, m_strText);
+		getFacilities().DrawString(gdip,
+								   m_strText,
+								   CRect(loc.left, loc.top + m_labelRelYPosition - size.cy,
+										 loc.right, loc.top + m_labelRelYPosition),
+								   pFont,
+								   (m_bActive) ? m_crText : COLOR_GRAYED_OUT,
+								   TA_BOTTOM | TA_CENTER,
+								   m_iMaxTextLength,
+								   "",
+								   "",
+								   false);
 	}
 	if (m_spFCO)
-		resizeLogic.Draw(pDC);
+		resizeLogic.Draw(pDC, gdip);
 }
 
 // New functions
@@ -65,19 +67,17 @@ void ClassLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMe
 		m_iFontKey = FONT_ABSTRACT;
 }
 
-CPoint	ClassLabelPart::GetTextPosition(void) const
+CPoint	ClassLabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	return GetLabelLocation().TopLeft();
+	return GetTextLocation(pDC, gdip).TopLeft();
 }
 
-CRect ClassLabelPart::GetTextLocation(void) const
+CRect ClassLabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
 	CRect loc = GetLocation();
 
-	CDC dc;
-	dc.CreateCompatibleDC(NULL);
-	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
-	CSize cSize = dc.GetTextExtent(m_strText);
+	DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+	CSize cSize = getFacilities().MeasureText(gdip, pFont, m_strText);
 
 	long centerline = (loc.left + loc.right) / 2;
 	return CRect(centerline - cSize.cx / 2,

@@ -52,7 +52,7 @@ public:
 	virtual CRect			GetLabelLocation	(void) const;
 	virtual CRect			GetPortLocation		(CComPtr<IMgaFCO>& fco) const;
 	virtual bool			GetPorts			(CComPtr<IMgaFCOs>& portFCOs) const;
-	virtual void			Draw				(CDC* pDC);
+	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 	virtual void			SaveState			(void);
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
@@ -72,7 +72,7 @@ public:
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
 
-	virtual void	DrawBackground				(CDC* pDC);
+	virtual void	DrawBackground				(CDC* pDC, Gdiplus::Graphics* gdip);
 
 	virtual void	SetBoxLocation				(const CRect& cRect);
 	virtual void	SetReferenced				(bool referenced);

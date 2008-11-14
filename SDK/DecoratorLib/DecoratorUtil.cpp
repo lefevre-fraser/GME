@@ -171,14 +171,22 @@ Facilities::~Facilities()
 		delete it3->second->pFont;
 		delete it3->second;
 	}
-	for ( std::map<CString,CPen*>::iterator it4 = m_mapPens.begin() ; it4 != m_mapPens.end() ; ++it4 ) {
-		it4->second->DeleteObject();
+	for ( std::map<int,GdipFont*>::iterator it4 = m_mapGdipFonts.begin() ; it4 != m_mapGdipFonts.end() ; ++it4 ) {
+		delete it4->second->gdipFont;
 		delete it4->second;
 	}
-	for ( std::map<CString,CBrush*>::iterator it5 = m_mapBrushes.begin() ; it5 != m_mapBrushes.end() ; ++it5 ) {
+	for ( std::map<CString,CPen*>::iterator it5 = m_mapPens.begin() ; it5 != m_mapPens.end() ; ++it5 ) {
 		it5->second->DeleteObject();
 		delete it5->second;
 	}
+	for ( std::map<CString,CBrush*>::iterator it6 = m_mapBrushes.begin() ; it6 != m_mapBrushes.end() ; ++it6 ) {
+		it6->second->DeleteObject();
+		delete it6->second;
+	}
+	for ( std::map<CString,Gdiplus::Pen*>::iterator it7 = m_mapGdipPens.begin() ; it7 != m_mapGdipPens.end() ; ++it7 )
+		delete it7->second;
+	for ( std::map<CString,Gdiplus::SolidBrush*>::iterator it8 = m_mapGdipBrushes.begin() ; it8 != m_mapGdipBrushes.end() ; ++it8 )
+		delete it8->second;
 }
 
 bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )
@@ -685,198 +693,196 @@ void Facilities::createFont( int iFontKey, const CString& strKind, int iBoldness
 	m_mapFonts[ iFontKey ]->pFont = new CFont();
 	m_mapFonts[ iFontKey ]->pFont->CreateFont( iSize, 0, 0, 0, iBoldness, bItalics, 0, 0, ANSI_CHARSET, OUT_DEVICE_PRECIS,
 												CLIP_DEFAULT_PRECIS, PROOF_QUALITY, FF_SWISS, strKind );
+
+	GdipFont* pgFont = GetFont( iFontKey );
+	if ( pgFont ) {
+		delete pgFont->gdipFont;
+		delete pgFont;
+	}
+
+/*	int fontStyle = Gdiplus::FontStyleRegular;
+	if (iBoldness == FW_BOLD)
+		fontStyle |= Gdiplus::FontStyleBold;
+	if (bItalics)
+		fontStyle |= Gdiplus::FontStyleItalic;
+
+	float pixelSize = static_cast<float> (iSize * 72.0 / GetDeviceCaps(GetDC(NULL), LOGPIXELSY));
+	USES_CONVERSION;
+	m_mapGdipFonts[ iFontKey ] = new GdipFont( strKind, iSize, iBoldness == FW_BOLD, bItalics );
+	m_mapGdipFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( (WCHAR*)A2W(strKind), pixelSize, fontStyle, Gdiplus::UnitPixel );*/
+
+	m_mapGdipFonts[ iFontKey ] = new GdipFont( strKind, iSize, iBoldness == FW_BOLD, bItalics );
+	CDC dc;
+	dc.CreateCompatibleDC(NULL);
+	LOGFONT logFont;
+	m_mapFonts[ iFontKey ]->pFont->GetLogFont(&logFont);
+	m_mapGdipFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( dc.m_hDC, &logFont );
 }
 
-SFont* Facilities::getFont( int iFontKey ) const
+GdipFont* Facilities::GetFont( int iFontKey ) const
 {
-	std::map<int,SFont*>::const_iterator it = m_mapFonts.find( iFontKey );
-	return ( it == m_mapFonts.end() ) ? NULL : it->second;
+	std::map<int,GdipFont*>::const_iterator it = m_mapGdipFonts.find( iFontKey );
+	return ( it == m_mapGdipFonts.end() ) ? NULL : it->second;
 }
 
-CPen* Facilities::getPen( COLORREF crColor, int iWidth, bool bDashed )
+Gdiplus::Pen* Facilities::GetPen( COLORREF crColor, int iWidth )
 {
 	char chBuffer[ 30 ];
-	sprintf( chBuffer, "%x-%d-%d", crColor, iWidth, bDashed );
-	std::map<CString,CPen*>::iterator it = m_mapPens.find( CString( chBuffer ) );
-	if ( it != m_mapPens.end() )
+	sprintf( chBuffer, "%x-%d", crColor, iWidth );
+	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.find( CString( chBuffer ) );
+	if ( it != m_mapGdipPens.end() )
 		return it->second;
-	CPen* pPen = new CPen( bDashed ? PS_DOT : PS_SOLID, iWidth, crColor );
-	m_mapPens.insert( std::map<CString,CPen*>::value_type( CString( chBuffer ), pPen ) );
+	Gdiplus::Pen* pPen = new Gdiplus::Pen(Gdiplus::Color(GetRValue(crColor), GetGValue(crColor), GetBValue(crColor)), static_cast<float> (iWidth));
+	m_mapGdipPens.insert( std::map<CString,Gdiplus::Pen*>::value_type( CString( chBuffer ), pPen ) );
 	return pPen;
 }
 
-CBrush* Facilities::getBrush( COLORREF crColor )
+Gdiplus::SolidBrush* Facilities::GetBrush( COLORREF crColor )
 {
 	char chBuffer[ 30 ];
 	sprintf( chBuffer, "%x", crColor );
-	std::map<CString,CBrush*>::iterator it = m_mapBrushes.find( CString( chBuffer ) );
-	if ( it != m_mapBrushes.end() )
+	std::map<CString,Gdiplus::SolidBrush*>::iterator it = m_mapGdipBrushes.find( CString( chBuffer ) );
+	if ( it != m_mapGdipBrushes.end() )
 		return it->second;
-	CBrush* pBrush = new CBrush( crColor );
-	m_mapBrushes.insert( std::map<CString,CBrush*>::value_type( CString( chBuffer ), pBrush ) );
+	Gdiplus::SolidBrush* pBrush = new Gdiplus::SolidBrush(Gdiplus::Color(GetRValue(crColor), GetGValue(crColor), GetBValue(crColor)));
+	m_mapGdipBrushes.insert( std::map<CString,Gdiplus::SolidBrush*>::value_type( CString( chBuffer ), pBrush ) );
 	return pBrush;
 }
 
-void Facilities::drawText( CDC* pDC, const CString& strText, const CPoint& cpTopLeft,  CFont* pFont, COLORREF crColor, int iAlign, int iLength, const CString& strPre, const CString& strPost, bool bPeriods ) const
+CSize Facilities::MeasureText( Gdiplus::Graphics* gdip, GdipFont* pFont, const CString& strText)
+{
+	return MeasureText(gdip, pFont->gdipFont, strText);
+}
+
+CSize Facilities::MeasureText( Gdiplus::Graphics* gdip, Gdiplus::Font* pFont, const CString& strText)
+{
+	Gdiplus::Graphics* gdip2 = NULL;
+	CDC	dc;
+	if (gdip == NULL) {
+		dc.CreateCompatibleDC(NULL);
+		gdip2 = new Gdiplus::Graphics(dc.m_hDC);
+		gdip2->SetPageUnit(Gdiplus::UnitPixel);
+		gdip2->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+		gdip2->SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+		gdip = gdip2;
+	}
+
+	Gdiplus::PointF origin(0, 0);
+	Gdiplus::RectF rectF;
+	USES_CONVERSION;
+	gdip->MeasureString((WCHAR*)A2W(strText), strText.GetLength(), pFont, origin, &rectF);
+	Gdiplus::SizeF sizeF;
+	rectF.GetSize(&sizeF);
+	CSize size(static_cast<long> (sizeF.Width), static_cast<long> (sizeF.Height));
+
+	if (gdip2 != NULL)
+		delete gdip2;
+	return size;
+}
+
+void Facilities::DrawString( Gdiplus::Graphics* gdip, const CString& strText, const CRect& crBounds, GdipFont* pFont,
+							 COLORREF crColor, int iAlign, int iLength, const CString& strPre, const CString& strPost, bool bPeriods ) const
+{
+	DrawString(gdip, strText, crBounds, pFont->gdipFont, crColor, iAlign, iLength, strPre, strPost, bPeriods);
+}
+
+void Facilities::DrawString( Gdiplus::Graphics* gdip, const CString& strText, const CRect& crBounds, Gdiplus::Font* pFont,
+							 COLORREF crColor, int iAlign, int iLength, const CString& strPre, const CString& strPost, bool bPeriods ) const
 {
 	CString strText2( strPre + strText + strPost );
 	if ( iLength != -1 && strText2.GetLength() > iLength )
 		strText2 = strPre + strText.Left( iLength + strPre.GetLength() ) + ( ( bPeriods ) ? "..." : "" ) + strPost;
 
-	CFont* oldFont = pDC->SelectObject( pFont );
-	pDC->SetTextAlign( iAlign );
-	SetBkMode( pDC->m_hDC, TRANSPARENT );
+	Gdiplus::StringFormat format;
+	Gdiplus::StringAlignment horizontalAlignment;
+	if ((iAlign & TA_CENTER) == TA_CENTER) {
+		horizontalAlignment = Gdiplus::StringAlignmentCenter;
+	} else if ((iAlign & TA_RIGHT) == TA_RIGHT) {
+		horizontalAlignment = Gdiplus::StringAlignmentFar;
+	} else {	// TA_LEFT
+		horizontalAlignment = Gdiplus::StringAlignmentNear;
+	}
+	format.SetAlignment(horizontalAlignment);
+	Gdiplus::StringAlignment verticalAlignment;
+	if ((iAlign & TA_BASELINE) == TA_BASELINE) {
+		verticalAlignment = Gdiplus::StringAlignmentCenter;
+	} else if ((iAlign & TA_BOTTOM) == TA_BOTTOM) {
+		verticalAlignment = Gdiplus::StringAlignmentFar;
+	} else {	// TA_TOP
+		verticalAlignment = Gdiplus::StringAlignmentNear;
+	}
+	format.SetLineAlignment(verticalAlignment);
 
-	pDC->SetTextColor( pDC->IsPrinting() ? COLOR_BLACK : crColor );
-	pDC->TextOut( cpTopLeft.x, cpTopLeft.y, strText2 );
-	pDC->SelectObject( oldFont );
+	HDC hDC = gdip->GetHDC();
+	COLORREF textColor = GetDeviceCaps(hDC, TECHNOLOGY) == DT_RASPRINTER ? COLOR_BLACK : crColor;
+	gdip->ReleaseHDC(hDC);
+
+	Gdiplus::SolidBrush textBrush(Gdiplus::Color(GetRValue(textColor),
+												 GetGValue(textColor),
+												 GetBValue(textColor)));
+
+	Gdiplus::RectF rectF(static_cast<float> (crBounds.left),
+						 static_cast<float> (crBounds.top),
+						 static_cast<float> (crBounds.Width()),
+						 static_cast<float> (crBounds.Height()));
+	USES_CONVERSION;
+	gdip->DrawString((WCHAR*)A2W(strText), strText.GetLength(), pFont, rectF, &format, &textBrush);
 }
 
-void Facilities::drawCenteredText( CDC* pDC, const CString& strText, RECT r, CFont* pFont, COLORREF crColor ) const
-{
-	if (pFont == 0)
-		return;
-	CFont* oldFont = pDC->SelectObject( pFont );
-	SetBkMode( pDC->m_hDC, TRANSPARENT );
-	pDC->SetTextColor( pDC->IsPrinting() ? COLOR_BLACK : crColor );
-	pDC->DrawText( strText, &r, DT_VCENTER | DT_SINGLELINE | DT_CENTER | DT_WORD_ELLIPSIS );
-	pDC->SelectObject( oldFont );
-}
-
-void Facilities::drawLeftText( CDC* pDC, const CString& strText, RECT r, CFont* pFont, COLORREF crColor ) const
-{
-	if (pFont == 0)
-		return;
-	CFont* oldFont = pDC->SelectObject( pFont );
-	SetBkMode( pDC->m_hDC, TRANSPARENT );
-	pDC->SetTextColor( pDC->IsPrinting() ? COLOR_BLACK : crColor );
-	pDC->DrawText( strText, &r, DT_VCENTER | DT_SINGLELINE | DT_LEFT );
-	pDC->SelectObject( oldFont );
-}
-
-void Facilities::drawLeftMultiText( CDC *pDC, const CString& strText, RECT r, CFont* pFont, COLORREF crColor ) const
-{
-	if (pFont == 0)
-		return;
-	CFont* oldFont = pDC->SelectObject( pFont );
-	SetBkMode( pDC->m_hDC, TRANSPARENT );
-	pDC->SetTextColor( pDC->IsPrinting() ? COLOR_BLACK : crColor );
-	pDC->DrawText( strText, &r, DT_VCENTER | DT_WORD_ELLIPSIS | DT_WORDBREAK | DT_LEFT );
-	pDC->SelectObject( oldFont );
-}
-
-
-void Facilities::drawRightText( CDC *pDC, const CString& strText, RECT r, CFont* pFont, COLORREF crColor ) const
-{
-	if (pFont == 0)
-		return;
-	CFont* oldFont = pDC->SelectObject( pFont );
-	SetBkMode( pDC->m_hDC, TRANSPARENT );
-	pDC->SetTextColor( pDC->IsPrinting() ? COLOR_BLACK : crColor );
-	pDC->DrawText( strText, &r, DT_VCENTER | DT_SINGLELINE | DT_RIGHT );
-	pDC->SelectObject( oldFont );
-}
-
-void Facilities::drawRect( CDC* pDC, const CRect& cRect, COLORREF crColor, int iWidth ) const
+void Facilities::DrawRect( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iWidth ) const
 {
 	Facilities* pThis = (Facilities*) this;
-	CPen* pPen = pThis->getPen( crColor, iWidth );
+	Gdiplus::Pen* pPen = pThis->GetPen( crColor, iWidth );
 	CRect cRect2 = cRect;
 	cRect2.DeflateRect( iWidth / 2, iWidth / 2 );
 
-	CPen* pPreviousPen = pDC->SelectObject( pPen );
-	pDC->MoveTo( cRect.left, cRect.top );
-	pDC->LineTo( cRect2.right , cRect2.top );
-	pDC->LineTo( cRect2.right , cRect2.bottom );
-	pDC->LineTo( cRect2.left, cRect2.bottom );
-	pDC->LineTo( cRect2.left, cRect2.top );
-	pDC->SelectObject( pPreviousPen );
+	gdip->DrawRectangle(pPen, cRect2.left, cRect2.top, cRect2.Width(), cRect2.Height());
 }
 
-void Facilities::drawBox( CDC* pDC, const CRect& cRect, COLORREF crColor, int iDepth ) const
+void Facilities::DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iDepth ) const
 {
 	Facilities* pThis = (Facilities*) this;
 
-	int CR_DIVIDE = 50;
-	for ( int i = 0 ; i < CR_DIVIDE ; i ++ ) {
-		CRect cRect2 = cRect;
-		cRect2.top = min( cRect.bottom, (long) ( cRect.top + ( cRect.Height() / CR_DIVIDE + 1 ) * i ) );
-		cRect2.bottom = min( cRect.bottom, (long) ( cRect2.top + ( cRect.Height() / CR_DIVIDE + 1 ) ) );
-		pDC->FillSolidRect( cRect2, shiftColor( crColor, ( i - 20 ) * 2 ) );
-	}
+	COLORREF beginColor = shiftColor( crColor, - 40 );
+	COLORREF endColor = shiftColor( crColor, 60 );
 
-	CR_DIVIDE = 25;
-	int CR_MULTI = (int) ( (double) 70 / iDepth );
-	for ( int i = 0 ; i < iDepth ; i++ ) {
-		CPen* pPrevoius = pDC->SelectObject( pThis->getPen( shiftColor( crColor, - i * CR_MULTI ) ) );
-		pDC->MoveTo( cRect.left + i, cRect.top + i );
-		pDC->LineTo( cRect.right - i, cRect.top + i );
-		for ( int j = 0 ; j < CR_DIVIDE ; j++ ) {
-			pDC->SelectObject( pThis->getPen( shiftColor( crColor, - i * CR_MULTI + i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
-			pDC->LineTo( cRect.right - i, ( j == CR_DIVIDE - 1 ) ? cRect.bottom - i : cRect.top + i + ( cRect.Height() - i * 2 ) / CR_DIVIDE * ( j + 1 ) );
-		}
-		pDC->SelectObject( pThis->getPen( shiftColor( crColor, i * 10 ) ) );
-		pDC->LineTo( cRect.left + i, cRect.bottom - i );
-		for ( int j = 0 ; j < CR_DIVIDE ; j++ ) {
-			pDC->SelectObject( pThis->getPen( shiftColor( crColor, i * CR_MULTI - i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
-			pDC->LineTo( cRect.left + i, ( j == CR_DIVIDE - 1 ) ? cRect.top + i : cRect.bottom - i - ( cRect.Height() - i * 2 ) / CR_DIVIDE * ( j + 1 ) );
-		}
-		pDC->SelectObject( pPrevoius );
-	}
-}
+	Gdiplus::GraphicsPath edgePath;
+	edgePath.AddLine(cRect.left, cRect.top, cRect.right, cRect.top);
+	edgePath.AddLine(cRect.right, cRect.top, cRect.right, cRect.bottom);
+	edgePath.AddLine(cRect.right, cRect.bottom, cRect.left, cRect.bottom);
+	edgePath.AddLine(cRect.left, cRect.bottom, cRect.left, cRect.top);
 
-void Facilities::draw3DBox( CDC* pDC, const CRect& rect, int borderSize, COLORREF brColor, COLORREF modelColor, bool special )
-{
-	if (special)
-		borderSize = borderSize * 2;
-	else
-		borderSize++;
+	Gdiplus::Color centerColor = Gdiplus::Color(GetRValue(beginColor),
+												GetGValue(beginColor),
+												GetBValue(beginColor));
+	Gdiplus::Color surroundColor = Gdiplus::Color(GetRValue(endColor),
+												  GetGValue(endColor),
+												  GetBValue(endColor));
+	Gdiplus::Color presetColors[] = {
+									surroundColor,
+									centerColor,
+									centerColor };
 
-	CRect r = rect;
-	r.DeflateRect( borderSize - 2, borderSize - 2 );
-	pDC->FillSolidRect( r, modelColor );
+	float borderRatio = static_cast<float> (iDepth / (cRect.Width() / 2.0));
+	float interpolationPositions[] = {
+		0.0f,
+		borderRatio,
+		1.0f };
+	Gdiplus::PathGradientBrush edgePathGradientBrush(&edgePath);
+	edgePathGradientBrush.SetInterpolationColors(presetColors, interpolationPositions, 3);
+	gdip->FillPath(&edgePathGradientBrush, &edgePath);
 
-	CPen* pen = getPen( brColor );
-	CPen* oldpen = pDC->SelectObject( pen );
-
-	CRect brect = r;
-	CPen* hiPen = getPen( getLightBorderColor( modelColor ) );
-	CPen* loPen = getPen( getDarkBorderColor( modelColor ) );
-	for ( int i = 0; i < borderSize; i++ ) {
-		pDC->MoveTo( CPoint( brect.left, brect.bottom ) );
-		pDC->SelectObject( hiPen );
-		pDC->LineTo( brect.TopLeft() );
-		pDC->SelectObject( hiPen );
-		pDC->LineTo( CPoint( brect.right, brect.top ) );
-		pDC->SelectObject( loPen );
-		pDC->LineTo( brect.BottomRight() );
-		pDC->SelectObject( loPen );
-		pDC->LineTo( CPoint( brect.left, brect.bottom ) );
-		brect.InflateRect( 1, 1 );
-	}
-
-	pDC->SelectObject( pen );
-	if ( !special )
-		r.InflateRect(borderSize,borderSize);
-	pDC->MoveTo( r.TopLeft() );
-	pDC->LineTo( CPoint( r.right, r.top ) );
-	pDC->LineTo( r.BottomRight() );
-	pDC->LineTo( CPoint( r.left, r.bottom ) );
-	pDC->LineTo( r.TopLeft() );
-	if ( !special )
-		r.DeflateRect( borderSize, borderSize );
-
-	pDC->SelectObject( oldpen );
-}
-
-void Facilities::draw3DBox( CDC* pDC, const CRect& rect, COLORREF brColor, COLORREF color, bool isType)
-{
-	draw3DBox( pDC, rect, GME_3D_BORDER_SIZE, brColor, color, isType );
-}
-
-void Facilities::drawFlatBox( CDC* pDC, const CRect& rect, COLORREF brColor, COLORREF color )
-{
-	draw3DBox( pDC, rect, 0, brColor, color );
+	CRect cInnerRect = cRect;
+	cInnerRect.InflateRect(-iDepth, -iDepth);
+	Gdiplus::LinearGradientBrush gradientBrush1(Gdiplus::Point(cInnerRect.left, cInnerRect.top),
+												Gdiplus::Point(cInnerRect.left, cInnerRect.bottom),
+												Gdiplus::Color(GetRValue(beginColor),
+															   GetGValue(beginColor),
+															   GetBValue(beginColor)),
+												Gdiplus::Color(GetRValue(endColor),
+															   GetGValue(endColor),
+															   GetBValue(endColor)));
+	gdip->FillRectangle(&gradientBrush1, cInnerRect.left, cInnerRect.top, cInnerRect.Width(), cInnerRect.Height());
 }
 
 COLORREF Facilities::shiftColor( COLORREF crColor, int iShift ) const
@@ -888,28 +894,6 @@ COLORREF Facilities::shiftColor( COLORREF crColor, int iShift ) const
 	iG = min( max( iG + iShift, 0 ), 255 );
 	iB = min( max( iB + iShift, 0 ), 255 );
 	return RGB( iR, iG, iB );
-}
-
-COLORREF Facilities::getLightBorderColor(COLORREF color) const
-{
-	int b = (color & 0xff0000) >> 16;
-	int g = (color & 0xff00) >> 8;
-	int r = (color & 0xff);
-	r = min(0xff,r + 0x40);
-	g = min(0xff,g + 0x40);
-	b = min(0xff,b + 0x40);
-	return RGB(r,g,b);
-}
-
-COLORREF Facilities::getDarkBorderColor(COLORREF color) const
-{
-	int b = (color & 0xff0000) >> 16;
-	int g = (color & 0xff00) >> 8;
-	int r = (color & 0xff);
-	r = max(0,r - 0x40);
-	g = max(0,g - 0x40);
-	b = max(0,b - 0x40);
-	return RGB(r,g,b);
 }
 
 std::vector<CString> Facilities::wrapString( const CString& strIn, int iWrap, int iMax ) const
@@ -964,6 +948,99 @@ CString Facilities::getStereotyped( const CString& strIn ) const
 	else
 		str = str + STEREOTYPE_LEFTA + strIn + STEREOTYPE_RIGHTA;
 	return str;
+}
+
+SFont* Facilities::getFont( int iFontKey ) const
+{
+	std::map<int,SFont*>::const_iterator it = m_mapFonts.find( iFontKey );
+	return ( it == m_mapFonts.end() ) ? NULL : it->second;
+}
+
+CPen* Facilities::getPen( COLORREF crColor, int iWidth, bool bDashed )
+{
+	char chBuffer[ 30 ];
+	sprintf( chBuffer, "%x-%d-%d", crColor, iWidth, bDashed );
+	std::map<CString,CPen*>::iterator it = m_mapPens.find( CString( chBuffer ) );
+	if ( it != m_mapPens.end() )
+		return it->second;
+	CPen* pPen = new CPen( bDashed ? PS_DOT : PS_SOLID, iWidth, crColor );
+	m_mapPens.insert( std::map<CString,CPen*>::value_type( CString( chBuffer ), pPen ) );
+	return pPen;
+}
+
+CBrush* Facilities::getBrush( COLORREF crColor )
+{
+	char chBuffer[ 30 ];
+	sprintf( chBuffer, "%x", crColor );
+	std::map<CString,CBrush*>::iterator it = m_mapBrushes.find( CString( chBuffer ) );
+	if ( it != m_mapBrushes.end() )
+		return it->second;
+	CBrush* pBrush = new CBrush( crColor );
+	m_mapBrushes.insert( std::map<CString,CBrush*>::value_type( CString( chBuffer ), pBrush ) );
+	return pBrush;
+}
+
+void Facilities::drawText( CDC* pDC, const CString& strText, const CPoint& cpTopLeft,  CFont* pFont, COLORREF crColor, int iAlign, int iLength, const CString& strPre, const CString& strPost, bool bPeriods ) const
+{
+	CString strText2( strPre + strText + strPost );
+	if ( iLength != -1 && strText2.GetLength() > iLength )
+		strText2 = strPre + strText.Left( iLength + strPre.GetLength() ) + ( ( bPeriods ) ? "..." : "" ) + strPost;
+
+	CFont* oldFont = pDC->SelectObject( pFont );
+	pDC->SetTextAlign( iAlign );
+	SetBkMode( pDC->m_hDC, TRANSPARENT );
+
+	pDC->SetTextColor( pDC->IsPrinting() ? COLOR_BLACK : crColor );
+	pDC->TextOut( cpTopLeft.x, cpTopLeft.y, strText2 );
+	pDC->SelectObject( oldFont );
+}
+
+void Facilities::drawRect( CDC* pDC, const CRect& cRect, COLORREF crColor, int iWidth ) const
+{
+	Facilities* pThis = (Facilities*) this;
+	CPen* pPen = pThis->getPen( crColor, iWidth );
+	CRect cRect2 = cRect;
+	cRect2.DeflateRect( iWidth / 2, iWidth / 2 );
+
+	CPen* pPreviousPen = pDC->SelectObject( pPen );
+	pDC->MoveTo( cRect.left, cRect.top );
+	pDC->LineTo( cRect2.right , cRect2.top );
+	pDC->LineTo( cRect2.right , cRect2.bottom );
+	pDC->LineTo( cRect2.left, cRect2.bottom );
+	pDC->LineTo( cRect2.left, cRect2.top );
+	pDC->SelectObject( pPreviousPen );
+}
+
+void Facilities::drawBox( CDC* pDC, const CRect& cRect, COLORREF crColor, int iDepth ) const
+{
+	Facilities* pThis = (Facilities*) this;
+
+	int CR_DIVIDE = 50;
+	for ( int i = 0 ; i < CR_DIVIDE ; i ++ ) {
+		CRect cRect2 = cRect;
+		cRect2.top = min( cRect.bottom, (long) ( cRect.top + ( cRect.Height() / CR_DIVIDE + 1 ) * i ) );
+		cRect2.bottom = min( cRect.bottom, (long) ( cRect2.top + ( cRect.Height() / CR_DIVIDE + 1 ) ) );
+		pDC->FillSolidRect( cRect2, shiftColor( crColor, ( i - 20 ) * 2 ) );
+	}
+
+	CR_DIVIDE = 25;
+	int CR_MULTI = (int) ( (double) 70 / iDepth );
+	for ( int i = 0 ; i < iDepth ; i++ ) {
+		CPen* pPrevoius = pDC->SelectObject( pThis->getPen( shiftColor( crColor, - i * CR_MULTI ) ) );
+		pDC->MoveTo( cRect.left + i, cRect.top + i );
+		pDC->LineTo( cRect.right - i, cRect.top + i );
+		for ( int j = 0 ; j < CR_DIVIDE ; j++ ) {
+			pDC->SelectObject( pThis->getPen( shiftColor( crColor, - i * CR_MULTI + i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
+			pDC->LineTo( cRect.right - i, ( j == CR_DIVIDE - 1 ) ? cRect.bottom - i : cRect.top + i + ( cRect.Height() - i * 2 ) / CR_DIVIDE * ( j + 1 ) );
+		}
+		pDC->SelectObject( pThis->getPen( shiftColor( crColor, i * 10 ) ) );
+		pDC->LineTo( cRect.left + i, cRect.bottom - i );
+		for ( int j = 0 ; j < CR_DIVIDE ; j++ ) {
+			pDC->SelectObject( pThis->getPen( shiftColor( crColor, i * CR_MULTI - i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
+			pDC->LineTo( cRect.left + i, ( j == CR_DIVIDE - 1 ) ? cRect.top + i : cRect.bottom - i - ( cRect.Height() - i * 2 ) / CR_DIVIDE * ( j + 1 ) );
+		}
+		pDC->SelectObject( pPrevoius );
+	}
 }
 
 }; // namespace DecoratorSDK

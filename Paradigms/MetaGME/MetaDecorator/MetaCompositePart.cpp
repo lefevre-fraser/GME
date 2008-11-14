@@ -42,14 +42,6 @@ CRect MetaCompositePart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
 	throw PortNotFoundException();
 }
 
-bool MetaCompositePart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
-{
-	CComPtr<IMgaFCOs> spFCOs;
-	COMTHROW(spFCOs.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
-	portFCOs = spFCOs.Detach();
-	return false;
-}
-
 CRect MetaCompositePart::GetLabelLocation(void) const
 {
 	HRESULT retVal = S_OK;

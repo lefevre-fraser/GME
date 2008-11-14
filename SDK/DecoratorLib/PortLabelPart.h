@@ -39,8 +39,8 @@ public:
 	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 
-	virtual CPoint	GetTextPosition				(void) const;
-	virtual CRect	GetTextLocation				(void) const;
+	virtual CPoint	GetTextPosition				(CDC* pDC, Gdiplus::Graphics* gdip) const;
+	virtual CRect	GetTextLocation				(CDC* pDC, Gdiplus::Graphics* gdip) const;
 };
 
 }; // namespace DecoratorSDK

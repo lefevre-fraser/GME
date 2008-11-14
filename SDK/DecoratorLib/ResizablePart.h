@@ -41,7 +41,7 @@ public:
 	virtual CSize			GetPreferredSize	(void) const;
 	virtual void			SetLocation			(const CRect& location);
 	virtual CRect			GetLocation			(void) const;
-	virtual void			Draw				(CDC* pDC);
+	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);

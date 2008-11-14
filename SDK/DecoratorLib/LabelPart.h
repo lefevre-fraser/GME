@@ -27,11 +27,11 @@ public:
 	LabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~LabelPart();
 
-	virtual void	Draw						(CDC* pDC);
+	virtual void	Draw						(CDC* pDC, Gdiplus::Graphics* gdip);
 
-	virtual CPoint	GetTextPosition				(void) const;
+	virtual CPoint	GetTextPosition				(CDC* pDC, Gdiplus::Graphics* gdip) const;
 	virtual void	SetTextRelYPosition			(long relYPosition) {};	// This doesn't make sense in case of box label decorator: label text location is computed automatically from box location and text alignment
-	virtual CRect	GetTextLocation				(void) const;
+	virtual CRect	GetTextLocation				(CDC* pDC, Gdiplus::Graphics* gdip) const;
 	virtual void	ExecuteOperation			(const CString& newString);
 };
 

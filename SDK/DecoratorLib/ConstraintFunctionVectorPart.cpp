@@ -30,11 +30,6 @@ ConstraintFunctionVectorPart::~ConstraintFunctionVectorPart()
 {
 }
 
-void ConstraintFunctionVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
-{
-	ConstraintVectorPart::Initialize(pProject, pPart, pFCO);
-}
-
 // New functions
 void ConstraintFunctionVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 									  HWND parentWnd, PreferenceMap& preferences)
@@ -104,7 +99,7 @@ void ConstraintFunctionVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, 
 	polygonPoints.push_back(fRight);
 	polygonPoints.push_back(fTop);
 
-	AddCommand(VectorCommand(polygonPoints, VectorCommand::Polygon));
+	AddCommand(VectorCommand(polygonPoints, VectorCommand::FillPolygon));
 }
 
 }; // namespace DecoratorSDK

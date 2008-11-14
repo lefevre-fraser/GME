@@ -129,19 +129,28 @@ public:
 class VectorCommand {
 public:
 	enum Codes {
-		BeginPath			= 0,
-		EndPath				= 1,
-		StrokeAndFillPath	= 2,
-		MoveTo				= 3,
-		LineTo				= 4,
-		Rectangle			= 5,
-		Ellipse				= 6,
-		Polygon				= 7,
-		AngleArc			= 8,
-		SelectBrush			= 9,
-		SelectPen			= 10,
-		SelectNullBrush		= 11,
-		SelectNullPen		= 12
+		DrawLine			= 0,
+		DrawRectangle		= 1,
+		DrawEllipse			= 2,
+		DrawPolygon			= 3,
+		FillRectangle		= 4,
+		FillEllipse			= 5,
+		FillPolygon			= 6,
+		SelectPen			= 7,
+		SelectBrush			= 8,
+		BeginPath			= 9,
+		EndPath				= 10,
+		StrokePath			= 11,
+		FillPath			= 12,
+		StrokeAndFillPath	= 13,
+		AddLineToPath		= 14,
+		AddEllipseToPath	= 15,
+		AddPolygonToPath	= 16,
+		AddArcToPath		= 17,
+		BeginShadowPath		= 18,
+		EndShadowPath		= 19,
+		CopyShadowPath		= 20,
+		CastShadowPath		= 21
 	};
 
 public:
@@ -174,11 +183,12 @@ protected:
 
 class VectorPart: public ResizablePart
 {
+protected:
 	// Preference variable name strings
 	CString						penColorVariableName;
-	CString						burshColorVariableName;
+	CString						brushColorVariableName;
+	CString						borderColorVariableName;
 
-protected:
 	CRect						m_Extents;
 	std::vector<VectorCommand>	m_Commands;
 	COLORREF					m_crPen;
@@ -189,6 +199,14 @@ protected:
 	CBrush*						m_originalBrush;
 	COLORREF					m_shadowStartColor;
 	COLORREF					m_shadowEndColor;
+	Gdiplus::GraphicsPath*		m_mainPath;
+	Gdiplus::GraphicsPath*		m_shadowPath;
+	bool						m_bInMainPathDefinition;
+	bool						m_bInShadowPathDefinition;
+	Gdiplus::Brush*				m_CurrentBrush;
+	Gdiplus::Pen*				m_CurrentPen;
+	bool						m_bShadowCasted;
+	bool						m_bShadowEnabled;
 
 	std::vector<CoordCommand*>	m_coordCommands;
 
@@ -207,20 +225,12 @@ public:
 
 // =============== resembles IMgaNewDecorator
 public:
-	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
-												 CComPtr<IMgaFCO>& pFCO);
 	virtual feature_code	GetFeatures			(void) const;
 	virtual void			SetLocation			(const CRect& location);
-	virtual void			Draw				(CDC* pDC);
+	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
-
-protected:
-	virtual void	SetBrush					(CDC* pDC);
-	virtual void	SetPen						(CDC* pDC);
-	void			PolyDraw					(CDC* pDC, const LPPOINT lppt, const LPBYTE lpbTypes, int cCount) const;
-	void			OffsetPolyPoints			(const LPPOINT lppt, int cCount, int offset) const;
 };
 
 }; // namespace DecoratorSDK

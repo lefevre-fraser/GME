@@ -74,10 +74,13 @@ public:
 	virtual long	GetLongest					(void) const;
 
 	virtual void	SetText						(const CString& text) { m_strText = text; };
-	virtual CPoint	GetTextPosition				(void) const = 0;
+	virtual CPoint	GetTextPosition				(CDC* pDC, Gdiplus::Graphics* gdip) const = 0;
 	virtual void	SetTextRelYPosition			(long relYPosition) = 0;
-	virtual CRect	GetTextLocation				(void) const = 0;
+	virtual CRect	GetTextLocation				(CDC* pDC, Gdiplus::Graphics* gdip) const = 0;
 	virtual void	ExecuteOperation			(const CString& newString) = 0;
+
+protected:
+	virtual CRect	GetTextLocation				(void) const;
 };
 
 }; // namespace DecoratorSDK

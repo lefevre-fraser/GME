@@ -342,7 +342,7 @@ void DecoratorBase::drawBackground( CDC* pDC ) const
 {
 	CRect cRect = getBoxLocation();
 	if ( m_bActive )
-		m_pBitmap->draw( pDC, cRect, *m_pTileVector );
+		m_pBitmap->draw( NULL, pDC, cRect, *m_pTileVector );
 	else
 		getFacilities().drawRect( pDC, cRect, COLOR_GRAY, 2 );
 }
@@ -432,7 +432,7 @@ void PortDecorator::drawBackground( CDC* pDC ) const
 {
 	CRect cRect = getBoxLocation();
 	if ( m_bActive )
-		m_pBitmap->draw( pDC, cRect, *m_pTileVector );
+		m_pBitmap->draw( NULL, pDC, cRect, *m_pTileVector );
 	else {
 		cRect.right--;
 		cRect.bottom--;
@@ -638,7 +638,7 @@ void TypeableDecorator::drawIcons( CDC* pDC ) const
 		int width = ( cRect.Width() - pBitmap->getWidth() ) /2;
 		int height =  ( cRect.Height() - pBitmap->getHeight() ) /2;
 		CRect rDest( cRect.left + width, cRect.top + height, cRect.left + width + pBitmap->getWidth(), cRect.top + height + pBitmap->getHeight() );
-		pBitmap->draw( pDC, rDest, TileVector( 1, BackgroundTile() ) );
+		pBitmap->draw( NULL, pDC, rDest, TileVector( 1, BackgroundTile() ) );
 	}
 }
 
@@ -1219,7 +1219,7 @@ void ReferenceDecorator::drawIcons( CDC* pDC ) const
 		cRect.top += GAP_LABEL;
 		cRect.right = cRect.left + pBitmap->getWidth();
 		cRect.bottom = cRect.top + pBitmap->getHeight();
-		pBitmap->draw( pDC, cRect, TileVector( 1, BackgroundTile() ) );
+		pBitmap->draw( NULL, pDC, cRect, TileVector( 1, BackgroundTile() ) );
 	}
 }
 

@@ -30,7 +30,6 @@ public:
 // =============== resembles IMgaNewDecorator
 public:
 	virtual CRect	GetPortLocation				(CComPtr<IMgaFCO>& fco) const;
-	virtual bool	GetPorts					(CComPtr<IMgaFCOs>& portFCOs) const;
 	virtual CRect	GetLabelLocation			(void) const;
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

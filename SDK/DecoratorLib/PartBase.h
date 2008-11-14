@@ -67,7 +67,7 @@ public:
 	virtual CRect			GetLabelLocation	(void) const;								// default (no) implementation
 	virtual CRect			GetPortLocation		(CComPtr<IMgaFCO>& fco) const;				// default (no) implementation
 	virtual bool			GetPorts			(CComPtr<IMgaFCOs>& portFCOs) const;		// default (no) implementation
-	virtual void			Draw				(CDC* pDC);									// default (no) implementation
+	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);		// default (no) implementation
 	virtual void			SaveState			(void);										// default (no) implementation
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

@@ -97,6 +97,8 @@ END
 //
 
 IDR_DECORATOR        REGISTRY DISCARDABLE    "Decorator.rgs"
+IDR_NEWDECORATOR     REGISTRY DISCARDABLE    "NewDecorator.rgs"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

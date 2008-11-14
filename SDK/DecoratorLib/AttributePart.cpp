@@ -33,48 +33,50 @@ AttributePart::~AttributePart()
 {
 }
 
-void AttributePart::Draw(CDC* pDC)
+void AttributePart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	if (m_bTextEnabled) {
 		CRect loc = GetLocation();
-		getFacilities().drawText(pDC,
-								 m_strText + ATTRIBUTE_SEP,
-								 CPoint(loc.left + DECORATOR_MARGINX, loc.top + m_textRelYPosition),
-								 getFacilities().getFont(m_iFontKey)->pFont,
-								 (m_bActive) ? m_crText : COLOR_GREY,
-								 TA_BOTTOM | TA_LEFT,
-								 m_iMaxTextLength,
-								 "",
-								 "",
-								 false);
-		getFacilities().drawText(pDC,
-								 m_strType,
-								 CPoint(loc.right - DECORATOR_MARGINX, loc.top + m_textRelYPosition),
-								 getFacilities().getFont(m_iFontKey)->pFont,
-								 (m_bActive) ? m_crText : COLOR_GREY,
-								 TA_BOTTOM | TA_RIGHT,
-								 m_iMaxTextLength,
-								 "",
-								 "",
-								 false);
+		DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+		CSize size = getFacilities().MeasureText(gdip, pFont, m_strText);
+		getFacilities().DrawString(gdip,
+								   m_strText + ATTRIBUTE_SEP,
+								   CRect(loc.left + DECORATOR_MARGINX, loc.top + m_textRelYPosition - size.cy,
+										 loc.right - DECORATOR_MARGINX, loc.top + m_textRelYPosition),
+								   pFont,
+								   (m_bActive) ? m_crText : COLOR_GREY,
+								   TA_BOTTOM | TA_LEFT,
+								   m_iMaxTextLength,
+								   "",
+								   "",
+								   false);
+		getFacilities().DrawString(gdip,
+								   m_strType,
+								   CRect(loc.left + DECORATOR_MARGINX, loc.top + m_textRelYPosition - size.cy,
+										 loc.right - DECORATOR_MARGINX, loc.top + m_textRelYPosition),
+								   pFont,
+								   (m_bActive) ? m_crText : COLOR_GREY,
+								   TA_BOTTOM | TA_RIGHT,
+								   m_iMaxTextLength,
+								   "",
+								   "",
+								   false);
 	}
 	if (m_spFCO)
-		resizeLogic.Draw(pDC);
+		resizeLogic.Draw(pDC, gdip);
 }
 
-CPoint	AttributePart::GetTextPosition(void) const
+CPoint	AttributePart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	return GetTextLocation().TopLeft();
+	return GetTextLocation(pDC, gdip).TopLeft();
 }
 
-CRect AttributePart::GetTextLocation(void) const
+CRect AttributePart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
 	CRect loc = GetLocation();
 
-	CDC dc;
-	dc.CreateCompatibleDC(NULL);
-	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
-	CSize cSize = dc.GetTextExtent(DecoratorSDK::getFacilities().getStereotyped(m_strText));
+	DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+	CSize cSize = getFacilities().MeasureText(gdip, pFont, m_strText);
 
 	return CRect(loc.left + DECORATOR_MARGINX,
 				 loc.top + m_textRelYPosition - cSize.cy,
@@ -82,23 +84,25 @@ CRect AttributePart::GetTextLocation(void) const
 				 loc.top + m_textRelYPosition);
 }
 
-CSize AttributePart::GetNameSize(CDC* pDC) const
+CSize AttributePart::GetNameSize(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	ASSERT(pDC != NULL);
-	return pDC->GetTextExtent(m_strText);
+	ASSERT(gdip != NULL);
+	DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+	return getFacilities().MeasureText(gdip, pFont, m_strText);
 }
 
-CSize AttributePart::GetTypeSize(CDC* pDC) const
+CSize AttributePart::GetTypeSize(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	ASSERT(pDC != NULL);
-	CSize extent = pDC->GetTextExtent(m_strType);
-	return extent;
+	ASSERT(gdip != NULL);
+	DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+	return getFacilities().MeasureText(gdip, pFont, m_strType);
 }
 
-CSize AttributePart::GetTextSize(CDC* pDC) const
+CSize AttributePart::GetTextSize(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	ASSERT(pDC != NULL);
-	return pDC->GetTextExtent(m_strText + ATTRIBUTE_SEP + m_strType);
+	ASSERT(gdip != NULL);
+	DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+	return getFacilities().MeasureText(gdip, pFont, m_strText + ATTRIBUTE_SEP + m_strType);
 }
 
 }; // namespace DecoratorSDK

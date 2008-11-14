@@ -11,6 +11,7 @@
 #include "GuiObject.h"
 #include "ModelGrid.h"
 #include "DecoratorEventSink.h"
+#include "AnnotatorEventSink.h"
 
 #include "AutoRoute/AutoRouterGraph.h"
 #include "AutoRoute/AutoRouter.h"
@@ -409,6 +410,8 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel> &pModel, CComPtr<IMgaRegNode> &m
 	special = false;
 
 	decorators = new CComPtr<IMgaDecorator>[numAsp];
+	newDecorators = new CComPtr<IMgaNewDecorator>[numAsp];
+	annotatorEventSinks = new CAnnotatorEventSink[numAsp];
 	locations = new CRect[numAsp];
 
 	try {
@@ -468,6 +471,8 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel> &pModel, CComPtr<IMgaRegNode> &m
 		parentAspect = 0;
 		delete [] decorators;
 		delete [] locations;
+		delete [] newDecorators;
+		delete [] annotatorEventSinks;
 		throw hresult_exception(e.hr);
 		return;
 	}
@@ -476,23 +481,41 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel> &pModel, CComPtr<IMgaRegNode> &m
 CGuiAnnotator::~CGuiAnnotator()
 {
 	for (int i = 0; i < numParentAspects; i++) {
-		if (decorators[i] != NULL) {
+		if (decorators[i] != NULL)
 			COMTHROW(decorators[i]->Destroy());
-		}
 	}
 	delete [] decorators;
 	delete [] locations;
+	delete [] newDecorators;
+	delete [] annotatorEventSinks;
 }
 
 void CGuiAnnotator::InitDecorator(int asp)
 {
 	try {
+		CComPtr<IMgaNewDecoratorEvents> annotatorEventSinkIface;
+#if defined (TRYNEWDECORATORS)
+		CString progId = AN_NEWDECORATOR_PROGID;
+		COMTHROW(newDecorators[asp].CoCreateInstance(PutInBstr(progId)));
+		HRESULT hr = annotatorEventSinks[asp].QuerySinkInterface((void**) &annotatorEventSinkIface);
+		if (hr == S_OK) {
+			annotatorEventSinks[asp].SetView(view);
+			// TODO
+			annotatorEventSinks[asp].SetGuiAnnotator(this);
+		}
+		decorators[asp] = CComQIPtr<IMgaDecorator>(newDecorators[asp]);
+#else
 		CString progId = AN_DECORATOR_PROGID;
 		COMTHROW(decorators[asp].CoCreateInstance(PutInBstr(progId)));
+#endif
 		CComBSTR param(AN_PARAM_ROOTNODE);
 		CComVariant value(rootNode);
 		COMTHROW(decorators[asp]->SetParam(param, value));
-		COMTHROW(decorators[asp]->Initialize(theApp.mgaProject, NULL, NULL));
+
+		if (newDecorators[asp])
+			COMTHROW(newDecorators[asp]->InitializeEx(theApp.mgaProject, NULL, NULL, annotatorEventSinkIface, (ULONGLONG)view->m_hWnd));
+		else
+			COMTHROW(decorators[asp]->Initialize(theApp.mgaProject, NULL, NULL));
 
 		long sx, sy;
 		COMTHROW(decorators[asp]->GetPreferredSize(&sx, &sy));
@@ -515,7 +538,7 @@ bool CGuiAnnotator::IsVisible(int aspect)
 	return (decorators[aspect] != NULL);
 }
 
-void CGuiAnnotator::Draw(CDC * pDC)
+void CGuiAnnotator::Draw(Gdiplus::Graphics* gdip, CDC* pDC)
 {
 	if (decorators[parentAspect]) {
 		try {
@@ -1191,8 +1214,8 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 
 	CDecoratorEventSink* decoratorEventSink = NULL;
 	try {
-#if defined (TRYNEWDECORATORS)
 		CComPtr<IMgaNewDecoratorEvents> decoratorEventSinkIface;
+#if defined (TRYNEWDECORATORS)
 		if (progId == GME_DEFAULT_DECORATOR ||
 			progId == "Mga.UMLDecorator" ||
 			progId == "Mga.Decorator.MetaDecorator")
@@ -1783,7 +1806,7 @@ void CGuiObject::GetRectList(CGuiObjectList &objList,CRectList &rects)
 //////////////////////////////////
 // Virtual methods of CGuiObject
 //////////////////////////////////
-void CGuiObject::Draw(CDC *pDC)
+void CGuiObject::Draw(Gdiplus::Graphics* gdip, CDC *pDC)
 {
 	VERIFY(parentAspect >= 0);
 	VERIFY(GetCurrentAspect());
@@ -2145,9 +2168,9 @@ void CGuiConnectionLabel::SetLocation(CPoint &endPoint,CPoint &nextPoint,CRect &
 	}
 }
 
-void CGuiConnectionLabel::Draw(CDC *pDC,COLORREF color, CGuiConnection *conn)
+void CGuiConnectionLabel::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection *conn)
 {
-	if(label.IsEmpty())
+	if (label.IsEmpty())
 		return;
 
 	label.Replace("%name%", (LPCSTR)(conn->name));
@@ -2163,10 +2186,11 @@ void CGuiConnectionLabel::Draw(CDC *pDC,COLORREF color, CGuiConnection *conn)
 		attrName += metaAttr->name;
 		attrName += "%";
 		label.Replace(attrName, conn->attributeCache[metaAttr->name]);
-
 	}
 
-	graphics.DrawText(pDC,label,loc,graphics.GetFont(GME_CONNLABEL_FONT),color,alignment);
+	if (label.IsEmpty())
+		return;
+	graphics.DrawGdipText(gdip, label, loc, graphics.GetGdipFont(GME_CONNLABEL_FONT), color, alignment);
 }
 
 ////////////////////////////////// CGuiConnectionLabel /////////////////////////////
@@ -2192,10 +2216,10 @@ void CGuiConnectionLabelSet::SetLocation(int index,CPoint &endPoint,CPoint &next
 	labels[index].SetLocation(endPoint,nextPoint,box);
 }
 
-void CGuiConnectionLabelSet::Draw(CDC *pDC,COLORREF color, CGuiConnection *conn)
+void CGuiConnectionLabelSet::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection *conn)
 {
 	for(int i = 0; i < GME_CONN_LABEL_NUM; i++)
-		labels[i].Draw(pDC, color, conn);
+		labels[i].Draw(gdip, color, conn);
 }
 
 
@@ -2423,7 +2447,7 @@ void CGuiConnection::Resolve()
 	}
 }
 
-void CGuiConnection::Draw(CDC *pDC)
+void CGuiConnection::Draw(Gdiplus::Graphics* gdip, CDC *pDC)
 {
 	if(!IsVisible())
 		return;
@@ -2482,7 +2506,7 @@ void CGuiConnection::Draw(CDC *pDC)
 
 	const CPointList &points = routerPath.p ? normalPoints : tmpPoints;
 
-	graphics.DrawConnection(pDC, points, grayedOut ? GME_GRAYED_OUT_COLOR : color, lineType, srcStyle, dstStyle,
+	graphics.DrawConnection(gdip, points, grayedOut ? GME_GRAYED_OUT_COLOR : color, lineType, srcStyle, dstStyle,
 							true, view->m_zoomVal > ZOOM_NO, selected ? 1: 0);
 
 	POSITION pos = points.GetHeadPosition();
@@ -2512,7 +2536,7 @@ void CGuiConnection::Draw(CDC *pDC)
 	labelset->SetLocation(GME_CONN_MAIN_LABEL, middle, middle2, locTemp);
 
 
-	labelset->Draw(pDC,(grayedOut ? GME_GRAYED_OUT_COLOR : nameColor), this);
+	labelset->Draw(gdip, (grayedOut ? GME_GRAYED_OUT_COLOR : nameColor), this);
 }
 
 void CGuiConnection::RemoveFromRouter(CAutoRouter &router)

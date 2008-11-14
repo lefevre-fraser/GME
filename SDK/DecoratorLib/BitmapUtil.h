@@ -158,8 +158,6 @@ class BitmapBase
 		BitmapBase( const CString& strName, COLORREF crTransparentColor, COLORREF crBackgroundColor );
 		BitmapBase( const CString& strName, COLORREF crTransparentColor, COLORREF crGrayedColor, bool isMasked );
 
-		void setSize( long lWidth, long lHeight );
-
 	public :
 		virtual ~BitmapBase();
 
@@ -173,12 +171,15 @@ class BitmapBase
 		COLORREF getTransparentColor() const;
 		COLORREF getBackgroundColor() const;
 
-		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode,
-						   DWORD dwModifierFlags = MF_NOOP ) const = 0;
-		void draw( CDC* pDC, const CRect& cRect, const TileVector& vecTiles, DWORD dwModifierFlags = MF_NOOP ) const;
+		virtual void draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect& dstRect,
+						   DWORD dwOpCode, DWORD dwModifierFlags = MF_NOOP ) const = 0;
+				void draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& cRect, const TileVector& vecTiles,
+						   DWORD dwModifierFlags = MF_NOOP ) const;
 
 	protected :
+		void setSize( long lWidth, long lHeight );
 		void setName( const CString& strName );
+		Gdiplus::ColorMatrix GetGreyFadeMatrix(COLORREF greyColor) const;
 };
 
 //################################################################################################
@@ -201,10 +202,11 @@ class BitmapDIB
 
 	public :
 		virtual bool isInitialized() const;
-		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode,
-						   DWORD dwModifierFlags = MF_NOOP ) const;
+		virtual void draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect& dstRect,
+						   DWORD dwOpCode, DWORD dwModifierFlags = MF_NOOP ) const;
 
 	private :
+		HBITMAP DIBToBitmap(HDIB hDIB, HPALETTE hPal = NULL);
 		void load( const CString& strName );
 };
 
@@ -229,8 +231,8 @@ class BitmapMasked
 
 	public :
 		virtual bool isInitialized() const;
-		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode,
-						   DWORD dwModifierFlags = MF_NOOP ) const;
+		virtual void draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect& dstRect,
+						   DWORD dwOpCode, DWORD dwModifierFlags = MF_NOOP ) const;
 
 		virtual long getWidth() const;
 		virtual long getHeight() const;
@@ -240,8 +242,10 @@ class BitmapMasked
 		WORD NumColors(  BITMAPINFOHEADER& bmiHeader ) const;
 		void Free();
 		BOOL CreatePalette();
-		void drawTransparent (CDC* pDC, const CRect &rect, COLORREF clrTransparency, bool bGray, COLORREF grayColor) const;
-		void draw (CDC* pDC, const CRect &rect) const;
+		void drawTransparent (Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect &dstRect,
+							  COLORREF clrTransparency, bool bGray, COLORREF grayColor) const;
+		void draw (Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect &dstRect,
+				   bool bGray, COLORREF grayColor) const;
 };
 
 //################################################################################################
@@ -256,7 +260,7 @@ class BitmapGen
 	: public BitmapBase
 {
 	private :
-		Image*			m_pImage;
+		Gdiplus::Image*		m_pImage;
 
 	public :
 		BitmapGen( const CString& strName );
@@ -266,8 +270,8 @@ class BitmapGen
 
 	public :
 		virtual bool isInitialized() const;
-		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode,
-						   DWORD dwModifierFlags = MF_NOOP ) const;
+		virtual void draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect& dstRect,
+						   DWORD dwOpCode, DWORD dwModifierFlags = MF_NOOP ) const;
 
 	private :
 		void load( const CString& strName );
@@ -283,7 +287,7 @@ class BitmapRES
 	: public BitmapBase
 {
 	private :
-		Bitmap*  m_pBitmap;
+		Gdiplus::Bitmap*  m_pBitmap;
 
 	public :
 		BitmapRES( UINT uiID );
@@ -293,8 +297,8 @@ class BitmapRES
 
 	public :
 		virtual bool isInitialized() const;
-		virtual void draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode,
-						   DWORD dwModifierFlags = MF_NOOP ) const;
+		virtual void draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect& dstRect,
+						   DWORD dwOpCode, DWORD dwModifierFlags = MF_NOOP ) const;
 
 	private :
 		void load( UINT uiID );

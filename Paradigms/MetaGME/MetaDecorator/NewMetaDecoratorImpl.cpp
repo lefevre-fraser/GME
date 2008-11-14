@@ -6,6 +6,7 @@
 //################################################################################################
 
 #include "StdAfx.h"
+#include "DecoratorConfig.h"
 #include "NewMetaDecoratorImpl.h"
 #include "NewMetaDecorator.h"
 #include "DecoratorExceptions.h"
@@ -60,7 +61,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::Destroy()
 
 STDMETHODIMP CNewMetaDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 {
-	*bstrMnemonic = CComBSTR("NewMetaDecorator").Detach();
+	*bstrMnemonic = CComBSTR(NEWDECORATOR_NAME).Detach();
 
 	return S_OK;
 }
@@ -256,10 +257,14 @@ STDMETHODIMP CNewMetaDecoratorImpl::Draw(HDC hdc)
 
 	CDC dc;
 	dc.Attach(hdc);
+	Gdiplus::Graphics gdipGraphics(hdc);
+	gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
+	gdipGraphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+	gdipGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
 
 	HRESULT retVal = S_OK;
 	try {
-		m_pNewDecorator->Draw(&dc);
+		m_pNewDecorator->Draw(&dc, &gdipGraphics);
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;

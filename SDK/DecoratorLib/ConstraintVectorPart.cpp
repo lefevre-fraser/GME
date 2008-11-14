@@ -39,11 +39,6 @@ CSize ConstraintVectorPart::GetPreferredSize(void) const
 	return CSize(m_constraintWidth, m_constraintHeight);
 }
 
-void ConstraintVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
-{
-	VectorPart::Initialize(pProject, pPart, pFCO);
-}
-
 // New functions
 void ConstraintVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 										HWND parentWnd, PreferenceMap& preferences)
@@ -126,20 +121,17 @@ void ConstraintVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<
 	polygonPoints.push_back(rRTx);
 	polygonPoints.push_back(rRTy);
 
-	AddCommand(VectorCommand(fillColorCmd, garyedColorCmd, VectorCommand::SelectPen));
-	AddCommand(VectorCommand(fillColorCmd, garyedColorCmd, VectorCommand::SelectBrush));
-	AddCommand(VectorCommand(leftMost, topMost, rightMost, bottomMost, VectorCommand::Ellipse));
-	AddCommand(VectorCommand(bkgndColorCmd, bkgndColorCmd, VectorCommand::SelectPen));
-	AddCommand(VectorCommand(bkgndColorCmd, bkgndColorCmd, VectorCommand::SelectBrush));
-	AddCommand(VectorCommand(leftoThick, topoThick, rightoThick, bottomoThick, VectorCommand::Ellipse));
-	AddCommand(VectorCommand(fillColorCmd, garyedColorCmd, VectorCommand::SelectPen));
-	AddCommand(VectorCommand(fillColorCmd, garyedColorCmd, VectorCommand::SelectBrush));
-	AddCommand(VectorCommand(polygonPoints, VectorCommand::Polygon));
-}
+	AddCommand(VectorCommand(VectorCommand::BeginShadowPath));
+	AddCommand(VectorCommand(leftMost, topMost, rightMost, bottomMost, VectorCommand::AddEllipseToPath));
+	AddCommand(VectorCommand(VectorCommand::EndShadowPath));
+	AddCommand(VectorCommand(VectorCommand::CastShadowPath));
 
-void ConstraintVectorPart::SetBrush(CDC* pDC)
-{
-	pDC->SelectObject(DecoratorSDK::getFacilities().getBrush(m_bActive ? m_crPen : COLOR_GRAYED_OUT));
+	AddCommand(VectorCommand(fillColorCmd, garyedColorCmd, VectorCommand::SelectBrush));
+	AddCommand(VectorCommand(leftMost, topMost, rightMost, bottomMost, VectorCommand::FillEllipse));
+	AddCommand(VectorCommand(bkgndColorCmd, bkgndColorCmd, VectorCommand::SelectBrush));
+	AddCommand(VectorCommand(leftoThick, topoThick, rightoThick, bottomoThick, VectorCommand::FillEllipse));
+	AddCommand(VectorCommand(fillColorCmd, garyedColorCmd, VectorCommand::SelectBrush));
+	AddCommand(VectorCommand(polygonPoints, VectorCommand::FillPolygon));
 }
 
 }; // namespace DecoratorSDK

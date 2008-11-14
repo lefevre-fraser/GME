@@ -37,9 +37,11 @@ CSize DiamondVectorPart::GetPreferredSize(void) const
 	return CSize(m_diamondWidth, m_diamondHeight);
 }
 
-void DiamondVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
+// New functions
+void DiamondVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
+									  HWND parentWnd, PreferenceMap& preferences)
 {
-	VectorPart::Initialize(pProject, pPart, pFCO);
+	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
 	SimpleCoordCommand* topMost		= new SimpleCoordCommand(TopMost);
@@ -58,25 +60,14 @@ void DiamondVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaM
 	m_coordCommands.push_back(centery);
 
 	AddCommand(VectorCommand(VectorCommand::BeginPath));
-	AddCommand(VectorCommand(leftMost,	centery,	VectorCommand::MoveTo));
-	AddCommand(VectorCommand(centerx,	bottomMost,	VectorCommand::LineTo));
-	AddCommand(VectorCommand(rightMost,	centery,	VectorCommand::LineTo));
-	AddCommand(VectorCommand(centerx,	topMost,	VectorCommand::LineTo));
-	AddCommand(VectorCommand(leftMost,	centery,	VectorCommand::LineTo));
+	AddCommand(VectorCommand(leftMost,	centery,	centerx,	bottomMost,	VectorCommand::AddLineToPath));
+	AddCommand(VectorCommand(centerx,	bottomMost,	rightMost,	centery,	VectorCommand::AddLineToPath));
+	AddCommand(VectorCommand(rightMost,	centery,	centerx,	topMost,	VectorCommand::AddLineToPath));
+	AddCommand(VectorCommand(centerx,	topMost,	leftMost,	centery,	VectorCommand::AddLineToPath));
 	AddCommand(VectorCommand(VectorCommand::EndPath));
+	AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
+	AddCommand(VectorCommand(VectorCommand::CastShadowPath));
 	AddCommand(VectorCommand(VectorCommand::StrokeAndFillPath));
-}
-
-// New functions
-void DiamondVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
-									  HWND parentWnd, PreferenceMap& preferences)
-{
-	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
-}
-
-void DiamondVectorPart::SetBrush(CDC* pDC)
-{
-	pDC->SelectStockObject(NULL_BRUSH);
 }
 
 }; // namespace DecoratorSDK

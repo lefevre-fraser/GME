@@ -8,8 +8,6 @@
 #define IDB_REFERENCE_SIGN              210
 #define IDB_BITMAP_CONSTRAINT           211
 #define IDB_BITMAP_CDEFINITION          212
-#define IDC_TEXTEDIT                    201
-#define IDD_INPLACEEDITDIALOG           211
 
 // Next default values for new objects
 // 

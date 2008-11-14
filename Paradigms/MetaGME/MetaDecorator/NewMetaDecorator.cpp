@@ -98,9 +98,9 @@ void NewMetaDecorator::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 	m_part->GetPorts(portFCOs);
 }
 
-void NewMetaDecorator::Draw(CDC* pDC)
+void NewMetaDecorator::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	m_part->Draw(pDC);
+	m_part->Draw(pDC, gdip);
 }
 
 void NewMetaDecorator::SaveState()

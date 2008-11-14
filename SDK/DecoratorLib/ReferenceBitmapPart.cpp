@@ -9,7 +9,7 @@
 #include "ReferenceBitmapPart.h"
 #include "AtomBitmapPart.h"
 #include "SetBitmapPart.h"
-#include "ModelSwitchPart.h"
+#include "ModelComplexPart.h"
 #include "DecoratorExceptions.h"
 
 
@@ -174,11 +174,11 @@ bool ReferenceBitmapPart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 }
 
 
-void ReferenceBitmapPart::Draw(CDC* pDC)
+void ReferenceBitmapPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	TypeableBitmapPart::Draw(pDC);
+	TypeableBitmapPart::Draw(pDC, gdip);
 	if (m_referencedPart != NULL)
-		m_referencedPart->Draw(pDC);
+		m_referencedPart->Draw(pDC, gdip);
 }
 
 void ReferenceBitmapPart::SaveState()
@@ -225,7 +225,7 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 					break;
 				case OBJTYPE_MODEL:
 					model_ref = true;
-					pReferenced = new ModelSwitchPart(this, m_eventSink);
+					pReferenced = new ModelComplexPart(this, m_eventSink);
 					break;
 			}
 		}
@@ -595,40 +595,40 @@ bool ReferenceBitmapPart::OperationCanceledByGME(void)
 	return handled;
 }
 
-void ReferenceBitmapPart::DrawBackground(CDC* pDC)
+void ReferenceBitmapPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	BitmapPart* bitmapPart = NULL;
 	if (m_referencedPart != NULL)
 		bitmapPart = dynamic_cast<BitmapPart*> (m_referencedPart);
 	if (bitmapPart) {
-		bitmapPart->DrawBackground(pDC);
+		bitmapPart->DrawBackground(pDC, gdip);
 	} else {
 #ifndef OLD_DECORATOR_LOOKANDFEEL
-		TypeableBitmapPart::DrawBackground(pDC);
+		TypeableBitmapPart::DrawBackground(pDC, gdip);
 #else
 		if (m_bActive) {
-			TypeableBitmapPart::DrawBackground(pDC);
+			TypeableBitmapPart::DrawBackground(pDC, gdip);
 		} else {
 			CRect cRect = TypeableBitmapPart::GetBoxLocation(false);
 			int iDepth = 2;
-			getFacilities().drawBox(pDC, cRect, COLOR_LIGHTGRAY, iDepth);
-			getFacilities().drawRect(pDC, cRect, COLOR_GRAY);
+			getFacilities().DrawBox(gdip, cRect, COLOR_LIGHTGRAY, iDepth);
+			getFacilities().DrawRect(gdip, cRect, COLOR_GRAY);
 			cRect.DeflateRect(iDepth, iDepth);
-			getFacilities().drawRect(pDC, cRect, COLOR_GRAY);
+			getFacilities().DrawRect(gdip, cRect, COLOR_GRAY);
 		}
 #endif
 	}
 }
 
-void ReferenceBitmapPart::DrawIcons(CDC* pDC)
+void ReferenceBitmapPart::DrawIcons(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	BitmapPart* bitmapPart = NULL;
 	if (m_referencedPart != NULL)
 		bitmapPart = dynamic_cast<BitmapPart*> (m_referencedPart);
 	if (bitmapPart)
-		bitmapPart->DrawIcons(pDC);
+		bitmapPart->DrawIcons(pDC, gdip);
 	else
-		TypeableBitmapPart::DrawIcons(pDC);
+		TypeableBitmapPart::DrawIcons(pDC, gdip);
 
 	if (/*false*/ m_spFCO && m_bIconRequired) {
 		BitmapBase* pBitmap = getFacilities().getBitmap(createResString((m_bActive) ? IDB_ICON_REFERENCE : IDB_ICON_REFERENCE_DIS));
@@ -637,7 +637,7 @@ void ReferenceBitmapPart::DrawIcons(CDC* pDC)
 		cRect.top += GAP_LABEL;
 		cRect.right = cRect.left + pBitmap->getWidth();
 		cRect.bottom = cRect.top + pBitmap->getHeight();
-		pBitmap->draw(pDC, cRect, TileVector(1, BackgroundTile()));
+		pBitmap->draw(gdip, pDC, cRect, TileVector(1, BackgroundTile()));
 	}
 }
 

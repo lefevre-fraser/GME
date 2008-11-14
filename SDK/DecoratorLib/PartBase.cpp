@@ -55,7 +55,7 @@ void PartBase::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>&
 
 	if (m_spFCO) {
 		COMTHROW(m_spFCO->get_ObjType(&m_eType));
-	} else {
+	} else if (m_spPart) {
 		CComPtr<IMgaMetaRole> spRole;
 		COMTHROW(m_spPart->get_Role(&spRole));
 
@@ -130,7 +130,7 @@ bool PartBase::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 	return false;
 }
 
-void PartBase::Draw(CDC* pDC)
+void PartBase::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	// empty default implementation
 }
@@ -144,6 +144,7 @@ void PartBase::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 							HWND parentWnd, PreferenceMap& preferences)
 {
 	m_parentWnd = parentWnd;
+	Initialize(pProject, pPart, pFCO);
 
 	// HasViolations
 	if (m_spFCO) {
@@ -152,11 +153,16 @@ void PartBase::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 			m_bHasViolation = it->second.uValue.bValue;
 		else
 			m_bHasViolation = getFacilities().getPreferenceStatus(m_spFCO, PREF_VIOLATED) == PS_HERE;
+	} else {
+		PreferenceMap::iterator it = preferences.find(PREF_ITEMRESIZABLE);
+		if (it == preferences.end())
+			preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(false);
+		it = preferences.find(PREF_ITEMSHADOWCAST);
+		if (it == preferences.end())
+			preferences[PREF_ITEMSHADOWCAST] = PreferenceVariant(false);
 	}
 
 	m_lBorderWidth = 0;
-
-	Initialize(pProject, pPart, pFCO);
 }
 
 void PartBase::SetSelected(bool bIsSelected)

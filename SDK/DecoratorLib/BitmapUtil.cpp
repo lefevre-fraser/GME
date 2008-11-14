@@ -157,14 +157,6 @@ BitmapBase::~BitmapBase()
 {
 }
 
-void BitmapBase::setName( const CString& strName )
-{
-	int iPos = strName.ReverseFind( '\\' );
-	int iPos2 = strName.ReverseFind( '/' );
-	iPos = max( iPos, iPos2 );
-	m_strName = ( iPos == -1 ) ? strName : strName.Right( strName.GetLength() - iPos - 1 );
-}
-
 CString BitmapBase::getName() const
 {
 	return m_strName;
@@ -200,13 +192,8 @@ COLORREF BitmapBase::getBackgroundColor() const
 	return m_crBackgroundColor;
 }
 
-void BitmapBase::setSize( long lWidth, long lHeight )
-{
-	m_lWidth = lWidth;
-	m_lHeight = lHeight;
-}
-
-void BitmapBase::draw( CDC* pDC, const CRect& cRect, const TileVector& vecTiles, DWORD dwModifierFlags ) const
+void BitmapBase::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& cRect, const TileVector& vecTiles,
+					   DWORD dwModifierFlags ) const
 {
 	for ( unsigned long i = 0 ; i < vecTiles.size() ; i++ ) {
 
@@ -274,25 +261,56 @@ void BitmapBase::draw( CDC* pDC, const CRect& cRect, const TileVector& vecTiles,
 						break;
 				}
 
-				draw( pDC, CRect( srcTopLeft.x, srcTopLeft.y, lSrcRight, lSrcBottom ),
+				draw( gdip, pDC, CRect( srcTopLeft.x, srcTopLeft.y, lSrcRight, lSrcBottom ),
 					  CRect( lDstLeft, lDstTop, lDstRight, lDstBottom ), SRCCOPY, dwModifierFlags );
 			}
 		}
 	}
 	if ( m_bHasBackgroundColor ) {
-		CDC dcMemory;
-		dcMemory.CreateCompatibleDC( pDC );
-		CBitmap bmp;
-		 bmp.CreateCompatibleBitmap( pDC, cRect.Width(), cRect.Height() );
-		dcMemory.SelectObject( &bmp );
-		dcMemory.FillSolidRect( CRect( 0, 0, cRect.Width(), cRect.Height() ), m_crBackgroundColor );
-		CPen pen;
-		pen.CreatePen( PS_SOLID, 6, m_crBackgroundColor );
-		dcMemory.SelectObject( &pen );
-		dcMemory.MoveTo( 0 , 0 );
-		dcMemory.LineTo( 60, 60 );
-		pDC->StretchBlt( cRect.left, cRect.top, cRect.Width(), cRect.Height(), &dcMemory, 0, 0, cRect.Width(), cRect.Height(), SRCAND );
+		if (gdip != NULL) {
+			// TODO: fillrect with background color and SRCAND effect
+		} else {
+			CDC dcMemory;
+			dcMemory.CreateCompatibleDC( pDC );
+			CBitmap bmp;
+			bmp.CreateCompatibleBitmap( pDC, cRect.Width(), cRect.Height() );
+			dcMemory.SelectObject( &bmp );
+			dcMemory.FillSolidRect( CRect( 0, 0, cRect.Width(), cRect.Height() ), m_crBackgroundColor );
+			CPen pen;
+			pen.CreatePen( PS_SOLID, 6, m_crBackgroundColor );
+			dcMemory.SelectObject( &pen );
+			dcMemory.MoveTo( 0 , 0 );
+			dcMemory.LineTo( 60, 60 );
+			pDC->StretchBlt( cRect.left, cRect.top, cRect.Width(), cRect.Height(), &dcMemory, 0, 0, cRect.Width(), cRect.Height(), SRCAND );
+		}
 	}
+}
+
+void BitmapBase::setSize( long lWidth, long lHeight )
+{
+	m_lWidth = lWidth;
+	m_lHeight = lHeight;
+}
+
+void BitmapBase::setName( const CString& strName )
+{
+	int iPos = strName.ReverseFind( '\\' );
+	int iPos2 = strName.ReverseFind( '/' );
+	iPos = max( iPos, iPos2 );
+	m_strName = ( iPos == -1 ) ? strName : strName.Right( strName.GetLength() - iPos - 1 );
+}
+
+Gdiplus::ColorMatrix BitmapBase::GetGreyFadeMatrix(COLORREF greyColor) const
+{
+	float fadeFactor = 0.3f * GetRValue(greyColor) + 0.59f * GetGValue(greyColor) + 0.11f * GetBValue(greyColor);
+	Gdiplus::ColorMatrix greyFadeColorMatrix = {
+		0.3f / fadeFactor,	0.0f,				0.0f,				0.0f,			0.0f,
+		0.0f,				0.59f / fadeFactor,	0.0f,				0.0f,			0.0f,
+		0.0f,				0.0f,				0.11f / fadeFactor,	0.0f,			0.0f,
+		0.0f,				0.0f,				0.0f,				1.0f,			0.0f,
+		0.0f,				0.0f,				0.0f,				0.0f,			1.0f
+	};
+	return greyFadeColorMatrix;
 }
 
 
@@ -328,13 +346,72 @@ BitmapDIB::~BitmapDIB()
 	}
 }
 
-void BitmapDIB::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode, DWORD dwModifierFlags ) const
+void BitmapDIB::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect& dstRect,
+					  DWORD dwOpCode, DWORD dwModifierFlags ) const
 {
 	if ( isInitialized() ) {
 		CRect srcRectCopy = srcRect;
 		CRect dstRectCopy = dstRect;
-		::PaintDIB( pDC->m_hDC, &dstRectCopy, m_hDIB, &srcRectCopy, NULL );
+		if (gdip != NULL) {
+			LPSTR lpDIBHdr = (LPSTR)GlobalLock(m_hDIB);
+			LPSTR lpDIBBits = FindDIBBits(lpDIBHdr);
+			Gdiplus::Bitmap bitmap((LPBITMAPINFO)lpDIBHdr, lpDIBBits);
+
+			bool bGray = (dwModifierFlags & MF_GREYED) != 0 && m_bHasGrayedColor;
+			Gdiplus::ImageAttributes imgAttribs;
+			if ((dwModifierFlags & MF_TRANSPARENT) != 0 && m_bHasTransparentColor) {
+				Gdiplus::Color transparentColor(GetRValue(m_crTransparentColor), GetGValue(m_crTransparentColor), GetBValue(m_crTransparentColor));
+				imgAttribs.SetColorKey(transparentColor, transparentColor);
+			}
+			if (bGray) {
+				Gdiplus::ColorMatrix greyFadeColorMatrix = GetGreyFadeMatrix(m_crGrayedColor);
+				imgAttribs.SetColorMatrix(&greyFadeColorMatrix);
+			}
+			Gdiplus::Rect destRect(dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
+			gdip->DrawImage(&bitmap, destRect, srcRect.left, srcRect.top, srcRect.Width(), srcRect.Height(),
+							Gdiplus::UnitPixel, &imgAttribs);
+			GlobalUnlock(m_hDIB);
+		} else {
+			::PaintDIB( pDC->m_hDC, &dstRectCopy, m_hDIB, &srcRectCopy, NULL );
+		}
 	}
+}
+
+HBITMAP BitmapDIB::DIBToBitmap(HDIB hDIB, HPALETTE hPal)
+{
+	LPSTR lpDIBHdr, lpDIBBits;	// pointer to DIB header, pointer to DIB bits
+	HBITMAP hBitmap;			// handle to device-dependent bitmap
+	HDC hDC;					// handle to DC
+	HPALETTE hOldPal = NULL;	// handle to a palette
+
+	if (!hDIB)
+		return NULL;
+
+	lpDIBHdr = (LPSTR)GlobalLock(hDIB);
+
+	lpDIBBits = FindDIBBits(lpDIBHdr);
+
+	hDC = GetDC(NULL);
+	if (!hDC)
+	{
+		GlobalUnlock(hDIB);
+		return NULL;
+	}
+
+	if (hPal)
+		hOldPal = SelectPalette(hDC, hPal, FALSE);
+	RealizePalette(hDC);
+
+	hBitmap = CreateDIBitmap(hDC, (LPBITMAPINFOHEADER)lpDIBHdr, CBM_INIT,
+							 lpDIBBits, (LPBITMAPINFO)lpDIBHdr, DIB_RGB_COLORS);
+
+	if (hOldPal)
+		SelectPalette(hDC, hOldPal, FALSE);
+
+	ReleaseDC(NULL, hDC);
+	GlobalUnlock(hDIB);
+
+	return hBitmap;
 }
 
 void BitmapDIB::load( const CString& strName )
@@ -418,14 +495,15 @@ bool BitmapMasked::isInitialized() const
 	return m_pBMI != NULL;
 }
 
-void BitmapMasked::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode, DWORD dwModifierFlags ) const
+void BitmapMasked::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect& dstRect,
+						 DWORD dwOpCode, DWORD dwModifierFlags ) const
 {
 	if ( isInitialized() ) {
-		bool bGray = (dwModifierFlags & MF_GREYED) != 0;
-		if ((dwModifierFlags & MF_TRANSPARENT) != 0)
-			drawTransparent (pDC, dstRect, m_crTransparentColor, bGray, m_crGrayedColor);
+		bool bGray = (dwModifierFlags & MF_GREYED) != 0 && m_bHasGrayedColor;
+		if ((dwModifierFlags & MF_TRANSPARENT) != 0 && m_bHasTransparentColor)
+			drawTransparent (gdip, pDC, srcRect, dstRect, m_crTransparentColor, bGray, m_crGrayedColor);
 		else
-			draw (pDC, dstRect);
+			draw (gdip, pDC, srcRect, dstRect, bGray, m_crGrayedColor);
 	}
 }
 
@@ -618,168 +696,193 @@ BOOL  BitmapMasked::CreatePalette()
 	return bResult;
 }
 
-void BitmapMasked::draw(CDC *pDC, const CRect &rect) const
+void BitmapMasked::draw(Gdiplus::Graphics* gdip, CDC *pDC, const CRect& srcRect, const CRect &dstRect,
+						bool bGray, COLORREF grayColor) const
 {
 	if ( !isInitialized() )
 		return;
 
-	CPalette* pOldPal = NULL;        // Previous palette
-	
-	// Get the DIB's palette, then select it into DC
-	if (m_pPalette != NULL)
-	{
-		// Select as background since we have
-		// already realized in forground if needed
-		pOldPal = pDC->SelectPalette( m_pPalette, TRUE);
-	}
-	
-	/* Make sure to use the stretching mode best for color pictures */
-	pDC->SetStretchBltMode( COLORONCOLOR );
-	
-	/* Determine whether to call StretchDIBits() or SetDIBitsToDevice() */
-	::StretchDIBits(pDC->m_hDC,						// hDC
-		rect.left,					// DestX
-		rect.top,					// DestY
-		rect.Width(),				// nDestWidth
-		rect.Height(),				// nDestHeight
-		0,							// SrcX
-		0,							// SrcY
-		getWidth(),					// wSrcWidth
-		getHeight(),				// wSrcHeight
-		m_pBits,                      // lpBits
-		m_pBMI,                       // lpBitsInfo
-		DIB_RGB_COLORS,               // wUsage
-		SRCCOPY);                     // dwROP
-	
-	/* Reselect old palette */
-	if (pOldPal != NULL)
-	{
-		pDC->SelectPalette( pOldPal, TRUE);
+	if (gdip != NULL) {
+		Gdiplus::Bitmap bitmap(m_pBMI, m_pBits);
+		Gdiplus::ImageAttributes imgAttribs;
+		if (bGray) {
+			Gdiplus::ColorMatrix greyFadeColorMatrix = GetGreyFadeMatrix(grayColor);
+			imgAttribs.SetColorMatrix(&greyFadeColorMatrix);
+		}
+		Gdiplus::Rect destRect(dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
+		gdip->DrawImage(&bitmap, destRect, srcRect.left, srcRect.top, srcRect.Width(), srcRect.Height(),
+						Gdiplus::UnitPixel, &imgAttribs);
+	} else {
+		CPalette* pOldPal = NULL;        // Previous palette
+		
+		// Get the DIB's palette, then select it into DC
+		if (m_pPalette != NULL)
+		{
+			// Select as background since we have
+			// already realized in forground if needed
+			pOldPal = pDC->SelectPalette( m_pPalette, TRUE);
+		}
+		
+		/* Make sure to use the stretching mode best for color pictures */
+		pDC->SetStretchBltMode( COLORONCOLOR );
+		
+		/* Determine whether to call StretchDIBits() or SetDIBitsToDevice() */
+		::StretchDIBits(pDC->m_hDC,		// hDC
+			dstRect.left,				// DestX
+			dstRect.top,				// DestY
+			dstRect.Width(),			// nDestWidth
+			dstRect.Height(),			// nDestHeight
+			0,							// SrcX
+			0,							// SrcY
+			getWidth(),					// wSrcWidth
+			getHeight(),				// wSrcHeight
+			m_pBits,					// lpBits
+			m_pBMI,						// lpBitsInfo
+			DIB_RGB_COLORS,				// wUsage
+			SRCCOPY);					// dwROP
+		
+		/* Reselect old palette */
+		if (pOldPal != NULL)
+		{
+			pDC->SelectPalette( pOldPal, TRUE);
+		}
 	}
 }
 
-void BitmapMasked::drawTransparent(CDC *pDC, const CRect &rect, COLORREF clrTransparency, bool bGray,
-								   COLORREF grayColor) const
+void BitmapMasked::drawTransparent(Gdiplus::Graphics* gdip, CDC *pDC, const CRect& srcRect, const CRect &dstRect,
+								   COLORREF clrTransparency, bool bGray, COLORREF grayColor) const
 {
 	if ( !isInitialized() )
 		return;
-    //
-    // Create a memory DC (dcImage) and select the bitmap into it.
-    //
-    CDC dcImage;
-    dcImage.CreateCompatibleDC (pDC);
-	CBitmap bmImage;
-	bmImage.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
 
-    CBitmap* pOldBitmapImage = dcImage.SelectObject(&bmImage);
+	if (gdip != NULL) {
+		Gdiplus::Bitmap bitmap(m_pBMI, m_pBits);
+		Gdiplus::Rect destRect(dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
+		Gdiplus::ImageAttributes imgAttribs;
+		Gdiplus::Color transparentColor(GetRValue(clrTransparency), GetGValue(clrTransparency), GetBValue(clrTransparency));
+		imgAttribs.SetColorKey(transparentColor, transparentColor);
+		if (bGray) {
+			Gdiplus::ColorMatrix greyFadeColorMatrix = GetGreyFadeMatrix(grayColor);
+			imgAttribs.SetColorMatrix(&greyFadeColorMatrix);
+		}
+		gdip->DrawImage(&bitmap, destRect, srcRect.left, srcRect.top, srcRect.Width(), srcRect.Height(),
+						Gdiplus::UnitPixel, &imgAttribs);
+	} else {
+		//
+		// Create a memory DC (dcImage) and select the bitmap into it.
+		//
+		CDC dcImage;
+		dcImage.CreateCompatibleDC (pDC);
+		CBitmap bmImage;
+		bmImage.CreateCompatibleBitmap(pDC, dstRect.Width(), dstRect.Height());
+
+		CBitmap* pOldBitmapImage = dcImage.SelectObject(&bmImage);
 
 
-	CPalette* pOldPal = NULL;        // Previous palette
-	// Get the DIB's palette, then select it into DC
-	if (m_pPalette != NULL)
-	{
-		// Select as background since we have
-		// already realized in forground if needed
-		pOldPal = dcImage.SelectPalette( m_pPalette, TRUE);
+		CPalette* pOldPal = NULL;        // Previous palette
+		// Get the DIB's palette, then select it into DC
+		if (m_pPalette != NULL)
+		{
+			// Select as background since we have
+			// already realized in forground if needed
+			pOldPal = dcImage.SelectPalette( m_pPalette, TRUE);
+		}
+
+		/* Make sure to use the stretching mode best for color pictures */
+		dcImage.SetStretchBltMode( COLORONCOLOR );
+
+		/* Determine whether to call StretchDIBits() or SetDIBitsToDevice() */
+		::StretchDIBits(dcImage.m_hDC,	// hDC
+			0,							// DestX
+			0,							// DestY
+			dstRect.Width(),			// nDestWidth
+			dstRect.Height(),			// nDestHeight
+			0,							// SrcX
+			0,							// SrcY
+			getWidth(),					// wSrcWidth
+			getHeight(),				// wSrcHeight
+			m_pBits,					// lpBits
+			m_pBMI,						// lpBitsInfo
+			DIB_RGB_COLORS,				// wUsage
+			SRCCOPY);					// dwROP
+
+		/* Reselect old palette */
+
+		if (pOldPal != NULL)
+		{
+			dcImage.SelectPalette( pOldPal, TRUE);
+		}
+
+		//
+		// Create a second memory DC (dcAnd) and in it create an AND mask.
+		//
+		CDC dcAnd;
+		dcAnd.CreateCompatibleDC (pDC);
+
+		CBitmap bitmapAnd;
+		bitmapAnd.CreateBitmap (dstRect.Width(), dstRect.Height(), 1, 1, NULL);
+		CBitmap* pOldBitmapAnd = dcAnd.SelectObject (&bitmapAnd);
+
+		dcImage.SetBkColor (clrTransparency);
+		dcAnd.BitBlt (0, 0, dstRect.Width(), dstRect.Height(), &dcImage, 0, 0,
+					  SRCCOPY);
+
+		//
+		// Create a third memory DC (dcXor) and in it create an XOR mask.
+		//
+		CDC dcXor;
+		dcXor.CreateCompatibleDC (pDC);
+
+		CBitmap bitmapXor;
+		bitmapXor.CreateCompatibleBitmap (&dcImage, dstRect.Width(), dstRect.Height());
+		CBitmap* pOldBitmapXor = dcXor.SelectObject (&bitmapXor);
+
+		dcXor.BitBlt (0, 0, dstRect.Width(), dstRect.Height(), &dcImage, 0, 0,
+					  SRCCOPY);
+
+		dcXor.BitBlt (0, 0, dstRect.Width(), dstRect.Height(), &dcAnd, 0, 0,
+					  0x220326);
+
+		//
+		// Copy the pixels in the destination rectangle to a temporary
+		// memory DC (dcTemp).
+		//
+		CDC dcTemp;
+		dcTemp.CreateCompatibleDC (pDC);
+
+		CBitmap bitmapTemp;
+		bitmapTemp.CreateCompatibleBitmap (&dcImage, dstRect.Width(), dstRect.Height());
+		CBitmap* pOldBitmapTemp = dcTemp.SelectObject (&bitmapTemp);
+
+		dcTemp.BitBlt (0, 0, dstRect.Width(), dstRect.Height(), pDC, dstRect.left, dstRect.top, SRCCOPY);
+
+		//
+		// Generate the final image by applying the AND and XOR masks to
+		// the image in the temporary memory DC.
+		//
+		if (bGray) {
+			dcTemp.SetTextColor(grayColor);
+			dcTemp.BitBlt (0, 0, dstRect.Width(), dstRect.Height(), &dcAnd, 0, 0, SRCAND);
+		}
+		else {
+			dcTemp.BitBlt (0, 0, dstRect.Width(), dstRect.Height(), &dcAnd, 0, 0, SRCAND);
+
+			dcTemp.BitBlt (0, 0, dstRect.Width(), dstRect.Height(), &dcXor, 0, 0, SRCINVERT);
+		}
+
+		//
+		// Blit the resulting image to the screen.
+		//
+		pDC->BitBlt (dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height(), &dcTemp, 0, 0, SRCCOPY);
+
+		//
+		// Restore the default bitmaps.
+		//
+		dcTemp.SelectObject (pOldBitmapTemp);
+		dcXor.SelectObject (pOldBitmapXor);
+		dcAnd.SelectObject (pOldBitmapAnd);
+		dcImage.SelectObject (pOldBitmapImage);
 	}
-	
-	/* Make sure to use the stretching mode best for color pictures */
-	dcImage.SetStretchBltMode( COLORONCOLOR );
-	
-	/* Determine whether to call StretchDIBits() or SetDIBitsToDevice() */
-	::StretchDIBits(dcImage.m_hDC,						// hDC
-		0,							// DestX
-		0,							// DestY
-		rect.Width(),				// nDestWidth
-		rect.Height(),				// nDestHeight
-		0,							// SrcX
-		0,							// SrcY
-		getWidth(),					// wSrcWidth
-		getHeight(),				// wSrcHeight
-		m_pBits,                      // lpBits
-		m_pBMI,                       // lpBitsInfo
-		DIB_RGB_COLORS,               // wUsage
-		SRCCOPY);                     // dwROP
-	
-	/* Reselect old palette */
-		
-	if (pOldPal != NULL)
-	{
-		dcImage.SelectPalette( pOldPal, TRUE);
-	}
-		
-    //
-    // Create a second memory DC (dcAnd) and in it create an AND mask.
-    //
-    CDC dcAnd;
-    dcAnd.CreateCompatibleDC (pDC);
-
-    CBitmap bitmapAnd;
-    bitmapAnd.CreateBitmap (rect.Width(), rect.Height(), 1, 1, NULL);
-    CBitmap* pOldBitmapAnd = dcAnd.SelectObject (&bitmapAnd);
-
-    dcImage.SetBkColor (clrTransparency);
-    dcAnd.BitBlt (0, 0, rect.Width(), rect.Height(), &dcImage, 0, 0,
-        SRCCOPY);
-
-    //
-    // Create a third memory DC (dcXor) and in it create an XOR mask.
-    //
-    CDC dcXor;
-    dcXor.CreateCompatibleDC (pDC);
-
-    CBitmap bitmapXor;
-    bitmapXor.CreateCompatibleBitmap (&dcImage, rect.Width(), rect.Height());
-    CBitmap* pOldBitmapXor = dcXor.SelectObject (&bitmapXor);
-
-    dcXor.BitBlt (0, 0, rect.Width(), rect.Height(), &dcImage, 0, 0,
-        SRCCOPY);
-
-    dcXor.BitBlt (0, 0, rect.Width(), rect.Height(), &dcAnd, 0, 0,
-        0x220326);
-
-    //
-    // Copy the pixels in the destination rectangle to a temporary
-    // memory DC (dcTemp).
-    //
-    CDC dcTemp;
-    dcTemp.CreateCompatibleDC (pDC);
-
-    CBitmap bitmapTemp;
-    bitmapTemp.CreateCompatibleBitmap (&dcImage, rect.Width(), rect.Height());
-    CBitmap* pOldBitmapTemp = dcTemp.SelectObject (&bitmapTemp);
-
-    dcTemp.BitBlt (0, 0, rect.Width(), rect.Height(), pDC, rect.left, rect.top, SRCCOPY);
-
-    //
-    // Generate the final image by applying the AND and XOR masks to
-    // the image in the temporary memory DC.
-    //
-	if (bGray) {
-		dcTemp.SetTextColor(grayColor);
-		dcTemp.BitBlt (0, 0, rect.Width(), rect.Height(), &dcAnd, 0, 0,
-			SRCAND);	
-	}
-	else {
-		dcTemp.BitBlt (0, 0, rect.Width(), rect.Height(), &dcAnd, 0, 0,
-			SRCAND);
-
-		dcTemp.BitBlt (0, 0, rect.Width(), rect.Height(), &dcXor, 0, 0,
-			SRCINVERT);
-	}
-
-    //
-    // Blit the resulting image to the screen.
-    //
-    pDC->BitBlt (rect.left, rect.top, rect.Width(), rect.Height(), &dcTemp, 0, 0, SRCCOPY);
-
-    //
-    // Restore the default bitmaps.
-    //
-    dcTemp.SelectObject (pOldBitmapTemp);
-    dcXor.SelectObject (pOldBitmapXor);
-    dcAnd.SelectObject (pOldBitmapAnd);
-    dcImage.SelectObject (pOldBitmapImage);
 }
 
 //################################################################################################
@@ -815,17 +918,21 @@ BitmapGen::~BitmapGen()
 	}
 }
 
-void BitmapGen::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode, DWORD dwModifierFlags ) const
+void BitmapGen::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect& dstRect,
+					  DWORD dwOpCode, DWORD dwModifierFlags ) const
 {
-	ASSERT( m_pImage);
-	Graphics graphics(pDC->m_hDC);
-	graphics.SetPageUnit( UnitPixel);
-	Status st = Win32Error;
-/*	Technique is only available in GDI+ 1.1, which is only distributed with Vista :(((
+	ASSERT(m_pImage);
+	Gdiplus::Graphics* gdip2 = gdip;
+	if (gdip == NULL) {
+		gdip2 = new Gdiplus::Graphics(pDC->m_hDC);
+		gdip2->SetPageUnit(Gdiplus::UnitPixel);
+	}
+	Gdiplus::Status st = Gdiplus::Win32Error;
+	/* Technique is only available in GDI+ 1.1, which is only distributed with Vista :(((
 	if (greyScale) {
 		// The common method is to get the gray value of a pixel by the following equation
 		// GrayValue = 0.3*Red + 0.59*Green + 0.11*Blue
-		ColorMatrix geryScaleColorConversion;
+		Gdiplus::ColorMatrix geryScaleColorConversion;
 		for (int i = 0; i < 5; i++)
 			for (int j = 0; j < 5; j++)
 				geryScaleColorConversion[i][j] = 0.0;
@@ -841,24 +948,39 @@ void BitmapGen::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWOR
 		geryScaleColorConversion(3, 3) = 1.0;
 		geryScaleColorConversion(4, 4) = 1.0;
 		// Affine transformation matrix: http://msdn.microsoft.com/en-us/library/ms536397(VS.85).aspx
-		RectF srcRectF((float)srcRect.left, (float)srcRect.top, (float)srcRect.Width(), (float)srcRect.Height());
-		Matrix affineTransform((float)dstRect.Width() / (float)srcRect.Width(), 0.0,
-								0.0, (float)dstRect.Height() / (float)srcRect.Height(),
-								(float)(dstRect.left - srcRect.left), (float)(dstRect.top - srcRect.top));
+		Gdiplus::RectF srcRectF((float)srcRect.left, (float)srcRect.top, (float)srcRect.Width(), (float)srcRect.Height());
+		Gdiplus::Matrix affineTransform((float)dstRect.Width() / (float)srcRect.Width(), 0.0,
+										0.0, (float)dstRect.Height() / (float)srcRect.Height(),
+										(float)(dstRect.left - srcRect.left), (float)(dstRect.top - srcRect.top));
 		// Greyscale technique (instead of colormatrix): decrease saturation
 		// http://weseetips.com/2008/05/27/how-to-convert-images-to-grayscale-by-using-hls-colorspace/
-		HueSaturationLightnessParams hslParams;
+		Gdiplus::HueSaturationLightnessParams hslParams;
 		hslParams.hueLevel			= 0;
 		hslParams.saturationLevel	= -100;
 		hslParams.lightnessLevel	= 0;
-		HueSaturationLightness hslEffect;
+		Gdiplus::HueSaturationLightness hslEffect;
 		hslEffect.SetParameters(&hslParams);
 
-		st = graphics.DrawImage(m_pImage, &srcRectF, &affineTransform, &hslEffect, NULL, UnitPixel);
-	} else {*/
-	st = graphics.DrawImage(m_pImage, dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
-	if( st == Win32Error) // in case of corrupted image file (although successfully loaded)
-		graphics.FillRectangle( &SolidBrush(Color::Red), dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
+		st = graphics.DrawImage(m_pImage, &srcRectF, &affineTransform, &hslEffect, NULL, Gdiplus::UnitPixel);
+//	} else {*/
+		
+	bool bGray = (dwModifierFlags & MF_GREYED) != 0 && m_bHasGrayedColor;
+	Gdiplus::ImageAttributes imgAttribs;
+	if ((dwModifierFlags & MF_TRANSPARENT) != 0 && m_bHasTransparentColor) {
+		Gdiplus::Color transparentColor(GetRValue(m_crTransparentColor), GetGValue(m_crTransparentColor), GetBValue(m_crTransparentColor));
+		imgAttribs.SetColorKey(transparentColor, transparentColor);
+	}
+	if (bGray) {
+		Gdiplus::ColorMatrix greyFadeColorMatrix = GetGreyFadeMatrix(m_crGrayedColor);
+		imgAttribs.SetColorMatrix(&greyFadeColorMatrix);
+	}
+	Gdiplus::Rect destRect(dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
+	st = gdip->DrawImage(m_pImage, destRect, srcRect.left, srcRect.top, srcRect.Width(), srcRect.Height(),
+						 Gdiplus::UnitPixel, &imgAttribs);
+	if (st == Gdiplus::Win32Error) // in case of corrupted image file (although successfully loaded)
+		gdip2->FillRectangle(&Gdiplus::SolidBrush(Gdiplus::Color::Red), dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
+	if (gdip == NULL)
+		delete gdip2;
 }
 
 void BitmapGen::load( const CString& strName )
@@ -873,8 +995,8 @@ void BitmapGen::load( const CString& strName )
 
 		for ( unsigned int i = 0 ; !success && i < vecPathes.size() ; i++ )
 		{
-			m_pImage = Image::FromFile( CA2W( (LPCTSTR) vecPathes[ i ] + strFName));
-			if( m_pImage && m_pImage->GetLastStatus() == Ok)
+			m_pImage = Gdiplus::Image::FromFile( CA2W( (LPCTSTR) vecPathes[ i ] + strFName));
+			if( m_pImage && m_pImage->GetLastStatus() == Gdiplus::Ok)
 			{
 				ASSERT( m_pImage->GetWidth() > 0); // valid sizes, otherwise AutoRouter fails
 				ASSERT( m_pImage->GetHeight() > 0); 
@@ -926,11 +1048,29 @@ BitmapRES::~BitmapRES()
 	m_pBitmap = NULL;
 }
 
-void BitmapRES::draw( CDC* pDC, const CRect& srcRect, const CRect& dstRect, DWORD dwOpCode, DWORD dwModifierFlags ) const
+void BitmapRES::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, const CRect& dstRect,
+					  DWORD dwOpCode, DWORD dwModifierFlags ) const
 {
-	Graphics graphics(pDC->m_hDC);
-	graphics.SetPageUnit(UnitPixel);
-	graphics.DrawImage(m_pBitmap, dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
+	Gdiplus::Graphics* gdip2 = gdip;
+	if (gdip == NULL) {
+		gdip2 = new Gdiplus::Graphics(pDC->m_hDC);
+		gdip2->SetPageUnit(Gdiplus::UnitPixel);
+	}
+	bool bGray = (dwModifierFlags & MF_GREYED) != 0 && m_bHasGrayedColor;
+	Gdiplus::ImageAttributes imgAttribs;
+	if ((dwModifierFlags & MF_TRANSPARENT) != 0 && m_bHasTransparentColor) {
+		Gdiplus::Color transparentColor(GetRValue(m_crTransparentColor), GetGValue(m_crTransparentColor), GetBValue(m_crTransparentColor));
+		imgAttribs.SetColorKey(transparentColor, transparentColor);
+	}
+	if (bGray) {
+		Gdiplus::ColorMatrix greyFadeColorMatrix = GetGreyFadeMatrix(m_crGrayedColor);
+		imgAttribs.SetColorMatrix(&greyFadeColorMatrix);
+	}
+	Gdiplus::Rect destRect(dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
+	gdip2->DrawImage(m_pBitmap, destRect, srcRect.left, srcRect.top, srcRect.Width(), srcRect.Height(),
+					 Gdiplus::UnitPixel, &imgAttribs);
+	if (gdip == NULL)
+		delete gdip2;
 }
 
 void BitmapRES::load( UINT uiID )
@@ -938,12 +1078,12 @@ void BitmapRES::load( UINT uiID )
 	// create a GDI+ Bitmap from the resource
 	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(uiID), RT_BITMAP);
 	ASSERT(hInst != NULL);
-	m_pBitmap = new Bitmap(hInst, (WCHAR*) MAKEINTRESOURCE( uiID));
+	m_pBitmap = new Gdiplus::Bitmap(hInst, (WCHAR*) MAKEINTRESOURCE( uiID));
 	if (!m_pBitmap) {
 		m_pBitmap = NULL;
 		return;
 	}
-	if (m_pBitmap->GetLastStatus() != Ok) {
+	if (m_pBitmap->GetLastStatus() != Gdiplus::Ok) {
 		ASSERT(true);
 	}
 

@@ -33,39 +33,39 @@ StereoLabelPart::~StereoLabelPart()
 {
 }
 
-void StereoLabelPart::Draw(CDC* pDC)
+void StereoLabelPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	if (m_bTextEnabled) {
 		CRect loc = GetLocation();
-		long centerline = (loc.left + loc.right) / 2;
-		getFacilities().drawText(pDC,
-								 DecoratorSDK::getFacilities().getStereotyped(m_strText),
-								 CPoint(centerline, loc.top + m_labelRelYPosition),
-								 getFacilities().getFont(m_iFontKey)->pFont,
-								 (m_bActive) ? m_crText : COLOR_GREY,
-								 TA_BOTTOM | TA_CENTER,
-								 m_iMaxTextLength,
-								 "",
-								 "",
-								 false);
+		DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+		CSize size = getFacilities().MeasureText(gdip, pFont, m_strText);
+		getFacilities().DrawString(gdip,
+								   DecoratorSDK::getFacilities().getStereotyped(m_strText),
+								   CRect(loc.left, loc.top + m_labelRelYPosition - size.cy,
+										 loc.right, loc.top + m_labelRelYPosition),
+								   pFont,
+								   (m_bActive) ? m_crText : COLOR_GREY,
+								   TA_BOTTOM | TA_CENTER,
+								   m_iMaxTextLength,
+								   "",
+								   "",
+								   false);
 	}
 	if (m_spFCO)
-		resizeLogic.Draw(pDC);
+		resizeLogic.Draw(pDC, gdip);
 }
 
-CPoint	StereoLabelPart::GetTextPosition(void) const
+CPoint	StereoLabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	return GetLabelLocation().TopLeft();
+	return GetTextLocation(pDC, gdip).TopLeft();
 }
 
-CRect StereoLabelPart::GetTextLocation(void) const
+CRect StereoLabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
 	CRect loc = GetLocation();
 
-	CDC dc;
-	dc.CreateCompatibleDC(NULL);
-	dc.SelectObject(getFacilities().getFont(m_iFontKey)->pFont);
-	CSize cSize = dc.GetTextExtent(DecoratorSDK::getFacilities().getStereotyped(m_strText));
+	DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+	CSize cSize = getFacilities().MeasureText(gdip, pFont, DecoratorSDK::getFacilities().getStereotyped(m_strText));
 
 	long centerline = (loc.left + loc.right) / 2;
 	return CRect(centerline - cSize.cx / 2,

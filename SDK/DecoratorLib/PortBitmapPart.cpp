@@ -68,15 +68,15 @@ void PortBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMe
 	TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 
-void PortBitmapPart::DrawBackground(CDC* pDC)
+void PortBitmapPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	CRect cRect = GetBoxLocation(false);
 	if (m_bActive) {
-		m_pBitmap->draw(pDC, cRect, *m_pTileVector);
+		m_pBitmap->draw(gdip, pDC, cRect, *m_pTileVector);
 	} else {
 		cRect.right--;
 		cRect.bottom--;
-		getFacilities().drawRect(pDC, cRect, COLOR_GRAY, 1);
+		getFacilities().DrawRect(gdip, cRect, COLOR_GRAY, 1);
 	}
 }
 

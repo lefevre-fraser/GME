@@ -46,7 +46,7 @@ public:
 	virtual CRect			GetLabelLocation	(void) const = 0;
 	virtual CRect			GetPortLocation		(CComPtr<IMgaFCO>& fco) const = 0;
 	virtual bool			GetPorts			(CComPtr<IMgaFCOs>& portFCOs) const = 0;
-	virtual void			Draw				(CDC* pDC) = 0;
+	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip) = 0;
 	virtual void			SaveState			(void) = 0;
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

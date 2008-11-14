@@ -5,8 +5,6 @@
 #define IDS_PROJNAME                    100
 #define IDR_DECORATOR                   101
 #define IDR_NEWDECORATOR                102
-#define IDC_TEXTEDIT                    201
-#define IDD_INPLACEEDITDIALOG           211
 #define IDB_BITMAP_PROXY                210
 #define IDB_REFERENCE_SIGN              210
 #define IDB_BITMAP_CONSTRAINT           211

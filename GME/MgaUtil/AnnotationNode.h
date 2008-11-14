@@ -49,10 +49,6 @@ public:
 	void Read(CAnnotationBrowserDlg *dlg);
 	void Write(CAnnotationBrowserDlg *dlg);
 
-protected:
-	void	LogfontEncode(CString &str, const LOGFONT * lfp);
-	bool	LogfontDecode(const CString &str, LOGFONT * lfp);
-
 public:
 	static void InitializeClass();
 	static bool classIsInitialized;

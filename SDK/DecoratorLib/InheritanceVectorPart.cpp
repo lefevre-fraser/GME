@@ -30,11 +30,6 @@ InheritanceVectorPart::~InheritanceVectorPart()
 {
 }
 
-void InheritanceVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
-{
-	TriangleVectorPart::Initialize(pProject, pPart, pFCO);
-}
-
 // New functions
 void InheritanceVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 									  HWND parentWnd, PreferenceMap& preferences)
@@ -42,8 +37,6 @@ void InheritanceVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr
 	TriangleVectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	if (m_inheritanceType == ImplementationInheritance || m_inheritanceType == InterfaceInheritance) {
-		//dc.SelectObject(getFacilities().getBrush(m_isActive ? m_color : COLOR_GRAYED_OUT));
-
 		getFacilities().getMetaFCO(pPart, m_spMetaFCO);
 		bool bColor = false;
 		COLORREF crColor = COLOR_BLACK;
@@ -61,13 +54,6 @@ void InheritanceVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr
 		unsigned long size = m_coordCommands.size();
 		AddCommand(VectorCommand(colorCmd, grayedCmd, VectorCommand::SelectBrush));
 
-		if (m_inheritanceType == InterfaceInheritance)
-			AddCommand(VectorCommand(VectorCommand::SelectNullBrush));
-
-		// Looks awful
-//		if (m_inheritanceType == ImplementationInheritance)
-//			AddCommand(VectorCommand(VectorCommand::SelectNullPen));
-
 		// Add four coordinates for the inner circle boundaries
 		ComplexCoordCommand* ellipseLeft = new ComplexCoordCommand(LeftMost, 0.5 - 0.25 * INHERITANCE_RATIO);
 		ellipseLeft->AddCommand(RightMost, 0.5 + 0.25 * INHERITANCE_RATIO, CoordAdd);
@@ -84,11 +70,18 @@ void InheritanceVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr
 		m_coordCommands.push_back(ellipseRight);
 		m_coordCommands.push_back(ellipseBottom);
 		size = m_coordCommands.size();
-		AddCommand(VectorCommand(m_coordCommands[size - 4],
-								 m_coordCommands[size - 3],
-								 m_coordCommands[size - 2],
-								 m_coordCommands[size - 1],
-								 VectorCommand::Ellipse));
+		if (m_inheritanceType == InterfaceInheritance)
+			AddCommand(VectorCommand(m_coordCommands[size - 4],
+									 m_coordCommands[size - 3],
+									 m_coordCommands[size - 2],
+									 m_coordCommands[size - 1],
+									 VectorCommand::DrawEllipse));
+		if (m_inheritanceType == ImplementationInheritance)
+			AddCommand(VectorCommand(m_coordCommands[size - 4],
+									 m_coordCommands[size - 3],
+									 m_coordCommands[size - 2],
+									 m_coordCommands[size - 1],
+									 VectorCommand::FillEllipse));
 	}
 }
 

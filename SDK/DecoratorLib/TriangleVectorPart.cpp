@@ -37,9 +37,11 @@ CSize TriangleVectorPart::GetPreferredSize(void) const
 	return CSize(m_triangleWidth, m_triangleHeight);
 }
 
-void TriangleVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
+// New functions
+void TriangleVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
+									  HWND parentWnd, PreferenceMap& preferences)
 {
-	VectorPart::Initialize(pProject, pPart, pFCO);
+	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	SimpleCoordCommand* leftMost		= new SimpleCoordCommand(LeftMost);
 	SimpleCoordCommand* topMost			= new SimpleCoordCommand(TopMost);
@@ -55,24 +57,13 @@ void TriangleVectorPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 	m_coordCommands.push_back(triangletip);
 
 	AddCommand(VectorCommand(VectorCommand::BeginPath));
-	AddCommand(VectorCommand(leftMost,		bottomMost,	VectorCommand::MoveTo));
-	AddCommand(VectorCommand(rightMost,		bottomMost,	VectorCommand::LineTo));
-	AddCommand(VectorCommand(triangletip,	topMost,	VectorCommand::LineTo));
-	AddCommand(VectorCommand(leftMost,		bottomMost,	VectorCommand::LineTo));
+	AddCommand(VectorCommand(leftMost,		bottomMost,	rightMost,		bottomMost,	VectorCommand::AddLineToPath));
+	AddCommand(VectorCommand(rightMost,		bottomMost,	triangletip,	topMost,	VectorCommand::AddLineToPath));
+	AddCommand(VectorCommand(triangletip,	topMost,	leftMost,		bottomMost,	VectorCommand::AddLineToPath));
 	AddCommand(VectorCommand(VectorCommand::EndPath));
+	AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
+	AddCommand(VectorCommand(VectorCommand::CastShadowPath));
 	AddCommand(VectorCommand(VectorCommand::StrokeAndFillPath));
-}
-
-// New functions
-void TriangleVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
-									  HWND parentWnd, PreferenceMap& preferences)
-{
-	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
-}
-
-void TriangleVectorPart::SetBrush(CDC* pDC)
-{
-	pDC->SelectStockObject(NULL_BRUSH);
 }
 
 }; // namespace DecoratorSDK

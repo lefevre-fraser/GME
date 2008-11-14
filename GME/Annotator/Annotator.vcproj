@@ -51,7 +51,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../Common,../Interfaces"
+				AdditionalIncludeDirectories="..\..\SDK\DecoratorLib;..\Common;..\Interfaces"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -81,9 +81,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="gdiplus.lib DecoratorLib.lib"
 				OutputFile=".\Release/Annotator.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="..\..\GME\Lib"
 				ModuleDefinitionFile=".\DecoratorApp.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Release/Annotator.pdb"
@@ -153,7 +155,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Common,../Interfaces"
+				AdditionalIncludeDirectories="..\..\SDK\DecoratorLib;..\Common;..\Interfaces"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -182,9 +184,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="gdiplus.lib DecoratorLib.lib"
 				OutputFile=".\Debug/Annotator.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="..\..\GME\Lib"
 				ModuleDefinitionFile=".\DecoratorApp.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Annotator.pdb"
@@ -226,6 +230,22 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
+			<File
+				RelativePath="..\MgaUtil\AnnotationUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AnnotatorCompositePart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AnnotatorRectanglePart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AnnotatorTextPart.cpp"
+				>
+			</File>
 			<File
 				RelativePath="..\Common\CommonError.cpp"
 				>
@@ -337,31 +357,12 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="DecoratorUtil.cpp"
+				RelativePath=".\NewAnnotatorDecorator.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\NewAnnotatorDecoratorImpl.cpp"
+				>
 			</File>
 			<File
 				RelativePath="StdAfx.cpp"
@@ -402,6 +403,22 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MgaUtil\AnnotationUtil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AnnotatorCompositePart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AnnotatorRectanglePart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AnnotatorTextPart.h"
+				>
+			</File>
+			<File
 				RelativePath="Decorator.h"
 				>
 			</File>
@@ -414,7 +431,11 @@
 				>
 			</File>
 			<File
-				RelativePath="DecoratorUtil.h"
+				RelativePath=".\NewAnnotatorDecorator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewAnnotatorDecoratorImpl.h"
 				>
 			</File>
 			<File
@@ -435,6 +456,10 @@
 			>
 			<File
 				RelativePath="Decorator.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\NewDecorator.rgs"
 				>
 			</File>
 		</Filter>

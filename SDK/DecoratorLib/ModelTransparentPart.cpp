@@ -132,9 +132,9 @@ bool ModelTransparentPart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 	return true;
 }
 
-void ModelTransparentPart::Draw(CDC* pDC)
+void ModelTransparentPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	TypeableBitmapPart::Draw(pDC);
+	TypeableBitmapPart::Draw(pDC, gdip);
 }
 
 void ModelTransparentPart::SaveState()
@@ -238,9 +238,9 @@ bool ModelTransparentPart::OperationCanceledByGME(void)
 	return false;
 }
 
-void ModelTransparentPart::DrawBackground(CDC* pDC)
+void ModelTransparentPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	TypeableBitmapPart::DrawBackground(pDC);
+	TypeableBitmapPart::DrawBackground(pDC, gdip);
 	// TODO
 }
 

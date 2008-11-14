@@ -65,7 +65,7 @@ public:
 	virtual void			SetLocation			(const CRect& location);
 	virtual CRect			GetLocation			(void) const;
 	virtual CRect			GetLabelLocation	(void) const;
-	virtual void			Draw				(CDC* pDC);
+	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 	virtual void			SaveState			(void);
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
@@ -85,10 +85,8 @@ public:
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
 
-	virtual void	SetBrush					(CDC* pDC);
-
 	virtual void	CollectAttributes			(CComPtr<IMgaFCO> mgaFco = NULL) = 0;
-	virtual void	CalcRelPositions			(CDC* pDC = NULL);
+	virtual void	CalcRelPositions			(CDC* pDC = NULL, Gdiplus::Graphics* gdip = NULL);
 	virtual void	SetBoxLocation				(const CRect& cRect);
 	virtual void	SetReferenced				(bool referenced);
 	virtual void	SetParentPart				(PartBase* pPart);

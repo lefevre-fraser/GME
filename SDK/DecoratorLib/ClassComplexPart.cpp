@@ -188,19 +188,19 @@ CRect ClassComplexPart::GetLabelLocation(void) const
 	return labelLocation;
 }
 
-void ClassComplexPart::Draw(CDC* pDC)
+void ClassComplexPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	CalcRelPositions(pDC);
+	CalcRelPositions(pDC, gdip);
+	VectorPart::Draw(pDC, gdip);
 	if (m_LabelPart != NULL)
-		m_LabelPart->Draw(pDC);
+		m_LabelPart->Draw(pDC, gdip);
 	if (m_StereotypePart != NULL)
-		m_StereotypePart->Draw(pDC);
+		m_StereotypePart->Draw(pDC, gdip);
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
-		(*ii)->Draw(pDC);
+		(*ii)->Draw(pDC, gdip);
 	}
 	if (m_copySignPart != NULL)
-		m_copySignPart->Draw(pDC);
-	VectorPart::Draw(pDC);
+		m_copySignPart->Draw(pDC, gdip);
 }
 
 void ClassComplexPart::SaveState()
@@ -1015,12 +1015,7 @@ bool ClassComplexPart::OperationCanceledByGME(void)
 	return false;
 }
 
-void ClassComplexPart::SetBrush(CDC* pDC)
-{
-	pDC->SelectStockObject(NULL_BRUSH);
-}
-
-void ClassComplexPart::CalcRelPositions(CDC* pDC)
+void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	m_lMaxTextWidth			= 0;
 	m_lMaxTextHeight		= 0;
@@ -1030,19 +1025,26 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	CDC	dc;
 
 	dc.Attach(pDC ? pDC->m_hDC : GetDC(NULL));			// Trick
-	CFont* oldfont = dc.SelectObject(getFacilities().getFont(FONT_PORTNAME)->pFont);
+	Gdiplus::Graphics* gdip2 = NULL;
+	if (gdip == NULL) {
+		gdip2 = new Gdiplus::Graphics(dc.m_hDC);
+		gdip2->SetPageUnit(Gdiplus::UnitPixel);
+		gdip2->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+		gdip2->SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+		gdip = gdip2;
+	}
 
 	long numberOfGaps = 0;
 	long heightPreEstimation = m_DecoratorMarginY;
 	if (m_LabelPart != NULL) {
-		CRect labelLoc = m_LabelPart->GetTextLocation();
+		CRect labelLoc = m_LabelPart->GetTextLocation(pDC, gdip);
 		m_lMaxTextWidth = max(m_lMaxTextWidth, labelLoc.Width());
 		m_lMaxTextHeight = max(m_lMaxTextHeight, labelLoc.Height());
 		heightPreEstimation += m_lMaxTextHeight;
 	}
 
 	if (m_StereotypePart != NULL) {
-		CRect stereoLoc = m_StereotypePart->GetTextLocation();
+		CRect stereoLoc = m_StereotypePart->GetTextLocation(pDC, gdip);
 		m_lMaxTextWidth = max(m_lMaxTextWidth, stereoLoc.Width());
 		m_lMaxTextHeight = max(m_lMaxTextHeight, stereoLoc.Height());
 		numberOfGaps++;
@@ -1054,7 +1056,7 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	heightPreEstimation += m_DecoratorMarginY;
 
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
-		CSize extent = (*ii)->GetTextSize(&dc);
+		CSize extent = (*ii)->GetTextSize(&dc, gdip);
 		m_lMaxTextWidth = max(m_lMaxTextWidth, extent.cx);
 		m_lMaxTextHeight = max(m_lMaxTextHeight, extent.cy);
 		numberOfGaps++;
@@ -1062,11 +1064,12 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 		heightPreEstimation += m_DecoratorGapY;
 	}
 
+	long attribCount = (long)m_AttributeParts.size();
 	if (m_copySignPart) {
 		heightPreEstimation += m_DecoratorMarginY;
 		CSize iconSize = m_copySignPart->GetPreferredSize();
 		heightPreEstimation += iconSize.cy;
-	} else if (m_AttributeParts.size() == 0) {
+	} else if (attribCount == 0) {
 		heightPreEstimation += m_DecoratorMinAttrSize;
 	}
 	heightPreEstimation += m_DecoratorMarginY;
@@ -1075,8 +1078,12 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	CPoint offset = GetLocation().TopLeft();
 
 	long stretchedGapSize = m_DecoratorGapY;
+	long gapSizeModify = 0;
 	if (m_spFCO) {	// stretch logic only should work outside of PartBrowser
-		long gapSizeModify = (location.IsRectEmpty() || numberOfGaps == 0) ? 0 : (location.Height() - heightPreEstimation) / numberOfGaps;
+		if (!location.IsRectEmpty()) {
+			if (location.Height() - heightPreEstimation != 0)
+				gapSizeModify = (location.Height() - heightPreEstimation) / (numberOfGaps + (attribCount > 0 ? 3 : 2));
+		}
 		stretchedGapSize += gapSizeModify;
 	}
 
@@ -1087,6 +1094,7 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 
 	if (m_LabelPart != NULL) {
 		ypos += m_lMaxTextHeight;
+		ypos += gapSizeModify;
 
 		m_LabelPart->SetTextRelYPosition(ypos);
 	}
@@ -1094,18 +1102,21 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	if (m_StereotypePart != NULL) {
 		ypos += stretchedGapSize;
 		ypos += m_lMaxTextHeight;
+		if (m_LabelPart == NULL)
+			ypos += gapSizeModify;
 
 		m_StereotypePart->SetTextRelYPosition(ypos);
 	}
 
 	ypos += m_DecoratorMarginY;
+	ypos += gapSizeModify;
 	m_SeparatorLoc = ypos + offset.y;
 
 	bool roundEdge = true;
 	long edgeRadius = 9;
 	if (m_coordCommands.size() > 0) {
-		ASSERT(GetCommandNumber() >= 2);
-		RemoveLastCommand(2);	// Remove the last commands
+		ASSERT(GetCommandNumber() >= 1);
+		RemoveLastCommand();	// Remove the last commands
 		delete m_coordCommands[m_coordCommands.size() - 1];	// Delete the AbsoulteCommand (the separator location)
 		m_coordCommands.pop_back();
 	} else {
@@ -1129,7 +1140,18 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 			rightoRadius->AddCommand(OneConstant, edgeRadius, CoordSubstract);
 			ComplexCoordCommand* bottomoRadius = new ComplexCoordCommand(BottomMost);
 			bottomoRadius->AddCommand(OneConstant, edgeRadius, CoordSubstract);
+
+			ComplexCoordCommand* lefto2Radius = new ComplexCoordCommand(LeftMost);
+			lefto2Radius->AddCommand(OneConstant, 2 * edgeRadius, CoordAdd);
+			ComplexCoordCommand* topo2Radius = new ComplexCoordCommand(TopMost);
+			topo2Radius->AddCommand(OneConstant, 2 * edgeRadius, CoordAdd);
+			ComplexCoordCommand* righto2Radius = new ComplexCoordCommand(RightMost);
+			righto2Radius->AddCommand(OneConstant, 2 * edgeRadius, CoordSubstract);
+			ComplexCoordCommand* bottomo2Radius = new ComplexCoordCommand(BottomMost);
+			bottomo2Radius->AddCommand(OneConstant, 2 * edgeRadius, CoordSubstract);
+
 			AbsoluteCoordCommand* radiusCommand = new AbsoluteCoordCommand(edgeRadius);
+			AbsoluteCoordCommand* diameterCommand = new AbsoluteCoordCommand(2 * edgeRadius);
 			SimpleCoordCommand* angle0Command = new SimpleCoordCommand(ZeroConstant);
 			AbsoluteCoordCommand* angle90Command = new AbsoluteCoordCommand(90);
 			AbsoluteCoordCommand* angle180Command = new AbsoluteCoordCommand(180);
@@ -1139,64 +1161,73 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 			m_coordCommands.push_back(topoRadius);
 			m_coordCommands.push_back(rightoRadius);
 			m_coordCommands.push_back(bottomoRadius);
+			m_coordCommands.push_back(lefto2Radius);
+			m_coordCommands.push_back(topo2Radius);
+			m_coordCommands.push_back(righto2Radius);
+			m_coordCommands.push_back(bottomo2Radius);
 			m_coordCommands.push_back(radiusCommand);
+			m_coordCommands.push_back(diameterCommand);
 			m_coordCommands.push_back(angle0Command);
 			m_coordCommands.push_back(angle90Command);
 			m_coordCommands.push_back(angle180Command);
 			m_coordCommands.push_back(angle270Command);
 
 			std::vector<const CoordCommand*> m_arcParams;
-			AddCommand(VectorCommand(leftoRadius, topMost, VectorCommand::MoveTo));
-			m_arcParams.push_back(leftoRadius);
-			m_arcParams.push_back(topoRadius);
-			m_arcParams.push_back(radiusCommand);
+			m_arcParams.push_back(leftMost);
+			m_arcParams.push_back(topMost);
+			m_arcParams.push_back(diameterCommand);
+			m_arcParams.push_back(diameterCommand);
+			m_arcParams.push_back(angle180Command);
 			m_arcParams.push_back(angle90Command);
-			m_arcParams.push_back(angle90Command);
-			AddCommand(VectorCommand(m_arcParams, VectorCommand::AngleArc));
-			AddCommand(VectorCommand(leftMost, bottomoRadius, VectorCommand::LineTo));
-			m_arcParams[0] = leftoRadius;
-			m_arcParams[1] = bottomoRadius;
-			m_arcParams[2] = radiusCommand;
-			m_arcParams[3] = angle180Command;
+			AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
+			AddCommand(VectorCommand(leftoRadius, topMost, rightoRadius, topMost, VectorCommand::AddLineToPath));
+			m_arcParams[0] = righto2Radius;
+			m_arcParams[1] = topMost;
+			m_arcParams[2] = diameterCommand;
+			m_arcParams[3] = diameterCommand;
+			m_arcParams[4] = angle270Command;
+			m_arcParams[5] = angle90Command;
+			AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
+			AddCommand(VectorCommand(rightMost, topoRadius, rightMost, bottomoRadius, VectorCommand::AddLineToPath));
+			m_arcParams[0] = righto2Radius;
+			m_arcParams[1] = bottomo2Radius;
+			m_arcParams[2] = diameterCommand;
+			m_arcParams[3] = diameterCommand;
+			m_arcParams[4] = angle0Command;
+			m_arcParams[5] = angle90Command;
+			AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
+			AddCommand(VectorCommand(rightoRadius, bottomMost, leftoRadius, bottomMost, VectorCommand::AddLineToPath));
+			m_arcParams[0] = leftMost;
+			m_arcParams[1] = bottomo2Radius;
+			m_arcParams[2] = diameterCommand;
+			m_arcParams[3] = diameterCommand;
 			m_arcParams[4] = angle90Command;
-			AddCommand(VectorCommand(m_arcParams, VectorCommand::AngleArc));
-			AddCommand(VectorCommand(rightoRadius, bottomMost, VectorCommand::LineTo));
-			m_arcParams[0] = rightoRadius;
-			m_arcParams[1] = bottomoRadius;
-			m_arcParams[2] = radiusCommand;
-			m_arcParams[3] = angle270Command;
-			m_arcParams[4] = angle90Command;
-			AddCommand(VectorCommand(m_arcParams, VectorCommand::AngleArc));
-			AddCommand(VectorCommand(rightMost, topoRadius, VectorCommand::LineTo));
-			m_arcParams[0] = rightoRadius;
-			m_arcParams[1] = topoRadius;
-			m_arcParams[2] = radiusCommand;
-			m_arcParams[3] = angle0Command;
-			m_arcParams[4] = angle90Command;
-			AddCommand(VectorCommand(m_arcParams, VectorCommand::AngleArc));
-			AddCommand(VectorCommand(leftoRadius, topMost, VectorCommand::LineTo));
+			m_arcParams[5] = angle90Command;
+			AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
+			AddCommand(VectorCommand(leftMost, bottomoRadius, leftMost, topoRadius, VectorCommand::AddLineToPath));
 		} else {
-//			AddCommand(VectorCommand(leftMost, topMost, rightMost, bottomMost, VectorCommand::Rectangle));
-			AddCommand(VectorCommand(leftMost, topMost, VectorCommand::MoveTo));
-			AddCommand(VectorCommand(leftMost, bottomMost, VectorCommand::LineTo));
-			AddCommand(VectorCommand(rightMost, bottomMost, VectorCommand::LineTo));
-			AddCommand(VectorCommand(rightMost, topMost, VectorCommand::LineTo));
-			AddCommand(VectorCommand(leftMost, topMost, VectorCommand::LineTo));
+			AddCommand(VectorCommand(leftMost, topMost, rightMost, topMost, VectorCommand::AddLineToPath));
+			AddCommand(VectorCommand(rightMost, topMost, rightMost, bottomMost, VectorCommand::AddLineToPath));
+			AddCommand(VectorCommand(rightMost, bottomMost, leftMost, bottomMost, VectorCommand::AddLineToPath));
+			AddCommand(VectorCommand(leftMost, bottomMost, leftMost, topMost, VectorCommand::AddLineToPath));
 		}
-		AddCommand(VectorCommand::EndPath);
-		AddCommand(VectorCommand::StrokeAndFillPath);
+		{
+			AddCommand(VectorCommand(VectorCommand::EndPath));
+			AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
+			AddCommand(VectorCommand(VectorCommand::CastShadowPath));
+			AddCommand(VectorCommand::StrokeAndFillPath);
+		}
 	}
 
 	AbsoluteCoordCommand* sepLocCoordCmd = new AbsoluteCoordCommand(m_SeparatorLoc);
 	m_coordCommands.push_back(sepLocCoordCmd);
-	AddCommand(VectorCommand(m_coordCommands[0], sepLocCoordCmd, VectorCommand::MoveTo));
-	AddCommand(VectorCommand(m_coordCommands[2], sepLocCoordCmd, VectorCommand::LineTo));
+	AddCommand(VectorCommand(m_coordCommands[0], sepLocCoordCmd, m_coordCommands[2], sepLocCoordCmd, VectorCommand::DrawLine));
 
 	ypos += m_DecoratorMarginY;
+	ypos += gapSizeModify;
 
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		ypos += m_lMaxTextHeight;
-		(*ii)->SetTextRelYPosition(ypos);
 		(*ii)->SetTextRelYPosition(ypos);
 		ypos += stretchedGapSize;
 	}
@@ -1214,10 +1245,10 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC)
 	m_calcSize.cx = xrightpos + m_DecoratorMarginX;
 	m_calcSize.cy = ypos + m_DecoratorMarginY;
 
-	if (pDC) {
-		dc.SelectObject(oldfont);
+	if (gdip2 != NULL)
+		delete gdip2;
+	if (pDC)
 		dc.Detach();
-	}
 }
 
 void ClassComplexPart::SetBoxLocation(const CRect& cRect)

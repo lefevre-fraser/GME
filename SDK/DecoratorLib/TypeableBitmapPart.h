@@ -37,7 +37,7 @@ public:
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 
 protected:
-	virtual void	DrawIcons					(CDC* pDC);
+	virtual void	DrawIcons					(CDC* pDC, Gdiplus::Graphics* gdip);
 };
 
 }; // namespace DecoratorSDK

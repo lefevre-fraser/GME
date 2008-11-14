@@ -200,7 +200,7 @@ typedef CList<CComObjPtr<IMgaAttribute>, CComObjPtr<IMgaAttribute> >	CMgaAttribu
 typedef CTypedPtrMap<CMapPtrToPtr, void *, CGuiMetaBase *>				CGuiMetaBaseTable;
 typedef CTypedPtrList<CPtrList, CGuiMetaBase *>							CGuiMetaBaseList;
 
-typedef CTypedPtrList<CPtrList, CGMEView*>							CViewList;
+typedef CTypedPtrList<CPtrList, CGMEView*>								CViewList;
 
 typedef CTypedPtrList<CPtrList, CGuiMetaAspect*>						CGuiMetaAspectList;
 typedef CTypedPtrList<CPtrList, CGuiMetaAttribute*>						CGuiMetaAttributeList;
@@ -228,7 +228,7 @@ typedef CTypedPtrList<CPtrList, CPendingRequest *>						CPendingRequestList;
 typedef CList<CPoint, CPoint&>											CPointList;
 
 typedef CTypedPtrMap<CMapPtrToPtr, void *, CPen *>						CPenTable;
-typedef CTypedPtrMap<CMapPtrToPtr, void *, CBrush *>						CBrushTable;
+typedef CTypedPtrMap<CMapPtrToPtr, void *, CBrush *>					CBrushTable;
 
 typedef CList<bool, bool &>												CBoolList;
 

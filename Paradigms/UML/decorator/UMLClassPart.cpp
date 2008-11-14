@@ -126,7 +126,7 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 
 	ClassComplexPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
-	CalcRelPositions();
+	CalcRelPositions(NULL, NULL);
 }
 
 void UMLClassPart::CollectAttributes(CComPtr<IMgaFCO> mgaFco)

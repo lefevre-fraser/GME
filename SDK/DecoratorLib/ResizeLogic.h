@@ -72,7 +72,7 @@ public:
 	virtual void	Initialize					(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);
 	virtual void	Destroy						(void);
-	virtual void	Draw						(CDC* pDC);
+	virtual void	Draw						(CDC* pDC, Gdiplus::Graphics* gdip);
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);

@@ -1,13 +1,13 @@
 // UMLDecorator.cpp : Implementation of CUMLDecorator
 #include "stdafx.h"
 #include "Decorator.h"
+#include "..\MgaUtil\AnnotationUtil.h"
 
 #include "..\Common\CommonError.h"
 
 #define VERIFY_INIT   { if (!m_isInitialized) return E_DECORATOR_UNINITIALIZED; }
 #define VERIFY_LOCSET { if (!m_isLocSet) return E_DECORATOR_LOCISNOTSET; }
 
-CDecoratorUtil	d_util;
 
 /////////////////////////////////////////////////////////////////////////////
 // CDecorator
@@ -32,7 +32,7 @@ STDMETHODIMP CDecorator::GetMnemonic(BSTR *mnemonic)
 }
 
 STDMETHODIMP CDecorator::GetFeatures(feature_code *features)
-{	
+{
 	*features = F_RESIZABLE | F_MOUSEEVENTS | F_RESIZEAFTERMOD;
 	return S_OK;
 }
@@ -162,7 +162,7 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 
 
 	dc.SelectStockObject(NULL_PEN);
-	
+
 	if ( m_isActive && (m_bgcolor != AN_COLOR_TRANSPARENT) ) {
 		CBrush mybrush(m_bgcolor);
 		CPen mypen(PS_SOLID, 1, m_bgcolor);
@@ -172,7 +172,7 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 		dc.SelectObject(oldpen);
 		dc.SelectObject(oldbrush);
 	}
-	
+
 	int oldbkmode = dc.SetBkMode( ((!m_isActive) || m_bgcolor == AN_COLOR_TRANSPARENT) ? TRANSPARENT : OPAQUE);
 	COLORREF oldbkcolor = dc.SetBkColor(m_bgcolor);
 	dc.SetTextAlign(TA_LEFT | TA_TOP);
@@ -225,37 +225,6 @@ CDecorator::~CDecorator()
 {
 }
 
-void CDecorator::LogfontEncode(CString &str, const LOGFONT * lfp)
-{	
-	TCHAR buff[6];
-	buff[5] = _T('0');
-
-	str.Empty();
-	for (int i = 0; i < sizeof(LOGFONT); i++) {
-		unsigned int ch = ((const unsigned char *)lfp)[i];
-		_sntprintf(buff, 5, _T("%2x "), ch);
-		str += buff;
-	}
-}
-
-bool CDecorator::LogfontDecode(const CString &str, LOGFONT * lfp)
-{
-	int i = 0;
-	int pos = 0;
-	int epos = 0;
-	epos = str.Find(_T(' '), pos);
-	while (epos > 0) {
-		unsigned int ch;
-		if (_stscanf(str.Mid(pos,epos-pos), _T("%2x"), &ch) != 1) {
-			return false;
-		}
-		((unsigned char *)lfp)[i++] = ch;
-		pos = epos+1;
-		epos = str.Find(_T(' '), pos);
-	}
-	return (i == sizeof(LOGFONT));
-}
-
 void CDecorator::ReadPreferences()
 {
 	try {
@@ -263,7 +232,7 @@ void CDecorator::ReadPreferences()
 		COMTHROW(m_regRoot->get_Value(&bstr));
 		m_text = bstr;
 		m_text.Replace("\n", "\r\n");
-	} 
+	}
 	catch (hresult_exception &) {
 		m_text = "Unable to read annotation !";
 	}
@@ -272,7 +241,7 @@ void CDecorator::ReadPreferences()
 		CComBSTR bstr;
 		COMTHROW(m_regRoot->get_Name(&bstr));
 		m_name = bstr;
-	} 
+	}
 	catch (hresult_exception &) {
 		m_name = "Unknown";
 	}
@@ -286,35 +255,13 @@ void CDecorator::ReadPreferences()
 			COMTHROW(lfNode->get_Value(&bstr));
 		}
 		CString str(bstr);
-		if (!LogfontDecode(str, &m_logfont)) {
+		if (!CAnnotationUtil::LogfontDecode(str, &m_logfont)) {
 			// throw hresult_exception();
-			m_logfont.lfHeight = -MulDiv(AN_DEFAULT_FONT_HEIGHT, GetDeviceCaps(::GetWindowDC(NULL), LOGPIXELSY), 72);
-		_tcsncpy(m_logfont.lfFaceName, AN_DEFAULT_FONT_FACE, LF_FACESIZE);
-		m_logfont.lfPitchAndFamily = FF_DONTCARE | DEFAULT_PITCH;
-		m_logfont.lfQuality = DEFAULT_QUALITY;
-		m_logfont.lfClipPrecision  = CLIP_DEFAULT_PRECIS;
-		m_logfont.lfOutPrecision = OUT_DEFAULT_PRECIS;
-		m_logfont.lfCharSet = ANSI_CHARSET;
-		m_logfont.lfItalic  = FALSE;
-		m_logfont.lfUnderline = FALSE;
-		m_logfont.lfStrikeOut = FALSE;
-		m_logfont.lfWeight = FW_DONTCARE;
-		m_logfont.lfWidth = 0;
+			CAnnotationUtil::FillLogFontWithDefault(&m_logfont);
 		}
-	} 
+	}
 	catch (hresult_exception &) {
-		m_logfont.lfHeight = -MulDiv(AN_DEFAULT_FONT_HEIGHT, GetDeviceCaps(::GetWindowDC(NULL), LOGPIXELSY), 72);
-		_tcsncpy(m_logfont.lfFaceName, AN_DEFAULT_FONT_FACE, LF_FACESIZE);
-		m_logfont.lfPitchAndFamily = FF_DONTCARE | DEFAULT_PITCH;
-		m_logfont.lfQuality = DEFAULT_QUALITY;
-		m_logfont.lfClipPrecision  = CLIP_DEFAULT_PRECIS;
-		m_logfont.lfOutPrecision = OUT_DEFAULT_PRECIS;
-		m_logfont.lfCharSet = ANSI_CHARSET;
-		m_logfont.lfItalic  = FALSE;
-		m_logfont.lfUnderline = FALSE;
-		m_logfont.lfStrikeOut = FALSE;
-		m_logfont.lfWeight = FW_DONTCARE;
-		m_logfont.lfWidth = 0;
+		CAnnotationUtil::FillLogFontWithDefault(&m_logfont);
 	}
 
 	try {
@@ -336,7 +283,7 @@ void CDecorator::ReadPreferences()
 		else {
 			throw hresult_exception();
 		}
-	} 
+	}
 	catch (hresult_exception &) {
 		m_color = AN_DEFAULT_COLOR;
 	}
@@ -360,7 +307,7 @@ void CDecorator::ReadPreferences()
 		else {
 			m_bgcolor = AN_DEFAULT_BGCOLOR;
 		}
-	} 
+	}
 	catch (hresult_exception &) {
 		m_bgcolor = AN_DEFAULT_BGCOLOR;
 	}
@@ -369,7 +316,7 @@ void CDecorator::ReadPreferences()
 void CDecorator::CalcNativeSize(CSize &size)
 {
 	CDC	dc;
-			
+
 	dc.CreateCompatibleDC(NULL);
 	CFont myfont;
 	myfont.CreateFontIndirect(&m_logfont);

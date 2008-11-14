@@ -31,15 +31,15 @@ public:
 	AttributePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~AttributePart();
 
-	virtual void	Draw						(CDC* pDC);
+	virtual void	Draw						(CDC* pDC, Gdiplus::Graphics* gdip);
 
-	virtual CPoint	GetTextPosition				(void) const;
+	virtual CPoint	GetTextPosition				(CDC* pDC, Gdiplus::Graphics* gdip) const;
 	virtual void	SetTextRelYPosition			(long relYPosition) { m_textRelYPosition = relYPosition; };
-	virtual CRect	GetTextLocation				(void) const;
+	virtual CRect	GetTextLocation				(CDC* pDC, Gdiplus::Graphics* gdip) const;
 
-	virtual CSize	GetNameSize					(CDC* pDC) const;
-	virtual CSize	GetTypeSize					(CDC* pDC) const;
-	virtual CSize	GetTextSize					(CDC* pDC) const;
+	virtual CSize	GetNameSize					(CDC* pDC, Gdiplus::Graphics* gdip) const;
+	virtual CSize	GetTypeSize					(CDC* pDC, Gdiplus::Graphics* gdip) const;
+	virtual CSize	GetTextSize					(CDC* pDC, Gdiplus::Graphics* gdip) const;
 	virtual void	SetName						(const CString& nameStr) { m_strText = nameStr; };
 	virtual void	SetType						(const CString& typeStr) { m_strType = typeStr; };
 	virtual CString	GetName						(void) const { return m_strText; };

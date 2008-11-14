@@ -35,7 +35,7 @@
 #include <afxtempl.h>
 
 #include <gdiplus.h>
-using namespace Gdiplus;
+//using namespace Gdiplus;
 
 #include <atlbase.h>
 //You may derive a class from CComModule and use it if you want to override

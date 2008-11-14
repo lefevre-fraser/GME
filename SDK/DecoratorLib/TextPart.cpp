@@ -92,15 +92,17 @@ void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 		CComBSTR bstrText;
 		CComPtr<IMgaMetaFCO> spMetaFCO;
 		if (!m_spFCO) {
-			CComPtr<IMgaMetaRole> spRole;
-			COMTHROW(m_spPart->get_Role(&spRole));
-			COMTHROW(spRole->get_Kind(&spMetaFCO));
+			if (m_spPart) {
+				CComPtr<IMgaMetaRole> spRole;
+				COMTHROW(m_spPart->get_Role(&spRole));
+				COMTHROW(spRole->get_Kind(&spMetaFCO));
 
-			if (!bTextDefined) {
-				COMTHROW(spRole->get_DisplayedName(&bstrText));
-				if (bstrText.Length() == 0) {
-					bstrText.Empty();
-					COMTHROW(spMetaFCO->get_Name(&bstrText));
+				if (!bTextDefined) {
+					COMTHROW(spRole->get_DisplayedName(&bstrText));
+					if (bstrText.Length() == 0) {
+						bstrText.Empty();
+						COMTHROW(spMetaFCO->get_Name(&bstrText));
+					}
 				}
 			}
 		} else {
@@ -306,6 +308,18 @@ long TextPart::GetLongest(void) const
 			maxv = ilen;
 	}
 	return maxv;
+}
+
+CRect TextPart::GetTextLocation(void) const
+{
+	CDC dc;
+	dc.CreateCompatibleDC(NULL);
+	Gdiplus::Graphics gdipGraphics(dc.m_hDC);
+	gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
+	gdipGraphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+	gdipGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+
+	return GetTextLocation(&dc, &gdipGraphics);
 }
 
 }; // namespace DecoratorSDK

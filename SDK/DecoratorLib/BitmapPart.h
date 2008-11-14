@@ -36,18 +36,16 @@ public:
 
 // =============== resembles IMgaNewDecorator
 public:
-	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
-												 CComPtr<IMgaFCO>& pFCO);
 	virtual feature_code	GetFeatures			(void) const;
 	virtual CSize			GetPreferredSize	(void) const;
-	virtual void			Draw				(CDC* pDC);
+	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 
-	virtual void			DrawBorder			(CDC* pDC);
-	virtual void			DrawBackground		(CDC* pDC);
-	virtual void			DrawIcons			(CDC* pDC);
+	virtual void			DrawBorder			(CDC* pDC, Gdiplus::Graphics* gdip);
+	virtual void			DrawBackground		(CDC* pDC, Gdiplus::Graphics* gdip);
+	virtual void			DrawIcons			(CDC* pDC, Gdiplus::Graphics* gdip);
 };
 
 }; // namespace DecoratorSDK

@@ -130,6 +130,7 @@ void CInPlaceEditDialog::OnLButtonDown(UINT nFlags, CPoint point)
 
 		if (child && child != this) {
 			child->SendMessage(WM_LBUTTONDOWN, nFlags, MAKELPARAM(point.x, point.y));
+			TRACE3("CInPlaceEditDialog::OnLButtonDown %ld %ld %ld\n", nFlags, point.x, point.y);
 			return;
 		}
 	}
@@ -142,10 +143,12 @@ void CInPlaceEditDialog::OnLButtonUp(UINT nFlags, CPoint point)
 	// See notes for OnLButtonDown.
 	CWnd *child = ChildWindowFromPoint(point, CWP_ALL);
 
-	if (child && child != this)
+	if (child && child != this) {
 		child->SendMessage(WM_LBUTTONUP, nFlags, MAKELPARAM(point.x, point.y));
-	else
+		TRACE3("CInPlaceEditDialog::OnLButtonUp %ld %ld %ld\n", nFlags, point.x, point.y);
+	} else {
 		CDialog::OnLButtonUp(nFlags, point);
+	}
 }
 
 void CInPlaceEditDialog::OnLButtonDblClk(UINT nFlags, CPoint point)
@@ -153,10 +156,12 @@ void CInPlaceEditDialog::OnLButtonDblClk(UINT nFlags, CPoint point)
 	// See notes for OnLButtonDown.
 	CWnd *child = ChildWindowFromPoint(point, CWP_ALL);
 
-	if (child && child != this)
+	if (child && child != this) {
 		child->SendMessage(WM_LBUTTONDBLCLK, nFlags, MAKELPARAM(point.x, point.y));
-	else
+		TRACE3("CInPlaceEditDialog::OnLButtonDblClk %ld %ld %ld\n", nFlags, point.x, point.y);
+	} else {
 		CDialog::OnLButtonDblClk(nFlags, point);
+	}
 }
 
 void CInPlaceEditDialog::OnMouseMove(UINT nFlags, CPoint point)
@@ -164,10 +169,12 @@ void CInPlaceEditDialog::OnMouseMove(UINT nFlags, CPoint point)
 	// See notes for OnLButtonDown.
 	CWnd *child = ChildWindowFromPoint(point, CWP_ALL);
 
-	if (child && child != this)
+	if (child && child != this) {
 		child->SendMessage(WM_MOUSEMOVE, nFlags, MAKELPARAM(point.x, point.y));
-	else
+		TRACE3("CInPlaceEditDialog::OnMouseMove %ld %ld %ld\n", nFlags, point.x, point.y);
+	} else {
 		CDialog::OnMouseMove(nFlags, point);
+	}
 }
 
 BOOL CInPlaceEditDialog::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
@@ -179,10 +186,12 @@ BOOL CInPlaceEditDialog::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 	// See notes for OnLButtonDown.
 	CWnd *child = ChildWindowFromPoint(cursorPos, CWP_ALL);
 
-	if (child && child != this)
+	if (child && child != this) {
 		return child->SendMessage(WM_SETCURSOR, (WPARAM)(child->m_hWnd), MAKELPARAM(nHitTest, message));
-	else
+		TRACE3("CInPlaceEditDialog::OnSetCursor %p %lu %lu\n", pWnd, nHitTest, message);
+	} else {
 		return CDialog::OnSetCursor(pWnd, nHitTest, message);
+	}
 }
 
 int CInPlaceEditDialog::OnMouseActivate(CWnd* pWnd, UINT nHitTest, UINT message)
@@ -194,10 +203,12 @@ int CInPlaceEditDialog::OnMouseActivate(CWnd* pWnd, UINT nHitTest, UINT message)
 	// See notes for OnLButtonDown.
 	CWnd *child = ChildWindowFromPoint(cursorPos, CWP_ALL);
 
-	if (child && child != this)
+	if (child && child != this) {
 		return child->SendMessage(WM_MOUSEACTIVATE, (WPARAM)(child->m_hWnd), MAKELPARAM(nHitTest, message));
-	else
+		TRACE3("CInPlaceEditDialog::OnMouseActivate %p %lu %lu\n", pWnd, nHitTest, message);
+	} else {
 		return CDialog::OnMouseActivate(pWnd, nHitTest, message);
+	}
 }
 
 void CInPlaceEditDialog::OnEnChangeTextedit()

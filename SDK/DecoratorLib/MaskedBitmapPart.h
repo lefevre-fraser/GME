@@ -35,14 +35,12 @@ public:
 
 // =============== resembles IMgaNewDecorator
 public:
-	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
-												 CComPtr<IMgaFCO>& pFCO);
 	virtual feature_code	GetFeatures			(void) const;
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 
-	virtual void			DrawBackground		(CDC* pDC);
+	virtual void			DrawBackground		(CDC* pDC, Gdiplus::Graphics* gdip);
 };
 
 }; // namespace DecoratorSDK

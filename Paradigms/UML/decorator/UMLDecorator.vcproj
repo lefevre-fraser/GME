@@ -473,6 +473,14 @@
 			Name="Resources"
 			>
 			<File
+				RelativePath=".\res\constraint.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\constraintdefinition.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\NewUMLDecorator.rgs"
 				>
 			</File>

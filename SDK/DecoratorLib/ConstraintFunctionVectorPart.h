@@ -30,9 +30,6 @@ public:
 
 // =============== resembles IMgaNewDecorator
 public:
-	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
-												 CComPtr<IMgaFCO>& pFCO);
-
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 };

@@ -6,7 +6,9 @@
 #include "DecoratorStd.h"
 #include "DecoratorConfig.h"
 #include "Resource.h"       // main symbols
-#include "DecoratorUtil.h"
+#define __Meta_h__
+#define __Mga_h__
+#include "DecoratorLib.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -64,8 +66,6 @@ protected:
 private:
 	void	CalcNativeSize(CSize &size);
 	void	ReadPreferences();
-	void	LogfontEncode(CString &str, const LOGFONT * lfp);
-	bool	LogfontDecode(const CString &str, LOGFONT * lfp);
 };
 
 

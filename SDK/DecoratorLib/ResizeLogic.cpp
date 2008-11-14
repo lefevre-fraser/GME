@@ -40,7 +40,7 @@ void ResizeLogic::Destroy(void)
 	OperationCanceledByGME();
 }
 
-void ResizeLogic::Draw(CDC* pDC)
+void ResizeLogic::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	if ((m_resizeFeatures & DrawResizeCorner) != 0) {
 		// draw resize corner

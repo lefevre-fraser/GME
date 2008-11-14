@@ -80,6 +80,7 @@ namespace DecoratorSDK
 	static const char* PREF_TYPEINFOSHOWN			= "isTypeInfoShown";
 	static const char* PREF_PORTLABELLENGTH			= "portLabelLength";
 	static const char* PREF_BORDERCOLOR				= "borderColor";
+	static const char* PREF_FILLCOLOR				= "fillColor";
 
 	static const char* PREF_LABELFONT				= "labelFont";
 	static const char* PREF_LABELLENGTH				= "labelLength";
@@ -98,6 +99,7 @@ namespace DecoratorSDK
 
 	static const char* PREF_ITEMEDITABLE			= "itemEditable";
 	static const char* PREF_ITEMRESIZABLE			= "itemResizable";
+	static const char* PREF_ITEMSHADOWCAST			= "itemShadowCast";
 	static const char* PREF_PREFERREDSIZE			= "preferredSize";
 	static const char* PREF_ISMASKEDBITMAP			= "isMaskedBitmap";
 	static const char* PREF_ISMODELEXPANDED			= "isModelExpanded";
@@ -187,14 +189,28 @@ namespace DecoratorSDK
 
 	struct SFont
 	{
-		CFont*		pFont;
-		int			iSize;
-		CString		strName;
-		int			iBoldness;
-		bool		bItalics;
+		CFont*			pFont;
+		int				iSize;
+		CString			strName;
+		int				iBoldness;
+		bool			bItalics;
 
 		SFont( const CString& _strName, int _iSize, int _iBoldness, bool _bItalics )
 			: pFont( NULL ), strName( _strName ), iSize( _iSize ), iBoldness( _iBoldness ), bItalics( _bItalics )
+		{
+		}
+	};
+
+	struct GdipFont
+	{
+		Gdiplus::Font*	gdipFont;
+		int				iSize;
+		CString			strName;
+		bool			bBoldness;
+		bool			bItalics;
+
+		GdipFont( const CString& _strName, int _iSize, bool _bBoldness, bool _bItalics )
+			: gdipFont( NULL ), strName( _strName ), iSize( _iSize ), bBoldness( _bBoldness ), bItalics( _bItalics )
 		{
 		}
 	};

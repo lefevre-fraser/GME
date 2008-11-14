@@ -32,6 +32,7 @@
 #include "EmergencySaveDlg.h"
 #include "CrashTest.h"
 #include <Gdiplus.h>
+#include "GraphicsUtil.h"
 
 
 #ifdef _DEBUG
@@ -483,6 +484,7 @@ int CGMEApp::Run()
 	gdiplusStartupInput.SuppressBackgroundThread = TRUE;
 	VERIFY(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, &gdiplusStartupOutput) == Gdiplus::Ok);
 	gdiplusStartupOutput.NotificationHook(&gdiplusHookToken);
+	graphics.Initialize();
 
 	if(bNoProtect) {
 		return CWinApp::Run();
@@ -508,6 +510,7 @@ int CGMEApp::Run()
 		}
 	}
 	// Closing GDI+
+	graphics.Uninitialize();
 	gdiplusStartupOutput.NotificationUnhook(gdiplusHookToken);
 	Gdiplus::GdiplusShutdown(gdiplusToken);
 }
