@@ -962,9 +962,8 @@ void CCoreDataAttrBase<long>::Dump()
 
 // --------------------------- CCorePointerAttrBase
 
-CCorePointerAttrBase::CCorePointerAttrBase()
+CCorePointerAttrBase::CCorePointerAttrBase() : isEmpty(true)
 {
-	backref = objects_iterator(); // was: backref = NULL;
 }
 
 #ifdef _DEBUG
@@ -972,7 +971,7 @@ CCorePointerAttrBase::CCorePointerAttrBase()
 CCorePointerAttrBase::~CCorePointerAttrBase()
 {
 	ASSERT( values.empty() );
-	ASSERT( INVALID_ITERATOR( backref));
+	ASSERT( isEmpty );
 }
 
 
@@ -1079,7 +1078,7 @@ void CCorePointerAttrBase::StorageCopyTo(const VARIANT &v, CComObjPtr<CCoreColle
 
 void CCorePointerAttrBase::InsertIntoCollection()
 {
-	ASSERT( INVALID_ITERATOR( backref));
+	ASSERT( isEmpty );
 	ASSERT( !values.empty() );
 
 	if( values.front() != NULL )
@@ -1089,6 +1088,7 @@ void CCorePointerAttrBase::InsertIntoCollection()
 		std::pair<objects_iterator, bool> t = collection.insert(GetObject());
 		ASSERT( t.second );
 		backref = t.first;
+		isEmpty = false;
 	}
 }
 
@@ -1096,7 +1096,7 @@ void CCorePointerAttrBase::RemoveFromCollection()
 {
 	ASSERT( !values.empty() );
 
-	if( !INVALID_ITERATOR( backref))
+	if( !isEmpty )
 	{
 		ASSERT( values.front() != NULL );
 
@@ -1105,6 +1105,7 @@ void CCorePointerAttrBase::RemoveFromCollection()
 
 		collection.erase( backref );
 		backref = objects_iterator(); // was: backref = NULL;
+		isEmpty = true;
 	}
 	else
 		ASSERT( values.front() == NULL );

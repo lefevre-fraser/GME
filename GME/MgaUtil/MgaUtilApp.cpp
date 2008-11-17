@@ -103,12 +103,14 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 STDAPI DllRegisterServer(void)
 {
 	// registers object, typelib and all interfaces in typelib
+	_Module.UpdateRegistryFromResource(IDR_MGAUTIL, TRUE);
 	return _Module.RegisterServer(TRUE);
 }
 /////////////////////////////////////////////////////////////////////////////
 // DllUnregisterServer - Removes entries from the system registry
 STDAPI DllUnregisterServer(void)
 {
+	_Module.UpdateRegistryFromResource(IDR_MGAUTIL, FALSE);
 	_Module.UnregisterServer(TRUE); //TRUE indicates that typelib is unreg'd
 	return S_OK;
 }

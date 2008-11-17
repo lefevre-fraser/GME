@@ -166,7 +166,7 @@ CString CMgaOpenDlg::AskConnectionString(bool meta)
 			}
 			else if( m_radio == 1 )
 			{
-				CFileDialog dlg(true, NULL, filenamehint, 
+				CFileDialog dlg(true, NULL, filenamehint.IsEmpty() ? (LPCSTR)filenamehint : NULL, 
 					OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | 
 					(flag_create ? 0 : OFN_FILEMUSTEXIST), meta ? metafilter : mgafilter);
 

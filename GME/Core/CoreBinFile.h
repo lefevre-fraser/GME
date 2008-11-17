@@ -78,18 +78,6 @@ typedef stdext::hash_map< metaobjidpair_type
 typedef objects_type::iterator objects_iterator;
 
 extern objects_iterator no_object;
-//bool p2 = a._Mycont == no_object._Mycont; // good
-//bool p0 = a == binfile->objects.end();    // wrong
-//bool p1 = no_object == binfile->objects.end();//wrong
-// if a == 0 && no_object == 0 the ASSERT( a == no_object) gives a no compatible iterator message
-//
-// comparison of an invalid (null or simply default constructed) iterator 
-// like no_object with a valid iterator in MS STL is cumbersome,  because
-// MS STL asserts in debug mode, asserting 'non-compatible iterator comparisons'.
-// Since no_object is null, its container is null too, which
-// will fire the assertion on any 'myobj_iter == no_object;' expression.
-// Thus this small test will replace the old expression:
-#define EQUAL_WITH_NO_OBJECT( x) ( x._Mycont == 0)
 
 
 // --------------------------- CCoreBinFile
@@ -196,6 +184,7 @@ public:
 public:
 	objects_type objects;
 	objects_iterator opened_object;
+	bool isEmpty;
 
 	typedef stdext::hash_map<metaid_type, objid_type> maxobjids_type;
 	typedef maxobjids_type::iterator maxobjids_iterator;
@@ -378,21 +367,23 @@ template<>
 class BinAttr<VALTYPE_POINTER> : public BinAttrBase
 {
 public:
-	BinAttr() : a(no_object) { }
+	BinAttr() : a(no_object), isEmpty(true) { }
 
 	objects_iterator a;
+	bool isEmpty;
 
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_POINTER; }
 
 	void Set(CCoreBinFile *binfile, objects_iterator b)
 	{
 		ASSERT( binfile != NULL );
-		ASSERT( EQUAL_WITH_NO_OBJECT( a)); // was: ASSERT( a == no_object)
-		ASSERT( !EQUAL_WITH_NO_OBJECT( b) &&  b != binfile->objects.end()); // was: ASSERT( b != no_object && b != binfile->objects.end() );
+		ASSERT( isEmpty ); // was: ASSERT( a == no_object)
+		ASSERT( b != binfile->objects.end()); // was: ASSERT( b != no_object && b != binfile->objects.end() );
 
 		binfile->modified = true;
 
 		a = b;
+		isEmpty = false;
 
 		ASSERT( binfile->opened_object->second.Find(attrid) == this );
 
@@ -412,7 +403,7 @@ public:
 
 	virtual void Set(CCoreBinFile *binfile, VARIANT p)
 	{
-		if( !EQUAL_WITH_NO_OBJECT( a))
+		if( !isEmpty )
 		{
 			BinAttrBase *base = a->second.Find(attrid + ATTRID_COLLECTION);
 			ASSERT( base != NULL );
@@ -429,6 +420,7 @@ public:
 		}
 
 		a = no_object;
+		isEmpty = true;
 
 		metaobjidpair_type idpair;
 		CopyTo(p, idpair);
@@ -446,7 +438,7 @@ public:
 	}
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const
 	{
-		if(EQUAL_WITH_NO_OBJECT( a))
+		if( isEmpty )
 		{
 			metaobjidpair_type idpair;
 			idpair.metaid = METAID_NONE;
@@ -459,7 +451,7 @@ public:
 
 	virtual void Write(CCoreBinFile *binfile) const
 	{
-		if(EQUAL_WITH_NO_OBJECT( a))
+		if( isEmpty )
 		{
 			binfile->write((metaid_type)METAID_NONE);
 		}
@@ -475,7 +467,7 @@ public:
 
 	virtual void Read(CCoreBinFile *binfile)
 	{
-		ASSERT( EQUAL_WITH_NO_OBJECT( a));
+		ASSERT( isEmpty );
 
 		metaid_type metaid;
 		binfile->read(metaid);
@@ -490,7 +482,7 @@ public:
 			binfile->resolvelist.push_front(CCoreBinFile::resolve_type());
 			CCoreBinFile::resolve_type &b = binfile->resolvelist.front();
 
-			ASSERT( !EQUAL_WITH_NO_OBJECT( binfile->opened_object));
+			ASSERT( !binfile->isEmpty );
 
 			b.obj = binfile->opened_object;
 			b.attrid = attrid;

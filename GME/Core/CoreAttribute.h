@@ -17,10 +17,6 @@
 #include <list>
 #include <set>
 
-// comparison of an invalid (null or simply default constructed) iterator 
-// with a valid iterator in MS STL is cumbersome. See EQUAL_WITH_NO_OBJECT in CoreBinFile.h 
-// for explanation for a macro similar to this
-#define INVALID_ITERATOR( x) ( x._Mycont == 0)
 
 class CCoreProject;
 class CCoreLockAttribute;
@@ -307,6 +303,7 @@ public:
 protected:
 	values_type values;
 	objects_iterator backref;
+	bool isEmpty;
 
 // ------- CopyTo
 
@@ -353,7 +350,7 @@ public:
 // ------- Methods
 
 public:
-	bool IsEmpty() const NOTHROW { return INVALID_ITERATOR(backref); } // used to be: return backref == objects_iterator(NULL);
+	bool IsEmpty() const NOTHROW { return isEmpty; } // used to be: return backref == objects_iterator(NULL);
 	bool IsLoaded() const NOTHROW { return !values.empty(); }
 
 	// does not load, only compares

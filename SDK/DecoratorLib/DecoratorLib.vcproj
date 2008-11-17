@@ -65,6 +65,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="$(IntDir)\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -74,13 +75,15 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
+				OutputFile="$(IntDir)/$(ProjectName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy /Y $(IntDir)\$(TargetName).lib ..\..\GME\lib"
+				Description="Copying decorator library to GME libraries..."
+				CommandLine="copy /Y $(IntDir)\$(TargetName).lib ..\..\GME\lib\$(TargetName)D.lib"
 			/>
 		</Configuration>
 		<Configuration
@@ -131,6 +134,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="$(IntDir)\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -140,13 +144,15 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
+				OutputFile="$(IntDir)/$(ProjectName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy /Y $(IntDir)\$(TargetName).lib ..\..\GME\lib"
+				Description="Copying decorator library to GME libraries..."
+				CommandLine="copy /Y $(IntDir)\$(TargetName).lib ..\..\GME\lib\copy /Y $(IntDir)\$(TargetName).lib ..\..\GME\lib\$(TargetName).lib"
 			/>
 		</Configuration>
 	</Configurations>

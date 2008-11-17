@@ -269,7 +269,7 @@ bool BinObject::HasEmptyPointers() const
 	{
 		if( (*i)->GetValType() == VALTYPE_POINTER )
 		{
-			if( !EQUAL_WITH_NO_OBJECT( ( ( BinAttr<VALTYPE_POINTER>*)(*i))->a))
+			if( !( ( ( BinAttr<VALTYPE_POINTER>*)(*i))->isEmpty))
 				return false;
 		}
 		++i;
@@ -289,6 +289,7 @@ CCoreBinFile::CCoreBinFile()
 	opened_object = no_object;
 	intrans = false;
 	modified = false;
+	isEmpty = true;
 }
 
 CCoreBinFile::~CCoreBinFile()
@@ -592,7 +593,7 @@ STDMETHODIMP CCoreBinFile::get_AttributeValue(VARIANT *p)
 {
 	CHECK_OUT(p);
 
-	if( EQUAL_WITH_NO_OBJECT( opened_object) || !InTransaction())
+	if( isEmpty || !InTransaction())
 		COMRETURN(E_INVALID_USAGE);
 	
 	COMTRY
@@ -607,7 +608,7 @@ STDMETHODIMP CCoreBinFile::get_AttributeValue(VARIANT *p)
 
 STDMETHODIMP CCoreBinFile::put_AttributeValue(VARIANT p)
 {
-	if( EQUAL_WITH_NO_OBJECT( opened_object) || !InTransaction())
+	if( isEmpty || !InTransaction())
 		COMRETURN(E_INVALID_USAGE);
 	
 	COMTRY
@@ -669,17 +670,19 @@ STDMETHODIMP CCoreBinFile::OpenObject(objid_type objid)
 	idpair.metaid = metaid;
 	idpair.objid = objid;
 
-	if( !EQUAL_WITH_NO_OBJECT( opened_object) &&
+	if( !isEmpty &&
 		metaobjidpair_equalkey()(opened_object->first, idpair) )
 		return S_OK;
 
 	COMTRY
 	{
 		opened_object = objects.find(idpair);
-		if( EQUAL_WITH_NO_OBJECT( opened_object) ||
+		isEmpty = false;
+		if( (opened_object == objects.end()) ||
 			opened_object->second.deleted )
 		{
 			opened_object = no_object;
+			isEmpty = true;
 			HR_THROW(E_NOTFOUND);
 		}
 	}
@@ -698,6 +701,7 @@ STDMETHODIMP CCoreBinFile::CreateObject(objid_type *objid)
 		modified = true;
 
 		opened_object = no_object;
+		isEmpty = true;
 
 		ASSERT( metaid != METAID_NONE );
 
@@ -720,6 +724,7 @@ STDMETHODIMP CCoreBinFile::CreateObject(objid_type *objid)
 		created_objects.push_front(t.first);
 
 		opened_object = t.first;
+		isEmpty = false;
 		*objid = idpair.objid;
 	}
 	COMCATCH(;)
@@ -728,12 +733,13 @@ STDMETHODIMP CCoreBinFile::CreateObject(objid_type *objid)
 STDMETHODIMP CCoreBinFile::CloseObject()
 {
 	opened_object = no_object;
+	isEmpty =  true;
 	return S_OK;
 }
 
 STDMETHODIMP CCoreBinFile::LockObject()
 {
-	if( EQUAL_WITH_NO_OBJECT( opened_object) || !InTransaction())
+	if( isEmpty || !InTransaction())
 		COMRETURN(E_INVALID_USAGE);
 
 	return S_OK;
@@ -741,7 +747,7 @@ STDMETHODIMP CCoreBinFile::LockObject()
 
 STDMETHODIMP CCoreBinFile::DeleteObject()
 {
-	if( EQUAL_WITH_NO_OBJECT( opened_object) || !InTransaction())
+	if( isEmpty || !InTransaction())
 		COMRETURN(E_INVALID_USAGE);
 
 	ASSERT( metaobject != NULL );
@@ -754,6 +760,7 @@ STDMETHODIMP CCoreBinFile::DeleteObject()
 
 	opened_object->second.deleted = true;
 	opened_object = no_object;
+	isEmpty = true;
 
 	return S_OK;
 }
@@ -775,6 +782,7 @@ void CCoreBinFile::CancelProject()
 	modified = false;
 
 	opened_object = no_object;
+	isEmpty = true;
 	deleted_objects.clear();
 	created_objects.clear();
 	maxobjids.clear();
@@ -865,7 +873,7 @@ void CCoreBinFile::LoadProject()
 		ASSERT( t.second );
 
 		opened_object = t.first;
-
+		isEmpty = false;
 		opened_object->second.deleted = false;
 		opened_object->second.Read(this);
 		
@@ -889,7 +897,9 @@ void CCoreBinFile::LoadProject()
 	while( i != e )
 	{
 		opened_object = i->obj;
-		ASSERT( !EQUAL_WITH_NO_OBJECT( opened_object));
+		isEmpty = false;
+		
+		// ASSERT( !isEmpty ); 
 
 		BinAttrBase *base = opened_object->second.Find(i->attrid);
 		ASSERT( base != NULL );
@@ -906,6 +916,7 @@ void CCoreBinFile::LoadProject()
 	}
 
 	opened_object = no_object;
+	isEmpty = true;
 	resolvelist.clear();
 
 	ifs.close();

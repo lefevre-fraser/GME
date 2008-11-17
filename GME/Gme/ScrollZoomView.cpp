@@ -141,8 +141,10 @@ void CScrollZoomView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
 		pDC->SetMapMode(MM_ANISOTROPIC);
 		pDC->SetWindowExt(m_totalLog);  // window is in logical coordinates
 		pDC->SetViewportExt(m_totalDev);
+#ifdef DEBUG
 		if (m_totalDev.cx == 0 || m_totalDev.cy == 0)
 			TRACE0("Warning: CScrollZoomView scaled to nothing.\n");
+#endif
 		break;
 
 	case MM_ISOTROPIC:
@@ -382,8 +384,10 @@ CPoint CScrollZoomView::GetDeviceScrollPosition() const
 void CScrollZoomView::GetDeviceScrollSizes(int& nMapMode, SIZE& sizeTotal,
 			SIZE& sizePage, SIZE& sizeLine) const
 {
+#ifdef DEBUG
 	if (m_nMapMode <= 0)
 		TRACE0("Warning: CScrollZoomView::GetDeviceScrollSizes returning invalid mapping mode.\n");
+#endif
 	nMapMode = m_nMapMode;
 	sizeTotal = m_totalDev;
 	sizePage = m_pageDev;

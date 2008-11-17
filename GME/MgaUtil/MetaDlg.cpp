@@ -65,7 +65,8 @@ BOOL CMetaDlg::OnInitDialog()
 	MSGTRY
 	{
 		ASSERT( registrar == NULL );
-		COMTHROW( registrar.CoCreateInstance(OLESTR("MGA.MgaRegistrar")) );
+		// Invoke IMgaregistrar through a COM surrogate (to support COM elevation under Vista)
+		COMTHROW( registrar.CoCreateInstance(OLESTR("MGA.MgaRegistrar"), NULL, CLSCTX_LOCAL_SERVER) );
 		ASSERT( registrar != NULL );
 
 		if(flags == METADLG_PARREG) {

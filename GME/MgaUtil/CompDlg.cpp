@@ -415,10 +415,10 @@ int CCompDlg::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodN
     IUnknownPtr   pAppDomainPunk = NULL;
 
     hr = pHost->GetDefaultDomain(&pAppDomainPunk);
-    assert(pAppDomainPunk); 
+    ASSERT(pAppDomainPunk); 
  
     hr = pAppDomainPunk->QueryInterface(__uuidof(_AppDomain),(void**) &pDefaultDomain);
-    assert(pDefaultDomain);
+    ASSERT(pDefaultDomain);
 
     try 
 	{
