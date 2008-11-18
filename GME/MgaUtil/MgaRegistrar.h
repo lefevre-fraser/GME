@@ -25,6 +25,9 @@ END_COM_MAP()
 
 // ------- Methods
 
+private:
+	int CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodName, int mode);
+
 public:
 	STDMETHOD(get_IconPath)(regaccessmode_enum mode, BSTR *path);
 	STDMETHOD(put_IconPath)(regaccessmode_enum mode, BSTR path);

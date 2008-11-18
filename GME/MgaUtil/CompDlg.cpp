@@ -5,13 +5,11 @@
 #include "MgaUtil.h"
 #include "CompDlg.h"
 #include "CompInfoDlg.h"
+#include "UACUtils.h"
 
 #include <atlbase.h>
 #include <objbase.h>
-#include <MSCOREE.H> 
- 
-#import "C:\\windows\\Microsoft.NET\\Framework\\v2.0.50727\\mscorlib.tlb" auto_rename
-using namespace mscorlib;
+
 
 
 #ifdef _DEBUG
@@ -71,15 +69,14 @@ BOOL CCompDlg::OnInitDialog()
 
 	MSGTRY
 	{
-		ASSERT( registrar == NULL );
-		COMTHROW( registrar.CoCreateInstance(OLESTR("MGA.MgaRegistrar")) );
-		ASSERT( registrar != NULL );
+		if( !CUACUtils::isVistaOrLater() ) {
+			CComPtr<IMgaRegistrar> registrar;
+			COMTHROW( registrar.CoCreateInstance(OLESTR("MGA.MgaRegistrar")) );
+			ASSERT( registrar != NULL );
 
-		{
 			if(registrar->RegisterComponent(CComBSTR("AAA"), 
 				componenttype_enum(COMPONENTTYPE_INTERPRETER+COMPONENTTYPE_PARADIGM_INDEPENDENT), CComBSTR("Dummy"), REGACCESS_TEST) != S_OK) {
 				GetDlgItem(IDC_RADIOSYS)->EnableWindow(false);
-				GetDlgItem(IDC_RADIOUSER)->EnableWindow(false);
 				GetDlgItem(IDC_RADIOBOTH)->EnableWindow(false);
 			}
 		}
@@ -119,6 +116,8 @@ BOOL CCompDlg::OnInitDialog()
 
 void CCompDlg::ResetItems()
 {
+	CComPtr<IMgaRegistrar> registrar;
+	registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
 	ASSERT( registrar != NULL );
 
 	m_remove.EnableWindow(false);
@@ -260,7 +259,19 @@ void CCompDlg::OnRemove()
 		{
 			CString progid = m_list.GetItemText(m_list.GetNextSelectedItem(pos), 2);
 
-			ASSERT( registrar != NULL );
+			CComPtr<IMgaRegistrar> registrar;
+			if (CUACUtils::isVistaOrLater()) {
+				CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
+			}
+			else {
+				registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
+			}
+
+			if( !registrar ) {
+				::AfxMessageBox(_T("Unable to unregister component. Maybe due to insufficient rights."), MB_ICONSTOP | MB_OK);
+				return;
+			}
+
 			COMTHROW( registrar->UnregisterComponent(PutInBstr(progid), regacc_translate(m_accessmode)) );
 
 			componenttype_enum type;
@@ -295,6 +306,19 @@ void CCompDlg::OnToggle()
 
 			VARIANT_BOOL is_ass, can_ass;
 			
+			CComPtr<IMgaRegistrar> registrar;
+			if (CUACUtils::isVistaOrLater() && (regacc_translate(m_accessmode) != REGACCESS_USER) ) {
+				CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
+			}
+			else {
+				registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
+			}
+
+			if( !registrar ) {
+				::AfxMessageBox(_T("Unable to disable/enable component. Maybe due to insufficient rights."), MB_ICONSTOP | MB_OK);
+				return;
+			}
+
 			HRESULT hr = registrar->IsAssociated(progid, PutInBstr(paradigm), &is_ass, &can_ass, REGACCESS_PRIORITY);
 			if(hr != S_OK) AfxMessageBox("Cannot Activate this component");
 			if(is_ass) hr = (registrar->Disassociate(progid, PutInBstr(paradigm), regacc_translate(m_accessmode)) );
@@ -350,158 +374,20 @@ void CCompDlg::OnInstall()
 	MSGCATCH("Error while installing component",;)
 }
 
-int CCompDlg::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodName, int mode)
-{
-//
-    // Query 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v2.0.50727\Install' DWORD value
-    // See http://support.microsoft.com/kb/318785/ (http://support.microsoft.com/kb/318785/) for more information on .NET runtime versioning information
-    //
-    HKEY key = NULL;
-    DWORD lastError = 0;
-    lastError = RegOpenKeyEx(HKEY_LOCAL_MACHINE,TEXT("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727"),0,KEY_QUERY_VALUE,&key);
-    if(lastError!=ERROR_SUCCESS) {
-        AfxMessageBox("Error opening HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727");
-        return 1;
-    }
-
-    DWORD type;
-    BYTE data[4];
-    DWORD len = sizeof(data);
-    lastError = RegQueryValueEx(key,TEXT("Install"),NULL,&type,data,&len);
- 
-    if(lastError!=ERROR_SUCCESS) {
-        RegCloseKey(key);
-        AfxMessageBox("Error querying HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727\\Install");
-        return 2;
-    }
-
-    RegCloseKey(key);
-
-    // Was Install DWORD key value == 1 ??
-    if(data[0]==1)
-        ;//_putts(TEXT(".NET Framework v2.0.50727 is installed"));
-    else {
-        AfxMessageBox(".NET Framework v2.0.50727 is NOT installed");
-        return 3;
-    } 
-
-	LPWSTR pszVer = L"v2.0.50727";  
-    LPWSTR pszFlavor = L"wks";
-    ICorRuntimeHost *pHost = NULL;
-
-    HRESULT hr = CorBindToRuntimeEx( pszVer,       
-                                                       pszFlavor,    
-                                                       STARTUP_LOADER_OPTIMIZATION_SINGLE_DOMAIN | STARTUP_CONCURRENT_GC, 
-                                                       CLSID_CorRuntimeHost, 
-                                                       IID_ICorRuntimeHost,
-                                                       (void **)&pHost);
-
-    if (!SUCCEEDED(hr)) {
-		CString csTemp;
-		long lVal = (long)hr;
-		csTemp.Format( "CorBindToRuntimeEx failed:  %f", lVal );
-		AfxMessageBox(csTemp);
-        return 1;
-    }
- 
-    //_putts(TEXT("Loaded version 2.0.50727 of the CLR\n"));
- 
-    pHost->Start(); // Start the CLR
-
-    //
-    // Get a pointer to the default domain in the CLR
-    //
-    _AppDomainPtr pDefaultDomain = NULL;
-    IUnknownPtr   pAppDomainPunk = NULL;
-
-    hr = pHost->GetDefaultDomain(&pAppDomainPunk);
-    ASSERT(pAppDomainPunk); 
- 
-    hr = pAppDomainPunk->QueryInterface(__uuidof(_AppDomain),(void**) &pDefaultDomain);
-    ASSERT(pDefaultDomain);
-
-    try 
-	{
-        _ObjectHandlePtr pObjectHandle; 
-        _ObjectPtr pObject; 
-        _TypePtr pType;
-        SAFEARRAY* psa;
-
-        // Create an instance of a type from an assembly
-		pObjectHandle = pDefaultDomain->CreateInstanceFrom(assemblyPath, typeName);
-  
-        variant_t vtobj = pObjectHandle->Unwrap();                                     // Get an _Object (as variant) from the _ObjectHandle
-        vtobj.pdispVal->QueryInterface(__uuidof(_Object),(void**)&pObject);  // QI the variant for the Object iface
-        pType = pObject->GetType();                                                         // Get the _Type iface
-		psa = SafeArrayCreateVector(VT_VARIANT,0,1);                                // Create a safearray (0 length)
-		
-		{
-			VARIANT typeNameParam; 
-			VariantInit(&typeNameParam);
-			typeNameParam.vt = VT_I4;
-			typeNameParam.intVal = mode;
-			LONG index = 0;
-
-			SafeArrayPutElement(psa, &index, &typeNameParam);
-		}
-		
-		//_variant_t retVal = 
-			pType->InvokeMember_3(methodName,                                                     // Invoke "Test" method on pType
-                                            BindingFlags_InvokeMethod,
-                                            NULL,
-                                            vtobj,
-                                            psa );
-
-		//if (retVal.vt == VT_I4)
-		//{
-		//	int ret = retVal.intVal;
-		//}
-
-        SafeArrayDestroy(psa);                                                                   // Destroy safearray
-    }
-    catch(_com_error& error) 
-	{
-		CString csTemp;
-		csTemp.Format( "ERROR: %s", (_TCHAR*)error.Description() );
-		AfxMessageBox(csTemp);
-        goto exit;
-    }
-
-exit:
-    pHost->Stop();
-    pHost->Release();
-
-    return 0;
-}
-
-typedef HRESULT (STDAPICALLTYPE *CTLREGPROC)();
-
 void CCompDlg::RegisterDll(const CString &path)
 {
-	HMODULE hModule = LoadLibrary(path);
-	if( hModule == 0 )
-		HR_THROW(E_FAIL);
-
-	CTLREGPROC DLLRegisterServer =
-		(CTLREGPROC)::GetProcAddress(hModule,"DllRegisterServer" );
-
-	
-	if( DLLRegisterServer == NULL )
-	{
-		//C# dll:
-		CallManagedFunction(path.AllocSysString(), L"GME.CSharp.Registrar", L"DLLRegisterServer", m_accessmode);
+	CComPtr<IMgaRegistrar> registrar;
+	if (CUACUtils::isVistaOrLater()) {
+		CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
 	}
-	else
-	{
-		//c++ dll, this is probably unnecessary:
-		COMTHROW( DLLRegisterServer() );
-		FreeLibrary(hModule);
-
-		CComPtr<IMgaRegistrar> registrar;
-		COMTHROW( registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar")) );
-		COMTHROW( registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode)) );
+	else {
+		registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
 	}
-      
+
+	if( (!registrar) || 
+		 FAILED(registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode))) ) {
+		::AfxMessageBox(_T("Unable to register component. Maybe due to insufficient rights."), MB_ICONSTOP | MB_OK);
+	}
 }
 
 
@@ -516,6 +402,20 @@ void CCompDlg::RegisterPattern(const CString &path)
 			AfxMessageBox("Could not open or read the specified file: " + path);
 			return;
 		}
+	}
+
+	regaccessmode_enum acmode = regacc_translate(m_accessmode);
+	CComPtr<IMgaRegistrar> registrar;
+	if (CUACUtils::isVistaOrLater() && (acmode != REGACCESS_USER) ) {
+		CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
+	}
+	else {
+		registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
+	}
+
+	if( !registrar ) {
+		::AfxMessageBox(_T("Unable to register pattern component. Maybe due to insufficient rights."), MB_ICONSTOP | MB_OK);
+		return;
 	}
 
 	CCompInfoDlg dlg(registrar);
@@ -601,7 +501,7 @@ nothing_understood:
 
 	CComBSTR progid(dlg.m_progid);
 
-	regaccessmode_enum acmode = regacc_translate(m_accessmode);
+	
 	COMTHROW(registrar->RegisterComponent(progid, 
 				(componenttype_enum)(COMPONENTTYPE_INTERPRETER|COMPONENTTYPE_SCRIPT),
 				PutInBstr(dlg.m_description), acmode));

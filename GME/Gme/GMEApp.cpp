@@ -1016,7 +1016,7 @@ bool DiagnoseParadigm(CString metaname, bool syscheck = false) {
 		HRESULT hr = reg.CoCreateInstance(CComBSTR("Mga.MgaRegistrar"));
 		if(hr != S_OK) {
 			throw CString("Cannot create the registrar component\n"
-						  "We recommend you reinstall GME");
+						  "We recommend you to reinstall GME");
 		}
 		CComBSTR conn;
 		CComVariant guid;

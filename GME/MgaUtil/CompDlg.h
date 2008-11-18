@@ -56,13 +56,9 @@ protected:
 
 protected:
 	void ResetItems();
-
-	int CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodName, int mode);
 	void RegisterDll(const CString &path);
 	void RegisterPattern(const CString &path);
 	void RegisterUnknownFile(const CString &path);
-
-	CComObjPtr<IMgaRegistrar> registrar;
 
 public:
 	CString paradigm;
