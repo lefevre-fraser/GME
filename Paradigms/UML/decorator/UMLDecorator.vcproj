@@ -181,7 +181,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdiplus.lib DecoratorLib.lib"
+				AdditionalDependencies="gdiplus.lib DecoratorLibD.lib"
 				OutputFile=".\Debug/UMLDecorator.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
