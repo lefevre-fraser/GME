@@ -184,7 +184,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdiplus.lib DecoratorLib.lib"
+				AdditionalDependencies="gdiplus.lib DecoratorLibD.lib"
 				OutputFile=".\Debug/Annotator.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
