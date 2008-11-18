@@ -26,7 +26,7 @@
 #define _AFX_ALL_WARNINGS
 
 #if defined(_DEBUG)
-#define ADDCRASHTESTMENU
+//#define ADDCRASHTESTMENU
 // also change it in PartBrowser/StdAfx.h
 #define TRYNEWDECORATORS
 //#define ACTIVEXGMEVIEW

@@ -41,6 +41,7 @@ void CCompDlg::DoDataExchange(CDataExchange* pDX)
 	//{{AFX_DATA_MAP(CCompDlg)
 	DDX_Control(pDX, Toggle, m_toggle);
 	DDX_Control(pDX, IDC_REMOVE, m_remove);
+	DDX_Control(pDX, IDC_INSTALL, m_install);
 	DDX_Control(pDX, IDC_LIST, m_list);
 	DDX_Radio(pDX, IDC_RADIOSYS, m_accessmode);
 	DDX_Radio(pDX, IDC_ACTIVEDISP, m_dispmode);
@@ -80,6 +81,7 @@ BOOL CCompDlg::OnInitDialog()
 				GetDlgItem(IDC_RADIOBOTH)->EnableWindow(false);
 			}
 		}
+		
 
 		SetDlgItemText(IDOK, onOKoper);
 		
@@ -112,6 +114,16 @@ BOOL CCompDlg::OnInitDialog()
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CCompDlg::RefreshShieldIcons()
+{
+	if( CUACUtils::isVistaOrLater() ) {
+		bool shieldOn = regacc_translate(m_accessmode) != REGACCESS_USER;
+		CUACUtils::SetShieldIcon(m_install, shieldOn);
+		CUACUtils::SetShieldIcon(m_remove, shieldOn);
+		CUACUtils::SetShieldIcon(m_toggle, shieldOn);
+	}
 }
 
 void CCompDlg::ResetItems()

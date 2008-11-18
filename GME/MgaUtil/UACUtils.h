@@ -29,4 +29,6 @@ public:
 							 __uuidof(T),
 							 reinterpret_cast<void**>(object));
 	}
+
+	static void SetShieldIcon(const CButton& button, bool on=true);
 };

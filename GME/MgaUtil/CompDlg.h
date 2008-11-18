@@ -24,6 +24,7 @@ public:
 	enum { IDD = IDD_COMPDLG };
 	CButton	m_toggle;
 	CButton	m_remove;
+	CButton m_install;
 	CListCtrl	m_list;
 	int		m_accessmode;
 	int		m_dispmode;
@@ -55,6 +56,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
+	void RefreshShieldIcons();
 	void ResetItems();
 	void RegisterDll(const CString &path);
 	void RegisterPattern(const CString &path);
