@@ -206,7 +206,7 @@ STDMETHODIMP CAutoRouterPort::SetAttributes(long attr)
 }
 STDMETHODIMP CAutoRouterPort::SetLimitedDirs( long p_ltd) 
 { 
-	limitedDirections = (bool)p_ltd; 
+	limitedDirections = (p_ltd != 0); 
 	return S_OK;
 }
 STDMETHODIMP CAutoRouterPort::GetOwner(IAutoRouterBox** result)

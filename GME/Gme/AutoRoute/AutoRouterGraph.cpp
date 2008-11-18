@@ -70,7 +70,7 @@ void CAutoRouterGraph::Remove(CComObjPtr<CAutoRouterBox> box)
 
 void CAutoRouterGraph::DeleteAllBoxes()
 {
-	for (int i = 0; i<boxes.size(); i++)
+	for (CAutoRouterBoxList::size_type i = 0; i<boxes.size(); i++)
 	{
 		DeleteBoxAndPortEdges(boxes[i]);
 		boxes[i]->Destroy();
@@ -87,7 +87,7 @@ void CAutoRouterGraph::SetPortAttr(CComObjPtr<CAutoRouterPort> port, unsigned in
 
 int  CAutoRouterGraph::IsRectClipBoxes(CRect rect) const
 {
-	for (int i = 0; i<boxes.size(); i++)
+	for (CAutoRouterBoxList::size_type i = 0; i<boxes.size(); i++)
 	{
 		if( IsRectClip(rect, boxes[i]->rect) )
 			return 1;
@@ -183,12 +183,12 @@ CRect CAutoRouterGraph::GetSurroundRect() const
 {
 	CRect rect(0,0,0,0);
 
-	for (int i = 0; i<boxes.size(); i++)
+	for (CAutoRouterBoxList::size_type i = 0; i<boxes.size(); i++)
 	{
 		rect |= boxes[i]->rect;
 	}
 
-	for (int i = 0; i<paths.size(); i++)
+	for (CAutoRouterPathList::size_type i = 0; i<paths.size(); i++)
 	{
 		rect |= paths[i]->GetSurroundRect();
 	}

@@ -15,7 +15,7 @@ CAutoRouterBox::CAutoRouterBox():	owner(NULL),
 
 void CAutoRouterBox::DeleteAllPorts()
 {
-	for (int i = 0; i<ports.size(); i++)
+	for (CAutoRouterPortList::size_type i = 0; i<ports.size(); i++)
 	{
 		ports[i]->SetOwner(NULL);
 	}
@@ -29,7 +29,7 @@ void CAutoRouterBox::ShiftBy(CSize offset)
 {
 	rect += offset;
 
-	for(int i=0; i<ports.size();i++)
+	for(CAutoRouterPortList::size_type i=0; i<ports.size();i++)
 	{
 		ports[i]->ShiftBy(offset);
 	}
