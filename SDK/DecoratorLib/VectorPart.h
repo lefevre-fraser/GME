@@ -187,18 +187,25 @@ protected:
 	// Preference variable name strings
 	CString						penColorVariableName;
 	CString						brushColorVariableName;
-	CString						borderColorVariableName;
+	CString						gradientColorVariableName;
+	CString						shadowColorVariableName;
 
 	CRect						m_Extents;
 	std::vector<VectorCommand>	m_Commands;
 	COLORREF					m_crPen;
 	COLORREF					m_crBrush;
+	bool						m_bCastShadow;
+	COLORREF					m_crShadow;
+	long						m_iShadowThickness;
+	long						m_iShadowDirection;
+	bool						m_bGradientFill;
+	COLORREF					m_crGradient;
+	long						m_iGradientDirection;
+
 	bool						m_bOriginalPenSaved;
 	CPen*						m_originalPen;
 	bool						m_bOriginalBrushSaved;
 	CBrush*						m_originalBrush;
-	COLORREF					m_shadowStartColor;
-	COLORREF					m_shadowEndColor;
 	Gdiplus::GraphicsPath*		m_mainPath;
 	Gdiplus::GraphicsPath*		m_shadowPath;
 	bool						m_bInMainPathDefinition;
@@ -206,7 +213,6 @@ protected:
 	Gdiplus::Brush*				m_CurrentBrush;
 	Gdiplus::Pen*				m_CurrentPen;
 	bool						m_bShadowCasted;
-	bool						m_bShadowEnabled;
 
 	std::vector<CoordCommand*>	m_coordCommands;
 

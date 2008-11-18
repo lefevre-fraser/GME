@@ -22,10 +22,19 @@ static char THIS_FILE[]=__FILE__;
 LOGFONT	CAnnotationNode::defFont;
 COLORREF CAnnotationNode::defColor;
 COLORREF CAnnotationNode::defBgcolor;
-bool CAnnotationNode::classIsInitialized = false;
-bool CAnnotationNode::defInheritable     = false;
-bool CAnnotationNode::defHidden          = false;
-bool CAnnotationNode::defCanBeRederived  = false;
+COLORREF CAnnotationNode::defShadowcolor;
+COLORREF CAnnotationNode::defGradientcolor;
+bool CAnnotationNode::classIsInitialized	= false;
+bool CAnnotationNode::defInheritable		= false;
+bool CAnnotationNode::defHidden				= false;
+bool CAnnotationNode::defCanBeRederived		= false;
+bool CAnnotationNode::defGradientFill		= false;
+int  CAnnotationNode::defGradientDirection	= 0;
+bool CAnnotationNode::defCastShadow			= false;
+int  CAnnotationNode::defShadowDepth		= 9;
+int  CAnnotationNode::defShadowDirection	= 45;
+bool CAnnotationNode::defRoundEdgeRect		= false;
+int  CAnnotationNode::defRoundEdgeRadius	= 9;
 
 CAnnotationNode::CAnnotationNode(const CComPtr<IMgaRegNode> &regNode)
 {
@@ -44,7 +53,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW( m_regNode->get_Status( &st));
 		if( st > ATTSTATUS_HERE) // -1: meta, 0: here, >=1: inherited
 			m_virtual = true;
-	} 
+	}
 	catch (hresult_exception &) {
 		ASSERT(("Error while reading annotation from registry.", false));
 		m_virtual = false;
@@ -59,10 +68,10 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
-			if( bstr == "1")
+			if (bstr == "1")
 				m_canBeRederived = true;
 		}
-	} 
+	}
 	catch (hresult_exception &) {
 		m_canBeRederived = defCanBeRederived;
 	}
@@ -73,7 +82,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		CComBSTR bstr;
 		COMTHROW(m_regNode->get_Name(&bstr));
 		m_name = bstr;
-	} 
+	}
 	catch (hresult_exception &) {
 		ASSERT(("Error while reading annotation from registry.", false));
 		m_name = "ERROR!!!";
@@ -85,7 +94,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW(m_regNode->get_Value(&bstr));
 		m_text = bstr;
 		m_text.Replace("\n", "\r\n");
-	} 
+	}
 	catch (hresult_exception &) {
 		ASSERT(("Error while reading annotation from registry.", false));
 		m_text = "Unable to read annotation text.";
@@ -100,10 +109,10 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
-			if( bstr == "1")
+			if (bstr == "1")
 				m_inheritable = true;
 		}
-	} 
+	}
 	catch (hresult_exception &) {
 		m_inheritable = defInheritable;
 	}
@@ -117,10 +126,10 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
-			if( bstr == "1")
+			if (bstr == "1")
 				m_hidden = true;
 		}
-	} 
+	}
 	catch (hresult_exception &) {
 		m_hidden = defHidden;
 	}
@@ -138,7 +147,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		if (!CAnnotationUtil::LogfontDecode(str, &m_logfont)) {
 			throw hresult_exception();
 		}
-	} 
+	}
 	catch (hresult_exception &) {
 		memcpy(&m_logfont, &defFont, sizeof(LOGFONT));
 	}
@@ -163,7 +172,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		else {
 			throw hresult_exception();
 		}
-	} 
+	}
 	catch (hresult_exception &) {
 		m_color = defColor;
 	}
@@ -188,11 +197,194 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		else {
 			m_bgcolor = defBgcolor;
 		}
-	} 
+	}
 	catch (hresult_exception &) {
 		m_bgcolor = AN_DEFAULT_BGCOLOR;
 	}
-	
+
+	// Gradient Color
+	try {
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> gradientcolNode;
+		CComBSTR gradientcolName(AN_GRADIENTCOLOR_PREF);
+		COMTHROW(m_regNode->get_SubNodeByName(gradientcolName, &gradientcolNode));
+		if (gradientcolNode != NULL) {
+			COMTHROW(gradientcolNode->get_Value(&bstr));
+		}
+		CString strVal(bstr);
+		unsigned int val;
+		if (_stscanf(strVal,_T("%x"),&val) == 1) {
+			unsigned int r = (val & 0xff0000) >> 16;
+			unsigned int g = (val & 0xff00) >> 8;
+			unsigned int b = val & 0xff;
+			m_crGradient = RGB(r,g,b);
+		}
+		else {
+			m_crGradient = defGradientcolor;
+		}
+	}
+	catch (hresult_exception &) {
+		m_crGradient = AN_DEFAULT_GRADIENTCOLOR;
+	}
+
+	// Shadow Color
+	try {
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> bordercolNode;
+		CComBSTR bordercolName(AN_SHADOWCOLOR_PREF);
+		COMTHROW(m_regNode->get_SubNodeByName(bordercolName, &bordercolNode));
+		if (bordercolNode != NULL) {
+			COMTHROW(bordercolNode->get_Value(&bstr));
+		}
+		CString strVal(bstr);
+		unsigned int val;
+		if (_stscanf(strVal,_T("%x"),&val) == 1) {
+			unsigned int r = (val & 0xff0000) >> 16;
+			unsigned int g = (val & 0xff00) >> 8;
+			unsigned int b = val & 0xff;
+			m_crShadow = RGB(r,g,b);
+		}
+		else {
+			m_crShadow = defShadowcolor;
+		}
+	}
+	catch (hresult_exception &) {
+		m_crShadow = AN_DEFAULT_SHADOWCOLOR;
+	}
+
+	// 'GradienFill'
+	try {
+		m_bGradientFill = defGradientFill;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_GRADIENTFILL_PREF);
+		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			if (bstr == "1")
+				m_bGradientFill = true;
+			else
+				m_bGradientFill = false;
+		}
+	}
+	catch (hresult_exception &) {
+		m_bGradientFill = defGradientFill;
+	}
+
+	// 'GradientDirection'
+	try {
+		m_iGradientDirection = defGradientDirection;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_GRADIENTDIRECTION_PREF);
+		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			CString strVal(bstr);
+			if (_stscanf(strVal,_T("%ld"),&m_iGradientDirection) != 1) {
+				m_iGradientDirection = defGradientDirection;
+			}
+		}
+	}
+	catch (hresult_exception &) {
+		m_iGradientDirection = defGradientDirection;
+	}
+
+	// 'CastShadow'
+	try {
+		m_bCastShadow = defCastShadow;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_CASTSHADOW_PREF);
+		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			if (bstr == "1")
+				m_bCastShadow = true;
+			else
+				m_bCastShadow = false;
+		}
+	}
+	catch (hresult_exception &) {
+		m_bCastShadow = defCastShadow;
+	}
+
+	// 'ShadowDepth'
+	try {
+		m_iShadowDepth = defShadowDepth;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_SHADOWDEPTH_PREF);
+		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			CString strVal(bstr);
+			if (_stscanf(strVal,_T("%ld"),&m_iShadowDepth) != 1) {
+				m_iShadowDepth = defShadowDepth;
+			}
+		}
+	}
+	catch (hresult_exception &) {
+		m_iShadowDepth = defShadowDepth;
+	}
+
+	// 'ShadowDirection'
+	try {
+		m_iShadowDirection = defShadowDirection;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_SHADOWDIRECTION_PREF);
+		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			CString strVal(bstr);
+			if (_stscanf(strVal,_T("%ld"),&m_iShadowDirection) != 1) {
+				m_iShadowDirection = defShadowDirection;
+			}
+		}
+	}
+	catch (hresult_exception &) {
+		m_iShadowDirection = defShadowDirection;
+	}
+
+	// 'RoundEdgeRect'
+	try {
+		m_bRoundEdgeRect = defRoundEdgeRect;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_ROUNDEDGERECT_PREF);
+		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			if (bstr == "1")
+				m_bRoundEdgeRect = true;
+			else
+				m_bRoundEdgeRect = false;
+		}
+	}
+	catch (hresult_exception &) {
+		m_bRoundEdgeRect = defRoundEdgeRect;
+	}
+
+	// 'RoundEdgeRadius'
+	try {
+		m_iRoundEdgeRadius = defRoundEdgeRadius;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_ROUNDEDGERADIUS_PREF);
+		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			CString strVal(bstr);
+			if (_stscanf(strVal,_T("%ld"),&m_iRoundEdgeRadius) != 1) {
+				m_iRoundEdgeRadius = defRoundEdgeRadius;
+			}
+		}
+	}
+	catch (hresult_exception &) {
+		m_iRoundEdgeRadius = defRoundEdgeRadius;
+	}
+
 	// Aspects
 	m_aspects.SetSize(dlg->m_aspectNames.GetSize());
 	CComPtr<IMgaRegNode> aspRoot;
@@ -396,6 +588,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 			ASSERT(("Error while writing annotation to registry.", false));
 		}
 	}
+
 	if (m_bgcolor != defBgcolor) {
 		try {
 			unsigned long ival = m_bgcolor;
@@ -411,6 +604,157 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 			COMTHROW(m_regNode->get_SubNodeByName(bgcolName, &bgcolNode));
 			COMTHROW(bgcolNode->put_Value(bstr));
 		
+		}
+		catch (hresult_exception &) {
+			ASSERT(("Error while writing annotation to registry.", false));
+		}
+	}
+
+	if (m_crShadow != defShadowcolor) {
+		try {
+			unsigned long ival = m_crShadow;
+			unsigned long r = (ival & 0xff0000) >> 16;
+			unsigned long g = (ival & 0xff00) >> 8;
+			unsigned long b = ival & 0xff;
+			ival = (unsigned long)(RGB(r,g,b));
+			CString str;
+			str.Format(_T("0x%06x"), (unsigned long)ival);
+			CComBSTR bstr(str);
+			CComPtr<IMgaRegNode> bordercolNode;
+			CComBSTR bordercolName(AN_SHADOWCOLOR_PREF);
+			COMTHROW(m_regNode->get_SubNodeByName(bordercolName, &bordercolNode));
+			COMTHROW(bordercolNode->put_Value(bstr));
+		
+		}
+		catch (hresult_exception &) {
+			ASSERT(("Error while writing annotation to registry.", false));
+		}
+	}
+
+	if (m_crGradient != defGradientcolor) {
+		try {
+			unsigned long ival = m_crGradient;
+			unsigned long r = (ival & 0xff0000) >> 16;
+			unsigned long g = (ival & 0xff00) >> 8;
+			unsigned long b = ival & 0xff;
+			ival = (unsigned long)(RGB(r,g,b));
+			CString str;
+			str.Format(_T("0x%06x"), (unsigned long)ival);
+			CComBSTR bstr(str);
+			CComPtr<IMgaRegNode> gradientcolNode;
+			CComBSTR gradientcolName(AN_GRADIENTCOLOR_PREF);
+			COMTHROW(m_regNode->get_SubNodeByName(gradientcolName, &gradientcolNode));
+			COMTHROW(gradientcolNode->put_Value(bstr));
+		
+		}
+		catch (hresult_exception &) {
+			ASSERT(("Error while writing annotation to registry.", false));
+		}
+	}
+
+	// Store 'gradientfill' preference
+	{
+		try {
+			CString str(m_bGradientFill ? "1" : "0");
+			CComBSTR bstr(str);
+			CComPtr<IMgaRegNode> lfNode;
+			CComBSTR lfName(AN_GRADIENTFILL_PREF);
+			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+			COMTHROW(lfNode->put_Value(bstr));
+		}
+		catch (hresult_exception &) {
+			ASSERT(("Error while writing annotation to registry.", false));
+		}
+	}
+
+	// Store 'gradientdirection' preference
+	{
+		try {
+			CString str;
+			str.Format(_T("%ld"), m_iGradientDirection);
+			CComBSTR bstr(str);
+			CComPtr<IMgaRegNode> lfNode;
+			CComBSTR lfName(AN_GRADIENTDIRECTION_PREF);
+			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+			COMTHROW(lfNode->put_Value(bstr));
+		}
+		catch (hresult_exception &) {
+			ASSERT(("Error while writing annotation to registry.", false));
+		}
+	}
+
+	// Store 'castshadow' preference
+	{
+		try {
+			CString str(m_bCastShadow ? "1" : "0");
+			CComBSTR bstr(str);
+			CComPtr<IMgaRegNode> lfNode;
+			CComBSTR lfName(AN_CASTSHADOW_PREF);
+			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+			COMTHROW(lfNode->put_Value(bstr));
+		}
+		catch (hresult_exception &) {
+			ASSERT(("Error while writing annotation to registry.", false));
+		}
+	}
+
+	// Store 'shadowdepth' preference
+	{
+		try {
+			CString str;
+			str.Format(_T("%ld"), m_iShadowDepth);
+			CComBSTR bstr(str);
+			CComPtr<IMgaRegNode> lfNode;
+			CComBSTR lfName(AN_SHADOWDEPTH_PREF);
+			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+			COMTHROW(lfNode->put_Value(bstr));
+		}
+		catch (hresult_exception &) {
+			ASSERT(("Error while writing annotation to registry.", false));
+		}
+	}
+
+	// Store 'shadowdirection' preference
+	{
+		try {
+			CString str;
+			str.Format(_T("%ld"), m_iShadowDirection);
+			CComBSTR bstr(str);
+			CComPtr<IMgaRegNode> lfNode;
+			CComBSTR lfName(AN_SHADOWDIRECTION_PREF);
+			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+			COMTHROW(lfNode->put_Value(bstr));
+		}
+		catch (hresult_exception &) {
+			ASSERT(("Error while writing annotation to registry.", false));
+		}
+	}
+
+	// Store 'roundedgerect' preference
+	{
+		try {
+			CString str(m_bRoundEdgeRect ? "1" : "0");
+			CComBSTR bstr(str);
+			CComPtr<IMgaRegNode> lfNode;
+			CComBSTR lfName(AN_ROUNDEDGERECT_PREF);
+			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+			COMTHROW(lfNode->put_Value(bstr));
+		}
+		catch (hresult_exception &) {
+			ASSERT(("Error while writing annotation to registry.", false));
+		}
+	}
+
+	// Store 'roundedgeradius' preference
+	{
+		try {
+			CString str;
+			str.Format(_T("%ld"), m_iRoundEdgeRadius);
+			CComBSTR bstr(str);
+			CComPtr<IMgaRegNode> lfNode;
+			CComBSTR lfName(AN_ROUNDEDGERADIUS_PREF);
+			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
+			COMTHROW(lfNode->put_Value(bstr));
 		}
 		catch (hresult_exception &) {
 			ASSERT(("Error while writing annotation to registry.", false));
@@ -469,6 +813,10 @@ void CAnnotationNode::InitializeClass()
 	defColor = AN_DEFAULT_COLOR;
 
 	defBgcolor = AN_DEFAULT_BGCOLOR;
+
+	defShadowcolor = AN_DEFAULT_SHADOWCOLOR;
+
+	defGradientcolor = AN_DEFAULT_GRADIENTCOLOR;
 
 	classIsInitialized = true;
 }

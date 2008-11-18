@@ -7,12 +7,14 @@
 
 #include "StdAfx.h"
 #include "DecoratorUtil.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #include "DecoratorDefs.h"
 #include "MgaUtil.h"
 #include "BitmapUtil.h"
 
-static long stereotypeCharacterType = 1;
+static long stereotypeCharacterType = 0;
 
 namespace DecoratorSDK
 {
@@ -843,8 +845,8 @@ void Facilities::DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF 
 {
 	Facilities* pThis = (Facilities*) this;
 
-	COLORREF beginColor = shiftColor( crColor, - 40 );
-	COLORREF endColor = shiftColor( crColor, 60 );
+	COLORREF beginColor = ShiftColor( crColor, - 40 );
+	COLORREF endColor = ShiftColor( crColor, 60 );
 
 	Gdiplus::GraphicsPath edgePath;
 	edgePath.AddLine(cRect.left, cRect.top, cRect.right, cRect.top);
@@ -874,18 +876,18 @@ void Facilities::DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF 
 
 	CRect cInnerRect = cRect;
 	cInnerRect.InflateRect(-iDepth, -iDepth);
-	Gdiplus::LinearGradientBrush gradientBrush1(Gdiplus::Point(cInnerRect.left, cInnerRect.top),
-												Gdiplus::Point(cInnerRect.left, cInnerRect.bottom),
-												Gdiplus::Color(GetRValue(beginColor),
-															   GetGValue(beginColor),
-															   GetBValue(beginColor)),
-												Gdiplus::Color(GetRValue(endColor),
-															   GetGValue(endColor),
-															   GetBValue(endColor)));
-	gdip->FillRectangle(&gradientBrush1, cInnerRect.left, cInnerRect.top, cInnerRect.Width(), cInnerRect.Height());
+	Gdiplus::LinearGradientBrush linearGradientBrush(Gdiplus::Point(cInnerRect.left, cInnerRect.top),
+													 Gdiplus::Point(cInnerRect.left, cInnerRect.bottom),
+													 Gdiplus::Color(GetRValue(beginColor),
+																	GetGValue(beginColor),
+																	GetBValue(beginColor)),
+													 Gdiplus::Color(GetRValue(endColor),
+																	GetGValue(endColor),
+																	GetBValue(endColor)));
+	gdip->FillRectangle(&linearGradientBrush, cInnerRect.left, cInnerRect.top, cInnerRect.Width(), cInnerRect.Height());
 }
 
-COLORREF Facilities::shiftColor( COLORREF crColor, int iShift ) const
+COLORREF Facilities::ShiftColor( COLORREF crColor, int iShift ) const
 {
 	int iR = GetRValue( crColor );
 	int iG = GetGValue( crColor );
@@ -894,6 +896,11 @@ COLORREF Facilities::shiftColor( COLORREF crColor, int iShift ) const
 	iG = min( max( iG + iShift, 0 ), 255 );
 	iB = min( max( iB + iShift, 0 ), 255 );
 	return RGB( iR, iG, iB );
+}
+
+double Facilities::Deg2Rad( long deg ) const
+{
+	return (deg * 2 * M_PI / 360.0);
 }
 
 std::vector<CString> Facilities::wrapString( const CString& strIn, int iWrap, int iMax ) const
@@ -1020,23 +1027,23 @@ void Facilities::drawBox( CDC* pDC, const CRect& cRect, COLORREF crColor, int iD
 		CRect cRect2 = cRect;
 		cRect2.top = min( cRect.bottom, (long) ( cRect.top + ( cRect.Height() / CR_DIVIDE + 1 ) * i ) );
 		cRect2.bottom = min( cRect.bottom, (long) ( cRect2.top + ( cRect.Height() / CR_DIVIDE + 1 ) ) );
-		pDC->FillSolidRect( cRect2, shiftColor( crColor, ( i - 20 ) * 2 ) );
+		pDC->FillSolidRect( cRect2, ShiftColor( crColor, ( i - 20 ) * 2 ) );
 	}
 
 	CR_DIVIDE = 25;
 	int CR_MULTI = (int) ( (double) 70 / iDepth );
 	for ( int i = 0 ; i < iDepth ; i++ ) {
-		CPen* pPrevoius = pDC->SelectObject( pThis->getPen( shiftColor( crColor, - i * CR_MULTI ) ) );
+		CPen* pPrevoius = pDC->SelectObject( pThis->getPen( ShiftColor( crColor, - i * CR_MULTI ) ) );
 		pDC->MoveTo( cRect.left + i, cRect.top + i );
 		pDC->LineTo( cRect.right - i, cRect.top + i );
 		for ( int j = 0 ; j < CR_DIVIDE ; j++ ) {
-			pDC->SelectObject( pThis->getPen( shiftColor( crColor, - i * CR_MULTI + i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
+			pDC->SelectObject( pThis->getPen( ShiftColor( crColor, - i * CR_MULTI + i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
 			pDC->LineTo( cRect.right - i, ( j == CR_DIVIDE - 1 ) ? cRect.bottom - i : cRect.top + i + ( cRect.Height() - i * 2 ) / CR_DIVIDE * ( j + 1 ) );
 		}
-		pDC->SelectObject( pThis->getPen( shiftColor( crColor, i * 10 ) ) );
+		pDC->SelectObject( pThis->getPen( ShiftColor( crColor, i * 10 ) ) );
 		pDC->LineTo( cRect.left + i, cRect.bottom - i );
 		for ( int j = 0 ; j < CR_DIVIDE ; j++ ) {
-			pDC->SelectObject( pThis->getPen( shiftColor( crColor, i * CR_MULTI - i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
+			pDC->SelectObject( pThis->getPen( ShiftColor( crColor, i * CR_MULTI - i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
 			pDC->LineTo( cRect.left + i, ( j == CR_DIVIDE - 1 ) ? cRect.top + i : cRect.bottom - i - ( cRect.Height() - i * 2 ) / CR_DIVIDE * ( j + 1 ) );
 		}
 		pDC->SelectObject( pPrevoius );

@@ -112,7 +112,8 @@ namespace DecoratorSDK
 							 const CString& strPost = "", bool bPeriods = true ) const;
 			void DrawRect( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iWidth = 1 ) const;
 			void DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iDepth ) const;
-			COLORREF shiftColor( COLORREF crColor, int iShift ) const;
+			COLORREF ShiftColor( COLORREF crColor, int iShift ) const;
+			double Deg2Rad( long deg ) const;
 
 			std::vector<CString> wrapString( const CString& str, int iWrap, int iMax ) const;
 			CString getStereotyped( const CString& str ) const;

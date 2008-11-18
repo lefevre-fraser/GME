@@ -22,31 +22,23 @@
 #define IDC_RADIOSYS                    1026
 #define IDC_AUTOSAVE_SAME_DIR           1026
 #define IDC_WRAPMINIPROJ                1026
-#define IDC_RADIO2                      1027
 #define IDC_NODELFILES                  1027
 #define IDC_RADIOUSER                   1027
 #define IDC_AUTOSAVE_DEDICATED_DIR      1027
 #define IDC_WRAPASIS                    1027
-#define IDC_RADIO3                      1028
 #define IDC_RADIOBOTH                   1028
 #define IDC_WRAPAUTO                    1028
-#define IDC_RADIO4                      1029
 #define IDC_ACTIVEDISP                  1029
 #define IDC_OUTPUTTOCLIPBOARD           1029
 #define IDC_CONNSRC                     1030
-#define IDC_RADIO5                      1031
 #define IDC_ACTIVE_INACTIVE             1031
 #define IDC_OUTPUTTOFILE                1031
 #define IDC_CONNSRCPORT                 1032
-#define IDC_RADIO6                      1033
 #define IDC_ALLCOMPS                    1033
 #define IDC_DIRECTIONUP                 1033
-#define IDC_RADIO7                      1034
 #define IDC_DIRECTIONDN                 1034
 #define IDC_CONNTYPE                    1035
-#define IDC_RADIO8                      1036
 #define IDC_LIBR1                       1036
-#define IDC_RADIO9                      1037
 #define IDC_CONNROLE                    1037
 #define IDC_LIBR2                       1037
 #define IDC_CONNID                      1038
@@ -150,8 +142,11 @@
 #define IDC_EDIT_XCOORD                 2208
 #define IDC_STATIC_YCOORD               2209
 #define IDC_EDIT_YCOORD                 2210
+#define IDC_COMBO_GRADIENTCOLOR         2211
+#define IDC_STATIC_SHADOWCOLOR          2212
 #define IDC_EDIT_NAME                   2213
 #define IDC_EDIT_TEXT                   2214
+#define IDC_STATIC_GRADIENTCOLOR        2215
 #define IDC_CHECK_DEFPOS                2216
 #define IDC_BUTTON1                     2218
 #define IDC_BUTTON_IGNORE               2218
@@ -215,6 +210,20 @@
 #define IDC_CHECKMARK                   2278
 #define IDC_EDITMARK                    2279
 #define IDC_NAVIGATIONHISTORY           2280
+#define IDC_COMBO_SHADOWCOLOR           2281
+#define IDC_CHECK_GRADIENTFILL          2282
+#define IDC_CHECK_CASTSHADOW            2283
+#define IDC_CHECK_ROUNDEDGE             2284
+#define IDC_EDIT_SHADOWDEPTH            2285
+#define IDC_SPIN2                       2286
+#define IDC_EDIT_GRADIENTDIR            2286
+#define IDC_STATIC_SHADOWDEPTH          2287
+#define IDC_STATIC_GRADIENTDIR          2288
+#define IDC_STATIC_EDGERADIUS           2289
+#define IDC_EDIT_SHADOWDEPTH3           2290
+#define IDC_EDIT_EDGERADIUS             2290
+#define IDC_STATIC_SHADOWDIRECTION      2291
+#define IDC_EDIT_SHADOWDIRECTION        2292
 #define ID_CNTX_ADDNODE                 32774
 #define ID_CNTX_CLEARNODE               32775
 #define ID_CNTX_REMOVETREE              32776
@@ -227,7 +236,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        2072
 #define _APS_NEXT_COMMAND_VALUE         32779
-#define _APS_NEXT_CONTROL_VALUE         2281
+#define _APS_NEXT_CONTROL_VALUE         2288
 #define _APS_NEXT_SYMED_VALUE           2091
 #endif
 #endif

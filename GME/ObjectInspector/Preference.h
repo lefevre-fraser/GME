@@ -21,13 +21,13 @@
 
 typedef char*(*TableRowType)[5];
 
-class CPreference  
+class CPreference
 {
 	static char* m_szConnectionPreferenceTable[][5];
 	static char* m_szAtomPreferenceTable[][5];
 	static char* m_szModelPreferenceTable[][5];
 	static char* m_szProxyPreferenceTable[][5];
-	static char* m_szSetPreferenceTable[][5];	
+	static char* m_szSetPreferenceTable[][5];
 
 public:
 	void WriteItemToMga(CListItem ListItem,const CMgaFCOPtrList& MgaFCOPtrList, bool bIsForKind);

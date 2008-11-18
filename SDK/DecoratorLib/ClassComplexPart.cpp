@@ -27,6 +27,8 @@ ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEven
 	m_copySignPart				(NULL),
 
 	m_crAttributeText			(COLOR_BLACK),
+	m_bRoundEdgeRect			(false),
+	m_bRoundEdgeRadius			(9),
 	m_lMaxTextWidth				(0),
 	m_lMaxTextHeight			(0),
 	m_lMinTextWidth				(LONG_MAX),
@@ -246,6 +248,22 @@ void ClassComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 	if (m_copySignPart != NULL)
 		m_copySignPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+
+	m_bRoundEdgeRect = false;
+	it = preferences.find(PREF_ROUNDEDGERECT);
+	if (it != preferences.end()) {
+		m_bCastShadow = it->second.uValue.bValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERECT, m_bRoundEdgeRect);
+	}
+
+	m_bRoundEdgeRadius = 9;
+	it = preferences.find(PREF_ROUNDEDGERADIUS);
+	if (it != preferences.end()) {
+		m_iShadowThickness = it->second.uValue.bValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERADIUS, m_bRoundEdgeRadius, false);
+	}
 }
 
 void ClassComplexPart::SetSelected(bool bIsSelected)
@@ -1112,8 +1130,6 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 	ypos += gapSizeModify;
 	m_SeparatorLoc = ypos + offset.y;
 
-	bool roundEdge = true;
-	long edgeRadius = 9;
 	if (m_coordCommands.size() > 0) {
 		ASSERT(GetCommandNumber() >= 1);
 		RemoveLastCommand();	// Remove the last commands
@@ -1131,27 +1147,27 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 		m_coordCommands.push_back(bottomMost);
 
 		AddCommand(VectorCommand::BeginPath);
-		if (roundEdge) {
+		if (m_bRoundEdgeRect) {
 			ComplexCoordCommand* leftoRadius = new ComplexCoordCommand(LeftMost);
-			leftoRadius->AddCommand(OneConstant, edgeRadius, CoordAdd);
+			leftoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordAdd);
 			ComplexCoordCommand* topoRadius = new ComplexCoordCommand(TopMost);
-			topoRadius->AddCommand(OneConstant, edgeRadius, CoordAdd);
+			topoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordAdd);
 			ComplexCoordCommand* rightoRadius = new ComplexCoordCommand(RightMost);
-			rightoRadius->AddCommand(OneConstant, edgeRadius, CoordSubstract);
+			rightoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordSubstract);
 			ComplexCoordCommand* bottomoRadius = new ComplexCoordCommand(BottomMost);
-			bottomoRadius->AddCommand(OneConstant, edgeRadius, CoordSubstract);
+			bottomoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordSubstract);
 
 			ComplexCoordCommand* lefto2Radius = new ComplexCoordCommand(LeftMost);
-			lefto2Radius->AddCommand(OneConstant, 2 * edgeRadius, CoordAdd);
+			lefto2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordAdd);
 			ComplexCoordCommand* topo2Radius = new ComplexCoordCommand(TopMost);
-			topo2Radius->AddCommand(OneConstant, 2 * edgeRadius, CoordAdd);
+			topo2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordAdd);
 			ComplexCoordCommand* righto2Radius = new ComplexCoordCommand(RightMost);
-			righto2Radius->AddCommand(OneConstant, 2 * edgeRadius, CoordSubstract);
+			righto2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordSubstract);
 			ComplexCoordCommand* bottomo2Radius = new ComplexCoordCommand(BottomMost);
-			bottomo2Radius->AddCommand(OneConstant, 2 * edgeRadius, CoordSubstract);
+			bottomo2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordSubstract);
 
-			AbsoluteCoordCommand* radiusCommand = new AbsoluteCoordCommand(edgeRadius);
-			AbsoluteCoordCommand* diameterCommand = new AbsoluteCoordCommand(2 * edgeRadius);
+			AbsoluteCoordCommand* radiusCommand = new AbsoluteCoordCommand(m_bRoundEdgeRadius);
+			AbsoluteCoordCommand* diameterCommand = new AbsoluteCoordCommand(2 * m_bRoundEdgeRadius);
 			SimpleCoordCommand* angle0Command = new SimpleCoordCommand(ZeroConstant);
 			AbsoluteCoordCommand* angle90Command = new AbsoluteCoordCommand(90);
 			AbsoluteCoordCommand* angle180Command = new AbsoluteCoordCommand(180);

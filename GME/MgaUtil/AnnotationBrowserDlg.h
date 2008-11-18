@@ -30,27 +30,36 @@ public:
 	//{{AFX_DATA(CAnnotationBrowserDlg)
 	enum { IDD = IDD_ANNOTATION_BROWSER };
 	CAnnotationAspectList	m_wndAnnotationAspectList;
-	CAnnotationList	m_wndAnnotationList;
-	CAnnotationPanel	m_wndAnnotation;
-	CString	m_modelName;
-	CString	m_modelRole;
-	CString	m_modelKind;
-	CString	m_anName;
-	CString	m_anText;
-	CString	m_anFont;
-	BOOL	m_aaDefPos;
-	long	m_aaXCoord;
-	long	m_aaYCoord;
+	CAnnotationList			m_wndAnnotationList;
+	CAnnotationPanel		m_wndAnnotation;
+	CString					m_modelName;
+	CString					m_modelRole;
+	CString					m_modelKind;
+	CString					m_anName;
+	CString					m_anText;
+	CString					m_anFont;
+	BOOL					m_aaDefPos;
+	long					m_aaXCoord;
+	long					m_aaYCoord;
+	BOOL					m_bGradientFill;
+	int						m_iGradientDirection;
+	BOOL					m_bCastShadow;
+	int						m_iShadowDepth;
+	int						m_iShadowDirection;
+	BOOL					m_bRoundEdgeRect;
+	int						m_iRoundEdgeRadius;
 	//}}AFX_DATA
-	LOGFONT	  m_anLogFont;
-	CColorBtn m_colorbtn;
-	CColorBtn m_bgcolorbtn; 
-	CSplitterBar m_wndSplitterBar;
-	CComPtr<IMgaModel> m_model;
-	CComPtr<IMgaRegNode> m_focus;
+	LOGFONT					m_anLogFont;
+	CColorBtn				m_colorbtn;
+	CColorBtn				m_bgcolorbtn;
+	CColorBtn				m_shadowcolorbtn;
+	CColorBtn				m_gradientcolorbtn;
+	CSplitterBar			m_wndSplitterBar;
+	CComPtr<IMgaModel>		m_model;
+	CComPtr<IMgaRegNode>	m_focus;
 
-	CStringArray	m_aspectNames;
-	CAnnotationNodeList	m_annotations;
+	CStringArray			m_aspectNames;
+	CAnnotationNodeList		m_annotations;
 
 
 // Overrides
@@ -79,6 +88,11 @@ protected:
 	afx_msg void OnButtonFont();
 	afx_msg void OnItemchangedListAspect(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnCheckDefpos();
+	afx_msg void OnBnClickedShowhidebutton();
+	afx_msg void OnBnClickedRederivebutton();
+	afx_msg void OnBnClickedCheckGradientfill();
+	afx_msg void OnBnClickedCheckCastshadow();
+	afx_msg void OnBnClickedCheckRoundedge();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -86,8 +100,6 @@ public:
 	CButton m_inheritable;
 	CButton m_showHideBtn;
 	CButton m_rederiveBtn;
-	afx_msg void OnBnClickedShowhidebutton();
-	afx_msg void OnBnClickedRederivebutton();
 };
 
 //{{AFX_INSERT_LOCATION}}

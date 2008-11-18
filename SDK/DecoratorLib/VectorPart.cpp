@@ -7,6 +7,7 @@
 
 #include "StdAfx.h"
 #include "VectorPart.h"
+#include <math.h>
 
 
 namespace DecoratorSDK {
@@ -119,16 +120,21 @@ VectorCommand::~VectorCommand()
 
 VectorPart::VectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	ResizablePart				(pPart, eventSink),
+	m_bCastShadow				(false),
+	m_iShadowThickness			(9),
+	m_iShadowDirection			(45),
+	m_bGradientFill				(false),
+	m_iGradientDirection		(0),
 	m_mainPath					(NULL),
 	m_shadowPath				(NULL),
 	m_bInMainPathDefinition		(false),
 	m_bInShadowPathDefinition	(false),
-	m_bShadowCasted				(false),
-	m_bShadowEnabled			(true)
+	m_bShadowCasted				(false)
 {
-	penColorVariableName	= PREF_COLOR;
-	brushColorVariableName	= PREF_BORDERCOLOR;
-	borderColorVariableName	= PREF_BORDERCOLOR;
+	penColorVariableName		= PREF_COLOR;
+	brushColorVariableName		= PREF_FILLCOLOR;
+	gradientColorVariableName	= PREF_GRADIENTCOLOR;
+	shadowColorVariableName		= PREF_SHADOWCOLOR;
 }
 
 VectorPart::~VectorPart()
@@ -295,37 +301,44 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 				}
 				break;
 			case VectorCommand::CastShadowPath: {
-					long shadowThickness = 0;
+					long shadowThickness = m_iShadowThickness;
 					std::vector<long> points = (*ii).GetResolvedValues(m_Extents);
 					if (points.size() > 0)
 						shadowThickness = points[0];
-					else
-						shadowThickness = 9;
-					if (shadowThickness > 0 && m_bShadowEnabled) {
+					if (shadowThickness > 0 && m_bCastShadow) {
 						if (m_shadowPath == NULL) {
 							m_shadowPath = new Gdiplus::GraphicsPath();
 							m_shadowPath->AddPath(m_mainPath, FALSE);
 						}
 						Gdiplus::Matrix shadowTranslationMatrix;
-						shadowTranslationMatrix.Translate(static_cast<float> (shadowThickness), static_cast<float> (shadowThickness));
+						if (m_iShadowDirection < 0 || m_iShadowDirection > 360) {
+							// Create a glow
+							float horizontalScaleFactor = ((float)m_Rect.Width() + 2 * shadowThickness) / m_Rect.Width();
+							float verticalScaleFactor = ((float)m_Rect.Height() + 2 * shadowThickness) / m_Rect.Height();
+							shadowTranslationMatrix.Scale(horizontalScaleFactor, verticalScaleFactor);
+							shadowTranslationMatrix.Translate(static_cast<float> (shadowThickness),
+															  static_cast<float> (shadowThickness));
+						} else {
+							// Create a normal translated shadow
+							shadowTranslationMatrix.Translate(static_cast<float> (cos(DecoratorSDK::getFacilities().Deg2Rad(m_iShadowDirection)) * shadowThickness),
+															  static_cast<float> (sin(DecoratorSDK::getFacilities().Deg2Rad(m_iShadowDirection)) * shadowThickness));
+						}
 						m_shadowPath->Transform(&shadowTranslationMatrix);
 
 						Gdiplus::PathGradientBrush shadowPathGradientBrush(m_shadowPath);
-						m_shadowStartColor = m_bActive ? m_crPen : COLOR_GRAYED_OUT;
-
 						// Set blend factors and positions for the path gradient brush.
 						Gdiplus::Color shadowStartColor = Gdiplus::Color(255,
-																		 GetRValue(m_shadowStartColor),
-																		 GetGValue(m_shadowStartColor),
-																		 GetBValue(m_shadowStartColor));
+																		 GetRValue(m_crShadow),
+																		 GetGValue(m_crShadow),
+																		 GetBValue(m_crShadow));
 						Gdiplus::Color shadowBlendedColor = Gdiplus::Color(128,
-																		   GetRValue(m_shadowStartColor),
-																		   GetGValue(m_shadowStartColor),
-																		   GetBValue(m_shadowStartColor));
+																		   GetRValue(m_crShadow),
+																		   GetGValue(m_crShadow),
+																		   GetBValue(m_crShadow));
 						Gdiplus::Color shadowEndColor = Gdiplus::Color(0,
-																	   GetRValue(m_shadowStartColor),
-																	   GetGValue(m_shadowStartColor),
-																	   GetBValue(m_shadowStartColor));
+																	   GetRValue(m_crShadow),
+																	   GetGValue(m_crShadow),
+																	   GetBValue(m_crShadow));
 						Gdiplus::Color presetColors[] = {
 														shadowEndColor,
 														shadowBlendedColor,
@@ -340,8 +353,9 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 						shadowPathGradientBrush.SetInterpolationColors(presetColors, interpolationPositions, 3);
 
 						gdip->FillPath(&shadowPathGradientBrush, m_shadowPath);
+	
+						m_bShadowCasted = true;
 					}
-					m_bShadowCasted = true;
 				}
 				break;
 			case VectorCommand::FillPath:
@@ -349,19 +363,54 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 			case VectorCommand::StrokeAndFillPath: {
 					if (cmdCode == VectorCommand::FillPath || cmdCode == VectorCommand::StrokeAndFillPath) {
 						std::vector<long> colors = (*ii).GetResolvedValues(m_Extents);
-						ASSERT(colors.size() == 0 || colors.size() == 2);
-						if (m_bShadowCasted || colors.size() == 2) {
-							Gdiplus::SolidBrush* fillBrush = NULL;
-							if (colors.size() == 2)
-								fillBrush = DecoratorSDK::getFacilities().GetBrush((COLORREF)(m_bActive ? colors[0] : colors[1]));
-							else
-								fillBrush = DecoratorSDK::getFacilities().GetBrush(m_shadowEndColor);
-							gdip->FillPath(fillBrush, m_mainPath);
+						ASSERT(colors.size() == 0 || colors.size() == 2 || colors.size() == 4);
+						if (m_bGradientFill || m_bShadowCasted || colors.size() == 2) {
+							if (m_bGradientFill) {
+								int gradVectorEndX = 0;
+								int gradVectorEndY = 0;
+								if (m_iGradientDirection == 90) {
+									gradVectorEndX = m_Rect.left;
+									gradVectorEndY = m_Rect.bottom;
+								} else {
+									long gradientAngle = abs(m_iGradientDirection);
+									gradientAngle = gradientAngle - gradientAngle / 90;
+									if (gradientAngle == 0) {
+										gradVectorEndX = m_Rect.right;
+										gradVectorEndY = m_Rect.top;
+									} else {
+										if (gradientAngle < 45) {
+											gradVectorEndX = m_Rect.right;
+											gradVectorEndY = static_cast<int> (m_Rect.Width() * tan(DecoratorSDK::getFacilities().Deg2Rad(gradientAngle)));
+										} else {
+											gradVectorEndX = static_cast<int> (m_Rect.Height() * tan(DecoratorSDK::getFacilities().Deg2Rad(90 - gradientAngle)));
+											gradVectorEndY = m_Rect.bottom;
+										}
+									}
+								}
+								Gdiplus::Point gradVectorEnd(gradVectorEndX, gradVectorEndY);
+								Gdiplus::LinearGradientBrush linearGradientBrush(
+									Gdiplus::Point(m_Rect.left, m_Rect.top),
+									gradVectorEnd,
+									Gdiplus::Color(GetRValue(m_crBrush),
+												   GetGValue(m_crBrush),
+												   GetBValue(m_crBrush)),
+									Gdiplus::Color(GetRValue(m_crGradient),
+												   GetGValue(m_crGradient),
+												   GetBValue(m_crGradient)));
+								gdip->FillPath(&linearGradientBrush, m_mainPath);
+							} else {
+								Gdiplus::SolidBrush* fillBrush = NULL;
+								if (colors.size() == 2)
+									fillBrush = DecoratorSDK::getFacilities().GetBrush((COLORREF)(m_bActive ? colors[0] : colors[1]));
+								else
+									fillBrush = DecoratorSDK::getFacilities().GetBrush(m_crBrush);
+								gdip->FillPath(fillBrush, m_mainPath);
+							}
 						}
 					}
 					if (cmdCode == VectorCommand::StrokePath || cmdCode == VectorCommand::StrokeAndFillPath) {
-						COLORREF penColor = m_bActive ? m_crPen : COLOR_GRAYED_OUT;
-						Gdiplus::Pen* strokePen = DecoratorSDK::getFacilities().GetPen(penColor);
+						COLORREF borderColor = m_bActive ? m_crPen : COLOR_GRAYED_OUT;
+						Gdiplus::Pen* strokePen = DecoratorSDK::getFacilities().GetPen(borderColor);
 						gdip->DrawPath(strokePen, m_mainPath);
 					}
 				}
@@ -441,21 +490,64 @@ void VectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	if (it != preferences.end()) {
 		m_crBrush = it->second.uValue.crValue;
 	} else {
-		getFacilities().getPreference(m_spFCO, m_spMetaFCO, penColorVariableName, m_crBrush);
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, brushColorVariableName, m_crBrush);
 	}
 
-	m_shadowEndColor = COLOR_WHITE;
-	it = preferences.find(borderColorVariableName);
-	if (it != preferences.end()) {
-		m_shadowEndColor = it->second.uValue.crValue;
-	} else {
-		getFacilities().getPreference(m_spFCO, m_spMetaFCO, borderColorVariableName, m_shadowEndColor);
-	}
-
-	m_bShadowEnabled = true;
+	m_bCastShadow = false;
 	it = preferences.find(PREF_ITEMSHADOWCAST);
-	if (it != preferences.end())
-		m_bShadowEnabled = it->second.uValue.bValue;
+	if (it != preferences.end()) {
+		m_bCastShadow = it->second.uValue.bValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ITEMSHADOWCAST, m_bCastShadow);
+	}
+
+	m_crShadow = COLOR_GREY;
+	it = preferences.find(shadowColorVariableName);
+	if (it != preferences.end()) {
+		m_crGradient = it->second.uValue.crValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, shadowColorVariableName, m_crShadow);
+	}
+
+	m_iShadowThickness = 9;
+	it = preferences.find(PREF_SHADOWTHICKNESS);
+	if (it != preferences.end()) {
+		m_iShadowThickness = it->second.uValue.bValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_SHADOWTHICKNESS, m_iShadowThickness, false);
+	}
+
+	m_iShadowDirection = 45;
+	it = preferences.find(PREF_SHADOWDIRECTION);
+	if (it != preferences.end()) {
+		m_iShadowDirection = it->second.uValue.bValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_SHADOWDIRECTION, m_iShadowDirection, false);
+	}
+
+	m_bGradientFill = false;
+	it = preferences.find(PREF_ITEMGRADIENTFILL);
+	if (it != preferences.end()) {
+		m_bGradientFill = it->second.uValue.bValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ITEMGRADIENTFILL, m_bGradientFill);
+	}
+
+	m_crGradient = COLOR_WHITE;
+	it = preferences.find(gradientColorVariableName);
+	if (it != preferences.end()) {
+		m_crGradient = it->second.uValue.crValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, gradientColorVariableName, m_crGradient);
+	}
+
+	m_iGradientDirection = 0;
+	it = preferences.find(PREF_GRADIENTDIRECTION);
+	if (it != preferences.end()) {
+		m_iGradientDirection = it->second.uValue.bValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_GRADIENTDIRECTION, m_iGradientDirection, false);
+	}
 }
 
 }; // namespace DecoratorSDK

@@ -37,6 +37,8 @@ protected:
 	long						m_SeparatorLoc;
 	CSize						m_calcSize;
 	COLORREF					m_crAttributeText;
+	bool						m_bRoundEdgeRect;
+	long						m_bRoundEdgeRadius;
 	long						m_lMaxTextWidth;
 	long						m_lMaxTextHeight;
 	long						m_lMinTextWidth;

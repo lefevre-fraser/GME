@@ -25,6 +25,8 @@ AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMga
 	m_crBgColor		(AN_DEFAULT_BGCOLOR)
 {
 	m_crText = AN_DEFAULT_COLOR;
+	m_crShadow = AN_DEFAULT_SHADOWCOLOR;
+	m_crGradient = AN_DEFAULT_GRADIENTCOLOR;
 	memset(&m_logFont, 0, sizeof(LOGFONT));
 }
 
@@ -105,8 +107,18 @@ void AnnotatorTextPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 void AnnotatorTextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 									 HWND parentWnd, DecoratorSDK::PreferenceMap& preferences)
 {
-	preferences[DecoratorSDK::PREF_FILLCOLOR]		= m_crBgColor;
-	preferences[DecoratorSDK::PREF_TEXTOVERRIDE]	= DecoratorSDK::PreferenceVariant(true);
+	preferences[DecoratorSDK::PREF_FILLCOLOR]			= DecoratorSDK::PreferenceVariant(m_crBgColor);
+	preferences[DecoratorSDK::PREF_SHADOWCOLOR]			= DecoratorSDK::PreferenceVariant(m_crShadow);
+	preferences[DecoratorSDK::PREF_GRADIENTCOLOR]		= DecoratorSDK::PreferenceVariant(m_crGradient);
+	preferences[DecoratorSDK::PREF_ITEMGRADIENTFILL]	= DecoratorSDK::PreferenceVariant(m_bGradientFill);
+	preferences[DecoratorSDK::PREF_GRADIENTDIRECTION]	= DecoratorSDK::PreferenceVariant(m_iGradientDirection);
+	preferences[DecoratorSDK::PREF_ITEMSHADOWCAST]		= DecoratorSDK::PreferenceVariant(m_bCastShadow);
+	preferences[DecoratorSDK::PREF_SHADOWTHICKNESS]		= DecoratorSDK::PreferenceVariant(m_iShadowDepth);
+	preferences[DecoratorSDK::PREF_SHADOWDIRECTION]		= DecoratorSDK::PreferenceVariant(m_iShadowDirection);
+	preferences[DecoratorSDK::PREF_ROUNDEDGERECT]		= DecoratorSDK::PreferenceVariant(m_bRoundEdgeRect);
+	preferences[DecoratorSDK::PREF_ROUNDEDGERADIUS]		= DecoratorSDK::PreferenceVariant(m_iRoundEdgeRadius);
+
+	preferences[DecoratorSDK::PREF_TEXTOVERRIDE]		= DecoratorSDK::PreferenceVariant(true);
 	TextPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 
@@ -220,6 +232,184 @@ void AnnotatorTextPart::ReadPreferences(void)
 	}
 	catch (hresult_exception&) {
 		m_crBgColor = AN_DEFAULT_BGCOLOR;
+	}
+
+	try {
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> shadowcolNode;
+		CComBSTR shadowcolName(AN_SHADOWCOLOR_PREF);
+		COMTHROW(m_regRoot->get_SubNodeByName(shadowcolName, &shadowcolNode));
+		if (shadowcolNode != NULL) {
+			COMTHROW(shadowcolNode->get_Value(&bstr));
+		}
+		CString strVal(bstr);
+		unsigned int val;
+		if (_stscanf(strVal,_T("%x"),&val) == 1) {
+			unsigned int r = (val & 0xff0000) >> 16;
+			unsigned int g = (val & 0xff00) >> 8;
+			unsigned int b = val & 0xff;
+			m_crShadow = RGB(r,g,b);
+		} else {
+			m_crShadow = AN_DEFAULT_SHADOWCOLOR;
+		}
+	}
+	catch (hresult_exception&) {
+		m_crShadow = AN_DEFAULT_SHADOWCOLOR;
+	}
+
+	try {
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> gradientcolNode;
+		CComBSTR gradientcolName(AN_GRADIENTCOLOR_PREF);
+		COMTHROW(m_regRoot->get_SubNodeByName(gradientcolName, &gradientcolNode));
+		if (gradientcolNode != NULL) {
+			COMTHROW(gradientcolNode->get_Value(&bstr));
+		}
+		CString strVal(bstr);
+		unsigned int val;
+		if (_stscanf(strVal,_T("%x"),&val) == 1) {
+			unsigned int r = (val & 0xff0000) >> 16;
+			unsigned int g = (val & 0xff00) >> 8;
+			unsigned int b = val & 0xff;
+			m_crGradient = RGB(r,g,b);
+		} else {
+			m_crGradient = AN_DEFAULT_GRADIENTCOLOR;
+		}
+	}
+	catch (hresult_exception&) {
+		m_crGradient = AN_DEFAULT_GRADIENTCOLOR;
+	}
+
+	try {
+		m_bGradientFill = AN_DEFAULT_GRADIENTFILL;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_GRADIENTFILL_PREF);
+		COMTHROW(m_regRoot->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			if (bstr == "1")
+				m_bGradientFill = true;
+			else
+				m_bGradientFill = false;
+		}
+	}
+	catch (hresult_exception &) {
+		m_bGradientFill = AN_DEFAULT_GRADIENTFILL;
+	}
+
+	// 'GradientDirection'
+	try {
+		m_iGradientDirection = AN_DEFAULT_GRADIENTDIRECTION;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_GRADIENTDIRECTION_PREF);
+		COMTHROW(m_regRoot->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			CString strVal(bstr);
+			if (_stscanf(strVal,_T("%ld"),&m_iGradientDirection) != 1) {
+				m_iGradientDirection = AN_DEFAULT_GRADIENTDIRECTION;
+			}
+		}
+	}
+	catch (hresult_exception &) {
+		m_iGradientDirection = AN_DEFAULT_GRADIENTDIRECTION;
+	}
+
+	// 'CastShadow'
+	try {
+		m_bCastShadow = AN_DEFAULT_CASTSHADOW;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_CASTSHADOW_PREF);
+		COMTHROW(m_regRoot->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			if (bstr == "1")
+				m_bCastShadow = true;
+			else
+				m_bCastShadow = false;
+		}
+	}
+	catch (hresult_exception &) {
+		m_bCastShadow = AN_DEFAULT_CASTSHADOW;
+	}
+
+	// 'ShadowDepth'
+	try {
+		m_iShadowDepth = AN_DEFAULT_SHADOWDEPTH;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_SHADOWDEPTH_PREF);
+		COMTHROW(m_regRoot->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			CString strVal(bstr);
+			if (_stscanf(strVal,_T("%ld"),&m_iShadowDepth) != 1) {
+				m_iShadowDepth = AN_DEFAULT_SHADOWDEPTH;
+			}
+		}
+	}
+	catch (hresult_exception &) {
+		m_iShadowDepth = AN_DEFAULT_SHADOWDEPTH;
+	}
+
+	// 'ShadowDirection'
+	try {
+		m_iShadowDirection = AN_DEFAULT_SHADOWDIRECTION;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_SHADOWDIRECTION_PREF);
+		COMTHROW(m_regRoot->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			CString strVal(bstr);
+			if (_stscanf(strVal,_T("%ld"),&m_iShadowDirection) != 1) {
+				m_iShadowDirection = AN_DEFAULT_SHADOWDIRECTION;
+			}
+		}
+	}
+	catch (hresult_exception &) {
+		m_iShadowDirection = AN_DEFAULT_SHADOWDIRECTION;
+	}
+
+	// 'RoundEdgeRect'
+	try {
+		m_bRoundEdgeRect = AN_DEFAULT_ROUNDEDGERECT;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_ROUNDEDGERECT_PREF);
+		COMTHROW(m_regRoot->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			if (bstr == "1")
+				m_bRoundEdgeRect = true;
+			else
+				m_bRoundEdgeRect = false;
+		}
+	}
+	catch (hresult_exception &) {
+		m_bRoundEdgeRect = AN_DEFAULT_ROUNDEDGERECT;
+	}
+
+	// 'RoundEdgeRadius'
+	try {
+		m_iRoundEdgeRadius = AN_DEFAULT_ROUNDEDGERADIUS;
+		CComBSTR bstr;
+		CComPtr<IMgaRegNode> lfNode;
+		CComBSTR lfName(AN_ROUNDEDGERADIUS_PREF);
+		COMTHROW(m_regRoot->get_SubNodeByName(lfName, &lfNode));
+		if (lfNode != NULL) {
+			COMTHROW(lfNode->get_Value(&bstr));
+			CString strVal(bstr);
+			if (_stscanf(strVal,_T("%ld"),&m_iRoundEdgeRadius) != 1) {
+				m_iRoundEdgeRadius = AN_DEFAULT_ROUNDEDGERADIUS;
+			}
+		}
+	}
+	catch (hresult_exception &) {
+		m_iRoundEdgeRadius = AN_DEFAULT_ROUNDEDGERADIUS;
 	}
 }
 

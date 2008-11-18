@@ -81,6 +81,8 @@ namespace DecoratorSDK
 	static const char* PREF_PORTLABELLENGTH			= "portLabelLength";
 	static const char* PREF_BORDERCOLOR				= "borderColor";
 	static const char* PREF_FILLCOLOR				= "fillColor";
+	static const char* PREF_GRADIENTCOLOR			= "gradientColor";
+	static const char* PREF_SHADOWCOLOR				= "shadowColor";
 
 	static const char* PREF_LABELFONT				= "labelFont";
 	static const char* PREF_LABELLENGTH				= "labelLength";
@@ -99,10 +101,16 @@ namespace DecoratorSDK
 
 	static const char* PREF_ITEMEDITABLE			= "itemEditable";
 	static const char* PREF_ITEMRESIZABLE			= "itemResizable";
-	static const char* PREF_ITEMSHADOWCAST			= "itemShadowCast";
 	static const char* PREF_PREFERREDSIZE			= "preferredSize";
 	static const char* PREF_ISMASKEDBITMAP			= "isMaskedBitmap";
 	static const char* PREF_ISMODELEXPANDED			= "isModelExpanded";
+	static const char* PREF_ITEMSHADOWCAST			= "itemShadowCast";
+	static const char* PREF_SHADOWTHICKNESS			= "shadowThickness";
+	static const char* PREF_SHADOWDIRECTION			= "shadowDirection";
+	static const char* PREF_ITEMGRADIENTFILL		= "gradientFill";
+	static const char* PREF_GRADIENTDIRECTION		= "gradientDirection";
+	static const char* PREF_ROUNDEDGERECT			= "roundEdgeRect";
+	static const char* PREF_ROUNDEDGERADIUS			= "roundEdgeRadius";
 
 	static const char* PREF_DECORATOR_MARGINX		= "decoratorMarginX";
 	static const char* PREF_DECORATOR_MARGINY		= "decoratorMarginY";
@@ -111,22 +119,20 @@ namespace DecoratorSDK
 	static const char* PREF_TEXTOVERRIDE			= "textOverride";
 	static const char* PREF_ROUNDEDGE				= "roundEdge";
 	static const char* PREF_EDGERADIUS				= "edgeRadius";
-	static const char* PREF_CASTSHADOW				= "castShadow";
-	static const char* PREF_SHADOWTHICKNESS			= "shadowThickness";
 
-	static const int FONT_LABEL			= 0;
-	static const int FONT_PORT			= 1;
-	static const int FONT_TYPE			= 2;
-	static const int FONT_PORT_OUTSIDE	= 3;
-	static const int FONT_PORTNAME		= 4;
-	static const int FONT_CONNLABEL		= 5;
-	static const int FONT_ABSTRACT		= 6;
+	static const int FONT_LABEL					= 0;
+	static const int FONT_PORT					= 1;
+	static const int FONT_TYPE					= 2;
+	static const int FONT_PORT_OUTSIDE			= 3;
+	static const int FONT_PORTNAME				= 4;
+	static const int FONT_CONNLABEL				= 5;
+	static const int FONT_ABSTRACT				= 6;
 
-	static const int GAP_LABEL			= 2;
-	static const int GAP_PORT			= 3;
-	static const int GAP_XMODELPORT		= 4;
-	static const int GAP_YMODELPORT		= 8;
-	static const int GAP_PORTLABEL		= 20;
+	static const int GAP_LABEL					= 2;
+	static const int GAP_PORT					= 3;
+	static const int GAP_XMODELPORT				= 4;
+	static const int GAP_YMODELPORT				= 8;
+	static const int GAP_PORTLABEL				= 20;
 
 	static const COLORREF COLOR_BLACK 			= RGB( 0x00, 0x00, 0x00 );
 	static const COLORREF COLOR_GRAY 			= RGB( 0xB0, 0xB0, 0xB0 );

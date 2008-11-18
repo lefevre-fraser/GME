@@ -23,15 +23,22 @@ CAnnotationBrowserDlg::CAnnotationBrowserDlg(const CComPtr<IMgaModel> &model, co
 	: CDialog(CAnnotationBrowserDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CAnnotationBrowserDlg)
-	m_modelName = _T("");
-	m_modelRole = _T("");
-	m_modelKind = _T("");
-	m_anName = _T("");
-	m_anText = _T("");
-	m_anFont = _T("");
-	m_aaDefPos = FALSE;
-	m_aaXCoord = 0;
-	m_aaYCoord = 0;
+	m_modelName				= _T("");
+	m_modelRole				= _T("");
+	m_modelKind				= _T("");
+	m_anName				= _T("");
+	m_anText				= _T("");
+	m_anFont				= _T("");
+	m_aaDefPos				= FALSE;
+	m_aaXCoord				= 0;
+	m_aaYCoord				= 0;
+	m_bGradientFill			= FALSE;
+	m_iGradientDirection	= 0;
+	m_bCastShadow			= FALSE;
+	m_iShadowDepth			= 9;
+	m_iShadowDirection		= 45;
+	m_bRoundEdgeRect		= FALSE;
+	m_iRoundEdgeRadius		= 9;
 	//}}AFX_DATA_INIT
 
 	m_model = model;
@@ -62,6 +69,12 @@ void CAnnotationBrowserDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK_DEFPOS, m_aaDefPos);
 	DDX_Text(pDX, IDC_EDIT_XCOORD, m_aaXCoord);
 	DDX_Text(pDX, IDC_EDIT_YCOORD, m_aaYCoord);
+	DDX_Check(pDX, IDC_CHECK_GRADIENTFILL, m_bGradientFill);
+	DDX_Text(pDX, IDC_EDIT_GRADIENTDIR, m_iGradientDirection);
+	DDX_Check(pDX, IDC_CHECK_CASTSHADOW, m_bCastShadow);
+	DDX_Text(pDX, IDC_EDIT_SHADOWDEPTH, m_iShadowDepth);
+	DDX_Check(pDX, IDC_CHECK_ROUNDEDGE, m_bRoundEdgeRect);
+	DDX_Text(pDX, IDC_EDIT_EDGERADIUS, m_iRoundEdgeRadius);
 	//}}AFX_DATA_MAP
 	DDX_Control(pDX, IDC_CHECK1, m_inheritable);
 	DDX_Control(pDX, IDC_SHOWHIDEBUTTON, m_showHideBtn);
@@ -76,9 +89,12 @@ BEGIN_MESSAGE_MAP(CAnnotationBrowserDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_FONT, OnButtonFont)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_ASPECT, OnItemchangedListAspect)
 	ON_BN_CLICKED(IDC_CHECK_DEFPOS, OnCheckDefpos)
-	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_SHOWHIDEBUTTON, OnBnClickedShowhidebutton)
 	ON_BN_CLICKED(IDC_REDERIVEBUTTON, OnBnClickedRederivebutton)
+	ON_BN_CLICKED(IDC_CHECK_GRADIENTFILL, OnBnClickedCheckGradientfill)
+	ON_BN_CLICKED(IDC_CHECK_CASTSHADOW, OnBnClickedCheckCastshadow)
+	ON_BN_CLICKED(IDC_CHECK_ROUNDEDGE, OnBnClickedCheckRoundedge)
+	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -90,6 +106,8 @@ BOOL CAnnotationBrowserDlg::OnInitDialog()
 	
 	m_colorbtn.SubclassDlgItem(IDC_COMBO_COLOR,this); 
 	m_bgcolorbtn.SubclassDlgItem(IDC_COMBO_BGCOLOR,this); 
+	m_shadowcolorbtn.SubclassDlgItem(IDC_COMBO_SHADOWCOLOR,this); 
+	m_gradientcolorbtn.SubclassDlgItem(IDC_COMBO_GRADIENTCOLOR,this); 
 
 	CRect rect(0,0,0,0);
 
@@ -193,7 +211,7 @@ void CAnnotationBrowserDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialog::OnSize(nType, cx, cy);
 
-	CRect origTopRect(0, 0, 0+406, 0+20), origBottomRect(0, 250, 0+406, 250+20 ); 
+	CRect origTopRect(0, 0, 0+406, 0+20), origBottomRect(0, 311, 0+406, 311+20 ); 
 	MapDialogRect(&origTopRect);
 	MapDialogRect(&origBottomRect);
 
@@ -213,10 +231,10 @@ void CAnnotationBrowserDlg::OnSize(UINT nType, int cx, int cy)
 	if (m_wndAnnotation.GetSafeHwnd() && m_wndAnnotationList.GetSafeHwnd()) {
 		m_wndAnnotationList.SetWindowPos(NULL, 0, origTopRect.bottom, static_cast<int>(cx*ratio), cy - (origBottomRect.bottom-origBottomRect.top) - origTopRect.bottom, SWP_NOZORDER);
 		m_wndAnnotation.SetWindowPos(NULL, static_cast<int>(cx*ratio)+GetSystemMetrics(SM_CYFRAME), origTopRect.bottom, cx - (static_cast<int>(cx*ratio)+GetSystemMetrics(SM_CYFRAME)), cy - (origBottomRect.bottom-origBottomRect.top) - origTopRect.bottom, SWP_NOZORDER);
-		m_wndSplitterBar.SetPanes(&m_wndAnnotationList,&m_wndAnnotation);		
+		m_wndSplitterBar.SetPanes(&m_wndAnnotationList,&m_wndAnnotation);
 	}
 
-	CRect rect3(0, 254, 0+406, 254+17);
+	CRect rect3(0, 315, 0+406, 315+17);
 	MapDialogRect(&rect3);
 	CRect rectDlg;
 	GetClientRect(&rectDlg);
@@ -234,8 +252,6 @@ void CAnnotationBrowserDlg::OnSize(UINT nType, int cx, int cy)
 		wndCANCEL->GetClientRect(&origWnd);
 		wndCANCEL->MoveWindow(static_cast<int>(242.0 * ratio), rectDlg.bottom - (rect3.bottom - rect3.top), origWnd.Width(), origWnd.Height());
 	}
-
-	
 }
 
 void CAnnotationBrowserDlg::OnOK() 
@@ -344,8 +360,17 @@ void CAnnotationBrowserDlg::SavePanelToNode(CAnnotationNode *node) {
 	node->m_hidden = tx == show_str;
 
 	memcpy(&(node->m_logfont), &m_anLogFont, sizeof(LOGFONT));
-	node->m_color = m_colorbtn.currentcolor;
-	node->m_bgcolor = m_bgcolorbtn.currentcolor;
+	node->m_color				= m_colorbtn.currentcolor;
+	node->m_bgcolor				= m_bgcolorbtn.currentcolor;
+	node->m_crShadow			= m_shadowcolorbtn.currentcolor;
+	node->m_crGradient			= m_gradientcolorbtn.currentcolor;
+	node->m_bGradientFill		= (m_bGradientFill == TRUE);
+	node->m_iGradientDirection	= m_iGradientDirection;
+	node->m_bCastShadow			= (m_bCastShadow == TRUE);
+	node->m_iShadowDepth		= m_iShadowDepth;
+	node->m_iShadowDirection	= m_iShadowDirection;
+	node->m_bRoundEdgeRect		= (m_bRoundEdgeRect == TRUE);
+	node->m_iRoundEdgeRadius	= m_iRoundEdgeRadius;
 
 	POSITION pos = m_wndAnnotationAspectList.GetFirstSelectedItemPosition();
 	if (pos) {
@@ -394,6 +419,25 @@ void CAnnotationBrowserDlg::LoadNodeToPanel(CAnnotationNode *node) {
 	memcpy(&m_anLogFont, &(node->m_logfont), sizeof(LOGFONT));
 	m_colorbtn.currentcolor = node->m_color;
 	m_bgcolorbtn.currentcolor = node->m_bgcolor;
+	m_shadowcolorbtn.currentcolor = node->m_crShadow;
+	m_gradientcolorbtn.currentcolor = node->m_crGradient;
+	m_bGradientFill = node->m_bGradientFill ? TRUE : FALSE;
+	m_iGradientDirection = node->m_iGradientDirection;
+	GetDlgItem(IDC_STATIC_GRADIENTCOLOR)->EnableWindow(node->m_bGradientFill);
+	GetDlgItem(IDC_COMBO_GRADIENTCOLOR)->EnableWindow(node->m_bGradientFill);
+	GetDlgItem(IDC_STATIC_GRADIENTDIR)->EnableWindow(node->m_bGradientFill);
+	GetDlgItem(IDC_EDIT_GRADIENTDIR)->EnableWindow(node->m_bGradientFill);
+	m_bCastShadow = node->m_bCastShadow ? TRUE : FALSE;
+	m_iShadowDepth = node->m_iShadowDepth;
+	GetDlgItem(IDC_STATIC_SHADOWCOLOR)->EnableWindow(node->m_bCastShadow);
+	GetDlgItem(IDC_COMBO_SHADOWCOLOR)->EnableWindow(node->m_bCastShadow);
+	GetDlgItem(IDC_STATIC_SHADOWDEPTH)->EnableWindow(node->m_bCastShadow);
+	GetDlgItem(IDC_EDIT_SHADOWDEPTH)->EnableWindow(node->m_bCastShadow);
+	m_iShadowDirection = node->m_iShadowDirection;
+	m_bRoundEdgeRect = node->m_bRoundEdgeRect ? TRUE : FALSE;
+	GetDlgItem(IDC_EDIT_EDGERADIUS)->EnableWindow(node->m_bRoundEdgeRect);
+	GetDlgItem(IDC_STATIC_EDGERADIUS)->EnableWindow(node->m_bRoundEdgeRect);
+	m_iRoundEdgeRadius = node->m_iRoundEdgeRadius;
 
 	m_wndAnnotationAspectList.DeleteAllItems();
 	for (int i = 0; i < m_aspectNames.GetSize(); i++) {
@@ -414,6 +458,8 @@ void CAnnotationBrowserDlg::LoadNodeToPanel(CAnnotationNode *node) {
 	UpdateData(FALSE);
 	m_colorbtn.RedrawWindow();
 	m_bgcolorbtn.RedrawWindow();
+	m_shadowcolorbtn.RedrawWindow();
+	m_gradientcolorbtn.RedrawWindow();
 }
 
 void CAnnotationBrowserDlg::OnButtonFont() 
@@ -492,4 +538,31 @@ void CAnnotationBrowserDlg::OnBnClickedRederivebutton()
 		
 		LoadNodeToPanel(node);
 	}
+}
+
+void CAnnotationBrowserDlg::OnBnClickedCheckGradientfill()
+{
+	CButton* pCheck = (CButton*)GetDlgItem(IDC_CHECK_GRADIENTFILL);
+	BOOL bGradientFill = pCheck->GetCheck();
+
+	GetDlgItem(IDC_STATIC_GRADIENTCOLOR)->EnableWindow(bGradientFill);
+	GetDlgItem(IDC_COMBO_GRADIENTCOLOR)->EnableWindow(bGradientFill);
+	GetDlgItem(IDC_STATIC_GRADIENTDIR)->EnableWindow(bGradientFill);
+	GetDlgItem(IDC_EDIT_GRADIENTDIR)->EnableWindow(bGradientFill);
+}
+
+void CAnnotationBrowserDlg::OnBnClickedCheckCastshadow()
+{
+	CButton* pCheck = (CButton*)GetDlgItem(IDC_CHECK_CASTSHADOW);
+	BOOL bCastShadow = pCheck->GetCheck();
+
+	GetDlgItem(IDC_STATIC_SHADOWCOLOR)->EnableWindow(bCastShadow);
+	GetDlgItem(IDC_COMBO_SHADOWCOLOR)->EnableWindow(bCastShadow);
+	GetDlgItem(IDC_STATIC_SHADOWDEPTH)->EnableWindow(bCastShadow);
+	GetDlgItem(IDC_EDIT_SHADOWDEPTH)->EnableWindow(bCastShadow);
+}
+
+void CAnnotationBrowserDlg::OnBnClickedCheckRoundedge()
+{
+	// TODO: Add your control notification handler code here
 }

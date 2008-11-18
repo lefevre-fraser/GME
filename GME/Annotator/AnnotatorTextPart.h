@@ -29,6 +29,15 @@ protected:
 	CComPtr<IMgaRegNode>	m_regRoot;
 	CString					m_strName;
 	COLORREF				m_crBgColor;
+	COLORREF				m_crShadow;
+	COLORREF				m_crGradient;
+	bool					m_bGradientFill;
+	long					m_iGradientDirection;
+	bool					m_bCastShadow;
+	long					m_iShadowDepth;
+	long					m_iShadowDirection;
+	bool					m_bRoundEdgeRect;
+	long					m_iRoundEdgeRadius;
 	LOGFONT					m_logFont;
 
 public:
