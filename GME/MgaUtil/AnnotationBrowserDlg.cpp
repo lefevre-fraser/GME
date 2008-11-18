@@ -211,7 +211,7 @@ void CAnnotationBrowserDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialog::OnSize(nType, cx, cy);
 
-	CRect origTopRect(0, 0, 0+406, 0+20), origBottomRect(0, 311, 0+406, 311+20 ); 
+	CRect origTopRect(0, 0, 0+406, 0+20), origBottomRect(0, 334, 0+406, 334+20 ); 
 	MapDialogRect(&origTopRect);
 	MapDialogRect(&origBottomRect);
 
@@ -234,7 +234,7 @@ void CAnnotationBrowserDlg::OnSize(UINT nType, int cx, int cy)
 		m_wndSplitterBar.SetPanes(&m_wndAnnotationList,&m_wndAnnotation);
 	}
 
-	CRect rect3(0, 315, 0+406, 315+17);
+	CRect rect3(0, 338, 0+406, 338+17);
 	MapDialogRect(&rect3);
 	CRect rectDlg;
 	GetClientRect(&rectDlg);

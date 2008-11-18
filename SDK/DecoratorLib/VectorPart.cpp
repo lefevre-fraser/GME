@@ -310,20 +310,29 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 							m_shadowPath = new Gdiplus::GraphicsPath();
 							m_shadowPath->AddPath(m_mainPath, FALSE);
 						}
-						Gdiplus::Matrix shadowTranslationMatrix;
 						if (m_iShadowDirection < 0 || m_iShadowDirection > 360) {
 							// Create a glow
 							float horizontalScaleFactor = ((float)m_Rect.Width() + 2 * shadowThickness) / m_Rect.Width();
 							float verticalScaleFactor = ((float)m_Rect.Height() + 2 * shadowThickness) / m_Rect.Height();
-							shadowTranslationMatrix.Scale(horizontalScaleFactor, verticalScaleFactor);
-							shadowTranslationMatrix.Translate(static_cast<float> (shadowThickness),
-															  static_cast<float> (shadowThickness));
+
+							Gdiplus::Matrix shadowTranslationMatrix1;
+							shadowTranslationMatrix1.Translate(static_cast<float> (-m_Rect.left),
+															   static_cast<float> (-m_Rect.top));
+							m_shadowPath->Transform(&shadowTranslationMatrix1);
+							Gdiplus::Matrix shadowTranslationMatrix2;
+							shadowTranslationMatrix2.Scale(horizontalScaleFactor, verticalScaleFactor);
+							m_shadowPath->Transform(&shadowTranslationMatrix2);
+							Gdiplus::Matrix shadowTranslationMatrix3;
+							shadowTranslationMatrix3.Translate(static_cast<float> (m_Rect.left - shadowThickness),
+															   static_cast<float> (m_Rect.top - shadowThickness));
+							m_shadowPath->Transform(&shadowTranslationMatrix3);
 						} else {
 							// Create a normal translated shadow
+							Gdiplus::Matrix shadowTranslationMatrix;
 							shadowTranslationMatrix.Translate(static_cast<float> (cos(DecoratorSDK::getFacilities().Deg2Rad(m_iShadowDirection)) * shadowThickness),
 															  static_cast<float> (sin(DecoratorSDK::getFacilities().Deg2Rad(m_iShadowDirection)) * shadowThickness));
+							m_shadowPath->Transform(&shadowTranslationMatrix);
 						}
-						m_shadowPath->Transform(&shadowTranslationMatrix);
 
 						Gdiplus::PathGradientBrush shadowPathGradientBrush(m_shadowPath);
 						// Set blend factors and positions for the path gradient brush.
@@ -378,13 +387,15 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 										gradVectorEndX = m_Rect.right;
 										gradVectorEndY = m_Rect.top;
 									} else {
-										if (gradientAngle < 45) {
-											gradVectorEndX = m_Rect.right;
-											gradVectorEndY = static_cast<int> (m_Rect.Width() * tan(DecoratorSDK::getFacilities().Deg2Rad(gradientAngle)));
-										} else {
-											gradVectorEndX = static_cast<int> (m_Rect.Height() * tan(DecoratorSDK::getFacilities().Deg2Rad(90 - gradientAngle)));
-											gradVectorEndY = m_Rect.bottom;
-										}
+										double beta = atan((double)m_Rect.Height() / m_Rect.Width());
+										double alfa = DecoratorSDK::getFacilities().Deg2Rad(gradientAngle);
+										double x = m_Rect.Width() * cos(alfa) / sin(beta);
+										double y = m_Rect.Height() * sin(alfa) / cos(beta);
+										gradVectorEndX = static_cast<int> (x) + m_Rect.left;
+										gradVectorEndY = static_cast<int> (y) + m_Rect.top;
+										TRACE("(l %ld, t %ld, w %ld, h %ld) a %lf x %lf y %lf xf %ld yf %ld\n",
+											m_Rect.left, m_Rect.top, m_Rect.Width(), m_Rect.Height(), alfa, x, y,
+											gradVectorEndX, gradVectorEndY);
 									}
 								}
 								Gdiplus::Point gradVectorEnd(gradVectorEndX, gradVectorEndY);
@@ -512,7 +523,7 @@ void VectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	m_iShadowThickness = 9;
 	it = preferences.find(PREF_SHADOWTHICKNESS);
 	if (it != preferences.end()) {
-		m_iShadowThickness = it->second.uValue.bValue;
+		m_iShadowThickness = it->second.uValue.lValue;
 	} else {
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_SHADOWTHICKNESS, m_iShadowThickness, false);
 	}
@@ -520,7 +531,7 @@ void VectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	m_iShadowDirection = 45;
 	it = preferences.find(PREF_SHADOWDIRECTION);
 	if (it != preferences.end()) {
-		m_iShadowDirection = it->second.uValue.bValue;
+		m_iShadowDirection = it->second.uValue.lValue;
 	} else {
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_SHADOWDIRECTION, m_iShadowDirection, false);
 	}
@@ -544,7 +555,7 @@ void VectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	m_iGradientDirection = 0;
 	it = preferences.find(PREF_GRADIENTDIRECTION);
 	if (it != preferences.end()) {
-		m_iGradientDirection = it->second.uValue.bValue;
+		m_iGradientDirection = it->second.uValue.lValue;
 	} else {
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_GRADIENTDIRECTION, m_iGradientDirection, false);
 	}

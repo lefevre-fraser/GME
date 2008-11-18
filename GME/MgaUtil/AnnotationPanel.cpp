@@ -78,14 +78,14 @@ void CAnnotationPanel::OnSize(UINT nType, int cx, int cy)
 		ctrl->MoveWindow(&origRect);
 	}
 
-	ctrl = prnt->GetDlgItem(IDC_STATIC_BORDERCOLOR);
+/*	ctrl = prnt->GetDlgItem(IDC_STATIC_BORDERCOLOR);
 	if (ctrl->GetSafeHwnd()) {
 		CRect origRect(13,138+16,13+19,138+8+16);
 		prnt->MapDialogRect(&origRect);
 		ClientToScreen(&origRect);
 		prnt->ScreenToClient(&origRect);
 		ctrl->MoveWindow(&origRect);
-	}
+	}*/
 
 	ctrl = prnt->GetDlgItem(IDC_STATIC_GRADIENTCOLOR);
 	if (ctrl->GetSafeHwnd()) {
@@ -193,7 +193,7 @@ void CAnnotationPanel::OnSize(UINT nType, int cx, int cy)
 		ctrl->MoveWindow(&origRect);
 	}
 
-	ctrl = prnt->GetDlgItem(IDC_COMBO_BORDERCOLOR);
+/*	ctrl = prnt->GetDlgItem(IDC_COMBO_BORDERCOLOR);
 	if (ctrl->GetSafeHwnd()) {
 		CRect origRect(58,135+16,38+135,135+14+16);
 		CRect origRect2(192,135+16,200,135+14+16);
@@ -203,7 +203,7 @@ void CAnnotationPanel::OnSize(UINT nType, int cx, int cy)
 		ClientToScreen(&origRect);
 		prnt->ScreenToClient(&origRect);
 		ctrl->MoveWindow(&origRect);
-	}
+	}*/
 
 	ctrl = prnt->GetDlgItem(IDC_COMBO_GRADIENTCOLOR);
 	if (ctrl->GetSafeHwnd()) {
@@ -235,7 +235,7 @@ void CAnnotationPanel::OnSize(UINT nType, int cx, int cy)
 		ctrl->MoveWindow(&origRect);
 	}
 
-	ctrl = prnt->GetDlgItem(IDC_RADIO_VERTICAL);
+/*	ctrl = prnt->GetDlgItem(IDC_RADIO_VERTICAL);
 	if (ctrl->GetSafeHwnd()) {
 		CRect origRect(68,170+16,68+53,170+10+16);
 		prnt->MapDialogRect(&origRect);
@@ -251,7 +251,7 @@ void CAnnotationPanel::OnSize(UINT nType, int cx, int cy)
 		ClientToScreen(&origRect);
 		prnt->ScreenToClient(&origRect);
 		ctrl->MoveWindow(&origRect);
-	}
+	}*/
 
 	ctrl = prnt->GetDlgItem(IDC_STATIC_SHADOWDEPTH);
 	if (ctrl->GetSafeHwnd()) {
