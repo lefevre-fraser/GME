@@ -329,6 +329,7 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 						} else {
 							// Create a normal translated shadow
 							Gdiplus::Matrix shadowTranslationMatrix;
+							long iShadowDirection = m_iShadowDirection - (m_iShadowDirection / 360) * 360;
 							shadowTranslationMatrix.Translate(static_cast<float> (cos(DecoratorSDK::getFacilities().Deg2Rad(m_iShadowDirection)) * shadowThickness),
 															  static_cast<float> (sin(DecoratorSDK::getFacilities().Deg2Rad(m_iShadowDirection)) * shadowThickness));
 							m_shadowPath->Transform(&shadowTranslationMatrix);
@@ -382,7 +383,7 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 									gradVectorEndY = m_Rect.bottom;
 								} else {
 									long gradientAngle = abs(m_iGradientDirection);
-									gradientAngle = gradientAngle - gradientAngle / 90;
+									gradientAngle = gradientAngle - (gradientAngle / 90) * 90;
 									if (gradientAngle == 0) {
 										gradVectorEndX = m_Rect.right;
 										gradVectorEndY = m_Rect.top;

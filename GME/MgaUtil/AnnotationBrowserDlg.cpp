@@ -73,6 +73,7 @@ void CAnnotationBrowserDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_GRADIENTDIR, m_iGradientDirection);
 	DDX_Check(pDX, IDC_CHECK_CASTSHADOW, m_bCastShadow);
 	DDX_Text(pDX, IDC_EDIT_SHADOWDEPTH, m_iShadowDepth);
+	DDX_Text(pDX, IDC_EDIT_SHADOWDIRECTION, m_iShadowDirection);
 	DDX_Check(pDX, IDC_CHECK_ROUNDEDGE, m_bRoundEdgeRect);
 	DDX_Text(pDX, IDC_EDIT_EDGERADIUS, m_iRoundEdgeRadius);
 	//}}AFX_DATA_MAP
@@ -433,10 +434,12 @@ void CAnnotationBrowserDlg::LoadNodeToPanel(CAnnotationNode *node) {
 	GetDlgItem(IDC_COMBO_SHADOWCOLOR)->EnableWindow(node->m_bCastShadow);
 	GetDlgItem(IDC_STATIC_SHADOWDEPTH)->EnableWindow(node->m_bCastShadow);
 	GetDlgItem(IDC_EDIT_SHADOWDEPTH)->EnableWindow(node->m_bCastShadow);
+	GetDlgItem(IDC_STATIC_SHADOWDIRECTION)->EnableWindow(node->m_bCastShadow);
+	GetDlgItem(IDC_EDIT_SHADOWDIRECTION)->EnableWindow(node->m_bCastShadow);
 	m_iShadowDirection = node->m_iShadowDirection;
 	m_bRoundEdgeRect = node->m_bRoundEdgeRect ? TRUE : FALSE;
-	GetDlgItem(IDC_EDIT_EDGERADIUS)->EnableWindow(node->m_bRoundEdgeRect);
 	GetDlgItem(IDC_STATIC_EDGERADIUS)->EnableWindow(node->m_bRoundEdgeRect);
+	GetDlgItem(IDC_EDIT_EDGERADIUS)->EnableWindow(node->m_bRoundEdgeRect);
 	m_iRoundEdgeRadius = node->m_iRoundEdgeRadius;
 
 	m_wndAnnotationAspectList.DeleteAllItems();
@@ -560,9 +563,15 @@ void CAnnotationBrowserDlg::OnBnClickedCheckCastshadow()
 	GetDlgItem(IDC_COMBO_SHADOWCOLOR)->EnableWindow(bCastShadow);
 	GetDlgItem(IDC_STATIC_SHADOWDEPTH)->EnableWindow(bCastShadow);
 	GetDlgItem(IDC_EDIT_SHADOWDEPTH)->EnableWindow(bCastShadow);
+	GetDlgItem(IDC_STATIC_SHADOWDIRECTION)->EnableWindow(bCastShadow);
+	GetDlgItem(IDC_EDIT_SHADOWDIRECTION)->EnableWindow(bCastShadow);
 }
 
 void CAnnotationBrowserDlg::OnBnClickedCheckRoundedge()
 {
-	// TODO: Add your control notification handler code here
+	CButton* pCheck = (CButton*)GetDlgItem(IDC_CHECK_ROUNDEDGE);
+	BOOL bRoundEdge = pCheck->GetCheck();
+
+	GetDlgItem(IDC_STATIC_EDGERADIUS)->EnableWindow(bRoundEdge);
+	GetDlgItem(IDC_EDIT_EDGERADIUS)->EnableWindow(bRoundEdge);
 }

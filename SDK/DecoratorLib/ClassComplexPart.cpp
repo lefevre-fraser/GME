@@ -252,7 +252,7 @@ void ClassComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 	m_bRoundEdgeRect = false;
 	it = preferences.find(PREF_ROUNDEDGERECT);
 	if (it != preferences.end()) {
-		m_bCastShadow = it->second.uValue.bValue;
+		m_bRoundEdgeRect = it->second.uValue.bValue;
 	} else {
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERECT, m_bRoundEdgeRect);
 	}
@@ -260,7 +260,7 @@ void ClassComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 	m_bRoundEdgeRadius = 9;
 	it = preferences.find(PREF_ROUNDEDGERADIUS);
 	if (it != preferences.end()) {
-		m_iShadowThickness = it->second.uValue.bValue;
+		m_bRoundEdgeRadius = it->second.uValue.bValue;
 	} else {
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERADIUS, m_bRoundEdgeRadius, false);
 	}
@@ -1227,12 +1227,11 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 			AddCommand(VectorCommand(rightMost, bottomMost, leftMost, bottomMost, VectorCommand::AddLineToPath));
 			AddCommand(VectorCommand(leftMost, bottomMost, leftMost, topMost, VectorCommand::AddLineToPath));
 		}
-		{
-			AddCommand(VectorCommand(VectorCommand::EndPath));
-			AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
-			AddCommand(VectorCommand(VectorCommand::CastShadowPath));
-			AddCommand(VectorCommand::StrokeAndFillPath);
-		}
+
+		AddCommand(VectorCommand(VectorCommand::EndPath));
+		AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
+		AddCommand(VectorCommand(VectorCommand::CastShadowPath));
+		AddCommand(VectorCommand::StrokeAndFillPath);
 	}
 
 	AbsoluteCoordCommand* sepLocCoordCmd = new AbsoluteCoordCommand(m_SeparatorLoc);
