@@ -20,7 +20,7 @@ static char THIS_FILE[] = __FILE__;
 // from GME
 typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FONT_KIND_NUM } GMEFontKind;
 static int  fontSizes[GME_FONT_KIND_NUM]	= { 18, 15, 12 };
-#define GME_DEFAULT_DECORATOR		"MGA.BoxDecorator"
+#define GME_DEFAULT_DECORATOR		"MGA.NewBoxDecorator"
 #define DECORATOR_PREF				"decorator"
 typedef CTypedPtrList<CPtrList, CRect *>	CRectList;
 
@@ -137,37 +137,20 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				CComPtr<IMgaMetaFCO> mFco;
 				COMTHROW(mmRole->get_Kind(&mFco));
 				CComPtr<IMgaDecorator> decorator;
-#if defined (TRYNEWDECORATORS)
 				CComPtr<IMgaNewDecorator> newDecorator;
-#endif
 				CComBSTR decoratorProgId = GetDecoratorProgId(mFco);
 
-				bool newDecoratorCreated = false;
-#if defined (TRYNEWDECORATORS)
 				CComPtr<IMgaNewDecoratorEvents> decorEventSinkIface;
-				if (decoratorProgId == GME_DEFAULT_DECORATOR ||
-					decoratorProgId == "Mga.UMLDecorator" ||
-					decoratorProgId == "Mga.Decorator.MetaDecorator")
-				{
-					if (decoratorProgId == GME_DEFAULT_DECORATOR)
-						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.NewBoxDecorator")));
-					else if (decoratorProgId == "Mga.UMLDecorator")
-						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.NewUMLDecorator")));
-					else if (decoratorProgId == "Mga.Decorator.MetaDecorator")
-						COMTHROW(newDecorator.CoCreateInstance(PutInBstr("Mga.Decorator.NewMetaDecorator")));
-					newDecoratorCreated = true;
+				HRESULT hres = newDecorator.CoCreateInstance(PutInBstr(decoratorProgId));
+				if (SUCCEEDED(hres)) {
 					triple.decorEventSink = new CDecoratorEventSink();
 					HRESULT hr = triple.decorEventSink->QuerySinkInterface((void**) &decorEventSinkIface);
 					decorator = CComQIPtr<IMgaDecorator>(newDecorator);
-				} else
-#endif
-				COMTHROW(decorator.CoCreateInstance(PutInBstr(decoratorProgId)));
-#if defined (TRYNEWDECORATORS)
-				if (newDecoratorCreated)
 					COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, decorEventSinkIface, (ULONGLONG)m_hWnd));
-				else
-#endif
-				COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
+				} else {
+					COMTHROW(decorator.CoCreateInstance(PutInBstr(decoratorProgId)));
+					COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
+				}
 				COMTHROW(decorator->SetLocation(0, 0, 0, 0));
 				triple.decorator = decorator;
 

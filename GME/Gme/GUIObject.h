@@ -131,6 +131,7 @@ public:
 	static void ShiftAnnotations(CGuiAnnotatorList &annList,CPoint &shiftBy);
 	static bool Showable( CComPtr<IMgaRegNode> &mRootNode);
 	static int  Hide( CComPtr<IMgaRegNode> &mRootNode);
+	CComPtr<IMgaNewDecorator> GetNewDecorator(int asp) { return newDecorators[asp]; }
 
 public:
 	CComPtr<IMgaRegNode>		rootNode;

@@ -22,7 +22,6 @@
 
 #if defined(_DEBUG)
 // also change it in GME/StdAfx.h
-#define TRYNEWDECORATORS
 #endif
 
 #include <afxctl.h>         // MFC support for ActiveX Controls

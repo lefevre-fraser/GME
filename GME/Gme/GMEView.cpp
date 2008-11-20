@@ -517,6 +517,7 @@ CGMEView::CGMEView()
 	isContextInitiatedOperation		= false;
 	shouldCommitOperation			= false;
 	objectInDecoratorOperation		= NULL;
+	annotatorInDecoratorOperation	= NULL;
 	selectionOfContext				= NULL;
 
 	prevDropEffect					= DROPEFFECT_NONE;
@@ -1537,15 +1538,13 @@ bool CGMEView::SendNow(bool onlyDecoratorNotification)
 				if(oStatus == OBJECT_EXISTS) {	// make sure it has not been deleted since then
 					if (!onlyDecoratorNotification)
 						COMTHROW( pUnselection->mgaFco->SendEvent(OBJEVENT_DESELECT));
-#if defined TRYNEWDECORATORS
-					// Sending decorator events just for efficinecy
+					// Sending decorator events (for efficiency)
 					CGuiAspect* pAspect = pUnselection->GetCurrentAspect();
 					if (pAspect != NULL) {
 						CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
 						if (newDecorator)
 							HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
 					}
-#endif
 				}
 			}
 		}
@@ -1560,15 +1559,13 @@ bool CGMEView::SendNow(bool onlyDecoratorNotification)
 				if (oStatus == OBJECT_EXISTS) {
 					if (!onlyDecoratorNotification)
 						COMTHROW( pSelection->mgaFco->SendEvent(OBJEVENT_SELECT));
-#if defined TRYNEWDECORATORS
-					// Sending decorator events just for efficinecy
+					// Sending decorator events (for efficiency)
 					CGuiAspect* pAspect = pSelection->GetCurrentAspect();
 					if (pAspect != NULL) {
 						CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
 						if (newDecorator)
 							HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
 					}
-#endif
 				}
 			}
 		}
@@ -1586,6 +1583,58 @@ bool CGMEView::SendNow(bool onlyDecoratorNotification)
 		ok = false;
 	}
 	return ok;
+}
+
+void CGMEView::AddAnnotationToSelectionHead(CGuiAnnotator* ann)
+{
+	AddAnnotationToSelection(ann, true);
+}
+
+void CGMEView::AddAnnotationToSelectionTail(CGuiAnnotator* ann)
+{
+	AddAnnotationToSelection(ann, false);
+}
+
+void CGMEView::AddAnnotationToSelection(CGuiAnnotator* ann, bool headOrTail)
+{
+//	CComPtr<IMgaNewDecorator> newDecorator(ann->GetNewDecorator(currentAspect->index));
+//	if (newDecorator)
+//		HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
+	if (headOrTail)
+		selectedAnnotations.AddHead(ann);
+	else
+		selectedAnnotations.AddTail(ann);
+}
+
+void CGMEView::RemoveAllAnnotationFromSelection(void)
+{
+//	POSITION pos = selectedAnnotations.GetHeadPosition();
+//	CGuiAnnotator *ann;
+//	while (pos) {
+//		ann = selectedAnnotations.GetNext(pos);
+//		CComPtr<IMgaNewDecorator> newDecorator(ann->GetNewDecorator(currentAspect->index));
+//		if (newDecorator)
+//			HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
+//	}
+	selectedAnnotations.RemoveAll();
+}
+
+void CGMEView::RemoveAnnotationFromSelectionHead(void)
+{
+//	CGuiAnnotator* head = selectedAnnotations.GetHead();
+//	CComPtr<IMgaNewDecorator> newDecorator(head->GetNewDecorator(currentAspect->index));
+//	if (newDecorator)
+//		HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
+	selectedAnnotations.RemoveHead();
+}
+
+void CGMEView::RemoveAnnotationFromSelection(POSITION annPos)
+{
+//	CGuiAnnotator* ann = selectedAnnotations.GetAt(annPos);
+//	CComPtr<IMgaNewDecorator> newDecorator(ann->GetNewDecorator(currentAspect->index));
+//	if (newDecorator)
+//		HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
+	selectedAnnotations.RemoveAt(annPos);
 }
 
 void CGMEView::ResetParent()
@@ -1868,7 +1917,7 @@ void CGMEView::Reset(bool doInvalidate)
 		annotators.RemoveAll();
 		connections.RemoveAll();
 		selected.RemoveAll(); // we don't call here the this->SendUnselEvent4List( &selected); because it might contain freshly deleted objects, which can't be notified
-		selectedAnnotations.RemoveAll();
+		RemoveAllAnnotationFromSelection();
 
 
 		// Now build up new objectset
@@ -1966,7 +2015,7 @@ void CGMEView::Reset(bool doInvalidate)
 		//	while(oPos) {
 		//		CGuiAnnotator *ann = annotators.GetNext(oPos);
 		//		if (id == ann->id) {
-		//			selectedAnnotations.AddTail(ann);
+		//			AddAnnotationToSelectionTail(ann);
 		//		}
 		//	}
 		//}		
@@ -1978,7 +2027,7 @@ void CGMEView::Reset(bool doInvalidate)
 			while(oPos) {
 				CString id = selAnIDs.GetNext(oPos);
 				if (id == ann->id) {
-					selectedAnnotations.AddTail(ann);
+					AddAnnotationToSelectionTail(ann);
 				}
 			}
 			if( !cntxAnnID.IsEmpty() && cntxAnnID == ann->id)
@@ -2002,7 +2051,6 @@ void CGMEView::Reset(bool doInvalidate)
 
 	EndWaitCursor();
 
-#if defined TRYNEWDECORATORS
 	SendNow(true);
 
 	POSITION pos = selected.GetHeadPosition();
@@ -2012,7 +2060,7 @@ void CGMEView::Reset(bool doInvalidate)
 			long oStatus;
 			COMTHROW(go->mgaFco->get_Status(&oStatus));
 			if (oStatus == OBJECT_EXISTS) {	// make sure it has not been deleted since then
-				// Sending decorator events just for efficinecy
+				// Sending decorator events (for efficiency)
 				CGuiAspect* pAspect = go->GetCurrentAspect();
 				if (pAspect != NULL) {
 					CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
@@ -2022,7 +2070,6 @@ void CGMEView::Reset(bool doInvalidate)
 			}
 		}
 	}
-#endif
 }
 
 void CGMEView::InitSets()
@@ -2361,7 +2408,7 @@ void CGMEView::ModeChange()
 	CGMEEventLogger::LogGMEEvent("CGMEView::ModeChange in "+path+name+"\r\n");
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
-	selectedAnnotations.RemoveAll();
+	RemoveAllAnnotationFromSelection();
 	ClearConnSpecs();
 	CGMEDoc *pDoc = GetDocument();
 	CGuiAnnotator::GrayOutAnnotations(annotators, pDoc->GetEditMode() == GME_VISUAL_MODE);
@@ -2517,7 +2564,7 @@ void CGMEView::SetCenterObject(CComPtr<IMgaFCO> centerObj)
 
 				this->SendUnselEvent4List( &selected);
 				selected.RemoveAll();
-				selectedAnnotations.RemoveAll();
+				RemoveAllAnnotationFromSelection();
 				this->SendSelecEvent4Object( guiObj);
 				selected.AddTail(guiObj);
 				ScrollToPosition(spos);
@@ -3822,7 +3869,7 @@ void CGMEView::ChangeAspect(CString aspName, bool p_eraseStack /*=true*/)
 			AutoRoute(); // HACK we may have size change here, reroute the whole thing for now
 			this->SendUnselEvent4List( &selected);
 			selected.RemoveAll();
-			selectedAnnotations.RemoveAll();
+			RemoveAllAnnotationFromSelection();
 
 //			CGMEView* gmeviewA = (CGMEView*)GetActiveView();
 //			if (gmeviewA)
@@ -3983,7 +4030,7 @@ void CGMEView::OnSelChangeAspectProp()
 		AutoRoute(); // HACK we may have size change here, reroute the whole thing for now
 		this->SendUnselEvent4List( &selected);
 		selected.RemoveAll();
-		selectedAnnotations.RemoveAll();
+		RemoveAllAnnotationFromSelection();
 
 		TRACE("CGMEView::OnSelChangeAspectProp\n");
 		m_refreshpannwin = true;
@@ -4010,7 +4057,7 @@ bool CGMEView::ChangePrnAspect(CString aspName)
 	AutoRoute(); // HACK we may have size change here, reroute the whole thing for now
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
-	selectedAnnotations.RemoveAll();
+	RemoveAllAnnotationFromSelection();
 	return true;
 }
 
@@ -4029,7 +4076,6 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 			{
 				CGMEEventLogger::LogGMEEvent("    mode=GME_EDIT_MODE\r\n");
 
-#if defined TRYNEWDECORATORS
 				CGMEView* self = const_cast<CGMEView*> (this);
 				CGuiObject*	object	= self		? self->FindObject(point, true) : 0;
 //				CGuiPort*	port	= object	? object->FindPort(point, true) : 0;
@@ -4084,8 +4130,9 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 								objectInDecoratorOperation = object;
 						}
 					}
+				} else {
+					CGuiAnnotator* annotation = FindAnnotation(point);
 				}
-#endif
 			}	//case
 		}	// switch
 	}	// if (!tmpConnectMode)
@@ -4120,7 +4167,6 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 			{
 				CGMEEventLogger::LogGMEEvent("    mode=GME_EDIT_MODE\r\n");
 
-#if defined TRYNEWDECORATORS
 				CGMEView* self = const_cast<CGMEView*> (this);
 				CGuiObject*	object	= self		? self->FindObject(point, true) : 0;
 //				CGuiPort*	port	= object	? object->FindPort(point, true) : 0;
@@ -4215,13 +4261,11 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 					CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 					return;
 				}
-#endif
 
 				CGuiObject* selection = FindObject(point);
-#if defined TRYNEWDECORATORS
 				if (selection == NULL)	// select with label
 					selection = FindObject(point, false, true);
-#endif
+
 				CGuiAnnotator* annotation = selection ? NULL : FindAnnotation(point);
 				CGuiConnection* connection = router.FindConnection(point);
 
@@ -4236,7 +4280,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 							selected.RemoveAt(alreadySelected);
 						}
 						else if(!(nFlags & MK_CONTROL)) {
-							selectedAnnotations.RemoveAll();
+							RemoveAllAnnotationFromSelection();
 							this->SendUnselEvent4List( &selected);
 							selected.RemoveAll();
 						}
@@ -4247,14 +4291,14 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 					if (annotation) {
 						CGMEEventLogger::LogGMEEvent("    LButton over "+annotation->GetName()+"\r\n"); 
 						alreadySelected = selectedAnnotations.Find(annotation);
-						if(alreadySelected)
-							selectedAnnotations.RemoveAt(alreadySelected);
-						else if(!(nFlags & MK_CONTROL)) {
+						if (alreadySelected) {
+							RemoveAnnotationFromSelection(alreadySelected);
+						} else if (!(nFlags & MK_CONTROL)) {
 							this->SendUnselEvent4List( &selected);
 							selected.RemoveAll();
-							selectedAnnotations.RemoveAll();
+							RemoveAllAnnotationFromSelection();
 						}
-						selectedAnnotations.AddHead(annotation);
+						AddAnnotationToSelectionHead(annotation);
 					}
 
 					inDrag = true;
@@ -4295,8 +4339,8 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 								ChangeAttrPrefObjs(selected);
 							}
 							if (annotation) {
-								if(alreadySelected) {
-									selectedAnnotations.RemoveHead();
+								if (alreadySelected) {
+									RemoveAnnotationFromSelectionHead();
 									annotation = selectedAnnotations.GetCount() ? selectedAnnotations.GetHead() : 0;
 									/*
 									if(annotation)
@@ -4312,7 +4356,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						else {
 							this->SendUnselEvent4List( &selected);
 							selected.RemoveAll();
-							selectedAnnotations.RemoveAll();
+							RemoveAllAnnotationFromSelection();
 							if (selection) {
 								if(!alreadySelected) {
 									this->SendSelecEvent4Object( selection);
@@ -4322,7 +4366,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 							}
 							if (annotation) {
 								if(!alreadySelected) {
-									selectedAnnotations.AddHead(annotation);
+									AddAnnotationToSelectionHead(annotation);
 									 /* ChangeAttrPrefFco(selectedAnnotations.GetTail()); */
 								}
 							}
@@ -4360,7 +4404,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 				else {
 					this->SendUnselEvent4List( &selected);
 					selected.RemoveAll();
-					selectedAnnotations.RemoveAll();
+					RemoveAllAnnotationFromSelection();
 					selection = 0;
 					annotation = 0;
 
@@ -4569,7 +4613,6 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 	if (GetDocument()->GetEditMode() == GME_EDIT_MODE) {
 		CoordinateTransfer(point);	// DPtoLP
 
-#if defined TRYNEWDECORATORS
 		CGMEView* self = const_cast<CGMEView*> (this);
 		CGuiObject*	object	= self ? self->FindObject(point, true, true) : 0;
 		if (object == NULL)	// not label of the object but can be some port label inside the object
@@ -4609,7 +4652,6 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 		} else {
 			CancelDecoratorOperation();
 		}
-#endif
 
 		CGuiObject *selection = FindObject(point);
 		CGuiAnnotator *annotation = FindAnnotation(point);
@@ -4730,10 +4772,8 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 	CGMEDoc* doc = GetDocument();
 	contextPort = 0;
 	contextSelection = FindObject(local);
-#if defined TRYNEWDECORATORS
 	if (contextSelection == NULL && doc->GetEditMode() == GME_EDIT_MODE)
 		contextSelection = FindObject(local, false, true);
-#endif
 	if( dynamic_cast<CGuiObject*>( contextSelection)) {
 		CGuiPort *port = dynamic_cast<CGuiObject*>( contextSelection)->FindPort( local);
 		if(port && port->IsRealPort()) {
@@ -4759,7 +4799,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 		{
 			CGMEEventLogger::LogGMEEvent("    mode=GME_SET_MODE\r\n");
 			selected.RemoveAll();
-			selectedAnnotations.RemoveAll();
+			RemoveAllAnnotationFromSelection();
 			CGuiSet *set = dynamic_cast<CGuiSet *>(contextSelection);
 			if(set) {
 				if(set == currentSet)
@@ -4827,10 +4867,9 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 
 			// new selection logic 8/2/00
 			CGuiObject* selection = FindObject(local);
-#if defined TRYNEWDECORATORS
-			if (selection == NULL)
+			if (selection == NULL)	// select with label
 				selection = FindObject(local, false, true);
-#endif
+
 			{
 				CGuiAnnotator *annotation = selection ? NULL : FindAnnotation(local);
 
@@ -4840,7 +4879,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 					if(!(nFlags & MK_CONTROL)) {
 						this->SendUnselEvent4List( &selected);
 						selected.RemoveAll();
-						selectedAnnotations.RemoveAll();
+						RemoveAllAnnotationFromSelection();
 					}
 					else if(alreadySelected) {
 						this->SendUnselEvent4Object( selected.GetAt( alreadySelected));
@@ -4849,19 +4888,17 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 					this->SendSelecEvent4Object( selection);
 					selected.AddHead(selection);
 					ChangeAttrPrefObjs(selected);
-				}
-				else {
+				} else {
 					if (annotation != 0) {
 						alreadySelected = selectedAnnotations.Find(annotation);
-						if(!(nFlags & MK_CONTROL)) {
+						if (!(nFlags & MK_CONTROL)) {
 							this->SendUnselEvent4List( &selected);
 							selected.RemoveAll();
-							selectedAnnotations.RemoveAll();
+							RemoveAllAnnotationFromSelection();
+						} else if (alreadySelected) {
+							RemoveAnnotationFromSelection(alreadySelected);
 						}
-						else if(alreadySelected) {
-							selectedAnnotations.RemoveAt(alreadySelected);
-						}
-						selectedAnnotations.AddHead(annotation);
+						AddAnnotationToSelectionHead(annotation);
 						// ANNTODO: ChangeAttrPref....
 					}
 				}
@@ -4884,14 +4921,16 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 			}
 			else if(contextSelection) {
 				HMENU decoratorAdditionalMenu = ::CreatePopupMenu();
-				CGuiAspect* pAspect = selection->GetCurrentAspect();
-				if (pAspect != NULL) {
-					CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
-					HRESULT retVal = S_OK;
-					if (newDecorator) {
-						CClientDC transformDC(this);
-						OnPrepareDC(&transformDC);
-						retVal = newDecorator->MouseRightButtonDown((ULONGLONG)decoratorAdditionalMenu, nFlags, local.x, local.y, (ULONGLONG)transformDC.m_hDC);
+				if (selection != NULL) {
+					CGuiAspect* pAspect = selection->GetCurrentAspect();
+					if (pAspect != NULL) {
+						CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+						HRESULT retVal = S_OK;
+						if (newDecorator) {
+							CClientDC transformDC(this);
+							OnPrepareDC(&transformDC);
+							retVal = newDecorator->MouseRightButtonDown((ULONGLONG)decoratorAdditionalMenu, nFlags, local.x, local.y, (ULONGLONG)transformDC.m_hDC);
+						}
 					}
 				}
 				CMenu menu;
@@ -5352,7 +5391,7 @@ void CGMEView::OnEditDelete()
 
 	GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
 	DeleteAnnotations(selectedAnnotations);
-	selectedAnnotations.RemoveAll();
+	RemoveAllAnnotationFromSelection();
 
 	if(!isType)
 		return;
@@ -5622,7 +5661,7 @@ void CGMEView::OnEditCut()
 		if(isType) DeleteObjects(selected);
 		DeleteAnnotations(selectedAnnotations);
 		if(isType) selected.RemoveAll();
-		selectedAnnotations.RemoveAll();
+		RemoveAllAnnotationFromSelection();
 	}
 }
 
@@ -7122,7 +7161,7 @@ void CGMEView::OnEditSelectall()
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditSelectall in "+path+name+"\r\n");
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
-	selectedAnnotations.RemoveAll();
+	RemoveAllAnnotationFromSelection();
 	POSITION pos = children.GetHeadPosition();
 	while(pos) {
 		CGuiObject *obj = dynamic_cast<CGuiObject *>(children.GetNext(pos));
@@ -7138,7 +7177,7 @@ void CGMEView::OnEditSelectall()
 	while(pos) {
 		CGuiAnnotator *ann = annotators.GetNext(pos);
 		if (ann->IsVisible()) {
-			selectedAnnotations.AddTail(ann);
+			AddAnnotationToSelectionTail(ann);
 		}
 	}
 

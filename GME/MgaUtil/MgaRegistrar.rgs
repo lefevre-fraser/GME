@@ -27,7 +27,6 @@ HKCR
                 val Enabled = d 1
             }
             val LocalizedString = s '@%MODULE%,-2072'
-            val IconReference = s '@%MODULE%,-2073'
 		}
 	}
 }

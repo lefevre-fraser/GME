@@ -92,6 +92,7 @@ public:
 	bool					isContextInitiatedOperation;
 	bool					shouldCommitOperation;
 	CGuiObject*				objectInDecoratorOperation;
+	CGuiAnnotator*			annotatorInDecoratorOperation;
 	struct ContextClickState {
 		UINT		nFlags;
 		CPoint		lpoint;
@@ -185,6 +186,12 @@ public:
 	bool					SendUnselEvent4List(CGuiObjectList* pSelectedList);
 	bool					SendMouseOver4Object(CGuiObject* object);
 	bool					SendNow(bool onlyDecoratorNotification = false);
+	void					AddAnnotationToSelectionHead(CGuiAnnotator* ann);
+	void					AddAnnotationToSelectionTail(CGuiAnnotator* ann);
+	void					AddAnnotationToSelection(CGuiAnnotator* ann, bool headOrTail);
+	void					RemoveAllAnnotationFromSelection(void);
+	void					RemoveAnnotationFromSelectionHead(void);
+	void					RemoveAnnotationFromSelection(POSITION annPos);
 	bool					FollowLine(CGuiConnection* guiConn, bool reverse, bool tryPort);
 	bool					FollowLine(CGuiObject* guiObj, bool reverse, bool tryPort);
 	bool					FollowLine(CGuiPort* guiPort, bool reverse, bool tryPort);

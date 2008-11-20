@@ -494,7 +494,6 @@ void CGuiAnnotator::InitDecorator(int asp)
 {
 	try {
 		CComPtr<IMgaNewDecoratorEvents> annotatorEventSinkIface;
-#if defined (TRYNEWDECORATORS)
 		CString progId = AN_NEWDECORATOR_PROGID;
 		COMTHROW(newDecorators[asp].CoCreateInstance(PutInBstr(progId)));
 		HRESULT hr = annotatorEventSinks[asp].QuerySinkInterface((void**) &annotatorEventSinkIface);
@@ -504,7 +503,7 @@ void CGuiAnnotator::InitDecorator(int asp)
 			annotatorEventSinks[asp].SetGuiAnnotator(this);
 		}
 		decorators[asp] = CComQIPtr<IMgaDecorator>(newDecorators[asp]);
-#else
+#if defined (OLDDECORATORS)
 		CString progId = AN_DECORATOR_PROGID;
 		COMTHROW(decorators[asp].CoCreateInstance(PutInBstr(progId)));
 #endif
@@ -1215,17 +1214,8 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 	CDecoratorEventSink* decoratorEventSink = NULL;
 	try {
 		CComPtr<IMgaNewDecoratorEvents> decoratorEventSinkIface;
-#if defined (TRYNEWDECORATORS)
-		if (progId == GME_DEFAULT_DECORATOR ||
-			progId == "Mga.UMLDecorator" ||
-			progId == "Mga.Decorator.MetaDecorator")
-		{
-			if (progId == GME_DEFAULT_DECORATOR)
-				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.NewBoxDecorator")));
-			else if (progId == "Mga.UMLDecorator")
-				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.NewUMLDecorator")));
-			else if (progId == "Mga.Decorator.MetaDecorator")
-				COMTHROW(newDecor.CoCreateInstance(PutInBstr("Mga.Decorator.NewMetaDecorator")));
+		HRESULT hres = newDecor.CoCreateInstance(PutInBstr(progId));
+		if (SUCCEEDED(hres)) {
 			decoratorEventSink = new CDecoratorEventSink();
 			HRESULT hr = decoratorEventSink->QuerySinkInterface((void**) &decoratorEventSinkIface);
 			if (hr == S_OK) {
@@ -1233,9 +1223,9 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 				decoratorEventSink->SetGuiObject(this);
 			}
 			decor = CComQIPtr<IMgaDecorator>(newDecor);
-		} else
-#endif
-		COMTHROW(decor.CoCreateInstance(PutInBstr(progId)));
+		} else {
+			COMTHROW(decor.CoCreateInstance(PutInBstr(progId)));
+		}
 
 		POSITION ppos = params.GetHeadPosition();
 		POSITION vpos = values.GetHeadPosition();

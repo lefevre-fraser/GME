@@ -28,7 +28,6 @@
 #if defined(_DEBUG)
 //#define ADDCRASHTESTMENU
 // also change it in PartBrowser/StdAfx.h
-#define TRYNEWDECORATORS
 //#define ACTIVEXGMEVIEW
 #endif
 

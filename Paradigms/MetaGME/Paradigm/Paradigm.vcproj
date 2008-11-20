@@ -255,6 +255,14 @@
 			RelativePath="MetaGME.xmp"
 			>
 		</File>
+		<File
+			RelativePath=".\OldMetaGME-model.xme"
+			>
+		</File>
+		<File
+			RelativePath=".\OldMetaGME.xmp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

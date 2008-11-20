@@ -159,7 +159,8 @@ typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FON
 #define	GME_CONN_DST_LABEL2			3
 #define GME_CONN_MAIN_LABEL			GME_CONN_LABEL_NUM - 1
 
-#define GME_DEFAULT_DECORATOR		"MGA.BoxDecorator"
+#define GME_OLDDEFAULT_DECORATOR	"MGA.BoxDecorator"
+#define GME_DEFAULT_DECORATOR		"MGA.NewBoxDecorator"
 
 class CGuiMetaProject;
 class CGuiMetaBase;
