@@ -1,5 +1,7 @@
 #pragma once
 
+#include "strsafe.h"
+
 class CUACUtils
 {
 public:
@@ -15,16 +17,22 @@ public:
 		bindOptions.hwnd = window;
 		bindOptions.dwClassContext = CLSCTX_LOCAL_SERVER;
 
-		CStringW string;
-		const int guidLength = 39;
+		WCHAR wszMonikerName[300];
+		WCHAR wszCLSID[50];
 
-		::StringFromGUID2(classId, string.GetBufferSetLength(guidLength),
-									 guidLength);
+		#define cntof(a) (sizeof(a)/sizeof(a[0]))
 
-		string.ReleaseBuffer();
-		string.Insert(0, L"Elevation:Administrator!new:");
+		::StringFromGUID2(classId, wszCLSID,
+									 cntof(wszCLSID));
 
-		return ::CoGetObject(string,
+		HRESULT hr = ::StringCchPrintfW(wszMonikerName, cntof(wszMonikerName), L"Elevation:Administrator!new:%s", wszCLSID);
+	
+		if (FAILED(hr))
+		{
+			return hr;
+		}
+
+		return ::CoGetObject(wszMonikerName,
 							 &bindOptions,
 							 __uuidof(T),
 							 reinterpret_cast<void**>(object));

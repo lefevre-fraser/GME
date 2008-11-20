@@ -59,6 +59,9 @@ BEGIN_MESSAGE_MAP(CCompDlg, CDialog)
 	ON_BN_CLICKED(Toggle, OnToggle)
 	//}}AFX_MSG_MAP
 	ON_WM_SIZE()
+	ON_BN_CLICKED(IDC_RADIOSYS, &CCompDlg::OnBnClickedRadiosys)
+	ON_BN_CLICKED(IDC_RADIOUSER, &CCompDlg::OnBnClickedRadiouser)
+	ON_BN_CLICKED(IDC_RADIOBOTH, &CCompDlg::OnBnClickedRadioboth)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -109,6 +112,9 @@ BOOL CCompDlg::OnInitDialog()
 		}
 		UpdateData(false);
 		ResetItems();
+
+		RefreshShieldIcons();
+		
 	}
 	MSGCATCH("Error while initializing CompDlg",;)
 	
@@ -119,6 +125,7 @@ BOOL CCompDlg::OnInitDialog()
 void CCompDlg::RefreshShieldIcons()
 {
 	if( CUACUtils::isVistaOrLater() ) {
+		UpdateData(TRUE);
 		bool shieldOn = regacc_translate(m_accessmode) != REGACCESS_USER;
 		CUACUtils::SetShieldIcon(m_install, shieldOn);
 		CUACUtils::SetShieldIcon(m_remove, shieldOn);
@@ -137,6 +144,8 @@ void CCompDlg::ResetItems()
 
 	UpdateData();
 	VERIFYTHROW( m_list.DeleteAllItems() != 0 );
+
+	
 
 	CComVariant v;
 	if(m_dispmode == 0) {
@@ -564,4 +573,19 @@ void CCompDlg::OnSize(UINT nType, int cx, int cy)
 
 		m_list.SetWindowPos( NULL, list_rect.left, list_rect.top, width > 20? width: 20, list_rect.Height(), SWP_NOZORDER);
 	}
+}
+
+void CCompDlg::OnBnClickedRadiosys()
+{
+	RefreshShieldIcons();
+}
+
+void CCompDlg::OnBnClickedRadiouser()
+{
+	RefreshShieldIcons();
+}
+
+void CCompDlg::OnBnClickedRadioboth()
+{
+	RefreshShieldIcons();
 }

@@ -89,6 +89,7 @@ IDB_SPLASH              BITMAP                  "Splsh16.bmp"
 IDB_ABOUT               BITMAP                  "aboutpic.bmp"
 IDR_TOOLBAR_DUMMY       BITMAP                  "res\\dummybar.bmp"
 IDR_TOOLBAR_NAVIG       BITMAP                  "res\\ToolbarNavig.bmp"
+IDB_MAIN_TOOLBAR24      BITMAP                  "res\\ToolbarMain24.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1257,7 +1258,7 @@ BEGIN
         RIGHTMARGIN, 74
     END
 
-	IDD_PART_BROWSER_DIALOG, DIALOG
+    IDD_PART_BROWSER_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 179

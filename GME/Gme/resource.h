@@ -12,7 +12,7 @@
 #define ID_INDICATOR_PARADIGM           105
 #define ID_INDICATOR_TIME               106
 #define CG_IDD_MODELPROPERTIESBAR       107
-#define IDS_STRING107                   107
+#define IDS_REGISTRAR_NAME              107
 #define CG_ID_VIEW_MODELPROPERTIESBAR   108
 #define ID_PARTBROWSER                  109
 #define ID_GMEBROWSER                   110
@@ -107,6 +107,8 @@
 #define IDD_EMERGENCY_DIALOG            219
 #define IDD_PANNING_WINDOW_DIALOG       220
 #define IDD_CHILDFRAME_DIALOG           221
+#define IDB_BITMAP1                     224
+#define IDB_MAIN_TOOLBAR24              224
 #define IDC_NAME                        1000
 #define IDC_TYPENAME                    1001
 #define IDC_KINDNAME                    1002
@@ -491,7 +493,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        224
+#define _APS_NEXT_RESOURCE_VALUE        225
 #define _APS_NEXT_COMMAND_VALUE         33100
 #define _APS_NEXT_CONTROL_VALUE         1128
 #define _APS_NEXT_SYMED_VALUE           119

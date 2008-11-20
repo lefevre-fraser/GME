@@ -788,6 +788,17 @@ END
 
 IDB_BITMAP1             BITMAP                  "res\\CompImageList.bmp"
 IDB_BITMAP2             BITMAP                  "res\\AddOnStatus.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_REGISTRAR_NAME      "GME Registration Agent"
+END
+
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 

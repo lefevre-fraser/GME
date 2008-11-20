@@ -69,6 +69,9 @@ public:
 	CString progid;
 	CString onOKoper;
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnBnClickedRadiosys();
+	afx_msg void OnBnClickedRadiouser();
+	afx_msg void OnBnClickedRadioboth();
 };
 
 //{{AFX_INSERT_LOCATION}}

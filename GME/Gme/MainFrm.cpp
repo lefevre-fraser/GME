@@ -1374,6 +1374,15 @@ void CMainFrame::OnApplicationLook(UINT id)
 	RedrawWindow(NULL, NULL, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
 
 	theApp.WriteInt(_T("ApplicationLook"), theApp.m_nAppLook);
+
+
+	// Checking resolution
+	CWindowDC dc(NULL);
+	bool bHiColorIcons = dc.GetDeviceCaps(BITSPIXEL) >= 16;
+
+
+	//m_wndToolBarMain.LoadBitmap(bHiColorIcons ? IDB_MAIN_TOOLBAR24 : IDR_MAINFRAME);
+
 }
 
 
