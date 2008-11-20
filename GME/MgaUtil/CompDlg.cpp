@@ -127,8 +127,8 @@ void CCompDlg::RefreshShieldIcons()
 	if( CUACUtils::isVistaOrLater() ) {
 		UpdateData(TRUE);
 		bool shieldOn = regacc_translate(m_accessmode) != REGACCESS_USER;
-		CUACUtils::SetShieldIcon(m_install, shieldOn);
-		CUACUtils::SetShieldIcon(m_remove, shieldOn);
+		CUACUtils::SetShieldIcon(m_install, true);
+		CUACUtils::SetShieldIcon(m_remove, true);
 		CUACUtils::SetShieldIcon(m_toggle, shieldOn);
 	}
 }
@@ -282,7 +282,7 @@ void CCompDlg::OnRemove()
 
 			CComPtr<IMgaRegistrar> registrar;
 			if (CUACUtils::isVistaOrLater()) {
-				CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
+				CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar, GetSafeHwnd());
 			}
 			else {
 				registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
@@ -399,7 +399,7 @@ void CCompDlg::RegisterDll(const CString &path)
 {
 	CComPtr<IMgaRegistrar> registrar;
 	if (CUACUtils::isVistaOrLater()) {
-		CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
+		CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar, GetSafeHwnd());
 	}
 	else {
 		registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));

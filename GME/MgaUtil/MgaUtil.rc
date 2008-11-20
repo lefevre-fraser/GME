@@ -762,6 +762,7 @@ IDI_ICON_REGMETA        ICON                    "res\\icon_regmeta.ico"
 IDI_ICON_REGINHERIT     ICON                    "res\\icon_reginherit.ico"
 IDI_ICON_REGUNDEF       ICON                    "res\\icon_regundef.ico"
 IDI_ICON_REGINVALID     ICON                    "res\\icon_reginvalid.ico"
+IDI_GME                 ICON                    "E:\\GME\\GME\\Gme\\res\\GME.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
