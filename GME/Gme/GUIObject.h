@@ -369,14 +369,15 @@ public:
 class CGuiConnection : public CGuiFco
 {
 public:
-	CGuiConnection(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView *vw,int numAsp,bool resolve = true);
+	CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role, CGMEView *vw, int numAsp, bool resolve = true);
 	virtual ~CGuiConnection() { delete labelset;  delete visible; delete [] autorouterPrefs;}
 
 	void RefreshAttributeCache();
 	CComPtr<IAutoRouterPath> GetRouterPath()				{ return routerPath; }
 	void SetRouterPath(CComPtr<IAutoRouterPath> path) 		{ routerPath = path; }
 	void GrayOutEndPoints();
-	void ToggleSelect()                     { selected = !selected; }
+	void ToggleHover()										{ hovered = !hovered; }
+	void SetSelect(bool sel)								{ selected = sel; }
 	void Resolve();
 	void ReadARPreferences();
 	bool GetARPref(int dir) {return autorouterPrefs[dir];}
@@ -386,22 +387,23 @@ public:
 	virtual void Draw(Gdiplus::Graphics* gdip, CDC *pDC);
 
 public:
-	CGuiObject *src;
-	CGuiPort *srcPort;
-	CGuiObject *dst;
-	CGuiPort *dstPort;
+	CGuiObject* src;
+	CGuiPort* srcPort;
+	CGuiObject* dst;
+	CGuiPort* dstPort;
 	CMapStringToString	attributeCache;
 
 private:	
 	CComPtr<IAutoRouterPath> routerPath;
-	CGuiConnectionLabelSet	*labelset;
-	bool *visible;
+	CGuiConnectionLabelSet*	labelset;
+	bool* visible;
 	int lineType;
 	int srcStyle;
 	int dstStyle;
 	COLORREF color;
 	COLORREF nameColor;
 	bool* autorouterPrefs;
+	bool  hovered;
 	bool  selected;
 };
 

@@ -2219,7 +2219,16 @@ void CGuiConnectionLabelSet::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiC
 // Non-virtual methods of CGuiConnection
 ////////////////////////////////////////////////
 
-CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView *vw,int numAsp,bool resolve) : CGuiFco(pt,role,vw,numAsp), visible(0), src(0), srcPort(0), dst(0), dstPort(0), autorouterPrefs(0),selected(false)
+CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role, CGMEView *vw, int numAsp, bool resolve):
+	CGuiFco(pt, role, vw, numAsp),
+	visible			(NULL),
+	src				(NULL),
+	srcPort			(NULL),
+	dst				(NULL),
+	dstPort			(NULL),
+	autorouterPrefs	(NULL),
+	hovered			(false),
+	selected		(false)
 {
 	CComPtr<IAutoRouterPath> dummy;
 	routerPath = dummy;
@@ -2497,7 +2506,7 @@ void CGuiConnection::Draw(Gdiplus::Graphics* gdip, CDC *pDC)
 	const CPointList &points = routerPath.p ? normalPoints : tmpPoints;
 
 	graphics.DrawConnection(gdip, points, grayedOut ? GME_GRAYED_OUT_COLOR : color, lineType, srcStyle, dstStyle,
-							true, view->m_zoomVal > ZOOM_NO, selected ? 1: 0);
+							true, view->m_zoomVal > ZOOM_NO, selected ? 3 : hovered ? 5 : 1);
 
 	POSITION pos = points.GetHeadPosition();
 	CPoint start = points.GetNext(pos);

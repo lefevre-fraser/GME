@@ -7,6 +7,7 @@
 
 #include "StdAfx.h"
 #include "VectorPart.h"
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 
@@ -390,12 +391,14 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 									} else {
 										double beta = atan((double)m_Rect.Height() / m_Rect.Width());
 										double alfa = DecoratorSDK::getFacilities().Deg2Rad(gradientAngle);
-										double x = m_Rect.Width() * cos(alfa) / sin(beta);
-										double y = m_Rect.Height() * sin(alfa) / cos(beta);
+										double d = sqrt((double)m_Rect.Width() * m_Rect.Width() + m_Rect.Height() * m_Rect.Height());
+										double r = d * cos(alfa < beta ? beta - alfa : alfa - beta);
+										double x = r * cos(alfa);
+										double y = r * sin(alfa);
 										gradVectorEndX = static_cast<int> (x) + m_Rect.left;
 										gradVectorEndY = static_cast<int> (y) + m_Rect.top;
-										TRACE("(l %ld, t %ld, w %ld, h %ld) a %lf x %lf y %lf xf %ld yf %ld\n",
-											m_Rect.left, m_Rect.top, m_Rect.Width(), m_Rect.Height(), alfa, x, y,
+										TRACE("(l %ld, t %ld, w %ld, h %ld) a %lf b %lf x %lf y %lf xf %ld yf %ld\n",
+											m_Rect.left, m_Rect.top, m_Rect.Width(), m_Rect.Height(), (double)gradientAngle, beta / 2 / M_PI * 360.0, x, y,
 											gradVectorEndX, gradVectorEndY);
 									}
 								}

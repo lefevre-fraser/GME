@@ -100,6 +100,7 @@ public:
 	};
 	ContextClickState		ctxClkSt;
 	CGuiObject*				selectionOfContext;
+	CGuiConnection*			selectedConnection;
 	// === End of decorator operation specific variables ===
 	COleDropTarget			dropTarget;
 	bool					inDrag;
@@ -192,6 +193,7 @@ public:
 	void					RemoveAllAnnotationFromSelection(void);
 	void					RemoveAnnotationFromSelectionHead(void);
 	void					RemoveAnnotationFromSelection(POSITION annPos);
+	void					ClearConnectionSelection(void);
 	bool					FollowLine(CGuiConnection* guiConn, bool reverse, bool tryPort);
 	bool					FollowLine(CGuiObject* guiObj, bool reverse, bool tryPort);
 	bool					FollowLine(CGuiPort* guiPort, bool reverse, bool tryPort);

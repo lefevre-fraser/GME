@@ -79,8 +79,6 @@ int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CMDIChildWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	
-
 #if !defined(ACTIVEXGMEVIEW)
 	{
 		// Initialize dialog bar propBar
@@ -92,13 +90,12 @@ int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 			return -1;		// fail to create
 		}
 
-		
 		// terge 
 		int zoomvals[] = {ZOOM_MIN, 10, 25, 50, 75, ZOOM_NO, 150, 200, 300, ZOOM_MAX, ZOOM_WIDTH, ZOOM_HEIGHT, ZOOM_ALL, 0};
 //		int zoomvals[] = {ZOOM_NO, 150, 200, 250, 300, 350, 400, 0}; // for test
 		propBar.SetZoomList(zoomvals);
+		propBar.DockToFrameWindow(CBRS_ALIGN_TOP);
 
-		
 		ShowPane(&propBar,true, false, true);
 	}
 #endif
@@ -106,10 +103,10 @@ int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-void CChildFrame::OnClose() 
+void CChildFrame::OnClose()
 {
 	bool doClose = true;
-	if(sendEvent && view) 
+	if (sendEvent && view)
 		doClose = ((CGMEView *)view)->SendCloseModelEvent();
 	sendEvent = true;
 

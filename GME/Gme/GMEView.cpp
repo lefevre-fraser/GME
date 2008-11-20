@@ -519,6 +519,7 @@ CGMEView::CGMEView()
 	objectInDecoratorOperation		= NULL;
 	annotatorInDecoratorOperation	= NULL;
 	selectionOfContext				= NULL;
+	selectedConnection				= NULL;
 
 	prevDropEffect					= DROPEFFECT_NONE;
 	inDrag							= false;
@@ -1519,8 +1520,14 @@ bool CGMEView::SendUnselEvent4List( CGuiObjectList* pUnselection)
 
 bool CGMEView::SendNow(bool onlyDecoratorNotification)
 {
-	if( m_lstSelect.empty() && m_lstUnselect.empty())
+	if (m_lstSelect.empty() && m_lstUnselect.empty()) {
 		return false;
+	} else {
+		if (selectedConnection != NULL) {
+			selectedConnection->SetSelect(false);
+			selectedConnection = NULL;
+		}
+	}
 
 	bool ok = true;
 	try {
@@ -1597,6 +1604,7 @@ void CGMEView::AddAnnotationToSelectionTail(CGuiAnnotator* ann)
 
 void CGMEView::AddAnnotationToSelection(CGuiAnnotator* ann, bool headOrTail)
 {
+	ClearConnectionSelection();
 //	CComPtr<IMgaNewDecorator> newDecorator(ann->GetNewDecorator(currentAspect->index));
 //	if (newDecorator)
 //		HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
@@ -1635,6 +1643,14 @@ void CGMEView::RemoveAnnotationFromSelection(POSITION annPos)
 //	if (newDecorator)
 //		HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
 	selectedAnnotations.RemoveAt(annPos);
+}
+
+void CGMEView::ClearConnectionSelection(void)
+{
+	if (selectedConnection != NULL) {
+		selectedConnection->SetSelect(false);
+		selectedConnection = NULL;
+	}
 }
 
 void CGMEView::ResetParent()
@@ -1918,6 +1934,7 @@ void CGMEView::Reset(bool doInvalidate)
 		connections.RemoveAll();
 		selected.RemoveAll(); // we don't call here the this->SendUnselEvent4List( &selected); because it might contain freshly deleted objects, which can't be notified
 		RemoveAllAnnotationFromSelection();
+		ClearConnectionSelection();
 
 
 		// Now build up new objectset
@@ -2082,30 +2099,6 @@ void CGMEView::InitSets()
 	}
 }
 
-
-void CGMEView::ChangeAttrPrefFco(CGuiFco *guiFco)
-{
-	CComPtr<IMgaObjects> mgaobjs;
-	COMTHROW(mgaobjs.CoCreateInstance(L"Mga.MgaObjects"));
-	CComPtr<IMgaObject> mgaobj;
-	COMTHROW(guiFco->mgaFco.QueryInterface(&mgaobj));
-	COMTHROW(mgaobjs->Append(mgaobj));
-
-	CGMEObjectInspector::theInstance->SetObjects(mgaobjs);
-}
-
-void CGMEView::ChangeAttrPrefFco() // currentModel
-{
-
-	CComPtr<IMgaObjects> mgaobjs;
-	COMTHROW(mgaobjs.CoCreateInstance(L"Mga.MgaObjects"));
-	CComPtr<IMgaObject> mgaobj;
-	COMTHROW(currentModel.QueryInterface(&mgaobj));
-	COMTHROW(mgaobjs->Append(mgaobj));
-
-	CGMEObjectInspector::theInstance->SetObjects(mgaobjs);
-}
-
 void CGMEView::ChangeAttrPrefObjs(CGuiObjectList &objlist)
 {
 	CComPtr<IMgaObjects> mgaobjs;
@@ -2121,7 +2114,47 @@ void CGMEView::ChangeAttrPrefObjs(CGuiObjectList &objlist)
 	CGMEObjectInspector::theInstance->SetObjects(mgaobjs);
 }
 
-void CGMEView::ShowProperties(CGuiFco *guiFco)
+void CGMEView::ChangeAttrPrefFco(CGuiFco* guiFco)
+{
+	CGuiConnection* conn = dynamic_cast<CGuiConnection*> (guiFco);
+	if (conn != NULL) {
+		if (selectedConnection != conn) {
+			if (selectedConnection != NULL)
+				selectedConnection->SetSelect(false);
+			conn->SetSelect(true);
+			selectedConnection = conn;
+		}
+	} else {
+		if (selectedConnection != NULL)
+			selectedConnection->SetSelect(false);
+		selectedConnection = NULL;
+	}
+
+	CComPtr<IMgaObjects> mgaobjs;
+	COMTHROW(mgaobjs.CoCreateInstance(L"Mga.MgaObjects"));
+	CComPtr<IMgaObject> mgaobj;
+	COMTHROW(guiFco->mgaFco.QueryInterface(&mgaobj));
+	COMTHROW(mgaobjs->Append(mgaobj));
+
+	CGMEObjectInspector::theInstance->SetObjects(mgaobjs);
+}
+
+void CGMEView::ChangeAttrPrefFco() // currentModel
+{
+	if (selectedConnection != NULL)
+		selectedConnection->SetSelect(false);
+	selectedConnection = NULL;
+
+	CComPtr<IMgaObjects> mgaobjs;
+	COMTHROW(mgaobjs.CoCreateInstance(L"Mga.MgaObjects"));
+	CComPtr<IMgaObject> mgaobj;
+	COMTHROW(currentModel.QueryInterface(&mgaobj));
+	COMTHROW(mgaobjs->Append(mgaobj));
+
+	CGMEObjectInspector::theInstance->SetObjects(mgaobjs);
+}
+
+void CGMEView::ShowProperties(CGuiFco* guiFco)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::ShowProperties("+guiFco->GetName()+" "+guiFco->GetID()+")\r\n");
     ChangeAttrPrefFco(guiFco);
@@ -2137,7 +2170,7 @@ void CGMEView::ShowProperties()
 	CGMEObjectInspector::theInstance->ShowPanel(2);
 }
 
-void CGMEView::ShowAttributes(CGuiFco *guiFco)
+void CGMEView::ShowAttributes(CGuiFco* guiFco)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::ShowAttributes("+guiFco->GetName()+" "+guiFco->GetID()+")\r\n");
 	ChangeAttrPrefFco(guiFco);
@@ -2409,6 +2442,7 @@ void CGMEView::ModeChange()
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
 	RemoveAllAnnotationFromSelection();
+	ClearConnectionSelection();
 	ClearConnSpecs();
 	CGMEDoc *pDoc = GetDocument();
 	CGuiAnnotator::GrayOutAnnotations(annotators, pDoc->GetEditMode() == GME_VISUAL_MODE);
@@ -2565,6 +2599,7 @@ void CGMEView::SetCenterObject(CComPtr<IMgaFCO> centerObj)
 				this->SendUnselEvent4List( &selected);
 				selected.RemoveAll();
 				RemoveAllAnnotationFromSelection();
+				ClearConnectionSelection();
 				this->SendSelecEvent4Object( guiObj);
 				selected.AddTail(guiObj);
 				ScrollToPosition(spos);
@@ -3870,6 +3905,7 @@ void CGMEView::ChangeAspect(CString aspName, bool p_eraseStack /*=true*/)
 			this->SendUnselEvent4List( &selected);
 			selected.RemoveAll();
 			RemoveAllAnnotationFromSelection();
+			ClearConnectionSelection();
 
 //			CGMEView* gmeviewA = (CGMEView*)GetActiveView();
 //			if (gmeviewA)
@@ -4031,6 +4067,7 @@ void CGMEView::OnSelChangeAspectProp()
 		this->SendUnselEvent4List( &selected);
 		selected.RemoveAll();
 		RemoveAllAnnotationFromSelection();
+		ClearConnectionSelection();
 
 		TRACE("CGMEView::OnSelChangeAspectProp\n");
 		m_refreshpannwin = true;
@@ -4058,6 +4095,7 @@ bool CGMEView::ChangePrnAspect(CString aspName)
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
 	RemoveAllAnnotationFromSelection();
+	ClearConnectionSelection();
 	return true;
 }
 
@@ -4283,6 +4321,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 							RemoveAllAnnotationFromSelection();
 							this->SendUnselEvent4List( &selected);
 							selected.RemoveAll();
+							ClearConnectionSelection();
 						}
 
 						this->SendSelecEvent4Object( selection);
@@ -4357,6 +4396,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 							this->SendUnselEvent4List( &selected);
 							selected.RemoveAll();
 							RemoveAllAnnotationFromSelection();
+							ClearConnectionSelection();
 							if (selection) {
 								if(!alreadySelected) {
 									this->SendSelecEvent4Object( selection);
@@ -4405,6 +4445,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 					this->SendUnselEvent4List( &selected);
 					selected.RemoveAll();
 					RemoveAllAnnotationFromSelection();
+					ClearConnectionSelection();
 					selection = 0;
 					annotation = 0;
 
@@ -4800,6 +4841,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 			CGMEEventLogger::LogGMEEvent("    mode=GME_SET_MODE\r\n");
 			selected.RemoveAll();
 			RemoveAllAnnotationFromSelection();
+			ClearConnectionSelection();
 			CGuiSet *set = dynamic_cast<CGuiSet *>(contextSelection);
 			if(set) {
 				if(set == currentSet)
@@ -4880,6 +4922,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 						this->SendUnselEvent4List( &selected);
 						selected.RemoveAll();
 						RemoveAllAnnotationFromSelection();
+						ClearConnectionSelection();
 					}
 					else if(alreadySelected) {
 						this->SendUnselEvent4Object( selected.GetAt( alreadySelected));
@@ -5392,6 +5435,7 @@ void CGMEView::OnEditDelete()
 	GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
 	DeleteAnnotations(selectedAnnotations);
 	RemoveAllAnnotationFromSelection();
+	ClearConnectionSelection();
 
 	if(!isType)
 		return;
@@ -5662,6 +5706,7 @@ void CGMEView::OnEditCut()
 		DeleteAnnotations(selectedAnnotations);
 		if(isType) selected.RemoveAll();
 		RemoveAllAnnotationFromSelection();
+		ClearConnectionSelection();
 	}
 }
 
@@ -7162,6 +7207,7 @@ void CGMEView::OnEditSelectall()
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
 	RemoveAllAnnotationFromSelection();
+	ClearConnectionSelection();
 	POSITION pos = children.GetHeadPosition();
 	while(pos) {
 		CGuiObject *obj = dynamic_cast<CGuiObject *>(children.GetNext(pos));
@@ -7566,8 +7612,8 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 		static CGuiConnection *last_Connection = 0;
 		if( last_Connection != curr_Connection) // state change for at most two connections
 		{
-			if( last_Connection) last_Connection->ToggleSelect(); // if a previous was selected, now it will become unselected
-			if( curr_Connection) curr_Connection->ToggleSelect(); // toggle the new one
+			if( last_Connection) last_Connection->ToggleHover(); // if a previous was selected, now it will become unselected
+			if( curr_Connection) curr_Connection->ToggleHover(); // toggle the new one
 			last_Connection = curr_Connection;
 			Invalidate();
 		} 

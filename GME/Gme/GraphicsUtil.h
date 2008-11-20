@@ -15,7 +15,6 @@ public:
 	CPoint* path;
 
 public:
-	void Draw(CDC* pDC, CPoint& tip, bool bPen);
 	void Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, CPoint& tip, bool bPen);
 };
 
@@ -25,17 +24,11 @@ public:
 	~CGraphics();
 
 public:
-	CPenTable pens;
-	CPenTable dashPens;
-	CPenTable dashMagnifiedPens;
-	CPenTable dashPrintPens;
-	CPenTable printPens;
 	GdipPenTable gdipPens;
 	GdipPenTable gdipDashPens;
 	GdipPenTable gdipDashMagnifiedPens;
 	GdipPenTable gdipDashPrintPens;
 	GdipPenTable gdipPrintPens;
-	CBrushTable brushes;
 	GdipBrushTable gdipBrushes;
 	CFont* normalFonts[GME_FONT_KIND_NUM];
 	CFont* semiboldFonts[GME_FONT_KIND_NUM];
@@ -56,29 +49,19 @@ public:
 	void	Initialize(void);
 	void	Uninitialize(void);
 
-	CPen* GetPen(COLORREF color, bool isPrinting = false, bool dash = false, bool isViewMagnified = false, int width = 1);
 	Gdiplus::Pen* GetGdipPen2(Gdiplus::Graphics* gdip, COLORREF color, bool dash = false, bool isViewMagnified = false, int width = 1);
 	Gdiplus::Pen* GetGdipPen(Gdiplus::Graphics* gdip, COLORREF color, bool isPrinting, bool dash = false, bool isViewMagnified = false, int width = 1);
-	CBrush* GetBrush(COLORREF color);
 	Gdiplus::SolidBrush* GetGdipBrush(COLORREF color);
-	CFont* GetFont(GMEFontKind kind);
-	CFont* GetFont(int kindsize, bool bold = false, bool semibold = false);
 	Gdiplus::Font* GetGdipFont(GMEFontKind kind);
 	Gdiplus::Font* GetGdipFont(int kindsize, bool bold = false, bool semibold = false);
-	void DeletePens(CPenTable& penTable, GdipPenTable& gdipPenTable);
-	void DeleteBrushes(CBrushTable& brushTable, GdipBrushTable& gdipBrushTable);
+	void DeletePens(GdipPenTable& gdipPenTable);
+	void DeleteBrushes(GdipBrushTable& gdipBrushTable);
 	void CreateFonts(CFont** font, Gdiplus::Font** gdipFont, int boldness);
-	void DrawMark(CDC* pDC, int x1, int x2, int y1, int y2);
-	void DrawGrid(CDC* pDC, int xSpace, int ySpace, int maxx, int maxy, COLORREF color = GME_GRID_COLOR);
 	void DrawGrid(Gdiplus::Graphics* gdip, int xSpace, int ySpace, int maxx, int maxy, COLORREF color = GME_GRID_COLOR);
-	void DrawConnection(CDC* pDC, const CPointList& points, COLORREF color, int lineType, int srcEnd, int dstEnd,
-						bool mark, bool isViewMagnified, int lineStyle = 0);
-	void DrawArrow(CDC* pDC, CPoint& beforeLast, CPoint& last, int iEnd );
 	void DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points, COLORREF color, int lineType,
-						int srcEnd, int dstEnd, bool mark, bool isViewMagnified, int lineStyle = 0);
+						int srcEnd, int dstEnd, bool mark, bool isViewMagnified, int lineStyle = 1);
 	void DrawArrow(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush,
 				   CPoint& beforeLast, CPoint& last, int iEnd );
-	void DrawText(CDC* pDC, CString& txt, CPoint& pt, CFont* font, COLORREF color, int align);
 	void DrawGdipText(Gdiplus::Graphics* gdip, CString& txt, CPoint& pt, Gdiplus::Font* font, COLORREF color, int align);
 	Gdiplus::RectF MeasureText2(Gdiplus::Graphics* gdip, CString& txt, CPoint& pt, Gdiplus::Font* font);
 	CSize MeasureText(Gdiplus::Graphics* gdip, CString& txt, CPoint& pt, Gdiplus::Font* font);

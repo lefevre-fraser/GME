@@ -53,25 +53,6 @@ CArrowHead::~CArrowHead()
 	delete [] path;
 }
 
-void CArrowHead::Draw(CDC *pDC, CPoint &tip, bool bPen)
-{
-	pDC->MoveTo(path[0] + tip);
-	pDC->BeginPath();
-	for (int i = 1; i<segments; i++) {
-		pDC->LineTo(path[i] + tip);
-	}
-	pDC->EndPath();
-	pDC->FillPath();
-
-	if ( bPen ) {
-		pDC->MoveTo(path[0] + tip);
-		for (int i = 1; i<segments; i++) {
-			pDC->LineTo(path[i] + tip);
-		}
-		pDC->LineTo(path[0] + tip);
-	}
-}
-
 void CArrowHead::Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, CPoint& tip, bool bPen)
 {
 	Gdiplus::GraphicsPath* arrowHeadPath = new Gdiplus::GraphicsPath();
@@ -96,53 +77,6 @@ CGraphics::~CGraphics()
 
 void CGraphics::Initialize(void)
 {
-	GetPen(GME_BACKGROUND_COLOR	);
-	GetPen(GME_BORDER_COLOR		);
-	GetPen(GME_MODEL_COLOR		);
-	GetPen(GME_NAME_COLOR		);
-	GetPen(GME_PORTNAME_COLOR	);
-	GetPen(GME_CONNECTION_COLOR	);
-	GetPen(GME_GRAYED_OUT_COLOR	);
-	GetPen(GME_GRID_COLOR		);
-	GetPen(GME_BLACK_COLOR		);
-	GetPen(GME_WHITE_COLOR		);
-	GetPen(GME_GREY_COLOR		);
-	GetPen(GME_BACKGROUND_COLOR	, false, true);
-	GetPen(GME_BORDER_COLOR		, false, true);
-	GetPen(GME_MODEL_COLOR		, false, true);
-	GetPen(GME_NAME_COLOR		, false, true);
-	GetPen(GME_PORTNAME_COLOR	, false, true);
-	GetPen(GME_CONNECTION_COLOR	, false, true);
-	GetPen(GME_GRAYED_OUT_COLOR	, false, true);
-	GetPen(GME_GRID_COLOR		, false, true);
-	GetPen(GME_BLACK_COLOR		, false, true);
-	GetPen(GME_WHITE_COLOR		, false, true);
-	GetPen(GME_GREY_COLOR		, false, true);
-
-	GetPen(GME_BACKGROUND_COLOR	, true, true);
-	GetPen(GME_BORDER_COLOR		, true, true);
-	GetPen(GME_MODEL_COLOR		, true, true);
-	GetPen(GME_NAME_COLOR		, true, true);
-	GetPen(GME_PORTNAME_COLOR	, true, true);
-	GetPen(GME_CONNECTION_COLOR	, true, true);
-	GetPen(GME_GRAYED_OUT_COLOR	, true, true);
-	GetPen(GME_GRID_COLOR		, true, true);
-	GetPen(GME_BLACK_COLOR		, true, true);
-	GetPen(GME_WHITE_COLOR		, true, true);
-	GetPen(GME_GREY_COLOR		, true, true);
-
-	GetPen(GME_BACKGROUND_COLOR	, true, false);
-	GetPen(GME_BORDER_COLOR		, true, false);
-	GetPen(GME_MODEL_COLOR		, true, false);
-	GetPen(GME_NAME_COLOR		, true, false);
-	GetPen(GME_PORTNAME_COLOR	, true, false);
-	GetPen(GME_CONNECTION_COLOR	, true, false);
-	GetPen(GME_GRAYED_OUT_COLOR	, true, false);
-	GetPen(GME_GRID_COLOR		, true, false);
-	GetPen(GME_BLACK_COLOR		, true, false);
-	GetPen(GME_WHITE_COLOR		, true, false);
-	GetPen(GME_GREY_COLOR		, true, false);
-
 	CreateFonts(normalFonts, normalGdipFonts, FW_LIGHT);
 	CreateFonts(semiboldFonts, semiboldGdipFonts, FW_NORMAL);
 	CreateFonts(boldFonts, boldGdipFonts, FW_SEMIBOLD);
@@ -159,12 +93,12 @@ void CGraphics::Initialize(void)
 
 void CGraphics::Uninitialize(void)
 {
-	DeletePens(pens, gdipPens);
-	DeletePens(dashPens, gdipDashPens);
-	DeletePens(dashMagnifiedPens, gdipDashMagnifiedPens);
-	DeletePens(printPens, gdipPrintPens);
-	DeletePens(dashPrintPens, gdipDashPrintPens);
-	DeleteBrushes(brushes, gdipBrushes);
+	DeletePens(gdipPens);
+	DeletePens(gdipDashPens);
+	DeletePens(gdipDashMagnifiedPens);
+	DeletePens(gdipPrintPens);
+	DeletePens(gdipDashPrintPens);
+	DeleteBrushes(gdipBrushes);
 
 	POSITION pos = allFonts.GetHeadPosition();
 	while(pos)
@@ -183,17 +117,10 @@ void CGraphics::Uninitialize(void)
 	}
 }
 
-void CGraphics::DeletePens(CPenTable &penTable, GdipPenTable& gdipPenTable)
+void CGraphics::DeletePens(GdipPenTable& gdipPenTable)
 {
-	POSITION pos = penTable.GetStartPosition();
-	CPen *pen;
-	void *pt;
-	while(pos) {
-		penTable.GetNextAssoc(pos,pt,pen);
-		delete pen;
-	}
-
-	pos = gdipPenTable.GetStartPosition();
+	POSITION pos = gdipPenTable.GetStartPosition();
+	void* pt;
 	Gdiplus::Pen* gdipPen;
 	while(pos) {
 		gdipPenTable.GetNextAssoc(pos, pt, gdipPen);
@@ -201,17 +128,10 @@ void CGraphics::DeletePens(CPenTable &penTable, GdipPenTable& gdipPenTable)
 	}
 }
 
-void CGraphics::DeleteBrushes(CBrushTable& brushTable, GdipBrushTable& gdipBrushTable)
+void CGraphics::DeleteBrushes(GdipBrushTable& gdipBrushTable)
 {
-	POSITION pos = brushTable.GetStartPosition();
-	CBrush* brush;
+	POSITION pos = gdipBrushTable.GetStartPosition();
 	void* pt;
-	while(pos) {
-		brushTable.GetNextAssoc(pos, pt, brush);
-		delete brush;
-	}
-
-	pos = gdipBrushTable.GetStartPosition();
 	Gdiplus::SolidBrush* gdipBrush;
 	while(pos) {
 		gdipBrushTable.GetNextAssoc(pos, pt, gdipBrush);
@@ -238,17 +158,6 @@ void CGraphics::CreateFonts(CFont** font, Gdiplus::Font** gdipFont, int boldness
 	}
 }
 
-
-CFont* CGraphics::GetFont(GMEFontKind kind)
-{
-	return GetFont(kind, fontBoldness[kind], fontSemiboldness[kind]);
-}
-
-CFont* CGraphics::GetFont(int kindsize, bool bold, bool semibold)
-{
-	return bold ? boldFonts[kindsize] : (semibold ? semiboldFonts[kindsize] : normalFonts[kindsize]);
-}
-
 Gdiplus::Font* CGraphics::GetGdipFont(GMEFontKind kind)
 {
 	return GetGdipFont(kind, fontBoldness[kind], fontSemiboldness[kind]);
@@ -257,31 +166,6 @@ Gdiplus::Font* CGraphics::GetGdipFont(GMEFontKind kind)
 Gdiplus::Font* CGraphics::GetGdipFont(int kindsize, bool bold, bool semibold)
 {
 	return bold ? boldGdipFonts[kindsize] : (semibold ? semiboldGdipFonts[kindsize] : normalGdipFonts[kindsize]);
-}
-
-CPen* CGraphics::GetPen(COLORREF color, bool isPrinting, bool dash, bool isViewMagnified, int width /* = 1 */)
-{
-	LOGBRUSH logb = {BS_SOLID, 0, 0};
-	DWORD dashstyle[2] = {4, 2};
-	DWORD solidstyle[2] = {4, 0};
-	// print real dashed line
-	CPen *pen = 0;
-	if( width != 1 || !((dash ? (isPrinting? dashPrintPens: isViewMagnified ? dashMagnifiedPens : dashPens) : (isPrinting? printPens: pens)).Lookup((void *)color,pen))) {
-		pen = new CPen();
-//		pen->CreatePen((dash ? PS_DOT : PS_SOLID),1,color);
-//		pen->CreatePen((dash ? (isPrinting? PS_DASH: PS_DOT) : PS_SOLID),1,color);
-		logb.lbColor = color; 
-//		pen->CreatePen((dash ? (isPrinting? PS_USERSTYLE|PS_GEOMETRIC: PS_DOT|PS_GEOMETRIC) : 
-//			PS_SOLID|PS_GEOMETRIC), (isPrinting? 5: 1),
-//			&logb, (dash && isPrinting)? 2: 0, (dash && isPrinting)? dashstyle: NULL);
-		pen->CreatePen((dash ? (isPrinting? PS_USERSTYLE|PS_GEOMETRIC: isViewMagnified ? PS_DASH|PS_GEOMETRIC : PS_DOT) : 
-			(isPrinting? PS_USERSTYLE|PS_GEOMETRIC: PS_SOLID|PS_GEOMETRIC)), (isPrinting? 1: width),
-				&logb, (isPrinting)? 2: 0, (isPrinting)? (dash? dashstyle: solidstyle): NULL);
-		if( width == 1) // only if regular
-		(dash ? (isPrinting? dashPrintPens: isViewMagnified ? dashMagnifiedPens : dashPens) : (isPrinting? printPens: pens)).SetAt((void *)color,pen);
-	}
-	ASSERT(pen);
-	return pen;
 }
 
 Gdiplus::Pen* CGraphics::GetGdipPen2(Gdiplus::Graphics* gdip, COLORREF color, bool dash, bool isViewMagnified,
@@ -317,18 +201,6 @@ Gdiplus::Pen* CGraphics::GetGdipPen(Gdiplus::Graphics* gdip, COLORREF color, boo
 	return pen;
 }
 
-CBrush* CGraphics::GetBrush(COLORREF color)
-{
-	CBrush* brush = 0;
-	if(!(brushes.Lookup((void*)color,brush))) {
-		brush = new CBrush();
-		brush->CreateSolidBrush(color);
-		brushes.SetAt((void*)color,brush);
-	}
-	ASSERT(brush);
-	return brush;
-}
-
 Gdiplus::SolidBrush* CGraphics::GetGdipBrush(COLORREF color)
 {
 	Gdiplus::SolidBrush* brush = NULL;
@@ -340,23 +212,6 @@ Gdiplus::SolidBrush* CGraphics::GetGdipBrush(COLORREF color)
 	return brush;
 }
 
-void CGraphics::DrawMark(CDC *pDC,int x1,int x2,int y1,int y2)
-{
-	pDC->MoveTo(x1,y1);
-	pDC->LineTo(x2,y2);
-}
-
-void CGraphics::DrawGrid(CDC *pDC,int xSpace,int ySpace,int maxx,int maxy,COLORREF color)
-{
-	CPen *pen = GetPen(color, pDC->IsPrinting()!=FALSE);
-	CPen *oldpen = pDC->SelectObject(pen);
-	for(int x = 0 ; x < maxx; x += xSpace)
-		DrawMark(pDC,x,x,0,maxy);
-	for(int y = 0; y < maxy; y += ySpace)
-		DrawMark(pDC,0,maxx,y,y);
-	pDC->SelectObject(oldpen);
-}
-
 void CGraphics::DrawGrid(Gdiplus::Graphics* gdip, int xSpace, int ySpace, int maxx, int maxy, COLORREF color)
 {
 	Gdiplus::Pen* pen = GetGdipPen2(gdip, color);
@@ -366,107 +221,8 @@ void CGraphics::DrawGrid(Gdiplus::Graphics* gdip, int xSpace, int ySpace, int ma
 		gdip->DrawLine(pen, 0, y, maxx, y);
 }
 
-void CGraphics::DrawConnection(CDC *pDC, const CPointList &points, COLORREF color, int lineType,
-							   int srcEnd, int dstEnd, bool mark, bool isViewMagnified, int lineStyle /* = 0 */)
-{
-	if( points.GetCount()==0 )
-		return;
-
-	ASSERT(points.GetCount() >= 2);
-
-	if(pDC->IsPrinting()) {
-		color = GME_BLACK_COLOR;
-	}
-
-	// the color has to be altered a little bit, because the predefined PenMap has color at its key 
-	// so it will confuse this bold Pen with already existing pens
-	//CPen *pen = GetPen(color, pDC->IsPrinting()!=FALSE, lineType > 0);
-	CPen *pen = GetPen(/*lineStyle > 0? (color+0x0f0f0f):*/ color, pDC->IsPrinting() != FALSE, lineType > 0,
-					   isViewMagnified, lineStyle > 0 ? 5: 1);
-	CPen *oldpen = pDC->SelectObject(pen);
-	CBrush *brush = GetBrush(color);
-	CBrush *oldbrush = pDC->SelectObject(brush);
-
-	CPoint beforeLast;
-	CPoint last;
-	POSITION pos = points.GetHeadPosition();
-	if(pos)	{
-		CPoint pt = points.GetNext(pos);
-		last = pt;
-		pDC->MoveTo(pt);
-		while(pos) {
-			pt = points.GetNext(pos);
-			beforeLast = last;
-			last = pt;
-			pDC->LineTo(pt);
-		}
-	}
-	CPen *headpen = GetPen(color, pDC->IsPrinting()!=FALSE);
-	pDC->SelectObject (headpen);
-
-	POSITION pos2 = points.GetHeadPosition();
-	CPoint first = points.GetNext(pos2);
-	CPoint second = points.GetNext(pos2);
-
-	pDC->SelectObject( GetBrush( ( srcEnd == GME_EMPTYDIAMOND_END || srcEnd == GME_EMPTYAPEX_END || srcEnd == GME_EMPTYBULLET_END ) ? GME_WHITE_COLOR : color ) );
-
-	DrawArrow(pDC, second, first, srcEnd);
-
-	pDC->SelectObject( GetBrush( ( dstEnd == GME_EMPTYDIAMOND_END || dstEnd == GME_EMPTYAPEX_END || dstEnd == GME_EMPTYBULLET_END ) ? GME_WHITE_COLOR : color ) );
-
-	DrawArrow(pDC, beforeLast, last, dstEnd);
-
-	pDC->SelectObject(oldbrush);
-	pDC->SelectObject(oldpen);
-	
-	if( lineStyle > 0) pen->DeleteObject(); // delete special pen
-}
-
-void CGraphics::DrawArrow(CDC* pDC, CPoint& beforeLast, CPoint& last, int iEnd)
-{
-	int dir = 0;
-	if(beforeLast.x == last.x)
-		dir = beforeLast.y > last.y ? dir = GME_UP_DIRECTION : GME_DOWN_DIRECTION;
-	else
-		dir = beforeLast.x > last.x ? dir = GME_LEFT_DIRECTION : GME_RIGHT_DIRECTION;
-	switch( iEnd ) {
-		case GME_ARROW_END :
-			arrows[ dir ]->Draw( pDC, last, false );
-			break;
-		case GME_DIAMOND_END :
-		case GME_EMPTYDIAMOND_END :
-			diamonds[ dir ]->Draw( pDC, last, iEnd == GME_EMPTYDIAMOND_END );
-			break;
-		case GME_APEX_END :
-		case GME_EMPTYAPEX_END :
-			apexes[ dir ]->Draw( pDC, last, iEnd == GME_EMPTYAPEX_END );
-			break;
-		case GME_BULLET_END :
-		case GME_EMPTYBULLET_END :
-			bullets[ dir ]->Draw( pDC, last, iEnd == GME_EMPTYBULLET_END );
-			break;
-		case GME_HALFARROWLEFT_END :
-			leftHalfArrows[ dir ]->Draw( pDC, last, true );
-			break;
-		case GME_HALFARROWRIGHT_END :
-			rightHalfArrows[ dir ]->Draw( pDC, last, true );
-			break;
-	}
-}
-
-void CGraphics::DrawText(CDC *pDC,CString &txt,CPoint &pt,CFont *font,COLORREF color,int align)
-{
-	if(font == 0)
-		return;
-	pDC->SelectObject(font);
-	pDC->SetTextAlign(align);
-	SetBkMode(pDC->m_hDC,TRANSPARENT);
-	pDC->SetTextColor(pDC->IsPrinting() ? GME_BLACK_COLOR : color);
-	pDC->TextOut(pt.x,pt.y,(LPCTSTR)txt,txt.GetLength());
-}
-
 void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList &points, COLORREF color, int lineType,
-							   int srcEnd, int dstEnd, bool mark, bool isViewMagnified, int lineStyle /* = 0 */)
+							   int srcEnd, int dstEnd, bool mark, bool isViewMagnified, int lineStyle)
 {
 	if (points.GetCount() == 0)
 		return;
@@ -481,7 +237,7 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList &points
 
 	// the color has to be altered a little bit, because the predefined PenMap has color at its key 
 	// so it will confuse this bold Pen with already existing pens
-	Gdiplus::Pen* pen = GetGdipPen(gdip, color, isPrinting, lineType > 0, isViewMagnified, lineStyle > 0 ? 5 : 1);
+	Gdiplus::Pen* pen = GetGdipPen(gdip, color, isPrinting, lineType > 0, isViewMagnified, lineStyle);
 	Gdiplus::Brush* brush = GetGdipBrush(color);
 
 	CPoint beforeLast;
@@ -516,7 +272,7 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList &points
 
 	DrawArrow(gdip, headpen, headBrush, beforeLast, last, dstEnd);
 	
-	if (lineStyle > 0)
+	if (lineStyle > 1)
 		delete pen; // delete special pen
 }
 
