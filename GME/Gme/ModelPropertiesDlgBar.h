@@ -12,7 +12,7 @@
 
 #define MAX_ZOOM 100
 
-class CModelPropertiesDlgBar : public CDialogBar
+class CModelPropertiesDlgBar : public CPaneDialog
 {
 // Construction
 public:

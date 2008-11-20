@@ -16,11 +16,11 @@ static char THIS_FILE[] = __FILE__;
 // CModelPropertiesDlgBar dialog
 
 CModelPropertiesDlgBar::CModelPropertiesDlgBar()
-	: CDialogBar()
+: CPaneDialog()
 {
 }
 
-BEGIN_MESSAGE_MAP(CModelPropertiesDlgBar, CDialogBar)
+BEGIN_MESSAGE_MAP(CModelPropertiesDlgBar, CPaneDialog)
 	ON_CBN_SELENDOK(IDC_ZOOMS, OnSelEnd)
 	ON_COMMAND(IDOK, OnOK)
 END_MESSAGE_MAP()

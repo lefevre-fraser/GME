@@ -108,7 +108,7 @@ protected:  // control bar embedded members
 
 
 	CComponentBar		m_wndComponentBar;
-	CDialogBar			m_wndDlgBar;
+//	CDialogBar			m_wndDlgBar;
 	CGMEPartBrowser		m_partBrowser;
 	CGMEBrowser			m_browser;
 	CGMEObjectInspector	m_objectInspector;

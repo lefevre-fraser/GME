@@ -79,32 +79,27 @@ int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CMDIChildWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	// TODO: Add a menu item that will toggle the visibility of the
-	// dialog bar named "ModelPropertiesBar":
-	//   1. In ResourceView, open the menu resource that is used by
-	//      the CChildFrame class
-	//   2. Select the View submenu
-	//   3. Double-click on the blank item at the bottom of the submenu
-	//   4. Assign the new item an ID: CG_ID_VIEW_MODELPROPERTIESBAR
-	//   5. Assign the item a Caption: ModelPropertiesBar
+	
 
-	// TODO: Change the value of CG_ID_VIEW_MODELPROPERTIESBAR to an appropriate value:
-	//   1. Open the file resource.h
-	// CG: The following block was inserted by the 'Dialog Bar' component
 #if !defined(ACTIVEXGMEVIEW)
 	{
 		// Initialize dialog bar propBar
-		if (!propBar.Create(this, CG_IDD_MODELPROPERTIESBAR,
-			CBRS_TOP | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,
+		if (!propBar.Create(_T("Model Properties"), this, FALSE, CG_IDD_MODELPROPERTIESBAR,
+			WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP | CBRS_FLOAT_MULTI,
 			CG_ID_VIEW_MODELPROPERTIESBAR))
 		{
 			TRACE0("Failed to create dialog bar propBar\n");
 			return -1;		// fail to create
 		}
+
+		
 		// terge 
 		int zoomvals[] = {ZOOM_MIN, 10, 25, 50, 75, ZOOM_NO, 150, 200, 300, ZOOM_MAX, ZOOM_WIDTH, ZOOM_HEIGHT, ZOOM_ALL, 0};
 //		int zoomvals[] = {ZOOM_NO, 150, 200, 250, 300, 350, 400, 0}; // for test
 		propBar.SetZoomList(zoomvals);
+
+		
+		ShowPane(&propBar,true, false, true);
 	}
 #endif
 
