@@ -93,11 +93,8 @@ void CGraphics::Initialize(void)
 
 void CGraphics::Uninitialize(void)
 {
-	DeletePens(gdipPens);
-	DeletePens(gdipDashPens);
-	DeletePens(gdipDashMagnifiedPens);
-	DeletePens(gdipPrintPens);
-	DeletePens(gdipDashPrintPens);
+	for (std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.begin() ; it != m_mapGdipPens.end() ; ++it)
+		delete it->second;
 	DeleteBrushes(gdipBrushes);
 
 	POSITION pos = allFonts.GetHeadPosition();
@@ -107,7 +104,7 @@ void CGraphics::Uninitialize(void)
 	while(pos)
 		delete allGdipFonts.GetNext(pos);
 
-	for(int i = 0; i < GME_DIRECTION_NUM; i++) {
+	for (int i = 0; i < GME_DIRECTION_NUM; i++) {
 		delete arrows[i];
 		delete diamonds[i];
 		delete apexes[i];
@@ -181,23 +178,29 @@ Gdiplus::Pen* CGraphics::GetGdipPen2(Gdiplus::Graphics* gdip, COLORREF color, bo
 Gdiplus::Pen* CGraphics::GetGdipPen(Gdiplus::Graphics* gdip, COLORREF color, bool isPrinting, bool dash,
 									bool isViewMagnified, int width /* = 1 */)
 {
-	Gdiplus::Pen* pen = NULL;
-	if (width != 1 || !((dash ? (isPrinting ? gdipDashPrintPens: isViewMagnified ? gdipDashMagnifiedPens : gdipDashPens) : (isPrinting? gdipPrintPens: gdipPens)).Lookup((void *)color,pen)))
-	{
-		Gdiplus::Color gdipColor(GetRValue(color), GetGValue(color), GetBValue(color));
-		float fWidth = static_cast<float> (isPrinting ? 1 : width);
-		pen = new Gdiplus::Pen(gdipColor, fWidth);
-		if (dash) {
-			pen->SetDashStyle(Gdiplus::DashStyleDash);
-			pen->SetDashCap(Gdiplus::DashCapFlat);
-//		} else {
-//			pen->SetDashStyle(Gdiplus::DashStyleSolid);
-		}
+	char chBuffer[128];
+	sprintf(chBuffer, "%x-%d-%d-%d-%ld", color, isPrinting, dash, isViewMagnified, width);
+	ASSERT(strlen(chBuffer) < 30);
+	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.find(CString(chBuffer));
+	if (it != m_mapGdipPens.end())
+		return it->second;
 
-		if (width == 1) // only if regular
-			(dash ? (isPrinting ? gdipDashPrintPens: isViewMagnified ? gdipDashMagnifiedPens : gdipDashPens) : (isPrinting? gdipPrintPens: gdipPens)).SetAt((void *)color,pen);
+	Gdiplus::Color gdipColor(GetRValue(color), GetGValue(color), GetBValue(color));
+	float fWidth = static_cast<float> (isPrinting ? 1 : width);
+	Gdiplus::Pen* pen = new Gdiplus::Pen(gdipColor, fWidth);
+	if (dash) {
+		Gdiplus::REAL dashPatternVals[2] = {
+			5.0f,	// dash length 5
+			2.0f	// space length 2
+		};
+		pen->SetDashPattern(dashPatternVals, 2);
+		pen->SetDashStyle(Gdiplus::DashStyleCustom);
+		pen->SetDashCap(Gdiplus::DashCapRound);
+//	} else {
+//		pen->SetDashStyle(Gdiplus::DashStyleSolid);
 	}
-	ASSERT(pen);
+
+	m_mapGdipPens.insert(std::map<CString,Gdiplus::Pen*>::value_type(CString(chBuffer), pen));
 	return pen;
 }
 
@@ -271,9 +274,6 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList &points
 							  dstEnd == GME_EMPTYBULLET_END) ? GME_WHITE_COLOR : color);
 
 	DrawArrow(gdip, headpen, headBrush, beforeLast, last, dstEnd);
-	
-	if (lineStyle > 1)
-		delete pen; // delete special pen
 }
 
 void CGraphics::DrawArrow(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush,

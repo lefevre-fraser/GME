@@ -69,10 +69,6 @@ UINT PASCAL _AfxGetMouseScrollLines()
 
 	// couldn't use the window -- try system settings
 	uCachedScrollLines = 3; // reasonable default
-	DWORD dwVersion = ::GetVersion();
-	bool bWin95 = (dwVersion & 0x80000000) != 0;
-	bool bWin4 = (BYTE)dwVersion >= 4;
-	if (!bWin4)
 	{
 		HKEY hKey;
 		if (RegOpenKeyEx(HKEY_CURRENT_USER,  _T("Control Panel\\Desktop"),
@@ -89,10 +85,6 @@ UINT PASCAL _AfxGetMouseScrollLines()
 			}
 			RegCloseKey(hKey);
 		}
-	}
-	else if (!bWin95)
-	{
-		::SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &uCachedScrollLines, 0);
 	}
 
 	return uCachedScrollLines;

@@ -828,8 +828,6 @@ void CGMEView::OnDraw(Gdiplus::Graphics* gdip, CDC* pDC)
 				gdip->FillRectangle(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
 				//gdip->FillEllipse(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
 			}
-			if (GME_CONNSELECT_WIDTH > 1)
-				delete xorPen;
 		}
 		if (connTmp) {
 			CRect rect = connTmp->GetLocation();
@@ -863,8 +861,6 @@ void CGMEView::OnDraw(Gdiplus::Graphics* gdip, CDC* pDC)
 				gdip->FillRectangle(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
 				//gdip->FillEllipse(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.x + GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y + GME_HOTSPOT_VISUAL_RADIUS);
 			}
-			if (GME_CONNSELECT_WIDTH > 1)
-				delete xorPen;
 		}
 	}
 
@@ -3956,7 +3952,7 @@ CGMEView *CGMEView::GetActiveView()
 
 BOOL CGMEView::OnEraseBkgnd(CDC* pDC)
 {
-	if(!pDC->IsPrinting()  &&  !IsPreview()) {  
+	if (!pDC->IsPrinting() && !IsPreview()) {  
 		OnPrepareDC(offScreen);
 		CRect r;
 		GetClientRect(&r);

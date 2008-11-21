@@ -1,6 +1,8 @@
 #ifndef GME_GraphicsUtil_h
 #define GME_GraphicsUtil_h
 
+#include <map>
+
 typedef CTypedPtrList<CPtrList, Gdiplus::Font*>					GdipFontList;
 typedef CTypedPtrMap<CMapPtrToPtr, void*, Gdiplus::Pen*>		GdipPenTable;
 typedef CTypedPtrMap<CMapPtrToPtr, void*, Gdiplus::SolidBrush*>	GdipBrushTable;
@@ -24,11 +26,7 @@ public:
 	~CGraphics();
 
 public:
-	GdipPenTable gdipPens;
-	GdipPenTable gdipDashPens;
-	GdipPenTable gdipDashMagnifiedPens;
-	GdipPenTable gdipDashPrintPens;
-	GdipPenTable gdipPrintPens;
+	std::map<CString,Gdiplus::Pen*> m_mapGdipPens;
 	GdipBrushTable gdipBrushes;
 	CFont* normalFonts[GME_FONT_KIND_NUM];
 	CFont* semiboldFonts[GME_FONT_KIND_NUM];
