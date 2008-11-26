@@ -537,7 +537,7 @@ bool CGuiAnnotator::IsVisible(int aspect)
 	return (decorators[aspect] != NULL);
 }
 
-void CGuiAnnotator::Draw(Gdiplus::Graphics* gdip, CDC* pDC)
+void CGuiAnnotator::Draw(CDC* pDC)
 {
 	if (decorators[parentAspect]) {
 		try {
@@ -1796,7 +1796,7 @@ void CGuiObject::GetRectList(CGuiObjectList &objList,CRectList &rects)
 //////////////////////////////////
 // Virtual methods of CGuiObject
 //////////////////////////////////
-void CGuiObject::Draw(Gdiplus::Graphics* gdip, CDC *pDC)
+void CGuiObject::Draw(CDC *pDC)
 {
 	VERIFY(parentAspect >= 0);
 	VERIFY(GetCurrentAspect());
@@ -2470,10 +2470,11 @@ void CGuiConnection::Draw(Gdiplus::Graphics* gdip, CDC *pDC)
 	{
 		//CAutoRouterPath* p = static_cast<CAutoRouterPath*>(routerPath.p);
 
+		// TODO: using CComSafeArray anywhere, see http://msdn.microsoft.com/de-de/library/3xzbsee8.aspx
 		//There was a problem with uninitialized safearrays, so create a dummy:
-		SAFEARRAY *pArr;
+		SAFEARRAY* pArr;
 		SAFEARRAYBOUND bound[1];
-		bound[0].lLbound =  0;
+		bound[0].lLbound = 0;
 		bound[0].cElements = 2;
 
 		pArr = SafeArrayCreate(VT_I4,1,bound);
@@ -2485,22 +2486,21 @@ void CGuiConnection::Draw(Gdiplus::Graphics* gdip, CDC *pDC)
 		{
 			//length
 			long elementNum = (pArr)->rgsabound[0].cElements;
-			
+
 			//lock it before use
 			SafeArrayLock(pArr);
 			long* pArrElements = (long*) (pArr)->pvData;
-			
-			for (int i=0; i<elementNum/2;i++)
+
+			for (int i = 0; i < elementNum / 2; i++)
 			{
-				CPoint p(pArrElements[2*i], pArrElements[2*i+1]);
+				CPoint p(pArrElements[2 * i], pArrElements[2 * i + 1]);
 				normalPoints.AddTail(p);
 			}
 
 			SafeArrayUnlock(pArr);
-
-			//clear memory
-			SafeArrayDestroy(pArr);
 		}
+		//clear memory
+		SafeArrayDestroy(pArr);
 	}
 
 	const CPointList &points = routerPath.p ? normalPoints : tmpPoints;

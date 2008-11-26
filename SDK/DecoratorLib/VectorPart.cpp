@@ -395,11 +395,12 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 										double r = d * cos(alfa < beta ? beta - alfa : alfa - beta);
 										double x = r * cos(alfa);
 										double y = r * sin(alfa);
-										gradVectorEndX = static_cast<int> (x) + m_Rect.left;
-										gradVectorEndY = static_cast<int> (y) + m_Rect.top;
-										TRACE("(l %ld, t %ld, w %ld, h %ld) a %lf b %lf x %lf y %lf xf %ld yf %ld\n",
-											m_Rect.left, m_Rect.top, m_Rect.Width(), m_Rect.Height(), (double)gradientAngle, beta / 2 / M_PI * 360.0, x, y,
-											gradVectorEndX, gradVectorEndY);
+										gradVectorEndX = static_cast<int> (x) + m_Rect.left + 1;
+										gradVectorEndY = static_cast<int> (y) + m_Rect.top + 1;
+//										TRACE("(l %ld, t %ld, w %ld, h %ld) a %lf b %lf x %lf y %lf xf %ld yf %ld\n",
+//											  m_Rect.left, m_Rect.top, m_Rect.Width(), m_Rect.Height(),
+//											  (double)gradientAngle, beta / 2 / M_PI * 360.0, x, y,
+//											  gradVectorEndX, gradVectorEndY);
 									}
 								}
 								Gdiplus::Point gradVectorEnd(gradVectorEndX, gradVectorEndY);

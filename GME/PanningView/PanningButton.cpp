@@ -60,7 +60,7 @@ bool CPanningButton::Create()
 
 void CPanningButton::SetBitmapDC(CWnd* owner, CDC* bdc, CRect& orisize, CRect& actsize, COLORREF& bkgrnd) // may be empty
 {
-	TRACE("SetBitmapDC\n");
+//	TRACE("SetBitmapDC\n");
 	if (m_bitmapDC)
 		SendDeleteDeviceContext(m_bitmapDC);
 	m_bitmapDC = bdc; 
@@ -75,7 +75,7 @@ void CPanningButton::SetBitmapDC(CWnd* owner, CDC* bdc, CRect& orisize, CRect& a
 
 void CPanningButton::SetViewRect(CRect irect)
 {
-	TRACE("SetViewRect\n");
+//	TRACE("SetViewRect\n");
 	// the method can be called even if the panning window is not visible
 	if (m_bitmapSizeOri.IsRectEmpty() || m_bitmapSizeStored.IsRectEmpty())
 		return;
@@ -189,8 +189,8 @@ void CPanningButton::OnPaint()
 	if (!m_viewRectOnStored.IsRectEmpty() && m_viewRectOnScreen != m_bitmapOnScreen &&
 		!m_viewRectOnScreen.IsRectEmpty())
 	{
-		TRACE("m_viewRectOnScreen: w:%d, h:%d,  m_bitmapOnScreen: w:%d, h:%d\n", m_viewRectOnScreen.Width(),
-				m_viewRectOnScreen.Height(), m_bitmapOnScreen.Width(), m_bitmapOnScreen.Height());
+//		TRACE("m_viewRectOnScreen: w:%d, h:%d,  m_bitmapOnScreen: w:%d, h:%d\n", m_viewRectOnScreen.Width(),
+//				m_viewRectOnScreen.Height(), m_bitmapOnScreen.Width(), m_bitmapOnScreen.Height());
 		if (!m_inMove) {
 			CRect vRect(0, 0, 0, 0);
 			ViewRectToScreen(vRect);

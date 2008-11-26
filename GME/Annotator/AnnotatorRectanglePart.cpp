@@ -38,7 +38,6 @@ void AnnotatorRectanglePart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 void AnnotatorRectanglePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 										  HWND parentWnd, DecoratorSDK::PreferenceMap& preferences)
 {
-	preferences[DecoratorSDK::PREF_ITEMSHADOWCAST] = DecoratorSDK::PreferenceVariant(true);
 	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	m_bRoundEdgeRect = false;

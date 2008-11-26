@@ -6671,10 +6671,9 @@ bool CCoreXmlFile::addSVN( const std::string& p_entity, bool p_recursive /*= fal
 
 HRESULT UseTheseStrings( short size, BSTR names[])
 {
-	USES_CONVERSION;
-	for( int i = 0; i < size; ++i)
-	{
-		MessageBox( NULL, W2A( names[i]), "Msg", MB_OK);
+	for (int i = 0; i < size; ++i) {
+		CW2A name(names[i]);
+		MessageBox(NULL, name, "Msg", MB_OK);
 	}
 	return S_OK;
 }

@@ -152,7 +152,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying decorator library to GME libraries..."
-				CommandLine="copy /Y $(IntDir)\$(TargetName).lib ..\..\GME\lib\copy /Y $(IntDir)\$(TargetName).lib ..\..\GME\lib\$(TargetName).lib"
+				CommandLine="copy /Y $(IntDir)\$(TargetName).lib ..\..\GME\lib\$(TargetName).lib"
 			/>
 		</Configuration>
 	</Configurations>

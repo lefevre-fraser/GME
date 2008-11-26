@@ -709,9 +709,9 @@ void Facilities::createFont( int iFontKey, const CString& strKind, int iBoldness
 		fontStyle |= Gdiplus::FontStyleItalic;
 
 	float pixelSize = static_cast<float> (iSize * 72.0 / GetDeviceCaps(GetDC(NULL), LOGPIXELSY));
-	USES_CONVERSION;
 	m_mapGdipFonts[ iFontKey ] = new GdipFont( strKind, iSize, iBoldness == FW_BOLD, bItalics );
-	m_mapGdipFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( (WCHAR*)A2W(strKind), pixelSize, fontStyle, Gdiplus::UnitPixel );*/
+	CA2W wcTxt(strKind);
+	m_mapGdipFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( wcTxt, pixelSize, fontStyle, Gdiplus::UnitPixel );*/
 
 	m_mapGdipFonts[ iFontKey ] = new GdipFont( strKind, iSize, iBoldness == FW_BOLD, bItalics );
 	CDC dc;
@@ -729,25 +729,25 @@ GdipFont* Facilities::GetFont( int iFontKey ) const
 
 Gdiplus::Pen* Facilities::GetPen( COLORREF crColor, int iWidth )
 {
-	char chBuffer[ 30 ];
-	sprintf( chBuffer, "%x-%d", crColor, iWidth );
-	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.find( CString( chBuffer ) );
-	if ( it != m_mapGdipPens.end() )
+	CString chBuffer;
+	chBuffer.Format("%x-%d", crColor, iWidth);
+	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.find(chBuffer);
+	if (it != m_mapGdipPens.end())
 		return it->second;
 	Gdiplus::Pen* pPen = new Gdiplus::Pen(Gdiplus::Color(GetRValue(crColor), GetGValue(crColor), GetBValue(crColor)), static_cast<float> (iWidth));
-	m_mapGdipPens.insert( std::map<CString,Gdiplus::Pen*>::value_type( CString( chBuffer ), pPen ) );
+	m_mapGdipPens.insert( std::map<CString,Gdiplus::Pen*>::value_type(chBuffer, pPen));
 	return pPen;
 }
 
 Gdiplus::SolidBrush* Facilities::GetBrush( COLORREF crColor )
 {
-	char chBuffer[ 30 ];
-	sprintf( chBuffer, "%x", crColor );
-	std::map<CString,Gdiplus::SolidBrush*>::iterator it = m_mapGdipBrushes.find( CString( chBuffer ) );
-	if ( it != m_mapGdipBrushes.end() )
+	CString chBuffer;
+	chBuffer.Format("%x", crColor);
+	std::map<CString,Gdiplus::SolidBrush*>::iterator it = m_mapGdipBrushes.find(chBuffer);
+	if (it != m_mapGdipBrushes.end())
 		return it->second;
 	Gdiplus::SolidBrush* pBrush = new Gdiplus::SolidBrush(Gdiplus::Color(GetRValue(crColor), GetGValue(crColor), GetBValue(crColor)));
-	m_mapGdipBrushes.insert( std::map<CString,Gdiplus::SolidBrush*>::value_type( CString( chBuffer ), pBrush ) );
+	m_mapGdipBrushes.insert(std::map<CString,Gdiplus::SolidBrush*>::value_type(chBuffer, pBrush));
 	return pBrush;
 }
 
@@ -769,10 +769,10 @@ CSize Facilities::MeasureText( Gdiplus::Graphics* gdip, Gdiplus::Font* pFont, co
 		gdip = gdip2;
 	}
 
+	CA2W wcTxt(strText);
 	Gdiplus::PointF origin(0, 0);
 	Gdiplus::RectF rectF;
-	USES_CONVERSION;
-	gdip->MeasureString((WCHAR*)A2W(strText), strText.GetLength(), pFont, origin, &rectF);
+	gdip->MeasureString(wcTxt, strText.GetLength(), pFont, origin, &rectF);
 	Gdiplus::SizeF sizeF;
 	rectF.GetSize(&sizeF);
 	CSize size(static_cast<long> (sizeF.Width), static_cast<long> (sizeF.Height));
@@ -815,20 +815,20 @@ void Facilities::DrawString( Gdiplus::Graphics* gdip, const CString& strText, co
 	}
 	format.SetLineAlignment(verticalAlignment);
 
-	HDC hDC = gdip->GetHDC();
-	COLORREF textColor = GetDeviceCaps(hDC, TECHNOLOGY) == DT_RASPRINTER ? COLOR_BLACK : crColor;
-	gdip->ReleaseHDC(hDC);
+//	HDC hDC = gdip->GetHDC();
+	COLORREF textColor = /*GetDeviceCaps(hDC, TECHNOLOGY) == DT_RASPRINTER ? COLOR_BLACK :*/ crColor;
+//	gdip->ReleaseHDC(hDC);
 
 	Gdiplus::SolidBrush textBrush(Gdiplus::Color(GetRValue(textColor),
 												 GetGValue(textColor),
 												 GetBValue(textColor)));
 
+	CA2W wcTxt(strText);
 	Gdiplus::RectF rectF(static_cast<float> (crBounds.left),
 						 static_cast<float> (crBounds.top),
 						 static_cast<float> (crBounds.Width()),
 						 static_cast<float> (crBounds.Height()));
-	USES_CONVERSION;
-	gdip->DrawString((WCHAR*)A2W(strText), strText.GetLength(), pFont, rectF, &format, &textBrush);
+	gdip->DrawString(wcTxt, strText.GetLength(), pFont, rectF, &format, &textBrush);
 }
 
 void Facilities::DrawRect( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iWidth ) const
@@ -965,25 +965,25 @@ SFont* Facilities::getFont( int iFontKey ) const
 
 CPen* Facilities::getPen( COLORREF crColor, int iWidth, bool bDashed )
 {
-	char chBuffer[ 30 ];
-	sprintf( chBuffer, "%x-%d-%d", crColor, iWidth, bDashed );
-	std::map<CString,CPen*>::iterator it = m_mapPens.find( CString( chBuffer ) );
-	if ( it != m_mapPens.end() )
+	CString chBuffer;
+	chBuffer.Format("%x-%d-%d", crColor, iWidth, bDashed);
+	std::map<CString,CPen*>::iterator it = m_mapPens.find(chBuffer);
+	if (it != m_mapPens.end())
 		return it->second;
-	CPen* pPen = new CPen( bDashed ? PS_DOT : PS_SOLID, iWidth, crColor );
-	m_mapPens.insert( std::map<CString,CPen*>::value_type( CString( chBuffer ), pPen ) );
+	CPen* pPen = new CPen(bDashed ? PS_DOT : PS_SOLID, iWidth, crColor);
+	m_mapPens.insert(std::map<CString,CPen*>::value_type(chBuffer, pPen));
 	return pPen;
 }
 
 CBrush* Facilities::getBrush( COLORREF crColor )
 {
-	char chBuffer[ 30 ];
-	sprintf( chBuffer, "%x", crColor );
-	std::map<CString,CBrush*>::iterator it = m_mapBrushes.find( CString( chBuffer ) );
-	if ( it != m_mapBrushes.end() )
+	CString chBuffer;
+	chBuffer.Format("%x", crColor);
+	std::map<CString,CBrush*>::iterator it = m_mapBrushes.find(chBuffer);
+	if (it != m_mapBrushes.end())
 		return it->second;
-	CBrush* pBrush = new CBrush( crColor );
-	m_mapBrushes.insert( std::map<CString,CBrush*>::value_type( CString( chBuffer ), pBrush ) );
+	CBrush* pBrush = new CBrush(crColor);
+	m_mapBrushes.insert(std::map<CString,CBrush*>::value_type(chBuffer, pBrush));
 	return pBrush;
 }
 

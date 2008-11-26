@@ -25,8 +25,6 @@ static char THIS_FILE[] = __FILE__;
 
 HRESULT DualHandleException(REFIID riidSource, const CException* pAnyException)
 {
-	USES_CONVERSION;
-
 	ASSERT_VALID(pAnyException);
 
 	TRACE0("DualHandleException called\n");
@@ -57,10 +55,14 @@ HRESULT DualHandleException(REFIID riidSource, const CException* pAnyException)
 
 			// propagate source and help file if present
 			// call ::SysAllocString directly so no further exceptions are thrown
-			if (!e->m_strHelpFile.IsEmpty())
-				bstrHelpFile = ::SysAllocString(T2COLE(e->m_strHelpFile));
-			if (!e->m_strSource.IsEmpty())
-				bstrSource = ::SysAllocString(T2COLE(e->m_strSource));
+			if (!e->m_strHelpFile.IsEmpty()) {
+				CT2COLE strHelpFile(e->m_strHelpFile);
+				bstrHelpFile = ::SysAllocString(strHelpFile);
+			}
+			if (!e->m_strSource.IsEmpty()) {
+				CT2COLE strSource(e->m_strSource);
+				bstrSource = ::SysAllocString(strSource);
+			}
 
 		}
 		else if (pAnyException->IsKindOf(RUNTIME_CLASS(CMemoryException)))
@@ -76,15 +78,20 @@ HRESULT DualHandleException(REFIID riidSource, const CException* pAnyException)
 			hr = E_UNEXPECTED;
 		}
 
-		if (bstrHelpFile == NULL && dwHelpContext != 0)
-			bstrHelpFile = ::SysAllocString(T2COLE(AfxGetApp()->m_pszHelpFilePath));
+		if (bstrHelpFile == NULL && dwHelpContext != 0) {
+			CT2COLE strHelpFilePath(AfxGetApp()->m_pszHelpFilePath);
+			bstrHelpFile = ::SysAllocString(strHelpFilePath);
+		}
 
-		if (bstrSource == NULL)
-			bstrSource = ::SysAllocString(T2COLE(AfxGetAppName()));
+		if (bstrSource == NULL) {
+			CT2COLE strAppName(AfxGetAppName());
+			bstrSource = ::SysAllocString(strAppName);
+		}
 
 		// Set up ErrInfo object
 		pcerrinfo->SetGUID(guid);
-		pcerrinfo->SetDescription(::SysAllocString(T2COLE(pszDescription)));
+		CT2COLE strDescription(pszDescription);
+		pcerrinfo->SetDescription(::SysAllocString(strDescription));
 		pcerrinfo->SetHelpContext(dwHelpContext);
 		pcerrinfo->SetHelpFile(bstrHelpFile);
 		pcerrinfo->SetSource(bstrSource);

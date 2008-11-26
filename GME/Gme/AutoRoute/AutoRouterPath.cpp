@@ -497,20 +497,16 @@ STDMETHODIMP CAutoRouterPath::GetPointList(SAFEARRAY **pArr)
 
 	if (!pArr) return E_POINTER;
 
-	if (*pArr != NULL)
-	{
-		//reset safearray
-		SafeArrayDestroy(*pArr);
-		*pArr = NULL;
-	}
-
 	//set bounds
 	SAFEARRAYBOUND bound[1];
-	bound[0].lLbound =  0;
-	bound[0].cElements = 2 * points.GetSize();
+	bound[0].lLbound	= 0;
+	bound[0].cElements	= 2 * points.GetSize();
 
 	//create safearray
-	*pArr = SafeArrayCreate(VT_I4,1,bound);
+	if (*pArr == NULL)
+		*pArr = SafeArrayCreate(VT_I4,1,bound);
+	else
+		SafeArrayRedim(*pArr,bound);
 
 	//lock before usage
 	res = SafeArrayLock(*pArr);
@@ -527,9 +523,10 @@ STDMETHODIMP CAutoRouterPath::GetPointList(SAFEARRAY **pArr)
 
 		while(pos)
 		{
+			ASSERT(position < 32);
 			CPoint point = points.GetNext(pos); 
-			pArrElements[position] = point.x;
-			pArrElements[position+1]=point.y;
+			pArrElements[position]		= point.x;
+			pArrElements[position + 1]	= point.y;
 			position += 2;
 		}
 	}

@@ -269,8 +269,6 @@ void CAnnotationBrowserDlg::OnOK()
 
 void CAnnotationBrowserDlg::FillAspects()
 {
-	USES_CONVERSION;
-
 	m_aspectNames.RemoveAll();
 	m_aspectNames.Add(_T("DEFAULT"));
 
@@ -286,7 +284,8 @@ void CAnnotationBrowserDlg::FillAspects()
 
 		CComBSTR bstr;
 		COMTHROW(aspect->get_Name(&bstr));
-		m_aspectNames.Add(OLE2T(bstr));
+		COLE2T aspectName(bstr);
+		m_aspectNames.Add(aspectName);
 	}
 	MGACOLL_ITERATE_END;
 }

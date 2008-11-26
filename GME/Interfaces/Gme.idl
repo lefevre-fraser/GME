@@ -492,12 +492,12 @@ interface IAutoRouterGraph : IDispatch{
 	pointer_default(unique)
 ]
 interface IAutoRouterPath : IDispatch{
-	[id(1)] HRESULT GetOwner([out,retval] IAutoRouterGraph** result);
+	[id(1)] HRESULT GetOwner([out, retval] IAutoRouterGraph** result);
 	[id(2)] HRESULT SetEndDir([in] long arpath_end);
 	[id(3)] HRESULT SetStartDir([in] long arpath_start);
 	[id(4)] HRESULT GetExtPtr([out, retval] long* address);
 	[id(5)] HRESULT SetExtPtr([in] long address);
-	[id(6)] HRESULT GetPointList([out, retval] SAFEARRAY(long) *pArr);
+	[id(6)] HRESULT GetPointList([in, out] SAFEARRAY(long) *pArr);
 
 	[id(7)] HRESULT Destroy();
 };

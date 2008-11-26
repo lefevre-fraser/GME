@@ -1151,8 +1151,8 @@ bool ParadigmHasConstraints(BSTR connstr) {
 
 STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR version, VARIANT guid, regaccessmode_enum mode)
 {
-	USES_CONVERSION;
-	CString cver(OLE2CT(version)); 
+	COLE2CT version2(version);
+	CString cver(version2); 
 
 	if( guid.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(guid) != sizeof(GUID) )
 	COMRETURN(E_INVALIDARG);
@@ -1228,8 +1228,8 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR versi
 
 STDMETHODIMP CMgaRegistrar::QueryParadigmAllGUIDs(BSTR parname, VARIANT *guidstrs, regaccessmode_enum mode) {
 	CHECK_OUT(guidstrs);
-	USES_CONVERSION;
-	CString pname(OLE2CT(parname)); 
+	COLE2CT parname2(parname);
+	CString pname(parname2); 
 
 	COMTRY
 	{
@@ -2139,8 +2139,8 @@ STDMETHODIMP CMgaRegistrar::get_AssociatedParadigms(BSTR progid, regaccessmode_e
 
 STDMETHODIMP CMgaRegistrar::Associate(BSTR progid, BSTR paradigm, regaccessmode_enum mode)
 {
-	USES_CONVERSION;
-	CString pname(OLE2CT(progid)); 
+	COLE2CT progid2(progid);
+	CString pname(progid2);
 	COMTRY
 	{
 		bool somethingdone = false;
@@ -2185,8 +2185,8 @@ STDMETHODIMP CMgaRegistrar::Associate(BSTR progid, BSTR paradigm, regaccessmode_
 
 STDMETHODIMP CMgaRegistrar::Disassociate(BSTR progid, BSTR paradigm, regaccessmode_enum mode)
 {
-	USES_CONVERSION;
-	CString pname(OLE2CT(progid)); 
+	COLE2CT progid2(progid);
+	CString pname(progid2);
 	COMTRY
 	{
 		if(mode & RM_USER) {		

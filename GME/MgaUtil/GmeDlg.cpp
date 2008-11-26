@@ -212,9 +212,7 @@ void CGmeDlg::fillScripEngineList()
         hResult = ProgIDFromCLSID(ourCLSID, &str);
 
         {
-            USES_CONVERSION;
-
-            LPCTSTR pszString = OLE2CT(str);
+			COLE2CT pszString(str);
 			
 			LVITEM lvItem;
 			lvItem.mask = LVIF_PARAM | LVIF_STATE | LVIF_TEXT;  

@@ -52,7 +52,6 @@ public:
 	Gdiplus::SolidBrush* GetGdipBrush(COLORREF color);
 	Gdiplus::Font* GetGdipFont(GMEFontKind kind);
 	Gdiplus::Font* GetGdipFont(int kindsize, bool bold = false, bool semibold = false);
-	void DeletePens(GdipPenTable& gdipPenTable);
 	void DeleteBrushes(GdipBrushTable& gdipBrushTable);
 	void CreateFonts(CFont** font, Gdiplus::Font** gdipFont, int boldness);
 	void DrawGrid(Gdiplus::Graphics* gdip, int xSpace, int ySpace, int maxx, int maxy, COLORREF color = GME_GRID_COLOR);

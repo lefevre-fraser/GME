@@ -1080,8 +1080,6 @@ void ModelComplexPart::OrderPorts(std::vector<PortPartData*>& vecPorts)
 		lMax = max(lMax, (*ii)->portPart->GetInnerPosition().x);
 	}
 
-	std::vector<PortPart*>	m_vecLeftPorts;
-	std::vector<PortPart*>	m_vecRightPorts;
 	for (std::vector<PortPartData*>::iterator ii = vecPorts.begin(); ii != vecPorts.end(); ++ii) {
 		PreferenceMap mapPrefs;
 		mapPrefs[PREF_LABELCOLOR]		= PreferenceVariant(m_crPortText);

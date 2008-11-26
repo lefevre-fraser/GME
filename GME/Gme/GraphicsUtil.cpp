@@ -64,6 +64,7 @@ void CArrowHead::Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush
 		arrowHeadPath->AddLine(path[segments - 1].x + tip.x, path[segments - 1].y + tip.y, path[0].x + tip.x, path[0].y + tip.y);
 		gdip->DrawPath(pen, arrowHeadPath);
 	}
+	delete arrowHeadPath;
 }
 
 
@@ -114,17 +115,6 @@ void CGraphics::Uninitialize(void)
 	}
 }
 
-void CGraphics::DeletePens(GdipPenTable& gdipPenTable)
-{
-	POSITION pos = gdipPenTable.GetStartPosition();
-	void* pt;
-	Gdiplus::Pen* gdipPen;
-	while(pos) {
-		gdipPenTable.GetNextAssoc(pos, pt, gdipPen);
-		delete gdipPen;
-	}
-}
-
 void CGraphics::DeleteBrushes(GdipBrushTable& gdipBrushTable)
 {
 	POSITION pos = gdipBrushTable.GetStartPosition();
@@ -135,7 +125,6 @@ void CGraphics::DeleteBrushes(GdipBrushTable& gdipBrushTable)
 		delete gdipBrush;
 	}
 }
-
 
 void CGraphics::CreateFonts(CFont** font, Gdiplus::Font** gdipFont, int boldness)
 {
@@ -178,10 +167,9 @@ Gdiplus::Pen* CGraphics::GetGdipPen2(Gdiplus::Graphics* gdip, COLORREF color, bo
 Gdiplus::Pen* CGraphics::GetGdipPen(Gdiplus::Graphics* gdip, COLORREF color, bool isPrinting, bool dash,
 									bool isViewMagnified, int width /* = 1 */)
 {
-	char chBuffer[128];
-	sprintf(chBuffer, "%x-%d-%d-%d-%ld", color, isPrinting, dash, isViewMagnified, width);
-	ASSERT(strlen(chBuffer) < 30);
-	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.find(CString(chBuffer));
+	CString chBuffer;
+	chBuffer.Format("%x-%d-%d-%d-%ld", color, isPrinting, dash, isViewMagnified, width);
+	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.find(chBuffer);
 	if (it != m_mapGdipPens.end())
 		return it->second;
 
@@ -200,7 +188,7 @@ Gdiplus::Pen* CGraphics::GetGdipPen(Gdiplus::Graphics* gdip, COLORREF color, boo
 //		pen->SetDashStyle(Gdiplus::DashStyleSolid);
 	}
 
-	m_mapGdipPens.insert(std::map<CString,Gdiplus::Pen*>::value_type(CString(chBuffer), pen));
+	m_mapGdipPens.insert(std::map<CString,Gdiplus::Pen*>::value_type(chBuffer, pen));
 	return pen;
 }
 
@@ -232,11 +220,11 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList &points
 
 	ASSERT(points.GetCount() >= 2);
 
-	HDC hDC = gdip->GetHDC();
-	bool isPrinting = GetDeviceCaps(hDC, TECHNOLOGY) == DT_RASPRINTER;
-	gdip->ReleaseHDC(hDC);
-	if (isPrinting)
-		color = GME_BLACK_COLOR;
+//	HDC hDC = gdip->GetHDC();
+	bool isPrinting = false;	//GetDeviceCaps(hDC, TECHNOLOGY) == DT_RASPRINTER;
+//	gdip->ReleaseHDC(hDC);
+//	if (isPrinting)
+//		color = GME_BLACK_COLOR;
 
 	// the color has to be altered a little bit, because the predefined PenMap has color at its key 
 	// so it will confuse this bold Pen with already existing pens
@@ -256,6 +244,7 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList &points
 			last = pt;
 		}
 	}
+
 	Gdiplus::Pen* headpen = GetGdipPen(gdip, color, isPrinting);
 
 	POSITION pos2 = points.GetHeadPosition();
@@ -347,12 +336,10 @@ void CGraphics::DrawGdipText(Gdiplus::Graphics* gdip, CString& txt, CPoint& pt, 
 	Gdiplus::PointF pointF(static_cast<float> (pt.x),
 						   static_cast<float> (pt.y));
 
-	USES_CONVERSION;
-	WCHAR* wcTxt = (WCHAR*)A2W(txt);
-
+	CA2W wcTxt(txt);
 	Gdiplus::RectF rectF;
 	gdip->MeasureString(wcTxt, txt.GetLength(), font, pointF, &rectF);
-	gdip->DrawString((WCHAR*)A2W(txt), txt.GetLength(), font, rectF, &format, &textBrush);
+	gdip->DrawString(wcTxt, txt.GetLength(), font, rectF, &format, &textBrush);
 }
 
 Gdiplus::RectF CGraphics::MeasureText2(Gdiplus::Graphics* gdip, CString& txt, CPoint& pt, Gdiplus::Font* font)
@@ -360,9 +347,7 @@ Gdiplus::RectF CGraphics::MeasureText2(Gdiplus::Graphics* gdip, CString& txt, CP
 	Gdiplus::PointF pointF(static_cast<float> (pt.x),
 						   static_cast<float> (pt.y));
 
-	USES_CONVERSION;
-	WCHAR* wcTxt = (WCHAR*)A2W(txt);
-
+	CA2W wcTxt(txt);
 	Gdiplus::RectF rectF;
 	gdip->MeasureString(wcTxt, txt.GetLength(), font, pointF, &rectF);
 	return rectF;

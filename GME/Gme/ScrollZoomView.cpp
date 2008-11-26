@@ -437,7 +437,7 @@ void CScrollZoomView::ScrollToDevicePosition(POINT ptDev)
 	TRACE("notifyPanning from ScrollToDevicePosition\n");
 	notifyPanning(ptDev);
 //	ScrollWindow(xOrig - ptDev.x, yOrig - ptDev.y);
-	ScrollWindow((ptDev.x -xOrig), (ptDev.y -yOrig) );
+	ScrollWindow((ptDev.x - xOrig), (ptDev.y - yOrig) );
 }
 
 /////////////////////////////////////////////////////////////////////////////

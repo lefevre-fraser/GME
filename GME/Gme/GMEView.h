@@ -216,9 +216,9 @@ public:
 	void					ModeChange();
 	void					IncrementalAutoRoute();
 	void					AutoRoute();
-	void					DrawConnections(Gdiplus::Graphics* gdip, CDC* pDC);
-	void					PrintHeader(Gdiplus::Graphics* gdip, CDC* pDC, CPrintInfo* pInfo);
-	void					PrintHeaderRect(Gdiplus::Graphics* gdip, CDC* pDC, CRect& rectDraw);
+	void					DrawConnections(CDC* pDC);
+	void					PrintHeader(CDC* pDC, CPrintInfo* pInfo);
+	void					PrintHeaderRect(CDC* pDC, CRect& rectDraw);
 	void					PrintMultiLineText(Gdiplus::Graphics* gdip, CDC* pDC, CString txt, int x, int& y, int ry, int xwidth);
 
 	void					CoordinateTransfer(CPoint& point) const;
@@ -332,7 +332,6 @@ protected:
 
 // Generated message map functions
 public:
-	void OnDraw(Gdiplus::Graphics* gdip, CDC* pDC);
 	void ShowGrid(bool show);
 	void AttributepanelPage(long page);
 	void ZoomPercent(long percent);
