@@ -2443,7 +2443,7 @@ void RefreshManager::DetachObjFromLibBase( const CoreObj& p_baseObj, CoreObj& p_
 	long last_relid_set = 0;
 	long max_relid_found= 0;
 #ifdef _DEBUG
-	char p[15000];p[0] = 0;
+	char p[151];p[0] = 0;
 #endif
 
 	CComPtr<ICoreAttributes> atts;

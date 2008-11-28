@@ -125,7 +125,7 @@ private:
 	static void				LogFloatRegisters(PCONTEXT pContextRecord, DWORD exceptionCode);
 	static void				LogCallStack(PCONTEXT pContextRecord, bool bWriteVariables);
 
-	static LPCTSTR			GetExceptionString(DWORD exceptionCode);
+	static CString			GetExceptionString(DWORD exceptionCode);
 	static BOOL				GetLogicalAddress(PVOID addr, PTSTR szModule, DWORD len, DWORD& section, DWORD& offset);
 	static BOOL				GetVersionString(HINSTANCE hModul, char* versionString);
 

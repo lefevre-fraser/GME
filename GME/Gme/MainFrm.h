@@ -51,9 +51,9 @@ public:
 	void CreateNewView(CView *view, CComPtr<IMgaModel>& model);
 	void DestroyView(CView *view);
 	void WriteStatusZoom(int zoomPct);
-	void WriteStatusParadigm(const char *txt);
-	void WriteStatusMode(const char *txt);
-	void WriteStatusText(int pane,const char *txt);
+	void WriteStatusParadigm(const CString& txt);
+	void WriteStatusMode(const CString& txt);
+	void WriteStatusText(int pane, const CString& txt);
 	void UpdateTitle(LPCTSTR title);
 	void SetPartBrowserMetaModel(CGuiMetaModel* meta)	{ m_partBrowser.SetMetaModel(meta); }
 	void SetPartBrowserBg(COLORREF bgColor)				{ m_partBrowser.SetBgColor(bgColor); m_partBrowser.RePaint(); }

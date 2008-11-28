@@ -428,11 +428,9 @@ BOOL CGMEApp::EmergencySave(EmergencySaveMode saveMode)
 			int p = embackupname.ReverseFind('.');
 			if ((p == -1) || embackupname.Find('\\', p) != -1)
 				p = embackupname.GetLength();
-			CString emcode("-emergency");
+			CString emcode;
 			static int emnum;
-			char emfield[10];
-			sprintf(emfield, "%d", ++emnum);
-			emcode += emfield;
+			emcode.Format("-emergency%ld", ++emnum);
 			embackupname.Insert(p, emcode);
 		}
 		HRESULT hr = S_OK;

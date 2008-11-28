@@ -254,8 +254,8 @@ XMLTag::XMLTag(const TCHAR* tagString, DWORD value, const TCHAR* formatString, s
 	m_closed(false)
 {
 	OpenTag(tagString, true, false);
-	char buffer[32];
-	sprintf(buffer, formatString, value);
+	CString buffer;
+	buffer.Format(formatString, value);
 	Append(buffer);
 	CloseTag(false, true);
 }
@@ -268,8 +268,8 @@ XMLTag::XMLTag(const TCHAR* tagString, std::vector<CString>& openedXmlTags, CStr
 	m_closed(false)
 {
 	OpenTag(tagString, true, false);
-	char buffer[128];
-	sprintf(buffer, formatString, value);
+	CString buffer;
+	buffer.Format(formatString, value);
 	Append(buffer);
 	CloseTag(false, true);
 }
@@ -281,8 +281,8 @@ XMLTag::XMLTag(const TCHAR* tagString, DWORD value, std::vector<CString>& opened
 	m_closed(false)
 {
 	OpenTag(tagString, true, false);
-	char buffer[32];
-	sprintf(buffer, "%08X", value);
+	CString buffer;
+	buffer.Format("%08X", value);
 	Append(buffer);
 	CloseTag(false, true);
 }
@@ -773,7 +773,6 @@ void ExceptionHandler::LogFloatRegisters(PCONTEXT pContextRecord, DWORD exceptio
 	// Output Cr0Npx State
 	XMLTag cr0NpxStateTag(Cr0NpxStateXMLTag, pContextRecord->FloatSave.Cr0NpxState, m_openedXmlTags, m_UserCrashData);
 
-	char buffer[256];
 	int topOfStack = (pContextRecord->FloatSave.StatusWord & 0x3800) >> 11;
 	for (int i = 0 ; i < 8 ; i++) {
 		int index = (topOfStack + i) % 8;
@@ -782,7 +781,8 @@ void ExceptionHandler::LogFloatRegisters(PCONTEXT pContextRecord, DWORD exceptio
 			case 0:
 			case 1:
 				if (exceptionCode != EXCEPTION_FLT_INVALID_OPERATION) {
-					sprintf(buffer, "%+026.18E", TempReal2Double(&pContextRecord->FloatSave.RegisterArea[i * 10]));
+					CString buffer;
+					buffer.Format("%+026.18E", TempReal2Double(&pContextRecord->FloatSave.RegisterArea[i * 10]));
 					XMLTag fpRegisterTag(FPRegisterXMLTag, buffer, m_openedXmlTags, m_UserCrashData);
 				}
 				break;
@@ -800,7 +800,8 @@ void ExceptionHandler::LogFloatRegisters(PCONTEXT pContextRecord, DWORD exceptio
 				break;
 		}
 		{
-			sprintf(buffer, "%016I64X", *(__int64*)(&pContextRecord->FloatSave.RegisterArea[i * 10]));
+			CString buffer;
+			buffer.Format("%016I64X", *(__int64*)(&pContextRecord->FloatSave.RegisterArea[i * 10]));
 			XMLTag fpHexaStrTag(FPHexStringXMLTag, buffer, m_openedXmlTags, m_UserCrashData);
 		}
 	}
@@ -996,7 +997,7 @@ void ExceptionHandler::LogCallStack(PCONTEXT pContextRecord, bool bWriteVariable
 }
 
 
-LPCTSTR ExceptionHandler::GetExceptionString(DWORD exceptionCode)
+CString ExceptionHandler::GetExceptionString(DWORD exceptionCode)
 {
 	#define EXCEPTION(x) case EXCEPTION_##x: return _T(#x);
 
@@ -1027,7 +1028,7 @@ LPCTSTR ExceptionHandler::GetExceptionString(DWORD exceptionCode)
 
 	// If not one of the "known" exceptions, try to get the string
 	// from NTDLL.DLL's message table.
-	static TCHAR szBuffer[512] = { 0 };
+	TCHAR szBuffer[512] = { 0 };
 
 	FormatMessage(
 		FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,
@@ -1039,7 +1040,8 @@ LPCTSTR ExceptionHandler::GetExceptionString(DWORD exceptionCode)
 		0
 	);
 
-	return szBuffer;
+	CString buffer(szBuffer);
+	return buffer;
 }
 
 

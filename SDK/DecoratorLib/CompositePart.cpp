@@ -628,6 +628,102 @@ bool CompositePart::MouseWheelTurned(UINT nFlags, short distance, const CPoint& 
 	return false;
 }
 
+bool CompositePart::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
+{
+	HRESULT retVal = S_OK;
+	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
+		try {
+			if ((*ii)->DragEnter(dropEffect, pDataObject, dwKeyState, point, transformHDC))
+				return true;
+		}
+		catch(hresult_exception& e) {
+			retVal = e.hr;
+		}
+		catch(DecoratorException& e) {
+			retVal = e.GetHResult();
+		}
+		if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
+			break;
+	}
+
+	if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED)
+		throw DecoratorException((DecoratorExceptionCode)retVal);
+
+	return false;
+}
+
+bool CompositePart::DragLeave(void)
+{
+	HRESULT retVal = S_OK;
+	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
+		try {
+			if ((*ii)->DragLeave())
+				return true;
+		}
+		catch(hresult_exception& e) {
+			retVal = e.hr;
+		}
+		catch(DecoratorException& e) {
+			retVal = e.GetHResult();
+		}
+		if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
+			break;
+	}
+
+	if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED)
+		throw DecoratorException((DecoratorExceptionCode)retVal);
+
+	return false;
+}
+
+bool CompositePart::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
+{
+	HRESULT retVal = S_OK;
+	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
+		try {
+			if ((*ii)->DragOver(dropEffect, pDataObject, dwKeyState, point, transformHDC))
+				return true;
+		}
+		catch(hresult_exception& e) {
+			retVal = e.hr;
+		}
+		catch(DecoratorException& e) {
+			retVal = e.GetHResult();
+		}
+		if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
+			break;
+	}
+
+	if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED)
+		throw DecoratorException((DecoratorExceptionCode)retVal);
+
+	return false;
+}
+
+bool CompositePart::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, const CPoint& point, HDC transformHDC)
+{
+	HRESULT retVal = S_OK;
+	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
+		try {
+			if ((*ii)->Drop(pDataObject, dropEffect, point, transformHDC))
+				return true;
+		}
+		catch(hresult_exception& e) {
+			retVal = e.hr;
+		}
+		catch(DecoratorException& e) {
+			retVal = e.GetHResult();
+		}
+		if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
+			break;
+	}
+
+	if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED)
+		throw DecoratorException((DecoratorExceptionCode)retVal);
+
+	return false;
+}
+
 bool CompositePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;

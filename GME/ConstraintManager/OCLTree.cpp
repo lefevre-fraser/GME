@@ -1223,7 +1223,7 @@ namespace OclTree
 
 		if ( m_vecDeclarators.empty() ) {
 			char chBuffer[ 20 ];
-			sprintf( chBuffer, "!iter%d", context.m_vecImplicits.size() );
+			sprintf( chBuffer, "!iter%ld", context.m_vecImplicits.size() );
 			m_vecDeclarators.push_back( std::string( chBuffer ) );
 			context.m_vecImplicits.push_back( std::string( chBuffer ) );
 		}
@@ -1434,7 +1434,7 @@ namespace OclTree
 		if ( ! m_vecArguments.empty() ) {
 			for ( unsigned int i = 0 ; i < m_vecArguments.size() ; i++ ) {
 				char chNum[ 100 ];
-				sprintf( chNum, "%d", i );
+				sprintf( chNum, "%lu", i );
 				strOut += strTabs + TABSTR + "<Argument_" + std::string( chNum ) + ">\r\n";
 				strOut += m_vecArguments[ i ]->Print( strTabs + TABSTR + TABSTR );
 				strOut += strTabs + TABSTR + "</Argument_" + std::string( chNum ) + ">\r\n";
@@ -1534,7 +1534,7 @@ namespace OclTree
 				TypeSeq vecType = m_pThisNode->m_vecType;
 				vecType.erase( vecType.begin() );
 				char chBuffer[ 20 ];
-				sprintf( chBuffer, "!iter%d", contextIterator.m_vecImplicits.size() );
+				sprintf( chBuffer, "!iter%lu", contextIterator.m_vecImplicits.size() );
 				contextIterator.m_ctxTypes.AddVariable( std::string( chBuffer ), vecType, true );
 				contextIterator.m_vecImplicits.push_back( std::string( chBuffer ) );
 
@@ -1770,7 +1770,7 @@ namespace OclTree
 		if ( ! m_vecArguments.empty() ) {
 			for ( unsigned int i = 0 ; i < m_vecArguments.size() ; i++ ) {
 				char chNum[ 100 ];
-				sprintf( chNum, "%d", i );
+				sprintf( chNum, "%lu", i );
 				strOut += strTabs + TABSTR + "<Argument_" + std::string( chNum ) + ">\r\n";
 				strOut += m_vecArguments[ i ]->Print( strTabs + TABSTR + TABSTR );
 				strOut += strTabs + TABSTR + "</Argument_" + std::string( chNum ) + ">\r\n";
@@ -2222,9 +2222,9 @@ namespace OclTree
 							context.m_setDependencies.insert( OclMeta::Dependency( sigAttributeInner.Print(), m_mapPositions[ LID_FEATURE_NAME ] ) );
 						int iPiece = 0; char chBuffer[ 500 ];
 						std::string strDeclarator = "-" + m_strName;
-						sprintf( chBuffer, "%d", iPiece );
+						sprintf( chBuffer, "%ld", iPiece );
 						while ( context.m_ctxTypes.ExistsVariable( strDeclarator + std::string( chBuffer ) ) )
-							sprintf( chBuffer, "%d", ++iPiece );
+							sprintf( chBuffer, "%ld", ++iPiece );
 
 						VariableNode* pVariableNode = GetTreeManager()->CreateVariable();
 						pVariableNode->m_strName = strDeclarator + std::string( chBuffer );
@@ -2683,7 +2683,7 @@ namespace OclTree
 
 		for ( unsigned int i = 0 ; i < pNode->m_vecNodes.size() ; i++ ) {
 			char chNum[ 100 ];
-			sprintf( chNum, "%d", i );
+			sprintf( chNum, "%lu", i );
 			strOut += strTabs + TABSTR + "<Element_" + std::string( chNum ) + ">\r\n";
 			strOut += pNode->m_vecNodes[ i ]->Print( strTabs + TABSTR + TABSTR );
 			strOut += strTabs + TABSTR + "</Element_" + std::string( chNum ) + ">\r\n";

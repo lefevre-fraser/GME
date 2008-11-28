@@ -43,7 +43,7 @@ bool CScriptEdit::Init(CConsoleCtrl *cons)
 	catch(hresult_exception &e) 
 	{ 
 		char s[200];
-		sprintf(s, "Scripting Initialization Error: %d", e.hr);
+		sprintf(s, "Scripting Initialization Error: %ld", e.hr);
 		m_console->Message((LPCTSTR)s, MSG_ERROR);
 		return false;
 	}

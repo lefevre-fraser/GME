@@ -526,6 +526,82 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance
 	return retVal;
 }
 
+STDMETHODIMP CNewMetaDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+{
+	HRESULT retVal = S_OK;
+	try {
+		if (m_pNewDecorator->DragEnter((DROPEFFECT*)dropEffect, (COleDataObject*)pCOleDataObject, (DWORD)keyState, CPoint(pointx, pointy), (HDC)transformHDC)) {
+			retVal = S_DECORATOR_EVENT_HANDLED;
+		} else {
+			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
+			*dropEffect = DROPEFFECT_NONE;
+		}
+	}
+	catch(hresult_exception& e) {
+		retVal = e.hr;
+	}
+	catch(DecoratorException& e) {
+		retVal = e.GetHResult();
+	}
+	return retVal;
+}
+
+STDMETHODIMP CNewMetaDecoratorImpl::DragLeave()
+{
+	HRESULT retVal = S_OK;
+	try {
+		if (m_pNewDecorator->DragLeave())
+			retVal = S_DECORATOR_EVENT_HANDLED;
+		else
+			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
+	}
+	catch(hresult_exception& e) {
+		retVal = e.hr;
+	}
+	catch(DecoratorException& e) {
+		retVal = e.GetHResult();
+	}
+	return retVal;
+}
+
+STDMETHODIMP CNewMetaDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+{
+	HRESULT retVal = S_OK;
+	try {
+		if (m_pNewDecorator->DragOver((DROPEFFECT*)dropEffect, (COleDataObject*)pCOleDataObject, (DWORD)keyState, CPoint(pointx, pointy), (HDC)transformHDC)) {
+			retVal = S_DECORATOR_EVENT_HANDLED;
+		} else {
+			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
+			*dropEffect = DROPEFFECT_NONE;
+		}
+	}
+	catch(hresult_exception& e) {
+		retVal = e.hr;
+	}
+	catch(DecoratorException& e) {
+		retVal = e.GetHResult();
+	}
+	return retVal;
+}
+
+STDMETHODIMP CNewMetaDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+{
+	HRESULT retVal = S_OK;
+	try {
+		if (m_pNewDecorator->Drop((COleDataObject*)pCOleDataObject, (DROPEFFECT)dropEffect, CPoint(pointx, pointy), (HDC)transformHDC))
+			retVal = S_DECORATOR_EVENT_HANDLED;
+		else
+			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
+	}
+	catch(hresult_exception& e) {
+		retVal = e.hr;
+	}
+	catch(DecoratorException& e) {
+		retVal = e.GetHResult();
+	}
+	return retVal;
+}
+
 STDMETHODIMP CNewMetaDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;

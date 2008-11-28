@@ -248,7 +248,7 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="MetaGME-model.xml"
+			RelativePath=".\MetaGME-model.xme"
 			>
 		</File>
 		<File

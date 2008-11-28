@@ -4,6 +4,7 @@
 //	OCLObjectExBasic.cpp
 //
 //###############################################################################################################################################
+#include "StdAfx.h"
 #include "Solve4786.h"
 #include "OCLObjectExBasic.h"
 #include "OCLType.h"
@@ -20,8 +21,8 @@ namespace OclBasic
 
 	std::string PrintCollection( const std::string& strTypeName, const OclMeta::ObjectVector& vecElements )
 	{
-		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%d", vecElements.size() );
+		CString chBuffer;
+		chBuffer.Format( "%lu", vecElements.size() );
 		return strTypeName + " { size: " + std::string( chBuffer ) + "; } ";
 		/*
 		std::string strObject = strTypeName + " { " + std::string( chBuffer ) + " , [ ";
@@ -264,7 +265,7 @@ namespace OclBasic
 	std::string Real::Print() const
 	{
 		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%f", m_Value );
+		sprintf( chBuffer, "%lf", m_Value );
 		return "ocl::Real { " + std::string( chBuffer ) + " }";
 	}
 
@@ -318,7 +319,7 @@ namespace OclBasic
 		double lValue;
 		Real::GetValue( lValue );
 		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%d", (long) lValue );
+		sprintf( chBuffer, "%ld", (long) lValue );
 		return "ocl::Integer { " + std::string( chBuffer ) + " }";
 	}
 

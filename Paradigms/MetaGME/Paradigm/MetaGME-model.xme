@@ -3577,7 +3577,7 @@ dName = dstModels</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -4224,7 +4224,7 @@ self.aspectHasMember(Set{})</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -5526,7 +5526,7 @@ lines &lt;&gt; &quot;&quot; implies lines.toInteger() &gt; 0 and lines.toInteger
 					<value>nwNESW</value>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -6050,7 +6050,7 @@ Double, double</value>
 					<value>nesNESW</value>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -6194,7 +6194,7 @@ Double, double</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -8412,7 +8412,7 @@ endif
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -9238,7 +9238,7 @@ dName = bdst</value>
 					<value>nswNSW</value>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -9388,7 +9388,7 @@ dName = bdst</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -11389,7 +11389,7 @@ ctx &lt;&gt; &quot;&quot; implies ctx.match( &quot;^&quot; + id + &quot;(::&quot
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -12256,7 +12256,7 @@ attribute , attribute
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -13122,7 +13122,7 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -13556,7 +13556,7 @@ dName = dstConnection</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -14016,7 +14016,7 @@ Right Half-Arrow, right half arrow</value>
 					<value>nesw</value>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -19876,7 +19876,7 @@ dName = dstSameAspect</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -20273,7 +20273,7 @@ dName = dstSameFolder</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -20505,7 +20505,7 @@ dName = dstFCO</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -22173,7 +22173,7 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 					<value>neswNESW</value>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -22531,7 +22531,7 @@ dName = dstReferTo</value>
 					<value>neswNESW</value>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -23287,7 +23287,7 @@ rrName = src</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -23626,7 +23626,7 @@ dName=dstSets</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -24743,7 +24743,7 @@ dName=dstSets</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -25219,7 +25219,7 @@ Center, 8</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -25680,7 +25680,7 @@ dName = dstContainment</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -26727,7 +26727,7 @@ dName = dstContainment</value>
 					<value>neswNESW</value>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -26898,7 +26898,7 @@ dName = dstContainment</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -27029,7 +27029,7 @@ rrName = src</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -28442,7 +28442,7 @@ self.folderInFolderGen(Set{})</value>
 					<value>neswNESW</value>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -28983,7 +28983,7 @@ dName = srcFolderContainment</value>
 					</regnode>
 				</regnode>
 				<attribute kind="Decorator">
-					<value>Mga.Decorator.NewMetaDecorator</value>
+					<value>Mga.Decorator.MetaDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>

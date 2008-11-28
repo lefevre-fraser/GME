@@ -318,7 +318,7 @@ void XmlAttrLong::fromString(const char * str)
 void XmlAttrLong::toString(std::string& str) const
 {
     static char buf[100];
-    sprintf( buf, "%d", m_value );
+    sprintf( buf, "%ld", m_value );
     str = buf;
 }
 

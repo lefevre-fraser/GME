@@ -151,7 +151,7 @@ STDMETHODIMP CScriptHost::OnScriptError(
 		desc.Replace("\n", "<br>");		// 0a newlines
 
 		char err[5000];
-		sprintf(err, "Scripting Error at Position: %d Line: %u<br>%s", ch, line, desc);
+		sprintf(err, "Scripting Error at Position: %ld Line: %lu<br>%s", ch, line, (const char*)desc);
 		m_console->Message((LPCTSTR)err, MSG_ERROR);
 	}
 	catch(hresult_exception &e) 

@@ -10,8 +10,7 @@ CRecentConnStrList::CRecentConnStrList(UINT nStart, LPCTSTR lpszSection,
 	LPCTSTR lpszEntryFormat, int nSize, int nMaxDispLen)
 {
 	ASSERT(nSize != 0);
-	m_arrNames = new CString[nSize];
-	m_nSize = nSize;
+	m_arrNames.resize(nSize);
 
 	m_nStart = nStart;
 	m_strSectionName = lpszSection;
@@ -21,29 +20,28 @@ CRecentConnStrList::CRecentConnStrList(UINT nStart, LPCTSTR lpszSection,
 
 CRecentConnStrList::~CRecentConnStrList()
 {
-	delete[] m_arrNames;
 }
 
 // Operations
 void CRecentConnStrList::Add(LPCTSTR lpszConnName)
 {
-	ASSERT(m_arrNames != NULL);
+	ASSERT(m_arrNames.size() > 0);
 	ASSERT(lpszConnName != NULL);
 	ASSERT(AfxIsValidString(lpszConnName));
 
 	// update the MRU list, if an existing MRU string matches conn name
 	int iMRU;
-	for (iMRU = 0; iMRU < m_nSize-1; iMRU++)
+	for (iMRU = 0; iMRU < (int)m_arrNames.size() - 1; iMRU++)
 	{
-		if (lstrcmp(m_arrNames[iMRU], lpszConnName) == 0)
+		if (m_arrNames[iMRU].Compare(lpszConnName) == 0)
 			break;      // iMRU will point to matching entry
 	}
 	// move MRU strings before this one down
 	for (; iMRU > 0; iMRU--)
 	{
 		ASSERT(iMRU > 0);
-		ASSERT(iMRU < m_nSize);
-		m_arrNames[iMRU] = m_arrNames[iMRU-1];
+		ASSERT(iMRU < (int)m_arrNames.size());
+		m_arrNames[iMRU] = m_arrNames[iMRU - 1];
 	}
 	// place this one at the beginning
 	m_arrNames[0] = lpszConnName;
@@ -52,21 +50,21 @@ void CRecentConnStrList::Add(LPCTSTR lpszConnName)
 void CRecentConnStrList::Remove(int nIndex)
 {
 	ASSERT(nIndex >= 0);
-	ASSERT(nIndex < m_nSize);
+	ASSERT(nIndex < (int)m_arrNames.size());
 
 	m_arrNames[nIndex].Empty();
 	int iMRU;
-	for (iMRU = nIndex; iMRU < m_nSize-1; iMRU++)
+	for (iMRU = nIndex; iMRU < (int)m_arrNames.size() - 1; iMRU++)
 		m_arrNames[iMRU] = m_arrNames[iMRU+1];
 
-	ASSERT(iMRU < m_nSize);
+	ASSERT(iMRU < (int)m_arrNames.size());
 	m_arrNames[iMRU].Empty();
 }
 
 BOOL CRecentConnStrList::GetDisplayName(CString& strName, int nIndex) const
 {
-	ASSERT(m_arrNames != NULL);
-	ASSERT(nIndex < m_nSize);
+	ASSERT(m_arrNames.size() > 0);
+	ASSERT(nIndex < (int)m_arrNames.size());
 	if (m_arrNames[nIndex].IsEmpty())
 		return FALSE;
 
@@ -76,7 +74,7 @@ BOOL CRecentConnStrList::GetDisplayName(CString& strName, int nIndex) const
 
 void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI,bool enable)
 {
-	ASSERT(m_arrNames != NULL);
+	ASSERT(m_arrNames.size() > 0);
 
 	CMenu* pMenu = pCmdUI->m_pMenu;
 	if (m_strOriginal.IsEmpty() && pMenu != NULL)
@@ -94,37 +92,26 @@ void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI,bool enable)
 	if (pCmdUI->m_pMenu == NULL)
 		return;
 
-	for (int iMRU = 0; iMRU < m_nSize; iMRU++)
+	for (unsigned int iMRU = 0; iMRU < m_arrNames.size(); iMRU++)
 		pCmdUI->m_pMenu->DeleteMenu(pCmdUI->m_nID + iMRU, MF_BYCOMMAND);
 
 	CString strName;
-	CString strTemp;
-	for (int iMRU = 0; iMRU < m_nSize; iMRU++)
+	for (int iMRU = 0; iMRU < (int)m_arrNames.size(); iMRU++)
 	{
 		if (!GetDisplayName(strName, iMRU))
 			break;
 
 		// double up any '&' characters so they are not underlined
-		LPCTSTR lpszSrc = strName;
-		LPTSTR lpszDest = strTemp.GetBuffer(strName.GetLength()*2);
-		while (*lpszSrc != 0)
-		{
-			if (*lpszSrc == '&')
-				*lpszDest++ = '&';
-			if (_istlead(*lpszSrc))
-				*lpszDest++ = *lpszSrc++;
-			*lpszDest++ = *lpszSrc++;
-		}
-		*lpszDest = 0;
-		strTemp.ReleaseBuffer();
+		strName.Replace("&", "&&");
 
 		// insert mnemonic + the file name
-		TCHAR buf[10];
-		wsprintf(buf, _T("&%d "), (iMRU+1+m_nStart) % 10);
+		CString buf;
+		buf.Format("&%ld ", (iMRU + 1 + m_nStart) % 10);
 		pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex,
 			MF_STRING | MF_BYPOSITION, pCmdUI->m_nID,
-			CString(buf) + strTemp);
-		if( !enable ) pCmdUI->Enable(FALSE);
+			buf + strName);
+		if (!enable)
+			pCmdUI->Enable(FALSE);
 		pCmdUI->m_nIndex++;
 		pCmdUI->m_nID++;
 	}
@@ -138,37 +125,35 @@ void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI,bool enable)
 
 void CRecentConnStrList::WriteList()
 {
-	ASSERT(m_arrNames != NULL);
+	ASSERT(m_arrNames.size() > 0);
 	ASSERT(!m_strSectionName.IsEmpty());
 	ASSERT(!m_strEntryFormat.IsEmpty());
-	LPTSTR pszEntry = new TCHAR[m_strEntryFormat.GetLength()+5];
+	CString strEntry;
 	CWinApp* pApp = AfxGetApp();
 	pApp->WriteProfileString(m_strSectionName, NULL, NULL);
-	for (int iMRU = 0; iMRU < m_nSize; iMRU++)
+	for (int iMRU = 0; iMRU < (int)m_arrNames.size(); iMRU++)
 	{
-		wsprintf(pszEntry, m_strEntryFormat, iMRU + 1);
+		strEntry.Format(m_strEntryFormat, iMRU + 1);
 		if (!m_arrNames[iMRU].IsEmpty())
 		{
-			pApp->WriteProfileString(m_strSectionName, pszEntry,
+			pApp->WriteProfileString(m_strSectionName, strEntry,
 				m_arrNames[iMRU]);
 		}
 	}
-	delete[] pszEntry;
 }
 
 void CRecentConnStrList::ReadList()
 {
-	ASSERT(m_arrNames != NULL);
+	ASSERT(m_arrNames.size() > 0);
 	ASSERT(!m_strSectionName.IsEmpty());
 	ASSERT(!m_strEntryFormat.IsEmpty());
-	LPTSTR pszEntry = new TCHAR[m_strEntryFormat.GetLength()+5];
+	CString strEntry;
 	CWinApp* pApp = AfxGetApp();
-	for (int iMRU = 0; iMRU < m_nSize; iMRU++)
+	for (int iMRU = 0; iMRU < (int)m_arrNames.size(); iMRU++)
 	{
-		wsprintf(pszEntry, m_strEntryFormat, iMRU + 1);
+		strEntry.Format(m_strEntryFormat, iMRU + 1);
 		m_arrNames[iMRU] = pApp->GetProfileString(
-			m_strSectionName, pszEntry, NULL);// '&afxChNil' previously
+			m_strSectionName, strEntry, NULL);// '&afxChNil' previously
 	}
-	delete[] pszEntry;
 }
 

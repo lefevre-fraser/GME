@@ -622,24 +622,24 @@ void CMainFrame::CreateNewView(CView *view, CComPtr<IMgaModel>& model)
 	}
 }
 
-void CMainFrame::WriteStatusMode(const char *txt)
+void CMainFrame::WriteStatusMode(const CString& txt)
 {
 	WriteStatusText(modePaneNo,txt);
 }
 
-void CMainFrame::WriteStatusParadigm(const char *txt)
+void CMainFrame::WriteStatusParadigm(const CString& txt)
 {
 	WriteStatusText(paradigmPaneNo,txt);
 }
 
 void CMainFrame::WriteStatusZoom(int zoomPct)
 {
-	char txt[32];
-	sprintf(txt,"%d%%",zoomPct);
+	CString txt;
+	txt.Format("%d%%", zoomPct);
 	WriteStatusText(zoomPaneNo,txt);
 }
 
-void CMainFrame::WriteStatusText(int pane,const char *txt)
+void CMainFrame::WriteStatusText(int pane, const CString& txt)
 {
 	CSize size;
 	{

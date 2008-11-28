@@ -176,6 +176,26 @@ bool NewBoxDecorator::MouseWheelTurned(UINT nFlags, short distance, const CPoint
 	return m_part->MouseWheelTurned(nFlags, distance, point, transformHDC);
 }
 
+bool NewBoxDecorator::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
+{
+	return m_part->DragEnter(dropEffect, pDataObject, dwKeyState, point, transformHDC);
+}
+
+bool NewBoxDecorator::DragLeave(void)
+{
+	return m_part->DragLeave();
+}
+
+bool NewBoxDecorator::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
+{
+	return m_part->DragOver(dropEffect, pDataObject, dwKeyState, point, transformHDC);
+}
+
+bool NewBoxDecorator::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, const CPoint& point, HDC transformHDC)
+{
+	return m_part->Drop(pDataObject, dropEffect, point, transformHDC);
+}
+
 bool NewBoxDecorator::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return m_part->MenuItemSelected(menuItemId, nFlags, point, transformHDC);

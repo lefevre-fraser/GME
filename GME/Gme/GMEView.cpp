@@ -1858,6 +1858,9 @@ void CGMEView::Reset(bool doInvalidate)
 		TRACE("CGMEView::Reset GetActiveView\n");
 		/*gmeviewA->*/m_refreshpannwin = true; 
 	}
+	CComPtr<IMgaFCO> selConn;
+	if (selectedConnection != NULL)
+		selConn = selectedConnection->mgaFco;
 	try {
 	BeginTransaction(TRANSACTION_READ_ONLY);
 		validGuiObjects = false;
@@ -1925,6 +1928,7 @@ void CGMEView::Reset(bool doInvalidate)
 			delete annotators.GetNext(pos);
 		}
 
+		ClearConnectionSelection();
 		pos = connections.GetHeadPosition();
 		while(pos) {
 			CGuiConnection *conn = connections.GetNext(pos);
@@ -1942,7 +1946,6 @@ void CGMEView::Reset(bool doInvalidate)
 		connections.RemoveAll();
 		selected.RemoveAll(); // we don't call here the this->SendUnselEvent4List( &selected); because it might contain freshly deleted objects, which can't be notified
 		RemoveAllAnnotationFromSelection();
-		ClearConnectionSelection();
 
 
 		// Now build up new objectset
@@ -2092,6 +2095,18 @@ void CGMEView::Reset(bool doInvalidate)
 					if (newDecorator)
 						HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
 				}
+			}
+		}
+	}
+
+	if (selConn != NULL) {
+		pos = connections.GetHeadPosition();
+		while(pos) {
+			CGuiConnection *conn = connections.GetNext(pos);
+			if (conn->mgaFco == selConn) {
+				selectedConnection = conn;
+				conn->SetSelect(true);
+				break;
 			}
 		}
 	}
@@ -4440,12 +4455,12 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						int num;
 						if((num = currentModel->CheckForReferences(selected)) > 0) {
 							char txt[128];
-							sprintf(txt,"Selected model(s) cannot be deleted due to %d reference(s)",num);
+							sprintf(txt,"Selected model(s) cannot be deleted due to %ld reference(s)",num);
 							AfxMessageBox(txt,MB_OK | MB_ICONSTOP);
 						}
 						else if((num = currentModel->CheckForInherited(selected)) > 0) {
 							char txt[128];
-							sprintf(txt,"Selected model(s) cannot be deleted due to %d inherited part(s)",num);
+							sprintf(txt,"Selected model(s) cannot be deleted due to %ld inherited part(s)",num);
 							AfxMessageBox(txt,MB_OK | MB_ICONSTOP);
 						}
 						else {

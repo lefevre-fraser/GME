@@ -2,6 +2,8 @@
 #ifndef MGA_RECENTCONNSTRLIST_H
 #define MGA_RECENTCONNSTRLIST_H
 
+#include <vector>
+
 /*
 	This class is based on the CRecentFileList class, but unfortunately we
 	could not reuse it as it was, it is too coupled with files.
@@ -19,9 +21,9 @@ public:
 		int nMaxDispLen = 40);
 
 // Attributes
-	int GetSize() const { return m_nSize; }
+	int GetSize() const { return m_arrNames.size(); }
 	CString& operator[](int nIndex) 
-	{ ASSERT(nIndex < m_nSize); return m_arrNames[nIndex]; }
+	{ return m_arrNames[nIndex]; }
 
 // Operations
 	void Remove(int nIndex);
@@ -34,8 +36,7 @@ public:
 // Implementation
 	virtual ~CRecentConnStrList();
 
-	int m_nSize;                // contents of the MRU list
-	CString* m_arrNames;
+	std::vector<CString> m_arrNames;
 	CString m_strSectionName;   // for saving
 	CString m_strEntryFormat;
 	UINT m_nStart;              // for displaying

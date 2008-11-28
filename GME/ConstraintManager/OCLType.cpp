@@ -662,7 +662,7 @@ namespace OclMeta
 #ifdef _WIN32
 		_itoa(level, signoStr, 10);  
 #else
-		sprintf( signoStr, "%d", level );
+		sprintf( signoStr, "%ld", level );
 #endif
 		signo += signoStr;
 

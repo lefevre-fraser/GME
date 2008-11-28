@@ -225,6 +225,28 @@ bool PartBase::MouseWheelTurned(UINT nFlags, short distance, const CPoint& point
 	return false;
 }
 
+bool PartBase::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
+{
+	dropEffect = DROPEFFECT_NONE;
+	return false;
+}
+
+bool PartBase::DragLeave(void)
+{
+	return false;
+}
+
+bool PartBase::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
+{
+	dropEffect = DROPEFFECT_NONE;
+	return false;
+}
+
+bool PartBase::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, const CPoint& point, HDC transformHDC)
+{
+	return false;
+}
+
 bool PartBase::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return false;

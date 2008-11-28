@@ -226,6 +226,30 @@ bool ModelTransparentPart::MouseWheelTurned(UINT nFlags, short distance, const C
 	return false;
 }
 
+bool ModelTransparentPart::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
+{
+	// TODO: relay events
+	return false;
+}
+
+bool ModelTransparentPart::DragLeave(void)
+{
+	// TODO: relay events
+	return false;
+}
+
+bool ModelTransparentPart::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
+{
+	// TODO: relay events
+	return false;
+}
+
+bool ModelTransparentPart::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, const CPoint& point, HDC transformHDC)
+{
+	// TODO: relay events
+	return false;
+}
+
 bool ModelTransparentPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	// TODO: relay events
