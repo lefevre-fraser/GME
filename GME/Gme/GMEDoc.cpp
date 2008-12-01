@@ -76,40 +76,10 @@ CGMEDoc::CGMEDoc()
 
 	editMode = GME_EDIT_MODE;
 
-	modeBar.CreateEx(CMainFrame::theInstance,
-        TBSTYLE_TRANSPARENT | TBSTYLE_FLAT, 
-        WS_CHILD|WS_VISIBLE|CBRS_ALIGN_LEFT, 
-        CRect(0,0,0,0),
-        IDW_TOOLBAR_MODE); // provide unqiue ID for each toolbar [important !!!] 
-                           // see MainFrm.cpp OnCreate for other details
-	modeBar.LoadToolBar(IDR_TOOLBAR_MODE);
-	modeBar.SetPaneStyle(modeBar.GetPaneStyle() 
-		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-	modeBar.EnableDocking(CBRS_ALIGN_ANY);
-	modeBar.SetWindowText(_T("Mode")); // will show this title when floating
-
-	CMainFrame::theInstance->ShowPane(&modeBar, TRUE, FALSE, FALSE);
-	CMainFrame::theInstance->DockPane(&modeBar,AFX_IDW_DOCKBAR_LEFT);
-
-	CRect rd;
-	CMainFrame::theInstance->RecalcLayout(TRUE);
-	modeBar.GetWindowRect(rd);
-	rd.OffsetRect( 0, rd.Height());
+	// Making the navigation and mode toolbars visible
+	CMainFrame::theInstance->ShowNavigationAndModeToolbars(true);
 	
 
-	naviBar.CreateEx( CMainFrame::theInstance,
-		TBSTYLE_TRANSPARENT | TBSTYLE_FLAT,
-		WS_CHILD|WS_VISIBLE|CBRS_ALIGN_LEFT,
-		CRect(0,0,0,0),
-		IDW_TOOLBAR_NAVIG); // unique!
-	naviBar.LoadToolBar( IDR_TOOLBAR_NAVIG);
-	naviBar.SetPaneStyle( naviBar.GetPaneStyle()
-		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-	naviBar.EnableDocking(CBRS_ALIGN_ANY);
-	naviBar.SetWindowText(_T("Navigator")); // will show this title when floating
-
-	CMainFrame::theInstance->ShowPane(&naviBar, TRUE, FALSE, FALSE);
-	CMainFrame::theInstance->DockPane(&naviBar,AFX_IDW_DOCKBAR_LEFT, rd);
 
 	try {
 	    COMTHROW( resolver.CoCreateInstance(L"Mga.MgaResolver"));
@@ -122,12 +92,6 @@ CGMEDoc::CGMEDoc()
 CGMEDoc::~CGMEDoc()
 {
 	theInstance = 0;
-	if (modeBar.GetSafeHwnd() && (!modeBar.IsWindowVisible())) {
-		CMainFrame::theInstance->ShowPane(&modeBar, FALSE, FALSE, FALSE);
-	}
-	if (naviBar.GetSafeHwnd() && (!naviBar.IsWindowVisible())) {
-		CMainFrame::theInstance->ShowPane(&naviBar, FALSE, FALSE, FALSE);
-	}
 }
 
 bool CGMEDoc::CreateFcoList(CGuiObjectList* list,CComPtr<IMgaFCOs> &fcos,CGMEView *view)
@@ -977,6 +941,9 @@ void CGMEDoc::OnCloseDocument(bool suppressErrors)
 #endif
 	}
 
+	// Making navigation and mode bars invisible
+	CMainFrame::theInstance->ShowNavigationAndModeToolbars(false);
+	
 	CDocument::OnCloseDocument();
 	resolver = NULL;
 	theApp.CloseProject();

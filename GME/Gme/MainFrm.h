@@ -106,6 +106,10 @@ protected:  // control bar embedded members
 	CMFCToolBar			m_wndToolBarWins;
 	CMFCMenuBar			m_wndMenuBar;
 
+	CMFCToolBar modeBar;
+	CMFCToolBar naviBar;
+
+
 
 	CComponentBar		m_wndComponentBar;
 //	CDialogBar			m_wndDlgBar;
@@ -163,6 +167,10 @@ protected:
 	afx_msg void OnMdiNewHorzTabGroup();
 	afx_msg void OnMdiNewVertGroup();
 	LRESULT OnToolbarCreateNew(WPARAM wp,LPARAM lp);
+	afx_msg void OnWindowNewhorizontaltabgroup();
+	afx_msg void OnWindowNewverticaltabgroup();
+	afx_msg void OnWindowMovetoprevioustabgroup();
+	afx_msg void OnWindowMovetonexttabgroup();
 
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
@@ -174,10 +182,8 @@ private:
 //	IMgaObject*	folderFindByPath(IMgaFolder* folder, const wstring& strPath);
 
 public:
-	afx_msg void OnWindowNewhorizontaltabgroup();
-	afx_msg void OnWindowNewverticaltabgroup();
-	afx_msg void OnWindowMovetoprevioustabgroup();
-	afx_msg void OnWindowMovetonexttabgroup();
+	void ShowNavigationAndModeToolbars(bool isVisible);
+
 };
 
 /////////////////////////////////////////////////////////////////////////////
