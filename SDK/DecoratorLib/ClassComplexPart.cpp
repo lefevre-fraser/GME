@@ -964,75 +964,6 @@ bool ClassComplexPart::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataOb
 	return false;
 }
 
-bool ClassComplexPart::DragLeave(void)
-{
-	HRESULT retVal = S_OK;
-	try {
-		if (VectorPart::DragLeave())
-			return true;
-	}
-	catch(hresult_exception& e) {
-		retVal = e.hr;
-	}
-	catch(DecoratorException& e) {
-		retVal = e.GetHResult();
-	}
-	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_LabelPart->DragLeave())
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
-	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_StereotypePart->DragLeave())
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
-		for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
-			try {
-				if ((*ii)->DragLeave())
-					return true;
-			}
-			catch(hresult_exception& e) {
-				retVal = e.hr;
-			}
-			catch(DecoratorException& e) {
-				retVal = e.GetHResult();
-			}
-			if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
-				break;
-		}
-	}
-	if (m_copySignPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
-		try {
-			if (m_copySignPart->DragLeave())
-				return true;
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
-
-	return false;
-}
-
 bool ClassComplexPart::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
@@ -1131,6 +1062,63 @@ bool ClassComplexPart::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, 
 		for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 			try {
 				if ((*ii)->Drop(pDataObject, dropEffect, point, transformHDC))
+					return true;
+			}
+			catch(hresult_exception& e) {
+				retVal = e.hr;
+			}
+			catch(DecoratorException& e) {
+				retVal = e.GetHResult();
+			}
+			if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
+				break;
+		}
+	}
+
+	return false;
+}
+
+bool ClassComplexPart::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transformHDC)
+{
+	HRESULT retVal = S_OK;
+	try {
+		if (VectorPart::DropFile(p_hDropInfo, point, transformHDC))
+			return true;
+	}
+	catch(hresult_exception& e) {
+		retVal = e.hr;
+	}
+	catch(DecoratorException& e) {
+		retVal = e.GetHResult();
+	}
+	if (m_LabelPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
+		try {
+			if (m_LabelPart->DropFile(p_hDropInfo, point, transformHDC))
+				return true;
+		}
+		catch(hresult_exception& e) {
+			retVal = e.hr;
+		}
+		catch(DecoratorException& e) {
+			retVal = e.GetHResult();
+		}
+	}
+	if (m_StereotypePart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED)) {
+		try {
+			if (m_StereotypePart->DropFile(p_hDropInfo, point, transformHDC))
+				return true;
+		}
+		catch(hresult_exception& e) {
+			retVal = e.hr;
+		}
+		catch(DecoratorException& e) {
+			retVal = e.GetHResult();
+		}
+	}
+	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+		for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
+			try {
+				if ((*ii)->DropFile(p_hDropInfo, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {

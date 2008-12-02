@@ -537,24 +537,6 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG 
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::DragLeave()
-{
-	HRESULT retVal = S_OK;
-	try {
-		if (m_pNewDecorator->DragLeave())
-			retVal = S_DECORATOR_EVENT_HANDLED;
-		else
-			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
-	}
-	catch(hresult_exception& e) {
-		retVal = e.hr;
-	}
-	catch(DecoratorException& e) {
-		retVal = e.GetHResult();
-	}
-	return retVal;
-}
-
 STDMETHODIMP CNewAnnotatorDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
@@ -580,6 +562,24 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG d
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pNewDecorator->Drop((COleDataObject*)pCOleDataObject, (DROPEFFECT)dropEffect, CPoint(pointx, pointy), (HDC)transformHDC))
+			retVal = S_DECORATOR_EVENT_HANDLED;
+		else
+			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
+	}
+	catch(hresult_exception& e) {
+		retVal = e.hr;
+	}
+	catch(DecoratorException& e) {
+		retVal = e.GetHResult();
+	}
+	return retVal;
+}
+
+STDMETHODIMP CNewAnnotatorDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+{
+	HRESULT retVal = S_OK;
+	try {
+		if (m_pNewDecorator->DropFile((HDROP)hDropInfo, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;

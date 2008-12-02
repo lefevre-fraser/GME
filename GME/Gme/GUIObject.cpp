@@ -18,6 +18,7 @@
 #include "AutoRoute/AutoRouterPath.h"
 
 #include "GMEEventLogger.h"
+#include "MainFrm.h"
 
 
 CModelGrid modelGrid;
@@ -1240,6 +1241,7 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 			COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
 	}
 	catch (hresult_exception &e) {
+		CMainFrame::theInstance->m_console.Message("Cannot create " + progId + " decorator! Trying default " + GME_DEFAULT_DECORATOR + " decorator.", 3);
 		try {
 			if (progId != GME_DEFAULT_DECORATOR) {
 				// AfxMessageBox does not work here becase some stupid Win32 event mechanisms
@@ -1254,7 +1256,7 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 			}
 		}
 		catch (hresult_exception &e) {
-			AfxMessageBox("Cannot create default decorator.\nGiving up.");
+			CMainFrame::theInstance->m_console.Message("Cannot create default decorator.\nGiving up.", 3);
 			throw hresult_exception(e.hr);
 		}
 	}

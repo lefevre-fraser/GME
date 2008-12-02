@@ -391,7 +391,7 @@ BOOL CGMEApp::InitInstance()
 	dynmenus_need_refresh = true;
 
 	GetSettings();
-	m_pMainWnd->DragAcceptFiles();
+	m_pMainWnd->DragAcceptFiles(TRUE);
 
 	return TRUE;
 }

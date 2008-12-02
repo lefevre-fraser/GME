@@ -890,55 +890,6 @@ bool ModelComplexPart::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataOb
 	return false;
 }
 
-bool ModelComplexPart::DragLeave(void)
-{
-	HRESULT retVal = S_OK;
-	try {
-		if (TypeableBitmapPart::DragLeave())
-			return true;
-	}
-	catch(hresult_exception& e) {
-		retVal = e.hr;
-	}
-	catch(DecoratorException& e) {
-		retVal = e.GetHResult();
-	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
-		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
-			try {
-				if ((*ii)->DragLeave())
-					return true;
-			}
-			catch(hresult_exception& e) {
-				retVal = e.hr;
-			}
-			catch(DecoratorException& e) {
-				retVal = e.GetHResult();
-			}
-			if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
-				break;
-		}
-	}
-	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
-		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
-			try {
-				if ((*ii)->DragLeave())
-					return true;
-			}
-			catch(hresult_exception& e) {
-				retVal = e.hr;
-			}
-			catch(DecoratorException& e) {
-				retVal = e.GetHResult();
-			}
-			if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
-				break;
-		}
-	}
-
-	return false;
-}
-
 bool ModelComplexPart::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
@@ -1021,6 +972,55 @@ bool ModelComplexPart::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, 
 		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 			try {
 				if ((*ii)->Drop(pDataObject, dropEffect, point, transformHDC))
+					return true;
+			}
+			catch(hresult_exception& e) {
+				retVal = e.hr;
+			}
+			catch(DecoratorException& e) {
+				retVal = e.GetHResult();
+			}
+			if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
+				break;
+		}
+	}
+
+	return false;
+}
+
+bool ModelComplexPart::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transformHDC)
+{
+	HRESULT retVal = S_OK;
+	try {
+		if (TypeableBitmapPart::DropFile(p_hDropInfo, point, transformHDC))
+			return true;
+	}
+	catch(hresult_exception& e) {
+		retVal = e.hr;
+	}
+	catch(DecoratorException& e) {
+		retVal = e.GetHResult();
+	}
+	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
+			try {
+				if ((*ii)->DropFile(p_hDropInfo, point, transformHDC))
+					return true;
+			}
+			catch(hresult_exception& e) {
+				retVal = e.hr;
+			}
+			catch(DecoratorException& e) {
+				retVal = e.GetHResult();
+			}
+			if (retVal != S_OK && retVal != S_DECORATOR_EVENT_NOT_HANDLED && retVal != E_DECORATOR_NOT_IMPLEMENTED)
+				break;
+		}
+	}
+	if (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED) {
+		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
+			try {
+				if ((*ii)->DropFile(p_hDropInfo, point, transformHDC))
 					return true;
 			}
 			catch(hresult_exception& e) {

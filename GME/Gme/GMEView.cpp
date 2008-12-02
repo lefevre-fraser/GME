@@ -275,6 +275,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_WM_SIZE()
 	ON_WM_ERASEBKGND()
 	ON_WM_SETCURSOR()
+	ON_WM_DROPFILES()
 	ON_EN_KILLFOCUS(IDC_NAME, OnKillfocusNameProp)
 	ON_CBN_SELCHANGE(IDC_ASPECT, OnSelChangeAspectProp)
 	ON_WM_LBUTTONUP()
@@ -1005,6 +1006,7 @@ void CGMEView::OnInitialUpdate()
 	EndWaitCursor();
 
 	SendOpenModelEvent();
+	DragAcceptFiles(TRUE);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -4041,6 +4043,31 @@ BOOL CGMEView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 	return TRUE;
 }
 
+void CGMEView::OnDropFiles(HDROP p_hDropInfo)
+{
+	CPoint point;
+	DragQueryPoint(p_hDropInfo, &point);
+	CoordinateTransfer(point);
+
+	CGuiObject* selection = FindObject(point);
+	HRESULT retVal = S_OK;
+	if (selection != NULL) {
+		CGuiAspect* pAspect = selection->GetCurrentAspect();
+		if (pAspect != NULL) {
+			CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+			if (newDecorator) {
+				CClientDC transformDC(this);
+				OnPrepareDC(&transformDC);
+				retVal = newDecorator->DropFile((ULONGLONG)p_hDropInfo, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+			}
+		}
+	}
+	if (retVal == S_DECORATOR_EVENT_HANDLED)
+		return;
+
+	CMainFrame::theInstance->OnDropFiles(p_hDropInfo);
+}
+
 void CGMEView::OnKillfocusNameProp()
 {
 	if(!initDone)
@@ -5094,6 +5121,7 @@ DROPEFFECT CGMEView::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeyState, 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnDragEnter in "+path+name+"\r\n");
 	ASSERT(prevDropEffect == DROPEFFECT_NONE);
+
 	if(isType && CGMEDataSource::IsGmeNativeDataAvailable(pDataObject,theApp.mgaProject)) {
 //	if(pDataObject->IsDataAvailable(CGMEDataSource::cfGMEDesc)) {
 
@@ -5105,6 +5133,40 @@ DROPEFFECT CGMEView::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeyState, 
 	}
 	else if( isType && CGMEDataSource::IsXMLDataAvailable(pDataObject) )
 		return DROPEFFECT_COPY;
+
+	CoordinateTransfer(point);
+	DROPEFFECT dropEffect = DROPEFFECT_NONE;
+	HRESULT retVal = S_OK;
+	CGuiObject* selection = FindObject(point);
+	if (selection != NULL) {
+		CGuiAspect* pAspect = selection->GetCurrentAspect();
+		if (pAspect != NULL) {
+			CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+			if (newDecorator) {
+				CClientDC transformDC(this);
+				OnPrepareDC(&transformDC);
+				retVal = newDecorator->DragEnter(&dropEffect, (ULONGLONG)pDataObject, dwKeyState, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+			}
+		}
+	}
+	if (dropEffect != DROPEFFECT_NONE) {
+		dragPoint = point;
+		return dropEffect;
+	}
+
+	CGuiAnnotator* annotation = FindAnnotation(point);
+	if (annotation != NULL) {
+		CComPtr<IMgaNewDecorator> newDecorator(annotation->GetNewDecorator(currentAspect->index));
+		if (newDecorator) {
+			CClientDC transformDC(this);
+			OnPrepareDC(&transformDC);
+			retVal = newDecorator->DragEnter(&dropEffect, (ULONGLONG)pDataObject, dwKeyState, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+		}
+	}
+	if (dropEffect != DROPEFFECT_NONE) {
+		dragPoint = point;
+		return dropEffect;
+	}
 
 	return DROPEFFECT_NONE;
 }
@@ -5136,8 +5198,36 @@ DROPEFFECT CGMEView::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState, C
 
 	CoordinateTransfer(point);
 	CGuiObject *obj = FindObject(point);
-	if(obj)
+	HRESULT retVal = S_OK;
+	DROPEFFECT dropEffect = DROPEFFECT_NONE;
+	if(obj) {
 		CGMEEventLogger::LogGMEEvent("    Dragging over: "+obj->GetName()+" "+obj->GetID()+" in "+path+name+"\r\n");//better this way, not logging dragging over empty space
+
+		CGuiAspect* pAspect = obj->GetCurrentAspect();
+		if (pAspect != NULL) {
+			CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+			if (newDecorator) {
+				CClientDC transformDC(this);
+				OnPrepareDC(&transformDC);
+				retVal = newDecorator->DragOver(&dropEffect, (ULONGLONG)pDataObject, dwKeyState, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+			}
+		}
+		if (dropEffect != DROPEFFECT_NONE)
+			return dropEffect;
+	}
+
+	CGuiAnnotator* annotation = FindAnnotation(point);
+	if (annotation != NULL) {
+		CComPtr<IMgaNewDecorator> newDecorator(annotation->GetNewDecorator(currentAspect->index));
+		if (newDecorator) {
+			CClientDC transformDC(this);
+			OnPrepareDC(&transformDC);
+			retVal = newDecorator->DragOver(&dropEffect, (ULONGLONG)pDataObject, dwKeyState, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+		}
+	}
+	if (dropEffect != DROPEFFECT_NONE)
+		return dropEffect;
+
 	CGuiObject *ref = dynamic_cast<CGuiReference *>(obj);
 	if(!ref)
 		ref = dynamic_cast<CGuiCompoundReference *>(obj);
@@ -5254,6 +5344,33 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 		}
 	}
 	CGuiObject *target = FindObject(testPoint);
+	HRESULT retVal = S_OK;
+	if (target != NULL) {
+		CGuiAspect* pAspect = target->GetCurrentAspect();
+		if (pAspect != NULL) {
+			CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+			if (newDecorator) {
+				CClientDC transformDC(this);
+				OnPrepareDC(&transformDC);
+				retVal = newDecorator->Drop((ULONGLONG)pDataObject, dropEffect, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+			}
+		}
+	}
+	if (retVal == S_DECORATOR_EVENT_HANDLED)
+		return TRUE;
+
+	CGuiAnnotator* annotation = FindAnnotation(point);
+	if (annotation != NULL) {
+		CComPtr<IMgaNewDecorator> newDecorator(annotation->GetNewDecorator(currentAspect->index));
+		if (newDecorator) {
+			CClientDC transformDC(this);
+			OnPrepareDC(&transformDC);
+			retVal = newDecorator->Drop((ULONGLONG)pDataObject, dropEffect, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+		}
+	}
+	if (retVal == S_DECORATOR_EVENT_HANDLED)
+		return TRUE;
+
 	CGuiReference *guiRef = dynamic_cast<CGuiReference *>(target);
 	CGuiCompoundReference *compRef = dynamic_cast<CGuiCompoundReference *>(target);
 	bool sameTarget = (target == dragSource);

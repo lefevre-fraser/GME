@@ -183,11 +183,6 @@ bool NewUMLDecorator::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataObj
 	return m_part->DragEnter(dropEffect, pDataObject, dwKeyState, point, transformHDC);
 }
 
-bool NewUMLDecorator::DragLeave(void)
-{
-	return m_part->DragLeave();
-}
-
 bool NewUMLDecorator::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
 {
 	return m_part->DragOver(dropEffect, pDataObject, dwKeyState, point, transformHDC);
@@ -196,6 +191,11 @@ bool NewUMLDecorator::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObje
 bool NewUMLDecorator::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, const CPoint& point, HDC transformHDC)
 {
 	return m_part->Drop(pDataObject, dropEffect, point, transformHDC);
+}
+
+bool NewUMLDecorator::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transformHDC)
+{
+	return m_part->DropFile(p_hDropInfo, point, transformHDC);
 }
 
 bool NewUMLDecorator::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)

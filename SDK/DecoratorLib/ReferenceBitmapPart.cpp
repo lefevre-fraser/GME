@@ -576,25 +576,6 @@ bool ReferenceBitmapPart::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDat
 	return false;
 }
 
-bool ReferenceBitmapPart::DragLeave(void)
-{
-	HRESULT retVal = S_OK;
-	bool handled = false;
-	try {
-		handled = TypeableBitmapPart::DragLeave();
-	}
-	catch(hresult_exception& e) {
-		retVal = e.hr;
-	}
-	catch(DecoratorException& e) {
-		retVal = e.GetHResult();
-	}
-	if (!handled && m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
-		handled = m_referencedPart->DragLeave();
-
-	return handled;
-}
-
 bool ReferenceBitmapPart::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
@@ -630,6 +611,26 @@ bool ReferenceBitmapPart::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffec
 	}
 	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
 		if (m_referencedPart->Drop(pDataObject, dropEffect, point, transformHDC))
+			return true;
+
+	return false;
+}
+
+bool ReferenceBitmapPart::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transformHDC)
+{
+	HRESULT retVal = S_OK;
+	try {
+		if (TypeableBitmapPart::DropFile(p_hDropInfo, point, transformHDC))
+			return true;
+	}
+	catch(hresult_exception& e) {
+		retVal = e.hr;
+	}
+	catch(DecoratorException& e) {
+		retVal = e.GetHResult();
+	}
+	if (m_referencedPart != NULL && (retVal == S_OK || retVal == S_DECORATOR_EVENT_NOT_HANDLED || retVal == E_DECORATOR_NOT_IMPLEMENTED))
+		if (m_referencedPart->DropFile(p_hDropInfo, point, transformHDC))
 			return true;
 
 	return false;

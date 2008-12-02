@@ -231,11 +231,6 @@ bool PartBase::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DW
 	return false;
 }
 
-bool PartBase::DragLeave(void)
-{
-	return false;
-}
-
 bool PartBase::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
 {
 	dropEffect = DROPEFFECT_NONE;
@@ -243,6 +238,11 @@ bool PartBase::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWO
 }
 
 bool PartBase::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, const CPoint& point, HDC transformHDC)
+{
+	return false;
+}
+
+bool PartBase::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transformHDC)
 {
 	return false;
 }

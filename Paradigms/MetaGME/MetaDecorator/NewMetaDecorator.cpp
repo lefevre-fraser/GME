@@ -183,11 +183,6 @@ bool NewMetaDecorator::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataOb
 	return m_part->DragEnter(dropEffect, pDataObject, dwKeyState, point, transformHDC);
 }
 
-bool NewMetaDecorator::DragLeave(void)
-{
-	return m_part->DragLeave();
-}
-
 bool NewMetaDecorator::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
 {
 	return m_part->DragOver(dropEffect, pDataObject, dwKeyState, point, transformHDC);
@@ -196,6 +191,11 @@ bool NewMetaDecorator::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObj
 bool NewMetaDecorator::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, const CPoint& point, HDC transformHDC)
 {
 	return m_part->Drop(pDataObject, dropEffect, point, transformHDC);
+}
+
+bool NewMetaDecorator::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transformHDC)
+{
+	return m_part->DropFile(p_hDropInfo, point, transformHDC);
 }
 
 bool NewMetaDecorator::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)

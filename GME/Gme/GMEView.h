@@ -343,6 +343,7 @@ protected:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+	afx_msg void OnDropFiles(HDROP p_hDropInfo);
 	afx_msg void OnKillfocusNameProp();
 	afx_msg void OnSelChangeAspectProp();
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);

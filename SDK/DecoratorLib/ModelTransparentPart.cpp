@@ -232,12 +232,6 @@ bool ModelTransparentPart::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDa
 	return false;
 }
 
-bool ModelTransparentPart::DragLeave(void)
-{
-	// TODO: relay events
-	return false;
-}
-
 bool ModelTransparentPart::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
 {
 	// TODO: relay events
@@ -245,6 +239,12 @@ bool ModelTransparentPart::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDat
 }
 
 bool ModelTransparentPart::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, const CPoint& point, HDC transformHDC)
+{
+	// TODO: relay events
+	return false;
+}
+
+bool ModelTransparentPart::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transformHDC)
 {
 	// TODO: relay events
 	return false;

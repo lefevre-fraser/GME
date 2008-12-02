@@ -262,7 +262,7 @@ int CMainFrame::CreateToolBars()
 
 */
 
-if( !m_wndToolBarMain.CreateEx(this
+	if( !m_wndToolBarMain.CreateEx(this
 		, TBSTYLE_FLAT
 		, WS_CHILD |  WS_VISIBLE | CBRS_ALIGN_TOP
 		, CRect(0,0,0,0)

@@ -64,7 +64,7 @@ public:
 	void ChangeGMEViewAspect(int ind);
 	void CycleGMEViewAspect();
 	void GMEViewInvalidate();
-	BOOL CMainFrame::VerifyBarState(LPCTSTR lpszProfileName);
+	BOOL VerifyBarState(LPCTSTR lpszProfileName);
 	void OnDeleteDCForPanningVindowCtrl(CDC* bCDC);
 	void ShowObjectInspector();
 	void ShowFindDlg();
@@ -150,8 +150,10 @@ protected:
 	afx_msg void OnUpdateViewMultiUserSubversion(CCmdUI* pCmdUI);
 	afx_msg void OnViewClearConsole();
 	afx_msg void OnUpdateViewClearConsole( CCmdUI* pCmdUI);
-	afx_msg void CMainFrame::OnClose();
-	afx_msg void OnDropFiles(HDROP);
+	afx_msg void OnClose();
+public:
+	afx_msg void OnDropFiles(HDROP p_hDropInfo);
+protected:
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 
 	afx_msg void OnBtnBack();
