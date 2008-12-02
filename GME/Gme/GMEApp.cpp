@@ -1499,18 +1499,23 @@ void CGMEApp::OnFileOpen()
 
 BOOL CGMEApp::SaveAllModified() 
 {
-	if(mgaProject != NULL && (proj_type_is_mga||proj_type_is_xmlbackend)) {
+	if (mgaProject != NULL && (proj_type_is_mga || proj_type_is_xmlbackend)) {
 		long l;
 		COMTHROW(mgaProject->get_ProjectStatus(&l));
 		int ret;
-		if(!(l & PROJECT_STATUS_CHANGED)) ret = IDNO;
-		else ret = AfxMessageBox("Save project '" + projectName + "'?",  MB_YESNOCANCEL);
-		if(ret == IDCANCEL) return FALSE;
-		else if(ret == IDNO) {
+		if (!(l & PROJECT_STATUS_CHANGED))
+			ret = IDNO;
+		else
+			ret = AfxMessageBox("Save project '" + projectName + "'?",  MB_YESNOCANCEL);
+		if (ret == IDCANCEL) {
+			return FALSE;
+		} else if (ret == IDNO) {
 			abort_on_close = true;
 			OnFileAbortProject();
+		} else {
+			((CMainFrame*)m_pMainWnd)->clearMgaProj();
+			return SafeCloseProject();
 		}
-		else return SafeCloseProject();
 	}
 	return TRUE;
 }
@@ -1612,8 +1617,7 @@ bool CGMEApp::SafeCloseProject() {
 void CGMEApp::OnFileCloseproject() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileCloseproject\r\n");
-	((CMainFrame*)m_pMainWnd)->clearMgaProj();
-	SafeCloseProject();
+	SaveAllModified();
 }
 
 
