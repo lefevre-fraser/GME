@@ -10,7 +10,7 @@
 
 
 #include "StdAfx.h"
-#include "ResizablePart.h"
+#include "VectorPart.h"
 
 
 namespace DecoratorSDK {
@@ -21,7 +21,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-class BitmapPart: public ResizablePart
+class BitmapPart: public VectorPart
 {
 protected:
 	BitmapBase*		m_pBitmap;
@@ -29,6 +29,8 @@ protected:
 	COLORREF		m_crOverlay;
 	bool			m_bOverlay;
 	COLORREF		m_crBorder;
+	bool			m_bRoundEdgeRect;
+	long			m_bRoundEdgeRadius;
 
 public:
 	BitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);

@@ -18,9 +18,11 @@ namespace DecoratorSDK {
 //################################################################################################
 
 BitmapPart::BitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
-	ResizablePart	(pPart, eventSink),
-	m_pBitmap		(NULL),
-	m_pTileVector	(NULL)
+	VectorPart			(pPart, eventSink),
+	m_pBitmap			(NULL),
+	m_pTileVector		(NULL),
+	m_bRoundEdgeRect	(false),
+	m_bRoundEdgeRadius	(9)
 {
 }
 
@@ -36,7 +38,7 @@ feature_code BitmapPart::GetFeatures(void) const
 
 CSize BitmapPart::GetPreferredSize(void) const
 {
-	CSize size = ResizablePart::GetPreferredSize();
+	CSize size = VectorPart::GetPreferredSize();
 	if (size.cx * size.cy != 0)
 		return size;
 
@@ -45,18 +47,18 @@ CSize BitmapPart::GetPreferredSize(void) const
 
 void BitmapPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
+	VectorPart::Draw(pDC, gdip);
+
 	DrawBorder(pDC, gdip);
 	DrawBackground(pDC, gdip);
 	DrawIcons(pDC, gdip);
-
-	return ResizablePart::Draw(pDC, gdip);
 }
 
 // New functions
 void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 							  HWND parentWnd, PreferenceMap& preferences)
 {
-	ResizablePart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	CComPtr<IMgaMetaFCO> spMetaFCO;
 	if (!pFCO) {
@@ -136,8 +138,119 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 			m_pTileVector = preferences.find(PREF_TILESDEFAULT)->second.uValue.pTiles;
 		}
 	}
-}
 
+	m_bRoundEdgeRect = false;
+	it = preferences.find(PREF_ROUNDEDGERECT);
+	if (it != preferences.end()) {
+		m_bRoundEdgeRect = it->second.uValue.bValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERECT, m_bRoundEdgeRect);
+	}
+
+	m_bRoundEdgeRadius = 9;
+	it = preferences.find(PREF_ROUNDEDGERADIUS);
+	if (it != preferences.end()) {
+		m_bRoundEdgeRadius = it->second.uValue.bValue;
+	} else {
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERADIUS, m_bRoundEdgeRadius, false);
+	}
+
+	SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
+	SimpleCoordCommand* topMost		= new SimpleCoordCommand(TopMost);
+	SimpleCoordCommand* rightMost	= new SimpleCoordCommand(RightMost);
+	SimpleCoordCommand* bottomMost	= new SimpleCoordCommand(BottomMost);
+	m_coordCommands.push_back(leftMost);
+	m_coordCommands.push_back(topMost);
+	m_coordCommands.push_back(rightMost);
+	m_coordCommands.push_back(bottomMost);
+
+	AddCommand(VectorCommand(VectorCommand::BeginPath));
+
+	if (m_bRoundEdgeRect) {
+		ComplexCoordCommand* leftoRadius = new ComplexCoordCommand(LeftMost);
+		leftoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordAdd);
+		ComplexCoordCommand* topoRadius = new ComplexCoordCommand(TopMost);
+		topoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordAdd);
+		ComplexCoordCommand* rightoRadius = new ComplexCoordCommand(RightMost);
+		rightoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordSubstract);
+		ComplexCoordCommand* bottomoRadius = new ComplexCoordCommand(BottomMost);
+		bottomoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordSubstract);
+
+		ComplexCoordCommand* lefto2Radius = new ComplexCoordCommand(LeftMost);
+		lefto2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordAdd);
+		ComplexCoordCommand* topo2Radius = new ComplexCoordCommand(TopMost);
+		topo2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordAdd);
+		ComplexCoordCommand* righto2Radius = new ComplexCoordCommand(RightMost);
+		righto2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordSubstract);
+		ComplexCoordCommand* bottomo2Radius = new ComplexCoordCommand(BottomMost);
+		bottomo2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordSubstract);
+
+		AbsoluteCoordCommand* radiusCommand = new AbsoluteCoordCommand(m_bRoundEdgeRadius);
+		AbsoluteCoordCommand* diameterCommand = new AbsoluteCoordCommand(2 * m_bRoundEdgeRadius);
+		SimpleCoordCommand* angle0Command = new SimpleCoordCommand(ZeroConstant);
+		AbsoluteCoordCommand* angle90Command = new AbsoluteCoordCommand(90);
+		AbsoluteCoordCommand* angle180Command = new AbsoluteCoordCommand(180);
+		AbsoluteCoordCommand* angle270Command = new AbsoluteCoordCommand(270);
+
+		m_coordCommands.push_back(leftoRadius);
+		m_coordCommands.push_back(topoRadius);
+		m_coordCommands.push_back(rightoRadius);
+		m_coordCommands.push_back(bottomoRadius);
+		m_coordCommands.push_back(lefto2Radius);
+		m_coordCommands.push_back(topo2Radius);
+		m_coordCommands.push_back(righto2Radius);
+		m_coordCommands.push_back(bottomo2Radius);
+		m_coordCommands.push_back(radiusCommand);
+		m_coordCommands.push_back(diameterCommand);
+		m_coordCommands.push_back(angle0Command);
+		m_coordCommands.push_back(angle90Command);
+		m_coordCommands.push_back(angle180Command);
+		m_coordCommands.push_back(angle270Command);
+
+		std::vector<const CoordCommand*> m_arcParams;
+		m_arcParams.push_back(leftMost);
+		m_arcParams.push_back(topMost);
+		m_arcParams.push_back(diameterCommand);
+		m_arcParams.push_back(diameterCommand);
+		m_arcParams.push_back(angle180Command);
+		m_arcParams.push_back(angle90Command);
+		AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
+		AddCommand(VectorCommand(leftoRadius, topMost, rightoRadius, topMost, VectorCommand::AddLineToPath));
+		m_arcParams[0] = righto2Radius;
+		m_arcParams[1] = topMost;
+		m_arcParams[2] = diameterCommand;
+		m_arcParams[3] = diameterCommand;
+		m_arcParams[4] = angle270Command;
+		m_arcParams[5] = angle90Command;
+		AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
+		AddCommand(VectorCommand(rightMost, topoRadius, rightMost, bottomoRadius, VectorCommand::AddLineToPath));
+		m_arcParams[0] = righto2Radius;
+		m_arcParams[1] = bottomo2Radius;
+		m_arcParams[2] = diameterCommand;
+		m_arcParams[3] = diameterCommand;
+		m_arcParams[4] = angle0Command;
+		m_arcParams[5] = angle90Command;
+		AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
+		AddCommand(VectorCommand(rightoRadius, bottomMost, leftoRadius, bottomMost, VectorCommand::AddLineToPath));
+		m_arcParams[0] = leftMost;
+		m_arcParams[1] = bottomo2Radius;
+		m_arcParams[2] = diameterCommand;
+		m_arcParams[3] = diameterCommand;
+		m_arcParams[4] = angle90Command;
+		m_arcParams[5] = angle90Command;
+		AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
+		AddCommand(VectorCommand(leftMost, bottomoRadius, leftMost, topoRadius, VectorCommand::AddLineToPath));
+	} else {
+		AddCommand(VectorCommand(leftMost,		bottomMost,	rightMost,		bottomMost,	VectorCommand::AddLineToPath));
+		AddCommand(VectorCommand(rightMost,		bottomMost,	rightMost,		topMost,	VectorCommand::AddLineToPath));
+		AddCommand(VectorCommand(rightMost,		topMost,	leftMost,		topMost,	VectorCommand::AddLineToPath));
+		AddCommand(VectorCommand(leftMost,		topMost,	leftMost,		bottomMost,	VectorCommand::AddLineToPath));
+	}
+
+	AddCommand(VectorCommand(VectorCommand::EndPath));
+	AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
+	AddCommand(VectorCommand(VectorCommand::CastShadowPath));
+}
 
 void BitmapPart::DrawBorder(CDC* pDC, Gdiplus::Graphics* gdip)
 {
