@@ -1866,7 +1866,7 @@ void CGMEView::Reset(bool doInvalidate)
 	if (selectedConnection != NULL)
 		selConn = selectedConnection->mgaFco;
 	try {
-	BeginTransaction(TRANSACTION_READ_ONLY);
+		BeginTransaction(TRANSACTION_READ_ONLY);
 		validGuiObjects = false;
 
 		BeginWaitCursor();
@@ -2068,7 +2068,7 @@ void CGMEView::Reset(bool doInvalidate)
 
 		CommitTransaction();
 	}
-	catch(hresult_exception &e) {
+	catch (hresult_exception& e) {
 		AbortTransaction(e.hr);
 		AfxMessageBox("Unable to refresh model");
 		CGMEEventLogger::LogGMEEvent("CGMEView::Reset - Unable to refresh model.\r\n");
@@ -2085,13 +2085,11 @@ void CGMEView::Reset(bool doInvalidate)
 
 	SendNow(true);
 
-	POSITION pos = selected.GetHeadPosition();
-	while (pos) {
-		CGuiObject* go = selected.GetNext(pos);
-		if (go && go->mgaFco) {
-			long oStatus;
-			COMTHROW(go->mgaFco->get_Status(&oStatus));
-			if (oStatus == OBJECT_EXISTS) {	// make sure it has not been deleted since then
+	try {
+		POSITION pos = selected.GetHeadPosition();
+		while (pos) {
+			CGuiObject* go = selected.GetNext(pos);
+			if (go && go->mgaFco) {
 				// Sending decorator events (for efficiency)
 				CGuiAspect* pAspect = go->GetCurrentAspect();
 				if (pAspect != NULL) {
@@ -2102,9 +2100,13 @@ void CGMEView::Reset(bool doInvalidate)
 			}
 		}
 	}
+	catch (hresult_exception&) {
+		AfxMessageBox("Unable to refresh selected status to decorators");
+		CGMEEventLogger::LogGMEEvent("CGMEView::Reset - Unable to refresh selected status to decorators.\r\n");
+	}
 
 	if (selConn != NULL) {
-		pos = connections.GetHeadPosition();
+		POSITION pos = connections.GetHeadPosition();
 		while(pos) {
 			CGuiConnection *conn = connections.GetNext(pos);
 			if (conn->mgaFco == selConn) {

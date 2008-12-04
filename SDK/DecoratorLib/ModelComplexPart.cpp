@@ -1165,14 +1165,12 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 
 
 	cRect.BottomRight() += CPoint(1, 1);
-//	CPoint ptOrigin = pDC->OffsetViewportOrg((long) (cRect.left * ((double) cExtentD.cx / cExtentL.cx)), (long) (cRect.top * ((double) cExtentD.cy / cExtentL.cy)));
 	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 		(*ii)->Draw(pDC, gdip);
 	}
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->Draw(pDC, gdip);
 	}
-//	pDC->SetViewportOrg(ptOrigin);
 }
 
 struct PortPartData {

@@ -22,6 +22,7 @@ ResizablePart::ResizablePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> ev
 	PartBase			(pPart, eventSink),
 	m_bResizable		(true),
 	m_bReadCustomSize	(true),
+	m_bResetSize		(false),
 	resizeLogic			(NULL)
 {
 	resizeLogic.SetParentPart(this);
@@ -229,7 +230,7 @@ void ResizablePart::WindowResizingFinished(UINT nSide, CRect& location)
 				CPoint pt = location.TopLeft();
 				COMTHROW(part->SetGmeAttrs(0, pt.x, pt.y));
 				// Save preferred size part
-				CSize size(location.Width(), location.Height());
+				CSize size(m_bResetSize ? 0 : location.Width(), m_bResetSize ? 0 : location.Height());
 				if (size.cx >= 0 && size.cy >= 0) {
 					OLECHAR bbc[40];
 					swprintf(bbc, 40, OLESTR("%ld,%ld"), size.cx, size.cy);
@@ -244,10 +245,12 @@ void ResizablePart::WindowResizingFinished(UINT nSide, CRect& location)
 		}
 		catch(hresult_exception &e)
 		{
+			m_bResetSize = false;
 			ASSERT(FAILED(e.hr));
 			SetErrorInfo(e.hr);
 		}
 	}
+	m_bResetSize = false;
 	PartBase::WindowResizingFinished(nSide, location);
 }
 

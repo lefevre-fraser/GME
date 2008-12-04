@@ -26,7 +26,8 @@ class ResizablePart: public PartBase
 {
 public:
 	bool			m_bResizable;		// Disabling resizability
-	bool			m_bReadCustomSize;	// for temporary use, when you want to determine intended size
+	bool			m_bReadCustomSize;	// For temporary use, when you want to determine intended size
+	bool			m_bResetSize;		// For temporary use, siganling that size reset is needed
 	ResizeLogic		resizeLogic;
 
 	ResizablePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);

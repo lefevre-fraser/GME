@@ -8,6 +8,7 @@
 #include "StdAfx.h"
 #include "ResizeLogic.h"
 #include "DecoratorExceptions.h"
+#include "ResizablePart.h"
 
 
 namespace DecoratorSDK {
@@ -162,13 +163,14 @@ bool ResizeLogic::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& p
 		CSize normalPreferredSize = m_parentPart->GetPreferredSize();
 		long deltax = normalPreferredSize.cx - pRect.Width();
 		long deltay = normalPreferredSize.cy - pRect.Height();
-		if (deltax != 0 || deltay != 0) {
-			m_parentPart->WindowResizingStarted(nFlags, pRect);
-			pRect.InflateRect(0, 0, deltax, deltay);
-			m_parentPart->WindowResizing(nFlags, pRect);
-			m_parentPart->WindowResized(nFlags, CSize(deltax, deltay));
-			m_parentPart->WindowResizingFinished(nFlags, pRect);
-		}
+		ResizablePart* resizablePart = dynamic_cast<ResizablePart*> (m_parentPart);
+		if (resizablePart != NULL)
+			resizablePart->m_bResetSize = true;
+		m_parentPart->WindowResizingStarted(nFlags, pRect);
+		pRect.InflateRect(0, 0, deltax, deltay);
+		m_parentPart->WindowResizing(nFlags, pRect);
+		m_parentPart->WindowResized(nFlags, CSize(deltax, deltay));
+		m_parentPart->WindowResizingFinished(nFlags, pRect);
 		return true;
 	}
 
