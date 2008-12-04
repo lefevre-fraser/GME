@@ -91,6 +91,7 @@ public:
 	bool					inOpenedDecoratorTransaction;
 	bool					isContextInitiatedOperation;
 	bool					shouldCommitOperation;
+	bool					decoratorOrAnnotator;
 	CGuiObject*				objectInDecoratorOperation;
 	CGuiAnnotator*			annotatorInDecoratorOperation;
 	struct ContextClickState {
@@ -99,7 +100,8 @@ public:
 		CPoint		dpoint;
 	};
 	ContextClickState		ctxClkSt;
-	CGuiObject*				selectionOfContext;
+	CGuiObject*				selectedObjectOfContext;
+	CGuiAnnotator*			selectedAnnotationOfContext;
 	CGuiConnection*			selectedConnection;
 	// === End of decorator operation specific variables ===
 	COleDropTarget			dropTarget;

@@ -202,7 +202,7 @@ bool TextPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 
 bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_spFCO && m_bActive && m_bSelected && m_bTextEditable) {
+	if (m_bActive && m_bSelected && m_bTextEditable) {
 		CRect ptRect = GetTextLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
@@ -268,7 +268,7 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 
 bool TextPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_spFCO && m_bActive && m_bSelected && m_bTextEditable) {
+	if (m_bActive && m_bSelected && m_bTextEditable) {
 		CRect ptRect = GetTextLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);

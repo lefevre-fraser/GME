@@ -530,9 +530,11 @@ CGMEView::CGMEView()
 	inOpenedDecoratorTransaction	= false;
 	isContextInitiatedOperation		= false;
 	shouldCommitOperation			= false;
+	decoratorOrAnnotator			= true;
 	objectInDecoratorOperation		= NULL;
 	annotatorInDecoratorOperation	= NULL;
-	selectionOfContext				= NULL;
+	selectedObjectOfContext			= NULL;
+	selectedAnnotationOfContext		= NULL;
 	selectedConnection				= NULL;
 
 	prevDropEffect					= DROPEFFECT_NONE;
@@ -1615,9 +1617,9 @@ void CGMEView::AddAnnotationToSelectionTail(CGuiAnnotator* ann)
 void CGMEView::AddAnnotationToSelection(CGuiAnnotator* ann, bool headOrTail)
 {
 	ClearConnectionSelection();
-//	CComPtr<IMgaNewDecorator> newDecorator(ann->GetNewDecorator(currentAspect->index));
-//	if (newDecorator)
-//		HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
+	CComPtr<IMgaNewDecorator> newDecorator = ann->GetNewDecorator(currentAspect->index);
+	if (newDecorator)
+		HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
 	if (headOrTail)
 		selectedAnnotations.AddHead(ann);
 	else
@@ -1626,32 +1628,32 @@ void CGMEView::AddAnnotationToSelection(CGuiAnnotator* ann, bool headOrTail)
 
 void CGMEView::RemoveAllAnnotationFromSelection(void)
 {
-//	POSITION pos = selectedAnnotations.GetHeadPosition();
-//	CGuiAnnotator *ann;
-//	while (pos) {
-//		ann = selectedAnnotations.GetNext(pos);
-//		CComPtr<IMgaNewDecorator> newDecorator(ann->GetNewDecorator(currentAspect->index));
-//		if (newDecorator)
-//			HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
-//	}
+	POSITION pos = selectedAnnotations.GetHeadPosition();
+	CGuiAnnotator *ann;
+	while (pos) {
+		ann = selectedAnnotations.GetNext(pos);
+		CComPtr<IMgaNewDecorator> newDecorator = ann->GetNewDecorator(currentAspect->index);
+		if (newDecorator)
+			HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
+	}
 	selectedAnnotations.RemoveAll();
 }
 
 void CGMEView::RemoveAnnotationFromSelectionHead(void)
 {
-//	CGuiAnnotator* head = selectedAnnotations.GetHead();
-//	CComPtr<IMgaNewDecorator> newDecorator(head->GetNewDecorator(currentAspect->index));
-//	if (newDecorator)
-//		HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
+	CGuiAnnotator* head = selectedAnnotations.GetHead();
+	CComPtr<IMgaNewDecorator> newDecorator = head->GetNewDecorator(currentAspect->index);
+	if (newDecorator)
+		HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
 	selectedAnnotations.RemoveHead();
 }
 
 void CGMEView::RemoveAnnotationFromSelection(POSITION annPos)
 {
-//	CGuiAnnotator* ann = selectedAnnotations.GetAt(annPos);
-//	CComPtr<IMgaNewDecorator> newDecorator(ann->GetNewDecorator(currentAspect->index));
-//	if (newDecorator)
-//		HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
+	CGuiAnnotator* ann = selectedAnnotations.GetAt(annPos);
+	CComPtr<IMgaNewDecorator> newDecorator = ann->GetNewDecorator(currentAspect->index);
+	if (newDecorator)
+		HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
 	selectedAnnotations.RemoveAt(annPos);
 }
 
@@ -1925,6 +1927,7 @@ void CGMEView::Reset(bool doInvalidate)
 			delete obj;
 		}
 
+		RemoveAllAnnotationFromSelection();
 		pos = annotators.GetHeadPosition();
 		while(pos) {
 			delete annotators.GetNext(pos);
@@ -1947,7 +1950,6 @@ void CGMEView::Reset(bool doInvalidate)
 		annotators.RemoveAll();
 		connections.RemoveAll();
 		selected.RemoveAll(); // we don't call here the this->SendUnselEvent4List( &selected); because it might contain freshly deleted objects, which can't be notified
-		RemoveAllAnnotationFromSelection();
 
 
 		// Now build up new objectset
@@ -4180,57 +4182,77 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 //				CGuiPort*	port	= object	? object->FindPort(point, true) : 0;
 
 				if (inNewDecoratorOperation) {
-					CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
-					if (pAspect != NULL) {
-						CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
-						if (newDecorator) {
-							CClientDC transformDC(this);
-							OnPrepareDC(&transformDC);
-							HRESULT retVal = newDecorator->MouseLeftButtonUp(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
-							if (retVal == S_DECORATOR_EVENT_HANDLED) {
-								if (inOpenedDecoratorTransaction) {
-									if (shouldCommitOperation) {
-										CommitTransaction();
-										shouldCommitOperation = false;
-										objectInDecoratorOperation = NULL;
-									} else {
-										AbortTransaction(S_OK);
-									}
-									inOpenedDecoratorTransaction = false;
-									isContextInitiatedOperation = false;
-								}
-								break;
-							} else if (retVal != S_OK &&
-									   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
-									   retVal != E_DECORATOR_NOT_IMPLEMENTED)
-							{
-								CancelDecoratorOperation();
-								COMTHROW(retVal);
-							}
+					CComPtr<IMgaNewDecorator> newDecorator;
+					if (decoratorOrAnnotator) {
+						ASSERT(objectInDecoratorOperation != NULL);
+						CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+						if (pAspect != NULL) {
+							CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+							newDecorator = newDecorator2;
 						}
+					} else {
+						ASSERT(annotatorInDecoratorOperation != NULL);
+						newDecorator = annotatorInDecoratorOperation->GetNewDecorator(currentAspect->index);
 					}
-				} else if (object) {
-					CGuiAspect* pAspect = object->GetCurrentAspect();
-					if (pAspect != NULL) {
-						CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
-						if (newDecorator) {
-							CClientDC transformDC(this);
-							OnPrepareDC(&transformDC);
-							HRESULT retVal = newDecorator->MouseLeftButtonUp(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
-							if (retVal != S_OK &&
-								retVal != S_DECORATOR_EVENT_HANDLED &&
-								retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
-								retVal != E_DECORATOR_NOT_IMPLEMENTED)
-							{
-								CancelDecoratorOperation();
-								COMTHROW(retVal);
+					if (newDecorator) {
+						CClientDC transformDC(this);
+						OnPrepareDC(&transformDC);
+						HRESULT retVal = newDecorator->MouseLeftButtonUp(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+						if (retVal == S_DECORATOR_EVENT_HANDLED) {
+							if (inOpenedDecoratorTransaction) {
+								if (shouldCommitOperation) {
+									CommitTransaction();
+									shouldCommitOperation = false;
+									objectInDecoratorOperation = NULL;
+									annotatorInDecoratorOperation = NULL;
+								} else {
+									AbortTransaction(S_OK);
+								}
+								inOpenedDecoratorTransaction = false;
+								isContextInitiatedOperation = false;
 							}
-							if (inNewDecoratorOperation)
-								objectInDecoratorOperation = object;
+							break;
+						} else if (retVal != S_OK &&
+								   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+								   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+						{
+							CancelDecoratorOperation();
+							COMTHROW(retVal);
 						}
 					}
 				} else {
-					CGuiAnnotator* annotation = FindAnnotation(point);
+					CGuiAnnotator* annotation = NULL;
+					CComPtr<IMgaNewDecorator> newDecorator;
+					if (object != NULL) {
+						CGuiAspect* pAspect = object->GetCurrentAspect();
+						if (pAspect != NULL) {
+							CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+							newDecorator = newDecorator2;
+						}
+					} else {
+						annotation = FindAnnotation(point);
+						if (annotation)
+							newDecorator = annotation->GetNewDecorator(currentAspect->index);
+					}
+					if (newDecorator) {
+						CClientDC transformDC(this);
+						OnPrepareDC(&transformDC);
+						HRESULT retVal = newDecorator->MouseLeftButtonUp(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+						if (retVal != S_OK &&
+							retVal != S_DECORATOR_EVENT_HANDLED &&
+							retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+							retVal != E_DECORATOR_NOT_IMPLEMENTED)
+						{
+							CancelDecoratorOperation();
+							COMTHROW(retVal);
+						}
+						if (inNewDecoratorOperation) {
+							if (decoratorOrAnnotator)
+								objectInDecoratorOperation = object;
+							else
+								annotatorInDecoratorOperation = annotation;
+						}
+					}
 				}
 			}	//case
 		}	// switch
@@ -4280,79 +4302,106 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 						return;
 					}
-					CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
-					if (pAspect != NULL) {
-						CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
-						if (newDecorator) {
-							CClientDC transformDC(this);
-							OnPrepareDC(&transformDC);
-							HRESULT retVal = newDecorator->MouseLeftButtonDown(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
-							if (retVal == S_DECORATOR_EVENT_HANDLED) {
-								if (inOpenedDecoratorTransaction) {
-									if (shouldCommitOperation) {
-										CommitTransaction();
-										shouldCommitOperation = false;
-										objectInDecoratorOperation = NULL;
-									} else {
-										AbortTransaction(S_OK);
-									}
+					CComPtr<IMgaNewDecorator> newDecorator;
+					if (decoratorOrAnnotator) {
+						ASSERT(objectInDecoratorOperation != NULL);
+						CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+						if (pAspect != NULL) {
+							CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+							newDecorator = newDecorator2;
+						}
+					} else {
+						ASSERT(annotatorInDecoratorOperation != NULL);
+						newDecorator = annotatorInDecoratorOperation->GetNewDecorator(currentAspect->index);
+					}
+					if (newDecorator) {
+						CClientDC transformDC(this);
+						OnPrepareDC(&transformDC);
+						HRESULT retVal = newDecorator->MouseLeftButtonDown(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+						if (retVal == S_DECORATOR_EVENT_HANDLED) {
+							if (inOpenedDecoratorTransaction) {
+								if (shouldCommitOperation) {
+									CommitTransaction();
+									shouldCommitOperation = false;
+									objectInDecoratorOperation = NULL;
+									annotatorInDecoratorOperation = NULL;
+								} else {
+									AbortTransaction(S_OK);
+								}
+								inOpenedDecoratorTransaction = false;
+								isContextInitiatedOperation = false;
+							}
+						} else if (retVal != S_OK &&
+								   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+								   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+						{
+							CancelDecoratorOperation();
+							COMTHROW(retVal);
+						}
+						CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+						return;
+					}
+				} else {
+					CGuiAnnotator* annotation = NULL;
+					CComPtr<IMgaNewDecorator> newDecorator;
+					if (object != NULL) {
+						CGuiAspect* pAspect = object->GetCurrentAspect();
+						if (pAspect != NULL) {
+							CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+							newDecorator = newDecorator2;
+						}
+					} else {
+						annotation = FindAnnotation(point);
+						if (annotation)
+							newDecorator = annotation->GetNewDecorator(currentAspect->index);
+					}
+					if (newDecorator) {
+						CClientDC transformDC(this);
+						OnPrepareDC(&transformDC);
+						HRESULT retVal = newDecorator->MouseLeftButtonDown(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+						if (retVal == S_DECORATOR_EVENT_HANDLED) {
+							if (inOpenedDecoratorTransaction) {
+								if (shouldCommitOperation) {
+									CommitTransaction();
+									shouldCommitOperation = false;
+									objectInDecoratorOperation = NULL;
+									annotatorInDecoratorOperation = NULL;
 									inOpenedDecoratorTransaction = false;
 									isContextInitiatedOperation = false;
-								}
-							} else if (retVal != S_OK &&
-									   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
-									   retVal != E_DECORATOR_NOT_IMPLEMENTED)
-							{
-								CancelDecoratorOperation();
-								COMTHROW(retVal);
-							}
-							CScrollZoomView::OnLButtonDown(nFlags, ppoint);
-							return;
-						}
-					}
-				} else if (object) {
-					CGuiAspect* pAspect = object->GetCurrentAspect();
-					if (pAspect != NULL) {
-						CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
-						if (newDecorator) {
-							CClientDC transformDC(this);
-							OnPrepareDC(&transformDC);
-							HRESULT retVal = newDecorator->MouseLeftButtonDown(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
-							if (retVal == S_DECORATOR_EVENT_HANDLED) {
-								if (inOpenedDecoratorTransaction) {
-									if (shouldCommitOperation) {
-										CommitTransaction();
-										shouldCommitOperation = false;
-										objectInDecoratorOperation = NULL;
-										inOpenedDecoratorTransaction = false;
-										isContextInitiatedOperation = false;
-										CScrollZoomView::OnLButtonDown(nFlags, ppoint);
-										return;
-									} else if (!inNewDecoratorOperation) {
-										AbortTransaction(S_OK);
-										inOpenedDecoratorTransaction = false;
-										isContextInitiatedOperation = false;
-										CScrollZoomView::OnLButtonDown(nFlags, ppoint);
-										return;
-									} else {
-										if (::GetCapture() != NULL)
-											::ReleaseCapture();
-									}
-								} else {
-									if (inNewDecoratorOperation)
-										objectInDecoratorOperation = object;
 									CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 									return;
+								} else if (!inNewDecoratorOperation) {
+									AbortTransaction(S_OK);
+									inOpenedDecoratorTransaction = false;
+									isContextInitiatedOperation = false;
+									CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+									return;
+								} else {
+									if (::GetCapture() != NULL)
+										::ReleaseCapture();
 								}
-							} else if (retVal != S_OK &&
-									   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
-									   retVal != E_DECORATOR_NOT_IMPLEMENTED)
-							{
-								CancelDecoratorOperation();
-								COMTHROW(retVal);
+							} else {
+								if (inNewDecoratorOperation) {
+									if (decoratorOrAnnotator)
+										objectInDecoratorOperation = object;
+									else
+										annotatorInDecoratorOperation = annotation;
+								}
+								CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+								return;
 							}
-							if (inNewDecoratorOperation)
+						} else if (retVal != S_OK &&
+								   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+								   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+						{
+							CancelDecoratorOperation();
+							COMTHROW(retVal);
+						}
+						if (inNewDecoratorOperation) {
+							if (decoratorOrAnnotator)
 								objectInDecoratorOperation = object;
+							else
+								annotatorInDecoratorOperation = annotation;
 						}
 					}
 				}
@@ -4723,36 +4772,47 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 		CGuiObject*	object	= self ? self->FindObject(point, true, true) : 0;
 		if (object == NULL)	// not label of the object but can be some port label inside the object
 			object = self ? self->FindObject(point, true, false) : 0;
+		CGuiAnnotator *annotation = FindAnnotation(point);
 
-		if (object) {
-			CGuiAspect* pAspect = object->GetCurrentAspect();
-			if (pAspect != NULL) {
-				CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
-				if (newDecorator) {
-					CClientDC transformDC(this);
-					OnPrepareDC(&transformDC);
-					HRESULT retVal = newDecorator->MouseLeftButtonDoubleClick(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
-					if (retVal == S_DECORATOR_EVENT_HANDLED) {
-						if (inOpenedDecoratorTransaction) {
-							if (shouldCommitOperation) {
-								CommitTransaction();
-								shouldCommitOperation = false;
-								objectInDecoratorOperation = NULL;
-							} else {
-								AbortTransaction(S_OK);
-							}
-							inOpenedDecoratorTransaction = false;
-							isContextInitiatedOperation = false;
+		if (object || annotation) {
+			CComPtr<IMgaNewDecorator> newDecorator;
+			if (object != NULL) {
+				CGuiAspect* pAspect = object->GetCurrentAspect();
+				if (pAspect != NULL) {
+					CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+					newDecorator = newDecorator2;
+				}
+			} else {
+				annotation = FindAnnotation(point);
+				if (annotation)
+					newDecorator = annotation->GetNewDecorator(currentAspect->index);
+			}
+
+			if (newDecorator) {
+				CClientDC transformDC(this);
+				OnPrepareDC(&transformDC);
+				HRESULT retVal = newDecorator->MouseLeftButtonDoubleClick(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+				if (retVal == S_DECORATOR_EVENT_HANDLED) {
+					if (inOpenedDecoratorTransaction) {
+						if (shouldCommitOperation) {
+							CommitTransaction();
+							shouldCommitOperation = false;
+							objectInDecoratorOperation = NULL;
+							annotatorInDecoratorOperation = NULL;
+						} else {
+							AbortTransaction(S_OK);
 						}
-						CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
-						return;
-					} else if (retVal != S_OK &&
-							   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
-							   retVal != E_DECORATOR_NOT_IMPLEMENTED)
-					{
-						CancelDecoratorOperation();
-						COMTHROW(retVal);
+						inOpenedDecoratorTransaction = false;
+						isContextInitiatedOperation = false;
 					}
+					CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
+					return;
+				} else if (retVal != S_OK &&
+						   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+						   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+				{
+					CancelDecoratorOperation();
+					COMTHROW(retVal);
 				}
 			}
 		} else {
@@ -4760,7 +4820,6 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 		}
 
 		CGuiObject *selection = FindObject(point);
-		CGuiAnnotator *annotation = FindAnnotation(point);
 
 		if(selection) {
 			CGMEEventLogger::LogGMEEvent(    "LButton double clicked on "+selection->GetName()+" "+selection->GetID()+"\r\n");
@@ -5014,7 +5073,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				Invalidate();
 			}
 
-			if(contextPort) {
+			if (contextPort != NULL) {
 				CString itemname = CString( "[") + (contextSelection?(contextSelection->GetInfoText() + CString(" : ")): CString("")) + contextPort->GetInfoText() + CString( "]");
 
 				CMenu menu;
@@ -5026,8 +5085,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 					sm->InsertMenu( 0, MF_BYPOSITION|MFS_DEFAULT, ID_CNTX_SHOWPORTINPARENT, itemname);
 					sm->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, global.x,global.y,GetParent());
 				}
-			}
-			else if(contextSelection) {
+			} else if (contextSelection != NULL) {
 				HMENU decoratorAdditionalMenu = ::CreatePopupMenu();
 				if (selection != NULL) {
 					CGuiAspect* pAspect = selection->GetCurrentAspect();
@@ -5046,7 +5104,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				CMenu* subMenu = menu.GetSubMenu(0);
 				if (::GetMenuItemCount(decoratorAdditionalMenu) > 0) {
 					subMenu->InsertMenu(0, MF_BYPOSITION | MF_SEPARATOR, 0, "");
-					subMenu->InsertMenu(0, MF_BYPOSITION | MF_POPUP | MF_ENABLED, (UINT_PTR)(decoratorAdditionalMenu), "Special Edit");
+					subMenu->InsertMenu(0, MF_BYPOSITION | MF_POPUP | MF_ENABLED, (UINT_PTR)(decoratorAdditionalMenu), "Decorator Edit");
 				}
 				UINT cmdId = (UINT)subMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
 															global.x,global.y,GetParent());
@@ -5054,15 +5112,29 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				ctxClkSt.nFlags = nFlags;
 				ctxClkSt.lpoint = local;
 				ctxClkSt.dpoint = ppoint;
-				selectionOfContext = selection;
+				selectedObjectOfContext = selection;
 				::DestroyMenu(decoratorAdditionalMenu);
-			} else if (contextAnnotation) {
+			} else if (contextAnnotation != NULL) {
+				HMENU decoratorAdditionalMenu = ::CreatePopupMenu();
+				CComPtr<IMgaNewDecorator> newDecorator = contextAnnotation->GetNewDecorator(currentAspect->index);
+				HRESULT retVal = S_OK;
+				if (newDecorator) {
+					CClientDC transformDC(this);
+					OnPrepareDC(&transformDC);
+					retVal = newDecorator->MouseRightButtonDown((ULONGLONG)decoratorAdditionalMenu, nFlags, local.x, local.y, (ULONGLONG)transformDC.m_hDC);
+				}
 				CMenu menu;
 				menu.LoadMenu(IDR_ANNCONTEXT_MENU);
-				menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
-													global.x,global.y,GetParent());
-			}
-			else {
+				CMenu* subMenu = menu.GetSubMenu(0);
+				if (::GetMenuItemCount(decoratorAdditionalMenu) > 0) {
+					subMenu->InsertMenu(0, MF_BYPOSITION | MF_SEPARATOR, 0, "");
+					subMenu->InsertMenu(0, MF_BYPOSITION | MF_POPUP | MF_ENABLED, (UINT_PTR)(decoratorAdditionalMenu), "Decorator Edit");
+				}
+				UINT cmdId = (UINT)subMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
+															global.x,global.y,GetParent());
+				selectedAnnotationOfContext = contextAnnotation;
+				::DestroyMenu(decoratorAdditionalMenu);
+			} else {
 				CMenu menu;
 				menu.LoadMenu(IDR_SELFCONTEXT_MENU);
 				CMenu *submenu = menu.GetSubMenu(0);
@@ -5156,7 +5228,7 @@ DROPEFFECT CGMEView::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeyState, 
 
 	CGuiAnnotator* annotation = FindAnnotation(point);
 	if (annotation != NULL) {
-		CComPtr<IMgaNewDecorator> newDecorator(annotation->GetNewDecorator(currentAspect->index));
+		CComPtr<IMgaNewDecorator> newDecorator = annotation->GetNewDecorator(currentAspect->index);
 		if (newDecorator) {
 			CClientDC transformDC(this);
 			OnPrepareDC(&transformDC);
@@ -5218,7 +5290,7 @@ DROPEFFECT CGMEView::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState, C
 
 	CGuiAnnotator* annotation = FindAnnotation(point);
 	if (annotation != NULL) {
-		CComPtr<IMgaNewDecorator> newDecorator(annotation->GetNewDecorator(currentAspect->index));
+		CComPtr<IMgaNewDecorator> newDecorator = annotation->GetNewDecorator(currentAspect->index);
 		if (newDecorator) {
 			CClientDC transformDC(this);
 			OnPrepareDC(&transformDC);
@@ -5361,7 +5433,7 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 
 	CGuiAnnotator* annotation = FindAnnotation(point);
 	if (annotation != NULL) {
-		CComPtr<IMgaNewDecorator> newDecorator(annotation->GetNewDecorator(currentAspect->index));
+		CComPtr<IMgaNewDecorator> newDecorator = annotation->GetNewDecorator(currentAspect->index);
 		if (newDecorator) {
 			CClientDC transformDC(this);
 			OnPrepareDC(&transformDC);
@@ -5545,14 +5617,25 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 			CCmdUI* pUI = (CCmdUI*) pExtra;
 			pUI->Enable(isType);
 			return true;
-		} else if (nCode == CN_COMMAND && selectionOfContext != NULL) {
-			// Send command using saved state
-			CGuiAspect* pAspect = selectionOfContext->GetCurrentAspect();
-			if (pAspect != NULL) {
-				CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+		} else if (nCode == CN_COMMAND) {
+			if (selectedObjectOfContext != NULL || selectedAnnotationOfContext != NULL) {
+				// Send command using saved state
+				CComPtr<IMgaNewDecorator> newDecorator;
+				if (selectedObjectOfContext != NULL) {
+					CGuiAspect* pAspect = selectedObjectOfContext->GetCurrentAspect();
+					if (pAspect != NULL) {
+						CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+						newDecorator = newDecorator2;
+					}
+				} else {
+					newDecorator = selectedAnnotationOfContext->GetNewDecorator(currentAspect->index);
+				}
 				if (newDecorator) {
 					isContextInitiatedOperation = true;
-					objectInDecoratorOperation = selectionOfContext;
+					if (selectedObjectOfContext != NULL)
+						objectInDecoratorOperation = selectedObjectOfContext;
+					else
+						annotatorInDecoratorOperation = selectedAnnotationOfContext;
 					CClientDC transformDC(this);
 					OnPrepareDC(&transformDC);
 					HRESULT retVal = newDecorator->MenuItemSelected(nID, ctxClkSt.nFlags, ctxClkSt.lpoint.x, ctxClkSt.lpoint.y,
@@ -5563,6 +5646,7 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 								CommitTransaction();
 								shouldCommitOperation = false;
 								objectInDecoratorOperation = NULL;
+								annotatorInDecoratorOperation = NULL;
 							} else {
 								AbortTransaction(S_OK);
 							}
@@ -6344,22 +6428,32 @@ void CGMEView::CancelDecoratorOperation(bool notify)
 			::ReleaseCapture();
 		shouldCommitOperation = false;
 		if (originalRect.IsRectEmpty() == FALSE) {
-			objectInDecoratorOperation->ResizeObject(originalRect);
+			if (decoratorOrAnnotator)
+				objectInDecoratorOperation->ResizeObject(originalRect);
+//			else
+//				annotatorInDecoratorOperation->ResizeObject(originalRect);
 			Invalidate();
 			originalRect.SetRectEmpty();
 		}
 		inNewDecoratorOperation = false;
 		if (isCursorChangedByDecorator)
 			SetEditCursor();
-		if (notify && objectInDecoratorOperation != NULL) {
-			CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
-			if (pAspect != NULL) {
-				CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
-				if (newDecorator)
-					HRESULT retVal = newDecorator->OperationCanceled();
+		if (notify) {
+			CComPtr<IMgaNewDecorator> newDecorator;
+			if (objectInDecoratorOperation != NULL) {
+				CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+				if (pAspect != NULL) {
+					CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+					newDecorator2 = newDecorator;
+				}
+			} else if (annotatorInDecoratorOperation != NULL) {
+				newDecorator = annotatorInDecoratorOperation->GetNewDecorator(currentAspect->index);
 			}
+			if (newDecorator)
+				HRESULT retVal = newDecorator->OperationCanceled();
 		}
 		objectInDecoratorOperation = NULL;
+		annotatorInDecoratorOperation = NULL;
 		isContextInitiatedOperation = false;
 	}
 	if (inOpenedDecoratorTransaction) {
@@ -7704,53 +7798,67 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 		lastPort   = port;
 	}
 
-	{ // new decorator notification logic
+	if (GetDocument()->GetEditMode() == GME_EDIT_MODE) { // new decorator notification logic
 		//static CGuiObject* lastObject = 0;
 		CGuiObject*	object	= self		? self->FindObject(point, true) : 0;
 		CGuiPort*	port	= object	? object->FindPort(point, true) : 0;
 		if (object == NULL)
 			object = self ? self->FindObject(point, true, true) : 0;
+		CGuiAnnotator* annotation = FindAnnotation(point);
 
 		if (inNewDecoratorOperation) {
-			CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
-			if (pAspect != NULL) {
-				CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
-				if (newDecorator) {
-					CClientDC transformDC(this);
-					OnPrepareDC(&transformDC);
-					HRESULT retVal = newDecorator->MouseMoved(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
-					if (retVal == S_DECORATOR_EVENT_HANDLED) {
-						CScrollZoomView::OnMouseMove(nFlags, screenpoint);
-						return;
-					} else if (retVal != S_OK &&
-								retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
-								retVal != E_DECORATOR_NOT_IMPLEMENTED)
-					{
-						CancelDecoratorOperation();
-						COMTHROW(retVal);
-					}
+			CComPtr<IMgaNewDecorator> newDecorator;
+			if (decoratorOrAnnotator) {
+				ASSERT(objectInDecoratorOperation != NULL);
+				CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+				if (pAspect != NULL) {
+					CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+					newDecorator = newDecorator2;
+				}
+			} else {
+				ASSERT(annotatorInDecoratorOperation != NULL);
+				newDecorator = annotatorInDecoratorOperation->GetNewDecorator(currentAspect->index);
+			}
+			if (newDecorator) {
+				CClientDC transformDC(this);
+				OnPrepareDC(&transformDC);
+				HRESULT retVal = newDecorator->MouseMoved(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+				if (retVal == S_DECORATOR_EVENT_HANDLED) {
+					CScrollZoomView::OnMouseMove(nFlags, screenpoint);
+					return;
+				} else if (retVal != S_OK &&
+						   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+						   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+				{
+					CancelDecoratorOperation();
+					COMTHROW(retVal);
 				}
 			}
-		} else if (object != NULL) {
-			if (GetDocument()->GetEditMode() == GME_EDIT_MODE) {
+		} else if (object != NULL || annotation != NULL) {
+			CComPtr<IMgaNewDecorator> newDecorator;
+			if (object != NULL) {
 				CGuiAspect* pAspect = object->GetCurrentAspect();
 				if (pAspect != NULL) {
-					CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
-					if (newDecorator) {
-						CClientDC transformDC(this);
-						OnPrepareDC(&transformDC);
-						HRESULT retVal = newDecorator->MouseMoved(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
-						if (retVal == S_DECORATOR_EVENT_HANDLED) {
-							CScrollZoomView::OnMouseMove(nFlags, screenpoint);
-							return;
-						} else if (retVal != S_OK &&
-								   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
-								   retVal != E_DECORATOR_NOT_IMPLEMENTED)
-						{
-							CancelDecoratorOperation();
-							COMTHROW(retVal);
-						}
-					}
+					CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+					newDecorator = newDecorator2;
+				}
+			} else {
+				ASSERT(annotation != NULL);
+				newDecorator = annotation->GetNewDecorator(currentAspect->index);
+			}
+			if (newDecorator) {
+				CClientDC transformDC(this);
+				OnPrepareDC(&transformDC);
+				HRESULT retVal = newDecorator->MouseMoved(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+				if (retVal == S_DECORATOR_EVENT_HANDLED) {
+					CScrollZoomView::OnMouseMove(nFlags, screenpoint);
+					return;
+				} else if (retVal != S_OK &&
+						   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+						   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+				{
+					CancelDecoratorOperation();
+					COMTHROW(retVal);
 				}
 			}
 		} else {

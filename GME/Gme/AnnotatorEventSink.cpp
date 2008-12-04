@@ -112,6 +112,7 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleEditingStarted(LONG left, LON
 
 	pThis->m_view->BeginTransaction();
 	pThis->m_view->inNewDecoratorOperation = true;
+	pThis->m_view->decoratorOrAnnotator = false;
 	pThis->m_view->inOpenedDecoratorTransaction = true;
 	pThis->m_view->shouldCommitOperation = false;
 
@@ -225,6 +226,7 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::WindowResizingStarted(LONG nType, 
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
 	pThis->m_view->inNewDecoratorOperation = true;
+	pThis->m_view->decoratorOrAnnotator = false;
 	pThis->m_view->shouldCommitOperation = false;
 	pThis->m_view->originalRect = CRect(left, top, right, bottom);
 
@@ -270,6 +272,7 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::GeneralOperationStarted(ULONGLONG 
 
 	pThis->m_view->BeginTransaction();
 	pThis->m_view->inNewDecoratorOperation = true;
+	pThis->m_view->decoratorOrAnnotator = false;
 	pThis->m_view->inOpenedDecoratorTransaction = true;
 	pThis->m_view->shouldCommitOperation = false;
 
