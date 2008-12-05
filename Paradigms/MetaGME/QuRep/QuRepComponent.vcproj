@@ -146,7 +146,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="./,C:/Program Files/GME/sdk/BON/"
+				AdditionalIncludeDirectories="./,../../../sdk/BON/"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
