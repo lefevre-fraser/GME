@@ -1,9 +1,0 @@
-Feature	Feature_Parent	Title	Description	Display	Level	Directory_	Attributes	ISReleaseFlags	ISComments	ISFeatureCabName
-s38	S38	L64	L255	I2	i2	S72	i2	S255	S255	S255
-Feature	Feature
-Contrib		##ID_STRING10##	##ID_STRING16##	10	1	INSTALLDIR	0			
-Documentation		##ID_STRING3##	##ID_STRING13##	6	1	INSTALLDIR	0		Enter comments regarding this feature here.	
-GMEApplication		##ID_STRING1##	##ID_STRING11##	2	1	INSTALLDIR	16		Enter comments regarding this feature here.	
-Samples		##ID_STRING2##	##ID_STRING12##	4	1	INSTALLDIR	0		Enter comments regarding this feature here.	
-SDK		##ID_STRING5##	##ID_STRING15##	8	1	INSTALLDIR	0			
-Tutorials	Documentation	##ID_STRING6##	##ID_STRING14##	2	1	INSTALLDIR	0			

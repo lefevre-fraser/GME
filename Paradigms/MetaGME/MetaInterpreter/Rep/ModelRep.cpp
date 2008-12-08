@@ -484,16 +484,18 @@ std::string ModelRep::doDump()
 	std::vector<std::string> role_lines_to_dump;
 	std::vector< RoleMapKey> key_list;
 	// all roles (final)
-	RoleMap_Iterator it = m_finalRoleMap.begin();
-	for( ; it != m_finalRoleMap.end(); ++it)
+	for( RoleMap_Iterator it = m_finalRoleMap.begin();
+		 it != m_finalRoleMap.end(); 
+		 ++it) {
 		key_list.push_back( it->first);
+	}
 
 	AnyLexicographicSort any_lex;
 	std::sort( key_list.begin(), key_list.end(), any_lex);
 	
-	std::vector< RoleMapKey>::iterator key_it = key_list.begin();
-	for( ; key_it != key_list.end(); ++key_it )
-	{
+	for( std::vector< RoleMapKey>::iterator key_it = key_list.begin(); 
+		 key_it != key_list.end(); 
+		 ++key_it )	{
 		//RoleMapKey ptr = it->first;
 		//RoleMapValue &roles = it->second;
 		RoleMapKey ptr = *key_it;
@@ -531,7 +533,6 @@ std::string ModelRep::doDump()
 				else
 					role_lines_to_dump.push_back( role_line);
 			}
-		++it;
 	}
 	StringLex lex;
 	std::sort( role_lines_to_dump.begin(), role_lines_to_dump.end(), lex);

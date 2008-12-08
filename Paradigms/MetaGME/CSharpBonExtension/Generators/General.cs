@@ -116,7 +116,7 @@ namespace BonExtension.Generators
                     }
                 }
             }
-            catch (Exception exc)
+            catch (Exception )
             {
 
             }

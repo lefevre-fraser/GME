@@ -1699,10 +1699,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="ConfigureComponent.exe"
-			>
-		</File>
 	</Files>
 	<Globals>
 		<Global

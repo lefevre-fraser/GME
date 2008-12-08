@@ -81,7 +81,7 @@ def compile_BON():
         
 def compile_JBON():
     "Compile Java component support (JBON)"
-    sln_file = os.path.join(GME_ROOT, "Java", "native", "JavaSupport.sln");
+    sln_file = os.path.join(GME_ROOT, "SDK", "Java", "native", "JavaSupport.sln");
     tools.build_VS( sln_file, "Release" )
 
         
@@ -140,9 +140,9 @@ def zip_dispatchSDK():
 
 
 def zip_metainterpreter():
-    "Create MetaInterpreter2004.zip"
-    zip_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "MetaInterpreter2004")
-    tools.zip(zip_dir, "MetaInterpreter2004.zip", "packagefiles.lst")
+    "Create MetaInterpreter.zip"
+    zip_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "MetaInterpreter")
+    tools.zip(zip_dir, "MetaInterpreter.zip", "packagefiles.lst")
 
 
 def zip_metainterpreter_framework():

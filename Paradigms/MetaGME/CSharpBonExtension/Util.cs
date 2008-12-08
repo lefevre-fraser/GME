@@ -14,7 +14,7 @@ namespace GME.CSharp
             {
                 return GME.CSharp.BonExtender.MetaProject.RootFolder.get_DefinedFCOByName(name, false) as IMgaMetaFCO;
             }
-            catch (COMException e)
+            catch (COMException)
             {
                 return GME.CSharp.BonExtender.MetaProject.RootFolder.get_DefinedFolderByName(name, false) as IMgaMetaFolder;
             }
