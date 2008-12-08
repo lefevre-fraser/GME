@@ -155,7 +155,7 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERADIUS, m_bRoundEdgeRadius, false);
 	}
 
-/*	SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
+	SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
 	SimpleCoordCommand* topMost		= new SimpleCoordCommand(TopMost);
 	SimpleCoordCommand* rightMost	= new SimpleCoordCommand(RightMost);
 	SimpleCoordCommand* bottomMost	= new SimpleCoordCommand(BottomMost);
@@ -249,7 +249,7 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 
 	AddCommand(VectorCommand(VectorCommand::EndPath));
 	AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
-	AddCommand(VectorCommand(VectorCommand::CastShadowPath));*/
+	AddCommand(VectorCommand(VectorCommand::CastShadowPath));
 }
 
 void BitmapPart::DrawBorder(CDC* pDC, Gdiplus::Graphics* gdip)

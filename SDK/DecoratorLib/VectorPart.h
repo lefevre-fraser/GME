@@ -190,7 +190,6 @@ protected:
 	CString						gradientColorVariableName;
 	CString						shadowColorVariableName;
 
-	CRect						m_Extents;
 	std::vector<VectorCommand>	m_Commands;
 	COLORREF					m_crPen;
 	COLORREF					m_crBrush;
@@ -220,7 +219,6 @@ public:
 	VectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
 	virtual ~VectorPart();
 
-	void			SetExtents					(const CRect& extents) { m_Extents = extents; };
 	void			AddCommand					(const VectorCommand& cmd) { m_Commands.push_back(cmd); };
 	long			GetCommandNumber			(void) const { return (long)m_Commands.size(); };
 	void			RemoveLastCommand			(long cmdCount = 1);
@@ -232,7 +230,6 @@ public:
 // =============== resembles IMgaNewDecorator
 public:
 	virtual feature_code	GetFeatures			(void) const;
-	virtual void			SetLocation			(const CRect& location);
 	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

@@ -191,12 +191,6 @@ feature_code VectorPart::GetFeatures(void) const
 	return F_RESIZABLE | F_MOUSEEVENTS;
 }
 
-void VectorPart::SetLocation(const CRect& location)
-{
-	m_Extents = location;
-	ResizablePart::SetLocation(location);
-}
-
 void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	COLORREF penColor = m_bActive ? m_crPen : COLOR_GRAYED_OUT;
@@ -209,22 +203,22 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 		long cmdCode = (*ii).GetCode();
 		switch(cmdCode) {
 			case VectorCommand::DrawLine: {
-					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					CRect rc = (*ii).GetResolvedCoords(m_Rect);
 					gdip->DrawLine(m_CurrentPen, rc.left, rc.top, rc.right, rc.bottom);
 				}
 				break;
 			case VectorCommand::DrawRectangle: {
-					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					CRect rc = (*ii).GetResolvedCoords(m_Rect);
 					gdip->DrawRectangle(m_CurrentPen, rc.left, rc.top, rc.Width(), rc.Height());
 				}
 				break;
 			case VectorCommand::DrawEllipse: {
-					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					CRect rc = (*ii).GetResolvedCoords(m_Rect);
 					gdip->DrawEllipse(m_CurrentPen, rc.left, rc.top, rc.Width(), rc.Height());
 				}
 				break;
 			case VectorCommand::DrawPolygon: {
-					std::vector<long> points = (*ii).GetResolvedValues(m_Extents);
+					std::vector<long> points = (*ii).GetResolvedValues(m_Rect);
 					long coordNum = static_cast<long> (points.size() / 2);
 					Gdiplus::Point* ppoints = new Gdiplus::Point[coordNum];
 					for (long i = 0; i < coordNum; i++)
@@ -234,17 +228,17 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 				}
 				break;
 			case VectorCommand::FillRectangle: {
-					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					CRect rc = (*ii).GetResolvedCoords(m_Rect);
 					gdip->FillRectangle(m_CurrentBrush, rc.left, rc.top, rc.Width(), rc.Height());
 				}
 				break;
 			case VectorCommand::FillEllipse: {
-					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					CRect rc = (*ii).GetResolvedCoords(m_Rect);
 					gdip->FillEllipse(m_CurrentBrush, rc.left, rc.top, rc.Width(), rc.Height());
 				}
 				break;
 			case VectorCommand::FillPolygon: {
-					std::vector<long> points = (*ii).GetResolvedValues(m_Extents);
+					std::vector<long> points = (*ii).GetResolvedValues(m_Rect);
 					long coordNum = static_cast<long> (points.size() / 2);
 					Gdiplus::Point* ppoints = new Gdiplus::Point[coordNum];
 					for (long i = 0; i < coordNum; i++)
@@ -254,14 +248,14 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 				}
 				break;
 			case VectorCommand::SelectPen: {
-					std::vector<long> colors = (*ii).GetResolvedValues(m_Extents);
+					std::vector<long> colors = (*ii).GetResolvedValues(m_Rect);
 					ASSERT(colors.size() == 2);
 					COLORREF penColor = m_bActive ? colors[0] : colors[1];
 					m_CurrentPen = DecoratorSDK::getFacilities().GetPen(penColor);
 				}
 				break;
 			case VectorCommand::SelectBrush: {
-					std::vector<long> colors = (*ii).GetResolvedValues(m_Extents);
+					std::vector<long> colors = (*ii).GetResolvedValues(m_Rect);
 					ASSERT(colors.size() == 2);
 					COLORREF brushColor = m_bActive ? colors[0] : colors[1];
 					m_CurrentBrush = DecoratorSDK::getFacilities().GetBrush(brushColor);
@@ -303,7 +297,7 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 				break;
 			case VectorCommand::CastShadowPath: {
 					long shadowThickness = m_iShadowThickness;
-					std::vector<long> points = (*ii).GetResolvedValues(m_Extents);
+					std::vector<long> points = (*ii).GetResolvedValues(m_Rect);
 					if (points.size() > 0)
 						shadowThickness = points[0];
 					if (shadowThickness > 0 && m_bCastShadow) {
@@ -354,7 +348,7 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 														shadowEndColor,
 														shadowBlendedColor,
 														shadowStartColor };
-						float shadowBorder = static_cast<float> (shadowThickness / (m_Extents.Width() / 2.0));
+						float shadowBorder = static_cast<float> (shadowThickness / (m_Rect.Width() / 2.0));
 						if (shadowBorder > 1.0)
 							shadowBorder = 1.0;
 						float interpolationPositions[] = {
@@ -373,7 +367,7 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 			case VectorCommand::StrokePath:
 			case VectorCommand::StrokeAndFillPath: {
 					if (cmdCode == VectorCommand::FillPath || cmdCode == VectorCommand::StrokeAndFillPath) {
-						std::vector<long> colors = (*ii).GetResolvedValues(m_Extents);
+						std::vector<long> colors = (*ii).GetResolvedValues(m_Rect);
 						ASSERT(colors.size() == 0 || colors.size() == 2 || colors.size() == 4);
 						if (m_bGradientFill || m_bShadowCasted || colors.size() == 2) {
 							if (m_bGradientFill) {
@@ -432,7 +426,7 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 				}
 				break;
 			case VectorCommand::AddLineToPath: {
-					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					CRect rc = (*ii).GetResolvedCoords(m_Rect);
 					if (m_bInMainPathDefinition)
 						m_mainPath->AddLine(rc.left, rc.top, rc.right, rc.bottom);
 					if (m_bInShadowPathDefinition)
@@ -440,7 +434,7 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 				}
 				break;
 			case VectorCommand::AddEllipseToPath: {
-					CRect rc = (*ii).GetResolvedCoords(m_Extents);
+					CRect rc = (*ii).GetResolvedCoords(m_Rect);
 					if (m_bInMainPathDefinition)
 						m_mainPath->AddEllipse(rc.left, rc.top, rc.Width(), rc.Height());
 					if (m_bInShadowPathDefinition)
@@ -448,7 +442,7 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 				}
 				break;
 			case VectorCommand::AddPolygonToPath: {
-					std::vector<long> points = (*ii).GetResolvedValues(m_Extents);
+					std::vector<long> points = (*ii).GetResolvedValues(m_Rect);
 					long coordNum = static_cast<long> (points.size() / 2);
 					Gdiplus::Point* ppoints = new Gdiplus::Point[coordNum];
 					for (long i = 0; i < coordNum; i++)
@@ -461,7 +455,7 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 				}
 				break;
 			case VectorCommand::AddArcToPath: {
-					std::vector<long> values = (*ii).GetResolvedValues(m_Extents);
+					std::vector<long> values = (*ii).GetResolvedValues(m_Rect);
 					ASSERT(values.size() == 6);
 					if (m_bInMainPathDefinition)
 						m_mainPath->AddArc(values[0], values[1], values[2], values[3], (float)values[4], (float)values[5]);
