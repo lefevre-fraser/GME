@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MONTraverser", "MONTraverse
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaDecorator", "MetaDecorator\MetaDecorator.vcproj", "{8789990A-1CEB-457D-9E99-C718A6D89781}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaGME2004", "MetaInterpreter2004\MetaGME2004.vcproj", "{19E47A7E-B569-4E9B-BD77-FE9E310098EB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaInterpreter", "MetaInterpreter\MetaInterpreter.vcproj", "{19E47A7E-B569-4E9B-BD77-FE9E310098EB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8789990A-1CEB-457D-9E99-C718A6D89781} = {8789990A-1CEB-457D-9E99-C718A6D89781}
 	EndProjectSection
@@ -24,8 +24,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaMAid", "MetaMAid\MetaMA
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuRep", "QuRep\QuRepComponent.vcproj", "{C27B35CF-08FE-4B91-9EB4-78A8583A23D4}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BonXtender8", "BonExtension8\BonXtender8.vcproj", "{DF66F798-BCC9-44D0-9FFB-1148C353DDD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpBonExtension", "CSharpBonExtension\CSharpBonExtension.csproj", "{319187C8-844C-401E-B3DD-0E9BB54D97F0}"
 EndProject
