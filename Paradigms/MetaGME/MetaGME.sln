@@ -25,8 +25,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaMAid", "MetaMAid\MetaMA
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuRep", "QuRep\QuRepComponent.vcproj", "{C27B35CF-08FE-4B91-9EB4-78A8583A23D4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaGME2008", "MetaInterpreter2008\MetaGME8.vcproj", "{98080516-B915-4681-8D08-102D4B4AA59E}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BonXtender8", "BonExtension8\BonXtender8.vcproj", "{DF66F798-BCC9-44D0-9FFB-1148C353DDD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpBonExtension", "CSharpBonExtension\CSharpBonExtension.csproj", "{319187C8-844C-401E-B3DD-0E9BB54D97F0}"
@@ -164,21 +162,6 @@ Global
 		{C27B35CF-08FE-4B91-9EB4-78A8583A23D4}.ReleaseNoUserInput|Mixed Platforms.Build.0 = Release|Win32
 		{C27B35CF-08FE-4B91-9EB4-78A8583A23D4}.ReleaseNoUserInput|Win32.ActiveCfg = Release|Win32
 		{C27B35CF-08FE-4B91-9EB4-78A8583A23D4}.ReleaseNoUserInput|Win32.Build.0 = Release|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.Debug|Win32.Build.0 = Debug|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.Release|Any CPU.ActiveCfg = Release|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.Release|Win32.ActiveCfg = Release|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.Release|Win32.Build.0 = Release|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.ReleaseNoUserInput|Any CPU.ActiveCfg = Release|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.ReleaseNoUserInput|Mixed Platforms.ActiveCfg = Release|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.ReleaseNoUserInput|Mixed Platforms.Build.0 = Release|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.ReleaseNoUserInput|Win32.ActiveCfg = Release|Win32
-		{98080516-B915-4681-8D08-102D4B4AA59E}.ReleaseNoUserInput|Win32.Build.0 = Release|Win32
 		{DF66F798-BCC9-44D0-9FFB-1148C353DDD7}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{DF66F798-BCC9-44D0-9FFB-1148C353DDD7}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{DF66F798-BCC9-44D0-9FFB-1148C353DDD7}.Debug|Mixed Platforms.Build.0 = Debug|Win32
