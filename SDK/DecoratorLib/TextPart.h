@@ -50,6 +50,7 @@ protected:
 	COLORREF					m_crText;
 	int							m_iFontKey;
 	int							m_iMaxTextLength;
+	bool						m_bMultiLine;
 
 public:
 	TextPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);

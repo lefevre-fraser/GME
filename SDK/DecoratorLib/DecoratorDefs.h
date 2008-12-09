@@ -34,6 +34,8 @@
 #define DECORATOR_CTX_MENU_MINID	0x2001
 #define DECORATOR_CTX_MENU_MAXID	0x2101
 
+#define IDD_INPLACEEDITSLDIALOG		211
+#define IDD_INPLACEEDITMLDIALOG		212
 
 //################################################################################################
 //
@@ -119,6 +121,7 @@ namespace DecoratorSDK
 	static const char* PREF_TEXTOVERRIDE			= "textOverride";
 	static const char* PREF_ROUNDEDGE				= "roundEdge";
 	static const char* PREF_EDGERADIUS				= "edgeRadius";
+	static const char* PREF_MULTILINEINPLACEEDIT	= "multiLineInPlaceEdit";
 
 	static const int FONT_LABEL					= 0;
 	static const int FONT_PORT					= 1;

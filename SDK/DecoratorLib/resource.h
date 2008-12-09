@@ -28,7 +28,6 @@
 #define IDB_ICON_SUBTYPE_DIS            208
 #define IDB_ICON_TYPE_DIS               209
 #define IDB_REFERENCE_SIGN              210
-#define IDD_INPLACEEDITDIALOG           211
 #define IDB_EXPAND_SIGN                 212
 #define IDB_COLLAPSE_SIGN               213
 

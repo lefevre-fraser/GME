@@ -8,8 +8,8 @@
 #include "StdAfx.h"
 #include "TextPart.h"
 #include "DecoratorExceptions.h"
-#include "InPlaceEditDialog.h"
-
+#include "InPlaceEditSingleLineDialog.h"
+#include "InPlaceEditMultiLineDialog.h"
 
 namespace DecoratorSDK {
 
@@ -29,7 +29,8 @@ TextPart::TextPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	m_iTextWrapCount	(0),
 	m_crText			(COLOR_BLACK),
 	m_iFontKey			(FONT_LABEL),
-	m_iMaxTextLength	(MAX_LABEL_LENGTH)
+	m_iMaxTextLength	(MAX_LABEL_LENGTH),
+	m_bMultiLine		(false)
 {
 	resizeLogic.SetParentPart(this);
 }
@@ -76,6 +77,10 @@ void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 	PreferenceMap::iterator it = preferences.find(PREF_ITEMEDITABLE);
 	if (it != preferences.end())
 		m_bTextEditable = it->second.uValue.bValue;
+
+	it = preferences.find(PREF_MULTILINEINPLACEEDIT);
+	if (it != preferences.end())
+		m_bMultiLine = it->second.uValue.bValue;
 
 	if (m_spFCO)
 		resizeLogic.InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
@@ -232,26 +237,57 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 		// end font scaling
 		dc.SelectObject(scaled_font);
 		// Do scaling and offset because of possible zoom and horizontal/vertical scrolling
-		CSize cSize = dc.GetTextExtent(m_strText);
+
+		CSize cSize;
+		if (!m_bMultiLine) {
+			cSize = dc.GetTextExtent(m_strText);
+		} else {
+			// Determine Text Width and Height
+			CSize oSize;
+			// Determine the line Height
+			oSize = dc.GetTextExtent(CString(_T(" ")));
+			cSize.cy = oSize.cy;
+			// Text Width
+			cSize.cx = 0;
+			CString oStr;
+			int i = 0;
+			// Parse the string; the lines in a multiline Edit are separated by "\r\n"
+			for(i = 0; TRUE == ::AfxExtractSubString(oStr, m_strText, i, _T('\n')); i++) {
+				int iLen = oStr.GetLength() - 1;
+				if (iLen >= 0) {
+					// Eliminate last '\r'
+					if (_T('\r') == oStr.GetAt(iLen))
+						oStr = oStr.Left(iLen);
+					oSize = dc.GetTextExtent(oStr);
+					if (cSize.cx < oSize.cx)
+						cSize.cx = oSize.cx;
+				}
+			}
+			// Text Height
+			cSize.cy *= i;
+		}
+
 		POINT editLeftTopPt = { ptRect.left, ptRect.top };
 		BOOL success = ::LPtoDP(transformHDC, &editLeftTopPt, 1);
 		CRect editLocation(editLeftTopPt, cSize);
 
-		CInPlaceEditDialog inPlaceEditDlg(cWnd);
-		inPlaceEditDlg.SetText(m_strText);
-		inPlaceEditDlg.SetInitialRect(editLocation);
-		inPlaceEditDlg.SetParentWnd(m_parentWnd, cWnd);
-		inPlaceEditDlg.SetFont(scaled_font);
+		CInPlaceEditDialog* inPlaceEditDlg = NULL;
+		if (m_bMultiLine)
+			inPlaceEditDlg = new CInPlaceEditMultiLineDialog(cWnd);
+		else
+			inPlaceEditDlg = new CInPlaceEditSingleLineDialog(cWnd);
+		inPlaceEditDlg->SetProperties(m_strText, editLocation, m_parentWnd, cWnd, scaled_font);
 
-		if (inPlaceEditDlg.DoModal() == IDOK) {
+		if (inPlaceEditDlg->DoModal() == IDOK) {
 			TitleEditingStarted(editLocation);
-			CString newString = inPlaceEditDlg.GetText();
+			CString newString = inPlaceEditDlg->GetText();
 			// transaction operation begin
 			ExecuteOperation(newString);
 			// transaction operation end
 			TitleChanged(newString);
 			TitleEditingFinished(editLocation);
 		}
+		delete inPlaceEditDlg;
 		delete scaled_font;
 		scaled_font = NULL;
 

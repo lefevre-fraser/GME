@@ -272,7 +272,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\InPlaceNativeDialog.cpp"
+				RelativePath=".\InPlaceEditMultiLineDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\InPlaceEditSingleLineDialog.cpp"
 				>
 			</File>
 			<File
@@ -494,7 +498,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\InPlaceNativeDialog.h"
+				RelativePath=".\InPlaceEditMultiLineDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InPlaceEditSingleLineDialog.h"
 				>
 			</File>
 			<File
@@ -636,7 +644,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\collapsesign.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\res\expand.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\expandsign.bmp"
 				>
 			</File>
 			<File

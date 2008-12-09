@@ -88,9 +88,10 @@
 #define IDD_CONSOLE_DIALOG              209
 #define IDR_TOOLBAR_MAIN                210
 #define ID_VIEW_APPLOOK_WIN_2000        210
-#define IDD_INPLACEEDITDIALOG           211
 #define IDR_TOOLBAR_WINS                211
 #define ID_VIEW_APPLOOK_OFF_XP          211
+#define IDD_INPLACEEDITSLDIALOG         211
+#define IDD_INPLACEEDITMLDIALOG         212
 #define IDR_MYTOOLBARS_MENU             212
 #define ID_VIEW_APPLOOK_WIN_XP          212
 #define IDR_TOOLBAR_NAVIG               213

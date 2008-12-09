@@ -8,7 +8,7 @@
 //
 
 #include "stdafx.h"
-#include "Resource.h"
+#include "DecoratorDefs.h"
 
 // CInPlaceEditDialog dialog
 
@@ -17,12 +17,12 @@ class CInPlaceEditDialog : public CDialog
 	DECLARE_DYNAMIC(CInPlaceEditDialog)
 
 public:
-	CInPlaceEditDialog(CWnd* pParent = NULL);   // standard constructor
+	CInPlaceEditDialog(short iDD, CWnd* pParent = NULL);   // standard constructor
 	virtual ~CInPlaceEditDialog();
 
 // Dialog Data
 	//{{AFX_DATA(CInPlaceEditDialog)
-	enum { IDD = IDD_INPLACEEDITDIALOG };
+	short m_IDD;
 	CString	m_Text;
 	//}}AFX_DATA
 
@@ -51,10 +51,12 @@ public:
 	CRect	m_initialRect;
 	CFont*	m_font;
 	long	m_zoomVal;
+	bool	m_bMultiLine;
 
-	void	SetParentWnd(HWND parentWnd, CWnd* parentCWnd) { m_parentHWnd = parentWnd; m_parentCWnd = parentCWnd; };
-	void	SetInitialRect(const CRect& rect) { m_initialRect = rect; };
-	void	SetFont(CFont* font) { m_font = font; };
+	void	SetProperties(const CString& text, const CRect& initialRect, HWND parentWnd, CWnd* parentCWnd, CFont* font,
+						  bool isMultiLine = false)
+				{ m_Text = text; m_initialRect = initialRect; m_parentHWnd = parentWnd; m_parentCWnd = parentCWnd;
+				  m_font = font; m_bMultiLine = isMultiLine; };
 	CString GetText() const { return m_Text; };
 	void	SetText(const CString& text) { m_Text = text; };
 

@@ -119,6 +119,7 @@ void AnnotatorTextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 	preferences[DecoratorSDK::PREF_ROUNDEDGERADIUS]		= DecoratorSDK::PreferenceVariant(m_iRoundEdgeRadius);
 
 	preferences[DecoratorSDK::PREF_TEXTOVERRIDE]		= DecoratorSDK::PreferenceVariant(true);
+	preferences[DecoratorSDK::PREF_MULTILINEINPLACEEDIT]= DecoratorSDK::PreferenceVariant(true);
 	TextPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 

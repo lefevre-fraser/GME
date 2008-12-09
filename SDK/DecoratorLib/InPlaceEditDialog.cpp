@@ -8,8 +8,9 @@
 // CInPlaceEditDialog dialog
 
 IMPLEMENT_DYNAMIC(CInPlaceEditDialog, CDialog)
-CInPlaceEditDialog::CInPlaceEditDialog(CWnd* pParent /*=NULL*/)
-	: CDialog(CInPlaceEditDialog::IDD, pParent)
+CInPlaceEditDialog::CInPlaceEditDialog(short iDD, CWnd* pParent /*=NULL*/)
+	: CDialog(iDD, pParent),
+	m_IDD(iDD)
 {
 }
 
@@ -246,11 +247,11 @@ CRect CInPlaceEditDialog::GetWindowSizeFromResource(void) const
 	// if the dialog resource resides in a DLL ...
 	//
 
-	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(IDD_INPLACEEDITDIALOG), RT_DIALOG);
+	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(m_IDD), RT_DIALOG);
 
 	ASSERT(hInst != NULL);
 
-	HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(IDD_INPLACEEDITDIALOG), RT_DIALOG);
+	HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(m_IDD), RT_DIALOG);
 	ASSERT(hRsrc != NULL);
 
 	HGLOBAL hTemplate = ::LoadResource(hInst, hRsrc);
@@ -265,7 +266,7 @@ CRect CInPlaceEditDialog::GetWindowSizeFromResource(void) const
 	HGLOBAL hDlgInit = NULL;
 	CDialog dlg;
 
-	HRSRC hsDlgInit = ::FindResource(hInst, MAKEINTRESOURCE(IDD_INPLACEEDITDIALOG), RT_DLGINIT);
+	HRSRC hsDlgInit = ::FindResource(hInst, MAKEINTRESOURCE(m_IDD), RT_DLGINIT);
 	if (hsDlgInit != NULL) {
 		// load it
 		hDlgInit = ::LoadResource(hInst, hsDlgInit);
