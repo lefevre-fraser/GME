@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="CORELib">
-      <Guid>{##5##}</Guid>
+      <Guid>##5##</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
@@ -59,7 +59,7 @@
       <Isolated>False</Isolated>
     </COMReference>
     <COMReference Include="GmeLib">
-      <Guid>{##6##}</Guid>
+      <Guid>##6##</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
@@ -67,7 +67,7 @@
       <Isolated>False</Isolated>
     </COMReference>
     <COMReference Include="METALib">
-      <Guid>{##7##}</Guid>
+      <Guid>##7##</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
@@ -75,7 +75,7 @@
       <Isolated>False</Isolated>
     </COMReference>
     <COMReference Include="MGALib">
-      <Guid>{##8##}</Guid>
+      <Guid>##8##</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
@@ -83,7 +83,7 @@
       <Isolated>False</Isolated>
     </COMReference>
     <COMReference Include="MGAUTILLib">
-      <Guid>{##9##}</Guid>
+      <Guid>##9##</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>

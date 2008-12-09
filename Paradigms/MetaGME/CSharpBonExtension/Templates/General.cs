@@ -13,13 +13,16 @@ namespace ##1##
         void Delete();
     }
 
-    public interface IFolder : IObject
+    public interface IContainer
+    { }
+
+    public interface IFolder : IObject, IContainer
     { }
 
     public interface IFCO : IObject
     { }
 
-    public interface IModel : IFCO
+    public interface IModel : IFCO, IContainer
     { }
 
     public interface IAtom : IFCO

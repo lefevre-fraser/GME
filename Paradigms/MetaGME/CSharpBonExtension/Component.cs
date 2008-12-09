@@ -182,8 +182,6 @@ namespace GME.CSharp
                 BonExtension.Setup f1 = new BonExtension.Setup();
                 if (DialogResult.OK == f1.ShowDialog())
                 {
-                    //todo: flatten meta, proxies
-
                     foreach (MGALib.IMgaFCO fco in root.ChildFCOs)
                     {
                         processParadigmSheet(fco);                                              

@@ -188,7 +188,7 @@ namespace BonExtension.Generators
                 (this.HasChildren) ? className + "Impl" : className,
                 baseInterfaces,
                 memberType,
-                GenerateCommon(),
+                GenerateCommon() + GenerateContainer(),
                 GenerateAttributes(ref attrs, ref sbAttrib),
                 GenerateConnections(ref conns, ref sbConns),
                 GenerateRelationships(ref rels, ref sbRels),

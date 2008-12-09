@@ -31,25 +31,32 @@ namespace BonExtension.Generators
 @"
 	    void Connect({0} obj1, {1} obj2);
 ";
+            #region Endpoint
+            public static readonly string EndPointInterface =
+@"
+	    public {0} {1} { get; };
+";
+            public static readonly string EndPointInner =
+@"
+                    if (connPoint.target.MetaBase.Name == ""{0}"" && connPoint.ConnRole == ""{1}"")
+                        return new {2}(connPoint.target as {3});
+";
+            public static readonly string EndPoint =
+@"
+        public {0} {1}
+        {{
+            get
+            {{
+                foreach (MgaConnPoint connPoint in this.mgaObject.ConnPoints)
+                {{
+                    {2}
+                }}
 
-//            public static readonly string EndPoint =
-//@"
-//        public {0} {1}
-//        {{
-//            get
-//            {{
-//                MgaConnPoints points = mgaObject.ConnPoints;
-//                foreach (MgaConnPoint point in points)
-//                {{                    
-//                    if (point.target.Meta.Name == ""{0}"")
-//                    {{
-//                        return new {0}(point.target as {2});
-//                    }}
-//                }}
-//                return null;
-//            }}
-//        }}
-//";
+                return null;
+            }}
+        }}
+";
+            #endregion
         }
 
         public Connection(MGALib.IMgaAtom mgaObject)
@@ -76,6 +83,7 @@ namespace BonExtension.Generators
             StringBuilder sbConns = new StringBuilder();
             StringBuilder sbRels = new StringBuilder();
             StringBuilder sbCons = new StringBuilder();
+            StringBuilder sbEnds = new StringBuilder();
 
             string baseInterfaces = (this.HasChildren) ? className : baseInterfaceName;
 
@@ -91,14 +99,14 @@ namespace BonExtension.Generators
                 (this.HasChildren) ? className + "Impl" : className,
                 baseInterfaces,
                 memberType,
-                GenerateCommon(),
+                GenerateCommon() + GenerateContainer(),
                 GenerateAttributes(ref attrs, ref sbAttrib),
                 GenerateConnections(ref conns, ref sbConns),
                 GenerateRelationships(ref rels, ref sbRels),
                 GenerateConnects(ref cons, ref sbCons),
                 "IMgaMeta" + memberType.Substring(4),
                 className,
-                GenerateCreateNews(ref crnews,this));
+                GenerateCreateNews(ref crnews,this) + GenerateEndPoints(ref sbEnds));
 
             baseInterfaces = baseInterfaceName;
 
@@ -124,7 +132,7 @@ namespace BonExtension.Generators
                     sbAttrib.ToString(),
                     sbConns.ToString(),
                     sbRels.ToString(),
-                    sbCons.ToString());
+                    sbCons.ToString()+sbEnds.ToString());
                 }
             }
 
@@ -139,17 +147,95 @@ namespace BonExtension.Generators
         //    return sb.ToString();
         //}
 
+        public string GenerateEndPoints(ref StringBuilder forInterface)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(generateOwnEndPoints(ref forInterface));
+
+            //genarate parents' attributes:
+            //foreach (DerivedWithKind parent in this.Parents)
+            //{
+            //    if (parent.Rel is Model)
+            //    {
+            //        if (parent.Type == DerivedWithKind.InhType.General ||
+            //            parent.Type == DerivedWithKind.InhType.Implementation)
+            //            sb.Append((parent.Rel as Model).GenerateContainments(ref names, ref forInterface));
+            //    }
+            //}
+
+            return sb.ToString();
+        }
+        private string generateOwnEndPoints(ref StringBuilder forInterface)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (ConnEndPoints connends in Ends)
+            {
+                    sb.Append(generateCurrentEndPoints(connends));
+                    if (this.HasChildren)
+                    {
+                        forInterface.Append(generateCurrentEndPointsForInterface(connends));
+                    }
+                
+                break;
+            }
+            return sb.ToString();
+        }
+        private string generateCurrentEndPoints(ConnEndPoints current)
+        {
+            
+            StringBuilder sb = new StringBuilder();
+            {
+                StringBuilder inner = new StringBuilder();
+                inner.AppendFormat(Connection.Template.EndPointInner, current.src.className, "src"/*Is it okay?*/, current.src.ProperClassName, current.src.memberType);
+                if (current.src.HasChildren)
+                {
+                    //and add all of the children
+                    foreach (DerivedWithKind child in current.src.ChildrenRecursive)
+                    {
+                        if (child.Type == DerivedWithKind.InhType.General)
+                            inner.AppendFormat(Connection.Template.EndPointInner, child.Rel.className, "src", child.Rel.ProperClassName, child.Rel.memberType);
+                    }
+                }
+
+                sb.AppendFormat(Connection.Template.EndPoint, current.src.className, "Src", inner.ToString());
+            }
+            {
+                StringBuilder inner = new StringBuilder();
+                inner.AppendFormat(Connection.Template.EndPointInner, current.dst.className, "dst"/*Is it okay?*/, current.dst.ProperClassName, current.dst.memberType);
+                if (current.dst.HasChildren)
+                {
+                    //and add all of the children
+                    foreach (DerivedWithKind child in current.dst.ChildrenRecursive)
+                    {
+                        if (child.Type == DerivedWithKind.InhType.General)
+                            inner.AppendFormat(Connection.Template.EndPointInner, child.Rel.className, "dst", child.Rel.ProperClassName, child.Rel.memberType);
+                    }
+                }
+                sb.AppendFormat(Connection.Template.EndPoint, current.dst.className, "Dst", inner.ToString());
+            }
+                        
+            return sb.ToString();
+        }
+        private string generateCurrentEndPointsForInterface(ConnEndPoints current)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat(Connection.Template.EndPointInterface, current.src.className, "Src");
+            sb.AppendFormat(Connection.Template.EndPointInterface, current.dst.className, "Dst");
+
+            return sb.ToString();
+        }
+        
         #region Connect
         public class ConnEndPoints
         {
-            public Object src = null;
-            public Object dst = null;
+            public FCO src = null;
+            public FCO dst = null;
 
             public ConnEndPoints()
             {
             }
 
-            public ConnEndPoints(Object src, Object dst)
+            public ConnEndPoints(FCO src, FCO dst)
             {
                 this.src = src;
                 this.dst = dst;
@@ -300,9 +386,9 @@ namespace BonExtension.Generators
         private string generateConnectForInterface(ConnEndPoints current)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat(Connection.Template.ConnectInterface, 
-                current.src.Name, 
-                current.dst.Name);
+            //sb.AppendFormat(Connection.Template.ConnectInterface, 
+            //    current.src.Name, 
+            //    current.dst.Name);
 
             return sb.ToString();
         }

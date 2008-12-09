@@ -9,35 +9,8 @@ namespace BonExtension.Generators
     {
         public class Template
         {
-            public static readonly string Init =
-@"
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-using MGALib;
-using METALib;
-";
-
-            public static readonly string Object =
-@"
-namespace {0}
-{{
-    public class {1} : {2}
-    {{
-        internal {{3}} mgaObject;
-        
-        public {1}({3} mgaObject)
-        {{
-            this.mgaObject = mgaObject;
-        }}
-    }}
-
-    //Common
-    {4}
-}}
-";
-
+            #region CreateNew
             public static readonly string CreateNewModelParent =
 @"
         public static {0} CreateNew({1} parent)
@@ -80,7 +53,36 @@ namespace {0}
             throw new ArgumentException();
         }}
 ";
+            #endregion
+            #region General
+            public static readonly string Init =
+@"
+using System;
+using System.Collections.Generic;
+using System.Text;
 
+using MGALib;
+using METALib;
+";
+
+            public static readonly string Object =
+@"
+namespace {0}
+{{
+    public class {1} : {2}
+    {{
+        internal {{3}} mgaObject;
+        
+        public {1}({3} mgaObject)
+        {{
+            this.mgaObject = mgaObject;
+        }}
+    }}
+
+    //Common
+    {4}
+}}
+";
             public static readonly string General =
 @"
         #region IObject Members
@@ -138,6 +140,7 @@ namespace {0}
             this.mgaObject.DestroyObject();
         }}
 ";
+            #endregion
         }
 
         public static Dictionary<string, string> ProxyCache = new Dictionary<string, string>();
@@ -170,21 +173,17 @@ namespace {0}
             }
         }
 
+        #region Parent - Child
         public class DerivedWithKind
         {
             public enum InhType
             {
                 General, Implementation, Interface
             }
+
             public FCO Rel;
             public InhType Type;
-            public DerivedWithKind(FCO rel, InhType type)
-            {
-                this.Rel = rel;
-                this.Type = type;
-            }
         }
-
         internal virtual IEnumerable<DerivedWithKind> Parents
         {
             get { return new List<DerivedWithKind>(); }
@@ -194,6 +193,7 @@ namespace {0}
         {
             get { return false; }
         }
+        #endregion
 
         internal IEnumerable<MGALib.IMgaObject> MgaObjects
         {
@@ -272,8 +272,8 @@ namespace {0}
         private string generateOwnCreateNews(ref List<string> containers, Object realCurrentObject)
         {
             StringBuilder sb = new StringBuilder();
-            if (this.InRootFolder)
-            {
+            if (this.InRootFolder && !containers.Contains("RootFolder"))
+            {                
                 containers.Add("RootFolder");
                 sb.AppendFormat(Object.Template.CreateNewFolderParent,
                     ((realCurrentObject.HasChildren) ? realCurrentObject.className + "Impl" : realCurrentObject.className), 
@@ -313,6 +313,7 @@ namespace {0}
             return inner.ToString();
         }
         #endregion
+
 
         public string GenerateCommon()
         {

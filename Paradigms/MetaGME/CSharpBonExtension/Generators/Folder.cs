@@ -9,6 +9,36 @@ namespace BonExtension.Generators
     {
         new public class Template
         {
+            #region Container
+            public static readonly string ContainerFolderInner =
+@"
+                        if (this.mgaObject.ParentFolder.MetaBase.Name == ""{0}"")
+                            return new {0}(this.mgaObject.ParentFolder);
+";
+            public static readonly string Container =
+@"
+        public IContainer Container
+        {{
+            get
+            {{
+                if (this.mgaObject.ParentFolder != null)
+                {{
+                    if (this.mgaObject.ParentFolder == {1}.Project.RootFolder)
+                    {{
+                        return new RootFolder({1}.Project.RootFolder as MGALib.IMgaFolder);
+                    }}
+                    else
+                    {{
+                        {0}
+                    }}
+                }}
+
+                return null;
+            }}
+        }}
+";
+            #endregion
+            #region Containment
             public static readonly string Containment =
 @"
         public IEnumerable<{0}> Contained{0}s
@@ -24,6 +54,8 @@ namespace BonExtension.Generators
             }}
         }}
 ";
+            #endregion
+            #region General
             public static readonly string Class =
 @"
 namespace {0}
@@ -48,7 +80,8 @@ namespace {0}
         #endregion
     }}
 }}
-";        
+";
+            #endregion
         }
 
         public Folder(MGALib.IMgaAtom mgaObject)
@@ -183,6 +216,46 @@ namespace {0}
         }
         #endregion
 
+        #region Container
+        public string GenerateContainer()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            StringBuilder folder = new StringBuilder();
+
+            List<string> foldernames = new List<string>();
+
+            generateContainerInner(ref folder, ref foldernames);
+
+            sb.AppendFormat(Folder.Template.Container, folder.ToString(), General.ClassName);
+
+            return sb.ToString();
+        }
+        private void generateContainerInner(ref StringBuilder folder, ref List<string> folderNames)
+        {
+            generateOwnContainerInnerFolder(ref folder, ref folderNames);
+            
+        }
+        private void generateOwnContainerInnerFolder(ref StringBuilder sb, ref List<string> folderNames)
+        {
+            //PossibleContainers that are folders
+            foreach (Object container in this.PossibleContainers)
+            {
+                Folder folder = container as Folder;
+                if (folder != null)
+                {
+                    if (!folderNames.Contains(folder.className))
+                    {
+                        //this container is a model
+                        sb.AppendFormat(Folder.Template.ContainerFolderInner, folder.className, folder.className);
+                        folderNames.Add(folder.className);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
         public override string GenerateClass()
         {
             List<string> crnews = new List<string>();
@@ -196,7 +269,7 @@ namespace {0}
                 className,
                 baseInterfaceName,
                 memberType,
-                GenerateCommon(),
+                GenerateCommon()+GenerateContainer(),
                 GenerateContainments(),
                 "IMgaMeta" + memberType.Substring(4),
                 className,

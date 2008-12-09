@@ -9,6 +9,45 @@ namespace BonExtension.Generators
     {
         new public class Template
         {
+            #region Container
+            public static readonly string ContainerFolderInner =
+@"
+                        if (this.mgaObject.ParentFolder.MetaBase.Name == ""{0}"")
+                            return new {0}(this.mgaObject.ParentFolder);
+";
+            public static readonly string ContainerModelInner =
+@"
+                    if (this.mgaObject.ParentModel.MetaBase.Name == ""{0}"")
+                        return new {1}(this.mgaObject.ParentModel);
+";
+            public static readonly string Container =
+@"
+        public IContainer Container
+        {{
+            get
+            {{
+                if (this.mgaObject.ParentModel != null)
+                {{
+                    {0}
+                }}
+                else if (this.mgaObject.ParentFolder != null)
+                {{
+                    if (this.mgaObject.ParentFolder == {2}.Project.RootFolder)
+                    {{
+                        return new RootFolder({2}.Project.RootFolder as MGALib.IMgaFolder);
+                    }}
+                    else
+                    {{
+                        {1}
+                    }}
+                }}
+
+                return null;
+            }}
+        }}
+";
+            #endregion
+            #region Attribute
             public static readonly string Attribute =
 @"
         public {0} {1}
@@ -53,10 +92,16 @@ namespace BonExtension.Generators
             {1}
         }}
 ";
-
+            #endregion
+            #region Relationship
             public static readonly string Relationship =
 @"
-        public IEnumerable<{0}> Get{1}Dsts()
+        public IEnumerable<{0}> {4}
+        {{
+            get {{ return Get{1}{3}s(); }}
+        }}
+
+        public IEnumerable<{0}> Get{1}{3}s()
         {{
             MgaConnPoints points = mgaObject.PartOfConns;
             foreach (MgaConnPoint point in points)
@@ -79,9 +124,11 @@ namespace BonExtension.Generators
 ";
             public static readonly string RelationshipInterface =
 @"
-        IEnumerable<{0}> Get{1}Dsts();
+        IEnumerable<{0}> {3}{{get;}}
+        IEnumerable<{0}> Get{1}{2}s();
 ";
-
+            #endregion
+            #region Connection
             public static readonly string Connection =
 @"
         public IEnumerable<{0}> Get{0}s()
@@ -103,14 +150,15 @@ namespace BonExtension.Generators
 @"
         IEnumerable<{0}> Get{0}s();
 ";
-
+            #endregion
+            #region General
             public static readonly string Interface =
 @"
 namespace {0}
 {{
     public interface {1} : {2}
     {{
-
+        IContainer Container{{get;}}
         #region Common
 /*
 {3}
@@ -174,6 +222,7 @@ namespace {0}
     }}
 }}
 ";
+            #endregion
         }
 
 
@@ -215,7 +264,7 @@ namespace {0}
 
 
 
-        #region Inheritance        
+        #region Inheritance
         internal override IEnumerable<DerivedWithKind> Parents
         {
             get
@@ -251,14 +300,14 @@ namespace {0}
                                                     if (connOther2.target.MetaBase.Name.Contains("Proxy"))
                                                     {
                                                         if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                            yield return new DerivedWithKind(Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO, type);
+                                                            yield return new DerivedWithKind(){Rel = Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO, Type= type};
                                                         else
                                                             GME.CSharp.BonExtender.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
                                                     }
                                                     else
                                                     {
                                                         if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
-                                                            yield return new DerivedWithKind(Object.ElementsByName[connOther2.target.Name] as FCO, type);
+                                                            yield return new DerivedWithKind() { Rel = Object.ElementsByName[connOther2.target.Name] as FCO, Type = type };
                                                         else
                                                         {
                                                             //TODO
@@ -313,14 +362,14 @@ namespace {0}
                                                     if (connOther2.target.MetaBase.Name.Contains("Proxy"))
                                                     {
                                                         if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                            yield return new DerivedWithKind( Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO, type);
+                                                            yield return new DerivedWithKind() { Rel = Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO, Type = type };
                                                         else
                                                             GME.CSharp.BonExtender.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
                                                     }
                                                     else
                                                     {
                                                         if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
-                                                            yield return new DerivedWithKind( Object.ElementsByName[connOther2.target.Name] as FCO, type);
+                                                            yield return new DerivedWithKind() { Rel = Object.ElementsByName[connOther2.target.Name] as FCO, Type = type };
                                                         else
                                                         {
                                                             //todo
@@ -673,13 +722,17 @@ namespace {0}
         #region Relationship
         protected class FCOConnection
         {
-            public FCOConnection(FCO Fco, Connection Conn)
+            public FCOConnection(FCO Fco, Connection Conn, string DstOrSrc, string RoleName)
             {
                 this.Fco = Fco;
                 this.Conn = Conn;
+                this.DstOrSrc = DstOrSrc;
+                this.RoleName = RoleName;
             }
             public FCO Fco;
             public Connection Conn;
+            public string DstOrSrc;
+            public string RoleName;
         }
         protected IEnumerable<FCOConnection> Relations
         {
@@ -693,12 +746,17 @@ namespace {0}
                         if (conn.Owner.Meta.Name == "ConnectorToDestination" || conn.Owner.Meta.Name == "SourceToConnector")
                         {
                             string dir = conn.Owner.Meta.Name;
+
+                            string DstOrSrc = (dir == "ConnectorToDestination") ? "Src" : "Dst";
+
                             foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
                                 if (connOther.target.ID != mgaObject.ID)
                                 {
                                     //connOther.target: Connector
                                     Connection connection = null;
+
+                                    //get the connection
                                     foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
                                     {
                                         if (conn2.Owner.Meta.Name == "AssociationClass")
@@ -730,6 +788,8 @@ namespace {0}
                                             }
                                         }
                                     }
+
+                                    //get the other one
                                     foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
                                     {
                                         if (conn2.Owner.Meta.Name != "AssociationClass" && conn2.Owner.Meta.Name != dir)
@@ -739,12 +799,24 @@ namespace {0}
                                                 if (connOther2.target.ID != connOther.target.ID)
                                                 {
                                                     //connOther2.target: dst
+                                                    string Role;
+                                                    try
+                                                    {
+                                                        Role = connOther2.Owner.get_StrAttrByName(DstOrSrc.ToLower() + "Rolename");
+                                                    }
+                                                    catch
+                                                    {
+                                                        Role = DstOrSrc;
+                                                    }
+                                                    
                                                     if (connOther2.target.MetaBase.Name.Contains("Proxy"))
                                                     {
                                                         if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
                                                             yield return new FCOConnection(
                                                                 Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO,
-                                                                connection);
+                                                                connection, 
+                                                                DstOrSrc, 
+                                                                Role);
                                                         else
                                                             GME.CSharp.BonExtender.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
                                                     }
@@ -753,7 +825,9 @@ namespace {0}
                                                         if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
                                                             yield return new FCOConnection(
                                                                 Object.ElementsByName[connOther2.target.Name] as FCO,
-                                                                connection);
+                                                                connection,
+                                                                DstOrSrc,
+                                                                Role);
                                                         else
                                                         {
                                                             //todo
@@ -796,18 +870,20 @@ namespace {0}
             {
                 if (!names.Contains(dst.Conn.className))
                 {
-                    sb.Append(generateRelationship(dst.Fco, dst.Conn.className));
+                    sb.Append(generateRelationship(dst));
                     if (this.HasChildren)
                     {
-                        forInterface.Append(generateRelationshipForInterface(dst.Fco.className, dst.Conn.className));
+                        forInterface.Append(generateRelationshipForInterface(dst));
                     }
                     names.Add(dst.Conn.className);
                 }
             }
             return sb.ToString();
         }
-        private string generateRelationship(FCO current, string relname)
+        private string generateRelationship(FCOConnection dst)
         {
+            FCO current = dst.Fco;
+            string relname = dst.Conn.className;
             StringBuilder inner = new StringBuilder();
 
             inner.AppendFormat(FCO.Template.RelationshipInner, current.className, current.ProperClassName, current.memberType);
@@ -823,17 +899,104 @@ namespace {0}
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat(FCO.Template.Relationship, current.className, relname, inner.ToString());
+            sb.AppendFormat(FCO.Template.Relationship, current.className, relname, inner.ToString(), dst.DstOrSrc, dst.RoleName);
 
             return sb.ToString();
         }
-        private string generateRelationshipForInterface(string dstTypeName, string relname)
+        private string generateRelationshipForInterface(FCOConnection dst)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat(FCO.Template.RelationshipInterface, dstTypeName, relname);
+            sb.AppendFormat(FCO.Template.RelationshipInterface, dst.Fco.className, dst.Conn.className, dst.DstOrSrc, dst.RoleName);
 
             return sb.ToString();
         }
+        #endregion
+        
+        #region Container
+        public string GenerateContainer()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            StringBuilder model = new StringBuilder();
+            StringBuilder folder = new StringBuilder();
+
+            List<string> modelnames = new List<string>();
+            List<string> foldernames = new List<string>();
+
+            generateContainerInner(ref model, ref modelnames, ref folder, ref foldernames);
+
+            sb.AppendFormat(FCO.Template.Container, model.ToString(), folder.ToString(), General.ClassName);
+
+            return sb.ToString();
+        }
+        private void generateContainerInner(ref StringBuilder model, ref List<string> modelNames, ref StringBuilder folder, ref List<string> folderNames)
+        {
+            generateOwnContainerInnerModel(ref model, ref modelNames);
+            generateOwnContainerInnerFolder(ref folder, ref folderNames);
+            
+            //the same to the elements parents 
+            foreach (DerivedWithKind parent in this.Parents)
+            {
+                if (parent.Type == DerivedWithKind.InhType.General ||
+                    parent.Type == DerivedWithKind.InhType.Implementation)
+                {
+                    parent.Rel.generateContainerInner(ref model, ref modelNames, ref folder, ref folderNames);
+                }                
+            }
+        }
+        private void generateOwnContainerInnerModel(ref StringBuilder sb, ref List<string> modelNames)
+        {
+            //PossibleContainers that are models
+            foreach (Object container in this.PossibleContainers)
+            {
+                FCO model = container as FCO;
+                if (model != null)
+                {
+                    //this container is a model
+                    if (!modelNames.Contains(model.className))
+                    {
+                        sb.AppendFormat(FCO.Template.ContainerModelInner, model.className, model.ProperClassName);
+                        modelNames.Add(model.className);
+                    }
+
+                    //its children:
+                    if (model.HasChildren)
+                    {
+                        //and add all of the children
+                        foreach (DerivedWithKind child in model.ChildrenRecursive)
+                        {
+                            if (child.Type == DerivedWithKind.InhType.General ||
+                                child.Type == DerivedWithKind.InhType.Interface)
+                            {
+                                if (!modelNames.Contains(child.Rel.className))
+                                {
+                                    sb.AppendFormat(FCO.Template.ContainerModelInner, child.Rel.className, child.Rel.ProperClassName);
+                                    modelNames.Add(child.Rel.className);
+                                }
+                            }
+                        }
+                    }
+                }
+            }            
+        }
+        private void generateOwnContainerInnerFolder(ref StringBuilder sb, ref List<string> folderNames)
+        {
+            //PossibleContainers that are folders
+            foreach (Object container in this.PossibleContainers)
+            {
+                Folder folder = container as Folder;
+                if (folder != null)
+                {
+                    if (!folderNames.Contains(folder.className))
+                    {
+                        //this container is a model
+                        sb.AppendFormat(FCO.Template.ContainerFolderInner, folder.className, folder.className);
+                        folderNames.Add(folder.className);
+                    }
+                }
+            }    
+        }
+
         #endregion
 
         public override string GenerateClass()
@@ -864,7 +1027,7 @@ namespace {0}
                 (this.HasChildren)?className+"Impl":className,
                 baseInterfaces, 
                 memberType, 
-                GenerateCommon(),
+                GenerateCommon()+GenerateContainer(),
                 GenerateAttributes(ref attrs, ref sbAttrib),
                 GenerateConnections(ref conns, ref sbConns),
                 GenerateRelationships(ref rels, ref sbRels),
