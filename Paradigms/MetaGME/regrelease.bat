@@ -20,8 +20,8 @@ regsvr32 /s "BONExtension\Release\BonExtender2004.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
-echo MetaInterpreter2004.dll:
-regsvr32 /s "MetaInterpreter2004\Release\MetaInterpreter2004.dll"
+echo MetaInterpreter.dll:
+regsvr32 /s "MetaInterpreter\Release\MetaInterpreter.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 

@@ -1,6 +1,6 @@
 ; Interpreter.def : Declares the module parameters.
 
-LIBRARY      "MetaInterpreter2004.DLL"
+LIBRARY      "MetaInterpreter.DLL"
 
 EXPORTS
 	DllCanUnloadNow     PRIVATE

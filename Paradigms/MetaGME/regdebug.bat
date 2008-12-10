@@ -21,7 +21,7 @@ if errorlevel 1 goto errorlabel
 echo    OK
 
 echo MetaInterpreter2004.dll:
-regsvr32 /s "MetaInterpreter2004\Debug\MetaInterpreter2004.dll"
+regsvr32 /s "MetaInterpreter\Debug\MetaInterpreter.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
