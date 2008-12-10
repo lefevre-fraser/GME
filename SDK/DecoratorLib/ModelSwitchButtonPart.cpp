@@ -157,10 +157,13 @@ void ModelSwitchButtonPart::InitiateModelExpandStateSwitch(void)
 			CComPtr<IMgaPart> part;
 			COMTHROW(terrFco->get_Part(mAspect, &part));
 
-			OLECHAR bbc[10];
-			swprintf(bbc, 10, OLESTR("%ld"), m_lBitmapResID == IDB_EXPAND_SIGN ? 1 : 0);
-			CComBSTR bb(bbc);
-			COMTHROW(part->put_RegistryValue(CComBSTR(PREF_ISMODELEXPANDED), bb));
+			ASSERT(part);
+			if (part) {
+				OLECHAR bbc[10];
+				swprintf(bbc, 10, OLESTR("%ld"), m_lBitmapResID == IDB_EXPAND_SIGN ? 1 : 0);
+				CComBSTR bb(bbc);
+				COMTHROW(part->put_RegistryValue(CComBSTR(PREF_ISMODELEXPANDED), bb));
+			}
 		}
 
 		if (!inTrans) {

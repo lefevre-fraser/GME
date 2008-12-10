@@ -65,17 +65,19 @@ void ModelSwitchPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaM
 				COMTHROW(terrFco->get_Status(&status));
 				if (status == OBJECT_EXISTS) {
 					COMTHROW(terrFco->get_Part(mAspect, &part));
-					CComBSTR regName(PREF_ISMODELEXPANDED);
-					COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+					if (part) {
+						CComBSTR regName(PREF_ISMODELEXPANDED);
+						COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+					}
 				}
 
 				pProject->CommitTransaction();
 			} else {
-//				COMTHROW(pProject->get_ActiveTerritory(&terr));
-
 				COMTHROW(pFCO->get_Part(mAspect, &part));
-				CComBSTR regName(PREF_ISMODELEXPANDED);
-				COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+				if (part) {
+					CComBSTR regName(PREF_ISMODELEXPANDED);
+					COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+				}
 			}
 
 			CString boolStr;

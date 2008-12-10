@@ -78,17 +78,19 @@ CSize ResizablePart::GetPreferredSize(void) const
 				COMTHROW(terrFco->get_Status(&status));
 				if (status == OBJECT_EXISTS) {
 					COMTHROW(terrFco->get_Part(mAspect, &part));
-					CComBSTR regName(PREF_PREFERREDSIZE);
-					COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+					if (part) {
+						CComBSTR regName(PREF_PREFERREDSIZE);
+						COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+					}
 				}
 
 				m_spProject->CommitTransaction();
 			} else {
-//				COMTHROW(m_spProject->get_ActiveTerritory(&terr));
-
 				COMTHROW(m_spFCO->get_Part(mAspect, &part));
-				CComBSTR regName(PREF_PREFERREDSIZE);
-				COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+				if (part) {
+					CComBSTR regName(PREF_PREFERREDSIZE);
+					COMTHROW(part->get_RegistryValue(regName, &bstrVal));
+				}
 			}
 
 			CString sizeStr;
@@ -227,15 +229,18 @@ void ResizablePart::WindowResizingFinished(UINT nSide, CRect& location)
 				CComPtr<IMgaPart> part;
 				COMTHROW(terrFco->get_Part(mAspect, &part));
 
-				CPoint pt = location.TopLeft();
-				COMTHROW(part->SetGmeAttrs(0, pt.x, pt.y));
-				// Save preferred size part
-				CSize size(m_bResetSize ? 0 : location.Width(), m_bResetSize ? 0 : location.Height());
-				if (size.cx >= 0 && size.cy >= 0) {
-					OLECHAR bbc[40];
-					swprintf(bbc, 40, OLESTR("%ld,%ld"), size.cx, size.cy);
-					CComBSTR bb(bbc);
-					COMTHROW(part->put_RegistryValue(CComBSTR(PREF_PREFERREDSIZE), bb));
+				ASSERT(part);
+				if (part) {
+					CPoint pt = location.TopLeft();
+					COMTHROW(part->SetGmeAttrs(0, pt.x, pt.y));
+					// Save preferred size part
+					CSize size(m_bResetSize ? 0 : location.Width(), m_bResetSize ? 0 : location.Height());
+					if (size.cx >= 0 && size.cy >= 0) {
+						OLECHAR bbc[40];
+						swprintf(bbc, 40, OLESTR("%ld,%ld"), size.cx, size.cy);
+						CComBSTR bb(bbc);
+						COMTHROW(part->put_RegistryValue(CComBSTR(PREF_PREFERREDSIZE), bb));
+					}
 				}
 			}
 
