@@ -159,6 +159,32 @@ BOOL CPartBrowserDlg::OnInitDialog()
 	tab.SetWindowPos(&wndBottom, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	partFrame.Create(IDD_PARTBROWSERFRAME_DIALOG, this);
 
+	// Opportunity for some users to bring the tabs to the bottom again (TCS_BOTTOM is obsolete now)
+	// TCS_BOTTOM style is obsolete (see MSDN: "This style is not supported if you use ComCtl32.dll version 6.")
+	// this style appeared with Internet Explorer 3.x, ComCtl 6.0 is the Windows XP and Windows Vista version of ComCtl.
+	// If user really wants to switch it back, he can force PartBrowser to use TCS_BOTTOM style by creating a
+	// string registry key with "1" value under the "HKCU\Software\GME\GUI\PartBrowser\BottomTabs"
+	HKEY hKey;
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\GME\\GUI\\PartBrowser"),
+					 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
+	{
+		TCHAR szData[128];
+		DWORD dwKeyDataType;
+		DWORD dwDataBufSize = sizeof(szData)/sizeof(TCHAR);
+
+		if (RegQueryValueEx(hKey, _T("BottomTabs"), NULL, &dwKeyDataType,
+							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
+		{
+			UINT uBottomTabs = _tcstoul(szData, NULL, 10);
+			if (uBottomTabs > 0) {
+				LONG dwStyle = ::GetWindowLong(tab.m_hWnd, GWL_STYLE);
+				dwStyle = dwStyle | TCS_BOTTOM;
+				::SetWindowLong(tab.m_hWnd, GWL_STYLE, dwStyle);
+			}
+		}
+		RegCloseKey(hKey);
+	}
+
 	SetTabs();
 
 	return TRUE;	// return TRUE unless you set the focus to a control

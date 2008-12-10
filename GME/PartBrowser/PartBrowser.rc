@@ -113,27 +113,23 @@ CAPTION "About PartBrowser Control"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_ABOUTDLL,IDC_STATIC,10,10,20,20
-    LTEXT           "PartBrowser Control, Version 1.0",IDC_STATIC,40,10,170,
-                    8
+    LTEXT           "PartBrowser Control, Version 1.0",IDC_STATIC,40,10,170,8
     LTEXT           "Copyright (C) 2007, ",IDC_STATIC,40,25,170,8
     DEFPUSHBUTTON   "OK",IDOK,221,7,32,16,WS_GROUP
 END
 
-IDD_PROPPAGE_PARTBROWSER DIALOG  0, 0, 250, 62
+IDD_PROPPAGE_PARTBROWSER DIALOGEX 0, 0, 250, 62
 STYLE DS_SETFONT | WS_CHILD
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    LTEXT           "TODO: Place controls to manipulate properties of PartBrowser Control on this dialog.",
-                    IDC_STATIC,7,25,229,16
+    LTEXT           "TODO: Place controls to manipulate properties of PartBrowser Control on this dialog.",IDC_STATIC,0,25,229,16
 END
 
 IDD_PARTBROWSER_DIALOG DIALOGEX 0, 0, 137, 74
 STYLE DS_SETFONT | DS_SETFOREGROUND | WS_CHILD | WS_VISIBLE
-EXSTYLE WS_EX_CLIENTEDGE
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    CONTROL         "Tab1",IDC_ASPECT_TAB,"SysTabControl32",TCS_BOTTOM | 
-                    TCS_MULTILINE | TCS_RAGGEDRIGHT,7,7,123,60
+    CONTROL         "Tab1",IDC_ASPECT_TAB,"SysTabControl32",TCS_MULTILINE | TCS_RAGGEDRIGHT,0,0,136,73
 END
 
 IDD_PARTBROWSERFRAME_DIALOG DIALOG  0, 0, 107, 56
@@ -161,26 +157,20 @@ BEGIN
 
     IDD_PROPPAGE_PARTBROWSER, DIALOG
     BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 243
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 55
+        RIGHTMARGIN, 248
+        BOTTOMMARGIN, 61
     END
 
     IDD_PARTBROWSER_DIALOG, DIALOG
     BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 130
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 67
+        RIGHTMARGIN, 136
+        BOTTOMMARGIN, 73
     END
 
     IDD_PARTBROWSERFRAME_DIALOG, DIALOG
     BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 92
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 49
+        RIGHTMARGIN, 95
+        BOTTOMMARGIN, 55
     END
 END
 #endif    // APSTUDIO_INVOKED
