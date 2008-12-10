@@ -151,7 +151,7 @@
 				AdditionalOptions="/Zm200 "
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\GME\Include\STLport,.\,rep,gui,..\..\..\sdk\BON"
+				AdditionalIncludeDirectories=".\,rep,gui,..\..\..\sdk\BON"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;BUILDER_OBJECT_NETWORK_V2"
 				StringPooling="true"
 				RuntimeLibrary="2"

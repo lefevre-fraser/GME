@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Common;..\include\STLport;..\Interfaces;&quot;$(VCInstallDir)\atlmfc\src\mfc&quot;"
+				AdditionalIncludeDirectories="..\Common;..\Interfaces;&quot;$(VCInstallDir)\atlmfc\src\mfc&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -85,7 +85,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\Common;..\include\STLport;..\Interfaces;&quot;$(VCInstallDir)\atlmfc\src\mfc&quot;;"
+				AdditionalIncludeDirectories="..\Common;..\Interfaces;&quot;$(VCInstallDir)\atlmfc\src\mfc&quot;;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL"
 				RuntimeLibrary="2"
 				TreatWChar_tAsBuiltInType="TRUE"
