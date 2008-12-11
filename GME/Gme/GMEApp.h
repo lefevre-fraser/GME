@@ -119,6 +119,9 @@ private:
 	//
 	void ClearDisabledComps();
 
+	// Updates the plugins and addons on the component toolbar
+	void CGMEApp::UpdateComponentToolbar();
+
 	//
 	// component filter related public methods
 	//

@@ -733,9 +733,125 @@ void CGMEApp::FindConstraintManager() {
 }
 
 
+void CGMEApp::UpdateComponentToolbar()
+{
+		if(!mgaMetaProject) return;
+
+		// Updating the Component toolbar
+		CComPtr<IMgaRegistrar> registrar;
+		if(registrar.CoCreateInstance(L"Mga.MgaRegistrar") != S_OK) return;
+
+		if(!CMainFrame::theInstance) return;
+		CComponentBar &componentBar = CMainFrame::theInstance->m_wndComponentBar;
+
+
+		// Removing the add-in and plug-in buttons
+		const CObList &componentButtons = componentBar.GetAllButtons();
+		for(POSITION pos = componentButtons.GetHeadPosition(); pos!= NULL; )
+		{
+			const CMFCToolBarButton* pCurrent = (const CMFCToolBarButton*) componentButtons.GetNext(pos); 
+			if(pCurrent->m_bUserButton == TRUE)
+			{
+				componentBar.RemoveButton(componentBar.ButtonToIndex(pCurrent));
+			}
+		}
+
+		
+		// Traversing  the plugins and interpreters
+		for(int i = 0; i < plugins.GetSize() + interpreters.GetSize(); ++i)	
+		{        				 						
+			// Querying component name
+			CComBSTR componentName;
+			if(i < plugins.GetSize()) // if it is a plugin
+			{
+				componentName = plugins[i];
+			}
+			else					// if it is an interpreter
+			{
+				componentName = interpreters[i-plugins.GetSize()];
+			}
+
+			// Obtaining ToolTip
+			HRESULT errCode;
+			CString toolTip;
+			errCode = registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, componentName, CComBSTR("Tooltip"), PutOut(toolTip));
+			if(errCode != S_OK || toolTip.IsEmpty())
+			{
+				toolTip = componentName;
+			}
+            if(i < plugins.GetSize())
+			{
+				pluginTooltips.Add(toolTip);
+			}
+            else
+			{
+				interpreterTooltips.Add(toolTip);
+			}
+
+			// Querying icon information
+			CString iconInfo;
+			errCode = registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, componentName, CComBSTR("Icon"), PutOut(iconInfo));
+			if(errCode != S_OK || iconInfo.IsEmpty()) 
+			{
+				continue;
+			}
+			
+			// Loading icon
+			HICON hIcon = NULL; //, hictofree = NULL;
+			int commaPos;
+			HMODULE hModule = NULL;
+			if((commaPos = iconInfo.Find(',')) >= 0)  //Format:   <modulename>,<resourceID>
+			{
+				if(commaPos)  // module name present;
+				{
+					hModule = GetModuleHandle(iconInfo.Left(commaPos));
+					if(!hModule) 
+					{						
+						hModule = GetModuleHandle(iconInfo.Left(commaPos));
+					}
+				}
+			}
+			else // No module name provided, 
+			{
+				CString modulePath;
+				registrar->get_LocalDllPath(componentName, PutOut(modulePath));			
+				if(modulePath) 
+				{
+					hModule = GetModuleHandle(modulePath);
+				}
+			}
+
+			if( hModule != NULL ) 
+			{
+				hIcon = (HICON)::LoadImage(hModule, iconInfo.Mid(commaPos+1), IMAGE_ICON, 0,0, LR_DEFAULTCOLOR);
+			}
+			else 
+			{				  
+				// simple .ico file with path
+				hIcon =(HICON)LoadImage(NULL, iconInfo, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+			}
+			
+			// If icon is not found either in the DLL or a standalone file
+			if(!hIcon) 
+			{
+				hIcon = LoadIcon(IDI_COMPNOTFOUND); // Displaying component not found icon
+			}
+
+
+			//Adding button icon
+			CMFCToolBarImages* pToolBarImages = componentBar.GetImages();
+			int nIndex = pToolBarImages->AddIcon(hIcon);
+
+			// Adding button
+			int commandID = (i< plugins.GetSize()) ? ID_FILE_RUNPLUGIN1 + i:ID_FILE_INTERPRET1 + i-plugins.GetSize();
+			CMFCToolBarButton toolBarButton(commandID,nIndex, componentName + '\n'+ toolTip,TRUE);			
+			componentBar.InsertButton(toolBarButton);
+		}		
+}
+
 
 void CGMEApp::UpdateComponentLists(bool restart_addons) {
-		/*ClearDisabledComps();	
+		ClearDisabledComps();	
 		plugins .RemoveAll();
         pluginTooltips.RemoveAll();
 		interpreters.RemoveAll();
@@ -787,115 +903,7 @@ void CGMEApp::UpdateComponentLists(bool restart_addons) {
 	
 		}
 		dynmenus_need_refresh = true;
-
-
-// Update the Component toolbar
-
-		if(!CMainFrame::theInstance) return;
-		CComponentBar &cb = CMainFrame::theInstance->m_wndComponentBar;
-		CToolBarCtrl &tbc = cb.GetToolBarCtrl();
-		cb.ShowWindow(SW_HIDE);
-
-		for (int bCnt = tbc.GetButtonCount(); bCnt > 0;) {
-			tbc.DeleteButton(--bCnt);
-		}
-
-		CComPtr<IMgaRegistrar> reg;
-		if(reg.CoCreateInstance(L"Mga.MgaRegistrar") != S_OK) return;
-		if(!mgaMetaProject) return;
-
-		CImageList imlist;
-		imlist.Create(15,16,ILC_MASK, 0, 20);
-		CImageList *oldlist = tbc.SetImageList(&imlist);
-		if (oldlist) {
-			oldlist->DeleteImageList();
-		}
-
-
-		for(int i = 0; i < plugins.GetSize() + interpreters.GetSize(); ++i)	{
-            // insert separator between plugin and interpreter icons (if at least one plugin exits)
-			if((i == plugins.GetSize()) && (i != 0)) {
-				TBBUTTON but = { 0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0,0 };
-				tbc.AddButtons(1,&but);
-			}
-			CString bico, tooltip;;
-			CComPtr<IMgaComponent> loadedcomp;
-			CComBSTR compname;
-			if(i < plugins.GetSize()) compname = plugins[i];
-			else compname = interpreters[i-plugins.GetSize()];
-			HRESULT s;
-            s = reg->get_ComponentExtraInfo(REGACCESS_PRIORITY, compname, CComBSTR("Tooltip"), PutOut(tooltip));
-            if(s != S_OK || tooltip.IsEmpty())
-                tooltip = compname;
-            if(i < plugins.GetSize())
-                pluginTooltips.Add( tooltip );
-            else
-                interpreterTooltips.Add( tooltip );
-            s = reg->get_ComponentExtraInfo(REGACCESS_PRIORITY, compname, CComBSTR("Icon"), PutOut(bico));
-			if(s != S_OK || bico.IsEmpty()) continue;
-			
-			HICON hic = NULL, hictofree = NULL;
-			int cpos;
-			if((cpos = bico.Find(',')) >= 0) {  //   <modulename>,<resourceID>
-				HMODULE hm = NULL;
-				if(cpos) {  // module name present;
-					hm = GetModuleHandle(bico.Left(cpos));
-					if(!hm) {
-						loadedcomp.CoCreateInstance(compname);
-						hm = GetModuleHandle(bico.Left(cpos));
-					}
-				}
-				else {
-					CString modname;
-					reg->get_LocalDllPath(compname, PutOut(modname));			
-					if(modname) {
-						loadedcomp.CoCreateInstance(compname);
-						CString mn(modname);
-						hm = GetModuleHandle(mn);
-					}
-				}
-				if( hm != NULL ) {
-				 hic = ::LoadIcon(hm, bico.Mid(cpos+1));
-/*
-				 HRSRC res = ::FindResource(hm, bico.Mid(cpos+1), RT_GROUP_ICON);
-				 res = ::FindResource(hm, MAKEINTRESOURCE(201), RT_GROUP_ICON);
-				 res = ::FindResource(hm, "IDI_COMPICON", RT_GROUP_ICON);
-				 if(res) {
-                    HGLOBAL hg;  
-					hic = CreateIconFromResourceEx((LPBYTE)LockResource(hg = LoadResource(hm, res)), 
-													SizeofResource(hm, res), 
-													true,
-													0x30000,
-													GetSystemMetrics(SM_CXICON),
-													GetSystemMetrics(SM_CYICON),
-													LR_DEFAULTCOLOR);
-// TODO:					FreeResource(hg);
-				 }
-*//*
-				}
-			}
-			else {				  //    simple filename
-				hic = hictofree = (HICON)LoadImage(NULL, bico, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
-			}
-			if(!hic) hic = LoadIcon(IDI_COMPNOTFOUND);
-
-			TBBUTTON but = { 0, 0, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0};
-			but.iBitmap = imlist.Add(hic);
-			if(hictofree) DestroyIcon(hictofree);
-			if(i < plugins.GetSize()) but.idCommand = ID_FILE_RUNPLUGIN1 + i;
-			else but.idCommand = ID_FILE_INTERPRET1 + i-plugins.GetSize();
-	//		CString strx(plugins[i]);
-	//		strx += '\0';
-	//		but.iString = tbc.AddStrings(strx);
-			tbc.AddButtons(1,&but);
-		}
-
-		if( tbc.GetButtonCount() > 0)
-			cb.ShowWindow(SW_SHOW);
-		
-		imlist.Detach();
-
-		@@@@*/
+		UpdateComponentToolbar();
 }
 
 void CGMEApp::UpdateDynMenus(CMenu *filemenu)   {
