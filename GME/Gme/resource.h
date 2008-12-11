@@ -12,26 +12,15 @@
 #define ID_INDICATOR_PARADIGM           105
 #define ID_INDICATOR_TIME               106
 #define CG_IDD_MODELPROPERTIESBAR       107
-#define IDS_REGISTRAR_NAME              107
 #define CG_ID_VIEW_MODELPROPERTIESBAR   108
 #define ID_PARTBROWSER                  109
 #define ID_GMEBROWSER                   110
-#define ID_USER_TOOL1                   110
-#define ID_USER_TOOL2                   111
 #define IDB_SPLASH                      112
-#define ID_USER_TOOL3                   112
 #define ID_PROPERTYCOMBO                113
-#define ID_USER_TOOL4                   113
-#define ID_USER_TOOL5                   114
 #define IDR_AUTOROUTERPORT              115
-#define ID_USER_TOOL6                   115
 #define IDR_AUTOROUTERBOX               116
-#define ID_USER_TOOL7                   116
 #define IDR_AUTOROUTERGRAPH             117
-#define ID_USER_TOOL8                   117
 #define IDR_AUTOROUTERPATH              118
-#define ID_USER_TOOL9                   118
-#define ID_USER_TOOL10                  119
 #define IDP_OLE_INIT_FAILED             120
 #define ID_VIEW_CUSTOMIZE               126
 #define IDR_MAINFRAME                   128
@@ -80,6 +69,7 @@
 #define IDD_SEARCH_DIALOG               188
 #define IDD_PRINTOPTIONS                196
 #define IDR_TOOLBAR_DUMMY               197
+#define IDR_TOOLBAR_COMPONENTS          197
 #define IDC_TEXTEDIT                    201
 #define IDD_PRINTDLGORD                 202
 #define IDD_PRNSETUPDLGORD              203
@@ -227,6 +217,16 @@
 #define IDD_PRINT_DIALOG                1538
 #define IDD_PRINTSETUP_DIALOG           1539
 #define IDD_PARADIGMPROPERTIES_DIALOG   1540
+#define ID_USER_TOOL1                   6150
+#define ID_USER_TOOL2                   6151
+#define ID_USER_TOOL3                   6152
+#define ID_USER_TOOL4                   6153
+#define ID_USER_TOOL5                   6154
+#define ID_USER_TOOL6                   6155
+#define ID_USER_TOOL7                   6156
+#define ID_USER_TOOL8                   6157
+#define ID_USER_TOOL9                   6158
+#define ID_USER_TOOL10                  6159
 #define ID_CANCEL_EDIT_CNTR             32768
 #define ID_MODE_EDIT                    32769
 #define ID_MODE_AUTOCONNECT             32770
@@ -483,6 +483,8 @@
 #define ID_WINDOW_MOVETOPREVIOUSTABGROUP 33097
 #define ID_WINDOW_MOVETONEXTTABGROUP    33098
 #define ID_TOOLS_A                      33099
+#define ID_BUTTON33100                  33100
+#define ID_VIEW_TOOLBARS                33200
 #define IDW_TOOLBAR_MAIN                0xE820
 #define IDW_TOOLBAR_WINS                0xE821
 #define IDW_TOOLBAR_DUMMY               0xE822
@@ -495,7 +497,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        225
-#define _APS_NEXT_COMMAND_VALUE         33100
+#define _APS_NEXT_COMMAND_VALUE         33102
 #define _APS_NEXT_CONTROL_VALUE         1128
 #define _APS_NEXT_SYMED_VALUE           119
 #endif
