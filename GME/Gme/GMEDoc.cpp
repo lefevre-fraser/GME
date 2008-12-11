@@ -941,8 +941,6 @@ void CGMEDoc::OnCloseDocument(bool suppressErrors)
 #endif
 	}
 
-	// Making navigation and mode bars invisible
-	CMainFrame::theInstance->ShowNavigationAndModeToolbars(false);
 	
 	CDocument::OnCloseDocument();
 	resolver = NULL;
