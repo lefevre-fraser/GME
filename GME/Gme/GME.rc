@@ -87,7 +87,7 @@ IDB_MGAOPEN             BITMAP                  "res\\metaopen.bmp"
 IDB_BITMAP_LOGO         BITMAP                  "res\\bitmap_l.bmp"
 IDB_SPLASH              BITMAP                  "Splsh16.bmp"
 IDB_ABOUT               BITMAP                  "aboutpic.bmp"
-IDR_TOOLBAR_DUMMY       BITMAP                  "res\\dummybar.bmp"
+IDR_TOOLBAR_COMPONENTS  BITMAP                  "res\\dummybar.bmp"
 IDR_TOOLBAR_NAVIG       BITMAP                  "res\\ToolbarNavig.bmp"
 IDB_MAIN_TOOLBAR24      BITMAP                  "res\\ToolbarMain24.bmp"
 
@@ -98,9 +98,6 @@ IDB_MAIN_TOOLBAR24      BITMAP                  "res\\ToolbarMain24.bmp"
 
 IDR_TOOLBAR_MAIN TOOLBAR  16, 15
 BEGIN
-    BUTTON      ID_FILE_CHECK
-    BUTTON      ID_FILE_INTERPRET
-    SEPARATOR
     BUTTON      ID_FILE_SAVEPROJECT
     BUTTON      ID_EDIT_COPY
     BUTTON      ID_EDIT_PASTE
@@ -134,9 +131,10 @@ BEGIN
     BUTTON      ID_MODE_VISUALIZE
 END
 
-IDR_TOOLBAR_DUMMY TOOLBAR  16, 15
+IDR_TOOLBAR_COMPONENTS TOOLBAR  16, 15
 BEGIN
-    BUTTON      ID_DUMMY
+    BUTTON      ID_FILE_CHECK
+    BUTTON      ID_FILE_INTERPRET
 END
 
 IDR_TOOLBAR_WINS TOOLBAR  16, 15
@@ -223,7 +221,7 @@ BEGIN
         MENUITEM SEPARATOR
         POPUP "&Toolbars"
         BEGIN
-            MENUITEM "<Toolbar List>",              ID_VIEW_TOOLBAR
+            MENUITEM "<Toolbar List>",              ID_VIEW_TOOLBARS
         END
         MENUITEM "&Full Screen",                ID_VIEW_FULLSCREEN
         MENUITEM "Cl&ear Console",              ID_VIEW_CLEARCONSOLE
@@ -1383,8 +1381,6 @@ BEGIN
     ID_INDICATOR_TIME       "Time"
     CG_ID_VIEW_MODELPROPERTIESBAR 
                             "Show or hide ModelPropertiesBar\nToggle ModelPropertiesBar"
-    ID_USER_TOOL1           """Activates user-defined tool"""
-    ID_USER_TOOL2           """Activates user-defined tool"""
 END
 
 STRINGTABLE 
@@ -1672,6 +1668,13 @@ END
 
 STRINGTABLE 
 BEGIN
+    IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_USER_TOOL1           """Activates user-defined tool"""
+    ID_USER_TOOL2           """Activates user-defined tool"""
     ID_USER_TOOL3           """Activates user-defined tool"""
     ID_USER_TOOL4           """Activates user-defined tool"""
     ID_USER_TOOL5           """Activates user-defined tool"""
@@ -1680,7 +1683,11 @@ BEGIN
     ID_USER_TOOL8           """Activates user-defined tool"""
     ID_USER_TOOL9           """Activates user-defined tool"""
     ID_USER_TOOL10          """Activates user-defined tool"""
-    IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_TOOLS_EXTERNAL_TOOLS "<User defined tools>\n<User defined tools>"
 END
 
 #endif    // English (U.S.) resources
