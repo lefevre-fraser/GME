@@ -37,8 +37,8 @@ CAnnotationBrowserDlg::CAnnotationBrowserDlg(const CComPtr<IMgaModel> &model, co
 	m_bCastShadow			= FALSE;
 	m_iShadowDepth			= 9;
 	m_iShadowDirection		= 45;
-	m_bRoundEdgeRect		= FALSE;
-	m_iRoundEdgeRadius		= 9;
+	m_bRoundCornerRect		= FALSE;
+	m_iRoundCornerRadius	= 9;
 	//}}AFX_DATA_INIT
 
 	m_model = model;
@@ -74,8 +74,8 @@ void CAnnotationBrowserDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK_CASTSHADOW, m_bCastShadow);
 	DDX_Text(pDX, IDC_EDIT_SHADOWDEPTH, m_iShadowDepth);
 	DDX_Text(pDX, IDC_EDIT_SHADOWDIRECTION, m_iShadowDirection);
-	DDX_Check(pDX, IDC_CHECK_ROUNDEDGE, m_bRoundEdgeRect);
-	DDX_Text(pDX, IDC_EDIT_EDGERADIUS, m_iRoundEdgeRadius);
+	DDX_Check(pDX, IDC_CHECK_ROUNDCORNER, m_bRoundCornerRect);
+	DDX_Text(pDX, IDC_EDIT_CORNERRADIUS, m_iRoundCornerRadius);
 	//}}AFX_DATA_MAP
 	DDX_Control(pDX, IDC_CHECK1, m_inheritable);
 	DDX_Control(pDX, IDC_SHOWHIDEBUTTON, m_showHideBtn);
@@ -94,7 +94,7 @@ BEGIN_MESSAGE_MAP(CAnnotationBrowserDlg, CDialog)
 	ON_BN_CLICKED(IDC_REDERIVEBUTTON, OnBnClickedRederivebutton)
 	ON_BN_CLICKED(IDC_CHECK_GRADIENTFILL, OnBnClickedCheckGradientfill)
 	ON_BN_CLICKED(IDC_CHECK_CASTSHADOW, OnBnClickedCheckCastshadow)
-	ON_BN_CLICKED(IDC_CHECK_ROUNDEDGE, OnBnClickedCheckRoundedge)
+	ON_BN_CLICKED(IDC_CHECK_ROUNDCORNER, OnBnClickedCheckRoundCorner)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -369,8 +369,8 @@ void CAnnotationBrowserDlg::SavePanelToNode(CAnnotationNode *node) {
 	node->m_bCastShadow			= (m_bCastShadow == TRUE);
 	node->m_iShadowDepth		= m_iShadowDepth;
 	node->m_iShadowDirection	= m_iShadowDirection;
-	node->m_bRoundEdgeRect		= (m_bRoundEdgeRect == TRUE);
-	node->m_iRoundEdgeRadius	= m_iRoundEdgeRadius;
+	node->m_bRoundCornerRect	= (m_bRoundCornerRect == TRUE);
+	node->m_iRoundCornerRadius	= m_iRoundCornerRadius;
 
 	POSITION pos = m_wndAnnotationAspectList.GetFirstSelectedItemPosition();
 	if (pos) {
@@ -436,10 +436,10 @@ void CAnnotationBrowserDlg::LoadNodeToPanel(CAnnotationNode *node) {
 	GetDlgItem(IDC_STATIC_SHADOWDIRECTION)->EnableWindow(node->m_bCastShadow);
 	GetDlgItem(IDC_EDIT_SHADOWDIRECTION)->EnableWindow(node->m_bCastShadow);
 	m_iShadowDirection = node->m_iShadowDirection;
-	m_bRoundEdgeRect = node->m_bRoundEdgeRect ? TRUE : FALSE;
-	GetDlgItem(IDC_STATIC_EDGERADIUS)->EnableWindow(node->m_bRoundEdgeRect);
-	GetDlgItem(IDC_EDIT_EDGERADIUS)->EnableWindow(node->m_bRoundEdgeRect);
-	m_iRoundEdgeRadius = node->m_iRoundEdgeRadius;
+	m_bRoundCornerRect = node->m_bRoundCornerRect ? TRUE : FALSE;
+	GetDlgItem(IDC_STATIC_CORNERRADIUS)->EnableWindow(node->m_bRoundCornerRect);
+	GetDlgItem(IDC_EDIT_CORNERRADIUS)->EnableWindow(node->m_bRoundCornerRect);
+	m_iRoundCornerRadius = node->m_iRoundCornerRadius;
 
 	m_wndAnnotationAspectList.DeleteAllItems();
 	for (int i = 0; i < m_aspectNames.GetSize(); i++) {
@@ -566,11 +566,11 @@ void CAnnotationBrowserDlg::OnBnClickedCheckCastshadow()
 	GetDlgItem(IDC_EDIT_SHADOWDIRECTION)->EnableWindow(bCastShadow);
 }
 
-void CAnnotationBrowserDlg::OnBnClickedCheckRoundedge()
+void CAnnotationBrowserDlg::OnBnClickedCheckRoundCorner()
 {
-	CButton* pCheck = (CButton*)GetDlgItem(IDC_CHECK_ROUNDEDGE);
-	BOOL bRoundEdge = pCheck->GetCheck();
+	CButton* pCheck = (CButton*)GetDlgItem(IDC_CHECK_ROUNDCORNER);
+	BOOL bRoundCorner = pCheck->GetCheck();
 
-	GetDlgItem(IDC_STATIC_EDGERADIUS)->EnableWindow(bRoundEdge);
-	GetDlgItem(IDC_EDIT_EDGERADIUS)->EnableWindow(bRoundEdge);
+	GetDlgItem(IDC_STATIC_CORNERRADIUS)->EnableWindow(bRoundCorner);
+	GetDlgItem(IDC_EDIT_CORNERRADIUS)->EnableWindow(bRoundCorner);
 }

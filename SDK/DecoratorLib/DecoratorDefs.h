@@ -111,16 +111,15 @@ namespace DecoratorSDK
 	static const char* PREF_SHADOWDIRECTION			= "shadowDirection";
 	static const char* PREF_ITEMGRADIENTFILL		= "gradientFill";
 	static const char* PREF_GRADIENTDIRECTION		= "gradientDirection";
-	static const char* PREF_ROUNDEDGERECT			= "roundEdgeRect";
-	static const char* PREF_ROUNDEDGERADIUS			= "roundEdgeRadius";
+	static const char* PREF_ROUNDCORNERRECT			= "roundCornerRect";
+	static const char* PREF_ROUNDCORNERRADIUS		= "roundCornerRadius";
 
 	static const char* PREF_DECORATOR_MARGINX		= "decoratorMarginX";
 	static const char* PREF_DECORATOR_MARGINY		= "decoratorMarginY";
 	static const char* PREF_DECORATOR_GAPY			= "decoratorGapY";
 	static const char* PREF_DECORATOR_MINATTRSIZE	= "decoratorMinAttrSize";
 	static const char* PREF_TEXTOVERRIDE			= "textOverride";
-	static const char* PREF_ROUNDEDGE				= "roundEdge";
-	static const char* PREF_EDGERADIUS				= "edgeRadius";
+	static const char* PREF_TEXTCOLOROVERRIDE		= "textColorOverride";
 	static const char* PREF_MULTILINEINPLACEEDIT	= "multiLineInPlaceEdit";
 
 	static const int FONT_LABEL					= 0;

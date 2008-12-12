@@ -21,8 +21,9 @@ BitmapPart::BitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSin
 	VectorPart			(pPart, eventSink),
 	m_pBitmap			(NULL),
 	m_pTileVector		(NULL),
-	m_bRoundEdgeRect	(false),
-	m_bRoundEdgeRadius	(9)
+	m_crBorder			(COLOR_BLACK),
+	m_bRoundCornerRect	(false),
+	m_bRoundCornerRadius(9)
 {
 }
 
@@ -77,6 +78,14 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	} else {
 		m_bOverlay = getFacilities().getPreference(pFCO, spMetaFCO, PREF_OVERLAYCOLOR, m_crOverlay);
 	}
+
+	// Border Color
+	m_crBorder = COLOR_BLACK;
+	it = preferences.find(PREF_BORDERCOLOR);
+	if (it != preferences.end())
+		m_crBorder = it->second.uValue.crValue;
+	else
+		getFacilities().getPreference(pFCO, PREF_BORDERCOLOR, m_crBorder);
 
 	// Check if we should create masked bitmap
 	bool bMasked = false;
@@ -139,20 +148,20 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 		}
 	}
 
-	m_bRoundEdgeRect = false;
-	it = preferences.find(PREF_ROUNDEDGERECT);
+	m_bRoundCornerRect = false;
+	it = preferences.find(PREF_ROUNDCORNERRECT);
 	if (it != preferences.end()) {
-		m_bRoundEdgeRect = it->second.uValue.bValue;
+		m_bRoundCornerRect = it->second.uValue.bValue;
 	} else {
-		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERECT, m_bRoundEdgeRect);
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDCORNERRECT, m_bRoundCornerRect);
 	}
 
-	m_bRoundEdgeRadius = 9;
-	it = preferences.find(PREF_ROUNDEDGERADIUS);
+	m_bRoundCornerRadius = 9;
+	it = preferences.find(PREF_ROUNDCORNERRADIUS);
 	if (it != preferences.end()) {
-		m_bRoundEdgeRadius = it->second.uValue.bValue;
+		m_bRoundCornerRadius = it->second.uValue.bValue;
 	} else {
-		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERADIUS, m_bRoundEdgeRadius, false);
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDCORNERRADIUS, m_bRoundCornerRadius, false);
 	}
 
 	SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
@@ -166,27 +175,27 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 
 	AddCommand(VectorCommand(VectorCommand::BeginPath));
 
-	if (m_bRoundEdgeRect) {
+	if (m_bRoundCornerRect) {
 		ComplexCoordCommand* leftoRadius = new ComplexCoordCommand(LeftMost);
-		leftoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordAdd);
+		leftoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordAdd);
 		ComplexCoordCommand* topoRadius = new ComplexCoordCommand(TopMost);
-		topoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordAdd);
+		topoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordAdd);
 		ComplexCoordCommand* rightoRadius = new ComplexCoordCommand(RightMost);
-		rightoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordSubstract);
+		rightoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordSubstract);
 		ComplexCoordCommand* bottomoRadius = new ComplexCoordCommand(BottomMost);
-		bottomoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordSubstract);
+		bottomoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordSubstract);
 
 		ComplexCoordCommand* lefto2Radius = new ComplexCoordCommand(LeftMost);
-		lefto2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordAdd);
+		lefto2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordAdd);
 		ComplexCoordCommand* topo2Radius = new ComplexCoordCommand(TopMost);
-		topo2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordAdd);
+		topo2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordAdd);
 		ComplexCoordCommand* righto2Radius = new ComplexCoordCommand(RightMost);
-		righto2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordSubstract);
+		righto2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordSubstract);
 		ComplexCoordCommand* bottomo2Radius = new ComplexCoordCommand(BottomMost);
-		bottomo2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordSubstract);
+		bottomo2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordSubstract);
 
-		AbsoluteCoordCommand* radiusCommand = new AbsoluteCoordCommand(m_bRoundEdgeRadius);
-		AbsoluteCoordCommand* diameterCommand = new AbsoluteCoordCommand(2 * m_bRoundEdgeRadius);
+		AbsoluteCoordCommand* radiusCommand = new AbsoluteCoordCommand(m_bRoundCornerRadius);
+		AbsoluteCoordCommand* diameterCommand = new AbsoluteCoordCommand(2 * m_bRoundCornerRadius);
 		SimpleCoordCommand* angle0Command = new SimpleCoordCommand(ZeroConstant);
 		AbsoluteCoordCommand* angle90Command = new AbsoluteCoordCommand(90);
 		AbsoluteCoordCommand* angle180Command = new AbsoluteCoordCommand(180);

@@ -550,6 +550,7 @@ CGMEView::CGMEView()
 
 	needsReset						= false;
 	alive							= true;
+	bgColor							= 0;
 
 	instanceCount++;
 
@@ -977,9 +978,9 @@ void CGMEView::OnInitialUpdate()
 			}
 		}
 
+		SetBgColor();
 		CreateGuiObjects();
 		SetProperties();
-		SetBgColor();
 
 		if (GetDocument()->initialCenterObj) {
 			COMTHROW(terry->OpenFCO(GetDocument()->initialCenterObj, &centerObj));
@@ -1954,9 +1955,9 @@ void CGMEView::Reset(bool doInvalidate)
 
 		// Now build up new objectset
 
+		SetBgColor();
 		CreateGuiObjects();
 		SetProperties();
-		SetBgColor();
 
 		// Note: Refresh type/subtype/instance property - if it crashes, contact Peter
 		{

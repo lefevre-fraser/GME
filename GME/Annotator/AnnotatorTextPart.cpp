@@ -24,10 +24,13 @@ AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMga
 	m_regRoot		(NULL),
 	m_crBgColor		(AN_DEFAULT_BGCOLOR)
 {
-	m_crText = AN_DEFAULT_COLOR;
-	m_crShadow = AN_DEFAULT_SHADOWCOLOR;
-	m_crGradient = AN_DEFAULT_GRADIENTCOLOR;
+	m_crText					= AN_DEFAULT_COLOR;
+	m_crShadow					= AN_DEFAULT_SHADOWCOLOR;
+	m_crGradient				= AN_DEFAULT_GRADIENTCOLOR;
 	memset(&m_logFont, 0, sizeof(LOGFONT));
+
+	textStringVariableName		= "";	// disable
+	textColorVariableName		= "";	// disable
 }
 
 AnnotatorTextPart::~AnnotatorTextPart()
@@ -115,10 +118,11 @@ void AnnotatorTextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 	preferences[DecoratorSDK::PREF_ITEMSHADOWCAST]		= DecoratorSDK::PreferenceVariant(m_bCastShadow);
 	preferences[DecoratorSDK::PREF_SHADOWTHICKNESS]		= DecoratorSDK::PreferenceVariant(m_iShadowDepth);
 	preferences[DecoratorSDK::PREF_SHADOWDIRECTION]		= DecoratorSDK::PreferenceVariant(m_iShadowDirection);
-	preferences[DecoratorSDK::PREF_ROUNDEDGERECT]		= DecoratorSDK::PreferenceVariant(m_bRoundEdgeRect);
-	preferences[DecoratorSDK::PREF_ROUNDEDGERADIUS]		= DecoratorSDK::PreferenceVariant(m_iRoundEdgeRadius);
+	preferences[DecoratorSDK::PREF_ROUNDCORNERRECT]		= DecoratorSDK::PreferenceVariant(m_bRoundCornerRect);
+	preferences[DecoratorSDK::PREF_ROUNDCORNERRADIUS]	= DecoratorSDK::PreferenceVariant(m_iRoundCornerRadius);
 
 	preferences[DecoratorSDK::PREF_TEXTOVERRIDE]		= DecoratorSDK::PreferenceVariant(true);
+	preferences[DecoratorSDK::PREF_TEXTCOLOROVERRIDE]	= DecoratorSDK::PreferenceVariant(true);
 	preferences[DecoratorSDK::PREF_MULTILINEINPLACEEDIT]= DecoratorSDK::PreferenceVariant(true);
 	TextPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
@@ -375,42 +379,42 @@ void AnnotatorTextPart::ReadPreferences(void)
 		m_iShadowDirection = AN_DEFAULT_SHADOWDIRECTION;
 	}
 
-	// 'RoundEdgeRect'
+	// 'RoundCornerRect'
 	try {
-		m_bRoundEdgeRect = AN_DEFAULT_ROUNDEDGERECT;
+		m_bRoundCornerRect = AN_DEFAULT_ROUNDCORNERRECT;
 		CComBSTR bstr;
 		CComPtr<IMgaRegNode> lfNode;
-		CComBSTR lfName(AN_ROUNDEDGERECT_PREF);
+		CComBSTR lfName(AN_ROUNDCORNERRECT_PREF);
 		COMTHROW(m_regRoot->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
 			if (bstr == "1")
-				m_bRoundEdgeRect = true;
+				m_bRoundCornerRect = true;
 			else
-				m_bRoundEdgeRect = false;
+				m_bRoundCornerRect = false;
 		}
 	}
 	catch (hresult_exception &) {
-		m_bRoundEdgeRect = AN_DEFAULT_ROUNDEDGERECT;
+		m_bRoundCornerRect = AN_DEFAULT_ROUNDCORNERRECT;
 	}
 
-	// 'RoundEdgeRadius'
+	// 'RoundCornerRadius'
 	try {
-		m_iRoundEdgeRadius = AN_DEFAULT_ROUNDEDGERADIUS;
+		m_iRoundCornerRadius = AN_DEFAULT_ROUNDCORNERRADIUS;
 		CComBSTR bstr;
 		CComPtr<IMgaRegNode> lfNode;
-		CComBSTR lfName(AN_ROUNDEDGERADIUS_PREF);
+		CComBSTR lfName(AN_ROUNDCORNERRADIUS_PREF);
 		COMTHROW(m_regRoot->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
 			CString strVal(bstr);
-			if (_stscanf(strVal,_T("%ld"),&m_iRoundEdgeRadius) != 1) {
-				m_iRoundEdgeRadius = AN_DEFAULT_ROUNDEDGERADIUS;
+			if (_stscanf(strVal,_T("%ld"),&m_iRoundCornerRadius) != 1) {
+				m_iRoundCornerRadius = AN_DEFAULT_ROUNDCORNERRADIUS;
 			}
 		}
 	}
 	catch (hresult_exception &) {
-		m_iRoundEdgeRadius = AN_DEFAULT_ROUNDEDGERADIUS;
+		m_iRoundCornerRadius = AN_DEFAULT_ROUNDCORNERRADIUS;
 	}
 }
 

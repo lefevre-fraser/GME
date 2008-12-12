@@ -27,8 +27,8 @@ ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEven
 	m_copySignPart				(NULL),
 
 	m_crAttributeText			(COLOR_BLACK),
-	m_bRoundEdgeRect			(false),
-	m_bRoundEdgeRadius			(9),
+	m_bRoundCornerRect			(false),
+	m_bRoundCornerRadius		(9),
 	m_lMaxTextWidth				(0),
 	m_lMaxTextHeight			(0),
 	m_lMinTextWidth				(LONG_MAX),
@@ -249,20 +249,20 @@ void ClassComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 		m_copySignPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
-	m_bRoundEdgeRect = false;
-	it = preferences.find(PREF_ROUNDEDGERECT);
+	m_bRoundCornerRect = false;
+	it = preferences.find(PREF_ROUNDCORNERRECT);
 	if (it != preferences.end()) {
-		m_bRoundEdgeRect = it->second.uValue.bValue;
+		m_bRoundCornerRect = it->second.uValue.bValue;
 	} else {
-		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERECT, m_bRoundEdgeRect);
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDCORNERRECT, m_bRoundCornerRect);
 	}
 
-	m_bRoundEdgeRadius = 9;
-	it = preferences.find(PREF_ROUNDEDGERADIUS);
+	m_bRoundCornerRadius = 9;
+	it = preferences.find(PREF_ROUNDCORNERRADIUS);
 	if (it != preferences.end()) {
-		m_bRoundEdgeRadius = it->second.uValue.bValue;
+		m_bRoundCornerRadius = it->second.uValue.bValue;
 	} else {
-		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDEDGERADIUS, m_bRoundEdgeRadius, false);
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDCORNERRADIUS, m_bRoundCornerRadius, false);
 	}
 }
 
@@ -1375,27 +1375,27 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 		m_coordCommands.push_back(bottomMost);
 
 		AddCommand(VectorCommand::BeginPath);
-		if (m_bRoundEdgeRect) {
+		if (m_bRoundCornerRect) {
 			ComplexCoordCommand* leftoRadius = new ComplexCoordCommand(LeftMost);
-			leftoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordAdd);
+			leftoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordAdd);
 			ComplexCoordCommand* topoRadius = new ComplexCoordCommand(TopMost);
-			topoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordAdd);
+			topoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordAdd);
 			ComplexCoordCommand* rightoRadius = new ComplexCoordCommand(RightMost);
-			rightoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordSubstract);
+			rightoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordSubstract);
 			ComplexCoordCommand* bottomoRadius = new ComplexCoordCommand(BottomMost);
-			bottomoRadius->AddCommand(OneConstant, m_bRoundEdgeRadius, CoordSubstract);
+			bottomoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordSubstract);
 
 			ComplexCoordCommand* lefto2Radius = new ComplexCoordCommand(LeftMost);
-			lefto2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordAdd);
+			lefto2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordAdd);
 			ComplexCoordCommand* topo2Radius = new ComplexCoordCommand(TopMost);
-			topo2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordAdd);
+			topo2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordAdd);
 			ComplexCoordCommand* righto2Radius = new ComplexCoordCommand(RightMost);
-			righto2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordSubstract);
+			righto2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordSubstract);
 			ComplexCoordCommand* bottomo2Radius = new ComplexCoordCommand(BottomMost);
-			bottomo2Radius->AddCommand(OneConstant, 2 * m_bRoundEdgeRadius, CoordSubstract);
+			bottomo2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordSubstract);
 
-			AbsoluteCoordCommand* radiusCommand = new AbsoluteCoordCommand(m_bRoundEdgeRadius);
-			AbsoluteCoordCommand* diameterCommand = new AbsoluteCoordCommand(2 * m_bRoundEdgeRadius);
+			AbsoluteCoordCommand* radiusCommand = new AbsoluteCoordCommand(m_bRoundCornerRadius);
+			AbsoluteCoordCommand* diameterCommand = new AbsoluteCoordCommand(2 * m_bRoundCornerRadius);
 			SimpleCoordCommand* angle0Command = new SimpleCoordCommand(ZeroConstant);
 			AbsoluteCoordCommand* angle90Command = new AbsoluteCoordCommand(90);
 			AbsoluteCoordCommand* angle180Command = new AbsoluteCoordCommand(180);

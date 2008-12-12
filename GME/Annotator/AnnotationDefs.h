@@ -22,8 +22,8 @@
 #define AN_CASTSHADOW_PREF			"castshadow"
 #define AN_SHADOWDEPTH_PREF			"shadowdepth"
 #define AN_SHADOWDIRECTION_PREF		"shadowdirection"
-#define AN_ROUNDEDGERECT_PREF		"roundedgerect"
-#define AN_ROUNDEDGERADIUS_PREF		"roundedgeradius"
+#define AN_ROUNDCORNERRECT_PREF		"roundrectcorner"
+#define AN_ROUNDCORNERRADIUS_PREF	"roundrectcornerradius"
 
 #define	AN_VISIBLE_DEFAULT			"DefaultVisibility"
 #define AN_DEFANNOTATION_NAME		"Annotation"
@@ -41,8 +41,8 @@
 #define AN_DEFAULT_CASTSHADOW			false
 #define AN_DEFAULT_SHADOWDEPTH			9
 #define AN_DEFAULT_SHADOWDIRECTION		45
-#define AN_DEFAULT_ROUNDEDGERECT		false
-#define AN_DEFAULT_ROUNDEDGERADIUS		9
+#define AN_DEFAULT_ROUNDCORNERRECT		false
+#define AN_DEFAULT_ROUNDCORNERRADIUS	9
 
 #define AN_MARGIN						6
 

@@ -29,8 +29,8 @@ protected:
 	COLORREF		m_crOverlay;
 	bool			m_bOverlay;
 	COLORREF		m_crBorder;
-	bool			m_bRoundEdgeRect;
-	long			m_bRoundEdgeRadius;
+	bool			m_bRoundCornerRect;
+	long			m_bRoundCornerRadius;
 
 public:
 	BitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);

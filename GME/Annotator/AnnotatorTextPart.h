@@ -36,8 +36,8 @@ protected:
 	bool					m_bCastShadow;
 	long					m_iShadowDepth;
 	long					m_iShadowDirection;
-	bool					m_bRoundEdgeRect;
-	long					m_iRoundEdgeRadius;
+	bool					m_bRoundCornerRect;
+	long					m_iRoundCornerRadius;
 	LOGFONT					m_logFont;
 
 public:

@@ -307,7 +307,7 @@ void CAnnotationPanel::OnSize(UINT nType, int cx, int cy)
 		ctrl->MoveWindow(&origRect);
 	}
 
-	ctrl = prnt->GetDlgItem(IDC_CHECK_ROUNDEDGE);
+	ctrl = prnt->GetDlgItem(IDC_CHECK_ROUNDCORNER);
 	if (ctrl->GetSafeHwnd()) {
 		CRect origRect(13,209+16,13+55,209+10+16);
 		prnt->MapDialogRect(&origRect);

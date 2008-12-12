@@ -33,8 +33,8 @@ int  CAnnotationNode::defGradientDirection	= 0;
 bool CAnnotationNode::defCastShadow			= false;
 int  CAnnotationNode::defShadowDepth		= 9;
 int  CAnnotationNode::defShadowDirection	= 45;
-bool CAnnotationNode::defRoundEdgeRect		= false;
-int  CAnnotationNode::defRoundEdgeRadius	= 9;
+bool CAnnotationNode::defRoundCornerRect	= false;
+int  CAnnotationNode::defRoundCornerRadius	= 9;
 
 CAnnotationNode::CAnnotationNode(const CComPtr<IMgaRegNode> &regNode)
 {
@@ -347,42 +347,42 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		m_iShadowDirection = defShadowDirection;
 	}
 
-	// 'RoundEdgeRect'
+	// 'RoundCornerRect'
 	try {
-		m_bRoundEdgeRect = defRoundEdgeRect;
+		m_bRoundCornerRect = defRoundCornerRect;
 		CComBSTR bstr;
 		CComPtr<IMgaRegNode> lfNode;
-		CComBSTR lfName(AN_ROUNDEDGERECT_PREF);
+		CComBSTR lfName(AN_ROUNDCORNERRECT_PREF);
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
 			if (bstr == "1")
-				m_bRoundEdgeRect = true;
+				m_bRoundCornerRect = true;
 			else
-				m_bRoundEdgeRect = false;
+				m_bRoundCornerRect = false;
 		}
 	}
 	catch (hresult_exception &) {
-		m_bRoundEdgeRect = defRoundEdgeRect;
+		m_bRoundCornerRect = defRoundCornerRect;
 	}
 
-	// 'RoundEdgeRadius'
+	// 'RoundCornerRadius'
 	try {
-		m_iRoundEdgeRadius = defRoundEdgeRadius;
+		m_iRoundCornerRadius = defRoundCornerRadius;
 		CComBSTR bstr;
 		CComPtr<IMgaRegNode> lfNode;
-		CComBSTR lfName(AN_ROUNDEDGERADIUS_PREF);
+		CComBSTR lfName(AN_ROUNDCORNERRADIUS_PREF);
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
 			CString strVal(bstr);
-			if (_stscanf(strVal,_T("%ld"),&m_iRoundEdgeRadius) != 1) {
-				m_iRoundEdgeRadius = defRoundEdgeRadius;
+			if (_stscanf(strVal,_T("%ld"),&m_iRoundCornerRadius) != 1) {
+				m_iRoundCornerRadius = defRoundCornerRadius;
 			}
 		}
 	}
 	catch (hresult_exception &) {
-		m_iRoundEdgeRadius = defRoundEdgeRadius;
+		m_iRoundCornerRadius = defRoundCornerRadius;
 	}
 
 	// Aspects
@@ -730,13 +730,13 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 		}
 	}
 
-	// Store 'roundedgerect' preference
+	// Store 'roundcornerrect' preference
 	{
 		try {
-			CString str(m_bRoundEdgeRect ? "1" : "0");
+			CString str(m_bRoundCornerRect ? "1" : "0");
 			CComBSTR bstr(str);
 			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_ROUNDEDGERECT_PREF);
+			CComBSTR lfName(AN_ROUNDCORNERRECT_PREF);
 			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 			COMTHROW(lfNode->put_Value(bstr));
 		}
@@ -745,14 +745,14 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 		}
 	}
 
-	// Store 'roundedgeradius' preference
+	// Store 'roundcornerradius' preference
 	{
 		try {
 			CString str;
-			str.Format(_T("%ld"), m_iRoundEdgeRadius);
+			str.Format(_T("%ld"), m_iRoundCornerRadius);
 			CComBSTR bstr(str);
 			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_ROUNDEDGERADIUS_PREF);
+			CComBSTR lfName(AN_ROUNDCORNERRADIUS_PREF);
 			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 			COMTHROW(lfNode->put_Value(bstr));
 		}

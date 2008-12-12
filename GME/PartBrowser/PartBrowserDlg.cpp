@@ -128,16 +128,13 @@ void CPartBrowserDlg::SetTabs()
 
 void CPartBrowserDlg::Resize()
 {
-	RECT r;
+	CRect r;
 	GetClientRect(&r);
 	if (::IsWindow(tab.m_hWnd))
 		tab.MoveWindow(&r);
 	if (::IsWindow(partFrame.m_hWnd)) {
 		tab.AdjustRect(FALSE, &r);
-		r.bottom -= 2;
-		r.top += 2;
-		r.left += 2;
-		r.right -= 2;
+		r.DeflateRect(1, 1);
 		partFrame.Resize(r);
 	}
 }

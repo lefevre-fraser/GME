@@ -24,8 +24,8 @@ namespace AnnotatorDecor {
 class AnnotatorRectanglePart: public DecoratorSDK::VectorPart
 {
 protected:
-	bool					m_bRoundEdgeRect;
-	long					m_bRoundEdgeRadius;
+	bool					m_bRoundCornerRect;
+	long					m_bRoundCornerRadius;
 
 public:
 	AnnotatorRectanglePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);

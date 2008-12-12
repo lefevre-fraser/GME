@@ -523,7 +523,7 @@ void VectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	m_crShadow = COLOR_GREY;
 	it = preferences.find(shadowColorVariableName);
 	if (it != preferences.end()) {
-		m_crGradient = it->second.uValue.crValue;
+		m_crShadow = it->second.uValue.crValue;
 	} else {
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, shadowColorVariableName, m_crShadow);
 	}

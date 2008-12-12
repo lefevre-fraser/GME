@@ -42,6 +42,7 @@ CPanningButton::~CPanningButton()
 BEGIN_MESSAGE_MAP(CPanningButton, CWnd)
 	//{{AFX_MSG_MAP(CPanningButton)
 	ON_WM_PAINT()
+	ON_WM_ERASEBKGND()
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
@@ -200,6 +201,11 @@ void CPanningButton::OnPaint()
 			dc.FrameRect(&m_viewRectInMove, &brush1);
 		}
 	}
+}
+
+BOOL CPanningButton::OnEraseBkgnd(CDC* pDC)
+{
+	return TRUE;
 }
 
 void CPanningButton::OnMouseMove(UINT nFlags, CPoint point)

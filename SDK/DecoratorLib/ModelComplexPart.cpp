@@ -274,12 +274,6 @@ void ModelComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 		if (m_iMaxPortTextLength == 0)	// if 0 it means it has to show all way long
 			m_iMaxPortTextLength = 999;	// so we set a huge value
 
-		it = preferences.find(PREF_BORDERCOLOR);
-		if (it != preferences.end())
-			m_crBorder = it->second.uValue.crValue;
-		else
-			getFacilities().getPreference(pFCO, PREF_BORDERCOLOR, m_crBorder);
-
 		TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 		LoadPorts();

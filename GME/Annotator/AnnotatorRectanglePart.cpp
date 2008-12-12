@@ -19,8 +19,8 @@ namespace AnnotatorDecor {
 
 AnnotatorRectanglePart::AnnotatorRectanglePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	VectorPart(pPart, eventSink),
-	m_bRoundEdgeRect		(false),
-	m_bRoundEdgeRadius		(9)
+	m_bRoundCornerRect		(false),
+	m_bRoundCornerRadius	(9)
 {
 	brushColorVariableName	= DecoratorSDK::PREF_FILLCOLOR;
 }
@@ -40,20 +40,20 @@ void AnnotatorRectanglePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPt
 {
 	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
-	m_bRoundEdgeRect = false;
-	DecoratorSDK::PreferenceMap::iterator it = preferences.find(DecoratorSDK::PREF_ROUNDEDGERECT);
+	m_bRoundCornerRect = false;
+	DecoratorSDK::PreferenceMap::iterator it = preferences.find(DecoratorSDK::PREF_ROUNDCORNERRECT);
 	if (it != preferences.end()) {
-		m_bRoundEdgeRect = it->second.uValue.bValue;
+		m_bRoundCornerRect = it->second.uValue.bValue;
 	} else {
-		DecoratorSDK::getFacilities().getPreference(m_spFCO, m_spMetaFCO, DecoratorSDK::PREF_ROUNDEDGERECT, m_bRoundEdgeRect);
+		DecoratorSDK::getFacilities().getPreference(m_spFCO, m_spMetaFCO, DecoratorSDK::PREF_ROUNDCORNERRECT, m_bRoundCornerRect);
 	}
 
-	m_bRoundEdgeRadius = 9;
-	it = preferences.find(DecoratorSDK::PREF_ROUNDEDGERADIUS);
+	m_bRoundCornerRadius = 9;
+	it = preferences.find(DecoratorSDK::PREF_ROUNDCORNERRADIUS);
 	if (it != preferences.end()) {
-		m_bRoundEdgeRadius = it->second.uValue.bValue;
+		m_bRoundCornerRadius = it->second.uValue.bValue;
 	} else {
-		DecoratorSDK::getFacilities().getPreference(m_spFCO, m_spMetaFCO, DecoratorSDK::PREF_ROUNDEDGERADIUS, m_bRoundEdgeRadius, false);
+		DecoratorSDK::getFacilities().getPreference(m_spFCO, m_spMetaFCO, DecoratorSDK::PREF_ROUNDCORNERRADIUS, m_bRoundCornerRadius, false);
 	}
 
 	DecoratorSDK::SimpleCoordCommand* leftMost		= new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::LeftMost);
@@ -67,27 +67,27 @@ void AnnotatorRectanglePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPt
 
 	AddCommand(DecoratorSDK::VectorCommand(DecoratorSDK::VectorCommand::BeginPath));
 
-	if (m_bRoundEdgeRect) {
+	if (m_bRoundCornerRect) {
 		DecoratorSDK::ComplexCoordCommand* leftoRadius = new DecoratorSDK::ComplexCoordCommand(DecoratorSDK::LeftMost);
-		leftoRadius->AddCommand(DecoratorSDK::OneConstant, m_bRoundEdgeRadius, DecoratorSDK::CoordAdd);
+		leftoRadius->AddCommand(DecoratorSDK::OneConstant, m_bRoundCornerRadius, DecoratorSDK::CoordAdd);
 		DecoratorSDK::ComplexCoordCommand* topoRadius = new DecoratorSDK::ComplexCoordCommand(DecoratorSDK::TopMost);
-		topoRadius->AddCommand(DecoratorSDK::OneConstant, m_bRoundEdgeRadius, DecoratorSDK::CoordAdd);
+		topoRadius->AddCommand(DecoratorSDK::OneConstant, m_bRoundCornerRadius, DecoratorSDK::CoordAdd);
 		DecoratorSDK::ComplexCoordCommand* rightoRadius = new DecoratorSDK::ComplexCoordCommand(DecoratorSDK::RightMost);
-		rightoRadius->AddCommand(DecoratorSDK::OneConstant, m_bRoundEdgeRadius, DecoratorSDK::CoordSubstract);
+		rightoRadius->AddCommand(DecoratorSDK::OneConstant, m_bRoundCornerRadius, DecoratorSDK::CoordSubstract);
 		DecoratorSDK::ComplexCoordCommand* bottomoRadius = new DecoratorSDK::ComplexCoordCommand(DecoratorSDK::BottomMost);
-		bottomoRadius->AddCommand(DecoratorSDK::OneConstant, m_bRoundEdgeRadius, DecoratorSDK::CoordSubstract);
+		bottomoRadius->AddCommand(DecoratorSDK::OneConstant, m_bRoundCornerRadius, DecoratorSDK::CoordSubstract);
 
 		DecoratorSDK::ComplexCoordCommand* lefto2Radius = new DecoratorSDK::ComplexCoordCommand(DecoratorSDK::LeftMost);
-		lefto2Radius->AddCommand(DecoratorSDK::OneConstant, 2 * m_bRoundEdgeRadius, DecoratorSDK::CoordAdd);
+		lefto2Radius->AddCommand(DecoratorSDK::OneConstant, 2 * m_bRoundCornerRadius, DecoratorSDK::CoordAdd);
 		DecoratorSDK::ComplexCoordCommand* topo2Radius = new DecoratorSDK::ComplexCoordCommand(DecoratorSDK::TopMost);
-		topo2Radius->AddCommand(DecoratorSDK::OneConstant, 2 * m_bRoundEdgeRadius, DecoratorSDK::CoordAdd);
+		topo2Radius->AddCommand(DecoratorSDK::OneConstant, 2 * m_bRoundCornerRadius, DecoratorSDK::CoordAdd);
 		DecoratorSDK::ComplexCoordCommand* righto2Radius = new DecoratorSDK::ComplexCoordCommand(DecoratorSDK::RightMost);
-		righto2Radius->AddCommand(DecoratorSDK::OneConstant, 2 * m_bRoundEdgeRadius, DecoratorSDK::CoordSubstract);
+		righto2Radius->AddCommand(DecoratorSDK::OneConstant, 2 * m_bRoundCornerRadius, DecoratorSDK::CoordSubstract);
 		DecoratorSDK::ComplexCoordCommand* bottomo2Radius = new DecoratorSDK::ComplexCoordCommand(DecoratorSDK::BottomMost);
-		bottomo2Radius->AddCommand(DecoratorSDK::OneConstant, 2 * m_bRoundEdgeRadius, DecoratorSDK::CoordSubstract);
+		bottomo2Radius->AddCommand(DecoratorSDK::OneConstant, 2 * m_bRoundCornerRadius, DecoratorSDK::CoordSubstract);
 
-		DecoratorSDK::AbsoluteCoordCommand* radiusCommand = new DecoratorSDK::AbsoluteCoordCommand(m_bRoundEdgeRadius);
-		DecoratorSDK::AbsoluteCoordCommand* diameterCommand = new DecoratorSDK::AbsoluteCoordCommand(2 * m_bRoundEdgeRadius);
+		DecoratorSDK::AbsoluteCoordCommand* radiusCommand = new DecoratorSDK::AbsoluteCoordCommand(m_bRoundCornerRadius);
+		DecoratorSDK::AbsoluteCoordCommand* diameterCommand = new DecoratorSDK::AbsoluteCoordCommand(2 * m_bRoundCornerRadius);
 		DecoratorSDK::SimpleCoordCommand* angle0Command = new DecoratorSDK::SimpleCoordCommand(DecoratorSDK::ZeroConstant);
 		DecoratorSDK::AbsoluteCoordCommand* angle90Command = new DecoratorSDK::AbsoluteCoordCommand(90);
 		DecoratorSDK::AbsoluteCoordCommand* angle180Command = new DecoratorSDK::AbsoluteCoordCommand(180);

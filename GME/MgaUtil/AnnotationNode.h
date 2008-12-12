@@ -43,8 +43,8 @@ public:
 	bool		m_bCastShadow;
 	int			m_iShadowDepth;
 	int			m_iShadowDirection;
-	bool		m_bRoundEdgeRect;
-	int			m_iRoundEdgeRadius;
+	bool		m_bRoundCornerRect;
+	int			m_iRoundCornerRadius;
 
 	bool		m_virtual;			// if status of the main regnode is 'inherited'
 	bool		m_canBeRederived;	// the "broken_deriv" entry signals that
@@ -75,8 +75,8 @@ public:
 	static bool		defCastShadow;
 	static int		defShadowDepth;
 	static int		defShadowDirection;
-	static bool		defRoundEdgeRect;
-	static int		defRoundEdgeRadius;
+	static bool		defRoundCornerRect;
+	static int		defRoundCornerRadius;
 };
 
 #endif // !defined(AFX_ANNOTATIONNODE_H__A60720A0_33C3_4FFE_9995_8439D58246E8__INCLUDED_)

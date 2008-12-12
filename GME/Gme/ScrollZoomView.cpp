@@ -401,7 +401,7 @@ void CScrollZoomView::notifyPanning(CPoint pt)
 	dc.SetViewportExt(m_scalePercent, m_scalePercent);
 	dc.DPtoLP((LPPOINT)&pt);
 	dc.DPtoLP(&client);
-	CRect pannw(pt.x, pt.y, pt.x+client.Width(), pt.y+client.Height());
+	CRect pannw(pt.x, pt.y, pt.x + client.Width(), pt.y + client.Height());
 	pannw.NormalizeRect();
 
 	main->m_panningWindow.SetViewRect(pannw);

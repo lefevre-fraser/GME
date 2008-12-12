@@ -46,8 +46,8 @@ public:
 	BOOL					m_bCastShadow;
 	int						m_iShadowDepth;
 	int						m_iShadowDirection;
-	BOOL					m_bRoundEdgeRect;
-	int						m_iRoundEdgeRadius;
+	BOOL					m_bRoundCornerRect;
+	int						m_iRoundCornerRadius;
 	//}}AFX_DATA
 	LOGFONT					m_anLogFont;
 	CColorBtn				m_colorbtn;
@@ -92,7 +92,7 @@ protected:
 	afx_msg void OnBnClickedRederivebutton();
 	afx_msg void OnBnClickedCheckGradientfill();
 	afx_msg void OnBnClickedCheckCastshadow();
-	afx_msg void OnBnClickedCheckRoundedge();
+	afx_msg void OnBnClickedCheckRoundCorner();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

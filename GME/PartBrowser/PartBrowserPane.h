@@ -7,6 +7,7 @@
 // PartBrowserPane.h : header file
 //
 
+#include "StdAfx.h"
 #include <vector>
 
 class CDecoratorEventSink;

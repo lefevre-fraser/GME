@@ -134,13 +134,16 @@ void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 		m_iMaxTextLength = it->second.uValue.lValue;
 
 	// Text's Color
-	m_crText = COLOR_BLACK;
-	it = preferences.find(textColorVariableName);
-	if (it != preferences.end()) {
-		m_crText = it->second.uValue.crValue;
-	} else {
-		if (m_spFCO)
-			getFacilities().getPreference(m_spFCO, textColorVariableName, m_crText);
+	it = preferences.find(DecoratorSDK::PREF_TEXTCOLOROVERRIDE);
+	if (it == preferences.end()) {
+		m_crText = COLOR_BLACK;
+		it = preferences.find(textColorVariableName);
+		if (it != preferences.end()) {
+			m_crText = it->second.uValue.crValue;
+		} else {
+			if (m_spFCO)
+				getFacilities().getPreference(m_spFCO, textColorVariableName, m_crText);
+		}
 	}
 
 	// Text's Location

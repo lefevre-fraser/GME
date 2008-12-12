@@ -7,6 +7,7 @@
 // PartBrowserPaneFrame.h : header file
 //
 
+#include "StdAfx.h"
 #include "PartBrowserPane.h"
 #include "Resource.h"
 
