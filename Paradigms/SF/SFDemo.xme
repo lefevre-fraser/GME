@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{4AB83CE7-3852-4867-BF7E-36A99783265E}" cdate="Mon Oct 09 11:00:24 2006" mdate="Mon Oct 09 11:00:24 2006" version="" metaguid="{6FC684F6-C715-48FB-8EF1-BA68D5572661}" metaversion="" metaname="SF">
+<project guid="{EE3754D6-1511-4E5D-88F7-4CD4AB11A079}" cdate="Fri Dec 12 15:16:35 2008" mdate="Fri Dec 12 15:16:35 2008" version="" metaguid="{86628E20-FA77-47A9-B0F2-48961589D6B9}" metaversion="" metaname="SF">
 	<name>SFDemo</name>
 	<comment></comment>
 	<author></author>
-	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x1" kind="RootFolder" guid="{E38B2E1D-D852-4995-9506-863551EEA0D5}">
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x1" kind="RootFolder" guid="{e38b2e1d-d852-4995-9506-863551eea0d5}">
 		<name>sf-demo</name>
-		<model id="id-0065-00000001" kind="Compound" guid="{A57CA6B2-D95E-485c-A768-98C16FD30588}" relid="0x1" childrelidcntr="0x68">
+		<model id="id-0065-00000001" kind="Compound" guid="{a57ca6b2-d95e-485c-a768-98c16fd30588}" relid="0x1" childrelidcntr="0x68">
 			<name>System</name>
-			<model id="id-0065-00000002" kind="Primitive" role="PrimitiveParts" guid="{EFE4434E-87D2-4e5e-8E41-F915F03A78D7}" relid="0x34" childrelidcntr="0x6">
+			<model id="id-0065-00000002" kind="Primitive" role="PrimitiveParts" guid="{efe4434e-87d2-4e5e-8e41-f915f03a78d7}" relid="0x34" childrelidcntr="0x6">
 				<name>LPFilter2</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -35,7 +35,7 @@
 				<attribute kind="Script">
 					<value>lpfilter_script</value>
 				</attribute>
-				<atom id="id-0066-00000001" kind="Param" role="Parameters" guid="{9938ED4D-B230-4188-9FCA-41A23FEF2155}" relid="0x1">
+				<atom id="id-0066-00000001" kind="Param" role="Parameters" guid="{9938ed4d-b230-4188-9fca-41a23fef2155}" relid="0x1">
 					<name>LastReset</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -62,7 +62,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000002" kind="InputSignal" role="InputSignals" guid="{DAEFC4EC-C8EE-4b10-89B6-B0F389208A71}" relid="0x2">
+				<atom id="id-0066-00000002" kind="InputSignal" role="InputSignals" guid="{daefc4ec-c8ee-4b10-89b6-b0f389208a71}" relid="0x2">
 					<name>In</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -77,7 +77,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000003" kind="Param" role="Parameters" guid="{8A8E345E-1813-43be-8ADD-AEE94D1419BE}" relid="0x4">
+				<atom id="id-0066-00000003" kind="Param" role="Parameters" guid="{8a8e345e-1813-43be-8add-aee94d1419be}" relid="0x4">
 					<name>Buffer</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -104,7 +104,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000004" kind="Param" role="Parameters" guid="{1B32499B-5D41-4c3e-98A4-BAAF83F46348}" relid="0x5">
+				<atom id="id-0066-00000004" kind="Param" role="Parameters" guid="{1b32499b-5d41-4c3e-98a4-baaf83f46348}" relid="0x5">
 					<name>Factor</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -131,7 +131,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000005" kind="InputParam" role="InputParameters" guid="{9214747C-B438-4514-95F0-FA875D11892D}" relid="0x3">
+				<atom id="id-0066-00000005" kind="InputParam" role="InputParameters" guid="{9214747c-b438-4514-95f0-fa875d11892d}" relid="0x3">
 					<name>Reset</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -152,7 +152,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000006" kind="OutputSignal" role="OutputSignals" guid="{2290CF05-5BC9-4493-8AA0-885DFC91FCF4}" relid="0x6">
+				<atom id="id-0066-00000006" kind="OutputSignal" role="OutputSignals" guid="{2290cf05-5bc9-4493-8aa0-885dfc91fcf4}" relid="0x6">
 					<name>Out</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -168,14 +168,14 @@
 					</regnode>
 				</atom>
 			</model>
-			<model id="id-0065-00000003" kind="Primitive" role="PrimitiveParts" guid="{28374DDF-A9AB-43c0-8B41-F598A0236618}" relid="0x46" childrelidcntr="0x4">
+			<model id="id-0065-00000003" kind="Primitive" role="PrimitiveParts" guid="{28374ddf-a9ab-43c0-8b41-f598a0236618}" relid="0x46" childrelidcntr="0x4">
 				<name>DBSetup2</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>140,497</value>
+							<value>175,497</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -194,7 +194,7 @@
 				<attribute kind="Script">
 					<value>dbsetup_script</value>
 				</attribute>
-				<atom id="id-0066-00000007" kind="InputParam" role="InputParameters" guid="{A2C1B322-4B82-4456-B300-D923ACDCC0F8}" relid="0x3">
+				<atom id="id-0066-00000007" kind="InputParam" role="InputParameters" guid="{a2c1b322-4b82-4456-b300-d923acdcc0f8}" relid="0x3">
 					<name>Name</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -215,7 +215,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000008" kind="InputParam" role="InputParameters" guid="{3E72BEA4-E775-43f5-B9E7-FA9272ED0904}" relid="0x4">
+				<atom id="id-0066-00000008" kind="InputParam" role="InputParameters" guid="{3e72bea4-e775-43f5-b9e7-fa9272ed0904}" relid="0x4">
 					<name>IsFrequency</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -236,7 +236,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000009" kind="InputParam" role="InputParameters" guid="{FDD2295F-6D50-439a-A243-CC71F90E973B}" relid="0x1">
+				<atom id="id-0066-00000009" kind="InputParam" role="InputParameters" guid="{fdd2295f-6d50-439a-a243-cc71f90e973b}" relid="0x1">
 					<name>SampRate</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -257,7 +257,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000000a" kind="InputParam" role="InputParameters" guid="{51D3E509-AE7E-44c6-A305-6360720976F9}" relid="0x2">
+				<atom id="id-0066-0000000a" kind="InputParam" role="InputParameters" guid="{51d3e509-ae7e-44c6-a305-6360720976f9}" relid="0x2">
 					<name>Size</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -279,14 +279,14 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-00000004" kind="Primitive" role="PrimitiveParts" guid="{E262589C-7D24-4430-9B85-F291FAD3D3DC}" relid="0x56" childrelidcntr="0x3">
+			<model id="id-0065-00000004" kind="Primitive" role="PrimitiveParts" guid="{e262589c-7d24-4430-9b85-f291fad3d3dc}" relid="0x56" childrelidcntr="0x3">
 				<name>Plotter3</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>756,238</value>
+							<value>756,245</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -305,7 +305,7 @@
 				<attribute kind="Script">
 					<value>plotter_script</value>
 				</attribute>
-				<atom id="id-0066-0000000b" kind="InputParam" role="InputParameters" guid="{D5D6567F-C5A1-463b-950B-D0454D88632F}" relid="0x1">
+				<atom id="id-0066-0000000b" kind="InputParam" role="InputParameters" guid="{d5d6567f-c5a1-463b-950b-d0454d88632f}" relid="0x1">
 					<name>DBase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -326,7 +326,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000000c" kind="InputParam" role="InputParameters" guid="{97635622-8D6E-4841-A70D-B3504B0820F1}" relid="0x2">
+				<atom id="id-0066-0000000c" kind="InputParam" role="InputParameters" guid="{97635622-8d6e-4841-a70d-b3504b0820f1}" relid="0x2">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -347,7 +347,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000000d" kind="InputSignal" role="InputSignals" guid="{BF7B36A8-6E06-4efd-A534-DEA17D044DBA}" relid="0x3">
+				<atom id="id-0066-0000000d" kind="InputSignal" role="InputSignals" guid="{bf7b36a8-6e06-4efd-a534-dea17d044dba}" relid="0x3">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -363,14 +363,14 @@
 					</regnode>
 				</atom>
 			</model>
-			<model id="id-0065-00000005" kind="Primitive" role="PrimitiveParts" guid="{9B06D7FE-1020-4ff5-8E89-1ABC14AB28CC}" relid="0x4f" childrelidcntr="0x3">
+			<model id="id-0065-00000005" kind="Primitive" role="PrimitiveParts" guid="{9b06d7fe-1020-4ff5-8e89-1abc14ab28cc}" relid="0x4f" childrelidcntr="0x3">
 				<name>Plotter10</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>756,924</value>
+							<value>756,931</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -389,7 +389,7 @@
 				<attribute kind="Script">
 					<value>plotter_script</value>
 				</attribute>
-				<atom id="id-0066-0000000e" kind="InputSignal" role="InputSignals" guid="{E0D6B7E3-0DF3-488a-8F06-1AFE1ED9E0E1}" relid="0x1">
+				<atom id="id-0066-0000000e" kind="InputSignal" role="InputSignals" guid="{e0d6b7e3-0df3-488a-8f06-1afe1ed9e0e1}" relid="0x1">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -404,7 +404,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-0000000f" kind="InputParam" role="InputParameters" guid="{54B470EC-4D0E-4285-A175-A1EDE1AC5567}" relid="0x2">
+				<atom id="id-0066-0000000f" kind="InputParam" role="InputParameters" guid="{54b470ec-4d0e-4285-a175-a1ede1ac5567}" relid="0x2">
 					<name>DBase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -425,7 +425,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000010" kind="InputParam" role="InputParameters" guid="{5AEFE225-9D3A-492d-9E72-EAE3A80847DD}" relid="0x3">
+				<atom id="id-0066-00000010" kind="InputParam" role="InputParameters" guid="{5aefe225-9d3a-492d-9e72-eae3a80847dd}" relid="0x3">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -447,7 +447,7 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-00000006" kind="Primitive" role="PrimitiveParts" guid="{CE45FD20-E4EF-4965-B224-2B753F39B256}" relid="0x52" childrelidcntr="0x2">
+			<model id="id-0065-00000006" kind="Primitive" role="PrimitiveParts" guid="{ce45fd20-e4ef-4965-b224-2b753f39b256}" relid="0x52" childrelidcntr="0x2">
 				<name>GUISetup1</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -473,7 +473,7 @@
 				<attribute kind="Script">
 					<value>guisetup_script</value>
 				</attribute>
-				<atom id="id-0066-00000011" kind="InputParam" role="InputParameters" guid="{177F3369-B22B-4091-9934-20B89EC57A2C}" relid="0x1">
+				<atom id="id-0066-00000011" kind="InputParam" role="InputParameters" guid="{177f3369-b22b-4091-9934-20b89ec57a2c}" relid="0x1">
 					<name>SampRate</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -494,7 +494,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000012" kind="InputParam" role="InputParameters" guid="{FC9A4469-E729-4d41-AA5F-6BBF8BE531E8}" relid="0x2">
+				<atom id="id-0066-00000012" kind="InputParam" role="InputParameters" guid="{fc9a4469-e729-4d41-aa5f-6bbf8be531e8}" relid="0x2">
 					<name>NumChannels</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -516,14 +516,14 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-00000007" kind="Primitive" role="PrimitiveParts" guid="{04398AD1-CF6E-4a85-B623-3BBF17775E5E}" relid="0x58" childrelidcntr="0x3">
+			<model id="id-0065-00000007" kind="Primitive" role="PrimitiveParts" guid="{04398ad1-cf6e-4a85-b623-3bbf17775e5e}" relid="0x58" childrelidcntr="0x3">
 				<name>Plotter5</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>756,434</value>
+							<value>756,441</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -542,7 +542,7 @@
 				<attribute kind="Script">
 					<value>plotter_script</value>
 				</attribute>
-				<atom id="id-0066-00000013" kind="InputSignal" role="InputSignals" guid="{CF3BAA07-E8DF-434f-A30A-14D787340C51}" relid="0x1">
+				<atom id="id-0066-00000013" kind="InputSignal" role="InputSignals" guid="{cf3baa07-e8df-434f-a30a-14d787340c51}" relid="0x1">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -557,7 +557,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000014" kind="InputParam" role="InputParameters" guid="{66D1CC9B-1D60-461e-9C92-D7C2B8EF8391}" relid="0x2">
+				<atom id="id-0066-00000014" kind="InputParam" role="InputParameters" guid="{66d1cc9b-1d60-461e-9c92-d7c2b8ef8391}" relid="0x2">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -578,7 +578,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000015" kind="InputParam" role="InputParameters" guid="{C612C44B-87C9-471d-B125-02B80941F4E8}" relid="0x3">
+				<atom id="id-0066-00000015" kind="InputParam" role="InputParameters" guid="{c612c44b-87c9-471d-b125-02b80941f4e8}" relid="0x3">
 					<name>DBase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -600,7 +600,7 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-00000008" kind="Primitive" role="PrimitiveParts" guid="{384A7B85-8A67-456b-9951-ED91719FE1D5}" relid="0x60" childrelidcntr="0x4">
+			<model id="id-0065-00000008" kind="Primitive" role="PrimitiveParts" guid="{384a7b85-8a67-456b-9951-ed91719fe1d5}" relid="0x60" childrelidcntr="0x4">
 				<name>Generator2</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -626,7 +626,7 @@
 				<attribute kind="Script">
 					<value>datagen_script</value>
 				</attribute>
-				<atom id="id-0066-00000016" kind="OutputSignal" role="OutputSignals" guid="{55D3FB8A-4969-4f96-853F-5701F97F7CEC}" relid="0x1">
+				<atom id="id-0066-00000016" kind="OutputSignal" role="OutputSignals" guid="{55d3fb8a-4969-4f96-853f-5701f97f7cec}" relid="0x1">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -641,7 +641,7 @@
 						<value>4</value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000017" kind="InputParam" role="InputParameters" guid="{A18F1482-F4AB-4948-AB8A-E29583446BC0}" relid="0x2">
+				<atom id="id-0066-00000017" kind="InputParam" role="InputParameters" guid="{a18f1482-f4ab-4948-ab8a-e29583446bc0}" relid="0x2">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -662,7 +662,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000018" kind="InputParam" role="InputParameters" guid="{EAE3435C-CC90-42cd-84AC-32BB79366E8E}" relid="0x3">
+				<atom id="id-0066-00000018" kind="InputParam" role="InputParameters" guid="{eae3435c-cc90-42cd-84ac-32bb79366e8e}" relid="0x3">
 					<name>Size</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -683,7 +683,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000019" kind="InputParam" role="InputParameters" guid="{D2250B5E-C370-495f-979B-8CD07FD45EC2}" relid="0x4">
+				<atom id="id-0066-00000019" kind="InputParam" role="InputParameters" guid="{d2250b5e-c370-495f-979b-8cd07fd45ec2}" relid="0x4">
 					<name>Frequency</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -705,14 +705,14 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-00000009" kind="Primitive" role="PrimitiveParts" guid="{7A2F478D-7A1E-419a-95A0-846EC7D1BA13}" relid="0x64" childrelidcntr="0x4">
+			<model id="id-0065-00000009" kind="Primitive" role="PrimitiveParts" guid="{7a2f478d-7a1e-419a-95a0-846ec7d1ba13}" relid="0x64" childrelidcntr="0x4">
 				<name>DBSetup3</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>140,602</value>
+							<value>175,609</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -731,7 +731,7 @@
 				<attribute kind="Script">
 					<value>dbsetup_script</value>
 				</attribute>
-				<atom id="id-0066-0000001a" kind="InputParam" role="InputParameters" guid="{EE8547DF-C105-4509-A5DB-FC3CE2686418}" relid="0x1">
+				<atom id="id-0066-0000001a" kind="InputParam" role="InputParameters" guid="{ee8547df-c105-4509-a5db-fc3ce2686418}" relid="0x1">
 					<name>SampRate</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -752,7 +752,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000001b" kind="InputParam" role="InputParameters" guid="{99F8CE2E-69EE-4768-A5B0-C9766B650FFF}" relid="0x2">
+				<atom id="id-0066-0000001b" kind="InputParam" role="InputParameters" guid="{99f8ce2e-69ee-4768-a5b0-c9766b650fff}" relid="0x2">
 					<name>Size</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -773,7 +773,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000001c" kind="InputParam" role="InputParameters" guid="{861E7D29-54F5-4b34-8BBF-133E770B6F6A}" relid="0x3">
+				<atom id="id-0066-0000001c" kind="InputParam" role="InputParameters" guid="{861e7d29-54f5-4b34-8bbf-133e770b6f6a}" relid="0x3">
 					<name>Name</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -794,7 +794,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000001d" kind="InputParam" role="InputParameters" guid="{574C9794-F5AB-4464-ADCE-A32BB1B4F2C6}" relid="0x4">
+				<atom id="id-0066-0000001d" kind="InputParam" role="InputParameters" guid="{574c9794-f5ab-4464-adce-a32bb1b4f2c6}" relid="0x4">
 					<name>IsFrequency</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -816,14 +816,14 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-0000000a" kind="Primitive" role="PrimitiveParts" guid="{F11669A6-D4E2-4aa5-B5DB-308C2E7AB51D}" relid="0x65" childrelidcntr="0x3">
+			<model id="id-0065-0000000a" kind="Primitive" role="PrimitiveParts" guid="{f11669a6-d4e2-4aa5-b5db-308c2e7ab51d}" relid="0x65" childrelidcntr="0x3">
 				<name>Plotter8</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>756,728</value>
+							<value>756,735</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -842,7 +842,7 @@
 				<attribute kind="Script">
 					<value>plotter_script</value>
 				</attribute>
-				<atom id="id-0066-0000001e" kind="InputSignal" role="InputSignals" guid="{6A2BE34F-8021-4d1d-9B3D-12851F89B1D5}" relid="0x1">
+				<atom id="id-0066-0000001e" kind="InputSignal" role="InputSignals" guid="{6a2be34f-8021-4d1d-9b3d-12851f89b1d5}" relid="0x1">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -857,7 +857,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-0000001f" kind="InputParam" role="InputParameters" guid="{1437E845-ADED-411c-924D-7C0B9A09A477}" relid="0x2">
+				<atom id="id-0066-0000001f" kind="InputParam" role="InputParameters" guid="{1437e845-aded-411c-924d-7c0b9a09a477}" relid="0x2">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -878,7 +878,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000020" kind="InputParam" role="InputParameters" guid="{C4C5B8C7-9C53-4418-923F-5AC3525B4201}" relid="0x3">
+				<atom id="id-0066-00000020" kind="InputParam" role="InputParameters" guid="{c4c5b8c7-9c53-4418-923f-5ac3525b4201}" relid="0x3">
 					<name>DBase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -900,14 +900,14 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-0000000b" kind="Primitive" role="PrimitiveParts" guid="{AB89D8E5-2D64-4250-823A-9F03386308F1}" relid="0x67" childrelidcntr="0x3">
+			<model id="id-0065-0000000b" kind="Primitive" role="PrimitiveParts" guid="{ab89d8e5-2d64-4250-823a-9f03386308f1}" relid="0x67" childrelidcntr="0x3">
 				<name>Plotter2</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>756,140</value>
+							<value>756,147</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -926,7 +926,7 @@
 				<attribute kind="Script">
 					<value>plotter_script</value>
 				</attribute>
-				<atom id="id-0066-00000021" kind="InputParam" role="InputParameters" guid="{8358F726-B81B-4f3f-98E4-08E88B067131}" relid="0x1">
+				<atom id="id-0066-00000021" kind="InputParam" role="InputParameters" guid="{8358f726-b81b-4f3f-98e4-08e88b067131}" relid="0x1">
 					<name>DBase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -947,7 +947,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000022" kind="InputParam" role="InputParameters" guid="{7750192B-9344-409e-B95B-B862C8B96E4E}" relid="0x2">
+				<atom id="id-0066-00000022" kind="InputParam" role="InputParameters" guid="{7750192b-9344-409e-b95b-b862c8b96e4e}" relid="0x2">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -968,7 +968,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000023" kind="InputSignal" role="InputSignals" guid="{15CB8D66-BFF4-4a42-8E56-AA6668684F16}" relid="0x3">
+				<atom id="id-0066-00000023" kind="InputSignal" role="InputSignals" guid="{15cb8d66-bff4-4a42-8e56-aa6668684f16}" relid="0x3">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -984,14 +984,14 @@
 					</regnode>
 				</atom>
 			</model>
-			<model id="id-0065-0000000c" kind="Primitive" role="PrimitiveParts" guid="{009EF956-CFE9-4b2a-9BED-3D486DFC71CE}" relid="0x68" childrelidcntr="0x4">
+			<model id="id-0065-0000000c" kind="Primitive" role="PrimitiveParts" guid="{009ef956-cfe9-4b2a-9bed-3d486dfc71ce}" relid="0x68" childrelidcntr="0x4">
 				<name>DBSetup1</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>140,385</value>
+							<value>175,385</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -1010,7 +1010,7 @@
 				<attribute kind="Script">
 					<value>dbsetup_script</value>
 				</attribute>
-				<atom id="id-0066-00000024" kind="InputParam" role="InputParameters" guid="{20D40B98-B053-46b4-AB4F-315D36CBEECA}" relid="0x1">
+				<atom id="id-0066-00000024" kind="InputParam" role="InputParameters" guid="{20d40b98-b053-46b4-ab4f-315d36cbeeca}" relid="0x1">
 					<name>Name</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1031,7 +1031,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000025" kind="InputParam" role="InputParameters" guid="{F51B0B32-5AFD-44c4-AE63-1E3EA8C5CE7C}" relid="0x2">
+				<atom id="id-0066-00000025" kind="InputParam" role="InputParameters" guid="{f51b0b32-5afd-44c4-ae63-1e3ea8c5ce7c}" relid="0x2">
 					<name>SampRate</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1052,7 +1052,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000026" kind="InputParam" role="InputParameters" guid="{FD267EE0-37C9-4253-BD52-012FB14B63AB}" relid="0x3">
+				<atom id="id-0066-00000026" kind="InputParam" role="InputParameters" guid="{fd267ee0-37c9-4253-bd52-012fb14b63ab}" relid="0x3">
 					<name>IsFrequency</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1073,7 +1073,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000027" kind="InputParam" role="InputParameters" guid="{207A7028-775D-4de0-A6A1-D1CF0A6AFF56}" relid="0x4">
+				<atom id="id-0066-00000027" kind="InputParam" role="InputParameters" guid="{207a7028-775d-4de0-a6a1-d1cf0a6aff56}" relid="0x4">
 					<name>Size</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1095,7 +1095,7 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-0000000d" kind="Primitive" role="PrimitiveParts" guid="{0558F1DE-1EBF-4f15-9F79-1018E7A28CF4}" relid="0x2c" childrelidcntr="0x5">
+			<model id="id-0065-0000000d" kind="Primitive" role="PrimitiveParts" guid="{0558f1de-1ebf-4f15-9f79-1018e7a28cf4}" relid="0x2c" childrelidcntr="0x5">
 				<name>Envelope2</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -1121,7 +1121,7 @@
 				<attribute kind="Script">
 					<value>envelope_script</value>
 				</attribute>
-				<atom id="id-0066-00000028" kind="InputParam" role="InputParameters" guid="{1E7037C4-10D0-465b-9530-5D26112CF622}" relid="0x1">
+				<atom id="id-0066-00000028" kind="InputParam" role="InputParameters" guid="{1e7037c4-10d0-465b-9530-5d26112cf622}" relid="0x1">
 					<name>Reset</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1142,7 +1142,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000029" kind="OutputSignal" role="OutputSignals" guid="{9A0EF490-02F4-4ad8-A184-21A0BA8ECAC3}" relid="0x4">
+				<atom id="id-0066-00000029" kind="OutputSignal" role="OutputSignals" guid="{9a0ef490-02f4-4ad8-a184-21a0ba8ecac3}" relid="0x4">
 					<name>Out</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1157,7 +1157,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-0000002a" kind="Param" role="Parameters" guid="{6108F0EC-001E-4e68-B604-764C5221E780}" relid="0x3">
+				<atom id="id-0066-0000002a" kind="Param" role="Parameters" guid="{6108f0ec-001e-4e68-b604-764c5221e780}" relid="0x3">
 					<name>LastReset</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1184,7 +1184,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000002b" kind="Param" role="Parameters" guid="{5C8FA354-DFC2-4adb-A480-DD99DE8BFBDA}" relid="0x2">
+				<atom id="id-0066-0000002b" kind="Param" role="Parameters" guid="{5c8fa354-dfc2-4adb-a480-dd99de8bfbda}" relid="0x2">
 					<name>Buffer</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1211,7 +1211,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000002c" kind="InputSignal" role="InputSignals" guid="{4CD10814-C499-4ed8-8AEA-1E697E49F11C}" relid="0x5">
+				<atom id="id-0066-0000002c" kind="InputSignal" role="InputSignals" guid="{4cd10814-c499-4ed8-8aea-1e697e49f11c}" relid="0x5">
 					<name>In</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1227,14 +1227,14 @@
 					</regnode>
 				</atom>
 			</model>
-			<model id="id-0065-0000000e" kind="Primitive" role="PrimitiveParts" guid="{98D86D2E-4897-4239-ABD7-1A746DB0A0CA}" relid="0x35" childrelidcntr="0x3">
+			<model id="id-0065-0000000e" kind="Primitive" role="PrimitiveParts" guid="{98d86d2e-4897-4239-abd7-1a746db0a0ca}" relid="0x35" childrelidcntr="0x3">
 				<name>Plotter4</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>756,336</value>
+							<value>756,343</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -1253,7 +1253,7 @@
 				<attribute kind="Script">
 					<value>plotter_script</value>
 				</attribute>
-				<atom id="id-0066-0000002d" kind="InputSignal" role="InputSignals" guid="{51E544C3-E39E-44f4-AA27-289061242C9D}" relid="0x2">
+				<atom id="id-0066-0000002d" kind="InputSignal" role="InputSignals" guid="{51e544c3-e39e-44f4-aa27-289061242c9d}" relid="0x2">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1268,7 +1268,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-0000002e" kind="InputParam" role="InputParameters" guid="{61E79DA3-D863-4c73-AA08-42424E7E9340}" relid="0x3">
+				<atom id="id-0066-0000002e" kind="InputParam" role="InputParameters" guid="{61e79da3-d863-4c73-aa08-42424e7e9340}" relid="0x3">
 					<name>DBase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1289,7 +1289,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000002f" kind="InputParam" role="InputParameters" guid="{F5C120A3-3D65-4f4c-93B7-207A2E307EFB}" relid="0x1">
+				<atom id="id-0066-0000002f" kind="InputParam" role="InputParameters" guid="{f5c120a3-3d65-4f4c-93b7-207a2e307efb}" relid="0x1">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1311,7 +1311,7 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-0000000f" kind="Primitive" role="PrimitiveParts" guid="{B096E83C-9FAC-4c1f-BBB7-FF8E7DC52021}" relid="0x45" childrelidcntr="0x5">
+			<model id="id-0065-0000000f" kind="Primitive" role="PrimitiveParts" guid="{b096e83c-9fac-4c1f-bbb7-ff8e7dc52021}" relid="0x45" childrelidcntr="0x5">
 				<name>Envelope1</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -1337,7 +1337,7 @@
 				<attribute kind="Script">
 					<value>envelope_script</value>
 				</attribute>
-				<atom id="id-0066-00000030" kind="InputParam" role="InputParameters" guid="{26FB566F-68D9-4fe2-8EF8-C8ABD0960C18}" relid="0x5">
+				<atom id="id-0066-00000030" kind="InputParam" role="InputParameters" guid="{26fb566f-68d9-4fe2-8ef8-c8abd0960c18}" relid="0x5">
 					<name>Reset</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1358,7 +1358,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000031" kind="OutputSignal" role="OutputSignals" guid="{C553F6AC-F44D-407c-ABA0-863E77F72B4B}" relid="0x3">
+				<atom id="id-0066-00000031" kind="OutputSignal" role="OutputSignals" guid="{c553f6ac-f44d-407c-aba0-863e77f72b4b}" relid="0x3">
 					<name>Out</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1373,7 +1373,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000032" kind="InputSignal" role="InputSignals" guid="{4A4B9B2A-C0AB-4130-ACC9-A58DD67A9F16}" relid="0x4">
+				<atom id="id-0066-00000032" kind="InputSignal" role="InputSignals" guid="{4a4b9b2a-c0ab-4130-acc9-a58dd67a9f16}" relid="0x4">
 					<name>In</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1388,7 +1388,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000033" kind="Param" role="Parameters" guid="{307DC36E-DC52-4ef9-8725-C41C3C020782}" relid="0x1">
+				<atom id="id-0066-00000033" kind="Param" role="Parameters" guid="{307dc36e-dc52-4ef9-8725-c41c3c020782}" relid="0x1">
 					<name>LastReset</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1415,7 +1415,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000034" kind="Param" role="Parameters" guid="{BA612ABE-76E0-48dc-8FE5-10C9B297614B}" relid="0x2">
+				<atom id="id-0066-00000034" kind="Param" role="Parameters" guid="{ba612abe-76e0-48dc-8fe5-10c9b297614b}" relid="0x2">
 					<name>Buffer</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1443,14 +1443,14 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-00000010" kind="Primitive" role="PrimitiveParts" guid="{E908B0CA-9D8C-4e5c-A622-6A98E9E487B2}" relid="0x30" childrelidcntr="0x3">
+			<model id="id-0065-00000010" kind="Primitive" role="PrimitiveParts" guid="{e908b0ca-9d8c-4e5c-a622-6a98e9e487b2}" relid="0x30" childrelidcntr="0x3">
 				<name>Plotter9</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>756,826</value>
+							<value>756,833</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -1469,7 +1469,7 @@
 				<attribute kind="Script">
 					<value>plotter_script</value>
 				</attribute>
-				<atom id="id-0066-00000035" kind="InputParam" role="InputParameters" guid="{E56CA9BE-5307-4694-BF12-77A026D4396C}" relid="0x1">
+				<atom id="id-0066-00000035" kind="InputParam" role="InputParameters" guid="{e56ca9be-5307-4694-bf12-77a026d4396c}" relid="0x1">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1490,7 +1490,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000036" kind="InputParam" role="InputParameters" guid="{065FCCDF-2EBE-4b9c-842E-152F87F030BD}" relid="0x2">
+				<atom id="id-0066-00000036" kind="InputParam" role="InputParameters" guid="{065fccdf-2ebe-4b9c-842e-152f87f030bd}" relid="0x2">
 					<name>DBase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1511,7 +1511,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000037" kind="InputSignal" role="InputSignals" guid="{E36F3EE7-3F54-4957-8B97-FB88B5A4F8BD}" relid="0x3">
+				<atom id="id-0066-00000037" kind="InputSignal" role="InputSignals" guid="{e36f3ee7-3f54-4957-8b97-fb88b5a4f8bd}" relid="0x3">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1527,14 +1527,14 @@
 					</regnode>
 				</atom>
 			</model>
-			<model id="id-0065-00000011" kind="Primitive" role="PrimitiveParts" guid="{0453A363-AF12-4386-9A79-0AE72D27CF1C}" relid="0x36" childrelidcntr="0x3">
+			<model id="id-0065-00000011" kind="Primitive" role="PrimitiveParts" guid="{0453a363-af12-4386-9a79-0ae72d27cf1c}" relid="0x36" childrelidcntr="0x3">
 				<name>Plotter1</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>756,42</value>
+							<value>756,49</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -1553,7 +1553,7 @@
 				<attribute kind="Script">
 					<value>plotter_script</value>
 				</attribute>
-				<atom id="id-0066-00000038" kind="InputParam" role="InputParameters" guid="{E2996623-E82C-413f-B1C1-AE57567C06CC}" relid="0x1">
+				<atom id="id-0066-00000038" kind="InputParam" role="InputParameters" guid="{e2996623-e82c-413f-b1c1-ae57567c06cc}" relid="0x1">
 					<name>DBase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1574,7 +1574,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000039" kind="InputParam" role="InputParameters" guid="{A661DE0C-AF2F-4277-977A-A79B818DBF3C}" relid="0x2">
+				<atom id="id-0066-00000039" kind="InputParam" role="InputParameters" guid="{a661de0c-af2f-4277-977a-a79b818dbf3c}" relid="0x2">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1595,7 +1595,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000003a" kind="InputSignal" role="InputSignals" guid="{DD832FF3-E90A-4226-A958-203DAE102D52}" relid="0x3">
+				<atom id="id-0066-0000003a" kind="InputSignal" role="InputSignals" guid="{dd832ff3-e90a-4226-a958-203dae102d52}" relid="0x3">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1611,7 +1611,7 @@
 					</regnode>
 				</atom>
 			</model>
-			<model id="id-0065-00000012" kind="Primitive" role="PrimitiveParts" guid="{6C6C8969-D24D-4378-B558-6ECCC0FEF14A}" relid="0x3d" childrelidcntr="0x4">
+			<model id="id-0065-00000012" kind="Primitive" role="PrimitiveParts" guid="{6c6c8969-d24d-4378-b558-6eccc0fef14a}" relid="0x3d" childrelidcntr="0x4">
 				<name>DBSetup5</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -1637,7 +1637,7 @@
 				<attribute kind="Script">
 					<value>dbsetup_script</value>
 				</attribute>
-				<atom id="id-0066-0000003b" kind="InputParam" role="InputParameters" guid="{B5D3105F-76BA-4e96-8A2A-D6B9F76E3646}" relid="0x3">
+				<atom id="id-0066-0000003b" kind="InputParam" role="InputParameters" guid="{b5d3105f-76ba-4e96-8a2a-d6b9f76e3646}" relid="0x3">
 					<name>Size</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1658,7 +1658,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000003c" kind="InputParam" role="InputParameters" guid="{49F88B02-9901-470b-8E2C-FE1493B5893A}" relid="0x4">
+				<atom id="id-0066-0000003c" kind="InputParam" role="InputParameters" guid="{49f88b02-9901-470b-8e2c-fe1493b5893a}" relid="0x4">
 					<name>Name</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1679,7 +1679,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000003d" kind="InputParam" role="InputParameters" guid="{715A8FB6-35DD-4c60-A165-567776055EEC}" relid="0x1">
+				<atom id="id-0066-0000003d" kind="InputParam" role="InputParameters" guid="{715a8fb6-35dd-4c60-a165-567776055eec}" relid="0x1">
 					<name>IsFrequency</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1700,7 +1700,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000003e" kind="InputParam" role="InputParameters" guid="{84D1CD90-4256-47a0-BC58-B8405D6EFA82}" relid="0x2">
+				<atom id="id-0066-0000003e" kind="InputParam" role="InputParameters" guid="{84d1cd90-4256-47a0-bc58-b8405d6efa82}" relid="0x2">
 					<name>SampRate</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1722,7 +1722,7 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-00000013" kind="Primitive" role="PrimitiveParts" guid="{A90F54A0-9340-4e13-96F3-5DF271238C1D}" relid="0x2" childrelidcntr="0x6">
+			<model id="id-0065-00000013" kind="Primitive" role="PrimitiveParts" guid="{a90f54a0-9340-4e13-96f3-5df271238c1d}" relid="0x2" childrelidcntr="0x6">
 				<name>LPFilter1</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -1757,7 +1757,7 @@
 				<attribute kind="Script">
 					<value>lpfilter_script</value>
 				</attribute>
-				<atom id="id-0066-0000003f" kind="InputParam" role="InputParameters" guid="{F9CFA3FA-23E6-40e7-9CD0-D42D61CE4119}" relid="0x4">
+				<atom id="id-0066-0000003f" kind="InputParam" role="InputParameters" guid="{f9cfa3fa-23e6-40e7-9cd0-d42d61ce4119}" relid="0x4">
 					<name>Reset</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1778,7 +1778,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000040" kind="Param" role="Parameters" guid="{C4F34EA0-559D-416d-AB5E-EEA860B9F6CD}" relid="0x1">
+				<atom id="id-0066-00000040" kind="Param" role="Parameters" guid="{c4f34ea0-559d-416d-ab5e-eea860b9f6cd}" relid="0x1">
 					<name>Factor</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1805,7 +1805,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000041" kind="OutputSignal" role="OutputSignals" guid="{44BDE40E-5043-4387-8259-775BDB865573}" relid="0x2">
+				<atom id="id-0066-00000041" kind="OutputSignal" role="OutputSignals" guid="{44bde40e-5043-4387-8259-775bdb865573}" relid="0x2">
 					<name>Out</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1820,7 +1820,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000042" kind="InputSignal" role="InputSignals" guid="{5CB39BF7-0E40-4b2d-93E4-08F1D19167A0}" relid="0x5">
+				<atom id="id-0066-00000042" kind="InputSignal" role="InputSignals" guid="{5cb39bf7-0e40-4b2d-93e4-08f1d19167a0}" relid="0x5">
 					<name>In</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1835,7 +1835,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000043" kind="Param" role="Parameters" guid="{A08D9941-B5BF-4fc7-8B93-233B1BE1103B}" relid="0x6">
+				<atom id="id-0066-00000043" kind="Param" role="Parameters" guid="{a08d9941-b5bf-4fc7-8b93-233b1be1103b}" relid="0x6">
 					<name>Buffer</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1862,7 +1862,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000044" kind="Param" role="Parameters" guid="{55DCC8C9-5F91-4724-B2BF-E15695060FA2}" relid="0x3">
+				<atom id="id-0066-00000044" kind="Param" role="Parameters" guid="{55dcc8c9-5f91-4724-b2bf-e15695060fa2}" relid="0x3">
 					<name>LastReset</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1890,14 +1890,14 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-00000014" kind="Primitive" role="PrimitiveParts" guid="{C56BF881-F1CE-45bd-AB60-15CFE28F627F}" relid="0x15" childrelidcntr="0x3">
+			<model id="id-0065-00000014" kind="Primitive" role="PrimitiveParts" guid="{c56bf881-f1ce-45bd-ab60-15cfe28f627f}" relid="0x15" childrelidcntr="0x3">
 				<name>Plotter6</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>756,532</value>
+							<value>756,539</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -1916,7 +1916,7 @@
 				<attribute kind="Script">
 					<value>plotter_script</value>
 				</attribute>
-				<atom id="id-0066-00000045" kind="InputParam" role="InputParameters" guid="{DD14D47F-58EC-4b36-9F11-9BE68DA4F7D5}" relid="0x1">
+				<atom id="id-0066-00000045" kind="InputParam" role="InputParameters" guid="{dd14d47f-58ec-4b36-9f11-9be68da4f7d5}" relid="0x1">
 					<name>DBase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1937,7 +1937,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000046" kind="InputParam" role="InputParameters" guid="{4452DC7A-5620-4afc-A0E5-4822FD3EAC35}" relid="0x2">
+				<atom id="id-0066-00000046" kind="InputParam" role="InputParameters" guid="{4452dc7a-5620-4afc-a0e5-4822fd3eac35}" relid="0x2">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1958,7 +1958,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000047" kind="InputSignal" role="InputSignals" guid="{5C8ABC0E-FB08-47ad-BD53-C9A4C00A2434}" relid="0x3">
+				<atom id="id-0066-00000047" kind="InputSignal" role="InputSignals" guid="{5c8abc0e-fb08-47ad-bd53-c9a4c00a2434}" relid="0x3">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -1974,14 +1974,14 @@
 					</regnode>
 				</atom>
 			</model>
-			<model id="id-0065-00000015" kind="Primitive" role="PrimitiveParts" guid="{030DC211-FCB1-4fa7-88D7-80E9B455787E}" relid="0x26" childrelidcntr="0x4">
+			<model id="id-0065-00000015" kind="Primitive" role="PrimitiveParts" guid="{030dc211-fcb1-4fa7-88d7-80e9b455787e}" relid="0x26" childrelidcntr="0x4">
 				<name>DBSetup4</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>140,714</value>
+							<value>182,721</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -2000,7 +2000,7 @@
 				<attribute kind="Script">
 					<value>dbsetup_script</value>
 				</attribute>
-				<atom id="id-0066-00000048" kind="InputParam" role="InputParameters" guid="{4877CEEB-F101-4c3f-BAFE-012E79EFADD6}" relid="0x2">
+				<atom id="id-0066-00000048" kind="InputParam" role="InputParameters" guid="{4877ceeb-f101-4c3f-bafe-012e79efadd6}" relid="0x2">
 					<name>SampRate</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2021,7 +2021,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000049" kind="InputParam" role="InputParameters" guid="{086D112D-A648-40ae-98FF-987332C06DDF}" relid="0x4">
+				<atom id="id-0066-00000049" kind="InputParam" role="InputParameters" guid="{086d112d-a648-40ae-98ff-987332c06ddf}" relid="0x4">
 					<name>IsFrequency</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2042,7 +2042,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000004a" kind="InputParam" role="InputParameters" guid="{FE96C416-F3A5-4d35-8CD6-04B42C02FB1A}" relid="0x1">
+				<atom id="id-0066-0000004a" kind="InputParam" role="InputParameters" guid="{fe96c416-f3a5-4d35-8cd6-04b42c02fb1a}" relid="0x1">
 					<name>Name</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2063,7 +2063,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000004b" kind="InputParam" role="InputParameters" guid="{76477F28-1CA3-4c3e-B798-67F8AD2C0D74}" relid="0x3">
+				<atom id="id-0066-0000004b" kind="InputParam" role="InputParameters" guid="{76477f28-1ca3-4c3e-b798-67f8ad2c0d74}" relid="0x3">
 					<name>Size</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2085,7 +2085,7 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-00000016" kind="Primitive" role="PrimitiveParts" guid="{C3FA8DF7-02B3-4ebd-B33B-694DB71EBFC6}" relid="0x6" childrelidcntr="0x4">
+			<model id="id-0065-00000016" kind="Primitive" role="PrimitiveParts" guid="{c3fa8df7-02b3-4ebd-b33b-694db71ebfc6}" relid="0x6" childrelidcntr="0x4">
 				<name>Generator1</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -2111,7 +2111,7 @@
 				<attribute kind="Script">
 					<value>datagen_script</value>
 				</attribute>
-				<atom id="id-0066-0000004c" kind="InputParam" role="InputParameters" guid="{B2AFDA21-3BF4-4b0b-8E14-4C50E1A96ACF}" relid="0x4">
+				<atom id="id-0066-0000004c" kind="InputParam" role="InputParameters" guid="{b2afda21-3bf4-4b0b-8e14-4c50e1a96acf}" relid="0x4">
 					<name>Size</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2132,7 +2132,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000004d" kind="InputParam" role="InputParameters" guid="{82026A80-011A-479d-9011-B74AFCF6939C}" relid="0x3">
+				<atom id="id-0066-0000004d" kind="InputParam" role="InputParameters" guid="{82026a80-011a-479d-9011-b74afcf6939c}" relid="0x3">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2153,7 +2153,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000004e" kind="InputParam" role="InputParameters" guid="{F02B3D61-594E-442f-B7A5-1F920C979E1A}" relid="0x2">
+				<atom id="id-0066-0000004e" kind="InputParam" role="InputParameters" guid="{f02b3d61-594e-442f-b7a5-1f920c979e1a}" relid="0x2">
 					<name>Frequency</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2174,7 +2174,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-0000004f" kind="OutputSignal" role="OutputSignals" guid="{7CCEC188-F7CE-4921-AE3D-0B815CB582B4}" relid="0x1">
+				<atom id="id-0066-0000004f" kind="OutputSignal" role="OutputSignals" guid="{7ccec188-f7ce-4921-ae3d-0b815cb582b4}" relid="0x1">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2190,14 +2190,14 @@
 					</regnode>
 				</atom>
 			</model>
-			<model id="id-0065-00000017" kind="Primitive" role="PrimitiveParts" guid="{C0B6CC12-52A8-4aaa-BFF9-465F562BBA58}" relid="0x3" childrelidcntr="0x3">
+			<model id="id-0065-00000017" kind="Primitive" role="PrimitiveParts" guid="{c0b6cc12-52a8-4aaa-bff9-465f562bba58}" relid="0x3" childrelidcntr="0x3">
 				<name>Plotter7</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>756,630</value>
+							<value>756,637</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -2216,7 +2216,7 @@
 				<attribute kind="Script">
 					<value>plotter_script</value>
 				</attribute>
-				<atom id="id-0066-00000050" kind="InputParam" role="InputParameters" guid="{6F0D2AD2-A3C9-4239-9D38-7186FD67DBAA}" relid="0x3">
+				<atom id="id-0066-00000050" kind="InputParam" role="InputParameters" guid="{6f0d2ad2-a3c9-4239-9d38-7186fd67dbaa}" relid="0x3">
 					<name>Channel</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2237,7 +2237,7 @@
 						<value>1</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000051" kind="InputParam" role="InputParameters" guid="{058FF5D9-ACAF-4fc0-BBD4-C8BD84C81C8E}" relid="0x2">
+				<atom id="id-0066-00000051" kind="InputParam" role="InputParameters" guid="{058ff5d9-acaf-4fc0-bbd4-c8bd84c81c8e}" relid="0x2">
 					<name>DBase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2258,7 +2258,7 @@
 						<value>20</value>
 					</attribute>
 				</atom>
-				<atom id="id-0066-00000052" kind="InputSignal" role="InputSignals" guid="{CCDDC799-0310-45ad-9254-1964C85DB462}" relid="0x1">
+				<atom id="id-0066-00000052" kind="InputSignal" role="InputSignals" guid="{ccddc799-0310-45ad-9254-1964c85db462}" relid="0x1">
 					<name>Data</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2274,14 +2274,14 @@
 					</regnode>
 				</atom>
 			</model>
-			<model id="id-0065-00000018" kind="Compound" role="CompoundParts" guid="{D4D84576-1FC1-442b-80A4-CCEEB1EC3A4F}" relid="0x2f" childrelidcntr="0x16">
+			<model id="id-0065-00000018" kind="Compound" role="CompoundParts" guid="{d4d84576-1fc1-442b-80a4-cceeb1ec3a4f}" relid="0x2f" childrelidcntr="0x16">
 				<name>TwoChannels</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>273,91</value>
+							<value>266,42</value>
 						</regnode>
 					</regnode>
 					<regnode name="SignalFlowAspect" isopaque="yes">
@@ -2291,7 +2291,7 @@
 						</regnode>
 					</regnode>
 				</regnode>
-				<model id="id-0065-00000019" kind="Primitive" role="PrimitiveParts" guid="{32D119BF-07DD-4337-B1EB-30CC9D1B9C7C}" relid="0x16" childrelidcntr="0x4">
+				<model id="id-0065-00000019" kind="Primitive" role="PrimitiveParts" guid="{32d119bf-07dd-4337-b1eb-30cc9d1b9c7c}" relid="0x16" childrelidcntr="0x4">
 					<name>AbsPhase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2320,7 +2320,7 @@
 					<attribute kind="Script">
 						<value>abs_phase_script</value>
 					</attribute>
-					<atom id="id-0066-00000053" kind="InputSignal" role="InputSignals" guid="{9D7E2244-BC3B-41f4-A490-D54B5303992B}" relid="0x4">
+					<atom id="id-0066-00000053" kind="InputSignal" role="InputSignals" guid="{9d7e2244-bc3b-41f4-a490-d54b5303992b}" relid="0x4">
 						<name>Imag</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2335,7 +2335,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-00000054" kind="InputSignal" role="InputSignals" guid="{FDA55CD4-83FE-43d7-9E87-894B98BB351B}" relid="0x2">
+					<atom id="id-0066-00000054" kind="InputSignal" role="InputSignals" guid="{fda55cd4-83fe-43d7-9e87-894b98bb351b}" relid="0x2">
 						<name>Real</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2350,7 +2350,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-00000055" kind="OutputSignal" role="OutputSignals" guid="{BB942105-3776-4134-8F3D-8DF6B6F67788}" relid="0x3">
+					<atom id="id-0066-00000055" kind="OutputSignal" role="OutputSignals" guid="{bb942105-3776-4134-8f3d-8df6b6f67788}" relid="0x3">
 						<name>Abs</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2365,7 +2365,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-00000056" kind="OutputSignal" role="OutputSignals" guid="{C554C102-93AB-4951-B784-F98CF077C6FD}" relid="0x1">
+					<atom id="id-0066-00000056" kind="OutputSignal" role="OutputSignals" guid="{c554c102-93ab-4951-b784-f98cf077c6fd}" relid="0x1">
 						<name>Phase</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2381,7 +2381,7 @@
 						</regnode>
 					</atom>
 				</model>
-				<model id="id-0065-0000001a" kind="Primitive" role="PrimitiveParts" guid="{46A55DB8-A48A-4ca4-953C-2AC936373978}" relid="0x7" childrelidcntr="0x4">
+				<model id="id-0065-0000001a" kind="Primitive" role="PrimitiveParts" guid="{46a55db8-a48a-4ca4-953c-2ac936373978}" relid="0x7" childrelidcntr="0x4">
 					<name>FFT</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2410,7 +2410,7 @@
 					<attribute kind="Script">
 						<value>fft_script</value>
 					</attribute>
-					<atom id="id-0066-00000057" kind="OutputSignal" role="OutputSignals" guid="{96A295D9-D432-4291-870F-3809842267FC}" relid="0x3">
+					<atom id="id-0066-00000057" kind="OutputSignal" role="OutputSignals" guid="{96a295d9-d432-4291-870f-3809842267fc}" relid="0x3">
 						<name>Real</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2425,7 +2425,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-00000058" kind="InputSignal" role="InputSignals" guid="{E2F8CF63-1D55-44b3-9453-B9F3D436EA91}" relid="0x4">
+					<atom id="id-0066-00000058" kind="InputSignal" role="InputSignals" guid="{e2f8cf63-1d55-44b3-9453-b9f3d436ea91}" relid="0x4">
 						<name>Imag</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2440,7 +2440,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-00000059" kind="InputSignal" role="InputSignals" guid="{C805DCDF-D8C4-426e-91CB-14682E988846}" relid="0x1">
+					<atom id="id-0066-00000059" kind="InputSignal" role="InputSignals" guid="{c805dcdf-d8c4-426e-91cb-14682e988846}" relid="0x1">
 						<name>Real</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2455,7 +2455,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-0000005a" kind="OutputSignal" role="OutputSignals" guid="{67264E41-C436-4baf-8A6F-EAADDB5325E9}" relid="0x2">
+					<atom id="id-0066-0000005a" kind="OutputSignal" role="OutputSignals" guid="{67264e41-c436-4baf-8a6f-eaaddb5325e9}" relid="0x2">
 						<name>Imag</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2471,7 +2471,7 @@
 						</regnode>
 					</atom>
 				</model>
-				<model id="id-0065-0000001b" kind="Primitive" role="PrimitiveParts" guid="{CA96A2AB-23E6-4f2f-8D9E-FF266E50E869}" relid="0x11" childrelidcntr="0x4">
+				<model id="id-0065-0000001b" kind="Primitive" role="PrimitiveParts" guid="{ca96a2ab-23e6-4f2f-8d9e-ff266e50e869}" relid="0x11" childrelidcntr="0x4">
 					<name>AbsPhase</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2500,7 +2500,7 @@
 					<attribute kind="Script">
 						<value>abs_phase_script</value>
 					</attribute>
-					<atom id="id-0066-0000005b" kind="InputSignal" role="InputSignals" guid="{AD2E9242-5625-4fd9-A9B5-7D912C18ECA3}" relid="0x2">
+					<atom id="id-0066-0000005b" kind="InputSignal" role="InputSignals" guid="{ad2e9242-5625-4fd9-a9b5-7d912c18eca3}" relid="0x2">
 						<name>Imag</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2515,7 +2515,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-0000005c" kind="OutputSignal" role="OutputSignals" guid="{16CE3CC5-DD49-492e-94E7-257705B377BA}" relid="0x1">
+					<atom id="id-0066-0000005c" kind="OutputSignal" role="OutputSignals" guid="{16ce3cc5-dd49-492e-94e7-257705b377ba}" relid="0x1">
 						<name>Phase</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2530,7 +2530,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-0000005d" kind="OutputSignal" role="OutputSignals" guid="{D7D917A5-75E4-4311-9765-792CAF6C5C78}" relid="0x3">
+					<atom id="id-0066-0000005d" kind="OutputSignal" role="OutputSignals" guid="{d7d917a5-75e4-4311-9765-792caf6c5c78}" relid="0x3">
 						<name>Abs</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2545,7 +2545,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-0000005e" kind="InputSignal" role="InputSignals" guid="{61D453DC-DAF6-48fa-B467-CDCD88AC5F2D}" relid="0x4">
+					<atom id="id-0066-0000005e" kind="InputSignal" role="InputSignals" guid="{61d453dc-daf6-48fa-b467-cdcd88ac5f2d}" relid="0x4">
 						<name>Real</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2561,7 +2561,7 @@
 						</regnode>
 					</atom>
 				</model>
-				<model id="id-0065-0000001c" kind="Primitive" role="PrimitiveParts" guid="{EF575DC9-515C-4d78-AA4B-9DB06B924C0E}" relid="0x14" childrelidcntr="0x6">
+				<model id="id-0065-0000001c" kind="Primitive" role="PrimitiveParts" guid="{ef575dc9-515c-4d78-aa4b-9db06b924c0e}" relid="0x14" childrelidcntr="0x6">
 					<name>Splitter</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2590,7 +2590,7 @@
 					<attribute kind="Script">
 						<value>splitter_script</value>
 					</attribute>
-					<atom id="id-0066-0000005f" kind="OutputSignal" role="OutputSignals" guid="{436B1B24-C4F6-4f92-A2FA-0BF2E8FF961B}" relid="0x2">
+					<atom id="id-0066-0000005f" kind="OutputSignal" role="OutputSignals" guid="{436b1b24-c4f6-4f92-a2fa-0bf2e8ff961b}" relid="0x2">
 						<name>Re1</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2605,7 +2605,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-00000060" kind="InputSignal" role="InputSignals" guid="{CFF258A2-61CD-4ec7-B261-260ECB4512CA}" relid="0x5">
+					<atom id="id-0066-00000060" kind="InputSignal" role="InputSignals" guid="{cff258a2-61cd-4ec7-b261-260ecb4512ca}" relid="0x5">
 						<name>Imag</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2620,7 +2620,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-00000061" kind="OutputSignal" role="OutputSignals" guid="{7E020BA7-8637-4498-AFC6-75D4A1BB9732}" relid="0x1">
+					<atom id="id-0066-00000061" kind="OutputSignal" role="OutputSignals" guid="{7e020ba7-8637-4498-afc6-75d4a1bb9732}" relid="0x1">
 						<name>Im1</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2635,7 +2635,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-00000062" kind="OutputSignal" role="OutputSignals" guid="{F89570C3-4151-4c0d-8595-2086FAC1B1F8}" relid="0x3">
+					<atom id="id-0066-00000062" kind="OutputSignal" role="OutputSignals" guid="{f89570c3-4151-4c0d-8595-2086fac1b1f8}" relid="0x3">
 						<name>Re2</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2650,7 +2650,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-00000063" kind="OutputSignal" role="OutputSignals" guid="{8AE618FE-7B26-4167-B14A-C3A00C1685B1}" relid="0x4">
+					<atom id="id-0066-00000063" kind="OutputSignal" role="OutputSignals" guid="{8ae618fe-7b26-4167-b14a-c3a00c1685b1}" relid="0x4">
 						<name>Im2</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2665,7 +2665,7 @@
 							<value>4</value>
 						</regnode>
 					</atom>
-					<atom id="id-0066-00000064" kind="InputSignal" role="InputSignals" guid="{60ABB6A6-2ADF-4645-BFE5-F5B403CE4FFB}" relid="0x6">
+					<atom id="id-0066-00000064" kind="InputSignal" role="InputSignals" guid="{60abb6a6-2adf-4645-bfe5-f5b403ce4ffb}" relid="0x6">
 						<name>Real</name>
 						<regnode name="PartRegs" isopaque="yes">
 							<value></value>
@@ -2681,7 +2681,7 @@
 						</regnode>
 					</atom>
 				</model>
-				<atom id="id-0066-00000065" kind="InputSignal" role="InputSignals" guid="{2BC8F0C2-0241-42cb-BA62-19A7CA029FC6}" relid="0x1">
+				<atom id="id-0066-00000065" kind="InputSignal" role="InputSignals" guid="{2bc8f0c2-0241-42cb-ba62-19a7ca029fc6}" relid="0x1">
 					<name>In2</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2696,7 +2696,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000066" kind="OutputSignal" role="OutputSignals" guid="{6B487383-2B53-4e19-96E0-E7204560D0D3}" relid="0x2">
+				<atom id="id-0066-00000066" kind="OutputSignal" role="OutputSignals" guid="{6b487383-2b53-4e19-96e0-e7204560d0d3}" relid="0x2">
 					<name>Ph1</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2711,7 +2711,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000067" kind="OutputSignal" role="OutputSignals" guid="{A2E3A118-7A09-4417-99DD-F4673C6D7878}" relid="0xb">
+				<atom id="id-0066-00000067" kind="OutputSignal" role="OutputSignals" guid="{a2e3a118-7a09-4417-99dd-f4673c6d7878}" relid="0xb">
 					<name>Ab1</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2726,7 +2726,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000068" kind="OutputSignal" role="OutputSignals" guid="{5A8E94D1-EDC1-4468-8658-AC273DEF87E1}" relid="0x3">
+				<atom id="id-0066-00000068" kind="OutputSignal" role="OutputSignals" guid="{5a8e94d1-edc1-4468-8658-ac273def87e1}" relid="0x3">
 					<name>Ph2</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2741,7 +2741,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-00000069" kind="InputSignal" role="InputSignals" guid="{1E4C1961-AAA0-4783-8F78-5E17598691C4}" relid="0x12">
+				<atom id="id-0066-00000069" kind="InputSignal" role="InputSignals" guid="{1e4c1961-aaa0-4783-8f78-5e17598691c4}" relid="0x12">
 					<name>In1</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2756,7 +2756,7 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<atom id="id-0066-0000006a" kind="OutputSignal" role="OutputSignals" guid="{4BC456CF-E337-4dc4-A56C-CC11D5D106A4}" relid="0x8">
+				<atom id="id-0066-0000006a" kind="OutputSignal" role="OutputSignals" guid="{4bc456cf-e337-4dc4-a56c-cc11d5d106a4}" relid="0x8">
 					<name>Ab2</name>
 					<regnode name="PartRegs" isopaque="yes">
 						<value></value>
@@ -2771,68 +2771,68 @@
 						<value></value>
 					</regnode>
 				</atom>
-				<connection id="id-0068-00000001" kind="DataflowConn" role="DFC" guid="{4C3D7A96-D794-456a-A8FB-3BD8EEBE9525}" relid="0xe">
+				<connection id="id-0068-00000001" kind="DataflowConn" role="DFC" guid="{4c3d7a96-d794-456a-a8fb-3bd8eebe9525}" relid="0xe">
 					<name>DFC</name>
 					<connpoint role="src" target="id-0066-0000005d"/>
 					<connpoint role="dst" target="id-0066-00000067"/>
 				</connection>
-				<connection id="id-0068-00000002" kind="DataflowConn" role="DFC" guid="{E6D36E9A-FBB7-4e27-BD13-6ADCA140AA1B}" relid="0xf">
+				<connection id="id-0068-00000002" kind="DataflowConn" role="DFC" guid="{e6d36e9a-fbb7-4e27-bd13-6adca140aa1b}" relid="0xf">
 					<name>DFC</name>
 					<connpoint role="src" target="id-0066-0000005a"/>
 					<connpoint role="dst" target="id-0066-00000060"/>
 				</connection>
-				<connection id="id-0068-00000003" kind="DataflowConn" role="DFC" guid="{2EF6930C-4D16-4e63-BFAE-D644AFFBA03F}" relid="0x10">
+				<connection id="id-0068-00000003" kind="DataflowConn" role="DFC" guid="{2ef6930c-4d16-4e63-bfae-d644affba03f}" relid="0x10">
 					<name>DFC</name>
 					<connpoint role="src" target="id-0066-0000005c"/>
 					<connpoint role="dst" target="id-0066-00000066"/>
 				</connection>
-				<connection id="id-0068-00000004" kind="DataflowConn" role="DFC" guid="{E573F304-1286-41bd-BA71-4288D8B7D39B}" relid="0x9">
+				<connection id="id-0068-00000004" kind="DataflowConn" role="DFC" guid="{e573f304-1286-41bd-ba71-4288d8b7d39b}" relid="0x9">
 					<name>DFC</name>
 					<connpoint role="dst" target="id-0066-00000053"/>
 					<connpoint role="src" target="id-0066-00000063"/>
 				</connection>
-				<connection id="id-0068-00000005" kind="DataflowConn" role="DFC" guid="{0875F63A-E401-4612-AE9E-05190B96B32C}" relid="0xa">
+				<connection id="id-0068-00000005" kind="DataflowConn" role="DFC" guid="{0875f63a-e401-4612-ae9e-05190b96b32c}" relid="0xa">
 					<name>DFC</name>
 					<connpoint role="dst" target="id-0066-0000005e"/>
 					<connpoint role="src" target="id-0066-0000005f"/>
 				</connection>
-				<connection id="id-0068-00000006" kind="DataflowConn" role="DFC" guid="{7BD0F797-777F-4763-8037-7AE06A1723F3}" relid="0xc">
+				<connection id="id-0068-00000006" kind="DataflowConn" role="DFC" guid="{7bd0f797-777f-4763-8037-7ae06a1723f3}" relid="0xc">
 					<name>DFC</name>
 					<connpoint role="dst" target="id-0066-00000058"/>
 					<connpoint role="src" target="id-0066-00000065"/>
 				</connection>
-				<connection id="id-0068-00000007" kind="DataflowConn" role="DFC" guid="{9DA3A163-83F4-4d52-8E38-2C7F29644464}" relid="0xd">
+				<connection id="id-0068-00000007" kind="DataflowConn" role="DFC" guid="{9da3a163-83f4-4d52-8e38-2c7f29644464}" relid="0xd">
 					<name>DFC</name>
 					<connpoint role="dst" target="id-0066-00000054"/>
 					<connpoint role="src" target="id-0066-00000062"/>
 				</connection>
-				<connection id="id-0068-00000008" kind="DataflowConn" role="DFC" guid="{94199FBF-29AB-419f-ADB6-BC379D5FF0BE}" relid="0x6">
+				<connection id="id-0068-00000008" kind="DataflowConn" role="DFC" guid="{94199fbf-29ab-419f-adb6-bc379d5ff0be}" relid="0x6">
 					<name>DFC</name>
 					<connpoint role="dst" target="id-0066-00000059"/>
 					<connpoint role="src" target="id-0066-00000069"/>
 				</connection>
-				<connection id="id-0068-00000009" kind="DataflowConn" role="DFC" guid="{B12F6A7E-B28E-427c-9D8F-B5799CED918C}" relid="0x13">
+				<connection id="id-0068-00000009" kind="DataflowConn" role="DFC" guid="{b12f6a7e-b28e-427c-9d8f-b5799ced918c}" relid="0x13">
 					<name>DFC</name>
 					<connpoint role="dst" target="id-0066-0000005b"/>
 					<connpoint role="src" target="id-0066-00000061"/>
 				</connection>
-				<connection id="id-0068-0000000a" kind="DataflowConn" role="DFC" guid="{1AEFCC12-16E3-40e0-96F9-1AB8AB464520}" relid="0x15">
+				<connection id="id-0068-0000000a" kind="DataflowConn" role="DFC" guid="{1aefcc12-16e3-40e0-96f9-1ab8ab464520}" relid="0x15">
 					<name>DFC</name>
 					<connpoint role="src" target="id-0066-00000057"/>
 					<connpoint role="dst" target="id-0066-00000064"/>
 				</connection>
-				<connection id="id-0068-0000000b" kind="DataflowConn" role="DFC" guid="{DF880418-5065-4840-ADBB-521CB10BBC52}" relid="0x4">
+				<connection id="id-0068-0000000b" kind="DataflowConn" role="DFC" guid="{df880418-5065-4840-adbb-521cb10bbc52}" relid="0x4">
 					<name>DFC</name>
 					<connpoint role="src" target="id-0066-00000056"/>
 					<connpoint role="dst" target="id-0066-00000068"/>
 				</connection>
-				<connection id="id-0068-0000000c" kind="DataflowConn" role="DFC" guid="{26F55566-D65A-40dc-BC33-19DADE0629C1}" relid="0x5">
+				<connection id="id-0068-0000000c" kind="DataflowConn" role="DFC" guid="{26f55566-d65a-40dc-bc33-19dade0629c1}" relid="0x5">
 					<name>DFC</name>
 					<connpoint role="src" target="id-0066-00000055"/>
 					<connpoint role="dst" target="id-0066-0000006a"/>
 				</connection>
 			</model>
-			<atom id="id-0066-0000006b" kind="Param" role="Parameters" guid="{34D4514A-7583-4607-B647-70D99807851F}" relid="0x1d">
+			<atom id="id-0066-0000006b" kind="Param" role="Parameters" guid="{34d4514a-7583-4607-b647-70d99807851f}" relid="0x1d">
 				<name>False</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -2859,7 +2859,7 @@
 					<value>1</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-0000006c" kind="Param" role="Parameters" guid="{B02AF12A-F8B6-4c8c-A085-E01D04D85F27}" relid="0x38">
+			<atom id="id-0066-0000006c" kind="Param" role="Parameters" guid="{b02af12a-f8b6-4c8c-a085-e01d04d85f27}" relid="0x38">
 				<name>Ch2</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -2886,14 +2886,14 @@
 					<value>1</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-0000006d" kind="Param" role="Parameters" guid="{45508D64-1E31-4b35-B640-D657C9C225CC}" relid="0x66">
+			<atom id="id-0066-0000006d" kind="Param" role="Parameters" guid="{45508d64-1e31-4b35-b640-d657c9c225cc}" relid="0x66">
 				<name>PhaseDB</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>639,464</value>
+							<value>628,453</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2913,14 +2913,14 @@
 					<value>20</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-0000006e" kind="Param" role="Parameters" guid="{20DD0A3E-8D4B-437c-AB7A-CA52411290BF}" relid="0x3f">
+			<atom id="id-0066-0000006e" kind="Param" role="Parameters" guid="{20dd0a3e-8d4b-437c-ab7a-ca52411290bf}" relid="0x3f">
 				<name>EnvResetCNT</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>401,72</value>
+							<value>341,180</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2940,14 +2940,14 @@
 					<value>1</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-0000006f" kind="Param" role="Parameters" guid="{07F1C8B2-93C2-4688-8C80-443B56B86E66}" relid="0xc">
+			<atom id="id-0066-0000006f" kind="Param" role="Parameters" guid="{07f1c8b2-93c2-4688-8c80-443b56b86e66}" relid="0xc">
 				<name>SampRate</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>23,429</value>
+							<value>12,495</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2967,7 +2967,7 @@
 					<value>1</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000070" kind="Param" role="Parameters" guid="{A0F77437-470D-45f0-8670-32165ADCFF59}" relid="0x1">
+			<atom id="id-0066-00000070" kind="Param" role="Parameters" guid="{a0f77437-470d-45f0-8670-32165adcff59}" relid="0x1">
 				<name>FiltDB</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -2994,7 +2994,7 @@
 					<value>20</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000071" kind="Param" role="Parameters" guid="{D240838A-8271-41b3-ADFE-113E5CEC69F5}" relid="0x29">
+			<atom id="id-0066-00000071" kind="Param" role="Parameters" guid="{d240838a-8271-41b3-adfe-113e5cec69f5}" relid="0x29">
 				<name>True</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -3021,7 +3021,7 @@
 					<value>1</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000072" kind="Param" role="Parameters" guid="{619A6AB8-A244-47e1-B0AE-A9A6319F9A60}" relid="0x3a">
+			<atom id="id-0066-00000072" kind="Param" role="Parameters" guid="{619a6ab8-a244-47e1-b0ae-a9a6319f9a60}" relid="0x3a">
 				<name>EvnDB</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -3048,7 +3048,7 @@
 					<value>20</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000073" kind="Param" role="Parameters" guid="{9647B64B-0DFC-47c4-994B-F045051E3AD6}" relid="0xb">
+			<atom id="id-0066-00000073" kind="Param" role="Parameters" guid="{9647b64b-0dfc-47c4-994b-f045051e3ad6}" relid="0xb">
 				<name>AbsDB</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -3075,14 +3075,14 @@
 					<value>20</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000074" kind="Param" role="Parameters" guid="{B9A8F84B-3503-4343-BAA1-10966E79D14B}" relid="0x9">
+			<atom id="id-0066-00000074" kind="Param" role="Parameters" guid="{b9a8f84b-3503-4343-baa1-10966e79d14b}" relid="0x9">
 				<name>DataSize</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>51,401</value>
+							<value>19,362</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -3102,7 +3102,7 @@
 					<value>1</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000075" kind="Param" role="Parameters" guid="{946CE839-3643-4d29-9849-6D879AE8F6E9}" relid="0x4">
+			<atom id="id-0066-00000075" kind="Param" role="Parameters" guid="{946ce839-3643-4d29-9849-6d879ae8f6e9}" relid="0x4">
 				<name>TimeDB</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
@@ -3129,14 +3129,14 @@
 					<value>20</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000076" kind="Param" role="Parameters" guid="{80DB26BB-9B76-4157-9338-DFBFF4D600E2}" relid="0x51">
+			<atom id="id-0066-00000076" kind="Param" role="Parameters" guid="{80db26bb-9b76-4157-9338-dfbff4d600e2}" relid="0x51">
 				<name>FiltResetCNT</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>380,366</value>
+							<value>348,257</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -3156,14 +3156,14 @@
 					<value>1</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000077" kind="Param" role="Parameters" guid="{54083A89-1962-489a-8CDB-25AD096EA2A8}" relid="0x2e">
+			<atom id="id-0066-00000077" kind="Param" role="Parameters" guid="{54083a89-1962-489a-8cdb-25ad096ea2a8}" relid="0x2e">
 				<name>Ch1</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
 					<regnode name="ParameterAspect" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>695,9</value>
+							<value>684,12</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -3183,342 +3183,342 @@
 					<value>1</value>
 				</attribute>
 			</atom>
-			<connection id="id-0068-0000000d" kind="ParameterConn" role="PC" guid="{0C20ED92-3BA6-496f-8C6B-E58302C13D50}" relid="0xd">
+			<connection id="id-0068-0000000d" kind="ParameterConn" role="PC" guid="{0c20ed92-3ba6-496f-8c6b-e58302c13d50}" relid="0xd">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000050"/>
 				<connpoint role="src" target="id-0066-00000077"/>
 			</connection>
-			<connection id="id-0068-0000000e" kind="ParameterConn" role="PC" guid="{6D6C34CE-523A-40c1-9F08-14AE88D1D119}" relid="0x25">
+			<connection id="id-0068-0000000e" kind="ParameterConn" role="PC" guid="{6d6c34ce-523a-40c1-9f08-14ae88d1d119}" relid="0x25">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000002e"/>
 				<connpoint role="src" target="id-0066-00000073"/>
 			</connection>
-			<connection id="id-0068-0000000f" kind="ParameterConn" role="PC" guid="{EAEBD62D-E76B-49b5-A455-66F41C4C8804}" relid="0x1c">
+			<connection id="id-0068-0000000f" kind="ParameterConn" role="PC" guid="{eaebd62d-e76b-49b5-a455-66f41c4c8804}" relid="0x1c">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000017"/>
 				<connpoint role="src" target="id-0066-0000006c"/>
 			</connection>
-			<connection id="id-0068-00000010" kind="ParameterConn" role="PC" guid="{B7535A3F-3183-45dc-9263-5D87879B1292}" relid="0x37">
+			<connection id="id-0068-00000010" kind="ParameterConn" role="PC" guid="{b7535a3f-3183-45dc-9263-5d87879b1292}" relid="0x37">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000003f"/>
 				<connpoint role="src" target="id-0066-00000076"/>
 			</connection>
-			<connection id="id-0068-00000011" kind="ParameterConn" role="PC" guid="{FB2DBE77-97F9-407d-BA6A-C130ED77B059}" relid="0x39">
+			<connection id="id-0068-00000011" kind="ParameterConn" role="PC" guid="{fb2dbe77-97f9-407d-ba6a-c130ed77b059}" relid="0x39">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000001f"/>
 				<connpoint role="src" target="id-0066-00000077"/>
 			</connection>
-			<connection id="id-0068-00000012" kind="ParameterConn" role="PC" guid="{D5FB5885-231B-4d12-B309-7E37A7F03E1E}" relid="0x16">
+			<connection id="id-0068-00000012" kind="ParameterConn" role="PC" guid="{d5fb5885-231b-4d12-b309-7e37a7f03e1e}" relid="0x16">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000051"/>
 				<connpoint role="src" target="id-0066-00000072"/>
 			</connection>
-			<connection id="id-0068-00000013" kind="ParameterConn" role="PC" guid="{E1CA47BC-A25B-455b-94B7-757FBD7F076F}" relid="0x55">
+			<connection id="id-0068-00000013" kind="ParameterConn" role="PC" guid="{e1ca47bc-a25b-455b-94b7-757fbd7f076f}" relid="0x55">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000002f"/>
 				<connpoint role="src" target="id-0066-0000006c"/>
 			</connection>
-			<connection id="id-0068-00000014" kind="ParameterConn" role="PC" guid="{8F4832AE-A550-4b5a-9141-0451E48F7ABA}" relid="0x49">
+			<connection id="id-0068-00000014" kind="ParameterConn" role="PC" guid="{8f4832ae-a550-4b5a-9141-0451e48f7aba}" relid="0x49">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000012"/>
 				<connpoint role="src" target="id-0066-0000006c"/>
 			</connection>
-			<connection id="id-0068-00000015" kind="ParameterConn" role="PC" guid="{F7D5FBA0-C516-48c8-AA1C-CB6D63383F7E}" relid="0x4a">
+			<connection id="id-0068-00000015" kind="ParameterConn" role="PC" guid="{f7d5fba0-c516-48c8-aa1c-cb6d63383f7e}" relid="0x4a">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000036"/>
 				<connpoint role="src" target="id-0066-00000072"/>
 			</connection>
-			<connection id="id-0068-00000016" kind="DataflowConn" role="DFC" guid="{DE4F2D14-BCF7-4fde-82C3-D5088D355E84}" relid="0x4b">
+			<connection id="id-0068-00000016" kind="DataflowConn" role="DFC" guid="{de4f2d14-bcf7-4fde-82c3-d5088d355e84}" relid="0x4b">
 				<name>DFC</name>
 				<connpoint role="dst" target="id-0066-0000003a"/>
 				<connpoint role="src" target="id-0066-00000067"/>
 			</connection>
-			<connection id="id-0068-00000017" kind="DataflowConn" role="DFC" guid="{5932325B-21A0-4991-9570-D289A592B8E6}" relid="0x4c">
+			<connection id="id-0068-00000017" kind="DataflowConn" role="DFC" guid="{5932325b-21a0-4991-9570-d289a592b8e6}" relid="0x4c">
 				<name>DFC</name>
 				<connpoint role="dst" target="id-0066-0000002d"/>
 				<connpoint role="src" target="id-0066-0000006a"/>
 			</connection>
-			<connection id="id-0068-00000018" kind="ParameterConn" role="PC" guid="{97EA160C-5823-400b-8EFE-85CBB8B9C1D5}" relid="0x4d">
+			<connection id="id-0068-00000018" kind="ParameterConn" role="PC" guid="{97ea160c-5823-400b-8efe-85cbb8b9c1d5}" relid="0x4d">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000001a"/>
 				<connpoint role="src" target="id-0066-0000006f"/>
 			</connection>
-			<connection id="id-0068-00000019" kind="ParameterConn" role="PC" guid="{BED1F97E-0A31-4604-9F1A-22BAB9C9B4CE}" relid="0x4e">
+			<connection id="id-0068-00000019" kind="ParameterConn" role="PC" guid="{bed1f97e-0a31-4604-9f1a-22bab9c9b4ce}" relid="0x4e">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000001b"/>
 				<connpoint role="src" target="id-0066-00000074"/>
 			</connection>
-			<connection id="id-0068-0000001a" kind="ParameterConn" role="PC" guid="{52FCFC17-0B9F-4cdd-818C-5D396EDFCB77}" relid="0x53">
+			<connection id="id-0068-0000001a" kind="ParameterConn" role="PC" guid="{52fcfc17-0b9f-4cdd-818c-5d396edfcb77}" relid="0x53">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000003c"/>
 				<connpoint role="src" target="id-0066-00000072"/>
 			</connection>
-			<connection id="id-0068-0000001b" kind="DataflowConn" role="DFC" guid="{89FD6565-58CF-482f-8336-B6C9798722D0}" relid="0x54">
+			<connection id="id-0068-0000001b" kind="DataflowConn" role="DFC" guid="{89fd6565-58cf-482f-8336-b6c9798722d0}" relid="0x54">
 				<name>DFC</name>
 				<connpoint role="src" target="id-0066-00000016"/>
 				<connpoint role="dst" target="id-0066-00000065"/>
 			</connection>
-			<connection id="id-0068-0000001c" kind="ParameterConn" role="PC" guid="{43F0B517-DB1A-4ba3-BD62-97A19061C18C}" relid="0x47">
+			<connection id="id-0068-0000001c" kind="ParameterConn" role="PC" guid="{43f0b517-db1a-4ba3-bd62-97a19061c18c}" relid="0x47">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000039"/>
 				<connpoint role="src" target="id-0066-00000077"/>
 			</connection>
-			<connection id="id-0068-0000001d" kind="ParameterConn" role="PC" guid="{3D918A04-E44B-435f-8F6E-F27B595AFB00}" relid="0x48">
+			<connection id="id-0068-0000001d" kind="ParameterConn" role="PC" guid="{3d918a04-e44b-435f-8f6e-f27b595afb00}" relid="0x48">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000035"/>
 				<connpoint role="src" target="id-0066-0000006c"/>
 			</connection>
-			<connection id="id-0068-0000001e" kind="ParameterConn" role="PC" guid="{9EACF5E6-7405-48f5-9689-DA0ED0354955}" relid="0x57">
+			<connection id="id-0068-0000001e" kind="ParameterConn" role="PC" guid="{9eacf5e6-7405-48f5-9689-da0ed0354955}" relid="0x57">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000003d"/>
 				<connpoint role="src" target="id-0066-00000071"/>
 			</connection>
-			<connection id="id-0068-0000001f" kind="ParameterConn" role="PC" guid="{9F66EC87-48E8-4658-A43B-B0B695C99699}" relid="0x17">
+			<connection id="id-0068-0000001f" kind="ParameterConn" role="PC" guid="{9f66ec87-48e8-4658-a43b-b0b695c99699}" relid="0x17">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000005"/>
 				<connpoint role="src" target="id-0066-00000076"/>
 			</connection>
-			<connection id="id-0068-00000020" kind="ParameterConn" role="PC" guid="{7AEF3948-D276-4b24-A6CB-F61AF64C6C7E}" relid="0x59">
+			<connection id="id-0068-00000020" kind="ParameterConn" role="PC" guid="{7aef3948-d276-4b24-a6cb-f61af64c6c7e}" relid="0x59">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000010"/>
 				<connpoint role="src" target="id-0066-0000006c"/>
 			</connection>
-			<connection id="id-0068-00000021" kind="DataflowConn" role="DFC" guid="{4C1AC657-5EB4-4056-88D7-0BCCE08D20F9}" relid="0x5a">
+			<connection id="id-0068-00000021" kind="DataflowConn" role="DFC" guid="{4c1ac657-5eb4-4056-88d7-0bcce08d20f9}" relid="0x5a">
 				<name>DFC</name>
 				<connpoint role="src" target="id-0066-00000016"/>
 				<connpoint role="dst" target="id-0066-00000047"/>
 			</connection>
-			<connection id="id-0068-00000022" kind="ParameterConn" role="PC" guid="{4CED55AE-A9EC-4811-8A35-4C9F02C5C149}" relid="0x5b">
+			<connection id="id-0068-00000022" kind="ParameterConn" role="PC" guid="{4ced55ae-a9ec-4811-8a35-4c9f02c5c149}" relid="0x5b">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000000f"/>
 				<connpoint role="src" target="id-0066-00000070"/>
 			</connection>
-			<connection id="id-0068-00000023" kind="ParameterConn" role="PC" guid="{C17B9977-769F-45fc-9A3E-8183FE83FD2C}" relid="0x5c">
+			<connection id="id-0068-00000023" kind="ParameterConn" role="PC" guid="{c17b9977-769f-45fc-9a3e-8183fe83fd2c}" relid="0x5c">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000004e"/>
 				<connpoint role="src" target="id-0066-0000006f"/>
 			</connection>
-			<connection id="id-0068-00000024" kind="DataflowConn" role="DFC" guid="{18C7E30A-81BA-46c7-8B9C-ADDC7D32E120}" relid="0x5d">
+			<connection id="id-0068-00000024" kind="DataflowConn" role="DFC" guid="{18c7e30a-81ba-46c7-8b9c-addc7d32e120}" relid="0x5d">
 				<name>DFC</name>
 				<connpoint role="dst" target="id-0066-0000001e"/>
 				<connpoint role="src" target="id-0066-00000041"/>
 			</connection>
-			<connection id="id-0068-00000025" kind="ParameterConn" role="PC" guid="{AD1A115A-365F-4db0-9DC9-0C423F3D9A06}" relid="0x5e">
+			<connection id="id-0068-00000025" kind="ParameterConn" role="PC" guid="{ad1a115a-365f-4db0-9dc9-0c423f3d9a06}" relid="0x5e">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000008"/>
 				<connpoint role="src" target="id-0066-00000071"/>
 			</connection>
-			<connection id="id-0068-00000026" kind="DataflowConn" role="DFC" guid="{F153D342-57E5-49e8-A706-3DE20E6795DD}" relid="0x5f">
+			<connection id="id-0068-00000026" kind="DataflowConn" role="DFC" guid="{f153d342-57e5-49e8-a706-3de20e6795dd}" relid="0x5f">
 				<name>DFC</name>
 				<connpoint role="src" target="id-0066-00000029"/>
 				<connpoint role="dst" target="id-0066-00000037"/>
 			</connection>
-			<connection id="id-0068-00000027" kind="ParameterConn" role="PC" guid="{3D39F19A-9A35-4fe0-942C-6F49BC6F82D1}" relid="0x1f">
+			<connection id="id-0068-00000027" kind="ParameterConn" role="PC" guid="{3d39f19a-9a35-4fe0-942c-6f49bc6f82d1}" relid="0x1f">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000009"/>
 				<connpoint role="src" target="id-0066-0000006f"/>
 			</connection>
-			<connection id="id-0068-00000028" kind="ParameterConn" role="PC" guid="{1C7098EA-3ED2-44e2-9EA2-07BD894F5CC5}" relid="0x61">
+			<connection id="id-0068-00000028" kind="ParameterConn" role="PC" guid="{1c7098ea-3ed2-44e2-9ea2-07bd894f5cc5}" relid="0x61">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000046"/>
 				<connpoint role="src" target="id-0066-0000006c"/>
 			</connection>
-			<connection id="id-0068-00000029" kind="DataflowConn" role="DFC" guid="{DBF40278-6C4C-49de-BB11-74D0C3C34DA6}" relid="0x62">
+			<connection id="id-0068-00000029" kind="DataflowConn" role="DFC" guid="{dbf40278-6c4c-49de-bb11-74d0c3c34da6}" relid="0x62">
 				<name>DFC</name>
 				<connpoint role="dst" target="id-0066-00000032"/>
 				<connpoint role="src" target="id-0066-00000067"/>
 			</connection>
-			<connection id="id-0068-0000002a" kind="ParameterConn" role="PC" guid="{E26AD25B-56F8-4243-9759-390D38A9C67F}" relid="0x63">
+			<connection id="id-0068-0000002a" kind="ParameterConn" role="PC" guid="{e26ad25b-56f8-4243-9759-390d38a9c67f}" relid="0x63">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000019"/>
 				<connpoint role="src" target="id-0066-0000006f"/>
 			</connection>
-			<connection id="id-0068-0000002b" kind="DataflowConn" role="DFC" guid="{D3172E83-5D4C-4f12-A22E-856EE7F38511}" relid="0x20">
+			<connection id="id-0068-0000002b" kind="DataflowConn" role="DFC" guid="{d3172e83-5d4c-4f12-a22e-856ee7f38511}" relid="0x20">
 				<name>DFC</name>
 				<connpoint role="dst" target="id-0066-00000002"/>
 				<connpoint role="src" target="id-0066-0000006a"/>
 			</connection>
-			<connection id="id-0068-0000002c" kind="DataflowConn" role="DFC" guid="{61076745-A739-4017-82AA-17F519760B86}" relid="0x21">
+			<connection id="id-0068-0000002c" kind="DataflowConn" role="DFC" guid="{61076745-a739-4017-82aa-17f519760b86}" relid="0x21">
 				<name>DFC</name>
 				<connpoint role="dst" target="id-0066-00000042"/>
 				<connpoint role="src" target="id-0066-00000067"/>
 			</connection>
-			<connection id="id-0068-0000002d" kind="ParameterConn" role="PC" guid="{76887D2C-DB72-4376-B895-4EFFD5F78EBF}" relid="0x3e">
+			<connection id="id-0068-0000002d" kind="ParameterConn" role="PC" guid="{76887d2c-db72-4376-b895-4effd5f78ebf}" relid="0x3e">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000025"/>
 				<connpoint role="src" target="id-0066-0000006f"/>
 			</connection>
-			<connection id="id-0068-0000002e" kind="ParameterConn" role="PC" guid="{666BD2E3-5DBB-4d6b-9909-B184468B6244}" relid="0x18">
+			<connection id="id-0068-0000002e" kind="ParameterConn" role="PC" guid="{666bd2e3-5dbb-4d6b-9909-b184468b6244}" relid="0x18">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000030"/>
 				<connpoint role="src" target="id-0066-0000006e"/>
 			</connection>
-			<connection id="id-0068-0000002f" kind="ParameterConn" role="PC" guid="{AB011608-CE17-4698-9F3D-626E00A72B17}" relid="0x19">
+			<connection id="id-0068-0000002f" kind="ParameterConn" role="PC" guid="{ab011608-ce17-4698-9f3d-626e00a72b17}" relid="0x19">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000049"/>
 				<connpoint role="src" target="id-0066-00000071"/>
 			</connection>
-			<connection id="id-0068-00000030" kind="ParameterConn" role="PC" guid="{6A1865D7-5F68-476c-957C-8FD8BC0DD124}" relid="0x14">
+			<connection id="id-0068-00000030" kind="ParameterConn" role="PC" guid="{6a1865d7-5f68-476c-957c-8fd8bc0dd124}" relid="0x14">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000004a"/>
 				<connpoint role="src" target="id-0066-00000070"/>
 			</connection>
-			<connection id="id-0068-00000031" kind="ParameterConn" role="PC" guid="{916D5900-0016-49c6-B308-61FB3D2E4EE0}" relid="0x31">
+			<connection id="id-0068-00000031" kind="ParameterConn" role="PC" guid="{916d5900-0016-49c6-b308-61fb3d2e4ee0}" relid="0x31">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000003b"/>
 				<connpoint role="src" target="id-0066-00000074"/>
 			</connection>
-			<connection id="id-0068-00000032" kind="ParameterConn" role="PC" guid="{2306BD19-CFFB-4cad-B956-95D359BD4EBB}" relid="0x32">
+			<connection id="id-0068-00000032" kind="ParameterConn" role="PC" guid="{2306bd19-cffb-4cad-b956-95d359bd4ebb}" relid="0x32">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000001d"/>
 				<connpoint role="src" target="id-0066-0000006b"/>
 			</connection>
-			<connection id="id-0068-00000033" kind="ParameterConn" role="PC" guid="{D833AC10-6DCB-4ea2-839B-39A5723A289B}" relid="0x33">
+			<connection id="id-0068-00000033" kind="ParameterConn" role="PC" guid="{d833ac10-6dcb-4ea2-839b-39a5723a289b}" relid="0x33">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000004b"/>
 				<connpoint role="src" target="id-0066-00000074"/>
 			</connection>
-			<connection id="id-0068-00000034" kind="ParameterConn" role="PC" guid="{CB01D17F-E44D-4dad-8FEB-9F9A9B8E925F}" relid="0xf">
+			<connection id="id-0068-00000034" kind="ParameterConn" role="PC" guid="{cb01d17f-e44d-4dad-8feb-9f9a9b8e925f}" relid="0xf">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000011"/>
 				<connpoint role="src" target="id-0066-0000006f"/>
 			</connection>
-			<connection id="id-0068-00000035" kind="ParameterConn" role="PC" guid="{29D700C1-0F4F-4b73-8F3D-CED720FE8B96}" relid="0x2b">
+			<connection id="id-0068-00000035" kind="ParameterConn" role="PC" guid="{29d700c1-0f4f-4b73-8f3d-ced720fe8b96}" relid="0x2b">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000001c"/>
 				<connpoint role="src" target="id-0066-00000075"/>
 			</connection>
-			<connection id="id-0068-00000036" kind="ParameterConn" role="PC" guid="{E7F8689C-F76D-43e6-860E-DF2AAB411A92}" relid="0x10">
+			<connection id="id-0068-00000036" kind="ParameterConn" role="PC" guid="{e7f8689c-f76d-43e6-860e-df2aab411a92}" relid="0x10">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000022"/>
 				<connpoint role="src" target="id-0066-00000077"/>
 			</connection>
-			<connection id="id-0068-00000037" kind="ParameterConn" role="PC" guid="{1BACA9E5-4B88-4d87-AA44-3C08C6E13157}" relid="0x40">
+			<connection id="id-0068-00000037" kind="ParameterConn" role="PC" guid="{1baca9e5-4b88-4d87-aa44-3c08c6e13157}" relid="0x40">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000000a"/>
 				<connpoint role="src" target="id-0066-00000074"/>
 			</connection>
-			<connection id="id-0068-00000038" kind="ParameterConn" role="PC" guid="{C9490467-CF20-4ab5-AF3B-A040D6B6B129}" relid="0x41">
+			<connection id="id-0068-00000038" kind="ParameterConn" role="PC" guid="{c9490467-cf20-4ab5-af3b-a040d6b6b129}" relid="0x41">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000020"/>
 				<connpoint role="src" target="id-0066-00000070"/>
 			</connection>
-			<connection id="id-0068-00000039" kind="DataflowConn" role="DFC" guid="{B95A328C-922F-4c06-8949-6CD9B49DD3ED}" relid="0x42">
+			<connection id="id-0068-00000039" kind="DataflowConn" role="DFC" guid="{b95a328c-922f-4c06-8949-6cd9b49dd3ed}" relid="0x42">
 				<name>DFC</name>
 				<connpoint role="dst" target="id-0066-00000013"/>
 				<connpoint role="src" target="id-0066-00000068"/>
 			</connection>
-			<connection id="id-0068-0000003a" kind="ParameterConn" role="PC" guid="{57F2CDEE-C046-435f-BFA0-B18C5D34D942}" relid="0x27">
+			<connection id="id-0068-0000003a" kind="ParameterConn" role="PC" guid="{57f2cdee-c046-435f-bfa0-b18c5d34d942}" relid="0x27">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000026"/>
 				<connpoint role="src" target="id-0066-00000071"/>
 			</connection>
-			<connection id="id-0068-0000003b" kind="DataflowConn" role="DFC" guid="{FB9AC6D0-924F-4aff-A441-5130BB25E559}" relid="0x28">
+			<connection id="id-0068-0000003b" kind="DataflowConn" role="DFC" guid="{fb9ac6d0-924f-4aff-a441-5130bb25e559}" relid="0x28">
 				<name>DFC</name>
 				<connpoint role="src" target="id-0066-0000004f"/>
 				<connpoint role="dst" target="id-0066-00000069"/>
 			</connection>
-			<connection id="id-0068-0000003c" kind="DataflowConn" role="DFC" guid="{0FA25AEC-63A0-4fb1-BA1F-5232DCE6C885}" relid="0x43">
+			<connection id="id-0068-0000003c" kind="DataflowConn" role="DFC" guid="{0fa25aec-63a0-4fb1-ba1f-5232dce6c885}" relid="0x43">
 				<name>DFC</name>
 				<connpoint role="dst" target="id-0066-0000002c"/>
 				<connpoint role="src" target="id-0066-0000006a"/>
 			</connection>
-			<connection id="id-0068-0000003d" kind="DataflowConn" role="DFC" guid="{3DDABD43-732A-46bb-B479-21C3D947AA6F}" relid="0x44">
+			<connection id="id-0068-0000003d" kind="DataflowConn" role="DFC" guid="{3ddabd43-732a-46bb-b479-21c3d947aa6f}" relid="0x44">
 				<name>DFC</name>
 				<connpoint role="src" target="id-0066-00000031"/>
 				<connpoint role="dst" target="id-0066-00000052"/>
 			</connection>
-			<connection id="id-0068-0000003e" kind="ParameterConn" role="PC" guid="{C23664A0-BA58-48ed-AEE6-9E6604A672FD}" relid="0x3c">
+			<connection id="id-0068-0000003e" kind="ParameterConn" role="PC" guid="{c23664a0-ba58-48ed-aee6-9e6604a672fd}" relid="0x3c">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000024"/>
 				<connpoint role="src" target="id-0066-00000073"/>
 			</connection>
-			<connection id="id-0068-0000003f" kind="ParameterConn" role="PC" guid="{972C946B-22F0-41bd-95CA-5236938AEAE1}" relid="0x2a">
+			<connection id="id-0068-0000003f" kind="ParameterConn" role="PC" guid="{972c946b-22f0-41bd-95ca-5236938aeae1}" relid="0x2a">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000045"/>
 				<connpoint role="src" target="id-0066-00000075"/>
 			</connection>
-			<connection id="id-0068-00000040" kind="ParameterConn" role="PC" guid="{D9662AE7-AD4A-41dc-A833-3744A19B13A4}" relid="0x22">
+			<connection id="id-0068-00000040" kind="ParameterConn" role="PC" guid="{d9662ae7-ad4a-41dc-a833-3744a19b13a4}" relid="0x22">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000000b"/>
 				<connpoint role="src" target="id-0066-00000075"/>
 			</connection>
-			<connection id="id-0068-00000041" kind="ParameterConn" role="PC" guid="{F37306D2-5693-4196-B3B4-E5157984EB35}" relid="0x3b">
+			<connection id="id-0068-00000041" kind="ParameterConn" role="PC" guid="{f37306d2-5693-4196-b3b4-e5157984eb35}" relid="0x3b">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000018"/>
 				<connpoint role="src" target="id-0066-00000074"/>
 			</connection>
-			<connection id="id-0068-00000042" kind="ParameterConn" role="PC" guid="{C3549111-0889-460b-AECE-9E3020A2C663}" relid="0x13">
+			<connection id="id-0068-00000042" kind="ParameterConn" role="PC" guid="{c3549111-0889-460b-aece-9e3020a2c663}" relid="0x13">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000021"/>
 				<connpoint role="src" target="id-0066-0000006d"/>
 			</connection>
-			<connection id="id-0068-00000043" kind="ParameterConn" role="PC" guid="{9E7DDF4D-1373-47e6-BF89-36824D29348E}" relid="0xe">
+			<connection id="id-0068-00000043" kind="ParameterConn" role="PC" guid="{9e7ddf4d-1373-47e6-bf89-36824d29348e}" relid="0xe">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000015"/>
 				<connpoint role="src" target="id-0066-0000006d"/>
 			</connection>
-			<connection id="id-0068-00000044" kind="ParameterConn" role="PC" guid="{5B672212-9F23-48d0-9C81-115D1426E7A2}" relid="0x12">
+			<connection id="id-0068-00000044" kind="ParameterConn" role="PC" guid="{5b672212-9f23-48d0-9c81-115d1426e7a2}" relid="0x12">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000004d"/>
 				<connpoint role="src" target="id-0066-00000077"/>
 			</connection>
-			<connection id="id-0068-00000045" kind="ParameterConn" role="PC" guid="{A5E5D61F-1698-47f6-8081-512E6E9952BF}" relid="0x11">
+			<connection id="id-0068-00000045" kind="ParameterConn" role="PC" guid="{a5e5d61f-1698-47f6-8081-512e6e9952bf}" relid="0x11">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000003e"/>
 				<connpoint role="src" target="id-0066-0000006f"/>
 			</connection>
-			<connection id="id-0068-00000046" kind="ParameterConn" role="PC" guid="{EAD47839-7748-4b17-AC6C-1DAF6C0CF2E8}" relid="0x23">
+			<connection id="id-0068-00000046" kind="ParameterConn" role="PC" guid="{ead47839-7748-4b17-ac6c-1daf6c0cf2e8}" relid="0x23">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000028"/>
 				<connpoint role="src" target="id-0066-0000006e"/>
 			</connection>
-			<connection id="id-0068-00000047" kind="DataflowConn" role="DFC" guid="{9769151F-B6FC-47e9-BA70-CF1795915A5E}" relid="0x24">
+			<connection id="id-0068-00000047" kind="DataflowConn" role="DFC" guid="{9769151f-b6fc-47e9-ba70-cf1795915a5e}" relid="0x24">
 				<name>DFC</name>
 				<connpoint role="dst" target="id-0066-0000000d"/>
 				<connpoint role="src" target="id-0066-0000004f"/>
 			</connection>
-			<connection id="id-0068-00000048" kind="ParameterConn" role="PC" guid="{0C6EC383-E004-40ca-A31C-9FA8AF3DA706}" relid="0xa">
+			<connection id="id-0068-00000048" kind="ParameterConn" role="PC" guid="{0c6ec383-e004-40ca-a31c-9fa8af3da706}" relid="0xa">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000000c"/>
 				<connpoint role="src" target="id-0066-00000077"/>
 			</connection>
-			<connection id="id-0068-00000049" kind="ParameterConn" role="PC" guid="{12A3D8C6-DBBB-464a-9A1A-893F81EB9F13}" relid="0x7">
+			<connection id="id-0068-00000049" kind="ParameterConn" role="PC" guid="{12a3d8c6-dbbb-464a-9a1a-893f81eb9f13}" relid="0x7">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000014"/>
 				<connpoint role="src" target="id-0066-0000006c"/>
 			</connection>
-			<connection id="id-0068-0000004a" kind="ParameterConn" role="PC" guid="{5B4A6691-E880-40ee-8C9A-FD12DB6AB205}" relid="0x8">
+			<connection id="id-0068-0000004a" kind="ParameterConn" role="PC" guid="{5b4a6691-e880-40ee-8c9a-fd12db6ab205}" relid="0x8">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000007"/>
 				<connpoint role="src" target="id-0066-0000006d"/>
 			</connection>
-			<connection id="id-0068-0000004b" kind="ParameterConn" role="PC" guid="{A1EFB604-AC90-4372-9B3D-38C1361279B2}" relid="0x5">
+			<connection id="id-0068-0000004b" kind="ParameterConn" role="PC" guid="{a1efb604-ac90-4372-9b3d-38c1361279b2}" relid="0x5">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000027"/>
 				<connpoint role="src" target="id-0066-00000074"/>
 			</connection>
-			<connection id="id-0068-0000004c" kind="ParameterConn" role="PC" guid="{90423968-0E47-4bd4-820C-941134BB1925}" relid="0x50">
+			<connection id="id-0068-0000004c" kind="ParameterConn" role="PC" guid="{90423968-0e47-4bd4-820c-941134bb1925}" relid="0x50">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000048"/>
 				<connpoint role="src" target="id-0066-0000006f"/>
 			</connection>
-			<connection id="id-0068-0000004d" kind="ParameterConn" role="PC" guid="{9575E645-453F-4428-9B94-AA8C0A805825}" relid="0x1e">
+			<connection id="id-0068-0000004d" kind="ParameterConn" role="PC" guid="{9575e645-453f-4428-9b94-aa8c0a805825}" relid="0x1e">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-0000004c"/>
 				<connpoint role="src" target="id-0066-00000074"/>
 			</connection>
-			<connection id="id-0068-0000004e" kind="DataflowConn" role="DFC" guid="{DF34A397-F802-4232-8D00-75E188F2F9FA}" relid="0x2d">
+			<connection id="id-0068-0000004e" kind="DataflowConn" role="DFC" guid="{df34a397-f802-4232-8d00-75e188f2f9fa}" relid="0x2d">
 				<name>DFC</name>
 				<connpoint role="src" target="id-0066-00000006"/>
 				<connpoint role="dst" target="id-0066-0000000e"/>
 			</connection>
-			<connection id="id-0068-0000004f" kind="DataflowConn" role="DFC" guid="{060FC56B-634C-4f17-A9D6-2635F6024B06}" relid="0x1a">
+			<connection id="id-0068-0000004f" kind="DataflowConn" role="DFC" guid="{060fc56b-634c-4f17-a9d6-2635f6024b06}" relid="0x1a">
 				<name>DFC</name>
 				<connpoint role="dst" target="id-0066-00000023"/>
 				<connpoint role="src" target="id-0066-00000066"/>
 			</connection>
-			<connection id="id-0068-00000050" kind="ParameterConn" role="PC" guid="{4B5D0D4A-C6BF-4161-9F3F-E5F6F00B833B}" relid="0x1b">
+			<connection id="id-0068-00000050" kind="ParameterConn" role="PC" guid="{4b5d0d4a-c6bf-4161-9f3f-e5f6f00b833b}" relid="0x1b">
 				<name>PC</name>
 				<connpoint role="dst" target="id-0066-00000038"/>
 				<connpoint role="src" target="id-0066-00000073"/>

@@ -14,6 +14,7 @@ extern Globals global_vars;
 /*static*/ const std::string ConnectionRep::ConnLineEnd_str = "ConnLineEnd";
 /*static*/ const std::string ConnectionRep::ConnLineStart_str = "ConnLineStart";
 /*static*/ const std::string ConnectionRep::ConnLineType_str = "ConnLineType";
+/*static*/ const std::string ConnectionRep::LabelFormatStr_str = "LabelFormatStr";
 /*static*/ const std::string ConnectionRep::SrcAttrLabel1_str = "SrcAttrLabel1";
 /*static*/ const std::string ConnectionRep::SrcAttrLabel2_str = "SrcAttrLabel2";
 /*static*/ const std::string ConnectionRep::DstAttrLabel1_str = "DstAttrLabel1";
@@ -92,6 +93,13 @@ ConnectionRep::~ConnectionRep()
 	{
 		m_sAttrConnLineType = m_ptr->getAttribute( ConnLineType_str)->getStringValue();
 		isconnlinetype_set = true;
+	}
+
+	bool islabelformat_set = false;
+	if( m_ptr->getAttribute( LabelFormatStr_str)->getStatus() >= BON::AS_Here)
+	{
+		m_sAttrLabelFormatStr = m_ptr->getAttribute( LabelFormatStr_str)->getStringValue();
+		islabelformat_set = true;
 	}
 
 	bool issrclabel1_set = false;
@@ -177,6 +185,12 @@ ConnectionRep::~ConnectionRep()
 		{
 			m_sAttrConnLineType = (*it)->getAttribute( ConnLineType_str)->getStringValue();
 			isconnlinetype_set = true;
+		}
+
+		if( !islabelformat_set && (*it)->getAttribute( LabelFormatStr_str)->getStatus() >= BON::AS_Here)
+		{
+			m_sAttrLabelFormatStr = (*it)->getAttribute( LabelFormatStr_str)->getStringValue();
+			islabelformat_set = true;
 		}
 
 		if( !issrclabel1_set && (*it)->getAttribute( SrcAttrLabel1_str)->getStatus() >= BON::AS_Here)
@@ -287,10 +301,14 @@ std::string ConnectionRep::dumpConnDetails()
 
 		if( !m_sAttrConnLineStart.empty())
 			mmm += indStr() + "<regnode name = \"srcStyle\" value =\"" + m_sAttrConnLineStart + "\"></regnode>\n";
-		
+
 		if( !m_sAttrConnLineType.empty())
 			mmm += indStr() + "<regnode name = \"lineType\" value =\"" + m_sAttrConnLineType + "\"></regnode>\n";
-	
+
+		// TODO? resolve also labelFormatStr macros???
+		if( !m_sAttrLabelFormatStr.empty())
+			mmm += indStr() + "<regnode name = \"labelFormatStr\" value =\"" + m_sAttrLabelFormatStr + "\"></regnode>\n";
+
 		std::string * which[] = 
 		{
 			&m_sAttrSrcAttrLabel1,

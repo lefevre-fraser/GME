@@ -13,6 +13,7 @@ public: // constant strings
 	static const std::string ConnLineEnd_str;//"Icon"
 	static const std::string ConnLineStart_str;//"PortIcon"
 	static const std::string ConnLineType_str;//"Decorator"
+	static const std::string LabelFormatStr_str;//"LabelFormatStr"
 	static const std::string SrcAttrLabel1_str;//"SrcAttrLabel1"
 	static const std::string SrcAttrLabel2_str;//"SrcAttrLabel2"
 	static const std::string DstAttrLabel1_str;//"DstAttrLabel1"
@@ -43,6 +44,7 @@ protected:
 	std::string m_sAttrConnLineEnd;
 	std::string m_sAttrConnLineStart;
 	std::string m_sAttrConnLineType;
+	std::string m_sAttrLabelFormatStr;
 	std::string m_sAttrSrcAttrLabel1;
 	std::string m_sAttrSrcAttrLabel2;
 	std::string m_sAttrDstAttrLabel1;

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{0E78410B-43D4-4247-813E-D34FDDED68FC}" cdate="Mon Oct 09 11:04:22 2006" mdate="Mon Oct 09 11:04:22 2006" version="" metaguid="{D300EA57-7F64-4B0E-AE50-878BE38527DC}" metaversion="" metaname="MetaGME">
+<project guid="{0BCC7AD4-28FD-49C5-AB44-A1F1BFAAF756}" cdate="Fri Dec 12 15:08:06 2008" mdate="Fri Dec 12 15:08:06 2008" version="" metaguid="{0ACE7AE2-4D5D-49B3-A57B-3EF9B5A150F2}" metaversion="" metaname="MetaGME">
 	<name>HFSM</name>
 	<comment></comment>
 	<author></author>
-	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x3" kind="RootFolder" guid="{2F38E935-1609-480d-857F-5B6B1FD27DB2}">
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x3" kind="RootFolder" guid="{2f38e935-1609-480d-857f-5b6b1fd27db2}">
 		<name>HFSM</name>
 		<regnode name="AspectRegistry" isopaque="yes">
 			<value></value>
@@ -17,6 +17,15 @@
 						<value></value>
 						<regnode name="InputSequence" isopaque="yes">
 							<value>1010</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<regnode name="Sequences" status="undefined">
+					<value></value>
+					<regnode name="MetaRef" status="undefined">
+						<value></value>
+						<regnode name="InputSequence" isopaque="yes">
+							<value>1019</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -33,6 +42,9 @@
 			<regnode name="AspectOrder" isopaque="yes">
 				<value>valid</value>
 				<regnode name="Sequence" isopaque="yes">
+					<value>2</value>
+				</regnode>
+				<regnode name="Sequences" isopaque="yes">
 					<value>2</value>
 				</regnode>
 				<regnode name="StateMachine" isopaque="yes">
@@ -131,6 +143,9 @@
 							<regnode name="Sequence" isopaque="yes">
 								<value>1011</value>
 							</regnode>
+							<regnode name="Sequences" isopaque="yes">
+								<value>1020</value>
+							</regnode>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -139,6 +154,9 @@
 					<regnode name="InputSequence:Events" isopaque="yes">
 						<value></value>
 						<regnode name="Sequence" isopaque="yes">
+							<value>yes</value>
+						</regnode>
+						<regnode name="Sequences" isopaque="yes">
 							<value>yes</value>
 						</regnode>
 					</regnode>
@@ -161,12 +179,42 @@
 							<regnode name="Sequence" isopaque="yes">
 								<value>1012</value>
 							</regnode>
+							<regnode name="Sequences" isopaque="yes">
+								<value>1021</value>
+							</regnode>
 						</regnode>
 					</regnode>
 				</regnode>
 				<regnode name="PrimaryAspects" isopaque="yes">
 					<value></value>
 					<regnode name="InputSequence:Sequence" isopaque="yes">
+						<value></value>
+						<regnode name="Sequence" isopaque="yes">
+							<value>yes</value>
+						</regnode>
+						<regnode name="Sequences" isopaque="yes">
+							<value>yes</value>
+						</regnode>
+					</regnode>
+				</regnode>
+			</regnode>
+			<regnode name="SequenceConn-7-Connection" status="undefined">
+				<value></value>
+				<regnode name="MetaRef" isopaque="yes">
+					<value>1021</value>
+					<regnode name="InputSequence" status="undefined">
+						<value></value>
+						<regnode name="SequenceConn" isopaque="yes">
+							<value>1022</value>
+							<regnode name="Sequence" isopaque="yes">
+								<value>1023</value>
+							</regnode>
+						</regnode>
+					</regnode>
+				</regnode>
+				<regnode name="PrimaryAspects" status="undefined">
+					<value></value>
+					<regnode name="InputSequence:SequenceConn" status="undefined">
 						<value></value>
 						<regnode name="Sequence" isopaque="yes">
 							<value>yes</value>
@@ -193,9 +241,9 @@
 				</regnode>
 			</regnode>
 		</regnode>
-		<model id="id-0065-00000001" kind="ParadigmSheet" guid="{A1D7062B-6FD2-4b76-8572-781CC8F825B1}" relid="0x1" childrelidcntr="0x43">
+		<model id="id-0065-00000001" kind="ParadigmSheet" guid="{a1d7062b-6fd2-4b76-8572-781cc8f825b1}" relid="0x1" childrelidcntr="0x43">
 			<name>HFSM</name>
-			<atom id="id-0066-00000001" kind="BooleanAttribute" role="BooleanAttribute" guid="{78643195-DE2A-4787-9824-380DA0D1C4DD}" relid="0x36">
+			<atom id="id-0066-00000001" kind="BooleanAttribute" role="BooleanAttribute" guid="{78643195-de2a-4787-9824-380da0d1c4dd}" relid="0x36">
 				<name>StartState</name>
 				<regnode name="MetaRef" isopaque="yes">
 					<value>1041</value>
@@ -205,6 +253,12 @@
 				</regnode>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>626,133</value>
+						</regnode>
+					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -228,10 +282,16 @@
 					<value>Start State?</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000002" kind="Constraint" role="Constraint" guid="{B3D52076-036A-4b39-A92C-454F5D1ED932}" relid="0x40">
+			<atom id="id-0066-00000002" kind="Constraint" role="Constraint" guid="{b3d52076-036a-4b39-a92c-454f5d1ed932}" relid="0x40">
 				<name>SingleStartState</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>482,251</value>
+						</regnode>
+					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -306,17 +366,23 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value>false</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000003" kind="FieldAttribute" role="FieldAttribute" guid="{5D2FDBB3-C9D4-481b-97A9-2453047764AA}" relid="0x25">
+			<atom id="id-0066-00000003" kind="FieldAttribute" role="FieldAttribute" guid="{5d2fdbb3-c9d4-481b-97a9-2453047764aa}" relid="0x25">
 				<name>Event</name>
 				<regnode name="MetaRef" isopaque="yes">
 					<value>1017</value>
 				</regnode>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>97,280</value>
+						</regnode>
+					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>106,286</value>
+							<value>97,280</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -345,7 +411,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value>Event:</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000004" kind="Connection" role="Connection" guid="{333D585E-A870-4ab2-B518-C380E89676CF}" relid="0x12">
+			<atom id="id-0066-00000004" kind="Connection" role="Connection" guid="{333d585e-a870-4ab2-b518-c380e89676cf}" relid="0x12">
 				<name>Transition</name>
 				<regnode name="MetaRef" isopaque="yes">
 					<value>1009</value>
@@ -367,6 +433,12 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				</regnode>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>102,147</value>
+						</regnode>
+					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -376,7 +448,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>106,145</value>
+							<value>102,147</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -388,7 +460,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>106,145</value>
+							<value>102,147</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -440,6 +512,9 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="LabelFormatStr" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="NamePosition" status="meta">
 					<value>4</value>
 				</attribute>
@@ -450,10 +525,16 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value></value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000005" kind="Connector" role="Connector" guid="{EDDB0F0A-F319-4ec1-9990-513EB100A91C}" relid="0x7">
+			<atom id="id-0066-00000005" kind="Connector" role="Connector" guid="{eddb0f0a-f319-4ec1-9990-513eb100a91c}" relid="0x7">
 				<name>Connector</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>298,172</value>
+						</regnode>
+					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -474,7 +555,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value>Mga.Decorator.MetaDecorator</value>
 				</regnode>
 			</atom>
-			<atom id="id-0066-00000006" kind="Model" role="Model" guid="{F2E81C08-D96E-45d5-ABF4-D009FDE85AD1}" relid="0x1">
+			<atom id="id-0066-00000006" kind="Model" role="Model" guid="{f2e81c08-d96e-45d5-abf4-d009fde85ad1}" relid="0x1">
 				<name>State</name>
 				<regnode name="KindAspects" isopaque="yes">
 					<value></value>
@@ -499,6 +580,12 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				</regnode>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>446,133</value>
+						</regnode>
+					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -508,7 +595,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>449,138</value>
+							<value>446,140</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -520,7 +607,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>449,138</value>
+							<value>446,140</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -533,6 +620,9 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 						</regnode>
 					</regnode>
 				</regnode>
+				<attribute kind="AutoRouterPref" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="Decorator" status="meta">
 					<value></value>
 				</attribute>
@@ -541,6 +631,15 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				</attribute>
 				<attribute kind="GeneralPreferences">
 					<value>color=0x0080C0</value>
+				</attribute>
+				<attribute kind="GradientFillColor" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="GradientFillDirection" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="HelpURL" status="meta">
+					<value></value>
 				</attribute>
 				<attribute kind="Icon">
 					<value>defaultstate.bmp</value>
@@ -554,11 +653,20 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsGradientFillEnabled" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsRoundRectangleEnabled" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="IsShadowCastEnabled" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsTypeInfoShown" status="meta">
 					<value>true</value>
@@ -575,11 +683,23 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="PortIcon" status="meta">
 					<value></value>
 				</attribute>
+				<attribute kind="RoundRectangleRadius" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowColor" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowDirection" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowThickness" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
 				</attribute>
 			</atom>
-			<connection id="id-0068-00000001" kind="ConnectorToDestination" role="ConnectorToDestination" guid="{443DFD7F-D182-499e-8BE7-DC2D0F738FAD}" relid="0x9">
+			<connection id="id-0068-00000001" kind="ConnectorToDestination" role="ConnectorToDestination" guid="{443dfd7f-d182-499e-8be7-dc2d0f738fad}" relid="0x9">
 				<name>ConnectorToDestination</name>
 				<regnode name="dstStyle" isopaque="yes">
 					<value>arrow</value>
@@ -593,7 +713,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="src" target="id-0066-00000005"/>
 				<connpoint role="dst" target="id-0066-00000006"/>
 			</connection>
-			<connection id="id-0068-00000002" kind="SourceToConnector" role="SourceToConnector" guid="{3F4DC6E1-D6D1-4106-B402-D3124397C47F}" relid="0x8">
+			<connection id="id-0068-00000002" kind="SourceToConnector" role="SourceToConnector" guid="{3f4dc6e1-d6d1-4106-b402-d3124397c47f}" relid="0x8">
 				<name>SourceToConnector</name>
 				<attribute kind="Cardinality">
 					<value></value>
@@ -604,12 +724,12 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="dst" target="id-0066-00000005"/>
 				<connpoint role="src" target="id-0066-00000006"/>
 			</connection>
-			<connection id="id-0068-00000003" kind="HasAspect" role="HasAspect" guid="{BB0276A3-AB9B-46b2-A5A6-BB96FFF19029}" relid="0x4">
+			<connection id="id-0068-00000003" kind="HasAspect" role="HasAspect" guid="{bb0276a3-ab9b-46b2-a5a6-bb96fff19029}" relid="0x4">
 				<name>HasAspect</name>
 				<connpoint role="dst" target="id-0066-00000006"/>
 				<connpoint role="src" target="id-0069-00000001"/>
 			</connection>
-			<connection id="id-0068-00000004" kind="Containment" role="Containment" guid="{F345FAE7-CBAB-4222-89C6-95EBB5F641CE}" relid="0x2">
+			<connection id="id-0068-00000004" kind="Containment" role="Containment" guid="{f345fae7-cbab-4222-89c6-95ebb5f641ce}" relid="0x2">
 				<name>Containment</name>
 				<attribute kind="Cardinality">
 					<value></value>
@@ -620,20 +740,20 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="Rolename" status="meta">
 					<value></value>
 				</attribute>
-				<connpoint role="src" target="id-0066-00000006"/>
 				<connpoint role="dst" target="id-0066-00000006"/>
+				<connpoint role="src" target="id-0066-00000006"/>
 			</connection>
-			<connection id="id-0068-00000005" kind="AssociationClass" role="AssociationClass" guid="{997BFE54-9591-49e8-8B11-83A0D1F0E2AE}" relid="0x18">
+			<connection id="id-0068-00000005" kind="AssociationClass" role="AssociationClass" guid="{997bfe54-9591-49e8-8b11-83a0d1f0e2ae}" relid="0x18">
 				<name>AssociationClass</name>
 				<connpoint role="dst" target="id-0066-00000004"/>
 				<connpoint role="src" target="id-0066-00000005"/>
 			</connection>
-			<connection id="id-0068-00000006" kind="HasAttribute" role="HasAttribute" guid="{0796F665-0F7A-41c4-978B-C198A5672DD3}" relid="0x28">
+			<connection id="id-0068-00000006" kind="HasAttribute" role="HasAttribute" guid="{0796f665-0f7a-41c4-978b-c198a5672dd3}" relid="0x28">
 				<name>HasAttribute</name>
 				<connpoint role="src" target="id-0066-00000003"/>
 				<connpoint role="dst" target="id-0066-00000004"/>
 			</connection>
-			<connection id="id-0068-00000007" kind="Containment" role="Containment" guid="{80B92127-7446-457f-9AD5-37340EB88C22}" relid="0x34">
+			<connection id="id-0068-00000007" kind="Containment" role="Containment" guid="{80b92127-7446-457f-9ad5-37340eb88c22}" relid="0x34">
 				<name>Containment</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>Ss</value>
@@ -650,12 +770,12 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="src" target="id-0066-00000004"/>
 				<connpoint role="dst" target="id-0066-00000006"/>
 			</connection>
-			<connection id="id-0068-00000008" kind="HasAttribute" role="HasAttribute" guid="{8648967E-D697-43b9-90AD-1536EB3C9DF2}" relid="0x38">
+			<connection id="id-0068-00000008" kind="HasAttribute" role="HasAttribute" guid="{8648967e-d697-43b9-90ad-1536eb3c9df2}" relid="0x38">
 				<name>HasAttribute</name>
 				<connpoint role="src" target="id-0066-00000001"/>
 				<connpoint role="dst" target="id-0066-00000006"/>
 			</connection>
-			<connection id="id-0068-00000009" kind="HasConstraint" role="HasConstraint" guid="{85C01312-BA1A-47f9-9C08-D32F78A44155}" relid="0x41">
+			<connection id="id-0068-00000009" kind="HasConstraint" role="HasConstraint" guid="{85c01312-ba1a-47f9-9c08-d32f78a44155}" relid="0x41">
 				<name>HasConstraint</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>s</value>
@@ -663,7 +783,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="src" target="id-0066-00000002"/>
 				<connpoint role="dst" target="id-0066-00000006"/>
 			</connection>
-			<set id="id-0069-00000001" kind="Aspect" role="Aspect" guid="{69D755F3-CE85-40e4-8888-72125341EFC4}" relid="0x0" members="id-0066-00000004 id-0066-00000006">
+			<set id="id-0069-00000001" kind="Aspect" role="Aspect" guid="{69d755f3-ce85-40e4-8888-72125341efc4}" relid="0x0" members="id-0066-00000004 id-0066-00000006">
 				<name>StateMachine</name>
 				<regnode name="MetaRef" isopaque="yes">
 					<value></value>
@@ -673,10 +793,16 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				</regnode>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>453,21</value>
+						</regnode>
+					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>449,27</value>
+							<value>453,21</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -685,15 +811,21 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				</attribute>
 			</set>
 		</model>
-		<model id="id-0065-00000002" kind="ParadigmSheet" guid="{E25352D6-D8FB-4053-BEED-5324D0C20258}" relid="0x3" childrelidcntr="0x1e">
+		<model id="id-0065-00000002" kind="ParadigmSheet" guid="{e25352d6-d8fb-4053-beed-5324d0c20258}" relid="0x3" childrelidcntr="0x1e">
 			<name>InputSequence</name>
-			<atom id="id-0066-00000007" kind="FieldAttribute" role="FieldAttribute" guid="{203BBE5C-E7FC-401a-8FB3-99ACC6C2CA6B}" relid="0x1d">
+			<atom id="id-0066-00000007" kind="FieldAttribute" role="FieldAttribute" guid="{203bbe5c-e7fc-401a-8fb3-99acc6c2ca6b}" relid="0x1d">
 				<name>Delay</name>
 				<regnode name="MetaRef" isopaque="yes">
 					<value>1040</value>
 				</regnode>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>475,259</value>
+						</regnode>
+					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -726,10 +858,16 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value>Secs after last event:</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000008" kind="Constraint" role="Constraint" guid="{E3E93C11-D382-41b5-A537-EF355109B5F0}" relid="0x9">
+			<atom id="id-0066-00000008" kind="Constraint" role="Constraint" guid="{e3e93c11-d382-41b5-a537-ef355109b5f0}" relid="0x9">
 				<name>SingleConnection</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>307,419</value>
+						</regnode>
+					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -801,7 +939,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value>false</value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000009" kind="Connection" role="Connection" guid="{0AD553E0-231C-4fb3-B185-4AD5D322DC3A}" relid="0x7">
+			<atom id="id-0066-00000009" kind="Connection" role="Connection" guid="{0ad553e0-231c-4fb3-b185-4ad5d322dc3a}" relid="0x7">
 				<name>Sequence</name>
 				<regnode name="MetaRef" isopaque="yes">
 					<value>1021</value>
@@ -817,6 +955,12 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				</regnode>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>67,259</value>
+						</regnode>
+					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -884,6 +1028,9 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="LabelFormatStr" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="NamePosition" status="meta">
 					<value>4</value>
 				</attribute>
@@ -894,10 +1041,16 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value></value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-0000000a" kind="Connector" role="Connector" guid="{6462454E-69E7-4e21-BCEB-4E7E879ADA5E}" relid="0x4">
+			<atom id="id-0066-0000000a" kind="Connector" role="Connector" guid="{6462454e-69e7-4e21-bceb-4e7e879ada5e}" relid="0x4">
 				<name>Connector</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>235,403</value>
+						</regnode>
+					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -915,13 +1068,19 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value>nwES</value>
 				</regnode>
 			</atom>
-			<atom id="id-0066-0000000b" kind="Model" role="Model" guid="{8C57C8B5-76D5-482f-B2C1-FE3CE0655CB7}" relid="0x1">
+			<atom id="id-0066-0000000b" kind="Model" role="Model" guid="{8c57c8b5-76d5-482f-b2c1-fe3ce0655cb7}" relid="0x1">
 				<name>InputSequence</name>
 				<regnode name="MetaRef" isopaque="yes">
 					<value>1026</value>
 				</regnode>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>274,105</value>
+						</regnode>
+					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -947,6 +1106,9 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 						</regnode>
 					</regnode>
 				</regnode>
+				<attribute kind="AutoRouterPref" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="Decorator" status="meta">
 					<value></value>
 				</attribute>
@@ -954,6 +1116,15 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value></value>
 				</attribute>
 				<attribute kind="GeneralPreferences" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="GradientFillColor" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="GradientFillDirection" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="HelpURL" status="meta">
 					<value></value>
 				</attribute>
 				<attribute kind="Icon" status="meta">
@@ -968,11 +1139,20 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsGradientFillEnabled" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsRoundRectangleEnabled" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="IsShadowCastEnabled" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsTypeInfoShown" status="meta">
 					<value>true</value>
@@ -989,11 +1169,23 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="PortIcon" status="meta">
 					<value></value>
 				</attribute>
+				<attribute kind="RoundRectangleRadius" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowColor" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowDirection" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowThickness" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-0000000c" kind="Atom" role="Atom" guid="{3BBEDB21-B135-4229-855A-B4BCE73F2961}" relid="0x15">
+			<atom id="id-0066-0000000c" kind="Atom" role="Atom" guid="{3bbedb21-b135-4229-855a-b4bce73f2961}" relid="0x15">
 				<name>Events</name>
 				<regnode name="MetaRef" isopaque="yes">
 					<value>1020</value>
@@ -1033,28 +1225,34 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				</regnode>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>283,259</value>
+						</regnode>
+					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>281,264</value>
+							<value>283,259</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>281,264</value>
+							<value>283,259</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>281,264</value>
+							<value>283,259</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>281,264</value>
+							<value>283,259</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1097,6 +1295,9 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 						</regnode>
 					</regnode>
 				</regnode>
+				<attribute kind="AutoRouterPref" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="Decorator" status="meta">
 					<value></value>
 				</attribute>
@@ -1104,6 +1305,15 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value></value>
 				</attribute>
 				<attribute kind="GeneralPreferences" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="GradientFillColor" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="GradientFillDirection" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="HelpURL" status="meta">
 					<value></value>
 				</attribute>
 				<attribute kind="Icon">
@@ -1118,11 +1328,20 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsGradientFillEnabled" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsRoundRectangleEnabled" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="IsShadowCastEnabled" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsTypeShown" status="meta">
 					<value>false</value>
@@ -1136,11 +1355,23 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="PortIcon" status="meta">
 					<value></value>
 				</attribute>
+				<attribute kind="RoundRectangleRadius" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowColor" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowDirection" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowThickness" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
 				</attribute>
 			</atom>
-			<connection id="id-0068-0000000a" kind="HasAttribute" role="HasAttribute" guid="{E56651C6-BF92-4cf9-9E0F-A6DB9CD9A3AD}" relid="0x1e">
+			<connection id="id-0068-0000000a" kind="HasAttribute" role="HasAttribute" guid="{e56651c6-bf92-4cf9-9e0f-a6db9cd9a3ad}" relid="0x1e">
 				<name>HasAttribute</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>We</value>
@@ -1148,7 +1379,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="src" target="id-0066-00000007"/>
 				<connpoint role="dst" target="id-0066-0000000c"/>
 			</connection>
-			<connection id="id-0068-0000000b" kind="HasConstraint" role="HasConstraint" guid="{28BBBCA1-E60B-4068-89CB-7499D153A32B}" relid="0x1c">
+			<connection id="id-0068-0000000b" kind="HasConstraint" role="HasConstraint" guid="{28bbbca1-e60b-4068-89cb-7499d153a32b}" relid="0x1c">
 				<name>HasConstraint</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>Ns</value>
@@ -1156,7 +1387,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="src" target="id-0066-00000008"/>
 				<connpoint role="dst" target="id-0066-0000000c"/>
 			</connection>
-			<connection id="id-0068-0000000c" kind="ConnectorToDestination" role="ConnectorToDestination" guid="{74F3AC6E-92B9-484f-9159-045A3AEF7944}" relid="0x1b">
+			<connection id="id-0068-0000000c" kind="ConnectorToDestination" role="ConnectorToDestination" guid="{74f3ac6e-92b9-484f-9159-045a3aef7944}" relid="0x1b">
 				<name>ConnectorToDestination</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>s</value>
@@ -1173,7 +1404,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="src" target="id-0066-0000000a"/>
 				<connpoint role="dst" target="id-0066-0000000c"/>
 			</connection>
-			<connection id="id-0068-0000000d" kind="SourceToConnector" role="SourceToConnector" guid="{C90A505F-3183-4285-BC7D-38A3D074DBEC}" relid="0x1a">
+			<connection id="id-0068-0000000d" kind="SourceToConnector" role="SourceToConnector" guid="{c90a505f-3183-4285-bc7d-38a3d074dbec}" relid="0x1a">
 				<name>SourceToConnector</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>W</value>
@@ -1187,7 +1418,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="dst" target="id-0066-0000000a"/>
 				<connpoint role="src" target="id-0066-0000000c"/>
 			</connection>
-			<connection id="id-0068-0000000e" kind="Containment" role="Containment" guid="{33ED9CA9-F235-42f7-9983-B6D3C7241154}" relid="0x18">
+			<connection id="id-0068-0000000e" kind="Containment" role="Containment" guid="{33ed9ca9-f235-42f7-9983-b6d3c7241154}" relid="0x18">
 				<name>Containment</name>
 				<attribute kind="Cardinality" status="meta">
 					<value>0..*</value>
@@ -1201,7 +1432,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="dst" target="id-0066-0000000b"/>
 				<connpoint role="src" target="id-0066-0000000c"/>
 			</connection>
-			<connection id="id-0068-0000000f" kind="Containment" role="Containment" guid="{F94F88E1-769D-49d7-8EBB-99E724C85F5F}" relid="0x11">
+			<connection id="id-0068-0000000f" kind="Containment" role="Containment" guid="{f94f88e1-769d-49d7-8ebb-99e724c85f5f}" relid="0x11">
 				<name>Containment</name>
 				<attribute kind="Cardinality" status="meta">
 					<value>0..*</value>
@@ -1215,7 +1446,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="src" target="id-0066-00000009"/>
 				<connpoint role="dst" target="id-0066-0000000b"/>
 			</connection>
-			<connection id="id-0068-00000010" kind="HasAspect" role="HasAspect" guid="{138EBC24-441B-410a-9D8A-3F920B72CA91}" relid="0xb">
+			<connection id="id-0068-00000010" kind="HasAspect" role="HasAspect" guid="{138ebc24-441b-410a-9d8a-3f920b72ca91}" relid="0xb">
 				<name>HasAspect</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>We</value>
@@ -1223,13 +1454,13 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<connpoint role="dst" target="id-0066-0000000b"/>
 				<connpoint role="src" target="id-0069-00000002"/>
 			</connection>
-			<connection id="id-0068-00000011" kind="AssociationClass" role="AssociationClass" guid="{110D0807-3B7A-49f7-AD01-12D83AA3B401}" relid="0x8">
+			<connection id="id-0068-00000011" kind="AssociationClass" role="AssociationClass" guid="{110d0807-3b7a-49f7-ad01-12d83aa3b401}" relid="0x8">
 				<name>AssociationClass</name>
 				<connpoint role="src" target="id-0066-00000009"/>
 				<connpoint role="dst" target="id-0066-0000000a"/>
 			</connection>
-			<set id="id-0069-00000002" kind="Aspect" role="Aspect" guid="{9EBA4968-81CC-46e0-9AA7-590C5FB50489}" relid="0x0" members="id-0066-00000009 id-0066-0000000c">
-				<name>Sequence</name>
+			<set id="id-0069-00000002" kind="Aspect" role="Aspect" guid="{9eba4968-81cc-46e0-9aa7-590c5fb50489}" relid="0x0" members="id-0066-00000009 id-0066-0000000c">
+				<name>Sequences</name>
 				<regnode name="MetaRef" isopaque="yes">
 					<value></value>
 					<regnode name="InputSequence" isopaque="yes">
@@ -1238,6 +1469,12 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				</regnode>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>667,105</value>
+						</regnode>
+					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">

@@ -477,6 +477,18 @@ std::string ModelRep::doDump()
 	mmm += dumpInstanceIcon();
 	mmm += dumpNameWrap();
 	mmm += dumpNameEnabled();
+	mmm += dumpAutoRouterPref();
+	mmm += dumpHelpURL();
+
+	mmm += dumpGradientFillEnabled();
+	mmm += dumpGradientFillColor();
+	mmm += dumpGradientFillDirection();
+	mmm += dumpShadowCastEnabled();
+	mmm += dumpShadowColor();
+	mmm += dumpShadowThickness();
+	mmm += dumpShadowDirection();
+	mmm += dumpRoundRectangleEnabled();
+	mmm += dumpRoundRectangleRadius();
 	--ind;
 	mmm += dumpConstraints();
 	mmm += dumpAttributes();

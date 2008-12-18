@@ -151,7 +151,10 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 					COMTHROW(decorator.CoCreateInstance(PutInBstr(decoratorProgId)));
 					COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
 				}
-				COMTHROW(decorator->SetLocation(0, 0, 0, 0));
+
+				long sx, sy;
+				COMTHROW(decorator->GetPreferredSize(&sx, &sy));
+				COMTHROW(decorator->SetLocation(0, 0, sx, sy));
 				triple.decorator = decorator;
 
 				pdt.push_back(triple);

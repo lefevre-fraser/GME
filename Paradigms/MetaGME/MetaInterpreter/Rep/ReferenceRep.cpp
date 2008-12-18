@@ -302,7 +302,19 @@ std::string ReferenceRep::doDump()
 	mmm += dumpInstanceIcon();
 	mmm += dumpNameWrap();
 	mmm += dumpNameEnabled();
+	mmm += dumpAutoRouterPref();
+	mmm += dumpHelpURL();
 	// 	mmm += dumpTypeDisplayed() == dumpTypeShown() not needed
+
+	mmm += dumpGradientFillEnabled();
+	mmm += dumpGradientFillColor();
+	mmm += dumpGradientFillDirection();
+	mmm += dumpShadowCastEnabled();
+	mmm += dumpShadowColor();
+	mmm += dumpShadowThickness();
+	mmm += dumpShadowDirection();
+	mmm += dumpRoundRectangleEnabled();
+	mmm += dumpRoundRectangleRadius();
 
 	mmm += indStr() + "<pointerspec name = \"ref\">\n";
 	++ind;

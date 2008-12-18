@@ -26,7 +26,18 @@ extern Globals global_vars;
 /*static*/ const std::string FCO::InstanceIcon_str = "InstanceIcon";
 /*static*/ const std::string FCO::NameWrapNum_str = "NameWrapNum";
 /*static*/ const std::string FCO::IsNameEnabled_str = "IsNameEnabled";
+/*static*/ const std::string FCO::AutoRouterPref_str = "AutoRouterPref";
+/*static*/ const std::string FCO::HelpURL_str = "HelpURL";
 
+/*static*/ const std::string FCO::IsGradientFillEnabled_str = "IsGradientFillEnabled";
+/*static*/ const std::string FCO::GradientFillColor_str = "GradientFillColor";
+/*static*/ const std::string FCO::GradientFillDirection_str = "GradientFillDirection";
+/*static*/ const std::string FCO::IsShadowCastEnabled_str = "IsShadowCastEnabled";
+/*static*/ const std::string FCO::ShadowColor_str = "ShadowColor";
+/*static*/ const std::string FCO::ShadowThickness_str = "ShadowThickness";
+/*static*/ const std::string FCO::ShadowDirection_str = "ShadowDirection";
+/*static*/ const std::string FCO::IsRoundRectangleEnabled_str = "IsRoundRectangleEnabled";
+/*static*/ const std::string FCO::RoundRectangleRadius_str = "RoundRectangleRadius";
 
 FCO::FCO( BON::FCO& ptr, BON::FCO& resp_ptr)
 	: Any( ptr)
@@ -37,6 +48,15 @@ FCO::FCO( BON::FCO& ptr, BON::FCO& resp_ptr)
 	, m_bAttrIsNameEnabled( true)
 	, m_iAttrNamePosition( 0)
 	, m_iAttrNameWrapNum( 0)
+	, m_bAttrIsGradientFillEnabled( false)
+	, m_iAttrGradientFillColor( RGB(0xC0,0xC0,0xC0))
+	, m_iAttrGradientFillDirection( 0)
+	, m_bAttrIsShadowCastEnabled( false)
+	, m_iAttrShadowColor( RGB(0xC0,0xC0,0xC0))
+	, m_iAttrShadowThickness( 9)
+	, m_iAttrShadowDirection( 45)
+	, m_bAttrIsRoundRectangleEnabled( false)
+	, m_iAttrRoundRectangleRadius( 9)
 	, m_references()
 	, m_partOf()
 	, m_partOfFinal()
@@ -201,6 +221,84 @@ void FCO::initAttributes()
 		decorator_set = true;
 	}
 
+	bool autorouterpref_set = false;
+	if( m_ptr->getAttribute( AutoRouterPref_str)->getStatus() >= BON::AS_Here)
+	{
+		m_sAttrAutoRouterPref = m_ptr->getAttribute( AutoRouterPref_str)->getStringValue();
+		autorouterpref_set = true;
+	}
+
+	bool helpurl_set = false;
+	if( m_ptr->getAttribute( HelpURL_str)->getStatus() >= BON::AS_Here)
+	{
+		m_sAttrHelpURL = m_ptr->getAttribute( HelpURL_str)->getStringValue();
+		helpurl_set = true;
+	}
+
+	bool isgradientfillenabled_set = false;
+	if( m_ptr->getAttribute( IsGradientFillEnabled_str)->getStatus() >= BON::AS_Here)
+	{
+		m_bAttrIsGradientFillEnabled = m_ptr->getAttribute( IsGradientFillEnabled_str)->getBooleanValue();
+		isgradientfillenabled_set = true;
+	}
+
+	bool gradientfillcolor_set = false;
+	if( m_ptr->getAttribute( GradientFillColor_str)->getStatus() >= BON::AS_Here)
+	{
+		m_iAttrGradientFillColor = (COLORREF)m_ptr->getAttribute( GradientFillColor_str)->getIntegerValue();
+		gradientfillcolor_set = true;
+	}
+
+	bool gradientfilldirection_set = false;
+	if( m_ptr->getAttribute( GradientFillDirection_str)->getStatus() >= BON::AS_Here)
+	{
+		m_iAttrGradientFillDirection = m_ptr->getAttribute( GradientFillDirection_str)->getIntegerValue();
+		gradientfilldirection_set = true;
+	}
+
+	bool isshadowcastenabled_set = false;
+	if( m_ptr->getAttribute( IsShadowCastEnabled_str)->getStatus() >= BON::AS_Here)
+	{
+		m_bAttrIsShadowCastEnabled = m_ptr->getAttribute( IsShadowCastEnabled_str)->getBooleanValue();
+		isshadowcastenabled_set = true;
+	}
+
+	bool shadowcolor_set = false;
+	if( m_ptr->getAttribute( ShadowColor_str)->getStatus() >= BON::AS_Here)
+	{
+		m_iAttrShadowColor = (COLORREF)m_ptr->getAttribute( ShadowColor_str)->getIntegerValue();
+		shadowcolor_set = true;
+	}
+
+	bool shadowthickness_set = false;
+	if( m_ptr->getAttribute( ShadowThickness_str)->getStatus() >= BON::AS_Here)
+	{
+		m_iAttrShadowThickness = m_ptr->getAttribute( ShadowThickness_str)->getIntegerValue();
+		shadowthickness_set = true;
+	}
+
+	bool shadowdirection_set = false;
+	if( m_ptr->getAttribute( ShadowDirection_str)->getStatus() >= BON::AS_Here)
+	{
+		m_iAttrShadowDirection = m_ptr->getAttribute( ShadowDirection_str)->getIntegerValue();
+		shadowdirection_set = true;
+	}
+
+	bool isroundrectangleenabled_set = false;
+	if( m_ptr->getAttribute( IsRoundRectangleEnabled_str)->getStatus() >= BON::AS_Here)
+	{
+		m_bAttrIsRoundRectangleEnabled = m_ptr->getAttribute( IsRoundRectangleEnabled_str)->getBooleanValue();
+		isroundrectangleenabled_set = true;
+	}
+
+	bool roundrectangleradius_set = false;
+	if( m_ptr->getAttribute( RoundRectangleRadius_str)->getStatus() >= BON::AS_Here)
+	{
+		m_iAttrRoundRectangleRadius = m_ptr->getAttribute( RoundRectangleRadius_str)->getIntegerValue();
+		roundrectangleradius_set = true;
+	}
+
+
 	// proxies have only the following attributes: abstract, inrootfolder, displayedname, generalpref
 	// real objects have beside these other attributes
 
@@ -294,6 +392,72 @@ void FCO::initAttributes()
 		{
 			m_sAttrDecorator = (*it)->getAttribute( Decorator_str)->getStringValue();
 			decorator_set = true;
+		}
+
+		if ( !autorouterpref_set && (*it)->getAttribute( AutoRouterPref_str)->getStatus() >= BON::AS_Here)
+		{
+			m_sAttrAutoRouterPref = (*it)->getAttribute( AutoRouterPref_str)->getStringValue();
+			autorouterpref_set = true;
+		}
+
+		if ( !helpurl_set && (*it)->getAttribute( HelpURL_str)->getStatus() >= BON::AS_Here)
+		{
+			m_sAttrHelpURL = (*it)->getAttribute( HelpURL_str)->getStringValue();
+			helpurl_set = true;
+		}
+
+		if ( !isgradientfillenabled_set && (*it)->getAttribute( IsGradientFillEnabled_str)->getStatus() >= BON::AS_Here)
+		{
+			m_bAttrIsGradientFillEnabled = (*it)->getAttribute( IsGradientFillEnabled_str)->getBooleanValue();
+			isgradientfillenabled_set = true;
+		}
+
+		if ( !gradientfillcolor_set && (*it)->getAttribute( GradientFillColor_str)->getStatus() >= BON::AS_Here)
+		{
+			m_iAttrGradientFillColor = (COLORREF)(*it)->getAttribute( GradientFillColor_str)->getIntegerValue();
+			gradientfillcolor_set = true;
+		}
+
+		if ( !gradientfilldirection_set && (*it)->getAttribute( GradientFillDirection_str)->getStatus() >= BON::AS_Here)
+		{
+			m_iAttrGradientFillDirection = (*it)->getAttribute( GradientFillDirection_str)->getIntegerValue();
+			gradientfilldirection_set = true;
+		}
+
+		if ( !isshadowcastenabled_set && (*it)->getAttribute( IsShadowCastEnabled_str)->getStatus() >= BON::AS_Here)
+		{
+			m_bAttrIsShadowCastEnabled = (*it)->getAttribute( IsShadowCastEnabled_str)->getBooleanValue();
+			isshadowcastenabled_set = true;
+		}
+
+		if ( !shadowcolor_set && (*it)->getAttribute( ShadowColor_str)->getStatus() >= BON::AS_Here)
+		{
+			m_iAttrShadowColor = (COLORREF)(*it)->getAttribute( ShadowColor_str)->getIntegerValue();
+			shadowcolor_set = true;
+		}
+
+		if ( !shadowthickness_set && (*it)->getAttribute( ShadowThickness_str)->getStatus() >= BON::AS_Here)
+		{
+			m_iAttrShadowThickness = (*it)->getAttribute( ShadowThickness_str)->getIntegerValue();
+			shadowthickness_set = true;
+		}
+
+		if ( !shadowdirection_set && (*it)->getAttribute( ShadowDirection_str)->getStatus() >= BON::AS_Here)
+		{
+			m_iAttrShadowDirection = (*it)->getAttribute( ShadowDirection_str)->getIntegerValue();
+			shadowdirection_set = true;
+		}
+
+		if ( !isroundrectangleenabled_set && (*it)->getAttribute( IsRoundRectangleEnabled_str)->getStatus() >= BON::AS_Here)
+		{
+			m_bAttrIsRoundRectangleEnabled = (*it)->getAttribute( IsRoundRectangleEnabled_str)->getBooleanValue();
+			isroundrectangleenabled_set = true;
+		}
+
+		if ( !roundrectangleradius_set && (*it)->getAttribute( RoundRectangleRadius_str)->getStatus() >= BON::AS_Here)
+		{
+			m_iAttrRoundRectangleRadius = (*it)->getAttribute( RoundRectangleRadius_str)->getIntegerValue();
+			roundrectangleradius_set = true;
 		}
 #endif
 	}
@@ -873,16 +1037,14 @@ std::string FCO::dumpGeneralPref()
 
 std::string FCO::dumpNamePosition() const
 {
-	std::string mmm;
+	CString p;
 	//if ( this->m_ptr)
 	{
 		int name_pos = min(8,max(0,m_iAttrNamePosition));//m_ptr->getAttribute( NamePosition_str)->getIntegerValue();
-		char p[2];
-		sprintf(p, "%d", name_pos);
-		mmm = std::string( p);
+		p.Format("%ld", name_pos);
 	}
 	//else mmm = "NullPtrError";
-	return indStr() + "<regnode name = \"namePosition\" value =\"" + mmm +"\">" + "</regnode>\n";
+	return indStr() + "<regnode name = \"namePosition\" value =\"" + (const char*)p +"\">" + "</regnode>\n";
 }
 
 
@@ -944,11 +1106,10 @@ std::string FCO::dumpNameWrap() const
 	//if ( this->m_ptr)
 	{
 		const int &icon = m_iAttrNameWrapNum;//m_ptr->getAttribute( NameWrapNum_str)->getIntegerValue();
-		char p[64];
-		sprintf(p, "%d", icon);
-		std::string icon_str( (const char *) p);// = m_ptr->getAttribute( NameWrapNum_str)->getStringValue();
+		CString p;
+		p.Format("%ld", icon);
 		if( icon != 0)
-			mmm += indStr() + "<regnode name = \"nameWrap\" value =\"" + icon_str + "\"></regnode>\n";
+			mmm += indStr() + "<regnode name = \"nameWrap\" value =\"" + (const char*)p + "\"></regnode>\n";
 	}
 	return mmm;
 }
@@ -974,3 +1135,252 @@ std::string FCO::dumpNameEnabled() const
 	}
 	return mmm;
 }
+
+
+std::string FCO::dumpAutoRouterPref() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpAutoRouterPref();
+	}
+
+	//if ( this->m_ptr)
+	{
+		const std::string &formatStr = m_sAttrAutoRouterPref;//m_ptr->getAttribute( AutoRouterPref_str)->getStringValue();
+
+		if( !formatStr.empty())
+			mmm += indStr() + "<regnode name = \"autorouterPref\" value =\"" + formatStr + "\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpHelpURL() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpHelpURL();
+	}
+
+	//if ( this->m_ptr)
+	{
+		const std::string &helpURL = m_sAttrHelpURL;//m_ptr->getAttribute( HelpURL_str)->getStringValue();
+
+		if( !helpURL.empty())
+			mmm += indStr() + "<regnode name = \"help\" value =\"" + helpURL + "\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpGradientFillEnabled() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpGradientFillEnabled();
+	}
+
+	//if ( this->m_ptr)
+	{
+		bool enabled = m_bAttrIsGradientFillEnabled;//m_ptr->getAttribute( IsGradientFillEnabled_str)->getBooleanValue();
+
+		if( enabled)
+			mmm += indStr() + "<regnode name = \"gradientFill\" value =\"true\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpGradientFillColor() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpGradientFillColor();
+	}
+
+	//if ( this->m_ptr)
+	{
+		const unsigned int color = (unsigned int)m_iAttrGradientFillColor;//m_ptr->getAttribute( GradientFillColor_str)->getIntegerValue();
+		CString p;
+		p.Format("0x%06x", color);
+		if( m_iAttrGradientFillColor != RGB(0xC0,0xC0,0xC0))
+			mmm += indStr() + "<regnode name = \"gradientColor\" value =\"" + (const char*)p + "\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpGradientFillDirection() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpGradientFillDirection();
+	}
+
+	//if ( this->m_ptr)
+	{
+		const int direction = m_iAttrGradientFillDirection;//m_ptr->getAttribute( GradientFillDirection_str)->getIntegerValue();
+		CString p;
+		p.Format("%ld", direction);
+		if( direction != 45)
+			mmm += indStr() + "<regnode name = \"gradientDirection\" value =\"" + (const char*)p + "\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpShadowCastEnabled() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpShadowCastEnabled();
+	}
+
+	//if ( this->m_ptr)
+	{
+		bool enabled = m_bAttrIsShadowCastEnabled;//m_ptr->getAttribute( IsShadowCastEnabled_str)->getBooleanValue();
+
+		if( enabled)
+			mmm += indStr() + "<regnode name = \"itemShadowCast\" value =\"true\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpShadowColor() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpShadowColor();
+	}
+
+	//if ( this->m_ptr)
+	{
+		const unsigned int color = (unsigned int)m_iAttrShadowColor;//m_ptr->getAttribute( ShadowColor_str)->getIntegerValue();
+		CString p;
+		p.Format("0x%06x", color);
+		if( m_iAttrShadowColor != RGB(0xC0,0xC0,0xC0))
+			mmm += indStr() + "<regnode name = \"shadowColor\" value =\"" + (const char*)p + "\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpShadowThickness() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpShadowThickness();
+	}
+
+	//if ( this->m_ptr)
+	{
+		const int thickness = m_iAttrShadowThickness;//m_ptr->getAttribute( ShadowThickness_str)->getIntegerValue();
+		CString p;
+		p.Format("%ld", thickness);
+		if( thickness != 9)
+			mmm += indStr() + "<regnode name = \"shadowThickness\" value =\"" + (const char*)p + "\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpShadowDirection() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpShadowDirection();
+	}
+
+	//if ( this->m_ptr)
+	{
+		const int direction = m_iAttrShadowDirection;//m_ptr->getAttribute( ShadowDirection_str)->getIntegerValue();
+		CString p;
+		p.Format("%ld", direction);
+		if( direction != 45)
+			mmm += indStr() + "<regnode name = \"shadowDirection\" value =\"" + (const char*)p + "\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpRoundRectangleEnabled() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpRoundRectangleEnabled();
+	}
+
+	//if ( this->m_ptr)
+	{
+		bool enabled = m_bAttrIsRoundRectangleEnabled;//m_ptr->getAttribute( IsRoundRectangleEnabled_str)->getBooleanValue();
+
+		if( enabled)
+			mmm += indStr() + "<regnode name = \"roundCornerRect\" value =\"true\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpRoundRectangleRadius() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpRoundRectangleRadius();
+	}
+
+	//if ( this->m_ptr)
+	{
+		const int radius = m_iAttrRoundRectangleRadius;//m_ptr->getAttribute( RoundRectangleRadius_str)->getIntegerValue();
+		CString p;
+		p.Format("%ld", radius);
+		if( radius != 9)
+			mmm += indStr() + "<regnode name = \"roundCornerRadius\" value =\"" + (const char*)p + "\"></regnode>\n";
+	}
+	return mmm;
+}
+

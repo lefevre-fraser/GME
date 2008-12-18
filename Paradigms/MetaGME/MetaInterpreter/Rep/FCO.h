@@ -28,6 +28,18 @@ public: // constant strings
 	static const std::string InstanceIcon_str;//"InstanceIcon"
 	static const std::string NameWrapNum_str;//"NameWrapNum"
 	static const std::string IsNameEnabled_str;//"IsNameEnabled"
+	static const std::string AutoRouterPref_str;//"AutoRouterPref"
+	static const std::string HelpURL_str;//"HelpURL"
+
+	static const std::string IsGradientFillEnabled_str;//"IsGradientFillEnabled"
+	static const std::string GradientFillColor_str;//"GradientFillColor"
+	static const std::string GradientFillDirection_str;//"GradientFillDirection"
+	static const std::string IsShadowCastEnabled_str;//"IsShadowCastEnabled"
+	static const std::string ShadowColor_str;//"ShadowColor"
+	static const std::string ShadowThickness_str;//"ShadowThickness"
+	static const std::string ShadowDirection_str;//"ShadowDirection"
+	static const std::string IsRoundRectangleEnabled_str;//"IsRoundRectangleEnabled"
+	static const std::string RoundRectangleRadius_str;//"RoundRectangleRadius"
 
 public: // typedefs
 	typedef std::vector<ModelRep *> ModelRepPtrList;
@@ -143,6 +155,18 @@ public:
 	std::string dumpInstanceIcon() const;
 	std::string dumpNameWrap() const;
 	std::string dumpNameEnabled() const;
+	std::string dumpAutoRouterPref() const;
+	std::string dumpHelpURL() const;
+
+	std::string dumpGradientFillEnabled() const;
+	std::string dumpGradientFillColor() const;
+	std::string dumpGradientFillDirection() const;
+	std::string dumpShadowCastEnabled() const;
+	std::string dumpShadowColor() const;
+	std::string dumpShadowThickness() const;
+	std::string dumpShadowDirection() const;
+	std::string dumpRoundRectangleEnabled() const;
+	std::string dumpRoundRectangleRadius() const;
 
 
 protected:
@@ -169,6 +193,18 @@ protected:
 	std::string m_sAttrSubTypeIcon;
 	std::string m_sAttrInstanceIcon;
 	std::string m_sAttrDecorator;
+	std::string m_sAttrAutoRouterPref;
+	std::string m_sAttrHelpURL;
+
+	bool m_bAttrIsGradientFillEnabled;
+	COLORREF m_iAttrGradientFillColor;
+	int m_iAttrGradientFillDirection;
+	bool m_bAttrIsShadowCastEnabled;
+	COLORREF m_iAttrShadowColor;
+	int m_iAttrShadowThickness;
+	int m_iAttrShadowDirection;
+	bool m_bAttrIsRoundRectangleEnabled;
+	int m_iAttrRoundRectangleRadius;
 
 	// store the list of references which refer to this
 	std::vector<ReferenceRep *> m_references;

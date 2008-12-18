@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="HFSM" guid="{1941977B-2109-4FA8-B851-70A60724C1F4}" cdate="Mon Oct 09 11:04:22 2006" mdate="Mon Oct 09 11:04:22 2006" >
+<paradigm name="HFSM" guid="{0BCC7AD4-28FD-49C5-AB44-A1F1BFAAF756}" cdate="Fri Dec 12 15:08:06 2008" mdate="Fri Dec 12 15:08:06 2008" >
 
 	<comment></comment>
 
@@ -34,6 +34,7 @@
 				<dispname>Multiplicity of objects, which are associated to Events as &quot;src&quot; over Sequence, has to match 0..1.</dispname>
 			</constraint>
 				<regnode name = "icon" value ="event.bmp"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<connection name = "Sequence" metaref = "1005" >
 				<regnode name = "color" value ="0x000000"></regnode>
@@ -66,17 +67,19 @@
 		</connection>
 		<model name = "InputSequence" metaref = "1007" >
 				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 			<role name = "Events" metaref = "1008" kind = "Events"></role>
 			<role name = "Sequence" metaref = "1009" kind = "Sequence"></role>
-			<aspect name = "Sequence" metaref = "1010" >
-				<part metaref = "1011" role = "Events" primary = "yes" linked = "no"></part>
-				<part metaref = "1012" role = "Sequence" primary = "yes" linked = "no"></part>
+			<aspect name = "Sequences" metaref = "1019" >
+				<part metaref = "1020" role = "Events" primary = "yes" linked = "no"></part>
+				<part metaref = "1021" role = "Sequence" primary = "yes" linked = "no"></part>
 			</aspect>
 		</model>
 		<model name = "State" metaref = "1013" attributes = "StartState" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "color" value ="0x0080C0"></regnode>
 				<regnode name = "icon" value ="defaultstate.bmp"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 			<constraint name="SingleStartState" eventmask = "0x800000" depth = "1" priority = "2">
 				<![CDATA[let states = self.parts( State ) in
 states->size > 0

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="SF" guid="{6FC684F6-C715-48FB-8EF1-BA68D5572661}" cdate="Mon Oct 09 10:59:17 2006" mdate="Mon Oct 09 10:59:17 2006" >
+<paradigm name="SF" guid="{86628E20-FA77-47A9-B0F2-48961589D6B9}" cdate="Fri Dec 12 15:14:18 2008" mdate="Fri Dec 12 15:14:18 2008" >
 
 	<comment></comment>
 
@@ -40,25 +40,35 @@
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="inparam-atom.bmp"></regnode>
 				<regnode name = "porticon" value ="inparam-port.bmp"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "InputSignal" metaref = "1009" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="isig-atom.bmp"></regnode>
 				<regnode name = "porticon" value ="isig-port.bmp"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "OutputParam" metaref = "1010"  attributes = "DataType Size">
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="outparam-atom.bmp"></regnode>
 				<regnode name = "porticon" value ="outparam-port.bmp"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "OutputSignal" metaref = "1011" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="osig-atom.bmp"></regnode>
 				<regnode name = "porticon" value ="osig-port.bmp"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Param" metaref = "1012"  attributes = "Global DataType Size InitValue">
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="param.bmp"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<connection name = "DataflowConn" metaref = "1013" >
 				<regnode name = "color" value ="0x000000"></regnode>
@@ -117,6 +127,8 @@
 		<model name = "Compound" metaref = "1015" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "color" value ="0xe0e0a0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 			<constraint name="AtLeastOnePart" eventmask = "0x0" depth = "1" priority = "2">
 				<![CDATA[self.parts()->size > 0]]>
 				<dispname>Compounds must have parts</dispname>
@@ -149,6 +161,8 @@
 		<model name = "Primitive" metaref = "1038" attributes = "Firing Script Priority" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "color" value ="0xc8f8c8"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 			<role name = "InputParameters" metaref = "1039" kind = "InputParam"></role>
 			<role name = "InputSignals" metaref = "1040" kind = "InputSignal"></role>
 			<role name = "OutputParameters" metaref = "1041" kind = "OutputParam"></role>

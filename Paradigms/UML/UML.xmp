@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="UML" guid="{D050E6EA-C1A6-4A39-9171-AE1918810D1F}" cdate="Mon Jun 18 14:52:42 2007" mdate="Mon Jun 18 14:52:42 2007" >
+<paradigm name="UML" guid="{6CA070AE-FD66-46B3-B7CC-0BB85BB69E14}" cdate="Fri Dec 12 14:59:58 2008" mdate="Fri Dec 12 14:59:58 2008" >
 
 	<comment>Descent into the maelstrom!</comment>
 
@@ -189,6 +189,8 @@ st <> "" implies st.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 				<regnode name = "icon" value ="class.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Connector" metaref = "1019" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -224,6 +226,8 @@ srcCount <> 0 implies srcCount = 1]]>
 			</constraint>
 				<regnode name = "icon" value ="connector.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Constraint" metaref = "1020"  attributes = "ConstraintEqn ConstraintDescription">
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -255,6 +259,8 @@ endif]]>
 			</constraint>
 				<regnode name = "icon" value ="constraint.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "ConstraintDefinition" metaref = "1021"  attributes = "DefinitionRetType DefinitionStereo DefinitionEqn DefinitionParamList">
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -276,6 +282,8 @@ endif]]>
 			</constraint>
 				<regnode name = "icon" value ="constraintdefinition.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Inheritance" metaref = "1022" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -297,6 +305,8 @@ baseCount <> 0 implies baseCount = 1]]>
 			</constraint>
 				<regnode name = "icon" value ="inheritance.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<connection name = "Association" metaref = "1023" attributes = "Stereotype dstCardinality dstRolename srcCardinality srcRolename" >
 				<regnode name = "color" value ="0x000000"></regnode>
@@ -568,12 +578,15 @@ assocCount <> 0 implies assocCount = 1]]>
 			</constraint>
 			<regnode name = "icon" value ="classref.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+			<regnode name = "gradientDirection" value ="0"></regnode>
+			<regnode name = "gradientDirection" value ="0"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Class"></pointeritem>
 			</pointerspec>
 		</reference>
 		<model name = "ClassDiagram" metaref = "1034" >
 				<regnode name = "namePosition" value ="0"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 			<role name = "Association" metaref = "1035" kind = "Association"></role>
 			<role name = "AssociationClass" metaref = "1036" kind = "AssociationClass"></role>
 			<role name = "Base" metaref = "1037" kind = "Base"></role>
@@ -618,6 +631,7 @@ assocCount <> 0 implies assocCount = 1]]>
 		</model>
 		<model name = "Namespace" metaref = "1087" >
 				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 			<constraint name="UniqueNamespaceName" eventmask = "0x0" depth = "0" priority = "2">
 				<![CDATA[project.allInstancesOf( Namespace ) -> select( ns | ns.name = self.name && ns.parent() = self.parent() ) -> size = 1]]>
 				<dispname>A namespace must be unique.</dispname>
@@ -635,6 +649,7 @@ assocCount <> 0 implies assocCount = 1]]>
 		</model>
 		<model name = "Package" metaref = "1072" attributes = "version alias" >
 				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "gradientDirection" value ="0"></regnode>
 			<constraint name="UniquePackageName" eventmask = "0x0" depth = "0" priority = "2">
 				<![CDATA[project.allInstancesOf( Package ) -> select( pkg | pkg.name = self.name ) -> size = 1]]>
 				<dispname>Name of a Package must be unique.</dispname>
