@@ -1,6 +1,4 @@
-; Interpreter.def : Declares the module parameters.
-
-LIBRARY      "Component.DLL"
+; Component.def : Declares the module parameters.
 
 EXPORTS
 	DllCanUnloadNow     PRIVATE

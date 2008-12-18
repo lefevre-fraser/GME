@@ -19,8 +19,6 @@
 	this software.
 */
 
-#define TEST_META_CONFORMANCE_INSIDE_BON // by ZolMol
-
 #include "stdafx.h"
 #include "BONImpl.h"
 #include "Extensions.h"

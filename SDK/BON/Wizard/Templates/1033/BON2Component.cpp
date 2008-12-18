@@ -20,6 +20,7 @@
 */
 
 #include "stdafx.h"
+#include <Console.h>
 #include "BON2Component.h"
 
 namespace BON
@@ -89,8 +90,12 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 #ifdef GME_ADDON
 	project->setAutoCommit( false);
 #endif
+	using namespace GMEConsole;
+	Console::Out::WriteLine("Interpreter started...");
 	// ======================
-	// Insert application specific code here
+	// TODO: Insert application specific code here
+
+	Console::Out::WriteLine("Interpreter completed...");
 }
 
 // ====================================================

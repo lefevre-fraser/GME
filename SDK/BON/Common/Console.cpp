@@ -18,13 +18,7 @@ namespace GMEConsole
 			HRESULT s2 = client->get_OLEServer(&pDispatch);
 			if ((SUCCEEDED(s2)) && (pDispatch != 0))
 			{
-				HRESULT s3 = pDispatch->QueryInterface(&gmeoleapp);
-				if (!SUCCEEDED(s3) )
-				{
-					AfxThrowOleException(s3);
-				}
-				ASSERT(gmeoleapp != 0);
-
+				COMTHROW(pDispatch->QueryInterface(&gmeoleapp));
 			}
 		}
 	}

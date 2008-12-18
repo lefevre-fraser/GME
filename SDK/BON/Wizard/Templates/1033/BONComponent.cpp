@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
+#include <Console.h>
 #include "Component.h"
+
 
 /* 
 // This method is usually no longer in use and does not need to be implemented,
@@ -14,5 +16,8 @@ void CComponent::Invoke(CBuilder &builder,CBuilderObjectList &selected, long par
 
 void CComponent::InvokeEx(CBuilder &builder,CBuilderObject *focus, CBuilderObjectList &selected, long param) 
 {
+	using namespace GMEConsole;
+	Console::Out::WriteLine("Interpreter started...");
 	AfxMessageBox("GME Component --- Sample rf:" + builder.GetRootFolder()->GetName(), MB_OK | MB_ICONSTOP);
+	Console::Out::WriteLine("Interpreter completed...");
 }

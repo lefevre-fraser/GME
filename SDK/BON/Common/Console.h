@@ -1,42 +1,52 @@
 #pragma once
 #include "ComHelp.h"
 #include "GMECOM.h"
-#include "Formatter.h"
+//#include "Formatter.h"
+
 
 namespace GMEConsole
 {
 	class Console
 	{
-	friend class RawComponent;
 
 		static CComPtr<IGMEOLEApp> gmeoleapp;
-		static void SetupConsole(CComPtr<IMgaProject> project); 
+		
 	public:
+
+		static void SetupConsole(CComPtr<IMgaProject> project); 
 
 		static void WriteLine(const CString& message, msgtype_enum type)
 		{
-			SCODE code = gmeoleapp->ConsoleMessage( CComBSTR(message.GetLength(),message),type);
-			if(S_OK != code)
-			{
-				AfxThrowOleException(code);
+			if (gmeoleapp == 0) {
+				switch (type) {
+				case MSG_NORMAL:
+				case MSG_INFO:
+				case MSG_WARNING:
+					_tprintf(message);
+					break;
+				case MSG_ERROR:
+					_ftprintf(stderr, message);
+					break;
+				}
+			}
+			else {
+				COMTHROW(gmeoleapp->ConsoleMessage( CComBSTR(message.GetLength(),message),type));
 			}
 		}
 
 		static void Clear()
 		{
-
-			gmeoleapp->put_ConsoleContents(L"");
+			COMTHROW(gmeoleapp->put_ConsoleContents(L""));
 		}
 
 		static void SetContents(const CString& contents)
 		{
-			SCODE code = gmeoleapp->put_ConsoleContents( CComBSTR(contents.GetLength(),contents));
-			if(S_OK != code)
-			{
-				AfxThrowOleException(code);
-			}
+			COMTHROW(gmeoleapp->put_ConsoleContents( CComBSTR(contents.GetLength(),contents)));
+		}
 
-
+		static void NavigateTo(const CString& url)
+		{
+			COMTHROW(gmeoleapp->ConsoleNavigateTo(CComBSTR(url.GetLength(), url)));
 		}
 
 		class Error

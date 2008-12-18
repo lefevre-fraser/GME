@@ -23,7 +23,7 @@
 #define BON_h
 
 #include "Utils.h"
-#include "ComponentLib.h"
+#include "ComponentLib_h.h"
 #include "Common.h"
 #include "MON.h"
 

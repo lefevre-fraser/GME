@@ -48,18 +48,19 @@
 #include "GMECOM.h"
 
 #ifdef BUILDER_OBJECT_NETWORK
-#include <Component.h>
+#include <BONComponent.h>
 #include "Builder.h"
 #endif
 
 #include "ComHelp.h"
 
-#include "ComponentLib.h"
+#include "ComponentLib_h.h"
 
 #include <ComponentConfig.h>
 
 #include "ComponentObj.h"
 
+#include "Console.h"
 
 
 #include "ComponentLib_i.c"
@@ -69,13 +70,12 @@
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
-#endif
+#endif // _DEBUG
 
 // --------------------------------------- GmeDllDesc
 
 // Syntax:
 //   interpreter,<paradigm>,<description>,<progid>
-//   plug-in,*,<description>,<progid>
 //   add-on,<paradigm>,<progid>
 //
 // Examples:
@@ -89,15 +89,11 @@ static char THIS_FILE[] = __FILE__;
 #define EXCETYPE (componenttype_enum)(CETYPE|COMPONENTTYPE_PARADIGM_INDEPENDENT)
 #undef PARADIGMS
 #define PARADIGMS "*"
-#else
+#else // PARADIGM_INDEPENDENT
 #define EXCETYPE CETYPE
-#endif
+#endif // PARADIGM_INDEPENDENT
 
 
-#ifdef GME_PLUGIN
-wchar_t GmeDllDesc[] = L"<GMEDLLDESC> plug-in," L"," WCHAR(COMPONENT_NAME) L"," WCHAR(COCLASS_PROGID) L"<END>";
-#define CETYPE	COMPONENTTYPE_PLUGIN
-#else
 #ifdef GME_ADDON
 wchar_t GmeDllDesc[] = L"<GMEDLLDESC> add-on,*," WCHAR(COMPONENT_NAME) L"," WCHAR(COCLASS_PROGID) L"<END>";
 #define CETYPE	COMPONENTTYPE_ADDON
@@ -106,11 +102,9 @@ wchar_t GmeDllDesc[] = L"<GMEDLLDESC> add-on,*," WCHAR(COMPONENT_NAME) L"," WCHA
 wchar_t GmeDllDesc[] = L"<GMEDLLDESC> interpreter," WCHAR(PARADIGMS) L"," WCHAR(COMPONENT_NAME) L"," WCHAR(COCLASS_PROGID) L"<END>";
 #define CETYPE	COMPONENTTYPE_INTERPRETER
 #else
-#error No GME Componenttype (one of GME_PLUGIN, GME_ADDON, GME_INTERPRETER) is defined
+#error No GME Componenttype (one of GME_ADDON or GME_INTERPRETER) is defined
 #endif
 #endif
-#endif
-
 
 
 #undef WCHAR_L
@@ -265,7 +259,7 @@ CComponentObj::CComponentObj()
 	interactive = true;
 #ifdef RAWCOMPONENT_H
 	rawcomp.interactive = interactive;
-#endif
+#endif // RAWCOMPONENT_H
 	// BY PAKA BEGIN
 	#ifdef BUILDER_OBJECT_NETWORK_V2
 		bon2Comp.m_bIsInteractive = interactive;
@@ -337,19 +331,18 @@ END_INTERFACE_MAP()
 // We register the ComponentClass
 // CLSID_MGAComponentClass
 
-IMPLEMENT_OLECREATE(CComponentObj, COCLASS_PROGID,
-COCLASS_UUID_EXPLODED1,
-COCLASS_UUID_EXPLODED2,
-COCLASS_UUID_EXPLODED3,
-COCLASS_UUID_EXPLODED4,
-COCLASS_UUID_EXPLODED5,
-COCLASS_UUID_EXPLODED6,
-COCLASS_UUID_EXPLODED7,
-COCLASS_UUID_EXPLODED8,
-COCLASS_UUID_EXPLODED9,
-COCLASS_UUID_EXPLODED10,
-COCLASS_UUID_EXPLODED11
-)
+IMPLEMENT_OLECREATE(CComponentObj, COCLASS_PROGID, 
+						   COCLASS_UUID_EXPLODED1,
+						   COCLASS_UUID_EXPLODED2,
+						   COCLASS_UUID_EXPLODED3,
+						   COCLASS_UUID_EXPLODED4,
+						   COCLASS_UUID_EXPLODED5,
+						   COCLASS_UUID_EXPLODED6,
+						   COCLASS_UUID_EXPLODED7,
+						   COCLASS_UUID_EXPLODED8,
+						   COCLASS_UUID_EXPLODED9,
+						   COCLASS_UUID_EXPLODED10,
+						   COCLASS_UUID_EXPLODED11)
 
 /////////////////////////////////////////////////////////////////////////////
 // CComponentObj::XInterface
@@ -594,7 +587,7 @@ STDMETHODIMP COMCLASS::ObjectsInvokeEx( IMgaProject *project,  IMgaObject *curre
 
 STDMETHODIMP COMCLASS::Initialize(struct IMgaProject *p) {
 	COMTRY {
-		;
+		GMEConsole::Console::SetupConsole(p);
 	} COMCATCH(;);
 };
 
@@ -632,7 +625,7 @@ STDMETHODIMP COMCLASS::put_ComponentParameter(BSTR name, VARIANT newVal) {
 }
 
 
-#else
+#else // BUILDER_OBJECT_NETWORK
 
 // BY PAKA BEGIN
 #ifdef BUILDER_OBJECT_NETWORK_V2
@@ -805,6 +798,8 @@ STDMETHODIMP COMCLASS::Initialize( struct IMgaProject *p )
 			COMTHROW( pThis->addon->put_EventMask( ADDON_EVENTMASK ) );
 		#endif
 
+		GMEConsole::Console::SetupConsole(p);
+
 		CComPtr<IMgaTerritory> spTerritory;
 		COMTHROW( p->CreateTerritory( NULL, &spTerritory ) );
 		COMTHROW( p->BeginTransaction( spTerritory ) );
@@ -924,6 +919,7 @@ STDMETHODIMP COMCLASS::Initialize(struct IMgaProject *p) {
 		COMTHROW(pThis->rawcomp.addon->put_EventMask(ADDON_EVENTMASK));
 
 #endif
+		GMEConsole::Console::SetupConsole(p);
 		return pThis->rawcomp.Initialize(p);
 	} COMCATCH(;);
 };
@@ -1020,8 +1016,6 @@ STDMETHODIMP COMCLASS::get_version(enum MgaInterfaceVersion *pVal)
 
 CComponentReg::CComponentReg()
 {
-
-#ifndef GME_PLUGIN
 	CString pars = PARADIGMS;
 #ifndef PARADIGM_INDEPENDENT
 	while( !pars.IsEmpty() )
@@ -1035,8 +1029,7 @@ CComponentReg::CComponentReg()
 		ASSERT(!par.IsEmpty());
 		paradigms.AddTail(par);
 	}
-#endif
-#endif
+#endif // PARADIGM_INDEPENDENT
 }
 
 

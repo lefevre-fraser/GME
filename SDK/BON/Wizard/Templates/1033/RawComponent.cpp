@@ -6,9 +6,10 @@
 ///////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 
-#include "ComHelp.h"
-#include "GMECOM.h"
-#include <ComponentConfig.h>
+#include <ComHelp.h>
+#include <GMECOM.h>
+#include <Console.h>
+#include "ComponentConfig.h"
 #include "RawComponent.h"
 
 // this method is called after all the generic initialization is done
@@ -47,9 +48,12 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 		try {
 			COMTHROW(project->get_Name(&projname));
 			if(currentobj) COMTHROW(currentobj->get_Name(&focusname));
+			using namespace GMEConsole;
+			Console::Out::WriteLine("Interpreter started...");
 			AfxMessageBox("RAW Com Component --- Plugin!!!! Sample (project: " + CString(projname) +
 						", focus: " + CString(focusname));
 			COMTHROW(project->CommitTransaction());
+			Console::Out::WriteLine("Interpreter completed...");
 		}	catch(...) { project->AbortTransaction(); throw; }
 		
 	  } 

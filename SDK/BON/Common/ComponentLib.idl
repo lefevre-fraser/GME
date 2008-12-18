@@ -4,18 +4,12 @@
 
 #include <ComponentConfig.h>
 
-#define MAKE_STR(PAR) #PAR
-#define PATH3(X,Y) MAKE_STR(X##Y)
-#define PATH2(X,Y) PATH3(X,Y)
-#define PATH(NAME) PATH2(GME_BASE,NAME)
-
-
-#include PATH(/Interfaces/InterfaceColl.h)
-#include PATH(/Interfaces/meta.idl)
-#include PATH(/Interfaces/mga.idl)
-#include PATH(/Interfaces/mgautil.idl)
-#include PATH(/Interfaces/gme.idl)
-#include PATH(/Interfaces/parser.idl)
+#include <InterfaceColl.h>
+#include <meta.idl>
+#include <mga.idl>
+#include <mgautil.idl>
+#include <gme.idl>
+#include <parser.idl>
 
 
 [
