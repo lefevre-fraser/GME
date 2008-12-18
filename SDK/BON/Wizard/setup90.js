@@ -108,7 +108,6 @@ function main()
 		for (i in componentPrefixes) {
 			var strSrc = FileSys.BuildPath(strSourceFolder, componentPrefixes[i] + ".ico");
 			var strDest = FileSys.BuildPath(strDestFolder, componentPrefixes[i] + ".ico");
-			WScript.Echo("DBG: " + strSrc);
 			FileSys.CopyFile(strSrc, strDest);
 		}
 
@@ -128,7 +127,7 @@ function main()
 	// Read and write *Component.vsz, add engine version and replace path when found
 	try
 	{
-		for (pref in componentPrefixes) {
+		for (i in componentPrefixes) {
 			var strSrc = FileSys.BuildPath(strSourceFolder, componentPrefixes[i] + ".vsz");
 			var strDest = FileSys.BuildPath(strDestFolder, componentPrefixes[i] + ".vsz");
 	
