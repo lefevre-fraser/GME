@@ -132,7 +132,7 @@ void CAnnotationPanel::OnSize(UINT nType, int cx, int cy)
 		ctrl->MoveWindow(&origRect);
 	}
 
-	ctrl = prnt->GetDlgItem(IDC_STATIC_EDGERADIUS);
+	ctrl = prnt->GetDlgItem(IDC_STATIC_CORNERRADIUS);
 	if (ctrl->GetSafeHwnd()) {
 		CRect origRect(75,210+16,75+17,210+8+16);
 		prnt->MapDialogRect(&origRect);
@@ -193,7 +193,7 @@ void CAnnotationPanel::OnSize(UINT nType, int cx, int cy)
 		ctrl->MoveWindow(&origRect);
 	}
 
-	ctrl = prnt->GetDlgItem(IDC_EDIT_EDGERADIUS);
+	ctrl = prnt->GetDlgItem(IDC_EDIT_CORNERRADIUS);
 	if (ctrl->GetSafeHwnd()) {
 		CRect origRect(135,206+16,135+55,206+14+16);
 		prnt->MapDialogRect(&origRect);
