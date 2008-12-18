@@ -78,3 +78,10 @@ void CConsole::SetGMEProj(IDispatch *idp)
 	static BYTE parms[] = VTS_DISPATCH;
 	InvokeHelper(6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, idp);
 }
+
+void CConsole::NavigateTo(LPCTSTR url)
+{
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(7, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
+		 url);
+}

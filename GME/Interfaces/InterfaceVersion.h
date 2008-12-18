@@ -7,7 +7,7 @@
 // CHECKSUM Mga.idl = 534AEB6A
 // CHECKSUM MgaUtil.idl = 16B2520E
 // CHECKSUM MgaDecorator.idl = 83ECDE8D
-// CHECKSUM Gme.idl = 612DDAA3
+// CHECKSUM Gme.idl = FE262847
 // CHECKSUM Parser.idl = 1EAAB0F2
 
 
@@ -17,6 +17,6 @@
 //  -- keep them in sync
 //  -- never decrease it
 cpp_quote("#ifndef INTERFACE_VERSION")
-cpp_quote("#define INTERFACE_VERSION 0x000200AD")
+cpp_quote("#define INTERFACE_VERSION 0x000200AE")
 cpp_quote("#endif //INTERFACE_VERSION")
-#define INTERFACE_VERSION 0x000200AD
+#define INTERFACE_VERSION 0x000200AE

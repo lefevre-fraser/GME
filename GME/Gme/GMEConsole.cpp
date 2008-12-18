@@ -124,3 +124,8 @@ void CGMEConsole::SetGMEProj(IDispatch *idp)
 {
 	m_Console.SetGMEProj(idp);
 }
+
+void CGMEConsole::NavigateTo(CString url)
+{
+	m_Console.NavigateTo(url);
+}

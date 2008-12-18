@@ -126,10 +126,11 @@ interface IGMEOLEApp : IDispatch
 	[id(33)] HRESULT ShowFCO([in] IMgaFCO* mgaFCO, [in, defaultvalue(0)] VARIANT_BOOL inParent);
 	[id(34)] HRESULT ConsoleMessage([in] BSTR msg, [in]msgtype_enum type);
 	[id(35)] HRESULT ConsoleClear();
+	[id(36)] HRESULT ConsoleNavigateTo([in] BSTR url);
 
-	[id(36), helpstring("method ChangeEditmode")] HRESULT ChangeEditmode([in] editmode_enum mode);
-	[id(37), helpstring("method GridShow")] HRESULT GridShow([in] VARIANT_BOOL show);
-	[id(38), helpstring("method AttributepanelPage")] HRESULT AttributepanelPage([in] attribpanel_page page);
+	[id(37), helpstring("method ChangeEditmode")] HRESULT ChangeEditmode([in] editmode_enum mode);
+	[id(38), helpstring("method GridShow")] HRESULT GridShow([in] VARIANT_BOOL show);
+	[id(39), helpstring("method AttributepanelPage")] HRESULT AttributepanelPage([in] attribpanel_page page);
 
 	[propget, id(40)] HRESULT OleIt([out, retval] IGMEOLEIt ** mgamodel);
 

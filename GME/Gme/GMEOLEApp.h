@@ -87,6 +87,7 @@ protected:
 	afx_msg void ShowFCO(LPDISPATCH mgaFCO, BOOL inParent);
 	afx_msg void ConsoleMessage(LPCTSTR msg, long type);
 	afx_msg void ConsoleClear();
+	afx_msg void ConsoleNavigateTo(LPCTSTR url);
 
 	afx_msg void ChangeEditmode(long mode);
 	afx_msg void GridShow(BOOL show);
@@ -142,6 +143,7 @@ protected:
 		STDMETHOD(ShowFCO)(THIS_ IMgaFCO* mgaFCO, VARIANT_BOOL inParent = FALSE);
 		STDMETHOD(ConsoleMessage)(THIS_ BSTR msg, msgtype_enum type);
 		STDMETHOD(ConsoleClear)(THIS);
+		STDMETHOD(ConsoleNavigateTo)(THIS_ BSTR url);
 
 		STDMETHOD(ChangeEditmode)(THIS_ editmode_enum mode);
 		STDMETHOD(GridShow)(THIS_ VARIANT_BOOL show);

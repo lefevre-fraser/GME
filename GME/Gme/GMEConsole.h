@@ -26,6 +26,7 @@ public:
 	void SetContents(const CString& contents);
 	void SetGMEApp(IDispatch *idp);
 	void SetGMEProj(IDispatch *idp);
+	void NavigateTo(CString url);
 	IDispatch * GetInterface() {return NULL;};
 
 // Dialog Data

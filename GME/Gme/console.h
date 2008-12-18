@@ -52,6 +52,7 @@ public:
 	void AboutBox();
 	void SetGMEApp(IDispatch *idp);
 	void SetGMEProj(IDispatch *idp);
+	void NavigateTo(LPCTSTR url);
 };
 
 //{{AFX_INSERT_LOCATION}}

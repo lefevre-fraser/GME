@@ -81,6 +81,7 @@ public:
 	afx_msg void Clear();
 	afx_msg void SetGMEApp(IDispatch *disp);
 	afx_msg void SetGMEProj(IDispatch *disp);
+	afx_msg void NavigateTo(LPCTSTR url);
 	afx_msg void AboutBox();
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
@@ -95,15 +96,15 @@ public:
 // Dispatch and event IDs
 public:
 	enum {
-	//{{AFX_DISP_ID(CConsoleCtrl)
+		dispidNavigateTo = 7L,
+		//{{AFX_DISP_ID(CConsoleCtrl)
 	dispidContents = 1L,
 	dispidMessage = 2L,
 	dispidClear = 3L,
 	eventidClickMGAID = 1L,
 	//}}AFX_DISP_ID
 	};
-
-private:
+	
 };
 
 //{{AFX_INSERT_LOCATION}}

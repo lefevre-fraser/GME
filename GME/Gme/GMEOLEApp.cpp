@@ -108,6 +108,7 @@ BEGIN_DISPATCH_MAP(CGMEOLEApp, CCmdTarget)
 	DISP_FUNCTION(CGMEOLEApp, "ShowFCO", ShowFCO, VT_EMPTY, VTS_DISPATCH VTS_BOOL)
 	DISP_FUNCTION(CGMEOLEApp, "ConsoleMessage", ConsoleMessage, VT_EMPTY, VTS_BSTR VTS_I4)
 	DISP_FUNCTION(CGMEOLEApp, "ConsoleClear", ConsoleClear, VT_EMPTY, VTS_NONE)
+	DISP_FUNCTION(CGMEOLEApp, "ConsoleNavigateTo", ConsoleNavigateTo, VT_EMPTY, VTS_BSTR)
 
 	DISP_FUNCTION(CGMEOLEApp, "ChangeEditmode", ChangeEditmode, VT_EMPTY, VTS_I4)
 	DISP_FUNCTION(CGMEOLEApp, "GridShow", GridShow, VT_EMPTY, VTS_BOOL)
@@ -688,6 +689,15 @@ void CGMEOLEApp::ConsoleClear()
 	CMainFrame::theInstance->m_console.Clear();
 }
 
+void CGMEOLEApp::ConsoleNavigateTo(LPCTSTR url)
+{
+	CGMEEventLogger::LogGMEEvent("CGMEOLEApp::ConsoleNavigateTo("+CString(url)+")\r\n");
+	
+	// PRECONDITIONS: None
+
+	CMainFrame::theInstance->m_console.NavigateTo(url);
+}
+
 void CGMEOLEApp::DisableComp(LPCTSTR pCompName, BOOL pDisable)
 {
 	// this method allows user added components to be disabled
@@ -1221,6 +1231,18 @@ STDMETHODIMP CGMEOLEApp::XDual::ConsoleClear()
 	TRY_DUAL(IID_IGMEOLEApp)
 	{
 		pThis->ConsoleClear();
+		return NOERROR;
+	}
+	CATCH_ALL_DUAL
+}
+
+STDMETHODIMP CGMEOLEApp::XDual::ConsoleNavigateTo(BSTR url)
+{
+	METHOD_PROLOGUE(CGMEOLEApp, Dual)
+
+	TRY_DUAL(IID_IGMEOLEApp)
+	{
+		pThis->ConsoleNavigateTo(CString(url));
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL

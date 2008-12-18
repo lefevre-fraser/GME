@@ -55,6 +55,7 @@ BEGIN_DISPATCH_MAP(CConsoleCtrl, COleControl)
 	DISP_DEFVALUE(CConsoleCtrl, "Contents")
 	DISP_FUNCTION(CConsoleCtrl, "SetGMEApp", SetGMEApp, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION(CConsoleCtrl, "SetGMEProj", SetGMEProj, VT_EMPTY, VTS_DISPATCH)
+	DISP_FUNCTION_ID(CConsoleCtrl, "NavigateTo", dispidNavigateTo, NavigateTo, VT_EMPTY, VTS_BSTR)
 	DISP_FUNCTION_ID(CConsoleCtrl, "AboutBox", DISPID_ABOUTBOX, AboutBox, VT_EMPTY, VTS_NONE)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
@@ -380,6 +381,11 @@ void CConsoleCtrl::SetGMEProj(IDispatch *disp)
 	m_edit.SetGMEProj(disp);
 }
 
+void CConsoleCtrl::NavigateTo(LPCTSTR url)
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	m_browser.Navigate2(url);
+}
 /////////////////////////////////////////////////////////////////////////////
 // CConsoleCtrl message handlers
 
@@ -796,4 +802,6 @@ BOOL CConsoleCtrl::OnToolTipNotify(UINT id, NMHDR *pNMHDR, LRESULT *pResult)
 	*pResult = 0;
 	return TRUE;    // message was handled
 }
+
+
 
