@@ -9,6 +9,7 @@
 #include <mga.idl>
 #include <mgautil.idl>
 #include <gme.idl>
+#include <mgadecorator.idl>
 #include <parser.idl>
 
 
