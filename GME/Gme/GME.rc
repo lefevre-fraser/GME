@@ -387,6 +387,7 @@ BEGIN
     END
     POPUP "&Window"
     BEGIN
+        MENUITEM "&New Window",                 ID_WINDOW_NEW, INACTIVE
         MENUITEM "New &Horizontal Tab Group",   ID_WINDOW_NEWHORIZONTALTABGROUP
         MENUITEM "New &Vertical Tab Group",     ID_WINDOW_NEWVERTICALTABGROUP
         MENUITEM "Move to &Previous Tab Group", ID_WINDOW_MOVETOPREVIOUSTABGROUP

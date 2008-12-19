@@ -25,25 +25,33 @@ static char THIS_FILE[] = __FILE__;
 
 afx_msg BOOL CComponentBar::OnTT(UINT, NMHDR * pNMHDR, LRESULT * ) {
 	TOOLTIPTEXT *pTTT = (TOOLTIPTEXT *)pNMHDR;
-	UINT nID =pNMHDR->idFrom;
+	UINT nIndex =pNMHDR->idFrom;
+
+	if(nIndex == 1)
+	{
+		strncpy(pTTT->szText, "Check constraints", 79);
+		return FALSE;
+	}
+
+	if(nIndex == 2)
+	{
+		strncpy(pTTT->szText, "Interpret the current model", 79);
+		return FALSE;
+	}
+
+
+	CMFCToolBarButton* pButton = GetButton(nIndex-1);
+	UINT nID = pButton->m_nID;
 
 	if(nID >= ID_FILE_RUNPLUGIN1 && nID <= ID_FILE_RUNPLUGIN8) {
 		strncpy(pTTT->szText, theApp.pluginTooltips[nID-ID_FILE_RUNPLUGIN1], 79);
+		return FALSE;
 	}
 	if(nID >= ID_FILE_INTERPRET1 && nID <= ID_FILE_INTERPRET18) {
 		strncpy(pTTT->szText, theApp.interpreterTooltips[nID-ID_FILE_INTERPRET1], 79);
+			return FALSE;
 	}
-	if (pTTT->uFlags & TTF_IDISHWND) {
-	// idFrom is actually the HWND of the tool
-		nID = ::GetDlgCtrlID((HWND)nID);
-		if(nID) {
-			pTTT->lpszText = "Ajaj"; //theApp.plugins[0];
-			pTTT->hinst = AfxGetResourceHandle();
-			return(TRUE);
-		}
-	}	
-	return(FALSE);
-	;
+	return TRUE;
 }
 
 const int  iMaxUserToolbars = 10;
@@ -83,6 +91,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	*/
 	ON_COMMAND(ID_EDIT_SEARCH, OnEditSearch)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_SEARCH, OnUpdateEditSearch)
+	ON_UPDATE_COMMAND_UI(ID_WINDOW_NEW, OnUpdateWindowNew)
 	ON_WM_TIMER()
 	ON_WM_DESTROY()
 	
@@ -811,6 +820,11 @@ void CMainFrame::OnUpdateViewPartbrowser(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(m_partBrowser.IsVisible());
 }
 
+void CMainFrame::OnUpdateFileNew(CCmdUI* pCmdUI)
+{
+	pCmdUI->Disable();
+}
+
 void CMainFrame::OnUpdateViewPannWin(CCmdUI* pCmdUI) 
 {
 	pCmdUI->Enable();
@@ -1513,4 +1527,9 @@ void CMainFrame::ShowNavigationAndModeToolbars(bool isVisible)
 {
 	ShowPane(&modeBar, isVisible, FALSE, FALSE);
 	ShowPane(&naviBar, isVisible, FALSE, FALSE);	
+}
+
+void CMainFrame::OnUpdateWindowNew(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(FALSE);
 }

@@ -740,16 +740,6 @@ void CGMEApp::UpdateComponentToolbar()
 		CComponentBar &componentBar = CMainFrame::theInstance->m_wndComponentBar;
 		componentBar.ShowWindow(SW_HIDE);
 
-		if(!mgaMetaProject) 
-		{
-			return;
-		}
-
-		// Updating the Component toolbar
-		CComPtr<IMgaRegistrar> registrar;
-		if(registrar.CoCreateInstance(L"Mga.MgaRegistrar") != S_OK) return;
-
-
 
 		// Removing the add-in and plug-in buttons
 		const CObList &componentButtons = componentBar.GetAllButtons();
@@ -764,7 +754,18 @@ void CGMEApp::UpdateComponentToolbar()
 
 		// Clearing user images
 		m_userImages.Clear();
+
+		if(!mgaMetaProject) 
+		{
+			componentBar.RecalcLayout();
+			return;
+		}
 		
+		// Updating the Component toolbar
+		CComPtr<IMgaRegistrar> registrar;
+		if(registrar.CoCreateInstance(L"Mga.MgaRegistrar") != S_OK) return;
+
+
 		// Traversing  the plugins and interpreters
 		for(int i = 0; i < plugins.GetSize() + interpreters.GetSize(); ++i)	
 		{        				 						
@@ -838,13 +839,12 @@ void CGMEApp::UpdateComponentToolbar()
 
 			if( hModule != NULL ) 
 			{
-				// hIcon = (HICON)::LoadImage(hModule, iconInfo.Mid(commaPos+1), IMAGE_ICON, 0,0, LR_DEFAULTCOLOR);
-				hIcon = ::LoadIcon(hModule, iconInfo.Mid(commaPos+1));
+				 hIcon = (HICON)::LoadImage(hModule, iconInfo.Mid(commaPos+1), IMAGE_ICON, 16,16, LR_DEFAULTCOLOR);
 			}
 			else 
 			{				  
 				// simple .ico file with path
-				hIcon =(HICON)LoadImage(NULL, iconInfo, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+				hIcon =(HICON)LoadImage(NULL, iconInfo, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
 			}
 			
 			// If icon is not found either in the DLL or a standalone file
@@ -855,12 +855,12 @@ void CGMEApp::UpdateComponentToolbar()
 
 
 			//Adding button icon			
-			int nIndex = m_userImages.AddIcon(hIcon);
+			int nIndex = m_userImages.AddIcon(hIcon,TRUE);
 			CMFCToolBar::SetUserImages(&m_userImages);
 
 			// Adding button
 			int commandID = (i< plugins.GetSize()) ? ID_FILE_RUNPLUGIN1 + i:ID_FILE_INTERPRET1 + i-plugins.GetSize();
-			CMFCToolBarButton toolBarButton(commandID,nIndex, toolTip,TRUE);
+			CMFCToolBarButton toolBarButton(commandID,nIndex, componentName+'\n'+toolTip,TRUE);
 			
 			componentBar.InsertButton(toolBarButton);
 			componentBar.RecalcLayout();

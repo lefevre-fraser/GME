@@ -151,6 +151,7 @@ protected:
 	afx_msg void OnUpdateViewMultiUserSubversion(CCmdUI* pCmdUI);
 	afx_msg void OnViewClearConsole();
 	afx_msg void OnUpdateViewClearConsole( CCmdUI* pCmdUI);
+	afx_msg void OnUpdateWindowNew(CCmdUI* pCmdUI);
 	afx_msg void OnClose();
 public:
 	afx_msg void OnDropFiles(HDROP p_hDropInfo);
