@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="MetaMAid"
-	ProjectGUID="{43E2FCA8-93A2-4EFA-B1B6-AE0AEC4198C7}"
+	Name="QuRep"
+	ProjectGUID="{3D2AD525-7A56-44AC-9755-5F7A2917CB3B}"
+	RootNamespace="QuRep"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -218,11 +219,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\copier.cpp"
+				>
+			</File>
+			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Formatter.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\kindseldlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\nullexc.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\RawComponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RelationInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SearchRepl.cpp"
 				>
 			</File>
 			<File
@@ -271,6 +292,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\copier.h"
+				>
+			</File>
+			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Formatter.h"
 				>
 			</File>
@@ -279,11 +304,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\kindseldlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\nullexc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\RawComponent.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Resource.h"
+				RelativePath=".\RelationInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SearchRepl.h"
 				>
 			</File>
 			<File
@@ -300,7 +341,7 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 			<File
-				RelativePath=".\CompIcon.ico"
+				RelativePath=".\compicon.ico"
 				>
 			</File>
 		</Filter>

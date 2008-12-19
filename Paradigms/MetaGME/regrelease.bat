@@ -15,8 +15,8 @@ regsvr32 /s "MONTraverser\Release\MONTraverser.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
-echo BonExtender2004.dll:
-regsvr32 /s "BONExtension\Release\BonExtender2004.dll"
+echo BonExtender.dll:
+regsvr32 /s "BonExtender\Release\BonExtender.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
@@ -26,7 +26,17 @@ if errorlevel 1 goto errorlabel
 echo    OK
 
 echo NamespaceConfig.dll:
-regsvr32 /s "NamespaceConfigure\Release\NamespaceConfig.dll"
+regsvr32 /s "NamespaceConfig\Release\NamespaceConfig.dll"
+if errorlevel 1 goto errorlabel
+echo    OK
+
+echo MetaMAid.dll:
+regsvr32 /s "MetaMAid\Release\MetaMAid.dll"
+if errorlevel 1 goto errorlabel
+echo    OK
+
+echo QuRep.dll:
+regsvr32 /s "QuRep\Release\QuRep.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 

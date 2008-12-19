@@ -18,7 +18,7 @@
 	arising out of or in connection with the use or performance of
 	this software.
 */
-
+#include "StdAfx.h"
 #include "BON2Component.h"
 #include "MONDialog.h"
 

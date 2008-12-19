@@ -19,6 +19,7 @@
 	this software.
 */
 #include "StdAfx.h"
+
 #include "BON2Component.h"
 
 #include "logger.h"
@@ -26,13 +27,31 @@
 #include "string"
 
 #include "Dumper.h"
-#include "NameSpecDlg.h"
+
 #include "globals.h"
 Globals global_vars;
-NameSpecDlg * dlg;
 
 namespace BON
 {
+
+class Deallocator
+{
+public:
+	Deallocator( Component* pComp)
+		: m_pComp( pComp)
+	{
+	}
+
+	~Deallocator()
+	{
+		global_vars.err.m_proj = Project();
+		if( m_pComp) m_pComp->finiMembers();
+		else ASSERT(0);
+	}
+protected:
+	Component *m_pComp;
+
+};
 
 //###############################################################################################################################################
 //
@@ -42,6 +61,7 @@ namespace BON
 
 Component::Component()
 	: m_bIsInteractive( false )
+	, m_sheet( 0)
 {
 }
 
@@ -72,21 +92,7 @@ void Component::finalize( Project& project )
 {
 	// ======================
 	// Insert application specific code here
-		m_entities.clear();
-		m_relations.clear();
-		m_equivRelations.clear();
-		//m_toBeDeletedEntities.clear();
-		m_equivBag.clear();
-		m_realObj.clear();
-
-		Sheet::m_BON_Project_Root_Folder = (Folder)NULL; // crucial!!!
-
-		if ( m_sheet != 0)  
-		{ 
-			TO( "Internal error: Merged Paradigm Sheet object still exists."); 
-			delete m_sheet; 
-			m_sheet = 0; 
-		}
+	finiMembers();
 }
 
 
@@ -101,8 +107,9 @@ void Component::scanSubModels( const Model& model)
 
 void Component::scanModels( const Model& model, const Folder& parent)
 {
-  scanSubModels(model);
-  entityBuilder(model, parent);
+	scanSubModels(model);
+	entityBuilder(model, parent);
+	m_setOfParShs.insert( model);
 }
 
 
@@ -122,7 +129,6 @@ void Component::scanProject( Project& project)
 	try
 	{
 		Folder rf = project->getRootFolder();
-		Sheet::m_BON_Project_Root_Folder = rf;
 
 		std::set<Folder> folders;
 		folders.insert( rf); // including root folder
@@ -164,17 +170,6 @@ void Component::scanProject( Project& project)
 void Component::initMembers( Project& project)
 {
 	m_projectName = project->getName();
-	m_dir = "";
-
-	if ( global_vars.silent_mode)
-	{
-		CComPtr<IMgaProject> mgaProject = project->getProjectI();
-		CComBSTR    connString;
-		COMTHROW(mgaProject->get_ProjectConnStr(&connString));
-		std::string path = Util::Copy( connString);
-		int e = path.rfind('\\');
-		if( e != std::string::npos && path.substr(0, 4) == "MGA=") m_dir = path.substr(4, e-3); // cut leading "MGA=" , preserve tailing '\\'
-	}
 
 	m_entities.clear();
 	//m_toBeDeletedEntities.clear();
@@ -183,6 +178,26 @@ void Component::initMembers( Project& project)
 	m_realObj.clear();
 
 	m_sheet = 0;
+}
+
+void Component::finiMembers()
+{
+	m_entities.clear();
+	m_relations.clear();
+	m_equivRelations.clear();
+	//m_toBeDeletedEntities.clear();
+	m_equivBag.clear();
+	m_realObj.clear();
+
+	m_setOfParShs.erase( m_setOfParShs.begin(), m_setOfParShs.end());
+	m_setOfParShs.clear();
+
+	if ( m_sheet != 0)  
+	{ 
+		TO( "Internal error: Merged Paradigm Sheet object still exists."); 
+		delete m_sheet; 
+		m_sheet = 0; 
+	}
 }
 
 
@@ -198,6 +213,10 @@ void Component::createSheet()
 bool Component::populateSheet( Project& project )
 {
 	m_sheet->setProject( project );
+	m_sheet->m_BON_Project_Root_Folder2 = project->getRootFolder();
+	m_sheet->m_setOfParadigmSheets2 = m_setOfParShs;
+	m_setOfParShs.clear();
+
 
 	bool error = false;
 
@@ -241,11 +260,11 @@ bool Component::populateSheet( Project& project )
 			else if ( fco->getObjectMeta().name() == "Folder" )
 				new_elem = m_sheet->createFolderRep( fco, resp);//(resp != BON::FCO())?resp:fco);
 			else if ( fco->getObjectMeta().name() == "Aspect" )
-				new_elem = m_sheet->createAspectRep( fco, resp);//(resp != BON::FCO())?resp:fco);
+				/*new_elem = m_sheet->createAspectRep( fco, (resp != BON::FCO())?resp:fco)*/;
 			else if ( fco->getObjectMeta().name() == "Constraint" )
-				new_elem = m_sheet->createConstraintRep( fco);
+				/*new_elem = m_sheet->createConstraintRep( fco)*/;
 			else if ( fco->getObjectMeta().name() == "ConstraintFunc" )
-				new_elem = m_sheet->createConstraintFuncRep( fco);
+				/*new_elem = m_sheet->createConstraintFuncRep( fco)*/;
 			else if ( fco->getObjectMeta().name() == "BooleanAttribute" )
 				new_elem = m_sheet->createBoolAttributeRep( fco);
 			else if ( fco->getObjectMeta().name() == "EnumAttribute" )
@@ -261,10 +280,7 @@ bool Component::populateSheet( Project& project )
 			{
 				new_elem->setParentFolder( parent_folder, orig_parent_folder); 
 				if ( m_equivBag.find( fco) != m_equivBag.end())
-				{
 					new_elem->setEquivPeers( m_equivBag[ fco]);
-					new_elem->setDisplayedName( it_1->getDispName());
-				}
 			}
 		}
 	} // for m_entities
@@ -293,12 +309,12 @@ bool Component::populateSheet( Project& project )
 			containmentManager( *rel_it);
 		else if ( oper == Relation::FOLDER_CONTAINMENT_OP)
 			folderContainmentManager( *rel_it);
-		else if ( oper == Relation::HAS_ASPECT_OP)
+		/*else if ( oper == Relation::HAS_ASPECT_OP)
 			hasAspectManager( *rel_it);
 		else if ( oper == Relation::ASPECT_MEMBER_OP)
 			aspectMemberManager( *rel_it);
 		else if ( oper == Relation::HAS_CONSTRAINT_OP)
-			hasConstraintManager( *rel_it);
+			hasConstraintManager( *rel_it);*/
 		else if ( oper == Relation::HAS_ATTRIBUTE_OP)
 			hasAttributeManager( *rel_it);
 	}
@@ -360,45 +376,39 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 	// ======================
 	// Insert application specific code here
 	global_vars.silent_mode = (lParam == GME_SILENT_MODE);
-	//global_vars.silent_mode = true;
-	initMembers( project);
 
-	std::string temp;
-	if ( !Sheet::makeValidParadigmName( m_projectName, temp))
+	// when deallocated will clear the member variables of Component upon leaving the scope (and some of global_vars)
+	Deallocator g( this);
+	
+	initMembers( project);
+	global_vars.err.m_proj = project;
+
+	BON::Folder rf = project->getRootFolder();
+	BON::RegistryNode rn = rf->getRegistry()->getChild( "Namespace");
+	global_vars.m_namespace_name = rn?rn->getValue():"";
+
+	BON::RegistryNode opt_rn = rf->getRegistry()->getChild( Dumper::m_strBonExtenderOptions);
+
+	if ( Dumper::selectOutputFiles( m_projectName, opt_rn) > 1)
 	{
-		if( !global_vars.silent_mode)
-		{
-			project->consoleMsg("[MetaInterpreter] Invalid or empty paradigm name (Rootfolder name). Please remove spaces and the special characters, except '.' and '_'. Using: \"" + temp + "\".", MSG_ERROR);
-			CString msg = "Invalid or empty paradigm name: \"";
-			msg += (m_projectName + "\". Continue using: \"" + temp + "\"?").c_str();
-			if( AfxMessageBox( (LPCTSTR)msg, MB_YESNO | MB_ICONWARNING) != IDYES)
-			{
-				project->consoleMsg("[MetaInterpreter] Intepretation stopped by the user.", MSG_NORMAL);
-				return;
-			}
-		}
-	}
-	if ( Dumper::selectOutputFiles( project, m_projectName, m_dir) > 1)
-	{
-		if( !global_vars.silent_mode) project->consoleMsg("[MetaInterpreter] Output file name selection cancelled by the user or other file operation failed.", MSG_NORMAL);
+		if( !global_vars.silent_mode) project->consoleMsg("[BonExtender] Output file name selection cancelled by the user or other file operation failed.", MSG_NORMAL);
 		return;
 	}
-
-	Dumper::selectOptions( project);
-
-	global_vars.err.m_proj = project;
 
 	CWaitCursor wait;
 
 	CTime theTime = CTime::GetCurrentTime();
 	CString s = theTime.Format("%#c");
-	s = "METAINTERPRETER LOG STARTED " + s;
+	s = "BonExtender LOG STARTED " + s;
 
 	global_vars.err.open( global_vars.err_file_name.c_str(), std::ios_base::out);
 
 	global_vars.err << MSG_NORMAL << std::string( s.GetLength(), '=') << "\n";
 	global_vars.err << (LPCTSTR) s << "\n";
 	global_vars.err << MSG_NORMAL << std::string( s.GetLength(), '=') << "\n";
+
+	global_vars.dmp_s.open( global_vars.source_file_name.c_str(), std::ios_base::out);
+	global_vars.dmp_h.open( global_vars.header_file_name.c_str(), std::ios_base::out);
 
 	try {
 		
@@ -413,8 +423,6 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 		proxyFinder();						// replaces proxies with the real objects
 		equivalenceFinder();				// merges the equivalent objects (the relations they are part of)
 		removeProxiesAndEquiv();
-		bool cont = nameSelector();
-
 		while ( !checkForProxies()) { }
 		
 		bool do_at_all = true;
@@ -422,8 +430,6 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 		{
 			if ( Sheet::checkInstance())
 				global_vars.err << MSG_ERROR << "Internal error: merged paradigm sheet already exists\n";
-
-			global_vars.dmp.open( global_vars.xmp_file_name.c_str(), std::ios_base::out);
 
 			createSheet();
 
@@ -455,14 +461,9 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 				global_vars.err << MSG_ERROR << "Internal error: Merged Sheet object doesn't exist\n";
 			
 			deleteSheet();
-			
-			global_vars.dmp.close();
-			if (success)
-				Dumper::registerIt( global_vars.xmp_file_name);
 		}
 		else
 			global_vars.err << MSG_ERROR << "Exited before populating the Merged Paradigm Sheet. Proxy or other problem may exist.\n";
-		
 	}	catch (...)	
 	{
 		global_vars.err << MSG_ERROR << "Internal error: Exception thrown by Component.\n";
@@ -472,10 +473,13 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 	if ( Sheet::checkInstance())
 		global_vars.err << MSG_ERROR << "Internal error: Merged Paradigm Sheet object still exists\n";
 
+	global_vars.dmp_h.close();
+	global_vars.dmp_s.close();
+
 	global_vars.err << MSG_NORMAL << "\nEND OF LOG\n";
 	global_vars.err.flushit();
 	global_vars.err.close();
-	global_vars.err.m_proj = (Project) 0;
+	global_vars.err.m_proj = Project();
 }
 
 // ====================================================

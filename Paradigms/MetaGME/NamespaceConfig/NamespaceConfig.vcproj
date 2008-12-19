@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="MetaMAid"
-	ProjectGUID="{43E2FCA8-93A2-4EFA-B1B6-AE0AEC4198C7}"
+	Name="NamespaceConfig"
+	ProjectGUID="{92AE3C21-CE95-4A59-97D9-ACB5082426DE}"
+	RootNamespace="NamespaceConfig"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -49,9 +50,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;$(GME_ROOT)/SDK/BON/Common"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL;BUILDER_OBJECT_NETWORK_V2"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -133,8 +135,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories=".;$(GME_ROOT)/SDK/BON/Common"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;BUILDER_OBJECT_NETWORK_V2"
 				RuntimeLibrary="2"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -190,11 +193,27 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\BON.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BON2Component.cpp"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\BONImpl.cpp"
+				>
+			</File>
+			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\ComHelp.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\component.def"
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Common.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Component.def"
 				>
 			</File>
 			<File
@@ -218,11 +237,39 @@
 				>
 			</File>
 			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Events.cpp"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Exceptions.cpp"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Extensions.cpp"
+				>
+			</File>
+			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Formatter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\RawComponent.cpp"
+				RelativePath=".\MetaGMEBonX.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MetaGMEVisitor.cpp"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\MON.cpp"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\MONImpl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NmspSpec.cpp"
 				>
 			</File>
 			<File
@@ -245,13 +292,33 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Utils.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\BON.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BON2Component.h"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\BONImpl.h"
+				>
+			</File>
+			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\ComHelp.h"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Common.h"
 				>
 			</File>
 			<File
@@ -271,6 +338,18 @@
 				>
 			</File>
 			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Events.h"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Exceptions.h"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Extensions.h"
+				>
+			</File>
+			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Formatter.h"
 				>
 			</File>
@@ -279,7 +358,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RawComponent.h"
+				RelativePath=".\MetaGMEBonX.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MetaGMEVisitor.h"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\MON.h"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\MONImpl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NmspSpec.h"
 				>
 			</File>
 			<File
@@ -292,6 +387,10 @@
 			</File>
 			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Utils.h"
 				>
 			</File>
 		</Filter>

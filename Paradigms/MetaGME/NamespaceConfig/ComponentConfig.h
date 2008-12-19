@@ -8,31 +8,31 @@
 #define BON2COMPONENT
 
 // COM UUID-s, names and progID
-#define TYPELIB_UUID "1CB9FEAE-D8F7-48B0-A776-1541149AAF50"
-#define TYPELIB_NAME "MGA Interpreter TypeLibrary (MetaInterpreter)"
-#define COCLASS_UUID "F15CF3E9-7383-44B3-9AB8-A275283BBCA9"
-#define COCLASS_NAME "MGA Interpreter CoClass (MetaInterpreter)"
-#define COCLASS_PROGID "MGA.Interpreter.MetaInterpreter"
+#define TYPELIB_UUID "A80F5574-0EA6-44F4-8001-9B803C3E2960"
+#define TYPELIB_NAME "MGA Interpreter TypeLibrary (NamespaceConfig)"
+#define COCLASS_UUID "7A7B03E5-9132-45EA-919C-C5BEC40387B1"
+#define COCLASS_NAME "MGA Interpreter CoClass (NamespaceConfig)"
+#define COCLASS_PROGID "MGA.Interpreter.NamespaceConfig"
 
-#define COCLASS_UUID_EXPLODED1  0xf15cf3e9
-#define COCLASS_UUID_EXPLODED2   0x7383
-#define COCLASS_UUID_EXPLODED3   0x44b3
-#define COCLASS_UUID_EXPLODED4   0x9a
-#define COCLASS_UUID_EXPLODED5   0xb8
-#define COCLASS_UUID_EXPLODED6   0xa2
-#define COCLASS_UUID_EXPLODED7   0x75
-#define COCLASS_UUID_EXPLODED8   0x28
-#define COCLASS_UUID_EXPLODED9   0x3b
-#define COCLASS_UUID_EXPLODED10  0xbc
-#define COCLASS_UUID_EXPLODED11  0xa9
+#define COCLASS_UUID_EXPLODED1  0x7a7b03e5
+#define COCLASS_UUID_EXPLODED2   0x9132
+#define COCLASS_UUID_EXPLODED3   0x45ea
+#define COCLASS_UUID_EXPLODED4   0x91
+#define COCLASS_UUID_EXPLODED5   0x9c
+#define COCLASS_UUID_EXPLODED6   0xc5
+#define COCLASS_UUID_EXPLODED7   0xbe
+#define COCLASS_UUID_EXPLODED8   0xc4
+#define COCLASS_UUID_EXPLODED9   0x3
+#define COCLASS_UUID_EXPLODED10  0x87
+#define COCLASS_UUID_EXPLODED11  0xb1
 
 
 // This name will appear in the popup window for interpreter selection.
-#define COMPONENT_NAME "MetaInterpreter"
+#define COMPONENT_NAME "NamespaceConfig"
 
 
 // This text will appear in the toolbar icon tooltip and in the menu.
-#define TOOLTIP_TEXT "MetaInterpreter Interpreter"
+#define TOOLTIP_TEXT "NamespaceConfig Interpreter"
 
 // This macro determines the component type (addon vs. interpreter):
 #define GME_INTERPRETER

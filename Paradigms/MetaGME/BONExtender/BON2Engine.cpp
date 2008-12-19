@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "BON2Component.h"
 
 #include "logger.h"
@@ -6,11 +6,9 @@
 #include "string"
 
 #include "Dumper.h"
-#include "NameSpecDlg.h"
 #include "globals.h"
 
 extern Globals global_vars;
-extern NameSpecDlg * dlg;
 
 namespace BON
 {
@@ -649,23 +647,9 @@ void Component::removeProxiesAndEquiv()
 }
 
 
+#if(NEEDED_FOR_METAINTERPRETER_ONLY)
 bool Component::nameSelector()
 {
-	// imagine an fco has several equivalence relationships
-	// the set of names that are considered (mainly for historical , but for practical reasons as well)
-	// are the names of the 
-	//      -non proxy equivalents
-	//      -the operator (Equivalence, SameAspect, SameFolder) itself
-	// 
-	// but beware that, the operator is chosen sometimes as the ''Name responsible''
-	// and this pointer is not among the equivalent objects set ( m_equivs ) 
-	// -in such cases the original resp pointer remains unchanged
-	// -if another name is selected, than the resp pointer is changed 
-	//  with the non-proxy equivalent's pointer
-	// 
-	// the display name can be selected independently from the name, so that it may come
-	// from another equivalent than the name comes from
-
 	bool res = true;
 
 	dlg = new NameSpecDlg();
@@ -687,20 +671,12 @@ bool Component::nameSelector()
 		// it_2->first = fco
 		// it_2->second = m_equivBag[ fco];
 		std::string defname = resp->getName(); // take its name from its name responsible
-		std::string defdispname = "";          // initial value = "". This "" value will always be added as a dispname possibility (see NameSpecDlg::GetDispNames method)
-		std::string regname, regdispname;      // the registry contained name
+		std::string regname;
 
-		// load information from registry
 		if( fco->getObjectMeta().name() == "Aspect")
-		{
 			regname = AspectRep::getMyRegistry( fco, it_1->getParentFolder())->getValueByPath( "/" + Any::NameSelectorNode_str);
-			regdispname = AspectRep::getMyRegistry( fco, it_1->getParentFolder())->getValueByPath( "/" + Any::DisplayedNameSelectorNode_str);
-		}
 		else
-		{
 			regname = Any::getMyRegistry( fco, it_1->getParentFolder())->getValueByPath( "/" + Any::NameSelectorNode_str);
-			regdispname = Any::getMyRegistry( fco, it_1->getParentFolder())->getValueByPath( "/" + Any::DisplayedNameSelectorNode_str);
-		}
 
 		
 		bool is_any_alternative = false;
@@ -729,16 +705,15 @@ bool Component::nameSelector()
 			CString kind = fco->getObjectMeta().name().c_str();
 			
 			if( is_reg_among_names)	// if valid info in registry use it
-				dlg->m_dn[ fco] = make_pair( regname, regdispname);
+				dlg->m_dn[ fco] = regname;
 			else					// otherwise use the default name
-				dlg->m_dn[ fco] = make_pair( defname, defdispname);
+				dlg->m_dn[ fco] = defname;
 
 			if( !is_def_among_names)
 			{
 				dlg->m_map[ fco].insert( resp);
 			}
-			
-			// fill up the equiv pointer map , leaving out proxies
+
 			jt = it_2->second.begin();
 			for( ; jt != it_2->second.end(); ++jt)
 			{
@@ -750,100 +725,58 @@ bool Component::nameSelector()
 		}
 	}
 
-	if( global_vars.silent_mode)
-	{
-		res = true;
-		dlg->m_result = dlg->m_dn;
-	}
-	else
-	{
-		res = false;
-		if( !dlg->m_dn.empty())	res = dlg->DoModal() == IDOK;
-	}
-
+	res = false;
+	if( !dlg->m_dn.empty())	res = dlg->DoModal() == IDOK;
 	if( res)
 	{
 		NameSpecDlg::DEFNAMES_MAP::iterator it_0 = dlg->m_result.begin();
 		for( ; it_0 != dlg->m_result.end(); ++it_0)
 		{
 			BON::FCO key_fco = it_0->first;
-			std::string newsel_name     = it_0->second.first;	// the newly selected name
-			std::string newsel_dispname = it_0->second.second;	//                    display name
+			std::string newsel_name = it_0->second;
+			BON::FCO newsel_resp;
 
-			bool found = false;
 			Entity_Iterator it_1( m_entities.begin());
-			for( ; !found && it_1 != m_entities.end(); ++it_1 )
+			for( ; it_1 != m_entities.end(); ++it_1 )
 			{
 				if( it_1->isDeleted()) continue;
 
-				if( it_1->getPointer() == key_fco) // found the entity: *it_1
+				FCO fco( it_1->getPointer());
+				if( fco == key_fco) // found the entity
 				{
-					found = true;
+					if( fco->getObjectMeta().name() == "Aspect")
+						AspectRep::getMyRegistry( fco, it_1->getParentFolder())->setValueByPath( "/" + Any::NameSelectorNode_str, newsel_name);
+					else
+						Any::getMyRegistry( fco, it_1->getParentFolder())->setValueByPath( "/" + Any::NameSelectorNode_str, newsel_name);
 
-					// search for the object among non-proxy equivalents which has the selected name
-					BON::FCO newsel_resp; // this will store the new value if found
-
-					// get the equivset of the key_fco
+					//find the new resppointer value in the equivBag
 					EquivBag_Iterator it_2 = m_equivBag.find( key_fco);
-					if( it_2 != m_equivBag.end()) 
-					{
-						// find the new resppointer value in the equivBag[key_fco] set: it_2->second
-						std::set < ObjPointer >::iterator it_3 = it_2->second.begin();
-						for( ; !newsel_resp && it_3 != it_2->second.end(); ++it_3)
-						{
-							if( !isProxy( *it_3))
-							{
-								std::string eqname = (*it_3)->getName(); // the name of one equivalent
+					if( it_2 == m_equivBag.end()) continue;
 
-								if( eqname == newsel_name)
-									newsel_resp = *it_3;
-							}
+					std::set < ObjPointer >::iterator it_3 = it_2->second.begin();
+					for( ; !newsel_resp && it_3 != it_2->second.end(); ++it_3)
+					{
+						if( !isProxy( *it_3))
+						{
+							std::string eqname = (*it_3)->getName(); // the name of one equivalent
+
+							if( eqname == newsel_name)
+								newsel_resp = *it_3;
 						}
 					}
-					else
-					{
-						ASSERT( 0 ); // the key_fco should have equivalents, thus must be present in the equivBag as a key
-						continue;
-					}
 
-
-					// if the pointer having the selected name is found
-					// then set it as the new "name responsible" pointer
-					// if not found then we leave the default resp pointer 
-					// unchanged, since that was the only name coming not
-					// from the equivalents, but from the old resp pointer
 					if( newsel_resp) // found
-					{
 						it_1->setRespPointer( newsel_resp); // set the new name resp
-					}
-
-					// the dispName has to be set all the time
-					it_1->setDispName( newsel_dispname);
-
-					// save back into registry the user selection
-					if( key_fco->getObjectMeta().name() == "Aspect")
-					{
-						AspectRep::getMyRegistry( key_fco, it_1->getParentFolder())->setValueByPath( "/" + Any::NameSelectorNode_str, newsel_name);
-						AspectRep::getMyRegistry( key_fco, it_1->getParentFolder())->setValueByPath( "/" + Any::DisplayedNameSelectorNode_str, newsel_dispname);
-					}
-					else
-					{
-						Any::getMyRegistry( key_fco, it_1->getParentFolder())->setValueByPath( "/" + Any::NameSelectorNode_str, newsel_name);
-						Any::getMyRegistry( key_fco, it_1->getParentFolder())->setValueByPath( "/" + Any::DisplayedNameSelectorNode_str, newsel_dispname);
-					}
+					//if not found then the the default resp is in charge, which is correct
 				}
 			}
-			if( !found) 
-			{ 
-				ASSERT( 0 ); 
-			} // the key_fco must be a non-deleted entity in the m_entities
 		}
 	}
 
 	delete dlg;
 	return res;
 }
-
+#endif
 
 int Component::isProxy( const ObjPointer& ptr)
 {
@@ -1211,6 +1144,7 @@ void Component::folderContainmentManager( Relation & rel_it)
 }
 
 
+#if(NEEDED_FOR_METAINTERPRETER_ONLY)
 void Component::hasAspectManager( Relation & rel_it)
 {
 	if ( rel_it.getOperation() == Relation::HAS_ASPECT_OP )
@@ -1325,6 +1259,7 @@ void Component::hasConstraintManager( Relation & rel_it)
 		} // if
 	} // if
 }
+#endif
 
 
 void Component::hasAttributeManager( Relation & rel_it)

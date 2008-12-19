@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="MetaMAid"
-	ProjectGUID="{43E2FCA8-93A2-4EFA-B1B6-AE0AEC4198C7}"
+	Name="HFSMSimulator"
+	ProjectGUID="{A4D2943B-E677-492F-A8C2-FA9B4FC1D3F4}"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -49,7 +49,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;$(GME_ROOT)/SDK/BON/Common"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL;BUILDER_OBJECT_NETWORK"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -133,7 +133,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories=".;$(GME_ROOT)/SDK/BON/Common"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;BUILDER_OBJECT_NETWORK"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -190,11 +190,19 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\BONComponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Builder.cpp"
+				>
+			</File>
+			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\ComHelp.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\component.def"
+				RelativePath=".\Component.def"
 				>
 			</File>
 			<File
@@ -219,10 +227,6 @@
 			</File>
 			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Formatter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\RawComponent.cpp"
 				>
 			</File>
 			<File
@@ -251,6 +255,14 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath=".\BONComponent.h"
+				>
+			</File>
+			<File
+				RelativePath="$(GME_ROOT)\SDK\BON\Common\Builder.h"
+				>
+			</File>
+			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\ComHelp.h"
 				>
 			</File>
@@ -276,10 +288,6 @@
 			</File>
 			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\GMECOM.H"
-				>
-			</File>
-			<File
-				RelativePath=".\RawComponent.h"
 				>
 			</File>
 			<File
