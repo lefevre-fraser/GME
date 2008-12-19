@@ -5,10 +5,20 @@
 #if !defined(AFX_STDAFX_H__C4EFDDFC_C095_4509_B571_632F0986D162__INCLUDED_)
 #define AFX_STDAFX_H__C4EFDDFC_C095_4509_B571_632F0986D162__INCLUDED_
 
+#pragma once
+
+#define TEST_META_CONFORMANCE_INSIDE_BON // by ZolMol
+
+#ifndef VC_EXTRALEAN
+#define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
+#endif
+
+#include "targetver.h"
+
+#define _CRT_SECURE_NO_WARNINGS
 
 #define _ATL_APARTMENT_THREADED
 
-#include "targetver.h"
 #include <afxwin.h>
 #include <afxdisp.h>
 

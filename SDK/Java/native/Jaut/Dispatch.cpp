@@ -205,7 +205,7 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Dispatch_changeInterface
 	}
 
 	IID iid;
-	HRESULT hr = IIDFromString((jchar*)uni, &iid);
+	HRESULT hr = IIDFromString((LPOLESTR)uni, &iid);
 	env->ReleaseStringChars(itf, uni);
 	
 	if( FAILED(hr) )
@@ -244,7 +244,7 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Dispatch_attachNewInstance
 	}
 	
 	CLSID clsid;
-	HRESULT hr = CLSIDFromProgID(uni, &clsid);
+	HRESULT hr = CLSIDFromProgID((LPCOLESTR)uni, &clsid);
 	env->ReleaseStringChars(progid, uni);
 
 	if( FAILED(hr) )
@@ -286,7 +286,7 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Dispatch_attachActiveObject
 	}
 	
 	CLSID clsid;
-	HRESULT hr = CLSIDFromProgID(uni, &clsid);
+	HRESULT hr = CLSIDFromProgID((LPCOLESTR)uni, &clsid);
 	env->ReleaseStringChars(progid, uni);
 
 	if( FAILED(hr) )
@@ -356,7 +356,7 @@ JNIEXPORT jintArray JNICALL Java_org_isis_jaut_Dispatch_getIDsOfNames
 			if( name == NULL )
 				break;
 
-			ns[index] = env->GetStringChars(name, NULL);
+			ns[index] = (const OLECHAR*)env->GetStringChars(name, NULL);
 			env->DeleteLocalRef(name);
 
 			if( ns[index] == NULL )
@@ -380,7 +380,7 @@ JNIEXPORT jintArray JNICALL Java_org_isis_jaut_Dispatch_getIDsOfNames
 	while( --index >= 0 )
 	{
 		jstring name = (jstring)env->GetObjectArrayElement(names, index);
-		env->ReleaseStringChars(name, ns[index]);
+		env->ReleaseStringChars(name, (const jchar*)ns[index]);
 		env->DeleteLocalRef(name);
 	}
 
@@ -412,14 +412,14 @@ JNIEXPORT jint JNICALL Java_org_isis_jaut_Dispatch_getIDOfName
 		return NULL;
 	}
 
-	const OLECHAR *n = env->GetStringChars(name, NULL);
+	const OLECHAR *n = (const OLECHAR*)env->GetStringChars(name, NULL);
 	if( n == NULL )
 		return NULL;
 
 	long id = 0;
 	HRESULT hr = p->GetIDsOfNames(IID_NULL, (OLECHAR**)&n, 1, NULL, &id);
 
-	env->ReleaseStringChars(name, n);
+	env->ReleaseStringChars(name, (const jchar*)n);
 	
 	if( FAILED(hr) )
 		ThrowComException(env, hr);

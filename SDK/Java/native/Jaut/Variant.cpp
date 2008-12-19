@@ -534,7 +534,7 @@ JNIEXPORT jstring JNICALL Java_org_isis_jaut_Variant_getString
 		return NULL;
 	}
 
-    return env->NewString(b, SysStringLen(b));
+    return env->NewString((const jchar*)b, SysStringLen(b));
 }
 
 JNIEXPORT void JNICALL Java_org_isis_jaut_Variant_setString
@@ -573,7 +573,7 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Variant_setString
 		s = env->GetStringChars(val, NULL);
 	if( s != NULL )
 	{
-		*b = SysAllocStringLen(s, l);
+		*b = SysAllocStringLen((const OLECHAR*)s, l);
 		env->ReleaseStringChars(val, s);
 	}
 }

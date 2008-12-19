@@ -1,7 +1,7 @@
 #ifndef GMECOM_H
 #define GMECOM_H
 
-#include "ComponentLib.h"
+#include "ComponentLib_h.h"
 
 // TODO: remove it or replace it with SmartMultiPtr from CommonMgaTrukk.h
 template <class TTT>

@@ -41,7 +41,7 @@ JNIEXPORT jint JNICALL Java_org_isis_gme_mgadecorator_MgaDecorator_createNative_
     const jchar * chars = env->GetStringChars( progid, false );
 
     CLSID clsid;
-    HRESULT hr = CLSIDFromProgID(chars, &clsid);
+    HRESULT hr = CLSIDFromProgID((LPCOLESTR)chars, &clsid);
     env->ReleaseStringChars( progid, chars );
     COMCHECK( hr );
 

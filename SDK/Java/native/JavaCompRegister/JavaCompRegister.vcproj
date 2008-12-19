@@ -50,7 +50,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\GME\Interfaces,..\..\..\GME\Common"
+				AdditionalIncludeDirectories="&quot;$(GME_ROOT)\GME\Interfaces&quot;;&quot;$(GME_ROOT)\GME\Common&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -146,7 +146,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\GME\Interfaces,..\..\..\GME\Common"
+				AdditionalIncludeDirectories="&quot;$(GME_ROOT)\GME\Interfaces&quot;;&quot;$(GME_ROOT)\GME\Common&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -214,7 +214,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="..\..\..\GME\Common\CommonError.cpp"
+				RelativePath="$(GME_ROOT)\GME\Common\CommonError.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -240,7 +240,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\GME\Common\CommonMfc.cpp"
+				RelativePath="$(GME_ROOT)\GME\Common\CommonMfc.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -266,7 +266,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\GME\Common\CommonSmart.cpp"
+				RelativePath="$(GME_ROOT)\GME\Common\CommonSmart.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"

@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="JAUT"
 	ProjectGUID="{3D12EDCF-EAC3-4D44-AB60-DAD47762021F}"
+	RootNamespace="JAUT"
 	Keyword="AtlProj"
 	TargetFrameworkVersion="131072"
 	>
@@ -50,7 +51,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="C:\j2sdk1.4.2_07\include,C:\j2sdk1.4.2_07\include\win32"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Java\jdk1.6.0_06\include&quot;;&quot;C:\Program Files\Java\jdk1.6.0_06\include\win32&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -145,7 +146,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\j2sdk1.4.2_07\include,C:\j2sdk1.4.2_07\include\win32"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Java\jdk1.6.0_06\include&quot;;&quot;C:\Program Files\Java\jdk1.6.0_06\include\win32&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -279,7 +280,7 @@
 						Name="VCCLCompilerTool"
 						Optimization="1"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;_ATL_STATIC_REGISTRY;_ATL_MIN_CRT;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;_ATL_STATIC_REGISTRY;$(NoInherit)"
 						BrowseInformation="1"
 					/>
 				</FileConfiguration>

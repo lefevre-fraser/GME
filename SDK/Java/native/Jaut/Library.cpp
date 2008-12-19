@@ -223,10 +223,10 @@ void ThrowInvokeException(JNIEnv* env, EXCEPINFO *info)
 	if( code == 0 )
 		code = info->scode;
 
-	jstring source = env->NewString(info->bstrSource, 
+	jstring source = env->NewString((const jchar*)(info->bstrSource), 
 		SysStringLen(info->bstrSource));
 
-	jstring descr = env->NewString(info->bstrDescription, 
+	jstring descr = env->NewString((const jchar*)(info->bstrDescription), 
 		SysStringLen(info->bstrDescription));
 
 	jthrowable exc = (jthrowable)env->NewObject(JAUT_InvokeException_Class,
