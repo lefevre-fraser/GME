@@ -366,13 +366,13 @@ function InitDocument(document)
 	window.external.Load(document);
 	
 	var framework = window.external.FindSymbol('COMPONENT_FRAMEWORK');
-	if (framework = 'RAW') {
+	if (framework == 'RAW') {
 	    COMPONENT_FRAMEWORK_SUMMARY.innerHTML = "This is a <B>raw COM</B> GME component project."
 	}
-	else if (framework = 'BON') {
+	else if (framework == 'BON') {
 	    COMPONENT_FRAMEWORK_SUMMARY.innerHTML = "This is a classic <B>BON</B> GME component project."
 	}
-	else if (framework = 'BON2') {
+	else if (framework == 'BON2') {
 	    COMPONENT_FRAMEWORK_SUMMARY.innerHTML = "This is a <B>BON 2</B> GME component project."
 	}
 	else {

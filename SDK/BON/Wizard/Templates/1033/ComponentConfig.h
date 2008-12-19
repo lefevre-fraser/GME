@@ -48,6 +48,7 @@
 [!endif]
 [!if GME_ADDON]
 #define GME_ADDON
+#define ADDON_EVENTMASK [!output ADDON_EVENTMASK]
 [!endif]
 
 // The name of the paradigm(s). The GME will use this component
