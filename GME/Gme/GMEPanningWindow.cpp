@@ -52,12 +52,7 @@ int CGMEPanningWindow::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	if (!m_PanningWindowWrapper.Create("PanningWindow", WS_CHILD | WS_VISIBLE, CRect(0, 0, 150, 150), this, IDC_PANNINGWINDOWCTRL1))
 		return -1;
-/* @@@@
-	m_szMin = CSize(120,120);
-    m_szFloat = CSize(250,250); 
-	m_szHorz = CSize(170,170);
-    m_szVert = CSize(170,170);
-*/
+
 	return 0;
 }
 

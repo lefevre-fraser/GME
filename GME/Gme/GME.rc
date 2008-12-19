@@ -94,6 +94,7 @@ IDB_MAIN_TOOLBAR24      BITMAP                  "res\\ToolbarMain24.bmp"
 IDB_MODELING_TOOLBAR24  BITMAP                  "res\\ToolbarModeling24.bmp"
 IDB_WINS_TOOLBAR24      BITMAP                  "res\\ToolbarWins24.bmp"
 IDB_MODE_TOOLBAR24      BITMAP                  "res\\ToolbarMode24.bmp"
+IDB_NAVIG_TOOLBAR24     BITMAP                  "res\\ToolbarNavig24.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -151,14 +152,10 @@ END
 
 IDR_TOOLBAR_WINS TOOLBAR  16, 16
 BEGIN
-    BUTTON      ID_VIEW_ATTRIBUTES
-    BUTTON      ID_VIEW_PARTBROWSER
-    BUTTON      ID_VIEW_BROWSER
-    BUTTON      ID_VIEW_PANNWIN
-    BUTTON      ID_VIEW_CONSOLE
+    BUTTON      ID_VIEW_FULLSCREEN
     SEPARATOR
-    BUTTON      ID_WINDOW_TILE_HORZ
-    BUTTON      ID_WINDOW_TILE_VERT
+    BUTTON      ID_WINDOW_NEWHORIZONTALTABGROUP
+    BUTTON      ID_WINDOW_NEWVERTICALTABGROUP
     SEPARATOR
     BUTTON      ID_APP_ABOUT
 END

@@ -126,18 +126,7 @@ protected:
 	afx_msg void OnUpdateTime(CCmdUI* pCmdUI);
 	//{{AFX_MSG(CMainFrame)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	/* @@@afx_msg void OnViewPartbrowser();
-	afx_msg void OnViewPannWin();
-	afx_msg void OnUpdateViewPannWin(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewPartbrowser(CCmdUI* pCmdUI);
-	afx_msg void OnViewBrowser();
-	afx_msg void OnUpdateViewBrowser(CCmdUI* pCmdUI);
-	afx_msg void OnViewAttributes();
-	afx_msg void OnUpdateViewAttributes(CCmdUI* pCmdUI);
-	afx_msg void OnViewConsole();
-	afx_msg void OnUpdateViewConsole(CCmdUI* pCmdUI);
 
-	*/
 	afx_msg void OnViewFullScreen();
 	afx_msg void OnEditSearch();
 	afx_msg void OnUpdateEditSearch(CCmdUI* pCmdUI);

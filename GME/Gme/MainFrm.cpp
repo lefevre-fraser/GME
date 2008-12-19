@@ -78,17 +78,6 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TIME, OnUpdateTime)
 	//{{AFX_MSG_MAP(CMainFrame)
 	ON_WM_CREATE()
-	/*@@@ ON_COMMAND(ID_VIEW_PARTBROWSER, OnViewPartbrowser)
-	ON_COMMAND(ID_VIEW_PANNWIN, OnViewPannWin)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_PANNWIN, OnUpdateViewPannWin)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_PARTBROWSER, OnUpdateViewPartbrowser)
-	ON_COMMAND(ID_VIEW_BROWSER, OnViewBrowser)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_BROWSER, OnUpdateViewBrowser)
-	ON_COMMAND(ID_VIEW_ATTRIBUTES, OnViewAttributes)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_ATTRIBUTES, OnUpdateViewAttributes)
-	ON_COMMAND(ID_VIEW_CONSOLE, OnViewConsole)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_CONSOLE, OnUpdateViewConsole)
-	*/
 	ON_COMMAND(ID_EDIT_SEARCH, OnEditSearch)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_SEARCH, OnUpdateEditSearch)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW_NEW, OnUpdateWindowNew)
@@ -368,7 +357,7 @@ int CMainFrame::CreateToolBars()
 		WS_CHILD|WS_VISIBLE|CBRS_ALIGN_LEFT,
 		CRect(0,0,0,0),
 		IDW_TOOLBAR_NAVIG); // unique!
-	naviBar.LoadToolBar(IDR_TOOLBAR_NAVIG/*, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_NAVIG_TOOLBAR24 : 0*/);
+	naviBar.LoadToolBar(IDR_TOOLBAR_NAVIG, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_NAVIG_TOOLBAR24 : 0);
 	naviBar.SetPaneStyle(naviBar.GetPaneStyle()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 
@@ -796,78 +785,6 @@ BOOL CMainFrame::InitStatusBar(UINT *pIndicators, int nSize, int nSeconds)
 }
 
 
-/* @@@@
-void CMainFrame::OnViewPartbrowser() 
-{
-	ShowPane(&m_partBrowser, !m_partBrowser.IsVisible(), FALSE, FALSE);
-}
-
-void CMainFrame::OnViewPannWin() 
-{
-	ShowPane(&m_panningWindow, !m_panningWindow.IsVisible(), FALSE, FALSE);
-	CMDIChildWnd* fwin = MDIGetActive(NULL);
-	if (!fwin)
-		return;
-	CView * view = fwin->GetActiveView();
-	if (!view)
-		return;
-	view->PostMessage(WM_USER_PANNREFRESH, (WPARAM)0, (LPARAM)0);
-}
-
-void CMainFrame::OnUpdateViewPartbrowser(CCmdUI* pCmdUI) 
-{
-	pCmdUI->Enable();
-	pCmdUI->SetCheck(m_partBrowser.IsVisible());
-}
-
-void CMainFrame::OnUpdateFileNew(CCmdUI* pCmdUI)
-{
-	pCmdUI->Disable();
-}
-
-void CMainFrame::OnUpdateViewPannWin(CCmdUI* pCmdUI) 
-{
-	pCmdUI->Enable();
-	pCmdUI->SetCheck(m_panningWindow.IsVisible());
-}
-
-
-void CMainFrame::OnViewBrowser() 
-{
-	ShowPane(&m_browser, !m_browser.IsVisible(), FALSE, TRUE);
-}
-
-void CMainFrame::OnUpdateViewBrowser(CCmdUI* pCmdUI) 
-{
-	pCmdUI->Enable();
-	pCmdUI->SetCheck(m_browser.IsVisible());
-}
-
-void CMainFrame::OnViewAttributes() 
-{
-	ShowPane(&m_objectInspector, !m_objectInspector.IsVisible(), FALSE, FALSE);
-}
-
-void CMainFrame::OnUpdateViewAttributes(CCmdUI* pCmdUI) 
-{
-	pCmdUI->Enable();
-	pCmdUI->SetCheck(m_objectInspector.IsVisible());
-}
-
-
-void CMainFrame::OnViewConsole() 
-{
-	ShowPane(&m_console, !m_console.IsVisible(), FALSE, FALSE);
-}
-
-void CMainFrame::OnUpdateViewConsole(CCmdUI* pCmdUI) 
-{
-	pCmdUI->Enable();
-	pCmdUI->SetCheck(m_console.IsVisible());	
-}
-
-
-*/
 void CMainFrame::OnEditSearch() 
 {
 	m_search.ShowWindow(SW_SHOWNORMAL);

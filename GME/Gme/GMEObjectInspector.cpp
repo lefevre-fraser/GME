@@ -56,16 +56,6 @@ int CGMEObjectInspector::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if(!m_ObjectInspector.Create("ObjectInspector",WS_CHILD | WS_VISIBLE,CRect(0,0,230,300),this,IDC_OBJECT_INSPECTOR_CTRL))
 		return -1;
 
-	/* @@@
-    m_szFloat = CSize(500,165); 
-	m_szHorz = CSize(100,165);
-    m_szVert = CSize(120,400);
-
-	m_szFloat = CSize(400,600); 
-	m_szHorz = CSize(800,165);
-    m_szVert = CSize(120,400);
-
-*/	
 	return 0;
 }
 

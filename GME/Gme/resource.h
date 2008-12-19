@@ -98,6 +98,7 @@
 #define ID_VIEW_APPLOOK_OFF_2007_AQUA   218
 #define IDD_EMERGENCY_DIALOG            219
 #define IDD_PANNING_WINDOW_DIALOG       220
+#define IDB_NAVIG_TOOLBAR24             220
 #define IDD_CHILDFRAME_DIALOG           221
 #define IDB_MODE_TOOLBAR24              221
 #define IDB_WINS_TOOLBAR24              222
