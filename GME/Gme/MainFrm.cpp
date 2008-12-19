@@ -268,21 +268,37 @@ int CMainFrame::CreateToolBars()
 		, CRect(0,0,0,0)
 		, IDW_TOOLBAR_MAIN) // provide unqiue ID for each toolbar [important !!!]
 		||
-		!m_wndToolBarMain.LoadToolBar(IDR_TOOLBAR_MAIN)
+		!m_wndToolBarMain.LoadToolBar(IDR_TOOLBAR_MAIN, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_MAIN_TOOLBAR24 : 0)
 		)
 	{
 		TRACE0("Failed to create main toolbar\n");
 		return -1;      // fail to create
 	}
-	
-
 
 	m_wndToolBarMain.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
-	
+
 	// Enable toolbar and docking window menu replacement
 	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."), ID_VIEW_TOOLBAR, FALSE, TRUE);
 
 
+	// -- Modeling ToolBar
+	if( !m_wndToolBarModeling.CreateEx(this
+		, TBSTYLE_FLAT
+		, WS_CHILD |  WS_VISIBLE | CBRS_ALIGN_TOP
+		, CRect(0,0,0,0)
+		, IDW_TOOLBAR_MODELING) // provide unqiue ID for each toolbar [important !!!]
+		||
+		!m_wndToolBarModeling.LoadToolBar(IDR_TOOLBAR_MODELING, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_MODELING_TOOLBAR24 : 0)
+		)
+	{
+		TRACE0("Failed to create modeling toolbar\n");
+		return -1;      // fail to create
+	}
+
+	m_wndToolBarModeling.SetPaneStyle( m_wndToolBarModeling.GetPaneStyle()
+		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
+
+	m_wndToolBarModeling.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
 
 	// -- Window Arrangement ToolBar
 	if( !m_wndToolBarWins.CreateEx( this
@@ -291,7 +307,7 @@ int CMainFrame::CreateToolBars()
 		, CRect(0,0,0,0)
 		, IDW_TOOLBAR_WINS) // provide unqiue ID for each toolbar
 		||
-		!m_wndToolBarWins.LoadToolBar(IDR_TOOLBAR_WINS)
+		!m_wndToolBarWins.LoadToolBar(IDR_TOOLBAR_WINS, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_WINS_TOOLBAR24 : 0)
 		)
 	{
 		TRACE0("Failed to create windows toolbar\n");
@@ -300,9 +316,9 @@ int CMainFrame::CreateToolBars()
 
 	m_wndToolBarWins.SetPaneStyle( m_wndToolBarWins.GetPaneStyle()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-	
+
 	m_wndToolBarWins.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
-	
+
 	// -- User-defined Component ToolBar
 	if( !m_wndComponentBar.CreateEx(this
 		, TBSTYLE_FLAT
@@ -310,7 +326,7 @@ int CMainFrame::CreateToolBars()
 		, CRect(0, 0, 0, 0)
 		, IDW_TOOLBAR_DUMMY) // provide unqiue ID for each toolbar
 		||
-	   !m_wndComponentBar.LoadToolBar(IDR_TOOLBAR_DUMMY)
+	   !m_wndComponentBar.LoadToolBar(IDR_TOOLBAR_DUMMY, 0, 0, TRUE)
 	   )
 	{
 		TRACE0("Failed to create component toolbar\n");
@@ -321,18 +337,18 @@ int CMainFrame::CreateToolBars()
 	m_wndComponentBar.SetBorders( 5, 0, 5, 0);
 
 
-	m_wndComponentBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
+//	m_wndComponentBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
 
 
 	// Mode toolbar
 
-		modeBar.CreateEx(CMainFrame::theInstance,
-        TBSTYLE_TRANSPARENT | TBSTYLE_FLAT, 
-        WS_CHILD|WS_VISIBLE|CBRS_ALIGN_LEFT, 
-        CRect(0,0,0,0),
-        IDW_TOOLBAR_MODE); // provide unqiue ID for each toolbar [important !!!] 
-                           // see MainFrm.cpp OnCreate for other details
-	modeBar.LoadToolBar(IDR_TOOLBAR_MODE);
+	modeBar.CreateEx(CMainFrame::theInstance,
+		TBSTYLE_TRANSPARENT | TBSTYLE_FLAT, 
+		WS_CHILD|WS_VISIBLE|CBRS_ALIGN_LEFT, 
+		CRect(0,0,0,0),
+		IDW_TOOLBAR_MODE);	// provide unqiue ID for each toolbar [important !!!] 
+							// see MainFrm.cpp OnCreate for other details
+	modeBar.LoadToolBar(IDR_TOOLBAR_MODE, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_MODE_TOOLBAR24 : 0);
 	modeBar.SetPaneStyle(modeBar.GetPaneStyle() 
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 
@@ -343,8 +359,8 @@ int CMainFrame::CreateToolBars()
 		WS_CHILD|WS_VISIBLE|CBRS_ALIGN_LEFT,
 		CRect(0,0,0,0),
 		IDW_TOOLBAR_NAVIG); // unique!
-	naviBar.LoadToolBar( IDR_TOOLBAR_NAVIG);
-	naviBar.SetPaneStyle( naviBar.GetPaneStyle()
+	naviBar.LoadToolBar(IDR_TOOLBAR_NAVIG/*, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_NAVIG_TOOLBAR24 : 0*/);
+	naviBar.SetPaneStyle(naviBar.GetPaneStyle()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 
 
@@ -353,6 +369,9 @@ int CMainFrame::CreateToolBars()
 	// Toolbars are dockable to any side of the frame
 	m_wndToolBarMain.SetWindowText(_T("Standard"));
 	m_wndToolBarMain.EnableDocking(CBRS_ALIGN_ANY);
+
+	m_wndToolBarModeling.SetWindowText(_T("Modeling"));
+	m_wndToolBarModeling.EnableDocking(CBRS_ALIGN_ANY);
 
 	m_wndToolBarWins.SetWindowText(_T("Windows"));
 	m_wndToolBarWins.EnableDocking(CBRS_ALIGN_ANY);
@@ -371,6 +390,9 @@ int CMainFrame::CreateToolBars()
 	DockPane(&m_wndToolBarMain/*,AFX_IDW_DOCKBAR_TOP*/);
 
 	// place next to the main toolbar
+	DockPane(&m_wndToolBarModeling/*, AFX_IDW_DOCKBAR_TOP*/);
+
+	// place next to the modeling toolbar
 	DockPane(&m_wndToolBarWins/*, AFX_IDW_DOCKBAR_TOP*/);
 
 	// place next to the wins toolbar
@@ -387,7 +409,7 @@ int CMainFrame::CreateToolBars()
 	// Allow user-defined toolbars operations:
 	InitUserToolbars(NULL, uiFirstUserToolBarId, uiLastUserToolBarId);
 
-	
+
 	return 0;
 }
 

@@ -80,8 +80,9 @@ IDI_COMPNOTFOUND        ICON                    "res\\ico00001.ico"
 //
 
 IDR_TOOLBAR_MAIN        BITMAP                  "res\\ToolbarMain.bmp"
-IDR_TOOLBAR_MODE        BITMAP                  "res\\toolbar1.bmp"
-IDR_TOOLBAR_WINS        BITMAP                  "res\\toolbarWins.bmp"
+IDR_TOOLBAR_MODE        BITMAP                  "res\\ToolbarMode.bmp"
+IDR_TOOLBAR_WINS        BITMAP                  "res\\ToolbarWins.bmp"
+IDR_TOOLBAR_MODELING    BITMAP                  "res\\ToolbarModeling.bmp"
 IDB_METAOPEN            BITMAP                  "res\\mgaopen.bmp"
 IDB_MGAOPEN             BITMAP                  "res\\metaopen.bmp"
 IDB_BITMAP_LOGO         BITMAP                  "res\\bitmap_l.bmp"
@@ -90,14 +91,18 @@ IDB_ABOUT               BITMAP                  "aboutpic.bmp"
 IDR_TOOLBAR_COMPONENTS  BITMAP                  "res\\dummybar.bmp"
 IDR_TOOLBAR_NAVIG       BITMAP                  "res\\ToolbarNavig.bmp"
 IDB_MAIN_TOOLBAR24      BITMAP                  "res\\ToolbarMain24.bmp"
+IDB_MODELING_TOOLBAR24  BITMAP                  "res\\ToolbarModeling24.bmp"
+IDB_WINS_TOOLBAR24      BITMAP                  "res\\ToolbarWins24.bmp"
+IDB_MODE_TOOLBAR24      BITMAP                  "res\\ToolbarMode24.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Toolbar
 //
 
-IDR_TOOLBAR_MAIN TOOLBAR  16, 15
+IDR_TOOLBAR_MAIN TOOLBAR  16, 16
 BEGIN
+    BUTTON      ID_FILE_OPEN
     BUTTON      ID_FILE_SAVEPROJECT
     BUTTON      ID_EDIT_COPY
     BUTTON      ID_EDIT_PASTE
@@ -106,22 +111,29 @@ BEGIN
     BUTTON      ID_EDIT_UNDO
     BUTTON      ID_EDIT_REDO
     SEPARATOR
-    BUTTON      ID_VIEW_PARENT
-    BUTTON      ID_EDIT_SHOWBASETYPE
-    BUTTON      ID_EDIT_SHOWTYPE
+    BUTTON      ID_EDIT_SEARCH
     SEPARATOR
-    BUTTON      ID_EDIT_SYNC
-    BUTTON      ID_VIEW_GRID
-    BUTTON      ID_VIEW_REFRESH
     BUTTON      ID_FILE_PRINT
     SEPARATOR
-    BUTTON      ID_EDIT_SEARCH
+    BUTTON      ID_HELP_CONTENTS
+END
+
+IDR_TOOLBAR_MODELING TOOLBAR  16, 16
+BEGIN
+    BUTTON      ID_VIEW_REFRESH
     SEPARATOR
     BUTTON      ID_MODE_SHORTCONNECT
     BUTTON      ID_MODE_SHORTDISCONNECT
+    SEPARATOR
+    BUTTON      ID_VIEW_GRID
+    BUTTON      ID_EDIT_SYNC
+    SEPARATOR
+    BUTTON      ID_VIEW_PARENT
+    BUTTON      ID_EDIT_SHOWBASETYPE
+    BUTTON      ID_EDIT_SHOWTYPE
 END
 
-IDR_TOOLBAR_MODE TOOLBAR  16, 15
+IDR_TOOLBAR_MODE TOOLBAR  16, 16
 BEGIN
     BUTTON      ID_MODE_EDIT
     BUTTON      ID_MODE_AUTOCONNECT
@@ -131,13 +143,13 @@ BEGIN
     BUTTON      ID_MODE_VISUALIZE
 END
 
-IDR_TOOLBAR_COMPONENTS TOOLBAR  16, 15
+IDR_TOOLBAR_COMPONENTS TOOLBAR  16, 16
 BEGIN
     BUTTON      ID_FILE_CHECK
     BUTTON      ID_FILE_INTERPRET
 END
 
-IDR_TOOLBAR_WINS TOOLBAR  16, 15
+IDR_TOOLBAR_WINS TOOLBAR  16, 16
 BEGIN
     BUTTON      ID_VIEW_ATTRIBUTES
     BUTTON      ID_VIEW_PARTBROWSER
@@ -151,7 +163,7 @@ BEGIN
     BUTTON      ID_APP_ABOUT
 END
 
-IDR_TOOLBAR_NAVIG TOOLBAR  16, 15
+IDR_TOOLBAR_NAVIG TOOLBAR  16, 16
 BEGIN
     BUTTON      ID_BUTTON33020
     BUTTON      ID_BUTTON33021

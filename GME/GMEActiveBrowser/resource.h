@@ -38,7 +38,6 @@
 #define IDC_CONN_STRING                 216
 #define IDC_BROWSE                      217
 #define IDI_LIBRARY                     218
-#define IDB_BITMAP1                     219
 #define IDC_CONNSTR                     220
 #define IDC_TAB1                        221
 #define IDC_COMBO_SEARCH_AGGREGATE      1001

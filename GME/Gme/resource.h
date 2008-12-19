@@ -88,6 +88,7 @@
 #define ID_VIEW_APPLOOK_OFF_2003        213
 #define IDD_PART_BROWSER_DIALOG         214
 #define ID_VIEW_APPLOOK_VS_2005         214
+#define IDR_TOOLBAR_MODELING            214
 #define ID_VIEW_APPLOOK_OFF_2007_BLUE   215
 #define IDD_CONNECTIVITYDIALOG          216
 #define ID_VIEW_APPLOOK_OFF_2007_BLACK  216
@@ -98,7 +99,9 @@
 #define IDD_EMERGENCY_DIALOG            219
 #define IDD_PANNING_WINDOW_DIALOG       220
 #define IDD_CHILDFRAME_DIALOG           221
-#define IDB_BITMAP1                     224
+#define IDB_MODE_TOOLBAR24              221
+#define IDB_WINS_TOOLBAR24              222
+#define IDB_MODELING_TOOLBAR24          223
 #define IDB_MAIN_TOOLBAR24              224
 #define IDC_NAME                        1000
 #define IDC_TYPENAME                    1001
@@ -490,6 +493,7 @@
 #define IDW_TOOLBAR_DUMMY               0xE822
 #define IDW_TOOLBAR_MODE                0xE823
 #define IDW_TOOLBAR_NAVIG               0xE824
+#define IDW_TOOLBAR_MODELING            0xE825
 
 // Next default values for new objects
 // 

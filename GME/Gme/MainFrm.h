@@ -103,6 +103,7 @@ public:
 protected:  // control bar embedded members
 	CMFCStatusBar		m_wndStatusBar;
 	CMFCToolBar			m_wndToolBarMain;
+	CMFCToolBar			m_wndToolBarModeling;
 	CMFCToolBar			m_wndToolBarWins;
 	CMFCMenuBar			m_wndMenuBar;
 

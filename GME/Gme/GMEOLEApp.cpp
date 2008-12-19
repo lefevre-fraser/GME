@@ -628,17 +628,22 @@ LPDISPATCH CGMEOLEApp::GetPanels()
 
 	panel = new CGMEOLEPanel();
 	panel->SetParams( &CMainFrame::theInstance->m_wndToolBarMain, _T("Main Toolbar"));
-	coll->Add(panel->GetIDispatch(FALSE));	
+	coll->Add(panel->GetIDispatch(FALSE));
+	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
+
+	panel = new CGMEOLEPanel();
+	panel->SetParams( &CMainFrame::theInstance->m_wndToolBarModeling, _T("Modeling Toolbar"));
+	coll->Add(panel->GetIDispatch(FALSE));
 	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
 
 	panel = new CGMEOLEPanel();
 	panel->SetParams( &CMainFrame::theInstance->m_wndToolBarWins, _T("Window Toolbar"));
-	coll->Add(panel->GetIDispatch(FALSE));	
+	coll->Add(panel->GetIDispatch(FALSE));
 	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
 
 	panel = new CGMEOLEPanel();
 	panel->SetParams( &CMainFrame::theInstance->m_wndComponentBar, _T("Component Toolbar"));
-	coll->Add(panel->GetIDispatch(FALSE));	
+	coll->Add(panel->GetIDispatch(FALSE));
 	panel->GetIDispatch(FALSE)->Release();	// We do not hold reference, hopefully the collection will hold one
 
 	return coll->GetIDispatch(FALSE);
