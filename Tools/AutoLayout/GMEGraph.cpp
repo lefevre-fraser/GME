@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "ComponentLib.h"
 #include "CommonSmart.h"
 #include "GMEGraph.h"
 

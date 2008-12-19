@@ -7,7 +7,7 @@
 #include "stdafx.h"
 
 #include "CommonSmart.h"
-#include "ComponentLib.h"
+#include "ComponentLib_h.h"
 #include <ComponentConfig.h>
 #include "RawComponent.h"
 #include "merge.h"

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CommonSmart.h"
-#include "ComponentLib.h"
+#include "ComponentLib_h.h"
 #include ".\merge.h"
 
 #pragma warning(disable:4244)

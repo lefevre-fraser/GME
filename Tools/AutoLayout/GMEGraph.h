@@ -1,8 +1,8 @@
 #ifndef _GMEGRAPH_H_
 #define _GMEGRAPH_H_
 
-#include "ComponentLib.h"
 #include "Graph.h"
+#include "ComponentLib_h.h"
 
 class GMEGraph : public Graph
 {

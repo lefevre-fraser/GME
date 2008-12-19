@@ -5,22 +5,22 @@
 #if !defined(AFX_STDAFX_H__C4EFDDFC_C095_4509_B571_632F0986D162__INCLUDED_)
 #define AFX_STDAFX_H__C4EFDDFC_C095_4509_B571_632F0986D162__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
-#define STRICT
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0400
+#define TEST_META_CONFORMANCE_INSIDE_BON // by ZolMol
+
+#ifndef VC_EXTRALEAN
+#define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
 #endif
+
+#include "targetver.h"
+
+#define _CRT_SECURE_NO_WARNINGS
+
 #define _ATL_APARTMENT_THREADED
 
 #include <afxwin.h>
 #include <afxdisp.h>
-#include <afxext.h>         // MFC extensions
-#ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>			// MFC support for Windows Common Controls
-#endif // _AFX_NO_AFXCMN_SUPPORT
 
 #include <atlbase.h>
 //You may derive a class from CComModule and use it if you want to override

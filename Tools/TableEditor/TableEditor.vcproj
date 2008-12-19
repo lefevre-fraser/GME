@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="AutoLayout"
-	ProjectGUID="{D9D1550F-A446-4ABA-BAB1-DED0535E9223}"
-	RootNamespace="AutoLayout"
+	Name="TableEditor"
+	ProjectGUID="{25852958-D8CE-4DF0-AC7A-AF4D5B5D614A}"
+	RootNamespace="TableEditor"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -49,7 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/SDK/BON/Common&quot;;&quot;$(GME_ROOT)/GME/Common&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/SDK/BON/Common&quot;;&quot;$(GME_ROOT)/GME/Include&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -71,7 +71,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="xerces-c_2.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(GME_ROOT)/GME/Lib&quot;"
 				ModuleDefinitionFile="Component.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -133,7 +135,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/SDK/BON/Common&quot;;&quot;$(GME_ROOT)/GME/Common&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/SDK/BON/Common&quot;;&quot;$(GME_ROOT)/GME/Include&quot;"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -154,7 +156,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="xerces-c_2.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(GME_ROOT)/GME/Lib&quot;"
 				ModuleDefinitionFile="Component.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -195,15 +199,7 @@
 				>
 			</File>
 			<File
-				RelativePath="$(GME_ROOT)\GME\Common\CommonError.cpp"
-				>
-			</File>
-			<File
-				RelativePath="$(GME_ROOT)\GME\Common\CommonSmart.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\component.def"
+				RelativePath=".\Component.def"
 				>
 			</File>
 			<File
@@ -227,35 +223,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DlgAutoLayout.cpp"
-				>
-			</File>
-			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Formatter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GAOptimizer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GMEGraph.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Graph.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LayoutOptimization.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Random.cpp"
+				RelativePath=".\GridDlg.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\RawComponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SelectDlg.cpp"
 				>
 			</File>
 			<File
@@ -277,6 +257,14 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\TableEditorDumper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TableEditorParser.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
@@ -304,15 +292,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DlgAutoLayout.h"
-				>
-			</File>
-			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Formatter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GAOptimizer.h"
 				>
 			</File>
 			<File
@@ -320,19 +300,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GMEGraph.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Graph.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LayoutOptimization.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Random.h"
+				RelativePath=".\GridDlg.h"
 				>
 			</File>
 			<File
@@ -340,11 +308,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SelectDlg.h"
 				>
 			</File>
 			<File
 				RelativePath=".\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TableEditorDumper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TableEditorParser.h"
 				>
 			</File>
 			<File
@@ -357,7 +337,151 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 			<File
-				RelativePath=".\compicon.ico"
+				RelativePath=".\CompIcon.ico"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="GridCtrl"
+			>
+			<File
+				RelativePath=".\GridCtrl_src\CellRange.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCell.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridDropTarget.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridDropTarget.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\InPlaceEdit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\InPlaceEdit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\MemDC.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\TitleTip.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\TitleTip.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="NewCellTypes"
+			>
+			<File
+				RelativePath=".\NewCellTypes\GridCellAttrName.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellAttrName.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellCheck.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellCheck.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellCombo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellCombo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellComboBool.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellComboBool.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellDateTime.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellDateTime.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellDouble.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellDouble.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellFCO.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellFCO.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellMultiLine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellMultiLine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellNumeric.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridCellNumeric.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridURLCell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NewCellTypes\GridURLCell.h"
 				>
 			</File>
 		</Filter>

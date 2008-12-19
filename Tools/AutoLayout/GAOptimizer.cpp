@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <cfloat>
 #include <cmath>
 #include <algorithm>

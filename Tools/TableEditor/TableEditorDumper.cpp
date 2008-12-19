@@ -46,9 +46,9 @@ void TableEditorDumper::InitDump(CString filename, int numCols, int numRows)
 	StartElemAttr("Table");
 
 	char numBuf[256];
-	itoa(numCols,numBuf,10);
+	_itoa(numCols,numBuf,10);
 	Attr("ss:ExpandedColumnCount",numBuf, FALSE);
-	itoa(numRows,numBuf,10);
+	_itoa(numRows,numBuf,10);
 	Attr("ss:ExpandedRowCount",numBuf, FALSE);
 	Attr("x:FullColumns","1",FALSE);
 	Attr("x:FullRows","1",TRUE);

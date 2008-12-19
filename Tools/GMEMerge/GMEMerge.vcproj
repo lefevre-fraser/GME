@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="AutoLayout"
-	ProjectGUID="{D9D1550F-A446-4ABA-BAB1-DED0535E9223}"
-	RootNamespace="AutoLayout"
+	Name="GMEMerge"
+	ProjectGUID="{D2785E06-4750-4CB2-87B8-D3B84E74E7E6}"
+	RootNamespace="GMEMerge"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -49,7 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/SDK/BON/Common&quot;;&quot;$(GME_ROOT)/GME/Common&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/GME/Common&quot;;&quot;$(GME_ROOT)/SDK/BON/Common&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -133,7 +133,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/SDK/BON/Common&quot;;&quot;$(GME_ROOT)/GME/Common&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/GME/Common&quot;;&quot;$(GME_ROOT)/SDK/BON/Common&quot;"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -227,31 +227,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DlgAutoLayout.cpp"
-				>
-			</File>
-			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Formatter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GAOptimizer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GMEGraph.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Graph.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LayoutOptimization.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Random.cpp"
+				RelativePath=".\Merge.cpp"
 				>
 			</File>
 			<File
@@ -304,15 +284,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DlgAutoLayout.h"
-				>
-			</File>
-			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Formatter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GAOptimizer.h"
 				>
 			</File>
 			<File
@@ -320,19 +292,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GMEGraph.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Graph.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LayoutOptimization.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Random.h"
+				RelativePath=".\Merge.h"
 				>
 			</File>
 			<File
@@ -340,7 +300,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath=".\Resource.h"
 				>
 			</File>
 			<File

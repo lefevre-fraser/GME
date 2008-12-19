@@ -8,31 +8,31 @@
 #define RAWCOMPONENT
 
 // COM UUID-s, names and progID
-#define TYPELIB_UUID "E0EDD212-6AEC-41AE-8F45-4A75921D16C7"
-#define TYPELIB_NAME "MGA Interpreter TypeLibrary (AutoLayout)"
-#define COCLASS_UUID "DB312634-F076-4FB2-BCA9-CEF7D239590D"
-#define COCLASS_NAME "MGA Interpreter CoClass (AutoLayout)"
-#define COCLASS_PROGID "MGA.Interpreter.AutoLayout"
+#define TYPELIB_UUID "C4970E27-78C0-45E5-93DB-171F34D62C58"
+#define TYPELIB_NAME "MGA Interpreter TypeLibrary (TableEditor)"
+#define COCLASS_UUID "E91D51AD-6B6D-44BC-AE35-E7F3CB604B26"
+#define COCLASS_NAME "MGA Interpreter CoClass (TableEditor)"
+#define COCLASS_PROGID "MGA.Interpreter.TableEditor"
 
-#define COCLASS_UUID_EXPLODED1  0xdb312634
-#define COCLASS_UUID_EXPLODED2   0xf076
-#define COCLASS_UUID_EXPLODED3   0x4fb2
-#define COCLASS_UUID_EXPLODED4   0xbc
-#define COCLASS_UUID_EXPLODED5   0xa9
-#define COCLASS_UUID_EXPLODED6   0xce
-#define COCLASS_UUID_EXPLODED7   0xf7
-#define COCLASS_UUID_EXPLODED8   0xd2
-#define COCLASS_UUID_EXPLODED9   0x39
-#define COCLASS_UUID_EXPLODED10  0x59
-#define COCLASS_UUID_EXPLODED11  0xd
+#define COCLASS_UUID_EXPLODED1  0xe91d51ad
+#define COCLASS_UUID_EXPLODED2   0x6b6d
+#define COCLASS_UUID_EXPLODED3   0x44bc
+#define COCLASS_UUID_EXPLODED4   0xae
+#define COCLASS_UUID_EXPLODED5   0x35
+#define COCLASS_UUID_EXPLODED6   0xe7
+#define COCLASS_UUID_EXPLODED7   0xf3
+#define COCLASS_UUID_EXPLODED8   0xcb
+#define COCLASS_UUID_EXPLODED9   0x60
+#define COCLASS_UUID_EXPLODED10  0x4b
+#define COCLASS_UUID_EXPLODED11  0x26
 
 
 // This name will appear in the popup window for interpreter selection.
-#define COMPONENT_NAME "AutoLayout"
+#define COMPONENT_NAME "Table Editor"
 
 
 // This text will appear in the toolbar icon tooltip and in the menu.
-#define TOOLTIP_TEXT "Auto Layout PlugIn"
+#define TOOLTIP_TEXT "Table Editor PlugIn"
 
 // This macro determines the component type (addon vs. interpreter):
 #define GME_INTERPRETER

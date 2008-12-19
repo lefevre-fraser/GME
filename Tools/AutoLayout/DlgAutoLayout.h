@@ -8,7 +8,7 @@
 //
 
 #include "resource.h"
-#include "ComponentLib.h"
+#include "ComponentLib_h.h"
 #include "GMEGraph.h"
 #include "LayoutOptimization.h"
 #include "GAOptimizer.h"
