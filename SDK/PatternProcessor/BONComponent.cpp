@@ -22,7 +22,7 @@
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 
-#include "Component.h"
+#include "BONComponent.h"
 
 #define PATLINELENGTH 500
 
