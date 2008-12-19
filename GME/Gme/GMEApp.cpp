@@ -800,24 +800,33 @@ void CGMEApp::UpdateComponentToolbar()
 			HICON hIcon = NULL; //, hictofree = NULL;
 			int commaPos;
 			HMODULE hModule = NULL;
+			CComPtr<IMgaComponent> loadedConmponent; // GetModuleHandle works with loaded DLL only
 			if((commaPos = iconInfo.Find(',')) >= 0)  //Format:   <modulename>,<resourceID>
 			{
 				if(commaPos)  // module name present;
 				{
 					hModule = GetModuleHandle(iconInfo.Left(commaPos));
 					if(!hModule) 
-					{						
+					{
+						loadedConmponent.CoCreateInstance(componentName);
 						hModule = GetModuleHandle(iconInfo.Left(commaPos));
 					}
 				}
-			}
-			else // No module name provided, 
-			{
-				CString modulePath;
-				registrar->get_LocalDllPath(componentName, PutOut(modulePath));			
-				if(modulePath) 
+				else // No module name provided, 
 				{
-					hModule = GetModuleHandle(modulePath);
+					CString modulePath;
+					registrar->get_LocalDllPath(componentName, PutOut(modulePath));			
+					if(modulePath) 
+					{
+						hModule = ::GetModuleHandle(modulePath);
+						if(!hModule)
+						{
+							loadedConmponent.CoCreateInstance(componentName);
+							hModule = ::GetModuleHandle(modulePath);
+						}
+						DWORD test = ::GetLastError();
+						TRACE1("%ul",test);
+					}
 				}
 			}
 
