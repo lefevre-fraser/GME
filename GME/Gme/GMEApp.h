@@ -57,7 +57,7 @@ public:
 
 	// Application look
 	UINT  m_nAppLook;
-
+	CMFCToolBarImages m_userImages;
 	CComPtr<IMgaComponentEx> mgaConstMgr;
 	CGuiMetaProject *guiMetaProject;
 	CString projectName;

@@ -278,6 +278,7 @@ BOOL CGMEApp::InitInstance()
 	LoadStdProfileSettings();  // Load standard INI file options (including MRU)
 	m_RecentProjectList.ReadList();
 
+
 	// Load Accelerator Table for CGMEView
 
 	m_GMEView_hAccel = LoadAccelerators(m_hInstance, MAKEINTRESOURCE(IDR_GMEVIEW));
@@ -735,14 +736,19 @@ void CGMEApp::FindConstraintManager() {
 
 void CGMEApp::UpdateComponentToolbar()
 {
-		if(!mgaMetaProject) return;
+		if(!CMainFrame::theInstance) return;
+		CComponentBar &componentBar = CMainFrame::theInstance->m_wndComponentBar;
+		componentBar.ShowWindow(SW_HIDE);
+
+		if(!mgaMetaProject) 
+		{
+			return;
+		}
 
 		// Updating the Component toolbar
 		CComPtr<IMgaRegistrar> registrar;
 		if(registrar.CoCreateInstance(L"Mga.MgaRegistrar") != S_OK) return;
 
-		if(!CMainFrame::theInstance) return;
-		CComponentBar &componentBar = CMainFrame::theInstance->m_wndComponentBar;
 
 
 		// Removing the add-in and plug-in buttons
@@ -756,6 +762,8 @@ void CGMEApp::UpdateComponentToolbar()
 			}
 		}
 
+		// Clearing user images
+		m_userImages.Clear();
 		
 		// Traversing  the plugins and interpreters
 		for(int i = 0; i < plugins.GetSize() + interpreters.GetSize(); ++i)	
@@ -808,7 +816,7 @@ void CGMEApp::UpdateComponentToolbar()
 					hModule = GetModuleHandle(iconInfo.Left(commaPos));
 					if(!hModule) 
 					{
-						loadedConmponent.CoCreateInstance(componentName);
+						loadedConmponent.CoCreateInstance(componentName); // GetModuleHandle works for loaded DLLs only
 						hModule = GetModuleHandle(iconInfo.Left(commaPos));
 					}
 				}
@@ -821,18 +829,17 @@ void CGMEApp::UpdateComponentToolbar()
 						hModule = ::GetModuleHandle(modulePath);
 						if(!hModule)
 						{
-							loadedConmponent.CoCreateInstance(componentName);
+							loadedConmponent.CoCreateInstance(componentName); // GetModuleHandle works for loaded DLLs only
 							hModule = ::GetModuleHandle(modulePath);
 						}
-						DWORD test = ::GetLastError();
-						TRACE1("%ul",test);
 					}
 				}
 			}
 
 			if( hModule != NULL ) 
 			{
-				hIcon = (HICON)::LoadImage(hModule, iconInfo.Mid(commaPos+1), IMAGE_ICON, 0,0, LR_DEFAULTCOLOR);
+				// hIcon = (HICON)::LoadImage(hModule, iconInfo.Mid(commaPos+1), IMAGE_ICON, 0,0, LR_DEFAULTCOLOR);
+				hIcon = ::LoadIcon(hModule, iconInfo.Mid(commaPos+1));
 			}
 			else 
 			{				  
@@ -847,14 +854,17 @@ void CGMEApp::UpdateComponentToolbar()
 			}
 
 
-			//Adding button icon
-			CMFCToolBarImages* pToolBarImages = componentBar.GetImages();
-			int nIndex = pToolBarImages->AddIcon(hIcon);
+			//Adding button icon			
+			int nIndex = m_userImages.AddIcon(hIcon);
+			CMFCToolBar::SetUserImages(&m_userImages);
 
 			// Adding button
 			int commandID = (i< plugins.GetSize()) ? ID_FILE_RUNPLUGIN1 + i:ID_FILE_INTERPRET1 + i-plugins.GetSize();
-			CMFCToolBarButton toolBarButton(commandID,nIndex, componentName + '\n'+ toolTip,TRUE);			
+			CMFCToolBarButton toolBarButton(commandID,nIndex, toolTip,TRUE);
+			
 			componentBar.InsertButton(toolBarButton);
+			componentBar.RecalcLayout();
+			componentBar.ShowWindow(SW_SHOW);
 		}		
 }
 

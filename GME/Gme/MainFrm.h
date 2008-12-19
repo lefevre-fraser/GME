@@ -99,7 +99,7 @@ public:
 	CGMEPanningWindow	m_panningWindow;
 	CGMEConsole			m_console;
 
-
+	CComponentBar		m_wndComponentBar;
 protected:  // control bar embedded members
 	CMFCStatusBar		m_wndStatusBar;
 	CMFCToolBar			m_wndToolBarMain;
@@ -111,7 +111,7 @@ protected:  // control bar embedded members
 
 
 
-	CComponentBar		m_wndComponentBar;
+
 //	CDialogBar			m_wndDlgBar;
 	CGMEPartBrowser		m_partBrowser;
 	CGMEBrowser			m_browser;
