@@ -137,6 +137,10 @@ CGMEApp::CGMEApp() :
 	// TODO: add construction code here,
 	set_terminate(EmergencyTerminate);
 	// Place all significant initialization in InitInstance
+	SIZE size;
+	size.cx=16;
+	size.cy = 16;
+	m_userImages.SetImageSize(size);
 }
 
 CGMEApp::~CGMEApp()
