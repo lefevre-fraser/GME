@@ -80,6 +80,10 @@ regsvr32 /s "PanningView\Release\PanningView.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
+echo GMEView.ocx:
+regsvr32 /s "GMEView\Release\GMEView.ocx"
+if errorlevel 1 goto errorlabel
+echo    OK
 goto eof
 
 :errorlabel
