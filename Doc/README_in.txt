@@ -30,9 +30,22 @@ guaranteed.
 1. Release Notes
 ************************************************
 
-Release Notes of Release r8.6.25
+Release Notes of Release r8.12.19
 --------------------------------
-  - TBD
+  - This is an internal release, release notes are not finalized
+  - The GME application and all plugins are ported to the Visual Studio 2008 
+    environment
+  - STLport is not used anymore
+  - redesigned decorator interface
+  - GME view is now a standalone ActiveX control
+  - xerces library is updated to 2.8
+  - subversion backend library is updated to 1.4.6
+  - The wizard for Raw, BON and BON2 interpreters are integrated with Visual
+    Studio (this time only VS2008 is supported, the Express Edition is not)
+  - the application GUI got a facelift (new MFC classes, more Vista-like look
+    and feel)
+  - Vista UAC is supported when the GUI/interpreters need access to protected 
+    resources (mostly to the registry)
 
 
 Release Notes of Release r7.6.29
