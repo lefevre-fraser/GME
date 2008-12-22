@@ -113,7 +113,7 @@ public:
 	void SetAspect(int a)							{ parentAspect = (a < numParentAspects ? a : 0); }
 	bool IsVisible(int aspect = -1);
 	bool IsSpecial()                                { return special; }
-	void Draw(CDC* pDC);
+	void Draw(HDC pDC);
 	void GrayOut(bool set = true);
 
 	const CRect& GetLocation(int aspect = -1);
@@ -183,7 +183,7 @@ public:
 	virtual CGuiMetaAttributeList *GetMetaAttributes();
 	virtual void RemoveFromRouter(CAutoRouter &router) = 0;
 	virtual bool IsVisible(int aspect = -1) = 0;
-	virtual void Draw(CDC* pDC) = 0;
+	virtual void Draw(HDC pDC) = 0;
 	virtual void GrayOut(bool set = true)			{ grayedOut = set; }
 
 public:
@@ -263,7 +263,7 @@ public:
 
 	virtual bool IsVisible(int aspect = -1)				{ return guiAspects[(aspect < 0 ? parentAspect : aspect)] != NULL; }
 	virtual void RemoveFromRouter(CAutoRouter &router)	{ router.DeleteObject(this); }
-	virtual void Draw(CDC* pDC);
+	virtual void Draw(HDC pDC);
 	virtual void GrayOut(bool set);
 	virtual CGuiMetaAspect *GetKindAspect(CComPtr<IMgaMetaPart> metaPart);
 
@@ -384,10 +384,10 @@ public:
 
 	virtual bool IsVisible(int aspect = -1)				{ return visible && visible[aspect < 0 ? parentAspect : aspect];  }
 	virtual void RemoveFromRouter(CAutoRouter &router);
-	virtual void Draw(Gdiplus::Graphics* gdip, CDC *pDC);
+	virtual void Draw(Gdiplus::Graphics* gdip, HDC pDC);
 
 protected:
-	virtual void Draw(CDC *pDC) {};
+	virtual void Draw(HDC pDC) {};
 
 public:
 	CGuiObject* src;

@@ -17,7 +17,7 @@ class CPanningViewDlg : public CDialog
 // Construction
 public:
 	CPanningViewDlg(CWnd* pParent = NULL);   // standard constructor
-	void SetBitmapDC(CWnd* owner, CDC* bdc, CRect& ori, CRect& rect, COLORREF& bkgrnd);
+	void SetBitmapDC(HWND owner, HDC bdc, HBITMAP oldBmp, CRect& ori, CRect& rect, COLORREF& bkgrnd);
 	void SetViewRect(CRect& vrect);
 	BOOL OnInitDialog();
 

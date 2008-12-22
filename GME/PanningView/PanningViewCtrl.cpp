@@ -30,7 +30,7 @@ END_MESSAGE_MAP()
 
 BEGIN_DISPATCH_MAP(CPanningViewCtrl, COleControl)
 	//{{AFX_DISPATCH_MAP(CPanningViewCtrl)
-	DISP_FUNCTION_ID(CPanningViewCtrl, "SetBitmapDC", dispidSetBitmapDC, SetBitmapDC, VT_EMPTY, VTS_UI8 VTS_UI8 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_COLOR)
+	DISP_FUNCTION_ID(CPanningViewCtrl, "SetBitmapDC", dispidSetBitmapDC, SetBitmapDC, VT_EMPTY, VTS_UI8 VTS_UI8 VTS_UI8 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_COLOR)
 	DISP_FUNCTION_ID(CPanningViewCtrl, "SetViewRect", dispidSetViewRect, SetViewRect, VT_EMPTY, VTS_I4 VTS_I4 VTS_I4 VTS_I4)
 	//}}AFX_DISPATCH_MAP
 	DISP_FUNCTION_ID(CPanningViewCtrl, "AboutBox", DISPID_ABOUTBOX, AboutBox, VT_EMPTY, VTS_NONE)
@@ -232,20 +232,21 @@ BOOL CPanningViewCtrl::PreCreateWindow(CREATESTRUCT& cs)
 	return COleControl::PreCreateWindow(cs);
 }
 
-void CPanningViewCtrl::SetBitmapDC(ULONGLONG ownerCWnd, ULONGLONG bCDC,
+void CPanningViewCtrl::SetBitmapDC(ULONGLONG ownerWnd, ULONGLONG bDC, ULONGLONG oldBmp,
 								   LONG orix, LONG oriy, LONG oriw, LONG orih,
 								   LONG rx, LONG ry, LONG rw, LONG rh,
 								   OLE_COLOR bkgrnd)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	CWnd* owner = (CWnd*) ownerCWnd;
-	CDC* bdc = (CDC*) bCDC;
+	HWND owner = (HWND) ownerWnd;
+	HDC bdc = (HDC) bDC;
+	HBITMAP oBmp = (HBITMAP)oldBmp;
 	CRect ori(orix, oriy, orix + oriw, oriy + orih);
 	CRect rect(rx, ry, rx + rw, ry + rh);
 	COLORREF bgColor = TranslateColor(bkgrnd);
 
-	m_panningViewDlg.SetBitmapDC(owner, bdc, ori, rect, bgColor);
+	m_panningViewDlg.SetBitmapDC(owner, bdc, oBmp, ori, rect, bgColor);
 }
 
 void CPanningViewCtrl::SetViewRect(LONG vrx, LONG vry, LONG vrw, LONG vrh)
@@ -255,9 +256,4 @@ void CPanningViewCtrl::SetViewRect(LONG vrx, LONG vry, LONG vrw, LONG vrh)
 	CRect vrect(vrx, vry, vrx + vrw, vry + vrh);
 
 	m_panningViewDlg.SetViewRect(vrect);
-}
-
-void CPanningViewCtrl::SendDeleteDeviceContext(ULONGLONG bCDC)
-{
-	this->FireDeleteDeviceContext(bCDC);
 }

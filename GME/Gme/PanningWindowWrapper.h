@@ -44,7 +44,7 @@ public:
 
 // Operations
 public:
-	void SetBitmapDC(ULONGLONG ownerCWnd, ULONGLONG bCDC,
+	void SetBitmapDC(ULONGLONG ownerWnd, ULONGLONG bDC, ULONGLONG oldBmp,
 					 LONG orix, LONG oriy, LONG oriw, LONG orih,
 					 LONG rx, LONG ry, LONG rw, LONG rh,
 					 OLE_COLOR bkgrnd);

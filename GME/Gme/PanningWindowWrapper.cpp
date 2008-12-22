@@ -15,15 +15,15 @@ IMPLEMENT_DYNCREATE(CPanningWindowWrapper, CWnd)
 /////////////////////////////////////////////////////////////////////////////
 // CPanningWindowWrapper operations
 
-void CPanningWindowWrapper::SetBitmapDC(ULONGLONG ownerCWnd, ULONGLONG bCDC,
+void CPanningWindowWrapper::SetBitmapDC(ULONGLONG ownerWnd, ULONGLONG bDC, ULONGLONG oldBmp,
 										LONG orix, LONG oriy, LONG oriw, LONG orih,
 										LONG rx, LONG ry, LONG rw, LONG rh,
 										OLE_COLOR bkgrnd)
 {
 	static BYTE parms[] =
-		VTS_UI8 VTS_UI8 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_COLOR;
+		VTS_UI8 VTS_UI8 VTS_UI8 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_COLOR;
 	InvokeHelper(0x1, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		ownerCWnd, bCDC, orix, oriy, oriw, orih, rx, ry, rw, rh, bkgrnd);
+		ownerWnd, bDC, oldBmp, orix, oriy, oriw, orih, rx, ry, rw, rh, bkgrnd);
 }
 
 void CPanningWindowWrapper::SetViewRect(LONG vrx, LONG vry, LONG vrw, LONG vrh)

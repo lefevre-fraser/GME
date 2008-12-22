@@ -38,9 +38,9 @@ BOOL CPanningViewDlg::OnInitDialog()
 	return ret;
 }
 
-void CPanningViewDlg::SetBitmapDC(CWnd* owner, CDC* bdc, CRect& ori, CRect& rect, COLORREF& bkgrnd)
+void CPanningViewDlg::SetBitmapDC(HWND owner, HDC bdc, HBITMAP oldBmp, CRect& ori, CRect& rect, COLORREF& bkgrnd)
 {
-	m_pvbutton.SetBitmapDC(owner, bdc, ori, rect, bkgrnd);
+	m_pvbutton.SetBitmapDC(owner, bdc, oldBmp, ori, rect, bkgrnd);
 }
 
 void CPanningViewDlg::SetViewRect(CRect& vrect)

@@ -37,7 +37,6 @@ END_MESSAGE_MAP()
 
 BEGIN_EVENTSINK_MAP(CGMEPanningWindow, CDockablePane)
 	//{{AFX_EVENTSINK_MAP(CGMEPanningWindow)
-	ON_EVENT(CGMEPanningWindow, IDC_PANNINGWINDOWCTRL1, 1 /* DeleteDeviceContext */, OnDeleteDeviceContextGmePanningVindowCtrl, VTS_UI8)
 	//}}AFX_EVENTSINK_MAP
 END_EVENTSINK_MAP()
 
@@ -122,9 +121,9 @@ BOOL CGMEPanningWindow::PreTranslateMessage(MSG* pMsg)
 }
 
 
-void CGMEPanningWindow::SetBitmapDC(CWnd* owner, CDC* bdc, CRect& ori, CRect& rect, COLORREF& bkgrnd)
+void CGMEPanningWindow::SetBitmapDC(HWND owner, HDC bdc, HBITMAP oldBmp, CRect& ori, CRect& rect, COLORREF& bkgrnd)
 {
-	m_PanningWindowWrapper.SetBitmapDC((ULONGLONG)owner, (ULONGLONG)bdc, ori.left, ori.top, ori.Width(), ori.Height(),
+	m_PanningWindowWrapper.SetBitmapDC((ULONGLONG)owner, (ULONGLONG)bdc, (ULONGLONG)oldBmp, ori.left, ori.top, ori.Width(), ori.Height(),
 										rect.left, rect.top, rect.Width(), rect.Height(), (OLE_COLOR)bkgrnd);
 }
 
@@ -132,10 +131,4 @@ void CGMEPanningWindow::SetBitmapDC(CWnd* owner, CDC* bdc, CRect& ori, CRect& re
 void CGMEPanningWindow::SetViewRect(CRect vrect)
 {
 	m_PanningWindowWrapper.SetViewRect(vrect.left, vrect.top, vrect.Width(), vrect.Height());
-}
-
-
-void CGMEPanningWindow::OnDeleteDeviceContextGmePanningVindowCtrl(ULONGLONG bCDC)
-{
-	CMainFrame::theInstance->OnDeleteDCForPanningVindowCtrl((CDC*) bCDC);
 }

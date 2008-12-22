@@ -629,46 +629,37 @@ void CGMEView::DoPannWinRefresh()
 	CGuiObject::GetExtent(children,objext);
 	CGuiAnnotator::GetExtent(annotators,annext);
 	extent.UnionRect(&objext, &annext);
-	extent.right = (int)(extent.right*EXTENT_ERROR_CORR); // ??
-	extent.bottom = (int)(extent.bottom*EXTENT_ERROR_CORR); // ??
-	
-	CRect target = CRect(0, 0, extent.Width()/PANNING_RATIO_MIN, extent.Height()/PANNING_RATIO_MIN);
+	extent.right = (int)(extent.right * EXTENT_ERROR_CORR); // ??
+	extent.bottom = (int)(extent.bottom * EXTENT_ERROR_CORR); // ??
+
+	CRect target = CRect(0, 0, extent.Width() / PANNING_RATIO_MIN, extent.Height() / PANNING_RATIO_MIN);
 
 	// make a bitmap DC
-	CDC *pannDC = new CDC();
+	HDC tmpDC = ::GetWindowDC(this->m_hWnd);
+	HDC pannDC = CreateCompatibleDC(tmpDC);
 	ASSERT(pannDC != NULL);
-	CClientDC tmpDC(this);
 
-	// TODO: Error checking
-	pannDC->CreateCompatibleDC(&tmpDC);
-	CBitmap * pannBmp = new CBitmap();
-	ASSERT(pannBmp != NULL);
-
-	// TODO: Error checking
-	BOOL ret = pannBmp->CreateCompatibleBitmap(&tmpDC, target.Width(), target.Height());
-	if( !ret) // introd' by zolmol
-	{
-		if( pannDC)
-			delete pannDC;
-		if( pannBmp) 
-			delete pannBmp;
-
+	HBITMAP pannBmp = ::CreateCompatibleBitmap(tmpDC, target.Width(), target.Height());
+	if (pannBmp == NULL) {	// introd' by zolmol
+		if (pannDC != NULL)
+			::DeleteDC(pannDC);
 		return;
 	}
-	ASSERT(ret);
-	pannDC->SelectObject(pannBmp);
+	HBITMAP oldBmp = (HBITMAP)::SelectObject(pannDC, pannBmp);
 
 	// set background color
-	pannDC->SetMapMode(MM_TEXT);
+	::SetMapMode(pannDC, MM_TEXT);
 	// DWORD dw1 = GetSysColor(COLOR_WINDOW);
 	// BYTE r1 = GetRValue(dw1);
-	// BYTE g1 = GetGValue(dw1); 
-	// BYTE b1 = GetBValue(dw1); 
-	pannDC->FillSolidRect(&target, bgColor); // RGB(r1,g1,b1));
+	// BYTE g1 = GetGValue(dw1);
+	// BYTE b1 = GetBValue(dw1);
+	HBRUSH bgBrush = ::CreateSolidBrush(bgColor);
+	::FillRect(pannDC, target, bgBrush);
+	::DeleteObject(bgBrush);
 
-	pannDC->SetMapMode(MM_ISOTROPIC);
-	pannDC->SetWindowExt(extent.Width(), extent.Height());
-	pannDC->SetViewportExt(target.Width(), target.Height());
+	::SetMapMode(pannDC, MM_ISOTROPIC);
+	::SetWindowExtEx(pannDC, extent.Width(), extent.Height(), NULL);
+	::SetViewportExtEx(pannDC, target.Width(), target.Height(), NULL);
 
 	{
 		// draw the image
@@ -683,17 +674,18 @@ void CGMEView::DoPannWinRefresh()
 		pos = children.GetHeadPosition();
 		while(pos) {
 			CGuiFco *fco = children.GetNext(pos);
-			if(fco->IsVisible()) {
-				CGuiConnection *conn = dynamic_cast<CGuiConnection *>(fco);
-				if(!conn)
+			if (fco->IsVisible()) {
+				CGuiConnection *conn = dynamic_cast<CGuiConnection*>(fco);
+				if (!conn)
 					fco->Draw(pannDC);
 			}
 		}
 	}
 
 	// force CPanningWindow to reset the DC 
-	main->m_panningWindow.SetBitmapDC(this, pannDC, extent, target, bgColor);
+	main->m_panningWindow.SetBitmapDC(this->m_hWnd, pannDC, oldBmp, extent, target, bgColor);
 	notifyPanning(GetDeviceScrollPosition());
+	::ReleaseDC(this->m_hWnd, tmpDC);
 }
 
 void CGMEView::OnDraw(CDC* pDC)
@@ -758,7 +750,7 @@ void CGMEView::OnDraw(CDC* pDC)
 	while (pos) {
 		CGuiAnnotator *annotator = annotators.GetNext(pos);
 		if (annotator->IsVisible()) {
-			annotator->Draw(pDC);
+			annotator->Draw(pDC->m_hDC);
 		}
 	}
 
@@ -768,7 +760,7 @@ void CGMEView::OnDraw(CDC* pDC)
 		if (fco->IsVisible()) {
 			CGuiConnection* conn = dynamic_cast<CGuiConnection*> (fco);
 			if (!conn)
-				fco->Draw(pDC);
+				fco->Draw(pDC->m_hDC);
 		}
 	}
 	DrawConnections(pDC);
@@ -1329,7 +1321,7 @@ void CGMEView::OnDestroy()
 	if (pos != NULL  &&  doc->GetNextView(pos)  &&  pos == NULL)
 	{
 		CRect extent(0,0,0,0), target(0,0,0,0); // terge
-		main->m_panningWindow.SetBitmapDC(this, NULL, extent, target, bgColor);
+		main->m_panningWindow.SetBitmapDC(this->m_hWnd, NULL, NULL, extent, target, bgColor);
 	}
 
 	CScrollZoomView::OnDestroy();
@@ -2452,7 +2444,7 @@ void CGMEView::DrawConnections(CDC* pDC)
 	while (pos) {
 		CGuiConnection* conn = connections.GetNext(pos);
 		if (conn->IsVisible()) {
-			conn->Draw(&gdip, pDC);
+			conn->Draw(&gdip, pDC->m_hDC);
 		}
 	}
 }

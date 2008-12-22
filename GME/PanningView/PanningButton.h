@@ -16,7 +16,7 @@ class CPanningButton : public CWnd
 public:
 	CPanningButton();
 	bool Create();
-	void SetBitmapDC(CWnd* owner, CDC* bdc, CRect& ori, CRect& rect, COLORREF& bkgrnd);
+	void SetBitmapDC(HWND owner, HDC bdc, HBITMAP oldBmp, CRect& ori, CRect& rect, COLORREF& bkgrnd);
 	void SetViewRect(CRect vrect);
 
 private:
@@ -28,8 +28,9 @@ private:
 	CPoint	m_moveStartPoint;
 	CRect	m_moveStartRect;
 
-	CWnd*	m_owner;
-	CDC*	m_bitmapDC;
+	HWND	m_owner;
+	HDC		m_bitmapDC;
+	HBITMAP	m_oldBmp;
 	CRect	m_bitmapSizeOri;
 	CRect	m_bitmapSizeStored;
 	CRect	m_bitmapOnScreen;
@@ -46,7 +47,7 @@ private:
 
 	void BmpToScreen(CRect clientr);
 	void ViewRectToScreen(CRect& vRect);
-	void SendDeleteDeviceContext(CDC* bCDC);
+	void DeleteDeviceContext(HDC bDC, HBITMAP oldBmp);
 
 // Operations
 public:

@@ -31,7 +31,7 @@ library PanningViewLib
 			// NOTE - ClassWizard will maintain property information here.
 			//    Use extreme caution when editing this section.
 			//{{AFX_ODL_METHOD(CPanningViewCtrl)
-			[id(1), helpstring("method SetBitmapDC")] void SetBitmapDC([in] ULONGLONG ownerCWnd, [in] ULONGLONG bCDC,
+			[id(1), helpstring("method SetBitmapDC")] void SetBitmapDC([in] ULONGLONG ownerWnd, [in] ULONGLONG bDC, [in] ULONGLONG oldBmp,
 																		[in] LONG orix, [in] LONG oriy, [in] LONG oriw, [in] LONG orih,
 																		[in] LONG rx, [in] LONG ry, [in] LONG rw, [in] LONG rh,
 																		[in] OLE_COLOR bkgrnd);
@@ -54,7 +54,6 @@ library PanningViewLib
 			// NOTE - ClassWizard will maintain event information here.
 			//    Use extreme caution when editing this section.
 			//{{AFX_ODL_EVENT(CPanningViewCtrl)
-			[id(1), helpstring("method DeleteDeviceContext")] void DeleteDeviceContext(ULONGLONG bCDC);
 			//}}AFX_ODL_EVENT
 	};
 

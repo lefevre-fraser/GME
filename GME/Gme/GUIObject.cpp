@@ -538,11 +538,11 @@ bool CGuiAnnotator::IsVisible(int aspect)
 	return (decorators[aspect] != NULL);
 }
 
-void CGuiAnnotator::Draw(CDC* pDC)
+void CGuiAnnotator::Draw(HDC pDC)
 {
 	if (decorators[parentAspect]) {
 		try {
-			COMTHROW(decorators[parentAspect]->Draw(pDC->m_hDC));
+			COMTHROW(decorators[parentAspect]->Draw(pDC));
 		}
 		catch (hresult_exception &) {
 			AfxMessageBox("Error in annotator [method Draw()]");
@@ -1798,13 +1798,13 @@ void CGuiObject::GetRectList(CGuiObjectList &objList,CRectList &rects)
 //////////////////////////////////
 // Virtual methods of CGuiObject
 //////////////////////////////////
-void CGuiObject::Draw(CDC *pDC)
+void CGuiObject::Draw(HDC pDC)
 {
 	VERIFY(parentAspect >= 0);
 	VERIFY(GetCurrentAspect());
 
 	try {
-		COMTHROW(GetCurrentAspect()->GetDecorator()->Draw(pDC->m_hDC));
+		COMTHROW(GetCurrentAspect()->GetDecorator()->Draw(pDC));
 	}
 	catch (hresult_exception &) {
 		AfxMessageBox("Error in decorator [method Draw()]");
@@ -2448,7 +2448,7 @@ void CGuiConnection::Resolve()
 	}
 }
 
-void CGuiConnection::Draw(Gdiplus::Graphics* gdip, CDC *pDC)
+void CGuiConnection::Draw(Gdiplus::Graphics* gdip, HDC pDC)
 {
 	if(!IsVisible())
 		return;

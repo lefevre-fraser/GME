@@ -56,14 +56,13 @@ public:
 	//{{AFX_MSG(CGMEPanningWindow)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnDeleteDeviceContextGmePanningVindowCtrl(ULONGLONG bCDC);
 	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 // Implementation
 public:
-	void SetBitmapDC(CWnd* owner, CDC* bdc, CRect& ori, CRect& rect, COLORREF& bkgrnd);
+	void SetBitmapDC(HWND owner, HDC bdc, HBITMAP oldBmp, CRect& ori, CRect& rect, COLORREF& bkgrnd);
 	void SetViewRect(CRect vrect);
 };
 

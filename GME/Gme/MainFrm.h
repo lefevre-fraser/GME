@@ -65,7 +65,6 @@ public:
 	void CycleGMEViewAspect();
 	void GMEViewInvalidate();
 	BOOL VerifyBarState(LPCTSTR lpszProfileName);
-	void OnDeleteDCForPanningVindowCtrl(CDC* bCDC);
 	void ShowObjectInspector();
 	void ShowFindDlg();
 	void HideFindDlg();

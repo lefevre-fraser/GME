@@ -20,9 +20,11 @@ CPanningButton::CPanningButton()
 	m_viewRectInMove	= CRect(0, 0, 0, 0);
 	m_viewRectOnStored	= CRect(0, 0, 0, 0);
 	m_bitmapDC			= NULL;
+	m_oldBmp			= NULL;
 	m_bitmapSizeStored	= CRect(0, 0, 0, 0);
 	m_bitmapSizeOri		= CRect(0, 0, 0, 0);
 	m_owner				= NULL;
+	m_backgorund		= RGB(255, 255, 255);
 	m_sizeallh			= NULL;
 	m_arrowh			= NULL;
 	m_inMove			= false;
@@ -34,8 +36,8 @@ CPanningButton::CPanningButton()
 
 CPanningButton::~CPanningButton()
 {
-	if (m_bitmapDC)
-		SendDeleteDeviceContext(m_bitmapDC);
+	if (m_bitmapDC != NULL)
+		DeleteDeviceContext(m_bitmapDC, m_oldBmp);
 }
 
 
@@ -59,13 +61,13 @@ bool CPanningButton::Create()
 	return true;
 }
 
-void CPanningButton::SetBitmapDC(CWnd* owner, CDC* bdc, CRect& orisize, CRect& actsize, COLORREF& bkgrnd) // may be empty
+void CPanningButton::SetBitmapDC(HWND owner, HDC bdc, HBITMAP oldBmp, CRect& orisize, CRect& actsize, COLORREF& bkgrnd) // may be empty
 {
-//	TRACE("SetBitmapDC\n");
-	if (m_bitmapDC)
-		SendDeleteDeviceContext(m_bitmapDC);
-	m_bitmapDC = bdc; 
+	if (m_bitmapDC != NULL)
+		DeleteDeviceContext(m_bitmapDC, m_oldBmp);
 	m_owner = owner;
+	m_bitmapDC = bdc;
+	m_oldBmp = oldBmp;
 	m_bitmapSizeOri = orisize;
 	m_bitmapSizeStored = actsize;
 	m_backgorund = bkgrnd;
@@ -76,7 +78,6 @@ void CPanningButton::SetBitmapDC(CWnd* owner, CDC* bdc, CRect& orisize, CRect& a
 
 void CPanningButton::SetViewRect(CRect irect)
 {
-//	TRACE("SetViewRect\n");
 	// the method can be called even if the panning window is not visible
 	if (m_bitmapSizeOri.IsRectEmpty() || m_bitmapSizeStored.IsRectEmpty())
 		return;
@@ -86,10 +87,10 @@ void CPanningButton::SetViewRect(CRect irect)
 	m_oriToStoredRx = (double)(m_bitmapSizeStored.Width()) / m_bitmapSizeOri.Width();
 	m_oriToStoredRy = (double)(m_bitmapSizeStored.Height()) / m_bitmapSizeOri.Height();
 	CRect newViewRectOnStored;
-	newViewRectOnStored.left = (int)(irect.left * m_oriToStoredRx);
-	newViewRectOnStored.right = (int)(irect.right * m_oriToStoredRx);
-	newViewRectOnStored.top = (int)(irect.top * m_oriToStoredRy);
-	newViewRectOnStored.bottom = (int)(irect.bottom * m_oriToStoredRy);
+	newViewRectOnStored.left	= (int)(irect.left		* m_oriToStoredRx);
+	newViewRectOnStored.right	= (int)(irect.right		* m_oriToStoredRx);
+	newViewRectOnStored.top		= (int)(irect.top		* m_oriToStoredRy);
+	newViewRectOnStored.bottom	= (int)(irect.bottom	* m_oriToStoredRy);
 	if (m_viewRectOnStored.EqualRect(&newViewRectOnStored))
 		return;
 	else
@@ -133,15 +134,13 @@ void CPanningButton::ViewRectToScreen(CRect &vRect)
 	vRect.bottom = min(vRect.bottom, m_bitmapOnScreen.bottom);
 }
 
-void CPanningButton::SendDeleteDeviceContext(CDC* bCDC)
+void CPanningButton::DeleteDeviceContext(HDC bDC, HBITMAP oldBmp)
 {
-	CWnd* wnd = GetParent();	// Dlg Window
-	if (wnd != NULL)
-		wnd = wnd->GetParent();	// OLE Control Window
-	if (wnd->IsKindOf(RUNTIME_CLASS(CPanningViewCtrl))) {
-		CPanningViewCtrl* ctrl = STATIC_DOWNCAST(CPanningViewCtrl, wnd);
-		ctrl->SendDeleteDeviceContext((ULONGLONG) bCDC);
-	}
+	HBITMAP hBmp = (HBITMAP)::SelectObject(bDC, (HBITMAP)oldBmp);
+	BOOL succ = FALSE;
+	if (hBmp != NULL)
+		succ = ::DeleteObject(hBmp);
+	succ = ::DeleteDC(bDC);
 }
 
 void CPanningButton::OnPaint()
@@ -154,8 +153,8 @@ void CPanningButton::OnPaint()
 	GetParent()->GetClientRect(&clientr);
 	CBrush brush;
 	COLORREF col;
-	if (!m_bitmapDC) {
-		DWORD dw = GetSysColor(COLOR_3DFACE);
+	if (m_bitmapDC == NULL) {
+		DWORD dw = ::GetSysColor(COLOR_3DFACE);
 		BYTE r = GetRValue(dw);
 		BYTE g = GetGValue(dw);
 		BYTE b = GetBValue(dw);
@@ -167,20 +166,18 @@ void CPanningButton::OnPaint()
 	dc.FillRect(&clientr, &brush);
 
 	// no bitmap - return
-	if (!m_bitmapDC)
+	if (m_bitmapDC == NULL)
 		return;
 
-	m_bitmapDC->SetMapMode(MM_TEXT);
+	::SetMapMode(m_bitmapDC, MM_TEXT);
 
 	// transform bitmap to screen
 	BmpToScreen(clientr);
-	// TODO: Error checking
-	BOOL ret = dc.StretchBlt(0, 0, m_bitmapOnScreen.Width(), m_bitmapOnScreen.Height(), m_bitmapDC, 
-							 0, 0, m_bitmapSizeStored.Width(), m_bitmapSizeStored.Height(), SRCCOPY);
-	if( !ret)
+	BOOL ret = ::StretchBlt(dc.m_hDC, 0, 0, m_bitmapOnScreen.Width(), m_bitmapOnScreen.Height(), m_bitmapDC,
+							0, 0, m_bitmapSizeStored.Width(), m_bitmapSizeStored.Height(), SRCCOPY);
+	if (!ret)
 		return;
 
-	ASSERT(ret);
 	CBrush brush1;
 	DWORD dw1 = GetSysColor(COLOR_WINDOWTEXT);
 	BYTE r1 = GetRValue(dw1);
@@ -190,8 +187,6 @@ void CPanningButton::OnPaint()
 	if (!m_viewRectOnStored.IsRectEmpty() && m_viewRectOnScreen != m_bitmapOnScreen &&
 		!m_viewRectOnScreen.IsRectEmpty())
 	{
-//		TRACE("m_viewRectOnScreen: w:%d, h:%d,  m_bitmapOnScreen: w:%d, h:%d\n", m_viewRectOnScreen.Width(),
-//				m_viewRectOnScreen.Height(), m_bitmapOnScreen.Width(), m_bitmapOnScreen.Height());
 		if (!m_inMove) {
 			CRect vRect(0, 0, 0, 0);
 			ViewRectToScreen(vRect);
@@ -280,7 +275,7 @@ void CPanningButton::OnLButtonUp(UINT nFlags, CPoint point)
 			dy /= m_storedToScreenRy;
 			dx /= m_oriToStoredRx;
 			dy /= m_oriToStoredRy;
-			m_owner->PostMessage(WM_PANN_SCROLL, (WPARAM)(int)dx, (LPARAM)(int)dy);
+			::PostMessage(m_owner, WM_PANN_SCROLL, (WPARAM)(int)dx, (LPARAM)(int)dy);
 			Invalidate();
 		}
 		m_viewRectInMove = CRect(0, 0, 0, 0);

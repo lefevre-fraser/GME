@@ -47,7 +47,7 @@ protected:
 
 // Dispatch maps
 	//{{AFX_DISPATCH(CPanningViewCtrl)
-	afx_msg void SetBitmapDC(ULONGLONG ownerCWnd, ULONGLONG bCDC,
+	afx_msg void SetBitmapDC(ULONGLONG ownerWnd, ULONGLONG bDC, ULONGLONG oldBmp,
 							 LONG orix, LONG oriy, LONG oriw, LONG orih,
 							 LONG rx, LONG ry, LONG rw, LONG rh,
 							 OLE_COLOR bkgrnd);
@@ -59,8 +59,6 @@ protected:
 
 // Event maps
 	//{{AFX_EVENT(CPanningViewCtrl)
-	void FireDeleteDeviceContext(ULONGLONG bCDC)
-		{FireEvent(eventidDeleteDeviceContext, EVENT_PARAM(VTS_UI8), bCDC); }
 	//}}AFX_EVENT
 	DECLARE_EVENT_MAP()
 
@@ -69,11 +67,8 @@ public:
 	enum {
 		//{{AFX_DISP_ID(CPanningViewCtrl)
 		dispidSetBitmapDC = 1L,
-		dispidSetViewRect = 2L,
-		eventidDeleteDeviceContext = 1L
+		dispidSetViewRect = 2L
 		//}}AFX_DISP_ID
 	};
-
-	void SendDeleteDeviceContext(ULONGLONG bCDC);
 };
 

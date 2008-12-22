@@ -900,17 +900,6 @@ BOOL CMainFrame::VerifyBarState(LPCTSTR lpszProfileName)
     return TRUE;
 }
 
-void CMainFrame::OnDeleteDCForPanningVindowCtrl(CDC* bCDC)
-{
-	// TODO: forward to view control later
-	if (bCDC != NULL) {
-		CBitmap* bmp = bCDC->GetCurrentBitmap();
-		delete bCDC;
-		if (bmp)
-			delete bmp;
-	}
-}
-
 BOOL CMainFrame::DestroyWindow() 
 {	
 	return CMDIFrameWndEx::DestroyWindow();
