@@ -88,11 +88,6 @@ ComponentObj.cpp	BONCommonFiles	COMPON~1.CPP|ComponentObj.cpp	0				1	<ISProjectF
 ComponentObj.h	BONCommonFiles	COMPON~1.H|ComponentObj.h	0				1	<ISProjectFolder>\sdk\bon\common\ComponentObj.h	1
 ComponentWizard.css	BONWizard1033Files	COMPON~1.CSS|ComponentWizard.css	0				1	<ISProjectFolder>\sdk\bon\wizard\1033\ComponentWizard.css	1
 ComponentWizard.gif	BONWizardImageFiles	COMPON~1.GIF|ComponentWizard.gif	0				1	<ISProjectFolder>\sdk\bon\wizard\Images\ComponentWizard.gif	1
-ComponentWizard.ncb	BONWizardFiles	COMPON~1.NCB|ComponentWizard.ncb	0				1	<ISProjectFolder>\sdk\bon\wizard\ComponentWizard.ncb	1
-ComponentWizard.sln	BONWizardFiles	COMPON~1.SLN|ComponentWizard.sln	0				1	<ISProjectFolder>\sdk\bon\wizard\ComponentWizard.sln	1
-ComponentWizard.suo	BONWizardFiles	COMPON~1.SUO|ComponentWizard.suo	0				1	<ISProjectFolder>\sdk\bon\wizard\ComponentWizard.suo	1
-ComponentWizard.vcproj	BONWizardFiles	COMPON~1.VCP|ComponentWizard.vcproj	0				1	<ISProjectFolder>\sdk\bon\wizard\ComponentWizard.vcproj	1
-ComponentWizard.vcproj.ISIS.	BONWizardFiles	COMPON~1.USE|ComponentWizard.vcproj.ISIS.volgy.user	0				1	<ISProjectFolder>\sdk\bon\wizard\ComponentWizard.vcproj.ISIS.volgy.user	1
 ComponentWizard.vsdir	BONWizardFiles	COMPON~1.VSD|ComponentWizard.vsdir	0				1	<ISProjectFolder>\sdk\bon\wizard\ComponentWizard.vsdir	1
 ComponentWizard_Background.g2	BONWizardImageFiles	COMPON~1.GIF|ComponentWizard_Background.gif	0				1	<ISProjectFolder>\sdk\bon\wizard\Images\ComponentWizard_Background.gif	1
 CompositePart.cpp	DecoratorLib	COMPOS~1.CPP|CompositePart.cpp	0				1	<ISProjectFolder>\sdk\decoratorlib\CompositePart.cpp	1
@@ -427,8 +422,8 @@ RawComponent.cpp	BONWizardTemplate1033Files	RAWCOM~1.CPP|RawComponent.cpp	0				1
 RawComponent.h	BONWizardTemplate1033Files	RAWCOM~1.H|RawComponent.h	0				1	<ISProjectFolder>\sdk\bon\wizard\Templates\1033\RawComponent.h	1
 RawComponent.ico	BONWizardFiles	RAWCOM~1.ICO|RawComponent.ico	0				1	<ISProjectFolder>\sdk\bon\wizard\RawComponent.ico	1
 RawComponent.vsz	BONWizardFiles	RAWCOM~1.VSZ|RawComponent.vsz	0				1	<ISProjectFolder>\sdk\bon\wizard\RawComponent.vsz	1
-ReadMe.txt	DecoratorLib	ReadMe.txt	0				1	<ISProjectFolder>\sdk\decoratorlib\ReadMe.txt	1
-README.txt1	ReadmeFiles	README.txt	0				1	<ISProjectFolder>\doc\README.txt	1
+README.txt	ReadmeFiles	README.txt	0				1	<ISProjectFolder>\doc\README.txt	1
+ReadMe2.txt	DecoratorLib	ReadMe.txt	0				1	<ISProjectFolder>\sdk\decoratorlib\ReadMe.txt	1
 real2cpx.c	SFDemoScripts	real2cpx.c	0				1	<ISProjectFolder>\paradigms\sf\demo\scripts\real2cpx.c	1
 reference.bmp	DecoratorLibResources	REFERE~1.BMP|reference.bmp	0				1	<ISProjectFolder>\sdk\decoratorlib\res\reference.bmp	1
 ReferenceBitmapPart.cpp	DecoratorLib	REFERE~1.CPP|ReferenceBitmapPart.cpp	0				1	<ISProjectFolder>\sdk\decoratorlib\ReferenceBitmapPart.cpp	1
