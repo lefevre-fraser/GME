@@ -433,12 +433,39 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 						m_shadowPath->AddLine(rc.left, rc.top, rc.right, rc.bottom);
 				}
 				break;
-			case VectorCommand::AddEllipseToPath: {
+			case VectorCommand::AddRectangleToPath:
+			case VectorCommand::AddRoundRectangleToPath: {
 					CRect rc = (*ii).GetResolvedCoords(m_Rect);
-					if (m_bInMainPathDefinition)
-						m_mainPath->AddEllipse(rc.left, rc.top, rc.Width(), rc.Height());
-					if (m_bInShadowPathDefinition)
-						m_shadowPath->AddEllipse(rc.left, rc.top, rc.Width(), rc.Height());
+					std::vector<long> points = (*ii).GetResolvedValues(m_Rect);
+					long radius = points[4];
+					if (cmdCode == VectorCommand::AddRectangleToPath || radius == 0) {
+						Gdiplus::Rect gdipRect(rc.left, rc.top, rc.Width(), rc.Height());
+						if (m_bInMainPathDefinition)
+							m_mainPath->AddRectangle(gdipRect);
+						if (m_bInShadowPathDefinition)
+							m_shadowPath->AddRectangle(gdipRect);
+					} else {
+						long diameter = 2 * radius;
+						if (m_bInMainPathDefinition) {
+							m_mainPath->AddArc(rc.left, rc.top, diameter, diameter, 180.0, 90.0);
+							m_mainPath->AddLine(rc.left + radius, rc.top, rc.right - radius, rc.top);
+							m_mainPath->AddArc(rc.right - diameter, rc.top, diameter, diameter, 270.0, 90.0);
+							m_mainPath->AddLine(rc.right, rc.top + radius, rc.right, rc.bottom - radius);
+							m_mainPath->AddArc(rc.right - diameter, rc.bottom - diameter, diameter, diameter, 0.0, 90.0);
+							m_mainPath->AddLine(rc.right - radius, rc.bottom, rc.left + radius, rc.bottom);
+							m_mainPath->AddArc(rc.left, rc.bottom - diameter, diameter, diameter, 90.0, 90.0);
+							m_mainPath->AddLine(rc.left, rc.bottom - radius, rc.left, rc.top + radius);
+						} else if (m_bInShadowPathDefinition) {
+							m_shadowPath->AddArc(rc.left, rc.top, diameter, diameter, 180.0, 90.0);
+							m_shadowPath->AddLine(rc.left + radius, rc.top, rc.right - radius, rc.top);
+							m_shadowPath->AddArc(rc.right - diameter, rc.top, diameter, diameter, 270.0, 90.0);
+							m_shadowPath->AddLine(rc.right, rc.top + radius, rc.right, rc.bottom - radius);
+							m_shadowPath->AddArc(rc.right - diameter, rc.bottom - diameter, diameter, diameter, 0.0, 90.0);
+							m_shadowPath->AddLine(rc.right - radius, rc.bottom, rc.left + radius, rc.bottom);
+							m_shadowPath->AddArc(rc.left, rc.bottom - diameter, diameter, diameter, 90.0, 90.0);
+							m_shadowPath->AddLine(rc.left, rc.bottom - radius, rc.left, rc.top + radius);
+						}
+					}
 				}
 				break;
 			case VectorCommand::AddPolygonToPath: {

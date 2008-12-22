@@ -164,98 +164,25 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDCORNERRADIUS, m_bRoundCornerRadius, false);
 	}
 
-	SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
-	SimpleCoordCommand* topMost		= new SimpleCoordCommand(TopMost);
-	SimpleCoordCommand* rightMost	= new SimpleCoordCommand(RightMost);
-	SimpleCoordCommand* bottomMost	= new SimpleCoordCommand(BottomMost);
+	SimpleCoordCommand* leftMost		= new SimpleCoordCommand(LeftMost);
+	SimpleCoordCommand* topMost			= new SimpleCoordCommand(TopMost);
+	SimpleCoordCommand* rightMost		= new SimpleCoordCommand(RightMost);
+	SimpleCoordCommand* bottomMost		= new SimpleCoordCommand(BottomMost);
+	AbsoluteCoordCommand* radiusCommand	= new AbsoluteCoordCommand(m_bRoundCornerRect ? m_bRoundCornerRadius : 0);
 	m_coordCommands.push_back(leftMost);
 	m_coordCommands.push_back(topMost);
 	m_coordCommands.push_back(rightMost);
 	m_coordCommands.push_back(bottomMost);
+	m_coordCommands.push_back(radiusCommand);
 
 	AddCommand(VectorCommand(VectorCommand::BeginPath));
-
-	if (m_bRoundCornerRect) {
-		ComplexCoordCommand* leftoRadius = new ComplexCoordCommand(LeftMost);
-		leftoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordAdd);
-		ComplexCoordCommand* topoRadius = new ComplexCoordCommand(TopMost);
-		topoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordAdd);
-		ComplexCoordCommand* rightoRadius = new ComplexCoordCommand(RightMost);
-		rightoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordSubstract);
-		ComplexCoordCommand* bottomoRadius = new ComplexCoordCommand(BottomMost);
-		bottomoRadius->AddCommand(OneConstant, m_bRoundCornerRadius, CoordSubstract);
-
-		ComplexCoordCommand* lefto2Radius = new ComplexCoordCommand(LeftMost);
-		lefto2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordAdd);
-		ComplexCoordCommand* topo2Radius = new ComplexCoordCommand(TopMost);
-		topo2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordAdd);
-		ComplexCoordCommand* righto2Radius = new ComplexCoordCommand(RightMost);
-		righto2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordSubstract);
-		ComplexCoordCommand* bottomo2Radius = new ComplexCoordCommand(BottomMost);
-		bottomo2Radius->AddCommand(OneConstant, 2 * m_bRoundCornerRadius, CoordSubstract);
-
-		AbsoluteCoordCommand* radiusCommand = new AbsoluteCoordCommand(m_bRoundCornerRadius);
-		AbsoluteCoordCommand* diameterCommand = new AbsoluteCoordCommand(2 * m_bRoundCornerRadius);
-		SimpleCoordCommand* angle0Command = new SimpleCoordCommand(ZeroConstant);
-		AbsoluteCoordCommand* angle90Command = new AbsoluteCoordCommand(90);
-		AbsoluteCoordCommand* angle180Command = new AbsoluteCoordCommand(180);
-		AbsoluteCoordCommand* angle270Command = new AbsoluteCoordCommand(270);
-
-		m_coordCommands.push_back(leftoRadius);
-		m_coordCommands.push_back(topoRadius);
-		m_coordCommands.push_back(rightoRadius);
-		m_coordCommands.push_back(bottomoRadius);
-		m_coordCommands.push_back(lefto2Radius);
-		m_coordCommands.push_back(topo2Radius);
-		m_coordCommands.push_back(righto2Radius);
-		m_coordCommands.push_back(bottomo2Radius);
-		m_coordCommands.push_back(radiusCommand);
-		m_coordCommands.push_back(diameterCommand);
-		m_coordCommands.push_back(angle0Command);
-		m_coordCommands.push_back(angle90Command);
-		m_coordCommands.push_back(angle180Command);
-		m_coordCommands.push_back(angle270Command);
-
-		std::vector<const CoordCommand*> m_arcParams;
-		m_arcParams.push_back(leftMost);
-		m_arcParams.push_back(topMost);
-		m_arcParams.push_back(diameterCommand);
-		m_arcParams.push_back(diameterCommand);
-		m_arcParams.push_back(angle180Command);
-		m_arcParams.push_back(angle90Command);
-		AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
-		AddCommand(VectorCommand(leftoRadius, topMost, rightoRadius, topMost, VectorCommand::AddLineToPath));
-		m_arcParams[0] = righto2Radius;
-		m_arcParams[1] = topMost;
-		m_arcParams[2] = diameterCommand;
-		m_arcParams[3] = diameterCommand;
-		m_arcParams[4] = angle270Command;
-		m_arcParams[5] = angle90Command;
-		AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
-		AddCommand(VectorCommand(rightMost, topoRadius, rightMost, bottomoRadius, VectorCommand::AddLineToPath));
-		m_arcParams[0] = righto2Radius;
-		m_arcParams[1] = bottomo2Radius;
-		m_arcParams[2] = diameterCommand;
-		m_arcParams[3] = diameterCommand;
-		m_arcParams[4] = angle0Command;
-		m_arcParams[5] = angle90Command;
-		AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
-		AddCommand(VectorCommand(rightoRadius, bottomMost, leftoRadius, bottomMost, VectorCommand::AddLineToPath));
-		m_arcParams[0] = leftMost;
-		m_arcParams[1] = bottomo2Radius;
-		m_arcParams[2] = diameterCommand;
-		m_arcParams[3] = diameterCommand;
-		m_arcParams[4] = angle90Command;
-		m_arcParams[5] = angle90Command;
-		AddCommand(VectorCommand(m_arcParams, VectorCommand::AddArcToPath));
-		AddCommand(VectorCommand(leftMost, bottomoRadius, leftMost, topoRadius, VectorCommand::AddLineToPath));
-	} else {
-		AddCommand(VectorCommand(leftMost,		bottomMost,	rightMost,		bottomMost,	VectorCommand::AddLineToPath));
-		AddCommand(VectorCommand(rightMost,		bottomMost,	rightMost,		topMost,	VectorCommand::AddLineToPath));
-		AddCommand(VectorCommand(rightMost,		topMost,	leftMost,		topMost,	VectorCommand::AddLineToPath));
-		AddCommand(VectorCommand(leftMost,		topMost,	leftMost,		bottomMost,	VectorCommand::AddLineToPath));
-	}
-
+	std::vector<const CoordCommand*> m_roundRectangleParams;
+	m_roundRectangleParams.push_back(leftMost);
+	m_roundRectangleParams.push_back(topMost);
+	m_roundRectangleParams.push_back(rightMost);
+	m_roundRectangleParams.push_back(bottomMost);
+	m_roundRectangleParams.push_back(radiusCommand);
+	AddCommand(VectorCommand(m_roundRectangleParams, VectorCommand::AddRoundRectangleToPath));
 	AddCommand(VectorCommand(VectorCommand::EndPath));
 	AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
 	AddCommand(VectorCommand(VectorCommand::CastShadowPath));
