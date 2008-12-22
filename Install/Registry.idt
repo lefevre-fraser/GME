@@ -1,0 +1,102 @@
+Registry	Root	Key	Name	Value	Component_	ISAttributes
+s72	i2	s255	S255	S0	s72	I4
+Registry	Registry
+Registry1	2	SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\GME.exe		[INSTALLDIR]GME.exe	GME.exe	0
+Registry10	2	SOFTWARE\GME\Components\MGA.Interpreter.MONTraverser	Paradigm	*	MONTraverser.dll	0
+Registry100	0	CLSID\{1FF57057-D598-4FC2-8F9D-708F59B9C017}\Insertable			PartBrowser.ocx	0
+Registry101	0	CLSID\{1FF57057-D598-4FC2-8F9D-708F59B9C017}\MiscStatus		0	PartBrowser.ocx	0
+Registry102	0	CLSID\{1FF57057-D598-4FC2-8F9D-708F59B9C017}\MiscStatus\1		131473	PartBrowser.ocx	0
+Registry103	0	CLSID\{1FF57057-D598-4FC2-8F9D-708F59B9C017}\ToolboxBitmap32		[!PartBrowser.ocx], 1	PartBrowser.ocx	0
+Registry104	0	CLSID\{1FF57057-D598-4FC2-8F9D-708F59B9C017}\TypeLib		{EA3F7431-913A-421F-9B9C-BEB6A735285A}	PartBrowser.ocx	0
+Registry105	0	CLSID\{1FF57057-D598-4FC2-8F9D-708F59B9C017}\Version		1.0	PartBrowser.ocx	0
+Registry106	0	CLSID\{8E82D238-D222-493D-8ED2-3175A5B1086C}			PartBrowser.ocx	1
+Registry107	0	PARTBROWSER.PartBrowserCtrl.1\Insertable			PartBrowser.ocx	0
+Registry11	2	SOFTWARE\GME\Paradigms\MetaGME	CurrentVersion	[GuidStrMetaGME]	MetaParadigmFiles	0
+Registry12	2	SOFTWARE\GME\Components\MGA.Interpreter.MONTraverser	Icon	,IDI_COMPICON	MONTraverser.dll	0
+Registry13	2	SOFTWARE\GME\Paradigms\MetaGME\[GuidStrMetaGME]	ConnStr	MGA=[INSTALLDIR_PARADIGMS_METAGME]MetaGME.mta	MetaParadigmFiles	0
+Registry14	2	SOFTWARE\GME\Components\MGA.Interpreter.MONTraverser	Tooltip	MONTraverser	MONTraverser.dll	0
+Registry145	2	SOFTWARE\GME	JavaClassPath	[INSTALLDIR_SDK_JAVA]\gme.jar	JavaClasses	0
+Registry15	2	SOFTWARE\GME\Paradigms\SF	CurrentVersion	[GuidStrSF]	SFParadigmFiles	0
+Registry16	2	SOFTWARE\GME\Components\MGA.Interpreter.MONTraverser\Associated	MetaGME		MONTraverser.dll	0
+Registry17	2	SOFTWARE\GME\Paradigms\SF\[GuidStrSF]	ConnStr	MGA=[INSTALLDIR_PARADIGMS_SF]SF.mta	SFParadigmFiles	0
+Registry18	2	SOFTWARE\GME\Components\MGA.PlugIn.AutoLayout\Associated	HFSM		AutoLayout.dll	0
+Registry19	2	SOFTWARE\GME\Paradigms\UML	CurrentVersion	[GuidStrUML]	UMLParadigmFiles	0
+Registry2	2	SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\GME.exe	Path	[INSTALLDIR]	GME.exe	0
+Registry20	2	SOFTWARE\GME\Components\MGA.PlugIn.AutoLayout	Type	#12	AutoLayout.dll	0
+Registry21	2	SOFTWARE\GME\Paradigms\UML\[GuidStrUML]	ConnStr	MGA=[INSTALLDIR_PARADIGMS_UML]UML.mta	UMLParadigmFiles	0
+Registry22	2	SOFTWARE\GME\Components\MGA.Interpreter.HFSMSimulator	Description	HFSM	HFSMInterpreter.dll	0
+Registry23	2	SOFTWARE\GME\Components\MGA.Interpreter.HFSMSimulator	Paradigm	HFSM	HFSMInterpreter.dll	0
+Registry24	2	SOFTWARE\GME\Components\MGA.Interpreter.HFSMSimulator	Icon	,IDI_COMPICON	HFSMInterpreter.dll	0
+Registry25	2	SOFTWARE\GME\Components\MGA.Interpreter.HFSMSimulator	Tooltip	HFSM Simulator	HFSMInterpreter.dll	0
+Registry26	2	SOFTWARE\GME\Components\MGA.PlugIn.AutoLayout	Description	AutoLayout	AutoLayout.dll	0
+Registry27	2	SOFTWARE\GME\Components\MGA.Interpreter.HFSMSimulator\Associated	HFSM		HFSMInterpreter.dll	0
+Registry28	2	SOFTWARE\GME\Components\MGA.PlugIn.AutoLayout	Paradigm	*	AutoLayout.dll	0
+Registry29	2	SOFTWARE\GME\Components\MGA.PlugIn.AutoLayout	Icon	,IDI_COMPICON	AutoLayout.dll	0
+Registry3	2	SOFTWARE\GME	IconPath	$PARADIGMDIR\icons;$PROJECTDIR\icons	GME.exe	0
+Registry30	2	SOFTWARE\GME\Components\MGA.PlugIn.AutoLayout	Tooltip	Auto Layout PlugIn	AutoLayout.dll	0
+Registry31	2	SOFTWARE\GME\Components\MGA.PlugIn.AutoLayout\Associated	MetaGME		AutoLayout.dll	0
+Registry32	2	SOFTWARE\GME\Components\MGA.PlugIn.AutoLayout\Associated	SF		AutoLayout.dll	0
+Registry33	2	SOFTWARE\GME\Components\MGA.PlugIn.AutoLayout\Associated	UML		AutoLayout.dll	0
+Registry34	0	CLSID\{1FF57057-D598-4FC2-8F9D-708F59B9C017}\Control			PartBrowser.ocx	0
+Registry36	0	GME.Application\CLSID		{C7DCCC2E-1642-4a40-8060-51A7B9FAE488}	GME.exe	0
+Registry37	2	SOFTWARE\GME\Components\MGA.Interpreter.SFInterpreter	Type	#1	SFInterpreter.dll	0
+Registry38	2	SOFTWARE\GME\Components\MGA.Interpreter.SFInterpreter	Description	SFInterpreter	SFInterpreter.dll	0
+Registry39	2	SOFTWARE\GME\Components\MGA.Interpreter.SFInterpreter	Paradigm	SF	SFInterpreter.dll	0
+Registry4	0	GME.Application		GME.Application	GME.exe	0
+Registry40	2	SOFTWARE\GME\Components\MGA.Interpreter.SFInterpreter	Tooltip	SignalFlow Interpreter	SFInterpreter.dll	0
+Registry41	0	CLSID\{C7DCCC2E-1642-4a40-8060-51A7B9FAE488}		GME.Application	GME.exe	0
+Registry42	2	SOFTWARE\GME\Components\MGA.Interpreter.SFInterpreter\Associated	SF		SFInterpreter.dll	0
+Registry43	0	CLSID\{C7DCCC2E-1642-4a40-8060-51A7B9FAE488}\InprocHandler32		ole32.dll	GME.exe	0
+Registry44	2	SOFTWARE\GME\Components\MGA.Interpreter.PatternProcessor	Type	#9	PatternProcessor.dll	0
+Registry45	2	SOFTWARE\GME\Components\MGA.Interpreter.PatternProcessor	Description	PatternProcessor	PatternProcessor.dll	0
+Registry46	2	SOFTWARE\GME\Components\MGA.Interpreter.PatternProcessor	Paradigm	*	PatternProcessor.dll	0
+Registry47	2	SOFTWARE\GME\Components\MGA.Interpreter.PatternProcessor	Tooltip	PatternProcessor	PatternProcessor.dll	0
+Registry48	0	CLSID\{C7DCCC2E-1642-4a40-8060-51A7B9FAE488}\LocalServer32		[INSTALLDIR]GME.exe	GME.exe	0
+Registry49	0	CLSID\{C7DCCC2E-1642-4a40-8060-51A7B9FAE488}\ProgID		GME.Application	GME.exe	0
+Registry5	2	SOFTWARE\GME\Components\MGA.Interpreter.HFSMSimulator	Type	#1	HFSMInterpreter.dll	0
+Registry50	2	SOFTWARE\GME\Components\Mga.AddOn.ConstraintManager	Type	#10	ConstraintManager.dll	0
+Registry51	2	SOFTWARE\GME\Components\Mga.AddOn.ConstraintManager	Description	ConstraintManager	ConstraintManager.dll	0
+Registry52	2	SOFTWARE\GME\Components\Mga.AddOn.ConstraintManager	Paradigm	*	ConstraintManager.dll	0
+Registry55	2	SOFTWARE\GME\Components\Mga.AddOn.ConstraintManager\Associated	HFSM		ConstraintManager.dll	0
+Registry56	2	SOFTWARE\GME\Components\Mga.AddOn.ConstraintManager\Associated	MetaGME		ConstraintManager.dll	0
+Registry57	2	SOFTWARE\GME\Components\Mga.AddOn.ConstraintManager\Associated	SF		ConstraintManager.dll	0
+Registry58	2	SOFTWARE\GME\Components\Mga.AddOn.ConstraintManager\Associated	UML		ConstraintManager.dll	0
+Registry6	2	SOFTWARE\GME\Components\MGA.Interpreter.MONTraverser	Type	#9	MONTraverser.dll	0
+Registry60	2	SOFTWARE\GME\Components\Mga.AddOn.ExpressionChecker	Type	#2	ConstraintManager.dll	0
+Registry61	2	SOFTWARE\GME\Components\Mga.AddOn.ExpressionChecker	Description	ExpressionChecker	ConstraintManager.dll	0
+Registry62	2	SOFTWARE\GME\Components\Mga.AddOn.ExpressionChecker	Paradigm	MetaGME	ConstraintManager.dll	0
+Registry65	2	SOFTWARE\GME\Components\Mga.AddOn.ExpressionChecker\Associated	MetaGME		ConstraintManager.dll	0
+Registry69	2	SOFTWARE\GME\Components\MGA.Interpreter.BON Extender	Type	#1	BonExtender.dll	0
+Registry7	2	SOFTWARE\GME\Paradigms\HFSM	CurrentVersion	[GuidStrHFSM]	HFSMParadigmFiles	0
+Registry70	1	SOFTWARE\GME	*		GME.exe	0
+Registry71	2	SOFTWARE\GME\Components\MGA.Interpreter.BON Extender	Description	BON Extender	BonExtender.dll	0
+Registry72	2	SOFTWARE\GME\Components\MGA.Interpreter.BON Extender	Paradigm	MetaGME	BonExtender.dll	0
+Registry73	2	SOFTWARE\GME\Components\MGA.Interpreter.BON Extender	Icon	,IDI_COMPICON	BonExtender.dll	0
+Registry74	2	SOFTWARE\GME\Components\MGA.Interpreter.BON Extender	Tooltip	BON Extender Interpreter	BonExtender.dll	0
+Registry75	2	SOFTWARE\GME\Components\MGA.Interpreter.BON Extender\Associated	MetaGME		BonExtender.dll	0
+Registry76	1	SOFTWARE\GME\Components\MGA.Interpreter.NamespaceConfig	Type	#1	NamespaceConfig.dll	0
+Registry77	2	SOFTWARE\GME\Components\MGA.Interpreter.MetaGME	Type	#1	MetaInterpreter.dll	0
+Registry78	2	SOFTWARE\GME\Components\MGA.Interpreter.MetaGME	Description	MetaGME 2004	MetaInterpreter.dll	0
+Registry79	2	SOFTWARE\GME\Components\MGA.Interpreter.MetaGME	Paradigm	MetaGME	MetaInterpreter.dll	0
+Registry8	2	SOFTWARE\GME\Components\MGA.Interpreter.MONTraverser	Description	MONTraverser	MONTraverser.dll	0
+Registry80	2	SOFTWARE\GME\Components\MGA.Interpreter.MetaGME	Icon	,IDI_COMPICON	MetaInterpreter.dll	0
+Registry81	2	SOFTWARE\GME\Components\MGA.Interpreter.MetaGME	Tooltip	MetaGME Interpreter	MetaInterpreter.dll	0
+Registry82	2	SOFTWARE\GME\Components\MGA.Interpreter.MetaGME\Associated	MetaGME		MetaInterpreter.dll	0
+Registry83	1	SOFTWARE\GME\Components\MGA.Interpreter.NamespaceConfig	Description	NamespaceConfig	NamespaceConfig.dll	0
+Registry84	1	SOFTWARE\GME\Components\MGA.Interpreter.NamespaceConfig	Paradigm	MetaGME	NamespaceConfig.dll	0
+Registry85	1	SOFTWARE\GME\Components\MGA.Interpreter.NamespaceConfig	Icon	,IDI_COMPICON	NamespaceConfig.dll	0
+Registry86	1	SOFTWARE\GME\Components\MGA.Interpreter.NamespaceConfig	Tooltip	NamespaceConfig Interpreter	NamespaceConfig.dll	0
+Registry87	2	SOFTWARE\GME\Components\MGA.PlugIn.Table Editor	Type	#12	TableEditor.dll	0
+Registry88	2	SOFTWARE\GME\Components\MGA.PlugIn.Table Editor	Description	Table Editor	TableEditor.dll	0
+Registry89	2	SOFTWARE\GME\Components\MGA.PlugIn.Table Editor	Paradigm	*	TableEditor.dll	0
+Registry9	2	SOFTWARE\GME\Paradigms\HFSM\[GuidStrHFSM]	ConnStr	MGA=[INSTALLDIR_PARADIGMS_HFSM]HFSM.mta	HFSMParadigmFiles	0
+Registry90	2	SOFTWARE\GME\Components\MGA.PlugIn.Table Editor	Icon	,IDI_COMPICON	TableEditor.dll	0
+Registry91	2	SOFTWARE\GME\Components\MGA.PlugIn.Table Editor	Tooltip	Table Editor PlugIn	TableEditor.dll	0
+Registry92	1	SOFTWARE\GME\Components\MGA.Interpreter.NamespaceConfig\Associated	MetaGME		NamespaceConfig.dll	0
+Registry93	2	SOFTWARE\GME\Components\MGA.AddOn.MetaMAid	Type	#2	MetaMAid.dll	0
+Registry94	2	SOFTWARE\GME\Components\MGA.AddOn.MetaMAid	Description	MetaMAid	MetaMAid.dll	0
+Registry95	2	SOFTWARE\GME\Components\MGA.AddOn.MetaMAid	Paradigm	MetaGME	MetaMAid.dll	0
+Registry96	2	SOFTWARE\GME\Components\MGA.AddOn.MetaMAid	Tooltip	MetaMAid AddOn	MetaMAid.dll	0
+Registry97	2	SOFTWARE\GME\Components\MGA.AddOn.MetaMAid\Associated	MetaGME		MetaMAid.dll	0
+Registry98	2	SOFTWARE\Microsoft\Windows\HTML Help	GME Manual and User Guide.chm	[INSTALLDIR_DOC]	OnlineHelp	0
+Registry99	0	CLSID\{1FF57057-D598-4FC2-8F9D-708F59B9C017}\InprocServer32	ThreadingModel	Apartment	PartBrowser.ocx	0

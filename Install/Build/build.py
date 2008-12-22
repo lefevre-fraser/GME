@@ -25,6 +25,18 @@ GME_ROOT = os.path.normpath(os.path.abspath("../.."))
 
 def check_prerequisites():
     "Check prerequisites (required tools, etc.)"
+    
+    # Test for GME_ROOT environment variable
+    if not os.environ['GME_ROOT']:
+        print "GME_ROOT environment variable is not set!"
+        raise
+        
+    if os.path.normpath(os.path.abspath(os.environ['GME_ROOT'])) != GME_ROOT:
+        print "GME_ROOT environment variable is not set to the current dev. source tree!"
+        print "GME_ROOT =", os.environ['GME_ROOT']
+        print "Current dev. source tree:", GME_ROOT
+        raise
+    
     # Test for Microsoft Visual Studio 2008
     try:
         tools.test_VS()
@@ -40,13 +52,13 @@ def check_prerequisites():
         raise
     
     # Test for InstallShield
-    #try:
-    #    tools.test_IS()
-    #except:
-    #    print "InstallShield Developer 8 is not installed!"
-    #    raise
+    try:
+        tools.test_IS()
+    except:
+        print "InstallShield Developer 8 is not installed!"
+        raise
     
-    # Test for CVS
+    # Test for SVN
     try:
         tools.test_SVN()
     except:
@@ -72,12 +84,6 @@ def compile_meta():
     cmd_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME");
     tools.system( "regrelease.bat >NUL", cmd_dir)
 
-
-def compile_BON():
-    "Compile C++ component support (BON)"
-    sln_file = os.path.join(GME_ROOT, "SDK", "BON", "tools", "ComponentTools.sln");
-    tools.build_VS( sln_file, "Release" )
-
         
 def compile_JBON():
     "Compile Java component support (JBON)"
@@ -89,23 +95,27 @@ def compile_tools():
     "Compile external tool components"
     
     # Table Editor
-    sln_file = os.path.join(GME_ROOT, "Tools", "GMETableEditor", "Component.sln");
+    sln_file = os.path.join(GME_ROOT, "Tools", "TableEditor", "TableEditor.sln");
     tools.build_VS( sln_file, "Release" )
     
     # Auto Layout
     sln_file = os.path.join(GME_ROOT, "Tools", "AutoLayout", "AutoLayout.sln");
     tools.build_VS( sln_file, "Release" )
     
-    # Model Migrate
-    sln_file = os.path.join(GME_ROOT, "Tools", "ModelMigrate", "ModelMigrate.sln");
-    tools.build_VS( sln_file, "Release" )
+    # Model Migrate - Does not compile currently
+    #sln_file = os.path.join(GME_ROOT, "Tools", "ModelMigrate", "ModelMigrate.sln");
+    #tools.build_VS( sln_file, "Release" )
     
     # GME Merge
-    sln_file = os.path.join(GME_ROOT, "Tools", "GMEMerge", "GMEMergeComponent.sln");
+    sln_file = os.path.join(GME_ROOT, "Tools", "GMEMerge", "GMEMerge.sln");
     tools.build_VS( sln_file, "Release" )
     
     # Pattern Processor
-    sln_file = os.path.join(GME_ROOT, "SDK", "PatProcessor", "BONComponent.sln");
+    sln_file = os.path.join(GME_ROOT, "SDK", "PatternProcessor", "PatternProcessor.sln");
+    tools.build_VS( sln_file, "Release" )
+    
+    # ExtractCrashDumpXML 
+    sln_file = os.path.join(GME_ROOT, "Tools", "ExtractCrashDumpXML", "ExtractCrashDumpXML.sln");
     tools.build_VS( sln_file, "Release" )
     
 
@@ -113,13 +123,13 @@ def compile_samples():
     "Compile sample components"
     
     # SF Paradigm
-    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2Interpreter", "BON2Component.sln");
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "SFInterpreter", "SFInterpreter.sln");
     tools.build_VS( sln_file, "Release" )
-    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2SFExample", "Bon2Component.sln");
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2SFSample", "BON2SFSample.sln");
     tools.build_VS( sln_file, "Release" )
     
     # HFSM Paradigm
-    sln_file = os.path.join(GME_ROOT, "Paradigms", "HFSM", "interpreter", "BONComponent.sln");
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "HFSM", "HFSMSimulator", "HFSMSimulator.sln");
     tools.build_VS( sln_file, "Release" )
     
     # UML Paradigm
@@ -133,23 +143,10 @@ def zip_decorkit():
     tools.zip(zip_dir, "DecoratorKit.zip", "packagefiles.lst")
 
 
-def zip_dispatchSDK():
-    "Create DispatchComponents.zip"
-    zip_dir = os.path.join(GME_ROOT, "SDK", "DispatchSDK")
-    tools.zip(zip_dir, "DispatchComponents.zip", "packagefiles.lst")
-
-
-def zip_metainterpreter():
-    "Create MetaInterpreter.zip"
-    zip_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "MetaInterpreter")
-    tools.zip(zip_dir, "MetaInterpreter.zip", "packagefiles.lst")
-
-
-def zip_metainterpreter_framework():
-    "Create MetaInterpreterFramework.zip"
-    zip_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "MetaInterpreterFramework")
-    tools.zip(zip_dir, "MetaInterpreterFramework.zip", "packagefiles.lst")
-
+def zip_scriptSDK():
+    "Create ScriptSDK.zip"
+    zip_dir = os.path.join(GME_ROOT, "SDK", "ScriptSDK")
+    tools.zip(zip_dir, "ScriptSDK.zip", "packagefiles.lst")
 
 def generate_meta_files():
     "Generate meta files (mta/mga)"
@@ -191,15 +188,14 @@ def generate_sample_files():
 
 def build_msi():
     "Build InstallShield Project (msi)"
-    #IS_vars = {}
-    #
-    #IS_vars["ProductVersion"] = prefs["version_string"]
-    #IS_vars["GuidStrMetaGME"] = tools.query_GUID("MetaGME")
-    #IS_vars["GuidStrSF"] = tools.query_GUID("SF")
-    #IS_vars["GuidStrUML"] = tools.query_GUID("UML")
-    #IS_vars["GuidStrHFSM"] = tools.query_GUID("HFSM")
-    #tools.build_IS(os.path.join(GME_ROOT, "Install.isv"), "FullConfig", "Release", IS_vars)
-    pass
+    IS_vars = {}
+    
+    IS_vars["ProductVersion"] = prefs["version_string"]
+    IS_vars["GuidStrMetaGME"] = tools.query_GUID("MetaGME")
+    IS_vars["GuidStrSF"] = tools.query_GUID("SF")
+    IS_vars["GuidStrUML"] = tools.query_GUID("UML")
+    IS_vars["GuidStrHFSM"] = tools.query_GUID("HFSM")
+    tools.build_IS(os.path.join(GME_ROOT, "Install.isv"), "FullConfig", "Release", IS_vars)
 
 
 def copy_msi():
@@ -227,17 +223,14 @@ build_steps = [
     update_version_str,
     compile_GME,
     compile_meta,
-    compile_BON, 
     compile_JBON,
     compile_tools,
     compile_samples, 
     zip_decorkit, 
-    zip_dispatchSDK, 
-    zip_metainterpreter, 
-    zip_metainterpreter_framework, 
+    zip_scriptSDK, 
     generate_meta_files,
     generate_sample_files, 
-    #build_msi,
+    build_msi,
     copy_msi,
     tag_repository
     ]

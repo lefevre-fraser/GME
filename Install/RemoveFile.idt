@@ -1,0 +1,13 @@
+FileKey	Component_	FileName	DirProperty	InstallMode
+s72	s72	L255	s72	i2
+RemoveFile	FileKey
+NewShortcut1	GME.exe		GMEFolder	2
+NewShortcut11	GME.exe		GMEFolder	2
+NewShortcut2	UserManual		DocFolder	2
+NewShortcut3	IntroductionDoc		DocFolder	2
+NewShortcut4	MGADoc		DocFolder	2
+NewShortcut5	UserManual		DocFolder	2
+NewShortcut6	MiniTutorials		TutorialFolder	2
+NewShortcut7	MiniTutorials		TutorialFolder	2
+NewShortcut8	MiniTutorials		TutorialFolder	2
+NewShortcut9	Tutorial		TutorialFolder	2

@@ -30,7 +30,7 @@ guaranteed.
 1. Release Notes
 ************************************************
 
-Release Notes of Release r8.12.19
+Release Notes of Release r8.12.22
 --------------------------------
   - This is an internal release, release notes are not finalized
   - The GME application and all plugins are ported to the Visual Studio 2008 

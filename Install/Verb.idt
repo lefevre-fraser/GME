@@ -1,0 +1,4 @@
+Extension_	Verb	Sequence	Command	Argument
+s255	s32	I2	L255	L255
+Verb	Extension_	Verb
+mga	Open		##ID_STRING39##	##ID_STRING38##

@@ -96,6 +96,7 @@ def build_VS(sln_path, config_name, project_name=""):
     msg += "Compiling " + sln_path + " [" + project_name + "] (" + config_name + ") "
     toolmsg(msg)
     DTE = win32com.client.Dispatch("VisualStudio.DTE.9.0")
+    DTE.MainWindow.Visible = True
     DTE.Solution.Open( sln_path )
     builder = DTE.Solution.SolutionBuild
     if prefs['clean']:
@@ -103,7 +104,7 @@ def build_VS(sln_path, config_name, project_name=""):
     if (project_name):
         builder.BuildProject(config_name, project_name, 1)
     else:
-        builder.SolutionConfigurations.Item(config_name).Activate
+        builder.SolutionConfigurations.Item(config_name).Activate()
         builder.Build(1);
     failed = builder.LastBuildInfo
     DTE.Quit()
@@ -158,39 +159,39 @@ def query_GUID(paradigm ):
     return regsitrar.ParadigmGUIDString(2, paradigm)
 
 
-#def test_IS():
-#    "Test for InstallShield Developer 8. Raises exception if not found."
-#    toolmsg("Trying to create ISWiAutomation.ISWiProject object")
-#    win32com.client.Dispatch("ISWiAutomation.ISWiProject")
-#    
-#def build_IS(isv_file, config, release, properties):
-#    """
-#    Builds an InstallShield Developer 8 project.
-#    params
-#        isv_file : full path to the InstallShield project (.isv)
-#        config   : name of the configuration to be built
-#        release  : name of the build configuration (e.g.: "Release")
-#        properties : dictionary of properties to set for the project at build time
-#    """
-#    toolmsg("Building " + isv_file + " - " + config + " - " + release)
-#    ism_file = os.path.splitext(isv_file)[0] + ".ism"
-#    ISWiProject = win32com.client.Dispatch( "ISWiAutomation.ISWiProject" )
-#    ISWiProject.ImportProject(ism_file, isv_file)
-#    ISWiProject.CloseProject()
-#    
-#    ISWiProject.OpenProject(ism_file)
-#    for property in properties.keys():
-#        ISProperty = ISWiProject.ISWiProperties.Item(property)
-#        ISProperty.Value = properties[property]
-#        toolmsg("\tSet property " + ISProperty.Name + " = " + ISProperty.Value)
-#        
-#    ISConfig = ISWiProject.ISWiProductConfigs.Item(config)
-#    ISRelease = ISConfig.ISWiReleases.Item(release)
-#    ISRelease.Build()
-#    ISWiProject.CloseProject()
-#    
-#    if ISRelease.BuildWarningCount > 0:
-#        toolmsg("Warnings found (%d)! Check logfile for details." % (ISRelease.BuildWarningCount))
-#    if ISRelease.BuildErrorCount > 0:
-#        raise BuildException, "InstallShield error(s) occured"
+def test_IS():
+    "Test for InstallShield Developer 8. Raises exception if not found."
+    toolmsg("Trying to create ISWiAutomation.ISWiProject object")
+    win32com.client.Dispatch("ISWiAutomation.ISWiProject")
+    
+def build_IS(isv_file, config, release, properties):
+    """
+    Builds an InstallShield Developer 8 project.
+    params
+        isv_file : full path to the InstallShield project (.isv)
+        config   : name of the configuration to be built
+        release  : name of the build configuration (e.g.: "Release")
+        properties : dictionary of properties to set for the project at build time
+    """
+    toolmsg("Building " + isv_file + " - " + config + " - " + release)
+    ism_file = os.path.splitext(isv_file)[0] + ".ism"
+    ISWiProject = win32com.client.Dispatch( "ISWiAutomation.ISWiProject" )
+    ISWiProject.ImportProject(ism_file, isv_file)
+    ISWiProject.CloseProject()
+    
+    ISWiProject.OpenProject(ism_file)
+    for property in properties.keys():
+        ISProperty = ISWiProject.ISWiProperties.Item(property)
+        ISProperty.Value = properties[property]
+        toolmsg("\tSet property " + ISProperty.Name + " = " + ISProperty.Value)
+        
+    ISConfig = ISWiProject.ISWiProductConfigs.Item(config)
+    ISRelease = ISConfig.ISWiReleases.Item(release)
+    ISRelease.Build()
+    ISWiProject.CloseProject()
+    
+    if ISRelease.BuildWarningCount > 0:
+        toolmsg("Warnings found (%d)! Check logfile for details." % (ISRelease.BuildWarningCount))
+    if ISRelease.BuildErrorCount > 0:
+        raise BuildException, "InstallShield error(s) occured"
         

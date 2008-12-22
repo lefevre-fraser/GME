@@ -1,0 +1,13 @@
+Action	Type	Source	Target	ISComments
+s72	i2	S64	S0	S255
+CustomAction	Action
+CheckForProductUpdates	226	ISUpdateServiceFolder	[ISUpdateServiceFolder]agent.exe "/au[ProductCode] /EndOfInstall"	Checks for product updates
+CheckForProductUpdatesOnReboot	226	ISUpdateServiceFolder	[ISUpdateServiceFolder]agent.exe "/au[ProductCode] /EndOfInstall /Reboot"	Checks for product updates on reboot
+ISSelfRegisterCosting	1	ISSELFREG.DLL	ISSelfRegisterCosting	
+ISSelfRegisterFiles	1025	ISSELFREG.DLL	ISSelfRegisterFiles	
+ISSelfRegisterFinalize	1	ISSELFREG.DLL	ISSelfRegisterFinalize	
+ISUnSelfRegisterFiles	1025	ISSELFREG.DLL	ISUnSelfRegisterFiles	
+setAllUsersProfile2K	51	ALLUSERSPROFILE	[%ALLUSERSPROFILE]	
+SetAllUsersProfileNT	51	ALLUSERSPROFILE	[%SystemRoot]\Profiles\All Users	
+SetForAllUsers	51	ALLUSERS	1	Set this value to install GME for all users
+setUserProfileNT	51	USERPROFILE	[%USERPROFILE]	

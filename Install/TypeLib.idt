@@ -1,0 +1,5 @@
+LibID	Language	Component_	Version	Description	Directory_	Feature_	Cost
+s38	i2	s72	I4	L128	S72	s38	I4
+TypeLib	LibID	Language	Component_
+{032D8DD2-C470-44C7-972E-4CF5EF9D1362}	0	JAUT.dll	65536	JAUT 1.0 Type Library	INSTALLDIR_BIN	SDK	1
+{EA3F7431-913A-421F-9B9C-BEB6A735285A}	0	PartBrowser.ocx	65536	PartBrowser ActiveX Control module	INSTALLDIR	GMEApplication	1

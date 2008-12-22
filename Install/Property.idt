@@ -1,0 +1,48 @@
+Property	Value	ISComments
+s72	L0	S255
+Property	Property
+_IsMaintenance	Change	
+_IsSetupTypeMin	Typical	
+AgreeToLicense	No	
+ApplicationUsers	AllUsers	
+ARPCONTACT	##IDPROP_ARPCONTACT##	
+ARPHELPLINK	##IDPROP_ARPHELPLINK##	
+ARPHELPTELEPHONE	##IDPROP_ARPHELPTELEPHONE##	
+ARPPRODUCTICON	ARPPRODUCTICON.exe	
+ARPREADME		
+ARPURLINFOABOUT	##NEW_STRING1##	
+ARPURLUPDATEINFO	##IDPROP_ARPURLUPDATEINFO##	
+DefaultUIFont	Tahoma8	
+DialogCaption	InstallShield for Windows Installer	
+DiskPrompt	[1]	
+Display_IsBitmapDlg	1	
+DisplayNameCustom	##IDS__DisplayName_Custom##	
+DisplayNameMinimal	##IDS__DisplayName_Minimal##	
+DisplayNameTypical	##IDS__DisplayName_Typical##	
+DWUSINTERVAL	30	
+ErrorDialog	SetupError	
+GuidStrHFSM		This_property_must_set_from_the_build_scripts
+GuidStrMetaGME		This_property_must_set_from_the_build_scripts
+GuidStrSF		This_property_must_set_from_the_build_scripts
+GuidStrUML		This_property_must_set_from_the_build_scripts
+InstallChoice	AR	
+INSTALLLEVEL	100	
+ISCHECKFORPRODUCTUPDATES	1	
+ISENABLEDWUSFINISHDIALOG		
+ISSCRIPT_VERSION_MISSING	##IDS_ISSCRIPT_VERSION_MISSING##	
+ISSCRIPT_VERSION_OLD	##IDS_ISSCRIPT_VERSION_OLD##	
+Manufacturer	##COMPANY_NAME##	
+PIDTemplate	12345<###-%%%%%%%>@@@@@	
+ProductCode	{D44ABD2F-D3B4-4EB6-898F-47FD4CDDBA08}	
+ProductID	none	
+ProductLanguage	1033	
+ProductName	GME	
+ProductVersion	This_property_must_set_from_the_build_scripts	
+ProgressType0	install	
+ProgressType1	Installing	
+ProgressType2	installed	
+ProgressType3	installs	
+RebootYesNo	Yes	
+ReinstallModeText	omus	
+SetupType	Typical	
+UpgradeCode	{43743D0C-2797-4797-8E8E-88FC0195E2B6}	

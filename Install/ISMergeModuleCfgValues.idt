@@ -1,0 +1,6 @@
+ISMergeModule_	Language_	ModuleConfiguration_	Value	Format	Type	ContextData	DefaultValue	Attributes	DisplayName	Description	HelpLocation	HelpKeyword
+s255	i2	s72	L0	i2	L255	L255	L255	I2	L255	L255	L255	L255
+ISMergeModuleCfgValues	ISMergeModule_	Language_	ModuleConfiguration_
+MDAC28.E7D6BCFA_9BFA_49D4_A1EE_767B7FD61E38	1033	MDAC28_SUPPRESS_REBOOT	NotSuppress	1	Property	Public	NotSuppress	2	Suppress MDAC 2.8 Reboot	Setting this value to "Suppress" will prevent the end-user from cancelling the reboot. It will just show a message saying a reboot is required and then reboot the computer.		
+MDAC28.E7D6BCFA_9BFA_49D4_A1EE_767B7FD61E38	1033	MDAC28_INSTALL_SEQUENCE	EXEC	1	Property	Public	EXEC	2	MDAC 2.8 Install Location	Setting this value to "UI" will install MDAC 2.8 before the Install Welcome dialog launches. The setup will then reboot the machine and continue.		
+MDAC28.E7D6BCFA_9BFA_49D4_A1EE_767B7FD61E38	1033	MDAC28_INSTALL_REBOOT	0	1	Property	Public	0	2	MDAC 2.8 Reboot Location	Setting this value to "1" will force a reboot soon after MDAC is installed. Try adding a condition of "Not AFTERREBOOT" to InstallWelcome in the InstallUISequence for a better end-user experience.		

@@ -1,0 +1,6 @@
+Feature_	ISMergeModule_	Language_
+s38	s255	i2
+ISFeatureMergeModules	Feature_	ISMergeModule_	Language_
+GMEApplication	Microsoft_VC90_ATL_x86.CEC8F2E3_AC9A_357C_BFCB_BFAC37C4AC50	0
+GMEApplication	Microsoft_VC90_CRT_x86.1F01A0AA_9393_3C3F_AF74_5E9BC79728D5	0
+GMEApplication	Microsoft_VC90_MFC_x86.ACCA45BB_9018_3990_86CE_58967C9C92D5	0
