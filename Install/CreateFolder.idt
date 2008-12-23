@@ -1,7 +1,0 @@
-Directory_	Component_
-s72	s72
-CreateFolder	Directory_	Component_
-INSTALLDIR_CONTRIB	EmptyComponent
-INSTALLDIR_SDK_WIZARD_HTML	BONWizardHTMLFiles
-INSTALLDIR_SDK_WIZARD_SCRIPTS	BONWizardScriptFiles
-INSTALLDIR_SDK_WIZARD_TEMPLATES	BONWizardTemplateFiles

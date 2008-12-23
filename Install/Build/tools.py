@@ -160,24 +160,21 @@ def query_GUID(paradigm ):
 
 
 def test_IS():
-    "Test for InstallShield Developer 8. Raises exception if not found."
-    toolmsg("Trying to create ISWiAutomation.ISWiProject object")
-    win32com.client.Dispatch("ISWiAutomation.ISWiProject")
+    "Test for InstallShield 2009 Professional. Raises exception if not found."
+    toolmsg("Trying to create IswiAuto15.ISWiProject object")
+    win32com.client.Dispatch("IswiAuto15.ISWiProject")
     
-def build_IS(isv_file, config, release, properties):
+def build_IS(ism_file, config, release, properties):
     """
-    Builds an InstallShield Developer 8 project.
+    Builds an 2009 Professional 8 project.
     params
         isv_file : full path to the InstallShield project (.isv)
         config   : name of the configuration to be built
         release  : name of the build configuration (e.g.: "Release")
         properties : dictionary of properties to set for the project at build time
     """
-    toolmsg("Building " + isv_file + " - " + config + " - " + release)
-    ism_file = os.path.splitext(isv_file)[0] + ".ism"
-    ISWiProject = win32com.client.Dispatch( "ISWiAutomation.ISWiProject" )
-    ISWiProject.ImportProject(ism_file, isv_file)
-    ISWiProject.CloseProject()
+    toolmsg("Building " + ism_file + " - " + config + " - " + release)
+    ISWiProject = win32com.client.Dispatch( "IswiAuto15.ISWiProject" )
     
     ISWiProject.OpenProject(ism_file)
     for property in properties.keys():

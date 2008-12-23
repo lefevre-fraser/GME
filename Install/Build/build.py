@@ -195,7 +195,7 @@ def build_msi():
     IS_vars["GuidStrSF"] = tools.query_GUID("SF")
     IS_vars["GuidStrUML"] = tools.query_GUID("UML")
     IS_vars["GuidStrHFSM"] = tools.query_GUID("HFSM")
-    tools.build_IS(os.path.join(GME_ROOT, "Install.isv"), "FullConfig", "Release", IS_vars)
+    tools.build_IS(os.path.join(GME_ROOT, "Install.ism"), "FullConfig", "Release", IS_vars)
 
 
 def copy_msi():
