@@ -46,7 +46,7 @@ void LabelPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 		}
 		iAlign |= TA_TOP;
 
-		DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+		DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_spFCO != NULL ? m_iFontKey : FONT_PORTNAME);	// Akos's request: Artificially smaller fonts in PartBrowser
 		int iLabelSize = pFont->iSize;
 		CRect cRect = GetTextLocation(pDC, gdip);
 		for (unsigned int i = 0; i < m_vecText.size(); i++)
@@ -70,7 +70,7 @@ CPoint	LabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
 	CPoint pt;
 	CRect cRect = GetLocation();	// GetBoxLocation(true)
-	int iLabelSize = getFacilities().getFont(m_iFontKey)->iSize * m_vecText.size();
+	int iLabelSize = getFacilities().getFont(m_spFCO != NULL ? m_iFontKey : FONT_PORTNAME)->iSize * m_vecText.size();	// Akos's request: Artificially smaller fonts in PartBrowser
 	switch(m_eTextLocation) {
 		case L_NORTH:
 		case L_NORTHWEST:
@@ -109,7 +109,7 @@ CRect LabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) const
 	CPoint pt = GetTextPosition(pDC, gdip);
 	ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
 
-	DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
+	DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_spFCO != NULL ? m_iFontKey : FONT_PORTNAME);	// Akos's request: Artificially smaller fonts in PartBrowser
 
 	CSize cSize(0, 0);
 	for (unsigned int i = 0 ; i < m_vecText.size(); i++) {

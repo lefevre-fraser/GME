@@ -44,7 +44,7 @@ void TypeableLabelPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 		}
 		iAlign |= TA_TOP;
 		CRect cRect = GetTextLocation(pDC, gdip);
-		int iLabelSize = getFacilities().GetFont(FONT_LABEL)->iSize;
+		int iLabelSize = getFacilities().GetFont(FONT_TYPE)->iSize;
 		long yPos = cRect.top + GAP_LABEL + iLabelSize * m_vecText.size();
 
 		getFacilities().DrawString(gdip,

@@ -347,6 +347,8 @@ private:
 	int alignment;
 	bool primary;
 public:
+	CGuiConnectionLabel();
+	virtual ~CGuiConnectionLabel() {};
 	void SetLabel(CString &l);
 	void SetPrimary(bool prim)	{ primary = prim; }
 	void SetLocation(CPoint& endPoint, CPoint& nextPoint, CRect& box);

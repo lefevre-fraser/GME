@@ -181,19 +181,20 @@ namespace DecoratorSDK
 	static const unsigned int CTX_MENU_ID_EXPANDMODEL	= DECORATOR_CTX_MENU_MINID + 2;
 	static const unsigned int CTX_MENU_ID_COLLAPSEMODEL	= DECORATOR_CTX_MENU_MINID + 3;
 
-	static const char* STEREOTYPE_LEFTA				= "<<";
-	static const char* STEREOTYPE_RIGHTA			= ">>";
-	static const wchar_t* STEREOTYPE_LEFTB			= L"\u226A ";
-	static const wchar_t* STEREOTYPE_RIGHTB			= L" \u226B";
-	static const char* ABSTRACT_ATTR				= "IsAbstract";
-	static const char* ATTRIBUTES_ATTR				= "Attributes";
-	static const char* ATTRIBUTE_SEP				= " : ";
+	static const char* STEREOTYPE_LEFTA					= "<<";
+	static const char* STEREOTYPE_RIGHTA				= ">>";
+	static const wchar_t* STEREOTYPE_LEFTB				= L"\u226A ";
+	static const wchar_t* STEREOTYPE_RIGHTB				= L" \u226B";
+	static const char* ABSTRACT_ATTR					= "IsAbstract";
+	static const char* ATTRIBUTES_ATTR					= "Attributes";
+	static const char* ATTRIBUTE_SEP					= " : ";
 
-	static const int DECORATOR_MARGINX				= 6;
-	static const int DECORATOR_MARGINY				= 4;
-	static const int DECORATOR_GAPY					= 0;
-	static const int DECORATOR_MINATTRSIZE			= 13;
-	static const int DECORATOR_SENSITIVITYDISTANCE	= 6;
+	static const int DECORATOR_MARGINX					= 6;
+	static const int DECORATOR_MARGINY					= 4;
+	static const int DECORATOR_GAPY						= 0;
+	static const int DECORATOR_MINATTRSIZE				= 13;
+	static const int DECORATOR_MINSENSITIVITYDISTANCE	= 2;
+	static const int DECORATOR_MAXSENSITIVITYDISTANCE	= 6;
 
 	struct SFont
 	{

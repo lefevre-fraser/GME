@@ -2112,6 +2112,12 @@ bool CGuiSet::ToggleMember(CGuiFco *member)
 
 ////////////////////////////////// CGuiConnectionLabel /////////////////////////////
 
+CGuiConnectionLabel::CGuiConnectionLabel():
+	alignment(TA_BASELINE | TA_CENTER),
+	primary(false)
+{
+}
+
 void CGuiConnectionLabel::SetLabel(CString &l)
 {
 	label = l;

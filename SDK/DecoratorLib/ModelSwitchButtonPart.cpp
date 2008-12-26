@@ -53,7 +53,7 @@ bool ModelSwitchButtonPart::MouseMoved(UINT nFlags, const CPoint& point, HDC tra
 			m_bCursorSaved = true;
 			return true;
 		} else {
-			cRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
+			cRect.InflateRect(DECORATOR_MAXSENSITIVITYDISTANCE, DECORATOR_MAXSENSITIVITYDISTANCE);
 			if (cRect.PtInRect(point)) {
 				if (m_bCursorSaved) {
 					SetCursor(m_originalCursor);
@@ -72,7 +72,7 @@ bool ModelSwitchButtonPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point
 {
 	if (m_spFCO && m_bActive) {
 		CRect cRect = GetLocation();
-		cRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
+		cRect.InflateRect(DECORATOR_MAXSENSITIVITYDISTANCE, DECORATOR_MAXSENSITIVITYDISTANCE);
 		if (cRect.PtInRect(point)) {
 			InitiateModelExpandStateSwitch();
 			return true;
@@ -86,7 +86,7 @@ bool ModelSwitchButtonPart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, 
 {
 	if (m_spFCO && m_bActive) {
 		CRect cRect = GetLocation();
-		cRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
+		cRect.InflateRect(DECORATOR_MAXSENSITIVITYDISTANCE, DECORATOR_MAXSENSITIVITYDISTANCE);
 		if (cRect.PtInRect(point)) {
 			// supress message
 			return true;
@@ -105,7 +105,7 @@ bool ModelSwitchButtonPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, co
 {
 	if (m_spFCO && m_bActive) {
 		CRect cRect = GetLocation();
-		cRect.InflateRect(DECORATOR_SENSITIVITYDISTANCE, DECORATOR_SENSITIVITYDISTANCE);
+		cRect.InflateRect(DECORATOR_MAXSENSITIVITYDISTANCE, DECORATOR_MAXSENSITIVITYDISTANCE);
 		if (cRect.PtInRect(point)) {
 			::AppendMenu(hCtxMenu,
 						 MF_STRING | MF_ENABLED,

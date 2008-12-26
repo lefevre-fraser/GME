@@ -339,6 +339,25 @@ void CGraphics::DrawGdipText(Gdiplus::Graphics* gdip, CString& txt, CPoint& pt, 
 	CA2W wcTxt(txt);
 	Gdiplus::RectF rectF;
 	gdip->MeasureString(wcTxt, txt.GetLength(), font, pointF, &rectF);
+	Gdiplus::SizeF size;
+	rectF.GetSize(&size);
+	float xOffset = 0;
+	if ((align & TA_CENTER) == TA_CENTER) {
+		xOffset = -size.Width/2;
+	} else if ((align & TA_RIGHT) == TA_RIGHT) {
+		xOffset = -size.Width;
+	} else {	// TA_LEFT
+		// nothing
+	}
+	float yOffset = 0;
+	if ((align & TA_BASELINE) == TA_BASELINE) {
+		yOffset = -size.Height/2;
+	} else if ((align & TA_BOTTOM) == TA_BOTTOM) {
+		yOffset = -size.Height;
+	} else {	// TA_TOP
+		// nothing
+	}
+	rectF.Offset(xOffset, yOffset);
 	gdip->DrawString(wcTxt, txt.GetLength(), font, rectF, &format, &textBrush);
 }
 
