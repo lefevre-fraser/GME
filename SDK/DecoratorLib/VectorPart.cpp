@@ -433,6 +433,14 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 						m_shadowPath->AddLine(rc.left, rc.top, rc.right, rc.bottom);
 				}
 				break;
+			case VectorCommand::AddEllipseToPath: {
+					CRect rc = (*ii).GetResolvedCoords(m_Rect);
+					if (m_bInMainPathDefinition)
+						m_mainPath->AddEllipse(rc.left, rc.top, rc.Width(), rc.Height());
+					if (m_bInShadowPathDefinition)
+						m_shadowPath->AddEllipse(rc.left, rc.top, rc.Width(), rc.Height());
+				}
+				break;
 			case VectorCommand::AddRectangleToPath:
 			case VectorCommand::AddRoundRectangleToPath: {
 					CRect rc = (*ii).GetResolvedCoords(m_Rect);
@@ -490,7 +498,7 @@ void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 						m_shadowPath->AddArc(values[0], values[1], values[2], values[3], (float)values[4], (float)values[5]);
 				}
 				break;
-			default: ASSERT(true);
+			default: ASSERT(false);
 		}
 	}
 	if (m_mainPath != NULL) {
