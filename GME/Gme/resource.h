@@ -68,7 +68,6 @@
 #define IDB_ABOUT                       184
 #define IDD_SEARCH_DIALOG               188
 #define IDD_PRINTOPTIONS                196
-#define IDR_TOOLBAR_DUMMY               197
 #define IDR_TOOLBAR_COMPONENTS          197
 #define IDC_TEXTEDIT                    201
 #define IDD_PRINTDLGORD                 202
@@ -97,6 +96,7 @@
 #define IDR_CRASH_TEST_MENU             218
 #define ID_VIEW_APPLOOK_OFF_2007_AQUA   218
 #define IDD_EMERGENCY_DIALOG            219
+#define IDB_COMPONENTS_TOOLBAR24		219
 #define IDD_PANNING_WINDOW_DIALOG       220
 #define IDB_NAVIG_TOOLBAR24             220
 #define IDD_CHILDFRAME_DIALOG           221
@@ -491,7 +491,7 @@
 #define ID_VIEW_TOOLBARS                33200
 #define IDW_TOOLBAR_MAIN                0xE820
 #define IDW_TOOLBAR_WINS                0xE821
-#define IDW_TOOLBAR_DUMMY               0xE822
+#define IDW_TOOLBAR_COMPONENT           0xE822
 #define IDW_TOOLBAR_MODE                0xE823
 #define IDW_TOOLBAR_NAVIG               0xE824
 #define IDW_TOOLBAR_MODELING            0xE825

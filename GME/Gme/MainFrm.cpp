@@ -107,12 +107,12 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	// show and hide toolbars.
 	ON_COMMAND_EX(IDW_TOOLBAR_MAIN, OnBarCheck)
 	ON_COMMAND_EX(IDW_TOOLBAR_WINS, OnBarCheck)
-	ON_COMMAND_EX(IDW_TOOLBAR_DUMMY, OnBarCheck)
+	ON_COMMAND_EX(IDW_TOOLBAR_COMPONENT, OnBarCheck)
 	ON_COMMAND_EX(IDW_TOOLBAR_MODE, OnBarCheck)
 	ON_COMMAND_EX(IDW_TOOLBAR_NAVIG, OnBarCheck)
 	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_MAIN, OnUpdateControlBarMenu)
 	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_WINS, OnUpdateControlBarMenu)
-	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_DUMMY, OnUpdateControlBarMenu)
+	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_COMPONENT, OnUpdateControlBarMenu)
 	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_MODE, OnUpdateControlBarMenu)
 	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_NAVIG, OnUpdateControlBarMenu)
 	ON_COMMAND(ID_BUTTON33020, OnBtnBack)
@@ -237,29 +237,7 @@ int CMainFrame::CreateToolBars()
 	bool bHiColorIcons = dc.GetDeviceCaps(BITSPIXEL) >= 16;
 
 
-
-
-
-
 	// -- MAIN ToolBar
-/*	if( !m_wndToolBarMain.CreateEx(this
-		, TBSTYLE_FLAT
-		, WS_CHILD |  WS_VISIBLE | CBRS_ALIGN_TOP
-		, CRect(0,0,0,0)
-		, IDW_TOOLBAR_MAIN) // provide unqiue ID for each toolbar [important !!!]
-		||
-		!m_wndToolBarMain.LoadToolBar(IDR_TOOLBAR_MAIN)
-		)
-	{
-		TRACE0("Failed to create main toolbar\n");
-		return -1;      // fail to create
-	}
-
-	m_wndToolBarMain.SetPaneStyle(m_wndToolBarMain.GetPaneStyle()
-		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-
-*/
-
 	if( !m_wndToolBarMain.CreateEx(this
 		, TBSTYLE_FLAT
 		, WS_CHILD |  WS_VISIBLE | CBRS_ALIGN_TOP
@@ -272,6 +250,9 @@ int CMainFrame::CreateToolBars()
 		TRACE0("Failed to create main toolbar\n");
 		return -1;      // fail to create
 	}
+
+	m_wndToolBarMain.SetPaneStyle(m_wndToolBarMain.GetPaneStyle()
+		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 
 	m_wndToolBarMain.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
 
@@ -322,9 +303,9 @@ int CMainFrame::CreateToolBars()
 		, TBSTYLE_FLAT
 		, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP
 		, CRect(0, 0, 0, 0)
-		, IDW_TOOLBAR_DUMMY) // provide unqiue ID for each toolbar
+		, IDW_TOOLBAR_COMPONENT) // provide unqiue ID for each toolbar
 		||
-	   !m_wndComponentBar.LoadToolBar(IDR_TOOLBAR_DUMMY, 0, 0, TRUE)
+	   !m_wndComponentBar.LoadToolBar(IDR_TOOLBAR_COMPONENTS, 0, 0, TRUE, 0, 0, bHiColorIcons ? IDB_COMPONENTS_TOOLBAR24 : 0)
 	   )
 	{
 		TRACE0("Failed to create component toolbar\n");
@@ -332,7 +313,7 @@ int CMainFrame::CreateToolBars()
 	}
 	m_wndComponentBar.SetPaneStyle(m_wndComponentBar.GetPaneStyle()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-	m_wndComponentBar.SetBorders( 5, 0, 5, 0);
+//	m_wndComponentBar.SetBorders(5, 0, 5, 0);
 
 
 //	m_wndComponentBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
@@ -385,28 +366,32 @@ int CMainFrame::CreateToolBars()
 
 
 
-	DockPane(&m_wndToolBarMain/*,AFX_IDW_DOCKBAR_TOP*/);
+	DockPane(&m_wndToolBarMain, AFX_IDW_DOCKBAR_TOP);
+	m_wndToolBarMain.DockToFrameWindow(AFX_IDW_DOCKBAR_TOP/*, NULL, DT_DOCK_FIRST*/);
 
 	// place next to the main toolbar
-	DockPane(&m_wndToolBarModeling/*, AFX_IDW_DOCKBAR_TOP*/);
+	DockPane(&m_wndToolBarModeling, AFX_IDW_DOCKBAR_TOP);
+	m_wndToolBarModeling.DockToFrameWindow(AFX_IDW_DOCKBAR_TOP/*, NULL, DT_DOCK_AFTER*/);
 
 	// place next to the modeling toolbar
-	DockPane(&m_wndToolBarWins/*, AFX_IDW_DOCKBAR_TOP*/);
+	DockPane(&m_wndToolBarWins, AFX_IDW_DOCKBAR_TOP);
+	m_wndToolBarWins.DockToFrameWindow(AFX_IDW_DOCKBAR_TOP/*, NULL, DT_DOCK_AFTER*/);
 
 	// place next to the wins toolbar
-	DockPane(&m_wndComponentBar/*, AFX_IDW_DOCKBAR_TOP*/);
+	DockPane(&m_wndComponentBar, AFX_IDW_DOCKBAR_TOP);
+	m_wndComponentBar.DockToFrameWindow(AFX_IDW_DOCKBAR_TOP/*, NULL, DT_DOCK_AFTER*/);
 
-	DockPane(&modeBar,AFX_IDW_DOCKBAR_LEFT);
-	
-	DockPane(&naviBar,AFX_IDW_DOCKBAR_LEFT);
+	DockPane(&modeBar, AFX_IDW_DOCKBAR_LEFT);
+	modeBar.DockToFrameWindow(AFX_IDW_DOCKBAR_LEFT/*, NULL, DT_DOCK_FIRST*/);
+
+	DockPane(&naviBar, AFX_IDW_DOCKBAR_LEFT);
+	naviBar.DockToFrameWindow(AFX_IDW_DOCKBAR_LEFT/*, NULL, DT_DOCK_AFTER*/);
 
 	// Hide navigation and mode panels first, they are visible when a model is open
 	ShowNavigationAndModeToolbars(false);
 
-
 	// Allow user-defined toolbars operations:
 	InitUserToolbars(NULL, uiFirstUserToolBarId, uiLastUserToolBarId);
-
 
 	return 0;
 }
@@ -581,6 +566,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// hide initially, openProject will show it if components available
 	// thus we ignore the registry settings
 	m_wndComponentBar.ShowWindow(SW_HIDE);
+	ShowPane(&m_wndComponentBar, FALSE, FALSE, FALSE);
 
 	// CG: The following line was added by the Splash Screen component.
 	CSplashWnd::ShowSplashScreen(this);
@@ -1432,7 +1418,7 @@ void CMainFrame::OnWindowMovetonexttabgroup()
 void CMainFrame::ShowNavigationAndModeToolbars(bool isVisible)
 {
 	ShowPane(&modeBar, isVisible, FALSE, FALSE);
-	ShowPane(&naviBar, isVisible, FALSE, FALSE);	
+	ShowPane(&naviBar, isVisible, FALSE, FALSE);
 }
 
 void CMainFrame::OnUpdateWindowNew(CCmdUI* pCmdUI)

@@ -88,13 +88,14 @@ IDB_MGAOPEN             BITMAP                  "res\\metaopen.bmp"
 IDB_BITMAP_LOGO         BITMAP                  "res\\bitmap_l.bmp"
 IDB_SPLASH              BITMAP                  "Splsh16.bmp"
 IDB_ABOUT               BITMAP                  "aboutpic.bmp"
-IDR_TOOLBAR_COMPONENTS  BITMAP                  "res\\dummybar.bmp"
+IDR_TOOLBAR_COMPONENTS  BITMAP                  "res\\ToolbarComponents.bmp"
 IDR_TOOLBAR_NAVIG       BITMAP                  "res\\ToolbarNavig.bmp"
 IDB_MAIN_TOOLBAR24      BITMAP                  "res\\ToolbarMain24.bmp"
 IDB_MODELING_TOOLBAR24  BITMAP                  "res\\ToolbarModeling24.bmp"
 IDB_WINS_TOOLBAR24      BITMAP                  "res\\ToolbarWins24.bmp"
 IDB_MODE_TOOLBAR24      BITMAP                  "res\\ToolbarMode24.bmp"
 IDB_NAVIG_TOOLBAR24     BITMAP                  "res\\ToolbarNavig24.bmp"
+IDB_COMPONENTS_TOOLBAR24 BITMAP                 "res\\ToolbarComponents24.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -348,7 +349,7 @@ BEGIN
         BEGIN
             MENUITEM "&Standard",                   IDW_TOOLBAR_MAIN
             MENUITEM "&Windows",                    IDW_TOOLBAR_WINS
-            MENUITEM "&Component",                  IDW_TOOLBAR_DUMMY
+            MENUITEM "&Component",                  IDW_TOOLBAR_COMPONENT
             MENUITEM "&Mode",                       IDW_TOOLBAR_MODE
             MENUITEM "&Navigator",                  IDW_TOOLBAR_NAVIG
         END
@@ -605,7 +606,7 @@ BEGIN
     BEGIN
         MENUITEM "&Standard",                   IDW_TOOLBAR_MAIN
         MENUITEM "&Windows",                    IDW_TOOLBAR_WINS
-        MENUITEM "&Components",                 IDW_TOOLBAR_DUMMY
+        MENUITEM "&Components",                 IDW_TOOLBAR_COMPONENT
         MENUITEM "&Navigator",                  IDW_TOOLBAR_NAVIG
     END
 END
@@ -1492,7 +1493,7 @@ STRINGTABLE
 BEGIN
     IDW_TOOLBAR_MAIN        "Show or hide the standard toolbar\nToggle Standard ToolBar"
     IDW_TOOLBAR_WINS        "Show or hide the window toolbar\nToggle Windows ToolBar"
-    IDW_TOOLBAR_DUMMY       "Show or hide the component toolbar\nToggle Components ToolBar"
+    IDW_TOOLBAR_COMPONENT   "Show or hide the component toolbar\nToggle Components ToolBar"
     IDW_TOOLBAR_MODE        "Show or hide the mode toolbar\nToggle Mode ToolBar"
     IDW_TOOLBAR_NAVIG       "Show or hide the navigator toolbar\nToggle Navigator ToolBar"
 END

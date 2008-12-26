@@ -78,8 +78,6 @@ CGMEDoc::CGMEDoc()
 
 	// Making the navigation and mode toolbars visible
 	CMainFrame::theInstance->ShowNavigationAndModeToolbars(true);
-	
-
 
 	try {
 	    COMTHROW( resolver.CoCreateInstance(L"Mga.MgaResolver"));

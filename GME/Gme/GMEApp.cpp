@@ -743,6 +743,7 @@ void CGMEApp::UpdateComponentToolbar()
 		if(!CMainFrame::theInstance) return;
 		CComponentBar &componentBar = CMainFrame::theInstance->m_wndComponentBar;
 		componentBar.ShowWindow(SW_HIDE);
+		CMainFrame::theInstance->ShowPane(&componentBar, FALSE, FALSE, FALSE);
 
 
 		// Removing the add-in and plug-in buttons
@@ -759,19 +760,19 @@ void CGMEApp::UpdateComponentToolbar()
 		// Clearing user images
 		m_userImages.Clear();
 
-		if(!mgaMetaProject) 
+		if(!mgaMetaProject)
 		{
 			componentBar.RecalcLayout();
 			return;
 		}
-		
+
 		// Updating the Component toolbar
 		CComPtr<IMgaRegistrar> registrar;
 		if(registrar.CoCreateInstance(L"Mga.MgaRegistrar") != S_OK) return;
 
 
 		// Traversing  the plugins and interpreters
-		for(int i = 0; i < plugins.GetSize() + interpreters.GetSize(); ++i)	
+		for(int i = 0; i < plugins.GetSize() + interpreters.GetSize(); ++i)
 		{        				 						
 			// Querying component name
 			CComBSTR componentName;
@@ -868,6 +869,7 @@ void CGMEApp::UpdateComponentToolbar()
 			
 			componentBar.InsertButton(toolBarButton);
 			componentBar.RecalcLayout();
+			CMainFrame::theInstance->ShowPane(&componentBar, TRUE, FALSE, FALSE);
 			componentBar.ShowWindow(SW_SHOW);
 		}		
 }
