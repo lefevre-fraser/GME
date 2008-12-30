@@ -42,6 +42,7 @@ std::string AtomRep::doDump()
 	mmm += dumpInstanceIcon();
 	mmm += dumpNameWrap();
 	mmm += dumpNameEnabled();
+	mmm += dumpResizable();
 	mmm += dumpAutoRouterPref();
 	mmm += dumpHelpURL();
 

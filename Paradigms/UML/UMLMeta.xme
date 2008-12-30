@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{975AE7DE-4758-4CE3-93DD-DDA1CC412FA6}" cdate="Fri Dec 12 14:59:58 2008" mdate="Fri Dec 12 14:59:58 2008" version="" metaguid="{0ACE7AE2-4D5D-49B3-A57B-3EF9B5A150F2}" metaversion="" metaname="MetaGME">
+<project guid="{50A9F89A-C2A5-4826-8715-3C9E2F5631A8}" cdate="Fri Dec 12 14:59:58 2008" mdate="Fri Dec 12 14:59:58 2008" version="" metaguid="{5BEDB4E3-7028-4C71-9A9B-9C2C5E7CF1D2}" metaversion="" metaname="MetaGME">
 	<name>UML</name>
 	<comment>Descent into the maelstrom!</comment>
 	<author>Jonathan M. Sprinkle</author>
@@ -869,6 +869,9 @@
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -979,6 +982,9 @@
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -1094,6 +1100,9 @@
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -1204,6 +1213,9 @@
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -1401,6 +1413,9 @@
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -1815,6 +1830,9 @@
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -2595,6 +2613,9 @@ associates -&gt; iterate( fco : gme::FCO ; ctxs = Set{} | ctxs.union( fco.allDes
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -2954,6 +2975,9 @@ endif</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -3991,11 +4015,14 @@ dName=dstClassBase</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
-				<attribute kind="IsShadowCastEnabled" status="meta">
-					<value>false</value>
+				<attribute kind="IsShadowCastEnabled">
+					<value>true</value>
 				</attribute>
 				<attribute kind="IsTypeShown" status="meta">
 					<value>false</value>
@@ -4012,14 +4039,14 @@ dName=dstClassBase</value>
 				<attribute kind="RoundRectangleRadius" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="ShadowColor" status="meta">
-					<value></value>
+				<attribute kind="ShadowColor">
+					<value>0x000000</value>
 				</attribute>
-				<attribute kind="ShadowDirection" status="meta">
-					<value></value>
+				<attribute kind="ShadowDirection">
+					<value>45</value>
 				</attribute>
-				<attribute kind="ShadowThickness" status="meta">
-					<value></value>
+				<attribute kind="ShadowThickness">
+					<value>10</value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
@@ -4428,6 +4455,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -4660,6 +4690,9 @@ attribute , attribute</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -4840,11 +4873,14 @@ attribute , attribute</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
-				<attribute kind="IsShadowCastEnabled" status="meta">
-					<value>false</value>
+				<attribute kind="IsShadowCastEnabled">
+					<value>true</value>
 				</attribute>
 				<attribute kind="IsTypeInfoShown" status="meta">
 					<value>true</value>
@@ -4864,14 +4900,14 @@ attribute , attribute</value>
 				<attribute kind="RoundRectangleRadius" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="ShadowColor" status="meta">
-					<value></value>
+				<attribute kind="ShadowColor">
+					<value>0x000000</value>
 				</attribute>
-				<attribute kind="ShadowDirection" status="meta">
-					<value></value>
+				<attribute kind="ShadowDirection">
+					<value>45</value>
 				</attribute>
-				<attribute kind="ShadowThickness" status="meta">
-					<value></value>
+				<attribute kind="ShadowThickness">
+					<value>10</value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
@@ -5034,6 +5070,9 @@ attribute , attribute</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -5925,6 +5964,9 @@ attribute , attribute</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -6035,6 +6077,9 @@ attribute , attribute</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -6198,6 +6243,9 @@ attribute , attribute</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -6311,6 +6359,9 @@ attribute , attribute</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -6426,6 +6477,9 @@ attribute , attribute</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -6536,6 +6590,9 @@ attribute , attribute</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -6820,6 +6877,9 @@ color = 0x000000</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -7011,6 +7071,9 @@ color = 0x000000</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -7818,6 +7881,9 @@ baseCount &lt;&gt; 0 implies baseCount = 1</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -7928,6 +7994,9 @@ baseCount &lt;&gt; 0 implies baseCount = 1</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -8253,6 +8322,9 @@ project.isCardinalityValid( self.attribute( attr ).oclAsType( ocl::String ) )</v
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -9743,6 +9815,9 @@ color = 0x000000</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -10276,6 +10351,9 @@ dName = dstAssocClassBase</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -10389,6 +10467,9 @@ dName = dstAssocClassBase</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>

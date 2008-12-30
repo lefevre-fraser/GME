@@ -46,6 +46,7 @@ protected:
 	bool							m_bSelected;
 	long							m_lBorderWidth;
 	bool							m_bReferenced;
+	bool							m_bResizable;
 
 public:
 	PartBase(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);

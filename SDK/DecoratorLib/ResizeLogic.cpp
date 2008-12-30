@@ -203,6 +203,7 @@ ResizeLogic::ResizeType ResizeLogic::DeterminePotentialResize(CPoint cursorPoint
 		long actualSensitivityByHeight = ((targetHeight - 25) * 6 + (40 - targetHeight) * 2) / targetHeight;
 		ASSERT(actualSensitivityByHeight <= DECORATOR_MAXSENSITIVITYDISTANCE && actualSensitivityByHeight >= DECORATOR_MINSENSITIVITYDISTANCE);
 		actualSensitivity = min(actualSensitivityByWidth, actualSensitivityByHeight);
+		actualSensitivity = min(max(actualSensitivity, DECORATOR_MINSENSITIVITYDISTANCE), DECORATOR_MAXSENSITIVITYDISTANCE);
 	}
 	CRect cornerRect(m_targetLocation.left, m_targetLocation.top, m_targetLocation.left + 1, m_targetLocation.top + 1);
 	cornerRect.InflateRect(actualSensitivity, actualSensitivity);

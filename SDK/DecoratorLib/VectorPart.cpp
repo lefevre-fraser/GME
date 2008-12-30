@@ -518,20 +518,12 @@ void VectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 							  HWND parentWnd, PreferenceMap& preferences)
 {
 	DecoratorSDK::getFacilities().getMetaFCO(pPart, m_spMetaFCO);
-	bool bResizeable = false;
-	PreferenceMap::iterator it = preferences.find(PREF_ITEMRESIZABLE);
-	if (it != preferences.end())
-		bResizeable = it->second.uValue.bValue;
-	else if (pFCO)
-		preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(true);
 
 	ResizablePart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
-	preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(bResizeable);
-
 	// Pen's Color
 	m_crPen = COLOR_BLACK;
-	it = preferences.find(penColorVariableName);
+	PreferenceMap::iterator it = preferences.find(penColorVariableName);
 	if (it != preferences.end()) {
 		m_crPen = it->second.uValue.crValue;
 	} else {

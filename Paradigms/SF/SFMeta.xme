@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{E8F3A2DF-96EB-4443-8366-08E45C03906A}" cdate="Fri Dec 12 15:14:18 2008" mdate="Fri Dec 12 15:14:18 2008" version="" metaguid="{0ACE7AE2-4D5D-49B3-A57B-3EF9B5A150F2}" metaversion="" metaname="MetaGME">
+<project guid="{A1EBA645-3EC2-4F76-88C8-F49A5AC23CA8}" cdate="Fri Dec 12 15:14:18 2008" mdate="Fri Dec 12 15:14:18 2008" version="" metaguid="{5BEDB4E3-7028-4C71-9A9B-9C2C5E7CF1D2}" metaversion="" metaname="MetaGME">
 	<name>SF</name>
 	<comment></comment>
 	<author></author>
@@ -493,13 +493,13 @@
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>351,13</value>
+							<value>340,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>410,14</value>
+							<value>417,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -631,7 +631,7 @@
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>659,13</value>
+							<value>647,14</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -921,6 +921,9 @@ Pointer</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -1070,6 +1073,9 @@ Pointer</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -1260,6 +1266,9 @@ Pointer</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -1346,19 +1355,19 @@ Pointer</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>512,208</value>
+							<value>513,203</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>498,173</value>
+							<value>499,168</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>498,173</value>
+							<value>499,168</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
@@ -1413,11 +1422,14 @@ Pointer</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
-				<attribute kind="IsShadowCastEnabled" status="meta">
-					<value>false</value>
+				<attribute kind="IsShadowCastEnabled">
+					<value>true</value>
 				</attribute>
 				<attribute kind="IsTypeShown" status="meta">
 					<value>false</value>
@@ -1434,14 +1446,14 @@ Pointer</value>
 				<attribute kind="RoundRectangleRadius" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="ShadowColor" status="meta">
-					<value></value>
+				<attribute kind="ShadowColor">
+					<value>0x000000</value>
 				</attribute>
-				<attribute kind="ShadowDirection" status="meta">
-					<value></value>
+				<attribute kind="ShadowDirection">
+					<value>45</value>
 				</attribute>
-				<attribute kind="ShadowThickness" status="meta">
-					<value></value>
+				<attribute kind="ShadowThickness">
+					<value>10</value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
@@ -1563,6 +1575,9 @@ Pointer</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -1658,7 +1673,7 @@ Pointer</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>239,258</value>
+							<value>235,259</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -1793,7 +1808,7 @@ Pointer</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>15,13</value>
+							<value>18,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
@@ -1868,7 +1883,7 @@ Pointer</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>141,123</value>
+							<value>139,133</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -1940,6 +1955,9 @@ Pointer</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -2024,7 +2042,7 @@ Pointer</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>253,139</value>
+							<value>249,147</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -2097,6 +2115,9 @@ Pointer</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -2147,7 +2168,7 @@ Pointer</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>197,13</value>
+							<value>200,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
@@ -2159,7 +2180,7 @@ Pointer</value>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>186,14</value>
+							<value>200,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
@@ -2214,11 +2235,14 @@ Pointer</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
-				<attribute kind="IsShadowCastEnabled" status="meta">
-					<value>false</value>
+				<attribute kind="IsShadowCastEnabled">
+					<value>true</value>
 				</attribute>
 				<attribute kind="IsTypeInfoShown" status="meta">
 					<value>true</value>
@@ -2238,14 +2262,14 @@ Pointer</value>
 				<attribute kind="RoundRectangleRadius" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="ShadowColor" status="meta">
-					<value></value>
+				<attribute kind="ShadowColor">
+					<value>0x000000</value>
 				</attribute>
-				<attribute kind="ShadowDirection" status="meta">
-					<value></value>
+				<attribute kind="ShadowDirection">
+					<value>45</value>
 				</attribute>
-				<attribute kind="ShadowThickness" status="meta">
-					<value></value>
+				<attribute kind="ShadowThickness">
+					<value>10</value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
@@ -2267,7 +2291,7 @@ Pointer</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>659,83</value>
+							<value>650,84</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2414,6 +2438,9 @@ Pointer</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -2675,6 +2702,9 @@ Pointer</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>

@@ -28,6 +28,7 @@ public: // constant strings
 	static const std::string InstanceIcon_str;//"InstanceIcon"
 	static const std::string NameWrapNum_str;//"NameWrapNum"
 	static const std::string IsNameEnabled_str;//"IsNameEnabled"
+	static const std::string IsResizable_str;//"IsResizable"
 	static const std::string AutoRouterPref_str;//"AutoRouterPref"
 	static const std::string HelpURL_str;//"HelpURL"
 
@@ -155,6 +156,7 @@ public:
 	std::string dumpInstanceIcon() const;
 	std::string dumpNameWrap() const;
 	std::string dumpNameEnabled() const;
+	std::string dumpResizable() const;
 	std::string dumpAutoRouterPref() const;
 	std::string dumpHelpURL() const;
 
@@ -182,6 +184,7 @@ protected:
 	bool m_bAttrIsHotspotEnabled;
 	bool m_bAttrIsTypeShown;
 	bool m_bAttrIsNameEnabled;
+	bool m_bAttrIsResizable;
 
 	int m_iAttrNamePosition;
 	int m_iAttrNameWrapNum;

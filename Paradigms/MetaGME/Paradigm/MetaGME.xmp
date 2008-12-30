@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="MetaGME" guid="{0ACE7AE2-4D5D-49B3-A57B-3EF9B5A150F2}" cdate="Fri Dec 05 10:44:13 2008" mdate="Fri Dec 05 10:44:13 2008" >
+<paradigm name="MetaGME" guid="{5BEDB4E3-7028-4C71-9A9B-9C2C5E7CF1D2}" cdate="Fri Dec 05 10:44:13 2008" mdate="Fri Dec 05 10:44:13 2008" >
 
 	<comment>GME Meta Paradigm</comment>
 
@@ -412,6 +412,8 @@ else (
 			<dispname>On include in set</dispname>
 		</attrdef>
 		<attrdef name="AutoRouterPref" metaref = "1563" valuetype = "string" defvalue = "">
+			<dispname>Auto router default directions</dispname>
+			<regnode name="help" value = "Possible values: &quot;NSWEnswe&quot;, upper case: source, lower case: destination"></regnode>
 		</attrdef>
 		<attrdef name="BooleanDefault" metaref = "1003" valuetype = "boolean" defvalue = "false">
 			<dispname>Default = &apos;True&apos;?</dispname>
@@ -544,9 +546,11 @@ else (
 		</attrdef>
 		<attrdef name="DstAttrLabel1" metaref = "1031" valuetype = "string" defvalue = "">
 			<dispname>1st destination label:</dispname>
+			<regnode name="help" value = "Destination primary attribute"></regnode>
 		</attrdef>
 		<attrdef name="DstAttrLabel2" metaref = "1032" valuetype = "string" defvalue = "">
 			<dispname>2nd destination label:</dispname>
+			<regnode name="help" value = "Destination secondary attribute"></regnode>
 		</attrdef>
 		<attrdef name="FieldDefault" metaref = "1033" valuetype = "string" defvalue = "">
 			<dispname>Default:</dispname>
@@ -559,13 +563,20 @@ else (
 			<dispname>Global Scope?</dispname>
 		</attrdef>
 		<attrdef name="GradientFillColor" metaref = "1504" valuetype = "string" defvalue = "">
+			<dispname>Gradient fill color:</dispname>
+			<regnode name="help" value = "This is the 2nd color used for the gradient fill, the 1st is the FillColor"></regnode>
 		</attrdef>
 		<attrdef name="GradientFillDirection" metaref = "1505" valuetype = "string" defvalue = "">
+			<dispname>Gradient fill direction:</dispname>
+			<regnode name="help" value = "Angle from 0-90 degree where the gradient points"></regnode>
 		</attrdef>
 		<attrdef name="Help" metaref = "1036" valuetype = "string" defvalue = "">
 			<dispname>Help:</dispname>
+			<regnode name="help" value = "The help text which for e.g. appears at the bottom of ObjectInspector Panel"></regnode>
 		</attrdef>
 		<attrdef name="HelpURL" metaref = "1564" valuetype = "string" defvalue = "">
+			<dispname>Help URL:</dispname>
+			<regnode name="help" value = "This webpage comes up for e.g. by the activation of the element&apos;s context menu&apos;s Help item"></regnode>
 		</attrdef>
 		<attrdef name="Icon" metaref = "1037" valuetype = "string" defvalue = "">
 			<dispname>Icon name:</dispname>
@@ -577,6 +588,7 @@ else (
 			<dispname>Abstract?</dispname>
 		</attrdef>
 		<attrdef name="IsGradientFillEnabled" metaref = "1506" valuetype = "boolean" defvalue = "false">
+			<dispname>Is gradient fill enabled?</dispname>
 		</attrdef>
 		<attrdef name="IsHotspotEnabled" metaref = "1040" valuetype = "boolean" defvalue = "true">
 			<dispname>Hotspots Enabled:</dispname>
@@ -587,9 +599,14 @@ else (
 		<attrdef name="IsPort" metaref = "1042" valuetype = "boolean" defvalue = "false">
 			<dispname>Object is a port?</dispname>
 		</attrdef>
+		<attrdef name="IsResizable" metaref = "1566" valuetype = "boolean" defvalue = "false">
+			<dispname>Is Resizable?</dispname>
+		</attrdef>
 		<attrdef name="IsRoundRectangleEnabled" metaref = "1507" valuetype = "boolean" defvalue = "false">
+			<dispname>Corners of the rectangle are rounded?</dispname>
 		</attrdef>
 		<attrdef name="IsShadowCastEnabled" metaref = "1508" valuetype = "boolean" defvalue = "false">
+			<dispname>Is shadow casting enabled?</dispname>
 		</attrdef>
 		<attrdef name="IsTypeInfoShown" metaref = "1043" valuetype = "boolean" defvalue = "true">
 			<dispname>Typeinfo displayed</dispname>
@@ -601,6 +618,8 @@ else (
 			<dispname>Viewable?</dispname>
 		</attrdef>
 		<attrdef name="LabelFormatStr" metaref = "1565" valuetype = "string" defvalue = "">
+			<dispname>Main label:</dispname>
+			<regnode name="help" value = "for e.g.: text+%name%"></regnode>
 		</attrdef>
 		<attrdef name="LostChildEvent" metaref = "1046" valuetype = "boolean" defvalue = "false">
 			<dispname>On lost child</dispname>
@@ -635,6 +654,7 @@ else (
 		</attrdef>
 		<attrdef name="Prompt" metaref = "1053" valuetype = "string" defvalue = "">
 			<dispname>Prompt:</dispname>
+			<regnode name="help" value = "Displayed name"></regnode>
 		</attrdef>
 		<attrdef name="ReferenceEvent" metaref = "1054" valuetype = "boolean" defvalue = "false">
 			<dispname>On refer</dispname>
@@ -646,18 +666,25 @@ else (
 			<dispname>CompositionRole</dispname>
 		</attrdef>
 		<attrdef name="RoundRectangleRadius" metaref = "1509" valuetype = "string" defvalue = "">
+			<dispname>Radius of the recangle corners</dispname>
 		</attrdef>
 		<attrdef name="ShadowColor" metaref = "1510" valuetype = "string" defvalue = "">
+			<dispname>Color of the shadow</dispname>
 		</attrdef>
 		<attrdef name="ShadowDirection" metaref = "1511" valuetype = "string" defvalue = "">
+			<dispname>Direction of the shadow</dispname>
+			<regnode name="help" value = "0-360 degree, special: minus degree means a glow around the element"></regnode>
 		</attrdef>
 		<attrdef name="ShadowThickness" metaref = "1512" valuetype = "string" defvalue = "">
+			<dispname>Displacement/offset of the shadow</dispname>
 		</attrdef>
 		<attrdef name="SrcAttrLabel1" metaref = "1057" valuetype = "string" defvalue = "">
 			<dispname>1st source label:</dispname>
+			<regnode name="help" value = "Source primary attribute"></regnode>
 		</attrdef>
 		<attrdef name="SrcAttrLabel2" metaref = "1058" valuetype = "string" defvalue = "">
 			<dispname>2nd source label:</dispname>
+			<regnode name="help" value = "Source secondary attribute"></regnode>
 		</attrdef>
 		<attrdef name="SubTypeIcon" metaref = "1059" valuetype = "string" defvalue = "">
 			<dispname>Subtype icon name:</dispname>
@@ -671,7 +698,7 @@ else (
 		<attrdef name="srcRolename" metaref = "1063" valuetype = "string" defvalue = "src">
 			<dispname>Rolename:</dispname>
 		</attrdef>
-		<atom name = "Atom" metaref = "1064"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
+		<atom name = "Atom" metaref = "1064"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -1190,7 +1217,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
-		<atom name = "FCO" metaref = "1078"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
+		<atom name = "FCO" metaref = "1078"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -1460,7 +1487,7 @@ baseCount <> 0 implies baseCount = 1]]>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
-		<atom name = "Model" metaref = "1088"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius IsTypeInfoShown">
+		<atom name = "Model" metaref = "1088"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius IsTypeInfoShown">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -1547,6 +1574,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 				<regnode name = "icon" value ="model.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
@@ -1573,7 +1601,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
-		<atom name = "Reference" metaref = "1092"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
+		<atom name = "Reference" metaref = "1092"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -1791,7 +1819,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
-		<atom name = "Set" metaref = "1098"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
+		<atom name = "Set" metaref = "1098"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -2600,7 +2628,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<pointeritem desc = "Aspect"></pointeritem>
 			</pointerspec>
 		</reference>
-		<reference name = "AtomProxy" metaref = "1131" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
+		<reference name = "AtomProxy" metaref = "1131" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -2789,7 +2817,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<pointeritem desc = "Connection"></pointeritem>
 			</pointerspec>
 		</reference>
-		<reference name = "FCOProxy" metaref = "1138" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
+		<reference name = "FCOProxy" metaref = "1138" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -2919,7 +2947,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<pointeritem desc = "Folder"></pointeritem>
 			</pointerspec>
 		</reference>
-		<reference name = "ModelProxy" metaref = "1143" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius IsTypeInfoShown">
+		<reference name = "ModelProxy" metaref = "1143" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius IsTypeInfoShown">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -3022,7 +3050,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<pointeritem desc = "Model"></pointeritem>
 			</pointerspec>
 		</reference>
-		<reference name = "ReferenceProxy" metaref = "1147" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
+		<reference name = "ReferenceProxy" metaref = "1147" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -3125,7 +3153,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<pointeritem desc = "Reference"></pointeritem>
 			</pointerspec>
 		</reference>
-		<reference name = "SetProxy" metaref = "1151" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
+		<reference name = "SetProxy" metaref = "1151" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>

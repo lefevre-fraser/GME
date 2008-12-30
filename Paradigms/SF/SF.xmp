@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="SF" guid="{86628E20-FA77-47A9-B0F2-48961589D6B9}" cdate="Fri Dec 12 15:14:18 2008" mdate="Fri Dec 12 15:14:18 2008" >
+<paradigm name="SF" guid="{A1EBA645-3EC2-4F76-88C8-F49A5AC23CA8}" cdate="Fri Dec 12 15:14:18 2008" mdate="Fri Dec 12 15:14:18 2008" >
 
 	<comment></comment>
 
@@ -42,6 +42,9 @@
 				<regnode name = "porticon" value ="inparam-port.bmp"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "itemShadowCast" value ="true"></regnode>
+				<regnode name = "shadowColor" value ="0x000000"></regnode>
+				<regnode name = "shadowThickness" value ="10"></regnode>
 		</atom>
 		<atom name = "InputSignal" metaref = "1009" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -56,6 +59,9 @@
 				<regnode name = "porticon" value ="outparam-port.bmp"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "itemShadowCast" value ="true"></regnode>
+				<regnode name = "shadowColor" value ="0x000000"></regnode>
+				<regnode name = "shadowThickness" value ="10"></regnode>
 		</atom>
 		<atom name = "OutputSignal" metaref = "1011" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -69,6 +75,9 @@
 				<regnode name = "icon" value ="param.bmp"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "itemShadowCast" value ="true"></regnode>
+				<regnode name = "shadowColor" value ="0x000000"></regnode>
+				<regnode name = "shadowThickness" value ="10"></regnode>
 		</atom>
 		<connection name = "DataflowConn" metaref = "1013" >
 				<regnode name = "color" value ="0x000000"></regnode>
@@ -127,8 +136,12 @@
 		<model name = "Compound" metaref = "1015" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "color" value ="0xe0e0a0"></regnode>
+				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "itemShadowCast" value ="true"></regnode>
+				<regnode name = "shadowColor" value ="0x000000"></regnode>
+				<regnode name = "shadowThickness" value ="10"></regnode>
 			<constraint name="AtLeastOnePart" eventmask = "0x0" depth = "1" priority = "2">
 				<![CDATA[self.parts()->size > 0]]>
 				<dispname>Compounds must have parts</dispname>
@@ -161,8 +174,12 @@
 		<model name = "Primitive" metaref = "1038" attributes = "Firing Script Priority" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "color" value ="0xc8f8c8"></regnode>
+				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "itemShadowCast" value ="true"></regnode>
+				<regnode name = "shadowColor" value ="0x000000"></regnode>
+				<regnode name = "shadowThickness" value ="10"></regnode>
 			<role name = "InputParameters" metaref = "1039" kind = "InputParam"></role>
 			<role name = "InputSignals" metaref = "1040" kind = "InputSignal"></role>
 			<role name = "OutputParameters" metaref = "1041" kind = "OutputParam"></role>

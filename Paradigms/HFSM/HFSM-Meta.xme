@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{0BCC7AD4-28FD-49C5-AB44-A1F1BFAAF756}" cdate="Fri Dec 12 15:08:06 2008" mdate="Fri Dec 12 15:08:06 2008" version="" metaguid="{0ACE7AE2-4D5D-49B3-A57B-3EF9B5A150F2}" metaversion="" metaname="MetaGME">
+<project guid="{2BD8E125-B6EC-49AA-B9FB-51E96F666CF4}" cdate="Fri Dec 12 15:08:06 2008" mdate="Fri Dec 12 15:08:06 2008" version="" metaguid="{5BEDB4E3-7028-4C71-9A9B-9C2C5E7CF1D2}" metaversion="" metaname="MetaGME">
 	<name>HFSM</name>
 	<comment></comment>
 	<author></author>
@@ -662,11 +662,14 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
-				<attribute kind="IsShadowCastEnabled" status="meta">
-					<value>false</value>
+				<attribute kind="IsShadowCastEnabled">
+					<value>true</value>
 				</attribute>
 				<attribute kind="IsTypeInfoShown" status="meta">
 					<value>true</value>
@@ -686,14 +689,14 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="RoundRectangleRadius" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="ShadowColor" status="meta">
-					<value></value>
+				<attribute kind="ShadowColor">
+					<value>0x0080C0</value>
 				</attribute>
-				<attribute kind="ShadowDirection" status="meta">
-					<value></value>
+				<attribute kind="ShadowDirection">
+					<value>45</value>
 				</attribute>
-				<attribute kind="ShadowThickness" status="meta">
-					<value></value>
+				<attribute kind="ShadowThickness">
+					<value>10</value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
@@ -1148,10 +1151,13 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
-				<attribute kind="IsShadowCastEnabled" status="meta">
+				<attribute kind="IsShadowCastEnabled">
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsTypeInfoShown" status="meta">
@@ -1172,13 +1178,13 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="RoundRectangleRadius" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="ShadowColor" status="meta">
+				<attribute kind="ShadowColor">
 					<value></value>
 				</attribute>
-				<attribute kind="ShadowDirection" status="meta">
+				<attribute kind="ShadowDirection">
 					<value></value>
 				</attribute>
-				<attribute kind="ShadowThickness" status="meta">
+				<attribute kind="ShadowThickness">
 					<value></value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
@@ -1337,11 +1343,14 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
-				<attribute kind="IsShadowCastEnabled" status="meta">
-					<value>false</value>
+				<attribute kind="IsShadowCastEnabled">
+					<value>true</value>
 				</attribute>
 				<attribute kind="IsTypeShown" status="meta">
 					<value>false</value>
@@ -1358,14 +1367,14 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="RoundRectangleRadius" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="ShadowColor" status="meta">
-					<value></value>
+				<attribute kind="ShadowColor">
+					<value>0x000000</value>
 				</attribute>
-				<attribute kind="ShadowDirection" status="meta">
-					<value></value>
+				<attribute kind="ShadowDirection">
+					<value>45</value>
 				</attribute>
-				<attribute kind="ShadowThickness" status="meta">
-					<value></value>
+				<attribute kind="ShadowThickness">
+					<value>10</value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>

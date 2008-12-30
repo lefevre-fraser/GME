@@ -20,7 +20,6 @@ namespace DecoratorSDK {
 
 ResizablePart::ResizablePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	PartBase			(pPart, eventSink),
-	m_bResizable		(true),
 	m_bReadCustomSize	(true),
 	m_bResetSize		(false),
 	resizeLogic			(NULL)
@@ -130,11 +129,6 @@ void ResizablePart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 void ResizablePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 								 HWND parentWnd, PreferenceMap& preferences)
 {
-	// Check if resizability is disabled/enabled
-	PreferenceMap::iterator it = preferences.find(PREF_ITEMRESIZABLE);
-	if (it != preferences.end())
-		m_bResizable = it->second.uValue.bValue;
-
 	if (pFCO)
 		resizeLogic.InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	PartBase::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);

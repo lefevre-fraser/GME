@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="UML" guid="{6CA070AE-FD66-46B3-B7CC-0BB85BB69E14}" cdate="Fri Dec 12 14:59:58 2008" mdate="Fri Dec 12 14:59:58 2008" >
+<paradigm name="UML" guid="{669010A8-7EE0-4E89-B5B9-35063EFC7B96}" cdate="Fri Dec 12 14:59:58 2008" mdate="Fri Dec 12 14:59:58 2008" >
 
 	<comment>Descent into the maelstrom!</comment>
 
@@ -189,8 +189,12 @@ st <> "" implies st.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 				<regnode name = "icon" value ="class.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "itemShadowCast" value ="true"></regnode>
+				<regnode name = "shadowColor" value ="0x000000"></regnode>
+				<regnode name = "shadowThickness" value ="10"></regnode>
 		</atom>
 		<atom name = "Connector" metaref = "1019" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -578,15 +582,23 @@ assocCount <> 0 implies assocCount = 1]]>
 			</constraint>
 			<regnode name = "icon" value ="classref.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+			<regnode name = "itemResizable" value ="true"></regnode>
 			<regnode name = "gradientDirection" value ="0"></regnode>
 			<regnode name = "gradientDirection" value ="0"></regnode>
+			<regnode name = "itemShadowCast" value ="true"></regnode>
+			<regnode name = "shadowColor" value ="0x000000"></regnode>
+			<regnode name = "shadowThickness" value ="10"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Class"></pointeritem>
 			</pointerspec>
 		</reference>
 		<model name = "ClassDiagram" metaref = "1034" >
 				<regnode name = "namePosition" value ="0"></regnode>
+				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
+				<regnode name = "itemShadowCast" value ="true"></regnode>
+				<regnode name = "shadowColor" value ="0x000000"></regnode>
+				<regnode name = "shadowThickness" value ="10"></regnode>
 			<role name = "Association" metaref = "1035" kind = "Association"></role>
 			<role name = "AssociationClass" metaref = "1036" kind = "AssociationClass"></role>
 			<role name = "Base" metaref = "1037" kind = "Base"></role>

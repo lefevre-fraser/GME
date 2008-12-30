@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{B07378F6-E83F-4EFC-A891-AFABF3FB14BE}" cdate="Fri Dec 05 10:44:13 2008" mdate="Fri Dec 05 10:44:13 2008" version="" metaguid="{0ACE7AE2-4D5D-49B3-A57B-3EF9B5A150F2}" metaversion="" metaname="MetaGME">
+<project guid="{D753F405-5336-4442-936A-FFDCD0C9217D}" cdate="Fri Dec 05 10:44:13 2008" mdate="Fri Dec 05 10:44:13 2008" version="" metaguid="{5BEDB4E3-7028-4C71-9A9B-9C2C5E7CF1D2}" metaversion="" metaname="MetaGME">
 	<name>MetaGME</name>
 	<comment>GME Meta Paradigm</comment>
 	<author>A. Ledeczi, P. Volgyesi, J. Sprinkle, T. Paka, Z. Molnar</author>
@@ -4371,6 +4371,12 @@
 					<value>1042</value>
 				</regnode>
 			</regnode>
+			<regnode name="IsResizable-c6-BooleanAttribute" status="undefined">
+				<value></value>
+				<regnode name="MetaRef" isopaque="yes">
+					<value>1566</value>
+				</regnode>
+			</regnode>
 			<regnode name="IsRoundRectangleEnabled-b7-BooleanAttribute" status="undefined">
 				<value></value>
 				<regnode name="MetaRef" isopaque="yes">
@@ -4871,6 +4877,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -4981,6 +4990,9 @@ rrName = src</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -5645,6 +5657,9 @@ mName=members
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -5908,6 +5923,9 @@ else (
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -6018,6 +6036,9 @@ else (
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -6130,6 +6151,9 @@ else (
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -6240,6 +6264,9 @@ else (
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -7278,6 +7305,9 @@ lines &lt;&gt; &quot;&quot; implies lines.toInteger() &gt; 0 and lines.toInteger
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -7533,6 +7563,9 @@ dName = dstObjects</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -7937,6 +7970,9 @@ Double, double</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -8125,6 +8161,9 @@ Double, double</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -8553,6 +8592,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -8666,6 +8708,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -10726,6 +10771,9 @@ endif
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -11326,6 +11374,9 @@ dName = dimpldst</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -11696,6 +11747,9 @@ dName = bdst</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -11890,6 +11944,9 @@ dName = bdst</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -12292,6 +12349,9 @@ dName = bimpldst</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -12402,6 +12462,9 @@ dName = bimpldst</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -14238,6 +14301,9 @@ ctx &lt;&gt; &quot;&quot; implies ctx.match( &quot;^&quot; + id + &quot;(::&quot
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -15273,6 +15339,9 @@ attribute , attribute
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -15556,6 +15625,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -15666,6 +15738,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -15780,6 +15855,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -16399,6 +16477,9 @@ color = 0x0</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -16918,6 +16999,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -17114,6 +17198,9 @@ rrName = src</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -17483,6 +17570,9 @@ Right Half-Arrow, right half arrow</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -19072,7 +19162,7 @@ dName = dstFCO</value>
 					<value>true</value>
 				</attribute>
 				<attribute kind="Help">
-					<value>Centered connection label from the connection attributes</value>
+					<value>for e.g.: text+%name%</value>
 				</attribute>
 				<attribute kind="IsViewable" status="meta">
 					<value>true</value>
@@ -19081,7 +19171,7 @@ dName = dstFCO</value>
 					<value>1</value>
 				</attribute>
 				<attribute kind="Prompt">
-					<value>Label format string:</value>
+					<value>Main label:</value>
 				</attribute>
 			</atom>
 			<reference id="id-0067-0000001b" kind="FCOProxy" role="FCOProxy" guid="{b8ce929a-c496-4c4e-a3f7-d44262e2fb03}" relid="0x8" referred="id-0066-00000117">
@@ -19160,6 +19250,9 @@ dName = dstFCO</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -19271,6 +19364,9 @@ dName = dstFCO</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -19385,6 +19481,9 @@ dName = dstFCO</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -20602,6 +20701,9 @@ self.name.trim() &lt;&gt; &quot;&quot;</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -20970,6 +21072,9 @@ else (
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -21080,6 +21185,9 @@ else (
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -21192,6 +21300,9 @@ else (
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -21302,6 +21413,9 @@ else (
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -21414,6 +21528,9 @@ else (
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -21524,6 +21641,9 @@ else (
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -23906,6 +24026,9 @@ dName = dstEquivalence</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -24415,6 +24538,9 @@ dName = dstSameAspect</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -24664,6 +24790,9 @@ dName = dstSameFolder</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -24916,6 +25045,9 @@ dName = dstSameFolder</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -25196,6 +25328,9 @@ dName = dstFCO</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -25510,6 +25645,9 @@ dName = dstFolder</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -25620,6 +25758,9 @@ dName = dstFolder</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -25996,6 +26137,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -26106,6 +26250,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -26218,6 +26365,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -26328,6 +26478,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -27316,6 +27469,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -27426,6 +27582,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -27775,6 +27934,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -27985,6 +28147,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -28099,6 +28264,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -28210,6 +28378,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -28320,6 +28491,9 @@ rrName = src</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -28692,6 +28866,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -28861,6 +29038,9 @@ rrName = src</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -29271,6 +29451,9 @@ dName=dstSets</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -29538,6 +29721,9 @@ dName=dstSets</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -29648,6 +29834,9 @@ dName=dstSets</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -29763,6 +29952,9 @@ dName=dstSets</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -29873,6 +30065,9 @@ dName=dstSets</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -30157,7 +30352,7 @@ dName=dstSets</value>
 				</attribute>
 			</set>
 		</model>
-		<model id="id-0065-0000000a" kind="ParadigmSheet" guid="{7b81a9dc-abcf-4c6c-be55-f8428ed93815}" relid="0x1" childrelidcntr="0xc5">
+		<model id="id-0065-0000000a" kind="ParadigmSheet" guid="{7b81a9dc-abcf-4c6c-be55-f8428ed93815}" relid="0x1" childrelidcntr="0xc7">
 			<name>Stereotypes</name>
 			<atom id="id-0066-00000104" kind="BooleanAttribute" role="BooleanAttribute" guid="{ecaa4547-ecf9-4de4-b673-a0681331f754}" relid="0xa8">
 				<name>IsNameEnabled</name>
@@ -30446,6 +30641,9 @@ dName=dstSets</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -30560,6 +30758,9 @@ dName=dstSets</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -30670,6 +30871,9 @@ dName=dstSets</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -30841,6 +31045,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -30996,6 +31203,9 @@ rrName = src</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -31429,6 +31639,9 @@ Center, 8</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -31539,6 +31752,9 @@ Center, 8</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -31735,6 +31951,9 @@ role &lt;&gt; &quot;&quot; implies role.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -32020,6 +32239,9 @@ dName = dstContainment</value>
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
@@ -32535,6 +32757,9 @@ dName = dstContainment</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -32645,6 +32870,9 @@ dName = dstContainment</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -33114,6 +33342,9 @@ dName = dstContainment</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -33323,6 +33554,9 @@ dName = dstContainment</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -33542,6 +33776,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -33711,6 +33948,9 @@ rrName = src</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -34525,7 +34765,7 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 					<value>true</value>
 				</attribute>
 				<attribute kind="Help">
-					<value>Possible values: &quot;NSWEnswe&quot;, upper case for source, lower case for destination</value>
+					<value>Possible values: &quot;NSWEnswe&quot;, upper case: source, lower case: destination</value>
 				</attribute>
 				<attribute kind="IsViewable" status="meta">
 					<value>true</value>
@@ -34577,6 +34817,39 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				</attribute>
 				<attribute kind="Prompt">
 					<value>Help URL:</value>
+				</attribute>
+			</atom>
+			<atom id="id-0066-00000164" kind="BooleanAttribute" role="BooleanAttribute" guid="{b0cea3b8-f544-4f4b-834c-5779c2524870}" relid="0xc6">
+				<name>IsResizable</name>
+				<regnode name="PartRegs" status="undefined">
+					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>520,674</value>
+						</regnode>
+					</regnode>
+					<regnode name="Attributes" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>542,672</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="BooleanDefault" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="GlobalScope" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="Help" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="IsViewable" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="Prompt">
+					<value>Is Resizable?</value>
 				</attribute>
 			</atom>
 			<connection id="id-0068-00000134" kind="HasAttribute" role="HasAttribute" guid="{04ffd3cf-63cc-4efa-a24c-e8bf89d5ade9}" relid="0xa3">
@@ -35020,6 +35293,11 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				<name>HasAttribute</name>
 				<connpoint role="dst" target="id-0066-00000122"/>
 				<connpoint role="src" target="id-0066-00000163"/>
+			</connection>
+			<connection id="id-0068-000001af" kind="HasAttribute" role="HasAttribute" guid="{126def3d-6a91-4a72-801d-f7283eef6d86}" relid="0xc7">
+				<name>HasAttribute</name>
+				<connpoint role="dst" target="id-0066-00000122"/>
+				<connpoint role="src" target="id-0066-00000164"/>
 			</connection>
 			<set id="id-0069-00000012" kind="Aspect" role="Aspect" guid="{aa796a51-26dd-428a-be15-083a5f6ad879}" relid="0x0" members="id-0066-00000118 id-0066-00000123">
 				<name>ClassDiagram</name>
@@ -35774,6 +36052,9 @@ self.folderInFolderGen(Set{})</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -35917,6 +36198,9 @@ self.folderInFolderGen(Set{})</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
@@ -36452,6 +36736,9 @@ rrName = src</value>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -36845,6 +37132,9 @@ else (
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>
 				</attribute>
@@ -36955,6 +37245,9 @@ else (
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsRoundRectangleEnabled" status="meta">
 					<value>false</value>

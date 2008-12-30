@@ -27,7 +27,8 @@ PartBase::PartBase(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
 	m_bActive		(true),
 	m_bSelected		(false),
 	m_lBorderWidth	(0),
-	m_bReferenced	(false)
+	m_bReferenced	(false),
+	m_bResizable	(false)
 {
 	m_Rect.SetRectEmpty();
 }
@@ -153,13 +154,19 @@ void PartBase::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 			m_bHasViolation = it->second.uValue.bValue;
 		else
 			m_bHasViolation = getFacilities().getPreferenceStatus(m_spFCO, PREF_VIOLATED) == PS_HERE;
+
+		it = preferences.find(PREF_ITEMRESIZABLE);
+		if (it != preferences.end())
+			m_bResizable = it->second.uValue.bValue;
+		else
+			getFacilities().getPreference(m_spFCO, PREF_ITEMRESIZABLE, m_bResizable);
 	} else {
-		PreferenceMap::iterator it = preferences.find(PREF_ITEMRESIZABLE);
-		if (it == preferences.end())
-			preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(false);
-		it = preferences.find(PREF_ITEMSHADOWCAST);
+		PreferenceMap::iterator it = preferences.find(PREF_ITEMSHADOWCAST);
 		if (it == preferences.end())
 			preferences[PREF_ITEMSHADOWCAST] = PreferenceVariant(false);
+		it = preferences.find(PREF_ITEMRESIZABLE);
+		if (it == preferences.end())
+			preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(false);
 	}
 
 	m_lBorderWidth = 0;

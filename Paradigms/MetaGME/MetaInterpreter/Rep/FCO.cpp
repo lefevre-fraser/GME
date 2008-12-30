@@ -26,6 +26,7 @@ extern Globals global_vars;
 /*static*/ const std::string FCO::InstanceIcon_str = "InstanceIcon";
 /*static*/ const std::string FCO::NameWrapNum_str = "NameWrapNum";
 /*static*/ const std::string FCO::IsNameEnabled_str = "IsNameEnabled";
+/*static*/ const std::string FCO::IsResizable_str = "IsResizable";
 /*static*/ const std::string FCO::AutoRouterPref_str = "AutoRouterPref";
 /*static*/ const std::string FCO::HelpURL_str = "HelpURL";
 
@@ -46,6 +47,7 @@ FCO::FCO( BON::FCO& ptr, BON::FCO& resp_ptr)
 	, m_bAttrIsHotspotEnabled( true)
 	, m_bAttrIsTypeShown( false)
 	, m_bAttrIsNameEnabled( true)
+	, m_bAttrIsResizable( false)
 	, m_iAttrNamePosition( 0)
 	, m_iAttrNameWrapNum( 0)
 	, m_bAttrIsGradientFillEnabled( false)
@@ -221,6 +223,13 @@ void FCO::initAttributes()
 		decorator_set = true;
 	}
 
+	bool isresizable_set = false;
+	if( m_ptr->getAttribute( IsResizable_str)->getStatus() >= BON::AS_Here)
+	{
+		m_bAttrIsResizable = m_ptr->getAttribute( IsResizable_str)->getBooleanValue();
+		isresizable_set = true;
+	}
+
 	bool autorouterpref_set = false;
 	if( m_ptr->getAttribute( AutoRouterPref_str)->getStatus() >= BON::AS_Here)
 	{
@@ -392,6 +401,12 @@ void FCO::initAttributes()
 		{
 			m_sAttrDecorator = (*it)->getAttribute( Decorator_str)->getStringValue();
 			decorator_set = true;
+		}
+
+		if ( !isresizable_set && (*it)->getAttribute( IsResizable_str)->getStatus() >= BON::AS_Here)
+		{
+			m_bAttrIsResizable = (*it)->getAttribute( IsResizable_str)->getBooleanValue();
+			isresizable_set = true;
 		}
 
 		if ( !autorouterpref_set && (*it)->getAttribute( AutoRouterPref_str)->getStatus() >= BON::AS_Here)
@@ -1132,6 +1147,28 @@ std::string FCO::dumpNameEnabled() const
 
 		if( !icon)
 			mmm += indStr() + "<regnode name = \"isNameEnabled\" value =\"false\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
+std::string FCO::dumpResizable() const
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpResizable();
+	}
+
+	//if ( this->m_ptr)
+	{
+		bool enabled = m_bAttrIsResizable;//m_ptr->getAttribute( IsResizable_str)->getBooleanValue();
+
+		if( enabled)
+			mmm += indStr() + "<regnode name = \"itemResizable\" value =\"true\"></regnode>\n";
 	}
 	return mmm;
 }
