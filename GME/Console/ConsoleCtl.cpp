@@ -175,8 +175,15 @@ CRect has3dLook(CDC* pdc, CRect rc)
 	rc.right  += 1;
 	pdc->SelectStockObject( NULL_PEN);
 
-	pdc->SelectStockObject( LTGRAY_BRUSH);
-	pdc->Rectangle( rc); // background painted for the area
+	DWORD dw = ::GetSysColor(COLOR_3DFACE);
+	BYTE r = GetRValue(dw);
+	BYTE g = GetGValue(dw);
+	BYTE b = GetBValue(dw);
+	COLORREF col = RGB(r,g,b);
+	CBrush brush;
+	brush.CreateSolidBrush(col);
+	// background painted for the area
+	pdc->FillRect(&rc, &brush);
 
 	int decr_x = 3;                           // will deflate with this constants
 	int decr_y = (rc.Height()-20)/2;
@@ -190,9 +197,8 @@ CRect has3dLook(CDC* pdc, CRect rc)
 	rc.bottom -= 1; rc.right -= 1;
 	pdc->Rectangle( rc); // the 2nd biggest rect (inverse cascaded compared to the white rc)
 
-	pdc->SelectStockObject( LTGRAY_BRUSH);
 	rc.top += 1; rc.left += 1;
-	pdc->Rectangle( rc); // cascaded compared to the white rc
+	pdc->FillRect(&rc, &brush);	// cascaded compared to the white rc
 
 	pdc->SelectStockObject( BLACK_BRUSH);
 	rc.bottom -= 1; rc.right -= 1;
@@ -234,9 +240,15 @@ void CConsoleCtrl::OnDraw(
 		rcExtra2 = rcBrwsr = rcExtra = rcBounds;
 
 		rcExtra2.left -= 1; rcExtra2.bottom += 1;
-		pdc->SelectStockObject( LTGRAY_BRUSH);
-		pdc->Rectangle( rcExtra2);         // light gray background for the whole region
-
+		// light gray background for the whole region
+		DWORD dw = ::GetSysColor(COLOR_3DFACE);
+		BYTE r = GetRValue(dw);
+		BYTE g = GetGValue(dw);
+		BYTE b = GetBValue(dw);
+		COLORREF col = RGB(r,g,b);
+		CBrush brush;
+		brush.CreateSolidBrush(col);
+		pdc->FillRect(&rcExtra2, &brush);
 
 		rcBrwsr.bottom -= vertic_size;     // take from the browser's space 30 lines
 		rcExtra.top = rcBrwsr.bottom;      // extra is the remaining space
