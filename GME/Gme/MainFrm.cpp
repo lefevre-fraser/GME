@@ -313,10 +313,6 @@ int CMainFrame::CreateToolBars()
 	}
 	m_wndComponentBar.SetPaneStyle(m_wndComponentBar.GetPaneStyle()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-//	m_wndComponentBar.SetBorders(5, 0, 5, 0);
-
-
-//	m_wndComponentBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
 
 
 	// Mode toolbar
@@ -361,31 +357,17 @@ int CMainFrame::CreateToolBars()
 	modeBar.SetWindowText(_T("Mode")); // will show this title when floating
 	modeBar.EnableDocking(CBRS_ALIGN_ANY);
 
-	naviBar.EnableDocking(CBRS_ALIGN_ANY);
 	naviBar.SetWindowText(_T("Navigator")); // will show this title when floating
+	naviBar.EnableDocking(CBRS_ALIGN_ANY);
 
-
-
-	DockPane(&m_wndToolBarMain, AFX_IDW_DOCKBAR_TOP);
-	m_wndToolBarMain.DockToFrameWindow(AFX_IDW_DOCKBAR_TOP/*, NULL, DT_DOCK_FIRST*/);
-
-	// place next to the main toolbar
-	DockPane(&m_wndToolBarModeling, AFX_IDW_DOCKBAR_TOP);
-	m_wndToolBarModeling.DockToFrameWindow(AFX_IDW_DOCKBAR_TOP/*, NULL, DT_DOCK_AFTER*/);
-
-	// place next to the modeling toolbar
-	DockPane(&m_wndToolBarWins, AFX_IDW_DOCKBAR_TOP);
-	m_wndToolBarWins.DockToFrameWindow(AFX_IDW_DOCKBAR_TOP/*, NULL, DT_DOCK_AFTER*/);
-
-	// place next to the wins toolbar
+	// Because of "DockPaneLeftOf" we dock them in "reverse" order: the rightmost first
 	DockPane(&m_wndComponentBar, AFX_IDW_DOCKBAR_TOP);
-	m_wndComponentBar.DockToFrameWindow(AFX_IDW_DOCKBAR_TOP/*, NULL, DT_DOCK_AFTER*/);
-
-	DockPane(&modeBar, AFX_IDW_DOCKBAR_LEFT);
-	modeBar.DockToFrameWindow(AFX_IDW_DOCKBAR_LEFT/*, NULL, DT_DOCK_FIRST*/);
+	DockPaneLeftOf(&m_wndToolBarWins, &m_wndComponentBar);
+	DockPaneLeftOf(&m_wndToolBarModeling, &m_wndToolBarWins);
+	DockPaneLeftOf(&m_wndToolBarMain, &m_wndToolBarModeling);
 
 	DockPane(&naviBar, AFX_IDW_DOCKBAR_LEFT);
-	naviBar.DockToFrameWindow(AFX_IDW_DOCKBAR_LEFT/*, NULL, DT_DOCK_AFTER*/);
+	DockPaneLeftOf(&modeBar, &naviBar);	// This means actually "TopOf" instead of "LeftOf", because they are vetical
 
 	// Hide navigation and mode panels first, they are visible when a model is open
 	ShowNavigationAndModeToolbars(false);
