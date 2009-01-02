@@ -92,10 +92,13 @@ CSize ResizablePart::GetPreferredSize(void) const
 				}
 			}
 
-			CString sizeStr;
-			CopyTo(bstrVal, sizeStr);
-			if (!sizeStr.IsEmpty())
-				ASSERT(sscanf(sizeStr, "%ld,%ld", &cx, &cy) == 2);
+			if (bstrVal) {
+				int numConverted = swscanf(bstrVal, OLESTR("%ld,%ld"), &cx, &cy);
+				if (numConverted != 2) {
+					cx = 0;
+					cy = 0;
+				}
+			}
 		}
 		catch(hresult_exception &e)
 		{

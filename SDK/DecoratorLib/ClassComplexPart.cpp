@@ -1395,7 +1395,8 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 	AddCommand(VectorCommand(m_coordCommands[0], sepLocCoordCmd, m_coordCommands[2], sepLocCoordCmd, VectorCommand::DrawLine));
 
 	ypos += m_DecoratorMarginY;
-	ypos += gapSizeModify;
+	if (m_AttributeParts.size() > 0)
+		ypos += gapSizeModify;
 
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
 		ypos += m_lMaxTextHeight;
