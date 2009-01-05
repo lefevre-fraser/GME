@@ -254,7 +254,8 @@ void FCO::initAttributes()
 	bool gradientfillcolor_set = false;
 	if( m_ptr->getAttribute( GradientFillColor_str)->getStatus() >= BON::AS_Here)
 	{
-		m_iAttrGradientFillColor = (COLORREF)m_ptr->getAttribute( GradientFillColor_str)->getIntegerValue();
+		std::string tmpStr = m_ptr->getAttribute( GradientFillColor_str)->getStringValue();
+		m_iAttrGradientFillColor = (COLORREF)strtoul(tmpStr.c_str(), NULL, 16);
 		gradientfillcolor_set = true;
 	}
 
@@ -275,7 +276,8 @@ void FCO::initAttributes()
 	bool shadowcolor_set = false;
 	if( m_ptr->getAttribute( ShadowColor_str)->getStatus() >= BON::AS_Here)
 	{
-		m_iAttrShadowColor = (COLORREF)m_ptr->getAttribute( ShadowColor_str)->getIntegerValue();
+		std::string tmpStr = m_ptr->getAttribute( ShadowColor_str)->getStringValue();
+		m_iAttrShadowColor = (COLORREF)strtoul(tmpStr.c_str(), NULL, 16);
 		shadowcolor_set = true;
 	}
 
@@ -429,7 +431,8 @@ void FCO::initAttributes()
 
 		if ( !gradientfillcolor_set && (*it)->getAttribute( GradientFillColor_str)->getStatus() >= BON::AS_Here)
 		{
-			m_iAttrGradientFillColor = (COLORREF)(*it)->getAttribute( GradientFillColor_str)->getIntegerValue();
+			std::string tmpStr = (*it)->getAttribute( GradientFillColor_str)->getStringValue();
+			m_iAttrGradientFillColor = (COLORREF)strtoul(tmpStr.c_str(), NULL, 16);
 			gradientfillcolor_set = true;
 		}
 
@@ -447,7 +450,8 @@ void FCO::initAttributes()
 
 		if ( !shadowcolor_set && (*it)->getAttribute( ShadowColor_str)->getStatus() >= BON::AS_Here)
 		{
-			m_iAttrShadowColor = (COLORREF)(*it)->getAttribute( ShadowColor_str)->getIntegerValue();
+			std::string tmpStr = (*it)->getAttribute( ShadowColor_str)->getStringValue();
+			m_iAttrShadowColor = (COLORREF)strtoul(tmpStr.c_str(), NULL, 16);
 			shadowcolor_set = true;
 		}
 
