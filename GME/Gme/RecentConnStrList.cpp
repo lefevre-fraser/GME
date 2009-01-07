@@ -116,7 +116,9 @@ void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI, bool enable)
 			MF_STRING | MF_BYPOSITION, pCmdUI->m_nID,
 			buf + strName);
 		// This causes error message with new MFC when we try to disable the last recent item
-		// So instead we don't add any disabled recent item at all (see exit above the iteration)
+		// So instead we don't add any disabled recent item at all (see exit above the iteration).
+		// Disabled recent list would occur when there's an open project without any open model,
+		// in case of this MFC automatically switches back from the IDR_GMETYPE menu to the IDR_MAINFRAME
 //		if (!enable)
 //			pCmdUI->Enable(FALSE);
 		pCmdUI->m_nIndex++;
