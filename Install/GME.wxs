@@ -107,6 +107,7 @@
                             </Directory>
                         </Directory>
                         <Directory Id='INSTALLDIR_PARADIGMS_SF' Name='SF'>
+                            <Directory Id='INSTALLDIR_PARADIGMS_SF_BON2SFINTERPRETER' Name='BON2SFInterpreter'/>
                             <Directory Id='INSTALLDIR_PARADIGMS_SF_BON2SFSAMPLE' Name='BON2SFSample'/>
                             <Directory Id='INSTALLDIR_PARADIGMS_SF_DEMO' Name='BON2SFSample'>
                                 <Directory Id='INSTALLDIR_PARADIGMS_SF_DEMO_INCLUDE' Name='include' />
@@ -838,6 +839,49 @@
         </DirectoryRef>
         
         <DirectoryRef Id="INSTALLDIR_PARADIGMS_SF">
+            <Component Id="BON2SFInterpreter.dll" Guid="55102216-6b16-4fcd-b270-69c01d4348c2">
+                <File Id="BON2SFInterpreter.dll" Name="BON2SFInterpreter.dll" KeyPath="yes" Source="..\Paradigms\SF\BON2SFInterpreter\Release\BON2SFInterpreter.dll">
+                    <Class Id="{257C467E-C7F2-4E70-8B44-817E40C8DE51}" Context="InprocServer32" Description="MGA.Interpreter.BON2SFInterpreter">
+                        <ProgId Id="MGA.Interpreter.BON2SFInterpreter" Description="MGA.Interpreter.BON2SFInterpreter" />
+                    </Class>
+                </File>
+                <RegistryKey Root='HKLM' Key='Software\GME\Components\MGA.Interpreter.BON2SFInterpreter'>
+                    <RegistryValue Name='Description' Type='string' Value='BON2SFInterpreter'/>
+                    <RegistryValue Name='Icon' Type='string' Value=',IDI_COMPICON'/>
+                    <RegistryValue Name='Paradigm' Type='string' Value='SF'/>
+                    <RegistryValue Name='Tooltip' Type='string' Value='SignalFlow Interpreter'/>
+                    <RegistryValue Name='Type' Type='integer' Value='1'/>
+                    <RegistryKey Key='Associated'>
+                        <RegistryValue Name='SF' Type='string' Value=''/>
+                    </RegistryKey>
+		        </RegistryKey>
+            </Component>
+        </DirectoryRef>
+        
+        <DirectoryRef Id="INSTALLDIR_PARADIGMS_SF_BON2SFINTERPRETER">
+            <Component Id="BON2SFInterpreterSource" Guid="{cffb44fa-c59c-4695-9db7-ca410d6bdca0}">
+                <File Id="BON2SFInterpreterSource_BON2Component.cpp" Name="BON2Component.cpp" Source="..\Paradigms\SF\BON2SFInterpreter\BON2Component.cpp" />
+                <File Id="BON2SFInterpreterSource_BON2Component.h" Name="BON2Component.h"  Source="..\Paradigms\SF\BON2SFInterpreter\BON2Component.h" />
+                <File Id="BON2SFInterpreter.sln" Name="BON2SFInterpreter.sln" KeyPath="yes" Source="..\Paradigms\SF\BON2SFInterpreter\BON2SFInterpreter.sln" />
+                <File Id="BON2SFInterpreter.vcproj" Name="BON2SFInterpreter.vcproj"  Source="..\Paradigms\SF\BON2SFInterpreter\BON2SFInterpreter.vcproj" />                
+                <File Id="BON2SFInterpreterSource_CompIcon.ico" Name="CompIcon.ico"  Source="..\Paradigms\SF\BON2SFInterpreter\CompIcon.ico" />
+                <File Id="BON2SFInterpreterSource_Component.def" Name="Component.def"  Source="..\Paradigms\SF\BON2SFInterpreter\Component.def" />
+                <File Id="BON2SFInterpreterSource_Component.rc" Name="Component.rc"  Source="..\Paradigms\SF\BON2SFInterpreter\Component.rc" />
+                <File Id="BON2SFInterpreterSource_ComponentConfig.h" Name="ComponentConfig.h"  Source="..\Paradigms\SF\BON2SFInterpreter\ComponentConfig.h" />
+                <File Id="BON2SFInterpreterSource_Resource.h" Name="Resource.h"  Source="..\Paradigms\SF\BON2SFInterpreter\Resource.h" />
+                <File Id="BON2SFInterpreterSource_StdAfx.cpp" Name="StdAfx.cpp"  Source="..\Paradigms\SF\BON2SFInterpreter\StdAfx.cpp" />
+                <File Id="BON2SFInterpreterSource_StdAfx.h" Name="StdAfx.h"  Source="..\Paradigms\SF\BON2SFInterpreter\StdAfx.h" />
+                <File Id="SFVisitor.h" Name="SFVisitor.h"  Source="..\Paradigms\SF\BON2SFInterpreter\SFVisitor.h" />
+                <File Id="SFVisitor.cpp" Name="SFVisitor.cpp"  Source="..\Paradigms\SF\BON2SFInterpreter\SFVisitor.cpp" />
+                <File Id="BON2SFInterpreterSource_PrintDlg.h" Name="PrintDlg.h"  Source="..\Paradigms\SF\BON2SFInterpreter\PrintDlg.h" />
+                <File Id="BON2SFInterpreterSource_PrintDlg.cpp" Name="PrintDlg.cpp"  Source="..\Paradigms\SF\BON2SFInterpreter\PrintDlg.cpp" />
+                <File Id="SFBonExtension.cpp" Name="SFBonExtension.cpp"  Source="..\Paradigms\SF\BON2SFInterpreter\SFBonExtension.cpp" />
+                <File Id="SFBonExtension.h" Name="SFBonExtension.h"  Source="..\Paradigms\SF\BON2SFInterpreter\SFBonExtension.h" />
+                <File Id="SFBonUserExtension.cpp" Name="SFBonUserExtension.cpp"  Source="..\Paradigms\SF\BON2SFInterpreter\SFBonUserExtension.cpp" />                
+            </Component>
+        </DirectoryRef>
+        
+        <DirectoryRef Id="INSTALLDIR_PARADIGMS_SF">
             <Component Id="BON2SFSample.dll" Guid="11ecb99c-6c68-4a43-b456-10532b06dea7">
                 <File Id="BON2SFSample.dll" Name="BON2SFSample.dll" KeyPath="yes" Source="..\Paradigms\SF\BON2SFSample\Release\BON2SFSample.dll">
                     <Class Id="{71B6B8C2-00B1-4D23-BE17-D6172C271AA8}" Context="InprocServer32" Description="MGA.Interpreter.BON2SFSample">
@@ -867,8 +911,8 @@
                 <File Id="BON2SFSampleSource_Component.def" Name="Component.def" Source="..\Paradigms\SF\BON2SFSample\Component.def" />
                 <File Id="BON2SFSampleSource_Component.rc" Name="Component.rc" Source="..\Paradigms\SF\BON2SFSample\Component.rc" />
                 <File Id="BON2SFSampleSource_ComponentConfig.h" Name="ComponentConfig.h" Source="..\Paradigms\SF\BON2SFSample\ComponentConfig.h" />
-                <File Id="PrintDlg.cpp" Name="PrintDlg.cpp" Source="..\Paradigms\SF\BON2SFSample\PrintDlg.cpp" />
-                <File Id="PrintDlg.h" Name="PrintDlg.h" Source="..\Paradigms\SF\BON2SFSample\PrintDlg.h" />
+                <File Id="BON2SFSampleSource_PrintDlg.cpp" Name="PrintDlg.cpp" Source="..\Paradigms\SF\BON2SFSample\PrintDlg.cpp" />
+                <File Id="BON2SFSampleSource_PrintDlg.h" Name="PrintDlg.h" Source="..\Paradigms\SF\BON2SFSample\PrintDlg.h" />
                 <File Id="BON2SFSampleSource_Resource.h" Name="Resource.h" Source="..\Paradigms\SF\BON2SFSample\Resource.h" />
                 <File Id="BON2SFSampleSource_StdAfx.cpp" Name="StdAfx.cpp" Source="..\Paradigms\SF\BON2SFSample\StdAfx.cpp" />
                 <File Id="BON2SFSampleSource_StdAfx.h" Name="StdAfx.h" Source="..\Paradigms\SF\BON2SFSample\StdAfx.h" />
@@ -1078,7 +1122,7 @@
                 <File Id="SFInterpreterSource_CompIcon.ico" Name="CompIcon.ico"  Source="..\Paradigms\SF\SFInterpreter\CompIcon.ico" />
                 <File Id="SFInterpreterSource_Component.def" Name="Component.def"  Source="..\Paradigms\SF\SFInterpreter\Component.def" />
                 <File Id="SFInterpreterSource_Component.rc" Name="Component.rc"  Source="..\Paradigms\SF\SFInterpreter\Component.rc" />
-                <File Id="vComponentConfig.h" Name="ComponentConfig.h"  Source="..\Paradigms\SF\SFInterpreter\ComponentConfig.h" />
+                <File Id="SFInterpreterSource_ComponentConfig.h" Name="ComponentConfig.h"  Source="..\Paradigms\SF\SFInterpreter\ComponentConfig.h" />
                 <File Id="Guardian.cpp" Name="Guardian.cpp"  Source="..\Paradigms\SF\SFInterpreter\Guardian.cpp" />
                 <File Id="Guardian.h" Name="Guardian.h"  Source="..\Paradigms\SF\SFInterpreter\Guardian.h" />
                 <File Id="SFInterpreterSource_Resource.h" Name="Resource.h"  Source="..\Paradigms\SF\SFInterpreter\Resource.h" />
@@ -1929,6 +1973,8 @@
             <Feature Id='Samples' Title='Samples' Description='These are sample paradigms and interpreters with source code'
                 Level='1'>
                 
+                <ComponentRef Id='BON2SFInterpreter.dll' />
+                <ComponentRef Id='BON2SFInterpreterSource' />
                 <ComponentRef Id='BON2SFSample.dll' />
                 <ComponentRef Id='BON2SFSampleSource' />
                 <ComponentRef Id='HFSMIcons' />

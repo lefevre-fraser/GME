@@ -127,6 +127,8 @@ def compile_samples():
     tools.build_VS( sln_file, "Release" )
     sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2SFSample", "BON2SFSample.sln");
     tools.build_VS( sln_file, "Release" )
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2SFInterpreter", "BON2SFInterpreter.sln");
+    tools.build_VS( sln_file, "Release" )
     
     # HFSM Paradigm
     sln_file = os.path.join(GME_ROOT, "Paradigms", "HFSM", "HFSMSimulator", "HFSMSimulator.sln");
