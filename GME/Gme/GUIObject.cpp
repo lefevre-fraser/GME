@@ -378,7 +378,16 @@ CRect CGuiPort::GetLocation()
 		ey = size.cy;
 	}
 	else {
-		COMTHROW((parent->GetDecorator())->GetPortLocation(mgaFco, &sx, &sy, &ex, &ey));
+		try {
+			parent->GetDecorator()->GetPortLocation(mgaFco, &sx, &sy, &ex, &ey);
+		}
+		catch(hresult_exception& e) {
+			if (e.hr == E_DECORATOR_PORTNOTFOUND) {
+				sx = sy = ex = ey = 0;
+			} else {
+				throw e;
+			}
+		}
 	}
 	return CRect(sx, sy, ex, ey);
 }
@@ -1504,12 +1513,12 @@ bool CGuiObject::IsLabelInside(CPoint &pt, bool lookNearToo)
 
 CGuiPort *CGuiObject::FindPort(CPoint &pt, bool lookNearToo)
 {
-	CGuiPort *found = 0;
-	CSize     foundSize(0,0);
+	CGuiPort* found = NULL;
+	CSize foundSize(0, 0);
 	VERIFY(GetCurrentAspect());
 	POSITION pos = GetCurrentAspect()->GetPortList().GetHeadPosition();
 	while(pos) {
-		CGuiPort *port = GetCurrentAspect()->GetPortList().GetNext(pos);
+		CGuiPort* port = GetCurrentAspect()->GetPortList().GetNext(pos);
 		// The last one in the list is weird one: fco is the object's fco, skip that.
 		// See CGuiAspect::InitPorts
 		if (!mgaFco.IsEqualObject(port->mgaFco)) {
