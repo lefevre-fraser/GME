@@ -130,15 +130,26 @@ namespace BON
 			typedef std::vector<FunctionPair> 						FunctionVector;
 
 		// Member Variables
-		public :
-			static FunctionVector vecKindFunctions;
+		private :
+			static FunctionVector* _vecKindFunctions;
 
 		// Construction and Destruction
 		public :
 			ExtensionManager( const std::vector<std::string>& vecKinds, CastFunction pFnCast, CreateFunction pFnCreate );
+			~ExtensionManager() 
+			{
+				delete _vecKindFunctions;
+			}
 
 		// Object methods
 		public :
+			static FunctionVector& vecKindFunctions() 
+			{ 
+				if (!_vecKindFunctions) {
+					_vecKindFunctions = new FunctionVector();
+				}
+				return *_vecKindFunctions;
+			}
 			static ObjectImpl* createImpl( ObjectType eType, const std::string& strKind, const std::string& strRole );
 
 		// Friends

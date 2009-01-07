@@ -163,24 +163,13 @@ namespace BON
 //
 //###############################################################################################################################################
 
-	ExtensionManager::FunctionVector vecKindCopy();
-
-	ExtensionManager::FunctionVector ExtensionManager::vecKindFunctions( vecKindCopy() );
-
-	ExtensionManager::FunctionVector vecKindCopy()
-	{
-		if ( ! ExtensionManager::vecKindFunctions.empty() ) {
-			ExtensionManager::FunctionVector vec = ExtensionManager::vecKindFunctions;
-			return vec;
-		}
-		return ExtensionManager::FunctionVector();
-	}
+	ExtensionManager::FunctionVector* ExtensionManager::_vecKindFunctions( NULL );
 
 	ExtensionManager::ExtensionManager( const std::vector<std::string>& vecKinds, CastFunction pFnCast, CreateFunction pFnCreate )
 	{
 		// Removed by PETER 
 		// for ( int i = 0 ; i < vecKinds.size() ; i++ ) {
-			ExtensionManager::vecKindFunctions.push_back( FunctionPair( pFnCast, pFnCreate ) );
+			ExtensionManager::vecKindFunctions().push_back( FunctionPair( pFnCast, pFnCreate ) );
 		// }
 	}
 
@@ -190,8 +179,8 @@ namespace BON
 		int iLevel = 0;
 		int iCnt = 0;
 		int iFuncNum = 0;
-		for ( int i = 0 ; i < ExtensionManager::vecKindFunctions.size() ; i++ ) {
-			ExtensionInfo eInfo = (*vecKindFunctions[ i ].first)( eOType, strKind, strRole );
+		for ( int i = 0 ; i < ExtensionManager::vecKindFunctions().size() ; i++ ) {
+			ExtensionInfo eInfo = (*vecKindFunctions()[ i ].first)( eOType, strKind, strRole );
 			int iDo = 0; // 0 - Do Nothing, 1 - Type Change, 2 - Type Equal
 			switch ( eInfo.first ) {
 				case EXT_Role : {
@@ -257,7 +246,7 @@ namespace BON
 					default:;
 				}
 			}
-			return (*vecKindFunctions[ iFuncNum ].second)();
+			return (*(vecKindFunctions())[ iFuncNum ].second)();
 		}
 		return NULL;
 	}
