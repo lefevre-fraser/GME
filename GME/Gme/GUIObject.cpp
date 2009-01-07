@@ -370,7 +370,10 @@ void CGuiPort::SetVisible(bool v)	// called on a tmp obj that only exists to set
 
 CRect CGuiPort::GetLocation()
 {
-	long sx, sy, ex, ey;
+	long sx = 0;
+	long sy = 0;
+	long ex = 0;
+	long ey = 0;
 	if (!IsRealPort()) {
 		CSize size = parent->GetLocation().Size();
 		sx = sy = 0;
@@ -382,9 +385,7 @@ CRect CGuiPort::GetLocation()
 			parent->GetDecorator()->GetPortLocation(mgaFco, &sx, &sy, &ex, &ey);
 		}
 		catch(hresult_exception& e) {
-			if (e.hr == E_DECORATOR_PORTNOTFOUND) {
-				sx = sy = ex = ey = 0;
-			} else {
+			if (e.hr != E_DECORATOR_PORTNOTFOUND) {
 				throw e;
 			}
 		}

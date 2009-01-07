@@ -22,6 +22,7 @@ namespace DecoratorSDK {
 ResizeLogic::ResizeLogic(PartBase* pPart):
 	m_parentPart(pPart)
 {
+	m_minSize.SetSize(0, 0);
 }
 
 ResizeLogic::~ResizeLogic()
@@ -76,17 +77,45 @@ bool ResizeLogic::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 			long deltax = point.x - m_previousMousePosition.x;
 			long deltay = point.y - m_previousMousePosition.y;
 			// Change size/m_targetLocation
+			CRect newTargetLocation = m_targetLocation;
 			switch(m_resizeState) {
-				case RightEdgeResize:			m_targetLocation.InflateRect(0,			0,			deltax,	0		);	break;
-				case BottomEdgeResize:			m_targetLocation.InflateRect(0,			0,			0,		deltay	);	break;
-				case LeftEdgeResize:			m_targetLocation.InflateRect(-deltax,	0,			0,		0		);	break;
-				case TopEdgeResize:				m_targetLocation.InflateRect(0,			-deltay,	0,		0		);	break;
-				case TopLeftCornerResize:		m_targetLocation.InflateRect(-deltax,	-deltay,	0,		0		);	break;
-				case TopRightCornerResize:		m_targetLocation.InflateRect(0,			-deltay,	deltax,	0		);	break;
-				case BottomRightCornerResize:	m_targetLocation.InflateRect(0,			0,			deltax,	deltay	);	break;
-				case BottomLeftCornerResize:	m_targetLocation.InflateRect(-deltax,	0,			0,		deltay	);	break;
-				case MoveOperation:				m_targetLocation.OffsetRect(deltax, deltay);							break;
+				case RightEdgeResize:			newTargetLocation.InflateRect(0,		0,			deltax,	0		);	break;
+				case BottomEdgeResize:			newTargetLocation.InflateRect(0,		0,			0,		deltay	);	break;
+				case LeftEdgeResize:			newTargetLocation.InflateRect(-deltax,	0,			0,		0		);	break;
+				case TopEdgeResize:				newTargetLocation.InflateRect(0,		-deltay,	0,		0		);	break;
+				case TopLeftCornerResize:		newTargetLocation.InflateRect(-deltax,	-deltay,	0,		0		);	break;
+				case TopRightCornerResize:		newTargetLocation.InflateRect(0,		-deltay,	deltax,	0		);	break;
+				case BottomRightCornerResize:	newTargetLocation.InflateRect(0,		0,			deltax,	deltay	);	break;
+				case BottomLeftCornerResize:	newTargetLocation.InflateRect(-deltax,	0,			0,		deltay	);	break;
+				case MoveOperation:				newTargetLocation.OffsetRect(deltax, deltay);							break;
 			}
+			long widthMinLimit = max(5, m_minSize.cx);
+			long heightMinLimit = max(5, m_minSize.cy);
+			if ((m_resizeState == RightEdgeResize || m_resizeState == LeftEdgeResize) &&
+				newTargetLocation.Width() < widthMinLimit)
+			{
+				return true;	// Don't resize
+			} else if ((m_resizeState == BottomEdgeResize || m_resizeState == TopEdgeResize) &&
+						newTargetLocation.Height() < heightMinLimit)
+			{
+				return true;	// Don't resize
+			} else if (m_targetLocation.Width () == widthMinLimit && m_targetLocation.Height () == heightMinLimit &&
+						deltax <= 0 && deltay <= 0)
+			{
+				return true;	// Don't resize
+			} else if (m_resizeState == TopLeftCornerResize || m_resizeState == BottomLeftCornerResize ||
+						m_resizeState == TopRightCornerResize || m_resizeState == BottomRightCornerResize)
+			{
+				if (newTargetLocation.Width() < widthMinLimit) {
+					newTargetLocation.left = m_targetLocation.left;
+					newTargetLocation.right = m_targetLocation.right;
+				}
+				if (newTargetLocation.Height() < heightMinLimit) {
+					newTargetLocation.top = m_targetLocation.top;
+					newTargetLocation.bottom = m_targetLocation.bottom;
+				}
+			}
+			m_targetLocation = newTargetLocation;
 			if (m_resizeState == MoveOperation)
 				m_parentPart->WindowMoving(nFlags, m_targetLocation);
 			else
@@ -199,9 +228,7 @@ ResizeLogic::ResizeType ResizeLogic::DeterminePotentialResize(CPoint cursorPoint
 		actualSensitivity = DECORATOR_MAXSENSITIVITYDISTANCE;
 	} else {
 		long actualSensitivityByWidth = ((targetWidth - 35) * 6 + (80 - targetWidth) * 2) / targetWidth;
-		ASSERT(actualSensitivityByWidth <= DECORATOR_MAXSENSITIVITYDISTANCE && actualSensitivityByWidth >= DECORATOR_MINSENSITIVITYDISTANCE);
 		long actualSensitivityByHeight = ((targetHeight - 25) * 6 + (40 - targetHeight) * 2) / targetHeight;
-		ASSERT(actualSensitivityByHeight <= DECORATOR_MAXSENSITIVITYDISTANCE && actualSensitivityByHeight >= DECORATOR_MINSENSITIVITYDISTANCE);
 		actualSensitivity = min(actualSensitivityByWidth, actualSensitivityByHeight);
 		actualSensitivity = min(max(actualSensitivity, DECORATOR_MINSENSITIVITYDISTANCE), DECORATOR_MAXSENSITIVITYDISTANCE);
 	}

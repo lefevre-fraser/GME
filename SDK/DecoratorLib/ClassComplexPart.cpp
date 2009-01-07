@@ -39,6 +39,7 @@ ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEven
 	m_DecoratorGapY				(DECORATOR_GAPY),
 	m_DecoratorMinAttrSize		(DECORATOR_MINATTRSIZE)
 {
+	m_calcSize.SetSize(0, 0);
 }
 
 ClassComplexPart::~ClassComplexPart()
@@ -1421,6 +1422,8 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 		delete gdip2;
 	if (pDC)
 		dc.Detach();
+
+	resizeLogic.SetMinimumSize(CSize(m_calcSize.cx, heightPreEstimation));
 }
 
 void ClassComplexPart::SetBoxLocation(const CRect& cRect)

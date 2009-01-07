@@ -127,10 +127,9 @@ void ModelComplexPart::SetActive(bool bIsActive)
 CSize ModelComplexPart::GetPreferredSize(void) const
 {
 	CSize size = ResizablePart::GetPreferredSize();
-	if (size.cx * size.cy != 0)
-		return size;
+	bool hasStoredCustomSize = (size.cx * size.cy != 0);
 
-	if (m_LeftPorts.empty() && m_RightPorts.empty()) {
+	if (!hasStoredCustomSize && m_LeftPorts.empty() && m_RightPorts.empty()) {
 		if (!m_pBitmap || m_pBitmap->getName() == createResString(IDB_MODEL)) {
 			return CSize(WIDTH_MODEL, HEIGHT_MODEL);
 		} else {
@@ -154,6 +153,13 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 	long lHeight = GAP_YMODELPORT * 2 +
 					max(m_LeftPorts.size(), m_RightPorts.size()) * (HEIGHT_PORT + GAP_PORT) - GAP_PORT;
 
+	if (hasStoredCustomSize) {
+		CSize calcSize = CSize(min(size.cx, lWidth), min(size.cy, lHeight));
+		resizeLogic.SetMinimumSize(calcSize);
+		return size;
+	}
+
+	resizeLogic.SetMinimumSize(CSize(lWidth, lHeight));
 	return CSize(max((long) WIDTH_MODEL, lWidth), max((long) HEIGHT_MODEL, lHeight));
 }
 

@@ -57,6 +57,7 @@ protected:
 	CPoint				m_previousMousePosition;
 	HCURSOR				m_originalCursor;
 	bool				m_bCursorSaved;
+	mutable CSize		m_minSize;
 
 public:
 	ResizeLogic(PartBase* pPart);
@@ -86,6 +87,7 @@ public:
 	ResizeType		DeterminePotentialResize	(CPoint cursorPoint) const;
 	bool			IsSizeChanged				(void) const { return m_targetLocation.EqualRect(m_originalLocation) == FALSE; };
 	CRect			GetOriginalLocation			(void) const { return m_originalLocation; };
+	void			SetMinimumSize				(CSize minSize) const { m_minSize = minSize; };
 
 private:
 	void			ChangeCursorForm			(ResizeType resizeType, bool notify = true);
