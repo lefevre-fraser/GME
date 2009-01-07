@@ -19,9 +19,7 @@
 #define ID_FILE_PLUGINMENU 40000
 
 
-#ifndef MGA_RECENTCONNSTRLIST_H
 #include "RecentConnStrList.h"
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CGMEApp:

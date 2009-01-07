@@ -55,7 +55,7 @@ void CRecentConnStrList::Remove(int nIndex)
 	m_arrNames[nIndex].Empty();
 	int iMRU;
 	for (iMRU = nIndex; iMRU < (int)m_arrNames.size() - 1; iMRU++)
-		m_arrNames[iMRU] = m_arrNames[iMRU+1];
+		m_arrNames[iMRU] = m_arrNames[iMRU + 1];
 
 	ASSERT(iMRU < (int)m_arrNames.size());
 	m_arrNames[iMRU].Empty();
@@ -72,7 +72,7 @@ BOOL CRecentConnStrList::GetDisplayName(CString& strName, int nIndex) const
 	return TRUE;
 }
 
-void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI,bool enable)
+void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI, bool enable)
 {
 	ASSERT(m_arrNames.size() > 0);
 
@@ -95,6 +95,11 @@ void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI,bool enable)
 	for (unsigned int iMRU = 0; iMRU < m_arrNames.size(); iMRU++)
 		pCmdUI->m_pMenu->DeleteMenu(pCmdUI->m_nID + iMRU, MF_BYCOMMAND);
 
+	if (!enable) {
+		pCmdUI->Enable(FALSE);
+		return;
+	}
+
 	CString strName;
 	for (int iMRU = 0; iMRU < (int)m_arrNames.size(); iMRU++)
 	{
@@ -110,8 +115,10 @@ void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI,bool enable)
 		pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex,
 			MF_STRING | MF_BYPOSITION, pCmdUI->m_nID,
 			buf + strName);
-		if (!enable)
-			pCmdUI->Enable(FALSE);
+		// This causes error message with new MFC when we try to disable the last recent item
+		// So instead we don't add any disabled recent item at all (see exit above the iteration)
+//		if (!enable)
+//			pCmdUI->Enable(FALSE);
 		pCmdUI->m_nIndex++;
 		pCmdUI->m_nID++;
 	}
