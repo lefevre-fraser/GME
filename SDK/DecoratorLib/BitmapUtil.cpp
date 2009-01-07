@@ -975,8 +975,8 @@ void BitmapGen::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, c
 		imgAttribs.SetColorMatrix(&greyFadeColorMatrix);
 	}
 	Gdiplus::Rect destRect(dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
-	st = gdip->DrawImage(m_pImage, destRect, srcRect.left, srcRect.top, srcRect.Width(), srcRect.Height(),
-						 Gdiplus::UnitPixel, &imgAttribs);
+	st = gdip2->DrawImage(m_pImage, destRect, srcRect.left, srcRect.top, srcRect.Width(), srcRect.Height(),
+						  Gdiplus::UnitPixel, &imgAttribs);
 	if (st == Gdiplus::Win32Error) // in case of corrupted image file (although successfully loaded)
 		gdip2->FillRectangle(&Gdiplus::SolidBrush(Gdiplus::Color::Red), dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
 	if (gdip == NULL)
