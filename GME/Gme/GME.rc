@@ -367,7 +367,7 @@ BEGIN
         END
         MENUITEM "&Display Constraints",        ID_FILE_DISPLAY_CONSTRAINTS
         MENUITEM SEPARATOR
-        MENUITEM "Re&gister Components...",     ID_FILE_REGPARADIGMS
+        MENUITEM "Re&gister Components...",     ID_FILE_REGCOMPONENTS
         MENUITEM "Run In&terpreter",            ID_FILE_RUNINTERPRETER
         MENUITEM "R&un Plug-In",                ID_TOOLS_RUNPLUG
         MENUITEM SEPARATOR
