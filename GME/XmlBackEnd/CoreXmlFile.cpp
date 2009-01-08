@@ -431,7 +431,12 @@ void XmlAttrBinary::fromString(const char * str)
 
 void XmlAttrBinary::toString(std::string& str) const
 {
-    bin2string( &m_value[0], m_value.size(), str );
+	if (m_value.empty()) {
+		str.clear();
+	}
+	else {
+		bin2string( &m_value[0], m_value.size(), str );
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
