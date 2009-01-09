@@ -164,10 +164,12 @@ namespace BON
 //###############################################################################################################################################
 
 	ExtensionManager::FunctionVector* ExtensionManager::_vecKindFunctions( NULL );
+	int ExtensionManager::_vecKindFunctions_refCnt( 0 );
 
 	ExtensionManager::ExtensionManager( const std::vector<std::string>& vecKinds, CastFunction pFnCast, CreateFunction pFnCreate )
 	{
-		// Removed by PETER 
+		_vecKindFunctions_refCnt++;
+		// Removed by PETER, but did not understand exactly why.
 		// for ( int i = 0 ; i < vecKinds.size() ; i++ ) {
 			ExtensionManager::vecKindFunctions().push_back( FunctionPair( pFnCast, pFnCreate ) );
 		// }

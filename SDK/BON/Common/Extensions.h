@@ -132,13 +132,17 @@ namespace BON
 		// Member Variables
 		private :
 			static FunctionVector* _vecKindFunctions;
+			static int _vecKindFunctions_refCnt;
 
 		// Construction and Destruction
 		public :
 			ExtensionManager( const std::vector<std::string>& vecKinds, CastFunction pFnCast, CreateFunction pFnCreate );
 			~ExtensionManager() 
 			{
-				delete _vecKindFunctions;
+				if (! --_vecKindFunctions_refCnt) {
+					delete _vecKindFunctions;
+					_vecKindFunctions = NULL;
+				}
 			}
 
 		// Object methods
