@@ -3,7 +3,7 @@
 #define USESVN  1
 
 #if(USESVN)
-#define USENEON 0
+#define USENEON 0	// Currently the neon lib is not in the GMESRC repository (GPL licensing)
 #define USESERF 1
 
 // make sure USESERF and USENEON are mutually exclusive:
@@ -17,25 +17,26 @@
 #pragma comment(lib, "shfolder.lib")
 #pragma comment(lib, "ws2_32.lib")
 
-#pragma comment(lib, "libapr.lib")
-#pragma comment(lib, "libaprutil.lib")
-#pragma comment(lib, "libapriconv.lib")
+#pragma comment(lib, "libapr-1.lib")
+#pragma comment(lib, "libaprutil-1.lib")
+#pragma comment(lib, "libapriconv-1.lib")
 #pragma comment(lib, "xml.lib")
 
 #pragma comment(lib, "libeay32.lib")
 #pragma comment(lib, "ssleay32.lib")
 
-#pragma comment(lib, "libsvn_client-1.lib")
-#pragma comment(lib, "libsvn_delta-1.lib")
-#pragma comment(lib, "libsvn_diff-1.lib")
-#pragma comment(lib, "libsvn_fs-1.lib")
+#pragma comment(lib, "svn_client-1.lib")
+#pragma comment(lib, "svn_delta-1.lib")
+#pragma comment(lib, "svn_diff-1.lib")
+#pragma comment(lib, "svn_fs-1.lib")
 #pragma comment(lib, "libsvn_fs_fs-1.lib")
-#pragma comment(lib, "libsvn_ra-1.lib")
+#pragma comment(lib, "libsvn_fs_util-1.lib")
+#pragma comment(lib, "svn_ra-1.lib")
 #pragma comment(lib, "libsvn_ra_local-1.lib")
 #pragma comment(lib, "libsvn_ra_svn-1.lib")
-#pragma comment(lib, "libsvn_repos-1.lib")
-#pragma comment(lib, "libsvn_subr-1.lib")
-#pragma comment(lib, "libsvn_wc-1.lib")
+#pragma comment(lib, "svn_repos-1.lib")
+#pragma comment(lib, "svn_subr-1.lib")
+#pragma comment(lib, "svn_wc-1.lib")
 
 #ifdef _DEBUG
 	#pragma comment(lib, "zlibstatD.lib")

@@ -371,20 +371,20 @@
         </DirectoryRef>
         
         <DirectoryRef Id="INSTALLDIR">
-            <Component Id="libapr.dll" Guid="5a068588-5484-49a8-afe5-cdaf0a352ba1">
-                <File Id="libapr.dll" Name="libapr.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libapr.dll" />
+            <Component Id="libapr-1.dll" Guid="5a068588-5484-49a8-afe5-cdaf0a352ba1">
+                <File Id="libapr-1.dll" Name="libapr-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libapr-1.dll" />
             </Component>
         </DirectoryRef>
         
         <DirectoryRef Id="INSTALLDIR">
-            <Component Id="libapriconv.dll" Guid="4eea984b-a9d6-47c7-a2a9-80f5e0f7af36">
-                <File Id="libapriconv.dll" Name="libapriconv.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libapriconv.dll" />
+            <Component Id="libapriconv-1.dll" Guid="4eea984b-a9d6-47c7-a2a9-80f5e0f7af36">
+                <File Id="libapriconv-1.dll" Name="libapriconv-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libapriconv-1.dll" />
             </Component>
         </DirectoryRef>
         
         <DirectoryRef Id="INSTALLDIR">
-            <Component Id="libaprutil.dll" Guid="b4d1ec1d-b8e8-4a2c-8fa6-f970822cfa5e">
-                <File Id="libaprutil.dll" Name="libaprutil.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libaprutil.dll" />
+            <Component Id="libaprutil-1.dll" Guid="b4d1ec1d-b8e8-4a2c-8fa6-f970822cfa5e">
+                <File Id="libaprutil-1.dll" Name="libaprutil-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libaprutil-1.dll" />
             </Component>
         </DirectoryRef>
         
@@ -763,6 +763,9 @@
                 <File Id="ReadmeFiles_README.txt" Name="README.txt" KeyPath="yes" Source="..\Doc\README.txt" />
                 <File Id="muserdoc.txt" Name="muserdoc.txt" Source="..\Doc\muserdoc.txt" />
                 <File Id="License.txt" Name="License.txt" Source="..\Doc\Legal\License.txt" />
+                <File Id="License.txt" Name="License.txt" Source="..\Doc\Legal\APR_Serf_Xerces.license" />
+                <File Id="License.txt" Name="License.txt" Source="..\Doc\Legal\OpenSSL.license" />
+                <File Id="License.txt" Name="License.txt" Source="..\Doc\Legal\Subversion.license" />
             </Component>
         </DirectoryRef>
         
@@ -1937,9 +1940,9 @@
                 <ComponentRef Id='ConstraintManager.dll' />
                 <ComponentRef Id='Core.dll' />
                 <ComponentRef Id='GMEActiveBrowser.ocx' />
-                <ComponentRef Id='libapr.dll' />
-                <ComponentRef Id='libapriconv.dll' />
-                <ComponentRef Id='libaprutil.dll' />
+                <ComponentRef Id='libapr-1.dll' />
+                <ComponentRef Id='libapriconv-1.dll' />
+                <ComponentRef Id='libaprutil-1.dll' />
                 <ComponentRef Id='libeay32.dll' />
                 <ComponentRef Id='Meta.dll' />
                 <ComponentRef Id='MetaDecorator.dll' />
