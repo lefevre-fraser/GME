@@ -30,7 +30,7 @@ regsvr32 /s "Parser\Release\Parser.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
-echo ConstraintMgr.dll:
+echo ConstraintManager.dll:
 regsvr32 /s "ConstraintManager\Release\ConstraintManager.dll"
 if errorlevel 1 goto errorlabel
 echo    OK

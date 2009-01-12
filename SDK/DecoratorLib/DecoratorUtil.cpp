@@ -793,7 +793,7 @@ void Facilities::DrawString( Gdiplus::Graphics* gdip, const CString& strText, co
 {
 	CString strText2( strPre + strText + strPost );
 	if ( iLength != -1 && strText2.GetLength() > iLength )
-		strText2 = strPre + strText.Left( iLength + strPre.GetLength() ) + ( ( bPeriods ) ? "..." : "" ) + strPost;
+		strText2 = strPre + strText.Left( iLength ) + ( ( bPeriods ) ? "..." : "" ) + strPost;
 
 	Gdiplus::StringFormat format;
 	Gdiplus::StringAlignment horizontalAlignment;
@@ -823,12 +823,12 @@ void Facilities::DrawString( Gdiplus::Graphics* gdip, const CString& strText, co
 												 GetGValue(textColor),
 												 GetBValue(textColor)));
 
-	CA2W wcTxt(strText);
+	CA2W wcTxt(strText2);
 	Gdiplus::RectF rectF(static_cast<float> (crBounds.left),
 						 static_cast<float> (crBounds.top),
 						 static_cast<float> (crBounds.Width()),
 						 static_cast<float> (crBounds.Height()));
-	gdip->DrawString(wcTxt, strText.GetLength(), pFont, rectF, &format, &textBrush);
+	gdip->DrawString(wcTxt, strText2.GetLength(), pFont, rectF, &format, &textBrush);
 }
 
 void Facilities::DrawRect( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iWidth ) const

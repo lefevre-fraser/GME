@@ -232,7 +232,7 @@ int CMainFrame::CreateToolBars()
 	// being assigned numbers from 0xE820
 
 
-		// Checking resolution
+	// Checking resolution
 	CWindowDC dc(NULL);
 	bool bHiColorIcons = dc.GetDeviceCaps(BITSPIXEL) >= 16;
 
@@ -240,7 +240,7 @@ int CMainFrame::CreateToolBars()
 	// -- MAIN ToolBar
 	if( !m_wndToolBarMain.CreateEx(this
 		, TBSTYLE_FLAT
-		, WS_CHILD |  WS_VISIBLE | CBRS_ALIGN_TOP
+		, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP
 		, CRect(0,0,0,0)
 		, IDW_TOOLBAR_MAIN) // provide unqiue ID for each toolbar [important !!!]
 		||

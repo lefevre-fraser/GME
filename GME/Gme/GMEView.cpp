@@ -52,19 +52,6 @@ int setZoomPercents[GME_ZOOM_LEVEL_NUM] = {
 static char THIS_FILE[] = __FILE__;
 #endif
 
-void DumpCDC(CDC* pDC) {
-	CSize ve = pDC->GetViewportExt();
-	CSize vo = pDC->GetViewportOrg();
-	CSize we = pDC->GetWindowExt();
-	CSize wo = pDC->GetWindowOrg();
-	CRect clipBox;
-	int clipRgnType = pDC->GetClipBox(&clipBox);
-	TRACE("\t%p %p mm %ld ve(%ld,%ld) vo(%ld,%ld) cb(%ld)(%ld,%ld,%ld,%ld) we(%ld,%ld) wo(%ld,%ld)\n",
-		pDC->m_hDC, pDC, pDC->GetMapMode(), ve.cx, ve.cy, vo.cx, vo.cy,
-		clipRgnType, clipBox.left, clipBox.top, clipBox.Width(), clipBox.Height(),
-		we.cx, we.cy, wo.cx, wo.cy);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CViewDriver
 bool CViewDriver::attrNeedsRefresh = false;

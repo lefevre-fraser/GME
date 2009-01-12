@@ -110,7 +110,6 @@ CSize ResizablePart::GetPreferredSize(void) const
 	return CSize(cx, cy);
 }
 
-
 void ResizablePart::SetLocation(const CRect& location)
 {
 	PartBase::SetLocation(location);

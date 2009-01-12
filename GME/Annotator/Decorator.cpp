@@ -139,12 +139,8 @@ STDMETHODIMP CDecorator::GetPortLocation(IMgaFCO *fco, long *sx, long *sy, long 
 STDMETHODIMP CDecorator::GetPorts(IMgaFCOs **portFCOs)
 {
 	VERIFY_INIT;
-	CComPtr<IMgaFCOs> coll;
-	HRESULT hr = coll.CoCreateInstance(OLESTR("Mga.MgaFCOs"));
-	*portFCOs = coll.Detach();
-	return hr;
+	return S_OK;
 }
-
 
 STDMETHODIMP CDecorator::Draw(HDC hdc)
 {
