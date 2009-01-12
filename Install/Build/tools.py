@@ -15,6 +15,8 @@ from prefs import prefs
 # Constants
 #
 ZIP_PRG = os.path.abspath("zip.exe")
+WIX_CANDLE_PRG = "candle.exe"
+WIX_LIGHT_PRG = "light.exe -sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension" # See comments in GME.wxs
 
 #
 # Classes
@@ -58,6 +60,21 @@ def zip(dirname, zipname, list=None):
     else:
         list_arg = ""
     cmd_line = "%s -9 -r %s %s . >NUL" % (ZIP_PRG, list_arg, zipname)
+    system(cmd_line, dirname)
+    
+def collect_and_zip(dirname, zipname, pattern=None):
+    """
+    Collect files (recursively) and build zip archive in the specified directory.
+    params
+        dirname : the path to the root of the files to be archived
+        zipname : the name of the zip archive (will be created in 'dirname')
+        pattern : file name pattern for selecting files to be included
+    """
+    if list is not None:
+        pattern_arg = "-i " + pattern
+    else:
+        pattern_arg = ""
+    cmd_line = "%s -9 -r %s . %s >NUL" % (ZIP_PRG, zipname, pattern_arg)
     system(cmd_line, dirname)
 
 
@@ -159,36 +176,25 @@ def query_GUID(paradigm ):
     return regsitrar.ParadigmGUIDString(2, paradigm)
 
 
-def test_IS():
-    "Test for InstallShield 2009 Professional. Raises exception if not found."
-    toolmsg("Trying to create IswiAuto15.ISWiProject object")
-    win32com.client.Dispatch("IswiAuto15.ISWiProject")
+def test_WiX():
+    "Test for WiX. Raises exception if not found."
+    toolmsg("Trying to execute WiX tool candle.exe")
+    system(WIX_CANDLE_PRG + " %s" % ("" if prefs['verbose'] else ">NUL"))
     
-def build_IS(ism_file, config, release, properties):
+def build_WiX(wxs_file):
     """
-    Builds an 2009 Professional 8 project.
+    Builds a WiX project.
     params
-        isv_file : full path to the InstallShield project (.isv)
-        config   : name of the configuration to be built
-        release  : name of the build configuration (e.g.: "Release")
-        properties : dictionary of properties to set for the project at build time
+        wxs_file : full path to the WiX source (.wxs)
     """
-    toolmsg("Building " + ism_file + " - " + config + " - " + release)
-    ISWiProject = win32com.client.Dispatch( "IswiAuto15.ISWiProject" )
+    fullpath = os.path.normpath(os.path.abspath(wxs_file))
+    dirname = os.path.dirname(fullpath)
+    filename = os.path.basename(fullpath)
+    (projectname, ext) = os.path.splitext(filename)
     
-    ISWiProject.OpenProject(ism_file)
-    for property in properties.keys():
-        ISProperty = ISWiProject.ISWiProperties.Item(property)
-        ISProperty.Value = properties[property]
-        toolmsg("\tSet property " + ISProperty.Name + " = " + ISProperty.Value)
-        
-    ISConfig = ISWiProject.ISWiProductConfigs.Item(config)
-    ISRelease = ISConfig.ISWiReleases.Item(release)
-    ISRelease.Build()
-    ISWiProject.CloseProject()
-    
-    if ISRelease.BuildWarningCount > 0:
-        toolmsg("Warnings found (%d)! Check logfile for details." % (ISRelease.BuildWarningCount))
-    if ISRelease.BuildErrorCount > 0:
-        raise BuildException, "InstallShield error(s) occured"
+    toolmsg("Building " + filename + " in " + dirname)
+    cmd_line = "%s %s %s" % (WIX_CANDLE_PRG, filename,  ("" if prefs['verbose'] else ">NUL"))
+    system(cmd_line, dirname)
+    cmd_line = "%s %s.wixobj %s" % (WIX_LIGHT_PRG, projectname, ("" if prefs['verbose'] else ">NUL"))
+    system(cmd_line, dirname)
         
