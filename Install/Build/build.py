@@ -197,9 +197,9 @@ def build_msi():
     print >> f, "<Include>"
     print >> f, "   <?define VERSIONSTR='%s' ?>" % (prefs["version_string"])
     print >> f, "   <?define GUIDSTRMETAGME='%s' ?>" % (tools.query_GUID("MetaGME"))
-    print >> f, "   <?define GUIDSTRHFSM='%s' ?>" % (tools.query_GUID("SF")) 
-    print >> f, "   <?define GUIDSTRSF='%s' ?>" % (tools.query_GUID("UML"))
-    print >> f, "   <?define GUIDSTRUML='%sf' ?>" % (tools.query_GUID("HFSM"))
+    print >> f, "   <?define GUIDSTRHFSM='%s' ?>" % (tools.query_GUID("HFSM")) 
+    print >> f, "   <?define GUIDSTRSF='%s' ?>" % (tools.query_GUID("SF"))
+    print >> f, "   <?define GUIDSTRUML='%s' ?>" % (tools.query_GUID("UML"))
     print >> f, "</Include>" 
     f.close()
    

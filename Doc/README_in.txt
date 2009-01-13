@@ -30,7 +30,7 @@ guaranteed.
 1. Release Notes
 ************************************************
 
-Release Notes of Release rNEXT
+Release Notes of Release r9.1.12
 --------------------------------
   - Subversion backend library is updated to 1.5.5
   - New WiX-based installer (instead of the previous InstallShield-based)

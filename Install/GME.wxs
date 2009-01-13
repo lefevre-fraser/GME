@@ -255,10 +255,13 @@
                 <Shortcut Id='UninstallShortcut'       
 		            Name='Uninstall GME'
 			        Description='Uninstalls the Generic Modeling Environment'
-		            Target='[System64Folder]msiexec.exe'
+		            Target='[System64Folder]msiexec.exe' Directory='ShortcutFolder'
 		            Arguments='/x [ProductCode]'/>
                 <Environment Id="GME_ROOT" Action="set" System="yes" Name="GME_ROOT" Value="[INSTALLDIR]" />
                 <RemoveFolder Id='RemoveShortcutFolder' On='uninstall' Directory='ShortcutFolder'/>
+                <!-- This is a bit ackward but might helps the user. We clear the (current) user registry from previous entries.
+                     Not compliant with ICE checks (user registry access from systemwide component). -->
+                <RemoveRegistryKey  Id='RemoveUserGMERegistry' Action='removeOnInstall' Root='HKCU' Key='Software\GME' />
             </Component>
             
         </DirectoryRef>
