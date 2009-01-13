@@ -156,7 +156,7 @@ namespace Util
 		else {
 			std::string strMessage = m_strMessage;
 			int iCnt = 0;
-			int iPos = m_strMessage.find( '?' );
+			size_t iPos = m_strMessage.find( '?' );
 			while ( iPos != std::string::npos && iCnt < m_vecParameters.size() ) {
 				strMessage = strMessage.substr( 0, iPos ) + m_vecParameters[ iCnt++ ] + strMessage.substr( iPos + 1, strMessage.length() - iPos - 1 );
 				iPos = strMessage.find( '?' );
@@ -170,7 +170,7 @@ namespace Util
 		return ( iPos < 0 || iPos >= m_vecParameters.size() ) ? "" : m_vecParameters[ iPos ];
 	}
 
-	int Exception::getParameterCount() const
+	size_t Exception::getParameterCount() const
 	{
 		return m_vecParameters.size();
 	}

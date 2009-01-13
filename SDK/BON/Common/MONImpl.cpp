@@ -370,7 +370,7 @@ namespace MON
 	std::set<ContainmentImpl*> ProjectImpl::getGlobalRoles( const std::string& strDescIn ) const
 	{
 		std::set<ContainmentImpl*> setRoles;
-		int iPos = strDescIn.find( " " );
+		size_t iPos = strDescIn.find( " " );
 		std::string strDesc = ( iPos == std::string::npos ) ? strDescIn : strDescIn.substr( 0, iPos );
 		for ( std::set<ObjectImpl*>::const_iterator it = ( (ProjectImpl* ) this )->m_mapObjectsByType[ OT_Role ].begin() ; it != ( (ProjectImpl* ) this )->m_mapObjectsByType[ OT_Role ].end() ; ++it ) {
 			if ( ( ( ContainmentImpl*) (*it) )->getChild()->getName() == strDesc )
@@ -402,7 +402,7 @@ namespace MON
 		if ( setModels.empty() )
 			return setRoles;
 
-		int iPos = strDescIn.find( " " );
+		size_t iPos = strDescIn.find( " " );
 		// strDesc to store the first token
 		std::string strDesc = ( iPos == std::string::npos ) ? strDescIn : strDescIn.substr( 0, iPos );
 		
@@ -440,7 +440,7 @@ namespace MON
 		if ( strDescIn.empty() )
 			return setIn;
 
-		int iPos = strDescIn.find( " " );
+		size_t iPos = strDescIn.find( " " );
 		// the next token (usually a "port")
 		std::string strDesc = ( iPos == std::string::npos ) ? strDescIn : strDescIn.substr( 0, iPos );
 
@@ -2055,7 +2055,7 @@ namespace MON
 		std::vector<std::string> vecExpr;
 
 		while ( ! strExpr.empty() ) {
-			int iPos = strExpr.find( '\n' );
+			size_t iPos = strExpr.find( '\n' );
 			if ( iPos != std::string::npos ) {
 				CString strLine = strExpr.substr( 0, iPos ).c_str();
 				strLine.TrimLeft();

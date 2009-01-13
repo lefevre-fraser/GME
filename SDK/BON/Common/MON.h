@@ -404,7 +404,7 @@ namespace MON
 			bool									isBidirectional() const;
 
 			std::set<ConnectionSpecification>	specifications() const;
-			int										specificationCount() const;
+			size_t										specificationCount() const;
 			ConnectionSpecification				specification( int iNum ) const;
 	};
 

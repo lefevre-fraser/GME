@@ -868,7 +868,7 @@ namespace MON
 		FULLFILTER( ConnectionSpecImpl*, ( (ConnectionImpl*) getCounted() )->getConnectionSpecs(), ConnectionSpecification, true, *it );
 	}
 
-	int Connection::specificationCount() const
+	size_t Connection::specificationCount() const
 	{
 		return ( (ConnectionImpl*) getCounted() )->getConnectionSpecs().size();
 	}

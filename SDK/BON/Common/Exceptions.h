@@ -91,7 +91,7 @@ namespace Util
 			Exception& operator << ( double pdoub);
 			std::string	getErrorMessage( bool bSubstitute = true ) const;
 			std::string	getParameter( int iPos ) const;
-			int			getParameterCount() const;
+			size_t			getParameterCount() const;
 			virtual std::string getKind() const;
 
 		protected :

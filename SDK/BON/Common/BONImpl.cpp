@@ -2252,7 +2252,7 @@ namespace BON
 	{
 		std::string strPath2;
 		std::string strName;
-		int iPos = ( bReverseOrder ) ? strPath.rfind( strDelimiter ) : strPath.find( strDelimiter );
+		size_t iPos = ( bReverseOrder ) ? strPath.rfind( strDelimiter ) : strPath.find( strDelimiter );
 		if ( iPos == std::string::npos ) {
 			strName = strPath;
 			strPath2 = "";
@@ -2571,7 +2571,7 @@ namespace BON
 
 			std::string str = meta.name();
 			bool bFound = false;
-			int iCnt = meta.specificationCount();
+			size_t iCnt = meta.specificationCount();
 			for ( int i = 0 ; i < iCnt ; i++ ) {
 				std::set<MON::ConnectionRole> roles = meta.specification( i ).roles();
 				for ( std::set<MON::ConnectionRole>::iterator it = roles.begin() ; it != roles.end() ; it++ ) {
@@ -5292,7 +5292,7 @@ namespace BON
 	{
 		std::string strPath2;
 		std::string strName;
-		int iPos = ( bReverseOrder ) ? strPath.rfind( strDelimiter ) : strPath.find( strDelimiter );
+		size_t iPos = ( bReverseOrder ) ? strPath.rfind( strDelimiter ) : strPath.find( strDelimiter );
 		if ( iPos == std::string::npos ) {
 			strName = strPath;
 			strPath2 = "";
