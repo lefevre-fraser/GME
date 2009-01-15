@@ -90,6 +90,7 @@
         <Directory Id='TARGETDIR' Name='SourceDir'>
             <Directory Id='ProgramFilesFolder'>
                 <Directory Id='INSTALLDIR' Name='GME'>
+                    <Directory Id='INSTALLDIR_BIN' Name='Bin'/>
                     <Directory Id='INSTALLDIR_CONTRIB' Name='Contrib'/>
                     <Directory Id='INSTALLDIR_DOC' Name='Doc'>
                         <Directory Id='INSTALLDIR_DOC_TUTORIALS' Name='Tutorials'>
@@ -230,7 +231,7 @@
         <!-- =========================================================== -->
         <!-- COMPONENTS -->
         <!-- =========================================================== -->
-        <DirectoryRef Id='INSTALLDIR'>
+        <DirectoryRef Id='INSTALLDIR_BIN'>
             <Component Id='GME.exe' Guid='62188D4B-8663-40f9-86F9-F89D65F5DE64'>
                 <File Id='GME.exe' Name='GME.exe' DiskId='1' Source='..\GME\Gme\Release\GME.exe' KeyPath='yes' Checksum='yes'> 
                     <Shortcut Id='ApplicationStartMenuShortcut' Name='GME' Icon='GME.ico'
@@ -267,7 +268,7 @@
         </DirectoryRef>
 
 	    
-	    <DirectoryRef Id='INSTALLDIR'>
+	    <DirectoryRef Id='INSTALLDIR_BIN'>
 	        <Component Id='Annotator.dll' Guid='d8ad8dd3-141c-4a64-be06-931b20b2492f'>
 	            <File Id="Annotator.dll" Name="Annotator.dll" KeyPath="yes" Source="..\GME\Annotator\Release\Annotator.dll">
                     <Class Id="{B1028D44-C108-40C6-94FA-D51B3B56A7A8}" Context="InprocServer32" Description="MGA NewDecorator CoClass (NewAnnotator)" ThreadingModel="apartment" Programmable="yes">
@@ -309,7 +310,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Console.ocx" Guid="c12c3f01-65ee-4db4-aaeb-b6cae21795b1">
                 <File Id="Console.ocx" Name="Console.ocx" KeyPath="yes" Source="..\GME\Console\Release\Console.ocx">
                     <Class Id="{A9B2B82A-B753-4FB0-8F0B-3661BC307053}" Context="InprocServer32" Description="GME Console Property Page" />
@@ -325,7 +326,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="ConstraintManager.dll" Guid="c3f75502-11d9-44cb-b84a-8d0ba458894b">
                 <File Id="ConstraintManager.dll" Name="ConstraintManager.dll" KeyPath="yes" Source="..\GME\ConstraintManager\Release\ConstraintManager.dll">
                     <Class Id="{44055854-A45B-4357-9D2C-FC66D6C0DFFA}" Context="InprocServer32" Description="ConstraintManager Class" ThreadingModel="apartment" Programmable="yes">
@@ -359,7 +360,7 @@
             </Component>
         </DirectoryRef>
         
-         <DirectoryRef Id="INSTALLDIR">
+         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Core.dll" Guid="5a19a282-1cbe-4a3f-80d0-52caa4aff44e">
                 <File Id="Core.dll" Name="Core.dll" KeyPath="yes" Source="..\GME\Core\Release\Core.dll">                    
                     <Class Id="{09D9DCA2-3E09-11D3-B2F7-005004D38590}" Context="InprocServer32" Description="CoreRepository Class" ThreadingModel="apartment" Programmable="yes">
@@ -391,7 +392,7 @@
             </Component>
         </DirectoryRef>
         
-         <DirectoryRef Id="INSTALLDIR">
+         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="GMEActiveBrowser.ocx" Guid="92105001-49cc-4eba-b891-5b12c3e8b5f9">
                 <File Id="GMEActiveBrowser.ocx" Name="GMEActiveBrowser.ocx" KeyPath="yes" Source="..\GME\GMEActiveBrowser\Release\GMEActiveBrowser.ocx">
                     <Class Id="{4B4C56DA-A2A0-4AE3-BC4B-B07151DE732C}" Context="InprocServer32" Description="GMEActiveBrowser Property Page" />
@@ -418,31 +419,31 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="libapr_1.dll" Guid="5a068588-5484-49a8-afe5-cdaf0a352ba1">
                 <File Id="libapr_1.dll" Name="libapr-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libapr-1.dll" />
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="libapriconv_1.dll" Guid="4eea984b-a9d6-47c7-a2a9-80f5e0f7af36">
                 <File Id="libapriconv_1.dll" Name="libapriconv-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libapriconv-1.dll" />
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="libaprutil_1.dll" Guid="b4d1ec1d-b8e8-4a2c-8fa6-f970822cfa5e">
                 <File Id="libaprutil_1.dll" Name="libaprutil-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libaprutil-1.dll" />
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="libeay32.dll" Guid="044ba74a-7dec-440b-a7a7-1decf56c85cb">
                 <File Id="libeay32.dll" Name="libeay32.dll" KeyPath="yes" Source="..\GME\lib\libeay32.dll" />
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Meta.dll" Guid="527ea6f5-ed90-48cc-ac80-d4e4ccd1a335">
                 <File Id="Meta.dll" Name="Meta.dll" KeyPath="yes" Source="..\GME\Meta\release\Meta.dll">
                     <Class Id="{8216325A-B7C8-1AD3-ABAE-000000000000}" Context="InprocServer32" Description="MgaMetaEnumItem Class" ThreadingModel="apartment" Programmable="yes">
@@ -596,7 +597,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Mga.dll" Guid="d2a805f5-0d58-46a1-b270-6f88af1e25b1">
                 <File Id="Mga.dll" Name="Mga.dll" KeyPath="yes" Source="..\GME\Mga\Release\Mga.dll">
                     <Class Id="{1DF52E42-BCC0-4439-B3CD-75610AC372A3}" Context="InprocServer32" Description="MgaO Class" ThreadingModel="apartment" Programmable="yes">
@@ -633,7 +634,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="MgaDecorators.dll" Guid="c6cc5198-9163-42c3-ac67-cbd43f1a0bc6">
                 <File Id="MgaDecorators.dll" Name="MgaDecorators.dll" KeyPath="yes" Source="..\GME\MgaDecorators\Release\MgaDecorators.dll">
                     <Class Id="{3FA0768D-F832-4C6A-973D-5D8E3EF05FFA}" Context="InprocServer32" Description="BoxDecorator Class" ThreadingModel="apartment" Programmable="yes">
@@ -650,7 +651,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="MgaUtil.dll" Guid="e476f906-c2f1-40ec-ad45-56b98c31b80d">
                 <File Id="MgaUtil.dll" Name="MgaUtil.dll" KeyPath="yes" Source="..\GME\MgaUtil\Release\MgaUtil.dll">
                     <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
@@ -744,7 +745,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="ObjectInspector.ocx" Guid="a4f8ebb1-2ee5-4755-a00c-bc6ff59baf5e">
                 <File Id="ObjectInspector.ocx" Name="ObjectInspector.ocx" KeyPath="yes" Source="..\GME\ObjectInspector\Release\ObjectInspector.ocx">
                     <Class Id="{0B4B5A75-BF21-4C8B-A705-E2666E1D9B15}" Context="InprocServer32" Description="ObjectInspector Property Page" />
@@ -762,7 +763,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="PanningView.ocx" Guid="3e230ebb-8c3e-44e2-ade8-78ce8c31b6d3">
                 <File Id="PanningView.ocx" Name="PanningView.ocx" KeyPath="yes" Source="..\GME\PanningView\Release\PanningView.ocx">
                     <Class Id="{458D3476-B3FF-4545-9645-C247A7C17E36}" Context="InprocServer32" Description="PanningView Property Page" />
@@ -773,7 +774,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Parser.dll" Guid="71935c0b-4c3e-48de-b514-5fd5187a4343">
                 <File Id="Parser.dll" Name="Parser.dll" KeyPath="yes" Source="..\GME\Parser\Release\Parser.dll">
                     <Class Id="{70C41B25-E3CE-11D3-B37A-005004D38590}" Context="InprocServer32" Description="MetaParser Class" ThreadingModel="apartment" Programmable="yes">
@@ -795,7 +796,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="PartBrowser.ocx" Guid="89b7e530-06ae-4da1-851f-bd546e18a5ba">
                 <File Id="PartBrowser.ocx" Name="PartBrowser.ocx" KeyPath="yes" Source="E:\GMESRC\GME\PartBrowser\Release\PartBrowser.ocx">
                     <Class Id="{8E82D238-D222-493D-8ED2-3175A5B1086C}" Context="InprocServer32" Description="PartBrowser Property Page" />
@@ -817,7 +818,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Search.ocx" Guid="81b6b085-13d2-47a5-8312-519f12a337e9">
                 <File Id="Search.ocx" Name="Search.ocx" KeyPath="yes" Source="..\GME\Search\Release\Search.ocx">
                     <Class Id="{F299943A-2397-45B1-8C77-A9D29F2FE58E}" Context="InprocServer32" Description="GME Search Property Page" />
@@ -828,7 +829,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="ssleay32.dll" Guid="d0332040-b89c-4218-8290-2efa08652558">
                 <File Id="ssleay32.dll" Name="ssleay32.dll" KeyPath="yes" Source="..\GME\lib\ssleay32.dll" />
             </Component>
@@ -857,13 +858,13 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="xerces_c_2_8.dll" Guid="69573e13-9d78-4e75-b353-6d109d9fedcd">
                 <File Id="xerces_c_2_8.dll" Name="xerces-c_2_8.dll" KeyPath="yes" Source="..\GME\lib\xerces-c_2_8.dll" />
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="XmlBackEnd.dll" Guid="bda363bb-dd37-4123-9450-785d8c246873">
                 <File Id="XmlBackEnd.dll" Name="XmlBackEnd.dll" KeyPath="yes" Source="..\GME\XmlBackEnd\Release\XmlBackEnd.dll">
                     <Class Id="{0C398158-C207-406D-8402-8D45274E5F85}" Context="InprocServer32" Description="SvnExec Class" ThreadingModel="both" Programmable="yes">
@@ -1897,7 +1898,7 @@
             </Component>
         </DirectoryRef>
         
-        <DirectoryRef Id="INSTALLDIR">
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="JAUT.dll" Guid="0c4a6e0b-c860-4819-9ef6-69230df410f4">
                 <File Id="JAUT.dll" Name="JAUT.dll" KeyPath="yes" Source="..\SDK\java\native\Jaut\Release\JAUT.dll" />
             </Component>
