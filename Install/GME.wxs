@@ -160,7 +160,7 @@
                         <Directory Id='INSTALLDIR_PARADIGMS_SF' Name='SF'>
                             <Directory Id='INSTALLDIR_PARADIGMS_SF_BON2SFINTERPRETER' Name='BON2SFInterpreter'/>
                             <Directory Id='INSTALLDIR_PARADIGMS_SF_BON2SFSAMPLE' Name='BON2SFSample'/>
-                            <Directory Id='INSTALLDIR_PARADIGMS_SF_DEMO' Name='BON2SFSample'>
+                            <Directory Id='INSTALLDIR_PARADIGMS_SF_DEMO' Name='demo'>
                                 <Directory Id='INSTALLDIR_PARADIGMS_SF_DEMO_INCLUDE' Name='include' />
                                 <Directory Id='INSTALLDIR_PARADIGMS_SF_DEMO_LIB' Name='lib' />
                                 <Directory Id='INSTALLDIR_PARADIGMS_SF_DEMO_SCRIPTS' Name='scripts' />
@@ -178,7 +178,7 @@
                     </Directory>
                     <Directory Id='INSTALLDIR_SDK' Name='SDK'>
                         <Directory Id='INSTALLDIR_SDK_BON' Name='BON'>
-                            <Directory Id='INSTALLDIR_SDK_BON_COMMON' Name='Commmon' />
+                            <Directory Id='INSTALLDIR_SDK_BON_COMMON' Name='Common' />
                             <Directory Id='INSTALLDIR_SDK_BON_WIZARD' Name='Wizard'>  
                                 <Directory Id='INSTALLDIR_SDK_BON_WIZARD_1033' Name='1033'>
                                     <Directory Id='INSTALLDIR_SDK_BON_WIZARD_1033_IMAGES' Name='Images' />  
@@ -1085,11 +1085,7 @@
                 <File Id="lpfilter.c" Name="lpfilter.c"  Source="..\Paradigms\SF\demo\lpfilter.c" />
                 <File Id="lpfilter.h" Name="lpfilter.h"  Source="..\Paradigms\SF\demo\lpfilter.h" />
                 <File Id="main.c" Name="main.c"  Source="..\Paradigms\SF\demo\main.c" />
-                <File Id="Makefile" Name="Makefile"  Source="..\Paradigms\SF\demo\Makefile" />
-                <File Id="mdemo.001" Name="mdemo.001"  Source="..\Paradigms\SF\demo\mdemo.001" />
                 <File Id="Mdemo.exe" Name="Mdemo.exe" KeyPath="yes" Source="..\Paradigms\SF\demo\Mdemo.exe" />
-                <File Id="mdemo.mak" Name="mdemo.mak"  Source="..\Paradigms\SF\demo\mdemo.mak" />
-                <File Id="mdemo.mdp" Name="mdemo.mdp"  Source="..\Paradigms\SF\demo\mdemo.mdp" />
                 <File Id="mdemo.sln" Name="mdemo.sln"  Source="..\Paradigms\SF\demo\mdemo.sln" />
                 <File Id="mdemo.vcproj" Name="mdemo.vcproj"  Source="..\Paradigms\SF\demo\mdemo.vcproj" />
                 <File Id="ui.cfg" Name="ui.cfg"  Source="..\Paradigms\SF\demo\ui.cfg" />
