@@ -95,7 +95,7 @@ IDB_MODELING_TOOLBAR24  BITMAP                  "res\\ToolbarModeling24.bmp"
 IDB_WINS_TOOLBAR24      BITMAP                  "res\\ToolbarWins24.bmp"
 IDB_MODE_TOOLBAR24      BITMAP                  "res\\ToolbarMode24.bmp"
 IDB_NAVIG_TOOLBAR24     BITMAP                  "res\\ToolbarNavig24.bmp"
-IDB_COMPONENTS_TOOLBAR24 BITMAP                 "res\\ToolbarComponents24.bmp"
+IDB_COMPONENTS_TOOLBAR24 BITMAP                  "res\\ToolbarComponents24.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -722,6 +722,7 @@ END
 
 CG_IDD_MODELPROPERTIESBAR DIALOGEX 0, 0, 467, 16
 STYLE DS_SETFONT | WS_CHILD
+EXSTYLE WS_EX_TOOLWINDOW
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     EDITTEXT        IDC_NAME,37,2,68,12,ES_AUTOHSCROLL
@@ -1420,6 +1421,11 @@ STRINGTABLE
 BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
     ID_APP_EXIT             "Quit the application\nExit"
+    ID_VIEW_FULLSCREEN      "Switch to Full Screen (hide panels and toolbars)\nFull Screen"
+    ID_WINDOW_NEWHORIZONTALTABGROUP 
+                            "New Horizontal Tab Group\nNew Horizontal Tab Group"
+    ID_WINDOW_NEWVERTICALTABGROUP 
+                            "New Vertical Tab Group\nNew Vertical Tab Group"
 END
 
 STRINGTABLE 
