@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="MetaGME" guid="{5BEDB4E3-7028-4C71-9A9B-9C2C5E7CF1D2}" cdate="Fri Dec 05 10:44:13 2008" mdate="Fri Dec 05 10:44:13 2008" >
+<paradigm name="MetaGME" guid="{0A264B93-2EFA-454E-89D7-C18CC4D60CA5}" cdate="Fri Dec 05 10:44:13 2008" mdate="Fri Dec 05 10:44:13 2008" >
 
 	<comment>GME Meta Paradigm</comment>
 
@@ -1003,7 +1003,7 @@ srcRole = "" and dstRole = "" or srcRole = "src" and dstRole = "dst"]]>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
-		<atom name = "Constraint" metaref = "1074"  attributes = "ConstraintDescription ConstraintParam ConstraintEqn ConstraintPriority Depth CloseEvent CreateEvent DeleteEvent NewChildEvent LostChildEvent MoveEvent DeriveEvent ConnectEvent DisconnectEvent ChangeAttributeEvent ChangePropertyEvent ChangeRelationEvent ReferenceEvent UnReferenceEvent AddSetEvent RemoveSetEvent">
+		<atom name = "Constraint" metaref = "1074"  attributes = "ConstraintDescription ConstraintParam ConstraintEqn ConstraintPriority CloseEvent Depth CreateEvent DeleteEvent NewChildEvent LostChildEvent MoveEvent DeriveEvent ConnectEvent DisconnectEvent ChangeAttributeEvent ChangePropertyEvent ChangeRelationEvent ReferenceEvent UnReferenceEvent AddSetEvent RemoveSetEvent">
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 			<constraint name="DescNotEmpty" eventmask = "0x0" depth = "0" priority = "2">

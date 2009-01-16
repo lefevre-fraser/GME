@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{A1EBA645-3EC2-4F76-88C8-F49A5AC23CA8}" cdate="Fri Dec 12 15:14:18 2008" mdate="Fri Dec 12 15:14:18 2008" version="" metaguid="{5BEDB4E3-7028-4C71-9A9B-9C2C5E7CF1D2}" metaversion="" metaname="MetaGME">
+<project guid="{8FEA9DFD-77CA-4FD5-8430-0E715A558E32}" cdate="Fri Dec 12 15:14:18 2008" mdate="Fri Dec 12 15:14:18 2008" version="" metaguid="{0A264B93-2EFA-454E-89D7-C18CC4D60CA5}" metaversion="" metaname="MetaGME">
 	<name>SF</name>
 	<comment></comment>
 	<author></author>
@@ -487,7 +487,7 @@
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>340,14</value>
+							<value>501,84</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -499,7 +499,7 @@
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>417,14</value>
+							<value>501,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -511,7 +511,7 @@
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>403,14</value>
+							<value>501,14</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -668,7 +668,7 @@ IFANY</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>650,154</value>
+							<value>258,448</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -761,7 +761,7 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>556,299</value>
+							<value>542,257</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -848,7 +848,7 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>91,259</value>
+							<value>91,266</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -860,7 +860,7 @@ Pointer</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>92,265</value>
+							<value>91,266</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -872,7 +872,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>92,265</value>
+							<value>91,266</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -998,7 +998,7 @@ Pointer</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>36,391</value>
+							<value>33,385</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -1010,7 +1010,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>36,391</value>
+							<value>33,385</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1202,7 +1202,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>134,391</value>
+							<value>133,385</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1349,7 +1349,7 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>506,203</value>
+							<value>499,175</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -1373,7 +1373,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>498,173</value>
+							<value>499,168</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1487,7 +1487,7 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>403,364</value>
+							<value>389,308</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -1499,7 +1499,7 @@ Pointer</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>386,306</value>
+							<value>389,308</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -1511,7 +1511,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>386,300</value>
+							<value>389,308</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1619,19 +1619,19 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>235,256</value>
+							<value>207,291</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>207,284</value>
+							<value>207,291</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>207,284</value>
+							<value>207,291</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1661,19 +1661,19 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>249,238</value>
+							<value>235,266</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>239,258</value>
+							<value>235,273</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>235,259</value>
+							<value>235,266</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -1685,7 +1685,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>239,258</value>
+							<value>235,266</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1802,7 +1802,7 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>18,14</value>
+							<value>11,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -1826,7 +1826,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>18,14</value>
+							<value>11,14</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1871,31 +1871,31 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>139,119</value>
+							<value>139,147</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>141,123</value>
+							<value>139,133</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>139,133</value>
+							<value>139,147</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>141,123</value>
+							<value>139,133</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>141,123</value>
+							<value>139,147</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2030,7 +2030,7 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>249,133</value>
+							<value>249,147</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -2054,7 +2054,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>253,139</value>
+							<value>249,147</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2162,7 +2162,7 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>186,14</value>
+							<value>200,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -2174,7 +2174,7 @@ Pointer</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>193,14</value>
+							<value>200,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -2186,7 +2186,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>186,14</value>
+							<value>200,14</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2242,7 +2242,7 @@ Pointer</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsShadowCastEnabled">
-					<value>true</value>
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsTypeInfoShown" status="meta">
 					<value>true</value>
@@ -2263,13 +2263,13 @@ Pointer</value>
 					<value></value>
 				</attribute>
 				<attribute kind="ShadowColor">
-					<value>0x000000</value>
+					<value></value>
 				</attribute>
 				<attribute kind="ShadowDirection">
-					<value>45</value>
+					<value></value>
 				</attribute>
 				<attribute kind="ShadowThickness">
-					<value>10</value>
+					<value></value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
@@ -2285,7 +2285,7 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>650,70</value>
+							<value>419,448</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -2351,7 +2351,7 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>519,364</value>
+							<value>505,294</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -2375,7 +2375,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>505,299</value>
+							<value>505,294</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2483,19 +2483,19 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>466,102</value>
+							<value>550,151</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>466,102</value>
+							<value>550,102</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>466,102</value>
+							<value>550,102</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2513,13 +2513,13 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>349,153</value>
+							<value>349,160</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>377,153</value>
+							<value>377,146</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2615,7 +2615,7 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>636,294</value>
+							<value>636,308</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -2627,7 +2627,7 @@ Pointer</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>638,306</value>
+							<value>636,308</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -2639,7 +2639,7 @@ Pointer</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>638,300</value>
+							<value>636,308</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2743,7 +2743,7 @@ Pointer</value>
 			<connection id="id-0068-00000001" kind="DerivedInheritance" role="DerivedInheritance" guid="{4ea1bd6f-7dee-490c-a5f3-0f544145238c}" relid="0x3f">
 				<name>DerivedInheritance</name>
 				<regnode name="autorouterPref" isopaque="yes">
-					<value>w</value>
+					<value>nw</value>
 				</regnode>
 				<connpoint role="src" target="id-0066-00000002"/>
 				<connpoint role="dst" target="id-0066-00000014"/>
@@ -2751,7 +2751,7 @@ Pointer</value>
 			<connection id="id-0068-00000002" kind="ConnectorToDestination" role="ConnectorToDestination" guid="{e437f21d-9a59-426b-a28c-5f3af0df252f}" relid="0x3d">
 				<name>ConnectorToDestination</name>
 				<regnode name="autorouterPref" isopaque="yes">
-					<value>nS</value>
+					<value>nW</value>
 				</regnode>
 				<attribute kind="Cardinality" status="meta">
 					<value>0..*</value>
@@ -2870,6 +2870,9 @@ Pointer</value>
 			</connection>
 			<connection id="id-0068-0000000e" kind="DerivedInheritance" role="DerivedInheritance" guid="{6f5f5c18-70d8-4c01-8f5d-4a0e910b4fe6}" relid="0x30">
 				<name>DerivedInheritance</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>n</value>
+				</regnode>
 				<connpoint role="src" target="id-0066-00000006"/>
 				<connpoint role="dst" target="id-0066-0000000e"/>
 			</connection>
@@ -2904,6 +2907,9 @@ Pointer</value>
 			</connection>
 			<connection id="id-0068-00000013" kind="DerivedInheritance" role="DerivedInheritance" guid="{b6bba447-1560-4a20-a738-9e3df6a5373f}" relid="0x18">
 				<name>DerivedInheritance</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>n</value>
+				</regnode>
 				<connpoint role="src" target="id-0066-00000006"/>
 				<connpoint role="dst" target="id-0066-0000001a"/>
 			</connection>
@@ -2917,6 +2923,9 @@ Pointer</value>
 			</connection>
 			<connection id="id-0068-00000015" kind="SourceToConnector" role="SourceToConnector" guid="{612e3408-310c-415a-af27-c08548e37343}" relid="0x14">
 				<name>SourceToConnector</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>n</value>
+				</regnode>
 				<attribute kind="Cardinality" status="meta">
 					<value>0..*</value>
 				</attribute>
@@ -2948,7 +2957,7 @@ Pointer</value>
 			<connection id="id-0068-00000018" kind="DerivedInheritance" role="DerivedInheritance" guid="{95324645-b0ae-492f-a2b7-795001c2f292}" relid="0x11">
 				<name>DerivedInheritance</name>
 				<regnode name="autorouterPref" isopaque="yes">
-					<value>e</value>
+					<value>ne</value>
 				</regnode>
 				<connpoint role="src" target="id-0066-00000002"/>
 				<connpoint role="dst" target="id-0066-00000013"/>
@@ -3029,13 +3038,13 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>777,49</value>
+							<value>322,42</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>778,55</value>
+							<value>777,49</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -3062,13 +3071,13 @@ Pointer</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>772,126</value>
+							<value>9,105</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>778,132</value>
+							<value>772,126</value>
 						</regnode>
 					</regnode>
 				</regnode>

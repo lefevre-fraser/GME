@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="SF" guid="{A1EBA645-3EC2-4F76-88C8-F49A5AC23CA8}" cdate="Fri Dec 12 15:14:18 2008" mdate="Fri Dec 12 15:14:18 2008" >
+<paradigm name="SF" guid="{8AA38D54-B157-430D-B91C-A6E9CCCA26FE}" cdate="Fri Dec 12 15:14:18 2008" mdate="Fri Dec 12 15:14:18 2008" >
 
 	<comment></comment>
 
@@ -139,9 +139,9 @@
 				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "itemShadowCast" value ="true"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
-				<regnode name = "shadowThickness" value ="10"></regnode>
+				<regnode name = "shadowThickness" value ="0"></regnode>
+				<regnode name = "shadowDirection" value ="0"></regnode>
 			<constraint name="AtLeastOnePart" eventmask = "0x0" depth = "1" priority = "2">
 				<![CDATA[self.parts()->size > 0]]>
 				<dispname>Compounds must have parts</dispname>
@@ -177,9 +177,9 @@
 				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "itemShadowCast" value ="true"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
-				<regnode name = "shadowThickness" value ="10"></regnode>
+				<regnode name = "shadowThickness" value ="0"></regnode>
+				<regnode name = "shadowDirection" value ="0"></regnode>
 			<role name = "InputParameters" metaref = "1039" kind = "InputParam"></role>
 			<role name = "InputSignals" metaref = "1040" kind = "InputSignal"></role>
 			<role name = "OutputParameters" metaref = "1041" kind = "OutputParam"></role>

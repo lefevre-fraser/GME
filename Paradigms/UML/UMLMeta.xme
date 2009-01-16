@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{50A9F89A-C2A5-4826-8715-3C9E2F5631A8}" cdate="Fri Dec 12 14:59:58 2008" mdate="Fri Dec 12 14:59:58 2008" version="" metaguid="{5BEDB4E3-7028-4C71-9A9B-9C2C5E7CF1D2}" metaversion="" metaname="MetaGME">
+<project guid="{AB818AE4-8ED9-445B-9FF9-5256171906AD}" cdate="Fri Dec 12 14:59:58 2008" mdate="Fri Dec 12 14:59:58 2008" version="" metaguid="{0A264B93-2EFA-454E-89D7-C18CC4D60CA5}" metaversion="" metaname="MetaGME">
 	<name>UML</name>
 	<comment>Descent into the maelstrom!</comment>
 	<author>Jonathan M. Sprinkle</author>
@@ -1278,7 +1278,7 @@
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>456,314</value>
+							<value>457,308</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1344,7 +1344,7 @@
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>1119,371</value>
+							<value>1189,357</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -1368,7 +1368,7 @@
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>799,40</value>
+							<value>811,28</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1464,7 +1464,7 @@
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>1056,511</value>
+							<value>1182,462</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -1506,19 +1506,19 @@
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>137,151</value>
+							<value>851,263</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>851,368</value>
+							<value>851,333</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>851,368</value>
+							<value>851,333</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1533,7 +1533,7 @@
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>489,342</value>
+							<value>531,580</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -1614,7 +1614,7 @@
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>825,202</value>
+							<value>650,188</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -1698,7 +1698,7 @@
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>34,308</value>
+							<value>13,420</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -1752,7 +1752,7 @@
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>392,231</value>
+							<value>378,217</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -1776,7 +1776,7 @@
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>99,256</value>
+							<value>98,252</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1875,13 +1875,13 @@
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>391,489</value>
+							<value>69,20</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>398,489</value>
+							<value>384,489</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -1983,7 +1983,7 @@
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>505,209</value>
+							<value>508,203</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -1995,7 +1995,7 @@
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>505,209</value>
+							<value>508,203</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2063,7 +2063,7 @@ dName=dstClassBase</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>398,566</value>
+							<value>398,636</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -2102,7 +2102,7 @@ associates -&gt; iterate( fco : gme::FCO ; ctxs = Set{} | ctxs.union( fco.allDes
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>132,566</value>
+							<value>132,636</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -2180,7 +2180,7 @@ associates -&gt; iterate( fco : gme::FCO ; ctxs = Set{} | ctxs.union( fco.allDes
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>825,279</value>
+							<value>1056,13</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -2261,7 +2261,7 @@ associates -&gt; iterate( fco : gme::FCO ; ctxs = Set{} | ctxs.union( fco.allDes
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>27,482</value>
+							<value>391,524</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -2432,13 +2432,13 @@ associates -&gt; iterate( fco : gme::FCO ; ctxs = Set{} | ctxs.union( fco.allDes
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>97,426</value>
+							<value>398,580</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>97,426</value>
+							<value>132,433</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2552,7 +2552,7 @@ associates -&gt; iterate( fco : gme::FCO ; ctxs = Set{} | ctxs.union( fco.allDes
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>316,292</value>
+							<value>316,294</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -2657,7 +2657,7 @@ associates -&gt; iterate( fco : gme::FCO ; ctxs = Set{} | ctxs.union( fco.allDes
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>724,313</value>
+							<value>717,313</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -2789,7 +2789,7 @@ associates -&gt; iterate( fco : gme::FCO ; ctxs = Set{} | ctxs.union( fco.allDes
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>419,391</value>
+							<value>20,76</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -2891,13 +2891,13 @@ endif</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>864,322</value>
+							<value>731,364</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>764,348</value>
+							<value>745,357</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
@@ -2915,7 +2915,7 @@ endif</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>736,467</value>
+							<value>731,462</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -3038,13 +3038,13 @@ endif</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>659,11</value>
+							<value>646,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>891,329</value>
+							<value>891,294</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -3056,7 +3056,7 @@ endif</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>897,326</value>
+							<value>891,294</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -3125,7 +3125,7 @@ dName=dstParent
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>937,440</value>
+							<value>1126,125</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -3206,13 +3206,13 @@ dName=dstParent
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>776,566</value>
+							<value>1000,608</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>776,566</value>
+							<value>769,566</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -3290,13 +3290,13 @@ dName=dstParent
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>1007,266</value>
+							<value>867,371</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>925,356</value>
+							<value>923,364</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -3335,7 +3335,7 @@ dName=dstParent
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>864,252</value>
+							<value>948,252</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -3371,7 +3371,7 @@ dName=dstParent
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>41,566</value>
+							<value>41,636</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -3409,7 +3409,7 @@ card.trim() &lt;&gt; &quot;&quot; implies card.trim().match( &quot;^\*|(&quot; +
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>825,356</value>
+							<value>1112,55</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -3490,7 +3490,7 @@ card.trim() &lt;&gt; &quot;&quot; implies card.trim().match( &quot;^\*|(&quot; +
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>559,307</value>
+							<value>139,13</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -3571,7 +3571,7 @@ card.trim() &lt;&gt; &quot;&quot; implies card.trim().match( &quot;^\*|(&quot; +
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>137,165</value>
+							<value>354,410</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
@@ -3601,7 +3601,7 @@ card.trim() &lt;&gt; &quot;&quot; implies card.trim().match( &quot;^\*|(&quot; +
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>158,308</value>
+							<value>11,497</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -3646,13 +3646,13 @@ card.trim() &lt;&gt; &quot;&quot; implies card.trim().match( &quot;^\*|(&quot; +
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>762,476</value>
+							<value>713,476</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>764,482</value>
+							<value>741,476</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -3688,7 +3688,7 @@ card.trim() &lt;&gt; &quot;&quot; implies card.trim().match( &quot;^\*|(&quot; +
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>223,566</value>
+							<value>223,636</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -3725,7 +3725,7 @@ endif</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>307,377</value>
+							<value>265,524</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -3806,7 +3806,7 @@ endif</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>137,179</value>
+							<value>270,228</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
@@ -3866,7 +3866,7 @@ endif</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>225,440</value>
+							<value>228,434</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -3936,25 +3936,25 @@ dName=dstClassBase</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>680,236</value>
+							<value>684,231</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>656,301</value>
+							<value>656,308</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>652,299</value>
+							<value>656,294</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>652,299</value>
+							<value>656,308</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -4022,7 +4022,7 @@ dName=dstClassBase</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsShadowCastEnabled">
-					<value>true</value>
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsTypeShown" status="meta">
 					<value>false</value>
@@ -4040,13 +4040,13 @@ dName=dstClassBase</value>
 					<value></value>
 				</attribute>
 				<attribute kind="ShadowColor">
-					<value>0x000000</value>
+					<value></value>
 				</attribute>
 				<attribute kind="ShadowDirection">
-					<value>45</value>
+					<value></value>
 				</attribute>
 				<attribute kind="ShadowThickness">
-					<value>10</value>
+					<value></value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
@@ -4059,7 +4059,7 @@ dName=dstClassBase</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>314,566</value>
+							<value>314,636</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -4101,7 +4101,7 @@ endif</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>937,503</value>
+							<value>916,601</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -4182,7 +4182,7 @@ endif</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>937,566</value>
+							<value>818,594</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -4264,13 +4264,13 @@ st &lt;&gt; &quot;&quot; implies st.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&quot; 
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>160,377</value>
+							<value>160,524</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>160,377</value>
+							<value>97,377</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -4372,7 +4372,7 @@ st &lt;&gt; &quot;&quot; implies st.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&quot; 
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>630,357</value>
+							<value>609,371</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -4384,7 +4384,7 @@ st &lt;&gt; &quot;&quot; implies st.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&quot; 
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>582,475</value>
+							<value>581,469</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -4396,7 +4396,7 @@ st &lt;&gt; &quot;&quot; implies st.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&quot; 
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>582,475</value>
+							<value>581,469</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -4499,7 +4499,7 @@ rrName = src</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>615,566</value>
+							<value>531,384</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -4583,7 +4583,7 @@ rrName = src</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>598,441</value>
+							<value>584,511</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -4620,13 +4620,13 @@ attribute , attribute</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>293,14</value>
+							<value>300,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>295,20</value>
+							<value>300,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
@@ -4638,13 +4638,13 @@ attribute , attribute</value>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>358,83</value>
+							<value>363,77</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>358,83</value>
+							<value>363,77</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -4815,7 +4815,7 @@ attribute , attribute</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>659,41</value>
+							<value>655,35</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -4880,7 +4880,7 @@ attribute , attribute</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsShadowCastEnabled">
-					<value>true</value>
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsTypeInfoShown" status="meta">
 					<value>true</value>
@@ -4901,13 +4901,13 @@ attribute , attribute</value>
 					<value></value>
 				</attribute>
 				<attribute kind="ShadowColor">
-					<value>0x000000</value>
+					<value></value>
 				</attribute>
 				<attribute kind="ShadowDirection">
-					<value>45</value>
+					<value></value>
 				</attribute>
 				<attribute kind="ShadowThickness">
-					<value>10</value>
+					<value></value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
@@ -4920,7 +4920,7 @@ attribute , attribute</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>958,55</value>
+							<value>1357,244</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -5001,19 +5001,19 @@ attribute , attribute</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>808,126</value>
+							<value>794,126</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>814,128</value>
+							<value>794,126</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>822,126</value>
+							<value>815,126</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -5025,7 +5025,7 @@ attribute , attribute</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>814,128</value>
+							<value>815,126</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -5124,7 +5124,7 @@ attribute , attribute</value>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>1049,132</value>
+							<value>1049,118</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -5205,7 +5205,7 @@ attribute , attribute</value>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>1042,188</value>
+							<value>1049,188</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -5280,7 +5280,7 @@ attribute , attribute</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>1231,483</value>
+							<value>1350,371</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" status="undefined">
@@ -5322,13 +5322,13 @@ attribute , attribute</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>975,371</value>
+							<value>1024,392</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>911,445</value>
+							<value>912,455</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
@@ -5346,7 +5346,7 @@ attribute , attribute</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>78,53</value>
+							<value>72,49</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -5578,6 +5578,9 @@ attribute , attribute</value>
 			</connection>
 			<connection id="id-0068-0000001d" kind="SourceToConnector" role="SourceToConnector" guid="{717a0f1c-93f9-4d88-8fba-8a481d8f2798}" relid="0x1b">
 				<name>SourceToConnector</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>s</value>
+				</regnode>
 				<attribute kind="Cardinality" status="meta">
 					<value>0..*</value>
 				</attribute>
@@ -5645,6 +5648,9 @@ attribute , attribute</value>
 			</connection>
 			<connection id="id-0068-00000025" kind="ConnectorToDestination" role="ConnectorToDestination" guid="{a4745197-2816-41b4-8b4f-b2bd69ea692c}" relid="0x10">
 				<name>ConnectorToDestination</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>N</value>
+				</regnode>
 				<attribute kind="Cardinality" status="meta">
 					<value>0..*</value>
 				</attribute>
@@ -5881,8 +5887,8 @@ attribute , attribute</value>
 				<attribute kind="Rolename" status="meta">
 					<value></value>
 				</attribute>
-				<connpoint role="dst" target="id-0066-00000034"/>
 				<connpoint role="src" target="id-0066-00000034"/>
+				<connpoint role="dst" target="id-0066-00000034"/>
 			</connection>
 		</model>
 		<model id="id-0065-00000003" kind="ParadigmSheet" guid="{962f7656-ff1e-4a55-ab7d-cf4def0db7e0}" relid="0x2" childrelidcntr="0x10">
@@ -6032,7 +6038,7 @@ attribute , attribute</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>15,13</value>
+							<value>8,14</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -6659,13 +6665,13 @@ attribute , attribute</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>9,98</value>
+							<value>23,98</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>617,13</value>
+							<value>604,14</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -6683,7 +6689,7 @@ attribute , attribute</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>174,258</value>
+							<value>69,482</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -6779,31 +6785,31 @@ attribute , attribute</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>187,301</value>
+							<value>222,287</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>218,279</value>
+							<value>222,273</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>218,279</value>
+							<value>222,273</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>218,167</value>
+							<value>222,161</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>218,279</value>
+							<value>222,273</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -6921,7 +6927,7 @@ color = 0x000000</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>314,258</value>
+							<value>69,552</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -7020,7 +7026,7 @@ color = 0x000000</value>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>218,14</value>
+							<value>225,14</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
@@ -7131,13 +7137,13 @@ color = 0x000000</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>39,350</value>
+							<value>53,357</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>43,356</value>
+							<value>60,350</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
@@ -7149,13 +7155,13 @@ color = 0x000000</value>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>43,244</value>
+							<value>53,238</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>43,356</value>
+							<value>53,357</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -7222,13 +7228,13 @@ dName = dstInheritance</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>244,419</value>
+							<value>251,580</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>244,419</value>
+							<value>237,419</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -7492,7 +7498,7 @@ endif</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>361,350</value>
+							<value>361,357</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -7516,7 +7522,7 @@ endif</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>365,356</value>
+							<value>361,357</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -7729,7 +7735,7 @@ operators-&gt;iterate( op ; accu = Set{ } | accu + op.connectedFCOs( &quot;src&q
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>244,258</value>
+							<value>377,552</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -7811,7 +7817,7 @@ baseCount &lt;&gt; 0 implies baseCount = 1</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>166,462</value>
+							<value>215,462</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -8171,7 +8177,7 @@ baseCount &lt;&gt; 0 implies baseCount = 1</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>160,426</value>
+							<value>27,398</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -8277,7 +8283,7 @@ project.isCardinalityValid( self.attribute( attr ).oclAsType( ocl::String ) )</v
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>330,125</value>
+							<value>330,119</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -8367,7 +8373,7 @@ project.isCardinalityValid( self.attribute( attr ).oclAsType( ocl::String ) )</v
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>314,461</value>
+							<value>216,601</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -8542,7 +8548,7 @@ self.attribute( attr ).oclAsType( ocl::String ).trim() &lt;&gt; &quot;&quot;</va
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>80,273</value>
+							<value>73,273</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -8560,13 +8566,13 @@ self.attribute( attr ).oclAsType( ocl::String ).trim() &lt;&gt; &quot;&quot;</va
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>134,327</value>
+							<value>115,329</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>134,327</value>
+							<value>129,329</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -8645,7 +8651,7 @@ dName = dstClassBase</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>9,553</value>
+							<value>16,553</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -8657,7 +8663,7 @@ dName = dstClassBase</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>65,497</value>
+							<value>65,504</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -8669,7 +8675,7 @@ dName = dstClassBase</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>71,501</value>
+							<value>65,504</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -8745,7 +8751,7 @@ dName=dstAssociationClasses</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>470,405</value>
+							<value>461,399</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -8820,7 +8826,7 @@ dName=dstAssociationClasses</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>496,517</value>
+							<value>237,657</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -8902,19 +8908,19 @@ project.isCardinalityValid( self.attribute( attr ).oclAsType( ocl::String ) )</v
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>438,354</value>
+							<value>445,361</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>431,361</value>
+							<value>445,361</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>431,361</value>
+							<value>445,361</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -8929,7 +8935,7 @@ project.isCardinalityValid( self.attribute( attr ).oclAsType( ocl::String ) )</v
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>293,363</value>
+							<value>195,118</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -9010,13 +9016,13 @@ project.isCardinalityValid( self.attribute( attr ).oclAsType( ocl::String ) )</v
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>209,293</value>
+							<value>181,167</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>230,272</value>
+							<value>230,279</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9092,7 +9098,7 @@ dstCount &lt;&gt; 0 implies dstCount = 1</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>398,363</value>
+							<value>475,76</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -9182,7 +9188,7 @@ dstCount &lt;&gt; 0 implies dstCount = 1</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>64,489</value>
+							<value>27,483</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9221,19 +9227,19 @@ dstCount &lt;&gt; 0 implies dstCount = 1</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>242,550</value>
+							<value>242,557</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>242,550</value>
+							<value>242,557</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>242,550</value>
+							<value>242,557</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9366,7 +9372,7 @@ assocCount &lt;&gt; 0 implies assocCount = 1</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>120,412</value>
+							<value>111,406</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9405,13 +9411,13 @@ assocCount &lt;&gt; 0 implies assocCount = 1</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>566,573</value>
+							<value>265,699</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>566,573</value>
+							<value>559,573</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9496,7 +9502,7 @@ self.attribute( attr ).oclAsType( ocl::String ).trim() &lt;&gt; &quot;&quot;</va
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>288,419</value>
+							<value>279,413</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9547,7 +9553,7 @@ self.attribute( attr ).oclAsType( ocl::String ).trim() &lt;&gt; &quot;&quot;</va
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>507,287</value>
+							<value>507,294</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -9565,13 +9571,13 @@ self.attribute( attr ).oclAsType( ocl::String ).trim() &lt;&gt; &quot;&quot;</va
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>477,327</value>
+							<value>472,329</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>477,327</value>
+							<value>472,329</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9638,13 +9644,13 @@ dName = dstConnector</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>888,384</value>
+							<value>342,657</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>888,384</value>
+							<value>881,384</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9744,7 +9750,7 @@ assocCount &lt;&gt; 0 implies assocCount = 1</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>330,272</value>
+							<value>329,266</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -9756,7 +9762,7 @@ assocCount &lt;&gt; 0 implies assocCount = 1</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>330,272</value>
+							<value>329,266</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9859,13 +9865,13 @@ color = 0x000000</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>468,272</value>
+							<value>468,132</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>468,272</value>
+							<value>468,279</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9950,7 +9956,7 @@ srcCount &lt;&gt; 0 implies srcCount = 1</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>568,524</value>
+							<value>559,518</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -9989,7 +9995,7 @@ srcCount &lt;&gt; 0 implies srcCount = 1</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>27,433</value>
+							<value>13,349</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -10070,19 +10076,19 @@ srcCount &lt;&gt; 0 implies srcCount = 1</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>284,347</value>
+							<value>270,361</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>298,361</value>
+							<value>270,361</value>
 						</regnode>
 					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>298,361</value>
+							<value>270,361</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -10190,7 +10196,7 @@ srcCount &lt;&gt; 0 implies srcCount = 1</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>604,371</value>
+							<value>604,378</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -10214,7 +10220,7 @@ srcCount &lt;&gt; 0 implies srcCount = 1</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>561,426</value>
+							<value>555,427</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -10305,7 +10311,7 @@ dName = dstAssocClassBase</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>309,27</value>
+							<value>309,21</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -10398,7 +10404,7 @@ dName = dstAssocClassBase</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>306,511</value>
+							<value>313,525</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
@@ -10410,7 +10416,7 @@ dName = dstAssocClassBase</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>306,518</value>
+							<value>313,525</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -10422,7 +10428,7 @@ dName = dstAssocClassBase</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>309,517</value>
+							<value>313,525</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -10570,7 +10576,7 @@ dName = dstAssocClassBase</value>
 			<connection id="id-0068-00000058" kind="ConnectorToDestination" role="ConnectorToDestination" guid="{ebb3fc2d-88bf-4cbd-b1aa-4a6f367fb3bd}" relid="0x31">
 				<name>ConnectorToDestination</name>
 				<regnode name="autorouterPref" isopaque="yes">
-					<value>Ss</value>
+					<value>wS</value>
 				</regnode>
 				<attribute kind="Cardinality" status="meta">
 					<value>0..*</value>
@@ -10769,7 +10775,7 @@ dName = dstAssocClassBase</value>
 			<connection id="id-0068-00000072" kind="SourceToConnector" role="SourceToConnector" guid="{a4f4c4fa-96ea-44ef-afc4-fec7ed710985}" relid="0x34">
 				<name>SourceToConnector</name>
 				<regnode name="autorouterPref" isopaque="yes">
-					<value>We</value>
+					<value></value>
 				</regnode>
 				<attribute kind="Cardinality" status="meta">
 					<value>0..*</value>

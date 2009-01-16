@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{2BD8E125-B6EC-49AA-B9FB-51E96F666CF4}" cdate="Fri Dec 12 15:08:06 2008" mdate="Fri Dec 12 15:08:06 2008" version="" metaguid="{5BEDB4E3-7028-4C71-9A9B-9C2C5E7CF1D2}" metaversion="" metaname="MetaGME">
+<project guid="{30B08910-F3D0-452B-9975-F18CF7AE84A9}" cdate="Fri Dec 12 15:08:06 2008" mdate="Fri Dec 12 15:08:06 2008" version="" metaguid="{0A264B93-2EFA-454E-89D7-C18CC4D60CA5}" metaversion="" metaname="MetaGME">
 	<name>HFSM</name>
 	<comment></comment>
 	<author></author>
@@ -595,7 +595,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>446,140</value>
+							<value>446,147</value>
 						</regnode>
 					</regnode>
 					<regnode name="Constraints" isopaque="yes">
@@ -607,7 +607,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>446,140</value>
+							<value>446,147</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -669,7 +669,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsShadowCastEnabled">
-					<value>true</value>
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsTypeInfoShown" status="meta">
 					<value>true</value>
@@ -690,13 +690,13 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value></value>
 				</attribute>
 				<attribute kind="ShadowColor">
-					<value>0x0080C0</value>
+					<value></value>
 				</attribute>
 				<attribute kind="ShadowDirection">
-					<value>45</value>
+					<value></value>
 				</attribute>
 				<attribute kind="ShadowThickness">
-					<value>10</value>
+					<value></value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
@@ -704,6 +704,9 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 			</atom>
 			<connection id="id-0068-00000001" kind="ConnectorToDestination" role="ConnectorToDestination" guid="{443dfd7f-d182-499e-8be7-dc2d0f738fad}" relid="0x9">
 				<name>ConnectorToDestination</name>
+				<regnode name="autorouterPref" isopaque="yes">
+					<value>S</value>
+				</regnode>
 				<regnode name="dstStyle" isopaque="yes">
 					<value>arrow</value>
 				</regnode>
@@ -1350,7 +1353,7 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsShadowCastEnabled">
-					<value>true</value>
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsTypeShown" status="meta">
 					<value>false</value>
@@ -1368,13 +1371,13 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value></value>
 				</attribute>
 				<attribute kind="ShadowColor">
-					<value>0x000000</value>
+					<value></value>
 				</attribute>
 				<attribute kind="ShadowDirection">
-					<value>45</value>
+					<value></value>
 				</attribute>
 				<attribute kind="ShadowThickness">
-					<value>10</value>
+					<value></value>
 				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>

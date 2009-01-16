@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{7346A06B-9128-4B1B-A86D-8120074FF1D2}" cdate="Fri Dec 12 15:10:41 2008" mdate="Fri Dec 12 15:10:41 2008" version="" metaguid="{2BD8E125-B6EC-49AA-B9FB-51E96F666CF4}" metaversion="" metaname="HFSM">
+<project guid="{3D168C53-034E-49FE-9775-F806269C0F4F}" cdate="Fri Dec 12 15:10:41 2008" mdate="Fri Dec 12 15:10:41 2008" version="" metaguid="{30B08910-F3D0-452B-9975-F18CF7AE84A9}" metaversion="" metaname="HFSM">
 	<name>HFSM-Test01</name>
 	<comment></comment>
 	<author></author>
@@ -281,7 +281,7 @@
 					<regnode name="StateMachine" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>308,294</value>
+							<value>311,294</value>
 						</regnode>
 					</regnode>
 				</regnode>

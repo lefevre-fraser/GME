@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="UML" guid="{669010A8-7EE0-4E89-B5B9-35063EFC7B96}" cdate="Fri Dec 12 14:59:58 2008" mdate="Fri Dec 12 14:59:58 2008" >
+<paradigm name="UML" guid="{78C48B32-DA50-45A8-A6B3-573798BCAC91}" cdate="Fri Dec 12 14:59:58 2008" mdate="Fri Dec 12 14:59:58 2008" >
 
 	<comment>Descent into the maelstrom!</comment>
 
@@ -192,9 +192,9 @@ st <> "" implies st.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "itemShadowCast" value ="true"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
-				<regnode name = "shadowThickness" value ="10"></regnode>
+				<regnode name = "shadowThickness" value ="0"></regnode>
+				<regnode name = "shadowDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Connector" metaref = "1019" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -585,9 +585,9 @@ assocCount <> 0 implies assocCount = 1]]>
 			<regnode name = "itemResizable" value ="true"></regnode>
 			<regnode name = "gradientDirection" value ="0"></regnode>
 			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "itemShadowCast" value ="true"></regnode>
 			<regnode name = "shadowColor" value ="0x000000"></regnode>
-			<regnode name = "shadowThickness" value ="10"></regnode>
+			<regnode name = "shadowThickness" value ="0"></regnode>
+			<regnode name = "shadowDirection" value ="0"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Class"></pointeritem>
 			</pointerspec>
@@ -596,9 +596,9 @@ assocCount <> 0 implies assocCount = 1]]>
 				<regnode name = "namePosition" value ="0"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "itemShadowCast" value ="true"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
-				<regnode name = "shadowThickness" value ="10"></regnode>
+				<regnode name = "shadowThickness" value ="0"></regnode>
+				<regnode name = "shadowDirection" value ="0"></regnode>
 			<role name = "Association" metaref = "1035" kind = "Association"></role>
 			<role name = "AssociationClass" metaref = "1036" kind = "AssociationClass"></role>
 			<role name = "Base" metaref = "1037" kind = "Base"></role>

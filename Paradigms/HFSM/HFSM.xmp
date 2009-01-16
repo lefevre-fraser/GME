@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="HFSM" guid="{2BD8E125-B6EC-49AA-B9FB-51E96F666CF4}" cdate="Fri Dec 12 15:08:06 2008" mdate="Fri Dec 12 15:08:06 2008" >
+<paradigm name="HFSM" guid="{30B08910-F3D0-452B-9975-F18CF7AE84A9}" cdate="Fri Dec 12 15:08:06 2008" mdate="Fri Dec 12 15:08:06 2008" >
 
 	<comment></comment>
 
@@ -35,9 +35,9 @@
 			</constraint>
 				<regnode name = "icon" value ="event.bmp"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "itemShadowCast" value ="true"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
-				<regnode name = "shadowThickness" value ="10"></regnode>
+				<regnode name = "shadowThickness" value ="0"></regnode>
+				<regnode name = "shadowDirection" value ="0"></regnode>
 		</atom>
 		<connection name = "Sequence" metaref = "1005" >
 				<regnode name = "color" value ="0x000000"></regnode>
@@ -88,9 +88,9 @@
 				<regnode name = "icon" value ="defaultstate.bmp"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "itemShadowCast" value ="true"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
-				<regnode name = "shadowThickness" value ="10"></regnode>
+				<regnode name = "shadowThickness" value ="0"></regnode>
+				<regnode name = "shadowDirection" value ="0"></regnode>
 			<constraint name="SingleStartState" eventmask = "0x800000" depth = "1" priority = "2">
 				<![CDATA[let states = self.parts( State ) in
 states->size > 0
