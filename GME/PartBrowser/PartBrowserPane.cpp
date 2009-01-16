@@ -223,7 +223,7 @@ void CPartBrowserPane::Resize(CRect r)
 			long sizeX = 0;
 			long sizeY = 0;
 			COMTHROW((*ii).decorator->GetPreferredSize(&sizeX, &sizeY));
-			CSize size (sizeX, sizeY);
+			CSize size(sizeX, sizeY);
 
 			// calculate the row height
 			if (objColumn == 0) {
@@ -327,9 +327,6 @@ void CPartBrowserPane::SetBgColor(COLORREF bgColor)
 
 void CPartBrowserPane::ChangeAspect(int index)
 {
-	if (currentAspectIndex == index)
-		return;
-
 	currentAspectIndex = index;
 	if (currentAspectIndex < 0 || pdts.size() <= 0)
 		return;
@@ -354,7 +351,7 @@ void CPartBrowserPane::ChangeAspect(int index)
 			long sizeX = 0;
 			long sizeY = 0;
 			COMTHROW((*ii).decorator->GetPreferredSize(&sizeX, &sizeY));
-			CSize size (sizeX, sizeY);
+			CSize size(sizeX, sizeY);
 
 			if (maxSize.cx < size.cx)
 				maxSize.cx = size.cx;
