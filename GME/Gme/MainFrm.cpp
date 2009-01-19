@@ -123,6 +123,10 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_WINDOW_NEWVERTICALTABGROUP, &CMainFrame::OnWindowNewverticaltabgroup)
 	ON_COMMAND(ID_WINDOW_MOVETOPREVIOUSTABGROUP, &CMainFrame::OnWindowMovetoprevioustabgroup)
 	ON_COMMAND(ID_WINDOW_MOVETONEXTTABGROUP, &CMainFrame::OnWindowMovetonexttabgroup)
+	ON_UPDATE_COMMAND_UI(ID_WINDOW_NEWHORIZONTALTABGROUP, &CMainFrame::OnUpdateWindowNewhorizontaltabgroup)
+	ON_UPDATE_COMMAND_UI(ID_WINDOW_NEWVERTICALTABGROUP, &CMainFrame::OnUpdateWindowNewverticaltabgroup)
+	ON_UPDATE_COMMAND_UI(ID_WINDOW_MOVETOPREVIOUSTABGROUP, &CMainFrame::OnUpdateWindowMovetoprevioustabgroup)
+	ON_UPDATE_COMMAND_UI(ID_WINDOW_MOVETONEXTTABGROUP, &CMainFrame::OnUpdateWindowMovetonexttabgroup)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -444,7 +448,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CDockingManager::SetDockingMode(DT_SMART);
 
 	// enable Visual Studio 2005 style docking window auto-hide behavior
-	EnableAutoHidePanes(CBRS_ALIGN_ANY);
+//	EnableAutoHidePanes(CBRS_ALIGN_ANY);
 
 
 
@@ -1395,7 +1399,57 @@ void CMainFrame::OnWindowMovetonexttabgroup()
 	MDITabMoveToNextGroup();
 }
 
+void CMainFrame::OnUpdateWindowNewhorizontaltabgroup(CCmdUI* pCmdUI)
+{
+	DWORD dwAllowedItems = GetMDITabsContextMenuAllowedItems();
+	if ((dwAllowedItems & AFX_MDI_CREATE_HORZ_GROUP) == 0)
+	{
+		pCmdUI->Enable(FALSE);
+	}
+	else
+	{
+		pCmdUI->Enable(TRUE);
+	}
+}
 
+void CMainFrame::OnUpdateWindowNewverticaltabgroup(CCmdUI* pCmdUI)
+{
+	DWORD dwAllowedItems = GetMDITabsContextMenuAllowedItems();
+	if ((dwAllowedItems & AFX_MDI_CREATE_VERT_GROUP) == 0)
+	{
+		pCmdUI->Enable(FALSE);
+	}
+	else
+	{
+		pCmdUI->Enable(TRUE);
+	}
+}
+
+void CMainFrame::OnUpdateWindowMovetoprevioustabgroup(CCmdUI* pCmdUI)
+{
+	DWORD dwAllowedItems = GetMDITabsContextMenuAllowedItems();
+	if ((dwAllowedItems & AFX_MDI_CAN_MOVE_PREV) == 0)
+	{
+		pCmdUI->Enable(FALSE);
+	}
+	else
+	{
+		pCmdUI->Enable(TRUE);
+	}
+}
+
+void CMainFrame::OnUpdateWindowMovetonexttabgroup(CCmdUI* pCmdUI)
+{
+	DWORD dwAllowedItems = GetMDITabsContextMenuAllowedItems();
+	if ((dwAllowedItems & AFX_MDI_CAN_MOVE_NEXT) == 0)
+	{
+		pCmdUI->Enable(FALSE);
+	}
+	else
+	{
+		pCmdUI->Enable(TRUE);
+	}
+}
 
 void CMainFrame::ShowNavigationAndModeToolbars(bool isVisible)
 {

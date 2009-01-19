@@ -2180,6 +2180,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\ToolbarComponents.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\ToolbarComponents24.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\res\ToolbarMain.bmp"
 				>
 			</File>
@@ -2188,11 +2196,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\ToolbarMode.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\ToolbarMode24.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\ToolbarModeling.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\ToolbarModeling24.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\res\ToolbarNavig.bmp"
 				>
 			</File>
 			<File
+				RelativePath=".\res\ToolbarNavig24.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\res\ToolbarWins.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\ToolbarWins24.bmp"
 				>
 			</File>
 			<File

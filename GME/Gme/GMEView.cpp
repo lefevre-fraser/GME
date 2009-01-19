@@ -385,7 +385,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_EDIT_SELECTALL, OnEditSelectall)
 	ON_UPDATE_COMMAND_UI(ID_FILE_CHECK, OnUpdateFileCheck)
 	ON_UPDATE_COMMAND_UI(ID_FILE_CHECKSEL, OnUpdateFileCheckSelected)
-	ON_UPDATE_COMMAND_UI(ID_FILE_CLOSE, OnUpdateFileClose)
+	ON_UPDATE_COMMAND_UI(ID_FILE_SETTINGS, OnUpdateFileSettings)
 	ON_COMMAND(ID_EDIT_PASTESPECIAL_ASINSTANCE, OnEditPastespecialAsinstance)
 	ON_COMMAND(ID_EDIT_PASTESPECIAL_ASREFERENCE, OnEditPastespecialAsreference)
 	ON_COMMAND(ID_EDIT_PASTESPECIAL_ASSUBTYPE, OnEditPastespecialAssubtype)
@@ -552,6 +552,7 @@ CGMEView::CGMEView()
 	contextPort						= 0;
 
 	tmpConnectMode					= false;
+	ClearSupressConnectionCheckAlert();
 	ClearConnSpecs();
 }
 
@@ -7029,8 +7030,6 @@ void CGMEView::OnUpdateCntxShowbasetype(CCmdUI* pCmdUI)
 void CGMEView::OnUpdateFileCheck(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(theApp.mgaConstMgr != NULL);
-	// TODO: Add your command update UI handler code here
-
 }
 
 void CGMEView::OnUpdateFileCheckSelected(CCmdUI* pCmdUI)
@@ -7464,9 +7463,10 @@ void CGMEView::OnEditSelectall()
 }
 
 
-void CGMEView::OnUpdateFileClose(CCmdUI* pCmdUI)
-// we use File/Close Model, because the dynamic menus are always used together with this one.
+void CGMEView::OnUpdateFileSettings(CCmdUI* pCmdUI)
 {
+	// This is an update message for Tools/Options menu
+	// This triggers the refresh of plugins/interpreters menus
 	theApp.UpdateDynMenus(pCmdUI->m_pMenu);
 }
 

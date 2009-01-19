@@ -39,6 +39,7 @@ private:
 	POSITION		m_prnpos;
 	unsigned int	m_lastPrnPage;
 	unsigned long	m_findNextAlreadyAchieved;
+	bool			m_supressConnectionCheckAlert;
 
 	void			SetZoomPoint(int curzoom, CPoint point);
 	bool			GetNamePositionVal(CComPtr<IMgaFCO>& ccpMgaFCO, int *valRet);
@@ -293,6 +294,9 @@ public:
 	void					RunComponent(CString compname);
 	void					SetEditCursor(void);
 	void					CancelDecoratorOperation(bool notify = true);
+	bool					ShouldSupressConnectionCheckAlert(void) const { return m_supressConnectionCheckAlert; };
+	void					ClearSupressConnectionCheckAlert(void) { m_supressConnectionCheckAlert = false; };
+	void					SupressConnectionCheckAlert(void) { m_supressConnectionCheckAlert = true; };
 
 	virtual int				OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
 
@@ -438,7 +442,7 @@ protected:
 	afx_msg void OnEditSelectall();
 	afx_msg void OnUpdateFileCheck(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateFileCheckSelected(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateFileClose(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateFileSettings(CCmdUI* pCmdUI);
 	afx_msg void OnEditPastespecialAsinstance();
 	afx_msg void OnEditPastespecialAsreference();
 	afx_msg void OnEditPastespecialAssubtype();

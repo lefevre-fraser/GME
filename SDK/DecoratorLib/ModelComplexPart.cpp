@@ -1148,7 +1148,7 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 	if (m_pBitmap->getName() != createResString(IDB_MODEL) && TypeableBitmapPart::m_bActive) {
 		TypeableBitmapPart::DrawBackground(pDC, gdip);
 	} else {
-		int iDepth = (m_bReferenced) ? 2 : ((m_iTypeInfo == 3) ? 4 : 7);
+		int iDepth = (m_bReferenced) ? 2 : ((m_iTypeInfo == 3) ? 4 : 8);
 		getFacilities().DrawBox(gdip, cRect, (!m_bActive) ? COLOR_LIGHTGRAY : (m_bOverlay) ? m_crOverlay : COLOR_GRAY, iDepth);
 		CRect cRect2 = cRect;
 		cRect2.InflateRect(1, 1);

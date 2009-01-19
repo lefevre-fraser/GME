@@ -47,7 +47,7 @@ void AtomBitmapPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 		TypeableBitmapPart::DrawBackground(pDC, gdip);
 	} else {
 		CRect cRect = GetBoxLocation(false);
-		int iDepth = (m_bReferenced) ? 2 : 7;
+		int iDepth = (m_bReferenced) ? 2 : 8;
 		getFacilities().DrawBox(gdip, cRect, COLOR_LIGHTGRAY, iDepth);
 		getFacilities().DrawRect(gdip, cRect, COLOR_GRAY);
 		cRect.DeflateRect(iDepth, iDepth);

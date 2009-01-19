@@ -933,36 +933,96 @@ void CGMEApp::UpdateComponentLists(bool restart_addons) {
 		UpdateComponentToolbar();
 }
 
-void CGMEApp::UpdateDynMenus(CMenu *filemenu)   {
-	if(!dynmenus_need_refresh) return;
-	ASSERT(filemenu);
-	for(UINT idx = 0; idx < filemenu->GetMenuItemCount(); idx++) {
-		CString label;
-		filemenu->GetMenuString(idx,label,MF_BYPOSITION);
-		if(!label.CompareNoCase("R&un Plug-In")) {
-			filemenu->DeleteMenu(idx,MF_BYPOSITION);
-			CMenu pluginmenu;
-			pluginmenu.CreatePopupMenu();
-			for(int i = 0; i < plugins.GetSize(); ++i)	{
-				pluginmenu.AppendMenu(MF_ENABLED, ID_FILE_RUNPLUGIN1 + i,pluginTooltips[i]);
-			}
-			filemenu->InsertMenu(idx,
-						plugins.GetSize() ? MF_BYPOSITION|MF_POPUP|MF_ENABLED: MF_BYPOSITION|MF_POPUP|MF_GRAYED,
-						(UINT)pluginmenu.Detach(),label);
+void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
+{
+	CString runPluginLabel = "R&un Plug-In";
+	CString runInterpreterLabel = "Run In&terpreter";
+	CString label;
+	// [ Begin workaround
+	// If you just go left to the Window menu next to the Tools menu, and back to the Tools menu (so not even abandoming the menubar)
+	// the original menu (without added intepreters and plugins) is switched back.
+	// To workaround this we check always if the original plugin and interpreter placeholder menus are present,
+	// because if they are present we have to populate the interpreters plugins again.
+	// Step 1: Get tools menu if we got NULL menu
+	if (toolmenu == NULL) {
+		CMenu* mainMenu = CMainFrame::theInstance->GetMenu();
+		if (mainMenu == NULL || mainMenu->m_hMenu == NULL) {
+			HMENU mainHMenu = CMainFrame::theInstance->GetMenuBar()->GetHMenu();
+			mainMenu = CMenu::FromHandle(mainHMenu);
 		}
-		if(!label.CompareNoCase("Run In&terpreter")) {
-			filemenu->DeleteMenu(idx,MF_BYPOSITION);
-			CMenu pluginmenu;
-			pluginmenu.CreatePopupMenu();
-			for(int i = 0; i < interpreters.GetSize(); ++i)	{
-				pluginmenu.AppendMenu(MF_ENABLED, ID_FILE_INTERPRET1 + i,interpreterTooltips[i]);
+		ASSERT(mainMenu);
+		for(UINT idxa = 0; idxa < mainMenu->GetMenuItemCount(); idxa++) {
+			CString labela;
+			mainMenu->GetMenuString(idxa, labela, MF_BYPOSITION);
+			if (!labela.CompareNoCase("&Tools")) {
+				toolmenu = mainMenu->GetSubMenu(idxa);
+				break;
 			}
-			filemenu->InsertMenu(idx,
-						interpreters.GetSize() ? MF_BYPOSITION|MF_POPUP|MF_ENABLED: MF_BYPOSITION|MF_POPUP|MF_GRAYED,
-						(UINT)pluginmenu.Detach(),label);
 		}
 	}
-	dynmenus_need_refresh = false;
+	// Step 2: Check if placeholder menus are present -> we switch trigger in that case
+	if (toolmenu != NULL) {
+		for(UINT idx = 0; idx < toolmenu->GetMenuItemCount(); idx++) {
+			toolmenu->GetMenuString(idx, label, MF_BYPOSITION);
+			UINT menuID = toolmenu->GetMenuItemID(idx);
+			if (menuID == ID_TOOLS_RUNPLUG || menuID == ID_FILE_RUNINTERPRETER) {
+				dynmenus_need_refresh = true;
+				break;
+			}
+		}
+	}
+	// End workaround ]
+	if (!dynmenus_need_refresh)
+		return;
+	ASSERT(toolmenu);
+	bool found = false;
+	for(UINT idx = 0; idx < toolmenu->GetMenuItemCount(); idx++) {
+		toolmenu->GetMenuString(idx, label, MF_BYPOSITION);
+		UINT menuID = toolmenu->GetMenuItemID(idx);
+		if (!label.CompareNoCase(runPluginLabel) ||
+			menuID == ID_TOOLS_RUNPLUG || menuID == ID_FILE_RUNPLUGIN1)
+		{
+			if (dynmenus_need_refresh) {
+				toolmenu->DeleteMenu(idx, MF_BYPOSITION);
+				if (plugins.GetSize() == 1) {
+					toolmenu->InsertMenu(idx, MF_BYPOSITION | MF_ENABLED,
+										ID_FILE_RUNPLUGIN1, pluginTooltips[0]);
+				} else {
+					CMenu pluginmenu;
+					pluginmenu.CreatePopupMenu();
+					for(int i = 0; i < plugins.GetSize(); ++i) {
+						pluginmenu.AppendMenu(MF_ENABLED, ID_FILE_RUNPLUGIN1 + i, pluginTooltips[i]);
+					}
+					toolmenu->InsertMenu(idx,
+								plugins.GetSize() ? MF_BYPOSITION | MF_POPUP | MF_ENABLED : MF_BYPOSITION | MF_POPUP | MF_GRAYED,
+								(UINT)pluginmenu.Detach(), runPluginLabel);
+				}
+				found = true;
+			}
+		} else if (!label.CompareNoCase(runInterpreterLabel) ||
+					menuID == ID_FILE_RUNINTERPRETER || menuID == ID_FILE_INTERPRET1)
+		{
+			if (dynmenus_need_refresh) {
+				toolmenu->DeleteMenu(idx, MF_BYPOSITION);
+				if (interpreters.GetSize() == 1) {
+					toolmenu->InsertMenu(idx, MF_BYPOSITION | MF_ENABLED,
+										ID_FILE_INTERPRET1, interpreterTooltips[0]);
+				} else {
+					CMenu pluginmenu;
+					pluginmenu.CreatePopupMenu();
+					for(int i = 0; i < interpreters.GetSize(); ++i) {
+						pluginmenu.AppendMenu(MF_ENABLED, ID_FILE_INTERPRET1 + i, interpreterTooltips[i]);
+					}
+					toolmenu->InsertMenu(idx,
+								interpreters.GetSize() ? MF_BYPOSITION | MF_POPUP | MF_ENABLED : MF_BYPOSITION | MF_POPUP | MF_GRAYED,
+								(UINT)pluginmenu.Detach(), runInterpreterLabel);
+				}
+				found = true;
+			}
+		}
+	}
+	if (found)
+		dynmenus_need_refresh = false;
 }
 
 

@@ -102,7 +102,7 @@ namespace DecoratorSDK
 Facilities::Facilities()
 	: m_bArePathesValid( false ), m_spProject( NULL )
 {
-	createFont( FONT_LABEL,			"Arial", FW_NORMAL,		false,	18 );
+	createFont( FONT_LABEL,			"Arial", FW_NORMAL,		false,	16 );
 	createFont( FONT_PORT,			"Arial", FW_BOLD,		false,	12 );
 	createFont( FONT_TYPE,			"Arial", FW_NORMAL,		false,	12 );
 	createFont( FONT_PORT_OUTSIDE,	"Arial", FW_BOLD,		false,	11 );
@@ -845,7 +845,7 @@ void Facilities::DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF 
 {
 	Facilities* pThis = (Facilities*) this;
 
-	COLORREF beginColor = ShiftColor( crColor, - 40 );
+	COLORREF beginColor = ShiftColor( crColor, -40 );
 	COLORREF endColor = ShiftColor( crColor, 60 );
 
 	Gdiplus::GraphicsPath edgePath;
@@ -860,31 +860,46 @@ void Facilities::DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF 
 	Gdiplus::Color surroundColor = Gdiplus::Color(GetRValue(endColor),
 												  GetGValue(endColor),
 												  GetBValue(endColor));
-	Gdiplus::Color presetColors[] = {
-									surroundColor,
-									centerColor,
-									centerColor };
-
-	float borderRatio = static_cast<float> (iDepth / (cRect.Width() / 2.0));
-	float interpolationPositions[] = {
+	Gdiplus::Color borderPresetColors[] = {
+											centerColor,
+											surroundColor,
+											surroundColor };
+	float borderRatio = static_cast<float> (iDepth / 2.0 / cRect.Width());
+	float borderInterpolationPositions[] = {
 		0.0f,
 		borderRatio,
 		1.0f };
 	Gdiplus::PathGradientBrush edgePathGradientBrush(&edgePath);
-	edgePathGradientBrush.SetInterpolationColors(presetColors, interpolationPositions, 3);
+	edgePathGradientBrush.SetInterpolationColors(borderPresetColors, borderInterpolationPositions, 3);
 	gdip->FillPath(&edgePathGradientBrush, &edgePath);
 
-	CRect cInnerRect = cRect;
-	cInnerRect.InflateRect(-iDepth, -iDepth);
-	Gdiplus::LinearGradientBrush linearGradientBrush(Gdiplus::Point(cInnerRect.left, cInnerRect.top),
-													 Gdiplus::Point(cInnerRect.left, cInnerRect.bottom),
-													 Gdiplus::Color(GetRValue(beginColor),
-																	GetGValue(beginColor),
-																	GetBValue(beginColor)),
-													 Gdiplus::Color(GetRValue(endColor),
-																	GetGValue(endColor),
-																	GetBValue(endColor)));
-	gdip->FillRectangle(&linearGradientBrush, cInnerRect.left, cInnerRect.top, cInnerRect.Width(), cInnerRect.Height());
+	CRect borderCenterRect = cRect;
+	borderCenterRect.InflateRect(-iDepth / 2, -iDepth / 2);
+	Gdiplus::GraphicsPath borderCenterPath;
+	borderCenterPath.AddLine(borderCenterRect.left,		borderCenterRect.top,		borderCenterRect.right,	borderCenterRect.top);
+	borderCenterPath.AddLine(borderCenterRect.right,	borderCenterRect.top,		borderCenterRect.right,	borderCenterRect.bottom);
+	borderCenterPath.AddLine(borderCenterRect.right,	borderCenterRect.bottom,	borderCenterRect.left,	borderCenterRect.bottom);
+	borderCenterPath.AddLine(borderCenterRect.left,		borderCenterRect.bottom,	borderCenterRect.left,	borderCenterRect.top);
+	Gdiplus::Color borderCenterPresetColors[] = {
+											surroundColor,
+											centerColor,
+											centerColor };
+	float centerRatio = static_cast<float> (iDepth / 2.0 / (cRect.Width() - 2 * iDepth));
+	float borderCenterInterpolationPositions[] = {
+		0.0f,
+		centerRatio,
+		1.0f };
+	Gdiplus::PathGradientBrush borderCenterPathGradientBrush(&borderCenterPath);
+	borderCenterPathGradientBrush.SetInterpolationColors(borderCenterPresetColors, borderCenterInterpolationPositions, 3);
+	gdip->FillPath(&borderCenterPathGradientBrush, &borderCenterPath);
+
+	CRect innerRect = cRect;
+	innerRect.InflateRect(-iDepth, -iDepth);
+	Gdiplus::LinearGradientBrush linearGradientBrush(Gdiplus::Point(innerRect.left, innerRect.top),
+													 Gdiplus::Point(innerRect.left, innerRect.bottom),
+													 surroundColor,
+													 centerColor);
+	gdip->FillRectangle(&linearGradientBrush, innerRect.left, innerRect.top, innerRect.Width(), innerRect.Height());
 }
 
 COLORREF Facilities::ShiftColor( COLORREF crColor, int iShift ) const

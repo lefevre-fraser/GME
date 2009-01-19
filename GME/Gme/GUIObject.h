@@ -380,6 +380,7 @@ public:
 	void GrayOutEndPoints();
 	void ToggleHover()										{ hovered = !hovered; }
 	void SetSelect(bool sel)								{ selected = sel; }
+	void GiveConnectionEndErroMessage(const CString& mainMsg, const CGuiPort* otherPort) const;
 	void Resolve();
 	void ReadARPreferences();
 	bool GetARPref(int dir) {return autorouterPrefs[dir];}

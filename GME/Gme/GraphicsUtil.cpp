@@ -5,7 +5,7 @@
 
 static bool fontBoldness[GME_FONT_KIND_NUM]		= { false, false, false };
 static bool fontSemiboldness[GME_FONT_KIND_NUM]	= { true, true, false };
-static int  fontSizes[GME_FONT_KIND_NUM]		= { 18, 15, 12 };
+static int  fontSizes[GME_FONT_KIND_NUM]		= { 16, 15, 12 };
 
 
 static int arrowXCoords[] = {-5, -7, -1, -7};

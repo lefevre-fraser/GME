@@ -163,6 +163,10 @@ protected:
 	afx_msg void OnWindowNewverticaltabgroup();
 	afx_msg void OnWindowMovetoprevioustabgroup();
 	afx_msg void OnWindowMovetonexttabgroup();
+	afx_msg void OnUpdateWindowNewhorizontaltabgroup(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateWindowNewverticaltabgroup(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateWindowMovetoprevioustabgroup(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateWindowMovetonexttabgroup(CCmdUI* pCmdUI);
 
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
