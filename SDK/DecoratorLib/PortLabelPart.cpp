@@ -22,7 +22,6 @@ PortLabelPart::PortLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> ev
 {
 	m_bInsideContainer	= true;
 	m_eAdjust			= L_WEST;
-	m_offsetPositions	= false;
 }
 
 PortLabelPart::~PortLabelPart()
@@ -50,55 +49,35 @@ void PortLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMet
 
 bool PortLabelPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-//	if (m_bInsideContainer)
-//		m_offsetPositions = true;
-
 	bool handled = LabelPart::MouseMoved(nFlags, point, transformHDC);
-
-	m_offsetPositions = false;
 
 	return handled;
 }
 
 bool PortLabelPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-//	if (m_bInsideContainer)
-//		m_offsetPositions = true;
-
 	bool handled = LabelPart::MouseLeftButtonDown(nFlags, point, transformHDC);
-
-	m_offsetPositions = false;
 
 	return handled;
 }
 
 bool PortLabelPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-//	if (m_bInsideContainer)
-//		m_offsetPositions = true;
-
 	bool handled = LabelPart::MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC);
-
-	m_offsetPositions = false;
 
 	return handled;
 }
 
 bool PortLabelPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-//	if (m_bInsideContainer)
-//		m_offsetPositions = true;
-
 	bool handled = LabelPart::MenuItemSelected(menuItemId, nFlags, point, transformHDC);
-
-	m_offsetPositions = false;
 
 	return handled;
 }
 
 CPoint PortLabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	int d = (m_eAdjust == L_EAST)? 1: -1;
+	int d = (m_eAdjust == L_EAST)? 1 : -1;
 	CPoint pt = LabelPart::GetTextPosition(pDC, gdip);
 	if (!m_bInsideContainer)
 		pt += CPoint(d * 7, -7);
@@ -109,8 +88,7 @@ CPoint PortLabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 CRect PortLabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
 	CRect r = LabelPart::GetTextLocation(pDC, gdip);
-//	if (m_offsetPositions)
-//		r += m_parentPart->GetParent()->GetLocation().TopLeft();
+
 	return r;
 }
 

@@ -143,7 +143,6 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 	if (m_bPortLabelInside) {
 		ASSERT(m_iLongestPortTextLength >= 0 && m_iLongestPortTextLength <= 1000);
 		ASSERT(m_iMaxPortTextLength >= 0 && m_iMaxPortTextLength <= 1000);
-		ASSERT(m_iMaxPortTextLength); // m_iMaxPortTextLength > 0 !!! since
 		long lw = min(m_iMaxPortTextLength, m_iLongestPortTextLength);
 		lWidth = (24 + 5 * (lw - 3) + GAP_LABEL + WIDTH_PORT + GAP_XMODELPORT) * 2 + GAP_PORTLABEL;
 	} else {
@@ -1151,7 +1150,7 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 		int iDepth = (m_bReferenced) ? 2 : ((m_iTypeInfo == 3) ? 4 : 8);
 		getFacilities().DrawBox(gdip, cRect, (!m_bActive) ? COLOR_LIGHTGRAY : (m_bOverlay) ? m_crOverlay : COLOR_GRAY, iDepth);
 		CRect cRect2 = cRect;
-		cRect2.InflateRect(1, 1);
+		cRect2.InflateRect(1, 1, 0, 0);
 		getFacilities().DrawRect(gdip, cRect2, (m_bActive) ? m_crBorder : COLOR_GRAY);
 		/* Commented out // inner border for Types, and Referenced models // Requested by Akos
 		if (m_iTypeInfo != 3 || m_bReferenced) {

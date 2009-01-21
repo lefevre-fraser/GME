@@ -51,12 +51,12 @@ public:
 	CRect	m_initialRect;
 	CFont*	m_font;
 	long	m_zoomVal;
-	bool	m_bMultiLine;
+	bool	m_bInflateToRight;
 
 	void	SetProperties(const CString& text, const CRect& initialRect, HWND parentWnd, CWnd* parentCWnd, CFont* font,
-						  bool isMultiLine = false)
+						  bool inflateToRight = true)
 				{ m_Text = text; m_initialRect = initialRect; m_parentHWnd = parentWnd; m_parentCWnd = parentCWnd;
-				  m_font = font; m_bMultiLine = isMultiLine; };
+				  m_font = font; m_bInflateToRight = inflateToRight; };
 	CString GetText() const { return m_Text; };
 	void	SetText(const CString& text) { m_Text = text; };
 

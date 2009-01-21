@@ -154,8 +154,8 @@ namespace DecoratorSDK
 	static const COLORREF COLOR_GRAYED_OUT		= RGB( 0xde, 0xde, 0xde );
 	static const COLORREF COLOR_TRANSPARENT		= RGB( 0xff, 0xff, 0xff );
 
-	static const int MAX_LABEL_LENGTH		= 64;
-	static const int MAX_TYPE_LENGTH		= 90;
+	static const int MAX_LABEL_LENGTH		= 128;
+	static const int MAX_TYPE_LENGTH		= 180;
 	static const int MAX_PORT_LENGTH		= 3;
 
 	static const int WIDTH_MODEL			= 113;

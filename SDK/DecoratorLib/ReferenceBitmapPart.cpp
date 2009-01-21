@@ -269,8 +269,8 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 
 		if (m_spFCO && model_ref) {
 			// these values will be get from the old PrefMap: preferences or from the m_spFCO's registry (most likely)
-			bool port_label_inside;
-			long port_label_length;
+			bool port_label_inside = true;
+			long port_label_length = MAX_PORT_LENGTH; // the default value in Preferences
 
 			PreferenceMap::iterator it;
 			it = preferences.find(PREF_PORTLABELINSIDE);
@@ -280,13 +280,10 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 				getFacilities().getPreference(m_spFCO, PREF_PORTLABELINSIDE, port_label_inside);
 
 			it = preferences.find(PREF_PORTLABELLENGTH);
-			if (it != preferences.end()) {
+			if (it != preferences.end())
 				port_label_length = it->second.uValue.lValue;
-			} else {
-				// if not found in registry use MAX_PORT_LENGTH
-				if (!getFacilities().getPreference(m_spFCO, PREF_PORTLABELLENGTH, port_label_length))
-					port_label_length = MAX_PORT_LENGTH; // the default value in Preferences
-			}
+			else // if not found in registry use MAX_PORT_LENGTH
+				getFacilities().getPreference(m_spFCO, PREF_PORTLABELLENGTH, port_label_length);
 
 			ASSERT(port_label_length >= 0 && port_label_length <= 1000);
 

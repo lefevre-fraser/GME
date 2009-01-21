@@ -31,6 +31,7 @@ AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMga
 
 	textStringVariableName		= "";	// disable
 	textColorVariableName		= "";	// disable
+	textMaxLengthVariableName	= DecoratorSDK::PREF_LABELLENGTH;
 }
 
 AnnotatorTextPart::~AnnotatorTextPart()
@@ -121,6 +122,7 @@ void AnnotatorTextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 	preferences[DecoratorSDK::PREF_ROUNDCORNERRECT]		= DecoratorSDK::PreferenceVariant(m_bRoundCornerRect);
 	preferences[DecoratorSDK::PREF_ROUNDCORNERRADIUS]	= DecoratorSDK::PreferenceVariant(m_iRoundCornerRadius);
 
+	preferences[DecoratorSDK::PREF_LABELLENGTH]			= DecoratorSDK::PreferenceVariant((long)-1);
 	preferences[DecoratorSDK::PREF_TEXTOVERRIDE]		= DecoratorSDK::PreferenceVariant(true);
 	preferences[DecoratorSDK::PREF_TEXTCOLOROVERRIDE]	= DecoratorSDK::PreferenceVariant(true);
 	preferences[DecoratorSDK::PREF_MULTILINEINPLACEEDIT]= DecoratorSDK::PreferenceVariant(true);

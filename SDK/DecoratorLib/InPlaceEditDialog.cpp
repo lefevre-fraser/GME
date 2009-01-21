@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "InPlaceEditDialog.h"
+#include "InPlaceEditMultiLineDialog.h"
 
 
 // CInPlaceEditDialog dialog
@@ -48,13 +49,17 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	CRect rectInResource = GetWindowSizeFromResource();
-	long width = (long)(m_initialRect.Width() * 1.50) + 4;
-	long height = (long)(m_initialRect.Height()) + 4;
+	long width = (long)(m_initialRect.Width() * 1.5) + 4;
+	double heightRatio = 1.0;
+	if (IsKindOf(RUNTIME_CLASS(CInPlaceEditMultiLineDialog)))
+		heightRatio = 1.5;
+	long height = (long)(m_initialRect.Height() * heightRatio) + 4;
 	CRect parentWindowRect;
 	::GetWindowRect(m_parentHWnd, &parentWindowRect);
 	m_initialRect.OffsetRect(parentWindowRect.TopLeft());
+	long left = m_bInflateToRight ? m_initialRect.left : (m_initialRect.left - (long)(m_initialRect.Width() * 0.5));
 
-	MoveWindow(m_initialRect.left, m_initialRect.top, width, height);
+	MoveWindow(left, m_initialRect.top, width, height);
 
 	CWnd* editWnd = GetDlgItem(IDC_TEXTEDIT);
 	editWnd->SetFont(m_font);

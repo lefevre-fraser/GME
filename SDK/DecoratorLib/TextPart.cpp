@@ -7,6 +7,7 @@
 
 #include "StdAfx.h"
 #include "TextPart.h"
+#include "PortLabelPart.h"
 #include "DecoratorExceptions.h"
 #include "InPlaceEditSingleLineDialog.h"
 #include "InPlaceEditMultiLineDialog.h"
@@ -279,7 +280,12 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 			inPlaceEditDlg = new CInPlaceEditMultiLineDialog(cWnd);
 		else
 			inPlaceEditDlg = new CInPlaceEditSingleLineDialog(cWnd);
-		inPlaceEditDlg->SetProperties(m_strText, editLocation, m_parentWnd, cWnd, scaled_font);
+		bool inflateToRight = true;
+		PortLabelPart* portLabelPart = dynamic_cast<PortLabelPart*> (this);
+		if (portLabelPart != NULL)
+			if (portLabelPart->GetLocationAdjust() == L_WEST)
+				inflateToRight = false;
+		inPlaceEditDlg->SetProperties(m_strText, editLocation, m_parentWnd, cWnd, scaled_font, inflateToRight);
 
 		if (inPlaceEditDlg->DoModal() == IDOK) {
 			TitleEditingStarted(editLocation);
@@ -343,6 +349,8 @@ long TextPart::GetLongest(void) const
 	long maxv = 0;
 	for (unsigned int i = 0; i < m_vecText.size(); i++) {
 		long ilen = m_vecText[i].GetLength();
+		if (m_iMaxTextLength > 0)
+			ilen = min(ilen, m_iMaxTextLength);
 		if (maxv < ilen)
 			maxv = ilen;
 	}

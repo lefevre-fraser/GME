@@ -26,7 +26,6 @@ class PortLabelPart: public LabelPart
 protected:
 	bool			m_bInsideContainer;
 	ELocation		m_eAdjust;
-	bool			m_offsetPositions;
 
 public:
 	PortLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
@@ -41,6 +40,8 @@ public:
 
 	virtual CPoint	GetTextPosition				(CDC* pDC, Gdiplus::Graphics* gdip) const;
 	virtual CRect	GetTextLocation				(CDC* pDC, Gdiplus::Graphics* gdip) const;
+
+	ELocation		GetLocationAdjust			(void) const { return m_eAdjust; };
 };
 
 }; // namespace DecoratorSDK

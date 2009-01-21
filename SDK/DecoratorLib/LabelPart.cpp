@@ -113,7 +113,7 @@ CRect LabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) const
 
 	CSize cSize(0, 0);
 	for (unsigned int i = 0 ; i < m_vecText.size(); i++) {
-		CSize tmpSize = getFacilities().MeasureText(gdip, pFont, m_vecText[i]);
+		CSize tmpSize = getFacilities().MeasureText(gdip, pFont, m_iMaxTextLength >= 0 ? m_vecText[i].Left(m_iMaxTextLength) : m_vecText[i]);
 		cSize.cy += tmpSize.cy;
 		cSize.cx = max(cSize.cx, tmpSize.cx);
 	}

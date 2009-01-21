@@ -854,51 +854,36 @@ void Facilities::DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF 
 	edgePath.AddLine(cRect.right, cRect.bottom, cRect.left, cRect.bottom);
 	edgePath.AddLine(cRect.left, cRect.bottom, cRect.left, cRect.top);
 
-	Gdiplus::Color centerColor = Gdiplus::Color(GetRValue(beginColor),
+	Gdiplus::Color darkerColor = Gdiplus::Color(GetRValue(beginColor),
 												GetGValue(beginColor),
 												GetBValue(beginColor));
-	Gdiplus::Color surroundColor = Gdiplus::Color(GetRValue(endColor),
-												  GetGValue(endColor),
-												  GetBValue(endColor));
+	Gdiplus::Color lighterColor = Gdiplus::Color(GetRValue(endColor),
+												 GetGValue(endColor),
+												 GetBValue(endColor));
 	Gdiplus::Color borderPresetColors[] = {
-											centerColor,
-											surroundColor,
-											surroundColor };
-	float borderRatio = static_cast<float> (iDepth / 2.0 / cRect.Width());
+											darkerColor,
+											lighterColor,
+											darkerColor,
+											darkerColor
+										  };
+	float borderRatio = static_cast<float> (static_cast<float> (iDepth) / cRect.Height());
+	float centerRatio = static_cast<float> (static_cast<float> (iDepth) / cRect.Height() * 2.0);
 	float borderInterpolationPositions[] = {
 		0.0f,
 		borderRatio,
-		1.0f };
-	Gdiplus::PathGradientBrush edgePathGradientBrush(&edgePath);
-	edgePathGradientBrush.SetInterpolationColors(borderPresetColors, borderInterpolationPositions, 3);
-	gdip->FillPath(&edgePathGradientBrush, &edgePath);
-
-	CRect borderCenterRect = cRect;
-	borderCenterRect.InflateRect(-iDepth / 2, -iDepth / 2);
-	Gdiplus::GraphicsPath borderCenterPath;
-	borderCenterPath.AddLine(borderCenterRect.left,		borderCenterRect.top,		borderCenterRect.right,	borderCenterRect.top);
-	borderCenterPath.AddLine(borderCenterRect.right,	borderCenterRect.top,		borderCenterRect.right,	borderCenterRect.bottom);
-	borderCenterPath.AddLine(borderCenterRect.right,	borderCenterRect.bottom,	borderCenterRect.left,	borderCenterRect.bottom);
-	borderCenterPath.AddLine(borderCenterRect.left,		borderCenterRect.bottom,	borderCenterRect.left,	borderCenterRect.top);
-	Gdiplus::Color borderCenterPresetColors[] = {
-											surroundColor,
-											centerColor,
-											centerColor };
-	float centerRatio = static_cast<float> (iDepth / 2.0 / (cRect.Width() - 2 * iDepth));
-	float borderCenterInterpolationPositions[] = {
-		0.0f,
 		centerRatio,
 		1.0f };
-	Gdiplus::PathGradientBrush borderCenterPathGradientBrush(&borderCenterPath);
-	borderCenterPathGradientBrush.SetInterpolationColors(borderCenterPresetColors, borderCenterInterpolationPositions, 3);
-	gdip->FillPath(&borderCenterPathGradientBrush, &borderCenterPath);
+	Gdiplus::PathGradientBrush edgePathGradientBrush(&edgePath);
+	edgePathGradientBrush.SetInterpolationColors(borderPresetColors, borderInterpolationPositions, 4);
+	gdip->FillPath(&edgePathGradientBrush, &edgePath);
 
 	CRect innerRect = cRect;
-	innerRect.InflateRect(-iDepth, -iDepth);
+	long vBorder = static_cast<long> (static_cast<float> (iDepth) * cRect.Width() / cRect.Height());
+	innerRect.InflateRect(-vBorder + 1, -iDepth + 1, -vBorder - 1, -iDepth - 1);
 	Gdiplus::LinearGradientBrush linearGradientBrush(Gdiplus::Point(innerRect.left, innerRect.top),
 													 Gdiplus::Point(innerRect.left, innerRect.bottom),
-													 surroundColor,
-													 centerColor);
+													 lighterColor,
+													 darkerColor);
 	gdip->FillRectangle(&linearGradientBrush, innerRect.left, innerRect.top, innerRect.Width(), innerRect.Height());
 }
 
