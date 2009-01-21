@@ -144,7 +144,18 @@ void CComponentApp::addComponents( HKEY root )
 
 BOOL CComponentApp::InitInstance()
 {
-    GUID defGUID = {0x40D16956,0x955A,0x4BB6,{0xAB,0x29,0x08,0xFC,0x0C,0xA8,0xDA,0x9B}};
+    GUID defGUID = {COCLASS_UUID_EXPLODED1,
+					COCLASS_UUID_EXPLODED2,
+					COCLASS_UUID_EXPLODED3,
+					{	COCLASS_UUID_EXPLODED4,
+						COCLASS_UUID_EXPLODED5,
+						COCLASS_UUID_EXPLODED6,
+						COCLASS_UUID_EXPLODED7,
+						COCLASS_UUID_EXPLODED8,
+						COCLASS_UUID_EXPLODED9,
+						COCLASS_UUID_EXPLODED10,
+						COCLASS_UUID_EXPLODED11}
+					};
     CJavaCompFactory * defFactory = new CJavaCompFactory(defGUID, RUNTIME_CLASS(CComponentObj), FALSE, COCLASS_PROGID);
     m_factories.push_back(defFactory);
     try
