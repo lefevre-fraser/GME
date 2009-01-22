@@ -53,7 +53,7 @@ protected:
 	bool						m_bMultiLine;
 
 public:
-	TextPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	TextPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~TextPart();
 
 // =============== resembles IMgaNewDecorator

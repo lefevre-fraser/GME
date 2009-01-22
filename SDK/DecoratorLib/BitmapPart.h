@@ -33,7 +33,7 @@ protected:
 	long			m_bRoundCornerRadius;
 
 public:
-	BitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	BitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~BitmapPart();
 
 // =============== resembles IMgaNewDecorator

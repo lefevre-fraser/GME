@@ -19,7 +19,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ModelTransparentPart::ModelTransparentPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
+ModelTransparentPart::ModelTransparentPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
 	TypeableBitmapPart			(pPart, eventSink)
 {
 }

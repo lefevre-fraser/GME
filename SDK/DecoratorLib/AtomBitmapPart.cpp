@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-AtomBitmapPart::AtomBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
+AtomBitmapPart::AtomBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
 	TypeableBitmapPart(pPart, eventSink)
 {
 }

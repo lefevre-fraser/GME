@@ -35,7 +35,7 @@ protected:
 	long						m_iLongestPortTextLength;
 
 public:
-	ModelComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	ModelComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~ModelComplexPart();
 
 // =============== resembles IMgaNewDecorator

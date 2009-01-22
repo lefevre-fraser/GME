@@ -28,7 +28,7 @@ protected:
 	std::vector<PartBase*>	m_compositeParts;
 
 public:
-	CompositePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	CompositePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~CompositePart();
 
 	virtual void			AddPart				(PartBase* part);

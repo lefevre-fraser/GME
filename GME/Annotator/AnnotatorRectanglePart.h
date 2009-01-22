@@ -28,7 +28,7 @@ protected:
 	long					m_bRoundCornerRadius;
 
 public:
-	AnnotatorRectanglePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	AnnotatorRectanglePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~AnnotatorRectanglePart();
 
 // =============== resembles IMgaNewDecorator

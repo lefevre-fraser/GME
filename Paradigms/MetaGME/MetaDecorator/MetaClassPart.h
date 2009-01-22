@@ -33,7 +33,7 @@ protected:
 	bool			m_isAbstract;
 
 public:
-	MetaClassPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, ShapeCode shape,
+	MetaClassPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, ShapeCode shape,
 				  const CString& stereotypeName);
 	virtual ~MetaClassPart();
 

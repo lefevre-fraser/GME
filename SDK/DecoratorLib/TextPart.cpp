@@ -20,7 +20,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-TextPart::TextPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
+TextPart::TextPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
 	PartBase			(pPart, eventSink),
 	resizeLogic			(NULL),
 	m_bCursorSaved		(false),
@@ -359,14 +359,20 @@ long TextPart::GetLongest(void) const
 
 CRect TextPart::GetTextLocation(void) const
 {
+	CRect txtLoc;
+
 	CDC dc;
 	dc.CreateCompatibleDC(NULL);
-	Gdiplus::Graphics gdipGraphics(dc.m_hDC);
-	gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
-	gdipGraphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-	gdipGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+	{
+		Gdiplus::Graphics gdipGraphics(dc.m_hDC);
+		gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
+		gdipGraphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+		gdipGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
 
-	return GetTextLocation(&dc, &gdipGraphics);
+		txtLoc = GetTextLocation(&dc, &gdipGraphics);
+	}
+
+	return txtLoc;
 }
 
 }; // namespace DecoratorSDK

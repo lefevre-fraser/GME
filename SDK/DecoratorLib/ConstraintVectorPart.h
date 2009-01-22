@@ -30,7 +30,7 @@ protected:
 	long					m_constraintHeight;
 
 public:
-	ConstraintVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, COLORREF fillColor,
+	ConstraintVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, COLORREF fillColor,
 						 double thicknessRatio, long constraintWidth, long constraintHeight);
 	virtual ~ConstraintVectorPart();
 

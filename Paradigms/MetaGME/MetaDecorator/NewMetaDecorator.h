@@ -29,7 +29,7 @@ protected:
 	CComPtr<IMgaNewDecoratorEvents>		m_eventSink;
 
 public:
-	NewMetaDecorator(CComPtr<IMgaNewDecoratorEvents> eventSink);
+	NewMetaDecorator(CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~NewMetaDecorator();
 
 // =============== resembles IMgaNewDecorator

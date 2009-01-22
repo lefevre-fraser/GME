@@ -18,7 +18,7 @@ namespace AnnotatorDecor {
 //
 //################################################################################################
 
-NewAnnotatorDecorator::NewAnnotatorDecorator(CComPtr<IMgaNewDecoratorEvents> eventSink):
+NewAnnotatorDecorator::NewAnnotatorDecorator(CComPtr<IMgaNewDecoratorEvents>& eventSink):
 	m_part(NULL),
 	m_eventSink(eventSink)
 {
@@ -40,6 +40,8 @@ void NewAnnotatorDecorator::Destroy()
 		delete m_part;
 		m_part = NULL;
 	}
+	if (m_eventSink)
+		m_eventSink.Release();
 }
 
 CString NewAnnotatorDecorator::GetMnemonic(void) const

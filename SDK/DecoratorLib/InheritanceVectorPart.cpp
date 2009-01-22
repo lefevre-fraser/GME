@@ -19,7 +19,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-InheritanceVectorPart::InheritanceVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink,
+InheritanceVectorPart::InheritanceVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink,
 											 long inheritanceWidth, long inheritanceHeight, InheritanceType inheritanceType):
 	TriangleVectorPart(pPart, eventSink, inheritanceWidth, inheritanceHeight),
 	m_inheritanceType(inheritanceType)

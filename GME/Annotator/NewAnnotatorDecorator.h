@@ -32,7 +32,7 @@ protected:
 	VARIANT								m_vValue;
 
 public:
-	NewAnnotatorDecorator(CComPtr<IMgaNewDecoratorEvents> eventSink);
+	NewAnnotatorDecorator(CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~NewAnnotatorDecorator();
 
 // =============== resembles IMgaNewDecorator

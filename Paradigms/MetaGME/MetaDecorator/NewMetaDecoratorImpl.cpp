@@ -255,24 +255,26 @@ STDMETHODIMP CNewMetaDecoratorImpl::Draw(HDC hdc)
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
 
+	HRESULT retVal = S_OK;
+
 	CDC dc;
 	dc.Attach(hdc);
-	Gdiplus::Graphics gdipGraphics(hdc);
-	gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
-	gdipGraphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-	gdipGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+	{
+		Gdiplus::Graphics gdipGraphics(hdc);
+		gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
+		gdipGraphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+		gdipGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
 
-	HRESULT retVal = S_OK;
-	try {
-		m_pNewDecorator->Draw(&dc, &gdipGraphics);
+		try {
+			m_pNewDecorator->Draw(&dc, &gdipGraphics);
+		}
+		catch(hresult_exception& e) {
+			retVal = e.hr;
+		}
+		catch(DecoratorException& e) {
+			retVal = e.GetHResult();
+		}
 	}
-	catch(hresult_exception& e) {
-		retVal = e.hr;
-	}
-	catch(DecoratorException& e) {
-		retVal = e.GetHResult();
-	}
-
 	dc.Detach();
 
 	return retVal;

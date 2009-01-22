@@ -24,7 +24,7 @@ namespace DecoratorSDK {
 class BoxCompositePart: public ObjectAndTextPart
 {
 public:
-	BoxCompositePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	BoxCompositePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~BoxCompositePart();
 
 // =============== resembles IMgaNewDecorator

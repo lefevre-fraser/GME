@@ -119,7 +119,7 @@ VectorCommand::~VectorCommand()
 //
 //################################################################################################
 
-VectorPart::VectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
+VectorPart::VectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
 	ResizablePart				(pPart, eventSink),
 	m_bCastShadow				(false),
 	m_iShadowThickness			(9),

@@ -28,7 +28,7 @@ protected:
 	ELocation		m_eAdjust;
 
 public:
-	PortLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	PortLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~PortLabelPart();
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

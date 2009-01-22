@@ -18,7 +18,7 @@ namespace MetaDecor {
 //
 //################################################################################################
 
-NewMetaDecorator::NewMetaDecorator(CComPtr<IMgaNewDecoratorEvents> eventSink):
+NewMetaDecorator::NewMetaDecorator(CComPtr<IMgaNewDecoratorEvents>& eventSink):
 	m_part(NULL),
 	m_eventSink(eventSink)
 {
@@ -40,6 +40,8 @@ void NewMetaDecorator::Destroy()
 		delete m_part;
 		m_part = NULL;
 	}
+	if (m_eventSink)
+		m_eventSink.Release();
 }
 
 CString NewMetaDecorator::GetMnemonic(void) const

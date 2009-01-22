@@ -27,7 +27,7 @@ class EllipseVectorPart: public VectorPart
 	long						m_ellipseHeight;
 
 public:
-	EllipseVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, long ellipseWidth, long ellipseHeight);
+	EllipseVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, long ellipseWidth, long ellipseHeight);
 	virtual ~EllipseVectorPart();
 
 // =============== resembles IMgaNewDecorator

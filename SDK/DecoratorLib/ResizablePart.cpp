@@ -18,7 +18,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ResizablePart::ResizablePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
+ResizablePart::ResizablePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
 	PartBase			(pPart, eventSink),
 	m_bReadCustomSize	(true),
 	m_bResetSize		(false),

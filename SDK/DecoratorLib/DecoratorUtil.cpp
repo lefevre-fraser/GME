@@ -189,6 +189,9 @@ Facilities::~Facilities()
 		delete it7->second;
 	for ( std::map<CString,Gdiplus::SolidBrush*>::iterator it8 = m_mapGdipBrushes.begin() ; it8 != m_mapGdipBrushes.end() ; ++it8 )
 		delete it8->second;
+
+	if (m_spProject)
+		m_spProject.Release();
 }
 
 bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )

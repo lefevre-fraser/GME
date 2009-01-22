@@ -27,7 +27,7 @@ protected:
 	CComPtr<IMgaNewDecoratorEvents>		m_eventSink;
 
 public:
-	NewBoxDecorator(CComPtr<IMgaNewDecoratorEvents> eventSink);
+	NewBoxDecorator(CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~NewBoxDecorator();
 
 // =============== resembles IMgaNewDecorator

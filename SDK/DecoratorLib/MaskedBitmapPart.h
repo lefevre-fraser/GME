@@ -29,7 +29,7 @@ protected:
 	COLORREF	m_crGrayedOut;
 
 public:
-	MaskedBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink, long bitmapResID,
+	MaskedBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, long bitmapResID,
 					 COLORREF transparentColor, COLORREF grayedOutColor);
 	virtual ~MaskedBitmapPart();
 

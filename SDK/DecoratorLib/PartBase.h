@@ -49,7 +49,7 @@ protected:
 	bool							m_bResizable;
 
 public:
-	PartBase(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	PartBase(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
 	virtual ~PartBase();
 
 	virtual void	SetParentPart				(PartBase* pPart) { m_parentPart = pPart; };

@@ -23,7 +23,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ModelSwitchPart::ModelSwitchPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
+ModelSwitchPart::ModelSwitchPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
 	CompositePart	(pPart, eventSink)
 {
 }

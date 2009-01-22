@@ -19,7 +19,7 @@ namespace AnnotatorDecor {
 //
 //################################################################################################
 
-AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink):
+AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
 	TextPart		(pPart, eventSink),
 	m_regRoot		(NULL),
 	m_crBgColor		(AN_DEFAULT_BGCOLOR)
@@ -36,6 +36,12 @@ AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMga
 
 AnnotatorTextPart::~AnnotatorTextPart()
 {
+}
+
+void AnnotatorTextPart::Destroy(void)
+{
+	if (m_regRoot)
+		m_regRoot.Release();
 }
 
 void AnnotatorTextPart::SetParam(const CString& strName, VARIANT vValue)
