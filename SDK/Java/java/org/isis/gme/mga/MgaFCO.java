@@ -316,7 +316,15 @@ public class MgaFCO extends MgaObject
      
     public float getFloatAttrByName( String name )
     {
-        return ((Float)get("FloatAttrByName", name)).floatValue();
+    	Object comVal = get("FloatAttrByName", name);
+    	if (comVal instanceof Float) {
+			return ((Float)comVal).floatValue();
+			
+		}else if (comVal instanceof Double) {
+			return ((Double)comVal).floatValue();
+			
+		}
+       throw new ClassCastException("Cannot cast " + comVal.getClass() + "to " + Float.class);
     }
      
     public void setFloatAttrByName( String name, float val )
@@ -535,3 +543,4 @@ public class MgaFCO extends MgaObject
         return new MgaFCO((Dispatch)get("RootFCO"));
     }
 }
+

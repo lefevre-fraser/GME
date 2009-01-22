@@ -41,6 +41,7 @@
 // for this paradigm. Separate the names of paradigms by commas.
 #define PARADIGM_INDEPENDENT
 
+#define GME_BASE ../../../../GME
 
 #define BON_ICON_SUPPORT
 

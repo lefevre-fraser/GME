@@ -18,48 +18,47 @@
  * ON AN "AS IS" BASIS, AND THE VANDERBILT UNIVERSITY HAS NO OBLIGATION TO
  * PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  *
- * Author: Gyorgy Balogh
- * Date last modified: 10/23/03
+ * Author: Andras Nadas
+ * Date last modified: 09/19/07
  */
-
 package org.isis.gme.mga;
 
-import org.isis.jaut.Dispatch;
+import org.isis.jaut.*;
 
-/**
- * @author bogyom
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
- */
-public class MgaFolders extends Dispatch 
-{
-	public MgaFolders( Dispatch d )
-	{
-		attach( d );
-		changeInterface( "{c59c2210-c1fd-11d3-9ad2-00aa00b6fe26}" );
-	}
+public class MgaClient extends Dispatch {
+
 	
-	public int getCount()
-	{
-		return ((Integer)get( "Count" )).intValue();
-	}
-		
-	public MgaFolder getItem( int index )
-	{
-		return new MgaFolder( (Dispatch)get( "Item", new Integer(index+1) ) );
-	}
-
-    public MgaFolder[] getAll()
+    // this is temporal, should go to another class (factory)
+    public static MgaClient createInstance()
     {
-        int       count = getCount();
-        MgaFolder[]  all   = new MgaFolder[count];
-
-        for( int i=0; i<count; i++ )
-            all[i] = getItem(i);
-        return all;
+    	MgaClient client = new MgaClient();
+    	client.attachNewInstance( "Mga.MgaClient", Dispatch.CLSCTX_INPROC_SERVER );
+        return client;
     }
-	
+    
+    public MgaClient()
+    {
+    }
+    
+    public MgaClient( Dispatch d )
+    {
+        attach( d );
+        changeInterface( "{F07EE1A2-2D53-449b-A2DA-45A1A9110E53}" );
+    }
+    
+    public String getName()
+    {
+        return get( "Name" ).toString();
+    }
+    
+    public Dispatch getOLEServer()
+    {
+        return (Dispatch)get( "OLEServer" );
+    }
+    
+    public MgaProject getProject()
+    {
+        return new MgaProject((Dispatch)get( "Project" ));
+    }
+   
 }

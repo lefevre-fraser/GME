@@ -42,7 +42,13 @@ void RawComponent::loadJavaVM()
     RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", 0, KEY_EXECUTE, &regkey);
     type = REG_SZ;
     bufSize = 2000;
-    RegQueryValueEx(regkey, "JavaClassPath", NULL, &type, (LPBYTE)classPath, &bufSize );
+	if(RegQueryValueEx(regkey, "JavaClassPath", NULL, &type, (LPBYTE)classPath, &bufSize ) != ERROR_SUCCESS){
+		AfxMessageBox("Cannot find JavaClassPath in registry under HKLM\\SOFTWARE\\GME");
+        unloadJavaVM();
+		//throw hresult_exception(E_FAIL);
+		throw regkey;
+	}
+
     RegCloseKey(regkey);
 
     // query java memory
@@ -71,7 +77,7 @@ void RawComponent::loadJavaVM()
     {        
         AfxMessageBox("Error loading java. Cannot query jvm.dll path from registry.");
         unloadJavaVM();
-        return;
+		throw regkey;        
     }    
 
     // load jvm.dll
@@ -80,7 +86,7 @@ void RawComponent::loadJavaVM()
     {
         AfxMessageBox("Error loading java. Cannot find jvm.dll.");
         unloadJavaVM();
-        return;
+        throw regkey;  
     }
 
     // Retrieve address of functions
@@ -90,7 +96,7 @@ void RawComponent::loadJavaVM()
     {
         AfxMessageBox("Error loading java. Invalid jvm.dll.");
         unloadJavaVM();
-        return;
+        throw regkey;  
     }
 
     // find java vm or create it if not found
@@ -126,7 +132,7 @@ void RawComponent::loadJavaVM()
         sprintf(buf, "Error loading java. Cannot create java virtual machine. Error code: %d", res);
         AfxMessageBox(buf);
         unloadJavaVM();
-        return;
+        throw regkey;  
     }
 }
     
@@ -184,13 +190,29 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 
             CComponentApp * app = (CComponentApp*)AfxGetApp();
 
+			jthrowable exc;
+
             // call the java interpreter
             jclass    entryClass  = m_env->FindClass("org/isis/gme/bon/ComponentInvoker");
+			exc = m_env->ExceptionOccurred();
+			if (exc) {
+				throw exc;
+			}
+
+
             jmethodID entryMethod = m_env->GetStaticMethodID(entryClass, "invokeEx", "(Ljava/lang/String;Ljava/lang/String;IIII)V");
+			exc = m_env->ExceptionOccurred();
+			if (exc) {
+				throw exc;
+			}
+
             m_env->CallStaticVoidMethod(entryClass, entryMethod, 
                 m_env->NewStringUTF(this->m_javaClassPath.c_str()), 
                 m_env->NewStringUTF(this->m_javaClass.c_str()), project, currentobj, selectedobjs, param);
-
+			exc = m_env->ExceptionOccurred();
+			if (exc) {
+				throw exc;
+			}
             /*jclass    entryClass  = app->m_env->FindClass("org/isis/gme/bon/ComponentInvoker");
             jmethodID entryMethod = app->m_env->GetStaticMethodID(entryClass, "invokeEx", "(Ljava/lang/String;Ljava/lang/String;IIII)V");
             app->m_env->CallStaticVoidMethod(entryClass, entryMethod, 
@@ -202,6 +224,45 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 
 			COMTHROW(project->CommitTransaction());
 		}	
+		catch(jthrowable jexc){
+			char buf[200];
+			m_env->ExceptionClear();
+			try{
+				jclass    throwableClass  = m_env->FindClass("java/lang/Throwable");
+				if (throwableClass == NULL) {
+					throw; /* class not found */
+				}
+				jmethodID msgMethod = m_env->GetMethodID(throwableClass,"getMessage","()Ljava/lang/String;");
+				if (msgMethod == NULL) {
+					throw; /* method not found */
+				}
+
+				jthrowable exc;
+				jstring msg = (jstring)m_env->CallObjectMethod(jexc,msgMethod);	
+				exc = m_env->ExceptionOccurred();
+				if (exc) {
+					throw exc;
+				}
+				
+				const char *str = m_env->GetStringUTFChars(msg, 0);
+				sprintf(buf, "Java exception occured at component invokation: %s", str);;
+				m_env->ReleaseStringUTFChars(msg, str);
+				
+				
+				
+				
+				AfxMessageBox(buf);
+			}catch(...){
+				m_env->ExceptionClear();
+				AfxMessageBox("Java exception occured at component invokation, the cause is unrecoverable.");
+			}
+
+			project->AbortTransaction(); 
+
+		}
+		catch(HKEY){
+			project->AbortTransaction(); 
+		}
         catch(...) 
         {
             AfxMessageBox("Internal error while executing java interpreter.");

@@ -105,7 +105,7 @@ void CDlgRegisterJavaComp::OnOK()
         char  dllPath[200];
         HKEY  dllPAthKey = 0;
         len = 200;
-        RegOpenKeyEx(HKEY_CLASSES_ROOT, "CLSID\\{40D16956-955A-4BB6-AB29-08FC0CA8DA9B}\\InProcServer32", 0, KEY_READ, &dllPAthKey);
+        RegOpenKeyEx(HKEY_CLASSES_ROOT, "CLSID\\{C97618C3-2574-4257-A6F9-6C3F497DCCED}\\InProcServer32", 0, KEY_READ, &dllPAthKey);
         if(RegQueryValueEx(dllPAthKey, "", NULL, NULL, (unsigned char*)dllPath, &len ) != ERROR_SUCCESS)
         {
             AfxMessageBox( "Error! Could not register java component. JavaCompRunner.dll is not registered properly." );

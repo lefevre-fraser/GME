@@ -54,7 +54,7 @@
 
 #include "ComHelp.h"
 
-#include "ComponentLib.h"
+#include "ComponentLib_h.h"
 
 #include "ComponentConfig.h"
 

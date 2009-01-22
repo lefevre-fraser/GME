@@ -83,8 +83,11 @@ public final class ComponentInvoker
                 throw new IllegalArgumentException("Given MGAProject pointer is NULL");
         
             // load class
-            URL         url  = new File(classPath).toURL();                 
-            URL[]       urls = new URL[]{url};
+            String paths[] = classPath.split(System.getProperty("path.separator"));
+            URL[] urls = new URL[paths.length];
+            for( int i=0; i<paths.length; ++i )
+                urls[i] = new File(paths[i]).toURI().toURL();
+
             ClassLoader cl   = new URLClassLoader(urls);
             Class       cls  = cl.loadClass(jclass);
             

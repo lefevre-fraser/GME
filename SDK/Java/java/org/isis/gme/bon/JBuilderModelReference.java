@@ -22,7 +22,10 @@ public class JBuilderModelReference extends JBuilderReference
 	{	MgaFCOs children;
 		MgaFCO r = getIModelRef();
 		while(true)
-		{	MgaFCO rr = ((MgaReference)r).getReferred();
+		{	
+            //MgaFCO rr = ((MgaReference)r).getReferred();
+            MgaReference ref = new MgaReference(r);
+            MgaFCO rr = ref.getReferred();
 			r = rr;
 			if(r==null)	
 				break;
