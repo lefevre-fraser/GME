@@ -1667,7 +1667,7 @@ BEGIN
     IDS_EMERGENCY_XML       "Emergency event. Please, restart GME. Your current work is found in the local checkout directory."
     IDS_EMERGENCY_PROJ      "Emergency event. Your current work %1 been saved to %2.\nThe original project file has not been modified.\nWe apologize for the inconvenience."
     IDS_EMERGENCY_NOPROJ    "Emergency event. Please, restart GME."
-    IDS_CRASHDUMP_INFO      "GME is able to generate a Microsoft MiniDump report file about this particular crash issue. Developers can use this file to analyze the crash, so it can significantly improve the quality of the program. The crash dump contains call stack, CPU register dump, and other crash related information. Please click the checkbox below if you willing to generate the crash dump. A File Explorer window will open automatically after that, so you can send the recent crash dump(s) easier to the following e-mail address: gme-supp@isis.vanderbilt.edu"
+    IDS_CRASHDUMP_INFO      "GME is able to generate a Microsoft MiniDump report file about this particular crash issue. Developers can use this file to analyze the crash, so it can significantly improve the quality of the program. The crash dump contains call stack, CPU register dump, and other crash related information. Please click the checkbox below if you are willing to generate the crash dump. A File Explorer window will open automatically after that, so you can send the recent crash dump(s) easier to the following e-mail address: gme-supp@isis.vanderbilt.edu"
 END
 
 STRINGTABLE 
