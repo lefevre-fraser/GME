@@ -67,7 +67,7 @@ protected:
 	CAspectSpecTbl aspectTable;
 	CString	aspectName;
 
-	afx_msg void OnSize( UINT, int, int );
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 	// Generated message map functions
 	//{{AFX_MSG(CAspectPage)
 	virtual BOOL OnInitDialog();

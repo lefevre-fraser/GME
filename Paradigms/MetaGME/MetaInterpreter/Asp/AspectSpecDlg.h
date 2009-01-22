@@ -37,8 +37,15 @@ public:
 	CAspectPageList	aspectPages;
 	CStringList	aspectNames;
 	int	lastID;
-	int countPages;
-	
+	int	countPages;
+
+// For resizability, see: MS KB 300606: http://support.microsoft.com/kb/300606
+// "How to implement a resizable property sheet class that contains a menu bar in Visual C++ 6.0"
+protected:
+	BOOL	m_bNeedInit;
+	CRect	m_rCrt;
+	int		m_nMinCX;
+	int		m_nMinCY;
 
 // Operations
 public:
@@ -48,6 +55,7 @@ public:
 	//{{AFX_VIRTUAL(CAspectSpecDlg)
 	public:
 	virtual BOOL OnInitDialog();
+	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -55,14 +63,17 @@ public:
 	void GetEntry(int entryNum, CString &roleName, CString &kindAspect, CString &isPrimary, const void * &ptr);
 	int AddEntry(CString aspectName, CString roleName, CString  kindAspect, CString primaryAspect, const void * ptr);
 	void GetAspects(CStringList& aspects);
-	void GetAspects( int rowID, CStringList& aspects);
+	void GetAspects(int rowID, CStringList& aspects);
 	virtual ~CAspectSpecDlg();
 
 	// Generated message map functions
 protected:
-	afx_msg int OnCreate( LPCREATESTRUCT lpCreateStruct );
 	//{{AFX_MSG(CAspectSpecDlg)
 		// NOTE - the ClassWizard will add and remove member functions here.
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnGetMinMaxInfo(MINMAXINFO* MinMaxInfo);
+	afx_msg LRESULT OnTabPageSelectionChange(WPARAM wParam, LPARAM lParam);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

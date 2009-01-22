@@ -133,7 +133,7 @@ void CAspectPage::OnOK()
 	CPropertyPage::OnOK();
 }
 
-void CAspectPage::OnSize( UINT ntype, int cx, int cy)
+void CAspectPage::OnSize(UINT ntype, int cx, int cy)
 {
 	// this methods captures the size of the remaining area
 	// after the stacking tabs have been drawn, so that 
@@ -144,12 +144,10 @@ void CAspectPage::OnSize( UINT ntype, int cx, int cy)
 	// but after the tabs were drawn the it is called with a smaller
 	// cy value
 
-	CPropertyPage::OnSize( ntype, cx, cy);
-	if ( m_actHeight == 0) m_actHeight = cy;
-	
-	m_actHeight = cy<m_actHeight?cy:m_actHeight;//minimum
-	m_actWidth = cx;
+	CPropertyPage::OnSize(ntype, cx, cy);
 
+	m_actHeight = cy;
+	m_actWidth = cx;
 }
 
 void CAspectPage::calcPlace( CRect &loc)

@@ -28,8 +28,11 @@ static char THIS_FILE[] = __FILE__;
 
 CAspectSpecDlg::CAspectSpecDlg(UINT nIDCaption, CWnd* pParentWnd, UINT iSelectPage)
 	: CPropertySheet(nIDCaption, pParentWnd, iSelectPage)
-	, lastID( 0)
-	, countPages( 0)
+	, lastID(0)
+	, countPages(0)
+	, m_bNeedInit(TRUE)
+	, m_nMinCX(0)
+	, m_nMinCY(0)
 {
 	m_psh.dwFlags |= PSH_NOAPPLYNOW;
 }
@@ -48,14 +51,18 @@ CAspectSpecDlg::~CAspectSpecDlg()
 	while (pos) 
 		delete aspectPages.GetNext(pos);
 
-
 	aspectPages.RemoveAll();
-
 }
 
+// See MS KB Q143291
+// "How to resize CPropertyPages at run time in Visual C++"
+#define WM_TABPAGESELECTIONCHANGE WM_USER + 111
 
 BEGIN_MESSAGE_MAP(CAspectSpecDlg, CPropertySheet)
 	ON_WM_CREATE()
+	ON_WM_SIZE()
+	ON_WM_GETMINMAXINFO()
+	ON_MESSAGE(WM_TABPAGESELECTIONCHANGE, OnTabPageSelectionChange)
 	//{{AFX_MSG_MAP(CAspectSpecDlg)
 		// NOTE - the ClassWizard will add and remove mapping macros here.
 	//}}AFX_MSG_MAP
@@ -145,6 +152,18 @@ BOOL CAspectSpecDlg::OnInitDialog()
 	// this will call the OnInitDialog of the first PropertyPage
 	BOOL bResult = CPropertySheet::OnInitDialog();
 
+	// [ Workaround for resizable property sheets
+	// http://nibuthomas.wordpress.com/2008/03/27/making-a-property-sheet-window-resizable/
+	// the reason why it can’t be resized is because SC_SIZE menu is missing from the property sheet system menu
+	// (Press Alt and Spacebar)!
+	CMenu* pMenu = GetSystemMenu(FALSE);
+	ASSERT(pMenu);
+	// Call once more with revert flag set to true to restore original system menu
+	GetSystemMenu( TRUE );	// This reverts to original system menu 
+	// Also don't forget to change the style to resizable
+	ModifyStyle(WS_DLGFRAME, WS_OVERLAPPEDWINDOW, 0);
+	// Workaround for resizable property sheets ]
+
 	// this portion may modify the layout of tabs (the number of rows they occupy)
 	// since the tabnames may be longer then expected
 	// so the first page needs to be resized after this 
@@ -152,24 +171,48 @@ BOOL CAspectSpecDlg::OnInitDialog()
 	int count = tab->GetItemCount();
 	POSITION pos = aspectNames.GetHeadPosition();
 	for (int i = 0; i < count; i++) {
-		TC_ITEM tcItem; 
-		tcItem.mask = TCIF_TEXT; 
+		TC_ITEM tcItem;
+		tcItem.mask = TCIF_TEXT;
 		tcItem.pszText = aspectNames.GetNext(pos).GetBuffer(255);
-		tab->SetItem(i, &tcItem ); 
+		tab->SetItem(i, &tcItem);
 	}
 
 	SetActivePage(0); // activates the first page, and calls AspectPage::OnSize with the updated size (lower than the previous)
 
 	// resizing of controls on the first page
-	CAspectPage *firstpage;
+	CAspectPage* firstpage;
 	POSITION pos1 = aspectPages.GetHeadPosition();
-	if( pos1){
+	if (pos1) {
 		firstpage = aspectPages.GetNext(pos1);
 		firstpage->resizeTableToFitIn();
 	}
 
+	// Init m_nMinCX/Y
+	CRect r;
+	GetWindowRect(&r);
+	m_nMinCX = r.Width();
+	m_nMinCY = r.Height();
+	// After this point we allow resize code to kick in
+	m_bNeedInit = FALSE;
+	GetClientRect(&m_rCrt);
 
 	return bResult;
+}
+
+BOOL CAspectSpecDlg::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
+{
+	NMHDR* pnmh = (LPNMHDR) lParam;
+
+	BOOL retVal = CPropertySheet::OnNotify(wParam, lParam, pResult);
+	// the sheet resizes the page whenever it is activated
+	// so we need to resize it to what we want
+	if (TCN_SELCHANGE == pnmh->code) {
+		// user-defined message needs to be posted because page must
+		// be resized after TCN_SELCHANGE has been processed
+		PostMessage(WM_TABPAGESELECTIONCHANGE);
+	}
+
+	return retVal;
 }
 
 int CAspectSpecDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -180,8 +223,92 @@ int CAspectSpecDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// and space left for 3 items
 	// that is why we enable the ScrollingTabs in case the number of pages > 19
 	// unfortunately the length of the names is not calculated
-	EnableStackedTabs( countPages <= 19);
+	EnableStackedTabs(countPages <= 19);
 
 	// Call the base class
 	return CPropertySheet::OnCreate(lpCreateStruct);
+}
+
+// See http://support.microsoft.com/kb/300606 and other related articles on the net
+// "How to implement a resizable property sheet class that contains a menu bar in Visual C++ 6.0"
+void CAspectSpecDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CPropertySheet::OnSize(nType, cx, cy);
+
+	CRect r1;
+
+	if (m_bNeedInit)
+		return;
+
+	CTabCtrl *pTab = GetTabControl();
+	ASSERT(NULL != pTab && IsWindow(pTab->m_hWnd));
+
+	int dx = cx - m_rCrt.Width();
+	int dy = cy - m_rCrt.Height();
+	GetClientRect(&m_rCrt);
+
+	HDWP hDWP = ::BeginDeferWindowPos(5);
+
+	pTab->GetClientRect(&r1); 
+	r1.right += dx;
+	r1.bottom += dy;
+	::DeferWindowPos(hDWP, pTab->m_hWnd, NULL,
+					 0, 0, r1.Width(), r1.Height(),
+					 SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOZORDER);
+
+	// Move all buttons with the lower right sides
+	for(CWnd *pChild = GetWindow(GW_CHILD);
+		pChild != NULL;
+		pChild = pChild->GetWindow(GW_HWNDNEXT))
+	{
+		if (pChild->SendMessage(WM_GETDLGCODE) & DLGC_BUTTON)
+		{
+			pChild->GetWindowRect(&r1); ScreenToClient(&r1); 
+			r1.top += dy;
+			r1.bottom += dy;
+			r1.left+= dx;
+			r1.right += dx;
+			::DeferWindowPos(hDWP, pChild->m_hWnd, NULL,
+							 r1.left, r1.top, 0, 0,
+							 SWP_NOACTIVATE|SWP_NOSIZE|SWP_NOZORDER);
+		}
+		// Resize everything else...
+		else
+		{
+			pChild->GetClientRect(&r1);
+			r1.right += dx;
+			r1.bottom += dy;
+			::DeferWindowPos(hDWP, pChild->m_hWnd, NULL, 0, 0, r1.Width(), r1.Height(),
+							 SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOZORDER);
+		}
+
+	}
+
+	::EndDeferWindowPos(hDWP);
+
+	// resizing of controls on the first page
+	CAspectPage* firstpage;
+	POSITION pos1 = aspectPages.GetHeadPosition();
+	if (pos1) {
+		firstpage = aspectPages.GetNext(pos1);
+		firstpage->resizeTableToFitIn();
+	}
+}
+
+void CAspectSpecDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
+{
+	CPropertySheet::OnGetMinMaxInfo(lpMMI);
+	lpMMI->ptMinTrackSize.x = m_nMinCX;
+	lpMMI->ptMinTrackSize.y = m_nMinCY;
+}
+
+LRESULT CAspectSpecDlg::OnTabPageSelectionChange(WPARAM wParam, LPARAM lParam)
+{
+	// user-defined message needs to be posted because page must
+	// be resized after TCN_SELCHANGE has been processed
+	CAspectPage* page = dynamic_cast<CAspectPage*> (GetActivePage());
+	ASSERT(page);
+	page->resizeTableToFitIn();
+
+	return 0;
 }
