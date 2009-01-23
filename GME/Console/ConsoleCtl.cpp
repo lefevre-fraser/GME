@@ -152,6 +152,12 @@ CConsoleCtrl::CConsoleCtrl()
 , m_recent3("")
 , m_recent4("")
 , m_recent5("")
+, m_hIco1(NULL)
+, m_hIco2(NULL)
+, m_hIco3(NULL)
+, m_hIcou(NULL)
+, m_hIcod(NULL)
+, m_hIcor(NULL)
 {
 	InitializeIIDs(&IID_DConsole, &IID_DConsoleEvents);
 
@@ -165,6 +171,18 @@ CConsoleCtrl::CConsoleCtrl()
 CConsoleCtrl::~CConsoleCtrl()
 {
 	// TODO: Cleanup your control's instance data here.
+	if (m_hIco1)
+		::DestroyIcon(m_hIco1);
+	if (m_hIco2)
+		::DestroyIcon(m_hIco2);
+	if (m_hIco3)
+		::DestroyIcon(m_hIco3);
+	if (m_hIcou)
+		::DestroyIcon(m_hIcou);
+	if (m_hIcod)
+		::DestroyIcon(m_hIcod);
+	if (m_hIcor)
+		::DestroyIcon(m_hIcor);
 }
 
 // creates a 3d look and feel around a textbox, 
@@ -420,65 +438,47 @@ int CConsoleCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_edit.LimitText(300);
 	bool ret = m_edit.Init(this);
 
-	CBitmap bm1, bm2, bm3, bmu, bmd, bmr;
-	bm1.LoadMappedBitmap(IDB_LOADSCR);//IDB_CONSOLE);
-	bm2.LoadMappedBitmap(IDB_EXECSCR);
-	bm3.LoadMappedBitmap(IDB_CLEANCON);
-	bmu.LoadMappedBitmap(IDB_BTNUP);
-	bmd.LoadMappedBitmap(IDB_BTNDN);
-	bmr.LoadMappedBitmap(IDB_BTNRET);
-
-	CSize bm1Size, bm2Size, bm3Size, bmuSize, bmdSize, bmrSize;
-	BITMAP bmStruct;
-	if (bm1.GetBitmap(&bmStruct)) bm1Size.cx = bmStruct.bmWidth, bm1Size.cy = bmStruct.bmHeight;
-	if (bm2.GetBitmap(&bmStruct)) bm2Size.cx = bmStruct.bmWidth, bm2Size.cy = bmStruct.bmHeight;
-	if (bm3.GetBitmap(&bmStruct)) bm3Size.cx = bmStruct.bmWidth, bm3Size.cy = bmStruct.bmHeight;
-	if (bmu.GetBitmap(&bmStruct)) bmuSize.cx = bmStruct.bmWidth, bmuSize.cy = bmStruct.bmHeight;
-	if (bmd.GetBitmap(&bmStruct)) bmdSize.cx = bmStruct.bmWidth, bmdSize.cy = bmStruct.bmHeight;
-	if (bmr.GetBitmap(&bmStruct)) bmrSize.cx = bmStruct.bmWidth, bmrSize.cy = bmStruct.bmHeight;
+	m_hIco1 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_LOADSCR),	IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hIco2 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_EXECSCR),	IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hIco3 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_CLEANCON),IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hIcou = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNUP),	IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hIcod = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNDN),	IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hIcor = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNRET),	IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
 
 	rect.bottom = rect.right = 100;
-	rect.left = rect.right - bm1Size.cx;
-	rect.bottom = rect.top - bm1Size.cy;
+	rect.left = rect.right - 16;
+	rect.bottom = rect.top - 16;
 
-	m_cmdButton.Create( _T("MenuButton"), WS_CHILD|WS_VISIBLE|BS_BITMAP, rect, this, IDC_MENU_COMMAND);
-	m_cmdButton.SetBitmap(bm1);
+	m_cmdButton.Create( _T("MenuButton"), WS_CHILD|WS_VISIBLE|BS_ICON, rect, this, IDC_MENU_COMMAND);
+	m_cmdButton.SetIcon(m_hIco1);
 
-	rect.right += bm2Size.cx;
-	rect.left  += bm2Size.cx;
-	m_exeButton.Create( _T("ExecButton"), WS_CHILD/*|WS_VISIBLE*/|BS_BITMAP, rect, this, IDC_RUNSCRIPT_COMMAND);
-	m_exeButton.SetBitmap(bm2);
+	rect.right += 16;
+	rect.left  += 16;
+	m_exeButton.Create( _T("ExecButton"), WS_CHILD/*|WS_VISIBLE*/|BS_ICON, rect, this, IDC_RUNSCRIPT_COMMAND);
+	m_exeButton.SetIcon(m_hIco2);
 
-	rect.left  += bm3Size.cx;
-	rect.right += bm3Size.cx;
-	m_clrButton.Create( _T("ClearConsButton"), WS_CHILD|WS_VISIBLE|BS_BITMAP, rect, this, IDC_CLEARCONSOLE_COMMAND);
-	m_clrButton.SetBitmap(bm3);
+	rect.left  += 16;
+	rect.right += 16;
+	m_clrButton.Create( _T("ClearConsButton"), WS_CHILD|WS_VISIBLE|BS_ICON, rect, this, IDC_CLEARCONSOLE_COMMAND);
+	m_clrButton.SetIcon(m_hIco3);
 
 	CRect rec2 = rect;
 	//rec2.right = rec2.left + 40; rec2.bottom = rec2.top + 16;
 	rec2.right = rec2.left + 19;//bmuSize.cx + 3; 
 	rec2.bottom = rec2.top + 16;//bmuSize.cy + 3;
-	m_upButton.Create( _T("Prev"), WS_CHILD|WS_VISIBLE|BS_BITMAP, rec2, this, IDC_PREV_COMMAND);
-	m_upButton.SetBitmap( bmu);
+	m_upButton.Create(_T("Prev"), WS_CHILD|WS_VISIBLE|BS_ICON, rec2, this, IDC_PREV_COMMAND);
+	m_upButton.SetIcon(m_hIcou);
 
-	m_dnButton.Create( _T("Next"), WS_CHILD|WS_VISIBLE|BS_BITMAP, rec2, this, IDC_NEXT_COMMAND);
-	m_dnButton.SetBitmap( bmd);
+	m_dnButton.Create(_T("Next"), WS_CHILD|WS_VISIBLE|BS_ICON, rec2, this, IDC_NEXT_COMMAND);
+	m_dnButton.SetIcon(m_hIcod);
 
-	m_retButton.Create( _T("Return"), WS_CHILD|WS_VISIBLE|BS_BITMAP, rec2, this, IDC_RETURN_COMMAND);
-	m_retButton.SetBitmap( bmr);
-
-	bm1.Detach();
-	bm2.Detach();
-	bm3.Detach();
-	bmu.Detach();
-	bmd.Detach();
-	bmr.Detach();
+	m_retButton.Create(_T("Return"), WS_CHILD|WS_VISIBLE|BS_ICON, rec2, this, IDC_RETURN_COMMAND);
+	m_retButton.SetIcon(m_hIcor);
 
 	EnableToolTips();
 
 	return 0;
 }
-
 
 static const TCHAR* icons[] = {
 	_T("NORMAL.GIF"),

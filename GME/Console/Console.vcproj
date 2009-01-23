@@ -555,19 +555,19 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 			<File
-				RelativePath=".\res\btndn.bmp"
+				RelativePath=".\res\btndn.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\res\btnret.bmp"
+				RelativePath=".\res\btnret.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\res\btnup.bmp"
+				RelativePath=".\res\btnup.ico"
 				>
 			</File>
 			<File
-				RelativePath="res\cleancon.bmp"
+				RelativePath=".\res\cleancon.ico"
 				>
 			</File>
 			<File
@@ -587,7 +587,7 @@
 				>
 			</File>
 			<File
-				RelativePath="res\execscr.bmp"
+				RelativePath=".\res\execscr.ico"
 				>
 			</File>
 			<File
@@ -595,7 +595,7 @@
 				>
 			</File>
 			<File
-				RelativePath="res\loadscr.bmp"
+				RelativePath=".\res\loadscr.ico"
 				>
 			</File>
 			<File

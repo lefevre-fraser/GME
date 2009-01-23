@@ -29,12 +29,12 @@
 #define IDC_RETURN_COMMAND              123
 #define IDS_CONSOLE_PPG_CAPTION         200
 #define IDD_PROPPAGE_CONSOLE            200
-#define IDB_LOADSCR                     211
-#define IDB_EXECSCR                     212
-#define IDB_CLEANCON                    213
-#define IDB_BTNUP                       214
-#define IDB_BTNDN                       215
-#define IDB_BTNRET                      216
+#define IDI_LOADSCR                     211
+#define IDI_EXECSCR                     212
+#define IDI_CLEANCON                    213
+#define IDI_BTNUP                       214
+#define IDI_BTNDN                       215
+#define IDI_BTNRET                      216
 
 // Next default values for new objects
 // 

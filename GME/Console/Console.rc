@@ -101,12 +101,12 @@ IDI_ABOUTDLL            ICON                    "Console.ico"
 //
 
 IDB_CONSOLE             BITMAP                  "ConsoleCtl.bmp"
-IDB_LOADSCR             BITMAP                  "res\\loadscr.bmp"
-IDB_EXECSCR             BITMAP                  "res\\execscr.bmp"
-IDB_CLEANCON            BITMAP                  "res\\cleancon.bmp"
-IDB_BTNUP               BITMAP                  "res\\btnup.bmp"
-IDB_BTNDN               BITMAP                  "res\\btndn.bmp"
-IDB_BTNRET              BITMAP                  "res\\btnret.bmp"
+IDI_LOADSCR             ICON                    "res\\loadscr.ico"
+IDI_EXECSCR             ICON                    "res\\execscr.ico"
+IDI_CLEANCON            ICON                    "res\\cleancon.ico"
+IDI_BTNUP               ICON                    "res\\btnup.ico"
+IDI_BTNDN               ICON                    "res\\btndn.ico"
+IDI_BTNRET              ICON                    "res\\btnret.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
