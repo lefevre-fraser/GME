@@ -11,6 +11,8 @@
 #include <limits.h>
 #include <afx.h>
 
+#define BUTTON_ICON_SIZE		16
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -438,34 +440,34 @@ int CConsoleCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_edit.LimitText(300);
 	bool ret = m_edit.Init(this);
 
-	m_hIco1 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_LOADSCR),	IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hIco2 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_EXECSCR),	IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hIco3 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_CLEANCON),IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hIcou = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNUP),	IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hIcod = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNDN),	IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hIcor = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNRET),	IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hIco1 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_LOADSCR),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
+	m_hIco2 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_EXECSCR),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
+	m_hIco3 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_CLEANCON),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
+	m_hIcou = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNUP),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
+	m_hIcod = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNDN),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
+	m_hIcor = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNRET),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
 
 	rect.bottom = rect.right = 100;
-	rect.left = rect.right - 16;
-	rect.bottom = rect.top - 16;
+	rect.left = rect.right - BUTTON_ICON_SIZE;
+	rect.bottom = rect.top - BUTTON_ICON_SIZE;
 
 	m_cmdButton.Create( _T("MenuButton"), WS_CHILD|WS_VISIBLE|BS_ICON, rect, this, IDC_MENU_COMMAND);
 	m_cmdButton.SetIcon(m_hIco1);
 
-	rect.right += 16;
-	rect.left  += 16;
+	rect.right += BUTTON_ICON_SIZE;
+	rect.left  += BUTTON_ICON_SIZE;
 	m_exeButton.Create( _T("ExecButton"), WS_CHILD/*|WS_VISIBLE*/|BS_ICON, rect, this, IDC_RUNSCRIPT_COMMAND);
 	m_exeButton.SetIcon(m_hIco2);
 
-	rect.left  += 16;
-	rect.right += 16;
+	rect.left  += BUTTON_ICON_SIZE;
+	rect.right += BUTTON_ICON_SIZE;
 	m_clrButton.Create( _T("ClearConsButton"), WS_CHILD|WS_VISIBLE|BS_ICON, rect, this, IDC_CLEARCONSOLE_COMMAND);
 	m_clrButton.SetIcon(m_hIco3);
 
 	CRect rec2 = rect;
-	//rec2.right = rec2.left + 40; rec2.bottom = rec2.top + 16;
-	rec2.right = rec2.left + 19;//bmuSize.cx + 3; 
-	rec2.bottom = rec2.top + 16;//bmuSize.cy + 3;
+	//rec2.right = rec2.left + 40; rec2.bottom = rec2.top + BUTTON_ICON_SIZE;
+	rec2.right = rec2.left + BUTTON_ICON_SIZE + 3;	//bmuSize.cx + 3; 
+	rec2.bottom = rec2.top + BUTTON_ICON_SIZE;		//bmuSize.cy + 3;
 	m_upButton.Create(_T("Prev"), WS_CHILD|WS_VISIBLE|BS_ICON, rec2, this, IDC_PREV_COMMAND);
 	m_upButton.SetIcon(m_hIcou);
 
