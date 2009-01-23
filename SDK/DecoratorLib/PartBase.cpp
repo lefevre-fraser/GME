@@ -45,6 +45,7 @@ PartBase::~PartBase()
 		m_spFCO.Release();
 	if (m_spMetaFCO)
 		m_spMetaFCO.Release();
+	// TODO: destroy more COM objects???
 }
 
 void PartBase::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
@@ -74,17 +75,6 @@ void PartBase::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>&
 
 void PartBase::Destroy(void)
 {
-	if (m_eventSink)
-		m_eventSink.Release();
-	if (m_spProject)
-		m_spProject.Release();
-	if (m_spPart)
-		m_spPart.Release();
-	if (m_spFCO)
-		m_spFCO.Release();
-	if (m_spMetaFCO)
-		m_spMetaFCO.Release();
-	// TODO: destroy more COM objects???
 }
 
 CString PartBase::GetMnemonic(void) const

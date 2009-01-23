@@ -38,12 +38,6 @@ AnnotatorTextPart::~AnnotatorTextPart()
 {
 }
 
-void AnnotatorTextPart::Destroy(void)
-{
-	if (m_regRoot)
-		m_regRoot.Release();
-}
-
 void AnnotatorTextPart::SetParam(const CString& strName, VARIANT vValue)
 {
 	if (!strName.CompareNoCase(AN_PARAM_ROOTNODE)) {

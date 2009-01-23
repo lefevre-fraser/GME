@@ -46,7 +46,6 @@ public:
 
 // =============== resembles IMgaNewDecorator
 public:
-	virtual void	Destroy						(void);
 	virtual void	SetParam					(const CString& strName, VARIANT vValue);
 	virtual bool	GetParam					(const CString& strName, VARIANT* pvValue);
 	virtual CSize	GetPreferredSize			(void) const;
