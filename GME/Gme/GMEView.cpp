@@ -253,6 +253,7 @@ HCURSOR CGMEView::editCursor;
 
 bool CGMEView::derivedDrop = false;
 bool CGMEView::instanceDrop = false;
+bool CGMEView::m_bUseStretchBlt = true;
 
 IMPLEMENT_DYNCREATE(CGMEView, CScrollZoomView)
 
@@ -554,6 +555,27 @@ CGMEView::CGMEView()
 	tmpConnectMode					= false;
 	ClearSupressConnectionCheckAlert();
 	ClearConnSpecs();
+
+	// Supposed workaround for Vista black view problem: use StretchBlt instead of BitBlt
+	// Problem can arise in multi-monitor systems with NVidia cards (but who knows what other configs)
+	// If user wants to fall back to the faster BitBlt, he can force GME to use it by creating a
+	// string registry key with "0" value under the "HKCU\Software\GME\GUI\UseStretchBlt"
+	HKEY hKey;
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\GME\\GUI\\"),
+					 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
+	{
+		TCHAR szData[128];
+		DWORD dwKeyDataType;
+		DWORD dwDataBufSize = sizeof(szData)/sizeof(TCHAR);
+
+		if (RegQueryValueEx(hKey, _T("UseStretchBlt"), NULL, &dwKeyDataType,
+							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
+		{
+			UINT uUseStretchBlt = _tcstoul(szData, NULL, 10);
+			m_bUseStretchBlt = (uUseStretchBlt != 0);
+		}
+		RegCloseKey(hKey);
+	}
 }
 
 CGMEView::~CGMEView()
@@ -866,7 +888,12 @@ void CGMEView::OnDraw(CDC* pDC)
 		GetClientRect(&r);
 		onScreen->DPtoLP(&r);
 		CPoint pt = GetScrollPosition();
-		onScreen->BitBlt(pt.x-5,pt.y-5,r.Width()+10,r.Height()+10,offScreen,pt.x-5,pt.y-5,SRCCOPY);
+		// Supposed workaround for Vista black view problem: use StretchBlt instead of BitBlt
+		// Problem can arise in multi-monitor systems with NVidia cards (but who knows what other configs)
+		if (m_bUseStretchBlt)
+			onScreen->StretchBlt(pt.x - 5, pt.y - 5, r.Width() + 10, r.Height() + 10, offScreen, pt.x - 5, pt.y - 5, r.Width() + 10, r.Height() + 10, SRCCOPY);
+		else
+			onScreen->BitBlt(pt.x - 5, pt.y - 5, r.Width() + 10, r.Height() + 10, offScreen, pt.x - 5, pt.y - 5, SRCCOPY);
 		if (m_refreshpannwin)
 		{
 			m_refreshpannwin = false;
@@ -2537,8 +2564,9 @@ void CGMEView::CreateOffScreen(CDC *dc)
 		return;
 	offScreenCreated = true;
 	offScreen = new CDC;
-	offScreen->CreateCompatibleDC(dc);
-	ASSERT(GetSystemMetrics(SM_SAMEDISPLAYFORMAT));
+	BOOL success = offScreen->CreateCompatibleDC(dc);
+	ASSERT(success);
+	ASSERT(::GetSystemMetrics(SM_SAMEDISPLAYFORMAT));
 	// In multi-monitor systems a window can bigger than just one screen, monitor resolutions can be different, etc.
 	// TODO: Maybe we should calculate with SM_CXMAXTRACK,SM_CYMAXTRACK? A window can be larger than the displays!!!
 	// TODO: handle run-time resolution changes!
@@ -2547,7 +2575,8 @@ void CGMEView::CreateOffScreen(CDC *dc)
 //	int offScreenWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
 //	int offScreenHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
 	ofsbmp = new CBitmap;
-	ofsbmp->CreateCompatibleBitmap(dc,offScreenWidth,offScreenHeight);
+	success = ofsbmp->CreateCompatibleBitmap(dc,offScreenWidth,offScreenHeight);
+	ASSERT(success);
 	// HACK: what about palettes?
 	offScreen->SelectObject(ofsbmp);
 }
@@ -3116,7 +3145,7 @@ void CGMEView::MakeSureGUIDIsUniqueForSmartCopy( CComPtr<IMgaFCO>& fco)
 
 	GUID t_guid = GUID_NULL;
 	::CoCreateGuid(&t_guid);
-		
+
 	if (t_guid != GUID_NULL)
 	{
 		CString str_guid;

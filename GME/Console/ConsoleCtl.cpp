@@ -482,6 +482,7 @@ int CConsoleCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
+
 static const TCHAR* icons[] = {
 	_T("NORMAL.GIF"),
 	_T("INFO.GIF"),

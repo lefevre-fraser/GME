@@ -172,6 +172,7 @@ public:
 	CChildFrame*			frame;
 	CPendingRequestList		pendingRequests;
 	CDC*					onScreen;
+	static bool				m_bUseStretchBlt;		// Supposed workaround for Vista black view problem: use StretchBlt instead of BitBlt
 
 	CGMEDoc*				GetDocument();
 
