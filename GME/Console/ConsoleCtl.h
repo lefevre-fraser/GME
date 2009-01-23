@@ -50,6 +50,13 @@ public:
 	CString     m_recent4;
 	CString     m_recent5;
 
+	HICON		m_hIco1;
+	HICON		m_hIco2;
+	HICON		m_hIco3;
+	HICON		m_hIcou;
+	HICON		m_hIcod;
+	HICON		m_hIcor;
+
 	DECLARE_OLECREATE_EX(CConsoleCtrl)    // Class factory and guid
 	DECLARE_OLETYPELIB(CConsoleCtrl)      // GetTypeInfo
 	DECLARE_PROPPAGEIDS(CConsoleCtrl)     // Property page IDs
