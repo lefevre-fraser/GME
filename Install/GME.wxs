@@ -829,6 +829,9 @@
                         </Class>
                     </TypeLib>    
                 </File>
+                <File Id="edf.dtd" Name="edf.dtd" Source="..\GME\Parser\edf.dtd" />
+                <File Id="mga.dtd" Name="mga.dtd" Source="..\GME\Parser\mga.dtd" />
+                <File Id="mgaclosure.dtd" Name="mgaclosure.dtd" Source="..\GME\Parser\mgaclosure.dtd" />
             </Component>
         </DirectoryRef>
         
