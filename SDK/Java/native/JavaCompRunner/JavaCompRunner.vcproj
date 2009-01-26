@@ -49,7 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/SDK/BON/Common&quot;;&quot;C:\Program Files\Java\jdk1.6.0_06\include&quot;;&quot;C:\Program Files\Java\jdk1.6.0_06\include\win32&quot;;&quot;$(GME_ROOT)/GME/Common&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/SDK/BON/Common&quot;;&quot;$(JAVA_HOME)\include&quot;;&quot;$(JAVA_HOME)\include\win32&quot;;&quot;$(GME_ROOT)/GME/Common&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -133,7 +133,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/SDK/BON/Common&quot;;&quot;C:\Program Files\Java\jdk1.6.0_06\include&quot;;&quot;C:\Program Files\Java\jdk1.6.0_06\include\win32&quot;;&quot;$(GME_ROOT)/GME/Common&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(GME_ROOT)/SDK/BON/Common&quot;;&quot;$(JAVA_HOME)\include&quot;;&quot;$(JAVA_HOME)\include\win32&quot;;&quot;$(GME_ROOT)/GME/Common&quot;"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
