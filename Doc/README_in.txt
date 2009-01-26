@@ -30,6 +30,13 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r9.1.23
+--------------------------------
+  - Fixing a misspelling in the SDK/BON/Common folder name
+  - Added type library registration for the installer
+  - Minor fixes in the JavaBON framework
+  - Bugfixes in the GUI/decorator logic
+
 Release Notes of Release r9.1.12
 --------------------------------
   - Subversion backend library is updated to 1.5.5
