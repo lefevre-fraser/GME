@@ -26,7 +26,7 @@ public:
 	static CGuiMetaProject *theInstance;
 public:
 	void RegisterMetaObject(metaref_type id, CGuiMetaBase *mobj);
-	int GetNewMenuCmdID()		{ ++maxMenuCmdID; ASSERT(maxMenuCmdID < DECORATOR_CTX_MENU_MINID); return maxMenuCmdID; };
+	int GetNewMenuCmdID()		{ ASSERT(maxMenuCmdID < DECORATOR_CTX_MENU_MINID - 1); return maxMenuCmdID++; };
 	bool CmdIDInRange(int id);
 	GMECommandCode CmdType(int id,CString &cmdName);
 	bool FindCommand(int cmdId,CString &label);
