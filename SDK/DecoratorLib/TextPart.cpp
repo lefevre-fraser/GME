@@ -211,7 +211,72 @@ bool TextPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 
 bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
+	return HandleTextEditOperation(false, point, transformHDC);
+}
+
+bool TextPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
+{
+	return HandleTextEditOperation(true, point, transformHDC);
+}
+
+bool TextPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
+{
 	if (m_bActive && m_bSelected && m_bTextEditable) {
+		CRect ptRect = GetTextLocation();
+		CRect ptRectInflated = ptRect;
+		ptRectInflated.InflateRect(3, 3);
+		if (ptRectInflated.PtInRect(point)) {
+			::AppendMenu(hCtxMenu, MF_STRING | MF_ENABLED, CTX_MENU_ID_RENAME, CTX_MENU_STR_RENAME);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool TextPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
+{
+	if (menuItemId == CTX_MENU_ID_RENAME)	// simulate left click -> starting text editing action
+		return MouseLeftButtonDown(nFlags, point, transformHDC);
+
+	return false;
+}
+
+bool TextPart::OperationCanceledByGME(void)
+{
+	// destroy inplace edit window and stuff if needed
+	// can't happen currently because of Modal dialog style
+	if (m_spFCO)
+		return resizeLogic.OperationCanceledByGME();
+
+	return false;
+}
+
+long TextPart::GetLongest(void) const
+{
+	long maxv = 0;
+	for (unsigned int i = 0; i < m_vecText.size(); i++) {
+		long ilen = m_vecText[i].GetLength();
+		if (m_iMaxTextLength > 0)
+			ilen = min(ilen, m_iMaxTextLength);
+		if (maxv < ilen)
+			maxv = ilen;
+	}
+	return maxv;
+}
+
+CRect TextPart::GetTextLocation(void) const
+{
+	CRect txtLoc;
+
+	txtLoc = GetTextLocation(getFacilities().getCDC(), getFacilities().getGraphics());
+
+	return txtLoc;
+}
+
+bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, HDC transformHDC)
+{
+	if (m_bActive && (m_bSelected || isDoubleClick) && m_bTextEditable) {
 		CRect ptRect = GetTextLocation();
 		CRect ptRectInflated = ptRect;
 		ptRectInflated.InflateRect(3, 3);
@@ -309,70 +374,6 @@ bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transfo
 	}
 
 	return false;
-}
-
-bool TextPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	if (m_bActive && m_bSelected && m_bTextEditable) {
-		CRect ptRect = GetTextLocation();
-		CRect ptRectInflated = ptRect;
-		ptRectInflated.InflateRect(3, 3);
-		if (ptRectInflated.PtInRect(point)) {
-			::AppendMenu(hCtxMenu, MF_STRING | MF_ENABLED, CTX_MENU_ID_RENAME, CTX_MENU_STR_RENAME);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool TextPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	if (menuItemId == CTX_MENU_ID_RENAME)	// simulate left click -> starting text editing action
-		return MouseLeftButtonDown(nFlags, point, transformHDC);
-
-	return false;
-}
-
-bool TextPart::OperationCanceledByGME(void)
-{
-	// destroy inplace edit window and stuff if needed
-	// can't happen currently because of Modal dialog style
-	if (m_spFCO)
-		return resizeLogic.OperationCanceledByGME();
-
-	return false;
-}
-
-long TextPart::GetLongest(void) const
-{
-	long maxv = 0;
-	for (unsigned int i = 0; i < m_vecText.size(); i++) {
-		long ilen = m_vecText[i].GetLength();
-		if (m_iMaxTextLength > 0)
-			ilen = min(ilen, m_iMaxTextLength);
-		if (maxv < ilen)
-			maxv = ilen;
-	}
-	return maxv;
-}
-
-CRect TextPart::GetTextLocation(void) const
-{
-	CRect txtLoc;
-
-	CDC dc;
-	dc.CreateCompatibleDC(NULL);
-	{
-		Gdiplus::Graphics gdipGraphics(dc.m_hDC);
-		gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
-		gdipGraphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-		gdipGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-
-		txtLoc = GetTextLocation(&dc, &gdipGraphics);
-	}
-
-	return txtLoc;
 }
 
 }; // namespace DecoratorSDK

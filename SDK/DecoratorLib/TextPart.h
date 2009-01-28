@@ -68,6 +68,7 @@ public:
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 	virtual bool	MouseMoved					(UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& point, HDC transformHDC);
+	virtual bool	MouseLeftButtonDoubleClick	(UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
@@ -82,6 +83,7 @@ public:
 
 protected:
 	virtual CRect	GetTextLocation				(void) const;
+	virtual bool	HandleTextEditOperation		(bool isDoubleClick, const CPoint& point, HDC transformHDC);
 };
 
 }; // namespace DecoratorSDK
