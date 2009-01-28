@@ -848,14 +848,8 @@ void Facilities::DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF 
 {
 	Facilities* pThis = (Facilities*) this;
 
-	COLORREF beginColor = ShiftColor( crColor, -40 );
-	COLORREF endColor = ShiftColor( crColor, 60 );
-
-	Gdiplus::GraphicsPath edgePath;
-	edgePath.AddLine(cRect.left, cRect.top, cRect.right, cRect.top);
-	edgePath.AddLine(cRect.right, cRect.top, cRect.right, cRect.bottom);
-	edgePath.AddLine(cRect.right, cRect.bottom, cRect.left, cRect.bottom);
-	edgePath.AddLine(cRect.left, cRect.bottom, cRect.left, cRect.top);
+	COLORREF beginColor = ShiftColor(crColor, -40);
+	COLORREF endColor = ShiftColor(crColor, 60);
 
 	Gdiplus::Color darkerColor = Gdiplus::Color(GetRValue(beginColor),
 												GetGValue(beginColor),
@@ -863,31 +857,164 @@ void Facilities::DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF 
 	Gdiplus::Color lighterColor = Gdiplus::Color(GetRValue(endColor),
 												 GetGValue(endColor),
 												 GetBValue(endColor));
-	Gdiplus::Color borderPresetColors[] = {
-											darkerColor,
-											lighterColor,
-											darkerColor,
-											darkerColor
-										  };
-	float borderRatio = static_cast<float> (static_cast<float> (iDepth) / cRect.Height());
-	float centerRatio = static_cast<float> (static_cast<float> (iDepth) / cRect.Height() * 2.0);
-	float borderInterpolationPositions[] = {
-		0.0f,
-		borderRatio,
-		centerRatio,
-		1.0f };
-	Gdiplus::PathGradientBrush edgePathGradientBrush(&edgePath);
-	edgePathGradientBrush.SetInterpolationColors(borderPresetColors, borderInterpolationPositions, 4);
-	gdip->FillPath(&edgePathGradientBrush, &edgePath);
 
-	CRect innerRect = cRect;
-	long vBorder = static_cast<long> (static_cast<float> (iDepth) * cRect.Width() / cRect.Height());
-	innerRect.InflateRect(-vBorder + 1, -iDepth + 1, -vBorder - 1, -iDepth - 1);
-	Gdiplus::LinearGradientBrush linearGradientBrush(Gdiplus::Point(innerRect.left, innerRect.top),
-													 Gdiplus::Point(innerRect.left, innerRect.bottom),
-													 lighterColor,
-													 darkerColor);
-	gdip->FillRectangle(&linearGradientBrush, innerRect.left, innerRect.top, innerRect.Width(), innerRect.Height());
+	int width = cRect.Width();
+	int height = cRect.Height();
+	if (width > height) {
+		int h2 = height / 2;
+		CPoint leftFocus;
+		leftFocus.x = cRect.left + h2;
+		leftFocus.y = cRect.top + h2;
+		CPoint rightFocus;
+		rightFocus.x = cRect.right - h2;
+		rightFocus.y = leftFocus.y;
+
+		Gdiplus::GraphicsPath doubleTrapezPath;
+		doubleTrapezPath.AddLine(cRect.left, cRect.top, cRect.right, cRect.top);
+		doubleTrapezPath.AddLine(cRect.right, cRect.top, cRect.right, cRect.top + 1);
+		doubleTrapezPath.AddLine(cRect.right, cRect.top + 1, rightFocus.x + 1, rightFocus.y);
+		doubleTrapezPath.AddLine(rightFocus.x + 1, rightFocus.y, cRect.right, cRect.bottom - 1);
+		doubleTrapezPath.AddLine(cRect.right, cRect.bottom - 1, cRect.right, cRect.bottom);
+		doubleTrapezPath.AddLine(cRect.right, cRect.bottom, cRect.left, cRect.bottom);
+		doubleTrapezPath.AddLine(cRect.left, cRect.bottom, cRect.left, cRect.bottom - 1);
+		doubleTrapezPath.AddLine(cRect.left, cRect.bottom - 1, leftFocus.x - 1, leftFocus.y);
+		doubleTrapezPath.AddLine(leftFocus.x - 1, leftFocus.y, cRect.left, cRect.top + 1);
+		doubleTrapezPath.AddLine(cRect.left, cRect.top + 1, cRect.left, cRect.top);
+
+		float bandRatio = static_cast<float> (static_cast<float> (iDepth) / cRect.Height());
+		Gdiplus::LinearGradientBrush trapezGradientBrush(Gdiplus::Point(cRect.left, cRect.top),
+														 Gdiplus::Point(cRect.left, cRect.bottom),
+														 darkerColor,
+														 lighterColor);
+		float blendFactors[] = {
+			0.0f,
+			1.0f,
+			1.0f,
+			0.0f };
+		float blendPositions[] = {
+			0.0f,
+			bandRatio,
+			1.0f - bandRatio,
+			1.0f };
+		trapezGradientBrush.SetBlend(blendFactors, blendPositions, 4);
+		gdip->FillPath(&trapezGradientBrush, &doubleTrapezPath);
+
+		float bandRatio2 = static_cast<float> (static_cast<float> (iDepth) / h2);
+		Gdiplus::GraphicsPath leftTrianglePath;
+		leftTrianglePath.AddLine(cRect.left, cRect.top, leftFocus.x, leftFocus.y);
+		leftTrianglePath.AddLine(leftFocus.x, leftFocus.y, cRect.left, cRect.bottom);
+		leftTrianglePath.AddLine(cRect.left, cRect.bottom, cRect.left, cRect.top);
+		Gdiplus::LinearGradientBrush leftTriangleGradientBrush(Gdiplus::Point(cRect.left, leftFocus.y),
+															   Gdiplus::Point(leftFocus.x, leftFocus.y),
+															   darkerColor,
+															   lighterColor);
+		float leftBlendFactors[] = {
+			0.0f,
+			1.0f,
+			1.0f };
+		float leftBlendPositions[] = {
+			0.0f,
+			bandRatio2,
+			1.0f };
+		leftTriangleGradientBrush.SetBlend(leftBlendFactors, leftBlendPositions, 3);
+		gdip->FillPath(&leftTriangleGradientBrush, &leftTrianglePath);
+
+		Gdiplus::GraphicsPath rightTrianglePath;
+		rightTrianglePath.AddLine(cRect.right, cRect.top, cRect.right, cRect.bottom);
+		rightTrianglePath.AddLine(cRect.right, cRect.bottom, rightFocus.x, rightFocus.y);
+		rightTrianglePath.AddLine(rightFocus.x, rightFocus.y, cRect.right, cRect.top);
+		Gdiplus::LinearGradientBrush rightTriangleGradientBrush(Gdiplus::Point(rightFocus.x, rightFocus.y),
+																Gdiplus::Point(cRect.right, rightFocus.y),
+																lighterColor,
+																darkerColor);
+		float rightBlendFactors[] = {
+			0.0f,
+			0.0f,
+			1.0f };
+		float rightBlendPositions[] = {
+			0.0f,
+			1.0f - bandRatio2,
+			1.0f };
+		rightTriangleGradientBrush.SetBlend(rightBlendFactors, rightBlendPositions, 3);
+		gdip->FillPath(&rightTriangleGradientBrush, &rightTrianglePath);
+	} else {
+		int w2 = width / 2;
+		CPoint topFocus;
+		topFocus.x = cRect.left + w2;
+		topFocus.y = cRect.top + w2;
+		CPoint bottomFocus;
+		bottomFocus.x = topFocus.x;
+		bottomFocus.y = cRect.bottom - w2;
+
+		Gdiplus::GraphicsPath doubleTrapezPath;
+		doubleTrapezPath.AddLine(cRect.left, cRect.top, cRect.left + 1, cRect.top);
+		doubleTrapezPath.AddLine(cRect.left + 1, cRect.top, topFocus.x, topFocus.y - 1);
+		doubleTrapezPath.AddLine(topFocus.x, topFocus.y - 1, cRect.right - 1, cRect.top);
+		doubleTrapezPath.AddLine(cRect.right - 1, cRect.top, cRect.right, cRect.top);
+		doubleTrapezPath.AddLine(cRect.right, cRect.top, cRect.right, cRect.bottom);
+		doubleTrapezPath.AddLine(cRect.right, cRect.bottom, cRect.right - 1, cRect.bottom);
+		doubleTrapezPath.AddLine(cRect.right - 1, cRect.bottom, bottomFocus.x, bottomFocus.y + 1);
+		doubleTrapezPath.AddLine(bottomFocus.x, bottomFocus.y + 1, cRect.left + 1, cRect.bottom);
+		doubleTrapezPath.AddLine(cRect.left + 1, cRect.bottom, cRect.left, cRect.bottom);
+		doubleTrapezPath.AddLine(cRect.left, cRect.bottom, cRect.left, cRect.top);
+
+		float bandRatio = static_cast<float> (static_cast<float> (iDepth) / cRect.Width());
+		Gdiplus::LinearGradientBrush trapezGradientBrush(Gdiplus::Point(cRect.left, cRect.top),
+														 Gdiplus::Point(cRect.right, cRect.top),
+														 darkerColor,
+														 lighterColor);
+		float blendFactors[] = {
+			0.0f,
+			1.0f,
+			1.0f,
+			0.0f };
+		float blendPositions[] = {
+			0.0f,
+			bandRatio,
+			1.0f - bandRatio,
+			1.0f };
+		trapezGradientBrush.SetBlend(blendFactors, blendPositions, 4);
+		gdip->FillPath(&trapezGradientBrush, &doubleTrapezPath);
+
+		float bandRatio2 = static_cast<float> (static_cast<float> (iDepth) / w2);
+		Gdiplus::GraphicsPath topTrianglePath;
+		topTrianglePath.AddLine(cRect.left, cRect.top, cRect.right, cRect.top);
+		topTrianglePath.AddLine(cRect.right, cRect.top, topFocus.x, topFocus.y);
+		topTrianglePath.AddLine(topFocus.x, topFocus.y, cRect.left, cRect.top);
+		Gdiplus::LinearGradientBrush topTriangleGradientBrush(Gdiplus::Point(topFocus.x, cRect.top),
+															   Gdiplus::Point(topFocus.x, topFocus.y),
+															   darkerColor,
+															   lighterColor);
+		float topBlendFactors[] = {
+			0.0f,
+			1.0f,
+			1.0f };
+		float topBlendPositions[] = {
+			0.0f,
+			bandRatio2,
+			1.0f };
+		topTriangleGradientBrush.SetBlend(topBlendFactors, topBlendPositions, 3);
+		gdip->FillPath(&topTriangleGradientBrush, &topTrianglePath);
+
+		Gdiplus::GraphicsPath bottomTrianglePath;
+		bottomTrianglePath.AddLine(cRect.left, cRect.bottom, bottomFocus.x, bottomFocus.y);
+		bottomTrianglePath.AddLine(bottomFocus.x, bottomFocus.y, cRect.right, cRect.bottom);
+		bottomTrianglePath.AddLine(cRect.right, cRect.bottom, cRect.left, cRect.bottom);
+		Gdiplus::LinearGradientBrush bottomTriangleGradientBrush(Gdiplus::Point(bottomFocus.x, bottomFocus.y),
+																 Gdiplus::Point(bottomFocus.x, cRect.bottom),
+																 lighterColor,
+																 darkerColor);
+		float bottomBlendFactors[] = {
+			0.0f,
+			0.0f,
+			1.0f };
+		float bottomBlendPositions[] = {
+			0.0f,
+			1.0f - bandRatio2,
+			1.0f };
+		bottomTriangleGradientBrush.SetBlend(bottomBlendFactors, bottomBlendPositions, 3);
+		gdip->FillPath(&bottomTriangleGradientBrush, &bottomTrianglePath);
+	}
 }
 
 COLORREF Facilities::ShiftColor( COLORREF crColor, int iShift ) const

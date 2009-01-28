@@ -1148,10 +1148,10 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 		TypeableBitmapPart::DrawBackground(pDC, gdip);
 	} else {
 		int iDepth = (m_bReferenced) ? 2 : ((m_iTypeInfo == 3) ? 4 : 8);
-		getFacilities().DrawBox(gdip, cRect, (!m_bActive) ? COLOR_LIGHTGRAY : (m_bOverlay) ? m_crOverlay : COLOR_GRAY, iDepth);
 		CRect cRect2 = cRect;
-		cRect2.InflateRect(1, 1, 0, 0);
-		getFacilities().DrawRect(gdip, cRect2, (m_bActive) ? m_crBorder : COLOR_GRAY);
+		cRect2.InflateRect(1, 1);
+		getFacilities().DrawBox(gdip, cRect2, (!m_bActive) ? COLOR_LIGHTGRAY : (m_bOverlay) ? m_crOverlay : COLOR_GRAY, iDepth);
+		getFacilities().DrawRect(gdip, cRect, (m_bActive) ? m_crBorder : COLOR_GRAY);
 		/* Commented out // inner border for Types, and Referenced models // Requested by Akos
 		if (m_iTypeInfo != 3 || m_bReferenced) {
 			cRect2 = cRect;
