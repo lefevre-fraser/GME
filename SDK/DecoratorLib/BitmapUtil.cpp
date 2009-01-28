@@ -923,10 +923,8 @@ void BitmapGen::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, c
 {
 	ASSERT(m_pImage);
 	Gdiplus::Graphics* gdip2 = gdip;
-	if (gdip == NULL) {
-		gdip2 = new Gdiplus::Graphics(pDC->m_hDC);
-		gdip2->SetPageUnit(Gdiplus::UnitPixel);
-	}
+	if (gdip == NULL)
+		gdip2 = getFacilities().getGraphics();
 	Gdiplus::Status st = Gdiplus::Win32Error;
 	/* Technique is only available in GDI+ 1.1, which is only distributed with Vista :(((
 	if (greyScale) {
@@ -979,8 +977,6 @@ void BitmapGen::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, c
 						  Gdiplus::UnitPixel, &imgAttribs);
 	if (st == Gdiplus::Win32Error) // in case of corrupted image file (although successfully loaded)
 		gdip2->FillRectangle(&Gdiplus::SolidBrush(Gdiplus::Color::Red), dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
-	if (gdip == NULL)
-		delete gdip2;
 }
 
 void BitmapGen::load( const CString& strName )
@@ -1052,10 +1048,8 @@ void BitmapRES::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, c
 					  DWORD dwOpCode, DWORD dwModifierFlags ) const
 {
 	Gdiplus::Graphics* gdip2 = gdip;
-	if (gdip == NULL) {
-		gdip2 = new Gdiplus::Graphics(pDC->m_hDC);
-		gdip2->SetPageUnit(Gdiplus::UnitPixel);
-	}
+	if (gdip == NULL)
+		gdip2 = getFacilities().getGraphics();
 	bool bGray = (dwModifierFlags & MF_GREYED) != 0 && m_bHasGrayedColor;
 	Gdiplus::ImageAttributes imgAttribs;
 	if ((dwModifierFlags & MF_TRANSPARENT) != 0 && m_bHasTransparentColor) {
@@ -1069,8 +1063,6 @@ void BitmapRES::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, c
 	Gdiplus::Rect destRect(dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
 	gdip2->DrawImage(m_pBitmap, destRect, srcRect.left, srcRect.top, srcRect.Width(), srcRect.Height(),
 					 Gdiplus::UnitPixel, &imgAttribs);
-	if (gdip == NULL)
-		delete gdip2;
 }
 
 void BitmapRES::load( UINT uiID )

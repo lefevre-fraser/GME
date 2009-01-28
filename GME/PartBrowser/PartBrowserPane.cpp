@@ -27,6 +27,9 @@ typedef CTypedPtrList<CPtrList, CRect *>	CRectList;
 /////////////////////////////////////////////////////////////////////////////
 // CPartBrowserPane
 
+Gdiplus::SmoothingMode		CPartBrowserPane::m_eEdgeAntiAlias = Gdiplus::SmoothingModeHighQuality;		// Edge smoothing mode
+Gdiplus::TextRenderingHint	CPartBrowserPane::m_eFontAntiAlias = Gdiplus::TextRenderingHintAntiAlias;	// Text renndering hint mode
+
 CPartBrowserPane::CPartBrowserPane():
 	mgaProject(NULL),
 	mgaMetaModel(NULL),
@@ -145,6 +148,7 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				if (SUCCEEDED(hres)) {
 					triple.decorEventSink = new CDecoratorEventSink();
 					HRESULT hr = triple.decorEventSink->QuerySinkInterface((void**) &decorEventSinkIface);
+					triple.newDecorator = newDecorator;
 					decorator = CComQIPtr<IMgaDecorator>(newDecorator);
 					COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, decorEventSinkIface, (ULONGLONG)m_hWnd));
 				} else {
@@ -172,7 +176,10 @@ void CPartBrowserPane::DestroyDecorators(void)
 	for (std::vector<std::vector<PartWithDecorator> >::iterator ii = pdts.begin(); ii != pdts.end(); ++ii) {
 		for (std::vector<PartWithDecorator>::iterator jj = (*ii).begin(); jj != (*ii).end(); ++jj) {
 			(*jj).decorator->Destroy();
-			(*jj).decorator.Release();
+			if ((*jj).newDecorator)
+				(*jj).newDecorator.Release();
+			else
+				(*jj).decorator.Release();
 			(*jj).part.Release();
 			if ((*jj).decorEventSink != NULL)
 				delete (*jj).decorEventSink;
@@ -292,6 +299,34 @@ void CPartBrowserPane::SetCurrentProject(CComPtr<IMgaProject> project)
 
 void CPartBrowserPane::SetMetaModel(CComPtr<IMgaMetaModel> meta)
 {
+	// If user wants to disable Font or Edge anti-aliasing (or smoothing), he/she can set the
+	// string registry keys under the "HKCU\Software\GME\GUI\FontAntiAlias" and "HKCU\Software\GME\GUI\EdgeAntiAlias"
+	// EdgeAntiAlias values: 0 - default (no smoothing), 1 - High speed mode, 2 - High quality mode
+	// FontAntiAlias values: 0 - default (system def.), 1 - SingleBitPerPixelGridFit, 2 - SingleBitPerPixel, 3 - AntiAliasGridFit,
+	//						 4 - AntiAlias, 5 - ClearTypeGridFit
+	HKEY hKey;
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\GME\\GUI\\"),
+					 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
+	{
+		TCHAR szData[128];
+		DWORD dwKeyDataType;
+		DWORD dwDataBufSize = sizeof(szData)/sizeof(TCHAR);
+
+		if (RegQueryValueEx(hKey, _T("EdgeAntiAlias"), NULL, &dwKeyDataType,
+							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
+		{
+			long lEdgeAntiAlias = _tcstol(szData, NULL, 10);
+			m_eEdgeAntiAlias = (Gdiplus::SmoothingMode)lEdgeAntiAlias;
+		}
+		if (RegQueryValueEx(hKey, _T("FontAntiAlias"), NULL, &dwKeyDataType,
+							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
+		{
+			long lFontAntiAlias = _tcstol(szData, NULL, 10);
+			m_eFontAntiAlias = (Gdiplus::TextRenderingHint)lFontAntiAlias;
+		}
+		RegCloseKey(hKey);
+	}
+
 	if (mgaMetaModel != NULL)
 		mgaMetaModel.Release();
 	mgaMetaModel = meta;
@@ -406,12 +441,20 @@ void CPartBrowserPane::OnPaint()
 	CPaintDC dc(this); // device context for painting
 	dc.SetWindowOrg(0, parent->GetScrollPosition ());
 
+	Gdiplus::Graphics gdipGraphics(dc.m_hDC);
+	gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
+	gdipGraphics.SetSmoothingMode(m_eEdgeAntiAlias);
+	gdipGraphics.SetTextRenderingHint(m_eFontAntiAlias);
+
 	if (pdts.size() > 0 && currentAspectIndex >= 0) {
 		try {
 			std::vector<PartWithDecorator> pdtv = pdts[currentAspectIndex];
 			for (std::vector<PartWithDecorator>::iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
-				ASSERT((*ii).decorator != NULL);
-				COMTHROW((*ii).decorator->Draw(dc.m_hDC));
+				if ((*ii).newDecorator) {
+					COMTHROW((*ii).newDecorator->DrawEx(dc.m_hDC, (ULONGLONG)(&gdipGraphics)));
+				} else {
+					COMTHROW((*ii).decorator->Draw(dc.m_hDC));
+				}
 			}
 		}
 		catch (hresult_exception&) {

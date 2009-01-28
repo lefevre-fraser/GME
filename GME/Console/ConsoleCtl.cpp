@@ -529,7 +529,7 @@ void CConsoleCtrl::Message(LPCTSTR str, short type)
 			CComBSTR where("BeforeEnd");
 			CComBSTR text(line);
 			COMTHROW(pElement->insertAdjacentHTML(where, text));
-			
+
 			// Scroll
 			CComPtr<IHTMLWindow2> parentWindow;
 			COMTHROW(pHtmlDoc->get_parentWindow( &parentWindow ));

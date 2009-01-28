@@ -102,6 +102,38 @@ namespace DecoratorSDK
 Facilities::Facilities()
 	: m_bArePathesValid( false ), m_spProject( NULL )
 {
+	m_nullDC.CreateCompatibleDC(NULL);
+	m_gdip = NULL;	// Create the Gdiplus::Graphics object later, cause at this point GdiplusStartup may not be called by GMEApp
+	m_eEdgeAntiAlias = Gdiplus::SmoothingModeHighQuality;
+	m_eFontAntiAlias = Gdiplus::TextRenderingHintAntiAlias;
+	// If user wants to disable Font or Edge anti-aliasing (or smoothing), he/she can set the
+	// string registry keys under the "HKCU\Software\GME\GUI\FontAntiAlias" and "HKCU\Software\GME\GUI\EdgeAntiAlias"
+	// EdgeAntiAlias values: 0 - default (no smoothing), 1 - High speed mode, 2 - High quality mode
+	// FontAntiAlias values: 0 - default (system def.), 1 - SingleBitPerPixelGridFit, 2 - SingleBitPerPixel, 3 - AntiAliasGridFit,
+	//						 4 - AntiAlias, 5 - ClearTypeGridFit
+	HKEY hKey;
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\GME\\GUI\\"),
+					 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
+	{
+		TCHAR szData[128];
+		DWORD dwKeyDataType;
+		DWORD dwDataBufSize = sizeof(szData)/sizeof(TCHAR);
+
+		if (RegQueryValueEx(hKey, _T("EdgeAntiAlias"), NULL, &dwKeyDataType,
+							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
+		{
+			long lEdgeAntiAlias = _tcstol(szData, NULL, 10);
+			m_eEdgeAntiAlias = (Gdiplus::SmoothingMode)lEdgeAntiAlias;
+		}
+		if (RegQueryValueEx(hKey, _T("FontAntiAlias"), NULL, &dwKeyDataType,
+							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
+		{
+			long lFontAntiAlias = _tcstol(szData, NULL, 10);
+			m_eFontAntiAlias = (Gdiplus::TextRenderingHint)lFontAntiAlias;
+		}
+		RegCloseKey(hKey);
+	}
+
 	createFont( FONT_LABEL,			"Arial", FW_NORMAL,		false,	16 );
 	createFont( FONT_PORT,			"Arial", FW_BOLD,		false,	12 );
 	createFont( FONT_TYPE,			"Arial", FW_NORMAL,		false,	12 );
@@ -192,10 +224,17 @@ Facilities::~Facilities()
 
 	if (m_spProject)
 		m_spProject.Release();
+
+	delete m_gdip;
 }
 
 bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )
 {
+	m_gdip = new Gdiplus::Graphics(m_nullDC.m_hDC);
+	m_gdip->SetPageUnit(Gdiplus::UnitPixel);
+	m_gdip->SetSmoothingMode(m_eEdgeAntiAlias);
+	m_gdip->SetTextRenderingHint(m_eFontAntiAlias);
+
 	if ( ! m_spProject || ! m_spProject.IsEqualObject( pProject ) )
 		m_spProject = pProject;
 	else
@@ -290,6 +329,16 @@ bool Facilities::arePathesValid() const
 std::vector<CString> Facilities::getPathes() const
 {
 	return m_vecPathes;
+}
+
+Gdiplus::Graphics* Facilities::getGraphics(void) const
+{
+	return m_gdip;
+}
+
+CDC* Facilities::getCDC(void)
+{
+	return &m_nullDC;
 }
 
 bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, const CString& strName, CString& strValue ) const
@@ -717,11 +766,9 @@ void Facilities::createFont( int iFontKey, const CString& strKind, int iBoldness
 	m_mapGdipFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( wcTxt, pixelSize, fontStyle, Gdiplus::UnitPixel );*/
 
 	m_mapGdipFonts[ iFontKey ] = new GdipFont( strKind, iSize, iBoldness == FW_BOLD, bItalics );
-	CDC dc;
-	dc.CreateCompatibleDC(NULL);
 	LOGFONT logFont;
 	m_mapFonts[ iFontKey ]->pFont->GetLogFont(&logFont);
-	m_mapGdipFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( dc.m_hDC, &logFont );
+	m_mapGdipFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( getCDC()->m_hDC, &logFont );
 }
 
 GdipFont* Facilities::GetFont( int iFontKey ) const
@@ -761,27 +808,18 @@ CSize Facilities::MeasureText( Gdiplus::Graphics* gdip, GdipFont* pFont, const C
 
 CSize Facilities::MeasureText( Gdiplus::Graphics* gdip, Gdiplus::Font* pFont, const CString& strText)
 {
-	Gdiplus::Graphics* gdip2 = NULL;
-	CDC	dc;
-	if (gdip == NULL) {
-		dc.CreateCompatibleDC(NULL);
-		gdip2 = new Gdiplus::Graphics(dc.m_hDC);
-		gdip2->SetPageUnit(Gdiplus::UnitPixel);
-		gdip2->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-		gdip2->SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-		gdip = gdip2;
-	}
+	Gdiplus::Graphics* gdip2 = gdip;
+	if (gdip == NULL)
+		gdip2 = m_gdip;
 
 	CA2W wcTxt(strText);
 	Gdiplus::PointF origin(0, 0);
 	Gdiplus::RectF rectF;
-	gdip->MeasureString(wcTxt, strText.GetLength(), pFont, origin, &rectF);
+	gdip2->MeasureString(wcTxt, strText.GetLength(), pFont, origin, &rectF);
 	Gdiplus::SizeF sizeF;
 	rectF.GetSize(&sizeF);
 	CSize size(static_cast<long> (sizeF.Width), static_cast<long> (sizeF.Height));
 
-	if (gdip2 != NULL)
-		delete gdip2;
 	return size;
 }
 

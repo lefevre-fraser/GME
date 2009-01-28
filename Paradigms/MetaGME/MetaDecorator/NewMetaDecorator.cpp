@@ -40,6 +40,8 @@ void NewMetaDecorator::Destroy()
 		delete m_part;
 		m_part = NULL;
 	}
+	if (m_eventSink)
+		m_eventSink.Release();
 }
 
 CString NewMetaDecorator::GetMnemonic(void) const

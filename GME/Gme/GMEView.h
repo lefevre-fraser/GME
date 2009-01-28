@@ -172,7 +172,10 @@ public:
 	CChildFrame*			frame;
 	CPendingRequestList		pendingRequests;
 	CDC*					onScreen;
-	static bool				m_bUseStretchBlt;		// Supposed workaround for Vista black view problem: use StretchBlt instead of BitBlt
+
+	static bool							m_bUseStretchBlt;		// Supposed workaround for Vista black view problem: use StretchBlt instead of BitBlt
+	static Gdiplus::SmoothingMode		m_eEdgeAntiAlias;		// Edge smoothing mode
+	static Gdiplus::TextRenderingHint	m_eFontAntiAlias;		// Text renndering hint mode
 
 	CGMEDoc*				GetDocument();
 
@@ -220,7 +223,7 @@ public:
 	void					ModeChange();
 	void					IncrementalAutoRoute();
 	void					AutoRoute();
-	void					DrawConnections(CDC* pDC);
+	void					DrawConnections(HDC pDC, Gdiplus::Graphics* gdip);
 	void					PrintHeader(CDC* pDC, CPrintInfo* pInfo);
 	void					PrintHeaderRect(CDC* pDC, CRect& rectDraw);
 	void					PrintMultiLineText(Gdiplus::Graphics* gdip, CDC* pDC, CString txt, int x, int& y, int ry, int xwidth);

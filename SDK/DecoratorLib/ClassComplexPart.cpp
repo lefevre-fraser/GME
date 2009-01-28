@@ -1269,18 +1269,6 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 	m_lMinTextWidth			= LONG_MAX;
 	m_lMinTextHeight		= LONG_MAX;
 
-	CDC	dc;
-
-	dc.Attach(pDC ? pDC->m_hDC : GetDC(NULL));			// Trick
-	Gdiplus::Graphics* gdip2 = NULL;
-	if (gdip == NULL) {
-		gdip2 = new Gdiplus::Graphics(dc.m_hDC);
-		gdip2->SetPageUnit(Gdiplus::UnitPixel);
-		gdip2->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-		gdip2->SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-		gdip = gdip2;
-	}
-
 	long numberOfGaps = 0;
 	long heightPreEstimation = m_DecoratorMarginY;
 	if (m_LabelPart != NULL) {
@@ -1303,7 +1291,7 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 	heightPreEstimation += m_DecoratorMarginY;
 
 	for (std::vector<AttributePart*>::iterator ii = m_AttributeParts.begin(); ii != m_AttributeParts.end(); ++ii) {
-		CSize extent = (*ii)->GetTextSize(&dc, gdip);
+		CSize extent = (*ii)->GetTextSize(pDC, gdip);
 		m_lMaxTextWidth = max(m_lMaxTextWidth, extent.cx);
 		m_lMaxTextHeight = max(m_lMaxTextHeight, extent.cy);
 		numberOfGaps++;
@@ -1417,11 +1405,6 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 	}
 	m_calcSize.cx = xrightpos + m_DecoratorMarginX;
 	m_calcSize.cy = ypos + m_DecoratorMarginY;
-
-	if (gdip2 != NULL)
-		delete gdip2;
-	if (pDC)
-		dc.Detach();
 
 	resizeLogic.SetMinimumSize(CSize(m_calcSize.cx, heightPreEstimation));
 }

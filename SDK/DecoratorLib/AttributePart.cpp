@@ -100,7 +100,6 @@ CSize AttributePart::GetTypeSize(CDC* pDC, Gdiplus::Graphics* gdip) const
 
 CSize AttributePart::GetTextSize(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
-	ASSERT(gdip != NULL);
 	DecoratorSDK::GdipFont* pFont = getFacilities().GetFont(m_iFontKey);
 	return getFacilities().MeasureText(gdip, pFont, m_strText + ATTRIBUTE_SEP + m_strType);
 }

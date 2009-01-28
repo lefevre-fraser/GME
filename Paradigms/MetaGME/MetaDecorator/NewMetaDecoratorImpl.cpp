@@ -43,7 +43,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPa
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	if (pFCO && !m_bInitCallFromEx)
-		return E_DECORATOR_USING_DEPRECATED_INIT;
+		return E_DECORATOR_USING_DEPRECATED_FUNCTION;
 
 	return S_OK;
 }
@@ -247,7 +247,6 @@ STDMETHODIMP CNewMetaDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 	return retVal;
 }
 
-
 STDMETHODIMP CNewMetaDecoratorImpl::Draw(HDC hdc)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -255,29 +254,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::Draw(HDC hdc)
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
 
-	HRESULT retVal = S_OK;
-
-	CDC dc;
-	dc.Attach(hdc);
-	{
-		Gdiplus::Graphics gdipGraphics(hdc);
-		gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
-		gdipGraphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-		gdipGraphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-
-		try {
-			m_pNewDecorator->Draw(&dc, &gdipGraphics);
-		}
-		catch(hresult_exception& e) {
-			retVal = e.hr;
-		}
-		catch(DecoratorException& e) {
-			retVal = e.GetHResult();
-		}
-	}
-	dc.Detach();
-
-	return retVal;
+	return E_DECORATOR_USING_DEPRECATED_FUNCTION;
 }
 
 STDMETHODIMP CNewMetaDecoratorImpl::SaveState()
@@ -309,6 +286,33 @@ STDMETHODIMP CNewMetaDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMeta
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
+
+	return retVal;
+}
+
+STDMETHODIMP CNewMetaDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
+	VERIFY_INITIALIZATION
+	VERIFY_LOCATION
+
+	HRESULT retVal = S_OK;
+
+	CDC dc;
+	dc.Attach(hdc);
+	{
+		try {
+			m_pNewDecorator->Draw(&dc, (Gdiplus::Graphics*)gdipGraphics);
+		}
+		catch(hresult_exception& e) {
+			retVal = e.hr;
+		}
+		catch(DecoratorException& e) {
+			retVal = e.GetHResult();
+		}
+	}
+	dc.Detach();
 
 	return retVal;
 }

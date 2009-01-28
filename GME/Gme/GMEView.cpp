@@ -251,9 +251,11 @@ HCURSOR CGMEView::zoomCursor;
 HCURSOR CGMEView::visualCursor;
 HCURSOR CGMEView::editCursor;
 
-bool CGMEView::derivedDrop = false;
-bool CGMEView::instanceDrop = false;
-bool CGMEView::m_bUseStretchBlt = true;
+bool						CGMEView::derivedDrop = false;
+bool						CGMEView::instanceDrop = false;
+bool						CGMEView::m_bUseStretchBlt = true;
+Gdiplus::SmoothingMode		CGMEView::m_eEdgeAntiAlias = Gdiplus::SmoothingModeHighQuality;		// Edge smoothing mode
+Gdiplus::TextRenderingHint	CGMEView::m_eFontAntiAlias = Gdiplus::TextRenderingHintAntiAlias;	// Text renndering hint mode
 
 IMPLEMENT_DYNCREATE(CGMEView, CScrollZoomView)
 
@@ -556,10 +558,6 @@ CGMEView::CGMEView()
 	ClearSupressConnectionCheckAlert();
 	ClearConnSpecs();
 
-	// Supposed workaround for Vista black view problem: use StretchBlt instead of BitBlt
-	// Problem can arise in multi-monitor systems with NVidia cards (but who knows what other configs)
-	// If user wants to fall back to the faster BitBlt, he can force GME to use it by creating a
-	// string registry key with "0" value under the "HKCU\Software\GME\GUI\UseStretchBlt"
 	HKEY hKey;
 	if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\GME\\GUI\\"),
 					 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
@@ -568,11 +566,33 @@ CGMEView::CGMEView()
 		DWORD dwKeyDataType;
 		DWORD dwDataBufSize = sizeof(szData)/sizeof(TCHAR);
 
+		// Supposed workaround for Vista black view problem: use StretchBlt instead of BitBlt
+		// Problem can arise in multi-monitor systems with NVidia cards (but who knows what other configs)
+		// If user wants to fall back to the faster BitBlt, he can force GME to use it by creating a
+		// string registry key with "0" value under the "HKCU\Software\GME\GUI\UseStretchBlt"
 		if (RegQueryValueEx(hKey, _T("UseStretchBlt"), NULL, &dwKeyDataType,
 							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
 		{
 			UINT uUseStretchBlt = _tcstoul(szData, NULL, 10);
 			m_bUseStretchBlt = (uUseStretchBlt != 0);
+		}
+
+		// If user wants to disable Font or Edge anti-aliasing (or smoothing), he/she can set the
+		// string registry keys under the "HKCU\Software\GME\GUI\FontAntiAlias" and "HKCU\Software\GME\GUI\EdgeAntiAlias"
+		// EdgeAntiAlias values: 0 - default (no smoothing), 1 - High speed mode, 2 - High quality mode
+		// FontAntiAlias values: 0 - default (system def.), 1 - SingleBitPerPixelGridFit, 2 - SingleBitPerPixel, 3 - AntiAliasGridFit,
+		//						 4 - AntiAlias, 5 - ClearTypeGridFit
+		if (RegQueryValueEx(hKey, _T("EdgeAntiAlias"), NULL, &dwKeyDataType,
+							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
+		{
+			long lEdgeAntiAlias = _tcstol(szData, NULL, 10);
+			m_eEdgeAntiAlias = (Gdiplus::SmoothingMode)lEdgeAntiAlias;
+		}
+		if (RegQueryValueEx(hKey, _T("FontAntiAlias"), NULL, &dwKeyDataType,
+							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
+		{
+			long lFontAntiAlias = _tcstol(szData, NULL, 10);
+			m_eFontAntiAlias = (Gdiplus::TextRenderingHint)lFontAntiAlias;
 		}
 		RegCloseKey(hKey);
 	}
@@ -672,12 +692,17 @@ void CGMEView::DoPannWinRefresh()
 	::SetViewportExtEx(pannDC, target.Width(), target.Height(), NULL);
 
 	{
+		Gdiplus::Graphics gdip(pannDC);
+		gdip.SetPageUnit(Gdiplus::UnitPixel);
+		gdip.SetSmoothingMode(m_eEdgeAntiAlias);
+		gdip.SetTextRenderingHint(m_eFontAntiAlias);
+
 		// draw the image
 		POSITION pos = annotators.GetHeadPosition();
 			while (pos) {
 			CGuiAnnotator *annotator = annotators.GetNext(pos);
 			if (annotator->IsVisible()) {
-				annotator->Draw(pannDC);
+				annotator->Draw(pannDC, &gdip);
 			}
 		}
 
@@ -687,7 +712,7 @@ void CGMEView::DoPannWinRefresh()
 			if (fco->IsVisible()) {
 				CGuiConnection *conn = dynamic_cast<CGuiConnection*>(fco);
 				if (!conn)
-					fco->Draw(pannDC);
+					fco->Draw(pannDC, &gdip);
 			}
 		}
 	}
@@ -709,176 +734,169 @@ void CGMEView::OnDraw(CDC* pDC)
 		OnPrepareDC(pDC);
 	}
 
-	if(drawGrid && !pDC->IsPrinting() && !IsPreview() && /// zoomIdx >= GME_ZOOM_LEVEL_MED) 
-			m_zoomVal >= ZOOM_NO)
 	{
 		Gdiplus::Graphics gdip(pDC->m_hDC);
 		gdip.SetPageUnit(Gdiplus::UnitPixel);
-		gdip.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-		gdip.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+		gdip.SetSmoothingMode(m_eEdgeAntiAlias);
+		gdip.SetTextRenderingHint(m_eFontAntiAlias);
 
-		CRect objext, annext, extent;
-		CGuiObject::GetExtent(children, objext);
-		CGuiAnnotator::GetExtent(annotators, annext);
-		extent.UnionRect(&objext, &annext);
-		extent.right = (int)(extent.right*EXTENT_ERROR_CORR); // ??
-		extent.bottom = (int)(extent.bottom*EXTENT_ERROR_CORR); // ??
-		CSize s(extent.right, extent.bottom);
-//		s.cx = s.cx + END_SCROLL_OFFSET;
-//		s.cy = s.cy + END_SCROLL_OFFSET;
-		CRect rect;
-		GetClientRect(&rect);
-		graphics.DrawGrid(&gdip, GME_GRID_SIZE, GME_GRID_SIZE,
-						  max(s.cx,rect.right), max(s.cy,rect.bottom));
-	}
+		if(drawGrid && !pDC->IsPrinting() && !IsPreview() && /// zoomIdx >= GME_ZOOM_LEVEL_MED) 
+				m_zoomVal >= ZOOM_NO)
+		{
+			CRect objext, annext, extent;
+			CGuiObject::GetExtent(children, objext);
+			CGuiAnnotator::GetExtent(annotators, annext);
+			extent.UnionRect(&objext, &annext);
+			extent.right = (int)(extent.right*EXTENT_ERROR_CORR); // ??
+			extent.bottom = (int)(extent.bottom*EXTENT_ERROR_CORR); // ??
+			CSize s(extent.right, extent.bottom);
+//			s.cx = s.cx + END_SCROLL_OFFSET;
+//			s.cy = s.cy + END_SCROLL_OFFSET;
+			CRect rect;
+			GetClientRect(&rect);
+			graphics.DrawGrid(&gdip, GME_GRID_SIZE, GME_GRID_SIZE,
+							  max(s.cx,rect.right), max(s.cy,rect.bottom));
+		}
 
-	 /*
-	 // DEBUG
+		/*
+		// DEBUG
 
-	CPoint spt = GetScrollPosition();
-	pDC->LPtoDP(&spt);
-	CRect clientRect;
-	GetClientRect(&clientRect);
-	clientRect += spt;
-	COLORREF col = RGB(10,10,10);
-	for (int x = clientRect.left; x < clientRect.right; x++) {
-		for (int y = clientRect.top; y < clientRect.bottom; y++) {
-			CPoint ppp(x, y);
-			CoordinateTransfer(ppp);
-			if (!modelGrid.IsAvailable(ppp.x, ppp.y)) {
-				CPoint np((x - spt.x)*zoom, (y-spt.y)*zoom);
-				pDC->DPtoLP(&np);
-				pDC->SetPixel(np, col);
+		CPoint spt = GetScrollPosition();
+		pDC->LPtoDP(&spt);
+		CRect clientRect;
+		GetClientRect(&clientRect);
+		clientRect += spt;
+		COLORREF col = RGB(10,10,10);
+		for (int x = clientRect.left; x < clientRect.right; x++) {
+			for (int y = clientRect.top; y < clientRect.bottom; y++) {
+				CPoint ppp(x, y);
+				CoordinateTransfer(ppp);
+				if (!modelGrid.IsAvailable(ppp.x, ppp.y)) {
+					CPoint np((x - spt.x)*zoom, (y-spt.y)*zoom);
+					pDC->DPtoLP(&np);
+					pDC->SetPixel(np, col);
+				}
 			}
 		}
-	}
-	//END-DEBUG
-	*/
+		//END-DEBUG
+		*/
 
 
-	POSITION pos = annotators.GetHeadPosition();
-	while (pos) {
-		CGuiAnnotator *annotator = annotators.GetNext(pos);
-		if (annotator->IsVisible()) {
-			annotator->Draw(pDC->m_hDC);
-		}
-	}
-
-	pos = children.GetHeadPosition();
-	while (pos) {
-		CGuiFco* fco = children.GetNext(pos);
-		if (fco->IsVisible()) {
-			CGuiConnection* conn = dynamic_cast<CGuiConnection*> (fco);
-			if (!conn)
-				fco->Draw(pDC->m_hDC);
-		}
-	}
-	DrawConnections(pDC);
-
-	if(pDoc->GetEditMode() == GME_EDIT_MODE || pDoc->GetEditMode() == GME_SET_MODE) {
-		if( ( (selected.GetCount() > 0) || (selectedAnnotations.GetCount() > 0) ) 
-					&& !pDC->IsPrinting() && !IsPreview()) {
-			POSITION pos = selected.GetHeadPosition();
-			CRectTracker tracker;
-			CGuiObject *obj;
-			while(pos) {
-				obj = selected.GetNext(pos);
-				tracker.m_rect = obj->GetLocation();
-				pDC->LPtoDP(&tracker.m_rect);
-				tracker.m_nStyle = CRectTracker::solidLine | CRectTracker::resizeInside;
-				tracker.Draw(pDC);
+		POSITION pos = annotators.GetHeadPosition();
+		while (pos) {
+			CGuiAnnotator *annotator = annotators.GetNext(pos);
+			if (annotator->IsVisible()) {
+				annotator->Draw(pDC->m_hDC, &gdip);
 			}
+		}
 
-			pos = selectedAnnotations.GetHeadPosition();
-			CGuiAnnotator *ann;
-			while(pos) {
-				ann = selectedAnnotations.GetNext(pos);
-				if( ann->IsVisible()) // the selectedAnnotation might become hidden is this aspect
-				{
-					tracker.m_rect = ann->GetLocation();
+		pos = children.GetHeadPosition();
+		while (pos) {
+			CGuiFco* fco = children.GetNext(pos);
+			if (fco->IsVisible()) {
+				CGuiConnection* conn = dynamic_cast<CGuiConnection*> (fco);
+				if (!conn)
+					fco->Draw(pDC->m_hDC, &gdip);
+			}
+		}
+		DrawConnections(pDC->m_hDC, &gdip);
+
+		if(pDoc->GetEditMode() == GME_EDIT_MODE || pDoc->GetEditMode() == GME_SET_MODE) {
+			if( ( (selected.GetCount() > 0) || (selectedAnnotations.GetCount() > 0) ) 
+						&& !pDC->IsPrinting() && !IsPreview()) {
+				POSITION pos = selected.GetHeadPosition();
+				CRectTracker tracker;
+				OnPrepareDC(pDC);	// It's needed somehow, in spite of previous OnPrepareDC
+				CGuiObject *obj;
+				while(pos) {
+					obj = selected.GetNext(pos);
+					tracker.m_rect = obj->GetLocation();
 					pDC->LPtoDP(&tracker.m_rect);
 					tracker.m_nStyle = CRectTracker::solidLine | CRectTracker::resizeInside;
 					tracker.Draw(pDC);
 				}
+
+				pos = selectedAnnotations.GetHeadPosition();
+				CGuiAnnotator *ann;
+				while(pos) {
+					ann = selectedAnnotations.GetNext(pos);
+					if (ann->IsVisible())	// the selectedAnnotation might become hidden in this aspect
+					{
+						tracker.m_rect = ann->GetLocation();
+						pDC->LPtoDP(&tracker.m_rect);
+						tracker.m_nStyle = CRectTracker::solidLine | CRectTracker::resizeInside;
+						tracker.Draw(pDC);
+					}
+				}
 			}
 		}
-	}
 
-	if (GetFocus() == this && ((pDoc->GetEditMode() == GME_AUTOCONNECT_MODE || pDoc->GetEditMode() == GME_SHORTAUTOCONNECT_MODE) || (tmpConnectMode))) {
-		if (connSrc) {
-			Gdiplus::Graphics gdip(pDC->m_hDC);
-			gdip.SetPageUnit(Gdiplus::UnitPixel);
-			gdip.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-			gdip.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-
-			CRect rect = connSrc->GetLocation();
-			if (connSrcPort) {
-				rect = connSrcPort->GetLocation() + rect.TopLeft();
-			}
-			Gdiplus::Pen* xorPen = graphics.GetGdipPen2(&gdip, GME_DARKRED_COLOR, false, m_zoomVal > ZOOM_NO, GME_CONNSELECT_WIDTH);
-			gdip.DrawRectangle(xorPen, rect.left, rect.top, rect.Width(), rect.Height());
-
-			if ((connSrcHotSide != GME_CENTER) && (!connSrcPort)) {
-				CPoint hotSpot;
-				switch (connSrcHotSide) {
-				case GME_SOUTH:
-					hotSpot.x = rect.CenterPoint().x;
-					hotSpot.y = rect.bottom;
-					break;
-				case GME_NORTH:
-					hotSpot.x = rect.CenterPoint().x;
-					hotSpot.y = rect.top;
-					break;
-				case GME_WEST:
-					hotSpot.x = rect.left;
-					hotSpot.y = rect.CenterPoint().y;
-					break;
-				case GME_EAST:
-					hotSpot.x = rect.right;
-					hotSpot.y = rect.CenterPoint().y;
-					break;
+		if (GetFocus() == this && ((pDoc->GetEditMode() == GME_AUTOCONNECT_MODE || pDoc->GetEditMode() == GME_SHORTAUTOCONNECT_MODE) || (tmpConnectMode))) {
+			if (connSrc) {
+				CRect rect = connSrc->GetLocation();
+				if (connSrcPort) {
+					rect = connSrcPort->GetLocation() + rect.TopLeft();
 				}
-				Gdiplus::Brush* xorBrush = graphics.GetGdipBrush(GME_DARKRED_COLOR);
-				gdip.FillRectangle(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS);
-				//gdip.FillEllipse(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS);
-			}
-		}
-		if (connTmp) {
-			Gdiplus::Graphics gdip(pDC->m_hDC);
-			gdip.SetPageUnit(Gdiplus::UnitPixel);
-			gdip.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-			gdip.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+				Gdiplus::Pen* xorPen = graphics.GetGdipPen2(&gdip, GME_DARKRED_COLOR, false, m_zoomVal > ZOOM_NO, GME_CONNSELECT_WIDTH);
+				gdip.DrawRectangle(xorPen, rect.left, rect.top, rect.Width(), rect.Height());
 
-			CRect rect = connTmp->GetLocation();
-			if (connTmpPort) {
-				rect = connTmpPort->GetLocation() + rect.TopLeft();
-			}
-			Gdiplus::Pen* xorPen = graphics.GetGdipPen2(&gdip, GME_RED_COLOR, false, m_zoomVal > ZOOM_NO, GME_CONNSELECT_WIDTH);
-			gdip.DrawRectangle(xorPen, rect.left, rect.top, rect.Width(), rect.Height());
-
-			if ((connTmpHotSide != GME_CENTER) && (!connTmpPort)) {
-				CPoint hotSpot;
-				switch (connTmpHotSide) {
-				case GME_SOUTH:
-					hotSpot.x = rect.CenterPoint().x;
-					hotSpot.y = rect.bottom;
-					break;
-				case GME_NORTH:
-					hotSpot.x = rect.CenterPoint().x;
-					hotSpot.y = rect.top;
-					break;
-				case GME_WEST:
-					hotSpot.x = rect.left;
-					hotSpot.y = rect.CenterPoint().y;
-					break;
-				case GME_EAST:
-					hotSpot.x = rect.right;
-					hotSpot.y = rect.CenterPoint().y;
-					break;
+				if ((connSrcHotSide != GME_CENTER) && (!connSrcPort)) {
+					CPoint hotSpot;
+					switch (connSrcHotSide) {
+					case GME_SOUTH:
+						hotSpot.x = rect.CenterPoint().x;
+						hotSpot.y = rect.bottom;
+						break;
+					case GME_NORTH:
+						hotSpot.x = rect.CenterPoint().x;
+						hotSpot.y = rect.top;
+						break;
+					case GME_WEST:
+						hotSpot.x = rect.left;
+						hotSpot.y = rect.CenterPoint().y;
+						break;
+					case GME_EAST:
+						hotSpot.x = rect.right;
+						hotSpot.y = rect.CenterPoint().y;
+						break;
+					}
+					Gdiplus::Brush* xorBrush = graphics.GetGdipBrush(GME_DARKRED_COLOR);
+					gdip.FillRectangle(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS);
+					//gdip.FillEllipse(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS);
 				}
-				Gdiplus::Brush* xorBrush = graphics.GetGdipBrush(GME_RED_COLOR);
-				gdip.FillRectangle(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS);
-				//gdip.FillEllipse(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS);
+			}
+			if (connTmp) {
+				CRect rect = connTmp->GetLocation();
+				if (connTmpPort) {
+					rect = connTmpPort->GetLocation() + rect.TopLeft();
+				}
+				Gdiplus::Pen* xorPen = graphics.GetGdipPen2(&gdip, GME_RED_COLOR, false, m_zoomVal > ZOOM_NO, GME_CONNSELECT_WIDTH);
+				gdip.DrawRectangle(xorPen, rect.left, rect.top, rect.Width(), rect.Height());
+
+				if ((connTmpHotSide != GME_CENTER) && (!connTmpPort)) {
+					CPoint hotSpot;
+					switch (connTmpHotSide) {
+					case GME_SOUTH:
+						hotSpot.x = rect.CenterPoint().x;
+						hotSpot.y = rect.bottom;
+						break;
+					case GME_NORTH:
+						hotSpot.x = rect.CenterPoint().x;
+						hotSpot.y = rect.top;
+						break;
+					case GME_WEST:
+						hotSpot.x = rect.left;
+						hotSpot.y = rect.CenterPoint().y;
+						break;
+					case GME_EAST:
+						hotSpot.x = rect.right;
+						hotSpot.y = rect.CenterPoint().y;
+						break;
+					}
+					Gdiplus::Brush* xorBrush = graphics.GetGdipBrush(GME_RED_COLOR);
+					gdip.FillRectangle(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS);
+					//gdip.FillEllipse(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS);
+				}
 			}
 		}
 	}
@@ -1109,8 +1127,8 @@ void CGMEView::PrintHeaderRect(CDC* pDC, CRect &rectDraw)
 
 	Gdiplus::Graphics gdip(pDC->m_hDC);
 	gdip.SetPageUnit(Gdiplus::UnitPixel);
-	gdip.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-	gdip.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+	gdip.SetSmoothingMode(m_eEdgeAntiAlias);
+	gdip.SetTextRenderingHint(m_eFontAntiAlias);
 
 	PrintMultiLineText(&gdip,pDC,line1,xx,txty,logdpi,rectDraw.Width() - xx);
 
@@ -2448,18 +2466,13 @@ void CGMEView::FindDerivedFrom(CComPtr<IMgaModel> model,CComPtr<IMgaModel> &type
 	}
 }
 
-void CGMEView::DrawConnections(CDC* pDC)
+void CGMEView::DrawConnections(HDC pDC, Gdiplus::Graphics* gdip)
 {
-	Gdiplus::Graphics gdip(pDC->m_hDC);
-	gdip.SetPageUnit(Gdiplus::UnitPixel);
-	gdip.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-	gdip.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-
 	POSITION pos = connections.GetHeadPosition();
 	while (pos) {
 		CGuiConnection* conn = connections.GetNext(pos);
 		if (conn->IsVisible()) {
-			conn->Draw(&gdip, pDC->m_hDC);
+			conn->Draw(pDC, gdip);
 		}
 	}
 }
@@ -5624,7 +5637,7 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 			pUI->Enable(isType);
 			return true;
 		}
-	} else if (nID >= DECORATOR_CTX_MENU_MINID && nID < DECORATOR_CTX_MENU_MAXID) {
+	} else if (nID >= DECORATOR_CTX_MENU_MINID && nID < DECORATOR_CTX_MENU_MAXID && CGuiMetaProject::theInstance->maxMenuCmdID < DECORATOR_CTX_MENU_MINID) {
 		if (nCode == CN_UPDATE_COMMAND_UI && pExtra != NULL) {
 			CCmdUI* pUI = (CCmdUI*) pExtra;
 			pUI->Enable(isType);

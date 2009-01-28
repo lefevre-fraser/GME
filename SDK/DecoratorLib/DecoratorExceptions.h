@@ -21,7 +21,7 @@ enum DecoratorExceptionCode {
 	EDecoratorUninitialized			= E_DECORATOR_UNINITIALIZED,
 	EDecoratorLocationIsNotSet		= E_DECORATOR_LOCISNOTSET,
 	EDecoratorPortNotFound			= E_DECORATOR_PORTNOTFOUND,
-	EDecoratorUsingDeprecatedInit	= E_DECORATOR_USING_DEPRECATED_INIT,
+	EDecoratorUsingDeprecatedFunc	= E_DECORATOR_USING_DEPRECATED_FUNCTION,
 	EDecoratorNotImplemented		= E_DECORATOR_NOT_IMPLEMENTED,
 	SDecoratorEventHandled			= S_DECORATOR_EVENT_HANDLED,
 	SDecoratorOK					= S_OK,

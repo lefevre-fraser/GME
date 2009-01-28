@@ -71,6 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="gdiplus.lib"
 				OutputFile="$(OutDir)/PartBrowser.ocx"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\GME\GMESRC\GME\Gme\Debug"
@@ -159,6 +160,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="gdiplus.lib"
 				OutputFile="$(OutDir)/PartBrowser.ocx"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\PartBrowser.def"

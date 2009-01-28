@@ -27,7 +27,7 @@ typedef enum decorator_error {
 [helpstring("Specified port (based on IMgaFCO) not found.")]
 	E_DECORATOR_PORTNOTFOUND	=	0x80737005,
 [helpstring("In case of new decorator interface use the new InitializeEx and supply parent HWND.")]
-	E_DECORATOR_USING_DEPRECATED_INIT	= 0x80737006,
+	E_DECORATOR_USING_DEPRECATED_FUNCTION	= 0x80737006,
 [helpstring("Not implemented method.")]
 	E_DECORATOR_NOT_IMPLEMENTED	= 0x80737007,
 [helpstring("Event handled / consumed.")]
@@ -123,22 +123,23 @@ const unsigned long	F_RESIZEAFTERMOD = 1<<7;
 	interface IMgaNewDecorator : IMgaDecorator
 	{
 		[id(20), helpstring("method InitializeEx")] HRESULT InitializeEx([in] IMgaProject* project, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj, [in] IMgaNewDecoratorEvents* eventSink, [in] ULONGLONG parentWnd);
-		[id(21), helpstring("method SetSelected")] HRESULT SetSelected([in] VARIANT_BOOL isSelected);
-		[id(22), helpstring("method MouseMoved")] HRESULT MouseMoved([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(23), helpstring("method MouseLeftButtonDown")] HRESULT MouseLeftButtonDown([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(24), helpstring("method MouseLeftButtonUp")] HRESULT MouseLeftButtonUp([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(25), helpstring("method MouseLeftButtonDoubleClick")] HRESULT MouseLeftButtonDoubleClick([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(26), helpstring("method MouseRightButtonDown")] HRESULT MouseRightButtonDown([in] ULONGLONG hCtxMenu, [in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(27), helpstring("method MouseRightButtonUp")] HRESULT MouseRightButtonUp([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(28), helpstring("method MouseRightButtonDoubleClick")] HRESULT MouseRightButtonDoubleClick([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(29), helpstring("method MouseMiddleButtonDown")] HRESULT MouseMiddleButtonDown([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(30), helpstring("method MouseMiddleButtonUp")] HRESULT MouseMiddleButtonUp([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(31), helpstring("method MouseMiddleButtonDoubleClick")] HRESULT MouseMiddleButtonDoubleClick([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(32), helpstring("method MouseWheelTurned")] HRESULT MouseWheelTurned([in] ULONG nFlags, [in] LONG distance, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(33), helpstring("method MenuItemSelected")] HRESULT MenuItemSelected([in] ULONG menuItemId, [in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(34), helpstring("method OperationCanceled")] HRESULT OperationCanceled();
-		[id(35), helpstring("method DragEnter")] HRESULT DragEnter([out] ULONG* dropEffect, [in] ULONGLONG pCOleDataObject, [in] ULONG keyState, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(36), helpstring("method DragOver")] HRESULT DragOver([out] ULONG* dropEffect, [in] ULONGLONG pCOleDataObject, [in] ULONG keyState, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(37), helpstring("method Drop")] HRESULT Drop([in] ULONGLONG pCOleDataObject, [in] ULONG dropEffect, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
-		[id(38), helpstring("method DropFile")] HRESULT DropFile([in] ULONGLONG hDropInfo, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(21), helpstring("method DrawEx")] HRESULT DrawEx([in] HDC hdc, [in] ULONGLONG gdip);
+		[id(22), helpstring("method SetSelected")] HRESULT SetSelected([in] VARIANT_BOOL isSelected);
+		[id(23), helpstring("method MouseMoved")] HRESULT MouseMoved([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(24), helpstring("method MouseLeftButtonDown")] HRESULT MouseLeftButtonDown([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(25), helpstring("method MouseLeftButtonUp")] HRESULT MouseLeftButtonUp([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(26), helpstring("method MouseLeftButtonDoubleClick")] HRESULT MouseLeftButtonDoubleClick([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(27), helpstring("method MouseRightButtonDown")] HRESULT MouseRightButtonDown([in] ULONGLONG hCtxMenu, [in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(28), helpstring("method MouseRightButtonUp")] HRESULT MouseRightButtonUp([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(29), helpstring("method MouseRightButtonDoubleClick")] HRESULT MouseRightButtonDoubleClick([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(30), helpstring("method MouseMiddleButtonDown")] HRESULT MouseMiddleButtonDown([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(31), helpstring("method MouseMiddleButtonUp")] HRESULT MouseMiddleButtonUp([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(32), helpstring("method MouseMiddleButtonDoubleClick")] HRESULT MouseMiddleButtonDoubleClick([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(33), helpstring("method MouseWheelTurned")] HRESULT MouseWheelTurned([in] ULONG nFlags, [in] LONG distance, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(34), helpstring("method MenuItemSelected")] HRESULT MenuItemSelected([in] ULONG menuItemId, [in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(35), helpstring("method OperationCanceled")] HRESULT OperationCanceled();
+		[id(36), helpstring("method DragEnter")] HRESULT DragEnter([out] ULONG* dropEffect, [in] ULONGLONG pCOleDataObject, [in] ULONG keyState, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(37), helpstring("method DragOver")] HRESULT DragOver([out] ULONG* dropEffect, [in] ULONGLONG pCOleDataObject, [in] ULONG keyState, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(38), helpstring("method Drop")] HRESULT Drop([in] ULONGLONG pCOleDataObject, [in] ULONG dropEffect, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+		[id(39), helpstring("method DropFile")] HRESULT DropFile([in] ULONGLONG hDropInfo, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
 	};

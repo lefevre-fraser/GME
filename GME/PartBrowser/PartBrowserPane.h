@@ -9,6 +9,7 @@
 
 #include "StdAfx.h"
 #include <vector>
+#include <Gdiplus.h>
 
 class CDecoratorEventSink;
 
@@ -21,9 +22,10 @@ class CPartBrowserPane : public CWnd
 // Construction
 public:
 	struct PartWithDecorator {
-		CComPtr<IMgaMetaPart>	part;
-		CComPtr<IMgaDecorator>	decorator;
-		CDecoratorEventSink*	decorEventSink;
+		CComPtr<IMgaMetaPart>		part;
+		CComPtr<IMgaDecorator>		decorator;
+		CComPtr<IMgaNewDecorator>	newDecorator;
+		CDecoratorEventSink*		decorEventSink;
 	};
 
 	CPartBrowserPane();
@@ -39,14 +41,16 @@ private:
 
 // Attributes
 protected:
-	CComPtr<IMgaProject>	mgaProject;
-	CComPtr<IMgaMetaModel>	mgaMetaModel;
-	COLORREF				backgroundColor;
+	CComPtr<IMgaProject>							mgaProject;
+	CComPtr<IMgaMetaModel>							mgaMetaModel;
+	COLORREF										backgroundColor;
 	std::vector<std::vector<PartWithDecorator> >	pdts;
-	int						currentAspectIndex;
-	CSize					maxSize;
-	bool					omitPaintMessages;
-	CFont					txtMetricFont;
+	int												currentAspectIndex;
+	CSize											maxSize;
+	bool											omitPaintMessages;
+	CFont											txtMetricFont;
+	static Gdiplus::SmoothingMode					m_eEdgeAntiAlias;		// Edge smoothing mode
+	static Gdiplus::TextRenderingHint				m_eFontAntiAlias;		// Text renndering hint mode
 
 public:
 // Operations

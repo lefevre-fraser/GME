@@ -74,13 +74,8 @@ CSize AnnotatorTextPart::GetPreferredSize(void) const
 {
 	CDC	dc;
 	dc.CreateCompatibleDC(NULL);
-	Gdiplus::Graphics* gdip = new Gdiplus::Graphics(dc.m_hDC);
-	gdip->SetPageUnit(Gdiplus::UnitPixel);
-	gdip->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-	gdip->SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-
 	Gdiplus::Font myFont(dc.m_hDC, &m_logFont);
-	CSize size = DecoratorSDK::getFacilities().MeasureText(gdip, &myFont, m_strText);
+	CSize size = DecoratorSDK::getFacilities().MeasureText(NULL, &myFont, m_strText);
 	size.cx += 2 * AN_MARGIN;
 	size.cy += 2 * AN_MARGIN;
 	return size;

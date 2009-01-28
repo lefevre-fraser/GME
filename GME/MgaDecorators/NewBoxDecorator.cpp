@@ -44,6 +44,8 @@ void NewBoxDecorator::Destroy()
 		delete m_part;
 		m_part = NULL;
 	}
+	if (m_eventSink)
+		m_eventSink.Release();
 }
 
 CString NewBoxDecorator::GetMnemonic(void) const

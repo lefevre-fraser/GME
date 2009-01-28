@@ -44,6 +44,10 @@ namespace DecoratorSDK
 			bool								m_bArePathesValid;
 			CString								m_strParadigmPath;
 			CString								m_strProjectPath;
+			CDC									m_nullDC;
+			Gdiplus::Graphics*					m_gdip;
+			Gdiplus::SmoothingMode				m_eEdgeAntiAlias;		// Edge smoothing mode
+			Gdiplus::TextRenderingHint			m_eFontAntiAlias;		// Text renndering hint mode
 
 			std::map<CString,BitmapBase*>			m_mapBitmaps;
 			std::map<CString,TileVector*>			m_mapTileVectors;
@@ -58,9 +62,11 @@ namespace DecoratorSDK
 			Facilities();
 			~Facilities();
 
-			bool loadPathes( IMgaProject* pProject, bool bRefresh = false );
+			bool loadPathes(IMgaProject* pProject, bool bRefresh = false);
 			bool arePathesValid() const;
-			std::vector<CString> getPathes() const;
+			std::vector<CString> getPathes(void) const;
+			Gdiplus::Graphics* getGraphics(void) const;
+			CDC* getCDC(void);
 
 			BitmapBase* getBitmap( const CString& strName );
 			BitmapBase* getBitmapT( const CString& strName, COLORREF crTransparent );
