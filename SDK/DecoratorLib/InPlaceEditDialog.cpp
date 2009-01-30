@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include "TextPart.h"
 #include "InPlaceEditDialog.h"
 #include "InPlaceEditMultiLineDialog.h"
 
@@ -11,7 +12,8 @@
 IMPLEMENT_DYNAMIC(CInPlaceEditDialog, CDialog)
 CInPlaceEditDialog::CInPlaceEditDialog(short iDD, CWnd* pParent /*=NULL*/)
 	: CDialog(iDD, pParent),
-	m_IDD(iDD)
+	m_IDD(iDD),
+	m_bDlgResult(false)
 {
 }
 
@@ -27,6 +29,23 @@ void CInPlaceEditDialog::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 }
 
+void CInPlaceEditDialog::PostNcDestroy(void)
+{
+	CDialog::PostNcDestroy();
+
+	if (m_bDlgResult) {
+		m_parentPart->TitleChanged(m_Text);
+		// transaction operation begin
+		m_parentPart->ExecuteOperation(m_Text);
+		// transaction operation end
+	}
+	m_parentPart->TitleEditingFinished(m_initialRect);
+	if (!m_bPermanentCWnd)
+		m_parentCWnd->Detach();
+	delete m_font;
+	delete this;
+}
+
 
 BEGIN_MESSAGE_MAP(CInPlaceEditDialog, CDialog)
 	ON_WM_DESTROY()
@@ -38,7 +57,6 @@ BEGIN_MESSAGE_MAP(CInPlaceEditDialog, CDialog)
 	ON_WM_MOUSEMOVE()
 	ON_WM_SETCURSOR()
 	ON_WM_MOUSEACTIVATE()
-	ON_EN_CHANGE(IDC_TEXTEDIT, OnEnChangeTextedit)
 END_MESSAGE_MAP()
 
 
@@ -54,9 +72,6 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	if (IsKindOf(RUNTIME_CLASS(CInPlaceEditMultiLineDialog)))
 		heightRatio = 1.5;
 	long height = (long)(m_initialRect.Height() * heightRatio) + 4;
-	CRect parentWindowRect;
-	::GetWindowRect(m_parentHWnd, &parentWindowRect);
-	m_initialRect.OffsetRect(parentWindowRect.TopLeft());
 	long left = m_bInflateToRight ? m_initialRect.left : (m_initialRect.left - (long)(m_initialRect.Width() * 0.5));
 
 	MoveWindow(left, m_initialRect.top, width, height);
@@ -68,15 +83,18 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	if (dWidth != 0 || dHeight != 0) {
 		CRect editRect;
 		editWnd->GetWindowRect(&editRect);
-		editWnd->MoveWindow(0, 0, editRect.Width() + dWidth, editRect.Height() + dHeight);
+		editWnd->MoveWindow(2, 2, editRect.Width() + dWidth, editRect.Height() + dHeight);
 	}
 
 	// Capture the mouse, this allows the dialog to close when the user clicks outside.
 	// The dialog has no "close" button.
 	SetCapture();
 
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	editWnd->SetFocus();
+	m_parentPart->TitleEditingStarted(m_initialRect);
+
+	return FALSE;	// return TRUE unless you set the focus to a control
+					// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CInPlaceEditDialog::OnDestroy()
@@ -90,16 +108,22 @@ void CInPlaceEditDialog::OnBnClickedCancel()
 {
 	// TODO: Add your control notification handler code here
 	ReleaseCapture();
+	m_bDlgResult = false;
 
-	OnCancel();
+	DestroyWindow();
+//	OnCancel();	-> calls EndDialog, which is for Modal dialogs, avoid it
 }
 
 void CInPlaceEditDialog::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
-	ReleaseCapture();
+	if (UpdateData(true)) {
+		ReleaseCapture();
+		m_bDlgResult = true;
 
-	OnOK();
+		DestroyWindow();
+//		OnOK();	-> calls EndDialog, which is for Modal dialogs, avoid it
+	}
 }
 
 void CInPlaceEditDialog::OnLButtonDown(UINT nFlags, CPoint point)
@@ -116,7 +140,9 @@ void CInPlaceEditDialog::OnLButtonDown(UINT nFlags, CPoint point)
 
 	if (!PtInRect(&r, p)) {
 		// If the user clicked outside of the dialog, close (and apply changes).
+		TRACE3("CInPlaceEditDialog::OnLButtonDown %ld %ld\n", nFlags, point.x, point.y);
 		OnBnClickedOk();	// Windows Explorer default behavior
+		return;
 	} else {
 		// inside the dialog. Since this window
 		// has the mouse captured, its children
@@ -135,8 +161,8 @@ void CInPlaceEditDialog::OnLButtonDown(UINT nFlags, CPoint point)
 		CWnd *child = ChildWindowFromPoint(point);
 
 		if (child && child != this) {
-			child->SendMessage(WM_LBUTTONDOWN, nFlags, MAKELPARAM(point.x, point.y));
 			TRACE3("CInPlaceEditDialog::OnLButtonDown %ld %ld %ld\n", nFlags, point.x, point.y);
+			child->SendMessage(WM_LBUTTONDOWN, nFlags, MAKELPARAM(point.x, point.y));
 			return;
 		}
 	}
@@ -217,23 +243,6 @@ int CInPlaceEditDialog::OnMouseActivate(CWnd* pWnd, UINT nHitTest, UINT message)
 	}
 }
 
-void CInPlaceEditDialog::OnEnChangeTextedit()
-{
-	// TODO:  If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialog::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO:  Add your control notification handler code here
-}
-
-void CInPlaceEditDialog::EndDialog(int nResult)
-{
-	ReleaseCapture();
-
-	CDialog::EndDialog(nResult);
-}
-
 BOOL CInPlaceEditDialog::PreTranslateMessage(MSG* pMsg) 
 {
 	// Fix (Adrian Roman): Sometimes if the picker loses focus it is never destroyed
@@ -287,7 +296,6 @@ CRect CInPlaceEditDialog::GetWindowSizeFromResource(void) const
 	}
 
 	CRect rect;
-//	dlg.GetClientRect(rectSize);
 	dlg.GetWindowRect(rectSize);
 
 	dlg.DestroyWindow();

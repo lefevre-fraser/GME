@@ -96,7 +96,7 @@
 #define IDR_CRASH_TEST_MENU             218
 #define ID_VIEW_APPLOOK_OFF_2007_AQUA   218
 #define IDD_EMERGENCY_DIALOG            219
-#define IDB_COMPONENTS_TOOLBAR24		219
+#define IDB_COMPONENTS_TOOLBAR24        219
 #define IDD_PANNING_WINDOW_DIALOG       220
 #define IDB_NAVIG_TOOLBAR24             220
 #define IDD_CHILDFRAME_DIALOG           221
@@ -503,7 +503,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        225
 #define _APS_NEXT_COMMAND_VALUE         33102
-#define _APS_NEXT_CONTROL_VALUE         1128
+#define _APS_NEXT_CONTROL_VALUE         1132
 #define _APS_NEXT_SYMED_VALUE           119
 #endif
 #endif

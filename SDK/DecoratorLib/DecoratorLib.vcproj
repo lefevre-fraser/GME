@@ -280,6 +280,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\InPlaceNativeDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LabelPart.cpp"
 				>
 			</File>
@@ -503,6 +507,10 @@
 			</File>
 			<File
 				RelativePath=".\InPlaceEditSingleLineDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InPlaceNativeDialog.h"
 				>
 			</File>
 			<File

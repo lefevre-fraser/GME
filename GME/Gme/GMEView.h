@@ -508,6 +508,7 @@ protected:
 	afx_msg void OnJumpToNextObject();
 	afx_msg void OnShowContextMenu();
 	afx_msg void OnPrintMetafile();
+	afx_msg LRESULT OnCommitTransaction(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnZoomIn();
 	afx_msg void OnZoomOut();
 	afx_msg LRESULT OnZoom(WPARAM wParam, LPARAM lParam);

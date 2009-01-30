@@ -111,10 +111,8 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::TitleEditingStarted(LONG left, LON
 {
 	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
 
-	pThis->m_view->BeginTransaction();
 	pThis->m_view->inNewDecoratorOperation = true;
 	pThis->m_view->decoratorOrAnnotator = true;
-	pThis->m_view->inOpenedDecoratorTransaction = true;
 	pThis->m_view->shouldCommitOperation = false;
 
 	return S_OK;
@@ -124,7 +122,15 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::TitleEditingFinished(LONG left, LO
 {
 	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
 
-	pThis->m_view->inNewDecoratorOperation = false;
+	if (pThis->m_view->inOpenedDecoratorTransaction) {
+		pThis->m_view->PostMessage(WM_USER_COMMITTRAN, 0, 0);
+	} else {
+		pThis->m_view->inOpenedDecoratorTransaction = false;
+		pThis->m_view->shouldCommitOperation = false;
+		pThis->m_view->inNewDecoratorOperation = false;
+		pThis->m_view->objectInDecoratorOperation = NULL;
+		pThis->m_view->annotatorInDecoratorOperation = NULL;
+	}
 
 	return S_OK;
 }
@@ -133,6 +139,8 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::TitleChanged(BSTR newTitle)
 {
 	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
 
+	pThis->m_view->BeginTransaction();
+	pThis->m_view->inOpenedDecoratorTransaction = true;
 	pThis->m_view->shouldCommitOperation = true;
 
 	return S_OK;

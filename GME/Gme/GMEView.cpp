@@ -468,6 +468,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_KEY_ZOOMOUT, OnZoomOut)
 	ON_COMMAND(ID_KEY_CYCLEOBJINSPFRWD, OnKeyCycleObjInspectorFrwd)
 	ON_COMMAND(ID_KEY_CYCLEOBJINSPBKWD, OnKeyCycleObjInspectorBkwd)
+	ON_MESSAGE(WM_USER_COMMITTRAN, OnCommitTransaction)
 	ON_MESSAGE(WM_USER_ZOOM, OnZoom)
 	ON_MESSAGE(WM_USER_PANNREFRESH, OnPannRefresh)
 	ON_MESSAGE(WM_PANN_SCROLL, OnPannScroll)
@@ -4824,14 +4825,32 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 							shouldCommitOperation = false;
 							objectInDecoratorOperation = NULL;
 							annotatorInDecoratorOperation = NULL;
-						} else {
+							inOpenedDecoratorTransaction = false;
+							isContextInitiatedOperation = false;
+							CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
+							return;
+						} else if (!inNewDecoratorOperation) {
 							AbortTransaction(S_OK);
+							inOpenedDecoratorTransaction = false;
+							isContextInitiatedOperation = false;
+							CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
+							return;
+						} else {
+							if (::GetCapture() != NULL)
+								::ReleaseCapture();
 						}
 						inOpenedDecoratorTransaction = false;
 						isContextInitiatedOperation = false;
+					} else {
+						if (inNewDecoratorOperation) {
+							if (decoratorOrAnnotator)
+								objectInDecoratorOperation = object;
+							else
+								annotatorInDecoratorOperation = annotation;
+						}
+						CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+						return;
 					}
-					CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
-					return;
 				} else if (retVal != S_OK &&
 						   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
 						   retVal != E_DECORATOR_NOT_IMPLEMENTED)
@@ -4839,9 +4858,17 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 					CancelDecoratorOperation();
 					COMTHROW(retVal);
 				}
+				if (inNewDecoratorOperation) {
+					if (decoratorOrAnnotator)
+						objectInDecoratorOperation = object;
+					else
+						annotatorInDecoratorOperation = annotation;
+				}
 			}
-		} else {
-			CancelDecoratorOperation();
+		}
+		if (inNewDecoratorOperation) {
+			CScrollZoomView::OnLButtonDown(nFlags, ppoint);
+			return;
 		}
 
 		CGuiObject *selection = FindObject(point);
@@ -8233,6 +8260,18 @@ void CGMEView::OnPrintMetafile()
 	if ( hEmf ) {
 		DeleteEnhMetaFile(hEmf);
 	}
+}
+
+LRESULT CGMEView::OnCommitTransaction(WPARAM wParam, LPARAM lParam)
+{
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnCommitTransaction() in " + path + name + "\r\n");
+	CommitTransaction();
+	inOpenedDecoratorTransaction = false;
+	shouldCommitOperation = false;
+	inNewDecoratorOperation = false;
+	objectInDecoratorOperation = NULL;
+	annotatorInDecoratorOperation = NULL;
+	return 0;
 }
 
 void CGMEView::ZoomRect(CRect srect)

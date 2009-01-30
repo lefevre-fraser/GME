@@ -11,6 +11,7 @@
 #include "DecoratorExceptions.h"
 #include "InPlaceEditSingleLineDialog.h"
 #include "InPlaceEditMultiLineDialog.h"
+//#include "InPlaceNativeDialog.h"
 
 namespace DecoratorSDK {
 
@@ -345,30 +346,16 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 			inPlaceEditDlg = new CInPlaceEditMultiLineDialog(cWnd);
 		else
 			inPlaceEditDlg = new CInPlaceEditSingleLineDialog(cWnd);
+
 		bool inflateToRight = true;
 		PortLabelPart* portLabelPart = dynamic_cast<PortLabelPart*> (this);
 		if (portLabelPart != NULL)
 			if (portLabelPart->GetLocationAdjust() == L_WEST)
 				inflateToRight = false;
-		inPlaceEditDlg->SetProperties(m_strText, editLocation, m_parentWnd, cWnd, scaled_font, inflateToRight);
-
-		if (inPlaceEditDlg->DoModal() == IDOK) {
-			TitleEditingStarted(editLocation);
-			CString newString = inPlaceEditDlg->GetText();
-			// transaction operation begin
-			ExecuteOperation(newString);
-			// transaction operation end
-			TitleChanged(newString);
-			TitleEditingFinished(editLocation);
-		}
-		delete inPlaceEditDlg;
-		delete scaled_font;
-		scaled_font = NULL;
-
-		if (!isPermanentCWnd) {
-			cWnd->Detach();
-			// delete is not needed, cause others created the CWnd, it'll be deleted in one OnIdle run by MFC
-		}
+		inPlaceEditDlg->SetProperties(m_strText, this, editLocation, m_parentWnd, cWnd, scaled_font,
+									  isPermanentCWnd, inflateToRight);
+		inPlaceEditDlg->Create(m_bMultiLine ? IDD_INPLACEEDITMLDIALOG : IDD_INPLACEEDITSLDIALOG, cWnd);
+		inPlaceEditDlg->ShowWindow(SW_SHOWNORMAL);
 
 		return true;
 	}

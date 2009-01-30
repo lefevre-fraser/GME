@@ -60,9 +60,10 @@ extern CComModule _Module;
 
 
 
-#define WM_USER_ZOOM			(WM_USER+111)
-#define WM_PANN_SCROLL			(WM_USER+112)
-#define WM_USER_PANNREFRESH		(WM_USER+113)
+#define WM_USER_ZOOM			(WM_USER + 111)
+#define WM_PANN_SCROLL			(WM_USER + 112)
+#define WM_USER_PANNREFRESH		(WM_USER + 113)
+#define WM_USER_COMMITTRAN		(WM_USER + 114)
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

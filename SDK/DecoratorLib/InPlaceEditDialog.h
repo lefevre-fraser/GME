@@ -10,6 +10,10 @@
 #include "stdafx.h"
 #include "DecoratorDefs.h"
 
+namespace DecoratorSDK {
+	class TextPart;
+}
+
 // CInPlaceEditDialog dialog
 
 class CInPlaceEditDialog : public CDialog
@@ -28,6 +32,7 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void PostNcDestroy(void);
 
 	DECLARE_MESSAGE_MAP()
 public:
@@ -43,20 +48,21 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);
-	afx_msg void OnEnChangeTextedit();
 	//}}AFX_MSG
 
-	CWnd*	m_parentCWnd;
-	HWND	m_parentHWnd;
-	CRect	m_initialRect;
-	CFont*	m_font;
-	long	m_zoomVal;
-	bool	m_bInflateToRight;
+	DecoratorSDK::TextPart*	m_parentPart;
+	CWnd*					m_parentCWnd;
+	HWND					m_parentHWnd;
+	CRect					m_initialRect;
+	CFont*					m_font;
+	bool					m_bPermanentCWnd;
+	bool					m_bInflateToRight;
+	bool					m_bDlgResult;
 
-	void	SetProperties(const CString& text, const CRect& initialRect, HWND parentWnd, CWnd* parentCWnd, CFont* font,
-						  bool inflateToRight = true)
-				{ m_Text = text; m_initialRect = initialRect; m_parentHWnd = parentWnd; m_parentCWnd = parentCWnd;
-				  m_font = font; m_bInflateToRight = inflateToRight; };
+	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect, HWND parentWnd,
+						  CWnd* parentCWnd, CFont* font, bool isPermanentCWnd, bool inflateToRight = true)
+				{ m_Text = text; m_parentPart = parentPart; m_initialRect = initialRect; m_parentHWnd = parentWnd;
+				  m_parentCWnd = parentCWnd; m_font = font; m_bPermanentCWnd = isPermanentCWnd; m_bInflateToRight = inflateToRight; };
 	CString GetText() const { return m_Text; };
 	void	SetText(const CString& text) { m_Text = text; };
 
@@ -64,7 +70,6 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CInPlaceEditDialog)
     public:
-    virtual void EndDialog(int nResult);
     virtual BOOL PreTranslateMessage(MSG* pMsg);
     //}}AFX_VIRTUAL
 
