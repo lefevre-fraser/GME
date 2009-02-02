@@ -28,7 +28,7 @@ CAnnotatorEventSink::CAnnotatorEventSink():
 	m_view(NULL),
 	m_guiAnnotator(NULL)
 {
-	EnableAutomation();
+//	EnableAutomation();	// only needed for Dispatch maps
 }
 
 CAnnotatorEventSink::~CAnnotatorEventSink()

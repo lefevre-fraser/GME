@@ -35,17 +35,7 @@ PartBase::PartBase(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
 
 PartBase::~PartBase()
 {
-	if (m_eventSink)
-		m_eventSink.Release();
-	if (m_spProject)
-		m_spProject.Release();
-	if (m_spPart)
-		m_spPart.Release();
-	if (m_spFCO)
-		m_spFCO.Release();
-	if (m_spMetaFCO)
-		m_spMetaFCO.Release();
-	// TODO: destroy more COM objects???
+	// TODO: anything to destroy?
 }
 
 void PartBase::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)

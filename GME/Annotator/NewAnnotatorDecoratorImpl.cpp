@@ -50,13 +50,26 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::Initialize(IMgaProject* pProject, IMgaM
 
 STDMETHODIMP CNewAnnotatorDecoratorImpl::Destroy()
 {
+	VERIFY_INITIALIZATION
+
+	HRESULT retVal = S_OK;
+	try {
+		m_pNewDecorator->Destroy();
+	}
+	catch(hresult_exception& e) {
+		retVal = e.hr;
+	}
+	catch(DecoratorException& e) {
+		retVal = e.GetHResult();
+	}
+
 	m_bLocationSet = false;
 	if (m_pNewDecorator) {
 		delete m_pNewDecorator;
 		m_pNewDecorator = NULL;
 	}
 
-	return S_OK;
+	return retVal;
 }
 
 STDMETHODIMP CNewAnnotatorDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)

@@ -43,7 +43,6 @@ library DecoratorLib
 	coclass NewAnnotatorDecorator
 	{
 		[default] interface IMgaNewDecorator;
-		[default, source] interface IMgaNewDecoratorEvents;
 		interface IMgaVersionInfo;
 	};
 

@@ -141,8 +141,12 @@ CGuiAspect::~CGuiAspect()
 		COMTHROW(decorator->Destroy());
 		decorator = NULL;
 	}
-	if (decoratorEventSink != NULL)
-		delete decoratorEventSink;
+	if (decoratorEventSink != NULL) {
+//		decoratorEventSink->ExternalDisconnect();
+//		ASSERT(decoratorEventSink->m_dwRef == 1);
+		decoratorEventSink->ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
+		decoratorEventSink = NULL;
+	}
 	POSITION pos = ports.GetHeadPosition();
 	while(pos) {
 		delete ports.GetNext(pos);
@@ -478,12 +482,17 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel> &pModel, CComPtr<IMgaRegNode> &m
 		}
 	}
 	catch(hresult_exception &e) {
+		for (int i = 0; i < numParentAspects; i++) {
+			if (decorators[i] != NULL)
+				COMTHROW(decorators[i]->Destroy());
+//			annotatorEventSinks[i].ExternalDisconnect();
+			annotatorEventSinks[i].ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
+		}
 		numParentAspects = 0;
 		parentAspect = 0;
 		delete [] decorators;
 		delete [] locations;
 		delete [] newDecorators;
-		delete [] annotatorEventSinks;
 		throw hresult_exception(e.hr);
 		return;
 	}
@@ -494,11 +503,12 @@ CGuiAnnotator::~CGuiAnnotator()
 	for (int i = 0; i < numParentAspects; i++) {
 		if (decorators[i] != NULL)
 			COMTHROW(decorators[i]->Destroy());
+//		annotatorEventSinks[i].ExternalDisconnect();
+		annotatorEventSinks[i].ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
 	}
 	delete [] decorators;
 	delete [] locations;
 	delete [] newDecorators;
-	delete [] annotatorEventSinks;
 }
 
 void CGuiAnnotator::InitDecorator(int asp)

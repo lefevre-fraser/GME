@@ -29,11 +29,13 @@ CDecoratorEventSink::CDecoratorEventSink():
 	m_view(NULL),
 	m_guiObject(NULL)
 {
-	EnableAutomation();
+	TRACE("EventSink contruct %p\n", this);
+//	EnableAutomation();	// only needed for Dispatch maps
 }
 
 CDecoratorEventSink::~CDecoratorEventSink()
 {
+	TRACE("EventSink destruct %p\n", this);
 }
 
 void CDecoratorEventSink::OnFinalRelease()

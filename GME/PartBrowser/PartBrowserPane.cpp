@@ -181,8 +181,10 @@ void CPartBrowserPane::DestroyDecorators(void)
 			else
 				(*jj).decorator.Release();
 			(*jj).part.Release();
-			if ((*jj).decorEventSink != NULL)
-				delete (*jj).decorEventSink;
+			if ((*jj).decorEventSink != NULL) {
+				(*jj).decorEventSink->ExternalRelease();
+				(*jj).decorEventSink = NULL;
+			}
 		}
 		(*ii).clear();
 	}

@@ -40,8 +40,6 @@ void NewUMLDecorator::Destroy()
 		delete m_part;
 		m_part = NULL;
 	}
-	if (m_eventSink)
-		m_eventSink.Release();
 }
 
 CString NewUMLDecorator::GetMnemonic(void) const
