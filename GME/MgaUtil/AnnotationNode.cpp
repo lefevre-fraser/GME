@@ -93,7 +93,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		CComBSTR bstr;
 		COMTHROW(m_regNode->get_Value(&bstr));
 		m_text = bstr;
-		m_text.Replace("\n", "\r\n");
+		m_text = CAnnotationUtil::ResolveNewLinesToCRLF(m_text);
 	}
 	catch (hresult_exception &) {
 		ASSERT(("Error while reading annotation from registry.", false));
@@ -456,7 +456,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 		CComBSTR bstr1;
 		COMTHROW(m_regNode->get_Value(&bstr1));
 		CString old_m_text = bstr1;
-		old_m_text.Replace("\n", "\r\n");
+		old_m_text = CAnnotationUtil::ResolveNewLinesToCRLF(old_m_text);
 
 		if(!m_virtual) COMTHROW(m_regNode->RemoveTree()); // remove the old node if it was HERE, because we will write a new node there
 		else // virtual node: still inherited
@@ -498,8 +498,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 
 	// Store text
 	try {
-		CString tmpstr(m_text);
-		tmpstr.Replace("\r\n", "\n");
+		CString tmpstr = CAnnotationUtil::ResolveNewLinesToLF(m_text);
 		CComBSTR bstr(tmpstr);
 		COMTHROW(m_regNode->put_Value(bstr));
 	}

@@ -139,10 +139,9 @@ void AnnotatorTextPart::ExecuteOperation(const CString& newString)
 	// transaction operation begin
 	try {
 		m_strText = newString;
-		CString strText = newString;
-		m_strText.Replace("\r\n", "\n");
+		CString tmpstr = CAnnotationUtil::ResolveNewLinesToLF(newString);
 		CComBSTR bstr;
-		CopyTo(strText, bstr);
+		CopyTo(tmpstr, bstr);
 		COMTHROW(m_regRoot->put_Value(bstr));
 	}
 	catch (hresult_exception&) {
@@ -157,7 +156,7 @@ void AnnotatorTextPart::ReadPreferences(void)
 		CComBSTR bstr;
 		COMTHROW(m_regRoot->get_Value(&bstr));
 		m_strText = bstr;
-		m_strText.Replace("\n", "\r\n");
+		m_strText = CAnnotationUtil::ResolveNewLinesToCRLF(m_strText);
 	}
 	catch (hresult_exception&) {
 		m_strText = "Unable to read annotation !";

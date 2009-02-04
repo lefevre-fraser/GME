@@ -112,10 +112,10 @@ void NewMetaDecorator::SaveState()
 void NewMetaDecorator::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 									HWND parentWnd)
 {
-	MetaCompositePart* MetaComposite = new MetaCompositePart(NULL, m_eventSink);
-	m_part = MetaComposite;
+	MetaCompositePart* metaComposite = new MetaCompositePart(NULL, m_eventSink);
+	m_part = metaComposite;
 
-	MetaComposite->InitializeEx(pProject, pPart, pFCO, parentWnd);
+	metaComposite->InitializeEx(pProject, pPart, pFCO, parentWnd);
 }
 
 void NewMetaDecorator::SetSelected(bool bIsSelected)
