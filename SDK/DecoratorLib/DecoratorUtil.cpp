@@ -222,9 +222,6 @@ Facilities::~Facilities()
 	for ( std::map<CString,Gdiplus::SolidBrush*>::iterator it8 = m_mapGdipBrushes.begin() ; it8 != m_mapGdipBrushes.end() ; ++it8 )
 		delete it8->second;
 
-	if (m_spProject)
-		m_spProject.Release();
-
 	delete m_gdip;
 }
 

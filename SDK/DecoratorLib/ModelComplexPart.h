@@ -16,7 +16,7 @@
 
 namespace DecoratorSDK {
 
-struct PortPartData;
+class PortPartData;
 
 //################################################################################################
 //

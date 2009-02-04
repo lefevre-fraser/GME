@@ -1644,9 +1644,9 @@ void CGMEView::AddAnnotationToSelectionTail(CGuiAnnotator* ann)
 void CGMEView::AddAnnotationToSelection(CGuiAnnotator* ann, bool headOrTail)
 {
 	ClearConnectionSelection();
-	CComPtr<IMgaNewDecorator> newDecorator = ann->GetNewDecorator(currentAspect->index);
-	if (newDecorator)
-		HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
+	CComPtr<IMgaNewDecorator> decorator = ann->GetDecorator(currentAspect->index);
+	if (decorator)
+		HRESULT retVal = decorator->SetSelected(VARIANT_TRUE);
 	if (headOrTail)
 		selectedAnnotations.AddHead(ann);
 	else
@@ -1659,9 +1659,9 @@ void CGMEView::RemoveAllAnnotationFromSelection(void)
 	CGuiAnnotator *ann;
 	while (pos) {
 		ann = selectedAnnotations.GetNext(pos);
-		CComPtr<IMgaNewDecorator> newDecorator = ann->GetNewDecorator(currentAspect->index);
-		if (newDecorator)
-			HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
+		CComPtr<IMgaNewDecorator> decorator = ann->GetDecorator(currentAspect->index);
+		if (decorator)
+			HRESULT retVal = decorator->SetSelected(VARIANT_FALSE);
 	}
 	selectedAnnotations.RemoveAll();
 }
@@ -1669,18 +1669,18 @@ void CGMEView::RemoveAllAnnotationFromSelection(void)
 void CGMEView::RemoveAnnotationFromSelectionHead(void)
 {
 	CGuiAnnotator* head = selectedAnnotations.GetHead();
-	CComPtr<IMgaNewDecorator> newDecorator = head->GetNewDecorator(currentAspect->index);
-	if (newDecorator)
-		HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
+	CComPtr<IMgaNewDecorator> decorator = head->GetDecorator(currentAspect->index);
+	if (decorator)
+		HRESULT retVal = decorator->SetSelected(VARIANT_FALSE);
 	selectedAnnotations.RemoveHead();
 }
 
 void CGMEView::RemoveAnnotationFromSelection(POSITION annPos)
 {
 	CGuiAnnotator* ann = selectedAnnotations.GetAt(annPos);
-	CComPtr<IMgaNewDecorator> newDecorator = ann->GetNewDecorator(currentAspect->index);
-	if (newDecorator)
-		HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
+	CComPtr<IMgaNewDecorator> decorator = ann->GetDecorator(currentAspect->index);
+	if (decorator)
+		HRESULT retVal = decorator->SetSelected(VARIANT_FALSE);
 	selectedAnnotations.RemoveAt(annPos);
 }
 
@@ -4218,7 +4218,7 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 						}
 					} else {
 						ASSERT(annotatorInDecoratorOperation != NULL);
-						newDecorator = annotatorInDecoratorOperation->GetNewDecorator(currentAspect->index);
+						newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
 					}
 					if (newDecorator) {
 						CClientDC transformDC(this);
@@ -4258,7 +4258,7 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 					} else {
 						annotation = FindAnnotation(point);
 						if (annotation)
-							newDecorator = annotation->GetNewDecorator(currentAspect->index);
+							newDecorator = annotation->GetDecorator(currentAspect->index);
 					}
 					if (newDecorator) {
 						CClientDC transformDC(this);
@@ -4338,7 +4338,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						}
 					} else {
 						ASSERT(annotatorInDecoratorOperation != NULL);
-						newDecorator = annotatorInDecoratorOperation->GetNewDecorator(currentAspect->index);
+						newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
 					}
 					if (newDecorator) {
 						CClientDC transformDC(this);
@@ -4379,7 +4379,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 					} else {
 						annotation = FindAnnotation(point);
 						if (annotation)
-							newDecorator = annotation->GetNewDecorator(currentAspect->index);
+							newDecorator = annotation->GetDecorator(currentAspect->index);
 					}
 					if (newDecorator) {
 						CClientDC transformDC(this);
@@ -4811,7 +4811,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			} else {
 				annotation = FindAnnotation(point);
 				if (annotation)
-					newDecorator = annotation->GetNewDecorator(currentAspect->index);
+					newDecorator = annotation->GetDecorator(currentAspect->index);
 			}
 
 			if (newDecorator) {
@@ -5168,12 +5168,12 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				::DestroyMenu(decoratorAdditionalMenu);
 			} else if (contextAnnotation != NULL) {
 				HMENU decoratorAdditionalMenu = ::CreatePopupMenu();
-				CComPtr<IMgaNewDecorator> newDecorator = contextAnnotation->GetNewDecorator(currentAspect->index);
+				CComPtr<IMgaNewDecorator> decorator = contextAnnotation->GetDecorator(currentAspect->index);
 				HRESULT retVal = S_OK;
-				if (newDecorator) {
+				if (decorator) {
 					CClientDC transformDC(this);
 					OnPrepareDC(&transformDC);
-					retVal = newDecorator->MouseRightButtonDown((ULONGLONG)decoratorAdditionalMenu, nFlags, local.x, local.y, (ULONGLONG)transformDC.m_hDC);
+					retVal = decorator->MouseRightButtonDown((ULONGLONG)decoratorAdditionalMenu, nFlags, local.x, local.y, (ULONGLONG)transformDC.m_hDC);
 				}
 				CMenu menu;
 				menu.LoadMenu(IDR_ANNCONTEXT_MENU);
@@ -5280,11 +5280,11 @@ DROPEFFECT CGMEView::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeyState, 
 
 	CGuiAnnotator* annotation = FindAnnotation(point);
 	if (annotation != NULL) {
-		CComPtr<IMgaNewDecorator> newDecorator = annotation->GetNewDecorator(currentAspect->index);
-		if (newDecorator) {
+		CComPtr<IMgaNewDecorator> decorator = annotation->GetDecorator(currentAspect->index);
+		if (decorator) {
 			CClientDC transformDC(this);
 			OnPrepareDC(&transformDC);
-			retVal = newDecorator->DragEnter(&dropEffect, (ULONGLONG)pDataObject, dwKeyState, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+			retVal = decorator->DragEnter(&dropEffect, (ULONGLONG)pDataObject, dwKeyState, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
 		}
 	}
 	if (dropEffect != DROPEFFECT_NONE) {
@@ -5342,11 +5342,11 @@ DROPEFFECT CGMEView::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState, C
 
 	CGuiAnnotator* annotation = FindAnnotation(point);
 	if (annotation != NULL) {
-		CComPtr<IMgaNewDecorator> newDecorator = annotation->GetNewDecorator(currentAspect->index);
-		if (newDecorator) {
+		CComPtr<IMgaNewDecorator> decorator = annotation->GetDecorator(currentAspect->index);
+		if (decorator) {
 			CClientDC transformDC(this);
 			OnPrepareDC(&transformDC);
-			retVal = newDecorator->DragOver(&dropEffect, (ULONGLONG)pDataObject, dwKeyState, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+			retVal = decorator->DragOver(&dropEffect, (ULONGLONG)pDataObject, dwKeyState, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
 		}
 	}
 	if (dropEffect != DROPEFFECT_NONE)
@@ -5485,11 +5485,11 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 
 	CGuiAnnotator* annotation = FindAnnotation(point);
 	if (annotation != NULL) {
-		CComPtr<IMgaNewDecorator> newDecorator = annotation->GetNewDecorator(currentAspect->index);
-		if (newDecorator) {
+		CComPtr<IMgaNewDecorator> decorator = annotation->GetDecorator(currentAspect->index);
+		if (decorator) {
 			CClientDC transformDC(this);
 			OnPrepareDC(&transformDC);
-			retVal = newDecorator->Drop((ULONGLONG)pDataObject, dropEffect, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+			retVal = decorator->Drop((ULONGLONG)pDataObject, dropEffect, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
 		}
 	}
 	if (retVal == S_DECORATOR_EVENT_HANDLED)
@@ -5680,7 +5680,7 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 						newDecorator = newDecorator2;
 					}
 				} else {
-					newDecorator = selectedAnnotationOfContext->GetNewDecorator(currentAspect->index);
+					newDecorator = selectedAnnotationOfContext->GetDecorator(currentAspect->index);
 				}
 				if (newDecorator) {
 					isContextInitiatedOperation = true;
@@ -6499,7 +6499,7 @@ void CGMEView::CancelDecoratorOperation(bool notify)
 					newDecorator2 = newDecorator;
 				}
 			} else if (annotatorInDecoratorOperation != NULL) {
-				newDecorator = annotatorInDecoratorOperation->GetNewDecorator(currentAspect->index);
+				newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
 			}
 			if (newDecorator)
 				HRESULT retVal = newDecorator->OperationCanceled();
@@ -7868,7 +7868,7 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 				}
 			} else {
 				ASSERT(annotatorInDecoratorOperation != NULL);
-				newDecorator = annotatorInDecoratorOperation->GetNewDecorator(currentAspect->index);
+				newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
 			}
 			if (newDecorator) {
 				CClientDC transformDC(this);
@@ -7895,7 +7895,7 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 				}
 			} else {
 				ASSERT(annotation != NULL);
-				newDecorator = annotation->GetNewDecorator(currentAspect->index);
+				newDecorator = annotation->GetDecorator(currentAspect->index);
 			}
 			if (newDecorator) {
 				CClientDC transformDC(this);

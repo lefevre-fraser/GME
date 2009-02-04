@@ -41,9 +41,9 @@ void ResizablePart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaP
 
 void ResizablePart::Destroy(void)
 {
+	OperationCanceledByGME();
 	if (m_bResizable)
 		resizeLogic.Destroy();
-	OperationCanceledByGME();
 }
 
 feature_code ResizablePart::GetFeatures(void) const

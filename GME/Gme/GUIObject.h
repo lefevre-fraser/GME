@@ -2,6 +2,7 @@
 #define _GUIOBJECT_INCLUDED_
 
 #include "Autoroute/AutoRouter.h"
+#include <vector>
 
 class CGMEView;
 class CModelGrid;
@@ -103,6 +104,20 @@ private:
 	CComPtr<IAutoRouterPort> routerPort;
 };
 
+class AnnotatorDecoratorData
+{
+public:
+	AnnotatorDecoratorData()
+		{ decorator = NULL; annotatorEventSink = NULL; };
+	AnnotatorDecoratorData(CComPtr<IMgaNewDecorator>& nD, CAnnotatorEventSink* aES, const CRect& loc):
+		decorator(nD), annotatorEventSink(aES), location(loc) {};
+	~AnnotatorDecoratorData() {};
+
+	CComPtr<IMgaNewDecorator>	decorator;
+	CAnnotatorEventSink*		annotatorEventSink;
+	CRect						location;
+};
+
 class CGuiAnnotator : public CGuiBase
 {
 public:
@@ -132,23 +147,19 @@ public:
 	static void ShiftAnnotations(CGuiAnnotatorList &annList,CPoint &shiftBy);
 	static bool Showable( CComPtr<IMgaRegNode> &mRootNode);
 	static int  Hide( CComPtr<IMgaRegNode> &mRootNode);
-	CComPtr<IMgaNewDecorator> GetNewDecorator(int asp) { return newDecorators[asp]; }
+	CComPtr<IMgaNewDecorator> GetDecorator(int asp) { return decoratorData[asp]->decorator; }
 
 public:
-	CComPtr<IMgaRegNode>		rootNode;
+	CComPtr<IMgaRegNode>						rootNode;
 
 protected:
-	CComPtr<IMgaModel>			model;
-	int							numParentAspects;
-	int							parentAspect;
-	bool						grayedOut;
-	CGMEView*					view;
-	CComPtr<IMgaDecorator>*		decorators;
-	CComPtr<IMgaNewDecorator>*	newDecorators;
-	CAnnotatorEventSink*		annotatorEventSinks;
-	CRect*						locations;
-	bool						special;
-
+	CComPtr<IMgaModel>							model;
+	int											numParentAspects;
+	int											parentAspect;
+	bool										grayedOut;
+	CGMEView*									view;
+	std::vector<AnnotatorDecoratorData*>		decoratorData;
+	bool										special;
 };
 
 class CGuiFco : public CGuiBase

@@ -101,10 +101,10 @@ void CompositePart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaP
 
 void CompositePart::Destroy()
 {
-	PartBase::Destroy();
 	for (std::vector<PartBase*>::iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
 		(*ii)->Destroy();
 	}
+	PartBase::Destroy();
 }
 
 CString CompositePart::GetMnemonic(void) const

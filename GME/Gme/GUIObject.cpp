@@ -142,8 +142,7 @@ CGuiAspect::~CGuiAspect()
 		decorator = NULL;
 	}
 	if (decoratorEventSink != NULL) {
-//		decoratorEventSink->ExternalDisconnect();
-//		ASSERT(decoratorEventSink->m_dwRef == 1);
+		ASSERT(decoratorEventSink->m_dwRef == 1);
 		decoratorEventSink->ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
 		decoratorEventSink = NULL;
 	}
@@ -424,10 +423,9 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel> &pModel, CComPtr<IMgaRegNode> &m
 	view = vw;
 	special = false;
 
-	decorators = new CComPtr<IMgaDecorator>[numAsp];
-	newDecorators = new CComPtr<IMgaNewDecorator>[numAsp];
-	annotatorEventSinks = new CAnnotatorEventSink[numAsp];
-	locations = new CRect[numAsp];
+	for (int i = 0; i < numAsp; i++) {
+		decoratorData.push_back(new AnnotatorDecoratorData());
+	}
 
 	try {
 		CComBSTR bName;
@@ -473,7 +471,7 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel> &pModel, CComPtr<IMgaRegNode> &m
 			COMTHROW(defAspNode->get_Status(&status));
 			if (status != ATTSTATUS_UNDEFINED) {
 				for (int i = 0; i < numParentAspects; i++) {
-					if (decorators[i] == NULL) {
+					if (decoratorData[i]->decorator == NULL) {
 						ReadLocation(i, defAspNode);
 						InitDecorator(i);
 					}
@@ -482,17 +480,18 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel> &pModel, CComPtr<IMgaRegNode> &m
 		}
 	}
 	catch(hresult_exception &e) {
-		for (int i = 0; i < numParentAspects; i++) {
-			if (decorators[i] != NULL)
-				COMTHROW(decorators[i]->Destroy());
-//			annotatorEventSinks[i].ExternalDisconnect();
-			annotatorEventSinks[i].ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
+		for (std::vector<AnnotatorDecoratorData*>::iterator ii = decoratorData.begin(); ii != decoratorData.end(); ++ii) {
+			if ((*ii)->decorator != NULL)
+				COMTHROW((*ii)->decorator->Destroy());
+			CAnnotatorEventSink* annotatorEventSink = (*ii)->annotatorEventSink;
+			delete (*ii);
+			if (annotatorEventSink != NULL)
+				annotatorEventSink->ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
 		}
+		decoratorData.clear();
+
 		numParentAspects = 0;
 		parentAspect = 0;
-		delete [] decorators;
-		delete [] locations;
-		delete [] newDecorators;
 		throw hresult_exception(e.hr);
 		return;
 	}
@@ -500,15 +499,16 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel> &pModel, CComPtr<IMgaRegNode> &m
 
 CGuiAnnotator::~CGuiAnnotator()
 {
-	for (int i = 0; i < numParentAspects; i++) {
-		if (decorators[i] != NULL)
-			COMTHROW(decorators[i]->Destroy());
-//		annotatorEventSinks[i].ExternalDisconnect();
-		annotatorEventSinks[i].ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
+	for (std::vector<AnnotatorDecoratorData*>::iterator ii = decoratorData.begin(); ii != decoratorData.end(); ++ii) {
+		if ((*ii)->decorator != NULL)
+			COMTHROW((*ii)->decorator->Destroy());
+		CAnnotatorEventSink* annotatorEventSink = (*ii)->annotatorEventSink;
+		delete (*ii);
+		ASSERT(annotatorEventSink->m_dwRef == 1);
+		if (annotatorEventSink != NULL)
+			annotatorEventSink->ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
 	}
-	delete [] decorators;
-	delete [] locations;
-	delete [] newDecorators;
+	decoratorData.clear();
 }
 
 void CGuiAnnotator::InitDecorator(int asp)
@@ -516,37 +516,31 @@ void CGuiAnnotator::InitDecorator(int asp)
 	try {
 		CComPtr<IMgaNewDecoratorEvents> annotatorEventSinkIface;
 		CString progId = AN_NEWDECORATOR_PROGID;
-		COMTHROW(newDecorators[asp].CoCreateInstance(PutInBstr(progId)));
-		HRESULT hr = annotatorEventSinks[asp].QuerySinkInterface((void**) &annotatorEventSinkIface);
+		COMTHROW(decoratorData[asp]->decorator.CoCreateInstance(PutInBstr(progId)));
+		decoratorData[asp]->annotatorEventSink = new CAnnotatorEventSink();
+		HRESULT hr = decoratorData[asp]->annotatorEventSink->QuerySinkInterface((void**) &annotatorEventSinkIface);
 		if (hr == S_OK) {
-			annotatorEventSinks[asp].SetView(view);
+			decoratorData[asp]->annotatorEventSink->SetView(view);
 			// TODO
-			annotatorEventSinks[asp].SetGuiAnnotator(this);
+			decoratorData[asp]->annotatorEventSink->SetGuiAnnotator(this);
 		}
-		decorators[asp] = CComQIPtr<IMgaDecorator>(newDecorators[asp]);
-#if defined (OLDDECORATORS)
-		CString progId = AN_DECORATOR_PROGID;
-		COMTHROW(decorators[asp].CoCreateInstance(PutInBstr(progId)));
-#endif
 		CComBSTR param(AN_PARAM_ROOTNODE);
 		CComVariant value(rootNode);
-		COMTHROW(decorators[asp]->SetParam(param, value));
+		COMTHROW(decoratorData[asp]->decorator->SetParam(param, value));
 
-		if (newDecorators[asp])
-			COMTHROW(newDecorators[asp]->InitializeEx(theApp.mgaProject, NULL, NULL, annotatorEventSinkIface, (ULONGLONG)view->m_hWnd));
-		else
-			COMTHROW(decorators[asp]->Initialize(theApp.mgaProject, NULL, NULL));
+		COMTHROW(decoratorData[asp]->decorator->InitializeEx(theApp.mgaProject, NULL, NULL, annotatorEventSinkIface, (ULONGLONG)view->m_hWnd));
 
 		long sx, sy;
-		COMTHROW(decorators[asp]->GetPreferredSize(&sx, &sy));
-		locations[asp].right = locations[asp].left + sx;
-		locations[asp].bottom = locations[asp].top + sy;
+		COMTHROW(decoratorData[asp]->decorator->GetPreferredSize(&sx, &sy));
+		decoratorData[asp]->location.right = decoratorData[asp]->location.left + sx;
+		decoratorData[asp]->location.bottom = decoratorData[asp]->location.top + sy;
 
-		COMTHROW(decorators[asp]->SetLocation(locations[asp].left, locations[asp].top, locations[asp].right, locations[asp].bottom));
+		COMTHROW(decoratorData[asp]->decorator->SetLocation(decoratorData[asp]->location.left, decoratorData[asp]->location.top,
+															decoratorData[asp]->location.right, decoratorData[asp]->location.bottom));
 	}
 	catch (hresult_exception &) {
 		AfxMessageBox("Cannot initialize annotator for annotation: " + name, MB_OK | MB_ICONSTOP);
-		decorators[asp] = NULL;
+		decoratorData[asp]->decorator = NULL;
 	}
 }
 
@@ -555,17 +549,14 @@ bool CGuiAnnotator::IsVisible(int aspect)
 	if (aspect < 0) {
 		aspect = parentAspect;
 	}
-	return (decorators[aspect] != NULL);
+	return (decoratorData[aspect]->decorator != NULL);
 }
 
 void CGuiAnnotator::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 {
-	if (decorators[parentAspect]) {
+	if (decoratorData[parentAspect]->decorator) {
 		try {
-			if (newDecorators[parentAspect] != NULL)
-				COMTHROW(newDecorators[parentAspect]->DrawEx(pDC, (ULONGLONG)gdip));
-			else
-				COMTHROW(decorators[parentAspect]->Draw(pDC));
+			COMTHROW(decoratorData[parentAspect]->decorator->DrawEx(pDC, (ULONGLONG)gdip));
 		}
 		catch (hresult_exception &) {
 			AfxMessageBox("Error in annotator [method Draw()]");
@@ -575,11 +566,11 @@ void CGuiAnnotator::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 
 void CGuiAnnotator::GrayOut(bool set)
 {
-	if (decorators[parentAspect]) {
+	if (decoratorData[parentAspect]->decorator) {
 		grayedOut = set;
 		try {
 #pragma warning(disable: 4310) // cast truncates constant value
-			COMTHROW(decorators[parentAspect]->SetActive(set ? VARIANT_FALSE : VARIANT_TRUE));
+			COMTHROW(decoratorData[parentAspect]->decorator->SetActive(set ? VARIANT_FALSE : VARIANT_TRUE));
 #pragma warning(default: 4310) // cast truncates constant value
 		}
 		catch (hresult_exception &) {
@@ -592,7 +583,7 @@ const CRect& CGuiAnnotator::GetLocation(int aspect)
 	if (aspect < 0) {
 		aspect = parentAspect;
 	}
-	return locations[aspect];
+	return decoratorData[aspect]->location;
 }
 
 void  CGuiAnnotator::SetLocation(const CRect &toLoc, int aspect, bool doMga)
@@ -611,10 +602,9 @@ void  CGuiAnnotator::SetLocation(const CRect &toLoc, int aspect, bool doMga)
 		loc.top = 0;
 	}
 
-
-	locations[aspect] = loc;
+	decoratorData[aspect]->location = loc;
 	try {
-		COMTHROW(decorators[aspect]->SetLocation(locations[aspect].left, locations[aspect].top, locations[aspect].right, locations[aspect].bottom));
+		COMTHROW(decoratorData[aspect]->decorator->SetLocation(loc.left, loc.top, loc.right, loc.bottom));
 	}
 	catch (hresult_exception &) {
 		AfxMessageBox("Cannot set location of annotation " + name);
@@ -627,8 +617,8 @@ void  CGuiAnnotator::SetLocation(const CRect &toLoc, int aspect, bool doMga)
 
 void  CGuiAnnotator::ReadLocation(int aspect, CComPtr<IMgaRegNode> &aspNode)
 {
-	locations[aspect].left = 0;
-	locations[aspect].top = 0;
+	decoratorData[aspect]->location.left = 0;
+	decoratorData[aspect]->location.top = 0;
 
 	try {
 		CComBSTR bstr;
@@ -636,8 +626,8 @@ void  CGuiAnnotator::ReadLocation(int aspect, CComPtr<IMgaRegNode> &aspNode)
 		CString str(bstr);
 		long lx, ly;
 		if(_stscanf(str,_T("%d,%d"), &lx, &ly) == 2) {
-			locations[aspect].left = lx;
-			locations[aspect].top = ly;
+			decoratorData[aspect]->location.left = lx;
+			decoratorData[aspect]->location.top = ly;
 		}
 		else {
 			throw hresult_exception();
@@ -652,8 +642,8 @@ void  CGuiAnnotator::ReadLocation(int aspect, CComPtr<IMgaRegNode> &aspNode)
 			CString strRoot(bstrRoot);
 			long lxr, lyr;
 			if(_stscanf(strRoot,_T("%d,%d"), &lxr, &lyr) == 2) {
-				locations[aspect].left = lxr;
-				locations[aspect].top = lyr;
+				decoratorData[aspect]->location.left = lxr;
+				decoratorData[aspect]->location.top = lyr;
 			}
 		}
 		catch (hresult_exception &) {
@@ -668,7 +658,7 @@ void  CGuiAnnotator::WriteLocation(int aspect)
 	}
 
 	OLECHAR bbc[40];
-	_snwprintf(bbc, 40, OLESTR("%ld,%ld"), locations[aspect].left, locations[aspect].top);
+	_snwprintf(bbc, 40, OLESTR("%ld,%ld"), decoratorData[aspect]->location.left, decoratorData[aspect]->location.top);
 	CComBSTR bb(bbc);
 
 

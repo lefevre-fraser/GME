@@ -1172,10 +1172,11 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 	}
 }
 
-struct PortPartData {
+class PortPartData {
+public:
 	PortPartData(PortPart* pD, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO):
 		portPart(pD), spPart(pPart), spFCO(pFCO) {};
-	~PortPartData() { spPart.Release(); spFCO.Release(); };
+	~PortPartData() {};
 
 	PortPart*				portPart;
 	CComPtr<IMgaMetaPart>	spPart;
@@ -1252,6 +1253,10 @@ void ModelComplexPart::LoadPorts(void)
 		} MGACOLL_ITERATE_END;
 
 		OrderPorts(vecPorts);
+
+		for (std::vector<PortPartData*>::iterator ii = vecPorts.begin(); ii != vecPorts.end(); ++ii)
+			delete (*ii);
+		vecPorts.clear();
 	}
 }
 

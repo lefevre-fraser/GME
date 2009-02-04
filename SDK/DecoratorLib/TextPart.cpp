@@ -51,9 +51,9 @@ void TextPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>&
 
 void TextPart::Destroy(void)
 {
+	OperationCanceledByGME();
 	if (m_spFCO)
 		resizeLogic.Destroy();
-	OperationCanceledByGME();
 }
 
 feature_code TextPart::GetFeatures(void) const

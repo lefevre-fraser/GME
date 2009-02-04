@@ -83,7 +83,7 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	if (dWidth != 0 || dHeight != 0) {
 		CRect editRect;
 		editWnd->GetWindowRect(&editRect);
-		editWnd->MoveWindow(2, 2, editRect.Width() + dWidth, editRect.Height() + dHeight);
+		editWnd->MoveWindow(0, 0, editRect.Width() + dWidth, editRect.Height() + dHeight);
 	}
 
 	// Capture the mouse, this allows the dialog to close when the user clicks outside.
