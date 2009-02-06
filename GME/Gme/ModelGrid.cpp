@@ -95,8 +95,8 @@ bool CModelGrid::IsAvailableG(CPoint &pt,CSize &halfSize)  // centerpoint!
 		return false;
 	for(int i = starty; i < endy; i++)
 		for(int j = startx; j < endx; j++)
-				if(!IsAvailable(j,i))
-					return false;
+			if(!IsAvailable(j,i))
+				return false;
 	return true;
 }
 
@@ -123,8 +123,8 @@ bool CModelGrid::IsAvailable(CPoint pt,CSize size)  // centerpoint!
 		return false;
 	for(int y = starty; y < endy; y++)
 		for(int x = startx; x < endx; x++)
-				if(!IsAvailable(x,y))
-					return false;
+			if(!IsAvailable(x,y))
+				return false;
 	return true;
 }
 

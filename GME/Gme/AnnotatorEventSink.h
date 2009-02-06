@@ -32,8 +32,8 @@ class CAnnotatorEventSink : public CCmdTarget
 {
 	DECLARE_DYNCREATE(CAnnotatorEventSink)
 
+	CAnnotatorEventSink();           // protected constructor used by dynamic creation
 public:
-	CAnnotatorEventSink();           // constructor used by dynamic creation
 
 
 // Attributes
@@ -47,7 +47,13 @@ public:
 
 // Overrides
 public:
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CAnnotatorEventSink)
+	public:
 	virtual void OnFinalRelease();
+	//}}AFX_VIRTUAL
+
+// Implementation
 
 public:
 	~CAnnotatorEventSink();
@@ -56,10 +62,19 @@ protected:
 	CGMEView*					m_view;
 	CGuiAnnotator*				m_guiAnnotator;
 
+	DECLARE_MESSAGE_MAP()
+	DECLARE_OLECREATE(CEventSink)
+
 	// Generated message map functions
 	//{{AFX_MSG(CAnnotatorEventSink)
 		// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
+
+	// Generated OLE dispatch map functions
+	//{{AFX_DISPATCH(CAnnotatorEventSink)
+		// NOTE - the ClassWizard will add and remove member functions here.
+	//}}AFX_DISPATCH
+	DECLARE_DISPATCH_MAP()
 
 public:
 // Native COM interfaces - peter

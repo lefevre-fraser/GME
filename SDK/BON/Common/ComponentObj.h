@@ -49,7 +49,7 @@ public:
 
 // Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CComponentObj)
+	//{{AFX_VIRTUAL(CEventSink)
 	public:
 	virtual void OnFinalRelease();
 	//}}AFX_VIRTUAL
@@ -63,7 +63,7 @@ public:
 	DECLARE_OLECREATE(CEventSink)
 
 	// Generated OLE dispatch map functions
-	//{{AFX_DISPATCH(CComponentObj)
+	//{{AFX_DISPATCH(CEventSink)
 		// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()

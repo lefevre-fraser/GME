@@ -40,16 +40,19 @@ afx_msg BOOL CComponentBar::OnTT(UINT, NMHDR * pNMHDR, LRESULT * ) {
 	}
 
 
-	CMFCToolBarButton* pButton = GetButton(nIndex-1);
-	UINT nID = pButton->m_nID;
+	CMFCToolBarButton* pButton = GetButton(nIndex - 1);
+	ASSERT(pButton);
+	if (pButton) {
+		UINT nID = pButton->m_nID;
 
-	if(nID >= ID_FILE_RUNPLUGIN1 && nID <= ID_FILE_RUNPLUGIN8) {
-		strncpy(pTTT->szText, theApp.pluginTooltips[nID-ID_FILE_RUNPLUGIN1], 79);
-		return FALSE;
-	}
-	if(nID >= ID_FILE_INTERPRET1 && nID <= ID_FILE_INTERPRET18) {
-		strncpy(pTTT->szText, theApp.interpreterTooltips[nID-ID_FILE_INTERPRET1], 79);
+		if(nID >= ID_FILE_RUNPLUGIN1 && nID <= ID_FILE_RUNPLUGIN8) {
+			strncpy(pTTT->szText, theApp.pluginTooltips[nID-ID_FILE_RUNPLUGIN1], 79);
 			return FALSE;
+		}
+		if(nID >= ID_FILE_INTERPRET1 && nID <= ID_FILE_INTERPRET18) {
+			strncpy(pTTT->szText, theApp.interpreterTooltips[nID-ID_FILE_INTERPRET1], 79);
+				return FALSE;
+		}
 	}
 	return TRUE;
 }

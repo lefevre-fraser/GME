@@ -29,7 +29,7 @@ CDecoratorEventSink::CDecoratorEventSink():
 	m_view(NULL),
 	m_guiObject(NULL)
 {
-//	EnableAutomation();	// only needed for Dispatch maps
+	EnableAutomation();	// only needed for Dispatch maps
 }
 
 CDecoratorEventSink::~CDecoratorEventSink()
@@ -46,6 +46,17 @@ void CDecoratorEventSink::OnFinalRelease()
 	CCmdTarget::OnFinalRelease();
 }
 
+BEGIN_MESSAGE_MAP(CDecoratorEventSink, CCmdTarget)
+	//{{AFX_MSG_MAP(CDecoratorEventSink)
+		// NOTE - the ClassWizard will add and remove mapping macros here.
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+BEGIN_DISPATCH_MAP(CDecoratorEventSink, CCmdTarget)
+	//{{AFX_DISPATCH_MAP(CDecoratorEventSink)
+		// NOTE - the ClassWizard will add and remove mapping macros here.
+	//}}AFX_DISPATCH_MAP
+END_DISPATCH_MAP()
 
 BEGIN_INTERFACE_MAP(CDecoratorEventSink, CCmdTarget)
 	INTERFACE_PART(CDecoratorEventSink, IID_IMgaNewDecoratorEvents, EventSink)

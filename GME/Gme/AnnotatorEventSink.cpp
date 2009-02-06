@@ -28,7 +28,7 @@ CAnnotatorEventSink::CAnnotatorEventSink():
 	m_view(NULL),
 	m_guiAnnotator(NULL)
 {
-//	EnableAutomation();	// only needed for Dispatch maps
+	EnableAutomation();	// only needed for Dispatch maps
 }
 
 CAnnotatorEventSink::~CAnnotatorEventSink()
@@ -45,6 +45,17 @@ void CAnnotatorEventSink::OnFinalRelease()
 	CCmdTarget::OnFinalRelease();
 }
 
+BEGIN_MESSAGE_MAP(CAnnotatorEventSink, CCmdTarget)
+	//{{AFX_MSG_MAP(CAnnotatorEventSink)
+		// NOTE - the ClassWizard will add and remove mapping macros here.
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+BEGIN_DISPATCH_MAP(CAnnotatorEventSink, CCmdTarget)
+	//{{AFX_DISPATCH_MAP(CAnnotatorEventSink)
+		// NOTE - the ClassWizard will add and remove mapping macros here.
+	//}}AFX_DISPATCH_MAP
+END_DISPATCH_MAP()
 
 BEGIN_INTERFACE_MAP(CAnnotatorEventSink, CCmdTarget)
 	INTERFACE_PART(CAnnotatorEventSink, IID_IMgaNewDecoratorEvents, EventSink)
