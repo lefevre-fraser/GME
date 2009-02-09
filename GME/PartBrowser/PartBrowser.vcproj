@@ -240,10 +240,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DecoratorEventSink.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\Gme\GMEOLEData.cpp"
 				>
 			</File>
@@ -285,6 +281,10 @@
 			</File>
 			<File
 				RelativePath=".\PartBrowserCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PartBrowserDecoratorEventSink.cpp"
 				>
 			</File>
 			<File
@@ -330,10 +330,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\DecoratorEventSink.h"
-				>
-			</File>
-			<File
 				RelativePath="..\Gme\GMEOLEData.h"
 				>
 			</File>
@@ -351,6 +347,10 @@
 			</File>
 			<File
 				RelativePath=".\PartBrowserCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PartBrowserDecoratorEventSink.h"
 				>
 			</File>
 			<File

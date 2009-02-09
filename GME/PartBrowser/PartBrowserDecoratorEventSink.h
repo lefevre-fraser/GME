@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// Decorator Event Sink implementation for PartBrowser
-//	DecoratorEventSink.h
+// PartBrowser Decorator Event Sink implementation for PartBrowser
+//	PartBrowserDecoratorEventSink.h
 //
 //################################################################################################
 
-#if !defined(AFX_DECORATOREVENTSINK_H__9829B754_62D2_4bad_A70D_E5F22160A529__INCLUDED_)
-#define AFX_DECORATOREVENTSINK_H__9829B754_62D2_4bad_A70D_E5F22160A529__INCLUDED_
+#if !defined(AFX_PARTBROWSERDECORATOREVENTSINK_H__9829B754_62D2_4BAD_A70D_E5F22160A529__INCLUDED_)
+#define AFX_PARTBROWSERDECORATOREVENTSINK_H__9829B754_62D2_4BAD_A70D_E5F22160A529__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -20,16 +20,16 @@
 
 //################################################################################################
 //
-// CLASS : CDecoratorEventSink
+// CLASS : CPartBrowserDecoratorEventSink
 //
 //################################################################################################
 
-class CDecoratorEventSink : public CCmdTarget
+class CPartBrowserDecoratorEventSink : public CCmdTarget
 {
-	DECLARE_DYNCREATE(CDecoratorEventSink)
+	DECLARE_DYNCREATE(CPartBrowserDecoratorEventSink)
 
+	CPartBrowserDecoratorEventSink();           // protected constructor used by dynamic creation
 public:
-	CDecoratorEventSink();           // constructor used by dynamic creation
 
 
 // Attributes
@@ -41,17 +41,32 @@ public:
 
 // Overrides
 public:
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CPartBrowserDecoratorEventSink)
+	public:
 	virtual void OnFinalRelease();
+	//}}AFX_VIRTUAL
+
+// Implementation
 
 public:
-	~CDecoratorEventSink();
+	~CPartBrowserDecoratorEventSink();
 
 protected:
 
+	DECLARE_MESSAGE_MAP()
+	DECLARE_OLECREATE(CEventSink)
+
 	// Generated message map functions
-	//{{AFX_MSG(CDecoratorEventSink)
+	//{{AFX_MSG(CPartBrowserDecoratorEventSink)
 		// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
+
+	// Generated OLE dispatch map functions
+	//{{AFX_DISPATCH(CPartBrowserDecoratorEventSink)
+		// NOTE - the ClassWizard will add and remove member functions here.
+	//}}AFX_DISPATCH
+	DECLARE_DISPATCH_MAP()
 
 public:
 // Native COM interfaces - peter
@@ -95,4 +110,4 @@ public:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_DECORATOREVENTSINK_H__9829B754_62D2_4bad_A70D_E5F22160A529__INCLUDED_)
+#endif // !defined(AFX_PARTBROWSERDECORATOREVENTSINK_H__9829B754_62D2_4BAD_A70D_E5F22160A529__INCLUDED_)

@@ -63,7 +63,7 @@ protected:
 	CGuiObject*					m_guiObject;
 
 	DECLARE_MESSAGE_MAP()
-	DECLARE_OLECREATE(CEventSink)
+	DECLARE_OLECREATE(CDecoratorEventSink)
 
 	// Generated message map functions
 	//{{AFX_MSG(CDecoratorEventSink)

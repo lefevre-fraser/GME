@@ -11,7 +11,7 @@
 #include <vector>
 #include <Gdiplus.h>
 
-class CDecoratorEventSink;
+class CPartBrowserDecoratorEventSink;
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -22,10 +22,10 @@ class CPartBrowserPane : public CWnd
 // Construction
 public:
 	struct PartWithDecorator {
-		CComPtr<IMgaMetaPart>		part;
-		CComPtr<IMgaDecorator>		decorator;
-		CComPtr<IMgaNewDecorator>	newDecorator;
-		CDecoratorEventSink*		decorEventSink;
+		CComPtr<IMgaMetaPart>			part;
+		CComPtr<IMgaDecorator>			decorator;
+		CComPtr<IMgaNewDecorator>		newDecorator;
+		CPartBrowserDecoratorEventSink*	decorEventSink;
 	};
 
 	CPartBrowserPane();

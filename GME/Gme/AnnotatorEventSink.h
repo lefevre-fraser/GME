@@ -63,7 +63,7 @@ protected:
 	CGuiAnnotator*				m_guiAnnotator;
 
 	DECLARE_MESSAGE_MAP()
-	DECLARE_OLECREATE(CEventSink)
+	DECLARE_OLECREATE(CAnnotatorEventSink)
 
 	// Generated message map functions
 	//{{AFX_MSG(CAnnotatorEventSink)

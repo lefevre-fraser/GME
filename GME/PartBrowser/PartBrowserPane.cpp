@@ -7,7 +7,7 @@
 #include "..\Interfaces\MgaDecorator.h"
 #include "..\Annotator\AnnotationDefs.h"
 #include "..\Gme\GMEOLEData.h"
-#include "DecoratorEventSink.h"
+#include "PartBrowserDecoratorEventSink.h"
 #include "Gme_i.c"
 
 
@@ -146,7 +146,7 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				CComPtr<IMgaNewDecoratorEvents> decorEventSinkIface;
 				HRESULT hres = newDecorator.CoCreateInstance(PutInBstr(decoratorProgId));
 				if (SUCCEEDED(hres)) {
-					triple.decorEventSink = new CDecoratorEventSink();
+					triple.decorEventSink = new CPartBrowserDecoratorEventSink();
 					HRESULT hr = triple.decorEventSink->QuerySinkInterface((void**) &decorEventSinkIface);
 					triple.newDecorator = newDecorator;
 					decorator = CComQIPtr<IMgaDecorator>(newDecorator);

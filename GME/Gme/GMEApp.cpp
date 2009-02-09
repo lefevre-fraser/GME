@@ -746,7 +746,6 @@ void CGMEApp::UpdateComponentToolbar()
 		componentBar.ShowWindow(SW_HIDE);
 		CMainFrame::theInstance->ShowPane(&componentBar, FALSE, FALSE, FALSE);
 
-
 		// Removing the add-in and plug-in buttons
 		const CObList &componentButtons = componentBar.GetAllButtons();
 		for(POSITION pos = componentButtons.GetHeadPosition(); pos!= NULL; )
@@ -754,14 +753,16 @@ void CGMEApp::UpdateComponentToolbar()
 			const CMFCToolBarButton* pCurrent = (const CMFCToolBarButton*) componentButtons.GetNext(pos); 
 			if(pCurrent->m_bUserButton == TRUE)
 			{
-				componentBar.RemoveButton(componentBar.ButtonToIndex(pCurrent));
+				int buttonIndex = componentBar.ButtonToIndex(pCurrent);
+				componentBar.RemoveButton(buttonIndex);
+				componentBar.RecalcLayout();
 			}
 		}
 
 		// Clearing user images
 		m_userImages.Clear();
 
-		if(!mgaMetaProject)
+		if (!mgaMetaProject)
 		{
 			componentBar.RecalcLayout();
 			return;
@@ -774,7 +775,7 @@ void CGMEApp::UpdateComponentToolbar()
 
 		// Traversing  the plugins and interpreters
 		for(int i = 0; i < plugins.GetSize() + interpreters.GetSize(); ++i)
-		{        				 						
+		{
 			// Querying component name
 			CComBSTR componentName;
 			if(i < plugins.GetSize()) // if it is a plugin
@@ -794,11 +795,11 @@ void CGMEApp::UpdateComponentToolbar()
 			{
 				toolTip = componentName;
 			}
-            if(i < plugins.GetSize())
+			if(i < plugins.GetSize())
 			{
 				pluginTooltips.Add(toolTip);
 			}
-            else
+			else
 			{
 				interpreterTooltips.Add(toolTip);
 			}
@@ -827,10 +828,10 @@ void CGMEApp::UpdateComponentToolbar()
 						hModule = GetModuleHandle(iconInfo.Left(commaPos));
 					}
 				}
-				else // No module name provided, 
+				else // No module name provided,
 				{
 					CString modulePath;
-					registrar->get_LocalDllPath(componentName, PutOut(modulePath));			
+					registrar->get_LocalDllPath(componentName, PutOut(modulePath));
 					if(modulePath) 
 					{
 						hModule = ::GetModuleHandle(modulePath);
@@ -843,23 +844,23 @@ void CGMEApp::UpdateComponentToolbar()
 				}
 			}
 
-			if( hModule != NULL ) 
+			if( hModule != NULL )
 			{
-				 hIcon = (HICON)::LoadImage(hModule, iconInfo.Mid(commaPos+1), IMAGE_ICON, 16,16, LR_DEFAULTCOLOR);
+				hIcon = (HICON)::LoadImage(hModule, iconInfo.Mid(commaPos+1), IMAGE_ICON, 16,16, LR_DEFAULTCOLOR);
 			}
-			else 
-			{				  
+			else
+			{
 				// simple .ico file with path
 				hIcon =(HICON)LoadImage(NULL, iconInfo, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
 			}
 			
 			// If icon is not found either in the DLL or a standalone file
-			if(!hIcon) 
+			if(!hIcon)
 			{
 				hIcon = LoadIcon(IDI_COMPNOTFOUND); // Displaying component not found icon
 			}
 
-			//Adding button icon			
+			//Adding button icon
 			int nIndex = m_userImages.AddIcon(hIcon);
 			ASSERT(nIndex >= 0);
 			BOOL succ = CMFCToolBar::SetUserImages(&m_userImages);
@@ -873,28 +874,28 @@ void CGMEApp::UpdateComponentToolbar()
 			componentBar.RecalcLayout();
 			CMainFrame::theInstance->ShowPane(&componentBar, TRUE, FALSE, FALSE);
 			componentBar.ShowWindow(SW_SHOW);
-		}		
+		}
 }
 
 
 void CGMEApp::UpdateComponentLists(bool restart_addons) {
 		ClearDisabledComps();	
 		plugins .RemoveAll();
-        pluginTooltips.RemoveAll();
+		pluginTooltips.RemoveAll();
 		interpreters.RemoveAll();
-        interpreterTooltips.RemoveAll();
+		interpreterTooltips.RemoveAll();
 		CStringArray tempaddons; tempaddons.Copy(addons);
 		addons.RemoveAll();
 		mgaConstMgr = NULL;
 		if(mgaMetaProject) {
-			CComBSTR b;            
+			CComBSTR b;
 			COMTHROW(mgaMetaProject->get_Name(&b));
 			CComPtr<IMgaRegistrar> reg;
 			COMTHROW(reg.CoCreateInstance(CComBSTR("Mga.MgaRegistrar")));
 			{
 				CComVariant v;
 				COMTHROW(reg->get_AssociatedComponents(b, COMPONENTTYPE_PLUGIN, REGACCESS_BOTH, &v));
-				CopyTo(v, plugins);			    
+				CopyTo(v, plugins);
 			}
 			{
 				CComVariant v;

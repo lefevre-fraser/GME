@@ -83,7 +83,7 @@ int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		// Initialize dialog bar propBar
 		if (!propBar.Create(_T("Model Properties"), this, FALSE, CG_IDD_MODELPROPERTIESBAR,
-			WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP | CBRS_FLOAT_MULTI,
+			WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP,
 			CG_ID_VIEW_MODELPROPERTIESBAR))
 		{
 			TRACE0("Failed to create dialog bar propBar\n");
@@ -97,7 +97,7 @@ int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		propBar.DockToFrameWindow(CBRS_ALIGN_TOP);
 		propBar.SetMinSize(CSize(0, 25));
 
-		ShowPane(&propBar,true, false, true);
+		ShowPane(&propBar, true, false, true);
 	}
 #endif
 
