@@ -116,8 +116,10 @@ namespace DecoratorSDK
 			void DrawString( Gdiplus::Graphics* gdip, const CString& strText, const CRect& crBounds, Gdiplus::Font* pFont,
 							 COLORREF crColor, int iAlign, int iLength = -1, const CString& strPre = "",
 							 const CString& strPost = "", bool bPeriods = true ) const;
-			void DrawRect( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iWidth = 1 ) const;
-			void DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iDepth ) const;
+			void DrawRect( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iWidth = 1,
+						   bool bRoundRect = false, int iCornerRadius = 0 ) const;
+			void DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iDepth,
+						  bool bRoundRect = false, int iCornerRadius = 0 ) const;
 			COLORREF ShiftColor( COLORREF crColor, int iShift ) const;
 			double Deg2Rad( long deg ) const;
 

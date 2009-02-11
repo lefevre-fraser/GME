@@ -193,6 +193,9 @@ feature_code VectorPart::GetFeatures(void) const
 
 void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
+	if (m_Commands.size() <= 0)
+		return;
+
 	COLORREF penColor = m_bActive ? m_crPen : COLOR_GRAYED_OUT;
 	m_CurrentPen = DecoratorSDK::getFacilities().GetPen(penColor);
 

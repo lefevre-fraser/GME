@@ -164,28 +164,30 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDCORNERRADIUS, m_bRoundCornerRadius, false);
 	}
 
-	SimpleCoordCommand* leftMost		= new SimpleCoordCommand(LeftMost);
-	SimpleCoordCommand* topMost			= new SimpleCoordCommand(TopMost);
-	SimpleCoordCommand* rightMost		= new SimpleCoordCommand(RightMost);
-	SimpleCoordCommand* bottomMost		= new SimpleCoordCommand(BottomMost);
-	AbsoluteCoordCommand* radiusCommand	= new AbsoluteCoordCommand(m_bRoundCornerRect ? m_bRoundCornerRadius : 0);
-	m_coordCommands.push_back(leftMost);
-	m_coordCommands.push_back(topMost);
-	m_coordCommands.push_back(rightMost);
-	m_coordCommands.push_back(bottomMost);
-	m_coordCommands.push_back(radiusCommand);
+	if (m_bCastShadow) {
+		SimpleCoordCommand* leftMost		= new SimpleCoordCommand(LeftMost);
+		SimpleCoordCommand* topMost			= new SimpleCoordCommand(TopMost);
+		SimpleCoordCommand* rightMost		= new SimpleCoordCommand(RightMost);
+		SimpleCoordCommand* bottomMost		= new SimpleCoordCommand(BottomMost);
+		AbsoluteCoordCommand* radiusCommand	= new AbsoluteCoordCommand(m_bRoundCornerRect ? m_bRoundCornerRadius : 0);
+		m_coordCommands.push_back(leftMost);
+		m_coordCommands.push_back(topMost);
+		m_coordCommands.push_back(rightMost);
+		m_coordCommands.push_back(bottomMost);
+		m_coordCommands.push_back(radiusCommand);
 
-	AddCommand(VectorCommand(VectorCommand::BeginPath));
-	std::vector<const CoordCommand*> m_roundRectangleParams;
-	m_roundRectangleParams.push_back(leftMost);
-	m_roundRectangleParams.push_back(topMost);
-	m_roundRectangleParams.push_back(rightMost);
-	m_roundRectangleParams.push_back(bottomMost);
-	m_roundRectangleParams.push_back(radiusCommand);
-	AddCommand(VectorCommand(m_roundRectangleParams, VectorCommand::AddRoundRectangleToPath));
-	AddCommand(VectorCommand(VectorCommand::EndPath));
-	AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
-	AddCommand(VectorCommand(VectorCommand::CastShadowPath));
+		AddCommand(VectorCommand(VectorCommand::BeginPath));
+		std::vector<const CoordCommand*> m_roundRectangleParams;
+		m_roundRectangleParams.push_back(leftMost);
+		m_roundRectangleParams.push_back(topMost);
+		m_roundRectangleParams.push_back(rightMost);
+		m_roundRectangleParams.push_back(bottomMost);
+		m_roundRectangleParams.push_back(radiusCommand);
+		AddCommand(VectorCommand(m_roundRectangleParams, VectorCommand::AddRoundRectangleToPath));
+		AddCommand(VectorCommand(VectorCommand::EndPath));
+		AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
+		AddCommand(VectorCommand(VectorCommand::CastShadowPath));
+	}
 }
 
 void BitmapPart::DrawBorder(CDC* pDC, Gdiplus::Graphics* gdip)
