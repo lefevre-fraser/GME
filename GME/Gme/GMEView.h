@@ -182,6 +182,7 @@ public:
 // Operations
 public:
 	CComPtr<IMgaModel>&		GetCurrentModel() { return currentModel; }
+	CGuiFco*				CreateGuiObject(CComPtr<IMgaFCO>& fco, CGuiFcoList* objList = NULL, CGuiConnectionList* connList = NULL);
 	void					CreateGuiObjects(CComPtr<IMgaFCOs>& fcos, CGuiFcoList& objList, CGuiConnectionList& connList);
 	void					CreateGuiObjects();
 	void					CreateAnnotators(CComPtr<IMgaRegNodes>& regNodes, CGuiAnnotatorList& annList);

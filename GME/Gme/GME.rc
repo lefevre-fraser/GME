@@ -72,7 +72,7 @@ IDR_MAINFRAME           ICON                    "res\\GME.ico"
 IDR_GMETYPE             ICON                    "res\\GMEDoc.ico"
 IDI_TYPEMARK_ICON       ICON                    "res\\icon1.ico"
 IDI_INSTANCEMARK_ICON   ICON                    "res\\typemark.ico"
-IDI_COMPNOTFOUND        ICON                    "res\\ico00001.ico"
+IDI_COMPNOTFOUND        ICON                    "res\\compnotfound.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

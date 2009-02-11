@@ -2070,6 +2070,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\compnotfound.ico"
+				>
+			</File>
+			<File
 				RelativePath="res\cur00001.cur"
 				>
 			</File>
@@ -2133,10 +2137,6 @@
 			</File>
 			<File
 				RelativePath="res\GMEDoc.ico"
-				>
-			</File>
-			<File
-				RelativePath="res\ico00001.ico"
 				>
 			</File>
 			<File

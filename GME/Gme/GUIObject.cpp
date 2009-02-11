@@ -1708,22 +1708,10 @@ void CGuiObject::ResizeObject(const CRect& newLocation/*, bool doMga*/)
 {
 	CGMEEventLogger::LogGMEEvent("CGuiObject::ResizeObject\n");
 
-/*	if (GetView() != modelGrid.GetSource()) {
-		// if the view where the object was moved and the view of the grid 
-		// do not correspond, we must clear & update the grid.
-		// possible because if a port is moved inside a model, then the model
-		// is redrawn as well, and modelGrid is a global variable.
-		// clearing only the grid would be too dangerous, would allow any movement
-		// because other objects will disappear from the radar
-		// but a Clear with a FillModelGrid will do the correct update
-		modelGrid.Clear();
-		GetView()->FillModelGrid();
-	}
-	modelGrid.Reset(this);*/
-
 	VERIFY(IsVisible());
 	SetLocation((CRect)newLocation, -1, false/*doMga, true*/);
-//	modelGrid.Set(this);
+	// Note: there's no need to update modelgrid now, because after finishing the resize operation
+	//		 there will be a full GMEView::Reset induced by the transaction commit
 }
 
 bool CGuiObject::NudgeObjects(CGuiObjectList &modelList,int right,int down)

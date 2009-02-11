@@ -1703,101 +1703,105 @@ void CGMEView::ResetParent()
 #endif
 }
 
+CGuiFco* CGMEView::CreateGuiObject(CComPtr<IMgaFCO>& fco, CGuiFcoList* objList, CGuiConnectionList* connList)
+{
+	CComPtr<IMgaMetaRole> role;
+	COMTHROW(fco->get_MetaRole(&role));
+	objtype_enum tp;
+	COMTHROW(fco->get_ObjType(&tp));
+	CGuiFco* guiFco;
+	bool isCGuiConnection = false;
+	if (tp == OBJTYPE_MODEL) {
+		guiFco = new CGuiModel(fco, role, this, guiMeta->NumberOfAspects());
+		((CGuiModel *)guiFco)->InitObject(this);
+		((CGuiModel *)guiFco)->SetAspect(currentAspect->index);
+	} else if(tp == OBJTYPE_REFERENCE) {
+		// Immediate referred object
+		CComPtr<IMgaFCO> refd;
+		CComPtr<IMgaReference> ref;
+		COMTHROW(fco.QueryInterface(&ref));
+		COMTHROW(ref->get_Referred(&refd));
+
+		// Final referred (non-reference) object
+		CComPtr<IMgaFCO> termRefd;
+		CComObjPtr<IMgaFCOs> refChain;
+		COMTHROW(refChain.CoCreateInstance(L"Mga.MgaFCOs"));
+// This seems to fix the ref-ref problem
+// the GetRefereeChain() puts in this fco
+//		COMTHROW(refChain->Append(fco));
+		GetRefereeChain(refChain,fco);
+
+		CComPtr<IMgaFCO> lastRef;
+		long refChainCnt;
+		COMTHROW(refChain->get_Count(&refChainCnt));
+		COMTHROW(refChain->get_Item(refChainCnt, &lastRef));
+
+		ref = NULL;
+		COMTHROW(lastRef.QueryInterface(&ref));
+		COMTHROW(ref->get_Referred(&termRefd));
+
+		objtype_enum rtp = OBJTYPE_NULL;
+		if (termRefd) {
+			COMTHROW(termRefd->get_ObjType(&rtp));
+		}
+
+		if (rtp == OBJTYPE_MODEL) {
+			guiFco = new CGuiCompoundReference(fco, role, this, guiMeta->NumberOfAspects(), refd, termRefd);
+			((CGuiCompoundReference *)guiFco)->InitObject(this);
+			((CGuiCompoundReference *)guiFco)->SetAspect(currentAspect->index);
+		} else {
+			guiFco = new CGuiReference(fco, role, this, guiMeta->NumberOfAspects(), refd, termRefd);
+			((CGuiReference *)guiFco)->InitObject(this);
+			((CGuiReference *)guiFco)->SetAspect(currentAspect->index);
+		}	
+	} else if(tp == OBJTYPE_SET) {
+		guiFco = new CGuiSet(fco, role, this, guiMeta->NumberOfAspects());
+		((CGuiSet *)guiFco)->InitObject(this);
+		((CGuiSet *)guiFco)->SetAspect(currentAspect->index);
+		if (objList != NULL && !currentSetID.IsEmpty()) {
+			CComBSTR bstr;
+			fco->get_ID(&bstr);
+			CString setID;
+			CopyTo(bstr, setID);
+			if(setID == currentSetID)
+				currentSet = dynamic_cast<CGuiSet*> (guiFco);
+		}
+	} else if (tp == OBJTYPE_CONNECTION) {
+		guiFco = new CGuiConnection(fco, role, this, guiMeta->NumberOfAspects(), false);
+		isCGuiConnection = true;
+	} else {
+		guiFco = new CGuiObject(fco, role, this, guiMeta->NumberOfAspects());
+		((CGuiObject *)guiFco)->InitObject(this);
+		((CGuiObject *)guiFco)->SetAspect(currentAspect->index);
+	}
+	guiFco->SetAspect(currentAspect->index);
+	CComBSTR bstr;
+	COMTHROW(fco->get_Name(&bstr));
+	if (!isCGuiConnection) {
+		CGuiObject* guiObj = static_cast<CGuiObject*> (guiFco);
+		guiObj->ReadAllLocations();
+		CopyTo(bstr, guiObj->name);
+		if (objList != NULL)
+			objList->AddTail(guiObj);
+	} else {
+		CGuiConnection* guiConn = static_cast<CGuiConnection*> (guiFco);
+		VERIFY(guiConn);
+		CopyTo(bstr, guiConn->name);
+		if (objList != NULL)
+			objList->AddTail(guiConn);
+		if (connList != NULL)
+			connList->AddTail(guiConn);
+	}
+	return guiFco;
+}
+
 // ??
-void CGMEView::CreateGuiObjects(CComPtr<IMgaFCOs> &fcos,CGuiFcoList &objList,CGuiConnectionList &connList)
+void CGMEView::CreateGuiObjects(CComPtr<IMgaFCOs>& fcos, CGuiFcoList& objList, CGuiConnectionList& connList)
 {
 	CComPtr<IMgaFCO> fco;
 	MGACOLL_ITERATE(IMgaFCO,fcos) {
 		fco = MGACOLL_ITER;
-		CComPtr<IMgaMetaRole> role;
-		COMTHROW(fco->get_MetaRole(&role));
-		objtype_enum tp;
-		COMTHROW(fco->get_ObjType(&tp));
-		CGuiFco *guiFco;
-		if(tp == OBJTYPE_MODEL) {
-			guiFco = new CGuiModel(fco,role,this,guiMeta->NumberOfAspects());
-			((CGuiModel *)guiFco)->InitObject(this);
-			((CGuiModel *)guiFco)->SetAspect(currentAspect->index);
-		}
-		else if(tp == OBJTYPE_REFERENCE) {
-			// Immediate referred object
-			CComPtr<IMgaFCO> refd;
-			CComPtr<IMgaReference> ref;
-			COMTHROW(fco.QueryInterface(&ref));
-			COMTHROW(ref->get_Referred(&refd));
-
-			// Final referred (non-reference) object
-			CComPtr<IMgaFCO> termRefd;
-			CComObjPtr<IMgaFCOs> refChain;
-			COMTHROW(refChain.CoCreateInstance(L"Mga.MgaFCOs"));
-// This seems to fix the ref-ref problem
-// the GetRefereeChain() puts in this fco
-//			COMTHROW(refChain->Append(fco));
-			GetRefereeChain(refChain,fco);
-
-			CComPtr<IMgaFCO> lastRef;
-			long refChainCnt;
-			COMTHROW(refChain->get_Count(&refChainCnt));
-			COMTHROW(refChain->get_Item(refChainCnt, &lastRef));
-			
-			ref = NULL;
-			COMTHROW(lastRef.QueryInterface(&ref));
-			COMTHROW(ref->get_Referred(&termRefd));
-
-			objtype_enum rtp = OBJTYPE_NULL;
-			if (termRefd) {
-				COMTHROW(termRefd->get_ObjType(&rtp));
-			}
-			
-			if(rtp == OBJTYPE_MODEL) {
-				guiFco = new CGuiCompoundReference(fco,role,this,guiMeta->NumberOfAspects(),refd,termRefd);
-				((CGuiCompoundReference *)guiFco)->InitObject(this);
-				((CGuiCompoundReference *)guiFco)->SetAspect(currentAspect->index);
-			}
-			else {
-				guiFco = new CGuiReference(fco,role,this,guiMeta->NumberOfAspects(),refd,termRefd);
-				((CGuiReference *)guiFco)->InitObject(this);
-				((CGuiReference *)guiFco)->SetAspect(currentAspect->index);
-			}
-			
-		}
-		else if(tp == OBJTYPE_SET) {
-			guiFco = new CGuiSet(fco,role,this,guiMeta->NumberOfAspects());
-			((CGuiSet *)guiFco)->InitObject(this);
-			((CGuiSet *)guiFco)->SetAspect(currentAspect->index);
-			if(!currentSetID.IsEmpty()) {
-				CComBSTR bstr;
-				fco->get_ID(&bstr);
-				CString setID;
-				CopyTo(bstr,setID);
-				if(setID == currentSetID)
-					currentSet = dynamic_cast<CGuiSet *>(guiFco);
-			}
-		}
-		else if(tp == OBJTYPE_CONNECTION) {
-			guiFco = new CGuiConnection(fco,role,this,guiMeta->NumberOfAspects(),false);
-		}
-		else {
-			guiFco = new CGuiObject(fco,role,this,guiMeta->NumberOfAspects());
-			((CGuiObject *)guiFco)->InitObject(this);
-			((CGuiObject *)guiFco)->SetAspect(currentAspect->index);
-		}
-		guiFco->SetAspect(currentAspect->index);
-		CComBSTR bstr;
-		COMTHROW(fco->get_Name(&bstr));
-		CGuiObject *guiObj = dynamic_cast<CGuiObject *>(guiFco);
-		if(guiObj) {
-			guiObj->ReadAllLocations();
-			CopyTo(bstr,guiObj->name);
-			objList.AddTail(guiObj);
-		}
-		else {
-			CGuiConnection *guiConn = dynamic_cast<CGuiConnection *>(guiFco);
-			VERIFY(guiConn);
-			CopyTo(bstr,guiConn->name);
-			objList.AddTail(guiConn);
-			connList.AddTail(guiConn);
-		}
+		CGuiFco* guiFco = CreateGuiObject(fco, &objList, &connList);
 	}
 	MGACOLL_ITERATE_END;
 }
@@ -3701,7 +3705,10 @@ void CGMEView::FillModelGrid()
 
 void CGMEView::SetObjectLocation(CComPtr<IMgaFCO> &child,CComPtr<IMgaMetaRole> &mmRole,CPoint pt)
 {
-	CRect loc = CRect(0,0,25,25);
+	// We temporarily create a GuiObject in order to have a decorator and be able to access real size data
+	CGuiFco* guiFco = CreateGuiObject(child, NULL, NULL);
+	CGuiObject* guiObject = dynamic_cast<CGuiObject*> (guiFco);
+	CRect loc = guiObject->GetLocation();
 	::SetLocation(loc,pt);
 
 	// CPoint npt = loc.CenterPoint();
@@ -3713,7 +3720,7 @@ void CGMEView::SetObjectLocation(CComPtr<IMgaFCO> &child,CComPtr<IMgaMetaRole> &
 	//	}
 	// }
 
-		try {
+	try {
 		CComPtr<IMgaMetaParts> mmParts;
 		CComPtr<IMgaMetaPart> mmPart;
 		COMTHROW(mmRole->get_Parts(&mmParts));
@@ -3731,6 +3738,8 @@ void CGMEView::SetObjectLocation(CComPtr<IMgaFCO> &child,CComPtr<IMgaMetaRole> &
 	catch(hresult_exception &e) {
 		throw hresult_exception(e.hr);
 	}
+
+	delete guiFco;
 }
 
 void CGMEView::GetRefereeChain(IMgaFCOs *refChain, IMgaFCO* fco)
@@ -3892,7 +3901,7 @@ void CGMEView::InsertNewPart(CString roleName,CPoint pt)
 		BeginTransaction();
 		if(!currentAspect->GetRoleByName(roleName,role,true)) {
 			AfxMessageBox("Internal Program Error in CGMEView::InsertNewPart");
-			CGMEEventLogger::LogGMEEvent("    Internaml Program Error in CGMEView::InsertNewPart.\r\n");
+			CGMEEventLogger::LogGMEEvent("    Internal Program Error in CGMEView::InsertNewPart.\r\n");
 			return;
 		}
 		COMTHROW(currentModel->CreateChildObject(role,&child));
