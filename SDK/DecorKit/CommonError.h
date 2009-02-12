@@ -104,30 +104,12 @@ inline bool CheckOut_IsBound(const SAFEARRAY *p) { return p != NULL; }
 		COMRETURN(E_INVALIDARG) \
 }
 
-#define MGACOLL_ITERATE(iftype, collifptr) \
-{ \
-	ASSERT( collifptr != NULL ); \
-	long iter_count = 0; \
-	COMTHROW( collifptr->get_Count(&iter_count) ); \
-	ASSERT( iter_count >= 0 ); \
-	CComPtr<iftype> *arrptr, *arrend, *array = new CComPtr<iftype>[iter_count]; \
-	if(iter_count > 0) \
-		COMTHROW( collifptr->GetAll(iter_count, &(*array)) ); \
-	arrend = array+iter_count; \
-	for(arrptr = array; arrptr != arrend; arrptr++)
-
-#define MGACOLL_ITER (*arrptr)
-#define MGACOLL_AT_END (arrptr == arrend)
-
-#define MGACOLL_ITERATE_END delete []array; }
-
-
-
 // --------------------------- Common Error Codes
 
 void SetErrorInfo(LPOLESTR desc) NOTHROW;
 void SetErrorInfo(HRESULT hr, LPOLESTR desc2 = NULL) NOTHROW;
 void GetErrorInfo(BSTR *p) NOTHROW;
+void GetErrorInfo(HRESULT hr, BSTR *p) NOTHROW;
 
 //		One or more arguments are invalid
 //*****	E_INVALIDARG
@@ -230,7 +212,7 @@ void GetErrorInfo(BSTR *p) NOTHROW;
 
 // the description table is in CommonError.cpp
 #define E_CORE_FIRST					E_LOCK_VIOLATION
-#define E_CORE_LAST						E_BINFILE
+#define E_CORE_LAST						E_NAMEMISSING
 
 // --------------------------- Meta Error Codes
 
@@ -279,5 +261,12 @@ void GetErrorInfo(BSTR *p) NOTHROW;
 // the description table is in CommonError.cpp
 #define E_PARSER_FIRST				E_INVALID_DTD
 #define E_PARSER_LAST				E_INVALID_XML_LONG
+
+// XSLT transformation error codes
+#define E_XSLT_XERCES_INIT				_HRESULT_TYPEDEF_(0x80734009)
+#define E_XSLT_COMPILE_ERROR			_HRESULT_TYPEDEF_(0x8073400A)
+#define E_XSLT_TRANSF_ERROR				_HRESULT_TYPEDEF_(0x8073400B)
+#define E_XSLT_ERROR					_HRESULT_TYPEDEF_(0x8073400C)
+#define E_XSLTFILESEL_USER_ABORTED		_HRESULT_TYPEDEF_(0x8073400D)
 
 #endif//MGA_COMMONERROR_H

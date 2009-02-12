@@ -48,7 +48,7 @@ const char *hresult_exception::what() const
 
 LPOLESTR common_descs[] = 
 {
-	OLESTR("Inproper use of object"),
+	OLESTR("Improper use of object"),
 	OLESTR("Unknown exception"),
 	OLESTR("Data conversion has failed"),
 	OLESTR("Requested != count in GetAll"),
@@ -78,8 +78,8 @@ LPOLESTR core_descs[] =
 	OLESTR("Invalid data in Repository"),
 	OLESTR("Cannot delete Object, has nonempty collection"),
 	OLESTR("Cannot resolve the connection string"),
-	OLESTR("Invalid binary file storage")
-	OLESTR("Project has no name")
+	OLESTR("Invalid binary file storage"),
+	OLESTR("Project has no name"),
 };
 
 LPOLESTR meta_descs[] = 
@@ -161,7 +161,7 @@ void GetErrorInfo(BSTR *desc)
 		COMTHROW( GetErrorInfo(0, PutOut(errinfo)) );
 		ASSERT( errinfo != NULL );
 
-		COMTHROW( errinfo->GetDescription(desc) );
+		if( errinfo) COMTHROW( errinfo->GetDescription(desc) );
 	}
 	catch(hresult_exception &)
 	{
@@ -169,3 +169,21 @@ void GetErrorInfo(BSTR *desc)
 	}
 }
 
+void GetErrorInfo(HRESULT hr, BSTR *p)
+{
+	ASSERT( p != NULL );
+
+	LPOLESTR desc = NULL;
+	if( E_COMMON_FIRST <= hr && hr <= E_COMMON_LAST ) desc = common_descs[hr - E_COMMON_FIRST];
+	else if( E_CORE_FIRST <= hr && hr <= E_CORE_LAST ) desc = core_descs[hr - E_CORE_FIRST];
+	else if( E_META_FIRST <= hr && hr <= E_META_LAST ) desc = meta_descs[hr - E_META_FIRST];
+	else if( E_PARSER_FIRST <= hr && hr <= E_PARSER_LAST ) desc = parser_descs[hr - E_PARSER_FIRST];
+	
+	if( desc != NULL )
+	{
+		SysFreeString(*p);
+		*p = SysAllocString(desc);
+	}
+	else
+		GetErrorInfo(p);
+}

@@ -299,6 +299,9 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				RelativePath="CommonError.h">
 			</File>
 			<File
+				RelativePath=".\CommonMgaTrukk.h">
+			</File>
+			<File
 				RelativePath="CommonSmart.h">
 			</File>
 			<File
