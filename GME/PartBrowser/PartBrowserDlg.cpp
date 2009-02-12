@@ -4,8 +4,8 @@
 #include "stdafx.h"
 #include "PartBrowserDlg.h"
 #include "PartBrowserCtrl.h"
-#include "..\Common\CommonError.h"
-#include "..\Common\CommonSmart.h"
+#include "CommonError.h"
+#include "CommonSmart.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

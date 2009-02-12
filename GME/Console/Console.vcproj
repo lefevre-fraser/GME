@@ -514,6 +514,22 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath="..\Common\CommonError.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\CommonMfc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\CommonMgaTrukk.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\CommonSmart.h"
+				>
+			</File>
+			<File
 				RelativePath="Console.h"
 				>
 			</File>

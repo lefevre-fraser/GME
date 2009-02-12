@@ -7,7 +7,7 @@
 #include "AggregateContextMenu.h"
 #include "GMEActiveBrowserCtl.h"
 #include "AggregateOptionsDlg.h"
-#include "..\Gme\GMEOleData.h"
+#include "..\Gme\GMEOLEData.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE

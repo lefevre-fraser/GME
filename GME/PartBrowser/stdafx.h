@@ -43,10 +43,10 @@
 #include "..\Interfaces\MgaUtil.h"
 #include "..\Interfaces\GME.h"
 #include "..\Interfaces\MgaDecorator.h"
-#include "..\Common\CommonError.h"
-#include "..\Common\CommonSmart.h"
-#include "..\Common\CommonMfc.h"
-#include "..\Common\CommonMgaTrukk.h"
+#include "CommonError.h"
+#include "CommonSmart.h"
+#include "CommonMfc.h"
+#include "CommonMgaTrukk.h"
 
 // Comment this out if you do not want to see the messages in the debug window
 #define DEBUG_EVENTS

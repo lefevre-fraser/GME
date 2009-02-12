@@ -39,7 +39,7 @@
 extern CComModule _Module;
 #include <atlcom.h>
 
-#include "..\Common\CommonError.h"
+#include "CommonError.h"
 
 
 

@@ -1063,6 +1063,22 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Common\CommonError.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\CommonMfc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\CommonMgaTrukk.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\CommonSmart.h"
+				>
+			</File>
+			<File
 				RelativePath="CompassCheckDlg.h"
 				>
 			</File>

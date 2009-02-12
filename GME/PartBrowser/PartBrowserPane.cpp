@@ -6,7 +6,7 @@
 #include "PartBrowserPaneFrame.h"
 #include "..\Interfaces\MgaDecorator.h"
 #include "..\Annotator\AnnotationDefs.h"
-#include "..\Gme\GMEOLEData.h"
+#include "..\GME\GMEOLEData.h"
 #include "PartBrowserDecoratorEventSink.h"
 #include "Gme_i.c"
 

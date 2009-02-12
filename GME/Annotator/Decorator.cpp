@@ -3,7 +3,7 @@
 #include "Decorator.h"
 #include "..\MgaUtil\AnnotationUtil.h"
 
-#include "..\Common\CommonError.h"
+#include "CommonError.h"
 
 #define VERIFY_INIT   { if (!m_isInitialized) return E_DECORATOR_UNINITIALIZED; }
 #define VERIFY_LOCSET { if (!m_isLocSet) return E_DECORATOR_LOCISNOTSET; }

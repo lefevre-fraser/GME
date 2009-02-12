@@ -419,6 +419,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Common\CommonError.h"
+				>
+			</File>
+			<File
 				RelativePath="Decorator.h"
 				>
 			</File>

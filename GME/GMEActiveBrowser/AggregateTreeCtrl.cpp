@@ -6,7 +6,7 @@
 #include "gmeactivebrowser.h"
 #include "AggregateTreeCtrl.h"
 #include "ActiveBrowserPropertyPage.h"
-#include "..\gme\GMEOleData.h"
+#include "..\gme\GMEOLEData.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE

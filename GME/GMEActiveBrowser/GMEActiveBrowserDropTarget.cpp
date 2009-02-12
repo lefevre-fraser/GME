@@ -6,7 +6,7 @@
 #include "gmeactivebrowser.h"
 #include "MgaMappedTreeCtrl.h"
 #include "GMEActiveBrowserDropTarget.h"
-#include "..\GME\GMEOleData.h"
+#include "..\GME\GMEOLEData.h"
 
 
 #ifdef _DEBUG

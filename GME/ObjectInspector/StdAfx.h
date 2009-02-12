@@ -37,10 +37,10 @@
 #include <afxdao.h>			// MFC DAO database classes
 
 
-#include "..\Common\CommonError.h"
-#include "..\Common\CommonSmart.h"
-#include "..\Common\CommonMfc.h"
-#include "..\Common\CommonMgaTrukk.h"
+#include "CommonError.h"
+#include "CommonSmart.h"
+#include "CommonMfc.h"
+#include "CommonMgaTrukk.h"
 
 #include "..\Mga\MgaLib.h"
 

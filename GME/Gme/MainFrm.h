@@ -17,9 +17,6 @@
 #include "GMEPanningWindow.h"
 #include "GMEOLEApp.h"
 
-// #include "..\include\stl\string"
-//#include <string>
-
 
 // Tooltip helper for components
 class CComponentBar : public CMFCToolBar {

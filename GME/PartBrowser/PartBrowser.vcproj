@@ -330,6 +330,22 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\Common\CommonError.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\CommonMfc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\CommonMgaTrukk.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\CommonSmart.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Gme\GMEOLEData.h"
 				>
 			</File>
