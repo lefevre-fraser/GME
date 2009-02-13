@@ -1,5 +1,6 @@
 CommonError.cpp
 CommonError.h
+CommonMgaTrukk.h
 CommonSmart.h
 Decorator.cpp
 Decorator.sln
