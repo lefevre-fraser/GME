@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Decorator"
 	ProjectGUID="{EDD829D2-B202-49AD-8F2B-AF0D5323F1D3}"
+	RootNamespace="Decorator"
 	Keyword="MFCProj"
 	TargetFrameworkVersion="131072"
 	>
@@ -50,6 +51,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\GME\Common;$(GME_ROOT)\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -76,7 +78,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="DecoratorLib.lib"
+				AdditionalDependencies="gdiplus.lib DecoratorLib.lib"
 				OutputFile=".\Release/Decorator.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

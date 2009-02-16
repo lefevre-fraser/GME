@@ -1,10 +1,10 @@
-// UMLDecorator.cpp : Implementation of CUMLDecorator
+// Decorator.cpp : Implementation of CDecorator
 #include "stdafx.h"
 #include "Decorator.h"
 
 
-#define VERIFY_INIT   { if (!m_isInitialized) return E_DECORATOR_UNINITIALIZED; }
-#define VERIFY_LOCSET { if (!m_isLocSet) return E_DECORATOR_LOCISNOTSET; }
+#define VERIFY_INITIALIZATION	{ if (!m_isInitialized) return E_DECORATOR_UNINITIALIZED; }
+#define VERIFY_LOCATION			{ if (!m_isLocSet) return E_DECORATOR_LOCISNOTSET; }
 
 CDecoratorUtil	d_util;
 
@@ -13,7 +13,7 @@ CDecoratorUtil	d_util;
 
 /////////////////////////////////////////////////////////////////////////////
 // CDecorator
-STDMETHODIMP CDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart, IMgaFCO *obj)
+STDMETHODIMP CDecorator::Initialize(IMgaProject* project, IMgaMetaPart* metaPart, IMgaFCO* obj)
 {
 	//
 	// TODO: read all important data from MGA and cache them for later use
@@ -22,8 +22,7 @@ STDMETHODIMP CDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart
 	
 	if (!GetMetaFCO(metaPart, m_metaFco)) {
 		return E_DECORATOR_INIT_WITH_NULL;
-	}
-	else {
+	} else {
 		m_isInitialized = true;
 	}	
 	
@@ -31,8 +30,7 @@ STDMETHODIMP CDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart
 		CComBSTR bstr;
 		COMTHROW(m_mgaFco->get_Name(&bstr));
 		m_name = bstr;
-	}
-	else {
+	} else {
 		CComBSTR bstr;
 		COMTHROW(m_metaFco->get_DisplayedName(&bstr));
 		if (bstr.Length() == 0 ) {
@@ -42,10 +40,10 @@ STDMETHODIMP CDecorator::Initialize(IMgaProject *project, IMgaMetaPart *metaPart
 		m_name = bstr;
 	}
 
-	if(!GetColorPreference(m_color,COLOR_PREF)) {
+	if (!GetColorPreference(m_color,COLOR_PREF)) {
 		m_color = GME_BLACK_COLOR;
 	}
-	if(!GetColorPreference(m_nameColor,NAME_COLOR_PREF)) {
+	if (!GetColorPreference(m_nameColor,NAME_COLOR_PREF)) {
 		m_nameColor = GME_BLACK_COLOR;
 	}
 	return S_OK;
@@ -56,14 +54,15 @@ STDMETHODIMP CDecorator::Destroy()
 	//
 	// TODO: At least free all references to MGA objects
 	//
-	VERIFY_INIT;
+	VERIFY_INITIALIZATION;
 	m_isInitialized = false;
 	m_isLocSet = false;
-	m_metaFco = NULL; m_mgaFco = NULL;
+	m_metaFco = NULL;
+	m_mgaFco = NULL;
 	return S_OK;
 }
 
-STDMETHODIMP CDecorator::GetMnemonic(BSTR *mnemonic)
+STDMETHODIMP CDecorator::GetMnemonic(BSTR* mnemonic)
 {	
 	//
 	// TODO: Return the logical name of the decorator (currently not used by GME)
@@ -88,7 +87,7 @@ STDMETHODIMP CDecorator::SetParam(BSTR name, VARIANT value)
 	// TODO:  Parse and set all supported parameters, otherwise return error
 	// (currently all values are BSTR type)
 	//
-	VERIFY_INIT;
+	VERIFY_INITIALIZATION;
 	return E_DECORATOR_UNKNOWN_PARAMETER;
 }
 
@@ -98,7 +97,7 @@ STDMETHODIMP CDecorator::GetParam(BSTR name, VARIANT* value)
 	// TODO: Return values of supported and previously set parameters, otherwise return error
 	// (currently GME does not use this method)
 	//
-	VERIFY_INIT;
+	VERIFY_INITIALIZATION;
 	return E_DECORATOR_UNKNOWN_PARAMETER;
 }
 
@@ -107,7 +106,7 @@ STDMETHODIMP CDecorator::SetActive(VARIANT_BOOL isActive)
 	//
 	// TODO: If isActive==VARIANT_FALSE, draw your object in GME_GREYED_OUT, otherwise use the color of the object
 	//
-	VERIFY_INIT;
+	VERIFY_INITIALIZATION;
 	m_isActive = (isActive != VARIANT_FALSE);
 	return S_OK;
 }
@@ -117,7 +116,7 @@ STDMETHODIMP CDecorator::GetPreferredSize(long* sizex, long* sizey)
 	//
 	// TODO: Give GME a hint about the object size. Do not expect GME to take it into account
 	//
-	VERIFY_INIT;
+	VERIFY_INITIALIZATION;
 	*sizex = SAMPLE_SIZEX;
 	*sizey = SAMPLE_SIZEY;
 	return S_OK;
@@ -129,7 +128,7 @@ STDMETHODIMP CDecorator::SetLocation(long sx, long sy, long ex, long ey)
 	//
 	// TODO: Draw the object exactly to the this location later
 	//
-	VERIFY_INIT;
+	VERIFY_INITIALIZATION;
 	m_sx = sx;
 	m_sy = sy;
 	m_ex = ex;
@@ -138,14 +137,14 @@ STDMETHODIMP CDecorator::SetLocation(long sx, long sy, long ex, long ey)
 	return S_OK;
 }
 
-STDMETHODIMP CDecorator::GetLocation(long *sx, long *sy, long *ex, long *ey)
+STDMETHODIMP CDecorator::GetLocation(long* sx, long* sy, long* ex, long* ey)
 {
 	//
 	// TODO: Return previously set location parameters
 	// (currently GME does not call this)
 	// 
-	VERIFY_INIT;
-	VERIFY_LOCSET;
+	VERIFY_INITIALIZATION;
+	VERIFY_LOCATION;
 	*sx = m_sx;
 	*sy = m_sy;
 	*ex = m_ex;
@@ -153,34 +152,34 @@ STDMETHODIMP CDecorator::GetLocation(long *sx, long *sy, long *ex, long *ey)
 	return S_OK;
 }
 
-STDMETHODIMP CDecorator::GetLabelLocation(long *sx, long *sy, long *ex, long *ey)
+STDMETHODIMP CDecorator::GetLabelLocation(long* sx, long* sy, long* ex, long* ey)
 {
 	//
 	// TODO: Return the location of the text box of your label if you support labels.
 	// (currently GME does not call this)
 	//
-	VERIFY_INIT;
-	VERIFY_LOCSET;
+	VERIFY_INITIALIZATION;
+	VERIFY_LOCATION;
 	return S_OK;
 }
 
-STDMETHODIMP CDecorator::GetPortLocation(IMgaFCO *fco, long *sx, long *sy, long *ex, long *ey)
+STDMETHODIMP CDecorator::GetPortLocation(IMgaFCO* fco, long* sx, long* sy, long* ex, long* ey)
 {
 	//
 	// TODO: Return the location of the specified port if ports are supported in the decorator
 	//
-	VERIFY_INIT;
-	VERIFY_LOCSET;
+	VERIFY_INITIALIZATION;
+	VERIFY_LOCATION;
 
 	return E_DECORATOR_PORTNOTFOUND;
 }
 
-STDMETHODIMP CDecorator::GetPorts(IMgaFCOs **portFCOs)
+STDMETHODIMP CDecorator::GetPorts(IMgaFCOs** portFCOs)
 {
 	//
 	// TODO: Return a collection of mga objects represented as ports.
 	//
-	VERIFY_INIT;
+	VERIFY_INITIALIZATION;
 	CComPtr<IMgaFCOs> coll;
 	COMTHROW(coll.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
 	*portFCOs = coll.Detach();
@@ -218,10 +217,18 @@ STDMETHODIMP CDecorator::SaveState()
 
 
 //////////// Decorator private functions
-CDecorator::CDecorator() : m_sx(0), m_sy(0), m_ex(0), m_ey(0), 
-	m_isActive(true), m_mgaFco(0), m_metaFco(0),
-	m_isInitialized(false), m_isLocSet(false),  
-	m_color(GME_BLACK_COLOR), m_nameColor(GME_BLACK_COLOR)
+CDecorator::CDecorator() :
+	m_sx(0),
+	m_sy(0),
+	m_ex(0),
+	m_ey(0),
+	m_isActive(true),
+	m_mgaFco(0),
+	m_metaFco(0),
+	m_isInitialized(false),
+	m_isLocSet(false),
+	m_color(GME_BLACK_COLOR),
+	m_nameColor(GME_BLACK_COLOR)
 {
 }
 
@@ -229,7 +236,7 @@ CDecorator::~CDecorator()
 {
 }
 
-bool CDecorator::GetMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco)
+bool CDecorator::GetMetaFCO(const CComPtr<IMgaMetaPart>& metaPart, CComPtr<IMgaMetaFCO> &metaFco)
 {
 	if (!metaPart) {
 		return false;
@@ -247,35 +254,35 @@ bool CDecorator::GetMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaM
 	return (metaFco != NULL);
 }
 
-bool CDecorator::GetPreference(CString &val,const CString &path)
+bool CDecorator::GetPreference(CString& val, const CString& path)
 {
 	CComBSTR pathBstr(path);
 	CComBSTR bstrVal;
 	if (m_mgaFco) {
-		COMTHROW(m_mgaFco->get_RegistryValue(pathBstr,&bstrVal));
+		COMTHROW(m_mgaFco->get_RegistryValue(pathBstr, &bstrVal));
 	}
 	else {
-		COMTHROW(m_metaFco->get_RegistryValue(pathBstr,&bstrVal));
+		COMTHROW(m_metaFco->get_RegistryValue(pathBstr, &bstrVal));
 	}
 	val = bstrVal;
 	return !val.IsEmpty();
 }
 
-bool CDecorator::GetPreference(int &val,const CString &path,bool hex)
+bool CDecorator::GetPreference(int& val, const CString& path, bool hex)
 {
 	CString strVal;
 	GetPreference(strVal, path);
-	return (sscanf(strVal,hex ? "%x" : "%d",&val) == 1);
+	return (sscanf(strVal, hex ? "%x" : "%d", &val) == 1);
 }
 
-bool CDecorator::GetColorPreference(unsigned long &color, const CString &path)
+bool CDecorator::GetColorPreference(unsigned long& color, const CString& path)
 {
 	int i;
-	if(GetPreference(i,path,true)) {
+	if (GetPreference(i, path, true)) {
 		unsigned int r = (i & 0xff0000) >> 16;
 		unsigned int g = (i & 0xff00) >> 8;
 		unsigned int b = i & 0xff;
-		color = RGB(r,g,b);
+		color = RGB(r, g, b);
 		return true;
 	}
 	return false;

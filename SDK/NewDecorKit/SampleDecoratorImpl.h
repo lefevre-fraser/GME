@@ -53,7 +53,6 @@ public:
 		COM_INTERFACE_ENTRY( IMgaNewDecorator )
 	END_COM_MAP()
 
-// =============== ISampleDecorator
 public:
 	// =============== inherited from IMgaDecorator
 	STDMETHOD( Initialize )						( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO );
@@ -72,7 +71,7 @@ public:
 	STDMETHOD( Draw )							( /*[in]*/ HDC hdc );
 	STDMETHOD( SaveState )						( void );
 
-	// =============== ISampleDecorator
+	// =============== inherited from IMgaNewDecorator
 	STDMETHOD( InitializeEx )					( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO, /*[in]*/ IMgaNewDecoratorEvents* eventSink, /*[in]*/ ULONGLONG parentWnd );
 	STDMETHOD( DrawEx )							( /*[in]*/ HDC hdc, /*[in]*/ ULONGLONG gdipGraphics );
 	STDMETHOD( SetSelected )					( /*[in]*/ VARIANT_BOOL bIsSelected );

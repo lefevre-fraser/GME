@@ -1,7 +1,7 @@
-// UMLDecorator.h : Declaration of the CUMLDecorator
+// Decorator.h : Declaration of the CUMLDecorator
 
-#ifndef __UMLDECORATOR_H_
-#define __UMLDECORATOR_H_
+#ifndef __DECORATOR_H_
+#define __DECORATOR_H_
 
 #include "DecoratorStd.h"
 #include "DecoratorConfig.h"
@@ -31,42 +31,43 @@ END_COM_MAP()
 
 // IMgaDecorator
 public:
-	STDMETHOD(Initialize)(/*[in]*/ IMgaProject *project, /*[in]*/ IMgaMetaPart *meta, /*[in]*/ IMgaFCO *obj);
-	STDMETHOD(Destroy)();
-	STDMETHOD(GetMnemonic)(/*[out]*/ BSTR *mnemonic);
-	STDMETHOD(GetFeatures)(/*[out]*/ feature_code *features);
-	STDMETHOD(SetParam)(/*[in]*/ BSTR name, /*[in]*/ VARIANT value);
-	STDMETHOD(GetParam)(/*[in]*/ BSTR name, /*[out]*/ VARIANT* value);
-	STDMETHOD(SetActive)(/*[in]*/ VARIANT_BOOL isActive);
-	STDMETHOD(GetPreferredSize)(/*[out]*/ long* sizex, /*[out]*/ long* sizey);
-	STDMETHOD(SetLocation)(/*[in]*/ long sx, /*[in]*/ long sy, /*[in]*/ long ex, /*[in]*/ long ey);
-	STDMETHOD(GetLocation)(/*[out]*/ long *sx, /*[out]*/ long *sy, /*[out]*/ long *ex, /*[out]*/ long *ey);	
-	STDMETHOD(GetLabelLocation)( /*[out]*/ long *sx, /*[out]*/ long *sy, /*[out]*/ long *ex, /*[out]*/ long *ey);
-	STDMETHOD(GetPortLocation)(/*[in]*/ IMgaFCO *fco, /*[out]*/ long *sx, /*[out]*/ long *sy, /*[out]*/ long *ex, /*[out]*/ long *ey);
-	STDMETHOD(GetPorts)(/*[out, retval]*/ IMgaFCOs **portFCOs);
-	STDMETHOD(Draw)(/*[in]*/ HDC hdc);
-	STDMETHOD(SaveState)();
-	
+	// =============== inherited from IMgaDecorator
+	STDMETHOD( Initialize )						( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO );
+	STDMETHOD( Destroy )						( void );
+	STDMETHOD( GetMnemonic )					( /*[out]*/ BSTR* bstrMnemonic );
+	STDMETHOD( GetFeatures )					( /*[out]*/ feature_code* pFeatureCodes );
+	STDMETHOD( SetParam )						( /*[in]*/ BSTR bstrName, /*[in]*/ VARIANT vValue );
+	STDMETHOD( GetParam )						( /*[in]*/ BSTR bstrName, /*[out]*/ VARIANT* pvValue );
+	STDMETHOD( SetActive )						( /*[in]*/ VARIANT_BOOL bIsActive );
+	STDMETHOD( GetPreferredSize )				( /*[out]*/ LONG* plWidth, /*[out]*/ LONG* plHeight );
+	STDMETHOD( SetLocation )					( /*[in]*/ LONG sx, /*[in]*/ LONG sy, /*[in]*/ LONG ex, /*[in]*/ LONG ey );
+	STDMETHOD( GetLocation )					( /*[out]*/ LONG* sx, /*[out]*/ LONG* sy, /*[out]*/ LONG* ex, /*[out]*/ LONG* ey );
+	STDMETHOD( GetLabelLocation )				( /*[out]*/ LONG* sx, /*[out]*/ LONG* sy, /*[out]*/ LONG* ex, /*[out]*/ LONG* ey );
+	STDMETHOD( GetPortLocation )				( /*[in]*/ IMgaFCO* fco, /*[out]*/ LONG* sx, /*[out]*/ LONG* sy, /*[out]*/ LONG* ex, /*[out]*/ LONG* ey );
+	STDMETHOD( GetPorts )						( /*[out, retval]*/ IMgaFCOs** portFCOs );
+	STDMETHOD( Draw )							( /*[in]*/ HDC hdc );
+	STDMETHOD( SaveState )						( void );
+
 protected:
-	bool m_isInitialized;
-	bool m_isLocSet;
-	long m_sy;
-	long m_sx;
-	long m_ey;
-	long m_ex;
-	bool m_isActive;
-	CComPtr<IMgaFCO>	m_mgaFco;
+	bool					m_isInitialized;
+	bool					m_isLocSet;
+	long					m_sy;
+	long					m_sx;
+	long					m_ey;
+	long					m_ex;
+	bool					m_isActive;
+	CComPtr<IMgaFCO>		m_mgaFco;
 	CComPtr<IMgaMetaFCO>	m_metaFco;
-	CString		m_name;
-	COLORREF	m_color;
-	COLORREF	m_nameColor;
+	CString					m_name;
+	COLORREF				m_color;
+	COLORREF				m_nameColor;
 
 private:
-	bool GetMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco);
-	bool GetPreference(CString &val, const CString &path);
-	bool GetPreference(int &val, const CString &path, bool hex = false);
-	bool GetColorPreference(COLORREF &color, const CString &path);
+	bool GetMetaFCO(const CComPtr<IMgaMetaPart>& metaPart, CComPtr<IMgaMetaFCO>& metaFco);
+	bool GetPreference(CString& val, const CString& path);
+	bool GetPreference(int& val, const CString& path, bool hex = false);
+	bool GetColorPreference(COLORREF& color, const CString& path);
 };
 
 
-#endif //__UMLDECORATOR_H_
+#endif //__DECORATOR_H_

@@ -246,7 +246,6 @@ bool NewBoxDecorator::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC trans
 				char pbufRead[100];
 				UINT readLen = txtFile.Read(pbufRead, sizeof(pbufRead) - 1);
 				pbufRead[readLen] = 0;
-				CString msg;
 				AfxMessageBox("Decorator drop: '" + conn + "' first 100 bytes: " + pbufRead + ".");
 				return true;
 			} else {

@@ -20,7 +20,7 @@
 
 #include "DecoratorExceptions.h"
 
-static const unsigned int	CTX_MENU_ID_SAMPLE		= DECORATOR_CTX_MENU_MINID + 100;
+static const unsigned int	CTX_MENU_ID_SAMPLE		= DECORATOR_CTX_MENU_MINID + 100;	// Should be unique
 static const char*			CTX_MENU_STR_SAMPLE		= "Sample Decorator Ctx Menu Item";
 
 
@@ -180,7 +180,9 @@ bool SampleCompositePart::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC t
 				char pbufRead[100];
 				UINT readLen = txtFile.Read(pbufRead, sizeof(pbufRead) - 1);
 				pbufRead[readLen] = 0;
-				CString msg;
+				GeneralOperationStarted(NULL);
+				// TODO: do something
+				GeneralOperationFinished(NULL);
 				AfxMessageBox("SampleDecorator drop: '" + conn + "' first 100 bytes: " + pbufRead + ".");
 				return true;
 			} else {
