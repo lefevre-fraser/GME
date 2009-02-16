@@ -63,7 +63,7 @@ STDMETHODIMP CDecorator::Destroy()
 }
 
 STDMETHODIMP CDecorator::GetMnemonic(BSTR* mnemonic)
-{	
+{
 	//
 	// TODO: Return the logical name of the decorator (currently not used by GME)
 	//
@@ -72,7 +72,7 @@ STDMETHODIMP CDecorator::GetMnemonic(BSTR* mnemonic)
 }
 
 STDMETHODIMP CDecorator::GetFeatures(feature_code *features)
-{	
+{
 	//
 	// TODO: Return supported features (combine multiple features with bitwise-OR)
 	// Available feature codes are found in MgaDecorator.idl
@@ -104,7 +104,7 @@ STDMETHODIMP CDecorator::GetParam(BSTR name, VARIANT* value)
 STDMETHODIMP CDecorator::SetActive(VARIANT_BOOL isActive)
 {
 	//
-	// TODO: If isActive==VARIANT_FALSE, draw your object in GME_GREYED_OUT, otherwise use the color of the object
+	// TODO: If isActive == VARIANT_FALSE, draw your object in GME_GREYED_OUT, otherwise use the color of the object
 	//
 	VERIFY_INITIALIZATION;
 	m_isActive = (isActive != VARIANT_FALSE);
@@ -142,7 +142,7 @@ STDMETHODIMP CDecorator::GetLocation(long* sx, long* sy, long* ex, long* ey)
 	//
 	// TODO: Return previously set location parameters
 	// (currently GME does not call this)
-	// 
+	//
 	VERIFY_INITIALIZATION;
 	VERIFY_LOCATION;
 	*sx = m_sx;
@@ -193,8 +193,8 @@ STDMETHODIMP CDecorator::Draw(HDC hdc)
 	// TODO: Draw your object. Saving & restoring the HDC is a good practice, however it is not a strict requirement
 	// Use d_util for brushes/pens/fonts.
 	//
-	VERIFY_INIT;
-	VERIFY_LOCSET;
+	VERIFY_INITIALIZATION;
+	VERIFY_LOCATION;
 
 	CDC dc;
 	dc.Attach(hdc);
@@ -211,7 +211,7 @@ STDMETHODIMP CDecorator::SaveState()
 	// TODO: The only method where we are in read-write transaction. Store all permanent information
 	// (currently GME does not support this) 
 	//
-	VERIFY_INIT;
+	VERIFY_INITIALIZATION;
 	return S_OK;
 }
 

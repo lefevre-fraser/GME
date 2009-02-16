@@ -82,6 +82,7 @@
 				OutputFile=".\Release/Decorator.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(GME_ROOT)\GME\Lib"
 				ModuleDefinitionFile=".\DecoratorApp.def"
 				ProgramDatabaseFile=".\Release/Decorator.pdb"
 				SubSystem="2"
