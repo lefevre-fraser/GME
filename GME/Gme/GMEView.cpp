@@ -4082,25 +4082,77 @@ BOOL CGMEView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 
 void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 {
-	CPoint point;
-	DragQueryPoint(p_hDropInfo, &point);
-	CoordinateTransfer(point);
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnDropFiles in " + path + name + "\r\n");
+	if (GetDocument()->GetEditMode() == GME_EDIT_MODE) {
+		CPoint point;
+		DragQueryPoint(p_hDropInfo, &point);
+		CoordinateTransfer(point);
 
-	CGuiObject* selection = FindObject(point);
-	HRESULT retVal = S_OK;
-	if (selection != NULL) {
-		CGuiAspect* pAspect = selection->GetCurrentAspect();
-		if (pAspect != NULL) {
-			CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
-			if (newDecorator) {
-				CClientDC transformDC(this);
-				OnPrepareDC(&transformDC);
-				retVal = newDecorator->DropFile((ULONGLONG)p_hDropInfo, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+		CGMEView* self = const_cast<CGMEView*> (this);
+		CGuiObject*	object	= self ? self->FindObject(point, true, true) : 0;
+		if (object == NULL)	// not label of the object but can be some port label inside the object
+			object = self ? self->FindObject(point, true, false) : 0;
+
+		HRESULT retVal = S_OK;
+		if (object != NULL) {
+			CGuiAspect* pAspect = object->GetCurrentAspect();
+			if (pAspect != NULL) {
+				CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+				if (newDecorator) {
+					CClientDC transformDC(this);
+					OnPrepareDC(&transformDC);
+					retVal = newDecorator->DropFile((ULONGLONG)p_hDropInfo, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+					if (retVal == S_DECORATOR_EVENT_HANDLED) {
+						if (inOpenedDecoratorTransaction) {
+							if (shouldCommitOperation) {
+								CommitTransaction();
+								shouldCommitOperation = false;
+								objectInDecoratorOperation = NULL;
+								annotatorInDecoratorOperation = NULL;
+								inOpenedDecoratorTransaction = false;
+								isContextInitiatedOperation = false;
+								return;
+							} else if (!inNewDecoratorOperation) {
+								AbortTransaction(S_OK);
+								inOpenedDecoratorTransaction = false;
+								isContextInitiatedOperation = false;
+								return;
+							} else {
+								if (::GetCapture() != NULL)
+									::ReleaseCapture();
+							}
+							inOpenedDecoratorTransaction = false;
+							isContextInitiatedOperation = false;
+						} else {
+							if (inNewDecoratorOperation) {
+								if (decoratorOrAnnotator)
+									objectInDecoratorOperation = object;
+								else
+									ASSERT(false);
+							}
+							return;
+						}
+					} else if (retVal != S_OK &&
+							   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
+							   retVal != E_DECORATOR_NOT_IMPLEMENTED)
+					{
+						CancelDecoratorOperation();
+						COMTHROW(retVal);
+					}
+					if (inNewDecoratorOperation) {
+						if (decoratorOrAnnotator)
+							objectInDecoratorOperation = object;
+						else
+							ASSERT(false);
+					}
+				}
 			}
 		}
+		if (inNewDecoratorOperation)
+			return;
+		if (retVal == S_DECORATOR_EVENT_HANDLED)
+			return;
 	}
-	if (retVal == S_DECORATOR_EVENT_HANDLED)
-		return;
 
 	CMainFrame::theInstance->OnDropFiles(p_hDropInfo);
 }
