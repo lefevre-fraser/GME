@@ -1,7 +1,7 @@
-// UMLDecorator.h : Declaration of the CUMLDecorator
+// Decorator.h : Declaration of the CDecorator
 
-#ifndef __UMLDECORATOR_H_
-#define __UMLDECORATOR_H_
+#ifndef __DECORATOR_H_
+#define __DECORATOR_H_
 
 #include "DecoratorStd.h"
 #include "DecoratorConfig.h"
@@ -69,4 +69,4 @@ private:
 };
 
 
-#endif //__UMLDECORATOR_H_
+#endif //__DECORATOR_H_

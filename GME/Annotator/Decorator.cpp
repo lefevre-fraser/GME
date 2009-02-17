@@ -1,4 +1,4 @@
-// UMLDecorator.cpp : Implementation of CUMLDecorator
+// Decorator.cpp : Implementation of CDecorator
 #include "stdafx.h"
 #include "Decorator.h"
 #include "..\MgaUtil\AnnotationUtil.h"

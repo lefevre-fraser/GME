@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by UMLDecorator.rc
+// Used by Decorator.rc
 //
 #define IDS_PROJNAME                    100
 #define IDR_DECORATOR					101

@@ -1,6 +1,6 @@
 //################################################################################################
 //
-// New UML decorator composite part class
+// New Annotator decorator composite part class
 //	AnnotatorCompositePart.cpp
 //
 //################################################################################################

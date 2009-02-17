@@ -21,6 +21,7 @@
 #define DECORATOR_NAME "Decorator"
 
 // This is the location of the GME interfaces file (Mga.idl, Meta.idl, etc)
+// !!! Be sure to also set the GME_ROOT environment variable to your GME source root !!!
 
 // #define GME_INTERFACES_BASE ../../GME/Interfaces
 #define GME_INTERFACES_BASE ../../GME/Interfaces
