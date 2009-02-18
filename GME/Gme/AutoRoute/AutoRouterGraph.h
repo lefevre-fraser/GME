@@ -97,8 +97,8 @@ private:
 
 	SAutoRouterEdge* GetListEdgeAt(CPoint point, int nearness = 0) const;
 
-	CComObjPtr<CAutoRouterPath> AddPath(const CPointList& points, unsigned int attr);
-	CComObjPtr<CAutoRouterPath> AddPath(CPoint startpoint, CPoint endpoint);
+	//CComObjPtr<CAutoRouterPath> AddPath(const CPointList& points, unsigned int attr);
+	//CComObjPtr<CAutoRouterPath> AddPath(CPoint startpoint, CPoint endpoint);
 
 // --- Boxes && Paths (FOR EXTERNAL USE)
 

@@ -76,8 +76,8 @@
 	variables of an edge are refer to that block in which this edge is inner! The
 	'block_oldgap' is the goal gap of the block when it was last evenly distributed.
 
-	The variables 'canstart' and 'canend' means that this egde can start and/or and
-	a block. The top edgeof a box only canend, while a fixed edge of a path can both
+	The variables 'canstart' and 'canend' means that this egde can start and/or end
+	a block. The top edge of a box only canend, while a fixed edge of a path can both
 	start and end of a block.
 
 */
