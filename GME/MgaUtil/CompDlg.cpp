@@ -296,15 +296,18 @@ void CCompDlg::OnRemove()
 			COMTHROW( registrar->UnregisterComponent(PutInBstr(progid), regacc_translate(m_accessmode)) );
 
 			componenttype_enum type;
-			ASSERT(E_NOTFOUND == registrar->QueryComponent(PutInBstr(progid), &type, NULL, regacc_translate(m_accessmode)));
+
+			CComBstrObj desc;
+			HRESULT hr = registrar->QueryComponent(PutInBstr(progid), &type, PutOut(desc), regacc_translate(m_accessmode));
+			ASSERT(E_NOTFOUND == hr);
 			switch(regacc_translate(m_accessmode)) {
 				case REGACCESS_USER:
-					if(S_OK == registrar->QueryComponent(PutInBstr(progid), &type, NULL, REGACCESS_SYSTEM)) {
+					if(S_OK == registrar->QueryComponent(PutInBstr(progid), &type, PutOut(desc), REGACCESS_SYSTEM)) {
 						AfxMessageBox("Warning: Component is still present in system registry");
 					}
 					break;
 				case REGACCESS_SYSTEM:
-					if(S_OK == registrar->QueryComponent(PutInBstr(progid), &type, NULL, REGACCESS_USER)) {
+					if(S_OK == registrar->QueryComponent(PutInBstr(progid), &type, PutOut(desc), REGACCESS_USER)) {
 						AfxMessageBox("Warning: Component is still present in user registry");
 					}
 					break;
