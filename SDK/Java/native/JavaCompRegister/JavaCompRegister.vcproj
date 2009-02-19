@@ -383,15 +383,15 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="..\..\..\GME\Common\CommonError.h"
+				RelativePath="$(GME_ROOT)\GME\Common\CommonError.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\GME\Common\CommonMfc.h"
+				RelativePath="$(GME_ROOT)\GME\Common\CommonMfc.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\GME\Common\CommonSmart.h"
+				RelativePath="$(GME_ROOT)\GME\Common\CommonSmart.h"
 				>
 			</File>
 			<File
