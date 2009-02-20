@@ -481,12 +481,12 @@ STDMETHODIMP CAutoRouterPath::SetStartDir(long arpath_start)
 	attributes = (attributes & ~ARPATH_StartMask) + (unsigned int)arpath_start;
 	return S_OK;
 }
-STDMETHODIMP CAutoRouterPath::GetExtPtr(long* address)
+STDMETHODIMP CAutoRouterPath::GetExtPtr(ULONGLONG* address)
 {
 	*address = extptr;
 	return S_OK;
 }
-STDMETHODIMP CAutoRouterPath::SetExtPtr(long address)
+STDMETHODIMP CAutoRouterPath::SetExtPtr(ULONGLONG address)
 {
 	extptr = address;
 	return S_OK;

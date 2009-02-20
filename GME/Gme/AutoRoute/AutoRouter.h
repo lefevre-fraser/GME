@@ -28,13 +28,11 @@ public:
 	void SetPathPreferences(CComPtr<IAutoRouterPath> path, CGuiConnection *conn);
 	void AddObjects(CGuiFcoList &fcos);
 	void AddFco(CGuiFco *fco);
-	//void AddCompound(CGuiCompound *compound);
 	void AddObject(CGuiObject *obj);
 	void AddConnections(CGuiConnectionList &connList);
 	void AddConnection(CGuiConnection *conn);
 	void DeleteObjects(CGuiObjectList &objectList);
 	void DeleteObject(CGuiObject *model);
-	//void DeleteObject(CGuiPort *port);
 	void ClearRouterPorts(CGuiPortList &portList);
 	void DeleteConnection(CGuiConnection *conn);
 	CGuiConnection *FindConnection(CPoint &pt) const;

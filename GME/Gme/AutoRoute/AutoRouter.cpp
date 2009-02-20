@@ -247,9 +247,9 @@ void CAutoRouter::AddConnection(CGuiConnection *conn)
 
 	SetPathPreferences(path, conn);
 	conn->SetRouterPath(path);
-	//hack no 1: this is a little hack: 
-	//only the address is needed, thus it should be void*
-	path->SetExtPtr((long)(conn));
+	// hack no 1: this is a little hack: 
+	// only the address is needed, thus it should be void*
+	path->SetExtPtr((ULONGLONG)conn);
 }
 
 void CAutoRouter::DeleteObjects(CGuiObjectList &objs)
@@ -319,8 +319,8 @@ CGuiConnection *CAutoRouter::FindConnection(CPoint &pt) const
 
 	if (path.p != NULL)
 	{
-		//hack no 2: this is the same hack as in hack no 1.
-		long address;
+		// hack no 2: this is the same hack as in hack no 1.
+		ULONGLONG address;
 		path->GetExtPtr(&address);
 		return (CGuiConnection*)(address);
 	}

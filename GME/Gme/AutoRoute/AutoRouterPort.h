@@ -50,7 +50,6 @@ public:
 	//only the COM interface methods are public, thus we need lots of friends
 	friend CAutoRouterBox;
 	friend CAutoRouterEdgeList;
-	friend CAutoRouterPath;
 	friend CAutoRouterGraph;
 
 DECLARE_REGISTRY_RESOURCEID(IDR_AUTOROUTERPORT)
@@ -99,7 +98,7 @@ private:
 	int IsPortClip(CRect r) const { return IsRectClip(rect, r); }
 
 	void CalculateSelfPoints();
-	
+
 	void ShiftBy(CSize offset);
 
 	void SetOwner(CComObjPtr<CAutoRouterBox> box);

@@ -29,7 +29,6 @@ typedef vector<CComObjPtr<CAutoRouterPort> > CAutoRouterPortList;
 // CAutoRouterBox
 
 class ATL_NO_VTABLE CAutoRouterBox : 
-	//public CObject,
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CAutoRouterBox, &CLSID_AutoRouterBox>,
 	public IDispatchImpl<IAutoRouterBox, &IID_IAutoRouterBox, &LIBID_GmeLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
@@ -38,7 +37,6 @@ public:
 	CAutoRouterBox();
 
 	//only the COM interface methods are public, thus we need lots of friends
-	friend CAutoRouterPort;
 	friend CAutoRouterGraph;
 	friend CAutoRouterEdgeList;
 	friend CAutoRouterPath;
@@ -58,7 +56,7 @@ END_COM_MAP()
 	{
 		return S_OK;
 	}
-	
+
 	void FinalRelease() 
 	{
 	}

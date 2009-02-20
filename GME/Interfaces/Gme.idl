@@ -435,7 +435,7 @@ interface IAutoRouterPort : IDispatch{
 	//[id(12)] HRESULT HasLimitedDirs([out,retval] long* result);
 	//[id(13)] HRESULT SetLimitedDirs([in] long p_ltd);
 
-	[id(1)] HRESULT GetOwner([out,retval] IAutoRouterBox** result);
+	[id(1)] HRESULT GetOwner([out, retval] IAutoRouterBox** result);
 	[id(2)] HRESULT SetRect([in] long p1, [in] long p2, [in] long p3, [in] long p4);
 	[id(3)] HRESULT SetAttributes([in] long attr);
 	[id(4)] HRESULT SetLimitedDirs([in] long p_ltd);
@@ -451,8 +451,8 @@ interface IAutoRouterGraph;
 	pointer_default(unique)
 ]
 interface IAutoRouterBox : IDispatch{
-	[id(1)] HRESULT GetOwner([out,retval] IAutoRouterGraph** result);
-	[id(2)] HRESULT CreatePort([out,retval] IAutoRouterPort** result);
+	[id(1)] HRESULT GetOwner([out, retval] IAutoRouterGraph** result);
+	[id(2)] HRESULT CreatePort([out, retval] IAutoRouterPort** result);
 	[id(3)] HRESULT Add([in] IAutoRouterPort* port);
 	[id(4)] HRESULT Delete([in] IAutoRouterPort* port);
 	[id(5)] HRESULT SetRect([in] long p1, [in] long p2, [in] long p3, [in] long p4);
@@ -479,11 +479,12 @@ interface IAutoRouterGraph : IDispatch{
 	[id(5)] HRESULT AutoRoute([out, retval] long* result);
 	[id(6)] HRESULT DeletePath([in] IAutoRouterPath* path);
 	[id(7)] HRESULT DeleteAll();
-	[id(8)] HRESULT GetPathAt([in] long pointX, [in] long pointY, [in] long nearness, [out, retval]  IAutoRouterPath** result);
-	[id(9)] HRESULT AddPath([in] IAutoRouterPort* startport,[in] IAutoRouterPort* endport, [out, retval]  IAutoRouterPath** result);
+	[id(8)] HRESULT GetPathAt([in] long pointX, [in] long pointY, [in] long nearness, [out, retval] IAutoRouterPath** result);
+	[id(9)] HRESULT AddPath([in] IAutoRouterPort* startport, [in] IAutoRouterPort* endport, [out, retval] IAutoRouterPath** result);
 
 	[id(10)] HRESULT Destroy();
 };
+
 [
 	object,
 	uuid(E472E1BB-9953-447E-BBE2-378C0DCB85E4),
@@ -496,8 +497,8 @@ interface IAutoRouterPath : IDispatch{
 	[id(1)] HRESULT GetOwner([out, retval] IAutoRouterGraph** result);
 	[id(2)] HRESULT SetEndDir([in] long arpath_end);
 	[id(3)] HRESULT SetStartDir([in] long arpath_start);
-	[id(4)] HRESULT GetExtPtr([out, retval] long* address);
-	[id(5)] HRESULT SetExtPtr([in] long address);
+	[id(4)] HRESULT GetExtPtr([out, retval] ULONGLONG* address);
+	[id(5)] HRESULT SetExtPtr([in] ULONGLONG address);
 	[id(6)] HRESULT GetPointList([in, out] SAFEARRAY(long) *pArr);
 
 	[id(7)] HRESULT Destroy();

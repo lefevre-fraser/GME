@@ -55,8 +55,6 @@ public:
 	//only the COM interface methods are public, thus we need lots of friends
 	friend CAutoRouterGraph;
 	friend CAutoRouterEdgeList;
-	friend CAutoRouterPort;
-	friend CAutoRouterBox;
 
 DECLARE_REGISTRY_RESOURCEID(IDR_AUTOROUTERPATH)
 
@@ -73,7 +71,7 @@ END_COM_MAP()
 	{
 		return S_OK;
 	}
-	
+
 	void FinalRelease() 
 	{		
 		DeleteAll();
@@ -177,14 +175,14 @@ private:
 private:
 	//this is a little hack: 
 	//only the address is needed, thus it should be void*
-	long extptr;
+	ULONGLONG extptr;
 
 public:
 	STDMETHOD(GetOwner)(IAutoRouterGraph** result);
 	STDMETHOD(SetEndDir)(long arpath_end);
 	STDMETHOD(SetStartDir)(long arpath_start);
-	STDMETHOD(GetExtPtr)(long* address);
-	STDMETHOD(SetExtPtr)(long address);
+	STDMETHOD(GetExtPtr)(ULONGLONG* address);
+	STDMETHOD(SetExtPtr)(ULONGLONG address);
 	STDMETHOD(GetPointList)(SAFEARRAY **pArr);
 	STDMETHOD(Destroy)();
 };

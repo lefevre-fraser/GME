@@ -16,7 +16,7 @@ class CAutoRouterBox;
 class CAutoRouterPath;
 class CAutoRouterEdgeList;
 struct SAutoRouterEdge;
-	
+
 #include <vector>
 #include <algorithm>
 using namespace std;
@@ -27,7 +27,6 @@ typedef CList<CPoint, CPoint&>				CPointList;
 
 // CAutoRouterGraph
 class ATL_NO_VTABLE CAutoRouterGraph : 
-	//public CObject,
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CAutoRouterGraph, &CLSID_AutoRouterGraph>,
 	public IDispatchImpl<IAutoRouterGraph, &IID_IAutoRouterGraph, &LIBID_GmeLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
@@ -36,10 +35,7 @@ public:
 	CAutoRouterGraph();
 
 	//only the COM interface methods are public, thus we need lots of friends
-	friend CAutoRouterPort;
-	friend CAutoRouterBox;
 	friend CAutoRouterEdgeList;
-	friend CAutoRouterPath;
 
 DECLARE_REGISTRY_RESOURCEID(IDR_AUTOROUTERGRAPH)
 
@@ -62,7 +58,7 @@ END_COM_MAP()
 
 		return S_OK;
 	}
-	
+
 	void FinalRelease() 
 	{
 	}
