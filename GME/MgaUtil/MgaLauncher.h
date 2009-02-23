@@ -59,9 +59,6 @@ public:
 
 public:
 	static CString PruneConnectionString(const CString &conn);
-
-private:
-	//int CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodName, CComPtr<IMgaProject> param);
 };
 
 #endif//MGA_MGALAUNCHER_H

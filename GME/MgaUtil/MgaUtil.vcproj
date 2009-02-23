@@ -746,6 +746,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\DotNetUtils.cpp"
+				>
+			</File>
+			<File
 				RelativePath="FolderPropertiesDlg.cpp"
 				>
 				<FileConfiguration
@@ -1402,6 +1406,10 @@
 			</File>
 			<File
 				RelativePath="DirDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DotNetUtils.h"
 				>
 			</File>
 			<File
