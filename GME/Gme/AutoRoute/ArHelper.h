@@ -2,47 +2,26 @@
 #ifndef __ARHELPER_H
 #define __ARHELPER_H
 
-template<class T>
-class CComPtr2 : public CComPtr<T>
-{
-public:
-	CComPtr2(const CComPtr<T>& ptr):CComPtr<T>(ptr)
-	{}
-
-	T** operator&() throw()
-	{
-		//ATLASSERT(p==NULL);
-		return &p;
-	}
-
-	~CComPtr2() throw()
-	{
-		if (p)
-			p->Release();
-	}
-};
-
-
 // --------------------------- CRect && CPoint
 
 
 CRect InflatedRect(const CRect& rect, int a);
 CRect DeflatedRect(const CRect& rect, int a);
 
-int IsPointNear(CPoint p1, CPoint p2, int nearness = 0);
-int IsPointIn(CPoint point, CRect rect, int nearness = 0);
-int IsRectIn(CRect r1, CRect r2);
-int IsRectClip(CRect r1, CRect r2);
+int IsPointNear(const CPoint& p1, const CPoint& p2, int nearness = 0);
+int IsPointIn(const CPoint& point, const CRect& rect, int nearness = 0);
+int IsRectIn(const CRect& r1, const CRect& r2);
+int IsRectClip(const CRect& r1, const CRect& r2);
 
-int IsPointNearHLine(CPoint p, long x1, long x2, long y, int nearness = 0);
-int IsPointNearVLine(CPoint p, long y1, long y2, long x, int nearness = 0);
-int DistanceFromHLine(CPoint p, long x1, long x2, long y);
-int DistanceFromVLine(CPoint p, long y1, long y2, long x);
+int IsPointNearHLine(const CPoint& p, long x1, long x2, long y, int nearness = 0);
+int IsPointNearVLine(const CPoint& p, long y1, long y2, long x, int nearness = 0);
+int DistanceFromHLine(const CPoint& p, long x1, long x2, long y);
+int DistanceFromVLine(const CPoint& p, long y1, long y2, long x);
 
-int IsPointNearLine(CPoint point, CPoint start, CPoint end, int nearness = 0);
-int IsLineMeetHLine(CPoint start, CPoint end, long x1, long x2, long y);
-int IsLineMeetVLine(CPoint start, CPoint end, long y1, long y2, long x);
-int IsLineClipRect(CPoint start, CPoint end, CRect rect);
+int IsPointNearLine(const CPoint& point, const CPoint& start, const CPoint& end, int nearness = 0);
+int IsLineMeetHLine(const CPoint& start, const CPoint& end, long x1, long x2, long y);
+int IsLineMeetVLine(const CPoint& start, const CPoint& end, long y1, long y2, long x);
+int IsLineClipRect(const CPoint& start, const CPoint& end, const CRect& rect);
 int Intersect(long first_x1, long first_x2, long second_x1, long second_x2);
 
 int IsOpeningBracket(CPoint* start_prev, CPoint* start, CPoint* end, CPoint* end_next, int ishorizontal);
@@ -72,25 +51,25 @@ EArDir NextClockwiseDir(EArDir dir);
 EArDir PrevClockwiseDir(EArDir dir);
 EArDir ReverseDir(EArDir dir);
 
-CPoint StepOneInDir(CPoint point, EArDir dir);
+CPoint StepOneInDir(const CPoint& point, EArDir dir);
 long& GetRectCoord(CRect& rect, EArDir dir);
-long GetRectOuterCoord(CRect rect, EArDir dir);
+long GetRectOuterCoord(const CRect& rect, EArDir dir);
 inline long& GetPointCoord(CPoint& point, int ishorizontal) { return ishorizontal ? point.x : point.y; }
 inline long& GetPointCoord(CPoint& point, EArDir dir) { return IsHorizontal(dir) ? point.x : point.y; }
 inline long ChooseInDir(long a, long b, EArDir dir) { return IsTopLeft(dir) ? min(a,b) : max(a,b); }
 
-EArDir GetMajorDir(CSize offset);
-EArDir GetMinorDir(CSize offset);
-EArDir ExGetMajorDir(CSize offset);
-EArDir ExGetMinorDir(CSize offset);
-EArDir GetDir(CSize offset, EArDir nodir = Dir_None);
-int IsPointInDirFrom(CPoint point, CPoint from, EArDir dir);
-int IsPointInDirFrom(CPoint point, CRect rect, EArDir dir);
-int IsPointBetweenSides(CPoint point, CRect rect, int ishorizontal = 1);
-inline int IsPointBetweenSides(CPoint point, CRect rect, EArDir dir) { return IsPointBetweenSides(point, rect, IsHorizontal(dir)); }
+EArDir GetMajorDir(const CSize& offset);
+EArDir GetMinorDir(const CSize& offset);
+EArDir ExGetMajorDir(const CSize& offset);
+EArDir ExGetMinorDir(const CSize& offset);
+EArDir GetDir(const CSize& offset, EArDir nodir = Dir_None);
+int IsPointInDirFrom(const CPoint& point, const CPoint& from, EArDir dir);
+int IsPointInDirFrom(const CPoint& point, const CRect& rect, EArDir dir);
+int IsPointBetweenSides(const CPoint& point, const CRect& rect, int ishorizontal = 1);
+inline int IsPointBetweenSides(const CPoint& point, const CRect& rect, EArDir dir) { return IsPointBetweenSides(point, rect, IsHorizontal(dir)); }
 int IsCoordInDirFrom(long coord, long from, EArDir dir);
 
-EArDir OnWhichEdge(CRect rect, CPoint point);
+EArDir OnWhichEdge(const CRect& rect, const CPoint& point);
 
 
 // --------------------------- CArFindNearestLine
@@ -99,7 +78,7 @@ EArDir OnWhichEdge(CRect rect, CPoint point);
 class CArFindNearestLine
 {
 public:
-	CArFindNearestLine(CPoint p): point(p), dist1(INT_MAX), dist2(INT_MAX) { }
+	CArFindNearestLine(const CPoint& p): point(p), dist1(INT_MAX), dist2(INT_MAX) { }
 
 	int HLine(int x1, int x2, int y);
 	int VLine(int y1, int y2, int x);

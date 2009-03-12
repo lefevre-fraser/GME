@@ -386,7 +386,6 @@
 #define IDC_PRINT_METAFILE              32956
 #define ID_PRINT_METAFILE               32957
 #define ID_VIEW_PANNWIN                 32958
-#define ID_BUTTON32959                  32959
 #define ID_SELFCNTX_COPYCLOSURE         32960
 #define ID_CNTX_COPYCLOSURE             32961
 #define ID_EDIT_COPYCLOSURE             32962
@@ -475,10 +474,6 @@
 #define ID_CRASHTEST_ILLEGALCODEREAD    33084
 #define ID_CRASHTEST_DIVIDEBYZERO       33085
 #define ID_VIEW_FULLSCREEN              33086
-#define ID_Menu33087                    33087
-#define ID_TOOLS_TEST                   33089
-#define ID_TOOLS_TEST33090              33090
-#define ID_TOOLS_                       33091
 #define ID_TOOLS_EXTERNAL_TOOLS         33092
 #define ID_FILE_RUNINTERPRETER          33093
 #define ID_TOOLS_RUNPLUG                33094
@@ -486,8 +481,8 @@
 #define ID_WINDOW_NEWVERTICALTABGROUP   33096
 #define ID_WINDOW_MOVETOPREVIOUSTABGROUP 33097
 #define ID_WINDOW_MOVETONEXTTABGROUP    33098
-#define ID_TOOLS_A                      33099
-#define ID_BUTTON33100                  33100
+#define ID_DELETECONNEDGECUSTOMDATA     33099
+#define ID_DELETECONNROUTECUSTOMDATA    33100
 #define ID_VIEW_TOOLBARS                33200
 #define IDW_TOOLBAR_MAIN                0xE820
 #define IDW_TOOLBAR_WINS                0xE821

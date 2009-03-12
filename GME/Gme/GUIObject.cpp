@@ -213,7 +213,7 @@ void CGuiAspect::SetLocation(const CRect& location)
 ////////////////////////////////////
 // Non-virtual methods of CGuiPort
 ////////////////////////////////////
-CGuiPort::CGuiPort(CGuiAspect *asp,CComPtr<IMgaFCO> fco) : parent(asp), mgaFco(fco), autorouterPrefs(0)
+CGuiPort::CGuiPort(CGuiAspect *asp,CComPtr<IMgaFCO> fco) : parent(asp), mgaFco(fco)
 {
 	CComBSTR bstr;
 	COMTHROW(fco->get_Name(&bstr));
@@ -224,7 +224,6 @@ CGuiPort::CGuiPort(CGuiAspect *asp,CComPtr<IMgaFCO> fco) : parent(asp), mgaFco(f
 	CopyTo(bstr,id);
 
 	if (!IsRealPort()) {
-		autorouterPrefs = new bool[8];
 		ReadARPreferences();
 	}
 
@@ -245,7 +244,6 @@ bool CGuiPort::GetPreference(CString &val,CString path)
 
 void CGuiPort::ReadARPreferences()
 {
-	VERIFY(autorouterPrefs);
 	CString val;
 	if (GetPreference(val, AUTOROUTER_PREF)) {
 		autorouterPrefs[GME_START_NORTH] = (val.Find("N") != -1);
@@ -267,8 +265,7 @@ void CGuiPort::ReadARPreferences()
 			autorouterPrefs[GME_END_EAST] = false;
 			autorouterPrefs[GME_END_SOUTH] = true;
 			autorouterPrefs[GME_END_WEST] = false;
-		}
-		else {
+		} else {
 			autorouterPrefs[GME_START_NORTH] = true;
 			autorouterPrefs[GME_START_EAST] = true;
 			autorouterPrefs[GME_START_SOUTH] = true;
@@ -283,10 +280,9 @@ void CGuiPort::ReadARPreferences()
 
 bool CGuiPort::GetARPref(int dir)
 {
-	if (!autorouterPrefs) {
-		autorouterPrefs = new bool[8];
+	if (IsRealPort()) {
 		CRect parentLoc = parent->GetLocation();
-		if (GetLocation().CenterPoint().x < (parentLoc.Size().cx/2)) {
+		if (GetLocation().CenterPoint().x < (parentLoc.Size().cx / 2)) {
 			autorouterPrefs[GME_START_NORTH] = false;
 			autorouterPrefs[GME_START_EAST] = false;
 			autorouterPrefs[GME_START_SOUTH] = false;
@@ -295,8 +291,7 @@ bool CGuiPort::GetARPref(int dir)
 			autorouterPrefs[GME_END_EAST] = false;
 			autorouterPrefs[GME_END_SOUTH] = false;
 			autorouterPrefs[GME_END_WEST] = true;
-		}
-		else {
+		} else {
 			autorouterPrefs[GME_START_NORTH] = false;
 			autorouterPrefs[GME_START_EAST] = true;
 			autorouterPrefs[GME_START_SOUTH] = false;
@@ -2239,7 +2234,6 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role
 	srcPort			(NULL),
 	dst				(NULL),
 	dstPort			(NULL),
-	autorouterPrefs	(NULL),
 	hovered			(false),
 	selected		(false)
 {
@@ -2303,7 +2297,6 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role
 	}
 
 	{
-		autorouterPrefs = new bool[8];
 		ReadARPreferences();
 	}
 	labelset = new CGuiConnectionLabelSet;
@@ -2700,7 +2693,6 @@ void CGuiConnection::RefreshAttributeCache()
 
 void CGuiConnection::ReadARPreferences()
 {
-	VERIFY(autorouterPrefs);
 	CString val;
 	if (GetPreference(val, AUTOROUTER_PREF)) {
 		autorouterPrefs[GME_START_NORTH] = (val.Find("N") != -1);

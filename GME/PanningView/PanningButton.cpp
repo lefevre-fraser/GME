@@ -138,9 +138,12 @@ void CPanningButton::DeleteDeviceContext(HDC bDC, HBITMAP oldBmp)
 {
 	HBITMAP hBmp = (HBITMAP)::SelectObject(bDC, (HBITMAP)oldBmp);
 	BOOL succ = FALSE;
-	if (hBmp != NULL)
+	if (hBmp != NULL) {
 		succ = ::DeleteObject(hBmp);
+		ASSERT(succ != FALSE);
+	}
 	succ = ::DeleteDC(bDC);
+	ASSERT(succ != FALSE);
 }
 
 void CPanningButton::OnPaint()

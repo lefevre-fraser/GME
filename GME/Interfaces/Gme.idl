@@ -418,7 +418,8 @@ interface IAutoRouterBox;
 	helpstring("IAutoRouterPort Interface"),
 	pointer_default(unique)
 ]
-interface IAutoRouterPort : IDispatch{
+interface IAutoRouterPort : IDispatch
+{
 	//[id(1)] HRESULT CanHaveStartEndPointOn([in] eardir_enum dir, [in] long isstart, [out,retval] long* result);
 	//[id(2)] HRESULT CanHaveStartEndPoint([in] long isstart, [out,retval] long* result);
 	//[id(3)] HRESULT CanHaveStartEndPointHorizontal([in] long ishorizontal, [out,retval] long* result);
@@ -450,7 +451,8 @@ interface IAutoRouterGraph;
 	helpstring("IAutoRouterBox Interface"),
 	pointer_default(unique)
 ]
-interface IAutoRouterBox : IDispatch{
+interface IAutoRouterBox : IDispatch
+{
 	[id(1)] HRESULT GetOwner([out, retval] IAutoRouterGraph** result);
 	[id(2)] HRESULT CreatePort([out, retval] IAutoRouterPort** result);
 	[id(3)] HRESULT Add([in] IAutoRouterPort* port);
@@ -470,7 +472,8 @@ interface IAutoRouterPath;
 	helpstring("IAutoRouterGraph Interface"),
 	pointer_default(unique)
 ]
-interface IAutoRouterGraph : IDispatch{
+interface IAutoRouterGraph : IDispatch
+{
 	[id(1)] HRESULT CreateBox([out, retval] IAutoRouterBox** result);
 	[id(2)] HRESULT Add([in] IAutoRouterBox* box);
 	[id(3)] HRESULT DeleteBox([in] IAutoRouterBox* box);
@@ -493,7 +496,8 @@ interface IAutoRouterGraph : IDispatch{
 	helpstring("IAutoRouterPath Interface"),
 	pointer_default(unique)
 ]
-interface IAutoRouterPath : IDispatch{
+interface IAutoRouterPath : IDispatch
+{
 	[id(1)] HRESULT GetOwner([out, retval] IAutoRouterGraph** result);
 	[id(2)] HRESULT SetEndDir([in] long arpath_end);
 	[id(3)] HRESULT SetStartDir([in] long arpath_start);

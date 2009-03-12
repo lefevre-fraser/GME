@@ -21,31 +21,32 @@ CRect DeflatedRect(const CRect& rect, int a)
 	return r; 
 }
 
-int IsPointNear(CPoint p1, CPoint p2, int nearness)
+int IsPointNear(const CPoint& p1, const CPoint& p2, int nearness)
 {
 	return p2.x - nearness <= p1.x && p1.x <= p2.x + nearness &&
 		   p2.y - nearness <= p1.y && p1.y <= p2.y + nearness;
 }
 
-int IsPointIn(CPoint point, CRect rect, int nearness)
+int IsPointIn(const CPoint& point, const CRect& rect, int nearness)
 {
-	rect.InflateRect(nearness, nearness);
-	return rect.PtInRect(point);
+	CRect tmpR = rect;
+	tmpR.InflateRect(nearness, nearness);
+	return tmpR.PtInRect(point);
 }
 
-int IsRectIn(CRect r1, CRect r2)
+int IsRectIn(const CRect& r1, const CRect& r2)
 {
 	return r2.left <= r1.left && r1.right <= r2.right &&
 		   r2.top <= r1.top && r1.bottom <= r2.bottom;
 }
 
-int IsRectClip(CRect r1, CRect r2)
+int IsRectClip(const CRect& r1, const CRect& r2)
 {
 	CRect rect;
 	return rect.IntersectRect(&r1, &r2);
 }
 
-int IsPointNearHLine(CPoint p, long x1, long x2, long y, int nearness)
+int IsPointNearHLine(const CPoint& p, long x1, long x2, long y, int nearness)
 {
 	ASSERT( x1 <= x2 );
 
@@ -53,7 +54,7 @@ int IsPointNearHLine(CPoint p, long x1, long x2, long y, int nearness)
 		   y - nearness <= p.y && p.y <= y + nearness;
 }
 
-int IsPointNearVLine(CPoint p, long y1, long y2, long x, int nearness)
+int IsPointNearVLine(const CPoint& p, long y1, long y2, long x, int nearness)
 {
 	ASSERT( y1 <= y2 );
 
@@ -61,21 +62,21 @@ int IsPointNearVLine(CPoint p, long y1, long y2, long x, int nearness)
 		   x - nearness <= p.x && p.x <= x + nearness;
 }
 
-int DistanceFromHLine(CPoint p, long x1, long x2, long y)
+int DistanceFromHLine(const CPoint& p, long x1, long x2, long y)
 {
 	ASSERT( x1 <= x2 );
 
 	return max(abs(p.y - y), max(x1 - p.x, p.x - x2));
 }
 
-int DistanceFromVLine(CPoint p, long y1, long y2, long x)
+int DistanceFromVLine(const CPoint& p, long y1, long y2, long x)
 {
 	ASSERT( y1 <= y2 );
 
 	return max(abs(p.x - x), max(y1 - p.y, p.y - y2));
 }
 
-int IsPointNearLine(CPoint point, CPoint start, CPoint end, int nearness)
+int IsPointNearLine(const CPoint& point, const CPoint& start, const CPoint& end, int nearness)
 {
 	ASSERT( 0 <= nearness );
 
@@ -86,13 +87,15 @@ int IsPointNearLine(CPoint point, CPoint start, CPoint end, int nearness)
 		return 0;
 	// end Zolmol
 
-	point -= start;
-	end -= start;
+	CPoint point2 = point;
+	point2 -= start;
+	CPoint end2 = end;
+	end2 -= start;
 
-	double x = end.x;
-	double y = end.y;
-	double u = point.x;
-	double v = point.y;
+	double x = end2.x;
+	double y = end2.y;
+	double u = point2.x;
+	double v = point2.y;
 	double xuyv = x * u + y * v;
 	double x2y2 = x * x + y * y;
 
@@ -106,45 +109,47 @@ int IsPointNearLine(CPoint point, CPoint start, CPoint end, int nearness)
 	return expr1 <= expr2;
 }
 
-int IsLineMeetHLine(CPoint start, CPoint end, long x1, long x2, long y)
+int IsLineMeetHLine(const CPoint& start, const CPoint& end, long x1, long x2, long y)
 {
 	ASSERT( x1 <= x2 );
 
 	if( !((start.y <= y && y <= end.y) || (end.y <= y && y <= start.y )) )
 		return 0;
 
-	end -= start;
+	CPoint end2 = end;
+	end2 -= start;
 	x1 -= start.x;
 	x2 -= start.x;
 	y -= start.y;
 
-	if( end.y == 0 )
-		return y == 0 && (( x1 <= 0 && 0 <= x2 ) || (x1 <= end.x && end.x <= x2));
+	if( end2.y == 0 )
+		return y == 0 && (( x1 <= 0 && 0 <= x2 ) || (x1 <= end2.x && end2.x <= x2));
 
-	long x = (long)(((float)end.x) / end.y) * y;
+	long x = (long)(((float)end2.x) / end2.y) * y;
 	return x1 <= x && x <= x2;
 }
 
-int IsLineMeetVLine(CPoint start, CPoint end, long y1, long y2, long x)
+int IsLineMeetVLine(const CPoint& start, const CPoint& end, long y1, long y2, long x)
 {
 	ASSERT( y1 <= y2 );
 
 	if( !((start.x <= x && x <= end.x) || (end.x <= x && x <= start.x )) )
 		return 0;
 
-	end -= start;
+	CPoint end2 = end;
+	end2 -= start;
 	y1 -= start.y;
 	y2 -= start.y;
 	x -= start.x;
 
-	if( end.x == 0 )
-		return x == 0 && (( y1 <= 0 && 0 <= y2 ) || (y1 <= end.y && end.y <= y2));
+	if( end2.x == 0 )
+		return x == 0 && (( y1 <= 0 && 0 <= y2 ) || (y1 <= end2.y && end2.y <= y2));
 
-	long y = (long)(((float)end.y) / end.x) * x;
+	long y = (long)(((float)end2.y) / end2.x) * x;
 	return y1 <= y && y <= y2;
 }
 
-int IsLineClipRect(CPoint start, CPoint end, CRect rect)
+int IsLineClipRect(const CPoint& start, const CPoint& end, const CRect& rect)
 {
 	if( rect.PtInRect(start) || rect.PtInRect(end) )
 		return 1;
@@ -264,7 +269,7 @@ EArDir ReverseDir(EArDir dir)
 	return dir;
 }
 
-CPoint StepOneInDir(CPoint point, EArDir dir)
+CPoint StepOneInDir(const CPoint& point, EArDir dir)
 {
 	ASSERT( IsRightAngle(dir) );
 	CPoint p(point);
@@ -310,7 +315,7 @@ long& GetRectCoord(CRect& rect, EArDir dir)
 	return rect.left;
 }
 
-long GetRectOuterCoord(CRect rect, EArDir dir)
+long GetRectOuterCoord(const CRect& rect, EArDir dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -335,7 +340,7 @@ long GetRectOuterCoord(CRect rect, EArDir dir)
 //				3  7
 //				 26
 
-int GetDirTableIndex(CSize offset)
+int GetDirTableIndex(const CSize& offset)
 {
 	return (offset.cx >= 0)*4 + (offset.cy >= 0)*2 + (abs(offset.cx) >= abs(offset.cy));
 }
@@ -352,7 +357,7 @@ EArDir majordir_table[] =
 	Dir_Right
 };
 
-EArDir GetMajorDir(CSize offset)
+EArDir GetMajorDir(const CSize& offset)
 {
 	return majordir_table[GetDirTableIndex(offset)];
 }
@@ -369,7 +374,7 @@ EArDir minordir_table[] =
 	Dir_Bottom
 };
 
-EArDir GetMinorDir(CSize offset)
+EArDir GetMinorDir(const CSize& offset)
 {
 	return minordir_table[GetDirTableIndex(offset)];
 }
@@ -380,7 +385,7 @@ EArDir GetMinorDir(CSize offset)
 //	C   6
 //  BA987
 
-int ExGetDirTableIndex(CSize offset)
+int ExGetDirTableIndex(const CSize& offset)
 {
 	return
 		offset.cx > 0 ?
@@ -487,7 +492,7 @@ EArDir exmajordir_table[17] =
 	Dir_Top
 };
 
-EArDir ExGetMajorDir(CSize offset)
+EArDir ExGetMajorDir(const CSize& offset)
 {
 	return exmajordir_table[ExGetDirTableIndex(offset)];
 }
@@ -513,12 +518,12 @@ EArDir exminordir_table[17] =
 	Dir_Left
 };
 
-EArDir ExGetMinorDir(CSize offset)
+EArDir ExGetMinorDir(const CSize& offset)
 {
 	return exminordir_table[ExGetDirTableIndex(offset)];
 }
 
-EArDir GetDir(CSize offset, EArDir nodir)
+EArDir GetDir(const CSize& offset, EArDir nodir)
 {
 	if( offset.cx == 0 )
 	{
@@ -542,7 +547,7 @@ EArDir GetDir(CSize offset, EArDir nodir)
 	return Dir_Skew;
 }
 
-int IsPointInDirFrom(CPoint point, CPoint from, EArDir dir)
+int IsPointInDirFrom(const CPoint& point, const CPoint& from, EArDir dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -564,7 +569,7 @@ int IsPointInDirFrom(CPoint point, CPoint from, EArDir dir)
 	return 0;
 }
 
-int IsPointInDirFrom(CPoint point, CRect rect, EArDir dir)
+int IsPointInDirFrom(const CPoint& point, const CRect& rect, EArDir dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -586,7 +591,7 @@ int IsPointInDirFrom(CPoint point, CRect rect, EArDir dir)
 	return 0;
 }
 
-int IsPointBetweenSides(CPoint point, CRect rect, int ishorizontal)
+int IsPointBetweenSides(const CPoint& point, const CRect& rect, int ishorizontal)
 {
 	if( ishorizontal )
 		return rect.top <= point.y && point.y < rect.bottom;
@@ -604,7 +609,7 @@ int IsCoordInDirFrom(long coord, long from, EArDir dir)
 	return coord >= from;
 }
 
-EArDir OnWhichEdge(CRect rect, CPoint point)
+EArDir OnWhichEdge(const CRect& rect, const CPoint& point)
 {
 	if( point.y == rect.top && rect.left < point.x && point.x < rect.right - 1 )
 		return Dir_Top;

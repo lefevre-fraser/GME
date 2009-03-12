@@ -164,7 +164,7 @@ void CAutoRouterEdgeList::AddEdges(CComObjPtr/*Dummy*/<CAutoRouterPath> path)
 		{
 			SAutoRouterEdge* edge = CreateEdge();
 
-			edge->owner = path;			
+			edge->owner = path;
 
 			edge->startpoint = startpoint;
 			edge->endpoint = endpoint;
@@ -184,14 +184,14 @@ void CAutoRouterEdgeList::AddEdges(CComObjPtr/*Dummy*/<CAutoRouterPath> path)
 	}
 }
 
-SAutoRouterEdge* CAutoRouterEdgeList::GetEdge(CPoint* startpoint, CPoint* endpoint) const
+SAutoRouterEdge* CAutoRouterEdgeList::GetEdge(const CPoint* startpoint, const CPoint* endpoint) const
 {
 	ASSERT( startpoint != NULL && endpoint != NULL );
 
 	SAutoRouterEdge* edge = order_first;
 	while( edge != NULL )
 	{
-		if( edge->startpoint == startpoint )
+		if( *edge->startpoint == *startpoint )
 		{
 			break;
 		}
@@ -203,7 +203,7 @@ SAutoRouterEdge* CAutoRouterEdgeList::GetEdge(CPoint* startpoint, CPoint* endpoi
 	return edge;
 }
 
-SAutoRouterEdge* CAutoRouterEdgeList::GetEdgeAt(CPoint point, int nearness) const
+SAutoRouterEdge* CAutoRouterEdgeList::GetEdgeAt(const CPoint& point, int nearness) const
 {
 	SAutoRouterEdge* edge = order_first;
 	while( edge )

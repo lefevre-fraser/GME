@@ -26,9 +26,9 @@ CAutoRouter::~CAutoRouter()
 
 void CAutoRouter::AutoRoute()
 {
-	if(CGMEView::IsHugeModel())
+	if (CGMEView::IsHugeModel())
 		return;
-	 
+
 	long res;
 	router->AutoRoute(&res);
 	routeret = res;
@@ -241,7 +241,7 @@ void CAutoRouter::AddConnection(CGuiConnection *conn)
 		return;
 	CComPtr<IAutoRouterPort> asrc = conn->srcPort->GetRouterPort();
 	CComPtr<IAutoRouterPort> adst = conn->dstPort->GetRouterPort();
-	CComPtr<IAutoRouterPath> path; 
+	CComPtr<IAutoRouterPath> path;
 
 	COMTHROW(router->AddPath(asrc, adst, &path));
 

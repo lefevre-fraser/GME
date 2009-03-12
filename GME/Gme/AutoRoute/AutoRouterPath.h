@@ -5,12 +5,13 @@
 
 //#include <oleauto.h>
 
-//#include "GME.h"
-#include "gmelib.h"
 #include "AutoRoute/ArHelper.h"
 
 #include "AutoRouterPort.h"
 #include "AutoRouterBox.h"
+
+//#include "GME.h"
+#include "gmelib.h"
 
 #define ARPATH_EndOnDefault		0x0000
 #define ARPATH_EndOnTop			0x0010
@@ -36,11 +37,9 @@
 
 typedef CList<CPoint, CPoint&>				CPointList;
 
-
-	class CAutoRouterGraph;
-	class CAutoRouterEdgeList;
-	class CAutoRouterPort;
-	class CAutoRouterBox;
+class CAutoRouterGraph;
+class CAutoRouterEdgeList;
+class CAutoRouterPort;
 
 // CAutoRouterPath
 

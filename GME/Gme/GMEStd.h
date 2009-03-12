@@ -144,7 +144,7 @@ typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FON
 #define NAME_POS_PREF				"namePosition"
 #define AUTOROUTER_PREF				"autorouterPref"
 #define ICON_PREF					"icon"
-#define PORT_ICON_PREF					"porticon"
+#define PORT_ICON_PREF				"porticon"
 #define DECORATOR_PREF				"decorator"
 #define HOTSPOT_PREF				"isHotspotEnabled"
 #define HOTSPOT_FALSE				"false"

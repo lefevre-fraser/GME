@@ -3,19 +3,14 @@
 #pragma once
 #include "resource.h"       // main symbols
 
-#include "GME.h"
-#include "gmelib.h"
 #include "AutoRoute/ArHelper.h" 
 #include "AutoRouterPath.h"
 #include "AutoRouterEdge.h"
 #include "AutoRouterPort.h"
 #include "AutoRouterBox.h"
 
-class CAutoRouterPort;
-class CAutoRouterBox;
-class CAutoRouterPath;
-class CAutoRouterEdgeList;
-struct SAutoRouterEdge;
+#include "GME.h"
+#include "gmelib.h"
 
 #include <vector>
 #include <algorithm>
@@ -70,7 +65,7 @@ private:
 
 	void DeleteAllBoxes();
 	const CAutoRouterBoxList& GetBoxList() const { return boxes; }
-	int HasNoBox() const { return boxes.size()==0; }
+	int HasNoBox() const { return boxes.size() == 0; }
 	int GetBoxCount() const { return boxes.size(); }
 
 	void SetPortAttr(CComObjPtr<CAutoRouterPort> port, unsigned int attr);
@@ -88,18 +83,15 @@ private:
 
 	void DeleteAllPaths();
 	const CAutoRouterPathList& GetPathList() const { return paths; }
-	int HasNoPath() const { return paths.size()==0; }
+	int HasNoPath() const { return paths.size() == 0; }
 	int GetPathCount() const { return paths.size(); }
 
-	SAutoRouterEdge* GetListEdgeAt(CPoint point, int nearness = 0) const;
-
-	//CComObjPtr<CAutoRouterPath> AddPath(const CPointList& points, unsigned int attr);
-	//CComObjPtr<CAutoRouterPath> AddPath(CPoint startpoint, CPoint endpoint);
+	SAutoRouterEdge* GetListEdgeAt(const CPoint& point, int nearness = 0) const;
 
 // --- Boxes && Paths (FOR EXTERNAL USE)
 
 private:
-	int IsEmpty() const { return (boxes.size()==0) && (paths.size()==0); }
+	int IsEmpty() const { return (boxes.size() == 0) && (paths.size() == 0); }
 
 	CRect GetSurroundRect() const;
 
@@ -147,17 +139,17 @@ private:
 	void AddBoxAndPortEdges(CComObjPtr<CAutoRouterBox> box);
 	void DeleteBoxAndPortEdges(CComObjPtr<CAutoRouterBox> box);
 
-	 CAutoRouterEdgeList& GetEdgeList(int ishorizontal) { return ishorizontal ? horizontal : vertical; }
+	CAutoRouterEdgeList& GetEdgeList(int ishorizontal) { return ishorizontal ? horizontal : vertical; }
 
 private:
 
-	 CAutoRouterEdgeList horizontal;
-	 CAutoRouterEdgeList vertical;
+	CAutoRouterEdgeList horizontal;
+	CAutoRouterEdgeList vertical;
 
 // --- Path && Edges
 
 private:
-	int CanDeleteTwoEdgesAt(CComObjPtr<CAutoRouterPath> path, POSITION pos);
+	int CanDeleteTwoEdgesAt(CComObjPtr<CAutoRouterPath> path, POSITION pos) const;
 	void DeleteTwoEdgesAt(CComObjPtr<CAutoRouterPath> path, POSITION pos);
 	void DeleteSamePointsAt(CComObjPtr<CAutoRouterPath> path, POSITION pos);
 	int SimplifyPaths();
@@ -171,11 +163,11 @@ public:
 	STDMETHOD(DeleteBox)(IAutoRouterBox* box);
 	STDMETHOD(ShiftBy)(IAutoRouterBox* box, long sizeX, long sizeY);
 	STDMETHOD(AutoRoute)(long* result);
-	STDMETHOD(DeletePath)( IAutoRouterPath* path);
+	STDMETHOD(DeletePath)(IAutoRouterPath* path);
 	STDMETHOD(DeleteAll)();
-	STDMETHOD(Destroy)();
 	STDMETHOD(GetPathAt)(long pointX, long pointY, long nearness, IAutoRouterPath** result);
 	STDMETHOD(AddPath)( IAutoRouterPort* startport,  IAutoRouterPort* endport, IAutoRouterPath** result);
+	STDMETHOD(Destroy)();
 
 private:
 	CAutoRouterBoxList boxes;

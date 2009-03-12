@@ -15,6 +15,7 @@
 #include "resource.h"       // main symbols
 #include <set>
 #include <map>
+#include "GMELib.h"
 
 #define ID_FILE_PLUGINMENU 40000
 

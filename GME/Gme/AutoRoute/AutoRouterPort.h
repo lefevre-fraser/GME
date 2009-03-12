@@ -5,10 +5,11 @@
 
 #include "AutoRoute/ArHelper.h" 
 
+#include "AutoRouterBox.h"
+
 #include "GME.h"
 #include "gmelib.h"
 
-#include "AutoRouterBox.h"
 
 #define ARPORT_EndOnTop					0x0001
 #define ARPORT_EndOnRight				0x0002
@@ -34,7 +35,6 @@
 
 class CAutoRouterBox;
 class CAutoRouterEdgeList;
-class CAutoRouterPath;
 class CAutoRouterGraph;
 
 // CAutoRouterPort

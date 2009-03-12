@@ -5,8 +5,6 @@
 
 
 
-#include "GME.h"
-#include "gmelib.h"
 #include "AutoRoute/ArHelper.h"
 
 #define ED_MAXCOORD		100000
@@ -20,6 +18,9 @@ class CAutoRouterPath;
 
 #include "AutoRouterPort.h"
 #include "AutoRouterGraph.h"
+
+#include "GME.h"
+#include "gmelib.h"
 
 #include <vector>
 using namespace std;

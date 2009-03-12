@@ -2,6 +2,7 @@
 #define _GUIOBJECT_INCLUDED_
 
 #include "Autoroute/AutoRouter.h"
+#include "GMEStd.h"
 #include <vector>
 
 class CGMEView;
@@ -77,7 +78,6 @@ class CGuiPort : public CGuiBase
 {
 public:
 	CGuiPort(CGuiAspect *asp,CComPtr<IMgaFCO> fco);
-	virtual ~CGuiPort() { delete [] autorouterPrefs; }
 public:
 	const CGuiConnectionList& GetInConns()		{ return inConns; }
 	const CGuiConnectionList& GetOutConns()		{ return outConns; }
@@ -100,7 +100,7 @@ public:
 	CGuiConnectionList outConns;
 
 private:
-	bool* autorouterPrefs;
+	bool autorouterPrefs[GME_AR_NUM];
 	CComPtr<IAutoRouterPort> routerPort;
 };
 
@@ -379,12 +379,11 @@ public:
 	void Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection* conn);
 };
 
-
 class CGuiConnection : public CGuiFco
 {
 public:
 	CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role, CGMEView *vw, int numAsp, bool resolve = true);
-	virtual ~CGuiConnection() { delete labelset;  delete visible; delete [] autorouterPrefs;}
+	virtual ~CGuiConnection() { delete labelset; delete visible; }
 
 	void RefreshAttributeCache();
 	CComPtr<IAutoRouterPath> GetRouterPath()				{ return routerPath; }
@@ -395,9 +394,9 @@ public:
 	void GiveConnectionEndErroMessage(const CString& mainMsg, const CGuiPort* otherPort) const;
 	void Resolve();
 	void ReadARPreferences();
-	bool GetARPref(int dir) {return autorouterPrefs[dir];}
+	bool GetARPref(int dir) const { return autorouterPrefs[dir]; }
 
-	virtual bool IsVisible(int aspect = -1)				{ return visible && visible[aspect < 0 ? parentAspect : aspect];  }
+	virtual bool IsVisible(int aspect = -1)				{ return visible && visible[aspect < 0 ? parentAspect : aspect]; }
 	virtual void RemoveFromRouter(CAutoRouter &router);
 	virtual void Draw(HDC pDC, Gdiplus::Graphics* gdip);
 
@@ -419,7 +418,7 @@ private:
 	int dstStyle;
 	COLORREF color;
 	COLORREF nameColor;
-	bool* autorouterPrefs;
+	bool autorouterPrefs[GME_AR_NUM];
 	bool  hovered;
 	bool  selected;
 };

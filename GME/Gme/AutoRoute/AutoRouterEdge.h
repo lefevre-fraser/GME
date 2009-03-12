@@ -79,8 +79,8 @@ private:
 	int ishorizontal;
 
 private:
-	SAutoRouterEdge* GetEdge(CPoint* startpoint, CPoint* endpoint) const;
-	SAutoRouterEdge* GetEdgeAt(CPoint point, int nearness = 0) const;
+	SAutoRouterEdge* GetEdge(const CPoint* startpoint, const CPoint* endpoint) const;
+	SAutoRouterEdge* GetEdgeAt(const CPoint& point, int nearness = 0) const;
 
 // --- Position
 

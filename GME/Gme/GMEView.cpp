@@ -942,7 +942,9 @@ void CGMEView::OnInitialUpdate()
 	frame->propBar.SetZoomVal(m_zoomVal);
 	CMainFrame::theInstance->WriteStatusZoom(m_zoomVal); // setZoomPercents[zoomIdx]);
 
-	CreateOffScreen(GetDC());
+	CDC* pDC = GetDC();
+	CreateOffScreen(pDC);
+	ReleaseDC(pDC);
 	CComPtr<IMgaFCO> centerObj;
 
 	try {
@@ -2648,7 +2650,7 @@ void CGMEView::SetCenterObject(CComPtr<IMgaFCO> centerObj)
 				}
 			}
 			if (guiObj->IsVisible()) {
-				CDC *pDC = GetDC();
+				CDC* pDC = GetDC();
 				OnPrepareDC(pDC);
 				CPoint centerPt = guiObj->GetCenter();
 				CRect wndRect;
@@ -2674,6 +2676,7 @@ void CGMEView::SetCenterObject(CComPtr<IMgaFCO> centerObj)
 				ChangeAttrPrefFco(guiObj);
 				Invalidate();
 				this->SendNow();
+				ReleaseDC(pDC);
 			}
 		}
 	}
@@ -8150,7 +8153,7 @@ void CGMEView::OnUpdateCntxAutoRouters( CCmdUI* pCmdUI )
 		if ( spFCO ) {
 			BeginTransaction(TRANSACTION_READ_ONLY);
 			CComBSTR bstrPref;
-			COMTHROW( spFCO->get_RegistryValue( CComBSTR( "autorouterPref" ), &bstrPref ) );
+			COMTHROW( spFCO->get_RegistryValue( CComBSTR( AUTOROUTER_PREF ), &bstrPref ) );
 			CommitTransaction();
 			CString strPref( bstrPref );
 			switch ( pCmdUI->m_nID ) {
@@ -8255,7 +8258,7 @@ void CGMEView::SwapAutoRouterPref( const CString& strP )
 		if ( spFCO ) {
 			BeginTransaction(TRANSACTION_GENERAL);
 			CComBSTR bstrPref;
-			COMTHROW( spFCO->get_RegistryValue( CComBSTR( "autorouterPref" ), &bstrPref ) );
+			COMTHROW( spFCO->get_RegistryValue( CComBSTR( AUTOROUTER_PREF ), &bstrPref ) );
 			CString strPref( bstrPref );
 			int iPos = strPref.Find( strP );
 			if ( iPos == -1 )
@@ -8265,7 +8268,7 @@ void CGMEView::SwapAutoRouterPref( const CString& strP )
 					strPref += strP;
 			else
 				strPref.Replace( strP, "" );
-			COMTHROW( spFCO->put_RegistryValue( CComBSTR( "autorouterPref" ), CComBSTR( strPref ) ) );
+			COMTHROW( spFCO->put_RegistryValue( CComBSTR( AUTOROUTER_PREF ), CComBSTR( strPref ) ) );
 			CommitTransaction();
 		}
 	}
@@ -8280,7 +8283,7 @@ void CGMEView::SetAllAutoRouterPref( bool bSrc, bool bClear )
 		if ( spFCO ) {
 			BeginTransaction(TRANSACTION_GENERAL);
 			CComBSTR bstrPref;
-			COMTHROW( spFCO->get_RegistryValue( CComBSTR( "autorouterPref" ), &bstrPref ) );
+			COMTHROW( spFCO->get_RegistryValue( CComBSTR( AUTOROUTER_PREF ), &bstrPref ) );
 			CString strPref( bstrPref );
 			CString src = "NEWS";
 			CString dst = "news";
@@ -8291,7 +8294,7 @@ void CGMEView::SetAllAutoRouterPref( bool bSrc, bool bClear )
 					strPref = src + strPref;
 				else
 					strPref += dst;
-			COMTHROW( spFCO->put_RegistryValue( CComBSTR( "autorouterPref" ), CComBSTR( strPref ) ) );
+			COMTHROW( spFCO->put_RegistryValue( CComBSTR( AUTOROUTER_PREF ), CComBSTR( strPref ) ) );
 			CommitTransaction();
 		}
 	}
@@ -8307,7 +8310,9 @@ void CGMEView::OnPrintMetafile()
 		return;
 	filePath = filedlg.GetPathName();
 	CMetaFileDC cDC;
-	BOOL ret = cDC.CreateEnhanced(GetDC(),filePath,NULL,_T("GME Model"));
+	CDC* pDC = GetDC();
+	BOOL ret = cDC.CreateEnhanced(pDC,filePath,NULL,_T("GME Model"));
+	ReleaseDC(pDC);
 	if (ret == FALSE) {
 		AfxMessageBox("Unable to create metafile.", MB_OK | MB_ICONSTOP);
 		return;

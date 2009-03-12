@@ -1,7 +1,6 @@
 // AutoRouterPort.cpp : Implementation of CAutoRouterPort
 #include "stdafx.h"
 #include "AutoRouterPort.h"
-#include "gmelib_i.c"
 #include "AutoRouterBox.h"
 
 

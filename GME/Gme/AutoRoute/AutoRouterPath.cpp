@@ -7,6 +7,7 @@
 #include "AutoRouterPort.h"
 
 
+// CAutoRouterPath implementation
 
 CAutoRouterPath::CAutoRouterPath(): owner(NULL),
 					startport(NULL),
@@ -301,15 +302,9 @@ POSITION CAutoRouterPath::GetTailEdgePtrs(CPoint*& start, CPoint*& end)
 
 void CAutoRouterPath::GetNextEdgePtrs(POSITION& pos, CPoint*& start, CPoint*& end)
 {
-	points.GetNext(pos);
-	ASSERT( pos != NULL );
-
-	POSITION p = pos;
-	start = &(points.GetNext(p));
-	if( p == NULL )
-		pos = NULL;
-	else
-		end = &(points.GetAt(p));
+	start = &(points.GetNext(pos));
+	if (pos != NULL)
+		end = &(points.GetAt(pos));
 }
 
 void CAutoRouterPath::GetPrevEdgePtrs(POSITION& pos, CPoint*& start, CPoint*& end)
@@ -471,26 +466,31 @@ STDMETHODIMP CAutoRouterPath::GetOwner(IAutoRouterGraph** result)
 {
 	return owner->QueryInterface(IID_IAutoRouterGraph,(void**)result);
 }
+
 STDMETHODIMP CAutoRouterPath::SetEndDir(long arpath_end)
 {
 	attributes = (attributes & ~ARPATH_EndMask) + (unsigned int)arpath_end;
 	return S_OK;
 }
+
 STDMETHODIMP CAutoRouterPath::SetStartDir(long arpath_start)
 {
 	attributes = (attributes & ~ARPATH_StartMask) + (unsigned int)arpath_start;
 	return S_OK;
 }
+
 STDMETHODIMP CAutoRouterPath::GetExtPtr(ULONGLONG* address)
 {
 	*address = extptr;
 	return S_OK;
 }
+
 STDMETHODIMP CAutoRouterPath::SetExtPtr(ULONGLONG address)
 {
 	extptr = address;
 	return S_OK;
 }
+
 STDMETHODIMP CAutoRouterPath::GetPointList(SAFEARRAY **pArr)
 {
 	HRESULT res = S_OK;

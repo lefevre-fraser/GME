@@ -166,7 +166,7 @@ void CAutoRouterGraph::DeleteAllPaths()
 	paths.clear();
 }
 
-SAutoRouterEdge* CAutoRouterGraph::GetListEdgeAt(CPoint point, int nearness) const
+SAutoRouterEdge* CAutoRouterGraph::GetListEdgeAt(const CPoint& point, int nearness) const
 {
 	SAutoRouterEdge* edge;
 
@@ -589,7 +589,7 @@ void CAutoRouterGraph::DeleteBoxAndPortEdges(CComObjPtr<CAutoRouterBox> box)
 
 // --- Path && Edges
 
-int CAutoRouterGraph::CanDeleteTwoEdgesAt(CComObjPtr<CAutoRouterPath> path, POSITION pos)
+int CAutoRouterGraph::CanDeleteTwoEdgesAt(CComObjPtr<CAutoRouterPath> path, POSITION pos) const
 {
 	CPointList& points = path->points;
 
@@ -977,7 +977,7 @@ void CAutoRouterGraph::ConnectAllDisconnectedPaths()
 
 // --- SelfPoints
 
-void  CAutoRouterGraph::CalculateSelfPoints()
+void CAutoRouterGraph::CalculateSelfPoints()
 {
 	selfpoints[0].x = ED_MINCOORD;
 	selfpoints[0].y = ED_MINCOORD;
@@ -999,6 +999,7 @@ STDMETHODIMP CAutoRouterGraph::CreateBox(IAutoRouterBox** result)
 
 	return ::QueryInterface(box,result);
 }
+
 STDMETHODIMP CAutoRouterGraph::Add(IAutoRouterBox* box)
 {
 	CComObjPtr<CAutoRouterBox> b = static_cast<CAutoRouterBox*>(box);
@@ -1013,6 +1014,7 @@ STDMETHODIMP CAutoRouterGraph::Add(IAutoRouterBox* box)
 
 	return S_OK; 
 }
+
 STDMETHODIMP CAutoRouterGraph::DeleteBox(IAutoRouterBox* box)
 {
 	CComObjPtr<CAutoRouterBox> b = static_cast<CAutoRouterBox*>(box);
@@ -1024,6 +1026,7 @@ STDMETHODIMP CAutoRouterGraph::DeleteBox(IAutoRouterBox* box)
 	
 	return b->Destroy();
 }
+
 STDMETHODIMP CAutoRouterGraph::ShiftBy(IAutoRouterBox* box, long sizeX, long sizeY)
 {
 	CSize offset(sizeX, sizeY);
@@ -1195,6 +1198,7 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long* result)
 	*result = updated;
 	return S_OK;
 }
+
 STDMETHODIMP CAutoRouterGraph::DeletePath( IAutoRouterPath* path)
 {
 	CComObjPtr<CAutoRouterPath> p = static_cast<CAutoRouterPath*>(path);
@@ -1206,26 +1210,11 @@ STDMETHODIMP CAutoRouterGraph::DeletePath( IAutoRouterPath* path)
 
 	return p->Destroy();	
 }
+
 STDMETHODIMP CAutoRouterGraph::DeleteAll() 
 { 
 	DeleteAllPaths(); 
 	DeleteAllBoxes(); 
-	return S_OK;
-}
-
-STDMETHODIMP CAutoRouterGraph::Destroy() 
-{ 
-	DeleteEdges(this);
-	DeleteAll();
-
-	horizontal.SetOwner(NULL);
-	vertical.SetOwner(NULL);
-
-	AddRef();
-	Release();
-	
-
-
 	return S_OK;
 }
 
@@ -1256,6 +1245,20 @@ STDMETHODIMP CAutoRouterGraph::AddPath(IAutoRouterPort* startport, IAutoRouterPo
 	Add(path);
 
 	return path->QueryInterface(IID_IAutoRouterPath,(void**)result);
+}
+
+STDMETHODIMP CAutoRouterGraph::Destroy() 
+{ 
+	DeleteEdges(this);
+	DeleteAll();
+
+	horizontal.SetOwner(NULL);
+	vertical.SetOwner(NULL);
+
+	AddRef();
+	Release();
+
+	return S_OK;
 }
 
 
