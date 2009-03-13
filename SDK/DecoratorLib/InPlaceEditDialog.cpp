@@ -34,12 +34,12 @@ void CInPlaceEditDialog::PostNcDestroy(void)
 	CDialog::PostNcDestroy();
 
 	if (m_bDlgResult) {
-		m_parentPart->TitleChanged(m_Text);
+		m_parentPart->LabelChanged(m_Text);
 		// transaction operation begin
 		m_parentPart->ExecuteOperation(m_Text);
 		// transaction operation end
 	}
-	m_parentPart->TitleEditingFinished(m_initialRect);
+	m_parentPart->LabelEditingFinished(m_initialRect);
 	if (!m_bPermanentCWnd)
 		m_parentCWnd->Detach();
 	delete m_font;
@@ -91,7 +91,7 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	SetCapture();
 
 	editWnd->SetFocus();
-	m_parentPart->TitleEditingStarted(m_initialRect);
+	m_parentPart->LabelEditingStarted(m_initialRect);
 
 	return FALSE;	// return TRUE unless you set the focus to a control
 					// EXCEPTION: OCX Property Pages should return FALSE

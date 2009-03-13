@@ -21,7 +21,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ReferenceBitmapPart::ReferenceBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
+ReferenceBitmapPart::ReferenceBitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
 	TypeableBitmapPart	(pPart, eventSink),
 	m_referencedPart	(NULL),
 	m_bIconRequired		(false)

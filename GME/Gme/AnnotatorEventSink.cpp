@@ -21,7 +21,7 @@ IMPLEMENT_DYNCREATE(CAnnotatorEventSink, CCmdTarget)
 
 HRESULT CAnnotatorEventSink::QuerySinkInterface(void** ppv)
 {
-	return m_xEventSink.QueryInterface(IID_IMgaNewDecoratorEvents, ppv);
+	return m_xEventSink.QueryInterface(IID_IMgaElementDecoratorEvents, ppv);
 }
 
 CAnnotatorEventSink::CAnnotatorEventSink():
@@ -58,7 +58,7 @@ BEGIN_DISPATCH_MAP(CAnnotatorEventSink, CCmdTarget)
 END_DISPATCH_MAP()
 
 BEGIN_INTERFACE_MAP(CAnnotatorEventSink, CCmdTarget)
-	INTERFACE_PART(CAnnotatorEventSink, IID_IMgaNewDecoratorEvents, EventSink)
+	INTERFACE_PART(CAnnotatorEventSink, IID_IMgaElementDecoratorEvents, EventSink)
 END_INTERFACE_MAP()
 
 
@@ -117,18 +117,18 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::CursorRestored()
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleEditingStarted(LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelEditingStarted(LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
-	pThis->m_view->inNewDecoratorOperation = true;
+	pThis->m_view->inElementDecoratorOperation = true;
 	pThis->m_view->decoratorOrAnnotator = false;
 	pThis->m_view->shouldCommitOperation = false;
 
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleEditingFinished(LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelEditingFinished(LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
@@ -137,7 +137,7 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleEditingFinished(LONG left, LO
 	} else {
 		pThis->m_view->inOpenedDecoratorTransaction = false;
 		pThis->m_view->shouldCommitOperation = false;
-		pThis->m_view->inNewDecoratorOperation = false;
+		pThis->m_view->inElementDecoratorOperation = false;
 		pThis->m_view->objectInDecoratorOperation = NULL;
 		pThis->m_view->annotatorInDecoratorOperation = NULL;
 	}
@@ -145,7 +145,7 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleEditingFinished(LONG left, LO
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleChanged(BSTR newTitle)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelChanged(BSTR newLabel)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
@@ -156,56 +156,56 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleChanged(BSTR newTitle)
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleMoving(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelMoving(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleMovingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelMovingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleMoved(LONG nType, LONG x, LONG y)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelMoved(LONG nType, LONG x, LONG y)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleResizingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelResizingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleResizing(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelResizing(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleResizingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelResizingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::XEventSink::TitleResized(LONG nType, LONG cx, LONG cy)
+STDMETHODIMP CAnnotatorEventSink::XEventSink::LabelResized(LONG nType, LONG cx, LONG cy)
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
@@ -244,7 +244,7 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::WindowResizingStarted(LONG nType, 
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
-	pThis->m_view->inNewDecoratorOperation = true;
+	pThis->m_view->inElementDecoratorOperation = true;
 	pThis->m_view->decoratorOrAnnotator = false;
 	pThis->m_view->shouldCommitOperation = false;
 	pThis->m_view->originalRect = CRect(left, top, right, bottom);
@@ -268,7 +268,7 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::WindowResizingFinished(LONG nType,
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
 //	TODO pThis->m_guiAnnotator->ResizeObject(CRect(left, top, right, bottom));
-	pThis->m_view->inNewDecoratorOperation = false;
+	pThis->m_view->inElementDecoratorOperation = false;
 	pThis->m_view->originalRect.SetRectEmpty();
 
 	return S_OK;
@@ -290,7 +290,7 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::GeneralOperationStarted(ULONGLONG 
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
 	pThis->m_view->BeginTransaction();
-	pThis->m_view->inNewDecoratorOperation = true;
+	pThis->m_view->inElementDecoratorOperation = true;
 	pThis->m_view->decoratorOrAnnotator = false;
 	pThis->m_view->inOpenedDecoratorTransaction = true;
 	pThis->m_view->shouldCommitOperation = false;
@@ -302,7 +302,7 @@ STDMETHODIMP CAnnotatorEventSink::XEventSink::GeneralOperationFinished(ULONGLONG
 {
 	METHOD_PROLOGUE(CAnnotatorEventSink,EventSink);
 
-	pThis->m_view->inNewDecoratorOperation = false;
+	pThis->m_view->inElementDecoratorOperation = false;
 	pThis->m_view->shouldCommitOperation = true;
 
 	return S_OK;

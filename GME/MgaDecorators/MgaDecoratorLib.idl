@@ -33,7 +33,7 @@ library MGADECORATORLib
 	]
 	coclass NewBoxDecorator
 	{
-		[default] interface IMgaNewDecorator;
+		[default] interface IMgaElementDecorator;
 		interface IMgaVersionInfo;
 	};
 

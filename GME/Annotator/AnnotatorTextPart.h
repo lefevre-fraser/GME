@@ -41,10 +41,10 @@ protected:
 	LOGFONT					m_logFont;
 
 public:
-	AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~AnnotatorTextPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void	SetParam					(const CString& strName, VARIANT vValue);
 	virtual bool	GetParam					(const CString& strName, VARIANT* pvValue);

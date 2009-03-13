@@ -27,7 +27,7 @@ protected:
 	CComPtr<IMgaFCO>	m_spActualFCO;
 
 public:
-	UMLAttributePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink,
+	UMLAttributePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents> eventSink,
 					 const CString& nameStr, const CString& typeStr, CComPtr<IMgaFCO>& pFCO);
 	virtual ~UMLAttributePart();
 

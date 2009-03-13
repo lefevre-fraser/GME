@@ -50,10 +50,10 @@ protected:
 	long						m_DecoratorMinAttrSize;
 
 public:
-	ClassComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	ClassComplexPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~ClassComplexPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);

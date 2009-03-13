@@ -28,10 +28,10 @@ protected:
 	long					m_bRoundCornerRadius;
 
 public:
-	AnnotatorRectanglePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	AnnotatorRectanglePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~AnnotatorRectanglePart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

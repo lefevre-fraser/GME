@@ -27,10 +27,10 @@ namespace SampleDecor {
 class SampleCompositePart: public DecoratorSDK::ObjectAndTextPart
 {
 public:
-	SampleCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	SampleCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~SampleCompositePart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	//
 	// TODO: Override any needed function here

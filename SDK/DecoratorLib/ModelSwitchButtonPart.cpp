@@ -19,7 +19,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ModelSwitchButtonPart::ModelSwitchButtonPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
+ModelSwitchButtonPart::ModelSwitchButtonPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
 	MaskedBitmapPart(pPart, eventSink, IDB_EXPAND_SIGN, COLOR_TRANSPARENT, COLOR_GRAYED_OUT)
 {
 }

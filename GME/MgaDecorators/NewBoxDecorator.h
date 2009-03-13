@@ -24,13 +24,13 @@ class NewBoxDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
-	CComPtr<IMgaNewDecoratorEvents>		m_eventSink;
+	CComPtr<IMgaElementDecoratorEvents>	m_eventSink;
 
 public:
-	NewBoxDecorator(CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	NewBoxDecorator(CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~NewBoxDecorator();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);

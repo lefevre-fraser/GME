@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ConstraintVectorPart::ConstraintVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, COLORREF fillColor,
+ConstraintVectorPart::ConstraintVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, COLORREF fillColor,
 										   double thicknessRatio, long constraintWidth, long constraintHeight):
 	VectorPart			(pPart, eventSink),
 	m_crFill			(fillColor),

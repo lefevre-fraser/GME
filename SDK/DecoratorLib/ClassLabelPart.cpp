@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ClassLabelPart::ClassLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, bool bIsAbstract):
+ClassLabelPart::ClassLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, bool bIsAbstract):
 	TextPart(pPart, eventSink),
 	m_bIsAbstract(bIsAbstract)
 {

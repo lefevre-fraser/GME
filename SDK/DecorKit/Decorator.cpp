@@ -226,7 +226,7 @@ STDMETHODIMP CDecorator::SaveState()
 
 // New functions
 STDMETHODIMP CDecorator::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-									  IMgaNewDecoratorEvents* eventSink, ULONGLONG parentWnd)
+									  IMgaElementDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	//
 	// TODO: handle extra parameters, call Initialize with the rest

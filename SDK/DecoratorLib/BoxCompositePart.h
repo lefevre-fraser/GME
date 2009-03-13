@@ -24,10 +24,10 @@ namespace DecoratorSDK {
 class BoxCompositePart: public ObjectAndTextPart
 {
 public:
-	BoxCompositePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	BoxCompositePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~BoxCompositePart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual CRect	GetPortLocation				(CComPtr<IMgaFCO>& fco) const;
 	virtual CRect	GetLabelLocation			(void) const;

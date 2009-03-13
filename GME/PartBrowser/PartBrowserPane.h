@@ -24,7 +24,7 @@ public:
 	struct PartWithDecorator {
 		CComPtr<IMgaMetaPart>			part;
 		CComPtr<IMgaDecorator>			decorator;
-		CComPtr<IMgaNewDecorator>		newDecorator;
+		CComPtr<IMgaElementDecorator>	newDecorator;
 		CPartBrowserDecoratorEventSink*	decorEventSink;
 	};
 

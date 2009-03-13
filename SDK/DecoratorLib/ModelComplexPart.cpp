@@ -19,7 +19,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ModelComplexPart::ModelComplexPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
+ModelComplexPart::ModelComplexPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
 	TypeableBitmapPart			(pPart, eventSink),
 
 	m_iMaxPortTextLength		(MAX_PORT_LENGTH),

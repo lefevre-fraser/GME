@@ -28,10 +28,10 @@ protected:
 	bool		m_bIconRequired;
 
 public:
-	ReferenceBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	ReferenceBitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~ReferenceBitmapPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);

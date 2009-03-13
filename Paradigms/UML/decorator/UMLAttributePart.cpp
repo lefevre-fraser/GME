@@ -19,7 +19,7 @@ namespace UMLDecor {
 //
 //################################################################################################
 
-UMLAttributePart::UMLAttributePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink,
+UMLAttributePart::UMLAttributePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents> eventSink,
 								   const CString& nameStr, const CString& typeStr, CComPtr<IMgaFCO>& pFCO):
 	AttributePart(pPart, eventSink),
 	m_spActualFCO(pFCO)

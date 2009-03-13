@@ -24,10 +24,10 @@ namespace UMLDecor {
 class UMLCompositePart: public DecoratorSDK::ObjectAndTextPart
 {
 public:
-	UMLCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents> eventSink);
+	UMLCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents> eventSink);
 	virtual ~UMLCompositePart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual CRect	GetPortLocation				(CComPtr<IMgaFCO>& fco) const;
 	virtual CRect	GetLabelLocation			(void) const;

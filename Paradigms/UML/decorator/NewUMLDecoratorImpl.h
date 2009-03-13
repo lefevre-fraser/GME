@@ -29,11 +29,11 @@ class DecoratorInterface;
 
 class ATL_NO_VTABLE CNewUMLDecoratorImpl :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IMgaNewDecorator,
+	public IMgaElementDecorator,
 	public CComCoClass<CNewUMLDecoratorImpl, &CLSID_NewUMLDecorator>
 {
 protected:
-	DecoratorSDK::DecoratorInterface*	m_pNewDecorator;
+	DecoratorSDK::DecoratorInterface*	m_pElementDecorator;
 	bool								m_bLocationSet;
 	bool								m_bInitCallFromEx;
 
@@ -45,7 +45,7 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP( CNewUMLDecoratorImpl )
-		COM_INTERFACE_ENTRY( IMgaNewDecorator )
+		COM_INTERFACE_ENTRY( IMgaElementDecorator )
 	END_COM_MAP()
 
 // =============== INewUMLDecorator
@@ -68,7 +68,7 @@ public:
 	STDMETHOD( SaveState )						( void );
 
 	// =============== INewUMLDecorator
-	STDMETHOD( InitializeEx )					( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO, /*[in]*/ IMgaNewDecoratorEvents* eventSink, /*[in]*/ ULONGLONG parentWnd );
+	STDMETHOD( InitializeEx )					( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO, /*[in]*/ IMgaElementDecoratorEvents* eventSink, /*[in]*/ ULONGLONG parentWnd );
 	STDMETHOD( DrawEx )							( /*[in]*/ HDC hdc, /*[in]*/ ULONGLONG gdipGraphics );
 	STDMETHOD( SetSelected )					( /*[in]*/ VARIANT_BOOL bIsSelected );
 	STDMETHOD( MouseMoved )						( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );

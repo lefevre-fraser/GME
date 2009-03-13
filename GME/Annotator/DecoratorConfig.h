@@ -13,7 +13,7 @@
 #define COCLASS_NAME "MGA Decorator CoClass (Annotator)"
 #define COCLASS_PROGID "MGA.Decorator.Annotator"
 #define NEWCOCLASS_UUID "B1028D44-C108-40c6-94FA-D51B3B56A7A8"
-#define NEWCOCLASS_NAME "MGA NewDecorator CoClass (NewAnnotator)"
+#define NEWCOCLASS_NAME "MGA ElementDecorator CoClass (NewAnnotator)"
 #define NEWCOCLASS_PROGID "MGA.Decorator.NewAnnotator"
 
 

@@ -53,10 +53,10 @@ protected:
 	bool						m_bMultiLine;
 
 public:
-	TextPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	TextPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~TextPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);
 	virtual void			Destroy				(void);

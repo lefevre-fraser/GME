@@ -69,7 +69,7 @@ public:
 	virtual void	SetResizeTargetLocation		(CRect targetLocation)	{ m_targetLocation = targetLocation; };
 	virtual void	SetParentPart				(PartBase* pPart)		{ m_parentPart = pPart; };
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 	virtual void	Initialize					(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);
 	virtual void	Destroy						(void);

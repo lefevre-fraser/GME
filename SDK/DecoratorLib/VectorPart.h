@@ -218,7 +218,7 @@ protected:
 	std::vector<CoordCommand*>	m_coordCommands;
 
 public:
-	VectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	VectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~VectorPart();
 
 	void			AddCommand					(const VectorCommand& cmd) { m_Commands.push_back(cmd); };
@@ -229,7 +229,7 @@ public:
 	void			DisposeCoordCommands		(void);
 	VectorCommand	GetCommand					(long index) const;
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual feature_code	GetFeatures			(void) const;
 	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);

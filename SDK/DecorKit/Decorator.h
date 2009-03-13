@@ -12,7 +12,7 @@
 // CDecorator
 class ATL_NO_VTABLE CDecorator : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IMgaNewDecorator,
+	public IMgaElementDecorator,
 	public CComCoClass<CDecorator, &CLSID_Decorator>
 {
 public:
@@ -24,7 +24,7 @@ DECLARE_REGISTRY_RESOURCEID(IDR_DECORATOR)
 DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 BEGIN_COM_MAP(CDecorator)
-	COM_INTERFACE_ENTRY(IMgaNewDecorator)
+	COM_INTERFACE_ENTRY(IMgaElementDecorator)
 END_COM_MAP()
 
 // IMgaDecorator
@@ -46,8 +46,8 @@ public:
 	STDMETHOD( Draw )							( /*[in]*/ HDC hdc );
 	STDMETHOD( SaveState )						( void );
 
-	// =============== IMgaNewDecorator
-	STDMETHOD( InitializeEx )					( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO, /*[in]*/ IMgaNewDecoratorEvents* eventSink, /*[in]*/ ULONGLONG parentWnd );
+	// =============== IMgaElementDecorator
+	STDMETHOD( InitializeEx )					( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO, /*[in]*/ IMgaElementDecoratorEvents* eventSink, /*[in]*/ ULONGLONG parentWnd );
 	STDMETHOD( DrawEx )							( /*[in]*/ HDC hdc, /*[in]*/ ULONGLONG gdipGraphics );
 	STDMETHOD( SetSelected )					( /*[in]*/ VARIANT_BOOL bIsSelected );
 	STDMETHOD( MouseMoved )						( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
@@ -69,22 +69,22 @@ public:
 	STDMETHOD( OperationCanceled )				( void );
 
 protected:
-	bool							m_isInitialized;
-	bool							m_isLocSet;
-	long							m_sy;
-	long							m_sx;
-	long							m_ey;
-	long							m_ex;
-	bool							m_isActive;
-	CComPtr<IMgaFCO>				m_mgaFco;
-	CComPtr<IMgaMetaFCO>			m_metaFco;
-	bool							m_bInitCallFromEx;
-	bool							m_bSelected;
-	CComPtr<IMgaNewDecoratorEvents>	m_eventSink;
-	HWND							m_parentWnd;
-	CString							m_name;
-	COLORREF						m_color;
-	COLORREF						m_nameColor;
+	bool								m_isInitialized;
+	bool								m_isLocSet;
+	long								m_sy;
+	long								m_sx;
+	long								m_ey;
+	long								m_ex;
+	bool								m_isActive;
+	CComPtr<IMgaFCO>					m_mgaFco;
+	CComPtr<IMgaMetaFCO>				m_metaFco;
+	bool								m_bInitCallFromEx;
+	bool								m_bSelected;
+	CComPtr<IMgaElementDecoratorEvents>	m_eventSink;
+	HWND								m_parentWnd;
+	CString								m_name;
+	COLORREF							m_color;
+	COLORREF							m_nameColor;
 
 private:
 	bool GetMetaFCO(const CComPtr<IMgaMetaPart>& metaPart, CComPtr<IMgaMetaFCO>& metaFco);

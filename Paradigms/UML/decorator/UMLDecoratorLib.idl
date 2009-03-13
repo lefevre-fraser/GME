@@ -42,7 +42,7 @@ library UMLDECORATORLib
 	]
 	coclass NewUMLDecorator
 	{
-		[default] interface IMgaNewDecorator;
+		[default] interface IMgaElementDecorator;
 		interface IMgaVersionInfo;
 	};
 

@@ -28,10 +28,10 @@ protected:
 	int					m_iTypeInfo;
 
 public:
-	TypeableBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	TypeableBitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~TypeableBitmapPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);

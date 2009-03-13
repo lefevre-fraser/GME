@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-MaskedBitmapPart::MaskedBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, long bitmapResID,
+MaskedBitmapPart::MaskedBitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, long bitmapResID,
 								   COLORREF transparentColor, COLORREF grayedOutColor):
 	BitmapPart		(pPart, eventSink),
 	m_lBitmapResID	(bitmapResID),

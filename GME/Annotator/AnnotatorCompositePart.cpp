@@ -21,7 +21,7 @@ namespace AnnotatorDecor {
 //
 //################################################################################################
 
-AnnotatorCompositePart::AnnotatorCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
+AnnotatorCompositePart::AnnotatorCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
 	ObjectAndTextPart(pPart, eventSink)
 {
 }

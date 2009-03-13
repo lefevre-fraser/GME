@@ -28,10 +28,10 @@ protected:
 	VARIANT								m_vValue;
 
 public:
-	AnnotatorCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	AnnotatorCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~AnnotatorCompositePart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void	SetParam					(const CString& strName, VARIANT vValue);
 	virtual CSize	GetPreferredSize			(void) const;

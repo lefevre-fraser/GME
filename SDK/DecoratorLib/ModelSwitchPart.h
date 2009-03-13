@@ -24,10 +24,10 @@ namespace DecoratorSDK {
 class ModelSwitchPart: public CompositePart
 {
 public:
-	ModelSwitchPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	ModelSwitchPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~ModelSwitchPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void	SetLocation					(const CRect& location);
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

@@ -75,54 +75,64 @@ const unsigned long	F_RESIZEAFTERMOD = 1<<7;
 
 	[
 		object,
-		uuid(1D63D045-28C9-4902-8E5F-46F4AC1F8C5B),
+		uuid(D25188F5-3ECF-433e-85C5-8B9574CA264C),
 		oleautomation,
-		helpstring("IMgaNewDecoratorEvents Interface"),
+		helpstring("IMgaCommonDecoratorEvents Interface"),
 		pointer_default(unique)
 	]
-	interface IMgaNewDecoratorEvents : IUnknown
+	interface IMgaCommonDecoratorEvents : IUnknown
 	{
 		[id(1), helpstring("method Refresh needed")] HRESULT Refresh();
 		[id(2), helpstring("method the editing operation is canceled")] HRESULT OperationCanceled();
 		[id(3), helpstring("method CursorChanged")] HRESULT CursorChanged([in] LONG newCursorID);
 		[id(4), helpstring("method CursorRestored")] HRESULT CursorRestored();
 
-		[id(5), helpstring("method TitleEditingStarted")] HRESULT TitleEditingStarted([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(6), helpstring("method TitleEditingFinished")] HRESULT TitleEditingFinished([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(7), helpstring("method TitleChanged")] HRESULT TitleChanged([in] BSTR newTitle);
-		[id(8), helpstring("method TitleMovingStarted")] HRESULT TitleMovingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(9), helpstring("method TitleMoving")] HRESULT TitleMoving([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(10), helpstring("method TitleMovingFinished")] HRESULT TitleMovingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(11), helpstring("method TitleMoved")] HRESULT TitleMoved([in] LONG nType, [in] LONG x, [in] LONG y);
-		[id(12), helpstring("method TitleResizingStarted")] HRESULT TitleResizingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(13), helpstring("method TitleResizing")] HRESULT TitleResizing([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(14), helpstring("method TitleResizingFinished")] HRESULT TitleResizingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(15), helpstring("method TitleResized")] HRESULT TitleResized([in] LONG nType, [in] LONG cx, [in] LONG cy);
+		[id(5), helpstring("method LabelEditingStarted")] HRESULT LabelEditingStarted([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(6), helpstring("method LabelEditingFinished")] HRESULT LabelEditingFinished([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(7), helpstring("method LabelChanged")] HRESULT LabelChanged([in] BSTR newLabel);
+		[id(8), helpstring("method LabelMovingStarted")] HRESULT LabelMovingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(9), helpstring("method LabelMoving")] HRESULT LabelMoving([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(10), helpstring("method LabelMovingFinished")] HRESULT LabelMovingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(11), helpstring("method LabelMoved")] HRESULT LabelMoved([in] LONG nType, [in] LONG x, [in] LONG y);
+		[id(12), helpstring("method LabelResizingStarted")] HRESULT LabelResizingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(13), helpstring("method LabelResizing")] HRESULT LabelResizing([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(14), helpstring("method LabelResizingFinished")] HRESULT LabelResizingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(15), helpstring("method LabelResized")] HRESULT LabelResized([in] LONG nType, [in] LONG cx, [in] LONG cy);
 
-		[id(16), helpstring("method WindowMovingStarted")] HRESULT WindowMovingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(17), helpstring("method WindowMoving")] HRESULT WindowMoving([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(18), helpstring("method WindowMovingFinished")] HRESULT WindowMovingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(19), helpstring("method WindowMoved")] HRESULT WindowMoved([in] LONG nType, [in] LONG x, [in] LONG y);
+		[id(16), helpstring("method GeneralOperationStarted")] HRESULT GeneralOperationStarted([in] ULONGLONG operationData);
+		[id(17), helpstring("method GeneralOperationFinished")] HRESULT GeneralOperationFinished([in] ULONGLONG operationData);
+	};
 
-		[id(20), helpstring("method WindowResizingStarted")] HRESULT WindowResizingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(21), helpstring("method WindowResizing")] HRESULT WindowResizing([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(22), helpstring("method WindowResizingFinished")] HRESULT WindowResizingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(23), helpstring("method WindowResized")] HRESULT WindowResized([in] LONG nType, [in] LONG cx, [in] LONG cy);
+	[
+		object,
+		uuid(1D63D045-28C9-4902-8E5F-46F4AC1F8C5B),
+		oleautomation,
+		helpstring("IMgaElementDecoratorEvents Interface"),
+		pointer_default(unique)
+	]
+	interface IMgaElementDecoratorEvents : IMgaCommonDecoratorEvents
+	{
+		[id(25), helpstring("method WindowMovingStarted")] HRESULT WindowMovingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(26), helpstring("method WindowMoving")] HRESULT WindowMoving([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(27), helpstring("method WindowMovingFinished")] HRESULT WindowMovingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(28), helpstring("method WindowMoved")] HRESULT WindowMoved([in] LONG nType, [in] LONG x, [in] LONG y);
 
-		[id(24), helpstring("method GeneralOperationStarted")] HRESULT GeneralOperationStarted([in] ULONGLONG operationData);
-		[id(25), helpstring("method GeneralOperationFinished")] HRESULT GeneralOperationFinished([in] ULONGLONG operationData);
+		[id(29), helpstring("method WindowResizingStarted")] HRESULT WindowResizingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(30), helpstring("method WindowResizing")] HRESULT WindowResizing([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(31), helpstring("method WindowResizingFinished")] HRESULT WindowResizingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(32), helpstring("method WindowResized")] HRESULT WindowResized([in] LONG nType, [in] LONG cx, [in] LONG cy);
 	};
 
 	[
 		object,
 		uuid(2BEAD76C-126E-405D-AAC6-B9CA39067006),
 		oleautomation,
-		helpstring("IMgaNewDecorator Interface"),
+		helpstring("IMgaElementDecorator Interface"),
 		pointer_default(unique)
 	]
-	interface IMgaNewDecorator : IMgaDecorator
+	interface IMgaElementDecorator : IMgaDecorator
 	{
-		[id(20), helpstring("method InitializeEx")] HRESULT InitializeEx([in] IMgaProject* project, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj, [in] IMgaNewDecoratorEvents* eventSink, [in] ULONGLONG parentWnd);
+		[id(20), helpstring("method InitializeEx")] HRESULT InitializeEx([in] IMgaProject* project, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj, [in] IMgaElementDecoratorEvents* eventSink, [in] ULONGLONG parentWnd);
 		[id(21), helpstring("method DrawEx")] HRESULT DrawEx([in] HDC hdc, [in] ULONGLONG gdip);
 		[id(22), helpstring("method SetSelected")] HRESULT SetSelected([in] VARIANT_BOOL isSelected);
 		[id(23), helpstring("method MouseMoved")] HRESULT MouseMoved([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);

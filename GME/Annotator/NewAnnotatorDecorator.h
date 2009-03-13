@@ -26,16 +26,16 @@ class NewAnnotatorDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
-	CComPtr<IMgaNewDecoratorEvents>		m_eventSink;
+	CComPtr<IMgaElementDecoratorEvents>	m_eventSink;
 
 	CString								m_strName;
 	VARIANT								m_vValue;
 
 public:
-	NewAnnotatorDecorator(CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	NewAnnotatorDecorator(CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~NewAnnotatorDecorator();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);

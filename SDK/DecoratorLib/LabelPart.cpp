@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-LabelPart::LabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
+LabelPart::LabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
 	TextPart(pPart, eventSink)
 {
 	textStringVariableName		= PREF_LABEL;

@@ -29,7 +29,7 @@ public:
 	PartInterface();
 	virtual ~PartInterface();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 // === every function can throw DecoratorException ===
 public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
@@ -72,24 +72,24 @@ public:
 	virtual bool	OperationCanceledByGME		(void) = 0;
 
 
-// =============== resembles IMgaNewDecoratorEvents
+// =============== resembles IMgaElementDecoratorEvents
 // === every function can throw DecoratorException ===
 	virtual void	Refresh						(void) = 0;
 	virtual void	OperationCanceledByDecorator(void) = 0;
 	virtual void	CursorChanged				(long newCursorID) = 0;
 	virtual void	CursorRestored				(void) = 0;
 
-	virtual void	TitleEditingStarted			(CRect& location) = 0;
-	virtual void	TitleEditingFinished		(CRect& location) = 0;
-	virtual void	TitleChanged				(CString& newTitle) = 0;
-	virtual void	TitleMovingStarted			(UINT nType, CRect& location) = 0;
-	virtual void	TitleMoving					(UINT nSide, CRect& location) = 0;
-	virtual void	TitleMovingFinished			(UINT nType, CRect& location) = 0;
-	virtual void	TitleMoved					(UINT nType, CPoint& point) = 0;
-	virtual void	TitleResizingStarted		(UINT nType, CRect& location) = 0;
-	virtual void	TitleResizing				(UINT nSide, CRect& location) = 0;
-	virtual void	TitleResizingFinished		(UINT nType, CRect& locatiot) = 0;
-	virtual void	TitleResized				(UINT nType, CSize& size) = 0;
+	virtual void	LabelEditingStarted			(CRect& location) = 0;
+	virtual void	LabelEditingFinished		(CRect& location) = 0;
+	virtual void	LabelChanged				(CString& newLabel) = 0;
+	virtual void	LabelMovingStarted			(UINT nType, CRect& location) = 0;
+	virtual void	LabelMoving					(UINT nSide, CRect& location) = 0;
+	virtual void	LabelMovingFinished			(UINT nType, CRect& location) = 0;
+	virtual void	LabelMoved					(UINT nType, CPoint& point) = 0;
+	virtual void	LabelResizingStarted		(UINT nType, CRect& location) = 0;
+	virtual void	LabelResizing				(UINT nSide, CRect& location) = 0;
+	virtual void	LabelResizingFinished		(UINT nType, CRect& locatiot) = 0;
+	virtual void	LabelResized				(UINT nType, CSize& size) = 0;
 
 	virtual void	WindowMovingStarted			(UINT nType, CRect& location) = 0;
 	virtual void	WindowMoving				(UINT nSide, CRect& location) = 0;

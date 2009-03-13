@@ -140,10 +140,10 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				CComPtr<IMgaMetaFCO> mFco;
 				COMTHROW(mmRole->get_Kind(&mFco));
 				CComPtr<IMgaDecorator> decorator;
-				CComPtr<IMgaNewDecorator> newDecorator;
+				CComPtr<IMgaElementDecorator> newDecorator;
 				CComBSTR decoratorProgId = GetDecoratorProgId(mFco);
 
-				CComPtr<IMgaNewDecoratorEvents> decorEventSinkIface;
+				CComPtr<IMgaElementDecoratorEvents> decorEventSinkIface;
 				HRESULT hres = newDecorator.CoCreateInstance(PutInBstr(decoratorProgId));
 				if (SUCCEEDED(hres)) {
 					triple.decorEventSink = new CPartBrowserDecoratorEventSink();

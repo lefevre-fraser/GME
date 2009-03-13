@@ -22,7 +22,7 @@
 //################################################################################################
 
 #define VERIFY_INITIALIZATION					\
-	if (!m_pNewDecorator)						\
+	if (!m_pElementDecorator)					\
 		return E_DECORATOR_UNINITIALIZED;
 
 #define VERIFY_LOCATION							\
@@ -30,7 +30,7 @@
 		return E_DECORATOR_LOCISNOTSET;
 
 CSampleDecoratorImpl::CSampleDecoratorImpl():
-	m_pNewDecorator		(NULL),
+	m_pElementDecorator		(NULL),
 	m_bLocationSet		(false),
 	m_bInitCallFromEx	(false)
 {
@@ -62,7 +62,7 @@ STDMETHODIMP CSampleDecoratorImpl::Destroy()
 
 	HRESULT retVal = S_OK;
 	try {
-		m_pNewDecorator->Destroy();
+		m_pElementDecorator->Destroy();
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;
@@ -72,9 +72,9 @@ STDMETHODIMP CSampleDecoratorImpl::Destroy()
 	}
 
 	m_bLocationSet = false;
-	if (m_pNewDecorator) {
-		delete m_pNewDecorator;
-		m_pNewDecorator = NULL;
+	if (m_pElementDecorator) {
+		delete m_pElementDecorator;
+		m_pElementDecorator = NULL;
 	}
 
 	return retVal;
@@ -123,7 +123,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
 
 	HRESULT retVal = S_OK;
 	try {
-		m_pNewDecorator->GetParam(bstrName, pvValue);
+		m_pElementDecorator->GetParam(bstrName, pvValue);
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;
@@ -143,7 +143,7 @@ STDMETHODIMP CSampleDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 
 	HRESULT retVal = S_OK;
 	try {
-		m_pNewDecorator->SetActive(vbIsActive == VARIANT_TRUE);
+		m_pElementDecorator->SetActive(vbIsActive == VARIANT_TRUE);
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;
@@ -163,7 +163,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeigh
 
 	HRESULT retVal = S_OK;
 	try {
-		CSize cSize = m_pNewDecorator->GetPreferredSize();
+		CSize cSize = m_pElementDecorator->GetPreferredSize();
 		*plWidth = cSize.cx;
 		*plHeight = cSize.cy;
 	}
@@ -186,7 +186,7 @@ STDMETHODIMP CSampleDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG e
 
 	HRESULT retVal = S_OK;
 	try {
-		m_pNewDecorator->SetLocation(CRect(sx, sy, ex, ey));
+		m_pElementDecorator->SetLocation(CRect(sx, sy, ex, ey));
 		m_bLocationSet = true;
 	}
 	catch(hresult_exception& e) {
@@ -209,7 +209,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LON
 
 	HRESULT retVal = S_OK;
 	try {
-		CRect cRect = m_pNewDecorator->GetLocation();
+		CRect cRect = m_pElementDecorator->GetLocation();
 		*sx = cRect.left;
 		*sy = cRect.top;
 		*ex = cRect.right;
@@ -235,7 +235,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex
 
 	HRESULT retVal = S_OK;
 	try {
-		CRect labelRect = m_pNewDecorator->GetLabelLocation();
+		CRect labelRect = m_pElementDecorator->GetLabelLocation();
 		*sx = labelRect.left;
 		*sy = labelRect.top;
 		*ex = labelRect.right;
@@ -260,7 +260,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG
 
 	HRESULT retVal = S_OK;
 	try {
-		CRect portLocation = m_pNewDecorator->GetPortLocation(CComPtr<IMgaFCO>(pFCO));
+		CRect portLocation = m_pElementDecorator->GetPortLocation(CComPtr<IMgaFCO>(pFCO));
 		*sx = portLocation.left;
 		*sy = portLocation.top;
 		*ex = portLocation.right;
@@ -285,7 +285,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 	HRESULT retVal = S_OK;
 	try {
 		CComPtr<IMgaFCOs> portMgaFCOs;
-		m_pNewDecorator->GetPorts(portMgaFCOs);
+		m_pElementDecorator->GetPorts(portMgaFCOs);
 		*portFCOs = portMgaFCOs;
 	}
 	catch(hresult_exception& e) {
@@ -325,7 +325,7 @@ STDMETHODIMP CSampleDecoratorImpl::SaveState()
 
 // New functions
 STDMETHODIMP CSampleDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-												IMgaNewDecoratorEvents* eventSink, ULONGLONG parentWnd)
+												IMgaElementDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	//
 	// TODO: handle extra parameters, call Initialize with the rest
@@ -336,8 +336,8 @@ STDMETHODIMP CSampleDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 
 	HRESULT retVal = S_OK;
 	try {
-		SampleDecor::SampleDecorator* sampleDecorator = new SampleDecor::SampleDecorator(CComPtr<IMgaNewDecoratorEvents>(eventSink));
-		m_pNewDecorator = sampleDecorator;
+		SampleDecor::SampleDecorator* sampleDecorator = new SampleDecor::SampleDecorator(CComPtr<IMgaElementDecoratorEvents>(eventSink));
+		m_pElementDecorator = sampleDecorator;
 		sampleDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
 									  CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
 	}
@@ -367,7 +367,7 @@ STDMETHODIMP CSampleDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 	dc.Attach(hdc);
 	{
 		try {
-			m_pNewDecorator->Draw(&dc, (Gdiplus::Graphics*)gdipGraphics);
+			m_pElementDecorator->Draw(&dc, (Gdiplus::Graphics*)gdipGraphics);
 		}
 		catch(hresult_exception& e) {
 			retVal = e.hr;
@@ -390,7 +390,7 @@ STDMETHODIMP CSampleDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 
 	HRESULT retVal = S_OK;
 	try {
-		m_pNewDecorator->SetSelected(vbIsSelected == VARIANT_TRUE);
+		m_pElementDecorator->SetSelected(vbIsSelected == VARIANT_TRUE);
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;
@@ -411,7 +411,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG po
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseMoved(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseMoved(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -435,7 +435,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseLeftButtonDown(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseLeftButtonDown(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -459,7 +459,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, 
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseLeftButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseLeftButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -483,7 +483,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseLeftButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseLeftButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -508,7 +508,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULON
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseRightButtonDown((HMENU) hCtxMenu, nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseRightButtonDown((HMENU) hCtxMenu, nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -532,7 +532,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx,
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseRightButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseRightButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -556,7 +556,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LON
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseRightButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseRightButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -580,7 +580,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG poin
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseMiddleButtonDown(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseMiddleButtonDown(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -604,7 +604,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseMiddleButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseMiddleButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -628,7 +628,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LO
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseMiddleButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseMiddleButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -652,7 +652,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance,
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MouseWheelTurned(nFlags, (short)distance, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MouseWheelTurned(nFlags, (short)distance, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -678,7 +678,7 @@ STDMETHODIMP CSampleDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleD
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->DragEnter((DROPEFFECT*)dropEffect, (COleDataObject*)pCOleDataObject, (DWORD)keyState, CPoint(pointx, pointy), (HDC)transformHDC)) {
+		if (m_pElementDecorator->DragEnter((DROPEFFECT*)dropEffect, (COleDataObject*)pCOleDataObject, (DWORD)keyState, CPoint(pointx, pointy), (HDC)transformHDC)) {
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		} else {
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -706,7 +706,7 @@ STDMETHODIMP CSampleDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDa
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->DragOver((DROPEFFECT*)dropEffect, (COleDataObject*)pCOleDataObject, (DWORD)keyState, CPoint(pointx, pointy), (HDC)transformHDC)) {
+		if (m_pElementDecorator->DragOver((DROPEFFECT*)dropEffect, (COleDataObject*)pCOleDataObject, (DWORD)keyState, CPoint(pointx, pointy), (HDC)transformHDC)) {
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		} else {
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -734,7 +734,7 @@ STDMETHODIMP CSampleDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEff
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->Drop((COleDataObject*)pCOleDataObject, (DROPEFFECT)dropEffect, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->Drop((COleDataObject*)pCOleDataObject, (DROPEFFECT)dropEffect, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -757,7 +757,7 @@ STDMETHODIMP CSampleDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LO
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->DropFile((HDROP)hDropInfo, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->DropFile((HDROP)hDropInfo, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -780,7 +780,7 @@ STDMETHODIMP CSampleDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFla
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->MenuItemSelected(menuItemId, nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
+		if (m_pElementDecorator->MenuItemSelected(menuItemId, nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;
@@ -802,7 +802,7 @@ STDMETHODIMP CSampleDecoratorImpl::OperationCanceled()
 	//
 	HRESULT retVal = S_OK;
 	try {
-		if (m_pNewDecorator->OperationCanceledByGME())
+		if (m_pElementDecorator->OperationCanceledByGME())
 			retVal = S_DECORATOR_EVENT_HANDLED;
 		else
 			retVal = S_DECORATOR_EVENT_NOT_HANDLED;

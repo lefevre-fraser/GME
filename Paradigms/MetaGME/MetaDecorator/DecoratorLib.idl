@@ -42,7 +42,7 @@ library DecoratorLib
 	]
 	coclass NewMetaDecorator
 	{
-		[default] interface IMgaNewDecorator;
+		[default] interface IMgaElementDecorator;
 		interface IMgaVersionInfo;
 	};
 

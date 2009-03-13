@@ -19,7 +19,7 @@ namespace MetaDecor {
 //
 //################################################################################################
 
-MetaAttributePart::MetaAttributePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink,
+MetaAttributePart::MetaAttributePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink,
 									 const CString& nameStr, const CString& typeStr, const CPoint& boxPos,
 									 CComPtr<IMgaFCO>& pFCO):
 	AttributePart	(pPart, eventSink),

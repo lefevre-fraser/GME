@@ -28,10 +28,10 @@ protected:
 	long						m_triangleHeight;
 
 public:
-	TriangleVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, long triangleWidth, long triangleHeight);
+	TriangleVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, long triangleWidth, long triangleHeight);
 	virtual ~TriangleVectorPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual CSize			GetPreferredSize	(void) const;
 

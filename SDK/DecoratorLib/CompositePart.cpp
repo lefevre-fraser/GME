@@ -18,7 +18,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-CompositePart::CompositePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
+CompositePart::CompositePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
 	PartBase(pPart, eventSink)
 {
 }

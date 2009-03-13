@@ -21,7 +21,7 @@ IMPLEMENT_DYNCREATE(CPartBrowserDecoratorEventSink, CCmdTarget)
 
 HRESULT CPartBrowserDecoratorEventSink::QuerySinkInterface(void** ppv)
 {
-	return m_xEventSink.QueryInterface(IID_IMgaNewDecoratorEvents, ppv);
+	return m_xEventSink.QueryInterface(IID_IMgaElementDecoratorEvents, ppv);
 }
 
 CPartBrowserDecoratorEventSink::CPartBrowserDecoratorEventSink()
@@ -56,7 +56,7 @@ BEGIN_DISPATCH_MAP(CPartBrowserDecoratorEventSink, CCmdTarget)
 END_DISPATCH_MAP()
 
 BEGIN_INTERFACE_MAP(CPartBrowserDecoratorEventSink, CCmdTarget)
-	INTERFACE_PART(CPartBrowserDecoratorEventSink, IID_IMgaNewDecoratorEvents, EventSink)
+	INTERFACE_PART(CPartBrowserDecoratorEventSink, IID_IMgaElementDecoratorEvents, EventSink)
 END_INTERFACE_MAP()
 
 
@@ -109,77 +109,77 @@ STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::CursorRestored()
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleEditingStarted(LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelEditingStarted(LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleEditingFinished(LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelEditingFinished(LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleChanged(BSTR newTitle)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelChanged(BSTR newLabel)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleMoving(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelMoving(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleMovingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelMovingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleMoved(LONG nType, LONG x, LONG y)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelMoved(LONG nType, LONG x, LONG y)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleResizingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelResizingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleResizing(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelResizing(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleResizingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelResizingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::TitleResized(LONG nType, LONG cx, LONG cy)
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelResized(LONG nType, LONG cx, LONG cy)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 

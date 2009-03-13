@@ -27,10 +27,10 @@ protected:
 	CPoint					m_ptInner;
 
 public:
-	PortBitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, const CPoint& ptInner);
+	PortBitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, const CPoint& ptInner);
 	virtual ~PortBitmapPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual CSize	GetPreferredSize			(void) const;
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

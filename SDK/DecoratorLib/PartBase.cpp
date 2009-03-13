@@ -18,7 +18,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-PartBase::PartBase(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
+PartBase::PartBase(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
 	m_parentPart	(pPart),
 	m_eventSink		(eventSink),
 	m_parentWnd		(NULL),
@@ -274,60 +274,60 @@ void PartBase::OperationCanceledByDecorator(void)
 	m_eventSink->OperationCanceled();
 }
 
-void PartBase::TitleEditingStarted(CRect& location)
+void PartBase::LabelEditingStarted(CRect& location)
 {
-	m_eventSink->TitleEditingStarted(location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelEditingStarted(location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::TitleEditingFinished(CRect& location)
+void PartBase::LabelEditingFinished(CRect& location)
 {
-	m_eventSink->TitleEditingFinished(location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelEditingFinished(location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::TitleChanged(CString& newTitle)
+void PartBase::LabelChanged(CString& newLabel)
 {
-	CComBSTR newTitleBStr(newTitle);
-	m_eventSink->TitleChanged(newTitleBStr);
+	CComBSTR newLabelBStr(newLabel);
+	m_eventSink->LabelChanged(newLabelBStr);
 }
 
-void PartBase::TitleMovingStarted(UINT nType, CRect& location)
+void PartBase::LabelMovingStarted(UINT nType, CRect& location)
 {
-	m_eventSink->TitleMovingStarted(nType, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelMovingStarted(nType, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::TitleMoving(UINT nSide, CRect& location)
+void PartBase::LabelMoving(UINT nSide, CRect& location)
 {
-	m_eventSink->TitleMoving(nSide, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelMoving(nSide, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::TitleMovingFinished(UINT nType, CRect& location)
+void PartBase::LabelMovingFinished(UINT nType, CRect& location)
 {
-	m_eventSink->TitleMovingFinished(nType, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelMovingFinished(nType, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::TitleMoved(UINT nType, CPoint& point)
+void PartBase::LabelMoved(UINT nType, CPoint& point)
 {
-	m_eventSink->TitleMoved(nType, point.x, point.y);
+	m_eventSink->LabelMoved(nType, point.x, point.y);
 }
 
-void PartBase::TitleResizingStarted(UINT nType, CRect& location)
+void PartBase::LabelResizingStarted(UINT nType, CRect& location)
 {
-	m_eventSink->TitleResizingStarted(nType, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelResizingStarted(nType, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::TitleResizing(UINT nSide, CRect& location)
+void PartBase::LabelResizing(UINT nSide, CRect& location)
 {
-	m_eventSink->TitleResizing(nSide, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelResizing(nSide, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::TitleResizingFinished(UINT nType, CRect& location)
+void PartBase::LabelResizingFinished(UINT nType, CRect& location)
 {
-	m_eventSink->TitleResizingFinished(nType, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelResizingFinished(nType, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::TitleResized(UINT nType, CSize& size)
+void PartBase::LabelResized(UINT nType, CSize& size)
 {
-	m_eventSink->TitleResized(nType, size.cx, size.cy);
+	m_eventSink->LabelResized(nType, size.cx, size.cy);
 }
 
 void PartBase::WindowMovingStarted(UINT nType, CRect& location)

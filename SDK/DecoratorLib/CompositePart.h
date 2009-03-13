@@ -28,7 +28,7 @@ protected:
 	std::vector<PartBase*>	m_compositeParts;
 
 public:
-	CompositePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	CompositePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~CompositePart();
 
 	virtual void			AddPart				(PartBase* part);
@@ -37,7 +37,7 @@ public:
 	virtual PartBase*		GetPart				(int index);
 	virtual long			GetSize				(void) const;
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);

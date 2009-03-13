@@ -28,10 +28,10 @@ protected:
 	long						m_diamondHeight;
 
 public:
-	DiamondVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, long diamondWidth, long diamondHeight);
+	DiamondVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, long diamondWidth, long diamondHeight);
 	virtual ~DiamondVectorPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual CSize			GetPreferredSize	(void) const;
 

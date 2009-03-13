@@ -30,7 +30,7 @@ class PartBase: public PartInterface
 {
 protected:
 	PartBase*						m_parentPart;
-	CComPtr<IMgaNewDecoratorEvents>	m_eventSink;
+	CComPtr<IMgaElementDecoratorEvents>	m_eventSink;
 
 	CComPtr<IMgaProject>			m_spProject;
 	CComPtr<IMgaMetaPart>			m_spPart;
@@ -49,12 +49,12 @@ protected:
 	bool							m_bResizable;
 
 public:
-	PartBase(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	PartBase(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~PartBase();
 
 	virtual void	SetParentPart				(PartBase* pPart) { m_parentPart = pPart; };
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO);
 	virtual void			Destroy				(void);										// default (no) implementation
 	virtual CString			GetMnemonic			(void) const;								// default (no) implementation
@@ -92,23 +92,23 @@ public:
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);	// default (no) implementation
 	virtual bool	OperationCanceledByGME		(void);																	// default (no) implementation
 
-// =============== resembles IMgaNewDecoratorEvents
+// =============== resembles IMgaElementDecoratorEvents
 	virtual void	Refresh						(void);
 	virtual void	OperationCanceledByDecorator(void);
 	virtual void	CursorChanged				(long newCursorID);
 	virtual void	CursorRestored				(void);
 
-	virtual void	TitleEditingStarted			(CRect& location);
-	virtual void	TitleEditingFinished		(CRect& location);
-	virtual void	TitleChanged				(CString& newTitle);
-	virtual void	TitleMovingStarted			(UINT nType, CRect& location);
-	virtual void	TitleMoving					(UINT nSide, CRect& location);
-	virtual void	TitleMovingFinished			(UINT nType, CRect& location);
-	virtual void	TitleMoved					(UINT nType, CPoint& point);
-	virtual void	TitleResizingStarted		(UINT nType, CRect& location);
-	virtual void	TitleResizing				(UINT nSide, CRect& location);
-	virtual void	TitleResizingFinished		(UINT nType, CRect& locatiot);
-	virtual void	TitleResized				(UINT nType, CSize& size);
+	virtual void	LabelEditingStarted			(CRect& location);
+	virtual void	LabelEditingFinished		(CRect& location);
+	virtual void	LabelChanged				(CString& newLabel);
+	virtual void	LabelMovingStarted			(UINT nType, CRect& location);
+	virtual void	LabelMoving					(UINT nSide, CRect& location);
+	virtual void	LabelMovingFinished			(UINT nType, CRect& location);
+	virtual void	LabelMoved					(UINT nType, CPoint& point);
+	virtual void	LabelResizingStarted		(UINT nType, CRect& location);
+	virtual void	LabelResizing				(UINT nSide, CRect& location);
+	virtual void	LabelResizingFinished		(UINT nType, CRect& locatiot);
+	virtual void	LabelResized				(UINT nType, CSize& size);
 
 	virtual void	WindowMovingStarted			(UINT nType, CRect& location);
 	virtual void	WindowMoving				(UINT nSide, CRect& location);

@@ -33,10 +33,10 @@ protected:
 	long			m_bRoundCornerRadius;
 
 public:
-	BitmapPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	BitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~BitmapPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual feature_code	GetFeatures			(void) const;
 	virtual CSize			GetPreferredSize	(void) const;

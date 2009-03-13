@@ -33,11 +33,11 @@ protected:
 	InheritanceType		m_inheritanceType;
 
 public:
-	InheritanceVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink,
+	InheritanceVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink,
 						  long inheritanceWidth, long inheritanceHeight, InheritanceType inheritanceType);
 	virtual ~InheritanceVectorPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);

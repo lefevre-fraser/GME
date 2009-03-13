@@ -88,7 +88,7 @@ public:
 	// === Start of decorator operation specific variables ===
 	bool					isCursorChangedByDecorator;
 	CRect					originalRect;
-	bool					inNewDecoratorOperation;
+	bool					inElementDecoratorOperation;
 	bool					inOpenedDecoratorTransaction;
 	bool					isContextInitiatedOperation;
 	bool					shouldCommitOperation;

@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-TypeableLabelPart::TypeableLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
+TypeableLabelPart::TypeableLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
 	LabelPart(pPart, eventSink),
 	m_bTypeNameEnabled(false),
 	m_iTypeInfo(0),

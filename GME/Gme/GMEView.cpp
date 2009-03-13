@@ -517,7 +517,7 @@ CGMEView::CGMEView()
 
 	isCursorChangedByDecorator		= false;
 	originalRect.SetRectEmpty();
-	inNewDecoratorOperation			= false;
+	inElementDecoratorOperation		= false;
 	inOpenedDecoratorTransaction	= false;
 	isContextInitiatedOperation		= false;
 	shouldCommitOperation			= false;
@@ -1589,7 +1589,7 @@ bool CGMEView::SendNow(bool onlyDecoratorNotification)
 					// Sending decorator events (for efficiency)
 					CGuiAspect* pAspect = pUnselection->GetCurrentAspect();
 					if (pAspect != NULL) {
-						CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+						CComQIPtr<IMgaElementDecorator> newDecorator(pAspect->GetDecorator());
 						if (newDecorator)
 							HRESULT retVal = newDecorator->SetSelected(VARIANT_FALSE);
 					}
@@ -1610,7 +1610,7 @@ bool CGMEView::SendNow(bool onlyDecoratorNotification)
 					// Sending decorator events (for efficiency)
 					CGuiAspect* pAspect = pSelection->GetCurrentAspect();
 					if (pAspect != NULL) {
-						CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+						CComQIPtr<IMgaElementDecorator> newDecorator(pAspect->GetDecorator());
 						if (newDecorator)
 							HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
 					}
@@ -1646,7 +1646,7 @@ void CGMEView::AddAnnotationToSelectionTail(CGuiAnnotator* ann)
 void CGMEView::AddAnnotationToSelection(CGuiAnnotator* ann, bool headOrTail)
 {
 	ClearConnectionSelection();
-	CComPtr<IMgaNewDecorator> decorator = ann->GetDecorator(currentAspect->index);
+	CComPtr<IMgaElementDecorator> decorator = ann->GetDecorator(currentAspect->index);
 	if (decorator)
 		HRESULT retVal = decorator->SetSelected(VARIANT_TRUE);
 	if (headOrTail)
@@ -1661,7 +1661,7 @@ void CGMEView::RemoveAllAnnotationFromSelection(void)
 	CGuiAnnotator *ann;
 	while (pos) {
 		ann = selectedAnnotations.GetNext(pos);
-		CComPtr<IMgaNewDecorator> decorator = ann->GetDecorator(currentAspect->index);
+		CComPtr<IMgaElementDecorator> decorator = ann->GetDecorator(currentAspect->index);
 		if (decorator)
 			HRESULT retVal = decorator->SetSelected(VARIANT_FALSE);
 	}
@@ -1671,7 +1671,7 @@ void CGMEView::RemoveAllAnnotationFromSelection(void)
 void CGMEView::RemoveAnnotationFromSelectionHead(void)
 {
 	CGuiAnnotator* head = selectedAnnotations.GetHead();
-	CComPtr<IMgaNewDecorator> decorator = head->GetDecorator(currentAspect->index);
+	CComPtr<IMgaElementDecorator> decorator = head->GetDecorator(currentAspect->index);
 	if (decorator)
 		HRESULT retVal = decorator->SetSelected(VARIANT_FALSE);
 	selectedAnnotations.RemoveHead();
@@ -1680,7 +1680,7 @@ void CGMEView::RemoveAnnotationFromSelectionHead(void)
 void CGMEView::RemoveAnnotationFromSelection(POSITION annPos)
 {
 	CGuiAnnotator* ann = selectedAnnotations.GetAt(annPos);
-	CComPtr<IMgaNewDecorator> decorator = ann->GetDecorator(currentAspect->index);
+	CComPtr<IMgaElementDecorator> decorator = ann->GetDecorator(currentAspect->index);
 	if (decorator)
 		HRESULT retVal = decorator->SetSelected(VARIANT_FALSE);
 	selectedAnnotations.RemoveAt(annPos);
@@ -2126,7 +2126,7 @@ void CGMEView::Reset(bool doInvalidate)
 				// Sending decorator events (for efficiency)
 				CGuiAspect* pAspect = go->GetCurrentAspect();
 				if (pAspect != NULL) {
-					CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+					CComQIPtr<IMgaElementDecorator> newDecorator(pAspect->GetDecorator());
 					if (newDecorator)
 						HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
 				}
@@ -4100,7 +4100,7 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 		if (object != NULL) {
 			CGuiAspect* pAspect = object->GetCurrentAspect();
 			if (pAspect != NULL) {
-				CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+				CComQIPtr<IMgaElementDecorator> newDecorator(pAspect->GetDecorator());
 				if (newDecorator) {
 					CClientDC transformDC(this);
 					OnPrepareDC(&transformDC);
@@ -4115,7 +4115,7 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 								inOpenedDecoratorTransaction = false;
 								isContextInitiatedOperation = false;
 								return;
-							} else if (!inNewDecoratorOperation) {
+							} else if (!inElementDecoratorOperation) {
 								AbortTransaction(S_OK);
 								inOpenedDecoratorTransaction = false;
 								isContextInitiatedOperation = false;
@@ -4127,7 +4127,7 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 							inOpenedDecoratorTransaction = false;
 							isContextInitiatedOperation = false;
 						} else {
-							if (inNewDecoratorOperation) {
+							if (inElementDecoratorOperation) {
 								if (decoratorOrAnnotator)
 									objectInDecoratorOperation = object;
 								else
@@ -4142,7 +4142,7 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 						CancelDecoratorOperation();
 						COMTHROW(retVal);
 					}
-					if (inNewDecoratorOperation) {
+					if (inElementDecoratorOperation) {
 						if (decoratorOrAnnotator)
 							objectInDecoratorOperation = object;
 						else
@@ -4151,7 +4151,7 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 				}
 			}
 		}
-		if (inNewDecoratorOperation)
+		if (inElementDecoratorOperation)
 			return;
 		if (retVal == S_DECORATOR_EVENT_HANDLED)
 			return;
@@ -4271,13 +4271,13 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 				CGuiObject*	object	= self		? self->FindObject(point, true) : 0;
 //				CGuiPort*	port	= object	? object->FindPort(point, true) : 0;
 
-				if (inNewDecoratorOperation) {
-					CComPtr<IMgaNewDecorator> newDecorator;
+				if (inElementDecoratorOperation) {
+					CComPtr<IMgaElementDecorator> newDecorator;
 					if (decoratorOrAnnotator) {
 						ASSERT(objectInDecoratorOperation != NULL);
 						CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
 						if (pAspect != NULL) {
-							CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+							CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 							newDecorator = newDecorator2;
 						}
 					} else {
@@ -4312,11 +4312,11 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 					}
 				} else {
 					CGuiAnnotator* annotation = NULL;
-					CComPtr<IMgaNewDecorator> newDecorator;
+					CComPtr<IMgaElementDecorator> newDecorator;
 					if (object != NULL) {
 						CGuiAspect* pAspect = object->GetCurrentAspect();
 						if (pAspect != NULL) {
-							CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+							CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 							newDecorator = newDecorator2;
 						}
 					} else {
@@ -4336,7 +4336,7 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 							CancelDecoratorOperation();
 							COMTHROW(retVal);
 						}
-						if (inNewDecoratorOperation) {
+						if (inElementDecoratorOperation) {
 							if (decoratorOrAnnotator)
 								objectInDecoratorOperation = object;
 							else
@@ -4384,20 +4384,20 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 				if (object == NULL)
 					object = self ? self->FindObject(point, true, true) : 0;
 
-				if (isContextInitiatedOperation || inNewDecoratorOperation) {
+				if (isContextInitiatedOperation || inElementDecoratorOperation) {
 					if (isContextInitiatedOperation) {
 						if (::GetCapture() != NULL)
 							::ReleaseCapture();
-						inNewDecoratorOperation = true;
+						inElementDecoratorOperation = true;
 						CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 						return;
 					}
-					CComPtr<IMgaNewDecorator> newDecorator;
+					CComPtr<IMgaElementDecorator> newDecorator;
 					if (decoratorOrAnnotator) {
 						ASSERT(objectInDecoratorOperation != NULL);
 						CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
 						if (pAspect != NULL) {
-							CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+							CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 							newDecorator = newDecorator2;
 						}
 					} else {
@@ -4433,11 +4433,11 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 					}
 				} else {
 					CGuiAnnotator* annotation = NULL;
-					CComPtr<IMgaNewDecorator> newDecorator;
+					CComPtr<IMgaElementDecorator> newDecorator;
 					if (object != NULL) {
 						CGuiAspect* pAspect = object->GetCurrentAspect();
 						if (pAspect != NULL) {
-							CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+							CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 							newDecorator = newDecorator2;
 						}
 					} else {
@@ -4460,7 +4460,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 									isContextInitiatedOperation = false;
 									CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 									return;
-								} else if (!inNewDecoratorOperation) {
+								} else if (!inElementDecoratorOperation) {
 									AbortTransaction(S_OK);
 									inOpenedDecoratorTransaction = false;
 									isContextInitiatedOperation = false;
@@ -4471,7 +4471,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 										::ReleaseCapture();
 								}
 							} else {
-								if (inNewDecoratorOperation) {
+								if (inElementDecoratorOperation) {
 									if (decoratorOrAnnotator)
 										objectInDecoratorOperation = object;
 									else
@@ -4487,7 +4487,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 							CancelDecoratorOperation();
 							COMTHROW(retVal);
 						}
-						if (inNewDecoratorOperation) {
+						if (inElementDecoratorOperation) {
 							if (decoratorOrAnnotator)
 								objectInDecoratorOperation = object;
 							else
@@ -4495,7 +4495,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						}
 					}
 				}
-				if (inNewDecoratorOperation) {
+				if (inElementDecoratorOperation) {
 					CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 					return;
 				}
@@ -4865,11 +4865,11 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 		CGuiAnnotator *annotation = FindAnnotation(point);
 
 		if (object || annotation) {
-			CComPtr<IMgaNewDecorator> newDecorator;
+			CComPtr<IMgaElementDecorator> newDecorator;
 			if (object != NULL) {
 				CGuiAspect* pAspect = object->GetCurrentAspect();
 				if (pAspect != NULL) {
-					CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+					CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 					newDecorator = newDecorator2;
 				}
 			} else {
@@ -4893,7 +4893,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 							isContextInitiatedOperation = false;
 							CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 							return;
-						} else if (!inNewDecoratorOperation) {
+						} else if (!inElementDecoratorOperation) {
 							AbortTransaction(S_OK);
 							inOpenedDecoratorTransaction = false;
 							isContextInitiatedOperation = false;
@@ -4906,7 +4906,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 						inOpenedDecoratorTransaction = false;
 						isContextInitiatedOperation = false;
 					} else {
-						if (inNewDecoratorOperation) {
+						if (inElementDecoratorOperation) {
 							if (decoratorOrAnnotator)
 								objectInDecoratorOperation = object;
 							else
@@ -4922,7 +4922,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 					CancelDecoratorOperation();
 					COMTHROW(retVal);
 				}
-				if (inNewDecoratorOperation) {
+				if (inElementDecoratorOperation) {
 					if (decoratorOrAnnotator)
 						objectInDecoratorOperation = object;
 					else
@@ -4930,7 +4930,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 				}
 			}
 		}
-		if (inNewDecoratorOperation) {
+		if (inElementDecoratorOperation) {
 			CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 			return;
 		}
@@ -5206,7 +5206,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				if (selection != NULL) {
 					CGuiAspect* pAspect = selection->GetCurrentAspect();
 					if (pAspect != NULL) {
-						CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+						CComQIPtr<IMgaElementDecorator> newDecorator(pAspect->GetDecorator());
 						HRESULT retVal = S_OK;
 						if (newDecorator) {
 							CClientDC transformDC(this);
@@ -5232,7 +5232,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				::DestroyMenu(decoratorAdditionalMenu);
 			} else if (contextAnnotation != NULL) {
 				HMENU decoratorAdditionalMenu = ::CreatePopupMenu();
-				CComPtr<IMgaNewDecorator> decorator = contextAnnotation->GetDecorator(currentAspect->index);
+				CComPtr<IMgaElementDecorator> decorator = contextAnnotation->GetDecorator(currentAspect->index);
 				HRESULT retVal = S_OK;
 				if (decorator) {
 					CClientDC transformDC(this);
@@ -5329,7 +5329,7 @@ DROPEFFECT CGMEView::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeyState, 
 	if (selection != NULL) {
 		CGuiAspect* pAspect = selection->GetCurrentAspect();
 		if (pAspect != NULL) {
-			CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+			CComQIPtr<IMgaElementDecorator> newDecorator(pAspect->GetDecorator());
 			if (newDecorator) {
 				CClientDC transformDC(this);
 				OnPrepareDC(&transformDC);
@@ -5344,7 +5344,7 @@ DROPEFFECT CGMEView::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeyState, 
 
 	CGuiAnnotator* annotation = FindAnnotation(point);
 	if (annotation != NULL) {
-		CComPtr<IMgaNewDecorator> decorator = annotation->GetDecorator(currentAspect->index);
+		CComPtr<IMgaElementDecorator> decorator = annotation->GetDecorator(currentAspect->index);
 		if (decorator) {
 			CClientDC transformDC(this);
 			OnPrepareDC(&transformDC);
@@ -5393,7 +5393,7 @@ DROPEFFECT CGMEView::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState, C
 
 		CGuiAspect* pAspect = obj->GetCurrentAspect();
 		if (pAspect != NULL) {
-			CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+			CComQIPtr<IMgaElementDecorator> newDecorator(pAspect->GetDecorator());
 			if (newDecorator) {
 				CClientDC transformDC(this);
 				OnPrepareDC(&transformDC);
@@ -5406,7 +5406,7 @@ DROPEFFECT CGMEView::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState, C
 
 	CGuiAnnotator* annotation = FindAnnotation(point);
 	if (annotation != NULL) {
-		CComPtr<IMgaNewDecorator> decorator = annotation->GetDecorator(currentAspect->index);
+		CComPtr<IMgaElementDecorator> decorator = annotation->GetDecorator(currentAspect->index);
 		if (decorator) {
 			CClientDC transformDC(this);
 			OnPrepareDC(&transformDC);
@@ -5536,7 +5536,7 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 	if (target != NULL) {
 		CGuiAspect* pAspect = target->GetCurrentAspect();
 		if (pAspect != NULL) {
-			CComQIPtr<IMgaNewDecorator> newDecorator(pAspect->GetDecorator());
+			CComQIPtr<IMgaElementDecorator> newDecorator(pAspect->GetDecorator());
 			if (newDecorator) {
 				CClientDC transformDC(this);
 				OnPrepareDC(&transformDC);
@@ -5549,7 +5549,7 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 
 	CGuiAnnotator* annotation = FindAnnotation(point);
 	if (annotation != NULL) {
-		CComPtr<IMgaNewDecorator> decorator = annotation->GetDecorator(currentAspect->index);
+		CComPtr<IMgaElementDecorator> decorator = annotation->GetDecorator(currentAspect->index);
 		if (decorator) {
 			CClientDC transformDC(this);
 			OnPrepareDC(&transformDC);
@@ -5706,7 +5706,7 @@ void CGMEView::OnEditNudgeup()
 
 BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)
 {
-	if (nID == ID_EDIT_CANCEL && inNewDecoratorOperation)	// capture ESC for decorator operation cancel
+	if (nID == ID_EDIT_CANCEL && inElementDecoratorOperation)	// capture ESC for decorator operation cancel
 		CancelDecoratorOperation();
 
 	if(CGuiMetaProject::theInstance->CmdIDInRange(nID))	{
@@ -5736,11 +5736,11 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 		} else if (nCode == CN_COMMAND) {
 			if (selectedObjectOfContext != NULL || selectedAnnotationOfContext != NULL) {
 				// Send command using saved state
-				CComPtr<IMgaNewDecorator> newDecorator;
+				CComPtr<IMgaElementDecorator> newDecorator;
 				if (selectedObjectOfContext != NULL) {
 					CGuiAspect* pAspect = selectedObjectOfContext->GetCurrentAspect();
 					if (pAspect != NULL) {
-						CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+						CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 						newDecorator = newDecorator2;
 					}
 				} else {
@@ -6539,7 +6539,7 @@ void CGMEView::SetEditCursor(void)
 
 void CGMEView::CancelDecoratorOperation(bool notify)
 {
-	if (inNewDecoratorOperation) {
+	if (inElementDecoratorOperation) {
 		if (::GetCapture() != NULL)
 			::ReleaseCapture();
 		shouldCommitOperation = false;
@@ -6551,15 +6551,15 @@ void CGMEView::CancelDecoratorOperation(bool notify)
 			Invalidate();
 			originalRect.SetRectEmpty();
 		}
-		inNewDecoratorOperation = false;
+		inElementDecoratorOperation = false;
 		if (isCursorChangedByDecorator)
 			SetEditCursor();
 		if (notify) {
-			CComPtr<IMgaNewDecorator> newDecorator;
+			CComPtr<IMgaElementDecorator> newDecorator;
 			if (objectInDecoratorOperation != NULL) {
 				CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
 				if (pAspect != NULL) {
-					CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+					CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 					newDecorator2 = newDecorator;
 				}
 			} else if (annotatorInDecoratorOperation != NULL) {
@@ -7891,7 +7891,7 @@ void CGMEView::OnResetSticky()
 
 void CGMEView::OnNcMouseMove(UINT nHitTest, CPoint point)
 {
-	if (nHitTest != HTCLIENT && !inNewDecoratorOperation && isCursorChangedByDecorator)
+	if (nHitTest != HTCLIENT && !inElementDecoratorOperation && isCursorChangedByDecorator)
 		SetEditCursor();
 }
 
@@ -7921,13 +7921,13 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 			object = self ? self->FindObject(point, true, true) : 0;
 		CGuiAnnotator* annotation = FindAnnotation(point);
 
-		if (inNewDecoratorOperation) {
-			CComPtr<IMgaNewDecorator> newDecorator;
+		if (inElementDecoratorOperation) {
+			CComPtr<IMgaElementDecorator> newDecorator;
 			if (decoratorOrAnnotator) {
 				ASSERT(objectInDecoratorOperation != NULL);
 				CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
 				if (pAspect != NULL) {
-					CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+					CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 					newDecorator = newDecorator2;
 				}
 			} else {
@@ -7950,11 +7950,11 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 				}
 			}
 		} else if (object != NULL || annotation != NULL) {
-			CComPtr<IMgaNewDecorator> newDecorator;
+			CComPtr<IMgaElementDecorator> newDecorator;
 			if (object != NULL) {
 				CGuiAspect* pAspect = object->GetCurrentAspect();
 				if (pAspect != NULL) {
-					CComQIPtr<IMgaNewDecorator> newDecorator2(pAspect->GetDecorator());
+					CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 					newDecorator = newDecorator2;
 				}
 			} else {
@@ -8334,7 +8334,7 @@ LRESULT CGMEView::OnCommitTransaction(WPARAM wParam, LPARAM lParam)
 	CommitTransaction();
 	inOpenedDecoratorTransaction = false;
 	shouldCommitOperation = false;
-	inNewDecoratorOperation = false;
+	inElementDecoratorOperation = false;
 	objectInDecoratorOperation = NULL;
 	annotatorInDecoratorOperation = NULL;
 	return 0;

@@ -24,7 +24,7 @@ namespace MetaDecor {
 class MetaStereoLabelPart: public DecoratorSDK::StereoLabelPart
 {
 public:
-	MetaStereoLabelPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	MetaStereoLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~MetaStereoLabelPart();
 
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

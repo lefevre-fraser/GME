@@ -35,7 +35,7 @@ class CGuiAspect : public CGuiBase
 {
 public:
 	CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind, int pind, const CComPtr<IMgaDecorator>& decor,
-			   CComPtr<IMgaNewDecorator> newDecor, CDecoratorEventSink* decorEventSink);
+			   CComPtr<IMgaElementDecorator> newDecor, CDecoratorEventSink* decorEventSink);
 	virtual ~CGuiAspect();
 
 
@@ -51,7 +51,7 @@ public:
 	const CRect& GetNameLocation()					{ return nameLoc; }
 	void SetLocation(const CRect& location);
 	CComPtr<IMgaDecorator> GetDecorator()			{ return decorator; }
-	CComPtr<IMgaNewDecorator> GetNewDecorator()		{ return newDecorator; }
+	CComPtr<IMgaElementDecorator> GetNewDecorator()	{ return newDecorator; }
 	int	GetIndex()									{ return index; }
 	CGuiPortList &GetPortList()						{ return ports; }
 	CGuiObject* GetParent()							{ return parent; }
@@ -65,7 +65,7 @@ private:
 	int						index;
 	CGuiPortList			ports;
 	CComPtr<IMgaDecorator>	decorator;
-	CComPtr<IMgaNewDecorator>	newDecorator;
+	CComPtr<IMgaElementDecorator>	newDecorator;
 	CDecoratorEventSink*	decoratorEventSink;
 	unsigned long			features;
 	CRect					loc;
@@ -109,13 +109,13 @@ class AnnotatorDecoratorData
 public:
 	AnnotatorDecoratorData()
 		{ decorator = NULL; annotatorEventSink = NULL; };
-	AnnotatorDecoratorData(CComPtr<IMgaNewDecorator>& nD, CAnnotatorEventSink* aES, const CRect& loc):
+	AnnotatorDecoratorData(CComPtr<IMgaElementDecorator>& nD, CAnnotatorEventSink* aES, const CRect& loc):
 		decorator(nD), annotatorEventSink(aES), location(loc) {};
 	~AnnotatorDecoratorData() {};
 
-	CComPtr<IMgaNewDecorator>	decorator;
-	CAnnotatorEventSink*		annotatorEventSink;
-	CRect						location;
+	CComPtr<IMgaElementDecorator>	decorator;
+	CAnnotatorEventSink*			annotatorEventSink;
+	CRect							location;
 };
 
 class CGuiAnnotator : public CGuiBase
@@ -147,7 +147,7 @@ public:
 	static void ShiftAnnotations(CGuiAnnotatorList &annList,CPoint &shiftBy);
 	static bool Showable( CComPtr<IMgaRegNode> &mRootNode);
 	static int  Hide( CComPtr<IMgaRegNode> &mRootNode);
-	CComPtr<IMgaNewDecorator> GetDecorator(int asp) { return decoratorData[asp]->decorator; }
+	CComPtr<IMgaElementDecorator> GetDecorator(int asp) { return decoratorData[asp]->decorator; }
 
 public:
 	CComPtr<IMgaRegNode>						rootNode;

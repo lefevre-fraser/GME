@@ -24,11 +24,11 @@ namespace DecoratorSDK {
 class ConstraintFunctionVectorPart: public ConstraintVectorPart
 {
 public:
-	ConstraintFunctionVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, COLORREF fillColor,
+	ConstraintFunctionVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, COLORREF fillColor,
 								 double thicknessRatio, long constraintWidth, long constraintHeight);
 	virtual ~ConstraintFunctionVectorPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);

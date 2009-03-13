@@ -24,10 +24,9 @@ namespace DecoratorSDK {
 class PortPart: public ObjectAndTextPart
 {
 public:
-	PortPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, const CPoint& ptInner);
+	PortPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, const CPoint& ptInner);
 	virtual ~PortPart();
 
-// =============== resembles IMgaNewDecorator
 public:
 	virtual CPoint	GetInnerPosition			(void) const;
 	virtual long	GetLongest					(void) const;

@@ -29,13 +29,13 @@ class SampleDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
-	CComPtr<IMgaNewDecoratorEvents>		m_eventSink;
+	CComPtr<IMgaElementDecoratorEvents>	m_eventSink;
 
 public:
-	SampleDecorator(CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	SampleDecorator(CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~SampleDecorator();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);

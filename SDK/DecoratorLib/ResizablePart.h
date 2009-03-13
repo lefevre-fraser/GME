@@ -29,10 +29,10 @@ public:
 	bool			m_bResetSize;		// For temporary use, siganling that size reset is needed
 	ResizeLogic		resizeLogic;
 
-	ResizablePart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	ResizablePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~ResizablePart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);

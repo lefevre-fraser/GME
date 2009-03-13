@@ -104,7 +104,7 @@ void SetCenterNoMga(CRect &location,CPoint pt)
 // Non-virtual methods of CGuiAspect
 ////////////////////////////////////
 CGuiAspect::CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind,int pind, const CComPtr<IMgaDecorator>& decor,
-					   CComPtr<IMgaNewDecorator> newDecor, CDecoratorEventSink* decorEventSink):
+					   CComPtr<IMgaElementDecorator> newDecor, CDecoratorEventSink* decorEventSink):
 	guiMeta(meta),
 	parent(p),
 	index(ind),
@@ -509,7 +509,7 @@ CGuiAnnotator::~CGuiAnnotator()
 void CGuiAnnotator::InitDecorator(int asp)
 {
 	try {
-		CComPtr<IMgaNewDecoratorEvents> annotatorEventSinkIface;
+		CComPtr<IMgaElementDecoratorEvents> annotatorEventSinkIface;
 		CString progId = AN_NEWDECORATOR_PROGID;
 		COMTHROW(decoratorData[asp]->decorator.CoCreateInstance(PutInBstr(progId)));
 		decoratorData[asp]->annotatorEventSink = new CAnnotatorEventSink();
@@ -1218,11 +1218,11 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 		progId = GME_DEFAULT_DECORATOR;
 	}
 	CComPtr<IMgaDecorator> decor;
-	CComPtr<IMgaNewDecorator> newDecor;
+	CComPtr<IMgaElementDecorator> newDecor;
 
 	CDecoratorEventSink* decoratorEventSink = NULL;
 	try {
-		CComPtr<IMgaNewDecoratorEvents> decoratorEventSinkIface;
+		CComPtr<IMgaElementDecoratorEvents> decoratorEventSinkIface;
 		HRESULT hres = newDecor.CoCreateInstance(PutInBstr(progId));
 		if (SUCCEEDED(hres)) {
 			decoratorEventSink = new CDecoratorEventSink();

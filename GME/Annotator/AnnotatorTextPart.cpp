@@ -19,7 +19,7 @@ namespace AnnotatorDecor {
 //
 //################################################################################################
 
-AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink):
+AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
 	TextPart		(pPart, eventSink),
 	m_regRoot		(NULL),
 	m_crBgColor		(AN_DEFAULT_BGCOLOR)

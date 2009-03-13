@@ -27,10 +27,10 @@ class EllipseVectorPart: public VectorPart
 	long						m_ellipseHeight;
 
 public:
-	EllipseVectorPart(PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, long ellipseWidth, long ellipseHeight);
+	EllipseVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, long ellipseWidth, long ellipseHeight);
 	virtual ~EllipseVectorPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual CSize			GetPreferredSize	(void) const;
 

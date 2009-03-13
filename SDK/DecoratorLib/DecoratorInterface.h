@@ -29,7 +29,7 @@ public:
 	DecoratorInterface();
 	virtual ~DecoratorInterface();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 // === every function can throw DecoratorException ===
 public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

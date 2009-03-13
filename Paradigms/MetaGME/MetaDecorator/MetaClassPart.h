@@ -33,11 +33,11 @@ protected:
 	bool			m_isAbstract;
 
 public:
-	MetaClassPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink, ShapeCode shape,
+	MetaClassPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, ShapeCode shape,
 				  const CString& stereotypeName);
 	virtual ~MetaClassPart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual void	SetParam					(const CString& strName, VARIANT vValue);
 	virtual bool	GetParam					(const CString& strName, VARIANT* pvValue);

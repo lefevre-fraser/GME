@@ -24,10 +24,10 @@ namespace MetaDecor {
 	class MetaCompositePart: public DecoratorSDK::ObjectAndTextPart
 {
 public:
-	MetaCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaNewDecoratorEvents>& eventSink);
+	MetaCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
 	virtual ~MetaCompositePart();
 
-// =============== resembles IMgaNewDecorator
+// =============== resembles IMgaElementDecorator
 public:
 	virtual CRect	GetPortLocation				(CComPtr<IMgaFCO>& fco) const;
 	virtual CRect	GetLabelLocation			(void) const;
