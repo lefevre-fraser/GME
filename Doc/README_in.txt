@@ -30,6 +30,19 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r9.3.16
+--------------------------------
+
+  - JAVA_HOME environment variable to locate SDK
+  - Better UAC support under Windows Vista
+  - Element decorator label editing editbox flicker problem fix
+  - Drawing performance fixes of new decorator infrastructure
+  - Memory usage optimalization of new decorator infrastructure
+  - MgaUtils became independent from .NET Framework
+  - DecoratorKit update to new Decorator interface
+  - NewDecoratorKit C++ example for new Decorator interface
+  - BulkCommit is the default option in the multiuser backend
+
 Release Notes of Release r9.1.23
 --------------------------------
   - Fixing a misspelling in the SDK/BON/Common folder name

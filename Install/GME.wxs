@@ -1257,7 +1257,7 @@
                 <File Id="Basic2Primitive.xsl" Name="Basic2Primitive.xsl" KeyPath="yes" Source="..\Paradigms\SF\xslt\Basic2Primitive.xsl" />
                 <File Id="Primitive2Basic.xsl" Name="Primitive2Basic.xsl"  Source="..\Paradigms\SF\xslt\Primitive2Basic.xsl" />
                 <File Id="SFDemoWithMetaChanged.xme" Name="SFDemoWithMetaChanged.xme"  Source="..\Paradigms\SF\xslt\SFDemoWithMetaChanged.xme" />
-                <File Id="mga.dtd" Name="mga.dtd"  Source="..\GME\Parser\mga.dtd" />
+                <File Id="SFxslt_mga.dtd" Name="mga.dtd"  Source="..\GME\Parser\mga.dtd" />
             </Component>
         </DirectoryRef>
 

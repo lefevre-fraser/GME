@@ -99,6 +99,9 @@ DefCheckOutOnAction = true\n\
 # use this option to specify your preferred access method: CMD or API\n\
 #AccessMethod = API # or CMD\n\
 \n\
+# Speed-up commits to the repository by aggregation.\
+UseBulkCommit = true \n\
+\n\
 # to overwrite these settings with user-specific preferences create a file\n\
 # called config.opt, in your local checkout directory\n\
 ";
