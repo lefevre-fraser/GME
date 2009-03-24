@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-DiamondVectorPart::DiamondVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink,
+DiamondVectorPart::DiamondVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink,
 									 long diamondWidth, long diamondHeight):
 	VectorPart(pPart, eventSink),
 	m_diamondWidth(diamondWidth),

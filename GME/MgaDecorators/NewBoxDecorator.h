@@ -24,10 +24,10 @@ class NewBoxDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
-	CComPtr<IMgaElementDecoratorEvents>	m_eventSink;
+	CComPtr<IMgaCommonDecoratorEvents>	m_eventSink;
 
 public:
-	NewBoxDecorator(CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	NewBoxDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~NewBoxDecorator();
 
 // =============== resembles IMgaElementDecorator

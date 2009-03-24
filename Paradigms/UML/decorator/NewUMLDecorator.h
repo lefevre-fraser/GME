@@ -26,10 +26,10 @@ class NewUMLDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
-	CComPtr<IMgaElementDecoratorEvents>	m_eventSink;
+	CComPtr<IMgaCommonDecoratorEvents>	m_eventSink;
 
 public:
-	NewUMLDecorator(CComPtr<IMgaElementDecoratorEvents> eventSink);
+	NewUMLDecorator(CComPtr<IMgaCommonDecoratorEvents> eventSink);
 	virtual ~NewUMLDecorator();
 
 // =============== resembles IMgaElementDecorator

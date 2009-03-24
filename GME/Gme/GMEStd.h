@@ -36,7 +36,7 @@ typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FON
 #define	GME_RED_COLOR				RGB(0xff, 0x00, 0x00)
 #define	GME_DARKRED_COLOR			RGB(0x80, 0x00, 0x00)
 #define	GME_GREY_COLOR				RGB(0xc0, 0xc0, 0xc0)
-#define GME_GRAYED_OUT_COLOR		RGB(222,222,222)
+#define GME_GRAYED_OUT_COLOR		RGB(0xde, 0xde, 0xde)
 
 #define GME_GRID_SIZE				7
 #define GME_PORT_SIZE				11
@@ -54,11 +54,11 @@ typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FON
 #define GME_MAX_GRID_DIM			1024
 #endif
 
-#define GME_BUTT_END					0
+#define GME_BUTT_END				0
 #define GME_ARROW_END				1
 #define GME_DIAMOND_END				2
-#define GME_APEX_END					3
-#define GME_BULLET_END					4
+#define GME_APEX_END				3
+#define GME_BULLET_END				4
 #define GME_EMPTYDIAMOND_END		5
 #define GME_EMPTYAPEX_END			6
 #define GME_EMPTYBULLET_END			7
@@ -148,16 +148,17 @@ typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FON
 #define DECORATOR_PREF				"decorator"
 #define HOTSPOT_PREF				"isHotspotEnabled"
 #define HOTSPOT_FALSE				"false"
+#define CUSTOMCONNECTIONEDGES		"customConnEdges"
 
 #define GME_AUTOSAVE_EXTENSION		".bak"
 
 
-#define GME_CONN_LABEL_NUM			5
 #define	GME_CONN_SRC_LABEL1			0
 #define	GME_CONN_SRC_LABEL2			1
 #define	GME_CONN_DST_LABEL1			2
 #define	GME_CONN_DST_LABEL2			3
-#define GME_CONN_MAIN_LABEL			GME_CONN_LABEL_NUM - 1
+#define GME_CONN_MAIN_LABEL			4
+#define GME_CONN_LABEL_NUM			5
 
 #define GME_OLDDEFAULT_DECORATOR	"MGA.BoxDecorator"
 #define GME_DEFAULT_DECORATOR		"MGA.NewBoxDecorator"

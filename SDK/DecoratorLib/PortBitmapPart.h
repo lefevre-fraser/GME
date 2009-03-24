@@ -27,7 +27,7 @@ protected:
 	CPoint					m_ptInner;
 
 public:
-	PortBitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, const CPoint& ptInner);
+	PortBitmapPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, const CPoint& ptInner);
 	virtual ~PortBitmapPart();
 
 // =============== resembles IMgaElementDecorator

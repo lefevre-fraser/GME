@@ -325,7 +325,7 @@ STDMETHODIMP CSampleDecoratorImpl::SaveState()
 
 // New functions
 STDMETHODIMP CSampleDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-												IMgaElementDecoratorEvents* eventSink, ULONGLONG parentWnd)
+												IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	//
 	// TODO: handle extra parameters, call Initialize with the rest
@@ -336,7 +336,7 @@ STDMETHODIMP CSampleDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 
 	HRESULT retVal = S_OK;
 	try {
-		SampleDecor::SampleDecorator* sampleDecorator = new SampleDecor::SampleDecorator(CComPtr<IMgaElementDecoratorEvents>(eventSink));
+		SampleDecor::SampleDecorator* sampleDecorator = new SampleDecor::SampleDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
 		m_pElementDecorator = sampleDecorator;
 		sampleDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
 									  CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);

@@ -18,7 +18,7 @@ namespace MetaDecor {
 //
 //################################################################################################
 
-NewMetaDecorator::NewMetaDecorator(CComPtr<IMgaElementDecoratorEvents>& eventSink):
+NewMetaDecorator::NewMetaDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	m_part(NULL),
 	m_eventSink(eventSink)
 {

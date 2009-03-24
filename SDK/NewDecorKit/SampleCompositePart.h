@@ -27,7 +27,7 @@ namespace SampleDecor {
 class SampleCompositePart: public DecoratorSDK::ObjectAndTextPart
 {
 public:
-	SampleCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	SampleCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~SampleCompositePart();
 
 // =============== resembles IMgaElementDecorator

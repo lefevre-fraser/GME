@@ -20,7 +20,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-PortPart::PortPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, const CPoint& ptInner):
+PortPart::PortPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, const CPoint& ptInner):
 	ObjectAndTextPart(pPart, eventSink)
 {
 	PortBitmapPart* portBitmapPart = new PortBitmapPart(this, eventSink, ptInner);

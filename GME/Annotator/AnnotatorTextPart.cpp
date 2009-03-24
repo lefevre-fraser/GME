@@ -19,7 +19,7 @@ namespace AnnotatorDecor {
 //
 //################################################################################################
 
-AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	TextPart		(pPart, eventSink),
 	m_regRoot		(NULL),
 	m_crBgColor		(AN_DEFAULT_BGCOLOR)
@@ -91,7 +91,7 @@ void AnnotatorTextPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 												 m_strText,
 												 CRect(loc.left, loc.top, loc.right, loc.bottom),
 												 &myFont,
-												 (m_bActive) ? m_crText : GME_GRAYED_OUT_COLOR,
+												 (m_bActive) ? m_crText : DecoratorSDK::COLOR_GRAYED_OUT,
 												 TA_LEFT | TA_TOP,
 												 m_iMaxTextLength,
 												 "",

@@ -28,7 +28,7 @@ protected:
 	CPoint				m_boxPos;
 
 public:
-	MetaAttributePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink,
+	MetaAttributePart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink,
 					  const CString& nameStr, const CString& typeStr, const CPoint& boxPos, CComPtr<IMgaFCO>& pFCO);
 	virtual ~MetaAttributePart();
 

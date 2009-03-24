@@ -24,7 +24,7 @@ namespace DecoratorSDK {
 class ModelSwitchPart: public CompositePart
 {
 public:
-	ModelSwitchPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	ModelSwitchPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~ModelSwitchPart();
 
 // =============== resembles IMgaElementDecorator

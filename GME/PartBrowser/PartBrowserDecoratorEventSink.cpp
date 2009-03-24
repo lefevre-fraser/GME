@@ -186,6 +186,20 @@ STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::LabelResized(LONG nType
 	return S_OK;
 }
 
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::GeneralOperationStarted(ULONGLONG operationData)
+{
+	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
+
+	return S_OK;
+}
+
+STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::GeneralOperationFinished(ULONGLONG operationData)
+{
+	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
+
+	return S_OK;
+}
+
 STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::WindowMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
@@ -236,20 +250,6 @@ STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::WindowResizingFinished(
 }
 
 STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::WindowResized(LONG nType, LONG cx, LONG cy)
-{
-	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
-
-	return S_OK;
-}
-
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::GeneralOperationStarted(ULONGLONG operationData)
-{
-	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
-
-	return S_OK;
-}
-
-STDMETHODIMP CPartBrowserDecoratorEventSink::XEventSink::GeneralOperationFinished(ULONGLONG operationData)
 {
 	METHOD_PROLOGUE(CPartBrowserDecoratorEventSink,EventSink);
 

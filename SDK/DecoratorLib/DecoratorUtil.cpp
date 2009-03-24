@@ -27,7 +27,7 @@ namespace DecoratorSDK
 
 	bool Convert( const CString& strValue, long& lValue, bool bIsHexa )
 	{
-		return sscanf( strValue, ( bIsHexa ) ? "%x" : "%d", &lValue ) == 1;
+		return sscanf( strValue, ( bIsHexa ) ? "%x" : "%ld", &lValue ) == 1;
 	}
 
 	bool Convert( const CString& strValue, COLORREF& crValue )
@@ -777,7 +777,7 @@ GdipFont* Facilities::GetFont( int iFontKey ) const
 Gdiplus::Pen* Facilities::GetPen( COLORREF crColor, int iWidth )
 {
 	CString chBuffer;
-	chBuffer.Format("%x-%d", crColor, iWidth);
+	chBuffer.Format("%x-%ld", crColor, iWidth);
 	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.find(chBuffer);
 	if (it != m_mapGdipPens.end())
 		return it->second;
@@ -852,6 +852,8 @@ void Facilities::DrawString( Gdiplus::Graphics* gdip, const CString& strText, co
 		verticalAlignment = Gdiplus::StringAlignmentNear;
 	}
 	format.SetLineAlignment(verticalAlignment);
+	format.SetFormatFlags(format.GetFormatFlags() | Gdiplus::StringFormatFlagsNoWrap);
+	format.SetTrimming(Gdiplus::StringTrimmingEllipsisPath);
 
 //	HDC hDC = gdip->GetHDC();
 	COLORREF textColor = /*GetDeviceCaps(hDC, TECHNOLOGY) == DT_RASPRINTER ? COLOR_BLACK :*/ crColor;
@@ -1196,7 +1198,7 @@ SFont* Facilities::getFont( int iFontKey ) const
 CPen* Facilities::getPen( COLORREF crColor, int iWidth, bool bDashed )
 {
 	CString chBuffer;
-	chBuffer.Format("%x-%d-%d", crColor, iWidth, bDashed);
+	chBuffer.Format("%x-%ld-%d", crColor, iWidth, bDashed);
 	std::map<CString,CPen*>::iterator it = m_mapPens.find(chBuffer);
 	if (it != m_mapPens.end())
 		return it->second;

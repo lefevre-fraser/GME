@@ -27,7 +27,7 @@ class VectorPart;
 class VectorAndLabelPart: public ObjectAndTextPart
 {
 public:
-	VectorAndLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	VectorAndLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~VectorAndLabelPart();
 
 public:

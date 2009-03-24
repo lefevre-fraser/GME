@@ -213,6 +213,29 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::LabelResized(LONG nType, LONG cx, 
 	return S_OK;
 }
 
+STDMETHODIMP CDecoratorEventSink::XEventSink::GeneralOperationStarted(ULONGLONG operationData)
+{
+	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
+
+	pThis->m_view->BeginTransaction();
+	pThis->m_view->inElementDecoratorOperation = true;
+	pThis->m_view->decoratorOrAnnotator = true;
+	pThis->m_view->inOpenedDecoratorTransaction = true;
+	pThis->m_view->shouldCommitOperation = false;
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::XEventSink::GeneralOperationFinished(ULONGLONG operationData)
+{
+	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
+
+	pThis->m_view->inElementDecoratorOperation = false;
+	pThis->m_view->shouldCommitOperation = true;
+
+	return S_OK;
+}
+
 STDMETHODIMP CDecoratorEventSink::XEventSink::WindowMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
 {
 	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
@@ -281,29 +304,6 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::WindowResized(LONG nType, LONG cx,
 
 	pThis->m_view->BeginTransaction();
 	pThis->m_view->inOpenedDecoratorTransaction = true;
-	pThis->m_view->shouldCommitOperation = true;
-
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::XEventSink::GeneralOperationStarted(ULONGLONG operationData)
-{
-	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
-
-	pThis->m_view->BeginTransaction();
-	pThis->m_view->inElementDecoratorOperation = true;
-	pThis->m_view->decoratorOrAnnotator = true;
-	pThis->m_view->inOpenedDecoratorTransaction = true;
-	pThis->m_view->shouldCommitOperation = false;
-
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::XEventSink::GeneralOperationFinished(ULONGLONG operationData)
-{
-	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
-
-	pThis->m_view->inElementDecoratorOperation = false;
 	pThis->m_view->shouldCommitOperation = true;
 
 	return S_OK;

@@ -28,7 +28,7 @@ protected:
 	bool		m_bIconRequired;
 
 public:
-	ReferenceBitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	ReferenceBitmapPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~ReferenceBitmapPart();
 
 // =============== resembles IMgaElementDecorator

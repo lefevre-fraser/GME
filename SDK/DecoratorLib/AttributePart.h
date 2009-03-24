@@ -28,7 +28,7 @@ protected:
 	long			m_textRelYPosition;	// bottom of the text because of the bottom alignment
 
 public:
-	AttributePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	AttributePart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~AttributePart();
 
 	virtual void	Draw						(CDC* pDC, Gdiplus::Graphics* gdip);

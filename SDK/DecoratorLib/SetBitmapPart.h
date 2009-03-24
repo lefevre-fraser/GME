@@ -24,7 +24,7 @@ namespace DecoratorSDK {
 class SetBitmapPart: public TypeableBitmapPart
 {
 public:
-	SetBitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	SetBitmapPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~SetBitmapPart();
 
 // =============== resembles IMgaElementDecorator

@@ -28,7 +28,7 @@ protected:
 	int					m_iTypeInfo;
 
 public:
-	TypeableBitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	TypeableBitmapPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~TypeableBitmapPart();
 
 // =============== resembles IMgaElementDecorator

@@ -18,7 +18,7 @@ namespace UMLDecor {
 //
 //################################################################################################
 
-NewUMLDecorator::NewUMLDecorator(CComPtr<IMgaElementDecoratorEvents> eventSink):
+NewUMLDecorator::NewUMLDecorator(CComPtr<IMgaCommonDecoratorEvents> eventSink):
 	m_part(NULL),
 	m_eventSink(eventSink)
 {

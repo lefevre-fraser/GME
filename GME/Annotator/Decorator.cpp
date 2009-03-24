@@ -2,12 +2,15 @@
 #include "stdafx.h"
 #include "Decorator.h"
 #include "..\MgaUtil\AnnotationUtil.h"
+#include "AnnotationDefs.h"
 
 #include "CommonError.h"
 
 #define VERIFY_INIT   { if (!m_isInitialized) return E_DECORATOR_UNINITIALIZED; }
 #define VERIFY_LOCSET { if (!m_isLocSet) return E_DECORATOR_LOCISNOTSET; }
 
+// From GMEStd.h
+#define GME_GRAYED_OUT_COLOR		RGB(0xde, 0xde, 0xde)
 
 /////////////////////////////////////////////////////////////////////////////
 // CDecorator

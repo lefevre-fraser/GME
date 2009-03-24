@@ -24,7 +24,7 @@ namespace DecoratorSDK {
 class LabelPart: public TextPart
 {
 public:
-	LabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	LabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~LabelPart();
 
 	virtual void	Draw						(CDC* pDC, Gdiplus::Graphics* gdip);

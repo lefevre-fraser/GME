@@ -26,10 +26,10 @@ class NewMetaDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
-	CComPtr<IMgaElementDecoratorEvents>	m_eventSink;
+	CComPtr<IMgaCommonDecoratorEvents>	m_eventSink;
 
 public:
-	NewMetaDecorator(CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	NewMetaDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~NewMetaDecorator();
 
 // =============== resembles IMgaElementDecorator

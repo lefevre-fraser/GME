@@ -278,7 +278,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::SaveState()
 
 // New functions
 STDMETHODIMP CNewBoxDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-												IMgaElementDecoratorEvents* eventSink, ULONGLONG parentWnd)
+												IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -286,7 +286,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 
 	HRESULT retVal = S_OK;
 	try {
-		NewBoxDecorator* newBoxDecorator = new NewBoxDecorator(CComPtr<IMgaElementDecoratorEvents>(eventSink));
+		NewBoxDecorator* newBoxDecorator = new NewBoxDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
 		m_pElementDecorator = newBoxDecorator;
 
 		newBoxDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),

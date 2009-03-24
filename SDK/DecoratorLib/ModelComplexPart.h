@@ -35,7 +35,7 @@ protected:
 	long						m_iLongestPortTextLength;
 
 public:
-	ModelComplexPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	ModelComplexPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~ModelComplexPart();
 
 // =============== resembles IMgaElementDecorator

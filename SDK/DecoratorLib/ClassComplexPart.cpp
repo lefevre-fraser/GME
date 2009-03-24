@@ -19,7 +19,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+ClassComplexPart::ClassComplexPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	VectorPart					(pPart, eventSink),
 
 	m_LabelPart					(NULL),

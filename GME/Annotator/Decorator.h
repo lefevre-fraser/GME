@@ -3,7 +3,6 @@
 #ifndef __DECORATOR_H_
 #define __DECORATOR_H_
 
-#include "DecoratorStd.h"
 #include "DecoratorConfig.h"
 #include "Resource.h"       // main symbols
 #define __Meta_h__

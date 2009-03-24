@@ -20,7 +20,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ObjectAndTextPart::ObjectAndTextPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+ObjectAndTextPart::ObjectAndTextPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	CompositePart(pPart, eventSink)
 {
 }

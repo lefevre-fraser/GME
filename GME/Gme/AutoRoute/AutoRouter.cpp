@@ -9,6 +9,24 @@
 
 #include "GMEView.h"
 
+// Functions for CMapAutoRouterPath2CGuiConnection, see AutoRouter.h
+template<>
+UINT AFXAPI HashKey<CAutoRouterPath*> (CAutoRouterPath* key)
+{
+	return (UINT)key;
+}
+
+typedef CAutoRouterPath* LPCCAutoRouterPath;
+
+template<>
+BOOL AFXAPI CompareElements<LPCCAutoRouterPath, LPCCAutoRouterPath>
+	 (const LPCCAutoRouterPath* pElement1, const LPCCAutoRouterPath* pElement2)
+{
+	if (*pElement1 == *pElement2)
+		return true;
+	return false;
+}
+
 ////////////////////////////////// CAutoRouter //////////////////////////////////
 
 CAutoRouter::CAutoRouter()
@@ -22,6 +40,7 @@ CAutoRouter::~CAutoRouter()
 	ASSERT( router != NULL );
 
 	router->Destroy();
+	mapPath2Conn.RemoveAll();
 }
 
 void CAutoRouter::AutoRoute()
@@ -50,6 +69,8 @@ void CAutoRouter::Fill(CGuiFcoList &fcos)
 
 void CAutoRouter::Clear(CGuiFcoList &fcos)
 {
+	mapPath2Conn.RemoveAll();
+
 	router->DeleteAll();
 
 	POSITION pos = fcos.GetHeadPosition();
@@ -177,7 +198,6 @@ void CAutoRouter::AddFco(CGuiFco *fco)
 	}
 }
 
-
 void CAutoRouter::AddObject(CGuiObject *object)
 {
 	if(CGMEView::IsHugeModel())
@@ -247,9 +267,11 @@ void CAutoRouter::AddConnection(CGuiConnection *conn)
 
 	SetPathPreferences(path, conn);
 	conn->SetRouterPath(path);
-	// hack no 1: this is a little hack: 
-	// only the address is needed, thus it should be void*
-	path->SetExtPtr((ULONGLONG)conn);
+	// Later if we get an IAutoRouterPath from AutoRouterGraph while searching for a connection line,
+	// we want to get the CGuiConnection object corresponding to that path. So we build a hash map for that
+	// (the other association direction is clear: CGuiConnection contains an CComPtr<IAutoRouterPath>)
+	CAutoRouterPath* ap = static_cast<CAutoRouterPath*> (path.p);
+	mapPath2Conn.SetAt(ap, conn);
 }
 
 void CAutoRouter::DeleteObjects(CGuiObjectList &objs)
@@ -302,7 +324,12 @@ void CAutoRouter::DeleteConnection(CGuiConnection *conn)
 	if(CGMEView::IsHugeModel())
 		return;
 	if(conn->GetRouterPath().p) {
-		router->DeletePath(conn->GetRouterPath());
+		{
+			CComPtr<IAutoRouterPath> currPath = conn->GetRouterPath();
+			// Update the hash map, otherwise it could contain destroyed CGuiConnection* object pointers
+			mapPath2Conn.RemoveKey(static_cast<CAutoRouterPath*> (currPath.p));
+			router->DeletePath(currPath);
+		}
 		CComPtr<IAutoRouterPath> path;
 		conn->SetRouterPath(path);
 	}
@@ -319,10 +346,14 @@ CGuiConnection *CAutoRouter::FindConnection(CPoint &pt) const
 
 	if (path.p != NULL)
 	{
-		// hack no 2: this is the same hack as in hack no 1.
-		ULONGLONG address;
-		path->GetExtPtr(&address);
-		return (CGuiConnection*)(address);
+		// We could get an IAutoRouterPath from AutoRouterGraph while searching for a connection line,
+		// we want to get the CGuiConnection object corresponding to that path. We have a hash map for that
+		// (the other association direction is clear: CGuiConnection contains an CComPtr<IAutoRouterPath>)
+		CGuiConnection* connAddr = NULL;
+		CAutoRouterPath* ap = static_cast<CAutoRouterPath*> (path.p);
+		mapPath2Conn.Lookup(ap, connAddr);
+
+		return connAddr;
 	}
 	else
 	{

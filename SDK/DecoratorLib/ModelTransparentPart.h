@@ -33,7 +33,7 @@ protected:
 //	Offscreen bitmap
 
 public:
-	ModelTransparentPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	ModelTransparentPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~ModelTransparentPart();
 
 // =============== resembles IMgaElementDecorator

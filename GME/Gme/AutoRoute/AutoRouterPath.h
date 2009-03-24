@@ -172,16 +172,11 @@ private:
 
 
 private:
-	//this is a little hack: 
-	//only the address is needed, thus it should be void*
-	ULONGLONG extptr;
 
 public:
 	STDMETHOD(GetOwner)(IAutoRouterGraph** result);
 	STDMETHOD(SetEndDir)(long arpath_end);
 	STDMETHOD(SetStartDir)(long arpath_start);
-	STDMETHOD(GetExtPtr)(ULONGLONG* address);
-	STDMETHOD(SetExtPtr)(ULONGLONG address);
 	STDMETHOD(GetPointList)(SAFEARRAY **pArr);
 	STDMETHOD(Destroy)();
 };

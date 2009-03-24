@@ -12,7 +12,7 @@
 #include "StdAfx.h"
 #include "ClassComplexPart.h"
 
-#include "DecoratorStd.h"
+#include "AnnotationDefs.h"
 
 
 namespace AnnotatorDecor {
@@ -41,7 +41,7 @@ protected:
 	LOGFONT					m_logFont;
 
 public:
-	AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~AnnotatorTextPart();
 
 // =============== resembles IMgaElementDecorator

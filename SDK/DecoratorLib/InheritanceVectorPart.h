@@ -33,7 +33,7 @@ protected:
 	InheritanceType		m_inheritanceType;
 
 public:
-	InheritanceVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink,
+	InheritanceVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink,
 						  long inheritanceWidth, long inheritanceHeight, InheritanceType inheritanceType);
 	virtual ~InheritanceVectorPart();
 

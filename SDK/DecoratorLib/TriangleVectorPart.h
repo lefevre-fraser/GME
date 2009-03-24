@@ -28,7 +28,7 @@ protected:
 	long						m_triangleHeight;
 
 public:
-	TriangleVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, long triangleWidth, long triangleHeight);
+	TriangleVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, long triangleWidth, long triangleHeight);
 	virtual ~TriangleVectorPart();
 
 // =============== resembles IMgaElementDecorator

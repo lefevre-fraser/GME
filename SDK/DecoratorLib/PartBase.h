@@ -30,7 +30,7 @@ class PartBase: public PartInterface
 {
 protected:
 	PartBase*						m_parentPart;
-	CComPtr<IMgaElementDecoratorEvents>	m_eventSink;
+	CComPtr<IMgaCommonDecoratorEvents>	m_eventSink;
 
 	CComPtr<IMgaProject>			m_spProject;
 	CComPtr<IMgaMetaPart>			m_spPart;
@@ -49,7 +49,7 @@ protected:
 	bool							m_bResizable;
 
 public:
-	PartBase(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	PartBase(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~PartBase();
 
 	virtual void	SetParentPart				(PartBase* pPart) { m_parentPart = pPart; };
@@ -110,6 +110,9 @@ public:
 	virtual void	LabelResizingFinished		(UINT nType, CRect& locatiot);
 	virtual void	LabelResized				(UINT nType, CSize& size);
 
+	virtual void	GeneralOperationStarted		(void* operationData);
+	virtual void	GeneralOperationFinished	(void* operationData);
+
 	virtual void	WindowMovingStarted			(UINT nType, CRect& location);
 	virtual void	WindowMoving				(UINT nSide, CRect& location);
 	virtual void	WindowMovingFinished		(UINT nType, CRect& location);
@@ -119,9 +122,6 @@ public:
 	virtual void	WindowResizing				(UINT nSide, CRect& location);
 	virtual void	WindowResizingFinished		(UINT nType, CRect& location);
 	virtual void	WindowResized				(UINT nType, CSize& size);
-
-	virtual void	GeneralOperationStarted		(void* operationData);
-	virtual void	GeneralOperationFinished	(void* operationData);
 
 // === Helper functions ===
 	virtual ECoordRefPoint	GetAlignment		(ELocation loc) const;

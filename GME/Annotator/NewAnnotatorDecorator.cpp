@@ -18,7 +18,7 @@ namespace AnnotatorDecor {
 //
 //################################################################################################
 
-NewAnnotatorDecorator::NewAnnotatorDecorator(CComPtr<IMgaElementDecoratorEvents>& eventSink):
+NewAnnotatorDecorator::NewAnnotatorDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	m_part(NULL),
 	m_eventSink(eventSink)
 {

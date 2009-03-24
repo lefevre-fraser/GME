@@ -28,7 +28,7 @@ protected:
 	long						m_diamondHeight;
 
 public:
-	DiamondVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, long diamondWidth, long diamondHeight);
+	DiamondVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, long diamondWidth, long diamondHeight);
 	virtual ~DiamondVectorPart();
 
 // =============== resembles IMgaElementDecorator

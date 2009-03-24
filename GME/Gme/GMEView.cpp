@@ -28,6 +28,8 @@
 
 #include "GMEOLEModel.h"
 
+//#include <sys/timeb.h>
+
 CGraphics graphics;
 static CViewList viewsToKill;
 
@@ -5037,6 +5039,22 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 		else {
 			OnViewParent();	// double click on model background brings up the parent model
 							// user requested standard behavior
+			/* Auto Router stress test
+			struct _timeb measuerementStartTime;
+			_ftime(&measuerementStartTime);
+			CString structSizeStr;
+			structSizeStr.Format("sizeof(SAutoRouterEdge) = %ld\n", sizeof(SAutoRouterEdge));
+			OutputDebugString(structSizeStr);
+			for (long i = 0; i < 1000; i++)
+				AutoRoute();
+			struct _timeb measuerementEndTime;
+			_ftime(&measuerementEndTime);
+			unsigned long elapsedSeconds = (unsigned long)(measuerementEndTime.time - measuerementStartTime.time);
+			short elapsedMilliSeconds = (unsigned long)(measuerementEndTime.millitm - measuerementStartTime.millitm);
+			CString elapsedTimeStr;
+			elapsedTimeStr.Format("Ellapsed seconds: %lu + millisecond %d\n", elapsedSeconds, elapsedMilliSeconds);
+			OutputDebugString(elapsedTimeStr);
+			Reset();*/
 		}
 	}
 	CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);

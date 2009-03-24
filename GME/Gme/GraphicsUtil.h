@@ -2,25 +2,27 @@
 #define GME_GraphicsUtil_h
 
 #include <map>
+#include <vector>
 
 typedef CTypedPtrList<CPtrList, Gdiplus::Font*>					GdipFontList;
 typedef CTypedPtrMap<CMapPtrToPtr, void*, Gdiplus::Pen*>		GdipPenTable;
 typedef CTypedPtrMap<CMapPtrToPtr, void*, Gdiplus::SolidBrush*>	GdipBrushTable;
 
 
-class CArrowHead {
+class CArrowHead
+{
 public:
-	CArrowHead(int dir, int* xCoords, int* yCoords, int numln);
+	CArrowHead(int dir, const std::vector<CPoint>& coords);
 	~CArrowHead();
 public:
-	int segments;
-	CPoint* path;
+	std::vector<CPoint> path;
 
 public:
-	void Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, CPoint& tip, bool bPen);
+	void Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen);
 };
 
-class CGraphics {
+class CGraphics
+{
 public:
 	CGraphics();
 	~CGraphics();

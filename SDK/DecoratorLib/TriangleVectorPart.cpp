@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-TriangleVectorPart::TriangleVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink,
+TriangleVectorPart::TriangleVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink,
 									   long triangleWidth, long triangleHeight):
 	VectorPart(pPart, eventSink),
 	m_triangleWidth(triangleWidth),

@@ -279,7 +279,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::SaveState()
 
 // New functions
 STDMETHODIMP CNewMetaDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-												 IMgaElementDecoratorEvents* eventSink, ULONGLONG parentWnd)
+												 IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -287,7 +287,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMeta
 
 	HRESULT retVal = S_OK;
 	try {
-		MetaDecor::NewMetaDecorator* newMetaDecorator = new MetaDecor::NewMetaDecorator(CComPtr<IMgaElementDecoratorEvents>(eventSink));
+		MetaDecor::NewMetaDecorator* newMetaDecorator = new MetaDecor::NewMetaDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
 		m_pElementDecorator = newMetaDecorator;
 
 		newMetaDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),

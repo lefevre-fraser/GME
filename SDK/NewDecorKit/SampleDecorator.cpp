@@ -21,7 +21,7 @@ namespace SampleDecor {
 //
 //################################################################################################
 
-SampleDecorator::SampleDecorator(CComPtr<IMgaElementDecoratorEvents>& eventSink):
+SampleDecorator::SampleDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	m_part(NULL),
 	m_eventSink(eventSink)
 {

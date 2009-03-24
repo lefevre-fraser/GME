@@ -26,7 +26,7 @@ namespace MetaDecor {
 //
 //################################################################################################
 
-MetaClassPart::MetaClassPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, ShapeCode shape,
+MetaClassPart::MetaClassPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, ShapeCode shape,
 							 const CString& stereotypeName):
 	ClassComplexPart(pPart, eventSink),
 	m_shape				(shape),

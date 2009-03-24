@@ -18,7 +18,7 @@ namespace UMLDecor {
 //
 //################################################################################################
 
-UMLStereoLabelPart::UMLStereoLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents> eventSink, CComPtr<IMgaFCO>& pFCO):
+UMLStereoLabelPart::UMLStereoLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents> eventSink, CComPtr<IMgaFCO>& pFCO):
 	DecoratorSDK::StereoLabelPart(pPart, eventSink),
 	m_spActualFCO(pFCO)
 {

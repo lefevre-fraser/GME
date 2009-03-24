@@ -156,6 +156,7 @@ private:
 	void CenterStairsInPathPoints(CComObjPtr<CAutoRouterPath> path);
 	void SimplifyPathPoints(CComObjPtr<CAutoRouterPath> path);
 	void ConnectAllDisconnectedPaths();
+	bool IsEdgeFixed(const CPoint& startpoint, const CPoint& endpoint);
 
 public:
 	STDMETHOD(CreateBox)(IAutoRouterBox** result);
@@ -166,7 +167,8 @@ public:
 	STDMETHOD(DeletePath)(IAutoRouterPath* path);
 	STDMETHOD(DeleteAll)();
 	STDMETHOD(GetPathAt)(long pointX, long pointY, long nearness, IAutoRouterPath** result);
-	STDMETHOD(AddPath)( IAutoRouterPort* startport,  IAutoRouterPort* endport, IAutoRouterPath** result);
+	STDMETHOD(AddPath)(IAutoRouterPort* startport,  IAutoRouterPort* endport, IAutoRouterPath** result);
+	STDMETHOD(IsEdgeFixed)(long startX, long startY, long endX, long endY, VARIANT_BOOL* result);
 	STDMETHOD(Destroy)();
 
 private:

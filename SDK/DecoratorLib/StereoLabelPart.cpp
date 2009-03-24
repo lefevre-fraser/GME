@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-StereoLabelPart::StereoLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+StereoLabelPart::StereoLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	TextPart(pPart, eventSink)
 {
 	textStringVariableName		= "";	// disable

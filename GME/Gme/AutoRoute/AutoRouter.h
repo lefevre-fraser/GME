@@ -1,12 +1,28 @@
 #ifndef GME_AutoRouter_h
 #define GME_AutoRouter_h
 
-class CAutoRouterBox;
-class CAutoRouterPort;
-class CAutoRouterPath;
-class CAutoRouterGraph;
+#include "stdafx.h"
+#include "afxcoll.h"
+#include "afxtempl.h"
+
+#include "AutoRouterPath.h"
+
+class CGuiConnection;
 
 typedef CList<CPoint, CPoint&>	CPointList;
+typedef CMap<CAutoRouterPath*, CAutoRouterPath*, CGuiConnection*, CGuiConnection* > CMapAutoRouterPath2CGuiConnection;
+
+// Functions for CMapAutoRouterPath2CGuiConnection, see AutoRouter.h
+template<>
+UINT AFXAPI HashKey< CAutoRouterPath* > (CAutoRouterPath* key);
+
+typedef CAutoRouterPath* LPCCAutoRouterPath;
+
+template<>
+BOOL AFXAPI CompareElements< LPCCAutoRouterPath, LPCCAutoRouterPath >
+	 (const LPCCAutoRouterPath* pElement1, const LPCCAutoRouterPath* pElement2);
+// End of functions for CMapAutoRouterPath2CGuiConnection, see AutoRouter.h
+
 
 class CAutoRouter {
 public:
@@ -18,6 +34,7 @@ public:
 public:
 	CComPtr<IAutoRouterGraph> router;
 	int routeret;
+	CMapAutoRouterPath2CGuiConnection mapPath2Conn;
 
 public:
 	void AutoRoute();

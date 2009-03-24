@@ -484,8 +484,9 @@ interface IAutoRouterGraph : IDispatch
 	[id(7)] HRESULT DeleteAll();
 	[id(8)] HRESULT GetPathAt([in] long pointX, [in] long pointY, [in] long nearness, [out, retval] IAutoRouterPath** result);
 	[id(9)] HRESULT AddPath([in] IAutoRouterPort* startport, [in] IAutoRouterPort* endport, [out, retval] IAutoRouterPath** result);
+	[id(10)] HRESULT IsEdgeFixed([in] long startX, [in] long startY, [in] long endX, [in] long endY, [out, retval] VARIANT_BOOL* result);
 
-	[id(10)] HRESULT Destroy();
+	[id(11)] HRESULT Destroy();
 };
 
 [
@@ -501,9 +502,7 @@ interface IAutoRouterPath : IDispatch
 	[id(1)] HRESULT GetOwner([out, retval] IAutoRouterGraph** result);
 	[id(2)] HRESULT SetEndDir([in] long arpath_end);
 	[id(3)] HRESULT SetStartDir([in] long arpath_start);
-	[id(4)] HRESULT GetExtPtr([out, retval] ULONGLONG* address);
-	[id(5)] HRESULT SetExtPtr([in] ULONGLONG address);
-	[id(6)] HRESULT GetPointList([in, out] SAFEARRAY(long) *pArr);
+	[id(4)] HRESULT GetPointList([in, out] SAFEARRAY(long) *pArr);
 
-	[id(7)] HRESULT Destroy();
+	[id(5)] HRESULT Destroy();
 };

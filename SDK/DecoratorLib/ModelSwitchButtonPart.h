@@ -29,7 +29,7 @@ protected:
 	bool				m_bCursorSaved;
 
 public:
-	ModelSwitchButtonPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	ModelSwitchButtonPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~ModelSwitchButtonPart();
 
 // =============== resembles IMgaElementDecorator

@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-EllipseVectorPart::EllipseVectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink,
+EllipseVectorPart::EllipseVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink,
 									 long ellipseWidth, long ellipseHeight):
 	VectorPart(pPart, eventSink),
 	m_ellipseWidth(ellipseWidth),

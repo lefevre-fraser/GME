@@ -29,7 +29,7 @@ protected:
 	int					m_iTypeInfo;
 
 public:
-	TypeableLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	TypeableLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~TypeableLabelPart();
 
 	virtual void	Draw						(CDC* pDC, Gdiplus::Graphics* gdip);

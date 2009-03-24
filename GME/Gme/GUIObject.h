@@ -383,7 +383,7 @@ class CGuiConnection : public CGuiFco
 {
 public:
 	CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role, CGMEView *vw, int numAsp, bool resolve = true);
-	virtual ~CGuiConnection() { delete labelset; delete visible; }
+	virtual ~CGuiConnection() { delete visible; }
 
 	void RefreshAttributeCache();
 	CComPtr<IAutoRouterPath> GetRouterPath()				{ return routerPath; }
@@ -395,6 +395,7 @@ public:
 	void Resolve();
 	void ReadARPreferences();
 	bool GetARPref(int dir) const { return autorouterPrefs[dir]; }
+	void GetPointList(CPointList& points) const;
 
 	virtual bool IsVisible(int aspect = -1)				{ return visible && visible[aspect < 0 ? parentAspect : aspect]; }
 	virtual void RemoveFromRouter(CAutoRouter &router);
@@ -411,7 +412,7 @@ public:
 
 private:
 	CComPtr<IAutoRouterPath> routerPath;
-	CGuiConnectionLabelSet*	labelset;
+	CGuiConnectionLabelSet labelset;
 	bool* visible;
 	int lineType;
 	int srcStyle;

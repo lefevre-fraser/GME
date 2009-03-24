@@ -27,7 +27,7 @@ class TextPart;
 class ObjectAndTextPart: public CompositePart
 {
 public:
-	ObjectAndTextPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	ObjectAndTextPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~ObjectAndTextPart();
 
 public:		// new functions

@@ -28,7 +28,7 @@ protected:
 	VARIANT								m_vValue;
 
 public:
-	AnnotatorCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	AnnotatorCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~AnnotatorCompositePart();
 
 // =============== resembles IMgaElementDecorator

@@ -2195,23 +2195,25 @@ void CGuiConnectionLabel::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConn
 
 CGuiConnectionLabelSet::CGuiConnectionLabelSet()
 {
-	for(int i = 0; i < GME_CONN_LABEL_NUM; i++)
-		labels[i].SetPrimary((i % 2) ? false : true);
+	labels[GME_CONN_SRC_LABEL1].SetPrimary(false);
+	labels[GME_CONN_SRC_LABEL2].SetPrimary(true);
+	labels[GME_CONN_DST_LABEL1].SetPrimary(false);
+	labels[GME_CONN_DST_LABEL2].SetPrimary(true);
 	labels[GME_CONN_MAIN_LABEL].SetPrimary(true);
 }
 
-void CGuiConnectionLabelSet::SetLabel(int index,CString &label)
+void CGuiConnectionLabelSet::SetLabel(int index, CString &label)
 {
-	if(index < 0 || index >= GME_CONN_LABEL_NUM)
+	if (index < 0 || index >= GME_CONN_LABEL_NUM)
 		return;
 	labels[index].SetLabel(label);
 }
 
-void CGuiConnectionLabelSet::SetLocation(int index,CPoint &endPoint,CPoint &nextPoint,CRect &box)
+void CGuiConnectionLabelSet::SetLocation(int index, CPoint &endPoint, CPoint &nextPoint, CRect &box)
 {
-	if(index < 0 || index >= GME_CONN_LABEL_NUM)
+	if (index < 0 || index >= GME_CONN_LABEL_NUM)
 		return;
-	labels[index].SetLocation(endPoint,nextPoint,box);
+	labels[index].SetLocation(endPoint, nextPoint, box);
 }
 
 void CGuiConnectionLabelSet::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection *conn)
@@ -2299,20 +2301,19 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role
 	{
 		ReadARPreferences();
 	}
-	labelset = new CGuiConnectionLabelSet;
 	{
 		CString pref;
 
 		GetPreference(pref,CONN_LABEL_FORMATSTR_PREF);
-		labelset->SetLabel(GME_CONN_MAIN_LABEL, pref);
+		labelset.SetLabel(GME_CONN_MAIN_LABEL, pref);
 		GetPreference(pref,CONN_SRC_LABEL1_PREF);
-		labelset->SetLabel(GME_CONN_SRC_LABEL1, pref);
+		labelset.SetLabel(GME_CONN_SRC_LABEL1, pref);
 		GetPreference(pref,CONN_SRC_LABEL2_PREF);
-		labelset->SetLabel(GME_CONN_SRC_LABEL2, pref);
+		labelset.SetLabel(GME_CONN_SRC_LABEL2, pref);
 		GetPreference(pref,CONN_DST_LABEL1_PREF);
-		labelset->SetLabel(GME_CONN_DST_LABEL1, pref);
+		labelset.SetLabel(GME_CONN_DST_LABEL1, pref);
 		GetPreference(pref,CONN_DST_LABEL2_PREF);
-		labelset->SetLabel(GME_CONN_DST_LABEL2, pref);
+		labelset.SetLabel(GME_CONN_DST_LABEL2, pref);
 	}
 	if(!GetColorPreference(color,COLOR_PREF)) {
 		color = GME_BLACK_COLOR;
@@ -2523,60 +2524,21 @@ void CGuiConnection::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 	VERIFY(src->IsVisible());
 	VERIFY(dst->IsVisible());
 
-	CPointList tmpPoints;
-	if(!routerPath.p) {
-		CPoint start = srcPort->GetLocation().CenterPoint() + src->GetLocation().TopLeft();
-		CPoint end   = dstPort->GetLocation().CenterPoint() + dst->GetLocation().TopLeft();
-		tmpPoints.AddHead(start);
-		tmpPoints.AddTail(end);
+	CPointList points;
+	GetPointList(points);
+
+	if (points.GetSize() <= 0) {
+		ASSERT(false);
+		return;
 	}
-
-
-	//retrieve data from AutoRouter
-	CPointList normalPoints;
-
-	//if not NULL
-	if (routerPath.p)
-	{
-		//CAutoRouterPath* p = static_cast<CAutoRouterPath*>(routerPath.p);
-
-		// TODO: using CComSafeArray anywhere, see http://msdn.microsoft.com/de-de/library/3xzbsee8.aspx
-		//There was a problem with uninitialized safearrays, so create a dummy:
-		SAFEARRAY* pArr;
-		SAFEARRAYBOUND bound[1];
-		bound[0].lLbound = 0;
-		bound[0].cElements = 2;
-
-		pArr = SafeArrayCreate(VT_I4,1,bound);
-
-		COMTHROW(routerPath->GetPointList(&pArr));
-
-		//one dim., long elements
-		if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
-		{
-			//length
-			long elementNum = (pArr)->rgsabound[0].cElements;
-
-			//lock it before use
-			SafeArrayLock(pArr);
-			long* pArrElements = (long*) (pArr)->pvData;
-
-			for (int i = 0; i < elementNum / 2; i++)
-			{
-				CPoint p(pArrElements[2 * i], pArrElements[2 * i + 1]);
-				normalPoints.AddTail(p);
-			}
-
-			SafeArrayUnlock(pArr);
-		}
-		//clear memory
-		SafeArrayDestroy(pArr);
-	}
-
-	const CPointList &points = routerPath.p ? normalPoints : tmpPoints;
 
 	graphics.DrawConnection(gdip, points, grayedOut ? GME_GRAYED_OUT_COLOR : color, lineType, srcStyle, dstStyle,
 							true, view->m_zoomVal > ZOOM_NO, selected ? 3 : hovered ? 5 : 1);
+
+	if (points.GetSize() < 2) {
+		ASSERT(false);
+		return;
+	}
 
 	POSITION pos = points.GetHeadPosition();
 	CPoint start = points.GetNext(pos);
@@ -2596,16 +2558,16 @@ void CGuiConnection::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 
 	CRect locTemp;
 	locTemp = src->GetLocation();
-	labelset->SetLocation(0, start, start2, locTemp);
-	labelset->SetLocation(1, start, start2, locTemp);
+	labelset.SetLocation(0, start, start2, locTemp);
+	labelset.SetLocation(1, start, start2, locTemp);
 	locTemp = dst->GetLocation();
-	labelset->SetLocation(2, end, end2, locTemp);
-	labelset->SetLocation(3, end, end2, locTemp);
+	labelset.SetLocation(2, end, end2, locTemp);
+	labelset.SetLocation(3, end, end2, locTemp);
 	locTemp = CRect(0,0,0,0);
-	labelset->SetLocation(GME_CONN_MAIN_LABEL, middle, middle2, locTemp);
+	labelset.SetLocation(GME_CONN_MAIN_LABEL, middle, middle2, locTemp);
 
 
-	labelset->Draw(gdip, (grayedOut ? GME_GRAYED_OUT_COLOR : nameColor), this);
+	labelset.Draw(gdip, (grayedOut ? GME_GRAYED_OUT_COLOR : nameColor), this);
 }
 
 void CGuiConnection::RemoveFromRouter(CAutoRouter &router)
@@ -2695,24 +2657,75 @@ void CGuiConnection::ReadARPreferences()
 {
 	CString val;
 	if (GetPreference(val, AUTOROUTER_PREF)) {
-		autorouterPrefs[GME_START_NORTH] = (val.Find("N") != -1);
-		autorouterPrefs[GME_START_EAST] = (val.Find("E") != -1);
-		autorouterPrefs[GME_START_SOUTH] = (val.Find("S") != -1);
-		autorouterPrefs[GME_START_WEST] = (val.Find("W") != -1);
-		autorouterPrefs[GME_END_NORTH] = (val.Find("n") != -1);
-		autorouterPrefs[GME_END_EAST] = (val.Find("e") != -1);
-		autorouterPrefs[GME_END_SOUTH] = (val.Find("s") != -1);
-		autorouterPrefs[GME_END_WEST] = (val.Find("w") != -1);
+		autorouterPrefs[GME_START_NORTH]	= (val.Find("N") != -1);
+		autorouterPrefs[GME_START_EAST]		= (val.Find("E") != -1);
+		autorouterPrefs[GME_START_SOUTH]	= (val.Find("S") != -1);
+		autorouterPrefs[GME_START_WEST]		= (val.Find("W") != -1);
+		autorouterPrefs[GME_END_NORTH]		= (val.Find("n") != -1);
+		autorouterPrefs[GME_END_EAST]		= (val.Find("e") != -1);
+		autorouterPrefs[GME_END_SOUTH]		= (val.Find("s") != -1);
+		autorouterPrefs[GME_END_WEST]		= (val.Find("w") != -1);
+	} else {
+		autorouterPrefs[GME_START_NORTH]	= false;
+		autorouterPrefs[GME_START_EAST]		= false;
+		autorouterPrefs[GME_START_SOUTH]	= false;
+		autorouterPrefs[GME_START_WEST]		= false;
+		autorouterPrefs[GME_END_NORTH]		= false;
+		autorouterPrefs[GME_END_EAST]		= false;
+		autorouterPrefs[GME_END_SOUTH]		= false;
+		autorouterPrefs[GME_END_WEST]		= false;
 	}
-	else {
-		autorouterPrefs[GME_START_NORTH] = false;
-		autorouterPrefs[GME_START_EAST] = false;
-		autorouterPrefs[GME_START_SOUTH] = false;
-		autorouterPrefs[GME_START_WEST] = false;
-		autorouterPrefs[GME_END_NORTH] = false;
-		autorouterPrefs[GME_END_EAST] = false;
-		autorouterPrefs[GME_END_SOUTH] = false;
-		autorouterPrefs[GME_END_WEST] = false;
+}
+
+void CGuiConnection::GetPointList(CPointList& points) const
+{
+	if (routerPath.p)
+	{
+		//retrieve data from AutoRouter
+		//CAutoRouterPath* p = static_cast<CAutoRouterPath*>(routerPath.p);
+
+		// TODO: using CComSafeArray anywhere, see http://msdn.microsoft.com/de-de/library/3xzbsee8.aspx
+		//There was a problem with uninitialized safearrays, so create a dummy:
+		SAFEARRAY* pArr;
+		SAFEARRAYBOUND bound[1];
+		bound[0].lLbound = 0;
+		bound[0].cElements = 2;
+
+		pArr = SafeArrayCreate(VT_I4,1,bound);
+
+		COMTHROW(routerPath->GetPointList(&pArr));
+
+		//one dim., long elements
+		if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
+		{
+			//length
+			long elementNum = (pArr)->rgsabound[0].cElements;
+
+			if (elementNum > 0)
+			{
+				//lock it before use
+				SafeArrayLock(pArr);
+				long* pArrElements = (long*) (pArr)->pvData;
+
+				for (int i = 0; i < elementNum / 2; i++)
+				{
+					CPoint p(pArrElements[2 * i], pArrElements[2 * i + 1]);
+					points.AddTail(p);
+				}
+
+				SafeArrayUnlock(pArr);
+			}
+		}
+		//clear memory
+		SafeArrayDestroy(pArr);
+	}
+
+	if (!routerPath.p || points.GetSize() <= 0)
+	{
+		CPoint start = srcPort->GetLocation().CenterPoint() + src->GetLocation().TopLeft();
+		CPoint end   = dstPort->GetLocation().CenterPoint() + dst->GetLocation().TopLeft();
+		points.AddHead(start);
+		points.AddTail(end);
 	}
 }
 

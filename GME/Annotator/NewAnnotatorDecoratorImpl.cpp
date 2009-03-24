@@ -270,7 +270,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::SaveState()
 
 // New functions
 STDMETHODIMP CNewAnnotatorDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-													  IMgaElementDecoratorEvents* eventSink, ULONGLONG parentWnd)
+													  IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -278,7 +278,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::InitializeEx(IMgaProject* pProject, IMg
 
 	HRESULT retVal = S_OK;
 	try {
-		AnnotatorDecor::NewAnnotatorDecorator* newAnnotatorDecorator = new AnnotatorDecor::NewAnnotatorDecorator(CComPtr<IMgaElementDecoratorEvents>(eventSink));
+		AnnotatorDecor::NewAnnotatorDecorator* newAnnotatorDecorator = new AnnotatorDecor::NewAnnotatorDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
 		m_pElementDecorator = newAnnotatorDecorator;
 		m_pElementDecorator->SetParam(m_bstrName, m_vValue);
 		newAnnotatorDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),

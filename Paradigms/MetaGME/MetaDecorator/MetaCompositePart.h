@@ -24,7 +24,7 @@ namespace MetaDecor {
 	class MetaCompositePart: public DecoratorSDK::ObjectAndTextPart
 {
 public:
-	MetaCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	MetaCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~MetaCompositePart();
 
 // =============== resembles IMgaElementDecorator

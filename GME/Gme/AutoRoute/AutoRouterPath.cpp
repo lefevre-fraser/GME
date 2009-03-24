@@ -13,8 +13,7 @@ CAutoRouterPath::CAutoRouterPath(): owner(NULL),
 					startport(NULL),
 					endport(NULL),
 					attributes(ARPATH_Default),
-					state(ARPATHST_Default),
-					extptr(NULL)
+					state(ARPATHST_Default)
 {
 }
 
@@ -476,18 +475,6 @@ STDMETHODIMP CAutoRouterPath::SetEndDir(long arpath_end)
 STDMETHODIMP CAutoRouterPath::SetStartDir(long arpath_start)
 {
 	attributes = (attributes & ~ARPATH_StartMask) + (unsigned int)arpath_start;
-	return S_OK;
-}
-
-STDMETHODIMP CAutoRouterPath::GetExtPtr(ULONGLONG* address)
-{
-	*address = extptr;
-	return S_OK;
-}
-
-STDMETHODIMP CAutoRouterPath::SetExtPtr(ULONGLONG address)
-{
-	extptr = address;
 	return S_OK;
 }
 

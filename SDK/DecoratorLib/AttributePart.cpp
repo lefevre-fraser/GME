@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-AttributePart::AttributePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+AttributePart::AttributePart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	TextPart(pPart, eventSink)
 {
 	textStringVariableName		= "";	// disable

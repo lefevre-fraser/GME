@@ -975,6 +975,21 @@ void CAutoRouterGraph::ConnectAllDisconnectedPaths()
 	}
 }
 
+bool CAutoRouterGraph::IsEdgeFixed(const CPoint& startpoint, const CPoint& endpoint)
+{
+	EArDir d = GetDir(endpoint - startpoint);
+	int h = IsHorizontal(d);
+
+	CAutoRouterEdgeList& elist = GetEdgeList(h);
+
+	SAutoRouterEdge* edge = elist.GetEdge(&startpoint, &endpoint);
+	if (edge != NULL)
+		return edge->edge_fixed;
+
+	ASSERT(false);
+	return true;
+}
+
 // --- SelfPoints
 
 void CAutoRouterGraph::CalculateSelfPoints()
@@ -1245,6 +1260,17 @@ STDMETHODIMP CAutoRouterGraph::AddPath(IAutoRouterPort* startport, IAutoRouterPo
 	Add(path);
 
 	return path->QueryInterface(IID_IAutoRouterPath,(void**)result);
+}
+
+STDMETHODIMP CAutoRouterGraph::IsEdgeFixed(long startX, long startY, long endX, long endY, VARIANT_BOOL* result)
+{
+	bool isFixed = IsEdgeFixed(CPoint(startX, startY), CPoint(endX, endY));
+	if (isFixed)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
 }
 
 STDMETHODIMP CAutoRouterGraph::Destroy() 

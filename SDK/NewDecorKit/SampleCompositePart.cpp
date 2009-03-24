@@ -32,7 +32,7 @@ namespace SampleDecor {
 //
 //################################################################################################
 
-SampleCompositePart::SampleCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+SampleCompositePart::SampleCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	ObjectAndTextPart(pPart, eventSink)
 {
 }

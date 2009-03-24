@@ -29,10 +29,10 @@ class SampleDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
-	CComPtr<IMgaElementDecoratorEvents>	m_eventSink;
+	CComPtr<IMgaCommonDecoratorEvents>	m_eventSink;
 
 public:
-	SampleDecorator(CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	SampleDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~SampleDecorator();
 
 // =============== resembles IMgaElementDecorator

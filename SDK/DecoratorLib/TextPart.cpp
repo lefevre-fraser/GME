@@ -21,7 +21,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-TextPart::TextPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+TextPart::TextPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	PartBase			(pPart, eventSink),
 	resizeLogic			(NULL),
 	m_bCursorSaved		(false),

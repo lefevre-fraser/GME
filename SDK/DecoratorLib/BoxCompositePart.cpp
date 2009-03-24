@@ -25,7 +25,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-BoxCompositePart::BoxCompositePart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+BoxCompositePart::BoxCompositePart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	ObjectAndTextPart(pPart, eventSink)
 {
 }

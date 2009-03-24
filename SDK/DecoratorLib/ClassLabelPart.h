@@ -28,7 +28,7 @@ protected:
 	bool		m_bIsAbstract;
 
 public:
-	ClassLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, bool bIsAbstract);
+	ClassLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, bool bIsAbstract);
 	virtual ~ClassLabelPart();
 
 	virtual void	Draw						(CDC* pDC, Gdiplus::Graphics* gdip);

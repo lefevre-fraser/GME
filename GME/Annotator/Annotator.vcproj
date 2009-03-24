@@ -431,10 +431,6 @@
 				>
 			</File>
 			<File
-				RelativePath="DecoratorStd.h"
-				>
-			</File>
-			<File
 				RelativePath=".\NewAnnotatorDecorator.h"
 				>
 			</File>

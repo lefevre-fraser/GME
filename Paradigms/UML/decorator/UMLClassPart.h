@@ -24,7 +24,7 @@ namespace UMLDecor {
 class UMLClassPart: public DecoratorSDK::ClassComplexPart
 {
 public:
-	UMLClassPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents> eventSink);
+	UMLClassPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents> eventSink);
 	virtual ~UMLClassPart();
 
 // =============== resembles IMgaElementDecorator

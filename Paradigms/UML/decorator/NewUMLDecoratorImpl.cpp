@@ -278,7 +278,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::SaveState()
 
 // New functions
 STDMETHODIMP CNewUMLDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-												IMgaElementDecoratorEvents* eventSink, ULONGLONG parentWnd)
+												IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -286,7 +286,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 
 	HRESULT retVal = S_OK;
 	try {
-		UMLDecor::NewUMLDecorator* newUMLDecorator = new UMLDecor::NewUMLDecorator(CComPtr<IMgaElementDecoratorEvents>(eventSink));
+		UMLDecor::NewUMLDecorator* newUMLDecorator = new UMLDecor::NewUMLDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
 		m_pElementDecorator = newUMLDecorator;
 
 		newUMLDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),

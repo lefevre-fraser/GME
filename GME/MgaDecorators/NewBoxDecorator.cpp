@@ -22,7 +22,7 @@
 //
 //################################################################################################
 
-NewBoxDecorator::NewBoxDecorator(CComPtr<IMgaElementDecoratorEvents>& eventSink):
+NewBoxDecorator::NewBoxDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	m_part(NULL),
 	m_eventSink(eventSink)
 {

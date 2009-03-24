@@ -23,7 +23,7 @@ namespace UMLDecor {
 //
 //################################################################################################
 
-UMLClassPart::UMLClassPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaElementDecoratorEvents> eventSink):
+UMLClassPart::UMLClassPart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents> eventSink):
 	ClassComplexPart(pPart, eventSink)
 {
 }

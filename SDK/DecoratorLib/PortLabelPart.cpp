@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-PortLabelPart::PortLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+PortLabelPart::PortLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	LabelPart(pPart, eventSink)
 {
 	m_bInsideContainer	= true;

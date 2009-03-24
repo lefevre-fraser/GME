@@ -17,7 +17,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-PortBitmapPart::PortBitmapPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink, const CPoint& ptInner):
+PortBitmapPart::PortBitmapPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, const CPoint& ptInner):
 	TypeableBitmapPart(pPart, eventSink),
 	m_ptInner(ptInner)
 {

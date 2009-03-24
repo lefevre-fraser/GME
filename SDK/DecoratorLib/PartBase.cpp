@@ -18,7 +18,7 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-PartBase::PartBase(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+PartBase::PartBase(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	m_parentPart	(pPart),
 	m_eventSink		(eventSink),
 	m_parentWnd		(NULL),
@@ -330,46 +330,6 @@ void PartBase::LabelResized(UINT nType, CSize& size)
 	m_eventSink->LabelResized(nType, size.cx, size.cy);
 }
 
-void PartBase::WindowMovingStarted(UINT nType, CRect& location)
-{
-	m_eventSink->WindowMovingStarted(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void PartBase::WindowMoving(UINT nSide, CRect& location)
-{
-	m_eventSink->WindowMoving(nSide, location.left, location.top, location.right, location.bottom);
-}
-
-void PartBase::WindowMovingFinished(UINT nType, CRect& location)
-{
-	m_eventSink->WindowMovingFinished(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void PartBase::WindowMoved(UINT nType, CPoint& point)
-{
-	m_eventSink->WindowMoved(nType, point.x, point.y);
-}
-
-void PartBase::WindowResizingStarted(UINT nType, CRect& location)
-{
-	m_eventSink->WindowResizingStarted(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void PartBase::WindowResizing(UINT nSide, CRect& location)
-{
-	m_eventSink->WindowResizing(nSide, location.left, location.top, location.right, location.bottom);
-}
-
-void PartBase::WindowResizingFinished(UINT nType, CRect& location)
-{
-	m_eventSink->WindowResizingFinished(nType, location.left, location.top, location.right, location.bottom);
-}
-
-void PartBase::WindowResized(UINT nType, CSize& size)
-{
-	m_eventSink->WindowResized(nType, size.cx, size.cy);
-}
-
 void PartBase::GeneralOperationStarted(void* operationData)
 {
 	m_eventSink->GeneralOperationStarted((ULONGLONG)operationData);
@@ -378,6 +338,78 @@ void PartBase::GeneralOperationStarted(void* operationData)
 void PartBase::GeneralOperationFinished(void* operationData)
 {
 	m_eventSink->GeneralOperationFinished((ULONGLONG)operationData);
+}
+
+void PartBase::WindowMovingStarted(UINT nType, CRect& location)
+{
+	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+	if (edes)
+		edes->WindowMovingStarted(nType, location.left, location.top, location.right, location.bottom);
+	else
+		ASSERT(false);
+}
+
+void PartBase::WindowMoving(UINT nSide, CRect& location)
+{
+	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+	if (edes)
+		edes->WindowMoving(nSide, location.left, location.top, location.right, location.bottom);
+	else
+		ASSERT(false);
+}
+
+void PartBase::WindowMovingFinished(UINT nType, CRect& location)
+{
+	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+	if (edes)
+		edes->WindowMovingFinished(nType, location.left, location.top, location.right, location.bottom);
+	else
+		ASSERT(false);
+}
+
+void PartBase::WindowMoved(UINT nType, CPoint& point)
+{
+	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+	if (edes)
+		edes->WindowMoved(nType, point.x, point.y);
+	else
+		ASSERT(false);
+}
+
+void PartBase::WindowResizingStarted(UINT nType, CRect& location)
+{
+	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+	if (edes)
+		edes->WindowResizingStarted(nType, location.left, location.top, location.right, location.bottom);
+	else
+		ASSERT(false);
+}
+
+void PartBase::WindowResizing(UINT nSide, CRect& location)
+{
+	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+	if (edes)
+		edes->WindowResizing(nSide, location.left, location.top, location.right, location.bottom);
+	else
+		ASSERT(false);
+}
+
+void PartBase::WindowResizingFinished(UINT nType, CRect& location)
+{
+	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+	if (edes)
+		edes->WindowResizingFinished(nType, location.left, location.top, location.right, location.bottom);
+	else
+		ASSERT(false);
+}
+
+void PartBase::WindowResized(UINT nType, CSize& size)
+{
+	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+	if (edes)
+		edes->WindowResized(nType, size.cx, size.cy);
+	else
+		ASSERT(false);
 }
 
 ECoordRefPoint PartBase::GetAlignment(ELocation loc) const

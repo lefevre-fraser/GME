@@ -3,59 +3,54 @@
 #include "GMEstd.h"
 #include "GraphicsUtil.h"
 
+
 static bool fontBoldness[GME_FONT_KIND_NUM]		= { false, false, false };
 static bool fontSemiboldness[GME_FONT_KIND_NUM]	= { true, true, false };
 static int  fontSizes[GME_FONT_KIND_NUM]		= { 16, 15, 12 };
 
 
-static int arrowXCoords[] = {-5, -7, -1, -7};
-static int arrowYCoords[] = {0, -3, 0, 3};
-static int leftHalfXCoords[] = {-1, -10};
-static int leftHalfYCoords[] = {0, -5};
-static int rightHalfXCoords[] = {-1, -10 };
-static int rightHalfYCoords[] = {0, 5};
-static int diamondXCoords[] = {-11, -6, -1, -6};
-static int diamondYCoords[] = {0, -3, 0, 3};
-static int apexXCoords[] = { -9, -9, -1 };
-static int apexYCoords[] = { -5, 5, 0 };
-static int bulletXCoords[] = { -1, -2, -3, -5, -6, -7, -7, -6, -5, -3, -2, -1 };
-static int bulletYCoords[] = { -1, -2, -3, -3, -2, -1, 1, 2, 3, 3, 2, 1 };
-
 //////////////////////////////////// CArrowHead //////////////////////////////
 
-CArrowHead::CArrowHead(int dir, int* xCoords, int* yCoords, int numln)
+CArrowHead::CArrowHead(int dir, const std::vector<CPoint>& coords)
 {
-	segments = numln;
-	path = new CPoint[segments];
-	for(int i = 0; i < segments; i++) {
+	ASSERT(coords.size() > 0);
+	std::vector<CPoint>::const_iterator ii = coords.begin();
+	while(ii != coords.end()) {
+		CPoint coord;
 		switch(dir) {
 		case GME_RIGHT_DIRECTION:
-			path[i].x = xCoords[i], path[i].y = yCoords[i];
+			coord.x = (*ii).x;
+			coord.y = (*ii).y;
 			break;
 		case GME_LEFT_DIRECTION:
-			path[i].x = -xCoords[i], path[i].y = -yCoords[i];
+			coord.x = -(*ii).x;
+			coord.y = -(*ii).y;
 			break;
 		case GME_UP_DIRECTION:
-			path[i].x = yCoords[i], path[i].y = -xCoords[i];
+			coord.x = (*ii).y;
+			coord.y = -(*ii).x;
 			break;
 		case GME_DOWN_DIRECTION:
-			path[i].x = -yCoords[i], path[i].y = +xCoords[i];
+			coord.x = -(*ii).y;
+			coord.y = (*ii).x;
 			break;
 		default:
-			ASSERT(FALSE);
+			ASSERT(false);
 			break;
 		}
+		path.push_back(coord);
+		++ii;
 	}
 }
 
 CArrowHead::~CArrowHead()
 {
-	delete [] path;
 }
 
-void CArrowHead::Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, CPoint& tip, bool bPen)
+void CArrowHead::Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen)
 {
 	Gdiplus::GraphicsPath* arrowHeadPath = new Gdiplus::GraphicsPath();
+	int segments = path.size();
 	for (int i = 1; i < segments; i++)
 		arrowHeadPath->AddLine(path[i - 1].x + tip.x, path[i - 1].y + tip.y, path[i].x + tip.x, path[i].y + tip.y);
 	gdip->FillPath(brush, arrowHeadPath);
@@ -78,17 +73,51 @@ CGraphics::~CGraphics()
 
 void CGraphics::Initialize(void)
 {
-	CreateFonts(normalFonts, normalGdipFonts, FW_LIGHT);
-	CreateFonts(semiboldFonts, semiboldGdipFonts, FW_NORMAL);
-	CreateFonts(boldFonts, boldGdipFonts, FW_SEMIBOLD);
+	CreateFonts(normalFonts,	normalGdipFonts,	FW_LIGHT);
+	CreateFonts(semiboldFonts,	semiboldGdipFonts,	FW_NORMAL);
+	CreateFonts(boldFonts,		boldGdipFonts,		FW_SEMIBOLD);
+
+	std::vector<CPoint> arrowCoords;
+	arrowCoords.push_back(CPoint(-5, 0));
+	arrowCoords.push_back(CPoint(-7, -3));
+	arrowCoords.push_back(CPoint(-1, 0));
+	arrowCoords.push_back(CPoint(-7, 3));
+	std::vector<CPoint> leftHalfCoords;
+	leftHalfCoords.push_back(CPoint(-1, 0));
+	leftHalfCoords.push_back(CPoint(-10, -5));
+	std::vector<CPoint> rightHalfCoords;
+	rightHalfCoords.push_back(CPoint(-1, 0));
+	rightHalfCoords.push_back(CPoint(-10, 5));
+	std::vector<CPoint> diamondCoords;
+	diamondCoords.push_back(CPoint(-11, 0));
+	diamondCoords.push_back(CPoint(-6, -3));
+	diamondCoords.push_back(CPoint(-1, 0));
+	diamondCoords.push_back(CPoint(-6, 3));
+	std::vector<CPoint> apexCoords;
+	apexCoords.push_back(CPoint(-9, -5));
+	apexCoords.push_back(CPoint(-9, 5));
+	apexCoords.push_back(CPoint(-1, 0));
+	std::vector<CPoint> bulletCoords;
+	bulletCoords.push_back(CPoint(-1, -1));
+	bulletCoords.push_back(CPoint(-2, -2));
+	bulletCoords.push_back(CPoint(-3, -3));
+	bulletCoords.push_back(CPoint(-5, -3));
+	bulletCoords.push_back(CPoint(-6, -2));
+	bulletCoords.push_back(CPoint(-7, -1));
+	bulletCoords.push_back(CPoint(-7, 1));
+	bulletCoords.push_back(CPoint(-6, 2));
+	bulletCoords.push_back(CPoint(-5, 3));
+	bulletCoords.push_back(CPoint(-3, 3));
+	bulletCoords.push_back(CPoint(-2, 2));
+	bulletCoords.push_back(CPoint(-1, 1));
 
 	for(int i = 0; i < GME_DIRECTION_NUM; i++) {
-		arrows[i] = new CArrowHead( i, arrowXCoords, arrowYCoords, 4 );
-		diamonds[i] = new CArrowHead( i, diamondXCoords, diamondYCoords, 4 );
-		apexes[i] = new CArrowHead( i, apexXCoords, apexYCoords, 3 );
-		bullets[i] = new CArrowHead( i, bulletXCoords, bulletYCoords, 12 );
-		leftHalfArrows[i]  = new CArrowHead( i, leftHalfXCoords, leftHalfYCoords, 2);
-		rightHalfArrows[i] = new CArrowHead( i, rightHalfXCoords, rightHalfYCoords, 2);
+		arrows[i]			= new CArrowHead( i, arrowCoords );
+		diamonds[i]			= new CArrowHead( i, diamondCoords );
+		apexes[i]			= new CArrowHead( i, apexCoords );
+		bullets[i]			= new CArrowHead( i, bulletCoords );
+		leftHalfArrows[i]	= new CArrowHead( i, leftHalfCoords );
+		rightHalfArrows[i]	= new CArrowHead( i, rightHalfCoords );
 	}
 }
 
@@ -322,6 +351,8 @@ void CGraphics::DrawGdipText(Gdiplus::Graphics* gdip, CString& txt, CPoint& pt, 
 		verticalAlignment = Gdiplus::StringAlignmentNear;
 	}
 	format.SetLineAlignment(verticalAlignment);
+	format.SetFormatFlags(format.GetFormatFlags() | Gdiplus::StringFormatFlagsNoWrap);
+	format.SetTrimming(Gdiplus::StringTrimmingEllipsisPath);
 
 	// TODO
 //	HDC hDC = gdip->GetHDC();

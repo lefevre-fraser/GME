@@ -27,7 +27,7 @@ protected:
 	long		m_labelRelYPosition;	// bottom of the text because of the bottom alignment
 
 public:
-	StereoLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	StereoLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~StereoLabelPart();
 
 	virtual void	Draw						(CDC* pDC, Gdiplus::Graphics* gdip);

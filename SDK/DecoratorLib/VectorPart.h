@@ -218,7 +218,7 @@ protected:
 	std::vector<CoordCommand*>	m_coordCommands;
 
 public:
-	VectorPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink);
+	VectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~VectorPart();
 
 	void			AddCommand					(const VectorCommand& cmd) { m_Commands.push_back(cmd); };

@@ -18,7 +18,7 @@ namespace MetaDecor {
 //
 //################################################################################################
 
-MetaStereoLabelPart::MetaStereoLabelPart(PartBase* pPart, CComPtr<IMgaElementDecoratorEvents>& eventSink):
+MetaStereoLabelPart::MetaStereoLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	DecoratorSDK::StereoLabelPart(pPart, eventSink)
 {
 }
