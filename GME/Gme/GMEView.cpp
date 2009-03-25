@@ -3566,8 +3566,14 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 			if(ok) {
 				CComPtr<IMgaFCO> child;
 				COMTHROW(currentModel->CreateChildObject(metaRole,&child));
+				CComPtr<IMgaMetaFCO> metaFco;
+				child->get_Meta(&metaFco);
 				CComBSTR nm;
-				COMTHROW(metaRole->get_DisplayedName(&nm));
+				COMTHROW(metaFco->get_DisplayedName(&nm));
+				if (nm.Length() == 0) {
+					nm.Empty();
+					COMTHROW(metaRole->get_DisplayedName(&nm));
+				}
 				COMTHROW(child->put_Name(nm));
 				CComBSTR bstr;
 				COMTHROW(child->get_ID(&bstr));

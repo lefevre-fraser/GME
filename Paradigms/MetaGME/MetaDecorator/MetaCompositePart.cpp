@@ -76,7 +76,8 @@ void MetaCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 
 			CComBSTR bstr;
 			COMTHROW(m_spMetaFCO->get_Name(&bstr));
-			CString stereotypeName(bstr);
+			CString stereotypeName;
+			CopyTo(bstr, stereotypeName);
 
 			// Get ShapeCode
 			ShapeCode shape = MetaDecor::GetDecorUtils().GetShapeCode(stereotypeName);
@@ -128,6 +129,10 @@ void MetaCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 				if (!pFCO)
 					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else {	// This must be a class
+				COMTHROW(m_spMetaFCO->get_DisplayedName(&bstr));
+				if (bstr.Length() != 0)
+					CopyTo(bstr, stereotypeName);
+
 				AddObjectPart(new MetaClassPart(this, m_eventSink, shape, stereotypeName));
 				// The MetaClassPart handles the label also
 			}

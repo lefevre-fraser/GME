@@ -191,7 +191,7 @@ SAutoRouterEdge* CAutoRouterEdgeList::GetEdge(const CPoint* startpoint, const CP
 	SAutoRouterEdge* edge = order_first;
 	while( edge != NULL )
 	{
-		if( *edge->startpoint == *startpoint )
+		if( edge->startpoint == startpoint )
 		{
 			break;
 		}

@@ -168,9 +168,6 @@ private:
 	unsigned int attributes;
 	int state;
 
-// --- External Pointer (ONLY FOR EXTERNAL USE)
-
-
 private:
 
 public:

@@ -584,7 +584,11 @@ CGuiMetaAspect::CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt,CGuiMetaModel *o,i
 				CComPtr<IMgaMetaFCO> kind;
 				COMTHROW(mmRole->get_Kind(&kind));
 				CComBSTR bstr;
-				COMTHROW(mmRole->get_DisplayedName(&bstr));
+				COMTHROW(kind->get_DisplayedName(&bstr));
+				if (bstr.Length() == 0) {
+					bstr.Empty();
+					COMTHROW(mmRole->get_DisplayedName(&bstr));
+				}
 				CString label;
 				CopyTo(bstr,label);
 				objtype_enum type;

@@ -510,7 +510,6 @@ STDMETHODIMP CAutoRouterPath::GetPointList(SAFEARRAY **pArr)
 
 		while(pos)
 		{
-			ASSERT(position < 32);
 			CPoint point = points.GetNext(pos); 
 			pArrElements[position]		= point.x;
 			pArrElements[position + 1]	= point.y;

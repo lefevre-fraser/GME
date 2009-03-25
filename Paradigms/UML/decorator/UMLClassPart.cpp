@@ -90,8 +90,10 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 			}
 			CComBSTR bstr;
 			COMTHROW(m_spFCO->get_Name(&bstr));
+			CString textStr;
+			CopyTo(bstr, textStr);
 			m_LabelPart = new DecoratorSDK::ClassLabelPart(this, m_eventSink, isAbstract);
-			m_LabelPart->SetText(CString(bstr));
+			m_LabelPart->SetText(textStr);
 		} else {
 			objtype_enum objtype;
 			COMTHROW(m_spMetaFCO->get_ObjType(&objtype));
@@ -106,8 +108,10 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 				bstr.Empty();
 				COMTHROW(m_spMetaFCO->get_Name(&bstr));
 			}
+			CString textStr;
+			CopyTo(bstr, textStr);
 			m_LabelPart = new DecoratorSDK::ClassLabelPart(this, m_eventSink, false);
-			m_LabelPart->SetText(CString(bstr));
+			m_LabelPart->SetText(textStr);
 		}
 
 		COLORREF color = GME_BLACK_COLOR;

@@ -57,7 +57,7 @@ CComBSTR CPartBrowserPane::GetDecoratorProgId(CComPtr<IMgaMetaFCO> metaFCO)
 	return bstrVal;
 }
 
-bool CPartBrowserPane::IsPartDisplayable(CComPtr<IMgaMetaPart> metaPart, bool debugPrint)
+bool CPartBrowserPane::IsPartDisplayable(CComPtr<IMgaMetaPart> metaPart)
 {
 	ASSERT(metaPart != NULL);
 	VARIANT_BOOL vb_primary;
@@ -68,19 +68,6 @@ bool CPartBrowserPane::IsPartDisplayable(CComPtr<IMgaMetaPart> metaPart, bool de
 	COMTHROW(mmRole->get_Kind(&mFco));
 	objtype_enum oType;
 	COMTHROW(mFco->get_ObjType(&oType));
-
-	if (debugPrint) {
-		CComBSTR bstrName;
-		COMTHROW(metaPart->get_Name(&bstrName));
-		objtype_enum eType;
-		COMTHROW(metaPart->get_ObjType(&eType));
-		CString cString;
-		CopyTo(bstrName, cString);
-		CComBSTR bstrRoleName;
-		COMTHROW(mmRole->get_DisplayedName(&bstrRoleName));
-		CString cString2;
-		CopyTo(bstrRoleName, cString2);
-	}
 
 	if (vb_primary != VARIANT_FALSE &&
 		(oType == OBJTYPE_MODEL ||
@@ -178,8 +165,7 @@ void CPartBrowserPane::DestroyDecorators(void)
 			(*jj).decorator->Destroy();
 			if ((*jj).newDecorator)
 				(*jj).newDecorator.Release();
-			else
-				(*jj).decorator.Release();
+			(*jj).decorator.Release();
 			(*jj).part.Release();
 			if ((*jj).decorEventSink != NULL) {
 				(*jj).decorEventSink->ExternalRelease();
@@ -344,11 +330,6 @@ void CPartBrowserPane::SetMetaModel(CComPtr<IMgaMetaModel> meta)
 		MGACOLL_ITERATE(IMgaMetaAspect, mmAspects) {
 			mmAspect = MGACOLL_ITER;
 
-			CComBSTR bstr;
-			COMTHROW(mmAspect->get_DisplayedName(&bstr));
-			CString cString;
-			CopyTo(bstr, cString);
-
 			CComPtr<IMgaMetaParts> metaParts;
 			COMTHROW(mmAspect->get_Parts(&metaParts));
 			CreateDecorators(metaParts);
@@ -397,7 +378,11 @@ void CPartBrowserPane::ChangeAspect(int index)
 				maxSize.cy = size.cy;
 
 			CComBSTR nameBStr;
-			COMTHROW((*ii).part->get_Name(&nameBStr));
+			HRESULT hr = (*ii).part->get_DisplayedName(&nameBStr);
+			if (FAILED(hr) || nameBStr.Length() == 0) {
+				nameBStr.Empty();
+				COMTHROW((*ii).part->get_Name(&nameBStr));
+			}
 			CString nameCString;
 			CopyTo(nameBStr, nameCString);
 			int text_cx = textMetric.GetTextExtent(nameCString).cx;

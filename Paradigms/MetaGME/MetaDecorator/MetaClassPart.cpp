@@ -144,8 +144,10 @@ void MetaClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMet
 			}
 			CComBSTR bstr;
 			COMTHROW(m_spFCO->get_Name(&bstr));
+			CString labelStr;
+			CopyTo(bstr, labelStr);
 			m_LabelPart = new DecoratorSDK::ClassLabelPart(this, m_eventSink, m_showAbstract && m_isAbstract);
-			m_LabelPart->SetText(CString(bstr));
+			m_LabelPart->SetText(labelStr);
 		}
 
 		m_StereotypePart = new MetaStereoLabelPart(this, m_eventSink);
@@ -204,20 +206,23 @@ void MetaClassPart::CollectAttributes(CComPtr<IMgaFCO> mgaFco)
 				
 				CComBSTR attrPosBstr;	// zolmol added: sort by [y, x]
 				COMTHROW(targetFco->get_RegistryValue(L"PartRegs/Attributes/Position", &attrPosBstr));
-				CString attr_pos = attrPosBstr;
+				CString attr_pos;
+				CopyTo(attrPosBstr, attr_pos);
 				CPoint pos(0, 0);
 				int res = _stscanf(attr_pos, "%d,%d", &pos.x, &pos.y);
 				if (res != 2)
 					pos = CPoint(0, 0);
 
-				CString targetKind = bstr;
+				CString targetKind;
+				CopyTo(bstr, targetKind);
 				if (targetKind == META_BOOLEANATTR_KIND ||
 					targetKind == META_ENUMATTR_KIND ||
 					targetKind == META_FIELDATTR_KIND)
 				{
 					CComBSTR nameBstr;
 					COMTHROW(targetFco->get_Name(&nameBstr));
-					CString targetName = nameBstr;
+					CString targetName;
+					CopyTo(nameBstr, targetName);
 					CString targetType;
 					if (targetKind == META_BOOLEANATTR_KIND)
 						targetType = META_BOOLEANATTR_LABEL;

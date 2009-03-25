@@ -135,12 +135,13 @@ CGuiAspect::~CGuiAspect()
 {
 	if (newDecorator) {
 		COMTHROW(newDecorator->Destroy());
+		newDecorator.Release();
 		newDecorator = NULL;
-		decorator = NULL;
 	} else {
 		COMTHROW(decorator->Destroy());
-		decorator = NULL;
 	}
+	decorator.Release();
+	decorator = NULL;
 	if (decoratorEventSink != NULL) {
 		ASSERT(decoratorEventSink->m_dwRef == 1);
 		decoratorEventSink->ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
@@ -476,8 +477,11 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel> &pModel, CComPtr<IMgaRegNode> &m
 	}
 	catch(hresult_exception &e) {
 		for (std::vector<AnnotatorDecoratorData*>::iterator ii = decoratorData.begin(); ii != decoratorData.end(); ++ii) {
-			if ((*ii)->decorator != NULL)
+			if ((*ii)->decorator != NULL) {
 				COMTHROW((*ii)->decorator->Destroy());
+				(*ii)->decorator.Release();
+				(*ii)->decorator = NULL;
+			}
 			CAnnotatorEventSink* annotatorEventSink = (*ii)->annotatorEventSink;
 			delete (*ii);
 			if (annotatorEventSink != NULL)
