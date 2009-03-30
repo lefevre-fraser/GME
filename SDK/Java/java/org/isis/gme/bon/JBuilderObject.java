@@ -275,7 +275,7 @@ public abstract class JBuilderObject extends Object
 	// Traverse Childeren
 	
 	public boolean getAttribute(String name, String val[])
-		{	
+	{	
 			try
                 {
                      val[0] = ciObject.getStrAttrByName(name);
@@ -299,7 +299,7 @@ public abstract class JBuilderObject extends Object
                 return null;
             }
             return ret;
-}
+	}
 	
 	public boolean getAttribute(String name, int val[])
 	{	
