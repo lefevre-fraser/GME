@@ -1096,7 +1096,7 @@ STDMETHODIMP CMgaProject::get_AddOns(IMgaAddOns **addons) {
 	COMTRY {
 		CHECK_OUTPTRPAR(addons);
 		CREATECOLLECTION_FOR(IMgaAddOn, q);
-		for(addoncoll::iterator j = alladdons.begin(); j != alladdons.end(); j++) {
+		for(addoncoll::iterator j = alladdons.begin(); j != alladdons.end(); ++j) {
 			q->Add(*j);
 		}
 		*addons = q.Detach();
@@ -1107,7 +1107,7 @@ STDMETHODIMP CMgaProject::get_Clients(IMgaClients **clients) {
 	COMTRY {
 		CHECK_OUTPTRPAR(clients);
 		CREATECOLLECTION_FOR(IMgaClient, q);
-		for(clientcoll::iterator j = allclients.begin(); j != allclients.end(); j++) {
+		for(clientcoll::iterator j = allclients.begin(); j != allclients.end(); ++j) {
 			q->Add(*j);
 		}
 		*clients = q.Detach();
@@ -1136,7 +1136,7 @@ STDMETHODIMP CMgaProject::GetClientByName(BSTR name, IMgaClient **pVal) {
 	COMTRY {
 		CHECK_INSTRPAR(name);
 		clientcoll::iterator j;
-		for(j = allclients.begin(); j != allclients.end(); j++) {
+		for(j = allclients.begin(); j != allclients.end(); ++j) {
 			CComPtr< CMgaClient > client(*j);
 			if (client->name == name) {
 				*pVal = client.Detach();
@@ -1153,7 +1153,7 @@ STDMETHODIMP CMgaProject::get_Territories(IMgaTerritories **terrs) {
 	COMTRY {
 		CHECK_OUTPTRPAR(terrs);
 		CREATECOLLECTION_FOR2(IMgaTerritory, IMgaTerritories, q);
-		for(tercoll::iterator j = allterrs.begin(); j != allterrs.end(); j++) {
+		for(tercoll::iterator j = allterrs.begin(); j != allterrs.end(); ++j) {
 			q->Add(*j);
 		}
 		*terrs = q.Detach();
@@ -1164,7 +1164,7 @@ STDMETHODIMP CMgaProject::get_AddOnComponents(IMgaComponents **comps) {
 	COMTRY {
 		CHECK_OUTPTRPAR(comps);
 		CREATECOLLECTION_FOR(IMgaComponent, q);
-		for(compcoll::iterator j = autocomps.begin(); j != autocomps.end(); j++) {
+		for(compcoll::iterator j = autocomps.begin(); j != autocomps.end(); ++j) {
 			q->Add(*j);
 		}
 		*comps = q.Detach();
@@ -1188,7 +1188,7 @@ STDMETHODIMP CMgaProject::EnableAutoAddOns(VARIANT_BOOL bEnable) {
 void CMgaProject::StartAutoAddOns() {
 	if(!autoaddons) return;
 #ifdef DEBUG
-	for(addoncoll::iterator j = alladdons.begin(); j != alladdons.end(); j++) {
+	for(addoncoll::iterator j = alladdons.begin(); j != alladdons.end(); ++j) {
 		ASSERT(!(*j)->IsAutomatic());
 	}
 #endif
@@ -1206,7 +1206,7 @@ void CMgaProject::StartAutoAddOns() {
 		CopyTo(progids, &vec[0], (&vec[0])+vec.size());
 		inautoaddoncreate = true;
 		CComBSTR errs;
-		for(std::vector<CComBstrObj>::iterator i = vec.begin(); i < vec.end(); i++) {
+		for(std::vector<CComBstrObj>::iterator i = vec.begin(); i < vec.end(); ++i) {
 			try {
 				CComPtr<IMgaComponent> addon;
 				COMTHROW(CreateMgaComponent(addon, *i)); // Was: COMTHROW( addon.CoCreateInstance(*i) );
@@ -1240,7 +1240,7 @@ void CMgaProject::StopAutoAddOns() {
 			addon.Release();
 	}
 #ifdef DEBUG
-		for(addoncoll::iterator j = alladdons.begin(); j != alladdons.end();j++) {
+		for(addoncoll::iterator j = alladdons.begin(); j != alladdons.end();++j) {
 			ASSERT(!(*j)->IsAutomatic());
 		}
 #endif
@@ -1390,7 +1390,7 @@ STDMETHODIMP CMgaProject::CheckSupress(VARIANT_BOOL s) {
 	COMTRY_IN_TRANSACTION {
 		if(s) checkoff = true;
 		else { 
-			for(objhash::iterator i = deferredchecks.begin(); i != deferredchecks.end(); i++) {
+			for(objhash::iterator i = deferredchecks.begin(); i != deferredchecks.end(); ++i) {
 				if(GetMetaID((*i)->self) == DTID_FOLDER) COMTHROW((*i)->Check());
 				else COMTHROW((*i)->CheckRCS());
 			}
@@ -1420,7 +1420,7 @@ STDMETHODIMP CMgaProject::GlobalNotify(globalevent_enum msg) {
 			}
 		}
 		tercoll::iterator i = allterrs.begin(), end = allterrs.end();
-		for(;i != end; i++) {
+		for(;i != end; ++i) {
 			if(msg == GLOBALEVENT_NOTIFICATION_READY && (*i)->notified == false) continue;
 			else (*i)->notified = false;
 			if((*i)->handler) {

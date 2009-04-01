@@ -1226,19 +1226,19 @@ namespace OclBasic
 			if (isInt)
 			{
 				TintMap::const_iterator it = intMap.begin();
-				for (; it != intMap.end(); it++)
+				for (; it != intMap.end(); ++it)
 					vecSelecteds.push_back( (*it).second);
 			}
 			else if (isReal)
 			{
 				TrealMap::const_iterator it = realMap.begin();
-				for (; it != realMap.end(); it++)
+				for (; it != realMap.end(); ++it)
 					vecSelecteds.push_back( (*it).second);
 			}
 			else if (isString)
 			{
 				TstringMap::const_iterator it = stringMap.begin();
-				for (; it != stringMap.end(); it++)
+				for (; it != stringMap.end(); ++it)
 					vecSelecteds.push_back( (*it).second);
 			}
 

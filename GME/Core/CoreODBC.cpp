@@ -372,7 +372,7 @@ STDMETHODIMP CCoreODBC::get_AttributeValue(VARIANT *p)
 		SQLTHROW(SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_UBIGINT, SQL_BIGINT, 20, 0,
                  &kk, 0, 0));
 		std::vector<metaobjidpair_type> idpairs;
-		for(attrlist::iterator vv = pp->second.begin(); vv != pp->second.end(); vv++) {
+		for(attrlist::iterator vv = pp->second.begin(); vv != pp->second.end(); ++vv) {
 			CComPtr<ICoreMetaObject> mo;
 			COMTHROW((*vv)->get_Object(&mo));
 			std::sqlstring oblister;

@@ -166,7 +166,7 @@ BOOL CConstraintPropertiesDialog::OnInitDialog()
 
 	if ( m_spConstraintIn.Ptr() ) {
 		EventMap eMap = GetEventMap();
-		for ( EventMap::iterator i = eMap.begin() ; i != eMap.end() ; i++ ) {
+		for ( EventMap::iterator i = eMap.begin() ; i != eMap.end() ; ++i ) {
 			( ( CButton* ) m_pageEvent.GetDlgItem( (*i).second ) )->SetCheck( ( m_spConstraintIn->GetEventMask() & (*i).first ) ? 1 : 0 );
 			m_pageEvent.GetDlgItem( (*i).second )->EnableWindow( m_spConstraintIn->GetLocation() == OclGme::ConstraintBase::CL_PROJECT );
 		}
@@ -303,7 +303,7 @@ void CConstraintPropertiesDialog::OnClickOK()
 
 	unsigned long ulEventMask = 0;
 	EventMap eMap = GetEventMap();
-	for ( EventMap::iterator i = eMap.begin() ; i != eMap.end() ; i++ ) {
+	for ( EventMap::iterator i = eMap.begin() ; i != eMap.end() ; ++i ) {
 		if ( ( ( CButton* ) m_pageEvent.GetDlgItem( (*i).second ) )->GetCheck() == 1 )
 			ulEventMask |= (*i).first;
 	}

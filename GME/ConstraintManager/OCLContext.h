@@ -239,7 +239,7 @@ namespace OclCommon
 			{
 				if ( ! m_vecContexts.empty() ) {
 					typename CTVector::iterator i = m_vecContexts.end();
-					i--;
+					--i;
 					m_vecContexts.erase( i );
 					return true;
 				}

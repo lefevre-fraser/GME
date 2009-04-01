@@ -111,7 +111,7 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 		}
 		COMTHROW( project->put_Preferences(project_prefs_orig) );
 
-		for(librecords::reverse_iterator i = libstodo.rbegin(); i != libstodo.rend(); i++) { // copied from ParseProject in order to recognize libraries (zolmol)
+		for(librecords::reverse_iterator i = libstodo.rbegin(); i != libstodo.rend(); ++i) { // copied from ParseProject in order to recognize libraries (zolmol)
 			COMTHROW(i->f->put_LibraryName(CComBSTR(i->libname.c_str())));
 			COMTHROW(i->f->put_Exempt(VARIANT_FALSE));
 		}
@@ -255,7 +255,7 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 		// in the xme file (depth first traversal), thus if the vector is traversed
 		// in reverse order (children libraries are always handled before their parent)
 		// the libroot_flag and library_flag flags can be applied with success
-		for(librecords::reverse_iterator i = libstodo.rbegin(); i != libstodo.rend(); i++) {
+		for(librecords::reverse_iterator i = libstodo.rbegin(); i != libstodo.rend(); ++i) {
 			COMTHROW(i->f->put_LibraryName(CComBSTR(i->libname.c_str())));
 			COMTHROW(i->f->put_Exempt(VARIANT_FALSE));
 		}

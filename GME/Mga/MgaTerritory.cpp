@@ -119,7 +119,7 @@ STDMETHODIMP CMgaTerritory::Destroy() {
 		if(!coreterr) COMTHROW(E_MGA_TARGET_DESTROYED);
 		COMTHROW(Flush());
 		CMgaProject::tercoll::iterator i = mgaproject->allterrs.begin(), end = mgaproject->allterrs.end();
-		for(;i != end; i++) {
+		for(;i != end; ++i) {
 			if(*i == this) {
 				mgaproject->allterrs.erase(i);
 				coreterr = NULL;   // release CoreTerritory object
@@ -164,7 +164,7 @@ STDMETHODIMP CMgaAddOn::Destroy() {
 		MARKSIG('8'); 
 		if(!handler) COMTHROW(E_MGA_TARGET_DESTROYED);
 		CMgaProject::addoncoll::iterator i = mgaproject->alladdons.begin(), end = mgaproject->alladdons.end();
-		for(;i != end; i++) {
+		for(;i != end; ++i) {
 			if(*i == this) {
 				mgaproject->alladdons.erase(i);
 				if(mgaproject->alladdons.empty()) mgaproject->reserveterr = NULL;   // release 

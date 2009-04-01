@@ -876,7 +876,7 @@ HRESULT FCO::objrwnotify() {
 					for(ii = pbeg; ii != pend;) {  
 						CMgaTerritory *t = (*ii).second->territory;
 						CComPtr<IMgaObject> obj = (*ii).second;
-						ii++;  // it is important to incr ii here, while obj 
+						++ii;  // it is important to incr ii here, while obj 
 							   // still holds a reference to the (*ii) object
 						CComVariant dummy;
 						if(t->rwhandler && (t->eventmask & OBJEVENT_CREATED) != 0) {
@@ -904,7 +904,7 @@ HRESULT FCO::objrwnotify() {
 				CMgaTerritory *t = (*ii).second->territory;
 				CComVariant &ud = (*ii).second->userdata;
 				CComPtr<IMgaObject> obj = (*ii).second;
-				ii++;  // it is important to incr ii here, while obj 
+				++ii;  // it is important to incr ii here, while obj 
 					   // still holds a reference to the (*ii) object
 				long mmask;
 				if(t->rwhandler && (mmask = (t->rweventmask & chmask)) != 0) {
@@ -947,7 +947,7 @@ HRESULT FCO::objnotify() {
 					for(ii = pbeg; ii != pend;) {  
 						CMgaTerritory *t = (*ii).second->territory;
 						CComPtr<IMgaObject> obj = (*ii).second;
-						ii++;  // it is important to incr ii here, while obj 
+						++ii;  // it is important to incr ii here, while obj 
 							   // still holds a reference to the (*ii) object
 						CComVariant dummy;
 						if(t->handler && (t->eventmask & OBJEVENT_CREATED) != 0) {
@@ -971,7 +971,7 @@ HRESULT FCO::objnotify() {
 				CMgaTerritory *t = (*ii).second->territory;
 				CComVariant &ud = (*ii).second->userdata;
 				CComPtr<IMgaObject> obj = (*ii).second;
-				ii++;  // it is important to incr ii here, while obj 
+				++ii;  // it is important to incr ii here, while obj 
 					   // still holds a reference to the (*ii) object
 				unsigned long mmask;
 				if(t->handler && (mmask = (t->eventmask & chmask)) != 0) {

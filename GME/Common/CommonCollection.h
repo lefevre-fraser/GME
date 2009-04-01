@@ -252,7 +252,7 @@ public:
 				*index = m_coll.begin() - iter + 1;
 				return S_OK;
 			}
-			iter++;
+			++iter;
 		}
 		*index = 0;
 		return E_NOTFOUND;

@@ -351,7 +351,7 @@ namespace OclMeta
 
 			static bool IsChecked( const DependencySet& ds )
 			{
-				for ( DependencySet::const_iterator i = ds.begin() ; i != ds.end() ; i++ )
+				for ( DependencySet::const_iterator i = ds.begin() ; i != ds.end() ; ++i )
 					if ( ! (*i).m_bChecked )
 						return false;
 				return true;
@@ -359,7 +359,7 @@ namespace OclMeta
 
 			static bool IsFailed( const DependencySet& ds )
 			{
-				for ( DependencySet::const_iterator i = ds.begin() ; i != ds.end() ; i++ )
+				for ( DependencySet::const_iterator i = ds.begin() ; i != ds.end() ; ++i )
 					if ( ! (*i).m_bChecked )
 						return false;
 					else
@@ -387,7 +387,7 @@ namespace OclMeta
 			static std::string Print( const DependencySet& setDependencies )
 			{
 				std::string strOut;
-				for ( DependencySet::const_iterator it = setDependencies.begin() ; it != setDependencies.end() ; it++ )
+				for ( DependencySet::const_iterator it = setDependencies.begin() ; it != setDependencies.end() ; ++it )
 					strOut += (*it).Print() + "\r\n";
 				return strOut;
 			}

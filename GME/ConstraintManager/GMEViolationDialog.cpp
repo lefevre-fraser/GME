@@ -538,7 +538,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 		CStringArray arrText;
 		OclGmeCM::FuncDesc::iterator it;
 		for (it = m_vecRecords[ m_iSelectedConstraint ].calledFunctions.begin(); 
-				it != m_vecRecords[ m_iSelectedConstraint ].calledFunctions.end(); it++)
+				it != m_vecRecords[ m_iSelectedConstraint ].calledFunctions.end(); ++it)
 		{
 			arrText.RemoveAll();
 			int serial = it->second.serial;

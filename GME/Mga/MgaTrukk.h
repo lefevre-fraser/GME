@@ -36,7 +36,7 @@ ASSERT( collifptr != NULL );				\
 std::vector< CoreObj> vect;			\
 GetAll2<ICoreObjects>(collifptr, vect);\
 std::vector< CoreObj>::iterator it_i = vect.begin(), it_e = vect.end();	\
-for(;it_i != it_e; it_i++ )
+for(;it_i != it_e; ++it_i )
 
 #define ITERATE_THROUGH_BACK(ci)  \
 CoreObjs collifptr=ci; \
@@ -140,7 +140,7 @@ void Sort(CoreObjs &coll, attrid_type  ai) {
 		GetAll2<ICoreObjects>(coll, vect);
 		std::vector< CoreObj>::iterator it_i = vect.begin(), it_e = vect.end();	
 		std::vector< CoreObj>::iterator it_j, it_min;
-		for(;it_i != it_e; it_i++ ) {
+		for(;it_i != it_e; ++it_i ) {
 			it_j = it_i;
 			avt min = (*it_j)[ai];
 			it_min = it_j;

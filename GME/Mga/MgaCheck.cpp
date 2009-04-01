@@ -15,7 +15,7 @@ void docheck(CMgaProject *mgaproject) {
 	coreobjhash &list = mgaproject->objstocheck;
 	coreobjhash::iterator i;
 	
-	for(i = list.begin(); i != list.end(); i++) {
+	for(i = list.begin(); i != list.end(); ++i) {
 		int &mode = (*i).second;
 		if(mode & CHK_REFEREES) {
 			mode = CHK_REFCONNS;
@@ -27,7 +27,7 @@ void docheck(CMgaProject *mgaproject) {
 		}
 //#pragma bookmark todo: put back stuff that needs testing
 	}
-	for(i = list.begin(); i != list.end(); i++) {
+	for(i = list.begin(); i != list.end(); ++i) {
 		if(((*i).first).IsDeleted()) continue;
 		if((*i).second & CHK_ILLEGAL) { COMTHROW(E_MGA_OP_REFUSED); }
 		else if((*i).second & CHK_SELF) { COMTHROW(ObjForCore((*i).first)->Check()); }

@@ -20,7 +20,7 @@ namespace OclMeta
 
 	void DisposeCallMap( CallResultMap& mapArg )
 	{
-		for ( CallResultMap::iterator i = mapArg.begin() ; i != mapArg.end() ; i++ )
+		for ( CallResultMap::iterator i = mapArg.begin() ; i != mapArg.end() ; ++i )
 			if ( (*i).second.bIsValid )
 				delete (*i).second.uResult.pFeature;
 			else
@@ -196,7 +196,7 @@ namespace OclMeta
 
 	void TypeManager::ClearTypes()
 	{
-		for ( TypeResultMap::iterator i = m_mapTypes.begin() ; i != m_mapTypes.end() ; i++ )
+		for ( TypeResultMap::iterator i = m_mapTypes.begin() ; i != m_mapTypes.end() ; ++i )
 			if ( (*i).second.bIsValid )
 				delete (*i).second.uResult.pType;
 			else
@@ -208,7 +208,7 @@ namespace OclMeta
 	{
 		TypeResultMap mapTypes = m_mapTypes;
 		m_mapTypes.clear();
-		for ( TypeResultMap::iterator i = mapTypes.begin() ; i != mapTypes.end() ; i++ )
+		for ( TypeResultMap::iterator i = mapTypes.begin() ; i != mapTypes.end() ; ++i )
 			if ( ! (*i).second.bIsValid )
 				delete (*i).second.uResult.pException;
 			else

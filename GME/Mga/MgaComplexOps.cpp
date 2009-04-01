@@ -182,7 +182,7 @@ HRESULT FCO::DeleteObject() {
 // take second objects from list1, and put them to the first place into list2
 void shiftlist(coreobjpairhash &list1, coreobjhash &list2) {
 		coreobjpairhash::iterator ii, beg = list1.begin(), end = list1.end();
-		for(ii = beg; ii != end; ii++) list2.insert(coreobjhash::value_type((*ii).second, 0));
+		for(ii = beg; ii != end; ++ii) list2.insert(coreobjhash::value_type((*ii).second, 0));
 }
 
 

@@ -302,7 +302,7 @@ std::string PrintToken( int iToken, bool bQuote )
 std::string PrintTokens( const TokenSet& setTokens )
 {
 	std::string strTokens( " " );
-	for ( TokenSet::const_iterator i = setTokens.begin() ; i != setTokens.end() ; i++ )
+	for ( TokenSet::const_iterator i = setTokens.begin() ; i != setTokens.end() ; ++i )
 		strTokens += PrintToken( *i, true ) + " ";
 	return strTokens;
 }

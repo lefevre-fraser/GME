@@ -80,7 +80,7 @@ void CMgaFilter::init() {
 	if(newname) {
 		names.clear();
 		MGA_TRACE("Names at init1");
-		for(BSTRhash::iterator i = names.begin(); i!=names.end(); i++) {
+		for(BSTRhash::iterator i = names.begin(); i!=names.end(); ++i) {
 			MGA_TRACE("Names: %ls\n",*i);
 		}
 
@@ -111,7 +111,7 @@ void CMgaFilter::init() {
 		}
 
 		MGA_TRACE("Names at init");
-		for(BSTRhash::iterator i = names.begin(); i!=names.end(); i++) {
+		for(BSTRhash::iterator i = names.begin(); i!=names.end(); ++i) {
 			MGA_TRACE("Names: %ls\n",*i);
 		}
 		newname = false;
@@ -131,12 +131,12 @@ void CMgaFilter::searchFCOs(CoreObj &self, EXCOLLECTIONTYPE_FOR(MgaFCO) *retcoll
 	}
 	if(add && !names.empty()) {
 		MGA_TRACE("Names at testbeg");
-		for(BSTRhash::iterator i = names.begin(); i!=names.end(); i++) {
+		for(BSTRhash::iterator i = names.begin(); i!=names.end(); ++i) {
 			MGA_TRACE("Names: %ls\n",*i);
 		}
 		if(names.find(CComBSTR(self[ATTRID_NAME])) == names.end()) add =false;
 		MGA_TRACE("Names at testend");
-		for(BSTRhash::iterator i = names.begin(); i!=names.end(); i++) {
+		for(BSTRhash::iterator i = names.begin(); i!=names.end(); ++i) {
 			MGA_TRACE("Names: %ls\n",*i);
 		}
 	}

@@ -130,7 +130,7 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 		}
 		COMTHROW( project->put_Preferences(project_prefs_orig) );
 
-		for(librecords::reverse_iterator i = libstodo.rbegin(); i != libstodo.rend(); i++) { // copied from ParseProject in order to recognize libraries (zolmol)
+		for(librecords::reverse_iterator i = libstodo.rbegin(); i != libstodo.rend(); ++i) { // copied from ParseProject in order to recognize libraries (zolmol)
 			COMTHROW(i->f->put_LibraryName(CComBSTR(i->libname.c_str())));
 			COMTHROW(i->f->put_Exempt(VARIANT_FALSE));
 		}

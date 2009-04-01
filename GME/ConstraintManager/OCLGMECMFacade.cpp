@@ -569,7 +569,7 @@ namespace OclGmeCM
 
 		for ( unsigned int i = 0 ; i < vecInputs2.size() ; i++ ) {
 			bool bWasAdded = false;
-			for ( EvaluationRecordVector::iterator it = vecInputs.begin() ; it != vecInputs.end() ; it++ ) {
+			for ( EvaluationRecordVector::iterator it = vecInputs.begin() ; it != vecInputs.end() ; ++it ) {
 				if( vecInputs2[ i ].spConstraint->GetPriority() <= (*it).spConstraint->GetPriority() ) {
 					vecInputs.insert( it, vecInputs2[ i ] );
 					bWasAdded = true;

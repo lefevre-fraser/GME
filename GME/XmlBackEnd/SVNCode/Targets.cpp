@@ -62,7 +62,7 @@ const apr_array_header_t *Targets::array (const Pool & pool)
 		m_targets.size(),
 		sizeof (const char *));
 
-	for (it = m_targets.begin (); it != m_targets.end (); it++)
+	for (it = m_targets.begin (); it != m_targets.end (); ++it)
 	{
 		const Path &path = *it;
 		const char * target =

@@ -265,7 +265,7 @@ namespace Ocl
 		if ( m_eState != CS_CHECK_SUCCEEDED )
 			throw m_eState;
 		bool bWasError = false;
-		for ( OclMeta::DependencySet::const_iterator i = setDependencies.begin() ; i != setDependencies.end() ; i++ ) {
+		for ( OclMeta::DependencySet::const_iterator i = setDependencies.begin() ; i != setDependencies.end() ; ++i ) {
 			if ( (*i).m_bFailed ) {
 				bWasError = true;
 				OclCommon::Exception exp( OclCommon::Exception( OclCommon::Exception::ET_SEMANTIC, EX_CONSTRAINT_DEF_FAILED, (*i).m_strSignature, (*i).m_position.iLine, (*i).m_position.iColumn ) );

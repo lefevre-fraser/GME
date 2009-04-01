@@ -163,7 +163,7 @@ HRESULT FCO::AddInternalConnections(struct IMgaFCOs *ins, struct IMgaFCOs **objs
 					if(ll == 0) { COMTHROW(conn->get_Src(&ntgt)); }
 					else { COMTHROW(ff->get_Item(1, &ntgt)); }
 					colltype::iterator colli, collb = coll.begin(), colle = coll.end();
-					for(colli = collb; colli != colle; colli++) {
+					for(colli = collb; colli != colle; ++colli) {
 						CComPtr<IMgaFCO> pp;
 						(*colli)->getinterface(&pp);
 						if(ObjFor(ntgt)->IsDescendantOf(pp)) {
@@ -181,7 +181,7 @@ HRESULT FCO::AddInternalConnections(struct IMgaFCOs *ins, struct IMgaFCOs **objs
 					if(ll == 0) { COMTHROW(conn->get_Dst(&ntgt)); }
 					else { COMTHROW(ff->get_Item(1, &ntgt)); }
 					colltype::iterator colli, collb = coll.begin(), colle = coll.end();
-					for(colli = collb; colli != colle; colli++) {
+					for(colli = collb; colli != colle; ++colli) {
 						CComPtr<IMgaFCO> pp;
 						(*colli)->getinterface(&pp);
 						if(ObjFor(ntgt)->IsDescendantOf(pp)) {

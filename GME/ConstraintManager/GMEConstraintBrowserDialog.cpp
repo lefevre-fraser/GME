@@ -209,7 +209,7 @@ void CConstraintBrowserDialog::OnClickCheck()
 		}
 	}
 	else {
-		for ( HandlerSet::iterator it = m_setSelecteds.begin() ; it != m_setSelecteds.end() ; it++ ) {
+		for ( HandlerSet::iterator it = m_setSelecteds.begin() ; it != m_setSelecteds.end() ; ++it ) {
 			EvaluationRecord item;
 
 			HTREEITEM hParent = m_treeObjects.GetParentItem( *it );
@@ -220,7 +220,7 @@ void CConstraintBrowserDialog::OnClickCheck()
 			item.spObject = CREATE_GMEOBJECT( m_pFacade->GetTreeManager()->GetTypeManager(), spObject );
 
 			std::string strCID = OclCommonEx::Convert( m_treeObjects.GetItemText( *it ) );
-			for ( ConstraintMap::iterator cit = m_mapConstraint.begin() ; cit != m_mapConstraint.end() ; cit++ ) {
+			for ( ConstraintMap::iterator cit = m_mapConstraint.begin() ; cit != m_mapConstraint.end() ; ++cit ) {
 				if ( (*cit).second->GetFullName() == strCID ) {
 					item.spConstraint = (*cit).second;
 					break;
@@ -383,7 +383,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 {
 	NM_TREEVIEW* pNMTV = (NM_TREEVIEW*) pNMHDR;
 	if ( m_eKindActiveTree == CConstraintTreeCtrl::TK_OBJECT ) {
-		for ( HandlerSet::iterator it = m_setClicked.begin() ; it != m_setClicked.end() ; it++ ) {
+		for ( HandlerSet::iterator it = m_setClicked.begin() ; it != m_setClicked.end() ; ++it ) {
 			BOOL bSelected = m_treeObjects.GetItemState( *it, TVIS_SELECTED ) & TVIS_SELECTED;
 			if ( ! bSelected ) {
 				SelectItem( *it, false );
@@ -450,7 +450,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 		m_pFacade->m_vecUserConstraints.clear();
 		m_pFacade->m_vecMetaConstraints.clear();
 
-		for ( ConstraintMap::iterator i = m_mapConstraint.begin() ; i != m_mapConstraint.end() ; i++ ) {
+		for ( ConstraintMap::iterator i = m_mapConstraint.begin() ; i != m_mapConstraint.end() ; ++i ) {
 			if ( (*i).second->GetLocation() != OclGme::ConstraintBase::CL_META )
 				m_pFacade->m_vecUserConstraints.push_back( (*i).second );
 			else
@@ -971,7 +971,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 
 		if ( spConstraint->IsValid() ) {
 			ConstraintVectorMap::iterator it = m_mapConstraints.find( strType );
-			for ( OclGme::ConstraintVector::iterator vit = (*it).second.begin() ; vit != (*it).second.end() ; vit++ ) {
+			for ( OclGme::ConstraintVector::iterator vit = (*it).second.begin() ; vit != (*it).second.end() ; ++vit ) {
 				if ( (*vit)->GetFullName() == spConstraint->GetFullName() ) {
 					(*it).second.erase( vit );
 					break;
