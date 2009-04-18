@@ -104,6 +104,10 @@ BOOL CCompDlg::OnInitDialog()
 		lvc.cx = 200;
 		VERIFYTHROW( m_list.InsertColumn(2, &lvc) != -1 );
 
+		lvc.pszText = "Path";
+		lvc.cx = 300;
+		VERIFYTHROW( m_list.InsertColumn(3, &lvc) != -1 );
+
 		iconlist.Create(IDB_BITMAP1,16,0,15);
 		m_list.SetImageList(&iconlist,LVSIL_SMALL);
 		if(parameter.vt == VT_BSTR) {
@@ -164,6 +168,8 @@ void CCompDlg::ResetItems()
 	{
 		componenttype_enum qtype;
 		CComBstrObj desc;
+		CComBstrObj localDllDispPath;
+		CString localDllDispPathStr;
 
 		bool err_ass = false;
 		VARIANT_BOOL is_ass, can_ass;
@@ -171,6 +177,7 @@ void CCompDlg::ResetItems()
 		if(hr != S_OK) {
 			err_ass = true;
 			desc = L"???";
+			localDllDispPath = L"???";
 			qtype = COMPONENTTYPE_NONE;
 		}
 		else {
@@ -184,12 +191,23 @@ void CCompDlg::ResetItems()
 				if(m_dispmode == 1 && (is_ass == VARIANT_FALSE && can_ass == VARIANT_FALSE)) continue;
 			}
 			else is_ass = can_ass = VARIANT_TRUE;
+
+			HRESULT hr = registrar->GetLocalDllPathDisp(progids[i], PutOut(localDllDispPath));
+			ASSERT(SUCCEEDED(hr));
+			localDllDispPathStr = (const char*)PutInCString(localDllDispPath);
+/*#define BUFSIZE 1024
+			TCHAR buffer[BUFSIZE]=TEXT("");
+			DWORD retval = GetFullPathName(localDllDispPathStr, BUFSIZE, buffer, NULL);
+			if (retval != 0)
+			{
+				localDllDispPathStr = buffer;
+			} TODO: inspect this later*/
 		}
 
 		int index;
 		VERIFYTHROW( (index = m_list.InsertItem(i, PutInCString(desc), err_ass ? 3 : is_ass ? 0 : can_ass ? 1 : 2)) != -1 );
 
-		
+
 		CString ctype;
 		switch(qtype & COMPONENTTYPE_ALL)
 		{
@@ -223,20 +241,10 @@ void CCompDlg::ResetItems()
 
 		VERIFYTHROW( m_list.SetItemText(index, 1, ctype) != 0 );
 		VERIFYTHROW( m_list.SetItemText(index, 2, PutInCString(progids[i])) != 0 );
+		VERIFYTHROW( m_list.SetItemText(index, 3, localDllDispPathStr) != 0 );
 		if(!desc.Compare( PutInBstr(to_select))) {
 			m_list.SetItemState(index, LVIS_SELECTED, LVIS_SELECTED);
 		}
-/*
-		LVITEM stat;
-		stat.iItem = index;
-		stat.iSubItem = 0;
-		stat.mask = LVIF_STATE;
-		stat.state = INDEXTOSTATEIMAGEMASK(2);
-		stat.stateMask = LVIS_STATEIMAGEMASK;
-//		stat.iImage = 1;
-//		stat.pszText = "Haha";
-		VERIFYTHROW( m_list.SetItemState(index, &stat));
-*/
 	}
 }
 
