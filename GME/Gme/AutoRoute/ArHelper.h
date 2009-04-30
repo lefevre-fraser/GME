@@ -2,8 +2,16 @@
 #ifndef __ARHELPER_H
 #define __ARHELPER_H
 
+#include "GmeStd.h"
+#include "Gme.h"
+
+#ifdef _DEBUG
+//	#define _DEBUG_DEEP
+#endif
+
 // --------------------------- CRect && CPoint
 
+static const CPoint emptyPoint = CPoint(-100000, -100000);
 
 CRect InflatedRect(const CRect& rect, int a);
 CRect DeflatedRect(const CRect& rect, int a);
@@ -24,53 +32,38 @@ int IsLineMeetVLine(const CPoint& start, const CPoint& end, long y1, long y2, lo
 int IsLineClipRect(const CPoint& start, const CPoint& end, const CRect& rect);
 int Intersect(long first_x1, long first_x2, long second_x1, long second_x2);
 
-int IsOpeningBracket(CPoint* start_prev, CPoint* start, CPoint* end, CPoint* end_next, int ishorizontal);
-int IsClosingBracket(CPoint* start_prev, CPoint* start, CPoint* end, CPoint* end_next, int ishorizontal);
 
+inline int IsHorizontal(RoutingDirection dir) { return dir == Dir_Right || dir == Dir_Left; }
+inline int IsVertical(RoutingDirection dir) { return dir == Dir_Top || dir == Dir_Bottom; }
+inline int IsRightAngle(RoutingDirection dir) { return Dir_Top <= dir && dir <= Dir_Left; }
+inline int IsTopLeft(RoutingDirection dir) { return dir == Dir_Top || dir == Dir_Left; }
+inline int IsBottomRight(RoutingDirection dir) { return dir == Dir_Bottom || dir == Dir_Right; }
+int AreInRightAngle(RoutingDirection dir1, RoutingDirection dir2);
+RoutingDirection NextClockwiseDir(RoutingDirection dir);
+RoutingDirection PrevClockwiseDir(RoutingDirection dir);
+RoutingDirection ReverseDir(RoutingDirection dir);
 
-// --------------------------- EArDir
-
-
-enum EArDir
-{
-	Dir_None = -1,
-	Dir_Top,
-	Dir_Right,
-	Dir_Bottom,
-	Dir_Left,
-	Dir_Skew
-};
-
-inline int IsHorizontal(EArDir dir) { return dir == Dir_Right || dir == Dir_Left; }
-inline int IsVertical(EArDir dir) { return dir == Dir_Top || dir == Dir_Bottom; }
-inline int IsRightAngle(EArDir dir) { return Dir_Top <= dir && dir <= Dir_Left; }
-inline int IsTopLeft(EArDir dir) { return dir == Dir_Top || dir == Dir_Left; }
-inline int IsBottomRight(EArDir dir) { return dir == Dir_Bottom || dir == Dir_Right; }
-int AreInRightAngle(EArDir dir1, EArDir dir2);
-EArDir NextClockwiseDir(EArDir dir);
-EArDir PrevClockwiseDir(EArDir dir);
-EArDir ReverseDir(EArDir dir);
-
-CPoint StepOneInDir(const CPoint& point, EArDir dir);
-long& GetRectCoord(CRect& rect, EArDir dir);
-long GetRectOuterCoord(const CRect& rect, EArDir dir);
+CPoint StepOneInDir(const CPoint& point, RoutingDirection dir);
+long& GetRectCoord(CRect& rect, RoutingDirection dir);
+long GetRectOuterCoord(const CRect& rect, RoutingDirection dir);
 inline long& GetPointCoord(CPoint& point, int ishorizontal) { return ishorizontal ? point.x : point.y; }
-inline long& GetPointCoord(CPoint& point, EArDir dir) { return IsHorizontal(dir) ? point.x : point.y; }
-inline long ChooseInDir(long a, long b, EArDir dir) { return IsTopLeft(dir) ? min(a,b) : max(a,b); }
+inline long& GetPointCoord(CPoint& point, RoutingDirection dir) { return IsHorizontal(dir) ? point.x : point.y; }
+inline long ChooseInDir(long a, long b, RoutingDirection dir) { return IsTopLeft(dir) ? min(a,b) : max(a,b); }
 
-EArDir GetMajorDir(const CSize& offset);
-EArDir GetMinorDir(const CSize& offset);
-EArDir ExGetMajorDir(const CSize& offset);
-EArDir ExGetMinorDir(const CSize& offset);
-EArDir GetDir(const CSize& offset, EArDir nodir = Dir_None);
-int IsPointInDirFrom(const CPoint& point, const CPoint& from, EArDir dir);
-int IsPointInDirFrom(const CPoint& point, const CRect& rect, EArDir dir);
+RoutingDirection GetMajorDir(const CSize& offset);
+RoutingDirection GetMinorDir(const CSize& offset);
+RoutingDirection ExGetMajorDir(const CSize& offset);
+RoutingDirection ExGetMinorDir(const CSize& offset);
+RoutingDirection GetDir(const CSize& offset, RoutingDirection nodir = Dir_None);
+RoutingDirection GetSkewDir(const CSize& offset, RoutingDirection nodir = Dir_None);
+int IsPointInDirFrom(const CPoint& point, const CPoint& from, RoutingDirection dir);
+int IsPointInDirFrom(const CPoint& point, const CRect& rect, RoutingDirection dir);
 int IsPointBetweenSides(const CPoint& point, const CRect& rect, int ishorizontal = 1);
-inline int IsPointBetweenSides(const CPoint& point, const CRect& rect, EArDir dir) { return IsPointBetweenSides(point, rect, IsHorizontal(dir)); }
-int IsCoordInDirFrom(long coord, long from, EArDir dir);
+inline int IsPointBetweenSides(const CPoint& point, const CRect& rect, RoutingDirection dir) { return IsPointBetweenSides(point, rect, IsHorizontal(dir)); }
+RoutingDirection PointOnSide(const CPoint& point, const CRect& rect);
+int IsCoordInDirFrom(long coord, long from, RoutingDirection dir);
 
-EArDir OnWhichEdge(const CRect& rect, const CPoint& point);
-
+RoutingDirection OnWhichEdge(const CRect& rect, const CPoint& point);
 
 // --------------------------- CArFindNearestLine
 
@@ -88,6 +81,41 @@ public:
 	CPoint point;
 	int dist1;		// |(x,y)| = max(|x|,|y|)
 	int dist2;		// |(x,y)| = |x| or |y|
+};
+
+
+// --------------------------- CPointList
+
+class CPointListPath : public CList<CPoint, CPoint&>
+{
+public:
+	POSITION GetHeadEdge(CPoint& start, CPoint& end) const;
+	POSITION GetTailEdge(CPoint& start, CPoint& end) const;
+	void GetNextEdge(POSITION& pos, CPoint& start, CPoint& end) const;
+	void GetPrevEdge(POSITION& pos, CPoint& start, CPoint& end) const;
+	void GetEdge(POSITION pos, CPoint& start, CPoint& end) const;
+
+	POSITION GetHeadEdgePtrs(CPoint*& start, CPoint*& end);
+	POSITION GetTailEdgePtrs(CPoint*& start, CPoint*& end);
+	void GetNextEdgePtrs(POSITION& pos, CPoint*& start, CPoint*& end);
+	void GetPrevEdgePtrs(POSITION& pos, CPoint*& start, CPoint*& end);
+	void GetEdgePtrs(POSITION pos, CPoint*& start, CPoint*& end);
+	CPoint* GetStartPoint(POSITION pos);
+	CPoint* GetEndPoint(POSITION pos);
+ 	CPoint* GetPointBeforeEdge(POSITION pos);
+	CPoint* GetPointAfterEdge(POSITION pos);
+
+	POSITION GetEdgePosBeforePoint(POSITION pos) const;
+	POSITION GetEdgePosAfterPoint(POSITION pos) const;
+	POSITION GetEdgePosForStartPoint(const CPoint& startpoint);
+
+// --- Debug
+
+#ifdef _DEBUG
+public:
+	void AssertValidPos(POSITION pos) const;
+	void DumpPoints(const CString& msg) const;
+#endif
 };
 
 

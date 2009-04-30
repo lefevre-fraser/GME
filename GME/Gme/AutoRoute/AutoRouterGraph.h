@@ -14,11 +14,33 @@
 
 #include <vector>
 #include <algorithm>
-using namespace std;
-typedef vector<CComObjPtr<CAutoRouterBox> > CAutoRouterBoxList;
-typedef vector<CComObjPtr<CAutoRouterPath> > CAutoRouterPathList;
 
-typedef CList<CPoint, CPoint&>				CPointList;
+
+typedef std::vector<CComPtr<IAutoRouterBox> > CAutoRouterBoxList;
+typedef std::vector<CComPtr<IAutoRouterPath> > CAutoRouterPathList;
+
+typedef CList<CPoint, CPoint&> CPointList;
+
+typedef CMap<IAutoRouterPath*, IAutoRouterPath*, CPointListPath*, CPointListPath* > CMapCARPath2CPointList;
+typedef CMap<void*, void*, std::vector<CPoint>, std::vector<CPoint> > CMapCARObject2CPoints;
+
+// Functions for CMapCARObject2CPoints and CMapCARPath2CPointList, see AutoRouterGraph.cpp
+typedef CPointListPath* LPPointList;
+
+template<>
+BOOL AFXAPI CompareElements< LPPointList, LPPointList >
+	 (const LPPointList* pElement1, const LPPointList* pElement2);
+
+template<>
+UINT AFXAPI HashKey< void* > (void* key);
+
+typedef std::vector<CPoint> CARPoints;
+
+template<>
+BOOL AFXAPI CompareElements< CARPoints, CARPoints >
+	 (const CARPoints* pElement1, const CARPoints* pElement2);
+// End of functions for CMapCARObject2CPoints and CMapCARPath2CPointList, see AutoRouterGraph.cpp
+
 
 // CAutoRouterGraph
 class ATL_NO_VTABLE CAutoRouterGraph : 
@@ -28,9 +50,6 @@ class ATL_NO_VTABLE CAutoRouterGraph :
 {
 public:
 	CAutoRouterGraph();
-
-	//only the COM interface methods are public, thus we need lots of friends
-	friend CAutoRouterEdgeList;
 
 DECLARE_REGISTRY_RESOURCEID(IDR_AUTOROUTERGRAPH)
 
@@ -43,143 +62,148 @@ END_COM_MAP()
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	HRESULT FinalConstruct()
-	{
-		horizontal.SetOwner(this);
-		vertical.SetOwner(this);
-
-		CalculateSelfPoints();
-		AddEdges(this);
-
-		return S_OK;
-	}
-
-	void FinalRelease() 
-	{
-	}
+	HRESULT FinalConstruct(void);
+	void FinalRelease(void);
 
 //box:
 
 private:
-	void Remove(CComObjPtr<CAutoRouterBox> box);
+	void Remove(CComPtr<IAutoRouterBox> box);
 
 	void DeleteAllBoxes();
 	const CAutoRouterBoxList& GetBoxList() const { return boxes; }
 	int HasNoBox() const { return boxes.size() == 0; }
 	int GetBoxCount() const { return boxes.size(); }
 
-	void SetPortAttr(CComObjPtr<CAutoRouterPort> port, unsigned int attr);
+	void SetPortAttr(CComPtr<IAutoRouterPort> port, unsigned int attr);
 
-	int IsRectClipBoxes(CRect rect) const;
-	int IsLineClipBoxes(CPoint p1, CPoint p2) const;
-	int CanBoxAt(CRect rect) const;
+	int IsRectClipBoxes(const CRect& rect) const;
+	int IsLineClipBoxes(const CPoint& p1, const CPoint& p2) const;
+	int CanBoxAt(const CRect& rect) const;
+	CComPtr<IAutoRouterBox> GetBoxAt(const CPoint& point, int nearness = 0) const;
 
-	CComObjPtr<CAutoRouterBox> AddAtomicPort(CRect rect, unsigned int attr);
+	CComPtr<IAutoRouterBox> AddAtomicPort(const CRect& rect, unsigned int attr);
 
 //path:
-	CComObjPtr<CAutoRouterPath> CreatePath() const;
-	void Add(CComObjPtr<CAutoRouterPath> path);
-	void Remove(CComObjPtr<CAutoRouterPath> path);
+	void Add(CComPtr<IAutoRouterPath> path);
+	void Remove(CComPtr<IAutoRouterPath> path);
 
 	void DeleteAllPaths();
 	const CAutoRouterPathList& GetPathList() const { return paths; }
 	int HasNoPath() const { return paths.size() == 0; }
 	int GetPathCount() const { return paths.size(); }
 
-	SAutoRouterEdge* GetListEdgeAt(const CPoint& point, int nearness = 0) const;
+	CAutoRouterEdge* GetListEdgeAt(const CPoint& point, int nearness = 0) const;
 
 // --- Boxes && Paths (FOR EXTERNAL USE)
 
-private:
 	int IsEmpty() const { return (boxes.size() == 0) && (paths.size() == 0); }
 
 	CRect GetSurroundRect() const;
 
 // --- Navigation
 
-private:
-	CComObjPtr<CAutoRouterBox> GetOutOfBox(CPoint& point, EArDir dir) const;
-
-	CComObjPtr<CAutoRouterBox> GoToNextBox(CPoint& point, EArDir dir, long stophere) const;
-	CComObjPtr<CAutoRouterBox> GoToNextBox(CPoint& point, EArDir dir, CPoint stophere) const 
+	CComPtr<IAutoRouterBox> GetOutOfBox(CPoint& point, RoutingDirection dir) const;
+	CComPtr<IAutoRouterBox> GoToNextBox(CPoint& point, RoutingDirection dir, long stophere) const;
+	CComPtr<IAutoRouterBox> GoToNextBox(CPoint& point, RoutingDirection dir, CPoint& stophere) const 
 		{ return GoToNextBox(point, dir, GetPointCoord(stophere, dir)); }
 
-	CComObjPtr<CAutoRouterBox> GoToNextBox(CPoint& point, EArDir dir, long stop1, long stop2) const
-		{ return GoToNextBox(point, dir, ChooseInDir(stop1, stop2,ReverseDir(dir))); }
-	CComObjPtr<CAutoRouterBox> GoToNextBox(CPoint& point, EArDir dir, CPoint stop1, CPoint stop2) const
+	CComPtr<IAutoRouterBox> GoToNextBox(CPoint& point, RoutingDirection dir, long stop1, long stop2) const
+		{ return GoToNextBox(point, dir, ChooseInDir(stop1, stop2, ReverseDir(dir))); }
+	CComPtr<IAutoRouterBox> GoToNextBox(CPoint& point, RoutingDirection dir, CPoint& stop1, CPoint& stop2) const
 		{ return GoToNextBox(point, dir, GetPointCoord(stop1, dir), GetPointCoord(stop2, dir)); }
 
-	void GetLimitsOfEdge(CPoint start, CPoint end, long& min, long& max) const;
+	void GetLimitsOfEdge(const CPoint& start, const CPoint& end, long& min, long& max) const;
+	int IsPointInBox(const CPoint& point) const { return GetBoxAt(point) != NULL; }
 
-private:
-	void Connect(CComObjPtr<CAutoRouterPath> path);
-	void Connect(CComObjPtr<CAutoRouterPath> path, CPoint startpoint, CPoint endpoint);
+	bool Connect(CComPtr<IAutoRouterPath> path);
+	bool Connect(CComPtr<IAutoRouterPath> path, CPoint& startpoint, CPoint& endpoint);
 
-	void ConnectPoints(CPointList& ret, CPoint startpoint, CPoint endpoint, EArDir hintstartdir, EArDir hintenddir);
+	void ConnectPoints(CPointListPath& ret, CPoint& startpoint, CPoint& endpoint, RoutingDirection hintstartdir, RoutingDirection hintenddir);
 
 	void DisconnectAll();
-	void Disconnect(CComObjPtr<CAutoRouterPath> path);
+	void Disconnect(CComPtr<IAutoRouterPath> path);
 
-	void DisconnectPathsClipping(CRect rect);
-	void DisconnectPathsFrom(CComObjPtr<CAutoRouterBox> box);
-	void DisconnectPathsFrom(CComObjPtr<CAutoRouterPort> port);
+	void DisconnectPathsClipping(const CRect& rect);
+	void DisconnectPathsFrom(CComPtr<IAutoRouterBox> box);
+	void DisconnectPathsFrom(CComPtr<IAutoRouterPort> port);
 
 // --- Edges
 
-private:
-	void AddEdges(CComObjPtr<CAutoRouterGraph> graph) { horizontal.AddEdges(graph); vertical.AddEdges(graph);}
-	void AddEdges(CComObjPtr<CAutoRouterBox> box) { horizontal.AddEdges(box); vertical.AddEdges(box);}
-	void AddEdges(CComObjPtr<CAutoRouterPort> port) { horizontal.AddEdges(port); vertical.AddEdges(port); }
-	void AddEdges(CComObjPtr<CAutoRouterPath> path) { horizontal.AddEdges(path); vertical.AddEdges(path); }
-	void DeleteEdges(CComObjPtr<IUnknown> object) { horizontal.DeleteEdges(object); vertical.DeleteEdges(object); }
+	void AddSelfEdges(void);
+	void AddEdges(CComPtr<IAutoRouterGraph> graph);
+	void AddEdges(CComPtr<IAutoRouterBox> box);
+	void AddEdges(CComPtr<IAutoRouterPort> port);
+	bool AddEdges(CComPtr<IAutoRouterPath> path);
+	void DeleteEdges(CComPtr<IUnknown> object);
 
 	void AddAllEdges();
-	void DeleteAllEdges() {horizontal.DeleteAllEdges(); vertical.DeleteAllEdges(); }
+	void DeleteAllEdges();
 
-	void AddBoxAndPortEdges(CComObjPtr<CAutoRouterBox> box);
-	void DeleteBoxAndPortEdges(CComObjPtr<CAutoRouterBox> box);
+	void AddBoxAndPortEdges(CComPtr<IAutoRouterBox> box);
+	void DeleteBoxAndPortEdges(CComPtr<IAutoRouterBox> box);
 
-	CAutoRouterEdgeList& GetEdgeList(int ishorizontal) { return ishorizontal ? horizontal : vertical; }
-
-private:
+	CAutoRouterEdgeList& GetEdgeList(int ishorizontal);
 
 	CAutoRouterEdgeList horizontal;
 	CAutoRouterEdgeList vertical;
 
 // --- Path && Edges
 
-private:
-	int CanDeleteTwoEdgesAt(CComObjPtr<CAutoRouterPath> path, POSITION pos) const;
-	void DeleteTwoEdgesAt(CComObjPtr<CAutoRouterPath> path, POSITION pos);
-	void DeleteSamePointsAt(CComObjPtr<CAutoRouterPath> path, POSITION pos);
+	int CanDeleteTwoEdgesAt(CComPtr<IAutoRouterPath> path, CPointListPath& points, POSITION pos) const;
+	void DeleteTwoEdgesAt(CComPtr<IAutoRouterPath> path, CPointListPath& points, POSITION pos);
+	void DeleteSamePointsAt(CComPtr<IAutoRouterPath> path, CPointListPath& points, POSITION pos);
 	int SimplifyPaths();
-	void CenterStairsInPathPoints(CComObjPtr<CAutoRouterPath> path);
-	void SimplifyPathPoints(CComObjPtr<CAutoRouterPath> path);
+	void CenterStairsInPathPoints(CComPtr<IAutoRouterPath> path, RoutingDirection hintstartdir, RoutingDirection hintenddir);
+	void SimplifyPathPoints(CComPtr<IAutoRouterPath> path);
 	void ConnectAllDisconnectedPaths();
-	bool IsEdgeFixed(const CPoint& startpoint, const CPoint& endpoint);
+	bool IsEdgeFixed(CComPtr<IAutoRouterPath> path, const CPoint& startpoint, const CPoint& endpoint);
 
 public:
 	STDMETHOD(CreateBox)(IAutoRouterBox** result);
-	STDMETHOD(Add)(IAutoRouterBox* box);
+	STDMETHOD(AddBox)(IAutoRouterBox* box);
 	STDMETHOD(DeleteBox)(IAutoRouterBox* box);
-	STDMETHOD(ShiftBy)(IAutoRouterBox* box, long sizeX, long sizeY);
-	STDMETHOD(AutoRoute)(long* result);
+	STDMETHOD(ShiftBoxBy)(IAutoRouterBox* box, long sizeX, long sizeY);
+
+	STDMETHOD(AutoRoute)(long aspect, long* result);
 	STDMETHOD(DeletePath)(IAutoRouterPath* path);
 	STDMETHOD(DeleteAll)();
 	STDMETHOD(GetPathAt)(long pointX, long pointY, long nearness, IAutoRouterPath** result);
-	STDMETHOD(AddPath)(IAutoRouterPort* startport,  IAutoRouterPort* endport, IAutoRouterPath** result);
-	STDMETHOD(IsEdgeFixed)(long startX, long startY, long endX, long endY, VARIANT_BOOL* result);
+	STDMETHOD(AddPath)(VARIANT_BOOL isAutoRouted, IAutoRouterPort* startport,  IAutoRouterPort* endport, IAutoRouterPath** result);
+	STDMETHOD(IsEdgeFixed)(IAutoRouterPath* path, long startX, long startY, long endX, long endY, VARIANT_BOOL* result);
+
+	STDMETHOD(GetSelfPoints)(long* p1x, long* p1y, long* p2x, long* p2y, long* p3x, long* p3y, long* p4x, long* p4y);
+
 	STDMETHOD(Destroy)();
 
 private:
 	CAutoRouterBoxList boxes;
 	CAutoRouterPathList paths;
 
-
-private:
+	std::vector<CPoint> selfpoints;
 	void CalculateSelfPoints();
 
-	CPoint selfpoints[4];
+	// Helper stores and container to overcome CPoint pointer distributions
+	CMapCARPath2CPointList arPathPointsCache;
+	CMapCARObject2CPoints arObjectsPointsCache;
+	void EmptyPointsCache(void);
+	bool UpdatePathPointsFromCache(CComPtr<IAutoRouterPath> path, bool modifyOrSet = true);
+	bool SetPathPointsFromCache(CComPtr<IAutoRouterPath> path);
+	bool UpdatePaths(void);
+
+	void GetPointList(CComPtr<IAutoRouterPath> path, CPointListPath& pointList) const;
+	bool UpdatePoints(CComPtr<IAutoRouterPath> path, const CPointListPath& pointList, bool modifyOrSet);
+
+// --- Debug
+
+#ifdef _DEBUG
+public:
+	virtual void AssertValid() const;
+	void AssertValidBox(CComPtr<IAutoRouterBox> box) const;
+	void AssertValidPath(CComPtr<IAutoRouterPath> path) const;
+	void DumpPaths(int pos, int c);
+	void DumpEdgeLists(void);
+#endif
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(AutoRouterGraph), CAutoRouterGraph)

@@ -533,6 +533,11 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Jump to Source",              ID_CONNCNTX_REVERSE
         MENUITEM "Jump to Destination",         ID_CONNCNTX_FOLLOW
+        MENUITEM SEPARATOR
+        MENUITEM "Disable auto routing of this connection", ID_DISABLEAUTOROUTINGOFCONN
+        MENUITEM "Enable auto routing of this connection", ID_ENABLEAUTOROUTINGOFCONN
+		MENUITEM "Delete this edge's customization", ID_DELETECONNEDGECUSTOMDATA
+        MENUITEM "Delete all customization for this connection", ID_DELETECONNROUTECUSTOMDATA
     END
 END
 

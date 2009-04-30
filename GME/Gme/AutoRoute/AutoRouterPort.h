@@ -10,6 +10,7 @@
 #include "GME.h"
 #include "gmelib.h"
 
+#include <vector>
 
 #define ARPORT_EndOnTop					0x0001
 #define ARPORT_EndOnRight				0x0002
@@ -41,16 +42,11 @@ class CAutoRouterGraph;
 
 class ATL_NO_VTABLE CAutoRouterPort : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CAutoRouterPort, &CLSID_AutoRouterPort>,	
+	public CComCoClass<CAutoRouterPort, &CLSID_AutoRouterPort>,
 	public IDispatchImpl<IAutoRouterPort, &IID_IAutoRouterPort, &LIBID_GmeLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
 {
 public:
 	CAutoRouterPort();
-
-	//only the COM interface methods are public, thus we need lots of friends
-	friend CAutoRouterBox;
-	friend CAutoRouterEdgeList;
-	friend CAutoRouterGraph;
 
 DECLARE_REGISTRY_RESOURCEID(IDR_AUTOROUTERPORT)
 
@@ -60,54 +56,46 @@ BEGIN_COM_MAP(CAutoRouterPort)
 	COM_INTERFACE_ENTRY(IDispatch)
 END_COM_MAP()
 
-
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	HRESULT FinalConstruct()
-	{
-		return S_OK;
-	}
-	
-	void FinalRelease() 
-	{
-		this->SetOwner(NULL);
-	}
+	HRESULT FinalConstruct(void);
+	void FinalRelease(void);
 
 private:
-	int CanHaveStartEndPointOn(EArDir dir, int isstart) const;
-	int CanHaveStartEndPoint(int isstart) const;
-	int CanHaveStartEndPointHorizontal(int ishorizontal) const;
-	int IsConnectToCenter() const { return (attributes & ARPORT_ConnectToCenter) != 0; }
-	EArDir GetStartEndDirTo(CPoint point, int isstart, EArDir notthis = Dir_None) const;
-
-	int CanCreateStartEndPointAt(CPoint point, int isstart, int nearness = 0) const;
-	CPoint CreateStartEndPointAt(CPoint point, int isstart) const;
-	CPoint CreateStartEndPointOn(EArDir dir) const;
-	CPoint CreateStartEndPointTo(CPoint point, int isstart) const;
-
-	unsigned int GetAttributes() const { return attributes; }
-	bool HasLimitedDirs() { return limitedDirections; }
-
-	CRect GetRect() const { return rect; }
-	CPoint GetCenter() const { return rect.CenterPoint(); }
-	int IsRectEmpty() const { return rect.IsRectEmpty(); }
-	EArDir OnWhichEdge(CPoint point) const { return ::OnWhichEdge(rect, point); }
-
-	int IsPortAt(CPoint point, int nearness = 0) const { return IsPointIn(point, rect, nearness); }
-	int IsPortIn(CRect r) const { return IsRectIn(rect, r); }
-	int IsPortClip(CRect r) const { return IsRectClip(rect, r); }
-
 	void CalculateSelfPoints();
 
-	void ShiftBy(CSize offset);
-
-	void SetOwner(CComObjPtr<CAutoRouterBox> box);
-
 public:
-	STDMETHOD(SetRect)(long p1, long p2, long p3, long p4);
-	STDMETHOD(SetAttributes)(long attr);
-	STDMETHOD(SetLimitedDirs)(long p_ltd);
 	STDMETHOD(GetOwner)(IAutoRouterBox** result);
+	STDMETHOD(HasOwner)(VARIANT_BOOL* result);
+	STDMETHOD(SetOwner)(IAutoRouterBox* box);
+
+	STDMETHOD(GetRect)(long* p1, long* p2, long* p3, long* p4);
+	STDMETHOD(IsRectEmpty)(VARIANT_BOOL* result);
+	STDMETHOD(GetCenter)(long* px, long* py);
+	STDMETHOD(SetRect)(long p1, long p2, long p3, long p4);
+	STDMETHOD(ShiftBy)(long offsetx, long offsety);
+	STDMETHOD(GetSelfPoints)(long* p1x, long* p1y, long* p2x, long* p2y, long* p3x, long* p3y, long* p4x, long* p4y);
+
+	STDMETHOD(GetAttributes)(long* result);
+	STDMETHOD(SetAttributes)(long attr);
+	STDMETHOD(IsConnectToCenter)(VARIANT_BOOL* result);
+	STDMETHOD(HasLimitedDirs)(VARIANT_BOOL* result);
+	STDMETHOD(SetLimitedDirs)(VARIANT_BOOL ltd);
+
+	STDMETHOD(IsPortAt)(long px, long py, long nearness, VARIANT_BOOL* result);
+	STDMETHOD(IsPortClip)(long p1, long p2, long p3, long p4, VARIANT_BOOL* result);
+	STDMETHOD(IsPortIn)(long p1, long p2, long p3, long p4, VARIANT_BOOL* result);
+	STDMETHOD(OnWhichEdge)(long px, long py, RoutingDirection* result);
+
+	STDMETHOD(CanHaveStartEndPointOn)(RoutingDirection dir, long isstart, VARIANT_BOOL* result);
+	STDMETHOD(CanHaveStartEndPoint)(long isstart, VARIANT_BOOL* result);
+	STDMETHOD(CanHaveStartEndPointHorizontal)(long ishorizontal, VARIANT_BOOL* result);
+	STDMETHOD(GetStartEndDirTo)(long px, long py, long isstart, RoutingDirection notthis, RoutingDirection* result);
+
+	STDMETHOD(CanCreateStartEndPointAt)(long px, long py, long isstart, long nearness, VARIANT_BOOL* result);
+	STDMETHOD(CreateStartEndPointAt)(long px, long py, long isstart, long* resultX, long* resultY);
+	STDMETHOD(CreateStartEndPointTo)(long px, long py, long isstart, long* resultX, long* resultY);
+	STDMETHOD(CreateStartEndPointOn)(RoutingDirection dir, long* resultX, long* resultY);
 
 private:
 	unsigned int attributes;
@@ -116,12 +104,13 @@ private:
 	CRect rect;
 	CPoint selfpoints[4];
 
-	CComObjPtr<CAutoRouterBox> owner;
-};
+	CComPtr<IAutoRouterBox> owner;
 
-inline CPoint CAutoRouterPort::CreateStartEndPointTo(CPoint point, int isstart) const
-{
-	return CreateStartEndPointOn(GetStartEndDirTo(point, isstart));
-}
+#ifdef _DEBUG
+public:
+	virtual void AssertValid() const;
+	void AssertValidStartEndPoint(const CPoint& point, RoutingDirection dir, int isstart);
+#endif
+};
 
 OBJECT_ENTRY_AUTO(__uuidof(AutoRouterPort), CAutoRouterPort)

@@ -12,14 +12,85 @@ class CAutoRouterGraph;
 
 class CAutoRouterEdgeList;
 
-struct SAutoRouterEdge
+class CAutoRouterEdge
 {
-	friend CAutoRouterEdgeList;
-	friend CAutoRouterGraph;
+public:
+	CAutoRouterEdge();
+	virtual ~CAutoRouterEdge();
+
+	CComPtr<IUnknown> GetOwner(void) const;
+	void	SetOwner(CComPtr<IUnknown> owner);
+	CPoint	GetStartPointPrev(void) const;
+	bool	IsStartPointPrevNull(void) const;
+	void	SetStartPointPrev(CPoint* point);
+	CPoint	GetStartPoint(void) const;
+	bool	IsSameStartPointByPointer(const CPoint* point) const;
+	bool	IsStartPointNull(void) const;
+	void	SetStartPoint(CPoint* point);
+	void	SetStartPointX(int x);
+	void	SetStartPointY(int y);
+	CPoint	GetEndPoint(void) const;
+	bool	IsEndPointNull(void) const;
+	void	SetEndPoint(CPoint* point);
+	void	SetStartAndEndPoint(CPoint* startPoint, CPoint* endPoint);
+	void	SetEndPointX(int x);
+	void	SetEndPointY(int y);
+	CPoint	GetEndPointNext(void) const;
+	bool	IsEndPointNextNull(void) const;
+	void	SetEndPointNext(CPoint* point);
+
+	float	GetPositionY(void) const;
+	void	SetPositionY(float y);
+	void	AddToPositionY(float dy);
+	int		GetPositionX1(void) const;
+	void	SetPositionX1(int x1);
+	int		GetPositionX2(void) const;
+	void	SetPositionX2(int x2);
+	bool	GetBracketClosing(void) const;
+	void	SetBracketClosing(bool b);
+	bool	GetBracketOpening(void) const;
+	void	SetBracketOpening(bool b);
+
+	CAutoRouterEdge* GetOrderNext(void);
+	void	SetOrderNext(CAutoRouterEdge* ordernext);
+	CAutoRouterEdge* GetOrderPrev(void);
+	void	SetOrderPrev(CAutoRouterEdge* orderprev);
+
+	long	GetSectionX1(void);
+	void	SetSectionX1(long x1);
+	long	GetSectionX2(void);
+	void	SetSectionX2(long x2);
+	CAutoRouterEdge* GetSectionNext(void);
+	CAutoRouterEdge** GetSectionNextPtr(void);
+	void	SetSectionNext(CAutoRouterEdge* sectionnext);
+	CAutoRouterEdge* GetSectionDown(void);
+	CAutoRouterEdge** GetSectionDownPtr(void);
+	void	SetSectionDown(CAutoRouterEdge* sectiondown);
+
+	bool	GetEdgeFixed(void);
+	void	SetEdgeFixed(bool ef);
+	bool	GetEdgeCustomFixed(void);
+	void	SetEdgeCustomFixed(bool ecf);
+	bool	GetEdgeCanpassed(void);
+	void	SetEdgeCanpassed(bool ecp);
+	RoutingDirection	GetDirection(void);
+	void	SetDirection(RoutingDirection dir);
+	void	RecalculateDirection(void);
+
+	CAutoRouterEdge* GetBlockPrev(void);
+	void	SetBlockPrev(CAutoRouterEdge* bp);
+	CAutoRouterEdge* GetBlockNext(void);
+	void	SetBlockNext(CAutoRouterEdge* bn);
+	CAutoRouterEdge* GetBlockTrace(void);
+	void	SetBlockTrace(CAutoRouterEdge* bt);
+
+	CAutoRouterEdge* GetClosestPrev(void);
+	void	SetClosestPrev(CAutoRouterEdge* cp);
+	CAutoRouterEdge* GetClosestNext(void);
+	void	SetClosestNext(CAutoRouterEdge* cn);
 
 private:
-
-	CComObjPtr<IUnknown> owner;
+	CComPtr<IUnknown> owner;
 	CPoint* startpoint_prev;
 	CPoint* startpoint;
 	CPoint* endpoint;
@@ -28,49 +99,49 @@ private:
 	float position_y;
 	long position_x1;
 	long position_x2;
-	int bracket_closing : 1;
-	int bracket_opening : 1;
-	
-	SAutoRouterEdge* order_next;
-	SAutoRouterEdge* order_prev;
+	bool bracket_closing;
+	bool bracket_opening;
+
+	CAutoRouterEdge* order_next;
+	CAutoRouterEdge* order_prev;
 
 	long section_x1;
 	long section_x2;
-	SAutoRouterEdge* section_next;
-	SAutoRouterEdge* section_down;
+	CAutoRouterEdge* section_next;
+	CAutoRouterEdge* section_down;
 
-	unsigned int edge_fixed : 1;
-	unsigned int edge_canpassed : 1;
+	bool edge_fixed;
+	bool edge_customFixed;
+	bool edge_canpassed;
+	RoutingDirection edge_direction;
 
-	SAutoRouterEdge* block_prev;
-	SAutoRouterEdge* block_next;
-	SAutoRouterEdge* block_trace;
+	CAutoRouterEdge* block_prev;
+	CAutoRouterEdge* block_next;
+	CAutoRouterEdge* block_trace;
 
-	SAutoRouterEdge* closest_prev;
-	SAutoRouterEdge* closest_next;
+	CAutoRouterEdge* closest_prev;
+	CAutoRouterEdge* closest_next;
 };
 
 class CAutoRouterEdgeList
 {
-private:
+public:
 	CAutoRouterEdgeList(int ishorizontal);
-	~CAutoRouterEdgeList();
+	virtual ~CAutoRouterEdgeList();
 
-	friend CAutoRouterGraph;
+	void SetOwner(CComPtr<IAutoRouterGraph> owner);
 
 private:
-	void SetOwner(CComObjPtr<CAutoRouterGraph> owner);
-	CComObjPtr<CAutoRouterGraph> owner;
+	CComPtr<IAutoRouterGraph> owner;
 
 // --- Edges
 
-private:
-	SAutoRouterEdge* CreateEdge() const;
-	void AddEdges(CComObjPtr<CAutoRouterPath> path);
-	void AddEdges(CComObjPtr<CAutoRouterBox> box);
-	void AddEdges(CComObjPtr<CAutoRouterPort> port);
-	void AddEdges(CComObjPtr<CAutoRouterGraph> graph);
-	void DeleteEdges(CComObjPtr<IUnknown> object);
+public:
+	bool AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath& pointList);
+	void AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CPoint>& selfpoints);
+	void AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoint>& selfpoints);
+	void AddEdges(CComPtr<IAutoRouterGraph> graph, std::vector<CPoint>& selfpoints);
+	void DeleteEdges(CComPtr<IUnknown> object);
 	void DeleteAllEdges();
 
 	int IsEmpty() const;
@@ -78,20 +149,27 @@ private:
 private:
 	int ishorizontal;
 
-private:
-	SAutoRouterEdge* GetEdge(const CPoint* startpoint, const CPoint* endpoint) const;
-	SAutoRouterEdge* GetEdgeAt(const CPoint& point, int nearness = 0) const;
+public:
+	CAutoRouterEdge* GetEdge(CComPtr<IAutoRouterPath> path, const CPoint& startpoint, const CPoint& endpoint) const;
+	CAutoRouterEdge* GetEdgeByPointer(const CPoint* startpoint, const CPoint* endpoint) const;
+	CAutoRouterEdge* GetEdgeAt(const CPoint& point, int nearness = 0) const;
+
+#ifdef _DEBUG
+public:
+	void AssertValidPathEdges(CComPtr<IAutoRouterPath> path, CPointListPath& points) const;
+	void DumpEdges(const CString& headMsg);
+#endif _DEBUG
 
 // --- Position
 
 private:
-	long Position_GetRealY(const SAutoRouterEdge* edge) const;
-	void Position_SetRealY(SAutoRouterEdge* edge, long y) const;
-	void Position_GetRealX(const SAutoRouterEdge* edge, long& x1, long& x2) const;
-	void Position_GetRealO(const SAutoRouterEdge* edge, long& o1, long& o2) const;
+	long Position_GetRealY(const CAutoRouterEdge* edge) const;
+	void Position_SetRealY(CAutoRouterEdge* edge, long y) const;
+	void Position_GetRealX(const CAutoRouterEdge* edge, long& x1, long& x2) const;
+	void Position_GetRealO(const CAutoRouterEdge* edge, long& o1, long& o2) const;
 
-	void Position_LoadY(SAutoRouterEdge* edge) const;
-	void Position_LoadB(SAutoRouterEdge* edge) const;
+	void Position_LoadY(CAutoRouterEdge* edge) const;
+	void Position_LoadB(CAutoRouterEdge* edge) const;
 	void PositionAll_StoreY() const;
 
 	void PositionAll_LoadX() const;
@@ -104,22 +182,22 @@ private:
 // --- Order
 
 private:
-	void Con_Order();
-	void Des_Order();
+	void Init_Order();
+	void Check_Order();
+
+public:
+	void InsertBefore(CAutoRouterEdge* edge, CAutoRouterEdge* before);
+	void InsertAfter(CAutoRouterEdge* edge, CAutoRouterEdge* after);
+	void InsertLast(CAutoRouterEdge* edge);
+	void Insert(CAutoRouterEdge* edge);
+	void Remove(CAutoRouterEdge* edge);
+	void Delete(CAutoRouterEdge* edge);
 
 private:
-	void InsertBefore(SAutoRouterEdge* edge, SAutoRouterEdge* before);
-	void InsertAfter(SAutoRouterEdge* edge, SAutoRouterEdge* after);
-	void InsertLast(SAutoRouterEdge* edge);
-	void Insert(SAutoRouterEdge* edge);
-	void Remove(SAutoRouterEdge* edge);
-	void Delete(SAutoRouterEdge* edge);
+	CAutoRouterEdge* SlideButNotPassEdges(CAutoRouterEdge* edge, float y);
 
-	SAutoRouterEdge* SlideButNotPassEdges(SAutoRouterEdge* edge, float y);
-
-private:
-	SAutoRouterEdge* order_first;
-	SAutoRouterEdge* order_last;
+	CAutoRouterEdge* order_first;
+	CAutoRouterEdge* order_last;
 
 #ifdef _DEBUG
 private:
@@ -129,42 +207,38 @@ private:
 // --- Section
 
 private:
-	void Con_Section();
-	void Des_Section();
+	void Init_Section();
+	void Check_Section();
 
-private:
 	void Section_Reset();
-	void Section_BeginScan(SAutoRouterEdge* blocker);
+	void Section_BeginScan(CAutoRouterEdge* blocker);
 	int Section_HasBlockedEdge();
-	SAutoRouterEdge* Section_GetBlockedEdge();
+	CAutoRouterEdge* Section_GetBlockedEdge();
 	int Section_IsImmediate();
 
-private:
-	SAutoRouterEdge* section_first;
-	SAutoRouterEdge* section_blocker;
-	SAutoRouterEdge** section_ptr2blocked;
+	CAutoRouterEdge* section_first;
+	CAutoRouterEdge* section_blocker;
+	CAutoRouterEdge** section_ptr2blocked;
 
 #ifdef _DEBUG
-public:
-	void Section_AssertLevel(SAutoRouterEdge* level, long x1, long x2) const;
+	void Section_AssertLevel(CAutoRouterEdge* level, long x1, long x2) const;
 	void AssertValidSection() const;
 	void AssertSectionReady() const;
 #endif
 
 // --- Bracket
 
-private:
-	int Bracket_IsClosing(const SAutoRouterEdge* edge) const;
-	int Bracket_IsOpening(const SAutoRouterEdge* edge) const;
-	int Bracket_IsSmallGap(const SAutoRouterEdge* blocked, const SAutoRouterEdge* blocker) const;
+	int Bracket_IsClosing(const CAutoRouterEdge* edge) const;
+	int Bracket_IsOpening(const CAutoRouterEdge* edge) const;
+	int Bracket_IsSmallGap(const CAutoRouterEdge* blocked, const CAutoRouterEdge* blocker) const;
 
-	int Bracket_ShouldBeSwitched(const SAutoRouterEdge* edge, const SAutoRouterEdge* next) const;
+	int Bracket_ShouldBeSwitched(const CAutoRouterEdge* edge, const CAutoRouterEdge* next) const;
 
 // --- Block
 
-private:
-	int Block_PushBackward(SAutoRouterEdge* blocked, SAutoRouterEdge* blocker);
-	int Block_PushForward(SAutoRouterEdge* blocked, SAutoRouterEdge* blocker);
+public:
+	int Block_PushBackward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker);
+	int Block_PushForward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker);
 	int Block_ScanForward();
 	int Block_ScanBackward();
 

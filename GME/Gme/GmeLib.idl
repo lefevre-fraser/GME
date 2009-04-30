@@ -20,6 +20,8 @@ library GmeLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
+	struct CustomPathData;
+
 	//  Class information for CMgaDataSource
 	[ uuid(FCB7DB63-9F59-46a6-9FEF-5C2679AEA69A) ]
 	coclass MgaDataSource

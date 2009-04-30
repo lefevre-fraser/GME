@@ -4,15 +4,13 @@
 #include "afxtempl.h"
 #include "float.h"
 
+#include <map>
+
 #include "AutoRouterGraph.h"
 #include "AutoRouterEdge.h"
 #include "AutoRouterPath.h"
 #include "AutoRouterBox.h"
 #include "AutoRouterPort.h"
-
-#ifdef _DEBUG
-// #define _DEBUG_DEEP
-#endif
 
 #define EDLS_S (ED_SMALLGAP)
 #define EDLS_R (ED_SMALLGAP+1)
@@ -24,7 +22,7 @@
 */
 
 /*
-	Every SAutoRouterEdge belongs to an edge of a CAutoRouterPath, CAutoRouterBox or CAutoRouterPort. This edge is
+	Every CAutoRouterEdge belongs to an edge of a CAutoRouterPath, CAutoRouterBox or CAutoRouterPort. This edge is
 	Represented by a CAutoRouterPoint with its next point. The variable 'point' will refer
 	to this CAutoRouterPoint.
 
@@ -44,7 +42,7 @@
 	belonging to the current section. The 'section_first' refers to the leftmost
 	edge in the section, while the 'section_next' to the next from left to right.
 
-	We say that the SAutoRouterEdge E1 "precede" the SAutoRouterEdge E2 if there is no other SAutoRouterEdge which
+	We say that the CAutoRouterEdge E1 "precede" the CAutoRouterEdge E2 if there is no other CAutoRouterEdge which
 	totally	blocks S1 from S2. So a section consists of the preceding edges of an 
 	infinite edge. We say that E1 is "adjacent" to E2, if E1 is the nearest edge
 	to E2 which precede it. Clearly, every edge has at most one adjacent precedence.
@@ -83,6 +81,370 @@
 */
 
 
+// --------------------------- CAutoRouterEdge
+
+CAutoRouterEdge::CAutoRouterEdge()
+{
+	this->owner				= NULL;
+
+	this->startpoint_prev	= NULL;
+	this->startpoint		= NULL;
+	this->endpoint			= NULL;
+	this->endpoint_next		= NULL;
+
+	this->position_y		= 0;
+	this->position_x1		= 0;
+	this->position_x2		= 0;
+	this->bracket_closing	= 0;
+	this->bracket_opening	= 0;
+
+	this->order_prev		= NULL;
+	this->order_next		= NULL;
+
+	this->edge_fixed		= 0;
+	this->edge_customFixed	= 0;
+	this->edge_canpassed	= 0;
+
+	this->position_y		= 0;
+
+	this->block_prev		= NULL;
+	this->block_next		= NULL;
+	this->block_trace		= NULL;
+
+	this->closest_prev		= NULL;
+	this->closest_next		= NULL;
+}
+
+CAutoRouterEdge::~CAutoRouterEdge()
+{
+}
+
+CComPtr<IUnknown> CAutoRouterEdge::GetOwner(void) const
+{
+	return owner;
+}
+
+void CAutoRouterEdge::SetOwner(CComPtr<IUnknown> owner)
+{
+	this->owner = owner;
+}
+
+CPoint CAutoRouterEdge::GetStartPointPrev(void) const
+{
+	return startpoint_prev == NULL ? emptyPoint : *startpoint_prev;
+}
+
+bool CAutoRouterEdge::IsStartPointPrevNull(void) const
+{
+	return startpoint_prev == NULL;
+}
+
+void CAutoRouterEdge::SetStartPointPrev(CPoint* point)
+{
+	startpoint_prev = point;
+}
+
+CPoint CAutoRouterEdge::GetStartPoint(void) const
+{
+	return startpoint == NULL ? emptyPoint : *startpoint;
+}
+
+bool CAutoRouterEdge::IsSameStartPointByPointer(const CPoint* point) const
+{
+	return startpoint == point;
+}
+
+bool CAutoRouterEdge::IsStartPointNull(void) const
+{
+	return startpoint == NULL;
+}
+
+void CAutoRouterEdge::SetStartPoint(CPoint* point)
+{
+	startpoint = point;
+	RecalculateDirection();
+}
+
+void CAutoRouterEdge::SetStartPointX(int x)
+{
+	startpoint->x = x;
+}
+
+void CAutoRouterEdge::SetStartPointY(int y)
+{
+	startpoint->y = y;
+}
+
+CPoint CAutoRouterEdge::GetEndPoint(void) const
+{
+	return endpoint == NULL ? emptyPoint : *endpoint;
+}
+
+bool CAutoRouterEdge::IsEndPointNull(void) const
+{
+	return endpoint == NULL;
+}
+
+void CAutoRouterEdge::SetEndPoint(CPoint* point)
+{
+	endpoint = point;
+	RecalculateDirection();
+}
+
+void CAutoRouterEdge::SetStartAndEndPoint(CPoint* startPoint, CPoint* endPoint)
+{
+	startpoint = startPoint;
+	endpoint = endPoint;
+	RecalculateDirection();
+}
+
+void CAutoRouterEdge::SetEndPointX(int x)
+{
+	endpoint->x = x;
+}
+
+void CAutoRouterEdge::SetEndPointY(int y)
+{
+	endpoint->y = y;
+}
+
+CPoint CAutoRouterEdge::GetEndPointNext(void) const
+{
+	return endpoint_next == NULL ? emptyPoint : *endpoint_next;
+}
+
+bool CAutoRouterEdge::IsEndPointNextNull(void) const
+{
+	return endpoint_next == NULL;
+}
+
+void CAutoRouterEdge::SetEndPointNext(CPoint* point)
+{
+	endpoint_next = point;
+}
+
+float CAutoRouterEdge::GetPositionY(void) const
+{
+	return position_y;
+}
+
+void CAutoRouterEdge::SetPositionY(float y)
+{
+	position_y = y;
+}
+
+void CAutoRouterEdge::AddToPositionY(float dy)
+{
+	position_y += dy;
+}
+
+int CAutoRouterEdge::GetPositionX1(void) const
+{
+	return position_x1;
+}
+
+void CAutoRouterEdge::SetPositionX1(int x1)
+{
+	position_x1 = x1;
+}
+
+int CAutoRouterEdge::GetPositionX2(void) const
+{
+	return position_x2;
+}
+
+void CAutoRouterEdge::SetPositionX2(int x2)
+{
+	position_x2 = x2;
+}
+
+bool CAutoRouterEdge::GetBracketClosing(void) const
+{
+	return bracket_closing;
+}
+
+void CAutoRouterEdge::SetBracketClosing(bool b)
+{
+	bracket_closing = b;
+}
+
+bool CAutoRouterEdge::GetBracketOpening(void) const
+{
+	return bracket_opening;
+}
+
+void CAutoRouterEdge::SetBracketOpening(bool b)
+{
+	bracket_opening = b;
+}
+
+CAutoRouterEdge* CAutoRouterEdge::GetOrderNext(void)
+{
+	return order_next;
+}
+
+void CAutoRouterEdge::SetOrderNext(CAutoRouterEdge* ordernext)
+{
+	order_next = ordernext;
+}
+
+CAutoRouterEdge* CAutoRouterEdge::GetOrderPrev(void)
+{
+	return order_prev;
+}
+
+void CAutoRouterEdge::SetOrderPrev(CAutoRouterEdge* orderprev)
+{
+	order_prev = orderprev;
+}
+
+long CAutoRouterEdge::GetSectionX1(void)
+{
+	return section_x1;
+}
+
+void CAutoRouterEdge::SetSectionX1(long x1)
+{
+	section_x1 = x1;
+}
+
+long CAutoRouterEdge::GetSectionX2(void)
+{
+	return section_x2;
+}
+
+void CAutoRouterEdge::SetSectionX2(long x2)
+{
+	section_x2 = x2;
+}
+
+CAutoRouterEdge* CAutoRouterEdge::GetSectionNext(void)
+{
+	return section_next;
+}
+
+CAutoRouterEdge** CAutoRouterEdge::GetSectionNextPtr(void)
+{
+	return &section_next;
+}
+
+void CAutoRouterEdge::SetSectionNext(CAutoRouterEdge* sectionnext)
+{
+	section_next = sectionnext;
+}
+
+CAutoRouterEdge* CAutoRouterEdge::GetSectionDown(void)
+{
+	return section_down;
+}
+
+CAutoRouterEdge** CAutoRouterEdge::GetSectionDownPtr(void)
+{
+	return &section_down;
+}
+
+void CAutoRouterEdge::SetSectionDown(CAutoRouterEdge* sectiondown)
+{
+	section_down = sectiondown;
+}
+
+bool CAutoRouterEdge::GetEdgeFixed(void)
+{
+	return edge_fixed;
+}
+
+void CAutoRouterEdge::SetEdgeFixed(bool ef)
+{
+	edge_fixed = ef;
+}
+
+bool CAutoRouterEdge::GetEdgeCustomFixed(void)
+{
+	return edge_customFixed;
+}
+
+void CAutoRouterEdge::SetEdgeCustomFixed(bool ecf)
+{
+	edge_customFixed = ecf;
+}
+
+bool CAutoRouterEdge::GetEdgeCanpassed(void)
+{
+	return edge_canpassed;
+}
+
+void CAutoRouterEdge::SetEdgeCanpassed(bool ecp)
+{
+	edge_canpassed = ecp;
+}
+
+RoutingDirection CAutoRouterEdge::GetDirection(void)
+{
+	return edge_direction;
+}
+
+void CAutoRouterEdge::SetDirection(RoutingDirection dir)
+{
+	edge_direction = dir;
+}
+
+void CAutoRouterEdge::RecalculateDirection(void)
+{
+	ASSERT(startpoint != NULL && endpoint != NULL);
+	edge_direction = GetDir(*endpoint - *startpoint);
+}
+
+CAutoRouterEdge* CAutoRouterEdge::GetBlockPrev(void)
+{
+	return block_prev;
+}
+
+void CAutoRouterEdge::SetBlockPrev(CAutoRouterEdge* bp)
+{
+	block_prev = bp;
+}
+
+CAutoRouterEdge* CAutoRouterEdge::GetBlockNext(void)
+{
+	return block_next;
+}
+
+void CAutoRouterEdge::SetBlockNext(CAutoRouterEdge* bn)
+{
+	block_next = bn;
+}
+
+CAutoRouterEdge* CAutoRouterEdge::GetBlockTrace(void)
+{
+	return block_trace;
+}
+
+void CAutoRouterEdge::SetBlockTrace(CAutoRouterEdge* bt)
+{
+	block_trace = bt;
+}
+
+CAutoRouterEdge* CAutoRouterEdge::GetClosestPrev(void)
+{
+	return closest_prev;
+}
+
+void CAutoRouterEdge::SetClosestPrev(CAutoRouterEdge* cp)
+{
+	closest_prev = cp;
+}
+
+CAutoRouterEdge* CAutoRouterEdge::GetClosestNext(void)
+{
+	return closest_next;
+}
+
+void CAutoRouterEdge::SetClosestNext(CAutoRouterEdge* cn)
+{
+	closest_next = cn;
+}
+
+
 // --------------------------- CAutoRouterEdgeList
 
 
@@ -92,233 +454,382 @@ CAutoRouterEdgeList::CAutoRouterEdgeList(int h)
 
 	ishorizontal = (h != 0);
 
-	Con_Order();
-	Con_Section();
+	Init_Order();
+	Init_Section();
 }
 
 CAutoRouterEdgeList::~CAutoRouterEdgeList()
 {
-	Des_Order();
-	Des_Section();
+	Check_Order();
+	Check_Section();
 }
 
-void CAutoRouterEdgeList::SetOwner(CComObjPtr/*Dummy*/<CAutoRouterGraph> o)
+void CAutoRouterEdgeList::SetOwner(CComPtr<IAutoRouterGraph> o)
 {
 	owner = o;
 }
 
 // --- Edges
 
-SAutoRouterEdge* CAutoRouterEdgeList::CreateEdge() const
+typedef std::pair<long,long> Long_Pair;
+
+bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath& pointList)
 {
-	SAutoRouterEdge* edge = new SAutoRouterEdge;
-	ASSERT( edge != NULL );
+	// Apply custom edge modifications - step 2, part 1
+	// (Step 1: Move the desired edges
+	//  Step 2: Fix the desired edges)
+	bool hasCustomEdge = false;
+	std::map<long,long> fixedIndexes;
+	SAFEARRAY* pArr = NULL;
+	COMTHROW(path->GetFixedEdgeIndexes(&pArr));
+	//one dim., long elements
+	if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
+	{
+		//length
+		long elementNum = (pArr)->rgsabound[0].cElements;
+		if (elementNum > 0)
+		{
+			hasCustomEdge = true;
+			//lock it before use
+			SafeArrayLock(pArr);
+			long* pArrElements = (long*) (pArr)->pvData;
+			for (int i = 0; i < elementNum; i++)
+			{
+				fixedIndexes.insert(Long_Pair(pArrElements[i], 0));
+			}
+			SafeArrayUnlock(pArr);
+		}
+	}
+	//clear memory
+	SafeArrayDestroy(pArr);
 
-	edge->owner = NULL;
-	
-	edge->startpoint_prev = NULL;
-	edge->startpoint = NULL;
-	edge->endpoint = NULL;
-	edge->endpoint_next = NULL;
+	std::map<long,long>::const_iterator indIter;
+	long currEdgeIndex = pointList.GetSize() - 2;
 
-	edge->position_y =0;
-	edge->position_x1 = 0;
-	edge->position_x2 = 0;
-	edge->bracket_closing = 0;
-	edge->bracket_opening = 0;
+	CPoint* startpoint = NULL;
+	CPoint* endpoint = NULL;
 
-	edge->order_prev = NULL;
-	edge->order_next = NULL;
-
-	edge->edge_fixed = 0;
-	edge->edge_canpassed = 0;
-
-	edge->position_y = 0;
-
-	edge->block_prev = NULL;
-	edge->block_next = NULL;
-	edge->block_trace = NULL;
-
-	edge->closest_prev = NULL;
-	edge->closest_next = NULL;
-
-	return edge;
-}
-
-void CAutoRouterEdgeList::AddEdges(CComObjPtr/*Dummy*/<CAutoRouterPath> path)
-{
-	CPoint* startpoint;
-	CPoint* endpoint;
-
-	POSITION pos = path->GetTailEdgePtrs(startpoint, endpoint);
+	POSITION pos = pointList.GetTailEdgePtrs(startpoint, endpoint);
 	while( pos != NULL )
 	{
-		EArDir dir = GetDir(*endpoint - *startpoint);
+		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 
-#ifdef _DEBUG
-		if( path->IsMoveable() )
-			ASSERT( IsRightAngle(dir) );
-#endif
-
-		if( IsRightAngle(dir) && IsHorizontal(dir) == ishorizontal )
+		if (*endpoint == *startpoint)
+			return false;
+		VARIANT_BOOL isMovable;
+		COMTHROW(path->IsMoveable(&isMovable));
+		if( isMovable == VARIANT_TRUE && dir != Dir_Skew)
 		{
-			SAutoRouterEdge* edge = CreateEdge();
+			int goodAngle = 0;
+			ASSERT( goodAngle = IsRightAngle(dir) );
+			if (goodAngle == 0)
+				return false;
+		}
 
-			edge->owner = path;
+		if( dir == Dir_Skew || IsRightAngle(dir) && IsHorizontal(dir) == ishorizontal )
+		{
+			CAutoRouterEdge* edge = new CAutoRouterEdge();
 
-			edge->startpoint = startpoint;
-			edge->endpoint = endpoint;
-			edge->startpoint_prev = path->GetPointBeforeEdge(pos);
-			edge->endpoint_next = path->GetPointAfterEdge(pos);
+			edge->SetOwner(path.p);
 
-			edge->edge_fixed = path->IsFixed() || 
-				(edge->startpoint_prev == NULL && path->GetStartPort()->IsConnectToCenter()) ||
-				(edge->endpoint_next == NULL && path->GetEndPort()->IsConnectToCenter());
+			edge->SetStartAndEndPoint(startpoint, endpoint);
+			edge->SetStartPointPrev(pointList.GetPointBeforeEdge(pos));
+			edge->SetEndPointNext(pointList.GetPointAfterEdge(pos));
 
-			Position_LoadY(edge);
-			Position_LoadB(edge);
+			// Apply custom edge modifications - step 2, part 2
+			if (hasCustomEdge)
+			{
+				indIter = fixedIndexes.find(currEdgeIndex);
+				edge->SetEdgeCustomFixed(indIter != fixedIndexes.end());
+			}
+			else
+			{
+				edge->SetEdgeCustomFixed(dir == Dir_Skew);
+			}
+
+			CComPtr<IAutoRouterPort> startPort;
+			COMTHROW(path->GetStartPort(&startPort));
+			ASSERT(startPort != NULL);
+			VARIANT_BOOL isStartPortConnectToCenter;
+			COMTHROW(startPort->IsConnectToCenter(&isStartPortConnectToCenter));
+			VARIANT_BOOL isEndPortConnectToCenter;
+
+			CComPtr<IAutoRouterPort> endPort;
+			COMTHROW(path->GetEndPort(&endPort));
+			ASSERT(endPort != NULL);
+			COMTHROW(endPort->IsConnectToCenter(&isEndPortConnectToCenter));
+			VARIANT_BOOL isPathFixed = VARIANT_FALSE;
+			COMTHROW(path->IsFixed(&isPathFixed));
+			edge->SetEdgeFixed(edge->GetEdgeCustomFixed() || isPathFixed == VARIANT_TRUE || 
+				(edge->IsStartPointPrevNull() && isStartPortConnectToCenter == VARIANT_TRUE) ||
+				(edge->IsEndPointNextNull() && isEndPortConnectToCenter == VARIANT_TRUE));
+
+			if (dir != Dir_Skew)
+			{
+				Position_LoadY(edge);
+				Position_LoadB(edge);
+			}
+			else
+			{
+				edge->SetPositionY(0.0);
+				edge->SetBracketOpening(false);
+				edge->SetBracketClosing(false);
+			}
 			Insert(edge);
 		}
 
-		path->GetPrevEdgePtrs(pos, startpoint, endpoint);
+		pointList.GetPrevEdgePtrs(pos, startpoint, endpoint);
+		currEdgeIndex--;
 	}
+
+	return true;
 }
 
-SAutoRouterEdge* CAutoRouterEdgeList::GetEdge(const CPoint* startpoint, const CPoint* endpoint) const
+CAutoRouterEdge* CAutoRouterEdgeList::GetEdge(CComPtr<IAutoRouterPath> path, const CPoint& startpoint, const CPoint& endpoint) const
 {
-	ASSERT( startpoint != NULL && endpoint != NULL );
-
-	SAutoRouterEdge* edge = order_first;
+	CAutoRouterEdge* edge = order_first;
 	while( edge != NULL )
 	{
-		if( edge->startpoint == startpoint )
+		if( edge->GetStartPoint() == startpoint )
+		{
+			if( edge->GetOwner() == path )
+				break;
+		}
+
+		edge = edge->GetOrderNext();
+	}
+
+	ASSERT( edge != NULL );
+	return edge;
+}
+
+CAutoRouterEdge* CAutoRouterEdgeList::GetEdgeByPointer(const CPoint* startpoint, const CPoint* endpoint) const
+{
+	CAutoRouterEdge* edge = order_first;
+	while( edge != NULL )
+	{
+		if( edge->IsSameStartPointByPointer(startpoint) )
 		{
 			break;
 		}
 
-		edge = edge->order_next;
+		edge = edge->GetOrderNext();
 	}
 
 	ASSERT( edge != NULL );
 	return edge;
 }
 
-SAutoRouterEdge* CAutoRouterEdgeList::GetEdgeAt(const CPoint& point, int nearness) const
+CAutoRouterEdge* CAutoRouterEdgeList::GetEdgeAt(const CPoint& point, int nearness) const
 {
-	SAutoRouterEdge* edge = order_first;
+	CAutoRouterEdge* edge = order_first;
 	while( edge )
 	{
-		if( IsPointNearLine(point, *edge->startpoint, *edge->endpoint, nearness) )
+		if( IsPointNearLine(point, edge->GetStartPoint(), edge->GetEndPoint(), nearness) )
 			return edge;
 
-		edge = edge->order_next;
+		edge = edge->GetOrderNext();
 	}
 
 	return NULL;
 }
 
+#ifdef _DEBUG
 
-void CAutoRouterEdgeList::AddEdges(CComObjPtr/*Dummy*/<CAutoRouterPort> port)
+void CAutoRouterEdgeList::AssertValidPathEdges(CComPtr<IAutoRouterPath> path, CPointListPath& points) const
 {
-	if( port->IsConnectToCenter())
+	ASSERT( path != NULL );
+	CComPtr<IAutoRouterGraph> ownerGraph;
+	COMTHROW(path->GetOwner(&ownerGraph));
+	ASSERT( ownerGraph.p == owner );
+
+	CPoint* startpoint = NULL;
+	CPoint* endpoint = NULL;
+
+	POSITION pos = points.GetTailEdgePtrs(startpoint, endpoint);
+	while( pos != NULL )
+	{
+		RoutingDirection dir = GetDir(*endpoint - *startpoint);
+
+		VARIANT_BOOL isMovable;
+		COMTHROW(path->IsMoveable(&isMovable));
+		if( isMovable == VARIANT_TRUE )
+			ASSERT( IsRightAngle(dir) );
+
+		if( IsRightAngle(dir) && IsHorizontal(dir) == ishorizontal )
+		{
+			CAutoRouterEdge* edge = GetEdgeByPointer(startpoint, endpoint);
+			ASSERT( edge != NULL );
+
+			ASSERT( edge->GetOwner() == path );
+
+			ASSERT( edge->GetStartPoint() == *startpoint );
+			ASSERT( edge->GetEndPoint() == *endpoint );
+			if (edge->IsStartPointPrevNull())
+				ASSERT( points.GetPointBeforeEdge(pos) == NULL );
+			else
+				ASSERT( edge->GetStartPointPrev() == *(points.GetPointBeforeEdge(pos)) );
+			if (edge->IsEndPointNextNull())
+				ASSERT( points.GetPointAfterEdge(pos) == NULL );
+			else
+				ASSERT( edge->GetEndPointNext() == *(points.GetPointAfterEdge(pos)) );
+		}
+
+		points.GetPrevEdgePtrs(pos, startpoint, endpoint);
+	}
+
+	CAutoRouterEdge* edge = order_first;
+	while( edge != NULL )
+	{
+		if( edge->GetOwner() == path )
+		{
+			POSITION pos = points.GetEdgePosForStartPoint(edge->GetStartPoint());
+			ASSERT( pos != NULL );
+			ASSERT( *(points.GetStartPoint(pos)) == edge->GetStartPoint() );
+			ASSERT( *(points.GetEndPoint(pos)) == edge->GetEndPoint() );
+			if (edge->IsStartPointPrevNull())
+				ASSERT( points.GetPointBeforeEdge(pos) == NULL );
+			else
+				ASSERT( *(points.GetPointBeforeEdge(pos)) == edge->GetStartPointPrev() );
+			if (edge->IsEndPointNextNull())
+				ASSERT( points.GetPointAfterEdge(pos) == NULL );
+			else
+				ASSERT( *(points.GetPointAfterEdge(pos)) == edge->GetEndPointNext() );
+		}
+
+		edge = edge->GetOrderNext();
+	}
+}
+
+void CAutoRouterEdgeList::DumpEdges(const CString& headMsg)
+{
+#ifdef _DEBUG_DEEP
+	TRACE0(headMsg + "\n");
+	CAutoRouterEdge* edge = order_first;
+	int i = 0;
+	while( edge != NULL )
+	{
+		TRACE1("\t %ld.: ", i);
+		TRACE2("sp %ld, %ld ", edge->IsStartPointNull() ? -1 : edge->GetStartPoint().x, edge->IsStartPointNull() ? -1 : edge->GetStartPoint().y);
+		TRACE2("ep %ld, %ld ", edge->IsEndPointNull() ? -1 : edge->GetEndPoint().x, edge->IsEndPointNull() ? -1 : edge->GetEndPoint().y);
+		TRACE2("spp %ld, %ld ", edge->IsStartPointPrevNull() ? -1 : edge->GetStartPointPrev().x, edge->IsStartPointPrevNull() ? -1 : edge->GetStartPointPrev().y);
+		TRACE2("epn %ld, %ld\n", edge->IsEndPointNextNull() ? -1 : edge->GetEndPointNext().x, edge->IsEndPointNextNull() ? -1 : edge->GetEndPointNext().y);
+		TRACE0("\t\t");
+		TRACE3("py %f px1 %ld px2 %ld ", edge->GetPositionY(), edge->GetPositionX1(), edge->GetPositionX2());
+		TRACE2("bc %ld bo %ld ", edge->GetBracketClosing(), edge->GetBracketOpening());
+		TRACE2("sx1 %ld sx2 %ld ", edge->GetSectionX1(), edge->GetSectionX2());
+		TRACE2("f %d cp %d\n", edge->GetEdgeFixed(), edge->GetEdgeCanpassed());
+
+		edge = edge->GetOrderNext();
+		i++;
+	}
+#endif
+}
+
+#endif
+
+void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CPoint>& selfpoints)
+{
+	VARIANT_BOOL isConnectToCenter;
+	COMTHROW(port->IsConnectToCenter(&isConnectToCenter));
+	if (isConnectToCenter == VARIANT_TRUE)
 	{
 		return;
 	}
 
 	for(int i = 0; i < 4; i++)
 	{
-		CPoint* startpoint_prev = port->selfpoints + ((i+3)%4);
-		CPoint* startpoint = port->selfpoints + (i);
-		CPoint* endpoint = port->selfpoints + ((i+1)%4);
-		CPoint* endpoint_next = port->selfpoints + ((i+2)%4);
+		CPoint* startpoint_prev = &(selfpoints[(i + 3) % 4]);
+		CPoint* startpoint = &(selfpoints[i]);
+		CPoint* endpoint = &(selfpoints[(i + 1) % 4]);
+		CPoint* endpoint_next = &(selfpoints[(i + 2) % 4]);
 
-		EArDir dir = GetDir(*endpoint - *startpoint);
+		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 		ASSERT( IsRightAngle(dir) );
 
-		if( IsHorizontal(dir) == ishorizontal && port->CanHaveStartEndPointHorizontal(ishorizontal) )
+		VARIANT_BOOL canHaveStartEndPointHorizontal;
+		COMTHROW(port->CanHaveStartEndPointHorizontal(ishorizontal, &canHaveStartEndPointHorizontal));
+		if( IsHorizontal(dir) == ishorizontal && canHaveStartEndPointHorizontal == VARIANT_TRUE )
 		{
-			SAutoRouterEdge* edge = CreateEdge();
+			CAutoRouterEdge* edge = new CAutoRouterEdge();
 
-			edge->owner = port;
+			edge->SetOwner(port.p);
 
-			edge->startpoint = startpoint;
-			edge->endpoint = endpoint;
-			edge->startpoint_prev = startpoint_prev;
-			edge->endpoint_next = endpoint_next;
+			edge->SetStartAndEndPoint(startpoint, endpoint);
+			edge->SetStartPointPrev(startpoint_prev);
+			edge->SetEndPointNext(endpoint_next);
 
-			edge->edge_fixed = 1;
+			edge->SetEdgeFixed(true);
 
 			Position_LoadY(edge);
 			Position_LoadB(edge);
 
-			if( edge->bracket_closing )
-				edge->position_y += 0.999F;
+			if( edge->GetBracketClosing() )
+				edge->AddToPositionY(0.999F);
 
 			Insert(edge);
 		}
 	}
 }
 
-void CAutoRouterEdgeList::AddEdges(CComObjPtr/*Dummy*/<CAutoRouterBox> box)
+void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoint>& selfpoints)
 {
 	for(int i = 0; i < 4; i++)
 	{
-		CPoint* startpoint_prev = box->selfpoints + ((i+3)%4);
-		CPoint* startpoint = box->selfpoints + (i);
-		CPoint* endpoint = box->selfpoints + ((i+1)%4);
-		CPoint* endpoint_next = box->selfpoints + ((i+2)%4);
+		CPoint* startpoint_prev = &(selfpoints[(i + 3) % 4]);
+		CPoint* startpoint = &(selfpoints[i]);
+		CPoint* endpoint = &(selfpoints[(i + 1) % 4]);
+		CPoint* endpoint_next = &(selfpoints[(i + 2) % 4]);
 
-		EArDir dir = GetDir(*endpoint - *startpoint);
+		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 		ASSERT( IsRightAngle(dir) );
 
 		if( IsHorizontal(dir) == ishorizontal )
 		{
-			SAutoRouterEdge* edge = CreateEdge();
+			CAutoRouterEdge* edge = new CAutoRouterEdge();
 
-			edge->owner = box;
+			edge->SetOwner(box.p);
 
-			edge->startpoint = startpoint;
-			edge->endpoint = endpoint;
-			edge->startpoint_prev = startpoint_prev;
-			edge->endpoint_next = endpoint_next;
+			edge->SetStartAndEndPoint(startpoint, endpoint);
+			edge->SetStartPointPrev(startpoint_prev);
+			edge->SetEndPointNext(endpoint_next);
 
-			edge->edge_fixed = 1;
+			edge->SetEdgeFixed(true);
 
 			Position_LoadY(edge);
 			Position_LoadB(edge);
 
-			if( edge->bracket_closing )
-				edge->position_y += 0.999F;
+			if( edge->GetBracketClosing() )
+				edge->AddToPositionY(0.999F);
 		
 			Insert(edge);
 		}
 	}
 }
 
-void CAutoRouterEdgeList::AddEdges(CComObjPtr/*Dummy*/<CAutoRouterGraph> graph)
+void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterGraph> graph, std::vector<CPoint>& selfpoints)
 {
 	for(int i = 0; i < 4; i++)
 	{
-		CPoint* startpoint_prev = graph->selfpoints + ((i+3)%4);
-		CPoint* startpoint = graph->selfpoints + (i);
-		CPoint* endpoint = graph->selfpoints + ((i+1)%4);
-		CPoint* endpoint_next = graph->selfpoints + ((i+2)%4);
+		CPoint* startpoint_prev = &(selfpoints[(i + 3) % 4]);
+		CPoint* startpoint = &(selfpoints[i]);
+		CPoint* endpoint = &(selfpoints[(i + 1) % 4]);
+		CPoint* endpoint_next = &(selfpoints[(i + 2) % 4]);
 
-		EArDir dir = GetDir(*endpoint - *startpoint);
+		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 		ASSERT( IsRightAngle(dir) );
 
 		if( IsHorizontal(dir) == ishorizontal )
 		{
-			SAutoRouterEdge* edge = CreateEdge();
+			CAutoRouterEdge* edge = new CAutoRouterEdge();
 
-			edge->owner = graph;
+			edge->SetOwner(graph.p);
 
-			edge->startpoint = startpoint;
-			edge->endpoint = endpoint;
-			edge->startpoint_prev = startpoint_prev;
-			edge->endpoint_next = endpoint_next;
+			edge->SetStartAndEndPoint(startpoint, endpoint);
+			edge->SetStartPointPrev(startpoint_prev);
+			edge->SetEndPointNext(endpoint_next);
 
-			edge->edge_fixed = 1;
+			edge->SetEdgeFixed(true);
 
 			Position_LoadY(edge);
 			Insert(edge);
@@ -326,19 +837,19 @@ void CAutoRouterEdgeList::AddEdges(CComObjPtr/*Dummy*/<CAutoRouterGraph> graph)
 	}
 }
 
-void CAutoRouterEdgeList::DeleteEdges(CComObjPtr<IUnknown> object)
+void CAutoRouterEdgeList::DeleteEdges(CComPtr<IUnknown> object)
 {
-	SAutoRouterEdge* edge = order_first;
+	CAutoRouterEdge* edge = order_first;
 	while( edge != NULL )
 	{
-		if( edge->owner == object )
+		if( edge->GetOwner() == object )
 		{
-			SAutoRouterEdge* next = edge->order_next;
+			CAutoRouterEdge* next = edge->GetOrderNext();
 			Delete(edge);
 			edge = next;
 		}
 		else
-			edge = edge->order_next;
+			edge = edge->GetOrderNext();
 	}
 }
 
@@ -355,138 +866,141 @@ int CAutoRouterEdgeList::IsEmpty() const
 
 // --- Position
 
-long CAutoRouterEdgeList::Position_GetRealY(const SAutoRouterEdge* edge) const
+long CAutoRouterEdgeList::Position_GetRealY(const CAutoRouterEdge* edge) const
 {
 	if( ishorizontal )
 	{
-		ASSERT( edge->startpoint->y == edge->endpoint->y );
-		return edge->startpoint->y;
+		ASSERT( edge->GetStartPoint().y == edge->GetEndPoint().y );
+		return edge->GetStartPoint().y;
 	}
 
-	ASSERT( edge->startpoint->x == edge->endpoint->x );
-	return edge->startpoint->x;
+	ASSERT( edge->GetStartPoint().x == edge->GetEndPoint().x );
+	return edge->GetStartPoint().x;
 }
 
-void CAutoRouterEdgeList::Position_SetRealY(SAutoRouterEdge* edge, long y) const
+void CAutoRouterEdgeList::Position_SetRealY(CAutoRouterEdge* edge, long y) const
 {
-	ASSERT( edge != NULL && edge->startpoint != NULL && edge->endpoint != NULL );
+	ASSERT( edge != NULL && !edge->IsStartPointNull() && !edge->IsEndPointNull() );
 
 	if( ishorizontal )
 	{
-		ASSERT( edge->startpoint->y == edge->endpoint->y );
-		edge->startpoint->y = y;
-		edge->endpoint->y = y;
+		ASSERT( edge->GetStartPoint().y == edge->GetEndPoint().y );
+		edge->SetStartPointY(y);
+		edge->SetEndPointY(y);
 	}
 	else
 	{
-		ASSERT( edge->startpoint->x == edge->endpoint->x );
-		edge->startpoint->x = y;
-		edge->endpoint->x = y;
+		ASSERT( edge->GetStartPoint().x == edge->GetEndPoint().x );
+		edge->SetStartPointX(y);
+		edge->SetEndPointX(y);
 	}
 }
 
-void CAutoRouterEdgeList::Position_GetRealX(const SAutoRouterEdge* edge, long& x1, long& x2) const
+void CAutoRouterEdgeList::Position_GetRealX(const CAutoRouterEdge* edge, long& x1, long& x2) const
 {
-	ASSERT( edge != NULL && edge->startpoint != NULL && edge->endpoint != NULL );
+	ASSERT( edge != NULL && !edge->IsStartPointNull() && !edge->IsEndPointNull() );
 
 	if( ishorizontal )
 	{
-		ASSERT( edge->startpoint->y == edge->endpoint->y );
-		if( edge->startpoint->x < edge->endpoint->x )
+		ASSERT( edge->GetStartPoint().y == edge->GetEndPoint().y );
+		if( edge->GetStartPoint().x < edge->GetEndPoint().x )
 		{
-			x1 = edge->startpoint->x;
-			x2 = edge->endpoint->x;
+			x1 = edge->GetStartPoint().x;
+			x2 = edge->GetEndPoint().x;
 		}
 		else
 		{
-			x1 = edge->endpoint->x;
-			x2 = edge->startpoint->x;
-		}
-	}
-	else
-	{
-		ASSERT( edge->startpoint->x == edge->endpoint->x );
-		if( edge->startpoint->y < edge->endpoint->y )
-		{
-			x1 = edge->startpoint->y;
-			x2 = edge->endpoint->y;
-		}
-		else
-		{
-			x1 = edge->endpoint->y;
-			x2 = edge->startpoint->y;
-		}
-	}
-}
-
-void CAutoRouterEdgeList::Position_GetRealO(const SAutoRouterEdge* edge, long& o1, long& o2) const
-{
-	ASSERT( edge != NULL && edge->startpoint != NULL && edge->endpoint != NULL );
-
-	if( ishorizontal )
-	{
-		ASSERT( edge->startpoint->y == edge->endpoint->y );
-		if( edge->startpoint->x < edge->endpoint->x )
-		{
-			o1 = edge->startpoint_prev == NULL ? 0 : edge->startpoint_prev->y - edge->startpoint->y;
-			o2 = edge->endpoint_next == NULL ? 0 : edge->endpoint_next->y - edge->endpoint->y;
-		}
-		else
-		{
-			o1 = edge->endpoint_next == NULL ? 0 : edge->endpoint_next->y - edge->endpoint->y;
-			o2 = edge->startpoint_prev == NULL ? 0 : edge->startpoint_prev->y - edge->startpoint->y;
+			x1 = edge->GetEndPoint().x;
+			x2 = edge->GetStartPoint().x;
 		}
 	}
 	else
 	{
-		ASSERT( edge->startpoint->x == edge->endpoint->x );
-		if( edge->startpoint->y < edge->endpoint->y )
+		ASSERT( edge->GetStartPoint().x == edge->GetEndPoint().x );
+		if( edge->GetStartPoint().y < edge->GetEndPoint().y )
 		{
-			o1 = edge->startpoint_prev == NULL ? 0 : edge->startpoint_prev->x - edge->startpoint->x;
-			o2 = edge->endpoint_next == NULL ? 0 : edge->endpoint_next->x - edge->endpoint->x;
+			x1 = edge->GetStartPoint().y;
+			x2 = edge->GetEndPoint().y;
 		}
 		else
 		{
-			o1 = edge->endpoint_next == NULL ? 0 : edge->endpoint_next->x - edge->endpoint->x;
-			o2 = edge->startpoint_prev == NULL ? 0 : edge->startpoint_prev->x - edge->startpoint->x;
+			x1 = edge->GetEndPoint().y;
+			x2 = edge->GetStartPoint().y;
 		}
 	}
 }
 
-void CAutoRouterEdgeList::Position_LoadY(SAutoRouterEdge* edge) const
+void CAutoRouterEdgeList::Position_GetRealO(const CAutoRouterEdge* edge, long& o1, long& o2) const
 {
-	ASSERT( edge != NULL && edge->order_next == NULL && edge->order_prev == NULL );
+	ASSERT( edge != NULL && !edge->IsStartPointNull() && !edge->IsEndPointNull() );
 
-	edge->position_y = (float) Position_GetRealY(edge);
+	if( ishorizontal )
+	{
+		ASSERT( edge->GetStartPoint().y == edge->GetEndPoint().y );
+		if( edge->GetStartPoint().x < edge->GetEndPoint().x )
+		{
+			o1 = edge->IsStartPointPrevNull() ? 0 : edge->GetStartPointPrev().y - edge->GetStartPoint().y;
+			o2 = edge->IsEndPointNextNull() ? 0 : edge->GetEndPointNext().y - edge->GetEndPoint().y;
+		}
+		else
+		{
+			o1 = edge->IsEndPointNextNull() ? 0 : edge->GetEndPointNext().y - edge->GetEndPoint().y;
+			o2 = edge->IsStartPointPrevNull() ? 0 : edge->GetStartPointPrev().y - edge->GetStartPoint().y;
+		}
+	}
+	else
+	{
+		ASSERT( edge->GetStartPoint().x == edge->GetEndPoint().x );
+		if( edge->GetStartPoint().y < edge->GetEndPoint().y )
+		{
+			o1 = edge->IsStartPointPrevNull() ? 0 : edge->GetStartPointPrev().x - edge->GetStartPoint().x;
+			o2 = edge->IsEndPointNextNull() ? 0 : edge->GetEndPointNext().x - edge->GetEndPoint().x;
+		}
+		else
+		{
+			o1 = edge->IsEndPointNextNull() ? 0 : edge->GetEndPointNext().x - edge->GetEndPoint().x;
+			o2 = edge->IsStartPointPrevNull() ? 0 : edge->GetStartPointPrev().x - edge->GetStartPoint().x;
+		}
+	}
 }
 
-void CAutoRouterEdgeList::Position_LoadB(SAutoRouterEdge* edge) const
+void CAutoRouterEdgeList::Position_LoadY(CAutoRouterEdge* edge) const
+{
+	ASSERT( edge != NULL && edge->GetOrderNext() == NULL && edge->GetOrderPrev() == NULL );
+
+	edge->SetPositionY((float) Position_GetRealY(edge));
+}
+
+void CAutoRouterEdgeList::Position_LoadB(CAutoRouterEdge* edge) const
 {
 	ASSERT( edge != NULL );
 
-	edge->bracket_opening = !edge->edge_fixed && Bracket_IsOpening(edge);
-	edge->bracket_closing = !edge->edge_fixed && Bracket_IsClosing(edge);
+	edge->SetBracketOpening(!edge->GetEdgeFixed() && Bracket_IsOpening(edge));
+	edge->SetBracketClosing(!edge->GetEdgeFixed() && Bracket_IsClosing(edge));
 }
 
 void CAutoRouterEdgeList::PositionAll_StoreY() const
 {
-	SAutoRouterEdge* edge = order_first;
+	CAutoRouterEdge* edge = order_first;
 	while( edge )
 	{
-		Position_SetRealY(edge, (long) edge->position_y);
+		Position_SetRealY(edge, (long) edge->GetPositionY());
 
-		edge = edge->order_next;
+		edge = edge->GetOrderNext();
 	}
 }
 
 void CAutoRouterEdgeList::PositionAll_LoadX() const
 {
-	SAutoRouterEdge* edge = order_first;
+	CAutoRouterEdge* edge = order_first;
 	while( edge )
 	{
-		Position_GetRealX(edge, edge->position_x1, edge->position_x2);
+		long ex1, ex2;
+		Position_GetRealX(edge, ex1, ex2);
+		edge->SetPositionX1(ex1);
+		edge->SetPositionX2(ex2);
 
-		edge = edge->order_next;
+		edge = edge->GetOrderNext();
 	}
 }
 
@@ -494,25 +1008,25 @@ void CAutoRouterEdgeList::PositionAll_LoadX() const
 
 void CAutoRouterEdgeList::AssertValidPositions() const
 {
-	SAutoRouterEdge* edge = order_first;
+	CAutoRouterEdge* edge = order_first;
 	while( edge )
 	{
 		long y = Position_GetRealY(edge);
-		ASSERT( edge->position_y - 1 <= y && y <= edge->position_y + 1 );
+		ASSERT( edge->GetPositionY() - 1 <= y && y <= edge->GetPositionY() + 1 );
 
-		if( edge->order_prev )
+		if( edge->GetOrderPrev() )
 		{
-			ASSERT( edge->order_prev->position_y <= edge->position_y );
-			ASSERT( Position_GetRealY(edge->order_prev) <= y );
+			ASSERT( edge->GetOrderPrev()->GetPositionY() <= edge->GetPositionY() );
+			ASSERT( Position_GetRealY(edge->GetOrderPrev()) <= y );
 		}
 
-		if( edge->order_next )
+		if( edge->GetOrderNext() )
 		{
-			ASSERT( edge->position_y <= edge->order_next->position_y );
-			ASSERT( y <= Position_GetRealY(edge->order_next) );
+			ASSERT( edge->GetPositionY() <= edge->GetOrderNext()->GetPositionY() );
+			ASSERT( y <= Position_GetRealY(edge->GetOrderNext()) );
 		}
 
-		edge = edge->order_next;
+		edge = edge->GetOrderNext();
 	}
 }
 
@@ -520,29 +1034,29 @@ void CAutoRouterEdgeList::AssertValidPositions() const
 
 // --- Order
 
-void CAutoRouterEdgeList::Con_Order()
+void CAutoRouterEdgeList::Init_Order()
 {
 	order_first = NULL;
 	order_last = NULL;
 }
 
-void CAutoRouterEdgeList::Des_Order()
+void CAutoRouterEdgeList::Check_Order()
 {
 	ASSERT( order_first == NULL && order_last == NULL );
 }
 
-void CAutoRouterEdgeList::InsertBefore(SAutoRouterEdge* edge, SAutoRouterEdge* before)
+void CAutoRouterEdgeList::InsertBefore(CAutoRouterEdge* edge, CAutoRouterEdge* before)
 {
 	ASSERT( edge != NULL && before != NULL && edge != before );
-	ASSERT( edge->order_next == NULL && edge->order_prev == NULL );
+	ASSERT( edge->GetOrderNext() == NULL && edge->GetOrderPrev() == NULL );
 
-	edge->order_prev = before->order_prev;
-	edge->order_next = before;
+	edge->SetOrderPrev(before->GetOrderPrev());
+	edge->SetOrderNext(before);
 
-	if( before->order_prev )
+	if( before->GetOrderPrev() )
 	{
-		ASSERT( before->order_prev->order_next == before );
-		before->order_prev->order_next = edge;
+		ASSERT( before->GetOrderPrev()->GetOrderNext() == before );
+		before->GetOrderPrev()->SetOrderNext(edge);
 
 		ASSERT( order_first != before );
 	}
@@ -552,21 +1066,21 @@ void CAutoRouterEdgeList::InsertBefore(SAutoRouterEdge* edge, SAutoRouterEdge* b
 		order_first = edge;
 	}
 
-	before->order_prev = edge;
+	before->SetOrderPrev(edge);
 }
 
-void CAutoRouterEdgeList::InsertAfter(SAutoRouterEdge* edge, SAutoRouterEdge* after)
+void CAutoRouterEdgeList::InsertAfter(CAutoRouterEdge* edge, CAutoRouterEdge* after)
 {
 	ASSERT( edge != NULL && after != NULL && edge != after );
-	ASSERT( edge->order_next == NULL && edge->order_prev == NULL );
+	ASSERT( edge->GetOrderNext() == NULL && edge->GetOrderPrev() == NULL );
 
-	edge->order_next = after->order_next;
-	edge->order_prev = after;
+	edge->SetOrderNext(after->GetOrderNext());
+	edge->SetOrderPrev(after);
 
-	if( after->order_next )
+	if( after->GetOrderNext() )
 	{
-		ASSERT( after->order_next->order_prev == after );
-		after->order_next->order_prev = edge;
+		ASSERT( after->GetOrderNext()->GetOrderPrev() == after );
+		after->GetOrderNext()->SetOrderPrev(edge);
 
 		ASSERT( order_last != after );
 	}
@@ -576,22 +1090,22 @@ void CAutoRouterEdgeList::InsertAfter(SAutoRouterEdge* edge, SAutoRouterEdge* af
 		order_last = edge;
 	}
 
-	after->order_next = edge;
+	after->SetOrderNext(edge);
 }
 
-void CAutoRouterEdgeList::InsertLast(SAutoRouterEdge* edge)
+void CAutoRouterEdgeList::InsertLast(CAutoRouterEdge* edge)
 {
 	ASSERT( edge != NULL );
-	ASSERT( edge->order_prev == NULL && edge->order_next == NULL );
+	ASSERT( edge->GetOrderPrev() == NULL && edge->GetOrderNext() == NULL );
 
-	edge->order_prev = order_last;
+	edge->SetOrderPrev(order_last);
 
 	if( order_last )
 	{
-		ASSERT( order_last->order_next == NULL );
+		ASSERT( order_last->GetOrderNext() == NULL );
 		ASSERT( order_first != NULL );
 
-		order_last->order_next = edge;
+		order_last->SetOrderNext(edge);
 		order_last = edge;
 	}
 	else
@@ -603,17 +1117,17 @@ void CAutoRouterEdgeList::InsertLast(SAutoRouterEdge* edge)
 	}
 }
 
-void CAutoRouterEdgeList::Insert(SAutoRouterEdge* edge)
+void CAutoRouterEdgeList::Insert(CAutoRouterEdge* edge)
 {
 	ASSERT( edge != NULL );
-	ASSERT( edge->order_prev == NULL && edge->order_next == NULL );
+	ASSERT( edge->GetOrderPrev() == NULL && edge->GetOrderNext() == NULL );
 
-	float y = edge->position_y;
+	float y = edge->GetPositionY();
 	ASSERT( ED_MINCOORD <= y && y <= ED_MAXCOORD );
 
-	SAutoRouterEdge* insert = order_first;
-	while( insert && insert->position_y < y )
-		insert = insert->order_next;
+	CAutoRouterEdge* insert = order_first;
+	while( insert && insert->GetPositionY() < y )
+		insert = insert->GetOrderNext();
 
 	if( insert )
 		InsertBefore(edge, insert);
@@ -621,71 +1135,71 @@ void CAutoRouterEdgeList::Insert(SAutoRouterEdge* edge)
 		InsertLast(edge);
 }
 
-void CAutoRouterEdgeList::Remove(SAutoRouterEdge* edge)
+void CAutoRouterEdgeList::Remove(CAutoRouterEdge* edge)
 {
 	ASSERT( edge != NULL );
 
 	if( order_first == edge )
-		order_first = edge->order_next;
+		order_first = edge->GetOrderNext();
 
-	if( edge->order_next )
-		edge->order_next->order_prev = edge->order_prev;
+	if( edge->GetOrderNext() )
+		edge->GetOrderNext()->SetOrderPrev(edge->GetOrderPrev());
 
 	if( order_last == edge )
-		order_last = edge->order_prev;
+		order_last = edge->GetOrderPrev();
 
-	if( edge->order_prev )
-		edge->order_prev->order_next = edge->order_next;
+	if( edge->GetOrderPrev() )
+		edge->GetOrderPrev()->SetOrderNext(edge->GetOrderNext());
 
-	edge->order_next = NULL;
-	edge->order_prev = NULL;
+	edge->SetOrderNext(NULL);
+	edge->SetOrderPrev(NULL);
 }
 
-void CAutoRouterEdgeList::Delete(SAutoRouterEdge* edge)
+void CAutoRouterEdgeList::Delete(CAutoRouterEdge* edge)
 {
 	ASSERT( edge != NULL );
 
 	Remove(edge);
 
-	edge->owner = NULL;
+	edge->SetOwner(NULL);
 
 	delete edge;
 }
 
-SAutoRouterEdge* CAutoRouterEdgeList::SlideButNotPassEdges(SAutoRouterEdge* edge, float y)
+CAutoRouterEdge* CAutoRouterEdgeList::SlideButNotPassEdges(CAutoRouterEdge* edge, float y)
 {
 	ASSERT( edge != NULL );
 	ASSERT( ED_MINCOORD < y && y < ED_MAXCOORD );
 
-	float oldy = edge->position_y;
+	float oldy = edge->GetPositionY();
 	ASSERT( ED_MINCOORD < oldy && oldy < ED_MAXCOORD );
 
 	if( oldy == y )
 		return NULL;
 
-	long x1 = edge->position_x1;
-	long x2 = edge->position_x2;
-	SAutoRouterEdge* ret = NULL;
+	long x1 = edge->GetPositionX1();
+	long x2 = edge->GetPositionX2();
+	CAutoRouterEdge* ret = NULL;
 
-	SAutoRouterEdge* insert = edge;
+	CAutoRouterEdge* insert = edge;
 	if( oldy < y )
 	{
-		while( insert->order_next )
+		while( insert->GetOrderNext() )
 		{
-			insert = insert->order_next;
+			insert = insert->GetOrderNext();
 
-			if( y < insert->position_y )
+			if( y < insert->GetPositionY() )
 				break;
 
-			if( !insert->edge_canpassed && Intersect(x1, x2, insert->position_x1, insert->position_x2 ) )
+			if( !insert->GetEdgeCanpassed() && Intersect(x1, x2, insert->GetPositionX1(), insert->GetPositionX2() ) )
 			{
 				ret = insert;
-				y = insert->position_y;
+				y = insert->GetPositionY();
 				break;
 			}
 		}
 
-		if( edge != insert && insert->order_prev != edge )
+		if( edge != insert && insert->GetOrderPrev() != edge )
 		{
 			Remove(edge);
 			InsertBefore(edge, insert);
@@ -693,22 +1207,22 @@ SAutoRouterEdge* CAutoRouterEdgeList::SlideButNotPassEdges(SAutoRouterEdge* edge
 	}
 	else
 	{
-		while( insert->order_prev )
+		while( insert->GetOrderPrev() )
 		{
-			insert = insert->order_prev;
+			insert = insert->GetOrderPrev();
 
-			if( y > insert->position_y )
+			if( y > insert->GetPositionY() )
 				break;
 
-			if( !insert->edge_canpassed && Intersect(x1, x2, insert->position_x1, insert->position_x2 ) )
+			if( !insert->GetEdgeCanpassed() && Intersect(x1, x2, insert->GetPositionX1(), insert->GetPositionX2() ) )
 			{
 				ret = insert;
-				y = insert->position_y;
+				y = insert->GetPositionY();
 				break;
 			}
 		}
 
-		if( edge != insert && insert->order_next != edge )
+		if( edge != insert && insert->GetOrderNext() != edge )
 		{
 			Remove(edge);
 			InsertAfter(edge, insert);
@@ -717,14 +1231,14 @@ SAutoRouterEdge* CAutoRouterEdgeList::SlideButNotPassEdges(SAutoRouterEdge* edge
 	}
 
 #ifdef _DEBUG
-	if( edge->order_next )
-		ASSERT( y <= edge->order_next->position_y );
+	if( edge->GetOrderNext() )
+		ASSERT( y <= edge->GetOrderNext()->GetPositionY() );
 
-	if( edge->order_prev )
-		ASSERT( edge->order_prev->position_y <= y );
+	if( edge->GetOrderPrev() )
+		ASSERT( edge->GetOrderPrev()->GetPositionY() <= y );
 #endif
 
-	edge->position_y = y;
+	edge->SetPositionY(y);
 
 	return ret;
 }
@@ -734,27 +1248,27 @@ SAutoRouterEdge* CAutoRouterEdgeList::SlideButNotPassEdges(SAutoRouterEdge* edge
 void CAutoRouterEdgeList::AssertValidOrder() const
 {
 	ASSERT( order_first != NULL && order_last != NULL );
-	ASSERT( order_first->order_prev == NULL );
-	ASSERT( order_last->order_next == NULL );
+	ASSERT( order_first->GetOrderPrev() == NULL );
+	ASSERT( order_last->GetOrderNext() == NULL );
 
 	float y = ED_MINCOORD;
 
 	TRACE("CAutoRouterEdgeList::AssertValidOrder (horizontal=%d) START\n", ishorizontal);
 
-	SAutoRouterEdge* edge = order_first;
+	CAutoRouterEdge* edge = order_first;
 	while( edge != order_last )
 	{
-		TRACE("edge=%p, position_y=%f\n", edge, edge->position_y);
+		TRACE("edge=%p, position_y=%f\n", edge, edge->GetPositionY());
 
 		ASSERT( edge != NULL );
-		ASSERT( y <= edge->position_y );
-		ASSERT( edge->order_next->order_prev == edge );
+		ASSERT( y <= edge->GetPositionY() );
+		ASSERT( edge->GetOrderNext()->GetOrderPrev() == edge );
 
-		y = edge->position_y;
-		edge = edge->order_next;
+		y = edge->GetPositionY();
+		edge = edge->GetOrderNext();
 	}
 
-	TRACE("edge=%p, position_y=%f\n", edge, edge->position_y);
+	TRACE("edge=%p, position_y=%f\n", edge, edge->GetPositionY());
 	TRACE("CAutoRouterEdgeList::AssertValidOrder (horizontal=%d) END\n", ishorizontal);
 
 	ASSERT( y <= ED_MAXCOORD );
@@ -764,14 +1278,14 @@ void CAutoRouterEdgeList::AssertValidOrder() const
 
 // --- Section
 
-void CAutoRouterEdgeList::Con_Section()
+void CAutoRouterEdgeList::Init_Section()
 {
 	section_first = NULL;
 	section_blocker = NULL;
 	section_ptr2blocked = NULL;
 }
 
-void CAutoRouterEdgeList::Des_Section()
+void CAutoRouterEdgeList::Check_Section()
 {
 	ASSERT( section_blocker == NULL && section_ptr2blocked == NULL );
 }
@@ -783,17 +1297,17 @@ void CAutoRouterEdgeList::Section_Reset()
 	section_first = NULL;
 }
 
-void CAutoRouterEdgeList::Section_BeginScan(SAutoRouterEdge* blocker)
+void CAutoRouterEdgeList::Section_BeginScan(CAutoRouterEdge* blocker)
 {
 	ASSERT( section_blocker == NULL && section_ptr2blocked == NULL );
 
 	section_blocker = blocker;
 
-	section_blocker->section_x1 = section_blocker->position_x1;
-	section_blocker->section_x2 = section_blocker->position_x2;
+	section_blocker->SetSectionX1(section_blocker->GetPositionX1());
+	section_blocker->SetSectionX2(section_blocker->GetPositionX2());
 
-	section_blocker->section_next = NULL;
-	section_blocker->section_down = NULL;
+	section_blocker->SetSectionNext(NULL);
+	section_blocker->SetSectionDown(NULL);
 }
 
 #define section_blocked (*section_ptr2blocked)
@@ -801,8 +1315,8 @@ int CAutoRouterEdgeList::Section_HasBlockedEdge()
 {
 	ASSERT( section_blocker != NULL );
 
-	long b1 = section_blocker->section_x1;
-	long b2 = section_blocker->section_x2;
+	long b1 = section_blocker->GetSectionX1();
+	long b2 = section_blocker->GetSectionX2();
 	ASSERT( b1 <= b2 );
 
 	if( section_ptr2blocked == NULL )
@@ -811,35 +1325,35 @@ int CAutoRouterEdgeList::Section_HasBlockedEdge()
 	}
 	else
 	{
-		SAutoRouterEdge* current_edge = section_blocked;
+		CAutoRouterEdge* current_edge = section_blocked;
 
 		ASSERT( current_edge != NULL );
 
-		SAutoRouterEdge* e = current_edge->section_down;
-		SAutoRouterEdge* o = NULL;
+		CAutoRouterEdge* e = current_edge->GetSectionDown();
+		CAutoRouterEdge* o = NULL;
 
-		long a1 = current_edge->section_x1;
-		long a2 = current_edge->section_x2;
+		long a1 = current_edge->GetSectionX1();
+		long a2 = current_edge->GetSectionX2();
 		ASSERT( a1 <= a2 );
 
 		ASSERT( b1 <= a2 &&  a1 <= b2 );							// not case 1 or 6
 
 		if( a1 < b1 && b2 < a2 )									// case 3
 		{
-			section_ptr2blocked = &(current_edge->section_down);
+			section_ptr2blocked = current_edge->GetSectionDownPtr();
 		}
 		else if( b1 <= a1 && a2 <= b2 )								// case 4
 		{
 			if( e )
 			{
-				while( e->section_next )
-					e = e->section_next;
+				while( e->GetSectionNext() )
+					e = e->GetSectionNext();
 
-				e->section_next = current_edge->section_next;
-				section_blocked = current_edge->section_down;
+				e->SetSectionNext(current_edge->GetSectionNext());
+				section_blocked = current_edge->GetSectionDown();
 			}
 			else
-				section_blocked = current_edge->section_next;
+				section_blocked = current_edge->GetSectionNext();
 		}
 		else if( b1 <= a1 && b2 < a2 )								// case 5
 		{
@@ -847,69 +1361,69 @@ int CAutoRouterEdgeList::Section_HasBlockedEdge()
 
 			a1 = b2 + 1;
 
-			while( e && e->section_x1 <= a1 )
+			while( e && e->GetSectionX1() <= a1 )
 			{	
-				ASSERT( e->section_x1 <= e->section_x2 );
+				ASSERT( e->GetSectionX1() <= e->GetSectionX2() );
 
-				if( a1 <= e->section_x2 )
-					a1 = e->section_x2 + 1;
+				if( a1 <= e->GetSectionX2() )
+					a1 = e->GetSectionX2() + 1;
 
 				o = e;
-				e = e->section_next;
+				e = e->GetSectionNext();
 			}
 
 			if( o )
 			{
-				section_blocked = current_edge->section_down;
-				o->section_next = current_edge;
-				current_edge->section_down = e;
+				section_blocked = current_edge->GetSectionDown();
+				o->SetSectionNext(current_edge);
+				current_edge->SetSectionDown(e);
 			}
 
 			ASSERT( b2 < a1 );
-			current_edge->section_x1 = a1;
+			current_edge->SetSectionX1(a1);
 		}
 		else														// case 2
 		{
 			ASSERT( a1 < b1 && b1 <= a2 && a2 <= b2 );
 
-			section_ptr2blocked = &(current_edge->section_down);
+			section_ptr2blocked = current_edge->GetSectionDownPtr();
 
 			while( e )
 			{
 				o = e;
-				e = e->section_next;
+				e = e->GetSectionNext();
 
-				if( o->section_x2 + 1 < b1 && ( e == NULL || o->section_x2 + 1 < e->section_x1 ) )
-					section_ptr2blocked = &(o->section_next);
+				if( o->GetSectionX2() + 1 < b1 && ( e == NULL || o->GetSectionX2() + 1 < e->GetSectionX1() ) )
+					section_ptr2blocked = o->GetSectionNextPtr();
 			}
 
 			if( section_blocked )
 			{
 				ASSERT( o != NULL );
-				o->section_next = current_edge->section_next;
+				o->SetSectionNext(current_edge->GetSectionNext());
 
-				current_edge->section_x2 = 
-					(section_blocked->section_x1 < b1 ? section_blocked->section_x1 : b1) - 1;
+				current_edge->SetSectionX2(
+					(section_blocked->GetSectionX1() < b1 ? section_blocked->GetSectionX1() : b1) - 1);
 
-				current_edge->section_next = section_blocked;
+				current_edge->SetSectionNext(section_blocked);
 				section_blocked = NULL;
 			}
 			else
-				current_edge->section_x2 = b1 - 1;
+				current_edge->SetSectionX2(b1 - 1);
 
-			section_ptr2blocked = &(current_edge->section_next);
+			section_ptr2blocked = current_edge->GetSectionNextPtr();
 		}
 	}
 
 	ASSERT( section_ptr2blocked != NULL );
 	while( section_blocked )
 	{
-		long a1 = section_blocked->section_x1;
-		long a2 = section_blocked->section_x2;
+		long a1 = section_blocked->GetSectionX1();
+		long a2 = section_blocked->GetSectionX2();
 
 		if( a2 < b1 )												// case 1
 		{
-			section_ptr2blocked = &(section_blocked->section_next);
+			section_ptr2blocked = section_blocked->GetSectionNextPtr();
 
 			ASSERT( section_ptr2blocked != NULL );
 			continue;
@@ -921,31 +1435,31 @@ int CAutoRouterEdgeList::Section_HasBlockedEdge()
 		{
 			long x = b1;
 
-			SAutoRouterEdge* e = section_blocked->section_down;
+			CAutoRouterEdge* e = section_blocked->GetSectionDown();
 			for(;;)
 			{
-				if( e == NULL || x < e->section_x1 )
+				if( e == NULL || x < e->GetSectionX1() )
 					return 1;
-				else if( x <= e->section_x2 )
+				else if( x <= e->GetSectionX2() )
 				{
-					x = e->section_x2 + 1;
+					x = e->GetSectionX2() + 1;
 					if( b2 < x )
 						break;
 				}
 
-				e = e->section_next;
+				e = e->GetSectionNext();
 			}
 
-			section_ptr2blocked = &(section_blocked->section_down);
+			section_ptr2blocked = section_blocked->GetSectionDownPtr();
 			continue;
 		}
 
 		return 1;
 	}
 
-	ASSERT( section_blocker->section_next == NULL && section_blocker->section_down == NULL );
+	ASSERT( section_blocker->GetSectionNext() == NULL && section_blocker->GetSectionDown() == NULL );
 
-	section_blocker->section_next = section_blocked;
+	section_blocker->SetSectionNext(section_blocked);
 	section_blocked = section_blocker;
 
 	section_blocker = NULL;
@@ -955,7 +1469,7 @@ int CAutoRouterEdgeList::Section_HasBlockedEdge()
 }
 #undef section_blocked
 
-SAutoRouterEdge* CAutoRouterEdgeList::Section_GetBlockedEdge()
+CAutoRouterEdge* CAutoRouterEdgeList::Section_GetBlockedEdge()
 {
 	ASSERT( section_blocker != NULL && section_ptr2blocked != NULL && *section_ptr2blocked != NULL );
 #ifdef _DEBUG_DEEP
@@ -969,15 +1483,15 @@ int CAutoRouterEdgeList::Section_IsImmediate()
 {
 	ASSERT( section_blocker != NULL && section_ptr2blocked != NULL && *section_ptr2blocked != NULL );
 
-	SAutoRouterEdge* section_blocked = *section_ptr2blocked;
-	SAutoRouterEdge* e = section_blocked->section_down;
+	CAutoRouterEdge* section_blocked = *section_ptr2blocked;
+	CAutoRouterEdge* e = section_blocked->GetSectionDown();
 
-	long a1 = section_blocked->section_x1;
-	long a2 = section_blocked->section_x2;
-	long p1 = section_blocked->position_x1;
-	long p2 = section_blocked->position_x2;
-	long b1 = section_blocker->section_x1;
-	long b2 = section_blocker->section_x2;
+	long a1 = section_blocked->GetSectionX1();
+	long a2 = section_blocked->GetSectionX2();
+	long p1 = section_blocked->GetPositionX1();
+	long p2 = section_blocked->GetPositionX2();
+	long b1 = section_blocker->GetSectionX1();
+	long b2 = section_blocker->GetSectionX2();
 
 	ASSERT( b1 <= a2 && a1 <= b2 );									// not case 1 or 6
 
@@ -986,34 +1500,34 @@ int CAutoRouterEdgeList::Section_IsImmediate()
 
 	if( a1 <= b1 )
 	{
-		while( e != NULL && e->section_x2 < b1 )
-			e = e->section_next;
+		while( e != NULL && e->GetSectionX2() < b1 )
+			e = e->GetSectionNext();
 
 		if( b2 <= a2 )
-			return e == NULL || b2 < e->section_x1;					// case 3
+			return e == NULL || b2 < e->GetSectionX1();				// case 3
 			
 		return e == NULL && a2 == p2;								// case 2
 	}
 
 	if( b2 <= a2 )
-		return a1 == p1 && (e == NULL || b2 < e->section_x1);		// case 5
+		return a1 == p1 && (e == NULL || b2 < e->GetSectionX1());	// case 5
 
 	return e == NULL && a1 == p1 && a2 == p2;						// case 4
 }
 
 #ifdef _DEBUG
 
-void CAutoRouterEdgeList::Section_AssertLevel(SAutoRouterEdge* level, long x1, long x2) const
+void CAutoRouterEdgeList::Section_AssertLevel(CAutoRouterEdge* level, long x1, long x2) const
 {
 	while( level )
 	{
-		ASSERT( level->position_x1 <= level->section_x1 && level->section_x2 <= level->position_x2 );
-		ASSERT( x1 < level->section_x1 && level->section_x1 <= level->section_x2 && level->section_x2 < x2 );
-		ASSERT( level->section_next == NULL || level->section_x2 < level->section_next->section_x1 );
+		ASSERT( level->GetPositionX1() <= level->GetSectionX1() && level->GetSectionX2() <= level->GetPositionX2() );
+		ASSERT( x1 < level->GetSectionX1() && level->GetSectionX1() <= level->GetSectionX2() && level->GetSectionX2() < x2 );
+		ASSERT( level->GetSectionNext() == NULL || level->GetSectionX2() < level->GetSectionNext()->GetSectionX1() );
 
-		Section_AssertLevel(level->section_down, level->section_x1, level->section_x2);
+		Section_AssertLevel(level->GetSectionDown(), level->GetSectionX1(), level->GetSectionX2());
 
-		level = level->section_next;
+		level = level->GetSectionNext();
 	}
 }
 
@@ -1031,26 +1545,89 @@ void CAutoRouterEdgeList::AssertSectionReady() const
 
 // --- Bracket
 
-int CAutoRouterEdgeList::Bracket_IsClosing(const SAutoRouterEdge* edge) const
+int CAutoRouterEdgeList::Bracket_IsClosing(const CAutoRouterEdge* edge) const
 {
-	ASSERT( edge != NULL && edge->startpoint != NULL && edge->endpoint != NULL );
+	ASSERT( edge != NULL );
+	ASSERT( !edge->IsStartPointNull() && !edge->IsEndPointNull() );
 
-	return IsClosingBracket(edge->startpoint_prev, edge->startpoint, edge->endpoint, edge->endpoint_next, ishorizontal);
+	CPoint start = edge->GetStartPoint();
+	CPoint end = edge->GetEndPoint();
+
+#ifdef _DEBUG
+	if( ishorizontal )
+	{
+		ASSERT( start.y == end.y );
+
+		if( !edge->IsStartPointPrevNull() )
+			ASSERT( edge->GetStartPointPrev().x == start.x );
+
+		if( !edge->IsEndPointNextNull() )
+			ASSERT( edge->GetEndPointNext().x == end.x );
+	}
+	else
+	{
+		ASSERT( start.x == end.x );
+
+		if( !edge->IsStartPointPrevNull() )
+			ASSERT( edge->GetStartPointPrev().y == start.y );
+
+		if( !edge->IsEndPointNextNull() )
+			ASSERT( edge->GetEndPointNext().y == end.y );
+	}
+#endif
+
+	if( edge->IsStartPointPrevNull() || edge->IsEndPointNextNull() )
+		return 0;
+
+	return ishorizontal ?
+		(edge->GetStartPointPrev().y < start.y && edge->GetEndPointNext().y < end.y ) :
+		(edge->GetStartPointPrev().x < start.x && edge->GetEndPointNext().x < end.x );
 }
 
-int CAutoRouterEdgeList::Bracket_IsOpening(const SAutoRouterEdge* edge) const
+int CAutoRouterEdgeList::Bracket_IsOpening(const CAutoRouterEdge* edge) const
 {
-	ASSERT( edge != NULL && edge->startpoint != NULL && edge->endpoint != NULL );
+	ASSERT( edge != NULL );
+	ASSERT( !edge->IsStartPointNull() && !edge->IsEndPointNull() );
 
-	return IsOpeningBracket(edge->startpoint_prev, edge->startpoint, edge->endpoint, edge->endpoint_next, ishorizontal);
+	CPoint start = edge->GetStartPoint();
+	CPoint end = edge->GetEndPoint();
+#ifdef _DEBUG
+	if( ishorizontal )
+	{
+		ASSERT( start.y == end.y );
+
+		if( !edge->IsStartPointPrevNull() )
+			ASSERT( edge->GetStartPointPrev().x == start.x );
+
+		if( !edge->IsEndPointNextNull() )
+			ASSERT( edge->GetEndPointNext().x == end.x );
+	}
+	else
+	{
+		ASSERT( start.x == end.x );
+
+		if( !edge->IsStartPointPrevNull() )
+			ASSERT( edge->GetStartPointPrev().y == start.y );
+
+		if( !edge->IsEndPointNextNull() )
+			ASSERT( edge->GetEndPointNext().y == end.y );
+	}
+#endif
+
+	if( edge->IsStartPointPrevNull() || edge->IsEndPointNextNull() )
+		return 0;
+
+	return ishorizontal ?
+		(edge->GetStartPointPrev().y > start.y && edge->GetEndPointNext().y > end.y ) :
+		(edge->GetStartPointPrev().x > start.x && edge->GetEndPointNext().x > end.x );
 }
 
-int CAutoRouterEdgeList::Bracket_IsSmallGap(const SAutoRouterEdge* blocked, const SAutoRouterEdge* blocker) const
+int CAutoRouterEdgeList::Bracket_IsSmallGap(const CAutoRouterEdge* blocked, const CAutoRouterEdge* blocker) const
 {
 	return Bracket_IsOpening(blocked) || Bracket_IsClosing(blocker);
 }
 
-int CAutoRouterEdgeList::Bracket_ShouldBeSwitched(const SAutoRouterEdge* edge, const SAutoRouterEdge* next) const
+int CAutoRouterEdgeList::Bracket_ShouldBeSwitched(const CAutoRouterEdge* edge, const CAutoRouterEdge* next) const
 {
 	ASSERT( edge != NULL && next != NULL );
 
@@ -1115,39 +1692,39 @@ inline float Block_GetG(float d, int b, int s)
 #undef R
 #undef D
 
-int CAutoRouterEdgeList::Block_PushBackward(SAutoRouterEdge* blocked, SAutoRouterEdge* blocker)
+int CAutoRouterEdgeList::Block_PushBackward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker)
 {
 	int modified = 0;
 
 	ASSERT( blocked != NULL && blocker != NULL );
-	ASSERT( blocked->position_y <= blocker->position_y );
-	ASSERT( blocked->block_prev != NULL );
+	ASSERT( blocked->GetPositionY() <= blocker->GetPositionY() );
+	ASSERT( blocked->GetBlockPrev() != NULL );
 
 	float f = 0;
 	float g = 0;
 
-	SAutoRouterEdge* edge = blocked;
-	SAutoRouterEdge* trace = blocker;
+	CAutoRouterEdge* edge = blocked;
+	CAutoRouterEdge* trace = blocker;
 
-	float d = trace->position_y - edge->position_y;
+	float d = trace->GetPositionY() - edge->GetPositionY();
 	ASSERT( d >= 0 );
 
-	int s = (edge->bracket_opening || trace->bracket_closing);
+	int s = (edge->GetBracketOpening() || trace->GetBracketClosing());
 	int b = 1 - s;
 
 	for(;;)
 	{
-		edge->block_trace = trace;
+		edge->SetBlockTrace(trace);
 		trace = edge;
-		edge = edge->block_prev;
+		edge = edge->GetBlockPrev();
 
 		if( edge == NULL )
 			break;
 
-		float d2 = trace->position_y - edge->position_y;
+		float d2 = trace->GetPositionY() - edge->GetPositionY();
 		ASSERT( d2 >= 0 );
 
-		if( edge->bracket_opening || trace->bracket_closing )
+		if( edge->GetBracketOpening() || trace->GetBracketClosing() )
 		{
 			g = Block_GetG(d,b,s);
 			if( d2 <= g )
@@ -1184,66 +1761,66 @@ int CAutoRouterEdgeList::Block_PushBackward(SAutoRouterEdge* blocked, SAutoRoute
 		edge = trace;
 		ASSERT( edge != NULL && edge != blocked );
 
-		float y = edge->position_y;
+		float y = edge->GetPositionY();
 
 		do
 		{
-			ASSERT( edge != NULL && edge->block_trace != NULL );
-			trace = edge->block_trace;
+			ASSERT( edge != NULL && edge->GetBlockTrace() != NULL );
+			trace = edge->GetBlockTrace();
 
-			y += (edge->bracket_opening || trace->bracket_closing) ? g : f;
+			y += (edge->GetBracketOpening() || trace->GetBracketClosing()) ? g : f;
 
-			if( y + 0.001F < trace->position_y )
+			if( y + 0.001F < trace->GetPositionY() )
 			{
 				modified = 1;
 				if( SlideButNotPassEdges(trace, y) )
-					trace->block_prev = NULL;
+					trace->SetBlockPrev(NULL);
 			}
 
 			edge = trace;
 		} while( edge != blocked );
 #ifdef _DEBUG
-		y += (edge->bracket_opening || blocker->bracket_closing) ? g : f;
-		ASSERT( FLT_EQU(y, blocker->position_y) );
+		y += (edge->GetBracketOpening() || blocker->GetBracketClosing()) ? g : f;
+		ASSERT( FLT_EQU(y, blocker->GetPositionY()) );
 #endif
 	}
 
 	return modified;
 }
 
-int CAutoRouterEdgeList::Block_PushForward(SAutoRouterEdge* blocked, SAutoRouterEdge* blocker)
+int CAutoRouterEdgeList::Block_PushForward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker)
 {
 	int modified = 0;
 
 	ASSERT( blocked != NULL && blocker != NULL );
-	ASSERT( blocked->position_y >= blocker->position_y );
-	ASSERT( blocked->block_next != NULL );
+	ASSERT( blocked->GetPositionY() >= blocker->GetPositionY() );
+	ASSERT( blocked->GetBlockNext() != NULL );
 
 	float f = 0;
 	float g = 0;
 
-	SAutoRouterEdge* edge = blocked;
-	SAutoRouterEdge* trace = blocker;
+	CAutoRouterEdge* edge = blocked;
+	CAutoRouterEdge* trace = blocker;
 
-	float d = edge->position_y - trace->position_y;
+	float d = edge->GetPositionY() - trace->GetPositionY();
 	ASSERT( d >= 0 );
 
-	int s = (trace->bracket_opening || edge->bracket_closing);
+	int s = (trace->GetBracketOpening() || edge->GetBracketClosing());
 	int b = 1 - s;
 
 	for(;;)
 	{
-		edge->block_trace = trace;
+		edge->SetBlockTrace(trace);
 		trace = edge;
-		edge = edge->block_next;
+		edge = edge->GetBlockNext();
 
 		if( edge == NULL )
 			break;
 
-		float d2 = edge->position_y - trace->position_y;
+		float d2 = edge->GetPositionY() - trace->GetPositionY();
 		ASSERT( d2 >= 0 );
 
-		if( trace->bracket_opening || edge->bracket_closing )
+		if( trace->GetBracketOpening() || edge->GetBracketClosing() )
 		{
 			g = Block_GetG(d,b,s);
 			if( d2 <= g )
@@ -1280,27 +1857,27 @@ int CAutoRouterEdgeList::Block_PushForward(SAutoRouterEdge* blocked, SAutoRouter
 		edge = trace;
 		ASSERT( edge != NULL && edge != blocked );
 
-		float y = edge->position_y;
+		float y = edge->GetPositionY();
 
 		do
 		{
-			ASSERT( edge != NULL && edge->block_trace != NULL );
-			trace = edge->block_trace;
+			ASSERT( edge != NULL && edge->GetBlockTrace() != NULL );
+			trace = edge->GetBlockTrace();
 
-			y -= (trace->bracket_opening || edge->bracket_closing) ? g : f;
+			y -= (trace->GetBracketOpening() || edge->GetBracketClosing()) ? g : f;
 
-			if( trace->position_y < y - 0.001F )
+			if( trace->GetPositionY() < y - 0.001F )
 			{
 				modified = 1;
 				if( SlideButNotPassEdges(trace, y) )
-					trace->block_next = NULL;
+					trace->SetBlockNext(NULL);
 			}
 
 			edge = trace;
 		} while( edge != blocked );
 #ifdef _DEBUG
-		y -= (blocker->bracket_opening || edge->bracket_closing) ? g : f;
-		ASSERT( FLT_EQU(y, blocker->position_y) );
+		y -= (blocker->GetBracketOpening() || edge->GetBracketClosing()) ? g : f;
+		ASSERT( FLT_EQU(y, blocker->GetPositionY()) );
 #endif
 	}
 
@@ -1320,39 +1897,42 @@ int CAutoRouterEdgeList::Block_ScanForward()
 	int modified = 0;
 
 	Section_Reset();
-	SAutoRouterEdge* blocker = order_first;
+	CAutoRouterEdge* blocker = order_first;
 	while( blocker )
 	{
-		SAutoRouterEdge* bmin = NULL;
-		SAutoRouterEdge* smin = NULL;
+		CAutoRouterEdge* bmin = NULL;
+		CAutoRouterEdge* smin = NULL;
 		float bmin_f = ED_MINCOORD - 1;
 		float smin_f = ED_MINCOORD - 1;
 
 		Section_BeginScan(blocker);
-		while( Section_HasBlockedEdge() ) if( Section_IsImmediate() )
+		while( Section_HasBlockedEdge() )
 		{
-			SAutoRouterEdge* blocked = Section_GetBlockedEdge();
-			ASSERT( blocked != NULL );
-
-			if( blocked->block_prev != NULL )
-				modified |= Block_PushBackward(blocked, blocker);
-
-			if( !blocker->edge_fixed )
+			if( Section_IsImmediate() )
 			{
-				if( blocked->bracket_opening || blocker->bracket_closing )
+				CAutoRouterEdge* blocked = Section_GetBlockedEdge();
+				ASSERT( blocked != NULL );
+
+				if( blocked->GetBlockPrev() != NULL )
+					modified |= Block_PushBackward(blocked, blocker);
+
+				if( !blocker->GetEdgeFixed() )
 				{
-					if( smin_f < blocked->position_y )
+					if( blocked->GetBracketOpening() || blocker->GetBracketClosing() )
 					{
-						smin_f = blocked->position_y;
-						smin = blocked;
+						if( smin_f < blocked->GetPositionY() )
+						{
+							smin_f = blocked->GetPositionY();
+							smin = blocked;
+						}
 					}
-				}
-				else
-				{
-					if( bmin_f < blocked->position_y )
+					else
 					{
-						bmin_f = blocked->position_y;
-						bmin = blocked;
+						if( bmin_f < blocked->GetPositionY() )
+						{
+							bmin_f = blocked->GetPositionY();
+							bmin = blocked;
+						}
 					}
 				}
 			}
@@ -1362,31 +1942,40 @@ int CAutoRouterEdgeList::Block_ScanForward()
 		{
 			if( smin )
 			{
-				blocker->closest_prev = smin_f > bmin_f ? smin : bmin;
+				blocker->SetClosestPrev(smin_f > bmin_f ? smin : bmin);
 
-				bmin_f = blocker->position_y - bmin_f;
-				smin_f = Block_GetF(blocker->position_y - smin_f, 0, 1);
+				bmin_f = blocker->GetPositionY() - bmin_f;
+				smin_f = Block_GetF(blocker->GetPositionY() - smin_f, 0, 1);
 
-				blocker->block_prev = smin_f < bmin_f ? smin : bmin;
+				blocker->SetBlockPrev(smin_f < bmin_f ? smin : bmin);
 			}
 			else
 			{
-				blocker->block_prev = bmin;
-				blocker->closest_prev = bmin;
+				blocker->SetBlockPrev(bmin);
+				blocker->SetClosestPrev(bmin);
 			}
 		}
 		else
 		{
-			blocker->block_prev = smin;
-			blocker->closest_prev = smin;
+			blocker->SetBlockPrev(smin);
+			blocker->SetClosestPrev(smin);
 		}
 
 #ifdef _DEBUG
-//		if( !blocker->edge_fixed && ((CAutoRouterPath*)blocker->owner)->IsHighLighted() )
-//			break;
+		if( !blocker->GetEdgeFixed() )
+		{
+			CComQIPtr<IAutoRouterPath> ownerPath = blocker->GetOwner();
+			VARIANT_BOOL isHighlighted = VARIANT_FALSE;
+			COMTHROW(ownerPath->IsHighLighted(&isHighlighted));
+			if (isHighlighted == VARIANT_TRUE)
+			{
+				ASSERT(false);
+				break;
+			}
+		}
 #endif
 
-		blocker = blocker->order_next;
+		blocker = blocker->GetOrderNext();
 	}
 
 	PositionAll_StoreY();
@@ -1413,39 +2002,42 @@ int CAutoRouterEdgeList::Block_ScanBackward()
 	int modified = 0;
 
 	Section_Reset();
-	SAutoRouterEdge* blocker = order_last;
+	CAutoRouterEdge* blocker = order_last;
 	while( blocker )
 	{
-		SAutoRouterEdge* bmin = NULL;
-		SAutoRouterEdge* smin = NULL;
+		CAutoRouterEdge* bmin = NULL;
+		CAutoRouterEdge* smin = NULL;
 		float bmin_f = ED_MAXCOORD + 1;
 		float smin_f = ED_MAXCOORD + 1;
 
 		Section_BeginScan(blocker);
-		while( Section_HasBlockedEdge() ) if( Section_IsImmediate() )
+		while( Section_HasBlockedEdge() )
 		{
-			SAutoRouterEdge* blocked = Section_GetBlockedEdge();
-			ASSERT( blocked != NULL );
-
-			if( blocked->block_next != NULL )
-				modified |= Block_PushForward(blocked, blocker);
-
-			if( !blocker->edge_fixed )
+			if( Section_IsImmediate() )
 			{
-				if( blocker->bracket_opening || blocked->bracket_closing )
+				CAutoRouterEdge* blocked = Section_GetBlockedEdge();
+				ASSERT( blocked != NULL );
+
+				if( blocked->GetBlockNext() != NULL )
+					modified |= Block_PushForward(blocked, blocker);
+
+				if( !blocker->GetEdgeFixed() )
 				{
-					if( smin_f > blocked->position_y )
+					if( blocker->GetBracketOpening() || blocked->GetBracketClosing() )
 					{
-						smin_f = blocked->position_y;
-						smin = blocked;
+						if( smin_f > blocked->GetPositionY() )
+						{
+							smin_f = blocked->GetPositionY();
+							smin = blocked;
+						}
 					}
-				}
-				else
-				{
-					if( bmin_f > blocked->position_y )
+					else
 					{
-						bmin_f = blocked->position_y;
-						bmin = blocked;
+						if( bmin_f > blocked->GetPositionY() )
+						{
+							bmin_f = blocked->GetPositionY();
+							bmin = blocked;
+						}
 					}
 				}
 			}
@@ -1455,31 +2047,40 @@ int CAutoRouterEdgeList::Block_ScanBackward()
 		{
 			if( smin )
 			{
-				blocker->closest_next = smin_f < bmin_f ? smin : bmin;
+				blocker->SetClosestNext(smin_f < bmin_f ? smin : bmin);
 
-				bmin_f = bmin_f - blocker->position_y;
-				smin_f = Block_GetF(smin_f - blocker->position_y, 0, 1);
+				bmin_f = bmin_f - blocker->GetPositionY();
+				smin_f = Block_GetF(smin_f - blocker->GetPositionY(), 0, 1);
 
-				blocker->block_next = smin_f < bmin_f ? smin : bmin;
+				blocker->SetBlockNext(smin_f < bmin_f ? smin : bmin);
 			}
 			else
 			{
-				blocker->block_next = bmin;
-				blocker->closest_next = bmin;
+				blocker->SetBlockNext(bmin);
+				blocker->SetClosestNext(bmin);
 			}
 		}
 		else
 		{
-			blocker->block_next = smin;
-			blocker->closest_next = smin;
+			blocker->SetBlockNext(smin);
+			blocker->SetClosestNext(smin);
 		}
 
 #ifdef _DEBUG
-//		if( !blocker->edge_fixed && ((CAutoRouterPath*)blocker->owner)->IsHighLighted() )
-//			break;
+		if( !blocker->GetEdgeFixed() )
+		{
+			CComQIPtr<IAutoRouterPath> ownerPath = blocker->GetOwner();
+			VARIANT_BOOL isHighlighted = VARIANT_FALSE;
+			COMTHROW(ownerPath->IsHighLighted(&isHighlighted));
+			if (isHighlighted == VARIANT_TRUE)
+			{
+				ASSERT(false);
+				break;
+			}
+		}
 #endif
 
-		blocker = blocker->order_prev;
+		blocker = blocker->GetOrderPrev();
 	}
 
 	PositionAll_StoreY();
@@ -1499,25 +2100,25 @@ int CAutoRouterEdgeList::Block_SwitchWrongs()
 
 	PositionAll_LoadX();
 
-	SAutoRouterEdge* second = order_first;
+	CAutoRouterEdge* second = order_first;
 	while( second != NULL )
 	{
-		if( second->closest_prev != NULL && second->closest_prev->closest_next != second &&
-			second->closest_next != NULL && second->closest_next->closest_prev == second )
+		if( second->GetClosestPrev() != NULL && second->GetClosestPrev()->GetClosestNext() != second &&
+			second->GetClosestNext() != NULL && second->GetClosestNext()->GetClosestPrev() == second )
 			
 		{
-			ASSERT( !second->edge_fixed );
+			ASSERT( !second->GetEdgeFixed() );
 
-			SAutoRouterEdge* edge = second;
-			SAutoRouterEdge* next = edge->closest_next;
+			CAutoRouterEdge* edge = second;
+			CAutoRouterEdge* next = edge->GetClosestNext();
 
-			while( next != NULL && edge == next->closest_prev )
+			while( next != NULL && edge == next->GetClosestPrev() )
 			{
-				ASSERT( edge != NULL && !edge->edge_fixed );
-				ASSERT( next != NULL && !next->edge_fixed );
+				ASSERT( edge != NULL && !edge->GetEdgeFixed() );
+				ASSERT( next != NULL && !next->GetEdgeFixed() );
 
-				float ey = edge->position_y;
-				float ny = next->position_y;
+				float ey = edge->GetPositionY();
+				float ny = next->GetPositionY();
 
 				ASSERT( ey <= ny );
 
@@ -1525,55 +2126,55 @@ int CAutoRouterEdgeList::Block_SwitchWrongs()
 				{
 					was = 1;
 
-					ASSERT( !edge->edge_canpassed && !next->edge_canpassed );
-					edge->edge_canpassed = 1;
-					next->edge_canpassed = 1;
+					ASSERT( !edge->GetEdgeCanpassed() && !next->GetEdgeCanpassed() );
+					edge->SetEdgeCanpassed(true);
+					next->SetEdgeCanpassed(true);
 
 					int a = SlideButNotPassEdges(edge, (ny+ey)/2 + 0.001F) != NULL;
 					a |= SlideButNotPassEdges(next, (ny+ey)/2 - 0.001F) != NULL;
 
 					if( a )
 					{
-						edge->closest_prev = NULL;
-						edge->closest_next = NULL;
-						next->closest_prev = NULL;
-						next->closest_next = NULL;
+						edge->SetClosestPrev(NULL);
+						edge->SetClosestNext(NULL);
+						next->SetClosestPrev(NULL);
+						next->SetClosestNext(NULL);
 
-						edge->edge_canpassed = 0;
-						next->edge_canpassed = 0;
+						edge->SetEdgeCanpassed(false);
+						next->SetEdgeCanpassed(false);
 						break;
 					}
 
-					if( edge->closest_prev != NULL && edge->closest_prev->closest_next == edge )
-						edge->closest_prev->closest_next = next;
+					if( edge->GetClosestPrev() != NULL && edge->GetClosestPrev()->GetClosestNext() == edge )
+						edge->GetClosestPrev()->SetClosestNext(next);
 
-					if( next->closest_next != NULL && next->closest_next->closest_prev == next)
-						next->closest_next->closest_prev = edge;
+					if( next->GetClosestNext() != NULL && next->GetClosestNext()->GetClosestPrev() == next)
+						next->GetClosestNext()->SetClosestPrev(edge);
 
-					edge->closest_next = next->closest_next;
-					next->closest_next = edge;
-					next->closest_prev = edge->closest_prev;
-					edge->closest_prev = next;
+					edge->SetClosestNext(next->GetClosestNext());
+					next->SetClosestNext(edge);
+					next->SetClosestPrev(edge->GetClosestPrev());
+					edge->SetClosestPrev(next);
 
-					edge->edge_canpassed = 0;
-					next->edge_canpassed = 0;
+					edge->SetEdgeCanpassed(false);
+					next->SetEdgeCanpassed(false);
 
 					ASSERT( !Bracket_ShouldBeSwitched(next, edge) );
 
-					if( next->closest_prev != NULL && next->closest_prev->closest_next == next )
-						edge = next->closest_prev;
+					if( next->GetClosestPrev() != NULL && next->GetClosestPrev()->GetClosestNext() == next )
+						edge = next->GetClosestPrev();
 					else
-						next = edge->closest_next;
+						next = edge->GetClosestNext();
 				}
 				else
 				{
 					edge = next;
-					next = next->closest_next;
+					next = next->GetClosestNext();
 				}
 			}
 		}
 
-		second = second->order_next;
+		second = second->GetOrderNext();
 	}
 
 	if( was )

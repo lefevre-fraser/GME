@@ -3,6 +3,7 @@
 #pragma once
 #include "resource.h"       // main symbols
 
+#include <vector>
 //#include <oleauto.h>
 
 #include "AutoRoute/ArHelper.h"
@@ -35,10 +36,28 @@
 #define ARPATHST_Connected		0x0001		// states
 #define ARPATHST_Default		0x0000
 
-typedef CList<CPoint, CPoint&>				CPointList;
+
+// Version of edge data structure
+#define CONNECTIONCUSTOMIZATIONDATAVERSION			0
+#define EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC		"-1"
+
+void InitCustomPathData(CustomPathData& edgeData);
+
+typedef CList<CPoint, CPoint&>	CPointList;
+
+// Functions for CMapAutoRouterPath2CGuiConnection and CMapCARPath2CPointList, see AutoRouter.cpp and AutoRouterGraph.cpp
+template<>
+UINT AFXAPI HashKey< IAutoRouterPath* > (IAutoRouterPath* key);
+
+typedef IAutoRouterPath* LPIAutoRouterPath;
+
+template<>
+BOOL AFXAPI CompareElements< LPIAutoRouterPath, LPIAutoRouterPath >
+	 (const LPIAutoRouterPath* pElement1, const LPIAutoRouterPath* pElement2);
+// End of functions for CMapAutoRouterPath2CGuiConnection and CMapCARPath2CPointList, see AutoRouter.cpp and AutoRouterGraph.cpp
+
 
 class CAutoRouterGraph;
-class CAutoRouterEdgeList;
 class CAutoRouterPort;
 
 // CAutoRouterPath
@@ -51,10 +70,6 @@ class ATL_NO_VTABLE CAutoRouterPath :
 public:
 	CAutoRouterPath();
 
-	//only the COM interface methods are public, thus we need lots of friends
-	friend CAutoRouterGraph;
-	friend CAutoRouterEdgeList;
-
 DECLARE_REGISTRY_RESOURCEID(IDR_AUTOROUTERPATH)
 
 
@@ -66,116 +81,112 @@ END_COM_MAP()
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	HRESULT FinalConstruct()
-	{
-		return S_OK;
-	}
-
-	void FinalRelease() 
-	{		
-		DeleteAll();
-		this->SetOwner(NULL);
-	}
+	HRESULT FinalConstruct(void);
+	void FinalRelease(void);
 
 private:
-	void SetOwner(CComObjPtr<CAutoRouterGraph> graph);
+	CComPtr<IAutoRouterGraph> owner;
 
-	CComObjPtr<CAutoRouterGraph> owner;
+// --- Ports
 
-// --- Ports (FOR EXTERNAL USE)
+	CComPtr<IAutoRouterPort> startport;							// reference
+	CComPtr<IAutoRouterPort> endport;							// reference
 
-private:
-	void SetStartPort(CComObjPtr<CAutoRouterPort> port);
-	void SetEndPort(CComObjPtr<CAutoRouterPort> port);
-	void ClearPorts();
-	CComObjPtr<CAutoRouterPort> GetStartPort() const;
-	CComObjPtr<CAutoRouterPort> GetEndPort() const;
+	POSITION GetPointPosAt(const CPoint& point, int nearness = 0) const;
+	POSITION GetEdgePosAt(const CPoint& point, int nearness = 0) const;
 
-private:
-	CComObjPtr<CAutoRouterPort> startport;							// reference
-	CComObjPtr<CAutoRouterPort> endport;							// reference
+// --- Points
 
-// --- Points (FOR EXTERNAL USE)
-
-private:
-	void AddTail(CPoint point);
-	void DeleteAll();
-	
-	int HasNoPoint() const { return points.IsEmpty(); }
-	int GetPointCount() const { return points.GetCount(); }
-
-	CPoint GetStartPoint() const;
-	CPoint GetEndPoint() const;
-	CPoint GetOutOfBoxStartPoint() const;
-	CPoint GetOutOfBoxEndPoint() const;
-
-	POSITION GetPointPosAt(CPoint point, int nearness = 0) const;
-	POSITION GetEdgePosAt(CPoint point, int nearness = 0) const;
-
-	void SimplifyTrivially();
-
-	CPointList points;
+	bool IsConnected(void) const;
 
 // --- Edges
+	CPointListPath points;
 
 private:
-	POSITION GetHeadEdge(CPoint& start, CPoint& end) const;
-	POSITION GetTailEdge(CPoint& start, CPoint& end) const;
-	void GetNextEdge(POSITION& pos, CPoint& start, CPoint& end) const;
-	void GetPrevEdge(POSITION& pos, CPoint& start, CPoint& end) const;
-	void GetEdge(POSITION pos, CPoint& start, CPoint& end) const;
-
-	POSITION GetHeadEdgePtrs(CPoint*& start, CPoint*& end);
-	POSITION GetTailEdgePtrs(CPoint*& start, CPoint*& end);
-	void GetNextEdgePtrs(POSITION& pos, CPoint*& start, CPoint*& end);
-	void GetPrevEdgePtrs(POSITION& pos, CPoint*& start, CPoint*& end);
-	void GetEdgePtrs(POSITION pos, CPoint*& start, CPoint*& end);
-	CPoint* GetStartPoint(POSITION pos);
-	CPoint* GetEndPoint(POSITION pos);
- 	CPoint* GetPointBeforeEdge(POSITION pos);
-	CPoint* GetPointAfterEdge(POSITION pos);
-
-	POSITION GetEdgePosBeforePoint(POSITION pos) const;
-	POSITION GetEdgePosAfterPoint(POSITION pos) const;
-	POSITION GetEdgePosForStartPoint(CPoint* startpoint);
-
-	int IsEdgeHorizontal(POSITION pos);
-
-// --- Data (FOR EXTERNAL USE)
-
-private:
-	CRect GetSurroundRect() const;
-
-	int IsPathAt(CPoint point, int nearness = 0) const { return GetEdgePosAt(point, nearness) != NULL; }
-	int IsPathClip(CRect rect) const;
-
-	void SetAttributes(unsigned int attr);
-	unsigned int GetAttributes() const { return attributes; }
-
-	int IsFixed() const { return (attributes & ARPATH_Fixed) != 0; }
-	int IsMoveable() const { return (attributes & ARPATH_Fixed) == 0; }
-	int IsHighLighted() const { return (attributes & ARPATH_HighLighted) != 0; }
-
-	int GetState() const { return state; };
-	int IsConnected() const { return (state & ARPATHST_Connected) != 0; }
-
-	EArDir GetEndDir() const;
-	EArDir GetStartDir() const;
-
-private:
-	void SetState(int state);
-
 	unsigned int attributes;
 	int state;
+	bool isAutoRoutingOn;
 
-private:
+	std::vector<CustomPathData> customPathData;
+	std::vector<CustomPathData> pathDataToDelete;
 
 public:
 	STDMETHOD(GetOwner)(IAutoRouterGraph** result);
+	STDMETHOD(HasOwner)(VARIANT_BOOL* result);
+	STDMETHOD(SetOwner)(IAutoRouterGraph* graph);
+	// Ports
+	STDMETHOD(SetStartPort)(IAutoRouterPort* port);
+	STDMETHOD(SetEndPort)(IAutoRouterPort* port);
+	STDMETHOD(ClearPorts)();
+	STDMETHOD(GetStartPort)(IAutoRouterPort** result);
+	STDMETHOD(GetEndPort)(IAutoRouterPort** result);
+	// Points
+	STDMETHOD(AddTail)(long px, long py);
+	STDMETHOD(DeleteAll)();
+
+	STDMETHOD(HasNoPoint)(VARIANT_BOOL* result);
+	STDMETHOD(GetPointCount)(long* result);
+
+	STDMETHOD(GetStartPoint)(long* resultX, long* resultY);
+	STDMETHOD(GetEndPoint)(long* resultX, long* resultY);
+	STDMETHOD(GetStartBox)(long* p1, long* p2, long* p3, long* p4);
+	STDMETHOD(GetEndBox)(long* p1, long* p2, long* p3, long* p4);
+	STDMETHOD(GetOutOfBoxStartPoint)(long* resultX, long* resultY, RoutingDirection hintDir);
+	STDMETHOD(GetOutOfBoxEndPoint)(long* resultX, long* resultY, RoutingDirection hintDir);
+
+	STDMETHOD(SimplifyTrivially)();
+
+	STDMETHOD(ModifyPoints)(SAFEARRAY* pArr);
+	STDMETHOD(SetPoints)(SAFEARRAY* pArr);
+	STDMETHOD(GetPointList)(SAFEARRAY** pArr);
+	// Edges
+
+	STDMETHOD(GetSurroundRect)(long* p1, long* p2, long* p3, long* p4);
+
+	STDMETHOD(IsEmpty)(VARIANT_BOOL* result);
+	STDMETHOD(IsPathAt)(long px, long py, long nearness, VARIANT_BOOL* result);
+	STDMETHOD(IsPathClip)(long p1, long p2, long p3, long p4, VARIANT_BOOL* result);
+
+	STDMETHOD(SetAttributes)(long attr);
+	STDMETHOD(GetAttributes)(long* result);
+
+	STDMETHOD(IsFixed)(VARIANT_BOOL* result);
+	STDMETHOD(IsMoveable)(VARIANT_BOOL* result);
+	STDMETHOD(IsHighLighted)(VARIANT_BOOL* result);
+
+	STDMETHOD(GetState)(long* result);
+	STDMETHOD(IsConnected)(VARIANT_BOOL* result);
+	STDMETHOD(SetState)(long state);
+
+	STDMETHOD(GetEndDir)(RoutingDirection* result);
+	STDMETHOD(GetStartDir)(RoutingDirection* result);
+
 	STDMETHOD(SetEndDir)(long arpath_end);
 	STDMETHOD(SetStartDir)(long arpath_start);
-	STDMETHOD(GetPointList)(SAFEARRAY **pArr);
+	// CustomData
+	STDMETHOD(SetCustomPathData)(SAFEARRAY* pArr);
+	STDMETHOD(ApplyCustomizationsBeforeAutoConnectPoints)(SAFEARRAY** pArr);
+	STDMETHOD(ApplyCustomizationsAfterAutoConnectPointsAndStuff)(void);
+	STDMETHOD(RemovePathCustomizations)(void);
+	STDMETHOD(MarkPathCustomizationsForDeletion)(long asp);
+	STDMETHOD(RemoveInvalidPathCustomizations)(long asp);
+	STDMETHOD(AreTherePathCustomizations)(VARIANT_BOOL* result);
+	STDMETHOD(AreThereDeletedPathCustomizations)(VARIANT_BOOL* result);
+	STDMETHOD(GetDeletedCustomPathData)(SAFEARRAY** pArr);
+	STDMETHOD(GetFixedEdgeIndexes)(SAFEARRAY** pArr);
+
+	STDMETHOD(IsAutoRouted)(VARIANT_BOOL* result);
+	STDMETHOD(SetAutoRouting)(VARIANT_BOOL autoRoutingState);
+	// Other
 	STDMETHOD(Destroy)();
+
+// --- Debug
+#ifdef _DEBUG
+public:
+	virtual void AssertValid();
+	void AssertValidPos(POSITION pos) const;
+	void AssertValidPoints() const;
+#endif
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(AutoRouterPath), CAutoRouterPath)

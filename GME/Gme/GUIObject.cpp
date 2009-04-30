@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
 #include <stdio.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include "GMEApp.h"
 #include "GMEstd.h"
 #include "GMEOLEData.h"
@@ -25,7 +27,7 @@ CModelGrid modelGrid;
 
 /////////////////////////////// Helper functions /////////////////////////////////
 
-void SetLocation(CRect &location,CPoint pt)
+void SetLocation(CRect& location, CPoint pt)
 {
 	CSize size = location.Size();
 	int cx = pt.x + size.cx / 2;
@@ -44,7 +46,7 @@ void SetLocation(CRect &location,CPoint pt)
 	location.top = pt.y;
 }
 
-void SetSize(CRect &location,CSize s)
+void SetSize(CRect& location, CSize s)
 {
 	if((s.cx % 2) == 0)
 		s.cx--;
@@ -66,7 +68,7 @@ void SetSize(CRect &location,CSize s)
 	location.bottom = location.top + s.cy;
 }
 
-void SetCenter(CRect &location,CPoint pt)
+void SetCenter(CRect& location, CPoint pt)
 {
 	ASSERT((pt.x % GME_GRID_SIZE) == 0);
 	ASSERT((pt.y % GME_GRID_SIZE) == 0);
@@ -85,7 +87,7 @@ void SetCenter(CRect &location,CPoint pt)
 	location.bottom = y1 + size.cy;
 }
 
-void SetCenterNoMga(CRect &location,CPoint pt)
+void SetCenterNoMga(CRect& location, CPoint pt)
 {
 	CSize size = location.Size();
 	int dx = size.cx / 2;
@@ -103,7 +105,7 @@ void SetCenterNoMga(CRect &location,CPoint pt)
 ////////////////////////////////////
 // Non-virtual methods of CGuiAspect
 ////////////////////////////////////
-CGuiAspect::CGuiAspect(CGuiMetaAspect *meta,CGuiObject *p,int ind,int pind, const CComPtr<IMgaDecorator>& decor,
+CGuiAspect::CGuiAspect(CGuiMetaAspect* meta, CGuiObject* p, int ind, int pind, const CComPtr<IMgaDecorator>& decor,
 					   CComPtr<IMgaElementDecorator> newDecor, CDecoratorEventSink* decorEventSink):
 	guiMeta(meta),
 	parent(p),
@@ -214,7 +216,7 @@ void CGuiAspect::SetLocation(const CRect& location)
 ////////////////////////////////////
 // Non-virtual methods of CGuiPort
 ////////////////////////////////////
-CGuiPort::CGuiPort(CGuiAspect *asp,CComPtr<IMgaFCO> fco) : parent(asp), mgaFco(fco)
+CGuiPort::CGuiPort(CGuiAspect* asp, CComPtr<IMgaFCO> fco) : parent(asp), mgaFco(fco)
 {
 	CComBSTR bstr;
 	COMTHROW(fco->get_Name(&bstr));
@@ -230,7 +232,7 @@ CGuiPort::CGuiPort(CGuiAspect *asp,CComPtr<IMgaFCO> fco) : parent(asp), mgaFco(f
 
 }
 
-bool CGuiPort::GetPreference(CString &val,CString path)
+bool CGuiPort::GetPreference(CString &val, CString path)
 {
 	VERIFY(mgaFco);
 	CComBSTR pathBstr;
@@ -409,7 +411,7 @@ bool CGuiPort::IsRealPort() {
 ////////////////////////////////////
 // Non-virtual methods of CGuiAnnotator
 ////////////////////////////////////
-CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel> &pModel, CComPtr<IMgaRegNode> &mRootNode, CGMEView *vw, int numAsp)
+CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel>& pModel, CComPtr<IMgaRegNode>& mRootNode, CGMEView* vw, int numAsp)
 {
 	model = pModel;
 	rootNode = mRootNode;
@@ -503,9 +505,10 @@ CGuiAnnotator::~CGuiAnnotator()
 			COMTHROW((*ii)->decorator->Destroy());
 		CAnnotatorEventSink* annotatorEventSink = (*ii)->annotatorEventSink;
 		delete (*ii);
-		ASSERT(annotatorEventSink->m_dwRef == 1);
-		if (annotatorEventSink != NULL)
+		if (annotatorEventSink != NULL) {
+			ASSERT(annotatorEventSink->m_dwRef == 1);
 			annotatorEventSink->ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
+		}
 	}
 	decoratorData.clear();
 }
@@ -585,7 +588,7 @@ const CRect& CGuiAnnotator::GetLocation(int aspect)
 	return decoratorData[aspect]->location;
 }
 
-void  CGuiAnnotator::SetLocation(const CRect &toLoc, int aspect, bool doMga)
+void  CGuiAnnotator::SetLocation(const CRect& toLoc, int aspect, bool doMga)
 {
 	if (aspect < 0) {
 		aspect = parentAspect;
@@ -614,7 +617,7 @@ void  CGuiAnnotator::SetLocation(const CRect &toLoc, int aspect, bool doMga)
 	}
 }
 
-void  CGuiAnnotator::ReadLocation(int aspect, CComPtr<IMgaRegNode> &aspNode)
+void  CGuiAnnotator::ReadLocation(int aspect, CComPtr<IMgaRegNode>& aspNode)
 {
 	decoratorData[aspect]->location.left = 0;
 	decoratorData[aspect]->location.top = 0;
@@ -675,7 +678,7 @@ void  CGuiAnnotator::WriteLocation(int aspect)
 ////////////////////////////////////
 // Static methods of CGuiAnnotator
 ////////////////////////////////////
-void CGuiAnnotator::SetAspect(CGuiAnnotatorList &list,int asp)
+void CGuiAnnotator::SetAspect(CGuiAnnotatorList& list, int asp)
 {
 	POSITION pos = list.GetHeadPosition();
 	while (pos) {
@@ -683,7 +686,7 @@ void CGuiAnnotator::SetAspect(CGuiAnnotatorList &list,int asp)
 	}
 }
 
-void CGuiAnnotator::GrayOutAnnotations(CGuiAnnotatorList &list,bool set)
+void CGuiAnnotator::GrayOutAnnotations(CGuiAnnotatorList& list, bool set)
 {
 	POSITION pos = list.GetHeadPosition();
 	while (pos) {
@@ -692,14 +695,14 @@ void CGuiAnnotator::GrayOutAnnotations(CGuiAnnotatorList &list,bool set)
 }
 
 
-void CGuiAnnotator::NudgeAnnotations(CGuiAnnotatorList &annotatorList,int right,int down)
+void CGuiAnnotator::NudgeAnnotations(CGuiAnnotatorList& annotatorList, int right, int down)
 {
 	CGMEEventLogger::LogGMEEvent("CGuiAnnotator::NudgeAnnotations ");
 	GMEEVENTLOG_GUIANNOTATORS(annotatorList);
 	ASSERT(right == 0 || down == 0); // cannot nudge diagonally for now
 	POSITION pos = annotatorList.GetHeadPosition();
 	while(pos) {
-		CGuiAnnotator *ann = annotatorList.GetNext(pos);
+		CGuiAnnotator* ann = annotatorList.GetNext(pos);
 		VERIFY(ann->IsVisible());
 		CRect rect = ann->GetLocation();
 		rect.top += down * GME_GRID_SIZE;
@@ -710,10 +713,10 @@ void CGuiAnnotator::NudgeAnnotations(CGuiAnnotatorList &annotatorList,int right,
 	}
 }
 
-void CGuiAnnotator::GetExtent(CGuiAnnotatorList &annotatorList,CRect &rect)
+void CGuiAnnotator::GetExtent(CGuiAnnotatorList& annotatorList, CRect& rect)
 {
-	CGuiAnnotator *ann;
-	CRect cur1,cur2;
+	CGuiAnnotator* ann;
+	CRect cur1, cur2;
 	POSITION pos = annotatorList.GetHeadPosition();
 	rect = CRect(0,0,0,0);
 	while(pos) {
@@ -721,7 +724,7 @@ void CGuiAnnotator::GetExtent(CGuiAnnotatorList &annotatorList,CRect &rect)
 		if(ann && ann->IsVisible()) {
 			cur2 = ann->GetLocation();
 			cur1 = rect;
-			rect.UnionRect(&cur1,&cur2);
+			rect.UnionRect(&cur1, &cur2);
 		}
 	}
 }
@@ -730,17 +733,17 @@ void CGuiAnnotator::GetRectList(CGuiAnnotatorList &annotatorList, CRectList &ann
 {
 	POSITION pos = annotatorList.GetHeadPosition();
 	while(pos) {
-		CRect *rect = new CRect(annotatorList.GetNext(pos)->GetLocation());
+		CRect* rect = new CRect(annotatorList.GetNext(pos)->GetLocation());
 		annRects.AddTail(rect);
 	}
 }
 
 
-void CGuiAnnotator::FindUpperLeft(CGuiAnnotatorList &anns,int &left,int &top)
+void CGuiAnnotator::FindUpperLeft(CGuiAnnotatorList& anns, int& left, int& top)
 {
 	bool start = true;
 	POSITION pos = anns.GetHeadPosition();
-	CGuiAnnotator *ann;
+	CGuiAnnotator* ann;
 	CRect r;
 	while(pos) {
 		ann = anns.GetNext(pos);
@@ -761,13 +764,13 @@ void CGuiAnnotator::FindUpperLeft(CGuiAnnotatorList &anns,int &left,int &top)
 	}
 }
 
-void CGuiAnnotator::ShiftAnnotations(CGuiAnnotatorList &annList,CPoint &shiftBy)
+void CGuiAnnotator::ShiftAnnotations(CGuiAnnotatorList& annList, CPoint& shiftBy)
 {
 	CGMEEventLogger::LogGMEEvent("CGuiAnnotator::ShiftAnnotations ");
 	GMEEVENTLOG_GUIANNOTATORS(annList);
 	POSITION pos = annList.GetHeadPosition();
 	while(pos) {
-		CGuiAnnotator *ann = annList.GetNext(pos);
+		CGuiAnnotator* ann = annList.GetNext(pos);
 		VERIFY(ann->IsVisible());
 		CRect newLoc = ann->GetLocation();
 		newLoc.OffsetRect(shiftBy);
@@ -776,7 +779,7 @@ void CGuiAnnotator::ShiftAnnotations(CGuiAnnotatorList &annList,CPoint &shiftBy)
 }
 
 // static
-int CGuiAnnotator::Hide(CComPtr<IMgaRegNode> &mRootNode )
+int CGuiAnnotator::Hide(CComPtr<IMgaRegNode>& mRootNode )
 {
 	CComBSTR val;
 	COMTHROW(mRootNode->get_Value( &val));
@@ -802,7 +805,7 @@ int CGuiAnnotator::Hide(CComPtr<IMgaRegNode> &mRootNode )
 }
 
 // static
-bool CGuiAnnotator::Showable( CComPtr<IMgaRegNode> &mRootNode )
+bool CGuiAnnotator::Showable( CComPtr<IMgaRegNode>& mRootNode )
 {   // decides whether an annotation should be displayed in case of a subtype/instance
 	// Subtype/instance may have: owned annotations (not present in the ancestor) -> main status = ATTSTATUS_HERE
 	//                            inherited annotations                           -> main status = ATTSTATUS_INHERITED1,2,...
@@ -868,18 +871,25 @@ bool CGuiAnnotator::Showable( CComPtr<IMgaRegNode> &mRootNode )
 // Non-virtual methods of CGuiFco
 //////////////////////////////////
 
-CGuiFco::CGuiFco(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView *vw,int numAsp) : CGuiBase(),
-		mgaFco(pt), metaRole(role), view(vw), numParentAspects(numAsp), parentAspect(0), grayedOut(false), isType(false)
+CGuiFco::CGuiFco(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp) :
+	CGuiBase(),
+	mgaFco(pt),
+	metaRole(role),
+	view(vw),
+	numParentAspects(numAsp),
+	parentAspect(0),
+	grayedOut(false),
+	isType(false)
 {
 	{
 		CComBSTR bstr;
 		COMTHROW(role->get_Name(&bstr));
-		CopyTo(bstr,roleName);
+		CopyTo(bstr, roleName);
 	}
 	{
 		CComBSTR bstr;
 		COMTHROW(role->get_DisplayedName(&bstr));
-		CopyTo(bstr,roleDisplayedName);
+		CopyTo(bstr, roleDisplayedName);
 	}
 	{
 		COMTHROW(role->get_Kind(&metaFco));
@@ -887,22 +897,22 @@ CGuiFco::CGuiFco(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView *vw,i
 	{
 		CComBSTR bstr;
 		COMTHROW(metaFco->get_Name(&bstr));
-		CopyTo(bstr,kindName);
+		CopyTo(bstr, kindName);
 	}
 	{
 		CComBSTR bstr;
 		COMTHROW(metaFco->get_DisplayedName(&bstr));
-		CopyTo(bstr,kindDisplayedName);
+		CopyTo(bstr, kindDisplayedName);
 	}
 	if (pt) {
 		CComBSTR bstr;
 		COMTHROW(mgaFco->get_ID(&bstr));
-		CopyTo(bstr,id);
+		CopyTo(bstr, id);
 	}
 	if (pt) {
 		CComBSTR bstr;
 		COMTHROW(mgaFco->get_Name(&bstr));
-		CopyTo(bstr,name);
+		CopyTo(bstr, name);
 	}
 
 	metaref_type metaRef;
@@ -918,53 +928,53 @@ metaref_type CGuiFco::GetRoleMetaRef()
 	return tp;
 }
 
-bool CGuiFco::IsPrimary(CGuiMetaModel *guiMetaModel,int aspectInd)
+bool CGuiFco::IsPrimary(CGuiMetaModel* guiMetaModel, int aspectInd)
 {
 	bool prim = false;
 	CGuiMetaAspect *aspect = guiMetaModel->FindAspect(aspectInd);
 	if(aspect)
-		prim = CGuiFco::IsPrimary(guiMetaModel,aspect,metaRole);
+		prim = CGuiFco::IsPrimary(guiMetaModel, aspect, metaRole);
 	return prim;
 }
 
-bool CGuiFco::IsPrimary(CGuiMetaModel *guiMetaModel,CGuiMetaAspect *aspect)
+bool CGuiFco::IsPrimary(CGuiMetaModel* guiMetaModel, CGuiMetaAspect* aspect)
 {
-	return CGuiFco::IsPrimary(guiMetaModel,aspect,metaRole);
+	return CGuiFco::IsPrimary(guiMetaModel, aspect, metaRole);
 }
 
-bool CGuiFco::GetPreference(CString &val,CString path)
+bool CGuiFco::GetPreference(CString& val, CString path)
 {
 	CComBSTR pathBstr;
-	CopyTo(path,pathBstr);
+	CopyTo(path, pathBstr);
 	CComBSTR bstrVal;
 	if (mgaFco) {
-		COMTHROW(mgaFco->get_RegistryValue(pathBstr,&bstrVal));
+		COMTHROW(mgaFco->get_RegistryValue(pathBstr, &bstrVal));
 	}
 	else {
-		COMTHROW(metaFco->get_RegistryValue(pathBstr,&bstrVal));
+		COMTHROW(metaFco->get_RegistryValue(pathBstr, &bstrVal));
 	}
 	CopyTo(bstrVal,val);
 	return !val.IsEmpty();
 }
 
 
-bool CGuiFco::GetPreference(int &val,CString path,bool hex)
+bool CGuiFco::GetPreference(int& val, CString path, bool hex)
 {
 	CComBSTR pathBstr;
-	CopyTo(path,pathBstr);
+	CopyTo(path, pathBstr);
 	CComBSTR bstrVal;
 	if(mgaFco == 0) {
-		COMTHROW(metaFco->get_RegistryValue(pathBstr,&bstrVal));
+		COMTHROW(metaFco->get_RegistryValue(pathBstr, &bstrVal));
 	}
 	else {
-		COMTHROW(mgaFco->get_RegistryValue(pathBstr,&bstrVal));
+		COMTHROW(mgaFco->get_RegistryValue(pathBstr, &bstrVal));
 	}
 	CString strVal;
 	CopyTo(bstrVal,strVal);
 	return (_stscanf(strVal,hex ? _T("%x") : _T("%d"),&val) == 1);
 }
 
-bool CGuiFco::GetColorPreference(unsigned long &color,CString path)
+bool CGuiFco::GetColorPreference(unsigned long& color, CString path)
 {
 	int i;
 	if(GetPreference(i,path,true)) {
@@ -991,19 +1001,19 @@ CGuiMetaModel *CGuiFco::GetGuiMetaParent()
 ////////////////////////////
 // Static methods of CGuiFco
 /////////////////////////////
-bool CGuiFco::IsPrimary(CGuiMetaModel *guiMetaModel,CGuiMetaAspect *guiAspect,CComPtr<IMgaMetaRole> &metaRole)
+bool CGuiFco::IsPrimary(CGuiMetaModel* guiMetaModel, CGuiMetaAspect* guiAspect, CComPtr<IMgaMetaRole>& metaRole)
 {
 	VARIANT_BOOL prim = VARIANT_FALSE;
 	CComPtr<IMgaMetaAspect> mAspect;
 	guiAspect->GetMetaAspect(mAspect);
 	CComPtr<IMgaMetaPart> part;
-	guiMetaModel->GetPartByRole(metaRole,mAspect,part);
+	guiMetaModel->GetPartByRole(metaRole, mAspect, part);
 	if(part != 0)
 		COMTHROW(part->get_IsPrimary(&prim));
 	return prim != VARIANT_FALSE;
 }
 
-void CGuiFco::SetAspect(CGuiFcoList &modelList,int asp)
+void CGuiFco::SetAspect(CGuiFcoList& modelList, int asp)
 {
 	POSITION pos = modelList.GetHeadPosition();
 	while(pos)
@@ -1011,11 +1021,11 @@ void CGuiFco::SetAspect(CGuiFcoList &modelList,int asp)
 }
 
 
-CGuiConnection *CGuiFco::FindConnection(CComPtr<IMgaFCO> &fco,CGuiConnectionList &conns)
+CGuiConnection* CGuiFco::FindConnection(CComPtr<IMgaFCO>& fco, CGuiConnectionList& conns)
 {
 	POSITION pos = conns.GetHeadPosition();
 	while(pos) {
-		CGuiConnection *conn = conns.GetNext(pos);
+		CGuiConnection* conn = conns.GetNext(pos);
 		VARIANT_BOOL b;
 		COMTHROW(conn->mgaFco->get_IsEqual(fco, &b));
 		if(b != VARIANT_FALSE)
@@ -1024,21 +1034,21 @@ CGuiConnection *CGuiFco::FindConnection(CComPtr<IMgaFCO> &fco,CGuiConnectionList
 	return 0;
 }
 
-void CGuiFco::GrayOutFcos(CGuiFcoList &list,bool set)
+void CGuiFco::GrayOutFcos(CGuiFcoList& list, bool set)
 {
 	POSITION pos = list.GetHeadPosition();
 	while(pos)
 		list.GetNext(pos)->GrayOut(set);
 }
 
-void CGuiFco::GrayOutFcos(CGuiConnectionList &list,bool set)
+void CGuiFco::GrayOutFcos(CGuiConnectionList& list, bool set)
 {
 	POSITION pos = list.GetHeadPosition();
 	while(pos)
 		list.GetNext(pos)->GrayOut(set);
 }
 
-void CGuiFco::GrayOutNonInternalConnections(CGuiConnectionList &list)
+void CGuiFco::GrayOutNonInternalConnections(CGuiConnectionList& list)
 {
 	POSITION pos = list.GetHeadPosition();
 	while(pos) {
@@ -1048,7 +1058,7 @@ void CGuiFco::GrayOutNonInternalConnections(CGuiConnectionList &list)
 	}
 }
 
-void CGuiFco::ResetFlags(CGuiFcoList &list)
+void CGuiFco::ResetFlags(CGuiFcoList& list)
 {
 	POSITION pos = list.GetHeadPosition();
 	while(pos)
@@ -1071,7 +1081,7 @@ CGuiMetaAttributeList *CGuiFco::GetMetaAttributes()
 //////////////////////////////////
 // Non-virtual methods of CGuiObject
 //////////////////////////////////
-CGuiObject::CGuiObject(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView *vw,int numAsp) : CGuiFco(pt,role,vw,numAsp)
+CGuiObject::CGuiObject(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp) : CGuiFco(pt, role, vw, numAsp)
 {
 	guiAspects.SetSize(numAsp);
 	for (int i = 0; i<numAsp; i++) {
@@ -1131,7 +1141,7 @@ CGuiObject::~CGuiObject()
 		POSITION ppos = view->pendingRequests.GetHeadPosition();
 		while (ppos) {
 			POSITION tmp = ppos;
-			CPendingObjectPosRequest *req = dynamic_cast<CPendingObjectPosRequest *> (view->pendingRequests.GetNext(ppos));
+			CPendingObjectPosRequest *req = dynamic_cast<CPendingObjectPosRequest*> (view->pendingRequests.GetNext(ppos));
 			if (req) {
 				if ( req->object == this ) {
 					view->pendingRequests.RemoveAt(tmp);
@@ -1147,10 +1157,10 @@ CGuiObject::~CGuiObject()
 	guiAspects.RemoveAll();
 }
 
-void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &decorStr, CWnd* viewWnd)
+void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& decorStr, CWnd* viewWnd)
 {
 	VERIFY(asp < numParentAspects);
-	CGuiMetaAspect *metaAspect = GetKindAspect(metaPart);
+	CGuiMetaAspect* metaAspect = GetKindAspect(metaPart);
 	VERIFY(metaAspect);
 
 	CString	progId;
@@ -1276,13 +1286,13 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart> &metaPart, CString &d
 	parentAspect = 0;
 }
 
-void CGuiObject::GetDecoratorStr(CString &decorStr)
+void CGuiObject::GetDecoratorStr(CString& decorStr)
 {
 	if (!GetPreference(decorStr, DECORATOR_PREF))
 		decorStr = GME_DEFAULT_DECORATOR;
 }
 
-void CGuiObject::SetCenter(CPoint &pt,int aspect, bool doMga)
+void CGuiObject::SetCenter(CPoint& pt, int aspect, bool doMga)
 {
 	if(aspect < 0)
 		aspect = parentAspect;
@@ -1300,7 +1310,7 @@ void CGuiObject::SetCenter(CPoint &pt,int aspect, bool doMga)
 		WriteLocation(aspect);
 }
 
-void CGuiObject::SetSize(CSize &s,int aspect,bool doMga)
+void CGuiObject::SetSize(CSize& s, int aspect, bool doMga)
 {
 	if(aspect < 0)
 		aspect = parentAspect;
@@ -1313,14 +1323,14 @@ void CGuiObject::SetSize(CSize &s,int aspect,bool doMga)
 		WriteLocation(aspect);
 }
 
-void CGuiObject::SetAllSizes(CSize &s, bool doMga)
+void CGuiObject::SetAllSizes(CSize& s, bool doMga)
 {
 	for(int i = 0; i < numParentAspects; i++)
 		if(guiAspects[i] != NULL)
 			SetSize(s,i,doMga);
 }
 
-void CGuiObject::SetLocation(CRect &r, int aspect, bool doMga/*, bool savePreferredSize*/)
+void CGuiObject::SetLocation(CRect& r, int aspect, bool doMga/*, bool savePreferredSize*/)
 {
 	if(aspect < 0)
 		aspect = parentAspect;
@@ -1356,14 +1366,14 @@ void CGuiObject::SetAllSizesToNative()
 	for(int i = 0; i < numParentAspects; i++) {
 		if(guiAspects[i]) {
 			s=GetNativeSize(i);
-			CRect loc(0,0,0,0);
+			CRect loc(0, 0, 0, 0);
 			guiAspects[i]->SetLocation(loc);
-			SetSize(s,i, false);
+			SetSize(s, i, false);
 		}
 	}
 }
 
-void CGuiObject::GetNeighbors(CGuiFcoList &list)
+void CGuiObject::GetNeighbors(CGuiFcoList& list)
 {
 	VERIFY(GetCurrentAspect());
 	POSITION ppos = GetCurrentAspect()->GetPortList().GetHeadPosition();
@@ -1388,7 +1398,7 @@ void CGuiObject::GetNeighbors(CGuiFcoList &list)
 	}
 }
 
-void CGuiObject::GetRelationsInOut(CGuiConnectionList &p_list, bool p_inOrOut)
+void CGuiObject::GetRelationsInOut(CGuiConnectionList& p_list, bool p_inOrOut)
 {
 	VERIFY(GetCurrentAspect());
 	
@@ -1407,7 +1417,7 @@ void CGuiObject::GetRelationsInOut(CGuiConnectionList &p_list, bool p_inOrOut)
 		while(cpos) 
 		{
 			// one connection
-			CGuiConnection *conn = p_inOrOut? port->GetInConns().GetNext(cpos): port->GetOutConns().GetNext(cpos);
+			CGuiConnection* conn = p_inOrOut? port->GetInConns().GetNext(cpos): port->GetOutConns().GetNext(cpos);
 
 			ASSERT( conn);
 			if( !conn) continue;
@@ -1443,16 +1453,16 @@ void CGuiObject::ReadAllLocations()
 			long x;
 			long y;
 
-			CRect loc(0,0,0,0);
+			CRect loc(0, 0, 0, 0);
 			CSize s = GetNativeSize(aspIndex);
 			::SetSize(loc,s);
 
-			if(part->GetGmeAttrs(0,&x,&y) == S_OK) {
-				::SetLocation(loc,CPoint(x,y));
+			if(part->GetGmeAttrs(0, &x, &y) == S_OK) {
+				::SetLocation(loc, CPoint(x, y));
 				guiAspects[aspIndex]->SetLocation(loc);
 			}
-			else { // unparsable integer pair found, use (-1,-1) like in CMgaPart::GetGmeAttrs
-				::SetLocation(loc,CPoint(-1,-1));
+			else { // unparsable integer pair found, use (-1, -1) like in CMgaPart::GetGmeAttrs
+				::SetLocation(loc,CPoint(-1, -1));
 				guiAspects[aspIndex]->SetLocation(loc);
 			}
 		}
@@ -1482,11 +1492,34 @@ void CGuiObject::WriteLocation(int aspect)
 		// Save position part
 		CPoint pt = r.TopLeft();
 		COMTHROW(part->SetGmeAttrs(0, pt.x, pt.y));
+		// This would be too agressive: to delete any connecting connections customizations if the box is moved
+		// DeleteCustomizationOfInOutConnections(aspect);
 		view->CommitTransaction();
 	}
 	catch(hresult_exception &e) {
 		view->AbortTransaction(e.hr);
 	}
+}
+
+void CGuiObject::DeleteCustomizationOfConnections(CGuiConnectionList& conns, int aspect)
+{
+	POSITION pos = conns.GetHeadPosition();
+	while(pos) {
+		CGuiConnection* conn = conns.GetNext(pos);
+		if (conn->HasPathCustomization())
+			if (conn->DeleteAllPathCustomizationsForAnAspect(aspect))
+				conn->WriteCustomPathData(false);
+	}
+}
+
+void CGuiObject::DeleteCustomizationOfInOutConnections(int aspect)
+{
+	CGuiConnectionList inConns;
+	GetRelationsInOut(inConns, true);
+	DeleteCustomizationOfConnections(inConns, aspect);
+	CGuiConnectionList outConns;
+	GetRelationsInOut(outConns, false);
+	DeleteCustomizationOfConnections(outConns, aspect);
 }
 
 void CGuiObject::GrayOutNeighbors()
@@ -1497,7 +1530,7 @@ void CGuiObject::GrayOutNeighbors()
 	ResetFlags(neighbors);
 }
 
-bool CGuiObject::IsInside(CPoint &pt, bool lookNearToo)
+bool CGuiObject::IsInside(CPoint& pt, bool lookNearToo)
 {
 	CRect loc = GetLocation();
 	if (lookNearToo)
@@ -1505,7 +1538,7 @@ bool CGuiObject::IsInside(CPoint &pt, bool lookNearToo)
 	return (loc.PtInRect(pt) == TRUE);
 }
 
-bool CGuiObject::IsLabelInside(CPoint &pt, bool lookNearToo)
+bool CGuiObject::IsLabelInside(CPoint& pt, bool lookNearToo)
 {
 	CRect loca = GetLocation();
 	CRect loc = GetNameLocation();
@@ -1514,7 +1547,7 @@ bool CGuiObject::IsLabelInside(CPoint &pt, bool lookNearToo)
 	return (loc.PtInRect(pt) == TRUE);
 }
 
-CGuiPort *CGuiObject::FindPort(CPoint &pt, bool lookNearToo)
+CGuiPort* CGuiObject::FindPort(CPoint& pt, bool lookNearToo)
 {
 	CGuiPort* found = NULL;
 	CSize foundSize(0, 0);
@@ -1524,19 +1557,23 @@ CGuiPort *CGuiObject::FindPort(CPoint &pt, bool lookNearToo)
 		CGuiPort* port = GetCurrentAspect()->GetPortList().GetNext(pos);
 		// The last one in the list is weird one: fco is the object's fco, skip that.
 		// See CGuiAspect::InitPorts
-		if (!mgaFco.IsEqualObject(port->mgaFco)) {
+		if (!mgaFco.IsEqualObject(port->mgaFco))
+		{
 			CRect r = port->GetLocation() + GetLocation().TopLeft();
 			CRect rInflated = r;
 			rInflated.InflateRect(3, 3);
-			if (r.PtInRect(pt) == TRUE || lookNearToo && rInflated.PtInRect(pt) == TRUE) {
+			if (r.PtInRect(pt) == TRUE || lookNearToo && rInflated.PtInRect(pt) == TRUE)
+			{
 				CSize psize = port->GetLocation().Size();
-				if (found) {
+				if (found)
+				{
 					if (psize.cx < foundSize.cx && psize.cy < foundSize.cy ) {
 						foundSize = psize;
 						found = port;
 					}
 				}
-				else {
+				else
+				{
 					foundSize = psize;
 					found = port;
 				}
@@ -1551,10 +1588,10 @@ CGuiPort *CGuiObject::FindPort(CComPtr<IMgaFCO> mgaFco)
 	ASSERT(GetCurrentAspect());
 	POSITION pos = GetCurrentAspect()->GetPortList().GetHeadPosition();
 	while(pos) {
-		CGuiPort *port = GetCurrentAspect()->GetPortList().GetNext(pos);
+		CGuiPort* port = GetCurrentAspect()->GetPortList().GetNext(pos);
 		VARIANT_BOOL b;
 		COMTHROW(port->mgaFco->get_IsEqual(mgaFco, &b));
-		if(b)
+		if (b)
 			return port;
 	}
 	return 0;
@@ -1587,64 +1624,64 @@ void CGuiObject::DecrementAnimRefCnt()
 // Static methods of CGuiObject
 //////////////////////////////////
 
-void CGuiObject::GetExtent(CGuiFcoList &objectList,CRect &rect)
+void CGuiObject::GetExtent(CGuiFcoList& objectList, CRect& rect)
 {
-	CGuiObject *obj;
-	CRect cur1,cur2;
+	CGuiObject* obj;
+	CRect cur1, cur2;
 	POSITION pos = objectList.GetHeadPosition();
-	rect = CRect(0,0,10,10);
+	rect = CRect(0, 0, 10, 10);
 	while(pos) {
 		obj = dynamic_cast<CGuiObject*>(objectList.GetNext(pos));
 		if(obj && obj->IsVisible()) {
 			cur2 = obj->GetLocation();
 			cur1 = rect;
-			rect.UnionRect(&cur1,&cur2);
+			rect.UnionRect(&cur1, &cur2);
 		}
 	}
 }
 
-void CGuiObject::GetExtent(CGuiObjectList &objectList,CRect &rect)
+void CGuiObject::GetExtent(CGuiObjectList& objectList, CRect& rect)
 {
-	CGuiObject *obj;
-	CRect cur1,cur2;
+	CGuiObject* obj;
+	CRect cur1, cur2;
 	POSITION pos = objectList.GetHeadPosition();
-	rect = CRect(0,0,0,0);
+	rect = CRect(0, 0, 0, 0);
 	while(pos) {
 		obj = objectList.GetNext(pos);
 		if(obj && obj->IsVisible()) {
 			cur2 = obj->GetLocation();
 			cur1 = rect;
-			rect.UnionRect(&cur1,&cur2);
+			rect.UnionRect(&cur1, &cur2);
 		}
 	}
 }
 
-void CGuiObject::MoveObjects(CGuiFcoList &fcoList,CPoint &pt)
+void CGuiObject::MoveObjects(CGuiFcoList& fcoList, CPoint& pt)
 {
 	CGuiObjectList objs;
 	POSITION pos = fcoList.GetHeadPosition();
 	while(pos) {
-		CGuiObject *obj = dynamic_cast<CGuiObject *>(fcoList.GetNext(pos));
+		CGuiObject* obj = dynamic_cast<CGuiObject*>(fcoList.GetNext(pos));
 		if(obj)
 			objs.AddTail(obj);
 	}
-	MoveObjects(objs,pt);
+	MoveObjects(objs, pt);
 }
 
-void CGuiObject::MoveObjects(CGuiObjectList &objList,CPoint &pt)
+void CGuiObject::MoveObjects(CGuiObjectList& objList, CPoint& pt)
 {
-	int left,top;
-	FindUpperLeft(objList,left,top);
-	CPoint diff = pt - CPoint(left,top);
-	ShiftModels(objList,diff);
+	int left, top;
+	FindUpperLeft(objList, left, top);
+	CPoint diff = pt - CPoint(left, top);
+	ShiftModels(objList, diff);
 }
 
 
-void CGuiObject::FindUpperLeft(CGuiObjectList &objs,int &left,int &top)
+void CGuiObject::FindUpperLeft(CGuiObjectList& objs, int& left, int& top)
 {
 	bool start = true;
 	POSITION pos = objs.GetHeadPosition();
-	CGuiObject *obj;
+	CGuiObject* obj;
 	CRect r;
 	while(pos) {
 		obj = objs.GetNext(pos);
@@ -1665,12 +1702,12 @@ void CGuiObject::FindUpperLeft(CGuiObjectList &objs,int &left,int &top)
 	}
 }
 
-void CGuiObject::ShiftModels(CGuiObjectList &objList,CPoint &shiftBy)
+void CGuiObject::ShiftModels(CGuiObjectList& objList, CPoint& shiftBy)
 {
 	CGMEEventLogger::LogGMEEvent("CGuiObject::ShiftModels ");
 	GMEEVENTLOG_GUIOBJS(objList);
 
-	CGuiObject *first_obj = objList.IsEmpty() ? 0 : objList.GetHead();
+	CGuiObject* first_obj = objList.IsEmpty() ? 0 : objList.GetHead();
 	if( first_obj && first_obj->GetView() && first_obj->GetView() != modelGrid.GetSource())
 	{
 		// if the view where the object was moved and the view of the grid 
@@ -1686,15 +1723,15 @@ void CGuiObject::ShiftModels(CGuiObjectList &objList,CPoint &shiftBy)
 
 	POSITION pos = objList.GetHeadPosition();
 	while(pos) {
-		CGuiObject *obj = objList.GetNext(pos);
+		CGuiObject* obj = objList.GetNext(pos);
 		modelGrid.Reset(obj);
 	}
 	pos = objList.GetHeadPosition();
 	while(pos) {
-		CGuiObject *obj = objList.GetNext(pos);
+		CGuiObject* obj = objList.GetNext(pos);
 		VERIFY(obj->IsVisible());
 		CPoint point = obj->GetCenter() + shiftBy;
-		if(!modelGrid.GetClosestAvailable(obj,point)) {
+		if(!modelGrid.GetClosestAvailable(obj, point)) {
 			AfxMessageBox("Too Many Models! Internal Program Error!",MB_OK | MB_ICONSTOP);
 			return;
 		}
@@ -1713,13 +1750,13 @@ void CGuiObject::ResizeObject(const CRect& newLocation/*, bool doMga*/)
 	//		 there will be a full GMEView::Reset induced by the transaction commit
 }
 
-bool CGuiObject::NudgeObjects(CGuiObjectList &modelList,int right,int down)
+bool CGuiObject::NudgeObjects(CGuiObjectList& modelList, int right, int down)
 {
 	CGMEEventLogger::LogGMEEvent("CGuiObject::NudgeObjects ");
 	GMEEVENTLOG_GUIOBJS(modelList);
 	ASSERT(right == 0 || down == 0); // cannot nudge diagonally for now
 
-	CGuiObject *first_obj = modelList.IsEmpty() ? 0 : modelList.GetHead();
+	CGuiObject* first_obj = modelList.IsEmpty() ? 0 : modelList.GetHead();
 	if( first_obj && first_obj->GetView() && first_obj->GetView() != modelGrid.GetSource())
 	{
 		// if the view where the object was nudged and the view of the grid 
@@ -1735,15 +1772,15 @@ bool CGuiObject::NudgeObjects(CGuiObjectList &modelList,int right,int down)
 
 	POSITION pos = modelList.GetHeadPosition();
 	while(pos) {
-		CGuiObject *model = modelList.GetNext(pos);
+		CGuiObject* model = modelList.GetNext(pos);
 		VERIFY(model->IsVisible());
 		modelGrid.Reset(model);
 	}
 	bool canDo = true;
 	pos = modelList.GetHeadPosition();
 	while(pos) {
-		CGuiObject *model = modelList.GetNext(pos);
-		if(!modelGrid.CanNudge(model,right,down)) {
+		CGuiObject* model = modelList.GetNext(pos);
+		if(!modelGrid.CanNudge(model, right, down)) {
 			canDo = false;
 			break;
 		}
@@ -1752,7 +1789,7 @@ bool CGuiObject::NudgeObjects(CGuiObjectList &modelList,int right,int down)
 		POSITION pos = modelList.GetHeadPosition();
 		while(pos) {
 			CGuiObject *model = modelList.GetNext(pos);
-			CPoint point = model->GetCenter() + CPoint(right * GME_GRID_SIZE,down * GME_GRID_SIZE);
+			CPoint point = model->GetCenter() + CPoint(right * GME_GRID_SIZE, down * GME_GRID_SIZE);
 			ASSERT(point.x % GME_GRID_SIZE == 0);
 			ASSERT(point.y % GME_GRID_SIZE == 0);
 			model->SetCenter(point);
@@ -1763,18 +1800,18 @@ bool CGuiObject::NudgeObjects(CGuiObjectList &modelList,int right,int down)
 	else {
 		POSITION pos = modelList.GetHeadPosition();
 		while(pos) {
-			CGuiObject *model = modelList.GetNext(pos);
+			CGuiObject* model = modelList.GetNext(pos);
 			modelGrid.Set(model);
 		}
 	}
 	return canDo;
 }
 
-CGuiObject *CGuiObject::FindObject(CComPtr<IMgaFCO> &fco,CGuiFcoList &fcoList)
+CGuiObject *CGuiObject::FindObject(CComPtr<IMgaFCO>& fco, CGuiFcoList& fcoList)
 {
 	POSITION pos = fcoList.GetHeadPosition();
 	while(pos) {
-		CGuiObject *obj = dynamic_cast<CGuiObject *>(fcoList.GetNext(pos));
+		CGuiObject* obj = dynamic_cast<CGuiObject*>(fcoList.GetNext(pos));
 		if(obj) {
 			VARIANT_BOOL b;
 			COMTHROW(obj->mgaFco->get_IsEqual(fco, &b));
@@ -1785,11 +1822,11 @@ CGuiObject *CGuiObject::FindObject(CComPtr<IMgaFCO> &fco,CGuiFcoList &fcoList)
 	return 0;
 }
 
-void CGuiObject::GetRectList(CGuiObjectList &objList,CRectList &rects)
+void CGuiObject::GetRectList(CGuiObjectList& objList, CRectList& rects)
 {
 	POSITION pos = objList.GetHeadPosition();
 	while(pos) {
-		CRect *rect = new CRect(objList.GetNext(pos)->GetLocation());
+		CRect* rect = new CRect(objList.GetNext(pos)->GetLocation());
 		rects.AddTail(rect);
 	}
 }
@@ -1877,7 +1914,7 @@ CGuiMetaAspect *CGuiObject::GetKindAspect(CComPtr<IMgaMetaPart> metaPart)
 ///////////////////////////////////////
 // Non-virtual methods of CGuiModel
 ///////////////////////////////////////
-CGuiModel::CGuiModel(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView *vw,int numAsp) : CGuiCompound(pt,role,vw,numAsp)
+CGuiModel::CGuiModel(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role,CGMEView* vw, int numAsp) : CGuiCompound(pt, role, vw, numAsp)
 {
 	if (IsReal()) {
 		VARIANT_BOOL inst;
@@ -1893,16 +1930,16 @@ CGuiModel::CGuiModel(CComPtr<IMgaFCO> &pt,CComPtr<IMgaMetaRole> &role,CGMEView *
 ///////////////////////////////////////
 // Virtual methods of CGuiModel
 ///////////////////////////////////////
-CGuiMetaAttributeList *CGuiModel::GetMetaAttributes()
+CGuiMetaAttributeList* CGuiModel::GetMetaAttributes()
 {
 	return &(GetCurrentAspect()->guiMeta->attrs);
 }
 
-CGuiMetaAspect *CGuiModel::GetKindAspect(CComPtr<IMgaMetaPart> metaPart)
+CGuiMetaAspect* CGuiModel::GetKindAspect(CComPtr<IMgaMetaPart> metaPart)
 {
-	CGuiMetaModel *guiMetaModel = dynamic_cast<CGuiMetaModel *>(guiMeta);
+	CGuiMetaModel* guiMetaModel = dynamic_cast<CGuiMetaModel*>(guiMeta);
 	VERIFY(guiMetaModel);
-	CGuiMetaAspect *metaAspect = NULL;
+	CGuiMetaAspect* metaAspect = NULL;
 	CComBSTR bstr;
 	COMTHROW(metaPart->get_KindAspect(&bstr));
 	CString kindAspect;
@@ -1937,7 +1974,7 @@ CGuiMetaAspect *CGuiModel::GetKindAspect(CComPtr<IMgaMetaPart> metaPart)
 // Non-virtual methods of CReference
 ///////////////////////////////////////
 
-CReference::CReference(CComPtr<IMgaFCO> mgaRefd,CComPtr<IMgaFCO> mgaTermRefd) : mgaReferee(mgaRefd), mgaTerminalReferee(mgaTermRefd)
+CReference::CReference(CComPtr<IMgaFCO> mgaRefd, CComPtr<IMgaFCO> mgaTermRefd) : mgaReferee(mgaRefd), mgaTerminalReferee(mgaTermRefd)
 {
 	mgaReferee = mgaRefd;
 	mgaTerminalReferee = mgaTermRefd;
@@ -1952,7 +1989,7 @@ CReference::CReference(CComPtr<IMgaFCO> mgaRefd,CComPtr<IMgaFCO> mgaTermRefd) : 
 			COMTHROW(mgaRefd->get_Meta(&meta));
 			CComBSTR bstr;
 			COMTHROW(meta->get_DisplayedName(&bstr));
-			CopyTo(bstr,targetKindDisplayedName);
+			CopyTo(bstr, targetKindDisplayedName);
 		}
 	}
 }
@@ -1963,7 +2000,7 @@ CString CReference::GetInfoText(CString &name)
 	if(IsNull())
 		txt = name + " -> null ";
 	else
-		txt.Format("%s -> %s (%s) ",name,targetName,targetKindDisplayedName);
+		txt.Format("%s -> %s (%s) ", name, targetName, targetKindDisplayedName);
 	return CString(txt);
 }
 ///////////////////////////////////////
@@ -2000,21 +2037,21 @@ CString CReference::GetInfoText(CString &name)
 // Virtual methods of CGuiCompoundReference
 ////////////////////////////////////////////////
 
-CGuiMetaAttributeList *CGuiCompoundReference::GetMetaAttributes()
+CGuiMetaAttributeList* CGuiCompoundReference::GetMetaAttributes()
 {
 	return &guiMeta->attrs;
 }
 
-CGuiMetaAspect *CGuiCompoundReference::GetKindAspect(CComPtr<IMgaMetaPart> metaPart)
+CGuiMetaAspect* CGuiCompoundReference::GetKindAspect(CComPtr<IMgaMetaPart> metaPart)
 {
 	CComPtr<IMgaMetaFCO> metaFcoForAM;
 	COMTHROW(GetTerminalReferee()->get_Meta(&metaFcoForAM));
 	metaref_type metaRef;
 	COMTHROW(metaFcoForAM->get_MetaRef(&metaRef));
-	CGuiMetaModel *guiMetaModel = CGuiMetaProject::theInstance->GetGuiMetaModel(metaRef);
+	CGuiMetaModel* guiMetaModel = CGuiMetaProject::theInstance->GetGuiMetaModel(metaRef);
 	VERIFY(guiMetaModel);
 
-	CGuiMetaAspect *metaAspect = NULL;
+	CGuiMetaAspect* metaAspect = NULL;
 	CComBSTR bstr;
 	COMTHROW(metaPart->get_KindAspect(&bstr));
 	CString kindAspect;
@@ -2051,7 +2088,7 @@ CGuiMetaAspect *CGuiCompoundReference::GetKindAspect(CComPtr<IMgaMetaPart> metaP
 // Non-virtual methods of CGuiSet
 ////////////////////////////////////////////////
 
-void CGuiSet::Init(CGuiFcoList &objs,CGuiConnectionList &conns)
+void CGuiSet::Init(CGuiFcoList& objs, CGuiConnectionList& conns)
 {
 	if (!IsReal()) {
 		return;
@@ -2064,33 +2101,33 @@ void CGuiSet::Init(CGuiFcoList &objs,CGuiConnectionList &conns)
 	MGACOLL_ITERATE(IMgaFCO,fcos) {
 		CComPtr<IMgaFCO> member;
 		member = MGACOLL_ITER;
-		CGuiFco *obj =  CGuiObject::FindObject(member,objs);
+		CGuiFco* obj =  CGuiObject::FindObject(member, objs);
 		if(!obj)
-			obj =  CGuiObject::FindConnection(member,conns);
+			obj =  CGuiObject::FindConnection(member, conns);
 		VERIFY(obj);
 		members.AddTail(obj);
 	}
 	MGACOLL_ITERATE_END;
 }
 
-bool CGuiSet::CheckMember(CGuiFco *fco)
+bool CGuiSet::CheckMember(CGuiFco* fco)
 {
 	CComPtr<IMgaMetaSet> metaSet;
 	COMTHROW(metaFco.QueryInterface(&metaSet));
 
 	metaref_type mr = fco->GetRoleMetaRef();
 	CString path;
-	path.Format("%d",mr);
+	path.Format("%d", mr);
 	CComBSTR bstr;
-	CopyTo(path,bstr);
+	CopyTo(path, bstr);
 
 	VARIANT_BOOL ok = VARIANT_FALSE;
-	COMTHROW(metaSet->CheckPath(bstr,&ok));
+	COMTHROW(metaSet->CheckPath(bstr, &ok));
 
 	return (ok != VARIANT_FALSE);
 }
 
-bool CGuiSet::ToggleMember(CGuiFco *member)
+bool CGuiSet::ToggleMember(CGuiFco* member)
 {
 	VERIFY(mgaFco);
 	CComPtr<IMgaSet> mgaSet;
@@ -2122,55 +2159,89 @@ CGuiConnectionLabel::CGuiConnectionLabel():
 {
 }
 
-void CGuiConnectionLabel::SetLabel(CString &l)
+void CGuiConnectionLabel::SetLabel(const CString& l)
 {
 	label = l;
 }
 
-void CGuiConnectionLabel::SetLocation(CPoint &endPoint,CPoint &nextPoint,CRect &box)
+void CGuiConnectionLabel::SetLocation(const CPoint& endPoint, const CPoint& nextPoint, const CRect& box)
 {
+	if (label.IsEmpty())
+		return;
+
 	int diffx = 3;
 	int diffy = 3;
 	BOOL f_center = box.IsRectNull();
 
 	loc = endPoint;
 	CPoint center = box.CenterPoint();
-	if(endPoint.x == nextPoint.x) {			// vertical line
-		if (f_center) {
+
+	bool skew = (endPoint.x != nextPoint.x && endPoint.y != nextPoint.y);
+	double alpha = 0.0;
+	bool moreVerticalThanHorizontal = true;
+	if (skew) {
+		alpha = atan2(-((double)nextPoint.y - endPoint.y), (double)nextPoint.x - endPoint.x);
+		moreVerticalThanHorizontal = (alpha >= -3 * M_PI_4 && alpha < -M_PI_4) || (alpha < 3 * M_PI_4 && alpha >= M_PI_4);
+		TRACE("Alpha %lf (%lf) h/v %d (%ld,%ld)-(%ld,%ld) delta(%ld,%ld) %s\n", alpha, alpha / M_PI * 180.0, moreVerticalThanHorizontal,
+			endPoint.x, endPoint.y, nextPoint.x, nextPoint.y, nextPoint.x - endPoint.x, nextPoint.y - endPoint.y,
+			(const char*)label);
+	}
+	RoutingDirection lineDir = Dir_None;
+	if (!f_center)
+		lineDir = PointOnSide(endPoint, box);
+
+	if (f_center)
+	{
+		if (endPoint.x == nextPoint.x || skew && moreVerticalThanHorizontal)	// vertical line
+		{
 			alignment = TA_BASELINE | (primary ? TA_RIGHT : TA_LEFT);
 			loc.x += primary ? -diffx : diffx;
 		}
-		else {
-			if(nextPoint.y < center.y) {		// up
-				loc.y -= diffy;
-				loc.x += primary ? -diffx : diffx;
-				alignment = TA_BOTTOM | (primary ? TA_RIGHT : TA_LEFT);
-			}
-			else {								// down
-				loc.y += diffy;
-				loc.x += primary ? -diffx : diffx;
-				alignment = TA_TOP | (primary ? TA_RIGHT : TA_LEFT);
-			}
-		}
-	}
-	else {									// horizontal line
-		if (f_center) {
+		else if (endPoint.y == nextPoint.y || skew && !moreVerticalThanHorizontal)	// horizontal line
+		{
 			alignment = TA_CENTER | (primary ? TA_BOTTOM : TA_TOP);
 		}
-		else {
-			if(nextPoint.x < center.x) {		// left
-				loc.x -= diffx;
-				alignment = TA_RIGHT | (primary ? TA_BOTTOM : TA_TOP);
-			}
-			else {								// right
-				loc.x += diffx;
-				alignment = TA_LEFT | (primary ? TA_BOTTOM : TA_TOP);
-			}
+		else
+		{
+			ASSERT(false);
+		}
+	}
+	else
+	{
+		switch(lineDir) {
+			case Dir_Top:	// up
+				{
+					loc.y -= diffy;
+					loc.x += primary ? -diffx : diffx;
+					alignment = TA_BOTTOM | (primary ? TA_RIGHT : TA_LEFT);
+				}
+				break;
+			case Dir_Bottom:	// down
+				{
+					loc.y += diffy;
+					loc.x += primary ? -diffx : diffx;
+					alignment = TA_TOP | (primary ? TA_RIGHT : TA_LEFT);
+				}
+				break;
+			case Dir_Left:		// left
+				{
+					loc.x -= diffx;
+					alignment = TA_RIGHT | (primary ? TA_BOTTOM : TA_TOP);
+				}
+				break;
+			default:
+				ASSERT(false);
+			case Dir_Right:		// right
+				{
+					loc.x += diffx;
+					alignment = TA_LEFT | (primary ? TA_BOTTOM : TA_TOP);
+				}
+				break;
 		}
 	}
 }
 
-void CGuiConnectionLabel::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection *conn)
+void CGuiConnectionLabel::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection* conn)
 {
 	if (label.IsEmpty())
 		return;
@@ -2206,21 +2277,21 @@ CGuiConnectionLabelSet::CGuiConnectionLabelSet()
 	labels[GME_CONN_MAIN_LABEL].SetPrimary(true);
 }
 
-void CGuiConnectionLabelSet::SetLabel(int index, CString &label)
+void CGuiConnectionLabelSet::SetLabel(int index, const CString& label)
 {
 	if (index < 0 || index >= GME_CONN_LABEL_NUM)
 		return;
 	labels[index].SetLabel(label);
 }
 
-void CGuiConnectionLabelSet::SetLocation(int index, CPoint &endPoint, CPoint &nextPoint, CRect &box)
+void CGuiConnectionLabelSet::SetLocation(int index, const CPoint& endPoint, const CPoint& nextPoint, const CRect& box)
 {
 	if (index < 0 || index >= GME_CONN_LABEL_NUM)
 		return;
 	labels[index].SetLocation(endPoint, nextPoint, box);
 }
 
-void CGuiConnectionLabelSet::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection *conn)
+void CGuiConnectionLabelSet::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection* conn)
 {
 	for(int i = 0; i < GME_CONN_LABEL_NUM; i++)
 		labels[i].Draw(gdip, color, conn);
@@ -2233,7 +2304,7 @@ void CGuiConnectionLabelSet::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiC
 // Non-virtual methods of CGuiConnection
 ////////////////////////////////////////////////
 
-CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role, CGMEView *vw, int numAsp, bool resolve):
+CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp, bool resolve):
 	CGuiFco(pt, role, vw, numAsp),
 	visible			(NULL),
 	src				(NULL),
@@ -2241,21 +2312,23 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role
 	dst				(NULL),
 	dstPort			(NULL),
 	hovered			(false),
-	selected		(false)
+	selected		(false),
+	autoRouted		(true)
 {
 	CComPtr<IAutoRouterPath> dummy;
 	routerPath = dummy;
 
-	if(resolve)
+	if (resolve)
 		Resolve();
+
 	{
 		CString pref;
-		GetPreference(pref,CONN_LINE_TYPE_PREF);
+		GetPreference(pref, CONN_LINE_TYPE_PREF);
 		lineType = (pref == "dash") ? 1 : 0;
 	}
 	{
 		CString pref;
-		GetPreference(pref,CONN_SRC_END_STYLE_PREF);
+		GetPreference(pref, CONN_SRC_END_STYLE_PREF);
 		if ( pref == "arrow" )
 			srcStyle = GME_ARROW_END;
 		else if ( pref == "diamond" )
@@ -2279,7 +2352,7 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role
 	}
 	{
 		CString pref;
-		GetPreference(pref,CONN_DST_END_STYLE_PREF);
+		GetPreference(pref, CONN_DST_END_STYLE_PREF);
 		if ( pref == "arrow" )
 			dstStyle = GME_ARROW_END;
 		else if ( pref == "diamond" )
@@ -2319,12 +2392,14 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO> &pt, CComPtr<IMgaMetaRole> &role
 		GetPreference(pref,CONN_DST_LABEL2_PREF);
 		labelset.SetLabel(GME_CONN_DST_LABEL2, pref);
 	}
-	if(!GetColorPreference(color,COLOR_PREF)) {
+	if (!GetColorPreference(color, COLOR_PREF)) {
 		color = GME_BLACK_COLOR;
 	}
-	if(!GetColorPreference(nameColor,NAME_COLOR_PREF)) {
+	if (!GetColorPreference(nameColor, NAME_COLOR_PREF)) {
 		nameColor = GME_BLACK_COLOR;
 	}
+	ReadConnectionAutoRouteState();
+	ReadCustomPathData();
 	RefreshAttributeCache();
 }
 
@@ -2364,7 +2439,7 @@ void CGuiConnection::Resolve()
 
 		// Compute visibility
 		visible = new bool[numParentAspects];
-		memset(visible,0,numParentAspects * sizeof(bool));
+		memset(visible, 0, numParentAspects * sizeof(bool));
 		CComPtr<IMgaMetaParts> mmParts;
 		COMTHROW(metaRole->get_Parts(&mmParts));
 		MGACOLL_ITERATE(IMgaMetaPart,mmParts) {
@@ -2415,11 +2490,11 @@ void CGuiConnection::Resolve()
 
 				POSITION pos = view->children.GetHeadPosition();
 				while (pos) {
-					CGuiObject *srcObj = dynamic_cast<CGuiObject *>(view->children.GetNext(pos));
+					CGuiObject *srcObj = dynamic_cast<CGuiObject*>(view->children.GetNext(pos));
 					if (srcObj && srcObj->IsVisible()) {
 						srcPort = srcObj->FindPort(mgaSrc);
 						if (srcPort) {
-							CGuiCompoundReference *modelRefObj = dynamic_cast<CGuiCompoundReference *>(srcObj);
+							CGuiCompoundReference *modelRefObj = dynamic_cast<CGuiCompoundReference*>(srcObj);
 							if (modelRefObj) {
 								CComPtr<IMgaFCO> mgaSrcPort;
 								COMTHROW(conn->get_Src(&mgaSrcPort));
@@ -2471,11 +2546,11 @@ void CGuiConnection::Resolve()
 
 				POSITION pos = view->children.GetHeadPosition();
 				while (pos) {
-					CGuiObject *dstObj = dynamic_cast<CGuiObject *>(view->children.GetNext(pos));
+					CGuiObject *dstObj = dynamic_cast<CGuiObject*>(view->children.GetNext(pos));
 					if (dstObj && dstObj->IsVisible()) {
 						dstPort = dstObj->FindPort(mgaDst);
 						if (dstPort) {
-							CGuiCompoundReference *modelRefObj = dynamic_cast<CGuiCompoundReference *>(dstObj);
+							CGuiCompoundReference *modelRefObj = dynamic_cast<CGuiCompoundReference*>(dstObj);
 							if (modelRefObj) {
 								CComPtr<IMgaFCO> mgaDstPort;
 								COMTHROW(conn->get_Dst(&mgaDstPort));
@@ -2560,15 +2635,22 @@ void CGuiConnection::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 	CRect tmpRect(middle, middle2);
 	middle = tmpRect.CenterPoint();
 
-	CRect locTemp;
-	locTemp = src->GetLocation();
-	labelset.SetLocation(0, start, start2, locTemp);
-	labelset.SetLocation(1, start, start2, locTemp);
-	locTemp = dst->GetLocation();
-	labelset.SetLocation(2, end, end2, locTemp);
-	labelset.SetLocation(3, end, end2, locTemp);
-	locTemp = CRect(0,0,0,0);
-	labelset.SetLocation(GME_CONN_MAIN_LABEL, middle, middle2, locTemp);
+	const CRect srcRect = src->GetLocation();
+	const CRect dstRect = dst->GetLocation();
+
+	CRect box;
+	box = src->GetLocation();
+	if (srcPort != NULL && srcPort->IsRealPort())
+		box = srcPort->GetLocation() + box.TopLeft();
+	labelset.SetLocation(0, start, start2, box);
+	labelset.SetLocation(1, start, start2, box);
+	box = dst->GetLocation();
+	if (dstPort != NULL && dstPort->IsRealPort())
+		box = dstPort->GetLocation() + box.TopLeft();
+	labelset.SetLocation(2, end, end2, box);
+	labelset.SetLocation(3, end, end2, box);
+	box = CRect(0, 0, 0, 0);
+	labelset.SetLocation(GME_CONN_MAIN_LABEL, middle, middle2, box);
 
 
 	labelset.Draw(gdip, (grayedOut ? GME_GRAYED_OUT_COLOR : nameColor), this);
@@ -2585,16 +2667,15 @@ void CGuiConnection::GrayOutEndPoints()
 	dst->GrayOut(grayedOut);
 }
 
-
 void CGuiConnection::RefreshAttributeCache()
 {
 	attributeCache.RemoveAll();
 
-	CGuiMetaAttributeList *guiMetaAttrs = GetMetaAttributes();
+	CGuiMetaAttributeList* guiMetaAttrs = GetMetaAttributes();
 	POSITION pos = guiMetaAttrs->GetHeadPosition();
 
 	while (pos) {
-		CGuiMetaAttribute *guiMetaAttr = guiMetaAttrs->GetNext(pos);
+		CGuiMetaAttribute* guiMetaAttr = guiMetaAttrs->GetNext(pos);
 		CComPtr<IMgaAttribute> attr;
 		CComPtr<IMgaMetaAttribute> metaAttr;
 		attval_enum	tp;
@@ -2690,12 +2771,7 @@ void CGuiConnection::GetPointList(CPointList& points) const
 
 		// TODO: using CComSafeArray anywhere, see http://msdn.microsoft.com/de-de/library/3xzbsee8.aspx
 		//There was a problem with uninitialized safearrays, so create a dummy:
-		SAFEARRAY* pArr;
-		SAFEARRAYBOUND bound[1];
-		bound[0].lLbound = 0;
-		bound[0].cElements = 2;
-
-		pArr = SafeArrayCreate(VT_I4,1,bound);
+		SAFEARRAY* pArr = NULL;
 
 		COMTHROW(routerPath->GetPointList(&pArr));
 
@@ -2733,6 +2809,540 @@ void CGuiConnection::GetPointList(CPointList& points) const
 	}
 }
 
+int CGuiConnection::GetEdgeCount(void) const
+{
+	CPointList points;
+	GetPointList(points);
+	return points.GetSize() - 1;
+}
+
+bool CGuiConnection::AdjustCoordLimits(CPointList& points, int edgeIndex, bool isPathEnd, bool xOrY, POSITION pos,
+									   int ptCoord, int lastlastCoord, int& coordMinLimit, int& coordMaxLimit) const
+{
+	if (!isPathEnd) {
+		// Internal edge
+		CPoint nextPt = points.GetNext(pos);
+		int nextPtCoord = xOrY ? nextPt.x : nextPt.y;
+		if (ptCoord < nextPtCoord && ptCoord < lastlastCoord)
+			coordMinLimit = LONG_MIN;
+		else
+			coordMinLimit = min(nextPtCoord, lastlastCoord);
+		if (ptCoord > nextPtCoord && ptCoord > lastlastCoord)
+			coordMaxLimit = LONG_MAX;
+		else
+			coordMaxLimit = max(nextPtCoord, lastlastCoord);
+	} else {
+		// Inspect entities at the end to calculate limits
+		CRect portRect;
+		portRect.SetRectEmpty();
+		if (edgeIndex == 0) {
+			if (srcPort != NULL && srcPort->IsRealPort()) {
+				return true;
+			} else if (src != NULL) {
+				portRect = src->GetLocation();
+			}
+		} else {
+			if (dstPort != NULL && dstPort->IsRealPort()) {
+				return true;
+			} else if (dst != NULL) {
+				portRect = dst->GetLocation();
+			}
+		}
+
+		if (!portRect.IsRectEmpty()) {
+			if (xOrY) {
+				coordMinLimit = portRect.left;
+				coordMaxLimit = portRect.right;
+			} else {
+				coordMinLimit = portRect.top;
+				coordMaxLimit = portRect.bottom;
+			}
+		} else {
+			ASSERT(false);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint& endPoint, CPoint& thirdPoint,
+								 ConnectionPartMoveType& connectionMoveMethod, bool& horizontalOrVerticalEdge,
+								 bool& isPartFixed, int& xMinLimit, int& xMaxLimit, int& yMinLimit, int& yMaxLimit) const
+{
+	CPointList points;
+	GetPointList(points);
+
+	int numEdges = points.GetSize() - 1;
+	CPoint last;
+	CPoint lastlast;
+	POSITION pos = points.GetHeadPosition();
+	int i = 0;
+	CComPtr<IAutoRouterGraph> comAg;
+	COMTHROW(routerPath->GetOwner(&comAg));
+	ASSERT(comAg);
+	if (pos) {
+		CPoint pt = points.GetNext(pos);
+		last = pt;
+		while (pos) {
+			pt = points.GetNext(pos);
+			if (IsConnectionAutoRouted()) {
+				bool moveAction = false;
+				if (last.x == pt.x) {	// vertical edge, horizontal move
+					if (abs(pt.x - point.x) <= 3 &&
+						(point.y >= min(last.y, pt.y) - 3 ||
+						 point.y <= max(last.y, pt.y) + 3))
+					{
+						connectionMoveMethod = HorizontalEdgeMove;
+						horizontalOrVerticalEdge = false;
+						moveAction = true;
+					}
+				} else {	// horizontal line, vertical move
+					if (abs(pt.y - point.y) <= 3 &&
+						(point.x >= min(last.x, pt.x) - 3 ||
+						 point.x <= max(last.x, pt.x) + 3))
+					{
+						connectionMoveMethod = VerticalEdgeMove;
+						horizontalOrVerticalEdge = true;
+						moveAction = true;
+					}
+				}
+				if (i < numEdges - 1 &&		// We can't drag two connected edges at the last point!
+					abs(pt.x - point.x) <= 3 &&
+					abs(pt.y - point.y) <= 3)
+				{
+					connectionMoveMethod = AdjacentEdgeMove;
+				}
+				if (moveAction) {
+					VARIANT_BOOL comIsFixed;
+					comAg->IsEdgeFixed(routerPath, last.x, last.y, pt.x, pt.y, &comIsFixed);
+					isPartFixed = (comIsFixed == VARIANT_TRUE);
+
+					startPoint = last;
+					endPoint = pt;
+					bool isPathEnd = (i == 0 || i == numEdges - 1);
+
+					bool isPartFixed2 = false;
+					if (connectionMoveMethod == HorizontalEdgeMove) {
+						isPartFixed2 = AdjustCoordLimits(points, i, isPathEnd, true, pos,
+														 pt.x, lastlast.x, xMinLimit, xMaxLimit);
+					} else if (connectionMoveMethod == VerticalEdgeMove) {
+						isPartFixed2 = AdjustCoordLimits(points, i, isPathEnd, false, pos,
+														 pt.y, lastlast.y, yMinLimit, yMaxLimit);
+					} else  if (connectionMoveMethod == AdjacentEdgeMove) {
+						POSITION nextPos = pos;
+						CPoint nextPt = points.GetNext(nextPos);
+						thirdPoint = nextPt;
+						if (horizontalOrVerticalEdge) {
+							isPartFixed2 = AdjustCoordLimits(points, i, isPathEnd, false, pos,
+															 pt.y, lastlast.y, yMinLimit, yMaxLimit);
+							if (isPartFixed2) {
+								connectionMoveMethod = HorizontalEdgeMove;
+								isPartFixed2 = false;
+							}
+							isPartFixed2 = AdjustCoordLimits(points, i + 1, i >= numEdges - 2, true, nextPos,
+															 nextPt.x, last.x, xMinLimit, xMaxLimit);
+							if (isPartFixed2) {
+								if (connectionMoveMethod != HorizontalEdgeMove) {
+									connectionMoveMethod = VerticalEdgeMove;
+									isPartFixed2 = false;
+								}
+							}
+						} else {
+							isPartFixed2 = AdjustCoordLimits(points, i, isPathEnd, true, pos,
+															 pt.x, lastlast.x, xMinLimit, xMaxLimit);
+							if (isPartFixed2) {
+								connectionMoveMethod = VerticalEdgeMove;
+								isPartFixed2 = false;
+							}
+							isPartFixed2 = AdjustCoordLimits(points, i + 1, i >= numEdges - 2, false, nextPos,
+															 nextPt.y, last.y, yMinLimit, yMaxLimit);
+							if (isPartFixed2) {
+								if (connectionMoveMethod != VerticalEdgeMove) {
+									connectionMoveMethod = HorizontalEdgeMove;
+									isPartFixed2 = false;
+								}
+							}
+						}
+					}
+					isPartFixed |= isPartFixed2;
+
+					return i;
+				}
+			} else {
+				if (abs(pt.x - point.x) <= 3 && abs(pt.y - point.y) <= 3) {
+					startPoint = last;
+					CPoint next = points.GetNext(pos);
+					endPoint = next;
+
+					connectionMoveMethod = ModifyExistingCustomPoint;
+					isPartFixed = false;
+					return i;
+				} else {
+					bool onEdge = false;
+					if (last.x == pt.x)			// vertical edge, horizontal move
+					{
+						if (abs(pt.x - point.x) <= 3 && point.y <= max(pt.y, last.y) + 3 && point.y >= min(pt.y, last.y) - 3)
+							onEdge = true;
+					}
+					else if (last.y == pt.y)	// horizontal line, vertical move
+					{
+						if (abs(pt.y - point.y) <= 3 && point.x <= max(pt.x, last.x) + 3 && point.x >= min(pt.x, last.x) - 3)
+							onEdge = true;
+					}
+					else
+					{
+						// TODO: consider non-linear edges
+						//
+						// Is the point close to the edge?
+						//
+						//     |det(pt-last last-point)|
+						// d = -------------------------
+						//            |pt-last|
+						//
+						double nom = abs((double)(pt.x - last.x) * (last.y - point.y) - (last.x - point.x) * (pt.y - last.y));
+						double denom_square = (double)((pt.x - last.x) * (pt.x - last.x) + (pt.y - last.y) * (pt.y - last.y));
+						double d_square = nom * nom / denom_square;
+						if (d_square <= 3.0 * 3.0) {
+							// Check not just if the point is on the line, but if it is on the line segment
+							// point = m * last + (1 - m) * pt
+							//
+							// m = (point + pt) / (last + pt)
+							// 0.0 <= m <= 1.0
+
+							double m1 = ((double)point.x - pt.x) / (last.x - pt.x);
+							double m2 = ((double)point.y - pt.y) / (last.y - pt.y);
+							ASSERT(abs(m2 - m1) < 2.0e-1);
+							TRACE3("GetEdgeIndex d2 %lf m1 %lf m2 %lf\n", d_square, m1, m2);
+							if (m1 >= 0.0 && m1 <= 1.0 && m2 >= 0.0 && m2 <= 1.0)
+								onEdge = true;
+						}
+						if (onEdge)
+						{
+							startPoint = last;
+							endPoint = pt;
+
+							connectionMoveMethod = InsertNewCustomPoint;
+							isPartFixed = false;
+							return i;
+						}
+					}
+				}
+			}
+
+			i++;
+			lastlast = last;
+			last = pt;
+		}
+	}
+
+	return -1;
+}
+
+int CGuiConnection::IsPathAt(const CPoint& point, ConnectionPartMoveType& connectionMoveMethod,
+							 bool& horizontalOrVerticalEdge, bool& isPartFixed) const
+{
+	CPoint tmpPoint;
+	int tmpLimit;
+	return GetEdgeIndex(point, tmpPoint, tmpPoint, tmpPoint, connectionMoveMethod, horizontalOrVerticalEdge,
+						isPartFixed, tmpLimit, tmpLimit, tmpLimit, tmpLimit);
+}
+
+void CGuiConnection::ReadCustomPathData(void)
+{
+	customPathData.clear();
+	CString pref;
+	TRACE0("ReadCustomEdges:\n");
+	if (GetPreference(pref, CUSTOMCONNECTIONDATA)) {
+		if (pref != EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC) {	// -1 is a magic number for deleted data
+			CString subStr;
+			int curPos = 0;
+			subStr = pref.Tokenize(";", curPos);
+			while (subStr != "") {
+				TRACE1("\tResulting token: %s\n", subStr);
+				CustomPathData pathData;
+				InitCustomPathData(pathData);
+				int curSubPos = 0;
+				CString versionStr = subStr.Tokenize(",", curSubPos);
+				pathData.version = strtol(versionStr, NULL, 10);
+				ASSERT(pathData.version == CONNECTIONCUSTOMIZATIONDATAVERSION);
+				if (pathData.version == CONNECTIONCUSTOMIZATIONDATAVERSION) {
+					CString aspectStr = subStr.Tokenize(",", curSubPos);
+					pathData.aspect = strtol(aspectStr, NULL, 10);
+					CString edgeIndexStr = subStr.Tokenize(",", curSubPos);
+					pathData.edgeIndex = strtol(edgeIndexStr, NULL, 10);
+					CString edgeCountStr = subStr.Tokenize(",", curSubPos);
+					pathData.edgeCount = strtol(edgeCountStr, NULL, 10);
+					CString edgeCustomTypeStr = subStr.Tokenize(",", curSubPos);
+					pathData.type = (PathCustomizationType)strtol(edgeCustomTypeStr, NULL, 10);
+					TRACE("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld", pathData.aspect, pathData.edgeIndex,
+																   pathData.edgeCount, pathData.type);
+					CString directionStr = subStr.Tokenize(",", curSubPos);
+					pathData.horizontalOrVerticalEdge = (strtol(directionStr, NULL, 10) != 0);
+					CString positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.x = strtol(positionStr, NULL, 10);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.y = strtol(positionStr, NULL, 10);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.l1 = strtol(positionStr, NULL, 10);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.l2 = strtol(positionStr, NULL, 10);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.l3 = strtol(positionStr, NULL, 10);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.l4 = strtol(positionStr, NULL, 10);
+
+					TRACE(", Dir %ld, x %ld, y %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
+						pathData.horizontalOrVerticalEdge, pathData.x, pathData.y,
+						pathData.l1, pathData.l2, pathData.l3, pathData.l4);
+
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.d1 = atof(positionStr);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.d2 = atof(positionStr);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.d3 = atof(positionStr);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.d4 = atof(positionStr);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.d5 = atof(positionStr);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.d6 = atof(positionStr);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.d7 = atof(positionStr);
+					positionStr = subStr.Tokenize(",", curSubPos);
+					pathData.d8 = atof(positionStr);
+
+					TRACE("\t d1 %lf, d2 %lf, d3 %lf, d4 %lf, d5 %lf, d6 %lf, d7 %lf, d8 %lf\n",
+						pathData.d1, pathData.d2, pathData.d3, pathData.d4,
+						pathData.d5, pathData.d6, pathData.d7, pathData.d8);
+
+					customPathData.push_back(pathData);
+				} else {
+					;	// TODO: Convert from older version to newer
+				}
+				subStr = pref.Tokenize(";", curPos);
+			}
+		}
+	}
+}
+
+void CGuiConnection::WriteCustomPathData(bool handleTransaction)
+{
+	CString valStr;
+	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+		CString edgeStr;
+		edgeStr.Format("%ld,%ld,%ld,%d,%ld", (*ii).version, (*ii).aspect, (*ii).edgeIndex, (*ii).edgeCount, (*ii).type);
+		CString additionalDataStr;
+		additionalDataStr.Format(",%ld,%ld,%ld", (*ii).horizontalOrVerticalEdge, (*ii).x, (*ii).y);
+		edgeStr.Append(additionalDataStr);
+		additionalDataStr.Format(",%ld,%ld,%ld,%ld", (*ii).l1, (*ii).l2, (*ii).l3, (*ii).l4);
+		edgeStr.Append(additionalDataStr);
+		additionalDataStr.Format(",%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf", (*ii).d1, (*ii).d2, (*ii).d3, (*ii).d4, (*ii).d5, (*ii).d6, (*ii).d7, (*ii).d8);
+		edgeStr.Append(additionalDataStr);
+		if (valStr != "")
+			valStr.Append(";");
+		valStr.Append(edgeStr);
+	}
+	VERIFY(mgaFco);
+	CComBSTR pathBstr;
+	CopyTo(CUSTOMCONNECTIONDATA, pathBstr);
+	CComBSTR bstrVal;
+	if (valStr == "")
+		bstrVal = EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC;
+	else
+		CopyTo(valStr, bstrVal);
+	if (handleTransaction)
+		view->BeginTransaction();
+	COMTHROW(mgaFco->put_RegistryValue(pathBstr, bstrVal));
+	if (handleTransaction)
+		view->CommitTransaction();
+}
+
+void CGuiConnection::InsertCustomPathData(CustomPathData& pathData)
+{
+	// TODO: branch only if we add new custom connection point
+	bool found = false;
+	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+		ASSERT((*ii).version == pathData.version);
+		if ((*ii).aspect == pathData.aspect &&
+			(*ii).edgeIndex >= pathData.edgeIndex)
+		{
+			found = true;
+			(*ii).edgeIndex = (*ii).edgeIndex + 1;
+		}
+	}
+	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+		ASSERT((*ii).version == pathData.version);
+		if ((*ii).aspect == pathData.aspect &&
+			(*ii).edgeIndex >= pathData.edgeIndex)
+		{
+			customPathData.insert(ii, pathData);
+			break;
+		}
+	}
+	if (!found)
+		customPathData.push_back(pathData);
+}
+
+void CGuiConnection::UpdateCustomPathData(CustomPathData& pathData)
+{
+	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+		ASSERT((*ii).version == pathData.version);
+		if ((*ii).aspect == pathData.aspect &&
+			(*ii).edgeIndex == pathData.edgeIndex)
+		{
+			ASSERT((*ii).type == pathData.type);
+			(*ii).version						= pathData.version;
+			(*ii).aspect						= pathData.aspect;
+			(*ii).edgeIndex						= pathData.edgeIndex;
+			(*ii).edgeCount						= pathData.edgeCount;
+			(*ii).type							= pathData.type;
+			(*ii).horizontalOrVerticalEdge		= pathData.horizontalOrVerticalEdge;
+			(*ii).x								= pathData.x;
+			(*ii).y								= pathData.y;
+			(*ii).l1							= pathData.l1;
+			(*ii).l2							= pathData.l2;
+			(*ii).l3							= pathData.l3;
+			(*ii).l4							= pathData.l4;
+			(*ii).d1							= pathData.d1;
+			(*ii).d2							= pathData.d2;
+			(*ii).d3							= pathData.d3;
+			(*ii).d4							= pathData.d4;
+			(*ii).d5							= pathData.d5;
+			(*ii).d6							= pathData.d6;
+			(*ii).d7							= pathData.d7;
+			(*ii).d8							= pathData.d8;
+
+			return;
+		}
+	}
+
+	// not found
+	customPathData.push_back(pathData);
+}
+
+std::vector<CustomPathData> CGuiConnection::GetCurrentPathCustomizations(void)
+{
+	std::vector<CustomPathData> cd;
+	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+		if ((*ii).aspect == parentAspect)
+			cd.push_back(*ii);
+	}
+	return cd;
+}
+
+bool CGuiConnection::HasPathCustomization(void) const
+{
+	return customPathData.size() > 0;
+}
+
+bool CGuiConnection::HasPathCustomization(int asp) const
+{
+	return HasPathCustomization(asp, -1);
+}
+
+bool CGuiConnection::HasPathCustomization(int asp, int edgeIndex) const
+{
+	for (std::vector<CustomPathData>::const_iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+		if ((*ii).aspect == asp &&
+			((*ii).edgeIndex == edgeIndex || edgeIndex == -1))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void CGuiConnection::DeletePathCustomization(CustomPathData& pathData)
+{
+	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+		ASSERT((*ii).version == pathData.version);
+		if ((*ii).aspect == pathData.aspect &&
+			(*ii).edgeIndex == pathData.edgeIndex)
+		{
+			ASSERT((*ii).type == pathData.type);
+			if ((*ii).type == SimpleEdgeDisplacement) {
+				ASSERT((*ii).horizontalOrVerticalEdge == pathData.horizontalOrVerticalEdge);
+			} else {
+				// TODO: other checks for other types
+			}
+			ii = customPathData.erase(ii);
+			return;
+		}
+	}
+	// not found
+	ASSERT(false);
+}
+
+bool CGuiConnection::DeleteAllPathCustomizationsForAnAspect(int asp)
+{
+	bool wereThereAnyDeletion = false;
+	std::vector<CustomPathData>::iterator ii = customPathData.begin();
+	while (ii != customPathData.end()) {
+		if ((*ii).aspect == asp) {
+			wereThereAnyDeletion = true;
+			ii = customPathData.erase(ii);
+		} else {
+			++ii;
+		}
+	}
+	return wereThereAnyDeletion;
+}
+
+void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat)
+{
+	std::vector<CustomPathData>::const_iterator ii = customPathDat.begin();
+	while (ii != customPathDat.end()) {
+		std::vector<CustomPathData>::iterator jj = customPathData.begin();
+		while (jj != customPathData.end()) {
+			if ((*ii).aspect == (*jj).aspect &&
+				(*ii).edgeIndex == (*jj).edgeIndex)
+			{
+				jj = customPathData.erase(jj);
+			} else {
+				++jj;
+			}
+		}
+		++ii;
+	}
+}
+
+bool CGuiConnection::IsConnectionAutoRouted(void) const
+{
+	return autoRouted;
+}
+
+void CGuiConnection::SetConnectionAutoRouted(bool autoRouteState)
+{
+	autoRouted = autoRouteState;
+}
+
+void CGuiConnection::ReadConnectionAutoRouteState(void)
+{
+	CString autoRoutingStateStr;
+	bool autoRoutingState = true;
+	if (GetPreference(autoRoutingStateStr, CONNECTIONAUTOROUTING)) {
+		if (autoRoutingStateStr == "false")
+			autoRoutingState = false;
+	}
+	SetConnectionAutoRouted(autoRoutingState);
+}
+
+void CGuiConnection::WriteConnectionAutoRouteState(bool handleTransaction)
+{
+	VERIFY(mgaFco);
+	CComBSTR pathBstr;
+	CopyTo(CONNECTIONAUTOROUTING, pathBstr);
+	CString valStr = IsConnectionAutoRouted() ? "true" : "false";
+	CComBSTR bstrVal;
+	CopyTo(valStr, bstrVal);
+	if (handleTransaction)
+		view->BeginTransaction();
+	COMTHROW(mgaFco->put_RegistryValue(pathBstr, bstrVal));
+	if (handleTransaction)
+		view->CommitTransaction();
+}
 
 
 ////////////////////////////////////////////////

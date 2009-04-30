@@ -7,119 +7,73 @@
 #include "AutoRouterPort.h"
 
 
+void InitCustomPathData(CustomPathData& pathData)
+{
+	pathData.version					= CONNECTIONCUSTOMIZATIONDATAVERSION;
+	pathData.aspect						= 0;
+	pathData.edgeIndex					= 0;
+	pathData.edgeCount					= 0;
+	pathData.type						= SimpleEdgeDisplacement;
+	pathData.horizontalOrVerticalEdge	= true;
+	pathData.x							= 0;
+	pathData.y							= 0;
+	pathData.l1							= 0;
+	pathData.l2							= 0;
+	pathData.l3							= 0;
+	pathData.l4							= 0;
+	pathData.d1							= 0.0;
+	pathData.d2							= 0.0;
+	pathData.d3							= 0.0;
+	pathData.d4							= 0.0;
+	pathData.d5							= 0.0;
+	pathData.d6							= 0.0;
+	pathData.d7							= 0.0;
+	pathData.d8							= 0.0;
+}
+
+// Functions for CMapAutoRouterPath2CGuiConnection and CMapCARPath2CPointList, see AutoRouter.h and AutoRouterGraph.h
+template<>
+UINT AFXAPI HashKey<IAutoRouterPath*> (IAutoRouterPath* key)
+{
+	return (UINT)key;
+}
+
+template<>
+BOOL AFXAPI CompareElements<LPIAutoRouterPath, LPIAutoRouterPath>
+	 (const LPIAutoRouterPath* pElement1, const LPIAutoRouterPath* pElement2)
+{
+	if (*pElement1 == *pElement2)
+		return true;
+	return false;
+}
+
+
 // CAutoRouterPath implementation
 
-CAutoRouterPath::CAutoRouterPath(): owner(NULL),
-					startport(NULL),
-					endport(NULL),
-					attributes(ARPATH_Default),
-					state(ARPATHST_Default)
+CAutoRouterPath::CAutoRouterPath():
+	owner(NULL),
+	startport(NULL),
+	endport(NULL),
+	attributes(ARPATH_Default),
+	state(ARPATHST_Default),
+	isAutoRoutingOn(true)
 {
 }
 
-
-void CAutoRouterPath::SetOwner(CComObjPtr<CAutoRouterGraph> o)
-{	
-	owner = o;
+HRESULT CAutoRouterPath::FinalConstruct(void)
+{
+	return S_OK;
 }
 
-// --- Ports
-
-void CAutoRouterPath::SetStartPort(CComObjPtr<CAutoRouterPort> port)
+void CAutoRouterPath::FinalRelease(void)
 {
-	startport = port;
-}
-
-void CAutoRouterPath::SetEndPort(CComObjPtr<CAutoRouterPort> port)
-{
-	endport = port;
-}
-
-void CAutoRouterPath::ClearPorts()
-{
-	startport = NULL;
-	endport = NULL;
-}
-
-CComObjPtr<CAutoRouterPort> CAutoRouterPath::GetStartPort() const
-{
-	ASSERT( startport != NULL );
-	return startport;
-}
-
-CComObjPtr<CAutoRouterPort> CAutoRouterPath::GetEndPort() const
-{
-	ASSERT( endport != NULL );
-	return endport;
+	DeleteAll();
+	this->SetOwner(NULL);
 }
 
 // --- Points
 
-void CAutoRouterPath::AddTail(CPoint point)
-{
-	ASSERT( !IsConnected() );
-	points.AddTail(point);
-}
-
-void CAutoRouterPath::DeleteAll()
-{
-	points.RemoveAll();
-	state = ARPATHST_Default;
-}
-
-CPoint CAutoRouterPath::GetStartPoint() const
-{
-	ASSERT( points.GetCount() >= 2 );
-
-	return points.GetHead();
-}
-
-CPoint CAutoRouterPath::GetEndPoint() const
-{
-	ASSERT( points.GetCount() >= 2 );
-
-	return points.GetTail();
-}
-
-CPoint CAutoRouterPath::GetOutOfBoxStartPoint() const
-{
-	ASSERT( points.GetCount() >= 2 );
-
-	POSITION pos = points.GetHeadPosition();
-	CPoint p = points.GetNext(pos);
-	EArDir d = GetDir(points.GetAt(pos) - p);
-	ASSERT( IsRightAngle(d) );
-
-	CComPtr<IAutoRouterBox> ownerStart;
-	GetStartPort()->GetOwner(&ownerStart);
-	CComObjPtr<CAutoRouterBox> startbox = static_cast<CAutoRouterBox*>(ownerStart.p);	
-
-	GetPointCoord(p, d) = GetRectOuterCoord(startbox->GetRect(), d);
-	ASSERT( points.GetAt(pos) == p || GetDir(points.GetAt(pos) - p) == d ); 
-
-	return p;
-}
-
-CPoint CAutoRouterPath::GetOutOfBoxEndPoint() const
-{
-	ASSERT( points.GetCount() >= 2 );
-
-	POSITION pos = points.GetTailPosition();
-	CPoint p = points.GetPrev(pos);
-	EArDir d = GetDir(points.GetAt(pos) - p);
-	ASSERT( IsRightAngle(d) );
-
-	CComPtr<IAutoRouterBox> ownerEnd;
-	GetEndPort()->GetOwner(&ownerEnd);
-	CComObjPtr<CAutoRouterBox> endbox = static_cast<CAutoRouterBox*>(ownerEnd.p);
-
-	GetPointCoord(p, d) = GetRectOuterCoord(endbox->GetRect(), d);
-	ASSERT( points.GetAt(pos) == p || GetDir(points.GetAt(pos) - p) == d ); 
-
-	return p;
-}
-
-POSITION CAutoRouterPath::GetPointPosAt(CPoint point, int nearness) const
+POSITION CAutoRouterPath::GetPointPosAt(const CPoint& point, int nearness) const
 {
 	POSITION pos = points.GetHeadPosition();
 	while( pos != NULL )
@@ -132,29 +86,169 @@ POSITION CAutoRouterPath::GetPointPosAt(CPoint point, int nearness) const
 	return NULL;
 }
 
-POSITION CAutoRouterPath::GetEdgePosAt(CPoint point, int nearness) const
+POSITION CAutoRouterPath::GetEdgePosAt(const CPoint& point, int nearness) const
 {
 	CPoint a;
 	CPoint b;
 
-	POSITION pos = GetTailEdge(a, b);
+	POSITION pos = points.GetTailEdge(a, b);
 	while( pos != NULL )
 	{
 		if( IsPointNearLine(point, a, b, nearness) )
 			return pos;
 
-		GetPrevEdge(pos, a, b);
+		points.GetPrevEdge(pos, a, b);
 	}
 
 	return NULL;
 }
 
-void CAutoRouterPath::SimplifyTrivially()
+bool CAutoRouterPath::IsConnected(void) const
+{
+	return (state & ARPATHST_Connected) != 0;
+}
+
+STDMETHODIMP CAutoRouterPath::AddTail(long px, long py)
+{
+	ASSERT( !IsConnected() );
+	points.AddTail(CPoint(px, py));
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::DeleteAll()
+{
+	points.RemoveAll();
+	state = ARPATHST_Default;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::HasNoPoint(VARIANT_BOOL* result)
+{
+	if (points.IsEmpty())
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::GetPointCount(long* result)
+{
+	*result = points.GetCount();
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::GetStartPoint(long* resultX, long* resultY)
+{
+	ASSERT( points.GetCount() >= 2 );
+	const CPoint& pt = points.GetHead();
+	*resultX = pt.x;
+	*resultY = pt.y;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::GetEndPoint(long* resultX, long* resultY)
+{
+	ASSERT( points.GetCount() >= 2 );
+	const CPoint& pt = points.GetTail();
+	*resultX = pt.x;
+	*resultY = pt.y;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::GetStartBox(long* p1, long* p2, long* p3, long* p4)
+{
+	CComPtr<IAutoRouterBox> startbox;
+	HRESULT hr = startport->GetOwner(&startbox);
+	ASSERT(SUCCEEDED(hr));
+	if (FAILED(hr))
+		return hr;
+
+	hr = startbox->GetRect(p1, p2, p3, p4);
+	ASSERT(SUCCEEDED(hr));
+
+	return hr;
+}
+
+STDMETHODIMP CAutoRouterPath::GetEndBox(long* p1, long* p2, long* p3, long* p4)
+{
+	CComPtr<IAutoRouterBox> endbox;
+	HRESULT hr = endport->GetOwner(&endbox);
+	ASSERT(SUCCEEDED(hr));
+	if (FAILED(hr))
+		return hr;
+
+	hr = endbox->GetRect(p1, p2, p3, p4);
+	ASSERT(SUCCEEDED(hr));
+
+	return hr;
+}
+
+STDMETHODIMP CAutoRouterPath::GetOutOfBoxStartPoint(long* resultX, long* resultY, RoutingDirection hintDir)
+{
+	long p1, p2, p3, p4;
+	HRESULT hr = GetStartBox(&p1, &p2, &p3, &p4);
+	ASSERT(SUCCEEDED(hr));
+	if (FAILED(hr))
+		return hr;
+	const CRect startBoxRect(p1, p2, p3, p4);
+
+	ASSERT( hintDir != Dir_Skew );
+	ASSERT( points.GetCount() >= 2 );
+	POSITION pos = points.GetHeadPosition();
+	CPoint p = points.GetNext(pos);
+	RoutingDirection d = GetDir(points.GetAt(pos) - p);
+	if (d == Dir_Skew)
+		d = hintDir;
+	ASSERT( IsRightAngle(d) );
+
+	GetPointCoord(p, d) = GetRectOuterCoord(startBoxRect, d);
+	ASSERT( points.GetAt(pos) == p || GetDir(points.GetAt(pos) - p) == d ); 
+
+	*resultX = p.x;
+	*resultY = p.y;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::GetOutOfBoxEndPoint(long* resultX, long* resultY, RoutingDirection hintDir)
+{
+	long p1, p2, p3, p4;
+	HRESULT hr = GetEndBox(&p1, &p2, &p3, &p4);
+	ASSERT(SUCCEEDED(hr));
+	if (FAILED(hr))
+		return hr;
+	const CRect endBoxRect(p1, p2, p3, p4);
+
+	ASSERT( hintDir != Dir_Skew );
+	ASSERT( points.GetCount() >= 2 );
+	POSITION pos = points.GetTailPosition();
+	CPoint p = points.GetPrev(pos);
+	RoutingDirection d = GetDir(points.GetAt(pos) - p);
+	if (d == Dir_Skew)
+		d = hintDir;
+	ASSERT( IsRightAngle(d) );
+
+	GetPointCoord(p, d) = GetRectOuterCoord(endBoxRect, d);
+	ASSERT( points.GetAt(pos) == p || GetDir(points.GetAt(pos) - p) == d ); 
+
+	*resultX = p.x;
+	*resultY = p.y;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::SimplifyTrivially()
 {
 	ASSERT( !IsConnected() );
 
 	if( points.GetCount() <= 2 )
-		return;
+		return S_OK;
 	
 	POSITION pos = points.GetHeadPosition();
 
@@ -166,13 +260,13 @@ void CAutoRouterPath::SimplifyTrivially()
 	ASSERT( pos2 != NULL );
 	CPoint p2 = points.GetNext(pos);
 
-	EArDir dir12 = GetDir(p2-p1);
+	RoutingDirection dir12 = GetDir(p2-p1);
 
 	POSITION pos3 = pos;
 	ASSERT( pos3 != NULL );
 	CPoint p3 = points.GetNext(pos);
 
-	EArDir dir23 = GetDir(p3-p2); 
+	RoutingDirection dir23 = GetDir(p3-p2); 
 
 	for(;;)
 	{
@@ -191,7 +285,7 @@ void CAutoRouterPath::SimplifyTrivially()
 		}
 
 		if( pos == NULL )
-			return;
+			return S_OK;
 
 		pos2 = pos3;
 		p2 = p3;
@@ -202,195 +296,71 @@ void CAutoRouterPath::SimplifyTrivially()
 		dir23 = GetDir(p3-p2);
 	}
 
+#ifdef _DEBUG
+	AssertValidPoints();
+#endif
+
+	return S_OK;
 }
 
-// --- Edges
-
-POSITION CAutoRouterPath::GetHeadEdge(CPoint& start, CPoint& end) const
+STDMETHODIMP CAutoRouterPath::ModifyPoints(SAFEARRAY* pArr)
 {
-	if( points.GetCount() < 2 )
-		return NULL;
-
-	POSITION pos = points.GetHeadPosition();
-	ASSERT( pos != NULL );
-
-	start = points.GetNext(pos);
-	ASSERT( pos != NULL );
-
-	end = points.GetAt(pos);
-
-	return pos;
-}
-
-POSITION CAutoRouterPath::GetTailEdge(CPoint& start, CPoint& end) const
-{
-	if( points.GetCount() < 2 )
-		return NULL;
-
-	POSITION pos = points.GetTailPosition();
-	ASSERT( pos != NULL );
-
-	end = points.GetPrev(pos);
-	ASSERT( pos != NULL );
-
-	start = points.GetAt(pos);
-
-	return pos;
-}
-
-void CAutoRouterPath::GetNextEdge(POSITION& pos, CPoint& start, CPoint& end) const
-{
-
-	points.GetNext(pos);
-	ASSERT( pos != NULL );
-
-	POSITION p = pos;
-	start = points.GetNext(p);
-	if( p == NULL )
-		pos = NULL;
-	else
-		end = points.GetAt(p);
-}
-
-void CAutoRouterPath::GetPrevEdge(POSITION& pos, CPoint& start, CPoint& end) const
-{
-	end = points.GetPrev(pos);
-	if( pos != NULL )
-		start = points.GetAt(pos);
-}
-
-void CAutoRouterPath::GetEdge(POSITION pos, CPoint& start, CPoint& end) const
-{
-	start = points.GetNext(pos);
-	ASSERT( pos != NULL );
-
-	end = points.GetAt(pos);
-}
-
-POSITION CAutoRouterPath::GetHeadEdgePtrs(CPoint*& start, CPoint*& end)
-{
-	if( points.GetCount() < 2 )
-		return NULL;
-
-	POSITION pos = points.GetHeadPosition();
-	ASSERT( pos != NULL );
-
-	start = &(points.GetNext(pos));
-	ASSERT( pos != NULL );
-
-	end = &(points.GetAt(pos));
-
-	return pos;
-}
-
-POSITION CAutoRouterPath::GetTailEdgePtrs(CPoint*& start, CPoint*& end)
-{
-	if( points.GetCount() < 2 )
-		return NULL;
-
-	POSITION pos = points.GetTailPosition();
-	ASSERT( pos != NULL );
-
-	end = &(points.GetPrev(pos));
-	ASSERT( pos != NULL );
-
-	start = &(points.GetAt(pos));
-
-	return pos;
-}
-
-void CAutoRouterPath::GetNextEdgePtrs(POSITION& pos, CPoint*& start, CPoint*& end)
-{
-	start = &(points.GetNext(pos));
-	if (pos != NULL)
-		end = &(points.GetAt(pos));
-}
-
-void CAutoRouterPath::GetPrevEdgePtrs(POSITION& pos, CPoint*& start, CPoint*& end)
-{
-	end = &(points.GetPrev(pos));
-	if( pos != NULL )
-		start = &(points.GetAt(pos));
-}
-
-void CAutoRouterPath::GetEdgePtrs(POSITION pos, CPoint*& start, CPoint*& end)
-{
-	start = &(points.GetNext(pos));
-	ASSERT( pos != NULL );
-
-	end = &(points.GetAt(pos));
-}
-
-CPoint* CAutoRouterPath::GetStartPoint(POSITION pos)
-{
-	return &(points.GetAt(pos));
-}
-
-CPoint* CAutoRouterPath::GetEndPoint(POSITION pos)
-{
-	points.GetNext(pos);
-	ASSERT( pos != NULL );
-
-	return &(points.GetAt(pos));
-}
-
-CPoint* CAutoRouterPath::GetPointBeforeEdge(POSITION pos)
-{
-	points.GetPrev(pos);
-	if( pos == NULL )
-		return NULL;
-
-	return &(points.GetAt(pos));
-}
-
-CPoint* CAutoRouterPath::GetPointAfterEdge(POSITION pos)
-{
-	points.GetNext(pos);
-	ASSERT( pos != NULL );
-
-	points.GetNext(pos);
-	if( pos == NULL )
-		return NULL;
-
-	return &(points.GetAt(pos));
-}
-
-POSITION CAutoRouterPath::GetEdgePosBeforePoint(POSITION pos) const
-{
-	points.GetPrev(pos);
-	return pos;
-}
-
-POSITION CAutoRouterPath::GetEdgePosAfterPoint(POSITION pos) const
-{
-	POSITION p = pos;
-	points.GetNext(p);
-	if( p == NULL )
-		return NULL;
-
-	return pos;
-}
-
-POSITION CAutoRouterPath::GetEdgePosForStartPoint(CPoint* startpoint)
-{
-	POSITION pos = points.GetHeadPosition();
-	while( pos != NULL )
+	//one dim., long elements
+	if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
 	{
-		if( &(points.GetNext(pos)) == startpoint )
+		//length
+		long elementNum = (pArr)->rgsabound[0].cElements;
+		ASSERT(elementNum % 2 == 0);
+		bool equalLength = points.GetSize() == elementNum / 2;
+		ASSERT(equalLength);
+		if (!equalLength)
+			return E_FAIL;
+		if (elementNum > 0)
 		{
-			ASSERT( pos != NULL );
-			points.GetPrev(pos);
-			break;
+			//lock it before use
+			SafeArrayLock(pArr);
+			long* pArrElements = (long*) (pArr)->pvData;
+			POSITION pos = points.GetHeadPosition();
+			for (int i = 0; i < elementNum / 2 && pos != NULL; i++)
+			{
+				CPoint p(pArrElements[2 * i], pArrElements[2 * i + 1]);
+				points.GetNext(pos) = p;
+			}
+			SafeArrayUnlock(pArr);
 		}
 	}
 
-	ASSERT( pos != NULL );
-	return pos;
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::SetPoints(SAFEARRAY* pArr)
+{
+	//one dim., long elements
+	if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
+	{
+		points.RemoveAll();
+		//length
+		long elementNum = (pArr)->rgsabound[0].cElements;
+		if (elementNum > 0)
+		{
+			//lock it before use
+			SafeArrayLock(pArr);
+			long* pArrElements = (long*) (pArr)->pvData;
+			for (int i = 0; i < elementNum / 2; i++)
+			{
+				CPoint p(pArrElements[2 * i], pArrElements[2 * i + 1]);
+				points.AddTail(p);
+			}
+			SafeArrayUnlock(pArr);
+		}
+	}
+
+	return S_OK;
 }
 
 // --- Data
 
-CRect CAutoRouterPath::GetSurroundRect() const
+STDMETHODIMP CAutoRouterPath::GetSurroundRect(long* p1, long* p2, long* p3, long* p4)
 {
 	CRect rect(INT_MAX,INT_MAX,INT_MIN,INT_MIN);
 
@@ -411,59 +381,239 @@ CRect CAutoRouterPath::GetSurroundRect() const
 		rect.SetRectEmpty();
 	}
 
-	return rect;
+	*p1 = rect.left;
+	*p2 = rect.top;
+	*p3 = rect.right;
+	*p4 = rect.bottom;
+
+	return S_OK;
 }
 
-int CAutoRouterPath::IsPathClip(CRect rect) const
+STDMETHODIMP CAutoRouterPath::IsEmpty(VARIANT_BOOL* result)
+{
+	if (points.IsEmpty() == TRUE)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::IsPathAt(long px, long py, long nearness, VARIANT_BOOL* result)
+{
+	if (GetEdgePosAt(CPoint(px, py), nearness) != NULL)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::IsPathClip(long p1, long p2, long p3, long p4, VARIANT_BOOL* result)
 {
 	CPoint a;
 	CPoint b;
 
-	POSITION pos = GetTailEdge(a, b);
+	POSITION pos = points.GetTailEdge(a, b);
 	while( pos != NULL )
 	{
-		if( IsLineClipRect(a, b, rect) )
-			return 1;
+		if( IsLineClipRect(a, b, CRect(p1, p2, p3, p4)) )
+		{
+			*result = VARIANT_TRUE;
+			return S_OK;
+		}
 
-		GetPrevEdge(pos, a, b);
+		points.GetPrevEdge(pos, a, b);
 	}
 
-	return 0;
+	*result = VARIANT_FALSE;
+	return S_OK;
 }
 
-void CAutoRouterPath::SetAttributes(unsigned int attr)
+STDMETHODIMP CAutoRouterPath::SetAttributes(long attr)
 {
 	attributes = attr;
+
+	return S_OK;
 }
 
-void CAutoRouterPath::SetState(int s)
+STDMETHODIMP CAutoRouterPath::GetAttributes(long* result)
+{
+	*result = attributes;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::IsFixed(VARIANT_BOOL* result)
+{
+	if ((attributes & ARPATH_Fixed) != 0)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::IsMoveable(VARIANT_BOOL* result)
+{
+	if ((attributes & ARPATH_Fixed) == 0)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::IsHighLighted(VARIANT_BOOL* result)
+{
+	if ((attributes & ARPATH_HighLighted) != 0)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::GetState(long* result)
+{
+	*result = state;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::IsConnected(VARIANT_BOOL* result)
+{
+	if (IsConnected())
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::SetState(long s)
 {
 	ASSERT( owner != NULL );
 
 	state = s;
+
+#ifdef _DEBUG
+	AssertValid();
+#endif
+
+	return S_OK;
 }
 
-EArDir CAutoRouterPath::GetEndDir() const
+STDMETHODIMP CAutoRouterPath::GetEndDir(RoutingDirection* result)
 {
 	unsigned int a = attributes & ARPATH_EndMask;
-	return a & ARPATH_EndOnTop ? Dir_Top : 
-	a & ARPATH_EndOnRight ? Dir_Right : 
-	a & ARPATH_EndOnBottom ? Dir_Bottom :
-	a & ARPATH_EndOnLeft ? Dir_Left : Dir_None;
+	*result =	a & ARPATH_EndOnTop ? Dir_Top :
+				a & ARPATH_EndOnRight ? Dir_Right :
+				a & ARPATH_EndOnBottom ? Dir_Bottom :
+				a & ARPATH_EndOnLeft ? Dir_Left : Dir_None;
+
+	return S_OK;
 }
 
-EArDir CAutoRouterPath::GetStartDir() const
+STDMETHODIMP CAutoRouterPath::GetStartDir(RoutingDirection* result)
 {
 	unsigned int a = attributes & ARPATH_StartMask;
-	return a & ARPATH_StartOnTop ? Dir_Top : 
-	a & ARPATH_StartOnRight ? Dir_Right : 
-	a & ARPATH_StartOnBottom ? Dir_Bottom :
-	a & ARPATH_StartOnLeft ? Dir_Left : Dir_None;
+	*result =	a & ARPATH_StartOnTop ? Dir_Top :
+				a & ARPATH_StartOnRight ? Dir_Right :
+				a & ARPATH_StartOnBottom ? Dir_Bottom :
+				a & ARPATH_StartOnLeft ? Dir_Left : Dir_None;
+
+	return S_OK;
 }
+
+// COM interface
 
 STDMETHODIMP CAutoRouterPath::GetOwner(IAutoRouterGraph** result)
 {
 	return owner->QueryInterface(IID_IAutoRouterGraph,(void**)result);
+}
+
+STDMETHODIMP CAutoRouterPath::HasOwner(VARIANT_BOOL* result)
+{
+	if (owner != NULL)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::SetOwner(IAutoRouterGraph* graph)
+{
+	owner = graph;
+
+	return S_OK;
+}
+
+// --- Ports
+
+STDMETHODIMP CAutoRouterPath::SetStartPort(IAutoRouterPort* port)
+{
+	startport = port;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::SetEndPort(IAutoRouterPort* port)
+{
+	endport = port;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::ClearPorts()
+{
+	startport = NULL;
+	endport = NULL;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::GetStartPort(IAutoRouterPort** result)
+{
+	ASSERT( startport != NULL );
+
+	return ::QueryInterface(startport, result);
+}
+
+STDMETHODIMP CAutoRouterPath::GetEndPort(IAutoRouterPort** result)
+{
+	ASSERT( endport != NULL );
+
+	return ::QueryInterface(endport, result);
+}
+
+STDMETHODIMP CAutoRouterPath::GetPointList(SAFEARRAY **pArr)
+{
+	if (!pArr)
+		return E_POINTER;
+
+	ASSERT(*pArr == NULL);
+	*pArr = SafeArrayCreateVector(VT_I4, 0, 2 * points.GetSize());
+
+	HRESULT hr = S_OK;
+	long position = 0;
+	POSITION pos = points.GetHeadPosition();
+	while(pos && SUCCEEDED(hr))
+	{
+		CPoint point = points.GetNext(pos);
+		hr = SafeArrayPutElement(*pArr, &position, &point.x);
+		ASSERT(SUCCEEDED(hr));
+		position++;
+		hr = SafeArrayPutElement(*pArr, &position, &point.y);
+		ASSERT(SUCCEEDED(hr));
+		position++;
+	}
+	
+	return hr;
+
+	//usage:
+	//if ((*pArr)->cDims != 1 || (*pArr)->cbElements != 4)
 }
 
 STDMETHODIMP CAutoRouterPath::SetEndDir(long arpath_end)
@@ -478,52 +628,331 @@ STDMETHODIMP CAutoRouterPath::SetStartDir(long arpath_start)
 	return S_OK;
 }
 
-STDMETHODIMP CAutoRouterPath::GetPointList(SAFEARRAY **pArr)
+STDMETHODIMP CAutoRouterPath::SetCustomPathData(SAFEARRAY* pArr)
 {
-	HRESULT res = S_OK;
+	HRESULT hr = S_OK;
 
-	if (!pArr) return E_POINTER;
+	if (!pArr)
+		return E_POINTER;
+
+	CustomPathData* pData;
+	hr = SafeArrayAccessData(pArr, (void**)&pData);
+	ASSERT(SUCCEEDED(hr));
+	if (FAILED(hr))
+		return hr;
+
+	customPathData.clear();
+	for (unsigned long i = 0; i < pArr->rgsabound->cElements; i++)
+	{
+		CustomPathData pathData;
+		pathData.version					= pData[i].version;
+		pathData.aspect						= pData[i].aspect;
+		pathData.edgeIndex					= pData[i].edgeIndex;
+		pathData.edgeCount					= pData[i].edgeCount;
+		pathData.type						= pData[i].type;
+		pathData.horizontalOrVerticalEdge	= pData[i].horizontalOrVerticalEdge;
+		pathData.x							= pData[i].x;
+		pathData.y							= pData[i].y;
+		pathData.l1							= pData[i].l1;
+		pathData.l2							= pData[i].l2;
+		pathData.l3							= pData[i].l3;
+		pathData.l4							= pData[i].l4;
+		pathData.d1							= pData[i].d1;
+		pathData.d2							= pData[i].d2;
+		pathData.d3							= pData[i].d3;
+		pathData.d4							= pData[i].d4;
+		pathData.d5							= pData[i].d5;
+		pathData.d6							= pData[i].d6;
+		pathData.d7							= pData[i].d7;
+		pathData.d8							= pData[i].d8;
+		customPathData.push_back(pathData);
+	}
+
+	hr = SafeArrayUnaccessData(pArr);
+	ASSERT(SUCCEEDED(hr));
+
+	return hr;
+}
+
+STDMETHODIMP CAutoRouterPath::ApplyCustomizationsBeforeAutoConnectPoints(SAFEARRAY** pArr)
+{
+	if (customPathData.empty())
+		return S_OK;
+
+	CPointListPath ret;
+
+	std::vector<CustomPathData>::iterator ii = customPathData.begin();
+	while (ii != customPathData.end()) {
+		if ((*ii).type == SimpleEdgeDisplacement) {
+//			ASSERT(isAutoRoutingOn);
+			// it is done in a previous phase
+		} else if ((*ii).type == CustomPointCustomization) {
+//			ASSERT(!isAutoRoutingOn);
+			ret.AddTail(CPoint((*ii).x, (*ii).y));
+		} else {
+			// unknown displacement type
+		}
+		++ii;
+	}
+
+	if (ret.GetSize() > 0) {
+		SafeArrayDestroy(*pArr);
+		*pArr = SafeArrayCreateVector(VT_I4, 0, 2 * ret.GetSize());
+		long position = 0;
+		HRESULT hr = S_OK;
+		POSITION pos = ret.GetHeadPosition();
+		while(pos && SUCCEEDED(hr))
+		{
+			CPoint point = ret.GetNext(pos);
+			hr = SafeArrayPutElement(*pArr, &position, &point.x);
+			ASSERT(SUCCEEDED(hr));
+			position++;
+			hr = SafeArrayPutElement(*pArr, &position, &point.y);
+			ASSERT(SUCCEEDED(hr));
+			position++;
+		}
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::ApplyCustomizationsAfterAutoConnectPointsAndStuff(void)
+{
+	if (customPathData.empty())
+		return S_OK;
+
+	if (isAutoRoutingOn) {
+		std::vector<CustomPathData>::iterator ii = customPathData.begin();
+		int numEdges = points.GetSize() - 1;
+		while (ii != customPathData.end()) {
+			if ((*ii).edgeCount != numEdges) {
+				pathDataToDelete.push_back(*ii);
+				ii = customPathData.erase(ii);
+			} else {
+				++ii;
+			}
+		}
+	}
+
+	CPoint* startpoint = NULL;
+	CPoint* endpoint = NULL;
+
+	int currEdgeIndex = 0;
+	POSITION pos = points.GetHeadEdgePtrs(startpoint, endpoint);
+	while (pos != NULL) {
+		std::vector<CustomPathData>::iterator ii = customPathData.begin();
+		while (ii != customPathData.end()) {
+			bool increment = true;
+			if (currEdgeIndex == (*ii).edgeIndex) {
+				if ((*ii).type == SimpleEdgeDisplacement) {
+//					ASSERT(isAutoRoutingOn);
+					RoutingDirection dir = GetDir(*endpoint - *startpoint);
+					if ((*ii).horizontalOrVerticalEdge == (IsHorizontal(dir) != 0)) {
+						if ((*ii).horizontalOrVerticalEdge) {
+							startpoint->y = (*ii).y;
+							endpoint->y = (*ii).y;
+						} else {
+							startpoint->x = (*ii).x;
+							endpoint->x = (*ii).x;
+						}
+					} else {
+						// something went wrong, invalid data: direction (horz/vert) not match
+						ASSERT(false);
+						pathDataToDelete.push_back(*ii);
+						ii = customPathData.erase(ii);
+						increment = false;
+					}
+				} else if ((*ii).type == CustomPointCustomization) {
+//					ASSERT(!isAutoRoutingOn);
+					// it is done in a previous phase
+				} else {
+					// unknown displacement type
+				}
+			}
+			if (increment)
+				++ii;
+		}
+
+		points.GetNextEdgePtrs(pos, startpoint, endpoint);
+		currEdgeIndex++;
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::RemovePathCustomizations(void)
+{
+	std::vector<CustomPathData>::iterator ii = customPathData.begin();
+	while (ii != customPathData.end()) {
+		pathDataToDelete.push_back(*ii);
+		++ii;
+	}
+	customPathData.clear();
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::MarkPathCustomizationsForDeletion(long asp)
+{
+	std::vector<CustomPathData>::iterator ii = customPathData.begin();
+	while (ii != customPathData.end()) {
+		if ((*ii).aspect == asp)
+			pathDataToDelete.push_back(*ii);
+		++ii;
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::RemoveInvalidPathCustomizations(long asp)
+{
+	// We only inhibit/delete those edges, which has an edge count
+	// (redundand data intended for this very sanity check)
+	// doesn't equal to edge count
+	std::vector<CustomPathData>::iterator ii = customPathData.begin();
+	int numEdges = points.GetSize() - 1;
+	while (ii != customPathData.end()) {
+		if ((*ii).aspect == asp) {
+			if ((*ii).edgeCount != numEdges)
+				ii = customPathData.erase(ii);
+			else
+				++ii;
+		} else {
+			++ii;
+		}
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::AreTherePathCustomizations(VARIANT_BOOL* result)
+{
+	if (!customPathData.empty())
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::AreThereDeletedPathCustomizations(VARIANT_BOOL* result)
+{
+	if (!pathDataToDelete.empty())
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::GetDeletedCustomPathData(SAFEARRAY** pArr)
+{
+	HRESULT hr = S_OK;
+
+	if (!pArr)
+		return E_POINTER;
 
 	//set bounds
 	SAFEARRAYBOUND bound[1];
 	bound[0].lLbound	= 0;
-	bound[0].cElements	= 2 * points.GetSize();
+	bound[0].cElements	= pathDataToDelete.size();
+	CustomPathData* pData;
+	IRecordInfo* pRI;
+
+	hr = GetRecordInfoFromGuids(LIBID_GmeLib, 1, 0, 0x409, __uuidof(CustomPathData), &pRI);
+	ASSERT(SUCCEEDED(hr));
+	if (FAILED(hr))
+		return hr;
 
 	//create safearray
-	if (*pArr == NULL)
-		*pArr = SafeArrayCreate(VT_I4,1,bound);
-	else
-		SafeArrayRedim(*pArr,bound);
+	*pArr = SafeArrayCreateEx(VT_RECORD, 1, bound, pRI);
+	pRI->Release();
+	pRI = NULL;
 
-	//lock before usage
-	res = SafeArrayLock(*pArr);
-	if (res) 
-		return res;
+	//access safearray
+	hr = SafeArrayAccessData(*pArr, (void**)&pData);
+	ASSERT(SUCCEEDED(hr));
+	if (FAILED(hr))
+		return hr;
 
-	//get pointer to start
-	long* pArrElements = (long*)(*pArr)->pvData;
-	long position = 0;
+	std::vector<CustomPathData>::iterator ii = pathDataToDelete.begin();
+	long i = 0;
+	while(ii != pathDataToDelete.end()) {
+		pData[i].version					= (*ii).version;
+		pData[i].aspect						= (*ii).aspect;
+		pData[i].edgeIndex					= (*ii).edgeIndex;
+		pData[i].edgeCount					= (*ii).edgeCount;
+		pData[i].type						= (*ii).type;
+		pData[i].horizontalOrVerticalEdge	= (*ii).horizontalOrVerticalEdge;
+		pData[i].x							= (*ii).x;
+		pData[i].y							= (*ii).y;
+		pData[i].l1							= (*ii).l1;
+		pData[i].l2							= (*ii).l2;
+		pData[i].l3							= (*ii).l3;
+		pData[i].l4							= (*ii).l4;
+		pData[i].d1							= (*ii).d1;
+		pData[i].d2							= (*ii).d2;
+		pData[i].d3							= (*ii).d3;
+		pData[i].d4							= (*ii).d4;
+		pData[i].d5							= (*ii).d5;
+		pData[i].d6							= (*ii).d6;
+		pData[i].d7							= (*ii).d7;
+		pData[i].d8							= (*ii).d8;
 
-	{
-		POSITION pos;
-		pos = points.GetHeadPosition();
-
-		while(pos)
-		{
-			CPoint point = points.GetNext(pos); 
-			pArrElements[position]		= point.x;
-			pArrElements[position + 1]	= point.y;
-			position += 2;
-		}
+		i++;
+		++ii;
 	}
 
-	//unlock
-	res = SafeArrayUnlock(*pArr);
+	//unaccess safearray
+	hr = SafeArrayUnaccessData(*pArr);
+	ASSERT(SUCCEEDED(hr));
+	if (FAILED(hr))
+		return hr;
 	
-	return res;
+	return hr;
+}
+
+STDMETHODIMP CAutoRouterPath::GetFixedEdgeIndexes(SAFEARRAY** pArr)
+{
+	if (!pArr)
+		return E_POINTER;
+
+	ASSERT(*pArr == NULL);
+	*pArr = SafeArrayCreateVector(VT_I4, 0, customPathData.size());
+
+	HRESULT hr = S_OK;
+	long position = 0;
+	std::vector<CustomPathData>::iterator ii = customPathData.begin();
+	while(ii != customPathData.end() && SUCCEEDED(hr))
+	{
+		long edgeIndex = (*ii).edgeIndex;
+		hr = SafeArrayPutElement(*pArr, &position, &edgeIndex);
+		ASSERT(SUCCEEDED(hr));
+		position++;
+		++ii;
+	}
+	
+	return hr;
 
 	//usage:
 	//if ((*pArr)->cDims != 1 || (*pArr)->cbElements != 4)
+}
+
+STDMETHODIMP CAutoRouterPath::IsAutoRouted(VARIANT_BOOL* result)
+{
+	if (isAutoRoutingOn)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterPath::SetAutoRouting(VARIANT_BOOL autoRoutingState)
+{
+	isAutoRoutingOn = (autoRoutingState == VARIANT_TRUE);
+
+	return S_OK;
 }
 
 STDMETHODIMP CAutoRouterPath::Destroy()
@@ -533,5 +962,86 @@ STDMETHODIMP CAutoRouterPath::Destroy()
 
 	return S_OK;
 }
+
+// --- Debug
+
+#ifdef _DEBUG
+
+void CAutoRouterPath::AssertValid()
+{
+	if( startport != NULL )
+		static_cast<CAutoRouterPort*> (startport.p)->AssertValid();
+
+	if( endport != NULL )
+		static_cast<CAutoRouterPort*> (endport.p)->AssertValid();
+
+	if( IsConnected() )
+		ASSERT( !points.IsEmpty() );
+	else
+		ASSERT( points.IsEmpty() );
+}
+
+void CAutoRouterPath::AssertValidPos(POSITION pos) const
+{
+	points.AssertValidPos(pos);
+}
+
+#pragma warning( disable : 4701 )
+
+void CAutoRouterPath::AssertValidPoints() const
+{
+	points.AssertValid();
+
+	if( points.IsEmpty() )
+		return;
+
+#ifdef _DEBUG_DEEP
+	TRACE("CAutoRouterPath::AssertValidPoints (count=%d) START\n", points.GetCount());
+#endif
+
+	POSITION pos = points.GetHeadPosition();
+	ASSERT( points.GetCount() >= 2 && pos != NULL );
+
+	POSITION p1p = NULL;
+	POSITION p2p = NULL;
+	POSITION p3p;
+
+	CPoint p1;
+	CPoint p2;
+
+	RoutingDirection d12;
+	RoutingDirection d23;
+	d23 = d12 = Dir_None;// init by zolmol
+
+	while( pos != NULL )
+	{
+		p3p = p2p;
+		p2p = p1p;
+		p1p = pos;
+
+		p2 = p1;
+		p1 = points.GetNext(pos);
+
+#ifdef _DEBUG_DEEP
+		TRACE("%p (%d,%d)\n", p1p, p1.x, p1.y);
+#endif
+		d23 = d12;
+		if( p2p != NULL )
+		{
+			d12 = GetDir(p2 - p1);
+			ASSERT( d12 == Dir_Skew || IsRightAngle(d12) );
+		}
+
+		if( p3p != NULL && d12 != Dir_Skew && d23 != Dir_Skew )
+			ASSERT( AreInRightAngle(d12, d23) );
+	}
+
+#ifdef _DEBUG_DEEP
+	TRACE("CAutoRouterPath::AssertValidPoints END\n");
+#endif
+
+}
+
+#endif
 
 // CAutoRouterPath

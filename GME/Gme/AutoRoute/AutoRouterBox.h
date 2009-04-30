@@ -23,9 +23,7 @@ class CAutoRouterPath;
 #include "gmelib.h"
 
 #include <vector>
-using namespace std;
-typedef vector<CComObjPtr<CAutoRouterPort> > CAutoRouterPortList;
-//typedef CTypedPtrList<CObList, CAutoRouterPort*>	CAutoRouterPortList;
+typedef std::vector<CComPtr<IAutoRouterPort> > CAutoRouterPortList;
 
 // CAutoRouterBox
 
@@ -36,11 +34,6 @@ class ATL_NO_VTABLE CAutoRouterBox :
 {
 public:
 	CAutoRouterBox();
-
-	//only the COM interface methods are public, thus we need lots of friends
-	friend CAutoRouterGraph;
-	friend CAutoRouterEdgeList;
-	friend CAutoRouterPath;
 
 DECLARE_REGISTRY_RESOURCEID(IDR_AUTOROUTERBOX)
 
@@ -53,43 +46,37 @@ END_COM_MAP()
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	HRESULT FinalConstruct()
-	{
-		return S_OK;
-	}
-
-	void FinalRelease() 
-	{
-	}
+	HRESULT FinalConstruct(void);
+	void FinalRelease(void);
 
 private:
-	void DeleteAllPorts();
-	const CAutoRouterPortList& GetPortList() const { return ports; }
-	int HasNoPort() const { return ports.size()==0; }
-	int GetPortCount() const { return ports.size(); }
-
-	int IsAtomic() const { return atomic; }
-
-	CRect GetRect() const { return rect; }
-	int IsRectEmpty() const { return rect.IsRectEmpty(); }
-
-	int IsBoxAt(CPoint point, int nearness = 0) const { return IsPointIn(point, rect, nearness); }
-	int IsBoxClip(CRect r) const { return IsRectClip(rect, r); }
-	int IsBoxIn(CRect r) const { return IsRectIn(rect, r); }
-
-	void SetRect(CPoint point) { ShiftBy(point - rect.TopLeft()); }
-	void ShiftBy(CSize offset);
-
 	void CalculateSelfPoints();
-
-	void SetOwner(CComObjPtr<CAutoRouterGraph> o);
+	void DeleteAllPorts();
 
 public:
 	STDMETHOD(GetOwner)(IAutoRouterGraph** result);
+	STDMETHOD(HasOwner)(VARIANT_BOOL* result);
+	STDMETHOD(SetOwner)(IAutoRouterGraph* graph);
+
 	STDMETHOD(CreatePort)(IAutoRouterPort** result);
-	STDMETHOD(Add)(IAutoRouterPort* port);
-	STDMETHOD(Delete)(IAutoRouterPort* port);
+	STDMETHOD(HasNoPort)(VARIANT_BOOL* result);
+	STDMETHOD(GetPortCount)(long* result);
+	STDMETHOD(IsAtomic)(VARIANT_BOOL* result);
+	STDMETHOD(AddPort)(IAutoRouterPort* port);
+	STDMETHOD(DeletePort)(IAutoRouterPort* port);
+	STDMETHOD(GetPortList)(SAFEARRAY** pArr);
+
+	STDMETHOD(GetRect)(long* p1, long* p2, long* p3, long* p4);
+	STDMETHOD(IsRectEmpty)(VARIANT_BOOL* result);
 	STDMETHOD(SetRect)(long p1, long p2, long p3, long p4);
+	STDMETHOD(SetRectByPoint)(long px, long py);
+	STDMETHOD(ShiftBy)(long offsetx, long offsety);
+	STDMETHOD(GetSelfPoints)(long* p1x, long* p1y, long* p2x, long* p2y, long* p3x, long* p3y, long* p4x, long* p4y);
+
+	STDMETHOD(IsBoxAt)(long px, long py, long nearness, VARIANT_BOOL* result);
+	STDMETHOD(IsBoxClip)(long p1, long p2, long p3, long p4, VARIANT_BOOL* result);
+	STDMETHOD(IsBoxIn)(long p1, long p2, long p3, long p4, VARIANT_BOOL* result);
+
 	STDMETHOD(Destroy)();
 
 private:
@@ -98,8 +85,15 @@ private:
 	int atomic;
 
 	CAutoRouterPortList ports;
-	CComObjPtr<CAutoRouterGraph> owner;
+	CComPtr<IAutoRouterGraph> owner;
 
+// --- Debug
+
+#ifdef _DEBUG
+public:
+	virtual void AssertValid() const;
+	void AssertValidPort(CComPtr<IAutoRouterPort> port) const;
+#endif
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(AutoRouterBox), CAutoRouterBox)

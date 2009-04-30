@@ -148,7 +148,8 @@ typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FON
 #define DECORATOR_PREF				"decorator"
 #define HOTSPOT_PREF				"isHotspotEnabled"
 #define HOTSPOT_FALSE				"false"
-#define CUSTOMCONNECTIONEDGES		"customConnEdges"
+#define CUSTOMCONNECTIONDATA		"customConnectionData"
+#define CONNECTIONAUTOROUTING		"connectionAutoRouting"
 
 #define GME_AUTOSAVE_EXTENSION		".bak"
 

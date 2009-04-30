@@ -13,12 +13,24 @@ class CArrowHead
 {
 public:
 	CArrowHead(int dir, const std::vector<CPoint>& coords);
-	~CArrowHead();
+	virtual ~CArrowHead();
 public:
 	std::vector<CPoint> path;
 
 public:
-	void Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen);
+	virtual void Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen,
+					  double angle);
+};
+
+class CBulletArrowHead: public CArrowHead
+{
+public:
+	CBulletArrowHead(int dir, const std::vector<CPoint>& coords);
+	virtual ~CBulletArrowHead();
+
+public:
+	virtual void Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen,
+					  double angle);
 };
 
 class CGraphics
@@ -60,10 +72,10 @@ public:
 	void DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points, COLORREF color, int lineType,
 						int srcEnd, int dstEnd, bool mark, bool isViewMagnified, int lineStyle = 1);
 	void DrawArrow(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush,
-				   CPoint& beforeLast, CPoint& last, int iEnd );
-	void DrawGdipText(Gdiplus::Graphics* gdip, CString& txt, CPoint& pt, Gdiplus::Font* font, COLORREF color, int align);
-	Gdiplus::RectF MeasureText2(Gdiplus::Graphics* gdip, CString& txt, CPoint& pt, Gdiplus::Font* font);
-	CSize MeasureText(Gdiplus::Graphics* gdip, CString& txt, CPoint& pt, Gdiplus::Font* font);
+				   const CPoint& beforeLast, const CPoint& last, int iEnd );
+	void DrawGdipText(Gdiplus::Graphics* gdip, const CString& txt, const CPoint& pt, Gdiplus::Font* font, COLORREF color, int align);
+	Gdiplus::RectF MeasureText2(Gdiplus::Graphics* gdip, const CString& txt, const CPoint& pt, Gdiplus::Font* font);
+	CSize MeasureText(Gdiplus::Graphics* gdip, const CString& txt, const CPoint& pt, Gdiplus::Font* font);
 };
 
 extern CGraphics graphics;

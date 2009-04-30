@@ -399,14 +399,74 @@ interface IMgaVersionInfo : IUnknown
 };
 
 //-------------------------------------------------------------------------------
-//typedef enum eardir_enum
-//{	Dir_None_	= -1,
-//	Dir_Top_,
-//	Dir_Right_,
-//	Dir_Bottom_,
-//	Dir_Left_,
-//	Dir_Skew_
-//} 	eardir_enum;
+typedef enum RoutingDirection
+{
+	Dir_None	= -1,
+	Dir_Top		= 0,
+	Dir_Right	= 1,
+	Dir_Bottom	= 2,
+	Dir_Left	= 3,
+	Dir_Skew	= 4
+} RoutingDirection;
+
+
+// Type of edge customization
+typedef enum PathCustomizationType
+{
+	Invalid						= 0,
+	SimpleEdgeDisplacement		= 1,
+	CustomPointCustomization	= 2,
+	NURBSEdgeCustomization		= 3,
+	NumOfPathCustomizationTypes	= 4
+} PathCustomizationType;
+
+[uuid(6EFD7B53-3D5D-4c17-89A7-4F3F401563A0)]
+// Structure for storing edge customization data
+struct CustomPathData
+{
+	[helpstring("Version number of structure")]
+	long version;
+	[helpstring("Which aspect does customization refers to")]
+	long aspect;
+	[helpstring("The index of the given edge in the edge array")]
+	long edgeIndex;
+	[helpstring("The number of the edges in the array")]
+	long edgeCount;
+	[helpstring("Type of the customization: simple displacement, NURBS curving, etc")]
+	PathCustomizationType type;
+	[helpstring("Tells if the displacement to an x or y coordinate")]
+	boolean horizontalOrVerticalEdge;
+	[helpstring("An x coordinate")]
+	long x;
+	[helpstring("An y coordinate")]
+	long y;
+
+	[helpstring("Additional long data no 1")]
+	long l1;
+	[helpstring("Additional long data no 2")]
+	long l2;
+	[helpstring("Additional long data no 3")]
+	long l3;
+	[helpstring("Additional long data no 4")]
+	long l4;
+	[helpstring("Additional double data no 1")]
+	double d1;
+	[helpstring("Additional double data no 2")]
+	double d2;
+	[helpstring("Additional double data no 3")]
+	double d3;
+	[helpstring("Additional double data no 4")]
+	double d4;
+	[helpstring("Additional double data no 5")]
+	double d5;
+	[helpstring("Additional double data no 6")]
+	double d6;
+	[helpstring("Additional double data no 7")]
+	double d7;
+	[helpstring("Additional double data no 8")]
+	double d8;
+};
+
 
 interface IAutoRouterBox;
 
@@ -420,29 +480,41 @@ interface IAutoRouterBox;
 ]
 interface IAutoRouterPort : IDispatch
 {
-	//[id(1)] HRESULT CanHaveStartEndPointOn([in] eardir_enum dir, [in] long isstart, [out,retval] long* result);
-	//[id(2)] HRESULT CanHaveStartEndPoint([in] long isstart, [out,retval] long* result);
-	//[id(3)] HRESULT CanHaveStartEndPointHorizontal([in] long ishorizontal, [out,retval] long* result);
-	//[id(4)] HRESULT IsConnectToCenter([out,retval] long* result);
-	//[id(5)] HRESULT GetStartEndDirTo([in] long pointX,[in] long pointY, [in] long isstart, [in] eardir_enum notthis, [out,retval] eardir_enum* result);
-
-	//[id(6)] HRESULT CanCreateStartEndPointAt([in] long pointX,[in] long pointY, [in] long isstart, [in] long nearness, [out,retval] long* result);
-	//[id(7)] HRESULT CreateStartEndPointAt([in] long pointX,[in] long pointY, [in] long isstart, [out,retval] long* resultPointX, [out,retval] long* resultPointY);
-	//[id(8)] HRESULT CreateStartEndPointOn([in] eardir_enum dir, [out,retval] long* resultPointX, [out,retval] long* resultPointY);
-	//[id(9)] HRESULT CreateStartEndPointTo([in] long pointX,[in] long pointY, [in] long isstart, [out,retval] long* resultPointX, [out,retval] long* resultPointY);
-
-	//[id(10)] HRESULT SetAttributes([in] long attr);
-	//[id(11)] HRESULT GetAttributes([out,retval] long* result);
-	//[id(12)] HRESULT HasLimitedDirs([out,retval] long* result);
-	//[id(13)] HRESULT SetLimitedDirs([in] long p_ltd);
-
 	[id(1)] HRESULT GetOwner([out, retval] IAutoRouterBox** result);
-	[id(2)] HRESULT SetRect([in] long p1, [in] long p2, [in] long p3, [in] long p4);
-	[id(3)] HRESULT SetAttributes([in] long attr);
-	[id(4)] HRESULT SetLimitedDirs([in] long p_ltd);
+	[id(2)] HRESULT HasOwner([out, retval] VARIANT_BOOL* result);
+	[id(3)] HRESULT SetOwner([in] IAutoRouterBox* graph);
+
+	[id(4)] HRESULT GetRect([out] long* p1, [out] long* p2, [out] long* p3, [out] long* p4);
+	[id(5)] HRESULT IsRectEmpty([out, retval] VARIANT_BOOL* result);
+	[id(6)] HRESULT GetCenter([out] long* px, [out] long* py);
+	[id(7)] HRESULT SetRect([in] long p1, [in] long p2, [in] long p3, [in] long p4);
+	[id(8)] HRESULT ShiftBy([in] long offsetx, [in] long offsety);
+	[id(9)] HRESULT GetSelfPoints([out] long* p1x, [out] long* p1y, [out] long* p2x, [out] long* p2y, [out] long* p3x, [out] long* p3y, [out] long* p4x, [out] long* p4y);
+
+	[id(10)] HRESULT GetAttributes([out,retval] long* result);
+	[id(11)] HRESULT SetAttributes([in] long attr);
+	[id(12)] HRESULT IsConnectToCenter([out,retval] VARIANT_BOOL* result);
+	[id(13)] HRESULT HasLimitedDirs([out,retval] VARIANT_BOOL* result);
+	[id(14)] HRESULT SetLimitedDirs([in] VARIANT_BOOL ltd);
+
+	[id(15)] HRESULT IsPortAt([in] long px, [in] long py, [in] long nearness, [out, retval] VARIANT_BOOL* result);
+	[id(16)] HRESULT IsPortClip([in] long p1, [in] long p2, [in] long p3, [in] long p4, [out, retval] VARIANT_BOOL* result);
+	[id(17)] HRESULT IsPortIn([in] long p1, [in] long p2, [in] long p3, [in] long p4, [out, retval] VARIANT_BOOL* result);
+	[id(18)] HRESULT OnWhichEdge([in] long px, [in] long py, [out, retval] RoutingDirection* result);
+
+	[id(19)] HRESULT CanHaveStartEndPointOn([in] RoutingDirection dir, [in] long isstart, [out,retval] VARIANT_BOOL* result);
+	[id(20)] HRESULT CanHaveStartEndPoint([in] long isstart, [out,retval] VARIANT_BOOL* result);
+	[id(21)] HRESULT CanHaveStartEndPointHorizontal([in] long ishorizontal, [out,retval] VARIANT_BOOL* result);
+	[id(22)] HRESULT GetStartEndDirTo([in] long px, [in] long py, [in] long isstart, [in] RoutingDirection notthis, [out,retval] RoutingDirection* result);
+
+	[id(23)] HRESULT CanCreateStartEndPointAt([in] long px, [in] long py, [in] long isstart, [in] long nearness, [out,retval] VARIANT_BOOL* result);
+	[id(24)] HRESULT CreateStartEndPointAt([in] long px, [in] long py, [in] long isstart, [out] long* resultX, [out] long* resultY);
+	[id(25)] HRESULT CreateStartEndPointOn([in] RoutingDirection dir, [out] long* resultX, [out] long* resultY);
+	[id(26)] HRESULT CreateStartEndPointTo([in] long px, [in] long py, [in] long isstart, [out] long* resultX, [out] long* resultY);
 };
 
 interface IAutoRouterGraph;
+
 [
 	object,
 	uuid(6E17FD46-787A-4510-A43B-B416451F86FE),
@@ -454,39 +526,29 @@ interface IAutoRouterGraph;
 interface IAutoRouterBox : IDispatch
 {
 	[id(1)] HRESULT GetOwner([out, retval] IAutoRouterGraph** result);
-	[id(2)] HRESULT CreatePort([out, retval] IAutoRouterPort** result);
-	[id(3)] HRESULT Add([in] IAutoRouterPort* port);
-	[id(4)] HRESULT Delete([in] IAutoRouterPort* port);
-	[id(5)] HRESULT SetRect([in] long p1, [in] long p2, [in] long p3, [in] long p4);
+	[id(2)] HRESULT HasOwner([out, retval] VARIANT_BOOL* result);
+	[id(3)] HRESULT SetOwner([in] IAutoRouterGraph* graph);
 
-	[id(6)] HRESULT Destroy();
-};
+	[id(4)] HRESULT CreatePort([out, retval] IAutoRouterPort** result);
+	[id(5)] HRESULT HasNoPort([out, retval] VARIANT_BOOL* result);
+	[id(6)] HRESULT GetPortCount([out, retval] long* result);
+	[id(7)] HRESULT IsAtomic([out, retval] VARIANT_BOOL* result);
+	[id(8)] HRESULT AddPort([in] IAutoRouterPort* port);
+	[id(9)] HRESULT DeletePort([in] IAutoRouterPort* port);
+	[id(10)] HRESULT GetPortList([out, retval] SAFEARRAY(IAutoRouterPort*)* pArr);
 
-interface IAutoRouterPath;
+	[id(11)] HRESULT GetRect([out] long* p1, [out] long* p2, [out] long* p3, [out] long* p4);
+	[id(12)] HRESULT IsRectEmpty([out, retval] VARIANT_BOOL* result);
+	[id(13)] HRESULT SetRect([in] long p1, [in] long p2, [in] long p3, [in] long p4);
+	[id(14)] HRESULT SetRectByPoint([in] long px, [in] long py);
+	[id(15)] HRESULT ShiftBy([in] long offsetx, [in] long offsety);
+	[id(16)] HRESULT GetSelfPoints([out] long* p1x, [out] long* p1y, [out] long* p2x, [out] long* p2y, [out] long* p3x, [out] long* p3y, [out] long* p4x, [out] long* p4y);
 
-[
-	object,
-	uuid(C86D598D-C58B-4D17-93EC-8C3BF1157073),
-	dual,
-	nonextensible,
-	helpstring("IAutoRouterGraph Interface"),
-	pointer_default(unique)
-]
-interface IAutoRouterGraph : IDispatch
-{
-	[id(1)] HRESULT CreateBox([out, retval] IAutoRouterBox** result);
-	[id(2)] HRESULT Add([in] IAutoRouterBox* box);
-	[id(3)] HRESULT DeleteBox([in] IAutoRouterBox* box);
-	[id(4)] HRESULT ShiftBy([in] IAutoRouterBox* box, [in] long sizeX, [in] long sizeY);
+	[id(17)] HRESULT IsBoxAt([in] long px, [in] long py, [in] long nearness, [out, retval] VARIANT_BOOL* result);
+	[id(18)] HRESULT IsBoxClip([in] long p1, [in] long p2, [in] long p3, [in] long p4, [out, retval] VARIANT_BOOL* result);
+	[id(19)] HRESULT IsBoxIn([in] long p1, [in] long p2, [in] long p3, [in] long p4, [out, retval] VARIANT_BOOL* result);
 
-	[id(5)] HRESULT AutoRoute([out, retval] long* result);
-	[id(6)] HRESULT DeletePath([in] IAutoRouterPath* path);
-	[id(7)] HRESULT DeleteAll();
-	[id(8)] HRESULT GetPathAt([in] long pointX, [in] long pointY, [in] long nearness, [out, retval] IAutoRouterPath** result);
-	[id(9)] HRESULT AddPath([in] IAutoRouterPort* startport, [in] IAutoRouterPort* endport, [out, retval] IAutoRouterPath** result);
-	[id(10)] HRESULT IsEdgeFixed([in] long startX, [in] long startY, [in] long endX, [in] long endY, [out, retval] VARIANT_BOOL* result);
-
-	[id(11)] HRESULT Destroy();
+	[id(20)] HRESULT Destroy();
 };
 
 [
@@ -500,9 +562,87 @@ interface IAutoRouterGraph : IDispatch
 interface IAutoRouterPath : IDispatch
 {
 	[id(1)] HRESULT GetOwner([out, retval] IAutoRouterGraph** result);
-	[id(2)] HRESULT SetEndDir([in] long arpath_end);
-	[id(3)] HRESULT SetStartDir([in] long arpath_start);
-	[id(4)] HRESULT GetPointList([in, out] SAFEARRAY(long) *pArr);
+	[id(2)] HRESULT HasOwner([out, retval] VARIANT_BOOL* result);
+	[id(3)] HRESULT SetOwner([in] IAutoRouterGraph* graph);
 
-	[id(5)] HRESULT Destroy();
+	[id(4)] HRESULT SetStartPort([in] IAutoRouterPort* port);
+	[id(5)] HRESULT SetEndPort([in] IAutoRouterPort* port);
+	[id(6)] HRESULT ClearPorts();
+	[id(7)] HRESULT GetStartPort([out, retval] IAutoRouterPort** result);
+	[id(8)] HRESULT GetEndPort([out, retval] IAutoRouterPort** result);
+	[id(9)] HRESULT AddTail([in] long px, [in] long py);
+	[id(10)] HRESULT DeleteAll();
+	[id(11)] HRESULT HasNoPoint([out, retval] VARIANT_BOOL* result);
+	[id(12)] HRESULT GetPointCount([out, retval] long* result);
+	[id(13)] HRESULT GetStartPoint([out] long* resultX, [out] long* resultY);
+	[id(14)] HRESULT GetEndPoint([out] long* resultX, [out] long* resultY);
+	[id(15)] HRESULT GetStartBox([out] long* p1, [out] long* p2, [out] long* p3, [out] long* p4);
+	[id(16)] HRESULT GetEndBox([out] long* p1, [out] long* p2, [out] long* p3, [out] long* p4);
+	[id(17)] HRESULT GetOutOfBoxStartPoint([out] long* resultX, [out] long* resultY, [in] RoutingDirection hintDir);
+	[id(18)] HRESULT GetOutOfBoxEndPoint([out] long* resultX, [out] long* resultY, [in] RoutingDirection hintDir);
+	[id(19)] HRESULT SimplifyTrivially();
+
+	[id(20)] HRESULT ModifyPoints([in] SAFEARRAY(long) pArr);
+	[id(21)] HRESULT SetPoints([in] SAFEARRAY(long) pArr);
+	[id(22)] HRESULT GetPointList([out, retval] SAFEARRAY(long)* pArr);
+
+	[id(23)] HRESULT GetSurroundRect([out] long* p1, [out] long* p2, [out] long* p3, [out] long* p4);
+	[id(24)] HRESULT IsEmpty([out, retval] VARIANT_BOOL* result);
+	[id(25)] HRESULT IsPathAt([in] long px, [in] long py, [in] long nearness, [out, retval] VARIANT_BOOL* result);
+	[id(26)] HRESULT IsPathClip([in] long p1, [in] long p2, [in] long p3, [in] long p4, [out, retval] VARIANT_BOOL* result);
+	[id(27)] HRESULT SetAttributes([in] long attr);
+	[id(28)] HRESULT GetAttributes([out, retval] long* result);
+	[id(29)] HRESULT IsFixed([out, retval] VARIANT_BOOL* result);
+	[id(30)] HRESULT IsMoveable([out, retval] VARIANT_BOOL* result);
+	[id(31)] HRESULT IsHighLighted([out, retval] VARIANT_BOOL* result);
+	[id(32)] HRESULT GetState([out, retval] long* result);
+	[id(33)] HRESULT IsConnected([out, retval] VARIANT_BOOL* result);
+	[id(34)] HRESULT SetState([in] long state);
+	[id(35)] HRESULT GetEndDir([out, retval] RoutingDirection* result);
+	[id(36)] HRESULT GetStartDir([out, retval] RoutingDirection* result);
+	[id(37)] HRESULT SetEndDir([in] long arpath_end);
+	[id(38)] HRESULT SetStartDir([in] long arpath_start);
+
+	[id(39)] HRESULT SetCustomPathData([in] SAFEARRAY(struct CustomPathData) pArr);
+	[id(40)] HRESULT ApplyCustomizationsBeforeAutoConnectPoints([in, out] SAFEARRAY(long)* pArr);
+	[id(41)] HRESULT ApplyCustomizationsAfterAutoConnectPointsAndStuff();
+	[id(42)] HRESULT RemovePathCustomizations();
+	[id(43)] HRESULT MarkPathCustomizationsForDeletion([in] long aspect);
+	[id(44)] HRESULT RemoveInvalidPathCustomizations([in] long aspect);
+	[id(45)] HRESULT AreTherePathCustomizations([out, retval] VARIANT_BOOL* result);
+	[id(46)] HRESULT AreThereDeletedPathCustomizations([out, retval] VARIANT_BOOL* result);
+	[id(47)] HRESULT GetDeletedCustomPathData([out, retval] SAFEARRAY(struct CustomPathData)* pArr);
+	[id(48)] HRESULT GetFixedEdgeIndexes([out, retval] SAFEARRAY(long)* pArr);
+
+	[id(49)] HRESULT IsAutoRouted([out, retval] VARIANT_BOOL* result);
+	[id(50)] HRESULT SetAutoRouting([in] VARIANT_BOOL autoRoutingState);
+
+	[id(51)] HRESULT Destroy();
+};
+
+[
+	object,
+	uuid(C86D598D-C58B-4D17-93EC-8C3BF1157073),
+	dual,
+	nonextensible,
+	helpstring("IAutoRouterGraph Interface"),
+	pointer_default(unique)
+]
+interface IAutoRouterGraph : IDispatch
+{
+	[id(1)] HRESULT CreateBox([out, retval] IAutoRouterBox** result);
+	[id(2)] HRESULT AddBox([in] IAutoRouterBox* box);
+	[id(3)] HRESULT DeleteBox([in] IAutoRouterBox* box);
+	[id(4)] HRESULT ShiftBoxBy([in] IAutoRouterBox* box, [in] long sizeX, [in] long sizeY);
+
+	[id(5)] HRESULT AutoRoute([in] long aspect, [out, retval] long* result);
+	[id(6)] HRESULT DeletePath([in] IAutoRouterPath* path);
+	[id(7)] HRESULT DeleteAll();
+	[id(8)] HRESULT GetPathAt([in] long pointX, [in] long pointY, [in] long nearness, [out, retval] IAutoRouterPath** result);
+	[id(9)] HRESULT AddPath([in] VARIANT_BOOL isAutoRouted, [in] IAutoRouterPort* startport, [in] IAutoRouterPort* endport, [out, retval] IAutoRouterPath** result);
+	[id(10)] HRESULT IsEdgeFixed([in] IAutoRouterPath* path, [in] long startX, [in] long startY, [in] long endX, [in] long endY, [out, retval] VARIANT_BOOL* result);
+
+	[id(11)] HRESULT GetSelfPoints([out] long* p1x, [out] long* p1y, [out] long* p2x, [out] long* p2y, [out] long* p3x, [out] long* p3y, [out] long* p4x, [out] long* p4y);
+
+	[id(12)] HRESULT Destroy();
 };

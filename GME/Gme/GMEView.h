@@ -104,6 +104,29 @@ public:
 	CGuiObject*				selectedObjectOfContext;
 	CGuiAnnotator*			selectedAnnotationOfContext;
 	CGuiConnection*			selectedConnection;
+	// for connection customize operation
+	bool					isInConnectionCustomizeOperation;
+	PathCustomizationType	customizeConnectionType;
+	int						customizeConnectionEdgeIndex;
+	ConnectionPartMoveType	customizeConnectionPartMoveMethod;
+	bool					customizeHorizontalOrVerticalEdge;
+	CPoint					customizeConnectionEdgeStartPoint;
+	CPoint					customizeConnectionEdgeEndPoint;
+	CPoint					customizeConnectionEdgeThirdPoint;
+	int						customizeConnectionEdgeXMinLimit;
+	int						customizeConnectionEdgeXMaxLimit;
+	int						customizeConnectionEdgeYMinLimit;
+	int						customizeConnectionEdgeYMaxLimit;
+	CPoint					customizeConnectionOrigCursor;
+	CPoint					customizeConnectionCurrCursor;
+	bool					isCursorChangedByEdgeCustomize;
+	HCURSOR					customizeConnectionCursorBackup;
+	// for connection context menu
+	CGuiConnection*			selectedContextConnection;
+	PathCustomizationType	contextConnectionCustomizationType;
+	int						contextConnectionEdgeIndex;
+	int						contextConnectionEdge2Index;
+	ConnectionPartMoveType	contextConnectionPartMoveMethod;
 	// === End of decorator operation specific variables ===
 	COleDropTarget			dropTarget;
 	bool					inDrag;
@@ -225,6 +248,16 @@ public:
 	void					IncrementalAutoRoute();
 	void					AutoRoute();
 	void					DrawConnections(HDC pDC, Gdiplus::Graphics* gdip);
+	void					DrawTracker(CDC* pDC, const CRect& trackerRect, CRectTracker::StyleFlags styleFlags);
+	void					DrawConnectionCustomizationTracker(CDC* pDC, Gdiplus::Graphics* gdip);
+	void					FillOutCustomPathData(CustomPathData& pathData, CGuiConnection* selectedConn, PathCustomizationType custType,
+												  int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge);
+	void					InsertCustomEdge(CGuiConnection* selectedConn, PathCustomizationType custType,
+											 int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge);
+	void					UpdateCustomEdges(CGuiConnection* selectedConn, PathCustomizationType custType,
+											  int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge);
+	void					DeleteCustomEdges(CGuiConnection* selectedConn, PathCustomizationType custType,
+											  int edgeIndex, bool horizontalOrVerticalEdge = false);
 	void					PrintHeader(CDC* pDC, CPrintInfo* pInfo);
 	void					PrintHeaderRect(CDC* pDC, CRect& rectDraw);
 	void					PrintMultiLineText(Gdiplus::Graphics* gdip, CDC* pDC, CString txt, int x, int& y, int ry, int xwidth);
@@ -335,6 +368,7 @@ public:
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
+	void WriteCustomConnectionPathData(void);
 #endif
 
 protected:
@@ -507,6 +541,10 @@ protected:
 	afx_msg void OnBackAlongConnection();
 	afx_msg void OnJumpToFirstObject();
 	afx_msg void OnJumpToNextObject();
+	afx_msg void OnDisableAutoRoutingOfConnection();
+	afx_msg void OnEnableAutoRoutingOfConnection();
+	afx_msg void OnDeleteConnEdgeCustomData();
+	afx_msg void OnDeleteConnRouteCustomData();
 	afx_msg void OnShowContextMenu();
 	afx_msg void OnPrintMetafile();
 	afx_msg LRESULT OnCommitTransaction(WPARAM wParam, LPARAM lParam);
@@ -529,6 +567,10 @@ protected:
 	afx_msg void OnUpdateCntxRevfollowConnection( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateJumpAlongConnection( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateBackAlongConnection( CCmdUI* pCmdUI );
+	afx_msg void OnUpdateDisableAutoRoutingOfConnection( CCmdUI* pCmdUI );
+	afx_msg void OnUpdateEnableAutoRoutingOfConnection( CCmdUI* pCmdUI );
+	afx_msg void OnUpdateDeleteConnEdgeCustomData( CCmdUI* pCmdUI );
+	afx_msg void OnUpdateDeleteConnRouteCustomData( CCmdUI* pCmdUI );
 #if defined(ADDCRASHTESTMENU)
 	afx_msg void OnCrashTestIllegalWrite();
 	afx_msg void OnCrashTestIllegalRead();

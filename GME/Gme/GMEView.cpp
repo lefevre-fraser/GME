@@ -28,7 +28,8 @@
 
 #include "GMEOLEModel.h"
 
-//#include <sys/timeb.h>
+#include "Autoroute/AutoRouterGraph.h"	// just for testing auto router performance
+#include <sys/timeb.h>
 
 CGraphics graphics;
 static CViewList viewsToKill;
@@ -333,6 +334,10 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_CNTX_LOCATEPORTINBROWSER, OnCntxPortLocateInBrw)
 	ON_COMMAND(ID_JUMPALONGCONN, OnJumpAlongConnection)
 	ON_COMMAND(ID_BACKALONGCONN, OnBackAlongConnection)
+	ON_COMMAND(ID_DISABLEAUTOROUTINGOFCONN, OnDisableAutoRoutingOfConnection)
+	ON_COMMAND(ID_ENABLEAUTOROUTINGOFCONN, OnEnableAutoRoutingOfConnection)
+	ON_COMMAND(ID_DELETECONNEDGECUSTOMDATA, OnDeleteConnEdgeCustomData)
+	ON_COMMAND(ID_DELETECONNROUTECUSTOMDATA, OnDeleteConnRouteCustomData)
 	ON_COMMAND(ID_JUMPTOFIRSTOBJ, OnJumpToFirstObject)
 	ON_COMMAND(ID_JUMPTONEXTOBJ, OnJumpToNextObject)
 	ON_COMMAND(ID_SHOWCONTEXTMENU, OnShowContextMenu)
@@ -349,6 +354,10 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_UPDATE_COMMAND_UI(ID_CNTX_REVERSECONNECTION, OnUpdateCntxRevfollowConnection)
 	ON_UPDATE_COMMAND_UI(ID_JUMPALONGCONN, OnUpdateJumpAlongConnection)
 	ON_UPDATE_COMMAND_UI(ID_BACKALONGCONN, OnUpdateBackAlongConnection)
+	ON_UPDATE_COMMAND_UI(ID_DISABLEAUTOROUTINGOFCONN, OnUpdateDisableAutoRoutingOfConnection)
+	ON_UPDATE_COMMAND_UI(ID_ENABLEAUTOROUTINGOFCONN, OnUpdateEnableAutoRoutingOfConnection)
+	ON_UPDATE_COMMAND_UI(ID_DELETECONNEDGECUSTOMDATA, OnUpdateDeleteConnEdgeCustomData)
+	ON_UPDATE_COMMAND_UI(ID_DELETECONNROUTECUSTOMDATA, OnUpdateDeleteConnRouteCustomData)
 #if defined(ADDCRASHTESTMENU)
 	ON_COMMAND(ID_CRASHTEST_ILLEGALWRITE, OnCrashTestIllegalWrite)
 	ON_COMMAND(ID_CRASHTEST_ILLEGALREAD, OnCrashTestIllegalRead)
@@ -529,6 +538,9 @@ CGMEView::CGMEView()
 	selectedObjectOfContext			= NULL;
 	selectedAnnotationOfContext		= NULL;
 	selectedConnection				= NULL;
+	isInConnectionCustomizeOperation= false;
+	isCursorChangedByEdgeCustomize	= false;
+	selectedContextConnection		= NULL;
 
 	prevDropEffect					= DROPEFFECT_NONE;
 	inDrag							= false;
@@ -901,6 +913,10 @@ void CGMEView::OnDraw(CDC* pDC)
 					//gdip.FillEllipse(xorBrush, hotSpot.x - GME_HOTSPOT_VISUAL_RADIUS, hotSpot.y - GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS, 2 * GME_HOTSPOT_VISUAL_RADIUS);
 				}
 			}
+		}
+
+		if (isInConnectionCustomizeOperation) {
+			DrawConnectionCustomizationTracker(pDC, &gdip);
 		}
 	}
 
@@ -1389,6 +1405,19 @@ CGMEDoc* CGMEView::GetDocument() // non-debug version is inline
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CGMEDoc)));
 	return (CGMEDoc*)m_pDocument;
 }
+
+void CGMEView::WriteCustomConnectionPathData(void)
+{
+	BeginTransaction();
+	POSITION pos = connections.GetHeadPosition();
+	while (pos) {
+		CGuiConnection* conn = connections.GetNext(pos);
+//		if (conn->mark)
+			conn->WriteCustomPathData(false);
+	}
+	CommitTransaction();
+}
+
 #endif //_DEBUG
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2486,17 +2515,124 @@ void CGMEView::DrawConnections(HDC pDC, Gdiplus::Graphics* gdip)
 	}
 }
 
+void CGMEView::DrawTracker(CDC* pDC, const CRect& trackerRect, CRectTracker::StyleFlags styleFlags)
+{
+	CRectTracker tracker;
+	OnPrepareDC(pDC);
+	tracker.m_rect = trackerRect;
+	tracker.m_nStyle = styleFlags;
+	pDC->LPtoDP(&tracker.m_rect);
+	tracker.Draw(pDC);
+}
+
+void CGMEView::DrawConnectionCustomizationTracker(CDC* pDC, Gdiplus::Graphics* gdip)
+{
+	if (customizeConnectionType == SimpleEdgeDisplacement)
+	{
+		if (customizeConnectionPartMoveMethod == HorizontalEdgeMove ||
+			customizeConnectionPartMoveMethod == AdjacentEdgeMove)
+		{
+			CPoint startPoint	= customizeConnectionEdgeStartPoint;
+			CPoint endPoint		= customizeConnectionEdgeEndPoint;
+			if (customizeConnectionPartMoveMethod == AdjacentEdgeMove && customizeHorizontalOrVerticalEdge) {
+				startPoint	= customizeConnectionEdgeEndPoint;
+				endPoint	= customizeConnectionEdgeThirdPoint;
+			}
+			CRect trackerRect;
+			trackerRect.left	= min(startPoint.x, max(customizeConnectionCurrCursor.x, customizeConnectionEdgeXMinLimit));
+			trackerRect.top		= min(startPoint.y, endPoint.y);
+			trackerRect.right	= max(startPoint.x, min(customizeConnectionCurrCursor.x, customizeConnectionEdgeXMaxLimit));
+			trackerRect.bottom	= max(startPoint.y, endPoint.y);
+			TRACE("Conn Customization Tracker: (%ld,%ld)-(%ld,%ld)\n", trackerRect.left, trackerRect.top,
+																	   trackerRect.right, trackerRect.bottom);
+			DrawTracker(pDC, trackerRect, CRectTracker::dottedLine);
+		}
+		if (customizeConnectionPartMoveMethod == VerticalEdgeMove ||
+			customizeConnectionPartMoveMethod == AdjacentEdgeMove)
+		{
+			CPoint startPoint	= customizeConnectionEdgeStartPoint;
+			CPoint endPoint		= customizeConnectionEdgeEndPoint;
+			if (customizeConnectionPartMoveMethod == AdjacentEdgeMove && !customizeHorizontalOrVerticalEdge) {
+				startPoint	= customizeConnectionEdgeEndPoint;
+				endPoint	= customizeConnectionEdgeThirdPoint;
+			}
+			CRect trackerRect;
+			trackerRect.left	= min(startPoint.x, endPoint.x);
+			trackerRect.top		= min(startPoint.y, max(customizeConnectionCurrCursor.y, customizeConnectionEdgeYMinLimit));
+			trackerRect.right	= max(startPoint.x, endPoint.x);
+			trackerRect.bottom	= max(startPoint.y, min(customizeConnectionCurrCursor.y, customizeConnectionEdgeYMaxLimit));
+			TRACE("Conn Customization Tracker: (%ld,%ld)-(%ld,%ld)\n", trackerRect.left, trackerRect.top,
+																	   trackerRect.right, trackerRect.bottom);
+			DrawTracker(pDC, trackerRect, CRectTracker::dottedLine);
+		}
+	} else if (customizeConnectionType == CustomPointCustomization) {
+		Gdiplus::Pen* dashPen = graphics.GetGdipPen2(gdip, GME_BLACK_COLOR, true, m_zoomVal > ZOOM_NO, 1);
+		gdip->DrawLine(dashPen, customizeConnectionEdgeStartPoint.x, customizeConnectionEdgeStartPoint.y,
+					   customizeConnectionCurrCursor.x, customizeConnectionCurrCursor.y);
+		gdip->DrawLine(dashPen, customizeConnectionCurrCursor.x, customizeConnectionCurrCursor.y,
+					   customizeConnectionEdgeEndPoint.x, customizeConnectionEdgeEndPoint.y);
+	}
+}
+
+void CGMEView::FillOutCustomPathData(CustomPathData& pathData, CGuiConnection* selectedConn, PathCustomizationType custType,
+									 int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge)
+{
+	InitCustomPathData(pathData);
+	pathData.version					= CONNECTIONCUSTOMIZATIONDATAVERSION;
+	pathData.aspect						= currentAspect->index;
+	pathData.edgeIndex					= edgeIndex;
+	pathData.edgeCount					= selectedConnection->GetEdgeCount();
+	pathData.type						= custType;
+	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge;
+	if (custType == SimpleEdgeDisplacement) {
+		pathData.x						= !horizontalOrVerticalEdge ? newPosX : 0;
+		pathData.y						= horizontalOrVerticalEdge ? newPosX : 0;
+	} else {
+		pathData.x						= newPosX;
+		pathData.y						= newPosY;
+	}
+}
+
+void CGMEView::InsertCustomEdge(CGuiConnection* selectedConn, PathCustomizationType custType,
+								int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge)
+{
+	CustomPathData pathData;
+	FillOutCustomPathData(pathData, selectedConn, custType, newPosX, newPosY, edgeIndex, horizontalOrVerticalEdge);
+	selectedConn->InsertCustomPathData(pathData);
+}
+
+void CGMEView::UpdateCustomEdges(CGuiConnection* selectedConn, PathCustomizationType custType,
+								 int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge)
+{
+	CustomPathData pathData;
+	FillOutCustomPathData(pathData, selectedConn, custType, newPosX, newPosY, edgeIndex, horizontalOrVerticalEdge);
+	selectedConn->UpdateCustomPathData(pathData);
+}
+
+void CGMEView::DeleteCustomEdges(CGuiConnection* selectedConn, PathCustomizationType custType,
+								 int edgeIndex, bool horizontalOrVerticalEdge)
+{
+	CustomPathData pathData;
+	InitCustomPathData(pathData);
+	pathData.version					= CONNECTIONCUSTOMIZATIONDATAVERSION;
+	pathData.aspect						= currentAspect->index;
+	pathData.edgeIndex					= edgeIndex;
+	pathData.type						= custType;
+	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge;
+	selectedConn->DeletePathCustomization(pathData);
+}
+
 void CGMEView::AutoRoute()
 {
 	BeginWaitCursor();
-	router.AutoRoute(children);  // Must reroute the whole thing, other code depends on it
+	router.AutoRoute(children, currentAspect->index);  // Must reroute the whole thing, other code depends on it
 	EndWaitCursor();
 }
 
 void CGMEView::IncrementalAutoRoute()
 {
 	BeginWaitCursor();
-	router.AutoRoute();
+	router.AutoRoute(currentAspect->index);
 	EndWaitCursor();
 }
 
@@ -4056,7 +4192,7 @@ BOOL CGMEView::OnEraseBkgnd(CDC* pDC)
 
 BOOL CGMEView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
-	if (isCursorChangedByDecorator)
+	if (isCursorChangedByDecorator || isCursorChangedByEdgeCustomize)
 		return TRUE;
 
 	if( GetFocus() != this )
@@ -4318,6 +4454,40 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 							COMTHROW(retVal);
 						}
 					}
+				} else if (isInConnectionCustomizeOperation) {
+					isInConnectionCustomizeOperation = false;
+					::SetCursor(customizeConnectionCursorBackup);
+					isCursorChangedByEdgeCustomize = false;
+					if (customizeConnectionType == SimpleEdgeDisplacement) {
+						int newPos = 0;
+						if (customizeConnectionPartMoveMethod == HorizontalEdgeMove ||
+							customizeConnectionPartMoveMethod == AdjacentEdgeMove)
+						{
+							newPos = min(max(point.x, customizeConnectionEdgeXMinLimit),
+													  customizeConnectionEdgeXMaxLimit);
+							int edgeIndex = customizeConnectionEdgeIndex;
+							if (customizeConnectionPartMoveMethod == AdjacentEdgeMove && customizeHorizontalOrVerticalEdge)
+								edgeIndex++;
+							UpdateCustomEdges(selectedConnection, SimpleEdgeDisplacement, newPos, 0, edgeIndex, false);
+						}
+						if (customizeConnectionPartMoveMethod == VerticalEdgeMove ||
+							customizeConnectionPartMoveMethod == AdjacentEdgeMove)
+						{
+							newPos = min(max(point.y, customizeConnectionEdgeYMinLimit),
+													  customizeConnectionEdgeYMaxLimit);
+							int edgeIndex = customizeConnectionEdgeIndex;
+							if (customizeConnectionPartMoveMethod == AdjacentEdgeMove && !customizeHorizontalOrVerticalEdge)
+								edgeIndex++;
+							UpdateCustomEdges(selectedConnection, SimpleEdgeDisplacement, newPos, 0, edgeIndex, true);
+						}
+					} else if (customizeConnectionType == CustomPointCustomization) {
+						if (customizeConnectionPartMoveMethod == InsertNewCustomPoint) {
+							InsertCustomEdge(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
+						} else if (customizeConnectionPartMoveMethod == ModifyExistingCustomPoint) {
+							UpdateCustomEdges(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
+						}
+					}
+					selectedConnection->WriteCustomPathData();
 				} else {
 					CGuiAnnotator* annotation = NULL;
 					CComPtr<IMgaElementDecorator> newDecorator;
@@ -4500,6 +4670,42 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 								objectInDecoratorOperation = object;
 							else
 								annotatorInDecoratorOperation = annotation;
+						}
+					} else {
+						// Start edge moving operation if needed
+						if (selectedConnection != NULL) {
+							bool isPartFixed = false;
+							customizeConnectionEdgeIndex = selectedConnection->GetEdgeIndex(
+																			point,
+																			customizeConnectionEdgeStartPoint,
+																			customizeConnectionEdgeEndPoint,
+																			customizeConnectionEdgeThirdPoint,
+																			customizeConnectionPartMoveMethod,
+																			customizeHorizontalOrVerticalEdge,
+																			isPartFixed,
+																			customizeConnectionEdgeXMinLimit,
+																			customizeConnectionEdgeXMaxLimit,
+																			customizeConnectionEdgeYMinLimit,
+																			customizeConnectionEdgeYMaxLimit);
+							if (customizeConnectionEdgeIndex >= 0 && !isPartFixed) {
+								TRACE("Starting edge customize operation of %ld.: (%ld, %ld)-(%ld, %ld)-(%ld, %ld) min/max: X(%ld, %ld) Y(%ld, %ld) h/v: %d\n",
+										customizeConnectionEdgeIndex,
+										customizeConnectionEdgeStartPoint.x, customizeConnectionEdgeStartPoint.y,
+										customizeConnectionEdgeEndPoint.x, customizeConnectionEdgeEndPoint.y,
+										customizeConnectionEdgeThirdPoint.x, customizeConnectionEdgeThirdPoint.y,
+										customizeConnectionEdgeXMinLimit, customizeConnectionEdgeXMaxLimit,
+										customizeConnectionEdgeYMinLimit, customizeConnectionEdgeYMaxLimit,
+										customizeConnectionPartMoveMethod);
+								if (selectedConnection->IsConnectionAutoRouted()) {
+									customizeConnectionType = SimpleEdgeDisplacement;
+								} else {
+									customizeConnectionType = CustomPointCustomization;
+								}
+								isInConnectionCustomizeOperation = true;
+								customizeConnectionOrigCursor = point;
+								customizeConnectionCurrCursor = point;
+								Invalidate();
+							}
 						}
 					}
 				}
@@ -5049,7 +5255,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			struct _timeb measuerementStartTime;
 			_ftime(&measuerementStartTime);
 			CString structSizeStr;
-			structSizeStr.Format("sizeof(SAutoRouterEdge) = %ld\n", sizeof(SAutoRouterEdge));
+			structSizeStr.Format("sizeof(CAutoRouterEdge) = %ld\n", sizeof(SAutoRouterEdge));
 			OutputDebugString(structSizeStr);
 			for (long i = 0; i < 1000; i++)
 				AutoRoute();
@@ -5226,6 +5432,14 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 					sm->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, global.x,global.y,GetParent());
 				}
 			} else if (contextSelection != NULL) {
+				selectedContextConnection = dynamic_cast<CGuiConnection*> (contextSelection);
+				if (selectedContextConnection) {
+					bool isPartFixed = false;
+					contextConnectionEdgeIndex = selectedContextConnection->IsPathAt(local,
+						contextConnectionPartMoveMethod, customizeHorizontalOrVerticalEdge, isPartFixed);
+					contextConnectionCustomizationType = CustomPointCustomization;
+				}
+
 				HMENU decoratorAdditionalMenu = ::CreatePopupMenu();
 				if (selection != NULL) {
 					CGuiAspect* pAspect = selection->GetCurrentAspect();
@@ -5240,7 +5454,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 					}
 				}
 				CMenu menu;
-				menu.LoadMenu(dynamic_cast<CGuiConnection*> (contextSelection) ? IDR_CONNCONTEXT_MENU : IDR_CONTEXT_MENU);
+				menu.LoadMenu(selectedContextConnection != NULL ? IDR_CONNCONTEXT_MENU : IDR_CONTEXT_MENU);
 				CMenu* subMenu = menu.GetSubMenu(0);
 				if (::GetMenuItemCount(decoratorAdditionalMenu) > 0) {
 					subMenu->InsertMenu(0, MF_BYPOSITION | MF_SEPARATOR, 0, "");
@@ -5641,9 +5855,9 @@ void CGMEView::OnEditNudgedown()
 
 	try {
 		BeginTransaction();
-		CGuiAnnotator::NudgeAnnotations(selectedAnnotations,0,1);
-		if(isType && CGuiObject::NudgeObjects(selected,0,1))
-			router.NudgeObjects(selected,0,1);
+		CGuiAnnotator::NudgeAnnotations(selectedAnnotations, 0, 1);
+		if(isType && CGuiObject::NudgeObjects(selected, 0, 1))
+			router.NudgeObjects(selected, 0, 1, currentAspect->index);
 		Invalidate();
 
 		CommitTransaction();
@@ -5665,9 +5879,9 @@ void CGMEView::OnEditNudgeleft()
 
 	try {
 		BeginTransaction();
-		CGuiAnnotator::NudgeAnnotations(selectedAnnotations,-1,0);
-		if(isType && CGuiObject::NudgeObjects(selected,-1,0))
-			router.NudgeObjects(selected,-1,0);
+		CGuiAnnotator::NudgeAnnotations(selectedAnnotations, -1, 0);
+		if(isType && CGuiObject::NudgeObjects(selected, -1, 0))
+			router.NudgeObjects(selected, -1, 0, currentAspect->index);
 		Invalidate();
 		CommitTransaction();
 	}
@@ -5688,9 +5902,9 @@ void CGMEView::OnEditNudgeright()
 
 	try {
 		BeginTransaction();
-		CGuiAnnotator::NudgeAnnotations(selectedAnnotations,1,0);
-		if(isType && CGuiObject::NudgeObjects(selected,1,0))
-			router.NudgeObjects(selected,1,0);
+		CGuiAnnotator::NudgeAnnotations(selectedAnnotations, 1, 0);
+		if(isType && CGuiObject::NudgeObjects(selected, 1, 0))
+			router.NudgeObjects(selected, 1, 0, currentAspect->index);
 		Invalidate();
 		CommitTransaction();
 	}
@@ -5711,9 +5925,9 @@ void CGMEView::OnEditNudgeup()
 
 	try {
 		BeginTransaction();
-		CGuiAnnotator::NudgeAnnotations(selectedAnnotations,0,-1);
-		if(isType && CGuiObject::NudgeObjects(selected,0,-1))
-			router.NudgeObjects(selected,0,-1);
+		CGuiAnnotator::NudgeAnnotations(selectedAnnotations, 0, -1);
+		if(isType && CGuiObject::NudgeObjects(selected, 0, -1))
+			router.NudgeObjects(selected, 0, -1, currentAspect->index);
 		Invalidate();
 		CommitTransaction();
 	}
@@ -5730,8 +5944,15 @@ void CGMEView::OnEditNudgeup()
 
 BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)
 {
-	if (nID == ID_EDIT_CANCEL && inElementDecoratorOperation)	// capture ESC for decorator operation cancel
-		CancelDecoratorOperation();
+	if (nID == ID_EDIT_CANCEL) {	// capture ESC for decorator or connection customization operation cancel
+		if (inElementDecoratorOperation)
+			CancelDecoratorOperation();
+		if (isInConnectionCustomizeOperation) {
+			isInConnectionCustomizeOperation = false;
+			::SetCursor(customizeConnectionCursorBackup);
+			isCursorChangedByEdgeCustomize = false;
+		}
+	}
 
 	if(CGuiMetaProject::theInstance->CmdIDInRange(nID))	{
 		if(nCode == CN_COMMAND && pHandlerInfo == NULL) {
@@ -6789,6 +7010,57 @@ void CGMEView::OnBackAlongConnection() // 'Jump back Along Conn' on Navigation t
 		FollowLine( selected.GetHead(), true, ::GetKeyState( VK_CONTROL) < 0);
 }
 
+void CGMEView::OnDisableAutoRoutingOfConnection()
+{
+	selectedContextConnection->SetConnectionAutoRouted(false);
+	selectedContextConnection->WriteConnectionAutoRouteState();
+}
+
+void CGMEView::OnEnableAutoRoutingOfConnection()
+{
+	selectedContextConnection->SetConnectionAutoRouted(true);
+	selectedContextConnection->WriteConnectionAutoRouteState();
+}
+
+void CGMEView::OnDeleteConnEdgeCustomData()
+{
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnEdgeCustomData in "+path+name+"\r\n");
+	if (selectedContextConnection != NULL && contextConnectionEdgeIndex >= 0) {
+		if (contextConnectionCustomizationType == SimpleEdgeDisplacement) {
+			if (customizeConnectionPartMoveMethod == HorizontalEdgeMove ||
+				customizeConnectionPartMoveMethod == AdjacentEdgeMove)
+			{
+				int edgeIndex = contextConnectionEdgeIndex;
+				if (customizeConnectionPartMoveMethod == AdjacentEdgeMove && customizeHorizontalOrVerticalEdge)
+					edgeIndex++;
+				DeleteCustomEdges(selectedContextConnection, SimpleEdgeDisplacement, edgeIndex, false);
+			}
+			if (customizeConnectionPartMoveMethod == VerticalEdgeMove ||
+				customizeConnectionPartMoveMethod == AdjacentEdgeMove)
+			{
+				int edgeIndex = contextConnectionEdgeIndex;
+				if (customizeConnectionPartMoveMethod == AdjacentEdgeMove && !customizeHorizontalOrVerticalEdge)
+					edgeIndex++;
+				DeleteCustomEdges(selectedContextConnection, SimpleEdgeDisplacement, edgeIndex, true);
+			}
+		} else if (contextConnectionCustomizationType == CustomPointCustomization) {
+			DeleteCustomEdges(selectedContextConnection, CustomPointCustomization, contextConnectionEdgeIndex);
+		}
+		selectedContextConnection->WriteCustomPathData();
+	}
+	selectedContextConnection = NULL;
+}
+
+void CGMEView::OnDeleteConnRouteCustomData()
+{
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnRouteCustomData in "+path+name+"\r\n");
+	if (selectedContextConnection != NULL) {
+		selectedContextConnection->DeleteAllPathCustomizationsForAnAspect(currentAspect->index);
+		selectedContextConnection->WriteCustomPathData();
+	}
+	selectedContextConnection = NULL;
+}
+
 bool jumpToSelectedEnd( CGuiConnectionList& p_collOfConns, bool p_reverse, bool p_tryPort)
 {
 	int hmany = p_collOfConns.GetCount();
@@ -6897,6 +7169,30 @@ void CGMEView::OnUpdateJumpAlongConnection(CCmdUI* pCmdUI)
 void CGMEView::OnUpdateBackAlongConnection(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable( areConnsForSels( selected, true));
+}
+
+void CGMEView::OnUpdateDisableAutoRoutingOfConnection(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(selectedContextConnection != NULL &&
+				   selectedContextConnection->IsConnectionAutoRouted());
+}
+
+void CGMEView::OnUpdateEnableAutoRoutingOfConnection(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(selectedContextConnection != NULL &&
+				   !selectedContextConnection->IsConnectionAutoRouted());
+}
+
+void CGMEView::OnUpdateDeleteConnEdgeCustomData(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(selectedContextConnection != NULL &&
+				   selectedContextConnection->HasPathCustomization(currentAspect->index, contextConnectionEdgeIndex));
+}
+
+void CGMEView::OnUpdateDeleteConnRouteCustomData(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(selectedContextConnection != NULL &&
+				   selectedContextConnection->HasPathCustomization(currentAspect->index));
 }
 
 #if defined(ADDCRASHTESTMENU)
@@ -7973,6 +8269,10 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 					COMTHROW(retVal);
 				}
 			}
+		} else if (isInConnectionCustomizeOperation) {
+			// Update Connection Customization Tracker
+			customizeConnectionCurrCursor = point;
+			Invalidate();
 		} else if (object != NULL || annotation != NULL) {
 			CComPtr<IMgaElementDecorator> newDecorator;
 			if (object != NULL) {
@@ -8001,6 +8301,42 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 				}
 			}
 		} else {
+			if (selectedConnection != NULL) {
+				ConnectionPartMoveType connectionPartMoveType;
+				bool horizontalOrVerticalEdge = false;
+				bool isPartFixed;
+				int edgeIndex = selectedConnection->IsPathAt(point, connectionPartMoveType, horizontalOrVerticalEdge, isPartFixed);
+				if (edgeIndex >= 0 && !isPartFixed) {
+					HCURSOR wantedCursor;
+					if (connectionPartMoveType == HorizontalEdgeMove) {
+						wantedCursor = LoadCursor(NULL, IDC_SIZEWE);
+					} else if (connectionPartMoveType == VerticalEdgeMove) {
+						wantedCursor = LoadCursor(NULL, IDC_SIZENS);
+					} else if (connectionPartMoveType == AdjacentEdgeMove) {
+						wantedCursor = LoadCursor(NULL, IDC_SIZEALL);
+					} else if (connectionPartMoveType == InsertNewCustomPoint) {
+						wantedCursor = LoadCursor(NULL, IDC_HAND);
+					} else if (connectionPartMoveType == ModifyExistingCustomPoint) {
+						wantedCursor = LoadCursor(NULL, IDC_CROSS);
+					} else {
+						ASSERT(false);
+					}
+					HCURSOR cursorBackup = ::SetCursor(wantedCursor);
+					if (!isCursorChangedByEdgeCustomize)
+						customizeConnectionCursorBackup = cursorBackup;
+					isCursorChangedByEdgeCustomize = true;
+				} else {
+					if (isCursorChangedByEdgeCustomize) {
+						::SetCursor(customizeConnectionCursorBackup);
+						isCursorChangedByEdgeCustomize = false;
+					}
+				}
+			} else {
+				if (isCursorChangedByEdgeCustomize) {
+					::SetCursor(customizeConnectionCursorBackup);
+					isCursorChangedByEdgeCustomize = false;
+				}
+			}
 			if (isCursorChangedByDecorator)
 				SetEditCursor();
 		}

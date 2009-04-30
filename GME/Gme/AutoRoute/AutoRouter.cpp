@@ -9,80 +9,68 @@
 
 #include "GMEView.h"
 
-// Functions for CMapAutoRouterPath2CGuiConnection, see AutoRouter.h
-template<>
-UINT AFXAPI HashKey<CAutoRouterPath*> (CAutoRouterPath* key)
-{
-	return (UINT)key;
-}
-
-typedef CAutoRouterPath* LPCCAutoRouterPath;
-
-template<>
-BOOL AFXAPI CompareElements<LPCCAutoRouterPath, LPCCAutoRouterPath>
-	 (const LPCCAutoRouterPath* pElement1, const LPCCAutoRouterPath* pElement2)
-{
-	if (*pElement1 == *pElement2)
-		return true;
-	return false;
-}
-
 ////////////////////////////////// CAutoRouter //////////////////////////////////
 
 CAutoRouter::CAutoRouter()
 {
 	//todo vt:
 	COMTHROW(CAutoRouterGraph::CreateInstance(&router));
+	routeret = 1;
 }
 
 CAutoRouter::~CAutoRouter()
 {
 	ASSERT( router != NULL );
 
-	router->Destroy();
+	COMTHROW(router->Destroy());
 	mapPath2Conn.RemoveAll();
 }
 
-void CAutoRouter::AutoRoute()
+bool CAutoRouter::AutoRoute(long aspect)
 {
 	if (CGMEView::IsHugeModel())
-		return;
+		return true;
 
 	long res;
-	router->AutoRoute(&res);
+	COMTHROW(router->AutoRoute(aspect, &res));
+	bool wereThereDeletion = RemoveDeletedCustomPathDataFromGuiConnections();
 	routeret = res;
+	return wereThereDeletion;
 }
 
-void CAutoRouter::AutoRoute(CGuiFcoList &fcos)
+void CAutoRouter::AutoRoute(CGuiFcoList& fcos, long aspect)
 {
 	if(CGMEView::IsHugeModel())
 		return;
-	Fill(fcos);
-	AutoRoute();
+	bool wereThereDeletion = false;
+	do {
+		Fill(fcos);
+		wereThereDeletion = AutoRoute(aspect);
+	} while (routeret == -2 && wereThereDeletion);
 }
 
-void CAutoRouter::Fill(CGuiFcoList &fcos)
+void CAutoRouter::Fill(CGuiFcoList& fcos)
 {
 	Clear(fcos);
 	AddObjects(fcos);
 }
 
-void CAutoRouter::Clear(CGuiFcoList &fcos)
+void CAutoRouter::Clear(CGuiFcoList& fcos)
 {
 	mapPath2Conn.RemoveAll();
 
-	router->DeleteAll();
+	COMTHROW(router->DeleteAll());
 
 	POSITION pos = fcos.GetHeadPosition();
 	while(pos) {
-		CGuiFco *fco = fcos.GetNext(pos);
-		CGuiConnection *conn = dynamic_cast<CGuiConnection *>(fco);
+		CGuiFco* fco = fcos.GetNext(pos);
+		CGuiConnection* conn = dynamic_cast<CGuiConnection*>(fco);
 		if(conn) {
 			CComPtr<IAutoRouterPath> path;
 			conn->SetRouterPath(path);
 		}
 		else {
-			CGuiObject *obj = dynamic_cast<CGuiObject *>(fco);
+			CGuiObject* obj = dynamic_cast<CGuiObject*>(fco);
 			VERIFY(obj);
 			if (obj->IsVisible()) {
 				CComPtr<IAutoRouterBox> box1;
@@ -99,16 +87,16 @@ void CAutoRouter::Clear(CGuiFcoList &fcos)
 	}
 }
 
-void CAutoRouter::AddObjects(CGuiFcoList &fcos)
+void CAutoRouter::AddObjects(CGuiFcoList& fcos)
 {
 	if(CGMEView::IsHugeModel())
 		return;
 	CGuiConnectionList conns;
 	POSITION pos = fcos.GetHeadPosition();
 	while(pos) {
-		CGuiFco *fco = fcos.GetNext(pos);
+		CGuiFco* fco = fcos.GetNext(pos);
 		if(fco->IsVisible()) {
-			CGuiConnection *conn = dynamic_cast<CGuiConnection *>(fco);
+			CGuiConnection* conn = dynamic_cast<CGuiConnection*>(fco);
 			if(conn)
 				conns.AddTail(conn);
 			else
@@ -120,7 +108,7 @@ void CAutoRouter::AddObjects(CGuiFcoList &fcos)
 		AddFco(conns.GetNext(pos));
 }
 
-void CAutoRouter::SetPortPreferences(CComPtr<IAutoRouterPort> portBox,CGuiPort * port)
+void CAutoRouter::SetPortPreferences(CComPtr<IAutoRouterPort> portBox, CGuiPort* port)
 {
 
 	if(CGMEView::IsHugeModel())
@@ -146,10 +134,10 @@ void CAutoRouter::SetPortPreferences(CComPtr<IAutoRouterPort> portBox,CGuiPort *
 	if (port->GetARPref(GME_END_WEST))
 		attr |= ARPORT_EndOnLeft;
 
-	portBox->SetAttributes(attr);
+	COMTHROW(portBox->SetAttributes(attr));
 }
 
-void CAutoRouter::SetPathPreferences(CComPtr<IAutoRouterPath> path, CGuiConnection *conn)
+void CAutoRouter::SetPathPreferences(CComPtr<IAutoRouterPath> path, CGuiConnection* conn)
 {
 	if(CGMEView::IsHugeModel())
 		return;
@@ -181,24 +169,135 @@ void CAutoRouter::SetPathPreferences(CComPtr<IAutoRouterPath> path, CGuiConnecti
 
 	path->SetStartDir(arpath_start);
 	path->SetEndDir(arpath_end);
+
+	// Load the customized edge data which corresponds to the needed aspect
+	std::vector<CustomPathData> cpd = conn->GetCurrentPathCustomizations();
+	SAFEARRAY* pArr;
+	HRESULT hr = S_OK;
+	//set bounds
+	SAFEARRAYBOUND bound[1];
+	bound[0].lLbound	= 0;
+	bound[0].cElements	= cpd.size();
+	CustomPathData* pData;
+	IRecordInfo* pRI;
+
+	COMTHROW(GetRecordInfoFromGuids(LIBID_GmeLib, 1, 0, 0x409, __uuidof(CustomPathData), &pRI));
+
+	//create safearray
+	pArr = SafeArrayCreateEx(VT_RECORD, 1, bound, pRI);
+	pRI->Release();
+	pRI = NULL;
+
+	//access safearray
+	COMTHROW(SafeArrayAccessData(pArr, (void**)&pData));
+
+	std::vector<CustomPathData>::iterator ii = cpd.begin();
+	long i = 0;
+	while(ii != cpd.end()) {
+		pData[i].version					= (*ii).version;
+		pData[i].aspect						= (*ii).aspect;
+		pData[i].edgeIndex					= (*ii).edgeIndex;
+		pData[i].edgeCount					= (*ii).edgeCount;
+		pData[i].type						= (*ii).type;
+		pData[i].horizontalOrVerticalEdge	= (*ii).horizontalOrVerticalEdge;
+		pData[i].x							= (*ii).x;
+		pData[i].y							= (*ii).y;
+		pData[i].l1							= (*ii).l1;
+		pData[i].l2							= (*ii).l2;
+		pData[i].l3							= (*ii).l3;
+		pData[i].l4							= (*ii).l4;
+		pData[i].d1							= (*ii).d1;
+		pData[i].d2							= (*ii).d2;
+		pData[i].d3							= (*ii).d3;
+		pData[i].d4							= (*ii).d4;
+		pData[i].d5							= (*ii).d5;
+		pData[i].d6							= (*ii).d6;
+		pData[i].d7							= (*ii).d7;
+		pData[i].d8							= (*ii).d8;
+
+		i++;
+		++ii;
+	}
+	//unaccess safearray
+	COMTHROW(SafeArrayUnaccessData(pArr));	
+
+	COMTHROW(path->SetCustomPathData(pArr));
+
+	COMTHROW(SafeArrayDestroy(pArr));
 }
 
-
-void CAutoRouter::AddFco(CGuiFco *fco)
+bool CAutoRouter::RemoveDeletedCustomPathDataFromGuiConnections(void)
 {
-	if(CGMEView::IsHugeModel())
+	CMapAutoRouterPath2CGuiConnection::CPair* pCurVal;
+	bool wereThereDeletion = false;
+
+	pCurVal = mapPath2Conn.PGetFirstAssoc();
+	while (pCurVal != NULL) {
+		// pCurVal->key:	CAutoRouterPath*
+		// pCurVal->value:	CGuiConnection*
+		VARIANT_BOOL areThere = VARIANT_FALSE;
+		COMTHROW(pCurVal->key->AreThereDeletedPathCustomizations(&areThere));
+		if (areThere == VARIANT_TRUE) {
+			std::vector<CustomPathData> cpd;
+			SAFEARRAY* pArr;
+			COMTHROW(pCurVal->key->GetDeletedCustomPathData(&pArr));
+			CustomPathData* pData;
+			COMTHROW(SafeArrayAccessData(pArr, (void**)&pData));
+
+			for (unsigned long i = 0; i < pArr->rgsabound->cElements; i++)
+			{
+				CustomPathData pathData;
+				pathData.version					= pData[i].version;
+				pathData.aspect						= pData[i].aspect;
+				pathData.edgeIndex					= pData[i].edgeIndex;
+				pathData.edgeCount					= pData[i].edgeCount;
+				pathData.type						= pData[i].type;
+				pathData.horizontalOrVerticalEdge	= pData[i].horizontalOrVerticalEdge;
+				pathData.x							= pData[i].x;
+				pathData.y							= pData[i].y;
+				pathData.l1							= pData[i].l1;
+				pathData.l2							= pData[i].l2;
+				pathData.l3							= pData[i].l3;
+				pathData.l4							= pData[i].l4;
+				pathData.d1							= pData[i].d1;
+				pathData.d2							= pData[i].d2;
+				pathData.d3							= pData[i].d3;
+				pathData.d4							= pData[i].d4;
+				pathData.d5							= pData[i].d5;
+				pathData.d6							= pData[i].d6;
+				pathData.d7							= pData[i].d7;
+				pathData.d8							= pData[i].d8;
+				cpd.push_back(pathData);
+			}
+
+			COMTHROW(SafeArrayUnaccessData(pArr));
+			COMTHROW(SafeArrayDestroy(pArr));
+
+			pCurVal->value->RemoveDeletedPathCustomizations(cpd);
+			wereThereDeletion = true;
+		}
+
+		pCurVal = mapPath2Conn.PGetNextAssoc(pCurVal);
+	}
+
+	return wereThereDeletion;
+}
+
+void CAutoRouter::AddFco(CGuiFco* fco)
+{
+	if (CGMEView::IsHugeModel())
 		return;
-	CGuiConnection *conn = dynamic_cast<CGuiConnection *>(fco);
-	if(conn)
+	CGuiConnection* conn = dynamic_cast<CGuiConnection*>(fco);
+	if (conn)
 		AddConnection(conn);
 	else {
-		CGuiObject *obj = dynamic_cast<CGuiObject *>(fco);
+		CGuiObject* obj = dynamic_cast<CGuiObject*>(fco);
 		VERIFY(obj);
 		AddObject(obj);
 	}
 }
 
-void CAutoRouter::AddObject(CGuiObject *object)
+void CAutoRouter::AddObject(CGuiObject* object)
 {
 	if(CGMEView::IsHugeModel())
 		return;
@@ -207,29 +306,29 @@ void CAutoRouter::AddObject(CGuiObject *object)
 	COMTHROW(router->CreateBox(&box));
 
 	CRect loc = object->GetLocation();
-	box->SetRect(loc.left, loc.top, loc.right, loc.bottom);
+	COMTHROW(box->SetRect(loc.left, loc.top, loc.right, loc.bottom));
 
 	CComPtr<IAutoRouterBox> nameBox;
 	if (theApp.labelAvoidance) {
 		COMTHROW(router->CreateBox(&nameBox));
 		CRect nameLoc = object->GetNameLocation();
-		nameBox->SetRect(nameLoc.left, nameLoc.top, nameLoc.right, nameLoc.bottom);
+		COMTHROW(nameBox->SetRect(nameLoc.left, nameLoc.top, nameLoc.right, nameLoc.bottom));
 	}
 
 	CGuiPortList &ports = object->GetPorts();
 	POSITION pos = ports.GetHeadPosition();
 	while(pos) {
-		CGuiPort *port = ports.GetNext(pos);
+		CGuiPort* port = ports.GetNext(pos);
 		CComPtr<IAutoRouterPort> portBox; 
 		COMTHROW(box->CreatePort(&portBox));
 		// real ports most obey the rule that the only dir allowed is
 		// the one on which side of their parent they are laid out
-		portBox->SetLimitedDirs( port->IsRealPort());
+		COMTHROW(portBox->SetLimitedDirs(port->IsRealPort()));
 		CRect r = port->GetLocation() + loc.TopLeft();
-		portBox->SetRect(r.left, r.top, r.right, r.bottom);
+		COMTHROW(portBox->SetRect(r.left, r.top, r.right, r.bottom));
 		SetPortPreferences(portBox,port);
 		port->SetRouterPort(portBox);
-		box->Add(portBox);
+		COMTHROW(box->AddPort(portBox));
 	}
 
 	object->SetRouterBox(box);
@@ -237,14 +336,14 @@ void CAutoRouter::AddObject(CGuiObject *object)
 		object->SetRouterNameBox(nameBox);
 	}
 
-	router->Add(box);
+	COMTHROW(router->AddBox(box));
 
 	if (theApp.labelAvoidance) {
-		router->Add(nameBox);
+		COMTHROW(router->AddBox(nameBox));
 	}
 }
 
-void CAutoRouter::AddConnections(CGuiConnectionList &connList)
+void CAutoRouter::AddConnections(CGuiConnectionList& connList)
 {
 	if(CGMEView::IsHugeModel())
 		return;
@@ -253,7 +352,7 @@ void CAutoRouter::AddConnections(CGuiConnectionList &connList)
 		AddConnection(connList.GetNext(pos));
 }
 
-void CAutoRouter::AddConnection(CGuiConnection *conn)
+void CAutoRouter::AddConnection(CGuiConnection* conn)
 {
 	if(CGMEView::IsHugeModel())
 		return;
@@ -263,15 +362,14 @@ void CAutoRouter::AddConnection(CGuiConnection *conn)
 	CComPtr<IAutoRouterPort> adst = conn->dstPort->GetRouterPort();
 	CComPtr<IAutoRouterPath> path;
 
-	COMTHROW(router->AddPath(asrc, adst, &path));
+	COMTHROW(router->AddPath(conn->IsConnectionAutoRouted() ? VARIANT_TRUE : VARIANT_FALSE, asrc, adst, &path));
 
 	SetPathPreferences(path, conn);
 	conn->SetRouterPath(path);
 	// Later if we get an IAutoRouterPath from AutoRouterGraph while searching for a connection line,
 	// we want to get the CGuiConnection object corresponding to that path. So we build a hash map for that
 	// (the other association direction is clear: CGuiConnection contains an CComPtr<IAutoRouterPath>)
-	CAutoRouterPath* ap = static_cast<CAutoRouterPath*> (path.p);
-	mapPath2Conn.SetAt(ap, conn);
+	mapPath2Conn.SetAt(path.p, conn);
 }
 
 void CAutoRouter::DeleteObjects(CGuiObjectList &objs)
@@ -292,12 +390,12 @@ void CAutoRouter::DeleteObject(CGuiObject *object)
 	if(CGMEView::IsHugeModel())
 		return;
 	if (object->IsVisible()) {
-		router->DeleteBox(object->GetRouterBox());
+		COMTHROW(router->DeleteBox(object->GetRouterBox()));
 
 		if (theApp.labelAvoidance) {
 			CComPtr<IAutoRouterBox> nameBox = object->GetRouterNameBox();
 			if (nameBox.p) {
-				router->DeleteBox(nameBox);
+				COMTHROW(router->DeleteBox(nameBox));
 			}
 		}
 
@@ -327,8 +425,8 @@ void CAutoRouter::DeleteConnection(CGuiConnection *conn)
 		{
 			CComPtr<IAutoRouterPath> currPath = conn->GetRouterPath();
 			// Update the hash map, otherwise it could contain destroyed CGuiConnection* object pointers
-			mapPath2Conn.RemoveKey(static_cast<CAutoRouterPath*> (currPath.p));
-			router->DeletePath(currPath);
+			mapPath2Conn.RemoveKey(currPath.p);
+			COMTHROW(router->DeletePath(currPath));
 		}
 		CComPtr<IAutoRouterPath> path;
 		conn->SetRouterPath(path);
@@ -342,7 +440,7 @@ CGuiConnection *CAutoRouter::FindConnection(CPoint &pt) const
 		return 0;
 
 	CComPtr<IAutoRouterPath> path;
-	router->GetPathAt(pt.x,pt.y,3,&path);
+	COMTHROW(router->GetPathAt(pt.x, pt.y, 3, &path));
 
 	if (path.p != NULL)
 	{
@@ -350,8 +448,7 @@ CGuiConnection *CAutoRouter::FindConnection(CPoint &pt) const
 		// we want to get the CGuiConnection object corresponding to that path. We have a hash map for that
 		// (the other association direction is clear: CGuiConnection contains an CComPtr<IAutoRouterPath>)
 		CGuiConnection* connAddr = NULL;
-		CAutoRouterPath* ap = static_cast<CAutoRouterPath*> (path.p);
-		mapPath2Conn.Lookup(ap, connAddr);
+		mapPath2Conn.Lookup(path, connAddr);
 
 		return connAddr;
 	}
@@ -361,7 +458,7 @@ CGuiConnection *CAutoRouter::FindConnection(CPoint &pt) const
 	}
 }
 
-void CAutoRouter::NudgeObjects(CGuiObjectList &objectList,int right,int down)
+void CAutoRouter::NudgeObjects(CGuiObjectList &objectList, int right, int down, long aspect)
 {
 	if(CGMEView::IsHugeModel())
 		return;
@@ -370,15 +467,15 @@ void CAutoRouter::NudgeObjects(CGuiObjectList &objectList,int right,int down)
 	while(pos) {
 		CGuiObject *obj = objectList.GetNext(pos);
 
-		router->ShiftBy(obj->GetRouterBox(),offs.cx, offs.cy);
+		COMTHROW(router->ShiftBoxBy(obj->GetRouterBox(), offs.cx, offs.cy));
 
 		if (theApp.labelAvoidance) {
 			CComPtr<IAutoRouterBox> nameBox = obj->GetRouterNameBox();
 			if (nameBox.p) {
-				router->ShiftBy(nameBox,offs.cx, offs.cy);
+				COMTHROW(router->ShiftBoxBy(nameBox, offs.cx, offs.cy));
 			}
 			
 		}
 	}
-	AutoRoute();
+	AutoRoute(aspect);
 }

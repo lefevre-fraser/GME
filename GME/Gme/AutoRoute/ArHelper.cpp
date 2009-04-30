@@ -165,111 +165,41 @@ int Intersect(long a1, long a2, long b1, long b2)
 	return min(a1,a2) <= max(b1,b2) && min(b1,b2) <= max(a1,a2);
 }
 
-int IsOpeningBracket(CPoint* start_prev, CPoint* start, CPoint* end, CPoint* end_next, int ishorizontal)
-{
-	ASSERT( start != NULL && end != NULL );
 
-#ifdef _DEBUG
-	if( ishorizontal )
-	{
-		ASSERT( start->y == end->y );
-
-		if( start_prev )
-			ASSERT( start_prev->x == start->x );
-
-		if( end_next )
-			ASSERT( end_next->x == end->x );
-	}
-	else
-	{
-		ASSERT( start->x == end->x );
-
-		if( start_prev )
-			ASSERT( start_prev->y == start->y );
-
-		if( end_next )
-			ASSERT( end_next->y == end->y );
-	}
-#endif
-
-	if( start_prev == NULL || end_next == NULL )
-		return 0;
-
-	return ishorizontal ?
-		(start_prev->y  > start->y && end_next->y > end->y ) :
-		(start_prev->x  > start->x && end_next->x > end->x );
-}
-
-int IsClosingBracket(CPoint* start_prev, CPoint* start, CPoint* end, CPoint* end_next, int ishorizontal)
-{
-	ASSERT( start != NULL && end != NULL );
-
-#ifdef _DEBUG
-	if( ishorizontal )
-	{
-		ASSERT( start->y == end->y );
-
-		if( start_prev )
-			ASSERT( start_prev->x == start->x );
-
-		if( end_next )
-			ASSERT( end_next->x == end->x );
-	}
-	else
-	{
-		ASSERT( start->x == end->x );
-
-		if( start_prev )
-			ASSERT( start_prev->y == start->y );
-
-		if( end_next )
-			ASSERT( end_next->y == end->y );
-	}
-#endif
-
-	if( start_prev == NULL || end_next == NULL )
-		return 0;
-
-	return ishorizontal ?
-		(start_prev->y  < start->y && end_next->y < end->y ) :
-		(start_prev->x  < start->x && end_next->x < end->x );
-}
+// --------------------------- RoutingDirection
 
 
-// --------------------------- EArDir
-
-
-int AreInRightAngle(EArDir dir1, EArDir dir2)
+int AreInRightAngle(RoutingDirection dir1, RoutingDirection dir2)
 {
 	ASSERT( IsRightAngle(dir1) && IsRightAngle(dir2) );
 	return IsHorizontal(dir1) == IsVertical(dir2);
 }
 
-EArDir NextClockwiseDir(EArDir dir)
+RoutingDirection NextClockwiseDir(RoutingDirection dir)
 {
 	if( IsRightAngle(dir) )
-		return (EArDir) ((dir+1) % 4);
+		return (RoutingDirection) ((dir+1) % 4);
 
 	return dir;
 }
 
-EArDir PrevClockwiseDir(EArDir dir)
+RoutingDirection PrevClockwiseDir(RoutingDirection dir)
 {
 	if( IsRightAngle(dir) )
-		return (EArDir) ((dir+3) % 4);
+		return (RoutingDirection) ((dir+3) % 4);
 
 	return dir;
 }
 
-EArDir ReverseDir(EArDir dir)
+RoutingDirection ReverseDir(RoutingDirection dir)
 {
 	if( IsRightAngle(dir) )
-		return (EArDir) ((dir+2) % 4);
+		return (RoutingDirection) ((dir+2) % 4);
 
 	return dir;
 }
 
-CPoint StepOneInDir(const CPoint& point, EArDir dir)
+CPoint StepOneInDir(const CPoint& point, RoutingDirection dir)
 {
 	ASSERT( IsRightAngle(dir) );
 	CPoint p(point);
@@ -296,7 +226,7 @@ CPoint StepOneInDir(const CPoint& point, EArDir dir)
 	return p;
 }
 
-long& GetRectCoord(CRect& rect, EArDir dir)
+long& GetRectCoord(CRect& rect, RoutingDirection dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -315,7 +245,7 @@ long& GetRectCoord(CRect& rect, EArDir dir)
 	return rect.left;
 }
 
-long GetRectOuterCoord(const CRect& rect, EArDir dir)
+long GetRectOuterCoord(const CRect& rect, RoutingDirection dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -345,7 +275,7 @@ int GetDirTableIndex(const CSize& offset)
 	return (offset.cx >= 0)*4 + (offset.cy >= 0)*2 + (abs(offset.cx) >= abs(offset.cy));
 }
 
-EArDir majordir_table[] =
+RoutingDirection majordir_table[] =
 {
 	Dir_Top,
 	Dir_Left,
@@ -357,12 +287,12 @@ EArDir majordir_table[] =
 	Dir_Right
 };
 
-EArDir GetMajorDir(const CSize& offset)
+RoutingDirection GetMajorDir(const CSize& offset)
 {
 	return majordir_table[GetDirTableIndex(offset)];
 }
 
-EArDir minordir_table[] =
+RoutingDirection minordir_table[] =
 {
 	Dir_Left,
 	Dir_Top,
@@ -374,7 +304,7 @@ EArDir minordir_table[] =
 	Dir_Bottom
 };
 
-EArDir GetMinorDir(const CSize& offset)
+RoutingDirection GetMinorDir(const CSize& offset)
 {
 	return minordir_table[GetDirTableIndex(offset)];
 }
@@ -471,7 +401,7 @@ int ExGetDirTableIndex(const CSize& offset)
 		));
 }
 
-EArDir exmajordir_table[17] =
+RoutingDirection exmajordir_table[17] =
 {
 	Dir_None,
 	Dir_Top,
@@ -492,12 +422,12 @@ EArDir exmajordir_table[17] =
 	Dir_Top
 };
 
-EArDir ExGetMajorDir(const CSize& offset)
+RoutingDirection ExGetMajorDir(const CSize& offset)
 {
 	return exmajordir_table[ExGetDirTableIndex(offset)];
 }
 
-EArDir exminordir_table[17] = 
+RoutingDirection exminordir_table[17] = 
 {
 	Dir_None,
 	Dir_None,
@@ -518,12 +448,12 @@ EArDir exminordir_table[17] =
 	Dir_Left
 };
 
-EArDir ExGetMinorDir(const CSize& offset)
+RoutingDirection ExGetMinorDir(const CSize& offset)
 {
 	return exminordir_table[ExGetDirTableIndex(offset)];
 }
 
-EArDir GetDir(const CSize& offset, EArDir nodir)
+RoutingDirection GetDir(const CSize& offset, RoutingDirection nodir)
 {
 	if( offset.cx == 0 )
 	{
@@ -547,7 +477,32 @@ EArDir GetDir(const CSize& offset, EArDir nodir)
 	return Dir_Skew;
 }
 
-int IsPointInDirFrom(const CPoint& point, const CPoint& from, EArDir dir)
+RoutingDirection GetSkewDir(const CSize& offset, RoutingDirection nodir)
+{
+	if (offset.cx == 0 || abs(offset.cy) > abs(offset.cx))
+	{
+		if (offset.cy == 0)
+			return nodir;
+
+		if (offset.cy < 0)
+			return Dir_Top;
+
+		return Dir_Bottom;
+	}
+
+	if (offset.cy == 0 || abs(offset.cx) >= abs(offset.cy))
+	{
+		if (offset.cx > 0)
+			return Dir_Right;
+
+		return Dir_Left;
+	}
+
+	ASSERT(false);
+	return Dir_Skew;
+}
+
+int IsPointInDirFrom(const CPoint& point, const CPoint& from, RoutingDirection dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -569,7 +524,7 @@ int IsPointInDirFrom(const CPoint& point, const CPoint& from, EArDir dir)
 	return 0;
 }
 
-int IsPointInDirFrom(const CPoint& point, const CRect& rect, EArDir dir)
+int IsPointInDirFrom(const CPoint& point, const CRect& rect, RoutingDirection dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -599,7 +554,29 @@ int IsPointBetweenSides(const CPoint& point, const CRect& rect, int ishorizontal
 	return rect.left <= point.x && point.x < rect.right;
 }
 
-int IsCoordInDirFrom(long coord, long from, EArDir dir)
+RoutingDirection PointOnSide(const CPoint& point, const CRect& rect)
+{
+	int dleft = DistanceFromVLine(point, rect.top, rect.bottom, rect.left);
+	int dtop = DistanceFromHLine(point, rect.left, rect.right, rect.top);
+	int dright = DistanceFromVLine(point, rect.top, rect.bottom, rect.right);
+	int dbottom = DistanceFromHLine(point, rect.left, rect.right, rect.bottom);
+
+	TRACE("Distances: %ld %ld %ld %ld\n", dleft, dtop, dright, dbottom);
+
+	if (dleft < 3)
+		return Dir_Left;
+	if (dtop < 3)
+		return Dir_Top;
+	if (dright < 3)
+		return Dir_Right;
+	if (dbottom < 3)
+		return Dir_Bottom;
+
+	ASSERT(false);
+	return GetSkewDir(point - rect.CenterPoint());
+}
+
+int IsCoordInDirFrom(long coord, long from, RoutingDirection dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -609,7 +586,7 @@ int IsCoordInDirFrom(long coord, long from, EArDir dir)
 	return coord >= from;
 }
 
-EArDir OnWhichEdge(const CRect& rect, const CPoint& point)
+RoutingDirection OnWhichEdge(const CRect& rect, const CPoint& point)
 {
 	if( point.y == rect.top && rect.left < point.x && point.x < rect.right - 1 )
 		return Dir_Top;
@@ -665,3 +642,267 @@ int CArFindNearestLine::VLine(int y1, int y2, int x)
 }
 
 
+// --------------------------- CPointList
+
+
+POSITION CPointListPath::GetHeadEdge(CPoint& start, CPoint& end) const
+{
+	if( GetCount() < 2 )
+		return NULL;
+
+	POSITION pos = GetHeadPosition();
+	ASSERT( pos != NULL );
+
+	start = GetNext(pos);
+	ASSERT( pos != NULL );
+
+	end = GetAt(pos);
+
+	return pos;
+}
+
+POSITION CPointListPath::GetTailEdge(CPoint& start, CPoint& end) const
+{
+	if( GetCount() < 2 )
+		return NULL;
+
+	POSITION pos = GetTailPosition();
+	ASSERT( pos != NULL );
+
+	end = GetPrev(pos);
+	ASSERT( pos != NULL );
+
+	start = GetAt(pos);
+
+	return pos;
+}
+
+void CPointListPath::GetNextEdge(POSITION& pos, CPoint& start, CPoint& end) const
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	GetNext(pos);
+	ASSERT( pos != NULL );
+
+	POSITION p = pos;
+	start = GetNext(p);
+	if( p == NULL )
+		pos = NULL;
+	else
+		end = GetAt(p);
+}
+
+void CPointListPath::GetPrevEdge(POSITION& pos, CPoint& start, CPoint& end) const
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	end = GetPrev(pos);
+	if( pos != NULL )
+		start = GetAt(pos);
+}
+
+void CPointListPath::GetEdge(POSITION pos, CPoint& start, CPoint& end) const
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	start = GetNext(pos);
+	ASSERT( pos != NULL );
+
+	end = GetAt(pos);
+}
+
+POSITION CPointListPath::GetHeadEdgePtrs(CPoint*& start, CPoint*& end)
+{
+	if( GetCount() < 2 )
+		return NULL;
+
+	POSITION pos = GetHeadPosition();
+	ASSERT( pos != NULL );
+
+	start = &(GetNext(pos));
+	ASSERT( pos != NULL );
+
+	end = &(GetAt(pos));
+
+	return pos;
+}
+
+POSITION CPointListPath::GetTailEdgePtrs(CPoint*& start, CPoint*& end)
+{
+	if( GetCount() < 2 )
+		return NULL;
+
+	POSITION pos = GetTailPosition();
+	ASSERT( pos != NULL );
+
+	end = &(GetPrev(pos));
+	ASSERT( pos != NULL );
+
+	start = &(GetAt(pos));
+
+	return pos;
+}
+
+void CPointListPath::GetNextEdgePtrs(POSITION& pos, CPoint*& start, CPoint*& end)
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	start = &(GetNext(pos));
+	if (pos != NULL)
+		end = &(GetAt(pos));
+}
+
+void CPointListPath::GetPrevEdgePtrs(POSITION& pos, CPoint*& start, CPoint*& end)
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	end = &(GetPrev(pos));
+	if( pos != NULL )
+		start = &(GetAt(pos));
+}
+
+void CPointListPath::GetEdgePtrs(POSITION pos, CPoint*& start, CPoint*& end)
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	start = &(GetNext(pos));
+	ASSERT( pos != NULL );
+
+	end = &(GetAt(pos));
+}
+
+CPoint* CPointListPath::GetStartPoint(POSITION pos)
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	return &(GetAt(pos));
+}
+
+CPoint* CPointListPath::GetEndPoint(POSITION pos)
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	GetNext(pos);
+	ASSERT( pos != NULL );
+
+	return &(GetAt(pos));
+}
+
+CPoint* CPointListPath::GetPointBeforeEdge(POSITION pos)
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	GetPrev(pos);
+	if( pos == NULL )
+		return NULL;
+
+	return &(GetAt(pos));
+}
+
+CPoint* CPointListPath::GetPointAfterEdge(POSITION pos)
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	GetNext(pos);
+	ASSERT( pos != NULL );
+
+	GetNext(pos);
+	if( pos == NULL )
+		return NULL;
+
+	return &(GetAt(pos));
+}
+
+POSITION CPointListPath::GetEdgePosBeforePoint(POSITION pos) const
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	GetPrev(pos);
+	return pos;
+}
+
+POSITION CPointListPath::GetEdgePosAfterPoint(POSITION pos) const
+{
+#ifdef _DEBUG
+	AssertValidPos(pos);
+#endif
+
+	POSITION p = pos;
+	GetNext(p);
+	if( p == NULL )
+		return NULL;
+
+	return pos;
+}
+
+POSITION CPointListPath::GetEdgePosForStartPoint(const CPoint& startpoint)
+{
+	POSITION pos = GetHeadPosition();
+	while( pos != NULL )
+	{
+		if( GetNext(pos) == startpoint )
+		{
+			ASSERT( pos != NULL );
+			GetPrev(pos);
+			break;
+		}
+	}
+
+	ASSERT( pos != NULL );
+	return pos;
+}
+
+#ifdef _DEBUG
+
+void CPointListPath::AssertValidPos(POSITION pos) const
+{
+	ASSERT( pos != NULL );
+
+	POSITION p = GetHeadPosition();
+	for(;;)
+	{
+		ASSERT( p != NULL );
+		if( p == pos )
+			return;
+
+		GetNext(p);
+	}
+}
+
+void CPointListPath::DumpPoints(const CString& msg) const
+{
+	TRACE0(msg);
+	TRACE0(", points dump begin:\n");
+	POSITION pos = GetHeadPosition();
+	int i = 0;
+	while(pos != NULL) {
+		CPoint p = GetNext(pos);
+		TRACE3("%ld.: (%ld, %ld)\n", i, p.x, p.y);
+		i++;
+	}
+	TRACE0("points dump end.\n");
+}
+
+#endif

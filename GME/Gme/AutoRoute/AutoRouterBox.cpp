@@ -6,35 +6,21 @@
 #include "AutoRouterGraph.h"
 
 
-CAutoRouterBox::CAutoRouterBox():	owner(NULL),
-									rect(0,0,0,0),
-									atomic(0)
-{	
+CAutoRouterBox::CAutoRouterBox():
+	owner(NULL),
+	rect(0, 0, 0, 0),
+	atomic(0)
+{
 	CalculateSelfPoints();
 }
 
-void CAutoRouterBox::DeleteAllPorts()
+HRESULT CAutoRouterBox::FinalConstruct(void)
 {
-	for (CAutoRouterPortList::size_type i = 0; i<ports.size(); i++)
-	{
-		ports[i]->SetOwner(NULL);
-	}
-
-	ports.clear();
-
-	atomic = 0;
+	return S_OK;
 }
 
-void CAutoRouterBox::ShiftBy(CSize offset)
+void CAutoRouterBox::FinalRelease(void)
 {
-	rect += offset;
-
-	for(CAutoRouterPortList::size_type i=0; i<ports.size();i++)
-	{
-		ports[i]->ShiftBy(offset);
-	}
-
-	CalculateSelfPoints();
 }
 
 void CAutoRouterBox::CalculateSelfPoints()
@@ -52,33 +38,108 @@ void CAutoRouterBox::CalculateSelfPoints()
 	selfpoints[3].y = rect.bottom - 1;
 }
 
-
-void CAutoRouterBox::SetOwner(CComObjPtr<CAutoRouterGraph> o)
+void CAutoRouterBox::DeleteAllPorts()
 {
-	owner = o;
+	for (CAutoRouterPortList::size_type i = 0; i < ports.size(); i++)
+	{
+		ports[i]->SetOwner(NULL);
+	}
+
+	ports.clear();
+
+	atomic = 0;
+}
+
+STDMETHODIMP CAutoRouterBox::GetOwner(IAutoRouterGraph** result)
+{
+	return owner->QueryInterface(IID_IAutoRouterGraph,(void**)result);
+}
+
+STDMETHODIMP CAutoRouterBox::HasOwner(VARIANT_BOOL* result)
+{
+	if (owner != NULL)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::SetOwner(IAutoRouterGraph* graph)
+{
+	owner = graph;
+
+	return S_OK;
 }
 
 STDMETHODIMP CAutoRouterBox::CreatePort(IAutoRouterPort** result)
 {
 	CComObjPtr<CAutoRouterPort> port;
-	
 	CreateComObject(port);
 
-	return ::QueryInterface(port,result);
+	return ::QueryInterface(port, result);
 }
-STDMETHODIMP CAutoRouterBox::Add(IAutoRouterPort* port)
+
+STDMETHODIMP CAutoRouterBox::HasNoPort(VARIANT_BOOL* result)
 {
-	CComObjPtr<CAutoRouterPort> p = static_cast<CAutoRouterPort*>(port);
+	if (ports.size() == 0)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::GetPortCount(long* result)
+{
+	*result = ports.size();
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::IsAtomic(VARIANT_BOOL* result)
+{
+	if (atomic)
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::AddPort(IAutoRouterPort* port)
+{
+	CComPtr<IAutoRouterPort> p = port;
 
 	p->SetOwner(this);
 
 	ports.push_back(p);
 
+#ifdef _DEBUG
+	AssertValidPort(p);
+#endif
+
 	return S_OK;
 }
-STDMETHODIMP CAutoRouterBox::Delete(IAutoRouterPort* port)
+
+STDMETHODIMP CAutoRouterBox::DeletePort(IAutoRouterPort* port)
 {
-	vector<CComObjPtr<CAutoRouterPort> >::iterator iter = std::find(ports.begin(), ports.end(), port);
+	ASSERT( port != NULL );
+#ifdef _DEBUG
+	CComPtr<IAutoRouterBox> ownerBox;
+	HRESULT hr = port->GetOwner(&ownerBox);
+	ASSERT(SUCCEEDED(hr));
+	if (FAILED(hr))
+		return hr;
+	ASSERT( ownerBox.p == this );
+
+	AssertValidPort(static_cast<CAutoRouterPort*>(port));
+
+	if( atomic )
+		ASSERT( ports.size() == 1 );
+#endif
+
+	std::vector<CComPtr<IAutoRouterPort> >::iterator iter = std::find(ports.begin(), ports.end(), port);
 
 	if (iter == ports.end())
 	{
@@ -89,10 +150,148 @@ STDMETHODIMP CAutoRouterBox::Delete(IAutoRouterPort* port)
 	(*iter)->SetOwner(NULL);
 
 	ports.erase(iter);
-	atomic=0;
+	atomic = 0;
 	
 	return S_OK;
 }
+
+STDMETHODIMP CAutoRouterBox::GetPortList(SAFEARRAY** pArr)
+{
+	if (!pArr)
+		return E_POINTER;
+
+	//create safearray
+	ASSERT(*pArr == NULL);
+	*pArr = SafeArrayCreateVector(VT_UNKNOWN, 0, ports.size());
+
+	HRESULT hr = S_OK;
+	for(long i = 0; i < (long)ports.size() && SUCCEEDED(hr); i++)
+	{
+		CComPtr<IAutoRouterPort> pUnk = ports[i];
+		hr = SafeArrayPutElement(*pArr, &i, pUnk);
+	}
+
+	return hr;
+
+	//usage:
+	//if ((*pArr)->cDims != 1 || (*pArr)->cbElements != 8)
+}
+
+STDMETHODIMP CAutoRouterBox::GetRect(long* p1, long* p2, long* p3, long* p4)
+{
+	*p1 = rect.left;
+	*p2 = rect.top;
+	*p3 = rect.right;
+	*p4 = rect.bottom;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::IsRectEmpty(VARIANT_BOOL* result)
+{
+	if (rect.IsRectEmpty())
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::SetRect(long p1, long p2, long p3, long p4)
+{
+	CRect r(p1, p2, p3, p4);
+
+	ASSERT( r.Width() >= 3 && r.Height() >= 3 );
+	ASSERT( r.TopLeft().x >= ED_MINCOORD && r.TopLeft().y >= ED_MINCOORD );
+	ASSERT( r.BottomRight().x <= ED_MAXCOORD && r.BottomRight().y <= ED_MAXCOORD );
+	ASSERT( ports.size() == 0 || atomic );
+
+	rect = r;
+	CalculateSelfPoints();
+
+	if( atomic )
+	{
+		ASSERT( ports.size() == 1 );
+		ports[0]->SetRect(r.left, r.top, r.right, r.bottom);
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::SetRectByPoint(long px, long py)
+{
+	const CPoint& point = (CPoint(px, py) - rect.TopLeft());
+	ShiftBy(point.x, point.y);
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::ShiftBy(long offsetx, long offsety)
+{
+	const CPoint offset(offsetx, offsety);
+	rect += offset;
+
+	HRESULT hr;
+	for(CAutoRouterPortList::size_type i = 0; i < ports.size(); i++)
+	{
+		hr = ports[i]->ShiftBy(offsetx, offsety);
+		ASSERT(SUCCEEDED(hr));
+		if (FAILED(hr))
+			return hr;
+	}
+
+	CalculateSelfPoints();
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::GetSelfPoints(long* p1x, long* p1y, long* p2x, long* p2y, long* p3x, long* p3y, long* p4x, long* p4y)
+{
+	*p1x = selfpoints[0].x;
+	*p1y = selfpoints[0].y;
+	*p2x = selfpoints[1].x;
+	*p2y = selfpoints[1].y;
+	*p3x = selfpoints[2].x;
+	*p3y = selfpoints[2].y;
+	*p4x = selfpoints[3].x;
+	*p4y = selfpoints[3].y;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::IsBoxAt(long px, long py, long nearness, VARIANT_BOOL* result)
+{
+	const CPoint point(px, py);
+	if (IsPointIn(point, rect, nearness))
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::IsBoxClip(long p1, long p2, long p3, long p4, VARIANT_BOOL* result)
+{
+	const CRect r(p1, p2, p3, p4);
+	if (IsRectClip(rect, r))
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CAutoRouterBox::IsBoxIn(long p1, long p2, long p3, long p4, VARIANT_BOOL* result)
+{
+	const CRect r(p1, p2, p3, p4);
+	if (IsRectIn(rect, r))
+		*result = VARIANT_TRUE;
+	else
+		*result = VARIANT_FALSE;
+
+	return S_OK;
+}
+
 STDMETHODIMP CAutoRouterBox::Destroy()
 {
 	//ideally it could be placed in the finaldestruct(), 
@@ -108,31 +307,34 @@ STDMETHODIMP CAutoRouterBox::Destroy()
 	return S_OK;
 }
 
-STDMETHODIMP CAutoRouterBox::GetOwner(IAutoRouterGraph** result)
+// --- Debug
+
+#ifdef _DEBUG
+
+void CAutoRouterBox::AssertValid() const
 {
-	return owner->QueryInterface(IID_IAutoRouterGraph,(void**)result);
+	for (CAutoRouterPortList::size_type i = 0; i < ports.size(); i++)
+	{
+		AssertValidPort(ports[i]);
+	}
 }
 
-STDMETHODIMP CAutoRouterBox::SetRect(long p1, long p2, long p3, long p4)
+void CAutoRouterBox::AssertValidPort(CComPtr<IAutoRouterPort> port) const
 {
-	CRect r(p1,p2,p3,p4);
+	static_cast<CAutoRouterPort*>(port.p)->AssertValid();
 
-	ASSERT( r.Width() >= 3 && r.Height() >= 3 );
-	ASSERT( r.TopLeft().x >= ED_MINCOORD && r.TopLeft().y >= ED_MINCOORD );
-	ASSERT( r.BottomRight().x <= ED_MAXCOORD && r.BottomRight().y <= ED_MAXCOORD );
-	ASSERT( HasNoPort() || atomic );
-
-	rect = r;
-	CalculateSelfPoints();
-
-	if( atomic )
-	{
-		ASSERT( ports.size() == 1 );
-		(static_cast<CAutoRouterPort*>(ports[0].p))->SetRect(r.left, r.top, r.right, r.bottom);
+	if( owner != NULL ) {
+		CComPtr<IAutoRouterBox> ownerBox;
+		COMTHROW(port->GetOwner(&ownerBox));
+		ASSERT( ownerBox.p == this );
 	}
 
-	return S_OK;
+	long p1, p2, p3, p4;
+	COMTHROW(port->GetRect(&p1, &p2, &p3, &p4));
+	ASSERT( IsRectIn(CRect(p1, p2, p3, p4), rect) );
 }
+
+#endif
 
 // CAutoRouterBox
 
