@@ -513,18 +513,19 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 
 	// SEARCH - Modal Dialog
-	if(!m_search.Create(MAKEINTRESOURCE(CGMESearch::IDD), this))
+	if(!m_search.Create(_T("Search"),this,CSize(200,200),TRUE,IDD_SEARCH_DIALOG,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+
 	{
         TRACE0("Failed to create Search Control\n");
         return -1;      // fail to create
 	}
 
+    m_search.EnableDocking(CBRS_ALIGN_ANY);
+    // --- Docking ---
+ 
+    DockPane(&m_browser, AFX_IDW_DOCKBAR_RIGHT);
 
-	// --- Docking ---
-
-	DockPane(&m_browser, AFX_IDW_DOCKBAR_RIGHT);
-	
-	DockPane(&m_partBrowser, AFX_IDW_DOCKBAR_LEFT);
+    DockPane(&m_partBrowser, AFX_IDW_DOCKBAR_LEFT);
 
 	m_panningWindow.DockToWindow(&m_partBrowser, CBRS_ALIGN_BOTTOM);
 	
@@ -533,6 +534,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	DockPane(&m_console,AFX_IDW_DOCKBAR_BOTTOM);
 
+	CDockablePane* pTabbedBar = NULL;
+	m_search.AttachToTabWnd(&m_console, DM_SHOW, TRUE, &pTabbedBar);
+	
+	m_search.ShowPane(FALSE, FALSE, FALSE);	
+
+	
 
 
 	// CG: The following block was inserted by 'Status Bar' component.
@@ -556,6 +563,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// thus we ignore the registry settings
 	m_wndComponentBar.ShowWindow(SW_HIDE);
 	ShowPane(&m_wndComponentBar, FALSE, FALSE, FALSE);
+
+	
 
 	// CG: The following line was added by the Splash Screen component.
 	CSplashWnd::ShowSplashScreen(this);
@@ -762,7 +771,11 @@ BOOL CMainFrame::InitStatusBar(UINT *pIndicators, int nSize, int nSeconds)
 
 void CMainFrame::OnEditSearch() 
 {
-	m_search.ShowWindow(SW_SHOWNORMAL);
+	if(!m_search.IsVisible())
+	{
+		m_search.ShowPane(TRUE, FALSE, TRUE);
+	}
+
 	CComPtr<IMgaObjects> objs;
 	if( CGMEBrowser::theInstance->GetSelectedItems( objs))
 		m_search.SetSelMgaObjects( objs);

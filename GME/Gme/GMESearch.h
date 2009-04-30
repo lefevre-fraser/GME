@@ -13,7 +13,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CGMESearch dialog
 
-class CGMESearch : public CDialog
+class CGMESearch :  public CDockablePane
 {
 // Construction
 public:

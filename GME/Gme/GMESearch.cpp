@@ -23,7 +23,7 @@ CGMESearch* CGMESearch::theInstance = NULL;
 
 
 CGMESearch::CGMESearch()
-	: CDialog()
+: CDockablePane()
 {
 	//{{AFX_DATA_INIT(CGMESearch)
 		// NOTE: the ClassWizard will add member initialization here
@@ -35,14 +35,14 @@ CGMESearch::CGMESearch()
 
 void CGMESearch::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CDockablePane::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CGMESearch)
 	DDX_Control(pDX, IDC_SEARCHCTRL, m_search);
 	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP(CGMESearch, CDialog)
+BEGIN_MESSAGE_MAP(CGMESearch, CDockablePane)
 	//{{AFX_MSG_MAP(CGMESearch)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
@@ -53,7 +53,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CGMESearch message handlers
 
-BEGIN_EVENTSINK_MAP(CGMESearch, CDialog)
+BEGIN_EVENTSINK_MAP(CGMESearch, CDockablePane)
     //{{AFX_EVENTSINK_MAP(CGMESearch)
 	ON_EVENT(CGMESearch, IDC_SEARCHCTRL, 1 /* ClickMgaObject */, OnClickMgaObjectSearchctrl, VTS_UNKNOWN)
 	ON_EVENT(CGMESearch, IDC_SEARCHCTRL, 2 /* DblClickMgaObject */, OnDblClickMgaObjectSearchctrl, VTS_UNKNOWN)
@@ -105,13 +105,20 @@ BOOL CGMESearch::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 	
-	return CDialog::PreTranslateMessage(pMsg);
+	return CDockablePane::PreTranslateMessage(pMsg);
 }
 
 int CGMESearch::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
-	if (CDialog::OnCreate(lpCreateStruct) == -1)
+	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
+
+   /* //if no project is open don't draw
+    if(m_search.GetMgaProject()==NULL)
+        return 0;*/
+
+    if(!m_search.Create("Search",WS_CHILD | WS_VISIBLE,CRect(0,0,230,300),this,IDC_SEARCHCTRL))
+        return -1;
 	
 //	if(!m_search.Create("Search",WS_CHILD | WS_VISIBLE,CRect(0,0,230,300),this,IDC_SEARCHCTRL))
 //		return -1;
@@ -122,7 +129,7 @@ int CGMESearch::OnCreate(LPCREATESTRUCT lpCreateStruct)
 // OnSizing implemented as well (see below)
 void CGMESearch::OnSize(UINT nType, int cx, int cy)
 {
-	CDialog::OnSize(nType, cx, cy);
+	CDockablePane::OnSize(nType, cx, cy);
 
 	if (m_search.GetSafeHwnd()) {
 		CRect rc;
@@ -136,7 +143,7 @@ void CGMESearch::OnSize(UINT nType, int cx, int cy)
 
 void CGMESearch::SetProject(CComPtr<IMgaProject> mgaProject)
 {
-	m_search.SetMgaProject(mgaProject);
+  	m_search.SetMgaProject(mgaProject);    
 }
 
 void CGMESearch::SetSelMgaObjects( CComPtr<IMgaObjects> p_mgaObjects)
@@ -163,6 +170,9 @@ void CGMESearch::LocateObject(LPCTSTR mgaObjectId)
 	 && mgaObjectId)
 	{
 		CGMEBrowser::theInstance->FocusItem( CComBSTR( mgaObjectId));
+        //added :kiran
+        CGMEDoc::theInstance->ShowObject(mgaObjectId);
+        
 	}
 }
 
@@ -185,5 +195,5 @@ void CGMESearch::OnSizing(UINT fwSide, LPRECT pRect)
 	if( pRect->bottom - pRect->top < desiredY) pRect->bottom = pRect->top + desiredY;
 	if( pRect->right - pRect->left < desiredX) pRect->right = pRect->left + desiredX;
 
-	CDialog::OnSizing(fwSide, pRect);
+	CDockablePane::OnSizing(fwSide, pRect);
 }
