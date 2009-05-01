@@ -525,16 +525,16 @@ void CSearchCtrl::SelMgaObjects(IUnknown* p_selMgaObjs)
 		if (ccpMgaObjects == NULL) 
 		{
 			ThrowError(CTL_E_INVALIDPROPERTYVALUE, _T("Unable to cast MgaObjects."));
-			m_searchDlg.EnableScoped( FALSE);
+			//m_searchDlg.EnableScoped( FALSE);
 			return;
 		}
 
 		m_MgaObjs = ccpMgaObjects;
-		m_searchDlg.EnableScoped( TRUE);
+		//m_searchDlg.EnableScoped( TRUE);
 	}
 	else { // called when Dlg is Hidden, in order to release the Mga ptrs
 		m_MgaObjs.Release();
-		m_searchDlg.EnableScoped( FALSE);
+		//m_searchDlg.EnableScoped( FALSE);
 	}
 	//SetModifiedFlag();
 }

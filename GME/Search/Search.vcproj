@@ -77,6 +77,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"
+				AdditionalIncludeDirectories="./Debug"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -180,6 +181,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"
+				AdditionalIncludeDirectories="./Release"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -233,6 +235,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\Attrib.cpp"
+				>
+			</File>
+			<File
 				RelativePath="ComHelp.cpp"
 				>
 				<FileConfiguration
@@ -283,6 +289,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\DummyEdit.cpp"
+				>
 			</File>
 			<File
 				RelativePath="Input.cpp"
@@ -401,28 +411,6 @@
 						Name="VCMIDLTool"
 						PreprocessorDefinitions=""
 						TargetEnvironment="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Search.rc"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="$(OUTDIR)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-						AdditionalIncludeDirectories="$(OUTDIR)"
 					/>
 				</FileConfiguration>
 			</File>
@@ -590,6 +578,10 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath=".\Attrib.h"
+				>
+			</File>
+			<File
 				RelativePath="ComHelp.h"
 				>
 			</File>
@@ -603,6 +595,10 @@
 			</File>
 			<File
 				RelativePath="..\Common\CommonSmart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DummyEdit.h"
 				>
 			</File>
 			<File
@@ -676,6 +672,10 @@
 			>
 			<File
 				RelativePath="Search.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Search.rc"
 				>
 			</File>
 			<File

@@ -21,7 +21,7 @@ static char THIS_FILE[]=__FILE__;
 
 CInput::CInput()
 {
-	
+    or=TRUE;
 }
 
 CInput::~CInput()
@@ -29,118 +29,138 @@ CInput::~CInput()
 
 }
 
-void CInput::GetInput(CString name, CString role, CString kind, CString attrname, int attrtype, 
-					  CString attrval, BOOL spl, BOOL mod, BOOL atom, BOOL ref, BOOL set, BOOL full, 
-					  IMgaFCO*, int, //WAS: IMgaFCO *root, int searchscope,
-					  BOOL bMatchCase, BOOL bScopedSearch)
+//Get the search criterias
+void CInput::GetInput(CString name, CString role, CString kind, CString attrname,CString name2,CString role2,CString kind2,CString attribute2,
+                      CString attrval, BOOL mod, BOOL atom, BOOL ref, BOOL set, BOOL full, 
+                      IMgaFCO*, int, //WAS: IMgaFCO *root, int searchscope,
+                      BOOL bMatchCase, int scopedSearch,int logicalExpr)
 {
-	doScopedSearch = bScopedSearch;
+    //doScopedSearch = bScopedSearch;
 
-	getCaseIgnored = !bMatchCase;
-	if( getCaseIgnored)
-	{
-		name.MakeLower();
-		role.MakeLower();
-		kind.MakeLower();
-		attrname.MakeLower();
-		attrval.MakeLower();
-	}
+    getCaseIgnored = !bMatchCase;
+    if( getCaseIgnored)
+    {
+        name.MakeLower();
+        role.MakeLower();
+        kind.MakeLower();
+        attrname.MakeLower();
+        attrval.MakeLower();
+        //addded
+        name2.MakeLower();
+        role2.MakeLower();
+        kind2.MakeLower();
+        attribute2.MakeLower();
+    }
+    objAttrib2=attribute2;
+    objattrib=attrname;
+    this->full=full;
 
-	if (full)
-	{
-		CString temp("");
-		
-		if (!name.IsEmpty())
-		{
-			//AfxMessageBox(name);
-			temp = "^";
-			temp += name;
-			temp += "$";
-			objName = CRegExp(temp);
-			temp = "";
-		}
-		else
-			objName = CRegExp(name);
+    objName=GetRegExp(name);
+    objRole = GetRegExp(role);
+    objKind = GetRegExp(kind);
+    objAttrName = GetRegExp(attrname);
 
-		if (!role.IsEmpty())
-		{
-			//AfxMessageBox(role);
-			temp = "^";
-			temp += role;
-			temp += "$";
-			objRole = CRegExp(temp);
-			temp = "";
-		}
-		else
-			objRole = CRegExp(role);
+    objName2=GetRegExp(name2);
+    objKind2=GetRegExp(kind2);
+    objRole2=GetRegExp(role2);
 
-		if (!kind.IsEmpty())
-		{
-			//AfxMessageBox(kind);
-			temp = "^";
-			temp += kind;
-			temp += "$";
-			objKind = CRegExp(temp);
-			temp = "";
-		}
-		else
-			objKind = CRegExp(kind);
+    objVal = attrval;
+    //objattribName = attrname;
+    this->name=name;
+    this->kind=kind;
+    this->role=role;
+    this->name2=name2;
+    this->kind2=kind2;
+    this->role2=role2;
 
-		if (!attrname.IsEmpty())
-		{
-			//AfxMessageBox(attrname);
-			temp = "^";
-			temp += attrname;
-			temp += "$";
-			objAttrName = CRegExp(temp);
-			temp = "";
-		}
-		else
-			objAttrName = CRegExp(attrname);
+    if(name2.Trim()=="" && kind2.Trim()==""&& role2.Trim()=="" && attribute2.Trim()=="")
+    {
+        doSecond=FALSE;
+    }
+    else doSecond=TRUE;
+    //getSplSearch = spl;
 
-		if (!attrval.IsEmpty())
-		{
-			//AfxMessageBox(attrval);
-			temp = "^";
-			temp += attrval;
-			temp += "$";
-			objAttrVal = CRegExp(temp);
-			temp = "";
-		}
-		else
-			objAttrVal = CRegExp(attrval);
-	}
-	else
-	{
-		objName = CRegExp(name);
-		objRole = CRegExp(role);
-		objKind = CRegExp(kind);
-		objAttrName = CRegExp(attrname);
-		objAttrVal = CRegExp(attrval);
-	}
-	objVal = attrval;
-	objattribName = attrname;
+    getModels = mod;
+    getAtoms = atom;
+    getReferences = ref;
+    getSets = set;
+    scope=scopedSearch;
+    logical=logicalExpr;
+    ParseAttribute();
+}
 
-	switch(attrtype)
-	{
-		case 0: getAttrType = ATTVAL_STRING;	break;
-		case 1: getAttrType = ATTVAL_INTEGER;	break;
-		case 2: getAttrType = ATTVAL_DOUBLE;	break;
-		case 3: getAttrType = ATTVAL_BOOLEAN;	break;
-		case 4: getAttrType = ATTVAL_REFERENCE;	break;
-		default: getAttrType = ATTVAL_STRING;		break;
-	}
+//Parses attribute expressions and keeps it in stack
+//Two stacks are used for both lhs and rhs search criteria
+void CInput::ParseAttribute()
+{
+    //CString attrName=objAttrName.st
 
-	getSplSearch = spl;
+    if(getCaseIgnored)
+    {
+        objattrib.MakeLower();
+        objAttrib2.MakeLower();
+    }
+    CString temp=objattrib;
+    CString oper,temp2;
 
-	getModels = mod;
-	getAtoms = atom;
-	getReferences = ref;
-	getSets = set;
+    //FInd individual parts of the attribute expression
+    //and put it on the stack for Lhs search criteria
+    //this keeps overall expression on the stack for eg if expression is 
+    // a<b & b<c,  element is stack wiil be a<b, &, b<c
+    //thus it will be divided into 3 elements
+    int index= temp.FindOneOf("&|");
+    if(index==-1 && temp!="")
+        expr1.push_back(Attrib(temp.Trim()));
 
-//	searchroot = root;// looks obsolete to me, replaced by doScopedSearch [zolmol]
+    int i=0;
+    while(index!=-1)
+    {
+        oper=temp[index];
+        AfxExtractSubString(temp2,temp,0,temp[index]);
+        expr1.push_back(Attrib(temp2.Trim()));
+        expr1.push_back(Attrib(CString(temp[index])));
+        temp=temp.Right(temp.GetLength()-index-1);
+        //i++;
+        index= temp.FindOneOf("&|");
+        if(index==-1) expr1.push_back(Attrib(temp.Trim()));
+    }
 
-//	doReferenceSearch = searchtype;
-//	doGlobalSearch = searchscope; // looks obsolete to me, replaced by doScopedSearch [zolmol]
 
+     //FInd individual parts of the attribute expression
+    //and put it on the stack for rhs search criteria
+    i=0;
+    temp=objAttrib2;
+    index=temp.FindOneOf("&|");
+    if(index==-1 && temp!="")
+        expr2.push_back(Attrib(temp.Trim()));
+    while(index!=-1)
+    {
+        AfxExtractSubString(temp2,temp,i,temp[index]);
+        expr2.push_back(Attrib(temp2.Trim()));
+        expr2.push_back(Attrib(CString(temp[index])));
+        //i++;
+        temp=temp.Right(temp.GetLength()-index-1);
+        index= temp.FindOneOf("&|");
+        if(index==-1) expr1.push_back(Attrib(temp.Trim()));
+    }
+}
+
+//Obtain regular expression form of the string
+//supplied
+CRegExp CInput::GetRegExp(CString name)
+{
+    CString temp="";
+    if(name.IsEmpty())
+    {
+        return CRegExp(name);
+    }
+    if(full)
+    {
+        temp="^";
+        temp+=name;
+        temp+="$";
+        return CRegExp(temp);
+    }
+
+    return CRegExp(name);
 }

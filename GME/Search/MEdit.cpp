@@ -9,9 +9,10 @@
 
 // CMEdit
 
-IMPLEMENT_DYNAMIC(CMEdit, CEdit)
+IMPLEMENT_DYNAMIC(CMEdit, CComboBox)
 CMEdit::CMEdit()
 {
+    //m_edit.set
 }
 
 CMEdit::~CMEdit()
@@ -19,8 +20,9 @@ CMEdit::~CMEdit()
 }
 
 
-BEGIN_MESSAGE_MAP(CMEdit, CEdit)
-	ON_WM_KEYDOWN()
+BEGIN_MESSAGE_MAP(CMEdit, CComboBox)
+    ON_WM_CTLCOLOR()
+    ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -28,30 +30,31 @@ END_MESSAGE_MAP()
 // CMEdit message handlers
 
 
-void CMEdit::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
-	CSearchDlg* dlg = (CSearchDlg*) GetParent();
-	if( dlg) {
-		if( nChar == VK_TAB)
-		{
-			dlg->tabPressed( this, ::GetKeyState( VK_SHIFT) < 0);
-		}
-		else if( nChar == VK_RETURN)
-		{
-			CWnd* nxt = 0;
-			nxt = &dlg->m_lstResults;//nxt = &dlg->m_btnGO;
-			if( nxt) 
-			{
-				dlg->clickGo();
-				nxt->SetFocus();
-				return;
-			}
-		}
-		else if( nChar == VK_ESCAPE)
-		{
-			dlg->getMyParent()->WantToBeClosed();
-		}
-	}
 
-	CEdit::OnKeyDown(nChar, nRepCnt, nFlags);
+
+HBRUSH CMEdit::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+    if (nCtlColor == CTLCOLOR_EDIT)
+    {
+        //[ASCII 160][ASCII 160][ASCII 160]Edit control
+        if (m_edit.GetSafeHwnd() == NULL)
+            m_edit.SubclassWindow(pWnd->GetSafeHwnd());
+    }
+    else if (nCtlColor == CTLCOLOR_LISTBOX)
+    {
+        //ListBox control
+        if (m_listbox.GetSafeHwnd() == NULL)
+            m_listbox.SubclassWindow(pWnd->GetSafeHwnd());
+    }
+    HBRUSH hbr = CComboBox::OnCtlColor(pDC, pWnd, nCtlColor);
+    return hbr;
+}
+
+void CMEdit::OnDestroy()
+{
+    if (m_edit.GetSafeHwnd() != NULL)
+        m_edit.UnsubclassWindow();
+    if (m_listbox.GetSafeHwnd() != NULL)
+        m_listbox.UnsubclassWindow();
+    CComboBox::OnDestroy();
 }

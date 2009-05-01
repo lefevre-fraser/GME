@@ -1,18 +1,23 @@
 #pragma once
 
-
+#include "DummyEdit.h"
 // CMEdit
 
-class CMEdit : public CEdit
+class CMEdit : public CComboBox
 {
-	DECLARE_DYNAMIC(CMEdit)
+    DECLARE_DYNAMIC(CMEdit)
 
 public:
-	CMEdit();
-	virtual ~CMEdit();
+    CMEdit();
+    virtual ~CMEdit();
 
 protected:
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+    CDummyEdit      m_edit;
+    CListBox   m_listbox;
+protected:
+    afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+    afx_msg void OnDestroy();
+
 };

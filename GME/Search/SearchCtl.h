@@ -91,7 +91,7 @@ protected:
 		{FireEvent(eventidDblClickMgaObject,EVENT_PARAM(VTS_UNKNOWN), mgaObject);}
 	void FireWantToBeClosed()
 		{FireEvent(eventidWantToBeClosed,EVENT_PARAM(VTS_NONE));}
-	void FireLocateMgaObject(LPCTSTR mgaObjectId)
+    void FireLocateMgaObject(LPCTSTR mgaObjectId)
 		{FireEvent(eventidLocateMgaObject, EVENT_PARAM(VTS_BSTR), mgaObjectId);}
 
 

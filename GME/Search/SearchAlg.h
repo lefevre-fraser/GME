@@ -38,7 +38,11 @@ public:
 *
 */
 	void Search(IMgaFolder *root, IMgaObjects* scope, IMgaFCO *selected, CComPtr<IMgaFCOs> disp, CProgressCtrl *Progress);
-
+    void SearchResults(CComPtr<IMgaFCOs> old_results,CComPtr<IMgaFCOs> disp, CProgressCtrl *Progress);
+    bool Check(IMgaFCO* fco,int type);
+    bool CheckLogicalCombination(IMgaFCO* fco,bool (CSearch::*Chk)(IMgaFCO* fco,bool first));
+    int Matches(IMgaFCO* fco,bool first);
+    bool PerformLogical(int first,int second);
 	
 private:
 
@@ -89,24 +93,26 @@ private:
 /**
 * \brief Check this model against the search criteria.
 */
-	void CheckModel(IMgaModel *Model);
+	bool CheckModel(IMgaFCO *Model);
 /**
 * \brief Check this atom against the search criteria.
 */
-	void CheckAtom(IMgaAtom *Atom);
+	bool CheckAtom(IMgaFCO *Atom);
 /**
 * \brief Check this reference against the search criteria.
 */
-	void CheckReference(IMgaReference *Reference);
+	bool CheckReference(IMgaFCO *Reference);
 /**
 * \brief Check this set against the search criteria.
 */
-	void CheckSet(IMgaSet *Set);
+	bool CheckSet(IMgaFCO *Set);
 
 /**
 * \brief Check the object's attributes against the search criteria.
 */
-	bool CheckAttributes(IMgaFCO *obj);
+	bool CheckAttributes(IMgaFCO *obj,bool first=true);
+
+   // bool CheckAttributes2(IMgaFCO *obj,BOOL first=1);
 
 
 	/// Where to store the results
@@ -117,6 +123,9 @@ private:
 	/// The input criteria.
 	CInput filter;
 
+    bool EvaluateResult(std::vector<Attrib>& attrs);
+
+   
 //	CGMESearchDialog *SearchDialog;
 };
 

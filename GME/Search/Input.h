@@ -6,6 +6,8 @@
 #define AFX_INPUT_H
 
 #include "RegExp.h"
+#include <vector>
+#include "attrib.h"
 
 #if _MSC_VER > 1000
 #pragma once
@@ -18,13 +20,16 @@
 */
 class CInput  
 {
+protected:
+    void ParseAttribute();
+    CRegExp GetRegExp(CString name);
 public:
 	CInput();
 	virtual ~CInput();
 
-	void GetInput(CString name, CString role, CString kind, CString attrname, int attrtype,
-				CString attrval, BOOL spl, BOOL mod, BOOL atom, BOOL ref, BOOL set, BOOL full, 
-				 IMgaFCO *root, int searchscope, BOOL caseMatch, BOOL bScopedSearch);
+	void GetInput(CString name, CString role, CString kind, CString attrname, CString name2,CString role2,CString kind2,CString attribute2,
+				CString attrval, BOOL mod, BOOL atom, BOOL ref, BOOL set, BOOL full, 
+				 IMgaFCO *root, int searchscope, BOOL caseMatch, int scopedSearch, int logicalExpr);
 
 	/// The name of the object the user is searching for.
 	CRegExp objName;
@@ -35,10 +40,12 @@ public:
 	/// The name of the attribute the user wants to search for.
 	CRegExp objAttrName;
 	/// The type of attribute the user wants to search for.
-	attval_enum getAttrType;
+	//attval_enum getAttrType;
 	/// The value of the attribute the user wants to search for.
+
+   
 	CRegExp objAttrVal;
-	CString objattribName;
+	CString objattrib;
 	CString objVal;
 
 	/// Does the user want to do a special reference search?
@@ -65,6 +72,28 @@ public:
 
 	/// Is the search restricted to a scope?
 	BOOL doScopedSearch;
+
+    //added
+    CRegExp objName2;
+    CRegExp objRole2;
+    CRegExp objKind2;
+    CRegExp objAttr2;
+    CString objAttrib2;
+    int scope;
+    int logical;
+   // attval_enum getAttrType2;
+    BOOL or;
+    BOOL full;
+    BOOL doSecond;
+
+    CString name;
+    CString role;
+    CString kind;
+    CString name2;
+    CString role2;
+    CString kind2;
+    std::vector<Attrib> expr1;
+    std::vector<Attrib> expr2;
 };
 
 #endif 
