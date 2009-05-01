@@ -22,6 +22,7 @@ typedef enum { GME_CMD_CONTEXT } GMECommandCode;
 typedef enum { GME_LEFT_SIDE, GME_TOP_SIDE, GME_RIGHT_SIDE, GME_BOTTOM_SIDE, GME_SIDE_NUM } GMESizeCode;
 typedef enum { GME_RIGHT_DIRECTION = 0, GME_LEFT_DIRECTION, GME_DOWN_DIRECTION, GME_UP_DIRECTION, GME_DIRECTION_NUM } GMEDirectionCode;
 typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FONT_KIND_NUM } GMEFontKind;
+typedef enum { GME_LINE_SOLID = 0, GME_LINE_DASH, GME_LINE_CUSTOMIZED } GMEConnLineType;
 
 #define	GME_BACKGROUND_COLOR		RGB(0xff, 0xff, 0xff)
 #define	GME_BORDER_COLOR			RGB(0x00, 0x00, 0x00)
@@ -213,7 +214,7 @@ typedef CTypedPtrList<CPtrList, CGuiFco*> 								CGuiFcoList;
 typedef CTypedPtrList<CPtrList, CGuiObject*> 							CGuiObjectList;
 typedef CTypedPtrList<CPtrList, CGuiAspect*>							CGuiAspectList;
 typedef CTypedPtrList<CPtrList, CGuiPort*> 								CGuiPortList;
-typedef CTypedPtrList<CPtrList, CGuiAnnotator*>								CGuiAnnotatorList;
+typedef CTypedPtrList<CPtrList, CGuiAnnotator*>							CGuiAnnotatorList;
 typedef CTypedPtrList<CPtrList, CGuiConnection*> 						CGuiConnectionList;
 
 typedef CTypedPtrList<CPtrList, CDynMenuItem*>							CDynMenuItemList;

@@ -415,17 +415,18 @@ public:
 					 int& yMinLimit, int& yMaxLimit) const;
 	int IsPathAt(const CPoint& point, ConnectionPartMoveType& connectionMoveMethod, bool& horizontalOrVerticalEdge,
 				 bool& isPartFixed) const;
-	std::vector<long> GetRelevantCustomizedEdgeIndexes(int asp);
+	std::vector<long> GetRelevantCustomizedEdgeIndexes(void);
 	void ReadCustomPathData(void);
 	void WriteCustomPathData(bool handleTransaction = true);
 	void InsertCustomPathData(CustomPathData& pathData);
 	void UpdateCustomPathData(CustomPathData& pathData);
 	std::vector<CustomPathData> GetCurrentPathCustomizations(void);
 	bool HasPathCustomization(void) const;
-	bool HasPathCustomization(int asp) const;
-	bool HasPathCustomization(int asp, int pathIndex) const;
+	bool HasPathCustomizationForCurrentAspect(int edgeIndex = -1) const;
+	bool HasPathCustomizationForAnAspect(int asp, int edgeIndex = -1) const;
 	void DeletePathCustomization(CustomPathData& pathData);
 	bool DeleteAllPathCustomizationsForAnAspect(int asp);
+	bool DeleteAllPathCustomizationsForCurrentAspect(void);
 	void RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat);
 	bool IsConnectionAutoRouted(void) const;
 	void SetConnectionAutoRouted(bool autoRouteState);
@@ -449,7 +450,7 @@ private:
 	CComPtr<IAutoRouterPath> routerPath;
 	CGuiConnectionLabelSet labelset;
 	bool* visible;
-	int lineType;
+	GMEConnLineType lineType;
 	int srcStyle;
 	int dstStyle;
 	COLORREF color;

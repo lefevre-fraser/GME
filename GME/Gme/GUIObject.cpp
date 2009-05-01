@@ -2182,9 +2182,6 @@ void CGuiConnectionLabel::SetLocation(const CPoint& endPoint, const CPoint& next
 	if (skew) {
 		alpha = atan2(-((double)nextPoint.y - endPoint.y), (double)nextPoint.x - endPoint.x);
 		moreVerticalThanHorizontal = (alpha >= -3 * M_PI_4 && alpha < -M_PI_4) || (alpha < 3 * M_PI_4 && alpha >= M_PI_4);
-		TRACE("Alpha %lf (%lf) h/v %d (%ld,%ld)-(%ld,%ld) delta(%ld,%ld) %s\n", alpha, alpha / M_PI * 180.0, moreVerticalThanHorizontal,
-			endPoint.x, endPoint.y, nextPoint.x, nextPoint.y, nextPoint.x - endPoint.x, nextPoint.y - endPoint.y,
-			(const char*)label);
 	}
 	RoutingDirection lineDir = Dir_None;
 	if (!f_center)
@@ -2324,7 +2321,7 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role
 	{
 		CString pref;
 		GetPreference(pref, CONN_LINE_TYPE_PREF);
-		lineType = (pref == "dash") ? 1 : 0;
+		lineType = (pref == "dash") ? GME_LINE_DASH : GME_LINE_SOLID;
 	}
 	{
 		CString pref;
@@ -2611,11 +2608,11 @@ void CGuiConnection::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 		return;
 	}
 
-	// TODO
-	//std::vector<long> costumizedEdgeIndexes = GetRelevantCustomizedEdgeIndexes(int asp)
-
-	graphics.DrawConnection(gdip, points, grayedOut ? GME_GRAYED_OUT_COLOR : color, lineType, srcStyle, dstStyle,
-							true, view->m_zoomVal > ZOOM_NO, selected ? 3 : hovered ? 5 : 1);
+	std::vector<long> customizedEdgeIndexes;
+	if (selected && autoRouted)
+		customizedEdgeIndexes = GetRelevantCustomizedEdgeIndexes();
+	graphics.DrawConnection(gdip, points, customizedEdgeIndexes, grayedOut ? GME_GRAYED_OUT_COLOR : color,
+							lineType, srcStyle, dstStyle, true, view->m_zoomVal > ZOOM_NO, selected ? 3 : hovered ? 5 : 1);
 
 	if (points.GetSize() < 2) {
 		ASSERT(false);
@@ -3015,8 +3012,7 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 
 							double m1 = ((double)point.x - pt.x) / (last.x - pt.x);
 							double m2 = ((double)point.y - pt.y) / (last.y - pt.y);
-							ASSERT(abs(m2 - m1) < 2.0e-1);
-							TRACE3("GetEdgeIndex d2 %lf m1 %lf m2 %lf\n", d_square, m1, m2);
+							//ASSERT(abs(m2 - m1) < 2.0e-1);
 							if (m1 >= 0.0 && m1 <= 1.0 && m2 >= 0.0 && m2 <= 1.0)
 								onEdge = true;
 						}
@@ -3051,16 +3047,17 @@ int CGuiConnection::IsPathAt(const CPoint& point, ConnectionPartMoveType& connec
 						isPartFixed, tmpLimit, tmpLimit, tmpLimit, tmpLimit);
 }
 
-std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(int asp)
+std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(void)
 {
+	long asp = view->currentAspect->index;
 	std::vector<long> customizedEdgeIndexes;
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
-		if ((*ii).aspect == asp) {
+		if ((*ii).aspect == asp || asp == -1) {
 			if (autoRouted && (*ii).type == SimpleEdgeDisplacement ||
 				!autoRouted && (*ii).type != SimpleEdgeDisplacement)
 			{
-				customizedEdgeIndexes.push_back((*ii).aspect);
+				customizedEdgeIndexes.push_back((*ii).edgeIndex);
 			}
 		}
 		++ii;
@@ -3072,14 +3069,14 @@ void CGuiConnection::ReadCustomPathData(void)
 {
 	customPathData.clear();
 	CString pref;
-	TRACE0("ReadCustomEdges:\n");
+	//TRACE0("ReadCustomEdges:\n");
 	if (GetPreference(pref, CUSTOMCONNECTIONDATA)) {
 		if (pref != EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC) {	// -1 is a magic number for deleted data
 			CString subStr;
 			int curPos = 0;
 			subStr = pref.Tokenize(";", curPos);
 			while (subStr != "") {
-				TRACE1("\tResulting token: %s\n", subStr);
+				//TRACE1("\tResulting token: %s\n", subStr);
 				CustomPathData pathData;
 				InitCustomPathData(pathData);
 				int curSubPos = 0;
@@ -3095,8 +3092,8 @@ void CGuiConnection::ReadCustomPathData(void)
 					pathData.edgeCount = strtol(edgeCountStr, NULL, 10);
 					CString edgeCustomTypeStr = subStr.Tokenize(",", curSubPos);
 					pathData.type = (PathCustomizationType)strtol(edgeCustomTypeStr, NULL, 10);
-					TRACE("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld", pathData.aspect, pathData.edgeIndex,
-																   pathData.edgeCount, pathData.type);
+					//TRACE("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld", pathData.aspect, pathData.edgeIndex,
+					//											   pathData.edgeCount, pathData.type);
 					CString directionStr = subStr.Tokenize(",", curSubPos);
 					pathData.horizontalOrVerticalEdge = (strtol(directionStr, NULL, 10) != 0);
 					CString positionStr = subStr.Tokenize(",", curSubPos);
@@ -3112,9 +3109,9 @@ void CGuiConnection::ReadCustomPathData(void)
 					positionStr = subStr.Tokenize(",", curSubPos);
 					pathData.l4 = strtol(positionStr, NULL, 10);
 
-					TRACE(", Dir %ld, x %ld, y %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
-						pathData.horizontalOrVerticalEdge, pathData.x, pathData.y,
-						pathData.l1, pathData.l2, pathData.l3, pathData.l4);
+					//TRACE(", Dir %ld, x %ld, y %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
+					//	pathData.horizontalOrVerticalEdge, pathData.x, pathData.y,
+					//	pathData.l1, pathData.l2, pathData.l3, pathData.l4);
 
 					positionStr = subStr.Tokenize(",", curSubPos);
 					pathData.d1 = atof(positionStr);
@@ -3133,9 +3130,9 @@ void CGuiConnection::ReadCustomPathData(void)
 					positionStr = subStr.Tokenize(",", curSubPos);
 					pathData.d8 = atof(positionStr);
 
-					TRACE("\t d1 %lf, d2 %lf, d3 %lf, d4 %lf, d5 %lf, d6 %lf, d7 %lf, d8 %lf\n",
-						pathData.d1, pathData.d2, pathData.d3, pathData.d4,
-						pathData.d5, pathData.d6, pathData.d7, pathData.d8);
+					//TRACE("\t d1 %lf, d2 %lf, d3 %lf, d4 %lf, d5 %lf, d6 %lf, d7 %lf, d8 %lf\n",
+					//	pathData.d1, pathData.d2, pathData.d3, pathData.d4,
+					//	pathData.d5, pathData.d6, pathData.d7, pathData.d8);
 
 					customPathData.push_back(pathData);
 				} else {
@@ -3257,12 +3254,12 @@ bool CGuiConnection::HasPathCustomization(void) const
 	return customPathData.size() > 0;
 }
 
-bool CGuiConnection::HasPathCustomization(int asp) const
+bool CGuiConnection::HasPathCustomizationForCurrentAspect(int edgeIndex) const
 {
-	return HasPathCustomization(asp, -1);
+	return HasPathCustomizationForAnAspect(view->currentAspect->index, edgeIndex);
 }
 
-bool CGuiConnection::HasPathCustomization(int asp, int edgeIndex) const
+bool CGuiConnection::HasPathCustomizationForAnAspect(int asp, int edgeIndex) const
 {
 	for (std::vector<CustomPathData>::const_iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 		if ((*ii).aspect == asp &&
@@ -3308,6 +3305,11 @@ bool CGuiConnection::DeleteAllPathCustomizationsForAnAspect(int asp)
 		}
 	}
 	return wereThereAnyDeletion;
+}
+
+bool CGuiConnection::DeleteAllPathCustomizationsForCurrentAspect(void)
+{
+	return DeleteAllPathCustomizationsForAnAspect(view->currentAspect->index);
 }
 
 void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat)

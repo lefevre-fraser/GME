@@ -479,7 +479,7 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 	// (Step 1: Move the desired edges
 	//  Step 2: Fix the desired edges)
 	bool hasCustomEdge = false;
-	std::map<long,long> customizedIndexes;
+	std::map<long,long> customizedIndexes;	// convert array to a map for easier lookup
 	SAFEARRAY* pArr = NULL;
 	COMTHROW(path->GetCustomizedEdgeIndexes(&pArr));
 	//one dim., long elements

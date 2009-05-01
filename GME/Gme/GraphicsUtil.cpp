@@ -232,21 +232,21 @@ Gdiplus::Font* CGraphics::GetGdipFont(int kindsize, bool bold, bool semibold)
 	return bold ? boldGdipFonts[kindsize] : (semibold ? semiboldGdipFonts[kindsize] : normalGdipFonts[kindsize]);
 }
 
-Gdiplus::Pen* CGraphics::GetGdipPen2(Gdiplus::Graphics* gdip, COLORREF color, bool dash, bool isViewMagnified,
-									 int width /* = 1 */)
+Gdiplus::Pen* CGraphics::GetGdipPen2(Gdiplus::Graphics* gdip, COLORREF color, GMEConnLineType lineType,
+									 bool isViewMagnified, int width)
 {
 	// TODO
 //	HDC hDC = gdip->GetHDC();
 //	bool isPrinting = GetDeviceCaps(hDC, TECHNOLOGY) == DT_RASPRINTER;
 //	gdip->ReleaseHDC(hDC);
-	return GetGdipPen(gdip, color, /*isPrinting*/ false, dash, isViewMagnified, width);
+	return GetGdipPen(gdip, color, /*isPrinting*/ false, lineType, isViewMagnified, width);
 }
 
-Gdiplus::Pen* CGraphics::GetGdipPen(Gdiplus::Graphics* gdip, COLORREF color, bool isPrinting, bool dash,
-									bool isViewMagnified, int width /* = 1 */)
+Gdiplus::Pen* CGraphics::GetGdipPen(Gdiplus::Graphics* gdip, COLORREF color, bool isPrinting, GMEConnLineType lineType,
+									bool isViewMagnified, int width)
 {
 	CString chBuffer;
-	chBuffer.Format("%x-%d-%d-%d-%ld", color, isPrinting, dash, isViewMagnified, width);
+	chBuffer.Format("%x-%d-%d-%d-%ld", color, isPrinting, lineType, isViewMagnified, width);
 	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.find(chBuffer);
 	if (it != m_mapGdipPens.end())
 		return it->second;
@@ -254,13 +254,16 @@ Gdiplus::Pen* CGraphics::GetGdipPen(Gdiplus::Graphics* gdip, COLORREF color, boo
 	Gdiplus::Color gdipColor(GetRValue(color), GetGValue(color), GetBValue(color));
 	float fWidth = static_cast<float> (isPrinting ? 1 : width);
 	Gdiplus::Pen* pen = new Gdiplus::Pen(gdipColor, fWidth);
-	if (dash) {
+	if (lineType == GME_LINE_DASH) {
 		Gdiplus::REAL dashPatternVals[2] = {
 			5.0f,	// dash length 5
 			2.0f	// space length 2
 		};
 		pen->SetDashPattern(dashPatternVals, 2);
 		pen->SetDashStyle(Gdiplus::DashStyleCustom);
+		pen->SetDashCap(Gdiplus::DashCapRound);
+	} else if (lineType == GME_LINE_CUSTOMIZED) {
+		pen->SetDashStyle(Gdiplus::DashStyleDashDotDot);
 		pen->SetDashCap(Gdiplus::DashCapRound);
 //	} else {
 //		pen->SetDashStyle(Gdiplus::DashStyleSolid);
@@ -290,8 +293,11 @@ void CGraphics::DrawGrid(Gdiplus::Graphics* gdip, int xSpace, int ySpace, int ma
 		gdip->DrawLine(pen, 0, y, maxx, y);
 }
 
-void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList &points, COLORREF color, int lineType,
-							   int srcEnd, int dstEnd, bool mark, bool isViewMagnified, int lineStyle)
+typedef std::pair<long,long> Long_Pair;
+
+void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points, const std::vector<long>& customizedEdgeIndexes,
+							   COLORREF color, GMEConnLineType lineType, int srcEnd, int dstEnd, bool mark,
+							   bool isViewMagnified, int lineStyle)
 {
 	if (points.GetCount() == 0)
 		return;
@@ -305,10 +311,20 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList &points
 //	if (isPrinting)
 //		color = GME_BLACK_COLOR;
 
-	// the color has to be altered a little bit, because the predefined PenMap has color at its key 
-	// so it will confuse this bold Pen with already existing pens
-	Gdiplus::Pen* pen = GetGdipPen(gdip, color, isPrinting, lineType > 0, isViewMagnified, lineStyle);
+	Gdiplus::Pen* pen = GetGdipPen(gdip, color, isPrinting, lineType, isViewMagnified, lineStyle);
 	Gdiplus::Brush* brush = GetGdipBrush(color);
+
+	bool hasCustomizedEdges = (customizedEdgeIndexes.size() > 0);
+	std::map<long,long> customizedIndexes;
+	if (hasCustomizedEdges) {	// convert array to a map for easier lookup
+		std::vector<long>::const_iterator ii = customizedEdgeIndexes.begin();
+		while (ii != customizedEdgeIndexes.end())
+		{
+			customizedIndexes.insert(Long_Pair(*ii, 0));
+			++ii;
+		}
+	}
+	std::map<long,long>::const_iterator indIter;
 
 	CPoint beforeLast;
 	CPoint last;
@@ -316,11 +332,21 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList &points
 	if (pos) {
 		CPoint pt = points.GetNext(pos);
 		last = pt;
+		long currEdgeIndex = 0;
 		while (pos) {
 			pt = points.GetNext(pos);
+			if (hasCustomizedEdges) {
+				indIter = customizedIndexes.find(currEdgeIndex);
+				if (indIter != customizedIndexes.end()) {
+					pen = GetGdipPen(gdip, color, isPrinting, GME_LINE_CUSTOMIZED, isViewMagnified, lineStyle);
+				} else {
+					pen = GetGdipPen(gdip, color, isPrinting, lineType, isViewMagnified, lineStyle);
+				}
+			}
 			gdip->DrawLine(pen, last.x, last.y, pt.x, pt.y);
 			beforeLast = last;
 			last = pt;
+			currEdgeIndex++;
 		}
 	}
 
@@ -377,8 +403,6 @@ void CGraphics::DrawArrow(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::B
 		skew = true;
 		dir = GME_RIGHT_DIRECTION;
 		alpha = atan2((double)last.y - beforeLast.y, (double)last.x - beforeLast.x);
-		TRACE("Alpha %lf (%lf) (%ld,%ld)-(%ld,%ld) delta(%ld,%ld)\n", alpha, alpha / M_PI * 180.0,
-			beforeLast.x, beforeLast.y, last.x, last.y, last.x - beforeLast.x, last.y - beforeLast.y);
 	}
 
 	switch (iEnd) {

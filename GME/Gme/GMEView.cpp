@@ -852,7 +852,7 @@ void CGMEView::OnDraw(CDC* pDC)
 				if (connSrcPort) {
 					rect = connSrcPort->GetLocation() + rect.TopLeft();
 				}
-				Gdiplus::Pen* xorPen = graphics.GetGdipPen2(&gdip, GME_DARKRED_COLOR, false, m_zoomVal > ZOOM_NO, GME_CONNSELECT_WIDTH);
+				Gdiplus::Pen* xorPen = graphics.GetGdipPen2(&gdip, GME_DARKRED_COLOR, GME_LINE_SOLID, m_zoomVal > ZOOM_NO, GME_CONNSELECT_WIDTH);
 				gdip.DrawRectangle(xorPen, rect.left, rect.top, rect.Width(), rect.Height());
 
 				if ((connSrcHotSide != GME_CENTER) && (!connSrcPort)) {
@@ -885,7 +885,7 @@ void CGMEView::OnDraw(CDC* pDC)
 				if (connTmpPort) {
 					rect = connTmpPort->GetLocation() + rect.TopLeft();
 				}
-				Gdiplus::Pen* xorPen = graphics.GetGdipPen2(&gdip, GME_RED_COLOR, false, m_zoomVal > ZOOM_NO, GME_CONNSELECT_WIDTH);
+				Gdiplus::Pen* xorPen = graphics.GetGdipPen2(&gdip, GME_RED_COLOR, GME_LINE_SOLID, m_zoomVal > ZOOM_NO, GME_CONNSELECT_WIDTH);
 				gdip.DrawRectangle(xorPen, rect.left, rect.top, rect.Width(), rect.Height());
 
 				if ((connTmpHotSide != GME_CENTER) && (!connTmpPort)) {
@@ -2543,8 +2543,8 @@ void CGMEView::DrawConnectionCustomizationTracker(CDC* pDC, Gdiplus::Graphics* g
 			trackerRect.top		= min(startPoint.y, endPoint.y);
 			trackerRect.right	= max(startPoint.x, min(customizeConnectionCurrCursor.x, customizeConnectionEdgeXMaxLimit));
 			trackerRect.bottom	= max(startPoint.y, endPoint.y);
-			TRACE("Conn Customization Tracker: (%ld,%ld)-(%ld,%ld)\n", trackerRect.left, trackerRect.top,
-																	   trackerRect.right, trackerRect.bottom);
+			//TRACE("Conn Customization Tracker: (%ld,%ld)-(%ld,%ld)\n", trackerRect.left, trackerRect.top,
+			//														   trackerRect.right, trackerRect.bottom);
 			DrawTracker(pDC, trackerRect, CRectTracker::dottedLine);
 		}
 		if (customizeConnectionPartMoveMethod == VerticalEdgeMove ||
@@ -2561,12 +2561,12 @@ void CGMEView::DrawConnectionCustomizationTracker(CDC* pDC, Gdiplus::Graphics* g
 			trackerRect.top		= min(startPoint.y, max(customizeConnectionCurrCursor.y, customizeConnectionEdgeYMinLimit));
 			trackerRect.right	= max(startPoint.x, endPoint.x);
 			trackerRect.bottom	= max(startPoint.y, min(customizeConnectionCurrCursor.y, customizeConnectionEdgeYMaxLimit));
-			TRACE("Conn Customization Tracker: (%ld,%ld)-(%ld,%ld)\n", trackerRect.left, trackerRect.top,
-																	   trackerRect.right, trackerRect.bottom);
+			//TRACE("Conn Customization Tracker: (%ld,%ld)-(%ld,%ld)\n", trackerRect.left, trackerRect.top,
+			//														   trackerRect.right, trackerRect.bottom);
 			DrawTracker(pDC, trackerRect, CRectTracker::dottedLine);
 		}
 	} else if (customizeConnectionType == CustomPointCustomization) {
-		Gdiplus::Pen* dashPen = graphics.GetGdipPen2(gdip, GME_BLACK_COLOR, true, m_zoomVal > ZOOM_NO, 1);
+		Gdiplus::Pen* dashPen = graphics.GetGdipPen2(gdip, GME_BLACK_COLOR, GME_LINE_DASH, m_zoomVal > ZOOM_NO, 1);
 		gdip->DrawLine(dashPen, customizeConnectionEdgeStartPoint.x, customizeConnectionEdgeStartPoint.y,
 					   customizeConnectionCurrCursor.x, customizeConnectionCurrCursor.y);
 		gdip->DrawLine(dashPen, customizeConnectionCurrCursor.x, customizeConnectionCurrCursor.y,
@@ -7055,7 +7055,7 @@ void CGMEView::OnDeleteConnRouteCustomData()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnRouteCustomData in "+path+name+"\r\n");
 	if (selectedContextConnection != NULL) {
-		selectedContextConnection->DeleteAllPathCustomizationsForAnAspect(currentAspect->index);
+		selectedContextConnection->DeleteAllPathCustomizationsForCurrentAspect();
 		selectedContextConnection->WriteCustomPathData();
 	}
 	selectedContextConnection = NULL;
@@ -7186,13 +7186,13 @@ void CGMEView::OnUpdateEnableAutoRoutingOfConnection(CCmdUI* pCmdUI)
 void CGMEView::OnUpdateDeleteConnEdgeCustomData(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(selectedContextConnection != NULL &&
-				   selectedContextConnection->HasPathCustomization(currentAspect->index, contextConnectionEdgeIndex));
+				   selectedContextConnection->HasPathCustomizationForCurrentAspect(contextConnectionEdgeIndex));
 }
 
 void CGMEView::OnUpdateDeleteConnRouteCustomData(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(selectedContextConnection != NULL &&
-				   selectedContextConnection->HasPathCustomization(currentAspect->index));
+				   selectedContextConnection->HasPathCustomizationForCurrentAspect());
 }
 
 #if defined(ADDCRASHTESTMENU)

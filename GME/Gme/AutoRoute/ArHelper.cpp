@@ -561,8 +561,6 @@ RoutingDirection PointOnSide(const CPoint& point, const CRect& rect)
 	int dright = DistanceFromVLine(point, rect.top, rect.bottom, rect.right);
 	int dbottom = DistanceFromHLine(point, rect.left, rect.right, rect.bottom);
 
-	TRACE("Distances: %ld %ld %ld %ld\n", dleft, dtop, dright, dbottom);
-
 	if (dleft < 3)
 		return Dir_Left;
 	if (dtop < 3)
