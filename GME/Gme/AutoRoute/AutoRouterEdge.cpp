@@ -479,9 +479,9 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 	// (Step 1: Move the desired edges
 	//  Step 2: Fix the desired edges)
 	bool hasCustomEdge = false;
-	std::map<long,long> fixedIndexes;
+	std::map<long,long> customizedIndexes;
 	SAFEARRAY* pArr = NULL;
-	COMTHROW(path->GetFixedEdgeIndexes(&pArr));
+	COMTHROW(path->GetCustomizedEdgeIndexes(&pArr));
 	//one dim., long elements
 	if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
 	{
@@ -495,7 +495,7 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 			long* pArrElements = (long*) (pArr)->pvData;
 			for (int i = 0; i < elementNum; i++)
 			{
-				fixedIndexes.insert(Long_Pair(pArrElements[i], 0));
+				customizedIndexes.insert(Long_Pair(pArrElements[i], 0));
 			}
 			SafeArrayUnlock(pArr);
 		}
@@ -539,8 +539,8 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 			// Apply custom edge modifications - step 2, part 2
 			if (hasCustomEdge)
 			{
-				indIter = fixedIndexes.find(currEdgeIndex);
-				edge->SetEdgeCustomFixed(indIter != fixedIndexes.end());
+				indIter = customizedIndexes.find(currEdgeIndex);
+				edge->SetEdgeCustomFixed(indIter != customizedIndexes.end());
 			}
 			else
 			{

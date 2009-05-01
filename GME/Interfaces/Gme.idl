@@ -612,7 +612,7 @@ interface IAutoRouterPath : IDispatch
 	[id(45)] HRESULT AreTherePathCustomizations([out, retval] VARIANT_BOOL* result);
 	[id(46)] HRESULT AreThereDeletedPathCustomizations([out, retval] VARIANT_BOOL* result);
 	[id(47)] HRESULT GetDeletedCustomPathData([out, retval] SAFEARRAY(struct CustomPathData)* pArr);
-	[id(48)] HRESULT GetFixedEdgeIndexes([out, retval] SAFEARRAY(long)* pArr);
+	[id(48)] HRESULT GetCustomizedEdgeIndexes([out, retval] SAFEARRAY(long)* pArr);
 
 	[id(49)] HRESULT IsAutoRouted([out, retval] VARIANT_BOOL* result);
 	[id(50)] HRESULT SetAutoRouting([in] VARIANT_BOOL autoRoutingState);

@@ -912,7 +912,7 @@ STDMETHODIMP CAutoRouterPath::GetDeletedCustomPathData(SAFEARRAY** pArr)
 	return hr;
 }
 
-STDMETHODIMP CAutoRouterPath::GetFixedEdgeIndexes(SAFEARRAY** pArr)
+STDMETHODIMP CAutoRouterPath::GetCustomizedEdgeIndexes(SAFEARRAY** pArr)
 {
 	if (!pArr)
 		return E_POINTER;
@@ -931,7 +931,7 @@ STDMETHODIMP CAutoRouterPath::GetFixedEdgeIndexes(SAFEARRAY** pArr)
 		position++;
 		++ii;
 	}
-	
+
 	return hr;
 
 	//usage:

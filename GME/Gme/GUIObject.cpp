@@ -2611,6 +2611,9 @@ void CGuiConnection::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 		return;
 	}
 
+	// TODO
+	//std::vector<long> costumizedEdgeIndexes = GetRelevantCustomizedEdgeIndexes(int asp)
+
 	graphics.DrawConnection(gdip, points, grayedOut ? GME_GRAYED_OUT_COLOR : color, lineType, srcStyle, dstStyle,
 							true, view->m_zoomVal > ZOOM_NO, selected ? 3 : hovered ? 5 : 1);
 
@@ -3046,6 +3049,23 @@ int CGuiConnection::IsPathAt(const CPoint& point, ConnectionPartMoveType& connec
 	int tmpLimit;
 	return GetEdgeIndex(point, tmpPoint, tmpPoint, tmpPoint, connectionMoveMethod, horizontalOrVerticalEdge,
 						isPartFixed, tmpLimit, tmpLimit, tmpLimit, tmpLimit);
+}
+
+std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(int asp)
+{
+	std::vector<long> customizedEdgeIndexes;
+	std::vector<CustomPathData>::iterator ii = customPathData.begin();
+	while (ii != customPathData.end()) {
+		if ((*ii).aspect == asp) {
+			if (autoRouted && (*ii).type == SimpleEdgeDisplacement ||
+				!autoRouted && (*ii).type != SimpleEdgeDisplacement)
+			{
+				customizedEdgeIndexes.push_back((*ii).aspect);
+			}
+		}
+		++ii;
+	}
+	return customizedEdgeIndexes;
 }
 
 void CGuiConnection::ReadCustomPathData(void)

@@ -173,7 +173,7 @@ public:
 	STDMETHOD(AreTherePathCustomizations)(VARIANT_BOOL* result);
 	STDMETHOD(AreThereDeletedPathCustomizations)(VARIANT_BOOL* result);
 	STDMETHOD(GetDeletedCustomPathData)(SAFEARRAY** pArr);
-	STDMETHOD(GetFixedEdgeIndexes)(SAFEARRAY** pArr);
+	STDMETHOD(GetCustomizedEdgeIndexes)(SAFEARRAY** pArr);
 
 	STDMETHOD(IsAutoRouted)(VARIANT_BOOL* result);
 	STDMETHOD(SetAutoRouting)(VARIANT_BOOL autoRoutingState);
