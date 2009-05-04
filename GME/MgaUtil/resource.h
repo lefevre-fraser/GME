@@ -220,6 +220,7 @@
 #define IDC_EDIT_GRADIENTDIR            2286
 #define IDC_STATIC_SHADOWDEPTH          2287
 #define IDC_STATIC_GRADIENTDIR          2288
+#define IDC_AUTOROUTEDEFAULT            2288
 #define IDC_STATIC_CORNERRADIUS         2289
 #define IDC_EDIT_SHADOWDEPTH3           2290
 #define IDC_EDIT_CORNERRADIUS           2290
@@ -237,7 +238,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        2074
 #define _APS_NEXT_COMMAND_VALUE         32779
-#define _APS_NEXT_CONTROL_VALUE         2288
+#define _APS_NEXT_CONTROL_VALUE         2289
 #define _APS_NEXT_SYMED_VALUE           2091
 #endif
 #endif

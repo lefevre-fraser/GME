@@ -129,6 +129,7 @@ CGMEApp::CGMEApp() :
   , m_compFilterOn( false)
 {
 	multipleView = false;
+	useAutoRouting = true;
 	labelAvoidance = false;
 	defZoomLev = "100";
 	mouseOverNotify = false;
@@ -1460,8 +1461,11 @@ void CGMEApp::GetSettings()
 			CGMEEventLogger::StopLogging();
 		}
 
-		
 		// Autorouter
+		VARIANT_BOOL useautorouting;
+		COMTHROW( registrar->get_UseAutoRouting(REGACCESS_USER, &useautorouting) );
+		useAutoRouting = (useautorouting != VARIANT_FALSE);
+
 		VARIANT_BOOL labelavoidance;
 		COMTHROW( registrar->get_LabelAvoidance(REGACCESS_USER, &labelavoidance) );
 		labelAvoidance = (labelavoidance != VARIANT_FALSE);

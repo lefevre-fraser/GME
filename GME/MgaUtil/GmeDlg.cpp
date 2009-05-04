@@ -45,6 +45,7 @@ CGmeDlg::CGmeDlg(CWnd* pParent /*=NULL*/)
 	m_autosave_dest = -1;
 	m_ext_enable = FALSE;
 	m_ext_editor = _T("");
+	m_useAutoRouting = TRUE;
 	m_labelavoidance = FALSE;
 	m_sendOverObj = FALSE;
 	m_timeStamps = FALSE;
@@ -69,6 +70,7 @@ void CGmeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Radio(pDX, IDC_AUTOSAVE_SAME_DIR, m_autosave_dest);
 	DDX_Check(pDX, IDC_EXT_ENABLE, m_ext_enable);
 	DDX_Text(pDX, IDC_EXT_EDITOR, m_ext_editor);
+	DDX_Check(pDX, IDC_AUTOROUTEDEFAULT, m_useAutoRouting);
 	DDX_Check(pDX, IDC_LABELAVOIDANCE, m_labelavoidance);
 	DDX_Check(pDX, IDC_SENDOVEROBJECT, m_sendOverObj);
 	DDX_Check(pDX, IDC_TIMESTAMPING, m_timeStamps);
@@ -297,6 +299,10 @@ BOOL CGmeDlg::OnInitDialog()
 		COMTHROW( registrar->get_ExternalEditor(REGACCESS_USER, PutOut(m_ext_editor)) );
 
 		// Autorouter
+		VARIANT_BOOL useAutoRouting;
+		COMTHROW( registrar->get_UseAutoRouting(REGACCESS_USER, &useAutoRouting) );
+		m_useAutoRouting = (useAutoRouting == VARIANT_FALSE) ? FALSE : TRUE;
+
 		VARIANT_BOOL labelavoidance;
 		COMTHROW( registrar->get_LabelAvoidance(REGACCESS_USER, &labelavoidance) );
 		m_labelavoidance = (labelavoidance == VARIANT_FALSE) ? FALSE : TRUE;
@@ -384,6 +390,9 @@ void CGmeDlg::OnOK()
 	COMTHROW( registrar->put_ExternalEditor(REGACCESS_USER, PutInBstr(m_ext_editor)) );
 
 	// Autorouter
+	VARIANT_BOOL useAutoRouting = (m_useAutoRouting == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
+	COMTHROW( registrar->put_UseAutoRouting(REGACCESS_USER, useAutoRouting) );
+
 	VARIANT_BOOL labelavoidance = (m_labelavoidance == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
 	COMTHROW( registrar->put_LabelAvoidance(REGACCESS_USER, labelavoidance) );
 

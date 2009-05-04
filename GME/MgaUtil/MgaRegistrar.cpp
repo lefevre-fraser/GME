@@ -504,6 +504,57 @@ STDMETHODIMP CMgaRegistrar::put_ExternalEditor(regaccessmode_enum mode, BSTR pat
 }
 
 
+STDMETHODIMP CMgaRegistrar::get_UseAutoRouting(regaccessmode_enum mode, VARIANT_BOOL *enabled)
+{
+	COMTRY
+	{
+		LONG res;
+		CString str;
+		if(mode & RM_USER) {
+			CRegKey mga;
+			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
+			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+			if(res == ERROR_SUCCESS) {
+				str	= QueryValue(mga, "UseAutoRouting");
+				if(!str.IsEmpty()) {
+					REVOKE_SYS2(mode);
+				}
+			}
+		}
+		if(mode & (RM_SYSDOREAD)) {
+			CRegKey mga;
+			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
+			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+			if(res == ERROR_SUCCESS) {
+				str = QueryValue(mga, "UseAutoRouting");
+			}
+		}
+		*enabled = (str == "0") ? VARIANT_FALSE : VARIANT_TRUE; // Default value: true
+	}
+	COMCATCH(;)
+}
+
+
+STDMETHODIMP CMgaRegistrar::put_UseAutoRouting(regaccessmode_enum mode, VARIANT_BOOL enabled)
+{
+	COMTRY
+	{
+		CString str = (enabled == VARIANT_FALSE) ? "0" : "1";
+		if(mode & RM_USER) {
+			CRegKey mga;
+			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
+			ERRTHROW( mga.SetStringValue( "UseAutoRouting", str));
+		}
+		if(mode & (RM_SYS | RM_TEST)) {
+			CRegKey mga;
+			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "UseAutoRouting", str));
+		}
+	}
+	COMCATCH(;)
+}
+
+
 STDMETHODIMP CMgaRegistrar::get_LabelAvoidance(regaccessmode_enum mode, VARIANT_BOOL *enabled)
 {
 	COMTRY

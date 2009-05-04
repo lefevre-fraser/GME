@@ -3343,10 +3343,12 @@ void CGuiConnection::SetConnectionAutoRouted(bool autoRouteState)
 void CGuiConnection::ReadConnectionAutoRouteState(void)
 {
 	CString autoRoutingStateStr;
-	bool autoRoutingState = true;
+	bool autoRoutingState = theApp.useAutoRouting;
 	if (GetPreference(autoRoutingStateStr, CONNECTIONAUTOROUTING)) {
 		if (autoRoutingStateStr == "false")
 			autoRoutingState = false;
+		else
+			autoRoutingState = true;
 	}
 	SetConnectionAutoRouted(autoRoutingState);
 }

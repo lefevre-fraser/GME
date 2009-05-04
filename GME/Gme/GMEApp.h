@@ -62,6 +62,7 @@ public:
 	CString projectName;
 	CString bitmapPath, projectDir, paradigmDir;
 	bool	multipleView;
+	bool	useAutoRouting;
 	bool	labelAvoidance;
 
 	HACCEL m_GMEView_hAccel;

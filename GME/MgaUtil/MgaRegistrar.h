@@ -62,6 +62,10 @@ public:
 	STDMETHOD(put_ExternalEditor)(regaccessmode_enum mode, BSTR path);
 	STDMETHOD(GetExternalEditorDisp)(regaccessmode_enum mode, BSTR *path) { return get_ExternalEditor( mode, path); }
 	STDMETHOD(SetExternalEditorDisp)(regaccessmode_enum mode, BSTR path) { return put_ExternalEditor( mode, path); }
+	STDMETHOD(get_UseAutoRouting)(regaccessmode_enum mode, VARIANT_BOOL *enabled);
+	STDMETHOD(put_UseAutoRouting)(regaccessmode_enum mode, VARIANT_BOOL enabled);
+	STDMETHOD(GetUseAutoRoutingDisp)(regaccessmode_enum mode, VARIANT_BOOL *enabled) { return get_UseAutoRouting( mode, enabled); }
+	STDMETHOD(SetUseAutoRoutingDisp)(regaccessmode_enum mode, VARIANT_BOOL enabled) { return put_UseAutoRouting( mode, enabled); }
 	STDMETHOD(get_LabelAvoidance)(regaccessmode_enum mode, VARIANT_BOOL *enabled);
 	STDMETHOD(put_LabelAvoidance)(regaccessmode_enum mode, VARIANT_BOOL enabled);
 	STDMETHOD(GetLabelAvoidanceDisp)(regaccessmode_enum mode, VARIANT_BOOL *enabled) { return get_LabelAvoidance( mode, enabled); }

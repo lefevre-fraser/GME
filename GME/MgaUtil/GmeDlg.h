@@ -42,6 +42,7 @@ public:
 	int		m_autosave_dest;
 	BOOL	m_ext_enable;
 	CString	m_ext_editor;
+	BOOL	m_useAutoRouting;
 	BOOL	m_labelavoidance;
 	BOOL	m_sendOverObj;
 	BOOL	m_timeStamps;

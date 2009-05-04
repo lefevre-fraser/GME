@@ -274,23 +274,35 @@ interface IMgaRegistrar : IDispatch
 
 	[propput, helpstring("property ExternalEditor")]
 	HRESULT ExternalEditor([in] regaccessmode_enum mode, [in] BSTR path);
-	
+
 	[helpstring("getter for property ExternalEditor")]
 	HRESULT GetExternalEditorDisp([in] regaccessmode_enum mode, [out, retval] BSTR *path);
 
 	[helpstring("setter for property ExternalEditor")]
 	HRESULT SetExternalEditorDisp([in] regaccessmode_enum mode, [in] BSTR path);
-	
+
 	// --- AutoRouter
+	[propget, helpstring("property UseAutoRouting")]
+	HRESULT UseAutoRouting([in] regaccessmode_enum mode, [out, retval] VARIANT_BOOL *enabled);
+
+	[propput, helpstring("property UseAutoRouting")]
+	HRESULT UseAutoRouting([in] regaccessmode_enum mode, [in] VARIANT_BOOL enabled);
+
+	[helpstring("getter for property UseAutoRouting")]
+	HRESULT GetUseAutoRoutingDisp([in] regaccessmode_enum mode, [out, retval] VARIANT_BOOL *enabled);
+
+	[helpstring("setter for property UseAutoRouting")]
+	HRESULT SetUseAutoRoutingDisp([in] regaccessmode_enum mode, [in] VARIANT_BOOL enabled);
+
 	[propget, helpstring("property LabelAvoidance")]
 	HRESULT LabelAvoidance([in] regaccessmode_enum mode, [out, retval] VARIANT_BOOL *enabled);
-	
+
 	[propput, helpstring("property LabelAvoidance")]
 	HRESULT LabelAvoidance([in] regaccessmode_enum mode, [in] VARIANT_BOOL enabled);
 
 	[helpstring("getter for property LabelAvoidance")]
 	HRESULT GetLabelAvoidanceDisp([in] regaccessmode_enum mode, [out, retval] VARIANT_BOOL *enabled);
-	
+
 	[helpstring("setter for property LabelAvoidance")]
 	HRESULT SetLabelAvoidanceDisp([in] regaccessmode_enum mode, [in] VARIANT_BOOL enabled);
 
@@ -316,7 +328,7 @@ interface IMgaRegistrar : IDispatch
 	// --- Send Mouse Over Object Notification
 	[helpstring("property MouseOverNotify")]
 	HRESULT GetMouseOverNotify([in] regaccessmode_enum mode, [out, retval] VARIANT_BOOL *enabled);
-	
+
 	[helpstring("property SendMouseOverObjNotif")]
 	HRESULT SetMouseOverNotify([in] regaccessmode_enum mode, [in] VARIANT_BOOL enabled);
 
@@ -329,14 +341,14 @@ interface IMgaRegistrar : IDispatch
 	// --- TimeStamping Messages in Console Window
 	[helpstring("getter method for TimeStamping")]
 	HRESULT GetTimeStamping([in] regaccessmode_enum mode, [out, retval] VARIANT_BOOL *enabled);
-	
+
 	[helpstring("setter method for TimeStamping")]
 	HRESULT SetTimeStamping([in] regaccessmode_enum mode, [in] VARIANT_BOOL enabled);
 
 	// --- ModelHistory Navigation enabled
 	[helpstring("is Navigation enabled")]
 	HRESULT GetNavigation([in] regaccessmode_enum mode, [out, retval] VARIANT_BOOL *enabled);
-	
+
 	[helpstring("setter for Navigation")]
 	HRESULT SetNavigation([in] regaccessmode_enum mode, [in] VARIANT_BOOL enabled);
 
