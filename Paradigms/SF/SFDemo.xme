@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{70A684E3-9BB9-421E-B0D0-BE8F2D340F8B}" cdate="Fri Dec 12 15:16:35 2008" mdate="Fri Dec 12 15:16:35 2008" version="" metaguid="{8AA38D54-B157-430D-B91C-A6E9CCCA26FE}" metaversion="" metaname="SF">
+<project guid="{93B1AB5D-7859-4A02-84A8-C263DA7122CA}" cdate="Mon May 04 12:03:59 2009" mdate="Mon May 04 12:03:59 2009" version="" metaguid="{7664413B-2B26-4A18-B4B6-9516BF066EB8}" metaversion="" metaname="SF">
 	<name>SFDemo</name>
 	<comment></comment>
 	<author></author>

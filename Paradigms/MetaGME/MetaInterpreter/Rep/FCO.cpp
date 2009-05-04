@@ -1283,7 +1283,7 @@ std::string FCO::dumpGradientFillDirection() const
 		const int direction = m_iAttrGradientFillDirection;//m_ptr->getAttribute( GradientFillDirection_str)->getIntegerValue();
 		CString p;
 		p.Format("%ld", direction);
-		if( direction != 45)
+		if( direction != 0)
 			mmm += indStr() + "<regnode name = \"gradientDirection\" value =\"" + (const char*)p + "\"></regnode>\n";
 	}
 	return mmm;

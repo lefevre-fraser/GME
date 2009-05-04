@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="UML" guid="{B9299E2C-53C2-4AB4-8BC3-8764586697D6}" cdate="Fri Dec 12 14:59:58 2008" mdate="Fri Dec 12 14:59:58 2008" >
+<paradigm name="UML" guid="{1820156A-495C-4C95-963C-B9EFB3B740DE}" cdate="Mon May 04 12:07:33 2009" mdate="Mon May 04 12:07:33 2009" >
 
 	<comment>Descent into the maelstrom!</comment>
 
@@ -162,7 +162,6 @@ card.trim() <> "" implies card.trim().match( "^\*|(" + item + "(" + ws + "," + w
 		<attrdef name="version" metaref = "1017" valuetype = "string" defvalue = "1.00">
 		</attrdef>
 		<atom name = "Class" metaref = "1018"  attributes = "IsAbstract Stereotype Attributes">
-			<dispname>ClassDispName</dispname>
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x000000"></regnode>
 			<constraint name="NoInheritanceRecursion" eventmask = "0xc00" depth = "0" priority = "1">
@@ -191,14 +190,11 @@ st <> "" implies st.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<regnode name = "icon" value ="class.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="0"></regnode>
 				<regnode name = "shadowDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Connector" metaref = "1019" >
-			<dispname>ConnectorDispName</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "color" value ="0x000000"></regnode>
 				<regnode name = "autorouterPref" value ="SEn"></regnode>
@@ -232,11 +228,8 @@ srcCount <> 0 implies srcCount = 1]]>
 			</constraint>
 				<regnode name = "icon" value ="connector.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Constraint" metaref = "1020"  attributes = "ConstraintEqn ConstraintDescription">
-			<dispname>ConstraintDispName</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 			<constraint name="HasContext" eventmask = "0x0" depth = "0" priority = "1">
 				<![CDATA[self.connectedFCOs( HasConstraint ) -> size > 0]]>
@@ -266,11 +259,8 @@ endif]]>
 			</constraint>
 				<regnode name = "icon" value ="constraint.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "ConstraintDefinition" metaref = "1021"  attributes = "DefinitionRetType DefinitionStereo DefinitionEqn DefinitionParamList">
-			<dispname>ConstrDefDispName</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 			<constraint name="HasContext" eventmask = "0x0" depth = "0" priority = "1">
 				<![CDATA[self.connectedFCOs( HasDefinition ) -> size > 0]]>
@@ -290,11 +280,8 @@ endif]]>
 			</constraint>
 				<regnode name = "icon" value ="constraintdefinition.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Inheritance" metaref = "1022" >
-			<dispname>InheritanceDispName</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "color" value ="0x000000"></regnode>
 				<regnode name = "autorouterPref" value ="Sn"></regnode>
@@ -314,8 +301,6 @@ baseCount <> 0 implies baseCount = 1]]>
 			</constraint>
 				<regnode name = "icon" value ="inheritance.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<connection name = "Association" metaref = "1023" attributes = "Stereotype dstCardinality dstRolename srcCardinality srcRolename" >
 				<regnode name = "color" value ="0x000000"></regnode>
@@ -567,7 +552,6 @@ project.isCardinalityValid( self.attribute( attr ).oclAsType( ocl::String ) )]]>
 			</connjoint>
 		</connection>
 		<reference name = "ClassCopy" metaref = "1033" attributes = "IsAbstract">
-			<dispname>ClassCopyDispName</dispname>
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x000000"></regnode>
 				<regnode name = "rName" value ="ref"></regnode>
@@ -589,8 +573,6 @@ assocCount <> 0 implies assocCount = 1]]>
 			<regnode name = "icon" value ="classref.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
 			<regnode name = "itemResizable" value ="true"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
 			<regnode name = "shadowColor" value ="0x000000"></regnode>
 			<regnode name = "shadowThickness" value ="0"></regnode>
 			<regnode name = "shadowDirection" value ="0"></regnode>
@@ -599,10 +581,8 @@ assocCount <> 0 implies assocCount = 1]]>
 			</pointerspec>
 		</reference>
 		<model name = "ClassDiagram" metaref = "1034" >
-			<dispname>ClassDiagramDispName</dispname>
 				<regnode name = "namePosition" value ="0"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="0"></regnode>
 				<regnode name = "shadowDirection" value ="0"></regnode>
@@ -650,7 +630,6 @@ assocCount <> 0 implies assocCount = 1]]>
 		</model>
 		<model name = "Namespace" metaref = "1087" >
 				<regnode name = "namePosition" value ="4"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 			<constraint name="UniqueNamespaceName" eventmask = "0x0" depth = "0" priority = "2">
 				<![CDATA[project.allInstancesOf( Namespace ) -> select( ns | ns.name = self.name && ns.parent() = self.parent() ) -> size = 1]]>
 				<dispname>A namespace must be unique.</dispname>
@@ -668,7 +647,6 @@ assocCount <> 0 implies assocCount = 1]]>
 		</model>
 		<model name = "Package" metaref = "1072" attributes = "version alias" >
 				<regnode name = "namePosition" value ="4"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 			<constraint name="UniquePackageName" eventmask = "0x0" depth = "0" priority = "2">
 				<![CDATA[project.allInstancesOf( Package ) -> select( pkg | pkg.name = self.name ) -> size = 1]]>
 				<dispname>Name of a Package must be unique.</dispname>

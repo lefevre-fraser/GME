@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="SF" guid="{8AA38D54-B157-430D-B91C-A6E9CCCA26FE}" cdate="Fri Dec 12 15:14:18 2008" mdate="Fri Dec 12 15:14:18 2008" >
+<paradigm name="SF" guid="{7664413B-2B26-4A18-B4B6-9516BF066EB8}" cdate="Mon May 04 12:01:50 2009" mdate="Mon May 04 12:01:50 2009" >
 
 	<comment></comment>
 
@@ -40,8 +40,6 @@
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="inparam-atom.bmp"></regnode>
 				<regnode name = "porticon" value ="inparam-port.bmp"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "itemShadowCast" value ="true"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="10"></regnode>
@@ -50,15 +48,11 @@
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="isig-atom.bmp"></regnode>
 				<regnode name = "porticon" value ="isig-port.bmp"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "OutputParam" metaref = "1010"  attributes = "DataType Size">
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="outparam-atom.bmp"></regnode>
 				<regnode name = "porticon" value ="outparam-port.bmp"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "itemShadowCast" value ="true"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="10"></regnode>
@@ -67,14 +61,10 @@
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="osig-atom.bmp"></regnode>
 				<regnode name = "porticon" value ="osig-port.bmp"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Param" metaref = "1012"  attributes = "Global DataType Size InitValue">
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="param.bmp"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "itemShadowCast" value ="true"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="10"></regnode>
@@ -137,8 +127,6 @@
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "color" value ="0xe0e0a0"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="0"></regnode>
 				<regnode name = "shadowDirection" value ="0"></regnode>
@@ -175,8 +163,6 @@
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "color" value ="0xc8f8c8"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="0"></regnode>
 				<regnode name = "shadowDirection" value ="0"></regnode>

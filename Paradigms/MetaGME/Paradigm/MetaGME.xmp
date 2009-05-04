@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="MetaGME" guid="{0A264B93-2EFA-454E-89D7-C18CC4D60CA5}" cdate="Fri Dec 05 10:44:13 2008" mdate="Fri Dec 05 10:44:13 2008" >
+<paradigm name="MetaGME" guid="{C6F98429-EA0F-4717-966A-FBF9E4E24537}" cdate="Mon May 04 11:33:32 2009" mdate="Mon May 04 11:33:32 2009" >
 
 	<comment>GME Meta Paradigm</comment>
 
@@ -777,31 +777,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 				<regnode name = "icon" value ="atom.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "BooleanAttribute" metaref = "1068"  attributes = "GlobalScope Help IsViewable Prompt BooleanDefault">
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -842,8 +817,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 				<regnode name = "icon" value ="booleanattribute.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Connection" metaref = "1069"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName Color NamePosition ConnLineType ConnLineStart ConnLineEnd LabelFormatStr SrcAttrLabel1 SrcAttrLabel2 DstAttrLabel1 DstAttrLabel2">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -946,19 +919,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 				<regnode name = "icon" value ="connection.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Connector" metaref = "1073" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1001,7 +961,6 @@ srcRole = "" and dstRole = "" or srcRole = "src" and dstRole = "dst"]]>
 			</constraint>
 				<regnode name = "icon" value ="connector.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Constraint" metaref = "1074"  attributes = "ConstraintDescription ConstraintParam ConstraintEqn ConstraintPriority CloseEvent Depth CreateEvent DeleteEvent NewChildEvent LostChildEvent MoveEvent DeriveEvent ConnectEvent DisconnectEvent ChangeAttributeEvent ChangePropertyEvent ChangeRelationEvent ReferenceEvent UnReferenceEvent AddSetEvent RemoveSetEvent">
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1055,7 +1014,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 				<regnode name = "icon" value ="constraint.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "ConstraintFunc" metaref = "1075"  attributes = "CFuncParamList CFuncDefinition CFuncContext CFuncReturnType CFuncStereotype">
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1103,7 +1061,6 @@ tr <> "" implies tr.match( "^" + id + "(::" + id + ")*$" )]]>
 			</constraint>
 				<regnode name = "icon" value ="constraintfunc.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "EnumAttribute" metaref = "1076"  attributes = "GlobalScope Help IsViewable Prompt DefaultItem MenuItems">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1148,8 +1105,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 				<regnode name = "icon" value ="enumattribute.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Equivalence" metaref = "1077" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1212,10 +1167,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 				<regnode name = "icon" value ="equiv.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "FCO" metaref = "1078"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1300,31 +1251,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 				<regnode name = "icon" value ="fco.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "FieldAttribute" metaref = "1082"  attributes = "GlobalScope Help IsViewable Prompt DataType FieldDefault Multiline ContentType">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1387,8 +1313,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 				<regnode name = "icon" value ="fieldattribute.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Folder" metaref = "1083"  attributes = "InRootFolder DisplayedName">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1416,10 +1340,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 				<regnode name = "icon" value ="folder.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "ImplementationInheritance" metaref = "1085" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1440,8 +1360,6 @@ baseCount <> 0 implies baseCount = 1]]>
 			</constraint>
 				<regnode name = "icon" value ="impinheritance.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Inheritance" metaref = "1086" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1462,8 +1380,6 @@ baseCount <> 0 implies baseCount = 1]]>
 			</constraint>
 				<regnode name = "icon" value ="inheritance.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "InterfaceInheritance" metaref = "1087" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1484,8 +1400,6 @@ baseCount <> 0 implies baseCount = 1]]>
 			</constraint>
 				<regnode name = "icon" value ="intinheritance.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Model" metaref = "1088"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius IsTypeInfoShown">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1575,31 +1489,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<regnode name = "icon" value ="model.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Reference" metaref = "1092"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1684,31 +1573,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 				<regnode name = "icon" value ="reference.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "SameAspect" metaref = "1096" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1759,10 +1623,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 				<regnode name = "icon" value ="equiv.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "SameFolder" metaref = "1097" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1814,10 +1674,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 				<regnode name = "icon" value ="equiv.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<atom name = "Set" metaref = "1098"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1902,31 +1758,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 				<regnode name = "icon" value ="set.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 		</atom>
 		<set name = "Aspect" metaref = "1102" attributes = "DisplayedName" >
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1934,8 +1765,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<regnode name = "mName" value ="members"></regnode>
 				<regnode name = "icon" value ="aspect.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 			<constraint name="HasMember" eventmask = "0x0" depth = "0" priority = "2">
 				<![CDATA[--self.allSameAspects( 1, true )->iterate( aspect : gme::Set ; accu : ocl::Integer = 0 | accu + aspect.members()->size ) > 0
 self.aspectHasMember(Set{})]]>
@@ -2622,8 +2451,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 			<regnode name = "icon" value ="aspectproxy.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Aspect"></pointeritem>
 			</pointerspec>
@@ -2702,31 +2529,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 			<regnode name = "icon" value ="atomproxy.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Atom"></pointeritem>
 			</pointerspec>
@@ -2800,19 +2602,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 			<regnode name = "icon" value ="connectionproxy.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Connection"></pointeritem>
 			</pointerspec>
@@ -2891,31 +2680,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 			<regnode name = "icon" value ="fcoproxy.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "FCO"></pointeritem>
 			</pointerspec>
@@ -2939,10 +2703,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</constraint>
 			<regnode name = "icon" value ="folderproxy.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Folder"></pointeritem>
 			</pointerspec>
@@ -3021,31 +2781,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 			<regnode name = "icon" value ="modelproxy.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Model"></pointeritem>
 			</pointerspec>
@@ -3124,31 +2859,6 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 			<regnode name = "icon" value ="referenceproxy.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Reference"></pointeritem>
 			</pointerspec>
@@ -3227,38 +2937,12 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			</attrdef>
 			<regnode name = "icon" value ="setproxy.bmp"></regnode>
 			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
-			<regnode name = "gradientDirection" value ="0"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Set"></pointeritem>
 			</pointerspec>
 		</reference>
 		<model name = "ParadigmSheet" metaref = "1155" >
 				<regnode name = "namePosition" value ="0"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 			<role name = "Aspect" metaref = "1157" kind = "Aspect"></role>
 			<role name = "AspectProxy" metaref = "1158" kind = "AspectProxy"></role>
 			<role name = "AssociationClass" metaref = "1159" kind = "AssociationClass"></role>

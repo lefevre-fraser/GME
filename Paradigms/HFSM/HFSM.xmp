@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="HFSM" guid="{30B08910-F3D0-452B-9975-F18CF7AE84A9}" cdate="Fri Dec 12 15:08:06 2008" mdate="Fri Dec 12 15:08:06 2008" >
+<paradigm name="HFSM" guid="{4D943E77-DA3F-4D8D-9A83-F61B13BB6A49}" cdate="Mon May 04 11:56:35 2009" mdate="Mon May 04 11:56:35 2009" >
 
 	<comment></comment>
 
@@ -34,7 +34,6 @@
 				<dispname>Multiplicity of objects, which are associated to Events as &quot;src&quot; over Sequence, has to match 0..1.</dispname>
 			</constraint>
 				<regnode name = "icon" value ="event.bmp"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="0"></regnode>
 				<regnode name = "shadowDirection" value ="0"></regnode>
@@ -71,7 +70,6 @@
 		<model name = "InputSequence" metaref = "1007" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="0"></regnode>
 				<regnode name = "shadowDirection" value ="0"></regnode>
@@ -87,7 +85,6 @@
 				<regnode name = "color" value ="0x0080C0"></regnode>
 				<regnode name = "icon" value ="defaultstate.bmp"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
-				<regnode name = "gradientDirection" value ="0"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="0"></regnode>
 				<regnode name = "shadowDirection" value ="0"></regnode>
