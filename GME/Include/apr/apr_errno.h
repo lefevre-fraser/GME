@@ -122,15 +122,42 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
  */
 #define APR_OS_ERRSPACE_SIZE 50000
 /**
+ * APR_UTIL_ERRSPACE_SIZE is the size of the space that is reserved for
+ * use within apr-util. This space is reserved above that used by APR
+ * internally.
+ * @note This number MUST be smaller than APR_OS_ERRSPACE_SIZE by a
+ *       large enough amount that APR has sufficient room for it's
+ *       codes.
+ */
+#define APR_UTIL_ERRSPACE_SIZE 20000
+/**
  * APR_OS_START_STATUS is where the APR specific status codes start.
  */
 #define APR_OS_START_STATUS    (APR_OS_START_ERROR + APR_OS_ERRSPACE_SIZE)
+/**
+ * APR_UTIL_START_STATUS is where APR-Util starts defining it's
+ * status codes.
+ */
+#define APR_UTIL_START_STATUS   (APR_OS_START_STATUS + \
+                           (APR_OS_ERRSPACE_SIZE - APR_UTIL_ERRSPACE_SIZE))
 /**
  * APR_OS_START_USERERR are reserved for applications that use APR that
  *     layer their own error codes along with APR's.  Note that the
  *     error immediately following this one is set ten times farther
  *     away than usual, so that users of apr have a lot of room in
  *     which to declare custom error codes.
+ *
+ * In general applications should try and create unique error codes. To try
+ * and assist in finding suitable ranges of numbers to use, the following
+ * ranges are known to be used by the listed applications. If your 
+ * application defines error codes please advise the range of numbers it
+ * uses to dev@apr.apache.org for inclusion in this list.
+ *
+ * Ranges shown are in relation to APR_OS_START_USERERR
+ *
+ * Subversion - Defined ranges, of less than 100, at intervals of 5000
+ *              starting at an offset of 5000, e.g.
+ *               +5000 to 5100,  +10000 to 10100
  */
 #define APR_OS_START_USERERR    (APR_OS_START_STATUS + APR_OS_ERRSPACE_SIZE)
 /**
@@ -155,7 +182,44 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
  */
 #define APR_OS_START_SYSERR    (APR_OS_START_EAIERR + APR_OS_ERRSPACE_SIZE)
 
-/** no error. @see APR_STATUS_IS_SUCCESS */
+/**
+ * @defgroup APR_ERROR_map APR Error Space
+ * <PRE>
+ * The following attempts to show the relation of the various constants
+ * used for mapping APR Status codes.
+ *
+ *       0          
+ *
+ *  20,000     APR_OS_START_ERROR
+ *
+ *         + APR_OS_ERRSPACE_SIZE (50,000)
+ *
+ *  70,000      APR_OS_START_STATUS
+ *
+ *         + APR_OS_ERRSPACE_SIZE - APR_UTIL_ERRSPACE_SIZE (30,000)
+ *
+ * 100,000      APR_UTIL_START_STATUS
+ *
+ *         + APR_UTIL_ERRSPACE_SIZE (20,000)
+ *
+ * 120,000      APR_OS_START_USERERR
+ *
+ *         + 10 x APR_OS_ERRSPACE_SIZE (50,000 * 10)
+ *
+ * 620,000      APR_OS_START_CANONERR
+ *
+ *         + APR_OS_ERRSPACE_SIZE (50,000)
+ *
+ * 670,000      APR_OS_START_EAIERR
+ *
+ *         + APR_OS_ERRSPACE_SIZE (50,000)
+ *
+ * 720,000      APR_OS_START_SYSERR
+ *
+ * </PRE>
+ */
+
+/** no error. */
 #define APR_SUCCESS 0
 
 /** 
@@ -181,6 +245,7 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
  * APR_EBADIP       The specified IP address is invalid
  * APR_EBADMASK     The specified netmask is invalid
  * APR_ESYMNOTFOUND Could not find the requested symbol
+ * APR_ENOTENOUGHENTROPY Not enough entropy to continue
  * </PRE>
  *
  * <PRE>
@@ -269,6 +334,8 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 #define APR_ESYMNOTFOUND   (APR_OS_START_ERROR + 26)
 /** @see APR_STATUS_IS_EPROC_UNKNOWN */
 #define APR_EPROC_UNKNOWN  (APR_OS_START_ERROR + 27)
+/** @see APR_STATUS_IS_ENOTENOUGHENTROPY */
+#define APR_ENOTENOUGHENTROPY (APR_OS_START_ERROR + 28)
 /** @} */
 
 /** 
@@ -276,7 +343,7 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
  * @warning For any particular error condition, more than one of these tests
  *      may match. This is because platform-specific error codes may not
  *      always match the semantics of the POSIX codes these tests (and the
- *      correcponding APR error codes) are named after. A notable example
+ *      corresponding APR error codes) are named after. A notable example
  *      are the APR_STATUS_IS_ENOENT and APR_STATUS_IS_ENOTDIR tests on
  *      Win32 platforms. The programmer should always be aware of this and
  *      adjust the order of the tests accordingly.
@@ -356,6 +423,8 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 #endif
 /** The given process was not recognized by APR. */
 #define APR_STATUS_IS_EPROC_UNKNOWN(s)  ((s) == APR_EPROC_UNKNOWN)
+/** APR could not gather enough entropy to continue. */
+#define APR_STATUS_IS_ENOTENOUGHENTROPY(s) ((s) == APR_ENOTENOUGHENTROPY)
 
 /** @} */
 
@@ -570,7 +639,7 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 #define APR_EACCES         (APR_OS_START_CANONERR + 1)
 #endif
 
-/** @see APR_STATUS_IS_EXIST */
+/** @see APR_STATUS_IS_EEXIST */
 #ifdef EEXIST
 #define APR_EEXIST EEXIST
 #else
@@ -705,7 +774,8 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 #define APR_ECONNRESET     (APR_OS_START_CANONERR + 19)
 #endif
 
-/** @see APR_STATUS_IS_ETIMEDOUT */
+/** @see APR_STATUS_IS_ETIMEDOUT 
+ *  @deprecated */
 #ifdef ETIMEDOUT
 #define APR_ETIMEDOUT ETIMEDOUT
 #else
@@ -754,6 +824,13 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 #define APR_ENOTEMPTY     (APR_OS_START_CANONERR + 26)
 #endif
 
+/** @see APR_STATUS_IS_EAFNOSUPPORT */
+#ifdef EAFNOSUPPORT
+#define APR_EAFNOSUPPORT EAFNOSUPPORT
+#else
+#define APR_EAFNOSUPPORT  (APR_OS_START_CANONERR + 27)
+#endif
+
 /** @} */
 
 #if defined(OS2) && !defined(DOXYGEN)
@@ -781,9 +858,6 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 /* And this needs to be greped away for good:
  */
 #define APR_OS2_STATUS(e) (APR_FROM_OS_ERROR(e))
-
-#define APR_STATUS_IS_SUCCESS(s)           ((s) == APR_SUCCESS \
-                || (s) == APR_OS_START_SYSERR + NO_ERROR)
 
 /* These can't sit in a private header, so in spite of the extra size, 
  * they need to be made available here.
@@ -880,7 +954,11 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
                 || (s) == APR_OS_START_SYSERR + SOCECONNABORTED)
 #define APR_STATUS_IS_ECONNRESET(s)     ((s) == APR_ECONNRESET \
                 || (s) == APR_OS_START_SYSERR + SOCECONNRESET)
-#define APR_STATUS_IS_ETIMEDOUT(s)      ((s) == APR_ETIMEDOUT \
+/* XXX deprecated */
+#define APR_STATUS_IS_ETIMEDOUT(s)         ((s) == APR_ETIMEDOUT \
+                || (s) == APR_OS_START_SYSERR + SOCETIMEDOUT)    
+#undef APR_STATUS_IS_TIMEUP
+#define APR_STATUS_IS_TIMEUP(s)         ((s) == APR_TIMEUP \
                 || (s) == APR_OS_START_SYSERR + SOCETIMEDOUT)    
 #define APR_STATUS_IS_EHOSTUNREACH(s)   ((s) == APR_EHOSTUNREACH \
                 || (s) == APR_OS_START_SYSERR + SOCEHOSTUNREACH)
@@ -895,6 +973,8 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 #define APR_STATUS_IS_ENOTEMPTY(s)      ((s) == APR_ENOTEMPTY \
                 || (s) == APR_OS_START_SYSERR + ERROR_DIR_NOT_EMPTY \
                 || (s) == APR_OS_START_SYSERR + ERROR_ACCESS_DENIED)
+#define APR_STATUS_IS_EAFNOSUPPORT(s)   ((s) == APR_AFNOSUPPORT \
+                || (s) == APR_OS_START_SYSERR + SOCEAFNOSUPPORT)
 
 /*
     Sorry, too tired to wrap this up for OS2... feel free to
@@ -910,7 +990,6 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
     { SOCESOCKTNOSUPPORT,       ESOCKTNOSUPPORT },
     { SOCEOPNOTSUPP,            EOPNOTSUPP      },
     { SOCEPFNOSUPPORT,          EPFNOSUPPORT    },
-    { SOCEAFNOSUPPORT,          EAFNOSUPPORT    },
     { SOCEADDRINUSE,            EADDRINUSE      },
     { SOCEADDRNOTAVAIL,         EADDRNOTAVAIL   },
     { SOCENETDOWN,              ENETDOWN        },
@@ -938,9 +1017,6 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
  */
 #define apr_get_netos_error()   (APR_FROM_OS_ERROR(WSAGetLastError()))
 #define apr_set_netos_error(e)   (WSASetLastError(APR_TO_OS_ERROR(e)))
-
-#define APR_STATUS_IS_SUCCESS(s)           ((s) == APR_SUCCESS \
-                || (s) == APR_OS_START_SYSERR + ERROR_SUCCESS)
 
 /* APR CANONICAL ERROR TESTS */
 #define APR_STATUS_IS_EACCES(s)         ((s) == APR_EACCES \
@@ -1015,7 +1091,12 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 #define APR_STATUS_IS_ECONNRESET(s)     ((s) == APR_ECONNRESET \
                 || (s) == APR_OS_START_SYSERR + ERROR_NETNAME_DELETED \
                 || (s) == APR_OS_START_SYSERR + WSAECONNRESET)
-#define APR_STATUS_IS_ETIMEDOUT(s)      ((s) == APR_ETIMEDOUT \
+/* XXX deprecated */
+#define APR_STATUS_IS_ETIMEDOUT(s)         ((s) == APR_ETIMEDOUT \
+                || (s) == APR_OS_START_SYSERR + WSAETIMEDOUT \
+                || (s) == APR_OS_START_SYSERR + WAIT_TIMEOUT)
+#undef APR_STATUS_IS_TIMEUP
+#define APR_STATUS_IS_TIMEUP(s)         ((s) == APR_TIMEUP \
                 || (s) == APR_OS_START_SYSERR + WSAETIMEDOUT \
                 || (s) == APR_OS_START_SYSERR + WAIT_TIMEOUT)
 #define APR_STATUS_IS_EHOSTUNREACH(s)   ((s) == APR_EHOSTUNREACH \
@@ -1036,8 +1117,10 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
                 || (s) == APR_OS_START_SYSERR + ERROR_NOT_SAME_DEVICE)
 #define APR_STATUS_IS_ENOTEMPTY(s)      ((s) == APR_ENOTEMPTY \
                 || (s) == APR_OS_START_SYSERR + ERROR_DIR_NOT_EMPTY)
+#define APR_STATUS_IS_EAFNOSUPPORT(s)   ((s) == APR_EAFNOSUPPORT \
+                || (s) == APR_OS_START_SYSERR + WSAEAFNOSUPPORT)
 
-#elif defined(NETWARE) && !defined(DOXYGEN) /* !defined(OS2) && !defined(WIN32) */
+#elif defined(NETWARE) && defined(USE_WINSOCK) && !defined(DOXYGEN) /* !defined(OS2) && !defined(WIN32) */
 
 #define APR_FROM_OS_ERROR(e) (e == 0 ? APR_SUCCESS : e + APR_OS_START_SYSERR)
 #define APR_TO_OS_ERROR(e)   (e == 0 ? APR_SUCCESS : e - APR_OS_START_SYSERR)
@@ -1048,8 +1131,6 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 /* A special case, only socket calls require this: */
 #define apr_get_netos_error()   (APR_FROM_OS_ERROR(WSAGetLastError()))
 #define apr_set_netos_error(e)  (WSASetLastError(APR_TO_OS_ERROR(e)))
-
-#define APR_STATUS_IS_SUCCESS(s)           ((s) == APR_SUCCESS)
 
 /* APR CANONICAL ERROR TESTS */
 #define APR_STATUS_IS_EACCES(s)         ((s) == APR_EACCES)
@@ -1080,7 +1161,12 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
                 || (s) == APR_OS_START_SYSERR + WSAECONNABORTED)
 #define APR_STATUS_IS_ECONNRESET(s)     ((s) == APR_ECONNRESET \
                 || (s) == APR_OS_START_SYSERR + WSAECONNRESET)
-#define APR_STATUS_IS_ETIMEDOUT(s)      ((s) == APR_ETIMEDOUT \
+/* XXX deprecated */
+#define APR_STATUS_IS_ETIMEDOUT(s)       ((s) == APR_ETIMEDOUT \
+                || (s) == APR_OS_START_SYSERR + WSAETIMEDOUT \
+                || (s) == APR_OS_START_SYSERR + WAIT_TIMEOUT)
+#undef APR_STATUS_IS_TIMEUP
+#define APR_STATUS_IS_TIMEUP(s)         ((s) == APR_TIMEUP \
                 || (s) == APR_OS_START_SYSERR + WSAETIMEDOUT \
                 || (s) == APR_OS_START_SYSERR + WAIT_TIMEOUT)
 #define APR_STATUS_IS_EHOSTUNREACH(s)   ((s) == APR_EHOSTUNREACH \
@@ -1092,6 +1178,8 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 #define APR_STATUS_IS_EPIPE(s)          ((s) == APR_EPIPE)
 #define APR_STATUS_IS_EXDEV(s)          ((s) == APR_EXDEV)
 #define APR_STATUS_IS_ENOTEMPTY(s)      ((s) == APR_ENOTEMPTY)
+#define APR_STATUS_IS_EAFNOSUPPORT(s)   ((s) == APR_EAFNOSUPPORT \
+                || (s) == APR_OS_START_SYSERR + WSAEAFNOSUPPORT)
 
 #else /* !defined(NETWARE) && !defined(OS2) && !defined(WIN32) */
 
@@ -1108,14 +1196,11 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
  */
 #define apr_get_netos_error() (errno)
 #define apr_set_netos_error(e) (errno = (e))
-/** @} */
 
 /** 
  * @addtogroup APR_STATUS_IS
  * @{
  */
-/** no error */
-#define APR_STATUS_IS_SUCCESS(s)        ((s) == APR_SUCCESS)
 
 /** permission denied */
 #define APR_STATUS_IS_EACCES(s)         ((s) == APR_EACCES)
@@ -1138,7 +1223,12 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 /** not a directory */
 #define APR_STATUS_IS_ENOTDIR(s)        ((s) == APR_ENOTDIR)
 /** no space left on device */
+#ifdef EDQUOT
+#define APR_STATUS_IS_ENOSPC(s)         ((s) == APR_ENOSPC \
+                                      || (s) == EDQUOT)
+#else
 #define APR_STATUS_IS_ENOSPC(s)         ((s) == APR_ENOSPC)
+#endif
 /** not enough memory */
 #define APR_STATUS_IS_ENOMEM(s)         ((s) == APR_ENOMEM)
 /** too many open files */
@@ -1191,8 +1281,9 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 
 /** Connection Reset by peer */
 #define APR_STATUS_IS_ECONNRESET(s)      ((s) == APR_ECONNRESET)
-/** Operation timed out */
-#define APR_STATUS_IS_ETIMEDOUT(s)       ((s) == APR_ETIMEDOUT)    
+/** Operation timed out
+ *  @deprecated */
+#define APR_STATUS_IS_ETIMEDOUT(s)      ((s) == APR_ETIMEDOUT)
 /** no route to host */
 #define APR_STATUS_IS_EHOSTUNREACH(s)    ((s) == APR_EHOSTUNREACH)
 /** network is unreachable */
@@ -1206,6 +1297,8 @@ APR_DECLARE(char *) apr_strerror(apr_status_t statcode, char *buf,
 /** Directory Not Empty */
 #define APR_STATUS_IS_ENOTEMPTY(s)       ((s) == APR_ENOTEMPTY || \
                                           (s) == APR_EEXIST)
+/** Address Family not supported */
+#define APR_STATUS_IS_EAFNOSUPPORT(s)    ((s) == APR_EAFNOSUPPORT)
 /** @} */
 
 #endif /* !defined(NETWARE) && !defined(OS2) && !defined(WIN32) */

@@ -42,8 +42,7 @@ extern "C" {
  */
 
 /**
- * @defgroup apr_poll_opt Poll options
- * @{
+ * Poll options
  */
 #define APR_POLLIN    0x001     /**< Can read without blocking */
 #define APR_POLLPRI   0x002     /**< Priority data available */
@@ -51,14 +50,19 @@ extern "C" {
 #define APR_POLLERR   0x010     /**< Pending error */
 #define APR_POLLHUP   0x020     /**< Hangup occurred */
 #define APR_POLLNVAL  0x040     /**< Descriptior invalid */
-/** @} */
+
+/**
+ * Pollset Flags
+ */
+#define APR_POLLSET_THREADSAFE 0x001 /**< Adding or Removing a Descriptor is thread safe */
+#define APR_POLLSET_NOCOPY     0x002 /**< Descriptors passed to apr_pollset_create() are not copied */
 
 /** Used in apr_pollfd_t to determine what the apr_descriptor is */
 typedef enum { 
     APR_NO_DESC,                /**< nothing here */
     APR_POLL_SOCKET,            /**< descriptor refers to a socket */
     APR_POLL_FILE,              /**< descriptor refers to a file */
-    APR_POLL_LASTDESC           /**< descriptor is the last one in the list */
+    APR_POLL_LASTDESC           /**< @deprecated descriptor is the last one in the list */
 } apr_datatype_e ;
 
 /** Union of either an APR file or socket. */
@@ -80,111 +84,6 @@ struct apr_pollfd_t {
     void *client_data;          /**< allows app to associate context */
 };
 
-/**
- * Setup the memory required for poll to operate properly
- * @param new_poll The poll structure to be used. 
- * @param num The number of socket descriptors to be polled.
- * @param cont The pool to operate on.
- * @deprecated This function is deprecated, APR applications should control the pollset memory themselves.
- */
-APR_DECLARE(apr_status_t) apr_poll_setup(apr_pollfd_t **new_poll, 
-                                         apr_int32_t num,
-                                         apr_pool_t *cont);
-
-/**
- * Poll the sockets in the poll structure
- * @param aprset The poll structure we will be using. 
- * @param numsock The number of sockets we are polling
- * @param nsds The number of sockets signalled.
- * @param timeout The amount of time in microseconds to wait.  This is 
- *                a maximum, not a minimum.  If a socket is signalled, we 
- *                will wake up before this time.  A negative number means 
- *                wait until a socket is signalled.
- * @remark
- * <PRE>
- * The number of sockets signalled is returned in the second argument. 
- *
- *        This is a blocking call, and it will not return until either a 
- *        socket has been signalled, or the timeout has expired. 
- * </PRE>
- */
-APR_DECLARE(apr_status_t) apr_poll(apr_pollfd_t *aprset, apr_int32_t numsock,
-                                   apr_int32_t *nsds, 
-                                   apr_interval_time_t timeout);
-
-/**
- * Add a socket to the poll structure.
- * @param aprset The poll structure we will be using. 
- * @param sock The socket to add to the current poll structure. 
- * @param event The events to look for when we do the poll.  One of:
- * <PRE>
- *            APR_POLLIN       signal if read will not block
- *            APR_POLLPRI      signal if prioirty data is availble to be read
- *            APR_POLLOUT      signal if write will not block
- * </PRE>
- * @deprecated This function is deprecated, APR applications should control the pollset memory themselves.
- */
-APR_DECLARE(apr_status_t) apr_poll_socket_add(apr_pollfd_t *aprset, 
-                                              apr_socket_t *sock,
-                                              apr_int16_t event);
-
-/**
- * Modify a socket in the poll structure with mask.
- * @param aprset The poll structure we will be using. 
- * @param sock The socket to modify in poll structure. 
- * @param events The events to stop looking for during the poll.  One of:
- * <PRE>
- *            APR_POLLIN       signal if read will not block
- *            APR_POLLPRI      signal if priority data is available to be read
- *            APR_POLLOUT      signal if write will not block
- * </PRE>
- * @deprecated This function is deprecated, APR applications should control the pollset memory themselves.
- */
-APR_DECLARE(apr_status_t) apr_poll_socket_mask(apr_pollfd_t *aprset,
-                                               apr_socket_t *sock,
-                                               apr_int16_t events);
-/**
- * Remove a socket from the poll structure.
- * @param aprset The poll structure we will be using. 
- * @param sock The socket to remove from the current poll structure. 
- * @deprecated This function is deprecated, APR applications should control the pollset memory themselves.
- */
-APR_DECLARE(apr_status_t) apr_poll_socket_remove(apr_pollfd_t *aprset, 
-                                                 apr_socket_t *sock);
-
-/**
- * Clear all events in the poll structure.
- * @param aprset The poll structure we will be using. 
- * @param events The events to clear from all sockets.  One of:
- * <PRE>
- *            APR_POLLIN       signal if read will not block
- *            APR_POLLPRI      signal if priority data is available to be read
- *            APR_POLLOUT      signal if write will not block
- * </PRE>
- * @deprecated This function is deprecated, APR applications should control the pollset memory themselves.
- */
-APR_DECLARE(apr_status_t) apr_poll_socket_clear(apr_pollfd_t *aprset, 
-                                                 apr_int16_t events);
-
-/**
- * Get the return events for the specified socket.
- * @param event The returned events for the socket.  One of:
- * <PRE>
- *            APR_POLLIN       Data is available to be read 
- *            APR_POLLPRI      Priority data is availble to be read
- *            APR_POLLOUT      Write will succeed
- *            APR_POLLERR      An error occurred on the socket
- *            APR_POLLHUP      The connection has been terminated
- *            APR_POLLNVAL     This is an invalid socket to poll on.
- *                             Socket not open.
- * </PRE>
- * @param sock The socket we wish to get information about. 
- * @param aprset The poll structure we will be using. 
- * @deprecated This function is deprecated, APR applications should control the pollset memory themselves.
- */
-APR_DECLARE(apr_status_t) apr_poll_revents_get(apr_int16_t *event, 
-                                          apr_socket_t *sock,
-                                          apr_pollfd_t *aprset);
 
 /* General-purpose poll API for arbitrarily large numbers of
  * file descriptors
@@ -198,8 +97,14 @@ typedef struct apr_pollset_t apr_pollset_t;
  * @param pollset  The pointer in which to return the newly created object 
  * @param size The maximum number of descriptors that this pollset can hold
  * @param p The pool from which to allocate the pollset
- * @param flags Optional flags to modify the operation of the pollset
- *              (reserved for future expansion)
+ * @param flags Optional flags to modify the operation of the pollset.
+ *
+ * @remark If flags equals APR_POLLSET_THREADSAFE, then a pollset is
+ * created on which it is safe to make concurrent calls to
+ * apr_pollset_add(), apr_pollset_remove() and apr_pollset_poll() from
+ * separate threads.  This feature is only supported on some
+ * platforms; the apr_pollset_create() call will fail with
+ * APR_ENOTIMPL on platforms where it is not supported.
  */
 APR_DECLARE(apr_status_t) apr_pollset_create(apr_pollset_t **pollset,
                                              apr_uint32_t size,
@@ -219,6 +124,15 @@ APR_DECLARE(apr_status_t) apr_pollset_destroy(apr_pollset_t *pollset);
  * @remark If you set client_data in the descriptor, that value
  *         will be returned in the client_data field whenever this
  *         descriptor is signalled in apr_pollset_poll().
+ * @remark If the pollset has been created with APR_POLLSET_THREADSAFE
+ *         and thread T1 is blocked in a call to apr_pollset_poll() for
+ *         this same pollset that is being modified via apr_pollset_add()
+ *         in thread T2, the currently executing apr_pollset_poll() call in
+ *         T1 will either: (1) automatically include the newly added descriptor
+ *         in the set of descriptors it is watching or (2) return immediately
+ *         with APR_EINTR.  Option (1) is recommended, but option (2) is
+ *         allowed for implementations where option (1) is impossible
+ *         or impractical.
  */
 APR_DECLARE(apr_status_t) apr_pollset_add(apr_pollset_t *pollset,
                                           const apr_pollfd_t *descriptor);
@@ -227,6 +141,15 @@ APR_DECLARE(apr_status_t) apr_pollset_add(apr_pollset_t *pollset,
  * Remove a descriptor from a pollset
  * @param pollset The pollset from which to remove the descriptor
  * @param descriptor The descriptor to remove
+ * @remark If the pollset has been created with APR_POLLSET_THREADSAFE
+ *         and thread T1 is blocked in a call to apr_pollset_poll() for
+ *         this same pollset that is being modified via apr_pollset_remove()
+ *         in thread T2, the currently executing apr_pollset_poll() call in
+ *         T1 will either: (1) automatically exclude the newly added descriptor
+ *         in the set of descriptors it is watching or (2) return immediately
+ *         with APR_EINTR.  Option (1) is recommended, but option (2) is
+ *         allowed for implementations where option (1) is impossible
+ *         or impractical.
  */
 APR_DECLARE(apr_status_t) apr_pollset_remove(apr_pollset_t *pollset,
                                              const apr_pollfd_t *descriptor);
@@ -242,6 +165,85 @@ APR_DECLARE(apr_status_t) apr_pollset_poll(apr_pollset_t *pollset,
                                            apr_interval_time_t timeout,
                                            apr_int32_t *num,
                                            const apr_pollfd_t **descriptors);
+
+
+/**
+ * Poll the descriptors in the poll structure
+ * @param aprset The poll structure we will be using. 
+ * @param numsock The number of descriptors we are polling
+ * @param nsds The number of descriptors signalled (output parameter)
+ * @param timeout The amount of time in microseconds to wait.  This is 
+ *                a maximum, not a minimum.  If a descriptor is signalled, we 
+ *                will wake up before this time.  A negative number means 
+ *                wait until a descriptor is signalled.
+ * @remark The number of descriptors signalled is returned in the third argument. 
+ *         This is a blocking call, and it will not return until either a 
+ *         descriptor has been signalled, or the timeout has expired. 
+ * @remark The rtnevents field in the apr_pollfd_t array will only be filled-
+ *         in if the return value is APR_SUCCESS.
+ */
+APR_DECLARE(apr_status_t) apr_poll(apr_pollfd_t *aprset, apr_int32_t numsock,
+                                   apr_int32_t *nsds, 
+                                   apr_interval_time_t timeout);
+
+/** Opaque structure used for pollset API */
+typedef struct apr_pollcb_t apr_pollcb_t;
+
+/**
+ * Setup a pollcb object
+ * @param pollcb  The pointer in which to return the newly created object 
+ * @param size The maximum number of descriptors that a single _poll can return.
+ * @param p The pool from which to allocate the pollcb
+ * @param flags Optional flags to modify the operation of the pollcb.
+ *
+ * @remark Pollcb is only supported on some platforms; the apr_pollcb_create()
+ * call will fail with APR_ENOTIMPL on platforms where it is not supported.
+ */
+APR_DECLARE(apr_status_t) apr_pollcb_create(apr_pollcb_t **pollcb,
+                                            apr_uint32_t size,
+                                            apr_pool_t *pool,
+                                            apr_uint32_t flags);
+
+/**
+ * Add a socket or file descriptor to a pollcb
+ * @param pollcb The pollcb to which to add the descriptor
+ * @param descriptor The descriptor to add
+ * @remark If you set client_data in the descriptor, that value
+ *         will be returned in the client_data field whenever this
+ *         descriptor is signalled in apr_pollcb_poll().
+ * @remark Unlike the apr_pollset API, the descriptor is not copied, and users 
+ *         must retain the memory used by descriptor, as the same pointer will be 
+ *         returned to them from apr_pollcb_poll.
+ */
+APR_DECLARE(apr_status_t) apr_pollcb_add(apr_pollcb_t *pollcb,
+                                         apr_pollfd_t *descriptor);
+/**
+ * Remove a descriptor from a pollcb
+ * @param pollcb The pollcb from which to remove the descriptor
+ * @param descriptor The descriptor to remove
+ */
+APR_DECLARE(apr_status_t) apr_pollcb_remove(apr_pollcb_t *pollcb,
+                                            apr_pollfd_t *descriptor);
+
+/** Function prototype for pollcb handlers 
+ * @param baton Opaque baton passed into apr_pollcb_poll
+ * @param descriptor Contains the notification for an active descriptor, 
+ *                   the rtnevents member contains what events were triggered
+ *                   for this descriptor.
+ */
+typedef apr_status_t (*apr_pollcb_cb_t)(void *baton, apr_pollfd_t *descriptor);
+
+/**
+ * Block for activity on the descriptor(s) in a pollcb
+ * @param pollcb The pollcb to use
+ * @param timeout Timeout in microseconds
+ * @param func Callback function to call for each active socket
+ * @param baton Opaque baton passed to the callback function.
+ */
+APR_DECLARE(apr_status_t) apr_pollcb_poll(apr_pollcb_t *pollcb,
+                                          apr_interval_time_t timeout,
+                                          apr_pollcb_cb_t func,
+                                          void *baton); 
 
 /** @} */
 

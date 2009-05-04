@@ -18,7 +18,7 @@
 #define APR_SIGNAL_H
 
 /**
- * @file apr_signal.h 
+ * @file apr_signal.h
  * @brief APR Signal Handling
  */
 
@@ -34,8 +34,8 @@ extern "C" {
 #endif /* __cplusplus */
 
 /**
- * @defgroup apr_signal Handling
- * @ingroup APR 
+ * @defgroup apr_signal Signal Handling
+ * @ingroup APR
  * @{
  */
 
@@ -79,15 +79,26 @@ APR_DECLARE(apr_sigfunc_t *) apr_signal(int signo, apr_sigfunc_t * func);
  */
 APR_DECLARE(const char *) apr_signal_description_get(int signum);
 
-/** @deprecated @see apr_signal_description_get */
-APR_DECLARE(const char *) apr_signal_get_description(int signum);
-
 /**
  * APR-private function for initializing the signal package
  * @internal
  * @param pglobal The internal, global pool
  */
 void apr_signal_init(apr_pool_t *pglobal);
+
+/**
+ * Block the delivery of a particular signal
+ * @param signum The signal number
+ * @return status
+ */
+APR_DECLARE(apr_status_t) apr_signal_block(int signum);
+
+/**
+ * Enable the delivery of a particular signal
+ * @param signum The signal number
+ * @return status
+ */
+APR_DECLARE(apr_status_t) apr_signal_unblock(int signum);
 
 /** @} */
 

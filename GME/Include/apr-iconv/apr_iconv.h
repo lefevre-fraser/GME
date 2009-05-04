@@ -32,9 +32,24 @@
 #ifndef APR_ICONV_H
 #define APR_ICONV_H
 
+/**
+ * @file apr_iconv.h
+ * @brief APR-iconv substitute iconv library implementation 
+ */
+
 #include "apr.h"
 #include "apr_pools.h"
 #include <stddef.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+/**
+ * @defgroup apr_iconv substitute iconv implementation
+ * @ingroup APR-iconv
+ * @{
+ */
 
 /**
  * API_DECLARE_EXPORT is defined when building the libapriconv dynamic 
@@ -49,7 +64,7 @@
  * and calling conventions at compile time.
  */
 
-#if !defined(WIN32)
+#if defined(DOXYGEN) || !defined(WIN32)
 /**
  * The public apr-iconv functions are declared with API_DECLARE(), so they 
  * use the most portable calling convention.  Public apr-iconv functions 
@@ -76,15 +91,15 @@
 #define API_DECLARE_DATA
 #elif defined(API_DECLARE_STATIC)
 #define API_DECLARE(type)            type __stdcall
-#define API_DECLARE_NONSTD(type)     type
+#define API_DECLARE_NONSTD(type)     type __cdecl
 #define API_DECLARE_DATA
 #elif defined(API_DECLARE_EXPORT)
 #define API_DECLARE(type)            __declspec(dllexport) type __stdcall
-#define API_DECLARE_NONSTD(type)     __declspec(dllexport) type
+#define API_DECLARE_NONSTD(type)     __declspec(dllexport) type __cdecl
 #define API_DECLARE_DATA             __declspec(dllexport)
 #else
 #define API_DECLARE(type)            __declspec(dllimport) type __stdcall
-#define API_DECLARE_NONSTD(type)     __declspec(dllimport) type
+#define API_DECLARE_NONSTD(type)     __declspec(dllimport) type __cdecl
 #define API_DECLARE_DATA             __declspec(dllimport)
 #endif
 
@@ -95,10 +110,41 @@ typedef void *apr_iconv_t;
 
 /* __BEGIN_DECLS */
 
-API_DECLARE(apr_status_t) apr_iconv_open(const char *, const char *, apr_pool_t *, apr_iconv_t *);
-API_DECLARE(apr_status_t) apr_iconv(apr_iconv_t, const char **, apr_size_t *, char **, apr_size_t *, apr_size_t *);
-API_DECLARE(apr_status_t) apr_iconv_close(apr_iconv_t, apr_pool_t *);
+/**
+ * Create a conversion descriptor.
+ * @param to name of charset to convert to.
+ * @param from name of charset of the input bytes.
+ * @param pool pool to alloc memory.
+ * @param cd conversion descriptor created in pool.
+ */
+API_DECLARE(apr_status_t) apr_iconv_open(const char *to, const char *from,
+                                         apr_pool_t *pool, apr_iconv_t *cd);
+/**
+ * Perform character set conversion.
+ * @param cd conversion descriptor created by apr_iconv_open().
+ * @param inbuf input buffer.
+ * @param inbytesleft bytes to convert.
+ * @param outbuf output buffer.
+ * @param outbytesleft space (in bytes) available in outbuf.
+ * @param translated number of input bytes converted.
+ */
+API_DECLARE(apr_status_t) apr_iconv(apr_iconv_t cd,
+                          const char **inbuf, apr_size_t *inbytesleft,
+                          char **outbuf, apr_size_t *outbytesleft,
+                          apr_size_t *translated);
+/**
+ * Deallocate descriptor for character set conversion.
+ * @param cd conversion descriptor.
+ * @param pool pool used in the apr_iconv_open().
+ */
+API_DECLARE(apr_status_t) apr_iconv_close(apr_iconv_t cd, apr_pool_t *pool);
 
 /* __END_DECLS */
+
+/** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* APR_ICONV_H */

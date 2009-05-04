@@ -136,11 +136,6 @@ APR_DECLARE(apr_status_t) apr_time_exp_tz(apr_time_exp_t *result,
                                           apr_time_t input,
                                           apr_int32_t offs);
 
-/** @deprecated @see apr_time_exp_tz */
-APR_DECLARE(apr_status_t) apr_explode_time(apr_time_exp_t *result,
-                                           apr_time_t input,
-                                           apr_int32_t offs);
-
 /**
  * convert a time to its human readable components in GMT timezone
  * @param result the exploded time
@@ -156,10 +151,6 @@ APR_DECLARE(apr_status_t) apr_time_exp_gmt(apr_time_exp_t *result,
  */
 APR_DECLARE(apr_status_t) apr_time_exp_lt(apr_time_exp_t *result, 
                                           apr_time_t input);
-
-/** @deprecated @see apr_time_exp_lt */
-APR_DECLARE(apr_status_t) apr_explode_localtime(apr_time_exp_t *result, 
-                                                apr_time_t input);
 
 /**
  * Convert time value from human readable format to a numeric apr_time_t 
@@ -179,10 +170,6 @@ APR_DECLARE(apr_status_t) apr_time_exp_get(apr_time_t *result,
 APR_DECLARE(apr_status_t) apr_time_exp_gmt_get(apr_time_t *result, 
                                                apr_time_exp_t *input);
 
-/** @deprecated @see apr_time_exp_gmt_get */
-APR_DECLARE(apr_status_t) apr_implode_gmt(apr_time_t *result, 
-                                          apr_time_exp_t *input);
-
 /**
  * Sleep for the specified number of micro-seconds.
  * @param t desired amount of time to sleep.
@@ -196,7 +183,7 @@ APR_DECLARE(void) apr_sleep(apr_interval_time_t t);
  * apr_rfc822_date formats dates in the RFC822
  * format in an efficient manner.  It is a fixed length
  * format which requires the indicated amount of storage,
- * including the trailing null byte.
+ * including the trailing NUL terminator.
  * @param date_str String to write to.
  * @param t the time to convert 
  */
@@ -208,7 +195,7 @@ APR_DECLARE(apr_status_t) apr_rfc822_date(char *date_str, apr_time_t t);
  * apr_ctime formats dates in the ctime() format
  * in an efficient manner.  it is a fixed length format
  * and requires the indicated amount of storage including
- * the trailing null byte.
+ * the trailing NUL terminator.
  * Unlike ANSI/ISO C ctime(), apr_ctime() does not include
  * a \n at the end of the string.
  * @param date_str String to write to.

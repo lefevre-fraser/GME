@@ -1,9 +1,9 @@
-/* Copyright 2000-2005 The Apache Software Foundation or its licensors, as
- * applicable.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/* Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -30,6 +30,9 @@
 #include "apr_file_io.h"
 
 #include "apu.h"
+#if APR_CHARSET_EBCDIC
+#include "apr_xlate.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -332,6 +335,19 @@ APU_DECLARE(int) apr_xml_insert_uri(apr_array_header_t *uri_array,
 
 /** Get the URI item for this XML element */
 #define APR_XML_GET_URI_ITEM(ary, i) (((const char * const *)(ary)->elts)[i])
+
+#if APR_CHARSET_EBCDIC
+/**
+ * Convert parsed tree in EBCDIC 
+ * @param p The pool to allocate out of
+ * @param pdoc The apr_xml_doc to convert.
+ * @param xlate The translation handle to use.
+ * @return Any errors found during conversion.
+ */
+APU_DECLARE(apr_status_t) apr_xml_parser_convert_doc(apr_pool_t *p,
+                                                     apr_xml_doc *pdoc,
+                                                     apr_xlate_t *convset);
+#endif
 
 #ifdef __cplusplus
 }

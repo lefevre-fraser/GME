@@ -67,10 +67,6 @@ APR_DECLARE(apr_status_t) apr_uid_current(apr_uid_t *userid,
                                           apr_gid_t *groupid,
                                           apr_pool_t *p);
 
-/** @deprecated @see apr_uid_current */
-APR_DECLARE(apr_status_t) apr_current_userid(apr_uid_t *userid,
-                                             apr_gid_t *groupid,
-                                             apr_pool_t *p);
 /**
  * Get the user name for a specified userid
  * @param username Pointer to new string containing user name (on output)
@@ -81,9 +77,6 @@ APR_DECLARE(apr_status_t) apr_current_userid(apr_uid_t *userid,
 APR_DECLARE(apr_status_t) apr_uid_name_get(char **username, apr_uid_t userid,
                                            apr_pool_t *p);
 
-/** @deprecated @see apr_uid_name_get */
-APR_DECLARE(apr_status_t) apr_get_username(char **username, apr_uid_t userid,
-                                           apr_pool_t *p);
 /**
  * Get the userid (and groupid) for the specified username
  * @param userid   Returns the user id
@@ -94,10 +87,6 @@ APR_DECLARE(apr_status_t) apr_get_username(char **username, apr_uid_t userid,
  */
 APR_DECLARE(apr_status_t) apr_uid_get(apr_uid_t *userid, apr_gid_t *groupid,
                                       const char *username, apr_pool_t *p);
-
-/** @deprecated @see apr_uid_get */
-APR_DECLARE(apr_status_t) apr_get_userid(apr_uid_t *userid, apr_gid_t *groupid,
-                                         const char *username, apr_pool_t *p);
 
 /**
  * Get the home directory for the named user
@@ -110,11 +99,6 @@ APR_DECLARE(apr_status_t) apr_uid_homepath_get(char **dirname,
                                                const char *username, 
                                                apr_pool_t *p);
 
-/** @deprecated @see apr_uid_homepath_get */
-APR_DECLARE(apr_status_t) apr_get_home_directory(char **dirname, 
-                                                 const char *username, 
-                                                 apr_pool_t *p);
-
 /**
  * Compare two user identifiers for equality.
  * @param left One uid to test
@@ -125,13 +109,8 @@ APR_DECLARE(apr_status_t) apr_get_home_directory(char **dirname,
  */
 #if defined(WIN32)
 APR_DECLARE(apr_status_t) apr_uid_compare(apr_uid_t left, apr_uid_t right);
-
-/** @deprecated @see apr_uid_compare */
-APR_DECLARE(apr_status_t) apr_compare_users(apr_uid_t left, apr_uid_t right);
 #else
 #define apr_uid_compare(left,right) (((left) == (right)) ? APR_SUCCESS : APR_EMISMATCH)
-/** @deprecated @see apr_uid_compare */
-#define apr_compare_users(left,right) (((left) == (right)) ? APR_SUCCESS : APR_EMISMATCH)
 #endif
 
 /**
@@ -144,14 +123,6 @@ APR_DECLARE(apr_status_t) apr_compare_users(apr_uid_t left, apr_uid_t right);
 APR_DECLARE(apr_status_t) apr_gid_name_get(char **groupname, 
                                              apr_gid_t groupid, apr_pool_t *p);
 
-/** @deprecated @see apr_gid_name_get */
-APR_DECLARE(apr_status_t) apr_group_name_get(char **groupname, 
-                                             apr_gid_t groupid, apr_pool_t *p);
-
-/** @deprecated @see apr_gid_name_get */
-APR_DECLARE(apr_status_t) apr_get_groupname(char **groupname, 
-                                            apr_gid_t groupid, apr_pool_t *p);
-
 /**
  * Get the groupid for a specified group name
  * @param groupid Pointer to the group id (on output)
@@ -161,10 +132,6 @@ APR_DECLARE(apr_status_t) apr_get_groupname(char **groupname,
  */
 APR_DECLARE(apr_status_t) apr_gid_get(apr_gid_t *groupid, 
                                       const char *groupname, apr_pool_t *p);
-
-/** @deprecated @see apr_gid_get */
-APR_DECLARE(apr_status_t) apr_get_groupid(apr_gid_t *groupid, 
-                                          const char *groupname, apr_pool_t *p);
 
 /**
  * Compare two group identifiers for equality.
@@ -176,12 +143,8 @@ APR_DECLARE(apr_status_t) apr_get_groupid(apr_gid_t *groupid,
  */
 #if defined(WIN32)
 APR_DECLARE(apr_status_t) apr_gid_compare(apr_gid_t left, apr_gid_t right);
-/** @deprecated @see apr_gid_compare */
-APR_DECLARE(apr_status_t) apr_compare_groups(apr_gid_t left, apr_gid_t right);
 #else
 #define apr_gid_compare(left,right) (((left) == (right)) ? APR_SUCCESS : APR_EMISMATCH)
-/** @deprecated @see apr_gid_compare */
-#define apr_compare_groups(left,right) (((left) == (right)) ? APR_SUCCESS : APR_EMISMATCH)
 #endif
 
 #endif  /* ! APR_HAS_USER */

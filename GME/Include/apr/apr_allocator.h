@@ -42,7 +42,15 @@ typedef struct apr_allocator_t apr_allocator_t;
 /** the structure which holds information about the allocation */
 typedef struct apr_memnode_t apr_memnode_t;
 
-/** basic memory node structure */
+/** basic memory node structure
+ * @note The next, ref and first_avail fields are available for use by the
+ *       caller of apr_allocator_alloc(), the remaining fields are read-only.
+ *       The next field has to be used with caution and sensibly set when the
+ *       memnode is passed back to apr_allocator_free().  See apr_allocator_free()
+ *       for details.  
+ *       The ref and first_avail fields will be properly restored by
+ *       apr_allocator_free().
+ */
 struct apr_memnode_t {
     apr_memnode_t *next;            /**< next memnode */
     apr_memnode_t **ref;            /**< reference to self */
@@ -83,7 +91,9 @@ APR_DECLARE(apr_memnode_t *) apr_allocator_alloc(apr_allocator_t *allocator,
                                                  apr_size_t size);
 
 /**
- * Free a block of mem, giving it back to the allocator
+ * Free a list of blocks of mem, giving them back to the allocator.
+ * The list is typically terminated by a memnode with its next field
+ * set to NULL.
  * @param allocator The allocator to give the mem back to
  * @param memnode The memory node to return
  */
@@ -106,19 +116,11 @@ APR_DECLARE(void) apr_allocator_free(apr_allocator_t *allocator,
 APR_DECLARE(void) apr_allocator_owner_set(apr_allocator_t *allocator,
                                           apr_pool_t *pool);
 
-/** @deprecated @see apr_allocator_owner_set */
-APR_DECLARE(void) apr_allocator_set_owner(apr_allocator_t *allocator,
-                                          apr_pool_t *pool);
-
 /**
  * Get the current owner of the allocator
  * @param allocator The allocator to get the owner from
  */
 APR_DECLARE(apr_pool_t *) apr_allocator_owner_get(apr_allocator_t *allocator);
-
-/** @deprecated @see apr_allocator_owner_get */
-APR_DECLARE(apr_pool_t *) apr_allocator_get_owner(
-                                  apr_allocator_t *allocator);
 
 /**
  * Set the current threshold at which the allocator should start
@@ -127,10 +129,6 @@ APR_DECLARE(apr_pool_t *) apr_allocator_get_owner(
  * @param size The threshold.  0 == unlimited.
  */
 APR_DECLARE(void) apr_allocator_max_free_set(apr_allocator_t *allocator,
-                                             apr_size_t size);
-
-/** @deprecated @see apr_allocator_max_free_set */
-APR_DECLARE(void) apr_allocator_set_max_free(apr_allocator_t *allocator,
                                              apr_size_t size);
 
 #include "apr_thread_mutex.h"
@@ -144,19 +142,11 @@ APR_DECLARE(void) apr_allocator_set_max_free(apr_allocator_t *allocator,
 APR_DECLARE(void) apr_allocator_mutex_set(apr_allocator_t *allocator,
                                           apr_thread_mutex_t *mutex);
 
-/** @deprecated @see apr_allocator_mutex_set */
-APR_DECLARE(void) apr_allocator_set_mutex(apr_allocator_t *allocator,
-                                          apr_thread_mutex_t *mutex);
-
 /**
  * Get the mutex currently set for the allocator
  * @param allocator The allocator
  */
 APR_DECLARE(apr_thread_mutex_t *) apr_allocator_mutex_get(
-                                      apr_allocator_t *allocator);
-
-/** @deprecated @see apr_allocator_mutex_get */
-APR_DECLARE(apr_thread_mutex_t *) apr_allocator_get_mutex(
                                       apr_allocator_t *allocator);
 
 #endif /* APR_HAS_THREADS */

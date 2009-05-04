@@ -71,6 +71,24 @@ APR_DECLARE(apr_status_t) apr_shm_create(apr_shm_t **m,
                                          apr_pool_t *pool);
 
 /**
+ * Remove named resource associated with a shared memory segment,
+ * preventing attachments to the resource, but not destroying it.
+ * @param filename The filename associated with shared-memory segment which
+ *        needs to be removed
+ * @param pool The pool used for file operations
+ * @remark This function is only supported on platforms which support
+ * name-based shared memory segments, and will return APR_ENOTIMPL on
+ * platforms without such support.  Removing the file while the shm
+ * is in use is not entirely portable, caller may use this to enhance
+ * obscurity of the resource, but be prepared for the the call to fail,
+ * and for concurrent attempts to create a resource of the same name
+ * to also fail.  The pool cleanup of apr_shm_create (apr_shm_destroy)
+ * also removes the named resource.
+ */
+APR_DECLARE(apr_status_t) apr_shm_remove(const char *filename,
+                                         apr_pool_t *pool);
+
+/**
  * Destroy a shared memory segment and associated memory.
  * @param m The shared memory segment structure to destroy.
  */
@@ -103,6 +121,7 @@ APR_DECLARE(apr_status_t) apr_shm_detach(apr_shm_t *m);
  * processes will maintain the same address mapping.
  * @param m The shared memory segment from which to retrieve
  *        the base address.
+ * @return address, aligned by APR_ALIGN_DEFAULT.
  */
 APR_DECLARE(void *) apr_shm_baseaddr_get(const apr_shm_t *m);
 

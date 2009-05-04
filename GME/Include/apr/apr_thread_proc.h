@@ -43,13 +43,13 @@ extern "C" {
  */
 
 typedef enum {
-    APR_SHELLCMD,       /**< use the shell to invoke the program */
-    APR_PROGRAM,        /**< invoke the program directly, no copied env */
-    APR_PROGRAM_ENV,    /**< invoke the program, replicating our environment */
-    APR_PROGRAM_PATH,   /**< find program on PATH, use our environment */
-    APR_SHELLCMD_ENV    /**< use the shell to invoke the program,
-                          *   replicating our environment
-                          */
+    APR_SHELLCMD,           /**< use the shell to invoke the program */
+    APR_PROGRAM,            /**< invoke the program directly, no copied env */
+    APR_PROGRAM_ENV,        /**< invoke the program, replicating our environment */
+    APR_PROGRAM_PATH,       /**< find program on PATH, use our environment */
+    APR_SHELLCMD_ENV        /**< use the shell to invoke the program,
+                             *   replicating our environment
+                             */
 } apr_cmdtype_e;
 
 typedef enum {
@@ -77,15 +77,26 @@ typedef enum {
 
 /** @see apr_procattr_io_set */
 #define APR_NO_PIPE          0
-
-/** @see apr_procattr_io_set */
+/** @see apr_procattr_io_set and apr_file_pipe_create_ex */
 #define APR_FULL_BLOCK       1
-/** @see apr_procattr_io_set */
+/** @see apr_procattr_io_set and apr_file_pipe_create_ex */
 #define APR_FULL_NONBLOCK    2
 /** @see apr_procattr_io_set */
 #define APR_PARENT_BLOCK     3
 /** @see apr_procattr_io_set */
 #define APR_CHILD_BLOCK      4
+/** @see apr_procattr_io_set */
+#define APR_NO_FILE          8
+
+/** @see apr_file_pipe_create_ex */
+#define APR_READ_BLOCK       3
+/** @see apr_file_pipe_create_ex */
+#define APR_WRITE_BLOCK      4
+
+/** @see apr_procattr_io_set 
+ * @note Win32 only effective with version 1.2.12, portably introduced in 1.3.0
+ */
+#define APR_NO_FILE          8
 
 /** @see apr_procattr_limit_set */
 #define APR_LIMIT_CPU        0
@@ -208,14 +219,16 @@ APR_DECLARE(apr_status_t) apr_threadattr_create(apr_threadattr_t **new_attr,
 /**
  * Set if newly created threads should be created in detached state.
  * @param attr The threadattr to affect 
- * @param on Thread detach state on or off
+ * @param on Non-zero if detached threads should be created.
  */
 APR_DECLARE(apr_status_t) apr_threadattr_detach_set(apr_threadattr_t *attr, 
-                                                   apr_int32_t on);
+                                                    apr_int32_t on);
 
 /**
  * Get the detach state for this threadattr.
- * @param attr The threadattr to reference 
+ * @param attr The threadattr to reference
+ * @return APR_DETACH if threads are to be detached, or APR_NOTDETACH
+ * if threads are to be joinable. 
  */
 APR_DECLARE(apr_status_t) apr_threadattr_detach_get(apr_threadattr_t *attr);
 
@@ -226,6 +239,19 @@ APR_DECLARE(apr_status_t) apr_threadattr_detach_get(apr_threadattr_t *attr);
  */
 APR_DECLARE(apr_status_t) apr_threadattr_stacksize_set(apr_threadattr_t *attr,
                                                        apr_size_t stacksize);
+
+/**
+ * Set the stack guard area size of newly created threads.
+ * @param attr The threadattr to affect 
+ * @param guardsize The stack guard area size in bytes
+ * @note Thread library implementations commonly use a "guard area"
+ * after each thread's stack which is not readable or writable such that
+ * stack overflows cause a segfault; this consumes e.g. 4K of memory
+ * and increases memory management overhead.  Setting the guard area
+ * size to zero hence trades off reliable behaviour on stack overflow
+ * for performance. */
+APR_DECLARE(apr_status_t) apr_threadattr_guardsize_set(apr_threadattr_t *attr,
+                                                       apr_size_t guardsize);
 
 /**
  * Create a new thread of execution
@@ -377,6 +403,12 @@ APR_DECLARE(apr_status_t) apr_procattr_create(apr_procattr_t **new_attr,
  * @param in Should stdin be a pipe back to the parent?
  * @param out Should stdout be a pipe back to the parent?
  * @param err Should stderr be a pipe back to the parent?
+ * @note If APR_NO_PIPE, there will be no special channel, the child
+ * inherits the parent's corresponding stdio stream.  If APR_NO_FILE is 
+ * specified, that corresponding stream is closed in the child (and will
+ * be INVALID_HANDLE_VALUE when inspected on Win32). This can have ugly 
+ * side effects, as the next file opened in the child on Unix will fall
+ * into the stdio stream fd slot!
  */
 APR_DECLARE(apr_status_t) apr_procattr_io_set(apr_procattr_t *attr, 
                                              apr_int32_t in, apr_int32_t out,
@@ -393,6 +425,9 @@ APR_DECLARE(apr_status_t) apr_procattr_io_set(apr_procattr_t *attr,
  *          process invocations - such as a log file. You can save some 
  *          extra function calls by not creating your own pipe since this
  *          creates one in the process space for you.
+ * @bug Note that calling this function with two NULL files on some platforms
+ * creates an APR_FULL_BLOCK pipe, but this behavior is neither portable nor
+ * is it supported.  @see apr_procattr_io_set instead for simple pipes.
  */
 APR_DECLARE(apr_status_t) apr_procattr_child_in_set(struct apr_procattr_t *attr,
                                                   apr_file_t *child_in,
@@ -407,6 +442,9 @@ APR_DECLARE(apr_status_t) apr_procattr_child_in_set(struct apr_procattr_t *attr,
  *         useful if you have already opened a pipe (or multiple files)
  *         that you wish to use, perhaps persistently across multiple
  *         process invocations - such as a log file. 
+ * @bug Note that calling this function with two NULL files on some platforms
+ * creates an APR_FULL_BLOCK pipe, but this behavior is neither portable nor
+ * is it supported.  @see apr_procattr_io_set instead for simple pipes.
  */
 APR_DECLARE(apr_status_t) apr_procattr_child_out_set(struct apr_procattr_t *attr,
                                                    apr_file_t *child_out,
@@ -421,6 +459,9 @@ APR_DECLARE(apr_status_t) apr_procattr_child_out_set(struct apr_procattr_t *attr
  *         useful if you have already opened a pipe (or multiple files)
  *         that you wish to use, perhaps persistently across multiple
  *         process invocations - such as a log file. 
+ * @bug Note that calling this function with two NULL files on some platforms
+ * creates an APR_FULL_BLOCK pipe, but this behavior is neither portable nor
+ * is it supported.  @see apr_procattr_io_set instead for simple pipes.
  */
 APR_DECLARE(apr_status_t) apr_procattr_child_err_set(struct apr_procattr_t *attr,
                                                    apr_file_t *child_err,
@@ -515,12 +556,35 @@ APR_DECLARE(apr_status_t) apr_procattr_error_check_set(apr_procattr_t *attr,
 APR_DECLARE(apr_status_t) apr_procattr_addrspace_set(apr_procattr_t *attr,
                                                        apr_int32_t addrspace);
 
+/**
+ * Set the username used for running process
+ * @param attr The procattr we care about. 
+ * @param username The username used
+ * @param password User password if needed. Password is needed on WIN32
+ *                 or any other platform having
+ *                 APR_PROCATTR_USER_SET_REQUIRES_PASSWORD set.
+ */
+APR_DECLARE(apr_status_t) apr_procattr_user_set(apr_procattr_t *attr,
+                                                const char *username,
+                                                const char *password);
+
+/**
+ * Set the group used for running process
+ * @param attr The procattr we care about. 
+ * @param groupname The group name  used
+ */
+APR_DECLARE(apr_status_t) apr_procattr_group_set(apr_procattr_t *attr,
+                                                 const char *groupname);
+
+
 #if APR_HAS_FORK
 /**
  * This is currently the only non-portable call in APR.  This executes 
  * a standard unix fork.
  * @param proc The resulting process handle. 
  * @param cont The pool to use. 
+ * @remark returns APR_INCHILD for the child, and APR_INPARENT for the parent
+ * or an error.
  */
 APR_DECLARE(apr_status_t) apr_proc_fork(apr_proc_t *proc, apr_pool_t *cont);
 #endif
@@ -537,14 +601,16 @@ APR_DECLARE(apr_status_t) apr_proc_fork(apr_proc_t *proc, apr_pool_t *cont);
  *            APR_SHELLCMD_ENV types of commands.
  * @param attr the procattr we should use to determine how to create the new
  *         process
- * @param cont The pool to use. 
+ * @param pool The pool to use.
+ * @note This function returns without waiting for the new process to terminate;
+ * use apr_proc_wait for that.
  */
 APR_DECLARE(apr_status_t) apr_proc_create(apr_proc_t *new_proc,
-                                             const char *progname,
-                                             const char * const *args,
-                                             const char * const *env, 
-                                             apr_procattr_t *attr, 
-                                             apr_pool_t *cont);
+                                          const char *progname,
+                                          const char * const *args,
+                                          const char * const *env, 
+                                          apr_procattr_t *attr, 
+                                          apr_pool_t *pool);
 
 /**
  * Wait for a child process to die
@@ -695,20 +761,6 @@ APR_DECLARE(void) apr_proc_other_child_refresh(apr_other_child_rec_t *ocr,
  * @param reason The reason code (e.g. APR_OC_REASON_RESTART) to running processes
  */
 APR_DECLARE(void) apr_proc_other_child_refresh_all(int reason);
-
-/** @deprecated @see apr_proc_other_child_refresh_all
- * @remark Call apr_proc_other_child_refresh_all(APR_OC_REASON_RESTART)
- * or apr_proc_other_child_refresh_all(APR_OC_REASON_RUNNING) instead.
- * @bug The differing implementations of this function on Win32 (_RUNNING checks) 
- * and Unix (used only for _RESTART) are the reason it will be dropped with APR 1.0.
- */
-APR_DECLARE(void) apr_proc_other_child_check(void);
-
-/** @deprecated @see apr_proc_other_child_alert
- * @bug This function's name had nothing to do with it's purpose
- */
-APR_DECLARE(apr_status_t) apr_proc_other_child_read(apr_proc_t *proc, int status);
-
 
 /** 
  * Terminate a process.

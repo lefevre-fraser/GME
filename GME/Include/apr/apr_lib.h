@@ -83,9 +83,6 @@ struct apr_vformatter_buff_t {
  */
 APR_DECLARE(const char *) apr_filepath_name_get(const char *pathname);
 
-/** @deprecated @see apr_filepath_name_get */
-APR_DECLARE(const char *) apr_filename_of_pathname(const char *pathname);
-
 /**
  * apr_killpg
  * Small utility macros to make things easier to read.  Not usually a
@@ -119,8 +116,18 @@ APR_DECLARE(const char *) apr_filename_of_pathname(const char *pathname);
  *      [ipv6-address]:port
  * %%pT takes an apr_os_thread_t * and prints it in decimal
  *      ('0' is printed if !APR_HAS_THREADS)
+ * %%pt takes an apr_os_thread_t * and prints it in hexadecimal
+ *      ('0' is printed if !APR_HAS_THREADS)
+ * %%pm takes an apr_status_t * and prints the appropriate error
+ *      string (from apr_strerror) corresponding to that error code.
  * %%pp takes a void * and outputs it in hex
+ * %%pB takes a apr_uint32_t * as bytes and outputs it's apr_strfsize
+ * %%pF same as above, but takes a apr_off_t *
+ * %%pS same as above, but takes a apr_size_t *
  *
+ * %%pt is only available from APR 1.2.0 onwards.
+ * %%pm, %%pB, %%pF and %%pS are only available from APR 1.3.0 onwards.
+ * 
  * The %%p hacks are to force gcc's printf warning code to skip
  * over a pointer argument without complaining.  This does
  * mean that the ANSI-style %%p (output a void * in hex format) won't
@@ -172,6 +179,11 @@ APR_DECLARE(int) apr_vformatter(int (*flush_func)(apr_vformatter_buff_t *b),
  * @param prompt The prompt to display
  * @param pwbuf Buffer to store the password
  * @param bufsize The length of the password buffer.
+ * @remark If the password entered must be truncated to fit in
+ * the provided buffer, APR_ENAMETOOLONG will be returned.
+ * Note that the bufsize paramater is passed by reference for no
+ * reason; its value will never be modified by the apr_password_get()
+ * function.
  */
 APR_DECLARE(apr_status_t) apr_password_get(const char *prompt, char *pwbuf, 
                                            apr_size_t *bufsize);

@@ -1,9 +1,9 @@
-/* Copyright 2000-2005 The Apache Software Foundation or its licensors, as
- * applicable.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/* Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -351,50 +351,6 @@ typedef apr_status_t (*apr_brigade_flush)(apr_bucket_brigade *bb, void *ctx);
 #define APR_BRIGADE_LAST(b)	APR_RING_LAST(&(b)->list)
 
 /**
- * Iterate through a bucket brigade
- * @param e The current bucket
- * @param b The brigade to iterate over
- * @remark This is the same as either:
- * <pre>
- *	e = APR_BRIGADE_FIRST(b);
- * 	while (e != APR_BRIGADE_SENTINEL(b)) {
- *	    ...
- * 	    e = APR_BUCKET_NEXT(e);
- * 	}
- *  OR
- * 	for (e = APR_BRIGADE_FIRST(b);
- *           e != APR_BRIGADE_SENTINEL(b);
- *           e = APR_BUCKET_NEXT(e)) {
- *	    ...
- * 	}
- * </pre>
- * @warning Be aware that you cannot change the value of e within
- * the foreach loop, nor can you destroy the bucket it points to.
- * Modifying the prev and next pointers of the bucket is dangerous
- * but can be done if you're careful.  If you change e's value or
- * destroy the bucket it points to, then APR_BRIGADE_FOREACH
- * will have no way to find out what bucket to use for its next
- * iteration.  The reason for this can be seen by looking closely
- * at the equivalent loops given in the tip above.  So, for example,
- * if you are writing a loop that empties out a brigade one bucket
- * at a time, APR_BRIGADE_FOREACH just won't work for you.  Do it
- * by hand, like so:
- * <pre>
- *      while (!APR_BRIGADE_EMPTY(b)) {
- *          e = APR_BRIGADE_FIRST(b);
- *          ...
- *          apr_bucket_delete(e);
- *      }
- * </pre>
- * @deprecated This macro causes more headaches than it's worth.  Use
- * one of the alternatives documented here instead; the clarity gained
- * in what's really going on is well worth the extra line or two of code.
- * This macro will be removed at some point in the future.
- */
-#define APR_BRIGADE_FOREACH(e, b)					\
-	APR_RING_FOREACH((e), &(b)->list, apr_bucket, link)
-
-/**
  * Insert a list of buckets at the front of a brigade
  * @param b The brigade to add to
  * @param e The first bucket in a list of buckets to insert
@@ -723,13 +679,32 @@ APU_DECLARE(apr_status_t) apr_brigade_destroy(apr_bucket_brigade *b);
 APU_DECLARE(apr_status_t) apr_brigade_cleanup(void *data);
 
 /**
- * Split a bucket brigade into two, such that the given bucket is the
- * first in the new bucket brigade. This function is useful when a
- * filter wants to pass only the initial part of a brigade to the next
- * filter.
+ * Move the buckets from the tail end of the existing brigade @param b into
+ * the brigade @param a. If @param a is NULL a new brigade is created. Buckets
+ * from @param e to the last bucket (inclusively) of brigade @param b are moved
+ * from @param b to the returned brigade @param a.
  * @param b The brigade to split
- * @param e The first element of the new brigade
+ * @param e The first bucket to move
+ * @param a The brigade which should be used for the result or NULL if
+ *          a new brigade should be created.
+ * @return The brigade supplied in @param a or a new one if @param a was NULL.
+ * @warning Note that this function allocates a new brigade if @param a is
+ * NULL so memory consumption should be carefully considered.
+ */
+APU_DECLARE(apr_bucket_brigade *) apr_brigade_split_ex(apr_bucket_brigade *b,
+                                                       apr_bucket *e,
+                                                       apr_bucket_brigade *a);
+
+/**
+ * Create a new bucket brigade and move the buckets from the tail end
+ * of an existing brigade into the new brigade.  Buckets from 
+ * @param e to the last bucket (inclusively) of brigade @param b
+ * are moved from @param b to the returned brigade.
+ * @param b The brigade to split 
+ * @param e The first bucket to move
  * @return The new brigade
+ * @warning Note that this function always allocates a new brigade
+ * so memory consumption should be carefully considered.
  */
 APU_DECLARE(apr_bucket_brigade *) apr_brigade_split(apr_bucket_brigade *b,
                                                     apr_bucket *e);
@@ -741,28 +716,22 @@ APU_DECLARE(apr_bucket_brigade *) apr_brigade_split(apr_bucket_brigade *b,
  * @param b The brigade to partition
  * @param point The offset at which to partition the brigade
  * @param after_point Returns a pointer to the first bucket after the partition
+ * @return APR_SUCCESS on success, APR_INCOMPLETE if the contents of the
+ * brigade were shorter than @a point, or an error code.
+ * @remark if APR_INCOMPLETE is returned, @a after_point will be set to
+ * the brigade sentinel.
  */
 APU_DECLARE(apr_status_t) apr_brigade_partition(apr_bucket_brigade *b,
                                                 apr_off_t point,
                                                 apr_bucket **after_point);
 
-#if APR_NOT_DONE_YET
-/**
- * consume nbytes from beginning of b -- call apr_bucket_destroy as
- * appropriate, and/or modify start on last element 
- * @param b The brigade to consume data from
- * @param nbytes The number of bytes to consume
- */
-APU_DECLARE(void) apr_brigade_consume(apr_bucket_brigade *b,
-                                      apr_off_t nbytes);
-#endif
-
 /**
  * Return the total length of the brigade.
  * @param bb The brigade to compute the length of
  * @param read_all Read unknown-length buckets to force a size
- * @param length Returns the length of the brigade, or -1 if the brigade has
- *               buckets of indeterminate length and read_all is 0.
+ * @param length Returns the length of the brigade (up to the end, or up
+ *               to a bucket read error), or -1 if the brigade has buckets
+ *               of indeterminate length and read_all is 0.
  */
 APU_DECLARE(apr_status_t) apr_brigade_length(apr_bucket_brigade *bb,
                                              int read_all,
@@ -924,6 +893,26 @@ APU_DECLARE(apr_status_t) apr_brigade_vprintf(apr_bucket_brigade *b,
                                               void *ctx,
                                               const char *fmt, va_list va);
 
+/**
+ * Utility function to insert a file (or a segment of a file) onto the
+ * end of the brigade.  The file is split into multiple buckets if it
+ * is larger than the maximum size which can be represented by a
+ * single bucket.
+ * @param bb the brigade to insert into
+ * @param f the file to insert
+ * @param start the offset of the start of the segment
+ * @param len the length of the segment of the file to insert
+ * @param p pool from which file buckets are allocated
+ * @return the last bucket inserted
+ */
+APU_DECLARE(apr_bucket *) apr_brigade_insert_file(apr_bucket_brigade *bb,
+                                                  apr_file_t *f,
+                                                  apr_off_t start,
+                                                  apr_off_t len,
+                                                  apr_pool_t *p);
+
+
+
 /*  *****  Bucket freelist functions *****  */
 /**
  * Create a bucket allocator.
@@ -999,7 +988,16 @@ APU_DECLARE_NONSTD(void) apr_bucket_free(void *block);
     } while (0)
 
 /**
- * read the data from the bucket
+ * Read the data from the bucket.
+ * 
+ * If it is not practical to return all
+ * the data in the bucket, the current bucket is split and replaced by
+ * two buckets, the first representing the data returned in this call,
+ * and the second representing the rest of the data as yet unread. The
+ * original bucket will become the first bucket after this call.
+ * 
+ * (It is assumed that the bucket is a member of a brigade when this
+ * function is called).
  * @param e The bucket to read from
  * @param str The location to store the data in
  * @param len The amount of data read
@@ -1016,7 +1014,12 @@ APU_DECLARE_NONSTD(void) apr_bucket_free(void *block);
 #define apr_bucket_setaside(e,p) (e)->type->setaside(e,p)
 
 /**
- * Split one bucket in two.
+ * Split one bucket in two at the point provided.
+ * 
+ * Once split, the original bucket becomes the first of the two new buckets.
+ * 
+ * (It is assumed that the bucket is a member of a brigade when this
+ * function is called).
  * @param e The bucket to split
  * @param point The offset to split the bucket at
  */
@@ -1457,6 +1460,12 @@ APU_DECLARE(apr_bucket *) apr_bucket_pipe_make(apr_bucket *b,
  *          while reading from this file bucket
  * @param list The freelist from which this bucket should be allocated
  * @return The new bucket, or NULL if allocation failed
+ * @remark If the file is truncated such that the segment of the file
+ * referenced by the bucket no longer exists, an attempt to read
+ * from the bucket will fail with APR_EOF. 
+ * @remark apr_brigade_insert_file() should generally be used to
+ * insert files into brigades, since that function can correctly
+ * handle large file issues.
  */
 APU_DECLARE(apr_bucket *) apr_bucket_file_create(apr_file_t *fd,
                                                  apr_off_t offset,

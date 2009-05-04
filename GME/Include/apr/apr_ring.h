@@ -69,8 +69,8 @@
  */
 #define APR_RING_ENTRY(elem)						\
     struct {								\
-	struct elem *next;						\
-	struct elem *prev;						\
+	struct elem * volatile next;					\
+	struct elem * volatile prev;					\
     }
 
 /**
@@ -90,8 +90,8 @@
  */
 #define APR_RING_HEAD(head, elem)					\
     struct head {							\
-	struct elem * volatile next;					\
-	struct elem * volatile prev;					\
+	struct elem *next;						\
+	struct elem *prev;						\
     }
 
 /**
@@ -157,7 +157,7 @@
  * @param link The name of the APR_RING_ENTRY in the element struct
  */
 #define APR_RING_SENTINEL(hp, elem, link)				\
-    (struct elem *)((char *)(hp) - APR_OFFSETOF(struct elem, link))
+    (struct elem *)((char *)(&(hp)->next) - APR_OFFSETOF(struct elem, link))
 
 /**
  * The first element of the ring
@@ -377,68 +377,30 @@
 #define APR_RING_REMOVE(ep, link)					\
     APR_RING_UNSPLICE((ep), (ep), link)
 
-
 /**
- * Iterate through a ring
+ * Iterate over a ring
  * @param ep The current element
- * @param hp The ring to iterate over
+ * @param head The head of the ring
  * @param elem The name of the element struct
  * @param link The name of the APR_RING_ENTRY in the element struct
- * @remark This is the same as either:
- * <pre>
- *	ep = APR_RING_FIRST(hp);
- * 	while (ep != APR_RING_SENTINEL(hp, elem, link)) {
- *	    ...
- * 	    ep = APR_RING_NEXT(ep, link);
- * 	}
- *   OR
- * 	for (ep = APR_RING_FIRST(hp);
- *           ep != APR_RING_SENTINEL(hp, elem, link);
- *           ep = APR_RING_NEXT(ep, link)) {
- *	    ...
- * 	}
- * </pre>
- * @warning Be aware that you cannot change the value of ep within
- * the foreach loop, nor can you destroy the ring element it points to.
- * Modifying the prev and next pointers of the element is dangerous
- * but can be done if you're careful.  If you change ep's value or
- * destroy the element it points to, then APR_RING_FOREACH
- * will have no way to find out what element to use for its next
- * iteration.  The reason for this can be seen by looking closely
- * at the equivalent loops given in the tip above.  So, for example,
- * if you are writing a loop that empties out a ring one element
- * at a time, APR_RING_FOREACH just won't work for you.  Do it
- * by hand, like so:
- * <pre>
- *      while (!APR_RING_EMPTY(hp, elem, link)) {
- *          ep = APR_RING_FIRST(hp);
- *          ...
- *          APR_RING_REMOVE(ep, link);
- *      }
- * </pre>
- * @deprecated This macro causes more headaches than it's worth.  Use
- * one of the alternatives documented here instead; the clarity gained
- * in what's really going on is well worth the extra line or two of code.
- * This macro will be removed at some point in the future.
  */
-#define APR_RING_FOREACH(ep, hp, elem, link)				\
-    for ((ep)  = APR_RING_FIRST((hp));					\
-	 (ep) != APR_RING_SENTINEL((hp), elem, link);			\
-	 (ep)  = APR_RING_NEXT((ep), link))
+#define APR_RING_FOREACH(ep, head, elem, link)                          \
+    for (ep = APR_RING_FIRST(head);                                     \
+         ep != APR_RING_SENTINEL(head, elem, link);                     \
+         ep = APR_RING_NEXT(ep, link))
 
 /**
- * Iterate through a ring backwards
- * @param ep The current element
- * @param hp The ring to iterate over
+ * Iterate over a ring safe against removal of the current element
+ * @param ep1 The current element
+ * @param ep2 Iteration cursor
+ * @param head The head of the ring
  * @param elem The name of the element struct
  * @param link The name of the APR_RING_ENTRY in the element struct
- * @see APR_RING_FOREACH
  */
-#define APR_RING_FOREACH_REVERSE(ep, hp, elem, link)			\
-    for ((ep)  = APR_RING_LAST((hp));					\
-	 (ep) != APR_RING_SENTINEL((hp), elem, link);			\
-	 (ep)  = APR_RING_PREV((ep), link))
-
+#define APR_RING_FOREACH_SAFE(ep1, ep2, head, elem, link)               \
+    for (ep1 = APR_RING_FIRST(head), ep2 = APR_RING_NEXT(ep1, link);    \
+         ep1 != APR_RING_SENTINEL(head, elem, link);                    \
+         ep1 = ep2, ep2 = APR_RING_NEXT(ep1, link))
 
 /* Debugging tools: */
 

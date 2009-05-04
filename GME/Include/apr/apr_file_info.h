@@ -76,26 +76,42 @@ typedef enum {
  * @{
  */
 
-#define APR_USETID      0x8000 /**< Set user id */
-#define APR_UREAD       0x0400 /**< Read by user */
-#define APR_UWRITE      0x0200 /**< Write by user */
-#define APR_UEXECUTE    0x0100 /**< Execute by user */
+#define APR_FPROT_USETID      0x8000 /**< Set user id */
+#define APR_FPROT_UREAD       0x0400 /**< Read by user */
+#define APR_FPROT_UWRITE      0x0200 /**< Write by user */
+#define APR_FPROT_UEXECUTE    0x0100 /**< Execute by user */
 
-#define APR_GSETID      0x4000 /**< Set group id */
-#define APR_GREAD       0x0040 /**< Read by group */
-#define APR_GWRITE      0x0020 /**< Write by group */
-#define APR_GEXECUTE    0x0010 /**< Execute by group */
+#define APR_FPROT_GSETID      0x4000 /**< Set group id */
+#define APR_FPROT_GREAD       0x0040 /**< Read by group */
+#define APR_FPROT_GWRITE      0x0020 /**< Write by group */
+#define APR_FPROT_GEXECUTE    0x0010 /**< Execute by group */
 
-#define APR_WSTICKY     0x2000 /**< Sticky bit */
-#define APR_WREAD       0x0004 /**< Read by others */
-#define APR_WWRITE      0x0002 /**< Write by others */
-#define APR_WEXECUTE    0x0001 /**< Execute by others */
+#define APR_FPROT_WSTICKY     0x2000 /**< Sticky bit */
+#define APR_FPROT_WREAD       0x0004 /**< Read by others */
+#define APR_FPROT_WWRITE      0x0002 /**< Write by others */
+#define APR_FPROT_WEXECUTE    0x0001 /**< Execute by others */
 
-#define APR_OS_DEFAULT  0x0FFF /**< use OS's default permissions */
+#define APR_FPROT_OS_DEFAULT  0x0FFF /**< use OS's default permissions */
 
 /* additional permission flags for apr_file_copy  and apr_file_append */
-#define APR_FILE_SOURCE_PERMS 0x1000 /**< Copy source file's permissions */
-
+#define APR_FPROT_FILE_SOURCE_PERMS 0x1000 /**< Copy source file's permissions */
+    
+/* backcompat */
+#define APR_USETID     APR_FPROT_USETID     /**< @deprecated @see APR_FPROT_USETID     */
+#define APR_UREAD      APR_FPROT_UREAD      /**< @deprecated @see APR_FPROT_UREAD      */
+#define APR_UWRITE     APR_FPROT_UWRITE     /**< @deprecated @see APR_FPROT_UWRITE     */
+#define APR_UEXECUTE   APR_FPROT_UEXECUTE   /**< @deprecated @see APR_FPROT_UEXECUTE   */
+#define APR_GSETID     APR_FPROT_GSETID     /**< @deprecated @see APR_FPROT_GSETID     */
+#define APR_GREAD      APR_FPROT_GREAD      /**< @deprecated @see APR_FPROT_GREAD      */
+#define APR_GWRITE     APR_FPROT_GWRITE     /**< @deprecated @see APR_FPROT_GWRITE     */
+#define APR_GEXECUTE   APR_FPROT_GEXECUTE   /**< @deprecated @see APR_FPROT_GEXECUTE   */
+#define APR_WSTICKY    APR_FPROT_WSTICKY    /**< @deprecated @see APR_FPROT_WSTICKY    */
+#define APR_WREAD      APR_FPROT_WREAD      /**< @deprecated @see APR_FPROT_WREAD      */
+#define APR_WWRITE     APR_FPROT_WWRITE     /**< @deprecated @see APR_FPROT_WWRITE     */
+#define APR_WEXECUTE   APR_FPROT_WEXECUTE   /**< @deprecated @see APR_FPROT_WEXECUTE   */
+#define APR_OS_DEFAULT APR_FPROT_OS_DEFAULT /**< @deprecated @see APR_FPROT_OS_DEFAULT */
+#define APR_FILE_SOURCE_PERMS APR_FPROT_FILE_SOURCE_PERMS /**< @deprecated @see APR_FPROT_FILE_SOURCE_PERMS */
+    
 /** @} */
 
 
@@ -109,16 +125,10 @@ typedef struct apr_dir_t          apr_dir_t;
 typedef apr_int32_t               apr_fileperms_t;
 #if (defined WIN32) || (defined NETWARE)
 /**
- * Structure for determining the inode of the file.
- */
-typedef apr_uint64_t              apr_ino_t;
-/**
  * Structure for determining the device the file is on.
  */
 typedef apr_uint32_t              apr_dev_t;
 #else
-/** The inode of the file. */
-typedef ino_t                     apr_ino_t;
 /**
  * Structure for determining the device the file is on.
  */
@@ -134,7 +144,7 @@ typedef struct apr_finfo_t        apr_finfo_t;
 
 #define APR_FINFO_LINK   0x00000001 /**< Stat the link not the file itself if it is a link */
 #define APR_FINFO_MTIME  0x00000010 /**< Modification Time */
-#define APR_FINFO_CTIME  0x00000020 /**< Creation Time */
+#define APR_FINFO_CTIME  0x00000020 /**< Creation or inode-changed time */
 #define APR_FINFO_ATIME  0x00000040 /**< Access Time */
 #define APR_FINFO_SIZE   0x00000100 /**< Size of the file */
 #define APR_FINFO_CSIZE  0x00000200 /**< Storage size consumed by the file */
@@ -192,7 +202,7 @@ struct apr_finfo_t {
     apr_time_t atime;
     /** The time the file was last modified */
     apr_time_t mtime;
-    /** The time the file was last changed */
+    /** The time the file was created, or the inode was last changed */
     apr_time_t ctime;
     /** The pathname of the file (possibly unrooted) */
     const char *fname;
@@ -210,29 +220,15 @@ struct apr_finfo_t {
  * @param fname The name of the file to stat.
  * @param wanted The desired apr_finfo_t fields, as a bit flag of APR_FINFO_
                  values 
- * @param cont the pool to use to allocate the new file. 
+ * @param pool the pool to use to allocate the new file. 
  *
  * @note If @c APR_INCOMPLETE is returned all the fields in @a finfo may
  *       not be filled in, and you need to check the @c finfo->valid bitmask
  *       to verify that what you're looking for is there.
  */ 
 APR_DECLARE(apr_status_t) apr_stat(apr_finfo_t *finfo, const char *fname,
-                                   apr_int32_t wanted, apr_pool_t *cont);
+                                   apr_int32_t wanted, apr_pool_t *pool);
 
-/**
- * get the specified file's stats.  The file is specified by filename, 
- * instead of using a pre-opened file.  If the file is a symlink, this function
- * will get the stats for the symlink not the file the symlink refers to.
- * @param finfo Where to store the information about the file, which is
- * never touched if the call fails.
- * @param fname The name of the file to stat.
- * @param wanted The desired apr_finfo_t fields, as a bit flag of APR_FINFO_ values 
- * @param cont the pool to use to allocate the new file. 
- * @deprecated This function is deprecated, it's equivalent to calling apr_stat with 
- * the wanted flag value APR_FINFO_LINK
- */ 
-APR_DECLARE(apr_status_t) apr_lstat(apr_finfo_t *finfo, const char *fname,
-                                    apr_int32_t wanted, apr_pool_t *cont);
 /** @} */
 /**
  * @defgroup apr_dir Directory Manipulation Functions
@@ -243,11 +239,11 @@ APR_DECLARE(apr_status_t) apr_lstat(apr_finfo_t *finfo, const char *fname,
  * Open the specified directory.
  * @param new_dir The opened directory descriptor.
  * @param dirname The full path to the directory (use / on all systems)
- * @param cont The pool to use.
+ * @param pool The pool to use.
  */                        
 APR_DECLARE(apr_status_t) apr_dir_open(apr_dir_t **new_dir, 
                                        const char *dirname, 
-                                       apr_pool_t *cont);
+                                       apr_pool_t *pool);
 
 /**
  * close the specified directory. 
@@ -282,7 +278,11 @@ APR_DECLARE(apr_status_t) apr_dir_rewind(apr_dir_t *thedir);
  * @{
  */
 
-/** Cause apr_filepath_merge to fail if addpath is above rootpath */
+/** Cause apr_filepath_merge to fail if addpath is above rootpath 
+ * @bug in APR 0.9 and 1.x, this flag's behavior is undefined
+ * if the rootpath is NULL or empty.  In APR 2.0 this should be
+ * changed to imply NOTABSOLUTE if the rootpath is NULL or empty.
+ */
 #define APR_FILEPATH_NOTABOVEROOT   0x01
 
 /** internal: Only meaningful with APR_FILEPATH_NOTABOVEROOT */

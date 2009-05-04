@@ -1,9 +1,9 @@
-/* Copyright 2000-2005 The Apache Software Foundation or its licensors, as
- * applicable.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/* Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -92,9 +92,6 @@ APU_DECLARE(apr_status_t) apr_xlate_open(apr_xlate_t **convset,
  */
 APU_DECLARE(apr_status_t) apr_xlate_sb_get(apr_xlate_t *convset, int *onoff);
 
-/** @deprecated @see apr_xlate_sb_get */
-APU_DECLARE(apr_status_t) apr_xlate_get_sb(apr_xlate_t *convset, int *onoff);
-
 /**
  * Convert a buffer of text from one codepage to another.
  * @param convset The handle allocated by apr_xlate_open, specifying 
@@ -106,8 +103,16 @@ APU_DECLARE(apr_status_t) apr_xlate_get_sb(apr_xlate_t *convset, int *onoff);
  * @param outbytes_left Input: the size of the output buffer
  *                      Output: the amount of the output buffer not yet used
  * @remark
- *  Return APR_ENOTIMPL if charset transcoding is not available
- *  in this instance of apr-util (i.e., APR_HAS_XLATE is undefined).
+ * Returns APR_ENOTIMPL if charset transcoding is not available
+ * in this instance of apr-util (i.e., APR_HAS_XLATE is undefined).
+ * Returns APR_INCOMPLETE if the input buffer ends in an incomplete
+ * multi-byte character.
+ *
+ * To correctly terminate the output buffer for some multi-byte
+ * character set encodings, a final call must be made to this function
+ * after the complete input string has been converted, passing
+ * the inbuf and inbytes_left parameters as NULL.  (Note that this
+ * mode only works from version 1.1.0 onwards)
  */
 APU_DECLARE(apr_status_t) apr_xlate_conv_buffer(apr_xlate_t *convset, 
                                                 const char *inbuf, 

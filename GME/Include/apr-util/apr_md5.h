@@ -28,12 +28,12 @@
    documentation and/or software.
  */
 
-/* Copyright 2000-2005 The Apache Software Foundation or its licensors, as
- * applicable.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/* Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -66,7 +66,6 @@ extern "C" {
 
 /** The MD5 digest size */
 #define APR_MD5_DIGESTSIZE 16
-#define MD5_DIGESTSIZE APR_MD5_DIGESTSIZE   /**< @deprecated */
 
 /** @see apr_md5_ctx_t */
 typedef struct apr_md5_ctx_t apr_md5_ctx_t;
@@ -135,14 +134,19 @@ APU_DECLARE(apr_status_t) apr_md5(unsigned char digest[APR_MD5_DIGESTSIZE],
  * @param password The password to encode
  * @param salt The salt to use for the encoding
  * @param result The string to store the encoded password in
- * @param nbytes The length of the string
+ * @param nbytes The size of the result buffer
  */
 APU_DECLARE(apr_status_t) apr_md5_encode(const char *password, const char *salt,
                                          char *result, apr_size_t nbytes);
 
 
 /**
- * Validate any password encypted with any algorithm that APR understands
+ * Validate hashes created by APR-supported algorithms: md5 and sha1.
+ * hashes created by crypt are supported only on platforms that provide
+ * crypt(3), so don't rely on that function unless you know that your
+ * application will be run only on platforms that support it.  On platforms
+ * that don't support crypt(3), this falls back to a clear text string
+ * comparison.
  * @param passwd The password to validate
  * @param hash The password to validate against
  */

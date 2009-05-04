@@ -171,22 +171,25 @@ APR_DECLARE_NONSTD(char *) apr_psprintf(apr_pool_t *p, const char *fmt, ...)
         __attribute__((format(printf,2,3)));
 
 /**
- * copy n characters from src to dst
+ * Copy up to dst_size characters from src to dst; does not copy
+ * past a NUL terminator in src, but always terminates dst with a NUL
+ * regardless.
  * @param dst The destination string
  * @param src The source string
  * @param dst_size The space available in dst; dst always receives
- *                 null-termination, so if src is longer than
+ *                 NUL termination, so if src is longer than
  *                 dst_size, the actual number of characters copied is
  *                 dst_size - 1.
+ * @return Pointer to the NUL terminator of the destination string, dst
  * @remark
  * <PRE>
- * We re-implement this function to implement these specific changes:
- *       1) strncpy() doesn't always null terminate and we want it to.
- *       2) strncpy() null fills, which is bogus, esp. when copy 8byte strings
- *          into 8k blocks.
- *       3) Instead of returning the pointer to the beginning of the
- *          destination string, we return a pointer to the terminating null
- *          to allow us to check for truncation.
+ * Note the differences between this function and strncpy():
+ *  1) strncpy() doesn't always NUL terminate; apr_cpystrn() does.
+ *  2) strncpy() pads the destination string with NULs, which is often 
+ *     unnecessary; apr_cpystrn() does not.
+ *  3) strncpy() returns a pointer to the beginning of the dst string;
+ *     apr_cpystrn() returns a pointer to the NUL terminator of dst, 
+ *     to allow a check for truncation.
  * </PRE>
  */
 APR_DECLARE(char *) apr_cpystrn(char *dst, const char *src,
@@ -197,6 +200,7 @@ APR_DECLARE(char *) apr_cpystrn(char *dst, const char *src,
  * @param dest The destination string.  It is okay to modify the string
  *             in place.  Namely dest == src
  * @param src The string to rid the spaces from.
+ * @return The destination string, dest.
  */
 APR_DECLARE(char *) apr_collapse_spaces(char *dest, const char *src);
 
@@ -295,18 +299,38 @@ APR_DECLARE(char *) apr_ltoa(apr_pool_t *p, long n);
 APR_DECLARE(char *) apr_off_t_toa(apr_pool_t *p, apr_off_t n);
 
 /**
+ * Convert a numeric string into an apr_off_t numeric value.
+ * @param offset The value of the parsed string.
+ * @param buf The string to parse. It may contain optional whitespace,
+ *   followed by an optional '+' (positive, default) or '-' (negative)
+ *   character, followed by an optional '0x' prefix if base is 0 or 16,
+ *   followed by numeric digits appropriate for base.
+ * @param end A pointer to the end of the valid character in buf. If
+ *   not NULL, it is set to the first invalid character in buf.
+ * @param base A numeric base in the range between 2 and 36 inclusive,
+ *   or 0.  If base is zero, buf will be treated as base ten unless its
+ *   digits are prefixed with '0x', in which case it will be treated as
+ *   base 16.
+ * @bug *end breaks type safety; where *buf is const, *end needs to be
+ * declared as const in APR 2.0
+ */
+APR_DECLARE(apr_status_t) apr_strtoff(apr_off_t *offset, const char *buf, 
+                                      char **end, int base);
+
+/**
  * parse a numeric string into a 64-bit numeric value
  * @param buf The string to parse. It may contain optional whitespace,
  *   followed by an optional '+' (positive, default) or '-' (negative)
  *   character, followed by an optional '0x' prefix if base is 0 or 16,
  *   followed by numeric digits appropriate for base.
  * @param end A pointer to the end of the valid character in buf. If
- *   not nil, it is set to the first invalid character in buf.
+ *   not NULL, it is set to the first invalid character in buf.
  * @param base A numeric base in the range between 2 and 36 inclusive,
  *   or 0.  If base is zero, buf will be treated as base ten unless its
  *   digits are prefixed with '0x', in which case it will be treated as
  *   base 16.
- * @return The numeric value of the string.
+ * @return The numeric value of the string.  On overflow, errno is set
+ * to ERANGE.
  */
 APR_DECLARE(apr_int64_t) apr_strtoi64(const char *buf, char **end, int base);
 
