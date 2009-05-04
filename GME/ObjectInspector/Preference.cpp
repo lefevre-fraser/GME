@@ -19,15 +19,15 @@ static char THIS_FILE[]=__FILE__;
 
 // LINE_STYLE_LIST (butt,arrow,diamond)
 #define LINE_STYLE_LIST_SIZE 10
-char *CPreference::m_szLineStyleList[]={"butt","arrow","diamond", "apex", "bullet", "empty diamond", "empty apex", "empty bullet", "left half arrow", "right half arrow" };
+char *CPreference::m_szLineStyleList[]={"butt", "arrow", "diamond", "apex", "bullet", "empty diamond", "empty apex", "empty bullet", "left half arrow", "right half arrow" };
 
 // LINE_TYPE_LIST (solid,dash)
 #define LINE_TYPE_LIST_SIZE 2
-char *CPreference::m_szLineTypeList[]={"solid","dash"};
+char *CPreference::m_szLineTypeList[]={"solid", "dash"};
 
 // BOOLEAN_LIST
 #define BOOLEAN_LIST_SIZE 2
-char *CPreference::m_szBooleanList[]={"true","false"};
+char *CPreference::m_szBooleanList[]={"true", "false"};
 
 
 
