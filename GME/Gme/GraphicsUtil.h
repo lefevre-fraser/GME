@@ -72,8 +72,8 @@ public:
 	void CreateFonts(CFont** font, Gdiplus::Font** gdipFont, int boldness);
 	void DrawGrid(Gdiplus::Graphics* gdip, int xSpace, int ySpace, int maxx, int maxy, COLORREF color = GME_GRID_COLOR);
 	void DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points, const std::vector<long>& customizedEdgeIndexes,
-						COLORREF color, GMEConnLineType lineType, int srcEnd, int dstEnd, bool mark, bool isViewMagnified,
-						int lineStyle = 1);
+						COLORREF color, GMEConnLineType lineType, int srcEnd, int dstEnd, bool isViewMagnified,
+						bool drawBullets, int width = 1);
 	void DrawArrow(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush,
 				   const CPoint& beforeLast, const CPoint& last, int iEnd );
 	void DrawGdipText(Gdiplus::Graphics* gdip, const CString& txt, const CPoint& pt, Gdiplus::Font* font, COLORREF color,

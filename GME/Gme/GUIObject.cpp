@@ -2612,7 +2612,8 @@ void CGuiConnection::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 	if (selected && autoRouted)
 		customizedEdgeIndexes = GetRelevantCustomizedEdgeIndexes();
 	graphics.DrawConnection(gdip, points, customizedEdgeIndexes, grayedOut ? GME_GRAYED_OUT_COLOR : color,
-							lineType, srcStyle, dstStyle, true, view->m_zoomVal > ZOOM_NO, selected ? 3 : hovered ? 5 : 1);
+							lineType, srcStyle, dstStyle, view->m_zoomVal > ZOOM_NO, !autoRouted && selected,
+							selected ? 3 : hovered ? 5 : 1);
 
 	if (points.GetSize() < 2) {
 		ASSERT(false);

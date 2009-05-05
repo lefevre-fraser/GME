@@ -296,13 +296,14 @@ void CGraphics::DrawGrid(Gdiplus::Graphics* gdip, int xSpace, int ySpace, int ma
 typedef std::pair<long,long> Long_Pair;
 
 void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points, const std::vector<long>& customizedEdgeIndexes,
-							   COLORREF color, GMEConnLineType lineType, int srcEnd, int dstEnd, bool mark,
-							   bool isViewMagnified, int lineStyle)
+							   COLORREF color, GMEConnLineType lineType, int srcEnd, int dstEnd, bool isViewMagnified,
+							   bool drawBullets, int width)
 {
 	if (points.GetCount() == 0)
 		return;
 
-	ASSERT(points.GetCount() >= 2);
+	long numEdges = points.GetCount() - 1;
+	ASSERT(numEdges >= 1);
 
 	// TODO?
 //	HDC hDC = gdip->GetHDC();
@@ -311,8 +312,11 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points
 //	if (isPrinting)
 //		color = GME_BLACK_COLOR;
 
-	Gdiplus::Pen* pen = GetGdipPen(gdip, color, isPrinting, lineType, isViewMagnified, lineStyle);
+	Gdiplus::Pen* pen = GetGdipPen(gdip, color, isPrinting, lineType, isViewMagnified, width);
 	Gdiplus::Brush* brush = GetGdipBrush(color);
+	Gdiplus::Brush* bulletBrush = brush;
+	long bulletOffset = (width + 4) / 2;
+	long bulletRadius = width + 4;
 
 	bool hasCustomizedEdges = (customizedEdgeIndexes.size() > 0);
 	std::map<long,long> customizedIndexes;
@@ -338,12 +342,14 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points
 			if (hasCustomizedEdges) {
 				indIter = customizedIndexes.find(currEdgeIndex);
 				if (indIter != customizedIndexes.end()) {
-					pen = GetGdipPen(gdip, color, isPrinting, GME_LINE_CUSTOMIZED, isViewMagnified, lineStyle);
+					pen = GetGdipPen(gdip, color, isPrinting, GME_LINE_CUSTOMIZED, isViewMagnified, width);
 				} else {
-					pen = GetGdipPen(gdip, color, isPrinting, lineType, isViewMagnified, lineStyle);
+					pen = GetGdipPen(gdip, color, isPrinting, lineType, isViewMagnified, width);
 				}
 			}
 			gdip->DrawLine(pen, last.x, last.y, pt.x, pt.y);
+			if (drawBullets && currEdgeIndex < numEdges - 1)
+				gdip->FillEllipse(bulletBrush, pt.x - bulletOffset, pt.y - bulletOffset, bulletRadius, bulletRadius);
 			beforeLast = last;
 			last = pt;
 			currEdgeIndex++;
