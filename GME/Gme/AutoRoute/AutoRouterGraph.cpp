@@ -1712,46 +1712,53 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 		{
 			CComPtr<IAutoRouterPath> path = *pathiter;
 
-			VARIANT_BOOL areThere = VARIANT_FALSE;
-			hr = path->AreTherePathCustomizations(&areThere);
+			VARIANT_BOOL isAutoRouted = VARIANT_FALSE;
+			hr = path->IsAutoRouted(&isAutoRouted);
 			ASSERT(SUCCEEDED(hr));
 			if (FAILED(hr))
 				return hr;
-			if (areThere == VARIANT_TRUE)
-			{
-				long sp1 = 0, sp2 = 0, sp3 = 0, sp4 = 0;
-				HRESULT hr = path->GetStartBox(&sp1, &sp2, &sp3, &sp4);
+			if (isAutoRouted == VARIANT_TRUE) {
+				VARIANT_BOOL areThere = VARIANT_FALSE;
+				hr = path->AreTherePathCustomizations(&areThere);
 				ASSERT(SUCCEEDED(hr));
 				if (FAILED(hr))
 					return hr;
-				const CRect startBoxRect(sp1, sp2, sp3, sp4);
-				long ep1 = 0, ep2 = 0, ep3 = 0, ep4 = 0;
-				hr = path->GetEndBox(&ep1, &ep2, &ep3, &ep4);
-				ASSERT(SUCCEEDED(hr));
-				if (FAILED(hr))
-					return hr;
-				const CRect endBoxRect(ep1, ep2, ep3, ep4);
-
-				std::vector<CComPtr<IAutoRouterBox> >::const_iterator boxiter = boxes.begin();
-
-				while (boxiter != boxes.end())
+				if (areThere == VARIANT_TRUE)
 				{
-					long p1, p2, p3, p4;
-					hr = (*boxiter)->GetRect(&p1, &p2, &p3, &p4);
-					const CRect boxRect(p1, p2, p3, p4);
-					if ((startBoxRect.IsRectEmpty() || !IsRectIn(startBoxRect, boxRect)) &&
-						(endBoxRect.IsRectEmpty() || !IsRectIn(endBoxRect, boxRect)))
-					{
-						VARIANT_BOOL isPathClip = VARIANT_FALSE;
-						hr = path->IsPathClip(boxRect.left, boxRect.top, boxRect.right, boxRect.bottom, &isPathClip);
-						if (isPathClip == VARIANT_TRUE)
-						{
-							path->MarkPathCustomizationsForDeletion(aspect);
-							updated = -2;
-						}
-					}
+					long sp1 = 0, sp2 = 0, sp3 = 0, sp4 = 0;
+					HRESULT hr = path->GetStartBox(&sp1, &sp2, &sp3, &sp4);
+					ASSERT(SUCCEEDED(hr));
+					if (FAILED(hr))
+						return hr;
+					const CRect startBoxRect(sp1, sp2, sp3, sp4);
+					long ep1 = 0, ep2 = 0, ep3 = 0, ep4 = 0;
+					hr = path->GetEndBox(&ep1, &ep2, &ep3, &ep4);
+					ASSERT(SUCCEEDED(hr));
+					if (FAILED(hr))
+						return hr;
+					const CRect endBoxRect(ep1, ep2, ep3, ep4);
 
-					++boxiter;
+					std::vector<CComPtr<IAutoRouterBox> >::const_iterator boxiter = boxes.begin();
+
+					while (boxiter != boxes.end())
+					{
+						long p1, p2, p3, p4;
+						hr = (*boxiter)->GetRect(&p1, &p2, &p3, &p4);
+						const CRect boxRect(p1, p2, p3, p4);
+						if ((startBoxRect.IsRectEmpty() || !IsRectIn(startBoxRect, boxRect)) &&
+							(endBoxRect.IsRectEmpty() || !IsRectIn(endBoxRect, boxRect)))
+						{
+							VARIANT_BOOL isPathClip = VARIANT_FALSE;
+							hr = path->IsPathClip(boxRect.left, boxRect.top, boxRect.right, boxRect.bottom, &isPathClip);
+							if (isPathClip == VARIANT_TRUE)
+							{
+								path->MarkPathCustomizationsForDeletion(aspect);
+								updated = -2;
+							}
+						}
+
+						++boxiter;
+					}
 				}
 			}
 
