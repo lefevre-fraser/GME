@@ -2310,7 +2310,7 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role
 	dstPort			(NULL),
 	hovered			(false),
 	selected		(false),
-	autoRouted		(true)
+	autoRouted		(theApp.useAutoRouting)
 {
 	CComPtr<IAutoRouterPath> dummy;
 	routerPath = dummy;
@@ -3016,15 +3016,15 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 							if (m1 >= 0.0 && m1 <= 1.0 && m2 >= 0.0 && m2 <= 1.0)
 								onEdge = true;
 						}
-						if (onEdge)
-						{
-							startPoint = last;
-							endPoint = pt;
+					}
+					if (onEdge)
+					{
+						startPoint = last;
+						endPoint = pt;
 
-							connectionMoveMethod = InsertNewCustomPoint;
-							isPartFixed = false;
-							return i;
-						}
+						connectionMoveMethod = InsertNewCustomPoint;
+						isPartFixed = false;
+						return i;
 					}
 				}
 			}
@@ -3069,7 +3069,7 @@ void CGuiConnection::ReadCustomPathData(void)
 {
 	customPathData.clear();
 	CString pref;
-	//TRACE0("ReadCustomEdges:\n");
+	TRACE0("ReadCustomEdges:\n");
 	if (GetPreference(pref, CUSTOMCONNECTIONDATA)) {
 		if (pref != EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC) {	// -1 is a magic number for deleted data
 			CString subStr;
@@ -3092,8 +3092,8 @@ void CGuiConnection::ReadCustomPathData(void)
 					pathData.edgeCount = strtol(edgeCountStr, NULL, 10);
 					CString edgeCustomTypeStr = subStr.Tokenize(",", curSubPos);
 					pathData.type = (PathCustomizationType)strtol(edgeCustomTypeStr, NULL, 10);
-					//TRACE("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld", pathData.aspect, pathData.edgeIndex,
-					//											   pathData.edgeCount, pathData.type);
+					TRACE("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld", pathData.aspect, pathData.edgeIndex,
+																 pathData.edgeCount, pathData.type);
 					CString directionStr = subStr.Tokenize(",", curSubPos);
 					pathData.horizontalOrVerticalEdge = (strtol(directionStr, NULL, 10) != 0);
 					CString positionStr = subStr.Tokenize(",", curSubPos);
@@ -3109,9 +3109,9 @@ void CGuiConnection::ReadCustomPathData(void)
 					positionStr = subStr.Tokenize(",", curSubPos);
 					pathData.l4 = strtol(positionStr, NULL, 10);
 
-					//TRACE(", Dir %ld, x %ld, y %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
-					//	pathData.horizontalOrVerticalEdge, pathData.x, pathData.y,
-					//	pathData.l1, pathData.l2, pathData.l3, pathData.l4);
+					TRACE(", Dir %ld, x %ld, y %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
+						pathData.horizontalOrVerticalEdge, pathData.x, pathData.y,
+						pathData.l1, pathData.l2, pathData.l3, pathData.l4);
 
 					positionStr = subStr.Tokenize(",", curSubPos);
 					pathData.d1 = atof(positionStr);
@@ -3130,9 +3130,9 @@ void CGuiConnection::ReadCustomPathData(void)
 					positionStr = subStr.Tokenize(",", curSubPos);
 					pathData.d8 = atof(positionStr);
 
-					//TRACE("\t d1 %lf, d2 %lf, d3 %lf, d4 %lf, d5 %lf, d6 %lf, d7 %lf, d8 %lf\n",
-					//	pathData.d1, pathData.d2, pathData.d3, pathData.d4,
-					//	pathData.d5, pathData.d6, pathData.d7, pathData.d8);
+					TRACE("\t d1 %lf, d2 %lf, d3 %lf, d4 %lf, d5 %lf, d6 %lf, d7 %lf, d8 %lf\n",
+						pathData.d1, pathData.d2, pathData.d3, pathData.d4,
+						pathData.d5, pathData.d6, pathData.d7, pathData.d8);
 
 					customPathData.push_back(pathData);
 				} else {
