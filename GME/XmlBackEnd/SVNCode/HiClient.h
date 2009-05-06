@@ -37,5 +37,6 @@ public:
 	bool commitAll           ( const std::string& p_path, bool p_keepCheckedOut);
 	bool add                 ( const std::string& p_path, bool p_recursive);
 	bool mkDirOnServer       ( const std::string& p_path);
+	bool speedLock			 ( const std::vector< std::string> & targets, std::string &msg);
 };
 

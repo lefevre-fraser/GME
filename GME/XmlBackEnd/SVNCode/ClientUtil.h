@@ -95,6 +95,9 @@ public:
 	//
 	struct NotifyHelp
 	{
+		std::string       m_msg;
+		bool			  m_OK;
+
 		/**
 		* Handler for Subversion notifications.
 		*

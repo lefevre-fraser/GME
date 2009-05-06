@@ -2859,6 +2859,56 @@ bool CCoreXmlFile::checkOutFiles(XmlObjSet& containers)
 #endif
 #endif
 
+	// PETER - SVNSPEEDHACK BEGIN
+	if( m_sourceControl == SC_SUBVERSION && m_svnByAPI ) {
+		XmlObjSetIter it;
+		std::vector< std::string> readOnlyFiles;
+
+		for( it=containers.begin(); it!=containers.end(); ++it ) {
+			if( isContainerReadOnly(*it) ){
+				string fileName;
+				getContainerFileName( *it, fileName, true );
+				readOnlyFiles.push_back( fileName );
+			}
+		}
+
+		if (readOnlyFiles.empty()) {
+			return true;
+		}
+
+		SAFEARRAY *pSA;
+		SAFEARRAYBOUND bounds;
+		bounds.lLbound = 0;
+		bounds.cElements = readOnlyFiles.size();
+		// create an array (client will free with SafeArrayDestroy())
+		pSA = SafeArrayCreate( VT_BSTR, 1, &bounds);
+		BSTR *theStrings;
+		SafeArrayAccessData( pSA, (void**) &theStrings);
+		for( std::vector< std::string>::size_type i = 0; i < readOnlyFiles.size(); ++i)
+		{
+			theStrings[i] = CComBSTR( readOnlyFiles[i].c_str());
+		}
+		SafeArrayUnaccessData( pSA);
+		CComVariant var_arr(pSA);
+
+		VARIANT_BOOL succ_vt = VARIANT_FALSE;
+		CComBSTR succ_msg;
+		COMTHROW( m_comSvn->SpeedLock(var_arr, &succ_vt, &succ_msg) );
+
+		if (succ_vt == VARIANT_TRUE) {
+			return true;
+		}
+		else {
+			std::string succ_msg_str;
+			sendMsg( "Could not check out all files needed to complete operation.", MSG_ERROR);
+			CopyTo(succ_msg, succ_msg_str);
+			sendMsg( succ_msg_str, MSG_INFO);
+			sendMsg( "Rollback follows.", MSG_INFO);
+			return false;
+		}
+	}
+	// PETER - SVNSPEEDHACK BEGIN
+
 	XmlObjSetIter it;
 	XmlObjSet     containersUsedByOthers;
 

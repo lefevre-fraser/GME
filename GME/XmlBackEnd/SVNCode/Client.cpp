@@ -752,6 +752,24 @@ svn_client_ctx_t * Client::getContext(const char *p_strMessage)
 	// no progress feedback yet
 	ctx->progress_func  = 0;
 	ctx->progress_baton = 0;
+
+
+	// Use custom ssh client "GMEplink" (no console window)
+	CString appPath;
+	::GetModuleFileName(NULL, appPath.GetBuffer(MAX_PATH), MAX_PATH);
+	appPath.ReleaseBuffer();
+	appPath = appPath.Left(appPath.ReverseFind('\\')+1);
+	svn_config_t * cfg = (svn_config_t *)apr_hash_get (ctx->config, SVN_CONFIG_CATEGORY_CONFIG,
+			APR_HASH_KEY_STRING);
+	const char * sshValue = NULL;
+	svn_config_get(cfg, &sshValue, SVN_CONFIG_SECTION_TUNNELS, "ssh", "");
+	if ((sshValue == NULL)||(sshValue[0] == 0)) {
+		CString tsvn_ssh = _T("\"") + appPath + _T("GMEplink.exe") + _T("\"");
+		tsvn_ssh.Replace('\\', '/');
+		svn_config_set(cfg, SVN_CONFIG_SECTION_TUNNELS, "ssh", tsvn_ssh);
+	}
+
+
 	return ctx;
 }
 
@@ -936,7 +954,13 @@ void ClientUtil::NotifyHelp::notify2( void *baton,
 // we deal with the notification that the @a notify->action has happened to @a notify->path.
 void ClientUtil::NotifyHelp::onNotify( const svn_wc_notify_t *notify, apr_pool_t *pool)
 {
-	//notify->action, notify->path
+	if (notify->action == svn_wc_notify_failed_lock) {
+		char errbuff[BUFSIZ];
+		const char* errbuff2 = svn_err_best_message(notify->err, errbuff, BUFSIZ);
+		m_msg.append(errbuff2 ? errbuff2 : errbuff);
+		m_msg.append("<br>"); // This is a terrible hack
+		m_OK = false;
+	}
 }
 
 //

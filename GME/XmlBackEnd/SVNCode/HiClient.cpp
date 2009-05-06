@@ -4,6 +4,8 @@
 
 #if(USESVN)
 #include "Pool.h"
+#include "svn_wc.h"
+#include "svn_dirent_uri.h"
 
 HiClient::HiClient( const std::string& p_userName, const std::string& p_passWord)
 	: Client( p_userName, p_passWord)
@@ -121,7 +123,10 @@ bool HiClient::isVersioned         ( const std::string& p_path, bool p_isADir /*
 
 	log( "isVersioned", p_path + (p_isADir?" dir ": " file "));
 	ClientUtil::InfoHelp::InfoVec inf;
-	bool res = info2Qck( p_path.c_str(), false, inf, p_suppressErrorMsg);
+	// PETER - SVNSPEEDHACK BEGIN
+	// bool res = info2Qck( p_path.c_str(), false, inf, p_suppressErrorMsg);
+	bool res =  sub_info2( p_path.c_str(), Revision(false, false), Revision(false, false), false, inf, p_suppressErrorMsg);
+	// PETER - SVNSPEEDHACK BEGIN
 	return res;
 }
 
@@ -478,6 +483,87 @@ bool HiClient::statusOnServer( const std::string& p_path, bool p_assembleStatusM
 			p_statMsg = "svn status command failed";
 	}
 	return rv;
+}
+
+bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string &msg)
+{
+	if( pathVec.size() == 0) return true;
+	log( "speedLock", pathVec.front());
+
+	Pool requestPool;
+
+	svn_error_t *err;
+	apr_array_header_t* targets;
+	
+	targets = apr_array_make( requestPool.pool(), pathVec.size(), sizeof(const char *));
+	for( std::vector< std::string>::size_type i = 0; i < pathVec.size(); ++i) {
+		const svn_wc_entry_t *entry;
+		const char *dirent;
+		const char *pathent;
+		svn_wc_adm_access_t *adm_access;
+
+		pathent = svn_dirent_internal_style(pathVec[i].c_str(), requestPool.pool());
+		dirent = svn_dirent_dirname( pathent, requestPool.pool());
+		err = svn_wc_adm_open( &adm_access, NULL, dirent, FALSE, FALSE, requestPool.pool());
+		if (err)
+		{
+			char errbuff[BUFSIZ];
+			const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
+			msg.append(errbuff2 ? errbuff2 : errbuff);
+			return false;
+		}
+
+
+		err = svn_wc_entry( &entry, pathent, adm_access, FALSE, requestPool.pool());
+		if (err)
+		{
+			char errbuff[BUFSIZ];
+			const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
+			msg.append(errbuff2 ? errbuff2 : errbuff);
+			return false;
+		}
+
+		err = svn_wc_adm_close( adm_access);
+		if (err)
+		{
+			char errbuff[BUFSIZ];
+			const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
+			msg.append(errbuff2 ? errbuff2 : errbuff);
+			return false;
+		}
+
+		if (entry && !entry->lock_token) {
+			const char ** ptr = (const char**)apr_array_push(targets);
+			*ptr = pathent;
+		}
+	}
+
+	svn_client_ctx_t *ctx = getContext(NULL);
+	if(ctx == NULL)
+	{
+		msg.append("Unable to create subversion client context");
+		return false;
+	}
+
+	m_notify2->m_msg.clear();
+	m_notify2->m_OK = true;
+
+	err = svn_client_lock(targets, "", FALSE, ctx, requestPool.pool());
+  
+	if (err)
+    {
+		char errbuff[BUFSIZ];
+		const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
+		msg.append(errbuff2 ? errbuff2 : errbuff);
+		return false;
+    }
+
+	if (! m_notify2->m_OK ) {
+		msg.append(m_notify2->m_msg);
+		return false;
+	}
+	
+	return true;
 }
 
 //#if(0)

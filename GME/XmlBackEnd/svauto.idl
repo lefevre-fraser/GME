@@ -31,6 +31,7 @@ interface ISvnExec : IDispatch{
 	[id(17), helpstring("method ReplaceUserName")] HRESULT ReplaceUserName(BSTR userName);
 	[id(18), helpstring("method IsUpToDate")] HRESULT IsUpToDate( BSTR path, [out, retval] VARIANT_BOOL* upToDate);
 	[id(19), helpstring("method BulkUnLock")] HRESULT BulkUnLock( VARIANT pathVector, [out, retval] VARIANT_BOOL* success);
+	[id(20), helpstring("method SpeedLock")] HRESULT SpeedLock( VARIANT targets, [out] VARIANT_BOOL* success, [out] BSTR* succ_msg);
 };
 
 

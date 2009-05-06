@@ -62,6 +62,7 @@ public:
 	STDMETHOD(Logging)(VARIANT_BOOL onoff, BSTR logfile);
 	STDMETHOD(IsUpToDate)(BSTR path, VARIANT_BOOL* upToDate);
 	STDMETHOD(BulkUnLock)(VARIANT pathVec, VARIANT_BOOL* success);
+	STDMETHOD(SpeedLock)(VARIANT targets, VARIANT_BOOL* success, BSTR* succ_msg);
 
 protected:
 	VARIANT_BOOL      b2vb( bool val);

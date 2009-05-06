@@ -373,3 +373,54 @@ STDMETHODIMP CSvnExec::BulkUnLock( VARIANT p_pathVec, VARIANT_BOOL* p_ptrSuccess
 #endif
 
 }
+
+STDMETHODIMP CSvnExec::SpeedLock( VARIANT targets, VARIANT_BOOL* success, BSTR* succ_msg)
+{
+	std::vector< std::string> vec;
+	BSTR HUGEP *pBSTR;
+	HRESULT hr;
+
+	SAFEARRAY* p_pathVecSA = targets.parray;
+	// Get a pointer to the elements of the array.
+	hr = SafeArrayAccessData( p_pathVecSA, (void HUGEP* FAR*)&pBSTR);
+	if( SUCCEEDED(hr))
+	{
+		char buff[ _MAX_PATH];
+
+		long lbound = 0;
+		long ubound = 0;
+
+		HRESULT hr0 = SafeArrayGetDim( p_pathVecSA) == 1 ? S_OK: E_FAIL;
+		HRESULT hr1 = SafeArrayGetLBound( p_pathVecSA, 1, &lbound);
+		HRESULT hr2 = SafeArrayGetUBound( p_pathVecSA, 1, &ubound);
+
+		if( SUCCEEDED( hr0) && SUCCEEDED( hr1) && SUCCEEDED( hr2))
+		{
+			long cElements = ubound - lbound + 1;
+			for( long i = 0; i < cElements; ++i)
+			{
+				size_t sz = wcstombs( buff, pBSTR[i], _MAX_PATH);
+				if( sz != std::string::npos)
+				{
+					buff[ sz] = 0; // terminating null char
+					vec.push_back( buff);
+				}
+			}
+		}
+		SafeArrayUnaccessData( p_pathVecSA);
+		SafeArrayDestroy( targets.parray);
+	}
+
+#if(USESVN)
+	std::string msg;
+	bool succ = m_impl->speedLock( vec, msg);
+	if( success)
+		*success = b2vb( succ);
+	CopyTo( msg, succ_msg);
+
+	return S_OK;
+#else
+	return E_NOTIMPL;
+#endif
+
+}

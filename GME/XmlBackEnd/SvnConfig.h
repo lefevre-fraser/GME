@@ -3,19 +3,15 @@
 #define USESVN  1
 
 #if(USESVN)
-#define USENEON 0	// Currently the neon lib is not in the GMESRC repository (GPL licensing)
+#define USENEON 1	// (GPL licensing!)
 #define USESERF 1
 
-// make sure USESERF and USENEON are mutually exclusive:
-#if(USENEON)
-	#if(USESERF)
-		#error Error: USENEON and USESERF are both true. You should not use both NEON and SERF at the same time!
-	#endif
-#endif
 
 #pragma comment(lib, "advapi32.lib")
 #pragma comment(lib, "shfolder.lib")
 #pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "secur32.lib")
+#pragma comment(lib, "crypt32.lib")
 
 #pragma comment(lib, "libapr-1.lib")
 #pragma comment(lib, "libaprutil-1.lib")
@@ -46,12 +42,11 @@
 
 
 #if(USENEON)
-	#pragma comment(lib, "libsvn_ra_dav-1.lib")
+	#pragma comment(lib, "libsvn_ra_neon-1.lib")
 	#ifdef _DEBUG
-		#pragma comment(lib, "libNeonD.lib")
+		#pragma comment(lib, "libneonD.lib")
 	#else
-		#pragma comment(lib, "libNeon.lib")
-		#pragma message( "in this case set msvcrtd.lib with the NODEFAULTLIB linker option")
+		#pragma comment(lib, "libneon.lib")
 	#endif
 #endif
 
