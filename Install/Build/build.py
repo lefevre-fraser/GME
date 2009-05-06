@@ -118,6 +118,9 @@ def compile_tools():
     sln_file = os.path.join(GME_ROOT, "Tools", "ExtractCrashDumpXML", "ExtractCrashDumpXML.sln");
     tools.build_VS( sln_file, "Release" )
     
+    # GMEplink
+    sln_file = os.path.join(GME_ROOT, "Tools", "GMEplink", "GMEplink.sln");
+    tools.build_VS( sln_file, "Release" )
 
 def compile_samples():
     "Compile sample components"

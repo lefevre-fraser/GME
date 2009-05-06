@@ -856,6 +856,7 @@
                 <File Id="APR_Serf_Xerces.license" Name="APR_Serf_Xerces.license" Source="..\Doc\Legal\APR_Serf_Xerces.license" />
                 <File Id="OpenSSL.license" Name="OpenSSL.license" Source="..\Doc\Legal\OpenSSL.license" />
                 <File Id="Subversion.license" Name="Subversion.license" Source="..\Doc\Legal\Subversion.license" />
+                <File Id="Neon.license" Name="Neon.license" Source="..\Doc\Legal\Neon.license" />
             </Component>
         </DirectoryRef>
         
@@ -933,6 +934,13 @@
                             <ProgId Id="Mga.CoreXmlFile.1" Description="CoreXmlFile Class" />
                         </Class>
                     </TypeLib>
+                </File>
+            </Component>
+        </DirectoryRef>
+        
+        <DirectoryRef Id="INSTALLDIR_BIN">
+            <Component Id="GMEplink.exe" Guid="b81ba731-322d-48fe-96ca-c4e0cd37b6df">
+                <File Id="GMEplink.exe" Name="GMEplink.exe" KeyPath="yes" Source="..\Tools\GMEplink\Release\GMEplink.exe">  
                 </File>
             </Component>
         </DirectoryRef>

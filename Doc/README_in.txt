@@ -30,6 +30,19 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r9.5.6
+--------------------------------
+  - Subversion client library is updated to 1.6.1 (NOTE: 
+    working directory format is compatible with 1.6.x clients
+    only)
+  - Improved performance with multiuser/subversion locking
+    (single transaction for all files to be "checked out")
+  - Included SSH tunnel (GMEplink), default used by the multiuser
+    backend (can be overidden in the standard subversion config files)
+  - Improved Search plugin
+  - Resizeable decorator
+  - Optional manual routing for connections
+
 Release Notes of Release r9.3.16
 --------------------------------
 
