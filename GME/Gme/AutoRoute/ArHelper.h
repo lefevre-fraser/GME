@@ -25,6 +25,8 @@ int IsPointNearHLine(const CPoint& p, long x1, long x2, long y, int nearness = 0
 int IsPointNearVLine(const CPoint& p, long y1, long y2, long x, int nearness = 0);
 int DistanceFromHLine(const CPoint& p, long x1, long x2, long y);
 int DistanceFromVLine(const CPoint& p, long y1, long y2, long x);
+double DistanceSquareFromLine(const CPoint& start, const CPoint& end, const CPoint& pt);
+bool IsOnEdge(const CPoint& start, const CPoint& end, const CPoint& pt);
 
 int IsPointNearLine(const CPoint& point, const CPoint& start, const CPoint& end, int nearness = 0);
 int IsLineMeetHLine(const CPoint& start, const CPoint& end, long x1, long x2, long y);

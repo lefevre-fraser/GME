@@ -4484,7 +4484,11 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 						if (customizeConnectionPartMoveMethod == InsertNewCustomPoint) {
 							InsertCustomEdge(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
 						} else if (customizeConnectionPartMoveMethod == ModifyExistingCustomPoint) {
-							UpdateCustomEdges(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
+							long edgeIndex = selectedConnection->IsPointOnSectionAndDeletable(customizeConnectionEdgeIndex, point);
+							if (edgeIndex >= 0)
+								DeleteCustomEdges(selectedConnection, CustomPointCustomization, edgeIndex);
+							else
+								UpdateCustomEdges(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
 						}
 					}
 					selectedConnection->WriteCustomPathData();
@@ -4709,7 +4713,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						}
 					}
 				}
-				if (inElementDecoratorOperation) {
+				if (inElementDecoratorOperation || isInConnectionCustomizeOperation) {
 					CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 					return;
 				}

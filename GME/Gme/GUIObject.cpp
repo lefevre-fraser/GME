@@ -2980,45 +2980,7 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 					isPartFixed = false;
 					return i;
 				} else {
-					bool onEdge = false;
-					if (last.x == pt.x)			// vertical edge, horizontal move
-					{
-						if (abs(pt.x - point.x) <= 3 && point.y <= max(pt.y, last.y) + 3 && point.y >= min(pt.y, last.y) - 3)
-							onEdge = true;
-					}
-					else if (last.y == pt.y)	// horizontal line, vertical move
-					{
-						if (abs(pt.y - point.y) <= 3 && point.x <= max(pt.x, last.x) + 3 && point.x >= min(pt.x, last.x) - 3)
-							onEdge = true;
-					}
-					else
-					{
-						// TODO: consider non-linear edges
-						//
-						// Is the point close to the edge?
-						//
-						//     |det(pt-last last-point)|
-						// d = -------------------------
-						//            |pt-last|
-						//
-						double nom = abs((double)(pt.x - last.x) * (last.y - point.y) - (last.x - point.x) * (pt.y - last.y));
-						double denom_square = (double)((pt.x - last.x) * (pt.x - last.x) + (pt.y - last.y) * (pt.y - last.y));
-						double d_square = nom * nom / denom_square;
-						if (d_square <= 3.0 * 3.0) {
-							// Check not just if the point is on the line, but if it is on the line segment
-							// point = m * last + (1 - m) * pt
-							//
-							// m = (point + pt) / (last + pt)
-							// 0.0 <= m <= 1.0
-
-							double m1 = ((double)point.x - pt.x) / (last.x - pt.x);
-							double m2 = ((double)point.y - pt.y) / (last.y - pt.y);
-							//ASSERT(abs(m2 - m1) < 2.0e-1);
-							if (m1 >= 0.0 && m1 <= 1.0 && m2 >= 0.0 && m2 <= 1.0)
-								onEdge = true;
-						}
-					}
-					if (onEdge)
+					if (IsOnEdge(last, pt, point))
 					{
 						startPoint = last;
 						endPoint = pt;
@@ -3046,6 +3008,43 @@ int CGuiConnection::IsPathAt(const CPoint& point, ConnectionPartMoveType& connec
 	int tmpLimit;
 	return GetEdgeIndex(point, tmpPoint, tmpPoint, tmpPoint, connectionMoveMethod, horizontalOrVerticalEdge,
 						isPartFixed, tmpLimit, tmpLimit, tmpLimit, tmpLimit);
+}
+
+long CGuiConnection::IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& point)
+{
+	CPointList points;
+	GetPointList(points);
+
+	int numEdges = points.GetSize() - 1;
+	CPoint last;
+	CPoint lastlast;
+	POSITION pos = points.GetHeadPosition();
+	int i = 0;
+	if (pos) {
+		CPoint pt = points.GetNext(pos);
+		last = pt;
+		while (pos) {
+			pt = points.GetNext(pos);
+
+			if (i == edgeIndex) {
+				if (pos) {
+					CPoint next = points.GetNext(pos);
+
+					if (IsOnEdge(last, next, point))
+					{
+						return i;
+					}
+				}
+				return -1;
+			}
+
+			i++;
+			lastlast = last;
+			last = pt;
+		}
+	}
+
+	return -1;
 }
 
 std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(void)
@@ -3274,23 +3273,48 @@ bool CGuiConnection::HasPathCustomizationForAnAspect(int asp, int edgeIndex) con
 
 void CGuiConnection::DeletePathCustomization(CustomPathData& pathData)
 {
-	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+	long i = 0;
+	bool found = false;
+	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii, i++) {
 		ASSERT((*ii).version == pathData.version);
-		if ((*ii).aspect == pathData.aspect &&
-			(*ii).edgeIndex == pathData.edgeIndex)
+		if ((*ii).aspect == pathData.aspect)
 		{
-			ASSERT((*ii).type == pathData.type);
-			if ((*ii).type == SimpleEdgeDisplacement) {
-				ASSERT((*ii).horizontalOrVerticalEdge == pathData.horizontalOrVerticalEdge);
+			if (pathData.type == SimpleEdgeDisplacement) {
+				if ((*ii).edgeIndex == pathData.edgeIndex) {
+					ASSERT((*ii).type == pathData.type);
+					ASSERT((*ii).horizontalOrVerticalEdge == pathData.horizontalOrVerticalEdge);
+					ii = customPathData.erase(ii);
+					found = true;
+					return;
+				}
+			} else if (pathData.type == CustomPointCustomization) {
+				if (i == pathData.edgeIndex) {	// in case of CustomPointCustomization delete by array index and not edgeIndex
+					ASSERT((*ii).type == pathData.type);
+					ii = customPathData.erase(ii);
+					found = true;
+					break;
+				}
 			} else {
 				// TODO: other checks for other types
 			}
-			ii = customPathData.erase(ii);
-			return;
+		}
+	}
+	// update indexes in case of full customization
+	if (pathData.type == CustomPointCustomization) {
+		for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+			ASSERT((*ii).version == pathData.version);
+			if ((*ii).aspect == pathData.aspect &&
+				(*ii).type == CustomPointCustomization)
+			{
+				ASSERT((*ii).edgeIndex != pathData.edgeIndex);	// because we just deleted it
+				if ((*ii).edgeIndex > pathData.edgeIndex) {
+					(*ii).edgeIndex = (*ii).edgeIndex - 1;
+				}
+			}
 		}
 	}
 	// not found
-	ASSERT(false);
+	ASSERT(found);
 }
 
 bool CGuiConnection::DeleteAllPathCustomizationsForAnAspect(int asp)

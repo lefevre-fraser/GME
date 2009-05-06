@@ -76,6 +76,53 @@ int DistanceFromVLine(const CPoint& p, long y1, long y2, long x)
 	return max(abs(p.x - x), max(y1 - p.y, p.y - y2));
 }
 
+double DistanceSquareFromLine(const CPoint& start, const CPoint& end, const CPoint& pt)
+{
+	//     |det(end-start start-pt)|
+	// d = -------------------------
+	//            |end-start|
+	//
+	double nom = abs((double)(end.x - start.x) * (start.y - pt.y) - (start.x - pt.x) * (end.y - start.y));
+	double denom_square = (double)((end.x - start.x) * (end.x - start.x) + (end.y - start.y) * (end.y - start.y));
+	double d_square = nom * nom / denom_square;
+	return d_square;
+}
+
+bool IsOnEdge(const CPoint& start, const CPoint& end, const CPoint& pt)
+{
+	if (start.x == end.x)			// vertical edge, horizontal move
+	{
+		if (abs(end.x - pt.x) <= 3 && pt.y <= max(end.y, start.y) + 3 && pt.y >= min(end.y, start.y) - 3)
+			return true;
+	}
+	else if (start.y == end.y)	// horizontal line, vertical move
+	{
+		if (abs(end.y - pt.y) <= 3 && pt.x <= max(end.x, start.x) + 3 && pt.x >= min(end.x, start.x) - 3)
+			return true;
+	}
+	else
+	{
+		// TODO: consider non-linear edges
+		//
+		// Is the point close to the edge?
+		double d_square = DistanceSquareFromLine(start, end, pt);
+		if (d_square <= 3.0 * 3.0) {
+			// Check not just if the point is on the line, but if it is on the line segment
+			// point = m * start + (1 - m) * end
+			//
+			// m = (pt + end) / (start + end)
+			// 0.0 <= m <= 1.0
+
+			double m1 = ((double)pt.x - end.x) / (start.x - end.x);
+			double m2 = ((double)pt.y - end.y) / (start.y - end.y);
+			//ASSERT(abs(m2 - m1) < 2.0e-1);
+			if (m1 >= 0.0 && m1 <= 1.0 && m2 >= 0.0 && m2 <= 1.0)
+				return true;
+		}
+	}
+	return false;
+}
+
 int IsPointNearLine(const CPoint& point, const CPoint& start, const CPoint& end, int nearness)
 {
 	ASSERT( 0 <= nearness );

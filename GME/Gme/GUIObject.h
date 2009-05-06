@@ -415,6 +415,7 @@ public:
 					 int& yMinLimit, int& yMaxLimit) const;
 	int IsPathAt(const CPoint& point, ConnectionPartMoveType& connectionMoveMethod, bool& horizontalOrVerticalEdge,
 				 bool& isPartFixed) const;
+	long IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& point);
 	std::vector<long> GetRelevantCustomizedEdgeIndexes(void);
 	void ReadCustomPathData(void);
 	void WriteCustomPathData(bool handleTransaction = true);
