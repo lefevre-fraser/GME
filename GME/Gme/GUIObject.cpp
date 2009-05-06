@@ -3357,27 +3357,94 @@ void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPat
 
 bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp)
 {
-	if (IsConnectionAutoRouted())
+	if (IsConnectionAutoRouted() && customPathData.size() < 1)
 		return false;
 
-/*
-	bool found = false;
+	CPointList points;
+	GetPointList(points);
+
+	CustomPathData* lastData = NULL;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
-		ASSERT((*ii).version == pathData.version);
-		if ((*ii).aspect == pathData.aspect)
+		ASSERT((*ii).version == CONNECTIONCUSTOMIZATIONDATAVERSION);
+		if ((*ii).aspect == asp)
 		{
-			if (pathData.type == CustomPointCustomization) {
-				if (i == pathData.edgeIndex) {	// in case of CustomPointCustomization delete by array index and not edgeIndex
-					ASSERT((*ii).type == pathData.type);
-					ii = customPathData.erase(ii);
-					found = true;
-					break;
+			if ((*ii).type == CustomPointCustomization) {
+				CPoint pt((*ii).x, (*ii).y);
+				CPoint last;
+				if (lastData != NULL) {
+					last = CPoint(lastData->x, lastData->y);
+				} else {
+					last = points.GetHead();
 				}
+				RoutingDirection dir = GetDir(last - pt);
+				if (dir == Dir_Skew) {
+					bool modify = false;
+					RoutingDirection dirToGo = GetSkewDir(last - pt);
+					if (dirToGo == Dir_Left || dirToGo == Dir_Right) {
+						if (abs(last.y - pt.y) <= 3) {
+							modify = true;
+						} else if (abs(last.x - pt.x) != 0) {
+							double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
+							double eps = 5.0e-1;
+							if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+								modify = true;
+						}
+						if (modify)
+							(*ii).y = last.y;
+					} else if (dirToGo == Dir_Top || dirToGo == Dir_Bottom) {
+						if (abs(last.x - pt.x) <= 3) {
+							modify = true;
+						} else if (abs(last.y - pt.y) != 0) {
+							double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
+							double eps = 5.0e-1;
+							if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+								modify = true;
+						}
+						if (modify)
+							(*ii).x = last.x;
+					}
+				}
+				lastData = &(*ii);
 			}
 		}
-	}*/
+	}
+	// see the very last connection line segment
+	if (lastData != NULL) {
+		CPoint pt(lastData->x, lastData->y);
+		CPoint last = points.GetTail();
+		RoutingDirection dir = GetDir(last - pt);
+		if (dir == Dir_Skew) {
+			bool modify = false;
+			RoutingDirection dirToGo = GetSkewDir(last - pt);
+			if (dirToGo == Dir_Left || dirToGo == Dir_Right) {
+				if (abs(last.y - pt.y) <= 3) {
+					modify = true;
+				} else if (abs(last.x - pt.x) != 0) {
+					double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
+					TRACE2("Horizontal alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
+					double eps = 5.0e-1;
+					if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+						modify = true;
+				}
+				if (modify)
+					lastData->y = last.y;
+			} else if (dirToGo == Dir_Top || dirToGo == Dir_Bottom) {
+				if (abs(last.x - pt.x) <= 3) {
+					modify = true;
+				} else if (abs(last.y - pt.y) != 0) {
+					double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
+					TRACE2("Vertical alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
+					double eps = 5.0e-1;
+					if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+						modify = true;
+				}
+				if (modify)
+					lastData->x = last.x;
+			}
+		}
+	}
 
-	CPointList points;
+/*	CPointList points;
 	GetPointList(points);
 
 	int numEdges = points.GetSize() - 1;
@@ -3411,7 +3478,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 						if (abs(last.x - pt.x) <= 3) {
 							modify = true;
 						} else if (abs(last.y - pt.y) != 0) {
-							double alpha = atan2(-((double)pt.x - last.x), (double)pt.y - last.y);
+							double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
 							double eps = 5.0e-1;
 							if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
 								modify = true;
@@ -3446,7 +3513,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 			lastlast = last;
 			last = pt;
 		}
-	}
+	}*/
 
 	return false;
 }
