@@ -429,6 +429,7 @@ public:
 	bool DeleteAllPathCustomizationsForAnAspect(int asp);
 	bool DeleteAllPathCustomizationsForCurrentAspect(void);
 	void RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat);
+	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp);
 	bool IsConnectionAutoRouted(void) const;
 	void SetConnectionAutoRouted(bool autoRouteState);
 	void ReadConnectionAutoRouteState(void);

@@ -4491,6 +4491,8 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 								UpdateCustomEdges(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
 						}
 					}
+					// TODO: align line segments to vertical or horizontal segment if applicable
+					selectedConnection->VerticalAndHorizontalSnappingOfConnectionLineSegments(currentAspect->index);
 					selectedConnection->WriteCustomPathData();
 				} else {
 					CGuiAnnotator* annotation = NULL;

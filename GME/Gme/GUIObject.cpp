@@ -2609,7 +2609,7 @@ void CGuiConnection::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 	}
 
 	std::vector<long> customizedEdgeIndexes;
-	if (selected && autoRouted)
+	if (selected && IsConnectionAutoRouted())
 		customizedEdgeIndexes = GetRelevantCustomizedEdgeIndexes();
 	graphics.DrawConnection(gdip, points, customizedEdgeIndexes, grayedOut ? GME_GRAYED_OUT_COLOR : color,
 							lineType, srcStyle, dstStyle, view->m_zoomVal > ZOOM_NO, !autoRouted && selected,
@@ -3054,8 +3054,8 @@ std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(void)
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
 		if ((*ii).aspect == asp || asp == -1) {
-			if (autoRouted && (*ii).type == SimpleEdgeDisplacement ||
-				!autoRouted && (*ii).type != SimpleEdgeDisplacement)
+			if (IsConnectionAutoRouted() && (*ii).type == SimpleEdgeDisplacement ||
+				!IsConnectionAutoRouted() && (*ii).type != SimpleEdgeDisplacement)
 			{
 				customizedEdgeIndexes.push_back((*ii).edgeIndex);
 			}
@@ -3353,6 +3353,102 @@ void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPat
 		}
 		++ii;
 	}
+}
+
+bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp)
+{
+	if (IsConnectionAutoRouted())
+		return false;
+
+/*
+	bool found = false;
+	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+		ASSERT((*ii).version == pathData.version);
+		if ((*ii).aspect == pathData.aspect)
+		{
+			if (pathData.type == CustomPointCustomization) {
+				if (i == pathData.edgeIndex) {	// in case of CustomPointCustomization delete by array index and not edgeIndex
+					ASSERT((*ii).type == pathData.type);
+					ii = customPathData.erase(ii);
+					found = true;
+					break;
+				}
+			}
+		}
+	}*/
+
+	CPointList points;
+	GetPointList(points);
+
+	int numEdges = points.GetSize() - 1;
+	CPoint last;
+	CPoint lastlast;
+	POSITION pos = points.GetHeadPosition();
+	int i = 0;
+	if (pos) {
+		CPoint pt = points.GetNext(pos);
+		last = pt;
+		while (pos) {
+			pt = points.GetNext(pos);
+
+			if (i < numEdges) {	// we won't modify the last point
+				RoutingDirection dir = GetDir(last - pt);
+				if (dir == Dir_Skew) {
+					bool modify = false;
+					RoutingDirection dirToGo = GetSkewDir(last - pt);
+					if (dirToGo == Dir_Left || dirToGo == Dir_Right) {
+						if (abs(last.y - pt.y) <= 3) {
+							modify = true;
+						} else if (abs(last.x - pt.x) != 0) {
+							double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
+							double eps = 5.0e-1;
+							if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+								modify = true;
+						}
+						if (modify)
+							pt.y = last.y;
+					} else if (dirToGo == Dir_Top || dirToGo == Dir_Bottom) {
+						if (abs(last.x - pt.x) <= 3) {
+							modify = true;
+						} else if (abs(last.y - pt.y) != 0) {
+							double alpha = atan2(-((double)pt.x - last.x), (double)pt.y - last.y);
+							double eps = 5.0e-1;
+							if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+								modify = true;
+						}
+						if (modify)
+							pt.x = last.x;
+					}
+					if (modify) {	// update the customization information also, not just the actual points
+						bool found = false;
+						long j = 0;
+						for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii, j++) {
+							ASSERT((*ii).version == CONNECTIONCUSTOMIZATIONDATAVERSION);
+							if ((*ii).aspect == asp)
+							{
+								if ((*ii).type == CustomPointCustomization) {
+									if (j == i) {
+										ASSERT(i == (*ii).edgeIndex);
+										(*ii).x = pt.x;
+										(*ii).y = pt.y;
+										found = true;
+										break;
+									}
+								}
+							}
+						}
+						ASSERT(found);
+					}
+				}
+			}
+
+			i++;
+			lastlast = last;
+			last = pt;
+		}
+	}
+
+	return false;
 }
 
 bool CGuiConnection::IsConnectionAutoRouted(void) const
