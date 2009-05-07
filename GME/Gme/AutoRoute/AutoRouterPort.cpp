@@ -510,6 +510,7 @@ STDMETHODIMP CAutoRouterPort::CreateStartEndPointTo(long px, long py, long issta
 	return hr;
 }
 
+#ifdef _DEBUG
 void CAutoRouterPort::AssertValid() const
 {
 }
@@ -534,3 +535,4 @@ void CAutoRouterPort::AssertValidStartEndPoint(const CPoint& point, RoutingDirec
 	COMTHROW(CanHaveStartEndPointOn(dir, isstart, &canHave));
 	ASSERT( canHave == VARIANT_TRUE );
 }
+#endif

@@ -1547,7 +1547,6 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 	{
 		if (c < 100)
 			UpdatePaths();
-		DumpPaths(0, c);
 		if( c > 0 )
 		{
 			if( last == 1 )
@@ -1561,7 +1560,6 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 			}
 		}
 
-		DumpPaths(1, c);
 		if( c > 0 )
 		{
 			if( last == 2 )
@@ -1570,14 +1568,11 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 			c--;
 			if( horizontal.Block_ScanBackward() )
 			{
-				DumpPaths(2, c);
 				updated = 1;
 
 				do {
 					c--;
-					DumpPaths(3, c);
 				} while( c > 0 && horizontal.Block_ScanBackward() );
-				DumpPaths(4, c);
 
 				if( last < 2 || last > 5 )
 					d = 0;
@@ -1588,7 +1583,6 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 			}
 		}
 
-		DumpPaths(5, c);
 		if( c > 0 )
 		{
 			if( last == 3 )
@@ -1597,14 +1591,11 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 			c--;
 			if( horizontal.Block_ScanForward() )
 			{
-				DumpPaths(6, c);
 				updated = 1;
 
 				do {
 					c--;
-					DumpPaths(7, c);
 				} while( c > 0 && horizontal.Block_ScanForward() );
-				DumpPaths(8, c);
 
 				if( last < 2 || last > 5 )
 					d = 0;
@@ -1615,7 +1606,6 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 			}
 		}
 
-		DumpPaths(9, c);
 		if( c > 0 )
 		{
 			if( last == 4 )
@@ -1639,7 +1629,6 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 			}
 		}
 
-		DumpPaths(10, c);
 		if( c > 0 )
 		{
 			if( last == 5 )
@@ -1663,7 +1652,6 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 			}
 		}
 
-		DumpPaths(11, c);
 		if( c > 0 )
 		{
 			if( last == 6 )
@@ -1677,7 +1665,6 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 			}
 		}
 
-		DumpPaths(12, c);
 		if( c > 0 )
 		{
 			if( last == 7 )
@@ -1984,6 +1971,7 @@ bool CAutoRouterGraph::UpdatePoints(CComPtr<IAutoRouterPath> path, const CPointL
 	return true;
 }
 
+#ifdef _DEBUG
 void CAutoRouterGraph::AssertValid() const
 {
 	std::vector<CComPtr<IAutoRouterBox> >::const_iterator iter = boxes.begin();
@@ -2114,5 +2102,6 @@ void CAutoRouterGraph::DumpEdgeLists(void)
 	vertical.DumpEdges("Vertical edges:");
 #endif
 }
+#endif
 
 // CAutoRouterGraph
