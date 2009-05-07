@@ -58,7 +58,7 @@ public class MgaMetaFolder extends MgaMetaBase
 
 	public MgaMetaFolder getDefinedFolderByName( String name, boolean inScope )
 	{
-		return new MgaMetaFolder( (Dispatch)call( "DefinedFolderByName", name, new Variant(inScope)) );
+		return new MgaMetaFolder( (Dispatch)call( "DefinedFolderByNameDisp", name, new Variant(inScope)) );
 	}
 
 	public MgaMetaFCOs getDefinedFCOs()
@@ -68,7 +68,7 @@ public class MgaMetaFolder extends MgaMetaBase
 
 	public MgaMetaFCO getDefinedFCOByName(String name, boolean inScope)
 	{
-		return new MgaMetaFCO( (Dispatch)call( "DefinedFCOByName", name, new Boolean(inScope) ) );
+		return new MgaMetaFCO( (Dispatch)call( "DefinedFCOByNameDisp", name, new Boolean(inScope) ) );
 	}
 
 	public MgaMetaAttributes getDefinedAttributes()
@@ -78,7 +78,7 @@ public class MgaMetaFolder extends MgaMetaBase
 
 	public MgaMetaAttribute getDefinedAttributeByName(String name, boolean inScope)
 	{
-		return new MgaMetaAttribute( (Dispatch)call( "DefinedAttributeByName", name, new Boolean(inScope)) );
+		return new MgaMetaAttribute( (Dispatch)call( "DefinedAttributeByNameDisp", name, new Boolean(inScope)) );
 	}
 
 	public MgaMetaFolder defineFolder()
@@ -123,7 +123,7 @@ public class MgaMetaFolder extends MgaMetaBase
 
 	public MgaMetaFolder getLegalChildFolderByName(String name)
 	{
-		return new MgaMetaFolder( (Dispatch)call( "LegalChildFolderByName", name ) );
+		return new MgaMetaFolder( (Dispatch)get( "LegalChildFolderByName", name ) );
 	}
 
 	public MgaMetaFCOs getLegalRootObjects()

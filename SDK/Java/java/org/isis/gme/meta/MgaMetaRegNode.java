@@ -73,12 +73,12 @@ public class MgaMetaRegNode extends Dispatch
 
 	public MgaMetaRegNode getRegistryNode( String path ) 
 	{
-		return new MgaMetaRegNode( (Dispatch)call( "RegistryNode", path ) );
+		return new MgaMetaRegNode( (Dispatch)get( "RegistryNode", path ) );
 	}
 
 	public String getRegistryValue( String path ) 
 	{
-		return (String)call( "RegistryValue", path );
+		return (String)get( "RegistryValue", path );
 	}
 
 	public void setRegistryValue( String path, String value )

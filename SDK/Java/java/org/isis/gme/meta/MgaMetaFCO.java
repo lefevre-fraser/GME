@@ -83,12 +83,12 @@ public class MgaMetaFCO extends MgaMetaBase
     
     public MgaMetaAttribute getAttributeByName( String name )
     {
-        return new MgaMetaAttribute( (Dispatch)call( "AttributeByName", name ) );
+        return new MgaMetaAttribute( (Dispatch)get( "AttributeByName", name ) );
     }
     
     public MgaMetaAttribute getAttributeByRef( int metaRef )
     {
-        return new MgaMetaAttribute( (Dispatch)call( "AttributeByRef", new Integer(metaRef)) );
+        return new MgaMetaAttribute( (Dispatch)get( "AttributeByRef", new Integer(metaRef)) );
     }
     
     public boolean getAliasingEnabled()
