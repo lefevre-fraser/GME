@@ -3095,42 +3095,73 @@ void CGuiConnection::ReadCustomPathData(void)
 					TRACE("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld", pathData.aspect, pathData.edgeIndex,
 																 pathData.edgeCount, pathData.type);
 					CString directionStr = subStr.Tokenize(",", curSubPos);
-					pathData.horizontalOrVerticalEdge = (strtol(directionStr, NULL, 10) != 0);
+					pathData.horizontalOrVerticalEdge = (strtol(directionStr, NULL, 10) != 0 ? VARIANT_TRUE : VARIANT_FALSE);
 					CString positionStr = subStr.Tokenize(",", curSubPos);
 					pathData.x = strtol(positionStr, NULL, 10);
 					positionStr = subStr.Tokenize(",", curSubPos);
 					pathData.y = strtol(positionStr, NULL, 10);
 					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.l1 = strtol(positionStr, NULL, 10);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.l2 = strtol(positionStr, NULL, 10);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.l3 = strtol(positionStr, NULL, 10);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.l4 = strtol(positionStr, NULL, 10);
+					pathData.numOfExtraLongData = strtol(positionStr, NULL, 10);
+					ASSERT(pathData.numOfExtraLongData >= 0 && pathData.numOfExtraLongData <= 4);
+					if (pathData.numOfExtraLongData > 0) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.l1 = strtol(positionStr, NULL, 10);
+					}
+					if (pathData.numOfExtraLongData > 1) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.l2 = strtol(positionStr, NULL, 10);
+					}
+					if (pathData.numOfExtraLongData > 2) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.l3 = strtol(positionStr, NULL, 10);
+					}
+					if (pathData.numOfExtraLongData > 3) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.l4 = strtol(positionStr, NULL, 10);
+					}
 
-					TRACE(", Dir %ld, x %ld, y %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
-						pathData.horizontalOrVerticalEdge, pathData.x, pathData.y,
-						pathData.l1, pathData.l2, pathData.l3, pathData.l4);
+					TRACE(", Dir %ld, x %ld, y %ld, num %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
+						pathData.horizontalOrVerticalEdge == VARIANT_TRUE ? 1 : 0, pathData.x, pathData.y,
+						pathData.numOfExtraLongData, pathData.l1, pathData.l2, pathData.l3, pathData.l4);
 
 					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.d1 = atof(positionStr);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.d2 = atof(positionStr);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.d3 = atof(positionStr);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.d4 = atof(positionStr);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.d5 = atof(positionStr);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.d6 = atof(positionStr);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.d7 = atof(positionStr);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.d8 = atof(positionStr);
+					pathData.numOfExtraDoubleData = strtol(positionStr, NULL, 10);
+					ASSERT(pathData.numOfExtraDoubleData >= 0 && pathData.numOfExtraDoubleData <= 8);
+					if (pathData.numOfExtraDoubleData > 0) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.d1 = atof(positionStr);
+					}
+					if (pathData.numOfExtraDoubleData > 1) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.d2 = atof(positionStr);
+					}
+					if (pathData.numOfExtraDoubleData > 2) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.d3 = atof(positionStr);
+					}
+					if (pathData.numOfExtraDoubleData > 3) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.d4 = atof(positionStr);
+					}
+					if (pathData.numOfExtraDoubleData > 4) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.d5 = atof(positionStr);
+					}
+					if (pathData.numOfExtraDoubleData > 5) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.d6 = atof(positionStr);
+					}
+					if (pathData.numOfExtraDoubleData > 6) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.d7 = atof(positionStr);
+					}
+					if (pathData.numOfExtraDoubleData > 7) {
+						positionStr = subStr.Tokenize(",", curSubPos);
+						pathData.d8 = atof(positionStr);
+					}
 
-					TRACE("\t d1 %lf, d2 %lf, d3 %lf, d4 %lf, d5 %lf, d6 %lf, d7 %lf, d8 %lf\n",
+					TRACE("\t num %ld, d1 %lf, d2 %lf, d3 %lf, d4 %lf, d5 %lf, d6 %lf, d7 %lf, d8 %lf\n",
+						pathData.numOfExtraDoubleData,
 						pathData.d1, pathData.d2, pathData.d3, pathData.d4,
 						pathData.d5, pathData.d6, pathData.d7, pathData.d8);
 
@@ -3151,12 +3182,58 @@ void CGuiConnection::WriteCustomPathData(bool handleTransaction)
 		CString edgeStr;
 		edgeStr.Format("%ld,%ld,%ld,%d,%ld", (*ii).version, (*ii).aspect, (*ii).edgeIndex, (*ii).edgeCount, (*ii).type);
 		CString additionalDataStr;
-		additionalDataStr.Format(",%ld,%ld,%ld", (*ii).horizontalOrVerticalEdge, (*ii).x, (*ii).y);
+		additionalDataStr.Format(",%ld,%ld,%ld,%ld", (*ii).horizontalOrVerticalEdge == VARIANT_TRUE ? 1 : 0, (*ii).x, (*ii).y, (*ii).numOfExtraLongData);
 		edgeStr.Append(additionalDataStr);
-		additionalDataStr.Format(",%ld,%ld,%ld,%ld", (*ii).l1, (*ii).l2, (*ii).l3, (*ii).l4);
+		if ((*ii).numOfExtraLongData > 0) {
+			additionalDataStr.Format(",%ld", (*ii).l1);
+			edgeStr.Append(additionalDataStr);
+		}
+		if ((*ii).numOfExtraLongData > 1) {
+			additionalDataStr.Format(",%ld", (*ii).l2);
+			edgeStr.Append(additionalDataStr);
+		}
+		if ((*ii).numOfExtraLongData > 2) {
+			additionalDataStr.Format(",%ld", (*ii).l3);
+			edgeStr.Append(additionalDataStr);
+		}
+		if ((*ii).numOfExtraLongData > 3) {
+			additionalDataStr.Format(",%ld", (*ii).l4);
+			edgeStr.Append(additionalDataStr);
+		}
+		additionalDataStr.Format(",%ld", (*ii).numOfExtraDoubleData);
 		edgeStr.Append(additionalDataStr);
-		additionalDataStr.Format(",%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf", (*ii).d1, (*ii).d2, (*ii).d3, (*ii).d4, (*ii).d5, (*ii).d6, (*ii).d7, (*ii).d8);
-		edgeStr.Append(additionalDataStr);
+		if ((*ii).numOfExtraDoubleData > 0) {
+			additionalDataStr.Format(",%lf", (*ii).d1);
+			edgeStr.Append(additionalDataStr);
+		}
+		if ((*ii).numOfExtraDoubleData > 1) {
+			additionalDataStr.Format(",%lf", (*ii).d2);
+			edgeStr.Append(additionalDataStr);
+		}
+		if ((*ii).numOfExtraDoubleData > 2) {
+			additionalDataStr.Format(",%lf", (*ii).d3);
+			edgeStr.Append(additionalDataStr);
+		}
+		if ((*ii).numOfExtraDoubleData > 3) {
+			additionalDataStr.Format(",%lf", (*ii).d4);
+			edgeStr.Append(additionalDataStr);
+		}
+		if ((*ii).numOfExtraDoubleData > 4) {
+			additionalDataStr.Format(",%lf", (*ii).d5);
+			edgeStr.Append(additionalDataStr);
+		}
+		if ((*ii).numOfExtraDoubleData > 5) {
+			additionalDataStr.Format(",%lf", (*ii).d6);
+			edgeStr.Append(additionalDataStr);
+		}
+		if ((*ii).numOfExtraDoubleData > 6) {
+			additionalDataStr.Format(",%lf", (*ii).d7);
+			edgeStr.Append(additionalDataStr);
+		}
+		if ((*ii).numOfExtraDoubleData > 7) {
+			additionalDataStr.Format(",%lf", (*ii).d8);
+			edgeStr.Append(additionalDataStr);
+		}
 		if (valStr != "")
 			valStr.Append(";");
 		valStr.Append(edgeStr);
@@ -3210,27 +3287,7 @@ void CGuiConnection::UpdateCustomPathData(CustomPathData& pathData)
 			(*ii).edgeIndex == pathData.edgeIndex)
 		{
 			ASSERT((*ii).type == pathData.type);
-			(*ii).version						= pathData.version;
-			(*ii).aspect						= pathData.aspect;
-			(*ii).edgeIndex						= pathData.edgeIndex;
-			(*ii).edgeCount						= pathData.edgeCount;
-			(*ii).type							= pathData.type;
-			(*ii).horizontalOrVerticalEdge		= pathData.horizontalOrVerticalEdge;
-			(*ii).x								= pathData.x;
-			(*ii).y								= pathData.y;
-			(*ii).l1							= pathData.l1;
-			(*ii).l2							= pathData.l2;
-			(*ii).l3							= pathData.l3;
-			(*ii).l4							= pathData.l4;
-			(*ii).d1							= pathData.d1;
-			(*ii).d2							= pathData.d2;
-			(*ii).d3							= pathData.d3;
-			(*ii).d4							= pathData.d4;
-			(*ii).d5							= pathData.d5;
-			(*ii).d6							= pathData.d6;
-			(*ii).d7							= pathData.d7;
-			(*ii).d8							= pathData.d8;
-
+			CopyCustomPathData(pathData, (*ii));
 			return;
 		}
 	}

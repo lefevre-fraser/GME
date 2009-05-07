@@ -14,13 +14,15 @@ void InitCustomPathData(CustomPathData& pathData)
 	pathData.edgeIndex					= 0;
 	pathData.edgeCount					= 0;
 	pathData.type						= SimpleEdgeDisplacement;
-	pathData.horizontalOrVerticalEdge	= true;
+	pathData.horizontalOrVerticalEdge	= VARIANT_TRUE;
 	pathData.x							= 0;
 	pathData.y							= 0;
+	pathData.numOfExtraLongData			= 0;
 	pathData.l1							= 0;
 	pathData.l2							= 0;
 	pathData.l3							= 0;
 	pathData.l4							= 0;
+	pathData.numOfExtraDoubleData		= 0;
 	pathData.d1							= 0.0;
 	pathData.d2							= 0.0;
 	pathData.d3							= 0.0;
@@ -29,6 +31,32 @@ void InitCustomPathData(CustomPathData& pathData)
 	pathData.d6							= 0.0;
 	pathData.d7							= 0.0;
 	pathData.d8							= 0.0;
+}
+
+void CopyCustomPathData(const CustomPathData& src, CustomPathData& dst)
+{
+	dst.version						= src.version;
+	dst.aspect						= src.aspect;
+	dst.edgeIndex					= src.edgeIndex;
+	dst.edgeCount					= src.edgeCount;
+	dst.type						= src.type;
+	dst.horizontalOrVerticalEdge	= src.horizontalOrVerticalEdge;
+	dst.x							= src.x;
+	dst.y							= src.y;
+	dst.numOfExtraLongData			= src.numOfExtraLongData;
+	dst.l1							= src.l1;
+	dst.l2							= src.l2;
+	dst.l3							= src.l3;
+	dst.l4							= src.l4;
+	dst.numOfExtraDoubleData		= src.numOfExtraDoubleData;
+	dst.d1							= src.d1;
+	dst.d2							= src.d2;
+	dst.d3							= src.d3;
+	dst.d4							= src.d4;
+	dst.d5							= src.d5;
+	dst.d6							= src.d6;
+	dst.d7							= src.d7;
+	dst.d8							= src.d8;
 }
 
 // Functions for CMapAutoRouterPath2CGuiConnection and CMapCARPath2CPointList, see AutoRouter.h and AutoRouterGraph.h
@@ -645,26 +673,7 @@ STDMETHODIMP CAutoRouterPath::SetCustomPathData(SAFEARRAY* pArr)
 	for (unsigned long i = 0; i < pArr->rgsabound->cElements; i++)
 	{
 		CustomPathData pathData;
-		pathData.version					= pData[i].version;
-		pathData.aspect						= pData[i].aspect;
-		pathData.edgeIndex					= pData[i].edgeIndex;
-		pathData.edgeCount					= pData[i].edgeCount;
-		pathData.type						= pData[i].type;
-		pathData.horizontalOrVerticalEdge	= pData[i].horizontalOrVerticalEdge;
-		pathData.x							= pData[i].x;
-		pathData.y							= pData[i].y;
-		pathData.l1							= pData[i].l1;
-		pathData.l2							= pData[i].l2;
-		pathData.l3							= pData[i].l3;
-		pathData.l4							= pData[i].l4;
-		pathData.d1							= pData[i].d1;
-		pathData.d2							= pData[i].d2;
-		pathData.d3							= pData[i].d3;
-		pathData.d4							= pData[i].d4;
-		pathData.d5							= pData[i].d5;
-		pathData.d6							= pData[i].d6;
-		pathData.d7							= pData[i].d7;
-		pathData.d8							= pData[i].d8;
+		CopyCustomPathData(pData[i], pathData);
 		customPathData.push_back(pathData);
 	}
 
@@ -747,8 +756,9 @@ STDMETHODIMP CAutoRouterPath::ApplyCustomizationsAfterAutoConnectPointsAndStuff(
 				if ((*ii).type == SimpleEdgeDisplacement) {
 //					ASSERT(isAutoRoutingOn);
 					RoutingDirection dir = GetDir(*endpoint - *startpoint);
-					if ((*ii).horizontalOrVerticalEdge == (IsHorizontal(dir) != 0)) {
-						if ((*ii).horizontalOrVerticalEdge) {
+					VARIANT_BOOL isHorizontalVar = (IsHorizontal(dir) != 0 ? VARIANT_TRUE : VARIANT_FALSE);
+					if ((*ii).horizontalOrVerticalEdge == isHorizontalVar) {
+						if ((*ii).horizontalOrVerticalEdge == VARIANT_TRUE) {
 							startpoint->y = (*ii).y;
 							endpoint->y = (*ii).y;
 						} else {
@@ -878,27 +888,7 @@ STDMETHODIMP CAutoRouterPath::GetDeletedCustomPathData(SAFEARRAY** pArr)
 	std::vector<CustomPathData>::iterator ii = pathDataToDelete.begin();
 	long i = 0;
 	while(ii != pathDataToDelete.end()) {
-		pData[i].version					= (*ii).version;
-		pData[i].aspect						= (*ii).aspect;
-		pData[i].edgeIndex					= (*ii).edgeIndex;
-		pData[i].edgeCount					= (*ii).edgeCount;
-		pData[i].type						= (*ii).type;
-		pData[i].horizontalOrVerticalEdge	= (*ii).horizontalOrVerticalEdge;
-		pData[i].x							= (*ii).x;
-		pData[i].y							= (*ii).y;
-		pData[i].l1							= (*ii).l1;
-		pData[i].l2							= (*ii).l2;
-		pData[i].l3							= (*ii).l3;
-		pData[i].l4							= (*ii).l4;
-		pData[i].d1							= (*ii).d1;
-		pData[i].d2							= (*ii).d2;
-		pData[i].d3							= (*ii).d3;
-		pData[i].d4							= (*ii).d4;
-		pData[i].d5							= (*ii).d5;
-		pData[i].d6							= (*ii).d6;
-		pData[i].d7							= (*ii).d7;
-		pData[i].d8							= (*ii).d8;
-
+		CopyCustomPathData((*ii), pData[i]);
 		i++;
 		++ii;
 	}

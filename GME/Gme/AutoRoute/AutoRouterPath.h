@@ -41,7 +41,8 @@
 #define CONNECTIONCUSTOMIZATIONDATAVERSION			0
 #define EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC		"-1"
 
-void InitCustomPathData(CustomPathData& edgeData);
+void InitCustomPathData(CustomPathData& pathData);
+void CopyCustomPathData(const CustomPathData& src, CustomPathData& dst);
 
 typedef CList<CPoint, CPoint&>	CPointList;
 

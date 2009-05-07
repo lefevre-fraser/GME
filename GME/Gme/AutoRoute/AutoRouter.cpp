@@ -194,27 +194,7 @@ void CAutoRouter::SetPathPreferences(CComPtr<IAutoRouterPath> path, CGuiConnecti
 	std::vector<CustomPathData>::iterator ii = cpd.begin();
 	long i = 0;
 	while(ii != cpd.end()) {
-		pData[i].version					= (*ii).version;
-		pData[i].aspect						= (*ii).aspect;
-		pData[i].edgeIndex					= (*ii).edgeIndex;
-		pData[i].edgeCount					= (*ii).edgeCount;
-		pData[i].type						= (*ii).type;
-		pData[i].horizontalOrVerticalEdge	= (*ii).horizontalOrVerticalEdge;
-		pData[i].x							= (*ii).x;
-		pData[i].y							= (*ii).y;
-		pData[i].l1							= (*ii).l1;
-		pData[i].l2							= (*ii).l2;
-		pData[i].l3							= (*ii).l3;
-		pData[i].l4							= (*ii).l4;
-		pData[i].d1							= (*ii).d1;
-		pData[i].d2							= (*ii).d2;
-		pData[i].d3							= (*ii).d3;
-		pData[i].d4							= (*ii).d4;
-		pData[i].d5							= (*ii).d5;
-		pData[i].d6							= (*ii).d6;
-		pData[i].d7							= (*ii).d7;
-		pData[i].d8							= (*ii).d8;
-
+		CopyCustomPathData((*ii), pData[i]);
 		i++;
 		++ii;
 	}
@@ -247,26 +227,7 @@ bool CAutoRouter::RemoveDeletedCustomPathDataFromGuiConnections(void)
 			for (unsigned long i = 0; i < pArr->rgsabound->cElements; i++)
 			{
 				CustomPathData pathData;
-				pathData.version					= pData[i].version;
-				pathData.aspect						= pData[i].aspect;
-				pathData.edgeIndex					= pData[i].edgeIndex;
-				pathData.edgeCount					= pData[i].edgeCount;
-				pathData.type						= pData[i].type;
-				pathData.horizontalOrVerticalEdge	= pData[i].horizontalOrVerticalEdge;
-				pathData.x							= pData[i].x;
-				pathData.y							= pData[i].y;
-				pathData.l1							= pData[i].l1;
-				pathData.l2							= pData[i].l2;
-				pathData.l3							= pData[i].l3;
-				pathData.l4							= pData[i].l4;
-				pathData.d1							= pData[i].d1;
-				pathData.d2							= pData[i].d2;
-				pathData.d3							= pData[i].d3;
-				pathData.d4							= pData[i].d4;
-				pathData.d5							= pData[i].d5;
-				pathData.d6							= pData[i].d6;
-				pathData.d7							= pData[i].d7;
-				pathData.d8							= pData[i].d8;
+				CopyCustomPathData(pData[i], pathData);
 				cpd.push_back(pathData);
 			}
 

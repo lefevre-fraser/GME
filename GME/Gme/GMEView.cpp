@@ -2583,7 +2583,7 @@ void CGMEView::FillOutCustomPathData(CustomPathData& pathData, CGuiConnection* s
 	pathData.edgeIndex					= edgeIndex;
 	pathData.edgeCount					= selectedConnection->GetEdgeCount();
 	pathData.type						= custType;
-	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge;
+	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge ? VARIANT_TRUE : VARIANT_FALSE;
 	if (custType == SimpleEdgeDisplacement) {
 		pathData.x						= !horizontalOrVerticalEdge ? newPosX : 0;
 		pathData.y						= horizontalOrVerticalEdge ? newPosX : 0;
@@ -2618,7 +2618,7 @@ void CGMEView::DeleteCustomEdges(CGuiConnection* selectedConn, PathCustomization
 	pathData.aspect						= currentAspect->index;
 	pathData.edgeIndex					= edgeIndex;
 	pathData.type						= custType;
-	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge;
+	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge ? VARIANT_TRUE : VARIANT_FALSE;
 	selectedConn->DeletePathCustomization(pathData);
 }
 

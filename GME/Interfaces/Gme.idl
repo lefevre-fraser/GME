@@ -435,12 +435,14 @@ struct CustomPathData
 	[helpstring("Type of the customization: simple displacement, NURBS curving, etc")]
 	PathCustomizationType type;
 	[helpstring("Tells if the displacement to an x or y coordinate")]
-	boolean horizontalOrVerticalEdge;
+	VARIANT_BOOL horizontalOrVerticalEdge;
 	[helpstring("An x coordinate")]
 	long x;
 	[helpstring("An y coordinate")]
 	long y;
 
+	[helpstring("Number of additional long data (max 4)")]
+	long numOfExtraLongData;
 	[helpstring("Additional long data no 1")]
 	long l1;
 	[helpstring("Additional long data no 2")]
@@ -449,6 +451,8 @@ struct CustomPathData
 	long l3;
 	[helpstring("Additional long data no 4")]
 	long l4;
+	[helpstring("Number of additional floating point data (max 8)")]
+	long numOfExtraDoubleData;
 	[helpstring("Additional double data no 1")]
 	double d1;
 	[helpstring("Additional double data no 2")]
