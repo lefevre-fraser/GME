@@ -3363,6 +3363,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 	CPointList points;
 	GetPointList(points);
 
+	double radEps = 5.0e-1 / 360.0 * 2 * M_PI;
 	CustomPathData* lastData = NULL;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 		ASSERT((*ii).version == CONNECTIONCUSTOMIZATIONDATAVERSION);
@@ -3385,8 +3386,8 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 							modify = true;
 						} else if (abs(last.x - pt.x) != 0) {
 							double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
-							double eps = 5.0e-1;
-							if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+							TRACE2("Horizontal alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
+							if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
 								modify = true;
 						}
 						if (modify)
@@ -3396,8 +3397,8 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 							modify = true;
 						} else if (abs(last.y - pt.y) != 0) {
 							double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
-							double eps = 5.0e-1;
-							if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+							TRACE2("Vertical alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
+							if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
 								modify = true;
 						}
 						if (modify)
@@ -3421,9 +3422,8 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 					modify = true;
 				} else if (abs(last.x - pt.x) != 0) {
 					double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
-					TRACE2("Horizontal alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
-					double eps = 5.0e-1;
-					if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+					TRACE2("Horizontal2 alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
+					if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
 						modify = true;
 				}
 				if (modify)
@@ -3433,9 +3433,8 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 					modify = true;
 				} else if (abs(last.y - pt.y) != 0) {
 					double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
-					TRACE2("Vertical alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
-					double eps = 5.0e-1;
-					if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+					TRACE2("Vertical2 alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
+					if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
 						modify = true;
 				}
 				if (modify)
@@ -3447,6 +3446,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 /*	CPointList points;
 	GetPointList(points);
 
+	double radEps = 5.0e-1 / 360.0 * 2 * M_PI;
 	int numEdges = points.GetSize() - 1;
 	CPoint last;
 	CPoint lastlast;
@@ -3468,8 +3468,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 							modify = true;
 						} else if (abs(last.x - pt.x) != 0) {
 							double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
-							double eps = 5.0e-1;
-							if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+							if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
 								modify = true;
 						}
 						if (modify)
@@ -3479,8 +3478,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 							modify = true;
 						} else if (abs(last.y - pt.y) != 0) {
 							double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
-							double eps = 5.0e-1;
-							if (abs(alpha + M_PI) < eps || abs(alpha) < eps || abs(alpha + M_PI) < eps)
+							if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
 								modify = true;
 						}
 						if (modify)
