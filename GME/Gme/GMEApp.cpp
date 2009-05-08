@@ -1462,7 +1462,7 @@ void CGMEApp::GetSettings()
 		}
 
 		// Autorouter
-		VARIANT_BOOL useautorouting;
+		VARIANT_BOOL useautorouting = VARIANT_TRUE;
 		COMTHROW( registrar->get_UseAutoRouting(REGACCESS_USER, &useautorouting) );
 		useAutoRouting = (useautorouting != VARIANT_FALSE);
 

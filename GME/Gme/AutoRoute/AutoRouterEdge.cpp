@@ -448,7 +448,7 @@ void CAutoRouterEdge::SetClosestNext(CAutoRouterEdge* cn)
 // --------------------------- CAutoRouterEdgeList
 
 
-CAutoRouterEdgeList::CAutoRouterEdgeList(int h)
+CAutoRouterEdgeList::CAutoRouterEdgeList(bool h)
 {
 	owner = NULL;
 
@@ -514,19 +514,20 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 	{
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 
-		if (*endpoint == *startpoint)
-			return false;
-		VARIANT_BOOL isMovable;
+		bool skipEdge = false;
+		if (dir == Dir_None)
+			skipEdge = true;
+		VARIANT_BOOL isMovable = VARIANT_TRUE;
 		COMTHROW(path->IsMoveable(&isMovable));
 		if( isMovable == VARIANT_TRUE && dir != Dir_Skew)
 		{
-			int goodAngle = 0;
-			ASSERT( goodAngle = IsRightAngle(dir) );
+			int goodAngle = IsRightAngle(dir);
+			ASSERT( goodAngle );
 			if (goodAngle == 0)
-				return false;
+				skipEdge = true;
 		}
 
-		if( dir == Dir_Skew || IsRightAngle(dir) && IsHorizontal(dir) == ishorizontal )
+		if( !skipEdge && (dir == Dir_Skew || IsRightAngle(dir) && IsHorizontal(dir) == ishorizontal) )
 		{
 			CAutoRouterEdge* edge = new CAutoRouterEdge();
 
@@ -550,13 +551,13 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 			CComPtr<IAutoRouterPort> startPort;
 			COMTHROW(path->GetStartPort(&startPort));
 			ASSERT(startPort != NULL);
-			VARIANT_BOOL isStartPortConnectToCenter;
+			VARIANT_BOOL isStartPortConnectToCenter = VARIANT_FALSE;
 			COMTHROW(startPort->IsConnectToCenter(&isStartPortConnectToCenter));
-			VARIANT_BOOL isEndPortConnectToCenter;
 
 			CComPtr<IAutoRouterPort> endPort;
 			COMTHROW(path->GetEndPort(&endPort));
 			ASSERT(endPort != NULL);
+			VARIANT_BOOL isEndPortConnectToCenter = VARIANT_FALSE;
 			COMTHROW(endPort->IsConnectToCenter(&isEndPortConnectToCenter));
 			VARIANT_BOOL isPathFixed = VARIANT_FALSE;
 			COMTHROW(path->IsFixed(&isPathFixed));
@@ -651,7 +652,7 @@ void CAutoRouterEdgeList::AssertValidPathEdges(CComPtr<IAutoRouterPath> path, CP
 	{
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 
-		VARIANT_BOOL isMovable;
+		VARIANT_BOOL isMovable = VARIANT_TRUE;
 		COMTHROW(path->IsMoveable(&isMovable));
 		if( isMovable == VARIANT_TRUE )
 			ASSERT( IsRightAngle(dir) );
@@ -730,7 +731,7 @@ void CAutoRouterEdgeList::DumpEdges(const CString& headMsg)
 
 void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CPoint>& selfpoints)
 {
-	VARIANT_BOOL isConnectToCenter;
+	VARIANT_BOOL isConnectToCenter = VARIANT_FALSE;
 	COMTHROW(port->IsConnectToCenter(&isConnectToCenter));
 	if (isConnectToCenter == VARIANT_TRUE)
 	{
@@ -747,7 +748,7 @@ void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CP
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 		ASSERT( IsRightAngle(dir) );
 
-		VARIANT_BOOL canHaveStartEndPointHorizontal;
+		VARIANT_BOOL canHaveStartEndPointHorizontal = VARIANT_FALSE;
 		COMTHROW(port->CanHaveStartEndPointHorizontal(ishorizontal, &canHaveStartEndPointHorizontal));
 		if( IsHorizontal(dir) == ishorizontal && canHaveStartEndPointHorizontal == VARIANT_TRUE )
 		{
@@ -859,7 +860,7 @@ void CAutoRouterEdgeList::DeleteAllEdges()
 		Delete(order_first);
 }
 
-int CAutoRouterEdgeList::IsEmpty() const
+bool CAutoRouterEdgeList::IsEmpty() const
 {
 	return order_first == NULL;
 }
@@ -1479,7 +1480,7 @@ CAutoRouterEdge* CAutoRouterEdgeList::Section_GetBlockedEdge()
 	return *section_ptr2blocked;
 }
 
-int CAutoRouterEdgeList::Section_IsImmediate()
+bool CAutoRouterEdgeList::Section_IsImmediate()
 {
 	ASSERT( section_blocker != NULL && section_ptr2blocked != NULL && *section_ptr2blocked != NULL );
 
@@ -1545,7 +1546,7 @@ void CAutoRouterEdgeList::AssertSectionReady() const
 
 // --- Bracket
 
-int CAutoRouterEdgeList::Bracket_IsClosing(const CAutoRouterEdge* edge) const
+bool CAutoRouterEdgeList::Bracket_IsClosing(const CAutoRouterEdge* edge) const
 {
 	ASSERT( edge != NULL );
 	ASSERT( !edge->IsStartPointNull() && !edge->IsEndPointNull() );
@@ -1577,14 +1578,14 @@ int CAutoRouterEdgeList::Bracket_IsClosing(const CAutoRouterEdge* edge) const
 #endif
 
 	if( edge->IsStartPointPrevNull() || edge->IsEndPointNextNull() )
-		return 0;
+		return false;
 
 	return ishorizontal ?
 		(edge->GetStartPointPrev().y < start.y && edge->GetEndPointNext().y < end.y ) :
 		(edge->GetStartPointPrev().x < start.x && edge->GetEndPointNext().x < end.x );
 }
 
-int CAutoRouterEdgeList::Bracket_IsOpening(const CAutoRouterEdge* edge) const
+bool CAutoRouterEdgeList::Bracket_IsOpening(const CAutoRouterEdge* edge) const
 {
 	ASSERT( edge != NULL );
 	ASSERT( !edge->IsStartPointNull() && !edge->IsEndPointNull() );
@@ -1615,19 +1616,19 @@ int CAutoRouterEdgeList::Bracket_IsOpening(const CAutoRouterEdge* edge) const
 #endif
 
 	if( edge->IsStartPointPrevNull() || edge->IsEndPointNextNull() )
-		return 0;
+		return false;
 
 	return ishorizontal ?
 		(edge->GetStartPointPrev().y > start.y && edge->GetEndPointNext().y > end.y ) :
 		(edge->GetStartPointPrev().x > start.x && edge->GetEndPointNext().x > end.x );
 }
 
-int CAutoRouterEdgeList::Bracket_IsSmallGap(const CAutoRouterEdge* blocked, const CAutoRouterEdge* blocker) const
+bool CAutoRouterEdgeList::Bracket_IsSmallGap(const CAutoRouterEdge* blocked, const CAutoRouterEdge* blocker) const
 {
 	return Bracket_IsOpening(blocked) || Bracket_IsClosing(blocker);
 }
 
-int CAutoRouterEdgeList::Bracket_ShouldBeSwitched(const CAutoRouterEdge* edge, const CAutoRouterEdge* next) const
+bool CAutoRouterEdgeList::Bracket_ShouldBeSwitched(const CAutoRouterEdge* edge, const CAutoRouterEdge* next) const
 {
 	ASSERT( edge != NULL && next != NULL );
 
@@ -1692,9 +1693,9 @@ inline float Block_GetG(float d, int b, int s)
 #undef R
 #undef D
 
-int CAutoRouterEdgeList::Block_PushBackward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker)
+bool CAutoRouterEdgeList::Block_PushBackward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker)
 {
-	int modified = 0;
+	bool modified = false;
 
 	ASSERT( blocked != NULL && blocker != NULL );
 	ASSERT( blocked->GetPositionY() <= blocker->GetPositionY() );
@@ -1772,7 +1773,7 @@ int CAutoRouterEdgeList::Block_PushBackward(CAutoRouterEdge* blocked, CAutoRoute
 
 			if( y + 0.001F < trace->GetPositionY() )
 			{
-				modified = 1;
+				modified = true;
 				if( SlideButNotPassEdges(trace, y) )
 					trace->SetBlockPrev(NULL);
 			}
@@ -1788,9 +1789,9 @@ int CAutoRouterEdgeList::Block_PushBackward(CAutoRouterEdge* blocked, CAutoRoute
 	return modified;
 }
 
-int CAutoRouterEdgeList::Block_PushForward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker)
+bool CAutoRouterEdgeList::Block_PushForward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker)
 {
-	int modified = 0;
+	bool modified = false;
 
 	ASSERT( blocked != NULL && blocker != NULL );
 	ASSERT( blocked->GetPositionY() >= blocker->GetPositionY() );
@@ -1868,7 +1869,7 @@ int CAutoRouterEdgeList::Block_PushForward(CAutoRouterEdge* blocked, CAutoRouter
 
 			if( trace->GetPositionY() < y - 0.001F )
 			{
-				modified = 1;
+				modified = true;
 				if( SlideButNotPassEdges(trace, y) )
 					trace->SetBlockNext(NULL);
 			}
@@ -1884,7 +1885,7 @@ int CAutoRouterEdgeList::Block_PushForward(CAutoRouterEdge* blocked, CAutoRouter
 	return modified;
 }
 
-int CAutoRouterEdgeList::Block_ScanForward()
+bool CAutoRouterEdgeList::Block_ScanForward()
 {
 #ifdef _DEBUG_DEEP
 	AssertValidOrder();
@@ -1894,7 +1895,7 @@ int CAutoRouterEdgeList::Block_ScanForward()
 
 	PositionAll_LoadX();
 
-	int modified = 0;
+	bool modified = false;
 
 	Section_Reset();
 	CAutoRouterEdge* blocker = order_first;
@@ -1989,7 +1990,7 @@ int CAutoRouterEdgeList::Block_ScanForward()
 	return modified;
 }
 
-int CAutoRouterEdgeList::Block_ScanBackward()
+bool CAutoRouterEdgeList::Block_ScanBackward()
 {
 #ifdef _DEBUG_DEEP
 	AssertValidOrder();
@@ -1999,7 +2000,7 @@ int CAutoRouterEdgeList::Block_ScanBackward()
 
 	PositionAll_LoadX();
 
-	int modified = 0;
+	bool modified = false;
 
 	Section_Reset();
 	CAutoRouterEdge* blocker = order_last;
@@ -2094,9 +2095,9 @@ int CAutoRouterEdgeList::Block_ScanBackward()
 	return modified;
 }
 
-int CAutoRouterEdgeList::Block_SwitchWrongs()
+bool CAutoRouterEdgeList::Block_SwitchWrongs()
 {
-	int was = 0;
+	bool was = false;
 
 	PositionAll_LoadX();
 
@@ -2124,7 +2125,7 @@ int CAutoRouterEdgeList::Block_SwitchWrongs()
 
 				if( ey + 1 <= ny && Bracket_ShouldBeSwitched(edge, next) )
 				{
-					was = 1;
+					was = true;
 
 					ASSERT( !edge->GetEdgeCanpassed() && !next->GetEdgeCanpassed() );
 					edge->SetEdgeCanpassed(true);

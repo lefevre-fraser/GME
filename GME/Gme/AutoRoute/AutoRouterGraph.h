@@ -143,7 +143,7 @@ private:
 	void AddBoxAndPortEdges(CComPtr<IAutoRouterBox> box);
 	void DeleteBoxAndPortEdges(CComPtr<IAutoRouterBox> box);
 
-	CAutoRouterEdgeList& GetEdgeList(int ishorizontal);
+	CAutoRouterEdgeList& GetEdgeList(bool ishorizontal);
 
 	CAutoRouterEdgeList horizontal;
 	CAutoRouterEdgeList vertical;

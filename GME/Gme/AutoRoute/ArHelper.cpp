@@ -21,32 +21,32 @@ CRect DeflatedRect(const CRect& rect, int a)
 	return r; 
 }
 
-int IsPointNear(const CPoint& p1, const CPoint& p2, int nearness)
+bool IsPointNear(const CPoint& p1, const CPoint& p2, int nearness)
 {
 	return p2.x - nearness <= p1.x && p1.x <= p2.x + nearness &&
 		   p2.y - nearness <= p1.y && p1.y <= p2.y + nearness;
 }
 
-int IsPointIn(const CPoint& point, const CRect& rect, int nearness)
+bool IsPointIn(const CPoint& point, const CRect& rect, int nearness)
 {
 	CRect tmpR = rect;
 	tmpR.InflateRect(nearness, nearness);
-	return tmpR.PtInRect(point);
+	return tmpR.PtInRect(point) == TRUE;
 }
 
-int IsRectIn(const CRect& r1, const CRect& r2)
+bool IsRectIn(const CRect& r1, const CRect& r2)
 {
 	return r2.left <= r1.left && r1.right <= r2.right &&
 		   r2.top <= r1.top && r1.bottom <= r2.bottom;
 }
 
-int IsRectClip(const CRect& r1, const CRect& r2)
+bool IsRectClip(const CRect& r1, const CRect& r2)
 {
 	CRect rect;
-	return rect.IntersectRect(&r1, &r2);
+	return rect.IntersectRect(&r1, &r2) == TRUE;
 }
 
-int IsPointNearHLine(const CPoint& p, long x1, long x2, long y, int nearness)
+bool IsPointNearHLine(const CPoint& p, long x1, long x2, long y, int nearness)
 {
 	ASSERT( x1 <= x2 );
 
@@ -54,7 +54,7 @@ int IsPointNearHLine(const CPoint& p, long x1, long x2, long y, int nearness)
 		   y - nearness <= p.y && p.y <= y + nearness;
 }
 
-int IsPointNearVLine(const CPoint& p, long y1, long y2, long x, int nearness)
+bool IsPointNearVLine(const CPoint& p, long y1, long y2, long x, int nearness)
 {
 	ASSERT( y1 <= y2 );
 
@@ -123,7 +123,7 @@ bool IsOnEdge(const CPoint& start, const CPoint& end, const CPoint& pt)
 	return false;
 }
 
-int IsPointNearLine(const CPoint& point, const CPoint& start, const CPoint& end, int nearness)
+bool IsPointNearLine(const CPoint& point, const CPoint& start, const CPoint& end, int nearness)
 {
 	ASSERT( 0 <= nearness );
 
@@ -131,7 +131,7 @@ int IsPointNearLine(const CPoint& point, const CPoint& start, const CPoint& end,
 	// the routing may create edges that have start==end
 	// thus confusing this algorithm
 	if( end.x == start.x && end.y == start.y)
-		return 0;
+		return false;
 	// end Zolmol
 
 	CPoint point2 = point;
@@ -147,7 +147,7 @@ int IsPointNearLine(const CPoint& point, const CPoint& start, const CPoint& end,
 	double x2y2 = x * x + y * y;
 
 	if(xuyv < 0 || xuyv > x2y2)
-		return 0;
+		return false;
 
 	double expr1 = (x * v - y * u) ;
 	expr1 *= expr1;
@@ -156,12 +156,12 @@ int IsPointNearLine(const CPoint& point, const CPoint& start, const CPoint& end,
 	return expr1 <= expr2;
 }
 
-int IsLineMeetHLine(const CPoint& start, const CPoint& end, long x1, long x2, long y)
+bool IsLineMeetHLine(const CPoint& start, const CPoint& end, long x1, long x2, long y)
 {
 	ASSERT( x1 <= x2 );
 
 	if( !((start.y <= y && y <= end.y) || (end.y <= y && y <= start.y )) )
-		return 0;
+		return false;
 
 	CPoint end2 = end;
 	end2 -= start;
@@ -176,12 +176,12 @@ int IsLineMeetHLine(const CPoint& start, const CPoint& end, long x1, long x2, lo
 	return x1 <= x && x <= x2;
 }
 
-int IsLineMeetVLine(const CPoint& start, const CPoint& end, long y1, long y2, long x)
+bool IsLineMeetVLine(const CPoint& start, const CPoint& end, long y1, long y2, long x)
 {
 	ASSERT( y1 <= y2 );
 
 	if( !((start.x <= x && x <= end.x) || (end.x <= x && x <= start.x )) )
-		return 0;
+		return false;
 
 	CPoint end2 = end;
 	end2 -= start;
@@ -196,7 +196,7 @@ int IsLineMeetVLine(const CPoint& start, const CPoint& end, long y1, long y2, lo
 	return y1 <= y && y <= y2;
 }
 
-int IsLineClipRect(const CPoint& start, const CPoint& end, const CRect& rect)
+bool IsLineClipRect(const CPoint& start, const CPoint& end, const CRect& rect)
 {
 	if( rect.PtInRect(start) || rect.PtInRect(end) )
 		return 1;
@@ -207,7 +207,7 @@ int IsLineClipRect(const CPoint& start, const CPoint& end, const CRect& rect)
 		IsLineMeetVLine(start, end, rect.top, rect.bottom -1, rect.right -1);
 }
 
-int Intersect(long a1, long a2, long b1, long b2)
+bool Intersect(long a1, long a2, long b1, long b2)
 {
 	return min(a1,a2) <= max(b1,b2) && min(b1,b2) <= max(a1,a2);
 }
@@ -216,7 +216,7 @@ int Intersect(long a1, long a2, long b1, long b2)
 // --------------------------- RoutingDirection
 
 
-int AreInRightAngle(RoutingDirection dir1, RoutingDirection dir2)
+bool AreInRightAngle(RoutingDirection dir1, RoutingDirection dir2)
 {
 	ASSERT( IsRightAngle(dir1) && IsRightAngle(dir2) );
 	return IsHorizontal(dir1) == IsVertical(dir2);
@@ -549,7 +549,7 @@ RoutingDirection GetSkewDir(const CSize& offset, RoutingDirection nodir)
 	return Dir_Skew;
 }
 
-int IsPointInDirFrom(const CPoint& point, const CPoint& from, RoutingDirection dir)
+bool IsPointInDirFrom(const CPoint& point, const CPoint& from, RoutingDirection dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -568,10 +568,10 @@ int IsPointInDirFrom(const CPoint& point, const CPoint& from, RoutingDirection d
 		return point.x <= from.x;
 	}
 
-	return 0;
+	return false;
 }
 
-int IsPointInDirFrom(const CPoint& point, const CRect& rect, RoutingDirection dir)
+bool IsPointInDirFrom(const CPoint& point, const CRect& rect, RoutingDirection dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -590,10 +590,10 @@ int IsPointInDirFrom(const CPoint& point, const CRect& rect, RoutingDirection di
 		return point.x < rect.left;
 	}
 
-	return 0;
+	return false;
 }
 
-int IsPointBetweenSides(const CPoint& point, const CRect& rect, int ishorizontal)
+bool IsPointBetweenSides(const CPoint& point, const CRect& rect, bool ishorizontal)
 {
 	if( ishorizontal )
 		return rect.top <= point.y && point.y < rect.bottom;
@@ -621,7 +621,7 @@ RoutingDirection PointOnSide(const CPoint& point, const CRect& rect)
 	return GetSkewDir(point - rect.CenterPoint());
 }
 
-int IsCoordInDirFrom(long coord, long from, RoutingDirection dir)
+bool IsCoordInDirFrom(long coord, long from, RoutingDirection dir)
 {
 	ASSERT( IsRightAngle(dir) );
 
@@ -652,7 +652,7 @@ RoutingDirection OnWhichEdge(const CRect& rect, const CPoint& point)
 // --------------------------- CArFindNearestLine
 
 
-int CArFindNearestLine::HLine(int x1, int x2, int y)
+bool CArFindNearestLine::HLine(int x1, int x2, int y)
 {
 	ASSERT( x1 <= x2 );
 
@@ -663,13 +663,13 @@ int CArFindNearestLine::HLine(int x1, int x2, int y)
 	{
 		dist1 = d1;
 		dist2 = d2;
-		return 1;
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-int CArFindNearestLine::VLine(int y1, int y2, int x)
+bool CArFindNearestLine::VLine(int y1, int y2, int x)
 {
 	ASSERT( y1 <= y2 );
 
@@ -680,10 +680,10 @@ int CArFindNearestLine::VLine(int y1, int y2, int x)
 	{
 		dist1 = d1;
 		dist2 = d2;
-		return 1;
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
 

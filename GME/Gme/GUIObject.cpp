@@ -2915,7 +2915,7 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 					connectionMoveMethod = AdjacentEdgeMove;
 				}
 				if (moveAction) {
-					VARIANT_BOOL comIsFixed;
+					VARIANT_BOOL comIsFixed = VARIANT_FALSE;
 					comAg->IsEdgeFixed(routerPath, last.x, last.y, pt.x, pt.y, &comIsFixed);
 					isPartFixed = (comIsFixed == VARIANT_TRUE);
 

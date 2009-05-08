@@ -986,7 +986,7 @@ void CAutoRouterPath::AssertValidPoints() const
 		return;
 
 #ifdef _DEBUG_DEEP
-	TRACE("CAutoRouterPath::AssertValidPoints (count=%d) START\n", points.GetCount());
+	TRACE("CAutoRouterPath::AssertValidPoints (count=%ld) START\n", points.GetCount());
 #endif
 
 	POSITION pos = points.GetHeadPosition();
@@ -1013,7 +1013,7 @@ void CAutoRouterPath::AssertValidPoints() const
 		p1 = points.GetNext(pos);
 
 #ifdef _DEBUG_DEEP
-		TRACE("%p (%d,%d)\n", p1p, p1.x, p1.y);
+		TRACE("%p (%ld,%ld)\n", p1p, p1.x, p1.y);
 #endif
 		d23 = d12;
 		if( p2p != NULL )

@@ -126,7 +126,7 @@ private:
 class CAutoRouterEdgeList
 {
 public:
-	CAutoRouterEdgeList(int ishorizontal);
+	CAutoRouterEdgeList(bool ishorizontal);
 	virtual ~CAutoRouterEdgeList();
 
 	void SetOwner(CComPtr<IAutoRouterGraph> owner);
@@ -144,10 +144,10 @@ public:
 	void DeleteEdges(CComPtr<IUnknown> object);
 	void DeleteAllEdges();
 
-	int IsEmpty() const;
+	bool IsEmpty() const;
 
 private:
-	int ishorizontal;
+	bool ishorizontal;
 
 public:
 	CAutoRouterEdge* GetEdge(CComPtr<IAutoRouterPath> path, const CPoint& startpoint, const CPoint& endpoint) const;
@@ -214,7 +214,7 @@ private:
 	void Section_BeginScan(CAutoRouterEdge* blocker);
 	int Section_HasBlockedEdge();
 	CAutoRouterEdge* Section_GetBlockedEdge();
-	int Section_IsImmediate();
+	bool Section_IsImmediate();
 
 	CAutoRouterEdge* section_first;
 	CAutoRouterEdge* section_blocker;
@@ -228,19 +228,19 @@ private:
 
 // --- Bracket
 
-	int Bracket_IsClosing(const CAutoRouterEdge* edge) const;
-	int Bracket_IsOpening(const CAutoRouterEdge* edge) const;
-	int Bracket_IsSmallGap(const CAutoRouterEdge* blocked, const CAutoRouterEdge* blocker) const;
+	bool Bracket_IsClosing(const CAutoRouterEdge* edge) const;
+	bool Bracket_IsOpening(const CAutoRouterEdge* edge) const;
+	bool Bracket_IsSmallGap(const CAutoRouterEdge* blocked, const CAutoRouterEdge* blocker) const;
 
-	int Bracket_ShouldBeSwitched(const CAutoRouterEdge* edge, const CAutoRouterEdge* next) const;
+	bool Bracket_ShouldBeSwitched(const CAutoRouterEdge* edge, const CAutoRouterEdge* next) const;
 
 // --- Block
 
 public:
-	int Block_PushBackward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker);
-	int Block_PushForward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker);
-	int Block_ScanForward();
-	int Block_ScanBackward();
+	bool Block_PushBackward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker);
+	bool Block_PushForward(CAutoRouterEdge* blocked, CAutoRouterEdge* blocker);
+	bool Block_ScanForward();
+	bool Block_ScanBackward();
 
-	int Block_SwitchWrongs();
+	bool Block_SwitchWrongs();
 };

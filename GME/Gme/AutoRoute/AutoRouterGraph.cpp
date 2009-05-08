@@ -106,7 +106,7 @@ void CAutoRouterGraph::Remove(CComPtr<IAutoRouterBox> box)
 		if( (startbox == box || endbox == box) )
 		{
 			//DeletePath:
-			VARIANT_BOOL hasOwner;
+			VARIANT_BOOL hasOwner = VARIANT_TRUE;
 			COMTHROW(path->HasOwner(&hasOwner));
 			if( hasOwner == VARIANT_TRUE )
 			{
@@ -205,7 +205,7 @@ int  CAutoRouterGraph::CanBoxAt(const CRect& rect) const
 void CAutoRouterGraph::Add(CComPtr<IAutoRouterPath> path)
 {
 	ASSERT( path != NULL );
-	VARIANT_BOOL hasOwner;
+	VARIANT_BOOL hasOwner = VARIANT_TRUE;
 	COMTHROW(path->HasOwner(&hasOwner));
 	ASSERT( hasOwner == VARIANT_FALSE );
 
@@ -504,47 +504,49 @@ bool CAutoRouterGraph::Connect(CComPtr<IAutoRouterPath> path, CPoint& startpoint
 	if (isAutoRouted == VARIANT_TRUE)
 		ConnectPoints(ret, start, end, startdir, enddir);
 
-	// ******************************************************************
-
-	SAFEARRAY* pArr = NULL;
-	pArr = SafeArrayCreateVector(VT_I4, 0, 2 * ret.GetSize());
-	long position = 0;
-	POSITION pos = ret.GetHeadPosition();
-	while(pos)
+	POSITION pos;
+	if (isAutoRouted == VARIANT_FALSE)
 	{
-		CPoint point = ret.GetNext(pos);
-		COMTHROW(SafeArrayPutElement(pArr, &position, &point.x));
-		position++;
-		COMTHROW(SafeArrayPutElement(pArr, &position, &point.y));
-		position++;
-	}
-
-	COMTHROW(path->ApplyCustomizationsBeforeAutoConnectPoints(&pArr));
-
-	//one dim., long elements
-	if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
-	{
-		ret.RemoveAll();
-		//length
-		long elementNum = (pArr)->rgsabound[0].cElements;
-		if (elementNum > 0)
+		// ******************************************************************
+		SAFEARRAY* pArr = NULL;
+		pArr = SafeArrayCreateVector(VT_I4, 0, 2 * ret.GetSize());
+		long position = 0;
+		pos = ret.GetHeadPosition();
+		while(pos)
 		{
-			ASSERT(elementNum % 2 == 0);
-			//lock it before use
-			SafeArrayLock(pArr);
-			long* pArrElements = (long*) (pArr)->pvData;
-			for (int i = 0; i < elementNum / 2; i++)
-			{
-				CPoint p(pArrElements[2 * i], pArrElements[2 * i + 1]);
-				ret.AddTail(p);
-			}
-			SafeArrayUnlock(pArr);
+			CPoint point = ret.GetNext(pos);
+			COMTHROW(SafeArrayPutElement(pArr, &position, &point.x));
+			position++;
+			COMTHROW(SafeArrayPutElement(pArr, &position, &point.y));
+			position++;
 		}
-	}
-	//clear memory
-	SafeArrayDestroy(pArr);
 
-	// *********************************************************
+		COMTHROW(path->ApplyCustomizationsBeforeAutoConnectPoints(&pArr));
+
+		//one dim., long elements
+		if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
+		{
+			ret.RemoveAll();
+			//length
+			long elementNum = (pArr)->rgsabound[0].cElements;
+			if (elementNum > 0)
+			{
+				ASSERT(elementNum % 2 == 0);
+				//lock it before use
+				SafeArrayLock(pArr);
+				long* pArrElements = (long*) (pArr)->pvData;
+				for (int i = 0; i < elementNum / 2; i++)
+				{
+					CPoint p(pArrElements[2 * i], pArrElements[2 * i + 1]);
+					ret.AddTail(p);
+				}
+				SafeArrayUnlock(pArr);
+			}
+		}
+		//clear memory
+		SafeArrayDestroy(pArr);
+		// *********************************************************
+	}
 
 	COMTHROW(path->DeleteAll());
 
@@ -567,7 +569,8 @@ bool CAutoRouterGraph::Connect(CComPtr<IAutoRouterPath> path, CPoint& startpoint
 	// Apply custom edge modifications - step 1
 	// (Step 1: Move the desired edges - see in CAutoRouterGraph::Connect(CComPtr<IAutoRouterPath> path, CPoint& startpoint, CPoint& endpoint)
 	//  Step 2: Fix the desired edges - see in CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path))
-	COMTHROW(path->ApplyCustomizationsAfterAutoConnectPointsAndStuff());
+	if (isAutoRouted == VARIANT_TRUE)
+		COMTHROW(path->ApplyCustomizationsAfterAutoConnectPointsAndStuff());
 
 	return AddEdges(path);
 }
@@ -913,7 +916,7 @@ void CAutoRouterGraph::DeleteBoxAndPortEdges(CComPtr<IAutoRouterBox> box)
 	SafeArrayDestroy(pArr);
 }
 
-CAutoRouterEdgeList& CAutoRouterGraph::GetEdgeList(int ishorizontal)
+CAutoRouterEdgeList& CAutoRouterGraph::GetEdgeList(bool ishorizontal)
 {
 	return ishorizontal ? horizontal : vertical;
 }
@@ -958,7 +961,7 @@ int CAutoRouterGraph::CanDeleteTwoEdgesAt(CComPtr<IAutoRouterPath> path, CPointL
 
 	RoutingDirection dir = GetDir(npoint - point);
 	ASSERT( IsRightAngle(dir) );
-	int ishorizontal = IsHorizontal(dir);
+	bool ishorizontal = IsHorizontal(dir);
 
 	CPoint newpoint;
 	GetPointCoord(newpoint, ishorizontal) = GetPointCoord(npoint, ishorizontal);
@@ -1008,7 +1011,7 @@ void CAutoRouterGraph::DeleteTwoEdgesAt(CComPtr<IAutoRouterPath> path, CPointLis
 
 	RoutingDirection dir = GetDir(*npoint - *point);
 	ASSERT( IsRightAngle(dir) );
-	int ishorizontal = IsHorizontal(dir);
+	bool ishorizontal = IsHorizontal(dir);
 
 	CPoint newpoint;
 	GetPointCoord(newpoint, ishorizontal) = GetPointCoord(*npoint, ishorizontal);
@@ -1097,7 +1100,7 @@ void CAutoRouterGraph::DeleteSamePointsAt(CComPtr<IAutoRouterPath> path, CPointL
 
 	RoutingDirection dir = GetDir(*point - *ppoint);
 	ASSERT( IsRightAngle(dir) );
-	int ishorizontal = IsHorizontal(dir);
+	bool ishorizontal = IsHorizontal(dir);
 
 	CAutoRouterEdgeList& hlist = GetEdgeList(ishorizontal);
 	CAutoRouterEdgeList& vlist = GetEdgeList(!ishorizontal);
@@ -1248,7 +1251,7 @@ void CAutoRouterGraph::CenterStairsInPathPoints(CComPtr<IAutoRouterPath> path, R
 
 			CPoint np2 = p2;
 			CPoint np3 = p3;
-			int h = IsHorizontal(d12);
+			bool h = IsHorizontal(d12);
 
 			long p4x = GetPointCoord(p4, h);
 			long p3x = GetPointCoord(p3, h);
@@ -1350,7 +1353,7 @@ void CAutoRouterGraph::SimplifyPathPoints(CComPtr<IAutoRouterPath> path)
 
 			RoutingDirection d = GetDir(p2 - p1);
 			ASSERT( IsRightAngle(d) );
-			int h = IsHorizontal(d);
+			bool h = IsHorizontal(d);
 
 			CPoint np3;
 			GetPointCoord(np3, h) = GetPointCoord(p5, h);
@@ -1426,7 +1429,7 @@ void CAutoRouterGraph::ConnectAllDisconnectedPaths()
 bool CAutoRouterGraph::IsEdgeFixed(CComPtr<IAutoRouterPath> path, const CPoint& startpoint, const CPoint& endpoint)
 {
 	RoutingDirection d = GetDir(endpoint - startpoint);
-	int h = IsHorizontal(d);
+	bool h = IsHorizontal(d);
 
 	CAutoRouterEdgeList& elist = GetEdgeList(h);
 
@@ -1759,7 +1762,7 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 
 STDMETHODIMP CAutoRouterGraph::DeletePath( IAutoRouterPath* path)
 {
-	VARIANT_BOOL hasOwner;
+	VARIANT_BOOL hasOwner = VARIANT_TRUE;
 	HRESULT hr = path->HasOwner(&hasOwner);
 	ASSERT(SUCCEEDED(hr));
 	if (FAILED(hr))
