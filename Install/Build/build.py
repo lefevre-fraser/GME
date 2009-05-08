@@ -28,7 +28,11 @@ def check_prerequisites():
     
     # Test for GME_ROOT environment variable
     if not os.environ['GME_ROOT']:
-        print "GME_ROOT environment variable is not set!"
+        print "GME_ROOT environment variable is not set! (It should point to the GMESRC folder)"
+        raise
+        
+    if not os.environ['JAVA_HOME']:
+        print "JAVA_HOME environment variable is not set! (It should point to the JDK root folder)"
         raise
         
     if os.path.normpath(os.path.abspath(os.environ['GME_ROOT'])) != GME_ROOT:

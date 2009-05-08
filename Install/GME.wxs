@@ -2082,6 +2082,7 @@
                 <ComponentRef Id='TableEditor.dll' />
                 <ComponentRef Id='xerces_c_2_8.dll' />
                 <ComponentRef Id='XmlBackEnd.dll' />
+                <ComponentRef Id='GMEplink.exe' />
                 
                 <MergeRef Id='CRT' />
                 <MergeRef Id='CRT Policy' />

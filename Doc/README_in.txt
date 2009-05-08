@@ -30,7 +30,7 @@ guaranteed.
 1. Release Notes
 ************************************************
 
-Release Notes of Release r9.5.6
+Release Notes of Release r9.5.7
 --------------------------------
   - Subversion client library is updated to 1.6.1 (NOTE: 
     working directory format is compatible with 1.6.x clients

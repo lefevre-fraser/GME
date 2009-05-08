@@ -288,7 +288,7 @@ namespace GME.CSharp
 
         #region IMgaVersionInfo Members
 
-        public GmeLib.MgaInterfaceVersion_enum Version
+        public GmeLib.MgaInterfaceVersion_enum version
         {
             get
             {
