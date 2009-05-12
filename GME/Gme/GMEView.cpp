@@ -336,6 +336,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_BACKALONGCONN, OnBackAlongConnection)
 	ON_COMMAND(ID_DISABLEAUTOROUTINGOFCONN, OnDisableAutoRoutingOfConnection)
 	ON_COMMAND(ID_ENABLEAUTOROUTINGOFCONN, OnEnableAutoRoutingOfConnection)
+	ON_COMMAND(ID_CONVERTAUTOROUTEDPATHTOCUSTOM, OnConvertAutoRoutedPathToCustom)
 	ON_COMMAND(ID_DELETECONNEDGECUSTOMDATA, OnDeleteConnEdgeCustomData)
 	ON_COMMAND(ID_DELETECONNROUTECUSTOMDATA, OnDeleteConnRouteCustomData)
 	ON_COMMAND(ID_JUMPTOFIRSTOBJ, OnJumpToFirstObject)
@@ -356,6 +357,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_UPDATE_COMMAND_UI(ID_BACKALONGCONN, OnUpdateBackAlongConnection)
 	ON_UPDATE_COMMAND_UI(ID_DISABLEAUTOROUTINGOFCONN, OnUpdateDisableAutoRoutingOfConnection)
 	ON_UPDATE_COMMAND_UI(ID_ENABLEAUTOROUTINGOFCONN, OnUpdateEnableAutoRoutingOfConnection)
+	ON_UPDATE_COMMAND_UI(ID_CONVERTAUTOROUTEDPATHTOCUSTOM, OnUpdateConvertAutoRoutedPathToCustom)
 	ON_UPDATE_COMMAND_UI(ID_DELETECONNEDGECUSTOMDATA, OnUpdateDeleteConnEdgeCustomData)
 	ON_UPDATE_COMMAND_UI(ID_DELETECONNROUTECUSTOMDATA, OnUpdateDeleteConnRouteCustomData)
 #if defined(ADDCRASHTESTMENU)
@@ -2574,30 +2576,11 @@ void CGMEView::DrawConnectionCustomizationTracker(CDC* pDC, Gdiplus::Graphics* g
 	}
 }
 
-void CGMEView::FillOutCustomPathData(CustomPathData& pathData, CGuiConnection* selectedConn, PathCustomizationType custType,
-									 int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge)
-{
-	InitCustomPathData(pathData);
-	pathData.version					= CONNECTIONCUSTOMIZATIONDATAVERSION;
-	pathData.aspect						= currentAspect->index;
-	pathData.edgeIndex					= edgeIndex;
-	pathData.edgeCount					= selectedConnection->GetEdgeCount();
-	pathData.type						= custType;
-	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge ? VARIANT_TRUE : VARIANT_FALSE;
-	if (custType == SimpleEdgeDisplacement) {
-		pathData.x						= !horizontalOrVerticalEdge ? newPosX : 0;
-		pathData.y						= horizontalOrVerticalEdge ? newPosX : 0;
-	} else {
-		pathData.x						= newPosX;
-		pathData.y						= newPosY;
-	}
-}
-
 void CGMEView::InsertCustomEdge(CGuiConnection* selectedConn, PathCustomizationType custType,
 								int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge)
 {
 	CustomPathData pathData;
-	FillOutCustomPathData(pathData, selectedConn, custType, newPosX, newPosY, edgeIndex, horizontalOrVerticalEdge);
+	selectedConn->FillOutCustomPathData(pathData, custType, currentAspect->index, newPosX, newPosY, edgeIndex, horizontalOrVerticalEdge);
 	selectedConn->InsertCustomPathData(pathData);
 }
 
@@ -2605,7 +2588,7 @@ void CGMEView::UpdateCustomEdges(CGuiConnection* selectedConn, PathCustomization
 								 int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge)
 {
 	CustomPathData pathData;
-	FillOutCustomPathData(pathData, selectedConn, custType, newPosX, newPosY, edgeIndex, horizontalOrVerticalEdge);
+	selectedConn->FillOutCustomPathData(pathData, custType, currentAspect->index, newPosX, newPosY, edgeIndex, horizontalOrVerticalEdge);
 	selectedConn->UpdateCustomPathData(pathData);
 }
 
@@ -5443,7 +5426,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 					bool isPartFixed = false;
 					contextConnectionEdgeIndex = selectedContextConnection->IsPathAt(local,
 						contextConnectionPartMoveMethod, customizeHorizontalOrVerticalEdge, isPartFixed);
-					contextConnectionCustomizationType = CustomPointCustomization;
+					contextConnectionCustomizationType = selectedContextConnection->IsConnectionAutoRouted() ? SimpleEdgeDisplacement : CustomPointCustomization;
 				}
 
 				HMENU decoratorAdditionalMenu = ::CreatePopupMenu();
@@ -7028,6 +7011,15 @@ void CGMEView::OnEnableAutoRoutingOfConnection()
 	selectedContextConnection->WriteConnectionAutoRouteState();
 }
 
+void CGMEView::OnConvertAutoRoutedPathToCustom()
+{
+	selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index);
+	BeginTransaction();
+	selectedContextConnection->WriteConnectionAutoRouteState(false);
+	selectedContextConnection->WriteCustomPathData(false);
+	CommitTransaction();
+}
+
 void CGMEView::OnDeleteConnEdgeCustomData()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnEdgeCustomData in "+path+name+"\r\n");
@@ -7187,6 +7179,11 @@ void CGMEView::OnUpdateEnableAutoRoutingOfConnection(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(selectedContextConnection != NULL &&
 				   !selectedContextConnection->IsConnectionAutoRouted());
+}
+
+void CGMEView::OnUpdateConvertAutoRoutedPathToCustom(CCmdUI* pCmdUI)
+{
+	OnUpdateDisableAutoRoutingOfConnection(pCmdUI);
 }
 
 void CGMEView::OnUpdateDeleteConnEdgeCustomData(CCmdUI* pCmdUI)

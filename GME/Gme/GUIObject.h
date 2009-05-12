@@ -185,9 +185,9 @@ public:
 	
 	static bool IsPrimary(CGuiMetaModel* guiMetaModel, CGuiMetaAspect* guiAspect, CComPtr<IMgaMetaRole>& metaRole);
 	static void SetAspect(CGuiFcoList& list, int asp);
-	static CGuiConnection* FindConnection(CComPtr<IMgaFCO>& fco,CGuiConnectionList& conns);
-	static void GrayOutFcos(CGuiFcoList &list,bool set = true);
-	static void GrayOutFcos(CGuiConnectionList &list,bool set = true);
+	static CGuiConnection* FindConnection(CComPtr<IMgaFCO>& fco, CGuiConnectionList& conns);
+	static void GrayOutFcos(CGuiFcoList &list, bool set = true);
+	static void GrayOutFcos(CGuiConnectionList &list, bool set = true);
 	static void GrayOutNonInternalConnections(CGuiConnectionList& list);
 	static void ResetFlags(CGuiFcoList &list);
 
@@ -252,8 +252,8 @@ public:
 	void ReadAllLocations();
 	void WriteLocation(int aspect = -1);
 	bool IsHotspotEnabled() const						{ return isHotspotEnabled; }
-	void DeleteCustomizationOfConnections(CGuiConnectionList& conns, int aspect);
-	void DeleteCustomizationOfInOutConnections(int aspect);
+	void DeleteCustomizationOfConnections(CGuiConnectionList& conns, long aspect);
+	void DeleteCustomizationOfInOutConnections(long aspect);
 
 public:
 	void GrayOutNeighbors();
@@ -417,6 +417,8 @@ public:
 				 bool& isPartFixed) const;
 	long IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& point);
 	std::vector<long> GetRelevantCustomizedEdgeIndexes(void);
+	void FillOutCustomPathData(CustomPathData& pathData, PathCustomizationType custType, long asp, int newPosX, int newPosY,
+							   int edgeIndex, bool horizontalOrVerticalEdge);
 	void ReadCustomPathData(void);
 	void WriteCustomPathData(bool handleTransaction = true);
 	void InsertCustomPathData(CustomPathData& pathData);
@@ -424,14 +426,15 @@ public:
 	std::vector<CustomPathData> GetCurrentPathCustomizations(void);
 	bool HasPathCustomization(void) const;
 	bool HasPathCustomizationForCurrentAspect(int edgeIndex = -1) const;
-	bool HasPathCustomizationForAnAspect(int asp, int edgeIndex = -1) const;
+	bool HasPathCustomizationForAnAspect(long asp, int edgeIndex = -1) const;
 	void DeletePathCustomization(CustomPathData& pathData);
-	bool DeleteAllPathCustomizationsForAnAspect(int asp);
+	bool DeleteAllPathCustomizationsForAnAspect(long asp);
 	bool DeleteAllPathCustomizationsForCurrentAspect(void);
 	void RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat);
 	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp);
 	bool IsConnectionAutoRouted(void) const;
 	void SetConnectionAutoRouted(bool autoRouteState);
+	void ConvertAutoRoutedPathToCustom(long asp);
 	void ReadConnectionAutoRouteState(void);
 	void WriteConnectionAutoRouteState(bool handleTransaction = true);
 

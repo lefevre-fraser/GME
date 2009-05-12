@@ -250,8 +250,6 @@ public:
 	void					DrawConnections(HDC pDC, Gdiplus::Graphics* gdip);
 	void					DrawTracker(CDC* pDC, const CRect& trackerRect, CRectTracker::StyleFlags styleFlags);
 	void					DrawConnectionCustomizationTracker(CDC* pDC, Gdiplus::Graphics* gdip);
-	void					FillOutCustomPathData(CustomPathData& pathData, CGuiConnection* selectedConn, PathCustomizationType custType,
-												  int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge);
 	void					InsertCustomEdge(CGuiConnection* selectedConn, PathCustomizationType custType,
 											 int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge);
 	void					UpdateCustomEdges(CGuiConnection* selectedConn, PathCustomizationType custType,
@@ -543,6 +541,7 @@ protected:
 	afx_msg void OnJumpToNextObject();
 	afx_msg void OnDisableAutoRoutingOfConnection();
 	afx_msg void OnEnableAutoRoutingOfConnection();
+	afx_msg void OnConvertAutoRoutedPathToCustom();
 	afx_msg void OnDeleteConnEdgeCustomData();
 	afx_msg void OnDeleteConnRouteCustomData();
 	afx_msg void OnShowContextMenu();
@@ -569,6 +568,7 @@ protected:
 	afx_msg void OnUpdateBackAlongConnection( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDisableAutoRoutingOfConnection( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateEnableAutoRoutingOfConnection( CCmdUI* pCmdUI );
+	afx_msg void OnUpdateConvertAutoRoutedPathToCustom( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDeleteConnEdgeCustomData( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDeleteConnRouteCustomData( CCmdUI* pCmdUI );
 #if defined(ADDCRASHTESTMENU)

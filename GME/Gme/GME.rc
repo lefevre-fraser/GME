@@ -536,6 +536,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Disable auto routing of this connection", ID_DISABLEAUTOROUTINGOFCONN
         MENUITEM "Enable auto routing of this connection", ID_ENABLEAUTOROUTINGOFCONN
+        MENUITEM "Convert auto routed path to custom path", ID_CONVERTAUTOROUTEDPATHTOCUSTOM
 		MENUITEM "Delete this edge's customization", ID_DELETECONNEDGECUSTOMDATA
         MENUITEM "Delete all customization for this connection", ID_DELETECONNROUTECUSTOMDATA
     END
