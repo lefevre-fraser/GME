@@ -6,6 +6,7 @@
 #include "CompDlg.h"
 #include "CompInfoDlg.h"
 #include "UACUtils.h"
+#include "Resource.h"
 
 #include <atlbase.h>
 #include <objbase.h>
@@ -32,6 +33,8 @@ CCompDlg::CCompDlg(CWnd* pParent /*=NULL*/)
 
 	type = COMPONENTTYPE_ALL;
 	onOKoper = "Close";
+
+	firstResize = true;
 }
 
 
@@ -121,7 +124,7 @@ BOOL CCompDlg::OnInitDialog()
 		
 	}
 	MSGCATCH("Error while initializing CompDlg",;)
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -574,15 +577,50 @@ void CCompDlg::OnAllcomps()
 
 void CCompDlg::OnSize(UINT nType, int cx, int cy)
 {
+	long deltaWidth = 0;
+	long deltaHeight = 0;
+
+	if (firstResize) {
+		CRect rectInResource = GetWindowSizeFromResource();
+		CRect currentDlgRect;
+		deltaWidth = cx - rectInResource.Width();
+		deltaHeight = cy - rectInResource.Height();
+		firstResize = false;
+	} else {
+		deltaWidth = cx - lastRect.Width();
+		deltaHeight = cy - lastRect.Height();
+	}
+
 	CDialog::OnSize(nType, cx, cy);
+	GetClientRect(&lastRect);
 
-	CRect list_rect;
-	if( m_list.GetSafeHwnd()) {
-		m_list.GetWindowRect( &list_rect);
-		ScreenToClient( &list_rect);
-		int width = cx - 2 * list_rect.left;
+	HDWP dwp = NULL;
+	bool defer = (deltaHeight != 0);
+	if (defer)
+		dwp = ::BeginDeferWindowPos(13);
 
-		m_list.SetWindowPos( NULL, list_rect.left, list_rect.top, width > 20? width: 20, list_rect.Height(), SWP_NOZORDER);
+	MoveControl(IDC_LIST,					0, 0, deltaWidth, deltaHeight, defer, &dwp);
+	if (defer) {
+		MoveControl(IDC_REMOVE,					0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(IDC_INSTALL,				0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(IDC_ACTIVEDISP,				0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(IDC_ACTIVE_INACTIVE,		0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(IDC_ALLCOMPS,				0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(Toggle,						0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(IDC_RADIOSYS,				0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(IDC_RADIOUSER,				0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(IDC_RADIOBOTH,				0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(IDC_REGISTERSTATIC,			0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(IDC_SHOWCOMPONENTSSTATIC,	0, deltaHeight, 0, 0, defer, &dwp);
+		MoveControl(IDOK,						0, deltaHeight, 0, 0, defer, &dwp);
+	}
+
+	if (defer) {
+		ASSERT(dwp != NULL);
+		if (dwp != NULL) {
+			BOOL success = ::EndDeferWindowPos(dwp);
+			ASSERT(success == TRUE);
+		}
 	}
 }
 
@@ -599,4 +637,87 @@ void CCompDlg::OnBnClickedRadiouser()
 void CCompDlg::OnBnClickedRadioboth()
 {
 	RefreshShieldIcons();
+}
+
+// CodeGuru: Finding Display Size of Dialog From Resource
+//		by Shridhar Guravannavar
+CRect CCompDlg::GetWindowSizeFromResource(void) const
+{
+	CRect rectSize;
+
+	// if the dialog resource resides in a DLL ...
+	//
+
+	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(IDD), RT_DIALOG);
+
+	ASSERT(hInst != NULL);
+
+	HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(IDD), RT_DIALOG);
+	ASSERT(hRsrc != NULL);
+
+	HGLOBAL hTemplate = ::LoadResource(hInst, hRsrc);
+	ASSERT(hTemplate != NULL);
+
+	DLGTEMPLATE* pTemplate = (DLGTEMPLATE*)::LockResource(hTemplate);
+
+	//Load coresponding DLGINIT resource
+	//(if we have any ActiveX components)
+	//
+	void* lpDlgInit;
+	HGLOBAL hDlgInit = NULL;
+	CDialog dlg;
+
+	HRSRC hsDlgInit = ::FindResource(hInst, MAKEINTRESOURCE(IDD), RT_DLGINIT);
+	if (hsDlgInit != NULL) {
+		// load it
+		hDlgInit = ::LoadResource(hInst, hsDlgInit);
+		ASSERT(hDlgInit != NULL);
+
+		// lock it
+		lpDlgInit = ::LockResource(hDlgInit);
+		ASSERT(lpDlgInit != NULL);
+
+		dlg.CreateIndirect(pTemplate, NULL, lpDlgInit);
+	} else {
+		dlg.CreateIndirect(pTemplate, NULL);
+	}
+
+	CRect rect;
+	dlg.GetClientRect(rectSize);
+
+	dlg.DestroyWindow();
+
+	::UnlockResource(hTemplate);
+	::FreeResource(hTemplate);
+	if (hDlgInit) {
+		::UnlockResource(hDlgInit);
+		::FreeResource(hDlgInit);
+	}
+
+	return rectSize;
+}
+
+void CCompDlg::MoveControl(int nID, int offsetX, int offsetY, int deltaWidth, int deltaHeight, bool defer, HDWP* pdwp)
+{
+	CWnd* controlWnd = GetDlgItem(nID);
+	if (controlWnd != NULL && (offsetX != 0 || offsetY != 0 || deltaWidth != 0 || deltaHeight != 0)) {
+		CRect controlClientRect;
+		controlWnd->GetClientRect(&controlClientRect);
+		CRect controlWindowRect;
+		controlWnd->GetWindowRect(&controlWindowRect);
+		ScreenToClient(&controlWindowRect);
+
+		if (defer) {
+			ASSERT(pdwp != NULL);
+			if (*pdwp != NULL)
+				*pdwp = ::DeferWindowPos(*pdwp, controlWnd->m_hWnd, NULL,
+										 controlWindowRect.left + offsetX, controlWindowRect.top + offsetY,
+										 controlWindowRect.Width() + deltaWidth, controlWindowRect.Height() + deltaHeight,
+										 SWP_NOZORDER /*| SWP_NOCOPYBITS*/);
+		} else {
+			controlWnd->SetWindowPos(NULL, controlWindowRect.left + offsetX, controlWindowRect.top + offsetY,
+									 controlWindowRect.Width() + deltaWidth, controlWindowRect.Height() + deltaHeight,
+									 SWP_NOZORDER);
+		}
+	}
 }

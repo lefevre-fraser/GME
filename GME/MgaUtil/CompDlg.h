@@ -72,6 +72,13 @@ public:
 	afx_msg void OnBnClickedRadiosys();
 	afx_msg void OnBnClickedRadiouser();
 	afx_msg void OnBnClickedRadioboth();
+
+private:
+	bool	firstResize;
+	CRect	lastRect;
+	CRect	GetWindowSizeFromResource(void) const;
+	void	MoveControl(int nID, int offsetX, int offsetY, int deltaWidth, int deltaHeight,
+						bool defer = false, HDWP* pdwp = NULL);
 };
 
 //{{AFX_INSERT_LOCATION}}
