@@ -422,7 +422,9 @@ public:
 	std::vector<CustomPathData> GetCurrentPathCustomizations(void);
 	bool HasPathCustomization(void) const;
 	bool HasPathCustomizationForCurrentAspect(int edgeIndex = -1) const;
-	bool HasPathCustomizationForAnAspect(long asp, int edgeIndex = -1) const;
+	bool HasPathCustomizationForAspect(long asp, int edgeIndex = -1) const;
+	bool HasPathCustomizationForTypeAndCurrentAspect(PathCustomizationType custType = Invalid, int edgeIndex = -1) const;
+	bool HasPathCustomizationForTypeAndAspect(long asp, PathCustomizationType custType = Invalid, int edgeIndex = -1) const;
 	void ReadCustomPathData(void);
 	void WriteCustomPathData(bool handleTransaction = true);
 	void InsertCustomPathData(CustomPathData& pathData);
@@ -431,10 +433,11 @@ public:
 	bool DeleteAllPathCustomizationsForAnAspect(long asp);
 	bool DeleteAllPathCustomizationsForCurrentAspect(void);
 	void RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat);
+	void SnapCoordIfApplicable(CustomPathData* coordToSet, const CPoint& last, const CPoint& pt);
 	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp);
 	bool IsAutoRouted(void) const;
 	void SetAutoRouted(bool autoRouteState);
-	void ConvertAutoRoutedPathToCustom(long asp);
+	void ConvertAutoRoutedPathToCustom(long asp, bool singleLine = false);
 	void ReadAutoRouteState(void);
 	void WriteAutoRouteState(bool handleTransaction = true);
 

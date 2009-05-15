@@ -2569,10 +2569,12 @@ void CGMEView::DrawConnectionCustomizationTracker(CDC* pDC, Gdiplus::Graphics* g
 		}
 	} else if (customizeConnectionType == CustomPointCustomization) {
 		Gdiplus::Pen* dashPen = graphics.GetGdipPen2(gdip, GME_BLACK_COLOR, GME_LINE_DASH, m_zoomVal > ZOOM_NO, 1);
-		gdip->DrawLine(dashPen, customizeConnectionEdgeStartPoint.x, customizeConnectionEdgeStartPoint.y,
-					   customizeConnectionCurrCursor.x, customizeConnectionCurrCursor.y);
-		gdip->DrawLine(dashPen, customizeConnectionCurrCursor.x, customizeConnectionCurrCursor.y,
-					   customizeConnectionEdgeEndPoint.x, customizeConnectionEdgeEndPoint.y);
+		if (customizeConnectionEdgeStartPoint != emptyPoint)
+			gdip->DrawLine(dashPen, customizeConnectionEdgeStartPoint.x, customizeConnectionEdgeStartPoint.y,
+						   customizeConnectionCurrCursor.x, customizeConnectionCurrCursor.y);
+		if (customizeConnectionEdgeEndPoint != emptyPoint)
+			gdip->DrawLine(dashPen, customizeConnectionCurrCursor.x, customizeConnectionCurrCursor.y,
+						   customizeConnectionEdgeEndPoint.x, customizeConnectionEdgeEndPoint.y);
 	}
 }
 
@@ -4474,8 +4476,8 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 								UpdateCustomEdges(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
 						}
 					}
-					// TODO: align line segments to vertical or horizontal segment if applicable
-					selectedConnection->VerticalAndHorizontalSnappingOfConnectionLineSegments(currentAspect->index);
+					if (!(nFlags & MK_CONTROL))	// Control button disables snapping
+						selectedConnection->VerticalAndHorizontalSnappingOfConnectionLineSegments(currentAspect->index);
 					selectedConnection->WriteCustomPathData();
 				} else {
 					CGuiAnnotator* annotation = NULL;
@@ -4612,7 +4614,40 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						if (annotation)
 							newDecorator = annotation->GetDecorator(currentAspect->index);
 					}
-					if (newDecorator) {
+					if (selectedConnection != NULL) {	// Start edge moving operation if needed
+						bool isPartFixed = false;
+						customizeConnectionEdgeIndex = selectedConnection->GetEdgeIndex(
+																		point,
+																		customizeConnectionEdgeStartPoint,
+																		customizeConnectionEdgeEndPoint,
+																		customizeConnectionEdgeThirdPoint,
+																		customizeConnectionPartMoveMethod,
+																		customizeHorizontalOrVerticalEdge,
+																		isPartFixed,
+																		customizeConnectionEdgeXMinLimit,
+																		customizeConnectionEdgeXMaxLimit,
+																		customizeConnectionEdgeYMinLimit,
+																		customizeConnectionEdgeYMaxLimit);
+						if (customizeConnectionEdgeIndex >= 0 && !isPartFixed) {
+							TRACE("Starting edge customize operation of %ld.: (%ld, %ld)-(%ld, %ld)-(%ld, %ld) min/max: X(%ld, %ld) Y(%ld, %ld) h/v: %d\n",
+									customizeConnectionEdgeIndex,
+									customizeConnectionEdgeStartPoint.x, customizeConnectionEdgeStartPoint.y,
+									customizeConnectionEdgeEndPoint.x, customizeConnectionEdgeEndPoint.y,
+									customizeConnectionEdgeThirdPoint.x, customizeConnectionEdgeThirdPoint.y,
+									customizeConnectionEdgeXMinLimit, customizeConnectionEdgeXMaxLimit,
+									customizeConnectionEdgeYMinLimit, customizeConnectionEdgeYMaxLimit,
+									customizeConnectionPartMoveMethod);
+							if (selectedConnection->IsAutoRouted()) {
+								customizeConnectionType = SimpleEdgeDisplacement;
+							} else {
+								customizeConnectionType = CustomPointCustomization;
+							}
+							isInConnectionCustomizeOperation = true;
+							customizeConnectionOrigCursor = point;
+							customizeConnectionCurrCursor = point;
+							Invalidate();
+						}
+					} else if (newDecorator && !isInConnectionCustomizeOperation) {
 						CClientDC transformDC(this);
 						OnPrepareDC(&transformDC);
 						HRESULT retVal = newDecorator->MouseLeftButtonDown(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
@@ -4659,42 +4694,6 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 								objectInDecoratorOperation = object;
 							else
 								annotatorInDecoratorOperation = annotation;
-						}
-					} else {
-						// Start edge moving operation if needed
-						if (selectedConnection != NULL) {
-							bool isPartFixed = false;
-							customizeConnectionEdgeIndex = selectedConnection->GetEdgeIndex(
-																			point,
-																			customizeConnectionEdgeStartPoint,
-																			customizeConnectionEdgeEndPoint,
-																			customizeConnectionEdgeThirdPoint,
-																			customizeConnectionPartMoveMethod,
-																			customizeHorizontalOrVerticalEdge,
-																			isPartFixed,
-																			customizeConnectionEdgeXMinLimit,
-																			customizeConnectionEdgeXMaxLimit,
-																			customizeConnectionEdgeYMinLimit,
-																			customizeConnectionEdgeYMaxLimit);
-							if (customizeConnectionEdgeIndex >= 0 && !isPartFixed) {
-								TRACE("Starting edge customize operation of %ld.: (%ld, %ld)-(%ld, %ld)-(%ld, %ld) min/max: X(%ld, %ld) Y(%ld, %ld) h/v: %d\n",
-										customizeConnectionEdgeIndex,
-										customizeConnectionEdgeStartPoint.x, customizeConnectionEdgeStartPoint.y,
-										customizeConnectionEdgeEndPoint.x, customizeConnectionEdgeEndPoint.y,
-										customizeConnectionEdgeThirdPoint.x, customizeConnectionEdgeThirdPoint.y,
-										customizeConnectionEdgeXMinLimit, customizeConnectionEdgeXMaxLimit,
-										customizeConnectionEdgeYMinLimit, customizeConnectionEdgeYMaxLimit,
-										customizeConnectionPartMoveMethod);
-								if (selectedConnection->IsAutoRouted()) {
-									customizeConnectionType = SimpleEdgeDisplacement;
-								} else {
-									customizeConnectionType = CustomPointCustomization;
-								}
-								isInConnectionCustomizeOperation = true;
-								customizeConnectionOrigCursor = point;
-								customizeConnectionCurrCursor = point;
-								Invalidate();
-							}
 						}
 					}
 				}
@@ -7002,7 +7001,11 @@ void CGMEView::OnBackAlongConnection() // 'Jump back Along Conn' on Navigation t
 void CGMEView::OnDisableAutoRoutingOfConnection()
 {
 	selectedContextConnection->SetAutoRouted(false);
-	selectedContextConnection->WriteAutoRouteState();
+	if (selectedContextConnection->HasPathCustomizationForTypeAndCurrentAspect(CustomPointCustomization)) {
+		selectedContextConnection->WriteAutoRouteState();
+	} else {
+		selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index, true);
+	}
 }
 
 void CGMEView::OnEnableAutoRoutingOfConnection()
@@ -7013,11 +7016,9 @@ void CGMEView::OnEnableAutoRoutingOfConnection()
 
 void CGMEView::OnConvertAutoRoutedPathToCustom()
 {
+	selectedContextConnection->SetAutoRouted(false);
+	selectedContextConnection->DeleteAllPathCustomizationsForCurrentAspect();
 	selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index);
-	BeginTransaction();
-	selectedContextConnection->WriteAutoRouteState(false);
-	selectedContextConnection->WriteCustomPathData(false);
-	CommitTransaction();
 }
 
 void CGMEView::OnDeleteConnEdgeCustomData()

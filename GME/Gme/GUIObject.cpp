@@ -2874,8 +2874,8 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 	GetPointList(points);
 
 	int numEdges = points.GetSize() - 1;
-	CPoint last;
-	CPoint lastlast;
+	CPoint last = emptyPoint;
+	CPoint lastlast = emptyPoint;
 	POSITION pos = points.GetHeadPosition();
 	int i = 0;
 	CComPtr<IAutoRouterGraph> comAg;
@@ -2971,22 +2971,33 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 				}
 			} else {
 				if (abs(pt.x - point.x) <= 3 && abs(pt.y - point.y) <= 3) {
-					startPoint = last;
-					CPoint next = points.GetNext(pos);
-					endPoint = next;
+					if (i == numEdges - 1) {
+						startPoint = last;
+						endPoint = emptyPoint;
+					} else {
+						startPoint = last;
+						CPoint next = points.GetNext(pos);
+						endPoint = next;
+					}
+
+					connectionMoveMethod = ModifyExistingCustomPoint;
+					isPartFixed = false;
+					return i + 1;
+				} else if (abs(last.x - point.x) <= 3 && abs(last.y - point.y) <= 3) {
+					startPoint = lastlast;	// emptyPoint if i == 0
+					endPoint = pt;
 
 					connectionMoveMethod = ModifyExistingCustomPoint;
 					isPartFixed = false;
 					return i;
 				} else {
-					if (IsOnEdge(last, pt, point))
-					{
+					if (IsOnEdge(last, pt, point)) {
 						startPoint = last;
 						endPoint = pt;
 
 						connectionMoveMethod = InsertNewCustomPoint;
 						isPartFixed = false;
-						return i;
+						return i + 1;
 					}
 				}
 			}
@@ -3029,8 +3040,7 @@ long CGuiConnection::IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& 
 				if (pos) {
 					CPoint next = points.GetNext(pos);
 
-					if (IsOnEdge(last, next, point))
-					{
+					if (IsOnEdge(last, next, point)) {
 						return i;
 					}
 				}
@@ -3100,14 +3110,25 @@ bool CGuiConnection::HasPathCustomization(void) const
 
 bool CGuiConnection::HasPathCustomizationForCurrentAspect(int edgeIndex) const
 {
-	return HasPathCustomizationForAnAspect(view->currentAspect->index, edgeIndex);
+	return HasPathCustomizationForAspect(view->currentAspect->index, edgeIndex);
 }
 
-bool CGuiConnection::HasPathCustomizationForAnAspect(long asp, int edgeIndex) const
+bool CGuiConnection::HasPathCustomizationForAspect(long asp, int edgeIndex) const
+{
+	return HasPathCustomizationForTypeAndAspect(asp, Invalid, edgeIndex);
+}
+
+bool CGuiConnection::HasPathCustomizationForTypeAndCurrentAspect(PathCustomizationType custType, int edgeIndex) const
+{
+	return HasPathCustomizationForTypeAndAspect(view->currentAspect->index, custType, edgeIndex);
+}
+
+bool CGuiConnection::HasPathCustomizationForTypeAndAspect(long asp, PathCustomizationType custType, int edgeIndex) const
 {
 	for (std::vector<CustomPathData>::const_iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 		if ((*ii).aspect == asp &&
-			((*ii).edgeIndex == edgeIndex || edgeIndex == -1))
+			((*ii).edgeIndex == edgeIndex || edgeIndex == -1) &&
+			((*ii).type == custType || custType == Invalid))
 		{
 			return true;
 		}
@@ -3411,8 +3432,8 @@ bool CGuiConnection::DeleteAllPathCustomizationsForAnAspect(long asp)
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
 		if ((*ii).aspect == asp &&
-			((*ii).type == CustomPointCustomization && !IsAutoRouted() ||
-			(*ii).type == SimpleEdgeDisplacement && IsAutoRouted()))
+			(IsAutoRouted() && (*ii).type == SimpleEdgeDisplacement ||
+			!IsAutoRouted() && (*ii).type != SimpleEdgeDisplacement))
 		{
 			wereThereAnyDeletion = true;
 			ii = customPathData.erase(ii);
@@ -3447,6 +3468,39 @@ void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPat
 	}
 }
 
+void CGuiConnection::SnapCoordIfApplicable(CustomPathData* coordToSet, const CPoint& last, const CPoint& pt)
+{
+	double radEps = 2.0 / 360.0 * 2 * M_PI;
+	RoutingDirection dir = GetDir(last - pt);
+	if (dir == Dir_Skew) {
+		bool modify = false;
+		RoutingDirection dirToGo = GetSkewDir(last - pt);
+		if (dirToGo == Dir_Left || dirToGo == Dir_Right) {
+			if (abs(last.y - pt.y) <= 3) {
+				modify = true;
+			} else if (abs(last.x - pt.x) != 0) {
+				double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
+				TRACE2("Horizontal alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
+				if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
+					modify = true;
+			}
+			if (modify)
+				coordToSet->y = last.y;
+		} else if (dirToGo == Dir_Top || dirToGo == Dir_Bottom) {
+			if (abs(last.x - pt.x) <= 3) {
+				modify = true;
+			} else if (abs(last.y - pt.y) != 0) {
+				double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
+				TRACE2("Vertical alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
+				if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
+					modify = true;
+			}
+			if (modify)
+				coordToSet->x = last.x;
+		}
+	}
+}
+
 bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp)
 {
 	if (IsAutoRouted() && customPathData.size() < 1)
@@ -3455,7 +3509,6 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 	CPointList points;
 	GetPointList(points);
 
-	double radEps = 5.0e-1 / 360.0 * 2 * M_PI;
 	CustomPathData* lastData = NULL;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 		ASSERT((*ii).version == CONNECTIONCUSTOMIZATIONDATAVERSION);
@@ -3469,34 +3522,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 				} else {
 					last = points.GetHead();
 				}
-				RoutingDirection dir = GetDir(last - pt);
-				if (dir == Dir_Skew) {
-					bool modify = false;
-					RoutingDirection dirToGo = GetSkewDir(last - pt);
-					if (dirToGo == Dir_Left || dirToGo == Dir_Right) {
-						if (abs(last.y - pt.y) <= 3) {
-							modify = true;
-						} else if (abs(last.x - pt.x) != 0) {
-							double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
-							TRACE2("Horizontal alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
-							if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
-								modify = true;
-						}
-						if (modify)
-							(*ii).y = last.y;
-					} else if (dirToGo == Dir_Top || dirToGo == Dir_Bottom) {
-						if (abs(last.x - pt.x) <= 3) {
-							modify = true;
-						} else if (abs(last.y - pt.y) != 0) {
-							double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
-							TRACE2("Vertical alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
-							if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
-								modify = true;
-						}
-						if (modify)
-							(*ii).x = last.x;
-					}
-				}
+				SnapCoordIfApplicable(&(*ii), last, pt);
 				lastData = &(*ii);
 			}
 		}
@@ -3505,34 +3531,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 	if (lastData != NULL) {
 		CPoint pt(lastData->x, lastData->y);
 		CPoint last = points.GetTail();
-		RoutingDirection dir = GetDir(last - pt);
-		if (dir == Dir_Skew) {
-			bool modify = false;
-			RoutingDirection dirToGo = GetSkewDir(last - pt);
-			if (dirToGo == Dir_Left || dirToGo == Dir_Right) {
-				if (abs(last.y - pt.y) <= 3) {
-					modify = true;
-				} else if (abs(last.x - pt.x) != 0) {
-					double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
-					TRACE2("Horizontal2 alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
-					if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
-						modify = true;
-				}
-				if (modify)
-					lastData->y = last.y;
-			} else if (dirToGo == Dir_Top || dirToGo == Dir_Bottom) {
-				if (abs(last.x - pt.x) <= 3) {
-					modify = true;
-				} else if (abs(last.y - pt.y) != 0) {
-					double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
-					TRACE2("Vertical2 alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
-					if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
-						modify = true;
-				}
-				if (modify)
-					lastData->x = last.x;
-			}
-		}
+		SnapCoordIfApplicable(lastData, last, pt);
 	}
 
 	return false;
@@ -3548,25 +3547,28 @@ void CGuiConnection::SetAutoRouted(bool autoRouteState)
 	autoRouted = autoRouteState;
 }
 
-void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp)
+void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp, bool singleLine)
 {
-	SetAutoRouted(false);
-
 	CPointList points;
 	GetPointList(points);
-	int numEdges = points.GetSize() - 1;
+	int numPoints = points.GetSize();
 
 	POSITION pos = points.GetHeadPosition();
 	int i = 0;
 	while (pos) {
 		CPoint pt = points.GetNext(pos);
-		if (i > 0 && i < numEdges) {	// do not include the start and end point
+		if (!singleLine || i == 0 || i == numPoints - 1) {	// do not include the start and end point
 			CustomPathData pathData;
-			FillOutCustomPathData(pathData, CustomPointCustomization, asp, pt.x, pt.y, i - 1, true);
+			FillOutCustomPathData(pathData, CustomPointCustomization, asp, pt.x, pt.y, i, true);
 			UpdateCustomPathData(pathData);
 		}
 		i++;
 	}
+
+	view->BeginTransaction();
+	WriteAutoRouteState(false);
+	WriteCustomPathData(false);
+	view->CommitTransaction();
 }
 
 void CGuiConnection::ReadAutoRouteState(void)

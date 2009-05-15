@@ -348,8 +348,11 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points
 				}
 			}
 			gdip->DrawLine(pen, last.x, last.y, pt.x, pt.y);
-			if (drawBullets && currEdgeIndex < numEdges - 1)
-				gdip->FillEllipse(bulletBrush, pt.x - bulletOffset, pt.y - bulletOffset, bulletRadius, bulletRadius);
+			if (drawBullets) {
+				gdip->FillEllipse(bulletBrush, last.x - bulletOffset, last.y - bulletOffset, bulletRadius, bulletRadius);
+				if (currEdgeIndex == numEdges - 1)
+					gdip->FillEllipse(bulletBrush, pt.x - bulletOffset, pt.y - bulletOffset, bulletRadius, bulletRadius);
+			}
 			beforeLast = last;
 			last = pt;
 			currEdgeIndex++;
