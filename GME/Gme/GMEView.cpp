@@ -4685,7 +4685,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 										customizeConnectionEdgeXMinLimit, customizeConnectionEdgeXMaxLimit,
 										customizeConnectionEdgeYMinLimit, customizeConnectionEdgeYMaxLimit,
 										customizeConnectionPartMoveMethod);
-								if (selectedConnection->IsConnectionAutoRouted()) {
+								if (selectedConnection->IsAutoRouted()) {
 									customizeConnectionType = SimpleEdgeDisplacement;
 								} else {
 									customizeConnectionType = CustomPointCustomization;
@@ -5426,7 +5426,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 					bool isPartFixed = false;
 					contextConnectionEdgeIndex = selectedContextConnection->IsPathAt(local,
 						contextConnectionPartMoveMethod, customizeHorizontalOrVerticalEdge, isPartFixed);
-					contextConnectionCustomizationType = selectedContextConnection->IsConnectionAutoRouted() ? SimpleEdgeDisplacement : CustomPointCustomization;
+					contextConnectionCustomizationType = selectedContextConnection->IsAutoRouted() ? SimpleEdgeDisplacement : CustomPointCustomization;
 				}
 
 				HMENU decoratorAdditionalMenu = ::CreatePopupMenu();
@@ -7001,21 +7001,21 @@ void CGMEView::OnBackAlongConnection() // 'Jump back Along Conn' on Navigation t
 
 void CGMEView::OnDisableAutoRoutingOfConnection()
 {
-	selectedContextConnection->SetConnectionAutoRouted(false);
-	selectedContextConnection->WriteConnectionAutoRouteState();
+	selectedContextConnection->SetAutoRouted(false);
+	selectedContextConnection->WriteAutoRouteState();
 }
 
 void CGMEView::OnEnableAutoRoutingOfConnection()
 {
-	selectedContextConnection->SetConnectionAutoRouted(true);
-	selectedContextConnection->WriteConnectionAutoRouteState();
+	selectedContextConnection->SetAutoRouted(true);
+	selectedContextConnection->WriteAutoRouteState();
 }
 
 void CGMEView::OnConvertAutoRoutedPathToCustom()
 {
 	selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index);
 	BeginTransaction();
-	selectedContextConnection->WriteConnectionAutoRouteState(false);
+	selectedContextConnection->WriteAutoRouteState(false);
 	selectedContextConnection->WriteCustomPathData(false);
 	CommitTransaction();
 }
@@ -7172,13 +7172,13 @@ void CGMEView::OnUpdateBackAlongConnection(CCmdUI* pCmdUI)
 void CGMEView::OnUpdateDisableAutoRoutingOfConnection(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(selectedContextConnection != NULL &&
-				   selectedContextConnection->IsConnectionAutoRouted());
+				   selectedContextConnection->IsAutoRouted());
 }
 
 void CGMEView::OnUpdateEnableAutoRoutingOfConnection(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(selectedContextConnection != NULL &&
-				   !selectedContextConnection->IsConnectionAutoRouted());
+				   !selectedContextConnection->IsAutoRouted());
 }
 
 void CGMEView::OnUpdateConvertAutoRoutedPathToCustom(CCmdUI* pCmdUI)

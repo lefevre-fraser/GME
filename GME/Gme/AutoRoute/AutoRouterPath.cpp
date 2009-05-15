@@ -693,11 +693,10 @@ STDMETHODIMP CAutoRouterPath::ApplyCustomizationsBeforeAutoConnectPoints(SAFEARR
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
 		if ((*ii).type == SimpleEdgeDisplacement) {
-//			ASSERT(isAutoRoutingOn);
-			// it is done in a previous phase
+			// it is done in a next phase
 		} else if ((*ii).type == CustomPointCustomization) {
-//			ASSERT(!isAutoRoutingOn);
-			ret.AddTail(CPoint((*ii).x, (*ii).y));
+			if (!isAutoRoutingOn)
+				ret.AddTail(CPoint((*ii).x, (*ii).y));
 		} else {
 			// unknown displacement type
 		}
@@ -734,7 +733,9 @@ STDMETHODIMP CAutoRouterPath::ApplyCustomizationsAfterAutoConnectPointsAndStuff(
 		std::vector<CustomPathData>::iterator ii = customPathData.begin();
 		int numEdges = points.GetSize() - 1;
 		while (ii != customPathData.end()) {
-			if ((*ii).edgeCount != numEdges) {
+			if ((*ii).edgeCount != numEdges &&
+				(*ii).type == SimpleEdgeDisplacement)
+			{
 				pathDataToDelete.push_back(*ii);
 				ii = customPathData.erase(ii);
 			} else {
@@ -754,7 +755,6 @@ STDMETHODIMP CAutoRouterPath::ApplyCustomizationsAfterAutoConnectPointsAndStuff(
 			bool increment = true;
 			if (currEdgeIndex == (*ii).edgeIndex) {
 				if ((*ii).type == SimpleEdgeDisplacement) {
-//					ASSERT(isAutoRoutingOn);
 					RoutingDirection dir = GetDir(*endpoint - *startpoint);
 					VARIANT_BOOL isHorizontalVar = (IsHorizontal(dir) != 0 ? VARIANT_TRUE : VARIANT_FALSE);
 					if ((*ii).horizontalOrVerticalEdge == isHorizontalVar) {
@@ -773,7 +773,6 @@ STDMETHODIMP CAutoRouterPath::ApplyCustomizationsAfterAutoConnectPointsAndStuff(
 						increment = false;
 					}
 				} else if ((*ii).type == CustomPointCustomization) {
-//					ASSERT(!isAutoRoutingOn);
 					// it is done in a previous phase
 				} else {
 					// unknown displacement type
@@ -823,10 +822,13 @@ STDMETHODIMP CAutoRouterPath::RemoveInvalidPathCustomizations(long asp)
 	int numEdges = points.GetSize() - 1;
 	while (ii != customPathData.end()) {
 		if ((*ii).aspect == asp) {
-			if ((*ii).edgeCount != numEdges)
+			if ((*ii).edgeCount != numEdges &&
+				(*ii).type == SimpleEdgeDisplacement)
+			{
 				ii = customPathData.erase(ii);
-			else
+			} else {
 				++ii;
+			}
 		} else {
 			++ii;
 		}

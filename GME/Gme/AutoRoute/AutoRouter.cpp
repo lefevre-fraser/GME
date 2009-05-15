@@ -323,7 +323,7 @@ void CAutoRouter::AddConnection(CGuiConnection* conn)
 	CComPtr<IAutoRouterPort> adst = conn->dstPort->GetRouterPort();
 	CComPtr<IAutoRouterPath> path;
 
-	COMTHROW(router->AddPath(conn->IsConnectionAutoRouted() ? VARIANT_TRUE : VARIANT_FALSE, asrc, adst, &path));
+	COMTHROW(router->AddPath(conn->IsAutoRouted() ? VARIANT_TRUE : VARIANT_FALSE, asrc, adst, &path));
 
 	SetPathPreferences(path, conn);
 	conn->SetRouterPath(path);

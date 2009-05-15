@@ -523,7 +523,6 @@ void CGuiAnnotator::InitDecorator(int asp)
 		HRESULT hr = decoratorData[asp]->annotatorEventSink->QuerySinkInterface((void**) &annotatorEventSinkIface);
 		if (hr == S_OK) {
 			decoratorData[asp]->annotatorEventSink->SetView(view);
-			// TODO
 			decoratorData[asp]->annotatorEventSink->SetGuiAnnotator(this);
 		}
 		CComBSTR param(AN_PARAM_ROOTNODE);
@@ -2395,7 +2394,7 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role
 	if (!GetColorPreference(nameColor, NAME_COLOR_PREF)) {
 		nameColor = GME_BLACK_COLOR;
 	}
-	ReadConnectionAutoRouteState();
+	ReadAutoRouteState();
 	ReadCustomPathData();
 	RefreshAttributeCache();
 }
@@ -2609,7 +2608,7 @@ void CGuiConnection::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 	}
 
 	std::vector<long> customizedEdgeIndexes;
-	if (selected && IsConnectionAutoRouted())
+	if (selected && IsAutoRouted())
 		customizedEdgeIndexes = GetRelevantCustomizedEdgeIndexes();
 	graphics.DrawConnection(gdip, points, customizedEdgeIndexes, grayedOut ? GME_GRAYED_OUT_COLOR : color,
 							lineType, srcStyle, dstStyle, view->m_zoomVal > ZOOM_NO, !autoRouted && selected,
@@ -2887,7 +2886,7 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 		last = pt;
 		while (pos) {
 			pt = points.GetNext(pos);
-			if (IsConnectionAutoRouted()) {
+			if (IsAutoRouted()) {
 				bool moveAction = false;
 				if (last.x == pt.x) {	// vertical edge, horizontal move
 					if (abs(pt.x - point.x) <= 3 &&
@@ -3054,8 +3053,8 @@ std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(void)
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
 		if ((*ii).aspect == asp || asp == -1) {
-			if (IsConnectionAutoRouted() && (*ii).type == SimpleEdgeDisplacement ||
-				!IsConnectionAutoRouted() && (*ii).type != SimpleEdgeDisplacement)
+			if (IsAutoRouted() && (*ii).type == SimpleEdgeDisplacement ||
+				!IsAutoRouted() && (*ii).type != SimpleEdgeDisplacement)
 			{
 				customizedEdgeIndexes.push_back((*ii).edgeIndex);
 			}
@@ -3084,6 +3083,38 @@ void CGuiConnection::FillOutCustomPathData(CustomPathData& pathData, PathCustomi
 	}
 }
 
+std::vector<CustomPathData> CGuiConnection::GetCurrentPathCustomizations(void)
+{
+	std::vector<CustomPathData> cd;
+	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+		if ((*ii).aspect == parentAspect)
+			cd.push_back(*ii);
+	}
+	return cd;
+}
+
+bool CGuiConnection::HasPathCustomization(void) const
+{
+	return customPathData.size() > 0;
+}
+
+bool CGuiConnection::HasPathCustomizationForCurrentAspect(int edgeIndex) const
+{
+	return HasPathCustomizationForAnAspect(view->currentAspect->index, edgeIndex);
+}
+
+bool CGuiConnection::HasPathCustomizationForAnAspect(long asp, int edgeIndex) const
+{
+	for (std::vector<CustomPathData>::const_iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
+		if ((*ii).aspect == asp &&
+			((*ii).edgeIndex == edgeIndex || edgeIndex == -1))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void CGuiConnection::ReadCustomPathData(void)
 {
 	customPathData.clear();
@@ -3095,7 +3126,7 @@ void CGuiConnection::ReadCustomPathData(void)
 			int curPos = 0;
 			subStr = pref.Tokenize(";", curPos);
 			while (subStr != "") {
-				//TRACE1("\tResulting token: %s\n", subStr);
+				TRACE1("\tResulting token: %s\n", subStr);
 				CustomPathData pathData;
 				InitCustomPathData(pathData);
 				int curSubPos = 0;
@@ -3139,9 +3170,13 @@ void CGuiConnection::ReadCustomPathData(void)
 						pathData.l4 = strtol(positionStr, NULL, 10);
 					}
 
-					TRACE(", Dir %ld, x %ld, y %ld, num %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
-						pathData.horizontalOrVerticalEdge == VARIANT_TRUE ? 1 : 0, pathData.x, pathData.y,
-						pathData.numOfExtraLongData, pathData.l1, pathData.l2, pathData.l3, pathData.l4);
+					TRACE3(", Dir %ld, x %ld, y %ld",
+						pathData.horizontalOrVerticalEdge == VARIANT_TRUE ? 1 : 0, pathData.x, pathData.y);
+					if (pathData.numOfExtraLongData)
+						TRACE(", num %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
+							pathData.numOfExtraLongData, pathData.l1, pathData.l2, pathData.l3, pathData.l4);
+					else
+						TRACE("\n");
 
 					positionStr = subStr.Tokenize(",", curSubPos);
 					pathData.numOfExtraDoubleData = strtol(positionStr, NULL, 10);
@@ -3179,10 +3214,12 @@ void CGuiConnection::ReadCustomPathData(void)
 						pathData.d8 = atof(positionStr);
 					}
 
-					TRACE("\t num %ld, d1 %lf, d2 %lf, d3 %lf, d4 %lf, d5 %lf, d6 %lf, d7 %lf, d8 %lf\n",
-						pathData.numOfExtraDoubleData,
-						pathData.d1, pathData.d2, pathData.d3, pathData.d4,
-						pathData.d5, pathData.d6, pathData.d7, pathData.d8);
+					if (pathData.numOfExtraDoubleData > 0) {
+						TRACE("\t num %ld, d1 %lf, d2 %lf, d3 %lf, d4 %lf, d5 %lf, d6 %lf, d7 %lf, d8 %lf\n",
+							pathData.numOfExtraDoubleData,
+							pathData.d1, pathData.d2, pathData.d3, pathData.d4,
+							pathData.d5, pathData.d6, pathData.d7, pathData.d8);
+					}
 
 					customPathData.push_back(pathData);
 				} else {
@@ -3274,27 +3311,34 @@ void CGuiConnection::WriteCustomPathData(bool handleTransaction)
 
 void CGuiConnection::InsertCustomPathData(CustomPathData& pathData)
 {
-	// TODO: branch only if we add new custom connection point
+	// Note:
+	//	We assume that element are in ascending order by edgeIndexes
+	//	Types and aspects can be mixed up, but edgeIndexes shoudl be in order within an aspect and type
+
+	// Update indexes
+	std::vector<CustomPathData>::iterator jj;	// insertion point
 	bool found = false;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 		ASSERT((*ii).version == pathData.version);
 		if ((*ii).aspect == pathData.aspect &&
+			(*ii).type == pathData.type &&
 			(*ii).edgeIndex >= pathData.edgeIndex)
 		{
+			if (!found)
+				jj = ii;
 			found = true;
-			(*ii).edgeIndex = (*ii).edgeIndex + 1;
+			if (pathData.type == CustomPointCustomization)
+				(*ii).edgeIndex = (*ii).edgeIndex + 1;
+			else if (pathData.type == SimpleEdgeDisplacement)
+				break;
+			// TODO: other cases
 		}
 	}
-	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
-		ASSERT((*ii).version == pathData.version);
-		if ((*ii).aspect == pathData.aspect &&
-			(*ii).edgeIndex >= pathData.edgeIndex)
-		{
-			customPathData.insert(ii, pathData);
-			break;
-		}
-	}
-	if (!found)
+	if (found)
+		// Insert
+		customPathData.insert(jj, pathData);
+	else
+		// If we didn't find elements with bigger or equal edgeIndexes, then we should insert it as last one (ascending order)
 		customPathData.push_back(pathData);
 }
 
@@ -3303,48 +3347,16 @@ void CGuiConnection::UpdateCustomPathData(CustomPathData& pathData)
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 		ASSERT((*ii).version == pathData.version);
 		if ((*ii).aspect == pathData.aspect &&
+			(*ii).type == pathData.type &&
 			(*ii).edgeIndex == pathData.edgeIndex)
 		{
-			ASSERT((*ii).type == pathData.type);
 			CopyCustomPathData(pathData, (*ii));
 			return;
 		}
 	}
 
-	// not found
-	customPathData.push_back(pathData);
-}
-
-std::vector<CustomPathData> CGuiConnection::GetCurrentPathCustomizations(void)
-{
-	std::vector<CustomPathData> cd;
-	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
-		if ((*ii).aspect == parentAspect)
-			cd.push_back(*ii);
-	}
-	return cd;
-}
-
-bool CGuiConnection::HasPathCustomization(void) const
-{
-	return customPathData.size() > 0;
-}
-
-bool CGuiConnection::HasPathCustomizationForCurrentAspect(int edgeIndex) const
-{
-	return HasPathCustomizationForAnAspect(view->currentAspect->index, edgeIndex);
-}
-
-bool CGuiConnection::HasPathCustomizationForAnAspect(long asp, int edgeIndex) const
-{
-	for (std::vector<CustomPathData>::const_iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
-		if ((*ii).aspect == asp &&
-			((*ii).edgeIndex == edgeIndex || edgeIndex == -1))
-		{
-			return true;
-		}
-	}
-	return false;
+	// not found => insert it, preserving order
+	InsertCustomPathData(pathData);
 }
 
 void CGuiConnection::DeletePathCustomization(CustomPathData& pathData)
@@ -3353,19 +3365,19 @@ void CGuiConnection::DeletePathCustomization(CustomPathData& pathData)
 	bool found = false;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii, i++) {
 		ASSERT((*ii).version == pathData.version);
-		if ((*ii).aspect == pathData.aspect)
+		if ((*ii).aspect == pathData.aspect &&
+			(*ii).type == pathData.type)
 		{
 			if (pathData.type == SimpleEdgeDisplacement) {
 				if ((*ii).edgeIndex == pathData.edgeIndex) {
-					ASSERT((*ii).type == pathData.type);
 					ASSERT((*ii).horizontalOrVerticalEdge == pathData.horizontalOrVerticalEdge);
 					ii = customPathData.erase(ii);
 					found = true;
 					return;
 				}
 			} else if (pathData.type == CustomPointCustomization) {
-				if (i == pathData.edgeIndex) {	// in case of CustomPointCustomization delete by array index and not edgeIndex
-					ASSERT((*ii).type == pathData.type);
+				// in case of CustomPointCustomization delete by array index and not edgeIndex
+				if (i == pathData.edgeIndex) {
 					ii = customPathData.erase(ii);
 					found = true;
 					break;
@@ -3380,7 +3392,7 @@ void CGuiConnection::DeletePathCustomization(CustomPathData& pathData)
 		for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 			ASSERT((*ii).version == pathData.version);
 			if ((*ii).aspect == pathData.aspect &&
-				(*ii).type == CustomPointCustomization)
+				(*ii).type == pathData.type)
 			{
 				ASSERT((*ii).edgeIndex != pathData.edgeIndex);	// because we just deleted it
 				if ((*ii).edgeIndex > pathData.edgeIndex) {
@@ -3398,7 +3410,10 @@ bool CGuiConnection::DeleteAllPathCustomizationsForAnAspect(long asp)
 	bool wereThereAnyDeletion = false;
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
-		if ((*ii).aspect == asp) {
+		if ((*ii).aspect == asp &&
+			((*ii).type == CustomPointCustomization && !IsAutoRouted() ||
+			(*ii).type == SimpleEdgeDisplacement && IsAutoRouted()))
+		{
 			wereThereAnyDeletion = true;
 			ii = customPathData.erase(ii);
 		} else {
@@ -3420,7 +3435,8 @@ void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPat
 		std::vector<CustomPathData>::iterator jj = customPathData.begin();
 		while (jj != customPathData.end()) {
 			if ((*ii).aspect == (*jj).aspect &&
-				(*ii).edgeIndex == (*jj).edgeIndex)
+				(*ii).edgeIndex == (*jj).edgeIndex &&
+				(*ii).type == (*jj).type)
 			{
 				jj = customPathData.erase(jj);
 			} else {
@@ -3433,7 +3449,7 @@ void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPat
 
 bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp)
 {
-	if (IsConnectionAutoRouted() && customPathData.size() < 1)
+	if (IsAutoRouted() && customPathData.size() < 1)
 		return false;
 
 	CPointList points;
@@ -3519,92 +3535,22 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 		}
 	}
 
-/*	CPointList points;
-	GetPointList(points);
-
-	double radEps = 5.0e-1 / 360.0 * 2 * M_PI;
-	int numEdges = points.GetSize() - 1;
-	CPoint last;
-	CPoint lastlast;
-	POSITION pos = points.GetHeadPosition();
-	int i = 0;
-	if (pos) {
-		CPoint pt = points.GetNext(pos);
-		last = pt;
-		while (pos) {
-			pt = points.GetNext(pos);
-
-			if (i < numEdges) {	// we won't modify the last point
-				RoutingDirection dir = GetDir(last - pt);
-				if (dir == Dir_Skew) {
-					bool modify = false;
-					RoutingDirection dirToGo = GetSkewDir(last - pt);
-					if (dirToGo == Dir_Left || dirToGo == Dir_Right) {
-						if (abs(last.y - pt.y) <= 3) {
-							modify = true;
-						} else if (abs(last.x - pt.x) != 0) {
-							double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
-							if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
-								modify = true;
-						}
-						if (modify)
-							pt.y = last.y;
-					} else if (dirToGo == Dir_Top || dirToGo == Dir_Bottom) {
-						if (abs(last.x - pt.x) <= 3) {
-							modify = true;
-						} else if (abs(last.y - pt.y) != 0) {
-							double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
-							if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
-								modify = true;
-						}
-						if (modify)
-							pt.x = last.x;
-					}
-					if (modify) {	// update the customization information also, not just the actual points
-						bool found = false;
-						long j = 0;
-						for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii, j++) {
-							ASSERT((*ii).version == CONNECTIONCUSTOMIZATIONDATAVERSION);
-							if ((*ii).aspect == asp)
-							{
-								if ((*ii).type == CustomPointCustomization) {
-									if (j == i) {
-										ASSERT(i == (*ii).edgeIndex);
-										(*ii).x = pt.x;
-										(*ii).y = pt.y;
-										found = true;
-										break;
-									}
-								}
-							}
-						}
-						ASSERT(found);
-					}
-				}
-			}
-
-			i++;
-			lastlast = last;
-			last = pt;
-		}
-	}*/
-
 	return false;
 }
 
-bool CGuiConnection::IsConnectionAutoRouted(void) const
+bool CGuiConnection::IsAutoRouted(void) const
 {
 	return autoRouted;
 }
 
-void CGuiConnection::SetConnectionAutoRouted(bool autoRouteState)
+void CGuiConnection::SetAutoRouted(bool autoRouteState)
 {
 	autoRouted = autoRouteState;
 }
 
 void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp)
 {
-	SetConnectionAutoRouted(false);
+	SetAutoRouted(false);
 
 	CPointList points;
 	GetPointList(points);
@@ -3623,7 +3569,7 @@ void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp)
 	}
 }
 
-void CGuiConnection::ReadConnectionAutoRouteState(void)
+void CGuiConnection::ReadAutoRouteState(void)
 {
 	CString autoRoutingStateStr;
 	bool autoRoutingState = theApp.useAutoRouting;
@@ -3633,15 +3579,15 @@ void CGuiConnection::ReadConnectionAutoRouteState(void)
 		else
 			autoRoutingState = true;
 	}
-	SetConnectionAutoRouted(autoRoutingState);
+	SetAutoRouted(autoRoutingState);
 }
 
-void CGuiConnection::WriteConnectionAutoRouteState(bool handleTransaction)
+void CGuiConnection::WriteAutoRouteState(bool handleTransaction)
 {
 	VERIFY(mgaFco);
 	CComBSTR pathBstr;
 	CopyTo(CONNECTIONAUTOROUTING, pathBstr);
-	CString valStr = IsConnectionAutoRouted() ? "true" : "false";
+	CString valStr = IsAutoRouted() ? "true" : "false";
 	CComBSTR bstrVal;
 	CopyTo(valStr, bstrVal);
 	if (handleTransaction)

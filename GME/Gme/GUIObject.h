@@ -419,24 +419,24 @@ public:
 	std::vector<long> GetRelevantCustomizedEdgeIndexes(void);
 	void FillOutCustomPathData(CustomPathData& pathData, PathCustomizationType custType, long asp, int newPosX, int newPosY,
 							   int edgeIndex, bool horizontalOrVerticalEdge);
-	void ReadCustomPathData(void);
-	void WriteCustomPathData(bool handleTransaction = true);
-	void InsertCustomPathData(CustomPathData& pathData);
-	void UpdateCustomPathData(CustomPathData& pathData);
 	std::vector<CustomPathData> GetCurrentPathCustomizations(void);
 	bool HasPathCustomization(void) const;
 	bool HasPathCustomizationForCurrentAspect(int edgeIndex = -1) const;
 	bool HasPathCustomizationForAnAspect(long asp, int edgeIndex = -1) const;
+	void ReadCustomPathData(void);
+	void WriteCustomPathData(bool handleTransaction = true);
+	void InsertCustomPathData(CustomPathData& pathData);
+	void UpdateCustomPathData(CustomPathData& pathData);
 	void DeletePathCustomization(CustomPathData& pathData);
 	bool DeleteAllPathCustomizationsForAnAspect(long asp);
 	bool DeleteAllPathCustomizationsForCurrentAspect(void);
 	void RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat);
 	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp);
-	bool IsConnectionAutoRouted(void) const;
-	void SetConnectionAutoRouted(bool autoRouteState);
+	bool IsAutoRouted(void) const;
+	void SetAutoRouted(bool autoRouteState);
 	void ConvertAutoRoutedPathToCustom(long asp);
-	void ReadConnectionAutoRouteState(void);
-	void WriteConnectionAutoRouteState(bool handleTransaction = true);
+	void ReadAutoRouteState(void);
+	void WriteAutoRouteState(bool handleTransaction = true);
 
 	virtual bool IsVisible(int aspect = -1)				{ return visible && visible[aspect < 0 ? parentAspect : aspect]; }
 	virtual void RemoveFromRouter(CAutoRouter &router);
