@@ -691,6 +691,26 @@ void CSearchDlg::OnSize(UINT nType, int cx, int cy)
 
     CDialog::OnSize(nType, cx, cy);
 
+	const int bottomMargin = 10;
+	
+	if( cx >= 0 && cy >= 0 && m_lstResults.GetSafeHwnd()&& m_prevSearches.GetSafeHwnd())
+    {
+	   
+		int bottomPos = (cy-bottomMargin)>0 ? (cy-bottomMargin):0;
+		CRect rectResultsList; m_lstResults.GetWindowRect( &rectResultsList); ScreenToClient( &rectResultsList);
+		rectResultsList.bottom= bottomPos;
+		m_lstResults.SetWindowPos( NULL, rectResultsList.left, rectResultsList.top, rectResultsList.Width(), rectResultsList.Height(), SWP_NOMOVE|SWP_NOZORDER|SWP_SHOWWINDOW);
+
+		CRect rectPrevSearches;
+		m_prevSearches.GetWindowRect(rectPrevSearches); ScreenToClient(rectPrevSearches);
+		rectPrevSearches.bottom = bottomPos;
+		m_prevSearches.SetWindowPos(NULL, rectPrevSearches.left, rectPrevSearches.top, rectPrevSearches.Width(), 
+			rectPrevSearches.Height(), SWP_NOMOVE|SWP_NOZORDER|SWP_SHOWWINDOW);
+
+
+
+	}
+/*
 	return;
     int width_x=cx;
     int width_y=cy;
@@ -705,7 +725,6 @@ void CSearchDlg::OnSize(UINT nType, int cx, int cy)
         m_lstResults.GetWindowRect( &rectResults); ScreenToClient( &rectResults);
 		m_lstResults.SetWindowPos( NULL, 0, 0, cx, rectResults.Height(), SWP_NOMOVE|SWP_NOZORDER|SWP_SHOWWINDOW);
     }
-	return;
     // resize previous searches
     if( width_x >= 0 && width_y >= 0 && m_prevSearches.GetSafeHwnd())
     {
@@ -800,6 +819,7 @@ void CSearchDlg::OnSize(UINT nType, int cx, int cy)
     ShowScrollBar(SB_VERT,logicalHeight>pageHeight);
     ShowScrollBar(SB_HORZ,logicalWidth>pageWidth);
     //Invalidate();
+	*/
 }
 
 void CSearchDlg::OnSizing(UINT fwSide, LPRECT pRect)
