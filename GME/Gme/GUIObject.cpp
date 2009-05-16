@@ -3040,7 +3040,7 @@ long CGuiConnection::IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& 
 				if (pos) {
 					CPoint next = points.GetNext(pos);
 
-					if (IsOnEdge(last, next, point)) {
+					if (IsOnEdge(last, next, point, 5)) {
 						return i;
 					}
 				}
@@ -3501,7 +3501,7 @@ void CGuiConnection::SnapCoordIfApplicable(CustomPathData* coordToSet, const CPo
 	}
 }
 
-bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp)
+bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp, int edgeIndex)
 {
 	if (IsAutoRouted() && customPathData.size() < 1)
 		return false;
@@ -3509,11 +3509,11 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 	CPointList points;
 	GetPointList(points);
 
+	int i = 0;
 	CustomPathData* lastData = NULL;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 		ASSERT((*ii).version == CONNECTIONCUSTOMIZATIONDATAVERSION);
-		if ((*ii).aspect == asp)
-		{
+		if ((*ii).aspect == asp) {
 			if ((*ii).type == CustomPointCustomization) {
 				CPoint pt((*ii).x, (*ii).y);
 				CPoint last;
@@ -3522,8 +3522,10 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 				} else {
 					last = points.GetHead();
 				}
-				SnapCoordIfApplicable(&(*ii), last, pt);
+				if (edgeIndex == -1 || i == edgeIndex - 1 || i == edgeIndex)	// Apply snapping only to the 
+					SnapCoordIfApplicable(&(*ii), last, pt);
 				lastData = &(*ii);
+				i++;
 			}
 		}
 	}

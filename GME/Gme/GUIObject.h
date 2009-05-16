@@ -434,7 +434,7 @@ public:
 	bool DeleteAllPathCustomizationsForCurrentAspect(void);
 	void RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat);
 	void SnapCoordIfApplicable(CustomPathData* coordToSet, const CPoint& last, const CPoint& pt);
-	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp);
+	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp, int edgeIndex = -1);
 	bool IsAutoRouted(void) const;
 	void SetAutoRouted(bool autoRouteState);
 	void ConvertAutoRoutedPathToCustom(long asp, bool singleLine = false);

@@ -88,16 +88,16 @@ double DistanceSquareFromLine(const CPoint& start, const CPoint& end, const CPoi
 	return d_square;
 }
 
-bool IsOnEdge(const CPoint& start, const CPoint& end, const CPoint& pt)
+bool IsOnEdge(const CPoint& start, const CPoint& end, const CPoint& pt, int nearness)
 {
 	if (start.x == end.x)			// vertical edge, horizontal move
 	{
-		if (abs(end.x - pt.x) <= 3 && pt.y <= max(end.y, start.y) + 3 && pt.y >= min(end.y, start.y) - 3)
+		if (abs(end.x - pt.x) <= nearness && pt.y <= max(end.y, start.y) + nearness && pt.y >= min(end.y, start.y) - nearness)
 			return true;
 	}
 	else if (start.y == end.y)	// horizontal line, vertical move
 	{
-		if (abs(end.y - pt.y) <= 3 && pt.x <= max(end.x, start.x) + 3 && pt.x >= min(end.x, start.x) - 3)
+		if (abs(end.y - pt.y) <= nearness && pt.x <= max(end.x, start.x) + nearness && pt.x >= min(end.x, start.x) - nearness)
 			return true;
 	}
 	else
@@ -106,7 +106,7 @@ bool IsOnEdge(const CPoint& start, const CPoint& end, const CPoint& pt)
 		//
 		// Is the point close to the edge?
 		double d_square = DistanceSquareFromLine(start, end, pt);
-		if (d_square <= 3.0 * 3.0) {
+		if (d_square <= nearness * nearness) {
 			// Check not just if the point is on the line, but if it is on the line segment
 			// point = m * start + (1 - m) * end
 			//
