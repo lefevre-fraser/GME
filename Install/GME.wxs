@@ -1323,7 +1323,7 @@
             </Component>
         </DirectoryRef>
 
-        <DirectoryRef Id="INSTALLDIR_PARADIGMS_UML_DECORATOR">
+        <DirectoryRef Id="INSTALLDIR_PARADIGMS_UML">
             <Component Id="UMLParadigmFiles" Guid="{28AC87D2-47D6-423E-86E5-36A879A0794E}">
                 <File Id="UML.mta" Name="UML.mta"  Source="..\Paradigms\UML\UML.mta" />
                 <File Id="UML.xmp" Name="UML.xmp" KeyPath="yes" Source="..\Paradigms\UML\UML.xmp" />
