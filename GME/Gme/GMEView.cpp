@@ -4475,9 +4475,9 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 							InsertCustomEdge(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
 							trySnap = true;
 						} else if (customizeConnectionPartMoveMethod == ModifyExistingCustomPoint) {
-							long edgeIndex = selectedConnection->IsPointOnSectionAndDeletable(customizeConnectionEdgeIndex, point);
+							long edgeIndex = selectedConnection->IsPointOnSectionAndDeletable(customizeConnectionEdgeIndex - 1, point);
 							if (edgeIndex >= 0) {
-								DeleteCustomEdges(selectedConnection, CustomPointCustomization, edgeIndex);
+								DeleteCustomEdges(selectedConnection, CustomPointCustomization, edgeIndex + 1);
 							} else {
 								UpdateCustomEdges(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
 								trySnap = true;

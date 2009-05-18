@@ -3522,7 +3522,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 				} else {
 					last = points.GetHead();
 				}
-				if (edgeIndex == -1 || i == edgeIndex - 1 || i == edgeIndex)	// Apply snapping only to the 
+				if (edgeIndex == -1 || i == edgeIndex - 1 || i == edgeIndex)	// Apply snapping only to the point neighbour edges
 					SnapCoordIfApplicable(&(*ii), last, pt);
 				lastData = &(*ii);
 				i++;
@@ -3530,7 +3530,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 		}
 	}
 	// see the very last connection line segment
-	if (lastData != NULL) {
+	if (lastData != NULL && (edgeIndex == -1 || i == edgeIndex - 1 || i == edgeIndex)) {
 		CPoint pt(lastData->x, lastData->y);
 		CPoint last = points.GetTail();
 		SnapCoordIfApplicable(lastData, last, pt);
