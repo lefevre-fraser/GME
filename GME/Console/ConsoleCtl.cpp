@@ -534,7 +534,9 @@ void CConsoleCtrl::Message(LPCTSTR str, short type)
 			CComPtr<IHTMLWindow2> parentWindow;
 			COMTHROW(pHtmlDoc->get_parentWindow( &parentWindow ));
 			ASSERT(parentWindow != NULL);
-			COMTHROW(parentWindow->scrollTo( 0,  LONG_MAX));
+			HRESULT hhh = (parentWindow->scrollTo( 0,  LONG_MAX/16)); // Starting from IE8 we need this /16 hack.  
+																	  // If you know the proper way of scrolling to the bottom, fix this.
+			//COMTHROW(parentWindow->scrollTo( 0,  LONG_MAX));
 		}
 		catch (hresult_exception &)
 		{
