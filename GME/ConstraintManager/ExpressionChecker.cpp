@@ -88,6 +88,22 @@ STDMETHODIMP CExpressionChecker::GlobalEvent( globalevent_enum event )
 			m_Facade.m_bEnabledEvents = true;
 			break;
 		}
+
+		case APPEVENT_XML_IMPORT_BEGIN:
+		//case APPEVENT_XML_IMPORT_FCOS_BEGIN:
+		//case APPEVENT_XML_IMPORT_SPECIAL_BEGIN:
+		case APPEVENT_LIB_ATTACH_BEGIN: {
+			m_Facade.m_bEnabledEvents = false;
+			break;
+		}
+
+		case APPEVENT_XML_IMPORT_END:
+		//case APPEVENT_XML_IMPORT_FCOS_END:
+		//case APPEVENT_XML_IMPORT_SPECIAL_END:
+		case APPEVENT_LIB_ATTACH_END: {
+			m_Facade.m_bEnabledEvents = true;
+			break;
+		}
 	}
 
 	return S_OK;
