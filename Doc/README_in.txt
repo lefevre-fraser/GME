@@ -32,6 +32,16 @@ guaranteed.
 
 Release Notes of Release r9.5.8
 --------------------------------
+  - Small fixes in the windows installer (location of
+    the UML paradigm files, GME.exe COM registration)
+  - GUI manual routing bugfixes
+  - ExpressionChecker (MetaGME) gets disabled during XML
+    imports (for performance reasons)
+  - Fixing the autoscroll problem in the Console on machines
+    with IE8 and later
+
+Release Notes of Release r9.5.8
+--------------------------------
   - Subversion client library is updated to 1.6.1 (NOTE: 
     working directory format is compatible with 1.6.x clients
     only)
