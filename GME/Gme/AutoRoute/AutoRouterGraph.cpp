@@ -1481,6 +1481,9 @@ STDMETHODIMP CAutoRouterGraph::CreateBox(IAutoRouterBox** result)
 
 STDMETHODIMP CAutoRouterGraph::AddBox(IAutoRouterBox* box)
 {
+	if (box == NULL)
+		return E_POINTER;
+
 	long p1, p2, p3, p4;
 	HRESULT hr = box->GetRect(&p1, &p2, &p3, &p4);
 	ASSERT(SUCCEEDED(hr));
@@ -1501,6 +1504,9 @@ STDMETHODIMP CAutoRouterGraph::AddBox(IAutoRouterBox* box)
 
 STDMETHODIMP CAutoRouterGraph::DeleteBox(IAutoRouterBox* box)
 {
+	if (box == NULL)
+		return E_POINTER;
+
 	VARIANT_BOOL hasOwner = VARIANT_FALSE;
 	HRESULT hr = box->HasOwner(&hasOwner);
 	ASSERT(SUCCEEDED(hr));
@@ -1517,6 +1523,9 @@ STDMETHODIMP CAutoRouterGraph::DeleteBox(IAutoRouterBox* box)
 
 STDMETHODIMP CAutoRouterGraph::ShiftBoxBy(IAutoRouterBox* box, long sizeX, long sizeY)
 {
+	if (box == NULL)
+		return E_POINTER;
+
 	CSize offset(sizeX, sizeY);
 
 	DeleteBoxAndPortEdges(box);
@@ -1540,6 +1549,9 @@ STDMETHODIMP CAutoRouterGraph::ShiftBoxBy(IAutoRouterBox* box, long sizeX, long 
 
 STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	ConnectAllDisconnectedPaths();
 
 	int updated = 0;
@@ -1764,6 +1776,9 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 
 STDMETHODIMP CAutoRouterGraph::DeletePath( IAutoRouterPath* path)
 {
+	if (path == NULL)
+		return E_POINTER;
+
 	VARIANT_BOOL hasOwner = VARIANT_TRUE;
 	HRESULT hr = path->HasOwner(&hasOwner);
 	ASSERT(SUCCEEDED(hr));
@@ -1787,6 +1802,9 @@ STDMETHODIMP CAutoRouterGraph::DeleteAll()
 
 STDMETHODIMP CAutoRouterGraph::GetPathAt(long pointX, long pointY, long nearness, IAutoRouterPath** result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	std::vector<CComPtr<IAutoRouterPath> >::iterator iter;
 	iter = paths.begin();
 
@@ -1811,6 +1829,9 @@ STDMETHODIMP CAutoRouterGraph::GetPathAt(long pointX, long pointY, long nearness
 
 STDMETHODIMP CAutoRouterGraph::AddPath(VARIANT_BOOL isAutoRouted, IAutoRouterPort* startport, IAutoRouterPort* endport, IAutoRouterPath** result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	CComObjPtr<CAutoRouterPath> cpath;
 	CreateComObject(cpath);
 	CComQIPtr<IAutoRouterPath> path = cpath;
@@ -1825,6 +1846,9 @@ STDMETHODIMP CAutoRouterGraph::AddPath(VARIANT_BOOL isAutoRouted, IAutoRouterPor
 
 STDMETHODIMP CAutoRouterGraph::IsEdgeFixed(IAutoRouterPath* path, long startX, long startY, long endX, long endY, VARIANT_BOOL* result)
 {
+	if (result == NULL || path == NULL)
+		return E_POINTER;
+
 	bool isFixed = IsEdgeFixed(CComPtr<IAutoRouterPath>(path), CPoint(startX, startY), CPoint(endX, endY));
 	if (isFixed)
 		*result = VARIANT_TRUE;
@@ -1836,6 +1860,9 @@ STDMETHODIMP CAutoRouterGraph::IsEdgeFixed(IAutoRouterPath* path, long startX, l
 
 STDMETHODIMP CAutoRouterGraph::GetSelfPoints(long* p1x, long* p1y, long* p2x, long* p2y, long* p3x, long* p3y, long* p4x, long* p4y)
 {
+	if (p1x == NULL || p1y == NULL || p2x == NULL || p2y == NULL || p3x == NULL || p3y == NULL || p4x == NULL || p4y == NULL)
+		return E_POINTER;
+
 	*p1x = selfpoints[0].x;
 	*p1y = selfpoints[0].y;
 	*p2x = selfpoints[1].x;

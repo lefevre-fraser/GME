@@ -57,6 +57,9 @@ STDMETHODIMP CAutoRouterBox::GetOwner(IAutoRouterGraph** result)
 
 STDMETHODIMP CAutoRouterBox::HasOwner(VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	if (owner != NULL)
 		*result = VARIANT_TRUE;
 	else
@@ -74,6 +77,9 @@ STDMETHODIMP CAutoRouterBox::SetOwner(IAutoRouterGraph* graph)
 
 STDMETHODIMP CAutoRouterBox::CreatePort(IAutoRouterPort** result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	CComObjPtr<CAutoRouterPort> port;
 	CreateComObject(port);
 
@@ -82,6 +88,9 @@ STDMETHODIMP CAutoRouterBox::CreatePort(IAutoRouterPort** result)
 
 STDMETHODIMP CAutoRouterBox::HasNoPort(VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	if (ports.size() == 0)
 		*result = VARIANT_TRUE;
 	else
@@ -92,6 +101,9 @@ STDMETHODIMP CAutoRouterBox::HasNoPort(VARIANT_BOOL* result)
 
 STDMETHODIMP CAutoRouterBox::GetPortCount(long* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	*result = ports.size();
 
 	return S_OK;
@@ -99,6 +111,9 @@ STDMETHODIMP CAutoRouterBox::GetPortCount(long* result)
 
 STDMETHODIMP CAutoRouterBox::IsAtomic(VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	if (atomic)
 		*result = VARIANT_TRUE;
 	else
@@ -109,6 +124,9 @@ STDMETHODIMP CAutoRouterBox::IsAtomic(VARIANT_BOOL* result)
 
 STDMETHODIMP CAutoRouterBox::AddPort(IAutoRouterPort* port)
 {
+	if (port == NULL)
+		return E_POINTER;
+
 	CComPtr<IAutoRouterPort> p = port;
 
 	p->SetOwner(this);
@@ -125,6 +143,9 @@ STDMETHODIMP CAutoRouterBox::AddPort(IAutoRouterPort* port)
 STDMETHODIMP CAutoRouterBox::DeletePort(IAutoRouterPort* port)
 {
 	ASSERT( port != NULL );
+	if (port == NULL)
+		return E_POINTER;
+
 #ifdef _DEBUG
 	CComPtr<IAutoRouterBox> ownerBox;
 	HRESULT hr = port->GetOwner(&ownerBox);
@@ -157,7 +178,7 @@ STDMETHODIMP CAutoRouterBox::DeletePort(IAutoRouterPort* port)
 
 STDMETHODIMP CAutoRouterBox::GetPortList(SAFEARRAY** pArr)
 {
-	if (!pArr)
+	if (pArr == NULL)
 		return E_POINTER;
 
 	//create safearray
@@ -179,6 +200,9 @@ STDMETHODIMP CAutoRouterBox::GetPortList(SAFEARRAY** pArr)
 
 STDMETHODIMP CAutoRouterBox::GetRect(long* p1, long* p2, long* p3, long* p4)
 {
+	if (p1 == NULL || p2 == NULL || p3 == NULL || p4 == NULL)
+		return E_POINTER;
+
 	*p1 = rect.left;
 	*p2 = rect.top;
 	*p3 = rect.right;
@@ -189,6 +213,9 @@ STDMETHODIMP CAutoRouterBox::GetRect(long* p1, long* p2, long* p3, long* p4)
 
 STDMETHODIMP CAutoRouterBox::IsRectEmpty(VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	if (rect.IsRectEmpty())
 		*result = VARIANT_TRUE;
 	else
@@ -247,6 +274,9 @@ STDMETHODIMP CAutoRouterBox::ShiftBy(long offsetx, long offsety)
 
 STDMETHODIMP CAutoRouterBox::GetSelfPoints(long* p1x, long* p1y, long* p2x, long* p2y, long* p3x, long* p3y, long* p4x, long* p4y)
 {
+	if (p1x == NULL || p1y == NULL || p2x == NULL || p2y == NULL || p3x == NULL || p3y == NULL || p4x == NULL || p4y == NULL)
+		return E_POINTER;
+
 	*p1x = selfpoints[0].x;
 	*p1y = selfpoints[0].y;
 	*p2x = selfpoints[1].x;
@@ -261,6 +291,9 @@ STDMETHODIMP CAutoRouterBox::GetSelfPoints(long* p1x, long* p1y, long* p2x, long
 
 STDMETHODIMP CAutoRouterBox::IsBoxAt(long px, long py, long nearness, VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	const CPoint point(px, py);
 	if (IsPointIn(point, rect, nearness))
 		*result = VARIANT_TRUE;
@@ -272,6 +305,9 @@ STDMETHODIMP CAutoRouterBox::IsBoxAt(long px, long py, long nearness, VARIANT_BO
 
 STDMETHODIMP CAutoRouterBox::IsBoxClip(long p1, long p2, long p3, long p4, VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	const CRect r(p1, p2, p3, p4);
 	if (IsRectClip(rect, r))
 		*result = VARIANT_TRUE;
@@ -283,6 +319,9 @@ STDMETHODIMP CAutoRouterBox::IsBoxClip(long p1, long p2, long p3, long p4, VARIA
 
 STDMETHODIMP CAutoRouterBox::IsBoxIn(long p1, long p2, long p3, long p4, VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	const CRect r(p1, p2, p3, p4);
 	if (IsRectIn(rect, r))
 		*result = VARIANT_TRUE;

@@ -45,11 +45,17 @@ void CAutoRouterPort::CalculateSelfPoints()
 
 STDMETHODIMP CAutoRouterPort::GetOwner(IAutoRouterBox** result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	return owner->QueryInterface(IID_IAutoRouterBox,(void**)result);
 }
 
 STDMETHODIMP CAutoRouterPort::HasOwner(VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	if (owner != NULL)
 		*result = VARIANT_TRUE;
 	else
@@ -67,6 +73,9 @@ STDMETHODIMP CAutoRouterPort::SetOwner(IAutoRouterBox* box)
 
 STDMETHODIMP CAutoRouterPort::GetRect(long* p1, long* p2, long* p3, long* p4)
 {
+	if (p1 == NULL || p2 == NULL || p3 == NULL || p4 == NULL)
+		return E_POINTER;
+
 	*p1 = rect.left;
 	*p2 = rect.top;
 	*p3 = rect.right;
@@ -77,6 +86,9 @@ STDMETHODIMP CAutoRouterPort::GetRect(long* p1, long* p2, long* p3, long* p4)
 
 STDMETHODIMP CAutoRouterPort::IsRectEmpty(VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	if (rect.IsRectEmpty())
 		*result = VARIANT_TRUE;
 	else
@@ -87,6 +99,9 @@ STDMETHODIMP CAutoRouterPort::IsRectEmpty(VARIANT_BOOL* result)
 
 STDMETHODIMP CAutoRouterPort::GetCenter(long* px, long* py)
 {
+	if (px == NULL || py == NULL)
+		return E_POINTER;
+
 	const CPoint center = rect.CenterPoint();
 	*px = center.x;
 	*py = center.y;
@@ -119,6 +134,9 @@ STDMETHODIMP CAutoRouterPort::ShiftBy(long offsetx, long offsety)
 
 STDMETHODIMP CAutoRouterPort::GetSelfPoints(long* p1x, long* p1y, long* p2x, long* p2y, long* p3x, long* p3y, long* p4x, long* p4y)
 {
+	if (p1x == NULL || p1y == NULL || p2x == NULL || p2y == NULL || p3x == NULL || p3y == NULL || p4x == NULL || p4y == NULL)
+		return E_POINTER;
+
 	*p1x = selfpoints[0].x;
 	*p1y = selfpoints[0].y;
 	*p2x = selfpoints[1].x;
@@ -133,6 +151,9 @@ STDMETHODIMP CAutoRouterPort::GetSelfPoints(long* p1x, long* p1y, long* p2x, lon
 
 STDMETHODIMP CAutoRouterPort::GetAttributes(long* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	*result = attributes;
 	return S_OK;
 }
@@ -145,6 +166,9 @@ STDMETHODIMP CAutoRouterPort::SetAttributes(long attr)
 
 STDMETHODIMP CAutoRouterPort::IsConnectToCenter(VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	if ((attributes & ARPORT_ConnectToCenter) != 0)
 		*result = VARIANT_TRUE;
 	else
@@ -155,6 +179,9 @@ STDMETHODIMP CAutoRouterPort::IsConnectToCenter(VARIANT_BOOL* result)
 
 STDMETHODIMP CAutoRouterPort::HasLimitedDirs(VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	if (limitedDirections)
 		*result = VARIANT_TRUE;
 	else
@@ -171,6 +198,9 @@ STDMETHODIMP CAutoRouterPort::SetLimitedDirs(VARIANT_BOOL ltd)
 
 STDMETHODIMP CAutoRouterPort::IsPortAt(long px, long py, long nearness, VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	const CPoint point(px, py);
 	if (IsPointIn(point, rect, nearness))
 		*result = VARIANT_TRUE;
@@ -182,6 +212,9 @@ STDMETHODIMP CAutoRouterPort::IsPortAt(long px, long py, long nearness, VARIANT_
 
 STDMETHODIMP CAutoRouterPort::IsPortClip(long p1, long p2, long p3, long p4, VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	const CRect r(p1, p2, p3, p4);
 	if (IsRectClip(rect, r))
 		*result = VARIANT_TRUE;
@@ -193,6 +226,9 @@ STDMETHODIMP CAutoRouterPort::IsPortClip(long p1, long p2, long p3, long p4, VAR
 
 STDMETHODIMP CAutoRouterPort::IsPortIn(long p1, long p2, long p3, long p4, VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	const CRect r(p1, p2, p3, p4);
 	if (IsRectIn(rect, r))
 		*result = VARIANT_TRUE;
@@ -204,6 +240,9 @@ STDMETHODIMP CAutoRouterPort::IsPortIn(long p1, long p2, long p3, long p4, VARIA
 
 STDMETHODIMP CAutoRouterPort::OnWhichEdge(long px, long py, RoutingDirection* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	RoutingDirection dir = ::OnWhichEdge(rect, CPoint(px, py));
 	*result = dir;
 
@@ -212,6 +251,9 @@ STDMETHODIMP CAutoRouterPort::OnWhichEdge(long px, long py, RoutingDirection* re
 
 STDMETHODIMP CAutoRouterPort::CanHaveStartEndPointOn(RoutingDirection dir, long isstart, VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	int d = (int) dir;
 	ASSERT( 0 <= d && d <= 3 );
 
@@ -228,6 +270,9 @@ STDMETHODIMP CAutoRouterPort::CanHaveStartEndPointOn(RoutingDirection dir, long 
 
 STDMETHODIMP CAutoRouterPort::CanHaveStartEndPoint(long isstart, VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	if ((attributes & (isstart ? ARPORT_StartOnAll : ARPORT_EndOnAll)) != 0)
 		*result = VARIANT_TRUE;
 	else
@@ -238,6 +283,9 @@ STDMETHODIMP CAutoRouterPort::CanHaveStartEndPoint(long isstart, VARIANT_BOOL* r
 
 STDMETHODIMP CAutoRouterPort::CanHaveStartEndPointHorizontal(long ishorizontal, VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	if ((attributes & (ishorizontal ? ARPORT_StartEndHorizontal : ARPORT_StartEndVertical)) != 0)
 		*result = VARIANT_TRUE;
 	else
@@ -248,6 +296,9 @@ STDMETHODIMP CAutoRouterPort::CanHaveStartEndPointHorizontal(long ishorizontal, 
 
 STDMETHODIMP CAutoRouterPort::GetStartEndDirTo(long px, long py, long isstart, RoutingDirection notthis, RoutingDirection* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	ASSERT( !rect.IsRectEmpty() );
 
 	const CPoint point(px, py);
@@ -362,6 +413,9 @@ STDMETHODIMP CAutoRouterPort::GetStartEndDirTo(long px, long py, long isstart, R
 
 STDMETHODIMP CAutoRouterPort::CanCreateStartEndPointAt(long px, long py, long isstart, long nearness, VARIANT_BOOL* result)
 {
+	if (result == NULL)
+		return E_POINTER;
+
 	VARIANT_BOOL canHave = VARIANT_FALSE;
 	HRESULT hr = CanHaveStartEndPoint(isstart, &canHave);
 	ASSERT(SUCCEEDED(hr));
@@ -377,6 +431,9 @@ STDMETHODIMP CAutoRouterPort::CanCreateStartEndPointAt(long px, long py, long is
 
 STDMETHODIMP CAutoRouterPort::CreateStartEndPointAt(long px, long py, long isstart, long* resultX, long* resultY)
 {
+	if (resultX == NULL || resultY == NULL)
+		return E_POINTER;
+
 	ASSERT( !rect.IsRectEmpty() );
 
 	RoutingDirection dir = Dir_None;
@@ -463,6 +520,9 @@ STDMETHODIMP CAutoRouterPort::CreateStartEndPointAt(long px, long py, long issta
 
 STDMETHODIMP CAutoRouterPort::CreateStartEndPointOn(RoutingDirection dir, long* resultX, long* resultY)
 {
+	if (resultX == NULL || resultY == NULL)
+		return E_POINTER;
+
 	ASSERT( !rect.IsRectEmpty() );
 	ASSERT( IsRightAngle(dir) );
 
@@ -499,6 +559,9 @@ STDMETHODIMP CAutoRouterPort::CreateStartEndPointOn(RoutingDirection dir, long* 
 
 STDMETHODIMP CAutoRouterPort::CreateStartEndPointTo(long px, long py, long isstart, long* resultX, long* resultY)
 {
+	if (resultX == NULL || resultY == NULL)
+		return E_POINTER;
+
 	RoutingDirection dir;
 	HRESULT hr = GetStartEndDirTo(px, py, isstart, Dir_None, &dir);
 	ASSERT(SUCCEEDED(hr));
