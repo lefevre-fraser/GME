@@ -16,7 +16,7 @@ namespace GMEConsole
 		if ((SUCCEEDED(s1)) && (client != 0))
 		{
 			HRESULT s2 = client->get_OLEServer(&pDispatch);
-			if ((SUCCEEDED(s2)) && (pDispatch != 0) && gmeoleapp != 0)
+			if ((SUCCEEDED(s2)) && (pDispatch != 0) && gmeoleapp == 0)
 			{
 				COMTHROW(pDispatch->QueryInterface(&gmeoleapp));
 			}
