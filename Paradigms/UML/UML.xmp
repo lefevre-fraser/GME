@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="UML" guid="{1820156A-495C-4C95-963C-B9EFB3B740DE}" cdate="Mon May 04 12:07:33 2009" mdate="Mon May 04 12:07:33 2009" >
+<paradigm name="UML" guid="{93DBE6C6-5BFB-4C3D-9474-FBE0B09C7226}" cdate="Mon May 04 12:07:33 2009" mdate="Mon May 04 12:07:33 2009" >
 
 	<comment>Descent into the maelstrom!</comment>
 

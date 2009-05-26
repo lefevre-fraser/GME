@@ -550,16 +550,14 @@ bool CAutoRouterGraph::Connect(CComPtr<IAutoRouterPath> path, CPoint& startpoint
 
 	COMTHROW(path->DeleteAll());
 
-	if (isAutoRouted == VARIANT_TRUE || ret.GetCount() <= 0)
-		COMTHROW(path->AddTail(startpoint.x, startpoint.y));
+	COMTHROW(path->AddTail(startpoint.x, startpoint.y));
 	pos = ret.GetHeadPosition();
 	while( pos != NULL )
 	{
 		const CPoint p = ret.GetNext(pos);
 		COMTHROW(path->AddTail(p.x, p.y));
 	}
-	if (isAutoRouted == VARIANT_TRUE || ret.GetCount() <= 0)
-		COMTHROW(path->AddTail(endpoint.x, endpoint.y));
+	COMTHROW(path->AddTail(endpoint.x, endpoint.y));
 
 	if (isAutoRouted == VARIANT_TRUE) {
 		COMTHROW(path->SimplifyTrivially());

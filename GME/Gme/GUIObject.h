@@ -437,7 +437,7 @@ public:
 	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp, int edgeIndex = -1);
 	bool IsAutoRouted(void) const;
 	void SetAutoRouted(bool autoRouteState);
-	void ConvertAutoRoutedPathToCustom(long asp, bool singleLine = false);
+	void ConvertAutoRoutedPathToCustom(long asp);
 	void ReadAutoRouteState(void);
 	void WriteAutoRouteState(bool handleTransaction = true);
 

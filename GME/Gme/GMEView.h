@@ -541,7 +541,6 @@ protected:
 	afx_msg void OnJumpToNextObject();
 	afx_msg void OnDisableAutoRoutingOfConnection();
 	afx_msg void OnEnableAutoRoutingOfConnection();
-	afx_msg void OnConvertAutoRoutedPathToCustom();
 	afx_msg void OnTryToSnapHorzVertPath();
 	afx_msg void OnDeleteConnEdgeCustomData();
 	afx_msg void OnDeleteConnPointCustomData();
@@ -570,7 +569,6 @@ protected:
 	afx_msg void OnUpdateBackAlongConnection( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDisableAutoRoutingOfConnection( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateEnableAutoRoutingOfConnection( CCmdUI* pCmdUI );
-	afx_msg void OnUpdateConvertAutoRoutedPathToCustom( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateTryToSnapHorzVertPath( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDeleteConnEdgeCustomData( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDeleteConnPointCustomData( CCmdUI* pCmdUI );

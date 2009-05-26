@@ -2971,33 +2971,22 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 				}
 			} else {
 				if (abs(pt.x - point.x) <= 3 && abs(pt.y - point.y) <= 3) {
-					if (i == numEdges - 1) {
-						startPoint = last;
-						endPoint = emptyPoint;
-					} else {
-						startPoint = last;
-						CPoint next = points.GetNext(pos);
-						endPoint = next;
-					}
-
-					connectionMoveMethod = ModifyExistingCustomPoint;
-					isPartFixed = false;
-					return i + 1;
-				} else if (abs(last.x - point.x) <= 3 && abs(last.y - point.y) <= 3) {
-					startPoint = lastlast;	// emptyPoint if i == 0
-					endPoint = pt;
+					startPoint = last;
+					CPoint next = points.GetNext(pos);
+					endPoint = next;
 
 					connectionMoveMethod = ModifyExistingCustomPoint;
 					isPartFixed = false;
 					return i;
 				} else {
-					if (IsOnEdge(last, pt, point)) {
+					if (IsOnEdge(last, pt, point))
+					{
 						startPoint = last;
 						endPoint = pt;
 
 						connectionMoveMethod = InsertNewCustomPoint;
 						isPartFixed = false;
-						return i + 1;
+						return i;
 					}
 				}
 			}
@@ -3549,7 +3538,7 @@ void CGuiConnection::SetAutoRouted(bool autoRouteState)
 	autoRouted = autoRouteState;
 }
 
-void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp, bool singleLine)
+void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp)
 {
 	CPointList points;
 	GetPointList(points);
@@ -3559,9 +3548,9 @@ void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp, bool singleLine)
 	int i = 0;
 	while (pos) {
 		CPoint pt = points.GetNext(pos);
-		if (!singleLine || i == 0 || i == numPoints - 1) {	// do not include the start and end point
+		if (i > 0 && i < numPoints - 1) {	// do not include the start and end point
 			CustomPathData pathData;
-			FillOutCustomPathData(pathData, CustomPointCustomization, asp, pt.x, pt.y, i, true);
+			FillOutCustomPathData(pathData, CustomPointCustomization, asp, pt.x, pt.y, i - 1, true);
 			UpdateCustomPathData(pathData);
 		}
 		i++;

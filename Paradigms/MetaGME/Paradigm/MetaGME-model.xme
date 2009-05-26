@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{AF20F3E5-BF08-40E8-AC62-B9632DEDF13B}" cdate="Mon May 04 11:33:32 2009" mdate="Mon May 04 11:33:32 2009" version="" metaguid="{0A264B93-2EFA-454E-89D7-C18CC4D60CA5}" metaversion="" metaname="MetaGME">
+<project guid="{9D3F9884-FE60-409C-8FC1-45789193989B}" cdate="Mon May 04 11:33:32 2009" mdate="Mon May 04 11:33:32 2009" version="" metaguid="{783504B9-9C58-407B-A8F9-9F98B6A24F03}" metaversion="" metaname="MetaGME">
 	<name>MetaGME</name>
 	<comment>GME Meta Paradigm</comment>
 	<author>A. Ledeczi, P. Volgyesi, J. Sprinkle, T. Paka, Z. Molnar</author>
@@ -1720,6 +1720,12 @@
 				<value></value>
 				<regnode name="MetaRef" isopaque="yes">
 					<value>1032</value>
+				</regnode>
+			</regnode>
+			<regnode name="IsAutoRouted-95-BooleanAttribute" status="undefined">
+				<value></value>
+				<regnode name="MetaRef" isopaque="yes">
+					<value>1567</value>
 				</regnode>
 			</regnode>
 			<regnode name="LabelFormatStr-93-FieldAttribute" status="undefined">
@@ -4359,6 +4365,12 @@
 					<value>1040</value>
 				</regnode>
 			</regnode>
+			<regnode name="IsModelAutoRouted-c8-BooleanAttribute" status="undefined">
+				<value></value>
+				<regnode name="MetaRef" isopaque="yes">
+					<value>1568</value>
+				</regnode>
+			</regnode>
 			<regnode name="IsNameEnabled-a8-BooleanAttribute" isopaque="yes">
 				<value></value>
 				<regnode name="MetaRef" isopaque="yes">
@@ -4733,6 +4745,9 @@ dName = dstModels</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -6262,6 +6277,9 @@ else (
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -7474,6 +7492,9 @@ dName = dstObjects</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -8587,6 +8608,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
@@ -10943,6 +10967,9 @@ dName = ddst</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -11105,6 +11132,9 @@ dName = dintdst</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -11286,6 +11316,9 @@ dName = dimpldst</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -11536,6 +11569,9 @@ dName = bdst</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -12108,6 +12144,9 @@ dName = bintdst</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -12243,6 +12282,9 @@ dName = bimpldst</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -12461,6 +12503,9 @@ dName = bimpldst</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
@@ -14744,6 +14789,9 @@ dName = dstFCO</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -15856,6 +15904,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -16316,7 +16367,7 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				</attribute>
 			</set>
 		</model>
-		<model id="id-0065-00000005" kind="ParadigmSheet" guid="{8109c1ad-aab0-44ad-99e5-65b6a24681f8}" relid="0x6" childrelidcntr="0x94">
+		<model id="id-0065-00000005" kind="ParadigmSheet" guid="{8109c1ad-aab0-44ad-99e5-65b6a24681f8}" relid="0x6" childrelidcntr="0x96">
 			<name>Connections</name>
 			<atom id="id-0066-00000083" kind="FieldAttribute" role="FieldAttribute" guid="{5c140064-1d60-4221-87bf-7993d917cb29}" relid="0x1c">
 				<name>Color</name>
@@ -16787,6 +16838,9 @@ dName = dstConnection</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -16918,7 +16972,7 @@ dName = dstConnection</value>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>79,504</value>
+							<value>79,427</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
@@ -17715,6 +17769,9 @@ dName = dstConnector</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -19077,6 +19134,9 @@ dName = dstFCO</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -19175,6 +19235,39 @@ dName = dstFCO</value>
 				</attribute>
 				<attribute kind="Prompt">
 					<value>Main label:</value>
+				</attribute>
+			</atom>
+			<atom id="id-0066-00000164" kind="BooleanAttribute" role="BooleanAttribute" guid="{23ce3e40-b144-456f-8d40-a461a0ca16ee}" relid="0x95">
+				<name>IsAutoRouted</name>
+				<regnode name="PartRegs" status="undefined">
+					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>605,742</value>
+						</regnode>
+					</regnode>
+					<regnode name="Attributes" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>619,721</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="BooleanDefault">
+					<value>true</value>
+				</attribute>
+				<attribute kind="GlobalScope" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="Help">
+					<value>Is the connection treated by the auto router.</value>
+				</attribute>
+				<attribute kind="IsViewable" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="Prompt">
+					<value>Is auto routed</value>
 				</attribute>
 			</atom>
 			<reference id="id-0067-00000020" kind="FCOProxy" role="FCOProxy" guid="{b8ce929a-c496-4c4e-a3f7-d44262e2fb03}" relid="0x8" referred="id-0066-00000120">
@@ -19363,6 +19456,9 @@ dName = dstFCO</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
@@ -19962,6 +20058,11 @@ dName = dstFCO</value>
 				<name>HasAttribute</name>
 				<connpoint role="dst" target="id-0066-00000093"/>
 				<connpoint role="src" target="id-0066-000000ab"/>
+			</connection>
+			<connection id="id-0068-000001af" kind="HasAttribute" role="HasAttribute" guid="{0cea1d0e-e11b-4911-be29-4c73ee780236}" relid="0x96">
+				<name>HasAttribute</name>
+				<connpoint role="dst" target="id-0066-00000093"/>
+				<connpoint role="src" target="id-0066-00000164"/>
 			</connection>
 			<set id="id-0069-0000000c" kind="Aspect" role="Aspect" guid="{28004673-753e-4fcf-9a6f-177970f0bb17}" relid="0x0" members="id-0066-00000084 id-0066-00000089 id-0066-00000094 id-0066-000000a8">
 				<name>Visualization</name>
@@ -23807,6 +23908,9 @@ dName = dstEquivalence</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -24165,6 +24269,9 @@ dName = dstAspect</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -24309,6 +24416,9 @@ dName = dstSameAspect</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -24703,6 +24813,9 @@ dName = dstSameFolder</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -25212,6 +25325,9 @@ dName = dstFCO</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -25494,6 +25610,9 @@ dName = dstFolder</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -26477,6 +26596,9 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
@@ -27764,6 +27886,9 @@ dName = dstReferTo</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -28145,6 +28270,9 @@ rrName = src</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
@@ -29280,6 +29408,9 @@ dName=dstSets</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -29835,6 +29966,9 @@ dName=dstSets</value>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -30355,7 +30489,7 @@ dName=dstSets</value>
 				</attribute>
 			</set>
 		</model>
-		<model id="id-0065-0000000a" kind="ParadigmSheet" guid="{7b81a9dc-abcf-4c6c-be55-f8428ed93815}" relid="0x1" childrelidcntr="0xc7">
+		<model id="id-0065-0000000a" kind="ParadigmSheet" guid="{7b81a9dc-abcf-4c6c-be55-f8428ed93815}" relid="0x1" childrelidcntr="0xc9">
 			<name>Stereotypes</name>
 			<atom id="id-0066-0000010d" kind="BooleanAttribute" role="BooleanAttribute" guid="{ecaa4547-ecf9-4de4-b673-a0681331f754}" relid="0xa8">
 				<name>IsNameEnabled</name>
@@ -30641,6 +30775,9 @@ dName=dstSets</value>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -30805,13 +30942,13 @@ dName=dstSets</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>551,1547</value>
+							<value>545,1540</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>551,1652</value>
+							<value>545,1645</value>
 						</regnode>
 					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
@@ -32096,6 +32233,9 @@ dName = dstContainment</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -34116,13 +34256,13 @@ rrName = src</value>
 					<regnode name="All" status="undefined">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>745,1547</value>
+							<value>745,1505</value>
 						</regnode>
 					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
-							<value>745,1652</value>
+							<value>745,1617</value>
 						</regnode>
 					</regnode>
 				</regnode>
@@ -34855,6 +34995,39 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 					<value>Is Resizable?</value>
 				</attribute>
 			</atom>
+			<atom id="id-0066-00000165" kind="BooleanAttribute" role="BooleanAttribute" guid="{da71485f-64fd-4cd7-b2ea-82935f8d93bb}" relid="0xc8">
+				<name>IsModelAutoRouted</name>
+				<regnode name="PartRegs" status="undefined">
+					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>745,1575</value>
+						</regnode>
+					</regnode>
+					<regnode name="Attributes" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>745,1694</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="BooleanDefault">
+					<value>true</value>
+				</attribute>
+				<attribute kind="GlobalScope" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="Help">
+					<value>Are the models&apos; connections treated by the auto router by default.</value>
+				</attribute>
+				<attribute kind="IsViewable" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="Prompt">
+					<value>Is auto routed</value>
+				</attribute>
+			</atom>
 			<connection id="id-0068-00000145" kind="HasAttribute" role="HasAttribute" guid="{04ffd3cf-63cc-4efa-a24c-e8bf89d5ade9}" relid="0xa3">
 				<name>HasAttribute</name>
 				<connpoint role="src" target="id-0066-0000010e"/>
@@ -35304,6 +35477,11 @@ name &lt;&gt; &quot;&quot; implies name.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&qu
 				<name>HasAttribute</name>
 				<connpoint role="dst" target="id-0066-0000012b"/>
 				<connpoint role="src" target="id-0066-0000014b"/>
+			</connection>
+			<connection id="id-0068-000001b0" kind="HasAttribute" role="HasAttribute" guid="{e83cdc09-6bf6-4850-875a-4ae24a3ff86b}" relid="0xc9">
+				<name>HasAttribute</name>
+				<connpoint role="dst" target="id-0066-00000114"/>
+				<connpoint role="src" target="id-0066-00000165"/>
 			</connection>
 			<set id="id-0069-0000001a" kind="Aspect" role="Aspect" guid="{aa796a51-26dd-428a-be15-083a5f6ad879}" relid="0x0" members="id-0066-00000121 id-0066-0000012c">
 				<name>ClassDiagram</name>
@@ -36404,6 +36582,9 @@ dName = srcFolderContainment</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -37247,6 +37428,9 @@ else (
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{2C0D03D5-2CE0-4602-8F14-EDFE77AD40F2}" cdate="Mon May 04 12:07:33 2009" mdate="Mon May 04 12:07:33 2009" version="" metaguid="{C6F98429-EA0F-4717-966A-FBF9E4E24537}" metaversion="" metaname="MetaGME">
+<project guid="{C38BD239-5394-49DC-813D-01B1BDA80FA0}" cdate="Mon May 04 12:07:33 2009" mdate="Mon May 04 12:07:33 2009" version="" metaguid="{783504B9-9C58-407B-A8F9-9F98B6A24F03}" metaversion="" metaname="MetaGME">
 	<name>UML</name>
 	<comment>Descent into the maelstrom!</comment>
 	<author>Jonathan M. Sprinkle</author>
@@ -980,6 +980,9 @@
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -1409,6 +1412,9 @@
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
@@ -2042,6 +2048,9 @@ dName=dstClassBase</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -3105,6 +3114,9 @@ dName=dstParent
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -3909,6 +3921,9 @@ dName=dstClassBase</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -4870,6 +4885,9 @@ attribute , attribute</value>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -5066,6 +5084,9 @@ attribute , attribute</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
@@ -6081,6 +6102,9 @@ attribute , attribute</value>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -6246,6 +6270,9 @@ attribute , attribute</value>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -6361,6 +6388,9 @@ attribute , attribute</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
@@ -7208,6 +7238,9 @@ dName = dstInheritance</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -7571,6 +7604,9 @@ dName = dstClassBase</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -7996,6 +8032,9 @@ baseCount &lt;&gt; 0 implies baseCount = 1</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
@@ -8619,6 +8658,9 @@ dName = dstClassBase</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -8721,6 +8763,9 @@ dName=dstAssociationClasses</value>
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -9624,6 +9669,9 @@ dName = dstConnector</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -10267,6 +10315,9 @@ dName = dstAssocClassBase</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -10352,6 +10403,9 @@ dName = dstAssocClassBase</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">

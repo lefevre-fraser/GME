@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="MetaGME" guid="{C6F98429-EA0F-4717-966A-FBF9E4E24537}" cdate="Mon May 04 11:33:32 2009" mdate="Mon May 04 11:33:32 2009" >
+<paradigm name="MetaGME" guid="{783504B9-9C58-407B-A8F9-9F98B6A24F03}" cdate="Mon May 04 11:33:32 2009" mdate="Mon May 04 11:33:32 2009" >
 
 	<comment>GME Meta Paradigm</comment>
 
@@ -587,11 +587,19 @@ else (
 		<attrdef name="IsAbstract" metaref = "1039" valuetype = "boolean" defvalue = "false">
 			<dispname>Abstract?</dispname>
 		</attrdef>
+		<attrdef name="IsAutoRouted" metaref = "1567" valuetype = "boolean" defvalue = "true">
+			<dispname>Is auto routed</dispname>
+			<regnode name="help" value = "Is the connection treated by the auto router."></regnode>
+		</attrdef>
 		<attrdef name="IsGradientFillEnabled" metaref = "1506" valuetype = "boolean" defvalue = "false">
 			<dispname>Is gradient fill enabled?</dispname>
 		</attrdef>
 		<attrdef name="IsHotspotEnabled" metaref = "1040" valuetype = "boolean" defvalue = "true">
 			<dispname>Hotspots Enabled:</dispname>
+		</attrdef>
+		<attrdef name="IsModelAutoRouted" metaref = "1568" valuetype = "boolean" defvalue = "true">
+			<dispname>Is auto routed</dispname>
+			<regnode name="help" value = "Are the models&apos; connections treated by the auto router by default."></regnode>
 		</attrdef>
 		<attrdef name="IsNameEnabled" metaref = "1041" valuetype = "boolean" defvalue = "true">
 			<dispname>Is Name enabled?</dispname>
@@ -818,7 +826,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<regnode name = "icon" value ="booleanattribute.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
 		</atom>
-		<atom name = "Connection" metaref = "1069"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName Color NamePosition ConnLineType ConnLineStart ConnLineEnd LabelFormatStr SrcAttrLabel1 SrcAttrLabel2 DstAttrLabel1 DstAttrLabel2">
+		<atom name = "Connection" metaref = "1069"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName Color NamePosition ConnLineType ConnLineStart ConnLineEnd LabelFormatStr SrcAttrLabel1 SrcAttrLabel2 DstAttrLabel1 DstAttrLabel2 IsAutoRouted">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -1401,7 +1409,7 @@ baseCount <> 0 implies baseCount = 1]]>
 				<regnode name = "icon" value ="intinheritance.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
 		</atom>
-		<atom name = "Model" metaref = "1088"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius IsTypeInfoShown">
+		<atom name = "Model" metaref = "1088"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius IsTypeInfoShown IsModelAutoRouted">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
@@ -2707,7 +2715,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<pointeritem desc = "Folder"></pointeritem>
 			</pointerspec>
 		</reference>
-		<reference name = "ModelProxy" metaref = "1143" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius IsTypeInfoShown">
+		<reference name = "ModelProxy" metaref = "1143" attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius IsTypeInfoShown IsModelAutoRouted">
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>
 				<regnode name = "color" value ="0x0"></regnode>

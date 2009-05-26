@@ -69,20 +69,20 @@ namespace BON
 	typedef Util::ComPtr<IMgaObject>		ObjectPtr;
 	typedef Util::ComPtr<IMgaFolder>		FolderPtr;
 	typedef Util::ComPtr<IMgaFCO>			FCOPtr;
-	typedef Util::ComPtr<IMgaAtom>		AtomPtr;
-	typedef Util::ComPtr<IMgaModel>		ModelPtr;
+	typedef Util::ComPtr<IMgaAtom>			AtomPtr;
+	typedef Util::ComPtr<IMgaModel>			ModelPtr;
 	typedef Util::ComPtr<IMgaConnection>	ConnectionPtr;
 	typedef Util::ComPtr<IMgaSet>			SetPtr;
-	typedef Util::ComPtr<IMgaReference>	ReferencePtr;
-	typedef Util::ComPtr<IMgaAttribute>	AttributePtr;
-	typedef Util::ComPtr<IMgaRegNode>	RegNodePtr;
-	typedef Util::ComPtr<IMgaConnPoint>	ConnPointPtr;
-	typedef Util::ComPtr<IMgaFCOs> 		FCOsPtr;
-	typedef Util::ComPtr<IMgaObjects>       ObjsPtr;
+	typedef Util::ComPtr<IMgaReference>		ReferencePtr;
+	typedef Util::ComPtr<IMgaAttribute>		AttributePtr;
+	typedef Util::ComPtr<IMgaRegNode>		RegNodePtr;
+	typedef Util::ComPtr<IMgaConnPoint>		ConnPointPtr;
+	typedef Util::ComPtr<IMgaFCOs>			FCOsPtr;
+	typedef Util::ComPtr<IMgaObjects>		ObjsPtr;
 
-	typedef Util::ComPtr<IGMEOLEApp> 		GMEAppPtr;
-	typedef Util::ComPtr<IGMEOLEColl>               GMECollPtr;
-	typedef Util::ComPtr<IGMEOLEPanel>              GMEPanelPtr;
+	typedef Util::ComPtr<IGMEOLEApp>			GMEAppPtr;
+	typedef Util::ComPtr<IGMEOLEColl>			GMECollPtr;
+	typedef Util::ComPtr<IGMEOLEPanel>			GMEPanelPtr;
 
 	typedef std::set<ObjectImpl*>				ObjectSet;
 	typedef std::pair<bool,ObjectSet>			ObjectSetPair;
@@ -112,8 +112,8 @@ namespace BON
 		// Type Definitions
 		private :
 			typedef std::map<ProjectPtr, ProjectImpl*>						ProjectMap;
-			typedef std::map<std::string, ObjectImpl*> 					ObjectMapByID;
-			typedef std::map<MON::Object, ObjectSetPair> 				ObjectMapByKind;
+			typedef std::map<std::string, ObjectImpl*> 						ObjectMapByID;
+			typedef std::map<MON::Object, ObjectSetPair> 					ObjectMapByKind;
 			typedef std::map<ObjectPtr, ObjectImpl*>						ObjectMap;
 			typedef std::set<Factory*>										FactorySet;
 
@@ -129,9 +129,9 @@ namespace BON
 			bool					m_bAutoCommit;
 			bool 					m_bIsDestructionActive;
 			ObjectMap				m_mapObjects;
-			ObjectMapByID		m_mapObjectsByID;
-			ObjectMapByKind		m_mapObjectsByKind;
-			FolderImpl*			m_pRootFolder;
+			ObjectMapByID			m_mapObjectsByID;
+			ObjectMapByKind			m_mapObjectsByKind;
+			FolderImpl*				m_pRootFolder;
 		// Namespace related member variables
 		private :
 			std::string			m_nmsp;
@@ -157,12 +157,12 @@ namespace BON
 			bool 					isDestructionActive() const;
 
 			ProjectPtr				getProjectI() const;
-			const MON::Project&	getProjectMeta() const;
+			const MON::Project&		getProjectMeta() const;
 
 			std::string				getName() const;
-			std::string 				getAuthor() const;
-			std::string 				getComment() const;
-			std::string 				getCreationTime() const;
+			std::string 			getAuthor() const;
+			std::string 			getComment() const;
+			std::string 			getCreationTime() const;
 			std::string				getChangeTime() const;
 			std::string				getGUID() const;
 			std::string				getVersion() const;
@@ -181,7 +181,7 @@ namespace BON
 			GMEAppPtr				getGMEI();
 			void					consoleClear();
 			void					consoleMsg(const std::string& msg, msgtype_enum type);
-			std::string 				getConsoleContents();
+			std::string 			getConsoleContents();
 			void 					putConsoleContents(const std::string& htmlMsg);
 
 			std::string				getGMEVersion();
@@ -228,8 +228,8 @@ namespace BON
 
 		// Find and Search
 		private :
-			ObjectImpl*			findByCOMI( IMgaObject* spObject ) const;
-			ObjectImpl*			findByIDI( const std::string& strID );
+			ObjectImpl*				findByCOMI( IMgaObject* spObject ) const;
+			ObjectImpl*				findByIDI( const std::string& strID );
 			ObjectSet				findByKindI( const MON::FCO& meta );
 			ObjectSet				findByKindI( const MON::Folder& meta );
 			void					findByKindI( FolderPtr spFolder, const MON::Folder& meta );
@@ -262,7 +262,7 @@ namespace BON
 	{
 		// Type definitions
 		private :
-			typedef std::pair<MON::Folder,FolderImpl*>				OneFolderLink;
+			typedef std::pair<MON::Folder,FolderImpl*>			OneFolderLink;
 			typedef std::map<RegNodePtr,RegistryNodeImpl*>		RegistryMap;
 
 		// Member variables
@@ -272,7 +272,7 @@ namespace BON
 			MON::Object 		m_meta;
 			OneFolderLink		m_parentFolder;
 			bool				m_bAllParentFolders;
-			RegistryMap		m_mapNodes;
+			RegistryMap			m_mapNodes;
 			bool 				m_bIsDestructionActive;
 
 		// Construction and Destruction
@@ -292,18 +292,18 @@ namespace BON
 		public :
 			Project					getProject() const;
 			ObjectPtr				getObjectI() const;
-			const MON::Object&	getObjectMeta() const;
+			const MON::Object&		getObjectMeta() const;
 
 			bool 					isDestructionActive() const;
 			std::string				getID() const;
-			virtual ObjectType 	getStereotype() const = 0;
+			virtual ObjectType		getStereotype() const = 0;
 			ObjectStatus			getStatus() const;
 			bool					isReadOnly() const;
 			bool					isInLibrary() const;
 
 			std::string				getName() const;
 			void					setName( const std::string& strName );
-			std::string 				getPath( const std::string& strDelimiter = "/", bool bReverseOrder = false, bool bNeedRootFolder = false ) const;
+			std::string 			getPath( const std::string& strDelimiter = "/", bool bReverseOrder = false, bool bNeedRootFolder = false ) const;
 
 			virtual std::string		getInfoString( Util::InfoOptions usOptions = Util::IO_None ) const = 0;
 			std::string				getInfoString( const std::set<Util::InfoOption>& setOptions ) const;
@@ -324,11 +324,11 @@ namespace BON
 
 		// Relations
 		private :
-			FolderImpl*		 	getParentFolderI( const MON::Folder& meta = MON::Folder() );
+			FolderImpl*		 		getParentFolderI( const MON::Folder& meta = MON::Folder() );
 
 		// Helper Methods
 		private :
-			std::string 				getInfoStringHelper( Util::InfoOptions usOptions, const std::string& strStereo ) const;
+			std::string 			getInfoStringHelper( Util::InfoOptions usOptions, const std::string& strStereo ) const;
 
 		// Event Handlers
 		private :
@@ -389,12 +389,12 @@ namespace BON
 		public :
 			Project								getProject() const;
 			Object								getObject() const;
-			RegNodePtr						getRegNodeI() const;
+			RegNodePtr							getRegNodeI() const;
 			bool								isRootNode() const;
 
 			std::string							getName() const;
 			std::string							getPath() const;
-			RegistryNodeStatus				getStatus() const;
+			RegistryNodeStatus					getStatus() const;
 			std::string							getValue() const;
 			void								setValue( const std::string& strValue );
 			long								getIntegerValue() const;
@@ -411,7 +411,7 @@ namespace BON
 		// Relations // ---> Interface Methods
 		public :
 			RegistryNode						getParent() const;
-			std::set<RegistryNode>			getChildren( bool bVirtualsAlso = false ) const;
+			std::set<RegistryNode>				getChildren( bool bVirtualsAlso = false ) const;
 			RegistryNode						getChild( const std::string& strName ) const;
 			void								removeTree();
 
@@ -442,7 +442,7 @@ namespace BON
 
 		// Member variables
 		private :
-			ManyObjectLink	m_childObjects;
+			ManyObjectLink		m_childObjects;
 			bool 				m_bAllChildObjects;
 
 		// Costruction and Destruction
@@ -459,9 +459,9 @@ namespace BON
 
 		// Get and Set operations // ---> Interface Methods
 		public :
-			ObjectType		getStereotype() const;
+			ObjectType			getStereotype() const;
 			FolderPtr			getFolderI() const;
-			MON::Folder		getFolderMeta() const;
+			MON::Folder			getFolderMeta() const;
 
 			std::string			getInfoString( Util::InfoOptions usOptions = Util::IO_None ) const;
 
@@ -470,9 +470,9 @@ namespace BON
 			std::set<Object>	getChildObjects( const MON::Object& meta = MON::Object() );
 			std::set<Object>	getChildObjects( const std::string& strObject );
 			std::set<Folder>	getChildFolders();
-			std::set<FCO>	getRootFCOs();
-			std::set<Atom>	getChildAtoms();
-			std::set<Model>	getChildModels();
+			std::set<FCO>		getRootFCOs();
+			std::set<Atom>		getChildAtoms();
+			std::set<Model>		getChildModels();
 
 			Object				findByPath( const std::string& strPath, const std::string& strDelimiter = "/", bool bReverseOrder = false );
 
@@ -533,7 +533,7 @@ namespace BON
 		// Member variables
 		private :
 			ProjectImpl* 			m_pProject;
-			ManyConnectionLink	m_connections;
+			ManyConnectionLink		m_connections;
 			bool					m_bAllConnections;
 
 		// Construction and Destruction
@@ -626,7 +626,7 @@ namespace BON
 		// Member Vairables
 		private :
 			FCOImpl* 					m_pFCO;
-			ReferenceImpl*			m_pContainer;
+			ReferenceImpl*				m_pContainer;
 
 		// Construction and Destruction
 		private :
@@ -638,16 +638,16 @@ namespace BON
 		// Set and Get operations // ---> Interface Methods
 		public :
 			bool 							isReferencePort() const;
-			FCO							getFCO() const;
-			ReferencePortContainer 		getContainer() const;
+			FCO								getFCO() const;
+			ReferencePortContainer 			getContainer() const;
 
 			std::string						getInfoString( Util::InfoOptions usOptions = Util::IO_None ) const;
 
 		// Relations // ---> Interface Methods
 		public :
 			ReferencePort					getParentPort() const;
-			std::set<ReferencePort>		getChildPorts() const;
-			std::set<ReferencePort>		getDescendantPorts() const;
+			std::set<ReferencePort>			getChildPorts() const;
+			std::set<ReferencePort>			getDescendantPorts() const;
 
 		// Relations
 		private :
@@ -678,7 +678,7 @@ namespace BON
 	{
 		// Type definitions
 		private :
-			typedef std::pair<MON::Model,ModelImpl*>					OneModelLink;
+			typedef std::pair<MON::Model,ModelImpl*>				OneModelLink;
 			typedef std::map<MON::Set,SetSetPair>					ManySetLink;
 			typedef std::map<MON::Reference,ReferenceSetPair>		ManyReferenceLink;
 			typedef std::map<MON::Attribute,AttributeImpl*>			ManyAttributeLink;
@@ -690,19 +690,19 @@ namespace BON
 			bool					m_bAllParentModels;
 			FCOImpl*				m_pType;
 			bool					m_bAllTypeFCOs;
-			FCOSet				m_setInstances;
+			FCOSet					m_setInstances;
 			bool					m_bAllInstanceFCOs;
-			FCOSet				m_setSubTypes;
+			FCOSet					m_setSubTypes;
 			bool					m_bAllSubTypeFCOs;
-			ManySetLink			m_sets;
+			ManySetLink				m_sets;
 			bool					m_bAllSets;
-			ManyReferenceLink	m_references;
+			ManyReferenceLink		m_references;
 			bool					m_bAllReferences;
 			ManyAttributeLink		m_attributes;
 			bool					m_bAllAttributes;
 			ReferencePortSet		m_refPorts;
 			bool					m_bAllRefPorts;
-			TypeInhObjectImpl*	m_pTIObject;
+			TypeInhObjectImpl*		m_pTIObject;
 
 		// Costruction and Destruction
 		protected :
@@ -711,19 +711,19 @@ namespace BON
 			static void         attachIPost( FCOImpl* pFCO );
 			void				doInitialize( ProjectImpl* pProject );
 		public :
-			virtual 		~FCOImpl();
-			bool 		setDeleted();
+			virtual 			~FCOImpl();
+			bool 				setDeleted();
 			static FCO attach( IMgaFCO* spFCO );
 
 		// Get and Set operations // ---> Interface Methods
 		public :
 			Project		 			getProject() const;
 			FCOPtr					getFCOI() const;
-			MON::FCO 			getFCOMeta() const;
+			MON::FCO 				getFCOMeta() const;
 
 			virtual bool			isReferencePort() const;
 
-			MON::Containment	getRole();
+			MON::Containment		getRole();
 			bool					isPort( const MON::Aspect& meta = MON::Aspect() );
 			bool					isPort( const std::string& strAspect );
 			bool 					isVisible( const MON::Aspect& meta, bool bAsContained = false );
@@ -738,16 +738,16 @@ namespace BON
 			std::set<ReferencePort>	getReferencePorts( const MON::Aspect& meta = MON::Aspect() );
 
 			std::set<Attribute>		getAttributes();
-			Attribute					getAttribute( const MON::Attribute& meta );
-			Attribute 					getAttribute( const std::string& strName );
+			Attribute				getAttribute( const MON::Attribute& meta );
+			Attribute 				getAttribute( const std::string& strName );
 
-			Object						getParent();
-			Model						getParentModel( const MON::Model& meta = MON::Model() );
-			Model						getParentModel( const std::string& strModel );
-			Model						getParentModelAs( const std::string& strRole );
+			Object					getParent();
+			Model					getParentModel( const MON::Model& meta = MON::Model() );
+			Model					getParentModel( const std::string& strModel );
+			Model					getParentModelAs( const std::string& strRole );
 
-			std::set<Set>				getMemberOf( const MON::Set& meta = MON::Set(), const MON::Aspect& aspect = MON::Aspect() );
-			std::set<Set>				getMemberOf( const std::string& strSet, const MON::Aspect& aspect = MON::Aspect() );
+			std::set<Set>			getMemberOf( const MON::Set& meta = MON::Set(), const MON::Aspect& aspect = MON::Aspect() );
+			std::set<Set>			getMemberOf( const std::string& strSet, const MON::Aspect& aspect = MON::Aspect() );
 
 			std::set<Reference>		getReferredBy( const MON::Reference& meta = MON::Reference() );
 			std::set<Reference>		getReferredBy( const std::string& strReference );
@@ -763,14 +763,14 @@ namespace BON
 		private :
 			AttributeImpl*			getAttributeI( const MON::Attribute& meta );
 
-			ModelImpl* 			getParentModelI( const MON::Model& meta = MON::Model() );
+			ModelImpl* 				getParentModelI( const MON::Model& meta = MON::Model() );
 
 			bool					isInstance() const;
 			FCOImpl*				getType();
-			FCOSet				getDerivedFCOs( bool bInstance );
+			FCOSet					getDerivedFCOs( bool bInstance );
 
-			ReferencePortSet	getRefPortRefsI();
-			REFWRAPPERS  m_storedRefWrappers;
+			ReferencePortSet		getRefPortRefsI();
+			REFWRAPPERS				m_storedRefWrappers;
 
 			SetSet					getSetsI( const MON::Set& meta = MON::Set() );
 			ReferenceSet			getReferencesI( const MON::Reference& meta = MON::Reference() );
@@ -813,7 +813,7 @@ namespace BON
 		// Extensions
 		public :
 			virtual void 			accept( Visitor* pVisitor );
-			FCORegistryNode		getRegistry() const;
+			FCORegistryNode			getRegistry() const;
 
 		// Prohibited operations
 		private :
@@ -851,7 +851,7 @@ namespace BON
 		private :
 			FCOImpl*			m_pFCO;
 			AttributePtr		m_spAttribute;
-			MON::Attribute	m_meta;
+			MON::Attribute		m_meta;
 
 		// Construction and Destruction
 		protected :
@@ -864,11 +864,11 @@ namespace BON
 		// Get and Set operations // ---> Interface Methods
 		public :
 			Project						getProject() const;
-			FCO						getFCO() const;
+			FCO							getFCO() const;
 			AttributePtr				getAttributeI() const;
-			const MON::Attribute&	getAttributeMeta() const;
+			const MON::Attribute&		getAttributeMeta() const;
 
-			AttributeStatus			getStatus() const;
+			AttributeStatus				getStatus() const;
 
 			Util::Variant				getValue() const;
 			void						setValue( const Util::Variant& value, bool bTypeTolerant = true );
@@ -878,7 +878,7 @@ namespace BON
 			void						setBooleanValue( bool bValue, bool bTypeTolerant = true );
 			double						getRealValue( bool bTypeTolerant = true ) const;
 			void						setRealValue( double dValue, bool bTypeTolerant = true );
-			std::string 					getStringValue( bool bTypeTolerant = true ) const;
+			std::string 				getStringValue( bool bTypeTolerant = true ) const;
 			void						setStringValue( const std::string& strValue, bool bTypeTolerant = true );
 			bool						isUndefined() const;
 			void						clear();
@@ -927,11 +927,11 @@ namespace BON
 			AtomPtr			getAtomI() const;
 			MON::Atom		getAtomMeta() const;
 
-			std::string			getInfoString( Util::InfoOptions usOptions = Util::IO_None ) const;
+			std::string		getInfoString( Util::InfoOptions usOptions = Util::IO_None ) const;
 
 		// Extensions
 		public :
-			virtual void 				accept( Visitor* pVisitor );
+			virtual void 			accept( Visitor* pVisitor );
 			FCOExRegistryNode		getRegistry() const;
 
 		// Prohibited Operations
@@ -958,7 +958,7 @@ namespace BON
 
 		// Member variables
 		private :
-			ManyFCOLink		m_childFCOs;
+			ManyFCOLink			m_childFCOs;
 			bool				m_bAllChildFCOs;
 
 		// Costruction and Destruction
@@ -979,11 +979,11 @@ namespace BON
 
 		// Get and Set operations // ---> Interface Methods
 		public :
-			ObjectType		getStereotype() const;
-			ModelPtr			getModelI() const;
-			MON::Model		getModelMeta() const;
+			ObjectType				getStereotype() const;
+			ModelPtr				getModelI() const;
+			MON::Model				getModelMeta() const;
 
-			std::string			getInfoString( Util::InfoOptions usOptions = Util::IO_None ) const;
+			std::string				getInfoString( Util::InfoOptions usOptions = Util::IO_None ) const;
 
 		// Relations // ---> Interface Methods
 		public :
@@ -992,7 +992,7 @@ namespace BON
 			std::set<FCO> 			getChildFCOsAs( const std::string& strRole, const MON::Aspect& aspect = MON::Aspect() );
 			std::set<Atom>			getChildAtoms( const MON::Aspect& aspect = MON::Aspect() );
 			std::set<Model>			getChildModels( const MON::Aspect& aspect = MON::Aspect() );
-			std::set<Set>				getChildSets( const MON::Aspect& aspect = MON::Aspect() );
+			std::set<Set>			getChildSets( const MON::Aspect& aspect = MON::Aspect() );
 			std::set<Reference>		getChildReferences( const MON::Aspect& aspect = MON::Aspect() );
 			std::set<Connection>	getChildConnections( const MON::Aspect& aspect = MON::Aspect() );
 
@@ -1002,12 +1002,12 @@ namespace BON
 
 		// Extensions
 		public :
-			virtual void 				accept( Visitor* pVisitor );
+			virtual void 			accept( Visitor* pVisitor );
 			ModelRegistryNode		getRegistry() const;
 
 		// Relations
 		private :
-			FCOSet	 	getChildFCOsI( const MON::FCO& meta = MON::FCO() );
+			FCOSet			getChildFCOsI( const MON::FCO& meta = MON::FCO() );
 
 			FCOImpl* 		createChildFCOI( const std::string& strRole, MON::ObjectType eType );
 			FCOImpl* 		createChildFCOI( const MON::FCO& meta, const std::string& strRole, MON::ObjectType eType );
@@ -1060,7 +1060,7 @@ namespace BON
 
 		// Member variables
 		private :
-			ManyFCOLink		m_memberFCOs;
+			ManyFCOLink			m_memberFCOs;
 			bool				m_bAllMemberFCOs;
 
 		// Costruction and Destruction
@@ -1081,7 +1081,7 @@ namespace BON
 
 		// Get and Set operations // ---> Interface Methods
 		public :
-			ObjectType	getStereotype() const;
+			ObjectType		getStereotype() const;
 			SetPtr			getSetI() const;
 			MON::Set		getSetMeta() const;
 
@@ -1097,12 +1097,12 @@ namespace BON
 
 		// Extensions
 		public :
-			virtual void 				accept( Visitor* pVisitor );
+			virtual void 			accept( Visitor* pVisitor );
 			FCOExRegistryNode		getRegistry() const;
 
 		// Relations
 		private :
-			FCOSet	 	getMemberFCOsI( const MON::FCO& meta = MON::FCO() );
+			FCOSet			getMemberFCOsI( const MON::FCO& meta = MON::FCO() );
 
 			void			addMemberI( const BON::FCO& fco );
 			void			removeMemberI( const BON::FCO& fco );
@@ -1119,7 +1119,7 @@ namespace BON
 			void			onReleasedAsSet( FCOImpl* pFCO, bool bOnlyMemoryFree );
 		// GME Event Handlers
 		public :
-			virtual void 			eventPerformedI( const Event& event );
+			virtual void 	eventPerformedI( const Event& event );
 		private :
 			void			onRelationChanged();
 
@@ -1143,15 +1143,15 @@ namespace BON
 	{
 		// Type definitions
 		private :
-			typedef std::pair<MON::FCO,FCOImpl*>		OneFCOLink;
+			typedef std::pair<MON::FCO,FCOImpl*>			OneFCOLink;
 			typedef std::map<FCOImpl*,ReferencePortImpl*>	ManyPortLink;
 
 		// Member variables
 		private :
 			OneFCOLink						m_referredFCO;
-			bool								m_bAllReferredFCOs;
-			ManyPortLink						m_childPorts;
-			bool								m_bAllChildPorts;
+			bool							m_bAllReferredFCOs;
+			ManyPortLink					m_childPorts;
+			bool							m_bAllChildPorts;
 			ReferencePortContainerImpl*		m_pContainer;
 
 		// Costruction and Destruction
@@ -1172,9 +1172,9 @@ namespace BON
 
 		// Get and Set operations // --->Interface Methods
 		public :
-			ObjectType			getStereotype() const;
+			ObjectType				getStereotype() const;
 			ReferencePtr			getReferenceI() const;
-			MON::Reference		getReferenceMeta() const;
+			MON::Reference			getReferenceMeta() const;
 
 			std::string				getInfoString( Util::InfoOptions usOptions = Util::IO_None ) const;
 
@@ -1182,13 +1182,13 @@ namespace BON
 		public :
 			FCO						getReferred( const MON::FCO& meta = MON::FCO() );
 			FCO						getReferred( const std::string& strFCO );
-			void						setReferred( const FCO& fco );
+			void					setReferred( const FCO& fco );
 
 			ReferencePortContainer	getRefPortContainer();
 
 		// Extensions
 		public :
-			virtual void 				accept( Visitor* pVisitor );
+			virtual void 			accept( Visitor* pVisitor );
 			FCOExRegistryNode		getRegistry() const;
 
 		// Relations
@@ -1197,7 +1197,7 @@ namespace BON
 			void					setReferredFCOI( const BON::FCO& fco );
 
 			ReferencePortSet		getRefPorts();
-			ReferencePortImpl*	getRefPort( FCOImpl* pFCO );
+			ReferencePortImpl*		getRefPort( FCOImpl* pFCO );
 
 		// Helper methods
 		private :
@@ -1264,9 +1264,9 @@ namespace BON
 			static Connection createAs( const Model& parent, const ConnectionEnd& srcEnd, const ConnectionEnd& dstEnd, const std::string& strRole );
 		// Get and Set operations // ---> Interface Methods
 		public :
-			ObjectType			getStereotype() const;
+			ObjectType				getStereotype() const;
 			ConnectionPtr			getConnectionI() const;
-			MON::Connection		getConnectionMeta() const;
+			MON::Connection			getConnectionMeta() const;
 
 			std::string				getInfoString( Util::InfoOptions usOptions = Util::IO_None ) const;
 
@@ -1284,7 +1284,7 @@ namespace BON
 		// Extensions
 		public :
 			virtual void 					accept( Visitor* pVisitor );
-			ConnectionRegistryNode		getRegistry() const;
+			ConnectionRegistryNode			getRegistry() const;
 
 		// Relations
 		private :
@@ -1333,7 +1333,7 @@ namespace BON
 			Project 					getProject() const;
 			Reference					getReference() const;
 
-			std::set<ReferencePort>	getReferencePorts();
+			std::set<ReferencePort>		getReferencePorts();
 			ReferencePort				getReferencePort( const FCO& fco );
 
 		// Friends
@@ -1362,7 +1362,7 @@ namespace BON
 		// Get and Set Operations // ---> Interface Methods
 		public :
 			Project 					getProject() const;
-			FCO						getFCO() const;
+			FCO							getFCO() const;
 
 			bool						isInstance() const;
 
@@ -1409,7 +1409,7 @@ namespace BON
 		public :
 			std::set<Type>				getSubTypes();
 			std::set<Instance>			getInstance();
-			std::set<TypeInhObject>	getDerivedObjects();
+			std::set<TypeInhObject>		getDerivedObjects();
 
 		// Friends
 			friend class FCOImpl;
@@ -1430,10 +1430,10 @@ namespace BON
 
 		// Members
 		public :
-			COLORREF					getColor() const;
+			COLORREF						getColor() const;
 			void							setColor( COLORREF color );
 
-			COLORREF					getNameColor() const;
+			COLORREF						getNameColor() const;
 			void							setNameColor( COLORREF color );
 
 			bool							getNameEnabled() const;
@@ -1442,10 +1442,10 @@ namespace BON
 			std::string						getHelpURL() const;
 			void 							setHelpURL( const std::string& strURL );
 
-			std::set<AutoRouterPref>	getInAutoRouterPref() const;
+			std::set<AutoRouterPref>		getInAutoRouterPref() const;
 			void							setInAutoRouterPref( const std::set<AutoRouterPref>& setPrefs );
 
-			std::set<AutoRouterPref>	getOutAutoRouterPref() const;
+			std::set<AutoRouterPref>		getOutAutoRouterPref() const;
 			void							setOutAutoRouterPref( const std::set<AutoRouterPref>& setPrefs );
 
 		// Friends
@@ -1477,7 +1477,7 @@ namespace BON
 			NamePosition					getNamePosition() const;
 			void							setNamePosition( NamePosition pos );
 
-			unsigned short				getNameWrap() const;
+			unsigned short					getNameWrap() const;
 			void							setNameWrap( unsigned short usWrap );
 
 			bool							getHotspotEnabled() const;
@@ -1488,6 +1488,9 @@ namespace BON
 
 			bool							getTypeInfoEnabled() const;
 			void							setTypeInfoEnabled( bool bEnabled );
+
+			bool							getModelAutoRoutingEnabled() const;
+			void							setModelAutoRoutingEnabled( bool bEnabled );
 
 			std::string						getDecorator() const;
 			void							setDecorator( const std::string& strName );
@@ -1524,13 +1527,13 @@ namespace BON
 
 		// Members
 		public :
-			COLORREF		getBorderColor() const;
+			COLORREF			getBorderColor() const;
 			void				setBorderColor( COLORREF color );
 
-			COLORREF		getBackgroundColor() const;
+			COLORREF			getBackgroundColor() const;
 			void				setBackgroundColor( COLORREF color );
 
-			COLORREF		getPortNameColor() const;
+			COLORREF			getPortNameColor() const;
 			void 				setPortNameColor( COLORREF color );
 
 		// Friends
@@ -1555,10 +1558,10 @@ namespace BON
 			LineType			getLineType() const;
 			void				setLineType( LineType eType );
 
-			LineEndType		getSrcLineEndType() const;
+			LineEndType			getSrcLineEndType() const;
 			void				setSrcLineEndType( LineEndType eType );
 
-			LineEndType		getDstLineEndType() const;
+			LineEndType			getDstLineEndType() const;
 			void				setDstLineEndType( LineEndType eType );
 
 			std::string			getLabel() const;
@@ -1575,6 +1578,9 @@ namespace BON
 
 			std::string			getDstLabel2() const;
 			void 				setDstLabel2( const std::string& strFormat );
+
+			bool				getConnectionAutoRoutingEnabled() const;
+			void				setConnectionAutoRoutingEnabled( bool bEnabled );
 
 		// Friends
 			friend class RegistryNodeImpl;

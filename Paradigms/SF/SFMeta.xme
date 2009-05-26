@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{95ABF9D3-2221-401A-8D14-2E5B36C23E0B}" cdate="Mon May 04 12:01:50 2009" mdate="Mon May 04 12:01:50 2009" version="" metaguid="{C6F98429-EA0F-4717-966A-FBF9E4E24537}" metaversion="" metaname="MetaGME">
+<project guid="{3F167E6E-3A6C-4034-A518-DFF47365D6D3}" cdate="Mon May 04 12:01:50 2009" mdate="Mon May 04 12:01:50 2009" version="" metaguid="{783504B9-9C58-407B-A8F9-9F98B6A24F03}" metaversion="" metaname="MetaGME">
 	<name>SF</name>
 	<comment></comment>
 	<author></author>
@@ -562,6 +562,9 @@
 				</attribute>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
+				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
 				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
@@ -1731,6 +1734,9 @@ Pointer</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -1953,6 +1959,9 @@ Pointer</value>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -2112,6 +2121,9 @@ Pointer</value>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -2230,6 +2242,9 @@ Pointer</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
@@ -2857,8 +2872,8 @@ Pointer</value>
 				<attribute kind="Cardinality" status="meta">
 					<value>0..*</value>
 				</attribute>
-				<connpoint role="dst" target="id-0066-00000012"/>
 				<connpoint role="src" target="id-0066-00000012"/>
+				<connpoint role="dst" target="id-0066-00000012"/>
 			</connection>
 			<connection id="id-0068-0000000d" kind="FolderContainment" role="FolderContainment" guid="{f84618ed-8ea3-4413-bafe-bf2c95fbc5ee}" relid="0x20">
 				<name>FolderContainment</name>

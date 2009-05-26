@@ -47,8 +47,8 @@ char *CPreference::m_szConnectionPreferenceTable[][5]=
 	{"STRING",				"srcLabel1",		"<blank>",		"Source primary attribute",				"Displays an attribute as a label on the source side of the connection."},
 	{"STRING",				"srcLabel2",		"<blank>",		"Source secondary attribute",			"Displays an attribute as a label on the source side of the connection."},
 	{"STRING",				"dstLabel1",		"<blank>",		"Destination primary attribute",		"Displays an attribute as a label on the destination side of the connection."},
-	{"STRING",				"dstLabel2",		"<blank>",		"Destination secondary attribute",		"Displays an attribute as a label on the destination side of the connection."}
-
+	{"STRING",				"dstLabel2",		"<blank>",		"Destination secondary attribute",		"Displays an attribute as a label on the destination side of the connection."},
+	{"BOOLEAN_LIST",		"isAutoRouted",		"true",			"Is auto routed",						"Is the connection treated by the auto router."}
 };
 
 
@@ -107,6 +107,7 @@ char* CPreference::m_szModelPreferenceTable[][5]=
 	{"STRING",			"nameWrap",			"0",			"NameWrap number",						"Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled."},
 	{"BOOLEAN_LIST",	"isNameEnabled",	"true",			"Name enabled",							"Displays the name."},
 	{"COMPASS_CHECK",	"autorouterPref",	"neswNESW",		"Auto Router Preference",				"Sets the allowed stick point of the connections from and to this model."},
+	{"BOOLEAN_LIST",	"isModelAutoRouted","true",			"Is auto routed",						"Are the models' connections treated by the auto router by default."},
 	{"BOOLEAN_LIST",	"isHotspotEnabled",	"true",			"Hotspots enabled",						"Enables the hotspot feature in connection mode."},
 	{"BOOLEAN_LIST",	"isTypeShown",		"false",		"Type displayed",						"Displays the type (subtype) if the model is an Instance"},
 	{"BOOLEAN_LIST",	"isTypeInfoShown",	"false",		"Typeinfo displayed",					"Displays T, S or I letter according to that the model is Type, Subtype or Instance"},

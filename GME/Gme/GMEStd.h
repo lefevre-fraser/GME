@@ -150,7 +150,8 @@ typedef enum { GME_LINE_SOLID = 0, GME_LINE_DASH, GME_LINE_CUSTOMIZED } GMEConnL
 #define HOTSPOT_PREF				"isHotspotEnabled"
 #define HOTSPOT_FALSE				"false"
 #define CUSTOMCONNECTIONDATA		"customConnectionData"
-#define CONNECTIONAUTOROUTING		"connectionAutoRouting"
+#define CONNECTIONAUTOROUTING		"isAutoRouted"
+#define MODELAUTOROUTING			"isModelAutoRouted"
 
 #define GME_AUTOSAVE_EXTENSION		".bak"
 

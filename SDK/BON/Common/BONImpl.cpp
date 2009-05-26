@@ -166,6 +166,7 @@ namespace BON
 	#define PREF_HotSpotEnabled "/isHotspotEnabled"
 	#define PREF_TypeNameEnabled "/isTypeShown"
 	#define PREF_TypeInfoEnabled "/isTypeInfoShown"
+	#define PREF_ModelAutoRoutingEnabled "/isModelAutoRouted"
 	#define PREF_Decorator "/decorator"
 	#define PREF_Icon "/icon"
 	#define PREF_PortIcon "/porticon"
@@ -182,6 +183,7 @@ namespace BON
 	#define PREF_SrcLabel2 "/srcLabel2"
 	#define PREF_DstLabel1 "/dstLabel1"
 	#define PREF_DstLabel2 "/dstLabel2"
+	#define PREF_ConnectionAutoRoutingEnabled "/isAutoRouted"
 
 	bool Convert( const std::string& strValue, long& lValue, bool bIsHexa )
 	{
@@ -7153,6 +7155,17 @@ namespace BON
 		getObject()->getRegistry()->setValueByPath( PREF_TypeInfoEnabled, (std::string) Util::Variant( bEnabled ) );
 	}
 
+	bool FCOExRegistryNodeImpl::getModelAutoRoutingEnabled() const
+	{
+		std::string strEnabled = getObject()->getRegistry()->getValueByPath( PREF_ModelAutoRoutingEnabled );
+		return ( strEnabled.empty() ) ? true : (bool) Util::Variant( strEnabled );
+	}
+
+	void FCOExRegistryNodeImpl::setModelAutoRoutingEnabled( bool bEnabled )
+	{
+		getObject()->getRegistry()->setValueByPath( PREF_ModelAutoRoutingEnabled, (std::string) Util::Variant( bEnabled ) );
+	}
+
 	std::string FCOExRegistryNodeImpl::getDecorator() const
 	{
 		return getObject()->getRegistry()->getValueByPath( PREF_Decorator );
@@ -7339,6 +7352,17 @@ namespace BON
 	void ConnectionRegistryNodeImpl::setDstLabel2( const std::string& strFormat )
 	{
 		getObject()->getRegistry()->setValueByPath( PREF_DstLabel2, strFormat );
+	}
+
+	bool ConnectionRegistryNodeImpl::getConnectionAutoRoutingEnabled() const
+	{
+		std::string strEnabled = getObject()->getRegistry()->getValueByPath( PREF_ConnectionAutoRoutingEnabled );
+		return ( strEnabled.empty() ) ? true : (bool) Util::Variant( strEnabled );
+	}
+
+	void ConnectionRegistryNodeImpl::setConnectionAutoRoutingEnabled( bool bEnabled )
+	{
+		getObject()->getRegistry()->setValueByPath( PREF_ConnectionAutoRoutingEnabled, (std::string) Util::Variant( bEnabled ) );
 	}
 
 }; // namespace BON

@@ -536,7 +536,6 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Disable auto routing of this connection", ID_DISABLEAUTOROUTINGOFCONN
         MENUITEM "Enable auto routing of this connection", ID_ENABLEAUTOROUTINGOFCONN
-        MENUITEM "Convert auto routed path to custom path", ID_CONVERTAUTOROUTEDPATHTOCUSTOM
         MENUITEM "Try to apply horizontal/vertical snap along the whole connection", ID_TRYTOSNAPHORZVERTPATH
 		MENUITEM "Delete this edge's customization", ID_DELETECONNEDGECUSTOMDATA
 		MENUITEM "Delete this point's customization", ID_DELETECONNPOINTCUSTOMDATA

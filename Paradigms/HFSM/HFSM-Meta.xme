@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{30B08910-F3D0-452B-9975-F18CF7AE84A9}" cdate="Fri Dec 12 15:08:06 2008" mdate="Fri Dec 12 15:08:06 2008" version="" metaguid="{0A264B93-2EFA-454E-89D7-C18CC4D60CA5}" metaversion="" metaname="MetaGME">
+<project guid="{F2B028B8-33BE-4F0A-9F5C-E0197CD90CD4}" cdate="Mon May 04 11:56:35 2009" mdate="Mon May 04 11:56:35 2009" version="" metaguid="{783504B9-9C58-407B-A8F9-9F98B6A24F03}" metaversion="" metaname="MetaGME">
 	<name>HFSM</name>
 	<comment></comment>
 	<author></author>
@@ -512,6 +512,9 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -659,6 +662,9 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsHotspotEnabled" status="meta">
 					<value>true</value>
 				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
 				</attribute>
@@ -746,8 +752,8 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="Rolename" status="meta">
 					<value></value>
 				</attribute>
-				<connpoint role="dst" target="id-0066-00000006"/>
 				<connpoint role="src" target="id-0066-00000006"/>
+				<connpoint role="dst" target="id-0066-00000006"/>
 			</connection>
 			<connection id="id-0068-00000005" kind="AssociationClass" role="AssociationClass" guid="{997bfe54-9591-49e8-8b11-83a0d1f0e2ae}" relid="0x18">
 				<name>AssociationClass</name>
@@ -1034,6 +1040,9 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
 				<attribute kind="LabelFormatStr" status="meta">
 					<value></value>
 				</attribute>
@@ -1149,6 +1158,9 @@ states-&gt;select( s : State | s.StartState )-&gt;size = 1</value>
 					<value>false</value>
 				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">

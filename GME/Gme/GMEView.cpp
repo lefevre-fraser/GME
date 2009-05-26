@@ -336,7 +336,6 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_BACKALONGCONN, OnBackAlongConnection)
 	ON_COMMAND(ID_DISABLEAUTOROUTINGOFCONN, OnDisableAutoRoutingOfConnection)
 	ON_COMMAND(ID_ENABLEAUTOROUTINGOFCONN, OnEnableAutoRoutingOfConnection)
-	ON_COMMAND(ID_CONVERTAUTOROUTEDPATHTOCUSTOM, OnConvertAutoRoutedPathToCustom)
 	ON_COMMAND(ID_TRYTOSNAPHORZVERTPATH, OnTryToSnapHorzVertPath)
 	ON_COMMAND(ID_DELETECONNEDGECUSTOMDATA, OnDeleteConnEdgeCustomData)
 	ON_COMMAND(ID_DELETECONNPOINTCUSTOMDATA, OnDeleteConnPointCustomData)
@@ -359,7 +358,6 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_UPDATE_COMMAND_UI(ID_BACKALONGCONN, OnUpdateBackAlongConnection)
 	ON_UPDATE_COMMAND_UI(ID_DISABLEAUTOROUTINGOFCONN, OnUpdateDisableAutoRoutingOfConnection)
 	ON_UPDATE_COMMAND_UI(ID_ENABLEAUTOROUTINGOFCONN, OnUpdateEnableAutoRoutingOfConnection)
-	ON_UPDATE_COMMAND_UI(ID_CONVERTAUTOROUTEDPATHTOCUSTOM, OnUpdateConvertAutoRoutedPathToCustom)
 	ON_UPDATE_COMMAND_UI(ID_TRYTOSNAPHORZVERTPATH, OnUpdateTryToSnapHorzVertPath)
 	ON_UPDATE_COMMAND_UI(ID_DELETECONNEDGECUSTOMDATA, OnUpdateDeleteConnEdgeCustomData)
 	ON_UPDATE_COMMAND_UI(ID_DELETECONNPOINTCUSTOMDATA, OnUpdateDeleteConnPointCustomData)
@@ -2573,9 +2571,11 @@ void CGMEView::DrawConnectionCustomizationTracker(CDC* pDC, Gdiplus::Graphics* g
 		}
 	} else if (customizeConnectionType == CustomPointCustomization) {
 		Gdiplus::Pen* dashPen = graphics.GetGdipPen2(gdip, GME_BLACK_COLOR, GME_LINE_DASH, m_zoomVal > ZOOM_NO, 1);
+		ASSERT(customizeConnectionEdgeStartPoint != emptyPoint);
 		if (customizeConnectionEdgeStartPoint != emptyPoint)
 			gdip->DrawLine(dashPen, customizeConnectionEdgeStartPoint.x, customizeConnectionEdgeStartPoint.y,
 						   customizeConnectionCurrCursor.x, customizeConnectionCurrCursor.y);
+		ASSERT(customizeConnectionEdgeEndPoint != emptyPoint);
 		if (customizeConnectionEdgeEndPoint != emptyPoint)
 			gdip->DrawLine(dashPen, customizeConnectionCurrCursor.x, customizeConnectionCurrCursor.y,
 						   customizeConnectionEdgeEndPoint.x, customizeConnectionEdgeEndPoint.y);
@@ -4475,9 +4475,9 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 							InsertCustomEdge(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
 							trySnap = true;
 						} else if (customizeConnectionPartMoveMethod == ModifyExistingCustomPoint) {
-							long edgeIndex = selectedConnection->IsPointOnSectionAndDeletable(customizeConnectionEdgeIndex - 1, point);
+							long edgeIndex = selectedConnection->IsPointOnSectionAndDeletable(customizeConnectionEdgeIndex, point);
 							if (edgeIndex >= 0) {
-								DeleteCustomEdges(selectedConnection, CustomPointCustomization, edgeIndex + 1);
+								DeleteCustomEdges(selectedConnection, CustomPointCustomization, edgeIndex);
 							} else {
 								UpdateCustomEdges(selectedConnection, CustomPointCustomization, point.x, point.y, customizeConnectionEdgeIndex, true);
 								trySnap = true;
@@ -7012,7 +7012,7 @@ void CGMEView::OnDisableAutoRoutingOfConnection()
 	if (selectedContextConnection->HasPathCustomizationForTypeAndCurrentAspect(CustomPointCustomization)) {
 		selectedContextConnection->WriteAutoRouteState();
 	} else {
-		selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index, true);
+		selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index);
 	}
 }
 
@@ -7020,13 +7020,6 @@ void CGMEView::OnEnableAutoRoutingOfConnection()
 {
 	selectedContextConnection->SetAutoRouted(true);
 	selectedContextConnection->WriteAutoRouteState();
-}
-
-void CGMEView::OnConvertAutoRoutedPathToCustom()
-{
-	selectedContextConnection->SetAutoRouted(false);
-	selectedContextConnection->DeleteAllPathCustomizationsForCurrentAspect();
-	selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index);
 }
 
 void CGMEView::OnTryToSnapHorzVertPath()
@@ -7199,11 +7192,6 @@ void CGMEView::OnUpdateEnableAutoRoutingOfConnection(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(selectedContextConnection != NULL &&
 				   !selectedContextConnection->IsAutoRouted());
-}
-
-void CGMEView::OnUpdateConvertAutoRoutedPathToCustom(CCmdUI* pCmdUI)
-{
-	OnUpdateDisableAutoRoutingOfConnection(pCmdUI);
 }
 
 void CGMEView::OnUpdateTryToSnapHorzVertPath(CCmdUI* pCmdUI)
