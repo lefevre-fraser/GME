@@ -1857,6 +1857,8 @@ void CGMEView::CreateGuiObjects()
 	COMTHROW(currentModel->get_ChildFCOs(&fcos));
 
 	{
+		isModelAutoRouted = theApp.useAutoRouting;	// update view's value to the app settings
+
 		CComBSTR pathBstr;
 		CopyTo(MODELAUTOROUTING, pathBstr);
 		CComBSTR bstrVal;

@@ -66,6 +66,9 @@ private:
 	// Helper for System Backround Color
 	char m_szSysBckGrnd[9];
 
+	// Helper variable for placing auto router switch settings in case of model preferences
+	bool isAutRouterPrefsCategoryAdded;
+
 	int GetRegistryValue(CComPtr<IMgaFCO>&ccpMgaFCO,CString strPath, CString &strRegValue);
 	TableRowType GetTableRow(CString strCurrPath, objtype_enum oeType);
 	

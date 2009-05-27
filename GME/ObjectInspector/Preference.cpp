@@ -106,8 +106,8 @@ char* CPreference::m_szModelPreferenceTable[][5]=
 	{"COMPASS_OPTION",	"namePosition",		"4",			"Name Location",						"Sets the name label location relative to the atom icon. Eg. North."},
 	{"STRING",			"nameWrap",			"0",			"NameWrap number",						"Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled."},
 	{"BOOLEAN_LIST",	"isNameEnabled",	"true",			"Name enabled",							"Displays the name."},
-	{"COMPASS_CHECK",	"autorouterPref",	"neswNESW",		"Auto Router Preference",				"Sets the allowed stick point of the connections from and to this model."},
 	{"BOOLEAN_LIST",	"isModelAutoRouted","true",			"Is auto routed",						"Are the models' connections treated by the auto router by default."},
+	{"COMPASS_CHECK",	"autorouterPref",	"neswNESW",		"Auto Router Preference",				"Sets the allowed stick point of the connections from and to this model."},
 	{"BOOLEAN_LIST",	"isHotspotEnabled",	"true",			"Hotspots enabled",						"Enables the hotspot feature in connection mode."},
 	{"BOOLEAN_LIST",	"isTypeShown",		"false",		"Type displayed",						"Displays the type (subtype) if the model is an Instance"},
 	{"BOOLEAN_LIST",	"isTypeInfoShown",	"false",		"Typeinfo displayed",					"Displays T, S or I letter according to that the model is Type, Subtype or Instance"},
@@ -207,6 +207,8 @@ CPreference::CPreference()
 
 	// Correcting table
 	m_szModelPreferenceTable[3][2]=m_szSysBckGrnd;
+
+	isAutRouterPrefsCategoryAdded = false;
 }
 
 CPreference::~CPreference()
@@ -429,6 +431,7 @@ int CPreference::FindRegPathInSetTable(const CString &strPath)
 void CPreference::CreateList(const CMgaFCOPtrList& MgaFCOPtrList)
 {
 	m_ListItemArray.RemoveAll();
+	isAutRouterPrefsCategoryAdded = false;
 	// If there is no FCO to show
 	if(MgaFCOPtrList.IsEmpty())
 	{
@@ -577,9 +580,10 @@ void CPreference::SetCategories( const CString& strPath, bool bIsAfter)
 		{
 			strName="Connection Preferences";
 		}
-		else if(strPath=="autorouterPref")
+		else if((strPath=="autorouterPref" || strPath=="isModelAutoRouted") && !isAutRouterPrefsCategoryAdded)
 		{
 			strName="Auto Router Preferences";
+			isAutRouterPrefsCategoryAdded = true;
 		}
 		else
 		{
@@ -813,7 +817,7 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 		ListItem.dwUserData=AUTOROUTER_DESTINATION;
 		ListItems.Add(ListItem);
 
-		// Cerating "Miscellaneous Preferences" category
+		// Creating "Miscellaneous Preferences" category
 		CListItem ListItemMisc;
 		ListItemMisc.bIsContainer=true;
 		ListItemMisc.strName="Miscellaneous Preferences";
