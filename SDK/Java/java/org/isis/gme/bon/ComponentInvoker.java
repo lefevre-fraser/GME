@@ -106,7 +106,7 @@ public final class ComponentInvoker
             // invoke component           
             if( comp instanceof Component)
             {
-                ((Component)comp).invokeEx(project, currentObj, selectedObjs, 0);
+                ((Component)comp).invokeEx(project, currentObj, selectedObjs, param);
             }
             else if(comp instanceof BONComponent)
             {
@@ -125,7 +125,7 @@ public final class ComponentInvoker
                 else
                     selected = null;
                                                                        
-                ((BONComponent)comp).invokeEx(builder, currentBONObj, selected, 0);                                       
+                ((BONComponent)comp).invokeEx(builder, currentBONObj, selected, param);                                       
             }
             else
             {
