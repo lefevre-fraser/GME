@@ -8926,26 +8926,28 @@ LRESULT CGMEView::OnCommitTransaction(WPARAM wParam, LPARAM lParam)
 LRESULT CGMEView::OnConvertNeededConnectionRoutes(WPARAM wParam, LPARAM lParam)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnConvertNeededConnectionRoutes() in " + path + name + "\r\n");
-	bool isThereAnyConversion = false;
-	POSITION pos = connections.GetHeadPosition();
-	while (pos) {
-		CGuiConnection* conn = connections.GetNext(pos);
-		if (conn->NeedsRouterPathConversion()) {
-			isThereAnyConversion = true;
-			break;
-		}
-	}
-	if (isThereAnyConversion) {
-		BeginTransaction();
-		pos = connections.GetHeadPosition();
+	if (beforeSecondAutoRoute) {
+		bool isThereAnyConversion = false;
+		POSITION pos = connections.GetHeadPosition();
 		while (pos) {
 			CGuiConnection* conn = connections.GetNext(pos);
-			if (conn->NeedsRouterPathConversion())
-				conn->ConvertAutoRoutedPathToCustom(currentAspect->index);
+			if (conn->NeedsRouterPathConversion()) {
+				isThereAnyConversion = true;
+				break;
+			}
 		}
-		CommitTransaction();
+		if (isThereAnyConversion) {
+			BeginTransaction();
+			pos = connections.GetHeadPosition();
+			while (pos) {
+				CGuiConnection* conn = connections.GetNext(pos);
+				if (conn->NeedsRouterPathConversion())
+					conn->ConvertAutoRoutedPathToCustom(currentAspect->index);
+			}
+			CommitTransaction();
+		}
+		beforeSecondAutoRoute = false;
 	}
-	beforeSecondAutoRoute = false;
 	return 0;
 }
 
