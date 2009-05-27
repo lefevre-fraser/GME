@@ -436,10 +436,9 @@ public:
 	void SnapCoordIfApplicable(CustomPathData* coordToSet, const CPoint& last, const CPoint& pt);
 	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp, int edgeIndex = -1);
 	bool IsAutoRouted(void) const;
-	void SetAutoRouted(bool autoRouteState);
+	bool NeedsRouterPathConversion(void) const;
 	void ConvertAutoRoutedPathToCustom(long asp);
 	void ReadAutoRouteState(void);
-	void WriteAutoRouteState(bool handleTransaction = true);
 
 	virtual bool IsVisible(int aspect = -1)				{ return visible && visible[aspect < 0 ? parentAspect : aspect]; }
 	virtual void RemoveFromRouter(CAutoRouter &router);
@@ -466,7 +465,8 @@ private:
 	bool autorouterPrefs[GME_AR_NUM];
 	bool hovered;
 	bool selected;
-	bool autoRouted;
+	bool connRegAutoRouteNotSet;
+	bool isAutoRouted;
 	std::vector<CustomPathData> customPathData;
 };
 

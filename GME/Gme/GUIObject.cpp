@@ -236,10 +236,10 @@ bool CGuiPort::GetPreference(CString &val, CString path)
 {
 	VERIFY(mgaFco);
 	CComBSTR pathBstr;
-	CopyTo(path,pathBstr);
+	CopyTo(path, pathBstr);
 	CComBSTR bstrVal;
 	COMTHROW(mgaFco->get_RegistryValue(pathBstr,&bstrVal));
-	CopyTo(bstrVal,val);
+	CopyTo(bstrVal, val);
 	return !val.IsEmpty();
 }
 
@@ -952,7 +952,7 @@ bool CGuiFco::GetPreference(CString& val, CString path)
 	else {
 		COMTHROW(metaFco->get_RegistryValue(pathBstr, &bstrVal));
 	}
-	CopyTo(bstrVal,val);
+	CopyTo(bstrVal, val);
 	return !val.IsEmpty();
 }
 
@@ -2302,14 +2302,15 @@ void CGuiConnectionLabelSet::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiC
 
 CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp, bool resolve):
 	CGuiFco(pt, role, vw, numAsp),
-	visible			(NULL),
-	src				(NULL),
-	srcPort			(NULL),
-	dst				(NULL),
-	dstPort			(NULL),
-	hovered			(false),
-	selected		(false),
-	autoRouted		(theApp.useAutoRouting)
+	visible					(NULL),
+	src						(NULL),
+	srcPort					(NULL),
+	dst						(NULL),
+	dstPort					(NULL),
+	hovered					(false),
+	selected				(false),
+	connRegAutoRouteNotSet	(true),
+	isAutoRouted			(theApp.useAutoRouting)
 {
 	CComPtr<IAutoRouterPath> dummy;
 	routerPath = dummy;
@@ -2394,8 +2395,8 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role
 	if (!GetColorPreference(nameColor, NAME_COLOR_PREF)) {
 		nameColor = GME_BLACK_COLOR;
 	}
-	ReadAutoRouteState();
 	ReadCustomPathData();
+	ReadAutoRouteState();
 	RefreshAttributeCache();
 }
 
@@ -2611,7 +2612,7 @@ void CGuiConnection::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 	if (selected && IsAutoRouted())
 		customizedEdgeIndexes = GetRelevantCustomizedEdgeIndexes();
 	graphics.DrawConnection(gdip, points, customizedEdgeIndexes, grayedOut ? GME_GRAYED_OUT_COLOR : color,
-							lineType, srcStyle, dstStyle, view->m_zoomVal > ZOOM_NO, !autoRouted && selected,
+							lineType, srcStyle, dstStyle, view->m_zoomVal > ZOOM_NO, !IsAutoRouted() && selected,
 							selected ? 3 : hovered ? 5 : 1);
 
 	if (points.GetSize() < 2) {
@@ -3129,7 +3130,6 @@ void CGuiConnection::ReadCustomPathData(void)
 {
 	customPathData.clear();
 	CString pref;
-	TRACE0("ReadCustomEdges:\n");
 	if (GetPreference(pref, CUSTOMCONNECTIONDATA)) {
 		if (pref != EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC) {	// -1 is a magic number for deleted data
 			CString subStr;
@@ -3530,12 +3530,10 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 
 bool CGuiConnection::IsAutoRouted(void) const
 {
-	return autoRouted;
-}
+	if (view->beforeSecondAutoRoute && NeedsRouterPathConversion())
+		return true;	// user just switched it, but we lie temporarily in order to be able to get the autorouted route
 
-void CGuiConnection::SetAutoRouted(bool autoRouteState)
-{
-	autoRouted = autoRouteState;
+	return isAutoRouted;
 }
 
 void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp)
@@ -3556,40 +3554,32 @@ void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp)
 		i++;
 	}
 
-	view->BeginTransaction();
-	WriteAutoRouteState(false);
 	WriteCustomPathData(false);
-	view->CommitTransaction();
 }
 
 void CGuiConnection::ReadAutoRouteState(void)
 {
 	CString autoRoutingStateStr;
-	bool autoRoutingState = theApp.useAutoRouting;
+
+	// The parent model's setting overrides the global (theApp.useAutoRouting) settings
+	bool connRegAutoRoute = view->isModelAutoRouted;
+	// The connection setting overrides the global or model settings
 	if (GetPreference(autoRoutingStateStr, CONNECTIONAUTOROUTING)) {
 		if (autoRoutingStateStr == "false")
-			autoRoutingState = false;
+			connRegAutoRoute = false;
 		else
-			autoRoutingState = true;
+			connRegAutoRoute = true;
+		connRegAutoRouteNotSet = false;
+	} else {
+		connRegAutoRouteNotSet = true;
 	}
-	SetAutoRouted(autoRoutingState);
+	isAutoRouted = connRegAutoRoute;
 }
 
-void CGuiConnection::WriteAutoRouteState(bool handleTransaction)
+bool CGuiConnection::NeedsRouterPathConversion(void) const
 {
-	VERIFY(mgaFco);
-	CComBSTR pathBstr;
-	CopyTo(CONNECTIONAUTOROUTING, pathBstr);
-	CString valStr = IsAutoRouted() ? "true" : "false";
-	CComBSTR bstrVal;
-	CopyTo(valStr, bstrVal);
-	if (handleTransaction)
-		view->BeginTransaction();
-	COMTHROW(mgaFco->put_RegistryValue(pathBstr, bstrVal));
-	if (handleTransaction)
-		view->CommitTransaction();
+	return (customPathData.size() < 1 && connRegAutoRouteNotSet && !isAutoRouted);
 }
-
 
 ////////////////////////////////////////////////
 // Static methods of CGuiConnection

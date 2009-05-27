@@ -20,6 +20,16 @@
 IMPLEMENT_DYNCREATE(CDecoratorEventSink, CCmdTarget)
 
 
+void CDecoratorEventSink::SetView(CGMEView* view)
+{
+	m_view = view;
+}
+
+void CDecoratorEventSink::SetGuiObject(CGuiObject* guiObject)
+{
+	m_guiObject = guiObject;
+}
+
 HRESULT CDecoratorEventSink::QuerySinkInterface(void** ppv)
 {
 	return m_xEventSink.QueryInterface(IID_IMgaElementDecoratorEvents, ppv);
@@ -134,6 +144,8 @@ STDMETHODIMP CDecoratorEventSink::XEventSink::LabelEditingFinished(LONG left, LO
 	METHOD_PROLOGUE(CDecoratorEventSink,EventSink);
 
 	if (pThis->m_view->inOpenedDecoratorTransaction) {
+		// Deferred Commit operation, we cannot do commit now because it would kill the underlying decoprator also
+		// Commit results in a whle refresh: complete destruction and regeneration of Gui* wrapper classes, and this destroys decorators also
 		pThis->m_view->PostMessage(WM_USER_COMMITTRAN, 0, 0);
 	} else {
 		pThis->m_view->inOpenedDecoratorTransaction = false;

@@ -191,6 +191,8 @@ public:
 
 	bool					needsReset;
 	bool					initDone;
+	bool					beforeSecondAutoRoute;	// We need a second AutoRoute to convert needed autorouted connections into custom connections
+	bool					isModelAutoRouted;
 	COLORREF				bgColor;
 	CChildFrame*			frame;
 	CPendingRequestList		pendingRequests;
@@ -539,20 +541,19 @@ protected:
 	afx_msg void OnBackAlongConnection();
 	afx_msg void OnJumpToFirstObject();
 	afx_msg void OnJumpToNextObject();
-	afx_msg void OnDisableAutoRoutingOfConnection();
-	afx_msg void OnEnableAutoRoutingOfConnection();
 	afx_msg void OnTryToSnapHorzVertPath();
 	afx_msg void OnDeleteConnEdgeCustomData();
 	afx_msg void OnDeleteConnPointCustomData();
 	afx_msg void OnDeleteConnRouteCustomData();
 	afx_msg void OnShowContextMenu();
 	afx_msg void OnPrintMetafile();
-	afx_msg LRESULT OnCommitTransaction(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnZoomIn();
 	afx_msg void OnZoomOut();
 	afx_msg LRESULT OnZoom(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPannScroll(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPannRefresh(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnCommitTransaction(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnConvertNeededConnectionRoutes(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnCntxNamePositionSouth();
 	afx_msg void OnCntxNamePositionNorth();
 	afx_msg void OnCntxNamePositionEast();
@@ -567,8 +568,6 @@ protected:
 	afx_msg void OnUpdateCntxRevfollowConnection( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateJumpAlongConnection( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateBackAlongConnection( CCmdUI* pCmdUI );
-	afx_msg void OnUpdateDisableAutoRoutingOfConnection( CCmdUI* pCmdUI );
-	afx_msg void OnUpdateEnableAutoRoutingOfConnection( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateTryToSnapHorzVertPath( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDeleteConnEdgeCustomData( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDeleteConnPointCustomData( CCmdUI* pCmdUI );

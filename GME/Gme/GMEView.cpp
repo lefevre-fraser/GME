@@ -334,8 +334,6 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_CNTX_LOCATEPORTINBROWSER, OnCntxPortLocateInBrw)
 	ON_COMMAND(ID_JUMPALONGCONN, OnJumpAlongConnection)
 	ON_COMMAND(ID_BACKALONGCONN, OnBackAlongConnection)
-	ON_COMMAND(ID_DISABLEAUTOROUTINGOFCONN, OnDisableAutoRoutingOfConnection)
-	ON_COMMAND(ID_ENABLEAUTOROUTINGOFCONN, OnEnableAutoRoutingOfConnection)
 	ON_COMMAND(ID_TRYTOSNAPHORZVERTPATH, OnTryToSnapHorzVertPath)
 	ON_COMMAND(ID_DELETECONNEDGECUSTOMDATA, OnDeleteConnEdgeCustomData)
 	ON_COMMAND(ID_DELETECONNPOINTCUSTOMDATA, OnDeleteConnPointCustomData)
@@ -356,8 +354,6 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_UPDATE_COMMAND_UI(ID_CNTX_REVERSECONNECTION, OnUpdateCntxRevfollowConnection)
 	ON_UPDATE_COMMAND_UI(ID_JUMPALONGCONN, OnUpdateJumpAlongConnection)
 	ON_UPDATE_COMMAND_UI(ID_BACKALONGCONN, OnUpdateBackAlongConnection)
-	ON_UPDATE_COMMAND_UI(ID_DISABLEAUTOROUTINGOFCONN, OnUpdateDisableAutoRoutingOfConnection)
-	ON_UPDATE_COMMAND_UI(ID_ENABLEAUTOROUTINGOFCONN, OnUpdateEnableAutoRoutingOfConnection)
 	ON_UPDATE_COMMAND_UI(ID_TRYTOSNAPHORZVERTPATH, OnUpdateTryToSnapHorzVertPath)
 	ON_UPDATE_COMMAND_UI(ID_DELETECONNEDGECUSTOMDATA, OnUpdateDeleteConnEdgeCustomData)
 	ON_UPDATE_COMMAND_UI(ID_DELETECONNPOINTCUSTOMDATA, OnUpdateDeleteConnPointCustomData)
@@ -483,10 +479,11 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_KEY_ZOOMOUT, OnZoomOut)
 	ON_COMMAND(ID_KEY_CYCLEOBJINSPFRWD, OnKeyCycleObjInspectorFrwd)
 	ON_COMMAND(ID_KEY_CYCLEOBJINSPBKWD, OnKeyCycleObjInspectorBkwd)
-	ON_MESSAGE(WM_USER_COMMITTRAN, OnCommitTransaction)
 	ON_MESSAGE(WM_USER_ZOOM, OnZoom)
 	ON_MESSAGE(WM_USER_PANNREFRESH, OnPannRefresh)
 	ON_MESSAGE(WM_PANN_SCROLL, OnPannScroll)
+	ON_MESSAGE(WM_USER_COMMITTRAN, OnCommitTransaction)
+	ON_MESSAGE(WM_USER_CONVERTROUTES, OnConvertNeededConnectionRoutes)
 	ON_COMMAND(ID_VIEW_SHOWSELMODEL, OnShowSelectedModel)
 	ON_COMMAND(ID_VIEW_FOCUSBROWSER, OnFocusBrowser)
 	ON_COMMAND(ID_VIEW_FOCUSINSPECTOR, OnFocusInspector)
@@ -516,6 +513,8 @@ CGMEView::CGMEView()
 	m_refreshpannwin				= false;
 
 	initDone						= false;
+	beforeSecondAutoRoute			= true;
+	isModelAutoRouted				= theApp.useAutoRouting;
 	inTransaction					= 0;
 
 	autoconnectCursor				= AfxGetApp()->LoadCursor(IDC_AUTOCONNECT_CURSOR);
@@ -1846,6 +1845,8 @@ void CGMEView::CreateGuiObjects(CComPtr<IMgaFCOs>& fcos, CGuiFcoList& objList, C
 // ??
 void CGMEView::CreateGuiObjects()
 {
+	beforeSecondAutoRoute = true;
+
 	CComBSTR bstr;
 	COMTHROW(currentModel->get_Name(&bstr));
 	CopyTo(bstr,name);
@@ -1854,6 +1855,21 @@ void CGMEView::CreateGuiObjects()
 
 	CComPtr<IMgaFCOs> fcos;
 	COMTHROW(currentModel->get_ChildFCOs(&fcos));
+
+	{
+		CComBSTR pathBstr;
+		CopyTo(MODELAUTOROUTING, pathBstr);
+		CComBSTR bstrVal;
+		COMTHROW(currentModel->get_RegistryValue(pathBstr, &bstrVal));
+		CString val;
+		CopyTo(bstrVal, val);
+		if (!val.IsEmpty()) {
+			if (val == "false")
+				isModelAutoRouted = false;
+			else
+				isModelAutoRouted = true;
+		}
+	}
 
 	CreateGuiObjects(fcos,children,connections);
 
@@ -2615,6 +2631,8 @@ void CGMEView::AutoRoute()
 {
 	BeginWaitCursor();
 	router.AutoRoute(children, currentAspect->index);  // Must reroute the whole thing, other code depends on it
+	if (beforeSecondAutoRoute)
+		this->PostMessage(WM_USER_CONVERTROUTES, 0, 0);
 	EndWaitCursor();
 }
 
@@ -7006,22 +7024,6 @@ void CGMEView::OnBackAlongConnection() // 'Jump back Along Conn' on Navigation t
 		FollowLine( selected.GetHead(), true, ::GetKeyState( VK_CONTROL) < 0);
 }
 
-void CGMEView::OnDisableAutoRoutingOfConnection()
-{
-	selectedContextConnection->SetAutoRouted(false);
-	if (selectedContextConnection->HasPathCustomizationForTypeAndCurrentAspect(CustomPointCustomization)) {
-		selectedContextConnection->WriteAutoRouteState();
-	} else {
-		selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index);
-	}
-}
-
-void CGMEView::OnEnableAutoRoutingOfConnection()
-{
-	selectedContextConnection->SetAutoRouted(true);
-	selectedContextConnection->WriteAutoRouteState();
-}
-
 void CGMEView::OnTryToSnapHorzVertPath()
 {
 	selectedContextConnection->VerticalAndHorizontalSnappingOfConnectionLineSegments(currentAspect->index, -1);
@@ -7182,21 +7184,10 @@ void CGMEView::OnUpdateBackAlongConnection(CCmdUI* pCmdUI)
 	pCmdUI->Enable( areConnsForSels( selected, true));
 }
 
-void CGMEView::OnUpdateDisableAutoRoutingOfConnection(CCmdUI* pCmdUI)
-{
-	pCmdUI->Enable(selectedContextConnection != NULL &&
-				   selectedContextConnection->IsAutoRouted());
-}
-
-void CGMEView::OnUpdateEnableAutoRoutingOfConnection(CCmdUI* pCmdUI)
+void CGMEView::OnUpdateTryToSnapHorzVertPath(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(selectedContextConnection != NULL &&
 				   !selectedContextConnection->IsAutoRouted());
-}
-
-void CGMEView::OnUpdateTryToSnapHorzVertPath(CCmdUI* pCmdUI)
-{
-	OnUpdateEnableAutoRoutingOfConnection(pCmdUI);
 }
 
 void CGMEView::OnUpdateDeleteConnEdgeCustomData(CCmdUI* pCmdUI)
@@ -8711,18 +8702,6 @@ void CGMEView::OnPrintMetafile()
 	}
 }
 
-LRESULT CGMEView::OnCommitTransaction(WPARAM wParam, LPARAM lParam)
-{
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCommitTransaction() in " + path + name + "\r\n");
-	CommitTransaction();
-	inOpenedDecoratorTransaction = false;
-	shouldCommitOperation = false;
-	inElementDecoratorOperation = false;
-	objectInDecoratorOperation = NULL;
-	annotatorInDecoratorOperation = NULL;
-	return 0;
-}
-
 void CGMEView::ZoomRect(CRect srect)
 {
 	CRect crect;
@@ -8928,38 +8907,86 @@ LRESULT CGMEView::OnPannScroll(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+LRESULT CGMEView::OnCommitTransaction(WPARAM wParam, LPARAM lParam)
+{
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnCommitTransaction() in " + path + name + "\r\n");
+	CommitTransaction();
+	inOpenedDecoratorTransaction = false;
+	shouldCommitOperation = false;
+	inElementDecoratorOperation = false;
+	objectInDecoratorOperation = NULL;
+	annotatorInDecoratorOperation = NULL;
+	isInConnectionCustomizeOperation = false;
+	selectedContextConnection = NULL;
+	return 0;
+}
+
+LRESULT CGMEView::OnConvertNeededConnectionRoutes(WPARAM wParam, LPARAM lParam)
+{
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnConvertNeededConnectionRoutes() in " + path + name + "\r\n");
+	bool isThereAnyConversion = false;
+	POSITION pos = connections.GetHeadPosition();
+	while (pos) {
+		CGuiConnection* conn = connections.GetNext(pos);
+		if (conn->NeedsRouterPathConversion()) {
+			isThereAnyConversion = true;
+			break;
+		}
+	}
+	if (isThereAnyConversion) {
+		BeginTransaction();
+		pos = connections.GetHeadPosition();
+		while (pos) {
+			CGuiConnection* conn = connections.GetNext(pos);
+			if (conn->NeedsRouterPathConversion())
+				conn->ConvertAutoRoutedPathToCustom(currentAspect->index);
+		}
+		CommitTransaction();
+	}
+	beforeSecondAutoRoute = false;
+	return 0;
+}
+
 void CGMEView::OnCntxNamePositionNorth()
 {
 	ChangeNamePosition(0);
 }
+
 void CGMEView::OnCntxNamePositionEast()
 {
 	ChangeNamePosition(2);
 }
+
 void CGMEView::OnCntxNamePositionSouth()
 {
 	ChangeNamePosition(4);
 }
+
 void CGMEView::OnCntxNamePositionWest()
 {
 	ChangeNamePosition(6);
 }
+
 void CGMEView::OnUpdateCntxNamePositionNorth( CCmdUI* pCmdUI )
 {
 	UpdateNamePositionMenuItem( pCmdUI, 0);
 }
+
 void CGMEView::OnUpdateCntxNamePositionEast( CCmdUI* pCmdUI )
 {
 	UpdateNamePositionMenuItem( pCmdUI, 2);
 }
+
 void CGMEView::OnUpdateCntxNamePositionSouth( CCmdUI* pCmdUI )
 {
 	UpdateNamePositionMenuItem( pCmdUI, 4);
 }
+
 void CGMEView::OnUpdateCntxNamePositionWest( CCmdUI* pCmdUI )
 {
 	UpdateNamePositionMenuItem( pCmdUI, 6);
 }
+
 void CGMEView::UpdateNamePositionMenuItem( CCmdUI* pCmdUI, int p_this_value)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::UpdateNamePositionMenuItem\r\n");

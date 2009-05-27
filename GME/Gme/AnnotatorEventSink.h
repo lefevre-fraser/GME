@@ -41,8 +41,8 @@ public:
 
 // Operations
 public:
-	void SetView(CGMEView* view) { m_view = view; }
-	void SetGuiAnnotator(CGuiAnnotator* guiAnnotator) { m_guiAnnotator = guiAnnotator; }
+	void SetView(CGMEView* view);
+	void SetGuiAnnotator(CGuiAnnotator* guiAnnotator);
 	HRESULT QuerySinkInterface(void** ppv);
 
 // Overrides

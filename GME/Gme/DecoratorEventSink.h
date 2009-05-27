@@ -41,8 +41,8 @@ public:
 
 // Operations
 public:
-	void SetView(CGMEView* view) { m_view = view; }
-	void SetGuiObject(CGuiObject* guiObject) { m_guiObject = guiObject; }
+	void SetView(CGMEView* view);
+	void SetGuiObject(CGuiObject* guiObject);
 	HRESULT QuerySinkInterface(void** ppv);
 
 // Overrides
