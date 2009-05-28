@@ -30,7 +30,14 @@ guaranteed.
 1. Release Notes
 ************************************************
 
-Release Notes of Release r9.5.8
+Release Notes of Release r9.5.28
+--------------------------------
+  - Multiuser backend fixes
+  - GUI speed enhancements (with AfxSetAmbientActCtx(FALSE))
+  - Small bugfixes in JBON and JavaComponentRunner
+  - Autorouter fixes
+
+Release Notes of Release r9.5.20
 --------------------------------
   - Small fixes in the windows installer (location of
     the UML paradigm files, GME.exe COM registration)
