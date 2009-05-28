@@ -53,6 +53,32 @@ CConstraintManagerApp theApp;
 
 BOOL CConstraintManagerApp::InitInstance()
 {
+	// See MSDN example code for CWinApp::InitInstance: http://msdn.microsoft.com/en-us/library/ae6yx0z0.aspx
+	// MFC module state handling code is changed with VC80.
+	// We follow the Microsoft's suggested way, but in case of any trouble the set the
+	// HKCU\Software\GME\AfxSetAmbientActCtxMod key to 0
+	UINT uAfxSetAmbientActCtxMod = 1;
+	HKEY hKey;
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\GME\\"),
+					 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
+	{
+		TCHAR szData[128];
+		DWORD dwKeyDataType;
+		DWORD dwDataBufSize = sizeof(szData)/sizeof(TCHAR);
+
+		if (RegQueryValueEx(hKey, _T("AfxSetAmbientActCtxMod"), NULL, &dwKeyDataType,
+							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
+		{
+			uAfxSetAmbientActCtxMod = _tcstoul(szData, NULL, 10);
+		}
+
+		RegCloseKey(hKey);
+	}
+	if (uAfxSetAmbientActCtxMod != 0)
+	{
+		AfxSetAmbientActCtx(FALSE);
+	}
+
     _Module.Init(ObjectMap, m_hInstance, &LIBID_CONSTRAINTMANAGERLib);
     return CWinApp::InitInstance();
 }

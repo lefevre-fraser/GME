@@ -1033,7 +1033,7 @@ CComponentReg::CComponentReg()
 }
 
 
-#define COMRETURN(hr) { HRESULT res; if((res = (hr)) != S_OK) return res; }
+#define COMRETURN(hr) { HRESULT res; ASSERT(hr == S_OK); if((res = (hr)) != S_OK) return res; }
 
 HRESULT CComponentReg::UnregisterParadigms(regaccessmode_enum loc) {
 	CComPtr<IMgaRegistrar> registrar;
