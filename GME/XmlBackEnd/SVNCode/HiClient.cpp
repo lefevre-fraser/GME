@@ -6,6 +6,7 @@
 #include "Pool.h"
 #include "svn_wc.h"
 #include "svn_dirent_uri.h"
+#include "svn_path.h"
 
 HiClient::HiClient( const std::string& p_userName, const std::string& p_passWord)
 	: Client( p_userName, p_passWord)
@@ -125,7 +126,8 @@ bool HiClient::isVersioned         ( const std::string& p_path, bool p_isADir /*
 	ClientUtil::InfoHelp::InfoVec inf;
 	// PETER - SVNSPEEDHACK BEGIN
 	// bool res = info2Qck( p_path.c_str(), false, inf, p_suppressErrorMsg);
-	bool res =  sub_info2( p_path.c_str(), Revision(false, false), Revision(false, false), false, inf, p_suppressErrorMsg);
+	Revision rev( svn_path_is_url(p_path.c_str()) ? svn_opt_revision_head : svn_opt_revision_unspecified);
+	bool res =  sub_info2( p_path.c_str(), rev, rev, false, inf, p_suppressErrorMsg);
 	// PETER - SVNSPEEDHACK BEGIN
 	return res;
 }

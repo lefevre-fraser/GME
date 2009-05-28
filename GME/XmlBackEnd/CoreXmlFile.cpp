@@ -2886,7 +2886,7 @@ bool CCoreXmlFile::checkOutFiles(XmlObjSet& containers)
 		SafeArrayAccessData( pSA, (void**) &theStrings);
 		for( std::vector< std::string>::size_type i = 0; i < readOnlyFiles.size(); ++i)
 		{
-			theStrings[i] = CComBSTR( readOnlyFiles[i].c_str());
+			theStrings[i] = CComBSTR( readOnlyFiles[i].c_str()).Detach();
 		}
 		SafeArrayUnaccessData( pSA);
 		CComVariant var_arr(pSA);
