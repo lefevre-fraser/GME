@@ -21,25 +21,8 @@ typedef std::vector<CComPtr<IAutoRouterPath> > CAutoRouterPathList;
 
 typedef CList<CPoint, CPoint&> CPointList;
 
-typedef CMap<IAutoRouterPath*, IAutoRouterPath*, CPointListPath*, CPointListPath* > CMapCARPath2CPointList;
-typedef CMap<void*, void*, std::vector<CPoint>, std::vector<CPoint> > CMapCARObject2CPoints;
-
-// Functions for CMapCARObject2CPoints and CMapCARPath2CPointList, see AutoRouterGraph.cpp
-typedef CPointListPath* LPPointList;
-
-template<>
-BOOL AFXAPI CompareElements< LPPointList, LPPointList >
-	 (const LPPointList* pElement1, const LPPointList* pElement2);
-
-template<>
-UINT AFXAPI HashKey< void* > (void* key);
-
-typedef std::vector<CPoint> CARPoints;
-
-template<>
-BOOL AFXAPI CompareElements< CARPoints, CARPoints >
-	 (const CARPoints* pElement1, const CARPoints* pElement2);
-// End of functions for CMapCARObject2CPoints and CMapCARPath2CPointList, see AutoRouterGraph.cpp
+typedef CTypedPtrMap<CMapPtrToPtr, IAutoRouterPath*, CPointListPath*> CMapCARPath2CPointList;
+typedef CTypedPtrMap<CMapPtrToPtr, void*, std::vector<CPoint>* > CMapCARObject2CPoints;
 
 
 // CAutoRouterGraph

@@ -11,7 +11,7 @@ class CGuiConnection;
 
 typedef CList<CPoint, CPoint&>	CPointList;
 
-typedef CMap<IAutoRouterPath*, IAutoRouterPath*, CGuiConnection*, CGuiConnection* > CMapAutoRouterPath2CGuiConnection;
+typedef CTypedPtrMap<CMapPtrToPtr, IAutoRouterPath*, CGuiConnection*>		CMapAutoRouterPath2CGuiConnection;
 
 
 class CAutoRouter {

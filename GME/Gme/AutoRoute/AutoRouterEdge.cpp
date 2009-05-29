@@ -473,7 +473,7 @@ void CAutoRouterEdgeList::SetOwner(CComPtr<IAutoRouterGraph> o)
 
 typedef std::pair<long,long> Long_Pair;
 
-bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath& pointList)
+bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath* pointList)
 {
 	// Apply custom edge modifications - step 2, part 1
 	// (Step 1: Move the desired edges
@@ -504,12 +504,12 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 	SafeArrayDestroy(pArr);
 
 	std::map<long,long>::const_iterator indIter;
-	long currEdgeIndex = pointList.GetSize() - 2;
+	long currEdgeIndex = pointList->GetSize() - 2;
 
 	CPoint* startpoint = NULL;
 	CPoint* endpoint = NULL;
 
-	POSITION pos = pointList.GetTailEdgePtrs(startpoint, endpoint);
+	POSITION pos = pointList->GetTailEdgePtrs(startpoint, endpoint);
 	while( pos != NULL )
 	{
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
@@ -534,8 +534,8 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 			edge->SetOwner(path.p);
 
 			edge->SetStartAndEndPoint(startpoint, endpoint);
-			edge->SetStartPointPrev(pointList.GetPointBeforeEdge(pos));
-			edge->SetEndPointNext(pointList.GetPointAfterEdge(pos));
+			edge->SetStartPointPrev(pointList->GetPointBeforeEdge(pos));
+			edge->SetEndPointNext(pointList->GetPointAfterEdge(pos));
 
 			// Apply custom edge modifications - step 2, part 2
 			if (hasCustomEdge)
@@ -579,7 +579,7 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 			Insert(edge);
 		}
 
-		pointList.GetPrevEdgePtrs(pos, startpoint, endpoint);
+		pointList->GetPrevEdgePtrs(pos, startpoint, endpoint);
 		currEdgeIndex--;
 	}
 
@@ -729,7 +729,7 @@ void CAutoRouterEdgeList::DumpEdges(const CString& headMsg)
 
 #endif
 
-void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CPoint>& selfpoints)
+void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CPoint>* selfpoints)
 {
 	VARIANT_BOOL isConnectToCenter = VARIANT_FALSE;
 	COMTHROW(port->IsConnectToCenter(&isConnectToCenter));
@@ -740,10 +740,10 @@ void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CP
 
 	for(int i = 0; i < 4; i++)
 	{
-		CPoint* startpoint_prev = &(selfpoints[(i + 3) % 4]);
-		CPoint* startpoint = &(selfpoints[i]);
-		CPoint* endpoint = &(selfpoints[(i + 1) % 4]);
-		CPoint* endpoint_next = &(selfpoints[(i + 2) % 4]);
+		CPoint* startpoint_prev = &((*selfpoints)[(i + 3) % 4]);
+		CPoint* startpoint = &((*selfpoints)[i]);
+		CPoint* endpoint = &((*selfpoints)[(i + 1) % 4]);
+		CPoint* endpoint_next = &((*selfpoints)[(i + 2) % 4]);
 
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 		ASSERT( IsRightAngle(dir) );
@@ -773,14 +773,14 @@ void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CP
 	}
 }
 
-void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoint>& selfpoints)
+void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoint>* selfpoints)
 {
 	for(int i = 0; i < 4; i++)
 	{
-		CPoint* startpoint_prev = &(selfpoints[(i + 3) % 4]);
-		CPoint* startpoint = &(selfpoints[i]);
-		CPoint* endpoint = &(selfpoints[(i + 1) % 4]);
-		CPoint* endpoint_next = &(selfpoints[(i + 2) % 4]);
+		CPoint* startpoint_prev = &((*selfpoints)[(i + 3) % 4]);
+		CPoint* startpoint = &((*selfpoints)[i]);
+		CPoint* endpoint = &((*selfpoints)[(i + 1) % 4]);
+		CPoint* endpoint_next = &((*selfpoints)[(i + 2) % 4]);
 
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 		ASSERT( IsRightAngle(dir) );
@@ -808,14 +808,14 @@ void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoi
 	}
 }
 
-void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterGraph> graph, std::vector<CPoint>& selfpoints)
+void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterGraph> graph, std::vector<CPoint>* selfpoints)
 {
 	for(int i = 0; i < 4; i++)
 	{
-		CPoint* startpoint_prev = &(selfpoints[(i + 3) % 4]);
-		CPoint* startpoint = &(selfpoints[i]);
-		CPoint* endpoint = &(selfpoints[(i + 1) % 4]);
-		CPoint* endpoint_next = &(selfpoints[(i + 2) % 4]);
+		CPoint* startpoint_prev = &((*selfpoints)[(i + 3) % 4]);
+		CPoint* startpoint = &((*selfpoints)[i]);
+		CPoint* endpoint = &((*selfpoints)[(i + 1) % 4]);
+		CPoint* endpoint_next = &((*selfpoints)[(i + 2) % 4]);
 
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 		ASSERT( IsRightAngle(dir) );

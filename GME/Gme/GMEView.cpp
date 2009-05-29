@@ -640,9 +640,8 @@ CGMEView::~CGMEView()
 		delete children.GetNext(pos);
 
 	pos = annotators.GetHeadPosition();
-	while(pos) {
+	while(pos)
 		delete annotators.GetNext(pos);
-	}
 
 	pos = pendingRequests.GetHeadPosition();
 	while(pos)
@@ -726,9 +725,10 @@ void CGMEView::DoPannWinRefresh()
 
 		pos = children.GetHeadPosition();
 		while(pos) {
-			CGuiFco *fco = children.GetNext(pos);
+			CGuiFco* fco = children.GetNext(pos);
+			ASSERT(fco != NULL);
 			if (fco->IsVisible()) {
-				CGuiConnection *conn = dynamic_cast<CGuiConnection*>(fco);
+				CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
 				if (!conn)
 					fco->Draw(pannDC, &gdip);
 			}
@@ -811,8 +811,9 @@ void CGMEView::OnDraw(CDC* pDC)
 		pos = children.GetHeadPosition();
 		while (pos) {
 			CGuiFco* fco = children.GetNext(pos);
+			ASSERT(fco != NULL);
 			if (fco->IsVisible()) {
-				CGuiConnection* conn = dynamic_cast<CGuiConnection*> (fco);
+				CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
 				if (!conn)
 					fco->Draw(pDC->m_hDC, &gdip);
 			}
@@ -1799,8 +1800,10 @@ CGuiFco* CGMEView::CreateGuiObject(CComPtr<IMgaFCO>& fco, CGuiFcoList* objList, 
 			fco->get_ID(&bstr);
 			CString setID;
 			CopyTo(bstr, setID);
-			if(setID == currentSetID)
-				currentSet = dynamic_cast<CGuiSet*> (guiFco);
+			if(setID == currentSetID) {
+				if (guiFco != NULL)
+					currentSet = guiFco->dynamic_cast_CGuiSet();
+			}
 		}
 	} else if (tp == OBJTYPE_CONNECTION) {
 		guiFco = new CGuiConnection(fco, role, this, guiMeta->NumberOfAspects(), false);
@@ -2004,8 +2007,9 @@ void CGMEView::Reset(bool doInvalidate)
 
 		POSITION pos = children.GetHeadPosition();
 		while(pos) {
-			CGuiFco *fco = children.GetNext(pos);
-			CGuiObject *obj = dynamic_cast<CGuiObject *>(fco);
+			CGuiFco* fco = children.GetNext(pos);
+			ASSERT(fco != NULL);
+			CGuiObject* obj = fco->dynamic_cast_CGuiObject();
 			if(obj && obj->IsVisible()) {
 				if(obj->GetRouterBox())					// it may be a new object not yet routed
 					obj->RemoveFromRouter(router);
@@ -2070,7 +2074,9 @@ void CGMEView::Reset(bool doInvalidate)
 			// filling up selected, m_lstSelect and m_lstUnselect lists
 			POSITION oPos = children.GetHeadPosition();
 			while(oPos) {
-				CGuiObject *obj = dynamic_cast<CGuiObject *>(children.GetNext(oPos));
+				CGuiFco* fco = children.GetNext(oPos);
+				ASSERT(fco != NULL);
+				CGuiObject* obj = fco->dynamic_cast_CGuiObject();
 				if( obj)
 				{
 					if( !cntxSelID.IsEmpty() && obj->id == cntxSelID)
@@ -2117,7 +2123,9 @@ void CGMEView::Reset(bool doInvalidate)
 		//	CString id = selIDs.GetNext(pos);
 		//	POSITION oPos = children.GetHeadPosition();
 		//	while(oPos) {
-		//		CGuiObject *obj = dynamic_cast<CGuiObject *>(children.GetNext(oPos));
+		//		CGuiFco* fco = children.GetNext(oPos);
+		//		ASSERT(fco != NULL);
+		//		CGuiObject* obj = fco->dynamic_cast_CGuiObject();
 		//		if(obj) {
 		//			if(id == obj->id)
 		//				selected.AddTail(obj); // this->SendSelecEvent4Object( obj); omitted because of a READONLY transaction
@@ -2208,7 +2216,9 @@ void CGMEView::InitSets()
 {
 	POSITION pos = children.GetHeadPosition();
 	while(pos) {
-		CGuiSet *set = dynamic_cast<CGuiSet *>(children.GetNext(pos));
+		CGuiFco* fco = children.GetNext(pos);
+		ASSERT(fco != NULL);
+		CGuiSet* set = fco->dynamic_cast_CGuiSet();
 		if(set)
 			set->Init(children,connections);
 	}
@@ -2231,7 +2241,8 @@ void CGMEView::ChangeAttrPrefObjs(CGuiObjectList &objlist)
 
 void CGMEView::ChangeAttrPrefFco(CGuiFco* guiFco)
 {
-	CGuiConnection* conn = dynamic_cast<CGuiConnection*> (guiFco);
+	ASSERT(guiFco != NULL);
+	CGuiConnection* conn = guiFco->dynamic_cast_CGuiConnection();
 	if (conn != NULL) {
 		if (selectedConnection != conn) {
 			if (selectedConnection != NULL)
@@ -2501,7 +2512,7 @@ void CGMEView::ShowModel(CComPtr<IMgaModel> model,CString *aspect)
 
 void CGMEView::GetModelInContext(CComPtr<IMgaModel> &model)
 {
-	if(contextSelection)
+	if (contextSelection)
 		VERIFY(SUCCEEDED(contextSelection->mgaFco.QueryInterface(&model)));
 	else
 		model = currentModel;
@@ -2950,7 +2961,9 @@ CGuiObject *CGMEView::HelpMeFindNextObject( bool p_secondFind)
 
 	POSITION pos = children.GetHeadPosition();
 	while(pos) {
-		CGuiObject *cur = dynamic_cast<CGuiObject *>( children.GetNext( pos));
+		CGuiFco* fco = children.GetNext(pos);
+		ASSERT(fco != NULL);
+		CGuiObject* cur = fco->dynamic_cast_CGuiObject();
 		if( cur && cur->IsVisible())
 		{
 			CPoint        cur_pos = cur->GetCenter();
@@ -2989,7 +3002,9 @@ CGuiObject *CGMEView::FindObject(CPoint &pt, bool lookNearToo, bool lookForLabel
 {
 	POSITION pos = children.GetHeadPosition();
 	while(pos) {
-		CGuiObject *obj = dynamic_cast<CGuiObject *>(children.GetNext(pos));
+		CGuiFco* fco = children.GetNext(pos);
+		ASSERT(fco != NULL);
+		CGuiObject* obj = fco->dynamic_cast_CGuiObject();
 		if(obj && obj->IsVisible()) {
 			if (!lookForLabel) {
 				if (obj->IsInside(pt, lookNearToo))
@@ -3018,11 +3033,13 @@ CGuiAnnotator *CGMEView::FindAnnotation(CPoint &pt)
 bool CGMEView::FindObjects(CRect &rect,CGuiObjectList &objectList)
 {
 	bool ret = false;
-	CGuiObject *obj;
-	CRect r,dummy;
+	CGuiObject* obj;
+	CRect r, dummy;
 	POSITION pos = children.GetHeadPosition();
 	while(pos) {
-		obj = dynamic_cast<CGuiObject *>(children.GetNext(pos));
+		CGuiFco* fco = children.GetNext(pos);
+		ASSERT(fco != NULL);
+		obj = fco->dynamic_cast_CGuiObject();
 		if(obj) {
 			if(!obj->IsVisible())
 				continue;
@@ -3615,7 +3632,9 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 					if( newFcos) CreateGuiObjects(newFcos,newGuiFcos,newConnections);
 					POSITION fpos = newGuiFcos.GetHeadPosition();
 					while (fpos) {
-						CGuiObject * fgobj = dynamic_cast<CGuiObject*>(newGuiFcos.GetNext(fpos));
+						CGuiFco* fgfco = newGuiFcos.GetNext(fpos);
+						ASSERT(fgfco != NULL);
+						CGuiObject* fgobj = fgfco->dynamic_cast_CGuiObject();
 						if (fgobj) {
 							newObjs.AddTail(fgobj);
 						}
@@ -3835,10 +3854,12 @@ void CGMEView::FillModelGrid()
 {
 	BeginWaitCursor();
 	modelGrid.SetSource(this);
-	CGuiObject *obj;
+	CGuiObject* obj;
 	POSITION pos = children.GetHeadPosition();
 	while(pos) {
-		obj = dynamic_cast<CGuiObject *>(children.GetNext(pos));
+		CGuiFco* fco = children.GetNext(pos);
+		ASSERT(fco != NULL);
+		obj = fco->dynamic_cast_CGuiObject();
 		if(!obj || !obj->IsVisible())
 			continue;
 		CPoint pt = obj->GetLocation().CenterPoint();
@@ -3863,7 +3884,9 @@ void CGMEView::SetObjectLocation(CComPtr<IMgaFCO> &child,CComPtr<IMgaMetaRole> &
 {
 	// We temporarily create a GuiObject in order to have a decorator and be able to access real size data
 	CGuiFco* guiFco = CreateGuiObject(child, NULL, NULL);
-	CGuiObject* guiObject = dynamic_cast<CGuiObject*> (guiFco);
+	ASSERT(guiFco != NULL);
+	CGuiObject* guiObject = guiFco->dynamic_cast_CGuiObject();
+	ASSERT(guiObject != NULL);
 	CRect loc = guiObject->GetLocation();
 	::SetLocation(loc,pt);
 
@@ -5199,7 +5222,8 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 								if(aspi >= 0) {
 									try {
 										BeginTransaction(TRANSACTION_READ_ONLY);
-										CGuiCompoundReference *compref = dynamic_cast<CGuiCompoundReference *>(selection);
+										ASSERT(selection != NULL);
+										CGuiCompoundReference* compref = selection->dynamic_cast_CGuiCompoundReference();
 										VERIFY(compref);
 										CComPtr<IMgaMetaFCO> metaFco;
 										COMTHROW(compref->GetTerminalReferee()->get_Meta(&metaFco));
@@ -5240,11 +5264,12 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			else {
 				int aspi = selection->MapAspect(selection->GetParentAspect());
 				if(aspi >= 0) {
-					CGuiCompound *comp = dynamic_cast<CGuiCompound *>(selection);
+					ASSERT(selection != NULL);
+					CGuiCompound* comp = selection->dynamic_cast_CGuiCompound();
 					VERIFY(comp);
-					CGuiMetaModel *guiMetaModel = dynamic_cast<CGuiMetaModel *>(comp->guiMeta);
+					CGuiMetaModel* guiMetaModel = dynamic_cast<CGuiMetaModel*>(comp->guiMeta);
 					VERIFY(guiMetaModel);
-					CGuiMetaAspect *asp = guiMetaModel->FindAspect(aspi);
+					CGuiMetaAspect* asp = guiMetaModel->FindAspect(aspi);
 					if(asp)
 						aspectName = asp->name;
 				}
@@ -5301,24 +5326,27 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 	contextSelection = FindObject(local);
 	if (contextSelection == NULL && doc->GetEditMode() == GME_EDIT_MODE)
 		contextSelection = FindObject(local, false, true);
-	if( dynamic_cast<CGuiObject*>( contextSelection)) {
-		CGuiPort *port = dynamic_cast<CGuiObject*>( contextSelection)->FindPort( local);
-		if(port && port->IsRealPort()) {
+	CGuiObject* cgobj = NULL;
+	if (contextSelection != NULL)
+		cgobj = contextSelection->dynamic_cast_CGuiObject();
+	if (cgobj) {
+		CGuiPort *port = cgobj->FindPort( local);
+		if (port && port->IsRealPort()) {
 			contextPort = port;
 		}
 	}
 
-	if(contextSelection == 0)
+	if (contextSelection == 0)
 		contextSelection = router.FindConnection(local);
-	if(!contextSelection) {
+	if (!contextSelection) {
 		contextAnnotation = FindAnnotation(local);
 	}
 	else {
 		contextAnnotation = NULL;
 	}
-	if(contextSelection)
+	if (contextSelection)
 		CGMEEventLogger::LogGMEEvent("    RButton over "+contextSelection->GetName()+" "+contextSelection->GetID()+"\r\n");
-	else if(contextAnnotation)
+	else if (contextAnnotation)
 		CGMEEventLogger::LogGMEEvent("    RButton over "+contextAnnotation->GetName()+"\r\n");
 
 	switch(doc->GetEditMode()) {
@@ -5328,7 +5356,9 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 			selected.RemoveAll();
 			RemoveAllAnnotationFromSelection();
 			ClearConnectionSelection();
-			CGuiSet *set = dynamic_cast<CGuiSet *>(contextSelection);
+			CGuiSet* set = NULL;
+			if (contextSelection)
+				set = contextSelection->dynamic_cast_CGuiSet();
 			if(set) {
 				if(set == currentSet)
 					currentSet = 0;
@@ -5365,7 +5395,9 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 	case GME_VISUAL_MODE:
 		{
 			CGMEEventLogger::LogGMEEvent("    mode=GME_VISUAL_MODE\r\n");
-			CGuiObject *obj = dynamic_cast<CGuiObject *>(contextSelection);
+			CGuiObject* obj = NULL;
+			if (contextSelection)
+				obj = contextSelection->dynamic_cast_CGuiObject();
 			if(obj) {
 				obj->ToggleGrayOut();
 				obj->GrayOutNeighbors();
@@ -5373,8 +5405,10 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				Invalidate();
 			}
 			else {
-				CGuiConnection *conn = dynamic_cast<CGuiConnection *>(contextSelection);
-				if(conn) {
+				CGuiConnection* conn = NULL;
+				if (contextSelection)
+					conn = contextSelection->dynamic_cast_CGuiConnection();
+				if (conn) {
 					conn->ToggleGrayOut();
 					conn->GrayOutEndPoints();
 					CGuiFco::GrayOutNonInternalConnections(connections);
@@ -5448,7 +5482,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 					sm->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, global.x,global.y,GetParent());
 				}
 			} else if (contextSelection != NULL) {
-				selectedContextConnection = dynamic_cast<CGuiConnection*> (contextSelection);
+				selectedContextConnection = contextSelection->dynamic_cast_CGuiConnection();
 				if (selectedContextConnection) {
 					bool isPartFixed = false;
 					contextConnectionEdgeIndex = selectedContextConnection->IsPathAt(local,
@@ -5530,9 +5564,9 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 			CGMEEventLogger::LogGMEEvent("    mode=GME_DISCONNECT_MODE\r\n");
 			CPoint global = point;
 			ClientToScreen(&global);
-			if(contextSelection) {
+			if (contextSelection) {
 				CMenu menu;
-				menu.LoadMenu(dynamic_cast<CGuiConnection *>(contextSelection) ? IDR_CONNCONTEXT_MENU : IDR_CONTEXT_MENU);
+				menu.LoadMenu(contextSelection->dynamic_cast_CGuiConnection() ? IDR_CONNCONTEXT_MENU : IDR_CONTEXT_MENU);
 				menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
 													global.x,global.y,GetParent());
 			}
@@ -5670,11 +5704,13 @@ DROPEFFECT CGMEView::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState, C
 	if (dropEffect != DROPEFFECT_NONE)
 		return dropEffect;
 
-	CGuiObject *ref = dynamic_cast<CGuiReference *>(obj);
-	if(!ref)
-		ref = dynamic_cast<CGuiCompoundReference *>(obj);
+	CGuiObject* ref = NULL;
+	if (obj)
+		ref = obj->dynamic_cast_CGuiReference();
+	if (obj && !ref)
+		ref = obj->dynamic_cast_CGuiCompoundReference();
 
-	if(ref && obj != dragSource && dragDesc.GetCount() <= 1)
+	if (ref && obj != dragSource && dragDesc.GetCount() <= 1)
 		return DROPEFFECT_LINK;
 	else if(!isType)
 		return DROPEFFECT_NONE;
@@ -5813,8 +5849,12 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 	if (retVal == S_DECORATOR_EVENT_HANDLED)
 		return TRUE;
 
-	CGuiReference *guiRef = dynamic_cast<CGuiReference *>(target);
-	CGuiCompoundReference *compRef = dynamic_cast<CGuiCompoundReference *>(target);
+	CGuiReference* guiRef = NULL;
+	CGuiCompoundReference* compRef = NULL;
+	if (target != NULL) {
+		guiRef = target->dynamic_cast_CGuiReference();
+		compRef = target->dynamic_cast_CGuiCompoundReference();
+	}
 	bool sameTarget = (target == dragSource);
 	if(isType || guiRef || compRef) {
 		DoPasteItem(pDataObject,
@@ -6073,13 +6113,13 @@ void CGMEView::OnUpdateEditDelete(CCmdUI* pCmdUI)
 void CGMEView::OnContextProperties()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnContextProperties in "+path+name+"\r\n");
-    if(contextSelection) {
-		CGuiObject *guiObj = dynamic_cast<CGuiObject *>(contextSelection);
-		if(guiObj)
+    if (contextSelection) {
+		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
+		if (guiObj)
 			ShowProperties(guiObj);
 		else {
-			CGuiConnection *guiConn = dynamic_cast<CGuiConnection *>(contextSelection);
-			if(guiConn)
+			CGuiConnection* guiConn = contextSelection->dynamic_cast_CGuiConnection();
+			if (guiConn)
 				ShowProperties(guiConn);
 		}
 	}
@@ -6091,7 +6131,7 @@ void CGMEView::OnContextProperties()
 	/*CComPtr<IMgaFCO> fco;
 	try {
 		BeginTransaction();
-		if(contextSelection)
+		if (contextSelection)
 			fco = contextSelection->mgaFco;
 		else
 			COMTHROW(currentModel.QueryInterface(&fco));
@@ -6130,13 +6170,13 @@ void CGMEView::AttributepanelPage(long page)
 void CGMEView::OnCntxPreferences()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxPreferences in "+path+name+"\r\n");
-	if(contextSelection) {
-		CGuiObject *guiObj = dynamic_cast<CGuiObject *>(contextSelection);
+	if (contextSelection) {
+		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if(guiObj)
 			ShowPreferences(guiObj);
 		else {
-			CGuiConnection *guiConn = dynamic_cast<CGuiConnection *>(contextSelection);
-			if(guiConn)
+			CGuiConnection* guiConn = contextSelection->dynamic_cast_CGuiConnection();
+			if (guiConn)
 				ShowPreferences(guiConn);
 		}
 	}
@@ -6152,11 +6192,11 @@ void CGMEView::OnCntxPreferences()
 void CGMEView::OnCntxDisconnectall()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxDisconnectall in "+path+name+"\r\n");
-	if(!isType)
+	if (!isType)
 		return;
-	if(contextSelection) {
-		CGuiObject *guiObj = dynamic_cast<CGuiObject *>(contextSelection);
-		if(guiObj && guiObj->IsVisible()) {
+	if (contextSelection) {
+		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
+		if (guiObj && guiObj->IsVisible()) {
 			try {
 				BeginTransaction();
 				POSITION pos = guiObj->GetPorts().GetHeadPosition();
@@ -6185,13 +6225,13 @@ void CGMEView::OnUpdateCntxDisconnectall(CCmdUI* pCmdUI)
 void CGMEView::OnCntxAttributes()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxAttributes in "+path+name+"\r\n");
-	if(contextSelection) {
-		CGuiObject *guiObj = dynamic_cast<CGuiObject *>(contextSelection);
-		if(guiObj)
+	if (contextSelection) {
+		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
+		if (guiObj)
 			ShowAttributes(guiObj);
 		else {
-			CGuiConnection *guiConn = dynamic_cast<CGuiConnection *>(contextSelection);
-			if(guiConn)
+			CGuiConnection* guiConn = contextSelection->dynamic_cast_CGuiConnection();
+			if (guiConn)
 				ShowAttributes(guiConn);
 		}
 	}
@@ -6359,8 +6399,8 @@ void CGMEView::OnUpdateEditPaste(CCmdUI* pCmdUI)
 void CGMEView::OnCntxCopy()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxCopy in "+path+name+"\r\n");
-	if(contextSelection) {
-		CGuiObject *guiObj = dynamic_cast<CGuiObject *>(contextSelection);
+	if (contextSelection) {
+		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if(guiObj) {
 			CGMEEventLogger::LogGMEEvent("    "+guiObj->GetName()+" "+guiObj->GetID()+"\r\n");
 			CGuiObjectList list;
@@ -6396,9 +6436,9 @@ void CGMEView::OnCntxCopy()
 void CGMEView::OnCntxCopyClosure()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxCopyClosure in "+path+name+"\r\n");
-	if(contextSelection) {
-		CGuiObject *guiObj = dynamic_cast<CGuiObject *>(contextSelection);
-		if(guiObj) {
+	if (contextSelection) {
+		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
+		if (guiObj) {
 			CGMEEventLogger::LogGMEEvent("    "+guiObj->GetName()+" "+guiObj->GetID()+"\r\n");
 			CGuiObjectList list;
 			CGuiAnnotatorList dummyList;
@@ -6433,9 +6473,9 @@ void CGMEView::OnCntxCopyClosure()
 void CGMEView::OnCntxCopySmart()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxCopySmart in "+path+name+"\r\n");
-	if(contextSelection) {
-		CGuiObject *guiObj = dynamic_cast<CGuiObject *>(contextSelection);
-		if(guiObj) {
+	if (contextSelection) {
+		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
+		if (guiObj) {
 			CGMEEventLogger::LogGMEEvent("    "+guiObj->GetName()+" "+guiObj->GetID()+"\r\n");
 			CGuiObjectList list;
 			CGuiAnnotatorList dummyList;
@@ -6455,7 +6495,7 @@ void CGMEView::OnCntxCopySmart()
 		}
 		else 
 		{
-			CGuiConnection *guiConn = dynamic_cast<CGuiConnection *>(contextSelection);
+			CGuiConnection* guiConn = contextSelection->dynamic_cast_CGuiConnection();
 			if( guiConn) // a valid connection
 			{
 				CGMEEventLogger::LogGMEEvent("    "+guiConn->GetName()+" "+guiConn->GetID()+"\r\n");
@@ -6493,7 +6533,7 @@ void CGMEView::OnCntxCut()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxCut in "+path+name+"\r\n");
 	if(isType && contextSelection) {
-		CGuiObject *guiObj = dynamic_cast<CGuiObject *>(contextSelection);
+		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if(guiObj) {
 			CGMEEventLogger::LogGMEEvent("    "+guiObj->GetName()+" "+guiObj->GetID()+"\r\n");
 			CGuiObjectList list;
@@ -6540,7 +6580,7 @@ void CGMEView::OnCntxDelete()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxDelete in "+path+name+"\r\n");
 	if(isType && contextSelection) {
-		CGuiObject *guiObj = dynamic_cast<CGuiObject *>(contextSelection);
+		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if(guiObj) {
 			CGMEEventLogger::LogGMEEvent("    "+guiObj->GetName()+" "+guiObj->GetID()+"\r\n");
 			CGuiObjectList list;
@@ -6848,7 +6888,9 @@ void CGMEView::OnConncntxDelete()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnConncntxDelete in "+path+name+"\r\n");
 	if(isType) {
-		CGuiConnection *conn = dynamic_cast<CGuiConnection *>(contextSelection);
+		CGuiConnection* conn = NULL;
+		if (contextSelection)
+			conn = contextSelection->dynamic_cast_CGuiConnection();
 		if(!conn || !DeleteConnection(conn))
 			AfxMessageBox("Connection cannot be deleted!");
 		contextSelection = 0;
@@ -6941,8 +6983,8 @@ void CGMEView::OnJumpToNextObject()
 void CGMEView::OnConnCntxFollow() // 'Go to Dst' context command of a connection 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnConnCntxFollow in "+path+name+"\r\n");
-	if(contextSelection) {
-		CGuiConnection *conn = dynamic_cast<CGuiConnection *>(contextSelection);
+	if (contextSelection) {
+		CGuiConnection* conn = contextSelection->dynamic_cast_CGuiConnection();
 		FollowLine( conn, false, ::GetKeyState( VK_CONTROL) < 0);
 		contextSelection = 0;
 		contextPort = 0;
@@ -6952,8 +6994,8 @@ void CGMEView::OnConnCntxFollow() // 'Go to Dst' context command of a connection
 void CGMEView::OnConnCntxRevfollow() // 'Go to Src' context command of a connection
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnConnCntxRevfollow in "+path+name+"\r\n");
-	if(contextSelection) {
-		CGuiConnection *conn = dynamic_cast<CGuiConnection *>(contextSelection);
+	if (contextSelection) {
+		CGuiConnection* conn = contextSelection->dynamic_cast_CGuiConnection();
 		FollowLine( conn, true, ::GetKeyState( VK_CONTROL) < 0);
 		contextSelection = 0;
 		contextPort = 0;
@@ -7271,12 +7313,14 @@ void CGMEView::OnUpdateCrashTestDivideByZero(CCmdUI* pCmdUI)
 void CGMEView::OnCntxClear()	// set refs to null, delete all members from set
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxClear in "+path+name+"\r\n");
-	if(!isType)
+	if (!isType)
 		return;
-	CGuiObject *obj = dynamic_cast<CGuiReference *>(contextSelection);
-	if(!obj)
-		obj = dynamic_cast<CGuiCompoundReference *>(contextSelection);
-	if(obj) {
+	CGuiObject* obj = NULL;
+	if (contextSelection)
+		obj = contextSelection->dynamic_cast_CGuiReference();
+	if (contextSelection && !obj)
+		obj = contextSelection->dynamic_cast_CGuiCompoundReference();
+	if (obj) {
 		try {
 			CGMEEventLogger::LogGMEEvent("    "+obj->GetName()+" "+obj->GetID()+"\r\n");
 			BeginTransaction();
@@ -7301,8 +7345,10 @@ void CGMEView::OnCntxClear()	// set refs to null, delete all members from set
 		}
 	}
 	else {
-		CGuiSet *set = dynamic_cast<CGuiSet *>(contextSelection);
-		if(set) {
+		CGuiSet* set = NULL;
+		if (contextSelection)
+			set = contextSelection->dynamic_cast_CGuiSet();
+		if (set) {
 			try {
 				CGMEEventLogger::LogGMEEvent("    "+set->GetName()+" "+set->GetID()+"\r\n");
 				BeginTransaction();
@@ -7320,21 +7366,25 @@ void CGMEView::OnCntxClear()	// set refs to null, delete all members from set
 
 void CGMEView::OnUpdateCntxClear(CCmdUI* pCmdUI)
 {
-	CGuiObject *obj = dynamic_cast<CGuiReference *>(contextSelection);
-	if(!obj)
-		obj = dynamic_cast<CGuiCompoundReference *>(contextSelection);
-	if(!obj)
-		obj = dynamic_cast<CGuiSet *>(contextSelection);
+	CGuiObject* obj = NULL;
+	if (contextSelection)
+		obj = contextSelection->dynamic_cast_CGuiReference();
+	if (contextSelection && !obj)
+		obj = contextSelection->dynamic_cast_CGuiCompoundReference();
+	if (contextSelection && !obj)
+		obj = contextSelection->dynamic_cast_CGuiSet();
 	pCmdUI->Enable(isType && obj != 0);
 }
 
 void CGMEView::OnCntxReset()	// revert to base i.e. reestablish dependency chain for refs and sets
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxReset in "+path+name+"\r\n");
-	CGuiObject *obj = dynamic_cast<CGuiReference *>(contextSelection);
-	if(!obj)
-		obj = dynamic_cast<CGuiCompoundReference *>(contextSelection);
-	if(obj) {
+	CGuiObject* obj = NULL;
+	if (contextSelection)
+		obj = contextSelection->dynamic_cast_CGuiReference();
+	if (contextSelection && !obj)
+		obj = contextSelection->dynamic_cast_CGuiCompoundReference();
+	if (obj) {
 		try {
 			CGMEEventLogger::LogGMEEvent("    "+obj->GetName()+" "+obj->GetID()+"\r\n");
 			BeginTransaction();
@@ -7348,8 +7398,10 @@ void CGMEView::OnCntxReset()	// revert to base i.e. reestablish dependency chain
 		}
 	}
 	else {
-		CGuiSet *set = dynamic_cast<CGuiSet *>(contextSelection);
-		if(set) {
+		CGuiSet* set = NULL;
+		if (contextSelection)
+			set = contextSelection->dynamic_cast_CGuiSet();
+		if (set) {
 			try {
 				CGMEEventLogger::LogGMEEvent("    "+set->GetName()+" "+set->GetID()+"\r\n");
 				BeginTransaction();
@@ -7367,11 +7419,13 @@ void CGMEView::OnCntxReset()	// revert to base i.e. reestablish dependency chain
 
 void CGMEView::OnUpdateCntxReset(CCmdUI* pCmdUI)
 {
-	CGuiObject *obj = dynamic_cast<CGuiReference *>(contextSelection);
-	if(!obj)
-		obj = dynamic_cast<CGuiCompoundReference *>(contextSelection);
-	if(!obj)
-		obj = dynamic_cast<CGuiSet *>(contextSelection);
+	CGuiObject* obj = NULL;
+	if (contextSelection)
+		obj = contextSelection->dynamic_cast_CGuiReference();
+	if (contextSelection && !obj)
+		obj = contextSelection->dynamic_cast_CGuiCompoundReference();
+	if (contextSelection && !obj)
+		obj = contextSelection->dynamic_cast_CGuiSet();
 	pCmdUI->Enable(baseType != 0 && obj != 0);
 }
 
@@ -7402,7 +7456,7 @@ void CGMEView::OnCntxHelp()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxHelp in "+path+name+"\r\n");
 	CComPtr<IMgaFCO> fco;
-	if(contextSelection)
+	if (contextSelection)
 	{
 		CGMEEventLogger::LogGMEEvent("    "+contextSelection->GetName()+" "+contextSelection->GetID()+"\r\n");
 		fco = contextSelection->mgaFco;
@@ -7464,7 +7518,7 @@ void CGMEView::OnCntxShowtype()
 void CGMEView::OnUpdateCntxShowtype(CCmdUI* pCmdUI)
 {
 	bool type = (contextSelection ? contextSelection->IsType() : isType);
-	bool model = (contextSelection ? (dynamic_cast<CGuiModel *>(contextSelection) != 0) : true);
+	bool model = (contextSelection ? (contextSelection->dynamic_cast_CGuiModel() != NULL) : true);
 	pCmdUI->Enable(model && !type);
 }
 
@@ -7484,7 +7538,7 @@ void CGMEView::OnUpdateCntxShowbasetype(CCmdUI* pCmdUI)
 {
 	bool ok = false;
 	bool type = contextSelection ? contextSelection->IsType() : isType;
-	bool model = (contextSelection ? (dynamic_cast<CGuiModel *>(contextSelection) != 0) : true);
+	bool model = (contextSelection ? (contextSelection->dynamic_cast_CGuiModel() != NULL) : true);
 	if(type && model) {
 		CComPtr<IMgaModel> model;
 		GetModelInContext(model);
@@ -7655,7 +7709,7 @@ void CGMEView::OnCntxRegistry()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxRegistry in "+path+name+"\r\n");
 	CComPtr<IMgaFCO> fco;
-	if(contextSelection)
+	if (contextSelection)
 	{
 		CGMEEventLogger::LogGMEEvent("    "+contextSelection->GetName()+" "+contextSelection->GetID()+"\r\n");
 		fco = contextSelection->mgaFco;
@@ -7740,7 +7794,9 @@ void CGMEView::OnEditSync()
 
 	POSITION opos = children.GetHeadPosition();
 	while (opos) {
-		CGuiObject	*obj = dynamic_cast<CGuiObject*>(children.GetNext(opos));
+		CGuiFco* ofco = children.GetNext(opos);
+		ASSERT(ofco != NULL);
+		CGuiObject* obj = ofco->dynamic_cast_CGuiObject();
 
 		if (!obj) {
 			// It is a connection
@@ -7909,7 +7965,9 @@ void CGMEView::OnEditSelectall()
 	ClearConnectionSelection();
 	POSITION pos = children.GetHeadPosition();
 	while(pos) {
-		CGuiObject *obj = dynamic_cast<CGuiObject *>(children.GetNext(pos));
+		CGuiFco* ofco = children.GetNext(pos);
+		ASSERT(ofco != NULL);
+		CGuiObject* obj = ofco->dynamic_cast_CGuiObject();
 		if(obj && obj->IsVisible()) {
 			this->SendSelecEvent4Object( obj);
 			selected.AddTail(obj);
@@ -8161,10 +8219,10 @@ void CGMEView::OnCntxRedirectionpaste()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxRedirectionpaste in "+path+name+"\r\n");
 	if(isType && contextSelection) {
-		CGuiObject *ref = dynamic_cast<CGuiReference *>(contextSelection);
-		if(!ref)
-			ref = dynamic_cast<CGuiCompoundReference *>(contextSelection);
-		if(ref) {
+		CGuiObject* ref = contextSelection->dynamic_cast_CGuiReference();
+		if (!ref)
+			ref = contextSelection->dynamic_cast_CGuiCompoundReference();
+		if (ref) {
 			COleDataObject clipboardData;
 			clipboardData.AttachClipboard();
 			derivedDrop = instanceDrop = false;
@@ -8176,9 +8234,11 @@ void CGMEView::OnCntxRedirectionpaste()
 void CGMEView::OnUpdateCntxRedirectionpaste(CCmdUI* pCmdUI)
 {
 	BOOL bEnable = (contextSelection != 0);
-	CGuiObject *ref = dynamic_cast<CGuiReference *>(contextSelection);
-	if(!ref)
-		ref = dynamic_cast<CGuiCompoundReference *>(contextSelection);
+	CGuiObject* ref = NULL;
+	if (contextSelection != NULL)
+		ref = contextSelection->dynamic_cast_CGuiReference();
+	if (contextSelection && !ref)
+		ref = contextSelection->dynamic_cast_CGuiCompoundReference();
 	bEnable = bEnable && (ref != 0);
 	COleDataObject dataObj;
 	bEnable = bEnable && dataObj.AttachClipboard() &&
@@ -8190,11 +8250,11 @@ void CGMEView::OnUpdateCntxRedirectionpaste(CCmdUI* pCmdUI)
 void CGMEView::OnCntxConnect()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxConnect in "+path+name+"\r\n");
-	if(contextSelection) {
-		CGuiObject *obj = dynamic_cast<CGuiObject *>(contextSelection);
-		if(obj) {
-			CGuiPort *port = obj->FindPort(contextMenuLocation);
-			if(connSrc == 0) {
+	if (contextSelection) {
+		CGuiObject* obj = contextSelection->dynamic_cast_CGuiObject();
+		if (obj) {
+			CGuiPort* port = obj->FindPort(contextMenuLocation);
+			if (connSrc == 0) {
 				connSrc = obj;
 				connSrcPort = port;
 				connSrcHotSide = GME_CENTER;

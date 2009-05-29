@@ -162,11 +162,24 @@ protected:
 	bool										special;
 };
 
+class CGuiReference;
+class CGuiCompoundReference;
+class CGuiSet;
+
 class CGuiFco : public CGuiBase
 {
 public:
 	CGuiFco(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp);
 	virtual ~CGuiFco() {}
+
+	// This is a trick to speed up dynamic_cast
+	virtual CGuiObject*				dynamic_cast_CGuiObject(void)				{ return NULL; }
+	virtual CGuiCompound*			dynamic_cast_CGuiCompound(void)				{ return NULL; }
+	virtual CGuiModel*				dynamic_cast_CGuiModel(void)				{ return NULL; }
+	virtual CGuiReference*			dynamic_cast_CGuiReference(void)			{ return NULL; }
+	virtual CGuiCompoundReference*	dynamic_cast_CGuiCompoundReference(void)	{ return NULL; }
+	virtual CGuiSet*				dynamic_cast_CGuiSet(void)					{ return NULL; }
+	virtual CGuiConnection*			dynamic_cast_CGuiConnection(void)			{ return NULL; }
 
 public:
 	bool IsReal()									{return (mgaFco != NULL);}
@@ -224,6 +237,9 @@ public:
 	CGuiObject(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp);					// regular objects
 	virtual ~CGuiObject();
 	void InitObject(CWnd* viewWnd);								// Need this because of virtual functions
+
+	// This is a trick to speed up dynamic_cast
+	virtual CGuiObject*				dynamic_cast_CGuiObject(void)				{ return this; }
 
 public:
 	void InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& decorStr, CWnd* viewWnd);
@@ -291,12 +307,18 @@ class CGuiCompound : public CGuiObject
 {
 public:
 	CGuiCompound(CComPtr<IMgaFCO>& pt,CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp) : CGuiObject(pt, role, vw, numAsp) {}
+
+	// This is a trick to speed up dynamic_cast
+	virtual CGuiCompound*			dynamic_cast_CGuiCompound(void)				{ return this; }
 };
 
 class CGuiModel : public CGuiCompound
 {
 public:
 	CGuiModel(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp);
+
+	// This is a trick to speed up dynamic_cast
+	virtual CGuiModel*				dynamic_cast_CGuiModel(void)				{ return this; }
 
 	virtual CGuiMetaAspect* GetKindAspect(CComPtr<IMgaMetaPart> metaPart);
 	virtual CGuiMetaAttributeList* GetMetaAttributes();
@@ -324,6 +346,10 @@ class CGuiReference : public CGuiObject, public CReference
 {
 public:
 	CGuiReference(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp, CComPtr<IMgaFCO> mgaRefd, CComPtr<IMgaFCO> mgaTermRefd) : CGuiObject(pt, role, vw, numAsp), CReference(mgaRefd, mgaTermRefd) {}
+
+	// This is a trick to speed up dynamic_cast
+	virtual CGuiReference*			dynamic_cast_CGuiReference(void)			{ return this; }
+
 public:
 	virtual CString GetInfoText() { return CReference::GetInfoText(name); }
 };
@@ -332,6 +358,10 @@ class CGuiCompoundReference : public CGuiCompound, public CReference
 {
 public:
 	CGuiCompoundReference(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp, CComPtr<IMgaFCO> mgaRefd, CComPtr<IMgaFCO> mgaTermRefd) : CGuiCompound(pt, role, vw, numAsp), CReference(mgaRefd, mgaTermRefd) {}
+
+	// This is a trick to speed up dynamic_cast
+	virtual CGuiCompoundReference*	dynamic_cast_CGuiCompoundReference(void)	{ return this; }
+
 public:
 	virtual CString GetInfoText() { return CReference::GetInfoText(name); }
 	virtual CGuiMetaAttributeList* GetMetaAttributes();
@@ -343,6 +373,9 @@ class CGuiSet : public CGuiObject
 {
 public:
 	CGuiSet(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp) : CGuiObject(pt, role, vw, numAsp) {}
+
+	// This is a trick to speed up dynamic_cast
+	virtual CGuiSet*				dynamic_cast_CGuiSet(void)					{ return this; }
 
 public:
 	void Init(CGuiFcoList& fcos, CGuiConnectionList& conns);
@@ -394,6 +427,9 @@ class CGuiConnection : public CGuiFco
 public:
 	CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp, bool resolve = true);
 	virtual ~CGuiConnection() { delete visible; }
+
+	// This is a trick to speed up dynamic_cast
+	virtual CGuiConnection*			dynamic_cast_CGuiConnection(void)			{ return this; }
 
 	void RefreshAttributeCache();
 	CComPtr<IAutoRouterPath> GetRouterPath()				{ return routerPath; }

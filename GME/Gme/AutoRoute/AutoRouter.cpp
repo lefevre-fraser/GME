@@ -64,13 +64,14 @@ void CAutoRouter::Clear(CGuiFcoList& fcos)
 	POSITION pos = fcos.GetHeadPosition();
 	while(pos) {
 		CGuiFco* fco = fcos.GetNext(pos);
-		CGuiConnection* conn = dynamic_cast<CGuiConnection*>(fco);
+		ASSERT(fco != NULL);
+		CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
 		if(conn) {
 			CComPtr<IAutoRouterPath> path;
 			conn->SetRouterPath(path);
 		}
 		else {
-			CGuiObject* obj = dynamic_cast<CGuiObject*>(fco);
+			CGuiObject* obj = fco->dynamic_cast_CGuiObject();
 			VERIFY(obj);
 			if (obj->IsVisible()) {
 				CComPtr<IAutoRouterBox> box1;
@@ -95,8 +96,9 @@ void CAutoRouter::AddObjects(CGuiFcoList& fcos)
 	POSITION pos = fcos.GetHeadPosition();
 	while(pos) {
 		CGuiFco* fco = fcos.GetNext(pos);
-		if(fco->IsVisible()) {
-			CGuiConnection* conn = dynamic_cast<CGuiConnection*>(fco);
+		ASSERT(fco != NULL);
+		if (fco->IsVisible()) {
+			CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
 			if(conn)
 				conns.AddTail(conn);
 			else
@@ -208,19 +210,19 @@ void CAutoRouter::SetPathPreferences(CComPtr<IAutoRouterPath> path, CGuiConnecti
 
 bool CAutoRouter::RemoveDeletedCustomPathDataFromGuiConnections(void)
 {
-	CMapAutoRouterPath2CGuiConnection::CPair* pCurVal;
 	bool wereThereDeletion = false;
 
-	pCurVal = mapPath2Conn.PGetFirstAssoc();
-	while (pCurVal != NULL) {
-		// pCurVal->key:	CAutoRouterPath*
-		// pCurVal->value:	CGuiConnection*
+	POSITION pos = mapPath2Conn.GetStartPosition();
+	IAutoRouterPath* key;
+	while (pos) {
+		CGuiConnection* value;
+		mapPath2Conn.GetNextAssoc(pos, key, value);
 		VARIANT_BOOL areThere = VARIANT_FALSE;
-		COMTHROW(pCurVal->key->AreThereDeletedPathCustomizations(&areThere));
+		COMTHROW(key->AreThereDeletedPathCustomizations(&areThere));
 		if (areThere == VARIANT_TRUE) {
 			std::vector<CustomPathData> cpd;
 			SAFEARRAY* pArr;
-			COMTHROW(pCurVal->key->GetDeletedCustomPathData(&pArr));
+			COMTHROW(key->GetDeletedCustomPathData(&pArr));
 			CustomPathData* pData;
 			COMTHROW(SafeArrayAccessData(pArr, (void**)&pData));
 
@@ -234,11 +236,9 @@ bool CAutoRouter::RemoveDeletedCustomPathDataFromGuiConnections(void)
 			COMTHROW(SafeArrayUnaccessData(pArr));
 			COMTHROW(SafeArrayDestroy(pArr));
 
-			pCurVal->value->RemoveDeletedPathCustomizations(cpd);
+			value->RemoveDeletedPathCustomizations(cpd);
 			wereThereDeletion = true;
 		}
-
-		pCurVal = mapPath2Conn.PGetNextAssoc(pCurVal);
 	}
 
 	return wereThereDeletion;
@@ -248,11 +248,12 @@ void CAutoRouter::AddFco(CGuiFco* fco)
 {
 	if (CGMEView::IsHugeModel())
 		return;
-	CGuiConnection* conn = dynamic_cast<CGuiConnection*>(fco);
+	ASSERT(fco != NULL);
+	CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
 	if (conn)
 		AddConnection(conn);
 	else {
-		CGuiObject* obj = dynamic_cast<CGuiObject*>(fco);
+		CGuiObject* obj = fco->dynamic_cast_CGuiObject();
 		VERIFY(obj);
 		AddObject(obj);
 	}

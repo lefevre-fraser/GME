@@ -259,7 +259,7 @@ void CGuiPort::ReadARPreferences()
 		autorouterPrefs[GME_END_WEST] = (val.Find("w") != -1);
 	}
 	else {
-		if (dynamic_cast<CGuiCompound*>(parent->GetParent())) {
+		if (parent->GetParent()->dynamic_cast_CGuiCompound() != NULL) {
 			autorouterPrefs[GME_START_NORTH] = true;
 			autorouterPrefs[GME_START_EAST] = false;
 			autorouterPrefs[GME_START_SOUTH] = true;
@@ -1629,8 +1629,10 @@ void CGuiObject::GetExtent(CGuiFcoList& objectList, CRect& rect)
 	CRect cur1, cur2;
 	POSITION pos = objectList.GetHeadPosition();
 	rect = CRect(0, 0, 10, 10);
-	while(pos) {
-		obj = dynamic_cast<CGuiObject*>(objectList.GetNext(pos));
+	while (pos) {
+		CGuiFco* fco = objectList.GetNext(pos);
+		ASSERT(fco != NULL);
+		obj = fco->dynamic_cast_CGuiObject();
 		if(obj && obj->IsVisible()) {
 			cur2 = obj->GetLocation();
 			cur1 = rect;
@@ -1660,8 +1662,10 @@ void CGuiObject::MoveObjects(CGuiFcoList& fcoList, CPoint& pt)
 	CGuiObjectList objs;
 	POSITION pos = fcoList.GetHeadPosition();
 	while(pos) {
-		CGuiObject* obj = dynamic_cast<CGuiObject*>(fcoList.GetNext(pos));
-		if(obj)
+		CGuiFco* fco = fcoList.GetNext(pos);
+		ASSERT(fco != NULL);
+		CGuiObject* obj = fco->dynamic_cast_CGuiObject();
+		if (obj)
 			objs.AddTail(obj);
 	}
 	MoveObjects(objs, pt);
@@ -1806,15 +1810,17 @@ bool CGuiObject::NudgeObjects(CGuiObjectList& modelList, int right, int down)
 	return canDo;
 }
 
-CGuiObject *CGuiObject::FindObject(CComPtr<IMgaFCO>& fco, CGuiFcoList& fcoList)
+CGuiObject* CGuiObject::FindObject(CComPtr<IMgaFCO>& fco, CGuiFcoList& fcoList)
 {
 	POSITION pos = fcoList.GetHeadPosition();
 	while(pos) {
-		CGuiObject* obj = dynamic_cast<CGuiObject*>(fcoList.GetNext(pos));
-		if(obj) {
+		CGuiFco* ofco = fcoList.GetNext(pos);
+		ASSERT(ofco != NULL);
+		CGuiObject* obj = ofco->dynamic_cast_CGuiObject();
+		if (obj) {
 			VARIANT_BOOL b;
 			COMTHROW(obj->mgaFco->get_IsEqual(fco, &b));
-			if(b)
+			if (b)
 				return obj;
 		}
 	}
@@ -2487,11 +2493,13 @@ void CGuiConnection::Resolve()
 
 				POSITION pos = view->children.GetHeadPosition();
 				while (pos) {
-					CGuiObject *srcObj = dynamic_cast<CGuiObject*>(view->children.GetNext(pos));
+					CGuiFco* fco = view->children.GetNext(pos);
+					ASSERT(fco != NULL);
+					CGuiObject* srcObj = fco->dynamic_cast_CGuiObject();
 					if (srcObj && srcObj->IsVisible()) {
 						srcPort = srcObj->FindPort(mgaSrc);
 						if (srcPort) {
-							CGuiCompoundReference *modelRefObj = dynamic_cast<CGuiCompoundReference*>(srcObj);
+							CGuiCompoundReference* modelRefObj = srcObj->dynamic_cast_CGuiCompoundReference();
 							if (modelRefObj) {
 								CComPtr<IMgaFCO> mgaSrcPort;
 								COMTHROW(conn->get_Src(&mgaSrcPort));
@@ -2543,11 +2551,13 @@ void CGuiConnection::Resolve()
 
 				POSITION pos = view->children.GetHeadPosition();
 				while (pos) {
-					CGuiObject *dstObj = dynamic_cast<CGuiObject*>(view->children.GetNext(pos));
+					CGuiFco* fco = view->children.GetNext(pos);
+					ASSERT(fco != NULL);
+					CGuiObject* dstObj = fco->dynamic_cast_CGuiObject();
 					if (dstObj && dstObj->IsVisible()) {
 						dstPort = dstObj->FindPort(mgaDst);
 						if (dstPort) {
-							CGuiCompoundReference *modelRefObj = dynamic_cast<CGuiCompoundReference*>(dstObj);
+							CGuiCompoundReference* modelRefObj = dstObj->dynamic_cast_CGuiCompoundReference();
 							if (modelRefObj) {
 								CComPtr<IMgaFCO> mgaDstPort;
 								COMTHROW(conn->get_Dst(&mgaDstPort));

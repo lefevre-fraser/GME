@@ -59,22 +59,6 @@ void CopyCustomPathData(const CustomPathData& src, CustomPathData& dst)
 	dst.d8							= src.d8;
 }
 
-// Functions for CMapAutoRouterPath2CGuiConnection and CMapCARPath2CPointList, see AutoRouter.h and AutoRouterGraph.h
-template<>
-UINT AFXAPI HashKey<IAutoRouterPath*> (IAutoRouterPath* key)
-{
-	return (UINT)key;
-}
-
-template<>
-BOOL AFXAPI CompareElements<LPIAutoRouterPath, LPIAutoRouterPath>
-	 (const LPIAutoRouterPath* pElement1, const LPIAutoRouterPath* pElement2)
-{
-	if (*pElement1 == *pElement2)
-		return true;
-	return false;
-}
-
 
 // CAutoRouterPath implementation
 

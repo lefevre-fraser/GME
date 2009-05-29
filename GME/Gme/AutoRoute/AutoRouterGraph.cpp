@@ -8,51 +8,6 @@
 #include "AutoRouterEdge.h"
 
 
-// Functions for CMapCARObject2CPoints and CMapCARPath2CPointList, see AutoRouterGraph.h
-template<>
-BOOL AFXAPI CompareElements< LPPointList, LPPointList >
-	 (const LPPointList* pElement1, const LPPointList* pElement2)
-{
-	if ((*pElement1)->GetCount() != (*pElement2)->GetCount())
-		return false;
-
-	POSITION pointpos1 = (*pElement1)->GetHeadPosition();
-	POSITION pointpos2 = (*pElement2)->GetHeadPosition();
-
-	while( pointpos1 != NULL )
-	{
-		CPoint point1 = (*pElement1)->GetNext(pointpos1);
-		CPoint point2 = (*pElement2)->GetNext(pointpos2);
-		if( point1 != point2 )
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
-template<>
-UINT AFXAPI HashKey<void*> (void* key)
-{
-	return (UINT)key;
-}
-
-template<>
-BOOL AFXAPI CompareElements< CARPoints, CARPoints >
-	 (const CARPoints* pElement1, const CARPoints* pElement2)
-{
-	if (pElement1->size() != pElement2->size())
-		return false;
-	CARPoints::const_iterator ii = pElement1->begin();
-	CARPoints::const_iterator jj = pElement2->begin();
-	while (ii != pElement1->end()) {
-		if ((*ii) != (*jj))
-			return false;
-	}
-	return true;
-}
-
 // --- CAutoRouterGraph
 
 CAutoRouterGraph::CAutoRouterGraph():
@@ -756,53 +711,50 @@ void CAutoRouterGraph::DisconnectPathsFrom(CComPtr<IAutoRouterPort> port)
 
 void CAutoRouterGraph::AddSelfEdges(void)
 {
-	horizontal.AddEdges(this, selfpoints);
-	vertical.AddEdges(this, selfpoints);
+	horizontal.AddEdges(this, &selfpoints);
+	vertical.AddEdges(this, &selfpoints);
 }
 
 void CAutoRouterGraph::AddEdges(CComPtr<IAutoRouterGraph> graph)
 {
 	long p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y;
 	COMTHROW(graph->GetSelfPoints(&p1x, &p1y, &p2x, &p2y, &p3x, &p3y, &p4x, &p4y));
-	std::vector<CPoint> selfPoints;
-	selfPoints.push_back(CPoint(p1x, p1y));
-	selfPoints.push_back(CPoint(p2x, p2y));
-	selfPoints.push_back(CPoint(p3x, p3y));
-	selfPoints.push_back(CPoint(p4x, p4y));
+	std::vector<CPoint>* selfPoints = new std::vector<CPoint>();
+	selfPoints->push_back(CPoint(p1x, p1y));
+	selfPoints->push_back(CPoint(p2x, p2y));
+	selfPoints->push_back(CPoint(p3x, p3y));
+	selfPoints->push_back(CPoint(p4x, p4y));
 	arObjectsPointsCache.SetAt(graph.p, selfPoints);
-	CMapCARObject2CPoints::CPair* pVal = arObjectsPointsCache.PLookup(graph.p);
-	horizontal.AddEdges(graph, pVal->value);
-	vertical.AddEdges(graph, pVal->value);
+	horizontal.AddEdges(graph, selfPoints);
+	vertical.AddEdges(graph, selfPoints);
 }
 
 void CAutoRouterGraph::AddEdges(CComPtr<IAutoRouterBox> box)
 {
 	long p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y;
 	COMTHROW(box->GetSelfPoints(&p1x, &p1y, &p2x, &p2y, &p3x, &p3y, &p4x, &p4y));
-	std::vector<CPoint> selfPoints;
-	selfPoints.push_back(CPoint(p1x, p1y));
-	selfPoints.push_back(CPoint(p2x, p2y));
-	selfPoints.push_back(CPoint(p3x, p3y));
-	selfPoints.push_back(CPoint(p4x, p4y));
+	std::vector<CPoint>* selfPoints = new std::vector<CPoint>();
+	selfPoints->push_back(CPoint(p1x, p1y));
+	selfPoints->push_back(CPoint(p2x, p2y));
+	selfPoints->push_back(CPoint(p3x, p3y));
+	selfPoints->push_back(CPoint(p4x, p4y));
 	arObjectsPointsCache.SetAt(box.p, selfPoints);
-	CMapCARObject2CPoints::CPair* pVal = arObjectsPointsCache.PLookup(box.p);
-	horizontal.AddEdges(box, pVal->value);
-	vertical.AddEdges(box, pVal->value);
+	horizontal.AddEdges(box, selfPoints);
+	vertical.AddEdges(box, selfPoints);
 }
 
 void CAutoRouterGraph::AddEdges(CComPtr<IAutoRouterPort> port)
 {
 	long p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y;
 	COMTHROW(port->GetSelfPoints(&p1x, &p1y, &p2x, &p2y, &p3x, &p3y, &p4x, &p4y));
-	std::vector<CPoint> selfPoints;
-	selfPoints.push_back(CPoint(p1x, p1y));
-	selfPoints.push_back(CPoint(p2x, p2y));
-	selfPoints.push_back(CPoint(p3x, p3y));
-	selfPoints.push_back(CPoint(p4x, p4y));
+	std::vector<CPoint>* selfPoints = new std::vector<CPoint>();
+	selfPoints->push_back(CPoint(p1x, p1y));
+	selfPoints->push_back(CPoint(p2x, p2y));
+	selfPoints->push_back(CPoint(p3x, p3y));
+	selfPoints->push_back(CPoint(p4x, p4y));
 	arObjectsPointsCache.SetAt(port.p, selfPoints);
-	CMapCARObject2CPoints::CPair* pVal = arObjectsPointsCache.PLookup(port.p);
-	horizontal.AddEdges(port, pVal->value);
-	vertical.AddEdges(port, pVal->value);
+	horizontal.AddEdges(port, selfPoints);
+	vertical.AddEdges(port, selfPoints);
 }
 
 bool CAutoRouterGraph::AddEdges(CComPtr<IAutoRouterPath> path)
@@ -822,7 +774,7 @@ bool CAutoRouterGraph::AddEdges(CComPtr<IAutoRouterPath> path)
 	VARIANT_BOOL isAutoRouted = VARIANT_FALSE;
 	COMTHROW(path->IsAutoRouted(&isAutoRouted));
 	if (isAutoRouted == VARIANT_TRUE)
-		return horizontal.AddEdges(path, *pointList) && vertical.AddEdges(path, *pointList);
+		return horizontal.AddEdges(path, pointList) && vertical.AddEdges(path, pointList);
 	
 	return true;
 }
@@ -1157,19 +1109,20 @@ int CAutoRouterGraph::SimplifyPaths()
 		VARIANT_BOOL isAutoRouted = VARIANT_FALSE;
 		COMTHROW(path->IsAutoRouted(&isAutoRouted));
 		if (isAutoRouted == VARIANT_TRUE) {
-			CMapCARPath2CPointList::CPair* pVal = arPathPointsCache.PLookup(path);
+			CPointListPath* pVal;
+			arPathPointsCache.Lookup(path, pVal);
 			ASSERT(pVal != NULL);
-			POSITION pointpos = pVal->value->GetHeadPosition();
+			POSITION pointpos = pVal->GetHeadPosition();
 
 			while( pointpos != NULL )
 			{
-				if( CanDeleteTwoEdgesAt(path, *(pVal->value), pointpos) )
+				if( CanDeleteTwoEdgesAt(path, *pVal, pointpos) )
 				{
-					DeleteTwoEdgesAt(path, *(pVal->value), pointpos);
+					DeleteTwoEdgesAt(path, *pVal, pointpos);
 					was = 1;
 					break;
 				}
-				pVal->value->GetNext(pointpos);
+				pVal->GetNext(pointpos);
 			}
 		}
 	}
@@ -1889,26 +1842,34 @@ STDMETHODIMP CAutoRouterGraph::Destroy()
 
 void CAutoRouterGraph::EmptyPointsCache(void)
 {
-	CMapCARPath2CPointList::CPair* pCurVal;
-	pCurVal = arPathPointsCache.PGetFirstAssoc();
-	while (pCurVal != NULL) {
-		// pCurVal->key:	CAutoRouterPath*
-		// pCurVal->value:	CPointList*
-		delete pCurVal->value;
-		pCurVal = arPathPointsCache.PGetNextAssoc(pCurVal);
+	POSITION pos = arPathPointsCache.GetStartPosition();
+	IAutoRouterPath* key;
+	while (pos) {
+		CPointListPath* value;
+		arPathPointsCache.GetNextAssoc(pos, key, value);
+		delete value;
 	}
 	arPathPointsCache.RemoveAll();
+
+	pos = arObjectsPointsCache.GetStartPosition();
+	void* key2;
+	while (pos) {
+		std::vector<CPoint>* value;
+		arObjectsPointsCache.GetNextAssoc(pos, key2, value);
+		delete value;
+	}
 	arObjectsPointsCache.RemoveAll();
 }
 
 bool CAutoRouterGraph::UpdatePathPointsFromCache(CComPtr<IAutoRouterPath> path, bool modifyOrSet)
 {
-	CMapCARPath2CPointList::CPair* pVal = arPathPointsCache.PLookup(path.p);
-	ASSERT(pVal != NULL);
-	if (pVal == NULL)
+	CPointListPath* value;
+	arPathPointsCache.Lookup(path.p, value);
+	ASSERT(value != NULL);
+	if (value == NULL)
 		return false;
 
-	HRESULT hr = UpdatePoints(path, *(pVal->value), modifyOrSet);
+	HRESULT hr = UpdatePoints(path, *value, modifyOrSet);
 	if (FAILED(hr))
 		return false;
 	return true;

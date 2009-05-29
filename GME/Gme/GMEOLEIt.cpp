@@ -2610,7 +2610,9 @@ void CGMEOLEIt::SetSelected( LPCTSTR list)
 					if( mga_fco && local_item == mga_fco) // must not be null
 					{
 						found = true;
-						CGuiObject * gui_obj = dynamic_cast<CGuiObject*>( gui_fco);
+						CGuiObject* gui_obj = NULL;
+						if (gui_fco)
+							gui_obj = gui_fco->dynamic_cast_CGuiObject();
 						if( gui_obj) new_selection.AddTail( gui_obj);
 					}
 				}
@@ -2712,7 +2714,9 @@ void CGMEOLEIt::SetSelectedFCOs( LPDISPATCH p_dispColl)
 					if( mga_fco && local_item == mga_fco) // test non-null
 					{
 						found = true;
-						CGuiObject * gui_obj = dynamic_cast<CGuiObject*>( gui_fco);
+						CGuiObject* gui_obj = NULL;
+						if (gui_fco)
+							gui_obj = gui_fco->dynamic_cast_CGuiObject();
 						if( gui_obj) new_selection.AddTail( gui_obj);
 					}
 				}

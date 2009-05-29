@@ -137,10 +137,10 @@ private:
 // --- Edges
 
 public:
-	bool AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath& pointList);
-	void AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CPoint>& selfpoints);
-	void AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoint>& selfpoints);
-	void AddEdges(CComPtr<IAutoRouterGraph> graph, std::vector<CPoint>& selfpoints);
+	bool AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath* pointList);
+	void AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CPoint>* selfpoints);
+	void AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoint>* selfpoints);
+	void AddEdges(CComPtr<IAutoRouterGraph> graph, std::vector<CPoint>* selfpoints);
 	void DeleteEdges(CComPtr<IUnknown> object);
 	void DeleteAllEdges();
 

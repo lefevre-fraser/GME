@@ -46,17 +46,6 @@ void CopyCustomPathData(const CustomPathData& src, CustomPathData& dst);
 
 typedef CList<CPoint, CPoint&>	CPointList;
 
-// Functions for CMapAutoRouterPath2CGuiConnection and CMapCARPath2CPointList, see AutoRouter.cpp and AutoRouterGraph.cpp
-template<>
-UINT AFXAPI HashKey< IAutoRouterPath* > (IAutoRouterPath* key);
-
-typedef IAutoRouterPath* LPIAutoRouterPath;
-
-template<>
-BOOL AFXAPI CompareElements< LPIAutoRouterPath, LPIAutoRouterPath >
-	 (const LPIAutoRouterPath* pElement1, const LPIAutoRouterPath* pElement2);
-// End of functions for CMapAutoRouterPath2CGuiConnection and CMapCARPath2CPointList, see AutoRouter.cpp and AutoRouterGraph.cpp
-
 
 class CAutoRouterGraph;
 class CAutoRouterPort;
