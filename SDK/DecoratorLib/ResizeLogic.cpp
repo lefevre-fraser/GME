@@ -192,7 +192,9 @@ bool ResizeLogic::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& p
 		CSize normalPreferredSize = m_parentPart->GetPreferredSize();
 		long deltax = normalPreferredSize.cx - pRect.Width();
 		long deltay = normalPreferredSize.cy - pRect.Height();
-		ResizablePart* resizablePart = dynamic_cast<ResizablePart*> (m_parentPart);
+		ResizablePart* resizablePart = NULL;
+		if (m_parentPart != NULL)
+			resizablePart = m_parentPart->dynamic_cast_ResizablePart();
 		if (resizablePart != NULL)
 			resizablePart->m_bResetSize = true;
 		m_parentPart->WindowResizingStarted(nFlags, pRect);

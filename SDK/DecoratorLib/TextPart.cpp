@@ -352,7 +352,7 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 			inPlaceEditDlg = new CInPlaceEditSingleLineDialog(cWnd);
 
 		bool inflateToRight = true;
-		PortLabelPart* portLabelPart = dynamic_cast<PortLabelPart*> (this);
+		PortLabelPart* portLabelPart = dynamic_cast_PortLabelPart();
 		if (portLabelPart != NULL)
 			if (portLabelPart->GetLocationAdjust() == L_WEST)
 				inflateToRight = false;

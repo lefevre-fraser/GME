@@ -36,6 +36,9 @@ public:
 	BitmapPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~BitmapPart();
 
+	// This is a trick to speed up dynamic_cast
+	BitmapPart*		dynamic_cast_BitmapPart(void)		{ return this; }
+
 // =============== resembles IMgaElementDecorator
 public:
 	virtual feature_code	GetFeatures			(void) const;

@@ -31,6 +31,10 @@ public:
 	PortLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~PortLabelPart();
 
+	// This is a trick to speed up dynamic_cast
+	PortLabelPart*	dynamic_cast_PortLabelPart(void)	{ return this; }
+
+// =============== resembles IMgaElementDecorator
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 	virtual bool	MouseMoved					(UINT nFlags, const CPoint& point, HDC transformHDC);

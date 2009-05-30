@@ -676,7 +676,7 @@ void ReferenceBitmapPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	BitmapPart* bitmapPart = NULL;
 	if (m_referencedPart != NULL)
-		bitmapPart = dynamic_cast<BitmapPart*> (m_referencedPart);
+		bitmapPart = m_referencedPart->dynamic_cast_BitmapPart();
 	if (bitmapPart) {
 		bitmapPart->DrawBackground(pDC, gdip);
 	} else {
@@ -701,7 +701,7 @@ void ReferenceBitmapPart::DrawIcons(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	BitmapPart* bitmapPart = NULL;
 	if (m_referencedPart != NULL)
-		bitmapPart = dynamic_cast<BitmapPart*> (m_referencedPart);
+		bitmapPart = m_referencedPart->dynamic_cast_BitmapPart();
 	if (bitmapPart)
 		bitmapPart->DrawIcons(pDC, gdip);
 	else
