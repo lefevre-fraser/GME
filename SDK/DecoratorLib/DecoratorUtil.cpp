@@ -227,10 +227,12 @@ Facilities::~Facilities()
 
 bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )
 {
-	m_gdip = new Gdiplus::Graphics(m_nullDC.m_hDC);
-	m_gdip->SetPageUnit(Gdiplus::UnitPixel);
-	m_gdip->SetSmoothingMode(m_eEdgeAntiAlias);
-	m_gdip->SetTextRenderingHint(m_eFontAntiAlias);
+	if (m_gdip == NULL) {
+		m_gdip = new Gdiplus::Graphics(m_nullDC.m_hDC);
+		m_gdip->SetPageUnit(Gdiplus::UnitPixel);
+		m_gdip->SetSmoothingMode(m_eEdgeAntiAlias);
+		m_gdip->SetTextRenderingHint(m_eFontAntiAlias);
+	}
 
 	if ( ! m_spProject || ! m_spProject.IsEqualObject( pProject ) )
 		m_spProject = pProject;
