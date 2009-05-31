@@ -1166,66 +1166,71 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 	CStringList params;
 	CStringList values;
 
+	if (!decorStr.IsEmpty()) {	// no decorator progId and no paarmeters => use default box decorator later
+		if (decorStr.FindOneOf("\n\t ,=") == -1) {	// just a progId, no parameters
+			progId = decorStr;
+		} else {	// there is some parameter
+			LPTSTR lpsz = new TCHAR[decorStr.GetLength()+1];
+			LPTSTR tok = new TCHAR[decorStr.GetLength()+1];
+			_tcscpy(lpsz, decorStr);
+			int curpos = 0, tokpos = 0;
+			int state = 0;  // 0:progid, 1:var, 2:val
+			bool	gotOne = false;
+			TCHAR	ch;
 
-	LPTSTR lpsz = new TCHAR[decorStr.GetLength()+1];
-	LPTSTR tok = new TCHAR[decorStr.GetLength()+1];
-	_tcscpy(lpsz, decorStr);
-	int curpos = 0, tokpos = 0;
-	int state = 0;  // 0:progid, 1:var, 2:val
-	bool	gotOne = false;
-	TCHAR	ch;
-
-	while ( (ch = lpsz[curpos++]) != 0) {
-		if (ch == _T('\n') || ch == _T('\t') || ch == _T(' ')) {
-			if (gotOne) {
-				state = 1;
-				gotOne = false;
+			while ( (ch = lpsz[curpos++]) != 0) {
+				if (ch == _T('\n') || ch == _T('\t') || ch == _T(' ')) {
+					if (gotOne) {
+						state = 1;
+						gotOne = false;
+						tok[tokpos] = 0;
+						progId = tok;
+						tokpos = 0;
+					}
+					continue;
+				}
+				switch (state) {
+					case 0:
+						gotOne = true;
+						tok[tokpos++] = ch;
+						break;
+					case 1:
+						if (ch == _T('=')) {
+							state = 2;
+							tok[tokpos] = 0;
+							params.AddTail(tok);
+							tokpos = 0;
+						}
+						else {
+							tok[tokpos++] = ch;
+						}
+						break;
+					case 2:
+						if (ch == _T(',')) {
+							state = 1;
+							tok[tokpos] = 0;
+							values.AddTail(tok);
+							tokpos = 0;
+						}
+						else {
+							tok[tokpos++] = ch;
+						}
+						break;
+				}
+			}
+			if (state == 0) {
 				tok[tokpos] = 0;
 				progId = tok;
-				tokpos = 0;
 			}
-			continue;
-		}
-		switch (state) {
-			case 0:
-				gotOne = true;
-				tok[tokpos++] = ch;
-				break;
-			case 1:
-				if (ch == _T('=')) {
-					state = 2;
-					tok[tokpos] = 0;
-					params.AddTail(tok);
-					tokpos = 0;
-				}
-				else {
-					tok[tokpos++] = ch;
-				}
-				break;
-			case 2:
-				if (ch == _T(',')) {
-					state = 1;
-					tok[tokpos] = 0;
-					values.AddTail(tok);
-					tokpos = 0;
-				}
-				else {
-					tok[tokpos++] = ch;
-				}
-				break;
-		}
-	}
-	if (state == 0) {
-		tok[tokpos] = 0;
-		progId = tok;
-	}
-	if (state == 2) {
-		tok[tokpos] = 0;
-		values.AddTail(tok);
-	}
+			if (state == 2) {
+				tok[tokpos] = 0;
+				values.AddTail(tok);
+			}
 
-	delete [] lpsz; // WAS: delete lpsz;
-	delete [] tok;; // WAS: delete tok;;
+			delete [] lpsz; // WAS: delete lpsz;
+			delete [] tok;; // WAS: delete tok;;
+		}
+	}
 
 	if (progId.IsEmpty()) {
 		progId = GME_DEFAULT_DECORATOR;
