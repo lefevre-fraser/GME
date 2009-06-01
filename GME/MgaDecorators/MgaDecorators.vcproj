@@ -160,6 +160,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="../Common;..\Interfaces;..\..\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;OLD_DECORATOR_LOOKANDFEEL"
 				StringPooling="true"

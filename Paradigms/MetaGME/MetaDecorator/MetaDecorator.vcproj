@@ -51,6 +51,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="..\..\..\SDK\DecoratorLib;..\..\..\GME\Common;..\..\..\GME\Interfaces"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
@@ -253,7 +255,7 @@
 			</File>
 			<File
 				RelativePath="DecoratorApp.cpp"
-				>				
+				>
 			</File>
 			<File
 				RelativePath="DecoratorApp.def"

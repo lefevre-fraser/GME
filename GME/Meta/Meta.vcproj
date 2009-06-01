@@ -150,8 +150,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="1"
-				InlineFunctionExpansion="1"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="../Interfaces;../Common"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL"
 				StringPooling="true"

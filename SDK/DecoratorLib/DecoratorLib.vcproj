@@ -115,6 +115,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="..\..\GME\Common;..\..\GME\Interfaces"
 				PreprocessorDefinitions="WIN32;NDEBUG;OLD_DECORATOR_LOOKANDFEEL"
 				RuntimeLibrary="2"
