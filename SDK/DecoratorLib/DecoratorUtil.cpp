@@ -615,11 +615,10 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 			pBMP = new BitmapMasked( nResID, crTC, crBC );
 		else
 			pBMP = new BitmapMasked( strName, crTC, crBC );
+		m_mapBitmaps.insert( std::map<CString,BitmapBase*>::value_type( strID, pBMP ) );
 		if ( pBMP->isInitialized() ) {
-			m_mapBitmaps.insert( std::map<CString,BitmapBase*>::value_type( strID, pBMP ) );
 			return pBMP;
 		}
-		delete pBMP;
 		return NULL;
 	}
 
@@ -667,7 +666,7 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 			m_mapBitmaps.insert( std::map<CString,BitmapBase*>::value_type( strID, pBMP ) );
 			return pBMP;
 		}
-		return NULL; // if the image not found
+		delete pBMP;
 	}
 
 	if ( strExt == ".res" || strExt.IsEmpty() ) {
@@ -684,9 +683,8 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 			return pBMP;
 		}
 		delete pBMP;
-		if ( ! strExt.IsEmpty() )
-			return NULL;
 	}
+	m_mapBitmaps.insert( std::map<CString,BitmapBase*>::value_type( strID, NULL ) );
 	return NULL;
 }
 

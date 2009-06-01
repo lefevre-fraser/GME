@@ -11,6 +11,7 @@
 #include "DecoratorUtil.h"
 #include "resource.h"
 #include "DecoratorDefs.h"
+#include <io.h>
 
 namespace DecoratorSDK
 {
@@ -991,13 +992,17 @@ void BitmapGen::load( const CString& strName )
 
 		for ( unsigned int i = 0 ; !success && i < vecPathes.size() ; i++ )
 		{
-			m_pImage = Gdiplus::Image::FromFile( CA2W( (LPCTSTR) vecPathes[ i ] + strFName));
-			if( m_pImage && m_pImage->GetLastStatus() == Gdiplus::Ok)
-			{
-				ASSERT( m_pImage->GetWidth() > 0); // valid sizes, otherwise AutoRouter fails
-				ASSERT( m_pImage->GetHeight() > 0); 
-				setSize( m_pImage->GetWidth(), m_pImage->GetHeight() );
-				success = true;
+			CString imageFileName = vecPathes[ i ] + strFName;
+			bool fileExists = (_access(imageFileName, 0) == 0);	// Uses GetFileAttributes
+			if (fileExists) {
+				m_pImage = Gdiplus::Image::FromFile( CA2W( (LPCTSTR) imageFileName));
+				if( m_pImage && m_pImage->GetLastStatus() == Gdiplus::Ok)
+				{
+					ASSERT( m_pImage->GetWidth() > 0); // valid sizes, otherwise AutoRouter fails
+					ASSERT( m_pImage->GetHeight() > 0); 
+					setSize( m_pImage->GetWidth(), m_pImage->GetHeight() );
+					success = true;
+				}
 			}
 		}
 
