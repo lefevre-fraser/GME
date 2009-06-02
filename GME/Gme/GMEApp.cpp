@@ -514,11 +514,12 @@ int CGMEApp::Run()
 	gdiplusStartupOutput.NotificationHook(&gdiplusHookToken);
 	graphics.Initialize();
 
-	if(bNoProtect) {
-		return CWinApp::Run();
+	int retVal = 0;
+	if (bNoProtect) {
+		retVal = CWinApp::Run();
 	} else {
 		__try {
-			return CWinApp::Run();
+			retVal = CWinApp::Run();
 		}
 		__except(ExceptionHandler::UnhandledExceptionFilterOfMain(GetExceptionCode(), GetExceptionInformation())) {
 			EmergencySave(DoTheSaveOnly);
@@ -531,9 +532,7 @@ int CGMEApp::Run()
 			}
 			EndWaitCursor();
 
-			// Closing GDI+
-			Gdiplus::GdiplusShutdown(gdiplusToken);
-			return -1;
+			retVal = -1;
 			// End by Peter
 		}
 	}
@@ -541,6 +540,8 @@ int CGMEApp::Run()
 	graphics.Uninitialize();
 	gdiplusStartupOutput.NotificationUnhook(gdiplusHookToken);
 	Gdiplus::GdiplusShutdown(gdiplusToken);
+
+	return retVal;
 }
 
 /////////////////////////////////////////////////////////////////////////////
