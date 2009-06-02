@@ -49,12 +49,13 @@ IMPLEMENT_DYNCREATE(CMetaPropertyPage, CPropertyPage)
 
 
 CAggregatePropertyPage::CAggregatePropertyPage() : CPropertyPage(CAggregatePropertyPage::IDD),
-				m_ComboEditCtrl(&m_ComboSearchCtrl), m_ComboSearchCtrl(&m_TreeAggregate)
+	m_ComboEditCtrl			(&m_ComboSearchCtrl),
+	m_ComboSearchCtrl		(&m_TreeAggregate),
+	m_bProjectOpen			(FALSE),
+	m_SearchButtonCtrlBitmap(NULL)
 {
 	//{{AFX_DATA_INIT(CAggregatePropertyPage)
 	//}}AFX_DATA_INIT
-
-	m_bProjectOpen=FALSE;
 }
 
 CAggregatePropertyPage::~CAggregatePropertyPage()
@@ -63,6 +64,8 @@ CAggregatePropertyPage::~CAggregatePropertyPage()
 	m_StateImageList.DeleteImageList();
 	VERIFY( m_ImageList.GetSafeHandle() == NULL);
 	VERIFY( m_StateImageList.GetSafeHandle() == NULL);
+	BOOL success = ::DeleteObject(m_SearchButtonCtrlBitmap);
+	ASSERT(success == TRUE);
 }
 
 void CAggregatePropertyPage::DoDataExchange(CDataExchange* pDX)
@@ -142,7 +145,9 @@ BOOL CAggregatePropertyPage::OnInitDialog()
 
 	SetDefID(IDC_SEARCH);
 
-	m_SearchButtonCtrl.SetBitmap(::LoadBitmap(AfxGetApp()->m_hInstance,MAKEINTRESOURCE(IDB_SEARCH)));
+	if (m_SearchButtonCtrlBitmap == NULL)
+		m_SearchButtonCtrlBitmap = ::LoadBitmap(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDB_SEARCH));
+	m_SearchButtonCtrl.SetBitmap(m_SearchButtonCtrlBitmap);
 
 	///////////////////////////////////////
 	m_SearchButtonCtrl.ShowWindow(SW_HIDE);

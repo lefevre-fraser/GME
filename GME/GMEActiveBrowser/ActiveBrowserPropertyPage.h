@@ -120,7 +120,7 @@ private:
 	BOOL m_bProjectOpen;
 	BOOL m_bIsBrowserCreatedNewObject;
 	CString m_strProjectName;
-			
+	HBITMAP m_SearchButtonCtrlBitmap;
 
 	// Creates the tree		
 	void SetupTree();

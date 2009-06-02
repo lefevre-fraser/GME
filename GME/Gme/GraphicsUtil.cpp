@@ -176,12 +176,14 @@ void CGraphics::Uninitialize(void)
 		delete it->second;
 	DeleteBrushes(gdipBrushes);
 
-	POSITION pos = allFonts.GetHeadPosition();
-	while(pos)
-		delete allFonts.GetNext(pos);
-	pos = allGdipFonts.GetHeadPosition();
-	while(pos)
-		delete allGdipFonts.GetNext(pos);
+	for (int i = 0; i < GME_FONT_KIND_NUM; i++) {
+		delete normalFonts[i];
+		delete semiboldFonts[i];
+		delete boldFonts[i];
+		delete normalGdipFonts[i];
+		delete semiboldGdipFonts[i];
+		delete boldGdipFonts[i];
+	}
 
 	for (int i = 0; i < GME_DIRECTION_NUM; i++) {
 		delete arrows[i];
@@ -211,14 +213,12 @@ void CGraphics::CreateFonts(CFont** font, Gdiplus::Font** gdipFont, int boldness
 		font[i]->CreateFont(fontSizes[i],0,0,0,boldness,0,0,0,ANSI_CHARSET,
 							OUT_DEVICE_PRECIS,CLIP_DEFAULT_PRECIS,
 							PROOF_QUALITY,FF_SWISS,"Arial");
-		allFonts.AddHead(font[i]);
 
 		CDC dc;
 		dc.CreateCompatibleDC(NULL);
 		LOGFONT logFont;
 		font[i]->GetLogFont(&logFont);
 		gdipFont[i] = new Gdiplus::Font( dc.m_hDC, &logFont );
-		allGdipFonts.AddHead(gdipFont[i]);
 	}
 }
 

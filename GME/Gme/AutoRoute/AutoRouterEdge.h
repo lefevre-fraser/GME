@@ -212,7 +212,7 @@ private:
 
 	void Section_Reset();
 	void Section_BeginScan(CAutoRouterEdge* blocker);
-	int Section_HasBlockedEdge();
+	bool Section_HasBlockedEdge();
 	CAutoRouterEdge* Section_GetBlockedEdge();
 	bool Section_IsImmediate();
 

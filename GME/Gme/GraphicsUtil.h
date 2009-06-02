@@ -48,8 +48,6 @@ public:
 	Gdiplus::Font* normalGdipFonts[GME_FONT_KIND_NUM];
 	Gdiplus::Font* semiboldGdipFonts[GME_FONT_KIND_NUM];
 	Gdiplus::Font* boldGdipFonts[GME_FONT_KIND_NUM];
-	CFontList allFonts;													// for destruction only
-	GdipFontList allGdipFonts;											// for destruction only
 	CArrowHead* arrows[GME_DIRECTION_NUM];
 	CArrowHead* diamonds[GME_DIRECTION_NUM];
 	CArrowHead* apexes[GME_DIRECTION_NUM];

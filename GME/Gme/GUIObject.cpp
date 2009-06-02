@@ -1380,9 +1380,10 @@ void CGuiObject::SetAllSizesToNative()
 void CGuiObject::GetNeighbors(CGuiFcoList& list)
 {
 	VERIFY(GetCurrentAspect());
-	POSITION ppos = GetCurrentAspect()->GetPortList().GetHeadPosition();
+	CGuiPortList& portList = GetCurrentAspect()->GetPortList();
+	POSITION ppos = portList.GetHeadPosition();
 	while (ppos) {
-		CGuiPort *port = GetCurrentAspect()->GetPortList().GetNext(ppos);
+		CGuiPort *port = portList.GetNext(ppos);
 		POSITION cpos = port->GetInConns().GetHeadPosition();
 		while(cpos) {
 			CGuiConnection *conn = port->GetInConns().GetNext(cpos);
@@ -1407,11 +1408,12 @@ void CGuiObject::GetRelationsInOut(CGuiConnectionList& p_list, bool p_inOrOut)
 	VERIFY(GetCurrentAspect());
 	
 	// acquire ports
-	POSITION ppos = GetCurrentAspect()->GetPortList().GetHeadPosition();
+	CGuiPortList& portList = GetCurrentAspect()->GetPortList();
+	POSITION ppos = portList.GetHeadPosition();
 	while (ppos) 
 	{
 		// one port
-		CGuiPort *port = GetCurrentAspect()->GetPortList().GetNext(ppos);
+		CGuiPort *port = portList.GetNext(ppos);
 
 		ASSERT( port); 
 		if( !port) continue;
@@ -1556,9 +1558,10 @@ CGuiPort* CGuiObject::FindPort(CPoint& pt, bool lookNearToo)
 	CGuiPort* found = NULL;
 	CSize foundSize(0, 0);
 	VERIFY(GetCurrentAspect());
-	POSITION pos = GetCurrentAspect()->GetPortList().GetHeadPosition();
+	CGuiPortList& portList = GetCurrentAspect()->GetPortList();
+	POSITION pos = portList.GetHeadPosition();
 	while(pos) {
-		CGuiPort* port = GetCurrentAspect()->GetPortList().GetNext(pos);
+		CGuiPort* port = portList.GetNext(pos);
 		// The last one in the list is weird one: fco is the object's fco, skip that.
 		// See CGuiAspect::InitPorts
 		if (!mgaFco.IsEqualObject(port->mgaFco))
@@ -1587,12 +1590,13 @@ CGuiPort* CGuiObject::FindPort(CPoint& pt, bool lookNearToo)
 	return found;
 }
 
-CGuiPort *CGuiObject::FindPort(CComPtr<IMgaFCO> mgaFco)
+CGuiPort* CGuiObject::FindPort(CComPtr<IMgaFCO> mgaFco)
 {
 	ASSERT(GetCurrentAspect());
-	POSITION pos = GetCurrentAspect()->GetPortList().GetHeadPosition();
+	CGuiPortList& portList = GetCurrentAspect()->GetPortList();
+	POSITION pos = portList.GetHeadPosition();
 	while(pos) {
-		CGuiPort* port = GetCurrentAspect()->GetPortList().GetNext(pos);
+		CGuiPort* port = portList.GetNext(pos);
 		VARIANT_BOOL b;
 		COMTHROW(port->mgaFco->get_IsEqual(mgaFco, &b));
 		if (b)

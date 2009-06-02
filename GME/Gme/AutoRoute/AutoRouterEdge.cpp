@@ -1312,7 +1312,7 @@ void CAutoRouterEdgeList::Section_BeginScan(CAutoRouterEdge* blocker)
 }
 
 #define section_blocked (*section_ptr2blocked)
-int CAutoRouterEdgeList::Section_HasBlockedEdge()
+bool CAutoRouterEdgeList::Section_HasBlockedEdge()
 {
 	ASSERT( section_blocker != NULL );
 
@@ -1440,7 +1440,7 @@ int CAutoRouterEdgeList::Section_HasBlockedEdge()
 			for(;;)
 			{
 				if( e == NULL || x < e->GetSectionX1() )
-					return 1;
+					return true;
 				else if( x <= e->GetSectionX2() )
 				{
 					x = e->GetSectionX2() + 1;
@@ -1455,7 +1455,7 @@ int CAutoRouterEdgeList::Section_HasBlockedEdge()
 			continue;
 		}
 
-		return 1;
+		return true;
 	}
 
 	ASSERT( section_blocker->GetSectionNext() == NULL && section_blocker->GetSectionDown() == NULL );
@@ -1466,7 +1466,7 @@ int CAutoRouterEdgeList::Section_HasBlockedEdge()
 	section_blocker = NULL;
 	section_ptr2blocked = NULL;
 
-	return 0;
+	return false;
 }
 #undef section_blocked
 
