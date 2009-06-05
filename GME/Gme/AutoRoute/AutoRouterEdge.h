@@ -18,8 +18,8 @@ public:
 	CAutoRouterEdge();
 	virtual ~CAutoRouterEdge();
 
-	CComPtr<IUnknown> GetOwner(void) const;
-	void	SetOwner(CComPtr<IUnknown> owner);
+	CObject* GetOwner(void) const;
+	void	SetOwner(CObject* owner);
 	CPoint	GetStartPointPrev(void) const;
 	bool	IsStartPointPrevNull(void) const;
 	void	SetStartPointPrev(CPoint* point);
@@ -90,7 +90,7 @@ public:
 	void	SetClosestNext(CAutoRouterEdge* cn);
 
 private:
-	CComPtr<IUnknown> owner;
+	CObject* owner;
 	CPoint* startpoint_prev;
 	CPoint* startpoint;
 	CPoint* endpoint;
@@ -129,19 +129,19 @@ public:
 	CAutoRouterEdgeList(bool ishorizontal);
 	virtual ~CAutoRouterEdgeList();
 
-	void SetOwner(CComPtr<IAutoRouterGraph> owner);
+	void SetOwner(CAutoRouterGraph* owner);
 
 private:
-	CComPtr<IAutoRouterGraph> owner;
+	CAutoRouterGraph* owner;
 
 // --- Edges
 
 public:
-	bool AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath* pointList);
-	void AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CPoint>* selfpoints);
-	void AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoint>* selfpoints);
-	void AddEdges(CComPtr<IAutoRouterGraph> graph, std::vector<CPoint>* selfpoints);
-	void DeleteEdges(CComPtr<IUnknown> object);
+	bool AddEdges(CAutoRouterPath* path);
+	void AddEdges(CAutoRouterPort* port);
+	void AddEdges(CAutoRouterBox* box);
+	void AddEdges(CAutoRouterGraph* graph);
+	void DeleteEdges(CObject* object);
 	void DeleteAllEdges();
 
 	bool IsEmpty() const;
@@ -150,13 +150,13 @@ private:
 	bool ishorizontal;
 
 public:
-	CAutoRouterEdge* GetEdge(CComPtr<IAutoRouterPath> path, const CPoint& startpoint, const CPoint& endpoint) const;
+	CAutoRouterEdge* GetEdge(CAutoRouterPath* path, const CPoint& startpoint, const CPoint& endpoint) const;
 	CAutoRouterEdge* GetEdgeByPointer(const CPoint* startpoint, const CPoint* endpoint) const;
 	CAutoRouterEdge* GetEdgeAt(const CPoint& point, int nearness = 0) const;
 
 #ifdef _DEBUG
 public:
-	void AssertValidPathEdges(CComPtr<IAutoRouterPath> path, CPointListPath& points) const;
+	void AssertValidPathEdges(CAutoRouterPath* path, CPointListPath& points) const;
 	void DumpEdges(const CString& headMsg);
 #endif _DEBUG
 

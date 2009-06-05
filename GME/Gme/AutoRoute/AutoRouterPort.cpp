@@ -12,12 +12,7 @@ CAutoRouterPort::CAutoRouterPort():	owner(NULL),
 	CalculateSelfPoints();
 }
 
-HRESULT CAutoRouterPort::FinalConstruct(void)
-{
-	return S_OK;
-}
-
-void CAutoRouterPort::FinalRelease(void)
+CAutoRouterPort::~CAutoRouterPort()
 {
 	this->SetOwner(NULL);
 }
@@ -41,458 +36,210 @@ void CAutoRouterPort::CalculateSelfPoints()
 	selfpoints[3].y = rect.bottom - 1;
 }
 
-// COM interface
-
-STDMETHODIMP CAutoRouterPort::GetOwner(IAutoRouterBox** result)
+CAutoRouterBox* CAutoRouterPort::GetOwner(void) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	return owner->QueryInterface(IID_IAutoRouterBox,(void**)result);
+	return owner;
 }
 
-STDMETHODIMP CAutoRouterPort::HasOwner(VARIANT_BOOL* result)
+bool CAutoRouterPort::HasOwner(void) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	if (owner != NULL)
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return owner != NULL;
 }
 
-STDMETHODIMP CAutoRouterPort::SetOwner(IAutoRouterBox* box)
+void CAutoRouterPort::SetOwner(CAutoRouterBox* box)
 {
 	owner = box;
-
-	return S_OK;
 }
 
-STDMETHODIMP CAutoRouterPort::GetRect(long* p1, long* p2, long* p3, long* p4)
+CRect CAutoRouterPort::GetRect(void) const
 {
-	if (p1 == NULL || p2 == NULL || p3 == NULL || p4 == NULL)
-		return E_POINTER;
-
-	*p1 = rect.left;
-	*p2 = rect.top;
-	*p3 = rect.right;
-	*p4 = rect.bottom;
-
-	return S_OK;
+	return rect;
 }
 
-STDMETHODIMP CAutoRouterPort::IsRectEmpty(VARIANT_BOOL* result)
+bool CAutoRouterPort::IsRectEmpty(void) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	if (rect.IsRectEmpty())
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return rect.IsRectEmpty() == TRUE;
 }
 
-STDMETHODIMP CAutoRouterPort::GetCenter(long* px, long* py)
+CPoint CAutoRouterPort::GetCenter(void) const
 {
-	if (px == NULL || py == NULL)
-		return E_POINTER;
-
-	const CPoint center = rect.CenterPoint();
-	*px = center.x;
-	*py = center.y;
-
-	return S_OK;
+	return rect.CenterPoint();
 }
 
-STDMETHODIMP CAutoRouterPort::SetRect(long p1, long p2, long p3, long p4)
+void CAutoRouterPort::SetRect(const CRect& r)
 {
-	CRect r(p1, p2, p3, p4);
 	ASSERT( r.Width() >= 3 && r.Height() >= 3 );
 
 	rect = r;
 	CalculateSelfPoints();
-
-	return S_OK;
 }
 
-STDMETHODIMP CAutoRouterPort::ShiftBy(long offsetx, long offsety)
+void CAutoRouterPort::ShiftBy(const CPoint& offset)
 {
 	ASSERT( !rect.IsRectEmpty() );
 
-	const CPoint offset(offsetx, offsety);
 	rect += offset;
 
 	CalculateSelfPoints();
-
-	return S_OK;
 }
 
-STDMETHODIMP CAutoRouterPort::GetSelfPoints(long* p1x, long* p1y, long* p2x, long* p2y, long* p3x, long* p3y, long* p4x, long* p4y)
+CPoint* CAutoRouterPort::GetSelfPoints(void) const
 {
-	if (p1x == NULL || p1y == NULL || p2x == NULL || p2y == NULL || p3x == NULL || p3y == NULL || p4x == NULL || p4y == NULL)
-		return E_POINTER;
-
-	*p1x = selfpoints[0].x;
-	*p1y = selfpoints[0].y;
-	*p2x = selfpoints[1].x;
-	*p2y = selfpoints[1].y;
-	*p3x = selfpoints[2].x;
-	*p3y = selfpoints[2].y;
-	*p4x = selfpoints[3].x;
-	*p4y = selfpoints[3].y;
-
-	return S_OK;
+	return (CPoint*)selfpoints;
 }
 
-STDMETHODIMP CAutoRouterPort::GetAttributes(long* result)
+long CAutoRouterPort::GetAttributes(void) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	*result = attributes;
-	return S_OK;
+	return attributes;
 }
 
-STDMETHODIMP CAutoRouterPort::SetAttributes(long attr)
+void CAutoRouterPort::SetAttributes(long attr)
 {
 	attributes = (unsigned int)attr;
-	return S_OK;
 }
 
-STDMETHODIMP CAutoRouterPort::IsConnectToCenter(VARIANT_BOOL* result)
+bool CAutoRouterPort::IsConnectToCenter(void) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	if ((attributes & ARPORT_ConnectToCenter) != 0)
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return ((attributes & ARPORT_ConnectToCenter) != 0);
 }
 
-STDMETHODIMP CAutoRouterPort::HasLimitedDirs(VARIANT_BOOL* result)
+bool CAutoRouterPort::HasLimitedDirs(void) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	if (limitedDirections)
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return limitedDirections;
 }
 
-STDMETHODIMP CAutoRouterPort::SetLimitedDirs(VARIANT_BOOL ltd)
+void CAutoRouterPort::SetLimitedDirs(bool ltd)
 {
-	limitedDirections = (ltd == VARIANT_TRUE);
-	return S_OK;
+	limitedDirections = ltd;
 }
 
-STDMETHODIMP CAutoRouterPort::IsPortAt(long px, long py, long nearness, VARIANT_BOOL* result)
+bool CAutoRouterPort::IsPortAt(const CPoint& point, long nearness) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	const CPoint point(px, py);
-	if (IsPointIn(point, rect, nearness))
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return IsPointIn(point, rect, nearness);
 }
 
-STDMETHODIMP CAutoRouterPort::IsPortClip(long p1, long p2, long p3, long p4, VARIANT_BOOL* result)
+bool CAutoRouterPort::IsPortClip(const CRect& r) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	const CRect r(p1, p2, p3, p4);
-	if (IsRectClip(rect, r))
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return IsRectClip(rect, r);
 }
 
-STDMETHODIMP CAutoRouterPort::IsPortIn(long p1, long p2, long p3, long p4, VARIANT_BOOL* result)
+bool CAutoRouterPort::IsPortIn(const CRect& r) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	const CRect r(p1, p2, p3, p4);
-	if (IsRectIn(rect, r))
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return IsRectIn(rect, r);
 }
 
-STDMETHODIMP CAutoRouterPort::OnWhichEdge(long px, long py, RoutingDirection* result)
+RoutingDirection CAutoRouterPort::OnWhichEdge(const CPoint& p) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	RoutingDirection dir = ::OnWhichEdge(rect, CPoint(px, py));
-	*result = dir;
-
-	return S_OK;
+	return ::OnWhichEdge(rect, p);
 }
 
-STDMETHODIMP CAutoRouterPort::CanHaveStartEndPointOn(RoutingDirection dir, long isstart, VARIANT_BOOL* result)
+bool CAutoRouterPort::CanHaveStartEndPointOn(RoutingDirection dir, bool isStart) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
 	int d = (int) dir;
 	ASSERT( 0 <= d && d <= 3 );
 
-	if( isstart )
+	if( isStart )
 		d += 4;
 
-	if ((attributes & (1 << d)) != 0)
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return ((attributes & (1 << d)) != 0);
 }
 
-STDMETHODIMP CAutoRouterPort::CanHaveStartEndPoint(long isstart, VARIANT_BOOL* result)
+bool CAutoRouterPort::CanHaveStartEndPoint(bool isStart) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	if ((attributes & (isstart ? ARPORT_StartOnAll : ARPORT_EndOnAll)) != 0)
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return ((attributes & (isStart ? ARPORT_StartOnAll : ARPORT_EndOnAll)) != 0);
 }
 
-STDMETHODIMP CAutoRouterPort::CanHaveStartEndPointHorizontal(long ishorizontal, VARIANT_BOOL* result)
+bool CAutoRouterPort::CanHaveStartEndPointHorizontal(bool ishorizontal) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	if ((attributes & (ishorizontal ? ARPORT_StartEndHorizontal : ARPORT_StartEndVertical)) != 0)
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return ((attributes & (ishorizontal ? ARPORT_StartEndHorizontal : ARPORT_StartEndVertical)) != 0);
 }
 
-STDMETHODIMP CAutoRouterPort::GetStartEndDirTo(long px, long py, long isstart, RoutingDirection notthis, RoutingDirection* result)
+RoutingDirection CAutoRouterPort::GetStartEndDirTo(const CPoint& point, bool isStart, RoutingDirection notthis) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
 	ASSERT( !rect.IsRectEmpty() );
 
-	const CPoint point(px, py);
 	CSize offset = point - rect.CenterPoint();
 
-	HRESULT hr;
-	VARIANT_BOOL canHave = VARIANT_FALSE;
+	bool canHave = false;
 
 	RoutingDirection dir1 = GetMajorDir(offset);
 
-	if (dir1 != notthis)
-	{
-		hr = CanHaveStartEndPointOn(dir1, isstart, &canHave);
-		ASSERT(SUCCEEDED(hr));
-		if (FAILED(hr))
-			return hr;
-		if (canHave == VARIANT_TRUE)
-		{
-			*result = dir1;
-			return S_OK;
-		}
-	}
+	if (dir1 != notthis && CanHaveStartEndPointOn(dir1, isStart))
+		return dir1;
 
 	RoutingDirection dir2 = GetMinorDir(offset);
 
-	if (dir2 != notthis)
-	{
-		hr = CanHaveStartEndPointOn(dir2, isstart, &canHave);
-		ASSERT(SUCCEEDED(hr));
-		if (FAILED(hr))
-			return hr;
-		if (canHave == VARIANT_TRUE)
-		{
-			*result = dir2;
-			return S_OK;
-		}
-	}
+	if (dir2 != notthis && CanHaveStartEndPointOn(dir2, isStart))
+		return dir2;
 
 	RoutingDirection dir3 = ReverseDir(dir2);
 
-	if (dir3 != notthis)
-	{
-		hr = CanHaveStartEndPointOn(dir3, isstart, &canHave);
-		ASSERT(SUCCEEDED(hr));
-		if (FAILED(hr))
-			return hr;
-		if (canHave == VARIANT_TRUE)
-		{
-			*result = dir3;
-			return S_OK;
-		}
-	}
+	if (dir3 != notthis && CanHaveStartEndPointOn(dir3, isStart))
+		return dir3;
 
 	RoutingDirection dir4 = ReverseDir(dir1);
 
-	if (dir4 != notthis)
-	{
-		hr = CanHaveStartEndPointOn(dir4, isstart, &canHave);
-		ASSERT(SUCCEEDED(hr));
-		if (FAILED(hr))
-			return hr;
-		if (canHave == VARIANT_TRUE)
-		{
-			*result = dir4;
-			return S_OK;
-		}
-	}
+	if (dir4 != notthis && CanHaveStartEndPointOn(dir4, isStart))
+		return dir4;
 
-	hr = CanHaveStartEndPointOn(dir1, isstart, &canHave);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if (canHave == VARIANT_TRUE)
-	{
-		*result = dir1;
-		return S_OK;
-	}
+	if (CanHaveStartEndPointOn(dir1, isStart))
+		return dir1;
 
-	hr = CanHaveStartEndPointOn(dir2, isstart, &canHave);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if (canHave == VARIANT_TRUE)
-	{
-		*result = dir2;
-		return S_OK;
-	}
+	if (CanHaveStartEndPointOn(dir2, isStart))
+		return dir2;
 
-	hr = CanHaveStartEndPointOn(dir3, isstart, &canHave);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if (canHave == VARIANT_TRUE)
-	{
-		*result = dir3;
-		return S_OK;
-	}
+	if (CanHaveStartEndPointOn(dir3, isStart))
+		return dir3;
 
-	hr = CanHaveStartEndPointOn(dir4, isstart, &canHave);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if (canHave == VARIANT_TRUE)
-	{
-		*result = dir4;
-		return S_OK;
-	}
+	if (CanHaveStartEndPointOn(dir4, isStart))
+		return dir4;
 
-	*result = Dir_Top;
-	return S_OK;
+	return Dir_Top;
 }
 
-STDMETHODIMP CAutoRouterPort::CanCreateStartEndPointAt(long px, long py, long isstart, long nearness, VARIANT_BOOL* result)
+bool CAutoRouterPort::CanCreateStartEndPointAt(const CPoint& point, bool isStart, long nearness) const
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	VARIANT_BOOL canHave = VARIANT_FALSE;
-	HRESULT hr = CanHaveStartEndPoint(isstart, &canHave);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if (canHave == VARIANT_TRUE && IsPointIn(CPoint(px, py), rect, nearness))
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
-
-	return S_OK;
+	return CanHaveStartEndPoint(isStart) && IsPointIn(point, rect, nearness);
 }
 
-STDMETHODIMP CAutoRouterPort::CreateStartEndPointAt(long px, long py, long isstart, long* resultX, long* resultY)
+CPoint CAutoRouterPort::CreateStartEndPointAt(const CPoint& p, bool isStart) const
 {
-	if (resultX == NULL || resultY == NULL)
-		return E_POINTER;
-
 	ASSERT( !rect.IsRectEmpty() );
+
+	CPoint point = p;
 
 	RoutingDirection dir = Dir_None;
 
-	CPoint point(px, py);
 	CArFindNearestLine nearest(point);
 
 	VARIANT_BOOL canHave = VARIANT_FALSE;
 
-	HRESULT hr = CanHaveStartEndPointOn(Dir_Top, isstart, &canHave);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if( canHave == VARIANT_TRUE && nearest.HLine(rect.left, rect.right - 1, rect.top) )
+	if (CanHaveStartEndPointOn(Dir_Top, isStart) && nearest.HLine(rect.left, rect.right - 1, rect.top))
 		dir = Dir_Top;
 
-	hr = CanHaveStartEndPointOn(Dir_Right, isstart, &canHave);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if( canHave == VARIANT_TRUE && nearest.VLine(rect.top, rect.bottom - 1, rect.right - 1) )
+	if (CanHaveStartEndPointOn(Dir_Right, isStart) && nearest.VLine(rect.top, rect.bottom - 1, rect.right - 1))
 		dir = Dir_Right;
 
-	hr = CanHaveStartEndPointOn(Dir_Bottom, isstart, &canHave);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if( canHave == VARIANT_TRUE && nearest.HLine(rect.left, rect.right - 1, rect.bottom - 1) )
+	if (CanHaveStartEndPointOn(Dir_Bottom, isStart) && nearest.HLine(rect.left, rect.right - 1, rect.bottom - 1))
 		dir = Dir_Bottom;
 
-	hr = CanHaveStartEndPointOn(Dir_Left, isstart, &canHave);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if( canHave == VARIANT_TRUE && nearest.VLine(rect.top, rect.bottom - 1, rect.left) )
+	if (CanHaveStartEndPointOn(Dir_Left, isStart) && nearest.VLine(rect.top, rect.bottom - 1, rect.left))
 		dir = Dir_Left;
 
 	ASSERT( IsRightAngle(dir) );
 
-	VARIANT_BOOL isConnect = VARIANT_FALSE;
-	hr = IsConnectToCenter(&isConnect);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if( isConnect == VARIANT_TRUE )
-	{
-		hr = CreateStartEndPointOn(dir, resultX, resultY);
-		return S_OK;
-	}
+	if (IsConnectToCenter())
+		return CreateStartEndPointOn(dir);
 
 	if( point.x < rect.left )
 		point.x = rect.left;
 	else if( rect.right <= point.x )
-		point.x = rect.right-1;
+		point.x = rect.right - 1;
 
 	if( point.y < rect.top )
 		point.y = rect.top;
 	else if( rect.bottom <= point.y )
-		point.y = rect.bottom-1;
+		point.y = rect.bottom - 1;
 
 	switch(dir)
 	{
@@ -513,64 +260,33 @@ STDMETHODIMP CAutoRouterPort::CreateStartEndPointAt(long px, long py, long issta
 		break;
 	}
 
-	*resultX = point.x;
-	*resultY = point.y;
-	return S_OK;
+	return point;
 }
 
-STDMETHODIMP CAutoRouterPort::CreateStartEndPointOn(RoutingDirection dir, long* resultX, long* resultY)
+CPoint CAutoRouterPort::CreateStartEndPointOn(RoutingDirection dir) const
 {
-	if (resultX == NULL || resultY == NULL)
-		return E_POINTER;
-
 	ASSERT( !rect.IsRectEmpty() );
 	ASSERT( IsRightAngle(dir) );
 
-	CPoint retPoint;
 	switch( dir )
 	{
-	case Dir_Top: {
-			retPoint = CPoint((rect.left + rect.right) / 2, rect.top);
-			*resultX = retPoint.x;
-			*resultY = retPoint.y;
-			return S_OK;
-		}
+	case Dir_Top:
+		return CPoint((rect.left + rect.right) / 2, rect.top);
 
-	case Dir_Bottom: {
-			retPoint = CPoint((rect.left + rect.right) / 2, rect.bottom - 1);
-			*resultX = retPoint.x;
-			*resultY = retPoint.y;
-			return S_OK;
-		}
+	case Dir_Bottom:
+		return CPoint((rect.left + rect.right) / 2, rect.bottom - 1);
 
-	case Dir_Left: {
-			retPoint = CPoint(rect.left, (rect.top + rect.bottom) / 2);
-			*resultX = retPoint.x;
-			*resultY = retPoint.y;
-			return S_OK;
-		}
+	case Dir_Left:
+		return CPoint(rect.left, (rect.top + rect.bottom) / 2);
 	}
 
-	retPoint = CPoint(rect.right - 1, (rect.top + rect.bottom) / 2);
-	*resultX = retPoint.x;
-	*resultY = retPoint.y;
-	return S_OK;
+	return CPoint(rect.right - 1, (rect.top + rect.bottom) / 2);
 }
 
-STDMETHODIMP CAutoRouterPort::CreateStartEndPointTo(long px, long py, long isstart, long* resultX, long* resultY)
+CPoint CAutoRouterPort::CreateStartEndPointTo(const CPoint& point, bool isStart) const
 {
-	if (resultX == NULL || resultY == NULL)
-		return E_POINTER;
-
-	RoutingDirection dir;
-	HRESULT hr = GetStartEndDirTo(px, py, isstart, Dir_None, &dir);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	hr = CreateStartEndPointOn(dir, resultX, resultY);
-	ASSERT(SUCCEEDED(hr));
-
-	return hr;
+	RoutingDirection dir = GetStartEndDirTo(point, isStart, Dir_None);
+	return CreateStartEndPointOn(dir);
 }
 
 #ifdef _DEBUG
@@ -578,12 +294,11 @@ void CAutoRouterPort::AssertValid() const
 {
 }
 
-void CAutoRouterPort::AssertValidStartEndPoint(const CPoint& point, RoutingDirection dir, int isstart)
+void CAutoRouterPort::AssertValidStartEndPoint(const CPoint& point, RoutingDirection dir, bool isStart)
 {
 	ASSERT( !rect.IsRectEmpty() );
 
-	RoutingDirection comDir;
-	COMTHROW(OnWhichEdge(point.x, point.y, &comDir));
+	RoutingDirection comDir = OnWhichEdge(point);
 	if( dir == Dir_None )
 	{
 		dir = comDir;
@@ -594,8 +309,6 @@ void CAutoRouterPort::AssertValidStartEndPoint(const CPoint& point, RoutingDirec
 		ASSERT( dir == comDir );
 	}
 
-	VARIANT_BOOL canHave = VARIANT_FALSE;
-	COMTHROW(CanHaveStartEndPointOn(dir, isstart, &canHave));
-	ASSERT( canHave == VARIANT_TRUE );
+	ASSERT( CanHaveStartEndPointOn(dir, isStart) );
 }
 #endif

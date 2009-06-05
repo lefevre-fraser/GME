@@ -4,15 +4,11 @@
 #include "resource.h"       // main symbols
 
 #include <vector>
-//#include <oleauto.h>
 
 #include "AutoRoute/ArHelper.h"
 
 #include "AutoRouterPort.h"
 #include "AutoRouterBox.h"
-
-//#include "GME.h"
-#include "gmelib.h"
 
 #define ARPATH_EndOnDefault		0x0000
 #define ARPATH_EndOnTop			0x0010
@@ -52,42 +48,22 @@ class CAutoRouterPort;
 
 // CAutoRouterPath
 
-class ATL_NO_VTABLE CAutoRouterPath : 
-	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CAutoRouterPath, &CLSID_AutoRouterPath>,
-	public IDispatchImpl<IAutoRouterPath, &IID_IAutoRouterPath, &LIBID_GmeLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
+class CAutoRouterPath : public CObject
 {
 public:
 	CAutoRouterPath();
-
-DECLARE_REGISTRY_RESOURCEID(IDR_AUTOROUTERPATH)
-
-
-BEGIN_COM_MAP(CAutoRouterPath)
-	COM_INTERFACE_ENTRY(IAutoRouterPath)
-	COM_INTERFACE_ENTRY(IDispatch)
-END_COM_MAP()
-
-
-	DECLARE_PROTECT_FINAL_CONSTRUCT()
-
-	HRESULT FinalConstruct(void);
-	void FinalRelease(void);
+	~CAutoRouterPath();
 
 private:
-	CComPtr<IAutoRouterGraph> owner;
+	CAutoRouterGraph* owner;
 
 // --- Ports
 
-	CComPtr<IAutoRouterPort> startport;							// reference
-	CComPtr<IAutoRouterPort> endport;							// reference
+	CAutoRouterPort* startport;							// reference
+	CAutoRouterPort* endport;							// reference
 
 	POSITION GetPointPosAt(const CPoint& point, int nearness = 0) const;
 	POSITION GetEdgePosAt(const CPoint& point, int nearness = 0) const;
-
-// --- Points
-
-	bool IsConnected(void) const;
 
 // --- Edges
 	CPointListPath points;
@@ -101,74 +77,73 @@ private:
 	std::vector<CustomPathData> pathDataToDelete;
 
 public:
-	STDMETHOD(GetOwner)(IAutoRouterGraph** result);
-	STDMETHOD(HasOwner)(VARIANT_BOOL* result);
-	STDMETHOD(SetOwner)(IAutoRouterGraph* graph);
+	CAutoRouterGraph* GetOwner(void) const;
+	bool HasOwner(void) const;
+	void SetOwner(CAutoRouterGraph* graph);
 	// Ports
-	STDMETHOD(SetStartPort)(IAutoRouterPort* port);
-	STDMETHOD(SetEndPort)(IAutoRouterPort* port);
-	STDMETHOD(ClearPorts)();
-	STDMETHOD(GetStartPort)(IAutoRouterPort** result);
-	STDMETHOD(GetEndPort)(IAutoRouterPort** result);
+	void SetStartPort(CAutoRouterPort* port);
+	void SetEndPort(CAutoRouterPort* port);
+	void ClearPorts(void);
+	CAutoRouterPort* GetStartPort(void);
+	CAutoRouterPort* GetEndPort(void);
 	// Points
-	STDMETHOD(AddTail)(long px, long py);
-	STDMETHOD(DeleteAll)();
+	void AddTail(CPoint& p);
+	void DeleteAll(void);
 
-	STDMETHOD(HasNoPoint)(VARIANT_BOOL* result);
-	STDMETHOD(GetPointCount)(long* result);
+	bool HasNoPoint(void) const;
+	long GetPointCount(void) const;
 
-	STDMETHOD(GetStartPoint)(long* resultX, long* resultY);
-	STDMETHOD(GetEndPoint)(long* resultX, long* resultY);
-	STDMETHOD(GetStartBox)(long* p1, long* p2, long* p3, long* p4);
-	STDMETHOD(GetEndBox)(long* p1, long* p2, long* p3, long* p4);
-	STDMETHOD(GetOutOfBoxStartPoint)(long* resultX, long* resultY, RoutingDirection hintDir);
-	STDMETHOD(GetOutOfBoxEndPoint)(long* resultX, long* resultY, RoutingDirection hintDir);
+	CPoint GetStartPoint(void) const;
+	CPoint GetEndPoint(void) const;
+	CRect GetStartBox(void) const;
+	CRect GetEndBox(void) const;
+	CPoint GetOutOfBoxStartPoint(RoutingDirection hintDir) const;
+	CPoint GetOutOfBoxEndPoint(RoutingDirection hintDir) const;
 
-	STDMETHOD(SimplifyTrivially)();
+	void SimplifyTrivially(void);
 
-	STDMETHOD(ModifyPoints)(SAFEARRAY* pArr);
-	STDMETHOD(SetPoints)(SAFEARRAY* pArr);
-	STDMETHOD(GetPointList)(SAFEARRAY** pArr);
+	CPointListPath& GetPointList(void);
+	void SetPoints(CPointListPath& pls);
 	// Edges
 
-	STDMETHOD(GetSurroundRect)(long* p1, long* p2, long* p3, long* p4);
+	CRect GetSurroundRect(void) const;
 
-	STDMETHOD(IsEmpty)(VARIANT_BOOL* result);
-	STDMETHOD(IsPathAt)(long px, long py, long nearness, VARIANT_BOOL* result);
-	STDMETHOD(IsPathClip)(long p1, long p2, long p3, long p4, VARIANT_BOOL* result);
+	bool IsEmpty(void) const;
+	bool IsPathAt(const CPoint& point, long nearness) const;
+	bool IsPathClip(const CRect& r) const;
 
-	STDMETHOD(SetAttributes)(long attr);
-	STDMETHOD(GetAttributes)(long* result);
+	void SetAttributes(long attr);
+	long GetAttributes(void) const;
 
-	STDMETHOD(IsFixed)(VARIANT_BOOL* result);
-	STDMETHOD(IsMoveable)(VARIANT_BOOL* result);
-	STDMETHOD(IsHighLighted)(VARIANT_BOOL* result);
+	bool IsFixed(void) const;
+	bool IsMoveable(void) const;
+	bool IsHighLighted(void) const;
 
-	STDMETHOD(GetState)(long* result);
-	STDMETHOD(IsConnected)(VARIANT_BOOL* result);
-	STDMETHOD(SetState)(long state);
+	long GetState(void) const;
+	bool IsConnected(void) const;
+	void SetState(long state);
 
-	STDMETHOD(GetEndDir)(RoutingDirection* result);
-	STDMETHOD(GetStartDir)(RoutingDirection* result);
+	RoutingDirection GetEndDir(void) const;
+	RoutingDirection GetStartDir(void) const;
 
-	STDMETHOD(SetEndDir)(long arpath_end);
-	STDMETHOD(SetStartDir)(long arpath_start);
+	void SetEndDir(long arpath_end);
+	void SetStartDir(long arpath_start);
 	// CustomData
-	STDMETHOD(SetCustomPathData)(SAFEARRAY* pArr);
-	STDMETHOD(ApplyCustomizationsBeforeAutoConnectPoints)(SAFEARRAY** pArr);
-	STDMETHOD(ApplyCustomizationsAfterAutoConnectPointsAndStuff)(void);
-	STDMETHOD(RemovePathCustomizations)(void);
-	STDMETHOD(MarkPathCustomizationsForDeletion)(long asp);
-	STDMETHOD(RemoveInvalidPathCustomizations)(long asp);
-	STDMETHOD(AreTherePathCustomizations)(VARIANT_BOOL* result);
-	STDMETHOD(AreThereDeletedPathCustomizations)(VARIANT_BOOL* result);
-	STDMETHOD(GetDeletedCustomPathData)(SAFEARRAY** pArr);
-	STDMETHOD(GetCustomizedEdgeIndexes)(SAFEARRAY** pArr);
+	void SetCustomPathData(const std::vector<CustomPathData>& pDat);
+	void ApplyCustomizationsBeforeAutoConnectPoints(CPointListPath& plist);
+	void ApplyCustomizationsAfterAutoConnectPointsAndStuff(void);
+	void RemovePathCustomizations(void);
+	void MarkPathCustomizationsForDeletion(long asp);
+	void RemoveInvalidPathCustomizations(long asp);
+	bool AreTherePathCustomizations(void) const;
+	bool AreThereDeletedPathCustomizations(void) const;
+	void GetDeletedCustomPathData(std::vector<CustomPathData>& cpd) const;
+	void GetCustomizedEdgeIndexes(std::vector<int>& indexes) const;
 
-	STDMETHOD(IsAutoRouted)(VARIANT_BOOL* result);
-	STDMETHOD(SetAutoRouting)(VARIANT_BOOL autoRoutingState);
+	bool IsAutoRouted(void) const;
+	void SetAutoRouting(bool autoRoutingState);
 	// Other
-	STDMETHOD(Destroy)();
+	void Destroy(void);
 
 // --- Debug
 #ifdef _DEBUG
@@ -178,5 +153,3 @@ public:
 	void AssertValidPoints() const;
 #endif
 };
-
-OBJECT_ENTRY_AUTO(__uuidof(AutoRouterPath), CAutoRouterPath)

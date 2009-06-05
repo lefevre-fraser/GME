@@ -42,10 +42,10 @@ public:
 public:
 	void InitPorts();
 	
-	CComPtr<IAutoRouterBox> GetRouterBox()							{ return routerBox; }
-	void SetRouterBox(CComPtr<IAutoRouterBox> rbox)					{ routerBox = rbox; }
-	CComPtr<IAutoRouterBox> GetRouterNameBox()						{ return routerNameBox; }
-	void SetRouterNameBox(CComPtr<IAutoRouterBox> rnbox)			{ routerNameBox = rnbox; }
+	CAutoRouterBox* GetRouterBox()					{ return routerBox; }
+	void SetRouterBox(CAutoRouterBox* rbox)			{ routerBox = rbox; }
+	CAutoRouterBox* GetRouterNameBox()				{ return routerNameBox; }
+	void SetRouterNameBox(CAutoRouterBox* rnbox)	{ routerNameBox = rnbox; }
 
 	const CRect& GetLocation()						{ return loc; }
 	const CRect& GetNameLocation()					{ return nameLoc; }
@@ -70,8 +70,8 @@ private:
 	unsigned long			features;
 	CRect					loc;
 	CRect					nameLoc;
-	CComPtr<IAutoRouterBox> routerBox;
-	CComPtr<IAutoRouterBox> routerNameBox;
+	CAutoRouterBox*			routerBox;
+	CAutoRouterBox*			routerNameBox;
 };
 
 class CGuiPort : public CGuiBase
@@ -88,8 +88,8 @@ public:
 	bool IsVisible();
 	void SetVisible(bool v);
 	CRect GetLocation();
-	CComPtr<IAutoRouterPort> GetRouterPort()					{ return routerPort; }
-	void SetRouterPort(CComPtr<IAutoRouterPort> port)			{ routerPort = port; }
+	CAutoRouterPort* GetRouterPort()			{ return routerPort; }
+	void SetRouterPort(CAutoRouterPort* port)	{ routerPort = port; }
 	CString GetInfoText()						{ return name; }
 	bool IsRealPort();
 
@@ -101,7 +101,7 @@ public:
 
 private:
 	bool autorouterPrefs[GME_AR_NUM];
-	CComPtr<IAutoRouterPort> routerPort;
+	CAutoRouterPort* routerPort;
 };
 
 class AnnotatorDecoratorData
@@ -261,10 +261,10 @@ public:
 	CGuiAspect* GetCurrentAspect()						{ return guiAspects[parentAspect]; }
 	CGuiPort* FindPort(CPoint& pt, bool lookNearToo = false);
 	CGuiPort* FindPort(CComPtr<IMgaFCO> mgaFco);
-	CComPtr<IAutoRouterBox> GetRouterBox()				{ return GetCurrentAspect()->GetRouterBox(); }
-	CComPtr<IAutoRouterBox>  GetRouterNameBox()			{ return GetCurrentAspect()->GetRouterNameBox(); }
-	void SetRouterBox(CComPtr<IAutoRouterBox> rbox)		{ GetCurrentAspect()->SetRouterBox(rbox) ; }
-	void SetRouterNameBox(CComPtr<IAutoRouterBox> rnbox){ GetCurrentAspect()->SetRouterNameBox(rnbox) ; }
+	CAutoRouterBox* GetRouterBox()						{ return GetCurrentAspect()->GetRouterBox(); }
+	CAutoRouterBox* GetRouterNameBox()					{ return GetCurrentAspect()->GetRouterNameBox(); }
+	void SetRouterBox(CAutoRouterBox* rbox)				{ GetCurrentAspect()->SetRouterBox(rbox) ; }
+	void SetRouterNameBox(CAutoRouterBox* rnbox)		{ GetCurrentAspect()->SetRouterNameBox(rnbox) ; }
 	void ReadAllLocations();
 	void WriteLocation(int aspect = -1);
 	bool IsHotspotEnabled() const						{ return isHotspotEnabled; }
@@ -432,8 +432,8 @@ public:
 	virtual CGuiConnection*			dynamic_cast_CGuiConnection(void)			{ return this; }
 
 	void RefreshAttributeCache();
-	CComPtr<IAutoRouterPath> GetRouterPath()				{ return routerPath; }
-	void SetRouterPath(CComPtr<IAutoRouterPath> path) 		{ routerPath = path; }
+	CAutoRouterPath* GetRouterPath()						{ return routerPath; }
+	void SetRouterPath(CAutoRouterPath* path) 				{ routerPath = path; }
 	void GrayOutEndPoints();
 	void ToggleHover()										{ hovered = !hovered; }
 	void SetSelect(bool sel)								{ selected = sel; }
@@ -472,9 +472,11 @@ public:
 	void SnapCoordIfApplicable(CustomPathData* coordToSet, const CPoint& last, const CPoint& pt);
 	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp, int edgeIndex = -1);
 	bool IsAutoRouted(void) const;
+	void SetAutoRouted(bool autoRouteState);
 	bool NeedsRouterPathConversion(void) const;
-	void ConvertAutoRoutedPathToCustom(long asp);
+	void ConvertAutoRoutedPathToCustom(long asp, bool handleTransaction = false);
 	void ReadAutoRouteState(void);
+	void WriteAutoRouteState(bool handleTransaction = true);
 
 	virtual bool IsVisible(int aspect = -1)				{ return visible && visible[aspect < 0 ? parentAspect : aspect]; }
 	virtual void RemoveFromRouter(CAutoRouter &router);
@@ -490,7 +492,7 @@ public:
 	CMapStringToString	attributeCache;
 
 private:
-	CComPtr<IAutoRouterPath> routerPath;
+	CAutoRouterPath* routerPath;
 	CGuiConnectionLabelSet labelset;
 	bool* visible;
 	GMEConnLineType lineType;

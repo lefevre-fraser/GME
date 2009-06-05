@@ -2036,22 +2036,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\AutoRoute\AutoRouterBox.rgs"
-				>
-			</File>
-			<File
-				RelativePath=".\AutoRoute\AutoRouterGraph.rgs"
-				>
-			</File>
-			<File
-				RelativePath=".\AutoRoute\AutoRouterPath.rgs"
-				>
-			</File>
-			<File
-				RelativePath=".\AutoRoute\AutoRouterPort.rgs"
-				>
-			</File>
-			<File
 				RelativePath="res\bitmap1.bmp"
 				>
 			</File>

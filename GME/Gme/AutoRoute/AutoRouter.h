@@ -11,7 +11,7 @@ class CGuiConnection;
 
 typedef CList<CPoint, CPoint&>	CPointList;
 
-typedef CTypedPtrMap<CMapPtrToPtr, IAutoRouterPath*, CGuiConnection*>		CMapAutoRouterPath2CGuiConnection;
+typedef CTypedPtrMap<CMapPtrToPtr, CAutoRouterPath*, CGuiConnection*>		CMapAutoRouterPath2CGuiConnection;
 
 
 class CAutoRouter {
@@ -20,7 +20,7 @@ public:
 	~CAutoRouter();
 
 private:
-	CComPtr<IAutoRouterGraph> router;
+	CAutoRouterGraph* router;
 	int routeret;
 	CMapAutoRouterPath2CGuiConnection mapPath2Conn;
 
@@ -29,8 +29,8 @@ public:
 	void AutoRoute(CGuiFcoList& fcos, long aspect);
 	void Fill(CGuiFcoList& fcos);
 	void Clear(CGuiFcoList& fcos);
-	void SetPortPreferences(CComPtr<IAutoRouterPort> portBox, CGuiPort* object);
-	void SetPathPreferences(CComPtr<IAutoRouterPath> path, CGuiConnection* conn);
+	void SetPortPreferences(CAutoRouterPort* portBox, CGuiPort* object);
+	void SetPathPreferences(CAutoRouterPath* path, CGuiConnection* conn);
 	bool RemoveDeletedCustomPathDataFromGuiConnections(void);
 	void AddObjects(CGuiFcoList& fcos);
 	void AddFco(CGuiFco* fco);

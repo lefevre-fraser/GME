@@ -2327,8 +2327,7 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role
 	connRegAutoRouteNotSet	(true),
 	isAutoRouted			(theApp.useAutoRouting)
 {
-	CComPtr<IAutoRouterPath> dummy;
-	routerPath = dummy;
+	routerPath = NULL;
 
 	if (resolve)
 		Resolve();
@@ -2784,43 +2783,17 @@ void CGuiConnection::ReadARPreferences()
 
 void CGuiConnection::GetPointList(CPointList& points) const
 {
-	if (routerPath.p)
+	if (routerPath != NULL)
 	{
-		//retrieve data from AutoRouter
-		//CAutoRouterPath* p = static_cast<CAutoRouterPath*>(routerPath.p);
-
-		// TODO: using CComSafeArray anywhere, see http://msdn.microsoft.com/de-de/library/3xzbsee8.aspx
-		//There was a problem with uninitialized safearrays, so create a dummy:
-		SAFEARRAY* pArr = NULL;
-
-		COMTHROW(routerPath->GetPointList(&pArr));
-
-		//one dim., long elements
-		if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
+		CPointListPath& pointList = routerPath->GetPointList();
+		POSITION pos = pointList.GetHeadPosition();
+		while( pos != NULL )
 		{
-			//length
-			long elementNum = (pArr)->rgsabound[0].cElements;
-
-			if (elementNum > 0)
-			{
-				//lock it before use
-				SafeArrayLock(pArr);
-				long* pArrElements = (long*) (pArr)->pvData;
-
-				for (int i = 0; i < elementNum / 2; i++)
-				{
-					CPoint p(pArrElements[2 * i], pArrElements[2 * i + 1]);
-					points.AddTail(p);
-				}
-
-				SafeArrayUnlock(pArr);
-			}
+			points.AddTail(pointList.GetNext(pos));
 		}
-		//clear memory
-		SafeArrayDestroy(pArr);
 	}
 
-	if (!routerPath.p || points.GetSize() <= 0)
+	if (!routerPath || points.GetSize() <= 0)
 	{
 		CPoint start = srcPort->GetLocation().CenterPoint() + src->GetLocation().TopLeft();
 		CPoint end   = dstPort->GetLocation().CenterPoint() + dst->GetLocation().TopLeft();
@@ -2898,9 +2871,8 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 	CPoint lastlast = emptyPoint;
 	POSITION pos = points.GetHeadPosition();
 	int i = 0;
-	CComPtr<IAutoRouterGraph> comAg;
-	COMTHROW(routerPath->GetOwner(&comAg));
-	ASSERT(comAg);
+	CAutoRouterGraph* ag = routerPath->GetOwner();
+	ASSERT(ag != NULL);
 	if (pos) {
 		CPoint pt = points.GetNext(pos);
 		last = pt;
@@ -2934,9 +2906,7 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 					connectionMoveMethod = AdjacentEdgeMove;
 				}
 				if (moveAction) {
-					VARIANT_BOOL comIsFixed = VARIANT_FALSE;
-					comAg->IsEdgeFixed(routerPath, last.x, last.y, pt.x, pt.y, &comIsFixed);
-					isPartFixed = (comIsFixed == VARIANT_TRUE);
+					isPartFixed = ag->IsEdgeFixed(routerPath, last, pt);
 
 					startPoint = last;
 					endPoint = pt;
@@ -3092,7 +3062,7 @@ void CGuiConnection::FillOutCustomPathData(CustomPathData& pathData, PathCustomi
 	pathData.edgeIndex					= edgeIndex;
 	pathData.edgeCount					= GetEdgeCount();
 	pathData.type						= custType;
-	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge ? VARIANT_TRUE : VARIANT_FALSE;
+	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge;
 	if (custType == SimpleEdgeDisplacement) {
 		pathData.x						= !horizontalOrVerticalEdge ? newPosX : 0;
 		pathData.y						= horizontalOrVerticalEdge ? newPosX : 0;
@@ -3174,7 +3144,7 @@ void CGuiConnection::ReadCustomPathData(void)
 					TRACE("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld", pathData.aspect, pathData.edgeIndex,
 																 pathData.edgeCount, pathData.type);
 					CString directionStr = subStr.Tokenize(",", curSubPos);
-					pathData.horizontalOrVerticalEdge = (strtol(directionStr, NULL, 10) != 0 ? VARIANT_TRUE : VARIANT_FALSE);
+					pathData.horizontalOrVerticalEdge = (strtol(directionStr, NULL, 10) != 0);
 					CString positionStr = subStr.Tokenize(",", curSubPos);
 					pathData.x = strtol(positionStr, NULL, 10);
 					positionStr = subStr.Tokenize(",", curSubPos);
@@ -3199,8 +3169,7 @@ void CGuiConnection::ReadCustomPathData(void)
 						pathData.l4 = strtol(positionStr, NULL, 10);
 					}
 
-					TRACE3(", Dir %ld, x %ld, y %ld",
-						pathData.horizontalOrVerticalEdge == VARIANT_TRUE ? 1 : 0, pathData.x, pathData.y);
+					TRACE3(", Dir %ld, x %ld, y %ld", pathData.horizontalOrVerticalEdge, pathData.x, pathData.y);
 					if (pathData.numOfExtraLongData)
 						TRACE(", num %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
 							pathData.numOfExtraLongData, pathData.l1, pathData.l2, pathData.l3, pathData.l4);
@@ -3267,7 +3236,7 @@ void CGuiConnection::WriteCustomPathData(bool handleTransaction)
 		CString edgeStr;
 		edgeStr.Format("%ld,%ld,%ld,%d,%ld", (*ii).version, (*ii).aspect, (*ii).edgeIndex, (*ii).edgeCount, (*ii).type);
 		CString additionalDataStr;
-		additionalDataStr.Format(",%ld,%ld,%ld,%ld", (*ii).horizontalOrVerticalEdge == VARIANT_TRUE ? 1 : 0, (*ii).x, (*ii).y, (*ii).numOfExtraLongData);
+		additionalDataStr.Format(",%ld,%ld,%ld,%ld", (*ii).horizontalOrVerticalEdge ? 1 : 0, (*ii).x, (*ii).y, (*ii).numOfExtraLongData);
 		edgeStr.Append(additionalDataStr);
 		if ((*ii).numOfExtraLongData > 0) {
 			additionalDataStr.Format(",%ld", (*ii).l1);
@@ -3555,7 +3524,17 @@ bool CGuiConnection::IsAutoRouted(void) const
 	return isAutoRouted;
 }
 
-void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp)
+void CGuiConnection::SetAutoRouted(bool autoRouteState)
+{
+	isAutoRouted = autoRouteState;
+}
+
+bool CGuiConnection::NeedsRouterPathConversion(void) const
+{
+	return (customPathData.size() < 1 && connRegAutoRouteNotSet && !isAutoRouted);
+}
+
+void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp, bool handleTransaction)
 {
 	CPointList points;
 	GetPointList(points);
@@ -3573,7 +3552,7 @@ void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp)
 		i++;
 	}
 
-	WriteCustomPathData(false);
+	WriteCustomPathData(handleTransaction);
 }
 
 void CGuiConnection::ReadAutoRouteState(void)
@@ -3595,9 +3574,19 @@ void CGuiConnection::ReadAutoRouteState(void)
 	isAutoRouted = connRegAutoRoute;
 }
 
-bool CGuiConnection::NeedsRouterPathConversion(void) const
+void CGuiConnection::WriteAutoRouteState(bool handleTransaction)
 {
-	return (customPathData.size() < 1 && connRegAutoRouteNotSet && !isAutoRouted);
+	VERIFY(mgaFco);
+	CComBSTR pathBstr;
+	CopyTo(CONNECTIONAUTOROUTING, pathBstr);
+	CString valStr = IsAutoRouted() ? "true" : "false";
+	CComBSTR bstrVal;
+	CopyTo(valStr, bstrVal);
+	if (handleTransaction)
+		view->BeginTransaction();
+	COMTHROW(mgaFco->put_RegistryValue(pathBstr, bstrVal));
+	if (handleTransaction)
+		view->CommitTransaction();
 }
 
 ////////////////////////////////////////////////

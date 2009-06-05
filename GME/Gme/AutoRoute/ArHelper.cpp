@@ -687,7 +687,7 @@ bool CArFindNearestLine::VLine(int y1, int y2, int x)
 }
 
 
-// --------------------------- CPointList
+// --------------------------- CPointListPath
 
 
 POSITION CPointListPath::GetHeadEdge(CPoint& start, CPoint& end) const

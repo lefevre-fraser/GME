@@ -119,12 +119,12 @@ CAutoRouterEdge::~CAutoRouterEdge()
 {
 }
 
-CComPtr<IUnknown> CAutoRouterEdge::GetOwner(void) const
+CObject* CAutoRouterEdge::GetOwner(void) const
 {
 	return owner;
 }
 
-void CAutoRouterEdge::SetOwner(CComPtr<IUnknown> owner)
+void CAutoRouterEdge::SetOwner(CObject* owner)
 {
 	this->owner = owner;
 }
@@ -464,7 +464,7 @@ CAutoRouterEdgeList::~CAutoRouterEdgeList()
 	Check_Section();
 }
 
-void CAutoRouterEdgeList::SetOwner(CComPtr<IAutoRouterGraph> o)
+void CAutoRouterEdgeList::SetOwner(CAutoRouterGraph* o)
 {
 	owner = o;
 }
@@ -473,43 +473,36 @@ void CAutoRouterEdgeList::SetOwner(CComPtr<IAutoRouterGraph> o)
 
 typedef std::pair<long,long> Long_Pair;
 
-bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath* pointList)
+bool CAutoRouterEdgeList::AddEdges(CAutoRouterPath* path)
 {
+	ASSERT_VALID(path);
+	ASSERT( path->GetOwner() == owner );
+	ASSERT_VALID( path->GetStartPort() );
+	ASSERT_VALID( path->GetEndPort() );
+
 	// Apply custom edge modifications - step 2, part 1
 	// (Step 1: Move the desired edges
 	//  Step 2: Fix the desired edges)
 	bool hasCustomEdge = false;
 	std::map<long,long> customizedIndexes;	// convert array to a map for easier lookup
-	SAFEARRAY* pArr = NULL;
-	COMTHROW(path->GetCustomizedEdgeIndexes(&pArr));
-	//one dim., long elements
-	if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
-	{
-		//length
-		long elementNum = (pArr)->rgsabound[0].cElements;
-		if (elementNum > 0)
-		{
-			hasCustomEdge = true;
-			//lock it before use
-			SafeArrayLock(pArr);
-			long* pArrElements = (long*) (pArr)->pvData;
-			for (int i = 0; i < elementNum; i++)
-			{
-				customizedIndexes.insert(Long_Pair(pArrElements[i], 0));
-			}
-			SafeArrayUnlock(pArr);
-		}
+	std::vector<int> indexes;
+	path->GetCustomizedEdgeIndexes(indexes);
+	std::vector<int>::iterator ii = indexes.begin();
+
+	while (ii != indexes.end()) {
+		hasCustomEdge = true;
+		customizedIndexes.insert(Long_Pair(*ii, 0));
+		++ii;
 	}
-	//clear memory
-	SafeArrayDestroy(pArr);
 
 	std::map<long,long>::const_iterator indIter;
-	long currEdgeIndex = pointList->GetSize() - 2;
+	CPointListPath& pointList = path->GetPointList();
+	long currEdgeIndex = pointList.GetSize() - 2;
 
 	CPoint* startpoint = NULL;
 	CPoint* endpoint = NULL;
 
-	POSITION pos = pointList->GetTailEdgePtrs(startpoint, endpoint);
+	POSITION pos = pointList.GetTailEdgePtrs(startpoint, endpoint);
 	while( pos != NULL )
 	{
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
@@ -517,9 +510,8 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 		bool skipEdge = false;
 		if (dir == Dir_None)
 			skipEdge = true;
-		VARIANT_BOOL isMovable = VARIANT_TRUE;
-		COMTHROW(path->IsMoveable(&isMovable));
-		if( isMovable == VARIANT_TRUE && dir != Dir_Skew)
+		bool isMovable = path->IsMoveable();
+		if( !isMovable && dir != Dir_Skew)
 		{
 			int goodAngle = IsRightAngle(dir);
 			ASSERT( goodAngle );
@@ -531,11 +523,11 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 		{
 			CAutoRouterEdge* edge = new CAutoRouterEdge();
 
-			edge->SetOwner(path.p);
+			edge->SetOwner(path);
 
 			edge->SetStartAndEndPoint(startpoint, endpoint);
-			edge->SetStartPointPrev(pointList->GetPointBeforeEdge(pos));
-			edge->SetEndPointNext(pointList->GetPointAfterEdge(pos));
+			edge->SetStartPointPrev(pointList.GetPointBeforeEdge(pos));
+			edge->SetEndPointNext(pointList.GetPointAfterEdge(pos));
 
 			// Apply custom edge modifications - step 2, part 2
 			if (hasCustomEdge)
@@ -548,22 +540,17 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 				edge->SetEdgeCustomFixed(dir == Dir_Skew);
 			}
 
-			CComPtr<IAutoRouterPort> startPort;
-			COMTHROW(path->GetStartPort(&startPort));
+			CAutoRouterPort* startPort = path->GetStartPort();
 			ASSERT(startPort != NULL);
-			VARIANT_BOOL isStartPortConnectToCenter = VARIANT_FALSE;
-			COMTHROW(startPort->IsConnectToCenter(&isStartPortConnectToCenter));
+			bool isStartPortConnectToCenter = startPort->IsConnectToCenter();
 
-			CComPtr<IAutoRouterPort> endPort;
-			COMTHROW(path->GetEndPort(&endPort));
+			CAutoRouterPort* endPort = path->GetEndPort();
 			ASSERT(endPort != NULL);
-			VARIANT_BOOL isEndPortConnectToCenter = VARIANT_FALSE;
-			COMTHROW(endPort->IsConnectToCenter(&isEndPortConnectToCenter));
-			VARIANT_BOOL isPathFixed = VARIANT_FALSE;
-			COMTHROW(path->IsFixed(&isPathFixed));
-			edge->SetEdgeFixed(edge->GetEdgeCustomFixed() || isPathFixed == VARIANT_TRUE || 
-				(edge->IsStartPointPrevNull() && isStartPortConnectToCenter == VARIANT_TRUE) ||
-				(edge->IsEndPointNextNull() && isEndPortConnectToCenter == VARIANT_TRUE));
+			bool isEndPortConnectToCenter = endPort->IsConnectToCenter();
+			bool isPathFixed = path->IsFixed();
+			edge->SetEdgeFixed(edge->GetEdgeCustomFixed() || isPathFixed || 
+				(edge->IsStartPointPrevNull() && isStartPortConnectToCenter) ||
+				(edge->IsEndPointNextNull() && isEndPortConnectToCenter));
 
 			if (dir != Dir_Skew)
 			{
@@ -579,14 +566,14 @@ bool CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path, CPointListPath
 			Insert(edge);
 		}
 
-		pointList->GetPrevEdgePtrs(pos, startpoint, endpoint);
+		pointList.GetPrevEdgePtrs(pos, startpoint, endpoint);
 		currEdgeIndex--;
 	}
 
 	return true;
 }
 
-CAutoRouterEdge* CAutoRouterEdgeList::GetEdge(CComPtr<IAutoRouterPath> path, const CPoint& startpoint, const CPoint& endpoint) const
+CAutoRouterEdge* CAutoRouterEdgeList::GetEdge(CAutoRouterPath* path, const CPoint& startpoint, const CPoint& endpoint) const
 {
 	CAutoRouterEdge* edge = order_first;
 	while( edge != NULL )
@@ -637,12 +624,11 @@ CAutoRouterEdge* CAutoRouterEdgeList::GetEdgeAt(const CPoint& point, int nearnes
 
 #ifdef _DEBUG
 
-void CAutoRouterEdgeList::AssertValidPathEdges(CComPtr<IAutoRouterPath> path, CPointListPath& points) const
+void CAutoRouterEdgeList::AssertValidPathEdges(CAutoRouterPath* path, CPointListPath& points) const
 {
 	ASSERT( path != NULL );
-	CComPtr<IAutoRouterGraph> ownerGraph;
-	COMTHROW(path->GetOwner(&ownerGraph));
-	ASSERT( ownerGraph.p == owner );
+	CAutoRouterGraph* ownerGraph = path->GetOwner();
+	ASSERT( ownerGraph == owner );
 
 	CPoint* startpoint = NULL;
 	CPoint* endpoint = NULL;
@@ -652,9 +638,7 @@ void CAutoRouterEdgeList::AssertValidPathEdges(CComPtr<IAutoRouterPath> path, CP
 	{
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 
-		VARIANT_BOOL isMovable = VARIANT_TRUE;
-		COMTHROW(path->IsMoveable(&isMovable));
-		if( isMovable == VARIANT_TRUE )
+		if( path->IsMoveable() )
 			ASSERT( IsRightAngle(dir) );
 
 		if( IsRightAngle(dir) && IsHorizontal(dir) == ishorizontal )
@@ -729,32 +713,32 @@ void CAutoRouterEdgeList::DumpEdges(const CString& headMsg)
 
 #endif
 
-void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CPoint>* selfpoints)
+void CAutoRouterEdgeList::AddEdges(CAutoRouterPort* port)
 {
-	VARIANT_BOOL isConnectToCenter = VARIANT_FALSE;
-	COMTHROW(port->IsConnectToCenter(&isConnectToCenter));
-	if (isConnectToCenter == VARIANT_TRUE)
-	{
+	ASSERT_VALID(port);
+	ASSERT( port->GetOwner()->GetOwner() == owner );
+
+	if (port->IsConnectToCenter() || port->GetOwner()->IsAtomic())
 		return;
-	}
+
+	CPoint* selfpoints = port->GetSelfPoints();
 
 	for(int i = 0; i < 4; i++)
 	{
-		CPoint* startpoint_prev = &((*selfpoints)[(i + 3) % 4]);
-		CPoint* startpoint = &((*selfpoints)[i]);
-		CPoint* endpoint = &((*selfpoints)[(i + 1) % 4]);
-		CPoint* endpoint_next = &((*selfpoints)[(i + 2) % 4]);
+		CPoint* startpoint_prev = &(selfpoints[(i + 3) % 4]);
+		CPoint* startpoint = &(selfpoints[i]);
+		CPoint* endpoint = &(selfpoints[(i + 1) % 4]);
+		CPoint* endpoint_next = &(selfpoints[(i + 2) % 4]);
 
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 		ASSERT( IsRightAngle(dir) );
 
-		VARIANT_BOOL canHaveStartEndPointHorizontal = VARIANT_FALSE;
-		COMTHROW(port->CanHaveStartEndPointHorizontal(ishorizontal, &canHaveStartEndPointHorizontal));
-		if( IsHorizontal(dir) == ishorizontal && canHaveStartEndPointHorizontal == VARIANT_TRUE )
+		bool canHaveStartEndPointHorizontal = port->CanHaveStartEndPointHorizontal(ishorizontal);
+		if( IsHorizontal(dir) == ishorizontal && canHaveStartEndPointHorizontal )
 		{
 			CAutoRouterEdge* edge = new CAutoRouterEdge();
 
-			edge->SetOwner(port.p);
+			edge->SetOwner(port);
 
 			edge->SetStartAndEndPoint(startpoint, endpoint);
 			edge->SetStartPointPrev(startpoint_prev);
@@ -773,14 +757,19 @@ void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPort> port, std::vector<CP
 	}
 }
 
-void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoint>* selfpoints)
+void CAutoRouterEdgeList::AddEdges(CAutoRouterBox* box)
 {
+	ASSERT_VALID(box);
+	ASSERT( box->GetOwner() == owner );
+
+	CPoint* selfpoints = box->GetSelfPoints();
+
 	for(int i = 0; i < 4; i++)
 	{
-		CPoint* startpoint_prev = &((*selfpoints)[(i + 3) % 4]);
-		CPoint* startpoint = &((*selfpoints)[i]);
-		CPoint* endpoint = &((*selfpoints)[(i + 1) % 4]);
-		CPoint* endpoint_next = &((*selfpoints)[(i + 2) % 4]);
+		CPoint* startpoint_prev = &(selfpoints[(i + 3) % 4]);
+		CPoint* startpoint = &(selfpoints[i]);
+		CPoint* endpoint = &(selfpoints[(i + 1) % 4]);
+		CPoint* endpoint_next = &(selfpoints[(i + 2) % 4]);
 
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 		ASSERT( IsRightAngle(dir) );
@@ -789,7 +778,7 @@ void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoi
 		{
 			CAutoRouterEdge* edge = new CAutoRouterEdge();
 
-			edge->SetOwner(box.p);
+			edge->SetOwner(box);
 
 			edge->SetStartAndEndPoint(startpoint, endpoint);
 			edge->SetStartPointPrev(startpoint_prev);
@@ -808,14 +797,19 @@ void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterBox> box, std::vector<CPoi
 	}
 }
 
-void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterGraph> graph, std::vector<CPoint>* selfpoints)
+void CAutoRouterEdgeList::AddEdges(CAutoRouterGraph* graph)
 {
+	ASSERT_VALID(graph);
+	ASSERT( graph == owner );
+
+	CPoint* selfpoints = graph->GetSelfPoints();
+
 	for(int i = 0; i < 4; i++)
 	{
-		CPoint* startpoint_prev = &((*selfpoints)[(i + 3) % 4]);
-		CPoint* startpoint = &((*selfpoints)[i]);
-		CPoint* endpoint = &((*selfpoints)[(i + 1) % 4]);
-		CPoint* endpoint_next = &((*selfpoints)[(i + 2) % 4]);
+		CPoint* startpoint_prev = &(selfpoints[(i + 3) % 4]);
+		CPoint* startpoint = &(selfpoints[i]);
+		CPoint* endpoint = &(selfpoints[(i + 1) % 4]);
+		CPoint* endpoint_next = &(selfpoints[(i + 2) % 4]);
 
 		RoutingDirection dir = GetDir(*endpoint - *startpoint);
 		ASSERT( IsRightAngle(dir) );
@@ -824,7 +818,7 @@ void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterGraph> graph, std::vector<
 		{
 			CAutoRouterEdge* edge = new CAutoRouterEdge();
 
-			edge->SetOwner(graph.p);
+			edge->SetOwner(graph);
 
 			edge->SetStartAndEndPoint(startpoint, endpoint);
 			edge->SetStartPointPrev(startpoint_prev);
@@ -838,7 +832,7 @@ void CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterGraph> graph, std::vector<
 	}
 }
 
-void CAutoRouterEdgeList::DeleteEdges(CComPtr<IUnknown> object)
+void CAutoRouterEdgeList::DeleteEdges(CObject* object)
 {
 	CAutoRouterEdge* edge = order_first;
 	while( edge != NULL )
@@ -1965,10 +1959,8 @@ bool CAutoRouterEdgeList::Block_ScanForward()
 #ifdef _DEBUG
 		if( !blocker->GetEdgeFixed() )
 		{
-			CComQIPtr<IAutoRouterPath> ownerPath = blocker->GetOwner();
-			VARIANT_BOOL isHighlighted = VARIANT_FALSE;
-			COMTHROW(ownerPath->IsHighLighted(&isHighlighted));
-			if (isHighlighted == VARIANT_TRUE)
+			CAutoRouterPath* ownerPath = static_cast<CAutoRouterPath*>(blocker->GetOwner());
+			if (ownerPath->IsHighLighted())
 			{
 				ASSERT(false);
 				break;
@@ -2070,10 +2062,8 @@ bool CAutoRouterEdgeList::Block_ScanBackward()
 #ifdef _DEBUG
 		if( !blocker->GetEdgeFixed() )
 		{
-			CComQIPtr<IAutoRouterPath> ownerPath = blocker->GetOwner();
-			VARIANT_BOOL isHighlighted = VARIANT_FALSE;
-			COMTHROW(ownerPath->IsHighLighted(&isHighlighted));
-			if (isHighlighted == VARIANT_TRUE)
+			CAutoRouterPath* ownerPath = static_cast<CAutoRouterPath*>(blocker->GetOwner());
+			if (ownerPath->IsHighLighted())
 			{
 				ASSERT(false);
 				break;

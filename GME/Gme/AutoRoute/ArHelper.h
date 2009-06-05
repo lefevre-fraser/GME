@@ -9,6 +9,56 @@
 //	#define _DEBUG_DEEP
 #endif
 
+
+enum RoutingDirection
+{
+	Dir_None	= -1,
+	Dir_Top		= 0,
+	Dir_Right	= 1,
+	Dir_Bottom	= 2,
+	Dir_Left	= 3,
+	Dir_Skew	= 4
+};
+
+// Type of edge customization
+enum PathCustomizationType
+{
+	Invalid						= 0,
+	SimpleEdgeDisplacement		= 1,
+	CustomPointCustomization	= 2,
+	NURBSEdgeCustomization		= 3,
+	NumOfPathCustomizationTypes	= 4
+};
+
+// Structure for storing edge customization data
+struct CustomPathData
+{
+	long version;					// Version number of structure
+	long aspect;					// Which aspect does customization refers to
+	long edgeIndex;					// The index of the given edge in the edge array
+	long edgeCount;					// The number of the edges in the array
+	PathCustomizationType type;		// Type of the customization: simple displacement, NURBS curving, etc
+	bool horizontalOrVerticalEdge;	// Tells if the displacement to an x or y coordinate
+	long x;							// An x coordinate
+	long y;							// An y coordinate
+
+	long numOfExtraLongData;		// Number of additional long data (max 4)
+	long l1;						// Additional long data no 1
+	long l2;						// Additional long data no 2
+	long l3;						// Additional long data no 3
+	long l4;						// Additional long data no 4
+	long numOfExtraDoubleData;		// Number of additional floating point data (max 8)
+	double d1;						// Additional double data no 1
+	double d2;						// Additional double data no 2
+	double d3;						// Additional double data no 3
+	double d4;						// Additional double data no 4
+	double d5;						// Additional double data no 5
+	double d6;						// Additional double data no 6
+	double d7;						// Additional double data no 7
+	double d8;						// Additional double data no 8
+};
+
+
 // --------------------------- CRect && CPoint
 
 static const CPoint emptyPoint = CPoint(-100000, -100000);
@@ -86,9 +136,9 @@ public:
 };
 
 
-// --------------------------- CPointList
+// --------------------------- CPointListPath
 
-class CPointListPath : public CList<CPoint, CPoint&>
+class CPointListPath : public CPointList
 {
 public:
 	POSITION GetHeadEdge(CPoint& start, CPoint& end) const;

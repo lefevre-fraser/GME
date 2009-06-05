@@ -11,134 +11,117 @@
 // --- CAutoRouterGraph
 
 CAutoRouterGraph::CAutoRouterGraph():
-	horizontal(1),
-	vertical(0)
-{
-}
-
-HRESULT CAutoRouterGraph::FinalConstruct(void)
+	horizontal(true),
+	vertical(false)
 {
 	horizontal.SetOwner(this);
 	vertical.SetOwner(this);
 
 	CalculateSelfPoints();
 	AddSelfEdges();
-
-	return S_OK;
-}
-
-void CAutoRouterGraph::FinalRelease(void)
-{
 }
 
 // --- Boxes
 
-void CAutoRouterGraph::Remove(CComPtr<IAutoRouterBox> box)
+void CAutoRouterGraph::Remove(CAutoRouterBox* box)
 {
 	DeleteBoxAndPortEdges(box);
 
-	std::vector<CComPtr<IAutoRouterPath> >::iterator iter;
+	std::vector<CAutoRouterPath*>::iterator iter;
 	iter = paths.begin();
 	
 	while(iter != paths.end())
 	{
-		int iteratorChanged = 0;
+		bool iteratorChanged = false;
 
-		CComPtr<IAutoRouterPath> path = *iter;
+		CAutoRouterPath* path = *iter;
 
-		CComPtr<IAutoRouterPort> startPort;
-		COMTHROW(path->GetStartPort(&startPort));
+		CAutoRouterPort* startPort = path->GetStartPort();
 		ASSERT(startPort != NULL);
-		CComPtr<IAutoRouterBox> startbox;
-		COMTHROW(startPort->GetOwner(&startbox));
+		CAutoRouterBox* startbox = startPort->GetOwner();
 
-		CComPtr<IAutoRouterPort> endPort;
-		COMTHROW(path->GetEndPort(&endPort));
+		CAutoRouterPort* endPort = path->GetEndPort();
 		ASSERT(endPort != NULL);
-		CComPtr<IAutoRouterBox> endbox;
-		COMTHROW(endPort->GetOwner(&endbox));
+		CAutoRouterBox* endbox = endPort->GetOwner();
 
 		if( (startbox == box || endbox == box) )
 		{
 			//DeletePath:
-			VARIANT_BOOL hasOwner = VARIANT_TRUE;
-			COMTHROW(path->HasOwner(&hasOwner));
-			if( hasOwner == VARIANT_TRUE )
+			if (path->HasOwner())
 			{
-				DeleteEdges(path.p);
+				DeleteEdges(path);
 				path->SetOwner(NULL);
 
 				iter = paths.erase(iter);
-				iteratorChanged = 1;
+				iteratorChanged = true;
 			}
 
-			path->Destroy();
+			path->Destroy();	// ??
 		}
 
-		if (iteratorChanged==0)
+		if (!iteratorChanged)
 			++iter;
 	}
 
 	box->SetOwner(NULL);
 
-	std::vector<CComPtr<IAutoRouterBox> >::iterator iter2 = std::find(boxes.begin(), boxes.end(), box);
+	std::vector<CAutoRouterBox*>::iterator iter2 = std::find(boxes.begin(), boxes.end(), box);
 
-	if (iter2 == boxes.end())
+	if (iter2 != boxes.end())
+	{
+		boxes.erase(iter2);
+	}
+	else
 	{
 		//error
+		ASSERT(false);
 	}
-
-	boxes.erase(iter2);
 }
 
 void CAutoRouterGraph::DeleteAllBoxes()
 {
-	for (CAutoRouterBoxList::size_type i = 0; i<boxes.size(); i++)
+	for (CAutoRouterBoxList::size_type i = 0; i < boxes.size(); i++)
 	{
 		DeleteBoxAndPortEdges(boxes[i]);
 		boxes[i]->Destroy();
+		delete boxes[i];
 	}
 
 	boxes.clear();
 }
 
-CComPtr<IAutoRouterBox> CAutoRouterGraph::GetBoxAt(const CPoint& point, int nearness) const
+CAutoRouterBox* CAutoRouterGraph::GetBoxAt(const CPoint& point, int nearness) const
 {
-	std::vector<CComPtr<IAutoRouterBox> >::const_iterator iter = boxes.begin();
+	std::vector<CAutoRouterBox*>::const_iterator iter = boxes.begin();
 	while (iter != boxes.end())
 	{
-		VARIANT_BOOL isBoxAt = VARIANT_FALSE;
-		COMTHROW((*iter)->IsBoxAt(point.x, point.y, nearness, &isBoxAt));
-		if( isBoxAt == VARIANT_TRUE )
-		{
+		if ((*iter)->IsBoxAt(point, nearness))
 			return (*iter);
-		}
+
 		++iter;
 	}
 
 	return NULL;
 }
 
-void CAutoRouterGraph::SetPortAttr(CComPtr<IAutoRouterPort> port, unsigned int attr)
+void CAutoRouterGraph::SetPortAttr(CAutoRouterPort* port, unsigned int attr)
 {
 	DisconnectPathsFrom(port);
 	port->SetAttributes(attr);
 }
 
-int  CAutoRouterGraph::IsRectClipBoxes(const CRect& rect) const
+bool CAutoRouterGraph::IsRectClipBoxes(const CRect& rect) const
 {
 	for (CAutoRouterBoxList::size_type i = 0; i < boxes.size(); i++)
 	{
-		long p1, p2, p3, p4;
-		COMTHROW(boxes[i]->GetRect(&p1, &p2, &p3, &p4));
-		const CRect boxRect(p1, p2, p3, p4);
+		const CRect boxRect = boxes[i]->GetRect();
 		if( IsRectClip(rect, boxRect) )
-			return 1;
+			return true;
 	}
-	return 0;
+	return false;
 }
 
-int  CAutoRouterGraph::IsLineClipBoxes(const CPoint& p1, const CPoint& p2) const
+bool CAutoRouterGraph::IsLineClipBoxes(const CPoint& p1, const CPoint& p2) const
 {
 	CRect rect(p1, p2);
 	rect.NormalizeRect();
@@ -152,17 +135,15 @@ int  CAutoRouterGraph::IsLineClipBoxes(const CPoint& p1, const CPoint& p2) const
 	return IsRectClipBoxes(rect);
 }
 
-int  CAutoRouterGraph::CanBoxAt(const CRect& rect) const
+bool CAutoRouterGraph::CanBoxAt(const CRect& rect) const
 {
 	return !IsRectClipBoxes(InflatedRect(rect, 1));
 }
 
-void CAutoRouterGraph::Add(CComPtr<IAutoRouterPath> path)
+void CAutoRouterGraph::Add(CAutoRouterPath* path)
 {
 	ASSERT( path != NULL );
-	VARIANT_BOOL hasOwner = VARIANT_TRUE;
-	COMTHROW(path->HasOwner(&hasOwner));
-	ASSERT( hasOwner == VARIANT_FALSE );
+	ASSERT(!path->HasOwner());
 
 	path->SetOwner(this);
 
@@ -175,34 +156,37 @@ void CAutoRouterGraph::Add(CComPtr<IAutoRouterPath> path)
 #endif
 }
 
-void CAutoRouterGraph::Remove(CComPtr<IAutoRouterPath> path)
+void CAutoRouterGraph::Remove(CAutoRouterPath* path)
 {
-	DeleteEdges(path.p);
+	DeleteEdges(path);
 
 	path->SetOwner(NULL);
 
+	std::vector<CAutoRouterPath*>::iterator iter = std::find(paths.begin(), paths.end(), path);
 
-	std::vector<CComPtr<IAutoRouterPath> >::iterator iter = std::find(paths.begin(), paths.end(), path);
-
-	if (iter == paths.end())
+	if (iter != paths.end())
+	{
+		paths.erase(iter);
+	}
+	else
 	{
 		//error
+		ASSERT(false);
 	}
-
-	paths.erase(iter);
 }
 
 void CAutoRouterGraph::DeleteAllPaths()
 {
-	std::vector<CComPtr<IAutoRouterPath> >::iterator iter;
+	std::vector<CAutoRouterPath*>::iterator iter;
 	iter = paths.begin();
 
 	while (iter != paths.end())
 	{
-		CComPtr<IUnknown> pUnk = (*iter);
-		DeleteEdges(pUnk);
+		DeleteEdges(*iter);
 
+		(*iter)->SetOwner(NULL);
 		(*iter)->Destroy();
+		delete (*iter);
 		++iter;
 	}
 
@@ -222,41 +206,34 @@ CAutoRouterEdge* CAutoRouterGraph::GetListEdgeAt(const CPoint& point, int nearne
 
 // --- Boxes && Paths
 
-CRect CAutoRouterGraph::GetSurroundRect() const
+CRect CAutoRouterGraph::GetSurroundRect(void) const
 {
 	CRect rect(0,0,0,0);
 
 	for (CAutoRouterBoxList::size_type i = 0; i < boxes.size(); i++)
 	{
-		long p1, p2, p3, p4;
-		COMTHROW(boxes[i]->GetRect(&p1, &p2, &p3, &p4));
-		const CRect boxRect(p1, p2, p3, p4);
-		rect |= boxRect;
+		rect |= boxes[i]->GetRect();
 	}
 
 	for (CAutoRouterPathList::size_type i = 0; i < paths.size(); i++)
 	{
-		long p1, p2, p3, p4;
-		COMTHROW(paths[i]->GetSurroundRect(&p1, &p2, &p3, &p4));
-		rect |= CRect(p1, p2, p3, p4);
+		rect |= paths[i]->GetSurroundRect();
 	}
 
 	return rect;
 }
 
-CComPtr<IAutoRouterBox> CAutoRouterGraph::GetOutOfBox(CPoint& point, RoutingDirection dir) const
+CAutoRouterBox* CAutoRouterGraph::GetOutOfBox(CPoint& point, RoutingDirection dir) const
 {
 	ASSERT( IsRightAngle(dir) );
 
-	CComPtr<IAutoRouterBox> boxby = NULL;
+	CAutoRouterBox* boxby = NULL;
 
-	std::vector<CComPtr<IAutoRouterBox> >::const_iterator iter = boxes.begin();
+	std::vector<CAutoRouterBox*>::const_iterator iter = boxes.begin();
 
 	while (iter != boxes.end())
 	{
-		long p1, p2, p3, p4;
-		COMTHROW((*iter)->GetRect(&p1, &p2, &p3, &p4));
-		const CRect boxRect(p1, p2, p3, p4);
+		const CRect boxRect = (*iter)->GetRect();
 		if( boxRect.PtInRect(point) )
 		{
 			boxby = *iter;
@@ -270,20 +247,18 @@ CComPtr<IAutoRouterBox> CAutoRouterGraph::GetOutOfBox(CPoint& point, RoutingDire
 	return boxby;
 }
 
-CComPtr<IAutoRouterBox> CAutoRouterGraph::GoToNextBox(CPoint& point, RoutingDirection dir, long stophere) const
+CAutoRouterBox* CAutoRouterGraph::GoToNextBox(CPoint& point, RoutingDirection dir, long stophere) const
 {
 	ASSERT( IsRightAngle(dir) );
 	ASSERT( GetPointCoord(point, dir) != stophere );
 
-	CComPtr<IAutoRouterBox> boxby = NULL;
+	CAutoRouterBox* boxby = NULL;
 
-	std::vector<CComPtr<IAutoRouterBox> >::const_iterator iter = boxes.begin();
+	std::vector<CAutoRouterBox*>::const_iterator iter = boxes.begin();
 
 	while (iter != boxes.end())
 	{
-		long p1, p2, p3, p4;
-		COMTHROW((*iter)->GetRect(&p1, &p2, &p3, &p4));
-		const CRect boxRect(p1, p2, p3, p4);
+		const CRect boxRect = (*iter)->GetRect();
 		if( IsPointInDirFrom(point, boxRect, ReverseDir(dir)) &&
 			IsPointBetweenSides(point, boxRect, dir) &&
 			IsCoordInDirFrom(stophere, GetRectOuterCoord(boxRect, ReverseDir(dir)), dir) )
@@ -305,7 +280,7 @@ void CAutoRouterGraph::GetLimitsOfEdge(const CPoint& startPt, const CPoint& endP
 	CPoint start = startPt;
 	CPoint end = endPt;
 
-	std::vector<CComPtr<IAutoRouterBox> >::const_iterator iter = boxes.begin();
+	std::vector<CAutoRouterBox*>::const_iterator iter = boxes.begin();
 
 	if( start.y == end.y )
 	{
@@ -318,9 +293,7 @@ void CAutoRouterGraph::GetLimitsOfEdge(const CPoint& startPt, const CPoint& endP
 
 		while( iter != boxes.end())
 		{
-			long p1, p2, p3, p4;
-			COMTHROW((*iter)->GetRect(&p1, &p2, &p3, &p4));
-			const CRect rect(p1, p2, p3, p4);
+			const CRect rect = (*iter)->GetRect();
 			++iter;
 
 			if(start.x < rect.right && rect.left <= end.x)
@@ -345,9 +318,7 @@ void CAutoRouterGraph::GetLimitsOfEdge(const CPoint& startPt, const CPoint& endP
 
 		while( iter != boxes.end())
 		{
-			long p1, p2, p3, p4;
-			COMTHROW((*iter)->GetRect(&p1, &p2, &p3, &p4));
-			const CRect rect(p1, p2, p3, p4);
+			const CRect rect = (*iter)->GetRect();
 			++iter;
 
 			if(start.y < rect.bottom && rect.top <= end.y)
@@ -363,57 +334,39 @@ void CAutoRouterGraph::GetLimitsOfEdge(const CPoint& startPt, const CPoint& endP
 	max--;
 }
 
-bool CAutoRouterGraph::Connect(CComPtr<IAutoRouterPath> path)
+bool CAutoRouterGraph::Connect(CAutoRouterPath* path)
 {
-	CComPtr<IAutoRouterPort> startport;
-	COMTHROW(path->GetStartPort(&startport));
-	CComPtr<IAutoRouterPort> endport;
-	COMTHROW(path->GetEndPort(&endport));
+	CAutoRouterPort* startport = path->GetStartPort();
+	CAutoRouterPort* endport = path->GetEndPort();
 
-	RoutingDirection startdir;
-	COMTHROW(path->GetStartDir(&startdir));
-	VARIANT_BOOL startportHasLimited = VARIANT_FALSE;
-	VARIANT_BOOL startportCanHave = VARIANT_TRUE;
+	RoutingDirection startdir = path->GetStartDir();
+	bool startportHasLimited = false;
+	bool startportCanHave = true;
 	if (startdir != Dir_None) {
-		COMTHROW(startport->HasLimitedDirs(&startportHasLimited));
-		COMTHROW(startport->CanHaveStartEndPointOn(startdir, 1, &startportCanHave));
+		startportHasLimited = startport->HasLimitedDirs();
+		startportCanHave = startport->CanHaveStartEndPointOn(startdir, true);
 	}
-	if( startdir == Dir_None ||															// recalc startdir if empty
-		startportHasLimited == VARIANT_TRUE && startportCanHave == VARIANT_FALSE)		// or is limited and userpref is invalid
+	if( startdir == Dir_None ||							// recalc startdir if empty
+		startportHasLimited && !startportCanHave)		// or is limited and userpref is invalid
 	{
-		long endportCenterX, endportCenterY;
-		COMTHROW(endport->GetCenter(&endportCenterX, &endportCenterY));
-		RoutingDirection startportDir;
-		COMTHROW(startport->GetStartEndDirTo(endportCenterX, endportCenterY, 1, Dir_None, &startportDir));
-		startdir = startportDir;
+		startdir = startport->GetStartEndDirTo(endport->GetCenter(), true);
 	}
 
-	RoutingDirection enddir;
-	COMTHROW(path->GetEndDir(&enddir));
-	VARIANT_BOOL endportHasLimited = VARIANT_FALSE;
-	VARIANT_BOOL endportCanHave = VARIANT_TRUE;
+	RoutingDirection enddir = path->GetEndDir();
+	bool endportHasLimited = false;
+	bool endportCanHave = true;
 	if (enddir != Dir_None) {
-		COMTHROW(endport->HasLimitedDirs(&endportHasLimited));
-		COMTHROW(endport->CanHaveStartEndPointOn(enddir, 0, &endportCanHave));
+		endportHasLimited = endport->HasLimitedDirs();
+		endportCanHave = endport->CanHaveStartEndPointOn(enddir, false);
 	}
-	if( enddir == Dir_None ||															// like above
-		endportHasLimited == VARIANT_TRUE && endportCanHave == VARIANT_FALSE)
+	if( enddir == Dir_None ||							// like above
+		endportHasLimited && !endportCanHave)
 	{
-		long startportCenterX, startportCenterY;
-		COMTHROW(startport->GetCenter(&startportCenterX, &startportCenterY));
-		RoutingDirection endportDir;
-		COMTHROW(endport->GetStartEndDirTo(startportCenterX, startportCenterY, 0,
-										   startport == endport ? startdir : Dir_None, &endportDir));
-
-		enddir = endportDir;
+		enddir = endport->GetStartEndDirTo(startport->GetCenter(), false, startport == endport ? startdir : Dir_None );
 	}
 
-	long startpointx, startpointy;
-	COMTHROW(startport->CreateStartEndPointOn(startdir, &startpointx, &startpointy));
-	CPoint startpoint(startpointx, startpointy);
-	long endpointx, endpointy;
-	COMTHROW(endport->CreateStartEndPointOn(enddir, &endpointx, &endpointy));
-	CPoint endpoint(endpointx, endpointy);
+	CPoint startpoint = startport->CreateStartEndPointOn(startdir);
+	CPoint endpoint = endport->CreateStartEndPointOn(enddir);
 
 	if( startpoint == endpoint )
 		startpoint = StepOneInDir(startpoint, NextClockwiseDir(startdir));
@@ -421,24 +374,19 @@ bool CAutoRouterGraph::Connect(CComPtr<IAutoRouterPath> path)
 	return Connect(path, startpoint, endpoint);
 }
 
-bool CAutoRouterGraph::Connect(CComPtr<IAutoRouterPath> path, CPoint& startpoint, CPoint& endpoint)
+bool CAutoRouterGraph::Connect(CAutoRouterPath* path, CPoint& startpoint, CPoint& endpoint)
 {
-	VARIANT_BOOL isConnected = VARIANT_TRUE;
-	COMTHROW(path->IsConnected(&isConnected));
-	ASSERT( isConnected == VARIANT_FALSE );
+	ASSERT( path != NULL && path->GetOwner() == this );
+	ASSERT( !path->IsConnected() );
 	ASSERT( startpoint != endpoint );
 
-	CComPtr<IAutoRouterPort> startPort;
-	COMTHROW(path->GetStartPort(&startPort));
+	CAutoRouterPort* startPort = path->GetStartPort();
 	ASSERT(startPort != NULL);
-	RoutingDirection startdir;
-	COMTHROW(startPort->OnWhichEdge(startpoint.x, startpoint.y, &startdir));
+	RoutingDirection startdir = startPort->OnWhichEdge(startpoint);
 
-	CComPtr<IAutoRouterPort> endPort;
-	COMTHROW(path->GetEndPort(&endPort));
+	CAutoRouterPort* endPort = path->GetEndPort();
 	ASSERT(endPort != NULL);
-	RoutingDirection enddir;
-	COMTHROW(endPort->OnWhichEdge(endpoint.x, endpoint.y, &enddir));
+	RoutingDirection enddir = endPort->OnWhichEdge(endpoint);
 	ASSERT( IsRightAngle(startdir) && IsRightAngle(enddir) );
 
 	CPoint start = startpoint;
@@ -449,83 +397,53 @@ bool CAutoRouterGraph::Connect(CComPtr<IAutoRouterPath> path, CPoint& startpoint
 	GetOutOfBox(end, enddir);
 	ASSERT( end != endpoint );
 
-	VARIANT_BOOL isEmpty = VARIANT_TRUE;
-	COMTHROW(path->IsEmpty(&isEmpty));
-	ASSERT( isEmpty == VARIANT_TRUE );
+	ASSERT( path->IsEmpty() );
 
 	CPointListPath ret;
-	VARIANT_BOOL isAutoRouted = VARIANT_FALSE;
-	COMTHROW(path->IsAutoRouted(&isAutoRouted));
-	if (isAutoRouted == VARIANT_TRUE)
+	bool isAutoRouted = path->IsAutoRouted();
+	if (isAutoRouted)
 		ConnectPoints(ret, start, end, startdir, enddir);
 
 	POSITION pos;
-	if (isAutoRouted == VARIANT_FALSE)
+	if (!isAutoRouted)
 	{
-		// ******************************************************************
-		SAFEARRAY* pArr = NULL;
-		pArr = SafeArrayCreateVector(VT_I4, 0, 2 * ret.GetSize());
-		long position = 0;
-		pos = ret.GetHeadPosition();
-		while(pos)
-		{
-			CPoint point = ret.GetNext(pos);
-			COMTHROW(SafeArrayPutElement(pArr, &position, &point.x));
-			position++;
-			COMTHROW(SafeArrayPutElement(pArr, &position, &point.y));
-			position++;
-		}
+		CPointListPath ret2;
+		path->ApplyCustomizationsBeforeAutoConnectPoints(ret2);
 
-		COMTHROW(path->ApplyCustomizationsBeforeAutoConnectPoints(&pArr));
-
-		//one dim., long elements
-		if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
+		if (ret2.GetCount() > 0)
 		{
 			ret.RemoveAll();
-			//length
-			long elementNum = (pArr)->rgsabound[0].cElements;
-			if (elementNum > 0)
+			POSITION pos = ret2.GetHeadPosition();
+			while( pos != NULL )
 			{
-				ASSERT(elementNum % 2 == 0);
-				//lock it before use
-				SafeArrayLock(pArr);
-				long* pArrElements = (long*) (pArr)->pvData;
-				for (int i = 0; i < elementNum / 2; i++)
-				{
-					CPoint p(pArrElements[2 * i], pArrElements[2 * i + 1]);
-					ret.AddTail(p);
-				}
-				SafeArrayUnlock(pArr);
+				ret.AddTail(ret2.GetNext(pos));
 			}
 		}
-		//clear memory
-		SafeArrayDestroy(pArr);
-		// *********************************************************
 	}
 
-	COMTHROW(path->DeleteAll());
+	path->DeleteAll();
 
-	COMTHROW(path->AddTail(startpoint.x, startpoint.y));
+	path->AddTail(startpoint);
 	pos = ret.GetHeadPosition();
 	while( pos != NULL )
 	{
-		const CPoint p = ret.GetNext(pos);
-		COMTHROW(path->AddTail(p.x, p.y));
+		CPoint p = ret.GetNext(pos);
+		path->AddTail(p);
 	}
-	COMTHROW(path->AddTail(endpoint.x, endpoint.y));
+	path->AddTail(endpoint);
 
-	if (isAutoRouted == VARIANT_TRUE) {
-		COMTHROW(path->SimplifyTrivially());
+	if (isAutoRouted) {
+		path->SimplifyTrivially();
 		SimplifyPathPoints(path);
 		CenterStairsInPathPoints(path, startdir, enddir);
 	}
-	COMTHROW(path->SetState(ARPATHST_Connected));
+	path->SetState(ARPATHST_Connected);
 
 	// Apply custom edge modifications - step 1
-	// (Step 1: Move the desired edges - see in CAutoRouterGraph::Connect(CComPtr<IAutoRouterPath> path, CPoint& startpoint, CPoint& endpoint)
-	//  Step 2: Fix the desired edges - see in CAutoRouterEdgeList::AddEdges(CComPtr<IAutoRouterPath> path))
-	if (isAutoRouted == VARIANT_TRUE)
-		COMTHROW(path->ApplyCustomizationsAfterAutoConnectPointsAndStuff());
+	// (Step 1: Move the desired edges - see in CAutoRouterGraph::Connect(CAutoRouterPath* path, CPoint& startpoint, CPoint& endpoint)
+	//  Step 2: Fix the desired edges - see in CAutoRouterEdgeList::AddEdges(CAutoRouterPath* path))
+	if (isAutoRouted)
+		path->ApplyCustomizationsAfterAutoConnectPointsAndStuff();
 
 	return AddEdges(path);
 }
@@ -554,13 +472,11 @@ void CAutoRouterGraph::ConnectPoints(CPointListPath& ret, CPoint& start, CPoint&
 		ret.AddTail(start);
 		CPoint old = start;
 
-		CComPtr<IAutoRouterBox> box = GoToNextBox(start, dir1, end);
+		CAutoRouterBox* box = GoToNextBox(start, dir1, end);
 		if( start == old )
 		{
 			ASSERT( box != NULL );
-			long p1, p2, p3, p4;
-			COMTHROW(box->GetRect(&p1, &p2, &p3, &p4));
-			const CRect rect(p1, p2, p3, p4);
+			const CRect rect = box->GetRect();
 
 			if( dir2 == Dir_None )
 				dir2 = NextClockwiseDir(dir1);
@@ -586,7 +502,7 @@ void CAutoRouterGraph::ConnectPoints(CPointListPath& ret, CPoint& start, CPoint&
 				{
 					if( IsPointBetweenSides(thestart, rect, dir1) )
 					{
-						if(	IsPointInDirFrom(rect.TopLeft()+rect.BottomRight(), start + end, dir2) )
+						if(	IsPointInDirFrom(rect.TopLeft() + rect.BottomRight(), start + end, dir2) )
 							rev = 1;
 					}
 					else
@@ -621,7 +537,7 @@ void CAutoRouterGraph::ConnectPoints(CPointListPath& ret, CPoint& start, CPoint&
 
 void CAutoRouterGraph::DisconnectAll()
 {
-	std::vector<CComPtr<IAutoRouterPath> >::iterator iter;
+	std::vector<CAutoRouterPath*>::iterator iter;
 	iter = paths.begin();
 	
 	while(iter != paths.end())
@@ -631,52 +547,44 @@ void CAutoRouterGraph::DisconnectAll()
 	}
 }
 
-void CAutoRouterGraph::Disconnect(CComPtr<IAutoRouterPath> path)
+void CAutoRouterGraph::Disconnect(CAutoRouterPath* path)
 {
-	VARIANT_BOOL isConnected = VARIANT_TRUE;
-	COMTHROW(path->IsConnected(&isConnected));
-	if( isConnected == VARIANT_TRUE )
-		DeleteEdges(path.p);
+	if( path->IsConnected() )
+		DeleteEdges(path);
 
 	path->DeleteAll();
 }
 
 void CAutoRouterGraph::DisconnectPathsClipping(const CRect& rect)
 {
-	std::vector<CComPtr<IAutoRouterPath> >::reverse_iterator iter;
+	std::vector<CAutoRouterPath*>::reverse_iterator iter;
 	iter = paths.rbegin();
 
 	while(iter != paths.rend())
 	{
-		VARIANT_BOOL isPathClip = VARIANT_TRUE;
-		COMTHROW((*iter)->IsPathClip(rect.left, rect.top, rect.right, rect.bottom, &isPathClip));
-		if( isPathClip == VARIANT_TRUE )
+		if( (*iter)->IsPathClip(rect) )
 			Disconnect(*iter);
 		++iter;
 	}
 }
 
-void CAutoRouterGraph::DisconnectPathsFrom(CComPtr<IAutoRouterBox> box)
+void CAutoRouterGraph::DisconnectPathsFrom(CAutoRouterBox* box)
 {
-	std::vector<CComPtr<IAutoRouterPath> >::reverse_iterator iter;
+	std::vector<CAutoRouterPath*>::reverse_iterator iter;
 	iter = paths.rbegin();
 
 	while(iter != paths.rend())
 	{
-		CComPtr<IAutoRouterPath> path = *iter;
+		CAutoRouterPath* path = *iter;
 
-		CComPtr<IAutoRouterPort> startPort;
-		COMTHROW(path->GetStartPort(&startPort));
+		CAutoRouterPort* startPort = path->GetStartPort();
 		ASSERT(startPort != NULL);
-		CComPtr<IAutoRouterBox> startbox;
-		COMTHROW(startPort->GetOwner(&startbox));
+		CAutoRouterBox* startbox = startPort->GetOwner();
 		ASSERT(startbox != NULL);
 
-		CComPtr<IAutoRouterPort> endPort;
-		COMTHROW(path->GetEndPort(&endPort));
+		CAutoRouterPort* endPort = path->GetEndPort();
 		ASSERT(endPort != NULL);
-		CComPtr<IAutoRouterBox> endbox;
-		COMTHROW(endPort->GetOwner(&endbox));
+		CAutoRouterBox* endbox = endPort->GetOwner();
 		ASSERT(endbox != NULL);
 
 		if( (startbox == box || endbox == box) )
@@ -686,19 +594,17 @@ void CAutoRouterGraph::DisconnectPathsFrom(CComPtr<IAutoRouterBox> box)
 	}
 }
 
-void CAutoRouterGraph::DisconnectPathsFrom(CComPtr<IAutoRouterPort> port)
+void CAutoRouterGraph::DisconnectPathsFrom(CAutoRouterPort* port)
 {
-	std::vector<CComPtr<IAutoRouterPath> >::reverse_iterator iter;
+	std::vector<CAutoRouterPath*>::reverse_iterator iter;
 	iter = paths.rbegin();
 	
 	while(iter != paths.rend())
 	{
-		CComPtr<IAutoRouterPath> path = *iter;
+		CAutoRouterPath* path = *iter;
 
-		CComPtr<IAutoRouterPort> startport;
-		COMTHROW(path->GetStartPort(&startport));
-		CComPtr<IAutoRouterPort> endport;
-		COMTHROW(path->GetEndPort(&endport));
+		CAutoRouterPort* startport = path->GetStartPort();
+		CAutoRouterPort* endport = path->GetEndPort();
 
 		if( (startport == port || endport == port) )
 			Disconnect(path);
@@ -711,75 +617,37 @@ void CAutoRouterGraph::DisconnectPathsFrom(CComPtr<IAutoRouterPort> port)
 
 void CAutoRouterGraph::AddSelfEdges(void)
 {
-	horizontal.AddEdges(this, &selfpoints);
-	vertical.AddEdges(this, &selfpoints);
+	horizontal.AddEdges(this);
+	vertical.AddEdges(this);
 }
 
-void CAutoRouterGraph::AddEdges(CComPtr<IAutoRouterGraph> graph)
+void CAutoRouterGraph::AddEdges(CAutoRouterGraph* graph)
 {
-	long p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y;
-	COMTHROW(graph->GetSelfPoints(&p1x, &p1y, &p2x, &p2y, &p3x, &p3y, &p4x, &p4y));
-	std::vector<CPoint>* selfPoints = new std::vector<CPoint>();
-	selfPoints->push_back(CPoint(p1x, p1y));
-	selfPoints->push_back(CPoint(p2x, p2y));
-	selfPoints->push_back(CPoint(p3x, p3y));
-	selfPoints->push_back(CPoint(p4x, p4y));
-	arObjectsPointsCache.SetAt(graph.p, selfPoints);
-	horizontal.AddEdges(graph, selfPoints);
-	vertical.AddEdges(graph, selfPoints);
+	horizontal.AddEdges(graph);
+	vertical.AddEdges(graph);
 }
 
-void CAutoRouterGraph::AddEdges(CComPtr<IAutoRouterBox> box)
+void CAutoRouterGraph::AddEdges(CAutoRouterBox* box)
 {
-	long p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y;
-	COMTHROW(box->GetSelfPoints(&p1x, &p1y, &p2x, &p2y, &p3x, &p3y, &p4x, &p4y));
-	std::vector<CPoint>* selfPoints = new std::vector<CPoint>();
-	selfPoints->push_back(CPoint(p1x, p1y));
-	selfPoints->push_back(CPoint(p2x, p2y));
-	selfPoints->push_back(CPoint(p3x, p3y));
-	selfPoints->push_back(CPoint(p4x, p4y));
-	arObjectsPointsCache.SetAt(box.p, selfPoints);
-	horizontal.AddEdges(box, selfPoints);
-	vertical.AddEdges(box, selfPoints);
+	horizontal.AddEdges(box);
+	vertical.AddEdges(box);
 }
 
-void CAutoRouterGraph::AddEdges(CComPtr<IAutoRouterPort> port)
+void CAutoRouterGraph::AddEdges(CAutoRouterPort* port)
 {
-	long p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y;
-	COMTHROW(port->GetSelfPoints(&p1x, &p1y, &p2x, &p2y, &p3x, &p3y, &p4x, &p4y));
-	std::vector<CPoint>* selfPoints = new std::vector<CPoint>();
-	selfPoints->push_back(CPoint(p1x, p1y));
-	selfPoints->push_back(CPoint(p2x, p2y));
-	selfPoints->push_back(CPoint(p3x, p3y));
-	selfPoints->push_back(CPoint(p4x, p4y));
-	arObjectsPointsCache.SetAt(port.p, selfPoints);
-	horizontal.AddEdges(port, selfPoints);
-	vertical.AddEdges(port, selfPoints);
+	horizontal.AddEdges(port);
+	vertical.AddEdges(port);
 }
 
-bool CAutoRouterGraph::AddEdges(CComPtr<IAutoRouterPath> path)
+bool CAutoRouterGraph::AddEdges(CAutoRouterPath* path)
 {
-	CPointListPath* pointList = new CPointListPath();
-	GetPointList(path, *pointList);
-
-	CPointListPath* pointList2;
-	BOOL found = arPathPointsCache.Lookup(path, pointList2);
-	if (found)
-	{
-		delete pointList2;
-		arPathPointsCache.RemoveKey(path.p);
-	}
-
-	arPathPointsCache.SetAt(path.p, pointList);
-	VARIANT_BOOL isAutoRouted = VARIANT_FALSE;
-	COMTHROW(path->IsAutoRouted(&isAutoRouted));
-	if (isAutoRouted == VARIANT_TRUE)
-		return horizontal.AddEdges(path, pointList) && vertical.AddEdges(path, pointList);
+	if (path->IsAutoRouted())
+		return horizontal.AddEdges(path) && vertical.AddEdges(path);
 	
 	return true;
 }
 
-void CAutoRouterGraph::DeleteEdges(CComPtr<IUnknown> object)
+void CAutoRouterGraph::DeleteEdges(CObject* object)
 {
 	horizontal.DeleteEdges(object);
 	vertical.DeleteEdges(object);
@@ -789,7 +657,7 @@ void CAutoRouterGraph::AddAllEdges()
 {
 	ASSERT( horizontal.IsEmpty() && vertical.IsEmpty() );
 
-	std::vector<CComPtr<IAutoRouterBox> >::iterator iter;
+	std::vector<CAutoRouterBox*>::iterator iter;
 	iter = boxes.begin();
 
 	while (iter != boxes.end())
@@ -798,7 +666,7 @@ void CAutoRouterGraph::AddAllEdges()
 		++iter;
 	}
 
-	std::vector<CComPtr<IAutoRouterPath> >::iterator iterP;
+	std::vector<CAutoRouterPath*>::iterator iterP;
 	iterP = paths.begin();
 
 	while (iterP != paths.end())
@@ -814,58 +682,32 @@ void CAutoRouterGraph::DeleteAllEdges()
 	vertical.DeleteAllEdges();
 }
 
-void CAutoRouterGraph::AddBoxAndPortEdges(CComPtr<IAutoRouterBox> box)
+void CAutoRouterGraph::AddBoxAndPortEdges(CAutoRouterBox* box)
 {
 	ASSERT( box != NULL );
 
 	AddEdges(box);
 
-	SAFEARRAY* pArr = NULL;
-	COMTHROW(box->GetPortList(&pArr));
-	//one dim., long elements
-	if ((pArr)->cDims == 1)
-	{
-		//length
-		long elementNum = (pArr)->rgsabound[0].cElements;
-		if (elementNum > 0)
-		{
-			for (long i = 0; i < elementNum; i++)
-			{
-				CComPtr<IAutoRouterPort> pUnk;
-				SafeArrayGetElement(pArr, &i, &pUnk);
-				AddEdges(pUnk);
-			}
-		}
+	const CAutoRouterPortList& pl = box->GetPortList();
+	std::vector<CAutoRouterPort*>::const_iterator ii = pl.begin();
+	while( ii != pl.end() ) {
+		AddEdges(*ii);
+		++ii;
 	}
-	//clear memory
-	SafeArrayDestroy(pArr);
 }
 
-void CAutoRouterGraph::DeleteBoxAndPortEdges(CComPtr<IAutoRouterBox> box)
+void CAutoRouterGraph::DeleteBoxAndPortEdges(CAutoRouterBox* box)
 {
 	ASSERT( box != NULL );
 
-	DeleteEdges(box.p);
+	DeleteEdges(box);
 
-	SAFEARRAY* pArr = NULL;
-	COMTHROW(box->GetPortList(&pArr));
-	//one dim., long elements
-	if ((pArr)->cDims == 1)
-	{
-		//length
-		long elementNum = (pArr)->rgsabound[0].cElements;
-		if (elementNum > 0)
-		{
-			for (long i = 0; i < elementNum; i++)
-			{
-				CComPtr<IUnknown> pUnk;
-				SafeArrayGetElement(pArr, &i, &pUnk);
-				DeleteEdges(pUnk);
-			}
-		}
+	const CAutoRouterPortList& pl = box->GetPortList();
+	std::vector<CAutoRouterPort*>::const_iterator ii = pl.begin();
+	while( ii != pl.end() ) {
+		DeleteEdges(*ii);
+		++ii;
 	}
-	//clear memory
-	SafeArrayDestroy(pArr);
 }
 
 CAutoRouterEdgeList& CAutoRouterGraph::GetEdgeList(bool ishorizontal)
@@ -875,16 +717,12 @@ CAutoRouterEdgeList& CAutoRouterGraph::GetEdgeList(bool ishorizontal)
 
 // --- Path && Edges
 
-int CAutoRouterGraph::CanDeleteTwoEdgesAt(CComPtr<IAutoRouterPath> path, CPointListPath& points, POSITION pos) const
+bool CAutoRouterGraph::CanDeleteTwoEdgesAt(CAutoRouterPath* path, CPointListPath& points, POSITION pos) const
 {
 #ifdef _DEBUG
-	CComPtr<IAutoRouterGraph> ownerGraph;
-	COMTHROW(path->GetOwner(&ownerGraph));
-	ASSERT( ownerGraph.p == this );
-	static_cast<CAutoRouterPath*>(path.p)->AssertValid();
-	VARIANT_BOOL isConnected = VARIANT_TRUE;
-	COMTHROW(path->IsConnected(&isConnected));
-	ASSERT( isConnected == VARIANT_TRUE );
+	ASSERT( path->GetOwner() == this );
+	path->AssertValid();
+	ASSERT( path->IsConnected() );
 	points.AssertValidPos(pos);
 #ifdef _DEBUG_DEEP
 //	horizontal.AssertValidPathEdges(path, points);
@@ -896,18 +734,18 @@ int CAutoRouterGraph::CanDeleteTwoEdgesAt(CComPtr<IAutoRouterPath> path, CPointL
 	CPoint point = points.GetNext(pos);
 	POSITION npointpos = pos;
 	if( npointpos == NULL )
-		return 0;
+		return false;
 	CPoint npoint = points.GetNext(pos);
 	POSITION nnpointpos = pos;
 	if( nnpointpos == NULL )
-		return 0;
+		return false;
 
 	pos = pointpos;
 	points.GetPrev(pos);
-	POSITION ppointpos = pos; if( ppointpos == NULL ) return 0;
+	POSITION ppointpos = pos; if( ppointpos == NULL ) return false;
 	CPoint ppoint = points.GetPrev(pos);
-	POSITION pppointpos = pos; if( pppointpos == NULL ) return 0;
-	if( npoint == point) return 0; // direction of zero-length edges can't be determined, so don't delete them
+	POSITION pppointpos = pos; if( pppointpos == NULL ) return false;
+	if( npoint == point) return false; // direction of zero-length edges can't be determined, so don't delete them
 
 	ASSERT( pppointpos != NULL && ppointpos != NULL && pointpos != NULL && npointpos != NULL && nnpointpos != NULL );
 
@@ -921,22 +759,18 @@ int CAutoRouterGraph::CanDeleteTwoEdgesAt(CComPtr<IAutoRouterPath> path, CPointL
 
 	ASSERT( GetDir(newpoint - ppoint) == dir );
 
-	if( IsLineClipBoxes(newpoint, npoint) ) return 0;
-	if( IsLineClipBoxes(newpoint, ppoint) ) return 0;
+	if( IsLineClipBoxes(newpoint, npoint) ) return false;
+	if( IsLineClipBoxes(newpoint, ppoint) ) return false;
 
-	return 1;
+	return true;
 }
 
-void CAutoRouterGraph::DeleteTwoEdgesAt(CComPtr<IAutoRouterPath> path, CPointListPath& points, POSITION pos)
+void CAutoRouterGraph::DeleteTwoEdgesAt(CAutoRouterPath* path, CPointListPath& points, POSITION pos)
 {
 #ifdef _DEBUG
-	CComPtr<IAutoRouterGraph> ownerGraph;
-	COMTHROW(path->GetOwner(&ownerGraph));
-	ASSERT( ownerGraph.p == this );
-	static_cast<CAutoRouterPath*>(path.p)->AssertValid();
-	VARIANT_BOOL isConnected = VARIANT_TRUE;
-	COMTHROW(path->IsConnected(&isConnected));
-	ASSERT( isConnected == VARIANT_TRUE );
+	ASSERT( path->GetOwner() == this );
+	path->AssertValid();
+	ASSERT( path->IsConnected() );
 	points.AssertValidPos(pos);
 #ifdef _DEBUG_DEEP
 //	horizontal.AssertValidPathEdges(path, points);
@@ -1009,26 +843,19 @@ void CAutoRouterGraph::DeleteTwoEdgesAt(CComPtr<IAutoRouterPath> path, CPointLis
 	if( *nnpoint == newpoint )
 		DeleteSamePointsAt(path, points, ppointpos);
 
-	// Update Points back
-	UpdatePathPointsFromCache(path, false);
-
 #ifdef _DEBUG_DEEP
-	static_cast<CAutoRouterPath*>(path.p)->AssertValid();
+	path->AssertValid();
 	horizontal.AssertValidPathEdges(path, points);
 	vertical.AssertValidPathEdges(path, points);
 #endif
 }
 
-void CAutoRouterGraph::DeleteSamePointsAt(CComPtr<IAutoRouterPath> path, CPointListPath& points, POSITION pos)
+void CAutoRouterGraph::DeleteSamePointsAt(CAutoRouterPath* path, CPointListPath& points, POSITION pos)
 {
 #ifdef _DEBUG
-	CComPtr<IAutoRouterGraph> ownerGraph;
-	COMTHROW(path->GetOwner(&ownerGraph));
-	ASSERT( ownerGraph.p == this );
-	static_cast<CAutoRouterPath*>(path.p)->AssertValid();
-	VARIANT_BOOL isConnected = VARIANT_TRUE;
-	COMTHROW(path->IsConnected(&isConnected));
-	ASSERT( isConnected == VARIANT_TRUE );
+	ASSERT( path->GetOwner() == this );
+	path->AssertValid();
+	ASSERT( path->IsConnected() );
 	points.AssertValidPos(pos);
 #endif
 
@@ -1088,41 +915,37 @@ void CAutoRouterGraph::DeleteSamePointsAt(CComPtr<IAutoRouterPath> path, CPointL
 	}
 
 #ifdef _DEBUG_DEEP
-	static_cast<CAutoRouterPath*>(path.p)->AssertValid();
+	path->AssertValid();
 //	horizontal.AssertValidPathEdges(path, points);
 //	vertical.AssertValidPathEdges(path, points);
 #endif
 }
 
-int CAutoRouterGraph::SimplifyPaths()
+bool CAutoRouterGraph::SimplifyPaths()
 {
-	int was = 0;
+	bool was = false;
 
-	std::vector<CComPtr<IAutoRouterPath> >::iterator iter;
+	std::vector<CAutoRouterPath*>::iterator iter;
 	iter = paths.begin();
 
 	while (iter != paths.end())
 	{
-		CComPtr<IAutoRouterPath> path = *iter;
+		CAutoRouterPath* path = *iter;
 		++iter;
 
-		VARIANT_BOOL isAutoRouted = VARIANT_FALSE;
-		COMTHROW(path->IsAutoRouted(&isAutoRouted));
-		if (isAutoRouted == VARIANT_TRUE) {
-			CPointListPath* pVal;
-			arPathPointsCache.Lookup(path, pVal);
-			ASSERT(pVal != NULL);
-			POSITION pointpos = pVal->GetHeadPosition();
+		if (path->IsAutoRouted()) {
+			CPointListPath& pointList = path->GetPointList();
+			POSITION pointpos = pointList.GetHeadPosition();
 
 			while( pointpos != NULL )
 			{
-				if( CanDeleteTwoEdgesAt(path, *pVal, pointpos) )
+				if( CanDeleteTwoEdgesAt(path, pointList, pointpos) )
 				{
-					DeleteTwoEdgesAt(path, *pVal, pointpos);
-					was = 1;
+					DeleteTwoEdgesAt(path, pointList, pointpos);
+					was = true;
 					break;
 				}
-				pVal->GetNext(pointpos);
+				pointList.GetNext(pointpos);
 			}
 		}
 	}
@@ -1131,21 +954,17 @@ int CAutoRouterGraph::SimplifyPaths()
 }
 
 #pragma warning(disable: 4700)
-void CAutoRouterGraph::CenterStairsInPathPoints(CComPtr<IAutoRouterPath> path, RoutingDirection hintstartdir, RoutingDirection hintenddir)
+void CAutoRouterGraph::CenterStairsInPathPoints(CAutoRouterPath* path, RoutingDirection hintstartdir, RoutingDirection hintenddir)
 {
 	ASSERT( path != NULL );
-	VARIANT_BOOL isConnected = VARIANT_TRUE;
-	COMTHROW(path->IsConnected(&isConnected));
-	ASSERT( isConnected == VARIANT_FALSE );
+	ASSERT( !path->IsConnected() );
 
-	CPointListPath pointList;
-	GetPointList(path, pointList);
+	CPointListPath& pointList = path->GetPointList();
+	ASSERT( pointList.GetCount() >= 2 );
 
 #ifdef _DEBUG
-	static_cast<CAutoRouterPath*>(path.p)->AssertValidPoints();
+	path->AssertValidPoints();
 #endif
-
-	bool modified = false;
 
 	CPoint p1;
 	CPoint p2;
@@ -1161,11 +980,8 @@ void CAutoRouterGraph::CenterStairsInPathPoints(CComPtr<IAutoRouterPath> path, R
 	RoutingDirection d23 = Dir_None;
 	RoutingDirection d34 = Dir_None;
 
-	long pX, pY;
-	COMTHROW(path->GetOutOfBoxStartPoint(&pX, &pY, hintstartdir));
-	const CPoint outOfBoxStartPoint(pX, pY);
-	COMTHROW(path->GetOutOfBoxEndPoint(&pX, &pY, hintenddir));
-	const CPoint outOfBoxEndPoint(pX, pY);
+	const CPoint outOfBoxStartPoint = path->GetOutOfBoxStartPoint(hintstartdir);
+	const CPoint outOfBoxEndPoint = path->GetOutOfBoxEndPoint(hintenddir);
 
 	POSITION pos = pointList.GetHeadPosition();
 	ASSERT( pos != NULL );
@@ -1237,35 +1053,27 @@ void CAutoRouterGraph::CenterStairsInPathPoints(CComPtr<IAutoRouterPath> path, R
 					p3 = np3;
 					pointList.SetAt(p2p, p2);
 					pointList.SetAt(p3p, p3);
-					modified = true;
 				}
 			}
 		}
 	}
 
-	if (modified)
-		UpdatePoints(path, pointList, true);
-
 #ifdef _DEBUG
-	static_cast<CAutoRouterPath*>(path.p)->AssertValidPoints();
+	path->AssertValidPoints();
 #endif
 }
 
-void CAutoRouterGraph::SimplifyPathPoints(CComPtr<IAutoRouterPath> path)
+void CAutoRouterGraph::SimplifyPathPoints(CAutoRouterPath* path)
 {
 	ASSERT( path != NULL );
-	VARIANT_BOOL isConnected = VARIANT_TRUE;
-	COMTHROW(path->IsConnected(&isConnected));
-	ASSERT( isConnected == VARIANT_FALSE );
+	ASSERT( !path->IsConnected() );
 
-	CPointListPath pointList;
-	GetPointList(path, pointList);
+	CPointListPath& pointList = path->GetPointList();
+	ASSERT( pointList.GetCount() >= 2 );
 
 #ifdef _DEBUG
-	static_cast<CAutoRouterPath*>(path.p)->AssertValidPoints();
+	path->AssertValidPoints();
 #endif
-
-	bool modified = false;
 
 	CPoint p1;
 	CPoint p2;
@@ -1314,7 +1122,6 @@ void CAutoRouterGraph::SimplifyPathPoints(CComPtr<IAutoRouterPath> path)
 
 			if( !IsLineClipBoxes(p2, np3) && !IsLineClipBoxes(np3, p4) )
 			{
-				modified = true;
 				pointList.RemoveAt(p2p);
 				pointList.RemoveAt(p4p);
 				pointList.SetAt(p3p, np3);
@@ -1333,18 +1140,15 @@ void CAutoRouterGraph::SimplifyPathPoints(CComPtr<IAutoRouterPath> path)
 		}
 	}
 
-	if (modified)
-		UpdatePoints(path, pointList, false);
-
 #ifdef _DEBUG
-	static_cast<CAutoRouterPath*>(path.p)->AssertValidPoints();
+	path->AssertValidPoints();
 #endif
 }
 #pragma warning(default: 4700)
 
 void CAutoRouterGraph::ConnectAllDisconnectedPaths()
 {
-	std::vector<CComPtr<IAutoRouterPath> >::iterator iter;
+	std::vector<CAutoRouterPath*>::iterator iter;
 
 	bool success = false;
 	bool giveup = false;
@@ -1353,20 +1157,16 @@ void CAutoRouterGraph::ConnectAllDisconnectedPaths()
 		iter = paths.begin();
 		while (iter != paths.end() && success)
 		{
-			CComPtr<IAutoRouterPath> path = *iter;
+			CAutoRouterPath* path = *iter;
 
-			VARIANT_BOOL isConnected = VARIANT_TRUE;
-			COMTHROW(path->IsConnected(&isConnected));
-			if( isConnected == VARIANT_FALSE )
+			if( !path->IsConnected() )
 			{
 				success = Connect(path);
 				if (!success) {
 					// Something is messed up, probably an existing edge customization results in a zero length edge
 					// In that case we try to delete any customization for this path to recover from the problem
-					VARIANT_BOOL areThere = VARIANT_FALSE;
-					COMTHROW(path->AreTherePathCustomizations(&areThere));
-					if (areThere == VARIANT_TRUE)
-						COMTHROW(path->RemovePathCustomizations());
+					if (path->AreTherePathCustomizations())
+						path->RemovePathCustomizations();
 					else
 						giveup = true;
 				}
@@ -1379,68 +1179,38 @@ void CAutoRouterGraph::ConnectAllDisconnectedPaths()
 	}
 }
 
-bool CAutoRouterGraph::IsEdgeFixed(CComPtr<IAutoRouterPath> path, const CPoint& startpoint, const CPoint& endpoint)
-{
-	RoutingDirection d = GetDir(endpoint - startpoint);
-	bool h = IsHorizontal(d);
-
-	CAutoRouterEdgeList& elist = GetEdgeList(h);
-
-	CAutoRouterEdge* edge = elist.GetEdge(path, startpoint, endpoint);
-	if (edge != NULL)
-		return edge->GetEdgeFixed() && !edge->GetEdgeCustomFixed();
-
-	ASSERT(false);
-	return true;
-}
-
 // --- SelfPoints
 
 void CAutoRouterGraph::CalculateSelfPoints()
 {
-	ASSERT(selfpoints.size() == 0);
+	selfpoints[0].x = ED_MINCOORD;
+	selfpoints[0].y = ED_MINCOORD;
 
-	if (selfpoints.size() == 0) {
-		selfpoints.push_back(CPoint(ED_MINCOORD, ED_MINCOORD));
-		selfpoints.push_back(CPoint(ED_MAXCOORD, ED_MINCOORD));
-		selfpoints.push_back(CPoint(ED_MAXCOORD, ED_MAXCOORD));
-		selfpoints.push_back(CPoint(ED_MINCOORD, ED_MAXCOORD));
-	} else {
-		ASSERT(selfpoints.size() == 4);
+	selfpoints[1].x = ED_MAXCOORD;
+	selfpoints[1].y = ED_MINCOORD;
 
-		selfpoints[0].x = ED_MINCOORD;
-		selfpoints[0].y = ED_MINCOORD;
+	selfpoints[2].x = ED_MAXCOORD;
+	selfpoints[2].y = ED_MAXCOORD;
 
-		selfpoints[1].x = ED_MAXCOORD;
-		selfpoints[1].y = ED_MINCOORD;
-
-		selfpoints[2].x = ED_MAXCOORD;
-		selfpoints[2].y = ED_MAXCOORD;
-
-		selfpoints[3].x = ED_MINCOORD;
-		selfpoints[3].y = ED_MAXCOORD;
-	}
+	selfpoints[3].x = ED_MINCOORD;
+	selfpoints[3].y = ED_MAXCOORD;
 }
 
-STDMETHODIMP CAutoRouterGraph::CreateBox(IAutoRouterBox** result)
+CAutoRouterBox* CAutoRouterGraph::CreateBox(void) const
 {
-	CComObjPtr<CAutoRouterBox> box;
-	CreateComObject(box);
+	CAutoRouterBox* box = new CAutoRouterBox();
+	ASSERT( box != NULL );
 
-	return ::QueryInterface(box, result);
+	return box;
 }
 
-STDMETHODIMP CAutoRouterGraph::AddBox(IAutoRouterBox* box)
+void CAutoRouterGraph::AddBox(CAutoRouterBox* box)
 {
+	ASSERT(box != NULL);
 	if (box == NULL)
-		return E_POINTER;
+		return;
 
-	long p1, p2, p3, p4;
-	HRESULT hr = box->GetRect(&p1, &p2, &p3, &p4);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	const CRect rect(p1, p2, p3, p4);
+	const CRect rect = box->GetRect();
 
 	DisconnectPathsClipping(rect);
 
@@ -1449,60 +1219,40 @@ STDMETHODIMP CAutoRouterGraph::AddBox(IAutoRouterBox* box)
 	boxes.push_back(box);
 
 	AddBoxAndPortEdges(box);
-
-	return S_OK; 
 }
 
-STDMETHODIMP CAutoRouterGraph::DeleteBox(IAutoRouterBox* box)
+void CAutoRouterGraph::DeleteBox(CAutoRouterBox* box)
 {
+	ASSERT(box != NULL);
 	if (box == NULL)
-		return E_POINTER;
+		return;
 
-	VARIANT_BOOL hasOwner = VARIANT_FALSE;
-	HRESULT hr = box->HasOwner(&hasOwner);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-
-	if( hasOwner == VARIANT_TRUE )
+	if( box->HasOwner() )
 	{
 		Remove(box);
 	}
 	
-	return box->Destroy();
+	box->Destroy();
+	delete box;
 }
 
-STDMETHODIMP CAutoRouterGraph::ShiftBoxBy(IAutoRouterBox* box, long sizeX, long sizeY)
+void CAutoRouterGraph::ShiftBoxBy(CAutoRouterBox* box, const CPoint& offset)
 {
+	ASSERT(box != NULL);
 	if (box == NULL)
-		return E_POINTER;
-
-	CSize offset(sizeX, sizeY);
+		return;
 
 	DeleteBoxAndPortEdges(box);
-	HRESULT hr = box->ShiftBy(offset.cx, offset.cy);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
+	box->ShiftBy(offset);
 	AddBoxAndPortEdges(box);
 
-	long p1, p2, p3, p4;
-	hr = box->GetRect(&p1, &p2, &p3, &p4);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	const CRect rect(p1, p2, p3, p4);
+	const CRect rect = box->GetRect();
 	DisconnectPathsClipping(rect);
 	DisconnectPathsFrom(box);
-
-	return S_OK;
 }
 
-STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
+long CAutoRouterGraph::AutoRoute(long aspect)
 {
-	if (result == NULL)
-		return E_POINTER;
-
 	ConnectAllDisconnectedPaths();
 
 	int updated = 0;
@@ -1513,8 +1263,6 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 
 	while( c > 0 )
 	{
-		if (c < 100)
-			UpdatePaths();
 		if( c > 0 )
 		{
 			if( last == 1 )
@@ -1649,7 +1397,6 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 		if( last == 0 )
 			break;
 	}
-	UpdatePaths();
 
 	if( c <= 0 )
 	{
@@ -1659,53 +1406,29 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 
 	// Check customized connection if there's any clip against boxes
 	{
-		std::vector<CComPtr<IAutoRouterPath> >::iterator pathiter;
+		std::vector<CAutoRouterPath*>::iterator pathiter;
 		pathiter = paths.begin();
 
 		HRESULT hr = S_OK;
 		while (pathiter != paths.end())
 		{
-			CComPtr<IAutoRouterPath> path = *pathiter;
+			CAutoRouterPath* path = *pathiter;
 
-			VARIANT_BOOL isAutoRouted = VARIANT_FALSE;
-			hr = path->IsAutoRouted(&isAutoRouted);
-			ASSERT(SUCCEEDED(hr));
-			if (FAILED(hr))
-				return hr;
-			if (isAutoRouted == VARIANT_TRUE) {
-				VARIANT_BOOL areThere = VARIANT_FALSE;
-				hr = path->AreTherePathCustomizations(&areThere);
-				ASSERT(SUCCEEDED(hr));
-				if (FAILED(hr))
-					return hr;
-				if (areThere == VARIANT_TRUE)
+			if (path->IsAutoRouted()) {
+				if (path->AreTherePathCustomizations())
 				{
-					long sp1 = 0, sp2 = 0, sp3 = 0, sp4 = 0;
-					HRESULT hr = path->GetStartBox(&sp1, &sp2, &sp3, &sp4);
-					ASSERT(SUCCEEDED(hr));
-					if (FAILED(hr))
-						return hr;
-					const CRect startBoxRect(sp1, sp2, sp3, sp4);
-					long ep1 = 0, ep2 = 0, ep3 = 0, ep4 = 0;
-					hr = path->GetEndBox(&ep1, &ep2, &ep3, &ep4);
-					ASSERT(SUCCEEDED(hr));
-					if (FAILED(hr))
-						return hr;
-					const CRect endBoxRect(ep1, ep2, ep3, ep4);
+					const CRect startBoxRect = path->GetStartBox();
+					const CRect endBoxRect = path->GetEndBox();
 
-					std::vector<CComPtr<IAutoRouterBox> >::const_iterator boxiter = boxes.begin();
+					std::vector<CAutoRouterBox*>::const_iterator boxiter = boxes.begin();
 
 					while (boxiter != boxes.end())
 					{
-						long p1, p2, p3, p4;
-						hr = (*boxiter)->GetRect(&p1, &p2, &p3, &p4);
-						const CRect boxRect(p1, p2, p3, p4);
+						const CRect boxRect = (*boxiter)->GetRect();
 						if ((startBoxRect.IsRectEmpty() || !IsRectIn(startBoxRect, boxRect)) &&
 							(endBoxRect.IsRectEmpty() || !IsRectIn(endBoxRect, boxRect)))
 						{
-							VARIANT_BOOL isPathClip = VARIANT_FALSE;
-							hr = path->IsPathClip(boxRect.left, boxRect.top, boxRect.right, boxRect.bottom, &isPathClip);
-							if (isPathClip == VARIANT_TRUE)
+							if (path->IsPathClip(boxRect))
 							{
 								path->MarkPathCustomizationsForDeletion(aspect);
 								updated = -2;
@@ -1721,251 +1444,95 @@ STDMETHODIMP CAutoRouterGraph::AutoRoute(long aspect, long* result)
 		}
 	}
 
-	*result = updated;
-	return S_OK;
+	return updated;
 }
 
-STDMETHODIMP CAutoRouterGraph::DeletePath( IAutoRouterPath* path)
+void CAutoRouterGraph::DeletePath(CAutoRouterPath* path)
 {
+	ASSERT(path != NULL);
 	if (path == NULL)
-		return E_POINTER;
+		return;
 
-	VARIANT_BOOL hasOwner = VARIANT_TRUE;
-	HRESULT hr = path->HasOwner(&hasOwner);
-	ASSERT(SUCCEEDED(hr));
-	if (FAILED(hr))
-		return hr;
-	if( hasOwner == VARIANT_TRUE )
+	if( path->HasOwner() )
 	{
+		ASSERT( path->GetOwner() == this );
+
 		Remove(path);
 	}
 
-	return path->Destroy();
+	path->Destroy();
+	delete path;
 }
 
-STDMETHODIMP CAutoRouterGraph::DeleteAll()
+void CAutoRouterGraph::DeleteAll(void)
 {
-	EmptyPointsCache();
 	DeleteAllPaths();
 	DeleteAllBoxes();
-	return S_OK;
 }
 
-STDMETHODIMP CAutoRouterGraph::GetPathAt(long pointX, long pointY, long nearness, IAutoRouterPath** result)
+CAutoRouterPath* CAutoRouterGraph::GetPathAt(const CPoint& point, long nearness)
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	std::vector<CComPtr<IAutoRouterPath> >::iterator iter;
+	std::vector<CAutoRouterPath*>::iterator iter;
 	iter = paths.begin();
 
 	while (iter != paths.end())
 	{
-		CComPtr<IAutoRouterPath> path = *iter;
+		CAutoRouterPath* path = *iter;
 
-		VARIANT_BOOL isPathAt = VARIANT_TRUE;
-		HRESULT hr = path->IsPathAt(pointX, pointY, nearness, &isPathAt);
-		ASSERT(SUCCEEDED(hr));
-		if (FAILED(hr))
-			return hr;
-		if( isPathAt == VARIANT_TRUE )
-			return path->QueryInterface(IID_IAutoRouterPath,(void**)result);
+		if( path->IsPathAt(point, nearness) )
+			return path;
 
 		++iter;
 	}
 
-	result = NULL;
-	return S_OK;
+	return NULL;
 }
 
-STDMETHODIMP CAutoRouterGraph::AddPath(VARIANT_BOOL isAutoRouted, IAutoRouterPort* startport, IAutoRouterPort* endport, IAutoRouterPath** result)
+CAutoRouterPath* CAutoRouterGraph::AddPath(bool isAutoRouted, CAutoRouterPort* startport, CAutoRouterPort* endport)
 {
-	if (result == NULL)
-		return E_POINTER;
-
-	CComObjPtr<CAutoRouterPath> cpath;
-	CreateComObject(cpath);
-	CComQIPtr<IAutoRouterPath> path = cpath;
+	CAutoRouterPath* path = new CAutoRouterPath();
 
 	path->SetAutoRouting(isAutoRouted);
 	path->SetStartPort(startport);
 	path->SetEndPort(endport);
 	Add(path);
 
-	return path->QueryInterface(IID_IAutoRouterPath, (void**)result);
+	return path;
 }
 
-STDMETHODIMP CAutoRouterGraph::IsEdgeFixed(IAutoRouterPath* path, long startX, long startY, long endX, long endY, VARIANT_BOOL* result)
+bool CAutoRouterGraph::IsEdgeFixed(CAutoRouterPath* path, const CPoint& startpoint, const CPoint& endpoint)
 {
-	if (result == NULL || path == NULL)
-		return E_POINTER;
+	RoutingDirection d = GetDir(endpoint - startpoint);
+	bool h = IsHorizontal(d);
 
-	bool isFixed = IsEdgeFixed(CComPtr<IAutoRouterPath>(path), CPoint(startX, startY), CPoint(endX, endY));
-	if (isFixed)
-		*result = VARIANT_TRUE;
-	else
-		*result = VARIANT_FALSE;
+	CAutoRouterEdgeList& elist = GetEdgeList(h);
 
-	return S_OK;
+	CAutoRouterEdge* edge = elist.GetEdge(path, startpoint, endpoint);
+	if (edge != NULL)
+		return edge->GetEdgeFixed() && !edge->GetEdgeCustomFixed();
+
+	ASSERT(false);
+	return true;
 }
 
-STDMETHODIMP CAutoRouterGraph::GetSelfPoints(long* p1x, long* p1y, long* p2x, long* p2y, long* p3x, long* p3y, long* p4x, long* p4y)
+CPoint* CAutoRouterGraph::GetSelfPoints(void) const
 {
-	if (p1x == NULL || p1y == NULL || p2x == NULL || p2y == NULL || p3x == NULL || p3y == NULL || p4x == NULL || p4y == NULL)
-		return E_POINTER;
-
-	*p1x = selfpoints[0].x;
-	*p1y = selfpoints[0].y;
-	*p2x = selfpoints[1].x;
-	*p2y = selfpoints[1].y;
-	*p3x = selfpoints[2].x;
-	*p3y = selfpoints[2].y;
-	*p4x = selfpoints[3].x;
-	*p4y = selfpoints[3].y;
-
-	return S_OK;
+	return (CPoint*)selfpoints;
 }
 
-STDMETHODIMP CAutoRouterGraph::Destroy()
+void CAutoRouterGraph::Destroy(void)
 {
 	DeleteEdges(this);
 	DeleteAll();
 
 	horizontal.SetOwner(NULL);
 	vertical.SetOwner(NULL);
-
-	AddRef();
-	Release();
-
-	return S_OK;
-}
-
-void CAutoRouterGraph::EmptyPointsCache(void)
-{
-	POSITION pos = arPathPointsCache.GetStartPosition();
-	IAutoRouterPath* key;
-	while (pos) {
-		CPointListPath* value;
-		arPathPointsCache.GetNextAssoc(pos, key, value);
-		delete value;
-	}
-	arPathPointsCache.RemoveAll();
-
-	pos = arObjectsPointsCache.GetStartPosition();
-	void* key2;
-	while (pos) {
-		std::vector<CPoint>* value;
-		arObjectsPointsCache.GetNextAssoc(pos, key2, value);
-		delete value;
-	}
-	arObjectsPointsCache.RemoveAll();
-}
-
-bool CAutoRouterGraph::UpdatePathPointsFromCache(CComPtr<IAutoRouterPath> path, bool modifyOrSet)
-{
-	CPointListPath* value;
-	arPathPointsCache.Lookup(path.p, value);
-	ASSERT(value != NULL);
-	if (value == NULL)
-		return false;
-
-	HRESULT hr = UpdatePoints(path, *value, modifyOrSet);
-	if (FAILED(hr))
-		return false;
-	return true;
-}
-
-bool CAutoRouterGraph::UpdatePaths(void)
-{
-	std::vector<CComPtr<IAutoRouterPath> >::iterator iter;
-	iter = paths.begin();
-
-	while (iter != paths.end())
-	{
-		VARIANT_BOOL isAutoRouted = VARIANT_FALSE;
-		COMTHROW((*iter)->IsAutoRouted(&isAutoRouted));
-		if (isAutoRouted == VARIANT_TRUE) {
-			if (!UpdatePathPointsFromCache(*iter))
-				return false;
-		}
-		++iter;
-	}
-	return true;
-}
-
-void CAutoRouterGraph::GetPointList(CComPtr<IAutoRouterPath> path, CPointListPath& pointList) const
-{
-	SAFEARRAY* pArr = NULL;
-	COMTHROW(path->GetPointList(&pArr));
-	//one dim., long elements
-	if ((pArr)->cDims == 1 && (pArr)->cbElements == 4)
-	{
-		pointList.RemoveAll();
-		//length
-		long elementNum = (pArr)->rgsabound[0].cElements;
-		if (elementNum > 0)
-		{
-			ASSERT(elementNum % 2 == 0);
-			//lock it before use
-			SafeArrayLock(pArr);
-			long* pArrElements = (long*) (pArr)->pvData;
-			for (int i = 0; i < elementNum / 2; i++)
-			{
-				CPoint p(pArrElements[2 * i], pArrElements[2 * i + 1]);
-				pointList.AddTail(p);
-			}
-			SafeArrayUnlock(pArr);
-		}
-	}
-	//clear memory
-	SafeArrayDestroy(pArr);
-}
-
-bool CAutoRouterGraph::UpdatePoints(CComPtr<IAutoRouterPath> path, const CPointListPath& pointList, bool modifyOrSet)
-{
-	VARIANT_BOOL isAutoRouted = VARIANT_FALSE;
-	COMTHROW(path->IsAutoRouted(&isAutoRouted));
-	if (isAutoRouted == VARIANT_FALSE)
-		return true;
-
-	SAFEARRAY* pArr = NULL;
-	pArr = SafeArrayCreateVector(VT_I4, 0, 2 * pointList.GetSize());
-
-	HRESULT hr = S_OK;
-	long position = 0;
-	POSITION pos = pointList.GetHeadPosition();
-	while(pos && SUCCEEDED(hr))
-	{
-		CPoint point = pointList.GetNext(pos);
-		hr = SafeArrayPutElement(pArr, &position, &point.x);
-		ASSERT(SUCCEEDED(hr));
-		position++;
-		hr = SafeArrayPutElement(pArr, &position, &point.y);
-		ASSERT(SUCCEEDED(hr));
-		position++;
-	}
-	if (FAILED(hr))
-		return false;
-
-	if (modifyOrSet)
-		hr = path->ModifyPoints(pArr);
-	else
-		hr = path->SetPoints(pArr);
-	if (FAILED(hr))
-		return false;
-
-	//clear memory
-	hr = SafeArrayDestroy(pArr);
-	if (FAILED(hr))
-		return false;
-
-	return true;
 }
 
 #ifdef _DEBUG
 void CAutoRouterGraph::AssertValid() const
 {
-	std::vector<CComPtr<IAutoRouterBox> >::const_iterator iter = boxes.begin();
+	std::vector<CAutoRouterBox*>::const_iterator iter = boxes.begin();
 
 	while (iter != boxes.end())
 	{
@@ -1973,7 +1540,7 @@ void CAutoRouterGraph::AssertValid() const
 		++iter;
 	}
 
-	std::vector<CComPtr<IAutoRouterPath> >::const_iterator iter2 = paths.begin();
+	std::vector<CAutoRouterPath*>::const_iterator iter2 = paths.begin();
 	
 	while(iter2 != paths.end())
 	{
@@ -1982,69 +1549,53 @@ void CAutoRouterGraph::AssertValid() const
 	}
 }
 
-void CAutoRouterGraph::AssertValidBox(CComPtr<IAutoRouterBox> box) const
+void CAutoRouterGraph::AssertValidBox(CAutoRouterBox* box) const
 {
-	static_cast<CAutoRouterBox*>(box.p)->AssertValid();
-	CComPtr<IAutoRouterGraph> ownerGraph;
-	COMTHROW(box->GetOwner(&ownerGraph));
-	ASSERT( ownerGraph.p == this );
+	box->AssertValid();
+	ASSERT( box->GetOwner() == this );
 
-	std::vector<CComPtr<IAutoRouterBox> >::const_iterator iter = std::find(boxes.begin(), boxes.end(), box);
+	std::vector<CAutoRouterBox*>::const_iterator iter = std::find(boxes.begin(), boxes.end(), box);
 	ASSERT (iter != boxes.end());
 }
 
-void CAutoRouterGraph::AssertValidPath(CComPtr<IAutoRouterPath> path) const
+void CAutoRouterGraph::AssertValidPath(CAutoRouterPath* path) const
 {
-	static_cast<CAutoRouterPath*>(path.p)->AssertValid();
-	CComPtr<IAutoRouterGraph> ownerGraph;
-	COMTHROW(path->GetOwner(&ownerGraph));
-	ASSERT( ownerGraph.p == this );
+	path->AssertValid();
+	ASSERT( path->GetOwner() == this );
 
-	std::vector<CComPtr<IAutoRouterPath> >::const_iterator iter = std::find(paths.begin(), paths.end(), path);
+	std::vector<CAutoRouterPath*>::const_iterator iter = std::find(paths.begin(), paths.end(), path);
 	ASSERT (iter != paths.end());
 
-	CPointListPath pointList;
-	GetPointList(path, pointList);
+	CPointListPath& pointList = path->GetPointList();
 
-	CComPtr<IAutoRouterPort> startPort;
-	COMTHROW(path->GetStartPort(&startPort));
+	CAutoRouterPort* startPort = path->GetStartPort();
 	ASSERT(startPort != NULL);
-	static_cast<CAutoRouterPort*>(startPort.p)->AssertValid();
-	CComPtr<IAutoRouterBox> ownerBox;
-	COMTHROW(startPort->GetOwner(&ownerBox));
-	CComPtr<IAutoRouterGraph> boxOwnerGraph;
-	COMTHROW(ownerBox->GetOwner(&boxOwnerGraph));
-	ASSERT( boxOwnerGraph.p == this );
-	static_cast<CAutoRouterBox*>(ownerBox.p)->AssertValidPort(startPort);
+	startPort->AssertValid();
+	CAutoRouterBox* ownerBox = startPort->GetOwner();
+	CAutoRouterGraph* boxOwnerGraph = ownerBox->GetOwner();
+	ASSERT( boxOwnerGraph == this );
+	ownerBox->AssertValidPort(startPort);
 
-	VARIANT_BOOL isConnected = VARIANT_TRUE;
-	COMTHROW(path->IsConnected(&isConnected));
-	if( isConnected == VARIANT_TRUE )
-		static_cast<CAutoRouterPort*>(startPort.p)->AssertValidStartEndPoint(pointList.GetHead(), Dir_None, 1);
+	if( path->IsConnected() )
+		startPort->AssertValidStartEndPoint(pointList.GetHead(), Dir_None, 1);
 
-	CComPtr<IAutoRouterPort> endPort;
-	COMTHROW(path->GetEndPort(&endPort));
+	CAutoRouterPort* endPort = path->GetEndPort();
 	ASSERT(endPort != NULL);
-	static_cast<CAutoRouterPort*>(endPort.p)->AssertValid();
-	CComPtr<IAutoRouterBox> ownerBox2;
-	COMTHROW(endPort->GetOwner(&ownerBox2));
-	CComPtr<IAutoRouterGraph> boxOwnerGraph2;
-	COMTHROW(ownerBox2->GetOwner(&boxOwnerGraph2));
-	ASSERT( boxOwnerGraph2.p == this );
-	static_cast<CAutoRouterBox*>(ownerBox2.p)->AssertValidPort(endPort);
+	endPort->AssertValid();
+	CAutoRouterBox* ownerBox2 = endPort->GetOwner();
+	ASSERT( ownerBox2->GetOwner() == this );
+	ownerBox2->AssertValidPort(endPort);
 
-	if( isConnected == VARIANT_TRUE )
+	if( path->IsConnected() )
 	{
-		static_cast<CAutoRouterPort*>(endPort.p)->AssertValidStartEndPoint(pointList.GetTail(), Dir_None, 0);
+		endPort->AssertValidStartEndPoint(pointList.GetTail(), Dir_None, 0);
 	}
 	else
 	{
-		VARIANT_BOOL hasNoPoint = VARIANT_TRUE;
-		COMTHROW(path->HasNoPoint(&hasNoPoint));
-		ASSERT( hasNoPoint == VARIANT_TRUE );
+		ASSERT( path->HasNoPoint() );
 	}
 
-	static_cast<CAutoRouterPath*>(path.p)->AssertValidPoints();
+	path->AssertValidPoints();
 
 	if( !pointList.IsEmpty() )
 	{
@@ -2069,7 +1620,7 @@ void CAutoRouterGraph::DumpPaths(int pos, int c)
 {
 #ifdef _DEBUG_DEEP
 /*	TRACE2("Paths dump pos %ld, c %ld:\n", pos, c);
-	std::vector<CComPtr<IAutoRouterPath> >::iterator iter;
+	std::vector<CAutoRouterPath*>::iterator iter;
 	iter = paths.begin();
 	int i = 0;
 
