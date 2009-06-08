@@ -4,11 +4,14 @@
 
 #include "GmeStd.h"
 #include "Gme.h"
+#include <vector>
 
 #ifdef _DEBUG
 //	#define _DEBUG_DEEP
 #endif
 
+
+// --------------------------- RoutingDirection && PathCustomizationType && CustomPathData
 
 enum RoutingDirection
 {
@@ -30,9 +33,14 @@ enum PathCustomizationType
 	NumOfPathCustomizationTypes	= 4
 };
 
+// Version of edge data structure
+#define CONNECTIONCUSTOMIZATIONDATAVERSION			0
+#define EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC		"-1"
+
 // Structure for storing edge customization data
-struct CustomPathData
+class CustomPathData
 {
+private:
 	long version;					// Version number of structure
 	long aspect;					// Which aspect does customization refers to
 	long edgeIndex;					// The index of the given edge in the edge array
@@ -42,20 +50,41 @@ struct CustomPathData
 	long x;							// An x coordinate
 	long y;							// An y coordinate
 
-	long numOfExtraLongData;		// Number of additional long data (max 4)
-	long l1;						// Additional long data no 1
-	long l2;						// Additional long data no 2
-	long l3;						// Additional long data no 3
-	long l4;						// Additional long data no 4
-	long numOfExtraDoubleData;		// Number of additional floating point data (max 8)
-	double d1;						// Additional double data no 1
-	double d2;						// Additional double data no 2
-	double d3;						// Additional double data no 3
-	double d4;						// Additional double data no 4
-	double d5;						// Additional double data no 5
-	double d6;						// Additional double data no 6
-	double d7;						// Additional double data no 7
-	double d8;						// Additional double data no 8
+	std::vector<long> l;			// Additional long data
+	std::vector<double> d;			// Additional double data
+
+public:
+	CustomPathData();
+	CustomPathData& operator=(const CustomPathData& other);
+
+	void Serialize(CString& outChannel);
+	bool Deserialize(const CString& inChannel);
+
+	long GetVersion(void) const;
+	void SetVersion(long ver);
+	long GetAspect(void) const;
+	void SetAspect(long asp);
+	long GetEdgeIndex(void) const;
+	void SetEdgeIndex(long index);
+	long GetEdgeCount(void) const;
+	void SetEdgeCount(long count);
+	PathCustomizationType GetType(void) const;
+	void SetType(PathCustomizationType typ);
+	bool IsHorizontalOrVertical(void) const;
+	void SetHorizontalOrVertical(bool parity);
+	long GetX(void) const;
+	void SetX(long coord);
+	long GetY(void) const;
+	void SetY(long coord);
+
+	long GetLongDataCount(void) const;
+	long GetLongData(long index) const;
+	void SetLongData(long index, long dat);
+	void AddLongData(long dat);
+	long GetDoubleDataCount(void) const;
+	double GetDoubleData(long index) const;
+	void SetDoubleData(long index, double dat);
+	void AddDoubleData(double dat);
 };
 
 

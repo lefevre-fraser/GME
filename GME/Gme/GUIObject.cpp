@@ -3041,11 +3041,11 @@ std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(void)
 	std::vector<long> customizedEdgeIndexes;
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
-		if ((*ii).aspect == asp || asp == -1) {
-			if (IsAutoRouted() && (*ii).type == SimpleEdgeDisplacement ||
-				!IsAutoRouted() && (*ii).type != SimpleEdgeDisplacement)
+		if ((*ii).GetAspect() == asp || asp == -1) {
+			if (IsAutoRouted() && (*ii).GetType() == SimpleEdgeDisplacement ||
+				!IsAutoRouted() && (*ii).GetType() != SimpleEdgeDisplacement)
 			{
-				customizedEdgeIndexes.push_back((*ii).edgeIndex);
+				customizedEdgeIndexes.push_back((*ii).GetEdgeIndex());
 			}
 		}
 		++ii;
@@ -3056,19 +3056,18 @@ std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(void)
 void CGuiConnection::FillOutCustomPathData(CustomPathData& pathData, PathCustomizationType custType, long asp,
 										   int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge)
 {
-	InitCustomPathData(pathData);
-	pathData.version					= CONNECTIONCUSTOMIZATIONDATAVERSION;
-	pathData.aspect						= asp;
-	pathData.edgeIndex					= edgeIndex;
-	pathData.edgeCount					= GetEdgeCount();
-	pathData.type						= custType;
-	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge;
+	pathData.SetVersion					(CONNECTIONCUSTOMIZATIONDATAVERSION);
+	pathData.SetAspect					(asp);
+	pathData.SetEdgeIndex				(edgeIndex);
+	pathData.SetEdgeCount				(GetEdgeCount());
+	pathData.SetType					(custType);
+	pathData.SetHorizontalOrVertical	(horizontalOrVerticalEdge);
 	if (custType == SimpleEdgeDisplacement) {
-		pathData.x						= !horizontalOrVerticalEdge ? newPosX : 0;
-		pathData.y						= horizontalOrVerticalEdge ? newPosX : 0;
+		pathData.SetX					(!horizontalOrVerticalEdge ? newPosX : 0);
+		pathData.SetY					(horizontalOrVerticalEdge ? newPosX : 0);
 	} else {
-		pathData.x						= newPosX;
-		pathData.y						= newPosY;
+		pathData.SetX					(newPosX);
+		pathData.SetY					(newPosY);
 	}
 }
 
@@ -3076,7 +3075,7 @@ std::vector<CustomPathData> CGuiConnection::GetCurrentPathCustomizations(void)
 {
 	std::vector<CustomPathData> cd;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
-		if ((*ii).aspect == parentAspect)
+		if ((*ii).GetAspect() == parentAspect)
 			cd.push_back(*ii);
 	}
 	return cd;
@@ -3105,9 +3104,9 @@ bool CGuiConnection::HasPathCustomizationForTypeAndCurrentAspect(PathCustomizati
 bool CGuiConnection::HasPathCustomizationForTypeAndAspect(long asp, PathCustomizationType custType, int edgeIndex) const
 {
 	for (std::vector<CustomPathData>::const_iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
-		if ((*ii).aspect == asp &&
-			((*ii).edgeIndex == edgeIndex || edgeIndex == -1) &&
-			((*ii).type == custType || custType == Invalid))
+		if ((*ii).GetAspect() == asp &&
+			((*ii).GetEdgeIndex() == edgeIndex || edgeIndex == -1) &&
+			((*ii).GetType() == custType || custType == Invalid))
 		{
 			return true;
 		}
@@ -3125,104 +3124,9 @@ void CGuiConnection::ReadCustomPathData(void)
 			int curPos = 0;
 			subStr = pref.Tokenize(";", curPos);
 			while (subStr != "") {
-				TRACE1("\tResulting token: %s\n", subStr);
 				CustomPathData pathData;
-				InitCustomPathData(pathData);
-				int curSubPos = 0;
-				CString versionStr = subStr.Tokenize(",", curSubPos);
-				pathData.version = strtol(versionStr, NULL, 10);
-				ASSERT(pathData.version == CONNECTIONCUSTOMIZATIONDATAVERSION);
-				if (pathData.version == CONNECTIONCUSTOMIZATIONDATAVERSION) {
-					CString aspectStr = subStr.Tokenize(",", curSubPos);
-					pathData.aspect = strtol(aspectStr, NULL, 10);
-					CString edgeIndexStr = subStr.Tokenize(",", curSubPos);
-					pathData.edgeIndex = strtol(edgeIndexStr, NULL, 10);
-					CString edgeCountStr = subStr.Tokenize(",", curSubPos);
-					pathData.edgeCount = strtol(edgeCountStr, NULL, 10);
-					CString edgeCustomTypeStr = subStr.Tokenize(",", curSubPos);
-					pathData.type = (PathCustomizationType)strtol(edgeCustomTypeStr, NULL, 10);
-					TRACE("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld", pathData.aspect, pathData.edgeIndex,
-																 pathData.edgeCount, pathData.type);
-					CString directionStr = subStr.Tokenize(",", curSubPos);
-					pathData.horizontalOrVerticalEdge = (strtol(directionStr, NULL, 10) != 0);
-					CString positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.x = strtol(positionStr, NULL, 10);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.y = strtol(positionStr, NULL, 10);
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.numOfExtraLongData = strtol(positionStr, NULL, 10);
-					ASSERT(pathData.numOfExtraLongData >= 0 && pathData.numOfExtraLongData <= 4);
-					if (pathData.numOfExtraLongData > 0) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.l1 = strtol(positionStr, NULL, 10);
-					}
-					if (pathData.numOfExtraLongData > 1) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.l2 = strtol(positionStr, NULL, 10);
-					}
-					if (pathData.numOfExtraLongData > 2) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.l3 = strtol(positionStr, NULL, 10);
-					}
-					if (pathData.numOfExtraLongData > 3) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.l4 = strtol(positionStr, NULL, 10);
-					}
-
-					TRACE3(", Dir %ld, x %ld, y %ld", pathData.horizontalOrVerticalEdge, pathData.x, pathData.y);
-					if (pathData.numOfExtraLongData)
-						TRACE(", num %ld, l1 %ld, l2 %ld, l3 %ld, l4 %ld\n",
-							pathData.numOfExtraLongData, pathData.l1, pathData.l2, pathData.l3, pathData.l4);
-					else
-						TRACE("\n");
-
-					positionStr = subStr.Tokenize(",", curSubPos);
-					pathData.numOfExtraDoubleData = strtol(positionStr, NULL, 10);
-					ASSERT(pathData.numOfExtraDoubleData >= 0 && pathData.numOfExtraDoubleData <= 8);
-					if (pathData.numOfExtraDoubleData > 0) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.d1 = atof(positionStr);
-					}
-					if (pathData.numOfExtraDoubleData > 1) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.d2 = atof(positionStr);
-					}
-					if (pathData.numOfExtraDoubleData > 2) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.d3 = atof(positionStr);
-					}
-					if (pathData.numOfExtraDoubleData > 3) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.d4 = atof(positionStr);
-					}
-					if (pathData.numOfExtraDoubleData > 4) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.d5 = atof(positionStr);
-					}
-					if (pathData.numOfExtraDoubleData > 5) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.d6 = atof(positionStr);
-					}
-					if (pathData.numOfExtraDoubleData > 6) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.d7 = atof(positionStr);
-					}
-					if (pathData.numOfExtraDoubleData > 7) {
-						positionStr = subStr.Tokenize(",", curSubPos);
-						pathData.d8 = atof(positionStr);
-					}
-
-					if (pathData.numOfExtraDoubleData > 0) {
-						TRACE("\t num %ld, d1 %lf, d2 %lf, d3 %lf, d4 %lf, d5 %lf, d6 %lf, d7 %lf, d8 %lf\n",
-							pathData.numOfExtraDoubleData,
-							pathData.d1, pathData.d2, pathData.d3, pathData.d4,
-							pathData.d5, pathData.d6, pathData.d7, pathData.d8);
-					}
-
+				if (pathData.Deserialize(subStr))
 					customPathData.push_back(pathData);
-				} else {
-					;	// TODO: Convert from older version to newer
-				}
 				subStr = pref.Tokenize(";", curPos);
 			}
 		}
@@ -3234,60 +3138,7 @@ void CGuiConnection::WriteCustomPathData(bool handleTransaction)
 	CString valStr;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 		CString edgeStr;
-		edgeStr.Format("%ld,%ld,%ld,%d,%ld", (*ii).version, (*ii).aspect, (*ii).edgeIndex, (*ii).edgeCount, (*ii).type);
-		CString additionalDataStr;
-		additionalDataStr.Format(",%ld,%ld,%ld,%ld", (*ii).horizontalOrVerticalEdge ? 1 : 0, (*ii).x, (*ii).y, (*ii).numOfExtraLongData);
-		edgeStr.Append(additionalDataStr);
-		if ((*ii).numOfExtraLongData > 0) {
-			additionalDataStr.Format(",%ld", (*ii).l1);
-			edgeStr.Append(additionalDataStr);
-		}
-		if ((*ii).numOfExtraLongData > 1) {
-			additionalDataStr.Format(",%ld", (*ii).l2);
-			edgeStr.Append(additionalDataStr);
-		}
-		if ((*ii).numOfExtraLongData > 2) {
-			additionalDataStr.Format(",%ld", (*ii).l3);
-			edgeStr.Append(additionalDataStr);
-		}
-		if ((*ii).numOfExtraLongData > 3) {
-			additionalDataStr.Format(",%ld", (*ii).l4);
-			edgeStr.Append(additionalDataStr);
-		}
-		additionalDataStr.Format(",%ld", (*ii).numOfExtraDoubleData);
-		edgeStr.Append(additionalDataStr);
-		if ((*ii).numOfExtraDoubleData > 0) {
-			additionalDataStr.Format(",%lf", (*ii).d1);
-			edgeStr.Append(additionalDataStr);
-		}
-		if ((*ii).numOfExtraDoubleData > 1) {
-			additionalDataStr.Format(",%lf", (*ii).d2);
-			edgeStr.Append(additionalDataStr);
-		}
-		if ((*ii).numOfExtraDoubleData > 2) {
-			additionalDataStr.Format(",%lf", (*ii).d3);
-			edgeStr.Append(additionalDataStr);
-		}
-		if ((*ii).numOfExtraDoubleData > 3) {
-			additionalDataStr.Format(",%lf", (*ii).d4);
-			edgeStr.Append(additionalDataStr);
-		}
-		if ((*ii).numOfExtraDoubleData > 4) {
-			additionalDataStr.Format(",%lf", (*ii).d5);
-			edgeStr.Append(additionalDataStr);
-		}
-		if ((*ii).numOfExtraDoubleData > 5) {
-			additionalDataStr.Format(",%lf", (*ii).d6);
-			edgeStr.Append(additionalDataStr);
-		}
-		if ((*ii).numOfExtraDoubleData > 6) {
-			additionalDataStr.Format(",%lf", (*ii).d7);
-			edgeStr.Append(additionalDataStr);
-		}
-		if ((*ii).numOfExtraDoubleData > 7) {
-			additionalDataStr.Format(",%lf", (*ii).d8);
-			edgeStr.Append(additionalDataStr);
-		}
+		(*ii).Serialize(edgeStr);
 		if (valStr != "")
 			valStr.Append(";");
 		valStr.Append(edgeStr);
@@ -3307,7 +3158,7 @@ void CGuiConnection::WriteCustomPathData(bool handleTransaction)
 		view->CommitTransaction();
 }
 
-void CGuiConnection::InsertCustomPathData(CustomPathData& pathData)
+void CGuiConnection::InsertCustomPathData(const CustomPathData& pathData)
 {
 	// Note:
 	//	We assume that element are in ascending order by edgeIndexes
@@ -3317,17 +3168,17 @@ void CGuiConnection::InsertCustomPathData(CustomPathData& pathData)
 	std::vector<CustomPathData>::iterator jj;	// insertion point
 	bool found = false;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
-		ASSERT((*ii).version == pathData.version);
-		if ((*ii).aspect == pathData.aspect &&
-			(*ii).type == pathData.type &&
-			(*ii).edgeIndex >= pathData.edgeIndex)
+		ASSERT((*ii).GetVersion() == pathData.GetVersion());
+		if ((*ii).GetAspect() == pathData.GetAspect() &&
+			(*ii).GetType() == pathData.GetType() &&
+			(*ii).GetEdgeIndex() >= pathData.GetEdgeIndex())
 		{
 			if (!found)
 				jj = ii;
 			found = true;
-			if (pathData.type == CustomPointCustomization)
-				(*ii).edgeIndex = (*ii).edgeIndex + 1;
-			else if (pathData.type == SimpleEdgeDisplacement)
+			if (pathData.GetType() == CustomPointCustomization)
+				(*ii).SetEdgeIndex((*ii).GetEdgeIndex() + 1);
+			else if (pathData.GetType() == SimpleEdgeDisplacement)
 				break;
 			// TODO: other cases
 		}
@@ -3340,15 +3191,15 @@ void CGuiConnection::InsertCustomPathData(CustomPathData& pathData)
 		customPathData.push_back(pathData);
 }
 
-void CGuiConnection::UpdateCustomPathData(CustomPathData& pathData)
+void CGuiConnection::UpdateCustomPathData(const CustomPathData& pathData)
 {
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
-		ASSERT((*ii).version == pathData.version);
-		if ((*ii).aspect == pathData.aspect &&
-			(*ii).type == pathData.type &&
-			(*ii).edgeIndex == pathData.edgeIndex)
+		ASSERT((*ii).GetVersion() == pathData.GetVersion());
+		if ((*ii).GetAspect() == pathData.GetAspect() &&
+			(*ii).GetType() == pathData.GetType() &&
+			(*ii).GetEdgeIndex() >= pathData.GetEdgeIndex())
 		{
-			CopyCustomPathData(pathData, (*ii));
+			(*ii) = pathData;
 			return;
 		}
 	}
@@ -3357,25 +3208,25 @@ void CGuiConnection::UpdateCustomPathData(CustomPathData& pathData)
 	InsertCustomPathData(pathData);
 }
 
-void CGuiConnection::DeletePathCustomization(CustomPathData& pathData)
+void CGuiConnection::DeletePathCustomization(const CustomPathData& pathData)
 {
 	long i = 0;
 	bool found = false;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii, i++) {
-		ASSERT((*ii).version == pathData.version);
-		if ((*ii).aspect == pathData.aspect &&
-			(*ii).type == pathData.type)
+		ASSERT((*ii).GetVersion() == pathData.GetVersion());
+		if ((*ii).GetAspect() == pathData.GetAspect() &&
+			(*ii).GetType() == pathData.GetType())
 		{
-			if (pathData.type == SimpleEdgeDisplacement) {
-				if ((*ii).edgeIndex == pathData.edgeIndex) {
-					ASSERT((*ii).horizontalOrVerticalEdge == pathData.horizontalOrVerticalEdge);
+			if (pathData.GetType() == SimpleEdgeDisplacement) {
+				if ((*ii).GetEdgeIndex() == pathData.GetEdgeIndex()) {
+					ASSERT((*ii).IsHorizontalOrVertical() == pathData.IsHorizontalOrVertical());
 					ii = customPathData.erase(ii);
 					found = true;
 					return;
 				}
-			} else if (pathData.type == CustomPointCustomization) {
+			} else if (pathData.GetType() == CustomPointCustomization) {
 				// in case of CustomPointCustomization delete by array index and not edgeIndex
-				if (i == pathData.edgeIndex) {
+				if (i == pathData.GetEdgeIndex()) {
 					ii = customPathData.erase(ii);
 					found = true;
 					break;
@@ -3386,15 +3237,15 @@ void CGuiConnection::DeletePathCustomization(CustomPathData& pathData)
 		}
 	}
 	// update indexes in case of full customization
-	if (pathData.type == CustomPointCustomization) {
+	if (pathData.GetType() == CustomPointCustomization) {
 		for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
-			ASSERT((*ii).version == pathData.version);
-			if ((*ii).aspect == pathData.aspect &&
-				(*ii).type == pathData.type)
+			ASSERT((*ii).GetVersion() == pathData.GetVersion());
+			if ((*ii).GetAspect() == pathData.GetAspect() &&
+				(*ii).GetType() == pathData.GetType())
 			{
-				ASSERT((*ii).edgeIndex != pathData.edgeIndex);	// because we just deleted it
-				if ((*ii).edgeIndex > pathData.edgeIndex) {
-					(*ii).edgeIndex = (*ii).edgeIndex - 1;
+				ASSERT((*ii).GetEdgeIndex() != pathData.GetEdgeIndex());	// because we just deleted it
+				if ((*ii).GetEdgeIndex() > pathData.GetEdgeIndex()) {
+					(*ii).SetEdgeIndex((*ii).GetEdgeIndex() - 1);
 				}
 			}
 		}
@@ -3408,9 +3259,9 @@ bool CGuiConnection::DeleteAllPathCustomizationsForAnAspect(long asp)
 	bool wereThereAnyDeletion = false;
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
-		if ((*ii).aspect == asp &&
-			(IsAutoRouted() && (*ii).type == SimpleEdgeDisplacement ||
-			!IsAutoRouted() && (*ii).type != SimpleEdgeDisplacement))
+		if ((*ii).GetAspect() == asp &&
+			(IsAutoRouted() && (*ii).GetType() == SimpleEdgeDisplacement ||
+			!IsAutoRouted() && (*ii).GetType() != SimpleEdgeDisplacement))
 		{
 			wereThereAnyDeletion = true;
 			ii = customPathData.erase(ii);
@@ -3432,9 +3283,9 @@ void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPat
 	while (ii != customPathDat.end()) {
 		std::vector<CustomPathData>::iterator jj = customPathData.begin();
 		while (jj != customPathData.end()) {
-			if ((*ii).aspect == (*jj).aspect &&
-				(*ii).edgeIndex == (*jj).edgeIndex &&
-				(*ii).type == (*jj).type)
+			if ((*ii).GetAspect() == (*jj).GetAspect() &&
+				(*ii).GetEdgeIndex() == (*jj).GetEdgeIndex() &&
+				(*ii).GetType() == (*jj).GetType())
 			{
 				jj = customPathData.erase(jj);
 			} else {
@@ -3462,7 +3313,7 @@ void CGuiConnection::SnapCoordIfApplicable(CustomPathData* coordToSet, const CPo
 					modify = true;
 			}
 			if (modify)
-				coordToSet->y = last.y;
+				coordToSet->SetY(last.y);
 		} else if (dirToGo == Dir_Top || dirToGo == Dir_Bottom) {
 			if (abs(last.x - pt.x) <= 3) {
 				modify = true;
@@ -3473,7 +3324,7 @@ void CGuiConnection::SnapCoordIfApplicable(CustomPathData* coordToSet, const CPo
 					modify = true;
 			}
 			if (modify)
-				coordToSet->x = last.x;
+				coordToSet->SetX(last.x);
 		}
 	}
 }
@@ -3489,13 +3340,13 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 	int i = 0;
 	CustomPathData* lastData = NULL;
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
-		ASSERT((*ii).version == CONNECTIONCUSTOMIZATIONDATAVERSION);
-		if ((*ii).aspect == asp) {
-			if ((*ii).type == CustomPointCustomization) {
-				CPoint pt((*ii).x, (*ii).y);
+		ASSERT((*ii).GetVersion() == CONNECTIONCUSTOMIZATIONDATAVERSION);
+		if ((*ii).GetAspect() == asp) {
+			if ((*ii).GetType() == CustomPointCustomization) {
+				CPoint pt((*ii).GetX(), (*ii).GetY());
 				CPoint last;
 				if (lastData != NULL) {
-					last = CPoint(lastData->x, lastData->y);
+					last = CPoint(lastData->GetX(), lastData->GetY());
 				} else {
 					last = points.GetHead();
 				}
@@ -3508,7 +3359,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 	}
 	// see the very last connection line segment
 	if (lastData != NULL && (edgeIndex == -1 || i == edgeIndex - 1 || i == edgeIndex)) {
-		CPoint pt(lastData->x, lastData->y);
+		CPoint pt(lastData->GetX(), lastData->GetY());
 		CPoint last = points.GetTail();
 		SnapCoordIfApplicable(lastData, last, pt);
 	}

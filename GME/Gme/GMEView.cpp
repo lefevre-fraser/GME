@@ -2631,12 +2631,11 @@ void CGMEView::DeleteCustomEdges(CGuiConnection* selectedConn, PathCustomization
 								 int edgeIndex, bool horizontalOrVerticalEdge)
 {
 	CustomPathData pathData;
-	InitCustomPathData(pathData);
-	pathData.version					= CONNECTIONCUSTOMIZATIONDATAVERSION;
-	pathData.aspect						= currentAspect->index;
-	pathData.edgeIndex					= edgeIndex;
-	pathData.type						= custType;
-	pathData.horizontalOrVerticalEdge	= horizontalOrVerticalEdge;
+	pathData.SetVersion					(CONNECTIONCUSTOMIZATIONDATAVERSION);
+	pathData.SetAspect					(currentAspect->index);
+	pathData.SetEdgeIndex				(edgeIndex);
+	pathData.SetType					(custType);
+	pathData.SetHorizontalOrVertical	(horizontalOrVerticalEdge);
 	selectedConn->DeletePathCustomization(pathData);
 }
 

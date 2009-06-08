@@ -33,13 +33,6 @@
 #define ARPATHST_Default		0x0000
 
 
-// Version of edge data structure
-#define CONNECTIONCUSTOMIZATIONDATAVERSION			0
-#define EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC		"-1"
-
-void InitCustomPathData(CustomPathData& pathData);
-void CopyCustomPathData(const CustomPathData& src, CustomPathData& dst);
-
 typedef CList<CPoint, CPoint&>	CPointList;
 
 

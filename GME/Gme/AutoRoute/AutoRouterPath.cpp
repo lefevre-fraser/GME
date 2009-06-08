@@ -7,59 +7,6 @@
 #include "AutoRouterPort.h"
 
 
-void InitCustomPathData(CustomPathData& pathData)
-{
-	pathData.version					= CONNECTIONCUSTOMIZATIONDATAVERSION;
-	pathData.aspect						= 0;
-	pathData.edgeIndex					= 0;
-	pathData.edgeCount					= 0;
-	pathData.type						= SimpleEdgeDisplacement;
-	pathData.horizontalOrVerticalEdge	= true;
-	pathData.x							= 0;
-	pathData.y							= 0;
-	pathData.numOfExtraLongData			= 0;
-	pathData.l1							= 0;
-	pathData.l2							= 0;
-	pathData.l3							= 0;
-	pathData.l4							= 0;
-	pathData.numOfExtraDoubleData		= 0;
-	pathData.d1							= 0.0;
-	pathData.d2							= 0.0;
-	pathData.d3							= 0.0;
-	pathData.d4							= 0.0;
-	pathData.d5							= 0.0;
-	pathData.d6							= 0.0;
-	pathData.d7							= 0.0;
-	pathData.d8							= 0.0;
-}
-
-void CopyCustomPathData(const CustomPathData& src, CustomPathData& dst)
-{
-	dst.version						= src.version;
-	dst.aspect						= src.aspect;
-	dst.edgeIndex					= src.edgeIndex;
-	dst.edgeCount					= src.edgeCount;
-	dst.type						= src.type;
-	dst.horizontalOrVerticalEdge	= src.horizontalOrVerticalEdge;
-	dst.x							= src.x;
-	dst.y							= src.y;
-	dst.numOfExtraLongData			= src.numOfExtraLongData;
-	dst.l1							= src.l1;
-	dst.l2							= src.l2;
-	dst.l3							= src.l3;
-	dst.l4							= src.l4;
-	dst.numOfExtraDoubleData		= src.numOfExtraDoubleData;
-	dst.d1							= src.d1;
-	dst.d2							= src.d2;
-	dst.d3							= src.d3;
-	dst.d4							= src.d4;
-	dst.d5							= src.d5;
-	dst.d6							= src.d6;
-	dst.d7							= src.d7;
-	dst.d8							= src.d8;
-}
-
-
 // CAutoRouterPath implementation
 
 CAutoRouterPath::CAutoRouterPath():
@@ -455,11 +402,11 @@ void CAutoRouterPath::ApplyCustomizationsBeforeAutoConnectPoints(CPointListPath&
 
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
-		if ((*ii).type == SimpleEdgeDisplacement) {
+		if ((*ii).GetType() == SimpleEdgeDisplacement) {
 			// it is done in a next phase
-		} else if ((*ii).type == CustomPointCustomization) {
+		} else if ((*ii).GetType() == CustomPointCustomization) {
 			if (!isAutoRoutingOn)
-				plist.AddTail(CPoint((*ii).x, (*ii).y));
+				plist.AddTail(CPoint((*ii).GetX(), (*ii).GetY()));
 		} else {
 			// unknown displacement type
 		}
@@ -476,8 +423,8 @@ void CAutoRouterPath::ApplyCustomizationsAfterAutoConnectPointsAndStuff(void)
 		std::vector<CustomPathData>::iterator ii = customPathData.begin();
 		int numEdges = points.GetSize() - 1;
 		while (ii != customPathData.end()) {
-			if ((*ii).edgeCount != numEdges &&
-				(*ii).type == SimpleEdgeDisplacement)
+			if ((*ii).GetEdgeCount() != numEdges &&
+				(*ii).GetType() == SimpleEdgeDisplacement)
 			{
 				pathDataToDelete.push_back(*ii);
 				ii = customPathData.erase(ii);
@@ -496,17 +443,17 @@ void CAutoRouterPath::ApplyCustomizationsAfterAutoConnectPointsAndStuff(void)
 		std::vector<CustomPathData>::iterator ii = customPathData.begin();
 		while (ii != customPathData.end()) {
 			bool increment = true;
-			if (currEdgeIndex == (*ii).edgeIndex) {
-				if ((*ii).type == SimpleEdgeDisplacement) {
+			if (currEdgeIndex == (*ii).GetEdgeIndex()) {
+				if ((*ii).GetType() == SimpleEdgeDisplacement) {
 					RoutingDirection dir = GetDir(*endpoint - *startpoint);
 					bool isHorizontalVar = (IsHorizontal(dir) != 0);
-					if ((*ii).horizontalOrVerticalEdge == isHorizontalVar) {
-						if ((*ii).horizontalOrVerticalEdge) {
-							startpoint->y = (*ii).y;
-							endpoint->y = (*ii).y;
+					if ((*ii).IsHorizontalOrVertical() == isHorizontalVar) {
+						if ((*ii).IsHorizontalOrVertical()) {
+							startpoint->y = (*ii).GetY();
+							endpoint->y = (*ii).GetY();
 						} else {
-							startpoint->x = (*ii).x;
-							endpoint->x = (*ii).x;
+							startpoint->x = (*ii).GetX();
+							endpoint->x = (*ii).GetX();
 						}
 					} else {
 						// something went wrong, invalid data: direction (horz/vert) not match
@@ -515,7 +462,7 @@ void CAutoRouterPath::ApplyCustomizationsAfterAutoConnectPointsAndStuff(void)
 						ii = customPathData.erase(ii);
 						increment = false;
 					}
-				} else if ((*ii).type == CustomPointCustomization) {
+				} else if ((*ii).GetType() == CustomPointCustomization) {
 					// it is done in a previous phase
 				} else {
 					// unknown displacement type
@@ -544,7 +491,7 @@ void CAutoRouterPath::MarkPathCustomizationsForDeletion(long asp)
 {
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
-		if ((*ii).aspect == asp)
+		if ((*ii).GetAspect() == asp)
 			pathDataToDelete.push_back(*ii);
 		++ii;
 	}
@@ -558,9 +505,9 @@ void CAutoRouterPath::RemoveInvalidPathCustomizations(long asp)
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	int numEdges = points.GetSize() - 1;
 	while (ii != customPathData.end()) {
-		if ((*ii).aspect == asp) {
-			if ((*ii).edgeCount != numEdges &&
-				(*ii).type == SimpleEdgeDisplacement)
+		if ((*ii).GetAspect() == asp) {
+			if ((*ii).GetEdgeCount() != numEdges &&
+				(*ii).GetType() == SimpleEdgeDisplacement)
 			{
 				ii = customPathData.erase(ii);
 			} else {
@@ -597,10 +544,10 @@ void CAutoRouterPath::GetCustomizedEdgeIndexes(std::vector<int>& indexes) const
 	std::vector<CustomPathData>::const_iterator ii = customPathData.begin();
 	while(ii != customPathData.end())
 	{
-		if (IsAutoRouted() && (*ii).type == SimpleEdgeDisplacement ||
-			!IsAutoRouted() && (*ii).type != SimpleEdgeDisplacement)
+		if (IsAutoRouted() && (*ii).GetType() == SimpleEdgeDisplacement ||
+			!IsAutoRouted() && (*ii).GetType() != SimpleEdgeDisplacement)
 		{
-			long edgeIndex = (*ii).edgeIndex;
+			long edgeIndex = (*ii).GetEdgeIndex();
 			indexes.push_back(edgeIndex);
 		}
 		++ii;

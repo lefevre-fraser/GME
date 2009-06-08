@@ -463,9 +463,9 @@ public:
 	bool HasPathCustomizationForTypeAndAspect(long asp, PathCustomizationType custType = Invalid, int edgeIndex = -1) const;
 	void ReadCustomPathData(void);
 	void WriteCustomPathData(bool handleTransaction = true);
-	void InsertCustomPathData(CustomPathData& pathData);
-	void UpdateCustomPathData(CustomPathData& pathData);
-	void DeletePathCustomization(CustomPathData& pathData);
+	void InsertCustomPathData(const CustomPathData& pathData);
+	void UpdateCustomPathData(const CustomPathData& pathData);
+	void DeletePathCustomization(const CustomPathData& pathData);
 	bool DeleteAllPathCustomizationsForAnAspect(long asp);
 	bool DeleteAllPathCustomizationsForCurrentAspect(void);
 	void RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat);

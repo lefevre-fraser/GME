@@ -6,6 +6,229 @@
 
 // --------------------------- CRect && CPoint
 
+CustomPathData::CustomPathData():
+	version						(CONNECTIONCUSTOMIZATIONDATAVERSION),
+	aspect						(0),
+	edgeIndex					(0),
+	edgeCount					(0),
+	type						(SimpleEdgeDisplacement),
+	horizontalOrVerticalEdge	(true),
+	x							(0),
+	y							(0)
+{
+}
+
+CustomPathData& CustomPathData::operator=(const CustomPathData& other)
+{
+	if (this != &other)
+	{
+		this->version					= other.version;
+		this->aspect					= other.aspect;
+		this->edgeIndex					= other.edgeIndex;
+		this->edgeCount					= other.edgeCount;
+		this->type						= other.type;
+		this->horizontalOrVerticalEdge	= other.horizontalOrVerticalEdge;
+		this->x							= other.x;
+		this->y							= other.y;
+		this->l							= other.l;
+		this->d							= other.d;
+	}
+	return *this;
+}
+
+void CustomPathData::Serialize(CString& outChannel)
+{
+	outChannel.Format("%ld,%ld,%ld,%d,%ld", GetVersion(), GetAspect(), GetEdgeIndex(),
+											GetEdgeCount(), GetType());
+	CString additionalDataStr;
+	additionalDataStr.Format(",%ld,%ld,%ld,%ld", IsHorizontalOrVertical() ? 1 : 0,
+												 GetX(), GetY(), GetLongDataCount());
+	outChannel.Append(additionalDataStr);
+	for(long i = 0; i < GetLongDataCount(); i++) {
+		additionalDataStr.Format(",%ld", l[i]);
+		outChannel.Append(additionalDataStr);
+	}
+	additionalDataStr.Format(",%ld", GetDoubleDataCount());
+	outChannel.Append(additionalDataStr);
+	for(long i = 0; i < GetDoubleDataCount(); i++) {
+		additionalDataStr.Format(",%lf", d[i]);
+		outChannel.Append(additionalDataStr);
+	}
+}
+
+bool CustomPathData::Deserialize(const CString& inChannel)
+{
+	TRACE1("\tResulting token: %s\n", inChannel);
+	int curSubPos = 0;
+	CString versionStr = inChannel.Tokenize(",", curSubPos);
+	SetVersion(strtol(versionStr, NULL, 10));
+	ASSERT(GetVersion() == CONNECTIONCUSTOMIZATIONDATAVERSION);
+	if (GetVersion() != CONNECTIONCUSTOMIZATIONDATAVERSION) {
+		// TODO: Convert from older version to newer
+		return false;
+	}
+	CString aspectStr = inChannel.Tokenize(",", curSubPos);
+	SetAspect(strtol(aspectStr, NULL, 10));
+	CString edgeIndexStr = inChannel.Tokenize(",", curSubPos);
+	SetEdgeIndex(strtol(edgeIndexStr, NULL, 10));
+	CString edgeCountStr = inChannel.Tokenize(",", curSubPos);
+	SetEdgeCount(strtol(edgeCountStr, NULL, 10));
+	CString edgeCustomTypeStr = inChannel.Tokenize(",", curSubPos);
+	SetType((PathCustomizationType)strtol(edgeCustomTypeStr, NULL, 10));
+	TRACE("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld", GetAspect(), GetEdgeIndex(), GetEdgeCount(), GetType());
+	CString directionStr = inChannel.Tokenize(",", curSubPos);
+	SetHorizontalOrVertical(strtol(directionStr, NULL, 10) != 0);
+	CString positionStr = inChannel.Tokenize(",", curSubPos);
+	SetX(strtol(positionStr, NULL, 10));
+	positionStr = inChannel.Tokenize(",", curSubPos);
+	SetY(strtol(positionStr, NULL, 10));
+	positionStr = inChannel.Tokenize(",", curSubPos);
+	long numOfExtraLongData = strtol(positionStr, NULL, 10);
+	ASSERT(numOfExtraLongData >= 0 && numOfExtraLongData <= 4);
+	TRACE(", Dir %ld, x %ld, y %ld, num %ld", IsHorizontalOrVertical(), GetX(), GetY(), numOfExtraLongData);
+	for(long i = 0; i < numOfExtraLongData; i++) {
+		positionStr = inChannel.Tokenize(",", curSubPos);
+		AddLongData(strtol(positionStr, NULL, 10));
+		TRACE2(", l%ld %ld", i, l[i]);
+	}
+	TRACE0("\n");
+
+	positionStr = inChannel.Tokenize(",", curSubPos);
+	long numOfExtraDoubleData = strtol(positionStr, NULL, 10);
+	ASSERT(numOfExtraDoubleData >= 0 && numOfExtraDoubleData <= 8);
+	TRACE1(", num %ld", numOfExtraDoubleData);
+	for(long i = 0; i < numOfExtraDoubleData; i++) {
+		positionStr = inChannel.Tokenize(",", curSubPos);
+		AddDoubleData(atof(positionStr));
+		TRACE2(", l%ld %lf", i, d[i]);
+	}
+	TRACE0("\n");
+	return true;
+}
+
+long CustomPathData::GetVersion(void) const
+{
+	return version;
+}
+
+void CustomPathData::SetVersion(long ver)
+{
+	version = ver;
+}
+
+long CustomPathData::GetAspect(void) const
+{
+	return aspect;
+}
+
+void CustomPathData::SetAspect(long asp)
+{
+	aspect = asp;
+}
+
+long CustomPathData::GetEdgeIndex(void) const
+{
+	return edgeIndex;
+}
+
+void CustomPathData::SetEdgeIndex(long index)
+{
+	edgeIndex = index;
+}
+
+long CustomPathData::GetEdgeCount(void) const
+{
+	return edgeCount;
+}
+
+void CustomPathData::SetEdgeCount(long count)
+{
+	edgeCount = count;
+}
+
+PathCustomizationType CustomPathData::GetType(void) const
+{
+	return type;
+}
+
+void CustomPathData::SetType(PathCustomizationType typ)
+{
+	type = typ;
+}
+
+bool CustomPathData::IsHorizontalOrVertical(void) const
+{
+	return horizontalOrVerticalEdge;
+}
+
+void CustomPathData::SetHorizontalOrVertical(bool parity)
+{
+	horizontalOrVerticalEdge = parity;
+}
+
+long CustomPathData::GetX(void) const
+{
+	return x;
+}
+
+void CustomPathData::SetX(long coord)
+{
+	x = coord;
+}
+
+long CustomPathData::GetY(void) const
+{
+	return y;
+}
+
+void CustomPathData::SetY(long coord)
+{
+	y = coord;
+}
+
+long CustomPathData::GetLongDataCount(void) const
+{
+	return (long)l.size();
+}
+
+long CustomPathData::GetLongData(long index) const
+{
+	return l[index];
+}
+
+void CustomPathData::SetLongData(long index, long dat)
+{
+	l[index] = dat;
+}
+
+void CustomPathData::AddLongData(long dat)
+{
+	l.push_back(dat);
+}
+
+long CustomPathData::GetDoubleDataCount(void) const
+{
+	return (long)d.size();
+}
+
+double CustomPathData::GetDoubleData(long index) const
+{
+	return d[index];
+}
+
+void CustomPathData::SetDoubleData(long index, double dat)
+{
+	d[index] = dat;
+}
+
+void CustomPathData::AddDoubleData(double dat)
+{
+	d.push_back(dat);
+}
+
+
+// --------------------------- CRect && CPoint
+
 
 CRect InflatedRect(const CRect& rect, int a)
 {
