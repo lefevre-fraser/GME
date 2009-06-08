@@ -59,7 +59,7 @@ void CAutoRouter::Clear(CGuiFcoList& fcos)
 {
 	mapPath2Conn.RemoveAll();
 
-	router->DeleteAll();
+	router->DeleteAll(true);
 
 	POSITION pos = fcos.GetHeadPosition();
 	while (pos) {

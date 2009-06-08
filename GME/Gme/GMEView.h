@@ -191,7 +191,7 @@ public:
 
 	bool					needsReset;
 	bool					initDone;
-	bool					beforeSecondAutoRoute;	// We need a second AutoRoute to convert needed autorouted connections into custom connections
+	bool					secondAutoRoute;		// We need a second AutoRoute to convert needed autorouted connections into custom connections
 	bool					isModelAutoRouted;
 	COLORREF				bgColor;
 	CChildFrame*			frame;

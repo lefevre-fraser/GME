@@ -82,7 +82,7 @@ void CAutoRouterGraph::DeleteAllBoxes()
 {
 	for (CAutoRouterBoxList::size_type i = 0; i < boxes.size(); i++)
 	{
-		DeleteBoxAndPortEdges(boxes[i]);
+		//DeleteBoxAndPortEdges(boxes[i]);	// no need: there's a DeleteAllEdges in DeleteAll
 		boxes[i]->Destroy();
 		delete boxes[i];
 	}
@@ -182,7 +182,7 @@ void CAutoRouterGraph::DeleteAllPaths()
 
 	while (iter != paths.end())
 	{
-		DeleteEdges(*iter);
+		//DeleteEdges(*iter);	// no need: there's a DeleteAllEdges in DeleteAll
 
 		(*iter)->SetOwner(NULL);
 		(*iter)->Destroy();
@@ -404,7 +404,6 @@ bool CAutoRouterGraph::Connect(CAutoRouterPath* path, CPoint& startpoint, CPoint
 	if (isAutoRouted)
 		ConnectPoints(ret, start, end, startdir, enddir);
 
-	POSITION pos;
 	if (!isAutoRouted)
 	{
 		CPointListPath ret2;
@@ -424,7 +423,7 @@ bool CAutoRouterGraph::Connect(CAutoRouterPath* path, CPoint& startpoint, CPoint
 	path->DeleteAll();
 
 	path->AddTail(startpoint);
-	pos = ret.GetHeadPosition();
+	POSITION pos = ret.GetHeadPosition();
 	while( pos != NULL )
 	{
 		CPoint p = ret.GetNext(pos);
@@ -1464,10 +1463,13 @@ void CAutoRouterGraph::DeletePath(CAutoRouterPath* path)
 	delete path;
 }
 
-void CAutoRouterGraph::DeleteAll(void)
+void CAutoRouterGraph::DeleteAll(bool addBackSelfEdges)
 {
 	DeleteAllPaths();
 	DeleteAllBoxes();
+	DeleteAllEdges();
+	if (addBackSelfEdges)
+		AddSelfEdges();
 }
 
 CAutoRouterPath* CAutoRouterGraph::GetPathAt(const CPoint& point, long nearness)
@@ -1522,8 +1524,7 @@ CPoint* CAutoRouterGraph::GetSelfPoints(void) const
 
 void CAutoRouterGraph::Destroy(void)
 {
-	DeleteEdges(this);
-	DeleteAll();
+	DeleteAll(false);
 
 	horizontal.SetOwner(NULL);
 	vertical.SetOwner(NULL);
@@ -1618,8 +1619,7 @@ void CAutoRouterGraph::AssertValidPath(CAutoRouterPath* path) const
 
 void CAutoRouterGraph::DumpPaths(int pos, int c)
 {
-#ifdef _DEBUG_DEEP
-/*	TRACE2("Paths dump pos %ld, c %ld:\n", pos, c);
+	TRACE2("Paths dump pos %ld, c %ld:\n", pos, c);
 	std::vector<CAutoRouterPath*>::iterator iter;
 	iter = paths.begin();
 	int i = 0;
@@ -1627,14 +1627,13 @@ void CAutoRouterGraph::DumpPaths(int pos, int c)
 	while (iter != paths.end())
 	{
 		TRACE1("%ld. Path:\n", i);
-//		DumpPoints((*iter)->GetPoints(), "DumpPaths");
+		(*iter)->GetPointList().DumpPoints("DumpPaths");
 
 		++iter;
 		i++;
 	}
 
-	DumpEdgeLists();*/
-#endif
+	DumpEdgeLists();
 }
 
 void CAutoRouterGraph::DumpEdgeLists(void)

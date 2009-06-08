@@ -515,7 +515,7 @@ CGMEView::CGMEView()
 	m_refreshpannwin				= false;
 
 	initDone						= false;
-	beforeSecondAutoRoute			= true;
+	secondAutoRoute					= false;
 	isModelAutoRouted				= theApp.useAutoRouting;
 	inTransaction					= 0;
 
@@ -1850,8 +1850,6 @@ void CGMEView::CreateGuiObjects(CComPtr<IMgaFCOs>& fcos, CGuiFcoList& objList, C
 // ??
 void CGMEView::CreateGuiObjects()
 {
-	beforeSecondAutoRoute = true;
-
 	CComBSTR bstr;
 	COMTHROW(currentModel->get_Name(&bstr));
 	CopyTo(bstr,name);
@@ -2646,8 +2644,21 @@ void CGMEView::AutoRoute()
 {
 	BeginWaitCursor();
 	router.AutoRoute(children, currentAspect->index);  // Must reroute the whole thing, other code depends on it
-	if (beforeSecondAutoRoute)
-		this->PostMessage(WM_USER_CONVERTROUTES, 0, 0);
+	if (!secondAutoRoute) {
+		bool isThereAnyConversion = false;
+		POSITION pos = connections.GetHeadPosition();
+		while (pos) {
+			CGuiConnection* conn = connections.GetNext(pos);
+			if (conn->NeedsRouterPathConversion()) {
+				isThereAnyConversion = true;
+				break;
+			}
+		}
+		if (isThereAnyConversion) {
+			secondAutoRoute = true;
+			this->PostMessage(WM_USER_CONVERTROUTES, 0, 0);
+		}
+	}
 	EndWaitCursor();
 }
 
@@ -6699,7 +6710,7 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 	//I tried logging pActivateView and pDeactiveView, but they always seemed to be "this"
 	//anyways, OnActivateView is called on both views, so you would know if going from
 	//one to another by the ACTIVATE/DEACTIVATE - Brian
-	
+
 	if(bActivate) {
 		if( theApp.isHistoryEnabled())
 		{
@@ -9003,27 +9014,18 @@ LRESULT CGMEView::OnCommitTransaction(WPARAM wParam, LPARAM lParam)
 LRESULT CGMEView::OnConvertNeededConnectionRoutes(WPARAM wParam, LPARAM lParam)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnConvertNeededConnectionRoutes() in " + path + name + "\r\n");
-	if (beforeSecondAutoRoute) {
-		bool isThereAnyConversion = false;
+	if (secondAutoRoute) {
+		BeginTransaction();
+		BeginWaitCursor();
 		POSITION pos = connections.GetHeadPosition();
 		while (pos) {
 			CGuiConnection* conn = connections.GetNext(pos);
-			if (conn->NeedsRouterPathConversion()) {
-				isThereAnyConversion = true;
-				break;
-			}
+			if (conn->NeedsRouterPathConversion())
+				conn->ConvertAutoRoutedPathToCustom(currentAspect->index);
 		}
-		if (isThereAnyConversion) {
-			BeginTransaction();
-			pos = connections.GetHeadPosition();
-			while (pos) {
-				CGuiConnection* conn = connections.GetNext(pos);
-				if (conn->NeedsRouterPathConversion())
-					conn->ConvertAutoRoutedPathToCustom(currentAspect->index);
-			}
-			CommitTransaction();
-		}
-		beforeSecondAutoRoute = false;
+		EndWaitCursor();
+		CommitTransaction();
+		secondAutoRoute = false;
 	}
 	return 0;
 }

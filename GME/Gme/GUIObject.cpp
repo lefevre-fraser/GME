@@ -3518,7 +3518,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 
 bool CGuiConnection::IsAutoRouted(void) const
 {
-	if (view->beforeSecondAutoRoute && NeedsRouterPathConversion())
+	if (!view->secondAutoRoute && NeedsRouterPathConversion())
 		return true;	// user just switched it, but we lie temporarily in order to be able to get the autorouted route
 
 	return isAutoRouted;
@@ -3579,7 +3579,7 @@ void CGuiConnection::WriteAutoRouteState(bool handleTransaction)
 	VERIFY(mgaFco);
 	CComBSTR pathBstr;
 	CopyTo(CONNECTIONAUTOROUTING, pathBstr);
-	CString valStr = IsAutoRouted() ? "true" : "false";
+	CString valStr = isAutoRouted ? "true" : "false";
 	CComBSTR bstrVal;
 	CopyTo(valStr, bstrVal);
 	if (handleTransaction)

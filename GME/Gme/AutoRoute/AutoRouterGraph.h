@@ -126,7 +126,7 @@ public:
 
 	long AutoRoute(long aspect);
 	void DeletePath(CAutoRouterPath* path);
-	void DeleteAll(void);
+	void DeleteAll(bool addBackSelfEdges = false);
 	CAutoRouterPath* GetPathAt(const CPoint& point, long nearness);
 	CAutoRouterPath* AddPath(bool isAutoRouted, CAutoRouterPort* startport, CAutoRouterPort* endport);
 	bool IsEdgeFixed(CAutoRouterPath* path, const CPoint& startpoint, const CPoint& endpoint);

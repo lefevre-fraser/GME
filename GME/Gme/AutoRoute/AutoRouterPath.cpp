@@ -597,8 +597,12 @@ void CAutoRouterPath::GetCustomizedEdgeIndexes(std::vector<int>& indexes) const
 	std::vector<CustomPathData>::const_iterator ii = customPathData.begin();
 	while(ii != customPathData.end())
 	{
-		long edgeIndex = (*ii).edgeIndex;
-		indexes.push_back(edgeIndex);
+		if (IsAutoRouted() && (*ii).type == SimpleEdgeDisplacement ||
+			!IsAutoRouted() && (*ii).type != SimpleEdgeDisplacement)
+		{
+			long edgeIndex = (*ii).edgeIndex;
+			indexes.push_back(edgeIndex);
+		}
 		++ii;
 	}
 }
