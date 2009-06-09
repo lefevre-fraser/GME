@@ -840,7 +840,6 @@ RoutingDirection PointOnSide(const CPoint& point, const CRect& rect)
 	if (dbottom < 3)
 		return Dir_Bottom;
 
-	ASSERT(false);
 	return GetSkewDir(point - rect.CenterPoint());
 }
 

@@ -640,10 +640,7 @@ void CAutoRouterGraph::AddEdges(CAutoRouterPort* port)
 
 bool CAutoRouterGraph::AddEdges(CAutoRouterPath* path)
 {
-	if (path->IsAutoRouted())
-		return horizontal.AddEdges(path) && vertical.AddEdges(path);
-	
-	return true;
+	return horizontal.AddEdges(path) && vertical.AddEdges(path);
 }
 
 void CAutoRouterGraph::DeleteEdges(CObject* object)

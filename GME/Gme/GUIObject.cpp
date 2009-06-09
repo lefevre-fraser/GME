@@ -2242,6 +2242,7 @@ void CGuiConnectionLabel::SetLocation(const CPoint& endPoint, const CPoint& next
 				break;
 			default:
 				ASSERT(false);
+			case Dir_Skew:	// TODO?
 			case Dir_Right:		// right
 				{
 					loc.x += diffx;

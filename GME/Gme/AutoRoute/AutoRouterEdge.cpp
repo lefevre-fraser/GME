@@ -480,6 +480,7 @@ bool CAutoRouterEdgeList::AddEdges(CAutoRouterPath* path)
 	ASSERT_VALID( path->GetStartPort() );
 	ASSERT_VALID( path->GetEndPort() );
 
+	bool isPathAutoRouted = path->IsAutoRouted();
 	// Apply custom edge modifications - step 2, part 1
 	// (Step 1: Move the desired edges
 	//  Step 2: Fix the desired edges)
@@ -487,12 +488,16 @@ bool CAutoRouterEdgeList::AddEdges(CAutoRouterPath* path)
 	std::map<long,long> customizedIndexes;	// convert array to a map for easier lookup
 	std::vector<int> indexes;
 	path->GetCustomizedEdgeIndexes(indexes);
-	std::vector<int>::iterator ii = indexes.begin();
 
-	while (ii != indexes.end()) {
+	if (isPathAutoRouted) {
+		std::vector<int>::iterator ii = indexes.begin();
+		while (ii != indexes.end()) {
+			hasCustomEdge = true;
+			customizedIndexes.insert(Long_Pair(*ii, 0));
+			++ii;
+		}
+	} else {
 		hasCustomEdge = true;
-		customizedIndexes.insert(Long_Pair(*ii, 0));
-		++ii;
 	}
 
 	std::map<long,long>::const_iterator indIter;
@@ -513,13 +518,15 @@ bool CAutoRouterEdgeList::AddEdges(CAutoRouterPath* path)
 		bool isMovable = path->IsMoveable();
 		if( !isMovable && dir != Dir_Skew)
 		{
-			int goodAngle = IsRightAngle(dir);
+			bool goodAngle = IsRightAngle(dir);
 			ASSERT( goodAngle );
-			if (goodAngle == 0)
+			if (!goodAngle)
 				skipEdge = true;
 		}
 
-		if( !skipEdge && (dir == Dir_Skew || IsRightAngle(dir) && IsHorizontal(dir) == ishorizontal) )
+		if( !skipEdge &&
+			(//dir == Dir_Skew || -> do not add skew lines now, auto routing cannot do anything with it
+			 IsRightAngle(dir) && IsHorizontal(dir) == ishorizontal) )
 		{
 			CAutoRouterEdge* edge = new CAutoRouterEdge();
 
@@ -532,8 +539,14 @@ bool CAutoRouterEdgeList::AddEdges(CAutoRouterPath* path)
 			// Apply custom edge modifications - step 2, part 2
 			if (hasCustomEdge)
 			{
-				indIter = customizedIndexes.find(currEdgeIndex);
-				edge->SetEdgeCustomFixed(indIter != customizedIndexes.end());
+				bool isEdgeCustomFixed = false;
+				if (isPathAutoRouted) {
+					indIter = customizedIndexes.find(currEdgeIndex);
+					isEdgeCustomFixed = (indIter != customizedIndexes.end());
+				} else {
+					isEdgeCustomFixed = true;
+				}
+				edge->SetEdgeCustomFixed(isEdgeCustomFixed);
 			}
 			else
 			{
