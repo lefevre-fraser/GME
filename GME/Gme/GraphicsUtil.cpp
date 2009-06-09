@@ -49,6 +49,23 @@ CArrowHead::~CArrowHead()
 {
 }
 
+CRect CArrowHead::GetLineCoords(long index1, long index2, double angle, bool skew)
+{
+	CRect line;
+	if (!skew) {
+		line.left	= path[index1].x;
+		line.top	= path[index1].y;
+		line.right	= path[index2].x;
+		line.bottom	= path[index2].y;
+	} else {
+		line.left	= (int)(cos(angle) * path[index1].x - sin(angle) * path[index1].y + 0.5);
+		line.top	= (int)(sin(angle) * path[index1].x + cos(angle) * path[index1].y + 0.5);
+		line.right	= (int)(cos(angle) * path[index2].x - sin(angle) * path[index2].y + 0.5);
+		line.bottom	= (int)(sin(angle) * path[index2].x + cos(angle) * path[index2].y + 0.5);
+	}
+	return line;
+}
+
 void CArrowHead::Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen,
 					  double angle)
 {
@@ -56,27 +73,14 @@ void CArrowHead::Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush
 	Gdiplus::GraphicsPath* arrowHeadPath = new Gdiplus::GraphicsPath();
 	int segments = path.size();
 	for (int i = 1; i < segments; i++) {
-		int p1x = 0;
-		int p1y = 0;
-		int p2x = 0;
-		int p2y = 0;
-		if (!skew) {
-			p1x = path[i - 1].x;
-			p1y = path[i - 1].y;
-			p2x = path[i    ].x;
-			p2y = path[i    ].y;
-		} else {
-			p1x = (int)(cos(angle) * path[i - 1].x - sin(angle) * path[i - 1].y + 0.5);
-			p1y = (int)(sin(angle) * path[i - 1].x + cos(angle) * path[i - 1].y + 0.5);
-			p2x = (int)(cos(angle) * path[i    ].x - sin(angle) * path[i    ].y + 0.5);
-			p2y = (int)(sin(angle) * path[i    ].x + cos(angle) * path[i    ].y + 0.5);
-		}
-		arrowHeadPath->AddLine(p1x + tip.x, p1y + tip.y, p2x + tip.x, p2y + tip.y);
+		CRect line = GetLineCoords(i - 1, i, angle, skew);
+		arrowHeadPath->AddLine(line.left + tip.x, line.top + tip.y, line.right + tip.x, line.bottom + tip.y);
 	}
 	gdip->FillPath(brush, arrowHeadPath);
 
 	if (bPen) {
-		arrowHeadPath->AddLine(path[segments - 1].x + tip.x, path[segments - 1].y + tip.y, path[0].x + tip.x, path[0].y + tip.y);
+		CRect line = GetLineCoords(segments - 1, 0, angle, skew);
+		arrowHeadPath->AddLine(line.left + tip.x, line.top + tip.y, line.right + tip.x, line.bottom + tip.y);
 		gdip->DrawPath(pen, arrowHeadPath);
 	}
 	delete arrowHeadPath;

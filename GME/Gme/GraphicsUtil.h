@@ -18,6 +18,7 @@ public:
 	std::vector<CPoint> path;
 
 public:
+	CRect GetLineCoords(long index1, long index2, double angle, bool skew);
 	virtual void Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen,
 					  double angle);
 };
