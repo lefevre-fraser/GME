@@ -48,8 +48,10 @@ void CAnnotationUtil::FillLogFontWithDefault(LOGFONT* lfp)
 {
 	ASSERT(lfp != NULL);
 	memset(lfp, 0, sizeof(LOGFONT));
-	lfp->lfHeight			= -MulDiv(AN_DEFAULT_FONT_HEIGHT, GetDeviceCaps(::GetWindowDC(NULL), LOGPIXELSY), 72);
+	HDC tempDC = ::GetWindowDC(NULL);
+	lfp->lfHeight			= -MulDiv(AN_DEFAULT_FONT_HEIGHT, GetDeviceCaps(tempDC, LOGPIXELSY), 72);
 	_tcsncpy(lfp->lfFaceName, AN_DEFAULT_FONT_FACE, LF_FACESIZE);
+	::ReleaseDC(NULL, tempDC);
 	lfp->lfPitchAndFamily	= FF_DONTCARE | DEFAULT_PITCH;
 	lfp->lfQuality			= DEFAULT_QUALITY;
 	lfp->lfClipPrecision	= CLIP_DEFAULT_PRECIS;
