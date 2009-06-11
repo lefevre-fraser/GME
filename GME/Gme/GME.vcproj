@@ -265,6 +265,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AnnotatorEventSink.rgs"
+				>
+			</File>
+			<File
 				RelativePath="AutoRoute\ArEdgeLs.cpp"
 				>
 				<FileConfiguration
@@ -564,6 +568,10 @@
 			</File>
 			<File
 				RelativePath="DecoratorEventSink.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DecoratorEventSink.rgs"
 				>
 			</File>
 			<File

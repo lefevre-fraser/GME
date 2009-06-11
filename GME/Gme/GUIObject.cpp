@@ -105,8 +105,8 @@ void SetCenterNoMga(CRect& location, CPoint pt)
 ////////////////////////////////////
 // Non-virtual methods of CGuiAspect
 ////////////////////////////////////
-CGuiAspect::CGuiAspect(CGuiMetaAspect* meta, CGuiObject* p, int ind, int pind, const CComPtr<IMgaDecorator>& decor,
-					   CComPtr<IMgaElementDecorator> newDecor, CDecoratorEventSink* decorEventSink):
+CGuiAspect::CGuiAspect(CGuiMetaAspect* meta, CGuiObject* p, int ind, int pind, CComPtr<IMgaDecorator>& decor,
+					   CComPtr<IMgaElementDecorator>& newDecor, CComObjPtr<CDecoratorEventSink>& decorEventSink):
 	guiMeta(meta),
 	parent(p),
 	index(ind),
@@ -145,8 +145,7 @@ CGuiAspect::~CGuiAspect()
 	decorator.Release();
 	decorator = NULL;
 	if (decoratorEventSink != NULL) {
-		ASSERT(decoratorEventSink->m_dwRef == 1);
-		decoratorEventSink->ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
+		decoratorEventSink.Release();
 		decoratorEventSink = NULL;
 	}
 	POSITION pos = ports.GetHeadPosition();
@@ -408,6 +407,27 @@ bool CGuiPort::IsRealPort() {
 
 ////////////////////////////////// CGuiAnnotator /////////////////////////////
 
+AnnotatorDecoratorData::AnnotatorDecoratorData()
+{
+	decorator = NULL;
+	annotatorEventSink = NULL;
+}
+
+AnnotatorDecoratorData::AnnotatorDecoratorData(CComPtr<IMgaElementDecorator>& nD, CComObjPtr<CAnnotatorEventSink>& aES,
+											   const CRect& loc):
+	decorator(nD),
+	annotatorEventSink(aES),
+	location(loc)
+{
+}
+
+AnnotatorDecoratorData::~AnnotatorDecoratorData()
+{
+}
+
+
+////////////////////////////////// CGuiAnnotator /////////////////////////////
+
 ////////////////////////////////////
 // Non-virtual methods of CGuiAnnotator
 ////////////////////////////////////
@@ -484,10 +504,11 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel>& pModel, CComPtr<IMgaRegNode>& m
 				(*ii)->decorator.Release();
 				(*ii)->decorator = NULL;
 			}
-			CAnnotatorEventSink* annotatorEventSink = (*ii)->annotatorEventSink;
+			if ((*ii)->annotatorEventSink != NULL) {
+				(*ii)->annotatorEventSink.Release();
+				(*ii)->annotatorEventSink = NULL;
+			}
 			delete (*ii);
-			if (annotatorEventSink != NULL)
-				annotatorEventSink->ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
 		}
 		decoratorData.clear();
 
@@ -501,14 +522,16 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel>& pModel, CComPtr<IMgaRegNode>& m
 CGuiAnnotator::~CGuiAnnotator()
 {
 	for (std::vector<AnnotatorDecoratorData*>::iterator ii = decoratorData.begin(); ii != decoratorData.end(); ++ii) {
-		if ((*ii)->decorator != NULL)
+		if ((*ii)->decorator != NULL) {
 			COMTHROW((*ii)->decorator->Destroy());
-		CAnnotatorEventSink* annotatorEventSink = (*ii)->annotatorEventSink;
-		delete (*ii);
-		if (annotatorEventSink != NULL) {
-			ASSERT(annotatorEventSink->m_dwRef == 1);
-			annotatorEventSink->ExternalRelease();	// calls InternalRelease which calls OnFinalRelease which calls delete this if m_dwRef is 0
+			(*ii)->decorator.Release();
+			(*ii)->decorator = NULL;
 		}
+		if ((*ii)->annotatorEventSink != NULL) {
+			(*ii)->annotatorEventSink.Release();
+			(*ii)->annotatorEventSink = NULL;
+		}
+		delete (*ii);
 	}
 	decoratorData.clear();
 }
@@ -516,12 +539,14 @@ CGuiAnnotator::~CGuiAnnotator()
 void CGuiAnnotator::InitDecorator(int asp)
 {
 	try {
-		CComPtr<IMgaElementDecoratorEvents> annotatorEventSinkIface;
 		CString progId = AN_NEWDECORATOR_PROGID;
 		COMTHROW(decoratorData[asp]->decorator.CoCreateInstance(PutInBstr(progId)));
-		decoratorData[asp]->annotatorEventSink = new CAnnotatorEventSink();
-		HRESULT hr = decoratorData[asp]->annotatorEventSink->QuerySinkInterface((void**) &annotatorEventSinkIface);
-		if (hr == S_OK) {
+
+		CComPtr<IMgaElementDecoratorEvents> annotatorEventSinkIface;
+		::CreateComObject(decoratorData[asp]->annotatorEventSink);
+		HRESULT hr = ::QueryInterface((IMgaElementDecoratorEvents*)(decoratorData[asp]->annotatorEventSink.p),
+									  &annotatorEventSinkIface);
+		if (SUCCEEDED(hr)) {
 			decoratorData[asp]->annotatorEventSink->SetView(view);
 			decoratorData[asp]->annotatorEventSink->SetGuiAnnotator(this);
 		}
@@ -1238,16 +1263,18 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 	CComPtr<IMgaDecorator> decor;
 	CComPtr<IMgaElementDecorator> newDecor;
 
-	CDecoratorEventSink* decoratorEventSink = NULL;
+	CComObjPtr<CDecoratorEventSink> decoratorEventSink;
 	try {
 		CComPtr<IMgaElementDecoratorEvents> decoratorEventSinkIface;
 		HRESULT hres = newDecor.CoCreateInstance(PutInBstr(progId));
 		if (SUCCEEDED(hres)) {
-			decoratorEventSink = new CDecoratorEventSink();
-			HRESULT hr = decoratorEventSink->QuerySinkInterface((void**) &decoratorEventSinkIface);
-			if (hr == S_OK) {
+			::CreateComObject(decoratorEventSink);
+			HRESULT hr = ::QueryInterface((IMgaElementDecoratorEvents*)decoratorEventSink.p, &decoratorEventSinkIface);
+			if (SUCCEEDED(hr)) {
 				decoratorEventSink->SetView(view);
 				decoratorEventSink->SetGuiObject(this);
+			} else {
+				ASSERT(false);
 			}
 			decor = CComQIPtr<IMgaDecorator>(newDecor);
 		} else {

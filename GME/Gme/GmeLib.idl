@@ -6,6 +6,7 @@ import "ocidl.idl";
 //--------------------------------------------------------------------------------------------
 // --------------------------- Meta Library
 import "Mga.idl";
+import "MgaDecorator.idl";
 import "Gme.idl";
 
 
@@ -19,8 +20,6 @@ library GmeLib
 {
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
-
-	struct CustomPathData;
 
 	//  Class information for CMgaDataSource
 	[ uuid(FCB7DB63-9F59-46a6-9FEF-5C2679AEA69A) ]
@@ -69,7 +68,6 @@ library GmeLib
 		interface ISupportErrorInfo;
 	};
 
-
 	//  Class information for CGMEOLEPanel
 
 	[ uuid(A946466F-29E2-44a6-A69A-4D6D9268A37F) ]
@@ -85,6 +83,24 @@ library GmeLib
 	coclass Collection
 	{
 		[default] interface IGMEOLEColl;
+		interface ISupportErrorInfo;
+	};
+
+	//  Class information for CDecoratorEventSink
+
+	[ uuid(8B4648C1-C3A9-45dd-AE8C-63DB998F5CC0) ]
+	coclass DecoratorEventSink
+	{
+		[default] interface IMgaElementDecoratorEvents;
+		interface ISupportErrorInfo;
+	};
+
+	//  Class information for CAnnotatorEventSink
+
+	[ uuid(133AB952-9A84-49e0-98CA-C2484D959F3E) ]
+	coclass AnnotatorEventSink
+	{
+		[default] interface IMgaElementDecoratorEvents;
 		interface ISupportErrorInfo;
 	};
 };

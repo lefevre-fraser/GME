@@ -17,10 +17,8 @@
 #define ID_GMEBROWSER                   110
 #define IDB_SPLASH                      112
 #define ID_PROPERTYCOMBO                113
-#define IDR_AUTOROUTERPORT              115
-#define IDR_AUTOROUTERBOX               116
-#define IDR_AUTOROUTERGRAPH             117
-#define IDR_AUTOROUTERPATH              118
+#define IDR_DECORATOREVENTSINK          115
+#define IDR_ANNOTATOREVENTSINK          116
 #define IDP_OLE_INIT_FAILED             120
 #define ID_VIEW_CUSTOMIZE               126
 #define IDR_MAINFRAME                   128

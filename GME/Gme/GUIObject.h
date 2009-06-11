@@ -34,8 +34,8 @@ protected:
 class CGuiAspect : public CGuiBase
 {
 public:
-	CGuiAspect(CGuiMetaAspect* meta, CGuiObject* p, int ind, int pind, const CComPtr<IMgaDecorator>& decor,
-			   CComPtr<IMgaElementDecorator> newDecor, CDecoratorEventSink* decorEventSink);
+	CGuiAspect(CGuiMetaAspect* meta, CGuiObject* p, int ind, int pind, CComPtr<IMgaDecorator>& decor,
+			   CComPtr<IMgaElementDecorator>& newDecor, CComObjPtr<CDecoratorEventSink>& decorEventSink);
 	virtual ~CGuiAspect();
 
 
@@ -66,7 +66,7 @@ private:
 	CGuiPortList			ports;
 	CComPtr<IMgaDecorator>	decorator;
 	CComPtr<IMgaElementDecorator>	newDecorator;
-	CDecoratorEventSink*	decoratorEventSink;
+	CComObjPtr<CDecoratorEventSink>	decoratorEventSink;
 	unsigned long			features;
 	CRect					loc;
 	CRect					nameLoc;
@@ -107,14 +107,12 @@ private:
 class AnnotatorDecoratorData
 {
 public:
-	AnnotatorDecoratorData()
-		{ decorator = NULL; annotatorEventSink = NULL; };
-	AnnotatorDecoratorData(CComPtr<IMgaElementDecorator>& nD, CAnnotatorEventSink* aES, const CRect& loc):
-		decorator(nD), annotatorEventSink(aES), location(loc) {};
-	~AnnotatorDecoratorData() {};
+	AnnotatorDecoratorData();
+	AnnotatorDecoratorData(CComPtr<IMgaElementDecorator>& nD, CComObjPtr<CAnnotatorEventSink>& aES, const CRect& loc);
+	virtual ~AnnotatorDecoratorData();
 
 	CComPtr<IMgaElementDecorator>	decorator;
-	CAnnotatorEventSink*			annotatorEventSink;
+	CComObjPtr<CAnnotatorEventSink>	annotatorEventSink;
 	CRect							location;
 };
 
@@ -231,8 +229,6 @@ protected:
 
 class CGuiObject : public CGuiFco
 {
-friend class CDecoratorEventSink;
-
 public:
 	CGuiObject(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp);					// regular objects
 	virtual ~CGuiObject();

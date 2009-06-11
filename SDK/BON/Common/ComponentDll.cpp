@@ -107,16 +107,6 @@ BOOL CComponentApp::InitInstance()
 	return TRUE;
 }
 
-int CComponentApp::ExitInstance()
-{
-	BOOL success = COleObjectFactory::UnregisterAll();
-	ASSERT(success == TRUE);
-
-	success = CWinApp::ExitInstance();
-	ASSERT(success == FALSE);
-	return success;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // Special entry points required for inproc servers
 

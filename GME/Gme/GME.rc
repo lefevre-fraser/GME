@@ -1344,6 +1344,13 @@ IDC_SET2_CURSOR         CURSOR                  "res\\cur00004.cur"
 IDC_VISUAL_CURSOR       CURSOR                  "res\\visual_c.cur"
 IDC_ZOOM_CURSOR         CURSOR                  "res\\cur00006.cur"
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_DECORATOREVENTSINK  REGISTRY                "DecoratorEventSink.rgs"
+IDR_ANNOTATOREVENTSINK  REGISTRY                "AnnotatorEventSink.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //

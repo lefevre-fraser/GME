@@ -29,7 +29,6 @@ public:
 	//{{AFX_VIRTUAL(CComponentApp)
 	public:
 	virtual BOOL InitInstance();
-	virtual int ExitInstance();
 	//}}AFX_VIRTUAL
 
 	//{{AFX_MSG(CComponentApp)
