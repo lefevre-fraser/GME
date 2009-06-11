@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include <Console.h>
-#include "Component.h"
+#include "BONComponent.h"
 
 
 /* 
