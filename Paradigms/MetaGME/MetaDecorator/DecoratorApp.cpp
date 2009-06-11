@@ -154,7 +154,7 @@ STDAPI DllUnregisterServer(void)
 		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
 		{0, 0}
 	};
-	_Module.UpdateRegistryFromResourceD( IDR_DECORATOR, TRUE, regMap );
+	_Module.UpdateRegistryFromResourceD( IDR_DECORATOR, FALSE, regMap );
 
 	_ATL_REGMAP_ENTRY regMap2[] = {
 		{CONSTOLESTR("NEWCOCLASS_PROGID"), CONSTOLESTR(NEWCOCLASS_PROGID)},
@@ -163,7 +163,7 @@ STDAPI DllUnregisterServer(void)
 		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
 		{0, 0}
 	};
-	return _Module.UpdateRegistryFromResourceD( IDR_NEWDECORATOR, TRUE, regMap2 );
+	return _Module.UpdateRegistryFromResourceD( IDR_NEWDECORATOR, FALSE, regMap2 );
 	/* All the classes are registered here. We do not use the register functions in the classes themselves
 	if ( SUCCEEDED( hr ) )
     {
