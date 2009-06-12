@@ -1267,7 +1267,16 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 	try {
 		CComPtr<IMgaElementDecoratorEvents> decoratorEventSinkIface;
 		HRESULT hres = newDecor.CoCreateInstance(PutInBstr(progId));
-		if (SUCCEEDED(hres)) {
+		if (FAILED(hres) && hres != CO_E_CLASSSTRING) {	// might be an old decorator
+			hres = decor.CoCreateInstance(PutInBstr(progId));
+		}
+		if (FAILED(hres)) {	// fall back to default decorator
+			CMainFrame::theInstance->m_console.Message("Cannot create " + progId + " decorator! Trying default (" + GME_DEFAULT_DECORATOR + ") decorator.", 3);
+			progId = GME_DEFAULT_DECORATOR;
+			COMTHROW(newDecor.CoCreateInstance(PutInBstr(progId)));
+		}
+
+		if (newDecor) {
 			::CreateComObject(decoratorEventSink);
 			HRESULT hr = ::QueryInterface((IMgaElementDecoratorEvents*)decoratorEventSink.p, &decoratorEventSinkIface);
 			if (SUCCEEDED(hr)) {
@@ -1277,8 +1286,6 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 				ASSERT(false);
 			}
 			decor = CComQIPtr<IMgaDecorator>(newDecor);
-		} else {
-			COMTHROW(decor.CoCreateInstance(PutInBstr(progId)));
 		}
 
 		POSITION ppos = params.GetHeadPosition();
@@ -1294,12 +1301,10 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 			COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
 	}
 	catch (hresult_exception &e) {
-		CMainFrame::theInstance->m_console.Message("Cannot create " + progId + " decorator! Trying default " + GME_DEFAULT_DECORATOR + " decorator.", 3);
+		CMainFrame::theInstance->m_console.Message("Cannot create " + progId + " decorator! Trying default (" + GME_OLDDEFAULT_DECORATOR + ") decorator.", 3);
 		try {
-			if (progId != GME_DEFAULT_DECORATOR) {
-				// AfxMessageBox does not work here becase some stupid Win32 event mechanisms
-				// AfxMessageBox("Cannot create specified (" + progId +") decorator for object: " + name + "\nCreating default decorator.");
-				progId = GME_DEFAULT_DECORATOR;
+			if (progId != GME_OLDDEFAULT_DECORATOR) {
+				progId = GME_OLDDEFAULT_DECORATOR;
 				decor = NULL;
 				COMTHROW(decor.CoCreateInstance(PutInBstr(progId)));
 				COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
