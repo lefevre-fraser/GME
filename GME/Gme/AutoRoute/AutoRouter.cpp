@@ -24,7 +24,6 @@ CAutoRouter::~CAutoRouter()
 
 	router->Destroy();
 	delete router;
-	mapPath2Conn.RemoveAll();
 }
 
 bool CAutoRouter::AutoRoute(long aspect)
@@ -57,8 +56,6 @@ void CAutoRouter::Fill(CGuiFcoList& fcos)
 
 void CAutoRouter::Clear(CGuiFcoList& fcos)
 {
-	mapPath2Conn.RemoveAll();
-
 	router->DeleteAll(true);
 
 	POSITION pos = fcos.GetHeadPosition();
@@ -176,17 +173,19 @@ bool CAutoRouter::RemoveDeletedCustomPathDataFromGuiConnections(void)
 {
 	bool wereThereDeletion = false;
 
-	POSITION pos = mapPath2Conn.GetStartPosition();
-	CAutoRouterPath* key;
-	while (pos) {
-		CGuiConnection* value;
-		mapPath2Conn.GetNextAssoc(pos, key, value);
-		if (key->AreThereDeletedPathCustomizations()) {
+	const CAutoRouterPathList& pathList = router->GetPathList();
+
+	CAutoRouterPathList::const_iterator ii = pathList.begin();
+	while (ii != pathList.end()) {
+		CAutoRouterPath* path = (*ii);
+		if (path->AreThereDeletedPathCustomizations()) {
 			std::vector<CustomPathData> cpd;
-			key->GetDeletedCustomPathData(cpd);
-			value->RemoveDeletedPathCustomizations(cpd);
+			path->GetDeletedCustomPathData(cpd);
+			CGuiConnection* conn = (CGuiConnection*)path->GetExtPtr();
+			conn->RemoveDeletedPathCustomizations(cpd);
 			wereThereDeletion = true;
 		}
+		++ii;
 	}
 
 	return wereThereDeletion;
@@ -271,10 +270,9 @@ void CAutoRouter::AddConnection(CGuiConnection* conn)
 
 	SetPathPreferences(path, conn);
 	conn->SetRouterPath(path);
-	// Later if we get an AutoRouterPath from AutoRouterGraph while searching for a connection line,
-	// we want to get the CGuiConnection object corresponding to that path. So we build a hash map for that
-	// (the other association direction is clear: CGuiConnection contains an CAutoRouterPath*)
-	mapPath2Conn.SetAt(path, conn);
+	// hack no 1: this is a little hack: 
+	// only the address is needed, thus it should be void*
+	path->SetExtPtr(conn);
 }
 
 void CAutoRouter::DeleteObjects(CGuiObjectList &objs)
@@ -324,8 +322,6 @@ void CAutoRouter::DeleteConnection(CGuiConnection *conn)
 
 	if (conn->GetRouterPath() != NULL) {
 		CAutoRouterPath* currPath = conn->GetRouterPath();
-		// Update the hash map, otherwise it could contain destroyed CGuiConnection* object pointers
-		mapPath2Conn.RemoveKey(currPath);
 		router->DeletePath(currPath);
 		conn->SetRouterPath(NULL);
 	}
@@ -340,13 +336,9 @@ CGuiConnection* CAutoRouter::FindConnection(CPoint& pt) const
 
 	if (path != NULL)
 	{
-		// We could get an AutoRouterPath from AutoRouterGraph while searching for a connection line,
-		// we want to get the CGuiConnection object corresponding to that path. We have a hash map for that
-		// (the other association direction is clear: CGuiConnection contains an CAutoRouterPath*)
-		CGuiConnection* connAddr = NULL;
-		mapPath2Conn.Lookup(path, connAddr);
-
-		return connAddr;
+		// hack no 2: this is the same hack as in hack no 1.
+		void* address = path->GetExtPtr();
+		return (CGuiConnection*)(address);
 	}
 	else
 	{

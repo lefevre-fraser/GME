@@ -138,6 +138,13 @@ public:
 	// Other
 	void Destroy(void);
 
+// --- External Pointer (ONLY FOR EXTERNAL USE)
+
+	void* GetExtPtr() const;
+	void SetExtPtr(void* p);
+private:
+	void* extptr;
+
 // --- Debug
 #ifdef _DEBUG
 public:

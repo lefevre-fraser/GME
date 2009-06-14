@@ -570,6 +570,18 @@ void CAutoRouterPath::Destroy(void)
 	SetEndPort(NULL);
 }
 
+// --- External Pointer (ONLY FOR EXTERNAL USE)
+
+void* CAutoRouterPath::GetExtPtr() const
+{
+	return extptr;
+}
+
+void CAutoRouterPath::SetExtPtr(void* p)
+{
+	extptr = p;
+}
+
 // --- Debug
 
 #ifdef _DEBUG

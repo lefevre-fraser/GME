@@ -11,8 +11,6 @@ class CGuiConnection;
 
 typedef CList<CPoint, CPoint&>	CPointList;
 
-typedef CTypedPtrMap<CMapPtrToPtr, CAutoRouterPath*, CGuiConnection*>		CMapAutoRouterPath2CGuiConnection;
-
 
 class CAutoRouter {
 public:
@@ -22,7 +20,6 @@ public:
 private:
 	CAutoRouterGraph* router;
 	int routeret;
-	CMapAutoRouterPath2CGuiConnection mapPath2Conn;
 
 public:
 	bool AutoRoute(long aspect);

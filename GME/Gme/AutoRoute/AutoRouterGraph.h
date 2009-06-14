@@ -49,7 +49,6 @@ private:
 	void Remove(CAutoRouterPath* path);
 
 	void DeleteAllPaths();
-	const CAutoRouterPathList& GetPathList() const { return paths; }
 	bool HasNoPath() const { return paths.size() == 0; }
 	int GetPathCount() const { return paths.size(); }
 
@@ -132,6 +131,7 @@ public:
 	bool IsEdgeFixed(CAutoRouterPath* path, const CPoint& startpoint, const CPoint& endpoint);
 
 	CPoint* GetSelfPoints(void) const;
+	const CAutoRouterPathList& GetPathList() const { return paths; }
 
 	void Destroy(void);
 
