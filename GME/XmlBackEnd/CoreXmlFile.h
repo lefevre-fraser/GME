@@ -68,6 +68,7 @@ public:
 class HelperFiles
 {
 public:
+	static const char * sessionFolderName;
 	static const char * signFileName;
 	static const char * protFileName;
 	static const char * protFileExt;
@@ -749,14 +750,20 @@ protected:
 	CmdClient                   *m_cmdSvn;
 	CComPtr< ISvnExec>          m_comSvn;
 
+	bool		 m_needsSessionRefresh;
 	void         protect                ( XmlObject * obj, OpCode oc);
 
 	bool         findOnProtectedLists   ( GUID p_gd, std::string& p_scapegoatUser);
+	void         refreshSessionFolder   ();
+
+	/*
 	std::string  refreshProtectionFile  ( const std::string& p_username);
+	bool         refreshSignFile        ();
 	bool         refreshOneFile         ( const std::string& p_filename);
+	*/
 	bool         findInFile             ( const std::string& p_filename, const std::string& p_gd);
 
-	bool         refreshSignFile        ();
+	
 	void         replaceUserName        ( const std::string& p_username);
 	std::string  userName               ();
 	inline bool  isSS                   ();

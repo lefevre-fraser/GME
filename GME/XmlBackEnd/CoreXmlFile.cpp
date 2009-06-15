@@ -106,6 +106,7 @@ UseBulkCommit = true \n\
 # called config.opt, in your local checkout directory\n\
 ";
 
+/*static*/ const char * HelperFiles::sessionFolderName = "session";
 /*static*/ const char * HelperFiles::signFileName = "sign.txt";
 /*static*/ const char * HelperFiles::protFileName = "list_";
 /*static*/ const char * HelperFiles::protFileExt  = ".txt";
@@ -602,6 +603,7 @@ CCoreXmlFile::CCoreXmlFile()
 	m_domParser             = 0;
 	m_domErrHandler         = 0;
 	m_strategyShared        = false;
+	m_needsSessionRefresh   = true;
 	fillParentMap();
 
 	XMLPlatformUtils::Initialize();
@@ -1563,6 +1565,36 @@ STDMETHODIMP CCoreXmlFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode)
 		//    getLatestAndLoad();
 	}
 
+	// Check for the new session folder, create one on-demand
+	std::string sessionFolder =  m_folderPath + "\\" + HelperFiles::sessionFolderName;
+	DWORD atts = ::GetFileAttributes(sessionFolder.c_str());
+	if (atts == INVALID_FILE_ATTRIBUTES || !(atts | FILE_ATTRIBUTE_DIRECTORY) ) {
+		sendMsg( "Detecting old session format. Upgrading to newer one (dedicated session folder).", MSG_INFO);
+		
+		BOOL  succ = ::CreateDirectory( sessionFolder.c_str(), NULL);
+		if( succ != TRUE)
+		{
+			sendMsg( "Exception: Could not create session folder: " + sessionFolder, MSG_ERROR);
+			AfxMessageBox( (std::string( "Could not create session folder: ") + sessionFolder).c_str());
+			HR_THROW(E_FILEOPEN);
+		}
+		// add to server
+		succ = addSVN( sessionFolder, true /*=recursive*/); 
+		if( !succ) {
+			sendMsg( "Exception: Could not add session folder to server.", MSG_ERROR);
+			AfxMessageBox( "Could not add session folder to server.");
+			HR_THROW(E_FILEOPEN);
+		}
+
+		// initial commit
+		succ = commitSVN( m_contentPath, true);
+		if( !succ) {
+			sendMsg( "Exception: Could not commit session folder.", MSG_ERROR);
+			AfxMessageBox( "Could not commit session folder.");
+			HR_THROW(E_FILEOPEN);
+		}
+	}
+
 	// m_sourceControl has to be filled for these methods below (setParent)
 	m_signer.setParent( this);
 	m_signer.in(); // signing on does username verification also
@@ -1700,6 +1732,7 @@ STDMETHODIMP CCoreXmlFile::BeginTransaction()
 	m_inTransaction = true;
 	m_trivialChanges = true;
 	m_fullLockNeeded = false;
+	m_needsSessionRefresh = true;
 	return S_OK;
 }
 
@@ -4829,8 +4862,8 @@ void SignManager::setParent( CCoreXmlFile* p_parent)
 {
 	PublicStorage::setParent( p_parent);
 
-	m_fileName = HelperFiles::signFileName;
-	m_localFileName = m_parent->m_folderPath + "\\" + m_fileName;
+	m_fileName = std::string(HelperFiles::sessionFolderName) + "/" + HelperFiles::signFileName;
+	m_localFileName = m_parent->m_folderPath + "\\" + HelperFiles::sessionFolderName + "\\" + HelperFiles::signFileName;
 
 	PublicStorage::init( "<users/>");
 }
@@ -5219,14 +5252,14 @@ void ProtectList::setParent( CCoreXmlFile* p_parent)
 	PublicStorage::setParent( p_parent);
 
 	m_fileName = getProtListFileName( userName());
-	m_localFileName = m_parent->m_folderPath + "\\" + m_fileName;
+	m_localFileName = m_parent->m_folderPath + "\\" + HelperFiles::sessionFolderName + "\\" + HelperFiles::protFileName + userName() + HelperFiles::protFileExt;
 
 	PublicStorage::init( "<objects/>");
 }
 
 std::string ProtectList::getProtListFileName( const std::string& p_username)
 {
-	return std::string( HelperFiles::protFileName) + p_username + HelperFiles::protFileExt;
+	return std::string( HelperFiles::sessionFolderName) + "/" + HelperFiles::protFileName + p_username + HelperFiles::protFileExt;
 }
 
 void ProtectList::onLoad()
@@ -5569,7 +5602,8 @@ bool CCoreXmlFile::findOnProtectedLists( GUID p_gd, std::string& p_scapegoatUser
 		; ++it)
 	{
 		if( it->m_nm == userName()) continue; // ignore my file
-		std::string fname = refreshProtectionFile( it->m_nm); // refresh my copy of this user's prot file
+		// std::string fname = refreshProtectionFile( it->m_nm); // refresh my copy of this user's prot file
+		std::string fname = ProtectList::getProtListFileName( it->m_nm );
 
 		if( found = findInFile( m_folderPath + "\\" + fname, str_gd))
 			p_scapegoatUser = it->m_nm;
@@ -5580,14 +5614,17 @@ bool CCoreXmlFile::findOnProtectedLists( GUID p_gd, std::string& p_scapegoatUser
 
 std::vector< LoggedIn> CCoreXmlFile::allusers()
 {
-	refreshSignFile();
+	// refreshSignFile();
+	refreshSessionFolder();
 	return getUsersFromSignFile();
 }
 
+/*
 bool CCoreXmlFile::refreshSignFile()
 {
 	return refreshOneFile( HelperFiles::signFileName);
 }
+*/
 
 void CCoreXmlFile::replaceUserName( const std::string& p_userName)
 {
@@ -5689,6 +5726,16 @@ CTime CCoreXmlFile::findEarliestLogin( int p_nbOfDays, int p_nbOfHours, int p_nb
 	return earliest;
 }
 
+void CCoreXmlFile::refreshSessionFolder()
+{
+	if( isSV() && m_needsSessionRefresh)
+	{
+		updateSVN( HelperFiles::sessionFolderName );
+		m_needsSessionRefresh = false;
+	}
+}
+
+/*
 bool CCoreXmlFile::refreshOneFile( const std::string& p_fname)
 {
 	if( isSS())
@@ -5717,12 +5764,15 @@ bool CCoreXmlFile::refreshOneFile( const std::string& p_fname)
 	return false;
 }
 
+
 std::string CCoreXmlFile::refreshProtectionFile( const std::string& p_username)
 {
 	std::string fname = ProtectList::getProtListFileName( p_username);
 	refreshOneFile( fname);
 	return fname;
 }
+
+*/
 
 bool CCoreXmlFile::findInFile( const std::string& fname, const std::string& str_gd)
 {
@@ -6478,33 +6528,44 @@ void CCoreXmlFile::createSubversionedFolder()
 		HR_THROW(E_FILEOPEN);
 	}
 
+
 	chdir( m_folderPath.c_str()); // change to the newly created local dir
 
+	// session folder
+	std::string sessionFolder =  m_folderPath + "\\" + HelperFiles::sessionFolderName;
+	BOOL  succ = ::CreateDirectory( sessionFolder.c_str(), NULL);
+	if( succ != TRUE)
+	{
+		sendMsg( "Exception: Could not create session folder: " + sessionFolder, MSG_ERROR);
+		AfxMessageBox( (std::string( "Could not create session folder: ") + sessionFolder).c_str());
+		HR_THROW(E_FILEOPEN);
+	}
+
+	// hashed folder structure (optional)
 	if( m_hashFileNames)
 	{
-		// creation succeeded?
-		int succ = createHashedFolders();
+		succ = createHashedFolders();
 		if( !succ) {
 			sendMsg( "Exception: Could not create initial directory structure.", MSG_ERROR);
 			AfxMessageBox( "Could not create initial directory structure.");
 			HR_THROW(E_FILEOPEN);
 		}
+	}
 
-		// add to server
-		succ = addSVN( m_contentPath, true /*=recursive*/); 
-		if( !succ) {
-			sendMsg( "Exception: Could not add initial directory structure to server.", MSG_ERROR);
-			AfxMessageBox( "Could not add initial directory structure to server.");
-			HR_THROW(E_FILEOPEN);
-		}
+	// add to server
+	succ = addSVN( m_contentPath, true /*=recursive*/); 
+	if( !succ) {
+		sendMsg( "Exception: Could not add initial directory structure to server.", MSG_ERROR);
+		AfxMessageBox( "Could not add initial directory structure to server.");
+		HR_THROW(E_FILEOPEN);
+	}
 
-		// initial commit
-		succ = commitSVN( m_contentPath, true);
-		if( !succ) {
-			sendMsg( "Exception: Could not commit initial directory structure.", MSG_ERROR);
-			AfxMessageBox( "Could not commit initial directory structure.");
-			HR_THROW(E_FILEOPEN);
-		}
+	// initial commit
+	succ = commitSVN( m_contentPath, true);
+	if( !succ) {
+		sendMsg( "Exception: Could not commit initial directory structure.", MSG_ERROR);
+		AfxMessageBox( "Could not commit initial directory structure.");
+		HR_THROW(E_FILEOPEN);
 	}
 }
 
