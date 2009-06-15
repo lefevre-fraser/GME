@@ -343,6 +343,8 @@
                             <ProgId Id="Mga.AddOn.ConstraintManager.1" Description="ConstraintManager Class">
                                 <ProgId Id="Mga.AddOn.ConstraintManager" Description="ConstraintManager Class" />
                             </ProgId>
+                        </Class>
+                        <Class Id="{74A06CAE-A3CF-4C7B-B4CB-C0A3C3C654B9}" Context="InprocServer32" Description="ExpressionChecker Class" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="Mga.AddOn.ExpressionChecker.1" Description="ExpressionChecker Class">
                                 <ProgId Id="Mga.AddOn.ExpressionChecker" Description="ExpressionChecker Class" />
                             </ProgId>
