@@ -103,8 +103,8 @@ protected:  // control bar embedded members
 	CMFCToolBar			m_wndToolBarWins;
 	CMFCMenuBar			m_wndMenuBar;
 
-	CMFCToolBar modeBar;
-	CMFCToolBar naviBar;
+	CMFCToolBar			m_wndModeBar;
+	CMFCToolBar			m_wndNaviBar;
 
 
 

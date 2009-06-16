@@ -781,16 +781,20 @@ void CGMEApp::UpdateComponentToolbar()
 			{
 				int buttonIndex = componentBar.ButtonToIndex(pCurrent);
 				componentBar.RemoveButton(buttonIndex);
-				componentBar.RecalcLayout();
+				componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
+				componentBar.AdjustSizeImmediate(TRUE);
+				componentBar.RecalcLayout();	// CPane::RecalcLayout
 			}
 		}
 
 		// Clearing user images
 		m_userImages.Clear();
+		componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
+		componentBar.AdjustSizeImmediate(TRUE);
+		componentBar.RecalcLayout();	// CPane::RecalcLayout
 
 		if (!mgaMetaProject)
 		{
-			componentBar.RecalcLayout();
 			return;
 		}
 
@@ -897,7 +901,9 @@ void CGMEApp::UpdateComponentToolbar()
 			CMFCToolBarButton toolBarButton(commandID, nIndex, componentName + '\n' + toolTip, TRUE);
 
 			componentBar.InsertButton(toolBarButton);
-			componentBar.RecalcLayout();
+			componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
+			componentBar.AdjustSizeImmediate(TRUE);
+			componentBar.RecalcLayout();	// CPane::RecalcLayout
 			CMainFrame::theInstance->ShowPane(&componentBar, TRUE, FALSE, FALSE);
 			componentBar.ShowWindow(SW_SHOW);
 		}

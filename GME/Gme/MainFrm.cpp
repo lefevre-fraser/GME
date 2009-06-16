@@ -244,7 +244,7 @@ int CMainFrame::CreateToolBars()
 
 
 	// -- MAIN ToolBar
-	if( !m_wndToolBarMain.CreateEx(this
+	if( !m_wndToolBarMain.CreateEx( this
 		, TBSTYLE_FLAT
 		, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP
 		, CRect(0,0,0,0)
@@ -267,7 +267,7 @@ int CMainFrame::CreateToolBars()
 
 
 	// -- Modeling ToolBar
-	if( !m_wndToolBarModeling.CreateEx(this
+	if( !m_wndToolBarModeling.CreateEx( this
 		, TBSTYLE_FLAT
 		, WS_CHILD |  WS_VISIBLE | CBRS_ALIGN_TOP
 		, CRect(0,0,0,0)
@@ -305,14 +305,14 @@ int CMainFrame::CreateToolBars()
 	m_wndToolBarWins.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
 
 	// -- User-defined Component ToolBar
-	if( !m_wndComponentBar.CreateEx(this
+	if( !m_wndComponentBar.CreateEx( this
 		, TBSTYLE_FLAT
 		, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP
 		, CRect(0, 0, 0, 0)
 		, IDW_TOOLBAR_COMPONENT) // provide unqiue ID for each toolbar
 		||
-	   !m_wndComponentBar.LoadToolBar(IDR_TOOLBAR_COMPONENTS, 0, 0, TRUE, 0, 0, bHiColorIcons ? IDB_COMPONENTS_TOOLBAR24 : 0)
-	   )
+		!m_wndComponentBar.LoadToolBar(IDR_TOOLBAR_COMPONENTS, 0, 0, TRUE, 0, 0, bHiColorIcons ? IDB_COMPONENTS_TOOLBAR24 : 0)
+		)
 	{
 		TRACE0("Failed to create component toolbar\n");
 		return -1;      // fail to create
@@ -323,25 +323,37 @@ int CMainFrame::CreateToolBars()
 
 	// Mode toolbar
 
-	modeBar.CreateEx(CMainFrame::theInstance,
-		TBSTYLE_TRANSPARENT | TBSTYLE_FLAT, 
-		WS_CHILD|WS_VISIBLE|CBRS_ALIGN_LEFT, 
-		CRect(0,0,0,0),
-		IDW_TOOLBAR_MODE);	// provide unqiue ID for each toolbar [important !!!] 
+	if( !m_wndModeBar.CreateEx( this
+		, TBSTYLE_FLAT
+		, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP
+		, CRect(0, 0, 0, 0)
+		, IDW_TOOLBAR_MODE)	// provide unqiue ID for each toolbar [important !!!] 
 							// see MainFrm.cpp OnCreate for other details
-	modeBar.LoadToolBar(IDR_TOOLBAR_MODE, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_MODE_TOOLBAR24 : 0);
-	modeBar.SetPaneStyle(modeBar.GetPaneStyle() 
+		||
+		!m_wndModeBar.LoadToolBar(IDR_TOOLBAR_MODE, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_MODE_TOOLBAR24 : 0)
+		)
+	{
+		TRACE0("Failed to create mode toolbar\n");
+		return -1;      // fail to create
+	}
+	m_wndModeBar.SetPaneStyle(m_wndModeBar.GetPaneStyle() 
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 
 
 	// Navigation toolbar
-	naviBar.CreateEx( CMainFrame::theInstance,
-		TBSTYLE_TRANSPARENT | TBSTYLE_FLAT,
-		WS_CHILD|WS_VISIBLE|CBRS_ALIGN_LEFT,
-		CRect(0,0,0,0),
-		IDW_TOOLBAR_NAVIG); // unique!
-	naviBar.LoadToolBar(IDR_TOOLBAR_NAVIG, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_NAVIG_TOOLBAR24 : 0);
-	naviBar.SetPaneStyle(naviBar.GetPaneStyle()
+	if( !m_wndNaviBar.CreateEx( this
+		, TBSTYLE_FLAT
+		, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP
+		, CRect(0, 0, 0, 0)
+		, IDW_TOOLBAR_NAVIG) // unique!
+		||
+		!m_wndNaviBar.LoadToolBar(IDR_TOOLBAR_NAVIG, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_NAVIG_TOOLBAR24 : 0)
+		)
+	{
+		TRACE0("Failed to create m_wndNaviBar toolbar\n");
+		return -1;      // fail to create
+	}
+	m_wndNaviBar.SetPaneStyle(m_wndNaviBar.GetPaneStyle()
 		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
 
 
@@ -359,12 +371,13 @@ int CMainFrame::CreateToolBars()
 
 	m_wndComponentBar.SetWindowText(_T("Components"));
 	m_wndComponentBar.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndComponentBar.AdjustSizeImmediate(TRUE);
 
-	modeBar.SetWindowText(_T("Mode")); // will show this title when floating
-	modeBar.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndModeBar.SetWindowText(_T("Mode")); // will show this title when floating
+	m_wndModeBar.EnableDocking(CBRS_ALIGN_ANY);
 
-	naviBar.SetWindowText(_T("Navigator")); // will show this title when floating
-	naviBar.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndNaviBar.SetWindowText(_T("Navigator")); // will show this title when floating
+	m_wndNaviBar.EnableDocking(CBRS_ALIGN_ANY);
 
 	// Because of "DockPaneLeftOf" we dock them in "reverse" order: the rightmost first
 	DockPane(&m_wndComponentBar, AFX_IDW_DOCKBAR_TOP);
@@ -372,8 +385,8 @@ int CMainFrame::CreateToolBars()
 	DockPaneLeftOf(&m_wndToolBarModeling, &m_wndToolBarWins);
 	DockPaneLeftOf(&m_wndToolBarMain, &m_wndToolBarModeling);
 
-	DockPane(&naviBar, AFX_IDW_DOCKBAR_LEFT);
-	DockPaneLeftOf(&modeBar, &naviBar);	// This means actually "TopOf" instead of "LeftOf", because they are vetical
+	DockPane(&m_wndNaviBar, AFX_IDW_DOCKBAR_LEFT);
+	DockPaneLeftOf(&m_wndModeBar, &m_wndNaviBar);	// This means actually "TopOf" instead of "LeftOf", because they are vetical
 
 	// Hide navigation and mode panels first, they are visible when a model is open
 	ShowNavigationAndModeToolbars(false);
@@ -1468,8 +1481,8 @@ void CMainFrame::OnUpdateWindowMovetonexttabgroup(CCmdUI* pCmdUI)
 
 void CMainFrame::ShowNavigationAndModeToolbars(bool isVisible)
 {
-	ShowPane(&modeBar, isVisible, FALSE, FALSE);
-	ShowPane(&naviBar, isVisible, FALSE, FALSE);
+	ShowPane(&m_wndModeBar, isVisible, FALSE, FALSE);
+	ShowPane(&m_wndNaviBar, isVisible, FALSE, FALSE);
 }
 
 void CMainFrame::OnUpdateWindowNew(CCmdUI* pCmdUI)
