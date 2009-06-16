@@ -30,6 +30,11 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r9.6.16
+--------------------------------
+  - Multiuser backend speed improvements (object
+    deletion and movement)
+
 Release Notes of Release r9.5.28
 --------------------------------
   - Multiuser backend fixes
