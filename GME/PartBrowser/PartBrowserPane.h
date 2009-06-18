@@ -10,8 +10,20 @@
 #include "StdAfx.h"
 #include <vector>
 #include <Gdiplus.h>
+#include "PartBrowserDecoratorEventSink.h"
 
-class CPartBrowserDecoratorEventSink;
+
+/////////////////////////////////////////////////////////////////////////////
+// PartWithDecorator helper class
+
+class PartWithDecorator
+{
+public:
+	CComPtr<IMgaMetaPart>						part;
+	CComPtr<IMgaDecorator>						decorator;
+	CComPtr<IMgaElementDecorator>				newDecorator;
+	CComObjPtr<CPartBrowserDecoratorEventSink>	decorEventSink;
+};
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -21,13 +33,6 @@ class CPartBrowserPane : public CWnd
 {
 // Construction
 public:
-	struct PartWithDecorator {
-		CComPtr<IMgaMetaPart>			part;
-		CComPtr<IMgaDecorator>			decorator;
-		CComPtr<IMgaElementDecorator>	newDecorator;
-		CPartBrowserDecoratorEventSink*	decorEventSink;
-	};
-
 	CPartBrowserPane();
 	virtual ~CPartBrowserPane();
 

@@ -94,8 +94,6 @@ STDAPI DllRegisterServer(void)
 		return ResultFromScode(SELFREG_E_CLASS);
 
 	return _Module.RegisterServer(TRUE);
-
-	return NOERROR;
 }
 
 
@@ -112,9 +110,7 @@ STDAPI DllUnregisterServer(void)
 	if (!COleObjectFactoryEx::UpdateRegistryAll(FALSE))
 		return ResultFromScode(SELFREG_E_CLASS);
 
-	_Module.UnregisterServer(TRUE); //TRUE indicates that typelib is unreg'd
-
-	return NOERROR;
+	return _Module.UnregisterServer(TRUE); //TRUE indicates that typelib is unreg'd
 }
 
 

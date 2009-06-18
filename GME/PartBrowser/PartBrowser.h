@@ -11,11 +11,13 @@
 
 // CPartBrowserApp : See PartBrowser.cpp for implementation.
 
-class CPartBrowserApp : public COleControlModule
+class CPartBrowserApp : public COleControlModule //CWinApp
 {
 public:
 	BOOL InitInstance();
 	int ExitInstance();
+private:
+	BOOL InitATL();
 };
 
 extern const GUID CDECL _tlid;

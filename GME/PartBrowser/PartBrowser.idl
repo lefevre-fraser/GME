@@ -14,6 +14,7 @@ import "Core.idl";
 #ifndef METAIDL_IMPORTED
 import "Meta.idl";
 #endif
+import "MgaDecorator.idl";
 
 
 [ uuid(EA3F7431-913A-421F-9B9C-BEB6A735285A), version(1.0),
@@ -77,6 +78,15 @@ library PartBrowserLib
 	{
 		[default] dispinterface _DPartBrowser;
 		[default, source] dispinterface _DPartBrowserEvents;
+	};
+
+	//  Class information for CPartBrowserDecoratorEventSink
+
+	[ uuid(6AC7B017-F8AC-4cec-83F1-B0D4B3381734) ]
+	coclass PartBrowserDecoratorEventSink
+	{
+		[default] interface IMgaElementDecoratorEvents;
+		interface ISupportErrorInfo;
 	};
 
 };

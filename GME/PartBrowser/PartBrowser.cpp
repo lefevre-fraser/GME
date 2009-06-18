@@ -2,6 +2,9 @@
 
 #include "stdafx.h"
 #include "PartBrowser.h"
+#include "PartBrowserCtrl.h"
+#include "PartBrowserDecoratorEventSink.h"
+#include "PartBrowser_i.c"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -15,6 +18,12 @@ const GUID CDECL BASED_CODE _tlid =
 const WORD _wVerMajor = 1;
 const WORD _wVerMinor = 0;
 
+
+CComModule _Module;
+
+BEGIN_OBJECT_MAP(ObjectMap)
+OBJECT_ENTRY(CLSID_PartBrowserDecoratorEventSink, CPartBrowserDecoratorEventSink)
+END_OBJECT_MAP()
 
 
 // CPartBrowserApp::InitInstance - DLL initialization
@@ -47,14 +56,10 @@ BOOL CPartBrowserApp::InitInstance()
 		AfxSetAmbientActCtx(FALSE);
 	}
 
-	BOOL bInit = COleControlModule::InitInstance();
+    _Module.Init(ObjectMap, m_hInstance, &LIBID_PartBrowserLib);
 
-	if (bInit)
-	{
-		// TODO: Add your own module initialization code here.
-	}
-
-	return bInit;
+//	return CWinApp::InitInstance();
+	return COleControlModule::InitInstance();
 }
 
 
@@ -64,17 +69,38 @@ BOOL CPartBrowserApp::InitInstance()
 int CPartBrowserApp::ExitInstance()
 {
 	// TODO: Add your own module termination code here.
+    _Module.Term();
 
+//	return CWinApp::ExitInstance();
 	return COleControlModule::ExitInstance();
 }
 
+/*
+/////////////////////////////////////////////////////////////////////////////
+// Used to determine whether the DLL can be unloaded by OLE
 
+STDAPI DllCanUnloadNow(void)
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
+    return (AfxDllCanUnloadNow()==S_OK && _Module.GetLockCount()==0) ? S_OK : S_FALSE;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Returns a class factory to create an object of the requested type
+
+STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
+{
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());//z
+	return _Module.GetClassObject(rclsid, riid, ppv);
+}
+*/
+/////////////////////////////////////////////////////////////////////////////
 // DllRegisterServer - Adds entries to the system registry
 
 STDAPI DllRegisterServer(void)
 {
-	AFX_MANAGE_STATE(_afxModuleAddrThis);
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	if (!AfxOleRegisterTypeLib(AfxGetInstanceHandle(), _tlid))
 		return ResultFromScode(SELFREG_E_TYPELIB);
@@ -82,16 +108,15 @@ STDAPI DllRegisterServer(void)
 	if (!COleObjectFactoryEx::UpdateRegistryAll(TRUE))
 		return ResultFromScode(SELFREG_E_CLASS);
 
-	return NOERROR;
+	return _Module.UpdateRegistryFromResource(IDR_DECORATOREVENTSINK, TRUE);
 }
 
-
-
+/////////////////////////////////////////////////////////////////////////////
 // DllUnregisterServer - Removes entries from the system registry
 
 STDAPI DllUnregisterServer(void)
 {
-	AFX_MANAGE_STATE(_afxModuleAddrThis);
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	if (!AfxOleUnregisterTypeLib(_tlid, _wVerMajor, _wVerMinor))
 		return ResultFromScode(SELFREG_E_TYPELIB);
@@ -99,5 +124,5 @@ STDAPI DllUnregisterServer(void)
 	if (!COleObjectFactoryEx::UpdateRegistryAll(FALSE))
 		return ResultFromScode(SELFREG_E_CLASS);
 
-	return NOERROR;
+	return _Module.UpdateRegistryFromResource(IDR_DECORATOREVENTSINK, FALSE);
 }

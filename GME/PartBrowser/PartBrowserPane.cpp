@@ -7,7 +7,6 @@
 #include "..\Interfaces\MgaDecorator.h"
 #include "..\Annotator\AnnotationDefs.h"
 #include "..\GME\GMEOLEData.h"
-#include "PartBrowserDecoratorEventSink.h"
 #include "Gme_i.c"
 
 
@@ -20,6 +19,7 @@ static char THIS_FILE[] = __FILE__;
 // from GME
 typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FONT_KIND_NUM } GMEFontKind;
 static int  fontSizes[GME_FONT_KIND_NUM]	= { 18, 15, 12 };
+#define GME_OLDDEFAULT_DECORATOR	"MGA.BoxDecorator"
 #define GME_DEFAULT_DECORATOR		"MGA.NewBoxDecorator"
 #define DECORATOR_PREF				"decorator"
 typedef CTypedPtrList<CPtrList, CRect *>	CRectList;
@@ -130,17 +130,44 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				CComPtr<IMgaElementDecorator> newDecorator;
 				CComBSTR decoratorProgId = GetDecoratorProgId(mFco);
 
-				CComPtr<IMgaElementDecoratorEvents> decorEventSinkIface;
-				HRESULT hres = newDecorator.CoCreateInstance(PutInBstr(decoratorProgId));
-				if (SUCCEEDED(hres)) {
-					triple.decorEventSink = new CPartBrowserDecoratorEventSink();
-					HRESULT hr = triple.decorEventSink->QuerySinkInterface((void**) &decorEventSinkIface);
-					triple.newDecorator = newDecorator;
-					decorator = CComQIPtr<IMgaDecorator>(newDecorator);
-					COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, decorEventSinkIface, (ULONGLONG)m_hWnd));
-				} else {
-					COMTHROW(decorator.CoCreateInstance(PutInBstr(decoratorProgId)));
-					COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
+				try {
+					CComPtr<IMgaElementDecoratorEvents> decorEventSinkIface;
+					HRESULT hres = newDecorator.CoCreateInstance(PutInBstr(decoratorProgId));
+					if (FAILED(hres) && hres != CO_E_CLASSSTRING) {	// might be an old decorator
+						hres = decorator.CoCreateInstance(PutInBstr(decoratorProgId));
+					}
+					if (FAILED(hres)) {	// fall back to default decorator
+						decoratorProgId = GME_DEFAULT_DECORATOR;
+						COMTHROW(newDecorator.CoCreateInstance(PutInBstr(decoratorProgId)));
+					}
+
+					if (newDecorator) {
+						CComObjPtr<CPartBrowserDecoratorEventSink>	decorEventSink;
+						::CreateComObject(decorEventSink);
+						triple.decorEventSink = decorEventSink;
+						HRESULT hr = ::QueryInterface((IMgaElementDecoratorEvents*)triple.decorEventSink.p, &decorEventSinkIface);
+						triple.newDecorator = newDecorator;
+						decorator = CComQIPtr<IMgaDecorator>(newDecorator);
+						COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, decorEventSinkIface, (ULONGLONG)m_hWnd));
+					} else {
+						COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
+					}
+				}
+				catch (hresult_exception &e) {
+					try {
+						if (decoratorProgId != GME_OLDDEFAULT_DECORATOR) {
+							decoratorProgId = GME_OLDDEFAULT_DECORATOR;
+							decorator = NULL;
+							COMTHROW(decorator.CoCreateInstance(PutInBstr(decoratorProgId)));
+							COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
+						}
+						else {
+							throw hresult_exception(e.hr);
+						}
+					}
+					catch (hresult_exception &e) {
+						throw hresult_exception(e.hr);
+					}
 				}
 
 				long sx, sy;
@@ -163,12 +190,15 @@ void CPartBrowserPane::DestroyDecorators(void)
 	for (std::vector<std::vector<PartWithDecorator> >::iterator ii = pdts.begin(); ii != pdts.end(); ++ii) {
 		for (std::vector<PartWithDecorator>::iterator jj = (*ii).begin(); jj != (*ii).end(); ++jj) {
 			(*jj).decorator->Destroy();
-			if ((*jj).newDecorator)
+			if ((*jj).newDecorator) {
 				(*jj).newDecorator.Release();
+				(*jj).newDecorator = NULL;
+			}
 			(*jj).decorator.Release();
+			(*jj).decorator = NULL;
 			(*jj).part.Release();
 			if ((*jj).decorEventSink != NULL) {
-				(*jj).decorEventSink->ExternalRelease();
+				(*jj).decorEventSink.Release();
 				(*jj).decorEventSink = NULL;
 			}
 		}

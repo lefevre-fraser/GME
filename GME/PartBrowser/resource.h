@@ -7,6 +7,7 @@
 #define IDB_PARTBROWSER                 1
 #define IDI_ABOUTDLL                    1
 #define IDS_PARTBROWSER_PPG             2
+#define IDR_DECORATOREVENTSINK          115
 #define IDD_PARTBROWSER_DIALOG          139
 #define IDD_PARTBROWSERFRAME_DIALOG     140
 #define IDS_PARTBROWSER_PPG_CAPTION     200
