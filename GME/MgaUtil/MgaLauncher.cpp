@@ -24,7 +24,7 @@
 #define GME_UMAN_FOLDER				"themodelbrowser.htm"
 */
 
-#define GME_UMAN_HOME				"Doc/GME Manual and User Guide.chm::/htm/"
+#define GME_UMAN_HOME				"Doc\\GME Manual and User Guide.chm::/htm/"
 #define GME_UMAN_CONTENTS			"helpcontents1.htm"
 #define GME_UMAN_MODEL				"models.htm"
 #define GME_UMAN_ATOM				"atoms.htm"
@@ -596,8 +596,21 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject * obj)
 			}
 
 			if( !url.IsEmpty() ) {
-				url = GME_UMAN_HOME + url;
-				HtmlHelp(NULL, url, HH_DISPLAY_TOPIC, 0);
+				char* gme_root = NULL;
+				bool hasSlashAtTheEnd = false;
+				// Uncomment the following lines if you want to use an absolute path based on the GME_ROOT environment
+				// variable, instead of a relative path
+				//gme_root = getenv("GME_ROOT");
+				//long len = strlen(gme_root);
+				//hasSlashAtTheEnd = (gme_root[len - 1] == '\\' || gme_root[len - 1] == '/');
+				CString gmeRoot = gme_root == NULL ? "..\\" : (hasSlashAtTheEnd ? gme_root : CString(gme_root) + '\\');
+				url = gmeRoot + GME_UMAN_HOME + url;
+				CWnd* mainWnd = AfxGetMainWnd();
+				HWND hwndCaller = NULL;
+				if (mainWnd != NULL)
+					hwndCaller = mainWnd->m_hWnd;
+				HWND helpWnd = ::HtmlHelp(hwndCaller, url, HH_DISPLAY_TOPIC, 0);
+				ASSERT(helpWnd != NULL);
 			}
 			else
 				AfxMessageBox("No default help is available for selection!",MB_OK | MB_ICONSTOP);

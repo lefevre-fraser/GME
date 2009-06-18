@@ -152,8 +152,6 @@ void CCompDlg::ResetItems()
 	UpdateData();
 	VERIFYTHROW( m_list.DeleteAllItems() != 0 );
 
-	
-
 	CComVariant v;
 	if(m_dispmode == 0) {
 		COMTHROW( registrar->get_AssociatedComponents(PutInBstr(paradigm), type, REGACCESS_BOTH, PutOut(v)) );
