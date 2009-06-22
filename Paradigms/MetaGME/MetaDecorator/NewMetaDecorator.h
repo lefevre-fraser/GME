@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// New Meta decorator class
-//	NewMetaDecorator.h
+// Meta decorator class
+//	MetaDecorator.h
 //
 //################################################################################################
 
-#ifndef __NEWMETADECORATOR_H_
-#define __NEWMETADECORATOR_H_
+#ifndef __METADECORATOR_H_
+#define __METADECORATOR_H_
 
 
 #include "StdAfx.h"
@@ -18,19 +18,19 @@ namespace MetaDecor {
 
 //################################################################################################
 //
-// CLASS : NewMetaDecorator
+// CLASS : MetaDecorator
 //
 //################################################################################################
 
-class NewMetaDecorator: public DecoratorSDK::DecoratorInterface
+class MetaDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
 	CComPtr<IMgaCommonDecoratorEvents>	m_eventSink;
 
 public:
-	NewMetaDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
-	virtual ~NewMetaDecorator();
+	MetaDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
+	virtual ~MetaDecorator();
 
 // =============== resembles IMgaElementDecorator
 public:
@@ -75,4 +75,4 @@ public:
 
 }; // namespace MetaDecor
 
-#endif //__NEWMETADECORATOR_H_
+#endif //__METADECORATOR_H_

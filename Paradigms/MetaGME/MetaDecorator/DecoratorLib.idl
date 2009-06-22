@@ -30,17 +30,7 @@ library DecoratorLib
 		uuid(COCLASS_UUID),
 		helpstring(COCLASS_NAME)
 	]
-	coclass Decorator
-	{
-		[default] interface IMgaDecorator;
-		interface IMgaVersionInfo;
-	};
-
-	[
-		uuid(NEWCOCLASS_UUID),
-		helpstring(NEWCOCLASS_NAME)
-	]
-	coclass NewMetaDecorator
+	coclass MetaDecorator
 	{
 		[default] interface IMgaElementDecorator;
 		interface IMgaVersionInfo;

@@ -1,7 +1,7 @@
 //################################################################################################
 //
-// New Meta Decorator COM side Implementation
-//	NewMetaDecoratorImpl.cpp
+// Meta Decorator COM side Implementation
+//	MetaDecoratorImpl.cpp
 //
 //################################################################################################
 
@@ -15,7 +15,7 @@
 
 //################################################################################################
 //
-// CLASS : CNewMetaDecoratorImpl
+// CLASS : CMetaDecoratorImpl
 //
 //################################################################################################
 
@@ -27,18 +27,18 @@
 	if (!m_bLocationSet)						\
 		return E_DECORATOR_LOCISNOTSET;
 
-CNewMetaDecoratorImpl::CNewMetaDecoratorImpl():
+CMetaDecoratorImpl::CMetaDecoratorImpl():
 	m_pElementDecorator	(NULL),
 	m_bLocationSet		(false),
 	m_bInitCallFromEx	(false)
 {
 }
 
-CNewMetaDecoratorImpl::~CNewMetaDecoratorImpl()
+CMetaDecoratorImpl::~CMetaDecoratorImpl()
 {
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
+STDMETHODIMP CMetaDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -48,7 +48,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPa
 	return S_OK;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::Destroy()
+STDMETHODIMP CMetaDecoratorImpl::Destroy()
 {
 	VERIFY_INITIALIZATION
 
@@ -72,21 +72,21 @@ STDMETHODIMP CNewMetaDecoratorImpl::Destroy()
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
+STDMETHODIMP CMetaDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 {
-	*bstrMnemonic = CComBSTR(NEWDECORATOR_NAME).Detach();
+	*bstrMnemonic = CComBSTR(DECORATOR_NAME).Detach();
 
 	return S_OK;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
+STDMETHODIMP CMetaDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 {
 	*pFeatureCodes = F_RESIZABLE | F_HASLABEL | F_HASPORTS;
 
 	return S_OK;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
+STDMETHODIMP CMetaDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
 {
 	VERIFY_INITIALIZATION
 
@@ -103,7 +103,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
+STDMETHODIMP CMetaDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
 {
 	VERIFY_INITIALIZATION
 
@@ -120,7 +120,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
+STDMETHODIMP CMetaDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 {
 	VERIFY_INITIALIZATION
 
@@ -137,7 +137,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeight)
+STDMETHODIMP CMetaDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeight)
 {
 	VERIFY_INITIALIZATION
 
@@ -157,7 +157,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeig
 }
 
 
-STDMETHODIMP CNewMetaDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG ey)
+STDMETHODIMP CMetaDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG ey)
 {
 	VERIFY_INITIALIZATION
 
@@ -175,7 +175,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG 
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CMetaDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -197,7 +197,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LO
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CMetaDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -219,7 +219,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* e
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CMetaDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -241,7 +241,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LON
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
+STDMETHODIMP CMetaDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 {
 	VERIFY_INITIALIZATION
 
@@ -260,7 +260,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::Draw(HDC hdc)
+STDMETHODIMP CMetaDecoratorImpl::Draw(HDC hdc)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -270,7 +270,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::Draw(HDC hdc)
 	return E_DECORATOR_USING_DEPRECATED_FUNCTION;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::SaveState()
+STDMETHODIMP CMetaDecoratorImpl::SaveState()
 {
 	VERIFY_INITIALIZATION
 
@@ -278,8 +278,8 @@ STDMETHODIMP CNewMetaDecoratorImpl::SaveState()
 }
 
 // New functions
-STDMETHODIMP CNewMetaDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-												 IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
+STDMETHODIMP CMetaDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
+											  IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -287,11 +287,11 @@ STDMETHODIMP CNewMetaDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMeta
 
 	HRESULT retVal = S_OK;
 	try {
-		MetaDecor::NewMetaDecorator* newMetaDecorator = new MetaDecor::NewMetaDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
-		m_pElementDecorator = newMetaDecorator;
+		MetaDecor::MetaDecorator* metaDecorator = new MetaDecor::MetaDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
+		m_pElementDecorator = metaDecorator;
 
-		newMetaDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
-									   CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
+		metaDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
+									CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;
@@ -303,7 +303,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMeta
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
+STDMETHODIMP CMetaDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -330,7 +330,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
+STDMETHODIMP CMetaDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 {
 	VERIFY_INITIALIZATION
 
@@ -347,7 +347,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -365,7 +365,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG p
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -383,7 +383,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG point
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -401,7 +401,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx,
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -419,7 +419,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LON
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -437,7 +437,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULO
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -455,7 +455,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -473,7 +473,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LO
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -491,7 +491,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG poi
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -509,7 +509,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG point
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -527,7 +527,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, L
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -545,7 +545,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -565,7 +565,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOle
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -585,7 +585,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleD
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -603,7 +603,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEf
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -621,7 +621,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, L
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CMetaDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -639,7 +639,7 @@ STDMETHODIMP CNewMetaDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFl
 	return retVal;
 }
 
-STDMETHODIMP CNewMetaDecoratorImpl::OperationCanceled()
+STDMETHODIMP CMetaDecoratorImpl::OperationCanceled()
 {
 	HRESULT retVal = S_OK;
 	try {

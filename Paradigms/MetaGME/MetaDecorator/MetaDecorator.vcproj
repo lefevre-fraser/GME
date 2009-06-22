@@ -228,10 +228,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="Decorator.cpp"
-				>
-			</File>
-			<File
 				RelativePath="Decorator.rc"
 				>
 				<FileConfiguration
@@ -344,10 +340,6 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="Decorator.h"
-				>
-			</File>
-			<File
 				RelativePath="DecoratorConfig.h"
 				>
 			</File>
@@ -400,19 +392,7 @@
 			Name="Resources"
 			>
 			<File
-				RelativePath=".\res\constraint.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\res\constraintfunc.bmp"
-				>
-			</File>
-			<File
 				RelativePath="Decorator.rgs"
-				>
-			</File>
-			<File
-				RelativePath=".\NewDecorator.rgs"
 				>
 			</File>
 			<File

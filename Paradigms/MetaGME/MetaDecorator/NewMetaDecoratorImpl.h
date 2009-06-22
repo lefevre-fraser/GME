@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// New Meta Decorator COM side Implementation
-//	NewMetaDecoratorImpl.h
+// Meta Decorator COM side Implementation
+//	MetaDecoratorImpl.h
 //
 //################################################################################################
 
-#ifndef __NEWMETADECORATORIMPL_H_
-#define __NEWMETADECORATORIMPL_H_
+#ifndef __METADECORATORIMPL_H_
+#define __METADECORATORIMPL_H_
 
 
 
@@ -23,14 +23,14 @@ class DecoratorInterface;
 
 //################################################################################################
 //
-// CLASS : CNewMetaDecoratorImpl
+// CLASS : CMetaDecoratorImpl
 //
 //################################################################################################
 
-class ATL_NO_VTABLE CNewMetaDecoratorImpl :
+class ATL_NO_VTABLE CMetaDecoratorImpl :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public IMgaElementDecorator,
-	public CComCoClass<CNewMetaDecoratorImpl, &CLSID_NewMetaDecorator>
+	public CComCoClass<CMetaDecoratorImpl, &CLSID_MetaDecorator>
 {
 protected:
 	DecoratorSDK::DecoratorInterface*	m_pElementDecorator;
@@ -38,17 +38,16 @@ protected:
 	bool								m_bInitCallFromEx;
 
 public:
-	CNewMetaDecoratorImpl();
-	~CNewMetaDecoratorImpl();
+	CMetaDecoratorImpl();
+	~CMetaDecoratorImpl();
 
-	DECLARE_REGISTRY_RESOURCEID( IDR_NEWDECORATOR )
+	DECLARE_REGISTRY_RESOURCEID( IDR_DECORATOR )
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP( CNewMetaDecoratorImpl )
+	BEGIN_COM_MAP( CMetaDecoratorImpl )
 		COM_INTERFACE_ENTRY( IMgaElementDecorator )
 	END_COM_MAP()
 
-// =============== INewMetaDecorator
 public:
 	// =============== inherited from IMgaElementDecorator
 	STDMETHOD( Initialize )						( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO );
@@ -67,7 +66,7 @@ public:
 	STDMETHOD( Draw )							( /*[in]*/ HDC hdc );
 	STDMETHOD( SaveState )						( void );
 
-	// =============== INewMetaDecorator
+	// =============== IMgaElementDecorator
 	STDMETHOD( InitializeEx )					( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO, /*[in]*/ IMgaCommonDecoratorEvents* eventSink, /*[in]*/ ULONGLONG parentWnd );
 	STDMETHOD( DrawEx )							( /*[in]*/ HDC hdc, /*[in]*/ ULONGLONG gdipGraphics );
 	STDMETHOD( SetSelected )					( /*[in]*/ VARIANT_BOOL bIsSelected );
@@ -90,4 +89,4 @@ public:
 	STDMETHOD( OperationCanceled )				( void );
 };
 
-#endif //__NEWMETADECORATORIMPL_H_
+#endif //__METADECORATORIMPL_H_

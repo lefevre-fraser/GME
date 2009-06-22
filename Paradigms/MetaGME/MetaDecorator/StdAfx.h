@@ -21,9 +21,6 @@
 extern CComModule _Module;
 #include <atlcom.h>
 
-#include "CommonError.h"
-#include "CommonMgaTrukk.h"
-
 #include <stdio.h>
 
 //{{AFX_INSERT_LOCATION}}

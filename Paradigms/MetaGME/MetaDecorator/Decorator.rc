@@ -96,7 +96,6 @@ END
 //
 
 IDR_DECORATOR           REGISTRY DISCARDABLE    "Decorator.rgs"
-IDR_NEWDECORATOR        REGISTRY DISCARDABLE    "NewDecorator.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -104,8 +103,6 @@ IDR_NEWDECORATOR        REGISTRY DISCARDABLE    "NewDecorator.rgs"
 //
 
 IDB_BITMAP_PROXY        BITMAP  DISCARDABLE     "res\\referencesign.bmp"
-IDB_BITMAP_CONSTRAINT   BITMAP  DISCARDABLE     "res\\constraint.bmp"
-IDB_BITMAP_CONSTRAINTFUNC BITMAP  DISCARDABLE     "res\\constraintfunc.bmp"
 IDB_BITMAP_REFERENCE_SIGN BITMAP  DISCARDABLE     "res\\referencesign.bmp"
 
 /////////////////////////////////////////////////////////////////////////////

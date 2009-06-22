@@ -12,16 +12,12 @@
 #define COCLASS_UUID "E0062203-4CF9-424a-BF05-4F6590942015"
 #define COCLASS_NAME "MGA Decorator CoClass (MetaDecorator)"
 #define COCLASS_PROGID "MGA.Decorator.MetaDecorator"
-#define NEWCOCLASS_UUID "764947C7-A4CE-4a22-B02C-7E99948C26C6"
-#define NEWCOCLASS_NAME "MGA NewDecorator CoClass (NewMetaDecorator)"
-#define NEWCOCLASS_PROGID "MGA.Decorator.NewMetaDecorator"
 
 #define CONSTOLESTR(X)		OLESTR(X)
 
 
 // This name will appear in the popup window for interpreter selection.
 #define DECORATOR_NAME "MetaDecorator"
-#define NEWDECORATOR_NAME "NewMetaDecorator"
 
 // This is the location of the GME interfaces file (Mga.idl, Meta.idl, etc)
 
