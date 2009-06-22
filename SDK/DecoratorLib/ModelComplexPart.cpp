@@ -138,7 +138,7 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 	}
 
 	LOGFONT logFont;
-	getFacilities().getFont(FONT_PORT)->pFont->GetLogFont(&logFont);
+	getFacilities().GetFont(FONT_PORT)->gdipFont->GetLogFontA(getFacilities().getGraphics(), &logFont);
 	long lWidth = 0;
 	if (m_bPortLabelInside) {
 		ASSERT(m_iLongestPortTextLength >= 0 && m_iLongestPortTextLength <= 1000);

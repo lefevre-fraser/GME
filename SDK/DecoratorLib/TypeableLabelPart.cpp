@@ -111,7 +111,7 @@ CPoint	TypeableLabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) con
 {
 	CPoint pt = LabelPart::GetTextPosition(pDC, gdip);
 	if (m_bTypeNameEnabled && (m_iTypeInfo == 3 || m_iTypeInfo == 2)) {
-		int iLabelSize = getFacilities().getFont(FONT_TYPE)->iSize;
+		int iLabelSize = getFacilities().GetFont(FONT_TYPE)->iSize;
 		switch(m_eTextLocation) {
 			case L_NORTH:
 			case L_NORTHWEST:
@@ -134,7 +134,7 @@ CRect TypeableLabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) cons
 
 	if (m_bTypeNameEnabled && (m_iTypeInfo == 3 || m_iTypeInfo == 2)) {
 		LOGFONT logFont;
-		getFacilities().getFont(FONT_TYPE)->pFont->GetLogFont(&logFont);
+		getFacilities().GetFont(FONT_TYPE)->gdipFont->GetLogFontA(gdip, &logFont);
 		ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
 
 		CSize cSize(logFont.lfWidth * m_strTypeName.GetLength(), logFont.lfHeight);

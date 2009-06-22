@@ -380,10 +380,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\StereotypeDecorators.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\TextPart.cpp"
 				>
 			</File>
@@ -595,10 +591,6 @@
 			</File>
 			<File
 				RelativePath=".\StereoLabelPart.h"
-				>
-			</File>
-			<File
-				RelativePath=".\StereotypeDecorators.h"
 				>
 			</File>
 			<File

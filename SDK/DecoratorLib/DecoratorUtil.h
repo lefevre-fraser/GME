@@ -51,12 +51,9 @@ namespace DecoratorSDK
 
 			std::map<CString,BitmapBase*>			m_mapBitmaps;
 			std::map<CString,TileVector*>			m_mapTileVectors;
-			std::map<int,SFont*>					m_mapFonts;
-			std::map<int,GdipFont*>					m_mapGdipFonts;
-			std::map<CString,CPen*>					m_mapPens;
-			std::map<CString,CBrush*>				m_mapBrushes;
-			std::map<CString,Gdiplus::Pen*>			m_mapGdipPens;
-			std::map<CString,Gdiplus::SolidBrush*>	m_mapGdipBrushes;
+			std::map<int,GdipFont*>					m_mapFonts;
+			std::map<CString,Gdiplus::Pen*>			m_mapPens;
+			std::map<CString,Gdiplus::SolidBrush*>	m_mapBrushes;
 
 		public :
 			Facilities();
@@ -125,16 +122,6 @@ namespace DecoratorSDK
 
 			std::vector<CString> wrapString( const CString& str, int iWrap, int iMax ) const;
 			CString getStereotyped( const CString& str ) const;
-
-			// for backward compatibility with StereotypeDecorators
-			SFont* getFont( int iFontKey ) const;
-			CPen* getPen( COLORREF crColor, int iWidth = 1, bool bDashed = false );
-			CBrush* getBrush( COLORREF crColor );
-			void drawText( CDC* pDC, const CString& strText, const CPoint& cpTopLeft,  CFont* pFont, COLORREF crColor,
-							int iAlign, int iLength = -1, const CString& strPre = "", const CString& strPost = "",
-							bool bPeriods = true ) const;
-			void drawRect( CDC* pDC, const CRect& cRect, COLORREF crColor, int iWidth = 1 ) const;
-			void drawBox( CDC* pDC, const CRect& cRect, COLORREF crColor, int iDepth ) const;
 
 		private :
 			BitmapBase* getBitmap( const CString& strName, bool bhasTC, COLORREF crTC, bool bhasBC, COLORREF crBC,

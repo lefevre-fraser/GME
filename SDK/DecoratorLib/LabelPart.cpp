@@ -70,7 +70,7 @@ CPoint	LabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 {
 	CPoint pt;
 	CRect cRect = GetLocation();	// GetBoxLocation(true)
-	int iLabelSize = getFacilities().getFont(m_iFontKey)->iSize * m_vecText.size();
+	int iLabelSize = getFacilities().GetFont(m_iFontKey)->iSize * m_vecText.size();
 	switch(m_eTextLocation) {
 		case L_NORTH:
 		case L_NORTHWEST:

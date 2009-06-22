@@ -200,27 +200,14 @@ Facilities::~Facilities()
 		delete it->second;
 	for ( std::map<CString,TileVector*>::iterator it2 = m_mapTileVectors.begin() ; it2 != m_mapTileVectors.end() ; ++it2 )
 		delete it2->second;
-	for ( std::map<int,SFont*>::iterator it3 = m_mapFonts.begin() ; it3 != m_mapFonts.end() ; ++it3 ) {
-		it3->second->pFont->DeleteObject();
-		delete it3->second->pFont;
+	for ( std::map<int,GdipFont*>::iterator it3 = m_mapFonts.begin() ; it3 != m_mapFonts.end() ; ++it3 ) {
+		delete it3->second->gdipFont;
 		delete it3->second;
 	}
-	for ( std::map<int,GdipFont*>::iterator it4 = m_mapGdipFonts.begin() ; it4 != m_mapGdipFonts.end() ; ++it4 ) {
-		delete it4->second->gdipFont;
+	for ( std::map<CString,Gdiplus::Pen*>::iterator it4 = m_mapPens.begin() ; it4 != m_mapPens.end() ; ++it4 )
 		delete it4->second;
-	}
-	for ( std::map<CString,CPen*>::iterator it5 = m_mapPens.begin() ; it5 != m_mapPens.end() ; ++it5 ) {
-		it5->second->DeleteObject();
+	for ( std::map<CString,Gdiplus::SolidBrush*>::iterator it5 = m_mapBrushes.begin() ; it5 != m_mapBrushes.end() ; ++it5 )
 		delete it5->second;
-	}
-	for ( std::map<CString,CBrush*>::iterator it6 = m_mapBrushes.begin() ; it6 != m_mapBrushes.end() ; ++it6 ) {
-		it6->second->DeleteObject();
-		delete it6->second;
-	}
-	for ( std::map<CString,Gdiplus::Pen*>::iterator it7 = m_mapGdipPens.begin() ; it7 != m_mapGdipPens.end() ; ++it7 )
-		delete it7->second;
-	for ( std::map<CString,Gdiplus::SolidBrush*>::iterator it8 = m_mapGdipBrushes.begin() ; it8 != m_mapGdipBrushes.end() ; ++it8 )
-		delete it8->second;
 
 	delete m_gdip;
 }
@@ -734,17 +721,6 @@ TileVector* Facilities::getTileVector( const CString& strName ) const
 
 void Facilities::createFont( int iFontKey, const CString& strKind, int iBoldness, bool bItalics, int iSize )
 {
-	SFont* psFont = getFont( iFontKey );
-	if ( psFont ) {
-		psFont->pFont->DeleteObject();
-		delete psFont->pFont;
-		delete psFont;
-	}
-	m_mapFonts[ iFontKey ] = new SFont( strKind, iSize, iBoldness, bItalics );
-	m_mapFonts[ iFontKey ]->pFont = new CFont();
-	m_mapFonts[ iFontKey ]->pFont->CreateFont( iSize, 0, 0, 0, iBoldness, bItalics, 0, 0, ANSI_CHARSET, OUT_DEVICE_PRECIS,
-												CLIP_DEFAULT_PRECIS, PROOF_QUALITY, FF_SWISS, strKind );
-
 	GdipFont* pgFont = GetFont( iFontKey );
 	if ( pgFont ) {
 		delete pgFont->gdipFont;
@@ -758,31 +734,38 @@ void Facilities::createFont( int iFontKey, const CString& strKind, int iBoldness
 		fontStyle |= Gdiplus::FontStyleItalic;
 
 	float pixelSize = static_cast<float> (iSize * 72.0 / GetDeviceCaps(GetDC(NULL), LOGPIXELSY));
-	m_mapGdipFonts[ iFontKey ] = new GdipFont( strKind, iSize, iBoldness == FW_BOLD, bItalics );
+	m_mapFonts[ iFontKey ] = new GdipFont( strKind, iSize, iBoldness == FW_BOLD, bItalics );
 	CA2W wcTxt(strKind);
-	m_mapGdipFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( wcTxt, pixelSize, fontStyle, Gdiplus::UnitPixel );*/
+	m_mapFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( wcTxt, pixelSize, fontStyle, Gdiplus::UnitPixel );*/
 
-	m_mapGdipFonts[ iFontKey ] = new GdipFont( strKind, iSize, iBoldness == FW_BOLD, bItalics );
+	m_mapFonts[ iFontKey ] = new GdipFont( strKind, iSize, iBoldness == FW_BOLD, bItalics );
+
+	CFont* pFont = new CFont();
+	pFont->CreateFont( iSize, 0, 0, 0, iBoldness, bItalics, 0, 0, ANSI_CHARSET, OUT_DEVICE_PRECIS,
+					   CLIP_DEFAULT_PRECIS, PROOF_QUALITY, FF_SWISS, strKind );
 	LOGFONT logFont;
-	m_mapFonts[ iFontKey ]->pFont->GetLogFont(&logFont);
-	m_mapGdipFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( getCDC()->m_hDC, &logFont );
+	pFont->GetLogFont(&logFont);
+	m_mapFonts[ iFontKey ]->gdipFont = new Gdiplus::Font( getCDC()->m_hDC, &logFont );
+
+	pFont->DeleteObject();
+	delete pFont;
 }
 
 GdipFont* Facilities::GetFont( int iFontKey ) const
 {
-	std::map<int,GdipFont*>::const_iterator it = m_mapGdipFonts.find( iFontKey );
-	return ( it == m_mapGdipFonts.end() ) ? NULL : it->second;
+	std::map<int,GdipFont*>::const_iterator it = m_mapFonts.find( iFontKey );
+	return ( it == m_mapFonts.end() ) ? NULL : it->second;
 }
 
 Gdiplus::Pen* Facilities::GetPen( COLORREF crColor, int iWidth )
 {
 	CString chBuffer;
 	chBuffer.Format("%x-%ld", crColor, iWidth);
-	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.find(chBuffer);
-	if (it != m_mapGdipPens.end())
+	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapPens.find(chBuffer);
+	if (it != m_mapPens.end())
 		return it->second;
 	Gdiplus::Pen* pPen = new Gdiplus::Pen(Gdiplus::Color(GetRValue(crColor), GetGValue(crColor), GetBValue(crColor)), static_cast<float> (iWidth));
-	m_mapGdipPens.insert( std::map<CString,Gdiplus::Pen*>::value_type(chBuffer, pPen));
+	m_mapPens.insert( std::map<CString,Gdiplus::Pen*>::value_type(chBuffer, pPen));
 	return pPen;
 }
 
@@ -790,11 +773,11 @@ Gdiplus::SolidBrush* Facilities::GetBrush( COLORREF crColor )
 {
 	CString chBuffer;
 	chBuffer.Format("%x", crColor);
-	std::map<CString,Gdiplus::SolidBrush*>::iterator it = m_mapGdipBrushes.find(chBuffer);
-	if (it != m_mapGdipBrushes.end())
+	std::map<CString,Gdiplus::SolidBrush*>::iterator it = m_mapBrushes.find(chBuffer);
+	if (it != m_mapBrushes.end())
 		return it->second;
 	Gdiplus::SolidBrush* pBrush = new Gdiplus::SolidBrush(Gdiplus::Color(GetRValue(crColor), GetGValue(crColor), GetBValue(crColor)));
-	m_mapGdipBrushes.insert(std::map<CString,Gdiplus::SolidBrush*>::value_type(chBuffer, pBrush));
+	m_mapBrushes.insert(std::map<CString,Gdiplus::SolidBrush*>::value_type(chBuffer, pBrush));
 	return pBrush;
 }
 
@@ -1187,99 +1170,6 @@ CString Facilities::getStereotyped( const CString& strIn ) const
 	else
 		str = str + STEREOTYPE_LEFTA + strIn + STEREOTYPE_RIGHTA;
 	return str;
-}
-
-SFont* Facilities::getFont( int iFontKey ) const
-{
-	std::map<int,SFont*>::const_iterator it = m_mapFonts.find( iFontKey );
-	return ( it == m_mapFonts.end() ) ? NULL : it->second;
-}
-
-CPen* Facilities::getPen( COLORREF crColor, int iWidth, bool bDashed )
-{
-	CString chBuffer;
-	chBuffer.Format("%x-%ld-%d", crColor, iWidth, bDashed);
-	std::map<CString,CPen*>::iterator it = m_mapPens.find(chBuffer);
-	if (it != m_mapPens.end())
-		return it->second;
-	CPen* pPen = new CPen(bDashed ? PS_DOT : PS_SOLID, iWidth, crColor);
-	m_mapPens.insert(std::map<CString,CPen*>::value_type(chBuffer, pPen));
-	return pPen;
-}
-
-CBrush* Facilities::getBrush( COLORREF crColor )
-{
-	CString chBuffer;
-	chBuffer.Format("%x", crColor);
-	std::map<CString,CBrush*>::iterator it = m_mapBrushes.find(chBuffer);
-	if (it != m_mapBrushes.end())
-		return it->second;
-	CBrush* pBrush = new CBrush(crColor);
-	m_mapBrushes.insert(std::map<CString,CBrush*>::value_type(chBuffer, pBrush));
-	return pBrush;
-}
-
-void Facilities::drawText( CDC* pDC, const CString& strText, const CPoint& cpTopLeft,  CFont* pFont, COLORREF crColor, int iAlign, int iLength, const CString& strPre, const CString& strPost, bool bPeriods ) const
-{
-	CString strText2( strPre + strText + strPost );
-	if ( iLength != -1 && strText2.GetLength() > iLength )
-		strText2 = strPre + strText.Left( iLength + strPre.GetLength() ) + ( ( bPeriods ) ? "..." : "" ) + strPost;
-
-	CFont* oldFont = pDC->SelectObject( pFont );
-	pDC->SetTextAlign( iAlign );
-	SetBkMode( pDC->m_hDC, TRANSPARENT );
-
-	pDC->SetTextColor( pDC->IsPrinting() ? COLOR_BLACK : crColor );
-	pDC->TextOut( cpTopLeft.x, cpTopLeft.y, strText2 );
-	pDC->SelectObject( oldFont );
-}
-
-void Facilities::drawRect( CDC* pDC, const CRect& cRect, COLORREF crColor, int iWidth ) const
-{
-	Facilities* pThis = (Facilities*) this;
-	CPen* pPen = pThis->getPen( crColor, iWidth );
-	CRect cRect2 = cRect;
-	cRect2.DeflateRect( iWidth / 2, iWidth / 2 );
-
-	CPen* pPreviousPen = pDC->SelectObject( pPen );
-	pDC->MoveTo( cRect.left, cRect.top );
-	pDC->LineTo( cRect2.right , cRect2.top );
-	pDC->LineTo( cRect2.right , cRect2.bottom );
-	pDC->LineTo( cRect2.left, cRect2.bottom );
-	pDC->LineTo( cRect2.left, cRect2.top );
-	pDC->SelectObject( pPreviousPen );
-}
-
-void Facilities::drawBox( CDC* pDC, const CRect& cRect, COLORREF crColor, int iDepth ) const
-{
-	Facilities* pThis = (Facilities*) this;
-
-	int CR_DIVIDE = 50;
-	for ( int i = 0 ; i < CR_DIVIDE ; i ++ ) {
-		CRect cRect2 = cRect;
-		cRect2.top = min( cRect.bottom, (long) ( cRect.top + ( cRect.Height() / CR_DIVIDE + 1 ) * i ) );
-		cRect2.bottom = min( cRect.bottom, (long) ( cRect2.top + ( cRect.Height() / CR_DIVIDE + 1 ) ) );
-		pDC->FillSolidRect( cRect2, ShiftColor( crColor, ( i - 20 ) * 2 ) );
-	}
-
-	CR_DIVIDE = 25;
-	int CR_MULTI = (int) ( (double) 70 / iDepth );
-	for ( int i = 0 ; i < iDepth ; i++ ) {
-		CPen* pPrevoius = pDC->SelectObject( pThis->getPen( ShiftColor( crColor, - i * CR_MULTI ) ) );
-		pDC->MoveTo( cRect.left + i, cRect.top + i );
-		pDC->LineTo( cRect.right - i, cRect.top + i );
-		for ( int j = 0 ; j < CR_DIVIDE ; j++ ) {
-			pDC->SelectObject( pThis->getPen( ShiftColor( crColor, - i * CR_MULTI + i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
-			pDC->LineTo( cRect.right - i, ( j == CR_DIVIDE - 1 ) ? cRect.bottom - i : cRect.top + i + ( cRect.Height() - i * 2 ) / CR_DIVIDE * ( j + 1 ) );
-		}
-		pDC->SelectObject( pThis->getPen( ShiftColor( crColor, i * 10 ) ) );
-		pDC->LineTo( cRect.left + i, cRect.bottom - i );
-		for ( int j = 0 ; j < CR_DIVIDE ; j++ ) {
-			pDC->SelectObject( pThis->getPen( ShiftColor( crColor, i * CR_MULTI - i * CR_MULTI * 2 / CR_DIVIDE * ( j + 1 ) ) ) );
-			pDC->LineTo( cRect.left + i, ( j == CR_DIVIDE - 1 ) ? cRect.top + i : cRect.bottom - i - ( cRect.Height() - i * 2 ) / CR_DIVIDE * ( j + 1 ) );
-		}
-		pDC->SelectObject( pPrevoius );
-	}
 }
 
 }; // namespace DecoratorSDK

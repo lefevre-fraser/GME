@@ -298,9 +298,9 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 		CDC dc;
 		dc.Attach(transformHDC);
 		// font scaling
-		CFont* originalFont = getFacilities().getFont(m_iFontKey)->pFont;
+		Gdiplus::Font* originalFont = getFacilities().GetFont(m_iFontKey)->gdipFont;
 		LOGFONT lf;
-		originalFont->GetLogFont(&lf);
+		originalFont->GetLogFontA(getFacilities().getGraphics(), &lf);
 		CSize windowExt = dc.GetWindowExt();
 		CSize viewPortExt = dc.GetViewportExt();
 		ASSERT(viewPortExt.cx / windowExt.cx == viewPortExt.cy / windowExt.cy);

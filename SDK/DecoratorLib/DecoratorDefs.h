@@ -196,20 +196,6 @@ namespace DecoratorSDK
 	static const int DECORATOR_MINSENSITIVITYDISTANCE	= 2;
 	static const int DECORATOR_MAXSENSITIVITYDISTANCE	= 6;
 
-	struct SFont
-	{
-		CFont*			pFont;
-		int				iSize;
-		CString			strName;
-		int				iBoldness;
-		bool			bItalics;
-
-		SFont( const CString& _strName, int _iSize, int _iBoldness, bool _bItalics )
-			: pFont( NULL ), strName( _strName ), iSize( _iSize ), iBoldness( _iBoldness ), bItalics( _bItalics )
-		{
-		}
-	};
-
 	struct GdipFont
 	{
 		Gdiplus::Font*	gdipFont;
