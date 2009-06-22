@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// New box decorator class
-//	NewBoxDecorator.h
+// Box decorator class
+//	BoxDecorator.h
 //
 //################################################################################################
 
-#ifndef __NEWBOXDECORATOR_H_
-#define __NEWBOXDECORATOR_H_
+#ifndef __BOXDECORATOR_H_
+#define __BOXDECORATOR_H_
 
 
 #include "StdAfx.h"
@@ -16,19 +16,19 @@
 
 //################################################################################################
 //
-// CLASS : NewBoxDecorator
+// CLASS : BoxDecorator
 //
 //################################################################################################
 
-class NewBoxDecorator: public DecoratorSDK::DecoratorInterface
+class BoxDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
 	CComPtr<IMgaCommonDecoratorEvents>	m_eventSink;
 
 public:
-	NewBoxDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
-	virtual ~NewBoxDecorator();
+	BoxDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
+	virtual ~BoxDecorator();
 
 // =============== resembles IMgaElementDecorator
 public:
@@ -71,4 +71,4 @@ public:
 	virtual bool	OperationCanceledByGME		(void);
 };
 
-#endif //__NEWBOXDECORATOR_H_
+#endif //__BOXDECORATOR_H_

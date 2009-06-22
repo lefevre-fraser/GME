@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// New Box Decorator COM side Implementation
-//	NewBoxDecoratorImpl.h
+// Box Decorator COM side Implementation
+//	BoxDecoratorImpl.h
 //
 //################################################################################################
 
-#ifndef __NEWBOXDECORATORIMPL_H_
-#define __NEWBOXDECORATORIMPL_H_
+#ifndef __BOXDECORATORIMPL_H_
+#define __BOXDECORATORIMPL_H_
 
 
 
@@ -21,14 +21,14 @@ class DecoratorInterface;
 
 //################################################################################################
 //
-// CLASS : CNewBoxDecoratorImpl
+// CLASS : CBoxDecoratorImpl
 //
 //################################################################################################
 
-class ATL_NO_VTABLE CNewBoxDecoratorImpl :
+class ATL_NO_VTABLE CBoxDecoratorImpl :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public IMgaElementDecorator,
-	public CComCoClass<CNewBoxDecoratorImpl, &CLSID_NewBoxDecorator>
+	public CComCoClass<CBoxDecoratorImpl, &CLSID_BoxDecorator>
 {
 protected:
 	DecoratorSDK::DecoratorInterface*	m_pElementDecorator;
@@ -36,17 +36,16 @@ protected:
 	bool								m_bInitCallFromEx;
 
 public:
-	CNewBoxDecoratorImpl();
-	~CNewBoxDecoratorImpl();
+	CBoxDecoratorImpl();
+	~CBoxDecoratorImpl();
 
-	DECLARE_REGISTRY_RESOURCEID( IDR_NEWBOXDECORATOR )
+	DECLARE_REGISTRY_RESOURCEID( IDR_BOXDECORATOR )
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP( CNewBoxDecoratorImpl )
+	BEGIN_COM_MAP( CBoxDecoratorImpl )
 		COM_INTERFACE_ENTRY( IMgaElementDecorator )
 	END_COM_MAP()
 
-// =============== INewBoxDecorator
 public:
 	// =============== inherited from IMgaDecorator
 	STDMETHOD( Initialize )						( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO );
@@ -65,7 +64,7 @@ public:
 	STDMETHOD( Draw )							( /*[in]*/ HDC hdc );
 	STDMETHOD( SaveState )						( void );
 
-	// =============== INewBoxDecorator
+	// =============== IMgaElementDecorator
 	STDMETHOD( InitializeEx )					( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO, /*[in]*/ IMgaCommonDecoratorEvents* eventSink, /*[in]*/ ULONGLONG parentWnd );
 	STDMETHOD( DrawEx )							( /*[in]*/ HDC hdc, /*[in]*/ ULONGLONG gdipGraphics );
 	STDMETHOD( SetSelected )					( /*[in]*/ VARIANT_BOOL bIsSelected );
@@ -88,4 +87,4 @@ public:
 	STDMETHOD( OperationCanceled )				( void );
 };
 
-#endif //__NEWBOXDECORATORIMPL_H_
+#endif //__BOXDECORATORIMPL_H_

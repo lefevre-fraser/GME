@@ -163,8 +163,7 @@ typedef enum { GME_LINE_SOLID = 0, GME_LINE_DASH, GME_LINE_CUSTOMIZED } GMEConnL
 #define GME_CONN_MAIN_LABEL			4
 #define GME_CONN_LABEL_NUM			5
 
-#define GME_OLDDEFAULT_DECORATOR	"MGA.BoxDecorator"
-#define GME_DEFAULT_DECORATOR		"MGA.NewBoxDecorator"
+#define GME_DEFAULT_DECORATOR		"MGA.BoxDecorator"
 
 class CGuiMetaProject;
 class CGuiMetaBase;

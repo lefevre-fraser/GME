@@ -4,7 +4,6 @@
 //
 #define IDS_PROJNAME                    100
 #define IDR_BOXDECORATOR                101
-#define IDR_NEWBOXDECORATOR             102
 #define IDB_DEFAULTREFTONULL            159
 #define IDB_REFERENCE                   159
 #define IDB_DEFAULTATOM                 160
@@ -40,6 +39,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        214
 #define _APS_NEXT_COMMAND_VALUE         32768
 #define _APS_NEXT_CONTROL_VALUE         202
-#define _APS_NEXT_SYMED_VALUE           105
+#define _APS_NEXT_SYMED_VALUE           103
 #endif
 #endif

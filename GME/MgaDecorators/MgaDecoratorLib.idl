@@ -23,16 +23,6 @@ library MGADECORATORLib
 	]
 	coclass BoxDecorator
 	{
-		[default] interface IMgaDecorator;
-		interface IMgaVersionInfo;
-	};
-
-	[
-		uuid(F42CEA82-01DE-47A0-828E-C9A707E864E6),
-		helpstring("NewBoxDecorator Class")
-	]
-	coclass NewBoxDecorator
-	{
 		[default] interface IMgaElementDecorator;
 		interface IMgaVersionInfo;
 	};

@@ -91,7 +91,6 @@ END
 //
 
 IDR_BOXDECORATOR        REGISTRY                "BoxDecorator.rgs"
-IDR_NEWBOXDECORATOR     REGISTRY                "NewBoxDecorator.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //

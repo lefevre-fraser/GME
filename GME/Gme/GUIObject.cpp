@@ -539,7 +539,7 @@ CGuiAnnotator::~CGuiAnnotator()
 void CGuiAnnotator::InitDecorator(int asp)
 {
 	try {
-		CString progId = AN_NEWDECORATOR_PROGID;
+		CString progId = AN_DECORATOR_PROGID;
 		COMTHROW(decoratorData[asp]->decorator.CoCreateInstance(PutInBstr(progId)));
 
 		CComPtr<IMgaElementDecoratorEvents> annotatorEventSinkIface;
@@ -1300,23 +1300,8 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 		else
 			COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
 	}
-	catch (hresult_exception &e) {
-		CMainFrame::theInstance->m_console.Message("Cannot create " + progId + " decorator! Trying default (" + GME_OLDDEFAULT_DECORATOR + ") decorator.", 3);
-		try {
-			if (progId != GME_OLDDEFAULT_DECORATOR) {
-				progId = GME_OLDDEFAULT_DECORATOR;
-				decor = NULL;
-				COMTHROW(decor.CoCreateInstance(PutInBstr(progId)));
-				COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
-			}
-			else {
-				throw hresult_exception(e.hr);
-			}
-		}
-		catch (hresult_exception &e) {
-			CMainFrame::theInstance->m_console.Message("Cannot create default decorator.\nGiving up.", 3);
-			throw hresult_exception(e.hr);
-		}
+	catch (hresult_exception&) {
+		CMainFrame::theInstance->m_console.Message("Cannot create " + progId + " decorator.", 3);
 	}
 	guiAspects[asp] = new CGuiAspect(metaAspect, this, metaAspect->index, asp, decor, newDecor, decoratorEventSink);
 	parentAspect = 0;

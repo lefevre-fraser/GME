@@ -19,8 +19,7 @@ static char THIS_FILE[] = __FILE__;
 // from GME
 typedef enum { GME_NAME_FONT = 0, GME_PORTNAME_FONT, GME_CONNLABEL_FONT, GME_FONT_KIND_NUM } GMEFontKind;
 static int  fontSizes[GME_FONT_KIND_NUM]	= { 18, 15, 12 };
-#define GME_OLDDEFAULT_DECORATOR	"MGA.BoxDecorator"
-#define GME_DEFAULT_DECORATOR		"MGA.NewBoxDecorator"
+#define GME_DEFAULT_DECORATOR		"MGA.BoxDecorator"
 #define DECORATOR_PREF				"decorator"
 typedef CTypedPtrList<CPtrList, CRect *>	CRectList;
 
@@ -153,21 +152,7 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 						COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
 					}
 				}
-				catch (hresult_exception &e) {
-					try {
-						if (decoratorProgId != GME_OLDDEFAULT_DECORATOR) {
-							decoratorProgId = GME_OLDDEFAULT_DECORATOR;
-							decorator = NULL;
-							COMTHROW(decorator.CoCreateInstance(PutInBstr(decoratorProgId)));
-							COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
-						}
-						else {
-							throw hresult_exception(e.hr);
-						}
-					}
-					catch (hresult_exception &e) {
-						throw hresult_exception(e.hr);
-					}
+				catch (hresult_exception&) {
 				}
 
 				long sx, sy;

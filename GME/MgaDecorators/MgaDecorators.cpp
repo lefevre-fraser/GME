@@ -11,15 +11,13 @@
 #include "MgaDecoratorLib.h"
 
 #include "MgaDecoratorLib_i.c"
-#include "BoxDecorator.h"
 #include "NewBoxDecoratorImpl.h"
 
 
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_BoxDecorator, CBoxDecorator)
-OBJECT_ENTRY(CLSID_NewBoxDecorator, CNewBoxDecoratorImpl)
+OBJECT_ENTRY(CLSID_BoxDecorator, CBoxDecoratorImpl)
 END_OBJECT_MAP()
 
 class CMgaDecoratorsApp : public CWinApp

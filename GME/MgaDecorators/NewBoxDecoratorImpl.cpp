@@ -1,7 +1,7 @@
 //################################################################################################
 //
-// New Box Decorator COM side Implementation
-//	NewBoxDecoratorImpl.cpp
+// Box Decorator COM side Implementation
+//	BoxDecoratorImpl.cpp
 //
 //################################################################################################
 
@@ -14,7 +14,7 @@
 
 //################################################################################################
 //
-// CLASS : CNewBoxDecoratorImpl
+// CLASS : CBoxDecoratorImpl
 //
 //################################################################################################
 
@@ -26,18 +26,18 @@
 	if (!m_bLocationSet)						\
 		return E_DECORATOR_LOCISNOTSET;
 
-CNewBoxDecoratorImpl::CNewBoxDecoratorImpl():
+CBoxDecoratorImpl::CBoxDecoratorImpl():
 	m_pElementDecorator	(NULL),
 	m_bLocationSet		(false),
 	m_bInitCallFromEx	(false)
 {
 }
 
-CNewBoxDecoratorImpl::~CNewBoxDecoratorImpl()
+CBoxDecoratorImpl::~CBoxDecoratorImpl()
 {
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
+STDMETHODIMP CBoxDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -47,7 +47,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPar
 	return S_OK;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::Destroy()
+STDMETHODIMP CBoxDecoratorImpl::Destroy()
 {
 	VERIFY_INITIALIZATION
 
@@ -71,21 +71,21 @@ STDMETHODIMP CNewBoxDecoratorImpl::Destroy()
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
+STDMETHODIMP CBoxDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 {
-	*bstrMnemonic = CComBSTR("NewBoxDecorator").Detach();
+	*bstrMnemonic = CComBSTR("BoxDecorator").Detach();
 
 	return S_OK;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
+STDMETHODIMP CBoxDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 {
 	*pFeatureCodes = F_RESIZABLE | F_HASLABEL | F_HASPORTS;
 
 	return S_OK;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
+STDMETHODIMP CBoxDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
 {
 	VERIFY_INITIALIZATION
 
@@ -102,7 +102,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
+STDMETHODIMP CBoxDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
 {
 	VERIFY_INITIALIZATION
 
@@ -119,7 +119,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
+STDMETHODIMP CBoxDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 {
 	VERIFY_INITIALIZATION
 
@@ -136,7 +136,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeight)
+STDMETHODIMP CBoxDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeight)
 {
 	VERIFY_INITIALIZATION
 
@@ -156,7 +156,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeigh
 }
 
 
-STDMETHODIMP CNewBoxDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG ey)
+STDMETHODIMP CBoxDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG ey)
 {
 	VERIFY_INITIALIZATION
 
@@ -174,7 +174,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG e
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CBoxDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -196,7 +196,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LON
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CBoxDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -218,7 +218,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CBoxDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -240,7 +240,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
+STDMETHODIMP CBoxDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 {
 	VERIFY_INITIALIZATION
 
@@ -259,7 +259,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::Draw(HDC hdc)
+STDMETHODIMP CBoxDecoratorImpl::Draw(HDC hdc)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -269,7 +269,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::Draw(HDC hdc)
 	return E_DECORATOR_USING_DEPRECATED_FUNCTION;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::SaveState()
+STDMETHODIMP CBoxDecoratorImpl::SaveState()
 {
 	VERIFY_INITIALIZATION
 
@@ -277,8 +277,8 @@ STDMETHODIMP CNewBoxDecoratorImpl::SaveState()
 }
 
 // New functions
-STDMETHODIMP CNewBoxDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-												IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
+STDMETHODIMP CBoxDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
+											 IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -286,11 +286,11 @@ STDMETHODIMP CNewBoxDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 
 	HRESULT retVal = S_OK;
 	try {
-		NewBoxDecorator* newBoxDecorator = new NewBoxDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
-		m_pElementDecorator = newBoxDecorator;
+		BoxDecorator* boxDecorator = new BoxDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
+		m_pElementDecorator = boxDecorator;
 
-		newBoxDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
-									  CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
+		boxDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
+								   CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;
@@ -302,7 +302,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
+STDMETHODIMP CBoxDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -329,7 +329,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
+STDMETHODIMP CBoxDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 {
 	VERIFY_INITIALIZATION
 
@@ -346,7 +346,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -364,7 +364,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG po
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -382,7 +382,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -400,7 +400,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, 
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -418,7 +418,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -436,7 +436,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULON
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -454,7 +454,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx,
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -472,7 +472,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LON
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -490,7 +490,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG poin
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -508,7 +508,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -526,7 +526,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LO
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -544,7 +544,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance,
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -564,7 +564,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleD
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -584,7 +584,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDa
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -602,7 +602,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEff
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -620,7 +620,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LO
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CBoxDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -638,7 +638,7 @@ STDMETHODIMP CNewBoxDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFla
 	return retVal;
 }
 
-STDMETHODIMP CNewBoxDecoratorImpl::OperationCanceled()
+STDMETHODIMP CBoxDecoratorImpl::OperationCanceled()
 {
 	HRESULT retVal = S_OK;
 	try {
