@@ -6,7 +6,7 @@
 //################################################################################################
 
 #include "StdAfx.h"
-#include "NewBoxDecorator.h"
+#include "BoxDecorator.h"
 #include "BoxCompositePart.h"
 #include <afxole.h>
 #include <sys/types.h>

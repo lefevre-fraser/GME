@@ -6,8 +6,8 @@
 //################################################################################################
 
 #include "StdAfx.h"
-#include "NewBoxDecoratorImpl.h"
-#include "NewBoxDecorator.h"
+#include "BoxDecoratorImpl.h"
+#include "BoxDecorator.h"
 #include "DecoratorExceptions.h"
 #include "DecoratorInterface.h"
 

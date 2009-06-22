@@ -11,7 +11,7 @@
 #include "MgaDecoratorLib.h"
 
 #include "MgaDecoratorLib_i.c"
-#include "NewBoxDecoratorImpl.h"
+#include "BoxDecoratorImpl.h"
 
 
 CComModule _Module;
