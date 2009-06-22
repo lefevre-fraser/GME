@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// New Annotator Decorator COM side Implementation
-//	NewAnnotatorDecoratorImpl.h
+// Annotator Decorator COM side Implementation
+//	AnnotatorDecoratorImpl.h
 //
 //################################################################################################
 
-#ifndef __NEWANNOTATORDECORATORIMPL_H_
-#define __NEWANNOTATORDECORATORIMPL_H_
+#ifndef __ANNOTATORDECORATORIMPL_H_
+#define __ANNOTATORDECORATORIMPL_H_
 
 
 
@@ -23,14 +23,14 @@ class DecoratorInterface;
 
 //################################################################################################
 //
-// CLASS : CNewAnnotatorDecoratorImpl
+// CLASS : CAnnotatorDecoratorImpl
 //
 //################################################################################################
 
-class ATL_NO_VTABLE CNewAnnotatorDecoratorImpl :
+class ATL_NO_VTABLE CAnnotatorDecoratorImpl :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public IMgaElementDecorator,
-	public CComCoClass<CNewAnnotatorDecoratorImpl, &CLSID_AnnotatorDecorator>
+	public CComCoClass<CAnnotatorDecoratorImpl, &CLSID_AnnotatorDecorator>
 {
 protected:
 	DecoratorSDK::DecoratorInterface*	m_pElementDecorator;
@@ -41,17 +41,16 @@ protected:
 	VARIANT								m_vValue;
 
 public:
-	CNewAnnotatorDecoratorImpl();
-	~CNewAnnotatorDecoratorImpl();
+	CAnnotatorDecoratorImpl();
+	~CAnnotatorDecoratorImpl();
 
 	DECLARE_REGISTRY_RESOURCEID( IDR_DECORATOR )
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP( CNewAnnotatorDecoratorImpl )
+	BEGIN_COM_MAP( CAnnotatorDecoratorImpl )
 		COM_INTERFACE_ENTRY( IMgaElementDecorator )
 	END_COM_MAP()
 
-// =============== INewAnnotatorDecorator
 public:
 	// =============== inherited from IMgaDecorator
 	STDMETHOD( Initialize )						( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO );
@@ -93,4 +92,4 @@ public:
 	STDMETHOD( OperationCanceled )				( void );
 };
 
-#endif //__NEWANNOTATORDECORATORIMPL_H_
+#endif //__ANNOTATORDECORATORIMPL_H_

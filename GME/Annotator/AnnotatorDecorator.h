@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// New Annotator decorator class
-//	NewAnnotatorDecorator.h
+// Annotator decorator class
+//	AnnotatorDecorator.h
 //
 //################################################################################################
 
-#ifndef __NEWANNOTATORDECORATOR_H_
-#define __NEWANNOTATORDECORATOR_H_
+#ifndef __ANNOTATORDECORATOR_H_
+#define __ANNOTATORDECORATOR_H_
 
 
 #include "StdAfx.h"
@@ -18,11 +18,11 @@ namespace AnnotatorDecor {
 
 //################################################################################################
 //
-// CLASS : NewAnnotatorDecorator
+// CLASS : AnnotatorDecorator
 //
 //################################################################################################
 
-class NewAnnotatorDecorator: public DecoratorSDK::DecoratorInterface
+class AnnotatorDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
@@ -32,8 +32,8 @@ protected:
 	VARIANT								m_vValue;
 
 public:
-	NewAnnotatorDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
-	virtual ~NewAnnotatorDecorator();
+	AnnotatorDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
+	virtual ~AnnotatorDecorator();
 
 // =============== resembles IMgaElementDecorator
 public:
@@ -78,4 +78,4 @@ public:
 
 }; // namespace AnnotatorDecor
 
-#endif //__NEWANNOTATORDECORATOR_H_
+#endif //__ANNOTATORDECORATOR_H_

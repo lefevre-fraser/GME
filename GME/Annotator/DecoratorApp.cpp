@@ -13,13 +13,13 @@
 #include "DecoratorLib.h"
 #include "DecoratorConfig.h"
 #include "DecoratorLib_i.c"
-#include "NewAnnotatorDecoratorImpl.h"
+#include "AnnotatorDecoratorImpl.h"
 
 
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_AnnotatorDecorator, CNewAnnotatorDecoratorImpl)
+OBJECT_ENTRY(CLSID_AnnotatorDecorator, CAnnotatorDecoratorImpl)
 END_OBJECT_MAP()
 
 class CDecoratorApp : public CWinApp

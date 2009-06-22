@@ -1,44 +1,44 @@
 //################################################################################################
 //
-// New Annotator Decorator COM side Implementation
-//	NewAnnotatorDecoratorImpl.cpp
+// Annotator Decorator COM side Implementation
+//	AnnotatorDecoratorImpl.cpp
 //
 //################################################################################################
 
 #include "StdAfx.h"
 #include "DecoratorConfig.h"
-#include "NewAnnotatorDecoratorImpl.h"
-#include "NewAnnotatorDecorator.h"
+#include "AnnotatorDecoratorImpl.h"
+#include "AnnotatorDecorator.h"
 #include "DecoratorExceptions.h"
 #include "DecoratorInterface.h"
 
 
 //################################################################################################
 //
-// CLASS : CNewAnnotatorDecoratorImpl
+// CLASS : CAnnotatorDecoratorImpl
 //
 //################################################################################################
 
 #define VERIFY_INITIALIZATION					\
-	if (!m_pElementDecorator)						\
+	if (!m_pElementDecorator)					\
 		return E_DECORATOR_UNINITIALIZED;
 
 #define VERIFY_LOCATION							\
 	if (!m_bLocationSet)						\
 		return E_DECORATOR_LOCISNOTSET;
 
-CNewAnnotatorDecoratorImpl::CNewAnnotatorDecoratorImpl():
+CAnnotatorDecoratorImpl::CAnnotatorDecoratorImpl():
 	m_pElementDecorator	(NULL),
 	m_bLocationSet		(false),
 	m_bInitCallFromEx	(false)
 {
 }
 
-CNewAnnotatorDecoratorImpl::~CNewAnnotatorDecoratorImpl()
+CAnnotatorDecoratorImpl::~CAnnotatorDecoratorImpl()
 {
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
+STDMETHODIMP CAnnotatorDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -48,7 +48,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::Initialize(IMgaProject* pProject, IMgaM
 	return S_OK;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::Destroy()
+STDMETHODIMP CAnnotatorDecoratorImpl::Destroy()
 {
 	VERIFY_INITIALIZATION
 
@@ -72,21 +72,21 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::Destroy()
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
+STDMETHODIMP CAnnotatorDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 {
 	*bstrMnemonic = CComBSTR(DECORATOR_NAME).Detach();
 
 	return S_OK;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
+STDMETHODIMP CAnnotatorDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 {
 	*pFeatureCodes = F_RESIZABLE | F_HASLABEL | F_MOUSEEVENTS | F_RESIZEAFTERMOD;
 
 	return S_OK;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
+STDMETHODIMP CAnnotatorDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
 {
 	HRESULT retVal = S_OK;
 	m_bstrName = bstrName;
@@ -94,7 +94,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
+STDMETHODIMP CAnnotatorDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
 {
 	VERIFY_INITIALIZATION
 
@@ -111,7 +111,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValu
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
+STDMETHODIMP CAnnotatorDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 {
 	VERIFY_INITIALIZATION
 
@@ -128,7 +128,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeight)
+STDMETHODIMP CAnnotatorDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeight)
 {
 	VERIFY_INITIALIZATION
 
@@ -148,7 +148,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* p
 }
 
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG ey)
+STDMETHODIMP CAnnotatorDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG ey)
 {
 	VERIFY_INITIALIZATION
 
@@ -166,7 +166,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, 
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CAnnotatorDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -188,7 +188,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* e
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CAnnotatorDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -210,7 +210,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LO
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CAnnotatorDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -232,7 +232,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
+STDMETHODIMP CAnnotatorDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 {
 	VERIFY_INITIALIZATION
 
@@ -251,7 +251,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::Draw(HDC hdc)
+STDMETHODIMP CAnnotatorDecoratorImpl::Draw(HDC hdc)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -261,7 +261,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::Draw(HDC hdc)
 	return E_DECORATOR_USING_DEPRECATED_FUNCTION;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::SaveState()
+STDMETHODIMP CAnnotatorDecoratorImpl::SaveState()
 {
 	VERIFY_INITIALIZATION
 
@@ -269,8 +269,8 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::SaveState()
 }
 
 // New functions
-STDMETHODIMP CNewAnnotatorDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-													  IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
+STDMETHODIMP CAnnotatorDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
+												   IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -278,11 +278,11 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::InitializeEx(IMgaProject* pProject, IMg
 
 	HRESULT retVal = S_OK;
 	try {
-		AnnotatorDecor::NewAnnotatorDecorator* newAnnotatorDecorator = new AnnotatorDecor::NewAnnotatorDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
-		m_pElementDecorator = newAnnotatorDecorator;
+		AnnotatorDecor::AnnotatorDecorator* annotatorDecorator = new AnnotatorDecor::AnnotatorDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
+		m_pElementDecorator = annotatorDecorator;
 		m_pElementDecorator->SetParam(m_bstrName, m_vValue);
-		newAnnotatorDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
-											CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
+		annotatorDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
+										 CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;
@@ -294,7 +294,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::InitializeEx(IMgaProject* pProject, IMg
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
+STDMETHODIMP CAnnotatorDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -321,7 +321,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
+STDMETHODIMP CAnnotatorDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 {
 	VERIFY_INITIALIZATION
 
@@ -338,7 +338,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -356,7 +356,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, L
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -374,7 +374,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG 
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -392,7 +392,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG po
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -410,7 +410,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -428,7 +428,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -446,7 +446,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG p
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -464,7 +464,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlag
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -482,7 +482,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LON
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -500,7 +500,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG 
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -518,7 +518,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFla
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -536,7 +536,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG dis
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -556,7 +556,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG 
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -576,7 +576,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG p
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -594,7 +594,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG d
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -612,7 +612,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG poin
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CAnnotatorDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -630,7 +630,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULON
 	return retVal;
 }
 
-STDMETHODIMP CNewAnnotatorDecoratorImpl::OperationCanceled()
+STDMETHODIMP CAnnotatorDecoratorImpl::OperationCanceled()
 {
 	HRESULT retVal = S_OK;
 	try {

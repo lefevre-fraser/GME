@@ -332,11 +332,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\NewAnnotatorDecorator.cpp"
+				RelativePath=".\AnnotatorDecorator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\NewAnnotatorDecoratorImpl.cpp"
+				RelativePath=".\AnnotatorDecoratorImpl.cpp"
 				>
 			</File>
 			<File
@@ -398,11 +398,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\NewAnnotatorDecorator.h"
+				RelativePath=".\AnnotatorDecorator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\NewAnnotatorDecoratorImpl.h"
+				RelativePath=".\AnnotatorDecoratorImpl.h"
 				>
 			</File>
 			<File
