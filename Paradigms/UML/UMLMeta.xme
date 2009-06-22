@@ -1799,7 +1799,7 @@
 					<value></value>
 				</attribute>
 				<attribute kind="Decorator">
-					<value>Mga.NewUMLDecorator</value>
+					<value>Mga.UMLDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -2584,7 +2584,7 @@ associates -&gt; iterate( fco : gme::FCO ; ctxs = Set{} | ctxs.union( fco.allDes
 					<value></value>
 				</attribute>
 				<attribute kind="Decorator">
-					<value>Mga.NewUMLDecorator</value>
+					<value>Mga.UMLDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -2947,7 +2947,7 @@ endif</value>
 					<value></value>
 				</attribute>
 				<attribute kind="Decorator">
-					<value>Mga.NewUMLDecorator</value>
+					<value>Mga.UMLDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -4431,7 +4431,7 @@ st &lt;&gt; &quot;&quot; implies st.match( &quot;^[_a-zA-Z][_a-zA-Z0-9]*$&quot; 
 					<value></value>
 				</attribute>
 				<attribute kind="Decorator">
-					<value>Mga.NewUMLDecorator</value>
+					<value>Mga.UMLDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -6874,7 +6874,7 @@ attribute , attribute</value>
 					<value></value>
 				</attribute>
 				<attribute kind="Decorator">
-					<value>Mga.NewUMLDecorator</value>
+					<value>Mga.UMLDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
@@ -9830,7 +9830,7 @@ assocCount &lt;&gt; 0 implies assocCount = 1</value>
 					<value></value>
 				</attribute>
 				<attribute kind="Decorator">
-					<value>Mga.NewUMLDecorator</value>
+					<value>Mga.UMLDecorator</value>
 				</attribute>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="MetaGME" guid="{783504B9-9C58-407B-A8F9-9F98B6A24F03}" cdate="Mon May 04 11:33:32 2009" mdate="Mon May 04 11:33:32 2009" >
+<paradigm name="MetaGME" guid="{9D3F9884-FE60-409C-8FC1-45789193989B}" cdate="Mon Jun 22 12:03:20 2009" mdate="Mon Jun 22 12:03:20 2009" >
 
 	<comment>GME Meta Paradigm</comment>
 
@@ -784,7 +784,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Port icon name:</dispname>
 			</attrdef>
 				<regnode name = "icon" value ="atom.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "BooleanAttribute" metaref = "1068"  attributes = "GlobalScope Help IsViewable Prompt BooleanDefault">
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -824,7 +824,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Format of Name is invalid</dispname>
 			</constraint>
 				<regnode name = "icon" value ="booleanattribute.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "Connection" metaref = "1069"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName Color NamePosition ConnLineType ConnLineStart ConnLineEnd LabelFormatStr SrcAttrLabel1 SrcAttrLabel2 DstAttrLabel1 DstAttrLabel2 IsAutoRouted">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -926,7 +926,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<enumitem dispname = "Center" value = "8"></enumitem>
 			</attrdef>
 				<regnode name = "icon" value ="connection.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "Connector" metaref = "1073" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -968,7 +968,7 @@ srcRole = "" and dstRole = "" or srcRole = "src" and dstRole = "dst"]]>
 				<dispname>Role of Source and role of Destination can be only in order: either &quot;src&quot; and &quot;dst&quot; or &quot;&quot; and &quot;&quot;.</dispname>
 			</constraint>
 				<regnode name = "icon" value ="connector.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "Constraint" metaref = "1074"  attributes = "ConstraintDescription ConstraintParam ConstraintEqn ConstraintPriority CloseEvent Depth CreateEvent DeleteEvent NewChildEvent LostChildEvent MoveEvent DeriveEvent ConnectEvent DisconnectEvent ChangeAttributeEvent ChangePropertyEvent ChangeRelationEvent ReferenceEvent UnReferenceEvent AddSetEvent RemoveSetEvent">
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1021,7 +1021,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Format of Name is invalid</dispname>
 			</constraint>
 				<regnode name = "icon" value ="constraint.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "ConstraintFunc" metaref = "1075"  attributes = "CFuncParamList CFuncDefinition CFuncContext CFuncReturnType CFuncStereotype">
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1068,7 +1068,7 @@ tr <> "" implies tr.match( "^" + id + "(::" + id + ")*$" )]]>
 				<dispname>Format of Return type of Constraint Function is invalid</dispname>
 			</constraint>
 				<regnode name = "icon" value ="constraintfunc.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "EnumAttribute" metaref = "1076"  attributes = "GlobalScope Help IsViewable Prompt DefaultItem MenuItems">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1112,7 +1112,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Format of Name is invalid</dispname>
 			</constraint>
 				<regnode name = "icon" value ="enumattribute.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "Equivalence" metaref = "1077" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1174,7 +1174,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Operands of Equivalence can be neither the same class nor classes with different types</dispname>
 			</constraint>
 				<regnode name = "icon" value ="equiv.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "FCO" metaref = "1078"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1258,7 +1258,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Port icon name:</dispname>
 			</attrdef>
 				<regnode name = "icon" value ="fco.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "FieldAttribute" metaref = "1082"  attributes = "GlobalScope Help IsViewable Prompt DataType FieldDefault Multiline ContentType">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1320,7 +1320,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Format of Name is invalid</dispname>
 			</constraint>
 				<regnode name = "icon" value ="fieldattribute.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "Folder" metaref = "1083"  attributes = "InRootFolder DisplayedName">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1347,7 +1347,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>In root folder?</dispname>
 			</attrdef>
 				<regnode name = "icon" value ="folder.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "ImplementationInheritance" metaref = "1085" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1367,7 +1367,7 @@ baseCount <> 0 implies baseCount = 1]]>
 				<dispname>Implementation inheritance operator has exactly one base class</dispname>
 			</constraint>
 				<regnode name = "icon" value ="impinheritance.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "Inheritance" metaref = "1086" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1387,7 +1387,7 @@ baseCount <> 0 implies baseCount = 1]]>
 				<dispname>Inheritance operator has exactly one base class.</dispname>
 			</constraint>
 				<regnode name = "icon" value ="inheritance.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "InterfaceInheritance" metaref = "1087" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1407,7 +1407,7 @@ baseCount <> 0 implies baseCount = 1]]>
 				<dispname>Interface inheritance operator have exactly one base class</dispname>
 			</constraint>
 				<regnode name = "icon" value ="intinheritance.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "Model" metaref = "1088"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius IsTypeInfoShown IsModelAutoRouted">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1495,7 +1495,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Port icon name:</dispname>
 			</attrdef>
 				<regnode name = "icon" value ="model.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
 		</atom>
 		<atom name = "Reference" metaref = "1092"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
@@ -1580,7 +1580,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Port icon name:</dispname>
 			</attrdef>
 				<regnode name = "icon" value ="reference.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "SameAspect" metaref = "1096" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1630,7 +1630,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Operands of SameAspect cannot be the same aspect.</dispname>
 			</constraint>
 				<regnode name = "icon" value ="equiv.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "SameFolder" metaref = "1097" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -1681,7 +1681,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Operands of SameFolder cannot be the same folder.</dispname>
 			</constraint>
 				<regnode name = "icon" value ="equiv.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<atom name = "Set" metaref = "1098"  attributes = "IsAbstract InRootFolder GeneralPreferences DisplayedName IsTypeShown Icon IsNameEnabled PortIcon SubTypeIcon NamePosition InstanceIcon Decorator NameWrapNum IsHotspotEnabled IsResizable AutoRouterPref HelpURL IsGradientFillEnabled GradientFillColor GradientFillDirection IsShadowCastEnabled ShadowColor ShadowThickness ShadowDirection IsRoundRectangleEnabled RoundRectangleRadius">
 				<regnode name = "namePosition" value ="8"></regnode>
@@ -1765,14 +1765,14 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Port icon name:</dispname>
 			</attrdef>
 				<regnode name = "icon" value ="set.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
 		<set name = "Aspect" metaref = "1102" attributes = "DisplayedName" >
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "sName" value ="srcFCO"></regnode>
 				<regnode name = "mName" value ="members"></regnode>
 				<regnode name = "icon" value ="aspect.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 			<constraint name="HasMember" eventmask = "0x0" depth = "0" priority = "2">
 				<![CDATA[--self.allSameAspects( 1, true )->iterate( aspect : gme::Set ; accu : ocl::Integer = 0 | accu + aspect.members()->size ) > 0
 self.aspectHasMember(Set{})]]>
@@ -2458,7 +2458,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Format of Name is invalid.</dispname>
 			</constraint>
 			<regnode name = "icon" value ="aspectproxy.bmp"></regnode>
-			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+			<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Aspect"></pointeritem>
 			</pointerspec>
@@ -2536,7 +2536,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Port icon name:</dispname>
 			</attrdef>
 			<regnode name = "icon" value ="atomproxy.bmp"></regnode>
-			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+			<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Atom"></pointeritem>
 			</pointerspec>
@@ -2609,7 +2609,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>In root folder?</dispname>
 			</attrdef>
 			<regnode name = "icon" value ="connectionproxy.bmp"></regnode>
-			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+			<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Connection"></pointeritem>
 			</pointerspec>
@@ -2687,7 +2687,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Port icon name:</dispname>
 			</attrdef>
 			<regnode name = "icon" value ="fcoproxy.bmp"></regnode>
-			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+			<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "FCO"></pointeritem>
 			</pointerspec>
@@ -2710,7 +2710,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Format of Name is invalid</dispname>
 			</constraint>
 			<regnode name = "icon" value ="folderproxy.bmp"></regnode>
-			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+			<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Folder"></pointeritem>
 			</pointerspec>
@@ -2788,7 +2788,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Port icon name:</dispname>
 			</attrdef>
 			<regnode name = "icon" value ="modelproxy.bmp"></regnode>
-			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+			<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Model"></pointeritem>
 			</pointerspec>
@@ -2866,7 +2866,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Port icon name:</dispname>
 			</attrdef>
 			<regnode name = "icon" value ="referenceproxy.bmp"></regnode>
-			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+			<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Reference"></pointeritem>
 			</pointerspec>
@@ -2944,7 +2944,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Port icon name:</dispname>
 			</attrdef>
 			<regnode name = "icon" value ="setproxy.bmp"></regnode>
-			<regnode name = "decorator" value ="Mga.Decorator.NewMetaDecorator"></regnode>
+			<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Set"></pointeritem>
 			</pointerspec>

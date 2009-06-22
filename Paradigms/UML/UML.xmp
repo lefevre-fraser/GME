@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="UML" guid="{93DBE6C6-5BFB-4C3D-9474-FBE0B09C7226}" cdate="Mon May 04 12:07:33 2009" mdate="Mon May 04 12:07:33 2009" >
+<paradigm name="UML" guid="{1913C77F-2986-4DA3-BD61-02F6C19FD44E}" cdate="Mon Jun 22 12:16:56 2009" mdate="Mon Jun 22 12:16:56 2009" >
 
 	<comment>Descent into the maelstrom!</comment>
 
@@ -188,7 +188,7 @@ st <> "" implies st.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<dispname>Format of Stereotype is invalid.</dispname>
 			</constraint>
 				<regnode name = "icon" value ="class.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.UMLDecorator"></regnode>
 				<regnode name = "itemResizable" value ="true"></regnode>
 				<regnode name = "shadowColor" value ="0x000000"></regnode>
 				<regnode name = "shadowThickness" value ="0"></regnode>
@@ -227,7 +227,7 @@ srcCount <> 0 implies srcCount = 1]]>
 				<dispname>Connector is invalid. It can have exactly one Source.</dispname>
 			</constraint>
 				<regnode name = "icon" value ="connector.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.UMLDecorator"></regnode>
 		</atom>
 		<atom name = "Constraint" metaref = "1020"  attributes = "ConstraintEqn ConstraintDescription">
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -258,7 +258,7 @@ endif]]>
 				<dispname>Format of the name of the Constraint is invalid</dispname>
 			</constraint>
 				<regnode name = "icon" value ="constraint.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.UMLDecorator"></regnode>
 		</atom>
 		<atom name = "ConstraintDefinition" metaref = "1021"  attributes = "DefinitionRetType DefinitionStereo DefinitionEqn DefinitionParamList">
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -279,7 +279,7 @@ endif]]>
 				<dispname>Format of the name of the Constraint is invalid</dispname>
 			</constraint>
 				<regnode name = "icon" value ="constraintdefinition.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.UMLDecorator"></regnode>
 		</atom>
 		<atom name = "Inheritance" metaref = "1022" >
 				<regnode name = "namePosition" value ="4"></regnode>
@@ -300,7 +300,7 @@ baseCount <> 0 implies baseCount = 1]]>
 				<dispname>Inheritance operator is invalid. It can have exactly one base Class.</dispname>
 			</constraint>
 				<regnode name = "icon" value ="inheritance.bmp"></regnode>
-				<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+				<regnode name = "decorator" value ="Mga.UMLDecorator"></regnode>
 		</atom>
 		<connection name = "Association" metaref = "1023" attributes = "Stereotype dstCardinality dstRolename srcCardinality srcRolename" >
 				<regnode name = "color" value ="0x000000"></regnode>
@@ -571,7 +571,7 @@ assocCount <> 0 implies assocCount = 1]]>
 				<dispname>Class as AssociationClass can have at most one Connector </dispname>
 			</constraint>
 			<regnode name = "icon" value ="classref.bmp"></regnode>
-			<regnode name = "decorator" value ="Mga.NewUMLDecorator"></regnode>
+			<regnode name = "decorator" value ="Mga.UMLDecorator"></regnode>
 			<regnode name = "itemResizable" value ="true"></regnode>
 			<regnode name = "shadowColor" value ="0x000000"></regnode>
 			<regnode name = "shadowThickness" value ="0"></regnode>
