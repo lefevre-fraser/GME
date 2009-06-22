@@ -32,16 +32,6 @@ library UMLDECORATORLib
 	]
 	coclass UMLDecorator
 	{
-		[default] interface IMgaDecorator;
-		interface IMgaVersionInfo;
-	};
-
-	[
-		uuid(42FF26BF-F7EE-4b27-922E-FD31FB981F67),
-		helpstring("NewUMLDecorator Class")
-	]
-	coclass NewUMLDecorator
-	{
 		[default] interface IMgaElementDecorator;
 		interface IMgaVersionInfo;
 	};

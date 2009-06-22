@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// New UML Decorator COM side Implementation
-//	NewUMLDecoratorImpl.h
+// UML Decorator COM side Implementation
+//	UMLDecoratorImpl.h
 //
 //################################################################################################
 
-#ifndef __NEWUMLDECORATORIMPL_H_
-#define __NEWUMLDECORATORIMPL_H_
+#ifndef __UMLDECORATORIMPL_H_
+#define __UMLDECORATORIMPL_H_
 
 
 
@@ -23,14 +23,14 @@ class DecoratorInterface;
 
 //################################################################################################
 //
-// CLASS : CNewUMLDecoratorImpl
+// CLASS : CUMLDecoratorImpl
 //
 //################################################################################################
 
-class ATL_NO_VTABLE CNewUMLDecoratorImpl :
+class ATL_NO_VTABLE CUMLDecoratorImpl :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public IMgaElementDecorator,
-	public CComCoClass<CNewUMLDecoratorImpl, &CLSID_NewUMLDecorator>
+	public CComCoClass<CUMLDecoratorImpl, &CLSID_UMLDecorator>
 {
 protected:
 	DecoratorSDK::DecoratorInterface*	m_pElementDecorator;
@@ -38,17 +38,16 @@ protected:
 	bool								m_bInitCallFromEx;
 
 public:
-	CNewUMLDecoratorImpl();
-	~CNewUMLDecoratorImpl();
+	CUMLDecoratorImpl();
+	~CUMLDecoratorImpl();
 
-	DECLARE_REGISTRY_RESOURCEID( IDR_NEWUMLDECORATOR )
+	DECLARE_REGISTRY_RESOURCEID( IDR_UMLDECORATOR )
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP( CNewUMLDecoratorImpl )
+	BEGIN_COM_MAP( CUMLDecoratorImpl )
 		COM_INTERFACE_ENTRY( IMgaElementDecorator )
 	END_COM_MAP()
 
-// =============== INewUMLDecorator
 public:
 	// =============== inherited from IMgaDecorator
 	STDMETHOD( Initialize )						( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO );
@@ -67,7 +66,7 @@ public:
 	STDMETHOD( Draw )							( /*[in]*/ HDC hdc );
 	STDMETHOD( SaveState )						( void );
 
-	// =============== INewUMLDecorator
+	// =============== IMgaElementDecorator
 	STDMETHOD( InitializeEx )					( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO, /*[in]*/ IMgaCommonDecoratorEvents* eventSink, /*[in]*/ ULONGLONG parentWnd );
 	STDMETHOD( DrawEx )							( /*[in]*/ HDC hdc, /*[in]*/ ULONGLONG gdipGraphics );
 	STDMETHOD( SetSelected )					( /*[in]*/ VARIANT_BOOL bIsSelected );
@@ -90,4 +89,4 @@ public:
 	STDMETHOD( OperationCanceled )				( void );
 };
 
-#endif //__NEWUMLDECORATORIMPL_H_
+#endif //__UMLDECORATORIMPL_H_

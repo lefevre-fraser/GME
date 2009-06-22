@@ -1,12 +1,12 @@
 //################################################################################################
 //
-// New UML decorator class
-//	NewUMLDecorator.h
+// UML decorator class
+//	UMLDecorator.h
 //
 //################################################################################################
 
-#ifndef __NEWUMLDECORATOR_H_
-#define __NEWUMLDECORATOR_H_
+#ifndef __UMLDECORATOR_H_
+#define __UMLDECORATOR_H_
 
 
 #include "StdAfx.h"
@@ -18,19 +18,19 @@ namespace UMLDecor {
 
 //################################################################################################
 //
-// CLASS : NewUMLDecorator
+// CLASS : UMLDecorator
 //
 //################################################################################################
 
-class NewUMLDecorator: public DecoratorSDK::DecoratorInterface
+class UMLDecorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
 	CComPtr<IMgaCommonDecoratorEvents>	m_eventSink;
 
 public:
-	NewUMLDecorator(CComPtr<IMgaCommonDecoratorEvents> eventSink);
-	virtual ~NewUMLDecorator();
+	UMLDecorator(CComPtr<IMgaCommonDecoratorEvents> eventSink);
+	virtual ~UMLDecorator();
 
 // =============== resembles IMgaElementDecorator
 public:
@@ -75,4 +75,4 @@ public:
 
 }; // namespace UMLDecor
 
-#endif //__NEWUMLDECORATOR_H_
+#endif //__UMLDECORATOR_H_

@@ -302,32 +302,6 @@
 				>
 			</File>
 			<File
-				RelativePath="UMLDecorator.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="UMLDecorator.rc"
 				>
 				<FileConfiguration
@@ -463,10 +437,6 @@
 				>
 			</File>
 			<File
-				RelativePath="UMLDecorator.h"
-				>
-			</File>
-			<File
 				RelativePath=".\UMLStereoLabelPart.h"
 				>
 			</File>
@@ -480,10 +450,6 @@
 			</File>
 			<File
 				RelativePath=".\res\constraintdefinition.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\NewUMLDecorator.rgs"
 				>
 			</File>
 			<File

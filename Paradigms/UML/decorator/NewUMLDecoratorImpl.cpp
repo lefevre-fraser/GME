@@ -1,7 +1,7 @@
 //################################################################################################
 //
-// New UML Decorator COM side Implementation
-//	NewUMLDecoratorImpl.cpp
+// UML Decorator COM side Implementation
+//	UMLDecoratorImpl.cpp
 //
 //################################################################################################
 
@@ -14,7 +14,7 @@
 
 //################################################################################################
 //
-// CLASS : CNewUMLDecoratorImpl
+// CLASS : CUMLDecoratorImpl
 //
 //################################################################################################
 
@@ -26,18 +26,18 @@
 	if (!m_bLocationSet)						\
 		return E_DECORATOR_LOCISNOTSET;
 
-CNewUMLDecoratorImpl::CNewUMLDecoratorImpl():
+CUMLDecoratorImpl::CUMLDecoratorImpl():
 	m_pElementDecorator	(NULL),
 	m_bLocationSet		(false),
 	m_bInitCallFromEx	(false)
 {
 }
 
-CNewUMLDecoratorImpl::~CNewUMLDecoratorImpl()
+CUMLDecoratorImpl::~CUMLDecoratorImpl()
 {
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
+STDMETHODIMP CUMLDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -47,7 +47,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPar
 	return S_OK;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::Destroy()
+STDMETHODIMP CUMLDecoratorImpl::Destroy()
 {
 	VERIFY_INITIALIZATION
 
@@ -71,21 +71,21 @@ STDMETHODIMP CNewUMLDecoratorImpl::Destroy()
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
+STDMETHODIMP CUMLDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 {
-	*bstrMnemonic = CComBSTR("NewUMLDecorator").Detach();
+	*bstrMnemonic = CComBSTR("UMLDecorator").Detach();
 
 	return S_OK;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
+STDMETHODIMP CUMLDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 {
 	*pFeatureCodes = F_HASLABEL;
 
 	return S_OK;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
+STDMETHODIMP CUMLDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
 {
 	VERIFY_INITIALIZATION
 
@@ -102,7 +102,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
+STDMETHODIMP CUMLDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
 {
 	VERIFY_INITIALIZATION
 
@@ -119,7 +119,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
+STDMETHODIMP CUMLDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 {
 	VERIFY_INITIALIZATION
 
@@ -136,7 +136,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeight)
+STDMETHODIMP CUMLDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeight)
 {
 	VERIFY_INITIALIZATION
 
@@ -156,7 +156,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeigh
 }
 
 
-STDMETHODIMP CNewUMLDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG ey)
+STDMETHODIMP CUMLDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG ey)
 {
 	VERIFY_INITIALIZATION
 
@@ -174,7 +174,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG e
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CUMLDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -196,7 +196,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LON
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CUMLDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -218,7 +218,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CUMLDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -240,7 +240,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
+STDMETHODIMP CUMLDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 {
 	VERIFY_INITIALIZATION
 
@@ -259,7 +259,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::Draw(HDC hdc)
+STDMETHODIMP CUMLDecoratorImpl::Draw(HDC hdc)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -269,7 +269,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::Draw(HDC hdc)
 	return E_DECORATOR_USING_DEPRECATED_FUNCTION;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::SaveState()
+STDMETHODIMP CUMLDecoratorImpl::SaveState()
 {
 	VERIFY_INITIALIZATION
 
@@ -277,8 +277,8 @@ STDMETHODIMP CNewUMLDecoratorImpl::SaveState()
 }
 
 // New functions
-STDMETHODIMP CNewUMLDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-												IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
+STDMETHODIMP CUMLDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
+											 IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -286,11 +286,11 @@ STDMETHODIMP CNewUMLDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 
 	HRESULT retVal = S_OK;
 	try {
-		UMLDecor::NewUMLDecorator* newUMLDecorator = new UMLDecor::NewUMLDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
-		m_pElementDecorator = newUMLDecorator;
+		UMLDecor::UMLDecorator* umlDecorator = new UMLDecor::UMLDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
+		m_pElementDecorator = umlDecorator;
 
-		newUMLDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
-									  CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
+		umlDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
+								   CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;
@@ -302,7 +302,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
+STDMETHODIMP CUMLDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -329,7 +329,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
+STDMETHODIMP CUMLDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 {
 	VERIFY_INITIALIZATION
 
@@ -346,7 +346,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -364,7 +364,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG po
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -382,7 +382,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -400,7 +400,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, 
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -418,7 +418,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -436,7 +436,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULON
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -454,7 +454,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx,
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -472,7 +472,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LON
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -490,7 +490,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG poin
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -508,7 +508,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -526,7 +526,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LO
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -544,7 +544,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance,
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -564,7 +564,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleD
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -584,7 +584,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDa
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -602,7 +602,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEff
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -620,7 +620,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LO
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CUMLDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	HRESULT retVal = S_OK;
 	try {
@@ -638,7 +638,7 @@ STDMETHODIMP CNewUMLDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFla
 	return retVal;
 }
 
-STDMETHODIMP CNewUMLDecoratorImpl::OperationCanceled()
+STDMETHODIMP CUMLDecoratorImpl::OperationCanceled()
 {
 	HRESULT retVal = S_OK;
 	try {

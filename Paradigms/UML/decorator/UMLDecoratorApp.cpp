@@ -13,15 +13,13 @@
 #include "UMLDecoratorLib.h"
 
 #include "UMLDecoratorLib_i.c"
-#include "UMLDecorator.h"
 #include "NewUMLDecoratorImpl.h"
 
 
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_UMLDecorator, CUMLDecorator)
-OBJECT_ENTRY(CLSID_NewUMLDecorator, CNewUMLDecoratorImpl)
+OBJECT_ENTRY(CLSID_UMLDecorator, CUMLDecoratorImpl)
 END_OBJECT_MAP()
 
 class CUMLDecoratorApp : public CWinApp

@@ -96,7 +96,6 @@ END
 //
 
 IDR_UMLDECORATOR        REGISTRY DISCARDABLE    "UMLDecorator.rgs"
-IDR_NEWUMLDECORATOR     REGISTRY DISCARDABLE    "NewUMLDecorator.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
