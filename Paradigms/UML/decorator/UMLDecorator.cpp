@@ -6,7 +6,7 @@
 //################################################################################################
 
 #include "StdAfx.h"
-#include "NewUMLDecorator.h"
+#include "UMLDecorator.h"
 #include "UMLCompositePart.h"
 
 

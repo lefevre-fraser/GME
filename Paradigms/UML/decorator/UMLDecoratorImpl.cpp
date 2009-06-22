@@ -6,8 +6,8 @@
 //################################################################################################
 
 #include "StdAfx.h"
-#include "NewUMLDecoratorImpl.h"
-#include "NewUMLDecorator.h"
+#include "UMLDecoratorImpl.h"
+#include "UMLDecorator.h"
 #include "DecoratorExceptions.h"
 #include "DecoratorInterface.h"
 

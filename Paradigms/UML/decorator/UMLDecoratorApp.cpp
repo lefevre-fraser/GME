@@ -13,7 +13,7 @@
 #include "UMLDecoratorLib.h"
 
 #include "UMLDecoratorLib_i.c"
-#include "NewUMLDecoratorImpl.h"
+#include "UMLDecoratorImpl.h"
 
 
 CComModule _Module;

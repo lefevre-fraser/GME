@@ -228,11 +228,11 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\NewUMLDecorator.cpp"
+				RelativePath=".\UMLDecorator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\NewUMLDecoratorImpl.cpp"
+				RelativePath=".\UMLDecoratorImpl.cpp"
 				>
 			</File>
 			<File
@@ -401,11 +401,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\NewUMLDecorator.h"
+				RelativePath=".\UMLDecorator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\NewUMLDecoratorImpl.h"
+				RelativePath=".\UMLDecoratorImpl.h"
 				>
 			</File>
 			<File
