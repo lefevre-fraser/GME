@@ -13,15 +13,13 @@
 #include "DecoratorLib.h"
 #include "DecoratorConfig.h"
 #include "DecoratorLib_i.c"
-#include "Decorator.h"
 #include "NewAnnotatorDecoratorImpl.h"
 
 
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_Decorator, CDecorator)
-OBJECT_ENTRY(CLSID_NewAnnotatorDecorator, CNewAnnotatorDecoratorImpl)
+OBJECT_ENTRY(CLSID_AnnotatorDecorator, CNewAnnotatorDecoratorImpl)
 END_OBJECT_MAP()
 
 class CDecoratorApp : public CWinApp
@@ -125,14 +123,6 @@ STDAPI DllRegisterServer(void)
 	};
 	HRESULT hr = _Module.UpdateRegistryFromResourceD( IDR_DECORATOR, TRUE, regMap );
 
-	_ATL_REGMAP_ENTRY regMap2[] = {
-		{CONSTOLESTR("NEWCOCLASS_PROGID"), CONSTOLESTR(NEWCOCLASS_PROGID)},
-		{CONSTOLESTR("NEWCOCLASS_NAME"), CONSTOLESTR(NEWCOCLASS_NAME)},
-		{CONSTOLESTR("NEWCOCLASS_UUID"), CONSTOLESTR(NEWCOCLASS_UUID)},
-		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
-		{0, 0}
-	};
-	hr = _Module.UpdateRegistryFromResourceD( IDR_NEWDECORATOR, TRUE, regMap2 );
 	/* if ( SUCCEEDED( hr ) ) //do not use this !
     {
 		// registers object, typelib and all 
@@ -159,14 +149,6 @@ STDAPI DllUnregisterServer(void)
 	};
 	HRESULT hr = _Module.UpdateRegistryFromResourceD( IDR_DECORATOR, FALSE, regMap );
 
-	_ATL_REGMAP_ENTRY regMap2[] = {
-		{CONSTOLESTR("NEWCOCLASS_PROGID"), CONSTOLESTR(NEWCOCLASS_PROGID)},
-		{CONSTOLESTR("NEWCOCLASS_NAME"), CONSTOLESTR(NEWCOCLASS_NAME)},
-		{CONSTOLESTR("NEWCOCLASS_UUID"), CONSTOLESTR(NEWCOCLASS_UUID)},
-		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
-		{0, 0}
-	};
-	hr = _Module.UpdateRegistryFromResourceD( IDR_NEWDECORATOR, FALSE, regMap2 );
 	/* if ( SUCCEEDED( hr ) ) //do not use this !
     {
 		// registers object, typelib and all 

@@ -30,7 +30,7 @@ class DecoratorInterface;
 class ATL_NO_VTABLE CNewAnnotatorDecoratorImpl :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public IMgaElementDecorator,
-	public CComCoClass<CNewAnnotatorDecoratorImpl, &CLSID_NewAnnotatorDecorator>
+	public CComCoClass<CNewAnnotatorDecoratorImpl, &CLSID_AnnotatorDecorator>
 {
 protected:
 	DecoratorSDK::DecoratorInterface*	m_pElementDecorator;
@@ -44,7 +44,7 @@ public:
 	CNewAnnotatorDecoratorImpl();
 	~CNewAnnotatorDecoratorImpl();
 
-	DECLARE_REGISTRY_RESOURCEID( IDR_NEWDECORATOR )
+	DECLARE_REGISTRY_RESOURCEID( IDR_DECORATOR )
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP( CNewAnnotatorDecoratorImpl )

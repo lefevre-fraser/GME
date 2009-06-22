@@ -39,8 +39,6 @@
 extern CComModule _Module;
 #include <atlcom.h>
 
-#include "CommonError.h"
-
 
 
 //{{AFX_INSERT_LOCATION}}

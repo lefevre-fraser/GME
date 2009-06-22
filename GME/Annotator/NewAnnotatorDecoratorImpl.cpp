@@ -74,7 +74,7 @@ STDMETHODIMP CNewAnnotatorDecoratorImpl::Destroy()
 
 STDMETHODIMP CNewAnnotatorDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 {
-	*bstrMnemonic = CComBSTR(NEWDECORATOR_NAME).Detach();
+	*bstrMnemonic = CComBSTR(DECORATOR_NAME).Detach();
 
 	return S_OK;
 }

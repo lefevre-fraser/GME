@@ -4,7 +4,6 @@
 #define E_ANNOTATOR_INVALID_PARAMVALUE	0x80737051
 
 #define AN_DECORATOR_PROGID			"MGA.Decorator.Annotator"
-#define AN_NEWDECORATOR_PROGID		"MGA.Decorator.NewAnnotator"
 
 #define AN_PARAM_ROOTNODE			"rootnode"
 
