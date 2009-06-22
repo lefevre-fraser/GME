@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{2018C454-6340-403B-9B09-BDB97B5C1962}" cdate="Mon May 04 12:00:56 2009" mdate="Mon May 04 12:00:56 2009" version="" metaguid="{F2B028B8-33BE-4F0A-9F5C-E0197CD90CD4}" metaversion="" metaname="HFSM">
+<project guid="{516A5EB7-F256-4720-84C6-46C28E6FC908}" cdate="Mon May 04 12:00:56 2009" mdate="Mon May 04 12:00:56 2009" version="" metaguid="{757682DE-E57F-4003-9A7E-8EE5C0368980}" metaversion="" metaname="HFSM">
 	<name>HFSM-Test02</name>
 	<comment></comment>
 	<author></author>

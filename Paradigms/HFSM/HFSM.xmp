@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="HFSM" guid="{F2B028B8-33BE-4F0A-9F5C-E0197CD90CD4}" cdate="Mon May 04 11:56:35 2009" mdate="Mon May 04 11:56:35 2009" >
+<paradigm name="HFSM" guid="{757682DE-E57F-4003-9A7E-8EE5C0368980}" cdate="Mon May 04 11:56:35 2009" mdate="Mon May 04 11:56:35 2009" >
 
 	<comment></comment>
 
