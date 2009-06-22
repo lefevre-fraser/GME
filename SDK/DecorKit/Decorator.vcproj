@@ -87,6 +87,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="2"
 			UseOfMFC="2"
+			UseOfATL="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
 			CharacterSet="2">
 			<Tool
