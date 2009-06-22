@@ -228,14 +228,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\UMLDecorator.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\UMLDecoratorImpl.cpp"
-				>
-			</File>
-			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -302,6 +294,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UMLDecorator.cpp"
+				>
+			</File>
+			<File
 				RelativePath="UMLDecorator.rc"
 				>
 				<FileConfiguration
@@ -354,6 +350,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UMLDecoratorImpl.cpp"
+				>
+			</File>
+			<File
 				RelativePath="UMLDecoratorLib.idl"
 				>
 				<FileConfiguration
@@ -401,14 +401,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\UMLDecorator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\UMLDecoratorImpl.h"
-				>
-			</File>
-			<File
 				RelativePath="Resource.h"
 				>
 			</File>
@@ -437,6 +429,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UMLDecorator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UMLDecoratorImpl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\UMLStereoLabelPart.h"
 				>
 			</File>
@@ -444,14 +444,6 @@
 		<Filter
 			Name="Resources"
 			>
-			<File
-				RelativePath=".\res\constraint.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\res\constraintdefinition.bmp"
-				>
-			</File>
 			<File
 				RelativePath=".\res\referencesign.bmp"
 				>

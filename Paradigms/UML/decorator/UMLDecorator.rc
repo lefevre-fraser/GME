@@ -102,8 +102,6 @@ IDR_UMLDECORATOR        REGISTRY DISCARDABLE    "UMLDecorator.rgs"
 // Bitmap
 //
 
-IDB_BITMAP_CONSTRAINT   BITMAP  DISCARDABLE     "res\\constraint.bmp"
-IDB_BITMAP_CDEFINITION  BITMAP  DISCARDABLE     "res\\constraintdefinition.bmp"
 IDB_REFERENCE_SIGN      BITMAP                  "res\\referencesign.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
