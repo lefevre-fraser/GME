@@ -304,11 +304,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\NewMetaDecorator.cpp"
+				RelativePath=".\MetaDecorator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\NewMetaDecoratorImpl.cpp"
+				RelativePath=".\MetaDecoratorImpl.cpp"
 				>
 			</File>
 			<File
@@ -368,11 +368,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\NewMetaDecorator.h"
+				RelativePath=".\MetaDecorator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\NewMetaDecoratorImpl.h"
+				RelativePath=".\MetaDecoratorImpl.h"
 				>
 			</File>
 			<File

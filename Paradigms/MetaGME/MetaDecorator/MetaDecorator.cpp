@@ -6,7 +6,7 @@
 //################################################################################################
 
 #include "StdAfx.h"
-#include "NewMetaDecorator.h"
+#include "MetaDecorator.h"
 #include "MetaCompositePart.h"
 
 

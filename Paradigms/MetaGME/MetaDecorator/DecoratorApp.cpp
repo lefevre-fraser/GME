@@ -13,7 +13,7 @@
 #include "DecoratorLib.h"
 #include "DecoratorConfig.h"
 #include "DecoratorLib_i.c"
-#include "NewMetaDecoratorImpl.h"
+#include "MetaDecoratorImpl.h"
 
 
 CComModule _Module;

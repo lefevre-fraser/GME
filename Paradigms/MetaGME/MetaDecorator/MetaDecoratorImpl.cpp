@@ -7,8 +7,8 @@
 
 #include "StdAfx.h"
 #include "DecoratorConfig.h"
-#include "NewMetaDecoratorImpl.h"
-#include "NewMetaDecorator.h"
+#include "MetaDecoratorImpl.h"
+#include "MetaDecorator.h"
 #include "DecoratorExceptions.h"
 #include "DecoratorInterface.h"
 
