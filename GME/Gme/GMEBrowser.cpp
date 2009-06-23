@@ -288,6 +288,7 @@ void CGMEBrowser::SetCurrObject(LPUNKNOWN pMgaObject)
 	ASSERT(ccpSelectedObjects!=NULL);
 //	CComQIPtr<IMgaObjects> ccpSelectedObjects(pMgaObject);
 	CGMEObjectInspector::theInstance->SetObjects(ccpSelectedObjects);
+    CGMESearch::theInstance->SetSelMgaObjects(ccpSelectedObjects);
 }
 
 void CGMEBrowser::OnShowAttributesActivebrowserctrl1(LPUNKNOWN object) 
@@ -316,7 +317,6 @@ void CGMEBrowser::OnShowAttributesGmeActiveBrowserCtrl(LPUNKNOWN pMgaObject)
 void CGMEBrowser::OnShowPreferencesGmeActiveBrowserCtrl(LPUNKNOWN pMgaObject) 
 {
 	ShowAttrPref(false, pMgaObject);
-	
 }
 
 void CGMEBrowser::OnShowPropertiesGmeActiveBrowserCtrl() 
