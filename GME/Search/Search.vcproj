@@ -237,7 +237,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\Attrib.cpp"
+				RelativePath=".\Attribute.cpp"
 				>
 			</File>
 			<File
@@ -293,53 +293,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\DummyEdit.cpp"
-				>
-			</File>
-			<File
 				RelativePath="Input.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MButton.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MComboBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MEdit.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MListCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="RegExp.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -548,39 +502,13 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="Validate.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\Attrib.h"
+				RelativePath=".\Attribute.h"
 				>
 			</File>
 			<File
@@ -605,26 +533,6 @@
 			</File>
 			<File
 				RelativePath="Input.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MButton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MComboBox.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MEdit.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MListCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath="RegExp.h"
 				>
 			</File>
 			<File
@@ -661,10 +569,6 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
-				>
-			</File>
-			<File
-				RelativePath="Validate.h"
 				>
 			</File>
 		</Filter>

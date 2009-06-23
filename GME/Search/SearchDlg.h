@@ -8,10 +8,6 @@
 class CSearchCtrl;
 
 #include "ComHelp.h"
-#include "MEdit.h"
-#include "MButton.h"
-#include "MComboBox.h"
-#include "MListCtrl.h"
 #include "afxwin.h"
 #include "afxcmn.h"
 // SearchDlg.h : header file
@@ -39,12 +35,14 @@ public:
 	void clickGo();
 	void itemDblClicked();
 	void itemClicked();
-	void tabPressed( CWnd* pOriginator, bool bShift = false);
-    
-    //added
-    void SaveSearch();
-    void LoadPrevSearch();
+   
+    //added -kiran
+    void SaveSearchHistory();
+    void LoadSearchHistory();
     void CreateSearchHistory();
+
+    //virtual LRESULT WindowProc(UINT message,  WPARAM wParam, LPARAM lParam);
+    //virtual BOOL PreTranslateMessage(MSG *pMsg);
 
 // Dialog Data
 	//{{AFX_DATA(CSearchDlg)
@@ -52,48 +50,69 @@ public:
 	//CStatic	m_stcRefCtrl;
 	CProgressCtrl	m_pgsSearch;
 
-	CString	m_edtName;
-	CString	m_edtKindName;
-	CString	m_edtRoleName;
-	CString	m_cmbType;
-	CString	m_edtAttrName;
-	CString	m_edtAttrValue;
+	CString	m_edtNameFirst;
+	CString	m_edtKindNameFirst;
+	CString	m_edtRoleNameFirst;
+    CString	m_edtAttributeFirst;
+	
+    //remove
+    CString	m_edtAttrValue;
+
+    CString m_edtNameSecond;
+    CString m_edtRoleNameSecond;
+    CString m_edtKindNameSecond;
+    CString m_edtAttributeSecond;
+
 	BOOL	m_chkAtom;
 	BOOL	m_chkFullWord;
 	BOOL	m_chkMod;
 	BOOL	m_chkRef;
 	BOOL	m_chkSet;
-	//BOOL	m_chkSplSearch;
 	BOOL	m_chkLocate;
 	BOOL	m_chkMatchCase;
-	//BOOL    m_chkScopedSearch;
-	//CString	m_stcRef;
+	
+	CButton	m_chkMatchCaseCtrl;
+	CButton	m_chkFullWordCtrl;
+	CButton	m_chkRefCtrl;
+	CButton	m_chkAtomCtrl;
+	CButton	m_chkSetCtrl;
+	CButton	m_chkModCtrl;
+	CComboBox	m_cmbCtrl;
+	CButton	m_btnGO;
+	CListCtrl	m_lstResults;
+    CTreeCtrl m_treeSearchHistory;
 
-	//CMButton	m_chkSplSearchCtrl;
-	//CMButton	m_chkLocateCtrl;
-	CMButton	m_chkMatchCaseCtrl;
-	//CMButton	m_chkScopedSearchCtrl;
-	CMButton	m_chkFullWordCtrl;
-	CMButton	m_chkRefCtrl;
-	CMButton	m_chkAtomCtrl;
-	CMButton	m_chkSetCtrl;
-	CMButton	m_chkModCtrl;
-	CMComboBox	m_cmbCtrl;
-	CMButton	m_btnGO;
-	CMListCtrl	m_lstResults;
-	CMEdit	m_edtNameCtrl;
-	CMEdit	m_edtKindNameCtrl;
-	CMEdit	m_edtRoleNameCtrl;
-	CMEdit	m_edtAttrNameCtrl;
-	//CMEdit	m_edtAttrValueCtrl;
+
+    //first search criteria controls
+	CComboBox	m_edtNameCtrlFirst;
+	CComboBox	m_edtKindNameCtrlFirst;
+	CComboBox	m_edtRoleNameCtrlFirst;
+	CComboBox	m_edtAttributeCtrlFirst;
+	
+    //second search criteria controls
+    CComboBox m_edtNameCtrlSecond;
+    CComboBox m_edtRoleNameCtrlSecond;
+    CComboBox m_edtKindNameCtrlSecond;
+    CComboBox m_edtAttributeCtrlSecond;
+     
+    CButton m_logicalGrp;
+    CComboBox m_cmbCtrl2;
+    int m_radioScope;
+    BOOL m_searchResults;
+    int m_radioLogical;
 
 private:
     //insert history to combobox
     void InsertHistory(CString string);
-    void ComputeWidthHeight();
+    void PrepareHistoryString(const CString &strCriteriaName,CString & strSearchValue,HTREEITEM hParent,CString &strSearch);
+    void ReadHistoryValue(const CString &strCriteriaName, CString &strHistory,BOOL firstSearchCriteria, CString &strValue);
+    //called to enter history text to combobox
+    //checks first if it exists at the first index of items
+    //if it does it is not inserted, else inserted
+    void InsertTextToControl(CString& strSearchTerm,CComboBox& control);
 
+    
 	//}}AFX_DATA
-
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -105,18 +124,14 @@ private:
 // Implementation
 protected:
 	
-	CSearchCtrl *GetCtrl() { return (CSearchCtrl*)GetParent(); }
+    CSearchCtrl *GetCtrl() { return (CSearchCtrl*)GetParent(); }
 
-	
 	void BuildExtendedName(IMgaFCO *named, CString &extName);
 	void BuildExtendedName(IMgaFolder *named, CString &extName);
 	void DisplayResults();
     void SearchResults();
-
-    //*Added*
-    void ParseAttribute();
-
-	CComPtr<IMgaFCOs> results;
+   
+   	CComPtr<IMgaFCOs> results;
 	CComPtr<IMgaFCO> specialSearchFCO;
 
 	BOOL m_scopedCtrlEnabled; // whether to enable scoped search at all
@@ -127,50 +142,13 @@ protected:
 	afx_msg void OnButtonGo();
 	afx_msg void OnClickListResults(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnDblclkListResults(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnCheckSplSearch();
-    afx_msg void OnDblclkPrevSearches(NMHDR* pNMHDR, LRESULT* pResult);
-
-    //scroll bar
-     afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-     afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
     afx_msg void OnCbnSelchangeCombotype();
-
-   
-    //scroll bar
-    int v_scrollPos;
-    int h_scrollPos;
-	const int vScrollWidth;
-    const int lineSize;
-	const int pageSize;
-    int logicalHeight;
-    int pageHeight;
-    int logicalWidth;
-    int pageWidth;
-     
-    //
-    CString m_edtName2;
-    CString m_edtRoleName2;
-    CString m_edtKindName2;
-    CString m_edtAttribute2;
-    //BOOL m_radioAnd;
-    CButton m_logicalGrp;
-    CComboBox m_cmbCtrl2;
-    CListCtrl m_prevSearches;
-    CString m_cmbType2;
-    int m_scope;
-    BOOL m_searchResults;
-    int m_radioLogical;
-   
-    CMEdit m_edtNameCtrl2;
-    CMEdit m_edtRoleNameCtrl2;
-    CMEdit m_edtKindNameCtrl2;
-    CMEdit m_edtAttributeCtrl2;
-    
+    afx_msg void OnNMDblclkTreeSearchHistory(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -21,7 +21,7 @@ static char THIS_FILE[]=__FILE__;
 
 CInput::CInput()
 {
-    or=TRUE;
+    
 }
 
 CInput::~CInput()
@@ -30,62 +30,72 @@ CInput::~CInput()
 }
 
 //Get the search criterias
-void CInput::GetInput(CString name, CString role, CString kind, CString attrname,CString name2,CString role2,CString kind2,CString attribute2,
+void CInput::GetInput(CString strNameFirst, CString strRoleFirst, CString strKindFirst, CString strAttributeFirst,CString strNameSecond,CString strRoleSecond,CString strKindSecond,CString strAttributeSecond,
                       CString attrval, BOOL mod, BOOL atom, BOOL ref, BOOL set, BOOL full, 
                       IMgaFCO*, int, //WAS: IMgaFCO *root, int searchscope,
                       BOOL bMatchCase, int scopedSearch,int logicalExpr)
 {
     //doScopedSearch = bScopedSearch;
 
-    getCaseIgnored = !bMatchCase;
-    if( getCaseIgnored)
+    m_bGetCaseIgnored = !bMatchCase;
+    if( m_bGetCaseIgnored)
     {
-        name.MakeLower();
-        role.MakeLower();
-        kind.MakeLower();
-        attrname.MakeLower();
+        strNameFirst.MakeLower();
+        strRoleFirst.MakeLower();
+        strKindFirst.MakeLower();
+        strAttributeFirst.MakeLower();
+
+        //attrval seems not used
         attrval.MakeLower();
         //addded
-        name2.MakeLower();
-        role2.MakeLower();
-        kind2.MakeLower();
-        attribute2.MakeLower();
+        strNameSecond.MakeLower();
+        strRoleSecond.MakeLower();
+        strKindSecond.MakeLower();
+        strAttributeSecond.MakeLower();
     }
-    objAttrib2=attribute2;
-    objattrib=attrname;
-    this->full=full;
+    
+    m_bFull=full;
 
-    objName=GetRegExp(name);
-    objRole = GetRegExp(role);
-    objKind = GetRegExp(kind);
-    objAttrName = GetRegExp(attrname);
+    //get regular expression forms
+    m_regNameFirst=GetRegExp(strNameFirst);
+    m_regRoleFirst = GetRegExp(strRoleFirst);
+    m_regKindFirst = GetRegExp(strKindFirst);
+    m_regAttributeFirst = GetRegExp(strAttributeFirst);
 
-    objName2=GetRegExp(name2);
-    objKind2=GetRegExp(kind2);
-    objRole2=GetRegExp(role2);
+    m_regNameSecond=GetRegExp(strNameSecond);
+    m_regKindSecond=GetRegExp(strKindSecond);
+    m_regRoleSecond=GetRegExp(strRoleSecond);
+    m_regAttributeSecond=GetRegExp(strAttributeSecond);
 
-    objVal = attrval;
-    //objattribName = attrname;
-    this->name=name;
-    this->kind=kind;
-    this->role=role;
-    this->name2=name2;
-    this->kind2=kind2;
-    this->role2=role2;
+    //get string forms
 
-    if(name2.Trim()=="" && kind2.Trim()==""&& role2.Trim()=="" && attribute2.Trim()=="")
+    //objVal = attrval;
+    //objattribName = strAttributeFirst;
+    m_strNameFirst=strNameFirst;
+    m_strKindFirst=strKindFirst;
+    m_strRoleFirst=strRoleFirst;
+    m_strAttributeFirst=strAttributeFirst;
+
+    m_strNameSecond=strNameSecond;
+    m_strKindSecond=strKindSecond;
+    m_strRoleSecond=strRoleSecond;
+    m_strAttributeSecond=strAttributeSecond;
+   
+
+    //check if nothing is present in the second
+    if(strAttributeSecond.Trim()=="" && strKindSecond.Trim()==""&& strRoleSecond.Trim()=="" && strAttributeSecond.Trim()=="")
     {
-        doSecond=FALSE;
+        m_bDoSecond=FALSE;
     }
-    else doSecond=TRUE;
+    else m_bDoSecond=TRUE;
     //getSplSearch = spl;
 
-    getModels = mod;
-    getAtoms = atom;
-    getReferences = ref;
-    getSets = set;
-    scope=scopedSearch;
-    logical=logicalExpr;
+    m_bGetModels = mod;
+    m_bGetAtoms = atom;
+    m_bGetReferences = ref;
+    m_bGetSets = set;
+    m_intScope=scopedSearch;
+    m_intLogical=logicalExpr;
     ParseAttribute();
 }
 
@@ -93,74 +103,73 @@ void CInput::GetInput(CString name, CString role, CString kind, CString attrname
 //Two stacks are used for both lhs and rhs search criteria
 void CInput::ParseAttribute()
 {
-    //CString attrName=objAttrName.st
+    //prepare the stack containing expressions and operations for first attribute
+    PrepareExpressionStack(m_strAttributeFirst,m_stackExpressionFirst);
 
-    if(getCaseIgnored)
+    //prepare the stack containing expressions and operations for second attribute
+    PrepareExpressionStack(m_strAttributeSecond,m_stackExpressionSecond);
+}
+
+void CInput::PrepareExpressionStack(const CString &atrAttributeExpression,std::vector<Attribute>& stack)
+{
+    //strOperation stores operators like &, |
+    //strUnitExpression is the expression like age> 30, i.e. it
+    //is a complete single expression without logical operator
+    CString strOperation,strUnitExpression; 
+
+    CString strAttributeExpression(atrAttributeExpression);
+
+    //get the index of logical operator
+    int index= strAttributeExpression.FindOneOf("&|");
+
+    //if no logical operator was found push the whole expression
+    if(index==-1 && strAttributeExpression!="")
     {
-        objattrib.MakeLower();
-        objAttrib2.MakeLower();
+        stack.push_back(Attribute(strAttributeExpression.Trim()));
     }
-    CString temp=objattrib;
-    CString oper,temp2;
-
-    //FInd individual parts of the attribute expression
-    //and put it on the stack for Lhs search criteria
-    //this keeps overall expression on the stack for eg if expression is 
-    // a<b & b<c,  element is stack wiil be a<b, &, b<c
-    //thus it will be divided into 3 elements
-    int index= temp.FindOneOf("&|");
-    if(index==-1 && temp!="")
-        expr1.push_back(Attrib(temp.Trim()));
-
-    int i=0;
+   
     while(index!=-1)
     {
-        oper=temp[index];
-        AfxExtractSubString(temp2,temp,0,temp[index]);
-        expr1.push_back(Attrib(temp2.Trim()));
-        expr1.push_back(Attrib(CString(temp[index])));
-        temp=temp.Right(temp.GetLength()-index-1);
-        //i++;
-        index= temp.FindOneOf("&|");
-        if(index==-1) expr1.push_back(Attrib(temp.Trim()));
-    }
+        //extract the operator
+        strOperation=strAttributeExpression[index];
 
+        //extract a single expression, the string on left of the index is a complete
+        //expression
+        AfxExtractSubString(strUnitExpression,strAttributeExpression,0,strAttributeExpression[index]);
 
-     //FInd individual parts of the attribute expression
-    //and put it on the stack for rhs search criteria
-    i=0;
-    temp=objAttrib2;
-    index=temp.FindOneOf("&|");
-    if(index==-1 && temp!="")
-        expr2.push_back(Attrib(temp.Trim()));
-    while(index!=-1)
-    {
-        AfxExtractSubString(temp2,temp,i,temp[index]);
-        expr2.push_back(Attrib(temp2.Trim()));
-        expr2.push_back(Attrib(CString(temp[index])));
-        //i++;
-        temp=temp.Right(temp.GetLength()-index-1);
-        index= temp.FindOneOf("&|");
-        if(index==-1) expr1.push_back(Attrib(temp.Trim()));
+        //put the expression on stack
+        stack.push_back(Attribute(strUnitExpression.Trim()));
+
+        //push the operator either &, |
+        stack.push_back(Attribute(CString(strOperation)));
+
+        //extract the remaining string on the right of index
+        strAttributeExpression=strAttributeExpression.Right(strAttributeExpression.GetLength()-index-1);
+        
+        //again find the logical operator
+        index= strAttributeExpression.FindOneOf("&|");
+
+        //if no more found treat all remaining string as expression
+        if(index==-1) stack.push_back(Attribute(strAttributeExpression.Trim()));
     }
 }
 
 //Obtain regular expression form of the string
 //supplied
-CRegExp CInput::GetRegExp(CString name)
+regex CInput::GetRegExp(CString name)
 {
     CString temp="";
     if(name.IsEmpty())
     {
-        return CRegExp(name);
+        return regex(name);
     }
-    if(full)
+    if(m_bFull)
     {
         temp="^";
         temp+=name;
         temp+="$";
-        return CRegExp(temp);
+        return regex(temp);
     }
 
-    return CRegExp(name);
+    return regex(name);
 }

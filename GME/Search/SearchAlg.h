@@ -123,7 +123,7 @@ private:
 	/// The input criteria.
 	CInput filter;
 
-    bool EvaluateResult(std::vector<Attrib>& attrs);
+    bool EvaluateResult(std::vector<Attribute>& attrs);
 
    
 //	CGMESearchDialog *SearchDialog;

@@ -5,9 +5,6 @@
 
 #include "stdafx.h"
 #include "ComHelp.h"
-//#include "GMECOM.h"
-//#include "ComponentConfig.h"
-//#include "RawComponent.h"
 #include "Input.h"
 #include "SearchAlg.h"
 
@@ -24,13 +21,11 @@ static char THIS_FILE[]=__FILE__;
 CSearch::CSearch(CInput inp)
 {
     filter = inp;
-    //	SearchDialog = NULL;
 }
 
 
 CSearch::~CSearch()
 {
-
 }
 
 // the main entry point for a search
@@ -41,11 +36,7 @@ void CSearch::Search(IMgaFolder *root, IMgaObjects* scopeColl, IMgaFCO *selected
     CComPtr<IMgaFolder> pRoot = root;
 
 
-    if(filter.scope==1)
-    {
-        //SearchReferences(selected);
-    }
-    else if( filter.scope==2 && scopeColl)
+    if( filter.GetSearchScope()==1 && scopeColl)
     {
         CComPtr<IMgaFCOs> non_container_coll;                  // will store the Atoms, Refs and Sets
         non_container_coll.CoCreateInstance( L"Mga.MgaFCOs");  // which are not Fs and Ms
@@ -81,7 +72,7 @@ void CSearch::Search(IMgaFolder *root, IMgaObjects* scopeColl, IMgaFCO *selected
         }
         non_container_coll.Release();
     }
-    else if(filter.scope==0)
+    else if(filter.GetSearchScope()==0)
     {
         SearchFolderHierarchy(pRoot);	
     }
@@ -95,34 +86,13 @@ void CSearch::CheckAllAtoms(IMgaFCOs *allObjects)
 
     MGACOLL_ITERATE(IMgaFCO, allObjects)
     {
-        /*CString partName;
-        CBstr bstr;
-        CComPtr<IMgaMetaRole> rmeta;
-        COMTHROW( MGACOLL_ITER->get_MetaRole(&rmeta) );
-        if(rmeta) 
-        {
-        COMTHROW( rmeta->get_Name(bstr) );
-        partName = bstr;
-        } 
-        else 
-        partName = "";*/
         objtype_enum rret;
         COMTHROW( MGACOLL_ITER->get_ObjType( &rret) );
 
-        /*if( filter.getCaseIgnored) // case ignored, make role lowercase
-        {
-        partName.MakeLower();
-        }*/
-
         if(rret == OBJTYPE_ATOM)  
         {
-            // if(Check(MGACOLL_ITER.p,0)) COMTHROW(results->Append((IMgaAtom *)MGACOLL_ITER.p));
             if (CheckAtom((IMgaAtom*)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaAtom*)(MGACOLL_ITER.p)));
         }
-        /*if((rret == OBJTYPE_ATOM) && filter.or&& filter.doSecond && (filter.objRole2.Match(partName)) )
-        {
-        CheckAtom((IMgaAtom *)MGACOLL_ITER.p,FALSE);
-        }*/
 
         m_pgsSearch->StepIt();	
     } MGACOLL_ITERATE_END;
@@ -135,35 +105,13 @@ void CSearch::CheckAllReferences(IMgaFCOs *allObjects)
 
     MGACOLL_ITERATE(IMgaFCO, allObjects)
     {
-        /*CString partName;
-        CBstr bstr;
-        CComPtr<IMgaMetaRole> rmeta;
-        COMTHROW( MGACOLL_ITER->get_MetaRole(&rmeta) );
-        if(rmeta) 
-        {
-        COMTHROW( rmeta->get_Name(bstr) );
-        partName = bstr;
-        } 
-        else 
-        partName = "";*/
         objtype_enum rret;
         COMTHROW( MGACOLL_ITER->get_ObjType( &rret) );
 
-        /*if( filter.getCaseIgnored) // case ignored, make role lowercase
-        {
-        partName.MakeLower();
-        }*/
-
         if(rret == OBJTYPE_REFERENCE )
         {
-            //if(Check(MGACOLL_ITER.p,2)) COMTHROW(results->Append((IMgaReference *)(MGACOLL_ITER.p)));
             if (CheckAtom((IMgaAtom*)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaReference*)(MGACOLL_ITER.p)));
         }
-        /*if((rret == OBJTYPE_REFERENCE) && filter.or && filter.doSecond && (filter.objRole2.Match(partName)) )
-        {
-        CheckReference((IMgaReference *)(MGACOLL_ITER.p),FALSE);
-        }*/
-
 
         m_pgsSearch->StepIt();
     } MGACOLL_ITERATE_END;
@@ -176,34 +124,13 @@ void CSearch::CheckAllSets(IMgaFCOs *allObjects)
 
     MGACOLL_ITERATE(IMgaFCO, allObjects)
     {
-        /*CString partName;
-        CBstr bstr;
-        CComPtr<IMgaMetaRole> rmeta;
-        COMTHROW( MGACOLL_ITER->get_MetaRole(&rmeta) );
-        if(rmeta) 
-        {
-        COMTHROW( rmeta->get_Name(bstr) );
-        partName = bstr;
-        } 
-        else 
-        partName = "";*/
         objtype_enum rret;
         COMTHROW( MGACOLL_ITER->get_ObjType( &rret) );
 
-        /*if( filter.getCaseIgnored) // case ignored, make role lowercase
-        {
-        partName.MakeLower();
-        }*/
-
         if(rret == OBJTYPE_SET)
         {
-            //if(Check(MGACOLL_ITER.p,3)) COMTHROW(results->Append((IMgaSet *)(MGACOLL_ITER.p)));
             if(CheckSet((IMgaSet*)(MGACOLL_ITER.p)))COMTHROW(results->Append((IMgaSet*)(MGACOLL_ITER.p)));
         }
-        /*if((rret == OBJTYPE_SET)&& filter.or && filter.doSecond && (filter.objRole2.Match(partName)) )
-        {
-        CheckSet((IMgaSet *)(MGACOLL_ITER.p),FALSE);
-        }*/
 
         m_pgsSearch->StepIt();
     } MGACOLL_ITERATE_END;	
@@ -212,42 +139,16 @@ void CSearch::CheckAllSets(IMgaFCOs *allObjects)
 // get all the models that have a matching role name, calling CheckModel on each
 void CSearch::CheckAllModels(IMgaFCOs *allObjects)
 {
-
-
     MGACOLL_ITERATE(IMgaFCO, allObjects)
     {
-        /*CString partName;
-        CBstr bstr;
-        CComPtr<IMgaMetaRole> rmeta;
-        COMTHROW( MGACOLL_ITER->get_MetaRole(&rmeta) );
-        if(rmeta) 
-        {
-        COMTHROW( rmeta->get_Name(bstr) );
-        partName = bstr;
-        } 
-        else 
-        partName = "";*/
         objtype_enum rret;
         COMTHROW( MGACOLL_ITER->get_ObjType( &rret) );
 
-        /*if( filter.getCaseIgnored) // case ignored, make role lowercase
-        {
-        partName.MakeLower();
-        }*/
-
         if(rret == OBJTYPE_MODEL) 
         {
-            //if(Check(MGACOLL_ITER.p,1)) COMTHROW(results->Append((IMgaModel *)(MGACOLL_ITER.p)));
-
             if(CheckModel((IMgaModel *)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaModel*)(MGACOLL_ITER.p)));;
         }
 
-        //added
-        /* if((rret == OBJTYPE_MODEL)  && filter.or&& filter.doSecond &&(filter.objRole2.Match(partName))) {
-        CheckModel((IMgaModel *)(MGACOLL_ITER.p),FALSE);
-        }*/
-
-        //end added
         m_pgsSearch->StepIt();
 
     } MGACOLL_ITERATE_END;
@@ -271,26 +172,22 @@ void CSearch::SearchFolderHierarchy(IMgaFolder *root)
         }
     } MGACOLL_ITERATE_END;
 
-    if (filter.getModels) 
+    if (filter.GetModels()) 
     {
         CheckAllModels(children);
-
     }
 
-    if (filter.getAtoms)
+    if (filter.GetAtoms())
     {
         CheckAllAtoms(children);
-
     }
 
-    if (filter.getReferences)
+    if (filter.GetReferences())
     {
-
         CheckAllReferences(children);
-
     }
 
-    if (filter.getSets)
+    if (filter.GetSets())
     {
         CheckAllSets(children);
     } 
@@ -328,30 +225,25 @@ void CSearch::SearchFolderHierarchy(IMgaFolder *root)
             }
         } MGACOLL_ITERATE_END;
 
-        if (filter.getModels) 
+        if (filter.GetModels()) 
         {
             CheckAllModels(subchildren);
         }
 
-        if (filter.getAtoms)
+        if (filter.GetAtoms())
         {
             CheckAllAtoms(subchildren);
-
         }
 
-        if (filter.getReferences)
+        if (filter.GetReferences())
         {
-
             CheckAllReferences(subchildren);
-
         }
 
-        if (filter.getSets)
+        if (filter.GetSets())
         {
             CheckAllSets(subchildren);
         } 
-
-
 
         POSITION mpos = mlist->GetHeadPosition();
         while(mpos)
@@ -382,30 +274,27 @@ void CSearch::SearchModelHierarchy(IMgaModel *root)
         CComPtr<IMgaFCOs> modelChildren;
         COMTHROW(root->get_ChildFCOs(&modelChildren));
 
-        if (filter.getAtoms)
+        if (filter.GetAtoms())
         {
             CheckAllAtoms(modelChildren);
-
         }
 
-        if (filter.getReferences)
+        if (filter.GetReferences())
         {
-
             CheckAllReferences(modelChildren);
-
         }
 
-        if (filter.getSets)
+        if (filter.GetSets())
         {
             CheckAllSets(modelChildren);
         } 
 
-        if (filter.getModels)
+        if (filter.GetModels())
         {
             CheckAllModels(modelChildren);
         }
 
-        CComPtrList<IMgaModel> *submodellist = new CComPtrList<IMgaModel>;	
+        CComPtrList<IMgaModel> submodellist;
         CComPtr<IMgaFCOs> psa;
         COMTHROW( root->get_ChildFCOs(&psa));
         MGACOLL_ITERATE(IMgaFCO, psa) {
@@ -413,19 +302,18 @@ void CSearch::SearchModelHierarchy(IMgaModel *root)
             MGACOLL_ITER.QueryInterface(&mm);
             if(mm != NULL) 
             {
-                submodellist->AddTail( mm );
+                submodellist.AddTail( mm );
             }
         } MGACOLL_ITERATE_END;
 
-        POSITION smpos = submodellist->GetHeadPosition();
+        POSITION smpos = submodellist.GetHeadPosition();
 
         while(smpos)
         {
-            CComPtr<IMgaModel> submodel = submodellist->GetNext(smpos);
+            CComPtr<IMgaModel> submodel = submodellist.GetNext(smpos);
 
             SearchModelHierarchy(submodel);
         }
-        delete submodellist; //no longer needed (used new above)
     }
 }
 
@@ -433,9 +321,13 @@ void CSearch::SearchModelHierarchy(IMgaModel *root)
 bool CSearch::CheckAtom(IMgaFCO *Atom)
 {
 
+    //check if the first search criteria matches
     int x=Matches(Atom,true);
+
+    //check if the atom matches second search criteria
     int y=Matches(Atom,false);
 
+    //perform logical operation to determine if bot the result match overall criteria   
     return PerformLogical(x,y);
 
 }
@@ -444,7 +336,10 @@ bool CSearch::CheckAtom(IMgaFCO *Atom)
 bool CSearch::CheckReference(IMgaFCO *Reference)
 {
 
+    //check if the References satisfies first search criteria
     int x=Matches(Reference,true);
+
+    //check if the reference matches second search criteria
     int y=Matches(Reference,false);
 
     return PerformLogical(x,y);
@@ -454,28 +349,32 @@ bool CSearch::CheckReference(IMgaFCO *Reference)
 bool CSearch::CheckSet(IMgaFCO *Set)
 {
 
+    //check if the first criteria is satisfied
     int x=Matches(Set,true);
+
+    //check if second criteria is satisified
     int y=Matches(Set,false);
 
+    //check if logical combination is satisfied
     return PerformLogical(x,y);
 }
 
 //checks the name, kindname and attributes, adding all matches to the results
 bool CSearch::CheckModel(IMgaFCO *Model) //BOOL first added to check if it matches first or second
 {
-
+     //check if the first criteria is satisfied
     int x=Matches(Model,true);
+
+     //check if second criteria is satisified
     int y=Matches(Model,false);
 
+    //check if logical combination is satisfied
     return PerformLogical(x,y);
-
 }
-
 
 //special search for references to specific objects
 void CSearch::SearchReferences(IMgaFCO *referenced)
 {
-
     CComPtr<IMgaFCOs> objRefByList;
     COMTHROW(referenced->get_ReferencedBy(&objRefByList));
 
@@ -484,299 +383,191 @@ void CSearch::SearchReferences(IMgaFCO *referenced)
         CComPtr<IMgaFCO> refobj = MGACOLL_ITER;
         COMTHROW(results->Append(refobj));
     } MGACOLL_ITERATE_END;
-
 }
-
-/*bool CSearch::CheckAttributes(IMgaFCO *obj,BOOL first)
-{			
-int val_int;
-double val_dbl;
-bool val_b;
-bool found = false;
-CComPtr<IMgaFCO> cObj = obj;
-
-//first, get the attribute names
-CStringList attriblist;
-attval_enum type;
-attval_enum sectype;
-
-type =first? filter.getAttrType:filter.getAttrType2;
-if(type == ATTVAL_STRING)
-sectype = ATTVAL_ENUM;
-else
-sectype = ATTVAL_NULL;
-
-CComPtr<IMgaMetaFCO> cmeta;
-CComPtr<IMgaMetaAttributes> mattrs;
-COMTHROW(cObj->get_Meta(&cmeta));
-COMTHROW(cmeta->get_Attributes(&mattrs));
-MGACOLL_ITERATE(IMgaMetaAttribute, mattrs) {
-attval_enum t;
-COMTHROW(MGACOLL_ITER->get_ValueType(&t) );
-if(t == type || t == sectype) { 
-CBstr n;
-COMTHROW(MGACOLL_ITER->get_Name(n) );
-attriblist.AddTail(n);
-}
-
-} MGACOLL_ITERATE_END;
-
-
-//now check the attributes
-POSITION strpos = attriblist.GetHeadPosition();
-
-while(strpos)
-{
-CString attrib = attriblist.GetNext(strpos);
-CString attrib_altered = attrib;
-
-if( filter.getCaseIgnored) // case ignored, make attrib name lowercase
-{
-attrib_altered.MakeLower();
-}
-
-if(filter.objAttrName.Match(attrib_altered))
-{
-if(!filter.objVal.IsEmpty())
-{
-int actval_int;
-double actval_dbl;
-bool actval_b;
-CString actval_str;
-
-CBstr bstrS;
-long l;
-VARIANT_BOOL vb;
-
-switch(type)
-{
-case ATTVAL_STRING:		if(! SUCCEEDED( cObj->get_StrAttrByName((CBstrIn)attrib, bstrS) ) ) found = false;
-//COMTHROW( cObj->get_StrAttrByName((CBstrIn)attrib, bstrS) ); 
-actval_str = bstrS;
-if( filter.getCaseIgnored) // case ignored, make attrib value lowercase
-{
-actval_str.MakeLower();
-}
-
-if(filter.objAttrVal.Match( actval_str))
-found = true;
-// the lines above allow partially specified values to match
-// by Zolmol
-
-if(filter.objVal == actval_str)
-found = true;
-break;
-
-case ATTVAL_INTEGER:	if(! SUCCEEDED( cObj->get_IntAttrByName((CBstrIn)attrib, &l) ) ) found = false;
-//COMTHROW( cObj->get_IntAttrByName((CBstrIn)attrib, &l));
-actval_int = l;
-val_int = atoi(filter.objVal);
-if(val_int == actval_int)
-found = true;
-break;
-
-case ATTVAL_DOUBLE:		if( !SUCCEEDED( cObj->get_FloatAttrByName((CBstrIn)attrib, &actval_dbl) ) ) found = false;
-//COMTHROW( cObj->get_FloatAttrByName((CBstrIn)attrib, &actval_dbl));
-val_dbl = atof(filter.objVal);
-if(val_dbl == actval_dbl)
-found = true;
-break;
-
-case ATTVAL_BOOLEAN:	if( !SUCCEEDED( cObj->get_BoolAttrByName((CBstrIn)attrib, &vb) ) ) found = false;
-//COMTHROW( cObj->get_BoolAttrByName((CBstrIn)attrib, &vb));
-actval_b = (vb != 0);			
-val_int = atoi(filter.objVal);
-if(filter.objVal=="false" || filter.objVal=="False" || filter.objVal=="FALSE" || val_int==0)
-val_b = false;
-if(filter.objVal=="true" || filter.objVal=="True" || filter.objVal=="TRUE" || val_int==1)
-val_b = true;
-
-if(val_b == actval_b)
-found = true;
-break;
-
-case ATTVAL_REFERENCE:	break;
-
-default:				found = true; break;
-}
-}
-else
-found = true;
-}
-
-if (found)	break;
-}		
-return found; 
-}
-*/
 
 bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
 {	
     int index=0;
-    int val_int;
-    double val_dbl;
-    bool val_b;		
+    	
     bool found = false;
     CComPtr<IMgaFCO> cObj = obj;
 
-    //first, get the attribute names
-    CStringList attriblist;
+    CStringList attributeList;
+
+    //stores type of the attribute
     std::vector<attval_enum> typeList;
+
+    //stores indices of the attribute in expression stack to access it randomly
+    //all attributes in the expression stack may not match the criteria
+    //so for the ones matching the criteria the index is stored so that it can be accessed 
+    //easily
     std::vector<int> indices;
-    std::vector<Attrib> expr=first?filter.expr1:filter.expr2;
+
+    //Get appropriate expression stack, either first or second 
+    std::vector<Attribute> expressionStack=first?filter.GetFirstAttributeStack():filter.GetSecondAttributeStack();
+
     CComPtr<IMgaMetaFCO> cmeta;
     CComPtr<IMgaMetaAttributes> mattrs;
     COMTHROW(cObj->get_Meta(&cmeta));
     COMTHROW(cmeta->get_Attributes(&mattrs));
-    index=0;
+
+    index = 0;
+
+    //iterate thru attributes and make a list if it matches search criteria
+    //also store its type and the index in original expression stack
     MGACOLL_ITERATE(IMgaMetaAttribute, mattrs) {
-        attval_enum t;
-		CComBSTR n;
-        COMTHROW(MGACOLL_ITER->get_DisplayedName(&n) );
-		CComBSTR n2;
-		COMTHROW(MGACOLL_ITER->get_Name(&n2) );
+        attval_enum type;
+		CComBSTR strDisplayedName;
+        COMTHROW(MGACOLL_ITER->get_DisplayedName(&strDisplayedName) );
+		CComBSTR strName;
+		COMTHROW(MGACOLL_ITER->get_Name(&strName) );
         index=0; 
-        for(std::vector<Attrib>::iterator it=expr.begin();it!=expr.end();++it)
+        for(std::vector<Attribute>::iterator it=expressionStack.begin();it!=expressionStack.end();++it)
         {
-            Attrib attr=*it;
-            CString name=(CString) n;
-            if (filter.getCaseIgnored) name.MakeLower();
-			if(attr.GetRegExp(attr.name,filter.full).Match(name))
+            Attribute attr=*it;
+            CString name=(CString) strDisplayedName;
+            if (filter.IsCaseIgnored()) name.MakeLower();
+            if(std::tr1::regex_search((LPCTSTR)name,attr.GetRegExp(attr.name,filter.MatchWholeWord())))
             {
-                COMTHROW(MGACOLL_ITER->get_ValueType(&t) );
-                attriblist.AddTail(CString(n2));
-                typeList.push_back(t);
+                COMTHROW(MGACOLL_ITER->get_ValueType(&type) );
+                attributeList.AddTail(CString(strName));
+
+                //put the attribute type in a vector
+                typeList.push_back(type);
+
+                //also put the appropriate index of the attribute name in the list
                 indices.push_back(index);
             }
             index++;
         }
-
-
-
     } MGACOLL_ITERATE_END;
 
 
-    //now check the attributes
-    POSITION strpos = attriblist.GetHeadPosition();
+    //now check the attributes one by one
+    POSITION strpos = attributeList.GetHeadPosition();
     index=0;
-    int temp_index=0;
-
+  
     while(strpos)
     {
-        CString attrib = attriblist.GetNext(strpos);
-        CString attrib_altered = attrib;
-        Attrib& attrib_name=expr[indices[index]];
+        CString strAttribute = attributeList.GetNext(strpos);
+        
+        //aceess the corresponding attribute by using the index stored in a vector
+        Attribute& attribute = expressionStack[indices[index]];
 
-        /* while(indices[index]>temp_index)
-        {
-        if(!expr[temp_index].IsOperator())
-        {
-        expr[temp_index].eval=FALSE;
-        }
-        temp_index++;
-        }*/
 
-        if( filter.getCaseIgnored) // case ignored, make attrib name lowercase
+        CString objVal=expressionStack[indices[index]].value;
+        if(!objVal.IsEmpty())
         {
-            attrib_altered.MakeLower();
-        }
+            //place holders for actual attribute values
+            int intActualValue;
+            double dblActualValue;
+            bool bActualValue;
+            CString strActualValue;
 
-        //this check is useless reduce it
+            //User supplied values
+            int intSearchValue;
+            double dblSearchValue;
+            bool bSearchValue;	
 
-        //if(attrib_name.GetRegExp(attrib_name.name,filter.full).Match(attrib_altered))
-        {
-            CString objVal=expr[indices[index]].value;
-            if(!objVal.IsEmpty())
+            CBstr bstrS;
+            long value;
+            VARIANT_BOOL vb;
+
+            switch(typeList[index])
             {
-                int actval_int;
-                double actval_dbl;
-                bool actval_b;
-                CString actval_str;
+            case ATTVAL_STRING:		
+                if(! SUCCEEDED( cObj->get_StrAttrByName((CBstrIn)strAttribute, bstrS) ) ) attribute.eval=FALSE;
 
-                CBstr bstrS;
-                long l;
-                VARIANT_BOOL vb;
-
-                switch(typeList[index])
+                strActualValue = bstrS;
+                if( filter.IsCaseIgnored()) // case ignored, make attrib value lowercase
                 {
-                case ATTVAL_STRING:		if(! SUCCEEDED( cObj->get_StrAttrByName((CBstrIn)attrib, bstrS) ) ) attrib_name.eval=FALSE;
-                    //COMTHROW( cObj->get_StrAttrByName((CBstrIn)attrib, bstrS) ); 
-                    actval_str = bstrS;
-                    if( filter.getCaseIgnored) // case ignored, make attrib value lowercase
-                    {
-                        actval_str.MakeLower();
-                    }
-
-                    if(attrib_name.CheckString(attrib_name.GetRegExp(objVal,filter.full).Match( actval_str)))
-                        attrib_name.eval=TRUE;
-                    break;
-
-                case ATTVAL_INTEGER:	if(! SUCCEEDED( cObj->get_IntAttrByName((CBstrIn)attrib, &l) ) ) attrib_name.eval=FALSE;
-                    //COMTHROW( cObj->get_IntAttrByName((CBstrIn)attrib, &l));
-                    actval_int = l;
-                    //val_int = atoi(filter.objVal);
-                    val_int = atoi(attrib_name.value);
-                    if(attrib_name.CheckInteger(actval_int,val_int))
-                        attrib_name.eval=TRUE;
-                    break;
-
-                case ATTVAL_DOUBLE:		if( !SUCCEEDED( cObj->get_FloatAttrByName((CBstrIn)attrib, &actval_dbl) ) ) attrib_name.eval=FALSE;
-                    //COMTHROW( cObj->get_FloatAttrByName((CBstrIn)attrib, &actval_dbl));
-                    val_dbl = atof(attrib_name.value);
-                    if(attrib_name.CheckDouble(actval_dbl,val_dbl))
-                        attrib_name.eval=TRUE ;
-                    break;
-
-                case ATTVAL_BOOLEAN:	if( !SUCCEEDED( cObj->get_BoolAttrByName((CBstrIn)attrib, &vb) ) ) attrib_name.eval=FALSE;
-                    //COMTHROW( cObj->get_BoolAttrByName((CBstrIn)attrib, &vb));
-                    actval_b = (vb != 0);			
-                    val_int = atoi(attrib_name.value);
-                    if(attrib_name.value=="false" || attrib_name.value=="False" || attrib_name.value=="FALSE" || val_int==0)
-                        val_b = false;
-                    if(attrib_name.value=="true" || attrib_name.value=="True" || attrib_name.value=="TRUE" || val_int==1)
-                        val_b = true;
-
-                    if(attrib_name.CheckBool(actval_b,val_b))
-                        attrib_name.eval=TRUE;
-                    break;
-
-                case ATTVAL_REFERENCE:	break;
-
-                default:				attrib_name.eval = TRUE; break;
+                    strActualValue.MakeLower();
                 }
+
+                if(attribute.CheckString(std::tr1::regex_search((LPCTSTR)strActualValue,attribute.GetRegExp(objVal,filter.MatchWholeWord()))))
+                    attribute.eval=TRUE;
+                break;
+
+            case ATTVAL_INTEGER:	
+
+                if(! SUCCEEDED( cObj->get_IntAttrByName((CBstrIn)strAttribute, &value) ) ) attribute.eval=FALSE;
+
+                intActualValue = value;
+
+                intSearchValue = atoi(attribute.value);
+                if(attribute.CheckInteger(intActualValue,intSearchValue))
+                    attribute.eval=TRUE;
+                break;
+
+            case ATTVAL_DOUBLE:		
+
+                if( !SUCCEEDED( cObj->get_FloatAttrByName((CBstrIn)strAttribute, &dblActualValue) ) ) attribute.eval=FALSE;
+
+                dblSearchValue = atof(attribute.value);
+                if(attribute.CheckDouble(dblActualValue,dblSearchValue))
+                    attribute.eval=TRUE ;
+                break;
+
+            case ATTVAL_BOOLEAN:	
+
+                if( !SUCCEEDED( cObj->get_BoolAttrByName((CBstrIn)strAttribute, &vb) ) ) attribute.eval=FALSE;
+
+                bActualValue = (vb != 0);			
+                intSearchValue = atoi(attribute.value);
+                if(attribute.value=="false" || attribute.value=="False" || attribute.value=="FALSE" || intSearchValue==0)
+                    bSearchValue = false;
+                if(attribute.value=="true" || attribute.value=="True" || attribute.value=="TRUE" || intSearchValue==1)
+                    bSearchValue = true;
+
+                if(attribute.CheckBool(bActualValue,bSearchValue))
+                    attribute.eval=TRUE;
+                break;
+
+            case ATTVAL_REFERENCE:	break;
+
+            default:				
+                attribute.eval = TRUE; break;
             }
-            else
-                attrib_name.eval = TRUE;
-
         }
+        else
+            attribute.eval = TRUE;
 
+        
         ++index;
-        //if (found)	break;
     }		
-    return EvaluateResult(expr); 
+    return EvaluateResult(expressionStack); 
 }
 
 //Evaluate the logical combination result
 
-bool CSearch::EvaluateResult(std::vector<Attrib>& attrs)
+bool CSearch::EvaluateResult(std::vector<Attribute>& vectorAttributes)
 {
-    if(attrs.size()==0)
+    if(vectorAttributes.size()==0)
         return true;
-    else if (attrs.size()==1)
-        return (attrs[0].eval==TRUE);
+    else if (vectorAttributes.size()==1)
+        return (vectorAttributes[0].eval==TRUE);
 
-    while(attrs.size()!=1)
+    while(vectorAttributes.size()!=1)
     {
-        Attrib attr=attrs.back();
-        attrs.pop_back();
-        Attrib oper=attrs.back();
-        attrs.pop_back();
-        Attrib attr2=attrs.back();
-        attrs.pop_back();
-        attr.eval=oper.LogicalCompare(attr.eval,oper,attr2.eval);
-        attrs.push_back(attr);
+        //pop the first attribute
+        Attribute attribute1=vectorAttributes.back();
+        vectorAttributes.pop_back();
+
+        //pop the operation
+        Attribute operation=vectorAttributes.back();
+        vectorAttributes.pop_back();
+
+        //pop the second attribute
+        Attribute attribute2=vectorAttributes.back();
+        vectorAttributes.pop_back();
+
+        //binary evaluation of 2 attributes using the operation
+        attribute1.eval=operation.LogicalCompare(attribute1.eval,operation,attribute2.eval);
+
+        //put the result back
+        vectorAttributes.push_back(attribute1);
     }
-    return (attrs[0].eval == TRUE);
+    return (vectorAttributes[0].eval==TRUE);
 }
 
 
@@ -791,86 +582,45 @@ void CSearch::SearchResults(CComPtr<IMgaFCOs> old_results,CComPtr<IMgaFCOs> disp
     {
         objtype_enum rret;
         COMTHROW( MGACOLL_ITER->get_ObjType( &rret) );
-        if (rret == OBJTYPE_ATOM  && filter.getAtoms)
+        if (rret == OBJTYPE_ATOM  && filter.GetAtoms())
         {
-            //if(Check(MGACOLL_ITER.p,0)) COMTHROW(results->Append((IMgaAtom*)(MGACOLL_ITER.p)));
             if (CheckAtom((IMgaAtom*)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaAtom*)(MGACOLL_ITER.p)));
         }
-        else if (rret == OBJTYPE_MODEL && filter.getModels)
+        else if (rret == OBJTYPE_MODEL && filter.GetModels())
         {
-            //type = "MODEL";
-            //if(Check((MGACOLL_ITER.p),1)) COMTHROW(results->Append((IMgaModel*)(MGACOLL_ITER.p)));
             if(CheckModel((IMgaModel *)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaModel*)(MGACOLL_ITER.p)));;
         }
-        else if (rret == OBJTYPE_REFERENCE && filter.getReferences)
+        else if (rret == OBJTYPE_REFERENCE && filter.GetReferences())
         {
-            //type = "REFERENCE";
-            //if(Check((MGACOLL_ITER.p),2)) COMTHROW(results->Append((IMgaReference*)(MGACOLL_ITER.p)));
             if (CheckAtom((IMgaAtom*)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaReference*)(MGACOLL_ITER.p)));
         }
-        else if (rret == OBJTYPE_SET && filter.getSets)
+        else if (rret == OBJTYPE_SET && filter.GetSets())
         {
-            //if(Check((MGACOLL_ITER.p),3)) COMTHROW(results->Append((IMgaSet*)(MGACOLL_ITER.p)));
             if(CheckSet((IMgaSet*)(MGACOLL_ITER.p)))COMTHROW(results->Append((IMgaSet*)(MGACOLL_ITER.p)));
-            //type = "SET";
         }
     } MGACOLL_ITERATE_END;
 }
 
 
-/*bool CSearch::Check(IMgaFCO* fco,int type) //0-atom,1-model,2-ref,3-set
-{
-
-switch(type)
-{
-case 0:
-return CheckLogicalCombination(fco,&CSearch::CheckAtom);
-
-case 1:
-return CheckLogicalCombination(fco,&CSearch::CheckModel);
-
-case 2:
-return CheckLogicalCombination(fco,&CSearch::CheckReference);
-
-case 3:
-return CheckLogicalCombination(fco,&CSearch::CheckSet);
-case 4:
-return CheckLogicalCombination(fco,&CSearch::CheckAttributes);
-}
-return false;
-}
-
-bool CSearch::CheckLogicalCombination(IMgaFCO* fco,bool (CSearch::*Chk)(IMgaFCO* fco,bool first))
-{
-BSTR n;
-COMTHROW(fco->get_Name(&n));
-switch(filter.logical)
-{
-case 0://AND
-return (this->*Chk)(fco,true) && (this->*Chk)(fco,false);
-case 1://OR
-return (this->*Chk)(fco,true) || (this->*Chk)(fco,false);
-case 2://XOR
-bool b1=(this->*Chk)(fco,true);
-bool b2=!(this->*Chk)(fco,false);
-bool b3=(!(this->*Chk)(fco,true));
-bool b4=(this->*Chk)(fco,false);
-return (b1 && b2) || (b3&& b4);
-// return (((this->*Chk)(fco,true) && (!(this->*Chk)(fco,false))) || (((!(this->*Chk)(fco,true)) && (this->*Chk)(fco,false))));
-}
-return false;
-}*/
+//Perform logical operations ANDing and ORing
+//to evaluate whether the final result is true
 
 bool CSearch::PerformLogical(int x,int y)
 {
-    switch (filter.logical)
+    //-1 undefined, 0 -false, 1 - true
+    //-1 is used to indicate that no search term is supplied in the 
+    //corresponding field
+    switch (filter.GetLogicalOperator())
     {
+     //and
     case 0:
         return (x==-1 && y==1)||(x==1 && y==-1) ||(x==1&&y==1);
+     //or
     case 1:
         return x==1 || y==1;
+    //xor
     case 2:
-        return (x==-1 && y==1)||(x==1 && y==-1)||(x==1 && y==0);
+        return (x==-1 && y==1)||(x==1 && y==-1)||(x==1 && y==0)||(x==0 && y==1);
     }
 
     return false;
@@ -881,6 +631,8 @@ int CSearch::Matches(IMgaFCO* fco,bool first)
     CString partName;
     CBstr bstr;
     CComPtr<IMgaMetaRole> rmeta;
+
+    //get role
     COMTHROW( fco->get_MetaRole(&rmeta) );
     if(rmeta) 
     {
@@ -889,16 +641,12 @@ int CSearch::Matches(IMgaFCO* fco,bool first)
     } 
     else 
         partName = "";
-    CRegExp role=first?filter.objRole:filter.objRole2;
-
-
-    //if(!role.Match(partName)) return false;
-
 
     //get the name
     CBstr bstrName;
     COMTHROW(fco->get_Name(bstrName));
-    CString name = bstrName;
+    CString strName = bstrName;
+
     //get the KindName
     CBstr bstrKindName;
     CComPtr<IMgaMetaFCO> cmeta;
@@ -906,9 +654,9 @@ int CSearch::Matches(IMgaFCO* fco,bool first)
     COMTHROW( fco->get_Name(bstrKindName) );
     CString kindName = bstrKindName;
 
-    if( filter.getCaseIgnored) // case ignored, make values lowercase
+    if( filter.IsCaseIgnored()) // case ignored, make values lowercase
     {
-        name.MakeLower();
+        strName.MakeLower();
         kindName.MakeLower();
         partName.MakeLower();
     }
@@ -916,58 +664,32 @@ int CSearch::Matches(IMgaFCO* fco,bool first)
     int result=-1;
     if(first)
     {
-        if(!filter.role.IsEmpty())
-        {
-            result=filter.objRole.Match(partName)?1:0;
+        if(!filter.GetFirstRole().IsEmpty())
+            result=std::tr1::regex_search((LPCTSTR)partName,filter.GetFirstRoleRegExp())?1:0;
 
-        }
-        if(!filter.kind.IsEmpty() && result!=0)
-            result=filter.objRole.Match(kindName)?1:0;
+        if(!filter.GetFirstKind().IsEmpty() && result!=0)
+            result=std::tr1::regex_search((LPCTSTR)kindName,filter.GetFirstKindRegExp())?1:0;
 
-        if(!filter.name.IsEmpty() &&result!=0)
-            result=filter.objName.Match(name)?1:0;
-        if(!filter.objattrib.IsEmpty() &&result!=0)
+        if(!filter.GetFirstName().IsEmpty() &&result!=0)
+            result=std::tr1::regex_search((LPCTSTR)strName,filter.GetFirstNameRegExp())?1:0;
+
+        if(!filter.GetFirstAttribute().IsEmpty() &&result!=0)
             result=CheckAttributes(fco,first)?1:0;
-
     }
     else
     {
-        if(!filter.role2.IsEmpty())
-        {
-            result=filter.objRole2.Match(partName)?1:0;
+        if(!filter.GetSecondRole().IsEmpty())
+            result=std::tr1::regex_search((LPCTSTR)partName,filter.GetSecondRoleRegExp())?1:0;
 
-        }
-        if(!filter.kind2.IsEmpty()&& result!=0)
-            result=filter.objRole2.Match(kindName)?1:0;
+        if(!filter.GetSecondKind().IsEmpty()&& result!=0)
+            result=std::tr1::regex_search((LPCTSTR)kindName,filter.GetSecondKindRegExp())?1:0;
 
-        if(!filter.name2.IsEmpty() &&result!=0)
-            result=filter.objName2.Match(name)?1:0;
-        if(!filter.objAttrib2.IsEmpty() && result!=0)
+        if(!filter.GetSecondName().IsEmpty() &&result!=0)
+            result=std::tr1::regex_search((LPCTSTR)strName,filter.GetSecondNameRegExp())?1:0;
+
+        if(!filter.GetSecondAttribute().IsEmpty() && result!=0)
             result=CheckAttributes(fco,first)?1:0;
     }
 
     return result;
-    //if(filter.objRole.Is
 }
-/*
-// COM Functions for Attributes!!...:-((
-
-void CSearch::GetAllAttributes(CBuilderObject *obj)
-{
-ASSERT (attrlist->IsEmpty());
-
-CComPtr<IMgaMetaAttributes> metaAttribs;
-//CComPtr<IMgaMetaFCO> objMeta = obj->GetMeta();
-
-COMTHROW(obj->GetMeta()->get_Attributes(&mattrs));
-
-MGACOLL_ITERATE(IMgaMetaAttribute, mattrs) 
-{
-attval_enum t;
-COMTHROW(MGACOLL_ITER->get_ValueType(&t) );
-CBstr n;
-COMTHROW(MGACOLL_ITER->get_Name() );
-
-
-}
-*/

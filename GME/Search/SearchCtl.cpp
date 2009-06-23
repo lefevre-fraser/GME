@@ -178,6 +178,7 @@ CSearchCtrl::CSearchCtrl()
 	SetInitialSize(SEARCH_INITIAL_SIZEX, SEARCH_INITIAL_SIZEY);
 	m_territory = NULL;
 	m_project = NULL;
+    m_MgaObjs=NULL;
 	m_transactionCnt = 0;
 	m_inEventTransactionMode = false;
 }
@@ -188,6 +189,9 @@ CSearchCtrl::CSearchCtrl()
 
 CSearchCtrl::~CSearchCtrl()
 {
+    m_territory = NULL;
+	m_project = NULL;
+    m_MgaObjs=NULL;
 }
 
 
@@ -284,6 +288,7 @@ BOOL CSearchCtrl::PreCreateWindow(CREATESTRUCT& cs)
 	cs.dwExStyle |= WS_EX_CONTROLPARENT;
 	return COleControl::PreCreateWindow(cs);
 }
+
 
 LPUNKNOWN CSearchCtrl::GetMgaProject() 
 {
@@ -518,8 +523,13 @@ void CSearchCtrl::LocateMgaObject(CComPtr<IMgaObject> object)
 
 void CSearchCtrl::SelMgaObjects(IUnknown* p_selMgaObjs)
 {
+    //if project is undefined no point in setting objects -kiran
+    if(!m_project)
+    {
+        m_MgaObjs.Release();
+        return;
+    }
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
 	if (p_selMgaObjs != NULL) {
 		CComQIPtr<IMgaObjects> ccpMgaObjects( p_selMgaObjs);
 		if (ccpMgaObjects == NULL) 
@@ -532,9 +542,6 @@ void CSearchCtrl::SelMgaObjects(IUnknown* p_selMgaObjs)
 		m_MgaObjs = ccpMgaObjects;
 		//m_searchDlg.EnableScoped( TRUE);
 	}
-	else { // called when Dlg is Hidden, in order to release the Mga ptrs
-		m_MgaObjs.Release();
-		//m_searchDlg.EnableScoped( FALSE);
-	}
+	
 	//SetModifiedFlag();
 }
