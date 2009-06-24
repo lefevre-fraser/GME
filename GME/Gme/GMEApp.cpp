@@ -1448,6 +1448,7 @@ void CGMEApp::SaveProject(const CString &conn) {
 
 void CGMEApp::GetSettings()
 {
+	bool oldUseAutoRouting = useAutoRouting;
 	MSGTRY
 	{
 		CComObjPtr<IMgaRegistrar> registrar;
@@ -1525,6 +1526,11 @@ void CGMEApp::GetSettings()
 	}
 	MSGCATCH("Error while trying to get program settings",;);
 	if(CGMEDoc::theInstance) {
+		// Global AutoRouting policy changed, convert opened views if necessary
+		if (!useAutoRouting && oldUseAutoRouting) {
+			CComPtr<IUnknown> nullPtr;
+			CGMEDoc::theInstance->ConvertPathToCustom(nullPtr);
+		}
 		if (autosaveEnabled) {
 			CMainFrame::theInstance->StartAutosaveTimer(autosaveFreq);
 		}

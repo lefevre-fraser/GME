@@ -44,7 +44,8 @@ END_MESSAGE_MAP()
 
 BEGIN_EVENTSINK_MAP(CGMEObjectInspector, CDockablePane)
     //{{AFX_EVENTSINK_MAP(CGMEBrowser)
-	ON_EVENT(CGMEObjectInspector, IDC_OBJECT_INSPECTOR_CTRL, 1 /* RootFolderNameChanged */, OnRootFolderNameChangedGmeActiveBrowserCtrl, VTS_NONE)
+	ON_EVENT(CGMEObjectInspector, IDC_OBJECT_INSPECTOR_CTRL, 1 /* RootFolderNameChanged */, OnRootFolderNameChangedGmeObjectInspectorCtrl, VTS_NONE)
+	ON_EVENT(CGMEObjectInspector, IDC_OBJECT_INSPECTOR_CTRL, 2 /* ConvertPathToCustom */, OnConvertPathToCustomGmeObjectInspectorCtrl, VTS_UNKNOWN)
 	//}}AFX_EVENTSINK_MAP
 END_EVENTSINK_MAP()
 
@@ -143,7 +144,13 @@ void CGMEObjectInspector::CyclePanel( VARIANT_BOOL frwd)
 	m_ObjectInspector.CyclePanel( frwd);
 }
 
-void CGMEObjectInspector::OnRootFolderNameChangedGmeActiveBrowserCtrl()
+void CGMEObjectInspector::OnRootFolderNameChangedGmeObjectInspectorCtrl()
 {
 	theApp.UpdateProjectName();
+}
+
+void CGMEObjectInspector::OnConvertPathToCustomGmeObjectInspectorCtrl(LPUNKNOWN pMgaObject)
+{
+	CComPtr<IUnknown> sunk(pMgaObject);
+	CGMEDoc::theInstance->ConvertPathToCustom(sunk);
 }

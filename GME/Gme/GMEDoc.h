@@ -131,6 +131,7 @@ public:
 	void ShowObject(LPCTSTR objectID);
 	void ResetNextToView()													{ nextToView = 0; }
 	void ChangeAspects(int index, CString aspName);
+	void ConvertPathToCustom(CComPtr<IUnknown>& pMgaObject);
 
 	static bool CreateFcoList(CGuiObjectList* list,CComPtr<IMgaFCOs> &fcos,CGMEView *view);
 	static bool CreateFcoList2(CGuiFcoList* list,CComPtr<IMgaFCOs> &fcos,CGMEView *view, long *howmany, bool* array[8]);

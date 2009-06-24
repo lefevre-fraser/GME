@@ -747,6 +747,25 @@ void CGMEDoc::ChangeAspects(int index, CString aspName)
 	}
 }
 
+void CGMEDoc::ConvertPathToCustom(CComPtr<IUnknown>& pMgaObject)
+{
+
+	POSITION pos = GetFirstViewPosition();
+	if (pos) {
+		while (pos != NULL) {
+			CGMEView* pView = (CGMEView*)GetNextView(pos);
+
+			pView->BeginTransaction();
+			try {
+				pView->ConvertPathToCustom(pMgaObject);
+				pView->CommitTransaction();
+			} catch(hresult_exception& e) {
+				pView->AbortTransaction(e.hr);
+			}
+		}
+	}
+}
+
 void CGMEDoc::ViewModeChange()
 {
 	POSITION pos = GetFirstViewPosition();

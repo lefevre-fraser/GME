@@ -450,7 +450,7 @@ public:
 	long IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& point);
 	std::vector<long> GetRelevantCustomizedEdgeIndexes(void);
 	void FillOutCustomPathData(CustomPathData& pathData, PathCustomizationType custType, long asp, int newPosX, int newPosY,
-							   int edgeIndex, bool horizontalOrVerticalEdge);
+							   int edgeIndex, int edgeCount, bool horizontalOrVerticalEdge);
 	std::vector<CustomPathData> GetCurrentPathCustomizations(void);
 	bool HasPathCustomization(void) const;
 	bool HasPathCustomizationForCurrentAspect(int edgeIndex = -1) const;
@@ -469,9 +469,11 @@ public:
 	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp, int edgeIndex = -1);
 	bool IsAutoRouted(void) const;
 	void SetAutoRouted(bool autoRouteState);
-	bool NeedsRouterPathConversion(void) const;
-	void ConvertAutoRoutedPathToCustom(long asp, bool handleTransaction = false);
-	void ReadAutoRouteState(void);
+	bool NeedsRouterPathConversion(void);
+	bool StoreAutoRoutedPathForConversion(void);
+	void ConvertAutoRoutedPathToCustom(long asp, bool useCachedData = true, bool handleTransaction = false);
+	void ConvertAutoRoutedPathToCustom2(long asp, bool handleTransaction = false);
+	bool ReadAutoRouteState(void);
 	void WriteAutoRouteState(bool handleTransaction = true);
 
 	virtual bool IsVisible(int aspect = -1)				{ return visible && visible[aspect < 0 ? parentAspect : aspect]; }
@@ -502,6 +504,8 @@ private:
 	bool connRegAutoRouteNotSet;
 	bool isAutoRouted;
 	std::vector<CustomPathData> customPathData;
+	bool hasCachedConversionData;
+	CPointList autoRoutedPathCacheForConverion;
 };
 
 

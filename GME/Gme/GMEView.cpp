@@ -50,6 +50,11 @@ int setZoomPercents[GME_ZOOM_LEVEL_NUM] = {
 // #define END_SCROLL_OFFSET 50 // not used - instead EXTENT_ERROR_CORR
 
 #ifdef _DEBUG
+//#define CONSIDER_ONLY_FIRST_ACTIVATE
+#endif
+
+
+#ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
@@ -515,7 +520,6 @@ CGMEView::CGMEView()
 	m_refreshpannwin				= false;
 
 	initDone						= false;
-	secondAutoRoute					= false;
 	isModelAutoRouted				= theApp.useAutoRouting;
 	inTransaction					= 0;
 
@@ -2615,7 +2619,7 @@ void CGMEView::InsertCustomEdge(CGuiConnection* selectedConn, PathCustomizationT
 								int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge)
 {
 	CustomPathData pathData;
-	selectedConn->FillOutCustomPathData(pathData, custType, currentAspect->index, newPosX, newPosY, edgeIndex, horizontalOrVerticalEdge);
+	selectedConn->FillOutCustomPathData(pathData, custType, currentAspect->index, newPosX, newPosY, edgeIndex, -1, horizontalOrVerticalEdge);
 	selectedConn->InsertCustomPathData(pathData);
 }
 
@@ -2623,7 +2627,7 @@ void CGMEView::UpdateCustomEdges(CGuiConnection* selectedConn, PathCustomization
 								 int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge)
 {
 	CustomPathData pathData;
-	selectedConn->FillOutCustomPathData(pathData, custType, currentAspect->index, newPosX, newPosY, edgeIndex, horizontalOrVerticalEdge);
+	selectedConn->FillOutCustomPathData(pathData, custType, currentAspect->index, newPosX, newPosY, edgeIndex, -1, horizontalOrVerticalEdge);
 	selectedConn->UpdateCustomPathData(pathData);
 }
 
@@ -2639,25 +2643,54 @@ void CGMEView::DeleteCustomEdges(CGuiConnection* selectedConn, PathCustomization
 	selectedConn->DeletePathCustomization(pathData);
 }
 
+void CGMEView::StoreAutoRoutedPathsForConversion(void)
+{
+	bool isThereAnyConversion = false;
+	POSITION pos = connections.GetHeadPosition();
+	while (pos) {
+		CGuiConnection* conn = connections.GetNext(pos);
+		if (conn->StoreAutoRoutedPathForConversion())
+			isThereAnyConversion = true;
+	}
+	if (isThereAnyConversion) {
+		this->PostMessage(WM_USER_CONVERTROUTES, 0, 0);
+	}
+}
+
+void CGMEView::ConvertPathToCustom(CComPtr<IUnknown>& pMgaObject)
+{
+	CComQIPtr<IMgaModel> pMgaModel(pMgaObject);
+	if (pMgaModel) {
+		VARIANT_BOOL isEq = VARIANT_FALSE;
+		COMTHROW(currentModel->get_IsEqual(pMgaModel, &isEq));
+		if (isEq == VARIANT_FALSE)
+			return;
+	}
+	CComQIPtr<IMgaConnection> pMgaConn(pMgaObject);
+
+	bool isThereAnyConversion = false;
+	POSITION pos = connections.GetHeadPosition();
+	while (pos) {
+		CGuiConnection* conn = connections.GetNext(pos);
+		bool isThisConnection = false;
+		if (pMgaConn != NULL) {
+			VARIANT_BOOL isEq = VARIANT_FALSE;
+			COMTHROW(conn->mgaFco->get_IsEqual(pMgaConn, &isEq));
+			if (isEq == VARIANT_TRUE)
+				isThisConnection = true;
+		}
+		if (pMgaModel == NULL || pMgaConn != NULL && isThisConnection) {
+			conn->ConvertAutoRoutedPathToCustom2(currentAspect->index, false);
+			if (isThisConnection)
+				break;
+		}
+	}
+}
+
 void CGMEView::AutoRoute()
 {
 	BeginWaitCursor();
 	router.AutoRoute(children, currentAspect->index);  // Must reroute the whole thing, other code depends on it
-	if (!secondAutoRoute) {
-		bool isThereAnyConversion = false;
-		POSITION pos = connections.GetHeadPosition();
-		while (pos) {
-			CGuiConnection* conn = connections.GetNext(pos);
-			if (conn->NeedsRouterPathConversion()) {
-				isThereAnyConversion = true;
-				break;
-			}
-		}
-		if (isThereAnyConversion) {
-			secondAutoRoute = true;
-			this->PostMessage(WM_USER_CONVERTROUTES, 0, 0);
-		}
-	}
 	EndWaitCursor();
 }
 
@@ -5302,9 +5335,11 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			ShowAnnotationBrowser(fcoToShow, annotation->rootNode);
 		}
 		else {
-			//OnViewParent();	// double click on model background brings up the parent model
+			OnViewParent();	// double click on model background brings up the parent model
 							// user requested standard behavior
+/*
 			// Auto Router stress test
+#define _DEBUG
 			struct _timeb measuerementStartTime;
 			_ftime(&measuerementStartTime);
 			CString structSizeStr;
@@ -5320,6 +5355,8 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			elapsedTimeStr.Format("Ellapsed: %lu s + %d ms\n", elapsedSeconds, elapsedMilliSeconds);
 			OutputDebugString(elapsedTimeStr);
 			Reset();
+#endif
+*/
 		}
 	}
 	CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
@@ -6710,7 +6747,11 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 	//anyways, OnActivateView is called on both views, so you would know if going from
 	//one to another by the ACTIVATE/DEACTIVATE - Brian
 
-	if(bActivate) {
+	if (bActivate
+#ifdef CONSIDER_ONLY_FIRST_ACTIVATE
+		&& (!initDone || needsReset)
+#endif
+		) {
 		if( theApp.isHistoryEnabled())
 		{
 			GetDocument()->tellHistorian( currentModId, currentAspect?currentAspect->name:"");
@@ -7086,7 +7127,7 @@ void CGMEView::OnConvertAutoRoutedPathToCustom()
 	selectedContextConnection->SetAutoRouted(false);
 	selectedContextConnection->WriteAutoRouteState(false);
 	selectedContextConnection->DeleteAllPathCustomizationsForCurrentAspect();
-	selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index);
+	selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index, false);
 	CommitTransaction();
 }
 
@@ -9013,19 +9054,15 @@ LRESULT CGMEView::OnCommitTransaction(WPARAM wParam, LPARAM lParam)
 LRESULT CGMEView::OnConvertNeededConnectionRoutes(WPARAM wParam, LPARAM lParam)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnConvertNeededConnectionRoutes() in " + path + name + "\r\n");
-	if (secondAutoRoute) {
-		BeginTransaction();
-		BeginWaitCursor();
-		POSITION pos = connections.GetHeadPosition();
-		while (pos) {
-			CGuiConnection* conn = connections.GetNext(pos);
-			if (conn->NeedsRouterPathConversion())
-				conn->ConvertAutoRoutedPathToCustom(currentAspect->index);
-		}
-		EndWaitCursor();
-		CommitTransaction();
-		secondAutoRoute = false;
+	BeginTransaction();
+	BeginWaitCursor();
+	POSITION pos = connections.GetHeadPosition();
+	while (pos) {
+		CGuiConnection* conn = connections.GetNext(pos);
+		conn->ConvertAutoRoutedPathToCustom(currentAspect->index);
 	}
+	EndWaitCursor();
+	CommitTransaction();
 	return 0;
 }
 

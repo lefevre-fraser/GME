@@ -51,7 +51,8 @@ public:
 	//{{AFX_MSG(CGMEObjectInspector)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnRootFolderNameChangedGmeActiveBrowserCtrl();
+	afx_msg void OnRootFolderNameChangedGmeObjectInspectorCtrl();
+	afx_msg void OnConvertPathToCustomGmeObjectInspectorCtrl(LPUNKNOWN pMgaObject);
 	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

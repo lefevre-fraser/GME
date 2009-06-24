@@ -47,8 +47,8 @@ END_DISPATCH_MAP()
 
 BEGIN_EVENT_MAP(CObjectInspectorCtrl, COleControl)
 	//{{AFX_EVENT_MAP(CObjectInspectorCtrl)
-	// NOTE - ClassWizard will add and remove event map entries
-	//    DO NOT EDIT what you see in these blocks of generated code !
+	EVENT_CUSTOM("RootFolderNameChanged", FireRootFolderNameChanged, VTS_NONE)
+	EVENT_CUSTOM("ConvertPathToCustom", FireConvertPathToCustom, VTS_UNKNOWN)
 	//}}AFX_EVENT_MAP
 END_EVENT_MAP()
 
@@ -902,6 +902,8 @@ void CObjectInspectorCtrl::WritePreferenceItemToMga(CListItem ListItem, bool bIs
 	CComPtr<IMgaMetaProject> ccpMetaProject;
 	try
 	{
+		m_Preference.IssuePossiblePathConversion(ListItem, m_FCOList, this);
+
 		long lProjectStatus;
 		COMTHROW(m_project->get_ProjectStatus(&lProjectStatus));
 		bool bInTransaction = ((lProjectStatus & 0x08) != 0);

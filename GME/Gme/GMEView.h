@@ -191,7 +191,6 @@ public:
 
 	bool					needsReset;
 	bool					initDone;
-	bool					secondAutoRoute;		// We need a second AutoRoute to convert needed autorouted connections into custom connections
 	bool					isModelAutoRouted;
 	COLORREF				bgColor;
 	CChildFrame*			frame;
@@ -258,6 +257,8 @@ public:
 											  int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge);
 	void					DeleteCustomEdges(CGuiConnection* selectedConn, PathCustomizationType custType,
 											  int edgeIndex, bool horizontalOrVerticalEdge = false);
+	void					StoreAutoRoutedPathsForConversion(void);
+	void					ConvertPathToCustom(CComPtr<IUnknown>& pMgaObject);
 	void					PrintHeader(CDC* pDC, CPrintInfo* pInfo);
 	void					PrintHeaderRect(CDC* pDC, CRect& rectDraw);
 	void					PrintMultiLineText(Gdiplus::Graphics* gdip, CDC* pDC, CString txt, int x, int& y, int ry, int xwidth);

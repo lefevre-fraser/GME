@@ -94,10 +94,13 @@ protected:
 	void OnMgaGlobalEvent(globalevent_enum event);
 	void RemoveZombies();
 
+public:
 // Event maps
 	//{{AFX_EVENT(CObjectInspectorCtrl)
 	void FireRootFolderNameChanged()
 		{FireEvent(eventidRootFolderNameChanged, EVENT_PARAM(VTS_NONE)); }
+	void FireConvertPathToCustom(LPUNKNOWN pMgaObject)
+		{FireEvent(eventidConvertPathToCustom, EVENT_PARAM(VTS_UNKNOWN), pMgaObject);}
 	//}}AFX_EVENT
 	DECLARE_EVENT_MAP()
 
@@ -134,7 +137,8 @@ public:
 	dispidShowPanel = 3L,
 	dispidEditName = 4L,
 	dispidCyclePanel = 5L,
-	eventidRootFolderNameChanged = 1L
+	eventidRootFolderNameChanged = 1L,
+	eventidConvertPathToCustom = 2L
 	//}}AFX_DISP_ID
 	};
 private:

@@ -30,7 +30,8 @@ class CPreference
 	static char* m_szSetPreferenceTable[][5];
 
 public:
-	void WriteItemToMga(CListItem ListItem,const CMgaFCOPtrList& MgaFCOPtrList, bool bIsForKind);
+	void WriteItemToMga(CListItem ListItem, const CMgaFCOPtrList& MgaFCOPtrList, bool bIsForKind);
+	void IssuePossiblePathConversion(CListItem ListItem, const CMgaFCOPtrList& MgaFCOPtrList, CObjectInspectorCtrl* pParent);
 //	CString m_strName;
 	void CreateListItem(CArray<CListItem,CListItem&>&  ListItems, 
 						TableRowType, const CString& strValue, 

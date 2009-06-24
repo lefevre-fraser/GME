@@ -746,6 +746,17 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 	ListItem.dwKeyValue=(DWORD)nKey;
 	ListItem.dwUserData=0;
 
+	CString strPrefName=(*pTableRow)[1];
+
+	if(strPrefName=="isAutoRouted")
+	{
+		ListItem.dwUserData=AUTOROUTER_STATE_CONN;
+	}
+	else if(strPrefName=="isModelAutoRouted")
+	{
+		ListItem.dwUserData=AUTOROUTER_STATE_MODEL;
+	}
+
 	CString strEntryType=(*pTableRow)[0];
 
 	if(strEntryType=="COLOR")
@@ -1150,5 +1161,30 @@ void CPreference::WriteItemToMga(CListItem ListItem,const CMgaFCOPtrList& MgaFCO
 		Write2Mga(strValue,ccpMgaFCO,ListItem,strRegPath,bIsForKind);
 
 
+	}
+}
+
+void CPreference::IssuePossiblePathConversion(CListItem ListItem, const CMgaFCOPtrList& MgaFCOPtrList,
+											  CObjectInspectorCtrl* pParent)
+{
+	if (ListItem.bIsContainer)
+		return;
+
+	CString strValue;
+	ListValue2MgaValue(ListItem,strValue);
+
+	POSITION pos = MgaFCOPtrList.GetHeadPosition();
+
+	while(pos)
+	{
+		CComPtr<IMgaFCO> ccpMgaFCO = MgaFCOPtrList.GetNext(pos);
+
+		// Firing the event
+		if ((ListItem.dwUserData == AUTOROUTER_STATE_CONN ||
+			 ListItem.dwUserData == AUTOROUTER_STATE_MODEL) &&
+			 strValue == "false")
+		{
+			pParent->FireConvertPathToCustom(ccpMgaFCO);
+		}
 	}
 }

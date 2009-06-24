@@ -2343,7 +2343,8 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role
 	hovered					(false),
 	selected				(false),
 	connRegAutoRouteNotSet	(true),
-	isAutoRouted			(theApp.useAutoRouting)
+	isAutoRouted			(theApp.useAutoRouting),
+	hasCachedConversionData	(false)
 {
 	routerPath = NULL;
 
@@ -2428,7 +2429,7 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role
 		nameColor = GME_BLACK_COLOR;
 	}
 	ReadCustomPathData();
-	ReadAutoRouteState();
+	SetAutoRouted(ReadAutoRouteState());
 	RefreshAttributeCache();
 }
 
@@ -3061,7 +3062,7 @@ std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(void)
 	while (ii != customPathData.end()) {
 		if ((*ii).GetAspect() == asp || asp == -1) {
 			if (IsAutoRouted() && (*ii).GetType() == SimpleEdgeDisplacement ||
-				!IsAutoRouted() && (*ii).GetType() != SimpleEdgeDisplacement)
+			   !IsAutoRouted() && (*ii).GetType() != SimpleEdgeDisplacement)
 			{
 				customizedEdgeIndexes.push_back((*ii).GetEdgeIndex());
 			}
@@ -3072,12 +3073,12 @@ std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(void)
 }
 
 void CGuiConnection::FillOutCustomPathData(CustomPathData& pathData, PathCustomizationType custType, long asp,
-										   int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge)
+										   int newPosX, int newPosY, int edgeIndex, int edgeCount, bool horizontalOrVerticalEdge)
 {
 	pathData.SetVersion					(CONNECTIONCUSTOMIZATIONDATAVERSION);
 	pathData.SetAspect					(asp);
 	pathData.SetEdgeIndex				(edgeIndex);
-	pathData.SetEdgeCount				(GetEdgeCount());
+	pathData.SetEdgeCount				(edgeCount < 0 ? GetEdgeCount() : edgeCount);
 	pathData.SetType					(custType);
 	pathData.SetHorizontalOrVertical	(horizontalOrVerticalEdge);
 	if (custType == SimpleEdgeDisplacement) {
@@ -3387,9 +3388,6 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 
 bool CGuiConnection::IsAutoRouted(void) const
 {
-	if (!view->secondAutoRoute && NeedsRouterPathConversion())
-		return true;	// user just switched it, but we lie temporarily in order to be able to get the autorouted route
-
 	return isAutoRouted;
 }
 
@@ -3398,33 +3396,62 @@ void CGuiConnection::SetAutoRouted(bool autoRouteState)
 	isAutoRouted = autoRouteState;
 }
 
-bool CGuiConnection::NeedsRouterPathConversion(void) const
+bool CGuiConnection::NeedsRouterPathConversion(void)
 {
-	return (customPathData.size() < 1 && connRegAutoRouteNotSet && !isAutoRouted);
+	TRACE("NeedsRouterPathConversion %lu %d %d\n", customPathData.size(), connRegAutoRouteNotSet, isAutoRouted);
+	return (customPathData.size() < 1 && connRegAutoRouteNotSet && isAutoRouted);
 }
 
-void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp, bool handleTransaction)
+bool CGuiConnection::StoreAutoRoutedPathForConversion(void)
 {
-	CPointList points;
-	GetPointList(points);
+	if (NeedsRouterPathConversion()) {
+		hasCachedConversionData = true;
+		GetPointList(autoRoutedPathCacheForConverion);
+		return true;
+	}
+	return false;
+}
+
+void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp, bool useCachedData, bool handleTransaction)
+{
+	CPointList& points = autoRoutedPathCacheForConverion;
+	if (!useCachedData) {
+		points.RemoveAll();
+		GetPointList(points);
+	} else {
+		if (!hasCachedConversionData)
+			return;
+	}
+	hasCachedConversionData = false;
 	int numPoints = points.GetSize();
 
-	POSITION pos = points.GetHeadPosition();
-	int i = 0;
-	while (pos) {
-		CPoint pt = points.GetNext(pos);
-		if (i > 0 && i < numPoints - 1) {	// do not include the start and end point
-			CustomPathData pathData;
-			FillOutCustomPathData(pathData, CustomPointCustomization, asp, pt.x, pt.y, i - 1, true);
-			UpdateCustomPathData(pathData);
+	bool wasThereDataToWrite = false;
+	if (numPoints > 2) {
+		POSITION pos = points.GetHeadPosition();
+		int i = 0;
+		while (pos) {
+			CPoint pt = points.GetNext(pos);
+			if (i > 0 && i < numPoints - 1) {	// do not include the start and end point
+				CustomPathData pathData;
+				FillOutCustomPathData(pathData, CustomPointCustomization, asp, pt.x, pt.y, i - 1, numPoints - 1, true);
+				wasThereDataToWrite = true;
+				UpdateCustomPathData(pathData);
+			}
+			i++;
 		}
-		i++;
 	}
 
-	WriteCustomPathData(handleTransaction);
+	if (wasThereDataToWrite)
+		WriteCustomPathData(handleTransaction);
 }
 
-void CGuiConnection::ReadAutoRouteState(void)
+void CGuiConnection::ConvertAutoRoutedPathToCustom2(long asp, bool handleTransaction)
+{
+	StoreAutoRoutedPathForConversion();
+	ConvertAutoRoutedPathToCustom(asp, true, handleTransaction);
+}
+
+bool CGuiConnection::ReadAutoRouteState(void)
 {
 	CString autoRoutingStateStr;
 
@@ -3440,7 +3467,7 @@ void CGuiConnection::ReadAutoRouteState(void)
 	} else {
 		connRegAutoRouteNotSet = true;
 	}
-	isAutoRouted = connRegAutoRoute;
+	return connRegAutoRoute;
 }
 
 void CGuiConnection::WriteAutoRouteState(bool handleTransaction)
