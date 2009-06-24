@@ -82,7 +82,6 @@ public:
 	CListCtrl	m_lstResults;
     CTreeCtrl m_treeSearchHistory;
 
-
     //first search criteria controls
 	CComboBox	m_edtNameCtrlFirst;
 	CComboBox	m_edtKindNameCtrlFirst;
