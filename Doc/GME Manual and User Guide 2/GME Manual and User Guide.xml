@@ -5815,8 +5815,8 @@ void CCompoundBuilder::Scan(CString foldName)
         <para>We mentioned earlier BON2 is based on MON thus it is obvious
         there are a lot of similarities between the two object network.
         Because for an interpreter writer the architecture of BON2 is more
-        important than MON, we will mention the specific usage and
-        differencies during the discussion of BON2.</para>
+        important than MON, we will mention the specific usage and differences
+        during the discussion of BON2.</para>
       </section>
     </section>
 
@@ -6210,8 +6210,8 @@ VARIANT v )
               </listitem>
 
               <listitem>
-                <para>The user always must use the appropiate wrapper classes,
-                and not the implementations.</para>
+                <para>The user always must use the appropriate wrapper
+                classes, and not the implementations.</para>
               </listitem>
 
               <listitem>
@@ -6445,7 +6445,7 @@ IMPLEMENT_BONEXTENSION(MainParameter,“MainParameter”); </programlisting></pa
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="???" />
+              <imagedata fileref="images/Multiple inheritance with BON extensions.png" />
             </imageobject>
 
             <caption><para>Multiple inheritance with BON extensions
@@ -6555,7 +6555,7 @@ void print( const BON::FCO&amp; fco )
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="???" />
+            <imagedata fileref="images/Relationship between the Project and BON objects associations to MON classes.png" />
           </imageobject>
 
           <caption><para>Relationship between the Project and BON Objects,
@@ -6567,11 +6567,11 @@ void print( const BON::FCO&amp; fco )
         (i.e. <code>ConnectionEnd</code> and <code>ReferencePort</code>). The
         concept of the <code>ReferencePort</code> may look familiar to whom
         had used the previous version of BON, but there are essential
-        differencies which will be discussed in the next subsection.</para>
+        differences which will be discussed in the next subsection.</para>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="???" />
+            <imagedata fileref="images/BON classes which have the corresponding COM interface.png" />
           </imageobject>
 
           <caption><para>BON classes, which have the corresponding COM
@@ -6601,7 +6601,7 @@ void print( const BON::FCO&amp; fco )
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="???" />
+            <imagedata fileref="images/BON classes with their specific relationships.png" />
           </imageobject>
 
           <caption><para>BON classes with their specific relationships
@@ -6616,9 +6616,9 @@ void print( const BON::FCO&amp; fco )
         <code>ReferencePort</code> means.</para>
 
         <note>
-          <para>During the explanation we assume that there is only one Aspect
-          in the paradigm in order not to deal with relationships between
-          objects, ports and aspects.</para>
+          <para>During the explanation we assume that there is only one
+          <emphasis>Aspect</emphasis> in the paradigm in order not to deal
+          with relationships between objects, ports and aspects.</para>
         </note>
 
         <section>
@@ -6634,7 +6634,7 @@ void print( const BON::FCO&amp; fco )
           were different objects.</para>
 
           <para>In BON2 these concepts are retained but they are clarified.
-          Consequently has essential differencies.</para>
+          Consequently has essential differences.</para>
 
           <para><code>BuilderModelReference</code> of BON is called
           <code>ReferencePortContainer</code> in BON2. GME allows that a
@@ -6672,7 +6672,7 @@ void print( const BON::FCO&amp; fco )
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="???" />
+              <imagedata fileref="images/Relationships of Model references and Reference-ports.png" />
             </imageobject>
 
             <caption><para>Relationships of Model references and
@@ -6780,7 +6780,7 @@ if ( connectionend-&gt;isReferencePort() ) { // do something } </programlisting>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="???" />
+            <imagedata fileref="images/Relationships of Attributes Type-Inheritance Objects and Registry Nodes.png" />
           </imageobject>
 
           <caption><para>Relationships of Attributes, Type-Inheritance Objects
@@ -7149,7 +7149,7 @@ public:
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="???" />
+            <imagedata fileref="images/Example metamodel for the BONExtender interpreter.png" />
           </imageobject>
 
           <caption><para>Example metamodel for the BONExtender interpreter
@@ -7951,7 +7951,7 @@ public:
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="???" />
+            <imagedata fileref="images/Constraint associated to the Compound kind in the SF paradigm.png" />
           </imageobject>
 
           <caption><para>Constraint associated to the Compound kind in the SF
@@ -8004,11 +8004,20 @@ public:
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="???" />
+            <imagedata fileref="images/deRef constraint definition in the paradigm MetaGME.png" />
           </imageobject>
 
-          <caption><para><code>identity</code> and <code>cropProxy</code>
-          constraint definitions in the paradigm MetaGME </para></caption>
+          <caption><para><code>deRef</code> constraint definition in the
+          paradigm MetaGME </para></caption>
+        </mediaobject>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/cropProxy constraint definition in the paradigm MetaGME.png" />
+          </imageobject>
+
+          <caption><para><code>cropProxy</code> constraint definition in the
+          paradigm MetaGME </para></caption>
         </mediaobject>
       </section>
 
@@ -8043,7 +8052,7 @@ public:
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="???" />
+            <imagedata fileref="images/Semantic errors in a Constraint Definition called WrongConstraint.png" />
           </imageobject>
 
           <caption><para>Semantic errors in a Constraint Definition called
@@ -8077,18 +8086,18 @@ public:
             <listitem>
               <para>All existing constraints defined by either a library, the
               model or the paradigm can be evaluated on demand executing the
-              <guimenu>File</guimenu> | <guimenu>Check</guimenu> |
-              <guimenuitem>Check All</guimenuitem> command.</para>
+              <guimenu>Tools</guimenu> | <guimenu>Check Constraints</guimenu>
+              | <guimenuitem>Check All</guimenuitem> command.</para>
             </listitem>
 
             <listitem>
               <para>All constraints associated to the active and opened Model
               or associated to its immediate and indirect children can be
-              evaluated on demand executing the <guimenu>File</guimenu> |
-              <guimenu>Check</guimenu> | <guimenuitem>Check</guimenuitem>
-              command. Examining the children may be excluded at the
-              <guilabel>Constraint Browser</guilabel> dialog’s
-              <guilabel>Settings</guilabel> page.</para>
+              evaluated on demand executing the <guimenu>Tools</guimenu> |
+              <guimenu>Check Constraints</guimenu> |
+              <guimenuitem>Check</guimenuitem> command. Examining the children
+              may be excluded at the <guilabel>Constraint Browser</guilabel>
+              dialog’s <guilabel>Settings</guilabel> page.</para>
             </listitem>
 
             <listitem>
@@ -8121,16 +8130,17 @@ public:
 
         <para>In GME the user may change some settings to alter the evaluation
         process. This can be done by opening the <guilabel>Constraint
-        Manager</guilabel>’s main dialog (<guimenu>File</guimenu> |
+        Manager</guilabel>’s main dialog (<guimenu>Tools</guimenu> |
         <guimenuitem>Display Constraints</guimenuitem>) and by clicking on the
         <guilabel>Settings</guilabel> page.</para>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="???" />
+            <imagedata fileref="images/Settings of the constraint evaluation.png" />
           </imageobject>
 
-          <caption><para>Settings of the evaluation </para></caption>
+          <caption><para>Settings of the constraint evaluation
+          </para></caption>
         </mediaobject>
 
         <section>
@@ -8246,15 +8256,6 @@ public:
           can iterate over those violations using the
           <guilabel>Previous</guilabel> and <guilabel>Next</guilabel>
           buttons.</para>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="???" />
-            </imageobject>
-
-            <caption><para>The dialog displaying the violated or failed
-            constraints in both compact and detailed views </para></caption>
-          </mediaobject>
         </section>
 
         <section>
@@ -8310,7 +8311,7 @@ public:
           defined in the imported model become library constraints. The types
           of constraints are the following: <mediaobject>
               <imageobject>
-                <imagedata fileref="???" />
+                <imagedata fileref="images/Icons for types of Constraints and Definitions.png" />
               </imageobject>
 
               <caption><para> Icons for types of Constraints and Definitions
