@@ -3387,6 +3387,9 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 
 bool CGuiConnection::IsAutoRouted(void) const
 {
+	if (view->needsConnConversion && connRegAutoRouteNotSet)
+		return true;
+
 	return isAutoRouted;
 }
 
@@ -3395,16 +3398,17 @@ void CGuiConnection::SetAutoRouted(bool autoRouteState)
 	isAutoRouted = autoRouteState;
 }
 
-bool CGuiConnection::NeedsRouterPathConversion(void)
+bool CGuiConnection::NeedsRouterPathConversion(bool expectedAutoRouterState)
 {
 	TRACE3("NeedsRouterPathConversion %d %d %d\n", connRegAutoRouteNotSet, isAutoRouted,
 			!HasPathCustomizationForTypeAndCurrentAspect(CustomPointCustomization));
-	return (connRegAutoRouteNotSet && isAutoRouted && !HasPathCustomizationForTypeAndCurrentAspect(CustomPointCustomization));
+	return (connRegAutoRouteNotSet && isAutoRouted == expectedAutoRouterState &&
+			!HasPathCustomizationForTypeAndCurrentAspect(CustomPointCustomization));
 }
 
-void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp, bool handleTransaction)
+void CGuiConnection::ConvertAutoRoutedPathToCustom(long asp, bool handleTransaction, bool expectedAutoRouterState)
 {
-	if (NeedsRouterPathConversion()) {
+	if (NeedsRouterPathConversion(expectedAutoRouterState)) {
 		CPointList points;
 		GetPointList(points);
 		int numPoints = points.GetSize();

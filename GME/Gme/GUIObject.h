@@ -469,8 +469,8 @@ public:
 	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp, int edgeIndex = -1);
 	bool IsAutoRouted(void) const;
 	void SetAutoRouted(bool autoRouteState);
-	bool NeedsRouterPathConversion(void);
-	void ConvertAutoRoutedPathToCustom(long asp, bool handleTransaction = false);
+	bool NeedsRouterPathConversion(bool expectedAutoRouterState = true);
+	void ConvertAutoRoutedPathToCustom(long asp, bool handleTransaction = false, bool expectedAutoRouterState = true);
 	bool ReadAutoRouteState(void);
 	void WriteAutoRouteState(bool handleTransaction = true);
 

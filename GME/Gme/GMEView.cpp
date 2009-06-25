@@ -488,7 +488,6 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_MESSAGE(WM_USER_PANNREFRESH, OnPannRefresh)
 	ON_MESSAGE(WM_PANN_SCROLL, OnPannScroll)
 	ON_MESSAGE(WM_USER_COMMITTRAN, OnCommitTransaction)
-	ON_MESSAGE(WM_USER_CONVERTROUTES, OnConvertNeededConnectionRoutes)
 	ON_COMMAND(ID_VIEW_SHOWSELMODEL, OnShowSelectedModel)
 	ON_COMMAND(ID_VIEW_FOCUSBROWSER, OnFocusBrowser)
 	ON_COMMAND(ID_VIEW_FOCUSINSPECTOR, OnFocusInspector)
@@ -561,6 +560,7 @@ CGMEView::CGMEView()
 	dragSource						= 0;
 
 	needsReset						= false;
+	needsConnConversion				= false;
 	alive							= true;
 	bgColor							= 0;
 
@@ -1033,7 +1033,7 @@ void CGMEView::OnInitialUpdate()
 		}
 
 		SetBgColor();
-		CreateGuiObjects();
+		needsConnConversion = CreateGuiObjects();
 		SetProperties();
 
 		if (GetDocument()->initialCenterObj) {
@@ -1042,6 +1042,11 @@ void CGMEView::OnInitialUpdate()
 		}
 
 		CommitTransaction();
+
+		if (needsConnConversion) {
+			ConvertNeededConnections();
+			needsConnConversion = false;
+		}
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
@@ -1850,7 +1855,7 @@ void CGMEView::CreateGuiObjects(CComPtr<IMgaFCOs>& fcos, CGuiFcoList& objList, C
 }
 
 // ??
-void CGMEView::CreateGuiObjects()
+bool CGMEView::CreateGuiObjects()
 {
 	CComBSTR bstr;
 	COMTHROW(currentModel->get_Name(&bstr));
@@ -1900,6 +1905,8 @@ void CGMEView::CreateGuiObjects()
 		parent = 0;
 		COMTHROW(cont.QueryInterface(&parent));
 	}
+
+	return IsConnectionConversionNeeded();
 }
 
 void CGMEView::CreateAnnotators(CComPtr<IMgaRegNodes> &regNodes, CGuiAnnotatorList &annList)
@@ -4114,6 +4121,31 @@ void CGMEView::ResolveConnections()
 	POSITION pos = connections.GetHeadPosition();
 	while(pos)
 		connections.GetNext(pos)->Resolve();
+}
+
+bool CGMEView::IsConnectionConversionNeeded(void)
+{
+	if (isModelAutoRouted)
+		return false;
+
+	POSITION pos = connections.GetHeadPosition();
+	while(pos) {
+		if (connections.GetNext(pos)->NeedsRouterPathConversion(false))
+			return true;
+	}
+
+	return false;
+}
+
+void CGMEView::ConvertNeededConnections(void)
+{
+	BeginTransaction();
+	POSITION pos = connections.GetHeadPosition();
+	while (pos) {
+		CGuiConnection* conn = connections.GetNext(pos);
+		conn->ConvertAutoRoutedPathToCustom(currentAspect->index, false, false);
+	}
+	CommitTransaction();
 }
 
 void CGMEView::InsertNewPart(CString roleName,CPoint pt)
@@ -9033,21 +9065,6 @@ LRESULT CGMEView::OnCommitTransaction(WPARAM wParam, LPARAM lParam)
 	annotatorInDecoratorOperation = NULL;
 	isInConnectionCustomizeOperation = false;
 	selectedContextConnection = NULL;
-	return 0;
-}
-
-LRESULT CGMEView::OnConvertNeededConnectionRoutes(WPARAM wParam, LPARAM lParam)
-{
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnConvertNeededConnectionRoutes() in " + path + name + "\r\n");
-	BeginTransaction();
-	BeginWaitCursor();
-	POSITION pos = connections.GetHeadPosition();
-	while (pos) {
-		CGuiConnection* conn = connections.GetNext(pos);
-//		conn->ConvertAutoRoutedPathToCustom(currentAspect->index);
-	}
-	EndWaitCursor();
-	CommitTransaction();
 	return 0;
 }
 

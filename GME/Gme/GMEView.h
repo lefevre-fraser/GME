@@ -190,6 +190,7 @@ public:
 	CStringList				newObjectIDs;			// after paste(drop) keep track of new objects for selection after reset
 
 	bool					needsReset;
+	bool					needsConnConversion;
 	bool					initDone;
 	bool					isModelAutoRouted;
 	COLORREF				bgColor;
@@ -208,7 +209,7 @@ public:
 	CComPtr<IMgaModel>&		GetCurrentModel() { return currentModel; }
 	CGuiFco*				CreateGuiObject(CComPtr<IMgaFCO>& fco, CGuiFcoList* objList = NULL, CGuiConnectionList* connList = NULL);
 	void					CreateGuiObjects(CComPtr<IMgaFCOs>& fcos, CGuiFcoList& objList, CGuiConnectionList& connList);
-	void					CreateGuiObjects();
+	bool					CreateGuiObjects();
 	void					CreateAnnotators(CComPtr<IMgaRegNodes>& regNodes, CGuiAnnotatorList& annList);
 	void					CreateAnnotators();
 	bool					SendOpenModelEvent();
@@ -287,6 +288,8 @@ public:
 	bool					Connect(CGuiObject* src, CGuiPort* srcPort, int srcHotSide, CGuiObject* dst, CGuiPort* dstPort,
 									int dstHotSide, bool nosticky);
 	void					ResolveConnections();
+	bool					IsConnectionConversionNeeded(void);
+	void					ConvertNeededConnections(void);
 	void					BeginTransaction(transactiontype_enum mode = TRANSACTION_GENERAL);
 	void					CommitTransaction();
 	void					AbortTransaction(HRESULT hr);
@@ -554,7 +557,6 @@ protected:
 	afx_msg LRESULT OnPannScroll(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPannRefresh(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnCommitTransaction(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnConvertNeededConnectionRoutes(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnCntxNamePositionSouth();
 	afx_msg void OnCntxNamePositionNorth();
 	afx_msg void OnCntxNamePositionEast();
