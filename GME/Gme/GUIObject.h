@@ -470,9 +470,7 @@ public:
 	bool IsAutoRouted(void) const;
 	void SetAutoRouted(bool autoRouteState);
 	bool NeedsRouterPathConversion(void);
-	bool StoreAutoRoutedPathForConversion(void);
-	void ConvertAutoRoutedPathToCustom(long asp, bool useCachedData = true, bool handleTransaction = false);
-	void ConvertAutoRoutedPathToCustom2(long asp, bool handleTransaction = false);
+	void ConvertAutoRoutedPathToCustom(long asp, bool handleTransaction = false);
 	bool ReadAutoRouteState(void);
 	void WriteAutoRouteState(bool handleTransaction = true);
 
@@ -504,8 +502,6 @@ private:
 	bool connRegAutoRouteNotSet;
 	bool isAutoRouted;
 	std::vector<CustomPathData> customPathData;
-	bool hasCachedConversionData;
-	CPointList autoRoutedPathCacheForConverion;
 };
 
 

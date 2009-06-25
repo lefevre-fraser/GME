@@ -339,7 +339,6 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_CNTX_LOCATEPORTINBROWSER, OnCntxPortLocateInBrw)
 	ON_COMMAND(ID_JUMPALONGCONN, OnJumpAlongConnection)
 	ON_COMMAND(ID_BACKALONGCONN, OnBackAlongConnection)
-	ON_COMMAND(ID_CONVERTAUTOROUTEDPATHTOCUSTOM, OnConvertAutoRoutedPathToCustom)
 	ON_COMMAND(ID_TRYTOSNAPHORZVERTPATH, OnTryToSnapHorzVertPath)
 	ON_COMMAND(ID_DELETECONNEDGECUSTOMDATA, OnDeleteConnEdgeCustomData)
 	ON_COMMAND(ID_DELETECONNPOINTCUSTOMDATA, OnDeleteConnPointCustomData)
@@ -360,7 +359,6 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_UPDATE_COMMAND_UI(ID_CNTX_REVERSECONNECTION, OnUpdateCntxRevfollowConnection)
 	ON_UPDATE_COMMAND_UI(ID_JUMPALONGCONN, OnUpdateJumpAlongConnection)
 	ON_UPDATE_COMMAND_UI(ID_BACKALONGCONN, OnUpdateBackAlongConnection)
-	ON_UPDATE_COMMAND_UI(ID_CONVERTAUTOROUTEDPATHTOCUSTOM, OnUpdateConvertAutoRoutedPathToCustom)
 	ON_UPDATE_COMMAND_UI(ID_TRYTOSNAPHORZVERTPATH, OnUpdateTryToSnapHorzVertPath)
 	ON_UPDATE_COMMAND_UI(ID_DELETECONNEDGECUSTOMDATA, OnUpdateDeleteConnEdgeCustomData)
 	ON_UPDATE_COMMAND_UI(ID_DELETECONNPOINTCUSTOMDATA, OnUpdateDeleteConnPointCustomData)
@@ -2642,7 +2640,7 @@ void CGMEView::DeleteCustomEdges(CGuiConnection* selectedConn, PathCustomization
 	pathData.SetHorizontalOrVertical	(horizontalOrVerticalEdge);
 	selectedConn->DeletePathCustomization(pathData);
 }
-
+/*
 void CGMEView::StoreAutoRoutedPathsForConversion(void)
 {
 	bool isThereAnyConversion = false;
@@ -2656,7 +2654,7 @@ void CGMEView::StoreAutoRoutedPathsForConversion(void)
 		this->PostMessage(WM_USER_CONVERTROUTES, 0, 0);
 	}
 }
-
+*/
 void CGMEView::ConvertPathToCustom(CComPtr<IUnknown>& pMgaObject)
 {
 	CComQIPtr<IMgaModel> pMgaModel(pMgaObject);
@@ -2678,10 +2676,12 @@ void CGMEView::ConvertPathToCustom(CComPtr<IUnknown>& pMgaObject)
 			COMTHROW(conn->mgaFco->get_IsEqual(pMgaConn, &isEq));
 			if (isEq == VARIANT_TRUE)
 				isThisConnection = true;
+		} else {
+			isThisConnection = true;
 		}
-		if (pMgaModel == NULL || pMgaConn != NULL && isThisConnection) {
-			conn->ConvertAutoRoutedPathToCustom2(currentAspect->index, false);
-			if (isThisConnection)
+		if (isThisConnection) {
+			conn->ConvertAutoRoutedPathToCustom(currentAspect->index, false);
+			if (isThisConnection && pMgaConn != NULL)
 				break;
 		}
 	}
@@ -7121,16 +7121,6 @@ void CGMEView::OnBackAlongConnection() // 'Jump back Along Conn' on Navigation t
 		FollowLine( selected.GetHead(), true, ::GetKeyState( VK_CONTROL) < 0);
 }
 
-void CGMEView::OnConvertAutoRoutedPathToCustom()
-{
-	BeginTransaction();
-	selectedContextConnection->SetAutoRouted(false);
-	selectedContextConnection->WriteAutoRouteState(false);
-	selectedContextConnection->DeleteAllPathCustomizationsForCurrentAspect();
-	selectedContextConnection->ConvertAutoRoutedPathToCustom(currentAspect->index, false);
-	CommitTransaction();
-}
-
 void CGMEView::OnTryToSnapHorzVertPath()
 {
 	selectedContextConnection->VerticalAndHorizontalSnappingOfConnectionLineSegments(currentAspect->index, -1);
@@ -7289,11 +7279,6 @@ void CGMEView::OnUpdateJumpAlongConnection(CCmdUI* pCmdUI)
 void CGMEView::OnUpdateBackAlongConnection(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable( areConnsForSels( selected, true));
-}
-
-void CGMEView::OnUpdateConvertAutoRoutedPathToCustom(CCmdUI* pCmdUI)
-{
-	pCmdUI->Enable(selectedContextConnection != NULL && selectedContextConnection->IsAutoRouted());
 }
 
 void CGMEView::OnUpdateTryToSnapHorzVertPath(CCmdUI* pCmdUI)
@@ -9059,7 +9044,7 @@ LRESULT CGMEView::OnConvertNeededConnectionRoutes(WPARAM wParam, LPARAM lParam)
 	POSITION pos = connections.GetHeadPosition();
 	while (pos) {
 		CGuiConnection* conn = connections.GetNext(pos);
-		conn->ConvertAutoRoutedPathToCustom(currentAspect->index);
+//		conn->ConvertAutoRoutedPathToCustom(currentAspect->index);
 	}
 	EndWaitCursor();
 	CommitTransaction();
