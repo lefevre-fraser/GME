@@ -80,8 +80,9 @@
           </listitem>
 
           <listitem>
-            <para>AttachLibrary and RefreshLibrary are able to process %VAR%
-            style environment variables in Library names.</para>
+            <para>AttachLibrary and RefreshLibrary are able to process
+            <code>%VAR%</code> style environment variables in Library
+            names.</para>
           </listitem>
 
           <listitem>
@@ -171,9 +172,10 @@
           </listitem>
 
           <listitem>
-            <para>'View in parent' command (shortcut: Shift + Enter, or Shift
-            + DblClick) introduced in ActiveBrowser to select and focus an
-            element in its parent (in the editing area)</para>
+            <para><emphasis>View in parent</emphasis> command (shortcut: Shift
+            + Enter, or Shift + DblClick) introduced in
+            <guilabel>ActiveBrowser</guilabel> to select and focus an element
+            in its parent (in the editing area)</para>
           </listitem>
 
           <listitem>
@@ -234,8 +236,8 @@
           </listitem>
 
           <listitem>
-            <para>Mga.dtd is no longer needed to be present in the project
-            folder for XSL translations</para>
+            <para><filename>Mga.dtd</filename> is no longer needed to be
+            present in the project folder for XSL translations</para>
           </listitem>
 
           <listitem>
@@ -275,7 +277,8 @@
           </listitem>
 
           <listitem>
-            <para>BON2 CREATED_EVENT handling improved for add-ons</para>
+            <para>BON2 <code>CREATED_EVENT</code> handling improved for
+            add-ons</para>
           </listitem>
 
           <listitem>
@@ -305,9 +308,9 @@
           </listitem>
 
           <listitem>
-            <para>New Builder Object Network (BON2). BON2 is using STL instead
-            of MFC. Object creation is on-demand enabling lightweight
-            interpreters.</para>
+            <para>New Builder Object Network (BON2). BON2 is using
+            <acronym>STL</acronym> instead of MFC. Object creation is
+            on-demand enabling lightweight interpreters.</para>
           </listitem>
 
           <listitem>
@@ -325,12 +328,14 @@
 
           <listitem>
             <para>External text editor support for multiline attributes
-            (configurable through the GME File menu/Settings dialog).</para>
+            (configurable through the GME <guimenu>File</guimenu>
+            menu/<guimenuitem>Settings</guimenuitem> dialog).</para>
           </listitem>
 
           <listitem>
             <para>Periodic autosave feature added (configurable through the
-            GME File menu/Settings dialog).</para>
+            GME <guimenu>File</guimenu>
+            menu/<guimenuitem>Settings</guimenuitem> dialog).</para>
           </listitem>
 
           <listitem>
@@ -348,9 +353,9 @@
 
           <listitem>
             <para>Runtime event logging (configurable through the GME File
-            menu/Settings dialog). Log files are placed under the &lt;USER
-            PROFILE&gt;/Application Data/GME folder. Please, include the log
-            file if possible.</para>
+            menu/Settings dialog). Log files are placed under the
+            <filename>&lt;USER PROFILE&gt;/Application Data/GME</filename>
+            folder. Please, include the log file if possible.</para>
           </listitem>
 
           <listitem>
@@ -376,9 +381,12 @@
 
           <listitem>
             <para>New Table Editor plug-in is introduced: to use it, open
-            File/Register Components, select the GME Table Editor, and press
-            Toggle. Afterwards, it can be launched from the component toolbar
-            or the File menu/run Plugins command.</para>
+            <guimenu>File</guimenu>/<guimenuitem>Register
+            Components</guimenuitem>, select the <guilabel>GME Table
+            Editor</guilabel>, and press <guilabel>Toggle</guilabel>.
+            Afterwards, it can be launched from the component toolbar or the
+            <guimenu>File</guimenu> menu/<guimenuitem>Run
+            Plugins</guimenuitem> command.</para>
           </listitem>
 
           <listitem>
@@ -503,12 +511,14 @@
       interpreters are used to perform the computational transformations
       necessary to synthesize executable code for use in the system's
       execution environment–often in conjunction with code libraries and some
-      form of middleware (e.g. CORBA, the MultiGraph kernel, POSIX) – or to
-      supply input data streams for use by various GOTS, COTS, or custom
-      software packages (e.g. spreadsheets, simulation engines) When changes
-      in the overall system require new application programs, the models are
-      updated to reflect these changes, the interpretation process is
-      repeated, and the applications and data streams are automatically
+      form of middleware (e.g. <link linkend="glossCORBA">CORBA</link>, the
+      MultiGraph kernel, <link linkend="glossPOSIX">POSIX</link>) – or to
+      supply input data streams for use by various <link
+      linkend="glossGOTS">GOTS</link>, <link linkend="glossCOTS">COTS</link>,
+      or custom software packages (e.g. spreadsheets, simulation engines) When
+      changes in the overall system require new application programs, the
+      models are updated to reflect these changes, the interpretation process
+      is repeated, and the applications and data streams are automatically
       regenerated from the models.</para>
 
       <para>Once a modeling paradigm has been established, the MIPS
@@ -583,15 +593,7 @@
           </imageobject>
 
           <caption><para>GME Main Editing Window</para></caption>
-        </mediaobject>as a figure:<figure>
-          <title>GME Main Editing Window</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="images/GME Main Editing Window.png" />
-            </imageobject>
-          </mediaobject>
-        </figure>The GME main editing window has the following
+        </mediaobject>The GME main editing window has the following
       components:<itemizedlist>
           <listitem>
             <para>Titlebar: Indicates the currently loaded project.</para>
