@@ -583,11 +583,18 @@
           </imageobject>
 
           <caption><para>GME Main Editing Window</para></caption>
-        </mediaobject>The GME main editing window has the following
+        </mediaobject>as a figure:<figure>
+          <title>GME Main Editing Window</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/GME Main Editing Window.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>The GME main editing window has the following
       components:<itemizedlist>
           <listitem>
-            <para><emphasis role="@bold">Titlebar</emphasis>: Indicates the
-            currently loaded project.</para>
+            <para>Titlebar: Indicates the currently loaded project.</para>
           </listitem>
 
           <listitem>
@@ -1167,7 +1174,7 @@
 
         <para>An object’s attributes can be accessed by right-clicking on the
         object and selecting <guimenuitem>Attributes</guimenuitem> from the
-        menu, causing the <guilabel>Attribute Browser</guilabel>
+        menu, causing the <guilabel>Attribute Browser</guilabel> to be
         activated.</para>
       </section>
 
@@ -11030,7 +11037,7 @@ gme::Reference::usedByConnPoints( { kind : ocl::Type } ) : ocl::Set( gme::Connec
       </sect2>
 
       <sect2>
-        <title>gme::Model</title>
+        <title><code>gme::Model</code></title>
 
         <para>The meta-kind <code>gme::Model</code> is the abstraction of
         containers which can contain fcos.</para>
@@ -11088,7 +11095,7 @@ gme::Model::parts( kind : ocl::Type ) : ocl::Set( gme::FCO ) </programlisting>Th
       </sect2>
 
       <sect2>
-        <title>gme::Project</title>
+        <title><code>gme::Project</code></title>
 
         <para>This kind is predefined in GME, and has exactly one instance in
         all models. It is introduced to facilitate writing constraint
