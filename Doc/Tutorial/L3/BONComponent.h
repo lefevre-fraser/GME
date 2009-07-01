@@ -1,6 +1,8 @@
 #ifndef GME_INTERPRETER_H
 #define GME_INTERPRETER_H
 
+#include<fstream>
+
 #include "Builder.h"
 
 

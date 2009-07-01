@@ -1,8 +1,9 @@
 #include "stdafx.h"
 
-#include "Component.h"
+#include <Console.h>
+#include <Formatter.h>
+#include "BONComponent.h"
 
-#include <fstream.h> 
 
 /* 
 // This method is usually no longer in use and does not need to be implemented,
@@ -14,12 +15,13 @@ void CComponent::Invoke(CBuilder &builder,CBuilderObjectList &selected, long par
 }
 */
 
-static ofstream outf; 
+using namespace GMEConsole;
 
 void CComponent::InvokeEx(CBuilder &builder,CBuilderObject *focus, CBuilderObjectList &selected, long param) 
-{ 
-	outf.open("netlist.lst"); 
-	outf << "Router list for network" << builder.GetRootFolder()->GetName() << endl; 
+{
+	Console::Out::WriteLine("Interpreter started...");
+
+	Console::Out::WriteLine(CString("Router list for network") + builder.GetRootFolder()->GetName()); 
 	const CBuilderModelList *diags = builder.GetRootFolder()->GetRootModels(); 
 	POSITION pos = diags->GetHeadPosition(); 
 	while(pos) 
@@ -27,8 +29,7 @@ void CComponent::InvokeEx(CBuilder &builder,CBuilderObject *focus, CBuilderObjec
 		CBuilderModel *diagram = diags->GetNext(pos); 
 		ProcessDiagram(diagram); 
 	} 
-	outf.close(); 
-} 
+}
 
 void CComponent::ProcessDiagram(CBuilderModel *d) 
 { 
@@ -47,19 +48,19 @@ void CComponent::ProcessRouter(CBuilderModel *r)
 	ASSERT(r->GetKindName() == "Router"); 
 	CString fam; 
 	r->GetAttribute("Family", fam); 
-	outf << "\tRouter " << r->GetName() << " (" << fam << ")" << endl; 
+	Console::Out::WriteLine(CString("\tRouter ") + r->GetName() + " (" + fam + ")");
 
 	const CBuilderAtomList *ports = r->GetAtoms("Port"); 
 	POSITION pos = ports->GetHeadPosition(); 
 	while(pos) 
-	{ 
+	{
 		CBuilderAtom *port = ports->GetNext(pos); 
 		CString iftype, ipaddr; 
 		int ifspeed; 
 		port->GetAttribute("IFType", iftype); 
 		port->GetAttribute("IFSpeed", ifspeed); 
-		port->GetAttribute("IPAddress", ipaddr); 
-		outf << "\t\tPort " << port->GetName(); 
-		outf << "(" << iftype << "; "<< ifspeed << "Kbps), Addr: " << ipaddr << endl; 
+		port->GetAttribute("IPAddress", ipaddr);
+		Console::Out::WriteLine(CString("    \t\tPort ") + Formatter::MakeObjectHyperlink(port->GetName(), port->GetObjId()) + 
+			"(" + iftype + "; " + CComVariant(ifspeed) + "Kbps), Addr: " + ipaddr );
 	} 
 }
