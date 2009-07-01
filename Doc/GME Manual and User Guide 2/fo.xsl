@@ -8,6 +8,18 @@
 
 <xsl:param name="fop1.extensions">1</xsl:param>
 
+<!-- TODO: consider using pgwide.properties -->
+<xsl:attribute-set name="monospace.verbatim.properties" 
+                   use-attribute-sets="verbatim.properties monospace.properties">
+  <xsl:attribute name="wrap-option">wrap</xsl:attribute>
+  <xsl:attribute name="hyphenation-character">\</xsl:attribute>
+</xsl:attribute-set>
+
+<xsl:attribute-set name="monospace.verbatim.properties">
+  <xsl:attribute name="font-size">8pt</xsl:attribute>
+</xsl:attribute-set>
+
+
 <!-- render gui* elements in bold -->
 <xsl:template match="guibutton">
   <xsl:call-template name="inline.boldseq"/>
