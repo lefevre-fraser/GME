@@ -51,7 +51,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\GME\Common;$(GME_ROOT)\SDK\DecoratorLib"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -147,7 +147,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\GME\Common;$(GME_ROOT)\SDK\DecoratorLib"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_ATL_DLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -220,7 +220,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="$(GME_ROOT)\GME\Common\CommonError.cpp"
+				RelativePath=".\CommonError.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -242,6 +242,14 @@
 						BrowseInformation="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\CommonMfc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CommonSmart.cpp"
+				>
 			</File>
 			<File
 				RelativePath="Decorator.rc"
@@ -371,15 +379,19 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="$(GME_ROOT)\GME\Common\CommonError.h"
+				RelativePath=".\CommonError.h"
 				>
 			</File>
 			<File
-				RelativePath="$(GME_ROOT)\GME\Common\CommonMgaTrukk.h"
+				RelativePath=".\CommonMfc.h"
 				>
 			</File>
 			<File
-				RelativePath="$(GME_ROOT)\GME\Common\CommonSmart.h"
+				RelativePath=".\CommonMgaTrukk.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CommonSmart.h"
 				>
 			</File>
 			<File
