@@ -37,8 +37,13 @@ CAnnotatorEventSink::~CAnnotatorEventSink()
 }
 
 
+///////////////////////////////////////////////////////////////////////////
+// IMgaElementDecoratorEvents
+
 STDMETHODIMP CAnnotatorEventSink::Refresh()
 {
+	m_view->Invalidate();
+
 	return S_OK;
 }
 
@@ -98,48 +103,50 @@ STDMETHODIMP CAnnotatorEventSink::LabelChanged(BSTR newLabel)
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::LabelMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::LabelMovingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::LabelMoving(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::LabelMoving(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::LabelMovingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::LabelMovingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::LabelMoved(LONG nType, LONG x, LONG y)
+STDMETHODIMP CAnnotatorEventSink::LabelMoved(LONG nFlags, LONG x, LONG y)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::LabelResizingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::LabelResizingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::LabelResizing(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::LabelResizing(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::LabelResizingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::LabelResizingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::LabelResized(LONG nType, LONG cx, LONG cy)
+STDMETHODIMP CAnnotatorEventSink::LabelResized(LONG nFlags, LONG cx, LONG cy)
 {
 	return S_OK;
 }
 
 STDMETHODIMP CAnnotatorEventSink::GeneralOperationStarted(ULONGLONG operationData)
 {
+	m_operationData = (void*)operationData;
+
 	m_view->BeginTransaction();
 	m_view->inElementDecoratorOperation = true;
 	m_view->decoratorOrAnnotator = false;
@@ -149,35 +156,38 @@ STDMETHODIMP CAnnotatorEventSink::GeneralOperationStarted(ULONGLONG operationDat
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::GeneralOperationFinished(ULONGLONG operationData)
+STDMETHODIMP CAnnotatorEventSink::GeneralOperationFinished(ULONGLONG* operationData)
 {
+	if (operationData != NULL)
+		*operationData = (ULONGLONG)m_operationData;
+
 	m_view->inElementDecoratorOperation = false;
 	m_view->shouldCommitOperation = true;
 
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::WindowMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::WindowMovingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::WindowMoving(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::WindowMoving(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::WindowMovingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::WindowMovingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::WindowMoved(LONG nType, LONG x, LONG y)
+STDMETHODIMP CAnnotatorEventSink::WindowMoved(LONG nFlags, LONG x, LONG y)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::WindowResizingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::WindowResizingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	m_view->inElementDecoratorOperation = true;
 	m_view->decoratorOrAnnotator = false;
@@ -187,7 +197,7 @@ STDMETHODIMP CAnnotatorEventSink::WindowResizingStarted(LONG nType, LONG left, L
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::WindowResizing(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::WindowResizing(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 //	TODO m_guiAnnotator->ResizeObject(CRect(left, top, right, bottom));
 	m_view->Invalidate();
@@ -196,7 +206,7 @@ STDMETHODIMP CAnnotatorEventSink::WindowResizing(LONG nSide, LONG left, LONG top
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::WindowResizingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CAnnotatorEventSink::WindowResizingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 //	TODO m_guiAnnotator->ResizeObject(CRect(left, top, right, bottom));
 	m_view->inElementDecoratorOperation = false;
@@ -205,7 +215,7 @@ STDMETHODIMP CAnnotatorEventSink::WindowResizingFinished(LONG nType, LONG left, 
 	return S_OK;
 }
 
-STDMETHODIMP CAnnotatorEventSink::WindowResized(LONG nType, LONG cx, LONG cy)
+STDMETHODIMP CAnnotatorEventSink::WindowResized(LONG nFlags, LONG cx, LONG cy)
 {
 	m_view->BeginTransaction();
 	m_view->inOpenedDecoratorTransaction = true;

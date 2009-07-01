@@ -82,24 +82,24 @@ public:
 	virtual void	LabelEditingStarted			(CRect& location) = 0;
 	virtual void	LabelEditingFinished		(CRect& location) = 0;
 	virtual void	LabelChanged				(CString& newLabel) = 0;
-	virtual void	LabelMovingStarted			(UINT nType, CRect& location) = 0;
-	virtual void	LabelMoving					(UINT nSide, CRect& location) = 0;
-	virtual void	LabelMovingFinished			(UINT nType, CRect& location) = 0;
-	virtual void	LabelMoved					(UINT nType, CPoint& point) = 0;
-	virtual void	LabelResizingStarted		(UINT nType, CRect& location) = 0;
-	virtual void	LabelResizing				(UINT nSide, CRect& location) = 0;
-	virtual void	LabelResizingFinished		(UINT nType, CRect& locatiot) = 0;
-	virtual void	LabelResized				(UINT nType, CSize& size) = 0;
+	virtual void	LabelMovingStarted			(UINT nFlags, CRect& location) = 0;
+	virtual void	LabelMoving					(UINT nFlags, CRect& location) = 0;
+	virtual void	LabelMovingFinished			(UINT nFlags, CRect& location) = 0;
+	virtual void	LabelMoved					(UINT nFlags, CPoint& point) = 0;
+	virtual void	LabelResizingStarted		(UINT nFlags, CRect& location) = 0;
+	virtual void	LabelResizing				(UINT nFlags, CRect& location) = 0;
+	virtual void	LabelResizingFinished		(UINT nFlags, CRect& locatiot) = 0;
+	virtual void	LabelResized				(UINT nFlags, CSize& size) = 0;
 
-	virtual void	WindowMovingStarted			(UINT nType, CRect& location) = 0;
-	virtual void	WindowMoving				(UINT nSide, CRect& location) = 0;
-	virtual void	WindowMovingFinished		(UINT nType, CRect& location) = 0;
-	virtual void	WindowMoved					(UINT nType, CPoint& point) = 0;
+	virtual void	WindowMovingStarted			(UINT nFlags, CRect& location) = 0;
+	virtual void	WindowMoving				(UINT nFlags, CRect& location) = 0;
+	virtual void	WindowMovingFinished		(UINT nFlags, CRect& location) = 0;
+	virtual void	WindowMoved					(UINT nFlags, CPoint& point) = 0;
 
-	virtual void	WindowResizingStarted		(UINT nType, CRect& location) = 0;
-	virtual void	WindowResizing				(UINT nSide, CRect& location) = 0;
-	virtual void	WindowResizingFinished		(UINT nType, CRect& location) = 0;
-	virtual void	WindowResized				(UINT nType, CSize& size) = 0;
+	virtual void	WindowResizingStarted		(UINT nFlags, CRect& location) = 0;
+	virtual void	WindowResizing				(UINT nFlags, CRect& location) = 0;
+	virtual void	WindowResizingFinished		(UINT nFlags, CRect& location) = 0;
+	virtual void	WindowResized				(UINT nFlags, CSize& size) = 0;
 };
 
 };	// namespace DecoratorSDK

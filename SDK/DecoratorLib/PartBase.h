@@ -110,27 +110,27 @@ public:
 	virtual void	LabelEditingStarted			(CRect& location);
 	virtual void	LabelEditingFinished		(CRect& location);
 	virtual void	LabelChanged				(CString& newLabel);
-	virtual void	LabelMovingStarted			(UINT nType, CRect& location);
-	virtual void	LabelMoving					(UINT nSide, CRect& location);
-	virtual void	LabelMovingFinished			(UINT nType, CRect& location);
-	virtual void	LabelMoved					(UINT nType, CPoint& point);
-	virtual void	LabelResizingStarted		(UINT nType, CRect& location);
-	virtual void	LabelResizing				(UINT nSide, CRect& location);
-	virtual void	LabelResizingFinished		(UINT nType, CRect& locatiot);
-	virtual void	LabelResized				(UINT nType, CSize& size);
+	virtual void	LabelMovingStarted			(UINT nFlags, CRect& location);
+	virtual void	LabelMoving					(UINT nFlags, CRect& location);
+	virtual void	LabelMovingFinished			(UINT nFlags, CRect& location);
+	virtual void	LabelMoved					(UINT nFlags, CPoint& point);
+	virtual void	LabelResizingStarted		(UINT nFlags, CRect& location);
+	virtual void	LabelResizing				(UINT nFlags, CRect& location);
+	virtual void	LabelResizingFinished		(UINT nFlags, CRect& locatiot);
+	virtual void	LabelResized				(UINT nFlags, CSize& size);
 
 	virtual void	GeneralOperationStarted		(void* operationData);
-	virtual void	GeneralOperationFinished	(void* operationData);
+	virtual void	GeneralOperationFinished	(void** operationData);
 
-	virtual void	WindowMovingStarted			(UINT nType, CRect& location);
-	virtual void	WindowMoving				(UINT nSide, CRect& location);
-	virtual void	WindowMovingFinished		(UINT nType, CRect& location);
-	virtual void	WindowMoved					(UINT nType, CPoint& point);
+	virtual void	WindowMovingStarted			(UINT nFlags, CRect& location);
+	virtual void	WindowMoving				(UINT nFlags, CRect& location);
+	virtual void	WindowMovingFinished		(UINT nFlags, CRect& location);
+	virtual void	WindowMoved					(UINT nFlags, CPoint& point);
 
-	virtual void	WindowResizingStarted		(UINT nType, CRect& location);
-	virtual void	WindowResizing				(UINT nSide, CRect& location);
-	virtual void	WindowResizingFinished		(UINT nType, CRect& location);
-	virtual void	WindowResized				(UINT nType, CSize& size);
+	virtual void	WindowResizingStarted		(UINT nFlags, CRect& location);
+	virtual void	WindowResizing				(UINT nFlags, CRect& location);
+	virtual void	WindowResizingFinished		(UINT nFlags, CRect& location);
+	virtual void	WindowResized				(UINT nFlags, CSize& size);
 
 // === Helper functions ===
 	virtual ECoordRefPoint	GetAlignment		(ELocation loc) const;

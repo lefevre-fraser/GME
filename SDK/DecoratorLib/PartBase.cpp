@@ -290,44 +290,44 @@ void PartBase::LabelChanged(CString& newLabel)
 	m_eventSink->LabelChanged(newLabelBStr);
 }
 
-void PartBase::LabelMovingStarted(UINT nType, CRect& location)
+void PartBase::LabelMovingStarted(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelMovingStarted(nType, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelMovingStarted(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::LabelMoving(UINT nSide, CRect& location)
+void PartBase::LabelMoving(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelMoving(nSide, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelMoving(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::LabelMovingFinished(UINT nType, CRect& location)
+void PartBase::LabelMovingFinished(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelMovingFinished(nType, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelMovingFinished(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::LabelMoved(UINT nType, CPoint& point)
+void PartBase::LabelMoved(UINT nFlags, CPoint& point)
 {
-	m_eventSink->LabelMoved(nType, point.x, point.y);
+	m_eventSink->LabelMoved(nFlags, point.x, point.y);
 }
 
-void PartBase::LabelResizingStarted(UINT nType, CRect& location)
+void PartBase::LabelResizingStarted(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelResizingStarted(nType, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelResizingStarted(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::LabelResizing(UINT nSide, CRect& location)
+void PartBase::LabelResizing(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelResizing(nSide, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelResizing(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::LabelResizingFinished(UINT nType, CRect& location)
+void PartBase::LabelResizingFinished(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelResizingFinished(nType, location.left, location.top, location.right, location.bottom);
+	m_eventSink->LabelResizingFinished(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
-void PartBase::LabelResized(UINT nType, CSize& size)
+void PartBase::LabelResized(UINT nFlags, CSize& size)
 {
-	m_eventSink->LabelResized(nType, size.cx, size.cy);
+	m_eventSink->LabelResized(nFlags, size.cx, size.cy);
 }
 
 void PartBase::GeneralOperationStarted(void* operationData)
@@ -335,79 +335,79 @@ void PartBase::GeneralOperationStarted(void* operationData)
 	m_eventSink->GeneralOperationStarted((ULONGLONG)operationData);
 }
 
-void PartBase::GeneralOperationFinished(void* operationData)
+void PartBase::GeneralOperationFinished(void** operationData)
 {
-	m_eventSink->GeneralOperationFinished((ULONGLONG)operationData);
+	m_eventSink->GeneralOperationFinished((ULONGLONG*)operationData);
 }
 
-void PartBase::WindowMovingStarted(UINT nType, CRect& location)
+void PartBase::WindowMovingStarted(UINT nFlags, CRect& location)
 {
 	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
 	if (edes)
-		edes->WindowMovingStarted(nType, location.left, location.top, location.right, location.bottom);
+		edes->WindowMovingStarted(nFlags, location.left, location.top, location.right, location.bottom);
 	else
 		ASSERT(false);
 }
 
-void PartBase::WindowMoving(UINT nSide, CRect& location)
+void PartBase::WindowMoving(UINT nFlags, CRect& location)
 {
 	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
 	if (edes)
-		edes->WindowMoving(nSide, location.left, location.top, location.right, location.bottom);
+		edes->WindowMoving(nFlags, location.left, location.top, location.right, location.bottom);
 	else
 		ASSERT(false);
 }
 
-void PartBase::WindowMovingFinished(UINT nType, CRect& location)
+void PartBase::WindowMovingFinished(UINT nFlags, CRect& location)
 {
 	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
 	if (edes)
-		edes->WindowMovingFinished(nType, location.left, location.top, location.right, location.bottom);
+		edes->WindowMovingFinished(nFlags, location.left, location.top, location.right, location.bottom);
 	else
 		ASSERT(false);
 }
 
-void PartBase::WindowMoved(UINT nType, CPoint& point)
+void PartBase::WindowMoved(UINT nFlags, CPoint& point)
 {
 	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
 	if (edes)
-		edes->WindowMoved(nType, point.x, point.y);
+		edes->WindowMoved(nFlags, point.x, point.y);
 	else
 		ASSERT(false);
 }
 
-void PartBase::WindowResizingStarted(UINT nType, CRect& location)
+void PartBase::WindowResizingStarted(UINT nFlags, CRect& location)
 {
 	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
 	if (edes)
-		edes->WindowResizingStarted(nType, location.left, location.top, location.right, location.bottom);
+		edes->WindowResizingStarted(nFlags, location.left, location.top, location.right, location.bottom);
 	else
 		ASSERT(false);
 }
 
-void PartBase::WindowResizing(UINT nSide, CRect& location)
+void PartBase::WindowResizing(UINT nFlags, CRect& location)
 {
 	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
 	if (edes)
-		edes->WindowResizing(nSide, location.left, location.top, location.right, location.bottom);
+		edes->WindowResizing(nFlags, location.left, location.top, location.right, location.bottom);
 	else
 		ASSERT(false);
 }
 
-void PartBase::WindowResizingFinished(UINT nType, CRect& location)
+void PartBase::WindowResizingFinished(UINT nFlags, CRect& location)
 {
 	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
 	if (edes)
-		edes->WindowResizingFinished(nType, location.left, location.top, location.right, location.bottom);
+		edes->WindowResizingFinished(nFlags, location.left, location.top, location.right, location.bottom);
 	else
 		ASSERT(false);
 }
 
-void PartBase::WindowResized(UINT nType, CSize& size)
+void PartBase::WindowResized(UINT nFlags, CSize& size)
 {
 	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
 	if (edes)
-		edes->WindowResized(nType, size.cx, size.cy);
+		edes->WindowResized(nFlags, size.cx, size.cy);
 	else
 		ASSERT(false);
 }

@@ -29,7 +29,8 @@ void CDecoratorEventSink::SetGuiObject(CGuiObject* guiObject)
 
 CDecoratorEventSink::CDecoratorEventSink():
 	m_view(NULL),
-	m_guiObject(NULL)
+	m_guiObject(NULL),
+	m_operationData(NULL)
 {
 }
 
@@ -43,6 +44,8 @@ CDecoratorEventSink::~CDecoratorEventSink()
 
 STDMETHODIMP CDecoratorEventSink::Refresh()
 {
+	m_view->Invalidate();
+
 	return S_OK;
 }
 
@@ -102,86 +105,7 @@ STDMETHODIMP CDecoratorEventSink::LabelChanged(BSTR newLabel)
 	return S_OK;
 }
 
-STDMETHODIMP CDecoratorEventSink::LabelMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::LabelMoving(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::LabelMovingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::LabelMoved(LONG nType, LONG x, LONG y)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::LabelResizingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::LabelResizing(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::LabelResizingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::LabelResized(LONG nType, LONG cx, LONG cy)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::GeneralOperationStarted(ULONGLONG operationData)
-{
-	m_view->BeginTransaction();
-	m_view->inElementDecoratorOperation = true;
-	m_view->decoratorOrAnnotator = true;
-	m_view->inOpenedDecoratorTransaction = true;
-	m_view->shouldCommitOperation = false;
-
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::GeneralOperationFinished(ULONGLONG operationData)
-{
-	m_view->inElementDecoratorOperation = false;
-	m_view->shouldCommitOperation = true;
-
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::WindowMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::WindowMoving(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::WindowMovingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::WindowMoved(LONG nType, LONG x, LONG y)
-{
-	return S_OK;
-}
-
-STDMETHODIMP CDecoratorEventSink::WindowResizingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CDecoratorEventSink::LabelMovingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	m_view->inElementDecoratorOperation = true;
 	m_view->decoratorOrAnnotator = true;
@@ -191,7 +115,142 @@ STDMETHODIMP CDecoratorEventSink::WindowResizingStarted(LONG nType, LONG left, L
 	return S_OK;
 }
 
-STDMETHODIMP CDecoratorEventSink::WindowResizing(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CDecoratorEventSink::LabelMoving(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
+{
+//	m_guiObject->ResizeObject(CRect(left, top, right, bottom));
+	m_view->Invalidate();
+	m_view->shouldCommitOperation = false;
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::LabelMovingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
+{
+//	m_guiObject->ResizeObject(CRect(left, top, right, bottom));
+	m_view->inElementDecoratorOperation = false;
+	m_view->originalRect.SetRectEmpty();
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::LabelMoved(LONG nFlags, LONG x, LONG y)
+{
+	m_view->BeginTransaction();
+	m_view->inOpenedDecoratorTransaction = true;
+	m_view->shouldCommitOperation = true;
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::LabelResizingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
+{
+	m_view->inElementDecoratorOperation = true;
+	m_view->decoratorOrAnnotator = true;
+	m_view->shouldCommitOperation = false;
+	m_view->originalRect = CRect(left, top, right, bottom);
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::LabelResizing(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
+{
+//	m_guiObject->ResizeObject(CRect(left, top, right, bottom));
+	m_view->Invalidate();
+	m_view->shouldCommitOperation = false;
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::LabelResizingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
+{
+//	m_guiObject->ResizeObject(CRect(left, top, right, bottom));
+	m_view->inElementDecoratorOperation = false;
+	m_view->originalRect.SetRectEmpty();
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::LabelResized(LONG nFlags, LONG cx, LONG cy)
+{
+	m_view->BeginTransaction();
+	m_view->inOpenedDecoratorTransaction = true;
+	m_view->shouldCommitOperation = true;
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::GeneralOperationStarted(ULONGLONG operationData)
+{
+	m_operationData = (void*)operationData;
+
+	m_view->BeginTransaction();
+	m_view->inElementDecoratorOperation = true;
+	m_view->decoratorOrAnnotator = true;
+	m_view->inOpenedDecoratorTransaction = true;
+	m_view->shouldCommitOperation = false;
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::GeneralOperationFinished(ULONGLONG* operationData)
+{
+	if (operationData != NULL)
+		*operationData = (ULONGLONG)m_operationData;
+
+	m_view->inElementDecoratorOperation = false;
+	m_view->shouldCommitOperation = true;
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::WindowMovingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
+{
+	m_view->inElementDecoratorOperation = true;
+	m_view->decoratorOrAnnotator = true;
+	m_view->shouldCommitOperation = false;
+	m_view->originalRect = CRect(left, top, right, bottom);
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::WindowMoving(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
+{
+//	m_guiObject->ResizeObject(CRect(left, top, right, bottom));
+	m_view->Invalidate();
+	m_view->shouldCommitOperation = false;
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::WindowMovingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
+{
+//	m_guiObject->ResizeObject(CRect(left, top, right, bottom));
+	m_view->inElementDecoratorOperation = false;
+	m_view->originalRect.SetRectEmpty();
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::WindowMoved(LONG nFlags, LONG x, LONG y)
+{
+	m_view->BeginTransaction();
+	m_view->inOpenedDecoratorTransaction = true;
+	m_view->shouldCommitOperation = true;
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::WindowResizingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
+{
+	m_view->inElementDecoratorOperation = true;
+	m_view->decoratorOrAnnotator = true;
+	m_view->shouldCommitOperation = false;
+	m_view->originalRect = CRect(left, top, right, bottom);
+
+	return S_OK;
+}
+
+STDMETHODIMP CDecoratorEventSink::WindowResizing(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	m_guiObject->ResizeObject(CRect(left, top, right, bottom));
 	m_view->Invalidate();
@@ -200,7 +259,7 @@ STDMETHODIMP CDecoratorEventSink::WindowResizing(LONG nSide, LONG left, LONG top
 	return S_OK;
 }
 
-STDMETHODIMP CDecoratorEventSink::WindowResizingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CDecoratorEventSink::WindowResizingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	m_guiObject->ResizeObject(CRect(left, top, right, bottom));
 	m_view->inElementDecoratorOperation = false;
@@ -209,7 +268,7 @@ STDMETHODIMP CDecoratorEventSink::WindowResizingFinished(LONG nType, LONG left, 
 	return S_OK;
 }
 
-STDMETHODIMP CDecoratorEventSink::WindowResized(LONG nType, LONG cx, LONG cy)
+STDMETHODIMP CDecoratorEventSink::WindowResized(LONG nFlags, LONG cx, LONG cy)
 {
 	m_view->BeginTransaction();
 	m_view->inOpenedDecoratorTransaction = true;

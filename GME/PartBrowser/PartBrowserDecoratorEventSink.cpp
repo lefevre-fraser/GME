@@ -62,42 +62,42 @@ STDMETHODIMP CPartBrowserDecoratorEventSink::LabelChanged(BSTR newLabel)
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::LabelMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::LabelMovingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::LabelMoving(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::LabelMoving(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::LabelMovingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::LabelMovingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::LabelMoved(LONG nType, LONG x, LONG y)
+STDMETHODIMP CPartBrowserDecoratorEventSink::LabelMoved(LONG nFlags, LONG x, LONG y)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::LabelResizingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::LabelResizingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::LabelResizing(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::LabelResizing(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::LabelResizingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::LabelResizingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::LabelResized(LONG nType, LONG cx, LONG cy)
+STDMETHODIMP CPartBrowserDecoratorEventSink::LabelResized(LONG nFlags, LONG cx, LONG cy)
 {
 	return S_OK;
 }
@@ -107,47 +107,47 @@ STDMETHODIMP CPartBrowserDecoratorEventSink::GeneralOperationStarted(ULONGLONG o
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::GeneralOperationFinished(ULONGLONG operationData)
+STDMETHODIMP CPartBrowserDecoratorEventSink::GeneralOperationFinished(ULONGLONG* operationData)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::WindowMovingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::WindowMovingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::WindowMoving(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::WindowMoving(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::WindowMovingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::WindowMovingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::WindowMoved(LONG nType, LONG x, LONG y)
+STDMETHODIMP CPartBrowserDecoratorEventSink::WindowMoved(LONG nFlags, LONG x, LONG y)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::WindowResizingStarted(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::WindowResizingStarted(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::WindowResizing(LONG nSide, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::WindowResizing(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::WindowResizingFinished(LONG nType, LONG left, LONG top, LONG right, LONG bottom)
+STDMETHODIMP CPartBrowserDecoratorEventSink::WindowResizingFinished(LONG nFlags, LONG left, LONG top, LONG right, LONG bottom)
 {
 	return S_OK;
 }
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::WindowResized(LONG nType, LONG cx, LONG cy)
+STDMETHODIMP CPartBrowserDecoratorEventSink::WindowResized(LONG nFlags, LONG cx, LONG cy)
 {
 	return S_OK;
 }

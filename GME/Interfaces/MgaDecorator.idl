@@ -90,17 +90,17 @@ const unsigned long	F_RESIZEAFTERMOD = 1<<7;
 		[id(5), helpstring("method LabelEditingStarted")] HRESULT LabelEditingStarted([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
 		[id(6), helpstring("method LabelEditingFinished")] HRESULT LabelEditingFinished([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
 		[id(7), helpstring("method LabelChanged")] HRESULT LabelChanged([in] BSTR newLabel);
-		[id(8), helpstring("method LabelMovingStarted")] HRESULT LabelMovingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(9), helpstring("method LabelMoving")] HRESULT LabelMoving([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(10), helpstring("method LabelMovingFinished")] HRESULT LabelMovingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(11), helpstring("method LabelMoved")] HRESULT LabelMoved([in] LONG nType, [in] LONG x, [in] LONG y);
-		[id(12), helpstring("method LabelResizingStarted")] HRESULT LabelResizingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(13), helpstring("method LabelResizing")] HRESULT LabelResizing([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(14), helpstring("method LabelResizingFinished")] HRESULT LabelResizingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(15), helpstring("method LabelResized")] HRESULT LabelResized([in] LONG nType, [in] LONG cx, [in] LONG cy);
+		[id(8), helpstring("method LabelMovingStarted")] HRESULT LabelMovingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(9), helpstring("method LabelMoving")] HRESULT LabelMoving([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(10), helpstring("method LabelMovingFinished")] HRESULT LabelMovingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(11), helpstring("method LabelMoved")] HRESULT LabelMoved([in] LONG nFlags, [in] LONG x, [in] LONG y);
+		[id(12), helpstring("method LabelResizingStarted")] HRESULT LabelResizingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(13), helpstring("method LabelResizing")] HRESULT LabelResizing([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(14), helpstring("method LabelResizingFinished")] HRESULT LabelResizingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(15), helpstring("method LabelResized")] HRESULT LabelResized([in] LONG nFlags, [in] LONG cx, [in] LONG cy);
 
 		[id(16), helpstring("method GeneralOperationStarted")] HRESULT GeneralOperationStarted([in] ULONGLONG operationData);
-		[id(17), helpstring("method GeneralOperationFinished")] HRESULT GeneralOperationFinished([in] ULONGLONG operationData);
+		[id(17), helpstring("method GeneralOperationFinished")] HRESULT GeneralOperationFinished([out] ULONGLONG* operationData);
 	};
 
 	[
@@ -143,15 +143,15 @@ const unsigned long	F_RESIZEAFTERMOD = 1<<7;
 	]
 	interface IMgaElementDecoratorEvents : IMgaCommonDecoratorEvents
 	{
-		[id(25), helpstring("method WindowMovingStarted")] HRESULT WindowMovingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(26), helpstring("method WindowMoving")] HRESULT WindowMoving([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(27), helpstring("method WindowMovingFinished")] HRESULT WindowMovingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(28), helpstring("method WindowMoved")] HRESULT WindowMoved([in] LONG nType, [in] LONG x, [in] LONG y);
+		[id(25), helpstring("method WindowMovingStarted")] HRESULT WindowMovingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(26), helpstring("method WindowMoving")] HRESULT WindowMoving([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(27), helpstring("method WindowMovingFinished")] HRESULT WindowMovingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(28), helpstring("method WindowMoved")] HRESULT WindowMoved([in] LONG nFlags, [in] LONG x, [in] LONG y);
 
-		[id(29), helpstring("method WindowResizingStarted")] HRESULT WindowResizingStarted([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(30), helpstring("method WindowResizing")] HRESULT WindowResizing([in] LONG nSide, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(31), helpstring("method WindowResizingFinished")] HRESULT WindowResizingFinished([in] LONG nType, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
-		[id(32), helpstring("method WindowResized")] HRESULT WindowResized([in] LONG nType, [in] LONG cx, [in] LONG cy);
+		[id(29), helpstring("method WindowResizingStarted")] HRESULT WindowResizingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(30), helpstring("method WindowResizing")] HRESULT WindowResizing([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(31), helpstring("method WindowResizingFinished")] HRESULT WindowResizingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+		[id(32), helpstring("method WindowResized")] HRESULT WindowResized([in] LONG nFlags, [in] LONG cx, [in] LONG cy);
 	};
 
 	[

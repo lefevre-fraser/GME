@@ -189,14 +189,14 @@ bool ResizablePart::OperationCanceledByGME(void)
 	return false;
 }
 
-void ResizablePart::WindowResizing(UINT nSide, CRect& location)
+void ResizablePart::WindowResizing(UINT nFlags, CRect& location)
 {
 	ASSERT(m_bResizable);
 	SetLocation(location);
-	PartBase::WindowResizing(nSide, location);
+	PartBase::WindowResizing(nFlags, location);
 }
 
-void ResizablePart::WindowResizingFinished(UINT nSide, CRect& location)
+void ResizablePart::WindowResizingFinished(UINT nFlags, CRect& location)
 {
 	ASSERT(m_bResizable);
 	SetLocation(location);
@@ -252,7 +252,7 @@ void ResizablePart::WindowResizingFinished(UINT nSide, CRect& location)
 		}
 	}
 	m_bResetSize = false;
-	PartBase::WindowResizingFinished(nSide, location);
+	PartBase::WindowResizingFinished(nFlags, location);
 }
 
 }; // namespace DecoratorSDK

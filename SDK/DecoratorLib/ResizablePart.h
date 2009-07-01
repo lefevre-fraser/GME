@@ -55,8 +55,8 @@ public:
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
 
-	virtual void	WindowResizing				(UINT nSide, CRect& location);
-	virtual void	WindowResizingFinished		(UINT nSide, CRect& location);
+	virtual void	WindowResizing				(UINT nFlags, CRect& location);
+	virtual void	WindowResizingFinished		(UINT nFlags, CRect& location);
 };
 
 }; // namespace DecoratorSDK

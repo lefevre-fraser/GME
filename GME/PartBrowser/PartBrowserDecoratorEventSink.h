@@ -67,27 +67,27 @@ public:
 	STDMETHOD( LabelEditingStarted )			( /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
 	STDMETHOD( LabelEditingFinished )			( /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
 	STDMETHOD( LabelChanged )					( /*[in]*/ BSTR newLabel );
-	STDMETHOD( LabelMovingStarted )				( /*[in]*/ LONG nType, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( LabelMoving )					( /*[in]*/ LONG nSide, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( LabelMovingFinished )			( /*[in]*/ LONG nType, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( LabelMoved )						( /*[in]*/ LONG nType, /*[in]*/ LONG x, /*[in]*/ LONG y );
-	STDMETHOD( LabelResizingStarted )			( /*[in]*/ LONG nType, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( LabelResizing )					( /*[in]*/ LONG nSide, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( LabelResizingFinished )			( /*[in]*/ LONG nType, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( LabelResized )					( /*[in]*/ LONG nType, /*[in]*/ LONG cx, /*[in]*/ LONG cy );
+	STDMETHOD( LabelMovingStarted )				( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( LabelMoving )					( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( LabelMovingFinished )			( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( LabelMoved )						( /*[in]*/ LONG nFlags, /*[in]*/ LONG x, /*[in]*/ LONG y );
+	STDMETHOD( LabelResizingStarted )			( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( LabelResizing )					( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( LabelResizingFinished )			( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( LabelResized )					( /*[in]*/ LONG nFlags, /*[in]*/ LONG cx, /*[in]*/ LONG cy );
 
 	STDMETHOD( GeneralOperationStarted )		( /*[in]*/ ULONGLONG operationData );
-	STDMETHOD( GeneralOperationFinished )		( /*[in]*/ ULONGLONG operationData );
+	STDMETHOD( GeneralOperationFinished )		( /*[out]*/ ULONGLONG* operationData );
 
-	STDMETHOD( WindowMovingStarted )			( /*[in]*/ LONG nType, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( WindowMoving )					( /*[in]*/ LONG nSide, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( WindowMovingFinished )			( /*[in]*/ LONG nType, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( WindowMoved )					( /*[in]*/ LONG nType, /*[in]*/ LONG x, /*[in]*/ LONG y );
+	STDMETHOD( WindowMovingStarted )			( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( WindowMoving )					( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( WindowMovingFinished )			( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( WindowMoved )					( /*[in]*/ LONG nFlags, /*[in]*/ LONG x, /*[in]*/ LONG y );
 
-	STDMETHOD( WindowResizingStarted )			( /*[in]*/ LONG nType, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( WindowResizing )					( /*[in]*/ LONG nSide, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( WindowResizingFinished )			( /*[in]*/ LONG nType, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
-	STDMETHOD( WindowResized )					( /*[in]*/ LONG nType, /*[in]*/ LONG cx, /*[in]*/ LONG cy );
+	STDMETHOD( WindowResizingStarted )			( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( WindowResizing )					( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( WindowResizingFinished )			( /*[in]*/ LONG nFlags, /*[in]*/ LONG left, /*[in]*/ LONG top, /*[in]*/ LONG right, /*[in]*/ LONG bottom );
+	STDMETHOD( WindowResized )					( /*[in]*/ LONG nFlags, /*[in]*/ LONG cx, /*[in]*/ LONG cy );
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(PartBrowserDecoratorEventSink), CPartBrowserDecoratorEventSink) 
