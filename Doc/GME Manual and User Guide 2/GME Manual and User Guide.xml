@@ -4654,7 +4654,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
     </section>
 
     <section>
-      <title>Semantics Guid to Metamodeling</title>
+      <title>Semantics Guide to Metamodeling</title>
 
       <para>The following table displays the representation of the concepts of
       GME, and how they translate semantically into core MGA concepts.</para>
@@ -4667,11 +4667,11 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
           <colspec colname="context" />
 
-          <colspec colname="symantics" />
+          <colspec colname="semantics" />
 
           <thead>
             <row>
-              <entry nameend="symantics" namest="stereotype">First Class
+              <entry nameend="semantics" namest="stereotype">First Class
               Objects (FCO’s)</entry>
             </row>
           </thead>
@@ -4690,14 +4690,6 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
               <entry>A class</entry>
 
-              <entry>14</entry>
-            </row>
-
-            <row>
-              <entry>12</entry>
-
-              <entry>A class</entry>
-
               <entry>The class is an MGA atom</entry>
             </row>
 
@@ -4707,7 +4699,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
               <entry>A class</entry>
 
               <entry>The class is an MGA connection (must be used as an
-              Association Class</entry>
+              Association Class)</entry>
             </row>
 
             <row>
@@ -4737,6 +4729,12 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </tgroup>
 
         <tgroup cols="3">
+          <colspec colname="stereotype" />
+
+          <colspec colname="context" />
+
+          <colspec colname="semantics" />
+
           <thead>
             <row>
               <entry nameend="semantics"
@@ -4777,6 +4775,12 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </tgroup>
 
         <tgroup cols="3">
+          <colspec colname="stereotype" />
+
+          <colspec colname="context" />
+
+          <colspec colname="semantics" />
+
           <thead>
             <row>
               <entry nameend="semantics" namest="stereotype">Association
@@ -4799,6 +4803,12 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </tgroup>
 
         <tgroup cols="3">
+          <colspec colname="stereotype" />
+
+          <colspec colname="context" />
+
+          <colspec colname="semantics" />
+
           <thead>
             <row>
               <entry nameend="semantics"
@@ -4847,6 +4857,12 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </tgroup>
 
         <tgroup cols="3">
+          <colspec colname="stereotype" />
+
+          <colspec colname="context" />
+
+          <colspec colname="semantics" />
+
           <thead>
             <row>
               <entry nameend="semantics"
@@ -4868,6 +4884,12 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </tgroup>
 
         <tgroup cols="3">
+          <colspec colname="stereotype" />
+
+          <colspec colname="context" />
+
+          <colspec colname="semantics" />
+
           <thead>
             <row>
               <entry nameend="semantics" namest="stereotype">Various</entry>
@@ -4902,6 +4924,12 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </tgroup>
 
         <tgroup cols="3">
+          <colspec colname="stereotype" />
+
+          <colspec colname="context" />
+
+          <colspec colname="semantics" />
+
           <thead>
             <row>
               <entry nameend="semantics"
@@ -4923,6 +4951,12 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </tgroup>
 
         <tgroup cols="3">
+          <colspec colname="stereotype" />
+
+          <colspec colname="context" />
+
+          <colspec colname="semantics" />
+
           <thead>
             <row>
               <entry nameend="semantics" namest="stereotype">Groups of
@@ -5082,31 +5116,34 @@ public:
         existing components, the following preprocessor constants have been
         designated for inclusion in the Component.h file: <itemizedlist>
             <listitem>
-              <para><code>NEW_BON_INVOKE</code>: if #defined in Component.h,
-              indicates that the new BON is being used. If it is not defined
-              (e.g. if the Component.h from an old BON is being used) the
-              framework works in compatibility mode.</para>
+              <para><code>NEW_BON_INVOKE</code>: if <code>#defined</code> in
+              <filename>Component.h</filename>, indicates that the new BON is
+              being used. If it is not defined (e.g. if the Component.h from
+              an old BON is being used) the framework works in compatibility
+              mode.</para>
             </listitem>
 
             <listitem>
               <para><code>DEPRECATED_BON_INVOKE_IMPLEMENTED</code>: In most
               cases, only the <code>CComponent::InvokeEx</code> needs to be
               implemented by the component programmer, and the
-              ImgaComponent::Invoke() method of the original COM interface
-              also results in a call to <code>InvokeEx</code>. If, however the
-              user prefers to leave the existing Component::Invoke() method to
-              be called in this case, the #define of this constant enables
-              this mode. <code>InvokeEx()</code> must be implemented anyway
-              (as <code>NEW_BON_INVOKE</code> is still defined).</para>
+              <code>ImgaComponent::Invoke()</code> method of the original COM
+              interface also results in a call to <code>InvokeEx</code>. If,
+              however the user prefers to leave the existing
+              <code>Component::Invoke()</code> method to be called in this
+              case, the #define of this constant enables this mode.
+              <code>InvokeEx()</code> must be implemented anyway (as
+              <code>NEW_BON_INVOKE</code> is still defined).</para>
             </listitem>
 
             <listitem>
               <para><code>IMPLEMENT_OLD_INTERFACE_ONLY</code>: this constant
-              can be included in old Component.h files only to fully disable
-              support for the <interfacename>IMgaComponentEx</interfacename>
-              COM interface (GME invokes to the old interface if the
-              <code>InvokeEx</code> is not supported). Using this constant is
-              generally not recommended.</para>
+              can be included in old <filename>Component.h</filename> files
+              only to fully disable support for the
+              <interfacename>IMgaComponentEx</interfacename> COM interface
+              (GME invokes to the old interface if the <code>InvokeEx</code>
+              is not supported). Using this constant is generally not
+              recommended.</para>
             </listitem>
           </itemizedlist></para>
 
@@ -5134,7 +5171,8 @@ void CComponent:: InvokeEx(CBuilder &amp;builder,CBuilderObject *focus,
  AfxMessageBox("Plug-In Sample"); 
 } </programlisting></para>
 
-        <para>The component.h and component.cpp files are the ones that the
+        <para>The <filename>component.h</filename> and
+        <filename>component.cpp</filename> files are the ones that the
         component writer needs to expand to implement the desired
         functionality.</para>
       </section>
@@ -5155,11 +5193,11 @@ void CComponent:: InvokeEx(CBuilder &amp;builder,CBuilderObject *focus,
         below. Note that each class is a derivative of the standard MFC
         CObject class.</para>
 
-        <para>As noted before, the single instance of the CBuilder class
-        provides a top level entry point into the builder object network. It
-        provides access to the model folders and supplies the name of the
-        current project. The public interface of the CBuilder class is shown
-        below. <programlisting>class CBuilder : public CObject { 
+        <para>As noted before, the single instance of the
+        <code>CBuilder</code> class provides a top level entry point into the
+        builder object network. It provides access to the model folders and
+        supplies the name of the current project. The public interface of the
+        <code>CBuilder</code> class is shown below. <programlisting>class CBuilder : public CObject { 
 public: 
   CBuilderFolder *GetRootFolder() const; 
   const CBuilderFolderList *GetFolders() const; 
@@ -5167,9 +5205,9 @@ public:
   CString GetProjectName() const; 
 }; </programlisting></para>
 
-        <para>The CBuilderFolder class provides access to the root models of
-        the given folder. It can also be used to create new root models.
-        <programlisting>class CBuilderFolder : public CObject { 
+        <para>The <code>CBuilderFolder</code> class provides access to the
+        root models of the given folder. It can also be used to create new
+        root models. <programlisting>class CBuilderFolder : public CObject { 
 public: 
   const CString&amp; GetName() const; 
   const CBuilderModelList *GetRootModels() const; 
@@ -5178,44 +5216,47 @@ public:
   CBuilderModel *CreateNewModel(CString kindName); 
 }; </programlisting></para>
 
-        <para>The CBuilderObject is the base class for several other classes.
-        It provides a set of common functionality for models, atoms,
-        references, sets and connections. Some of the functions need some
-        explanation.</para>
+        <para>The <code>CBuilderObject</code> is the base class for several
+        other classes. It provides a set of common functionality for models,
+        atoms, references, sets and connections. Some of the functions need
+        some explanation.</para>
 
-        <para>The GetAttribute() functions return true when their successfully
-        retrieved the value of attribute whose name was supplied in the name
-        argument. If the type of the val argument does not match the attribute
-        or the wrong name was provided, the function return false. For field
-        and page attributes, the type matches that of specified in the meta,
-        for menus, it is a CString and for toggle switches, it is a
-        bool.</para>
+        <para>The <code>GetAttribute()</code> functions return true when their
+        successfully retrieved the value of attribute whose name was supplied
+        in the name argument. If the type of the val argument does not match
+        the attribute or the wrong name was provided, the function return
+        false. For field and page attributes, the type matches that of
+        specified in the meta, for menus, it is a CString and for toggle
+        switches, it is a bool.</para>
 
         <para>The GetxxxAttributeNames functions return the list of names of
         attributes the given object has. This helps writing
         paradigm-independent components (plug-ins).</para>
 
-        <para>The GetReferencedBy function returns the list of references that
-        refer to the given object (renamed in v1.2 from GetReferences).</para>
+        <para>The <code>GetReferencedBy</code> function returns the list of
+        references that refer to the given object (renamed in v1.2 from
+        <code>GetReferences</code>).</para>
 
-        <para>The GetInConnections (GetOutConnection) functions return the
-        list of incoming (outgoing) connections from the given object. The
-        string argument specifies the name of the connection kind as specified
-        by the modeling paradigm. The GetInConnectedObjects
-        (GetOutConnectedObjects) functions return a list of objects instead.
-        The GetDirectInConnections (GetDirectOutConnections) build a tree. The
-        root of the tree is the given object, the edges of the tree are the
-        given kind of connections. The function returns the leaf nodes.
-        Basically these functions find paths to (from) the given object
-        without the component writer having to write the traversal
-        code.</para>
+        <para>The <code>GetInConnections</code>
+        (<code>GetOutConnection</code>) functions return the list of incoming
+        (outgoing) connections from the given object. The string argument
+        specifies the name of the connection kind as specified by the modeling
+        paradigm. The <code>GetInConnectedObjects</code>
+        (<code>GetOutConnectedObjects</code>) functions return a list of
+        objects instead. The <code>GetDirectInConnections</code>
+        (<code>GetDirectOutConnections</code>) build a tree. The root of the
+        tree is the given object, the edges of the tree are the given kind of
+        connections. The function returns the leaf nodes. Basically these
+        functions find paths to (from) the given object without the component
+        writer having to write the traversal code.</para>
 
-        <para>The TraverseChildren virtual functions provide a ways to
-        traverse the builder object network along the containment hierarchy.
-        The implementation provided does not do anything, the component writer
-        can override it to implement the necessary functionality. As we'll see
-        later, the CBuilderModel class does override this function. It
-        enumerates all of its children and calls their Traverse method.</para>
+        <para>The <code>TraverseChildren</code> virtual functions provide a
+        ways to traverse the builder object network along the containment
+        hierarchy. The implementation provided does not do anything, the
+        component writer can override it to implement the necessary
+        functionality. As we'll see later, the <code>CBuilderModel</code>
+        class does override this function. It enumerates all of its children
+        and calls their <code>Traverse</code> method.</para>
 
         <programlisting> class CBuilderObject : public CObject { 
   const CString&amp; GetName(); 
@@ -5265,22 +5306,24 @@ public:
   virtual void TraverseChildren(void *pointer = 0); 
 };</programlisting>
 
-        <para>The CBuilderModel class is the most important class in the
-        component interface, simply because models are the central objects in
-        the GME. They contain other objects, connections, sets, they have
-        aspects etc. The GetChildren function returns a list of all children,
-        i.e. all objects the model contains (models, atoms, sets, references
-        and connections). The GetModels method returns the list of contained
-        models. If a role name is supplied then only the specified part list
-        is returned. The GetAtoms, GetAtomReferences and GetModelReferences,
-        GetSets() functions work the same way except that a part name must be
-        supplied to them. The GetConnections method return the list of the
-        kind of connections that was requested. These are the connections that
-        are visible inside the given model.</para>
+        <para>The <code>CBuilderModel</code> class is the most important class
+        in the component interface, simply because models are the central
+        objects in the GME. They contain other objects, connections, sets,
+        they have aspects etc. The <code>GetChildren</code> function returns a
+        list of all children, i.e. all objects the model contains (models,
+        atoms, sets, references and connections). The <code>GetModels</code>
+        method returns the list of contained models. If a role name is
+        supplied then only the specified part list is returned. The
+        <code>GetAtoms</code>, <code>GetAtomReferences</code> and
+        <code>GetModelReferences</code>, <code>GetSets()</code> functions work
+        the same way except that a part name must be supplied to them. The
+        GetConnections method return the list of the kind of connections that
+        was requested. These are the connections that are visible inside the
+        given model.</para>
 
-        <para>The GetAspectNames function return the list of names of aspects
-        the current model has. This helps in writing paradigm-independent
-        components.</para>
+        <para>The <code>GetAspectNames</code> function return the list of
+        names of aspects the current model has. This helps in writing
+        paradigm-independent components.</para>
 
         <para>Children can be created with the appropriate creation functions.
         Similarly, connections can be constructed by specifying their kind and
@@ -5288,8 +5331,8 @@ public:
         CBuilderConnection class for a detailed description of
         connections.</para>
 
-        <para>The TraverseModels function is similar to the TraverseChildren
-        but it only traverses models.</para>
+        <para>The <code>TraverseModels</code> function is similar to the
+        <code>TraverseChildren</code> but it only traverses models.</para>
 
         <programlisting>class CBuilderModel : public CBuilderObject { 
 public: 
@@ -5316,16 +5359,16 @@ public:
   virtual void TraverseChildren(void *pointer = 0); 
 }; </programlisting>
 
-        <para>The CBuilderAtom class does not provide any new public
-        methods.</para>
+        <para>The <code>CBuilderAtom</code> class does not provide any new
+        public methods.</para>
 
         <programlisting>class CBuilderAtom : public CBuilderObject { 
 public: 
 }; </programlisting>
 
-        <para>The CBuilderAtomReference class provides the GetReferred
-        function that returns the atom (or atom reference) referred to by the
-        given reference.</para>
+        <para>The <code>CBuilderAtomReference</code> class provides the
+        <code>GetReferred</code> function that returns the atom (or atom
+        reference) referred to by the given reference.</para>
 
         <programlisting>class CBuilderAtomReference : public CBuilderObject { 
   const CBuilderObject *GetReferred() const; 
@@ -5336,10 +5379,11 @@ public:
         component interface avoids using ports for the sake simplicity.
         However, model references mandate the introduction of a new kind of
         object, model reference ports. A model reference contains a list of
-        port objects. The GetOwner method of the CBuilderReferencePort class
-        return the model reference containing the given port. The GetAtom
-        method returns the atom that corresponds to the port of the model that
-        the model reference port represents.</para>
+        port objects. The <code>GetOwner</code> method of the
+        <code>CBuilderReferencePort</code> class return the model reference
+        containing the given port. The <code>GetAtom</code> method returns the
+        atom that corresponds to the port of the model that the model
+        reference port represents.</para>
 
         <programlisting>class CBuilderReferencePort : public CBuilderObject { 
 public: 
@@ -5347,19 +5391,20 @@ public:
  const CBuilderAtom *GetAtom() const;       
 }; </programlisting>
 
-        <para>The CBuilderModelReference class provides the GetRefered
-        function that returns the model (or model reference) referred to by
-        the given reference. The GetRefereePorts return the list of
-        CBuilderReferencePorts.</para>
+        <para>The <code>CBuilderModelReference</code> class provides the
+        <code>GetRefered</code> function that returns the model (or model
+        reference) referred to by the given reference. The
+        <code>GetRefereePorts</code> return the list of
+        <code>CBuilderReferencePorts</code>.</para>
 
         <programlisting>class CBuilderModelReference : public CBuilderObject { 
   const CBuilderReferencePortList &amp;GetRefereePorts() const; 
   const CBuilderObject *GetReferred() const; 
 }; </programlisting>
 
-        <para>A CBuilderConnection instance describes a relation among three
-        objects. The owner is the model that contains the given connection
-        (i.e. the connection is visible in that model). The source
+        <para>A <code>CBuilderConnection</code> instance describes a relation
+        among three objects. The owner is the model that contains the given
+        connection (i.e. the connection is visible in that model). The source
         (destination) is always an atom or a reference port. If it is an atom
         then it is either contained by the owner, or it corresponds to a port
         of a model contained by the owner. So, in case of atoms, either the
@@ -5374,8 +5419,8 @@ public:
  CBuilderObject *GetDestination() const; 
 }; </programlisting>
 
-        <para>The CBuilderSet class member function provide straightforward
-        access to the different components of sets.</para>
+        <para>The <code>CBuilderSet</code> class member function provide
+        straightforward access to the different components of sets.</para>
 
         <programlisting>class CBuilderSet : public CBuilderObject { 
 public: 
@@ -5393,7 +5438,7 @@ public:
         <para>The following simple paradigm independent interpreter displays a
         message box for each model in the project. For the sake of simplicity,
         it assumes that there is no folder hierarchy in the given project. The
-        component.cpp file is shown below.</para>
+        <filename>component.cpp</filename> file is shown below.</para>
 
         <programlisting>#include "stdafx.h" 
 #include "Component.h" 
@@ -5434,11 +5479,11 @@ void CComponent::ScanModels(CBuilderModel *model, CString fName)
         defined interpretation actually begins, a pair of macros must be
         used.</para>
 
-        <para>The derived class declaration must use one of the DECLARE
-        macros. The implementation must include the appropriate IMPLEMENT
-        macro. There is a pair of macros for models, atoms, model- and atom
-        references, connections and sets. The following list describes their
-        generic form.</para>
+        <para>The derived class declaration must use one of the
+        <code>DECLARE</code> macros. The implementation must include the
+        appropriate <code>IMPLEMENT</code> macro. There is a pair of macros
+        for models, atoms, model- and atom references, connections and sets.
+        The following list describes their generic form.</para>
 
         <programlisting>DECLARE_CUSTOMMODEL(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
 DECLARE_CUSTOMMODELREF(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
@@ -5496,10 +5541,11 @@ CCompoundBuilder::~CCompoundBuilder()
 
         <para>The macros create a constructor and a Create function in order
         for a factory object to be able to create instances of the given
-        class. Do not define your own constructors, use the Initialize()
-        function instead. You have to call the base class implementation.
-        These macros call the standard MFC DECLARE_DYNCREATE and IMPLEMENT
-        DYNCREATE macros.</para>
+        class. Do not define your own constructors, use the
+        <code>Initialize()</code> function instead. You have to call the base
+        class implementation. These macros call the standard MFC
+        <code>DECLARE_DYNCREATE</code> and <code>IMPLEMENT
+        DYNCREATE</code>macros.</para>
 
         <para>If you want to define abstract base classes that are not
         associated with any of your models, use the appropriate macro pair
@@ -5520,9 +5566,9 @@ IMPLEMENT_CUSTOMATOMREFBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
 IMPLEMENT_CUSTOMCONNECTIONBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
 IMPLEMENT_CUSTOMSETBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) </programlisting>
 
-        <para>For casting, use the BUILDER_CAST(CLASS, PTR) macro for casting
-        a builder class pointer to its derived custom builder object
-        pointer.</para>
+        <para>For casting, use the <code>BUILDER_CAST(CLASS, PTR)</code> macro
+        for casting a builder class pointer to its derived custom builder
+        object pointer.</para>
       </section>
 
       <section>
@@ -5532,7 +5578,7 @@ IMPLEMENT_CUSTOMSETBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) </programlisting>
         Compound. Let's write a component that implements an algorithm similar
         to the previous example. In this case, we'll scan only the Compound
         models. Again, the folder hierarchy is not considered. Here is the
-        Component.h file:</para>
+        <filename>Component.h</filename> file:</para>
 
         <programlisting>#ifndef GME_INTERPRETER_H 
 #define GME_INTERPRETER_H 
@@ -5560,7 +5606,8 @@ public:
  
 #endif // whole file </programlisting>
 
-        <para>The component.cpp file is shown below.</para>
+        <para>The <filename>component.cpp</filename> file is shown
+        below.</para>
 
         <programlisting>#include "stdafx.h" 
 #include "Component.h" 
@@ -5655,7 +5702,7 @@ void CCompoundBuilder::Scan(CString foldName)
         initialization code runs.</para>
 
         <note>
-          <para>The time of the creation of the specific MON may take couple
+          <para>The time of the creation of the specific MON may be a couple
           of seconds depending of the complexity of the paradigm.</para>
         </note>
       </section>
@@ -5689,9 +5736,9 @@ void CCompoundBuilder::Scan(CString foldName)
               <interfacename>IMgaMetaProject</interfacename> which is the root
               of the object network. Because it contains directly or
               indirectly all metaobjects (i.e. all MON classes have the method
-              project( ) to access the project), Project offers methods with
-              which the user can obtain all instances of a specific metakind
-              or a meta-relation and she can find the
+              <code>project()</code> to access the project), Project offers
+              methods with which the user can obtain all instances of a
+              specific metakind or a meta-relation and she can find the
               <interfacename>MetaObject</interfacename> correspondent to a
               MetaReferenceID, to the name of a metakind or to name of an
               Aspect.</para>
@@ -5917,12 +5964,10 @@ void CCompoundBuilder::Scan(CString foldName)
         in contrary MON wrappers use the simple operator[.]. Here is an
         example demonstrate the mentioned above. <programlisting> 
 BON::FCO fco; // Here is an fco. 
-// fco.isPort( ); // This wiould result a compiler error because the wrapper 
-does not have this operation. 
+// fco.isPort( ); // This would result a compiler error because the wrapper does not have this operation. 
 fco-&gt;isPort( ); // The operator[-&gt;] will result a BON::FCOImpl pointer. 
 MON::FCO metafco = fco-&gt;getFCOMeta(); // obtain the definition of the FCO. 
-std::string strKindName = metafco.name(); // get the name of the meta, the 
-kindname of the object </programlisting></para>
+std::string strKindName = metafco.name(); // get the name of the meta, the kindname of the object </programlisting></para>
 
         <important>
           <para>Although advanced programmers may get the pointer of the
@@ -5936,18 +5981,18 @@ kindname of the object </programlisting></para>
         <programlisting>BON::Project project; // Let’s assume the project is valid. 
 BON::Folder root = project-&gt;getRootFolder( ); // Get the root folder 
 if ( root ) AfxMessageBox( “RootFolder always exists!” ); 
-BON::Folder parent = root-&gt;getParentFolder(); // Get the parent of the root, 
-which is NULL. 
+BON::Folder parent = root-&gt;getParentFolder(); // Get the parent of the root, which is NULL. 
 if ( ! parent ) AfxMessageBox( “RootFolder never has parent” ); </programlisting>
 
         <para>The user can check the equality of two BON object with the
-        operator[=] and operator[!=]. It must be emphasized that this equality
-        means two COM objects equality and the wrappers’. It is not necessary
-        to obtain the implementation pointers to check whether two objects are
-        equal or not. The operator[&lt;] makes possible that the objects may
-        be included into any kind of STL container including sets and maps
-        also. These operators can be used for all BON objects (e.g.
-        BON::Project is comparable with BON::ReferencePort).</para>
+        <code>operator[=]</code> and <code>operator[!=]</code>. It must be
+        emphasized that this equality means two COM objects equality and the
+        wrappers’. It is not necessary to obtain the implementation pointers
+        to check whether two objects are equal or not. The
+        <code>operator[&lt;]</code> makes possible that the objects may be
+        included into any kind of STL container including sets and maps also.
+        These operators can be used for all BON objects (e.g. BON::Project is
+        comparable with BON::ReferencePort).</para>
 
         <para>The last important feature of wrappers is the casting mechanism.
         This is implemented via the copy constructors and assignment
@@ -5999,7 +6044,7 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
         <note>
           <para>The whole meta object network (all MON objects) is created
           when the component starts to run and it is destructed when the
-          component accomplish its task.</para>
+          component accomplishes its task.</para>
         </note>
 
         <section>
@@ -6010,7 +6055,7 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
           interpreters). The difference is based on the usual process of the
           components.</para>
 
-          <para>As we mentioned above BON objects are created if and only if
+          <para>As we mentioned above, BON objects are created if and only if
           they are required to be constructed (i.e. the first time COM objects
           are retrieved) in contrast with the previous version of BON, where
           the whole project was mirrored and all BON objects were created at
@@ -6055,11 +6100,11 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
           <para>As we can see later, this type of object management works only
           if the references do not form a directed cycle. In BON by default
           there are only DAGs (Directed Acyclic Graphs) in which the
-          destruction of the BON objects are garanteed. However when a user
+          destruction of the BON objects are guaranteed. However when a user
           extends BON classes she may store wrapper instances (i.e. references
           to BON implementation instances), thus it is likely that reference
           cycles will occur. To avoid this the user has to set everything to
-          null manually in the finalization.</para>
+          <code>null</code> manually in the finalization.</para>
         </section>
       </section>
 
@@ -6080,7 +6125,7 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
         <para>During the finalization all resource must be released. The
         process of disposal consists of the destruction of all BON and MON
         objects (releasing all references to BON objects) and releasing the
-        additional resources (database connections, e.t.c.). This can be
+        additional resources (database connections, etc.). This can be
         completing the <code>finalize()</code> operation of
         <code>BON::Component</code>. Of course, additional resources include
         the additional references to BON objects also. This must be done in
@@ -6109,7 +6154,7 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
         different in case of add-ons and interpreters.</para>
 
         <para>The interpreters entry point is the <code>invokeEx()</code> of
-        <code>BON:.Component</code> and this is the main part. Here is a
+        <code>BON::Component</code> and this is the main part. Here is a
         descriptive example: <programlisting>void Component::invokeEx( Project&amp; project, FCO&amp; currentFCO, const 
 std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam ) 
 { 
@@ -6135,8 +6180,7 @@ std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam )
 
         <para>The user may handle and react to all events in
         <code>objectEventPerformed()</code> of <code>BON::Component</code>.
-        Here is an example: <programlisting>void Component::objectEventPerformed( Object&amp; object, unsigned long event, 
-VARIANT v ) 
+        Here is an example: <programlisting>void Component::objectEventPerformed( Object&amp; object, unsigned long event, VARIANT v ) 
 { 
  // v in this version of BON2 is unused, in the future it will contain  
  // appropriate event parameter(s) 
@@ -6846,8 +6890,7 @@ COLORREF crPort = BON::ModelRegistryNode( model-&gt;getRegistry() )-&gt;
 getPortNameColor(); 
 ... 
 // Obtaining the position of an FCO in the Aspect ‘Aspect’ 
-BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation( 
-“Aspect” ); </programlisting></para>
+BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation( “Aspect” ); </programlisting></para>
       </section>
     </section>
 
@@ -6914,7 +6957,7 @@ BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation(
       brings up the Component Configurator dialog box can be run any time to
       change component attributes. The output is generated to the file
       specified by the –f command-line argument. It defaults to
-      ComponentConfig.h.</para>
+      <filename>ComponentConfig.h</filename>.</para>
 
       <para>The appendix describes the procedure in detail. After you
       completed the steps outlined there, you can build the new component dll.
@@ -6985,11 +7028,12 @@ public:
   // kind and role getters 
   std::set&lt;Processing&gt; getParts(); 
 }; 
-}; // end namespace </programlisting><parameter>Processing (with Model
-        stereotype) has no ancestors in the metamodel, so it derives from the
-        <type>BON::ModelImpl</type> class. Compound derives from Processing so
-        this will be reflected in the generated skeleton, as well.
-        </parameter></para>
+}; // end namespace </programlisting></para>
+
+        <para>Processing (with Model stereotype) has no ancestors in the
+        metamodel, so it derives from the <type>BON::ModelImpl</type> class.
+        Compound derives from Processing so this will be reflected in the
+        generated skeleton, as well.</para>
 
         <para><parameter>Container kinds, like Models, Sets and Folders, will
         have specialized get methods returning the contained roles (in case of
@@ -8316,7 +8360,7 @@ public:
           even instances in a specific way.</para>
 
           <para>If the modeler set the aim to create a model, which will be
-          imported as a libarary into other models, then the constraints
+          imported as a library into other models, then the constraints
           defined in the imported model become library constraints. The types
           of constraints are the following: <mediaobject>
               <imageobject>
@@ -8335,7 +8379,7 @@ public:
           Constraints</guimenuitem> command, the user can browse all
           constraints available in the model in the page
           <guilabel>Constraints</guilabel> of the <guilabel>Constraint
-          Browser</guilabel>. The page displays the state (i.e. not avaiable
+          Browser</guilabel>. The page displays the state (i.e. not available
           because of errors, well- formed and valid), the type and the full
           name for each constraint.</para>
 
@@ -8351,7 +8395,7 @@ public:
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="???" />
+              <imagedata fileref="images/Constraints in the model.png" />
             </imageobject>
 
             <caption><para>Constraints in the model </para></caption>
@@ -8360,14 +8404,6 @@ public:
 
         <section>
           <title>Add and Remove constraints</title>
-
-          <para><mediaobject>
-              <imageobject>
-                <imagedata fileref="???" />
-              </imageobject>
-
-              <caption><para>Property pages for a constraint </para></caption>
-            </mediaobject></para>
 
           <para>With the <guilabel>Add</guilabel> and the
           <guilabel>Remove</guilabel> buttons the user may add and remove
@@ -8386,7 +8422,7 @@ public:
 
           <para><mediaobject>
               <imageobject>
-                <imagedata fileref="???" />
+                <imagedata fileref="images/Enable constraints - restrict the context of constraints.png" />
               </imageobject>
 
               <caption><para>Enable constraints – restrict the context of
@@ -9385,7 +9421,7 @@ object.isUndefined( ) </programlisting>
           <para>Here are some examples to facilitate the understanding of
           navigation over associations. <mediaobject>
               <imageobject>
-                <imagedata fileref="???" />
+                <imagedata fileref="images/Example for associations.png" />
               </imageobject>
 
               <caption><para>Example for associations.. </para></caption>
