@@ -8,7 +8,7 @@ namespace GMEConsole
 	
 		CString result("<a href=\"mga:id-");		
 		result+=text;
-		result+="\"";
+		result+="\">";
 		result+= objectId;
 		result+=  "</a>";
 		
@@ -17,14 +17,14 @@ namespace GMEConsole
 
 	CString Formatter::MakeObjectHyperlink(const CString & text, long objectId)
 	{
-
+		// Inverse of CBuilderObject::GetObjId()
 		unsigned long id = objectId, c, p;
 		p=id%100000000;
 		c=id/100000000;
 		c+=100;
 
 		CString result;
-		result.Format("<a href=\"mga:id-%0.4X-%0.8X\">");
+		result.Format("<a href=\"mga:id-%04X-%08X\">", c, p);
 		result+= text;
 		result+="</a>";		
 		return result;
