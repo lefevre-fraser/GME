@@ -5,10 +5,28 @@ namespace GMEConsole
 {
 	CString Formatter::MakeObjectHyperlink(const CString & text, const CString& objectId)
 	{
+	
 		CString result("<a href=\"mga:id-");		
+		result+=text;
+		result+="\"";
 		result+= objectId;
 		result+=  "</a>";
 		
+		return result;
+	}
+
+	CString Formatter::MakeObjectHyperlink(const CString & text, long objectId)
+	{
+
+		unsigned long id = objectId, c, p;
+		p=id%100000000;
+		c=id/100000000;
+		c+=100;
+
+		CString result;
+		result.Format("<a href=\"mga:id-%0.4X-%0.8X\">");
+		result+= text;
+		result+="</a>";		
 		return result;
 	}
 

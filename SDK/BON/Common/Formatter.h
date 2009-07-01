@@ -23,6 +23,7 @@ namespace GMEConsole
 		static CString MakeUnderline(const CString & text){return CString("<u>") + text +"</u>";}
 		static CString MakeHyperlink(const CString & text, const CString& url){return CString("<a href=\"") + url + "\">" + text +"</a>";}
 		static CString MakeObjectHyperlink(const CString & text, const CString& objectId);
+		static CString MakeObjectHyperlink(const CString & text, long objectId);
 		static CString MakeColored(const CString & text, COLORREF color);
 
 	};
