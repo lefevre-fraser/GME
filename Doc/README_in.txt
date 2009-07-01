@@ -1,8 +1,8 @@
 #include "GMEVersion.h"
 
               Generic Modeling Environment
-                 GME v8 GME_VERSION_ID
-       Copyright © 2000-2008 Vanderbilt University
+                 GME v9 GME_VERSION_ID
+       Copyright © 2000-2009 Vanderbilt University
 
 
 ************************************************
@@ -30,6 +30,12 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r9.7.1
+-------------------------------
+  - Autorouter and decorator bug fixes.
+  - Visual Studio Component wizard is (back)ported for
+    supporting VS2005.
+  
 Release Notes of Release r9.6.16
 --------------------------------
   - Multiuser backend speed improvements (object
