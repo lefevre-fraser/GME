@@ -6,7 +6,7 @@ namespace GMEConsole
 	CString Formatter::MakeObjectHyperlink(const CString & text, const CString& objectId)
 	{
 	
-		CString result("<a href=\"mga:id-");		
+		CString result("<a href=\"mga:");		
 		result+= objectId;
 		result+= "\">";
 		result+= text ;
