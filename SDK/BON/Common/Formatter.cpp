@@ -7,10 +7,10 @@ namespace GMEConsole
 	{
 	
 		CString result("<a href=\"mga:id-");		
-		result+=text;
-		result+="\">";
 		result+= objectId;
-		result+=  "</a>";
+		result+= "\">";
+		result+= text ;
+		result+= "</a>";
 		
 		return result;
 	}
