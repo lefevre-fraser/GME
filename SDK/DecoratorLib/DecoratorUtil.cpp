@@ -511,6 +511,42 @@ bool Facilities::getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, b
 	return true;
 }
 
+bool Facilities::getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, long& lValue ) const
+{
+	if (!spFCO) {
+		return false;
+	}
+	CComBSTR attrname;
+	CopyTo( strName, attrname );
+
+	try {
+		COMTHROW(spFCO->get_IntAttrByName(attrname, &lValue));
+	}
+	catch (hresult_exception &) {
+		return false;
+	}
+
+	return true;
+}
+
+bool Facilities::getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, double& fValue ) const
+{
+	if (!spFCO) {
+		return false;
+	}
+	CComBSTR attrname;
+	CopyTo( strName, attrname );
+
+	try {
+		COMTHROW(spFCO->get_FloatAttrByName(attrname, &fValue));
+	}
+	catch (hresult_exception &) {
+		return false;
+	}
+
+	return true;
+}
+
 bool Facilities::setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, const CString& strValue ) const
 {
 	if (!spFCO) {
@@ -542,6 +578,42 @@ bool Facilities::setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, b
 
 	try {
 		COMTHROW(spFCO->put_BoolAttrByName(attrname, vval));
+	}
+	catch (hresult_exception &) {
+		return false;
+	}
+
+	return true;
+}
+
+bool Facilities::setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, long lValue ) const
+{
+	if (!spFCO) {
+		return false;
+	}
+	CComBSTR attrname;
+	CopyTo( strName, attrname );
+
+	try {
+		COMTHROW(spFCO->put_IntAttrByName(attrname, lValue));
+	}
+	catch (hresult_exception &) {
+		return false;
+	}
+
+	return true;
+}
+
+bool Facilities::setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, double fValue ) const
+{
+	if (!spFCO) {
+		return false;
+	}
+	CComBSTR attrname;
+	CopyTo( strName, attrname );
+
+	try {
+		COMTHROW(spFCO->put_FloatAttrByName(attrname, fValue));
 	}
 	catch (hresult_exception &) {
 		return false;

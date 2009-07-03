@@ -100,8 +100,12 @@ namespace DecoratorSDK
 
 			bool getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, CString& strValue ) const;
 			bool getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, bool& bValue ) const;
+			bool getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, long& lValue ) const;
+			bool getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, double& fValue ) const;
 			bool setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, const CString& strValue ) const;
 			bool setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, bool bValue ) const;
+			bool setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, long lValue ) const;
+			bool setAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, double fValue ) const;
 
 			bool getMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco) const;
 

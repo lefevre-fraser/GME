@@ -132,7 +132,7 @@ bool ModelSwitchButtonPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const
 
 void ModelSwitchButtonPart::InitiateModelExpandStateSwitch(void)
 {
-	m_parentPart->GeneralOperationStarted(0);
+	m_parentPart->GeneralOperationStarted(NULL);
 	COMTRY {
 		CComPtr<IMgaMetaAspect> mAspect;
 		COMTHROW(m_spPart->get_ParentAspect(&mAspect));
@@ -175,7 +175,7 @@ void ModelSwitchButtonPart::InitiateModelExpandStateSwitch(void)
 		ASSERT(FAILED(e.hr));
 		SetErrorInfo(e.hr);
 	}
-	m_parentPart->GeneralOperationFinished(0);
+	m_parentPart->GeneralOperationFinished(NULL);
 }
 
 }; // namespace DecoratorSDK
