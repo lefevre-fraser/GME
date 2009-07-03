@@ -2872,6 +2872,24 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
             <para>For instances below the name of the object, the name of the
             type or subtype is shown with small font.</para>
           </listitem>
+
+          <listitem>
+            <para>The new decorators use vectorial graphics for vectorial
+            shapes (including: inheritance, same relationship, connection
+            bullets, constraint signs).</para>
+          </listitem>
+
+          <listitem>
+            <para>Vectorial shapes and (certain) boxes can have shadows,
+            gradient fills, rounded corners. All of these properties can be
+            defined in meta-models and can be adjusted in the Object
+            Inspector.</para>
+          </listitem>
+
+          <listitem>
+            <para>In-place editiing of labels and other text elements, like
+            UML class attributes or meta object attributes.</para>
+          </listitem>
         </itemizedlist>
       </section>
     </section>
@@ -3210,42 +3228,61 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
     <para>GME v1.2 and later implements object drawing in a separate plugable
     <acronym>COM</acronym> module making domain-specific visual representation
-    a reality. In earlier versions of GME one could only specify bitmap files
-    for objects. This method is still supported by the default decorator
-    component shipped with GME.</para>
+    a reality.</para>
 
     <para>Replacing the default implementation basically consists of two
     steps. First we have to create a COM based component, which implements the
-    <interfacename>IMgaDecorator</interfacename> COM interface. Second, we
-    have to assign this decorator to the classes in our metamodel (or for the
-    objects in our model(s) if we want to override the default decorator
+    <interfacename>IMgaElementDecorator</interfacename> COM interface. Second,
+    we have to assign this decorator to the classes in our metamodel (or for
+    the objects in our model(s) if we want to override the default decorator
     specified in the metamodel).</para>
+
+    <para>Decorators for GME v7.6.29 and before used the
+    <code>IMgaDecorator</code> COM interface for implementation, and used the
+    plain Windows GDI graphical subsystem to draw the graphics. Newer GME
+    versions use <code>IMgaElementDecorator</code> interface and
+    <acronym>GDI+</acronym> (Gdiplus) for drawing the objects. New GME
+    versions still support old decorators, but mixing the old GDI and the new
+    <acronym>GDI+</acronym> technology can confuse the system (resulting in
+    graphical errors), so it is highly advisable to update old decorators to
+    the new scheme. Also, it is advisable to use Release version decorators
+    with Release version GME, and Debug version decorators with Debug version
+    GME.</para>
 
     <para>GME instantiates a separate decorator for each object in each
     aspect, so we have to keep our decorator code as compact as possible.
-    Decorator components always have to be in-process servers. Using C++, ATL
-    or MFC is the recommended way to develop decorators.</para>
+    Decorator components always have to be in-process servers. Using C++,
+    <acronym>GDI+</acronym>, <acronym>ATL</acronym> or <acronym>MFC</acronym>
+    is the recommended way to develop decorators.</para>
 
     <section>
-      <title>The IMgaDecorator interface</title>
+      <title>The <code>IMgaElementDecorator</code> interface</title>
 
       <para>The following diagram shows the method invocation sequence on the
-      IMgaDecorator interface. Understanding the protocol between GME and the
-      decorators is the key to developing decorators. All the methods on the
-      decorator interface are called by GME (there is no callback mechanism).
-      The direction column in the diagram shows the direction of the
-      information flow.</para>
+      <code>IMgaElementDecorator</code> interface. Understanding the protocol
+      between GME and the decorators is the key to developing decorators. All
+      the methods on the decorator interface are called by GME (there is
+      <code>IMgaElementDecoratorEvents</code> interface for well defined
+      callback cases). The direction column in the diagram shows the direction
+      of the information flow.</para>
 
       <para>GME always calls your methods in a read-only MGA transaction. You
-      must not initiate new transactions in your decorator. SaveState() method
-      is the only exception to this rule. This method is called in a
-      read-write transaction, therefore, this is the only place where you can
-      store decorator specific information in the MGA project.</para>
+      must not initiate new transactions in your decorator.
+      <code>SaveState()</code> method is the only exception to this rule. This
+      method is called in a read-write transaction, therefore, this is the
+      only place where you can store decorator specific information in the MGA
+      project.</para>
 
       <table>
-        <title></title>
+        <title>Simplified lifecycle of a decorator object</title>
 
         <tgroup cols="3">
+          <colspec colnum="1" colwidth="3*" />
+
+          <colspec colnum="2" colwidth="2*" />
+
+          <colspec colnum="3" colwidth="40*" />
+
           <thead>
             <row>
               <entry>GME</entry>
@@ -3260,17 +3297,1730 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
             <row>
               <entry></entry>
 
-              <entry></entry>
+              <entry><code>=&gt;</code></entry>
+
+              <entry>decorator class constructor</entry>
             </row>
 
             <row>
               <entry></entry>
 
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>GetFeatures([out] features)</code></entry>
+            </row>
+
+            <row>
               <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>SetParam([in] name, [in]value)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>GetParam([in] name, [out] value)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>InitializeEx([in] mgaproject, [in] mgametapart,
+              [in] mgafco, [in] eventSink, [in] parentWnd)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>GetPreferredSize([out] sizex, [out]
+              sizey)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>GetPorts([out] portFCOs)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>SetLocation([in] sx, [in] sy, [in] ex, [in]
+              ey)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>GetPortLocation([in] fco, [out] sx, [out] sy, [out]
+              ex, [out] ey)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>GetLabelLocation([out] sx, [out] sy, [out] ex,
+              [out] ey)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>GetLocation([out] sx, [out] sy, [out] ex, [out]
+              ey)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>SetActive([in] isActive)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>DrawEx([in] hDC, [in] gdip)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>SaveState()</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>Destroy()</code></entry>
             </row>
           </tbody>
         </tgroup>
       </table>
+
+      <section>
+        <title><code>IMgaElementDecorator</code> Functions</title>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT GetFeatures([out] feature_code
+                *features)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>This method tells GME which features the decorator supports.
+        Available feature codes are (can be combined using the bitwise-OR
+        operator): <itemizedlist>
+            <listitem>
+              <para><code>F_RESIZABLE</code> : decorator supports resizable
+              objects</para>
+            </listitem>
+
+            <listitem>
+              <para><code>F_MOUSEVENTS</code> : decorator handles mouse
+              events</para>
+            </listitem>
+
+            <listitem>
+              <para><code>F_HASLABEL</code> : decorator draws labels for
+              objects (outside of the object)</para>
+            </listitem>
+
+            <listitem>
+              <para><code>F_HASSTATE</code> : decorator wants to save
+              information in the MGA project</para>
+            </listitem>
+
+            <listitem>
+              <para><code>F_HASPORTS</code> : decorator supports ports in
+              objects</para>
+            </listitem>
+
+            <listitem>
+              <para><code>F_ANIMATION</code> : decorator expects periodic
+              calls of its draw method</para>
+            </listitem>
+          </itemizedlist></para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT SetParam([in] BSTR name, [in] VARIANT
+                value)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>If there are some parameters specified for this decorator in the
+        meta model, GME will call this method for each parameter/value
+        pair.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT GetParam([in] BSTR name, [out] VARIANT
+                *value)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator needs to be able to give back all the
+        parameter/value pairs it got with the <code>SetParam(…)</code>
+        method.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT InitializeEx([in] IMgaProject* project,
+                [in] IMgaMetaPart *meta, [in] IMgaFCO *obj, [in]
+                IMgaCommonDecoratorEvents* eventSink, [in] ULONGLONG
+                parentWnd)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>This is your constructor like function. Read all the relevant
+        data from the project and cache them for later use (it is a better
+        approach than querying the MGA project in your drawing method all the
+        time). GME will instantiate a new decorator if its MGA object
+        changes.</para>
+
+        <para>The decorator can signal certain operations to GME with the
+        <code>eventSink</code> interface. For example decorator should notify
+        GME that a title editing operation is started, and also when the
+        operation is finished.</para>
+
+        <para><code>parentWnd</code> can be used when the decorator wants to
+        create some dialog window. In that case the parent window of the
+        created dialog should be this parent window. Currently this is used
+        when creating the in-place title editing window. If we would use just
+        the desktop window as a parent, the application would flicker during
+        the creation and destruction of the dialog.</para>
+
+        <para>You can use the <code>DecoratorUtils</code> helper facility
+        during the initialization of the decorator and also at later time. The
+        facility provides easier access to preference and attribute values of
+        an object. Besides that it contains font, pen, brush and bitmap cache.
+        There’s a <code>PreferenceMap</code> class used during initialization
+        to pass various settings, preference and attribute values easily among
+        the Decorator Part objects of the Decorator Part hierarchy.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT GetPreferredSize([out] long* sizex,
+                [out] long* sizey) </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>Your decorator can give GME a hint about the size of the object
+        to be drawn. You can compute this information based on the inner
+        structure of the object or based on a bitmap size, or even you can
+        read these values from the registry of the object. However, GME may
+        not take this information into account when it calls your
+        <code>SetLocation()</code> method. All the size and location
+        parameters are in logical units.</para>
+
+        <para>Note that GME really tries to preserve the size what you
+        specified, but because of grid snapping logics and other reasons the
+        final size of the decorator can differ with couple of pixels.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT GetPorts([out, retval] IMgaFCOs
+                **portFCOs) </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>If your decorator supports ports, it should give back a
+        collection of MGA objects that are drawn as ports inside the
+        decorator. GME uses this method along with successive calls on
+        <code>GetPortLocation()</code> to figure out where can it find port
+        objects.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT SetLocation([in] long sx, [in] long sy,
+                [in] long ex, [in] long ey) </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>You have to draw your object exactly to this position in this
+        size. There is no exemption to this. GME always calls this method
+        before <code>DrawEx()</code>.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT GetPortLocation([in] IMgaFCO *fco, [out]
+                long *sx, [out] long *sy, [out] long *ex, [out] long *ey)
+                </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>See description of <code>GetPorts()</code>. Position coordinates
+        are relative to the parent object.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT GetLabelLocation([out] long *sx, [out]
+                long *sy, [out] long *ex, [out] long *ey) </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>If you support label drawing, you have to specify the location
+        of the textbox of your label. This can reside outside of the object.
+        GME will call <code>SetLocation()</code> before this method.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT GetLocation([out] long *sx, [out] long
+                *sy, [out] long *ex, [out] long *ey) </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>Return the coordinates you got in
+        <code>SetLocation()</code>.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT SetActive([in] VARIANT_BOOL isActive)
+                </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>GME calls this method with <code>VARIANT_FALSE</code>, if your
+        object must be shown in gray color. (Eg.: GME was switched into “set”
+        mode.) By default the decorator should paint its object with the
+        active color.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT DrawEx([in] HDC hdc, [in] ULONGLONG
+                gdip) </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>You should draw the graphical representation of the decorator
+        using the supplied <code>Gdiplus::Graphics*</code> object. You have
+        all the required information when this method is called. Because a
+        Windows <code>Gdiplus::Graphics*</code> is supplied, the decorator has
+        to be an in-process server. <code>HDC</code> is provided only for
+        backward compatibility, it is highly recommended to use the
+        <code>Gdiplus::Graphics</code> interface. <code>DecoratorUtils</code>
+        facility makes drawing of bitmaps, shapes and text very easy.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT SaveState() </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>Because this is the only method your decorator is in read-write
+        transaction mode, it has to backup all the permanent data here.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT Destroy() </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>A destructor like function. Releasing all your COM pointers
+        (only if it is needed, so if the pointer is not an intelligent auto
+        pointer like <code>CComPtr&lt;Ixyz&gt;</code>) and allocated resources
+        is a good practice here.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT SetSelected([in] VARIANT_BOOL
+                isSelected) </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>GME calls this method when the selected state of the object is
+        changed. You might want to display slightly different appearance if it
+        is selected or not. Currently the default decorator uses this to allow
+        some operations, for example you can only start to resize a decorator
+        when it is selected. The decorator is the one who decides if a resize
+        operation should be started so it is needed to know if the object is
+        selected. (Note: GME draws the selection trackers.)</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT MouseMoved([in] ULONG nFlags, [in] LONG
+                pointx, [in] LONG pointy, [in] HDC transformHDC)
+                </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>GME forwards this message to the decorator when Windows’s
+        <code>WM_MOUSEMOVE</code> is received (more precisely: MFC’s
+        <code>OnMouseMove</code> is received) over the view window and the
+        cursor is close to or above the particular decorator’s area. The
+        decorator can decide if it wants to start some operation or change the
+        cursor (return <code>S_DECORATOR_EVENT_HANDLED</code>) or do not do
+        anything special (return
+        <code>S_DECORATOR_EVENT_NOT_HANDLED</code>).</para>
+
+        <para><code>nFlags</code>: Indicates whether various virtual keys are
+        down. This parameter can be any combination of the following values:
+        <itemizedlist>
+            <listitem>
+              <para><code>MK_CONTROL</code> : Set if the <code>CTRL</code> key
+              is down.</para>
+            </listitem>
+
+            <listitem>
+              <para><code>MK_LBUTTON</code> : Set if the left mouse button is
+              down.</para>
+            </listitem>
+
+            <listitem>
+              <para><code>MK_MBUTTON</code> : Set if the right mouse button is
+              down.</para>
+            </listitem>
+
+            <listitem>
+              <para><code>MK_RBUTTON</code> : Set if the <code>SHIFT</code>
+              key is down.</para>
+            </listitem>
+          </itemizedlist></para>
+
+        <para><code>pointx</code> and <code>pointy</code>: specifies the x-
+        and y-coordinate of the cursor. These coordinates are always relative
+        to the upper-left corner of the <emphasis>model</emphasis>. Because
+        the model window can be magnified and it can be scrolled the cursor
+        position to the model <emphasis>window</emphasis> (HWND) can be
+        different. If somebody wants to calculate the relative position to the
+        upper-left corner of the window, the <code>transformHDC</code> HDC is
+        supplied for that purpose. Using this HDC the coordinates can be
+        transformed.</para>
+
+        <para>If there are more decorators below or close to the cursor, GME
+        forwards the message until the event is not handled by one of them. If
+        none of the decorators treat the message, then GME’s event handler
+        code will take effect.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT MouseLeftButtonDown([in] ULONG nFlags,
+                [in] LONG pointx, [in] LONG pointy, [in] HDC transformHDC)
+                </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>GME forwards this message to the decorator when Windows’s
+        <code>WM_LBUTTONDOWN</code> is over the view window and the cursor is
+        close to or above the particular decorator’s area. The decorator can
+        decide if it wants to start some operation or change the cursor
+        (return <code>S_DECORATOR_EVENT_HANDLED</code>) or do not do anything
+        special (return <code>S_DECORATOR_EVENT_NOT_HANDLED</code>).</para>
+
+        <para>For the explanation of parameters and return values see the
+        <code>MouseMoved</code> interface function’s explanation.</para>
+
+        <para>The same things apply for the following interface functions:
+        <code>MouseLeftButtonUp</code>,
+        <code>MouseLeftButtonDoubleClick</code>,
+        <code>MouseRightButtonUp</code>,
+        <code>MouseRightButtonDoubleClick</code>,
+        <code>MouseMiddleButtonDown</code>, <code>MouseMiddleButtonUp</code>,
+        <code>MouseMiddleButtonDoubleClick</code>.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT MouseRightButtonDown([in] ULONGLONG
+                hCtxMenu, [in] ULONG nFlags, [in] LONG pointx, [in] LONG
+                pointy, [in] HDC transformHDC) </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>This message works almost the same way as the previous mouse
+        messages except one thing: right mouse button click is the regular
+        method to bring up context menus. When <code>WM_RBUTTONDOWN</code> is
+        received by GME, it constructs a specific context menu. If there are
+        decorators below or near the cursor, they get the opportunity to add
+        some additional menu items into the menu. If any of the decorators add
+        menu item (or complete submenu) to the supplied context menu handle,
+        GME creates a submenu titled “Decorator Edit”, and puts the
+        decorator’s context menu as a submenu in that.</para>
+
+        <para>You should also treat <code>MenuItemSelected</code> function and
+        call appropriate function on the
+        <code>IMgaCommonDecoratorEvents</code> interface.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT OperationCanceled() </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator receives this message from GME if some operation
+        which was initiated by the decorator (through the
+        <code>IMgaCommonDecoratorEvents</code> interface, like label editing,
+        window resizing or any other operation) was canceled because of some
+        reason. The decorator should admit the message and free any resources
+        associated to the initiated operation on the decorator’s side.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT DragEnter([out] ULONG* dropEffect, [in]
+                ULONGLONG pCOleDataObject, [in] ULONG keyState, [in] LONG
+                pointx, [in] LONG pointy, [in] HDC transformHDC)
+                </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>Decorator receives this if the system wants to determine whether
+        a drop can be accepted, and, if so, the effect of the drop. This
+        message corresponds to the <code>DragEnter</code> message of the
+        <code>IDropTarget</code> COM interface, see <acronym>MSDN</acronym>.
+        Other functions of this native Windows interface is
+        <code>DragLeave</code>, <code>DragOver</code> and <code>Drop</code>,
+        these messages work with each other. For a simple example you may take
+        a look at the <code>SampleDecorator</code> code in the
+        <code>NewDecoratorKit</code> in the <acronym>SDK</acronym>.</para>
+
+        <para><code>dropEffect</code>: On entry, pointer to the value of the
+        <code>pdwEffect</code> parameter of the <code>DoDragDrop</code>
+        function. On return, must contain one of the effect flags from the
+        <code>DROPEFFECT</code> enumeration, which indicates what the result
+        of the drop operation would be.</para>
+
+        <para><code>pCOleDataObject</code>: Pointer to the
+        <code>COleDataObject</code> data object. This data object contains the
+        data being transferred in the drag-and-drop operation. If the drop
+        occurs, this data object will be incorporated into the target.</para>
+
+        <para><code>keyState</code>: The current state of the keyboard
+        modifier keys on the keyboard. Possible values can be a combination of
+        any of the flags <code>MK_CONTROL</code>, <code>MK_SHIFT</code>,
+        <code>MK_ALT</code>, <code>MK_BUTTON</code>, <code>MK_LBUTTON</code>,
+        <code>MK_MBUTTON</code>, and <code>MK_RBUTTON</code>.</para>
+
+        <para><code>pointx</code> and <code>pointy</code>: specifies the x-
+        and y-coordinate of the cursor. These coordinates are always relative
+        to the upper-left corner of the <emphasis>model</emphasis>. Because
+        the model window can be magnified and it can be scrolled the cursor
+        position to the model <emphasis>window</emphasis> (HWND) can be
+        different. If somebody wants to calculate the relative position to the
+        upper-left corner of the window, the <code>transformHDC</code> HDC is
+        supplied for that purpose. Using this <code>HDC</code> the coordinates
+        can be transformed.</para>
+
+        <para>If there are more decorators below or close to the cursor, GME
+        forwards the message until the event is not handled by one of them. If
+        none of the decorators treat the message, then GME’s event handler
+        code will take effect.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT DragOver([out] ULONG* dropEffect, [in]
+                ULONGLONG pCOleDataObject, [in] ULONG keyState, [in] LONG
+                pointx, [in] LONG pointy, [in] HDC transformHDC)
+                </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>GME sends calls that function on the decorator in order to be
+        able to provide target feedback to the user and communicates the
+        drop's effect to the <code>DoDragDrop</code> function so it can
+        communicate the effect of the drop back to the source.</para>
+
+        <para>For the explanation of the parameters see <code>DragEnter</code>
+        function.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT Drop([in] ULONGLONG pCOleDataObject,
+                [in] ULONG dropEffect, [in] LONG pointx, [in] LONG pointy,
+                [in] HDC transformHDC) </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>GME sends calls that function to instruct the decorator to
+        incorporates the source data into the target place, remove the target
+        feedback, and release the data object.</para>
+
+        <para>For the explanation of the parameters see <code>DragEnter</code>
+        function.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code> HRESULT DropFile([in] ULONGLONG hDropInfo, [in]
+                LONG pointx, [in] LONG pointy, [in] HDC transformHDC)
+                </code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para><code>DropFile</code> is a completely different way to handle
+        possible drop operations, than the previously seen three
+        <code>IDropTarget</code> mocking method. While the previous three
+        method usually used during drag-drop operations initiated inside the
+        GME environment, DropFile only capable of dealing with file drop
+        operations.</para>
+
+        <para><code>hDropInfo</code>: Handle to a native Win32 internal drop
+        structure. Use the <code>DragQueryFile</code> Win32 API function to
+        query and treat this handle.</para>
+
+        <para>For a simple example you may take a look at the
+        <code>SampleDecorator</code> code in the <code>NewDecoratorKit</code>
+        in the SDK.</para>
+
+        <para>For the explanation of the coordinate and coordinate
+        transformation parameters see <code>DragEnter</code> function.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>The <code>IMgaElementDecoratorEvents</code> interface</title>
+
+      <para>On the <code>IMgaElementDecorator</code> interface GME can
+      communicate towards the decorators. Since the new decorators supposed to
+      be able to initiate label editing, resize and other operations, an
+      interface is needed through which the decoartopr can communicate back to
+      GME. This is the <code>IMgaElementDecoratorEvents</code>
+      interface.</para>
+
+      <para>One of the main reasons for that is because of a thing mentioned
+      earlier: GME always calls <code>IMgaElementDecorator</code> methods in a
+      read-only MGA transaction. Because GME refreshes the view after every
+      operation, a decorator cannot open a transaction because the refresh
+      includes the destruction of the decorator itself and a creation of a new
+      decorator. For that reason GME should open and commit the transaction
+      associated to the needed operation somehow. This is done with the help
+      of <code>IMgaElementDecoratorEvents</code> interface.</para>
+
+      <para>Usually events which signal some kind of operation start can open
+      a transaction on the GME’s side. Often for performance reasons the
+      transaction is only opened in the operation finished function and the
+      transaction is committed during the final call
+      (<code>LabelEditingFinished</code>,
+      <code>WindowResizeFinished</code>).</para>
+
+      <para>The interface also contains other useful functions to indicate
+      cursor change on the decorator side, cancellation of an operation, or
+      needed UI refresh.</para>
+
+      <para>The following table illustrates a label editing process:</para>
+
+      <table>
+        <title>Label editing process</title>
+
+        <tgroup cols="3">
+          <colspec colnum="1" colwidth="3*" />
+
+          <colspec colnum="2" colwidth="2*" />
+
+          <colspec colnum="3" colwidth="40*" />
+
+          <thead>
+            <row>
+              <entry>GME</entry>
+
+              <entry>Dir</entry>
+
+              <entry>Decorator</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>MouseMoved(nFlags, pointx, pointy,
+              transformHDC)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>SetSelected(VARIANT_TRUE)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>CursorChanged(LONG newCursorID)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>MouseLeftButtonDown(nFlags, pointx, pointy,
+              transformHDC)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>LabelEditingStarted(nFlags, left, top, right,
+              bottom)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>LabelChanged(BSTR newLabel)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>LabelEditingFinished(nFlags, left, top, right,
+              bottom)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>CursorRestored()</code></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>The following table illustrates a window resize process:</para>
+
+      <table>
+        <title>Window resize process</title>
+
+        <tgroup cols="3">
+          <colspec colnum="1" colwidth="3*" />
+
+          <colspec colnum="2" colwidth="2*" />
+
+          <colspec colnum="3" colwidth="40*" />
+
+          <thead>
+            <row>
+              <entry>GME</entry>
+
+              <entry>Dir</entry>
+
+              <entry>Decorator</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>MouseMoved(nFlags, pointx, pointy,
+              transformHDC)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>SetSelected(VARIANT_TRUE)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>CursorChanged(LONG newCursorID)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>MouseLeftButtonDown(nFlags, pointx, pointy,
+              transformHDC)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>WindowResizingStarted(nFlags, left, top, right,
+              bottom)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>MouseMoved(nFlags, pointx, pointy,
+              transformHDC)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>WindowResizing(nFlags, left, top, right,
+              bottom)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>=&gt;</code></entry>
+
+              <entry><code>MouseLeftButtonUp(nFlags, pointx, pointy,
+              transformHDC)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>WindowResized(nFlags, deltax,
+              deltay)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>WindowResizingFinished(nFlags, left, top, right,
+              bottom)</code></entry>
+            </row>
+
+            <row>
+              <entry></entry>
+
+              <entry><code>&lt;=</code></entry>
+
+              <entry><code>CursorRestored()</code></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <section>
+        <title><code>IMgaElementDecoratorEvents</code> Functions</title>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT Refresh()</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>This function signals to GME that a UI refresh is needed.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT OperationCanceled()</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator signals towards GME that an initiated operation
+        was canceled because of some reason. The reason can be anything but it
+        emerged on the decorator’s side, and a cancel decision was made. The
+        operation was started by the decorator also in the past.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT CursorChanged([in] LONG
+                newCursorID)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator signals towards GME that the cursor is changed.
+        The <code>newCursorID</code> parameter tells the new form of the
+        cursor.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT CursorRestored()</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator signals towards GME that the previously changed
+        and saved cursor is restored to its original state.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelEditingStarted([in] LONG left, [in]
+                LONG top, [in] LONG right, [in] LONG bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that a label
+        editing operation is started. The coordinates specify the operation’s
+        (the label) area.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelEditingFinished([in] LONG left, [in]
+                LONG top, [in] LONG right, [in] LONG bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that a label
+        editing operation is finished. The coordinates specify the operation’s
+        (the label) area. This should be the last message, because this will
+        issue the transaction commit command. The <code>LabelChanged</code>
+        message must precede it!</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelChanged([in] BSTR
+                newLabel)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that the new value
+        of the label is finalized and the transaction can be opened. The
+        <code>newLabel</code> is passed to GME, but the decorator is
+        responsible for issuing the actual label change command, because it
+        can be very different: changing a preference or an attribute. The
+        decorator must call <code>LabelChanged</code> function before
+        modifying the mga object. The decorator also must call the
+        <code>LabelEditingFinished</code> function after that, in order to
+        have the transaction committed by GME.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelMovingStarted([in] LONG nFlags, [in]
+                LONG left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that a label
+        moving operation is started. The coordinates specify the operation’s
+        (the label) area. Note that currently none of the GME’s bundled
+        decorators (default (box) decorator, UML decorator, meta decorator)
+        use this feature.</para>
+
+        <para><code>nFlag</code> came from a GME message (see
+        <code>MouseLeftButtonDown</code> above for example), and can be
+        forwarded back to GME for completeness, but currently GME doesn’t use
+        it.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelMoving([in] LONG nFlags, [in] LONG
+                left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that the label
+        position is changed, and we are still in the label moving operation.
+        The coordinates specify the actual location of the label.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelMovingFinished([in] LONG nFlags,
+                [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that a label
+        moving operation is finished. The coordinates specify the actual
+        location of the label. This should be the last message, because this
+        will issue the transaction commit command. The <code>LabelMoved</code>
+        message must precede it!</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelMoved([in] LONG nFlags, [in] LONG x,
+                [in] LONG y)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that the new
+        location of the label is finalized and the transaction can be opened.
+        The x and y parameters supposed to be the delta values compared to the
+        previous location of the label. The decorator must call
+        <code>LabelMoved</code> function before modifying the mga object. The
+        decorator also must call the <code>LabelMovingFinished</code> function
+        after that, in order to have the transaction committed by GME.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelResizingStarted([in] LONG nFlags,
+                [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that a label
+        resizing operation is started. The coordinates specify the operation’s
+        (the label) area. Note that currently none of the GME’s bundled
+        decorators (default (box) decorator, UML decorator, meta decorator)
+        use this feature.</para>
+
+        <para><code>nFlag</code> came from a GME message (see
+        <code>MouseLeftButtonDown</code> above for example), and can be
+        forwarded back to GME for completeness, but currently GME doesn’t use
+        it.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelResizing([in] LONG nFlags, [in] LONG
+                left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that the label
+        size is changed, and we are still in the label resizing operation. The
+        coordinates specify the actual location of the label.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelResizingFinished([in] LONG nFlags,
+                [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that a label
+        resizing operation is finished. The coordinates specify the actual
+        location of the label. This should be the last message, because this
+        will issue the transaction commit command. The
+        <code>LabelResized</code> message must precede it!</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT LabelResized([in] LONG nFlags, [in] LONG
+                x, [in] LONG y)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that the new
+        location of the label is finalized and the transaction can be opened.
+        The x and y parameters supposed to be the delta values compared to the
+        previous location of the label. The decorator must call
+        <code>LabelResized</code> function before modifying the mga object.
+        The decorator also must call the <code>LabelResizingFinished</code>
+        function after that, in order to have the transaction committed by
+        GME.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT GeneralOperationStarted([in] ULONGLONG
+                operationData)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that some editing
+        operation is started. GME will open a transaction as a result of this
+        message. If the decorator handles some user defined data to the GME in
+        the parameter, it will get it back later when the
+        <code>GeneralOperationFinished</code> is called. Decorator can give a
+        pointer to a memory object or just <code>NULL</code> as a data.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT GeneralOperationFinished([out] ULONGLONG*
+                operationData)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that the
+        previously started operation is finished. GME will commit the opened
+        transaction as a result of this message. If the decorator wants to
+        cancel the operation, it can call the <code>OperationCanceled</code>
+        function.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT WindowMovingStarted([in] LONG nFlags,
+                [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that a window
+        moving operation is started. The coordinates specify the operation’s
+        (the window) area. Note that currently none of the GME’s bundled
+        decorators (default (box) decorator, UML decorator, meta decorator)
+        use this feature.</para>
+
+        <para><code>nFlag</code> came from a GME message (see
+        <code>MouseLeftButtonDown</code> above for example), and can be
+        forwarded back to GME for completeness, but currently GME doesn’t use
+        it.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT WindowMoving([in] LONG nFlags, [in] LONG
+                left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that the window
+        position is changed, and we are still in the window moving operation.
+        The coordinates specify the actual location of the window.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT WindowMovingFinished([in] LONG nFlags,
+                [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that a window
+        moving operation is finished. The coordinates specify the actual
+        location of the window. This should be the last message, because this
+        will issue the transaction commit command. The
+        <code>WindowMoved</code> message must precede it!</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT WindowMoved([in] LONG nFlags, [in] LONG
+                x, [in] LONG y)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that the new
+        location of the window is finalized and the transaction can be opened.
+        The x and y parameters supposed to be the delta values compared to the
+        previous location of the window. The decorator must call
+        <code>WindowMoved</code> function before modifying the mga object. The
+        decorator also must call the <code>WindowMovingFinished</code>
+        function after that, in order to have the transaction committed by
+        GME.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT WindowResizingStarted([in] LONG nFlags,
+                [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that a window
+        resizing operation is started. The coordinates specify the operation’s
+        (the window) area. Note that currently none of the GME’s bundled
+        decorators (default (box) decorator, UML decorator, meta decorator)
+        use this feature.</para>
+
+        <para><code>nFlag</code> came from a GME message (see
+        <code>MouseLeftButtonDown</code> above for example), and can be
+        forwarded back to GME for completeness, but currently GME doesn’t use
+        it.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT WindowResizing([in] LONG nFlags, [in]
+                LONG left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that the window
+        size is changed, and we are still in the window resizing operation.
+        The coordinates specify the actual location of the window.</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT WindowResizingFinished([in] LONG nFlags,
+                [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG
+                bottom)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that a window
+        resizing operation is finished. The coordinates specify the actual
+        location of the window. This should be the last message, because this
+        will issue the transaction commit command. The
+        <code>WindowResized</code> message must precede it!</para>
+
+        <table>
+          <title></title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry><code>HRESULT WindowResized([in] LONG nFlags, [in] LONG
+                x, [in] LONG y)</code></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>The decorator tells to GME with this function that the new
+        location of the window is finalized and the transaction can be opened.
+        The x and y parameters supposed to be the delta values compared to the
+        previous location of the window. The decorator must call
+        <code>WindowResized</code> function before modifying the mga object.
+        The decorator also must call the <code>WindowResizingFinished</code>
+        function after that, in order to have the transaction committed by
+        GME.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Using the Decorator skeleton example codes</title>
+
+      <para>The <code>NewDecoratorKit</code> sample takes advantage of the
+      class hierarchy and utilities provided by the new
+      <code>DecoratorKit</code> library. The source code intended to be used
+      with Microsoft Visual Studio 2008. Because of the new DecoratorKit the
+      sample can inherit resizability properties and in-place label editing
+      features from the infrastructure. It also demonstrates context menu
+      usage and drag-drop handling.</para>
+
+      <para>The <code>DecoratorKit</code> source code provides a really
+      stripped down example implementation containing only the flat
+      implementation of the interface and not leveraging the new
+      <code>DecoratorLib</code>. The example still demonstrates very simple
+      drawing, context menu extension and file drop handling. This sample code
+      intended to be used with Microsoft Visual Studio .NET 2003.</para>
+
+      <para>Modifying the <code>DecoratorConfig.h</code> file would be your
+      first step when using the skeleton codes.</para>
+
+      <para>The following modifications have to be made: <itemizedlist>
+          <listitem>
+            <para>Give a new value to <code>TYPELIB_UUID</code> (a new ID can
+            be generated by the guidgen tool, found in Visual Studio)</para>
+          </listitem>
+
+          <listitem>
+            <para>Give a new value to <code>TYPELIB_NAME</code> (at least
+            replace the string between the parenthesis)</para>
+          </listitem>
+
+          <listitem>
+            <para>Give a new value to <code>COCLASS_UUID</code> (a new ID can
+            be generated by the guidgen tool, found in Visual Studio)</para>
+          </listitem>
+
+          <listitem>
+            <para>Give a new value to <code>COCLASS_NAME</code> (at least
+            replace the string between the parenthesis)</para>
+          </listitem>
+
+          <listitem>
+            <para>Give a new value to <code>COCLASS_PROGID</code> (at least
+            replace the last tag of the string)</para>
+          </listitem>
+
+          <listitem>
+            <para>Give a new value to <code>DECORATOR_NAME</code></para>
+          </listitem>
+
+          <listitem>
+            <para>Set <code>GME_INTERFACES_BASE</code> to point to the
+            interfaces directory of your GME source code (or GME installation,
+            if you don't have source code)</para>
+          </listitem>
+        </itemizedlist></para>
+
+      <para>You have to make these modifications only once. When you are
+      upgrading your decorator SDK, create a backup of your
+      <code>DecoratorConfig.h</code>, and restore it after the upgrade.</para>
+    </section>
+
+    <section>
+      <title>Using the <code>DecoratorLib</code> library</title>
+
+      <para>The new box decorator (GME’s default decorator), annotator
+      decorator, meta decorator and UML decorator all use the
+      <code>DecoratorLib</code> helper library. The purpose of this library is
+      very versatile: <itemizedlist>
+          <listitem>
+            <para>It abstracts the COM interface and provides a higher level
+            C++ interface</para>
+          </listitem>
+
+          <listitem>
+            <para>It makes COM object handling easier</para>
+          </listitem>
+
+          <listitem>
+            <para>It provides several building block classes called “decorator
+            parts”</para>
+          </listitem>
+
+          <listitem>
+            <para>With the help of the decorator parts you can get many handy
+            features for free: resizability, in-place text editing, vectorial
+            shapes, shape shadows and gradial fills</para>
+          </listitem>
+
+          <listitem>
+            <para>With the use of the <code>DecoratorUtil</code> (it is part
+            of the <code>DecoratorLib</code>) it is easier to access
+            preferences and attributes of the mga objects</para>
+          </listitem>
+
+          <listitem>
+            <para>DecoratorUtil also provides cached pen, brush and font
+            object to make the drawing operations resource aware</para>
+          </listitem>
+
+          <listitem>
+            <para><code>DecoratorUtil</code> also make text drawing and
+            measurement and other graphical operations easier.</para>
+          </listitem>
+        </itemizedlist></para>
+
+      <para>Using the <code>DecoratorLib</code> library requires from you the
+      following in you Visual Studio project: <itemizedlist>
+          <listitem>
+            <para>Using Visual Studio 2008 is the supported IDE</para>
+          </listitem>
+
+          <listitem>
+            <para>Link <code>DecoratorLib.lib</code> for Release or
+            <code>DecoratorLibD.lib</code> for Debug version into you
+            project</para>
+          </listitem>
+
+          <listitem>
+            <para>Also link <code>gdiplus.lib</code> into your project</para>
+          </listitem>
+        </itemizedlist></para>
+
+      <para>It might be advisable to start your project based on the
+      NewDecoratorKit sample decorator, or one of the existing decorators,
+      which are part of the GME source code: MgaDecorators, UML decorator or
+      Meta decorator.</para>
+
+      <para>The new class library hierarchy is based on the
+      <code>PartInterface</code> C++ interface which is higher level and much
+      nicer than the plain COM interface level. Based on the C++ there’s a
+      complete class hierarchy, where the root class is the
+      <code>PartBase</code>. You can use <code>CompositePart</code> and other
+      Part as building blocks to relatively easily add rich functionality to
+      your decorator. Some typical building blocks: <itemizedlist>
+          <listitem>
+            <para><code>TypeableBitmapPart</code>: it’s a building block which
+            can display bitmaps. It can also display “type”, “subtype” and
+            “reference” tiny marker icons to clearly indicate these
+            circumstances visually.</para>
+          </listitem>
+
+          <listitem>
+            <para><code>TypeableLabelPart</code>: Besides it is capable of
+            displaying the label of an object and allows in-place editing of
+            the text, it is able to display type information about the
+            object.</para>
+          </listitem>
+
+          <listitem>
+            <para><code>ObjectAndTextPart</code>: <code>CompositePart</code>
+            is a general way to put any kind of parts together, but usually a
+            decorator consists of some graphics (bitmap, vectorial) and a
+            label. <code>ObjectAndTextPart</code> makes this dual
+            configuration easier to implement.</para>
+          </listitem>
+
+          <listitem>
+            <para><code>VectorPart</code>: The vector part uses an own scheme
+            to describe vectorial graphics, but there are several ready-to-use
+            vectorial shapes, like: <code>TriangleVectorPart</code>,
+            <code>EllipseVectorPart</code> or
+            <code>DiamondVectorPart</code>.</para>
+          </listitem>
+        </itemizedlist></para>
+
+      <para>The main task is to decide which decorator parts represent the
+      functionality needed by the decorator and instantiate them at the proper
+      time. In the <code>NewDecoratorKit</code> example this place is the
+      <code>SampleCompositePart::InitializeEx</code> function, where currently
+      we add a vector part and a label part to the encapsulating composite
+      part. The UML and the Meta decorator source contains a switch here, the
+      branching decision is made according to the name of the meta object. For
+      example in case of constrain meta elements the needed constraint
+      vectorial part are used as the graphical part of the decorator.</para>
+
+      <para>You can use the <code>PreferenceMap</code> container to pass
+      various settings of the decorators between the parts during the
+      initialization phase.</para>
+
+      <para>After building up your decorator you probably want to customize it
+      with extra functionalities. You should use the
+      <code>DecoratorUtils</code> helper singleton class wherever it’s
+      possible to save system resources and you can implement certain tasks
+      easier with it: <itemizedlist>
+          <listitem>
+            <para>You can easier access preferences and attributes of the mga
+            objects, see <code>getAttribute</code> and
+            <code>getPreference</code> functions.</para>
+          </listitem>
+
+          <listitem>
+            <para>You can get cached pen, brush and font object to make the
+            drawing operations resource aware, see <code>GetFont</code>,
+            <code>GetPen</code>, <code>GetBrush</code> functions.</para>
+          </listitem>
+
+          <listitem>
+            <para>You can make text drawing and measurement and other
+            graphical operations easier, see: <code>MeasureText</code>,
+            <code>DrawString</code>, <code>DrawRect</code>,
+            <code>DrawBox</code>, <code>getGraphics</code>,
+            <code>getBitmap</code> functions.</para>
+          </listitem>
+        </itemizedlist></para>
+    </section>
+
+    <section>
+      <title>Assigning decorators to objects</title>
+
+      <para>You can assign decorators to objects in your meta model or even
+      later in your model(s). In the MetaGME environment there is a Decorator
+      attribute for each non-connection FCO where you can specify a COM ProgID
+      along with optional parameter/value pairs for a class. The format of
+      this string is as follows:</para>
+
+      <table>
+        <title></title>
+
+        <tgroup cols="1">
+          <tbody>
+            <row>
+              <entry><code>ProgID param1=value1, param2=value2,
+              …</code></entry>
+            </row>
+
+            <row>
+              <entry><code>e.g.:</code></entry>
+            </row>
+
+            <row>
+              <entry><code>MGA.Decorator.MetaDecorator showattributes=false,
+              showabstract=true</code></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>In your models all the non-connection FCOs have a preference
+      setting called Decorator. The format of this string is identical to the
+      one in the meta model.</para>
     </section>
   </section>
 
