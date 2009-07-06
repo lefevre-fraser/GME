@@ -8731,7 +8731,7 @@ BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation(
     <section>
       <title>How to create a new component project</title>
 
-      <para>The first time you wish to create a a component project, you must
+      <para>The first time you wish to create a component project, you must
       run <filename>C:\Program Files\GME\SDK\BON\Wizard\setup90.js</filename>.
       This registers the GME project types in Visual Studio.</para>
 
