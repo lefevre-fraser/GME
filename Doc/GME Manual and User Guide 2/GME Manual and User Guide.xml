@@ -328,14 +328,14 @@
 
           <listitem>
             <para>External text editor support for multiline attributes
-            (configurable through the GME <guimenu>File</guimenu>
-            menu/<guimenuitem>Settings</guimenuitem> dialog).</para>
+            (configurable through the GME <guimenu>Tools</guimenu>
+            menu/<guimenuitem>Options</guimenuitem> dialog).</para>
           </listitem>
 
           <listitem>
             <para>Periodic autosave feature added (configurable through the
-            GME <guimenu>File</guimenu>
-            menu/<guimenuitem>Settings</guimenuitem> dialog).</para>
+            GME <guimenu>Tools</guimenu>
+            menu/<guimenuitem>Options</guimenuitem> dialog).</para>
           </listitem>
 
           <listitem>
@@ -381,12 +381,10 @@
 
           <listitem>
             <para>New Table Editor plug-in is introduced: to use it, open
-            <guimenu>File</guimenu>/<guimenuitem>Register
+            <guimenu>Tools</guimenu> | <guimenuitem>Register
             Components</guimenuitem>, select the <guilabel>GME Table
             Editor</guilabel>, and press <guilabel>Toggle</guilabel>.
-            Afterwards, it can be launched from the component toolbar or the
-            <guimenu>File</guimenu> menu/<guimenuitem>Run
-            Plugins</guimenuitem> command.</para>
+            Afterwards, it can be launched from the component toolbar.</para>
           </listitem>
 
           <listitem>
@@ -1553,11 +1551,12 @@
               <term>File</term>
 
               <listitem>
-                <para>The File menu is context-sensitive, with choices
-                depending on whether or not a paradigm definition file and/or
-                project has been loaded and whether there is at least one
-                model window open. If no model window is open, the following
-                items show: <itemizedlist>
+                <para>The <guimenu>File</guimenu> menu is context-sensitive,
+                with choices depending on whether or not a paradigm definition
+                file and/or project has been loaded and whether there is at
+                least one <guilabel>Model Editor</guilabel> window open. If no
+                <guilabel>Model Editor</guilabel> window is open, the
+                following items show: <itemizedlist>
                     <listitem>
                       <para><guimenuitem>New Project</guimenuitem>: Creates a
                       new, empty project and allows registering a new modeling
@@ -1613,7 +1612,7 @@
                       change. If the user has a project open in one GME, while
                       she modifies the metamodels in another GME and
                       regenerates the paradigm, this command allows updating
-                      the models by automatically exporting toXML and
+                      the models by automatically exporting to XML and
                       importing from it. Note that any changes that invalidate
                       the existing models, for example deleting a model kind
                       that has instances in the project, will cause this
@@ -1623,34 +1622,55 @@
                     </listitem>
 
                     <listitem>
+                      <para><guimenuitem>Exit</guimenuitem>: Closes
+                      GME.</para>
+                    </listitem>
+                  </itemizedlist></para>
+
+                <para>If a <guilabel>Model Editor</guilabel> window is open,
+                the following options are available:<itemizedlist>
+                    <listitem>
+                      <para><guimenuitem>Close Model</guimenuitem>: Closes the
+                      current <guilabel>Model Editor</guilabel> window.</para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guimenuitem>Print</guimenuitem>: Allows the user
+                      to print the contents of the currently active
+                      <guilabel>Model Editor</guilabel> window. It scales the
+                      contents to fit on one page.</para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guimenuitem>Print Setup…</guimenuitem>: Standard
+                      Windows functionality.</para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guimenuitem>Print to
+                      Metafile</guimenuitem></para>
+                    </listitem>
+                  </itemizedlist></para>
+
+                <para></para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Tools</term>
+
+              <listitem>
+                <para>The <guilabel>Tools</guilabel> menu is also
+                context-sensitive. If no project is open, the following items
+                are available:<itemizedlist>
+                    <listitem>
                       <para><guimenuitem>Register Paradigms</guimenuitem>:
                       Registers a new modeling paradigm (discussed in detail
                       later).</para>
                     </listitem>
 
                     <listitem>
-                      <para><guimenuitem>Register Component</guimenuitem>:
-                      Registers an interpreter DLL with the current paradigm.
-                      A dialog box appears that makes it possible to register
-                      as many interpreters as the user wishes.</para>
-                    </listitem>
-
-                    <listitem>
-                      <para><guimenuitem>Check All</guimenuitem>: Invokes the
-                      Constraint Manager to check all constraints for the
-                      entire project.</para>
-                    </listitem>
-
-                    <listitem>
-                      <para><guimenuitem>Display Constraints</guimenuitem>:
-                      All the constraints defined in the meta-model are
-                      displayed. These constraints can be disabled globally,
-                      or on object basis in this dialog. Options of
-                      constraints’ evaluation are also available.</para>
-                    </listitem>
-
-                    <listitem>
-                      <para><guimenuitem>Settings</guimenuitem>: Sets
+                      <para><guimenuitem>Options</guimenuitem>: Sets
                       GME-specific parameters. Currently, the only supported
                       options are to set the path where the icon files are
                       located on the current machine and whether GME should
@@ -1666,15 +1686,57 @@
                     </listitem>
 
                     <listitem>
-                      <para><guimenuitem>Exit</guimenuitem>: Closes
-                      GME.</para>
+                      <para><guisubmenu>Multi-User</guisubmenu> |
+                      <guimenuitem>Active Users...</guimenuitem></para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guisubmenu>Multi-User</guisubmenu> |
+                      <guimenuitem>Subversion...</guimenuitem></para>
                     </listitem>
                   </itemizedlist></para>
 
-                <para>Once a model window is open, the following additional
-                items become available: <itemizedlist>
+                <para>After a project has been loaded or created, the
+                following menu items are active:<itemizedlist>
                     <listitem>
-                      <para><guimenuitem>Run Interpreter</guimenuitem>: As
+                      <para><guisubmenu>Constraints</guisubmenu> |
+                      <guimenuitem>Check All</guimenuitem>: Invokes the
+                      Constraint Manager to check all constraints for the
+                      entire project.</para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guisubmenu>Constraints</guisubmenu> |
+                      <guimenuitem>Display Constraints</guimenuitem>: All the
+                      constraints defined in the meta-model are displayed.
+                      These constraints can be disabled globally, or on object
+                      basis in this dialog. Options of constraints’ evaluation
+                      are also available.</para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guimenuitem>Register Components</guimenuitem>:
+                      Registers an interpreter DLL with the current paradigm.
+                      A dialog box appears that makes it possible to register
+                      as many interpreters as the user wishes.</para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guisubmenu>Multi-User</guisubmenu> |
+                      <guimenuitem>Refresh SourceControl
+                      Status...</guimenuitem></para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guisubmenu>Multi-User</guisubmenu> |
+                      <guimenuitem>Show Owner...</guimenuitem></para>
+                    </listitem>
+                  </itemizedlist></para>
+
+                <para>Once a <guilabel>Model Editor</guilabel> window is open,
+                the following additional items become available:<itemizedlist>
+                    <listitem>
+                      <para><guisubmenu>Run Interpreter</guisubmenu>: As
                       mentioned earlier, model interpreters are used in the
                       GME to extract semantic information from the models.
                       This menu choice invokes the model interpreter
@@ -1687,26 +1749,16 @@
                     </listitem>
 
                     <listitem>
-                      <para><guimenuitem>Run Plug-Ins</guimenuitem>: Plug-ins
+                      <para><guisubmenu>Run Plug-Ins</guisubmenu>: Plug-ins
                       are paradigm independent interpreters. This command
                       makes it possible to run the desired one.</para>
                     </listitem>
 
                     <listitem>
-                      <para><guimenuitem>Check</guimenuitem>: Invokes the
-                      Constraint Manager to check the constraints for the
-                      current model.</para>
-                    </listitem>
-
-                    <listitem>
-                      <para><guimenuitem>Print</guimenuitem>: Allows the user
-                      to print the contents of the currently active window. It
-                      scales the contents to fit on one page.</para>
-                    </listitem>
-
-                    <listitem>
-                      <para><guimenuitem>Print Setup…</guimenuitem>: Standard
-                      Windows functionality.</para>
+                      <para><guisubmenu>Constraints</guisubmenu> |
+                      <guimenuitem>Check</guimenuitem>: Invokes the Constraint
+                      Manager to check the constraints for the current
+                      model.</para>
                     </listitem>
                   </itemizedlist></para>
               </listitem>
@@ -1738,6 +1790,12 @@
                       This command empties the undo queue and clears the locks
                       on object that are otherwise not open in the current GME
                       instance.</para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guimenuitem>Find</guimenuitem>: Find model
+                      elements. This menu item is discussed in detail in <xref
+                      linkend="sect-searching" />.</para>
                     </listitem>
 
                     <listitem>
@@ -1783,11 +1841,16 @@
                     </listitem>
 
                     <listitem>
-                      <para><guimenuitem>Paste Special</guimenuitem>: A
-                      submenu makes it possible to paste the current clipboard
-                      data as a reference, subtype or instance. Paste Special
-                      only works if the data source is the current project and
-                      the current GME instance.</para>
+                      <para><guisubmenu>Paste Special</guisubmenu>: A submenu
+                      makes it possible to paste the current clipboard data as
+                      a reference, subtype or instance. Paste Special only
+                      works if the data source is the current project and the
+                      current GME instance.</para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guimenuitem>Delete</guimenuitem>: Removes the
+                      selected model element(s)</para>
                     </listitem>
 
                     <listitem>
@@ -1796,9 +1859,19 @@
                     </listitem>
 
                     <listitem>
+                      <para><guimenuitem>Clear Console</guimenuitem>: Empties
+                      the GME console</para>
+                    </listitem>
+
+                    <listitem>
                       <para><guimenuitem>Preferences</guimenuitem>: Shows the
                       preferences available for the current model (see
                       detailed discussion in a separate section below).</para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guimenuitem>Annotations</guimenuitem>: Shows the
+                      <guilabel>Annotations</guilabel> dialog.</para>
                     </listitem>
 
                     <listitem>
@@ -1829,6 +1902,11 @@
                       same real estate. Priority can be given to the selected
                       objects and within the selected objects the ones that
                       are visible in the source aspect.</para>
+                    </listitem>
+
+                    <listitem>
+                      <para><guimenuitem>Reset Stick
+                      Settings</guimenuitem></para>
                     </listitem>
                   </itemizedlist></para>
               </listitem>
@@ -2031,7 +2109,7 @@
       <title>Managing Paradigms</title>
 
       <para>The <guimenuitem>Register Paradigm</guimenuitem> item in the
-      <guimenu>File</guimenu> menu displays a dialog box where the user can
+      <guimenu>Tools</guimenu> menu displays a dialog box where the user can
       add or modify paradigms. This dialog box is also displayed as the first
       step of the <guimenuitem>New Project</guimenuitem> command (see
       below).</para>
@@ -2360,7 +2438,7 @@
       machine or the URL refers to a local file.</para>
     </section>
 
-    <section>
+    <section id="sect-searching">
       <title>Searching Objects</title>
 
       <para>The <guilabel>Search</guilabel> facility allows you to click or
@@ -2542,9 +2620,9 @@
 
       <para>In the bottom part of the console window the user can type in her
       instructions/programs. The user-preferred scripting language can be set
-      in the <guimenu>File</guimenu>|<guimenuitem>Settings</guimenuitem> menu.
-      The default scripting engine is JScript, however in this document Python
-      script samples will be used (Python.AXScript.2).</para>
+      in the <guimenu>Tools</guimenu> | <guimenuitem>Settings</guimenuitem>
+      menu. The default scripting engine is JScript, however in this document
+      Python script samples will be used (Python.AXScript.2).</para>
 
       <mediaobject>
         <imageobject>
@@ -7680,8 +7758,8 @@ void CCompoundBuilder::Scan(CString foldName)
               wrappers which handles the objects’ references instead of the
               user and serves pointer-like interface. When a user uses BON2,
               she always has to deal with these classes. Correspondent files
-              are MON.h, BON.h. Example: <code>BON::FCO</code> wrapper
-              class.</para>
+              are <filename>MON.h</filename>, <filename>BON.h</filename>.
+              Example: <code>BON::FCO</code> wrapper class.</para>
             </listitem>
           </itemizedlist></para>
       </section>
@@ -7741,8 +7819,9 @@ if ( ! parent ) AfxMessageBox( “RootFolder never has parent” ); </programlis
         to check whether two objects are equal or not. The
         <code>operator[&lt;]</code> makes possible that the objects may be
         included into any kind of STL container including sets and maps also.
-        These operators can be used for all BON objects (e.g. BON::Project is
-        comparable with BON::ReferencePort).</para>
+        These operators can be used for all BON objects (e.g.
+        <code>BON::Project</code> is comparable with
+        <code>BON::ReferencePort</code>).</para>
 
         <para>The last important feature of wrappers is the casting mechanism.
         This is implemented via the copy constructors and assignment
@@ -10125,7 +10204,7 @@ public:
         <section>
           <title>Constraint Browser</title>
 
-          <para>Exceuting the <guimenu>File</guimenu> | <guimenuitem>Display
+          <para>Exceuting the <guimenu>Tools</guimenu> | <guimenuitem>Display
           Constraints</guimenuitem> command, the user can browse all
           constraints available in the model in the page
           <guilabel>Constraints</guilabel> of the <guilabel>Constraint
