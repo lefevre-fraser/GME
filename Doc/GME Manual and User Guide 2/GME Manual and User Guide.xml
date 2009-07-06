@@ -138,7 +138,7 @@
           </listitem>
 
           <listitem>
-            <para>BON1 improvements: folder can contain other fcos than
+            <para>BON1 improvements: folder can contain other FCOs than
             models</para>
           </listitem>
 
@@ -172,7 +172,7 @@
           </listitem>
 
           <listitem>
-            <para><emphasis>View in parent</emphasis> command (shortcut: Shift
+            <para><guilabel>View in parent</guilabel> command (shortcut: Shift
             + Enter, or Shift + DblClick) introduced in
             <guilabel>ActiveBrowser</guilabel> to select and focus an element
             in its parent (in the editing area)</para>
@@ -1468,40 +1468,6 @@
         object and scroll the model, so that the object becomes
         visible.</para>
       </section>
-
-      <section>
-        <title>Locking</title>
-
-        <para>Using the MS Repository or ODBC backends, distributed multi-user
-        access is allowed to the same project. To ensure consistency, GME
-        implements a sophisticated locking mechanism.</para>
-
-        <para>There are four different types of locks from the perspective of
-        a user. An object can be <emphasis>not locked</emphasis>,
-        <emphasis>read-only</emphasis> locked, <emphasis>write-only</emphasis>
-        locked or <emphasis>exclusively</emphasis> locked. When an object is
-        read-only locked, then other users may access the same object, but
-        only in read-only mode. The read-only lock guarantees that all
-        information read from the object is up-to-date and cannot be modified
-        by other users while the lock is held. When an object is write-only
-        locked, then others can still access the same object write-only, but
-        not read-only or exclusively. The write-only lock guarantees that the
-        object is kept modifiable, while the write-only lock is held. It gives
-        no guarantee, however, that any information read from the object is
-        up-to-date. Reference objects are the prime reason for introducing the
-        write-only lock. Multiple users must be allowed to make references to
-        the same target model. To make matters worse, different users have
-        different undo queues, possibly containing modifications to the same
-        objects. Holding a write-only lock on the target model and exclusive
-        locks on the reference objects solves this problem. Finally, an
-        exclusive lock is equivalent to holding read-only and write-only locks
-        simultaneously.</para>
-
-        <para>In summary, an object is either not locked at all, read-only
-        locked by a few users, write-only locked by a few users, or
-        exclusively locked by a single user. Note that the object lock states
-        are visualized in the <guilabel>Model Browser</guilabel>.</para>
-      </section>
     </section>
 
     <section>
@@ -2008,7 +1974,7 @@
         panel you can customize the selected commentary. The
         <guilabel>Name</guilabel>, <guilabel>Text</guilabel>,
         <guilabel>Color</guilabel>, <guilabel>Background</guilabel> and
-        <guilabel>Font</guilabel> settings are self- explanatory. The
+        <guilabel>Font</guilabel> settings are self-explanatory. The
         <guilabel>Visibility</guilabel> sub-panel enables you to fine tune the
         position and visibility in an aspect based manner. All the aspects of
         the active model (and a special DEFAULT aspect) are listed on the left
@@ -2243,7 +2209,7 @@
           Browser</guilabel>) and parts (from the <guilabel>Part
           Browser</guilabel>) may be copied by left- click-dragging the
           objects into the <guilabel>Editor</guilabel> window. Standard
-          Windows keyboard shortcuts [Ctrl-C] to <guilabel>Copy</guilabel>,
+          Windows keyboard shortcuts ([Ctrl-C] to <guilabel>Copy</guilabel>,
           [Ctrl-V] to <guilabel>Paste</guilabel>) may also be used. A copy
           operation (the default when dragging from the <guilabel>Part
           Browser</guilabel>) is indicated by the small “+” symbol attached to
@@ -2425,11 +2391,10 @@
       inheritance.</para>
 
       <para>When the user selects help on a context menu or the
-      <guimenu>Help</guimenu> menu <guimenuitem>Help</guimenuitem> item for
-      the current model (also the [F1] key), GME looks up the most specific
-      help URL available for the given object. If no help URL is found, the
-      program defaults to the appropriate section of the User's Manual located
-      on the ISIS web server.</para>
+      <guimenu>Help</guimenu> menu item for the current model (also the [F1]
+      key), GME looks up the most specific help URL available for the given
+      object. If no help URL is found, the program defaults to the appropriate
+      section of the User's Manual located on the ISIS web server.</para>
 
       <para>When the appropriate URL is located, GME invokes the default web
       browser on the current machine and displays the contents of the URL. If
@@ -2565,8 +2530,8 @@
             </listitem>
 
             <listitem>
-              <para>Writing “GME+” is the same as “GME*” with the exception of
-              only “GM”.</para>
+              <para>Writing “GME+” is the same as “GME*” except it doesn't
+              match “GM”.</para>
             </listitem>
 
             <listitem>
@@ -2716,13 +2681,11 @@ gme.CloseProject( 1 ) </programlisting>
       or <code>IMgaFCO</code> pointers as incoming parameters, the latter
       method names being suffixed with “FCO”. The code sample below shows
       duplicating (clone) of objects: <blockquote>
-          <programlisting># clones object (if any) named “InSignal”, renames the clone to 
-“ClonedInSignal” and returns it 
+          <programlisting># clones object (if any) named “InSignal”, renames the clone to “ClonedInSignal” and returns it 
 clonedInSignalPtr = it.Duplicate( “InSignal”, “ClonedInSignal”)  
  
 # cloning clonedInSignal object 4 times, with different names 
-for i in range(5): it.DuplicateFCO( clonedInSignalPtr, “twiceClonedInSignal” 
-+ str(i)) 
+for i in range(5): it.DuplicateFCO( clonedInSignalPtr, “twiceClonedInSignal” + str(i)) 
  
 # cloning “twiceClonedInSignal2” object, using the it.Child() method 
 it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal”) </programlisting>
@@ -3258,14 +3221,15 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
         <para>Thus, if an interpreter asks for all children with “MyModel”
         kind (short form) it will get back only those MyModel elements which
-        are have “&lt;&lt;defaultNamespace&gt;&gt;::MyModel” kind and will not
-        be confused with elements of
-        “&lt;&lt;anotherNamespace&gt;&gt;::MyModel” kind. If a default
-        namespace is set and a “&lt;&lt;defaultNamespace&gt;&gt;::MyModel”
-        element is asked about its kind it will return “MyModel” only, while
-        if “&lt;&lt;anotherNamespace&gt;&gt;::MyModel” object is asked about
-        its kind will return
-        “&lt;&lt;anotherNamespace&gt;&gt;::MyModel”.</para>
+        are have “<code>&lt;&lt;defaultNamespace&gt;&gt;::MyModel</code>” kind
+        and will not be confused with elements of
+        “<code>&lt;&lt;anotherNamespace&gt;&gt;::MyModel</code>” kind. If a
+        default namespace is set and a
+        “<code>&lt;&lt;defaultNamespace&gt;&gt;::MyModel</code>” element is
+        asked about its kind it will return “MyModel” only, while if
+        “<code>&lt;&lt;anotherNamespace&gt;&gt;::MyModel</code>” object is
+        asked about its kind will return
+        “<code>&lt;&lt;anotherNamespace&gt;&gt;::MyModel</code>”.</para>
 
         <para>Add-ons and decorators require more care than interpreters,
         because they share a territory, in contrast to the interpreters, which
@@ -3273,9 +3237,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         on the Territory might be overwritten by the second add-on, it is
         required to set the preferred namespace on every entry point into the
         add-on library. In case of interpreters, it is generally enough to set
-        the namespace at the InvokeEx()’s first line. In case of add-ons and
-        decorators, all exposed methods (which can be called through the COM
-        interface) need to do this.</para>
+        the namespace at the <code>InvokeEx()</code>’s first line. In case of
+        add-ons and decorators, all exposed methods (which can be called
+        through the COM interface) need to do this.</para>
 
         <para>BON2 components based on BonExtender generated code, require one
         additional modification because of the special IMPLEMENT_BONEXTENSION
@@ -3600,7 +3564,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </tgroup>
         </table>
 
-        <para>This is your constructor like function. Read all the relevant
+        <para>This is your constructor-like function. Read all the relevant
         data from the project and cache them for later use (it is a better
         approach than querying the MGA project in your drawing method all the
         time). GME will instantiate a new decorator if its MGA object
@@ -4017,11 +3981,11 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         and y-coordinate of the cursor. These coordinates are always relative
         to the upper-left corner of the <emphasis>model</emphasis>. Because
         the model window can be magnified and it can be scrolled the cursor
-        position to the model <emphasis>window</emphasis> (HWND) can be
-        different. If somebody wants to calculate the relative position to the
-        upper-left corner of the window, the <code>transformHDC</code> HDC is
-        supplied for that purpose. Using this <code>HDC</code> the coordinates
-        can be transformed.</para>
+        position to the model <emphasis>window</emphasis> (<code>HWND</code>)
+        can be different. If somebody wants to calculate the relative position
+        to the upper-left corner of the window, the <code>transformHDC</code>
+        HDC is supplied for that purpose. Using this <code>HDC</code> the
+        coordinates can be transformed.</para>
 
         <para>If there are more decorators below or close to the cursor, GME
         forwards the message until the event is not handled by one of them. If
@@ -4848,12 +4812,12 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
         <para>The decorator tells to GME with this function that the new
         location of the window is finalized and the transaction can be opened.
-        The x and y parameters supposed to be the delta values compared to the
-        previous location of the window. The decorator must call
-        <code>WindowResized</code> function before modifying the mga object.
-        The decorator also must call the <code>WindowResizingFinished</code>
-        function after that, in order to have the transaction committed by
-        GME.</para>
+        The <code>x</code> and <code>y</code> parameters supposed to be the
+        delta values compared to the previous location of the window. The
+        decorator must call <code>WindowResized</code> function before
+        modifying the mga object. The decorator also must call the
+        <code>WindowResizingFinished</code> function after that, in order to
+        have the transaction committed by GME.</para>
       </section>
     </section>
 
@@ -5076,27 +5040,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       along with optional parameter/value pairs for a class. The format of
       this string is as follows:</para>
 
-      <table>
-        <title></title>
-
-        <tgroup cols="1">
-          <tbody>
-            <row>
-              <entry><code>ProgID param1=value1, param2=value2,
-              …</code></entry>
-            </row>
-
-            <row>
-              <entry><code>e.g.:</code></entry>
-            </row>
-
-            <row>
-              <entry><code>MGA.Decorator.MetaDecorator showattributes=false,
-              showabstract=true</code></entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
+      <programlisting>ProgID param1=value1, param2=value2, …
+e.g.:
+MGA.Decorator.MetaDecorator showattributes=false, showabstract=true</programlisting>
 
       <para>In your models all the non-connection FCOs have a preference
       setting called Decorator. The format of this string is identical to the
@@ -6907,8 +6853,7 @@ public:
  CBuilderFolderList selectedfolders; 
   void InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, 
    CBuilderObjectList &amp;selected, long param); 
-//  void Invoke(CBuilder &amp;builder, 
-   CBuilderObjectList &amp;selected, long param); 
+//  void Invoke(CBuilder &amp;builder, CBuilderObjectList &amp;selected, long param); 
 }; 
  
 #endif // whole file </programlisting></para>
@@ -7182,8 +7127,7 @@ public:
   CBuilderModelReference *CreateNewModelReference(CString refPartName, CBuilderObject* refTo); 
   CBuilderAtomReference *CreateNewAtomReference(CString refPartName, CBuilderObject* refTo); 
   CBuilderSet *CreateNewSet(CString partName); 
-  CBuilderConnection *CreateNewConnection(CString connName,  
-  CBuilderObject *src, CBuilderObject *dst); 
+  CBuilderConnection *CreateNewConnection(CString connName, CBuilderObject *src, CBuilderObject *dst); 
  
   virtual void TraverseModels(void *pointer = 0); 
   virtual void TraverseChildren(void *pointer = 0); 
