@@ -51,7 +51,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\SDK\DecoratorLib"
+				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -82,7 +82,7 @@
 				OutputFile=".\Release/Decorator.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(GME_ROOT)\GME\Lib"
+				AdditionalLibraryDirectories="$(GME_ROOT)\Lib;$(GME_ROOT)\GME\Lib"
 				ModuleDefinitionFile=".\DecoratorApp.def"
 				ProgramDatabaseFile=".\Release/Decorator.pdb"
 				SubSystem="2"
@@ -147,7 +147,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\SDK\DecoratorLib"
+				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_ATL_DLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -179,7 +179,7 @@
 				OutputFile=".\Debug/Decorator.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(GME_ROOT)\GME\Lib"
+				AdditionalLibraryDirectories="$(GME_ROOT)\Lib;$(GME_ROOT)\GME\Lib"
 				ModuleDefinitionFile=".\DecoratorApp.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Decorator.pdb"
@@ -219,38 +219,6 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
-			<File
-				RelativePath=".\CommonError.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="1"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\CommonMfc.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CommonSmart.cpp"
-				>
-			</File>
 			<File
 				RelativePath="Decorator.rc"
 				>
@@ -378,22 +346,6 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
-			<File
-				RelativePath=".\CommonError.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CommonMfc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CommonMgaTrukk.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CommonSmart.h"
-				>
-			</File>
 			<File
 				RelativePath="DecoratorConfig.h"
 				>

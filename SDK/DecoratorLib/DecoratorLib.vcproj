@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\GME\Common;..\..\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
 				PreprocessorDefinitions="WIN32;_DEBUG;OLD_DECORATOR_LOOKANDFEEL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -83,7 +83,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying decorator library to GME libraries..."
-				CommandLine="copy /Y $(IntDir)\$(TargetName).lib ..\..\GME\lib\$(TargetName)D.lib"
+				CommandLine="copy /Y $(IntDir)\$(TargetName).lib $(GME_ROOT)\GME\lib\$(TargetName)D.lib"
 			/>
 		</Configuration>
 		<Configuration
@@ -119,7 +119,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\GME\Common;..\..\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
 				PreprocessorDefinitions="WIN32;NDEBUG;OLD_DECORATOR_LOOKANDFEEL"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
@@ -156,7 +156,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying decorator library to GME libraries..."
-				CommandLine="copy /Y $(IntDir)\$(TargetName).lib ..\..\GME\lib\$(TargetName).lib"
+				CommandLine="copy /Y $(IntDir)\$(TargetName).lib $(GME_ROOT)\GME\lib\$(TargetName).lib"
 			/>
 		</Configuration>
 	</Configurations>
@@ -212,15 +212,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\GME\Common\CommonError.cpp"
+				RelativePath=".\CommonError.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\GME\Common\CommonMfc.cpp"
+				RelativePath=".\CommonMfc.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\GME\Common\CommonSmart.cpp"
+				RelativePath=".\CommonSmart.cpp"
 				>
 			</File>
 			<File
@@ -438,19 +438,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\GME\Common\CommonError.h"
+				RelativePath=".\CommonError.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\GME\Common\CommonMfc.h"
+				RelativePath=".\CommonMfc.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\GME\Common\CommonMgaTrukk.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\GME\Common\CommonSmart.h"
+				RelativePath=".\CommonSmart.h"
 				>
 			</File>
 			<File
@@ -720,10 +716,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

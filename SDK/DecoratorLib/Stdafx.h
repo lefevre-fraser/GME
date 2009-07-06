@@ -46,7 +46,6 @@ extern CComModule _Module;
 #include "CommonError.h"
 #include "CommonSmart.h"
 #include "CommonMfc.h"
-#include "CommonMgaTrukk.h"
 #include <stdio.h>
 
 
