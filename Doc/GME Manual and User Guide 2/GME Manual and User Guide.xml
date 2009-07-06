@@ -8731,52 +8731,18 @@ BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation(
     <section>
       <title>How to create a new component project</title>
 
-      <para>To create a new component, run
-      <command>CreateNewComponent.exe</command> that comes as part of the GME
-      distribution. A dialog box (<guilabel>Create New Component</guilabel>)
-      is presented to specify the target directory and the component
-      technology to be used. To work with the interfaces described above,
-      select <emphasis>Builder Object Network</emphasis> or <emphasis>Builder
-      Object Network II</emphasis>.</para>
+      <para>The first time you wish to create a a component project, you must
+      run <filename>C:\Program Files\GME\SDK\BON\Wizard\setup90.js</filename>.
+      This registers the GME project types in Visual Studio.</para>
 
-      <para>The second dialog box (<guilabel>Component
-      Configurator</guilabel>) lets you specify the most important
-      characteristics of the component: <itemizedlist>
-          <listitem>
-            <para>Its <code>type</code>: Interpreter, Plugin or AddOn. (AddOns
-            are not available when using Builder Object Network version
-            1.0.)</para>
-          </listitem>
-
-          <listitem>
-            <para>The component <code>name</code></para>
-          </listitem>
-
-          <listitem>
-            <para>The <code>name</code> of the paradigm(s) this component is
-            associated with. Multiple paradigms can be specified in a
-            space-separated list.</para>
-          </listitem>
-
-          <listitem>
-            <para>The component <code>progID</code></para>
-          </listitem>
-
-          <listitem>
-            <para>The component <code>classname</code> and the component type
-            library name</para>
-          </listitem>
-
-          <listitem>
-            <para>The <code>UUID</code>s associated with the component class
-            and its type library</para>
-          </listitem>
-
-          <listitem>
-            <para>The location of the GME interface files (IDL files) this
-            component is to be compiled to.</para>
-          </listitem>
-        </itemizedlist></para>
+      <para>To create a BON project, open Visual Studio. Go to
+      <guimenu>File</guimenu> | <guisubmenu>New</guisubmenu>
+      <guimenuitem>Project</guimenuitem>. Under <guimenu>Visual C++</guimenu>,
+      select <guisubmenu>GME</guisubmenu>, then the type of component you wish
+      to create. Give the project a name, then hit <guilabel>OK</guilabel>.
+      Hit <guilabel>Next &gt;</guilabel>. Under
+      <guilabel>Paradigms</guilabel>, enter the name of the metamodel. Hit
+      <guilabel>Finish</guilabel>.</para>
 
       <para>The resulting configuration is a ready-to-compile Visual Studio
       workspace (<filename>Component.dsw</filename>,
@@ -8791,19 +8757,12 @@ BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation(
       modified by the user, and for this reason they are generated with
       read-only attribute.</para>
 
-      <para><command>ConfigureComponent.exe</command>, the application that
-      brings up the Component Configurator dialog box can be run any time to
-      change component attributes. The output is generated to the file
-      specified by the –f command-line argument. It defaults to
-      <filename>ComponentConfig.h</filename>.</para>
-
-      <para>The appendix describes the procedure in detail. After you
-      completed the steps outlined there, you can build the new component dll.
-      This component dll is registered and associated with the paradigms you
-      specify. When you edit a model using one of these paradigms and press
-      the interpret button, you launch this component (if there are more than
-      one components associated with the given paradigm, a menu will pop up to
-      choose from). The dll will be located and loaded at this time.</para>
+      <para>After building the project, the component dll is registered and
+      associated with the paradigms you specify. When you edit a model using
+      one of these paradigms and press the interpret button, you launch this
+      component (if there are more than one components associated with the
+      given paradigm, a menu will pop up to choose from). The dll will be
+      located and loaded at this time.</para>
     </section>
 
     <section>
