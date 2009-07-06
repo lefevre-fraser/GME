@@ -9,8 +9,8 @@ FOPCP="lib/fop/avalon-framework-4.2.0.jar;lib/fop/batik-all-1.7.jar;lib/fop/comm
 #java -cp "$XALANCP" org.apache.xalan.xslt.Process -ENTITYRESOLVER org.apache.xml.resolver.tools.CatalogResolver -URIRESOLVER  org.apache.xml.resolver.tools.CatalogResolver -in "GME Manual and User Guide.xml" -xsl htmlhelp.xsl -out unused
 #hhc htmlhelp.hhp
 
-java -cp "$XALANCP" org.apache.xalan.xslt.Process -ENTITYRESOLVER org.apache.xml.resolver.tools.CatalogResolver -URIRESOLVER  org.apache.xml.resolver.tools.CatalogResolver -in "GME Manual and User Guide.xml" -xsl fo.xsl -out "GME Manual and User Guide".fo
-java -cp "$FOPCP" org.apache.fop.cli.Main -fo "GME Manual and User Guide".fo -pdf "GME Manual and User Guide".pdf
+java -Xmx256m -cp "$XALANCP" org.apache.xalan.xslt.Process -ENTITYRESOLVER org.apache.xml.resolver.tools.CatalogResolver -URIRESOLVER  org.apache.xml.resolver.tools.CatalogResolver -in "GME Manual and User Guide.xml" -xsl fo.xsl -out "GME Manual and User Guide".fo
+java -Xmx256m -cp "$FOPCP" org.apache.fop.cli.Main -fo "GME Manual and User Guide".fo -pdf "GME Manual and User Guide".pdf
 
 
 
