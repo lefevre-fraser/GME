@@ -1107,7 +1107,7 @@
         aspect at a time. Since some parts may be visible in more than one
         aspect while others may visible only in a single aspect, models may
         have a completely different appearance when viewed from different
-        aspects (after all, that’s why aspects exist!)</para>
+        aspects (after all, that's why aspects exist!)</para>
 
         <para>The following are examples of aspects: <itemizedlist>
             <listitem>
@@ -1172,7 +1172,7 @@
           <code>y</code>.</para></caption>
         </mediaobject>
 
-        <para>An object’s attributes can be accessed by right-clicking on the
+        <para>An object's attributes can be accessed by right-clicking on the
         object and selecting <guimenuitem>Attributes</guimenuitem> from the
         menu, causing the <guilabel>Attribute Browser</guilabel> to be
         activated.</para>
@@ -1316,7 +1316,7 @@
       <guilabel>Browser window</guilabel>. The <guilabel>Model
       Browser</guilabel> is primarily used to organize the individual models
       that make up an overall project, while the graphical editor is used for
-      actually constructing the project’s individual models.</para>
+      actually constructing the project's individual models.</para>
 
       <mediaobject>
         <imageobject>
@@ -1414,7 +1414,7 @@
         <guimenuitem>Redo</guimenuitem>, <guimenuitem>Copy</guimenuitem>,
         <guimenuitem>Paste</guimenuitem>, etc. Sorting options allow for the
         all of the objects and their children to be sorted by a specific
-        style. The <guimenuitem>Tree Browser Options</guimenuitem> menuitem
+        style. The <guimenuitem>Tree Browser Options</guimenuitem> menu item
         displays a dialog used for specifying the types of objects to be
         displayed in the <guilabel>Aggregate</guilabel> tab. For example, the
         user can choose not to view connections in the browser. To preserve
@@ -1529,12 +1529,12 @@
         <para>A typical <guilabel>Editor</guilabel> window is shown above. The
         status line near the top begins with an icon indicating whether the
         current model is a type (T) or instance (I). Next to it is a field
-        indicating the model’s name – <code>System</code> in this case. Next
-        to the model’s name is the <emphasis>kind</emphasis> field, indicating
+        indicating the model's name – <code>System</code> in this case. Next
+        to the model's name is the <emphasis>kind</emphasis> field, indicating
         the kind of model (e.g. <code>Connector</code>, <code>Compound</code>,
         <code>Network</code>, etc.) being edited. Continuing to the right, the
         Aspect field indicates that this model is being viewed in the
-        <code>SignalFlowAspect</code>. Remember, a model’s appearance,
+        <code>SignalFlowAspect</code>. Remember, a model's appearance,
         included parts, and connection types can change as different aspects
         are selected. Finally, the right side of the status line shows the
         base type of this model in case it is a model type (if it is an
@@ -1879,7 +1879,7 @@
                       is a property extension mechanism: any object can
                       contain an arbitrarily deep tree structure of simple
                       key-value pairs of data. Selecting this menu item opens
-                      up a simple dialog box where the current object’s
+                      up a simple dialog box where the current object's
                       registry can be edited. Special care must be taken when
                       editing the registry, since it is being used by the GME
                       GUI to store visualization information and
@@ -2257,7 +2257,7 @@
 
           <para>New parts and models are given a default name (defined in the
           modeling paradigm). Right-clicking a part (even connection) brings
-          up a context menu. Choose Properties to edit/view an object’s
+          up a context menu. Choose Properties to edit/view an object's
           properties. Choose Attributes to edit its paradigm-specific
           attribute values.</para>
 
@@ -2538,7 +2538,7 @@
         </note>
 
         <para>Check the <guilabel>Match Whole Word Only</guilabel> if you
-        don’t want a Regular Expression based search for the first four
+        don't want a Regular Expression based search for the first four
         fields.</para>
 
         <para>Syntax of the expressions: <itemizedlist>
@@ -2692,12 +2692,12 @@ gme.CloseProject( 1 ) </programlisting>
       named <code>MainCompound</code> are renamed. Operations accessing the
       objects inside a project are enclosed in a transaction. In case the
       transaction commit fails <code>AbortTransaction</code> must be used.
-      Beware that during a user-iinitiated transaction, another transaction
+      Beware that during a user-initiated transaction, another transaction
       should not be started. This means that during scripting, if a
       transaction has begun, user interface operations (like selection of an
       object in the <guilabel>View</guilabel> or
       <guilabel>ActiveBrowser</guilabel> with the mouse pointer) must be
-      suspended by the user untill the transaction is committed or
+      suspended by the user until the transaction is committed or
       aborted.</para>
 
       <para>The <code>it</code> variable represents the currently active model
@@ -2900,7 +2900,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           <para>To avoid multiple dependency chains between any two objects,
           in version 1.1 or older, only root type models could be explicitly
           derived or instantiated. This restriction has been relaxed. Now, if
-          none of a type model’s descendants and ascendants are derived or
+          none of a type model's descendants and ascendants are derived or
           instantiated, then the model can be derived or instantiated. This
           means, for example, that a model, that has nor subtypes or instances
           itself, can contain a model type AND its instances. This relaxed
@@ -2965,8 +2965,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
 
           <listitem>
-            <para>In-place editiing of labels and other text elements, like
-            UML class attributes or meta object attributes.</para>
+            <para>In-place editing of labels and other text elements, like UML
+            class attributes or meta object attributes.</para>
           </listitem>
         </itemizedlist>
       </section>
@@ -3141,8 +3141,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         and exported in .xme file will not be read by older GME releases. In
         order to help users in such a situation we provide an XSLT script
         which can be used with the ModelMigrate tool (or any other XSLT
-        tranformer engine) to remove the unreadable XML attributes (such as
-        guids) from a .xme file. The forward compatibility in case of .xme
+        transformer engine) to remove the unreadable XML attributes (such as
+        GUIDs) from a .xme file. The forward compatibility in case of .xme
         files is trivial, unique ids are assigned on the fly when importing
         files created with old versions of GME. Binary forward compatibility
         (.mga files) is also made possible with an on the fly assignment of
@@ -3178,7 +3178,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para>Metamodel composition is a nice feature if we obey certain
       restrictions. One of them is the aforementioned restriction on
-      equivalence operators. The second one is that we can’t have conflicting
+      equivalence operators. The second one is that we can't have conflicting
       names in the sub-languages, because of the unique name requirement of
       the composite metamodel. To allow composition in such cases, namespaces
       were introduced in the MetaGME environment, namely the MetaInterpreter
@@ -3190,7 +3190,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       (since libraries appear in a project as an element of type rootfolder).
       Every element contained by that rootfolder is defined in that namespace.
       The namespace assignment can be done through the Namespace Configurator
-      interpreter, which writes the specified values in the rootfolder’s
+      interpreter, which writes the specified values in the rootfolder's
       registry. If an empty string is specified then no namespace is assigned
       to elements, otherwise, a name of the ‘namespace::kindname’ form will be
       assigned. In case of nested libraries namespace modification is not
@@ -3240,7 +3240,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
         <para>An existing component (interpreter, add-on) can be re-used if
         slight modification is made to the code, which will not affect the
-        component’s behavior, but it will enable it to run in a composite
+        component's behavior, but it will enable it to run in a composite
         paradigm model. A component might set the namespace it is interested
         in, i.e. the default namespace, with a
         <code>IMgaTerritory::SetNamespace</code> method call. Raw COM
@@ -3280,7 +3280,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         <para>BON2 components based on BonExtender generated code, require one
         additional modification because of the special IMPLEMENT_BONEXTENSION
         macros, which contain global variable definitions holding kindname
-        strings, which can’t be affected by the territory’s actual namespace
+        strings, which can't be affected by the territory's actual namespace
         setting, because their initialization is made when the dll is loaded.
         To find the kindnames these macros exactly refer to in a composite
         paradigm environment, in the ComponentConfig.h file developers must
@@ -3304,7 +3304,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
   <section>
     <title>Decorators</title>
 
-    <para>GME v1.2 and later implements object drawing in a separate plugable
+    <para>GME v1.2 and later implements object drawing in a separate pluggable
     <acronym>COM</acronym> module making domain-specific visual representation
     a reality.</para>
 
@@ -3622,7 +3622,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         during the initialization of the decorator and also at later time. The
         facility provides easier access to preference and attribute values of
         an object. Besides that it contains font, pen, brush and bitmap cache.
-        There’s a <code>PreferenceMap</code> class used during initialization
+        There's a <code>PreferenceMap</code> class used during initialization
         to pass various settings, preference and attribute values easily among
         the Decorator Part objects of the Decorator Part hierarchy.</para>
 
@@ -3844,10 +3844,10 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </tgroup>
         </table>
 
-        <para>GME forwards this message to the decorator when Windows’s
-        <code>WM_MOUSEMOVE</code> is received (more precisely: MFC’s
+        <para>GME forwards this message to the decorator when Window's
+        <code>WM_MOUSEMOVE</code> is received (more precisely: MFC's
         <code>OnMouseMove</code> is received) over the view window and the
-        cursor is close to or above the particular decorator’s area. The
+        cursor is close to or above the particular decorator's area. The
         decorator can decide if it wants to start some operation or change the
         cursor (return <code>S_DECORATOR_EVENT_HANDLED</code>) or do not do
         anything special (return
@@ -3889,7 +3889,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
         <para>If there are more decorators below or close to the cursor, GME
         forwards the message until the event is not handled by one of them. If
-        none of the decorators treat the message, then GME’s event handler
+        none of the decorators treat the message, then GME's event handler
         code will take effect.</para>
 
         <table>
@@ -3906,15 +3906,15 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </tgroup>
         </table>
 
-        <para>GME forwards this message to the decorator when Windows’s
+        <para>GME forwards this message to the decorator when Window's
         <code>WM_LBUTTONDOWN</code> is over the view window and the cursor is
-        close to or above the particular decorator’s area. The decorator can
+        close to or above the particular decorator's area. The decorator can
         decide if it wants to start some operation or change the cursor
         (return <code>S_DECORATOR_EVENT_HANDLED</code>) or do not do anything
         special (return <code>S_DECORATOR_EVENT_NOT_HANDLED</code>).</para>
 
         <para>For the explanation of parameters and return values see the
-        <code>MouseMoved</code> interface function’s explanation.</para>
+        <code>MouseMoved</code> interface function's explanation.</para>
 
         <para>The same things apply for the following interface functions:
         <code>MouseLeftButtonUp</code>,
@@ -3946,7 +3946,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         some additional menu items into the menu. If any of the decorators add
         menu item (or complete submenu) to the supplied context menu handle,
         GME creates a submenu titled “Decorator Edit”, and puts the
-        decorator’s context menu as a submenu in that.</para>
+        decorator's context menu as a submenu in that.</para>
 
         <para>You should also treat <code>MenuItemSelected</code> function and
         call appropriate function on the
@@ -3969,7 +3969,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         <code>IMgaCommonDecoratorEvents</code> interface, like label editing,
         window resizing or any other operation) was canceled because of some
         reason. The decorator should admit the message and free any resources
-        associated to the initiated operation on the decorator’s side.</para>
+        associated to the initiated operation on the decorator's side.</para>
 
         <table>
           <title></title>
@@ -4025,7 +4025,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
         <para>If there are more decorators below or close to the cursor, GME
         forwards the message until the event is not handled by one of them. If
-        none of the decorators treat the message, then GME’s event handler
+        none of the decorators treat the message, then GME's event handler
         code will take effect.</para>
 
         <table>
@@ -4112,7 +4112,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       <para>On the <code>IMgaElementDecorator</code> interface GME can
       communicate towards the decorators. Since the new decorators supposed to
       be able to initiate label editing, resize and other operations, an
-      interface is needed through which the decoartopr can communicate back to
+      interface is needed through which the decorator can communicate back to
       GME. This is the <code>IMgaElementDecoratorEvents</code>
       interface.</para>
 
@@ -4126,7 +4126,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       of <code>IMgaElementDecoratorEvents</code> interface.</para>
 
       <para>Usually events which signal some kind of operation start can open
-      a transaction on the GME’s side. Often for performance reasons the
+      a transaction on the GME's side. Often for performance reasons the
       transaction is only opened in the operation finished function and the
       transaction is committed during the final call
       (<code>LabelEditingFinished</code>,
@@ -4383,7 +4383,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
         <para>The decorator signals towards GME that an initiated operation
         was canceled because of some reason. The reason can be anything but it
-        emerged on the decorator’s side, and a cancel decision was made. The
+        emerged on the decorator's side, and a cancel decision was made. The
         operation was started by the decorator also in the past.</para>
 
         <table>
@@ -4432,7 +4432,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </table>
 
         <para>The decorator tells to GME with this function that a label
-        editing operation is started. The coordinates specify the operation’s
+        editing operation is started. The coordinates specify the operation's
         (the label) area.</para>
 
         <table>
@@ -4449,7 +4449,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </table>
 
         <para>The decorator tells to GME with this function that a label
-        editing operation is finished. The coordinates specify the operation’s
+        editing operation is finished. The coordinates specify the operation's
         (the label) area. This should be the last message, because this will
         issue the transaction commit command. The <code>LabelChanged</code>
         message must precede it!</para>
@@ -4492,14 +4492,14 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </table>
 
         <para>The decorator tells to GME with this function that a label
-        moving operation is started. The coordinates specify the operation’s
-        (the label) area. Note that currently none of the GME’s bundled
+        moving operation is started. The coordinates specify the operation's
+        (the label) area. Note that currently none of the GME's bundled
         decorators (default (box) decorator, UML decorator, meta decorator)
         use this feature.</para>
 
         <para><code>nFlag</code> came from a GME message (see
         <code>MouseLeftButtonDown</code> above for example), and can be
-        forwarded back to GME for completeness, but currently GME doesn’t use
+        forwarded back to GME for completeness, but currently GME doesn't use
         it.</para>
 
         <table>
@@ -4576,14 +4576,14 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </table>
 
         <para>The decorator tells to GME with this function that a label
-        resizing operation is started. The coordinates specify the operation’s
-        (the label) area. Note that currently none of the GME’s bundled
+        resizing operation is started. The coordinates specify the operation's
+        (the label) area. Note that currently none of the GME's bundled
         decorators (default (box) decorator, UML decorator, meta decorator)
         use this feature.</para>
 
         <para><code>nFlag</code> came from a GME message (see
         <code>MouseLeftButtonDown</code> above for example), and can be
-        forwarded back to GME for completeness, but currently GME doesn’t use
+        forwarded back to GME for completeness, but currently GME doesn't use
         it.</para>
 
         <table>
@@ -4700,14 +4700,14 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </table>
 
         <para>The decorator tells to GME with this function that a window
-        moving operation is started. The coordinates specify the operation’s
-        (the window) area. Note that currently none of the GME’s bundled
+        moving operation is started. The coordinates specify the operation's
+        (the window) area. Note that currently none of the GME's bundled
         decorators (default (box) decorator, UML decorator, meta decorator)
         use this feature.</para>
 
         <para><code>nFlag</code> came from a GME message (see
         <code>MouseLeftButtonDown</code> above for example), and can be
-        forwarded back to GME for completeness, but currently GME doesn’t use
+        forwarded back to GME for completeness, but currently GME doesn't use
         it.</para>
 
         <table>
@@ -4785,14 +4785,14 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </table>
 
         <para>The decorator tells to GME with this function that a window
-        resizing operation is started. The coordinates specify the operation’s
-        (the window) area. Note that currently none of the GME’s bundled
+        resizing operation is started. The coordinates specify the operation's
+        (the window) area. Note that currently none of the GME's bundled
         decorators (default (box) decorator, UML decorator, meta decorator)
         use this feature.</para>
 
         <para><code>nFlag</code> came from a GME message (see
         <code>MouseLeftButtonDown</code> above for example), and can be
-        forwarded back to GME for completeness, but currently GME doesn’t use
+        forwarded back to GME for completeness, but currently GME doesn't use
         it.</para>
 
         <table>
@@ -4881,7 +4881,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       <para>The following modifications have to be made: <itemizedlist>
           <listitem>
             <para>Give a new value to <code>TYPELIB_UUID</code> (a new ID can
-            be generated by the guidgen tool, found in Visual Studio)</para>
+            be generated by the <command>guidgen</command> tool, found in
+            Visual Studio)</para>
           </listitem>
 
           <listitem>
@@ -4891,7 +4892,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
           <listitem>
             <para>Give a new value to <code>COCLASS_UUID</code> (a new ID can
-            be generated by the guidgen tool, found in Visual Studio)</para>
+            be generated by the <command>guidgen</command> tool, found in
+            Visual Studio)</para>
           </listitem>
 
           <listitem>
@@ -4923,7 +4925,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
     <section>
       <title>Using the <code>DecoratorLib</code> library</title>
 
-      <para>The new box decorator (GME’s default decorator), annotator
+      <para>The new box decorator (GME's default decorator), annotator
       decorator, meta decorator and UML decorator all use the
       <code>DecoratorLib</code> helper library. The purpose of this library is
       very versatile: <itemizedlist>
@@ -4944,7 +4946,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           <listitem>
             <para>With the help of the decorator parts you can get many handy
             features for free: resizability, in-place text editing, vectorial
-            shapes, shape shadows and gradial fills</para>
+            shapes, shape shadows and gradient fills</para>
           </listitem>
 
           <listitem>
@@ -4988,13 +4990,13 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para>The new class library hierarchy is based on the
       <code>PartInterface</code> C++ interface which is higher level and much
-      nicer than the plain COM interface level. Based on the C++ there’s a
+      nicer than the plain COM interface level. Based on the C++ there's a
       complete class hierarchy, where the root class is the
       <code>PartBase</code>. You can use <code>CompositePart</code> and other
       Part as building blocks to relatively easily add rich functionality to
       your decorator. Some typical building blocks: <itemizedlist>
           <listitem>
-            <para><code>TypeableBitmapPart</code>: it’s a building block which
+            <para><code>TypeableBitmapPart</code>: it's a building block which
             can display bitmaps. It can also display “type”, “subtype” and
             “reference” tiny marker icons to clearly indicate these
             circumstances visually.</para>
@@ -5040,7 +5042,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para>After building up your decorator you probably want to customize it
       with extra functionalities. You should use the
-      <code>DecoratorUtils</code> helper singleton class wherever it’s
+      <code>DecoratorUtils</code> helper singleton class wherever it's
       possible to save system resources and you can implement certain tasks
       easier with it: <itemizedlist>
           <listitem>
@@ -5138,8 +5140,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         <title>Folder</title>
 
         <para>A Folder is represented as a UML class of stereotype «folder».
-        Folders may own other Folders, FCO’s, and Constraints. Once a Folder
-        contains another container, it by default contains all FCO’s, Folders,
+        Folders may own other Folders, FCOs, and Constraints. Once a Folder
+        contains another container, it by default contains all FCOs, Folders,
         and Constraints that are in that container. Folders are visualized
         only in the model browser window of GME, and therefore do not use
         aspects. A Folder has the <emphasis>Displayed Name</emphasis>, and
@@ -5241,8 +5243,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
             <procedure>
               <step>
-                <para>Configure the <emphasis>Atom</emphasis> to be a memer of
-                a <emphasis>Model</emphasis></para>
+                <para>Configure the <emphasis>Atom</emphasis> to be a member
+                of a <emphasis>Model</emphasis></para>
               </step>
 
               <step>
@@ -5488,8 +5490,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
         <para>Inheritance is standard style for UML. Any
         <emphasis>FCO</emphasis> may inherit from an FCO kind of class, but an
-        FCO may inherit only from other FCO’s. Kinds may inherit only from
-        each other (e.g. Model may not inherit from Atom). When the class is
+        FCO may inherit only from other FCOs. Kinds may inherit only from each
+        other (e.g. Model may not inherit from Atom). When the class is
         declared as abstract, then it is used during generation, but no output
         FCO is generated. No class of kind FCO is ever generated.</para>
 
@@ -6467,7 +6469,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
             attribute will be defined in the metamodel, but not viewable in
             any Aspect (regardless of the properties of the
             <emphasis>FCO</emphasis>. This is useful if you want to store
-            attributes outside the user’s knowledge.</para>
+            attributes outside the user's knowledge.</para>
 
             <para><blockquote>
                 <para>Default value – Checked</para>
@@ -6500,7 +6502,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           <thead>
             <row>
               <entry nameend="semantics" namest="stereotype">First Class
-              Objects (FCO’s)</entry>
+              Objects (FCOs)</entry>
             </row>
           </thead>
 
@@ -6976,7 +6978,7 @@ public:
           </itemizedlist></para>
 
         <para>If none of the above constants are defined, the BON framework
-        interface is compatible with the old Ccomponent classes. Censequently,
+        interface is compatible with the old Ccomponent classes. Consequently,
         older BON code (Component.h and Component.cpp) can replace the
         corresponding skeleton/example files provided in the new BON. When
         using such a component, however, a warning is message is displayed to
@@ -6984,13 +6986,13 @@ public:
         the new BON. Although it is strongly recommended to update the
         component code (i.e converting <code>CComponent::Invoke</code> to
         <code>CComponent::InvokeEx()</code>, this warning can also be
-        supressed by disabling the new COM component interface through the
+        suppressed by disabling the new COM component interface through the
         inclusion of the <code>#define IMPLEMENT_OLD_INTERFACE_ONLY</code>
         definition into the old Component.h file.</para>
 
-        <para>Plung-Ins are paradigm-independent components. The example
-        Noname plug-in displays a message. The implementation is in the
-        component.cpp file shown below: <programlisting>#include "stdafx.h" 
+        <para>Plug-Ins are paradigm-independent components. The example Noname
+        plug-in displays a message. The implementation is in the component.cpp
+        file shown below: <programlisting>#include "stdafx.h" 
 #include "Component.h" 
  
 void CComponent:: InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, 
@@ -7522,11 +7524,11 @@ void CCompoundBuilder::Scan(CString foldName)
         <para>Whenever GME or the users execute a component, the paradigm is
         always accessible to the component via MON. The meta object network is
         read-only, and can be altered indirectly with reinterpretation only
-        (or modifing manually the .xmp file containing the interpreted
+        (or modifying manually the .xmp file containing the interpreted
         metamodel).</para>
 
         <para>The meta object network is created during the initialization
-        time of the components and it is already readable when the user’s
+        time of the components and it is already readable when the user's
         initialization code runs.</para>
 
         <note>
@@ -7551,8 +7553,8 @@ void CCompoundBuilder::Scan(CString foldName)
         </mediaobject>
 
         <para><interfacename>MetaObject</interfacename> is the base class for
-        all classes whose instances have unique identifier (MetaReferenceID).
-        This MON class corresponds to the
+        all classes whose instances have unique identifier
+        (<code>MetaReferenceID</code>). This MON class corresponds to the
         <interfacename>IMgaMetaBase</interfacename> COM interface which has
         common meta properties (identifier - mentioned above, name – string
         identifier, displayed name).</para>
@@ -7568,8 +7570,8 @@ void CCompoundBuilder::Scan(CString foldName)
               methods with which the user can obtain all instances of a
               specific metakind or a meta-relation and she can find the
               <interfacename>MetaObject</interfacename> correspondent to a
-              MetaReferenceID, to the name of a metakind or to name of an
-              Aspect.</para>
+              <code>MetaReferenceID</code>, to the name of a metakind or to
+              name of an Aspect.</para>
             </listitem>
 
             <listitem>
@@ -7612,25 +7614,26 @@ void CCompoundBuilder::Scan(CString foldName)
         which does not have any special and additional properties that FCO
         has.</para>
 
-        <para>Folder is similar to package or namespace but compairing with
-        the package concept in UML, in the same paradigm more than one Folder
-        may exist (they can contain different kinds). Because of this fact,
-        each folder can have different semantics and they are considered as
-        kinds and must have unique names with fcos.</para>
+        <para>Folder is similar to package or namespace but comparing with the
+        package concept in UML, in the same paradigm more than one Folder may
+        exist (they can contain different kinds). Because of this fact, each
+        folder can have different semantics and they are considered as kinds
+        and must have unique names with fcos.</para>
 
         <para>In GME Model is the most important concept, because it specifies
         with Containment the hierarchical structure of the objects in a GME
         project. As it is shown in the figure, Containment is a Model-FCO pair
         with a unique name in the context of the Model. In contrast to UML,
         regarding the relationships instead of class GME deals with
-        Containment which corresponds to the containment role and IMgaMetaRole
-        COM interface. With this concept more sophisticated paradigms may be
-        created without further constraints (e.g. in a class only that student
-        may take part in a golf club whose all grades are ‘A’ – Class ~ Model,
-        Student ~ FCO, Excellent ~ Containment GolfClub ~ Set) That is why Set
-        and Reference are associated with Containment instead of FCO. These
-        associations simiralry to FolderContainment are blue colored denoting
-        that they are introduced only in MON.</para>
+        Containment which corresponds to the containment role and
+        <code>IMgaMetaRole</code> COM interface. With this concept more
+        sophisticated paradigms may be created without further constraints
+        (e.g. in a class only that student may take part in a golf club whose
+        all grades are ‘A’ – Class ~ Model, Student ~ FCO, Excellent ~
+        Containment GolfClub ~ Set) That is why Set and Reference are
+        associated with Containment instead of FCO. These associations
+        similarly to FolderContainment are blue colored denoting that they are
+        introduced only in MON.</para>
 
         <mediaobject>
           <imageobject>
@@ -7645,7 +7648,7 @@ void CCompoundBuilder::Scan(CString foldName)
         meaning of the classes is described well with a bidirectional
         connection in whose case a connection has two specifications regarding
         the two directions how two containment (usually fcos with their all
-        containments) can be connected. In the metamodelling environment only
+        containments) can be connected. In the metamodeling environment only
         binary connections can be created with src and dst ConnectionRole.
         Except of Connection and Containment all classes are blue-colored
         because COM objects cannot be assigned to the instances
@@ -7658,8 +7661,8 @@ void CCompoundBuilder::Scan(CString foldName)
         <para>Via MON all information related with aspects can be obtained.
         ModelInAspect association describes which Model in which Aspect can be
         opened in the model editor. ContainmentPart, which corresponds to
-        IMgaMetaPart COM interface, tells the user which containment roles are
-        visible in the particular aspect.</para>
+        <code>IMgaMetaPart</code> COM interface, tells the user which
+        containment roles are visible in the particular aspect.</para>
 
         <mediaobject>
           <imageobject>
@@ -7717,10 +7720,10 @@ void CCompoundBuilder::Scan(CString foldName)
         implemented by default in the object network. When somebody would like
         to write an interpreter, she wants to do it as fast as it is possible,
         she does not want to deal with typical programming issues (i.e. object
-        disposal, compexity of COM, etc.) and she would like to face only with
-        task came from specific domain. If an interpreter writer follows the
-        rules discussed in these subsections and she is familiar with GME, she
-        almost has to know nothing about C++ and COM to achieve the goal
+        disposal, complexity of COM, etc.) and she would like to face only
+        with task came from specific domain. If an interpreter writer follows
+        the rules discussed in these subsections and she is familiar with GME,
+        she almost has to know nothing about C++ and COM to achieve the goal
         simply and very fast.</para>
 
         <para>BON2 defines three layers (four layers) based on each other:
@@ -7730,7 +7733,8 @@ void CCompoundBuilder::Scan(CString foldName)
               programmable interface of GME, the lowest layer which should be
               absolutely hidden for the user because of its complexity and in
               the case of interpreters the superfluous knowledge to use COM
-              properly. Correspondent files are meta.idl, mga.idl. Example:
+              properly. Correspondent files are <filename>meta.idl</filename>,
+              <filename>mga.idl</filename>. Example:
               <interfacename>IMgaFCO</interfacename> COM interface.</para>
             </listitem>
 
@@ -7744,7 +7748,7 @@ void CCompoundBuilder::Scan(CString foldName)
             </listitem>
 
             <listitem>
-              <para>Interface layer (1.b. layer) – This constints of those
+              <para>Interface layer (1.b. layer) – This consists of those
               classes and operations which are exported to the user (i.e. they
               have public visibility). These are discussed in the Appendix of
               MON and BON. In the current state of BON2 this layer is built
@@ -7778,13 +7782,13 @@ void CCompoundBuilder::Scan(CString foldName)
         automatically. Consequently in the aspect of a component implementor
         there is no difference between to wrapper object if they hold pointer
         to the relevant, real object. That is why, in lots of cases there is
-        no point to create wrapper objects dinamically or get the address of
+        no point to create wrapper objects dynamically or get the address of
         them. However it is not prohibited, it is not recommended because if
         the user did not dispose only one wrapper pointer, memory leak will be
         the result (because of the dependencies it can be very
         serious).</para>
 
-        <para>Of course wrapper classes make available the relevant object’s
+        <para>Of course wrapper classes make available the relevant object's
         pointers because they serve the specific interface of the class
         itself. For example BON::FCO let access to the pointer BON::FCOImpl
         because the implementation class has the proper operations of FCO.
@@ -7827,14 +7831,14 @@ if ( ! parent ) AfxMessageBox( “RootFolder never has parent” ); </programlis
         This is implemented via the copy constructors and assignment
         operators. If the cast succeeds, then the pointer held by the
         appropriate wrapper will be valid, otherwise it will be null. To
-        understand this, let’s see the following example. <programlisting>BON:.Model child; // Let’s assume child is valid 
+        understand this, let's see the following example. <programlisting>BON:.Model child; // Let’s assume child is valid 
 BON::Object parent = child-&gt;getParent(); 
 if ( parent ) AfxMessageBox( “This is always valid” ); 
 BON::Model model = object; 
 if ( model ) AfxMessageBox( “The parent is a model” ); 
 if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </programlisting></para>
 
-        <para>These facilites are implemented in the wrapper classes, the
+        <para>These facilities are implemented in the wrapper classes, the
         operations related with specific metakinds are implemented in the
         implementation classes in case of BON. For details see the Appendix
         about BON invocations and classes.</para>
@@ -7861,7 +7865,7 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
         <para>The time of disposal of objects depends on two essential factors
         and these are more complicated than they seem to be: <itemizedlist>
             <listitem>
-              <para>the component’s type.</para>
+              <para>the component's type.</para>
             </listitem>
 
             <listitem>
@@ -7903,7 +7907,7 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
           occupy memory in the whole time until the project is opened. If we
           followed the previous rule of managing objects, the memory would
           grow while the add-on would run. Therefore in case of add-ons a BON
-          object is immediatelly destructed after the last direct or indirect
+          object is immediately destructed after the last direct or indirect
           reference is released.</para>
         </section>
 
@@ -7941,8 +7945,8 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
         <title>Extending Interpreters</title>
 
         <para>The lifecycle of GME components is the same. After they are
-        intialized, they start to run, do their tasks and terminate, disposing
-        of the acquired resources.</para>
+        initialized, they start to run, do their tasks and terminate,
+        disposing of the acquired resources.</para>
 
         <para>During the initialization all additional resources of the
         component of the user must be obtained and created. This can be done
@@ -8076,7 +8080,7 @@ std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam )
 
         <para>We will demonstrate the extension with a simple example. Let us
         assume that there is a model whose name is ‘Compound’ and the user
-        wants to create a BON class which extends the model’s functionality
+        wants to create a BON class which extends the model's functionality
         with an operation. The operation returns a set containing Compound
         objects having at least two children.</para>
 
@@ -8111,7 +8115,7 @@ std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam )
               <listitem>
                 <para>If BON objects are cached by the extension additionally,
                 it counts as additional resource and the containers has to be
-                emptied and objects must be set to null in the overriden
+                emptied and objects must be set to null in the overridden
                 <code>finalize()</code> method.</para>
               </listitem>
 
@@ -8165,7 +8169,7 @@ private :
           <code>IMPLEMENT_BONEXTENSION</code>.</para>
 
           <para><code>DECLARE_BONEXTENSION</code> macro stands for creating
-          the appropriate wrapper and it always has to preceed the macros
+          the appropriate wrapper and it always has to precede the macros
           defining the classes which derive from this class. The parameters
           are the following: <itemizedlist>
               <listitem>
@@ -8190,12 +8194,13 @@ private :
 
           <programlisting>DECLARE_BONEXTENSION( BON::Model, CompoundImpl, Compound ); </programlisting>
 
-          <para><code>IMPLEMENT_BONEXTENSION</code> macro, residing in a .cpp
-          file, is for assigning the BON extension to a kind or a containment
-          defined by the paradigm, or to a meta- kind defined by GME. It is
-          allowed that the implementor specifies more than one kind, even it
-          is valid to assign a concept to a kind and a containment at the same
-          time. The parameters are the following: <itemizedlist>
+          <para><code>IMPLEMENT_BONEXTENSION</code> macro, residing in a
+          <filename>.cpp</filename> file, is for assigning the BON extension
+          to a kind or a containment defined by the paradigm, or to a meta-
+          kind defined by GME. It is allowed that the implementor specifies
+          more than one kind, even it is valid to assign a concept to a kind
+          and a containment at the same time. The parameters are the
+          following: <itemizedlist>
               <listitem>
                 <para>Wrapper class – The name of the BON extension which must
                 be assigned. In our case it is <code>Compound</code>.</para>
@@ -8233,7 +8238,7 @@ private :
           names.</para>
 
           <para>In the following enumeration the first is the highest
-          precendence. <itemizedlist>
+          precedence. <itemizedlist>
               <listitem>
                 <para>Containment rolename defined by the paradigm (e.g.
                 “<code>CompoundPart</code>”)</para>
@@ -8347,7 +8352,7 @@ IMPLEMENT_BONEXTENSION(MainParameter,“MainParameter”); </programlisting></pa
           <para>The rules that the user must comply with, are the following:
           <itemizedlist>
               <listitem>
-                <para>Abstract BON extensions – If a user wants to mplement
+                <para>Abstract BON extensions – If a user wants to implement
                 the common behaviour of classes in a base class, but she does
                 not want to or she cannot assign any kind, containment to the
                 extension, to create the appropriate wrapper class she must
@@ -8471,7 +8476,7 @@ void print( const BON::FCO&amp; fco )
         whose meta is <code>MON::Model</code>), the user may obtain the
         children contained by the object. The children are
         <code>BON::FCO</code> objects. The specific model kind (i.e.
-        <code>MON::Model</code> objects) tells the user what the childrens
+        <code>MON::Model</code> objects) tells the user what the children's
         kinds can be (i.e. <code>Compound</code> model may contain
         <code>Primitive</code> or <code>Compound</code> models among
         others).</para>
@@ -8494,7 +8499,7 @@ void print( const BON::FCO&amp; fco )
       <section>
         <title>ConnectionEnds and ReferencePorts</title>
 
-        <para>Let’s clarify with the previous and the next figure what
+        <para>Let's clarify with the previous and the next figure what
         <code>ReferencePort</code> means.</para>
 
         <note>
@@ -8532,7 +8537,7 @@ void print( const BON::FCO&amp; fco )
 
           <para>That means references can contain reference ports indirectly
           through the <code>ReferencePortContainer</code> interface which
-          always has to be obtained froim the reference before usage and which
+          always has to be obtained from the reference before usage and which
           is not recommended to cache by the component implementor.
           Consequently only <code>ReferencePortContainer</code> contains
           reference ports.</para>
@@ -8568,7 +8573,7 @@ void print( const BON::FCO&amp; fco )
 
           <para>Reference ports refer to the port contained by the model (blue
           lines in the figure). There is a relationship between reference
-          ports refering to the same port according to their containers. We
+          ports referring to the same port according to their containers. We
           say that the reference ports are the descendants of the port.
           <code>Ref2</code> refers to Model via Ref1. <code>P2</code> of
           <code>Ref1</code> is the parent of <code>P2</code> of
@@ -8584,16 +8589,16 @@ void print( const BON::FCO&amp; fco )
         <section>
           <title>ConnectionEnd and Connection</title>
 
-          <para>Connections in BON2 is implement in a different way comapring
+          <para>Connections in BON2 is implement in a different way comparing
           to the previous implementation. In both ends of a connection only
           <code>ConnectionEnd</code>s can stand. A <code>ConnectionEnd</code>
           can be an object itself – to be more precise, an fco – or reference
           ports. <code>ReferencePort</code> derives from
-          <code>ConnectionEnd</code> because this concept is not placable into
-          the set of metakinds and it has different meaning only in the case
-          if it stands for an end of a connection.</para>
+          <code>ConnectionEnd</code> because this concept is not placeable
+          into the set of metakinds and it has different meaning only in the
+          case if it stands for an end of a connection.</para>
 
-          <para>Let’s see the following examples considering the previous
+          <para>Let's see the following examples considering the previous
           figure to understand the described issues.</para>
 
           <programlisting>// the model called Model in the figure 
@@ -8774,13 +8779,17 @@ BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation(
         </itemizedlist></para>
 
       <para>The resulting configuration is a ready-to-compile Visual Studio
-      workspace (Component.dsw, BonComponent.dsw or BON2Component.dsw). If the
-      BON is selected, simple Component.cpp and Component.h files are
-      generated, in case of BON2 these files are BON2Component.h and
-      BON2Component.cpp. The user is expected to implement the component by
-      modifying these two files and adding other files if necessary. The other
-      files in the workspace are normally not modified by the user, and for
-      this reason they are generated with read-only attribute.</para>
+      workspace (<filename>Component.dsw</filename>,
+      <filename>BonComponent.dsw</filename> or
+      <filename>BON2Component.dsw</filename>). If the BON is selected, simple
+      <filename>Component.cpp</filename> and <filename>Component.h</filename>
+      files are generated, in case of BON2 these files are
+      <filename>BON2Component.h</filename> and
+      <filename>BON2Component.cpp</filename>. The user is expected to
+      implement the component by modifying these two files and adding other
+      files if necessary. The other files in the workspace are normally not
+      modified by the user, and for this reason they are generated with
+      read-only attribute.</para>
 
       <para><command>ConfigureComponent.exe</command>, the application that
       brings up the Component Configurator dialog box can be run any time to
@@ -8962,12 +8971,12 @@ public:
         for “begin user part”, “end user part”) comments are intended to
         provide a space where the user may add her own methods and members. If
         the user decides to regenerate the skeleton (i.e. the paradigm
-        changes), she won’t have to insert once again her own method and
+        changes), she won't have to insert once again her own method and
         member definitions into the skeleton class definitions. The BON
         Extender interpreter will parse for these special comments inside
         class definitions and it will insert the user defined part into the
         new generated header file. This header file contains two global
-        BUP/EUP pairs, which are intended to give a place for the user’s class
+        BUP/EUP pairs, which are intended to give a place for the user's class
         definitions, if any. These global comments have to start on the first
         character of the line. The BUP/EUP comments inside a class are not
         limited such way. These special comments are inserted only in the
@@ -8977,7 +8986,7 @@ public:
       <section>
         <title>Limited extension</title>
 
-        <para>It can happen that the user doesn’t intend to work with all
+        <para>It can happen that the user doesn't intend to work with all
         classes generated for a paradigm (i.e. the hardware definition part
         may be indifferent for implementer, since her interpreter is
         concentrating on the dataflow part). The “Select classes to extend”
@@ -8987,24 +8996,26 @@ public:
         positively extended too, and if it is deselected then its descendants
         are deselected too. If you want to limit the set of generated classes,
         then it is recommended to select “no” for each root object (staying on
-        top of the inheritance hierarchy) in the domains you don’t want to
+        top of the inheritance hierarchy) in the domains you don't want to
         deal with.</para>
 
         <para>There is another way of using this feature: if you would like to
         extend the classes only to some extent (not all classes down the
         inheritance hierarchy), you may like to handle some derived classes
-        together (i.e. you want to handle InputSignals and OutputSignals
-        together as Signal). In such cases you can select the base class
-        (Signal) and deselect the derived classes (InputSignal, OutputSignal).
-        When your interpreter will execute a base class instance will be
-        generated for each derived object in the model. This has consequences
-        for the generated get methods of containers (models, sets, folders):
-        if a container is extended (Processing) and some of its contained
-        objects are not (InputSignal) then the specific getter
-        (getInputSignals), which is intended to give back a set of the
-        specific kinds contained will return with these objects cast to the
-        nearest extended ancestor (Signals). There is a similar mechanism for
-        connections, too.</para>
+        together (i.e. you want to handle <code>InputSignals</code> and
+        <code>OutputSignals</code> together as <code>Signal</code>). In such
+        cases you can select the base class (<code>Signal</code>) and deselect
+        the derived classes (<code>InputSignal</code>,
+        <code>OutputSignal</code>). When your interpreter will execute a base
+        class instance will be generated for each derived object in the model.
+        This has consequences for the generated get methods of containers
+        (models, sets, folders): if a container is extended (Processing) and
+        some of its contained objects are not (<code>InputSignal</code>) then
+        the specific getter (<code>getInputSignals</code>), which is intended
+        to give back a set of the specific kinds contained will return with
+        these objects cast to the nearest extended ancestor
+        (<code>Signals</code>). There is a similar mechanism for connections,
+        too.</para>
 
         <programlisting>class ProcessingImpl : public BON::ModelImpl 
 { 
@@ -9027,7 +9038,7 @@ public:
         <para>If the user would like to extend some of the classes from the
         hierarchy below, then ModelBase, AtomBase and SetBase classes are
         definitely needed. Their descendants may be selected or deselected at
-        the user’s choice.</para>
+        the user's choice.</para>
 
         <mediaobject>
           <imageobject>
@@ -9230,7 +9241,7 @@ public:
                 <para>Some well-defined abstractions, which were made by the
                 modeler, disappear because all information is lost. For
                 example, if in future the standard OCL rules about accessing
-                an association-end are allowed, then it is likely that meny
+                an association-end are allowed, then it is likely that many
                 association-ends cannot be used due to ambiguity.</para>
               </listitem>
 
@@ -9553,7 +9564,7 @@ public:
                 <listitem>
                   <para>A constraint by default can be evaluated on demand. If
                   the user associates events for a constraint, it will be
-                  evaluated as well, when the context’s object receives such
+                  evaluated as well, when the context's object receives such
                   kind of events.</para>
 
                   <para>With these properties (if at least one is set) an
@@ -9609,7 +9620,7 @@ public:
 
                       <listitem>
                         <para>On change registry – The user modifies the
-                        objectÆs registry. (Object) (Not implemented)</para>
+                        object's registry. (Object) (Not implemented)</para>
                       </listitem>
 
                       <listitem>
@@ -9670,7 +9681,7 @@ public:
               </varlistentry>
 
               <varlistentry>
-                <term>Depth: (extension of the invariant’s context)</term>
+                <term>Depth: (extension of the invariant's context)</term>
 
                 <listitem>
                   <para>When a modification is made and it generates an event,
@@ -9682,20 +9693,20 @@ public:
                   <itemizedlist>
                     <listitem>
                       <para>0 – the constraint will be evaluated if and only
-                      if the context’s object receives events specified by the
+                      if the context's object receives events specified by the
                       events attributes.</para>
                     </listitem>
 
                     <listitem>
                       <para>1 – the constraint will be evaluated if the
-                      context’s object and/or its immediate children receive
+                      context's object and/or its immediate children receive
                       events specified by the events attributes. This is the
                       default value.</para>
                     </listitem>
 
                     <listitem>
                       <para>any – the constraint will be evaluated if the
-                      context’s object and/or any of its descendants receive
+                      context's object and/or any of its descendants receive
                       events specified by the events attributes.</para>
                     </listitem>
                   </itemizedlist>
@@ -9860,7 +9871,7 @@ public:
         written; only <code>ocl::Set</code> is valid.</para>
 
         <para>In order to facilitate the call of a Definition, which does not
-        have any parameters, the Definition’s <emphasis>Stereotype</emphasis>
+        have any parameters, the Definition's <emphasis>Stereotype</emphasis>
         can be set to <emphasis>attribute</emphasis>.</para>
 
         <para>For the time being the <emphasis>Context</emphasis> is an
@@ -9920,7 +9931,7 @@ public:
 
         <para>Because one constraint can be connected to more than one kind,
         the dialog enumerates all constraint and kind pairs. In the list
-        violations can be sorted by Constraint’s type, context or name.</para>
+        violations can be sorted by Constraint's type, context or name.</para>
 
         <para>Selecting an association, the text of the Constraint is shown on
         the left of the dialog with all primary errors (i.e. errors that do
@@ -9952,7 +9963,7 @@ public:
         <title>Evaluating the constraints</title>
 
         <para>During modeling time the well-formed and valid constraints are
-        used to maintain the model’s consistency.</para>
+        used to maintain the model's consistency.</para>
 
         <para>Constraints can be evaluated in several ways. These are the
         following: <orderedlist>
@@ -9979,18 +9990,18 @@ public:
               <guimenu>Check Constraints</guimenu> |
               <guimenuitem>Check</guimenuitem> command. Examining the children
               may be excluded at the <guilabel>Constraint Browser</guilabel>
-              dialog’s <guilabel>Settings</guilabel> page.</para>
+              dialog's <guilabel>Settings</guilabel> page.</para>
             </listitem>
 
             <listitem>
               <para>A specific constraint can be evaluated for all objects to
               which it applies at the <guilabel>Constraint Browser</guilabel>
-              dialog’s <guilabel>Constraints</guilabel> page.</para>
+              dialog's <guilabel>Constraints</guilabel> page.</para>
             </listitem>
 
             <listitem>
               <para>For a specific object, all constraints can be evaluated at
-              the <guilabel>Constraint Browser</guilabel> dialog’s
+              the <guilabel>Constraint Browser</guilabel> dialog's
               <guilabel>Kinds and Types</guilabel> page or executing the
               <guimenu>Constraint</guimenu> | <guimenuitem>Check</guimenuitem>
               command of the context menu of the <guilabel>Model
@@ -10204,7 +10215,7 @@ public:
         <section>
           <title>Constraint Browser</title>
 
-          <para>Exceuting the <guimenu>Tools</guimenu> | <guimenuitem>Display
+          <para>Executing the <guimenu>Tools</guimenu> | <guimenuitem>Display
           Constraints</guimenuitem> command, the user can browse all
           constraints available in the model in the page
           <guilabel>Constraints</guilabel> of the <guilabel>Constraint
@@ -10237,10 +10248,10 @@ public:
           <para>With the <guilabel>Add</guilabel> and the
           <guilabel>Remove</guilabel> buttons the user may add and remove
           constraints from the model. In the model, constraints cannot be
-          either added or removed from the libriaries and the paradigm.
+          either added or removed from the libraries and the paradigm.
           Constraint Definitions can be created only in the paradigm.</para>
 
-          <para>Modeler constraints can be specified similarly to a paradigm’s
+          <para>Modeler constraints can be specified similarly to a paradigm's
           constraints. The context can be only kinds rather than types,
           subtypes or instances. The set of the objects can be restricted with
           the constraint enabling mechanism.</para>
@@ -10300,12 +10311,12 @@ public:
               </listitem>
 
               <listitem>
-                <para>Cyan – the flag’s value is inherited, the value is
+                <para>Cyan – the flag's value is inherited, the value is
                 implicit</para>
               </listitem>
 
               <listitem>
-                <para>Black – the flag’s value is set explicitly – not
+                <para>Black – the flag's value is set explicitly – not
                 inherited</para>
               </listitem>
             </itemizedlist></para>
@@ -10339,7 +10350,7 @@ public:
             <para>It is likely that the user changes a flag for an object
             (e.g.: for a type) then the color of the checkboxes of the
             descendant objects will change using the advantage of type
-            inheritance in the regisrty.</para>
+            inheritance in the registry.</para>
           </note>
 
           <para>In order to facilitate the context definition the right and
@@ -10361,7 +10372,7 @@ public:
           <title>Constraints in a library</title>
 
           <para>Constraints residing in a library are the same as the
-          constraints in a model, but according to the library’s definition
+          constraints in a model, but according to the library's definition
           the constraints are read-only.</para>
 
           <note>
@@ -10422,7 +10433,7 @@ public:
         Collection, Set, Bag and Sequence) <itemizedlist>
             <listitem>
               <para>A compound type conforms to another compound type, if its
-              contained type conforms to another’s contained type.</para>
+              contained type conforms to another's contained type.</para>
             </listitem>
           </itemizedlist></para>
 
@@ -10430,7 +10441,7 @@ public:
         <itemizedlist>
             <listitem>
               <para>A tuple conforms to another tuple, if its contained member
-              types conforms to another’s contained member types, and these
+              types conforms to another's contained member types, and these
               members’ names are the same.</para>
             </listitem>
           </itemizedlist></para>
@@ -10466,7 +10477,7 @@ public:
 
         <para>A constraint can be named. In some circumstances, this is a
         requirement rather than an option, in order to make a distinction
-        between constraints of a type. The constraint’s defined name will be
+        between constraints of a type. The constraint's defined name will be
         the concatenation of the type of the context and the name of the
         constraint.</para>
 
@@ -10621,13 +10632,13 @@ context Person::friendNames : Set defattribute : …… </programlisting>
                 well-known (i.e. dynamic) type of the object. To write certain
                 expressions, the type must be downcast. This is the case when
                 an expression returns an object, but its static type is the
-                supertype of the object’s dynamic type.</para>
+                supertype of the object's dynamic type.</para>
               </listitem>
 
               <listitem>
                 <para>The type of the objects, overloads or overrides a
                 feature of a supertype in a certain way (e.g. by inheritance).
-                To access the supertype’s functionality, the type of the
+                To access the super type's functionality, the type of the
                 object must be up-cast.</para>
               </listitem>
             </itemizedlist></para>
@@ -10637,7 +10648,7 @@ context Person::friendNames : Set defattribute : …… </programlisting>
           method called <code>oclAsType</code>. This method returns the same
           object, but with the type it obtains as an argument.</para>
 
-          <para>To cast one object’s type to another, the former type has to
+          <para>To cast one object's type to another, the former type has to
           conform to the new type (up-casting) or the new type has to conform
           to the former type (down-casting). When these types cannot conform,
           it is a type conformance error, and an exception is thrown, and
@@ -10836,7 +10847,7 @@ Sequence{ 0, 1, 2, “23”, true } </programlisting>
 
           <para>This expression has two parts. The first part declares and
           initializes the variable, the second part declares where this
-          variable is accessible. Let expression’s return type is the same
+          variable is accessible. Let expression's return type is the same
           type as the second expression.</para>
 
           <para>Variables in OCL can be used to make the constraint more
@@ -10939,7 +10950,7 @@ mySet -&gt; one( size = 2 ) </programlisting>
           <code>iterate</code>.</para>
 
           <para><code>Iterate</code> always has a variable that is regarded as
-          the accumulator of the iteration. The iterator’s return type is the
+          the accumulator of the iteration. The iterator's return type is the
           type of the accumulator. The accumulator is always initialized. The
           expression has to include the accumulator variable so that the
           iteration will be meaningful (but it is not required). Iterate may
@@ -11545,7 +11556,7 @@ includes( self ) or size = 0 ) ) </programlisting>
                       <para>If two attributes are found (i.e. an attribute of
                       the compound object and an attribute of the contained
                       objects), then resolution is stopped. If the member
-                      selection operator is “.”, then the compound object’s
+                      selection operator is “.”, then the compound object's
                       attribute is resolved, otherwise the other attribute is
                       resolved.</para>
                     </listitem>
@@ -11706,7 +11717,7 @@ operator[ &lt;&gt; ]( any1 : ocl::Any , any2 : ocl::Any ) : ocl::Boolean </progr
           with <code>type</code> (i.e. it does not create a new object, the
           result is identical to the object itself).</para>
 
-          <para>The object’s type has to conform to the <code>type</code>, or
+          <para>The object's type has to conform to the <code>type</code>, or
           vice-versa. This method can be used to access overridden and
           overloaded features defined by ascendants of a type (up- cast), or
           it can be used for the well-known down-cast.</para>
@@ -12312,8 +12323,8 @@ ocl::Set::union( bag : ocl::Bag ) : ocl::Bag </programlisting>Returns the
           <code>bag</code>.</para>
 
           <para><programlisting> ocl::Set::subtract( collection : ocl::Collection ) : ocl::Set </programlisting>Returns
-          a <code>set</code> which contains all elements that that are
-          contained in set but not in <code>collection</code>.</para>
+          a <code>set</code> which contains all elements that are contained in
+          set but not in <code>collection</code>.</para>
 
           <para><programlisting>ocl::Set::intersection( set : ocl::Set ) : ocl::Set 
 ocl::Set::intersection( bag : ocl::Bag ) : ocl::Set </programlisting>Returns
@@ -12598,8 +12609,9 @@ ocl::Bag::intersection( bag : ocl::Bag ) : ocl::Bag </programlisting>Returns
       <sect2>
         <title><code>gme::Folder</code></title>
 
-        <para>The meta-kind &gt;clipboarddiv represents a folder. A folder may
-        contain objects which have meta-kind <code>gme::Object</code>.</para>
+        <para>The meta-kind <code>gme::Folder</code> represents a folder. A
+        folder may contain objects which have meta-kind
+        <code>gme::Object</code>.</para>
 
         <sect3>
           <title>Aliases, Super-Meta-Kind</title>
@@ -12924,7 +12936,7 @@ gme::Model::models( { kind : ocl::Type } ) : ocl::Set( gme::Model )
 gme::Model::atoms( { kind : ocl::String } ) : ocl::Set( gme::Atom ) (D) 
 gme::Model::atoms( { kind : ocl::Type } ) : ocl::Set( gme::Atom )  </programlisting>These
           methods have the same functionality as parts has, the exception that
-          they return objects whose meta-kind is the same as the method’s
+          they return objects whose meta-kind is the same as the method's
           prefix.</para>
 
           <para>These methods return the set of contained objects which are
