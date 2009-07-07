@@ -53,9 +53,11 @@ typedef enum { DSAtom, DSSet, DSNullRef, DSRefToNull, DSAtomPort, DSModelPort, D
 #define  UML_ATTRIBUTES_ATTR		"Attributes"
 #define  UML_ATTRIBUTE_SEP			" : "
 #define  UML_INHERITANCE_NAME		"Inheritance"
+#define  UML_INHERITANCE_PATTERN_NAME		"InheritancePattern"
 #define  UML_CONSTRAINT_NAME		"Constraint"
 #define  UML_CONSTRAINT_DEFINITION_NAME "ConstraintDefinition"
 #define  UML_CONNECTOR_NAME			"Connector"
+#define  UML_CONNECTOR_PATTERN_NAME			"ConnectorPattern"
 
 #define  UML_DECORATOR_MARGINX		6
 #define  UML_DECORATOR_MARGINY		4
