@@ -154,7 +154,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="&quot;$(GME_ROOT)\SDK\DecoratorLib&quot;;&quot;$(GME_ROOT)\Interfaces&quot;;&quot;$(GME_ROOT)\GME\Interfaces&quot;;D:\GMESRC\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
