@@ -32,7 +32,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Performing registration"
+				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Performing registration"
+				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
@@ -154,7 +154,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(GME_ROOT)\SDK\DecoratorLib&quot;;&quot;$(GME_ROOT)\Interfaces&quot;;&quot;$(GME_ROOT)\GME\Interfaces&quot;;D:\GMESRC\SDK\DecoratorLib"
+				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

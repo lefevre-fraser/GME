@@ -32,7 +32,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Performing registration"
+				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
@@ -136,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Performing registration"
+				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
@@ -296,19 +296,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MetaDecoratorUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MetaStereoLabelPart.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\MetaDecorator.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\MetaDecoratorImpl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MetaDecoratorUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MetaStereoLabelPart.cpp"
 				>
 			</File>
 			<File
@@ -360,19 +360,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MetaDecoratorUtil.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MetaStereoLabelPart.h"
-				>
-			</File>
-			<File
 				RelativePath=".\MetaDecorator.h"
 				>
 			</File>
 			<File
 				RelativePath=".\MetaDecoratorImpl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MetaDecoratorUtil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MetaStereoLabelPart.h"
 				>
 			</File>
 			<File

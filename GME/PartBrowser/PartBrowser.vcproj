@@ -105,7 +105,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Performing registration"
+				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;"
 			/>
 		</Configuration>
@@ -199,7 +199,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Performing registration"
+				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;"
 			/>
 		</Configuration>
