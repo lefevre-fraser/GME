@@ -42,6 +42,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				TypeLibraryName="$(GME_ROOT)\SDK\DecoratorLib\Debug\$(ProjectName)D.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -51,7 +52,12 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderFile="$(GME_ROOT)\GME\Lib\$(TargetName).pch"
+				ObjectFile="$(GME_ROOT)\SDK\DecoratorLib\Debug\"
+				ProgramDataBaseFileName="$(GME_ROOT)\SDK\DecoratorLib\Debug\vc90.pdb"
+				XMLDocumentationFileName="$(GME_ROOT)\SDK\DecoratorLib\Debug\"
 				BrowseInformation="1"
+				BrowseInformationFile="$(GME_ROOT)\GME\Lib\"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -60,6 +66,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				ResourceOutputFileName="$(GME_ROOT)\SDK\DecoratorLib\Debug\$(InputName).res"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -73,17 +80,17 @@
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
+				OutputDocumentFile="$(GME_ROOT)\SDK\DecoratorLib\Debug\$(TargetName).xml"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(IntDir)/$(ProjectName).bsc"
+				OutputFile="$(GME_ROOT)\SDK\DecoratorLib\Debug\$(ProjectName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description=""
 				CommandLine=""
 			/>
 		</Configuration>
@@ -114,6 +121,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				TypeLibraryName="$(GME_ROOT)\SDK\DecoratorLib\Release\$(ProjectName).tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -126,6 +134,10 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderFile="$(GME_ROOT)\GME\Lib\$(TargetName).pch"
+				ObjectFile="$(GME_ROOT)\SDK\DecoratorLib\Release\"
+				ProgramDataBaseFileName="$(GME_ROOT)\SDK\DecoratorLib\Release\vc90.pdb"
+				XMLDocumentationFileName="$(GME_ROOT)\SDK\DecoratorLib\Release\"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -134,6 +146,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				ResourceOutputFileName="$(GME_ROOT)\SDK\DecoratorLib\Release\$(InputName).res"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -147,17 +160,17 @@
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
+				OutputDocumentFile="$(GME_ROOT)\SDK\DecoratorLib\Release\$(TargetName).xml"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(IntDir)/$(ProjectName).bsc"
+				OutputFile="$(GME_ROOT)\SDK\DecoratorLib\Release\$(ProjectName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description=""
 				CommandLine=""
 			/>
 		</Configuration>

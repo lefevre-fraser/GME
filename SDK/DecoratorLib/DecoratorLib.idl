@@ -8,3 +8,13 @@ import "ocidl.idl";
 #include <gme.idl>
 #include <MgaDecorator.idl>
 
+[
+	uuid(61F92723-01CB-427c-AE6F-C9FA6A857166),
+	version(1.0),
+	helpstring("DECORATORLibLib 1.0 Type Library")
+]
+library DECORATORLibLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+};
