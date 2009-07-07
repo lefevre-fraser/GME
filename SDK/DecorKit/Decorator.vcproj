@@ -39,7 +39,7 @@
 				SuppressStartupBanner="TRUE"/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Performing registration"
+				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;
 echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 "
@@ -109,7 +109,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Performing registration"
+				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;
 echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 "
