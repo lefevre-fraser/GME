@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(GME_ROOT)\GME\Lib"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			UseOfMFC="2"
@@ -41,12 +41,13 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
-				PreprocessorDefinitions="WIN32;_DEBUG;OLD_DECORATOR_LOOKANDFEEL"
+				PreprocessorDefinitions="WIN32;_DEBUG;OLD_DECORATOR_LOOKANDFEEL;LIBCOMPILE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -65,7 +66,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(IntDir)\$(ProjectName).lib"
+				OutputFile="$(GME_ROOT)\GME\Lib\$(ProjectName)D.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -82,13 +83,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copying decorator library to GME libraries..."
-				CommandLine="copy /Y $(IntDir)\$(TargetName).lib $(GME_ROOT)\GME\lib\$(TargetName)D.lib"
+				Description=""
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(GME_ROOT)\GME\Lib"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			UseOfMFC="2"
@@ -112,6 +113,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -120,7 +122,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
-				PreprocessorDefinitions="WIN32;NDEBUG;OLD_DECORATOR_LOOKANDFEEL"
+				PreprocessorDefinitions="WIN32;NDEBUG;OLD_DECORATOR_LOOKANDFEEL;LIBCOMPILE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
 				UsePrecompiledHeader="2"
@@ -138,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(IntDir)\$(ProjectName).lib"
+				OutputFile="$(GME_ROOT)\GME\Lib\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -155,8 +157,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copying decorator library to GME libraries..."
-				CommandLine="copy /Y $(IntDir)\$(TargetName).lib $(GME_ROOT)\GME\lib\$(TargetName).lib"
+				Description=""
+				CommandLine=""
 			/>
 		</Configuration>
 	</Configurations>
@@ -245,6 +247,10 @@
 			</File>
 			<File
 				RelativePath=".\DecoratorInterface.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DecoratorLib.idl"
 				>
 			</File>
 			<File

@@ -45,9 +45,10 @@ extern CComModule _Module;
 
 #include "CommonError.h"
 #include "CommonSmart.h"
-//#include "CommonMfc.h"
 #include "CommonMgaTrukk.h"
 #include <stdio.h>
+
+#define GENERATEDLIBHEADER	"MgaDecoratorLib.h"
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

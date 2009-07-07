@@ -7,9 +7,6 @@
 //################################################################################################
 
 #include "StdAfx.h"
-#define __Meta_h__
-#define __Mga_h__
-#define __MgaDecorator_h__
 #include "DecoratorLib.h"
 #include <sys/types.h>
 #include <sys/stat.h>

@@ -3,10 +3,10 @@
 #include "afxcoll.h"
 #include "afxtempl.h"
 
+#include "DecoratorLib.h"
+
 #include "GMEOLEData.h"
 #include "CommonMfc.h"
-
-#include "parser.h"
 
 //#include "GMEstd.h"
 #define GME_GRID_SIZE	7

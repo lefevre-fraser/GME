@@ -15,8 +15,7 @@
 #include <vector>
 #include <map>
 
-#include "mga.h"
-#include "meta.h"
+#include GENERATEDLIBHEADER
 
 #include "DecoratorDefs.h"
 

@@ -10,8 +10,7 @@
 
 
 #include "StdAfx.h"
-#include "MgaDecorator.h"
-#include "mga.h"
+#include GENERATEDLIBHEADER
 #include "DecoratorDefs.h"
 #include "DecoratorUtil.h"
 #include "PartInterface.h"

@@ -19,10 +19,3 @@
 // This name will appear in the popup window for interpreter selection.
 #define DECORATOR_NAME "MetaDecorator"
 
-// This is the location of the GME interfaces file (Mga.idl, Meta.idl, etc)
-
-// #define GME_INTERFACES_BASE /GME/Interfaces
-#define GME_INTERFACES_BASE ../../../GME/Interfaces
-// #define GME_INTERFACES_BASE C:/Program Files/GME/interfaces
-// #define GME_INTERFACES_BASE D:/volgy/GME/interfaces
-// #define GME_INTERFACES_BASE D:/backup/GMEReleases/11-06-00/GME/interfaces

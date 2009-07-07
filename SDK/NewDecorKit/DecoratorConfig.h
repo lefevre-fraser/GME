@@ -20,9 +20,3 @@
 // This name will appear in the popup window for interpreter selection.
 #define DECORATOR_NAME "SampleDecorator"
 
-// This is the location of the GME interfaces file (Mga.idl, Meta.idl, etc)
-// !!! Be sure to also set the GME_ROOT environment variable to your GME source root !!!
-
-// #define GME_INTERFACES_BASE ../../GME/Interfaces
-// #define GME_INTERFACES_BASE C:/Program Files/GME/interfaces
-#define GME_INTERFACES_BASE C:/GME/trunk/GME/Interfaces

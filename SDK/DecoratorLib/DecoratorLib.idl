@@ -1,0 +1,10 @@
+ 
+import "oaidl.idl";
+import "ocidl.idl";
+
+#include <meta.idl>
+#include <mga.idl>
+#include <mgautil.idl>
+#include <gme.idl>
+#include <MgaDecorator.idl>
+

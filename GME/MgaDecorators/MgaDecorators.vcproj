@@ -46,7 +46,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="..\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
 				TargetEnvironment="1"
 				TypeLibraryName=".\Debug/MgaDecorators.tlb"
 				HeaderFileName=""
@@ -151,7 +151,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="..\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
 				TargetEnvironment="1"
 				TypeLibraryName=".\Release/MgaDecorators.tlb"
 				HeaderFileName=""

@@ -11,12 +11,3 @@
 // This #define determines the interpreter type:
 #define GME_DECORATOR
 
-// This is the location of the GME interfaces file (Mga.idl, Meta.idl, etc)
-
-// #define GME_INTERFACES_BASE /GME/Interfaces
-#define GME_INTERFACES_BASE ../../../GME/Interfaces
-// #define GME_INTERFACES_BASE C:/Program Files/GME/interfaces
-// #define GME_INTERFACES_BASE D:/backup/GMEReleases/02-12-01/GME/interfaces
-// #define GME_INTERFACES_BASE D:/backup/GMEReleases/11-06-00/GME/interfaces
-
-
