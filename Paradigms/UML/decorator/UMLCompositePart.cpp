@@ -72,13 +72,13 @@ void UMLCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 			CComBSTR bstr;
 			COMTHROW(m_spMetaFCO->get_Name(&bstr));
 			CString name(bstr);
-			if (name == UML_INHERITANCE_NAME) {
+			if (name == UML_INHERITANCE_NAME || name == UML_INHERITANCE_PATTERN_NAME) {
 				AddObjectPart(new DecoratorSDK::TriangleVectorPart(this, m_eventSink,
 																   static_cast<long> (UML_INHERITANCE_WIDTH),
 																   static_cast<long> (UML_INHERITANCE_HEIGHT)));
 				if (!pFCO)
 					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
-			} else if (name == UML_CONNECTOR_NAME) {
+			} else if (name == UML_CONNECTOR_NAME || name == UML_CONNECTOR_PATTERN_NAME) {
 				AddObjectPart(new DecoratorSDK::EllipseVectorPart(this, m_eventSink,
 																  static_cast<long> (UML_CONNECTOR_WIDTH),
 																  static_cast<long> (UML_CONNECTOR_HEIGHT)));
