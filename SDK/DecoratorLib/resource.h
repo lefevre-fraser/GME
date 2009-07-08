@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by app.rc
+// Used by DecoratorLib.rc
 //
 #define IDB_DEFAULTREFTONULL            159
 #define IDB_REFERENCE                   159
