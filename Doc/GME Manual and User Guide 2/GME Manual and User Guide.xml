@@ -2679,97 +2679,144 @@
     <section id="sect-searching">
       <title>Searching Objects</title>
 
-      <para>The <guilabel moreinfo="none">Search</guilabel> facility allows
-      you to click or double click on a search result and go directly to that
-      object in GME. Also, the search can stay open while you go back and
-      forth from GME to the search window.</para>
+      <para>Search in GME is implemented as a dockable window. Now you can
+      dock the search window wherever you like. The
+      <guilabel>Search</guilabel> window can be opened by executing the
+      <guimenu>Edit</guimenu> | <guimenuitem>Find</guimenuitem> command, using
+      the [CTRL-F] shortcut, or clicking the binocular icon in the toolbar.
+      The search window is tabbed along side console.</para>
+
+      <figure>
+        <title>GME Search Window</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/Search window.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
 
       <section>
-        <title>Types of search</title>
+        <title>Search Criteria</title>
 
-        <para>The <guilabel moreinfo="none">Search</guilabel> window can be
-        opened by executing the <guimenu moreinfo="none">Edit</guimenu> |
-        <guimenuitem moreinfo="none">Find</guimenuitem> command, using the
-        [CTRL-F] shortcut, or clicking the binocular icon in the
-        toolbar.</para>
-
-        <para>The Search provides for three types of searches.</para>
-
-        <section>
-          <title>General Search</title>
-
-          <para>This search option is used for finding Models, Atoms, Sets
-          and/or Reference objects in the project. It has the following
-          options which are AND relation with each other: <itemizedlist>
-              <listitem>
-                <para><guilabel moreinfo="none">Name</guilabel> – used to
-                specify the name of the object. It takes a Regular Expression
-                as an input. The Search checks for any names that have
-                patterns specified by this field.</para>
-              </listitem>
+        <para>The search in GME has two search criteria. Each search criteria
+        takes <emphasis>Name</emphasis>, <emphasis>Role Name</emphasis>,
+        <emphasis>Kind Name</emphasis> and <emphasis>Attribute</emphasis>.
+        Each of these inputs is treated as a regular expression. An object
+        must match all of the inputs to be considered a match. For example, if
+        you specify both Name and Role Name in first search criteria, then
+        both of them must match for a given object to be included in the
+        search result. The purpose of each input is as follows:<variablelist>
+            <varlistentry>
+              <term>Name</term>
 
               <listitem>
-                <para><guilabel moreinfo="none">Role Name</guilabel> – used to
-                specify the role name of the object. It takes a Regular
-                Expression as an input. The Search checks for any role names
-                that have patterns specified by this field.</para>
+                <para>used to specify the name of the object. The Search
+                checks for any names that match the pattern specified by this
+                field</para>
               </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Role Name</term>
 
               <listitem>
-                <para><guilabel moreinfo="none">Kind Name</guilabel> – used to
-                specify the kind name of the object. It takes a Regular
-                Expression as an input. The Search checks for any kind names
-                that have patterns specified by this field.</para>
+                <para>used to specify the role name of the object. The Search
+                checks for any role names that match the pattern specified by
+                this field.</para>
               </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Kind Name</term>
 
               <listitem>
-                <para><guilabel moreinfo="none">Attribute</guilabel> – used to
-                specify the attribute name appearing in the object. It takes a
-                Regular Expression as an input. The Search checks for any
-                attributes with names that have patterns specified by this
-                field.</para>
+                <para>used to specify the kind name of the object. The Search
+                checks for any kind names that match the pattern specified by
+                this field.</para>
               </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Attribute</term>
 
               <listitem>
-                <para><guilabel moreinfo="none">Type</guilabel> – specifies
-                the type of the attribute that is being searched for.</para>
+                <para>used to specify an attribute appearing in the object.
+                This field can take complicated logical expressions as input.
+                An attribute has a value associated with it. You can search
+                for attributes with a specific value or a value satisfying an
+                expression. </para>
+
+                <para>Supported operators in attribute
+                expression:<itemizedlist>
+                    <listitem>
+                      <para>Logical Operators: <code>&amp;</code> (AND),
+                      <code>|</code> (OR)</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>Comparison Operators: <code>=</code>,
+                      <code>&gt;</code>, <code>&lt;</code>,
+                      <code>&gt;=</code>, <code>&lt;=</code>,
+                      <code>!=</code></para>
+                    </listitem>
+                  </itemizedlist></para>
+
+                <para>Attribute expressions can be combined with logical
+                expressions. For example, let's say you want to search a
+                person object with <code>age &gt; 18</code> and height less
+                than 6 feet. Then you can have an attribute expression like
+                this: <code>age &gt; 18 &amp; height &lt; 6</code>. This will
+                find all objects which have attribute called age and height,
+                and then compare the values of those attributes. In this case
+                it checks if the age is greater than 18 and height is less
+                than 6.</para>
+
+                <note>
+                  <para><code>&gt;</code>, <code>&lt;</code>,
+                  <code>&gt;=</code> and <code>&lt;=</code> are not valid for
+                  string attribute types.</para>
+                </note>
               </listitem>
+            </varlistentry>
+          </variablelist></para>
+
+        <para>The two search criteria are combined with logical operators. The
+        operators are given below:<variablelist>
+            <varlistentry>
+              <term>And</term>
 
               <listitem>
-                <para><guilabel moreinfo="none">Value</guilabel> – specifies
-                the value of the attribute being searched for. It can take in
-                String, Integer, Float and Boolean (0 or 1) values.</para>
+                <para>Matching objects must satisfy both the search
+                criteria.</para>
               </listitem>
-            </itemizedlist></para>
-        </section>
+            </varlistentry>
 
-        <section>
-          <title>Meta-Kind Search</title>
+            <varlistentry>
+              <term>Or</term>
 
-          <para>The user can search for objects specifying the meta-kinds.
-          These can be Atoms, Models, References, Sets. Connections are not
-          supported.</para>
-        </section>
+              <listitem>
+                <para>Matching objects must satisfy at least one of the search
+                criteria.</para>
+              </listitem>
+            </varlistentry>
 
-        <section>
-          <title>Special Reference Search</title>
+            <varlistentry>
+              <term>Xor</term>
 
-          <para>The <guilabel moreinfo="none">Search for NULL
-          References</guilabel> option is used to look for references pointing
-          to null. More restrictions can be applied specifying the search
-          criteria. When you conduct any search, clicking on a search result
-          object will change the “NULL” into the name of that object. Then the
-          user may search for references pointing to that object with the
-          special search checkbox. Select the Special Reference Search, then
-          deselect it to set it back to NULL.</para>
-        </section>
+              <listitem>
+                <para>Matching objects must satisfy exactly one of the search
+                criteria.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist></para>
       </section>
 
       <section>
         <title>Regular Expressions</title>
 
         <para>The <emphasis>Name</emphasis>, <emphasis>Role</emphasis>,
-        <emphasis>Kind</emphasis> &amp; <emphasis>Attribute</emphasis> fields
+        <emphasis>Kind</emphasis> and <emphasis>Attribute</emphasis> fields
         can be specified using the regular expressions. This section documents
         the valid input kinds that the Search tool shall accept.</para>
 
@@ -2777,11 +2824,12 @@
           <para>Regular expressions are case-sensitive.</para>
         </note>
 
-        <para>Check the <guilabel moreinfo="none">Match Whole Word
-        Only</guilabel> if you don't want a Regular Expression based search
-        for the first four fields.</para>
+        <note>
+          <para>Check the Match Whole Word Only if you don't want a Regular
+          Expression based search for the first four fields.</para>
+        </note>
 
-        <para>Syntax of the expressions: <itemizedlist>
+        <para>Syntax of the expressions:<itemizedlist>
             <listitem>
               <para>Any permutation of characters, numbers &amp; symbols such
               as “_”, “-” is valid. A few special symbols that are used are
@@ -2813,45 +2861,72 @@
               <para>Writing “GME.*” is the same as “GME”.</para>
             </listitem>
           </itemizedlist></para>
+
+        <note>
+          <para>For more information on regular expressions, see <ulink
+          url="http://www.regular-expressions.info/">http://www.regular-expressions.info</ulink>.</para>
+        </note>
       </section>
 
       <section>
-        <title>Defaults</title>
+        <title>Search Scope</title>
 
-        <para>The Search functionality has been implemented assuming certain
-        default conditions.</para>
+        <para>Search can have one of two scopes indicated by <guilabel>Search
+        In</guilabel> Option. <guilabel>Entire Scope</guilabel> is the default
+        selection which means all the model hierarchy is searched starting
+        from the root folder. Selection of <guilabel>Current and
+        Child</guilabel> requires that some model or folder be selected in the
+        GME Browser. This option will search the model hierarchy starting from
+        the selected elements. That means only its child elements and their
+        descendants will be searched.</para>
 
-        <para>On invocation the search tool has the following default inputs:
-        <itemizedlist>
-            <listitem>
-              <para>All the <guilabel moreinfo="none">Search for</guilabel>
-              options are selected.</para>
-            </listitem>
+        <para>The scope of the search can also be limited to the current
+        search results. In this case only the elements in the current search
+        results are searched. This can be useful when you want to filter out
+        some of the results from current search result. This option is enabled
+        by checking the <guilabel>Search within results</guilabel>
+        option.</para>
+      </section>
 
-            <listitem>
-              <para>The <guilabel moreinfo="none">Match Whole Word</guilabel>
-              Only option is not checked.</para>
-            </listitem>
-          </itemizedlist></para>
+      <section>
+        <title>Object Types</title>
 
-        <para>The inputs can be specified in the following ways: <itemizedlist>
-            <listitem>
-              <para>Any of the input boxes being empty implies that the all
-              the objects will be returned without checking that input.</para>
-            </listitem>
+        <para>GME has different object types. The types of object to be
+        searched can be designated in <guilabel>Search For</guilabel> options
+        group. You can restrict your search to a <emphasis>Model</emphasis>,
+        <emphasis>Atom</emphasis>, <emphasis>Set</emphasis>,
+        <emphasis>Reference</emphasis> or a combination of them. </para>
+      </section>
 
-            <listitem>
-              <para>The attribute <emphasis>Type</emphasis> &amp;
-              <emphasis>Value</emphasis> fields require the attribute
-              <emphasis>Name</emphasis> to be specified.</para>
-            </listitem>
+      <section>
+        <title>Case Sensitivity and Whole Word Matching</title>
 
-            <listitem>
-              <para>The <emphasis>Value</emphasis> field shall not be
-              considered as a regular expression for searching the attribute
-              value. The value specified has to be exact.</para>
-            </listitem>
-          </itemizedlist></para>
+        <para>Search can be made case sensitive by checking <guilabel>Case
+        Sensitive</guilabel> check box in Search Options. If whole word
+        matching is desired <guilabel>Match Whole Word Only</guilabel> can
+        also be checked.</para>
+      </section>
+
+      <section>
+        <title>Search Results</title>
+
+        <para>The search results will be displayed in the list box beneath the
+        search criteria. The result will show the object's name along with its
+        type and path. You can double click on a specific object to view it in
+        the <guilabel>Model Editor</guilabel>.</para>
+      </section>
+
+      <section>
+        <title>Search History</title>
+
+        <para>Whenever you search for something, it's likely that you may need
+        to search for the same thing again after some time. Your searches are
+        kept in the Previous Searches tree control. You can double click the
+        entry in the tree control to bring it back to the search criteria
+        input boxes. The search history will also be saved in the registry to
+        preserve your searches across GME sessions. Also, the input combo box
+        controls in the search criteria will contain the search history of
+        that field.</para>
       </section>
     </section>
 
