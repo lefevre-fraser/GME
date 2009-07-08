@@ -2381,6 +2381,183 @@
     </section>
 
     <section>
+      <title>AutoRouter Feauters</title>
+
+      <para>The AutoRouter determines a connection's position between model
+      elements. However, sometimes the user wishes to specify the position.
+      Connection line customization features fulfill two fundamental
+      needs:<itemizedlist>
+          <listitem>
+            <para>The auto routed connection lines can be customized: line
+            segments (edges) can be dragged within the possible limits. At the
+            same time, the logic of the system is still preserved.</para>
+          </listitem>
+
+          <listitem>
+            <para>The whole auto routing logic can be turned off for
+            connections individually or completely for a model (on global
+            level or FCO model level). You are allowed to freely edit the
+            whole connection.</para>
+          </listitem>
+        </itemizedlist></para>
+
+      <para>The techniques can be also mixed, so some of the connection lines
+      can be maintained by the auto router logic system, while the others can
+      be completely free from it.</para>
+
+      <section>
+        <title>Autorouting policy</title>
+
+        <para>The user can specify if certain connections should be routed
+        automatically or manually on three possible levels (this is also the
+        order of priority):<itemizedlist>
+            <listitem>
+              <para>For connections individually</para>
+            </listitem>
+
+            <listitem>
+              <para>At the parent model level</para>
+            </listitem>
+
+            <listitem>
+              <para>GME’s global options</para>
+            </listitem>
+          </itemizedlist></para>
+
+        <section>
+          <title>GME’s default routing policy</title>
+
+          <para>If a connection doesn't have a setting on the connection or
+          parent level, GME’s default routing policy determines how the
+          connection should be treated. With model level and global settings,
+          it possible to fully customize every connection in a model
+          (fulfilling the second need). You can turn off the default auto
+          routing in the “<guimenu>Tools</guimenu> |
+          <guimenuitem>Options…</guimenuitem>” menu
+          “<guilabel>Autorouter</guilabel>” groupbox's first checkbox (see
+          <xref linkend="fig-gme-autorouting-default" />). Just as other
+          settings in this dialog, this setting is stored in the Windows
+          registry, and it is valid for the current installation of GME and
+          the current user. If the model is transferred to another machine,
+          the same settings should be applied to the other GME.</para>
+
+          <figure id="fig-gme-autorouting-default">
+            <title>GME AutoRouting default</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="images/GME autorouting global property.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>By default, the auto routing is turned off and the model and
+          connection entities don't contain any directive about auto routing,
+          so everything should work exactly the same way as with the older GME
+          versions. You can exclude certain connections from the auto-routing
+          with the use of the <guilabel>ObjectInspector</guilabel> or the
+          context menu. In this case a registry value is added to the
+          connection entity node, and the auto routing logic no longer will
+          take care of the connection.</para>
+
+          <para>If somebody turns off the default auto routing policy, and the
+          model doesn't contain specific policies for connections, all of the
+          routes will be fully customizable. Turning off the autorouting
+          settings on GME’s global level or model level indicate an automatic
+          conversion routine, which takes the auto routed points and loads
+          these calculated points as custom points into connection’s
+          customization data. As a result, after the conversion you won't just
+          have a simple line which connects the start point and the end point,
+          but the customization operation can be started from a state where a
+          similar topology to the autorouted scheme is present.</para>
+        </section>
+
+        <section>
+          <title>Switching routing policy on per connection basis</title>
+
+          <para>The user can exclude certain connections from the auto-routing
+          by setting the “Is auto routed” property in the
+          <guilabel>ObjectInspector</guilabel>'s
+          <guilabel>Preferences</guilabel> page to <code>false</code>. In this
+          case the auto routing logic no longer will take care of the
+          connection; it won’t see this connection at all. Similarly, if the
+          value <code>true</code> is set, the particular connection will join
+          the auto-routing scheme again. Switching back and forth between the
+          settings will preserve the customization data for both types of
+          routings. Hitting Ctrl+D clears the preferences settings.</para>
+
+          <figure>
+            <title>Connection AutoRouting settings</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="images/Connection autorouting setting.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>If the user turns off the default auto routing policy, and the
+          model doesn't contain specific policies for connections, all of the
+          routes will be fully customizable. If there isn't any stored
+          customization data, the previously mentioned conversion routine will
+          store the auto routed path points as the manual connection path
+          points.</para>
+        </section>
+
+        <section>
+          <title>Switching routing policy on per model basis</title>
+
+          <para>On the model’s <guilabel>Preferences</guilabel> page in
+          <guilabel>ObjectInspector</guilabel>, you can find a setting similar
+          to individual connections, but it is under the Auto Router
+          Preferences group in that case.</para>
+
+          <figure>
+            <title>Model AutoRouting settings</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="images/Model autorouting setting.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>This is the highest precedence level preference, so it
+          overrides the per model basis settings and the global GME
+          settings.</para>
+        </section>
+
+        <section>
+          <title>Auto routed connection</title>
+
+          <para>The customization information (which specifies or modifies a
+          certain topology) remains valid until the number of edges that make
+          up the connection line changes, or if a box collision situation
+          emerges as a result of the customization. In these cases, the
+          customization data will be ignored, but not deleted.</para>
+        </section>
+      </section>
+
+      <section>
+        <title>Editing a Connection</title>
+
+        <para>If you hover over a selected auto-routed connection, the cursor
+        will turn to a vertical or horizontal arrow. With a drag and drop
+        operation, you can adjust the vertical position of a horizontal edge
+        or the horizontal position of a vertical edge. If you hover over a
+        joint of an auto-routed connection, you can initiate a customization
+        operation where both edges which are adjacent to the particular point
+        will be moved.</para>
+
+        <para>If a connection line is selected, the edges that have
+        customization information will appear with a dash-dot-dot pattern. In
+        the context menu, there's also the possibility to delete the
+        customization for just a given edge, or delete all customization of
+        the connection.</para>
+      </section>
+    </section>
+
+    <section>
       <title>Help System</title>
 
       <para>GME provides context-sensitive, user-defined help functionality.
@@ -2670,12 +2847,12 @@ gme.CloseProject( 1 ) </programlisting>
       one model window is opened. Should the active model window be closed,
       the variable will automatically refer to the newly selected active
       window, if any. The <code>it</code> object implements the
-      <interfacename>IGMEOLEIt</interfacename> interface (defined in Gme.idl).
-      The main benefit of using this object is the ease of use of MGA related
-      operations on a higher level than that offered by the
-      <code>IMgaObject</code>, <code>IMgaFCO</code> and
-      <code>IMgaFolder</code> interfaces (see Mga.idl), and it allows the user
-      to automate some repetitive tasks.</para>
+      <interfacename>IGMEOLEIt</interfacename> interface (defined in
+      <filename>Gme.idl</filename>). The main benefit of using this object is
+      the ease of use of MGA related operations on a higher level than that
+      offered by the <code>IMgaObject</code>, <code>IMgaFCO</code> and
+      <code>IMgaFolder</code> interfaces (see <filename>Mga.idl</filename>),
+      and it allows the user to automate some repetitive tasks.</para>
 
       <para>The methods <code>it</code> provides require either object names,
       or <code>IMgaFCO</code> pointers as incoming parameters, the latter
@@ -4222,7 +4399,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
     </section>
 
     <section>
-      <title>Using the Decorator skeleton example codes</title>
+      <title>Using the Decorator skeleton example code</title>
 
       <para>The <code>NewDecoratorKit</code> sample takes advantage of the
       class hierarchy and utilities provided by the new
@@ -4240,7 +4417,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       intended to be used with Microsoft Visual Studio .NET 2003.</para>
 
       <para>Modifying the <code>DecoratorConfig.h</code> file would be your
-      first step when using the skeleton codes.</para>
+      first step when using the skeleton code.</para>
 
       <para>The following modifications have to be made: <itemizedlist>
           <listitem>
@@ -5578,8 +5755,8 @@ MGA.Decorator.MetaDecorator showattributes=false, showabstract=true</programlist
             checkboxes that give the constraint manager the authority to check
             this constraint when certain events occur (e.g. Model
             creation/deletion, connecting two objects). For more information
-            on the semantics of these events, please refer to the constraint
-            manager documentation.</para>
+            on the semantics of these events, please refer to <xref
+            linkend="sect-constraint-manager" />.</para>
 
             <itemizedlist>
               <listitem>
@@ -5678,7 +5855,7 @@ MGA.Decorator.MetaDecorator showattributes=false, showabstract=true</programlist
           <listitem>
             <para>Enumeration of the possible levels of priority of this
             constraint. For more information on constraint priority, refer to
-            the constraint manager.</para>
+            <xref linkend="sect-constraint-manager" />.</para>
 
             <para><blockquote>
                 <para>Contained in – <emphasis>Constraint</emphasis></para>
@@ -8353,7 +8530,7 @@ public:
     </section>
   </section>
 
-  <section>
+  <section id="sect-constraint-manager">
     <title>Constraint Manager</title>
 
     <para></para>
