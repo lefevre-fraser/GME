@@ -8,6 +8,14 @@
 
 <xsl:param name="fop1.extensions">1</xsl:param>
 
+<!-- section titles are labeled with section number -->
+<xsl:param name="section.autolabel" select="1"/>
+
+<!-- toplevel sections start on a new page -->
+<xsl:attribute-set name="section.level1.properties">
+  <xsl:attribute name="break-before">page</xsl:attribute>
+</xsl:attribute-set>
+
 <!-- TODO: consider using pgwide.properties -->
 <xsl:attribute-set name="monospace.verbatim.properties" 
                    use-attribute-sets="verbatim.properties monospace.properties">
@@ -18,7 +26,6 @@
 <xsl:attribute-set name="monospace.verbatim.properties">
   <xsl:attribute name="font-size">8pt</xsl:attribute>
 </xsl:attribute-set>
-
 
 <!-- render gui* elements in bold -->
 <xsl:template match="guibutton">
