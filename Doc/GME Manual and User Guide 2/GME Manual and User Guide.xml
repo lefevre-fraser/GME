@@ -2745,7 +2745,7 @@
                 This field can take complicated logical expressions as input.
                 An attribute has a value associated with it. You can search
                 for attributes with a specific value or a value satisfying an
-                expression. </para>
+                expression.</para>
 
                 <para>Supported operators in attribute
                 expression:<itemizedlist>
@@ -2895,7 +2895,7 @@
         searched can be designated in <guilabel>Search For</guilabel> options
         group. You can restrict your search to a <emphasis>Model</emphasis>,
         <emphasis>Atom</emphasis>, <emphasis>Set</emphasis>,
-        <emphasis>Reference</emphasis> or a combination of them. </para>
+        <emphasis>Reference</emphasis> or a combination of them.</para>
       </section>
 
       <section>
@@ -3299,37 +3299,38 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
   <section>
     <title>Libraries</title>
 
-    <para>Starting with v 2.0, GME supports model libraries, an important
-    mechanism for reusing design artifacts. Libraries are ordinary GME
-    projects; indeed every GME project (including the ones that import
-    libraries themselves) can be imported in a project as a library. The only
-    prerequisite is that both the library and the target project are based on
-    the same version of the same paradigm.</para>
+    <para>GME supports model libraries, an important mechanism for reusing
+    design artifacts. Libraries are ordinary GME projects; indeed every GME
+    project (including the ones that import libraries themselves) can be
+    imported in a project as a library. The only prerequisite is that both the
+    library and the target project are based on the same version of the same
+    paradigm.</para>
 
-    <para>When a library is imported, it is copied into the target project in
-    whole, so that the root folder of the library becomes an ordinary
+    <para>When a library is imported, it is copied into the target project as
+    a whole, so that the root folder of the library becomes an ordinary
     (non-root folder) in the target. The copy is indicated with a special flag
-    that warrants read-only access to this part of the target project.</para>
+    that dictates read-only access to this part of the target project.</para>
 
     <para>The primary way of using libraries is to create subtypes and
-    instances from the library objects. It is also possible to refer library
-    objects through references. Apart from being read-only, objects imported
-    through the library are equivalent to objects created from scratch.</para>
+    instances from the library objects. It is also possible to refer to
+    library objects through references. Apart from being read-only, objects
+    imported through the library are equivalent to objects created from
+    scratch.</para>
 
     <para>Library objects can easily be recognized in the tree browser. The
     library root is indicated with a special icon, and if the browser displays
     access icons, all library objects are marked to indicate read-only
     access.</para>
 
-    <para>To import a library in a project, the <guimenuitem
+    <para>To import a library in a project, use the <guimenuitem
     moreinfo="none">Attach library...</guimenuitem> command of the <guilabel
-    moreinfo="none">Model Browser</guilabel> context menu is used. It is
-    possible to attach libraries to folders only. The folder that receives the
-    library must be a legal container in the root folder according to the
-    paradigm. Since many paradigms do not allow the root folder to be
-    instantiated at other points in the model tree, the root folder of any
-    project is exempt from this rule, i.e. it is possible to attach a library
-    to the root folder even if the paradigm does not allow that.</para>
+    moreinfo="none">Model Browser</guilabel> context menu. It is possible to
+    attach libraries to folders only. The folder that receives the library
+    must be a legal container in the root folder according to the paradigm.
+    Since many paradigms do not allow the root folder to be instantiated at
+    other points in the model tree, the root folder of any project is exempt
+    from this rule, i.e. it is possible to attach a library to the root folder
+    even if the paradigm does not allow that.</para>
 
     <para>If the original library project changes, it is not automatically
     reflected in the projects that import it. It is possible, however, to
@@ -3338,100 +3339,61 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
     context menu. It is possible to specify an alternate name for the library,
     in case it has been moved, for example.</para>
 
-    <para>When a library is refreshed, changes in the library are propagated
-    to the library image and to the subtypes and instances created from the
-    library objects. During this process, complex scenarios can occur. First,
-    objects may have been deleted from the library, which means that images of
-    these objects and associations (references, connections) to them need to
-    be deleted. Another typical case is when an association is changed in the
-    library, which requires changing of the associations that depend on the
-    changed object, and may also require changing other associations (like
-    connections going through references) as well.</para>
-
-    <para>Generally, it is recommended to carefully check the models after a
-    refresh operation, especially if non-trivial changes were applied to the
-    library. Mapping the old and new library objects is based on the relative
-    ID-s (RelID-s). Relative ID-s are unique identifiers of objects belonging
-    to the same parent (i.e. folder or model). When an object is deleted, its
-    RelID is not reused for a long time (until the RelID space of about 100
-    million is not running out), so it is practically safe to identify objects
-    by RelID-s. The identification based on RelID-s works sufficiently by
-    itself in most cases. There may be exceptional situations, however, when
-    RelID-s need to be manually changed to provide a suitable mapping (e.g.
-    when an object is inadvertently deleted from a library, and must be
-    restored manually). The object 'Properties..' dialog boxes (available
-    through the context menu) can be used to manually change individual object
-    RelID-s. (When changing RelID-s, be aware that setting RelID-s incorrectly
-    may corrupt a whole project.)</para>
-
     <section>
-      <title>New Implementation of GME Libraries</title>
+      <title>Library Refresh</title>
 
-      <para>GME versions 6.9.x and above feature a new library implementation,
-      with a robust Refresh Library operation and the introduction of nested
-      libraries. In order to enable a successful refresh, the MGA library has
-      been enriched with <acronym>GUID</acronym>s: unique ids have been
-      assigned to each FCO and Folder elements in the Mga layer (affecting the
-      <interfacename>IMgaFCO</interfacename> and
-      <interfacename>IMgaFolder</interfacename> interface declarations). This
-      enables the correct and unambiguous restoration of relationships upon a
-      <guimenuitem moreinfo="none">Refresh Library</guimenuitem>
-      operation.</para>
+      <para>To support a successful refresh, a GME model has
+      <acronym>GUID</acronym>s: unique ids that are assigned to each FCO and
+      Folder. This enables the correct and unambiguous restoration of
+      relationships upon a <guimenuitem moreinfo="none">Refresh
+      Library</guimenuitem> operation.</para>
 
-      <para>Generally speaking, a refresh operation consists of storing every
-      relation which crosses the host-project—library border in an internal
-      datastructure. These relationships are as follows: <itemizedlist>
+      <para>Generally speaking, a refresh operation consists of restoring
+      every relation which crosses the host project—library border. These
+      relationships are as follows: <itemizedlist>
           <listitem>
             <para>a reference in the host project pointing to a library
-            element,</para>
+            element</para>
           </listitem>
 
           <listitem>
-            <para>a connection in the host project, which involves
-            referenceports (references to library models exposing internal
-            ports),</para>
+            <para>a connection in the host project, which is connected to a
+            referenceport that references a library model's port (references
+            to library models with ports have references to the ports, known
+            as referenceports)</para>
           </listitem>
 
           <listitem>
-            <para>a connection in the host project, which involves
-            referenceports (references to library models exposing internal
-            ports),</para>
-          </listitem>
-
-          <listitem>
-            <para>containers in the host project having library-derived
-            elements as their children.</para>
+            <para>library-derived subtypes in the host project</para>
           </listitem>
         </itemizedlist></para>
 
-      <para>When a library is refreshed, the brand new binary representation
-      is loaded from the specified .mga file and the border crossing
-      relationships are redirected from the old library to the new one. Note
-      that because libraries are read only, there are no relationships
-      pointing from the library to the host project. This redirection process
-      takes place in the following order: <itemizedlist>
+      <para>When a library is refreshed, the binary representation is loaded
+      from the library's <filename>.mga</filename> file and the
+      border-crossing relationships are redirected from the old library to the
+      new one. Note that because libraries are read only, there are no
+      relationships pointing from the library to the host project. This
+      redirection process takes place in the following order: <itemizedlist>
           <listitem>
-            <para>base-derived relationship is loosened to enable easier
+            <para>base-derived relationships are loosened to enable easier
             update later (step 0),</para>
           </listitem>
 
           <listitem>
-            <para>references to the old library elements are redirected to the
+            <para>references to old library elements are redirected to the
             corresponding new library element (step 1),</para>
           </listitem>
 
           <listitem>
-            <para>connections involving referenceports are reconstructed in a
-            way that any reference involved should be targeted to the new
-            library elements (step 2),</para>
+            <para>connections involving referenceports are reconnected to the
+            corresponding new library referenceport (step 2),</para>
           </listitem>
 
           <listitem>
-            <para>model children are synchronized in case of library element
-            derived models (step 3), for example, the basetype in the library
-            might have been enriched to contain new elements which need to be
-            propagated down into the derived element in the host project (step
-            3),</para>
+            <para>model subtypes are synchronized (step 3), for example, the
+            basetype in the library might have been enriched to contain new
+            elements which need to be propagated down into the subtypes in the
+            host project (step 3),</para>
           </listitem>
 
           <listitem>
@@ -3446,15 +3408,23 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </itemizedlist></para>
 
       <para>After every relationship is restored, the old library is unloaded
-      from the host project. The log messages which one can see during a
-      refresh operation separate these different kinds of relationship
-      restorations, in order to provide some feedback in case of a failure.
-      The refresh feature creates a new version of the library anyway, even
-      though the library might not have been altered. Respecting the idea of
-      read-only libraries, no nested library can be refreshed in a host
-      project. In such a case, the user needs to go down to the very bottom of
-      the cascading libraries, and refresh them in their containing project,
-      then do an upward step-by-step refresh.</para>
+      from the host project. Log messages provide feedback in case of a
+      failure. Since libraries are read-only, no nested library can be
+      refreshed in a host project. In such a case, the user needs to go down
+      to the very bottom of the cascading libraries (i.e. open them in GME),
+      and refresh them in their containing project, then do an upward
+      step-by-step refresh.</para>
+
+      <note>
+        <para>The refresh feature creates a new version of the library
+        regardless of whether or not the library was altered.</para>
+      </note>
+
+      <note>
+        <para>It is recommended to carefully check the models after a refresh
+        operation, especially if non-trivial changes were applied to the
+        library.</para>
+      </note>
 
       <section>
         <title>Data file compatibility issues</title>
@@ -3488,8 +3458,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       operator is used to unite two elements from two sub-metamodels) it can
       be said that any model valid in one of the sub-paradigms is a valid
       model in the composite paradigm as well. This means that it is possible
-      to import a sub-paradigm model (in .xme format) into an opened composite
-      paradigm model.</para>
+      to import a sub-paradigm model (in <filename>.xme</filename> format)
+      into an opened composite paradigm model.</para>
 
       <para>Furthermore, a model in the composite paradigm is able to host
       sub-paradigm models as libraries, by performing an on-the-fly conversion
@@ -3497,8 +3467,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       library. Components (e.g. interpreters) written for a sub-paradigm can
       also be reused for the composite paradigm, provided the user registers
       the component for the composite paradigm as well: a comma delimited list
-      of paradigm names must be provided in the ComponentConfig.h file
-      (<code>#define PARADIGMS</code> definition).</para>
+      of paradigm names must be provided in the
+      <filename>ComponentConfig.h</filename> file (<code>#define
+      PARADIGMS</code> definition).</para>
 
       <para>Metamodel composition is a nice feature if we obey certain
       restrictions. One of them is the aforementioned restriction on
@@ -3513,20 +3484,22 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       More specifically, the namespace definitions are assigned to rootfolders
       (since libraries appear in a project as an element of type rootfolder).
       Every element contained by that rootfolder is defined in that namespace.
-      The namespace assignment can be done through the Namespace Configurator
-      interpreter, which writes the specified values in the rootfolder's
-      registry. If an empty string is specified then no namespace is assigned
-      to elements, otherwise, a name of the ‘namespace::kindname’ form will be
-      assigned. In case of nested libraries namespace modification is not
-      possible, such values will be shown grayed out by the Namespace
-      Configurator.</para>
+      The namespace assignment can be done through the
+      <emphasis>NamespaceConfig</emphasis> interpreter, which writes the
+      specified values in the rootfolder's registry. If an empty string is
+      specified then no namespace is assigned to elements, otherwise, a name
+      of the ‘<code>namespace::kindname</code>’ form will be assigned. In case
+      of nested libraries namespace modification is not possible; such values
+      will be shown grayed out by the <emphasis>NamespaceConfig</emphasis>
+      interpreter.</para>
 
-      <para>After setting the needed namespaces the user might invoke the
+      <para>After setting the needed namespaces, the user might invoke the
       metainterpreter to create a composed paradigm, which will have no
       conflicting names. During modeling in this composed paradigm, the
       kindnames of the objects will contain the namespace information as a
-      prefix of the real kind name, so that objects in the PartBrowser will be
-      displayed with their fully qualified name.</para>
+      prefix of the real kind name, so that objects in the
+      <guilabel>PartBrowser</guilabel> will be displayed with their fully
+      qualified name.</para>
 
       <para>Regarding the features which we mentioned in case of composed
       metamodels, there are some workarounds as follows:</para>
@@ -3562,17 +3535,16 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       <section>
         <title>Re-using a component in a composed paradigm</title>
 
-        <para>An existing component (interpreter, add-on) can be re-used if
-        slight modification is made to the code, which will not affect the
-        component's behavior, but it will enable it to run in a composite
-        paradigm model. A component might set the namespace it is interested
-        in, i.e. the default namespace, with a
+        <para>An existing component (interpreter, add-on) can be re-used in a
+        composed paradigm if slight modification is made to the code, which
+        will not affect the component's behavior. A component might set the
+        namespace it is interested in, i.e. the default namespace, with a
         <code>IMgaTerritory::SetNamespace</code> method call. Raw COM
         component authors are probably familiar with
         <interfacename>IMgaTerritories</interfacename> and their relationship
         with Transactions and interpreters. BON2 component users need not deal
-        with Territories and Transactions, for their comfort is enough to call
-        the <code>BON::ProjectImpl::setNmspc()</code> method.</para>
+        with Territories and Transactions, as it is enough to call the
+        <code>BON::ProjectImpl::setNmspc()</code> method.</para>
 
         <para>By setting the default namespace as mentioned above, a component
         can access kind names in their shorter form (without the namespace
@@ -3580,37 +3552,40 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         in other namespaces than the default one, the kindname still will be a
         fully qualified one, with the namespace as a prefix.</para>
 
-        <para>Thus, if an interpreter asks for all children with “MyModel”
-        kind (short form) it will get back only those MyModel elements which
-        are have “<code>&lt;&lt;defaultNamespace&gt;&gt;::MyModel</code>” kind
-        and will not be confused with elements of
+        <para>Thus, if an interpreter asks for all children with
+        “<code>MyModel</code>” kind (short form) it will get back only those
+        <code>MyModel</code> elements which are have
+        “<code>&lt;&lt;defaultNamespace&gt;&gt;::MyModel</code>” kind and will
+        not be confused with elements of
         “<code>&lt;&lt;anotherNamespace&gt;&gt;::MyModel</code>” kind. If a
         default namespace is set and a
         “<code>&lt;&lt;defaultNamespace&gt;&gt;::MyModel</code>” element is
-        asked about its kind it will return “MyModel” only, while if
+        queried for its kind it will return <code>MyModel</code> only; if
         “<code>&lt;&lt;anotherNamespace&gt;&gt;::MyModel</code>” object is
-        asked about its kind will return
+        queried for its kind it will return
         “<code>&lt;&lt;anotherNamespace&gt;&gt;::MyModel</code>”.</para>
 
         <para>Add-ons and decorators require more care than interpreters,
         because they share a territory, in contrast to the interpreters, which
-        own their territory exclusively. Since the namespace one add-on sets
-        on the Territory might be overwritten by the second add-on, it is
+        own their territory exclusively. Since the namespace an add-on sets on
+        the Territory might be overwritten by the second add-on, it is
         required to set the preferred namespace on every entry point into the
         add-on library. In case of interpreters, it is generally enough to set
         the namespace at the <code>InvokeEx()</code>’s first line. In case of
         add-ons and decorators, all exposed methods (which can be called
         through the COM interface) need to do this.</para>
 
-        <para>BON2 components based on BonExtender generated code, require one
-        additional modification because of the special IMPLEMENT_BONEXTENSION
-        macros, which contain global variable definitions holding kindname
-        strings, which can't be affected by the territory's actual namespace
-        setting, because their initialization is made when the dll is loaded.
-        To find the kindnames these macros exactly refer to in a composite
-        paradigm environment, in the ComponentConfig.h file developers must
-        define the #NAMESPACE_PREF to a string that will be used to prefix the
-        kind name strings used in the IMPLEMENT_BONEXTENSION macros.</para>
+        <para>BON2 components based on BonExtender generated code require one
+        additional modification because of the special
+        <code>IMPLEMENT_BONEXTENSION</code> macros, which contain global
+        variable definitions holding kindname strings, which can't be affected
+        by the territory's actual namespace setting, because their
+        initialization is made when the <filename>.dll</filename> is loaded.
+        To find the kindnames these macros refer to in a composite paradigm
+        environment, developers must <code>#define NAMESPACE_PREF</code> in
+        the <filename>ComponentConfig.h</filename> file to the string that
+        will be used to prefix the kind name strings used in the
+        <code>IMPLEMENT_BONEXTENSION</code> macros.</para>
       </section>
 
       <section>
@@ -3619,7 +3594,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         <para>If namespaces are defined for the library and the host project,
         then the constraints in the host project need to be written in fully
         qualified form. However, the constraints defined in libraries may
-        remain untouched, using terms of the sub-paradigm. The Constraint
+        remain untouched (use terms of the sub-paradigm). The Constraint
         Manager recognizes that the types are defined there using short names,
         so it will prefix them automatically.</para>
       </section>
