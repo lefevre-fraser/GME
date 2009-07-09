@@ -258,7 +258,6 @@ public:
 											  int newPosX, int newPosY, int edgeIndex, bool horizontalOrVerticalEdge);
 	void					DeleteCustomEdges(CGuiConnection* selectedConn, PathCustomizationType custType,
 											  int edgeIndex, bool horizontalOrVerticalEdge = false);
-//	void					StoreAutoRoutedPathsForConversion(void);
 	void					ConvertPathToCustom(CComPtr<IUnknown>& pMgaObject);
 	void					PrintHeader(CDC* pDC, CPrintInfo* pInfo);
 	void					PrintHeaderRect(CDC* pDC, CRect& rectDraw);
@@ -372,7 +371,6 @@ public:
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
-	void WriteCustomConnectionPathData(void);
 #endif
 
 protected:

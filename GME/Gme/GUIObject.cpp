@@ -3055,12 +3055,13 @@ long CGuiConnection::IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& 
 
 std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(void)
 {
+	int edgeCount = GetEdgeCount();
 	long asp = view->currentAspect->index;
 	std::vector<long> customizedEdgeIndexes;
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
 	while (ii != customPathData.end()) {
 		if ((*ii).GetAspect() == asp || asp == -1) {
-			if (IsAutoRouted() && (*ii).GetType() == SimpleEdgeDisplacement ||
+			if (IsAutoRouted() && (*ii).GetType() == SimpleEdgeDisplacement && (*ii).GetEdgeCount() == edgeCount ||
 			   !IsAutoRouted() && (*ii).GetType() != SimpleEdgeDisplacement)
 			{
 				customizedEdgeIndexes.push_back((*ii).GetEdgeIndex());
@@ -3082,7 +3083,7 @@ void CGuiConnection::FillOutCustomPathData(CustomPathData& pathData, PathCustomi
 	pathData.SetHorizontalOrVertical	(horizontalOrVerticalEdge);
 	if (custType == SimpleEdgeDisplacement) {
 		pathData.SetX					(!horizontalOrVerticalEdge ? newPosX : 0);
-		pathData.SetY					(horizontalOrVerticalEdge ? newPosX : 0);
+		pathData.SetY					(horizontalOrVerticalEdge ? newPosY : 0);
 	} else {
 		pathData.SetX					(newPosX);
 		pathData.SetY					(newPosY);
@@ -3180,7 +3181,7 @@ void CGuiConnection::InsertCustomPathData(const CustomPathData& pathData)
 {
 	// Note:
 	//	We assume that element are in ascending order by edgeIndexes
-	//	Types and aspects can be mixed up, but edgeIndexes shoudl be in order within an aspect and type
+	//	Types and aspects can be mixed up, but edgeIndexes should be in order within an aspect and type
 
 	// Update indexes
 	std::vector<CustomPathData>::iterator jj;	// insertion point
@@ -3189,6 +3190,7 @@ void CGuiConnection::InsertCustomPathData(const CustomPathData& pathData)
 		ASSERT((*ii).GetVersion() == pathData.GetVersion());
 		if ((*ii).GetAspect() == pathData.GetAspect() &&
 			(*ii).GetType() == pathData.GetType() &&
+			(!IsAutoRouted() || (*ii).GetEdgeCount() == pathData.GetEdgeCount()) &&
 			(*ii).GetEdgeIndex() >= pathData.GetEdgeIndex())
 		{
 			if (!found)
@@ -3215,7 +3217,8 @@ void CGuiConnection::UpdateCustomPathData(const CustomPathData& pathData)
 		ASSERT((*ii).GetVersion() == pathData.GetVersion());
 		if ((*ii).GetAspect() == pathData.GetAspect() &&
 			(*ii).GetType() == pathData.GetType() &&
-			(*ii).GetEdgeIndex() >= pathData.GetEdgeIndex())
+			(!IsAutoRouted() || (*ii).GetEdgeCount() == pathData.GetEdgeCount()) &&
+			(*ii).GetEdgeIndex() == pathData.GetEdgeIndex())
 		{
 			(*ii) = pathData;
 			return;
@@ -3236,7 +3239,9 @@ void CGuiConnection::DeletePathCustomization(const CustomPathData& pathData)
 			(*ii).GetType() == pathData.GetType())
 		{
 			if (pathData.GetType() == SimpleEdgeDisplacement) {
-				if ((*ii).GetEdgeIndex() == pathData.GetEdgeIndex()) {
+				if ((*ii).GetEdgeIndex() == pathData.GetEdgeIndex() &&
+					(*ii).GetEdgeCount() == pathData.GetEdgeCount())
+				{
 					ASSERT((*ii).IsHorizontalOrVertical() == pathData.IsHorizontalOrVertical());
 					ii = customPathData.erase(ii);
 					found = true;
@@ -3303,7 +3308,8 @@ void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPat
 		while (jj != customPathData.end()) {
 			if ((*ii).GetAspect() == (*jj).GetAspect() &&
 				(*ii).GetEdgeIndex() == (*jj).GetEdgeIndex() &&
-				(*ii).GetType() == (*jj).GetType())
+				(*ii).GetType() == (*jj).GetType() &&
+				((*ii).GetType() == CustomPointCustomization || (*ii).GetEdgeCount() == (*jj).GetEdgeCount()))
 			{
 				jj = customPathData.erase(jj);
 			} else {

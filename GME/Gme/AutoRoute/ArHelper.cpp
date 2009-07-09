@@ -10,7 +10,7 @@ CustomPathData::CustomPathData():
 	version						(CONNECTIONCUSTOMIZATIONDATAVERSION),
 	aspect						(0),
 	edgeIndex					(0),
-	edgeCount					(0),
+	edgeCount					(-1),
 	type						(SimpleEdgeDisplacement),
 	horizontalOrVerticalEdge	(true),
 	x							(0),

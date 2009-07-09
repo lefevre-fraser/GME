@@ -1419,18 +1419,6 @@ CGMEDoc* CGMEView::GetDocument() // non-debug version is inline
 	return (CGMEDoc*)m_pDocument;
 }
 
-void CGMEView::WriteCustomConnectionPathData(void)
-{
-	BeginTransaction();
-	POSITION pos = connections.GetHeadPosition();
-	while (pos) {
-		CGuiConnection* conn = connections.GetNext(pos);
-//		if (conn->mark)
-			conn->WriteCustomPathData(false);
-	}
-	CommitTransaction();
-}
-
 #endif //_DEBUG
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2640,28 +2628,10 @@ void CGMEView::DeleteCustomEdges(CGuiConnection* selectedConn, PathCustomization
 								 int edgeIndex, bool horizontalOrVerticalEdge)
 {
 	CustomPathData pathData;
-	pathData.SetVersion					(CONNECTIONCUSTOMIZATIONDATAVERSION);
-	pathData.SetAspect					(currentAspect->index);
-	pathData.SetEdgeIndex				(edgeIndex);
-	pathData.SetType					(custType);
-	pathData.SetHorizontalOrVertical	(horizontalOrVerticalEdge);
+	selectedConn->FillOutCustomPathData(pathData, custType, currentAspect->index, 0, 0, edgeIndex, -1, horizontalOrVerticalEdge);
 	selectedConn->DeletePathCustomization(pathData);
 }
-/*
-void CGMEView::StoreAutoRoutedPathsForConversion(void)
-{
-	bool isThereAnyConversion = false;
-	POSITION pos = connections.GetHeadPosition();
-	while (pos) {
-		CGuiConnection* conn = connections.GetNext(pos);
-		if (conn->StoreAutoRoutedPathForConversion())
-			isThereAnyConversion = true;
-	}
-	if (isThereAnyConversion) {
-		this->PostMessage(WM_USER_CONVERTROUTES, 0, 0);
-	}
-}
-*/
+
 void CGMEView::ConvertPathToCustom(CComPtr<IUnknown>& pMgaObject)
 {
 	CComQIPtr<IMgaModel> pMgaModel(pMgaObject);
@@ -4588,7 +4558,7 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 							int edgeIndex = customizeConnectionEdgeIndex;
 							if (customizeConnectionPartMoveMethod == AdjacentEdgeMove && !customizeHorizontalOrVerticalEdge)
 								edgeIndex++;
-							UpdateCustomEdges(selectedConnection, SimpleEdgeDisplacement, newPos, 0, edgeIndex, true);
+							UpdateCustomEdges(selectedConnection, SimpleEdgeDisplacement, 0, newPos, edgeIndex, true);
 						}
 					} else if (customizeConnectionType == CustomPointCustomization) {
 						if (customizeConnectionPartMoveMethod == InsertNewCustomPoint) {
@@ -7164,19 +7134,19 @@ void CGMEView::OnDeleteConnEdgeCustomData()
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnEdgeCustomData in "+path+name+"\r\n");
 	if (selectedContextConnection != NULL && contextConnectionEdgeIndex >= 0) {
 		if (contextConnectionCustomizationType == SimpleEdgeDisplacement) {
-			if (customizeConnectionPartMoveMethod == HorizontalEdgeMove ||
-				customizeConnectionPartMoveMethod == AdjacentEdgeMove)
+			if (contextConnectionPartMoveMethod == HorizontalEdgeMove ||
+				contextConnectionPartMoveMethod == AdjacentEdgeMove)
 			{
 				int edgeIndex = contextConnectionEdgeIndex;
-				if (customizeConnectionPartMoveMethod == AdjacentEdgeMove && customizeHorizontalOrVerticalEdge)
+				if (contextConnectionPartMoveMethod == AdjacentEdgeMove && customizeHorizontalOrVerticalEdge)
 					edgeIndex++;
 				DeleteCustomEdges(selectedContextConnection, SimpleEdgeDisplacement, edgeIndex, false);
 			}
-			if (customizeConnectionPartMoveMethod == VerticalEdgeMove ||
-				customizeConnectionPartMoveMethod == AdjacentEdgeMove)
+			if (contextConnectionPartMoveMethod == VerticalEdgeMove ||
+				contextConnectionPartMoveMethod == AdjacentEdgeMove)
 			{
 				int edgeIndex = contextConnectionEdgeIndex;
-				if (customizeConnectionPartMoveMethod == AdjacentEdgeMove && !customizeHorizontalOrVerticalEdge)
+				if (contextConnectionPartMoveMethod == AdjacentEdgeMove && !customizeHorizontalOrVerticalEdge)
 					edgeIndex++;
 				DeleteCustomEdges(selectedContextConnection, SimpleEdgeDisplacement, edgeIndex, true);
 			}
