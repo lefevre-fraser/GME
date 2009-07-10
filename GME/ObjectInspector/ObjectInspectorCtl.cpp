@@ -180,6 +180,7 @@ CObjectInspectorCtrl::CObjectInspectorCtrl()
 	m_project = NULL;
 	m_objects = NULL;
 
+	ignoreNextEvents = false;
 }
 
 
@@ -524,6 +525,16 @@ void CObjectInspectorCtrl::RefreshPanels()
 	m_inspectorDlg.Refresh();
 }
 
+bool CObjectInspectorCtrl::IsInitialized(bool withObject) const
+{
+	return ( (m_project != NULL) && ( (!withObject) || (m_objects != NULL) ) );
+}
+
+void CObjectInspectorCtrl::IgnoreNextEvents(void)
+{
+	ignoreNextEvents = true;
+}
+
 void CObjectInspectorCtrl::RefreshReferencePanel()
 {
 
@@ -627,6 +638,10 @@ void CObjectInspectorCtrl::RefreshPropertyPanel()
 
 void CObjectInspectorCtrl::OnMgaObjectEvent(IMgaObject  *obj, unsigned long eventmask)
 {
+	if (ignoreNextEvents) {
+		ignoreNextEvents = false;
+		return;
+	}
 
 	CComPtr<IMgaObject> ccpMgaObject(obj);
 	// Handling Object Events
@@ -750,6 +765,8 @@ void CObjectInspectorCtrl::OnMgaObjectEvent(IMgaObject  *obj, unsigned long even
 
 void CObjectInspectorCtrl::OnMgaGlobalEvent(globalevent_enum event)
 {
+	if (ignoreNextEvents)
+		return;
 
 	// Handling Global Events
 	if(event==GLOBALEVENT_COMMIT_TRANSACTION)

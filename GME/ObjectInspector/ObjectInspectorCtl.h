@@ -70,6 +70,8 @@ protected:
 	CMgaFCOPtrList m_FCOList;
 	CMgaFolderPtrList m_FolderList;
 
+	bool ignoreNextEvents;
+
 // Message maps
 	//{{AFX_MSG(CObjectInspectorCtrl)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
@@ -128,7 +130,8 @@ public:
 	CProperty m_Property;
 
 	void RefreshPanels();
-	bool IsInitialized(bool withObject = false) {return ( (m_project != NULL) && ( (!withObject) || (m_objects != NULL) ) );}
+	bool IsInitialized(bool withObject = false) const;
+	void IgnoreNextEvents(void);
 
 	enum {
 	//{{AFX_DISP_ID(CObjectInspectorCtrl)

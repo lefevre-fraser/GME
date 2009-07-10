@@ -1184,6 +1184,8 @@ void CPreference::IssuePossiblePathConversion(CListItem ListItem, const CMgaFCOP
 			 ListItem.dwUserData == AUTOROUTER_STATE_MODEL) &&
 			 strValue == "false")
 		{
+			if (ListItem.dwUserData == AUTOROUTER_STATE_CONN)
+				pParent->IgnoreNextEvents();
 			pParent->FireConvertPathToCustom(ccpMgaFCO);
 		}
 	}
