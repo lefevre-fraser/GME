@@ -92,8 +92,8 @@ BOOL CGMESearch::PreTranslateMessage(MSG* pMsg)
 	{
 		switch(pMsg->wParam)
 		{
-			case VK_RETURN:
-			case VK_TAB:
+			//case VK_RETURN:
+			//case VK_TAB:
 			case VK_ESCAPE:
 			case VK_DELETE:
 			case VK_CONTROL:
