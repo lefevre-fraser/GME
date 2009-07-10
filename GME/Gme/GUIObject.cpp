@@ -2879,7 +2879,8 @@ bool CGuiConnection::AdjustCoordLimits(CPointList& points, int edgeIndex, bool i
 
 int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint& endPoint, CPoint& thirdPoint,
 								 ConnectionPartMoveType& connectionMoveMethod, bool& horizontalOrVerticalEdge,
-								 bool& isPartFixed, int& xMinLimit, int& xMaxLimit, int& yMinLimit, int& yMaxLimit) const
+								 bool& isPartFixed, int& xMinLimit, int& xMaxLimit, int& yMinLimit, int& yMaxLimit,
+								 bool checkPointOnEdge) const
 {
 	CPointList points;
 	GetPointList(points);
@@ -2907,7 +2908,7 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 						horizontalOrVerticalEdge = false;
 						moveAction = true;
 					}
-				} else {	// horizontal line, vertical move
+				} else if (last.y == pt.y) {	// horizontal line, vertical move
 					if (abs(pt.y - point.y) <= 3 &&
 						(point.x >= min(last.x, pt.x) - 3 ||
 						 point.x <= max(last.x, pt.x) + 3))
@@ -2916,6 +2917,9 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 						horizontalOrVerticalEdge = true;
 						moveAction = true;
 					}
+				} else {
+					// There mustn't be any skew edge in case of auto routed connection
+					ASSERT(false);
 				}
 				if (i < numEdges - 1 &&		// We can't drag two connected edges at the last point!
 					abs(pt.x - point.x) <= 3 &&
@@ -2931,12 +2935,17 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 					bool isPathEnd = (i == 0 || i == numEdges - 1);
 
 					bool isPartFixed2 = false;
+					bool pointOnEdge = false;
 					if (connectionMoveMethod == HorizontalEdgeMove) {
 						isPartFixed2 = AdjustCoordLimits(points, i, isPathEnd, true, pos,
 														 pt.x, lastlast.x, xMinLimit, xMaxLimit);
+						if (checkPointOnEdge)
+							pointOnEdge = point.y >= min(startPoint.y, endPoint.y) - 3 && point.y <= max(startPoint.y, endPoint.y) + 3;
 					} else if (connectionMoveMethod == VerticalEdgeMove) {
 						isPartFixed2 = AdjustCoordLimits(points, i, isPathEnd, false, pos,
 														 pt.y, lastlast.y, yMinLimit, yMaxLimit);
+						if (checkPointOnEdge)
+							pointOnEdge = point.x >= min(startPoint.x, endPoint.x) - 3 && point.x <= max(startPoint.x, endPoint.x) + 3;
 					} else  if (connectionMoveMethod == AdjacentEdgeMove) {
 						POSITION nextPos = pos;
 						CPoint nextPt = points.GetNext(nextPos);
@@ -2944,12 +2953,16 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 						if (horizontalOrVerticalEdge) {
 							isPartFixed2 = AdjustCoordLimits(points, i, isPathEnd, false, pos,
 															 pt.y, lastlast.y, yMinLimit, yMaxLimit);
+							if (checkPointOnEdge)
+								pointOnEdge = point.x >= min(startPoint.x, endPoint.x) - 3 && point.x <= max(startPoint.x, endPoint.x) + 3;
 							if (isPartFixed2) {
 								connectionMoveMethod = HorizontalEdgeMove;
 								isPartFixed2 = false;
 							}
 							isPartFixed2 = AdjustCoordLimits(points, i + 1, i >= numEdges - 2, true, nextPos,
 															 nextPt.x, last.x, xMinLimit, xMaxLimit);
+							if (checkPointOnEdge)
+								pointOnEdge = pointOnEdge && (point.y >= min(endPoint.y, nextPt.y) - 3 && point.y <= max(endPoint.y, nextPt.y) + 3);
 							if (isPartFixed2) {
 								if (connectionMoveMethod != HorizontalEdgeMove) {
 									connectionMoveMethod = VerticalEdgeMove;
@@ -2959,12 +2972,16 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 						} else {
 							isPartFixed2 = AdjustCoordLimits(points, i, isPathEnd, true, pos,
 															 pt.x, lastlast.x, xMinLimit, xMaxLimit);
+							if (checkPointOnEdge)
+								pointOnEdge = point.y >= min(startPoint.y, endPoint.y) - 3 && point.y <= max(startPoint.y, endPoint.y) + 3;
 							if (isPartFixed2) {
 								connectionMoveMethod = VerticalEdgeMove;
 								isPartFixed2 = false;
 							}
 							isPartFixed2 = AdjustCoordLimits(points, i + 1, i >= numEdges - 2, false, nextPos,
 															 nextPt.y, last.y, yMinLimit, yMaxLimit);
+							if (checkPointOnEdge)
+								pointOnEdge = pointOnEdge && (point.x >= min(endPoint.x, nextPt.x) - 3 && point.x <= max(endPoint.x, nextPt.x) + 3);
 							if (isPartFixed2) {
 								if (connectionMoveMethod != VerticalEdgeMove) {
 									connectionMoveMethod = HorizontalEdgeMove;
@@ -2975,7 +2992,8 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 					}
 					isPartFixed |= isPartFixed2;
 
-					return i;
+					if (!checkPointOnEdge || pointOnEdge)
+						return i;
 				}
 			} else {
 				if (abs(pt.x - point.x) <= 3 && abs(pt.y - point.y) <= 3) {
@@ -3011,10 +3029,18 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 int CGuiConnection::IsPathAt(const CPoint& point, ConnectionPartMoveType& connectionMoveMethod,
 							 bool& horizontalOrVerticalEdge, bool& isPartFixed) const
 {
-	CPoint tmpPoint;
-	int tmpLimit;
-	return GetEdgeIndex(point, tmpPoint, tmpPoint, tmpPoint, connectionMoveMethod, horizontalOrVerticalEdge,
-						isPartFixed, tmpLimit, tmpLimit, tmpLimit, tmpLimit);
+	CPoint customizeConnectionEdgeStartPoint;
+	CPoint customizeConnectionEdgeEndPoint;
+	CPoint customizeConnectionEdgeThirdPoint;
+	int customizeConnectionEdgeXMinLimit;
+	int customizeConnectionEdgeXMaxLimit;
+	int customizeConnectionEdgeYMinLimit;
+	int customizeConnectionEdgeYMaxLimit;
+
+	return GetEdgeIndex(point, customizeConnectionEdgeStartPoint, customizeConnectionEdgeEndPoint, customizeConnectionEdgeThirdPoint,
+						connectionMoveMethod, horizontalOrVerticalEdge,
+						isPartFixed, customizeConnectionEdgeXMinLimit, customizeConnectionEdgeXMaxLimit,
+						customizeConnectionEdgeYMinLimit, customizeConnectionEdgeYMaxLimit);
 }
 
 long CGuiConnection::IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& point)

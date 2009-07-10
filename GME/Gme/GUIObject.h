@@ -444,7 +444,7 @@ public:
 	int GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint& endPoint, CPoint& thirdPoint,
 					 ConnectionPartMoveType& connectionMoveMethod, bool& horizontalOrVerticalEdge,
 					 bool& isPartFixed, int& xMinLimit, int& xMaxLimit,
-					 int& yMinLimit, int& yMaxLimit) const;
+					 int& yMinLimit, int& yMaxLimit, bool checkPointOnEdge = true) const;
 	int IsPathAt(const CPoint& point, ConnectionPartMoveType& connectionMoveMethod, bool& horizontalOrVerticalEdge,
 				 bool& isPartFixed) const;
 	long IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& point);
