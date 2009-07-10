@@ -47,6 +47,7 @@ public: //there is a "protected:" in the AFX section above..
 	void DblClickOnObject(CComPtr<IMgaObject> object);
 	void WantToBeClosed();
 	void LocateMgaObject(CComPtr<IMgaObject> object);
+    virtual BOOL PreTranslateMessage(MSG *pMsg);
 	
 
 // Implementation

@@ -185,8 +185,6 @@ void CSearchDlg::RemoveZombies()
         if(oStatus != OBJECT_EXISTS)
         {
             specialSearchFCO = NULL;
-            //m_stcRefCtrl.SetWindowText("NULL References");
-            //m_stcRefCtrl.ShowWindow(TRUE);
         }
     }
 
@@ -456,8 +454,6 @@ void CSearchDlg::itemClicked()
                 CString name;
                 COMTHROW( selectedFCO->get_Name(bstr));
                 name = CString( bstr) + " References";
-                //m_stcRefCtrl.SetWindowText(name);
-                //m_stcRefCtrl.ShowWindow(TRUE);
                 specialSearchFCO = selectedFCO;
             }
 
@@ -515,6 +511,7 @@ void CSearchDlg::itemDblClicked()
     }
 }
 
+//save search history in registry
 void CSearchDlg::SaveSearchHistory()
 {
     CRegKey key;
@@ -556,7 +553,7 @@ void CSearchDlg::LoadSearchHistory()
     ULONG length;
     CHAR strValue[1000];
     //CString strValue;
-    
+
     int i=0;
     if(key.Open(HKEY_CURRENT_USER,_TEXT("Software\\GME\\Search"),KEY_ALL_ACCESS)==ERROR_SUCCESS)
     {
@@ -568,7 +565,7 @@ void CSearchDlg::LoadSearchHistory()
 
             //buffer size
             length=sizeof(strValue);
-            
+
             strKeyName+=stream.str();
 
             //query the key
@@ -583,11 +580,15 @@ void CSearchDlg::LoadSearchHistory()
     }
 }
 
+
 //create search history text and insert it intt the tree control
 //called after the user clicks the search button and results are available
 
 void CSearchDlg::CreateSearchHistory()
 {
+    //variable to store if criteria is empty
+    bool firstCriteriaEmpty=false,secondCriteriaEmpty=false;
+
     InsertTextToControl(m_edtNameFirst,m_edtNameCtrlFirst);
     InsertTextToControl(m_edtRoleNameFirst,m_edtKindNameCtrlFirst);
     InsertTextToControl(m_edtKindNameFirst,m_edtKindNameCtrlFirst);
@@ -606,29 +607,56 @@ void CSearchDlg::CreateSearchHistory()
 
     CString strSearch;
 
-    HTREEITEM hFirstCriteria=m_treeSearchHistory.InsertItem("First Search Criteria",hItem,TVI_FIRST);
-    //First criteria
-    PrepareHistoryString("Name",m_edtNameFirst,hFirstCriteria,strSearch);
-    PrepareHistoryString("Role",m_edtRoleNameFirst,hFirstCriteria,strSearch);
-    PrepareHistoryString("Kind",m_edtKindNameFirst,hFirstCriteria,strSearch);
-    PrepareHistoryString("Attribute",m_edtAttributeFirst,hFirstCriteria,strSearch);
+    if(m_edtNameFirst!="" || m_edtKindNameFirst!="" || m_edtRoleNameFirst!="" || m_edtAttributeFirst!="")
+    {
+        HTREEITEM hFirstCriteria=m_treeSearchHistory.InsertItem("First Search Criteria",hItem,TVI_FIRST);
+        //First criteria
+        PrepareHistoryString("Name",m_edtNameFirst,hFirstCriteria,strSearch);
+        PrepareHistoryString("Role",m_edtRoleNameFirst,hFirstCriteria,strSearch);
+        PrepareHistoryString("Kind",m_edtKindNameFirst,hFirstCriteria,strSearch);
+        PrepareHistoryString("Attribute",m_edtAttributeFirst,hFirstCriteria,strSearch);
+    }
+    else
+    {
+        firstCriteriaEmpty=true;
+    }
 
-    HTREEITEM hSecondCriteria=m_treeSearchHistory.InsertItem("Second Search Criteria",hItem,TVI_LAST);
+
     //search criteria separator
-    strSearch.Append(":");
 
-    //second criteria
-    PrepareHistoryString("Name",m_edtNameSecond,hSecondCriteria,strSearch);
-    PrepareHistoryString("Role",m_edtRoleNameSecond,hSecondCriteria,strSearch);
-    PrepareHistoryString("Kind",m_edtKindNameSecond,hSecondCriteria,strSearch);
-    PrepareHistoryString("Attribute",m_edtAttributeSecond,hSecondCriteria,strSearch);
+    //strSearch.Append(":");
+    if(m_edtNameSecond!="" || m_edtKindNameSecond!="" || m_edtRoleNameSecond!="" || m_edtAttributeSecond!="")
+    {
+        HTREEITEM hSecondCriteria=m_treeSearchHistory.InsertItem("Second Search Criteria",hItem,TVI_LAST);
+
+        //second criteria
+        PrepareHistoryString("Second Name",m_edtNameSecond,hSecondCriteria,strSearch);
+        PrepareHistoryString("Second Role",m_edtRoleNameSecond,hSecondCriteria,strSearch);
+        PrepareHistoryString("Second Kind",m_edtKindNameSecond,hSecondCriteria,strSearch);
+        PrepareHistoryString("Second Attribute",m_edtAttributeSecond,hSecondCriteria,strSearch);
+    }
+    else
+    {
+        secondCriteriaEmpty=true;
+    }
 
     //others
+    HTREEITEM hOtherCriteria=m_treeSearchHistory.InsertItem("Others",hItem,TVI_LAST);
+    PrepareHistoryString("Logical",m_radioLogical,hOtherCriteria,strSearch);
+    PrepareHistoryString("Model",m_chkMod,hOtherCriteria,strSearch);
+    PrepareHistoryString("Atom",m_chkAtom,hOtherCriteria,strSearch);
+    PrepareHistoryString("Set",m_chkSet,hOtherCriteria,strSearch);
+    PrepareHistoryString("Reference",m_chkRef,hOtherCriteria,strSearch);
+    PrepareHistoryString("Case",m_chkMatchCase,hOtherCriteria,strSearch);
+    PrepareHistoryString("WholeWord",m_chkFullWord,hOtherCriteria,strSearch);
+    PrepareHistoryString("Scope",m_radioScope,hOtherCriteria,strSearch);
+    PrepareHistoryString("Results",m_searchResults,hOtherCriteria,strSearch);
 
     m_treeSearchHistory.SetItemText(hItem,strSearch);
 
-    //Get first element from the previous history, if they are same the history is not added
-    if(strFirstElement==strSearch)
+    //Get first element from the previous history or check if both the criteria
+    //are empty, if they are same the history is not added
+    if(strFirstElement==strSearch || (firstCriteriaEmpty && secondCriteriaEmpty))
     {
         m_treeSearchHistory.DeleteItem(hItem);
         return;
@@ -660,7 +688,7 @@ void CSearchDlg::PrepareHistoryString(const CString &strCriteriaName,CString & s
     CString strNameValue;
     if(strSearchValue.Trim()=="")
         return;
-    if(strSearch.GetLength()>0 && strSearch.Right(1)!=":")
+    if(strSearch.GetLength()>0)
         strSearch.Append(", ");
 
     strNameValue.Append(strCriteriaName);
@@ -673,6 +701,15 @@ void CSearchDlg::PrepareHistoryString(const CString &strCriteriaName,CString & s
 
     m_treeSearchHistory.InsertItem(strNameValue,hParent,NULL);
 }
+
+void CSearchDlg::PrepareHistoryString(const CString &strCriteriaName,int & strSearchValue,HTREEITEM hParent,CString &strSearch)
+{
+    char buffer[10];
+    _itoa(strSearchValue,buffer,10);
+    PrepareHistoryString(strCriteriaName,CString(buffer),hParent,strSearch);
+
+}
+
 
 void CSearchDlg::InsertHistory(CString strHistory)
 {
@@ -690,43 +727,82 @@ void CSearchDlg::InsertHistory(CString strHistory)
     HTREEITEM hItem=m_treeSearchHistory.InsertItem("Dummy",NULL,TVI_LAST);
     HTREEITEM hFirstCriteria=m_treeSearchHistory.InsertItem("First Search Criteria",hItem,TVI_FIRST);
     HTREEITEM hSecondCriteria=m_treeSearchHistory.InsertItem("Second Search Criteria",hItem,TVI_LAST);
+    HTREEITEM hOtherCriteria=m_treeSearchHistory.InsertItem("Other",hItem,TVI_LAST);
 
     CString strSearch;
 
-    ReadHistoryValue("Name",strHistory,TRUE,readValue);
+    ReadHistoryValue("Name",strHistory,readValue);
     InsertTextToControl(readValue,m_edtNameCtrlFirst);
     PrepareHistoryString(CString("Name"),readValue,hFirstCriteria,strSearch);
-    
-    ReadHistoryValue("Role",strHistory,TRUE,readValue);
+
+    ReadHistoryValue("Role",strHistory,readValue);
     InsertTextToControl(readValue,m_edtRoleNameCtrlFirst);
     PrepareHistoryString(CString("Role"),readValue,hFirstCriteria,strSearch);
 
-    ReadHistoryValue("Kind",strHistory,TRUE,readValue);
-     InsertTextToControl(readValue,m_edtKindNameCtrlFirst);
+    ReadHistoryValue("Kind",strHistory,readValue);
+    InsertTextToControl(readValue,m_edtKindNameCtrlFirst);
     PrepareHistoryString(CString("Kind"),readValue,hFirstCriteria,strSearch);
 
-    ReadHistoryValue("Attribute",strHistory,TRUE,readValue);
+    ReadHistoryValue("Attribute",strHistory,readValue);
     InsertTextToControl(readValue,m_edtAttributeCtrlFirst);
     PrepareHistoryString(CString("Attribute"),readValue,hFirstCriteria,strSearch);
 
+    //if no first search criteria items are there delete it
+    int length=strSearch.GetLength();
+    if(length==0)
+        m_treeSearchHistory.DeleteItem(hFirstCriteria);
+
     //search criteria separator
-    strSearch.Append(":");
+    //strSearch.Append(":");
 
-    ReadHistoryValue("Name",strHistory,FALSE,readValue);
+    ReadHistoryValue("Second Name",strHistory,readValue);
     InsertTextToControl(readValue,m_edtNameCtrlSecond);
-    PrepareHistoryString(CString("Name"),readValue,hSecondCriteria,strSearch);
+    PrepareHistoryString(CString("Second Name"),readValue,hSecondCriteria,strSearch);
 
-    ReadHistoryValue("Role",strHistory,FALSE,readValue);
+    ReadHistoryValue("Second Role",strHistory,readValue);
     InsertTextToControl(readValue,m_edtRoleNameCtrlSecond);
-    PrepareHistoryString(CString("Role"),readValue,hSecondCriteria,strSearch);
+    PrepareHistoryString(CString("Second Role"),readValue,hSecondCriteria,strSearch);
 
-    ReadHistoryValue("Kind",strHistory,FALSE,readValue);
+    ReadHistoryValue("Second Kind",strHistory,readValue);
     InsertTextToControl(readValue,m_edtKindNameCtrlSecond);
-    PrepareHistoryString(CString("Kind"),readValue,hSecondCriteria,strSearch);
+    PrepareHistoryString(CString("Second Kind"),readValue,hSecondCriteria,strSearch);
 
-    ReadHistoryValue("Attribute",strHistory,FALSE,readValue);
+    ReadHistoryValue("Second Attribute",strHistory,readValue);
     InsertTextToControl(readValue,m_edtAttributeCtrlSecond);
-    PrepareHistoryString(CString("Attribute"),readValue,hSecondCriteria,strSearch);
+    PrepareHistoryString(CString("Second Attribute"),readValue,hSecondCriteria,strSearch);
+
+    //check if second search criteria has been added
+    length=strSearch.GetLength()-length;
+    if(length==0)
+         m_treeSearchHistory.DeleteItem(hSecondCriteria);
+
+
+    ReadHistoryValue("Logical",strHistory,m_radioLogical);
+    PrepareHistoryString("Logical",m_radioLogical,hOtherCriteria,strSearch);
+
+    ReadHistoryValue("Model",strHistory,m_chkMod);
+    PrepareHistoryString("Model",m_chkMod,hOtherCriteria,strSearch);
+
+    ReadHistoryValue("Atom",strHistory,m_chkAtom);
+    PrepareHistoryString("Atom",m_chkAtom,hOtherCriteria,strSearch);
+
+    ReadHistoryValue("Set",strHistory,m_chkSet);
+    PrepareHistoryString("Set",m_chkSet,hOtherCriteria,strSearch);
+
+    ReadHistoryValue("Reference",strHistory,m_chkRef);
+    PrepareHistoryString("Reference",m_chkRef,hOtherCriteria,strSearch);
+
+    ReadHistoryValue("Case",strHistory,m_chkMatchCase);
+    PrepareHistoryString("Case",m_chkMatchCase,hOtherCriteria,strSearch);
+
+    ReadHistoryValue("WholeWord",strHistory,m_chkFullWord);
+    PrepareHistoryString("WholeWord",m_chkFullWord,hOtherCriteria,strSearch);
+
+    ReadHistoryValue("Scope",strHistory,m_radioScope);
+    PrepareHistoryString("Scope",m_radioScope,hOtherCriteria,strSearch);
+
+    ReadHistoryValue("Results",strHistory,m_searchResults);
+    PrepareHistoryString("Results",m_searchResults,hOtherCriteria,strSearch);
 
     m_treeSearchHistory.SetItemText(hItem,strSearch);
 
@@ -737,41 +813,27 @@ void CSearchDlg::InsertHistory(CString strHistory)
 //first it looks for the criteria name
 //when found takes the string after that as the value
 //the quotes and commas are removed, 2 search criterias are differentiated by ':'
-void CSearchDlg::ReadHistoryValue(const CString &strCriteriaName, CString &strHistory,BOOL firstSearchCriteria, CString &strValue)
+void CSearchDlg::ReadHistoryValue(const CString &strCriteriaName, CString &strHistory, CString &strValue)
 {
     //clear the output string
     strValue="";
     CString strTemp(strCriteriaName);
     strTemp.Append("=");
-    int colonIndex=strHistory.Find(":");
     int indexText,indexComma;
-    if(firstSearchCriteria)
-    {
-        indexText=strHistory.Left(colonIndex).Find(strTemp);
-        if(indexText==-1) return;
-        indexComma=strHistory.Left(colonIndex).Find(",",indexText);
-        indexComma=indexComma==-1?colonIndex:indexComma;
-    }
+    indexText=strHistory.Find(strTemp);
+    if(indexText==-1) return;
+    indexComma=strHistory.Find(",",indexText);
+    indexComma=indexComma==-1?strHistory.GetLength():indexComma;
+    int start=indexText + strTemp.GetLength()+1;
+    strValue=strHistory.Mid(start,indexComma-start-1);
 
-    //as both search criteria label has same name like Name, Role
-    //if its not the first search criteria to be searched for we proceed
-    //to find the second search criteria
-    else if(!firstSearchCriteria)
-    {
-        indexText=strHistory.Right(strHistory.GetLength()-colonIndex).Find(strTemp);
-        if(indexText==-1)
-            return;
-        indexComma=strHistory.Right(strHistory.GetLength()-colonIndex).Find(",",indexText);
-        if(indexComma==-1)
-        {
-            indexComma=strHistory.GetLength();
-        }
-        indexText+=colonIndex;
-    }
-    int start=indexText + strTemp.GetLength();
+}
 
-    //get the string removing the double quotes
-    strValue=strHistory.Mid(start+1,indexComma-start-2).Trim();
+void CSearchDlg::ReadHistoryValue(const CString &strCriteriaName,CString &strHistory, int &value)
+{
+    CString strValue;
+    ReadHistoryValue(strCriteriaName,strHistory,strValue);
+    value=atoi(strValue.GetBuffer());
 }
 
 void CSearchDlg::SearchResults()
@@ -817,16 +879,26 @@ void CSearchDlg::OnNMDblclkTreeSearchHistory(NMHDR *pNMHDR, LRESULT *pResult)
         strSearchText=m_treeSearchHistory.GetItemText(hItem);
 
     //first search criteria
-    ReadHistoryValue("Name",strSearchText,TRUE,m_edtNameFirst);
-    ReadHistoryValue("Role",strSearchText,TRUE,m_edtRoleNameFirst);
-    ReadHistoryValue("Kind",strSearchText,TRUE,m_edtKindNameFirst);
-    ReadHistoryValue("Attribute",strSearchText,TRUE,m_edtAttributeFirst);
+    ReadHistoryValue("Name",strSearchText,m_edtNameFirst);
+    ReadHistoryValue("Role",strSearchText,m_edtRoleNameFirst);
+    ReadHistoryValue("Kind",strSearchText,m_edtKindNameFirst);
+    ReadHistoryValue("Attribute",strSearchText,m_edtAttributeFirst);
 
     //second search criteria
-    ReadHistoryValue("Name",strSearchText,FALSE,m_edtNameSecond);
-    ReadHistoryValue("Role",strSearchText,FALSE,m_edtRoleNameSecond);
-    ReadHistoryValue("Kind",strSearchText,FALSE,m_edtKindNameSecond);
-    ReadHistoryValue("Attribute",strSearchText,FALSE,m_edtAttributeSecond);
+    ReadHistoryValue("Second Name",strSearchText,m_edtNameSecond);
+    ReadHistoryValue("Second Role",strSearchText,m_edtRoleNameSecond);
+    ReadHistoryValue("Second Kind",strSearchText,m_edtKindNameSecond);
+    ReadHistoryValue("Second Attribute",strSearchText,m_edtAttributeSecond);
+
+    //others ReadHistoryValue("Logical",strHistory,m_radioLogical);
+    ReadHistoryValue("Model",strSearchText,m_chkMod);
+    ReadHistoryValue("Atom",strSearchText,m_chkAtom);
+    ReadHistoryValue("Set",strSearchText,m_chkSet);
+    ReadHistoryValue("Reference",strSearchText,m_chkRef);
+    ReadHistoryValue("Case",strSearchText,m_chkMatchCase);
+    ReadHistoryValue("WholeWord",strSearchText,m_chkFullWord);
+    ReadHistoryValue("Scope",strSearchText,m_radioScope);
+    ReadHistoryValue("Results",strSearchText,m_searchResults);
 
     UpdateData(FALSE);    
     *pResult = 0;

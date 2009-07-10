@@ -333,6 +333,7 @@ void CSearchCtrl::SetMgaProject(LPUNKNOWN newValue)
 		m_searchDlg.DisableSearch();
 		m_project = NULL;
 		m_territory = NULL;
+        m_MgaObjs.Release();
 	}
 }
 
@@ -540,8 +541,29 @@ void CSearchCtrl::SelMgaObjects(IUnknown* p_selMgaObjs)
 		}
 
 		m_MgaObjs = ccpMgaObjects;
-		//m_searchDlg.EnableScoped( TRUE);
+		
 	}
-	
-	//SetModifiedFlag();
+    else { // called when Dlg is Hidden, in order to release the Mga ptrs
+		m_MgaObjs.Release();
+	}
+}
+
+//added to make enter key work in dialog
+//the message from the parent CGMESearch is transmitted to OLE control
+//which is this, after this message is obtained its forwarded to dialog
+//so that it is properly taken care of
+
+BOOL CSearchCtrl::PreTranslateMessage(MSG *pMsg)
+{
+    if( pMsg->message == WM_KEYDOWN )
+	{
+		switch(pMsg->wParam)
+		{
+			case VK_RETURN:
+			case VK_TAB:
+                return this->m_searchDlg.PreTranslateMessage(pMsg);
+			
+		}
+	}
+    return FALSE;
 }

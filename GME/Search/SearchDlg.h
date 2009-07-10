@@ -103,8 +103,17 @@ public:
 private:
     //insert history to combobox
     void InsertHistory(CString string);
+
+    //prepare history string by appending search term name and value pairs. value is enclose by quotes
     void PrepareHistoryString(const CString &strCriteriaName,CString & strSearchValue,HTREEITEM hParent,CString &strSearch);
-    void ReadHistoryValue(const CString &strCriteriaName, CString &strHistory,BOOL firstSearchCriteria, CString &strValue);
+    void PrepareHistoryString(const CString &strCriteriaName,int & strSearchValue,HTREEITEM hParent,CString &strSearch);
+    
+    //reverse of prepare extract search value from the saved string
+    //string and int version with string extracting string value and int version extracting
+    //integer values
+    void ReadHistoryValue(const CString &strCriteriaName, CString &strHistory, CString &strValue);
+    void ReadHistoryValue(const CString &strCriteriaName,CString &strHistory, int &value);
+   
     //called to enter history text to combobox
     //checks first if it exists at the first index of items
     //if it does it is not inserted, else inserted
@@ -124,7 +133,6 @@ private:
 protected:
 	
     CSearchCtrl *GetCtrl() { return (CSearchCtrl*)GetParent(); }
-
 	void BuildExtendedName(IMgaFCO *named, CString &extName);
 	void BuildExtendedName(IMgaFolder *named, CString &extName);
 	void DisplayResults();
