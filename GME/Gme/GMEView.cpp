@@ -6139,18 +6139,23 @@ void CGMEView::OnEditDelete()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditDelete in "+path+name+"\r\n");
 
-	GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
-	DeleteAnnotations(selectedAnnotations);
-	RemoveAllAnnotationFromSelection();
-	ClearConnectionSelection();
+	if (selectedConnection && selected.IsEmpty() && selectedAnnotations.IsEmpty()) {
+		if(!DeleteConnection(selectedConnection))
+			AfxMessageBox("Connection cannot be deleted!");
+	} else {
+		GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
+		DeleteAnnotations(selectedAnnotations);
+		RemoveAllAnnotationFromSelection();
+		ClearConnectionSelection();
 
-	if(!isType)
-		return;
+		if(!isType)
+			return;
 
-	GMEEVENTLOG_GUIOBJS(selected);
-	this->SendUnselEvent4List( &selected);
-	if(DeleteObjects( selected))
-		selected.RemoveAll();
+		GMEEVENTLOG_GUIOBJS(selected);
+		this->SendUnselEvent4List( &selected);
+		if(DeleteObjects( selected))
+			selected.RemoveAll();
+	}
 }
 
 void CGMEView::OnUpdateEditDelete(CCmdUI* pCmdUI)
@@ -6158,7 +6163,7 @@ void CGMEView::OnUpdateEditDelete(CCmdUI* pCmdUI)
 	if( !selected.IsEmpty())
 		pCmdUI->Enable( isType);
 	else
-		pCmdUI->Enable(!selectedAnnotations.IsEmpty());
+		pCmdUI->Enable(!selectedAnnotations.IsEmpty() || (selectedConnection && isType));
 }
 
 void CGMEView::OnContextProperties()
