@@ -3646,9 +3646,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para>GME always calls your methods in a read-only MGA transaction. You
       must not initiate new transactions in your decorator.
-      <code>SaveState()</code> method is the only exception to this rule. This
-      method is called in a read-write transaction, therefore, this is the
-      only place where you can store decorator specific information in the MGA
+      <code>SaveState()</code> is the only exception to this rule. This method
+      is called in a read-write transaction, therefore, this is the only place
+      where you can store decorator specific information in the MGA
       project.</para>
 
       <table>
@@ -3868,10 +3868,11 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         <para>You can use the <code>DecoratorUtils</code> helper facility
         during the initialization of the decorator and also at later time. The
         facility provides easier access to preference and attribute values of
-        an object. Besides that it contains font, pen, brush and bitmap cache.
-        There's a <code>PreferenceMap</code> class used during initialization
-        to pass various settings, preference and attribute values easily among
-        the Decorator Part objects of the Decorator Part hierarchy.</para>
+        an object. Besides that, it contains font, pen, brush and bitmap
+        caches. There's a <code>PreferenceMap</code> class used during
+        initialization to pass various settings, preference and attribute
+        values easily among the Decorator Part objects of the Decorator Part
+        hierarchy.</para>
 
         <para><programlisting format="linespecific"> HRESULT GetPreferredSize([out] long* sizex, [out] long* sizey) </programlisting>Your
         decorator can give GME a hint about the size of the object to be
@@ -3910,7 +3911,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         the coordinates you got in <code>SetLocation()</code>.</para>
 
         <para><programlisting format="linespecific"> HRESULT SetActive([in] VARIANT_BOOL isActive) </programlisting>GME
-        calls this method with <code>VARIANT_FALSE</code>, if your object must
+        calls this method with <code>VARIANT_FALSE</code> if your object must
         be shown in gray color. (Eg.: GME was switched into “set” mode.) By
         default the decorator should paint its object with the active
         color.</para>
@@ -3998,7 +3999,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         <code>WM_LBUTTONDOWN</code> is over the view window and the cursor is
         close to or above the particular decorator's area. The decorator can
         decide if it wants to start some operation or change the cursor
-        (return <code>S_DECORATOR_EVENT_HANDLED</code>) or do not do anything
+        (return <code>S_DECORATOR_EVENT_HANDLED</code>) or not do anything
         special (return <code>S_DECORATOR_EVENT_NOT_HANDLED</code>).</para>
 
         <para>For the explanation of parameters and return values see the
@@ -4019,7 +4020,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         by GME, it constructs a specific context menu. If there are decorators
         below or near the cursor, they get the opportunity to add some
         additional menu items into the menu. If any of the decorators add menu
-        item (or complete submenu) to the supplied context menu handle, GME
+        items (or complete submenu) to the supplied context menu handle, GME
         creates a submenu titled “Decorator Edit”, and puts the decorator's
         context menu as a submenu in that.</para>
 
@@ -4032,21 +4033,21 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         initiated by the decorator (through the
         <code>IMgaCommonDecoratorEvents</code> interface, like label editing,
         window resizing or any other operation) was canceled because of some
-        reason. The decorator should admit the message and free any resources
-        associated to the initiated operation on the decorator's side.</para>
+        reason. The decorator should free any resources associated with the
+        initiated operation on the decorator's side.</para>
 
-        <para><programlisting format="linespecific"> HRESULT DragEnter([out] ULONG* dropEffect, [in] ULONGLONG pCOleDataObject, [in] ULONG keyState, [in] LONG pointx, [in] LONG pointy, [in] HDC transformHDC) </programlisting>Decorator
-        receives this if the system wants to determine whether a drop can be
-        accepted, and, if so, the effect of the drop. This message corresponds
-        to the <code>DragEnter</code> message of the <code>IDropTarget</code>
-        COM interface, see <acronym>MSDN</acronym>. Other functions of this
-        native Windows interface is <code>DragLeave</code>,
-        <code>DragOver</code> and <code>Drop</code>, these messages work with
-        each other. For a simple example you may take a look at the
-        <code>SampleDecorator</code> code in the <code>NewDecoratorKit</code>
-        in the <acronym>SDK</acronym>.</para>
+        <para><programlisting format="linespecific" id="method-dragenter"> HRESULT DragEnter([out] ULONG* dropEffect, [in] ULONGLONG pCOleDataObject, [in] ULONG keyState, [in] LONG pointx, [in] LONG pointy, [in] HDC transformHDC) </programlisting>The
+        decorator receives this if the system wants to determine whether a
+        drop can be accepted, and, if so, the effect of the drop. This message
+        corresponds to the <code>DragEnter</code> message of the
+        <code>IDropTarget</code> COM interface, see <acronym>MSDN</acronym>.
+        Other functions of this native Windows interface is
+        <code>DragLeave</code>, <code>DragOver</code> and <code>Drop</code>,
+        these messages work with each other. For a simple example you may take
+        a look at the <code>SampleDecorator</code> code in the
+        <code>NewDecoratorKit</code> in the <acronym>SDK</acronym>.</para>
 
-        <para><code>dropEffect</code>: On entry, pointer to the value of the
+        <para><code>dropEffect</code>: On entry, a pointer to the value of the
         <code>pdwEffect</code> parameter of the <code>DoDragDrop</code>
         function. On return, must contain one of the effect flags from the
         <code>DROPEFFECT</code> enumeration, which indicates what the result
@@ -4097,10 +4098,10 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
         <para><programlisting format="linespecific"> HRESULT DropFile([in] ULONGLONG hDropInfo, [in] LONG pointx, [in] LONG pointy, [in] HDC transformHDC) </programlisting><code>DropFile</code>
         is a completely different way to handle possible drop operations, than
-        the previously seen three <code>IDropTarget</code> mocking method.
-        While the previous three method usually used during drag-drop
-        operations initiated inside the GME environment, DropFile only capable
-        of dealing with file drop operations.</para>
+        the previously seen three <code>IDropTarget</code>-like methods. While
+        the previous three method usually used during drag-drop operations
+        initiated inside the GME environment, <code>DropFile</code> only
+        capable of dealing with file drop operations.</para>
 
         <para><code>hDropInfo</code>: Handle to a native Win32 internal drop
         structure. Use the <code>DragQueryFile</code> Win32 API function to
@@ -4111,7 +4112,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         in the SDK.</para>
 
         <para>For the explanation of the coordinate and coordinate
-        transformation parameters see <code>DragEnter</code> function.</para>
+        transformation parameters, see <link
+        linkend="method-dragenter"><code>DragEnter</code></link>
+        function.</para>
       </section>
     </section>
 
@@ -4368,49 +4371,46 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         function signals to GME that a UI refresh is needed.</para>
 
         <para><programlisting format="linespecific">HRESULT OperationCanceled()</programlisting>The
-        decorator signals towards GME that an initiated operation was canceled
-        because of some reason. The reason can be anything but it emerged on
-        the decorator's side, and a cancel decision was made. The operation
-        was started by the decorator also in the past.</para>
+        decorator signals GME that an initiated operation was canceled because
+        of some reason. The reason can be anything but it emerged on the
+        decorator's side, and a cancel decision was made. The operation was
+        started by the decorator also in the past.</para>
 
         <para><programlisting format="linespecific">HRESULT CursorChanged([in] LONG newCursorID)</programlisting>The
-        decorator signals towards GME that the cursor is changed. The
-        <code>newCursorID</code> parameter tells the new form of the
+        decorator signals GME that the cursor is changed. The
+        <code>newCursorID</code> parameter indicates the new form of the
         cursor.</para>
 
         <para><programlisting format="linespecific">HRESULT CursorRestored()</programlisting>The
-        decorator signals towards GME that the previously changed and saved
-        cursor is restored to its original state.</para>
+        decorator signals GME that the previously changed cursor is restored
+        to its original state.</para>
 
         <para><programlisting format="linespecific">HRESULT LabelEditingStarted([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that a label editing
-        operation is started. The coordinates specify the operation's (the
-        label) area.</para>
+        decorator tells GME that a label editing operation is started. The
+        coordinates specify the operation's (the label) area.</para>
 
         <para><programlisting format="linespecific">HRESULT LabelEditingFinished([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that a label editing
-        operation is finished. The coordinates specify the operation's (the
-        label) area. This should be the last message, because this will issue
-        the transaction commit command. The <code>LabelChanged</code> message
-        must precede it!</para>
+        decorator tells GME that a label editing operation is finished. The
+        coordinates specify the operation's (the label) area. This should be
+        the last message, because this will issue the transaction commit
+        command. The <code>LabelChanged</code> message must precede it!</para>
 
         <para><programlisting format="linespecific">HRESULT LabelChanged([in] BSTR newLabel)</programlisting>The
-        decorator tells to GME with this function that the new value of the
-        label is finalized and the transaction can be opened. The
-        <code>newLabel</code> is passed to GME, but the decorator is
-        responsible for issuing the actual label change command, because it
-        can be very different: changing a preference or an attribute. The
-        decorator must call <code>LabelChanged</code> function before
-        modifying the mga object. The decorator also must call the
-        <code>LabelEditingFinished</code> function after that, in order to
-        have the transaction committed by GME.</para>
+        decorator tells GME that the new value of the label is finalized and
+        the transaction can be opened. The <code>newLabel</code> is passed to
+        GME, but the decorator is responsible for issuing the actual label
+        change command, because it can be very different: changing a
+        preference or an attribute. The decorator must call
+        <code>LabelChanged</code> function before modifying the mga object.
+        The decorator also must call the <code>LabelEditingFinished</code>
+        function after that, in order to have the transaction committed by
+        GME.</para>
 
         <para><programlisting format="linespecific">HRESULT LabelMovingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that a label moving
-        operation is started. The coordinates specify the operation's (the
-        label) area. Note that currently none of the GME's bundled decorators
-        (default (box) decorator, UML decorator, meta decorator) use this
-        feature.</para>
+        decorator tells GME that a label moving operation is started. The
+        coordinates specify the operation's (the label) area. Note that
+        currently none of the GME's bundled decorators (default (box)
+        decorator, UML decorator, meta decorator) use this feature.</para>
 
         <para><code>nFlag</code> came from a GME message (see
         <code>MouseLeftButtonDown</code> above for example), and can be
@@ -4418,32 +4418,30 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         it.</para>
 
         <para><programlisting format="linespecific">HRESULT LabelMoving([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that the label position is
-        changed, and we are still in the label moving operation. The
-        coordinates specify the actual location of the label.</para>
+        decorator tells GME that the label position is changed, and we are
+        still in the label moving operation. The coordinates specify the
+        actual location of the label.</para>
 
         <para><programlisting format="linespecific">HRESULT LabelMovingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that a label moving
-        operation is finished. The coordinates specify the actual location of
-        the label. This should be the last message, because this will issue
-        the transaction commit command. The <code>LabelMoved</code> message
-        must precede it!</para>
+        decorator tells GME that a label moving operation is finished. The
+        coordinates specify the actual location of the label. This should be
+        the last message, because this will issue the transaction commit
+        command. The <code>LabelMoved</code> message must precede it!</para>
 
         <para><programlisting format="linespecific">HRESULT LabelMoved([in] LONG nFlags, [in] LONG x, [in] LONG y)</programlisting>The
-        decorator tells to GME with this function that the new location of the
-        label is finalized and the transaction can be opened. The x and y
-        parameters supposed to be the delta values compared to the previous
-        location of the label. The decorator must call <code>LabelMoved</code>
-        function before modifying the mga object. The decorator also must call
-        the <code>LabelMovingFinished</code> function after that, in order to
-        have the transaction committed by GME.</para>
+        decorator tells GME that the new location of the label is finalized
+        and the transaction can be opened. The <code>x</code> and
+        <code>y</code> parameters are the delta values compared to the
+        previous location of the label. The decorator must call
+        <code>LabelMoved</code> function before modifying the mga object. The
+        decorator also must call the <code>LabelMovingFinished</code> function
+        after that, in order to have the transaction committed by GME.</para>
 
         <para><programlisting format="linespecific">HRESULT LabelResizingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that a label resizing
-        operation is started. The coordinates specify the operation's (the
-        label) area. Note that currently none of the GME's bundled decorators
-        (default (box) decorator, UML decorator, meta decorator) use this
-        feature.</para>
+        decorator tells GME that a label resizing operation is started. The
+        coordinates specify the operation's (the label) area. Note that
+        currently none of the GME's bundled decorators (default (box)
+        decorator, UML decorator, meta decorator) use this feature.</para>
 
         <para><code>nFlag</code> came from a GME message (see
         <code>MouseLeftButtonDown</code> above for example), and can be
@@ -4451,48 +4449,45 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         it.</para>
 
         <para><programlisting format="linespecific">HRESULT LabelResizing([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that the label size is
-        changed, and we are still in the label resizing operation. The
-        coordinates specify the actual location of the label.</para>
+        decorator tells GME that the label size is changed, and we are still
+        in the label resizing operation. The coordinates specify the actual
+        location of the label.</para>
 
         <para><programlisting format="linespecific">HRESULT LabelResizingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that a label resizing
-        operation is finished. The coordinates specify the actual location of
-        the label. This should be the last message, because this will issue
-        the transaction commit command. The <code>LabelResized</code> message
-        must precede it!</para>
+        decorator tells GME that a label resizing operation is finished. The
+        coordinates specify the actual location of the label. This should be
+        the last message, because this will issue the transaction commit
+        command. The <code>LabelResized</code> message must precede it!</para>
 
         <para><programlisting format="linespecific">HRESULT LabelResized([in] LONG nFlags, [in] LONG x, [in] LONG y)</programlisting>The
-        decorator tells to GME with this function that the new location of the
-        label is finalized and the transaction can be opened. The x and y
-        parameters supposed to be the delta values compared to the previous
-        location of the label. The decorator must call
+        decorator tells GME that the new location of the label is finalized
+        and the transaction can be opened. The <code>x</code> and
+        <code>y</code> parameters are the delta values compared to the
+        previous location of the label. The decorator must call
         <code>LabelResized</code> function before modifying the mga object.
         The decorator also must call the <code>LabelResizingFinished</code>
         function after that, in order to have the transaction committed by
         GME.</para>
 
         <para><programlisting format="linespecific">HRESULT GeneralOperationStarted([in] ULONGLONG operationData)</programlisting>The
-        decorator tells to GME with this function that some editing operation
-        is started. GME will open a transaction as a result of this message.
-        If the decorator handles some user defined data to the GME in the
-        parameter, it will get it back later when the
-        <code>GeneralOperationFinished</code> is called. Decorator can give a
-        pointer to a memory object or just <code>NULL</code> as a data.</para>
+        decorator tells GME that some editing operation is started. GME will
+        open a transaction as a result of this message. If the decorator
+        handles some user defined data to the GME in the parameter, it will
+        get it back later when the <code>GeneralOperationFinished</code> is
+        called. Decorator can give a pointer to a memory object or just
+        <code>NULL</code> as a data.</para>
 
         <para><programlisting format="linespecific">HRESULT GeneralOperationFinished([out] ULONGLONG* operationData)</programlisting>The
-        decorator tells to GME with this function that the previously started
-        operation is finished. GME will commit the opened transaction as a
-        result of this message. If the decorator wants to cancel the
-        operation, it can call the <code>OperationCanceled</code>
-        function.</para>
+        decorator tells GME that the previously started operation is finished.
+        GME will commit the opened transaction as a result of this message. If
+        the decorator wants to cancel the operation, it can call the
+        <code>OperationCanceled</code> function.</para>
 
         <para><programlisting format="linespecific">HRESULT WindowMovingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that a window moving
-        operation is started. The coordinates specify the operation's (the
-        window) area. Note that currently none of the GME's bundled decorators
-        (default (box) decorator, UML decorator, meta decorator) use this
-        feature.</para>
+        decorator tells GME that a window moving operation is started. The
+        coordinates specify the operation's (the window) area. Note that
+        currently none of the GME's bundled decorators (default (box)
+        decorator, UML decorator, meta decorator) use this feature.</para>
 
         <para><code>nFlag</code> came from a GME message (see
         <code>MouseLeftButtonDown</code> above for example), and can be
@@ -4500,33 +4495,31 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         it.</para>
 
         <para><programlisting format="linespecific">HRESULT WindowMoving([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that the window position is
-        changed, and we are still in the window moving operation. The
-        coordinates specify the actual location of the window.</para>
+        decorator tells GME that the window position is changed, and we are
+        still in the window moving operation. The coordinates specify the
+        actual location of the window.</para>
 
         <para><programlisting format="linespecific">HRESULT WindowMovingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that a window moving
-        operation is finished. The coordinates specify the actual location of
-        the window. This should be the last message, because this will issue
-        the transaction commit command. The <code>WindowMoved</code> message
-        must precede it!</para>
+        decorator tells GME that a window moving operation is finished. The
+        coordinates specify the actual location of the window. This should be
+        the last message, because this will issue the transaction commit
+        command. The <code>WindowMoved</code> message must precede it!</para>
 
         <para><programlisting format="linespecific">HRESULT WindowMoved([in] LONG nFlags, [in] LONG x, [in] LONG y)</programlisting>The
-        decorator tells to GME with this function that the new location of the
-        window is finalized and the transaction can be opened. The x and y
-        parameters supposed to be the delta values compared to the previous
-        location of the window. The decorator must call
+        decorator tells GME that the new location of the window is finalized
+        and the transaction can be opened. The <code>x</code> and
+        <code>y</code> parameters are the delta values compared to the
+        previous location of the window. The decorator must call
         <code>WindowMoved</code> function before modifying the mga object. The
         decorator also must call the <code>WindowMovingFinished</code>
         function after that, in order to have the transaction committed by
         GME.</para>
 
         <para><programlisting format="linespecific">HRESULT WindowResizingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that a window resizing
-        operation is started. The coordinates specify the operation's (the
-        window) area. Note that currently none of the GME's bundled decorators
-        (default (box) decorator, UML decorator, meta decorator) use this
-        feature.</para>
+        decorator tells GME that a window resizing operation is started. The
+        coordinates specify the operation's (the window) area. Note that
+        currently none of the GME's bundled decorators (default (box)
+        decorator, UML decorator, meta decorator) use this feature.</para>
 
         <para><code>nFlag</code> came from a GME message (see
         <code>MouseLeftButtonDown</code> above for example), and can be
@@ -4534,26 +4527,26 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         it.</para>
 
         <para><programlisting format="linespecific">HRESULT WindowResizing([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that the window size is
-        changed, and we are still in the window resizing operation. The
-        coordinates specify the actual location of the window.</para>
+        decorator tells GME that the window size is changed, and we are still
+        in the window resizing operation. The coordinates specify the actual
+        location of the window.</para>
 
         <para><programlisting format="linespecific">HRESULT WindowResizingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom)</programlisting>The
-        decorator tells to GME with this function that a window resizing
-        operation is finished. The coordinates specify the actual location of
-        the window. This should be the last message, because this will issue
-        the transaction commit command. The <code>WindowResized</code> message
-        must precede it!</para>
+        decorator tells GME that a window resizing operation is finished. The
+        coordinates specify the actual location of the window. This should be
+        the last message, because this will issue the transaction commit
+        command. The <code>WindowResized</code> message must precede
+        it!</para>
 
         <para><programlisting format="linespecific">HRESULT WindowResized([in] LONG nFlags, [in] LONG x, [in] LONG y)</programlisting>The
-        decorator tells to GME with this function that the new location of the
-        window is finalized and the transaction can be opened. The
-        <code>x</code> and <code>y</code> parameters supposed to be the delta
-        values compared to the previous location of the window. The decorator
-        must call <code>WindowResized</code> function before modifying the mga
-        object. The decorator also must call the
-        <code>WindowResizingFinished</code> function after that, in order to
-        have the transaction committed by GME.</para>
+        decorator tells GME that the new location of the window is finalized
+        and the transaction can be opened. The <code>x</code> and
+        <code>y</code> parameters are the delta values compared to the
+        previous location of the window. The decorator must call
+        <code>WindowResized</code> function before modifying the mga object.
+        The decorator also must call the <code>WindowResizingFinished</code>
+        function after that, in order to have the transaction committed by
+        GME.</para>
       </section>
     </section>
 
@@ -4562,11 +4555,11 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para>The <code>NewDecoratorKit</code> sample takes advantage of the
       class hierarchy and utilities provided by the new
-      <code>DecoratorKit</code> library. The source code intended to be used
-      with Microsoft Visual Studio 2008. Because of the new DecoratorKit the
-      sample can inherit resizability properties and in-place label editing
-      features from the infrastructure. It also demonstrates context menu
-      usage and drag-drop handling.</para>
+      <code>DecoratorKit</code> library. The source code is intended to be
+      used with Microsoft Visual Studio 2008. Because of the new DecoratorKit,
+      the sample can inherit resizability properties and in-place label
+      editing features from the infrastructure. It also demonstrates context
+      menu usage and drag-drop handling.</para>
 
       <para>The <code>DecoratorKit</code> source code provides a really
       stripped down example implementation containing only the flat
@@ -4627,8 +4620,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para>The new box decorator (GME's default decorator), annotator
       decorator, meta decorator and UML decorator all use the
-      <code>DecoratorLib</code> helper library. The purpose of this library is
-      very versatile: <itemizedlist>
+      <code>DecoratorLib</code> helper library. The goals of this library are
+      as follows: <itemizedlist>
           <listitem>
             <para>It abstracts the COM interface and provides a higher level
             C++ interface</para>
@@ -4645,7 +4638,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
           <listitem>
             <para>With the help of the decorator parts you can get many handy
-            features for free: resizability, in-place text editing, vectorial
+            features for free: resizability, in-place text editing, vector
             shapes, shape shadows and gradient fills</para>
           </listitem>
 
@@ -4656,8 +4649,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
 
           <listitem>
-            <para>DecoratorUtil also provides cached pen, brush and font
-            object to make the drawing operations resource aware</para>
+            <para><code>DecoratorUtil</code> also provides cached pen, brush
+            and font object to make the drawing operations resource
+            aware</para>
           </listitem>
 
           <listitem>
@@ -4669,7 +4663,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       <para>Using the <code>DecoratorLib</code> library requires from you the
       following in you Visual Studio project: <itemizedlist>
           <listitem>
-            <para>Using Visual Studio 2008 is the supported IDE</para>
+            <para>Visual Studio 2008 is the supported IDE</para>
           </listitem>
 
           <listitem>
@@ -4683,30 +4677,29 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
         </itemizedlist></para>
 
-      <para>It might be advisable to start your project based on the
-      NewDecoratorKit sample decorator, or one of the existing decorators,
-      which are part of the GME source code: MgaDecorators, UML decorator or
-      Meta decorator.</para>
+      <para>it is advisable to start your project based on the
+      <code>NewDecoratorKit</code> sample decorator, or one of the existing
+      decorators, which are part of the GME source code: MgaDecorators, UML
+      decorator or Meta decorator.</para>
 
       <para>The new class library hierarchy is based on the
-      <code>PartInterface</code> C++ interface which is higher level and much
-      nicer than the plain COM interface level. Based on the C++ there's a
-      complete class hierarchy, where the root class is the
-      <code>PartBase</code>. You can use <code>CompositePart</code> and other
-      Part as building blocks to relatively easily add rich functionality to
-      your decorator. Some typical building blocks: <itemizedlist>
+      <code>PartInterface</code> C++ interface which is higher-level and much
+      nicer than the plain COM interface level. There's a complete class
+      hierarchy, where the root class is the <code>PartBase</code>. You can
+      use <code>CompositePart</code> and other Parts as building blocks to
+      relatively easily add rich functionality to your decorator. Some typical
+      building blocks: <itemizedlist>
           <listitem>
-            <para><code>TypeableBitmapPart</code>: it's a building block which
-            can display bitmaps. It can also display “type”, “subtype” and
+            <para><code>TypeableBitmapPart</code>: a building block which can
+            display bitmaps. It can also display “type”, “subtype” and
             “reference” tiny marker icons to clearly indicate these
             circumstances visually.</para>
           </listitem>
 
           <listitem>
-            <para><code>TypeableLabelPart</code>: Besides it is capable of
-            displaying the label of an object and allows in-place editing of
-            the text, it is able to display type information about the
-            object.</para>
+            <para><code>TypeableLabelPart</code>: Besides displaying the label
+            of an object and allowing in-place editing of the text, it is able
+            to display type information about the object.</para>
           </listitem>
 
           <listitem>
@@ -4718,7 +4711,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
 
           <listitem>
-            <para><code>VectorPart</code>: The vector part uses an own scheme
+            <para><code>VectorPart</code>: The vector part uses its own scheme
             to describe vectorial graphics, but there are several ready-to-use
             vectorial shapes, like: <code>TriangleVectorPart</code>,
             <code>EllipseVectorPart</code> or
@@ -4733,26 +4726,25 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       we add a vector part and a label part to the encapsulating composite
       part. The UML and the Meta decorator source contains a switch here, the
       branching decision is made according to the name of the meta object. For
-      example in case of constrain meta elements the needed constraint
-      vectorial part are used as the graphical part of the decorator.</para>
+      example in case of constraint meta elements, the needed constraint
+      vectorial parts are used as the graphical part of the decorator.</para>
 
       <para>You can use the <code>PreferenceMap</code> container to pass
       various settings of the decorators between the parts during the
       initialization phase.</para>
 
       <para>After building up your decorator you probably want to customize it
-      with extra functionalities. You should use the
-      <code>DecoratorUtils</code> helper singleton class wherever it's
-      possible to save system resources and you can implement certain tasks
-      easier with it: <itemizedlist>
+      with extra functionality. You should use the <code>DecoratorUtils</code>
+      helper singleton class wherever it's possible to save system resources
+      and you can implement certain tasks easier with it: <itemizedlist>
           <listitem>
-            <para>You can easier access preferences and attributes of the mga
-            objects, see <code>getAttribute</code> and
+            <para>You can more easily access preferences and attributes of the
+            mga objects; see <code>getAttribute</code> and
             <code>getPreference</code> functions.</para>
           </listitem>
 
           <listitem>
-            <para>You can get cached pen, brush and font object to make the
+            <para>You can get cached pen, brush and font objects to make the
             drawing operations resource aware, see <code>GetFont</code>,
             <code>GetPen</code>, <code>GetBrush</code> functions.</para>
           </listitem>
@@ -4791,11 +4783,10 @@ MGA.Decorator.MetaDecorator showattributes=false, showabstract=true</programlist
 
     <para>The metamodeling environment has been extended with a new decorator
     component in version 1.2 or later. It displays UML classes including their
-    stereotypes and attributes. Proxies also show this information It resizes
-    UML classes accordingly. Note that the figures below show the old
-    appearance of metamodels.</para>
+    stereotypes and attributes. Proxies also show this information. It resizes
+    UML classes accordingly.</para>
 
-    <para>GME adds a OCL syntax checker add-on to the metamodeling
+    <para>GME has a OCL syntax checker add-on for the metamodeling
     environment. Every time a constraint expression attribute is changed, this
     add-on is activated. Note that the target paradigm information is not
     available to this tool, therefore, it cannot check arguments and
