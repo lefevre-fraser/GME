@@ -86,6 +86,7 @@ BEGIN_DISPATCH_MAP(CGMEOLEModel, CCmdTarget)
 	DISP_FUNCTION(CGMEOLEModel, "Zoom", Zoom, VT_EMPTY, VTS_I4)
 	DISP_FUNCTION(CGMEOLEModel, "ZoomTo", ZoomTo, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION(CGMEOLEModel, "Scroll", Scroll, VT_EMPTY, VTS_I2 VTS_I2)
+	DISP_FUNCTION(CGMEOLEModel, "DumpModelGeometryXML", DumpModelGeometryXML, VT_HRESULT, VTS_BSTR)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
@@ -485,6 +486,15 @@ void CGMEOLEModel::Scroll(long bar, long scroll)
 	m_view->Invalidate();
 }
 
+HRESULT CGMEOLEModel::DumpModelGeometryXML(LPCTSTR filePath) 
+{
+	CGMEEventLogger::LogGMEEvent("CGMEOLEModel::DumpModelGeometryXML()\r\n");
+
+	PRECONDITION_VALID_MODEL
+
+	return m_view->DumpModelGeometryXML(filePath);
+}
+
 DELEGATE_DUAL_INTERFACE(CGMEOLEModel, Dual)
 
 // Implement ISupportErrorInfo to indicate we support the
@@ -736,6 +746,18 @@ STDMETHODIMP CGMEOLEModel::XDual::Scroll(bar_enum bar, scroll_enum scroll)
 	{
 		pThis->Scroll(bar, scroll);
 		return NOERROR;
+	}
+	CATCH_ALL_DUAL
+}
+
+
+STDMETHODIMP CGMEOLEModel::XDual::DumpModelGeometryXML(BSTR filePath)
+{
+	METHOD_PROLOGUE(CGMEOLEModel, Dual)
+
+	TRY_DUAL(IID_IGMEOLEModel)
+	{
+		return pThis->DumpModelGeometryXML(CString(filePath));
 	}
 	CATCH_ALL_DUAL
 }

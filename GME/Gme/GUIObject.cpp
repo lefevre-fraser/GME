@@ -2190,9 +2190,18 @@ CGuiConnectionLabel::CGuiConnectionLabel():
 {
 }
 
+CGuiConnectionLabel::~CGuiConnectionLabel()
+{
+}
+
 void CGuiConnectionLabel::SetLabel(const CString& l)
 {
 	label = l;
+}
+
+void CGuiConnectionLabel::SetPrimary(bool prim)
+{
+	primary = prim;
 }
 
 void CGuiConnectionLabel::SetLocation(const CPoint& endPoint, const CPoint& nextPoint, const CRect& box)
@@ -2295,6 +2304,21 @@ void CGuiConnectionLabel::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConn
 	graphics.DrawGdipText(gdip, label, loc, graphics.GetGdipFont(GME_CONNLABEL_FONT), color, alignment);
 }
 
+CPoint CGuiConnectionLabel::GetLocation(void) const
+{
+	return loc;
+}
+
+int CGuiConnectionLabel::GetAlignment(void) const
+{
+	return alignment;
+}
+
+CString CGuiConnectionLabel::GetLabel(void) const
+{
+	return label;
+}
+
 ////////////////////////////////// CGuiConnectionLabel /////////////////////////////
 
 CGuiConnectionLabelSet::CGuiConnectionLabelSet()
@@ -2304,6 +2328,10 @@ CGuiConnectionLabelSet::CGuiConnectionLabelSet()
 	labels[GME_CONN_DST_LABEL1].SetPrimary(false);
 	labels[GME_CONN_DST_LABEL2].SetPrimary(true);
 	labels[GME_CONN_MAIN_LABEL].SetPrimary(true);
+}
+
+CGuiConnectionLabelSet::~CGuiConnectionLabelSet()
+{
 }
 
 void CGuiConnectionLabelSet::SetLabel(int index, const CString& label)
@@ -2324,6 +2352,30 @@ void CGuiConnectionLabelSet::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiC
 {
 	for(int i = 0; i < GME_CONN_LABEL_NUM; i++)
 		labels[i].Draw(gdip, color, conn);
+}
+
+CPoint CGuiConnectionLabelSet::GetLocation(int index) const
+{
+	CPoint pt(-1, -1);
+	if (index >= 0 || index < GME_CONN_LABEL_NUM)
+		pt = labels[index].GetLocation();
+	return pt;
+}
+
+int CGuiConnectionLabelSet::GetAlignment(int index) const
+{
+	int alignment = 0;
+	if (index >= 0 || index < GME_CONN_LABEL_NUM)
+		alignment = labels[index].GetAlignment();
+	return alignment;
+}
+
+CString CGuiConnectionLabelSet::GetLabel(int index) const
+{
+	CString label;
+	if (index >= 0 || index < GME_CONN_LABEL_NUM)
+		label = labels[index].GetLabel();
+	return label;
 }
 
 
@@ -3498,6 +3550,11 @@ void CGuiConnection::WriteAutoRouteState(bool handleTransaction)
 	COMTHROW(mgaFco->put_RegistryValue(pathBstr, bstrVal));
 	if (handleTransaction)
 		view->CommitTransaction();
+}
+
+CGuiConnectionLabelSet& CGuiConnection::GetLabelSet(void)
+{
+	return labelset;
 }
 
 ////////////////////////////////////////////////

@@ -624,7 +624,8 @@ BEGIN_DISPATCH_MAP(CGMEOLEIt, CCmdTarget)
 	DISP_FUNCTION(CGMEOLEIt, "HideSetMembers", HideSetMembers, VT_EMPTY, VTS_NONE)
 	DISP_FUNCTION(CGMEOLEIt, "Zoom", Zoom, VT_EMPTY, VTS_I4)
 	DISP_FUNCTION(CGMEOLEIt, "ZoomTo", ZoomTo, VT_EMPTY, VTS_DISPATCH)
-	DISP_FUNCTION(CGMEOLEIt, "Scroll", Scroll, VT_EMPTY, VTS_I2 VTS_I2) 
+	DISP_FUNCTION(CGMEOLEIt, "Scroll", Scroll, VT_EMPTY, VTS_I2 VTS_I2)
+	DISP_FUNCTION(CGMEOLEIt, "DumpModelGeometryXML", DumpModelGeometryXML, VT_HRESULT, VTS_BSTR)
 
 
 	DISP_FUNCTION(CGMEOLEIt, "ShowFCO", ShowFCO, VT_EMPTY, VTS_BSTR VTS_BOOL)
@@ -1076,6 +1077,15 @@ void CGMEOLEIt::Scroll(long bar, long scroll)
 		m_theView->OnVScroll(code, 1, NULL);
 
 	m_theView->Invalidate();
+}
+
+HRESULT CGMEOLEIt::DumpModelGeometryXML(LPCTSTR filePath) 
+{
+	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::DumpModelGeometryXML()\r\n");
+
+	PRECONDITION_VALID_MODEL
+
+	return m_theView->DumpModelGeometryXML(filePath);
 }
 
 //static
@@ -3127,6 +3137,18 @@ STDMETHODIMP CGMEOLEIt::XDual::Scroll(bar_enum bar, scroll_enum scroll)
 	{
 		pThis->Scroll(bar, scroll);
 		return NOERROR;
+	}
+	CATCH_ALL_DUAL
+}
+
+
+STDMETHODIMP CGMEOLEIt::XDual::DumpModelGeometryXML(BSTR filePath)
+{
+	METHOD_PROLOGUE(CGMEOLEIt, Dual)
+
+	TRY_DUAL(IID_IGMEOLEIt)
+	{
+		return pThis->DumpModelGeometryXML(CString(filePath));
 	}
 	CATCH_ALL_DUAL
 }

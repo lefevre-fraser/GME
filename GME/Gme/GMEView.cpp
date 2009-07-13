@@ -31,6 +31,19 @@
 #include "Autoroute/AutoRouterGraph.h"	// just for testing auto router performance
 #include <sys/timeb.h>
 
+// The following is for Xerces, for DumpModelGeometryXML
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/framework/LocalFileFormatTarget.hpp>
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
+#include <iostream.h>
+#endif
+#include <xercesc/util/OutOfMemoryException.hpp>
+
 CGraphics graphics;
 static CViewList viewsToKill;
 
@@ -5337,11 +5350,8 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			ShowAnnotationBrowser(fcoToShow, annotation->rootNode);
 		}
 		else {
-			OnViewParent();	// double click on model background brings up the parent model
-							// user requested standard behavior
-/*
-			// Auto Router stress test
-#define _DEBUG
+//#ifdef _DEBUG
+/*			// Auto Router stress test
 			struct _timeb measuerementStartTime;
 			_ftime(&measuerementStartTime);
 			CString structSizeStr;
@@ -5356,9 +5366,14 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			CString elapsedTimeStr;
 			elapsedTimeStr.Format("Ellapsed: %lu s + %d ms\n", elapsedSeconds, elapsedMilliSeconds);
 			OutputDebugString(elapsedTimeStr);
-			Reset();
-#endif
-*/
+			Reset();*/
+			// XML dump test
+//			HRESULT hr = DumpModelGeometryXML("C:\\XMLDump.xml");
+//#else
+			OnViewParent();	// double click on model background brings up the parent model
+							// user requested standard behavior
+
+//#endif
 		}
 	}
 	CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
@@ -6937,6 +6952,242 @@ void CGMEView::CancelDecoratorOperation(bool notify)
 		AbortTransaction(S_OK);
 		inOpenedDecoratorTransaction = false;
 	}
+}
+
+XERCES_CPP_NAMESPACE_USE
+
+// ---------------------------------------------------------------------------
+//  This is a simple class that lets us do easy (though not terribly efficient)
+//  trancoding of char* data to XMLCh data.
+// ---------------------------------------------------------------------------
+class XStr
+{
+public :
+	// -----------------------------------------------------------------------
+	//  Constructors and Destructor
+	// -----------------------------------------------------------------------
+	XStr(const char* const toTranscode)
+	{
+		// Call the private transcoding method
+		fUnicodeForm = XMLString::transcode(toTranscode);
+	}
+
+	~XStr()
+	{
+		XMLString::release(&fUnicodeForm);
+	}
+
+
+	// -----------------------------------------------------------------------
+	//  Getter methods
+	// -----------------------------------------------------------------------
+	const XMLCh* unicodeForm() const
+	{
+		return fUnicodeForm;
+	}
+
+private :
+	// -----------------------------------------------------------------------
+	//  Private data members
+	//
+	//  fUnicodeForm
+	//      This is the Unicode XMLCh format of the string.
+	// -----------------------------------------------------------------------
+	XMLCh*   fUnicodeForm;
+};
+
+#define X(str) XStr(str).unicodeForm()
+
+
+HRESULT CGMEView::DumpModelGeometryXML(LPCTSTR filePath)
+{
+	HRESULT hr = S_OK;
+	try {
+		XMLPlatformUtils::Initialize();
+
+		DOMImplementation* impl =  DOMImplementationRegistry::getDOMImplementation(X("Core"));
+		if (impl != NULL)
+		{
+			try
+			{
+				xercesc::DOMDocument* doc = impl->createDocument(
+							0,					// root element namespace URI.
+							X("model"),			// root element name
+							0);					// document type object (DTD).
+
+				DOMElement* rootElem = doc->getDocumentElement();
+				rootElem->setAttribute(X("name"), X(name));
+				rootElem->setAttribute(X("id"), X(CString(currentModId)));
+
+				DOMElement* aspectsElem = doc->createElement(X("aspects"));
+				rootElem->appendChild(aspectsElem);
+				// save current aspect
+				SaveCurrAsp();
+				POSITION aspPos = guiMeta->aspects.GetHeadPosition();
+				// rotate through all aspects
+				while (aspPos) {
+					CGuiMetaAspect* asp = guiMeta->aspects.GetNext(aspPos);
+					ChangePrnAspect(asp->name);
+					DOMElement* aspectElem = doc->createElement(X("aspect"));
+					aspectsElem->appendChild(aspectElem);
+					CString intValStr;
+					intValStr.Format("%ld", asp->index);
+					aspectElem->setAttribute(X("index"), X(intValStr));					
+					aspectElem->setAttribute(X("name"), X(asp->name));
+
+					// List the contained elements (objects, connections)
+					DOMElement* objsElem = doc->createElement(X("objects"));
+					aspectElem->appendChild(objsElem);
+					DOMElement* connsElem = doc->createElement(X("connections"));
+					aspectElem->appendChild(connsElem);
+
+					POSITION pos = children.GetHeadPosition();
+					while (pos) {
+						CGuiFco* fco = children.GetNext(pos);
+						ASSERT(fco != NULL);
+						if (fco->IsVisible()) {
+							CGuiObject* obj = fco->dynamic_cast_CGuiObject();
+							if (obj) {
+								DOMElement* objElem = doc->createElement(X("object"));
+								objsElem->appendChild(objElem);
+								objElem->setAttribute(X("name"), X(obj->GetName()));
+								objElem->setAttribute(X("id"), X(obj->GetID()));
+
+								CString intValStr;
+								CRect loc = obj->GetLocation();
+								DOMElement* locElem = doc->createElement(X("location"));
+								objElem->appendChild(locElem);
+								intValStr.Format("%ld", loc.left);
+								locElem->setAttribute(X("left"), X(intValStr));
+								intValStr.Format("%ld", loc.top);
+								locElem->setAttribute(X("top"), X(intValStr));
+								intValStr.Format("%ld", loc.right);
+								locElem->setAttribute(X("right"), X(intValStr));
+								intValStr.Format("%ld", loc.bottom);
+								locElem->setAttribute(X("bottom"), X(intValStr));
+
+								CRect nameLoc = obj->GetNameLocation();
+								DOMElement* nameLocElem = doc->createElement(X("namelocation"));
+								objElem->appendChild(nameLocElem);
+								intValStr.Format("%ld", nameLoc.left);
+								nameLocElem->setAttribute(X("left"), X(intValStr));
+								intValStr.Format("%ld", nameLoc.top);
+								nameLocElem->setAttribute(X("top"), X(intValStr));
+								intValStr.Format("%ld", nameLoc.right);
+								nameLocElem->setAttribute(X("right"), X(intValStr));
+								intValStr.Format("%ld", nameLoc.bottom);
+								nameLocElem->setAttribute(X("bottom"), X(intValStr));
+							}
+							CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
+							if (conn) {
+								DOMElement* connElem = doc->createElement(X("connection"));
+								connsElem->appendChild(connElem);
+								connElem->setAttribute(X("name"), X(conn->GetName()));
+								connElem->setAttribute(X("id"), X(conn->GetID()));
+
+								CString intValStr;
+								CPointList points;
+								conn->GetPointList(points);
+								DOMElement* pointsElem = doc->createElement(X("points"));
+								connElem->appendChild(pointsElem);
+
+								POSITION pos = points.GetHeadPosition();
+								while (pos) {
+									CPoint pt = points.GetNext(pos);
+									DOMElement* ptElem = doc->createElement(X("pt"));
+									pointsElem->appendChild(ptElem);
+									intValStr.Format("%ld", pt.x);
+									ptElem->setAttribute(X("x"), X(intValStr));
+									intValStr.Format("%ld", pt.y);
+									ptElem->setAttribute(X("y"), X(intValStr));
+								}
+
+								DOMElement* labelsElem = doc->createElement(X("labels"));
+								connElem->appendChild(labelsElem);
+								for(int i = 0; i < GME_CONN_LABEL_NUM; i++)
+								{
+									CGuiConnectionLabelSet& labelset = conn->GetLabelSet();
+									CString label = labelset.GetLabel(i);
+									if (label.GetLength() > 0) {
+										DOMElement* labelElem = NULL;
+										switch(i) {
+											case GME_CONN_SRC_LABEL1: labelElem = doc->createElement(X("srcLabel1")); break;
+											case GME_CONN_SRC_LABEL2: labelElem = doc->createElement(X("srcLabel2")); break;
+											case GME_CONN_DST_LABEL1: labelElem = doc->createElement(X("dstLabel1")); break;
+											case GME_CONN_DST_LABEL2: labelElem = doc->createElement(X("dstLabel2")); break;
+											case GME_CONN_MAIN_LABEL: labelElem = doc->createElement(X("mainLabel")); break;
+										}
+										labelsElem->appendChild(labelElem);
+										CPoint pt = labelset.GetLocation(i);
+										intValStr.Format("%ld", pt.x);
+										labelElem->setAttribute(X("x"), X(intValStr));
+										intValStr.Format("%ld", pt.y);
+										labelElem->setAttribute(X("y"), X(intValStr));
+										intValStr.Format("%ld", labelset.GetAlignment(i));
+										labelElem->setAttribute(X("alignment"), X(intValStr));
+										labelElem->setAttribute(X("label"), X(label));
+									}
+								}
+							}
+						}
+					}
+				}
+				// restore Aspect
+				CGuiMetaAspect* lastcurr = GetSavedAsp();
+				ChangePrnAspect(lastcurr->name);
+				Invalidate();
+
+				//
+				// Now serialize the DOM tree with pretty print format.
+				//
+
+				DOMWriter* theSerializer = impl->createDOMWriter();
+				theSerializer->setNewLine(X("\n\r"));
+				theSerializer->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true);
+				XMLFormatTarget* myFormatTarget = new LocalFileFormatTarget(filePath);
+				theSerializer->writeNode(myFormatTarget, *doc);
+
+				// Free up stuff
+
+				delete myFormatTarget;
+				theSerializer->release();
+
+				doc->release();
+			}
+			catch (const OutOfMemoryException&)
+			{
+				XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+				hr = E_FAIL;
+			}
+			catch (const DOMException& e)
+			{
+				XERCES_STD_QUALIFIER cerr << "DOMException code is:  " << e.code << XERCES_STD_QUALIFIER endl;
+				hr = E_FAIL;
+			}
+			catch (...)
+			{
+				XERCES_STD_QUALIFIER cerr << "An error occurred creating the document" << XERCES_STD_QUALIFIER endl;
+				hr = E_FAIL;
+			}
+		} // (inpl != NULL)
+		else
+		{
+			XERCES_STD_QUALIFIER cerr << "Requested implementation is not supported" << XERCES_STD_QUALIFIER endl;
+			hr = E_FAIL;
+		}
+
+		XMLPlatformUtils::Terminate();
+	}
+	catch(const XMLException& toCatch)
+	{
+		char *pMsg = XMLString::transcode(toCatch.getMessage());
+		XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
+			 << "  Exception message:"
+			 << pMsg;
+		XMLString::release(&pMsg);
+	}
+
+	return hr;
 }
 
 void CGMEView::OnConncntxProperties()

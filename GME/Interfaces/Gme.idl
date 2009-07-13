@@ -196,6 +196,7 @@ interface IGMEOLEIt : IDispatch // the current/active opened view (model)
 	[id(16)] HRESULT Zoom([in] DWORD percent);
 	[id(17)] HRESULT ZoomTo([in] IMgaFCOs* mgaFCOs);
 	[id(18)] HRESULT Scroll([in] bar_enum, [in] scroll_enum);
+	[id(19)] HRESULT DumpModelGeometryXML([in] BSTR filePath);
 
 
 	// methods allowing the user to generate models ie. from the scripting window:
@@ -312,6 +313,7 @@ interface IGMEOLEModel : IDispatch // actually it corresponds to a view
 	[id(16)] HRESULT Zoom([in] DWORD percent); // for open models only
 	[id(17)] HRESULT ZoomTo([in] IMgaFCOs* mgaFCOs); // for open models only
 	[id(18)] HRESULT Scroll([in] bar_enum, [in] scroll_enum); // for opened models only
+	[id(19)] HRESULT DumpModelGeometryXML([in] BSTR filePath);
 
 };
 

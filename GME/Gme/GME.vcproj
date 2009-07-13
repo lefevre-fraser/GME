@@ -54,7 +54,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="../Common;../Interfaces;../Gme"
+				AdditionalIncludeDirectories="../Common;../Interfaces;../Include;../Gme"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -83,7 +83,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdiplus.lib"
+				AdditionalDependencies="gdiplus.lib xerces-c_2.lib"
 				OutputFile=".\Release/GME.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -154,7 +154,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Common;../Interfaces;../Gme"
+				AdditionalIncludeDirectories="../Common;../Interfaces;../Include;../Gme"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -184,7 +184,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdiplus.lib"
+				AdditionalDependencies="gdiplus.lib xerces-c_2D.lib"
 				OutputFile=".\Debug/GME.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"

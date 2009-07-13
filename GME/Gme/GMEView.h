@@ -338,6 +338,7 @@ public:
 	bool					ShouldSupressConnectionCheckAlert(void) const { return m_supressConnectionCheckAlert; };
 	void					ClearSupressConnectionCheckAlert(void) { m_supressConnectionCheckAlert = false; };
 	void					SupressConnectionCheckAlert(void) { m_supressConnectionCheckAlert = true; };
+	HRESULT					DumpModelGeometryXML(LPCTSTR filePath);
 
 	virtual int				OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
 

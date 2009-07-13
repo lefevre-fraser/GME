@@ -69,6 +69,7 @@ protected:
 	afx_msg void Zoom(long percent);
 	afx_msg void ZoomTo(LPDISPATCH mgaFCOs);
 	afx_msg void Scroll(long bar, long scroll);
+	afx_msg HRESULT DumpModelGeometryXML(LPCTSTR filePath);
 
 	DECLARE_DISPATCH_MAP()
 	DECLARE_INTERFACE_MAP()
@@ -94,6 +95,7 @@ protected:
 		STDMETHOD(Zoom)(THIS_ DWORD percent);
 		STDMETHOD(ZoomTo)(THIS_ IMgaFCOs* mgaFCOs);
 		STDMETHOD(Scroll)(THIS_ bar_enum bar, scroll_enum scroll);
+		STDMETHOD(DumpModelGeometryXML)(THIS_ BSTR filePath);
 	END_DUAL_INTERFACE_PART(Dual)
 
 	

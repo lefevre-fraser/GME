@@ -97,6 +97,7 @@ protected:
 	afx_msg void Zoom(long percent);
 	afx_msg void ZoomTo(LPDISPATCH mgaFCOs);
 	afx_msg void Scroll(long bar, long scroll); 
+	afx_msg HRESULT DumpModelGeometryXML(LPCTSTR filePath);
 
 	afx_msg BOOL GetValid();
 	afx_msg void SetValid(BOOL);
@@ -185,6 +186,7 @@ protected:
 		STDMETHOD(Zoom)(THIS_ DWORD percent);
 		STDMETHOD(ZoomTo)(THIS_ IMgaFCOs* mgaFCOs);
 		STDMETHOD(Scroll)(THIS_ bar_enum bar, scroll_enum scroll);
+		STDMETHOD(DumpModelGeometryXML)(THIS_ BSTR filePath);
 
 		STDMETHOD(ShowFCO)(THIS_ BSTR path, VARIANT_BOOL inparent);
 		STDMETHOD(ShowFCOPtr)(THIS_ IMgaFCO* ptr, VARIANT_BOOL inparent);

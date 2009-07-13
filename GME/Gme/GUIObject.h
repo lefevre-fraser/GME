@@ -391,23 +391,29 @@ private:
 	bool primary;
 public:
 	CGuiConnectionLabel();
-	virtual ~CGuiConnectionLabel() {};
+	virtual ~CGuiConnectionLabel();
 	void SetLabel(const CString& l);
-	void SetPrimary(bool prim)	{ primary = prim; }
+	void SetPrimary(bool prim);
 	void SetLocation(const CPoint& endPoint, const CPoint& nextPoint, const CRect& box);
 	void Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection* conn);
+	CPoint GetLocation(void) const;
+	int GetAlignment(void) const;
+	CString GetLabel(void) const;
 };
 
 class CGuiConnectionLabelSet {
 public:
 	CGuiConnectionLabelSet();
-	virtual ~CGuiConnectionLabelSet() {};
+	virtual ~CGuiConnectionLabelSet();
 private:
 	CGuiConnectionLabel labels[GME_CONN_LABEL_NUM];
 public:
 	void SetLabel(int index, const CString& label);
 	void SetLocation(int index, const CPoint& endPoint, const CPoint& nextPoint, const CRect& box);
 	void Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConnection* conn);
+	CPoint GetLocation(int index) const;
+	int GetAlignment(int index) const;
+	CString GetLabel(int index) const;
 };
 
 enum ConnectionPartMoveType {
@@ -473,6 +479,7 @@ public:
 	void ConvertAutoRoutedPathToCustom(long asp, bool handleTransaction = false, bool expectedAutoRouterState = true);
 	bool ReadAutoRouteState(void);
 	void WriteAutoRouteState(bool handleTransaction = true);
+	CGuiConnectionLabelSet& GetLabelSet(void);
 
 	virtual bool IsVisible(int aspect = -1)				{ return visible && visible[aspect < 0 ? parentAspect : aspect]; }
 	virtual void RemoveFromRouter(CAutoRouter &router);
