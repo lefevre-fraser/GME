@@ -6167,7 +6167,7 @@ MGA.Decorator.MetaDecorator showattributes=false, showabstract=true</programlist
     </section>
 
     <section>
-      <title>Semantics Guide to Metamodeling</title>
+      <title>Metamodeling Semantics</title>
 
       <para>The following table displays the representation of the concepts of
       GME, and how they translate semantically into core MGA concepts.</para>
@@ -6543,8 +6543,6 @@ MGA.Decorator.MetaDecorator showattributes=false, showabstract=true</programlist
     <section>
       <title>Builder Object Network version 1.0</title>
 
-      <para></para>
-
       <section>
         <title>What Does the BON Do?</title>
 
@@ -6606,16 +6604,16 @@ public:
         can then be access through recursive traversal of the children of
         model builders.</para>
 
-        <para>The CBuilderModelList contains the builders corresponding to the
-        models selected at the time interpretation was started. If the
-        component was started through the main window (either through the
-        toolbar or the File menu) then the list contains one model builder,
-        the one corresponding to the active window. If the interpretation was
-        started through a context menu (i.e. right click) then the list
-        contains items for all the selected objects in the given window. If
-        the interpretation was started through the context menu of the Model
-        Browser, then the list contains the builders for the selected models
-        in the browser.</para>
+        <para>The <code>CBuilderModelList</code> contains the builders
+        corresponding to the models selected at the time interpretation was
+        started. If the component was started through the main window (either
+        through the toolbar or the File menu) then the list contains one model
+        builder, the one corresponding to the active window. If the
+        interpretation was started through a context menu (i.e. right click)
+        then the list contains items for all the selected objects in the given
+        window. If the interpretation was started through the context menu of
+        the Model Browser, then the list contains the builders for the
+        selected models in the browser.</para>
 
         <para>Using this list parameter of the Invoke function makes it
         possible to start the interpretation at models the user selects. The
@@ -6744,8 +6742,8 @@ public:
         specified in the meta, for menus, it is a CString and for toggle
         switches, it is a bool.</para>
 
-        <para>The GetxxxAttributeNames functions return the list of names of
-        attributes the given object has. This helps writing
+        <para>The <code>GetxxxAttributeNames</code> functions return the list
+        of names of attributes the given object has. This helps writing
         paradigm-independent components (plug-ins).</para>
 
         <para>The <code>GetReferencedBy</code> function returns the list of
@@ -7162,8 +7160,6 @@ void CCompoundBuilder::Scan(CString foldName)
     <section>
       <title>Meta Object Network</title>
 
-      <para></para>
-
       <section>
         <title>What is MON?</title>
 
@@ -7388,7 +7384,7 @@ void CCompoundBuilder::Scan(CString foldName)
         <title>How to Use Mon</title>
 
         <para>We mentioned earlier BON2 is based on MON thus it is obvious
-        there are a lot of similarities between the two object network.
+        there are a lot of similarities between the two object networks.
         Because for an interpreter writer the architecture of BON2 is more
         important than MON, we will mention the specific usage and differences
         during the discussion of BON2.</para>
@@ -7398,29 +7394,27 @@ void CCompoundBuilder::Scan(CString foldName)
     <section>
       <title>Builder Object Network version 2.0</title>
 
-      <para></para>
-
       <section>
         <title>Architecture of BON2</title>
 
-        <para>So that the user will use and extend BON2 appropriately, she
-        must understand the architecture and the essential concepts
-        implemented by default in the object network. When somebody would like
-        to write an interpreter, she wants to do it as fast as it is possible,
-        she does not want to deal with typical programming issues (i.e. object
-        disposal, complexity of COM, etc.) and she would like to face only
-        with task came from specific domain. If an interpreter writer follows
-        the rules discussed in these subsections and she is familiar with GME,
-        she almost has to know nothing about C++ and COM to achieve the goal
-        simply and very fast.</para>
+        <para>For a user to use and extend BON2 appropriately, she must
+        understand the architecture and the essential concepts implemented by
+        default in the object network. When somebody would like to write an
+        interpreter, she wants to do it as fast as it is possible, she does
+        not want to deal with typical programming issues (i.e. object
+        disposal, complexity of COM, etc.), and she would like to face only
+        the domain-specific task. If an interpreter writer follows the rules
+        discussed in these subsections and she is familiar with GME, she has
+        to know almost nothing about C++ and COM to achieve the goal simply
+        and very fast.</para>
 
         <para>BON2 defines three layers (four layers) based on each other:
         <itemizedlist>
             <listitem>
-              <para>COM layer (0. layer) – Simply to say, this is the
-              programmable interface of GME, the lowest layer which should be
-              absolutely hidden for the user because of its complexity and in
-              the case of interpreters the superfluous knowledge to use COM
+              <para>COM layer (0. layer) – This is the programmable interface
+              of GME, the lowest layer which should be absolutely hidden from
+              the user because of its complexity, and, in the case of
+              interpreters, the superfluous knowledge of how to use COM
               properly. Correspondent files are <filename
               moreinfo="none">meta.idl</filename>, <filename
               moreinfo="none">mga.idl</filename>. Example:
@@ -7431,27 +7425,27 @@ void CCompoundBuilder::Scan(CString foldName)
               <para>Implementation layer (1.a. layer) – This layer is the core
               of BON2 in which all easy-to-use calls using MON are translated
               into COM operations. This is the place where BON objects are
-              cached also and where the basics of BON2 extensions are
-              implemented. Correspondent files are MONImpl.h, BONImpl.h.
-              Example: <code>BON::FCOImp</code>l implementation class.</para>
+              cached and where the basics of BON2 extensions are implemented.
+              Correspondent files are MONImpl.h, BONImpl.h. Example:
+              <code>BON::FCOImp</code>l implementation class.</para>
             </listitem>
 
             <listitem>
-              <para>Interface layer (1.b. layer) – This consists of those
+              <para>Interface layer (1.b. layer) – This consists of the
               classes and operations which are exported to the user (i.e. they
-              have public visibility). These are discussed in the Appendix of
-              MON and BON. In the current state of BON2 this layer is built
-              into the previous one. Correspondent files are MON.h, BONImpl.h.
-              Example should be: <code>BON::FCOInt</code> interface class, but
-              it is th same <code>BON::FCOImpl</code>.</para>
+              have public visibility). These are discussed in the Appendix
+              concerning MON and BON. Currently, this layer is built into the
+              previous one. Correspondent files are
+              <filename>MON.h</filename>, <filename>BONImpl.h</filename>.
+              Example: <code>BON::FCOImpl</code>.</para>
             </listitem>
 
             <listitem>
-              <para>Wrapper layer (2. layer) – The top most layer consists the
-              wrappers which handles the objects’ references instead of the
-              user and serves pointer-like interface. When a user uses BON2,
-              she always has to deal with these classes. Correspondent files
-              are <filename moreinfo="none">MON.h</filename>, <filename
+              <para>Wrapper layer (2. layer) – The top most layer consists of
+              the wrappers which handle the object references and provides a
+              pointer-like interface. When a user uses BON2, she always has to
+              deal with these classes. Correspondent files are <filename
+              moreinfo="none">MON.h</filename>, <filename
               moreinfo="none">BON.h</filename>. Example: <code>BON::FCO</code>
               wrapper class.</para>
             </listitem>
@@ -7461,44 +7455,31 @@ void CCompoundBuilder::Scan(CString foldName)
       <section>
         <title>Wrapper Classes</title>
 
-        <para>The wrappers are created in order to ease to implement
-        components and let the user concentrate only the interpreter
-        writing.</para>
+        <para>The wrappers are created in order to make interpreter writing
+        easier.</para>
 
-        <para>First of all wrappers should be considered as special pointers
-        (i.e. in the programming terminology smart-pointers) which hold a
-        pointer to a real object and if all (direct or indirect) references
-        are released to the real object, they disposes the object
-        automatically. Consequently in the aspect of a component implementor
-        there is no difference between to wrapper object if they hold pointer
-        to the relevant, real object. That is why, in lots of cases there is
-        no point to create wrapper objects dynamically or get the address of
-        them. However it is not prohibited, it is not recommended because if
-        the user did not dispose only one wrapper pointer, memory leak will be
-        the result (because of the dependencies it can be very
-        serious).</para>
+        <para>First of all, wrappers should be considered as special pointers
+        (i.e. <emphasis>smart pointers</emphasis>) which hold a pointer to a
+        real object. If all (direct or indirect) references to the real object
+        are released, the object is disposed of automatically. It is
+        recommended to use this automatic mechanism instead of a manual
+        garbage collection scheme.</para>
 
-        <para>Of course wrapper classes make available the relevant object's
-        pointers because they serve the specific interface of the class
-        itself. For example BON::FCO let access to the pointer BON::FCOImpl
-        because the implementation class has the proper operations of FCO.
-        Considering BON classes this indirection goes with operator[-&gt;] ,
-        in contrary MON wrappers use the simple operator[.]. Here is an
-        example demonstrate the mentioned above. <programlisting
-        format="linespecific"> 
-BON::FCO fco; // Here is an fco. 
+        <para>BON2 wrapper classes use the operator <code>-&gt;</code> to
+        access functionality, in contrast to MON wrappers which use the simple
+        operator <code>.</code>. Here is an example:<programlisting
+        format="linespecific">BON::FCO fco; // Here is an fco. 
 // fco.isPort( ); // This would result a compiler error because the wrapper does not have this operation. 
-fco-&gt;isPort( ); // The operator[-&gt;] will result a BON::FCOImpl pointer. 
+fco-&gt;isPort( ); // The operator[-&gt;] dereferences a BON::FCOImpl pointer. 
 MON::FCO metafco = fco-&gt;getFCOMeta(); // obtain the definition of the FCO. 
 std::string strKindName = metafco.name(); // get the name of the meta, the kindname of the object </programlisting></para>
 
         <important>
           <para>Although advanced programmers may get the pointer of the
-          implementation object and may store it outside of wrappers, it is
-          not recommended, because they have to be sure somehow the pointer is
-          valid and not disposed already. With the wrappers the validity of a
-          BON object can be decided easily thanked to operator[bool] and to
-          operator[!].</para>
+          implementation object and store it outside of wrappers, it is not
+          recommended, because they have to be sure somehow the pointer is
+          valid and not disposed already. With the wrappers, validity of a BON
+          object can be determined by operator[bool] and operator[!].</para>
         </important>
 
         <programlisting format="linespecific">BON::Project project; // Let’s assume the project is valid. 
@@ -7507,14 +7488,14 @@ if ( root ) AfxMessageBox( “RootFolder always exists!” );
 BON::Folder parent = root-&gt;getParentFolder(); // Get the parent of the root, which is NULL. 
 if ( ! parent ) AfxMessageBox( “RootFolder never has parent” ); </programlisting>
 
-        <para>The user can check the equality of two BON object with the
-        <code>operator[=]</code> and <code>operator[!=]</code>. It must be
-        emphasized that this equality means two COM objects equality and the
-        wrappers’. It is not necessary to obtain the implementation pointers
-        to check whether two objects are equal or not. The
-        <code>operator[&lt;]</code> makes possible that the objects may be
-        included into any kind of STL container including sets and maps also.
-        These operators can be used for all BON objects (e.g.
+        <para>The user can check the equality of two BON objects with the
+        <code>operator[==]</code> and <code>operator[!=]</code>. It must be
+        emphasized that this equality means that the two COM objects are
+        equal, not (necessarily) the wrappers. It is not necessary to obtain
+        the implementation pointers to check whether two objects are equal or
+        not. The <code>operator[&lt;]</code> makes it possible for the objects
+        to be included into any kind of STL container, including sets and
+        maps. These operators can be used for all BON objects (e.g.
         <code>BON::Project</code> is comparable with
         <code>BON::ReferencePort</code>).</para>
 
@@ -7530,32 +7511,28 @@ BON::Model model = object;
 if ( model ) AfxMessageBox( “The parent is a model” ); 
 if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </programlisting></para>
 
-        <para>These facilities are implemented in the wrapper classes, the
-        operations related with specific metakinds are implemented in the
-        implementation classes in case of BON. For details see the Appendix
-        about BON invocations and classes.</para>
+        <para>These facilities are implemented in the wrapper classes. For
+        details see the Appendix about BON invocations and classes.</para>
       </section>
 
       <section>
         <title>Objects’ Lifecycle in Components</title>
 
-        <para>However the user does not have to deal with the construction and
-        destruction of BON objects, it is good to know how it is implemented
-        and what are the guidelines regarding this issue.</para>
+        <para>The user does not have to deal with the construction and
+        destruction of BON objects. However it is good to know how it is
+        implemented and what the guidelines are.</para>
 
-        <para>A BON object is always created at the first time when the user
-        obtain a reference to a COM entity. In most cases (but not
-        necessarily) an instance of a BON implementation class is assigned to
-        the appropriate COM object and the BON object is cached.</para>
+        <para>A BON object is always created the first time the user obtains a
+        reference to a COM entity. In most cases, an instance of a BON
+        implementation class is assigned to the appropriate COM object and the
+        BON object is cached.</para>
 
-        <para>Because BON makes the COM architecture more user-friendly it is
-        obvious that more than one BON object (BON interface) may exist and is
-        assigned to the same COM object. It is the reason why the usage of
-        wrappers are recommended. Simply to say they have the responsibility
-        to decide when a BON object must be erased from the cache.</para>
+        <para>More than one BON object may be assigned to the same COM object.
+        The wrappers have the responsibility to decide when a BON object must
+        be erased from the cache.</para>
 
-        <para>The time of disposal of objects depends on two essential factors
-        and these are more complicated than they seem to be: <itemizedlist>
+        <para>The time of disposal of objects depends on two essential
+        factors:<itemizedlist>
             <listitem>
               <para>the component's type.</para>
             </listitem>
@@ -7575,61 +7552,43 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
         <section>
           <title>Objects in Add-ons and in Interpreters</title>
 
-          <para>The time when objects are freed differs in case of add-ons and
-          interpreters (plug-ins are regarded here as paradigm-independent
-          interpreters). The difference is based on the usual process of the
+          <para>The time when objects are freed differs in the case of add-ons
+          and interpreters (plug-ins are regarded here as paradigm-independent
+          interpreters). The difference is based on the typical process of the
           components.</para>
 
           <para>As we mentioned above, BON objects are created if and only if
           they are required to be constructed (i.e. the first time COM objects
-          are retrieved) in contrast with the previous version of BON, where
+          are retrieved), in contrast with the previous version of BON, where
           the whole project was mirrored and all BON objects were created at
           the time of the component initialization.</para>
 
           <para>When the user writes an interpreter it is likely that she
           would like to use an object more than once and she would like to
-          eliminate the time consumed by the construction and destruction
-          again and again. Thus in case of interpreters a BON object is cached
-          (remains in the memory) until the component finishes to run. It
-          means that if an object is retrieved it will not be disposed even if
-          there is no reference to it any more.</para>
+          eliminate the time consumed by repeated construction and
+          destruction. Thus, in case of interpreters, a BON object is cached
+          (remains in the memory) until the component finishes running. In
+          short, if an object is retrieved, it will not be disposed even if
+          there are no references to it.</para>
 
-          <para>In the case of add-ons, the behaviour is different because of
-          the kind of the component. Add-ons associated with a project run and
-          occupy memory in the whole time until the project is opened. If we
-          followed the previous rule of managing objects, the memory would
-          grow while the add-on would run. Therefore in case of add-ons a BON
-          object is immediately destructed after the last direct or indirect
-          reference is released.</para>
+          <para>Add-ons associated with a project run and occupy memory the
+          whole time until the project is closed. If we followed the previous
+          rule of managing objects, the memory would grow while the add-on
+          runs. Therefore in case of add-ons, a BON object is immediately
+          destructed after the last direct or indirect reference is
+          released.</para>
         </section>
 
         <section>
           <title>Aggregated Reference-counting</title>
 
-          <para>As we mentioned earlier wrapper classes are smart-pointers,
-          they manage the references to an object and disposes a BON
-          implementation instance if the last reference is released.</para>
-
-          <para>Objects are cached deeply in BON. This caching mechanism means
-          lots of cross-references regarded the fact that the object is
-          retrieved itself and what kind of relationships they can take part
-          in.</para>
-
-          <para>When we retrieve an object (e.g. the root folder of the
-          project) at the first time, we create the first reference to the
-          object. Because the singleton project contains all objects in the
-          project, we create an indirect reference to the project via the
-          object. The projects will be disposed if and only if all references
-          (direct and indirect) are disposed.</para>
-
-          <para>As we can see later, this type of object management works only
-          if the references do not form a directed cycle. In BON by default
-          there are only DAGs (Directed Acyclic Graphs) in which the
-          destruction of the BON objects are guaranteed. However when a user
-          extends BON classes she may store wrapper instances (i.e. references
-          to BON implementation instances), thus it is likely that reference
-          cycles will occur. To avoid this the user has to set everything to
-          <code>null</code> manually in the finalization.</para>
+          <para>As we mentioned earlier wrapper classes are smart pointers;
+          they manage the references to an object and dispose a BON
+          implementation instance if the last reference is released. If you
+          extend BON classes, take care not introduce reference cycles, as the
+          memory can never be reclaimed unless the references are manually set
+          to <code>null</code>. This is typically done during
+          finalization.</para>
         </section>
       </section>
 
@@ -7647,14 +7606,11 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
         singleton project for the <code>IMgaProject</code> and the whole meta
         object network are already created.</para>
 
-        <para>During the finalization all resource must be released. The
+        <para>During the finalization all resources must be released. The
         process of disposal consists of the destruction of all BON and MON
-        objects (releasing all references to BON objects) and releasing the
-        additional resources (database connections, etc.). This can be
-        completing the <code>finalize()</code> operation of
-        <code>BON::Component</code>. Of course, additional resources include
-        the additional references to BON objects also. This must be done in
-        the <code>finalize()</code> operation of BON extensions and not in the
+        objects (releasing all references to BON objects) and releasing any
+        additional resources (database connections, etc.). This can in the
+        <code>finalize()</code> operation of
         <code>BON::Component</code>.</para>
 
         <para>The steps of finalization are the following (these are done
@@ -7670,18 +7626,17 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
             </listitem>
 
             <listitem>
-              <para>Reference counting mechanism takes care of the BON objects
-              disposal, and everything is destructed.</para>
+              <para>The reference counting mechanism takes care of the BON
+              objects' disposal, and everything is destructed.</para>
             </listitem>
           </itemizedlist></para>
 
         <para>Where the component core implementation must be included is
         different in case of add-ons and interpreters.</para>
 
-        <para>The interpreters entry point is the <code>invokeEx()</code> of
+        <para>The interpreters' entry point is the <code>invokeEx()</code> of
         <code>BON::Component</code> and this is the main part. Here is a
-        descriptive example: <programlisting format="linespecific">void Component::invokeEx( Project&amp; project, FCO&amp; currentFCO, const 
-std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam ) 
+        descriptive example: <programlisting format="linespecific">void Component::invokeEx( Project&amp; project, FCO&amp; currentFCO, const std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam ) 
 { 
  AfxMessageBox( “Project: “ + CString( project-&gt;getName().c_str() ) ); 
  if ( ! Model( currentFCO ) ) { 
@@ -7700,8 +7655,8 @@ std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam )
         <title>Add-ons and Events</title>
 
         <para>The entry point of an add-on means the reaction to the specific
-        event of a specific object and it can be accomplished different sort
-        of ways.</para>
+        event of a specific object and it can be accomplished in different
+        ways.</para>
 
         <para>The user may handle and react to all events in
         <code>objectEventPerformed()</code> of <code>BON::Component</code>.
@@ -7718,20 +7673,20 @@ std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam )
  AfxMessageBox( strEvents ); 
 } </programlisting></para>
 
-        <para>This way of handling events is the most general, it is likely
+        <para>This way of handling events is the most general. It is likely
         the user may prefer the <code>BON::EventListener</code> interface.
         This interface has the <code>eventPerformed()</code> operation which
-        is empty by default. The operation has only a <code>BON::Event</code>
-        argument passed containing the context object, the event type, and the
-        event parameters (if they exist).</para>
+        is empty by default. The operation only has a <code>BON::Event</code>
+        argument containing the context object, the event type, and the event
+        parameters (if they exist).</para>
 
-        <para>The <code>BON::EventListener </code>interface must be
-        implemented by a class and the instance of the appropriate class has
-        to be passed to the BON project or to a BON object theirs
-        <code>addEventListener()</code> operation. An event listener may
-        specify the type of the events it can react to. It can be done with
-        overriding the <code>getAssignments()</code> operation of the listener
-        (it reacts to all events by default).</para>
+        <para>The <code>BON::EventListener</code> interface must be
+        implemented by a class, and an instance of the class has to be passed
+        to the BON project or to a BON object <code>addEventListener()</code>
+        operation. An event listener may specify the type of the events it can
+        react to. It can be done with overriding the
+        <code>getAssignments()</code> operation of the listener (it reacts to
+        all events by default).</para>
 
         <para>The order of event handling: <itemizedlist>
             <listitem>
@@ -7755,20 +7710,16 @@ std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam )
         <title>BON Extension Classes</title>
 
         <para>So that the user can write an interpreter which is simple enough
-        to modify and create the new version of BON must provides an
-        easy-to-use base. By default only the generic implementation is
-        available (i.e. <code>BON::FCO</code> and <code>BON::FCOImpl</code>
-        implementing the default functionality of the fco concept) and this
-        must be used to realize extensions according to a specific paradigm.
-        Following a few rules, and implement the specific behaviour as well as
-        using some not too complicated macros the task is accomplished
-        quickly.</para>
+        to create and modify, the BON2 provides an easy-to-use base. The
+        generic implementation (i.e. <code>BON::FCO</code> and
+        <code>BON::FCOImpl</code>) may be extended to accomodate a specific
+        paradigm.</para>
 
         <para>The extendable classes are <code>BON::FCO</code>,
         <code>BON::Atom</code>, <code>BON::Model</code>,
         <code>BON::Connection</code>, <code>BON::Set</code> and
-        <code>BON::Reference</code>. Of course a user extension can be derived
-        also.</para>
+        <code>BON::Reference</code>. Of course a user extension can be
+        extended also.</para>
 
         <para>We will demonstrate the extension with a simple example. Let us
         assume that there is a model whose name is ‘Compound’ and the user
@@ -7777,18 +7728,14 @@ std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam )
         objects having at least two children.</para>
 
         <section>
-          <title>Realize the Implementation Class</title>
+          <title>Creating the Implementation Class</title>
 
-          <para>The realization of a BON extension must be done in the
-          extension layer (i.e. the implementation class must be derived). In
-          order to do this the following rules are important: <itemizedlist>
+          <para>The creation of a BON extension must be done in the extension
+          layer (i.e. the implementation class must be derived). In order to
+          do this the following rules are important: <itemizedlist>
               <listitem>
                 <para>Although the implementor extends the implementation
-                class</para>
-              </listitem>
-
-              <listitem>
-                <para>The user always must use the appropriate wrapper
+                class, the user must always use the appropriate wrapper
                 classes, and not the implementations.</para>
               </listitem>
 
@@ -7798,22 +7745,21 @@ std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam )
               </listitem>
 
               <listitem>
-                <para>In case of interpreters in lost of cases there is no
-                point to cache the immediate and unfiltered result of a
-                generic call because only the wrappers are always created, the
-                objects exist while the component runs.</para>
+                <para>In case of interpreters, there is no point in caching
+                the result of a generic call because only the lightweight
+                wrappers are created.</para>
               </listitem>
 
               <listitem>
-                <para>If BON objects are cached by the extension additionally,
-                it counts as additional resource and the containers has to be
-                emptied and objects must be set to null in the overridden
+                <para>If BON objects are cached by the extension, it counts as
+                an additional reference. The containers must be emptied and
+                objects must be set to null in the overridden
                 <code>finalize()</code> method.</para>
               </listitem>
 
               <listitem>
                 <para>It is good practice to concatenate ‘Impl’ string to the
-                name of the implementation class. The used appropriate wrapper
+                name of the implementation class. The appropriate wrapper
                 class uses the name without ‘Impl’.</para>
               </listitem>
             </itemizedlist></para>
@@ -7828,7 +7774,7 @@ public :
   // cache the proper child models 
   std::set&lt;BON::Model&gt; temp = getChildModels(); 
   for ( std::set&lt;BON::Model&gt;::iterator it = temp.begin() ;  
-   it != temp.end() ; it++ ) { 
+     it != temp.end() ; it++ ) { 
    if ( (*it)-&gt;getObjectMeta().name() == “Compound” &amp;&amp; 
     (*it)-&gt;getChildFCOs().size() &gt;= 2 ) { 
     mySet.insert( *it ); 
@@ -7855,16 +7801,16 @@ private :
         <section>
           <title>Create the Wrapper Class</title>
 
-          <para>After the implementation is ready the user has to generate an
+          <para>After the implementation is ready, the user has to generate an
           appropriate wrapper class to the implementation class and assign it
-          to a specific kind defined by the paradigm. These go with to macros:
-          <code>DECLARE_BONEXTENSION</code> and
+          to a specific kind defined by the paradigm. These correspond to two
+          macros: <code>DECLARE_BONEXTENSION</code> and
           <code>IMPLEMENT_BONEXTENSION</code>.</para>
 
-          <para><code>DECLARE_BONEXTENSION</code> macro stands for creating
-          the appropriate wrapper and it always has to precede the macros
-          defining the classes which derive from this class. The parameters
-          are the following: <itemizedlist>
+          <para><code>DECLARE_BONEXTENSION</code> macro creates the
+          appropriate wrapper. It must precede the macros defining the classes
+          which derive from this class. The parameters are the following:
+          <itemizedlist>
               <listitem>
                 <para>Base wrapper class – This class has to be the wrapper
                 class of the base class of the user-defined implementation
@@ -7887,13 +7833,12 @@ private :
 
           <programlisting format="linespecific">DECLARE_BONEXTENSION( BON::Model, CompoundImpl, Compound ); </programlisting>
 
-          <para><code>IMPLEMENT_BONEXTENSION</code> macro, residing in a
+          <para>The <code>IMPLEMENT_BONEXTENSION</code> macro, inserted into a
           <filename moreinfo="none">.cpp</filename> file, is for assigning the
           BON extension to a kind or a containment defined by the paradigm, or
-          to a meta- kind defined by GME. It is allowed that the implementor
-          specifies more than one kind, even it is valid to assign a concept
-          to a kind and a containment at the same time. The parameters are the
-          following: <itemizedlist>
+          to a meta- kind defined by GME. The implementor may specify more
+          than one kind, or even assign a concept to a kind and a containment
+          at the same time. The parameters are the following: <itemizedlist>
               <listitem>
                 <para>Wrapper class – The name of the BON extension which must
                 be assigned. In our case it is <code>Compound</code>.</para>
@@ -7909,10 +7854,7 @@ private :
           <programlisting format="linespecific">IMPLEMENT_BONEXTENSION( Compound, “Compound” ); </programlisting>
 
           <para>After this step the BON extension to the Compound concept
-          defined by the paradigm is ready to use everywhere. Of course, all
-          rules are true for the extension also (e.g. only the generated
-          Compound wrapper class is permitted to use and it behaves as other
-          wrapper classes do).</para>
+          defined by the paradigm is ready to use everywhere.</para>
 
           <note>
             <para>It is not required that the name of the wrapper class is the
@@ -7923,12 +7865,13 @@ private :
         <section>
           <title>Assigning BON Extensions</title>
 
-          <para>As we mentioned above not only kinds can be specified for a
-          BON extension, but containment roles, even metakinds as well.
-          However it is possible that for one COM object more than one BON
-          extension could be created. In order to avoid collisions and resolve
-          them (if we can) there is a precedence defined among the
-          names.</para>
+          <para>As we mentioned above, not only <emphasis>kind</emphasis>s can
+          be specified for a BON extension, but
+          <emphasis>containment</emphasis> roles, even
+          <emphasis>metakinds</emphasis> as well. It is possible that for one
+          COM object more than one BON extension could be created. In order to
+          avoid collisions and resolve them (if we can) there is a precedence
+          defined among the names.</para>
 
           <para>In the following enumeration the first is the highest
           precedence. <itemizedlist>
@@ -7965,7 +7908,7 @@ private :
               </listitem>
 
               <listitem>
-                <para>There is kind assigned: <itemizedlist>
+                <para>If there is kind assigned: <itemizedlist>
                     <listitem>
                       <para>Only one kind : create appropriate BON
                       extension.</para>
@@ -8037,42 +7980,41 @@ IMPLEMENT_BONEXTENSION(MainParameter,“MainParameter”); </programlisting></pa
           corresponds to a <code>ProcessingUnit</code> concept. The metakind
           of <code>ProcessingUnit</code> is FCO, therefore the class in the
           implementation layer must be abstract and cannot be instantiated.
-          <code>Compound</code> derives from ProcessingUnit in the particular
-          domain, so the implementation class extends
+          <code>Compound</code> derives from <code>ProcessingUnit</code> in
+          the particular domain, so the implementation class extends
           <code>ProcessingUnitImpl</code>. Because the metakind of
-          <code>Compound</code> is <code>Model</code> it has to derive from
+          <code>Compound</code> is <code>Model</code>, it has to derive from
           <code>BON::ModelImpl</code> also.</para>
 
-          <para>The rules that the user must comply with, are the following:
+          <para>The rules that the user must comply with are the following:
           <itemizedlist>
               <listitem>
                 <para>Abstract BON extensions – If a user wants to implement
                 the common behaviour of classes in a base class, but she does
                 not want to or she cannot assign any kind, containment to the
                 extension, to create the appropriate wrapper class she must
-                use <code>DECLARE_ABSTRACT_BONEXTENSION</code>,
+                use the <code>DECLARE_ABSTRACT_BONEXTENSION</code> and
                 <code>IMPLEMENT_ABSTRACT_BONEXTENSION</code> macros.</para>
               </listitem>
 
               <listitem>
-                <para>Public inheritance – In the context of BON only public
-                inheritances may be used.</para>
+                <para>Public inheritance – Only public inheritance may be
+                used.</para>
               </listitem>
 
               <listitem>
-                <para>Metakind compliance – In an inheritance chain of BON the
+                <para>Metakind compliance – In a BON inheritance chain, the
                 user cannot mix the metakinds except of FCO (e.g. all
                 descendants of a BON extension having Atom metakind will have
                 Atom metakind)</para>
               </listitem>
 
               <listitem>
-                <para>Virtual inheritances – During the realization of the
-                implementation classes in case of diamond inheritance virtual
-                inheritance must be used (see how
+                <para>Virtual inheritances – In the case of diamond
+                inheritance, virtual inheritance must be used (see how
                 <code>ProcessingUnitImpl</code> extends
                 <code>BON::FCOImpl</code>). In case of wrapper classes all
-                inheritances all virtual.</para>
+                inheritances are virtual.</para>
               </listitem>
 
               <listitem>
@@ -8148,8 +8090,8 @@ void print( const BON::FCO&amp; fco )
         <para>Looking at the next figure carefully, there are only two
         exceptional classes which do not have the correspondent COM interface
         (i.e. <code>ConnectionEnd</code> and <code>ReferencePort</code>). The
-        concept of the <code>ReferencePort</code> may look familiar to whom
-        had used the previous version of BON, but there are essential
+        concept of the <code>ReferencePort</code> may look familiar to someone
+        who used the previous version of BON, but there are essential
         differences which will be discussed in the next subsection.</para>
 
         <figure>
@@ -8167,20 +8109,19 @@ void print( const BON::FCO&amp; fco )
       <section>
         <title>GME Metakinds in the Project</title>
 
-        <para>It is obvious that objects in projects have metakinds according
-        to the paradigm and they can play only the roles and can take part in
-        the relationships that come from the appropriate metakind. For
-        example, if an object is a model (i.e. it is a <code>BON::Model</code>
-        whose meta is <code>MON::Model</code>), the user may obtain the
-        children contained by the object. The children are
-        <code>BON::FCO</code> objects. The specific model kind (i.e.
-        <code>MON::Model</code> objects) tells the user what the children's
-        kinds can be (i.e. <code>Compound</code> model may contain
-        <code>Primitive</code> or <code>Compound</code> models among
-        others).</para>
+        <para>Objects in projects have metakinds according to the paradigm,
+        and they can play only the roles and can take part in the
+        relationships that come from the appropriate metakind. For example, if
+        an object is a model (i.e. it is a <code>BON::Model</code> whose meta
+        is <code>MON::Model</code>), the user may obtain the children
+        contained by the object. The children are <code>BON::FCO</code>
+        objects. The specific model kind (i.e. <code>MON::Model</code>
+        objects) tells the user what the children's kinds can be (i.e.
+        <code>Compound</code> model may contain <code>Primitive</code> or
+        <code>Compound</code> models among others).</para>
 
-        <para>If somebody is familiar a bit with GME, all the well-known GME
-        concepts are understandable except of a new one called
+        <para>If somebody is familiar with GME, all the well-known GME
+        concepts are familiar except of a new one called
         <code>ReferencePortContainer</code> with <code>ReferencePort</code>
         and <code>ConnectionEnd</code>.</para>
 
@@ -8212,38 +8153,33 @@ void print( const BON::FCO&amp; fco )
 
           <para>If a reference referred to a model, then this reference was
           called <code>BuilderModelReference</code> in the previous version of
-          BON. Model references were special in the aspect they might contain
-          reference ports the model – referred by the special reference -
-          contained ports. If an fco contained by the model played the port
-          role, there was a reference port contained by the model reference
-          referring to the fco. The port (i.e. the fco) and the reference port
-          were different objects.</para>
+          BON. Model references might contain reference ports. The port (i.e.
+          the FCO) and the reference port were different objects.</para>
 
-          <para>In BON2 these concepts are retained but they are clarified.
-          Consequently has essential differences.</para>
+          <para>In BON2 these concepts are retained, but they are
+          clarified.</para>
 
           <para><code>BuilderModelReference</code> of BON is called
           <code>ReferencePortContainer</code> in BON2. GME allows that a
-          reference may refer to models an other objects which are not models.
-          It is obvious a reference may ‘contain’ reference ports if and only
-          if it refers to a model. If the user changes the referred object
-          from a model to an atom, then the reference cannot ‘contain’
-          reference ports any more. Because of these facts
+          reference may refer to models and other objects which are not
+          models. It is obvious a reference may ‘contain’ reference ports if
+          and only if it refers to a model. If the user changes the referred
+          object from a model to an atom, then the reference cannot ‘contain’
+          reference ports. Because of these facts
           <code>ReferencePortContainer</code> is an interface (in contrast
           with <code>BuilderModelReference</code> object of BON) which is
-          implemented by the reference in the time it refers to a
-          model.</para>
+          implemented by the reference when it refers to a model.</para>
 
           <para>That means references can contain reference ports indirectly
           through the <code>ReferencePortContainer</code> interface which
-          always has to be obtained from the reference before usage and which
-          is not recommended to cache by the component implementor.
-          Consequently only <code>ReferencePortContainer</code> contains
+          always has to be obtained from the reference before use (and which
+          is not recommended to cache by the component implementor).
+          Consequently, only <code>ReferencePortContainer</code> contains
           reference ports.</para>
 
           <para><code>BON::ReferencePort</code> is retained in BON2, but its
           primary ancestor is not the same as the ancestor of
-          <code>BON::FCO</code>. The explanation is that primarily fco is a
+          <code>BON::FCO</code>. The explanation is that primarily FCO is a
           metakind and reference port is another concept defined because of
           connections.</para>
         </section>
@@ -8267,16 +8203,15 @@ void print( const BON::FCO&amp; fco )
             </mediaobject>
           </figure>
 
-          <para>Because the references ‘refers’ to a model, they implements
-          the ReferencePortContainer interface and they ‘contains’ reference
-          ports with the same names (<code>P1</code> and
-          <code>P2</code>).</para>
+          <para>Because the references ‘refer’ to a model, they implements the
+          <interfacename>ReferencePortContainer</interfacename> interface and
+          they ‘contain’ reference ports with the same names (<code>P1</code>
+          and <code>P2</code>).</para>
 
           <para>Reference ports refer to the port contained by the model (blue
-          lines in the figure). There is a relationship between reference
-          ports referring to the same port according to their containers. We
-          say that the reference ports are the descendants of the port.
-          <code>Ref2</code> refers to Model via Ref1. <code>P2</code> of
+          lines in the figure). We say that the reference ports are the
+          descendants of the port. <code>Ref2</code> refers to
+          <code>Model</code> via <code>Ref1</code>. <code>P2</code> of
           <code>Ref1</code> is the parent of <code>P2</code> of
           <code>Ref2</code>. The parent of <code>P2</code> of
           <code>Ref1</code> is null because <code>Ref1</code> refers to
@@ -8284,20 +8219,20 @@ void print( const BON::FCO&amp; fco )
           has three descendant reference ports and two children (i.e. two
           immediate reference ports). This relationship might be important for
           the component implementor if she wants to handle the connections
-          between objects in advanced way.</para>
+          between objects in an advanced way.</para>
         </section>
 
         <section>
           <title>ConnectionEnd and Connection</title>
 
-          <para>Connections in BON2 is implement in a different way comparing
-          to the previous implementation. In both ends of a connection only
-          <code>ConnectionEnd</code>s can stand. A <code>ConnectionEnd</code>
-          can be an object itself – to be more precise, an fco – or reference
-          ports. <code>ReferencePort</code> derives from
-          <code>ConnectionEnd</code> because this concept is not placeable
-          into the set of metakinds and it has different meaning only in the
-          case if it stands for an end of a connection.</para>
+          <para>Connections in BON2 are implemented in a different way
+          compared to the previous implementation. In both ends of a
+          connection, only <code>ConnectionEnd</code>s can exist. A
+          <code>ConnectionEnd</code> can be an object itself – to be more
+          precise, an fco – or a reference port. <code>ReferencePort</code>
+          derives from <code>ConnectionEnd</code> because this concept is not
+          placeable into the set of metakinds and it has a different
+          meaning.</para>
 
           <para>Let's see the following examples considering the previous
           figure to understand the described issues.</para>
@@ -8354,17 +8289,17 @@ if ( connectionend-&gt;isReferencePort() ) { // do something } </programlisting>
         <para>Type inheritance is special feature introduced in GME. This
         issue is implemented by interface called
         <code>BON::TypeInhObject</code>, <code>BON::Type</code> and
-        <code>BON:.Instance</code>. These are interface and an fco always
-        implements one of <code>BON::Type</code> and
-        <code>BON:.Instance</code>.</para>
+        <code>BON::Instance</code>. These are interfaces and an FCO always
+        implements one of <code>BON::Type</code> or
+        <code>BON::Instance</code>.</para>
 
         <para>In order to obtain the type inheritance interface the user has
         to use the <code>getTypeInhObject()</code> of <code>BON::FCO</code>.
         After a simple cast the user may obtain the type of the instance or
         the subtypes of the type.</para>
 
-        <para>Obtaining the type inheritance interfaces the user implicitly
-        holds a reference to the fco itself.</para>
+        <para>After obtaining the type inheritance interfaces, the user
+        implicitly holds a reference to the fco itself.</para>
 
         <figure>
           <title>Relationships of Attributes, Type-Inheritance Objects and
@@ -8381,33 +8316,34 @@ if ( connectionend-&gt;isReferencePort() ) { // do something } </programlisting>
       <section>
         <title>Registry, Attributes and Object Preferences</title>
 
-        <para>The registry of a BON2 object is implement similarly to the
-        registry of MON. The root RegistryNode can be accessed with the
-        <code>getRegistry()</code> of <code>BON::Object</code>. The root
-        registry node is defined in order to separate the interfaces, the real
-        and existing root nodes are children of the dummy root node.</para>
+        <para>The registry of a BON2 object is implemented similarly to the
+        registry of MON. The root <code>RegistryNode</code> can be accessed
+        with the <code>getRegistry()</code> of <code>BON::Object</code>. The
+        root registry node is defined in order to separate the interfaces; the
+        real and existing root nodes are children of the dummy root
+        node.</para>
 
-        <para>Using registry it is important to know that caching registry
-        nodes are not recommended: <itemizedlist>
+        <para>When using the registry, it is important to know that caching
+        registry nodes is not recommended: <itemizedlist>
             <listitem>
               <para>If the user uses at least one registry node (even the
               dummy root), she holds a reference to the appropriate object
-              implicitly. So that the object could be disposed all nodes must
+              implicitly. Before the object could be disposed, all nodes must
               be released. This is true for <code>BON::Attribute</code>
               also.</para>
             </listitem>
 
             <listitem>
-              <para>If the component not only reads the project but it may
-              modify the registry of an object or if the component is an
-              add-on reacting to events, then modifying or erasing at least
-              one registry node, all registry nodes of the object will be
-              invalid and the user has to obtain them again.</para>
+              <para>If the component not only reads the project but may
+              modifies the registry of an object or if the component is an
+              add-on reacting to events, then when modifying or erasing at
+              least one registry node, all registry nodes of the object will
+              be invalid and the user has to obtain them again.</para>
             </listitem>
           </itemizedlist></para>
 
         <para>As we know, objects in the project has predefined properties
-        defined by GME. Mainly this properties are related to visualization
+        defined by GME. Mainly these properties are related to visualization
         and implemented in the registry of the object. The appropriate access
         (including the type – integer, string, long, etc. - and the registry
         path) of these values varies. Using them manually via the generic
@@ -8415,16 +8351,15 @@ if ( connectionend-&gt;isReferencePort() ) { // do something } </programlisting>
         memorize.</para>
 
         <para>This is the reason why special root registry nodes are
-        introduced extending the RegistryNode interface. These are the
+        introduced that extend the RegistryNode interface. These are the
         following: <code>FCORegistryNode</code>,
         <code>FCOExRegistryNode</code>, <code>ConnectionRegistryNode</code>
-        and <code>ModelRegistryNode</code>. Except of
-        <code>FCOExRegistryNode</code> which can be obtained from fcos which
-        are not connections, the further ones are obvious.</para>
+        and <code>ModelRegistryNode</code>. Except for
+        <code>FCOExRegistryNode</code>, which can be obtained from fcos which
+        are not connections, the use of the others is obvious.</para>
 
         <para>An example:<programlisting format="linespecific">// Get the color of the portnames of the port 
-COLORREF crPort = BON::ModelRegistryNode( model-&gt;getRegistry() )-&gt; 
-getPortNameColor(); 
+COLORREF crPort = BON::ModelRegistryNode( model-&gt;getRegistry() )-&gt;getPortNameColor(); 
 ... 
 // Obtaining the position of an FCO in the Aspect ‘Aspect’ 
 BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation( “Aspect” ); </programlisting></para>
@@ -8462,14 +8397,15 @@ BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation(
       moreinfo="none">BON2Component.cpp</filename>. The user is expected to
       implement the component by modifying these two files and adding other
       files if necessary. The other files in the workspace are normally not
-      modified by the user, and for this reason they are generated with
+      modified by the user, and for this reason they are generated with a
       read-only attribute.</para>
 
-      <para>After building the project, the component dll is registered and
-      associated with the paradigms you specify. When you edit a model using
-      one of these paradigms and press the interpret button, you launch this
-      component (if there are more than one components associated with the
-      given paradigm, a menu will pop up to choose from). The dll will be
+      <para>After building the project, the component
+      <filename>.dll</filename> is registered and associated with the
+      paradigms you specify. When you edit a model using one of these
+      paradigms and press the interpret button, you launch this component (if
+      there are more than one components associated with the given paradigm, a
+      menu will pop up to choose from). The <filename>.dll</filename> will be
       located and loaded at this time.</para>
     </section>
 
@@ -8477,13 +8413,13 @@ BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation(
       <title>Extending the Component Interface using the BON Extender
       interpreter</title>
 
-      <para>After writing a few interpreters one can realize that the
-      extension of the Component Interface (as shown above) is a repetitive
-      and boring task. The BON Extender interpreter is aimed to automate this
-      process. Based on a specific metamodel a domain specific skeleton code
-      is generated. Thus when you write your interpreter (in the specific
-      paradigm) you will have only to enrich the generated classes with the
-      functionalities you want.</para>
+      <para>After writing a few interpreters, one realizes that the extension
+      of the <interfacename>Component</interfacename> Interface (as shown
+      above) is a repetitive and boring task. The BON Extender interpreter is
+      aimed to automate this process. Based on a specific metamodel,
+      domain-specific skeleton code is generated. Thus when you write your
+      interpreter (in the specific paradigm), you will have only to enrich the
+      generated classes with the functionality you want.</para>
 
       <para>The BON Extender interpreter creates specialized class definitions
       for all object kinds (even for abstract ones). These specialized classes
@@ -8501,11 +8437,10 @@ BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation(
       <section>
         <title>Naming convention used</title>
 
-        <para>The plain names will be used for FCOs and Folders, Attributes.
-        Since GME checks the names of the fore-mentioned objects these names
-        are usually valid identifiers for C++ compilers. However in case of
-        EnumAttributes the enumerated items will be encapsulated by a C++
-        enumeration type. These fields may be defined without too many
+        <para>Plain names are used for FCOs and Folders, Attributes. These
+        names are usually valid identifiers for C++ compilers. However in the
+        case of EnumAttributes, the enumerated items will be encapsulated by a
+        C++ enumeration type. These fields may be defined without many
         restrictions during meta-modeling, so a name validation takes place,
         converting non-alphanumeric characters to underscores. If the
         enumeration value starts with a digit a leading underscore will be
@@ -8514,7 +8449,7 @@ BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation(
         <para>In order to avoid name conflicts (e.g. in case default name is
         used: a Connection kind may be named Connection) the specialized
         classes will be part of a namespace generated based on the validated
-        paradigm name, appended by the “_BON” string.</para>
+        paradigm name.</para>
 
         <para>Below are some examples generated based on the SF paradigm.
         Processing and Compound are model kinds in this paradigm.
@@ -8535,32 +8470,30 @@ public:
 }; 
 }; // end namespace </programlisting></para>
 
-        <para>Processing (with Model stereotype) has no ancestors in the
-        metamodel, so it derives from the <type>BON::ModelImpl</type> class.
-        Compound derives from Processing so this will be reflected in the
-        generated skeleton, as well.</para>
+        <para><code>Processing</code> (with <code>Model</code> stereotype) has
+        no ancestors in the metamodel, so it derives from the
+        <type>BON::ModelImpl</type> class. <code>Compound</code> derives from
+        <code>Processing</code> so this will be reflected in the generated
+        skeleton.</para>
 
-        <para><parameter moreinfo="none">Container kinds, like Models, Sets
-        and Folders, will have specialized get methods returning the contained
-        roles (in case of models) and kinds (in case of sets, folders).
-        </parameter></para>
+        <para>Container kinds, like Models, Sets and Folders, will have
+        specialized get methods returning the contained roles (in case of
+        models) and kinds (in case of sets, folders). </para>
 
-        <para><parameter moreinfo="none">The Compound class’
-        <code>getParts()</code> method returns a set of
-        <code>Processing</code> instances (model kind), so users don’t have to
-        deal with the conversion from <code>BON::Model</code> to<code>
-        SF_BON::Processing</code> type since the method does this task. The
-        method name is based on the role name “<code>Parts</code>” (see
-        containment relation between <code>Compound</code> and
-        <code>Processing</code>). </parameter></para>
+        <para>The <code>Compound</code> class’ <code>getParts()</code> method
+        returns a set of <code>Processing</code> instances, so users don’t
+        have to deal with the conversion from <code>BON::Model</code> to
+        <code>SF_BON::Processing</code> type. The method name is based on the
+        role name “<code>Parts</code>” (see containment relation between
+        <code>Compound</code> and <code>Processing</code>). </para>
 
-        <para>The Processing class has three get methods which are related:
-        two get methods (<code>getInputSignals</code>,
+        <para>The <code>Processing</code> class has three get methods which
+        are related: two get methods (<code>getInputSignals</code>,
         <code>getOutputSignals</code>) which return the contained objects
         having <code>InputSignals</code> and <code>OutputSignals</code> role,
-        and an aggregated get method (gets) which returns all objects derived
-        from the Signal base. The suffix “s” comes from the role name
-        specified in the SF metamodel for the containment between
+        and an aggregated get method (<code>gets</code>) which returns all
+        objects derived from the Signal base. The suffix “s” comes from the
+        role name specified in the SF metamodel for the containment between
         <code>Processing</code> and <code>Signal</code>. If this rolename had
         been empty then the <code>getSignal</code> name would have been used.
         Sometimes name conflicts happen because of these naming conventions,
@@ -8568,8 +8501,9 @@ public:
         aggregated get methods may get an <code>int dummy</code>
         parameter.</para>
 
-        <para>If the Signal atom had been non-abstract and the rolename empty
-        in the meta-model the following get methods would have been generated:
+        <para>If the <code>Signal</code> atom had been non-abstract and the
+        rolename empty in the meta-model the following
+        <emphasis>get</emphasis> methods would have been generated:
         <programlisting format="linespecific">class ProcessingImpl : public ModelImpl { 
 public: 
   std::set&lt;InputSignals&gt; getInputSignals(); 
@@ -8578,13 +8512,12 @@ public:
   std::set&lt;Signals&gt; getSignals(int dummy); // aggregated 
 }; </programlisting></para>
 
-        <para>Connections will have specialized source and destination get
-        methods. However, when a connection can have a reference port as its
-        end the return value will be simply <code>BON::ConnectionEnd</code>.
-        In the case below no reference ports are involved (based on best
-        knowledge of the BON Extender interpreter) so a specialized class like
-        Signal will be returned by the get methods: <programlisting
-        format="linespecific">class DataflowConnImpl : public ConnectionImpl 
+        <para>Connections will have specialized source and destination
+        <emphasis>get</emphasis> methods. However, when a connection can have
+        a reference port as its end, the return value will be simply
+        <code>BON::ConnectionEnd</code>. In the case below no reference ports
+        are involved, so a specialized class like Signal will be returned by
+        the get methods: <programlisting format="linespecific">class DataflowConnImpl : public ConnectionImpl 
 { 
 public: 
   // connectionEnd getters 
@@ -8619,22 +8552,21 @@ public:
 
         <para>Furthermore, all FCOs which have attributes will have special
         get methods generated, with corresponding return types to their
-        specification (in case of EnumAttribute an enumeration type definition
-        will be generated based on the items declared in the “Menu items”
-        field).</para>
+        specification (in case of <code>EnumAttribute</code> an enumeration
+        type definition will be generated based on the items declared in the
+        “Menu items” field).</para>
       </section>
 
       <section>
         <title>Ordering</title>
 
         <para>The classes are generated into the header file based on the
-        following principles: groups are formed by classes which have
-        inheritance relationship among themselves. The groups are ordered
-        based on how many model kinds they contain, in descending order. Such
-        a group is dumped in top-down order (based on inheritance). The
-        methods inside a class are categorized as attribute, connection get
-        methods and role get methods (for models) set-member get methods for
-        (set).</para>
+        following principles: groups are formed for classes which have a
+        inheritance relationship among them. The groups are ordered based on
+        how many model kinds they contain, in descending order. Such a group
+        is dumped in top-down order (based on inheritance). The methods inside
+        a class are categorized as attribute, connection get methods and role
+        get methods (for models) set-member get methods for (set).</para>
 
         <para>The ”<code>///BUP</code>” and ”<code>///EUP</code>” (standing
         for “begin user part”, “end user part”) comments are intended to
@@ -8657,16 +8589,16 @@ public:
 
         <para>It can happen that the user doesn't intend to work with all
         classes generated for a paradigm (i.e. the hardware definition part
-        may be indifferent for implementer, since her interpreter is
-        concentrating on the dataflow part). The “Select classes to extend”
-        dialogue that appears during generation is intended for such cases. It
-        has listed all the classes which will be generated by default. If an
-        object kind is selected for extension then its ancestors are
-        positively extended too, and if it is deselected then its descendants
-        are deselected too. If you want to limit the set of generated classes,
-        then it is recommended to select “no” for each root object (staying on
-        top of the inheritance hierarchy) in the domains you don't want to
-        deal with.</para>
+        may be insignificant for implementer, since her interpreter is
+        concentrating on the dataflow part). The “<guilabel>Select classes to
+        extend</guilabel>” dialogue that appears during generation is intended
+        for such cases. It lists all the classes, which will be generated by
+        default. If an object kind is selected for extension then its
+        ancestors are selected too, and if it is deselected then its
+        descendants are deselected too. If you want to limit the set of
+        generated classes, then it is recommended to select “no” for each root
+        object (staying on top of the inheritance hierarchy) in the domains
+        you don't want to deal with.</para>
 
         <para>There is another way of using this feature: if you would like to
         extend the classes only to some extent (not all classes down the
@@ -8675,16 +8607,16 @@ public:
         <code>OutputSignals</code> together as <code>Signal</code>). In such
         cases you can select the base class (<code>Signal</code>) and deselect
         the derived classes (<code>InputSignal</code>,
-        <code>OutputSignal</code>). When your interpreter will execute a base
+        <code>OutputSignal</code>). When your interpreter executes, a base
         class instance will be generated for each derived object in the model.
-        This has consequences for the generated get methods of containers
-        (models, sets, folders): if a container is extended (Processing) and
-        some of its contained objects are not (<code>InputSignal</code>) then
-        the specific getter (<code>getInputSignals</code>), which is intended
-        to give back a set of the specific kinds contained will return with
-        these objects cast to the nearest extended ancestor
-        (<code>Signals</code>). There is a similar mechanism for connections,
-        too.</para>
+        This has consequences for the generated <emphasis>get</emphasis>
+        methods of containers (models, sets, folders): if a container is
+        extended (Processing) and some of its contained objects are not
+        (<code>InputSignal</code>) then the specific getter
+        (<code>getInputSignals</code>), which is intended to give back a set
+        of the specific kinds contained will return with these objects cast to
+        the nearest extended ancestor (<code>Signals</code>). There is a
+        similar mechanism for connections, too.</para>
 
         <programlisting format="linespecific">class ProcessingImpl : public BON::ModelImpl 
 { 
@@ -8692,11 +8624,11 @@ public:
   std::set&lt;Signal&gt; getInputSignals(); 
 }; </programlisting>
 
-        <para>Since FCO (as stereotype) objects are extended too, and may not
-        be instantiated (at modeling time no abstract FCO object is visible)
-        some limitations exist, which are enforced by the dialogue. If an
-        object which inherits directly from an FCO is deselected, then not
-        only the objects below it, but the whole inheritance tree is
+        <para>Since FCO (as a stereotype) objects are extended too, and may
+        not be instantiated (at modeling time no abstract FCO object is
+        visible) some limitations exist, which are enforced by the dialogue.
+        If an object which inherits directly from an FCO is deselected, then
+        not only the objects below it, but the whole inheritance tree is
         deselected.</para>
 
         <para>If an FCO object is selected then not only its ancestors, but
@@ -8724,8 +8656,6 @@ public:
 
   <section id="sect-constraint-manager">
     <title>Constraint Manager</title>
-
-    <para></para>
 
     <section>
       <title>Features of the new Constraint Manager</title>
