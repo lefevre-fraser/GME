@@ -19,6 +19,10 @@
       <firstname>Arpad</firstname>
 
       <surname>Bakay</surname>
+
+      <affiliation>
+        <orgname>ISIS</orgname>
+      </affiliation>
     </author>
   </articleinfo>
 
@@ -60,7 +64,7 @@
     types of programs that can access model data are <emphasis>standalone
     applications</emphasis> (which can be executed without the GME GUI) and
     other integrated components that serve different purposes
-    (<emphasis>Plugins</emphasis> and <emphasis>AddOns</emphasis>). </para>
+    (<emphasis>Plugins</emphasis> and <emphasis>AddOns</emphasis>).</para>
 
     <para>There are also different technologies available to access GME data:
     <itemizedlist>
@@ -100,8 +104,7 @@
     Network-based interpreter (not the BON II). The application domain and
     paradigm are those used in the <ulink url="Lesson2.html">previous
     lesson</ulink>. Our interpreter will complete a simple task: it will print
-    out a list of all routers, along with their ports and IP addresses.
-    </para>
+    out a list of all routers, along with their ports and IP addresses.</para>
   </section>
 
   <section>
@@ -116,9 +119,7 @@
     <code>SetAttribute( )</code>, <code>GetChildren( )</code>,
     <code>GetParent( )</code>, <code>CreateNewAtom( )</code>, etc. The main
     BON header file, <filename>Builder.h</filename>, is the authentic
-    repository of the BON interfaces. </para>
-
-    <para></para>
+    repository of the BON interfaces.</para>
 
     <figure id="BON-classes">
       <title>Classes in the Builder Object Network</title>
@@ -144,19 +145,19 @@
     represent <emphasis>references</emphasis> and <emphasis>sets</emphasis>,
     which are discussed in <ulink url="Lesson4.html">Lesson 4</ulink>.
     <code>CBuilderReferencePort</code> is a pseudo-object that is only present
-    in the BON. </para>
+    in the BON.</para>
 
     <para>Two other classes are "outsiders" to the <code>CBuilderObject</code>
     hierarchy. <code>CBuilder</code> represents the modeling project as a
     whole. It provides access to the root folder and to other folders, as well
     as to project-wide settings (such as <code>GetProjectName( )</code>).
     <code>CBuilderFolder</code> represents folders and is capable of
-    navigating the folder hierarchy and accessing root FCOs. </para>
+    navigating the folder hierarchy and accessing root FCOs.</para>
 
     <para>This tutorial does not attempt to explain the entire BON interface.
     Most methods listed in <filename>Builder.h</filename> are
     self-explanatory. However, the GME User's Manual does contain a detailed
-    description of the Builder Object Network. </para>
+    description of the Builder Object Network.</para>
 
     <para>Looking at the <filename>Builder.h</filename> file, it is obvious
     that this framework relies quite heavily on certain data types and
@@ -166,7 +167,7 @@
     class library provided with Microsoft Visual Studio. Please consult the MS
     Visual Studio / MFC documentation for help with these data types. Also,
     you will notice that a typical instruction pattern is used to navigate the
-    collection attributes: </para>
+    collection attributes:</para>
 
     <programlisting>POSITION pos = list.GetHeadPosition(); while(pos) { process(list.GetNext(pos)); } </programlisting>
 
@@ -175,22 +176,16 @@
     allow subclassing, and user-defined subclasses can be registered into the
     BON <emphasis>class factory</emphasis>. When this happens, the object
     network is not built from the predefined classes in Fig 3.1, but from the
-    user's own subclasses, which include additional functionality. </para>
+    user's own subclasses, which include additional functionality.</para>
 
     <para>The Builder Object Network is provided as part of a convenient
     framework, which includes a set of tools (or "wizards") that help the user
     to set up a component development project. Thanks to this framework, the
     process of creating an interpreter is both easy and quick. Even casual
     component developers can build meaningful interpreters within 30-60
-    minutes. </para>
-  </section>
+    minutes.</para>
 
-  <section>
-    <title>Creating a new Component</title>
-
-    <para></para>
-
-    <section>
+    <section id="sect-gen-workspace">
       <title>Generate a workspace</title>
 
       <para>The first time you wish to create a BON interpreter, you must run
@@ -229,7 +224,8 @@
       There should be an icon for the interpreter in the
       <guilabel>Components</guilabel> toolbar next to the general Interpret
       ('i") button. You may also run the interpreter by right-clicking a model
-      in the <guilabel>Model Browser</guilabel>.<figure>
+      in the <guilabel>Model Browser</guilabel> and clicking
+      <guisubmenu>Interpret</guisubmenu>.<figure>
           <title>Default Interpreter Icon</title>
 
           <mediaobject>
@@ -239,133 +235,133 @@
           </mediaobject>
         </figure></para>
     </section>
-  </section>
 
-  <section>
-    <title>Writing the interpreter code</title>
+    <section>
+      <title>Writing the interpreter code</title>
 
-    <para>Our final task consists of writing the crucial portion of the
-    interpreter code. Like any other program, the difficulty of this task
-    depends on the complexity of the functionality. Most interpreters
-    implement at least two typical functions:<variablelist>
-        <varlistentry>
-          <term>Navigating the object network</term>
+      <para>Our final task consists of writing the crucial portion of the
+      interpreter code. Like any other program, the difficulty of this task
+      depends on the complexity of the functionality. Most interpreters
+      implement at least two typical functions:<variablelist>
+          <varlistentry>
+            <term>Navigating the object network</term>
 
-          <listitem>
-            <para>usually, traversing all or part of the tree. Containment is
-            the most frequently used relationship for traversal, although
-            other relationships (inheritance, references, or connections) also
-            provide the ability to navigate in both directions. If the
-            paradigm is recursive, traversal is also implemented by a
-            potentially recursive chain of method calls.</para>
+            <listitem>
+              <para>usually, traversing all or part of the tree. Containment
+              is the most frequently used relationship for traversal, although
+              other relationships (inheritance, references, or connections)
+              also provide the ability to navigate in both directions. If the
+              paradigm is recursive, traversal is also implemented by a
+              potentially recursive chain of method calls.</para>
 
-            <para>Navigation can begin from several different points, all of
-            which are passed to <code>CComponent::InvokeEx</code> as
-            parameters. These points are:<itemizedlist>
-                <listitem>
-                  <para>The <code>CBuilder</code> object, which represents the
-                  entire project and provides access to the root folder, the
-                  hierarchy of subfolders (see Lesson 4), and the FCOs
-                  contained in them. </para>
-                </listitem>
+              <para>Navigation can begin from several different points, all of
+              which are passed to <code>CComponent::InvokeEx</code> as
+              parameters. These points are:<itemizedlist>
+                  <listitem>
+                    <para>The <code>CBuilder</code> object, which represents
+                    the entire project and provides access to the root folder,
+                    the hierarchy of subfolders (see Lesson 4), and the FCOs
+                    contained in them.</para>
+                  </listitem>
 
-                <listitem>
-                  <para>The focus object (if non-null), i.e. the model from
-                  which the interpreter was executed. </para>
-                </listitem>
+                  <listitem>
+                    <para>The focus object (if non-null), i.e. the model from
+                    which the interpreter was executed.</para>
+                  </listitem>
 
-                <listitem>
-                  <para>The list of selected objects, which is created only
-                  when the interpreter is started from the context menu;
-                  otherwise, the list is empty. </para>
-                </listitem>
-              </itemizedlist></para>
+                  <listitem>
+                    <para>The list of selected objects, which is created only
+                    when the interpreter is started from the context menu;
+                    otherwise, the list is empty.</para>
+                  </listitem>
+                </itemizedlist></para>
 
-            <para>The most frequently used methods for navigation are:
-            <itemizedlist>
-                <listitem>
-                  <para><code>GetRootFolder( )</code>, <code>GetFolders(
-                  )</code>, and <code>GetFolder(name)</code> in the
-                  <code>CBuilder</code> class</para>
-                </listitem>
+              <para>The most frequently used methods for navigation are:
+              <itemizedlist>
+                  <listitem>
+                    <para><code>GetRootFolder( )</code>, <code>GetFolders(
+                    )</code>, and <code>GetFolder(name)</code> in the
+                    <code>CBuilder</code> class</para>
+                  </listitem>
 
-                <listitem>
-                  <para><code>GetSubFolders( )</code>, <code>GetRootModels(
-                  )</code>, and <code>GetRootModel(name)</code> in the
-                  <code>CBuilderFolder</code> class</para>
-                </listitem>
+                  <listitem>
+                    <para><code>GetSubFolders( )</code>, <code>GetRootModels(
+                    )</code>, and <code>GetRootModel(name)</code> in the
+                    <code>CBuilderFolder</code> class</para>
+                  </listitem>
 
-                <listitem>
-                  <para><code>GetChildren( )</code>, <code>GetAtoms( )</code>,
-                  <code>GetModels( )</code>, <code>GetReferences( )</code>,
-                  <code>GetSets( )</code>, and <code>GetConnections( )</code>
-                  in the <code>CBuilderModel</code> class, along with the
-                  variations on these methods that filter the objects by
-                  kindname</para>
-                </listitem>
+                  <listitem>
+                    <para><code>GetChildren( )</code>, <code>GetAtoms(
+                    )</code>, <code>GetModels( )</code>, <code>GetReferences(
+                    )</code>, <code>GetSets( )</code>, and
+                    <code>GetConnections( )</code> in the
+                    <code>CBuilderModel</code> class, along with the
+                    variations on these methods that filter the objects by
+                    kindname</para>
+                  </listitem>
 
-                <listitem>
-                  <para><code>GetInConnections( )</code>,
-                  <code>GetInConnectedObjects( )</code>,
-                  <code>GetDirectInConnections( )</code>, and similar
-                  functions for navigating connections, plus <code>GetType(
-                  )</code> and <code>GetDerivedObjects( )</code> for
-                  navigating inheritance, all in the
-                  <code>CBuilderObject</code> class</para>
-                </listitem>
-              </itemizedlist></para>
+                  <listitem>
+                    <para><code>GetInConnections( )</code>,
+                    <code>GetInConnectedObjects( )</code>,
+                    <code>GetDirectInConnections( )</code>, and similar
+                    functions for navigating connections, plus <code>GetType(
+                    )</code> and <code>GetDerivedObjects( )</code> for
+                    navigating inheritance, all in the
+                    <code>CBuilderObject</code> class</para>
+                  </listitem>
+                </itemizedlist></para>
 
-            <para>Consult <filename>Builder.h</filename> for a full list of
-            methods. </para>
-          </listitem>
-        </varlistentry>
+              <para>Consult <filename>Builder.h</filename> for a full list of
+              methods.</para>
+            </listitem>
+          </varlistentry>
 
-        <varlistentry>
-          <term>Querying or modifying individual objects</term>
+          <varlistentry>
+            <term>Querying or modifying individual objects</term>
 
-          <listitem>
-            <para>accessing object properties (e.g. name, position),
-            attributes, metainformation, or associations. The function of
-            interpreters typically involves printing out object data in some
-            particular order and format, just like this example. The most
-            frequently used methods for this function are in the
-            <code>CBuilderObject</code> class. They are: <itemizedlist>
-                <listitem>
-                  <para><code>GetAttribute( )</code> and <code>SetAttribute(
-                  )</code> in several variations, depending on attribute data
-                  type</para>
-                </listitem>
+            <listitem>
+              <para>accessing object properties (e.g. name, position),
+              attributes, metainformation, or associations. The function of
+              interpreters typically involves printing out object data in some
+              particular order and format, just like this example. The most
+              frequently used methods for this function are in the
+              <code>CBuilderObject</code> class. They are: <itemizedlist>
+                  <listitem>
+                    <para><code>GetAttribute( )</code> and <code>SetAttribute(
+                    )</code> in several variations, depending on attribute
+                    data type</para>
+                  </listitem>
 
-                <listitem>
-                  <para><code>GetName( )</code>, <code>SetName( ),</code>
-                  <code>GetLocation( )</code>, and <code>SetLocation( )</code>
-                  for accessing properties</para>
-                </listitem>
+                  <listitem>
+                    <para><code>GetName( )</code>, <code>SetName( ),</code>
+                    <code>GetLocation( )</code>, and <code>SetLocation(
+                    )</code> for accessing properties</para>
+                  </listitem>
 
-                <listitem>
-                  <para><code>GetRegistryValue( )</code> and
-                  <code>SetRegistryValue( )</code> for accessing visualization
-                  information</para>
-                </listitem>
+                  <listitem>
+                    <para><code>GetRegistryValue( )</code> and
+                    <code>SetRegistryValue( )</code> for accessing
+                    visualization information</para>
+                  </listitem>
 
-                <listitem>
-                  <para><code>GetKindName( )</code>, <code>GetPartName(
-                  )</code>, and <code>GetAttributeNames( )</code> for
-                  accessing metainformation</para>
-                </listitem>
-              </itemizedlist></para>
-          </listitem>
-        </varlistentry>
-      </variablelist></para>
+                  <listitem>
+                    <para><code>GetKindName( )</code>, <code>GetPartName(
+                    )</code>, and <code>GetAttributeNames( )</code> for
+                    accessing metainformation</para>
+                  </listitem>
+                </itemizedlist></para>
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
 
-    <para>The operation of this particular interpreter should not depend on
-    the focus object or on selected objects (which may be <code>NULL</code> in
-    certain situations). Therefore, we must traverse the object tree through
-    the root of the object hierarchy. The paradigm does not allow subfolders,
-    so it is relatively easy to travel through all the root models in the
-    diagram. </para>
+      <para>The operation of this particular interpreter should not depend on
+      the focus object or on selected objects (which may be <code>NULL</code>
+      in certain situations). Therefore, we must traverse the object tree
+      through the root of the object hierarchy. The paradigm does not allow
+      subfolders, so it is relatively easy to travel through all the root
+      models in the diagram.</para>
 
-    <para>In <filename>BONComponent.cpp</filename>, insert:<programlisting>void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, CBuilderObjectList &amp;selected, long param) 
+      <para>In <filename>BONComponent.cpp</filename>, insert:<programlisting>void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, CBuilderObjectList &amp;selected, long param) 
 {
   Console::Out::WriteLine("Interpreter started...");
 
@@ -379,13 +375,13 @@
   } 
 }</programlisting></para>
 
-    <para><code>InvokeEx</code> demonstrates the basic tricks of traversing
-    the BON network: accessing child objects and iterating through
-    collections. The only difference between it and
-    <code>CComponent::ProcessDiagram</code> is that the latter is recursive
-    and processes different children in a different way. </para>
+      <para><code>InvokeEx</code> demonstrates the basic tricks of traversing
+      the BON network: accessing child objects and iterating through
+      collections. The only difference between it and
+      <code>CComponent::ProcessDiagram</code> is that the latter is recursive
+      and processes different children in a different way.</para>
 
-    <programlisting>void CComponent::ProcessDiagram(CBuilderModel *d) 
+      <programlisting>void CComponent::ProcessDiagram(CBuilderModel *d) 
 { 
   ASSERT(d-&gt;GetKindName() == "NetDiagram"); 
   const CBuilderModelList *diags = d-&gt;GetModels("NetDiagram"); 
@@ -397,16 +393,16 @@
   while(pos) ProcessRouter(routers-&gt;GetNext(pos)); 
 } </programlisting>
 
-    <para><code>ProcessDiagram</code> is fairly complex, even though we
-    managed to squeeze the iteration loops into a single line. Together, the
-    two methods above provide a nearly complete implementation of the
-    <emphasis>traversal</emphasis> function of the interpreter, the part that
-    locates routers in the hierarchy. The <code>ProcessRouter</code> method
-    takes care of the rest; it implements the <emphasis>node
-    processing</emphasis> function, as well as some minimal traversal into the
-    ports of a router. </para>
+      <para><code>ProcessDiagram</code> is fairly complex, even though we
+      managed to squeeze the iteration loops into a single line. Together, the
+      two methods above provide a nearly complete implementation of the
+      <emphasis>traversal</emphasis> function of the interpreter, the part
+      that locates routers in the hierarchy. The <code>ProcessRouter</code>
+      method takes care of the rest; it implements the <emphasis>node
+      processing</emphasis> function, as well as some minimal traversal into
+      the ports of a router.</para>
 
-    <programlisting>void CComponent::ProcessRouter(CBuilderModel *r) 
+      <programlisting>void CComponent::ProcessRouter(CBuilderModel *r) 
 { 
   ASSERT(r-&gt;GetKindName() == "Router"); 
   CString fam; 
@@ -428,17 +424,102 @@
   } 
 }</programlisting>
 
-    <para>Do not forget to add <code>ProcessDiagram</code> and
-    <code>ProcessRouter</code> to the <code>CComponent</code> declaration in
-    <filename>BONComponent.h</filename>.</para>
+      <para>Do not forget to add <code>ProcessDiagram</code> and
+      <code>ProcessRouter</code> to the <code>CComponent</code> declaration in
+      <filename>BONComponent.h</filename>.</para>
 
-    <para>The compilation should run smoothly unless there are typos in your
-    code. If you encounter assertions when running the interpreter for the
-    first time, make sure that you used the exact same names (kindnames,
-    rolenames and attribute names) in your paradigm that you are using in your
-    interpreter code. For reference, here are my copies of <ulink
-    url="L3/BONComponent.cpp"><filename>BONComponent.cpp</filename></ulink>
-    and <ulink url="L3/BONComponent.h"
-    userlevel=""><filename>BONComponent.h</filename></ulink>. </para>
+      <para>The compilation should run smoothly unless there are typos in your
+      code. If you encounter assertions when running the interpreter for the
+      first time, make sure that you used the exact same names (kindnames,
+      rolenames and attribute names) in your paradigm that you are using in
+      your interpreter code. For reference, here are my copies of <ulink
+      url="L3/BON1/BONComponent.cpp"><filename>BONComponent.cpp</filename></ulink>
+      and <ulink
+      url="L3/BON1/BONComponent.h"><filename>BONComponent.h</filename></ulink>.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>The Builder Object Network 2</title>
+
+    <para>To create a BON2 project, follow the directions in <xref
+    linkend="sect-gen-workspace" />, but select BON2 project instead of
+    BON.</para>
+
+    <para>Frequently-used methods for navigation are:<itemizedlist>
+        <listitem>
+          <para><code>project-&gt;getRootFolder()-&gt;getRootFCOs()</code>:
+          returns a <code>std::set&lt;BON::FCO&gt;</code>, the FCOs in the
+          top-level folder (commonly models)</para>
+        </listitem>
+
+        <listitem>
+          <para><code>getChildFolders()</code>, <code>getChildAtoms()</code>,
+          <code>getChildModels()</code> in <code>BON::FolderImpl</code></para>
+        </listitem>
+
+        <listitem>
+          <para><code>getChild*s</code> in <code>BON::ModelImpl</code></para>
+        </listitem>
+
+        <listitem>
+          <para><code>getReferred()</code> in
+          <code>BON::ReferenceImpl</code></para>
+        </listitem>
+
+        <listitem>
+          <para><code>getMembers()</code> in <code>BON::SetImpl</code></para>
+        </listitem>
+
+        <listitem>
+          <para><code>getSrc()</code>, <code>getDst()</code> in
+          <code>BON::ConnectionImpl</code></para>
+        </listitem>
+      </itemizedlist></para>
+
+    <para>The <code>get*s()</code> methods return STL collections.</para>
+
+    <para>Here are example files: <ulink
+    url="L3/BON2/BON2Component.cpp"><filename>BON2Component.cpp</filename></ulink>
+    and <ulink
+    url="L3/BON2/BON2Component.h"><filename>BON2Component.h</filename></ulink>.</para>
+  </section>
+
+  <section>
+    <title>BON2 Extended</title>
+
+    <para>BON2 Extended allows you to write paradigm-specific interpreters
+    more easily. Classes are generated for model elements using the
+    BONExtender interpreter.</para>
+
+    <para>To start, create a project as you did with BON2. Create a copy of
+    the paradigm (<filename>networking.mga</filename>) in the directory with
+    the source files. Then open the paradigm in GME and use the BONExtender
+    interpreter (<emphasis>X</emphasis> icon).</para>
+
+    <figure>
+      <title>BONExtender interpreter dialog</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="L3/BON Extender interpreter dialog.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Add the generated files <filename>networkingBonX.cpp</filename>,
+    <filename>networkingBonX.h</filename>,
+    <filename>networkingVisitor.cpp</filename>, and
+    <filename>networkingVisitor.h</filename> to the Visual Studio
+    project.</para>
+
+    <para>With BON2, you can extend the classes (e.g. NetDiagram) with
+    domain-specific functions. The BONExtender interpreter can also generate
+    visitor code which simplifies the </para>
+
+    <para>Here are example files: <ulink
+    url="L3/BON2Ex/BON2Component.cpp"><filename>BON2Component.cpp</filename></ulink>
+    and <ulink
+    url="L3/BON2Ex/BON2Component.h"><filename>BON2Component.h</filename></ulink>.</para>
   </section>
 </article>
