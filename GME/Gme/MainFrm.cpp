@@ -405,18 +405,18 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// Creating tabs for the MDI Children (documents)
 	CMDITabInfo mdiTabParams;
-	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_VS2005; // other styles available...
-	mdiTabParams.m_bActiveTabCloseButton = TRUE;      // set to FALSE to place close button at right of tab area
-	mdiTabParams.m_bTabIcons = FALSE;    // set to TRUE to enable document icons on MDI taba
-	mdiTabParams.m_bAutoColor = TRUE;    // set to FALSE to disable auto-coloring of MDI tabs
-	mdiTabParams.m_bDocumentMenu = TRUE; // enable the document menu at the right edge of the tab area
+	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_VS2005;	// other styles available...
+	mdiTabParams.m_bActiveTabCloseButton = TRUE;			// set to FALSE to place close button at right of tab area
+	mdiTabParams.m_bTabIcons = FALSE;						// set to TRUE to enable document icons on MDI tabs
+	mdiTabParams.m_bAutoColor = TRUE;						// set to FALSE to disable auto-coloring of MDI tabs
+	mdiTabParams.m_bDocumentMenu = TRUE;					// enable the document menu at the right edge of the tab area
 	EnableMDITabbedGroups(TRUE, mdiTabParams);
 
-	CMFCToolBar::EnableQuickCustomization ();
+	CMFCToolBar::EnableQuickCustomization();
 
 	// Set the visual manager and style based on persisted value
 	OnApplicationLook(theApp.m_nAppLook);
-	
+
 	EnableDocking(CBRS_ALIGN_ANY);
 
 
@@ -424,19 +424,19 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// STATUS BAR
 	if (!m_wndStatusBar.Create(this) ||
 		!m_wndStatusBar.SetIndicators(indicators,
-		  sizeof(indicators)/sizeof(UINT)))
+		sizeof(indicators)/sizeof(UINT)))
 	{
 		TRACE0("Failed to create status bar\n");
-		return -1;      // fail to create
+		return -1;		// fail to create
 	}
-	
+
 	CMFCToolBar::EnableQuickCustomization();
-	
+
 	// MENU BAR
 	if (!m_wndMenuBar.Create(this))
 	{
 		TRACE0("Failed to create menubar\n");
-		return -1;      // fail to create
+		return -1;		// fail to create
 	}
 
 	m_wndMenuBar.SetPaneStyle(m_wndMenuBar.GetPaneStyle() | CBRS_SIZE_DYNAMIC | CBRS_TOOLTIPS | CBRS_FLYBY);
@@ -456,7 +456,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Enable enhanced windows management dialog
 	EnableWindowsDialog(ID_WINDOW_MANAGER, _T("Model windows..."), TRUE);
 
-	
+
 
 
 	// enable Visual Studio 2005 style docking window behavior
@@ -477,13 +477,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_partBrowser.EnableDocking(CBRS_ALIGN_ANY);
 
 
-	// terge 
 	// PANNING WINDOW
 	if (!m_panningWindow.Create(_T("Panning Window"), this, CSize(240, 160),
 		TRUE, ID_PANNWIN, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("Failed to create panning Window\n");
-		return -1;      // fail to create
+		return -1;		// fail to create
 	}
 	
 	m_panningWindow.EnableDocking(CBRS_ALIGN_ANY);
@@ -491,21 +490,21 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// GME ACTIVE BROWSER TREE
 	if (!m_browser.Create(_T("GME Browser"), this, CSize(240, 80),
-        	TRUE, ID_GMEBROWSER, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+		TRUE, ID_GMEBROWSER, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("Failed to create browser\n");
-		return -1;      // fail to create
+		return -1;		// fail to create
 	}
 	
 	m_browser.EnableDocking(CBRS_ALIGN_ANY);
-	
+
 
 	// OBJECT INSPECTOR
 	if(!m_objectInspector.Create(_T("Object Inspector"), this, CSize(240, 160),
-		TRUE,IDD_OBJECT_INSPECTOR_DIALOG, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+		TRUE, IDD_OBJECT_INSPECTOR_DIALOG, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
 	{
-        TRACE0("Failed to create Object Inspector\n");
-        return -1;      // fail to create
+		TRACE0("Failed to create Object Inspector\n");
+		return -1;		// fail to create
 	}
 	
 	m_objectInspector.EnableDocking(CBRS_ALIGN_ANY);
@@ -514,10 +513,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// CONSOLE
 	if(!m_console.Create(_T("Console"), this, CSize(80, 160),
-		TRUE,IDD_CONSOLE_DIALOG, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+		TRUE, IDD_CONSOLE_DIALOG, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
 	{
-        TRACE0("Failed to create Console\n");
-        return -1;      // fail to create
+		TRACE0("Failed to create Console\n");
+		return -1;		// fail to create
 	}
 
 	m_console.EnableDocking(CBRS_ALIGN_ANY);
@@ -525,33 +524,33 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 
 	// SEARCH - Modal Dialog
-	if(!m_search.Create(_T("Search"),this,CSize(200,200),TRUE,IDD_SEARCH_DIALOG,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
-
+	if(!m_search.Create(_T("Search"), this, CSize(200, 200),
+		TRUE, IDD_SEARCH_DIALOG, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
 	{
-        TRACE0("Failed to create Search Control\n");
-        return -1;      // fail to create
+		TRACE0("Failed to create Search Control\n");
+		return -1;		// fail to create
 	}
 
-    m_search.EnableDocking(CBRS_ALIGN_ANY);
-    // --- Docking ---
- 
-    DockPane(&m_browser, AFX_IDW_DOCKBAR_RIGHT);
+	m_search.EnableDocking(CBRS_ALIGN_ANY);
+	// --- Docking ---
 
-    DockPane(&m_partBrowser, AFX_IDW_DOCKBAR_LEFT);
+	DockPane(&m_browser, AFX_IDW_DOCKBAR_RIGHT);
+
+	DockPane(&m_partBrowser, AFX_IDW_DOCKBAR_LEFT);
 
 	m_panningWindow.DockToWindow(&m_partBrowser, CBRS_ALIGN_BOTTOM);
-	
-	
+
+
 	m_objectInspector.DockToWindow(&m_browser,CBRS_ALIGN_BOTTOM);
 
 	DockPane(&m_console,AFX_IDW_DOCKBAR_BOTTOM);
 
 	CDockablePane* pTabbedBar = NULL;
 	m_search.AttachToTabWnd(&m_console, DM_SHOW, TRUE, &pTabbedBar);
-	
+
 	m_search.ShowPane(FALSE, FALSE, FALSE);	
 
-	
+
 
 
 	// CG: The following block was inserted by 'Status Bar' component.
@@ -576,7 +575,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndComponentBar.ShowWindow(SW_HIDE);
 	ShowPane(&m_wndComponentBar, FALSE, FALSE, FALSE);
 
-	
+
 
 	// CG: The following line was added by the Splash Screen component.
 	CSplashWnd::ShowSplashScreen(this);

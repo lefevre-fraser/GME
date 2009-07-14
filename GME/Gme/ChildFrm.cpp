@@ -129,3 +129,25 @@ void CChildFrame::OnSize(UINT nType, int cx, int cy)
 	// when the childwnd's are maximized
 	theApp.UpdateMainTitle();
 }
+
+BOOL CChildFrame::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_MBUTTONUP) {
+		CMFCTabCtrl* tabCtrl = GetRelatedTabGroup();
+		long xPos = GET_X_LPARAM(pMsg->lParam);
+		long yPos = GET_Y_LPARAM(pMsg->lParam);
+		CPoint point(xPos, yPos);
+		if (tabCtrl->IsPtInTabArea(point)) {
+			int i = tabCtrl->GetTabFromPoint(point);
+			if (i >= 0) {
+				CWnd* tabCtrlWnd = tabCtrl->GetTabWnd(i);
+				if (tabCtrlWnd != NULL && tabCtrlWnd->IsKindOf(RUNTIME_CLASS(CChildFrame))) {
+					CChildFrame* cf = STATIC_DOWNCAST(CChildFrame, tabCtrlWnd);
+					cf->PostMessage(WM_CLOSE);
+				}
+			}
+		}
+	}
+
+	return CMDIChildWndEx::PreTranslateMessage(pMsg);
+}
