@@ -52,13 +52,15 @@ public:
 	CWnd*					m_parentCWnd;
 	HWND					m_parentHWnd;
 	CRect					m_initialRect;
+	CPoint					m_mouseClick;	// Screen coordinates of the mouse click which invoked the in-place edit
 	CFont*					m_font;
 	bool					m_bPermanentCWnd;
 	bool					m_bInflateToRight;
 	bool					m_bDlgResult;
 
-	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect, HWND parentWnd,
-						  CWnd* parentCWnd, CFont* font, bool isPermanentCWnd, bool inflateToRight = true);
+	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect,
+						  const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, CFont* font,
+						  bool isPermanentCWnd, bool inflateToRight = true);
 	CString GetText() const;
 
 // Overrides

@@ -356,7 +356,9 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 		if (portLabelPart != NULL)
 			if (portLabelPart->GetLocationAdjust() == L_WEST)
 				inflateToRight = false;
-		inPlaceEditDlg->SetProperties(m_strText, this, editLocation, m_parentWnd, cWnd, scaled_font,
+		CPoint screenPt = point;
+		cWnd->ClientToScreen(&screenPt);
+		inPlaceEditDlg->SetProperties(m_strText, this, editLocation, screenPt, m_parentWnd, cWnd, scaled_font,
 									  isPermanentCWnd, inflateToRight);
 		inPlaceEditDlg->Create(m_bMultiLine ? IDD_INPLACEEDITMLDIALOG : IDD_INPLACEEDITSLDIALOG, cWnd);
 		inPlaceEditDlg->ShowWindow(SW_SHOWNORMAL);

@@ -85,6 +85,15 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	}
 
 	m_edtInPlace.SetFocus();
+
+	// Smart positioning of the caret
+	m_edtInPlace.ScreenToClient(&m_mouseClick);
+	int n = m_edtInPlace.CharFromPos(m_mouseClick);
+	int nLineIndex = HIWORD(n);
+	int nCharIndex = LOWORD(n);
+	TRACE("nLineIndex = %d, nCharIndex = %d\n", nCharIndex, nCharIndex);
+	m_edtInPlace.SetSel(nCharIndex, nCharIndex);
+
 	// Capture the mouse, this allows the dialog to close when the user clicks outside.
 	// The dialog has no "close" button.
 	m_edtInPlace.SetCapture();
@@ -175,12 +184,13 @@ LRESULT CInPlaceEditDialog::OnEndEditingWithOk(WPARAM wParam, LPARAM lParam)
 }
 
 void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect,
-									   HWND parentWnd, CWnd* parentCWnd, CFont* font, bool isPermanentCWnd,
-									   bool inflateToRight)
+									   const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, CFont* font,
+									   bool isPermanentCWnd, bool inflateToRight)
 {
 	m_Text				= text;
 	m_parentPart		= parentPart;
 	m_initialRect		= initialRect;
+	m_mouseClick		= mouseClick;
 	m_parentHWnd		= parentWnd;
 	m_parentCWnd		= parentCWnd;
 	m_font				= font;
