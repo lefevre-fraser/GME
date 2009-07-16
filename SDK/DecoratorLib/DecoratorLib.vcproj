@@ -227,15 +227,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CommonError.cpp"
+				RelativePath=".\DecoratorError.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CommonMfc.cpp"
+				RelativePath=".\DecoratorMfc.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CommonSmart.cpp"
+				RelativePath=".\DecoratorSmart.cpp"
 				>
 			</File>
 			<File
@@ -457,15 +457,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CommonError.h"
+				RelativePath=".\DecoratorError.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CommonMfc.h"
+				RelativePath=".\DecoratorMfc.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CommonSmart.h"
+				RelativePath=".\DecoratorSmart.h"
 				>
 			</File>
 			<File
