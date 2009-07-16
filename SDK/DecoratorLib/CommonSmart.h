@@ -3,7 +3,7 @@
 #define MGA_COMMONSMART_H
 
 #ifndef MGA_COMMONERROR_H
-#include "CommonError.h"
+#include "DecoratorError.h"
 #endif
 
 #ifndef __ATLBASE_H__

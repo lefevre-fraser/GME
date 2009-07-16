@@ -1,6 +1,6 @@
 
 #include "stdafx.h"
-#include "CommonMfc.h"
+#include "DecoratorMfc.h"
 #include <stdio.h>
 
 // --------------------------- Error

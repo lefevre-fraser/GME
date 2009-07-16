@@ -1,7 +1,7 @@
 
 #include "stdafx.h"
-#include "CommonError.h"
-#include "CommonSmart.h"
+#include "DecoratorError.h"
+#include "DecoratorSmart.h"
 #include <stdio.h>
 
 // --------------------------- hresult_exception

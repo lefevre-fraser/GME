@@ -1,6 +1,6 @@
 
 #include "stdafx.h"
-#include "CommonSmart.h"
+#include "DecoratorSmart.h"
 
 // --------------------------- CComBstrObj
 

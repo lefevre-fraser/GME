@@ -3,7 +3,7 @@
 #define MGA_COMMONMFC_H
 
 #ifndef MGA_COMMONSMART_H
-#include "CommonSmart.h"
+#include "DecoratorSmart.h"
 #endif
 
 #include "afxtempl.h"

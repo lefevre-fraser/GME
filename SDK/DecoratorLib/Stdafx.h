@@ -43,9 +43,9 @@
 extern CComModule _Module;
 #include <atlcom.h>
 
-#include "CommonError.h"
-#include "CommonSmart.h"
-#include "CommonMfc.h"
+#include "DecoratorError.h"
+#include "DecoratorSmart.h"
+#include "DecoratorMfc.h"
 #include <stdio.h>
 
 #ifdef LIBCOMPILE
