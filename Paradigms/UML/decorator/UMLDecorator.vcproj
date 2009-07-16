@@ -44,7 +44,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				TargetEnvironment="1"
 				TypeLibraryName=".\Release/UMLDecorator.tlb"
 				HeaderFileName=""
@@ -55,7 +55,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -87,7 +87,7 @@
 				OutputFile=".\Release/UMLDecorator.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(GME_ROOT)\Lib;$(GME_ROOT)\GME\Lib"
+				AdditionalLibraryDirectories="$(GME_ROOT)\GME\Lib;$(GME_ROOT)\Lib"
 				ModuleDefinitionFile=".\UMLDecoratorApp.def"
 				ProgramDatabaseFile=".\Release/UMLDecorator.pdb"
 				SubSystem="2"
@@ -146,7 +146,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				TargetEnvironment="1"
 				TypeLibraryName=".\Debug/UMLDecorator.tlb"
 				HeaderFileName=""
@@ -154,7 +154,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -187,7 +187,7 @@
 				OutputFile=".\Debug/UMLDecorator.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(GME_ROOT)\Lib;$(GME_ROOT)\GME\Lib"
+				AdditionalLibraryDirectories="$(GME_ROOT)\GME\Lib;$(GME_ROOT)\Lib"
 				ModuleDefinitionFile=".\UMLDecoratorApp.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/UMLDecorator.pdb"

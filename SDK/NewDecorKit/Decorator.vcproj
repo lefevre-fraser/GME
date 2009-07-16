@@ -44,7 +44,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				TypeLibraryName=".\Release/Decorator.tlb"
 				HeaderFileName=""
 			/>
@@ -52,7 +52,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\SDK\DecoratorLib"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;$(GME_ROOT)\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -83,7 +83,7 @@
 				OutputFile=".\Release/Decorator.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(GME_ROOT)\Lib;$(GME_ROOT)\GME\Lib"
+				AdditionalLibraryDirectories="$(GME_ROOT)\GME\Lib;$(GME_ROOT)\Lib"
 				ModuleDefinitionFile=".\DecoratorApp.def"
 				ProgramDatabaseFile=".\Release/Decorator.pdb"
 				SubSystem="2"
@@ -142,14 +142,14 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				TypeLibraryName=".\Debug/Decorator.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\SDK\DecoratorLib"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;$(GME_ROOT)\SDK\DecoratorLib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_ATL_DLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -181,7 +181,7 @@
 				OutputFile=".\Debug/Decorator.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(GME_ROOT)\Lib;$(GME_ROOT)\GME\Lib"
+				AdditionalLibraryDirectories="$(GME_ROOT)\GME\Lib;$(GME_ROOT)\Lib"
 				ModuleDefinitionFile=".\DecoratorApp.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Decorator.pdb"

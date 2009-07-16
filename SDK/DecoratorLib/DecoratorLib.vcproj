@@ -41,23 +41,23 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				TypeLibraryName="$(GME_ROOT)\SDK\DecoratorLib\Debug\$(ProjectName)D.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				PreprocessorDefinitions="WIN32;_DEBUG;OLD_DECORATOR_LOOKANDFEEL;LIBCOMPILE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile="$(GME_ROOT)\GME\Lib\$(TargetName).pch"
+				PrecompiledHeaderFile="$(GME_ROOT)\SDK\DecoratorLib\Debug\$(TargetName).pch"
 				ObjectFile="$(GME_ROOT)\SDK\DecoratorLib\Debug\"
 				ProgramDataBaseFileName="$(GME_ROOT)\SDK\DecoratorLib\Debug\vc90.pdb"
 				XMLDocumentationFileName="$(GME_ROOT)\SDK\DecoratorLib\Debug\"
 				BrowseInformation="1"
-				BrowseInformationFile="$(GME_ROOT)\GME\Lib\"
+				BrowseInformationFile="$(GME_ROOT)\SDK\DecoratorLib\Debug\"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -120,7 +120,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				TypeLibraryName="$(GME_ROOT)\SDK\DecoratorLib\Release\$(ProjectName).tlb"
 			/>
 			<Tool
@@ -129,12 +129,12 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				PreprocessorDefinitions="WIN32;NDEBUG;OLD_DECORATOR_LOOKANDFEEL;LIBCOMPILE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile="$(GME_ROOT)\GME\Lib\$(TargetName).pch"
+				PrecompiledHeaderFile="$(GME_ROOT)\SDK\DecoratorLib\Release\$(TargetName).pch"
 				ObjectFile="$(GME_ROOT)\SDK\DecoratorLib\Release\"
 				ProgramDataBaseFileName="$(GME_ROOT)\SDK\DecoratorLib\Release\vc90.pdb"
 				XMLDocumentationFileName="$(GME_ROOT)\SDK\DecoratorLib\Release\"
@@ -227,18 +227,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DecoratorError.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DecoratorMfc.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DecoratorSmart.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\CompositePart.cpp"
 				>
 			</File>
@@ -255,6 +243,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DecoratorError.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DecoratorExceptions.cpp"
 				>
 			</File>
@@ -264,6 +256,14 @@
 			</File>
 			<File
 				RelativePath=".\DecoratorLib.idl"
+				>
+			</File>
+			<File
+				RelativePath=".\DecoratorMfc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DecoratorSmart.cpp"
 				>
 			</File>
 			<File
@@ -457,18 +457,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DecoratorError.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DecoratorMfc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DecoratorSmart.h"
-				>
-			</File>
-			<File
 				RelativePath=".\CompositePart.h"
 				>
 			</File>
@@ -485,11 +473,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DecoratorError.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DecoratorExceptions.h"
 				>
 			</File>
 			<File
 				RelativePath=".\DecoratorInterface.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DecoratorMfc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DecoratorSmart.h"
 				>
 			</File>
 			<File
@@ -643,14 +643,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\DecoratorLib.ico"
-				>
-			</File>
-			<File
-				RelativePath=".\DecoratorLib.rc"
-				>
-			</File>
-			<File
 				RelativePath=".\res\atom.bmp"
 				>
 			</File>
@@ -664,6 +656,14 @@
 			</File>
 			<File
 				RelativePath=".\res\collapsesign.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\DecoratorLib.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\DecoratorLib.rc"
 				>
 			</File>
 			<File
