@@ -6,6 +6,7 @@
 #include "InPlaceEditDialog.h"
 #include "InPlaceEditMultiLineDialog.h"
 
+#define WM_USER_ENDEDITINGWITHOK	(WM_USER + 115)
 
 // CInPlaceEditDialog dialog
 
@@ -25,7 +26,7 @@ void CInPlaceEditDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CInPlaceEditDialog)
-	DDX_Text(pDX, IDC_TEXTEDIT, m_Text);
+	DDX_Control(pDX, IDC_TEXTEDIT, m_edtInPlace);
 	//}}AFX_DATA_MAP
 }
 
@@ -52,11 +53,7 @@ BEGIN_MESSAGE_MAP(CInPlaceEditDialog, CDialog)
 	ON_BN_CLICKED(IDCANCEL, OnBnClickedCancel)
 	ON_BN_CLICKED(IDOK, OnBnClickedOk)
 	ON_WM_LBUTTONDOWN()
-	ON_WM_LBUTTONUP()
-	ON_WM_LBUTTONDBLCLK()
-	ON_WM_MOUSEMOVE()
-	ON_WM_SETCURSOR()
-	ON_WM_MOUSEACTIVATE()
+	ON_MESSAGE(WM_USER_ENDEDITINGWITHOK, OnEndEditingWithOk)
 END_MESSAGE_MAP()
 
 
@@ -65,6 +62,8 @@ END_MESSAGE_MAP()
 BOOL CInPlaceEditDialog::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
+
+	m_edtInPlace.SetWindowText(m_Text);
 
 	CRect rectInResource = GetWindowSizeFromResource();
 	long width = (long)(m_initialRect.Width() * 1.5) + 4;
@@ -76,21 +75,20 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 
 	MoveWindow(left, m_initialRect.top, width, height);
 
-	CWnd* editWnd = GetDlgItem(IDC_TEXTEDIT);
-	editWnd->SetFont(m_font);
+	m_edtInPlace.SetFont(m_font);
 	long dWidth = width - rectInResource.Width();
 	long dHeight = height - rectInResource.Height();
 	if (dWidth != 0 || dHeight != 0) {
 		CRect editRect;
-		editWnd->GetWindowRect(&editRect);
-		editWnd->MoveWindow(0, 0, editRect.Width() + dWidth, editRect.Height() + dHeight);
+		m_edtInPlace.GetWindowRect(&editRect);
+		m_edtInPlace.MoveWindow(0, 0, editRect.Width() + dWidth, editRect.Height() + dHeight);
 	}
 
+	m_edtInPlace.SetFocus();
 	// Capture the mouse, this allows the dialog to close when the user clicks outside.
 	// The dialog has no "close" button.
-	SetCapture();
+	m_edtInPlace.SetCapture();
 
-	editWnd->SetFocus();
 	m_parentPart->LabelEditingStarted(m_initialRect);
 
 	return FALSE;	// return TRUE unless you set the focus to a control
@@ -107,22 +105,24 @@ void CInPlaceEditDialog::OnDestroy()
 void CInPlaceEditDialog::OnBnClickedCancel()
 {
 	// TODO: Add your control notification handler code here
+	m_edtInPlace.GetWindowText(m_Text);
 	ReleaseCapture();
 	m_bDlgResult = false;
 
 	DestroyWindow();
-//	OnCancel();	-> calls EndDialog, which is for Modal dialogs, avoid it
+//	OnCancel();	-> calls EndDialog, which is for Modal dialogs, avoid it!
 }
 
 void CInPlaceEditDialog::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
+	m_edtInPlace.GetWindowText(m_Text);
 	if (UpdateData(true)) {
 		ReleaseCapture();
 		m_bDlgResult = true;
 
 		DestroyWindow();
-//		OnOK();	-> calls EndDialog, which is for Modal dialogs, avoid it
+//		OnOK();	-> calls EndDialog, which is for Modal dialogs, avoid it!
 	}
 }
 
@@ -140,7 +140,6 @@ void CInPlaceEditDialog::OnLButtonDown(UINT nFlags, CPoint point)
 
 	if (!PtInRect(&r, p)) {
 		// If the user clicked outside of the dialog, close (and apply changes).
-		TRACE3("CInPlaceEditDialog::OnLButtonDown %ld %ld\n", nFlags, point.x, point.y);
 		OnBnClickedOk();	// Windows Explorer default behavior
 		return;
 	} else {
@@ -158,10 +157,9 @@ void CInPlaceEditDialog::OnLButtonDown(UINT nFlags, CPoint point)
 		// (obviously) because it would cause
 		// a stack overflow.
 
-		CWnd *child = ChildWindowFromPoint(point);
+		CWnd* child = ChildWindowFromPoint(point);
 
 		if (child && child != this) {
-			TRACE3("CInPlaceEditDialog::OnLButtonDown %ld %ld %ld\n", nFlags, point.x, point.y);
 			child->SendMessage(WM_LBUTTONDOWN, nFlags, MAKELPARAM(point.x, point.y));
 			return;
 		}
@@ -170,84 +168,47 @@ void CInPlaceEditDialog::OnLButtonDown(UINT nFlags, CPoint point)
 	CDialog::OnLButtonDown(nFlags, point);
 }
 
-void CInPlaceEditDialog::OnLButtonUp(UINT nFlags, CPoint point)
+LRESULT CInPlaceEditDialog::OnEndEditingWithOk(WPARAM wParam, LPARAM lParam)
 {
-	// See notes for OnLButtonDown.
-	CWnd *child = ChildWindowFromPoint(point, CWP_ALL);
-
-	if (child && child != this) {
-		child->SendMessage(WM_LBUTTONUP, nFlags, MAKELPARAM(point.x, point.y));
-		TRACE3("CInPlaceEditDialog::OnLButtonUp %ld %ld %ld\n", nFlags, point.x, point.y);
-	} else {
-		CDialog::OnLButtonUp(nFlags, point);
-	}
+	OnBnClickedOk();	// Windows Explorer default behavior
+	return 0;
 }
 
-void CInPlaceEditDialog::OnLButtonDblClk(UINT nFlags, CPoint point)
+void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect,
+									   HWND parentWnd, CWnd* parentCWnd, CFont* font, bool isPermanentCWnd,
+									   bool inflateToRight)
 {
-	// See notes for OnLButtonDown.
-	CWnd *child = ChildWindowFromPoint(point, CWP_ALL);
-
-	if (child && child != this) {
-		child->SendMessage(WM_LBUTTONDBLCLK, nFlags, MAKELPARAM(point.x, point.y));
-		TRACE3("CInPlaceEditDialog::OnLButtonDblClk %ld %ld %ld\n", nFlags, point.x, point.y);
-	} else {
-		CDialog::OnLButtonDblClk(nFlags, point);
-	}
+	m_Text				= text;
+	m_parentPart		= parentPart;
+	m_initialRect		= initialRect;
+	m_parentHWnd		= parentWnd;
+	m_parentCWnd		= parentCWnd;
+	m_font				= font;
+	m_bPermanentCWnd	= isPermanentCWnd;
+	m_bInflateToRight	= inflateToRight;
 }
 
-void CInPlaceEditDialog::OnMouseMove(UINT nFlags, CPoint point)
+CString CInPlaceEditDialog::GetText() const
 {
-	// See notes for OnLButtonDown.
-	CWnd *child = ChildWindowFromPoint(point, CWP_ALL);
-
-	if (child && child != this) {
-		child->SendMessage(WM_MOUSEMOVE, nFlags, MAKELPARAM(point.x, point.y));
-		TRACE3("CInPlaceEditDialog::OnMouseMove %ld %ld %ld\n", nFlags, point.x, point.y);
-	} else {
-		CDialog::OnMouseMove(nFlags, point);
-	}
-}
-
-BOOL CInPlaceEditDialog::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
-{
-	POINT cursorPos;
-	BOOL succ = ::GetCursorPos(&cursorPos);
-	ScreenToClient(&cursorPos);
-
-	// See notes for OnLButtonDown.
-	CWnd *child = ChildWindowFromPoint(cursorPos, CWP_ALL);
-
-	if (child && child != this) {
-		return child->SendMessage(WM_SETCURSOR, (WPARAM)(child->m_hWnd), MAKELPARAM(nHitTest, message));
-		TRACE3("CInPlaceEditDialog::OnSetCursor %p %lu %lu\n", pWnd, nHitTest, message);
-	} else {
-		return CDialog::OnSetCursor(pWnd, nHitTest, message);
-	}
-}
-
-int CInPlaceEditDialog::OnMouseActivate(CWnd* pWnd, UINT nHitTest, UINT message)
-{
-	POINT cursorPos;
-	BOOL succ = ::GetCursorPos(&cursorPos);
-	ScreenToClient(&cursorPos);
-
-	// See notes for OnLButtonDown.
-	CWnd *child = ChildWindowFromPoint(cursorPos, CWP_ALL);
-
-	if (child && child != this) {
-		return child->SendMessage(WM_MOUSEACTIVATE, (WPARAM)(child->m_hWnd), MAKELPARAM(nHitTest, message));
-		TRACE3("CInPlaceEditDialog::OnMouseActivate %p %lu %lu\n", pWnd, nHitTest, message);
-	} else {
-		return CDialog::OnMouseActivate(pWnd, nHitTest, message);
-	}
+	return m_Text;
 }
 
 BOOL CInPlaceEditDialog::PreTranslateMessage(MSG* pMsg) 
 {
-	// Fix (Adrian Roman): Sometimes if the picker loses focus it is never destroyed
-	if (GetCapture()->GetSafeHwnd() != m_hWnd)
-		SetCapture();
+	// Fix (Adrian Roman): Sometimes if the editor loses capture it is should be setcaptured again
+	CWnd* captureCWnd = m_edtInPlace.GetCapture();
+	if (captureCWnd ==  NULL || captureCWnd->m_hWnd != m_edtInPlace.m_hWnd) {
+		CRect editRect;
+		m_edtInPlace.GetWindowRect(&editRect);
+		BOOL inRect = editRect.PtInRect(pMsg->pt);
+		if (!inRect && pMsg->message == WM_MOUSELEAVE && m_edtInPlace.m_hWnd) {
+			// No recapture, quitting with ok
+			this->PostMessage(WM_USER_ENDEDITINGWITHOK, 0, 0);
+		} else {
+			// Recapture
+			m_edtInPlace.SetCapture();
+		}
+	}
 
 	return CDialog::PreTranslateMessage(pMsg);
 }

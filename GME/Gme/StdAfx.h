@@ -64,7 +64,6 @@ extern CComModule _Module;
 #define WM_PANN_SCROLL			(WM_USER + 112)
 #define WM_USER_PANNREFRESH		(WM_USER + 113)
 #define WM_USER_COMMITTRAN		(WM_USER + 114)	// used for deferred transaction commits in decorator events
-#define WM_USER_CONVERTROUTES	(WM_USER + 115)	// deferred execution and commit of auro routed connection conversions 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

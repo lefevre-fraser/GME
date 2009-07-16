@@ -26,9 +26,11 @@ public:
 
 // Dialog Data
 	//{{AFX_DATA(CInPlaceEditDialog)
+	CEdit	m_edtInPlace;
+	//}}AFX_DATA
+
 	short m_IDD;
 	CString	m_Text;
-	//}}AFX_DATA
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -43,11 +45,7 @@ public:
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
-	afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);
+	afx_msg LRESULT OnEndEditingWithOk(WPARAM wParam, LPARAM lParam);
 	//}}AFX_MSG
 
 	DecoratorSDK::TextPart*	m_parentPart;
@@ -60,11 +58,8 @@ public:
 	bool					m_bDlgResult;
 
 	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect, HWND parentWnd,
-						  CWnd* parentCWnd, CFont* font, bool isPermanentCWnd, bool inflateToRight = true)
-				{ m_Text = text; m_parentPart = parentPart; m_initialRect = initialRect; m_parentHWnd = parentWnd;
-				  m_parentCWnd = parentCWnd; m_font = font; m_bPermanentCWnd = isPermanentCWnd; m_bInflateToRight = inflateToRight; };
-	CString GetText() const { return m_Text; };
-	void	SetText(const CString& text) { m_Text = text; };
+						  CWnd* parentCWnd, CFont* font, bool isPermanentCWnd, bool inflateToRight = true);
+	CString GetText() const;
 
 // Overrides
     // ClassWizard generated virtual function overrides
