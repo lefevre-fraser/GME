@@ -43,6 +43,7 @@ void CDialogList::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CDialogList, CDialog)
 	//{{AFX_MSG_MAP(CDialogList)
 	ON_BN_CLICKED(IDC_BUTTON_IGNORE, OnButtonIgnore)
+	ON_LBN_DBLCLK(IDC_LIST, OnDblclkList)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -96,4 +97,9 @@ void CDialogList::OnOK()
 void CDialogList::OnButtonIgnore() 
 {
     EndDialog( IDIGNORE );
+}
+
+void CDialogList::OnDblclkList(void)
+{
+	OnOK();
 }
