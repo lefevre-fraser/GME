@@ -122,6 +122,7 @@ BOOL CGMEObjectInspector::PreTranslateMessage(MSG* pMsg)
 			case 'z':
 			case 'Z':
 			// Modification End
+			case VK_TAB:	// for JIRA GME-178
 				::TranslateMessage(pMsg);
 				::DispatchMessage(pMsg);
 				return TRUE;

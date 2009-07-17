@@ -58,9 +58,9 @@ public:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-	 afx_msg void OnArrowClicked();
-	 afx_msg void OnEditorClicked();
-	 afx_msg LONG OnEditEndOK(UINT lParam, LONG wParam);
+	afx_msg void OnArrowClicked();
+	afx_msg void OnEditorClicked();
+	afx_msg LONG OnEditEndOK(UINT lParam, LONG wParam);
 // Implementation
 public:
 	void GetItem(int nIndex, CListItem &ListItem);
@@ -104,6 +104,7 @@ private:
 	void UpdateItem(const CListItem& srcListItem, CListItem& dstListItem, int nIndex);
 	void SetDefault();
 	void SetHelp(int nIndex);
+	bool SelectNextItem(void);	// JIRA GME-178
 
 	CInPlaceManager m_InPlaceManager;
 

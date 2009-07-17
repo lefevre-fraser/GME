@@ -52,8 +52,8 @@ END_MESSAGE_MAP()
 BOOL CInspectorList::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Add your specialized code here and/or call the base class
-	cs.style |= WS_VSCROLL |LBS_OWNERDRAWVARIABLE | LBS_NOTIFY |\
-				LBS_NOINTEGRALHEIGHT|LBS_EXTENDEDSEL|LBS_HASSTRINGS;
+	cs.style |= WS_VSCROLL |LBS_OWNERDRAWVARIABLE | LBS_NOTIFY |
+				LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | LBS_HASSTRINGS;
 	cs.style&=~LBS_SORT;
 	cs.dwExStyle |= WS_EX_CLIENTEDGE;
 	return CListBox::PreCreateWindow(cs);
@@ -869,6 +869,36 @@ void CInspectorList::SetHelp(int nIndex)
 }
 
 
+bool CInspectorList::SelectNextItem(void)
+{
+	int nCount = GetCount();
+	if (nCount > 1) {
+		int nCurSel = GetCurSel();	// In a multiple-selection list box, the index of the item that has the focus.
+		if (nCurSel < nCount - 1) {
+			nCurSel++;
+		} else if (nCurSel == nCount - 1) {
+			nCurSel = 0;
+		} else {
+			return false;
+		}
+		// Clear current selections
+		// Get the indexes of all the selected items.
+		int nSelCount = GetSelCount();
+		CArray<int,int> arrListBoxSel;
+		arrListBoxSel.SetSize(nSelCount);
+		CListBox::GetSelItems(nSelCount, arrListBoxSel.GetData());
+		for(int i = 0; i < nSelCount; i++)
+			SetSel(arrListBoxSel.GetAt(i), FALSE);
+
+		// Select the next focused
+		SetSel(nCurSel, TRUE);
+		OnSelChange();
+		return true;
+	}
+	return false;
+}
+
+
 LONG CInspectorList::OnEditEndOK(UINT /*lParam*/, LONG /*wParam*/)
 {
 
@@ -912,6 +942,11 @@ void CInspectorList::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			{
 				SetDefault();
 				Invalidate();
+			}
+			break;
+		case VK_TAB:	// JIRA GME-178
+			{
+				SelectNextItem();
 			}
 			break;
 	}
