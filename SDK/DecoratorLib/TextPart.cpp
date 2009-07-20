@@ -51,7 +51,7 @@ void TextPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>&
 
 void TextPart::Destroy(void)
 {
-	OperationEndedByGME(0);
+	OperationCanceledByGME();
 	if (m_spFCO)
 		resizeLogic.Destroy();
 }
@@ -247,12 +247,12 @@ bool TextPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& poin
 	return false;
 }
 
-bool TextPart::OperationEndedByGME(INT resultCode)
+bool TextPart::OperationCanceledByGME(void)
 {
 	// destroy inplace edit window and stuff if needed
 	// can't happen currently because of Modal dialog style
 	if (m_spFCO)
-		return resizeLogic.OperationEndedByGME(resultCode);
+		return resizeLogic.OperationCanceledByGME();
 
 	return false;
 }
