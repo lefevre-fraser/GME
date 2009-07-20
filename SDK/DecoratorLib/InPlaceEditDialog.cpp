@@ -100,6 +100,8 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 
 	m_parentPart->LabelEditingStarted(m_initialRect);
 
+	m_editState = Initial;
+
 	return FALSE;	// return TRUE unless you set the focus to a control
 					// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -187,15 +189,16 @@ void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPa
 									   const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, CFont* font,
 									   bool isPermanentCWnd, bool inflateToRight)
 {
-	m_Text				= text;
-	m_parentPart		= parentPart;
-	m_initialRect		= initialRect;
-	m_mouseClick		= mouseClick;
-	m_parentHWnd		= parentWnd;
-	m_parentCWnd		= parentCWnd;
-	m_font				= font;
-	m_bPermanentCWnd	= isPermanentCWnd;
-	m_bInflateToRight	= inflateToRight;
+	m_Text						= text;
+	m_parentPart				= parentPart;
+	m_initialRect				= initialRect;
+	m_mouseClick				= mouseClick;
+	m_parentHWnd				= parentWnd;
+	m_parentCWnd				= parentCWnd;
+	m_font						= font;
+	m_bPermanentCWnd			= isPermanentCWnd;
+	m_bInflateToRight			= inflateToRight;
+	m_leftMouseButtonPressed	= false;
 }
 
 CString CInPlaceEditDialog::GetText() const
@@ -207,17 +210,52 @@ BOOL CInPlaceEditDialog::PreTranslateMessage(MSG* pMsg)
 {
 	// Fix (Adrian Roman): Sometimes if the editor loses capture it is should be setcaptured again
 	CWnd* captureCWnd = m_edtInPlace.GetCapture();
-	if (captureCWnd ==  NULL || captureCWnd->m_hWnd != m_edtInPlace.m_hWnd) {
-		CRect editRect;
-		m_edtInPlace.GetWindowRect(&editRect);
-		BOOL inRect = editRect.PtInRect(pMsg->pt);
-		if (!inRect && pMsg->message == WM_MOUSELEAVE && m_edtInPlace.m_hWnd) {
-			// No recapture, quitting with ok
-			this->PostMessage(WM_USER_ENDEDITINGWITHOK, 0, 0);
-		} else {
-			// Recapture
-			m_edtInPlace.SetCapture();
-		}
+	if (pMsg->message == WM_LBUTTONDOWN) {
+		m_leftMouseButtonPressed = true;
+	} else if (pMsg->message == WM_LBUTTONUP) {
+		m_leftMouseButtonPressed = false;
+	}
+	CRect editRect;
+	m_edtInPlace.GetWindowRect(&editRect);
+	BOOL inRect = editRect.PtInRect(pMsg->pt);
+	switch(m_editState) {
+		case Initial:
+			{
+				if (m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_LBUTTONDOWN)
+					m_editState = LButtonDownOutside;
+			}
+			break;
+		case LButtonDownOutside:
+			{
+				if (m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_MOUSEMOVE)
+					m_editState = MouseMoveAfterDown;
+				else if (!m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_LBUTTONUP)
+					m_editState = LButtonUpOutside;
+				else
+					m_editState = Initial;
+			}
+			break;
+		case MouseMoveAfterDown:
+			{
+				if (!m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_LBUTTONUP)
+					m_editState = LButtonUpOutside;
+				else if (!(m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_MOUSEMOVE))
+					m_editState = Initial;
+			}
+			break;
+		case LButtonUpOutside:
+			{
+				if (!(!m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_MOUSELEAVE))
+					m_editState = Initial;
+			}
+			break;
+	}
+	if (m_editState == LButtonUpOutside && pMsg->message == WM_MOUSELEAVE) {
+		// No recapture, quitting with ok (commit)
+		this->PostMessage(WM_USER_ENDEDITINGWITHOK, 0, 0);
+	} else if (captureCWnd ==  NULL || captureCWnd->m_hWnd != m_edtInPlace.m_hWnd) {
+		// Recapture
+		m_edtInPlace.SetCapture();
 	}
 
 	return CDialog::PreTranslateMessage(pMsg);

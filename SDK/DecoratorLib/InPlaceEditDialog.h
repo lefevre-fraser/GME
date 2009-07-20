@@ -48,6 +48,14 @@ public:
 	afx_msg LRESULT OnEndEditingWithOk(WPARAM wParam, LPARAM lParam);
 	//}}AFX_MSG
 
+protected:
+	enum EditState {
+		Initial				= 0,
+		LButtonDownOutside	= 1,
+		MouseMoveAfterDown	= 2,
+		LButtonUpOutside	= 3
+	};
+
 	DecoratorSDK::TextPart*	m_parentPart;
 	CWnd*					m_parentCWnd;
 	HWND					m_parentHWnd;
@@ -57,7 +65,10 @@ public:
 	bool					m_bPermanentCWnd;
 	bool					m_bInflateToRight;
 	bool					m_bDlgResult;
+	bool					m_leftMouseButtonPressed;
+	EditState				m_editState;
 
+public:
 	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect,
 						  const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, CFont* font,
 						  bool isPermanentCWnd, bool inflateToRight = true);

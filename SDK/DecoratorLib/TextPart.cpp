@@ -51,7 +51,7 @@ void TextPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>&
 
 void TextPart::Destroy(void)
 {
-	OperationCanceledByGME();
+	OperationEndedByGME(0);
 	if (m_spFCO)
 		resizeLogic.Destroy();
 }
@@ -247,12 +247,12 @@ bool TextPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& poin
 	return false;
 }
 
-bool TextPart::OperationCanceledByGME(void)
+bool TextPart::OperationEndedByGME(INT resultCode)
 {
 	// destroy inplace edit window and stuff if needed
 	// can't happen currently because of Modal dialog style
 	if (m_spFCO)
-		return resizeLogic.OperationCanceledByGME();
+		return resizeLogic.OperationEndedByGME(resultCode);
 
 	return false;
 }
@@ -360,8 +360,9 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 		cWnd->ClientToScreen(&screenPt);
 		inPlaceEditDlg->SetProperties(m_strText, this, editLocation, screenPt, m_parentWnd, cWnd, scaled_font,
 									  isPermanentCWnd, inflateToRight);
-		inPlaceEditDlg->Create(m_bMultiLine ? IDD_INPLACEEDITMLDIALOG : IDD_INPLACEEDITSLDIALOG, cWnd);
-		inPlaceEditDlg->ShowWindow(SW_SHOWNORMAL);
+		success = inPlaceEditDlg->Create(m_bMultiLine ? IDD_INPLACEEDITMLDIALOG : IDD_INPLACEEDITSLDIALOG, cWnd);
+		if (success == TRUE)
+			success = inPlaceEditDlg->ShowWindow(SW_SHOWNORMAL);
 
 		return true;
 	}
