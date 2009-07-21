@@ -34,8 +34,15 @@
 #define DECORATOR_CTX_MENU_MINID	0x4001
 #define DECORATOR_CTX_MENU_MAXID	0x4101
 
+#ifndef IDD_INPLACEEDITSLDIALOG
 #define IDD_INPLACEEDITSLDIALOG		211
+#endif
+#ifndef IDD_INPLACEEDITMLDIALOG
 #define IDD_INPLACEEDITMLDIALOG		212
+#endif
+#ifndef IDC_INPLACETEXTEDIT
+#define IDC_INPLACETEXTEDIT			201
+#endif
 
 //################################################################################################
 //
