@@ -28,7 +28,7 @@
 extern CComModule _Module;
 #include <atlcom.h>
 
-#include "CommonError.h"
+#include "DecoratorError.h"
 
 #include <stdio.h>
 

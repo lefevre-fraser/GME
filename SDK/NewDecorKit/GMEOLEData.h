@@ -5,7 +5,7 @@
 #include "DecoratorLib.h"
 #include <afxole.h>
 #include "mfcdual.h"
-#include "CommonSmart.h"
+#include "DecoratorSmart.h"
 
 class CGMEDataDescriptor
 {

@@ -6,7 +6,7 @@
 #include "DecoratorLib.h"
 
 #include "GMEOLEData.h"
-#include "CommonMfc.h"
+#include "DecoratorMfc.h"
 
 //#include "GMEstd.h"
 #define GME_GRID_SIZE	7
