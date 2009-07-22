@@ -47,32 +47,9 @@ void PortLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMet
 	LabelPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 
-bool PortLabelPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
+bool PortLabelPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	bool handled = LabelPart::MouseMoved(nFlags, point, transformHDC);
-
-	return handled;
-}
-
-bool PortLabelPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	bool handled = LabelPart::MouseLeftButtonDown(nFlags, point, transformHDC);
-
-	return handled;
-}
-
-bool PortLabelPart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	bool handled = LabelPart::MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC);
-
-	return handled;
-}
-
-bool PortLabelPart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	bool handled = LabelPart::MenuItemSelected(menuItemId, nFlags, point, transformHDC);
-
-	return handled;
+	return PartBase::MouseLeftButtonDoubleClick(nFlags, point, transformHDC);
 }
 
 CPoint PortLabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
@@ -83,13 +60,6 @@ CPoint PortLabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 		pt += CPoint(d * 7, -7);
 
 	return pt;
-}
-
-CRect PortLabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) const
-{
-	CRect r = LabelPart::GetTextLocation(pDC, gdip);
-
-	return r;
 }
 
 }; // namespace DecoratorSDK

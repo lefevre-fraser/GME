@@ -37,13 +37,9 @@ public:
 // =============== resembles IMgaElementDecorator
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
-	virtual bool	MouseMoved					(UINT nFlags, const CPoint& point, HDC transformHDC);
-	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& point, HDC transformHDC);
-	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC);
-	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
+	virtual bool	MouseLeftButtonDoubleClick	(UINT nFlags, const CPoint& point, HDC transformHDC);
 
 	virtual CPoint	GetTextPosition				(CDC* pDC, Gdiplus::Graphics* gdip) const;
-	virtual CRect	GetTextLocation				(CDC* pDC, Gdiplus::Graphics* gdip) const;
 
 	ELocation		GetLocationAdjust			(void) const { return m_eAdjust; };
 };
