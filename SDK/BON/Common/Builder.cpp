@@ -2296,6 +2296,7 @@ const CBuilderObject::objtype CBuilderReference::GetReferredType() const {
 
 bool CBuilderReference::PutReferred(CBuilderObject *nref)  {
 	ref = nref;
+	COMTHROW( GetIRef()->put_Referred(ref->ciObject) );
 	return false;
 }
 
