@@ -47,6 +47,8 @@
 #define IDC_COMBO10                     243
 #define IDC_TREE1                       244
 #define IDC_TREE_SEARCH_HISTORY         244
+#define IDC_CHECK1                      245
+#define IDC_CHECKCON                    245
 #define IDC_EDITNAME2                   256
 #define IDC_EDITROLE2                   257
 #define IDC_EDITKIND2                   258
@@ -67,7 +69,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        208
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         245
+#define _APS_NEXT_CONTROL_VALUE         246
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

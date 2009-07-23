@@ -71,6 +71,9 @@ private:
 * \param allObjects : list of objects currently being searched.
 */
 	void CheckAllAtoms(IMgaFCOs *allObjects);
+
+//check  all connections for matches
+    void CheckAllConnections(IMgaFCOs *allObjects);
 /**
 * \brief Check all the references for search matches.
 *
@@ -98,6 +101,9 @@ private:
 * \brief Check this atom against the search criteria.
 */
 	bool CheckAtom(IMgaFCO *Atom);
+
+    //check connection against search criteria
+    bool CheckConnection(IMgaFCO *Connection);
 /**
 * \brief Check this reference against the search criteria.
 */

@@ -31,7 +31,7 @@ public:
 	virtual ~CInput();
 
 	void CInput::GetInput(CString strNameFirst, CString strRoleFirst, CString strKindFirst, CString strAttributeFirst,CString strNameSecond,CString strRoleSecond,CString strKindSecond,CString strAttributeSecond,
-                      CString attrval, BOOL mod, BOOL atom, BOOL ref, BOOL set, BOOL full, 
+                      CString attrval, BOOL mod, BOOL atom, BOOL ref, BOOL set,BOOL connection, BOOL full, 
                       IMgaFCO*, int, //WAS: IMgaFCO *root, int searchscope,
                       BOOL bMatchCase, int scopedSearch,int logicalExpr);
 
@@ -62,6 +62,7 @@ public:
     BOOL &GetAtoms() {return m_bGetAtoms;}
     BOOL &GetSets() {return m_bGetSets;}
     BOOL &GetReferences() {return m_bGetReferences;}
+    BOOL &GetConnections() {return m_bGetConnections;}
     BOOL &IsCaseIgnored() {return m_bGetCaseIgnored;}
     BOOL &DoScopedSearch() {return m_bDoScopedSearch;}
     int &GetSearchScope(){return m_intScope;}
@@ -111,6 +112,8 @@ private:
 	BOOL m_bGetReferences;
 	/// Does the user want to search for Sets?
 	BOOL m_bGetSets;
+    //Does the user want to get Connections
+    BOOL m_bGetConnections;
 
     /// Does the user want caseMatching search
 	BOOL m_bGetCaseIgnored;

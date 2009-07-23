@@ -156,6 +156,8 @@ public:
 	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
     afx_msg void OnCbnSelchangeCombotype();
     afx_msg void OnNMDblclkTreeSearchHistory(NMHDR *pNMHDR, LRESULT *pResult);
+    // if the connections are to be searched for
+    BOOL m_chkConnection;
 };
 
 //{{AFX_INSERT_LOCATION}}

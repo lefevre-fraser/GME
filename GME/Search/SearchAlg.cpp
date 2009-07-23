@@ -36,7 +36,7 @@ void CSearch::Search(IMgaFolder *root, IMgaObjects* scopeColl, IMgaFCO *selected
     CComPtr<IMgaFolder> pRoot = root;
 
 
-    if( filter.GetSearchScope()==1 && scopeColl)
+    if( filter.GetSearchScope()==1 && scopeColl) //1 means it shud search within current scope
     {
         CComPtr<IMgaFCOs> non_container_coll;                  // will store the Atoms, Refs and Sets
         non_container_coll.CoCreateInstance( L"Mga.MgaFCOs");  // which are not Fs and Ms
@@ -55,6 +55,7 @@ void CSearch::Search(IMgaFolder *root, IMgaObjects* scopeColl, IMgaFCO *selected
                 case OBJTYPE_SET:
                 case OBJTYPE_ATOM:
                 case OBJTYPE_REFERENCE: 
+                case OBJTYPE_CONNECTION: //added
                     CComQIPtr<IMgaFCO> an_fco( MGACOLL_ITER);
                     if( an_fco && non_container_coll) 
                     {
@@ -69,6 +70,7 @@ void CSearch::Search(IMgaFolder *root, IMgaObjects* scopeColl, IMgaFCO *selected
             CheckAllReferences( non_container_coll);  // deals with refs only
             CheckAllAtoms( non_container_coll);       // ... atoms only
             CheckAllSets( non_container_coll);        // ... sets only
+            CheckAllConnections(non_container_coll); //added
         }
         non_container_coll.Release();
     }
@@ -98,6 +100,26 @@ void CSearch::CheckAllAtoms(IMgaFCOs *allObjects)
     } MGACOLL_ITERATE_END;
 
 }
+
+// get all the connections that have a matching role name, calling CheckAtom on each
+void CSearch::CheckAllConnections(IMgaFCOs *allObjects)
+{
+
+    MGACOLL_ITERATE(IMgaFCO, allObjects)
+    {
+        objtype_enum rret;
+        COMTHROW( MGACOLL_ITER->get_ObjType( &rret) );
+
+        if(rret == OBJTYPE_CONNECTION)  
+        {
+            if (CheckConnection((IMgaConnection*)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaConnection*)(MGACOLL_ITER.p)));
+        }
+
+        m_pgsSearch->StepIt();	
+    } MGACOLL_ITERATE_END;
+
+}
+
 
 // get all the references that have a matching role name, calling CheckReference on each
 void CSearch::CheckAllReferences(IMgaFCOs *allObjects)
@@ -192,6 +214,11 @@ void CSearch::SearchFolderHierarchy(IMgaFolder *root)
         CheckAllSets(children);
     } 
 
+    if(filter.GetConnections())
+    {
+        CheckAllConnections(children);
+    }
+
     POSITION rmpos = rootmodlist->GetHeadPosition();
     while(rmpos)
     {
@@ -245,6 +272,11 @@ void CSearch::SearchFolderHierarchy(IMgaFolder *root)
             CheckAllSets(subchildren);
         } 
 
+        if(filter.GetConnections())
+        {
+            CheckAllConnections(subchildren);
+        }
+
         POSITION mpos = mlist->GetHeadPosition();
         while(mpos)
         {
@@ -294,6 +326,11 @@ void CSearch::SearchModelHierarchy(IMgaModel *root)
             CheckAllModels(modelChildren);
         }
 
+        if(filter.GetConnections())
+        {
+            CheckAllConnections(modelChildren);
+        }
+
         CComPtrList<IMgaModel> submodellist;
         CComPtr<IMgaFCOs> psa;
         COMTHROW( root->get_ChildFCOs(&psa));
@@ -326,6 +363,21 @@ bool CSearch::CheckAtom(IMgaFCO *Atom)
 
     //check if the atom matches second search criteria
     int y=Matches(Atom,false);
+
+    //perform logical operation to determine if bot the result match overall criteria   
+    return PerformLogical(x,y);
+
+}
+
+//checks the name, kindname and attributes, adding all matches to the results
+bool CSearch::CheckConnection(IMgaFCO *Connection)
+{
+
+    //check if the first search criteria matches
+    int x=Matches(Connection,true);
+
+    //check if the atom matches second search criteria
+    int y=Matches(Connection,false);
 
     //perform logical operation to determine if bot the result match overall criteria   
     return PerformLogical(x,y);
@@ -626,6 +678,7 @@ bool CSearch::PerformLogical(int x,int y)
     return false;
 }
 
+//check if the searcc criteri matches agaibst the fco
 int CSearch::Matches(IMgaFCO* fco,bool first)
 {
     CString partName;

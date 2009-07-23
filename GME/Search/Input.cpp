@@ -31,7 +31,7 @@ CInput::~CInput()
 
 //Get the search criterias
 void CInput::GetInput(CString strNameFirst, CString strRoleFirst, CString strKindFirst, CString strAttributeFirst,CString strNameSecond,CString strRoleSecond,CString strKindSecond,CString strAttributeSecond,
-                      CString attrval, BOOL mod, BOOL atom, BOOL ref, BOOL set, BOOL full, 
+                      CString attrval, BOOL mod, BOOL atom, BOOL ref, BOOL set,BOOL connection, BOOL full, 
                       IMgaFCO*, int, //WAS: IMgaFCO *root, int searchscope,
                       BOOL bMatchCase, int scopedSearch,int logicalExpr)
 {
@@ -94,6 +94,7 @@ void CInput::GetInput(CString strNameFirst, CString strRoleFirst, CString strKin
     m_bGetAtoms = atom;
     m_bGetReferences = ref;
     m_bGetSets = set;
+    m_bGetConnections=connection;
     m_intScope=scopedSearch;
     m_intLogical=logicalExpr;
     ParseAttribute();

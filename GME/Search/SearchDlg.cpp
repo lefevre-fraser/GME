@@ -40,6 +40,7 @@ CSearchDlg::CSearchDlg()
 , m_chkMod(TRUE)
 , m_chkRef (TRUE)
 , m_chkSet(TRUE)
+, m_chkConnection(TRUE)
 , m_chkLocate(FALSE)
 , m_chkMatchCase(TRUE)
 
@@ -94,6 +95,7 @@ void CSearchDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_EDITKIND2, m_edtKindNameCtrlSecond);
     DDX_Control(pDX, IDC_EDITATTRVALU2, m_edtAttributeCtrlSecond);
     DDX_Control(pDX, IDC_TREE_SEARCH_HISTORY, m_treeSearchHistory);
+    DDX_Check(pDX, IDC_CHECKCON, m_chkConnection);
 }
 
 BEGIN_MESSAGE_MAP(CSearchDlg, CDialog)
@@ -253,7 +255,7 @@ void CSearchDlg::OnButtonGo()
         COMTHROW(ccpProject->get_RootFolder(&rootInput));
         CInput inp;
         inp.GetInput(m_edtNameFirst,m_edtRoleNameFirst,m_edtKindNameFirst,m_edtAttributeFirst,m_edtNameSecond,m_edtRoleNameSecond,m_edtKindNameSecond,m_edtAttributeSecond,m_edtAttrValue,
-            m_chkMod,m_chkAtom,m_chkRef,m_chkSet,m_chkFullWord,NULL,0,m_chkMatchCase,m_radioScope,m_radioLogical);
+            m_chkMod,m_chkAtom,m_chkRef,m_chkSet,m_chkConnection,m_chkFullWord,NULL,0,m_chkMatchCase,m_radioScope,m_radioLogical);
 
 
         CSearch searchGME(inp);
@@ -350,6 +352,8 @@ void CSearchDlg::DisplayResults()
             type = "REFERENCE";
         else if (rret == OBJTYPE_SET)
             type = "SET";
+        else if(rret == OBJTYPE_CONNECTION)
+            type = "CONNECTION";
 
         m_lstResults.InsertItem(count, name);
         m_lstResults.SetItemText(count, 1, path);
@@ -647,6 +651,7 @@ void CSearchDlg::CreateSearchHistory()
     PrepareHistoryString("Atom",m_chkAtom,hOtherCriteria,strSearch);
     PrepareHistoryString("Set",m_chkSet,hOtherCriteria,strSearch);
     PrepareHistoryString("Reference",m_chkRef,hOtherCriteria,strSearch);
+    PrepareHistoryString("Connection",m_chkConnection,hOtherCriteria,strSearch);
     PrepareHistoryString("Case",m_chkMatchCase,hOtherCriteria,strSearch);
     PrepareHistoryString("WholeWord",m_chkFullWord,hOtherCriteria,strSearch);
     PrepareHistoryString("Scope",m_radioScope,hOtherCriteria,strSearch);
@@ -792,6 +797,9 @@ void CSearchDlg::InsertHistory(CString strHistory)
     ReadHistoryValue("Reference",strHistory,m_chkRef);
     PrepareHistoryString("Reference",m_chkRef,hOtherCriteria,strSearch);
 
+    ReadHistoryValue("Connection",strHistory,m_chkConnection);
+    PrepareHistoryString("Connection",m_chkConnection,hOtherCriteria,strSearch);
+
     ReadHistoryValue("Case",strHistory,m_chkMatchCase);
     PrepareHistoryString("Case",m_chkMatchCase,hOtherCriteria,strSearch);
 
@@ -848,7 +856,7 @@ void CSearchDlg::SearchResults()
     COMTHROW(new_results.CoCreateInstance(L"Mga.MgaFCOs"));;
     CInput inp;
     inp.GetInput(m_edtNameFirst,m_edtRoleNameFirst,m_edtKindNameFirst,m_edtAttributeFirst,m_edtNameSecond,m_edtRoleNameSecond,m_edtKindNameSecond,m_edtAttributeSecond,m_edtAttrValue,
-        m_chkMod,m_chkAtom,m_chkRef,m_chkSet,m_chkFullWord,NULL,0,m_chkMatchCase,m_radioScope,m_radioLogical
+        m_chkMod,m_chkAtom,m_chkRef,m_chkSet,m_chkConnection,m_chkFullWord,NULL,0,m_chkMatchCase,m_radioScope,m_radioLogical
         );
 
     CSearch searchGME(inp);
@@ -895,6 +903,7 @@ void CSearchDlg::OnNMDblclkTreeSearchHistory(NMHDR *pNMHDR, LRESULT *pResult)
     ReadHistoryValue("Atom",strSearchText,m_chkAtom);
     ReadHistoryValue("Set",strSearchText,m_chkSet);
     ReadHistoryValue("Reference",strSearchText,m_chkRef);
+    ReadHistoryValue("Connection",strSearchText,m_chkConnection);
     ReadHistoryValue("Case",strSearchText,m_chkMatchCase);
     ReadHistoryValue("WholeWord",strSearchText,m_chkFullWord);
     ReadHistoryValue("Scope",strSearchText,m_radioScope);
