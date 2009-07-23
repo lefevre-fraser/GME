@@ -370,9 +370,14 @@ function InitDocument(document)
 	// with the appropriate symbol values
 	//
 	window.external.Load(document);
-	
+
 	if (PARADIGM_INDEPENDENT.checked) {
 	    PARADIGMS.disabled = true;
+	}
+
+	var framework = window.external.FindSymbol('COMPONENT_FRAMEWORK');
+	if (framework == 'BON') {
+	    GME_ADDON.disabled = true;
 	}
 }
 
