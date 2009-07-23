@@ -1,23 +1,23 @@
 //################################################################################################
 //
-// Sample Decorator COM side Implementation
-//	SampleDecoratorImpl.cpp
+// Decorator COM side Implementation
+//	DecoratorImpl.cpp
 // This class represents the COM/ATL side of the decorator COM connection layer
-// For the pure C++ side see SampleDecorator.h,cpp and SampleCompositePart.h,cpp
+// For the pure C++ side see Decorator.h,cpp and DecoratorCompositePart.h,cpp
 //
 //################################################################################################
 
 #include "StdAfx.h"
 #include "DecoratorConfig.h"
-#include "SampleDecoratorImpl.h"
-#include "SampleDecorator.h"
+#include "DecoratorImpl.h"
+#include "Decorator.h"
 #include "DecoratorExceptions.h"
 #include "DecoratorInterface.h"
 
 
 //################################################################################################
 //
-// CLASS : CSampleDecoratorImpl
+// CLASS : CDecoratorImpl
 //
 //################################################################################################
 
@@ -29,18 +29,18 @@
 	if (!m_bLocationSet)						\
 		return E_DECORATOR_LOCISNOTSET;
 
-CSampleDecoratorImpl::CSampleDecoratorImpl():
+CDecoratorImpl::CDecoratorImpl():
 	m_pElementDecorator		(NULL),
 	m_bLocationSet		(false),
 	m_bInitCallFromEx	(false)
 {
 }
 
-CSampleDecoratorImpl::~CSampleDecoratorImpl()
+CDecoratorImpl::~CDecoratorImpl()
 {
 }
 
-STDMETHODIMP CSampleDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
+STDMETHODIMP CDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
 {
 	//
 	// TODO: read all important data from MGA and cache them for later use
@@ -53,7 +53,7 @@ STDMETHODIMP CSampleDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPar
 	return S_OK;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::Destroy()
+STDMETHODIMP CDecoratorImpl::Destroy()
 {
 	//
 	// TODO: At least free all references to MGA objects
@@ -80,7 +80,7 @@ STDMETHODIMP CSampleDecoratorImpl::Destroy()
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
+STDMETHODIMP CDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 {
 	//
 	// TODO: Return the logical name of the decorator (currently not used by GME)
@@ -90,7 +90,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 	return S_OK;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
+STDMETHODIMP CDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 {
 	//
 	// TODO: Return supported features (combine multiple features with bitwise-OR)
@@ -101,7 +101,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 	return S_OK;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
+STDMETHODIMP CDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
 {
 	//
 	// TODO:  Parse and set all supported parameters, otherwise return error
@@ -113,7 +113,7 @@ STDMETHODIMP CSampleDecoratorImpl::SetParam(BSTR bstrName, VARIANT vValue)
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
+STDMETHODIMP CDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
 {
 	//
 	// TODO: Return values of supported and previously set parameters, otherwise return error
@@ -134,7 +134,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetParam(BSTR bstrName, VARIANT* pvValue)
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
+STDMETHODIMP CDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 {
 	//
 	// TODO: If isActive == VARIANT_FALSE, draw your object in GME_GREYED_OUT, otherwise use the color of the object
@@ -154,7 +154,7 @@ STDMETHODIMP CSampleDecoratorImpl::SetActive(VARIANT_BOOL vbIsActive)
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeight)
+STDMETHODIMP CDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeight)
 {
 	//
 	// TODO: Give GME a hint about the object size. Do not expect GME to take it into account
@@ -177,7 +177,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetPreferredSize(LONG* plWidth, LONG* plHeigh
 }
 
 
-STDMETHODIMP CSampleDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG ey)
+STDMETHODIMP CDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG ey)
 {
 	//
 	// TODO: Draw the object exactly to the this location later
@@ -198,7 +198,7 @@ STDMETHODIMP CSampleDecoratorImpl::SetLocation(LONG sx, LONG sy, LONG ex, LONG e
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	//
 	// TODO: Return previously set location parameters
@@ -224,7 +224,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetLocation(LONG* sx, LONG* sy, LONG* ex, LON
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	//
 	// TODO: Return the location of the text box of your label if you support labels.
@@ -250,7 +250,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetLabelLocation(LONG* sx, LONG* sy, LONG* ex
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG* sy, LONG* ex, LONG* ey)
+STDMETHODIMP CDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG* sy, LONG* ex, LONG* ey)
 {
 	//
 	// TODO: Return the location of the specified port if ports are supported in the decorator
@@ -275,7 +275,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetPortLocation(IMgaFCO* pFCO, LONG* sx, LONG
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
+STDMETHODIMP CDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 {
 	//
 	// TODO: Return a collection of mga objects represented as ports.
@@ -297,7 +297,7 @@ STDMETHODIMP CSampleDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::Draw(HDC hdc)
+STDMETHODIMP CDecoratorImpl::Draw(HDC hdc)
 {
 	//
 	// TODO: (In case of old decorator) Draw your object.
@@ -312,7 +312,7 @@ STDMETHODIMP CSampleDecoratorImpl::Draw(HDC hdc)
 	return E_DECORATOR_USING_DEPRECATED_FUNCTION;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::SaveState()
+STDMETHODIMP CDecoratorImpl::SaveState()
 {
 	//
 	// TODO: The only method where we are in read-write transaction. Store all permanent information
@@ -324,8 +324,8 @@ STDMETHODIMP CSampleDecoratorImpl::SaveState()
 }
 
 // New functions
-STDMETHODIMP CSampleDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
-												IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
+STDMETHODIMP CDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
+										  IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
 	//
 	// TODO: handle extra parameters, call Initialize with the rest
@@ -336,10 +336,10 @@ STDMETHODIMP CSampleDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 
 	HRESULT retVal = S_OK;
 	try {
-		SampleDecor::SampleDecorator* sampleDecorator = new SampleDecor::SampleDecorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
-		m_pElementDecorator = sampleDecorator;
-		sampleDecorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
-									  CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
+		Decor::Decorator* decorator = new Decor::Decorator(CComPtr<IMgaCommonDecoratorEvents>(eventSink));
+		m_pElementDecorator = decorator;
+		decorator->InitializeEx(CComPtr<IMgaProject>(pProject), CComPtr<IMgaMetaPart>(pPart),
+								CComPtr<IMgaFCO>(pFCO), (HWND)parentWnd);
 	}
 	catch(hresult_exception& e) {
 		retVal = e.hr;
@@ -351,7 +351,7 @@ STDMETHODIMP CSampleDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaP
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
+STDMETHODIMP CDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 {
 	//
 	// TODO: gdipGraphics is a Gdiplus::Graphics* variable, it is advisable to use this for drawing and don't use the HDC
@@ -381,7 +381,7 @@ STDMETHODIMP CSampleDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
+STDMETHODIMP CDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 {
 	//
 	// TODO: memorize selected state, it might be needed for some operations later
@@ -401,7 +401,7 @@ STDMETHODIMP CSampleDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, for example change the mouse cursor, you should return
@@ -425,7 +425,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG po
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -449,7 +449,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -473,7 +473,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, 
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -497,7 +497,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -522,7 +522,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULON
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -546,7 +546,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx,
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -570,7 +570,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LON
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -594,7 +594,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG poin
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -618,7 +618,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -642,7 +642,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LO
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -666,7 +666,7 @@ STDMETHODIMP CSampleDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance,
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -694,7 +694,7 @@ STDMETHODIMP CSampleDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleD
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -722,7 +722,7 @@ STDMETHODIMP CSampleDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDa
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -748,7 +748,7 @@ STDMETHODIMP CSampleDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEff
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -771,7 +771,7 @@ STDMETHODIMP CSampleDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LO
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
+STDMETHODIMP CDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
 	//
 	// TODO: if you respond to the message, you should return
@@ -794,7 +794,7 @@ STDMETHODIMP CSampleDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFla
 	return retVal;
 }
 
-STDMETHODIMP CSampleDecoratorImpl::OperationCanceled()
+STDMETHODIMP CDecoratorImpl::OperationCanceled()
 {
 	//
 	// TODO: if you handle the message, you should return S_DECORATOR_EVENT_HANDLED,

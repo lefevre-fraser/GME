@@ -1,13 +1,13 @@
 //################################################################################################
 //
-// Sample decorator composite part class
-//	SampleCompositePart.h
+// Decorator composite part class
+//	DecoratorCompositePart.h
 // Contains the specific decorator parts which compose the final decorator
 //
 //################################################################################################
 
-#ifndef __SAMPLECOMPOSITEPART_H_
-#define __SAMPLECOMPOSITEPART_H_
+#ifndef __DECORATORCOMPOSITEPART_H_
+#define __DECORATORCOMPOSITEPART_H_
 
 
 #include "StdAfx.h"
@@ -16,25 +16,25 @@
 
 class COleDataObject;
 
-namespace SampleDecor {
+namespace Decor {
 
 //################################################################################################
 //
-// CLASS : SampleCompositePart
+// CLASS : DecoratorCompositePart
 //
 //################################################################################################
 
-class SampleCompositePart: public DecoratorSDK::ObjectAndTextPart
+class DecoratorCompositePart: public DecoratorSDK::ObjectAndTextPart
 {
 public:
-	SampleCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
-	virtual ~SampleCompositePart();
+	DecoratorCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
+	virtual ~DecoratorCompositePart();
 
 // =============== resembles IMgaElementDecorator
 public:
 	//
 	// TODO: Override any needed function here
-	//		 For function list see: SampleDecorator.h or DecoratorSDK::DecoratorInterface
+	//		 For function list see: Decorator.h or DecoratorSDK::DecoratorInterface
 	//
 	virtual CRect	GetPortLocation				(CComPtr<IMgaFCO>& fco) const;
 	virtual CRect	GetLabelLocation			(void) const;
@@ -53,6 +53,6 @@ public:
 	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 };
 
-}; // namespace SampleDecor
+}; // namespace Decor
 
-#endif //__SAMPLECOMPOSITEPART_H_
+#endif //__DECORATORCOMPOSITEPART_H_

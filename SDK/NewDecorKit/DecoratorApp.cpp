@@ -11,13 +11,13 @@
 #include "DecoratorLib.h"
 #include "DecoratorConfig.h"
 #include "DecoratorLib_i.c"
-#include "SampleDecoratorImpl.h"
+#include "DecoratorImpl.h"
 
 
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_SampleDecorator, CSampleDecoratorImpl)
+OBJECT_ENTRY(CLSID_Decorator, CDecoratorImpl)
 END_OBJECT_MAP()
 
 class CDecoratorApp : public CWinApp

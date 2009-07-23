@@ -1,15 +1,15 @@
 //################################################################################################
 //
-// Sample decorator class
-//	SampleDecorator.h
+// Decorator class
+//	Decorator.h
 // This class represents the C++ side of the decorator COM connection layer
 // This is still just a relay class like teh COM/ATL SampleDecoratorImpl.h,cpp,
 // the meat should go into the composite part or into the parts in the composite part
 //
 //################################################################################################
 
-#ifndef __SAMPLEDECORATOR_H_
-#define __SAMPLEDECORATOR_H_
+#ifndef __DECORATOR_H_
+#define __DECORATOR_H_
 
 
 #include "StdAfx.h"
@@ -17,23 +17,23 @@
 #include "PartInterface.h"
 
 
-namespace SampleDecor {
+namespace Decor {
 
 //################################################################################################
 //
-// CLASS : SampleDecorator
+// CLASS : Decorator
 //
 //################################################################################################
 
-class SampleDecorator: public DecoratorSDK::DecoratorInterface
+class Decorator: public DecoratorSDK::DecoratorInterface
 {
 protected:
 	DecoratorSDK::PartInterface*		m_part;
 	CComPtr<IMgaCommonDecoratorEvents>	m_eventSink;
 
 public:
-	SampleDecorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
-	virtual ~SampleDecorator();
+	Decorator(CComPtr<IMgaCommonDecoratorEvents>& eventSink);
+	virtual ~Decorator();
 
 // =============== resembles IMgaElementDecorator
 public:
@@ -76,6 +76,6 @@ public:
 	virtual bool	OperationCanceledByGME		(void);
 };
 
-}; // namespace SampleDecor
+}; // namespace Decor
 
-#endif //__SAMPLEDECORATOR_H_
+#endif //__DECORATOR_H_

@@ -27,7 +27,7 @@ library DecoratorLib
 		uuid(COCLASS_UUID),
 		helpstring(COCLASS_NAME)
 	]
-	coclass SampleDecorator
+	coclass Decorator
 	{
 		[default] interface IMgaElementDecorator;
 		interface IMgaVersionInfo;

@@ -1,14 +1,14 @@
 //################################################################################################
 //
-// Sample Decorator COM side Implementation
-//	SampleDecoratorImpl.h
+// Decorator COM side Implementation
+//	DecoratorImpl.h
 // This class represents the COM/ATL side of the decorator COM connection layer
-// For the pure C++ side see SampleDecorator.h,cpp and SampleCompositePart.h,cpp
+// For the pure C++ side see Decorator.h,cpp and DecoratorCompositePart.h,cpp
 //
 //################################################################################################
 
-#ifndef __SAMPLEDECORATORIMPL_H_
-#define __SAMPLEDECORATORIMPL_H_
+#ifndef __DECORATORIMPL_H_
+#define __DECORATORIMPL_H_
 
 
 
@@ -22,14 +22,14 @@ class DecoratorInterface;
 
 //################################################################################################
 //
-// CLASS : CSampleDecoratorImpl
+// CLASS : CDecoratorImpl
 //
 //################################################################################################
 
-class ATL_NO_VTABLE CSampleDecoratorImpl :
+class ATL_NO_VTABLE CDecoratorImpl :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public IMgaElementDecorator,
-	public CComCoClass<CSampleDecoratorImpl, &CLSID_SampleDecorator>
+	public CComCoClass<CDecoratorImpl, &CLSID_Decorator>
 {
 protected:
 	DecoratorSDK::DecoratorInterface*	m_pElementDecorator;
@@ -40,13 +40,13 @@ protected:
 	VARIANT								m_vValue;
 
 public:
-	CSampleDecoratorImpl();
-	~CSampleDecoratorImpl();
+	CDecoratorImpl();
+	~CDecoratorImpl();
 
 	DECLARE_REGISTRY_RESOURCEID( IDR_DECORATOR )
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP( CSampleDecoratorImpl )
+	BEGIN_COM_MAP( CDecoratorImpl )
 		COM_INTERFACE_ENTRY( IMgaElementDecorator )
 	END_COM_MAP()
 
@@ -91,4 +91,4 @@ public:
 	STDMETHOD( OperationCanceled )				( void );
 };
 
-#endif //__SAMPLEDECORATORIMPL_H_
+#endif //__DECORATORIMPL_H_

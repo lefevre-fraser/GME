@@ -1,7 +1,7 @@
 //################################################################################################
 //
-// Sample decorator composite part class
-//	SampleCompositePart.cpp
+// Decorator composite part class
+//	DecoratorCompositePart.cpp
 // Contains the specific decorator parts which compose the final decorator
 //
 //################################################################################################
@@ -11,39 +11,39 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "GMEOLEData.h"
-#include "SampleCompositePart.h"
+#include "DecoratorCompositePart.h"
 #include "DiamondVectorPart.h"
 #include "TypeableLabelPart.h"
 
 #include "DecoratorExceptions.h"
 
 static const unsigned int	CTX_MENU_ID_SAMPLE		= DECORATOR_CTX_MENU_MINID + 100;	// Should be unique
-static const char*			CTX_MENU_STR_SAMPLE		= "Sample Decorator Ctx Menu Item";
+static const char*			CTX_MENU_STR_SAMPLE		= "Decorator Ctx Menu Item";
 
 
-namespace SampleDecor {
+namespace Decor {
 
 //################################################################################################
 //
-// CLASS : SampleCompositePart
+// CLASS : DecoratorCompositePart
 //
 //################################################################################################
 
-SampleCompositePart::SampleCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
+DecoratorCompositePart::DecoratorCompositePart(DecoratorSDK::PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	ObjectAndTextPart(pPart, eventSink)
 {
 }
 
-SampleCompositePart::~SampleCompositePart()
+DecoratorCompositePart::~DecoratorCompositePart()
 {
 }
 
-CRect SampleCompositePart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
+CRect DecoratorCompositePart::GetPortLocation(CComPtr<IMgaFCO>& fco) const
 {
 	throw PortNotFoundException();
 }
 
-CRect SampleCompositePart::GetLabelLocation(void) const
+CRect DecoratorCompositePart::GetLabelLocation(void) const
 {
 	HRESULT retVal = S_OK;
 	std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin();
@@ -65,7 +65,7 @@ CRect SampleCompositePart::GetLabelLocation(void) const
 }
 
 // New functions
-void SampleCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
+void DecoratorCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 									   HWND parentWnd, DecoratorSDK::PreferenceMap& preferences)
 {
 	//
@@ -87,7 +87,7 @@ void SampleCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 	CompositePart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 
-void SampleCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
+void DecoratorCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 									   HWND parentWnd)
 {
 	//
@@ -99,11 +99,11 @@ void SampleCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 	InitializeEx(pProject, pPart, pFCO, parentWnd, preferencesMap);
 }
 
-bool SampleCompositePart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
+bool DecoratorCompositePart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	CRect ptRect = m_compositeParts[0]->GetBoxLocation();
 	if (ptRect.PtInRect(point)) {
-		AfxMessageBox("SampleDecorator double clicked!");
+		AfxMessageBox("Decorator double clicked!");
 		GeneralOperationStarted(NULL);
 		// TODO: do something
 		GeneralOperationFinished(NULL);
@@ -113,7 +113,7 @@ bool SampleCompositePart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& 
 	return CompositePart::MouseLeftButtonDoubleClick(nFlags, point, transformHDC);
 }
 
-bool SampleCompositePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
+bool DecoratorCompositePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	CRect ptRect = m_compositeParts[0]->GetBoxLocation();
 	if (ptRect.PtInRect(point)) {
@@ -124,7 +124,7 @@ bool SampleCompositePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, cons
 	return CompositePart::MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC);
 }
 
-bool SampleCompositePart::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
+bool DecoratorCompositePart::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
 {
 	if (pDataObject->IsDataAvailable(CF_HDROP)) {
 		*dropEffect = DROPEFFECT_COPY;
@@ -134,7 +134,7 @@ bool SampleCompositePart::DragEnter(DROPEFFECT* dropEffect, COleDataObject* pDat
 	return CompositePart::DragEnter(dropEffect, pDataObject, dwKeyState, point, transformHDC);
 }
 
-bool SampleCompositePart::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
+bool DecoratorCompositePart::DragOver(DROPEFFECT* dropEffect, COleDataObject* pDataObject, DWORD dwKeyState, const CPoint& point, HDC transformHDC)
 {
 	if (pDataObject->IsDataAvailable(CF_HDROP)) {
 		*dropEffect = DROPEFFECT_COPY;
@@ -144,7 +144,7 @@ bool SampleCompositePart::DragOver(DROPEFFECT* dropEffect, COleDataObject* pData
 	return CompositePart::DragOver(dropEffect, pDataObject, dwKeyState, point, transformHDC);
 }
 
-bool SampleCompositePart::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, const CPoint& point, HDC transformHDC)
+bool DecoratorCompositePart::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffect, const CPoint& point, HDC transformHDC)
 {
 	if (pDataObject->IsDataAvailable(CF_HDROP) && dropEffect == DROPEFFECT_COPY) {
 		STGMEDIUM medium;
@@ -156,7 +156,7 @@ bool SampleCompositePart::Drop(COleDataObject* pDataObject, DROPEFFECT dropEffec
 	return CompositePart::Drop(pDataObject, dropEffect, point, transformHDC);
 }
 
-bool SampleCompositePart::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transformHDC)
+bool DecoratorCompositePart::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transformHDC)
 {
 	UINT nFiles = DragQueryFile(p_hDropInfo, 0xFFFFFFFF, NULL, 0);
 	if (nFiles < 1)
@@ -180,23 +180,23 @@ bool SampleCompositePart::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC t
 				GeneralOperationStarted(NULL);
 				// TODO: do something
 				GeneralOperationFinished(NULL);
-				AfxMessageBox("SampleDecorator drop: '" + conn + "' first 100 bytes: " + pbufRead + ".");
+				AfxMessageBox("Decorator drop: '" + conn + "' first 100 bytes: " + pbufRead + ".");
 				return true;
 			} else {
-				AfxMessageBox("SampleDecorator drop: '.txt' files may be dropped only. Can't open file: " + conn + "!");
+				AfxMessageBox("Decorator drop: '.txt' files may be dropped only. Can't open file: " + conn + "!");
 			}
 		} else {
-			AfxMessageBox("SampleDecorator drop: Can't inquire file information!");
+			AfxMessageBox("Decorator drop: Can't inquire file information!");
 		}
 	}
 
 	return CompositePart::DropFile(p_hDropInfo, point, transformHDC);
 }
 
-bool SampleCompositePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
+bool DecoratorCompositePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	if (menuItemId == CTX_MENU_ID_SAMPLE) {
-		AfxMessageBox("Sample Decorator Ctx Menu Item clicked!");
+		AfxMessageBox("Decorator Ctx Menu Item clicked!");
 		GeneralOperationStarted(NULL);
 		// TODO: do something
 		GeneralOperationFinished(NULL);
@@ -206,4 +206,4 @@ bool SampleCompositePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const C
 	return CompositePart::MenuItemSelected(menuItemId, nFlags, point, transformHDC);
 }
 
-}; // namespace SampleDecor
+}; // namespace Decor

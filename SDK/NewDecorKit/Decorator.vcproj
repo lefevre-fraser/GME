@@ -306,15 +306,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SampleCompositePart.cpp"
+				RelativePath=".\DecoratorCompositePart.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SampleDecorator.cpp"
+				RelativePath=".\Decorator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SampleDecoratorImpl.cpp"
+				RelativePath=".\DecoratorImpl.cpp"
 				>
 			</File>
 			<File
@@ -365,15 +365,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SampleCompositePart.h"
+				RelativePath=".\DecoratorCompositePart.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SampleDecorator.h"
+				RelativePath=".\Decorator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SampleDecoratorImpl.h"
+				RelativePath=".\DecoratorImpl.h"
 				>
 			</File>
 			<File
