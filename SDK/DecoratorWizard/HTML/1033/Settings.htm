@@ -108,19 +108,6 @@
 			 </TABLE>
 			</DIV>
 
-			<DIV CLASS="LINK">
-			 <TABLE WIDTH="100%" HEIGHT="28" BORDER="0" CELLPADDING="0" CELLSPACING="0" CLASS="LINKTEXT">
-			  <TR VALIGN="MIDDLE">
-	  		   <TD WIDTH="162">
-				<SPAN CLASS="ACTIVELINK" ID="Basic" TITLE="" onClick="Next(document, 'Basic.htm');" TABINDEX="1">Decorator Settings</SPAN>
-			   </TD>
-			   <TD WIDTH="4">
-				<IMG SRC="../../Images/spacer.gif" HEIGHT="1" WIDTH="4">
-			   </TD>
-			  </TR>
-			 </TABLE>
-			</DIV>
-
 		  	<DIV CLASS="LINKSELECTED">
 	 	   	 <SPAN CLASS="VERTLINE1">
 			  <IMG SRC="../../Images/spacer.gif" WIDTH="1" HEIGHT="1" ALT="" BORDER="0">
@@ -146,7 +133,7 @@
 			 <TABLE WIDTH="160" HEIGHT="28" BORDER="0" CELLPADDING="0" CELLSPACING="0" CLASS="LINKTEXTSELECTED">
 			  <TR VALIGN="MIDDLE">
 	  		   <TD WIDTH="162">
-				<SPAN ID="Advanced" TITLE="" onClick="Next(document, 'Advanced.htm');" TABINDEX="1">Advanced Settings</SPAN>
+				<SPAN ID="Settings" TITLE="" onClick="Next(document, 'Settings.htm');" TABINDEX="1">Settings</SPAN>
 			   </TD>
 			   <TD WIDTH="4">
 				<IMG SRC="../../Images/spacer.gif" HEIGHT="1" WIDTH="4">
@@ -189,8 +176,15 @@
  			 <TD VALIGN="TOP" WIDTH="12">
   				&nbsp;
   			  </TD>
-  			  <TD VALIGN="TOP" COLSPAN="3">				
- 				
+  			  <TD VALIGN="TOP" COLSPAN="3">
+  				<SPAN CLASS="itemTextTop" TITLE="Name of the GME Decorator.">
+ 				    <LABEL ID="AUT_ID0" FOR="DECORATOR_NAME">Decorator <U>N</U>ame:</LABEL>
+ 				    <BR/>
+ 				    <INPUT CLASS="sideBtn" TYPE="text" ID="DECORATOR_NAME" ACCESSKEY="n" TITLE="Name of the GME Decorator." onkeyup="UpdateNames();>
+    			</SPAN>
+				
+    			<P CLASS="ElementSpacer">&nbsp;</P>
+				
 				<SPAN CLASS="itemTextTop" TITLE="CoClass ProgID, no need to edit this.">
  				    <LABEL ID="AUT_ID0" FOR="COCLASS_PROGID">CoClass ProgID:</LABEL>
  				    <BR/>
@@ -317,8 +311,13 @@
 
 var tab_array = new Array();
 tab_array[0] = Default;
-tab_array[1] = Basic;
-tab_array[2] = Advanced;
+tab_array[1] = Settings;
+
+function UpdateNames() {
+    window.external.AddSymbol("COCLASS_PROGID", "MGA.Decorator." + window.external.FindSymbol('DECORATOR_NAME'));
+    window.external.AddSymbol("COCLASS_NAME", "MGA Decorator CoClass (" + window.external.FindSymbol('DECORATOR_NAME') + ")");
+    window.external.AddSymbol("TYPELIB_NAME", "MGA Decorator TypeLibrary (" + window.external.FindSymbol('DECORATOR_NAME') + ")");
+}
 
 // This is an example of a function which initializes the page
 //
@@ -338,6 +337,8 @@ function InitDocument(document)
 	// with the appropriate symbol values
 	//
 	window.external.Load(document);
+
+	CalcNames();
 }
 
 // If the wizard has more than 1 page, this 

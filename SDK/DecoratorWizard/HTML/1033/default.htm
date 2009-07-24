@@ -13,8 +13,6 @@
 
 	<!--  Decorator Settings -->
 	<SYMBOL NAME='DECORATOR_NAME' TYPE=text VALUE=''></SYMBOL>
-	
-    <!--  Advanced Settings -->
     <SYMBOL NAME='COCLASS_PROGID' TYPE=text VALUE=''></SYMBOL>
     <SYMBOL NAME='COCLASS_NAME' TYPE=text VALUE=''></SYMBOL>
     <SYMBOL NAME='COCLASS_UUID' TYPE=text VALUE=''></SYMBOL>
@@ -149,20 +147,7 @@
 			 <TABLE WIDTH="100%" HEIGHT="28" BORDER="0" CELLPADDING="0" CELLSPACING="0" CLASS="LINKTEXT">
 			  <TR VALIGN="MIDDLE">
 	  		   <TD WIDTH="100%">
-				<SPAN CLASS="ACTIVELINK" ID="Basic" TITLE="" onClick="Next(document, 'Basic.htm');" TABINDEX="1">Decorator Settings</SPAN>
-			   </TD>
-			   <TD WIDTH="4">
-				<IMG SRC="../../Images/spacer.gif" HEIGHT="1" WIDTH="4">
-			   </TD>
-			  </TR>
-			 </TABLE>
-			</DIV>
-
-			<DIV CLASS="LINK">
-			 <TABLE WIDTH="100%" HEIGHT="28" BORDER="0" CELLPADDING="0" CELLSPACING="0" CLASS="LINKTEXT">
-			  <TR VALIGN="MIDDLE">
-	  		   <TD WIDTH="100%">
-				<SPAN CLASS="ACTIVELINK" ID="Advanced" TITLE="" onClick="Next(document, 'Advanced.htm');" TABINDEX="1">Advanced Settings</SPAN>
+				<SPAN CLASS="ACTIVELINK" ID="Settings" TITLE="" onClick="Next(document, 'Settings.htm');" TABINDEX="1">Decorator Settings</SPAN>
 			   </TD>
 			   <TD WIDTH="4">
 				<IMG SRC="../../Images/spacer.gif" HEIGHT="1" WIDTH="4">
@@ -310,8 +295,7 @@
 
 var tab_array = new Array();
 tab_array[0] = Default;
-tab_array[1] = Basic;
-tab_array[2] = Advanced;
+tab_array[1] = Settings;
 
 // This is an example of a function which initializes the page
 //
@@ -330,15 +314,15 @@ function InitDocument(document)
 
 		var strGuid;
 
-		window.external.AddSymbol("COCLASS_PROGID", "MGA.Decorator." + window.external.FindSymbol('DECORATOR_NAME'));
-		window.external.AddSymbol("COCLASS_NAME", "MGA Decorator CoClass (" + window.external.FindSymbol('DECORATOR_NAME') + ")");
 		strGuid = window.external.CreateGuid();
 		window.external.AddSymbol("COCLASS_UUID", window.external.FormatGuid(strGuid, 0));
-
-        window.external.AddSymbol("TYPELIB_NAME", "MGA Decorator TypeLibrary (" + window.external.FindSymbol('DECORATOR_NAME') + ")");		
 		strGuid = window.external.CreateGuid();
 		window.external.AddSymbol("TYPELIB_UUID", window.external.FormatGuid(strGuid, 0));
-	}
+
+		window.external.AddSymbol("COCLASS_PROGID", "MGA.Decorator." + window.external.FindSymbol('DECORATOR_NAME'));
+		window.external.AddSymbol("COCLASS_NAME", "MGA Decorator CoClass (" + window.external.FindSymbol('DECORATOR_NAME') + ")");
+		window.external.AddSymbol("TYPELIB_NAME", "MGA Decorator TypeLibrary (" + window.external.FindSymbol('DECORATOR_NAME') + ")");
+    }
 
 	// Load the document and initialize the controls 
 	// with the appropriate symbol values

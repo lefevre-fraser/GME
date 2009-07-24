@@ -61,7 +61,87 @@
 			Filter="txt"
 			>
 			<File
-				RelativePath=".\Templates\1033\ComponentConfig.h"
+				RelativePath=".\Templates\1033\Decorator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\Decorator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\Decorator.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\Decorator.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\Decorator.sln"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\Decorator.vcproj"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\DecoratorApp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\DecoratorApp.def"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\DecoratorCompositePart.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\DecoratorCompositePart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\DecoratorConfig.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\DecoratorImpl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\DecoratorImpl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\DecoratorLib.idl"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\GMEOLEData.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\GMEOLEData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\mfcdual.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\mfcdual.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\StdAfx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Templates\1033\StdAfx.h"
 				>
 			</File>
 		</Filter>
@@ -70,12 +150,7 @@
 			Filter="htm"
 			>
 			<File
-				RelativePath=".\HTML\1033\Advanced.htm"
-				DeploymentContent="true"
-				>
-			</File>
-			<File
-				RelativePath=".\HTML\1033\Basic.htm"
+				RelativePath=".\HTML\1033\Settings.htm"
 				DeploymentContent="true"
 				>
 			</File>
@@ -109,10 +184,6 @@
 			</File>
 			<File
 				RelativePath=".\Decorator.vsz"
-				>
-			</File>
-			<File
-				RelativePath=".\Templates\1033\Common.inf"
 				>
 			</File>
 			<File
