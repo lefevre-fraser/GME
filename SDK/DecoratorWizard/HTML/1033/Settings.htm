@@ -180,7 +180,7 @@
   				<SPAN CLASS="itemTextTop" TITLE="Name of the GME Decorator.">
  				    <LABEL ID="AUT_ID0" FOR="DECORATOR_NAME">Decorator <U>N</U>ame:</LABEL>
  				    <BR/>
- 				    <INPUT CLASS="sideBtn" TYPE="text" ID="DECORATOR_NAME" ACCESSKEY="n" TITLE="Name of the GME Decorator." onkeyup="UpdateNames();>
+ 				    <INPUT CLASS="sideBtn" TYPE="text" ID="DECORATOR_NAME" ACCESSKEY="n" TITLE="Name of the GME Decorator." onkeyup="UpdateNames();">
     			</SPAN>
 				
     			<P CLASS="ElementSpacer">&nbsp;</P>
@@ -338,7 +338,7 @@ function InitDocument(document)
 	//
 	window.external.Load(document);
 
-	CalcNames();
+	UpdateNames();
 }
 
 // If the wizard has more than 1 page, this 
