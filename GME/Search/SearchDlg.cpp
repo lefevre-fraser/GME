@@ -44,6 +44,7 @@ CSearchDlg::CSearchDlg()
 , m_chkLocate(FALSE)
 , m_chkMatchCase(TRUE)
 
+, m_chkSplSearch(FALSE)
 {
     //create an empty IMgaFCOs list. it gets filled by the searchbutton
     //and emptied by RemoveAll(), cleaned up by RemoveZombies()
@@ -96,6 +97,9 @@ void CSearchDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_EDITATTRVALU2, m_edtAttributeCtrlSecond);
     DDX_Control(pDX, IDC_TREE_SEARCH_HISTORY, m_treeSearchHistory);
     DDX_Check(pDX, IDC_CHECKCON, m_chkConnection);
+    DDX_Check(pDX, IDC_CHECKSPLSEARCH, m_chkSplSearch);
+    DDX_Control(pDX, IDC_STATICREF, m_stcRefCtrl);
+    DDX_Control(pDX, IDC_CHECKCON, m_chkConnCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CSearchDlg, CDialog)
@@ -110,6 +114,7 @@ BEGIN_MESSAGE_MAP(CSearchDlg, CDialog)
     ON_WM_HSCROLL()
     ON_WM_KEYDOWN()
     ON_NOTIFY(NM_DBLCLK, IDC_TREE_SEARCH_HISTORY, &CSearchDlg::OnNMDblclkTreeSearchHistory)
+    ON_BN_CLICKED(IDC_CHECKSPLSEARCH, &CSearchDlg::OnCheckSplSearch)
 END_MESSAGE_MAP()
 
 BOOL CSearchDlg::OnInitDialog()
@@ -187,6 +192,8 @@ void CSearchDlg::RemoveZombies()
         if(oStatus != OBJECT_EXISTS)
         {
             specialSearchFCO = NULL;
+            m_stcRefCtrl.SetWindowText("NULL References");
+			m_stcRefCtrl.ShowWindow(TRUE);
         }
     }
 
@@ -255,7 +262,7 @@ void CSearchDlg::OnButtonGo()
         COMTHROW(ccpProject->get_RootFolder(&rootInput));
         CInput inp;
         inp.GetInput(m_edtNameFirst,m_edtRoleNameFirst,m_edtKindNameFirst,m_edtAttributeFirst,m_edtNameSecond,m_edtRoleNameSecond,m_edtKindNameSecond,m_edtAttributeSecond,m_edtAttrValue,
-            m_chkMod,m_chkAtom,m_chkRef,m_chkSet,m_chkConnection,m_chkFullWord,NULL,0,m_chkMatchCase,m_radioScope,m_radioLogical);
+            m_chkMod,m_chkAtom,m_chkRef,m_chkSet,m_chkConnection,m_chkSplSearch,m_chkFullWord,NULL,0,m_chkMatchCase,m_radioScope,m_radioLogical);
 
 
         CSearch searchGME(inp);
@@ -458,6 +465,8 @@ void CSearchDlg::itemClicked()
                 CString name;
                 COMTHROW( selectedFCO->get_Name(bstr));
                 name = CString( bstr) + " References";
+                m_stcRefCtrl.SetWindowText(name);
+				m_stcRefCtrl.ShowWindow(TRUE);
                 specialSearchFCO = selectedFCO;
             }
 
@@ -652,6 +661,7 @@ void CSearchDlg::CreateSearchHistory()
     PrepareHistoryString("Set",m_chkSet,hOtherCriteria,strSearch);
     PrepareHistoryString("Reference",m_chkRef,hOtherCriteria,strSearch);
     PrepareHistoryString("Connection",m_chkConnection,hOtherCriteria,strSearch);
+    PrepareHistoryString("Special",m_chkSplSearch,hOtherCriteria,strSearch);
     PrepareHistoryString("Case",m_chkMatchCase,hOtherCriteria,strSearch);
     PrepareHistoryString("WholeWord",m_chkFullWord,hOtherCriteria,strSearch);
     PrepareHistoryString("Scope",m_radioScope,hOtherCriteria,strSearch);
@@ -800,6 +810,9 @@ void CSearchDlg::InsertHistory(CString strHistory)
     ReadHistoryValue("Connection",strHistory,m_chkConnection);
     PrepareHistoryString("Connection",m_chkConnection,hOtherCriteria,strSearch);
 
+    ReadHistoryValue("Special",strHistory,m_chkSplSearch);
+    PrepareHistoryString("Special",m_chkSplSearch,hOtherCriteria,strSearch);
+
     ReadHistoryValue("Case",strHistory,m_chkMatchCase);
     PrepareHistoryString("Case",m_chkMatchCase,hOtherCriteria,strSearch);
 
@@ -856,7 +869,7 @@ void CSearchDlg::SearchResults()
     COMTHROW(new_results.CoCreateInstance(L"Mga.MgaFCOs"));;
     CInput inp;
     inp.GetInput(m_edtNameFirst,m_edtRoleNameFirst,m_edtKindNameFirst,m_edtAttributeFirst,m_edtNameSecond,m_edtRoleNameSecond,m_edtKindNameSecond,m_edtAttributeSecond,m_edtAttrValue,
-        m_chkMod,m_chkAtom,m_chkRef,m_chkSet,m_chkConnection,m_chkFullWord,NULL,0,m_chkMatchCase,m_radioScope,m_radioLogical
+        m_chkMod,m_chkAtom,m_chkRef,m_chkSet,m_chkConnection,m_chkSplSearch,m_chkFullWord,NULL,0,m_chkMatchCase,m_radioScope,m_radioLogical
         );
 
     CSearch searchGME(inp);
@@ -904,11 +917,67 @@ void CSearchDlg::OnNMDblclkTreeSearchHistory(NMHDR *pNMHDR, LRESULT *pResult)
     ReadHistoryValue("Set",strSearchText,m_chkSet);
     ReadHistoryValue("Reference",strSearchText,m_chkRef);
     ReadHistoryValue("Connection",strSearchText,m_chkConnection);
+    ReadHistoryValue("Special",strSearchText,m_chkSplSearch);
     ReadHistoryValue("Case",strSearchText,m_chkMatchCase);
     ReadHistoryValue("WholeWord",strSearchText,m_chkFullWord);
     ReadHistoryValue("Scope",strSearchText,m_radioScope);
     ReadHistoryValue("Results",strSearchText,m_searchResults);
 
-    UpdateData(FALSE);    
+    UpdateData(FALSE);  
+     // if special search is on disable search for others than reference
+    if(m_chkSplSearch)
+    {
+        OnCheckSplSearch();
+    }
+    else
+    {
+        m_chkModCtrl.EnableWindow(TRUE);
+		m_chkAtomCtrl.EnableWindow(TRUE);
+		m_chkSetCtrl.EnableWindow(TRUE);
+		m_chkRefCtrl.EnableWindow(TRUE);
+        m_chkConnCtrl.EnableWindow(TRUE);
+    }
     *pResult = 0;
+}
+
+void CSearchDlg::OnCheckSplSearch()
+{
+    CWnd::UpdateData(TRUE);
+
+	if(m_chkSplSearch)
+	{
+		m_chkMod = FALSE;
+		m_chkAtom = FALSE;
+		m_chkSet = FALSE;
+        m_chkConnection = FALSE;
+		m_chkRef = TRUE;
+
+		m_chkModCtrl.EnableWindow(FALSE);
+		m_chkAtomCtrl.EnableWindow(FALSE);
+		m_chkSetCtrl.EnableWindow(FALSE);
+		m_chkRefCtrl.EnableWindow(FALSE);
+        m_chkConnCtrl.EnableWindow(FALSE);
+		CWnd::UpdateData(FALSE);
+	}
+	else
+	{
+		m_chkMod = TRUE;
+		m_chkAtom = TRUE;
+		m_chkSet = TRUE;
+		m_chkRef = TRUE;
+        m_chkConnection=TRUE;
+
+		m_chkModCtrl.EnableWindow(TRUE);
+		m_chkAtomCtrl.EnableWindow(TRUE);
+		m_chkSetCtrl.EnableWindow(TRUE);
+		m_chkRefCtrl.EnableWindow(TRUE);
+        m_chkConnCtrl.EnableWindow(TRUE);
+		CWnd::UpdateData(FALSE);
+
+		//reset special reference search to NULL
+		specialSearchFCO = NULL;
+		m_stcRefCtrl.SetWindowText("NULL References");
+		m_stcRefCtrl.ShowWindow(TRUE);
+		CWnd::UpdateData(TRUE);
+	}
 }

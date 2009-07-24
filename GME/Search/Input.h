@@ -31,7 +31,7 @@ public:
 	virtual ~CInput();
 
 	void CInput::GetInput(CString strNameFirst, CString strRoleFirst, CString strKindFirst, CString strAttributeFirst,CString strNameSecond,CString strRoleSecond,CString strKindSecond,CString strAttributeSecond,
-                      CString attrval, BOOL mod, BOOL atom, BOOL ref, BOOL set,BOOL connection, BOOL full, 
+                      CString attrval, BOOL mod, BOOL atom, BOOL ref, BOOL set,BOOL connection,BOOL splSearch, BOOL full, 
                       IMgaFCO*, int, //WAS: IMgaFCO *root, int searchscope,
                       BOOL bMatchCase, int scopedSearch,int logicalExpr);
 
@@ -63,6 +63,7 @@ public:
     BOOL &GetSets() {return m_bGetSets;}
     BOOL &GetReferences() {return m_bGetReferences;}
     BOOL &GetConnections() {return m_bGetConnections;}
+    BOOL &GetSplSearch() {return m_bGetSplSearch;}
     BOOL &IsCaseIgnored() {return m_bGetCaseIgnored;}
     BOOL &DoScopedSearch() {return m_bDoScopedSearch;}
     int &GetSearchScope(){return m_intScope;}

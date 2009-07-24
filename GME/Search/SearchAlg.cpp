@@ -35,8 +35,12 @@ void CSearch::Search(IMgaFolder *root, IMgaObjects* scopeColl, IMgaFCO *selected
     m_pgsSearch = Progress;
     CComPtr<IMgaFolder> pRoot = root;
 
+    if(filter.GetReferences() && filter.GetSplSearch() && (selected != NULL))
+	{
+		SearchReferences(selected);
+	}
 
-    if( filter.GetSearchScope()==1 && scopeColl) //1 means it shud search within current scope
+    else if( filter.GetSearchScope()==1 && scopeColl) //1 means it shud search within current scope
     {
         CComPtr<IMgaFCOs> non_container_coll;                  // will store the Atoms, Refs and Sets
         non_container_coll.CoCreateInstance( L"Mga.MgaFCOs");  // which are not Fs and Ms
@@ -132,7 +136,7 @@ void CSearch::CheckAllReferences(IMgaFCOs *allObjects)
 
         if(rret == OBJTYPE_REFERENCE )
         {
-            if (CheckAtom((IMgaAtom*)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaReference*)(MGACOLL_ITER.p)));
+            if (CheckReference((IMgaReference*)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaReference*)(MGACOLL_ITER.p)));
         }
 
         m_pgsSearch->StepIt();
@@ -394,7 +398,23 @@ bool CSearch::CheckReference(IMgaFCO *Reference)
     //check if the reference matches second search criteria
     int y=Matches(Reference,false);
 
-    return PerformLogical(x,y);
+    bool found=PerformLogical(x,y);
+
+    
+   
+    //this is only for the Null reference search, searching for specific refererences handled below
+    //if both criteria is empty then it will find all NULL References
+    //if criteria is there then it will find NULL reference satisfying given criteria
+    if(filter.GetSplSearch() && (found || (x==-1 && y==-1)))
+    {
+        found=true;
+        CComPtr<IMgaFCO> referred;
+        COMTHROW(((IMgaReference*)Reference)->get_Referred(&referred));
+        if(referred != NULL)
+            found = false;
+    }
+
+  return found;
 }
 
 //checks the name, kindname and attributes, adding all matches to the results

@@ -158,6 +158,11 @@ public:
     afx_msg void OnNMDblclkTreeSearchHistory(NMHDR *pNMHDR, LRESULT *pResult);
     // if the connections are to be searched for
     BOOL m_chkConnection;
+    BOOL m_chkSplSearch;
+    afx_msg void OnCheckSplSearch();
+    // reference static text ctrl
+    CStatic m_stcRefCtrl;
+    CButton m_chkConnCtrl;
 };
 
 //{{AFX_INSERT_LOCATION}}
