@@ -355,7 +355,7 @@ function InitDocument(document)
 		strGuid = window.external.CreateGuid();
 		window.external.AddSymbol("COCLASS_UUID", window.external.FormatGuid(strGuid, 0));
 
-        window.external.AddSymbol("TYPELIB_NAME", "MGA Interpreter TypeLibrary (" + window.external.FindSymbol('COMPONENT_NAME') + ")");		
+		window.external.AddSymbol("TYPELIB_NAME", "MGA Interpreter TypeLibrary (" + window.external.FindSymbol('COMPONENT_NAME') + ")");		
 		strGuid = window.external.CreateGuid();
 		window.external.AddSymbol("TYPELIB_UUID", window.external.FormatGuid(strGuid, 0));
 	}

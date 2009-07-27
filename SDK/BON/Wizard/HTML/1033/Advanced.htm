@@ -200,7 +200,7 @@
     			<P CLASS="ElementSpacer">&nbsp;</P>
 				
 				<SPAN CLASS="itemText" TITLE="CoClass description, no need to edit this.">
- 				    <LABEL ID="AUT_ID4" FOR="COCLASS_NAME">CoClass Name:</LABEL>
+ 				    <LABEL ID="AUT_ID3" FOR="COCLASS_NAME">CoClass Name:</LABEL>
  				    <BR/>
  				    <INPUT CLASS="itemTextTwoColumnLong" TYPE="text" ID="COCLASS_NAME" TITLE="CoClass description, no need to edit this.">
     			</SPAN>
@@ -208,7 +208,7 @@
     			<P CLASS="ElementSpacer">&nbsp;</P>
 				
 				<SPAN CLASS="itemText" TITLE="CoClass GUID, no need to edit this.">
- 				    <LABEL ID="AUT_ID5" FOR="COCLASS_UUID">CoClass GUID:</LABEL>
+ 				    <LABEL ID="AUT_ID4" FOR="COCLASS_UUID">CoClass GUID:</LABEL>
  				    <BR/>
  				    <INPUT CLASS="itemTextTwoColumnLong" TYPE="text" ID="COCLASS_UUID" TITLE="CoClass GUID, no need to edit this.">
     			</SPAN>
@@ -216,7 +216,7 @@
     			<P CLASS="ElementSpacer">&nbsp;</P>
 				
 				<SPAN CLASS="itemText" TITLE="TypeLib description, no need to edit this.">
- 				    <LABEL ID="AUT_ID6" FOR="TYPELIB_NAME">TypeLib Name:</LABEL>
+ 				    <LABEL ID="AUT_ID5" FOR="TYPELIB_NAME">TypeLib Name:</LABEL>
  				    <BR/>
  				    <INPUT CLASS="itemTextTwoColumnLong" TYPE="text" ID="TYPELIB_NAME" TITLE="TypeLib description, no need to edit this.">
     			</SPAN>
@@ -397,6 +397,16 @@ function UpdateEventMask()
 	window.external.AddSymbol("ADDON_EVENTMASK", "0x" + eventmask.toString(16));
 }
 
+function UpdateNames() {
+    var componentName = window.external.FindSymbol('COMPONENT_NAME');
+    window.external.AddSymbol("COCLASS_PROGID", "MGA.Decorator." + componentName);
+    COCLASS_PROGID.value = window.external.FindSymbol('COCLASS_PROGID');
+    window.external.AddSymbol("COCLASS_NAME", "MGA Decorator CoClass (" + componentName + ")");
+    COCLASS_NAME.value = window.external.FindSymbol('COCLASS_NAME');
+    window.external.AddSymbol("TYPELIB_NAME", "MGA Decorator TypeLibrary (" + componentName + ")");
+    TYPELIB_NAME.value = window.external.FindSymbol('TYPELIB_NAME');
+}
+
 // This is an example of a function which initializes the page
 //
 function InitDocument(document)
@@ -425,7 +435,8 @@ function InitDocument(document)
     if (!window.external.FindSymbol('GME_ADDON')) {
         ADDON_EVENTLIST.disabled = true;
     }
-    
+
+    UpdateNames();
 }
 
 // If the wizard has more than 1 page, this 

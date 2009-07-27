@@ -193,7 +193,7 @@
  				<SPAN CLASS="itemTextTop" TITLE="Name of the GME Component.">
  				    <LABEL ID="AUT_ID0" FOR="COMPONENT_NAME">Component <U>N</U>ame:</LABEL>
  				    <BR/>
- 				    <INPUT CLASS="sideBtn" TYPE="text" ID="COMPONENT_NAME" ACCESSKEY="n" TITLE="Name of the GME Component.">
+ 				    <INPUT CLASS="sideBtn" TYPE="text" ID="COMPONENT_NAME" ACCESSKEY="n" TITLE="Name of the GME Component." onkeypress="UpdateNames();" onkeyup="UpdateNames();" onblur="UpdateNames();">
     			</SPAN>
 	
 				<P CLASS="ElementSpacer">&nbsp;</P>
@@ -352,6 +352,12 @@ function CheckParadigmName()
     }
 }
 
+function UpdateNames() {
+    window.external.AddSymbol("TOOLTIP_TEXT", COMPONENT_NAME.value + " Interpreter");
+    TOOLTIP_TEXT.value = window.external.FindSymbol('TOOLTIP_TEXT');
+    window.external.AddSymbol("COMPONENT_NAME", COMPONENT_NAME.value);
+}
+
 // This is an example of a function which initializes the page
 //
 function InitDocument(document)
@@ -379,6 +385,8 @@ function InitDocument(document)
 	if (framework == 'BON') {
 	    GME_ADDON.disabled = true;
 	}
+
+	UpdateNames();
 }
 
 // If the wizard has more than 1 page, this 
