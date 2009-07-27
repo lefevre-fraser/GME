@@ -180,13 +180,13 @@
   				<SPAN CLASS="itemTextTop" TITLE="Name of the GME Decorator.">
  				    <LABEL ID="AUT_ID0" FOR="DECORATOR_NAME">Decorator <U>N</U>ame:</LABEL>
  				    <BR/>
- 				    <INPUT CLASS="sideBtn" TYPE="text" ID="DECORATOR_NAME" ACCESSKEY="n" TITLE="Name of the GME Decorator." onkeyup="UpdateNames();">
+ 				    <INPUT CLASS="sideBtn" TYPE="text" ID="DECORATOR_NAME" ACCESSKEY="n" TITLE="Name of the GME Decorator." onkeypress="UpdateNames();" onkeyup="UpdateNames();" onblur="UpdateNames();">
     			</SPAN>
 				
     			<P CLASS="ElementSpacer">&nbsp;</P>
 				
 				<SPAN CLASS="itemTextTop" TITLE="CoClass ProgID, no need to edit this.">
- 				    <LABEL ID="AUT_ID0" FOR="COCLASS_PROGID">CoClass ProgID:</LABEL>
+ 				    <LABEL ID="AUT_ID1" FOR="COCLASS_PROGID">CoClass ProgID:</LABEL>
  				    <BR/>
  				    <INPUT CLASS="itemTextTwoColumnLong" TYPE="text" ID="COCLASS_PROGID" TITLE="CoClass ProgID, no need to edit this.">
     			</SPAN>
@@ -194,7 +194,7 @@
     			<P CLASS="ElementSpacer">&nbsp;</P>
 				
 				<SPAN CLASS="itemText" TITLE="CoClass description, no need to edit this.">
- 				    <LABEL ID="AUT_ID4" FOR="COCLASS_NAME">CoClass Name:</LABEL>
+ 				    <LABEL ID="AUT_ID3" FOR="COCLASS_NAME">CoClass Name:</LABEL>
  				    <BR/>
  				    <INPUT CLASS="itemTextTwoColumnLong" TYPE="text" ID="COCLASS_NAME" TITLE="CoClass description, no need to edit this.">
     			</SPAN>
@@ -202,7 +202,7 @@
     			<P CLASS="ElementSpacer">&nbsp;</P>
 				
 				<SPAN CLASS="itemText" TITLE="CoClass GUID, no need to edit this.">
- 				    <LABEL ID="AUT_ID5" FOR="COCLASS_UUID">CoClass GUID:</LABEL>
+ 				    <LABEL ID="AUT_ID4" FOR="COCLASS_UUID">CoClass GUID:</LABEL>
  				    <BR/>
  				    <INPUT CLASS="itemTextTwoColumnLong" TYPE="text" ID="COCLASS_UUID" TITLE="CoClass GUID, no need to edit this.">
     			</SPAN>
@@ -210,7 +210,7 @@
     			<P CLASS="ElementSpacer">&nbsp;</P>
 				
 				<SPAN CLASS="itemText" TITLE="TypeLib description, no need to edit this.">
- 				    <LABEL ID="AUT_ID6" FOR="TYPELIB_NAME">TypeLib Name:</LABEL>
+ 				    <LABEL ID="AUT_ID5" FOR="TYPELIB_NAME">TypeLib Name:</LABEL>
  				    <BR/>
  				    <INPUT CLASS="itemTextTwoColumnLong" TYPE="text" ID="TYPELIB_NAME" TITLE="TypeLib description, no need to edit this.">
     			</SPAN>
@@ -314,9 +314,13 @@ tab_array[0] = Default;
 tab_array[1] = Settings;
 
 function UpdateNames() {
-    window.external.AddSymbol("COCLASS_PROGID", "MGA.Decorator." + window.external.FindSymbol('DECORATOR_NAME'));
-    window.external.AddSymbol("COCLASS_NAME", "MGA Decorator CoClass (" + window.external.FindSymbol('DECORATOR_NAME') + ")");
-    window.external.AddSymbol("TYPELIB_NAME", "MGA Decorator TypeLibrary (" + window.external.FindSymbol('DECORATOR_NAME') + ")");
+    window.external.AddSymbol("COCLASS_PROGID", "MGA.Decorator." + DECORATOR_NAME.value);
+    COCLASS_PROGID.value = window.external.FindSymbol('COCLASS_PROGID');
+    window.external.AddSymbol("COCLASS_NAME", "MGA Decorator CoClass (" + DECORATOR_NAME.value + ")");
+    COCLASS_NAME.value = window.external.FindSymbol('COCLASS_NAME');
+    window.external.AddSymbol("TYPELIB_NAME", "MGA Decorator TypeLibrary (" + DECORATOR_NAME.value + ")");
+    TYPELIB_NAME.value = window.external.FindSymbol('TYPELIB_NAME');
+    window.external.AddSymbol("DECORATOR_NAME", DECORATOR_NAME.value);
 }
 
 // This is an example of a function which initializes the page
