@@ -475,7 +475,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 			return -1;	// fail to create
 	}
 	m_partBrowser.EnableDocking(CBRS_ALIGN_ANY);
-
+	int captionHeight = m_partBrowser.GetCaptionHeight();
+	m_partBrowser.SetMinSize(CSize(captionHeight, captionHeight));
 
 	// PANNING WINDOW
 	if (!m_panningWindow.Create(_T("Panning Window"), this, CSize(240, 160),
@@ -483,10 +484,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		TRACE0("Failed to create panning Window\n");
 		return -1;		// fail to create
-	}
-	
+	}	
 	m_panningWindow.EnableDocking(CBRS_ALIGN_ANY);
-
+	m_panningWindow.SetMinSize(CSize(captionHeight, captionHeight));
 
 	// GME ACTIVE BROWSER TREE
 	if (!m_browser.Create(_T("GME Browser"), this, CSize(240, 80),
@@ -495,9 +495,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create browser\n");
 		return -1;		// fail to create
 	}
-	
 	m_browser.EnableDocking(CBRS_ALIGN_ANY);
-
+	m_browser.SetMinSize(CSize(captionHeight, captionHeight));
 
 	// OBJECT INSPECTOR
 	if(!m_objectInspector.Create(_T("Object Inspector"), this, CSize(240, 160),
@@ -506,10 +505,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create Object Inspector\n");
 		return -1;		// fail to create
 	}
-	
 	m_objectInspector.EnableDocking(CBRS_ALIGN_ANY);
-
-
+	m_objectInspector.SetMinSize(CSize(captionHeight, captionHeight));
 
 	// CONSOLE
 	if(!m_console.Create(_T("Console"), this, CSize(80, 160),
@@ -518,10 +515,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create Console\n");
 		return -1;		// fail to create
 	}
-
 	m_console.EnableDocking(CBRS_ALIGN_ANY);
-
-
+	m_console.SetMinSize(CSize(captionHeight, captionHeight));
 
 	// SEARCH - Modal Dialog
 	if(!m_search.Create(_T("Search"), this, CSize(200, 200),
@@ -530,8 +525,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create Search Control\n");
 		return -1;		// fail to create
 	}
-
 	m_search.EnableDocking(CBRS_ALIGN_ANY);
+	m_search.SetMinSize(CSize(captionHeight, captionHeight));
+
+
 	// --- Docking ---
 
 	DockPane(&m_browser, AFX_IDW_DOCKBAR_RIGHT);
@@ -539,7 +536,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	DockPane(&m_partBrowser, AFX_IDW_DOCKBAR_LEFT);
 
 	m_panningWindow.DockToWindow(&m_partBrowser, CBRS_ALIGN_BOTTOM);
-
 
 	m_objectInspector.DockToWindow(&m_browser,CBRS_ALIGN_BOTTOM);
 
@@ -549,8 +545,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_search.AttachToTabWnd(&m_console, DM_SHOW, TRUE, &pTabbedBar);
 
 	m_search.ShowPane(FALSE, FALSE, FALSE);	
-
-
 
 
 	// CG: The following block was inserted by 'Status Bar' component.
@@ -574,7 +568,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// thus we ignore the registry settings
 	m_wndComponentBar.ShowWindow(SW_HIDE);
 	ShowPane(&m_wndComponentBar, FALSE, FALSE, FALSE);
-
 
 
 	// CG: The following line was added by the Splash Screen component.
@@ -786,6 +779,12 @@ void CMainFrame::OnEditSearch()
 	{
 		m_search.ShowPane(TRUE, FALSE, TRUE);
 	}
+/*	CRect searchWindowRect;
+	m_search.GetWindowRect(&searchWindowRect);
+	if (m_search.CanBeResized() && searchWindowRect.Height() <= searchWindowRect.GetCaptionHeight()) {
+		ScreenToClient(&searchWindowRect);
+		m_search.SetWindowPos(NULL, searchWindowRect.left, searchWindowRect.top, searchWindowRect.Width(), searchWindowRect.Height() + 100, SWP_NOZORDER | SWP_NOMOVE);
+	}*/
 
 	CComPtr<IMgaObjects> objs;
 	if( CGMEBrowser::theInstance->GetSelectedItems( objs))
