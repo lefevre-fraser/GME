@@ -39,6 +39,7 @@ void CProjectPropertiesDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PROJECT_COMMENT, comment);
 	DDX_Control(pDX, IDC_PROJECT_AUTHOR, author);
 	DDX_Control(pDX, IDC_PROJECT_NAME, name);
+	DDX_Control(pDX, IDC_PROJECT_CONNECTION, conn);
 	//}}AFX_DATA_MAP
 }
 
@@ -114,6 +115,13 @@ BOOL CProjectPropertiesDlg::OnInitDialog()
 			CString str;
 			CopyTo(bstr,str);
 			name.SetWindowText(str);
+		}
+		{
+			CComBSTR bstr;
+			COMTHROW(theApp.mgaProject->get_ProjectConnStr(&bstr));
+			CString str;
+			CopyTo(bstr,str);
+			conn.SetWindowText(str.Mid(4));
 		}
 		{
 			CComBSTR bstr;

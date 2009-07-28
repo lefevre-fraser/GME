@@ -29,6 +29,7 @@ public:
 	CEdit	comment;
 	CEdit	author;
 	CEdit	name;
+	CEdit	conn;
 	//}}AFX_DATA
 
 // Overrides

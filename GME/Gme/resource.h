@@ -156,6 +156,7 @@
 #define IDC_PROJECT_VERSION             1053
 #define IDC_DSTASPECT_LIST              1054
 #define IDC_PROJECT_GUID                1054
+#define IDC_PROJECT_CONNECTION          1055
 #define IDC_CURASP1056                  1056
 #define ID_DLLINFO                      1056
 #define IDC_SELASP1057                  1057
