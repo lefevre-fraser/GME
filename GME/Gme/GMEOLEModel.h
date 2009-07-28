@@ -70,6 +70,8 @@ protected:
 	afx_msg void ZoomTo(LPDISPATCH mgaFCOs);
 	afx_msg void Scroll(long bar, long scroll);
 	afx_msg HRESULT DumpModelGeometryXML(LPCTSTR filePath);
+	afx_msg CString GetCurrentAspect(void);
+	afx_msg void SetCurrentAspect(const CString& aspectName);
 
 	DECLARE_DISPATCH_MAP()
 	DECLARE_INTERFACE_MAP()
@@ -96,6 +98,8 @@ protected:
 		STDMETHOD(ZoomTo)(THIS_ IMgaFCOs* mgaFCOs);
 		STDMETHOD(Scroll)(THIS_ bar_enum bar, scroll_enum scroll);
 		STDMETHOD(DumpModelGeometryXML)(THIS_ BSTR filePath);
+		STDMETHOD(GetCurrentAspect)(THIS_ BSTR* aspectName);
+		STDMETHOD(SetCurrentAspect)(THIS_ BSTR aspectName);
 	END_DUAL_INTERFACE_PART(Dual)
 
 	

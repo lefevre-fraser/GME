@@ -271,8 +271,13 @@ interface IGMEOLEIt : IDispatch // the current/active opened view (model)
 	HRESULT GetSelectedFCOs([out, retval] IMgaFCOs** selected_fcos);
 
 
+	[helpstring("gets the current aspect of this view (opened model)")]
+	HRESULT GetCurrentAspect([out, retval] BSTR* aspectName);
+	[helpstring("sets the current aspect to the given aspect in this view (opened model)")]
+	HRESULT SetCurrentAspect([in] BSTR aspectName);
 	[helpstring("switches to the next aspect of this view (opened model)")]
 	HRESULT NextAspect();
+	[helpstring("switches to the previous aspect of this view (opened model)")]
 	HRESULT PrevAspect();
 
 	[helpstring("makes the next (if any) view (opened model) the active view ")]
@@ -314,6 +319,8 @@ interface IGMEOLEModel : IDispatch // actually it corresponds to a view
 	[id(17)] HRESULT ZoomTo([in] IMgaFCOs* mgaFCOs); // for open models only
 	[id(18)] HRESULT Scroll([in] bar_enum, [in] scroll_enum); // for opened models only
 	[id(19)] HRESULT DumpModelGeometryXML([in] BSTR filePath);
+	[id(20)] HRESULT GetCurrentAspect([out, retval] BSTR* aspectName);
+	[id(21)] HRESULT SetCurrentAspect([in] BSTR aspectName);
 
 };
 

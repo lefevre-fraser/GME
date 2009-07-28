@@ -682,10 +682,12 @@ BEGIN_DISPATCH_MAP(CGMEOLEIt, CCmdTarget)
 	DISP_FUNCTION(CGMEOLEIt, "SetSelectedFCOs", SetSelectedFCOs, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION(CGMEOLEIt, "GetSelectedFCOs", GetSelectedFCOs, VT_DISPATCH, VTS_NONE)
 
-	DISP_FUNCTION(CGMEOLEIt, "NextAspect", NextAspect, VT_EMPTY, VTS_NONE )
-	DISP_FUNCTION(CGMEOLEIt, "PrevAspect", PrevAspect, VT_EMPTY, VTS_NONE )
-	DISP_FUNCTION(CGMEOLEIt, "Next", Next, VT_EMPTY, VTS_NONE )
-	DISP_FUNCTION(CGMEOLEIt, "Prev", Prev, VT_EMPTY, VTS_NONE )
+	DISP_FUNCTION(CGMEOLEIt, "GetCurrentAspect", GetCurrentAspect, VT_HRESULT, VTS_BSTR)
+	DISP_FUNCTION(CGMEOLEIt, "SetCurrentAspect", SetCurrentAspect, VT_HRESULT, VTS_BSTR)
+	DISP_FUNCTION(CGMEOLEIt, "NextAspect", NextAspect, VT_EMPTY, VTS_NONE)
+	DISP_FUNCTION(CGMEOLEIt, "PrevAspect", PrevAspect, VT_EMPTY, VTS_NONE)
+	DISP_FUNCTION(CGMEOLEIt, "Next", Next, VT_EMPTY, VTS_NONE)
+	DISP_FUNCTION(CGMEOLEIt, "Prev", Prev, VT_EMPTY, VTS_NONE)
 	DISP_FUNCTION(CGMEOLEIt, "Position", Position, VT_EMPTY, VTS_BSTR VTS_BSTR VTS_I4 VTS_I4)
 	DISP_FUNCTION(CGMEOLEIt, "PositionFCO", PositionFCO, VT_EMPTY, VTS_DISPATCH VTS_BSTR VTS_I4 VTS_I4)
 
@@ -2788,6 +2790,25 @@ void CGMEOLEIt::moveAspect( int dir)
 	m_theView->ChangeAspect( ca);
 
 }
+
+CString CGMEOLEIt::GetCurrentAspect(void) 
+{
+	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GetCurrentAspect()\r\n");
+
+	PRECONDITION_VALID_MODEL
+
+	return m_theView->GetCurrentAspectName();
+}
+
+void CGMEOLEIt::SetCurrentAspect(const CString& aspectName) 
+{
+	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SetCurrentAspect()\r\n");
+
+	PRECONDITION_VALID_MODEL
+
+	m_theView->ChangeAspect(aspectName);
+}
+
 void CGMEOLEIt::NextAspect( )
 {
 	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::NextAspect()\r\n");
@@ -3721,6 +3742,31 @@ STDMETHODIMP CGMEOLEIt::XDual::GetSelectedFCOs(THIS_ IMgaFCOs** selected_fcos)
 		lpDisp->QueryInterface(IID_IMgaFCOs, (LPVOID*)selected_fcos);
 
 		return NOERROR;
+	}
+	CATCH_ALL_DUAL
+}
+
+STDMETHODIMP CGMEOLEIt::XDual::GetCurrentAspect(THIS_ BSTR* aspectName)
+{
+	METHOD_PROLOGUE(CGMEOLEIt, Dual)
+
+	TRY_DUAL(IID_IGMEOLEIt)
+	{
+		CComBSTR string_asp = pThis->GetCurrentAspect();
+		*aspectName = string_asp.Detach();
+		return NOERROR;
+	}
+	CATCH_ALL_DUAL
+}
+
+STDMETHODIMP CGMEOLEIt::XDual::SetCurrentAspect(THIS_ BSTR aspectName)
+{
+	METHOD_PROLOGUE(CGMEOLEIt, Dual)
+
+	TRY_DUAL(IID_IGMEOLEIt)
+	{
+		pThis->SetCurrentAspect(CString(aspectName));
+		return S_OK;
 	}
 	CATCH_ALL_DUAL
 }

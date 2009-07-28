@@ -304,6 +304,7 @@ public:
 	void					ChangeAspect(CString aspName, bool p_eraseStack = true);
 	void					ChangeAspect(int ind);
 	CString&				GetAspectName(int ind);
+	CString&				GetCurrentAspectName(void);
 	void					SetName();
 	void					RetrievePath();
 	void					SetBgColor();

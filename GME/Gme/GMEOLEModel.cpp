@@ -87,6 +87,8 @@ BEGIN_DISPATCH_MAP(CGMEOLEModel, CCmdTarget)
 	DISP_FUNCTION(CGMEOLEModel, "ZoomTo", ZoomTo, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION(CGMEOLEModel, "Scroll", Scroll, VT_EMPTY, VTS_I2 VTS_I2)
 	DISP_FUNCTION(CGMEOLEModel, "DumpModelGeometryXML", DumpModelGeometryXML, VT_HRESULT, VTS_BSTR)
+	DISP_FUNCTION(CGMEOLEModel, "GetCurrentAspect", GetCurrentAspect, VT_HRESULT, VTS_BSTR)
+	DISP_FUNCTION(CGMEOLEModel, "SetCurrentAspect", SetCurrentAspect, VT_HRESULT, VTS_BSTR)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
@@ -495,6 +497,24 @@ HRESULT CGMEOLEModel::DumpModelGeometryXML(LPCTSTR filePath)
 	return m_view->DumpModelGeometryXML(filePath);
 }
 
+CString CGMEOLEModel::GetCurrentAspect(void) 
+{
+	CGMEEventLogger::LogGMEEvent("CGMEOLEModel::GetCurrentAspect()\r\n");
+
+	PRECONDITION_VALID_MODEL
+
+	return m_view->GetCurrentAspectName();
+}
+
+void CGMEOLEModel::SetCurrentAspect(const CString& aspectName) 
+{
+	CGMEEventLogger::LogGMEEvent("CGMEOLEModel::SetCurrentAspect()\r\n");
+
+	PRECONDITION_VALID_MODEL
+
+	m_view->ChangeAspect(aspectName);
+}
+
 DELEGATE_DUAL_INTERFACE(CGMEOLEModel, Dual)
 
 // Implement ISupportErrorInfo to indicate we support the
@@ -762,3 +782,27 @@ STDMETHODIMP CGMEOLEModel::XDual::DumpModelGeometryXML(BSTR filePath)
 	CATCH_ALL_DUAL
 }
 
+STDMETHODIMP CGMEOLEModel::XDual::GetCurrentAspect(BSTR* aspectName)
+{
+	METHOD_PROLOGUE(CGMEOLEModel, Dual)
+
+	TRY_DUAL(IID_IGMEOLEModel)
+	{
+		CComBSTR string_asp = pThis->GetCurrentAspect();
+		*aspectName = string_asp.Detach();
+		return NOERROR;
+	}
+	CATCH_ALL_DUAL
+}
+
+STDMETHODIMP CGMEOLEModel::XDual::SetCurrentAspect(BSTR aspectName)
+{
+	METHOD_PROLOGUE(CGMEOLEModel, Dual)
+
+	TRY_DUAL(IID_IGMEOLEModel)
+	{
+		pThis->SetCurrentAspect(CString(aspectName));
+		return S_OK;
+	}
+	CATCH_ALL_DUAL
+}

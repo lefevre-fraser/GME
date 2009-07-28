@@ -4238,11 +4238,16 @@ void CGMEView::ChangeAspect(int ind)
 	ChangeAspect(am->name);
 }
 
-CString &CGMEView::GetAspectName(int ind)
+CString& CGMEView::GetAspectName(int ind)
 {
 	CGuiMetaAspect *am = guiMeta->FindAspect(ind);
 	VERIFY(am);
 	return am->name;
+}
+
+CString& CGMEView::GetCurrentAspectName(void)
+{
+	return GetAspectName(currentAspect->index);
 }
 
 CGMEView *CGMEView::GetActiveView()

@@ -96,7 +96,7 @@ protected:
 	afx_msg void HideSetMembers();
 	afx_msg void Zoom(long percent);
 	afx_msg void ZoomTo(LPDISPATCH mgaFCOs);
-	afx_msg void Scroll(long bar, long scroll); 
+	afx_msg void Scroll(long bar, long scroll);
 	afx_msg HRESULT DumpModelGeometryXML(LPCTSTR filePath);
 
 	afx_msg BOOL GetValid();
@@ -157,6 +157,8 @@ protected:
 	afx_msg void SetSelectedFCOs( LPDISPATCH);
 	afx_msg LPDISPATCH GetSelectedFCOs( );
 
+	afx_msg CString GetCurrentAspect(void);
+	afx_msg void SetCurrentAspect(const CString& aspectName);
 	afx_msg void NextAspect( );
 	afx_msg void PrevAspect( );
 	afx_msg void Next( );
@@ -243,6 +245,8 @@ protected:
 		STDMETHOD(SetSelectedFCOs)(THIS_ IMgaFCOs* fcos_to_select);
 		STDMETHOD(GetSelectedFCOs)(THIS_ IMgaFCOs** selected_fcos);
 
+		STDMETHOD(GetCurrentAspect)(THIS_ BSTR* aspectName);
+		STDMETHOD(SetCurrentAspect)(THIS_ BSTR aspectName);
 		STDMETHOD(NextAspect)(THIS);
 		STDMETHOD(PrevAspect)(THIS);
 		STDMETHOD(Next)(THIS);
