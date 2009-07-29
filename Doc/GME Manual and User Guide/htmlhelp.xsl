@@ -8,5 +8,6 @@
 <xsl:param name="chunk.section.depth">8</xsl:param>
 <xsl:param name="chunk.first.sections">1</xsl:param>
 <xsl:param name="base.dirXXX">htmlhelp/</xsl:param>
+<xsl:param name="use.id.as.filename">1</xsl:param>
 
 </xsl:stylesheet>  
