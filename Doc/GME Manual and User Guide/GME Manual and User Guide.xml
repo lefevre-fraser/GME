@@ -35,23 +35,119 @@
     <title>What is new</title>
 
     <section>
-      <title>What is new in version 9.0</title>
+      <title>What is new in version 9</title>
 
       <para>Among the significant improvements in this version
       are:<itemizedlist>
           <listitem>
-            <para>TBD</para>
+            <para>User interface:<itemizedlist>
+                <listitem>
+                  <para>Tab-based document management</para>
+                </listitem>
+
+                <listitem>
+                  <para>New workspace look-and-feel</para>
+                </listitem>
+
+                <listitem>
+                  <para>New decorator features:</para>
+                </listitem>
+
+                <listitem>
+                  <para>In place editing</para>
+                </listitem>
+
+                <listitem>
+                  <para>Resizable boxes</para>
+                </listitem>
+
+                <listitem>
+                  <para>Vectorial shapes (box, rounded corner box, triangle,
+                  diamond, constraint sign)</para>
+                </listitem>
+
+                <listitem>
+                  <para>Shadow casting and gradient fill of boxes and
+                  vectorial shapes</para>
+                </listitem>
+
+                <listitem>
+                  <para>Anti aliased fonts and edges</para>
+                </listitem>
+
+                <listitem>
+                  <para>Improved Search plugin</para>
+                </listitem>
+
+                <listitem>
+                  <para>Modifiable connection edges in case of auto routed
+                  connections</para>
+                </listitem>
+
+                <listitem>
+                  <para>Possibility to freely define connection lines</para>
+                </listitem>
+              </itemizedlist></para>
           </listitem>
-        </itemizedlist></para>
-    </section>
 
-    <section>
-      <title>What is new in version 8.0</title>
-
-      <para>Among the significant improvements in this version
-      are:<itemizedlist>
           <listitem>
-            <para>TBD</para>
+            <para>Development:<itemizedlist>
+                <listitem>
+                  <para>New decorator interface, decorator development
+                  supported by Visual Studio Wizard</para>
+                </listitem>
+
+                <listitem>
+                  <para>New class library for decorator development</para>
+                </listitem>
+
+                <listitem>
+                  <para>Interpreter development is supported by Visual Studio
+                  Wizards</para>
+                </listitem>
+
+                <listitem>
+                  <para>Console support for interpreters</para>
+                </listitem>
+              </itemizedlist></para>
+          </listitem>
+
+          <listitem>
+            <para>Paradigms:<itemizedlist>
+                <listitem>
+                  <para>New UML and Meta decorators</para>
+                </listitem>
+
+                <listitem>
+                  <para>New Box (default) decorator</para>
+                </listitem>
+              </itemizedlist></para>
+          </listitem>
+
+          <listitem>
+            <para>Other:<itemizedlist>
+                <listitem>
+                  <para>New installer based on WiX toolset</para>
+                </listitem>
+
+                <listitem>
+                  <para>Included SSH tunnel (GMEplink), default used by the
+                  multiuser backend (can be overridden in the standard
+                  subversion config files)</para>
+                </listitem>
+
+                <listitem>
+                  <para>Improved performance with multiuser/subversion locking
+                  (single transaction for all files to be "checked
+                  out")</para>
+                </listitem>
+
+                <listitem>
+                  <para>Subversion client library is updated to 1.6.1 (NOTE:
+                  working directory format is compatible with 1.6.x clients
+                  only)</para>
+                </listitem>
+              </itemizedlist></para>
           </listitem>
         </itemizedlist></para>
     </section>
@@ -302,8 +398,8 @@
           </listitem>
 
           <listitem>
-            <para>Mailing list for GME users. Sign up at
-            http://list.isis.vanderbilt.edu/mailman/listinfo/gme-users</para>
+            <para>Mailing list for GME users. Sign up at <ulink
+            url="http://list.isis.vanderbilt.edu/mailman/listinfo/gme-users">http://list.isis.vanderbilt.edu/mailman/listinfo/gme-users</ulink></para>
           </listitem>
 
           <listitem>
@@ -847,8 +943,8 @@
         model.</para>
 
         <figure>
-          <title>A primitive model SubGeneratorC containing four atoms
-          <code>SubGeneratorC</code></title>
+          <title>A primitive model <code>SubGeneratorC</code> containing four
+          atoms</title>
 
           <mediaobject>
             <imageobject>
@@ -909,8 +1005,8 @@
           </itemizedlist></para>
 
         <figure>
-          <title>Compound model SuperGen containing several Generator
-          models<code>SuperGen</code><code>Generator</code></title>
+          <title>Compound model <code>SuperGen</code> containing several
+          <code>Generator</code> models</title>
 
           <mediaobject>
             <imageobject>
@@ -1173,7 +1269,7 @@
 
         <figure>
           <title>The attribute box associated with an atom called
-          y.<code>y</code></title>
+          <code>y</code></title>
 
           <mediaobject>
             <imageobject>
@@ -2474,7 +2570,7 @@
     </section>
 
     <section>
-      <title>AutoRouter Feauters</title>
+      <title>AutoRouter Features</title>
 
       <para>The AutoRouter determines a connection's position between model
       elements. However, sometimes the user wishes to specify the position.
@@ -2513,22 +2609,22 @@
             </listitem>
 
             <listitem>
-              <para>GME’s global options</para>
+              <para>GME's global options</para>
             </listitem>
           </itemizedlist></para>
 
         <section>
-          <title>GME’s default routing policy</title>
+          <title>GME's default routing policy</title>
 
           <para>If a connection doesn't have a setting on the connection or
-          parent level, GME’s default routing policy determines how the
+          parent level, GME's default routing policy determines how the
           connection should be treated. With model level and global settings,
           it possible to fully customize every connection in a model
           (fulfilling the second need). You can turn off the default auto
           routing in the “<guimenu moreinfo="none">Tools</guimenu> |
           <guimenuitem moreinfo="none">Options…</guimenuitem>” menu “<guilabel
-          moreinfo="none">Autorouter</guilabel>” groupbox's first checkbox
-          (see <xref linkend="fig-gme-autorouting-default" />). Just as other
+          moreinfo="none">Autorouter</guilabel>” group's first checkbox (see
+          <xref linkend="fig-gme-autorouting-default" />). Just as other
           settings in this dialog, this setting is stored in the Windows
           registry, and it is valid for the current installation of GME and
           the current user. If the model is transferred to another machine,
@@ -2557,9 +2653,9 @@
           <para>If somebody turns off the default auto routing policy, and the
           model doesn't contain specific policies for connections, all of the
           routes will be fully customizable. Turning off the autorouting
-          settings on GME’s global level or model level indicate an automatic
+          settings on GME's global level or model level indicate an automatic
           conversion routine, which takes the auto routed points and loads
-          these calculated points as custom points into connection’s
+          these calculated points as custom points into connection's
           customization data. As a result, after the conversion you won't just
           have a simple line which connects the start point and the end point,
           but the customization operation can be started from a state where a
@@ -2574,7 +2670,7 @@
           moreinfo="none">ObjectInspector</guilabel>'s <guilabel
           moreinfo="none">Preferences</guilabel> page to <code>false</code>.
           In this case the auto routing logic no longer will take care of the
-          connection; it won’t see this connection at all. Similarly, if the
+          connection; it won't see this connection at all. Similarly, if the
           value <code>true</code> is set, the particular connection will join
           the auto-routing scheme again. Switching back and forth between the
           settings will preserve the customization data for both types of
@@ -2601,7 +2697,7 @@
         <section>
           <title>Switching routing policy on per model basis</title>
 
-          <para>On the model’s <guilabel
+          <para>On the model's <guilabel
           moreinfo="none">Preferences</guilabel> page in <guilabel
           moreinfo="none">ObjectInspector</guilabel>, you can find a setting
           similar to individual connections, but it is under the Auto Router
@@ -2973,9 +3069,9 @@
 
       <para>The first object <code>gme</code>, represents the running GME
       application instance and implements the <code>IGMEOLEApp</code>
-      interface as defined in the Gme.idl file. This interface allows the user
-      to access various user interface elements of the modeling environment
-      i.e. panels like <code>ActiveBrowser</code> and
+      interface as defined in the <filename>Gme.idl</filename> file. This
+      interface allows the user to access various user interface elements of
+      the modeling environment i.e. panels like <code>ActiveBrowser</code> and
       <code>ObjectBrowser</code>, or to execute project related commands like:
       invoking an interpreter on the currently opened model (if any).</para>
 
@@ -2993,8 +3089,9 @@ gme.RunComponent('Mga.Interpreter.ComponentC') </programlisting>
       <para>The lifetime of the gme object is the same as that of the
       application. The <code>project</code> variable is valid while a project
       is opened in the main application window. This variable implements the
-      <code>IMgaProject</code> interface defined in Mga.idl. For accessing the
-      inner elements inside an MGA project transactions must be used.</para>
+      <code>IMgaProject</code> interface defined in
+      <filename>Mga.idl</filename>. For accessing the inner elements inside an
+      MGA project transactions must be used.</para>
 
       <para><blockquote>
           <programlisting format="linespecific">gme.OpenProject('MGA=f:\\sf-sample.mga') 
@@ -6043,8 +6140,8 @@ MGA.Decorator.MetaDecorator showattributes=false, showabstract=true</programlist
           <term>Return type</term>
 
           <listitem>
-            <para>Text field that specifies the type a Constraint
-            Function.returns.</para>
+            <para>Text field that specifies the type a Constraint Function
+            returns.</para>
 
             <para><blockquote>
                 <para>Contained in –
@@ -6629,8 +6726,8 @@ public:
               <para><code>NEW_BON_INVOKE</code>: if <code>#defined</code> in
               <filename moreinfo="none">Component.h</filename>, indicates that
               the new BON is being used. If it is not defined (e.g. if the
-              Component.h from an old BON is being used) the framework works
-              in compatibility mode.</para>
+              <filename>Component.h</filename> from an old BON is being used)
+              the framework works in compatibility mode.</para>
             </listitem>
 
             <listitem>
@@ -6672,8 +6769,9 @@ public:
         definition into the old Component.h file.</para>
 
         <para>Plug-Ins are paradigm-independent components. The example Noname
-        plug-in displays a message. The implementation is in the component.cpp
-        file shown below: <programlisting format="linespecific">#include "stdafx.h" 
+        plug-in displays a message. The implementation is in the
+        <filename>component.cpp</filename> file shown below: <programlisting
+        format="linespecific">#include "stdafx.h" 
 #include "Component.h" 
  
 void CComponent:: InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, 
@@ -6830,9 +6928,9 @@ public:
         <code>GetAtoms</code>, <code>GetAtomReferences</code> and
         <code>GetModelReferences</code>, <code>GetSets()</code> functions work
         the same way except that a part name must be supplied to them. The
-        GetConnections method return the list of the kind of connections that
-        was requested. These are the connections that are visible inside the
-        given model.</para>
+        <code>GetConnections</code> method return the list of the kind of
+        connections that was requested. These are the connections that are
+        visible inside the given model.</para>
 
         <para>The <code>GetAspectNames</code> function return the list of
         names of aspects the current model has. This helps in writing
@@ -6985,7 +7083,7 @@ void CComponent::ScanModels(CBuilderModel *model, CString fName)
       <section>
         <title>Extending the Component Interface</title>
 
-        <para>The previous example used the build-in classes only. The
+        <para>The previous example used the built-in classes only. The
         component writer can extend the component interface by her own
         classes. In order for the interface to be able to create the builder
         object network instantiating the new added classes before the user
@@ -7248,7 +7346,7 @@ void CCompoundBuilder::Scan(CString foldName)
               indirectly all metaobjects (i.e. all MON classes have the method
               <code>project()</code> to access the project), Project offers
               methods with which the user can obtain all instances of a
-              specific metakind or a meta-relation and she can find the
+              specific metakind or a meta-relation and he can find the
               <interfacename>MetaObject</interfacename> correspondent to a
               <code>MetaReferenceID</code>, to the name of a metakind or to
               name of an Aspect.</para>
@@ -7712,7 +7810,7 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
         <para>So that the user can write an interpreter which is simple enough
         to create and modify, the BON2 provides an easy-to-use base. The
         generic implementation (i.e. <code>BON::FCO</code> and
-        <code>BON::FCOImpl</code>) may be extended to accomodate a specific
+        <code>BON::FCOImpl</code>) may be extended to accommodate a specific
         paradigm.</para>
 
         <para>The extendable classes are <code>BON::FCO</code>,
@@ -8478,14 +8576,14 @@ public:
 
         <para>Container kinds, like Models, Sets and Folders, will have
         specialized get methods returning the contained roles (in case of
-        models) and kinds (in case of sets, folders). </para>
+        models) and kinds (in case of sets, folders).</para>
 
         <para>The <code>Compound</code> class’ <code>getParts()</code> method
-        returns a set of <code>Processing</code> instances, so users don’t
+        returns a set of <code>Processing</code> instances, so users don't
         have to deal with the conversion from <code>BON::Model</code> to
         <code>SF_BON::Processing</code> type. The method name is based on the
         role name “<code>Parts</code>” (see containment relation between
-        <code>Compound</code> and <code>Processing</code>). </para>
+        <code>Compound</code> and <code>Processing</code>).</para>
 
         <para>The <code>Processing</code> class has three get methods which
         are related: two get methods (<code>getInputSignals</code>,
@@ -8591,7 +8689,7 @@ public:
         classes generated for a paradigm (i.e. the hardware definition part
         may be insignificant for implementer, since her interpreter is
         concentrating on the dataflow part). The “<guilabel>Select classes to
-        extend</guilabel>” dialogue that appears during generation is intended
+        extend</guilabel>” dialog that appears during generation is intended
         for such cases. It lists all the classes, which will be generated by
         default. If an object kind is selected for extension then its
         ancestors are selected too, and if it is deselected then its
@@ -8626,9 +8724,9 @@ public:
 
         <para>Since FCO (as a stereotype) objects are extended too, and may
         not be instantiated (at modeling time no abstract FCO object is
-        visible) some limitations exist, which are enforced by the dialogue.
-        If an object which inherits directly from an FCO is deselected, then
-        not only the objects below it, but the whole inheritance tree is
+        visible) some limitations exist, which are enforced by the dialog. If
+        an object which inherits directly from an FCO is deselected, then not
+        only the objects below it, but the whole inheritance tree is
         deselected.</para>
 
         <para>If an FCO object is selected then not only its ancestors, but
