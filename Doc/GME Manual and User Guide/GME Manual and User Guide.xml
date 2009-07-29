@@ -2991,7 +2991,17 @@
         searched can be designated in <guilabel>Search For</guilabel> options
         group. You can restrict your search to a <emphasis>Model</emphasis>,
         <emphasis>Atom</emphasis>, <emphasis>Set</emphasis>,
-        <emphasis>Reference</emphasis> or a combination of them.</para>
+        <emphasis>Reference</emphasis>, <emphasis>Connection</emphasis> or a
+        combination of them. Also included is a special type of search for
+        <code>NULL</code> references or references to a particular object.
+        When you check the <guilabel>Special</guilabel> checkbox, other
+        checkboxes in the group will be disabled. When you hit search, it will
+        start looking for <code>NULL</code> references in the given scope
+        satisfying the given criteria. Clicking on the object in the result
+        list will set it as the new object whose references are to be searched
+        for. After you click an object in the results and do <guilabel>Special
+        Search</guilabel>, the particular object's references will be looked
+        for.</para>
       </section>
 
       <section>
