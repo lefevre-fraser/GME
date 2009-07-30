@@ -24,15 +24,15 @@
 #define GME_UMAN_FOLDER				"themodelbrowser.htm"
 */
 
-#define GME_UMAN_HOME				"Doc\\GME Manual and User Guide.chm::/htm/"
-#define GME_UMAN_CONTENTS			"helpcontents1.htm"
-#define GME_UMAN_MODEL				"models.htm"
-#define GME_UMAN_ATOM				"atoms.htm"
-#define GME_UMAN_REFERENCE			"references.htm"
-#define GME_UMAN_SET				"sets.htm"
-#define GME_UMAN_CONNECTION			"connectionsandlinks.htm"
+#define GME_UMAN_HOME				"Doc/GME Manual and User Guide.chm::/"
+#define GME_UMAN_CONTENTS			"index.html"
+#define GME_UMAN_MODEL				"models.html"
+#define GME_UMAN_ATOM				"atoms.html"
+#define GME_UMAN_REFERENCE			"references.html"
+#define GME_UMAN_SET				"sets.html"
+#define GME_UMAN_CONNECTION			"connectionsandlinks.html"
 #pragma bookmark ( change when folders.htm exists for documentation )
-#define GME_UMAN_FOLDER				"themodelbrowser.htm"
+#define GME_UMAN_FOLDER				"themodelbrowser.html"
 
 
 // --------------------------- CMgaLauncher
@@ -524,7 +524,7 @@ HINSTANCE GotoURL(LPCTSTR url, int showcmd)
 }
 
 
-STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject * obj)
+STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -535,12 +535,11 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject * obj)
 		CString url;
 
 		if (obj != NULL) {
-			if	(
-				FAILED(obj->QueryInterface(&imf)) &&
-				FAILED(obj->QueryInterface(&imfco))
-				)
-
+			if (FAILED(obj->QueryInterface(&imf)) &&
+				FAILED(obj->QueryInterface(&imfco)))
+			{
 				COMTHROW(E_INVALIDARG);
+			}
 
 			CComBSTR bstrVal;
 			CComBSTR bstr = "help";
@@ -556,17 +555,22 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject * obj)
 			COMTHROW(obj->get_Name(PutOut(name)));
 		}
 
-		if(!url.IsEmpty())
-				GotoURL(url,SW_SHOWMAXIMIZED);
-		else {
-			if (obj == NULL) {
+		if (!url.IsEmpty())
+		{
+			GotoURL(url,SW_SHOWMAXIMIZED);
+		}
+		else
+		{
+			if (obj == NULL)
+			{
 				url = GME_UMAN_CONTENTS;
 			} 
-			else {
+			else
+			{
 				objtype_enum obj_t;
 				COMTHROW( obj->get_ObjType(&obj_t) );
 
-				switch(obj_t) {
+				switch (obj_t) {
 
 					case OBJTYPE_MODEL : {
 						url = GME_UMAN_MODEL;
@@ -595,25 +599,38 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject * obj)
 				}
 			}
 
-			if( !url.IsEmpty() ) {
-				char* gme_root = NULL;
-				bool hasSlashAtTheEnd = false;
-				// Uncomment the following lines if you want to use an absolute path based on the GME_ROOT environment
-				// variable, instead of a relative path
-				//gme_root = getenv("GME_ROOT");
-				//long len = strlen(gme_root);
-				//hasSlashAtTheEnd = (gme_root[len - 1] == '\\' || gme_root[len - 1] == '/');
-				CString gmeRoot = gme_root == NULL ? "..\\" : (hasSlashAtTheEnd ? gme_root : CString(gme_root) + '\\');
-				url = gmeRoot + GME_UMAN_HOME + url;
+			if (!url.IsEmpty())
+			{
+				CString gmeRoot("../");
+				// Use an absolute path based on the GME_ROOT environment variable, instead of a relative path if we can
+				char* gme_root_env = NULL;
+				gme_root_env = getenv("GME_ROOT");
+				if (gme_root_env) {
+					long len = strlen(gme_root_env);
+					bool hasSlashAtTheEnd = (gme_root_env[len - 1] == '\\' || gme_root_env[len - 1] == '/');
+					gmeRoot = gme_root_env;
+					if (!hasSlashAtTheEnd)
+						gmeRoot = gmeRoot + "/";
+				}
+				gmeRoot.Replace("\\", "/");
+				CString fullUrl = CString("ms-its:") + gmeRoot + GME_UMAN_HOME + url;
 				CWnd* mainWnd = AfxGetMainWnd();
 				HWND hwndCaller = NULL;
 				if (mainWnd != NULL)
 					hwndCaller = mainWnd->m_hWnd;
-				HWND helpWnd = ::HtmlHelp(hwndCaller, url, HH_DISPLAY_TOPIC, 0);
-				ASSERT(helpWnd != NULL);
+				HWND helpWnd = NULL;
+				helpWnd = ::HtmlHelp(hwndCaller, fullUrl, HH_DISPLAY_TOPIC, 0);
+				if (helpWnd == NULL && url != GME_UMAN_CONTENTS) {
+					fullUrl = CString("ms-its:") + gmeRoot + GME_UMAN_HOME + GME_UMAN_CONTENTS;
+					helpWnd = ::HtmlHelp(hwndCaller, fullUrl, HH_DISPLAY_TOPIC, 0);
+				}
+				if (helpWnd == NULL)
+					AfxMessageBox("Couldn't find help file or help topic: " + fullUrl, MB_OK | MB_ICONSTOP);
 			}
 			else
-				AfxMessageBox("No default help is available for selection!",MB_OK | MB_ICONSTOP);
+			{
+				AfxMessageBox("No default help is available for selection!", MB_OK | MB_ICONSTOP);
+			}
 		}
 	}
 	COMCATCH(;)
