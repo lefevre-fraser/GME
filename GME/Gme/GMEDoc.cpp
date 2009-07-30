@@ -520,6 +520,11 @@ CGMEChildFrame
 	return 0;
 }
 
+void CGMEDoc::DoOnViewRefresh(void)
+{
+	OnViewRefresh();
+}
+
 void CGMEDoc::InvalidateAllViews(bool thorough,bool /*fullAutoRoute*/)
 {
 	POSITION pos = GetFirstViewPosition();
@@ -977,7 +982,7 @@ BOOL CGMEDoc::OnNewDocument()
 	return TRUE;
 }
 
-BOOL CGMEDoc::OnOpenDocument(LPCTSTR /*lpszPathName*/) 
+BOOL CGMEDoc::OnOpenDocument(LPCTSTR /*lpszPathName*/)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnOpenDocument\r\n");
 	if (!CDocument::OnNewDocument())
@@ -989,7 +994,7 @@ BOOL CGMEDoc::OnOpenDocument(LPCTSTR /*lpszPathName*/)
 	return TRUE;
 }
 
-void CGMEDoc::OnViewRefresh() 
+void CGMEDoc::OnViewRefresh()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnViewRefresh\r\n");
 	ResetAllViews();

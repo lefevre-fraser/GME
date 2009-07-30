@@ -773,7 +773,7 @@ BOOL CMainFrame::InitStatusBar(UINT *pIndicators, int nSize, int nSeconds)
 }
 
 
-void CMainFrame::OnEditSearch() 
+void CMainFrame::OnEditSearch()
 {
 	if(!m_search.IsVisible())
 	{
@@ -794,7 +794,7 @@ void CMainFrame::OnEditSearch()
 	// to a focused searchbox
 }
 
-void CMainFrame::OnUpdateEditSearch(CCmdUI* pCmdUI) 
+void CMainFrame::OnUpdateEditSearch(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(
 		(CGMEDoc::theInstance != 0) &&
@@ -898,14 +898,14 @@ BOOL CMainFrame::VerifyBarState(LPCTSTR lpszProfileName)
     return TRUE;
 }
 
-BOOL CMainFrame::DestroyWindow() 
-{	
+BOOL CMainFrame::DestroyWindow()
+{
 	return CMDIFrameWndEx::DestroyWindow();
 }
 
 void CMainFrame::ShowObjectInspector()
 {
-    ShowPane(&m_objectInspector, TRUE, FALSE, TRUE);
+	ShowPane(&m_objectInspector, TRUE, FALSE, TRUE);
 }
 
 void CMainFrame::ShowFindDlg()
@@ -919,7 +919,7 @@ void CMainFrame::HideFindDlg()
 	m_search.ShowWindow( SW_HIDE);
 }
 
-void CMainFrame::OnTimer(UINT nIDEvent) 
+void CMainFrame::OnTimer(UINT nIDEvent)
 {
 	if (nIDEvent == GME_AUTOSAVE_EVENT_ID) {
 		theApp.Autosave();

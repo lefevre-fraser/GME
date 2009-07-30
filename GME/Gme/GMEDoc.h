@@ -46,6 +46,7 @@ public:
 #else
 	CGMEChildFrame *FindView(CComPtr<IMgaModel> model);
 #endif
+	void DoOnViewRefresh(void);
 
 	class Historian
 	{

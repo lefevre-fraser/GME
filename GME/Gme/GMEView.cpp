@@ -293,6 +293,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_RBUTTONDOWN()
 	ON_WM_LBUTTONDBLCLK()
+	ON_WM_APPCOMMAND()
 	ON_COMMAND(ID_VIEW_PARENT, OnViewParent)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PARENT, OnUpdateViewParent)
 	ON_COMMAND(ID_VIEW_GRID, OnViewGrid)
@@ -5506,7 +5507,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 			{
 				CGuiAnnotator *annotation = selection ? NULL : FindAnnotation(local);
 
-	 	 	 	POSITION alreadySelected = 0;
+				POSITION alreadySelected = 0;
 				if(selection != 0) {
 					alreadySelected = selected.Find(selection);
 					if(!(nFlags & MK_CONTROL)) {
@@ -5620,7 +5621,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				submenu->AppendMenu(MF_POPUP, (UINT_PTR)((HMENU)crashTestMenu), "Debug");
 #endif
 				submenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
-					   							global.x,global.y,GetParent());
+												global.x,global.y,GetParent());
 				currentAspect->ResetContextMenu(submenu);
 			}
 		}
@@ -5653,7 +5654,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				CMenu *submenu = menu.GetSubMenu(0);
 				currentAspect->InitContextMenu(submenu);
 				submenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
-					   							global.x,global.y,GetParent());
+												global.x,global.y,GetParent());
 				currentAspect->ResetContextMenu(submenu);
 			}
 		}
@@ -5663,6 +5664,51 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 	this->SendNow();
 }
 
+void CGMEView::OnAppCommand(CWnd* pWnd, UINT nCmd, UINT nDevice, UINT nKey)
+{
+	bool handled = true;
+	switch (nCmd) {
+		case APPCOMMAND_BROWSER_BACKWARD:
+			{
+				CGMEDoc* pDoc = GetDocument();
+				ASSERT_VALID(pDoc);
+				pDoc->back();
+			}
+			break;
+		case APPCOMMAND_BROWSER_FORWARD:
+			{
+				CGMEDoc* pDoc = GetDocument();
+				ASSERT_VALID(pDoc);
+				pDoc->forw();
+			}
+			break;
+		case APPCOMMAND_BROWSER_HOME:
+			{
+				CGMEDoc* pDoc = GetDocument();
+				ASSERT_VALID(pDoc);
+				pDoc->home();
+			}
+			break;
+		case APPCOMMAND_BROWSER_REFRESH:
+			{
+				CGMEDoc* pDoc = GetDocument();
+				ASSERT_VALID(pDoc);
+				pDoc->DoOnViewRefresh();
+			}
+			break;
+		case APPCOMMAND_BROWSER_SEARCH:
+			{
+				if (CMainFrame::theInstance != NULL)
+					CMainFrame::theInstance->ShowFindDlg();
+			}
+			break;
+		default:
+			handled = false;
+			break;
+	}
+	if (!handled)
+		CScrollZoomView::OnAppCommand(pWnd, nCmd, nDevice, nKey);
+}
 
 DROPEFFECT CGMEView::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeyState, CPoint point)
 {
