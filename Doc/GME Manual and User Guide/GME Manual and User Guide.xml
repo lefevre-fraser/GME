@@ -845,7 +845,7 @@
         <para>We now discuss the modeling components in greater detail.</para>
       </section>
 
-      <section>
+      <section id="models">
         <title>Models</title>
 
         <para>By model we mean an abstract object that represents something in
@@ -932,7 +932,7 @@
         generated rectangular icon with a 3D border.</para>
       </section>
 
-      <section>
+      <section id="atoms">
         <title>Atoms</title>
 
         <para><emphasis>Atoms</emphasis> (or <emphasis>atomic
@@ -1016,7 +1016,7 @@
         </figure>
       </section>
 
-      <section>
+      <section id="references">
         <title>References</title>
 
         <para><emphasis>References</emphasis> are parts that are similar in
@@ -1066,7 +1066,7 @@
         the referred-to model, but without 3D borders.</para>
       </section>
 
-      <section>
+      <section id="connectionsandlinks">
         <title>Connections and links</title>
 
         <para>Merely having parts in a model is not sufficient for creating
@@ -1136,7 +1136,7 @@
         indicate information flow between the models).</para>
       </section>
 
-      <section>
+      <section id="sets">
         <title>Sets</title>
 
         <para>Models containing objects and connections show a static system.
@@ -1486,7 +1486,7 @@
       "Folder" folders. Within these folders, we can add models Primitive and
       Compound. From these models, more parts can be added.</para>
 
-      <section>
+      <section id="themodelbrowser">
         <title>Model Browser navigation</title>
 
         <para>Arrow keys can navigate the selection in vertical directions.
