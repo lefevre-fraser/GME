@@ -16,6 +16,41 @@ class CSearchCtrl;
 /////////////////////////////////////////////////////////////////////////////
 // CSearchDlg dialog
 
+//struct used for sending information to sort function usd by List Control
+
+struct SortParam
+{
+    CListCtrl * listCtrl;
+    bool ascending;
+    int columnIndex;
+    SortParam(CListCtrl *listCtrl,int columnIndex, bool ascending)
+    {
+        this->listCtrl=listCtrl;
+        this->columnIndex=columnIndex;
+        this->ascending=ascending;
+    }
+};
+
+
+static int CALLBACK 
+ListItemCompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+{
+     // lParamSort contains a pointer to the sort parameters.
+
+   SortParam* sortParam = (SortParam*) lParamSort;
+   CListCtrl *pListCtrl=sortParam->listCtrl;
+
+   //get the 2 items to be compared
+   CString    strItem1 = pListCtrl->GetItemText(lParam1, sortParam->columnIndex);
+   CString    strItem2 = pListCtrl->GetItemText(lParam2, sortParam->columnIndex);
+
+   if(sortParam->ascending)
+       return strcmp(strItem1,strItem2);
+
+   return strcmp(strItem2, strItem1);
+}
+
+
 class CSearchDlg : public CDialog
 {
 // Construction
@@ -100,6 +135,9 @@ public:
     BOOL m_searchResults;
     int m_radioLogical;
 
+    //sort indicators for four result columns
+    bool ascending[4];
+
 private:
     //insert history to combobox
     void InsertHistory(CString string);
@@ -163,6 +201,7 @@ public:
     // reference static text ctrl
     CStatic m_stcRefCtrl;
     CButton m_chkConnCtrl;
+    afx_msg void OnLvnColumnclickListresults(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 //{{AFX_INSERT_LOCATION}}

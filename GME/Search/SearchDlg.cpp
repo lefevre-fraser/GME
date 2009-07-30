@@ -78,16 +78,11 @@ void CSearchDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Check(pDX, IDC_CHECKREF, m_chkRef);
     DDX_Check(pDX, IDC_CHECKSET, m_chkSet);
     DDX_Check(pDX, IDC_CHECK_CASESENS, m_chkMatchCase);
-    //DDX_ValidateInp(pDX, IDC_EDITNAME, m_edtNameFirst);
-    //DDX_ValidateInp(pDX, IDC_EDITKIND, m_edtKindNameFirst);
-    //DDX_ValidateInp(pDX, IDC_EDITROLE, m_edtRoleNameFirst);
-    //DDX_ValidateInp(pDX, IDC_EDITATTRNAME, m_edtAttributeFirst);
     DDX_Text(pDX, IDC_EDITNAME2, m_edtNameSecond);
     DDX_Text(pDX, IDC_EDITROLE2, m_edtRoleNameSecond);
     DDX_Text(pDX, IDC_EDITKIND2, m_edtKindNameSecond);
     DDX_Text(pDX, IDC_EDITATTRVALU2, m_edtAttributeSecond);
     DDX_Control(pDX, IDC_RADIOAND, m_logicalGrp);
-    //DDX_Control(pDX, IDC_PREV_SRCH, m_prevSearches);
     DDX_Radio(pDX, IDC_ENTIRESCOPE2, m_radioScope);
     DDX_Check(pDX, IDC_CHECK_RESULTS, m_searchResults);
     DDX_Radio(pDX, IDC_RADIOAND, m_radioLogical);
@@ -115,16 +110,21 @@ BEGIN_MESSAGE_MAP(CSearchDlg, CDialog)
     ON_WM_KEYDOWN()
     ON_NOTIFY(NM_DBLCLK, IDC_TREE_SEARCH_HISTORY, &CSearchDlg::OnNMDblclkTreeSearchHistory)
     ON_BN_CLICKED(IDC_CHECKSPLSEARCH, &CSearchDlg::OnCheckSplSearch)
+    ON_NOTIFY(LVN_COLUMNCLICK, IDC_LISTRESULTS, &CSearchDlg::OnLvnColumnclickListresults)
 END_MESSAGE_MAP()
 
 BOOL CSearchDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
 
-    m_lstResults.InsertColumn(1, "Object", LVCFMT_LEFT, 100, 1);
-    m_lstResults.InsertColumn(2, "Path", LVCFMT_LEFT, 210, 2);
-    m_lstResults.InsertColumn(3, "Type", LVCFMT_LEFT, 95, 3);
-    m_lstResults.InsertColumn(4, "Value", LVCFMT_LEFT, 210, 4);
+    //initialize sort array
+    ascending[0]=ascending[1]=ascending[2]=ascending[3]=true;
+
+    //column headers
+    m_lstResults.InsertColumn(1, "Object", LVCFMT_LEFT, 100, 0);
+    m_lstResults.InsertColumn(2, "Path", LVCFMT_LEFT, 210, 1);
+    m_lstResults.InsertColumn(3, "Type", LVCFMT_LEFT, 95, 2);
+    m_lstResults.InsertColumn(4, "Value", LVCFMT_LEFT, 210, 3);
     m_lstResults.SetExtendedStyle(m_lstResults.GetExtendedStyle()|LVS_EX_FULLROWSELECT);
 
     specialSearchFCO = NULL;
@@ -333,6 +333,14 @@ void CSearchDlg::DisplayResults()
     CString path, type, valu;
     bool attr_value_to_be_shown = !m_edtAttrValue.IsEmpty() && !m_edtAttributeFirst.IsEmpty();
 
+    if(!m_chkSplSearch) //only want to wipe this out on a regular search
+	{
+		specialSearchFCO = NULL;
+		m_stcRefCtrl.SetWindowText("NULL References");
+		m_stcRefCtrl.ShowWindow(TRUE);
+	}
+
+
     //Hide the window so it doesn't waste time redrawing each time we add an item
     m_lstResults.ShowWindow(SW_HIDE);
     m_lstResults.DeleteAllItems();
@@ -362,9 +370,30 @@ void CSearchDlg::DisplayResults()
         else if(rret == OBJTYPE_CONNECTION)
             type = "CONNECTION";
 
-        m_lstResults.InsertItem(count, name);
-        m_lstResults.SetItemText(count, 1, path);
-        m_lstResults.SetItemText(count, 2, type);
+        //use LVITEM to insert item into list control, LVITEM is needed so that
+        //lParam can be supplide which will be used during sort
+        //Object
+        LVITEM lvItem;
+        lvItem.lParam=count;
+        lvItem.iItem=count;
+        lvItem.iSubItem=0;
+        lvItem.pszText=name.GetBuffer();
+        lvItem.mask=LVIF_PARAM | LVIF_TEXT;
+        m_lstResults.InsertItem(&lvItem);
+        
+        //don't supply lParam for subitems, if you do that the subitems won't get
+        //displayed properly
+        //path
+        lvItem.mask=LVIF_TEXT;
+        lvItem.iSubItem = 1;
+        lvItem.pszText=path.GetBuffer();
+        m_lstResults.SetItem(&lvItem);
+ 
+        //type
+        lvItem.iSubItem=2;
+        lvItem.pszText=type.GetBuffer();
+        m_lstResults.SetItem(&lvItem);
+      
         if( attr_value_to_be_shown)
         {
             try {
@@ -501,11 +530,14 @@ void CSearchDlg::itemDblClicked()
             TheCtrl->BeginTransaction();
 
             long selected = m_lstResults.GetSelectionMark() + 1; //IMgaFCOs 1 based, GetSelectionMark 0 based
+            //LVITEM lvItem;
+            long lParam = m_lstResults.GetItemData(selected-1);
+           // m_lstResults.GetItem(&lvItem);
             CComPtr<IMgaFCO> selectedFCO;
             // selected might be 0 because GeSelectionMark might have returned -1
             if( selected >= 1 && selected <= count)
             {
-                COMTHROW(results->get_Item(selected,&selectedFCO)); // crashed probably when called with 0
+                COMTHROW(results->get_Item(lParam+1,&selectedFCO)); // crashed probably when called with 0
             }
 
             //CComPtr<IMgaObject> selectedObject = (IMgaObject *)(selectedFCO.p); // WAS this the scapegoat?
@@ -883,6 +915,7 @@ void CSearchDlg::SearchResults()
 
 CSearchDlg::~CSearchDlg()
 {
+    specialSearchFCO = NULL;
 }
 
 void CSearchDlg::OnNMDblclkTreeSearchHistory(NMHDR *pNMHDR, LRESULT *pResult)
@@ -980,4 +1013,18 @@ void CSearchDlg::OnCheckSplSearch()
 		m_stcRefCtrl.ShowWindow(TRUE);
 		CWnd::UpdateData(TRUE);
 	}
+}
+
+void CSearchDlg::OnLvnColumnclickListresults(NMHDR *pNMHDR, LRESULT *pResult)
+{
+    LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+    
+    //create the sort param that needs to be passed to sort function
+    SortParam param(&m_lstResults,pNMLV->iSubItem,ascending[pNMLV->iSubItem]);
+   
+    //sort the items
+    ListView_SortItemsEx(m_lstResults.GetSafeHwnd(), ListItemCompareProc, (LPARAM) &param);
+
+   ascending[pNMLV->iSubItem] = !ascending[pNMLV->iSubItem];
+    *pResult = 0;
 }
