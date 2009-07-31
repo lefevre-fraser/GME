@@ -24,10 +24,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CAspectSpecDlg
 
-//IMPLEMENT_DYNAMIC(CAspectSpecDlg, CPropertySheet)
-
-CAspectSpecDlg::CAspectSpecDlg(UINT nIDCaption, CWnd* pParentWnd, UINT iSelectPage)
-	: CPropertySheet(nIDCaption, pParentWnd, iSelectPage)
+CAspectSpecDlg::CAspectSpecDlg(LPCTSTR pszCaption, CWnd* pParentWnd, UINT iSelectPage)
+	: CPropertySheet(pszCaption, pParentWnd, iSelectPage)
 	, lastID(0)
 	, countPages(0)
 	, m_bNeedInit(TRUE)
@@ -35,14 +33,7 @@ CAspectSpecDlg::CAspectSpecDlg(UINT nIDCaption, CWnd* pParentWnd, UINT iSelectPa
 	, m_nMinCY(0)
 {
 	m_psh.dwFlags |= PSH_NOAPPLYNOW;
-}
-
-CAspectSpecDlg::CAspectSpecDlg(LPCTSTR pszCaption, CWnd* pParentWnd, UINT iSelectPage)
-	: CPropertySheet(pszCaption, pParentWnd, iSelectPage)
-	, lastID( 0)
-	, countPages( 0)
-{
-	m_psh.dwFlags |= PSH_NOAPPLYNOW;
+	m_rCrt.SetRectEmpty();
 }
 
 CAspectSpecDlg::~CAspectSpecDlg()

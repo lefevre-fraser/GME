@@ -24,11 +24,9 @@ typedef CTypedPtrList<CPtrList, CAspectPage*> CAspectPageList;
 
 class CAspectSpecDlg : public CPropertySheet
 {
-	//DECLARE_DYNAMIC(CAspectSpecDlg)
 
 // Construction
 public:
-	CAspectSpecDlg(UINT nIDCaption, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
 	CAspectSpecDlg(LPCTSTR pszCaption, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
 
 // Attributes
