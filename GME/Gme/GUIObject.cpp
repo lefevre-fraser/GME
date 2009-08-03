@@ -1044,6 +1044,22 @@ void CGuiFco::SetAspect(CGuiFcoList& modelList, int asp)
 		modelList.GetNext(pos)->SetAspect(asp);
 }
 
+CGuiObject* CGuiFco::FindObject(CComPtr<IMgaFCO>& fco, CGuiFcoList& fcoList)
+{
+	POSITION pos = fcoList.GetHeadPosition();
+	while(pos) {
+		CGuiFco* ofco = fcoList.GetNext(pos);
+		ASSERT(ofco != NULL);
+		CGuiObject* obj = ofco->dynamic_cast_CGuiObject();
+		if (obj) {
+			VARIANT_BOOL b;
+			COMTHROW(obj->mgaFco->get_IsEqual(fco, &b));
+			if (b)
+				return obj;
+		}
+	}
+	return 0;
+}
 
 CGuiConnection* CGuiFco::FindConnection(CComPtr<IMgaFCO>& fco, CGuiConnectionList& conns)
 {
@@ -1836,23 +1852,6 @@ bool CGuiObject::NudgeObjects(CGuiObjectList& modelList, int right, int down)
 	return canDo;
 }
 
-CGuiObject* CGuiObject::FindObject(CComPtr<IMgaFCO>& fco, CGuiFcoList& fcoList)
-{
-	POSITION pos = fcoList.GetHeadPosition();
-	while(pos) {
-		CGuiFco* ofco = fcoList.GetNext(pos);
-		ASSERT(ofco != NULL);
-		CGuiObject* obj = ofco->dynamic_cast_CGuiObject();
-		if (obj) {
-			VARIANT_BOOL b;
-			COMTHROW(obj->mgaFco->get_IsEqual(fco, &b));
-			if (b)
-				return obj;
-		}
-	}
-	return 0;
-}
-
 void CGuiObject::GetRectList(CGuiObjectList& objList, CRectList& rects)
 {
 	POSITION pos = objList.GetHeadPosition();
@@ -2132,9 +2131,9 @@ void CGuiSet::Init(CGuiFcoList& objs, CGuiConnectionList& conns)
 	MGACOLL_ITERATE(IMgaFCO,fcos) {
 		CComPtr<IMgaFCO> member;
 		member = MGACOLL_ITER;
-		CGuiFco* obj =  CGuiObject::FindObject(member, objs);
+		CGuiFco* obj =  CGuiFco::FindObject(member, objs);
 		if(!obj)
-			obj =  CGuiObject::FindConnection(member, conns);
+			obj =  CGuiFco::FindConnection(member, conns);
 		VERIFY(obj);
 		members.AddTail(obj);
 	}

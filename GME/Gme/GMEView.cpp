@@ -223,7 +223,7 @@ STDMETHODIMP CViewDriver::ObjectEvent(IMgaObject *obj, unsigned long eventmask,V
 			CComPtr<IMgaObject> object = obj;
 			CComPtr<IMgaFCO> fco;
 			if(SUCCEEDED(object.QueryInterface(&fco))) {
-				CGuiObject *guiObj = CGuiObject::FindObject(fco,view->children);
+				CGuiObject *guiObj = CGuiFco::FindObject(fco,view->children);
 				CGuiConnection *conn = CGuiFco::FindConnection(fco,view->connections);
 				if(guiObj) {
 					if(eventmask & OBJEVENT_PROPERTIES) {
@@ -2819,10 +2819,10 @@ void CGMEView::SetScroll()
 void CGMEView::SetCenterObject(CComPtr<IMgaFCO> centerObj)
 {
 	if(centerObj != NULL) {
-		CGuiObject *guiObj;
+		CGuiObject* guiObj = NULL;
 		try {
 			BeginTransaction(TRANSACTION_READ_ONLY);
-			guiObj = CGuiObject::FindObject(centerObj, children);
+			guiObj = CGuiFco::FindObject(centerObj, children);
 			CommitTransaction();
 		}
 		catch(hresult_exception e) {
@@ -2872,10 +2872,27 @@ void CGMEView::SetCenterObject(CComPtr<IMgaFCO> centerObj)
 				this->SendNow();
 				ReleaseDC(pDC);
 			}
+		} else {
+			CGuiConnection* connection = NULL;
+			try {
+				BeginTransaction(TRANSACTION_READ_ONLY);
+				connection = CGuiFco::FindConnection(centerObj, connections);
+				CommitTransaction();
+			}
+			catch(hresult_exception e) {
+				AbortTransaction(e.hr);
+				connection = NULL;
+			}
+			if (connection) {
+				this->SendUnselEvent4List(&selected);
+				selected.RemoveAll();
+				RemoveAllAnnotationFromSelection();
+				ClearConnectionSelection();
+				ChangeAttrPrefFco(connection);
+			}
 		}
 	}
 }
-
 
 void CGMEView::Invalidate(bool thorough)
 {
@@ -3034,7 +3051,7 @@ CGuiObject *CGMEView::HelpMeFindNextObject( bool p_secondFind)
 	return first;
 }
 
-CGuiObject *CGMEView::FindObject(CPoint &pt, bool lookNearToo, bool lookForLabel)
+CGuiObject* CGMEView::FindObject(CPoint &pt, bool lookNearToo, bool lookForLabel)
 {
 	POSITION pos = children.GetHeadPosition();
 	while(pos) {

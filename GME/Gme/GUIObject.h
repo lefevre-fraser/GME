@@ -196,6 +196,7 @@ public:
 	
 	static bool IsPrimary(CGuiMetaModel* guiMetaModel, CGuiMetaAspect* guiAspect, CComPtr<IMgaMetaRole>& metaRole);
 	static void SetAspect(CGuiFcoList& list, int asp);
+	static CGuiObject* FindObject(CComPtr<IMgaFCO>& fco, CGuiFcoList& fcoList);
 	static CGuiConnection* FindConnection(CComPtr<IMgaFCO>& fco, CGuiConnectionList& conns);
 	static void GrayOutFcos(CGuiFcoList &list, bool set = true);
 	static void GrayOutFcos(CGuiConnectionList &list, bool set = true);
@@ -284,7 +285,6 @@ public:
 	static void ShiftModels(CGuiObjectList& objList, CPoint& shiftBy);
 	void ResizeObject(const CRect& newLocation);
 	static bool NudgeObjects(CGuiObjectList& modelList, int right, int down);
-	static CGuiObject* FindObject(CComPtr<IMgaFCO>& fco, CGuiFcoList& fcoList);
 	static void GetRectList(CGuiObjectList& objList, CRectList& rects);
 
 	virtual bool IsVisible(int aspect = -1)				{ return guiAspects[(aspect < 0 ? parentAspect : aspect)] != NULL; }
