@@ -50,29 +50,29 @@
                 </listitem>
 
                 <listitem>
-                  <para>New decorator features:</para>
-                </listitem>
+                  <para>New decorator features:<itemizedlist>
+                        <listitem>
+                          <para>In place editing</para>
+                        </listitem>
 
-                <listitem>
-                  <para>In place editing</para>
-                </listitem>
+                        <listitem>
+                          <para>Resizable boxes</para>
+                        </listitem>
 
-                <listitem>
-                  <para>Resizable boxes</para>
-                </listitem>
+                        <listitem>
+                          <para>Vectorial shapes (box, rounded corner box, triangle,
+                          diamond, constraint sign)</para>
+                        </listitem>
 
-                <listitem>
-                  <para>Vectorial shapes (box, rounded corner box, triangle,
-                  diamond, constraint sign)</para>
-                </listitem>
+                        <listitem>
+                          <para>Shadow casting and gradient fill of boxes and
+                          vectorial shapes</para>
+                        </listitem>
 
-                <listitem>
-                  <para>Shadow casting and gradient fill of boxes and
-                  vectorial shapes</para>
-                </listitem>
-
-                <listitem>
-                  <para>Anti aliased fonts and edges</para>
+                        <listitem>
+                          <para>Anti aliased fonts and edges</para>
+                        </listitem>
+                   </itemizedlist></para>
                 </listitem>
 
                 <listitem>
@@ -119,17 +119,13 @@
                 </listitem>
 
                 <listitem>
-                  <para>New Box (default) decorator</para>
+                  <para>New Box decorator</para>
                 </listitem>
               </itemizedlist></para>
           </listitem>
 
           <listitem>
-            <para>Other:<itemizedlist>
-                <listitem>
-                  <para>New installer based on WiX toolset</para>
-                </listitem>
-
+            <para>Multi-user features and Other:<itemizedlist>
                 <listitem>
                   <para>Included SSH tunnel (GMEplink), default used by the
                   multiuser backend (can be overridden in the standard
@@ -146,6 +142,10 @@
                   <para>Subversion client library is updated to 1.6.1 (NOTE:
                   working directory format is compatible with 1.6.x clients
                   only)</para>
+                </listitem>
+
+                <listitem>
+                  <para>New installer based on WiX toolset</para>
                 </listitem>
               </itemizedlist></para>
           </listitem>
@@ -2645,7 +2645,7 @@
           so everything should work exactly the same way as with the older GME
           versions. You can exclude certain connections from the auto-routing
           with the use of the <guilabel
-          moreinfo="none">ObjectInspector</guilabel> or the context menu. In
+          moreinfo="none">Attribute Browser</guilabel> or the context menu. In
           this case a registry value is added to the connection entity node,
           and the auto routing logic no longer will take care of the
           connection.</para>
@@ -2667,7 +2667,7 @@
 
           <para>The user can exclude certain connections from the auto-routing
           by setting the “Is auto routed” property in the <guilabel
-          moreinfo="none">ObjectInspector</guilabel>'s <guilabel
+          moreinfo="none">Attribute Browser</guilabel>'s <guilabel
           moreinfo="none">Preferences</guilabel> page to <code>false</code>.
           In this case the auto routing logic no longer will take care of the
           connection; it won't see this connection at all. Similarly, if the
@@ -2699,7 +2699,7 @@
 
           <para>On the model's <guilabel
           moreinfo="none">Preferences</guilabel> page in <guilabel
-          moreinfo="none">ObjectInspector</guilabel>, you can find a setting
+          moreinfo="none">Attribute Browser</guilabel>, you can find a setting
           similar to individual connections, but it is under the Auto Router
           Preferences group in that case.</para>
 
@@ -3382,16 +3382,16 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
 
           <listitem>
-            <para>The new decorators use vectorial graphics for vectorial
-            shapes (including: inheritance, same relationship, connection
-            bullets, constraint signs).</para>
+            <para>The new decorators use vectorial graphics for
+            shapes like: inheritance (triangle), same relationship (diamond), connection
+            bullets, constraint signs, boxes).</para>
           </listitem>
 
           <listitem>
             <para>Vectorial shapes and (certain) boxes can have shadows,
             gradient fills, rounded corners. All of these properties can be
-            defined in meta-models and can be adjusted in the Object
-            Inspector.</para>
+            defined in meta-models and can be adjusted in the Attribute
+            Browser.</para>
           </listitem>
 
           <listitem>
