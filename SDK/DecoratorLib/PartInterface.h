@@ -73,7 +73,7 @@ public:
 
 // =============== resembles IMgaElementDecoratorEvents
 // === every function can throw DecoratorException ===
-	virtual void	Refresh						(void) = 0;
+	virtual void	Refresh						(refresh_mode_enum refreshMode) = 0;
 	virtual void	OperationCanceledByDecorator(void) = 0;
 	virtual void	CursorChanged				(long newCursorID) = 0;
 	virtual void	CursorRestored				(void) = 0;

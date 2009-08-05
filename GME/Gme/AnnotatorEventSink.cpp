@@ -40,9 +40,12 @@ CAnnotatorEventSink::~CAnnotatorEventSink()
 ///////////////////////////////////////////////////////////////////////////
 // IMgaElementDecoratorEvents
 
-STDMETHODIMP CAnnotatorEventSink::Refresh()
+STDMETHODIMP CAnnotatorEventSink::Refresh(refresh_mode_enum refreshMode)
 {
-	m_view->Invalidate();
+	if (refreshMode == RM_REDRAW_SELF)
+		m_view->Invalidate(true);
+	else if (refreshMode != RM_NOREFRESH)
+		m_view->PostMessage(WM_USER_DECOR_VIEWREFRESH_REQ, 0, refreshMode);
 
 	return S_OK;
 }
@@ -82,7 +85,7 @@ STDMETHODIMP CAnnotatorEventSink::LabelEditingFinished(LONG left, LONG top, LONG
 	if (m_view->inOpenedDecoratorTransaction) {
 		// Deferred Commit operation, we cannot do commit now because it would kill the underlying decoprator also
 		// Commit results in a whle refresh: complete destruction and regeneration of Gui* wrapper classes, and this destroys decorators also
-		m_view->PostMessage(WM_USER_COMMITTRAN, 0, 0);
+		m_view->PostMessage(WM_USER_DECOR_COMMITTRAN_REQ, 0, 0);
 	} else {
 		m_view->inOpenedDecoratorTransaction = false;
 		m_view->shouldCommitOperation = false;

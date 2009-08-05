@@ -60,10 +60,11 @@ extern CComModule _Module;
 
 
 
-#define WM_USER_ZOOM			(WM_USER + 111)
-#define WM_PANN_SCROLL			(WM_USER + 112)
-#define WM_USER_PANNREFRESH		(WM_USER + 113)
-#define WM_USER_COMMITTRAN		(WM_USER + 114)	// used for deferred transaction commits in decorator events
+#define WM_USER_ZOOM					(WM_USER + 111)
+#define WM_PANN_SCROLL					(WM_USER + 112)
+#define WM_USER_PANNREFRESH				(WM_USER + 113)
+#define WM_USER_DECOR_COMMITTRAN_REQ	(WM_USER + 114)	// used for deferred transaction commits in decorator events
+#define WM_USER_DECOR_VIEWREFRESH_REQ	(WM_USER + 115)	// used for deferred view refreshes in decorator events
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

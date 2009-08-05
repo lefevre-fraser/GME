@@ -59,7 +59,7 @@ public:
 protected:
 
 public:
-	STDMETHOD( Refresh )						( void );
+	STDMETHOD( Refresh )						( /*[in]*/ refresh_mode_enum refreshMode );
 	STDMETHOD( OperationCanceled )				( void );
 	STDMETHOD( CursorChanged )					( /*[in]*/ LONG newCursorID );
 	STDMETHOD( CursorRestored )					( void );

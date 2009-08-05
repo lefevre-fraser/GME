@@ -27,7 +27,7 @@ CPartBrowserDecoratorEventSink::~CPartBrowserDecoratorEventSink()
 ///////////////////////////////////////////////////////////////////////////
 // IMgaElementDecoratorEvents
 
-STDMETHODIMP CPartBrowserDecoratorEventSink::Refresh()
+STDMETHODIMP CPartBrowserDecoratorEventSink::Refresh(refresh_mode_enum refreshMode)
 {
 	return S_OK;
 }

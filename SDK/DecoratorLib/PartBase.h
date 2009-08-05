@@ -101,7 +101,7 @@ public:
 	virtual bool	OperationCanceledByGME		(void);																	// default (no) implementation
 
 // =============== resembles IMgaElementDecoratorEvents
-	virtual void	Refresh						(void);
+	virtual void	Refresh						(refresh_mode_enum refreshMode);
 	virtual void	OperationCanceledByDecorator(void);
 	virtual void	CursorChanged				(long newCursorID);
 	virtual void	CursorRestored				(void);

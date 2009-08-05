@@ -234,7 +234,7 @@ public:
 	std::list<CGuiObject*>	m_lstUnselect;
 	void					Reset(bool doInvalidate = false);
 	void					ResetPartBrowser();
-	void					ResetParent();
+	void					ResetParent(bool doInvalidate = false);
 	void					InitSets();
 	void					CreateOffScreen(CDC* dc);
 	void					Invalidate(bool thorough = false);
@@ -557,7 +557,8 @@ protected:
 	afx_msg LRESULT OnZoom(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPannScroll(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPannRefresh(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnCommitTransaction(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnDecoratorCommitTransactionRequest(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnDecoratorViewRefreshRequest(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnCntxNamePositionSouth();
 	afx_msg void OnCntxNamePositionNorth();
 	afx_msg void OnCntxNamePositionEast();

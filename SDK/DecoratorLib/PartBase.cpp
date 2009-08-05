@@ -254,9 +254,9 @@ bool PartBase::OperationCanceledByGME(void)
 	return false;
 }
 
-void PartBase::Refresh(void)
+void PartBase::Refresh(refresh_mode_enum refreshMode)
 {
-	m_eventSink->Refresh();
+	m_eventSink->Refresh(refreshMode);
 }
 
 void PartBase::CursorChanged(long newCursorID)

@@ -47,6 +47,16 @@ const unsigned long	F_ANIMATION = 1<<5;
 const unsigned long	F_IMGPATH = 1<<6;
 const unsigned long	F_RESIZEAFTERMOD = 1<<7;
 
+// Refresh modes
+typedef enum  refresh_mode_enum {
+	RM_NOREFRESH				= 0,
+	RM_REDRAW_SELF				= 1,
+	RM_REGENERATE_SELF			= 2,
+	RM_REGENERATE_PARENT_ALSO	= 3,
+	RM_REGENERATE_ALL_VIEWS		= 4
+} refresh_mode_enum;
+
+
 	[
 		object,
 		uuid(1E13054E-5AD1-41EB-8FF1-C3901D99FDCC),
@@ -82,7 +92,7 @@ const unsigned long	F_RESIZEAFTERMOD = 1<<7;
 	]
 	interface IMgaCommonDecoratorEvents : IUnknown
 	{
-		[id(1), helpstring("method Refresh needed")] HRESULT Refresh();
+		[id(1), helpstring("method Refresh needed")] HRESULT Refresh([in] refresh_mode_enum refreshMode);
 		[id(2), helpstring("method the editing operation is canceled")] HRESULT OperationCanceled();
 		[id(3), helpstring("method CursorChanged")] HRESULT CursorChanged([in] LONG newCursorID);
 		[id(4), helpstring("method CursorRestored")] HRESULT CursorRestored();

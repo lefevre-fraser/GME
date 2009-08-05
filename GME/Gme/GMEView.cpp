@@ -501,7 +501,8 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_MESSAGE(WM_USER_ZOOM, OnZoom)
 	ON_MESSAGE(WM_USER_PANNREFRESH, OnPannRefresh)
 	ON_MESSAGE(WM_PANN_SCROLL, OnPannScroll)
-	ON_MESSAGE(WM_USER_COMMITTRAN, OnCommitTransaction)
+	ON_MESSAGE(WM_USER_DECOR_COMMITTRAN_REQ, OnDecoratorCommitTransactionRequest)
+	ON_MESSAGE(WM_USER_DECOR_VIEWREFRESH_REQ, OnDecoratorViewRefreshRequest)
 	ON_COMMAND(ID_VIEW_SHOWSELMODEL, OnShowSelectedModel)
 	ON_COMMAND(ID_VIEW_FOCUSBROWSER, OnFocusBrowser)
 	ON_COMMAND(ID_VIEW_FOCUSINSPECTOR, OnFocusInspector)
@@ -1740,12 +1741,12 @@ void CGMEView::ClearConnectionSelection(void)
 	}
 }
 
-void CGMEView::ResetParent()
+void CGMEView::ResetParent(bool doInvalidate)
 {
 #if !defined (ACTIVEXGMEVIEW)
 	CGMEView *parentView = GetDocument()->FindView(parent);
 	if(parentView) {
-		parentView->Reset();
+		parentView->Reset(doInvalidate);
 		parentView->Invalidate();
 	}
 #endif
@@ -9348,9 +9349,9 @@ LRESULT CGMEView::OnPannScroll(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-LRESULT CGMEView::OnCommitTransaction(WPARAM wParam, LPARAM lParam)
+LRESULT CGMEView::OnDecoratorCommitTransactionRequest(WPARAM wParam, LPARAM lParam)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCommitTransaction() in " + path + name + "\r\n");
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnDecoratorCommitTransactionRequest() in " + path + name + "\r\n");
 	CommitTransaction();
 	inOpenedDecoratorTransaction = false;
 	shouldCommitOperation = false;
@@ -9359,6 +9360,31 @@ LRESULT CGMEView::OnCommitTransaction(WPARAM wParam, LPARAM lParam)
 	annotatorInDecoratorOperation = NULL;
 	isInConnectionCustomizeOperation = false;
 	selectedContextConnection = NULL;
+	return 0;
+}
+
+LRESULT CGMEView::OnDecoratorViewRefreshRequest(WPARAM wParam, LPARAM lParam)
+{
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnDecoratorViewRefreshRequest() in " + path + name + "\r\n");
+	refresh_mode_enum refreshMode = (refresh_mode_enum) lParam;
+	switch(refreshMode) {
+		case RM_REGENERATE_PARENT_ALSO:
+			{
+				ResetParent(true);
+			}
+			// Intentionally no break!
+		case RM_REGENERATE_SELF:
+			{
+				Reset(true);
+			}
+			break;
+		case RM_REGENERATE_ALL_VIEWS:
+			{
+				GetDocument()->ResetAllViews();
+			}
+			break;
+		default: break;	// RM_NOREFRESH, RM_REDRAW_SELF
+	}
 	return 0;
 }
 
