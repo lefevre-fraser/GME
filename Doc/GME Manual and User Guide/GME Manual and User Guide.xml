@@ -1759,8 +1759,6 @@
                       Metafile</guimenuitem></para>
                     </listitem>
                   </itemizedlist></para>
-
-                <para></para>
               </listitem>
             </varlistentry>
 
@@ -2741,10 +2739,101 @@
         will be moved.</para>
 
         <para>If a connection line is selected, the edges that have
-        customization information will appear with a dash-dot-dot pattern. In
-        the context menu, there's also the possibility to delete the
+        customization information will appear with a dash-dot-dot
+        pattern.</para>
+
+        <figure>
+          <title>Customized edge with dash-dot-dot pattern</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/Customized edge with dash-dot-dot pattern.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>In the context menu, there's also the possibility to delete the
         customization for just a given edge, or delete all customization of
         the connection.</para>
+
+        <figure>
+          <title>Context menu with options to delete customization</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/Context menu with options to delete customization.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section>
+        <title>Fully customizable connection modifications</title>
+
+        <para>The skew connection edges totally get out of control of the auto
+        router algorithm. The vertical and horizontal edges of the path are
+        still taken into account during the auto routing algorithm, so they
+        won't collide with auto routed lines. There's no box avoidance logic;
+        it is totally up to you how you want to route the connection line. The
+        only logic which still applies determines the start and the end point
+        according to the box's router direction preferences.</para>
+
+        <section>
+          <title>Editing fully customizable connections</title>
+
+          <para>You can click on a point anywhere on an edge on a connection,
+          and with a drag and drop technique a new point can be added to the
+          route.</para>
+
+          <figure>
+            <title>Creating a skew connection</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="images/Creating a skew connection.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>You can repeat this as many times as required and add other
+          points. Removing points can be done with context menu (right
+          clicking on the desired point) or by simply moving the point in-line
+          with the adjacent points. If you move the point in-line with the
+          adjacent points, the point will be automatically removed from the
+          route.</para>
+
+          <para>Besides automatic point deletion, There's also a logic which
+          does horizontal and vertical alignment of connection edge. This
+          means that if a newly added point creates a nearly vertical or
+          nearly horizontal edge, GME will automatically adjust those to be
+          totally vertical/horizontal. The align algorithm can be disabled by
+          holding down the Ctrl (Control) button during the point addition
+          drag and drop process. Also you can run this alignment algorithm
+          along the whole connection using the "<guimenuitem>Try to apply
+          horizontal/vertical snap along the whole connection</guimenuitem>"
+          context menu item.</para>
+
+          <para>GME tries to obtain the data of an auto-routed connection path
+          and feed that edge information into the fully customizable path's
+          data. That work is done by a special algorithm: it converts the
+          route determined by the auto-router logic into a series of fully
+          customizable connection points. This way you can start to customize
+          an existing line and do not have to build up one from scratch. This
+          algorithm runs before you change the auto routing state of the GME
+          application, on a whole model or an individual connection. Note that
+          this algorithm needs to run the auto-routing algorithm on the whole
+          model to be able to obtain the needed information, so it might make
+          opening or refreshing of a model view slower. For example if you
+          modify the auto-routing state of a sub-model and you open that
+          sub-model in a view much later, the conversion algorithm will run
+          only at the time (during the view opening procedure).</para>
+
+          <para>The start and the end points of the connections are special:
+          they are still determined by the auto-routing logic. This is partly
+          because connection path ending in a port wouldn't be movable anyway
+          because the location of the port cannot be changed inside the model
+          box (the port position is automatically computed and fixed).</para>
+        </section>
       </section>
     </section>
 
@@ -8297,7 +8386,7 @@ void print( const BON::FCO&amp; fco )
 
           <para>In the next figure we find a model called Model and four
           references (called Ref1, Ref2, Ref3 and Ref4) referring directly or
-          indirectly to the model. Models contains two atoms called P1 and P2
+          indirectly to the model. Model contains two atoms called P1 and P2
           which are ports.</para>
 
           <figure>
@@ -8347,7 +8436,7 @@ void print( const BON::FCO&amp; fco )
 
           <programlisting format="linespecific">// the model called Model in the figure 
 BON::Model model;  
-// P2 of Model, we omit the aquiring operations 
+// P2 of Model, we omit the acquiring operations 
 BON::Atom p2_model;  
 // Ref1 refers to Model 
 BON::Reference ref1 = model-&gt;getReferredBy();  
@@ -8356,14 +8445,14 @@ BON::ReferencePortContainer rpc_ref1 = ref1-&gt;getRefPortContainer();
 // Find the ReferencePort referring to P2 
 BON::ReferencePort p2_ref1 = rpc_ref1-&gt;getReferencePort( p2_model ) 
 .... 
-// Parent of the ReferencePort is null 
+// Parent of this ReferencePort is null 
 p2_ref1-&gt;getParentPort(); 
-// Descendants of P2 of Ref1 containig P2 of Ref2, Ref3 and Ref4 
+// Descendants of P2 of Ref1 containing P2 of Ref2, Ref3 and Ref4 
 p2_ref1-&gt;getDescendantPorts(); 
-// Children of P2 of Ref1 containig P2 of Ref2 and Ref3  
+// Children of P2 of Ref1 containing P2 of Ref2 and Ref3  
 p2_ref1-&gt;getChildPorts(); 
 // Get referred FCO (i.e. p2_model, P2 of Model) of P2 of Ref1.  
-P2_ref1-&gt;getFCO(); 
+p2_ref1-&gt;getFCO(); 
 .... 
 // Get objects connected to P2 of Model directly or indirectly (via reference  
 // ports). It includes A, A1, A2, A3 and A4. 
@@ -8376,7 +8465,19 @@ p2_model-&gt;getConnEnds( “”, “”, false );
 p2_ref1-&gt;getConnEnds( “”, “”, true ); 
 // Get objects connected to P2 of Ref1 directly without descendant reference  
 // ports. It includes only A1. 
-p2_ref1-&gt;getConnEnds( “”, “”, false ); </programlisting>
+p2_ref1-&gt;getConnEnds( “”, “”, false );
+
+// Gets objects connected to P1 of Ref3 or its referencers that have the "src" role in the connection (A3, A4)
+p1_ref3-&gt;GetConnEndsAs("src")
+// Gets the objects connected to P1 of Ref3 that can be reached by outgoing meta_connection "src" role connections and have no such outgoing connections
+// (A3, A4)
+p1_ref3-&gt;getDirectConnEnds( meta_connection, "src" )
+// p1_ref3 has no outgoing "dst" connections, so this returns p1_ref3
+p1_ref3-&gt;getDirectConnEnds( meta_connection, "dst" )
+
+
+
+</programlisting>
 
           <para>It is good to know that the casting mechanism defined by the
           appropriate wrapper classes works transparently between
@@ -8386,7 +8487,7 @@ p2_ref1-&gt;getConnEnds( “”, “”, false ); </programlisting>
           in two ways.</para>
 
           <programlisting format="linespecific"> 
-if ( BON::ReferencePort( connectionend ) { // do something } 
+if ( BON::ReferencePort( connectionend ) ) { // do something } 
 if ( connectionend-&gt;isReferencePort() ) { // do something } </programlisting>
         </section>
       </section>
