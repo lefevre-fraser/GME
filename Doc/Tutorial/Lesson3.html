@@ -1,4 +1,4 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Building Interpreters</title><link href="docbook-xslt-style.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.75.1" name="generator"><link rel="home" href="#N10002" title="Building Interpreters"><link rel="next" href="#N1001B" title="Introduction"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Building Interpreters"><div class="titlepage"><div><div><h2 class="title"><a name="N10002"></a>Building Interpreters</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Kevin</span> <span class="surname">Smyth</span></h3><div class="affiliation"><span class="orgname">ISIS<br></span></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Arpad</span> <span class="surname">Bakay</span></h3><div class="affiliation"><span class="orgname">ISIS<br></span></div></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#N1001B">Introduction</a></span></dt><dt><span class="section"><a href="#N1004D">The Builder Object Network</a></span></dt><dd><dl><dt><span class="section"><a href="#sect-gen-workspace">Generate a workspace</a></span></dt><dt><span class="section"><a href="#N10138">Writing the interpreter code</a></span></dt></dl></dd><dt><span class="section"><a href="#N1021E">The Builder Object Network 2</a></span></dt><dt><span class="section"><a href="#N10270">BON2 Extended</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1001B"></a>Introduction</h2></div></div></div><p>For some GME applications, the only motivation for a modeling
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Building Interpreters</title><link href="docbook-xslt-style.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.75.1" name="generator"><link rel="home" href="#N10004" title="Building Interpreters"><link rel="next" href="#N1001D" title="Introduction"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Building Interpreters"><div class="titlepage"><div><div><h2 class="title"><a name="N10004"></a>Building Interpreters</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Kevin</span> <span class="surname">Smyth</span></h3><div class="affiliation"><span class="orgname">ISIS<br></span></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Arpad</span> <span class="surname">Bakay</span></h3><div class="affiliation"><span class="orgname">ISIS<br></span></div></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#N1001D">Introduction</a></span></dt><dt><span class="section"><a href="#N1004F">The Builder Object Network</a></span></dt><dd><dl><dt><span class="section"><a href="#sect-gen-workspace">Generate a workspace</a></span></dt><dt><span class="section"><a href="#N1013A">Writing the interpreter code</a></span></dt></dl></dd><dt><span class="section"><a href="#N1022A">The Builder Object Network 2</a></span></dt><dt><span class="section"><a href="#N1027C">BON2 Extended</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1001D"></a>Introduction</h2></div></div></div><p>For some GME applications, the only motivation for a modeling
     project is the desire to describe a system in a structured way and to use
     the description as a form of interpersonal communication. Usually,
     however, we also want the computer to be able to process data from the
@@ -35,7 +35,7 @@
     Network-based interpreter (not the BON II). The application domain and
     paradigm are those used in the <a class="ulink" href="Lesson2.html" target="_top">previous
     lesson</a>. Our interpreter will complete a simple task: it will print
-    out a list of all routers, along with their ports and IP addresses.</p></div><div class="section" title="The Builder Object Network"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1004D"></a>The Builder Object Network</h2></div></div></div><p>As mentioned above, the job of the Builder Object Network is to
+    out a list of all routers, along with their ports and IP addresses.</p></div><div class="section" title="The Builder Object Network"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1004F"></a>The Builder Object Network</h2></div></div></div><p>As mentioned above, the job of the Builder Object Network is to
     instantiate C++ objects for each of the objects in the GME model tree.
     Access to the objects, and to the relationships between them, are
     available through methods that act on these objects. Class names and
@@ -94,14 +94,14 @@
       <span class="emphasis"><em>networkingTraverser)</em></span>, then hit
       <span class="guilabel">OK</span>. Hit <span class="guilabel">Next &gt;</span>. Under
       <span class="guilabel">Paradigms</span>, enter the name of the metamodel,
-      <span class="emphasis"><em>networking</em></span>.</p><div class="figure"><a name="N1010A"></a><p class="title"><b>Figure&nbsp;2.&nbsp;GME BON Component New Project Wizard</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/VS GME Component wizard.png" alt="GME BON Component New Project Wizard"></div></div></div><p><br class="figure-break">Hit <span class="guilabel">Finish</span>. You now have a GME BON
+      <span class="emphasis"><em>networking</em></span>.</p><div class="figure"><a name="N1010C"></a><p class="title"><b>Figure&nbsp;2.&nbsp;GME BON Component New Project Wizard</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/VS GME Component wizard.png" alt="GME BON Component New Project Wizard"></div></div></div><p><br class="figure-break">Hit <span class="guilabel">Finish</span>. You now have a GME BON
       interpreter; go ahead and build it. As part of the build process, the
-      interpreter will be registered.</p><div class="figure"><a name="N10117"></a><p class="title"><b>Figure&nbsp;3.&nbsp;Empty GME BON interpreter</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/VS empty BON1 project.png" alt="Empty GME BON interpreter"></div></div></div><p><br class="figure-break"></p><p>Now, run GME and open a <span class="emphasis"><em>networking</em></span> model.
+      interpreter will be registered.</p><div class="figure"><a name="N10119"></a><p class="title"><b>Figure&nbsp;3.&nbsp;Empty GME BON interpreter</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/VS empty BON1 project.png" alt="Empty GME BON interpreter"></div></div></div><p><br class="figure-break"></p><p>Now, run GME and open a <span class="emphasis"><em>networking</em></span> model.
       There should be an icon for the interpreter in the
       <span class="guilabel">Components</span> toolbar next to the general Interpret
       ('i") button. You may also run the interpreter by right-clicking a model
       in the <span class="guilabel">Model Browser</span> and clicking
-      <span class="guisubmenu">Interpret</span>.</p><div class="figure"><a name="N10130"></a><p class="title"><b>Figure&nbsp;4.&nbsp;Default Interpreter Icon</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/Default Interpreter Icon.png" alt="Default Interpreter Icon"></div></div></div><p><br class="figure-break"></p></div><div class="section" title="Writing the interpreter code"><div class="titlepage"><div><div><h3 class="title"><a name="N10138"></a>Writing the interpreter code</h3></div></div></div><p>Our final task consists of writing the crucial portion of the
+      <span class="guisubmenu">Interpret</span>.</p><div class="figure"><a name="N10132"></a><p class="title"><b>Figure&nbsp;4.&nbsp;Default Interpreter Icon</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/Default Interpreter Icon.png" alt="Default Interpreter Icon"></div></div></div><p><br class="figure-break"></p></div><div class="section" title="Writing the interpreter code"><div class="titlepage"><div><div><h3 class="title"><a name="N1013A"></a>Writing the interpreter code</h3></div></div></div><p>Our final task consists of writing the crucial portion of the
       interpreter code. Like any other program, the difficulty of this task
       depends on the complexity of the functionality. Most interpreters
       implement at least two typical functions:</p><div class="variablelist"><dl><dt><span class="term">Navigating the object network</span></dt><dd><p>usually, traversing all or part of the tree. Containment
@@ -153,7 +153,7 @@
       in certain situations). Therefore, we must traverse the object tree
       through the root of the object hierarchy. The paradigm does not allow
       subfolders, so it is relatively easy to travel through all the root
-      models in the diagram.</p><p>In <code class="filename">BONComponent.cpp</code>, insert:</p><pre class="programlisting">void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, CBuilderObjectList &amp;selected, long param) 
+      models in the diagram.</p><div class="figure"><a name="N101E0"></a><p class="title"><b>Figure&nbsp;5.&nbsp;<span class="emphasis"><em>Networking</em></span> metamodel</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/networking meta.png" alt="Networking metamodel"></div></div></div><br class="figure-break"><p>In <code class="filename">BONComponent.cpp</code>, insert:</p><pre class="programlisting">void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, CBuilderObjectList &amp;selected, long param) 
 {
   Console::Out::WriteLine("Interpreter started...");
 
@@ -213,23 +213,55 @@
       first time, make sure that you used the exact same names (kindnames,
       rolenames and attribute names) in your paradigm that you are using in
       your interpreter code. For reference, here are my copies of <a class="ulink" href="L3/BON1/BONComponent.cpp" target="_top"><code class="filename">BONComponent.cpp</code></a>
-      and <a class="ulink" href="L3/BON1/BONComponent.h" target="_top"><code class="filename">BONComponent.h</code></a>.</p></div></div><div class="section" title="The Builder Object Network 2"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1021E"></a>The Builder Object Network 2</h2></div></div></div><p>To create a BON2 project, follow the directions in <a class="xref" href="#sect-gen-workspace" title="Generate a workspace">the section called &ldquo;Generate a workspace&rdquo;</a>, but select BON2 project instead of
+      and <a class="ulink" href="L3/BON1/BONComponent.h" target="_top"><code class="filename">BONComponent.h</code></a>.</p></div></div><div class="section" title="The Builder Object Network 2"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1022A"></a>The Builder Object Network 2</h2></div></div></div><p>To create a BON2 project, follow the directions in <a class="xref" href="#sect-gen-workspace" title="Generate a workspace">the section called &ldquo;Generate a workspace&rdquo;</a>, but select BON2 project instead of
     BON.</p><p>Frequently-used methods for navigation are:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><code class="code">project-&gt;getRootFolder()-&gt;getRootFCOs()</code>:
           returns a <code class="code">std::set&lt;BON::FCO&gt;</code>, the FCOs in the
           top-level folder (commonly models)</p></li><li class="listitem"><p><code class="code">getChildFolders()</code>, <code class="code">getChildAtoms()</code>,
           <code class="code">getChildModels()</code> in <code class="code">BON::FolderImpl</code></p></li><li class="listitem"><p><code class="code">getChild*s</code> in <code class="code">BON::ModelImpl</code></p></li><li class="listitem"><p><code class="code">getReferred()</code> in
           <code class="code">BON::ReferenceImpl</code></p></li><li class="listitem"><p><code class="code">getMembers()</code> in <code class="code">BON::SetImpl</code></p></li><li class="listitem"><p><code class="code">getSrc()</code>, <code class="code">getDst()</code> in
           <code class="code">BON::ConnectionImpl</code></p></li></ul></div><p>The <code class="code">get*s()</code> methods return STL collections.</p><p>Here are example files: <a class="ulink" href="L3/BON2/BON2Component.cpp" target="_top"><code class="filename">BON2Component.cpp</code></a>
-    and <a class="ulink" href="L3/BON2/BON2Component.h" target="_top"><code class="filename">BON2Component.h</code></a>.</p></div><div class="section" title="BON2 Extended"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N10270"></a>BON2 Extended</h2></div></div></div><p>BON2 Extended allows you to write paradigm-specific interpreters
+    and <a class="ulink" href="L3/BON2/BON2Component.h" target="_top"><code class="filename">BON2Component.h</code></a>.</p></div><div class="section" title="BON2 Extended"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1027C"></a>BON2 Extended</h2></div></div></div><p>BON2 Extended allows you to write paradigm-specific interpreters
     more easily. Classes are generated for model elements using the
     BONExtender interpreter.</p><p>To start, create a project as you did with BON2. Create a copy of
     the paradigm (<code class="filename">networking.mga</code>) in the directory with
     the source files. Then open the paradigm in GME and use the BONExtender
-    interpreter (<span class="emphasis"><em>X</em></span> icon).</p><div class="figure"><a name="N1027E"></a><p class="title"><b>Figure&nbsp;5.&nbsp;BONExtender interpreter dialog</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/BON Extender interpreter dialog.png" alt="BONExtender interpreter dialog"></div></div></div><br class="figure-break"><p>Add the generated files <code class="filename">networkingBonX.cpp</code>,
+    interpreter (<span class="emphasis"><em>X</em></span> icon).</p><div class="figure"><a name="N1028A"></a><p class="title"><b>Figure&nbsp;6.&nbsp;BONExtender interpreter dialog</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/BON Extender interpreter dialog.png" alt="BONExtender interpreter dialog"></div></div></div><br class="figure-break"><p>Add the generated files <code class="filename">networkingBonX.cpp</code>,
     <code class="filename">networkingBonX.h</code>,
     <code class="filename">networkingVisitor.cpp</code>, and
     <code class="filename">networkingVisitor.h</code> to the Visual Studio
     project.</p><p>With BON2, you can extend the classes (e.g. NetDiagram) with
     domain-specific functions. The BONExtender interpreter can also generate
-    visitor code which simplifies the traversal of the model. </p><p>Here are example files: <a class="ulink" href="L3/BON2Ex/BON2Component.cpp" target="_top"><code class="filename">BON2Component.cpp</code></a>
+    visitor code which simplifies the traversal of the model.</p><div class="figure"><a name="N102A6"></a><p class="title"><b>Figure&nbsp;7.&nbsp;<span class="emphasis"><em>Networking</em></span> metamodel</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/networking meta.png" alt="Networking metamodel"></div></div></div><br class="figure-break"><p>The following code iterates through the top-level models (i.e. the
+    models under the root folder):</p><pre class="programlisting">std::set&lt;BON::Model&gt; rootModels = project-&gt;getRootFolder()-&gt;getChildModels();
+for (std::set&lt;BON::Model&gt;::iterator it = rootModels.begin(); it != rootModels.end(); it++) {
+}
+
+</pre><p>Child FCOs can be retrieved from a model by type:</p><pre class="programlisting">BON::Model diagram;
+std::set&lt;BON::FCO&gt; childModels = diagram-&gt;getChildFCOs("Router");
+for (std::set&lt;BON::FCO&gt;::iterator it = childModels.begin(); it != childModels.end(); it++) {
+ ProcessRouter(BON::Model(*it));
+}
+
+</pre><p>Attributes:</p><pre class="programlisting">BON::Atom port;
+std::string iftype = port-&gt;getAttribute("IFType")-&gt;getStringValue();
+int ifspeed = port-&gt;getAttribute("IFSpeed")-&gt;getIntegerValue();
+std::string ipaddr = port-&gt;getAttribute("IPAddress")-&gt;getStringValue();
+
+</pre><p>Connections:</p><pre class="programlisting">BON::Atom port;
+// Print the other end of all Connections
+std::set&lt;BON::Connection&gt; conns = port-&gt;getConnLinks();
+for (std::set&lt;BON::Connection&gt;::iterator it2 = conns.begin(); it2 != conns.end(); it2++) {
+ BON::ConnectionEnd other;
+ if ((*it2)-&gt;getDst() == *it) {
+  other = (*it2)-&gt;getSrc();
+ } else {
+  other = (*it2)-&gt;getDst();
+ }
+ // A ConnectionEnd is either an FCO or a ReferencePort
+ if (BON::FCO(other)) {
+  BON::FCO otherFCO(other);
+  Console::Out::WriteLine(CString("&amp;nbsp;&amp;nbsp;&amp;nbsp;Connected to ") + 
+  otherFCO-&gt;getObjectMeta().name() + " " + MakeHyperlink(otherFCO));
+ }
+}</pre><p>Here are example files: <a class="ulink" href="L3/BON2Ex/BON2Component.cpp" target="_top"><code class="filename">BON2Component.cpp</code></a>
     and <a class="ulink" href="L3/BON2Ex/BON2Component.h" target="_top"><code class="filename">BON2Component.h</code></a>.</p></div></div></body></html>

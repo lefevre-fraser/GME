@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../GME Manual and User Guide 2/lib/docbook-css-0.4/driver.css" type="text/css"?>
+<!-- export XALANCP="../GME Manual and User Guide/lib/resolver.jar;../GME Manual and User Guide/lib/xalan/serializer.jar;../GME Manual and User Guide/lib/xalan/xalan.jar;../GME Manual and User Guide/lib/xalan/xercesImpl.jar;../GME Manual and User Guide/lib/xalan/xml-apis.jar;../GME Manual and User Guide/" -->
+<!-- java -cp "$XALANCP" org.apache.xalan.xslt.Process -in "Lesson3.xml" -xsl ../GME\ Manual\ and\ User\ Guide/lib/docbook-xsl/html/onechunk.xsl -out "Lesson3.html" -param html.stylesheet docbook-xslt-style.css -->
+<!-- ?xml-stylesheet href="../GME Manual and User Guide/lib/docbook-css-0.4/driver.css" type="text/css"? -->
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <article>
@@ -362,6 +364,16 @@
       subfolders, so it is relatively easy to travel through all the root
       models in the diagram.</para>
 
+      <figure>
+        <title><emphasis>Networking</emphasis> metamodel</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="L3/networking meta.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
       <para>In <filename>BONComponent.cpp</filename>, insert:<programlisting>void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, CBuilderObjectList &amp;selected, long param) 
 {
   Console::Out::WriteLine("Interpreter started...");
@@ -516,7 +528,57 @@
 
     <para>With BON2, you can extend the classes (e.g. NetDiagram) with
     domain-specific functions. The BONExtender interpreter can also generate
-    visitor code which simplifies the traversal of the model. </para>
+    visitor code which simplifies the traversal of the model.</para>
+
+    <figure>
+      <title><emphasis>Networking</emphasis> metamodel</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="L3/networking meta.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>The following code iterates through the top-level models (i.e. the
+    models under the root folder):<programlisting>std::set&lt;BON::Model&gt; rootModels = project-&gt;getRootFolder()-&gt;getChildModels();
+for (std::set&lt;BON::Model&gt;::iterator it = rootModels.begin(); it != rootModels.end(); it++) {
+}
+
+</programlisting></para>
+
+    <para>Child FCOs can be retrieved from a model by type:<programlisting>BON::Model diagram;
+std::set&lt;BON::FCO&gt; childModels = diagram-&gt;getChildFCOs("Router");
+for (std::set&lt;BON::FCO&gt;::iterator it = childModels.begin(); it != childModels.end(); it++) {
+ ProcessRouter(BON::Model(*it));
+}
+
+</programlisting></para>
+
+    <para>Attributes:<programlisting>BON::Atom port;
+std::string iftype = port-&gt;getAttribute("IFType")-&gt;getStringValue();
+int ifspeed = port-&gt;getAttribute("IFSpeed")-&gt;getIntegerValue();
+std::string ipaddr = port-&gt;getAttribute("IPAddress")-&gt;getStringValue();
+
+</programlisting></para>
+
+    <para>Connections:<programlisting>BON::Atom port;
+// Print the other end of all Connections
+std::set&lt;BON::Connection&gt; conns = port-&gt;getConnLinks();
+for (std::set&lt;BON::Connection&gt;::iterator it2 = conns.begin(); it2 != conns.end(); it2++) {
+ BON::ConnectionEnd other;
+ if ((*it2)-&gt;getDst() == *it) {
+  other = (*it2)-&gt;getSrc();
+ } else {
+  other = (*it2)-&gt;getDst();
+ }
+ // A ConnectionEnd is either an FCO or a ReferencePort
+ if (BON::FCO(other)) {
+  BON::FCO otherFCO(other);
+  Console::Out::WriteLine(CString("&amp;nbsp;&amp;nbsp;&amp;nbsp;Connected to ") + 
+  otherFCO-&gt;getObjectMeta().name() + " " + MakeHyperlink(otherFCO));
+ }
+}</programlisting></para>
 
     <para>Here are example files: <ulink
     url="L3/BON2Ex/BON2Component.cpp"><filename>BON2Component.cpp</filename></ulink>
