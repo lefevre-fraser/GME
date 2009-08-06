@@ -51,28 +51,28 @@
 
                 <listitem>
                   <para>New decorator features:<itemizedlist>
-                        <listitem>
-                          <para>In place editing</para>
-                        </listitem>
+                      <listitem>
+                        <para>In-place editing of text</para>
+                      </listitem>
 
-                        <listitem>
-                          <para>Resizable boxes</para>
-                        </listitem>
+                      <listitem>
+                        <para>Resizable boxes</para>
+                      </listitem>
 
-                        <listitem>
-                          <para>Vectorial shapes (box, rounded corner box, triangle,
-                          diamond, constraint sign)</para>
-                        </listitem>
+                      <listitem>
+                        <para>Vectorial shapes (box, rounded corner box,
+                        triangle, diamond, constraint sign)</para>
+                      </listitem>
 
-                        <listitem>
-                          <para>Shadow casting and gradient fill of boxes and
-                          vectorial shapes</para>
-                        </listitem>
+                      <listitem>
+                        <para>Shadow casting and gradient fill of boxes and
+                        vectorial shapes</para>
+                      </listitem>
 
-                        <listitem>
-                          <para>Anti aliased fonts and edges</para>
-                        </listitem>
-                   </itemizedlist></para>
+                      <listitem>
+                        <para>Anti aliased fonts and edges</para>
+                      </listitem>
+                    </itemizedlist></para>
                 </listitem>
 
                 <listitem>
@@ -86,6 +86,105 @@
 
                 <listitem>
                   <para>Possibility to freely define connection lines</para>
+                </listitem>
+
+                <listitem>
+                  <para>Other minor improvements:<itemizedlist>
+                      <listitem>
+                        <para>Component registration dialog is now resizable
+                        and displays component locations in the
+                        filesystem</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Component registration dialog is now aware of
+                        UAC and privilege escalation on Windows Vista</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Project Properties dialog displays the location
+                        of the project file in the file system</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Aspect Mapping dialog is resizable in the Meta
+                        Interpreter</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Support for Back and Forward mouse buttons and
+                        also special keyboard keys: Back, Forward, Home,
+                        Refresh, Search</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Double click in the Connection Role Type
+                        Dialog's selection box now also closes the dialog with
+                        OK. This also affects the following dialogs: Resolve
+                        Folder Kind, Resolve Object Kind of ObjType, Resolve
+                        Role Type, Resolve Attribute Kind, Select Reference
+                        Role Type</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Middle button click on Model Editor tab closes
+                        it</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Connections becomes bold when selected</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Delete key deletes selected connection</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Using DisplayedName (instead of Name) in context
+                        menus, PartBrowser and decorators</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Double click on model's background in Model
+                        Editor opens the parent model</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Mouse scroll wheel works in PartBrowser (if it
+                        has the focus)</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>You can edit Preferences and Attributes in the
+                        Attribute Browser not just when you exactly click on
+                        the dropdown button, but clicking on the whole field
+                        area</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Tab buttons in the PartBrowser moved to the
+                        bottom of the tab control</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Drag-and-drop from PartBrowser into Model
+                        Editor</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Drag-and-drop from PartBrowser into Project
+                        Browser</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Console: Multiline, external script execution
+                        capability.</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Console: Improvements return/up/down</para>
+                      </listitem>
+                    </itemizedlist></para>
                 </listitem>
               </itemizedlist></para>
           </listitem>
@@ -2642,11 +2741,10 @@
           connection entities don't contain any directive about auto routing,
           so everything should work exactly the same way as with the older GME
           versions. You can exclude certain connections from the auto-routing
-          with the use of the <guilabel
-          moreinfo="none">Attribute Browser</guilabel> or the context menu. In
-          this case a registry value is added to the connection entity node,
-          and the auto routing logic no longer will take care of the
-          connection.</para>
+          with the use of the <guilabel moreinfo="none">Attribute
+          Browser</guilabel> or the context menu. In this case a registry
+          value is added to the connection entity node, and the auto routing
+          logic no longer will take care of the connection.</para>
 
           <para>If somebody turns off the default auto routing policy, and the
           model doesn't contain specific policies for connections, all of the
@@ -3471,8 +3569,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
 
           <listitem>
-            <para>The new decorators use vectorial graphics for
-            shapes like: inheritance (triangle), same relationship (diamond), connection
+            <para>The new decorators use vectorial graphics for shapes like:
+            inheritance (triangle), same relationship (diamond), connection
             bullets, constraint signs, boxes).</para>
           </listitem>
 
