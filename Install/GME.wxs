@@ -275,11 +275,6 @@
 	        <Component Id='Annotator.dll' Guid='d8ad8dd3-141c-4a64-be06-931b20b2492f'>
 	            <File Id="Annotator.dll" Name="Annotator.dll" KeyPath="yes" Source="..\GME\Annotator\Release\Annotator.dll">
 	                <TypeLib Id="{F0E585D5-1697-4698-B374-D73B0D6127D0}" Description="GME Annotator Type Library" Language="0" MajorVersion="1" MinorVersion="0">
-                        <Class Id="{B1028D44-C108-40C6-94FA-D51B3B56A7A8}" Context="InprocServer32" Description="MGA NewDecorator CoClass (NewAnnotator)" ThreadingModel="apartment" Programmable="yes">
-                            <ProgId Id="MGA.Decorator.NewAnnotator.1" Description="MGA NewDecorator CoClass (NewAnnotator)">
-                                <ProgId Id="MGA.Decorator.NewAnnotator" Description="MGA NewDecorator CoClass (NewAnnotator)" />
-                            </ProgId>
-                        </Class>
                         <Class Id="{D3CF55F1-D1AA-433E-982B-D2A6E22D8299}" Context="InprocServer32" Description="MGA Decorator CoClass (Annotator)" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="MGA.Decorator.Annotator.1" Description="MGA Decorator CoClass (Annotator)">
                                 <ProgId Id="MGA.Decorator.Annotator" Description="MGA Decorator CoClass (Annotator)" />
@@ -568,11 +563,6 @@
             <Component Id="MetaDecorator.dll" Guid="d269e1e4-15ff-496c-8eb6-bf088cc716b7">
                 <File Id="MetaDecorator.dll" Name="MetaDecorator.dll" KeyPath="yes" Source="..\Paradigms\MetaGME\MetaDecorator\Release\MetaDecorator.dll">
                     <TypeLib Id="{315F4696-6E31-48d2-8580-FA6CBB805520}" Description="MGA MetaDecorator Type Library" Language="0" MajorVersion="1" MinorVersion="0">
-                        <Class Id="{764947C7-A4CE-4A22-B02C-7E99948C26C6}" Context="InprocServer32" Description="MGA NewDecorator CoClass (NewMetaDecorator)" ThreadingModel="apartment" Programmable="yes">
-                            <ProgId Id="MGA.Decorator.NewMetaDecorator.1" Description="MGA NewDecorator CoClass (NewMetaDecorator)">
-                                <ProgId Id="MGA.Decorator.NewMetaDecorator" Description="MGA NewDecorator CoClass (NewMetaDecorator)" />
-                            </ProgId>
-                        </Class>
                         <Class Id="{E0062203-4CF9-424A-BF05-4F6590942015}" Context="InprocServer32" Description="MGA Decorator CoClass (MetaDecorator)" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="MGA.Decorator.MetaDecorator.1" Description="MGA Decorator CoClass (MetaDecorator)">
                                 <ProgId Id="MGA.Decorator.MetaDecorator" Description="MGA Decorator CoClass (MetaDecorator)" />
@@ -666,11 +656,6 @@
                         <Class Id="{3FA0768D-F832-4C6A-973D-5D8E3EF05FFA}" Context="InprocServer32" Description="BoxDecorator Class" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="Mga.BoxDecorator.1" Description="BoxDecorator Class">
                                 <ProgId Id="Mga.BoxDecorator" Description="BoxDecorator Class" />
-                            </ProgId>
-                        </Class>
-                        <Class Id="{F42CEA82-01DE-47A0-828E-C9A707E864E6}" Context="InprocServer32" Description="NewBoxDecorator Class" ThreadingModel="apartment" Programmable="yes">
-                            <ProgId Id="Mga.NewBoxDecorator.1" Description="NewBoxDecorator Class">
-                                <ProgId Id="Mga.NewBoxDecorator" Description="NewBoxDecorator Class" />
                             </ProgId>
                         </Class>
                     </TypeLib>                         
@@ -1280,11 +1265,6 @@
                                 <ProgId Id="Mga.UMLDecorator" Description="UMLDecorator Class" />
                             </ProgId>
                         </Class>
-                        <Class Id="{42FF26BF-F7EE-4B27-922E-FD31FB981F67}" Context="InprocServer32" Description="NewUMLDecorator Class" ThreadingModel="apartment" Programmable="yes">
-                            <ProgId Id="Mga.NewUMLDecorator.1" Description="NewUMLDecorator Class">
-                                <ProgId Id="Mga.NewUMLDecorator" Description="NewUMLDecorator Class" />
-                            </ProgId>
-                        </Class>
                     </TypeLib>    
                 </File>
             </Component>
@@ -1294,11 +1274,6 @@
             <Component Id="UMLDecoratorSource" Guid="{3E974827-B233-45F4-82CE-512387924349}">
                 <File Id="UMLDecoratorSource_DecoratorConfig.h" Name="DecoratorConfig.h" Source="..\Paradigms\UML\decorator\DecoratorConfig.h" />
                 <File Id="UMLDecoratorSource_DecoratorStd.h" Name="DecoratorStd.h"  Source="..\Paradigms\UML\decorator\DecoratorStd.h" />
-                <File Id="NewUMLDecorator.cpp" Name="NewUMLDecorator.cpp"  Source="..\Paradigms\UML\decorator\NewUMLDecorator.cpp" />
-                <File Id="NewUMLDecorator.h" Name="NewUMLDecorator.h"  Source="..\Paradigms\UML\decorator\NewUMLDecorator.h" />
-                <File Id="NewUMLDecorator.rgs" Name="NewUMLDecorator.rgs"  Source="..\Paradigms\UML\decorator\NewUMLDecorator.rgs" />
-                <File Id="NewUMLDecoratorImpl.cpp" Name="NewUMLDecoratorImpl.cpp"  Source="..\Paradigms\UML\decorator\NewUMLDecoratorImpl.cpp" />
-                <File Id="NewUMLDecoratorImpl.h" Name="NewUMLDecoratorImpl.h"  Source="..\Paradigms\UML\decorator\NewUMLDecoratorImpl.h" />
                 <File Id="UMLDecoratorSource_Resource.h" Name="Resource.h"  Source="..\Paradigms\UML\decorator\Resource.h" />
                 <File Id="UMLDecoratorSource_StdAfx.cpp" Name="StdAfx.cpp"  Source="..\Paradigms\UML\decorator\StdAfx.cpp" />
                 <File Id="UMLDecoratorSource_StdAfx.h" Name="StdAfx.h"  Source="..\Paradigms\UML\decorator\StdAfx.h" />
@@ -1884,6 +1859,8 @@
                 <File Id="InPlaceEditMultiLineDialog.h" Name="InPlaceEditMultiLineDialog.h"  Source="..\SDK\DecoratorLib\InPlaceEditMultiLineDialog.h" />
                 <File Id="InPlaceEditSingleLineDialog.cpp" Name="InPlaceEditSingleLineDialog.cpp"  Source="..\SDK\DecoratorLib\InPlaceEditSingleLineDialog.cpp" />
                 <File Id="InPlaceEditSingleLineDialog.h" Name="InPlaceEditSingleLineDialog.h"  Source="..\SDK\DecoratorLib\InPlaceEditSingleLineDialog.h" />
+                <File Id="InPlaceNativeDialog.cpp" Name="InPlaceNativeDialog.cpp"  Source="..\SDK\DecoratorLib\InPlaceNativeDialog.cpp" />
+                <File Id="InPlaceNativeDialog.h" Name="InPlaceNativeDialog.h"  Source="..\SDK\DecoratorLib\InPlaceNativeDialog.h" />
                 <File Id="LabelPart.cpp" Name="LabelPart.cpp"  Source="..\SDK\DecoratorLib\LabelPart.cpp" />
                 <File Id="LabelPart.h" Name="LabelPart.h"  Source="..\SDK\DecoratorLib\LabelPart.h" />
                 <File Id="MaskedBitmapPart.cpp" Name="MaskedBitmapPart.cpp"  Source="..\SDK\DecoratorLib\MaskedBitmapPart.cpp" />
@@ -1924,8 +1901,6 @@
                 <File Id="DecoratorLib_Stdafx.h" Name="Stdafx.h"  Source="..\SDK\DecoratorLib\Stdafx.h" />
                 <File Id="StereoLabelPart.cpp" Name="StereoLabelPart.cpp"  Source="..\SDK\DecoratorLib\StereoLabelPart.cpp" />
                 <File Id="StereoLabelPart.h" Name="StereoLabelPart.h"  Source="..\SDK\DecoratorLib\StereoLabelPart.h" />
-                <File Id="StereotypeDecorators.cpp" Name="StereotypeDecorators.cpp"  Source="..\SDK\DecoratorLib\StereotypeDecorators.cpp" />
-                <File Id="StereotypeDecorators.h" Name="StereotypeDecorators.h"  Source="..\SDK\DecoratorLib\StereotypeDecorators.h" />
                 <File Id="DecoratorLib_targetver.h" Name="targetver.h"  Source="..\SDK\DecoratorLib\targetver.h" />
                 <File Id="TextPart.cpp" Name="TextPart.cpp"  Source="..\SDK\DecoratorLib\TextPart.cpp" />
                 <File Id="TextPart.h" Name="TextPart.h"  Source="..\SDK\DecoratorLib\TextPart.h" />
