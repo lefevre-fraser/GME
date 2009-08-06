@@ -91,6 +91,16 @@
                 <listitem>
                   <para>Other minor improvements:<itemizedlist>
                       <listitem>
+                        <para>Ctrl + mouse wheel over Model Editor zooms the
+                        model in/out.</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Shift + mouse wheel over Model Editor scrolls the
+                        model horizontally.</para>
+                      </listitem>
+
+                      <listitem>
                         <para>Component registration dialog is now resizable
                         and displays component locations in the
                         filesystem</para>
@@ -193,7 +203,7 @@
             <para>Development:<itemizedlist>
                 <listitem>
                   <para>New decorator interface, decorator development
-                  supported by Visual Studio Wizard</para>
+                  is supported by Visual Studio Wizard</para>
                 </listitem>
 
                 <listitem>
@@ -4661,8 +4671,33 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       <section>
         <title><code>IMgaElementDecoratorEvents</code> Functions</title>
 
-        <para><programlisting format="linespecific">HRESULT Refresh()</programlisting>This
-        function signals to GME that a UI refresh is needed.</para>
+        <para><programlisting format="linespecific">HRESULT Refresh([in] refresh_mode_enum refreshMode)</programlisting>
+        This function signals to GME that a UI refresh is needed. The decorator can specify to GME what kind of refresh
+        is wanted:
+        <itemizedlist>
+            <listitem>
+              <para><code>RM_NOREFRESH</code> : No refresh</para>
+            </listitem>
+
+            <listitem>
+              <para><code>RM_REDRAW_SELF</code> : A graphical UI redraw</para>
+            </listitem>
+
+            <listitem>
+              <para><code>RM_REGENERATE_SELF</code> : complete refresh of the owner model's view including
+              regeneration of the decorators</para>
+            </listitem>
+
+            <listitem>
+              <para><code>RM_REGENERATE_PARENT_ALSO</code> : complete refresh of the owner model's parent model's view
+              (if it is open) including regeneration of the decorators</para>
+            </listitem>
+
+            <listitem>
+              <para><code>RM_REGENERATE_ALL_VIEWS</code> : regeneration of all open
+              views</para>
+            </listitem>
+        </itemizedlist></para>
 
         <para><programlisting format="linespecific">HRESULT OperationCanceled()</programlisting>The
         decorator signals GME that an initiated operation was canceled because
@@ -4845,7 +4880,49 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
     </section>
 
     <section>
+      <title>Visual Studio 2008 Decorator Wizard</title>
+
+      <para>The first time you wish to create a decorator project, you must
+      run <filename moreinfo="none">C:\Program
+      Files\GME\SDK\DecoratorWizard\setup90.js</filename>. This registers the decorator
+      project type in Visual Studio.</para>
+
+      <para>To create a Decorator project, open Visual Studio 2008. Go to <guimenu
+      moreinfo="none">File</guimenu> | <guisubmenu
+      moreinfo="none">New</guisubmenu> <guimenuitem
+      moreinfo="none">Project</guimenuitem>. Under <guimenu
+      moreinfo="none">Visual C++</guimenu>, select <guisubmenu
+      moreinfo="none">GME</guisubmenu>, then the Decorator template.
+      Give the project a name, then hit <guilabel
+      moreinfo="none">OK</guilabel>. The wizard generates UUIDs/CLSIDs/GUIDs
+      automatically, and does every required modification to the skeleton code.</para>
+
+      <figure>
+        <title>Starting the Decorator Wizard</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/Starting decorator wizard.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>The resulting configuration is a ready-to-compile Visual Studio 2008
+      Solution leveraging capabilites of the new <code>DecoratorLib</code>
+      library. The user is expected to
+      implement the component by modifying appropriate files of the skeleton code.
+      For further details see the section on <code>DecoratorLib</code></para>
+
+      <para>After building the project, the component
+      <filename>.dll</filename> is registered.</para>
+    </section>
+
+    <section>
       <title>Using the Decorator skeleton example code</title>
+
+      <para>The recommended method for decorator development is the Decorator
+      Wizard, see previous section. If for some reason you want to edit skeleton codes
+      directly, there are still two types of skeleton project provided in the SDK.</para>
 
       <para>The <code>NewDecoratorKit</code> sample takes advantage of the
       class hierarchy and utilities provided by the new
@@ -4961,9 +5038,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
 
           <listitem>
-            <para>Link <code>DecoratorLib.lib</code> for Release or
-            <code>DecoratorLibD.lib</code> for Debug version into you
-            project</para>
+            <para><code>DecoratorLib.lib</code> source code in the SDK</para>
           </listitem>
 
           <listitem>
@@ -4971,10 +5046,11 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
         </itemizedlist></para>
 
-      <para>it is advisable to start your project based on the
+      <para>It is recommended to use the Decorator Wizard to start the development.
+      If you start from scratch for some reason, you can start your project based on the
       <code>NewDecoratorKit</code> sample decorator, or one of the existing
       decorators, which are part of the GME source code: MgaDecorators, UML
-      decorator or Meta decorator.</para>
+      decorator (source can be found in the SDK also) or Meta decorator.</para>
 
       <para>The new class library hierarchy is based on the
       <code>PartInterface</code> C++ interface which is higher-level and much
