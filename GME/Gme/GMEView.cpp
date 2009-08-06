@@ -293,6 +293,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_RBUTTONDOWN()
 	ON_WM_LBUTTONDBLCLK()
+	ON_WM_MOUSEWHEEL()
 	ON_WM_APPCOMMAND()
 	ON_COMMAND(ID_VIEW_PARENT, OnViewParent)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PARENT, OnUpdateViewParent)
@@ -5672,6 +5673,26 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 	}
 	CScrollZoomView::OnRButtonDown(nFlags, ppoint);
 	this->SendNow();
+}
+
+BOOL CGMEView::OnMouseWheel(UINT fFlags, short zDelta, CPoint point)
+{
+	// handle zoom in/out
+	if (fFlags & MK_CONTROL) {
+		UINT uWheelScrollLines = GetMouseScrollLines();
+		int nToScroll = ::MulDiv(zDelta, uWheelScrollLines, WHEEL_DELTA);
+		if (nToScroll != 0) {
+			for(int i = 0; i < abs(nToScroll); i++) {
+				if (nToScroll > 0)
+					OnZoomIn();
+				else
+					OnZoomOut();
+			}
+		}
+		return TRUE;
+	}
+
+	return CScrollZoomView::OnMouseWheel(fFlags, zDelta, point);
 }
 
 void CGMEView::OnAppCommand(CWnd* pWnd, UINT nCmd, UINT nDevice, UINT nKey)

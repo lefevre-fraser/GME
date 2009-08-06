@@ -36,59 +36,8 @@ END_MESSAGE_MAP()
 	// standard GDI mapping modes are > 0
 
 
-UINT PASCAL _AfxGetMouseScrollLines()
-{
-	static UINT uCachedScrollLines;
-
-	// if we've already got it and we're not refreshing,
-	// return what we've already got
-
-	static UINT msgGetScrollLines;
-	static WORD nRegisteredMessage;
-
-	if (nRegisteredMessage == 0)
-	{
-		msgGetScrollLines = ::RegisterWindowMessage(MSH_SCROLL_LINES);
-		if (msgGetScrollLines == 0)
-			nRegisteredMessage = 1;     // couldn't register!  never try again
-		else
-			nRegisteredMessage = 2;     // it worked: use it
-	}
-
-	if (nRegisteredMessage == 2)
-	{
-		HWND hwMouseWheel = NULL;
-		hwMouseWheel = FindWindow(MSH_WHEELMODULE_CLASS, MSH_WHEELMODULE_TITLE);
-		if (hwMouseWheel && msgGetScrollLines)
-		{
-			uCachedScrollLines = (UINT)
-				::SendMessage(hwMouseWheel, msgGetScrollLines, 0, 0);
-			return uCachedScrollLines;
-		}
-	}
-
-	// couldn't use the window -- try system settings
-	uCachedScrollLines = 3; // reasonable default
-	{
-		HKEY hKey;
-		if (RegOpenKeyEx(HKEY_CURRENT_USER,  _T("Control Panel\\Desktop"),
-				0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
-		{
-			TCHAR szData[128];
-			DWORD dwKeyDataType;
-			DWORD dwDataBufSize = sizeof(szData)/sizeof(TCHAR);
-
-			if (RegQueryValueEx(hKey, _T("WheelScrollLines"), NULL, &dwKeyDataType,
-					(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
-			{
-				uCachedScrollLines = _tcstoul(szData, NULL, 10);
-			}
-			RegCloseKey(hKey);
-		}
-	}
-
-	return uCachedScrollLines;
-}
+UINT CScrollZoomView::uCachedScrollLines	= 3;
+bool CScrollZoomView::bScrollLinesRequested	= false;
 
 /////////////////////////////////////////////////////////////////////////////
 // CScrollZoomView construction/destruction
@@ -108,6 +57,21 @@ CScrollZoomView::CScrollZoomView()
 
 CScrollZoomView::~CScrollZoomView()
 {
+}
+
+UINT CScrollZoomView::GetMouseScrollLines(void)
+{
+
+	// if we've already got it and we're not refreshing,
+	// return what we've already got
+	if (bScrollLinesRequested)
+		return uCachedScrollLines;
+
+	// try system settings
+	::SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &uCachedScrollLines, 0);
+	bScrollLinesRequested = true;
+
+	return uCachedScrollLines;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -899,7 +863,7 @@ void CScrollZoomView::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 BOOL CScrollZoomView::OnMouseWheel(UINT fFlags, short zDelta, CPoint point)
 {
 	// we don't handle anything but scrolling just now
-	if (fFlags & (MK_SHIFT | MK_CONTROL))
+	if (fFlags & MK_CONTROL)
 		return FALSE;
 
 	// if the parent is a splitter, it will handle the message
@@ -935,12 +899,14 @@ BOOL CScrollZoomView::DoMouseWheel(UINT fFlags, short zDelta, CPoint point)
 	if (!bHasVertBar && !bHasHorzBar)
 		return FALSE;
 
+	bool preferHorizZoom = (fFlags & MK_SHIFT) != 0;
+
 	BOOL bResult = FALSE;
-	UINT uWheelScrollLines = _AfxGetMouseScrollLines();
+	UINT uWheelScrollLines = GetMouseScrollLines();
 	int nToScroll;
 	int nDisplacement;
 
-	if (bHasVertBar)
+	if (bHasVertBar && !(bHasHorzBar && preferHorizZoom))
 	{
 		nToScroll = ::MulDiv(-zDelta, uWheelScrollLines, WHEEL_DELTA);
 		if (nToScroll == -1 || uWheelScrollLines == WHEEL_PAGESCROLL)

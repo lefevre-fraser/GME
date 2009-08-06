@@ -24,9 +24,14 @@ class CScrollZoomView : public CView
 protected:
 	CScrollZoomView();
 
+	static UINT uCachedScrollLines;
+	static bool bScrollLinesRequested;
+
 public:
+	// used to specify default calculated page and line sizes
 	static AFX_DATA const SIZE sizeDefault;
-		// used to specify default calculated page and line sizes
+
+	static UINT GetMouseScrollLines(void);
 
 	// in logical units - call one of the following Set routines
 	void SetScaleToFitSize(SIZE sizeTotal);
@@ -41,8 +46,7 @@ public:
 
 	// for device units
 	CPoint GetDeviceScrollPosition() const;
-	void GetDeviceScrollSizes(int& nMapMode, SIZE& sizeTotal,
-			SIZE& sizePage, SIZE& sizeLine) const;
+	void GetDeviceScrollSizes(int& nMapMode, SIZE& sizeTotal, SIZE& sizePage, SIZE& sizeLine) const;
 
 // Operations
 public:
