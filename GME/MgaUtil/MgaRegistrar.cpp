@@ -956,6 +956,106 @@ STDMETHODIMP CMgaRegistrar::SetUndoQueueSize(regaccessmode_enum p_mode, BSTR p_q
 	COMCATCH(;)
 }
 
+STDMETHODIMP CMgaRegistrar::get_EdgeSmoothMode(regaccessmode_enum mode, edgesmoothmode_enum* smoothMode)
+{
+	COMTRY
+	{
+		LONG res;
+		CString str;
+		if(mode & RM_USER) {
+			CRegKey mga;
+			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
+			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+			if(res == ERROR_SUCCESS) {
+				str	= QueryValue(mga, "EdgeSmoothMode");
+				if(!str.IsEmpty()) {
+					REVOKE_SYS2(mode);
+				}
+			}
+		}
+		if(mode & (RM_SYSDOREAD)) {
+			CRegKey mga;
+			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
+			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+			if(res == ERROR_SUCCESS) {
+				str = QueryValue(mga, "EdgeSmoothMode");
+			}
+		}
+		*smoothMode = (edgesmoothmode_enum)(str.IsEmpty() ? 2 : strtol(str, NULL, 10));
+	}
+	COMCATCH(;)
+}
+
+STDMETHODIMP CMgaRegistrar::put_EdgeSmoothMode(regaccessmode_enum mode, edgesmoothmode_enum smoothMode)
+{
+	COMTRY
+	{
+		CString str;
+		str.Format("%d", smoothMode);
+		if(mode & RM_USER) {
+			CRegKey mga;
+			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
+			ERRTHROW( mga.SetStringValue( "EdgeSmoothMode", str));
+		}
+		if(mode & (RM_SYS | RM_TEST)) {
+			CRegKey mga;
+			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "EdgeSmoothMode", str));
+		}
+	}
+	COMCATCH(;)
+}
+
+STDMETHODIMP CMgaRegistrar::get_FontSmoothMode(regaccessmode_enum mode, fontsmoothmode_enum* smoothMode)
+{
+	COMTRY
+	{
+		LONG res;
+		CString str;
+		if(mode & RM_USER) {
+			CRegKey mga;
+			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
+			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+			if(res == ERROR_SUCCESS) {
+				str	= QueryValue(mga, "FontSmoothMode");
+				if(!str.IsEmpty()) {
+					REVOKE_SYS2(mode);
+				}
+			}
+		}
+		if(mode & (RM_SYSDOREAD)) {
+			CRegKey mga;
+			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
+			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+			if(res == ERROR_SUCCESS) {
+				str = QueryValue(mga, "FontSmoothMode");
+			}
+		}
+		*smoothMode = (fontsmoothmode_enum)(str.IsEmpty() ? 4 : strtol(str, NULL, 10));
+	}
+	COMCATCH(;)
+}
+
+STDMETHODIMP CMgaRegistrar::put_FontSmoothMode(regaccessmode_enum mode, fontsmoothmode_enum smoothMode)
+{
+	COMTRY
+	{
+		CString str;
+		str.Format("%d", smoothMode);
+		if(mode & RM_USER) {
+			CRegKey mga;
+			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
+			ERRTHROW( mga.SetStringValue( "FontSmoothMode", str));
+		}
+		if(mode & (RM_SYS | RM_TEST)) {
+			CRegKey mga;
+			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "FontSmoothMode", str));
+		}
+	}
+	COMCATCH(;)
+}
+
 STDMETHODIMP CMgaRegistrar::get_Paradigms(regaccessmode_enum mode, VARIANT *names)
 {
 	CHECK_OUT(names);

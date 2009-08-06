@@ -106,33 +106,16 @@ Facilities::Facilities()
 	m_gdip = NULL;	// Create the Gdiplus::Graphics object later, cause at this point GdiplusStartup may not be called by GMEApp
 	m_eEdgeAntiAlias = Gdiplus::SmoothingModeHighQuality;
 	m_eFontAntiAlias = Gdiplus::TextRenderingHintAntiAlias;
-	// If user wants to disable Font or Edge anti-aliasing (or smoothing), he/she can set the
-	// string registry keys under the "HKCU\Software\GME\GUI\FontAntiAlias" and "HKCU\Software\GME\GUI\EdgeAntiAlias"
-	// EdgeAntiAlias values: 0 - default (no smoothing), 1 - High speed mode, 2 - High quality mode
-	// FontAntiAlias values: 0 - default (system def.), 1 - SingleBitPerPixelGridFit, 2 - SingleBitPerPixel, 3 - AntiAliasGridFit,
-	//						 4 - AntiAlias, 5 - ClearTypeGridFit
-	HKEY hKey;
-	if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\GME\\GUI\\"),
-					 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
-	{
-		TCHAR szData[128];
-		DWORD dwKeyDataType;
-		DWORD dwDataBufSize = sizeof(szData)/sizeof(TCHAR);
 
-		if (RegQueryValueEx(hKey, _T("EdgeAntiAlias"), NULL, &dwKeyDataType,
-							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
-		{
-			long lEdgeAntiAlias = _tcstol(szData, NULL, 10);
-			m_eEdgeAntiAlias = (Gdiplus::SmoothingMode)lEdgeAntiAlias;
-		}
-		if (RegQueryValueEx(hKey, _T("FontAntiAlias"), NULL, &dwKeyDataType,
-							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
-		{
-			long lFontAntiAlias = _tcstol(szData, NULL, 10);
-			m_eFontAntiAlias = (Gdiplus::TextRenderingHint)lFontAntiAlias;
-		}
-		RegCloseKey(hKey);
-	}
+	CComPtr<IMgaRegistrar> registrar;
+	COMTHROW(registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar")));
+	ASSERT(registrar != NULL);
+	edgesmoothmode_enum edgeSmoothMode;
+	COMTHROW(registrar->get_EdgeSmoothMode(REGACCESS_USER, &edgeSmoothMode));
+	m_eEdgeAntiAlias = (Gdiplus::SmoothingMode)edgeSmoothMode;
+	fontsmoothmode_enum fontSmoothMode;
+	COMTHROW(registrar->get_FontSmoothMode(REGACCESS_USER, &fontSmoothMode));
+	m_eFontAntiAlias = (Gdiplus::TextRenderingHint)fontSmoothMode;
 
 	createFont( FONT_LABEL,			"Arial", FW_NORMAL,		false,	16 );
 	createFont( FONT_PORT,			"Arial", FW_BOLD,		false,	12 );

@@ -86,6 +86,14 @@ public:
 	STDMETHOD(SetNavigation)(regaccessmode_enum mode, VARIANT_BOOL enabled);
 	STDMETHOD(GetUndoQueueSize)(regaccessmode_enum mode, BSTR *queuesz);
 	STDMETHOD(SetUndoQueueSize)(regaccessmode_enum mode, BSTR queuesz);
+	STDMETHOD(get_EdgeSmoothMode)(regaccessmode_enum mode, edgesmoothmode_enum* smoothMode);
+	STDMETHOD(put_EdgeSmoothMode)(regaccessmode_enum mode, edgesmoothmode_enum smoothMode);
+	STDMETHOD(GetEdgeSmoothModeDisp)(regaccessmode_enum mode, edgesmoothmode_enum* smoothMode) { return get_EdgeSmoothMode( mode, smoothMode); }
+	STDMETHOD(SetEdgeSmoothModeDisp)(regaccessmode_enum mode, edgesmoothmode_enum smoothMode) { return put_EdgeSmoothMode( mode, smoothMode); }
+	STDMETHOD(get_FontSmoothMode)(regaccessmode_enum mode, fontsmoothmode_enum* smoothMode);
+	STDMETHOD(put_FontSmoothMode)(regaccessmode_enum mode, fontsmoothmode_enum smoothMode);
+	STDMETHOD(GetFontSmoothModeDisp)(regaccessmode_enum mode, fontsmoothmode_enum* smoothMode) { return get_FontSmoothMode( mode, smoothMode); }
+	STDMETHOD(SetFontSmoothModeDisp)(regaccessmode_enum mode, fontsmoothmode_enum smoothMode) { return put_FontSmoothMode( mode, smoothMode); }
 
 	STDMETHOD(get_Paradigms)(regaccessmode_enum mode, VARIANT *names);
 	STDMETHOD(GetParadigmsDisp)(regaccessmode_enum mode, VARIANT *names) { return get_Paradigms( mode, names); }

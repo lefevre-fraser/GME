@@ -156,6 +156,20 @@ typedef enum regaccessmode_enum {
 } regaccessmode_enum;
 
 
+typedef enum edgesmoothmode_enum {				// For clues see SetSmoothingMode SmoothingMode help in MSDN
+	EdgeSmooth_NoSmooth					= 0,	// This is the system default
+	EdgeSmooth_HighSpeedMode			= 1,	// Smoothing but better speed than high quality mode
+	EdgeSmooth_HighQualityMode			= 2		// The best quality
+} edgesmoothmode_enum;
+
+typedef enum fontsmoothmode_enum {				// For clues see SetTextRenderingHint TextRenderingHint help in MSDN
+	FontSmooth_SystemDefault			= 0,
+	FontSmooth_SingleBitPerPixelGridFit = 1,
+	FontSmooth_SingleBitPerPixel		= 2,
+	FontSmooth_AntiAliasGridFit			= 3,
+	FontSmooth_AntiAlias				= 4,
+	FontSmooth_ClearTypeGridFit			= 5
+} fontsmoothmode_enum;
 
 
 [
@@ -355,8 +369,34 @@ interface IMgaRegistrar : IDispatch
 	// --- UndoSize preference
 	[helpstring("getter for Undo size queue")]
 	HRESULT GetUndoQueueSize(regaccessmode_enum mode, BSTR *queuesz);
+
 	[helpstring("setter for Undo size queue. Valid if >=1. Affects GME performance. The smaller the faster.")]
 	HRESULT SetUndoQueueSize(regaccessmode_enum mode, BSTR queuesz);
+
+	// --- AntiAlias preferences
+	[propget, helpstring("property EdgeSmoothMode")]
+	HRESULT EdgeSmoothMode([in] regaccessmode_enum mode, [out, retval] edgesmoothmode_enum* smoothMode);
+
+	[propput, helpstring("property EdgeSmoothMode")]
+	HRESULT EdgeSmoothMode([in] regaccessmode_enum mode, [in] edgesmoothmode_enum smoothMode);
+
+	[helpstring("getter for Edge smooth mode (anti alias)")]
+	HRESULT GetEdgeSmoothModeDisp([in] regaccessmode_enum mode, [out, retval] edgesmoothmode_enum* smoothMode);
+
+	[helpstring("setter for Edge smooth mode (anti alias).")]
+	HRESULT SetEdgeSmoothModeDisp([in] regaccessmode_enum mode, [in] edgesmoothmode_enum smoothMode);
+
+	[propget, helpstring("property FontSmoothMode")]
+	HRESULT FontSmoothMode([in] regaccessmode_enum mode, [out, retval] fontsmoothmode_enum* smoothMode);
+
+	[propput, helpstring("property FontSmoothMode")]
+	HRESULT FontSmoothMode([in] regaccessmode_enum mode, [in] fontsmoothmode_enum smoothMode);
+
+	[helpstring("getter for Font smooth mode (anti alias)")]
+	HRESULT GetFontSmoothModeDisp([in] regaccessmode_enum mode, [out, retval] fontsmoothmode_enum* smoothMode);
+
+	[helpstring("setter for Font smooth mode (anti alias).")]
+	HRESULT SetFontSmoothModeDisp([in] regaccessmode_enum mode, [in] fontsmoothmode_enum smoothMode);
 
 	// --- Paradigms
 

@@ -16,16 +16,28 @@ const GUID CATID_ActiveScript = { 0xf0b7a1a1, 0x9847, 0x11cf, { 0x8f, 0x20, 0x0,
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/*static*/ const char * CGmeDlg::m_strZWidth   = "Fit Width";
-/*static*/ const char * CGmeDlg::m_strZHeight  = "Fit Height";
-/*static*/ const char * CGmeDlg::m_strZAll     = "Fit All";
+/*static*/ const char* CGmeDlg::m_strZWidth			= "Fit Width";
+/*static*/ const char* CGmeDlg::m_strZHeight		= "Fit Height";
+/*static*/ const char* CGmeDlg::m_strZAll			= "Fit All";
 
-/*static*/ const char * CGmeDlg::m_strFmtStrg  = "%g";
-/*static*/ const char * CGmeDlg::m_strFmtStrf  = "%f";
-/*static*/ const char * CGmeDlg::m_strFmtStrE  = "%E";
-/*static*/ const char * CGmeDlg::m_strFmtStre  = "%e";
-/*static*/ const char * CGmeDlg::m_strFmtStrg2  = "%.12g"; // the default one
-/*static*/ const char * CGmeDlg::m_strFmtStrf2  = "%lf";
+/*static*/ const char* CGmeDlg::m_strFmtStrg		= "%g";
+/*static*/ const char* CGmeDlg::m_strFmtStrf		= "%f";
+/*static*/ const char* CGmeDlg::m_strFmtStrE		= "%E";
+/*static*/ const char* CGmeDlg::m_strFmtStre		= "%e";
+/*static*/ const char* CGmeDlg::m_strFmtStrg2		= "%.12g"; // the default one
+/*static*/ const char* CGmeDlg::m_strFmtStrf2		= "%lf";
+
+/*static*/ const char* CGmeDlg::m_strESStrD			= "No Smooth";
+/*static*/ const char* CGmeDlg::m_strESStrHS		= "High Speed Mode";
+/*static*/ const char* CGmeDlg::m_strESStrHQ		= "High Quality Mode";
+
+/*static*/ const char* CGmeDlg::m_strFSStrSD		= "System Default";
+/*static*/ const char* CGmeDlg::m_strFSStrSBPPGF	= "Single Bit Per Pixel Grid Fit";
+/*static*/ const char* CGmeDlg::m_strFSStrSBPP		= "Single Bit Per Pixel";
+/*static*/ const char* CGmeDlg::m_strFSStrAAGF		= "Anti Alias Grid Fit";
+/*static*/ const char* CGmeDlg::m_strFSStrAA		= "Anti Alias";
+/*static*/ const char* CGmeDlg::m_strFSStrCTGF		= "Clear Type Grid Fit";
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CGmeDlg dialog
@@ -342,6 +354,12 @@ BOOL CGmeDlg::OnInitDialog()
 
 		// Undo queue size
 		fillUndoComboBox();
+
+		// Edge smoothing mode
+		fillEdgeSmoothModeComboBox();
+
+		// Font smoothing mode
+		fillFontSmoothModeComboBox();
 	}
 	MSGCATCH("Error while initializing GmeDlg",;)
 
@@ -429,6 +447,14 @@ void CGmeDlg::OnOK()
 	// Undo queue size
 	CString undo_queue_size = getUndoQueueSizeValue();
 	COMTHROW( registrar->SetUndoQueueSize( REGACCESS_USER, PutInBstr( undo_queue_size)) );
+
+	// Edge smoothing mode
+	edgesmoothmode_enum edgeSmoothMode = getEdgeSmoothModeValue();
+	COMTHROW( registrar->put_EdgeSmoothMode( REGACCESS_USER, edgeSmoothMode) );
+
+	// Font smoothing mode
+	fontsmoothmode_enum fontSmoothMode = getFontSmoothModeValue();
+	COMTHROW( registrar->put_FontSmoothMode( REGACCESS_USER, fontSmoothMode) );
 }
 
 
@@ -516,52 +542,6 @@ void CGmeDlg::OnExtEnable()
 	ExtControlManager();
 }
 
-CString CGmeDlg::getUndoQueueSizeValue()
-{
-	CString res( "10");
-	CWnd* combo = 0;
-	combo = GetDlgItem(IDC_UNDOSIZE);
-	if( combo)
-	{
-		CEdit* edit = 0;
-		edit = (CEdit*)( combo->GetDlgItem(1001));
-		if( edit)
-		{
-			char buff[100];
-			edit->GetLine(0, buff, sizeof(buff)-1);
-			int value = atoi( buff);
-			if( value > 0 && value < 100) // above 0 and below 100
-				res = buff;
-		}
-	}
-	return res;
-}
-
-CString CGmeDlg::getUndoQueueSizeFromReg()
-{
-	CString queuesize;
-	COMTHROW( registrar->GetUndoQueueSize( REGACCESS_USER, PutOut( queuesize)) );
-	if( queuesize.IsEmpty())
-		queuesize = "10";
-
-	return queuesize;
-}
-
-void CGmeDlg::fillUndoComboBox()
-{
-	CComboBox* sz_list = 0;
-	sz_list = (CComboBox*)GetDlgItem(IDC_UNDOSIZE);
-	sz_list->AddString("1");
-	sz_list->AddString("10");
-
-	CString regv = getUndoQueueSizeFromReg();
-	int pos = sz_list->FindStringExact( -1, regv);
-	if( pos == CB_ERR)
-		sz_list->InsertString( -1, regv);
-	sz_list->SelectString( -1, regv);
-
-}
-
 void CGmeDlg::fillZoomComboBox(int *list)
 {
 	if (!list) return;
@@ -606,19 +586,47 @@ void CGmeDlg::fillZoomComboBox(int *list)
 	}
 }
 
-void CGmeDlg::setZoomValue(CString& val )
+CString CGmeDlg::getZoomValueFromReg()
 {
-	CWnd* zoom = 0;
-	zoom = GetDlgItem(IDC_ZOOMS);
-	if( zoom) 
+	CString def_zoom;
+	CComBSTR bs_def_zoom;
+	COMTHROW( registrar->GetDefZoomLevel( REGACCESS_USER, &bs_def_zoom));
+	if( bs_def_zoom) 
+		CopyTo( bs_def_zoom, def_zoom);
+
+	int level = 100;
+	int zv = 0;
+	int l = _stscanf( (LPCTSTR) def_zoom, _T("%d"), &zv);
+	if( l == 1 && zv )
+		level = zv;
+
+	CString str;
+	if (level > 0)
 	{
-		CEdit* edit = 0;
-		edit = (CEdit*)(zoom->GetDlgItem(1001));
-		if( edit) 
-		{
-			edit->ReplaceSel( val);
-		}
+		char buff[100];
+		_itoa(level, buff, 10);
+		str = buff;
+		str += "%";
 	}
+	/*else // for now do not accept: ZOOM_WIDTH, ZOOM_HEIGHT, ZOOM_ALL values from the registry, see COMMENT above
+	{
+		switch (level)
+		{
+		case ZOOM_WIDTH:
+			str = m_strZWidth;
+			break;
+		case ZOOM_HEIGHT:
+			str = m_strZHeight;
+			break;
+		case ZOOM_ALL:
+			str = m_strZAll;
+			break;
+		}
+	}*/
+	
+	if( str.IsEmpty())
+		str = "100%";
+	return str;
 }
 
 CString CGmeDlg::getZoomValue()
@@ -666,51 +674,37 @@ CString CGmeDlg::getZoomValue()
 	return res;
 }
 
-CString CGmeDlg::getZoomValueFromReg()
+void CGmeDlg::setZoomValue(CString& val )
 {
-	CString def_zoom;
-	CComBSTR bs_def_zoom;
-	COMTHROW( registrar->GetDefZoomLevel( REGACCESS_USER, &bs_def_zoom));
-	if( bs_def_zoom) 
-		CopyTo( bs_def_zoom, def_zoom);
-
-	int level = 100;
-	int zv = 0;
-	int l = _stscanf( (LPCTSTR) def_zoom, _T("%d"), &zv);
-	if( l == 1 && zv )
-		level = zv;
-
-	CString str;
-	if (level > 0)
+	CWnd* zoom = 0;
+	zoom = GetDlgItem(IDC_ZOOMS);
+	if (zoom) 
 	{
-		char buff[100];
-		_itoa(level, buff, 10);
-		str = buff;
-		str += "%";
-	}
-	/*else // for now do not accept: ZOOM_WIDTH, ZOOM_HEIGHT, ZOOM_ALL values from the registry, see COMMENT above
-	{
-		switch (level)
+		CEdit* edit = 0;
+		edit = (CEdit*)(zoom->GetDlgItem(1001));
+		if (edit) 
 		{
-		case ZOOM_WIDTH:
-			str = m_strZWidth;
-			break;
-		case ZOOM_HEIGHT:
-			str = m_strZHeight;
-			break;
-		case ZOOM_ALL:
-			str = m_strZAll;
-			break;
+			edit->ReplaceSel( val);
 		}
-	}*/
-	
-	if( str.IsEmpty())
-		str = "100%";
-	return str;
+	}
 }
-void CGmeDlg::OnCbnSelchangeZooms()
+
+void CGmeDlg::fillFmtStrComboBox()
 {
-	// TODO: Add your control notification handler code here
+	CComboBox*  fmtBox = 0;
+	fmtBox = (CComboBox*)GetDlgItem(IDC_CMBFMTSTRS);
+	fmtBox->AddString( m_strFmtStrg);
+	fmtBox->AddString( m_strFmtStrf);
+	fmtBox->AddString( m_strFmtStre);
+	fmtBox->AddString( m_strFmtStrE);
+	fmtBox->AddString( m_strFmtStrg2);
+	fmtBox->AddString( m_strFmtStrf2);
+
+	CString regv = getFmtStrFromReg();
+	int pos = fmtBox->FindStringExact( -1, regv);
+	if( pos == CB_ERR)
+		fmtBox->InsertString( -1, regv);
+	fmtBox->SelectString( -1, regv);
 }
 
 CString CGmeDlg::getFmtStrFromReg()
@@ -746,21 +740,175 @@ CString CGmeDlg::getFmtStrValue()
 	return res;
 }
 
-void CGmeDlg::fillFmtStrComboBox()
+void CGmeDlg::fillUndoComboBox()
 {
-	CComboBox*  fmtBox = 0;
-	fmtBox = (CComboBox*)GetDlgItem(IDC_CMBFMTSTRS);
-	fmtBox->AddString( m_strFmtStrg);
-	fmtBox->AddString( m_strFmtStrf);
-	fmtBox->AddString( m_strFmtStre);
-	fmtBox->AddString( m_strFmtStrE);
-	fmtBox->AddString( m_strFmtStrg2);
-	fmtBox->AddString( m_strFmtStrf2);
+	CComboBox* sz_list = 0;
+	sz_list = (CComboBox*)GetDlgItem(IDC_UNDOSIZE);
+	sz_list->AddString("1");
+	sz_list->AddString("10");
 
-	CString regv = getFmtStrFromReg();
-	int pos = fmtBox->FindStringExact( -1, regv);
+	CString regv = getUndoQueueSizeFromReg();
+	int pos = sz_list->FindStringExact( -1, regv);
 	if( pos == CB_ERR)
-		fmtBox->InsertString( -1, regv);
-	fmtBox->SelectString( -1, regv);
+		sz_list->InsertString( -1, regv);
+	sz_list->SelectString( -1, regv);
+
 }
 
+CString CGmeDlg::getUndoQueueSizeFromReg()
+{
+	CString queuesize;
+	COMTHROW( registrar->GetUndoQueueSize( REGACCESS_USER, PutOut( queuesize)) );
+	if( queuesize.IsEmpty())
+		queuesize = "10";
+
+	return queuesize;
+}
+
+CString CGmeDlg::getUndoQueueSizeValue()
+{
+	CString res( "10");
+	CWnd* combo = 0;
+	combo = GetDlgItem(IDC_UNDOSIZE);
+	if( combo)
+	{
+		CEdit* edit = 0;
+		edit = (CEdit*)( combo->GetDlgItem(1001));
+		if( edit)
+		{
+			char buff[100];
+			edit->GetLine(0, buff, sizeof(buff)-1);
+			int value = atoi( buff);
+			if( value > 0 && value < 100) // above 0 and below 100
+				res = buff;
+		}
+	}
+	return res;
+}
+
+void CGmeDlg::fillEdgeSmoothModeComboBox()
+{
+	CComboBox* modeBox = 0;
+	modeBox = (CComboBox*)GetDlgItem(IDC_EDGESMOOTHMODE);
+	modeBox->AddString(m_strESStrD);
+	modeBox->AddString(m_strESStrHS);
+	modeBox->AddString(m_strESStrHQ);
+
+	CString regv = getEdgeSmoothModeStrFromReg();
+	int pos = modeBox->FindStringExact(-1, regv);
+	if (pos == CB_ERR)
+		modeBox->InsertString(-1, regv);
+	modeBox->SelectString(-1, regv);
+}
+
+CString CGmeDlg::getEdgeSmoothModeStrFromReg()
+{
+	edgesmoothmode_enum edgeSmoothMode;
+	COMTHROW(registrar->get_EdgeSmoothMode(REGACCESS_USER, &edgeSmoothMode));
+	CString reg_str;
+	switch(edgeSmoothMode) {
+		case EdgeSmooth_NoSmooth:			reg_str = m_strESStrD;	break;
+		case EdgeSmooth_HighSpeedMode:		reg_str = m_strESStrHS;	break;
+		default:
+		case EdgeSmooth_HighQualityMode:	reg_str = m_strESStrHQ;	break;
+	}
+	return reg_str;
+}
+
+edgesmoothmode_enum CGmeDlg::getEdgeSmoothModeValue()
+{
+	CString res(m_strESStrHQ);
+	CWnd* combo = 0;
+	combo = GetDlgItem(IDC_EDGESMOOTHMODE);
+	if (combo)
+	{
+		CEdit* edit = 0;
+		edit = (CEdit*)(combo->GetDlgItem(1001));
+		if (edit)
+		{
+			char buff[100];
+			edit->GetLine(0, buff, sizeof(buff)-1);
+			res = buff;
+		}
+	}
+	edgesmoothmode_enum edgeSmoothMode = EdgeSmooth_HighQualityMode;
+	if (res == m_strESStrD)
+		edgeSmoothMode = EdgeSmooth_NoSmooth;
+	else if (res == m_strESStrHS)
+		edgeSmoothMode = EdgeSmooth_HighSpeedMode;
+	else if (res == m_strESStrHQ)
+		edgeSmoothMode = EdgeSmooth_HighQualityMode;
+	return edgeSmoothMode;
+}
+
+void CGmeDlg::fillFontSmoothModeComboBox()
+{
+	CComboBox* modeBox = 0;
+	modeBox = (CComboBox*)GetDlgItem(IDC_FONTSMOOTHMODE);
+	modeBox->AddString(m_strFSStrSD);
+	modeBox->AddString(m_strFSStrSBPPGF);
+	modeBox->AddString(m_strFSStrSBPP);
+	modeBox->AddString(m_strFSStrAAGF);
+	modeBox->AddString(m_strFSStrAA);
+	modeBox->AddString(m_strFSStrCTGF);
+
+	CString regv = getFontSmoothModeStrFromReg();
+	int pos = modeBox->FindStringExact(-1, regv);
+	if (pos == CB_ERR)
+		modeBox->InsertString(-1, regv);
+	modeBox->SelectString(-1, regv);
+}
+
+CString CGmeDlg::getFontSmoothModeStrFromReg()
+{
+	fontsmoothmode_enum fontSmoothMode;
+	COMTHROW(registrar->get_FontSmoothMode(REGACCESS_USER, &fontSmoothMode));
+	CString reg_str;
+	switch(fontSmoothMode) {
+		case FontSmooth_SystemDefault:				reg_str = m_strFSStrSD;		break;
+		case FontSmooth_SingleBitPerPixelGridFit:	reg_str = m_strFSStrSBPPGF;	break;
+		case FontSmooth_SingleBitPerPixel:			reg_str = m_strFSStrSBPP;	break;
+		case FontSmooth_AntiAliasGridFit:			reg_str = m_strFSStrAAGF;	break;
+		default:
+		case FontSmooth_AntiAlias:					reg_str = m_strFSStrAA;		break;
+		case FontSmooth_ClearTypeGridFit:			reg_str = m_strFSStrCTGF;	break;
+	}
+	return reg_str;
+}
+
+fontsmoothmode_enum CGmeDlg::getFontSmoothModeValue()
+{
+	CString res(m_strFSStrAA);
+	CWnd* combo = 0;
+	combo = GetDlgItem(IDC_FONTSMOOTHMODE);
+	if (combo)
+	{
+		CEdit* edit = 0;
+		edit = (CEdit*)(combo->GetDlgItem(1001));
+		if (edit)
+		{
+			char buff[100];
+			edit->GetLine(0, buff, sizeof(buff)-1);
+			res = buff;
+		}
+	}
+	fontsmoothmode_enum fontSmoothMode = FontSmooth_AntiAlias;
+	if (res == m_strFSStrSD)
+		fontSmoothMode = FontSmooth_SystemDefault;
+	else if (res == m_strFSStrSBPPGF)
+		fontSmoothMode = FontSmooth_SingleBitPerPixelGridFit;
+	else if (res == m_strFSStrSBPP)
+		fontSmoothMode = FontSmooth_SingleBitPerPixel;
+	else if (res == m_strFSStrAAGF)
+		fontSmoothMode = FontSmooth_AntiAliasGridFit;
+	else if (res == m_strFSStrAA)
+		fontSmoothMode = FontSmooth_AntiAlias;
+	else if (res == m_strFSStrCTGF)
+		fontSmoothMode = FontSmooth_ClearTypeGridFit;
+	return fontSmoothMode;
+}
+
+void CGmeDlg::OnCbnSelchangeZooms()
+{
+	// TODO: Add your control notification handler code here
+}

@@ -227,7 +227,9 @@
 #define IDC_EDIT_CORNERRADIUS           2290
 #define IDC_SHOWCOMPONENTSSTATIC        2290
 #define IDC_STATIC_SHADOWDIRECTION      2291
+#define IDC_EDGESMOOTHMODE              2291
 #define IDC_EDIT_SHADOWDIRECTION        2292
+#define IDC_FONTSMOOTHMODE              2292
 #define ID_CNTX_ADDNODE                 32774
 #define ID_CNTX_CLEARNODE               32775
 #define ID_CNTX_REMOVETREE              32776
@@ -240,7 +242,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        2074
 #define _APS_NEXT_COMMAND_VALUE         32779
-#define _APS_NEXT_CONTROL_VALUE         2291
+#define _APS_NEXT_CONTROL_VALUE         2293
 #define _APS_NEXT_SYMED_VALUE           2091
 #endif
 #endif

@@ -7,6 +7,8 @@
 // GmeDlg.h : header file
 //
 
+#include "Resource.h"
+
 // copied from GmeStd.h, keep in sync with that!
 #define ZOOM_WIDTH	-1
 #define ZOOM_HEIGHT	-2
@@ -84,15 +86,23 @@ protected:
 private:
 	void fillScripEngineList();
 
-	CString getZoomValueFromReg();
-	void fillZoomComboBox(int *list);
-	void setZoomValue(CString& val);
-	CString getZoomValue();
 	int m_zoomList[MAX_ZOOM];
 
-	static const char * m_strZWidth;   // "Fit Width";
-	static const char * m_strZHeight;  // "Fit Height";
-	static const char * m_strZAll;     // "Fit All";
+	static const char* m_strZWidth;   // "Fit Width";
+	static const char* m_strZHeight;  // "Fit Height";
+	static const char* m_strZAll;     // "Fit All";
+
+	void fillZoomComboBox(int *list);
+	CString getZoomValueFromReg();
+	CString getZoomValue();
+	void setZoomValue(CString& val);
+
+	static const char* m_strFmtStrg;
+	static const char* m_strFmtStrf;
+	static const char* m_strFmtStre;
+	static const char* m_strFmtStrE;
+	static const char* m_strFmtStrg2;
+	static const char* m_strFmtStrf2;
 
 	void fillFmtStrComboBox();
 	CString getFmtStrFromReg();
@@ -102,12 +112,24 @@ private:
 	CString getUndoQueueSizeFromReg();
 	CString getUndoQueueSizeValue();
 
-	static const char * m_strFmtStrg;
-	static const char * m_strFmtStrf;
-	static const char * m_strFmtStre;
-	static const char * m_strFmtStrE;
-	static const char * m_strFmtStrg2;
-	static const char * m_strFmtStrf2;
+	static const char* m_strESStrD;
+	static const char* m_strESStrHS;
+	static const char* m_strESStrHQ;
+
+	void fillEdgeSmoothModeComboBox();
+	CString getEdgeSmoothModeStrFromReg();
+	edgesmoothmode_enum getEdgeSmoothModeValue();
+
+	static const char* m_strFSStrSD;
+	static const char* m_strFSStrSBPPGF;
+	static const char* m_strFSStrSBPP;
+	static const char* m_strFSStrAAGF;
+	static const char* m_strFSStrAA;
+	static const char* m_strFSStrCTGF;
+
+	void fillFontSmoothModeComboBox();
+	CString getFontSmoothModeStrFromReg();
+	fontsmoothmode_enum getFontSmoothModeValue();
 
 public:
 	afx_msg void OnCbnSelchangeZooms();
