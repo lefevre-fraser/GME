@@ -50,6 +50,8 @@ STDMETHODIMP CMetaDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart*
 
 STDMETHODIMP CMetaDecoratorImpl::Destroy()
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	VERIFY_INITIALIZATION
 
 	HRESULT retVal = S_OK;
@@ -349,6 +351,8 @@ STDMETHODIMP CMetaDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 
 STDMETHODIMP CMetaDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseMoved(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -367,6 +371,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG poin
 
 STDMETHODIMP CMetaDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseLeftButtonDown(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -385,6 +391,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, 
 
 STDMETHODIMP CMetaDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseLeftButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -403,6 +411,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LO
 
 STDMETHODIMP CMetaDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseLeftButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -421,6 +431,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG p
 
 STDMETHODIMP CMetaDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseRightButtonDown((HMENU) hCtxMenu, nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -439,6 +451,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG 
 
 STDMETHODIMP CMetaDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseRightButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -457,6 +471,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, L
 
 STDMETHODIMP CMetaDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseRightButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -475,6 +491,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG 
 
 STDMETHODIMP CMetaDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseMiddleButtonDown(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -493,6 +511,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx
 
 STDMETHODIMP CMetaDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseMiddleButtonUp(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -511,6 +531,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, 
 
 STDMETHODIMP CMetaDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseMiddleButtonDoubleClick(nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -529,6 +551,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG
 
 STDMETHODIMP CMetaDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MouseWheelTurned(nFlags, (short)distance, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -547,6 +571,8 @@ STDMETHODIMP CMetaDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, L
 
 STDMETHODIMP CMetaDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->DragEnter((DROPEFFECT*)dropEffect, (COleDataObject*)pCOleDataObject, (DWORD)keyState, CPoint(pointx, pointy), (HDC)transformHDC)) {
@@ -567,6 +593,8 @@ STDMETHODIMP CMetaDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDat
 
 STDMETHODIMP CMetaDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->DragOver((DROPEFFECT*)dropEffect, (COleDataObject*)pCOleDataObject, (DWORD)keyState, CPoint(pointx, pointy), (HDC)transformHDC)) {
@@ -587,6 +615,8 @@ STDMETHODIMP CMetaDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleData
 
 STDMETHODIMP CMetaDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->Drop((COleDataObject*)pCOleDataObject, (DROPEFFECT)dropEffect, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -605,6 +635,8 @@ STDMETHODIMP CMetaDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffec
 
 STDMETHODIMP CMetaDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->DropFile((HDROP)hDropInfo, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -623,6 +655,8 @@ STDMETHODIMP CMetaDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG
 
 STDMETHODIMP CMetaDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->MenuItemSelected(menuItemId, nFlags, CPoint(pointx, pointy), (HDC)transformHDC))
@@ -641,6 +675,8 @@ STDMETHODIMP CMetaDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags
 
 STDMETHODIMP CMetaDecoratorImpl::OperationCanceled()
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	HRESULT retVal = S_OK;
 	try {
 		if (m_pElementDecorator->OperationCanceledByGME())
