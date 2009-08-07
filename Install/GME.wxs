@@ -1861,6 +1861,8 @@
                 <File Id="ConstraintVectorPart.h" Name="ConstraintVectorPart.h"  Source="..\SDK\DecoratorLib\ConstraintVectorPart.h" />
                 <File Id="DecoratorDefs.cpp" Name="DecoratorDefs.cpp"  Source="..\SDK\DecoratorLib\DecoratorDefs.cpp" />
                 <File Id="DecoratorDefs.h" Name="DecoratorDefs.h"  Source="..\SDK\DecoratorLib\DecoratorDefs.h" />
+                <File Id="DecoratorError.cpp" Name="DecoratorError.cpp"  Source="..\SDK\DecoratorLib\DecoratorError.cpp" />
+                <File Id="DecoratorError.h" Name="DecoratorError.h"  Source="..\SDK\DecoratorLib\DecoratorError.h" />
                 <File Id="DecoratorExceptions.cpp" Name="DecoratorExceptions.cpp"  Source="..\SDK\DecoratorLib\DecoratorExceptions.cpp" />
                 <File Id="DecoratorExceptions.h" Name="DecoratorExceptions.h"  Source="..\SDK\DecoratorLib\DecoratorExceptions.h" />
                 <File Id="DecoratorInterface.cpp" Name="DecoratorInterface.cpp"  Source="..\SDK\DecoratorLib\DecoratorInterface.cpp" />
@@ -1870,6 +1872,10 @@
                 <File Id="DecoratorLib.rc" Name="DecoratorLib.rc"  Source="..\SDK\DecoratorLib\DecoratorLib.rc" />
                 <File Id="DecoratorLib.sln" Name="DecoratorLib.sln" KeyPath="yes" Source="..\SDK\DecoratorLib\DecoratorLib.sln" />
                 <File Id="DecoratorLib.vcproj" Name="DecoratorLib.vcproj"  Source="..\SDK\DecoratorLib\DecoratorLib.vcproj" />
+                <File Id="DecoratorMfc.cpp" Name="DecoratorMfc.cpp"  Source="..\SDK\DecoratorLib\DecoratorMfc.cpp" />
+                <File Id="DecoratorMfc.h" Name="DecoratorMfc.h"  Source="..\SDK\DecoratorLib\DecoratorMfc.h" />
+                <File Id="DecoratorSmart.cpp" Name="DecoratorSmart.cpp"  Source="..\SDK\DecoratorLib\DecoratorSmart.cpp" />
+                <File Id="DecoratorSmart.h" Name="DecoratorSmart.h"  Source="..\SDK\DecoratorLib\DecoratorSmart.h" />
                 <File Id="DecoratorUtil.cpp" Name="DecoratorUtil.cpp"  Source="..\SDK\DecoratorLib\DecoratorUtil.cpp" />
                 <File Id="DecoratorUtil.h" Name="DecoratorUtil.h"  Source="..\SDK\DecoratorLib\DecoratorUtil.h" />
                 <File Id="DiamondVectorPart.cpp" Name="DiamondVectorPart.cpp"  Source="..\SDK\DecoratorLib\DiamondVectorPart.cpp" />
@@ -2042,49 +2048,49 @@
 
         <DirectoryRef Id="INSTALLDIR_SDK_DECORATOREXAMPLES_NEWSAMPLE">
             <Component Id="DecoratorExamplesNewSample" Guid="{1E84229B-F4DE-48f7-B762-D9C50874B855}">
-                <File Id="DecoratorExamplesNewSample_Decorator.cpp" Name="Decorator.cpp" Source="..\SDK\NewDecorKit\Decorator.cpp" />
-                <File Id="DecoratorExamplesNewSample_Decorator.h" Name="Decorator.h" Source="..\SDK\NewDecorKit\Decorator.h" />
-                <File Id="DecoratorExamplesNewSample_Decorator.rc" Name="Decorator.rc" KeyPath="yes" Source="..\SDK\NewDecorKit\Decorator.rc" />
-                <File Id="DecoratorExamplesNewSample_Decorator.rgs" Name="Decorator.rgs" Source="..\SDK\NewDecorKit\Decorator.rgs" />
-                <File Id="DecoratorExamplesNewSample_Decorator.sln" Name="Decorator.sln" Source="..\SDK\NewDecorKit\Decorator.sln" />
-                <File Id="DecoratorExamplesNewSample_Decorator.vcproj" Name="Decorator.vcproj" Source="..\SDK\NewDecorKit\Decorator.vcproj" />
-                <File Id="DecoratorExamplesNewSample_DecoratorApp.cpp" Name="DecoratorApp.cpp" Source="..\SDK\NewDecorKit\DecoratorApp.cpp" />
-                <File Id="DecoratorExamplesNewSample_DecoratorApp.def" Name="DecoratorApp.def" Source="..\SDK\NewDecorKit\DecoratorApp.def" />
-                <File Id="DecoratorExamplesNewSample_DecoratorCompositePart.cpp" Name="DecoratorCompositePart.cpp" Source="..\SDK\NewDecorKit\DecoratorCompositePart.cpp" />
-                <File Id="DecoratorExamplesNewSample_DecoratorCompositePart.h" Name="DecoratorCompositePart.h" Source="..\SDK\NewDecorKit\DecoratorCompositePart.h" />
-                <File Id="DecoratorExamplesNewSample_DecoratorConfig.h" Name="DecoratorConfig.h" Source="..\SDK\NewDecorKit\DecoratorConfig.h" />
-                <File Id="DecoratorExamplesNewSample_DecoratorImpl.cpp" Name="DecoratorImpl.cpp" Source="..\SDK\NewDecorKit\DecoratorImpl.cpp" />
-                <File Id="DecoratorExamplesNewSample_DecoratorImpl.h" Name="DecoratorImpl.h" Source="..\SDK\NewDecorKit\DecoratorImpl.h" />
-                <File Id="DecoratorExamplesNewSample_DecoratorLib.idl" Name="DecoratorLib.idl" Source="..\SDK\NewDecorKit\DecoratorLib.idl" />
-                <File Id="DecoratorExamplesNewSample_GMEOLEData.cpp" Name="GMEOLEData.cpp" Source="..\SDK\NewDecorKit\GMEOLEData.cpp" />
-                <File Id="DecoratorExamplesNewSample_GMEOLEData.h" Name="GMEOLEData.h" Source="..\SDK\NewDecorKit\GMEOLEData.h" />
-                <File Id="DecoratorExamplesNewSample_mfcdual.cpp" Name="mfcdual.cpp" Source="..\SDK\NewDecorKit\mfcdual.cpp" />
-                <File Id="DecoratorExamplesNewSample_mfcdual.h" Name="mfcdual.h" Source="..\SDK\NewDecorKit\mfcdual.h" />
-                <File Id="DecoratorExamplesNewSample_resource.h" Name="resource.h" Source="..\SDK\NewDecorKit\resource.h" />
-                <File Id="DecoratorExamplesNewSample_StdAfx.cpp" Name="StdAfx.cpp" Source="..\SDK\NewDecorKit\StdAfx.cpp" />
-                <File Id="DecoratorExamplesNewSample_StdAfx.h" Name="StdAfx.h" Source="..\SDK\NewDecorKit\StdAfx.h" />
+                <File Id="DecoratorExamplesNewSample_Decorator.cpp" Name="Decorator.cpp" Source="..\SDK\Decorator Examples\NewSample\Decorator.cpp" />
+                <File Id="DecoratorExamplesNewSample_Decorator.h" Name="Decorator.h" Source="..\SDK\Decorator Examples\NewSample\Decorator.h" />
+                <File Id="DecoratorExamplesNewSample_Decorator.rc" Name="Decorator.rc" KeyPath="yes" Source="..\SDK\Decorator Examples\NewSample\Decorator.rc" />
+                <File Id="DecoratorExamplesNewSample_Decorator.rgs" Name="Decorator.rgs" Source="..\SDK\Decorator Examples\NewSample\Decorator.rgs" />
+                <File Id="DecoratorExamplesNewSample_Decorator.sln" Name="Decorator.sln" Source="..\SDK\Decorator Examples\NewSample\Decorator.sln" />
+                <File Id="DecoratorExamplesNewSample_Decorator.vcproj" Name="Decorator.vcproj" Source="..\SDK\Decorator Examples\NewSample\Decorator.vcproj" />
+                <File Id="DecoratorExamplesNewSample_DecoratorApp.cpp" Name="DecoratorApp.cpp" Source="..\SDK\Decorator Examples\NewSample\DecoratorApp.cpp" />
+                <File Id="DecoratorExamplesNewSample_DecoratorApp.def" Name="DecoratorApp.def" Source="..\SDK\Decorator Examples\NewSample\DecoratorApp.def" />
+                <File Id="DecoratorExamplesNewSample_DecoratorCompositePart.cpp" Name="DecoratorCompositePart.cpp" Source="..\SDK\Decorator Examples\NewSample\DecoratorCompositePart.cpp" />
+                <File Id="DecoratorExamplesNewSample_DecoratorCompositePart.h" Name="DecoratorCompositePart.h" Source="..\SDK\Decorator Examples\NewSample\DecoratorCompositePart.h" />
+                <File Id="DecoratorExamplesNewSample_DecoratorConfig.h" Name="DecoratorConfig.h" Source="..\SDK\Decorator Examples\NewSample\DecoratorConfig.h" />
+                <File Id="DecoratorExamplesNewSample_DecoratorImpl.cpp" Name="DecoratorImpl.cpp" Source="..\SDK\Decorator Examples\NewSample\DecoratorImpl.cpp" />
+                <File Id="DecoratorExamplesNewSample_DecoratorImpl.h" Name="DecoratorImpl.h" Source="..\SDK\Decorator Examples\NewSample\DecoratorImpl.h" />
+                <File Id="DecoratorExamplesNewSample_DecoratorLib.idl" Name="DecoratorLib.idl" Source="..\SDK\Decorator Examples\NewSample\DecoratorLib.idl" />
+                <File Id="DecoratorExamplesNewSample_GMEOLEData.cpp" Name="GMEOLEData.cpp" Source="..\SDK\Decorator Examples\NewSample\GMEOLEData.cpp" />
+                <File Id="DecoratorExamplesNewSample_GMEOLEData.h" Name="GMEOLEData.h" Source="..\SDK\Decorator Examples\NewSample\GMEOLEData.h" />
+                <File Id="DecoratorExamplesNewSample_mfcdual.cpp" Name="mfcdual.cpp" Source="..\SDK\Decorator Examples\NewSample\mfcdual.cpp" />
+                <File Id="DecoratorExamplesNewSample_mfcdual.h" Name="mfcdual.h" Source="..\SDK\Decorator Examples\NewSample\mfcdual.h" />
+                <File Id="DecoratorExamplesNewSample_resource.h" Name="resource.h" Source="..\SDK\Decorator Examples\NewSample\resource.h" />
+                <File Id="DecoratorExamplesNewSample_StdAfx.cpp" Name="StdAfx.cpp" Source="..\SDK\Decorator Examples\NewSample\StdAfx.cpp" />
+                <File Id="DecoratorExamplesNewSample_StdAfx.h" Name="StdAfx.h" Source="..\SDK\Decorator Examples\NewSample\StdAfx.h" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_SDK_DECORATOREXAMPLES_PLAINSAMPLE">
             <Component Id="DecoratorExamplesPlainSample" Guid="{A8F5CCA0-3BAE-4089-9A6F-54E46FA89173}">
-                <File Id="DecoratorExamplesPlainSample_CommonError.cpp" Name="CommonError.cpp" KeyPath="yes" Source="..\SDK\DecorKit\CommonError.cpp" />
-                <File Id="DecoratorExamplesPlainSample_CommonError.h" Name="CommonError.h" Source="..\SDK\DecorKit\CommonError.h" />
-                <File Id="DecoratorExamplesPlainSample_CommonSmart.h" Name="CommonSmart.h" Source="..\SDK\DecorKit\CommonSmart.h" />
-                <File Id="DecoratorExamplesPlainSample_Decorator.cpp" Name="Decorator.cpp" Source="..\SDK\DecorKit\Decorator.cpp" />
-                <File Id="DecoratorExamplesPlainSample_Decorator.h" Name="Decorator.h" Source="..\SDK\DecorKit\Decorator.h" />
-                <File Id="DecoratorExamplesPlainSample_Decorator.rc" Name="Decorator.rc" Source="..\SDK\DecorKit\Decorator.rc" />
-                <File Id="DecoratorExamplesPlainSample_Decorator.rgs" Name="Decorator.rgs" Source="..\SDK\DecorKit\Decorator.rgs" />
-                <File Id="DecoratorExamplesPlainSample_Decorator.sln" Name="Decorator.sln" Source="..\SDK\DecorKit\Decorator.sln" />
-                <File Id="DecoratorExamplesPlainSample_Decorator.vcproj" Name="Decorator.vcproj" Source="..\SDK\DecorKit\Decorator.vcproj" />
-                <File Id="DecoratorExamplesPlainSample_DecoratorApp.cpp" Name="DecoratorApp.cpp" Source="..\SDK\DecorKit\DecoratorApp.cpp" />
-                <File Id="DecoratorExamplesPlainSample_DecoratorApp.def" Name="DecoratorApp.def" Source="..\SDK\DecorKit\DecoratorApp.def" />
-                <File Id="DecoratorExamplesPlainSample_DecoratorConfig.h" Name="DecoratorConfig.h" Source="..\SDK\DecorKit\DecoratorConfig.h" />
-                <File Id="DecoratorExamplesPlainSample_DecoratorDefs.h" Name="DecoratorDefs.h" Source="..\SDK\DecorKit\DecoratorDefs.h" />
-                <File Id="DecoratorExamplesPlainSample_DecoratorLib.idl" Name="DecoratorLib.idl" Source="..\SDK\DecorKit\DecoratorLib.idl" />
-                <File Id="DecoratorExamplesPlainSample_resource.h" Name="resource.h" Source="..\SDK\DecorKit\resource.h" />
-                <File Id="DecoratorExamplesPlainSample_StdAfx.cpp" Name="StdAfx.cpp" Source="..\SDK\DecorKit\StdAfx.cpp" />
-                <File Id="DecoratorExamplesPlainSample_StdAfx.h" Name="StdAfx.h" Source="..\SDK\DecorKit\StdAfx.h" />
+                <File Id="DecoratorExamplesPlainSample_CommonError.cpp" Name="CommonError.cpp" KeyPath="yes" Source="..\SDK\Decorator Examples\PlainSample\CommonError.cpp" />
+                <File Id="DecoratorExamplesPlainSample_CommonError.h" Name="CommonError.h" Source="..\SDK\Decorator Examples\PlainSample\CommonError.h" />
+                <File Id="DecoratorExamplesPlainSample_CommonSmart.h" Name="CommonSmart.h" Source="..\SDK\Decorator Examples\PlainSample\CommonSmart.h" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.cpp" Name="Decorator.cpp" Source="..\SDK\Decorator Examples\PlainSample\Decorator.cpp" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.h" Name="Decorator.h" Source="..\SDK\Decorator Examples\PlainSample\Decorator.h" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.rc" Name="Decorator.rc" Source="..\SDK\Decorator Examples\PlainSample\Decorator.rc" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.rgs" Name="Decorator.rgs" Source="..\SDK\Decorator Examples\PlainSample\Decorator.rgs" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.sln" Name="Decorator.sln" Source="..\SDK\Decorator Examples\PlainSample\Decorator.sln" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.vcproj" Name="Decorator.vcproj" Source="..\SDK\Decorator Examples\PlainSample\Decorator.vcproj" />
+                <File Id="DecoratorExamplesPlainSample_DecoratorApp.cpp" Name="DecoratorApp.cpp" Source="..\SDK\Decorator Examples\PlainSample\DecoratorApp.cpp" />
+                <File Id="DecoratorExamplesPlainSample_DecoratorApp.def" Name="DecoratorApp.def" Source="..\SDK\Decorator Examples\PlainSample\DecoratorApp.def" />
+                <File Id="DecoratorExamplesPlainSample_DecoratorConfig.h" Name="DecoratorConfig.h" Source="..\SDK\Decorator Examples\PlainSample\DecoratorConfig.h" />
+                <File Id="DecoratorExamplesPlainSample_DecoratorDefs.h" Name="DecoratorDefs.h" Source="..\SDK\Decorator Examples\PlainSample\DecoratorDefs.h" />
+                <File Id="DecoratorExamplesPlainSample_DecoratorLib.idl" Name="DecoratorLib.idl" Source="..\SDK\Decorator Examples\PlainSample\DecoratorLib.idl" />
+                <File Id="DecoratorExamplesPlainSample_resource.h" Name="resource.h" Source="..\SDK\Decorator Examples\PlainSample\resource.h" />
+                <File Id="DecoratorExamplesPlainSample_StdAfx.cpp" Name="StdAfx.cpp" Source="..\SDK\Decorator Examples\PlainSample\StdAfx.cpp" />
+                <File Id="DecoratorExamplesPlainSample_StdAfx.h" Name="StdAfx.h" Source="..\SDK\Decorator Examples\PlainSample\StdAfx.h" />
             </Component>
         </DirectoryRef>
 

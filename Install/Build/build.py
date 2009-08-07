@@ -146,10 +146,14 @@ def compile_samples():
     tools.build_VS( sln_file, "Release" )
     
 
-def zip_decorkit():
-    "Create DecoratorKit.zip"
-    zip_dir = os.path.join(GME_ROOT, "SDK", "DecorKit")
-    tools.zip(zip_dir, "DecoratorKit.zip", "packagefiles.lst")
+def zip_decorsamples():
+    "Create PlainDecoratorSample.zip"
+    zip_dir = os.path.join(GME_ROOT, "SDK", "Decorator Examples", "PlainSample")
+    tools.zip(zip_dir, "PlainDecoratorSample.zip", "packagefiles.lst")
+
+    "Create NewDecoratorSample.zip"
+    zip_dir = os.path.join(GME_ROOT, "SDK", "Decorator Examples", "NewSample")
+    tools.zip(zip_dir, "NewDecoratorSample.zip", "packagefiles.lst")
 
 
 def zip_scriptSDK():
@@ -247,7 +251,7 @@ build_steps = [
     compile_JBON,
     compile_tools,
     compile_samples, 
-    zip_decorkit, 
+    zip_decorsamples, 
     zip_scriptSDK, 
     generate_meta_files,
     generate_sample_files, 
