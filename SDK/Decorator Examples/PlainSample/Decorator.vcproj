@@ -26,7 +26,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -60,6 +60,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				TypeLibraryName=".\Release/Decorator.tlb"
 				HeaderFileName=""/>
 			<Tool
@@ -95,7 +96,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_ATL_DLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -131,6 +132,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
+				AdditionalIncludeDirectories="$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces"
 				TypeLibraryName=".\Debug/Decorator.tlb"
 				HeaderFileName=""/>
 			<Tool

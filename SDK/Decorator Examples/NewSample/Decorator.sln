@@ -5,7 +5,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Decorator", "Decorator.vcpr
 		{77FEBD41-CD6C-4D55-B561-3957F7151CC2} = {77FEBD41-CD6C-4D55-B561-3957F7151CC2}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DecoratorLib", "..\DecoratorLib\DecoratorLib.vcproj", "{77FEBD41-CD6C-4D55-B561-3957F7151CC2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DecoratorLib", "..\..\DecoratorLib\DecoratorLib.vcproj", "{77FEBD41-CD6C-4D55-B561-3957F7151CC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
