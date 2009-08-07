@@ -199,11 +199,19 @@
                         <Directory Id='INSTALLDIR_SDK_DECORATORLIB' Name='DecoratorLib'>
                             <Directory Id='INSTALLDIR_SDK_DECORATORLIB_RES' Name='res' />
                         </Directory>
+                        <Directory Id='INSTALLDIR_SDK_DECORATOREXAMPLES' Name='Decorator Examples'>
+                            <Directory Id='INSTALLDIR_SDK_DECORATOREXAMPLES_NEWSAMPLE' Name='NewSample' />
+                            <Directory Id='INSTALLDIR_SDK_DECORATOREXAMPLES_PLAINSAMPLE' Name='PlainSample' />
+                            <Directory Id='INSTALLDIR_SDK_DECORATOREXAMPLES_UMLDECORATOR' Name='UMLDecorator'>
+                                <Directory Id='INSTALLDIR_SDK_DECORATOREXAMPLES_UMLDECORATOR_RES' Name='res' />
+                            </Directory>
+                          </Directory>
                         <Directory Id='INSTALLDIR_SDK_JAVA' Name='Java' />
                         <Directory Id='INSTALLDIR_SDK_PATTERNPROCESSOR' Name='PatternProcessor' />
                         <Directory Id='INSTALLDIR_SDK_SCRIPTS' Name='Scripts' />
                     </Directory>
                     <Directory Id='INSTALLDIR_TOOLS' Name='Tools' />
+                    <Directory Id='INSTALLDIR_LIBS' Name='Lib' />
                 </Directory>
              </Directory>
              
@@ -824,7 +832,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="PartBrowser.ocx" Guid="89b7e530-06ae-4da1-851f-bd546e18a5ba">
-                <File Id="PartBrowser.ocx" Name="PartBrowser.ocx" KeyPath="yes" Source="E:\GMESRC\GME\PartBrowser\Release\PartBrowser.ocx">
+                <File Id="PartBrowser.ocx" Name="PartBrowser.ocx" KeyPath="yes" Source="..\GME\PartBrowser\Release\PartBrowser.ocx">
                     <TypeLib Id="{EA3F7431-913A-421F-9B9C-BEB6A735285A}" Description="PartBrowser ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
                         <Class Id="{8E82D238-D222-493D-8ED2-3175A5B1086C}" Context="InprocServer32" Description="PartBrowser Property Page" />
                         <Class Id="{1FF57057-D598-4FC2-8F9D-708F59B9C017}" Context="InprocServer32" Description="PartBrowser Control" ThreadingModel="apartment" Version="1.0" Control="yes" Insertable="yes">
@@ -1809,8 +1817,6 @@
         
         <DirectoryRef Id="INSTALLDIR_SDK_DECORATORLIB">
             <Component Id="DecoratorLib" Guid="{C8C3EC1B-DD30-475E-84DC-3A874C6909E4}">
-                <File Id="app.ico" Name="app.ico" Source="..\SDK\DecoratorLib\app.ico" />
-                <File Id="app.rc" Name="app.rc"  Source="..\SDK\DecoratorLib\app.rc" />
                 <File Id="AtomBitmapPart.cpp" Name="AtomBitmapPart.cpp"  Source="..\SDK\DecoratorLib\AtomBitmapPart.cpp" />
                 <File Id="AtomBitmapPart.h" Name="AtomBitmapPart.h"  Source="..\SDK\DecoratorLib\AtomBitmapPart.h" />
                 <File Id="AttributePart.cpp" Name="AttributePart.cpp"  Source="..\SDK\DecoratorLib\AttributePart.cpp" />
@@ -1837,11 +1843,11 @@
                 <File Id="DecoratorExceptions.h" Name="DecoratorExceptions.h"  Source="..\SDK\DecoratorLib\DecoratorExceptions.h" />
                 <File Id="DecoratorInterface.cpp" Name="DecoratorInterface.cpp"  Source="..\SDK\DecoratorLib\DecoratorInterface.cpp" />
                 <File Id="DecoratorInterface.h" Name="DecoratorInterface.h"  Source="..\SDK\DecoratorLib\DecoratorInterface.h" />
-                <File Id="DecoratorLib.cpp" Name="DecoratorLib.cpp"  Source="..\SDK\DecoratorLib\DecoratorLib.cpp" />
-                <File Id="DecoratorLib.h" Name="DecoratorLib.h"  Source="..\SDK\DecoratorLib\DecoratorLib.h" />
+                <File Id="DecoratorLib.ico" Name="DecoratorLib.ico"  Source="..\SDK\DecoratorLib\DecoratorLib.ico" />
+                <File Id="DecoratorLib.idl" Name="DecoratorLib.idl"  Source="..\SDK\DecoratorLib\DecoratorLib.idl" />
+                <File Id="DecoratorLib.rc" Name="DecoratorLib.rc"  Source="..\SDK\DecoratorLib\DecoratorLib.rc" />
                 <File Id="DecoratorLib.sln" Name="DecoratorLib.sln" KeyPath="yes" Source="..\SDK\DecoratorLib\DecoratorLib.sln" />
                 <File Id="DecoratorLib.vcproj" Name="DecoratorLib.vcproj"  Source="..\SDK\DecoratorLib\DecoratorLib.vcproj" />
-                <File Id="DecoratorLib.vcproj.ISIS.volgy.user" Name="DecoratorLib.vcproj.ISIS.volgy.user"  Source="..\SDK\DecoratorLib\DecoratorLib.vcproj.ISIS.volgy.user" />
                 <File Id="DecoratorUtil.cpp" Name="DecoratorUtil.cpp"  Source="..\SDK\DecoratorLib\DecoratorUtil.cpp" />
                 <File Id="DecoratorUtil.h" Name="DecoratorUtil.h"  Source="..\SDK\DecoratorLib\DecoratorUtil.h" />
                 <File Id="DiamondVectorPart.cpp" Name="DiamondVectorPart.cpp"  Source="..\SDK\DecoratorLib\DiamondVectorPart.cpp" />
@@ -1887,7 +1893,6 @@
                 <File Id="PortPart.h" Name="PortPart.h"  Source="..\SDK\DecoratorLib\PortPart.h" />
                 <File Id="PreferenceVariant.cpp" Name="PreferenceVariant.cpp"  Source="..\SDK\DecoratorLib\PreferenceVariant.cpp" />
                 <File Id="PreferenceVariant.h" Name="PreferenceVariant.h"  Source="..\SDK\DecoratorLib\PreferenceVariant.h" />
-                <File Id="DecoratorLib_ReadMe.txt" Name="ReadMe.txt"  Source="..\SDK\DecoratorLib\ReadMe.txt" />
                 <File Id="ReferenceBitmapPart.cpp" Name="ReferenceBitmapPart.cpp"  Source="..\SDK\DecoratorLib\ReferenceBitmapPart.cpp" />
                 <File Id="ReferenceBitmapPart.h" Name="ReferenceBitmapPart.h"  Source="..\SDK\DecoratorLib\ReferenceBitmapPart.h" />
                 <File Id="ResizablePart.cpp" Name="ResizablePart.cpp"  Source="..\SDK\DecoratorLib\ResizablePart.cpp" />
@@ -1941,7 +1946,93 @@
                 <File Id="setport.bmp" Name="setport.bmp"  Source="..\SDK\DecoratorLib\res\setport.bmp" />
             </Component>
         </DirectoryRef>
-        
+
+        <DirectoryRef Id="INSTALLDIR_SDK_DECORATOREXAMPLES_NEWSAMPLE">
+            <Component Id="DecoratorExamplesNewSample" Guid="{1E84229B-F4DE-48f7-B762-D9C50874B855}">
+                <File Id="DecoratorExamplesNewSample_Decorator.cpp" Name="Decorator.cpp" Source="..\SDK\NewDecorKit\Decorator.cpp" />
+                <File Id="DecoratorExamplesNewSample_Decorator.h" Name="Decorator.h" Source="..\SDK\NewDecorKit\Decorator.h" />
+                <File Id="DecoratorExamplesNewSample_Decorator.rc" Name="Decorator.rc" KeyPath="yes" Source="..\SDK\NewDecorKit\Decorator.rc" />
+                <File Id="DecoratorExamplesNewSample_Decorator.rgs" Name="Decorator.rgs" Source="..\SDK\NewDecorKit\Decorator.rgs" />
+                <File Id="DecoratorExamplesNewSample_Decorator.sln" Name="Decorator.sln" Source="..\SDK\NewDecorKit\Decorator.sln" />
+                <File Id="DecoratorExamplesNewSample_Decorator.vcproj" Name="Decorator.vcproj" Source="..\SDK\NewDecorKit\Decorator.vcproj" />
+                <File Id="DecoratorExamplesNewSample_DecoratorApp.cpp" Name="DecoratorApp.cpp" Source="..\SDK\NewDecorKit\DecoratorApp.cpp" />
+                <File Id="DecoratorExamplesNewSample_DecoratorApp.def" Name="DecoratorApp.def" Source="..\SDK\NewDecorKit\DecoratorApp.def" />
+                <File Id="DecoratorExamplesNewSample_DecoratorCompositePart.cpp" Name="DecoratorCompositePart.cpp" Source="..\SDK\NewDecorKit\DecoratorCompositePart.cpp" />
+                <File Id="DecoratorExamplesNewSample_DecoratorCompositePart.h" Name="DecoratorCompositePart.h" Source="..\SDK\NewDecorKit\DecoratorCompositePart.h" />
+                <File Id="DecoratorExamplesNewSample_DecoratorConfig.h" Name="DecoratorConfig.h" Source="..\SDK\NewDecorKit\DecoratorConfig.h" />
+                <File Id="DecoratorExamplesNewSample_DecoratorImpl.cpp" Name="DecoratorImpl.cpp" Source="..\SDK\NewDecorKit\DecoratorImpl.cpp" />
+                <File Id="DecoratorExamplesNewSample_DecoratorImpl.h" Name="DecoratorImpl.h" Source="..\SDK\NewDecorKit\DecoratorImpl.h" />
+                <File Id="DecoratorExamplesNewSample_DecoratorLib.idl" Name="DecoratorLib.idl" Source="..\SDK\NewDecorKit\DecoratorLib.idl" />
+                <File Id="DecoratorExamplesNewSample_GMEOLEData.cpp" Name="GMEOLEData.cpp" Source="..\SDK\NewDecorKit\GMEOLEData.cpp" />
+                <File Id="DecoratorExamplesNewSample_GMEOLEData.h" Name="GMEOLEData.h" Source="..\SDK\NewDecorKit\GMEOLEData.h" />
+                <File Id="DecoratorExamplesNewSample_mfcdual.cpp" Name="mfcdual.cpp" Source="..\SDK\NewDecorKit\mfcdual.cpp" />
+                <File Id="DecoratorExamplesNewSample_mfcdual.h" Name="mfcdual.h" Source="..\SDK\NewDecorKit\mfcdual.h" />
+                <File Id="DecoratorExamplesNewSample_resource.h" Name="resource.h" Source="..\SDK\NewDecorKit\resource.h" />
+                <File Id="DecoratorExamplesNewSample_StdAfx.cpp" Name="StdAfx.cpp" Source="..\SDK\NewDecorKit\StdAfx.cpp" />
+                <File Id="DecoratorExamplesNewSample_StdAfx.h" Name="StdAfx.h" Source="..\SDK\NewDecorKit\StdAfx.h" />
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="INSTALLDIR_SDK_DECORATOREXAMPLES_PLAINSAMPLE">
+            <Component Id="DecoratorExamplesPlainSample" Guid="{A8F5CCA0-3BAE-4089-9A6F-54E46FA89173}">
+                <File Id="DecoratorExamplesPlainSample_CommonError.cpp" Name="CommonError.cpp" KeyPath="yes" Source="..\SDK\DecorKit\CommonError.cpp" />
+                <File Id="DecoratorExamplesPlainSample_CommonError.h" Name="CommonError.h" Source="..\SDK\DecorKit\CommonError.h" />
+                <File Id="DecoratorExamplesPlainSample_CommonSmart.h" Name="CommonSmart.h" Source="..\SDK\DecorKit\CommonSmart.h" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.cpp" Name="Decorator.cpp" Source="..\SDK\DecorKit\Decorator.cpp" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.h" Name="Decorator.h" Source="..\SDK\DecorKit\Decorator.h" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.rc" Name="Decorator.rc" Source="..\SDK\DecorKit\Decorator.rc" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.rgs" Name="Decorator.rgs" Source="..\SDK\DecorKit\Decorator.rgs" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.sln" Name="Decorator.sln" Source="..\SDK\DecorKit\Decorator.sln" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.vcproj" Name="Decorator.vcproj" Source="..\SDK\DecorKit\Decorator.vcproj" />
+                <File Id="DecoratorExamplesPlainSample_DecoratorApp.cpp" Name="DecoratorApp.cpp" Source="..\SDK\DecorKit\DecoratorApp.cpp" />
+                <File Id="DecoratorExamplesPlainSample_DecoratorApp.def" Name="DecoratorApp.def" Source="..\SDK\DecorKit\DecoratorApp.def" />
+                <File Id="DecoratorExamplesPlainSample_DecoratorConfig.h" Name="DecoratorConfig.h" Source="..\SDK\DecorKit\DecoratorConfig.h" />
+                <File Id="DecoratorExamplesPlainSample_DecoratorDefs.h" Name="DecoratorDefs.h" Source="..\SDK\DecorKit\DecoratorDefs.h" />
+                <File Id="DecoratorExamplesPlainSample_DecoratorLib.idl" Name="DecoratorLib.idl" Source="..\SDK\DecorKit\DecoratorLib.idl" />
+                <File Id="DecoratorExamplesPlainSample_resource.h" Name="resource.h" Source="..\SDK\DecorKit\resource.h" />
+                <File Id="DecoratorExamplesPlainSample_StdAfx.cpp" Name="StdAfx.cpp" Source="..\SDK\DecorKit\StdAfx.cpp" />
+                <File Id="DecoratorExamplesPlainSample_StdAfx.h" Name="StdAfx.h" Source="..\SDK\DecorKit\StdAfx.h" />
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="INSTALLDIR_SDK_DECORATOREXAMPLES_UMLDECORATOR">
+            <Component Id="DecoratorExamplesUMLDecorator" Guid="{B9D94D8E-6FD7-481d-B6E7-34C69797ABEA}">
+                <File Id="DecoratorExamplesUMLDecorator_DecoratorConfig.h" Name="DecoratorConfig.h" KeyPath="yes" Source="..\Paradigms\UML\decorator\DecoratorConfig.h" />
+                <File Id="DecoratorExamplesUMLDecorator_DecoratorStd.h" Name="DecoratorStd.h" Source="..\Paradigms\UML\decorator\DecoratorStd.h" />
+                <File Id="DecoratorExamplesUMLDecorator_Resource.h" Name="Resource.h" Source="..\Paradigms\UML\decorator\Resource.h" />
+                <File Id="DecoratorExamplesUMLDecorator_StdAfx.cpp" Name="StdAfx.cpp" Source="..\Paradigms\UML\decorator\StdAfx.cpp" />
+                <File Id="DecoratorExamplesUMLDecorator_StdAfx.h" Name="StdAfx.h" Source="..\Paradigms\UML\decorator\StdAfx.h" />
+                <File Id="DecoratorExamplesUMLDecorator_targetver.h" Name="targetver.h" Source="..\Paradigms\UML\decorator\targetver.h" />
+                <File Id="DecoratorExamplesUMLDecorator_TokenEx.cpp" Name="TokenEx.cpp" Source="..\Paradigms\UML\decorator\TokenEx.cpp" />
+                <File Id="DecoratorExamplesUMLDecorator_TokenEx.h" Name="TokenEx.h" Source="..\Paradigms\UML\decorator\TokenEx.h" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLAttributePart.cpp" Name="UMLAttributePart.cpp" Source="..\Paradigms\UML\decorator\UMLAttributePart.cpp" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLAttributePart.h" Name="UMLAttributePart.h" Source="..\Paradigms\UML\decorator\UMLAttributePart.h" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLClassPart.cpp" Name="UMLClassPart.cpp" Source="..\Paradigms\UML\decorator\UMLClassPart.cpp" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLClassPart.h" Name="UMLClassPart.h" Source="..\Paradigms\UML\decorator\UMLClassPart.h" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLCompositePart.cpp" Name="UMLCompositePart.cpp" Source="..\Paradigms\UML\decorator\UMLCompositePart.cpp" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLCompositePart.h" Name="UMLCompositePart.h" Source="..\Paradigms\UML\decorator\UMLCompositePart.h" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecorator.cpp" Name="UMLDecorator.cpp" Source="..\Paradigms\UML\decorator\UMLDecorator.cpp" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecorator.h" Name="UMLDecorator.h" Source="..\Paradigms\UML\decorator\UMLDecorator.h" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecorator.rc" Name="UMLDecorator.rc" Source="..\Paradigms\UML\decorator\UMLDecorator.rc" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecorator.rgs" Name="UMLDecorator.rgs" Source="..\Paradigms\UML\decorator\UMLDecorator.rgs" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecorator.sln" Name="UMLDecorator.sln" Source="..\Paradigms\UML\decorator\UMLDecorator.sln" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecorator.vcproj" Name="UMLDecorator.vcproj" Source="..\Paradigms\UML\decorator\UMLDecorator.vcproj" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecoratorApp.cpp" Name="UMLDecoratorApp.cpp" Source="..\Paradigms\UML\decorator\UMLDecoratorApp.cpp" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecoratorApp.def" Name="UMLDecoratorApp.def" Source="..\Paradigms\UML\decorator\UMLDecoratorApp.def" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecoratorImpl.cpp" Name="UMLDecoratorImpl.cpp" Source="..\Paradigms\UML\decorator\UMLDecoratorImpl.cpp" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecoratorImpl.h" Name="UMLDecoratorImpl.h" Source="..\Paradigms\UML\decorator\UMLDecoratorImpl.h" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLDecoratorLib.idl" Name="UMLDecoratorLib.idl" Source="..\Paradigms\UML\decorator\UMLDecoratorLib.idl" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLStereoLabelPart.cpp" Name="UMLStereoLabelPart.cpp" Source="..\Paradigms\UML\decorator\UMLStereoLabelPart.cpp" />
+                <File Id="DecoratorExamplesUMLDecorator_UMLStereoLabelPart.h" Name="UMLStereoLabelPart.h" Source="..\Paradigms\UML\decorator\UMLStereoLabelPart.h" />
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="INSTALLDIR_SDK_DECORATOREXAMPLES_UMLDECORATOR_RES">
+            <Component Id="DecoratorExamplesUMLDecoratorResources" Guid="{CEE43DF1-0957-4455-8724-DCDC5598A46F}">
+                <File Id="DecoratorExamplesUMLDecoratorResources_referencesign.bmp" Name="referencesign.bmp" KeyPath="yes" Source="..\Paradigms\UML\decorator\res\referencesign.bmp" />
+            </Component>
+        </DirectoryRef>
+
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="JAUT.dll" Guid="0c4a6e0b-c860-4819-9ef6-69230df410f4">
                 <File Id="JAUT.dll" Name="JAUT.dll" KeyPath="yes" Source="..\SDK\java\native\Jaut\Release\JAUT.dll">
@@ -2167,6 +2258,10 @@
                 <ComponentRef Id='BONWizardTemplates1033Files' />
                 <ComponentRef Id='DecoratorLib' />
                 <ComponentRef Id='DecoratorLibResources' />
+                <ComponentRef Id='DecoratorExamplesPlainSample' />
+                <ComponentRef Id='DecoratorExamplesNewSample' />
+                <ComponentRef Id='DecoratorExamplesUMLDecorator' />
+                <ComponentRef Id='DecoratorExamplesUMLDecoratorResources' />
                 <ComponentRef Id='Interfaces' />
                 <ComponentRef Id='JAUT.dll' />
                 <ComponentRef Id='JavaClasses' />
