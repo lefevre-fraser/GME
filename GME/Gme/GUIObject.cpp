@@ -3308,9 +3308,9 @@ void CGuiConnection::UpdateCustomPathData(const CustomPathData& pathData)
 
 void CGuiConnection::DeletePathCustomization(const CustomPathData& pathData)
 {
-	long i = 0;
+	long fullCustomEdgeCounter = 0;
 	bool found = false;
-	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii, i++) {
+	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 		ASSERT((*ii).GetVersion() == pathData.GetVersion());
 		if ((*ii).GetAspect() == pathData.GetAspect() &&
 			(*ii).GetType() == pathData.GetType())
@@ -3326,11 +3326,12 @@ void CGuiConnection::DeletePathCustomization(const CustomPathData& pathData)
 				}
 			} else if (pathData.GetType() == CustomPointCustomization) {
 				// in case of CustomPointCustomization delete by array index and not edgeIndex
-				if (i == pathData.GetEdgeIndex()) {
+				if (fullCustomEdgeCounter == pathData.GetEdgeIndex()) {
 					ii = customPathData.erase(ii);
 					found = true;
 					break;
 				}
+				fullCustomEdgeCounter++;
 			} else {
 				// TODO: other checks for other types
 			}
