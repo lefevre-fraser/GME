@@ -30,6 +30,11 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+
+Release Notes of Release r9.8.7
+-------------------------------
+  - User manual update
+
 Release Notes of Release r9.7.1
 -------------------------------
   - Autorouter and decorator bug fixes.

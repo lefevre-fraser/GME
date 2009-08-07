@@ -1522,9 +1522,9 @@
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L3">
             <Component Id="TutorialL3" Guid="{81FBBA0B-91ED-42A3-8C93-B78468C3AA4D}">
                 <File Id="BON_classes.png" Name="BON classes.png" KeyPath="yes" Source="..\Doc\Tutorial\L3\BON classes.png" />
-                <File Id="networking meta.png" Name="networking meta.png"  Source="..\Doc\Tutorial\L3\networking meta.png" />
+                <File Id="networking_meta.png" Name="networking meta.png"  Source="..\Doc\Tutorial\L3\networking meta.png" />
                 <File Id="BON_Extender_interpreter_dialog.png" Name="BON Extender interpreter dialog.png"  Source="..\Doc\Tutorial\L3\BON Extender interpreter dialog.png" />
-                <File Id="Default_Interpreter_Icon.png" Name="Default Interpreter Icon.png"  Source="..\Doc\Tutorial\L3\Default Interpreter Icon.pngh" />
+                <File Id="Default_Interpreter_Icon.png" Name="Default Interpreter Icon.png"  Source="..\Doc\Tutorial\L3\Default Interpreter Icon.png" />
                 <File Id="VS_empty_BON1_project.png" Name="VS empty BON1 project.png"  Source="..\Doc\Tutorial\L3\VS empty BON1 project.png" />
                 <File Id="VS_GME_Component_wizard.png" Name="VS GME Component wizard.png"  Source="..\Doc\Tutorial\L3\VS GME Component wizard.png" />
             </Component>
@@ -1672,19 +1672,6 @@
                 <File Id="JavaCompRegister.png" Name="JavaCompRegister.png" KeyPath="yes" Source="..\Doc\Tutorial\L8\JavaCompRegister.png" />
                 <File Id="Register_Components.png" Name="Register Components.png" Source="..\Doc\Tutorial\L8\Register Components.png" />
                 <File Id="Running.png" Name="Running.png" Source="..\Doc\Tutorial\L8\Running.png" />
-            </Component>
-        </DirectoryRef>
-
-        <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L8_F2">
-            <Component Id="TutorialL8F2" Guid="{7DA4FD35-7F8B-4753-BAF1-62E0AA21ACEC}">
-                <File Id="Fig8_2.gif" Name="Fig8_2.gif" KeyPath="yes" Source="..\Doc\Tutorial\L8\F2\Fig8_2.gif" />
-            </Component>
-        </DirectoryRef>
-
-        <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L8_F3">
-            <Component Id="TutorialL8F3" Guid="{CD005380-3F5B-4007-A0C0-F249297212A7}">
-                <File Id="Fig8_3.gif" Name="Fig8_3.gif" KeyPath="yes" Source="..\Doc\Tutorial\L8\F3\Fig8_3.gif" />
-                <File Id="Fig8_3b.gif" Name="Fig8_3b.gif"  Source="..\Doc\Tutorial\L8\F3\Fig8_3b.gif" />
             </Component>
         </DirectoryRef>
 
@@ -2300,9 +2287,7 @@
                     <ComponentRef Id='TutorialL6F2' />
                     <ComponentRef Id='TutorialL7' />
                     <ComponentRef Id='TutorialL7F1' />
-                    <ComponentRef Id='TutorialL8F1' />
-                    <ComponentRef Id='TutorialL8F2' />
-                    <ComponentRef Id='TutorialL8F3' />
+                    <ComponentRef Id='TutorialL8' />
                     
                 </Feature>
                 
