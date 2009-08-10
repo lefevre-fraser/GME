@@ -1430,8 +1430,6 @@
   <section>
     <title>Using GME</title>
 
-    <para></para>
-
     <section>
       <title>GME Interfaces</title>
 
@@ -1709,8 +1707,6 @@
 
     <section>
       <title>The Model Editor</title>
-
-      <para></para>
 
       <section>
         <title>The Editing Window</title>
@@ -2943,6 +2939,73 @@
           box (the port position is automatically computed and fixed).</para>
         </section>
       </section>
+    </section>
+
+    <section>
+      <title>Emergency saves and GME CrashDumps</title>
+
+      <para>GME is able to generate a <emphasis>CrashDump</emphasis> in the
+      event of a GME crash. A CrashDump file containing a collection of
+      information related to the particular crash. With the help of this file,
+      developers have information to analyze the crash and discover the bug
+      more easily.</para>
+
+      <para>Because parts of memory can contain classified information,
+      there's a choice to not generate the CrashDump. This security reason is
+      the only reason the default state of the generation switch is unchecked,
+      and why we don't collect these files automatically on a central server
+      at ISIS. So even if the file is generated, it will reside on the user's
+      machine and it's up to the user to send it to the developers. GME tries
+      to help the user by opening the folder containing the dump file in case
+      a dump is generated, so just a drag-and-drop is needed to send the file
+      using the user's preferred mail client.</para>
+
+      <para>There are three types of Emergency dialogs:<itemizedlist>
+          <listitem>
+            <para><figure>
+                <title>Emergency dialog when no project is open</title>
+
+                <mediaobject>
+                  <imageobject>
+                    <imagedata fileref="images/Emergency event.png" />
+                  </imageobject>
+                </mediaobject>
+              </figure></para>
+          </listitem>
+
+          <listitem>
+            <para><figure>
+                <title>Emergency dialog when a single-user project is
+                open</title>
+
+                <mediaobject>
+                  <imageobject>
+                    <imagedata fileref="images/Crashdump single user.png" />
+                  </imageobject>
+                </mediaobject>
+              </figure></para>
+          </listitem>
+
+          <listitem>
+            <para><figure>
+                <title>Emergency dialog when a multi-user project is
+                open</title>
+
+                <mediaobject>
+                  <imageobject>
+                    <imagedata fileref="images/Crashdump multiuser.png" />
+                  </imageobject>
+                </mediaobject>
+              </figure></para>
+          </listitem>
+        </itemizedlist></para>
+
+      <para>If your security policy allows sending such information to the
+      developers, please check the checkbox button on the dialog to generate
+      the crashdump, then send it to gme-supp@isis.vanderbilt.edu as a file
+      attachment. If you have any trouble handling crashdumps, you can also
+      send e-mail to the gme-users mailing list, and the developers will help
+      you.</para>
     </section>
 
     <section>
