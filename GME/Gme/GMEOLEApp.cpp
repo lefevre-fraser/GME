@@ -881,6 +881,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_Panels( IGMEOLEColl** coll)
 	{
 		LPDISPATCH lpDisp = pThis->GetPanels();
 		lpDisp->QueryInterface(IID_IGMEOLEColl, (LPVOID*)coll);
+		lpDisp->Release();
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
