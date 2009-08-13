@@ -29,22 +29,49 @@
 #include <string>
 #include <vector>
 
+
+template<class T>
+inline void COMCHECK2(const CComPtr<T>& p, const HRESULT hr)
+{
+	if (!SUCCEEDED(hr)) {
+		const IID piid = __uuidof(T);
+		CComQIPtr<ISupportErrorInfo> supportErrorInfo = p;
+		if (supportErrorInfo != NULL && supportErrorInfo->InterfaceSupportsErrorInfo(piid) == S_OK) {
+			CComQIPtr<IErrorInfo> errorInfo;
+			GetErrorInfo(0, &errorInfo);
+			BSTR bstr;
+			errorInfo->GetDescription(&bstr);
+			BON::Exception exception(hr, "?");
+			CString str( bstr );
+			std::string strResult( str.GetBuffer( str.GetLength() ) );
+			str.ReleaseBuffer();
+			exception << strResult;
+			SysFreeString(bstr);
+			throw exception;
+		} else {
+			BON::Exception exception(hr);
+			throw exception;
+		}
+	}
+}
+
+template<class T>
+inline void COMCHECK2(T* p, HRESULT hr) {
+	COMCHECK2(CComPtr<T>(p), hr);
+}
+
 #define ASSERTTHROW( exc )									\
 	{																\
 		ASSERT( ( exc.getErrorMessage().c_str(), false ) );		\
 		throw	exc;												\
 	}
 
-#undef COMTHROW
-#define COMTHROW( expr )														\
+#define BONCOMTHROW( expr )														\
 	{																				\
 		HRESULT hResult = expr;													\
 		if ( FAILED( hResult ) )													\
 			ASSERTTHROW( BON::Exception( hResult, "COMException" ) );		\
 	}
-// GMECOM.H defines a COMTHROW/COMCATCH pair
-// undef COMCATCH to avoid trying to catch the wrong exception type
-#undef COMCATCH
 
 namespace Util
 {

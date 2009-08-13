@@ -23,6 +23,9 @@
 #include "MONImpl.h"
 
 #include "Utils.h"
+// Utils.h uses COMTHROW but doesn't define it
+#define COMTHROW(x) BONCOMTHROW(x)
+
 #include "Exceptions.h"
 
 inline std::string _ref2str( long lRef )
@@ -46,7 +49,7 @@ inline MON::ProjectImpl* _getProject( IMgaMetaBase* spObject,  MON::ProjectImpl*
 	if ( pProject )
 		return pProject;
 	MON::ProjectPtr spProject;
-	COMTHROW( spObject->get_MetaProject( spProject.Addr() ) );
+	BONCOMTHROW( spObject->get_MetaProject( spProject.Addr() ) );
 	return MON::ProjectImpl::attach( spProject );
 }
 
@@ -79,7 +82,7 @@ namespace MON
 		ProjectImpl* pProject = new ProjectImpl( spProject );
 
 		FolderPtr spRootFolder;
-		COMTHROW( spProject->get_RootFolder( spRootFolder.Addr() ) );
+		BONCOMTHROW( spProject->get_RootFolder( spRootFolder.Addr() ) );
 		pProject->m_pRootFolder = pProject->processFolder( spRootFolder );
 
 		const ProjectImpl::ObjectSet& setRefs = pProject->getObjects( OT_Reference );
@@ -104,7 +107,7 @@ namespace MON
 	FolderImpl* ProjectImpl::processFolder( const FolderPtr& spFolder )
 	{
 		long lRef;
-		COMTHROW( spFolder->get_MetaRef( &lRef ) );
+		BONCOMTHROW( spFolder->get_MetaRef( &lRef ) );
 		if ( m_mapObjectsByRef.find( lRef ) != m_mapObjectsByRef.end() )
 			return ( FolderImpl* ) m_mapObjectsByRef[ lRef ];
 
@@ -112,14 +115,14 @@ namespace MON
 		insertObject( pFolder );
 
 		Util::ComPtr<IMgaMetaFolders> spFolders;
-		COMTHROW( spFolder->get_LegalChildFolders( spFolders.Addr() ) );
+		BONCOMTHROW( spFolder->get_LegalChildFolders( spFolders.Addr() ) );
 		MGACOLL_ITERATE( IMgaMetaFolder, spFolders.p ) {
 			FolderImpl* pChild = processFolder( MGACOLL_ITER.p );
 			m_setFolderContainments.insert( new FolderContainmentImpl( pFolder, pChild ) );
 		} MGACOLL_ITERATE_END;
 
 		Util::ComPtr<IMgaMetaFCOs> spFCOs;
-		COMTHROW( spFolder->get_LegalRootObjects( spFCOs.Addr() ) );
+		BONCOMTHROW( spFolder->get_LegalRootObjects( spFCOs.Addr() ) );
 		MGACOLL_ITERATE( IMgaMetaFCO, spFCOs.p ) {
 			FCOImpl* pChild = processFCO( MGACOLL_ITER.p );
 			m_setFolderContainments.insert( new FolderContainmentImpl( pFolder, pChild ) );
@@ -131,12 +134,12 @@ namespace MON
 	FCOImpl* ProjectImpl::processFCO( const FCOPtr& spFCO )
 	{
 		long lRef;
-		COMTHROW( spFCO->get_MetaRef( &lRef ) );
+		BONCOMTHROW( spFCO->get_MetaRef( &lRef ) );
 		if ( m_mapObjectsByRef.find( lRef ) != m_mapObjectsByRef.end() )
 			return ( FCOImpl* ) m_mapObjectsByRef[ lRef ];
 
 		objtype_enum eType;
-		COMTHROW( spFCO->get_ObjType( &eType ) );
+		BONCOMTHROW( spFCO->get_ObjType( &eType ) );
 		FCOImpl* pFCO;
 		switch ( eType ) {
 			case OBJTYPE_MODEL : {
@@ -167,12 +170,12 @@ namespace MON
 		}
 
 		Util::ComPtr<IMgaMetaAttributes> spAttributes;
-		COMTHROW( spFCO->get_Attributes( spAttributes.Addr() ) );
+		BONCOMTHROW( spFCO->get_Attributes( spAttributes.Addr() ) );
 		MGACOLL_ITERATE( IMgaMetaAttribute, spAttributes.p ) {
 			Util::ComPtr<IMgaMetaFCOs> spFCOs;
-			COMTHROW( MGACOLL_ITER->get_UsedIn( spFCOs.Addr() ) );
+			BONCOMTHROW( MGACOLL_ITER->get_UsedIn( spFCOs.Addr() ) );
 			long lCount = 0;
-			COMTHROW( spFCOs->get_Count( &lCount ) );
+			BONCOMTHROW( spFCOs->get_Count( &lCount ) );
 			AttributeImpl* pAttribute = processAttribute( MGACOLL_ITER.p, ( lCount == 1 ) ? pFCO : NULL );
 			if ( lCount == 1 )
 				pFCO->m_setAttributes.insert( pAttribute );
@@ -196,10 +199,10 @@ namespace MON
 		insertObject( pModel );
 
 		Util::ComPtr<IMgaMetaRoles> spRoles;
-		COMTHROW( spModel->get_Roles( spRoles.Addr() ) );
+		BONCOMTHROW( spModel->get_Roles( spRoles.Addr() ) );
 		MGACOLL_ITERATE( IMgaMetaRole, spRoles.p ) {
 			FCOPtr spFCO;
-			COMTHROW( MGACOLL_ITER->get_Kind( spFCO.Addr() ) );
+			BONCOMTHROW( MGACOLL_ITER->get_Kind( spFCO.Addr() ) );
 			FCOImpl* pFCO = processFCO( spFCO );
 			ContainmentImpl* pContainment = ContainmentImpl::attachI( MGACOLL_ITER, this );
 			pContainment->m_pParent = pModel;
@@ -213,7 +216,7 @@ namespace MON
 	void ProjectImpl::processModel( ModelImpl* pModel )
 	{
 		Util::ComPtr<IMgaMetaAspects> spAspects;
-		COMTHROW( pModel->getModelI()->get_Aspects( spAspects.Addr() ) );
+		BONCOMTHROW( pModel->getModelI()->get_Aspects( spAspects.Addr() ) );
 		MGACOLL_ITERATE( IMgaMetaAspect, spAspects.p ) {
 			AspectImpl* pAspect = processAspect( MGACOLL_ITER );
 			ModelInAspectImpl* pModelInAspect = new ModelInAspectImpl( pAspect, pModel );
@@ -231,10 +234,10 @@ namespace MON
 	void ProjectImpl::processConnection( ConnectionImpl* pConnection )
 	{
 		Util::ComPtr<IMgaMetaConnJoints> spJoints;
-		COMTHROW( pConnection->getConnectionI()->get_Joints( spJoints.Addr() ) );
+		BONCOMTHROW( pConnection->getConnectionI()->get_Joints( spJoints.Addr() ) );
 
 		long lJointNum;
-		COMTHROW( spJoints->get_Count( &lJointNum ) );
+		BONCOMTHROW( spJoints->get_Count( &lJointNum ) );
 		pConnection->m_bBidirectional = lJointNum == 2;	// WARNING
 
 		int i = 0;
@@ -245,24 +248,24 @@ namespace MON
 			pConnection->m_setConnSpecs.insert( pSpec );
 
 			Util::ComPtr<IMgaMetaPointerSpecs> spSpecs;
-			COMTHROW( spJoint->get_PointerSpecs( spSpecs.Addr() ) );
+			BONCOMTHROW( spJoint->get_PointerSpecs( spSpecs.Addr() ) );
 
 			MGACOLL_ITERATE( IMgaMetaPointerSpec, spSpecs.p ) {
 				Util::ComPtr<IMgaMetaPointerSpec> spSpec = MGACOLL_ITER.p;
 				CComBSTR bstrSpecName;
-				COMTHROW( spSpec->get_Name( &bstrSpecName ) );
+				BONCOMTHROW( spSpec->get_Name( &bstrSpecName ) );
 
 				ConnectionRoleImpl* pRole = new ConnectionRoleImpl( pSpec, Util::Copy( bstrSpecName ) );
 				pSpec->m_setRoles.insert( pRole );
 
 				Util::ComPtr<IMgaMetaPointerItems> spItems;
-				COMTHROW( spSpec->get_Items( spItems.Addr() ) );
+				BONCOMTHROW( spSpec->get_Items( spItems.Addr() ) );
 
 				std::set<ContainmentImpl*> setRolesFull;
 
 				MGACOLL_ITERATE( IMgaMetaPointerItem, spItems.p ) {
 					CComBSTR bstrDesc;
-					COMTHROW( MGACOLL_ITER->get_Desc( &bstrDesc ) );
+					BONCOMTHROW( MGACOLL_ITER->get_Desc( &bstrDesc ) );
 					std::set<ContainmentImpl*> setRoles = getLocalRoles( pConnection, Util::Copy( bstrDesc ) );
 					for ( std::set<ContainmentImpl*>::iterator it = setRoles.begin() ; it != setRoles.end() ; ++it )
 						setRolesFull.insert( *it );
@@ -287,12 +290,12 @@ namespace MON
 	void ProjectImpl::processReference( ReferenceImpl* pReference )
 	{
 		Util::ComPtr<IMgaMetaPointerSpec> spSpec;
-		COMTHROW( pReference->getReferenceI()->get_RefSpec( spSpec.Addr() ) );
+		BONCOMTHROW( pReference->getReferenceI()->get_RefSpec( spSpec.Addr() ) );
 		Util::ComPtr<IMgaMetaPointerItems> spItems;
-		COMTHROW( spSpec->get_Items( spItems.Addr() ) );
+		BONCOMTHROW( spSpec->get_Items( spItems.Addr() ) );
 		MGACOLL_ITERATE( IMgaMetaPointerItem, spItems.p ) {
 			CComBSTR bstrDesc;
-			COMTHROW( MGACOLL_ITER->get_Desc( &bstrDesc ) );
+			BONCOMTHROW( MGACOLL_ITER->get_Desc( &bstrDesc ) );
 			FCOImpl * refd = (FCOImpl *) findByName( Util::Copy( bstrDesc));//m_mapObjectsByName.find( name );
 			if ( refd)
 				m_setReferenceAssocs.insert( new ReferenceAssocImpl( pReference, refd) );
@@ -309,12 +312,12 @@ namespace MON
 	void ProjectImpl::processSet( SetImpl* pSet )
 	{
 		Util::ComPtr<IMgaMetaPointerSpec> spSpec;
-		COMTHROW( pSet->getSetI()->get_MemberSpec( spSpec.Addr() ) );
+		BONCOMTHROW( pSet->getSetI()->get_MemberSpec( spSpec.Addr() ) );
 		Util::ComPtr<IMgaMetaPointerItems> spItems;
-		COMTHROW( spSpec->get_Items( spItems.Addr() ) );
+		BONCOMTHROW( spSpec->get_Items( spItems.Addr() ) );
 		MGACOLL_ITERATE( IMgaMetaPointerItem, spItems.p ) {
 			CComBSTR bstrDesc;
-			COMTHROW( MGACOLL_ITER->get_Desc( &bstrDesc ) );
+			BONCOMTHROW( MGACOLL_ITER->get_Desc( &bstrDesc ) );
 			std::set<ContainmentImpl*> setRoles = getLocalRoles( pSet, Util::Copy( bstrDesc ) );
 			for ( std::set<ContainmentImpl*>::iterator it = setRoles.begin() ; it != setRoles.end() ; it++ )
 				m_setSetMemberships.insert( new SetMembershipImpl( pSet, *it ) );
@@ -324,7 +327,7 @@ namespace MON
 	AttributeImpl*	ProjectImpl::processAttribute( const AttributePtr& spAttribute, FCOImpl* pOwner )
 	{
 		long lRef;
-		COMTHROW( spAttribute->get_MetaRef( &lRef ) );
+		BONCOMTHROW( spAttribute->get_MetaRef( &lRef ) );
 		if ( m_mapObjectsByRef.find( lRef ) != m_mapObjectsByRef.end() )
 			return ( AttributeImpl* ) m_mapObjectsByRef[ lRef ];
 
@@ -336,7 +339,7 @@ namespace MON
 	AspectImpl* ProjectImpl::processAspect( const AspectPtr& spAspect )
 	{
 		long lRef;
-		COMTHROW( spAspect->get_MetaRef( &lRef ) );
+		BONCOMTHROW( spAspect->get_MetaRef( &lRef ) );
 		if ( m_mapObjectsByRef.find( lRef ) != m_mapObjectsByRef.end() )
 			return ( AspectImpl* ) m_mapObjectsByRef[ lRef ];
 
@@ -344,11 +347,11 @@ namespace MON
 		insertObject( pAspect );
 
 		Util::ComPtr<IMgaMetaParts> spParts;
-		COMTHROW( spAspect->get_Parts( spParts.Addr() ) );
+		BONCOMTHROW( spAspect->get_Parts( spParts.Addr() ) );
 		MGACOLL_ITERATE( IMgaMetaPart, spParts.p ) {
 			ContainmentPartImpl* pPart = ContainmentPartImpl::attachI( MGACOLL_ITER, this );
 			ContainmentPtr spRole;
-			COMTHROW( MGACOLL_ITER->get_Role( spRole.Addr() ) );
+			BONCOMTHROW( MGACOLL_ITER->get_Role( spRole.Addr() ) );
 			pPart->m_pContainment = ContainmentImpl::attachI( spRole, this );
 			pPart->m_pAspect = pAspect;
 			insertObject( pPart );
@@ -613,35 +616,35 @@ namespace MON
 	std::string ProjectImpl::getName() const
 	{
 		CComBSTR bstrName;
-		COMTHROW( m_spProject->get_Name( &bstrName ) );
+		BONCOMTHROW( m_spProject->get_Name( &bstrName ) );
 		return Util::Copy( bstrName );
 	}
 
 	std::string	ProjectImpl::getDisplayedName() const
 	{
 		CComBSTR bstrDName;
-		COMTHROW( m_spProject->get_DisplayedName( &bstrDName ) );
+		BONCOMTHROW( m_spProject->get_DisplayedName( &bstrDName ) );
 		return Util::Copy( bstrDName );
 	}
 
 	std::string ProjectImpl::getAuthor() const
 	{
 		CComBSTR bstrAuthor;
-		COMTHROW( m_spProject->get_Author( &bstrAuthor ) );
+		BONCOMTHROW( m_spProject->get_Author( &bstrAuthor ) );
 		return Util::Copy( bstrAuthor );
 	}
 
 	std::string ProjectImpl::getComment() const
 	{
 		CComBSTR bstrComment;
-		COMTHROW( m_spProject->get_Comment( &bstrComment ) );
+		BONCOMTHROW( m_spProject->get_Comment( &bstrComment ) );
 		return Util::Copy( bstrComment );
 	}
 
 	std::string ProjectImpl::getCreationTime() const
 	{
 		CComBSTR bstrTime;
-		COMTHROW( m_spProject->get_CreatedAt( &bstrTime ) );
+		BONCOMTHROW( m_spProject->get_CreatedAt( &bstrTime ) );
 		return Util::Copy( bstrTime );
 	}
 
@@ -781,28 +784,28 @@ namespace MON
 	long ObjectImpl::getRef() const
 	{
 		long lRef;
-		COMTHROW( m_spObject->get_MetaRef( &lRef ) );
+		BONCOMTHROW( m_spObject->get_MetaRef( &lRef ) );
 		return lRef;
 	}
 
 	std::string ObjectImpl::getName() const
 	{
 		CComBSTR bstrName;
-		COMTHROW( m_spObject->get_Name( &bstrName ) );
+		BONCOMTHROW( m_spObject->get_Name( &bstrName ) );
 		return Util::Copy( bstrName );
 	}
 
 	std::string	ObjectImpl::getDisplayedName() const
 	{
 		CComBSTR bstrDName;
-		COMTHROW( m_spObject->get_DisplayedName( &bstrDName ) );
+		BONCOMTHROW( m_spObject->get_DisplayedName( &bstrDName ) );
 		return Util::Copy( bstrDName );
 	}
 
 	ObjectType ObjectImpl::getType() const
 	{
 		objtype_enum eType;
-		COMTHROW( m_spObject->get_ObjType( &eType ) );
+		BONCOMTHROW( m_spObject->get_ObjType( &eType ) );
 		return ( ObjectType ) eType;
 	}
 
@@ -840,7 +843,7 @@ namespace MON
 		else {
 			strPath2 = strPath2.substr( 1 );
 			RegNodePtr spNode;
-			COMTHROW( m_spObject->get_RegistryNode( Util::Copy( strPath2 ), spNode.Addr() ) );
+			BONCOMTHROW( m_spObject->get_RegistryNode( Util::Copy( strPath2 ), spNode.Addr() ) );
 			pNode = new RegistryNodeImpl( spNode, this, strPath2.substr( 0, strPath.rfind( '/' ) + 1 ) );
 		}
 		m_mapRegistry.insert( RegistryMap::value_type( strPath2, pNode ) );
@@ -857,10 +860,10 @@ namespace MON
 		: ObjectImpl( spFolder, pProject )
 	{
 		Util::ComPtr<IMgaConstraints> spConstraints;
-		COMTHROW( spFolder->get_Constraints( spConstraints.Addr() ) );
+		BONCOMTHROW( spFolder->get_Constraints( spConstraints.Addr() ) );
 		MGACOLL_ITERATE( IMgaConstraint, spConstraints.p ) {
 			constraint_type_enum eType;
-			COMTHROW( MGACOLL_ITER->get_Type( &eType ) );
+			BONCOMTHROW( MGACOLL_ITER->get_Type( &eType ) );
 			if ( eType != CONSTRAINT_TYPE_FUNCTION )
 				m_setConstraints.insert( new ConstraintImpl( MGACOLL_ITER, this ) );
 		} MGACOLL_ITERATE_END;
@@ -914,10 +917,10 @@ namespace MON
 		: ObjectImpl( spFCO, pProject )
 	{
 		Util::ComPtr<IMgaConstraints> spConstraints;
-		COMTHROW( spFCO->get_Constraints( spConstraints.Addr() ) );
+		BONCOMTHROW( spFCO->get_Constraints( spConstraints.Addr() ) );
 		MGACOLL_ITERATE( IMgaConstraint, spConstraints.p ) {
 			constraint_type_enum eType;
-			COMTHROW( MGACOLL_ITER->get_Type( &eType ) );
+			BONCOMTHROW( MGACOLL_ITER->get_Type( &eType ) );
 			if ( eType != CONSTRAINT_TYPE_FUNCTION )
 				m_setConstraints.insert( new ConstraintImpl( MGACOLL_ITER, this ) );
 		} MGACOLL_ITERATE_END;
@@ -1190,7 +1193,7 @@ namespace MON
 	bool ConnectionImpl::isSimple() const
 	{
 		VARIANT_BOOL vbSimple;
-		COMTHROW( getConnectionI()->get_IsSimple( &vbSimple ) );
+		BONCOMTHROW( getConnectionI()->get_IsSimple( &vbSimple ) );
 		return vbSimple == VARIANT_TRUE;
 	}
 
@@ -1245,7 +1248,7 @@ namespace MON
 	{
 		if ( ! m_pParent ) {
 			ModelPtr spModel;
-			COMTHROW( getContainmentI()->get_ParentModel( spModel.Addr() ) );
+			BONCOMTHROW( getContainmentI()->get_ParentModel( spModel.Addr() ) );
 			( (ContainmentImpl*) this )->m_pParent = ModelImpl::attachI( spModel, getProject() );
 		}
 		return m_pParent;
@@ -1255,7 +1258,7 @@ namespace MON
 	{
 		if ( ! m_pChild ) {
 			FCOPtr spFCO;
-			COMTHROW( getContainmentI()->get_Kind( spFCO.Addr() ) );
+			BONCOMTHROW( getContainmentI()->get_Kind( spFCO.Addr() ) );
 			( (ContainmentImpl*) this )->m_pChild = (FCOImpl*) find( spFCO );
 		}
 		return m_pChild;
@@ -1324,7 +1327,7 @@ namespace MON
 	Util::Variant AttributeImpl::getDefaultValue() const
 	{
 		CComVariant varValue;
-		COMTHROW( getAttributeI()->get_DefaultValue( &varValue ) );
+		BONCOMTHROW( getAttributeI()->get_DefaultValue( &varValue ) );
 		switch ( varValue.vt ) {
 			case VT_EMPTY :
 				return Util::Variant();
@@ -1344,7 +1347,7 @@ namespace MON
 	AttributeType AttributeImpl::getValueType() const
 	{
 		attval_enum eType;
-		COMTHROW( getAttributeI()->get_ValueType( &eType ) );
+		BONCOMTHROW( getAttributeI()->get_ValueType( &eType ) );
 		if ( eType == ATTVAL_REFERENCE || eType == ATTVAL_DYNAMIC || eType == ATTVAL_NULL )
 			ASSERTTHROW( Util::Exception( "Unprocessed Attribute Type!" ) );
 		return (AttributeType) eType;
@@ -1357,13 +1360,13 @@ namespace MON
 
 		std::vector<AttributeImpl::NameValue> vecResult;
 		Util::ComPtr<IMgaMetaEnumItems> spItems;
-		COMTHROW( getAttributeI()->get_EnumItems( spItems.Addr() ) );
+		BONCOMTHROW( getAttributeI()->get_EnumItems( spItems.Addr() ) );
 
 		MGACOLL_ITERATE( IMgaMetaEnumItem, spItems.p ) {
 			CComBSTR bstrName;
-			COMTHROW( MGACOLL_ITER->get_DisplayedName( &bstrName ) );
+			BONCOMTHROW( MGACOLL_ITER->get_DisplayedName( &bstrName ) );
 			CComBSTR bstrValue;
-			COMTHROW( MGACOLL_ITER->get_Value( &bstrValue ) );
+			BONCOMTHROW( MGACOLL_ITER->get_Value( &bstrValue ) );
 			vecResult.push_back( AttributeImpl::NameValue( Util::Copy( bstrName ), Util::Copy( bstrValue ) ) );
 		} MGACOLL_ITERATE_END;
 
@@ -1457,14 +1460,14 @@ namespace MON
 	bool ContainmentPartImpl::isPrimary() const
 	{
 		VARIANT_BOOL vbPrimary;
-		COMTHROW( getPartI()->get_IsPrimary( &vbPrimary ) );
+		BONCOMTHROW( getPartI()->get_IsPrimary( &vbPrimary ) );
 		return vbPrimary == VARIANT_TRUE;
 	}
 
 	bool ContainmentPartImpl::isLinked() const
 	{
 		VARIANT_BOOL vbLinked;
-		COMTHROW( getPartI()->get_IsLinked( &vbLinked ) );
+		BONCOMTHROW( getPartI()->get_IsLinked( &vbLinked ) );
 		return vbLinked == VARIANT_TRUE;
 	}
 
@@ -1472,7 +1475,7 @@ namespace MON
 	{
 		if ( ! m_pContainment ) {
 			ContainmentPtr spRole;
-			COMTHROW( getPartI()->get_Role( spRole.Addr() ) );
+			BONCOMTHROW( getPartI()->get_Role( spRole.Addr() ) );
 			( (ContainmentPartImpl*) this )->m_pContainment = ContainmentImpl::attachI( spRole, getProject() );
 		}
 		return m_pContainment;
@@ -1482,7 +1485,7 @@ namespace MON
 	{
 		if ( ! m_pAspect ) {
 			AspectPtr spAspect;
-			COMTHROW( getPartI()->get_ParentAspect( spAspect.Addr() ) );
+			BONCOMTHROW( getPartI()->get_ParentAspect( spAspect.Addr() ) );
 			( (ContainmentPartImpl*) this )->m_pAspect = AspectImpl::attachI( spAspect, getProject() );
 		}
 		return m_pAspect;
@@ -1927,7 +1930,7 @@ namespace MON
 	{
 		if ( m_spNode ) {
 			CComBSTR bstrName;
-			COMTHROW( m_spNode->get_Name( &bstrName ) );
+			BONCOMTHROW( m_spNode->get_Name( &bstrName ) );
 			return Util::Copy( bstrName );
 		}
 		return "";
@@ -1942,7 +1945,7 @@ namespace MON
 	{
 		if ( m_spNode ) {
 			CComBSTR bstrValue;
-			COMTHROW( m_spNode->get_Value( &bstrValue ) );
+			BONCOMTHROW( m_spNode->get_Value( &bstrValue ) );
 			return Util::Copy( bstrValue );
 		}
 		return "";
@@ -1959,15 +1962,15 @@ namespace MON
 		Util::ComPtr<IMgaMetaRegNodes> spNodes;
 
 		if ( m_spNode ) {
-			COMTHROW( m_spNode->get_RegistryNodes( spNodes.Addr() ) );
+			BONCOMTHROW( m_spNode->get_RegistryNodes( spNodes.Addr() ) );
 		}
 		else {
-			COMTHROW( m_pObject->getObjectI()->get_RegistryNodes( spNodes.Addr() ) );
+			BONCOMTHROW( m_pObject->getObjectI()->get_RegistryNodes( spNodes.Addr() ) );
 		}
 
 		MGACOLL_ITERATE( IMgaMetaRegNode, spNodes.p ) {
 			CComBSTR bstrName;
-			COMTHROW( MGACOLL_ITER->get_Name( &bstrName ) );
+			BONCOMTHROW( MGACOLL_ITER->get_Name( &bstrName ) );
 			setNodes.insert( m_pObject->getRegistryNode( m_strPath + Util::Copy( bstrName ) ) );
 		} MGACOLL_ITERATE_END;
 
@@ -2036,21 +2039,21 @@ namespace MON
 	std::string	ConstraintImpl::getName() const
 	{
 		CComBSTR bstrName;
-		COMTHROW( m_spConstraint->get_Name( &bstrName ) );
+		BONCOMTHROW( m_spConstraint->get_Name( &bstrName ) );
 		return Util::Copy( bstrName );
 	}
 
 	std::string ConstraintImpl::getDescription() const
 	{
 		CComBSTR bstrName;
-		COMTHROW( m_spConstraint->get_DisplayedName( &bstrName ) );
+		BONCOMTHROW( m_spConstraint->get_DisplayedName( &bstrName ) );
 		return Util::Copy( bstrName );
 	}
 
 	std::vector<std::string> ConstraintImpl::getEquation() const
 	{
 		CComBSTR bstrExpr;
-		COMTHROW( m_spConstraint->get_Expression( &bstrExpr ) );
+		BONCOMTHROW( m_spConstraint->get_Expression( &bstrExpr ) );
 		std::string strExpr = Util::Copy( bstrExpr );
 		std::vector<std::string> vecExpr;
 
@@ -2076,7 +2079,7 @@ namespace MON
 	{
 		std::set<ObjectEventType> setEvents;
 		unsigned long ulEventMask;
-		COMTHROW( m_spConstraint->get_EventMask( &ulEventMask ) );
+		BONCOMTHROW( m_spConstraint->get_EventMask( &ulEventMask ) );
 
 		for ( ObjectEventType eType = OET_None ; eType != OET_All ; eType++ )
 			if ( ulEventMask & eType )
@@ -2087,14 +2090,14 @@ namespace MON
 	ConstraintPriority ConstraintImpl::getPriority() const
 	{
 		long lPriority;
-		COMTHROW( m_spConstraint->get_Priority( &lPriority ) );
+		BONCOMTHROW( m_spConstraint->get_Priority( &lPriority ) );
 		return (ConstraintPriority) lPriority;
 	}
 
 	ConstraintDepth ConstraintImpl::getDepth() const
 	{
 		constraint_depth_enum eDepth;
-		COMTHROW( m_spConstraint->get_Depth( &eDepth ) );
+		BONCOMTHROW( m_spConstraint->get_Depth( &eDepth ) );
 		return (ConstraintDepth) eDepth;
 	}
 

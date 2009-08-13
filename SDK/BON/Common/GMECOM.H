@@ -2,42 +2,6 @@
 #define GMECOM_H
 
 #include "ComponentLib_h.h"
-#include "Exceptions.h"
-// Exceptions.h defines a conflicting COMTHROW
-#undef COMTHROW
-
-// --------------------------- MACROS
-
-template<class T>
-inline void COMCHECK2(const CComPtr<T>& p, HRESULT hr)
-{
-	if (!SUCCEEDED(hr)) {
-		const IID piid = __uuidof(T);
-		CComQIPtr<ISupportErrorInfo> supportErrorInfo = p;
-		if (supportErrorInfo != NULL && supportErrorInfo->InterfaceSupportsErrorInfo(piid) == S_OK) {
-			CComQIPtr<IErrorInfo> errorInfo;
-			GetErrorInfo(0, &errorInfo);
-			BSTR bstr;
-			errorInfo->GetDescription(&bstr);
-			BON::Exception exception(hr, "?");
-			CString str( bstr );
-			std::string strResult( str.GetBuffer( str.GetLength() ) );
-			str.ReleaseBuffer();
-			exception << strResult;
-			SysFreeString(bstr);
-			throw exception;
-		} else {
-			BON::Exception exception(hr);
-			throw exception;
-		}
-	}
-}
-
-template<class T>
-inline void COMCHECK2(T* p, HRESULT hr) {
-	COMCHECK2(CComPtr<T>(p), hr);
-}
-
 
 // TODO: remove it or replace it with SmartMultiPtr from CommonMgaTrukk.h
 template <class TTT>

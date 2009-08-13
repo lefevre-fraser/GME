@@ -465,16 +465,16 @@ CBuilderConnection *CBuilderFolder::CreateNewConnection(CString kindName, CBuild
 			COMCHECK2(src->GetIObject(), src->GetIObject()->CreateCollection(&srcrefs));
 			src=((CBuilderModelReference*)src)->GetReferred();
 		}
-		if(!src->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMTHROW(E_INCONSISTENCY);
+		if(!src->IsKindOf(RUNTIME_CLASS(CBuilderModel))) BONCOMTHROW(E_INCONSISTENCY);
 		srcfco = source->GetIObject();
-		if(src != ((CBuilderReferencePort*)source)->GetPortObject()->GetParent()) COMTHROW(E_INCONSISTENCY);
+		if(src != ((CBuilderReferencePort*)source)->GetPortObject()->GetParent()) BONCOMTHROW(E_INCONSISTENCY);
 	}
 	else {
 		while(src->IsKindOf(RUNTIME_CLASS(CBuilderAtomReference))) {
 			COMCHECK2(src->GetIObject(), src->GetIObject()->CreateCollection(&srcrefs));
 			src=((CBuilderAtomReference*)src)->GetReferred();
 		}
-		// if(!src->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMTHROW(E_INCONSISTENCY);
+		// if(!src->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) BONCOMTHROW(E_INCONSISTENCY);
 		srcfco = src->GetIObject();
 	}
 
@@ -486,16 +486,16 @@ CBuilderConnection *CBuilderFolder::CreateNewConnection(CString kindName, CBuild
 			COMCHECK2(dst->GetIObject(), dst->GetIObject()->CreateCollection(&dstrefs));
 			dst=((CBuilderModelReference*)dst)->GetReferred();
 		}
-		if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMTHROW(E_INCONSISTENCY);
+		if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderModel))) BONCOMTHROW(E_INCONSISTENCY);
 		dstfco = destination->GetIObject();
-		if(dst != ((CBuilderReferencePort*)destination)->GetPortObject()->GetParent()) COMTHROW(E_INCONSISTENCY);
+		if(dst != ((CBuilderReferencePort*)destination)->GetPortObject()->GetParent()) BONCOMTHROW(E_INCONSISTENCY);
 	}
 	else {
 		while(dst->IsKindOf(RUNTIME_CLASS(CBuilderAtomReference))) {
 			COMCHECK2(dst->GetIObject(), dst->GetIObject()->CreateCollection(&dstrefs));
 			dst=((CBuilderAtomReference*)dst)->GetReferred();
 		}
-		// if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMTHROW(E_INCONSISTENCY);
+		// if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) BONCOMTHROW(E_INCONSISTENCY);
 		dstfco = dst->GetIObject();
 	}
 
@@ -2164,16 +2164,16 @@ CBuilderConnection *CBuilderModel::CreateNewConnection(CString connName, CBuilde
 			COMCHECK2(src->GetIObject(), src->GetIObject()->CreateCollection(&srcrefs));
 			src=((CBuilderModelReference*)src)->GetReferred();
 		}
-		if(!src->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMTHROW(E_INCONSISTENCY);
+		if(!src->IsKindOf(RUNTIME_CLASS(CBuilderModel))) BONCOMTHROW(E_INCONSISTENCY);
 		srcfco = source->GetIObject();
-		if(src != ((CBuilderReferencePort*)source)->GetPortObject()->GetParent()) COMTHROW(E_INCONSISTENCY);
+		if(src != ((CBuilderReferencePort*)source)->GetPortObject()->GetParent()) BONCOMTHROW(E_INCONSISTENCY);
 	}
 	else {
 		while(src->IsKindOf(RUNTIME_CLASS(CBuilderAtomReference))) {
 			COMCHECK2(src->GetIObject(), src->GetIObject()->CreateCollection(&srcrefs));
 			src=((CBuilderAtomReference*)src)->GetReferred();
 		}
-		// if(!src->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMTHROW(E_INCONSISTENCY);
+		// if(!src->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) BONCOMTHROW(E_INCONSISTENCY);
 		srcfco = src->GetIObject();
 	}
 
@@ -2185,16 +2185,16 @@ CBuilderConnection *CBuilderModel::CreateNewConnection(CString connName, CBuilde
 			COMCHECK2(dst->GetIObject(), dst->GetIObject()->CreateCollection(&dstrefs));
 			dst=((CBuilderModelReference*)dst)->GetReferred();
 		}
-		if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMTHROW(E_INCONSISTENCY);
+		if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderModel))) BONCOMTHROW(E_INCONSISTENCY);
 		dstfco = destination->GetIObject();
-		if(dst != ((CBuilderReferencePort*)destination)->GetPortObject()->GetParent()) COMTHROW(E_INCONSISTENCY);
+		if(dst != ((CBuilderReferencePort*)destination)->GetPortObject()->GetParent()) BONCOMTHROW(E_INCONSISTENCY);
 	}
 	else {
 		while(dst->IsKindOf(RUNTIME_CLASS(CBuilderAtomReference))) {
 			COMCHECK2(dst->GetIObject(), dst->GetIObject()->CreateCollection(&dstrefs));
 			dst=((CBuilderAtomReference*)dst)->GetReferred();
 		}
-		// if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMTHROW(E_INCONSISTENCY);
+		// if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) BONCOMTHROW(E_INCONSISTENCY);
 		dstfco = dst->GetIObject();
 	}
 
