@@ -42,6 +42,9 @@
 		if ( FAILED( hResult ) )													\
 			ASSERTTHROW( BON::Exception( hResult, "COMException" ) );		\
 	}
+// GMECOM.H defines a COMTHROW/COMCATCH pair
+// undef COMCATCH to avoid trying to catch the wrong exception type
+#undef COMCATCH
 
 namespace Util
 {

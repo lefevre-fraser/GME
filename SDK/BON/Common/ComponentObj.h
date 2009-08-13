@@ -187,10 +187,10 @@ public:
 	CComPtr<IMgaEventSink> 	e_sink;
 #endif // GME_ADDON
 
-	void HandleError( Util::Exception* pEx );
-
 #endif // BUILDER_OBJECT_NETWORK_V2
 // BY PAKA END
+
+	void HandleError( Util::Exception* pEx );
 
 }; // CComponentObj
 

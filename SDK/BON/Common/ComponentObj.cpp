@@ -463,7 +463,14 @@ STDMETHODIMP COMCLASS::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,  IM
 			COMTHROW(project->CommitTransaction());
 #endif
 		}
-		catch(...) { project->AbortTransaction(); throw; }
+		catch(Util::Exception e) {
+			pThis->HandleError(&e);
+			project->AbortTransaction(); 
+			throw;
+		} catch(...) {
+			project->AbortTransaction(); 
+			throw;
+		}
 	}
 	COMTHROW(project->put_Preferences(prefs));
 #else
@@ -630,23 +637,6 @@ STDMETHODIMP COMCLASS::put_ComponentParameter(BSTR name, VARIANT newVal) {
 // BY PAKA BEGIN
 #ifdef BUILDER_OBJECT_NETWORK_V2
 // If BUILDER OBJECT NETWORK 2 IS USED
-
-void CComponentObj::HandleError( Util::Exception* pEx )
-{
-	std::string strOut = "Exception kind : " + pEx->getKind() + "\n";
-	strOut += "Exception message : " + pEx->getErrorMessage();
-	if ( pEx->getKind() == "MON::Exception" ) {
-		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%x", ( (MON::Exception*) pEx)->getHResult() );
-		strOut += "\nException hresult : " + std::string( chBuffer );
-	}
-	else if ( pEx->getKind() == "BON::Exception" ) {
-		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%x", ( (BON::Exception*) pEx)->getHResult() );
-		strOut += "\nException hresult : " + std::string( chBuffer );
-	}
-	AfxMessageBox( strOut.c_str() );
-}
 
 STDMETHODIMP COMCLASS::Invoke( IMgaProject *gme, IMgaFCOs *psa, long param )
 {
@@ -962,6 +952,22 @@ STDMETHODIMP COMCLASS::put_ComponentParameter( BSTR name, VARIANT newVal )
 
 #endif // BUILDER_OBJECT_NETWORK
 
+void CComponentObj::HandleError( Util::Exception* pEx )
+{
+	std::string strOut = "Exception kind : " + pEx->getKind() + "\n";
+	strOut += "Exception message : " + pEx->getErrorMessage();
+	if ( pEx->getKind() == "MON::Exception" ) {
+		char chBuffer[ 100 ];
+		sprintf( chBuffer, "%x", ( (MON::Exception*) pEx)->getHResult() );
+		strOut += "\nException hresult : " + std::string( chBuffer );
+	}
+	else if ( pEx->getKind() == "BON::Exception" ) {
+		char chBuffer[ 100 ];
+		sprintf( chBuffer, "%x", ( (BON::Exception*) pEx)->getHResult() );
+		strOut += "\nException hresult : " + std::string( chBuffer );
+	}
+	AfxMessageBox( strOut.c_str() );
+}
 
 
 STDMETHODIMP COMCLASS::get_ComponentType( componenttype_enum *t)

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "GMECOM.h"
+#include "Exceptions.h"
 #include "Builder.h"
 
 #define E_INCONSISTENCY 0x87770100
@@ -19,14 +20,14 @@ CBuilder* CBuilder::theInstance = NULL;
 static const CBuilderConnectionList  EmptyList;
 
 CBuilder::CBuilder(IMgaProject* ig, CStringMap *pmap) : parametermap(pmap) {
-	ASSERT( ig != NULL );
+	ASSERT( "Project must not be null" );
 	ciGme = ig;
 
 	ciTerr = NULL;
-	COMVERIFY(ciGme->get_ActiveTerritory(&ciTerr));
+	COMCHECK2(ciGme, ciGme->get_ActiveTerritory(&ciTerr));
 
-	COMVERIFY( ciGme->get_RootFolder(&ciRootFolder));
-	ASSERT(ciRootFolder);
+	COMCHECK2(ciGme, ciGme->get_RootFolder(&ciRootFolder));
+	ASSERT("Failed to retreive root folder");
 
 	ASSERT( theInstance == NULL );
 	theInstance = this;
@@ -116,7 +117,7 @@ CBuilderObject* CBuilder::FindObject(IMgaFCO* i)
 	if( !objectmap.Lookup(iu, o) )
 	{
 		CBstr idstr;
-		COMVERIFY( i->get_ID(idstr) );
+		COMCHECK2( i, i->get_ID(idstr) );
 		ASSERT(false);
 	}
 	ASSERT(o);
@@ -128,7 +129,7 @@ CBuilderObject* CBuilder::FindObject(IMgaFCO* i)
 	if( !objectmap.Lookup(i, o) )
 	{
 		CBstr idstr;
-		COMVERIFY( i->get_ID(idstr) );
+		COMCHECK2(i, i->get_ID(idstr) );
 		ASSERT(false);
 	}
 	ASSERT(o);
@@ -167,7 +168,7 @@ CBuilderFolder *CBuilder::GetFolder(CString name) const
 CString CBuilder::GetProjectName() const
 {
 	CBstr bstr;
-	COMVERIFY( ciGme->get_Name(bstr) );
+	COMCHECK2(ciGme, ciGme->get_Name(bstr) );
 	return bstr;
 }
 
@@ -188,14 +189,14 @@ EditorModes CBuilder::GetEditorMode() const
 {
 	ASSERT( ciGme != NULL );
 	EditorModes mode = (EditorModes)0;
-//	COMVERIFY( ciGme->get_editormode(&mode) );
+//	COMCHECK2(ciGME, ciGme->get_editormode(&mode) );
 	return mode;
 }
 
 void CBuilder::SetEditorMode(EditorModes mode)
 {
 	ASSERT( ciGme != NULL );
-//	COMVERIFY( ciGme->put_editormode(mode) );
+//	COMCHECK2(ciGME, ciGme->put_editormode(mode) );
 }
 
 bool CBuilder::BeginTransaction(transactiontype_enum mode)
@@ -214,7 +215,7 @@ bool CBuilder::CommitTransaction()
 void CBuilder::AbortTransaction()
 {
 	ASSERT(ciGme);
-	COMVERIFY(ciGme->AbortTransaction());
+	COMCHECK2(ciGme, ciGme->AbortTransaction());
 }
 
 //////////////////////////////// CBuilderFolder /////////////////////////////////
@@ -226,7 +227,7 @@ CBuilderFolder::CBuilderFolder(IMgaFolder *ic, CBuilderFolder *parent) : ciFolde
 	CBuilder::theInstance->folders.AddTail(this);
 
 	CComPtr<IMgaFCOs> psa;
-	COMVERIFY( ciFolder->get_ChildFCOs(&psa));
+	COMCHECK2(ciFolder, ciFolder->get_ChildFCOs(&psa));
 	MGACOLL_ITERATE(IMgaFCO, psa) {
 		CComPtr<IMgaModel> mm;
 		CComPtr<IMgaAtom> aa;
@@ -257,24 +258,24 @@ CBuilderFolder::CBuilderFolder(IMgaFolder *ic, CBuilderFolder *parent) : ciFolde
 
 	{
 		CBstr bstr;
-		COMVERIFY(ciFolder->get_Name(bstr) );
+		COMCHECK2(ciFolder, ciFolder->get_Name(bstr) );
 		name = bstr;
 	}
 
 	{
 		CBstr bstr;
-		COMVERIFY( GetMeta()->get_Name(bstr) );
+		COMCHECK2(GetMeta(), GetMeta()->get_Name(bstr) );
 		kindName = bstr;
 		kindTitle = kindName;	// for atoms and models this'll be changed to the real thing in their constructor
 	}
 	{
 		CBstr bstr;
-		COMVERIFY( GetMeta()->get_DisplayedName(bstr) );
+		COMCHECK2(GetMeta(), GetMeta()->get_DisplayedName(bstr) );
 		kindTitle = bstr;
 	}
 
 	CComPtr<IMgaFolders> sfs;
-	COMVERIFY( ciFolder->get_ChildFolders(&sfs));
+	COMCHECK2(ciFolder, ciFolder->get_ChildFolders(&sfs));
 	MGACOLL_ITERATE(IMgaFolder, sfs) {
 			subfolders.AddTail(new CBuilderFolder(MGACOLL_ITER, this));
 	} MGACOLL_ITERATE_END;
@@ -300,7 +301,7 @@ CBuilderFolder::~CBuilderFolder() {
 
 CComPtr<IMgaMetaFolder> CBuilderFolder::GetMeta() const {
 		CComPtr<IMgaMetaFolder> cmeta;
-		COMVERIFY( ciFolder->get_MetaFolder(&cmeta) );
+		COMCHECK2(ciFolder, ciFolder->get_MetaFolder(&cmeta) );
 		return cmeta;
 }
 
@@ -340,15 +341,15 @@ CBuilderModel *CBuilderFolder::CreateNewModel(CString kindName, CBuilderModel* b
 {
 	CComPtr<IMgaMetaFolder> fmeta;
 	CComPtr<IMgaMetaFCO> cmeta;
-	COMVERIFY( ciFolder->get_MetaFolder(&fmeta) );
-	COMVERIFY( fmeta->get_LegalRootObjectByName((CBstrIn)kindName, &cmeta) );
+	COMCHECK2(ciFolder, ciFolder->get_MetaFolder(&fmeta) );
+	COMCHECK2(fmeta, fmeta->get_LegalRootObjectByName((CBstrIn)kindName, &cmeta) );
 	ASSERT( cmeta != NULL );
 	CComPtr<IMgaFCO> i;
 	if (baseType) {
-		COMVERIFY( ciFolder->DeriveRootObject(baseType->GetIModel(), instance ? VARIANT_TRUE : VARIANT_FALSE ,&i) );
+		COMCHECK2(ciFolder, ciFolder->DeriveRootObject(baseType->GetIModel(), instance ? VARIANT_TRUE : VARIANT_FALSE ,&i) );
 	}
 	else {
-		COMVERIFY( ciFolder->CreateRootObject(cmeta ,&i) );
+		COMCHECK2(ciFolder, ciFolder->CreateRootObject(cmeta ,&i) );
 	}
 	ASSERT( i != NULL );
 
@@ -363,11 +364,11 @@ CBuilderFolder *CBuilderFolder::CreateNewFolder(CString kindName)
 {
 	CComPtr<IMgaMetaFolder> fmeta;
 	CComPtr<IMgaMetaFolder> cmeta;
-	COMVERIFY( ciFolder->get_MetaFolder(&fmeta) );
-	COMVERIFY( fmeta->get_LegalChildFolderByName((CBstrIn)kindName, &cmeta) );
+	COMCHECK2(ciFolder, ciFolder->get_MetaFolder(&fmeta) );
+	COMCHECK2(ciFolder, fmeta->get_LegalChildFolderByName((CBstrIn)kindName, &cmeta) );
 	ASSERT( cmeta != NULL );
 	CComPtr<IMgaFolder> i;
-	COMVERIFY( ciFolder->CreateFolder(cmeta ,&i) );
+	COMCHECK2(ciFolder, ciFolder->CreateFolder(cmeta ,&i) );
 	ASSERT( i != NULL );
 
 	CBuilderFolder* o = new CBuilderFolder(i, this);
@@ -381,15 +382,15 @@ CBuilderAtom *CBuilderFolder::CreateNewAtom(CString kindName, CBuilderAtom* base
 
 	CComPtr<IMgaMetaFolder> fmeta;
 	CComPtr<IMgaMetaFCO> cmeta;
-	COMVERIFY( ciFolder->get_MetaFolder(&fmeta) );
-	COMVERIFY( fmeta->get_LegalRootObjectByName((CBstrIn)kindName, &cmeta) );
+	COMCHECK2(ciFolder, ciFolder->get_MetaFolder(&fmeta) );
+	COMCHECK2(fmeta, fmeta->get_LegalRootObjectByName((CBstrIn)kindName, &cmeta) );
 	ASSERT( cmeta != NULL );
 	CComPtr<IMgaFCO> i;
 	if (baseType) {
-		COMVERIFY( ciFolder->DeriveRootObject(baseType->GetIAtom(), instance ? VARIANT_TRUE : VARIANT_FALSE ,&i) );
+		COMCHECK2(ciFolder, ciFolder->DeriveRootObject(baseType->GetIAtom(), instance ? VARIANT_TRUE : VARIANT_FALSE ,&i) );
 	}
 	else {
-		COMVERIFY( ciFolder->CreateRootObject(cmeta ,&i) );
+		COMCHECK2(ciFolder, ciFolder->CreateRootObject(cmeta ,&i) );
 	}
 	ASSERT( i != NULL );
 
@@ -405,14 +406,14 @@ CBuilderReference *CBuilderFolder::CreateNewReference(CString kindName, CBuilder
 	IMgaFCO *i = NULL;
 	CComPtr<IMgaMetaFolder> fmeta;
 	CComPtr<IMgaMetaFCO> cmeta;
-	COMVERIFY( ciFolder->get_MetaFolder(&fmeta) );
-	COMVERIFY( fmeta->get_LegalRootObjectByName((CBstrIn)kindName, &cmeta) );
+	COMCHECK2(ciFolder, ciFolder->get_MetaFolder(&fmeta) );
+	COMCHECK2(fmeta, fmeta->get_LegalRootObjectByName((CBstrIn)kindName, &cmeta) );
 	ASSERT( cmeta != NULL );
 	if (baseType) {
-		COMVERIFY( ciFolder->DeriveRootObject(baseType->GetIRef(), instance ? VARIANT_TRUE : VARIANT_FALSE ,&i) );
+		COMCHECK2(ciFolder, ciFolder->DeriveRootObject(baseType->GetIRef(), instance ? VARIANT_TRUE : VARIANT_FALSE ,&i) );
 	}
 	else {
-		COMVERIFY( ciFolder->CreateRootObject(cmeta ,&i) );
+		COMCHECK2(ciFolder, ciFolder->CreateRootObject(cmeta ,&i) );
 	}
 	ASSERT( i != NULL );
 
@@ -461,19 +462,19 @@ CBuilderConnection *CBuilderFolder::CreateNewConnection(CString kindName, CBuild
 		srcfco = src->GetIObject();
 		src = ((CBuilderReferencePort*)src)->GetOwner();
 		while(src->IsKindOf(RUNTIME_CLASS(CBuilderModelReference))) {
-			COMVERIFY(src->GetIObject()->CreateCollection(&srcrefs));
+			COMCHECK2(src->GetIObject(), src->GetIObject()->CreateCollection(&srcrefs));
 			src=((CBuilderModelReference*)src)->GetReferred();
 		}
-		if(!src->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMVERIFY(E_INCONSISTENCY);
+		if(!src->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMTHROW(E_INCONSISTENCY);
 		srcfco = source->GetIObject();
-		if(src != ((CBuilderReferencePort*)source)->GetPortObject()->GetParent()) COMVERIFY(E_INCONSISTENCY);
+		if(src != ((CBuilderReferencePort*)source)->GetPortObject()->GetParent()) COMTHROW(E_INCONSISTENCY);
 	}
 	else {
 		while(src->IsKindOf(RUNTIME_CLASS(CBuilderAtomReference))) {
-			COMVERIFY(src->GetIObject()->CreateCollection(&srcrefs));
+			COMCHECK2(src->GetIObject(), src->GetIObject()->CreateCollection(&srcrefs));
 			src=((CBuilderAtomReference*)src)->GetReferred();
 		}
-		// if(!src->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMVERIFY(E_INCONSISTENCY);
+		// if(!src->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMTHROW(E_INCONSISTENCY);
 		srcfco = src->GetIObject();
 	}
 
@@ -482,29 +483,29 @@ CBuilderConnection *CBuilderFolder::CreateNewConnection(CString kindName, CBuild
 		dstfco = dst->GetIObject();
 		dst = ((CBuilderReferencePort*)dst)->GetOwner();
 		while(dst->IsKindOf(RUNTIME_CLASS(CBuilderModelReference))) {
-			COMVERIFY(dst->GetIObject()->CreateCollection(&dstrefs));
+			COMCHECK2(dst->GetIObject(), dst->GetIObject()->CreateCollection(&dstrefs));
 			dst=((CBuilderModelReference*)dst)->GetReferred();
 		}
-		if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMVERIFY(E_INCONSISTENCY);
+		if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMTHROW(E_INCONSISTENCY);
 		dstfco = destination->GetIObject();
-		if(dst != ((CBuilderReferencePort*)destination)->GetPortObject()->GetParent()) COMVERIFY(E_INCONSISTENCY);
+		if(dst != ((CBuilderReferencePort*)destination)->GetPortObject()->GetParent()) COMTHROW(E_INCONSISTENCY);
 	}
 	else {
 		while(dst->IsKindOf(RUNTIME_CLASS(CBuilderAtomReference))) {
-			COMVERIFY(dst->GetIObject()->CreateCollection(&dstrefs));
+			COMCHECK2(dst->GetIObject(), dst->GetIObject()->CreateCollection(&dstrefs));
 			dst=((CBuilderAtomReference*)dst)->GetReferred();
 		}
-		// if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMVERIFY(E_INCONSISTENCY);
+		// if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMTHROW(E_INCONSISTENCY);
 		dstfco = dst->GetIObject();
 	}
 
 	CComPtr<IMgaMetaFolder> fmeta;
 	CComPtr<IMgaMetaFCO> cmeta;
-	COMVERIFY( ciFolder->get_MetaFolder(&fmeta) );
-	COMVERIFY( fmeta->get_LegalRootObjectByName((CBstrIn)kindName, &cmeta) );
+	COMCHECK2(ciFolder, ciFolder->get_MetaFolder(&fmeta) );
+	COMCHECK2(fmeta, fmeta->get_LegalRootObjectByName((CBstrIn)kindName, &cmeta) );
 	ASSERT( cmeta != NULL );
 	CComPtr<IMgaFCO> i;
-	COMVERIFY( ciFolder->CreateRootObject(cmeta ,&i) );
+	COMCHECK2(ciFolder, ciFolder->CreateRootObject(cmeta ,&i) );
 	ASSERT( i != NULL );
 
 	CBuilderConnection* o = CBuilderFactory::Create(CComQIPtr<IMgaSimpleConnection>(i), NULL);
@@ -516,15 +517,15 @@ CBuilderConnection *CBuilderFolder::CreateNewConnection(CString kindName, CBuild
 CBuilderSet *CBuilderFolder::CreateNewSet(CString kindName, CBuilderSet* baseType, bool instance) {
 	CComPtr<IMgaMetaFolder> fmeta;
 	CComPtr<IMgaMetaFCO> cmeta;
-	COMVERIFY( ciFolder->get_MetaFolder(&fmeta) );
-	COMVERIFY( fmeta->get_LegalRootObjectByName((CBstrIn)kindName, &cmeta) );
+	COMCHECK2(ciFolder, ciFolder->get_MetaFolder(&fmeta) );
+	COMCHECK2(fmeta, fmeta->get_LegalRootObjectByName((CBstrIn)kindName, &cmeta) );
 	ASSERT( cmeta != NULL );
 	CComPtr<IMgaFCO> i;
 	if (baseType) {
-		COMVERIFY( ciFolder->DeriveRootObject(baseType->GetISet(), instance ? VARIANT_TRUE : VARIANT_FALSE ,&i) );
+		COMCHECK2(ciFolder, ciFolder->DeriveRootObject(baseType->GetISet(), instance ? VARIANT_TRUE : VARIANT_FALSE ,&i) );
 	}
 	else {
-		COMVERIFY( ciFolder->CreateRootObject(cmeta ,&i) );
+		COMCHECK2(ciFolder, ciFolder->CreateRootObject(cmeta ,&i) );
 	}
 	ASSERT( i != NULL );
 
@@ -538,7 +539,7 @@ CBuilderSet *CBuilderFolder::CreateNewSet(CString kindName, CBuilderSet* baseTyp
 bool CBuilderFolder::GetRegistryValue(CString &path,CString &val) const
 {
 	CBstr bstr;
-	COMVERIFY( ciFolder->get_RegistryValue((CBstrIn)path, bstr) );
+	COMCHECK2(ciFolder, ciFolder->get_RegistryValue((CBstrIn)path, bstr) );
 
 	val = bstr;
 	return true;
@@ -558,7 +559,7 @@ IMPLEMENT_DYNAMIC(CBuilderObject,CObject)
 
 CComPtr<IMgaMetaFCO> CBuilderObject::GetMeta() const {
 		CComPtr<IMgaMetaFCO> cmeta;
-		COMVERIFY( ciObject->get_Meta(&cmeta) );
+		COMCHECK2(ciObject, ciObject->get_Meta(&cmeta) );
 		return cmeta;
 }
 
@@ -572,13 +573,13 @@ CBuilderObject::CBuilderObject(IMgaFCO* io, CBuilderModel *p, bool globalregiste
 
 	{
 		CBstr bstr;
-		COMVERIFY( ciObject->get_Name(bstr) );
+		COMCHECK2(ciObject, ciObject->get_Name(bstr) );
 		name = bstr;
 	}
 
 	{
 		CBstr bstr;
-		COMVERIFY( GetMeta()->get_Name(bstr) );
+		COMCHECK2(GetMeta(), GetMeta()->get_Name(bstr) );
 		kindName = bstr;
 		kindTitle = kindName;	// for atoms and models this'll be changed to the real thing in their constructor
 	}
@@ -586,9 +587,9 @@ CBuilderObject::CBuilderObject(IMgaFCO* io, CBuilderModel *p, bool globalregiste
 	{
 		CBstr bstr;
 		CComPtr<IMgaMetaRole> rmeta;
-		COMVERIFY( ciObject->get_MetaRole(&rmeta) );
+		COMCHECK2(ciObject, ciObject->get_MetaRole(&rmeta) );
 		if(rmeta) {
-			COMVERIFY( rmeta->get_Name(bstr) );
+			COMCHECK2(rmeta, rmeta->get_Name(bstr) );
 			partName = bstr;
 		} else partName = "";
 	}
@@ -663,7 +664,7 @@ void CBuilderObject::Destroy()
 		ASSERT( this->IsKindOf(RUNTIME_CLASS(CBuilderModel)) );
 		delete this;
 	}
-	COMVERIFY(myself->DestroyObject());
+	COMCHECK2(myself, myself->DestroyObject());
 }
 
 CBuilderFolder *CBuilderObject::GetFolder() const
@@ -720,12 +721,12 @@ bool CBuilderObject::GetLocation(CString &aspectName,CRect &loc)
 
 	CComPtr<IMgaMetaAspect> asp;
 	CComQIPtr<IMgaMetaModel>	pmetam = parent->GetMeta();
-	COMVERIFY(pmetam->get_AspectByName((CBstrIn)aspectName, &asp));
+	COMCHECK2(pmetam, pmetam->get_AspectByName((CBstrIn)aspectName, &asp));
 	CComPtr<IMgaPart> part;
-	COMVERIFY(this->GetIObject()->get_Part(asp, &part));
+	COMCHECK2(this->GetIObject(), this->GetIObject()->get_Part(asp, &part));
 
 	long x, y;
-	COMVERIFY(part->GetGmeAttrs(NULL, &x, &y));
+	COMCHECK2(part, part->GetGmeAttrs(NULL, &x, &y));
 	loc.left = x, loc.top = y, loc.right = x + 100, loc.bottom = y + 100;
 	return true;
 }
@@ -737,11 +738,11 @@ bool CBuilderObject::SetLocation(CString aspectName,CPoint loc)
 
 	CComPtr<IMgaMetaAspect> asp;
 	CComQIPtr<IMgaMetaModel>	pmetam = parent->GetMeta();
-	COMVERIFY(pmetam->get_AspectByName((CBstrIn)aspectName, &asp));
+	COMCHECK2(pmetam, pmetam->get_AspectByName((CBstrIn)aspectName, &asp));
 	CComPtr<IMgaPart> part;
-	COMVERIFY(this->GetIObject()->get_Part(asp, &part));
+	COMCHECK2(this->GetIObject(), this->GetIObject()->get_Part(asp, &part));
 
-	COMVERIFY(part->SetGmeAttrs(NULL, loc.x, loc.y));
+	COMCHECK2(part, part->SetGmeAttrs(NULL, loc.x, loc.y));
 	return true;
 }
 
@@ -775,7 +776,7 @@ void CBuilderObject::DisplayMessage(CString &msg,bool error) const
 bool CBuilderObject::GetRegistryValue(CString &path,CString &val) const
 {
 	CBstr bstr;
-	COMVERIFY( ciObject->get_RegistryValue((CBstrIn)path, bstr) );
+	COMCHECK2(ciObject, ciObject->get_RegistryValue((CBstrIn)path, bstr) );
 
 	val = bstr;
 	return true;
@@ -844,11 +845,11 @@ bool CBuilderObject::GetAttribute(CString &name,CBuilderObject *&val) const
 int CBuilderObject::GetAttributeStatus(CString attrName) {
          CComPtr<IMgaMetaAttribute> mattr;
          CComPtr<IMgaAttribute> attr;
-         COMVERIFY(GetMeta()->get_AttributeByName(CComBSTR(attrName), &mattr));
-         COMVERIFY(ciObject->get_Attribute(mattr, &attr));
+         COMCHECK2(GetMeta(), GetMeta()->get_AttributeByName(CComBSTR(attrName), &mattr));
+         COMCHECK2(ciObject, ciObject->get_Attribute(mattr, &attr));
 
          long status;
-         COMVERIFY(attr->get_Status(&status));
+         COMCHECK2(attr, attr->get_Status(&status));
          return((int) status);
 }
 
@@ -899,13 +900,13 @@ void CBuilderObject::GetAttributeNames(CStringList &list, attval_enum type, attv
 	ASSERT( list.IsEmpty() );
 
 	CComPtr<IMgaMetaAttributes> mattrs;
-	COMVERIFY(GetMeta()->get_Attributes(&mattrs));
+	COMCHECK2(GetMeta(), GetMeta()->get_Attributes(&mattrs));
 	MGACOLL_ITERATE(IMgaMetaAttribute, mattrs) {
 		attval_enum t;
-		COMVERIFY(MGACOLL_ITER->get_ValueType(&t) );
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_ValueType(&t) );
 		if(t == type || t == sectype) {
 			CBstr n;
-			COMVERIFY(MGACOLL_ITER->get_Name(n) );
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Name(n) );
 			list.AddTail(n);
 		}
 
@@ -942,7 +943,7 @@ void CBuilderObject::GetReferencedBy(CBuilderObjectList &list) const
 	ASSERT( list.IsEmpty() );
 
 	CComPtr<IMgaFCOs> reflist;
-	COMVERIFY( GetIObject()->get_ReferencedBy(&reflist));
+	COMCHECK2(GetIObject(), GetIObject()->get_ReferencedBy(&reflist));
 	MGACOLL_ITERATE(IMgaFCO, reflist) {
 		CBuilderObject* object = CBuilder::theInstance->FindObject(MGACOLL_ITER);
 		ASSERT( object != NULL );
@@ -957,7 +958,7 @@ void CBuilderObject::GetMemberOfSets(CBuilderObjectList &list) const
 	ASSERT( list.IsEmpty() );
 
 	CComPtr<IMgaFCOs> setlist;
-	COMVERIFY( GetIObject()->get_MemberOfSets(&setlist));
+	COMCHECK2(GetIObject(), GetIObject()->get_MemberOfSets(&setlist));
 	MGACOLL_ITERATE(IMgaFCO, setlist) {
 		CBuilderObject* object = CBuilder::theInstance->FindObject(MGACOLL_ITER);
 		ASSERT( object != NULL );
@@ -980,7 +981,7 @@ bool CBuilderObject::SetName(CString newname)
 bool CBuilderObject::IsInstance()
 {
 	VARIANT_BOOL ret = 0;
-	COMVERIFY( ciObject->get_IsInstance(&ret) );
+	COMCHECK2(ciObject, ciObject->get_IsInstance(&ret) );
 	return ret != 0;
 
 }
@@ -990,7 +991,7 @@ CBuilderObject* CBuilderObject::GetType()
 {
 	if(!IsInstance()) return 0;
 	CComPtr<IMgaFCO> pp;
-	COMVERIFY( ciObject->get_Type(&pp) );
+	COMCHECK2(ciObject, ciObject->get_Type(&pp) );
 	return CBuilder::theInstance->FindObject(pp);
 
 }
@@ -999,17 +1000,17 @@ CBuilderObject *CBuilderObject::GetDerivedFrom()
 {
 	if(!IsInstance()) return 0;
 	CComPtr<IMgaFCO> pp;
-	COMVERIFY( ciObject->get_DerivedFrom(&pp) );
+	COMCHECK2(ciObject, ciObject->get_DerivedFrom(&pp) );
 	return CBuilder::theInstance->FindObject(pp);
 }
 
 void CBuilderObject::GetDerivedObjects(CBuilderObjectList &l, int mode) {
 	CComPtr<IMgaFCOs> pps;
-	COMVERIFY( ciObject->get_DerivedObjects(&pps));
+	COMCHECK2(ciObject, ciObject->get_DerivedObjects(&pps));
 	MGACOLL_ITERATE(IMgaFCO, pps) {
 		if(mode) {
 			VARIANT_BOOL inst;
-			COMVERIFY(MGACOLL_ITER->get_IsInstance(&inst));
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_IsInstance(&inst));
 			if(mode == 1 && inst) continue;
 			if(mode == 2 && !inst) continue;
 		}
@@ -1021,14 +1022,14 @@ bool CBuilderObject::IsMarked()
 {
 	VARIANT_BOOL ret = 0;
 // TODO
-//	COMVERIFY( iObject->get_marked(&ret) );
+//	COMCHECK2( iObject, iObject->get_marked(&ret) );
 	return ret != 0;
 }
 
 void CBuilderObject::Mark(bool marked)
 {
 // TODO
-//	COMVERIFY( iObject->put_marked(marked ? -1 : 0) );
+//	COMCHECK2( iObject, iObject->put_marked(marked ? -1 : 0) );
 }
 
 const CBuilderConnectionList *CBuilderObject::GetInConnections(const CString &name, bool bPorts ) const	{
@@ -1228,7 +1229,7 @@ long CBuilderObject::GetObjId() const
 {
 	long ret = -1;
 	CBstr rret;
-	COMVERIFY( ciObject->get_ID(rret) );
+	COMCHECK2( ciObject, ciObject->get_ID(rret) );
 	long mm, ss;
 	if(swscanf(*rret, OLESTR("id-%04lx-%08lx"), &mm, &ss) == 2 && mm > 100 && mm < 110) {
 		ASSERT(ss < 100000000);
@@ -1239,7 +1240,7 @@ long CBuilderObject::GetObjId() const
 
 CBuilderObject::objtype CBuilderObject::GetObjType() const {
 	objtype_enum rret;
-	COMVERIFY( ciObject->get_ObjType( &rret) );
+	COMCHECK2( ciObject, ciObject->get_ObjType( &rret) );
 	return (objtype)rret;
 }
 
@@ -1250,7 +1251,7 @@ CBuilderModel::CBuilderModel(IMgaModel *iModel, CBuilderModel *aparent) : CBuild
 {
 	{
 		CBstr bstr;
-		COMVERIFY( GetMeta()->get_DisplayedName(bstr) );
+		COMCHECK2( GetMeta(), GetMeta()->get_DisplayedName(bstr) );
 		kindTitle = bstr;
 	}
 
@@ -1375,17 +1376,17 @@ void CBuilderModel::CreateModels()
 	CBuilderModelList *objectlist;
 
 	CComPtr<IMgaMetaRoles> roles;
-	COMVERIFY( CComQIPtr<IMgaMetaModel>(GetMeta())->get_Roles(&roles) );
+	COMCHECK2(CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_Roles(&roles) );
 
 	modelLists.InitHashTable(17);
 	MGACOLL_ITERATE(IMgaMetaRole, roles) {
 		CComPtr<IMgaMetaFCO> kind;
-		COMVERIFY(MGACOLL_ITER->get_Kind(&kind));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Kind(&kind));
 		objtype_enum type;
-		COMVERIFY(kind->get_ObjType(&type));
+		COMCHECK2(kind, kind->get_ObjType(&type));
 		if( type == OBJTYPE_MODEL) {
 			CBstr part;
-			COMVERIFY(MGACOLL_ITER->get_Name(part) );
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Name(part) );
 			ASSERT( !modelLists.Lookup(CString(part), objectlist) );
 
 			objectlist = new CBuilderModelList;
@@ -1396,10 +1397,10 @@ void CBuilderModel::CreateModels()
 	} MGACOLL_ITERATE_END;
 
 	CComPtr<IMgaFCOs> chds;
-	COMVERIFY( GetIModel()->get_ChildFCOs(&chds) );
+	COMCHECK2(GetIModel(), GetIModel()->get_ChildFCOs(&chds) );
 	MGACOLL_ITERATE(IMgaFCO, chds) {
 		objtype_enum ot;
-		COMVERIFY(MGACOLL_ITER->get_ObjType(&ot));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_ObjType(&ot));
 		if(ot != OBJTYPE_MODEL) continue;
 		CBuilderModel* o = CBuilderFactory::Create(CComQIPtr<IMgaModel>(MGACOLL_ITER), this);
 
@@ -1417,17 +1418,17 @@ void CBuilderModel::CreateAtoms()
 	CBuilderAtomList *objectlist;
 
 	CComPtr<IMgaMetaRoles> roles;
-	COMVERIFY( CComQIPtr<IMgaMetaModel>(GetMeta())->get_Roles(&roles) );
+	COMCHECK2(CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_Roles(&roles) );
 
 	atomLists.InitHashTable(17);
 	MGACOLL_ITERATE(IMgaMetaRole, roles) {
 		CComPtr<IMgaMetaFCO> kind;
-		COMVERIFY(MGACOLL_ITER->get_Kind(&kind));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Kind(&kind));
 		objtype_enum type;
-		COMVERIFY(kind->get_ObjType(&type));
+		COMCHECK2(kind, kind->get_ObjType(&type));
 		if( type == OBJTYPE_ATOM) {
 			CBstr part;
-			COMVERIFY(MGACOLL_ITER->get_Name(part) );
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Name(part) );
 			ASSERT( !atomLists.Lookup(CString(part), objectlist) );
 
 			objectlist = new CBuilderAtomList;
@@ -1438,10 +1439,10 @@ void CBuilderModel::CreateAtoms()
 	} MGACOLL_ITERATE_END;
 
 	CComPtr<IMgaFCOs> chds;
-	COMVERIFY( GetIModel()->get_ChildFCOs(&chds) );
+	COMCHECK2(GetIModel(), GetIModel()->get_ChildFCOs(&chds) );
 	MGACOLL_ITERATE(IMgaFCO, chds) {
 		objtype_enum ot;
-		COMVERIFY(MGACOLL_ITER->get_ObjType(&ot));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_ObjType(&ot));
 		if(ot != OBJTYPE_ATOM) continue;
 
 		CBuilderAtom* o = CBuilderFactory::Create(CComQIPtr<IMgaAtom>(MGACOLL_ITER), this);
@@ -1459,19 +1460,19 @@ void CBuilderModel::CreateReferences()
 	CBuilderReferenceList *objectlist;
 
 	CComPtr<IMgaMetaRoles> roles;
-	COMVERIFY( CComQIPtr<IMgaMetaModel>(GetMeta())->get_Roles(&roles) );
+	COMCHECK2(CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_Roles(&roles) );
 
 	referenceLists.InitHashTable(17);
 	modelReferenceLists.InitHashTable(17);
 	atomReferenceLists.InitHashTable(17);
 	MGACOLL_ITERATE(IMgaMetaRole, roles) {
 		CComPtr<IMgaMetaFCO> kind;
-		COMVERIFY(MGACOLL_ITER->get_Kind(&kind));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Kind(&kind));
 		objtype_enum type;
-		COMVERIFY(kind->get_ObjType(&type));
+		COMCHECK2(kind, kind->get_ObjType(&type));
 		if( type == OBJTYPE_REFERENCE) {
 			CBstr part;
-			COMVERIFY(MGACOLL_ITER->get_Name(part) );
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Name(part) );
 			ASSERT( !referenceLists.Lookup(CString(part), objectlist) );
 
 			referenceLists[CString(part)] = new CBuilderReferenceList;
@@ -1481,23 +1482,23 @@ void CBuilderModel::CreateReferences()
 	} MGACOLL_ITERATE_END;
 
 	CComPtr<IMgaFCOs> chds;
-	COMVERIFY( GetIModel()->get_ChildFCOs(&chds) );
+	COMCHECK2(GetIModel(), GetIModel()->get_ChildFCOs(&chds) );
 	MGACOLL_ITERATE(IMgaFCO, chds) {
 
 		objtype_enum ot;
-		COMVERIFY(MGACOLL_ITER->get_ObjType(&ot));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_ObjType(&ot));
 		if(ot != OBJTYPE_REFERENCE) continue;
 		{ 	// test if modelref, also skips NULL references
 			CComPtr<IMgaFCO> r = MGACOLL_ITER;
 			while(ot == OBJTYPE_REFERENCE) {
 				CComPtr<IMgaFCO> rr;
-				COMVERIFY(CComQIPtr<IMgaReference>(r)->get_Referred(&rr));
+				COMCHECK2(CComQIPtr<IMgaReference>(r), CComQIPtr<IMgaReference>(r)->get_Referred(&rr));
 				r = rr;
 				if(!r) {
 					ot = OBJTYPE_NULL;
 					break;
 				}
-				COMVERIFY(r->get_ObjType(&ot));
+				COMCHECK2(r, r->get_ObjType(&ot));
 			}
 		}
 		CBuilderReference* oo = CBuilderFactory::Create(CComQIPtr<IMgaReference>(MGACOLL_ITER), this);
@@ -1526,17 +1527,17 @@ void CBuilderModel::CreateSets()
 	CBuilderSetList *objectlist;
 
 	CComPtr<IMgaMetaRoles> roles;
-	COMVERIFY( CComQIPtr<IMgaMetaModel>(GetMeta())->get_Roles(&roles) );
+	COMCHECK2(CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_Roles(&roles) );
 
 	setLists.InitHashTable(17);
 	MGACOLL_ITERATE(IMgaMetaRole, roles) {
 		CComPtr<IMgaMetaFCO> kind;
-		COMVERIFY(MGACOLL_ITER->get_Kind(&kind));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Kind(&kind));
 		objtype_enum type;
-		COMVERIFY(kind->get_ObjType(&type));
+		COMCHECK2(kind, kind->get_ObjType(&type));
 		if( type == OBJTYPE_SET) {
 			CBstr part;
-			COMVERIFY(MGACOLL_ITER->get_Name(part) );
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Name(part) );
 			ASSERT( !setLists.Lookup(CString(part), objectlist) );
 
 			objectlist = new CBuilderSetList;
@@ -1547,10 +1548,10 @@ void CBuilderModel::CreateSets()
 	} MGACOLL_ITERATE_END;
 
 	CComPtr<IMgaFCOs> chds;
-	COMVERIFY( GetIModel()->get_ChildFCOs(&chds) );
+	COMCHECK2(GetIModel(), GetIModel()->get_ChildFCOs(&chds) );
 	MGACOLL_ITERATE(IMgaFCO, chds) {
 		objtype_enum ot;
-		COMVERIFY(MGACOLL_ITER->get_ObjType(&ot));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_ObjType(&ot));
 		if(ot != OBJTYPE_SET) continue;
 		AddSet(CComQIPtr<IMgaSet>(MGACOLL_ITER));
 	} MGACOLL_ITERATE_END;
@@ -1563,17 +1564,17 @@ void CBuilderModel::CreateConnections()
 
 
 	CComPtr<IMgaMetaRoles> roles;
-	COMVERIFY( CComQIPtr<IMgaMetaModel>(GetMeta())->get_Roles(&roles) );
+	COMCHECK2(CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_Roles(&roles) );
 
 	connectionLists.InitHashTable(17);
 	MGACOLL_ITERATE(IMgaMetaRole, roles) {
 		CComPtr<IMgaMetaFCO> kind;
-		COMVERIFY(MGACOLL_ITER->get_Kind(&kind));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Kind(&kind));
 		objtype_enum type;
-		COMVERIFY(kind->get_ObjType(&type));
+		COMCHECK2(kind, kind->get_ObjType(&type));
 		if( type == OBJTYPE_CONNECTION) {
 			CBstr kname;
-			COMVERIFY(kind->get_Name(kname) );  // with connection lists we are working with kinds!!!!
+			COMCHECK2(kind, kind->get_Name(kname) );  // with connection lists we are working with kinds!!!!
 			ASSERT( !connectionLists.Lookup(CString(kname), objectlist) );
 
 			objectlist = new CBuilderConnectionList;
@@ -1584,10 +1585,10 @@ void CBuilderModel::CreateConnections()
 	} MGACOLL_ITERATE_END;
 
 	CComPtr<IMgaFCOs> chds;
-	COMVERIFY( GetIModel()->get_ChildFCOs(&chds) );
+	COMCHECK2(GetIModel(), GetIModel()->get_ChildFCOs(&chds) );
 	MGACOLL_ITERATE(IMgaFCO, chds) {
 		objtype_enum ot;
-		COMVERIFY(MGACOLL_ITER->get_ObjType(&ot));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_ObjType(&ot));
 		if(ot != OBJTYPE_CONNECTION) continue;
 // TODO: skip if not simple....
 		CBuilderConnection* o = AddConnection(CComQIPtr<IMgaSimpleConnection>(MGACOLL_ITER));
@@ -1794,14 +1795,14 @@ void CBuilderModel::TraverseChildren(void *pointer)
 
 void CBuilderModel::Open()
 {
-	COMVERIFY( GetIModel()->Open() );
+	COMCHECK2(GetIModel(), GetIModel()->Open() );
 }
 
 bool CBuilderModel::IsOpened()
 {
 	VARIANT_BOOL b = VARIANT_FALSE;
 // TODO:
-//	COMVERIFY( GetIModel()->get_opened(&b) );
+//	COMCHECK2(GetIModel(), GetIModel()->get_opened(&b) );
 	return b != 0;
 }
 
@@ -1821,7 +1822,7 @@ void CBuilderModel::GetSelection(CBuilderObjectList &list)
 // TODO:
 /*
 	SAFEARRAY *psa = NULL;
-	COMVERIFY( GetIModel()->GetSelection(&psa) );
+	COMCHECK2(GetIModel(), GetIModel()->GetSelection(&psa) );
 
 	CInterfacePtrList<IMgaObject*> ilist;
 	ilist.Load(&psa);
@@ -1837,7 +1838,7 @@ void CBuilderModel::GetSelection(CBuilderObjectList &list)
 void CBuilderModel::SelectionRemoveAll() const
 {
 // TODO:
-//	COMVERIFY( GetIModel()->UnselectAll() );
+//	COMCHECK2(GetIModel(), GetIModel()->UnselectAll() );
 }
 
 void CBuilderModel::SelectionAdd(CBuilderObjectList& list) const
@@ -1851,7 +1852,7 @@ void CBuilderModel::SelectionAdd(CBuilderObjectList& list) const
 		ilist.AddTail(list.GetNext(pos)->GetIObject());
 
 	SAFEARRAY *psa = ilist.Store();
-	COMVERIFY( GetIModel()->Select(&psa) );
+	COMCHECK2(GetIModel(), GetIModel()->Select(&psa) );
 	SafeArrayDestroyNoRelease(psa);
 */
 }
@@ -1867,7 +1868,7 @@ void CBuilderModel::SelectionRemove(CBuilderObjectList& list) const
 		ilist.AddTail(list.GetNext(pos)->GetIObject());
 
 	SAFEARRAY *psa = ilist.Store();
-	COMVERIFY( GetIModel()->Unselect(&psa) );
+	COMCHECK2(GetIModel(), GetIModel()->Unselect(&psa) );
 	SafeArrayDestroyNoRelease(psa);
 */
 }
@@ -1897,7 +1898,7 @@ void CBuilderModel::SelectionRemove(CBuilderObject* object)	 const
 void CBuilderModel::SetCurrentAspect(CString& aspect)
 {
 /*
-	COMVERIFY( GetIModel()->put_currentaspectbyname((CBstrIn)aspect) );
+	COMCHECK2(GetIModel(), GetIModel()->put_currentaspectbyname((CBstrIn)aspect) );
 */
 }
 
@@ -1905,11 +1906,11 @@ CString CBuilderModel::GetCurrentAspect()
 {
 	CBstr ret;
 	CComPtr<IMgaMetaAspects> asps;
-	COMVERIFY(CComQIPtr<IMgaMetaModel>(GetMeta())->get_Aspects(&asps));
+	COMCHECK2(CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_Aspects(&asps));
 	CComPtr<IMgaMetaAspect> asp;
-	COMVERIFY(asps->get_Item(1, &asp));
+	COMCHECK2(asps, asps->get_Item(1, &asp));
 
-	COMVERIFY(asp->get_Name(ret));
+	COMCHECK2(asp, asp->get_Name(ret));
 
 	return ret;
 }
@@ -1919,11 +1920,11 @@ void CBuilderModel::GetAspectNames(CStringList &list)
 	ASSERT( list.IsEmpty() );
 
 	CComPtr<IMgaMetaAspects> asps;
-	COMVERIFY(CComQIPtr<IMgaMetaModel>(GetMeta())->get_Aspects(&asps));
+	COMCHECK2(CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_Aspects(&asps));
 
 	MGACOLL_ITERATE(IMgaMetaAspect, asps) {
 		CBstr ret;
-		COMVERIFY(MGACOLL_ITER->get_Name(ret));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Name(ret));
 		list.AddTail(ret);
 	} MGACOLL_ITERATE_END;
 }
@@ -2033,15 +2034,15 @@ CBuilderModel *CBuilderModel::CreateNewModel(CString partName, CBuilderModel *ba
 
 	CBstr rname(partName);
 	CComPtr<IMgaMetaRole> role;
-	COMVERIFY( CComQIPtr<IMgaMetaModel>(GetMeta())->get_RoleByName((CBstrIn)rname, &role) );
+	COMCHECK2( CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_RoleByName((CBstrIn)rname, &role) );
 	ASSERT(role);
 	CComPtr<IMgaFCO> i = NULL;
 	if (baseType) {
-		COMVERIFY(GetIModel()->DeriveChildObject(baseType->GetIModel(), role, 
+		COMCHECK2(GetIModel(), GetIModel()->DeriveChildObject(baseType->GetIModel(), role, 
 			instance ? VARIANT_TRUE : VARIANT_FALSE, &i));
 	}
 	else {
-		COMVERIFY( GetIModel()->CreateChildObject(role, &i) );
+		COMCHECK2(GetIModel(), GetIModel()->CreateChildObject(role, &i) );
 	}
 	ASSERT( i != NULL );
 
@@ -2062,15 +2063,15 @@ CBuilderAtom *CBuilderModel::CreateNewAtom(CString partName, CBuilderAtom *baseT
 
 	CBstr rname(partName);
 	CComPtr<IMgaMetaRole> role;
-	COMVERIFY( CComQIPtr<IMgaMetaModel>(GetMeta())->get_RoleByName((CBstrIn)rname, &role) );
+	COMCHECK2( CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_RoleByName((CBstrIn)rname, &role) );
 	ASSERT(role);
 	CComPtr<IMgaFCO> i = NULL;
 	if (baseType) {
-		COMVERIFY(GetIModel()->DeriveChildObject(baseType->GetIAtom(), role, 
+		COMCHECK2(GetIModel(), GetIModel()->DeriveChildObject(baseType->GetIAtom(), role, 
 			instance ? VARIANT_TRUE : VARIANT_FALSE, &i));
 	}
 	else {
-		COMVERIFY( GetIModel()->CreateChildObject(role, &i) );
+		COMCHECK2(GetIModel(), GetIModel()->CreateChildObject(role, &i) );
 	}
 	ASSERT( i != NULL );
 
@@ -2090,16 +2091,16 @@ CBuilderReference *CBuilderModel::CreateNewReference(CString refPartName, CBuild
 
 	CBstr rname(refPartName);
 	CComPtr<IMgaMetaRole> role;
-	COMVERIFY( CComQIPtr<IMgaMetaModel>(GetMeta())->get_RoleByName((CBstrIn)rname, &role) );
+	COMCHECK2( CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_RoleByName((CBstrIn)rname, &role) );
 	ASSERT(role);
 	CComPtr<IMgaFCO> i = NULL;
 	if (baseType) {
 		ASSERT(refTo == NULL);
-		COMVERIFY(GetIModel()->DeriveChildObject(baseType->GetIRef(), role, 
+		COMCHECK2(GetIModel(), GetIModel()->DeriveChildObject(baseType->GetIRef(), role, 
 			instance ? VARIANT_TRUE : VARIANT_FALSE, &i));
 	}
 	else {
-		COMVERIFY( GetIModel()->CreateReference(role, refTo ? refTo->GetIObject() : NULL, &i) );
+		COMCHECK2( GetIModel(), GetIModel()->CreateReference(role, refTo ? refTo->GetIObject() : NULL, &i) );
 	}
 	
 	ASSERT( i != NULL );
@@ -2160,19 +2161,19 @@ CBuilderConnection *CBuilderModel::CreateNewConnection(CString connName, CBuilde
 		srcfco = src->GetIObject();
 		src = ((CBuilderReferencePort*)src)->GetOwner();
 		while(src->IsKindOf(RUNTIME_CLASS(CBuilderModelReference))) {
-			COMVERIFY(src->GetIObject()->CreateCollection(&srcrefs));
+			COMCHECK2(src->GetIObject(), src->GetIObject()->CreateCollection(&srcrefs));
 			src=((CBuilderModelReference*)src)->GetReferred();
 		}
-		if(!src->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMVERIFY(E_INCONSISTENCY);
+		if(!src->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMTHROW(E_INCONSISTENCY);
 		srcfco = source->GetIObject();
-		if(src != ((CBuilderReferencePort*)source)->GetPortObject()->GetParent()) COMVERIFY(E_INCONSISTENCY);
+		if(src != ((CBuilderReferencePort*)source)->GetPortObject()->GetParent()) COMTHROW(E_INCONSISTENCY);
 	}
 	else {
 		while(src->IsKindOf(RUNTIME_CLASS(CBuilderAtomReference))) {
-			COMVERIFY(src->GetIObject()->CreateCollection(&srcrefs));
+			COMCHECK2(src->GetIObject(), src->GetIObject()->CreateCollection(&srcrefs));
 			src=((CBuilderAtomReference*)src)->GetReferred();
 		}
-		// if(!src->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMVERIFY(E_INCONSISTENCY);
+		// if(!src->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMTHROW(E_INCONSISTENCY);
 		srcfco = src->GetIObject();
 	}
 
@@ -2181,29 +2182,29 @@ CBuilderConnection *CBuilderModel::CreateNewConnection(CString connName, CBuilde
 		dstfco = dst->GetIObject();
 		dst = ((CBuilderReferencePort*)dst)->GetOwner();
 		while(dst->IsKindOf(RUNTIME_CLASS(CBuilderModelReference))) {
-			COMVERIFY(dst->GetIObject()->CreateCollection(&dstrefs));
+			COMCHECK2(dst->GetIObject(), dst->GetIObject()->CreateCollection(&dstrefs));
 			dst=((CBuilderModelReference*)dst)->GetReferred();
 		}
-		if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMVERIFY(E_INCONSISTENCY);
+		if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderModel))) COMTHROW(E_INCONSISTENCY);
 		dstfco = destination->GetIObject();
-		if(dst != ((CBuilderReferencePort*)destination)->GetPortObject()->GetParent()) COMVERIFY(E_INCONSISTENCY);
+		if(dst != ((CBuilderReferencePort*)destination)->GetPortObject()->GetParent()) COMTHROW(E_INCONSISTENCY);
 	}
 	else {
 		while(dst->IsKindOf(RUNTIME_CLASS(CBuilderAtomReference))) {
-			COMVERIFY(dst->GetIObject()->CreateCollection(&dstrefs));
+			COMCHECK2(dst->GetIObject(), dst->GetIObject()->CreateCollection(&dstrefs));
 			dst=((CBuilderAtomReference*)dst)->GetReferred();
 		}
-		// if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMVERIFY(E_INCONSISTENCY);
+		// if(!dst->IsKindOf(RUNTIME_CLASS(CBuilderAtom))) COMTHROW(E_INCONSISTENCY);
 		dstfco = dst->GetIObject();
 	}
 
 	CComPtr<IMgaMetaRole> role;
-	COMVERIFY(CComQIPtr<IMgaMetaModel>(GetMeta())->get_RoleByName((CBstrIn)connName, &role));
+	COMCHECK2(CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_RoleByName((CBstrIn)connName, &role));
 	VERIFY(role);
 	CComPtr<IMgaFCO> iconn;
 	CComPtr<IMgaSimpleConnection> sconn;
-	COMVERIFY( GetIModel()->CreateSimpleConn(role, srcfco, dstfco, srcrefs, dstrefs, &iconn) );
-	COMVERIFY(iconn.QueryInterface(&sconn));
+	COMCHECK2( GetIModel(), GetIModel()->CreateSimpleConn(role, srcfco, dstfco, srcrefs, dstrefs, &iconn) );
+	COMCHECK2(iconn, iconn.QueryInterface(&sconn));
 	VERIFY( sconn );
 
 	CBuilderConnection *conn = AddConnection(sconn);
@@ -2218,7 +2219,7 @@ CBuilderSet *CBuilderModel::CreateNewSet(CString condPartName, CBuilderSet *base
 
 	CBstr rname(condPartName);
 	CComPtr<IMgaMetaRole> role;
-	COMVERIFY( CComQIPtr<IMgaMetaModel>(GetMeta())->get_RoleByName((CBstrIn)rname, &role) );
+	COMCHECK2( CComQIPtr<IMgaMetaModel>(GetMeta()), CComQIPtr<IMgaMetaModel>(GetMeta())->get_RoleByName((CBstrIn)rname, &role) );
 // TODO: check if it is a
 	ASSERT(role);
 
@@ -2252,10 +2253,10 @@ IMPLEMENT_DYNAMIC(CBuilderAtom,CBuilderObject)
 CBuilderAtom::CBuilderAtom(IMgaAtom *iAtom,CBuilderModel *aparent) : CBuilderObject(iAtom,aparent)
 {
 	CBstr bbstr;
-	COMVERIFY( iAtom->get_ID(bbstr));
+	COMCHECK2( iAtom, iAtom->get_ID(bbstr));
 	CString aaa = bbstr;
 	CBstr bstr;
-	COMVERIFY( GetMeta()->get_DisplayedName(bstr) );
+	COMCHECK2( GetMeta(), GetMeta()->get_DisplayedName(bstr) );
 	kindTitle = bstr;
 }
 
@@ -2284,7 +2285,7 @@ CBuilderReference::~CBuilderReference()
 
 void CBuilderReference::Resolve() {
 	CComPtr<IMgaFCO> i;
-	COMVERIFY( GetIRef()->get_Referred(&i) );
+	COMCHECK2( GetIRef(), GetIRef()->get_Referred(&i) );
 	if(i) ref = CBuilder::theInstance->FindObject(i);
 	else ref = NULL;
 }
@@ -2296,7 +2297,7 @@ const CBuilderObject::objtype CBuilderReference::GetReferredType() const {
 
 bool CBuilderReference::PutReferred(CBuilderObject *nref)  {
 	ref = nref;
-	COMTHROW( GetIRef()->put_Referred(ref->ciObject) );
+	COMCHECK2( GetIRef(), GetIRef()->put_Referred(ref->ciObject) );
 	return false;
 }
 
@@ -2365,28 +2366,28 @@ void CBuilderModelReference::CreateReferencePorts()
 	CComPtr<IMgaFCO> r = GetIModelRef();
 	while(1) {
 		CComPtr<IMgaFCO> rr;
-		COMVERIFY(CComQIPtr<IMgaReference>(r)->get_Referred(&rr));
+		COMCHECK2(CComQIPtr<IMgaReference>(r), CComQIPtr<IMgaReference>(r)->get_Referred(&rr));
 		r = rr;
 		if(!r) break;
 		objtype_enum o;
-		COMVERIFY(r->get_ObjType(&o));
+		COMCHECK2(r, r->get_ObjType(&o));
 		if(o == OBJTYPE_MODEL) break;
 		ASSERT(o == OBJTYPE_REFERENCE);
 	}
    if(r) {
-	COMVERIFY(CComQIPtr<IMgaModel>(r)->get_ChildFCOs(&children));
+	COMCHECK2(CComQIPtr<IMgaModel>(r), CComQIPtr<IMgaModel>(r)->get_ChildFCOs(&children));
 	MGACOLL_ITERATE(IMgaFCO, children) {
 		objtype_enum o;
-		COMVERIFY(MGACOLL_ITER->get_ObjType(&o));
+		COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_ObjType(&o));
 		{
 			CComPtr<IMgaFCO> &iportobj=MGACOLL_ITER;
 			CComPtr<IMgaMetaRole> role;
 			CComPtr<IMgaMetaParts> parts;
-			COMVERIFY(MGACOLL_ITER->get_MetaRole(&role));
-			COMVERIFY(role->get_Parts(&parts));
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_MetaRole(&role));
+			COMCHECK2(role, role->get_Parts(&parts));
 			MGACOLL_ITERATE(IMgaMetaPart, parts) {
 				VARIANT_BOOL vv;
-				COMVERIFY(MGACOLL_ITER->get_IsLinked(&vv));
+				COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_IsLinked(&vv));
 				if(vv) break;
 			}
 			if(!MGACOLL_AT_END) {
@@ -2436,7 +2437,7 @@ CBuilderReferencePort *CBuilderModelReference::FindPortRef(IMgaFCO *i) const {
 	if( !objectmap.Lookup(iu, o) )
 	{
 		CBstr idstr;
-		COMVERIFY( i->get_ID(idstr) );
+		COMCHECK2( i, i->get_ID(idstr) );
 		ASSERT(false);
 	}
 	ASSERT(o);
@@ -2448,7 +2449,7 @@ CBuilderReferencePort *CBuilderModelReference::FindPortRef(IMgaFCO *i) const {
 	if( !objectmap.Lookup(i, o) )
 	{
 		CBstr idstr;
-		COMVERIFY( i->get_ID(idstr) );
+		COMCHECK2( i, i->get_ID(idstr) );
 		ASSERT(false);
 	}
 	ASSERT(o);
@@ -2518,7 +2519,7 @@ CBuilderConnection::~CBuilderConnection()
 void CBuilderConnection::Destroy()
 {
 	ASSERT(ciConnection);
-	COMVERIFY(ciConnection->DestroyObject());
+	COMCHECK2(ciConnection, ciConnection->DestroyObject());
 
 	ASSERT(owner);
 	owner->RemoveMemberFromSets(this);
@@ -2534,17 +2535,17 @@ void CBuilderConnection::Resolve() {
 	CComPtr<IMgaFCOs> isrcrefs;
 	CComPtr<IMgaFCOs> idstrefs;
 
-	COMVERIFY(CComQIPtr<IMgaSimpleConnection>(ciConnection)->get_Src(&isrc) );
-	COMVERIFY(CComQIPtr<IMgaSimpleConnection>(ciConnection)->get_SrcReferences(&isrcrefs) );
+	COMCHECK2(CComQIPtr<IMgaSimpleConnection>(ciConnection), CComQIPtr<IMgaSimpleConnection>(ciConnection)->get_Src(&isrc) );
+	COMCHECK2(CComQIPtr<IMgaSimpleConnection>(ciConnection), CComQIPtr<IMgaSimpleConnection>(ciConnection)->get_SrcReferences(&isrcrefs) );
 
 	long isrcrcnt;
-	COMVERIFY(isrcrefs->get_Count(&isrcrcnt));
+	COMCHECK2(isrcrefs, isrcrefs->get_Count(&isrcrcnt));
 	CBuilderObject *endobj = CBuilder::theInstance->FindObject(isrc);
 	if(isrcrcnt) {
 		CComPtr<IMgaFCO> frTemp;
-		COMVERIFY( isrcrefs->get_Item( 1, &frTemp ) );
+		COMCHECK2( isrcrefs, isrcrefs->get_Item( 1, &frTemp ) );
 		CComPtr<IMgaFCO> lrTemp;
-		COMVERIFY( isrcrefs->get_Item( isrcrcnt, &lrTemp ) );
+		COMCHECK2( isrcrefs, isrcrefs->get_Item( isrcrcnt, &lrTemp ) );
 		CBuilderReference* frRef = (CBuilderReference*) CBuilder::theInstance->FindObject( frTemp );
 		CBuilderReference* lrRef = (CBuilderReference*) CBuilder::theInstance->FindObject( lrTemp );
 		if ( lrRef->GetReferred() == endobj )
@@ -2556,17 +2557,17 @@ void CBuilderConnection::Resolve() {
 		src = endobj;
 	}
 
-	COMVERIFY(CComQIPtr<IMgaSimpleConnection>(ciConnection)->get_Dst(&idst) );
-	COMVERIFY(CComQIPtr<IMgaSimpleConnection>(ciConnection)->get_DstReferences(&idstrefs) );
+	COMCHECK2(CComQIPtr<IMgaSimpleConnection>(ciConnection), CComQIPtr<IMgaSimpleConnection>(ciConnection)->get_Dst(&idst) );
+	COMCHECK2(CComQIPtr<IMgaSimpleConnection>(ciConnection), CComQIPtr<IMgaSimpleConnection>(ciConnection)->get_DstReferences(&idstrefs) );
 
 	endobj = CBuilder::theInstance->FindObject(idst);
 	long dstrcnt;
-	COMVERIFY(idstrefs->get_Count(&dstrcnt));
+	COMCHECK2(idstrefs, idstrefs->get_Count(&dstrcnt));
 	if(dstrcnt) {
 		CComPtr<IMgaFCO> frTemp;
-		COMVERIFY( idstrefs->get_Item( 1, &frTemp ) );
+		COMCHECK2( idstrefs, idstrefs->get_Item( 1, &frTemp ) );
 		CComPtr<IMgaFCO> lrTemp;
-		COMVERIFY( idstrefs->get_Item( dstrcnt, &lrTemp ) );
+		COMCHECK2( idstrefs, idstrefs->get_Item( dstrcnt, &lrTemp ) );
 		CBuilderReference* frRef = (CBuilderReference*) CBuilder::theInstance->FindObject( frTemp );
 		CBuilderReference* lrRef = (CBuilderReference*) CBuilder::theInstance->FindObject( lrTemp );
 		if ( lrRef->GetReferred() == endobj )
@@ -2627,17 +2628,17 @@ void CBuilderSet::Resolve() {
 	if(cur == NULL) cur = name;
 	ASSERT(*cur != L'\0');
 	CComPtr<IMgaFCOs> objs;
-	COMTHROW(owner->GetIModel()->get_ChildFCOs(&objs));
+	COMCHECK2(owner->GetIModel(), owner->GetIModel()->get_ChildFCOs(&objs));
 	while(cur) {
 		wchar_t *nextseg = wcschr(name, '+');
 		if(nextseg != NULL) *nextseg++ = 0;
 		bool ok = false;
 		MGACOLL_ITERATE(IMgaFCO, objs) {
 			objtype_enum ot;
-			COMVERIFY(MGACOLL_ITER->get_ObjType(&ot));
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_ObjType(&ot));
 			if(ot != OBJTYPE_CONNECTION && ot != OBJTYPE_SET) {
 				CComBSTR childname;
-				COMVERIFY(MGACOLL_ITER->get_Name(&childname));
+				COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Name(&childname));
 				if(childname == cur) {
 					InsertControl(CBuilder::theInstance->FindObject(MGACOLL_ITER));
 					break;
@@ -2652,13 +2653,13 @@ void CBuilderSet::Resolve() {
 
 	{
 		CComPtr<IMgaFCOs> psa;
-		COMVERIFY( CComQIPtr<IMgaSet>(iSet)->get_Members(&psa) );
+		COMCHECK2( CComQIPtr<IMgaSet>(iSet), CComQIPtr<IMgaSet>(iSet)->get_Members(&psa) );
 
 		MGACOLL_ITERATE(IMgaFCO, psa) {
 			    InsertMember(CBuilder::theInstance->FindObject(MGACOLL_ITER));
 /*
 			objtype_enum ot;
-			COMVERIFY(MGACOLL_ITER->get_ObjType(&ot));
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_ObjType(&ot));
 			if(ot != OBJTYPE_CONNECTION) {
 			    InsertPart(CBuilder::theInstance->FindObject(MGACOLL_ITER));
 			}
@@ -2690,7 +2691,7 @@ void CBuilderSet::Destroy()
 
 	delete this;
 
-	COMVERIFY( imodel->DeleteSet(objid) );
+	COMCHECK2( imodel, imodel->DeleteSet(objid) );
 }
 */
 
@@ -2701,7 +2702,7 @@ bool CBuilderSet::AddMember(CBuilderObject *member)
 	if( members.Find(member) )
 		return false;
 
-	COMVERIFY( CComQIPtr<IMgaSet>(iSet)->AddMember(member->GetIObject()) );
+	COMCHECK2( CComQIPtr<IMgaSet>(iSet), CComQIPtr<IMgaSet>(iSet)->AddMember(member->GetIObject()) );
 
 	members.AddTail(member);
 	return true;
@@ -2715,7 +2716,7 @@ bool CBuilderSet::RemoveMember(CBuilderObject *member)
 	if( !pos )
 		return false;
 
-	COMVERIFY( CComQIPtr<IMgaSet>(iSet)->RemoveMember(member->GetIObject()) );
+	COMCHECK2( CComQIPtr<IMgaSet>(iSet), CComQIPtr<IMgaSet>(iSet)->RemoveMember(member->GetIObject()) );
 
 	members.RemoveAt(pos);
 	return true;
@@ -2802,8 +2803,8 @@ CBuilderModel *CBuilderFactory::Create(IMgaModel* iModel, CBuilderModel *aparent
 		CBstr bstr;
 		{
 			CComPtr<IMgaMetaFCO> meta;
-			COMVERIFY(iModel->get_Meta(&meta));
-			COMVERIFY(meta->get_Name(bstr));
+			COMCHECK2(iModel, iModel->get_Meta(&meta));
+			COMCHECK2(meta, meta->get_Name(bstr));
 		}
 		CString kindname(bstr);
 
@@ -2861,8 +2862,8 @@ CBuilderAtom *CBuilderFactory::Create(IMgaAtom* iAtom, CBuilderModel *aparent)
 		CBstr bstr;
 		{
 			CComPtr<IMgaMetaFCO> meta;
-			COMVERIFY(iAtom->get_Meta(&meta));
-			COMVERIFY(meta->get_Name(bstr));
+			COMCHECK2(iAtom, iAtom->get_Meta(&meta));
+			COMCHECK2(meta, meta->get_Name(bstr));
 		}
 		CString kindname(bstr);
 
@@ -2996,12 +2997,12 @@ CBuilderReference *CBuilderFactory::Create(IMgaReference* iRef, CBuilderModel *a
 		objtype_enum ot;
 		{
 			CComPtr<IMgaMetaFCO> meta;
-			COMVERIFY(iRef->get_Meta(&meta));
-			COMVERIFY(meta->get_Name(bstr));
+			COMCHECK2(iRef, iRef->get_Meta(&meta));
+			COMCHECK2(meta, meta->get_Name(bstr));
 
 			CComPtr<IMgaFCO> fco;
-			COMVERIFY(iRef->get_Referred(&fco));
-			if(fco) COMVERIFY(fco->get_ObjType(&ot));
+			COMCHECK2(iRef, iRef->get_Referred(&fco));
+			if(fco) COMCHECK2(fco, fco->get_ObjType(&ot));
 			else ot = OBJTYPE_NULL;
 		}
 		CString kindname(bstr);
@@ -3072,8 +3073,8 @@ CBuilderConnection *CBuilderFactory::Create(IMgaSimpleConnection* iConnection, C
 		CBstr bstr;
 		{
 			CComPtr<IMgaMetaFCO> meta;
-			COMVERIFY(iConnection->get_Meta(&meta));
-			COMVERIFY(meta->get_Name(bstr));
+			COMCHECK2(iConnection, iConnection->get_Meta(&meta));
+			COMCHECK2(meta, meta->get_Name(bstr));
 		}
 		CString kindname(bstr);
 
@@ -3135,8 +3136,8 @@ CBuilderSet *CBuilderFactory::Create(IMgaSet* iSet, CBuilderModel *aparent)
 		CBstr bstr;
 		{
 			CComPtr<IMgaMetaFCO> meta;
-			COMVERIFY(iSet->get_Meta(&meta));
-			COMVERIFY(meta->get_Name(bstr));
+			COMCHECK2(iSet, iSet->get_Meta(&meta));
+			COMCHECK2(meta, meta->get_Name(bstr));
 		}
 		CString kindname(bstr);
 
@@ -3166,10 +3167,10 @@ CBuilderSet *CBuilderFactory::Create(IMgaSet* iSet, CBuilderModel *aparent)
 void CBuilderFactory::CollectFolderKindNames(IMgaMetaFolder* mf) {
 
 	CComPtr<IMgaMetaFCOs> psa;
-	COMVERIFY( mf->get_DefinedFCOs(&psa) );
+	COMCHECK2( mf, mf->get_DefinedFCOs(&psa) );
 	CollectFCOKindNames(psa);
 	CComPtr<IMgaMetaFolders> folds;
-	COMVERIFY( mf->get_DefinedFolders(&folds) );
+	COMCHECK2( mf, mf->get_DefinedFolders(&folds) );
 	MGACOLL_ITERATE(IMgaMetaFolder, folds) {
 		CollectFolderKindNames(MGACOLL_ITER);
 	} MGACOLL_ITERATE_END;
@@ -3179,15 +3180,15 @@ void CBuilderFactory::CollectFCOKindNames(IMgaMetaFCOs * psa) {
 	MGACOLL_ITERATE(IMgaMetaFCO, psa) {
 			CComBSTR name;
 			objtype_enum o;
-			COMVERIFY(MGACOLL_ITER->get_Name(&name));
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_Name(&name));
 			CString n = name;
-			COMVERIFY(MGACOLL_ITER->get_ObjType(&o));
+			COMCHECK2(MGACOLL_ITER, MGACOLL_ITER->get_ObjType(&o));
 			switch(o) {
 			case OBJTYPE_MODEL: 	modelkindnames.AddTail(n);
 				{
 				CComPtr<IMgaMetaFCOs> psa2;
 				CComQIPtr<IMgaMetaModel> mm = MGACOLL_ITER;
-				COMVERIFY(mm->get_DefinedFCOs(&psa2) );
+				COMCHECK2(mm, mm->get_DefinedFCOs(&psa2) );
 				CollectFCOKindNames(psa2);
 				}
 				break;
@@ -3208,7 +3209,7 @@ void CBuilderFactory::CheckKindNames(IMgaFolder* rf)
 	refkindnames.RemoveAll();
 	CComPtr<IMgaMetaFolder> mf;
 
-	COMVERIFY( rf->get_MetaFolder(&mf) );
+	COMCHECK2( rf, rf->get_MetaFolder(&mf) );
 	CollectFolderKindNames(mf);
 
 	if( modelBuildFunctions )

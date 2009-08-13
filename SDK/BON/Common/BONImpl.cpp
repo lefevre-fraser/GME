@@ -2680,6 +2680,7 @@ namespace BON
 			ASSERTTHROW( exc);
 		}
 
+		// metaRoles: set of ( MON::Connection, ( this-CE-role, other-CE-role) )
 		std::set<RoleMeta2> metaRoles;
 		std::set<MON::ConnectionSpecification> specs;
 
