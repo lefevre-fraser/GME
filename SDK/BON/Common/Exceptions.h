@@ -56,7 +56,7 @@ inline void COMCHECK2(const CComPtr<T>& p, const HRESULT hr)
 }
 
 template<class T>
-inline void COMCHECK2(T* p, HRESULT hr) {
+inline void COMCHECK2(T* p, const HRESULT hr) {
 	COMCHECK2(CComPtr<T>(p), hr);
 }
 

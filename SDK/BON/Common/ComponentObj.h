@@ -5,7 +5,7 @@
 #include "ComHelp.h"
 #include "GMECOM.h"
 #include <ComponentConfig.h>
-include "Exceptions.h"
+#include "Exceptions.h"
 
 
 #if defined(BUILDER_OBJECT_NETWORK)

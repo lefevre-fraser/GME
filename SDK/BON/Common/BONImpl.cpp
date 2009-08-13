@@ -46,35 +46,35 @@ namespace BON
 		if ( pProject )
 			return pProject;
 		ProjectPtr spProject;
-		BONCOMTHROW( spObject->get_Project( spProject.Addr() ) );
+		COMCHECK2( spObject, spObject->get_Project( spProject.Addr() ) );
 		return (ProjectImpl*) ProjectImpl::attach( spProject ).getCounted();
 	}
 
 	inline MON::ObjectPtr _getMetaBase( IMgaObject* spObject )
 	{
 		MON::ObjectPtr spMeta;
-		BONCOMTHROW( spObject->get_MetaBase( spMeta.Addr() ) );
+		COMCHECK2( spObject, spObject->get_MetaBase( spMeta.Addr() ) );
 		return spMeta;
 	}
 
 	inline std::string _getMetaName( IMgaObject* spObject )
 	{
 		CComBSTR bstrName;
-		BONCOMTHROW( _getMetaBase( spObject )->get_Name( &bstrName ) );
+		COMCHECK2( _getMetaBase( spObject ), _getMetaBase( spObject )->get_Name( &bstrName ) );
 		return Util::Copy( bstrName );
 	}
 
 	inline long _getMetaRef( IMgaObject* spObject )
 	{
 		long lRef;
-		BONCOMTHROW( _getMetaBase( spObject )->get_MetaRef( &lRef ) );
+		COMCHECK2( _getMetaBase( spObject ), _getMetaBase( spObject )->get_MetaRef( &lRef ) );
 		return lRef;
 	}
 
 	inline MON::Containment _getMetaRole( IMgaFCO* spFCO )
 	{
 		MON::ContainmentPtr spMeta;
-		BONCOMTHROW( spFCO->get_MetaRole( spMeta.Addr() ) );
+		COMCHECK2( spFCO, spFCO->get_MetaRole( spMeta.Addr() ) );
 		return MON::Containment(spMeta);
 	}
 
@@ -379,7 +379,7 @@ namespace BON
 
 		// Retrieve Meta
 		MON::ProjectPtr spMeta;
-		BONCOMTHROW( m_spProject->get_RootMeta( spMeta.Addr() ) );
+		COMCHECK2( m_spProject, m_spProject->get_RootMeta( spMeta.Addr() ) );
 		m_meta = MON::Project( spMeta );
 	}
 
@@ -448,35 +448,35 @@ namespace BON
 
 	void ProjectImpl::commit()
 	{
-		BONCOMTHROW( m_spProject->CommitTransaction() );
+		COMCHECK2( m_spProject, m_spProject->CommitTransaction() );
 
 		if (!m_spTerritory) {
-			BONCOMTHROW( m_spProject->CreateTerritory( NULL, m_spTerritory.Addr() ) );
+			COMCHECK2( m_spProject, m_spProject->CreateTerritory( NULL, m_spTerritory.Addr() ) );
 		}
-		BONCOMTHROW( m_spProject->BeginTransaction( m_spTerritory ) );
+		COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ) );
 	}
 
 	void ProjectImpl::commitOnly()
 	{
-		BONCOMTHROW( m_spProject->CommitTransaction() );
+		COMCHECK2( m_spProject, m_spProject->CommitTransaction() );
 	}
 
 	void ProjectImpl::beginOnly()
 	{
 		if (!m_spTerritory) {
-			BONCOMTHROW( m_spProject->CreateTerritory( NULL, m_spTerritory.Addr() ) );
+			COMCHECK2( m_spProject, m_spProject->CreateTerritory( NULL, m_spTerritory.Addr() ) );
 		}
-		BONCOMTHROW( m_spProject->BeginTransaction( m_spTerritory ) );
+		COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ) );
 	}
 
 	void ProjectImpl::abort()
 	{
-		BONCOMTHROW( m_spProject->AbortTransaction() );
+		COMCHECK2( m_spProject, m_spProject->AbortTransaction() );
 
 		if (!m_spTerritory) {
-			BONCOMTHROW( m_spProject->CreateTerritory( NULL, m_spTerritory.Addr() ) );
+			COMCHECK2( m_spProject, m_spProject->CreateTerritory( NULL, m_spTerritory.Addr() ) );
 		}
-		BONCOMTHROW( m_spProject->BeginTransaction( m_spTerritory ) );
+		COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ) );
 	}
 
 	bool ProjectImpl::isDestructionActive() const
@@ -497,42 +497,42 @@ namespace BON
 	std::string ProjectImpl::getName() const
 	{
 		CComBSTR bstrName;
-		BONCOMTHROW( m_spProject->get_Name( &bstrName ) );
+		COMCHECK2( m_spProject, m_spProject->get_Name( &bstrName ) );
 		return Util::Copy( bstrName );
 	}
 
 	std::string ProjectImpl::getAuthor() const
 	{
 		CComBSTR bstrAuthor;
-		BONCOMTHROW( m_spProject->get_Author( &bstrAuthor ) );
+		COMCHECK2( m_spProject, m_spProject->get_Author( &bstrAuthor ) );
 		return Util::Copy( bstrAuthor );
 	}
 
 	std::string ProjectImpl::getComment() const
 	{
 		CComBSTR bstrComment;
-		BONCOMTHROW( m_spProject->get_Comment( &bstrComment ) );
+		COMCHECK2( m_spProject, m_spProject->get_Comment( &bstrComment ) );
 		return Util::Copy( bstrComment );
 	}
 
 	std::string ProjectImpl::getCreationTime() const
 	{
 		CComBSTR bstrTime;
-		BONCOMTHROW( m_spProject->get_CreateTime( &bstrTime ) );
+		COMCHECK2( m_spProject, m_spProject->get_CreateTime( &bstrTime ) );
 		return Util::Copy( bstrTime );
 	}
 
 	std::string ProjectImpl::getChangeTime() const
 	{
 		CComBSTR bstrTime;
-		BONCOMTHROW( m_spProject->get_ChangeTime( &bstrTime ) );
+		COMCHECK2( m_spProject, m_spProject->get_ChangeTime( &bstrTime ) );
 		return Util::Copy( bstrTime );
 	}
 
 	std::string ProjectImpl::getGUID() const
 	{
 		CComVariant v;
-		BONCOMTHROW( m_spProject->get_GUID( &v ) );
+		COMCHECK2( m_spProject, m_spProject->get_GUID( &v ) );
 
 		if (v.vt != (VT_UI1 | VT_ARRAY) || 
 			v.parray == NULL || 
@@ -569,41 +569,41 @@ namespace BON
 	std::string ProjectImpl::getVersion() const
 	{
 		CComBSTR bstrVersion;
-		BONCOMTHROW( m_spProject->get_Version( &bstrVersion ) );
+		COMCHECK2( m_spProject, m_spProject->get_Version( &bstrVersion ) );
 		return Util::Copy( bstrVersion );
 	}
 
 	std::string ProjectImpl::getProjectPath() const
 	{
 		CComBSTR bstrName;
-		BONCOMTHROW( m_spProject->get_ProjectConnStr( &bstrName ) );
+		COMCHECK2( m_spProject, m_spProject->get_ProjectConnStr( &bstrName ) );
 		return Util::Copy( bstrName ).substr(4);
 	}
 
 	std::string ProjectImpl::getParadigmPath() const
 	{
 		CComBSTR bstrName;
-		BONCOMTHROW( m_spProject->get_ParadigmConnStr( &bstrName ) );
+		COMCHECK2( m_spProject, m_spProject->get_ParadigmConnStr( &bstrName ) );
 		return Util::Copy( bstrName ).substr(4);
 	}
 
 	void ProjectImpl::setName( const std::string& strName )
 	{
-		BONCOMTHROW( m_spProject->put_Name( Util::Copy( strName ) ) );
+		COMCHECK2( m_spProject, m_spProject->put_Name( Util::Copy( strName ) ) );
 		if ( isAutoCommit() )
 			commit();
 	}
 
 	void ProjectImpl::setAuthor( const std::string& strAuthor )
 	{
-		BONCOMTHROW( m_spProject->put_Author( Util::Copy( strAuthor ) ) );
+		COMCHECK2( m_spProject, m_spProject->put_Author( Util::Copy( strAuthor ) ) );
 		if ( isAutoCommit() )
 			commit();
 	}
 
 	void ProjectImpl::setComment( const std::string& strComment )
 	{
-		BONCOMTHROW( m_spProject->put_Comment( Util::Copy( strComment ) ) );
+		COMCHECK2( m_spProject, m_spProject->put_Comment( Util::Copy( strComment ) ) );
 		if ( isAutoCommit() )
 			commit();
 	}
@@ -668,14 +668,14 @@ namespace BON
 	void ProjectImpl::consoleMsg(const std::string& msg, msgtype_enum type)
 	{
 		GMEAppPtr pGME = getGME();
-		BONCOMTHROW(pGME->ConsoleMessage(Util::Copy( msg ), type));
+		COMCHECK2(pGME, pGME->ConsoleMessage(Util::Copy( msg ), type));
 	}
 
 	std::string ProjectImpl::getConsoleContents()
 	{
 		GMEAppPtr pGME = getGME();
 		CComBSTR ccBstr;
-		BONCOMTHROW(pGME->get_ConsoleContents( &ccBstr));
+		COMCHECK2(pGME, pGME->get_ConsoleContents( &ccBstr));
 		return Util::Copy( ccBstr );
 	}
 
@@ -683,127 +683,127 @@ namespace BON
 	{
 		GMEAppPtr pGME = getGME();
 		CComBSTR ccBstr(htmlMsg.c_str());
-		BONCOMTHROW(pGME->put_ConsoleContents( ccBstr));
+		COMCHECK2(pGME, pGME->put_ConsoleContents( ccBstr));
 	}
 
 	std::string	ProjectImpl::getGMEVersion()
 	{
 		GMEAppPtr pGME = getGME();
 		CComBSTR verBstr;
-		BONCOMTHROW(pGME->get_Version(&verBstr));
+		COMCHECK2(pGME, pGME->get_Version(&verBstr));
 		return Util::Copy( verBstr );
 	}
 
 	int	ProjectImpl::getGMEVersionMajor() {
 		GMEAppPtr pGME = getGME();
 		short n;
-		BONCOMTHROW(pGME->get_VersionMajor(&n));
+		COMCHECK2(pGME, pGME->get_VersionMajor(&n));
 		return n;
 	}
 
 	int	ProjectImpl::getGMEVersionMinor() {
 		GMEAppPtr pGME = getGME();
 		short n;
-		BONCOMTHROW(pGME->get_VersionMinor(&n));
+		COMCHECK2(pGME, pGME->get_VersionMinor(&n));
 		return n;
 	}
 
 	int	ProjectImpl::getGMEVersionPatchLevel() {
 		GMEAppPtr pGME = getGME();
 		short n;
-		BONCOMTHROW(pGME->get_VersionPatchLevel(&n));
+		COMCHECK2(pGME, pGME->get_VersionPatchLevel(&n));
 		return n;
 	}
 
 	void ProjectImpl::saveProject() {
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->CommitTransaction( ));
+			COMCHECK2( m_spProject, m_spProject->CommitTransaction( ));
 		}
 
 		GMEAppPtr pGME = getGME();
-		BONCOMTHROW(pGME->SaveProject());
+		COMCHECK2(pGME, pGME->SaveProject());
 
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->BeginTransaction( m_spTerritory ));
+			COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ));
 		}
 
 	}
  
 	void ProjectImpl::saveProjectAs(const std::string& connstr) {
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->CommitTransaction( ));
+			COMCHECK2( m_spProject, m_spProject->CommitTransaction( ));
 		}
 
 		GMEAppPtr pGME = getGME();
-		BONCOMTHROW(pGME->SaveProjectAs(Util::Copy( connstr )));
+		COMCHECK2(pGME, pGME->SaveProjectAs(Util::Copy( connstr )));
 
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->BeginTransaction( m_spTerritory ));
+			COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ));
 		}
 	}
 
 	void ProjectImpl::exportProject(const std::string& connstr) {
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->CommitTransaction( ));
+			COMCHECK2( m_spProject, m_spProject->CommitTransaction( ));
 		}
 
 		GMEAppPtr pGME = getGME();
-		BONCOMTHROW(pGME->ExportProject(Util::Copy( connstr )));
+		COMCHECK2(pGME, pGME->ExportProject(Util::Copy( connstr )));
 
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->BeginTransaction( m_spTerritory ));
+			COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ));
 		}
 	}
 
 	void ProjectImpl::importProject(const std::string& connstr) {
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->CommitTransaction( ));
+			COMCHECK2( m_spProject, m_spProject->CommitTransaction( ));
 		}
 
 		GMEAppPtr pGME = getGME();
-		BONCOMTHROW(pGME->ImportProject(Util::Copy( connstr )));
+		COMCHECK2(pGME, pGME->ImportProject(Util::Copy( connstr )));
 
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->BeginTransaction( m_spTerritory ));
+			COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ));
 		}
 	}
 
 	void ProjectImpl::checkConstraints() {
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->CommitTransaction( ));
+			COMCHECK2( m_spProject, m_spProject->CommitTransaction( ));
 		}
 
 		GMEAppPtr pGME = getGME();
-		BONCOMTHROW(pGME->CheckAllConstraints());
+		COMCHECK2(pGME, pGME->CheckAllConstraints());
 
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->BeginTransaction( m_spTerritory ));
+			COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ));
 		}
 	}
 
 	void ProjectImpl::runComponent(const std::string& progID) {
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->CommitTransaction( ));
+			COMCHECK2( m_spProject, m_spProject->CommitTransaction( ));
 		}
 
 		GMEAppPtr pGME = getGME();
-		BONCOMTHROW(pGME->RunComponent(Util::Copy( progID )));
+		COMCHECK2(pGME, pGME->RunComponent(Util::Copy( progID )));
 
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->BeginTransaction( m_spTerritory ));
+			COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ));
 		}
 	}
 
 	void ProjectImpl::showFCO(FCO fco) {
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->CommitTransaction( ));
+			COMCHECK2( m_spProject, m_spProject->CommitTransaction( ));
 		}
 
 		GMEAppPtr pGME = getGME();
-		BONCOMTHROW(pGME->ShowFCO(fco->getFCOI()));
+		COMCHECK2(pGME, pGME->ShowFCO(fco->getFCOI()));
 
 		if (m_spTerritory) {
-			BONCOMTHROW( m_spProject->BeginTransaction( m_spTerritory ));
+			COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ));
 		}
 	}
 
@@ -867,7 +867,7 @@ namespace BON
 		// Retrieve and Attach
 
 		ObjectPtr spObject;
-		BONCOMTHROW( m_spProject->GetObjectByID( Util::Copy( strID ), spObject.Addr() ) );
+		COMCHECK2( m_spProject, m_spProject->GetObjectByID( Util::Copy( strID ), spObject.Addr() ) );
 		if ( ! spObject )
 			return NULL;
 
@@ -883,12 +883,12 @@ namespace BON
 
 		// Create Filter
 		Util::ComPtr<IMgaFilter> spFilter;
-		BONCOMTHROW( m_spProject->CreateFilter( spFilter.Addr() ) );
-		BONCOMTHROW( spFilter->put_Kind( Util::Copy( meta.name() ) ) );
+		COMCHECK2( m_spProject, m_spProject->CreateFilter( spFilter.Addr() ) );
+		COMCHECK2( spFilter, spFilter->put_Kind( Util::Copy( meta.name() ) ) );
 
 		// Retrieve Objects
 		Util::ComPtr<IMgaFCOs> spFCOs;
-		BONCOMTHROW( m_spProject->AllFCOs( spFilter, spFCOs.Addr() ) );
+		COMCHECK2( m_spProject, m_spProject->AllFCOs( spFilter, spFCOs.Addr() ) );
 
 		// Retrieve and Attach
 		MGACOLL_ITERATE( IMgaFCO, spFCOs.p ) {
@@ -923,7 +923,7 @@ namespace BON
 
 		// Traverse Children
 		Util::ComPtr<IMgaFolders> spFolders;
-		BONCOMTHROW( spFolder->get_ChildFolders( spFolders.Addr() ) );
+		COMCHECK2( spFolder, spFolder->get_ChildFolders( spFolders.Addr() ) );
 		MGACOLL_ITERATE( IMgaFolder, spFolders.p ) {
 			findByKindI( MGACOLL_ITER, meta );
 		} MGACOLL_ITERATE_END;
@@ -950,7 +950,7 @@ namespace BON
 				ASSERTTHROW( Exception( "Can't retrieve GME Application object" ) );
 			if (pClient) {
 				CComQIPtr<IDispatch> pDispatch;
-				BONCOMTHROW(pClient->get_OLEServer(&pDispatch));
+				COMCHECK2(pClient, pClient->get_OLEServer(&pDispatch));
 				if (pDispatch) {
 					BONCOMTHROW(pDispatch.QueryInterface(m_gme.Addr()));
 				}
@@ -973,23 +973,23 @@ namespace BON
 	{
 		GMEAppPtr g = getGME();
 		GMECollPtr coll;
-		if( g) BONCOMTHROW( g->get_Panels( coll.Addr()));
+		if( g) COMCHECK2( g, g->get_Panels( coll.Addr()));
 		long cnt;
-		if( coll) BONCOMTHROW( coll->get_Count( &cnt));
+		if( coll) COMCHECK2( coll, coll->get_Count( &cnt));
 		if( cnt > 0)
 		{
 			CComQIPtr<IDispatch> pDispatch;
 			// the ActiveBrowser is the first panel:
-			BONCOMTHROW( coll->get_Item( 1, &pDispatch)); 
+			COMCHECK2( coll, coll->get_Item( 1, &pDispatch)); 
 			if( pDispatch)
 			{
 				GMEPanelPtr panel;
 				BONCOMTHROW( pDispatch.QueryInterface( panel.Addr()));
 				CComBSTR nm;
-				BONCOMTHROW( panel->get_Name( &nm));
+				COMCHECK2( panel, panel->get_Name( &nm));
 				ASSERT( nm == CComBSTR("Browser"));
 				CComQIPtr<IDispatch> pi;
-				BONCOMTHROW( panel->get_Interface( &pi));
+				COMCHECK2( panel, panel->get_Interface( &pi));
 				CComDispatchDriver dd;
 				dd = pi;
 				CComVariant w;
@@ -1052,7 +1052,7 @@ namespace BON
 				return m_pRootFolder;
 
 		FolderPtr spFolder;
-		BONCOMTHROW( m_spProject->get_RootFolder( spFolder.Addr() ) );
+		COMCHECK2( m_spProject, m_spProject->get_RootFolder( spFolder.Addr() ) );
 		return m_pRootFolder = (FolderImpl*) ObjectImpl::attachI( spFolder, this );
 	}
 
@@ -1165,9 +1165,9 @@ namespace BON
 		// Retrieve Meta
 		if ( ! meta ) {
 			MON::ObjectPtr spMetaBase;
-			BONCOMTHROW( m_spObject->get_MetaBase( spMetaBase.Addr() ) );
+			COMCHECK2( m_spObject, m_spObject->get_MetaBase( spMetaBase.Addr() ) );
 			long lRef;
-			BONCOMTHROW( spMetaBase->get_MetaRef( &lRef ) );
+			COMCHECK2( spMetaBase, spMetaBase->get_MetaRef( &lRef ) );
 			m_meta = m_pProject->getProjectMeta().findByRef( lRef );
 		}
 
@@ -1248,7 +1248,7 @@ namespace BON
 		// CHANGED LINE END
 		if ( ! _isAddOn() )
 			setDeleted();
-		BONCOMTHROW( getObjectI()->DestroyObject() );
+		COMCHECK2( getObjectI(), getObjectI()->DestroyObject() );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
 	}
@@ -1279,14 +1279,14 @@ namespace BON
 	std::string ObjectImpl::getID() const
 	{
 		CComBSTR bstrID;
-		BONCOMTHROW( m_spObject->get_ID( &bstrID ) );
+		COMCHECK2( m_spObject, m_spObject->get_ID( &bstrID ) );
 		return Util::Copy( bstrID );
 	}
 
 	ObjectStatus ObjectImpl::getStatus() const
 	{
 		long lStatus;
-		BONCOMTHROW( m_spObject->get_Status( &lStatus ) );
+		COMCHECK2( m_spObject, m_spObject->get_Status( &lStatus ) );
 		switch ( lStatus ) {
 			case OBJECT_EXISTS :
 				return OST_Exists;
@@ -1302,27 +1302,27 @@ namespace BON
 	bool ObjectImpl::isReadOnly() const
 	{
 		VARIANT_BOOL vbWritable;
-		BONCOMTHROW( m_spObject->get_IsWritable( &vbWritable ) );
+		COMCHECK2( m_spObject, m_spObject->get_IsWritable( &vbWritable ) );
 		return ( vbWritable ) ? false : true;
 	}
 
 	bool ObjectImpl::isInLibrary() const
 	{
 		VARIANT_BOOL vbLibrary;
-		BONCOMTHROW( m_spObject->get_IsLibObject( &vbLibrary ) );
+		COMCHECK2( m_spObject, m_spObject->get_IsLibObject( &vbLibrary ) );
 		return ( vbLibrary ) ? true : false;
 	}
 
 	std::string ObjectImpl::getName() const
 	{
 		CComBSTR bstrName;
-		BONCOMTHROW( m_spObject->get_Name( &bstrName ) );
+		COMCHECK2( m_spObject, m_spObject->get_Name( &bstrName ) );
 		return Util::Copy( bstrName );
 	}
 
 	void ObjectImpl::setName( const std::string& strName )
 	{
-		BONCOMTHROW( m_spObject->put_Name( Util::Copy( strName ) ) );
+		COMCHECK2( m_spObject, m_spObject->put_Name( Util::Copy( strName ) ) );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
 	}
@@ -1402,7 +1402,7 @@ namespace BON
 
 		// Retrieve
 		ObjectPtr spObject;
-		BONCOMTHROW( getObjectI()->GetParent( spObject.Addr() ) );
+		COMCHECK2( getObjectI(), getObjectI()->GetParent( spObject.Addr() ) );
 		CComQIPtr<IMgaFolder> spFolder = spObject;
 
 		// It is not a Folder
@@ -1462,7 +1462,7 @@ namespace BON
 	{
 		// Temporary Solution ... Eliminate If Event Paremeters Available
 		ObjectPtr spObject;
-		BONCOMTHROW( m_spObject->GetParent( spObject.Addr() ) );
+		COMCHECK2( m_spObject, m_spObject->GetParent( spObject.Addr() ) );
 		Folder folder( ObjectImpl::attachI( spObject, m_pProject ) );
 		if ( folder )
 			folder->onChildAdded( this );
@@ -1483,7 +1483,7 @@ namespace BON
 		if ( m_parentFolder.second )
 			m_parentFolder.second->onChildRemoved( this );
 		ObjectPtr spObject;
-		BONCOMTHROW( m_spObject->GetParent( spObject.Addr() ) );
+		COMCHECK2( m_spObject, m_spObject->GetParent( spObject.Addr() ) );
 		Folder folder( ObjectImpl::attachI( spObject, m_pProject ) );
 		if ( folder )
 			folder->onChildAdded( this );
@@ -1621,7 +1621,7 @@ namespace BON
 	{
 		if ( m_spNode ) { // modified by ZolMol
 			CComBSTR bstrName;
-			BONCOMTHROW( m_spNode->get_Name( &bstrName ) );
+			COMCHECK2( m_spNode, m_spNode->get_Name( &bstrName ) );
 			return Util::Copy( bstrName );
 		}
 		return "";
@@ -1631,7 +1631,7 @@ namespace BON
 	{
 		if ( m_spNode ) {
 			CComBSTR bstrName;
-			BONCOMTHROW( m_spNode->get_Path( &bstrName ) );
+			COMCHECK2( m_spNode, m_spNode->get_Path( &bstrName ) );
 			return "/" + Util::Copy( bstrName );
 		}
 		return "/";
@@ -1641,7 +1641,7 @@ namespace BON
 	{
 		if ( m_spNode ) {
 			long lStatus;
-			BONCOMTHROW( m_spNode->get_Status( &lStatus ) );
+			COMCHECK2( m_spNode, m_spNode->get_Status( &lStatus ) );
 			return lStatus;
 		}
 		return RNS_Undefined;
@@ -1651,7 +1651,7 @@ namespace BON
 	{
 		if ( m_spNode ) {
 			CComBSTR bstrValue;
-			BONCOMTHROW( m_spNode->get_Value( &bstrValue ) );
+			COMCHECK2( m_spNode, m_spNode->get_Value( &bstrValue ) );
 			return Util::Copy( bstrValue );
 		}
 		return "";
@@ -1660,7 +1660,7 @@ namespace BON
 	void RegistryNodeImpl::setValue( const std::string& strValue )
 	{
 		if ( m_spNode ) {
-			BONCOMTHROW( m_spNode->put_Value( Util::Copy( strValue ) ) );
+			COMCHECK2( m_spNode, m_spNode->put_Value( Util::Copy( strValue ) ) );
 			if ( getProject()->isAutoCommit() )
 				getProject()->commit();
 		}
@@ -1699,7 +1699,7 @@ namespace BON
 	void RegistryNodeImpl::clear()
 	{
 		if ( m_spNode ) {
-			BONCOMTHROW( m_spNode->Clear() );
+			COMCHECK2( m_spNode, m_spNode->Clear() );
 		}
 	}
 
@@ -1712,11 +1712,11 @@ namespace BON
 		CComBSTR bstrValue;
 		CComQIPtr<IMgaFCO> spFCO = m_pObject->getObjectI();
 		if ( spFCO ) {
-			BONCOMTHROW( spFCO->get_RegistryValue( Util::Copy( strPath2 ), &bstrValue ) );
+			COMCHECK2( spFCO, spFCO->get_RegistryValue( Util::Copy( strPath2 ), &bstrValue ) );
 		}
 		else {
 			CComQIPtr<IMgaFolder> spFolder = m_pObject->getObjectI();
-			BONCOMTHROW( spFolder->get_RegistryValue( Util::Copy( strPath2 ), &bstrValue ) );
+			COMCHECK2( spFolder, spFolder->get_RegistryValue( Util::Copy( strPath2 ), &bstrValue ) );
 		}
 
 		return Util::Copy( bstrValue );
@@ -1730,11 +1730,11 @@ namespace BON
 
 		CComQIPtr<IMgaFCO> spFCO = m_pObject->getObjectI();
 		if ( spFCO ) {
-			BONCOMTHROW( spFCO->put_RegistryValue( Util::Copy( strPath2 ), Util::Copy( strValue ) ) );
+			COMCHECK2( spFCO, spFCO->put_RegistryValue( Util::Copy( strPath2 ), Util::Copy( strValue ) ) );
 		}
 		else {
 			CComQIPtr<IMgaFolder> spFolder = m_pObject->getObjectI();
-			BONCOMTHROW( spFolder->put_RegistryValue( Util::Copy( strPath2 ), Util::Copy( strValue ) ) );
+			COMCHECK2( spFolder, spFolder->put_RegistryValue( Util::Copy( strPath2 ), Util::Copy( strValue ) ) );
 		}
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
@@ -1747,7 +1747,7 @@ namespace BON
 	{
 		if ( m_spNode ) {
 			RegNodePtr spNode;
-			BONCOMTHROW( m_spNode->get_ParentNode( spNode.Addr() ) );
+			COMCHECK2( m_spNode, m_spNode->get_ParentNode( spNode.Addr() ) );
 			return attachI( spNode, m_pObject );
 		}
 		return NULL;
@@ -1759,16 +1759,16 @@ namespace BON
 		Util::ComPtr<IMgaRegNodes> spNodes;
 
 		if ( m_spNode ) {
-			BONCOMTHROW( m_spNode->get_SubNodes( ( bVirtualsAlso ) ? VARIANT_TRUE : VARIANT_FALSE, spNodes.Addr() ) );
+			COMCHECK2( m_spNode, m_spNode->get_SubNodes( ( bVirtualsAlso ) ? VARIANT_TRUE : VARIANT_FALSE, spNodes.Addr() ) );
 		}
 		else {
 			CComQIPtr<IMgaFCO> spFCO = m_pObject->getObjectI();
 			if ( spFCO ) {
-				BONCOMTHROW( spFCO->get_Registry( ( bVirtualsAlso ) ? VARIANT_TRUE : VARIANT_FALSE, spNodes.Addr() ) );
+				COMCHECK2( spFCO, spFCO->get_Registry( ( bVirtualsAlso ) ? VARIANT_TRUE : VARIANT_FALSE, spNodes.Addr() ) );
 			}
 			else {
 				CComQIPtr<IMgaFolder> spFolder = m_pObject->getObjectI();
-				BONCOMTHROW( spFolder->get_Registry( ( bVirtualsAlso ) ? VARIANT_TRUE : VARIANT_FALSE, spNodes.Addr() ) );
+				COMCHECK2( spFolder, spFolder->get_Registry( ( bVirtualsAlso ) ? VARIANT_TRUE : VARIANT_FALSE, spNodes.Addr() ) );
 			}
 		}
 
@@ -1784,16 +1784,16 @@ namespace BON
 	{
 		RegNodePtr spNode;
 		if ( m_spNode ) {
-			BONCOMTHROW( m_spNode->get_SubNodeByName( Util::Copy( strName ), spNode.Addr() ) );
+			COMCHECK2( m_spNode, m_spNode->get_SubNodeByName( Util::Copy( strName ), spNode.Addr() ) );
 		}
 		else {
 			CComQIPtr<IMgaFCO> spFCO = m_pObject->getObjectI();
 			if ( spFCO ) {
-				BONCOMTHROW( spFCO->get_RegistryNode( Util::Copy( strName ), spNode.Addr() ) );
+				COMCHECK2( spFCO, spFCO->get_RegistryNode( Util::Copy( strName ), spNode.Addr() ) );
 			}
 			else {
 				CComQIPtr<IMgaFolder> spFolder = m_pObject->getObjectI();
-				BONCOMTHROW( spFolder->get_RegistryNode( Util::Copy( strName ), spNode.Addr() ) );
+				COMCHECK2( spFolder, spFolder->get_RegistryNode( Util::Copy( strName ), spNode.Addr() ) );
 			}
 		}
 		return ( spNode ) ? attachI( spNode, m_pObject ) : NULL;
@@ -1802,23 +1802,23 @@ namespace BON
 	void RegistryNodeImpl::removeTree()
 	{
 		if ( m_spNode ) {
-			BONCOMTHROW( m_spNode->RemoveTree() );
+			COMCHECK2( m_spNode, m_spNode->RemoveTree() );
 			return;
 		}
 
 		Util::ComPtr<IMgaRegNodes> spNodes;
 		CComQIPtr<IMgaFCO> spFCO = m_pObject->getObjectI();
 		if ( spFCO ) {
-			BONCOMTHROW( spFCO->get_Registry( VARIANT_FALSE, spNodes.Addr() ) );
+			COMCHECK2( spFCO, spFCO->get_Registry( VARIANT_FALSE, spNodes.Addr() ) );
 		}
 		else {
 			CComQIPtr<IMgaFolder> spFolder = m_pObject->getObjectI();
-			BONCOMTHROW( spFolder->get_Registry( VARIANT_FALSE, spNodes.Addr() ) );
+			COMCHECK2( spFolder, spFolder->get_Registry( VARIANT_FALSE, spNodes.Addr() ) );
 		}
 
 		if ( spNodes ) {
 			MGACOLL_ITERATE( IMgaRegNode, spNodes.p ) {
-				BONCOMTHROW( MGACOLL_ITER->RemoveTree() );
+				COMCHECK2( MGACOLL_ITER, MGACOLL_ITER->RemoveTree() );
 			} MGACOLL_ITERATE_END;
 		}
 		if ( getProject()->isAutoCommit() )
@@ -1834,11 +1834,11 @@ namespace BON
 		RegNodePtr spNode;
 		CComQIPtr<IMgaFCO> spFCO = m_pObject->getObjectI();
 		if ( spFCO ) {
-			BONCOMTHROW( spFCO->get_RegistryNode( Util::Copy( strPath2 ), spNode.Addr() ) );
+			COMCHECK2( spFCO, spFCO->get_RegistryNode( Util::Copy( strPath2 ), spNode.Addr() ) );
 		}
 		else {
 			CComQIPtr<IMgaFolder> spFolder = m_pObject->getObjectI();
-			BONCOMTHROW( spFolder->get_RegistryNode( Util::Copy( strPath2 ), spNode.Addr() ) );
+			COMCHECK2( spFolder, spFolder->get_RegistryNode( Util::Copy( strPath2 ), spNode.Addr() ) );
 		}
 
 		return ( spNode ) ? attachI( spNode, m_pObject ) : NULL;
@@ -1975,7 +1975,7 @@ namespace BON
 	void FolderImpl::getChildFolders( std::set<ObjectPtr>& setSPFolders )
 	{
 		Util::ComPtr<IMgaFolders> spFolders;
-		BONCOMTHROW( getFolderI()->get_ChildFolders( spFolders.Addr() ) );
+		COMCHECK2( getFolderI(), getFolderI()->get_ChildFolders( spFolders.Addr() ) );
 		MGACOLL_ITERATE( IMgaFolder, spFolders.p ) {
 			setSPFolders.insert( MGACOLL_ITER.p );
 		} MGACOLL_ITERATE_END;
@@ -1984,7 +1984,7 @@ namespace BON
 	void FolderImpl::getRootFCOs( std::set<ObjectPtr>& setSPFCOs )
 	{
 		Util::ComPtr<IMgaFCOs> spFCOs;
-		BONCOMTHROW( getFolderI()->get_ChildFCOs( spFCOs.Addr() ) );
+		COMCHECK2( getFolderI(), getFolderI()->get_ChildFCOs( spFCOs.Addr() ) );
 		MGACOLL_ITERATE( IMgaFCO, spFCOs.p ) {
 			setSPFCOs.insert( MGACOLL_ITER.p );
 		} MGACOLL_ITERATE_END;
@@ -2077,14 +2077,14 @@ namespace BON
 
 		if ( eType == MON::OT_Folder ) {
 			FolderPtr spFolder;
-			BONCOMTHROW( getFolderI()->CreateFolder( MON::Folder( objectMeta ).getFolderI(), spFolder.Addr() ) );
+			COMCHECK2( getFolderI(), getFolderI()->CreateFolder( MON::Folder( objectMeta ).getFolderI(), spFolder.Addr() ) );
 			FolderImpl* pFolder = FolderImpl::attachI( spFolder, (ProjectImpl*) getProject().getCounted(), objectMeta );
 			if ( ! _isAddOn() )
 				pFolder->eventPerformedI( Event( MON::OET_ObjectCreated, pFolder ) );
 			return pFolder;
 		}
 		FCOPtr spFCO;
-		BONCOMTHROW( getFolderI()->CreateRootObject( MON::FCO( objectMeta ).getFCOI(), spFCO.Addr() ) );
+		COMCHECK2( getFolderI(), getFolderI()->CreateRootObject( MON::FCO( objectMeta ).getFCOI(), spFCO.Addr() ) );
 		FCOImpl* pFCO = FCOImpl::attachI( spFCO, (ProjectImpl*) getProject().getCounted(), objectMeta );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
@@ -2106,7 +2106,7 @@ namespace BON
 		}
 
 		FCOPtr spFCO;
-		BONCOMTHROW( getFolderI()->DeriveRootObject( fco->getFCOI(), ( bAsInstance ) ? VARIANT_TRUE : VARIANT_FALSE, spFCO.Addr() ) );
+		COMCHECK2( getFolderI(), getFolderI()->DeriveRootObject( fco->getFCOI(), ( bAsInstance ) ? VARIANT_TRUE : VARIANT_FALSE, spFCO.Addr() ) );
 		FCOImpl* pFCO = FCOImpl::attachI( spFCO, (ProjectImpl*) getProject().getCounted(), fco->getFCOMeta() );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
@@ -2324,25 +2324,25 @@ namespace BON
 	ConnectionEndImpl* ConnectionEndImpl::attachI( IMgaConnPoint* spCP, ProjectImpl* pProject, const MON::Object& meta )
 	{
 		FCOPtr spTarget;
-		BONCOMTHROW( spCP->get_Target( spTarget.Addr() ) );
+		COMCHECK2( spCP, spCP->get_Target( spTarget.Addr() ) );
 		FCOImpl* pTarget = FCOImpl::attachI( spTarget, pProject, meta );
 
 		Util::ComPtr<IMgaFCOs> spRefs;
-		BONCOMTHROW( spCP->get_References( spRefs.Addr() ) );
+		COMCHECK2( spCP, spCP->get_References( spRefs.Addr() ) );
 
 		long lCount;
-		BONCOMTHROW( spRefs->get_Count( &lCount ) );
+		COMCHECK2( spRefs, spRefs->get_Count( &lCount ) );
 		if ( lCount == 0 )
 			return pTarget;
 
 		FCOPtr spRefFirst;
-		BONCOMTHROW( spRefs->get_Item( 1, spRefFirst.Addr() ) );
+		COMCHECK2( spRefs, spRefs->get_Item( 1, spRefFirst.Addr() ) );
 		FCOPtr spRefLast;
-		BONCOMTHROW( spRefs->get_Item( lCount, spRefLast.Addr() ) );
+		COMCHECK2( spRefs, spRefs->get_Item( lCount, spRefLast.Addr() ) );
 
 		CComQIPtr<IMgaReference> spRef = spRefLast;
 		FCOPtr spRefTarget;
-		BONCOMTHROW( spRef->get_Referred( spRefTarget.Addr() ) );
+		COMCHECK2( spRef, spRef->get_Referred( spRefTarget.Addr() ) );
 		if ( spRefTarget == spTarget )
 			return FCOImpl::attachI( spRefFirst, pProject );
 
@@ -2410,7 +2410,7 @@ namespace BON
 	void ConnectionEndImpl::getConnections( std::set<ConnPointPtr>& setSPConnPoints )
 	{
 		Util::ComPtr<IMgaConnPoints> spCPs;
-		BONCOMTHROW( getFCOHelper()->getFCOI()->get_PartOfConns( spCPs.Addr() ) );
+		COMCHECK2( getFCOHelper()->getFCOI(), getFCOHelper()->getFCOI()->get_PartOfConns( spCPs.Addr() ) );
 		MGACOLL_ITERATE( IMgaConnPoint, spCPs.p ) {
 			setSPConnPoints.insert( MGACOLL_ITER );
 		} MGACOLL_ITERATE_END;
@@ -2423,10 +2423,10 @@ namespace BON
 			std::set<ConnPointPtr>::iterator itSaved = it;
 			it++;
 			CComBSTR bstrRole;
-			BONCOMTHROW( (*itSaved)->get_ConnRole( &bstrRole ) );
+			COMCHECK2( (*itSaved), (*itSaved)->get_ConnRole( &bstrRole ) );
 			if ( Util::Copy( bstrRole ) == meta.first ) {
 				ConnectionPtr spConnection;
-				BONCOMTHROW( (*itSaved)->get_Owner( spConnection.Addr() ) );
+				COMCHECK2( (*itSaved), (*itSaved)->get_Owner( spConnection.Addr() ) );
 				if ( _getMetaRef( spConnection ) == meta.second.ref() ) {
 					ConnectionEndImpl* pEnd = ConnectionEndImpl::attachI( *itSaved, m_pProject );
 					pEnd->isConnectionsRetrieved( meta );
@@ -3356,7 +3356,7 @@ namespace BON
 	bool FCOImpl::isInstance() const
 	{
 		VARIANT_BOOL vbInstance;
-		BONCOMTHROW( getFCOI()->get_IsInstance( &vbInstance ) );
+		COMCHECK2( getFCOI(), getFCOI()->get_IsInstance( &vbInstance ) );
 		return vbInstance == VARIANT_TRUE;
 	}
 	MON::Containment FCOImpl::getRole()
@@ -3481,10 +3481,10 @@ namespace BON
 		if ( ! m_bAllAttributes ) {
 			m_bAllAttributes = true;
 			Util::ComPtr<IMgaAttributes> spAttributes;
-			BONCOMTHROW( getFCOI()->get_Attributes( spAttributes.Addr() ) );
+			COMCHECK2( getFCOI(), getFCOI()->get_Attributes( spAttributes.Addr() ) );
 			MGACOLL_ITERATE( IMgaAttribute, spAttributes.p ) {
 				MON::AttributePtr spMeta;
-				BONCOMTHROW( MGACOLL_ITER->get_Meta( spMeta.Addr() ) );
+				COMCHECK2( MGACOLL_ITER, MGACOLL_ITER->get_Meta( spMeta.Addr() ) );
 				MON::Attribute metaIter( spMeta );
 				m_attributes.insert( ManyAttributeLink::value_type( metaIter, AttributeImpl::attachI( MGACOLL_ITER, this, metaIter ) ) );
 			} MGACOLL_ITERATE_END;
@@ -3502,7 +3502,7 @@ namespace BON
 
 		// Retrieve
 		ObjectPtr spObject;
-		BONCOMTHROW( getObjectI()->GetParent( spObject.Addr() ) );
+		COMCHECK2( getObjectI(), getObjectI()->GetParent( spObject.Addr() ) );
 		CComQIPtr<IMgaModel> spModel = spObject;
 
 		// It is not a Model
@@ -3538,7 +3538,7 @@ namespace BON
 	void FCOImpl::getSets( std::set<SetPtr>& setSPSets )
 	{
 		Util::ComPtr<IMgaFCOs> spSets;
-		BONCOMTHROW( getFCOI()->get_MemberOfSets( spSets.Addr() ) );
+		COMCHECK2( getFCOI(), getFCOI()->get_MemberOfSets( spSets.Addr() ) );
 		MGACOLL_ITERATE( IMgaFCO, spSets.p ) {
 			CComQIPtr<IMgaSet> spSet = MGACOLL_ITER;
 			setSPSets.insert( spSet.p );
@@ -3610,7 +3610,7 @@ namespace BON
 	void FCOImpl::getReferences( std::set<ReferencePtr>& setSPReferences )
 	{
 		Util::ComPtr<IMgaFCOs> spReferences;
-		BONCOMTHROW( getFCOI()->get_ReferencedBy( spReferences.Addr() ) );
+		COMCHECK2( getFCOI(), getFCOI()->get_ReferencedBy( spReferences.Addr() ) );
 		MGACOLL_ITERATE( IMgaFCO, spReferences.p ) {
 			CComQIPtr<IMgaReference> spReference = MGACOLL_ITER;
 			setSPReferences.insert( spReference.p );
@@ -3673,13 +3673,13 @@ namespace BON
 		m_bAllTypeFCOs = true;
 		FCOPtr spFCO;
 		VARIANT_BOOL vbInstance;
-		BONCOMTHROW( getFCOI()->get_IsInstance( &vbInstance ) );
+		COMCHECK2( getFCOI(), getFCOI()->get_IsInstance( &vbInstance ) );
 		if (vbInstance) {
-			BONCOMTHROW( getFCOI()->get_Type( spFCO.Addr() ) );
+			COMCHECK2( getFCOI(), getFCOI()->get_Type( spFCO.Addr() ) );
 		}
 		else
 		{
-			BONCOMTHROW( getFCOI()->get_BaseType( spFCO.Addr() ) );
+			COMCHECK2( getFCOI(), getFCOI()->get_BaseType( spFCO.Addr() ) );
 		}
 		
 		if ( spFCO ) {
@@ -3693,10 +3693,10 @@ namespace BON
 	{
 		if ( bInstance && ! m_bAllInstanceFCOs || ! bInstance && ! m_bAllSubTypeFCOs ) {
 			Util::ComPtr<IMgaFCOs> spFCOs;
-			BONCOMTHROW( getFCOI()->get_DerivedObjects( spFCOs.Addr() ) );
+			COMCHECK2( getFCOI(), getFCOI()->get_DerivedObjects( spFCOs.Addr() ) );
 			MGACOLL_ITERATE( IMgaFCO, spFCOs.p ) {
 				VARIANT_BOOL vbInstance;
-				BONCOMTHROW( MGACOLL_ITER->get_IsInstance( &vbInstance ) );
+				COMCHECK2( MGACOLL_ITER, MGACOLL_ITER->get_IsInstance( &vbInstance ) );
 				if ( bInstance && vbInstance || ! bInstance && ! vbInstance ) {
 					FCOImpl* pFCO = FCOImpl::attachI( MGACOLL_ITER, ObjectImpl::m_pProject, getObjectMeta() );
 					if ( bInstance )
@@ -3892,7 +3892,7 @@ namespace BON
 
 		// Temporary Solution ... Eliminate If Event Paremeters Available
 		ObjectPtr spObject;
-		BONCOMTHROW( getObjectI()->GetParent( spObject.Addr() ) );
+		COMCHECK2( getObjectI(), getObjectI()->GetParent( spObject.Addr() ) );
 		Model model( ObjectImpl::attachI( spObject, (ProjectImpl*) getProject().getCounted() ) );
 		if ( model )
 			model->onChildAdded( this );
@@ -4163,10 +4163,10 @@ namespace BON
 		FCOsPtr spInSet;
 		FCOsPtr spOutSet;
 		BONCOMTHROW( spInSet.CoCreateInstance( L"Mga.MgaFCOs" ) );		// CHANGED LINE
-		BONCOMTHROW( spInSet->Append( getFCOI() ) ); 	
+		COMCHECK2( spInSet, spInSet->Append( getFCOI() ) ); 	
 		FCOPtr spFCO;
-		BONCOMTHROW( parent->getFolderI()->CopyFCOs( spInSet, spOutSet.Addr() ) );     // CHANGED LINE
-		BONCOMTHROW( spOutSet->get_Item( 1, spFCO.Addr() ) );
+		COMCHECK2( parent->getFolderI(), parent->getFolderI()->CopyFCOs( spInSet, spOutSet.Addr() ) );     // CHANGED LINE
+		COMCHECK2( spOutSet, spOutSet->get_Item( 1, spFCO.Addr() ) );
 		FCOImpl* pFCO = FCOImpl::attachI( spFCO, (ProjectImpl*) getProject().getCounted(), getObjectMeta() );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
@@ -4202,11 +4202,11 @@ namespace BON
 		FCOsPtr spInSet;
 		FCOsPtr spOutSet;
 		BONCOMTHROW( spInSet.CoCreateInstance( L"Mga.MgaFCOs" ) );		// CHANGED LINE
-		BONCOMTHROW( spInSet->Append( getFCOI() ) ); 	
+		COMCHECK2( spInSet, spInSet->Append( getFCOI() ) ); 	
 		
-		BONCOMTHROW( parent->getFolderI()->MoveFCOs( spInSet, spOutSet.Addr() ) );
+		COMCHECK2( parent->getFolderI(), parent->getFolderI()->MoveFCOs( spInSet, spOutSet.Addr() ) );
 		FCOPtr spFCO;
-		BONCOMTHROW( spOutSet->get_Item( 1, spFCO.Addr() ) );
+		COMCHECK2( spOutSet, spOutSet->get_Item( 1, spFCO.Addr() ) );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
 		return FCOImpl::attachI( spFCO, (ProjectImpl*) getProject().getCounted(), getObjectMeta() );
@@ -4243,14 +4243,14 @@ namespace BON
 
 		FCOsPtr spInSet;
 		BONCOMTHROW( spInSet.CoCreateInstance( L"Mga.MgaFCOs" ) );			// CHANGED LINE
-		BONCOMTHROW( spInSet->Append( getFCOI() ) );
+		COMCHECK2( spInSet, spInSet->Append( getFCOI() ) );
 		Util::ComPtr<IMgaMetaRoles> spRoles;
 		BONCOMTHROW( spRoles.CoCreateInstance( L"Mga.MgaMetaRoles" ) );		// CHANGED LINE
-		BONCOMTHROW( spRoles->Append( role.getContainmentI() ) );
+		COMCHECK2( spRoles, spRoles->Append( role.getContainmentI() ) );
 		FCOsPtr spOutSet;
-		BONCOMTHROW( parent->getModelI()->CopyFCOs( spInSet, spRoles, spOutSet.Addr() ) );
+		COMCHECK2( parent->getModelI(), parent->getModelI()->CopyFCOs( spInSet, spRoles, spOutSet.Addr() ) );
 		FCOPtr spFCO;
-		BONCOMTHROW( spOutSet->get_Item( 1, spFCO.Addr() ) );
+		COMCHECK2( spOutSet, spOutSet->get_Item( 1, spFCO.Addr() ) );
 
 		FCOImpl* pFCO = FCOImpl::attachI( spFCO, (ProjectImpl*) getProject().getCounted(), getObjectMeta() );
 		if ( getProject()->isAutoCommit() )
@@ -4302,14 +4302,14 @@ namespace BON
 
 		FCOsPtr spInSet;
 		BONCOMTHROW( spInSet.CoCreateInstance( L"Mga.MgaFCOs" ) );			// CHANGED LINE
-		BONCOMTHROW( spInSet->Append( getFCOI() ) );
+		COMCHECK2( spInSet, spInSet->Append( getFCOI() ) );
 		Util::ComPtr<IMgaMetaRoles> spRoles;
 		BONCOMTHROW( spRoles.CoCreateInstance( L"Mga.MgaMetaRoles" ) );		// CHANGED LINE
-		BONCOMTHROW( spRoles->Append( role.getContainmentI() ) );
+		COMCHECK2( spRoles, spRoles->Append( role.getContainmentI() ) );
 		FCOsPtr spOutSet;
-		BONCOMTHROW( parent->getModelI()->MoveFCOs( spInSet, spRoles, spOutSet.Addr() ) );
+		COMCHECK2( parent->getModelI(), parent->getModelI()->MoveFCOs( spInSet, spRoles, spOutSet.Addr() ) );
 		FCOPtr spFCO;
-		BONCOMTHROW( spOutSet->get_Item( 1, spFCO.Addr() ) );
+		COMCHECK2( spOutSet, spOutSet->get_Item( 1, spFCO.Addr() ) );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
 
@@ -4472,14 +4472,14 @@ namespace BON
 	AttributeStatus AttributeImpl::getStatus() const
 	{
 		long lStatus;
-		BONCOMTHROW( m_spAttribute->get_Status( &lStatus ) );
+		COMCHECK2( m_spAttribute, m_spAttribute->get_Status( &lStatus ) );
 		return lStatus;
 	}
 
 	Util::Variant AttributeImpl::getValue() const
 	{
 		CComVariant objValue;
-		BONCOMTHROW( m_spAttribute->get_Value( &objValue ) );
+		COMCHECK2( m_spAttribute, m_spAttribute->get_Value( &objValue ) );
 		if ( objValue.vt == VT_EMPTY || objValue.vt == VT_ERROR ) // || objValue.vt )
 			return Util::Variant();
 
@@ -4501,22 +4501,22 @@ namespace BON
 	{
 		checkTypes( value, ! bTypeTolerant );
 		if ( value.isUndefined() ) {
-			BONCOMTHROW( m_spAttribute->Clear() );
+			COMCHECK2( m_spAttribute, m_spAttribute->Clear() );
 		}
 		else {
 			switch ( m_meta.valueType() ) {
 				case MON::AT_Boolean :
-					BONCOMTHROW( m_spAttribute->put_BoolValue( (bool) value ) );
+					COMCHECK2( m_spAttribute, m_spAttribute->put_BoolValue( (bool) value ) );
 					break;
 				case MON::AT_Integer :
-					BONCOMTHROW( m_spAttribute->put_IntValue( (long) value ) );
+					COMCHECK2( m_spAttribute, m_spAttribute->put_IntValue( (long) value ) );
 					break;
 				case MON::AT_Real :
-					BONCOMTHROW( m_spAttribute->put_FloatValue( (double) value ) );
+					COMCHECK2( m_spAttribute, m_spAttribute->put_FloatValue( (double) value ) );
 					break;
 				case MON::AT_String :
 				case MON::AT_Enumeration :
-					BONCOMTHROW( m_spAttribute->put_StringValue( Util::Copy( (std::string) value ) ) );
+					COMCHECK2( m_spAttribute, m_spAttribute->put_StringValue( Util::Copy( (std::string) value ) ) );
 					break;
 			}
 		}
@@ -4904,7 +4904,7 @@ namespace BON
 	void ModelImpl::getChildFCOs( std::set<FCOPtr>& setSPFCOs )
 	{
 		Util::ComPtr<IMgaFCOs> spFCOs;
-		BONCOMTHROW( getModelI()->get_ChildFCOs( spFCOs.Addr() ) );
+		COMCHECK2( getModelI(), getModelI()->get_ChildFCOs( spFCOs.Addr() ) );
 		MGACOLL_ITERATE( IMgaFCO, spFCOs.p ) {
 			setSPFCOs.insert( MGACOLL_ITER );
 		} MGACOLL_ITERATE_END;
@@ -4998,7 +4998,7 @@ namespace BON
 		}
 
 		FCOPtr spFCO;
-		BONCOMTHROW( getModelI()->CreateChildObject( role.getContainmentI(), spFCO.Addr() ) );
+		COMCHECK2( getModelI(), getModelI()->CreateChildObject( role.getContainmentI(), spFCO.Addr() ) );
 		FCOImpl* pFCO = FCOImpl::attachI( spFCO, (ProjectImpl*) getProject().getCounted(), role.child() );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
@@ -5041,7 +5041,7 @@ namespace BON
 		}
 
 		FCOPtr spFCO;
-		BONCOMTHROW( getModelI()->CreateChildObject( role.getContainmentI(), spFCO.Addr() ) );
+		COMCHECK2( getModelI(), getModelI()->CreateChildObject( role.getContainmentI(), spFCO.Addr() ) );
 		FCOImpl* pFCO = FCOImpl::attachI( spFCO, (ProjectImpl*) getProject().getCounted(), meta );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
@@ -5083,7 +5083,7 @@ namespace BON
 		}
 
 		FCOPtr spFCO;
-		BONCOMTHROW( getModelI()->DeriveChildObject( fco->getFCOI(), role.getContainmentI(), ( bAsInstance ) ? VARIANT_TRUE : VARIANT_FALSE, spFCO.Addr() ) );
+		COMCHECK2( getModelI(), getModelI()->DeriveChildObject( fco->getFCOI(), role.getContainmentI(), ( bAsInstance ) ? VARIANT_TRUE : VARIANT_FALSE, spFCO.Addr() ) );
 		FCOImpl* pFCO = FCOImpl::attachI( spFCO, (ProjectImpl*) getProject().getCounted(), fco->getFCOMeta() );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
@@ -5578,7 +5578,7 @@ namespace BON
 	void SetImpl::getMemberFCOs( std::set<FCOPtr>& setSPFCOs )
 	{
 		Util::ComPtr<IMgaFCOs> spFCOs;
-		BONCOMTHROW( getSetI()->get_Members( spFCOs.Addr() ) );
+		COMCHECK2( getSetI(), getSetI()->get_Members( spFCOs.Addr() ) );
 		MGACOLL_ITERATE( IMgaFCO, spFCOs.p ) {
 			setSPFCOs.insert( MGACOLL_ITER );
 		} MGACOLL_ITERATE_END;
@@ -5636,7 +5636,7 @@ namespace BON
 	void SetImpl::addMemberI( const BON::FCO& fco )
 	{
 		FCOImpl* pMember = dynamic_cast<FCOImpl*>( fco.getCounted() );
-		BONCOMTHROW( getSetI()->AddMember( pMember->getFCOI() ) );
+		COMCHECK2( getSetI(), getSetI()->AddMember( pMember->getFCOI() ) );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
 		if ( ! _isAddOn() )
@@ -5646,7 +5646,7 @@ namespace BON
 	void SetImpl::removeMemberI( const BON::FCO& fco )
 	{
 		FCOImpl* pMember = dynamic_cast<FCOImpl*>( fco.getCounted() );
-		BONCOMTHROW( getSetI()->RemoveMember( pMember->getFCOI() ) );
+		COMCHECK2( getSetI(), getSetI()->RemoveMember( pMember->getFCOI() ) );
 		if ( getProject()->isAutoCommit() )
 			getProject()->commit();
 		if ( ! _isAddOn() )
@@ -6013,7 +6013,7 @@ namespace BON
 
 		// Retrieve
 		FCOPtr spFCO;
-		BONCOMTHROW( getReferenceI()->get_Referred( spFCO.Addr() ) );
+		COMCHECK2( getReferenceI(), getReferenceI()->get_Referred( spFCO.Addr() ) );
 
 		if ( spFCO.p && ( ! meta || _getMetaRef( spFCO ) == meta.ref() ) ) {
 			m_referredFCO.first = ( meta ) ? meta : MON::FCO( getProject()->getProjectMeta().findByName( _getMetaName( spFCO ) ) );
@@ -6028,7 +6028,7 @@ namespace BON
 
 	void ReferenceImpl::setReferredFCOI( const BON::FCO& fco )
 	{
-		BONCOMTHROW( getReferenceI()->put_Referred( fco->getFCOI() ) );
+		COMCHECK2( getReferenceI(), getReferenceI()->put_Referred( fco->getFCOI() ) );
 	}
 
 	bool ReferenceImpl::createRefPort( FCOImpl* pFCO )
@@ -6055,12 +6055,12 @@ namespace BON
 			FCOPtr spFCO;
 			do {
 				FCOPtr spFCO_temp;
-				BONCOMTHROW( spRef->get_Referred( spFCO_temp.Addr() ) );
+				COMCHECK2( spRef, spRef->get_Referred( spFCO_temp.Addr() ) );
 				spFCO = spFCO_temp;
 			} while ( spRef = spFCO.p );
 
 			Util::ComPtr<IMgaFCOs> spFCOs;
-			BONCOMTHROW( CComQIPtr<IMgaModel>( spFCO.p )->get_ChildFCOs( spFCOs.Addr() ) );
+			COMCHECK2( CComQIPtr<IMgaModel>( spFCO.p ), CComQIPtr<IMgaModel>( spFCO.p )->get_ChildFCOs( spFCOs.Addr() ) );
 			MGACOLL_ITERATE( IMgaFCO, spFCOs.p ) {
 				createRefPort( FCOImpl::attachI( MGACOLL_ITER, ObjectImpl::m_pProject ) );
 			} MGACOLL_ITERATE_END;
@@ -6489,12 +6489,12 @@ namespace BON
 		if ( ! m_bAllEnds ) {
 			m_bAllEnds = true;
 			Util::ComPtr<IMgaConnPoints> spCPs;
-			BONCOMTHROW( getConnectionI()->get_ConnPoints( spCPs.Addr() ) );
+			COMCHECK2( getConnectionI(), getConnectionI()->get_ConnPoints( spCPs.Addr() ) );
 			MGACOLL_ITERATE( IMgaConnPoint, spCPs.p ) {
 				CComBSTR bstrRole;
-				BONCOMTHROW( MGACOLL_ITER->get_ConnRole( &bstrRole ) );
+				COMCHECK2( MGACOLL_ITER, MGACOLL_ITER->get_ConnRole( &bstrRole ) );
 				FCOPtr spTarget;
-				BONCOMTHROW( MGACOLL_ITER->get_Target( spTarget.Addr() ) );
+				COMCHECK2( MGACOLL_ITER, MGACOLL_ITER->get_Target( spTarget.Addr() ) );
 				MON::Connection::Pair key( Util::Copy( bstrRole ), MON::FCO( getProject()->getProjectMeta().findByName( _getMetaName( spTarget ) ) ) );
 				if ( m_ends.find( key ) == m_ends.end() ) {
 					ConnectionEndImpl* pCE = ConnectionEndImpl::attachI( MGACOLL_ITER, ObjectImpl::m_pProject, key.second );
@@ -6539,7 +6539,7 @@ namespace BON
 				mapEnds[ it->first ] = port->getFCO();
 				Reference ref = port->getContainer()->getReference();
 				while ( ref ) {
-					BONCOMTHROW( ref->getFCOI()->CreateCollection( mapRefSeqs[ it->first ].Addr() ) );
+					COMCHECK2( ref->getFCOI(), ref->getFCOI()->CreateCollection( mapRefSeqs[ it->first ].Addr() ) );
 					ref = ref->getReferred();
 				}
 			}
@@ -6596,7 +6596,7 @@ namespace BON
 #endif
 
 		FCOPtr spFCO;
-		BONCOMTHROW( parent->getModelI()->CreateSimpleConn( meta.getContainmentI(), mapEnds[ "src" ]->getFCOI(), mapEnds[ "dst" ]->getFCOI(), mapRefSeqs[ "src" ], mapRefSeqs[ "dst" ], spFCO.Addr() ) );
+		COMCHECK2( parent->getModelI(), parent->getModelI()->CreateSimpleConn( meta.getContainmentI(), mapEnds[ "src" ]->getFCOI(), mapEnds[ "dst" ]->getFCOI(), mapRefSeqs[ "src" ], mapRefSeqs[ "dst" ], spFCO.Addr() ) );
 		ConnectionImpl* pConnection = ConnectionImpl::attachI( CComQIPtr<IMgaConnection>( spFCO.p ), (ProjectImpl*) parent->getProject().getCounted(), meta.child() );
 		if ( pConnection->getProject()->isAutoCommit() )
 			pConnection->getProject()->commit();

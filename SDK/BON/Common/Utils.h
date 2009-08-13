@@ -232,6 +232,12 @@ namespace Util
 			}
 	};
 
+	template<class T>
+	inline void COMCHECK2(const ComPtr<T>& p, const HRESULT hr) {
+		COMCHECK2(p.p, hr);
+	}
+
+
 // WARNING : Must be Removed
 
 template < class t >
