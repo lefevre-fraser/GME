@@ -39,14 +39,16 @@ inline void COMCHECK2(const CComPtr<T>& p, const HRESULT hr)
 		if (supportErrorInfo != NULL && supportErrorInfo->InterfaceSupportsErrorInfo(piid) == S_OK) {
 			CComQIPtr<IErrorInfo> errorInfo;
 			GetErrorInfo(0, &errorInfo);
+
 			BSTR bstr;
 			errorInfo->GetDescription(&bstr);
-			BON::Exception exception(hr, "?");
 			CString str( bstr );
 			std::string strResult( str.GetBuffer( str.GetLength() ) );
 			str.ReleaseBuffer();
-			exception << strResult;
 			SysFreeString(bstr);
+
+			BON::Exception exception(hr, "?");
+			exception << strResult;
 			throw exception;
 		} else {
 			BON::Exception exception(hr);
