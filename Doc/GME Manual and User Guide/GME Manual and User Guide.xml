@@ -4974,9 +4974,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       Solution leveraging capabilites of the new <code>DecoratorLib</code>
       library. The user is expected to
       implement the component by modifying appropriate files of the skeleton code.
-      For further details see the section on <code>DecoratorLib</code></para>
+      For further details see the section on <code>DecoratorLib</code>.</para>
 
-      <para>After building the project, the component
+      <para>After building the project, the decorator
       <filename>.dll</filename> is registered.</para>
     </section>
 
@@ -4994,6 +4994,13 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       the sample can inherit resizability properties and in-place label
       editing features from the infrastructure. It also demonstrates context
       menu usage and drag-drop handling.</para>
+
+      <para>In case of the <code>NewDecoratorKit</code> decorator you first have to adjust
+      <code>DecoratorLib.vcproj</code> project file path (this is part of the solution)
+      in the Visual Studio Solution file. Unfortunately in case of Solution (<code>.sln</code>) files
+      Visual Studio cannot resolve environment variables so <code>GME_ROOT</code> cannot be used.
+      Your solution's relative path is probably different from the SDK sample so you have to tune it.
+      This is not a problem with the Wizard because it does this all automatically.</para>
 
       <para>The <code>DecoratorKit</code> source code provides a really
       stripped down example implementation containing only the flat
@@ -5101,7 +5108,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
 
           <listitem>
-            <para><code>DecoratorLib.lib</code> source code in the SDK</para>
+            <para>Add <code>DecoratorLib.vcproj</code> project (located in the SDK) into your Solution,
+            and set it as a dependency prerequisite for your Decorator project</para>
           </listitem>
 
           <listitem>
