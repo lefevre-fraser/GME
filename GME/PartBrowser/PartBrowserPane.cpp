@@ -375,11 +375,11 @@ void CPartBrowserPane::ChangeAspect(int index)
 				maxSize.cy = size.cy;
 
 			CComBSTR nameBStr;
-			HRESULT hr = (*ii).part->get_DisplayedName(&nameBStr);
-			if (FAILED(hr) || nameBStr.Length() == 0) {
-				nameBStr.Empty();
+//			HRESULT hr = (*ii).part->get_DisplayedName(&nameBStr);
+//			if (FAILED(hr) || nameBStr.Length() == 0) {
+//				nameBStr.Empty();
 				COMTHROW((*ii).part->get_Name(&nameBStr));
-			}
+//			}
 			CString nameCString;
 			CopyTo(nameBStr, nameCString);
 			int text_cx = textMetric.GetTextExtent(nameCString).cx;
