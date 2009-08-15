@@ -4,7 +4,7 @@
 
 ////////////////////////////// CDynMenu /////////////////////////////
 
-CDynMenu::CDynMenu(int iden,char *nm) : id(iden), name(nm)
+CDynMenu::CDynMenu(int iden, char* nm) : id(iden), name(nm)
 {
 	menu.CreatePopupMenu();
 	minID = maxID = -1;
@@ -17,21 +17,21 @@ CDynMenu::~CDynMenu()
 		delete items.GetNext(pos);
 }
 
-void CDynMenu::AddItem(int id,CString &label,CString helpMsg)
+void CDynMenu::AddItem(int id, const CString& label, const CString& helpMsg)
 {
 	if(minID < 0)
 		minID = id;
 	maxID = id;
-	CDynMenuItem *item = new CDynMenuItem(id,label,helpMsg);
+	CDynMenuItem* item = new CDynMenuItem(id, label, helpMsg);
 	items.AddTail(item);
-	menu.AppendMenu(MF_ENABLED | MF_UNCHECKED | MF_STRING,id,label);
+	menu.AppendMenu(MF_ENABLED | MF_UNCHECKED | MF_STRING, id, label);
 }
 
-CDynMenuItem *CDynMenu::FindItem(int id)
+CDynMenuItem* CDynMenu::FindItem(int id)
 {
 	POSITION pos = items.GetHeadPosition();
 	while(pos) {
-		CDynMenuItem *item = items.GetNext(pos);
+		CDynMenuItem* item = items.GetNext(pos);
 		if(item->id == id)
 			return item;
 	}

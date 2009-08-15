@@ -3777,14 +3777,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 			if(ok) {
 				CComPtr<IMgaFCO> child;
 				COMTHROW(currentModel->CreateChildObject(metaRole,&child));
-				CComPtr<IMgaMetaFCO> metaFco;
-				child->get_Meta(&metaFco);
 				CComBSTR nm;
-				COMTHROW(metaFco->get_DisplayedName(&nm));
-				if (nm.Length() == 0) {
-					nm.Empty();
-					COMTHROW(metaRole->get_DisplayedName(&nm));
-				}
+				COMTHROW(metaRole->get_DisplayedName(&nm));
 				COMTHROW(child->put_Name(nm));
 				CComBSTR bstr;
 				COMTHROW(child->get_ID(&bstr));
@@ -4143,16 +4137,17 @@ void CGMEView::ConvertNeededConnections(void)
 	CommitTransaction();
 }
 
-void CGMEView::InsertNewPart(CString roleName,CPoint pt)
+void CGMEView::InsertNewPart(const CString& roleName, const CPoint& pt)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::InsertNewPart("+roleName+") in "+path+name+"\r\n");
 	CComPtr<IMgaFCO> child;
 	CComPtr<IMgaMetaRole> role;
 	try {
 		BeginTransaction();
-		if(!currentAspect->GetRoleByName(roleName,role,true)) {
+		if(!currentAspect->GetRoleByName(roleName, role, true)) {
 			AfxMessageBox("Internal Program Error in CGMEView::InsertNewPart");
 			CGMEEventLogger::LogGMEEvent("    Internal Program Error in CGMEView::InsertNewPart.\r\n");
+			AbortTransaction(E_FAIL);
 			return;
 		}
 		COMTHROW(currentModel->CreateChildObject(role,&child));
@@ -4166,7 +4161,7 @@ void CGMEView::InsertNewPart(CString roleName,CPoint pt)
 		CopyTo(bstr,newID);
 		newObjectIDs.AddHead(newID);
 
-		SetObjectLocation(child,role,pt);
+		SetObjectLocation(child, role, pt);
 		CommitTransaction();
 	}
 	catch(hresult_exception &e) {
@@ -6161,10 +6156,10 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 	if(CGuiMetaProject::theInstance->CmdIDInRange(nID))	{
 		if(nCode == CN_COMMAND && pHandlerInfo == NULL) {
 			CString label;
-			switch (CGuiMetaProject::theInstance->CmdType(nID,label)) {
+			switch (CGuiMetaProject::theInstance->CmdType(nID, label)) {
 			case GME_CMD_CONTEXT:
-				if(isType && currentAspect->FindCommand(nID,label))
-					InsertNewPart(label,contextMenuLocation);
+				if (isType && currentAspect->FindCommand(nID, label))
+					InsertNewPart(label, contextMenuLocation);
 				break;
 			default:
 				ASSERT(FALSE);

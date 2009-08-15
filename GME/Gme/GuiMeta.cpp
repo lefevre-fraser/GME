@@ -8,13 +8,13 @@
 
 // helper functions
 
-static bool FindMenu(CMenu *menu,CString &menuName,CMenu *&subMenu)
+static bool FindMenu(CMenu* menu, const CString& menuName, CMenu*& subMenu)
 {
 	subMenu = 0;
 	for(unsigned int i = 0; i < menu->GetMenuItemCount(); i++) {
 		CString label;
-		menu->GetMenuString(i,label,MF_BYPOSITION);
-		if(label == menuName) {
+		menu->GetMenuString(i, label, MF_BYPOSITION);
+		if (label == menuName) {
 			subMenu = menu->GetSubMenu(i);
 			return true;
 		}
@@ -22,24 +22,24 @@ static bool FindMenu(CMenu *menu,CString &menuName,CMenu *&subMenu)
 	return false;
 }
 
-static bool FindMenuItem(CMenu *menu,CString &itemName,unsigned int &pos)
+static bool FindMenuItem(CMenu* menu, const CString& itemName, unsigned int& pos)
 {
-	if(menu) {
+	if (menu) {
 		CString label;
 		for(pos = 0; pos < menu->GetMenuItemCount(); pos++) {
 			CString label;
-			menu->GetMenuString(pos,label,MF_BYPOSITION);
-			if(label == itemName)
+			menu->GetMenuString(pos, label, MF_BYPOSITION);
+			if (label == itemName)
 				return true;
 		}
 	}
 	return false;
 }
 
-static bool FindMenuItem(CMenu *menu,CString &menuName,CMenu *&subMenu,CString &itemName,unsigned int &pos)
+static bool FindMenuItem(CMenu* menu, const CString& menuName, CMenu*& subMenu, const CString& itemName, unsigned int& pos)
 {
-	FindMenu(menu,menuName,subMenu);
-	return FindMenuItem(subMenu,itemName,pos);
+	FindMenu(menu, menuName, subMenu);
+	return FindMenuItem(subMenu, itemName, pos);
 }
 
 // assumes that all constructors are called already inside a transaction
@@ -560,7 +560,9 @@ bool CGuiMetaModel::GetPartByRole(CComPtr<IMgaMetaRole> &theRole,CComPtr<IMgaMet
 }
 ////////////////////////////// CGuiMetaAspect /////////////////////////////
 
-CGuiMetaAspect::CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt,CGuiMetaModel *o,int ind) : owner(o), index(ind)
+CGuiMetaAspect::CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt, CGuiMetaModel* o, int ind):
+	owner(o),
+	index(ind)
 {
 	insertModelMenu = 0;
 	insertAtomMenu = 0;
@@ -584,35 +586,31 @@ CGuiMetaAspect::CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt,CGuiMetaModel *o,i
 				CComPtr<IMgaMetaFCO> kind;
 				COMTHROW(mmRole->get_Kind(&kind));
 				CComBSTR bstr;
-				COMTHROW(kind->get_DisplayedName(&bstr));
-				if (bstr.Length() == 0) {
-					bstr.Empty();
-					COMTHROW(mmRole->get_DisplayedName(&bstr));
-				}
+				COMTHROW(mmRole->get_DisplayedName(&bstr));
 				CString label;
 				CopyTo(bstr,label);
 				objtype_enum type;
 				COMTHROW(kind->get_ObjType(&type));
 				switch(type) {
 					case OBJTYPE_MODEL:
-						if(!insertModelMenu)
-							insertModelMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(),"Insert New Model");
-						insertModelMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(),label,"Help");
+						if (!insertModelMenu)
+							insertModelMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Model");
+						insertModelMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), label, "Help");
 						break;
 					case OBJTYPE_ATOM:
-						if(!insertAtomMenu)
-							insertAtomMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(),"Insert New Atom");
-						insertAtomMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(),label,"Help");
+						if (!insertAtomMenu)
+							insertAtomMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Atom");
+						insertAtomMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), label, "Help");
 						break;
 					case OBJTYPE_REFERENCE:
-						if(!insertReferenceMenu)
-							insertReferenceMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(),"Insert New Reference");
-						insertReferenceMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(),label,"Help");
+						if (!insertReferenceMenu)
+							insertReferenceMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Reference");
+						insertReferenceMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), label, "Help");
 						break;
 					case OBJTYPE_SET:
-						if(!insertSetMenu)
-							insertSetMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(),"Insert New Set");
-						insertSetMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(),label,"Help");
+						if (!insertSetMenu)
+							insertSetMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Set");
+						insertSetMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), label, "Help");
 						break;
 				}
 			}
@@ -650,66 +648,67 @@ CGuiMetaAspect::~CGuiMetaAspect()
 	delete insertSetMenu;
 }
 
-void CGuiMetaAspect::GetMetaAspect(CComPtr<IMgaMetaAspect> &mAspect)
+void CGuiMetaAspect::GetMetaAspect(CComPtr<IMgaMetaAspect>& mAspect)
 {
 	mgaMeta.QueryInterface(&mAspect);
 }
 
-void CGuiMetaAspect::InitContextMenu(CMenu *menu,CString label,CDynMenu *dm)
+void CGuiMetaAspect::InitContextMenu(CMenu* menu, const CString& label, CDynMenu* dm)
 {
-	if(!dm)
+	if (!dm)
 		return;
 
 	unsigned int pos = 0;
-	if(FindMenuItem(menu,label,pos)) {
-		menu->RemoveMenu(pos,MF_BYPOSITION | MF_POPUP);
+	if (FindMenuItem(menu, label, pos)) {
+		menu->RemoveMenu(pos, MF_BYPOSITION | MF_POPUP);
 		CMenu& dmm = dm->GetMenu();
 		menu->InsertMenu(pos, MF_BYPOSITION | MF_POPUP |
 			(dm->GetCount() > 0 ? MF_ENABLED : (MF_DISABLED | MF_GRAYED)),
-			(UINT)dmm.m_hMenu,label);
+			(UINT)dmm.m_hMenu, label);
 	}
 
 }
 
-void CGuiMetaAspect::InitContextMenu(CMenu *menu)
+void CGuiMetaAspect::InitContextMenu(CMenu* menu)
 {
-	InitContextMenu(menu,"Insert New Model",insertModelMenu);
-	InitContextMenu(menu,"Insert New Atom",insertAtomMenu);
-	InitContextMenu(menu,"Insert New Reference",insertReferenceMenu);
-	InitContextMenu(menu,"Insert New Set",insertSetMenu);
+	InitContextMenu(menu,"Insert New Model", insertModelMenu);
+	InitContextMenu(menu,"Insert New Atom", insertAtomMenu);
+	InitContextMenu(menu,"Insert New Reference", insertReferenceMenu);
+	InitContextMenu(menu,"Insert New Set", insertSetMenu);
 }
 
-void CGuiMetaAspect::ResetContextMenu(CMenu *menu)
+void CGuiMetaAspect::ResetContextMenu(CMenu* menu)
 {
 	unsigned int pos = 0;
 	CString name = "Insert New Model";
-	if(FindMenuItem(menu,name,pos))
-		menu->RemoveMenu(pos,MF_BYPOSITION | MF_POPUP);
+	if (FindMenuItem(menu, name, pos))
+		menu->RemoveMenu(pos, MF_BYPOSITION | MF_POPUP);
 	name = "Insert New Atom";
-	if(FindMenuItem(menu,name,pos))
-		menu->RemoveMenu(pos,MF_BYPOSITION | MF_POPUP);
+	if (FindMenuItem(menu, name, pos))
+		menu->RemoveMenu(pos, MF_BYPOSITION | MF_POPUP);
 	name = "Insert New Reference";
-	if(FindMenuItem(menu,name,pos))
-		menu->RemoveMenu(pos,MF_BYPOSITION | MF_POPUP);
+	if (FindMenuItem(menu, name, pos))
+		menu->RemoveMenu(pos, MF_BYPOSITION | MF_POPUP);
 	name = "Insert New Set";
-	if(FindMenuItem(menu,name,pos))
-		menu->RemoveMenu(pos,MF_BYPOSITION | MF_POPUP);
+	if (FindMenuItem(menu, name, pos))
+		menu->RemoveMenu(pos, MF_BYPOSITION | MF_POPUP);
 }
 
-bool CGuiMetaAspect::FindCommand(int id,CString &label)
+bool CGuiMetaAspect::FindCommand(int id, CString& label)
 {
 	CDynMenuItem *dmi = 0;
-	if((insertModelMenu && (dmi = insertModelMenu->FindItem(id)) != 0) ||
+	if ((insertModelMenu && (dmi = insertModelMenu->FindItem(id)) != 0) ||
 		(insertAtomMenu && (dmi = insertAtomMenu->FindItem(id)) != 0) ||
-			(insertReferenceMenu && (dmi = insertReferenceMenu->FindItem(id)) != 0) ||
-				(insertSetMenu && (dmi = insertSetMenu->FindItem(id)) != 0)) {
+		(insertReferenceMenu && (dmi = insertReferenceMenu->FindItem(id)) != 0) ||
+		(insertSetMenu && (dmi = insertSetMenu->FindItem(id)) != 0))
+	{
 		label = dmi->GetLabel();
 		return true;
 	}
 	return false;
 }
 
-bool CGuiMetaAspect::GetRoleByName(CString roleName,CComPtr<IMgaMetaRole> &theRole,bool dispName) 
+bool CGuiMetaAspect::GetRoleByName(const CString& roleName, CComPtr<IMgaMetaRole>& theRole, bool dispName) 
 {
 	CComPtr<IMgaMetaAspect> aspPt;
 	try {
@@ -724,7 +723,7 @@ bool CGuiMetaAspect::GetRoleByName(CString roleName,CComPtr<IMgaMetaRole> &theRo
 			CComPtr<IMgaMetaRole> mmRole;
 			COMTHROW(mmPart->get_Role(&mmRole));
 			CComBSTR bstr;
-			if(dispName) {
+			if (dispName) {
 				COMTHROW(mmRole->get_DisplayedName(&bstr));
 			}
 			else {
@@ -732,7 +731,7 @@ bool CGuiMetaAspect::GetRoleByName(CString roleName,CComPtr<IMgaMetaRole> &theRo
 			}
 			CString nm;
 			CopyTo(bstr,nm);
-			if(nm == roleName) {
+			if (nm == roleName) {
 				theRole = mmRole;
 			 	return true;
 			}
@@ -744,7 +743,7 @@ bool CGuiMetaAspect::GetRoleByName(CString roleName,CComPtr<IMgaMetaRole> &theRo
 	return false;
 }
 
-bool CGuiMetaAspect::GetPartByRole(CComPtr<IMgaMetaRole> &theRole,CComPtr<IMgaMetaPart> &thePart) 
+bool CGuiMetaAspect::GetPartByRole(CComPtr<IMgaMetaRole>& theRole, CComPtr<IMgaMetaPart>& thePart) 
 {
 	bool res = false;
 	CComPtr<IMgaMetaAspect> aspPt;
@@ -759,7 +758,7 @@ bool CGuiMetaAspect::GetPartByRole(CComPtr<IMgaMetaRole> &theRole,CComPtr<IMgaMe
 			mmPart = MGACOLL_ITER;
 			CComPtr<IMgaMetaRole> mmRole;
 			COMTHROW(mmPart->get_Role(&mmRole));
-			if( !res && mmRole == theRole) {
+			if (!res && mmRole == theRole) {
 				thePart = mmPart;
 			 	res = true; // we will not return any more from the middle of an iteration
 			}
@@ -771,7 +770,7 @@ bool CGuiMetaAspect::GetPartByRole(CComPtr<IMgaMetaRole> &theRole,CComPtr<IMgaMe
 	return res;
 }
 
-bool CGuiMetaAspect::IsLinkedRole(CComPtr<IMgaMetaRole> &theRole)
+bool CGuiMetaAspect::IsLinkedRole(CComPtr<IMgaMetaRole>& theRole)
 {
 	CComPtr<IMgaMetaParts> mmParts;
 	COMTHROW(theRole->get_Parts(&mmParts));
@@ -780,7 +779,7 @@ bool CGuiMetaAspect::IsLinkedRole(CComPtr<IMgaMetaRole> &theRole)
 		mmPart = MGACOLL_ITER;
 		VARIANT_BOOL linked;
 		COMTHROW(mmPart->get_IsLinked(&linked));
-		if(linked)
+		if (linked)
 			return true;
 	}
 	MGACOLL_ITERATE_END;
@@ -793,7 +792,7 @@ bool CGuiMetaAspect::IsPrimary(CComPtr<IMgaFCO> fco)
 	CComPtr<IMgaMetaRole> role;
 	COMTHROW(fco->get_MetaRole(&role));
 	CComPtr<IMgaMetaPart> part;
-	if(GetPartByRole(role,part))
+	if (GetPartByRole(role, part))
 		COMTHROW(part->get_IsPrimary(&prim));
 	return prim != VARIANT_FALSE;
 }
@@ -815,7 +814,7 @@ bool CGuiMetaAspect::IsPrimaryByRoleName(CComPtr<IMgaMetaRole> role)
 	CopyTo(bstr,roleName);
 	CComPtr<IMgaMetaPart> part;
 	CComPtr<IMgaMetaRole> newRole;
-	if(GetRoleByName(roleName,newRole) && GetPartByRole(newRole,part))
+	if (GetRoleByName(roleName, newRole) && GetPartByRole(newRole, part))
 		COMTHROW(part->get_IsPrimary(&prim));
 	return prim != VARIANT_FALSE;
 }
@@ -825,7 +824,7 @@ bool CGuiMetaAspect::CheckFcosBeforeInsertion(CComPtr<IMgaFCOs> fcos)
 	bool ok = true;
 	MGACOLL_ITERATE(IMgaFCO,fcos) {
 		CComPtr<IMgaFCO> fco = MGACOLL_ITER;
-		if(!IsPrimary(fco) && !IsPrimaryByRoleName(fco)) {
+		if (!IsPrimary(fco) && !IsPrimaryByRoleName(fco)) {
 			ok = false;
 			break;
 		}

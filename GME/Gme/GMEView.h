@@ -282,7 +282,7 @@ public:
 	void					SetObjectLocation(CComPtr<IMgaFCO>& child, CComPtr<IMgaMetaRole>& mmRole, CPoint pt);
 	void					SetScroll();
 	void					SetCenterObject(CComPtr<IMgaFCO> obj);
-	void					InsertNewPart(CString roleName, CPoint pt);
+	void					InsertNewPart(const CString& roleName, const CPoint& pt);
 	void					GetRefereeChain(IMgaFCOs* refChain, IMgaFCO* fco);
 	bool					Connect(CGuiObject* src, CGuiPort* srcPort, int srcHotSide, CGuiObject* dst, CGuiPort* dstPort,
 									int dstHotSide, bool nosticky);

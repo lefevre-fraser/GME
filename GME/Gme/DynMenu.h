@@ -4,37 +4,37 @@
 class CDynMenuItem {
 	friend class CDynMenu;
 public:
-	CDynMenuItem(int iden,CString &lab,CString &hmsg) : id(iden), label(lab), helpMsg(hmsg) {}
+	CDynMenuItem(int iden, const CString& lab, const CString& hmsg) : id(iden), label(lab), helpMsg(hmsg) {}
 protected:
 	int id;
-	CString label;
+	CString label;		// contains RoleNames actually
 	CString helpMsg;
 public:
-	CString &GetLabel()		{ return label; }
-	CString &GetHelpMsg()	{ return helpMsg; }
+	CString& GetLabel()		{ return label; }
+	CString& GetHelpMsg()	{ return helpMsg; }
 };
 
 class CDynMenu {
 public:
-	CDynMenu(int iden,char *nm);
+	CDynMenu(int iden, char *nm);
 	~CDynMenu();
 protected:
 	int id;
-	int minID,maxID;
+	int minID, maxID;
 	CString name;
 	CDynMenuItemList items;
 	CMenu menu;
 public:
 	void SetName(CString nm)	{ name = nm; }
 	void SetID(int i)			{ id = i; }
-	CMenu &GetMenu()			{ return menu; }
-	int GetMinID()				{ return minID; }
-	int GetMaxID()				{ return maxID; }
-	bool IsEmpty()				{ return items.GetCount() == 0; }
-	int GetCount()				{ return items.GetCount(); }
+	CMenu& GetMenu()			{ return menu; }
+	int GetMinID() const		{ return minID; }
+	int GetMaxID() const		{ return maxID; }
+	bool IsEmpty() const		{ return items.GetCount() == 0; }
+	int GetCount() const		{ return items.GetCount(); }
 
-	void AddItem(int id,CString &label,CString helpMsg);
-	CDynMenuItem *FindItem(int id);
+	void AddItem(int id, const CString& label, const CString& helpMsg);
+	CDynMenuItem* FindItem(int id);
 };
 
 #endif // whole file

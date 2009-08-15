@@ -137,7 +137,7 @@ public:
 class CGuiMetaAspect : public CGuiMetaBase
 {
 public:
-	CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt,CGuiMetaModel *o,int ind);
+	CGuiMetaAspect(CComPtr<IMgaMetaAspect>& mgaPt, CGuiMetaModel* o, int ind);
 	virtual ~CGuiMetaAspect();
 public:
 	CGuiMetaModel *owner;
@@ -149,13 +149,13 @@ public:
 	CGuiMetaAttributeList attrs;
 public:
 	void GetMetaAspect(CComPtr<IMgaMetaAspect> &mAspect);
-	void InitContextMenu(CMenu *menu,CString label,CDynMenu *dm);
-	void InitContextMenu(CMenu *menu);
-	void ResetContextMenu(CMenu *menu);
-	bool FindCommand(int cmdId,CString &label);
-	bool GetRoleByName(CString roleName,CComPtr<IMgaMetaRole> &theRole,bool dispName = false);
-	bool GetPartByRole(CComPtr<IMgaMetaRole> &theRole,CComPtr<IMgaMetaPart> &thePart);
-	bool IsLinkedRole(CComPtr<IMgaMetaRole> &theRole);
+	void InitContextMenu(CMenu* menu, const CString& label, CDynMenu* dm);
+	void InitContextMenu(CMenu* menu);
+	void ResetContextMenu(CMenu* menu);
+	bool FindCommand(int cmdId, CString &label);
+	bool GetRoleByName(const CString& roleName, CComPtr<IMgaMetaRole>& theRole, bool dispName = false);
+	bool GetPartByRole(CComPtr<IMgaMetaRole>& theRole, CComPtr<IMgaMetaPart>& thePart);
+	bool IsLinkedRole(CComPtr<IMgaMetaRole>& theRole);
 	bool IsPrimary(CComPtr<IMgaFCO> fco);
 	bool IsPrimaryByRoleName(CComPtr<IMgaFCO> fco);
 	bool IsPrimaryByRoleName(CComPtr<IMgaMetaRole> role);
