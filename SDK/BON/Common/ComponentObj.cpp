@@ -437,14 +437,14 @@ STDMETHODIMP COMCLASS::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,  IM
 			CBuilderObject *focus = NULL;
 			if (currentobj) {
 				CComPtr<IMgaFCO> currobj;
-				COMTHROW(terr->OpenFCO(currentobj,&currobj));
+				COMCHECK2(terr, terr->OpenFCO(currentobj,&currobj));
 				focus = CBuilder::theInstance->FindObject(currobj);
 				ASSERT( focus != NULL );
 			}
 			CBuilderObjectList objects;
 			if(selectedobjs) {
 			  CComPtr<IMgaFCOs> fcos;
-			  COMTHROW(terr->OpenFCOs(selectedobjs,&fcos));
+			  COMCHECK2(terr, terr->OpenFCOs(selectedobjs,&fcos));
 			  MGACOLL_ITERATE(IMgaFCO, fcos) {
 				CBuilderObject* o = CBuilder::theInstance->FindObject(MGACOLL_ITER);
 				ASSERT( o != NULL );
@@ -453,23 +453,26 @@ STDMETHODIMP COMCLASS::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,  IM
 			}
 
 #ifdef BON_CUSTOM_TRANSACTIONS
-			COMTHROW(project->CommitTransaction());
+			COMCHECK2(project, project->CommitTransaction());
 #endif
 
 			CComponent comp;
 			comp.InvokeEx(builder, focus, objects, param);
 
 #ifndef BON_CUSTOM_TRANSACTIONS
-			COMTHROW(project->CommitTransaction());
+			COMCHECK2(project, project->CommitTransaction());
 #endif
-		}
-		catch(Util::Exception e) {
+		} catch (Util::Exception e) {
 			pThis->HandleError(&e);
-			project->AbortTransaction(); 
+			COMTHROW(project->AbortTransaction());
+			COMTHROW(E_FAIL);
+		} catch (HRESULT) {
+			COMTHROW(project->AbortTransaction());
 			throw;
 		} catch(...) {
-			project->AbortTransaction(); 
-			throw;
+			AfxMessageBox( "Unhandled and unknown exception was thrown in BON2Component Invoke!" );
+			COMTHROW(project->AbortTransaction());
+			COMTHROW(E_FAIL);
 		}
 	}
 	COMTHROW(project->put_Preferences(prefs));
