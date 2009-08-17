@@ -326,7 +326,7 @@ std::string Any::getMyPrefix( int which /* = 0*/) const
 
 		BON::ObjectPtr p = m_ptr->getObjectI();
 		long relid = 0;
-		COMTHROW( p->get_RelID(&relid));
+		BONCOMTHROW( p->get_RelID(&relid));
 		char t[16];
 		sprintf( t, "%x", relid);
 

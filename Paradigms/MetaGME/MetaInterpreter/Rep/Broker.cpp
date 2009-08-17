@@ -4,6 +4,7 @@
 #include "Broker.h"
 #include "AspectRep.h"
 #include "map"
+#include "Exceptions.h"
 
 /* static vars to be initialized */
 int	Broker::m_constraintId = 1;
@@ -59,7 +60,7 @@ std::string Broker::getRegistryTokenName( const BON::Object& obj)
 
 	BON::ObjectPtr p = obj->getObjectI();
 	long relid = 0;
-	COMTHROW( p->get_RelID(&relid));
+	BONCOMTHROW( p->get_RelID(&relid));
 	char t[16];
 	sprintf( t, "%x", relid);
 

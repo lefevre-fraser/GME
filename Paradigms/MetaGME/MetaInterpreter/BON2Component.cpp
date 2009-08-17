@@ -170,7 +170,7 @@ void Component::initMembers( Project& project)
 	{
 		CComPtr<IMgaProject> mgaProject = project->getProjectI();
 		CComBSTR    connString;
-		COMTHROW(mgaProject->get_ProjectConnStr(&connString));
+		BONCOMTHROW(mgaProject->get_ProjectConnStr(&connString));
 		std::string path = Util::Copy( connString);
 		int e = path.rfind('\\');
 		if( e != std::string::npos && path.substr(0, 4) == "MGA=") m_dir = path.substr(4, e-3); // cut leading "MGA=" , preserve tailing '\\'
