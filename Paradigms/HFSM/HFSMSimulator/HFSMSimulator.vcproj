@@ -228,6 +228,10 @@
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Console.cpp"
 				>
 			</File>
+                        <File
+                                RelativePath="$(GME_ROOT)\SDK\BON\Common\Exceptions.cpp"
+                                >
+                        </File>
 			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Formatter.cpp"
 				>
