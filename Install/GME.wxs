@@ -54,8 +54,17 @@
 
     <?include GME_dyn.wxi ?>
     
-    <Product Name='GME' Id='EFA35770-E6FA-4d20-A5FC-A6142C227A42' UpgradeCode='dfdd761e-0979-4897-ac89-71f006d92bf8'
-        Language='1033' Codepage='1252' Version='$(var.VERSIONSTR)' Manufacturer='Vanderbilt University, ISIS'>    
+    <Product Name='GME' Id='*' UpgradeCode='dfdd761e-0979-4897-ac89-71f006d92bf8'
+        Language='1033' Codepage='1252' Version='$(var.VERSIONSTR)' Manufacturer='Vanderbilt University, ISIS'>
+        
+        <Upgrade Id="575c3a35-c428-49be-a50a-4ffd09c5de88">
+            <UpgradeVersion Minimum="$(var.VERSIONSTR)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/>
+            <UpgradeVersion Minimum="1.0.0" IncludeMinimum="yes" Maximum="$(var.VERSIONSTR)" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED"/>
+        </Upgrade>
+        
+        <InstallExecuteSequence>
+            <RemoveExistingProducts After="InstallInitialize" />
+        </InstallExecuteSequence>
 
         <Package Id='*' Keywords='GME, MIC, modeling, domain specific languages' Description='Generic Modeling Environment Installer'
             Manufacturer='Vanderbilt University, ISIS'
