@@ -105,14 +105,15 @@ void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 				COMTHROW(spRole->get_Kind(&spMetaFCO));
 
 				if (!bTextDefined) {
-					COMTHROW(spRole->get_DisplayedName(&bstrText));
-					//if (bstrText.Length() == 0) {
-					//	bstrText.Empty();
-					//	COMTHROW(spMetaFCO->get_DisplayedName(&bstrText));
-					//}
-					if (bstrText.Length() == 0) {
-						bstrText.Empty();
-						COMTHROW(spMetaFCO->get_Name(&bstrText));
+					CComBSTR bstrKindName;
+					COMTHROW(spMetaFCO->get_Name(&bstrKindName));
+					CComBSTR bstrRoleName;
+					COMTHROW(spRole->get_Name(&bstrRoleName));
+					if (bstrKindName == bstrRoleName) {
+						COMTHROW(spMetaFCO->get_DisplayedName(&bstrText));
+					}
+					else {
+						bstrText = bstrRoleName;
 					}
 				}
 			}

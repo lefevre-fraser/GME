@@ -374,14 +374,25 @@ void CPartBrowserPane::ChangeAspect(int index)
 			if (maxSize.cy < size.cy)
 				maxSize.cy = size.cy;
 
-			CComBSTR nameBStr;
-//			HRESULT hr = (*ii).part->get_DisplayedName(&nameBStr);
-//			if (FAILED(hr) || nameBStr.Length() == 0) {
-//				nameBStr.Empty();
-				COMTHROW((*ii).part->get_Name(&nameBStr));
-//			}
+			CComPtr<IMgaMetaRole> mmRole;
+			COMTHROW((*ii).part->get_Role(&mmRole));
+			CComPtr<IMgaMetaFCO> kind;
+			COMTHROW(mmRole->get_Kind(&kind));
+
 			CString nameCString;
-			CopyTo(nameBStr, nameCString);
+			CComBSTR bstrKindName;
+			COMTHROW(kind->get_Name(&bstrKindName));
+			CComBSTR bstrRoleName;
+			COMTHROW(mmRole->get_Name(&bstrRoleName));
+			if (bstrKindName == bstrRoleName) {
+				CComBSTR bstrDisplayedName;
+				COMTHROW(kind->get_DisplayedName(&bstrDisplayedName));
+				CopyTo(bstrDisplayedName,nameCString);
+			}
+			else {
+				CopyTo(bstrRoleName,nameCString);
+			}
+
 			int text_cx = textMetric.GetTextExtent(nameCString).cx;
 			if (maxSize.cx < text_cx)
 				maxSize.cx = text_cx;

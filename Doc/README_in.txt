@@ -31,6 +31,13 @@ guaranteed.
 ************************************************
 
 
+Release Notes of Release NEXT
+-------------------------------
+  - GUI uses the DisplayedName property if role name and 
+    kind name matches
+  - The GME isntaller automatically uninstalls previous GME
+    instances
+    
 Release Notes of Release r9.8.7
 -------------------------------
   - User manual update

@@ -972,8 +972,21 @@ void CAggregateContextMenu::SetModelChildren(LPUNKNOWN pUnknown)
 	MGACOLL_ITERATE(IMgaMetaRole, ccpMetaRoles) 
 	{
 		// Get displayed name
-		CComBSTR bszDispName;		
-		COMTHROW( MGACOLL_ITER->get_DisplayedName(&bszDispName) );
+		CComBSTR bszDispName;
+
+		CComPtr<IMgaMetaFCO> kind;
+		COMTHROW(MGACOLL_ITER->get_Kind(&kind));
+		CComBSTR bstrKindName;
+		COMTHROW(kind->get_Name(&bstrKindName));
+		CComBSTR bstrRoleName;
+		COMTHROW(MGACOLL_ITER->get_Name(&bstrRoleName));
+		if (bstrKindName == bstrRoleName) {
+			COMTHROW(kind->get_DisplayedName(&bszDispName));
+		}
+		else {
+			bszDispName = bstrRoleName;
+		}
+
 		
 		// Getting object type
 		CComPtr<IMgaMetaFCO> ccpMetaFCO;

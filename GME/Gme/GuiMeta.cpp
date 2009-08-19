@@ -585,10 +585,21 @@ CGuiMetaAspect::CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt, CGuiMetaModel* o,
 				COMTHROW(mmPart->get_Role(&mmRole));
 				CComPtr<IMgaMetaFCO> kind;
 				COMTHROW(mmRole->get_Kind(&kind));
-				CComBSTR bstr;
-				COMTHROW(mmRole->get_DisplayedName(&bstr));
+
 				CString label;
-				CopyTo(bstr,label);
+				CComBSTR bstrKindName;
+				COMTHROW(kind->get_Name(&bstrKindName));
+				CComBSTR bstrRoleName;
+				COMTHROW(mmRole->get_Name(&bstrRoleName));
+				if (bstrKindName == bstrRoleName) {
+					CComBSTR bstrDisplayedName;
+					COMTHROW(kind->get_DisplayedName(&bstrDisplayedName));
+					CopyTo(bstrDisplayedName,label);
+				}
+				else {
+					CopyTo(bstrRoleName,label);
+				}
+
 				objtype_enum type;
 				COMTHROW(kind->get_ObjType(&type));
 				switch(type) {
