@@ -35,8 +35,9 @@ Release Notes of Release NEXT
 -------------------------------
   - GUI uses the DisplayedName property if role name and 
     kind name matches
-  - The GME isntaller automatically uninstalls previous GME
+  - The GME installer automatically uninstalls previous GME
     instances
+  - Removed ModelMigrate tool
     
 Release Notes of Release r9.8.7
 -------------------------------

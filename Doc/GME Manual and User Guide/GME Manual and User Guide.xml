@@ -96,8 +96,8 @@
                       </listitem>
 
                       <listitem>
-                        <para>Shift + mouse wheel over Model Editor scrolls the
-                        model horizontally.</para>
+                        <para>Shift + mouse wheel over Model Editor scrolls
+                        the model horizontally.</para>
                       </listitem>
 
                       <listitem>
@@ -202,8 +202,8 @@
           <listitem>
             <para>Development:<itemizedlist>
                 <listitem>
-                  <para>New decorator interface, decorator development
-                  is supported by Visual Studio Wizard</para>
+                  <para>New decorator interface, decorator development is
+                  supported by Visual Studio Wizard</para>
                 </listitem>
 
                 <listitem>
@@ -3799,16 +3799,14 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         <para>The downside of modifying the internal representation of
         elements (assigning unique ids) is that backward compatibility was
         broken in case of XML files. A model created with a new version of GME
-        and exported in .xme file will not be read by older GME releases. In
-        order to help users in such a situation we provide an XSLT script
-        which can be used with the ModelMigrate tool (or any other XSLT
-        transformer engine) to remove the unreadable XML attributes (such as
-        GUIDs) from a .xme file. The forward compatibility in case of .xme
-        files is trivial, unique ids are assigned on the fly when importing
-        files created with old versions of GME. Binary forward compatibility
-        (.mga files) is also made possible with an on the fly assignment of
-        unique ids upon the <guimenuitem
-        moreinfo="none">OpenProject</guimenuitem> operation.</para>
+        and exported as a <filename>.xme</filename> file will not be read by
+        older GME releases.The forward compatibility in case of
+        <filename>.xme</filename> files is trivial; unique ids are assigned on
+        the fly when importing files created with old versions of GME. Binary
+        forward compatibility (<filename>.mga</filename> files) is also made
+        possible with an on the fly assignment of unique ids upon the
+        <guimenuitem moreinfo="none">OpenProject</guimenuitem>
+        operation.</para>
       </section>
     </section>
 
@@ -4735,8 +4733,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         <title><code>IMgaElementDecoratorEvents</code> Functions</title>
 
         <para><programlisting format="linespecific">HRESULT Refresh([in] refresh_mode_enum refreshMode)</programlisting>
-        This function signals to GME that a UI refresh is needed. The decorator can specify to GME what kind of refresh
-        is wanted:
+        This function signals to GME that a UI refresh is needed. The
+        decorator can specify to GME what kind of refresh is wanted:
         <itemizedlist>
             <listitem>
               <para><code>RM_NOREFRESH</code> : No refresh</para>
@@ -4747,20 +4745,22 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
             </listitem>
 
             <listitem>
-              <para><code>RM_REGENERATE_SELF</code> : complete refresh of the owner model's view including
-              regeneration of the decorators</para>
+              <para><code>RM_REGENERATE_SELF</code> : complete refresh of the
+              owner model's view including regeneration of the
+              decorators</para>
             </listitem>
 
             <listitem>
-              <para><code>RM_REGENERATE_PARENT_ALSO</code> : complete refresh of the owner model's parent model's view
-              (if it is open) including regeneration of the decorators</para>
+              <para><code>RM_REGENERATE_PARENT_ALSO</code> : complete refresh
+              of the owner model's parent model's view (if it is open)
+              including regeneration of the decorators</para>
             </listitem>
 
             <listitem>
-              <para><code>RM_REGENERATE_ALL_VIEWS</code> : regeneration of all open
-              views</para>
+              <para><code>RM_REGENERATE_ALL_VIEWS</code> : regeneration of all
+              open views</para>
             </listitem>
-        </itemizedlist></para>
+          </itemizedlist></para>
 
         <para><programlisting format="linespecific">HRESULT OperationCanceled()</programlisting>The
         decorator signals GME that an initiated operation was canceled because
@@ -4947,18 +4947,18 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para>The first time you wish to create a decorator project, you must
       run <filename moreinfo="none">C:\Program
-      Files\GME\SDK\DecoratorWizard\setup90.js</filename>. This registers the decorator
-      project type in Visual Studio.</para>
+      Files\GME\SDK\DecoratorWizard\setup90.js</filename>. This registers the
+      decorator project type in Visual Studio.</para>
 
-      <para>To create a Decorator project, open Visual Studio 2008. Go to <guimenu
-      moreinfo="none">File</guimenu> | <guisubmenu
+      <para>To create a Decorator project, open Visual Studio 2008. Go to
+      <guimenu moreinfo="none">File</guimenu> | <guisubmenu
       moreinfo="none">New</guisubmenu> <guimenuitem
       moreinfo="none">Project</guimenuitem>. Under <guimenu
       moreinfo="none">Visual C++</guimenu>, select <guisubmenu
-      moreinfo="none">GME</guisubmenu>, then the Decorator template.
-      Give the project a name, then hit <guilabel
-      moreinfo="none">OK</guilabel>. The wizard generates UUIDs/CLSIDs/GUIDs
-      automatically, and does every required modification to the skeleton code.</para>
+      moreinfo="none">GME</guisubmenu>, then the Decorator template. Give the
+      project a name, then hit <guilabel moreinfo="none">OK</guilabel>. The
+      wizard generates UUIDs/CLSIDs/GUIDs automatically, and does every
+      required modification to the skeleton code.</para>
 
       <figure>
         <title>Starting the Decorator Wizard</title>
@@ -4970,11 +4970,11 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         </mediaobject>
       </figure>
 
-      <para>The resulting configuration is a ready-to-compile Visual Studio 2008
-      Solution leveraging capabilites of the new <code>DecoratorLib</code>
-      library. The user is expected to
-      implement the component by modifying appropriate files of the skeleton code.
-      For further details see the section on <code>DecoratorLib</code>.</para>
+      <para>The resulting configuration is a ready-to-compile Visual Studio
+      2008 Solution leveraging capabilites of the new
+      <code>DecoratorLib</code> library. The user is expected to implement the
+      component by modifying appropriate files of the skeleton code. For
+      further details see the section on <code>DecoratorLib</code>.</para>
 
       <para>After building the project, the decorator
       <filename>.dll</filename> is registered.</para>
@@ -4984,8 +4984,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       <title>Using the Decorator skeleton example code</title>
 
       <para>The recommended method for decorator development is the Decorator
-      Wizard, see previous section. If for some reason you want to edit skeleton codes
-      directly, there are still two types of skeleton project provided in the SDK.</para>
+      Wizard, see previous section. If for some reason you want to edit
+      skeleton codes directly, there are still two types of skeleton project
+      provided in the SDK.</para>
 
       <para>The <code>NewDecoratorKit</code> sample takes advantage of the
       class hierarchy and utilities provided by the new
@@ -4995,12 +4996,14 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       editing features from the infrastructure. It also demonstrates context
       menu usage and drag-drop handling.</para>
 
-      <para>In case of the <code>NewDecoratorKit</code> decorator you first have to adjust
-      <code>DecoratorLib.vcproj</code> project file path (this is part of the solution)
-      in the Visual Studio Solution file. Unfortunately in case of Solution (<code>.sln</code>) files
-      Visual Studio cannot resolve environment variables so <code>GME_ROOT</code> cannot be used.
-      Your solution's relative path is probably different from the SDK sample so you have to tune it.
-      This is not a problem with the Wizard because it does this all automatically.</para>
+      <para>In case of the <code>NewDecoratorKit</code> decorator you first
+      have to adjust <code>DecoratorLib.vcproj</code> project file path (this
+      is part of the solution) in the Visual Studio Solution file.
+      Unfortunately in case of Solution (<code>.sln</code>) files Visual
+      Studio cannot resolve environment variables so <code>GME_ROOT</code>
+      cannot be used. Your solution's relative path is probably different from
+      the SDK sample so you have to tune it. This is not a problem with the
+      Wizard because it does this all automatically.</para>
 
       <para>The <code>DecoratorKit</code> source code provides a really
       stripped down example implementation containing only the flat
@@ -5108,8 +5111,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
 
           <listitem>
-            <para>Add <code>DecoratorLib.vcproj</code> project (located in the SDK) into your Solution,
-            and set it as a dependency prerequisite for your Decorator project</para>
+            <para>Add <code>DecoratorLib.vcproj</code> project (located in the
+            SDK) into your Solution, and set it as a dependency prerequisite
+            for your Decorator project</para>
           </listitem>
 
           <listitem>
@@ -5117,11 +5121,12 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
           </listitem>
         </itemizedlist></para>
 
-      <para>It is recommended to use the Decorator Wizard to start the development.
-      If you start from scratch for some reason, you can start your project based on the
-      <code>NewDecoratorKit</code> sample decorator, or one of the existing
-      decorators, which are part of the GME source code: MgaDecorators, UML
-      decorator (source can be found in the SDK also) or Meta decorator.</para>
+      <para>It is recommended to use the Decorator Wizard to start the
+      development. If you start from scratch for some reason, you can start
+      your project based on the <code>NewDecoratorKit</code> sample decorator,
+      or one of the existing decorators, which are part of the GME source
+      code: MgaDecorators, UML decorator (source can be found in the SDK also)
+      or Meta decorator.</para>
 
       <para>The new class library hierarchy is based on the
       <code>PartInterface</code> C++ interface which is higher-level and much
