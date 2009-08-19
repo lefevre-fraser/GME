@@ -106,10 +106,6 @@ def compile_tools():
     sln_file = os.path.join(GME_ROOT, "Tools", "AutoLayout", "AutoLayout.sln");
     tools.build_VS( sln_file, "Release" )
     
-    # Model Migrate - Does not compile currently
-    #sln_file = os.path.join(GME_ROOT, "Tools", "ModelMigrate", "ModelMigrate.sln");
-    #tools.build_VS( sln_file, "Release" )
-    
     # GME Merge
     sln_file = os.path.join(GME_ROOT, "Tools", "GMEMerge", "GMEMerge.sln");
     tools.build_VS( sln_file, "Release" )
