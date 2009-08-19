@@ -31,7 +31,7 @@ guaranteed.
 ************************************************
 
 
-Release Notes of Release NEXT
+Release Notes of Release r9.8.19
 -------------------------------
   - GUI uses the DisplayedName property if role name and 
     kind name matches
