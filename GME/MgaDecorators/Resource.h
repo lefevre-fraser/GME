@@ -21,6 +21,7 @@
 #define IDB_MODELPORT                   176
 #define IDB_ICON_TYPE                   201
 #define IDC_TEXTEDIT                    201
+#define IDC_INPLACETEXTEDIT             201
 #define IDB_ICON_SUBTYPE                202
 #define IDB_ICON_INSTANCE               203
 #define IDB_ICON_REFERENCE              204
@@ -29,6 +30,8 @@
 #define IDB_ICON_REFERENCE_DIS          207
 #define IDB_ICON_SUBTYPE_DIS            208
 #define IDB_ICON_TYPE_DIS               209
+#define IDD_INPLACEEDITSLDIALOG         211
+#define IDD_INPLACEEDITMLDIALOG         212
 #define IDB_EXPAND_SIGN                 212
 #define IDB_COLLAPSE_SIGN               213
 
