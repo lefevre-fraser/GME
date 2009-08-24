@@ -74,7 +74,7 @@ namespace Util
 {
 	Exception& Exception::operator << ( char pch)
 	{
-		addParameter( "" + pch);
+		addParameter( std::string(1, pch));
 		return *this;
 	}
 

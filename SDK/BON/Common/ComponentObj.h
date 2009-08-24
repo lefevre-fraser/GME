@@ -197,6 +197,7 @@ public:
 }; // CComponentObj
 
 
+#ifndef __AFXPRIV_H__
 
 class CPushRoutingFrame
 {
@@ -214,6 +215,9 @@ public:
 	~CPushRoutingFrame()
 	{ pThreadState->m_pRoutingFrame = pOldRoutingFrame; }
 };
+
+#endif // __AFXPRIV_H__
+
 
 
 
