@@ -185,12 +185,6 @@ VectorCommand VectorPart::GetCommand(long index) const
 	return m_Commands[index];
 }
 
-feature_code VectorPart::GetFeatures(void) const
-{
-	// TODO: it depends, if it is resizable
-	return F_RESIZABLE | F_MOUSEEVENTS;
-}
-
 void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	if (m_Commands.size() <= 0)

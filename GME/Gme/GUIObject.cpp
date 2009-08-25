@@ -578,6 +578,22 @@ bool CGuiAnnotator::IsVisible(int aspect)
 	return (decoratorData[aspect]->decorator != NULL);
 }
 
+bool CGuiAnnotator::IsResizable(void) const
+{
+	if (decoratorData[parentAspect]->decorator) {
+		try {
+			feature_code fc = 0;
+			COMTHROW(decoratorData[parentAspect]->decorator->GetFeatures(&fc));
+			return ((fc & F_RESIZABLE) != 0);
+		}
+		catch (hresult_exception &) {
+			AfxMessageBox("Error in annotator [method IsResizable()]");
+		}
+	}
+
+	return false;
+}
+
 void CGuiAnnotator::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 {
 	if (decoratorData[parentAspect]->decorator) {
@@ -1859,6 +1875,27 @@ void CGuiObject::GetRectList(CGuiObjectList& objList, CRectList& rects)
 		CRect* rect = new CRect(objList.GetNext(pos)->GetLocation());
 		rects.AddTail(rect);
 	}
+}
+
+bool CGuiObject::IsResizable(void)
+{
+	VERIFY(parentAspect >= 0);
+	VERIFY(GetCurrentAspect());
+
+	try {
+		feature_code fc = 0;
+		CGuiAspect* aspect = GetCurrentAspect();
+		if (aspect->GetNewDecorator())
+			COMTHROW(GetCurrentAspect()->GetNewDecorator()->GetFeatures(&fc));
+		else
+			COMTHROW(GetCurrentAspect()->GetDecorator()->GetFeatures(&fc));
+		return ((fc & F_RESIZABLE) != 0);
+	}
+	catch (hresult_exception &) {
+		AfxMessageBox("Error in CGuiObject [method IsResizable()]");
+	}
+
+	return false;
 }
 
 

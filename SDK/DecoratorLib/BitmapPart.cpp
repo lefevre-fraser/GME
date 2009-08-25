@@ -31,12 +31,6 @@ BitmapPart::~BitmapPart()
 {
 }
 
-feature_code BitmapPart::GetFeatures(void) const
-{
-	// TODO: it depends, if it is resizable
-	return F_RESIZABLE | F_MOUSEEVENTS;
-}
-
 CSize BitmapPart::GetPreferredSize(void) const
 {
 	CSize size = VectorPart::GetPreferredSize();

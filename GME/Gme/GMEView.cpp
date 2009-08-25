@@ -843,7 +843,9 @@ void CGMEView::OnDraw(CDC* pDC)
 					obj = selected.GetNext(pos);
 					tracker.m_rect = obj->GetLocation();
 					pDC->LPtoDP(&tracker.m_rect);
-					tracker.m_nStyle = CRectTracker::solidLine | CRectTracker::resizeInside;
+					tracker.m_nStyle = CRectTracker::solidLine;
+					if (obj->IsResizable())
+						tracker.m_nStyle |= CRectTracker::resizeInside;
 					tracker.Draw(pDC);
 				}
 
@@ -855,7 +857,9 @@ void CGMEView::OnDraw(CDC* pDC)
 					{
 						tracker.m_rect = ann->GetLocation();
 						pDC->LPtoDP(&tracker.m_rect);
-						tracker.m_nStyle = CRectTracker::solidLine | CRectTracker::resizeInside;
+						tracker.m_nStyle = CRectTracker::solidLine;
+						if (ann->IsResizable())
+							tracker.m_nStyle |= CRectTracker::resizeInside;
 						tracker.Draw(pDC);
 					}
 				}

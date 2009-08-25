@@ -231,7 +231,6 @@ public:
 
 // =============== resembles IMgaElementDecorator
 public:
-	virtual feature_code	GetFeatures			(void) const;
 	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

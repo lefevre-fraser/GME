@@ -35,8 +35,6 @@ public:
 
 // =============== resembles IMgaElementDecorator
 public:
-	virtual feature_code	GetFeatures			(void) const;
-
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 

@@ -126,6 +126,7 @@ public:
 	void ToggleGrayOut()							{ GrayOut(!grayedOut); }
 	void SetAspect(int a)							{ parentAspect = (a < numParentAspects ? a : 0); }
 	bool IsVisible(int aspect = -1);
+	bool IsResizable(void) const;
 	bool IsSpecial()                                { return special; }
 	void Draw(HDC pDC, Gdiplus::Graphics* gdip);
 	void GrayOut(bool set = true);
@@ -288,6 +289,7 @@ public:
 	static void GetRectList(CGuiObjectList& objList, CRectList& rects);
 
 	virtual bool IsVisible(int aspect = -1)				{ return guiAspects[(aspect < 0 ? parentAspect : aspect)] != NULL; }
+	virtual bool IsResizable(void);
 	virtual void RemoveFromRouter(CAutoRouter& router)	{ router.DeleteObject(this); }
 	virtual void Draw(HDC pDC, Gdiplus::Graphics* gdip);
 	virtual void GrayOut(bool set);

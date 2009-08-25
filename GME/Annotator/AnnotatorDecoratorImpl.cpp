@@ -83,7 +83,10 @@ STDMETHODIMP CAnnotatorDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 
 STDMETHODIMP CAnnotatorDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 {
-	*pFeatureCodes = F_RESIZABLE | F_HASLABEL | F_MOUSEEVENTS | F_RESIZEAFTERMOD;
+	if (m_pElementDecorator != NULL)
+		*pFeatureCodes = m_pElementDecorator->GetFeatures();
+	else
+		*pFeatureCodes = F_HASLABEL | F_MOUSEEVENTS;
 
 	return S_OK;
 }

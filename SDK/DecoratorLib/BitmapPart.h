@@ -41,7 +41,6 @@ public:
 
 // =============== resembles IMgaElementDecorator
 public:
-	virtual feature_code	GetFeatures			(void) const;
 	virtual CSize			GetPreferredSize	(void) const;
 	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 

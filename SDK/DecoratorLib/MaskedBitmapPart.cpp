@@ -30,11 +30,6 @@ MaskedBitmapPart::~MaskedBitmapPart()
 {
 }
 
-feature_code MaskedBitmapPart::GetFeatures(void) const
-{
-	return F_RESIZABLE | F_MOUSEEVENTS;
-}
-
 // New functions
 void MaskedBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 										HWND parentWnd, PreferenceMap& preferences)

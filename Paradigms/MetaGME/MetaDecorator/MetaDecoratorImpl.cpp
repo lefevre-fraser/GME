@@ -83,7 +83,10 @@ STDMETHODIMP CMetaDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 
 STDMETHODIMP CMetaDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 {
-	*pFeatureCodes = F_RESIZABLE | F_HASLABEL | F_HASPORTS;
+	if (m_pElementDecorator != NULL)
+		*pFeatureCodes = m_pElementDecorator->GetFeatures();
+	else
+		*pFeatureCodes = F_RESIZABLE | F_HASLABEL | F_HASPORTS;
 
 	return S_OK;
 }

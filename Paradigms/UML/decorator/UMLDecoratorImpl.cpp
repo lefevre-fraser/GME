@@ -82,7 +82,10 @@ STDMETHODIMP CUMLDecoratorImpl::GetMnemonic(BSTR* bstrMnemonic)
 
 STDMETHODIMP CUMLDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 {
-	*pFeatureCodes = F_HASLABEL;
+	if (m_pElementDecorator != NULL)
+		*pFeatureCodes = m_pElementDecorator->GetFeatures();
+	else
+		*pFeatureCodes = F_HASLABEL;
 
 	return S_OK;
 }
