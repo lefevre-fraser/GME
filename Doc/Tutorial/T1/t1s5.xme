@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{00000000-0000-0000-0000-000000000000}" cdate="Thu Mar 11 20:03:56 2004" mdate="Thu Mar 11 20:03:57 2004" metaguid="{66BBE690-DEAD-BEEF-FEED-DAD000000001}" metaname="MetaGME">
-	<name>FSM-Meta</name>
+<project guid="{72756FC9-DF91-40A8-806C-FFC6101E8372}" cdate="Tue Aug 25 09:32:50 2009" mdate="Tue Aug 25 09:32:50 2009" version="" metaguid="{9D3F9884-FE60-409C-8FC1-45789193989B}" metaversion="" metaname="MetaGME">
+	<name>FSM_Meta</name>
 	<comment></comment>
 	<author></author>
-	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x1" kind="RootFolder">
-		<name>FSM-Meta</name>
-		<regnode name="AspectRegistry">
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x1" kind="RootFolder" guid="{ce9f7d40-1ade-4b13-aed9-2b815b81485f}">
+		<name>FSM_Meta</name>
+		<regnode name="AspectRegistry" isopaque="yes">
 			<value></value>
-			<regnode name="AspectMetaRefs">
+			<regnode name="AspectMetaRefs" isopaque="yes">
 				<value></value>
-				<regnode name="FSM">
+				<regnode name="FSM" isopaque="yes">
 					<value></value>
-					<regnode name="MetaRef">
+					<regnode name="MetaRef" isopaque="yes">
 						<value></value>
 						<regnode name="State" isopaque="yes">
 							<value>1005</value>
@@ -28,13 +28,13 @@
 				</regnode>
 			</regnode>
 		</regnode>
-		<regnode name="NewParadigmSheet">
+		<regnode name="NewParadigmSheet" isopaque="yes">
 			<value></value>
-			<regnode name="State-1-Model">
+			<regnode name="State-1-Model" isopaque="yes">
 				<value></value>
-				<regnode name="KindAspects">
+				<regnode name="KindAspects" isopaque="yes">
 					<value></value>
-					<regnode name="State:State">
+					<regnode name="State:State" isopaque="yes">
 						<value></value>
 						<regnode name="FSM" isopaque="yes">
 							<value> </value>
@@ -43,7 +43,7 @@
 				</regnode>
 				<regnode name="MetaRef" isopaque="yes">
 					<value>1002</value>
-					<regnode name="State">
+					<regnode name="State" isopaque="yes">
 						<value></value>
 						<regnode name="State" isopaque="yes">
 							<value>1003</value>
@@ -53,9 +53,9 @@
 						</regnode>
 					</regnode>
 				</regnode>
-				<regnode name="PrimaryAspects">
+				<regnode name="PrimaryAspects" isopaque="yes">
 					<value></value>
-					<regnode name="State:State">
+					<regnode name="State:State" isopaque="yes">
 						<value></value>
 						<regnode name="FSM" isopaque="yes">
 							<value>yes</value>
@@ -63,11 +63,11 @@
 					</regnode>
 				</regnode>
 			</regnode>
-			<regnode name="Transition-2-Connection">
+			<regnode name="Transition-2-Connection" isopaque="yes">
 				<value></value>
 				<regnode name="MetaRef" isopaque="yes">
 					<value>1001</value>
-					<regnode name="State">
+					<regnode name="State" isopaque="yes">
 						<value></value>
 						<regnode name="Transition" isopaque="yes">
 							<value>1004</value>
@@ -77,9 +77,9 @@
 						</regnode>
 					</regnode>
 				</regnode>
-				<regnode name="PrimaryAspects">
+				<regnode name="PrimaryAspects" isopaque="yes">
 					<value></value>
-					<regnode name="State:Transition">
+					<regnode name="State:Transition" isopaque="yes">
 						<value></value>
 						<regnode name="FSM" isopaque="yes">
 							<value>yes</value>
@@ -88,12 +88,18 @@
 				</regnode>
 			</regnode>
 		</regnode>
-		<model id="id-0065-00000001" kind="ParadigmSheet" relid="0x1" childrelidcntr="0xe">
+		<model id="id-0065-00000001" kind="ParadigmSheet" guid="{41191b44-1c0b-42dd-8177-5bb1e1f46cd7}" relid="0x1" childrelidcntr="0xe">
 			<name>NewParadigmSheet</name>
-			<atom id="id-0066-00000001" kind="Connector" role="Connector" relid="0x7">
+			<atom id="id-0066-00000001" kind="Connector" role="Connector" guid="{6b37c7bf-dfcc-4352-bbfc-12121d18d61e}" relid="0x7">
 				<name>Connector</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>207,235</value>
+						</regnode>
+					</regnode>
 					<regnode name="ClassDiagram" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -108,10 +114,16 @@
 					</regnode>
 				</regnode>
 			</atom>
-			<atom id="id-0066-00000002" kind="Connection" role="Connection" relid="0x2">
+			<atom id="id-0066-00000002" kind="Connection" role="Connection" guid="{69bd2cf6-72db-472f-8179-aaca50384784}" relid="0x2">
 				<name>Transition</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>277,161</value>
+						</regnode>
+					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -167,6 +179,12 @@
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsAutoRouted" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="LabelFormatStr" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="NamePosition" status="meta">
 					<value>4</value>
 				</attribute>
@@ -177,10 +195,16 @@
 					<value></value>
 				</attribute>
 			</atom>
-			<atom id="id-0066-00000003" kind="Model" role="Model" relid="0x1">
+			<atom id="id-0066-00000003" kind="Model" role="Model" guid="{48fc2f41-9073-433b-aca1-cc105a6305cb}" relid="0x1">
 				<name>State</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>88,154</value>
+						</regnode>
+					</regnode>
 					<regnode name="Attributes" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
@@ -206,6 +230,9 @@
 						</regnode>
 					</regnode>
 				</regnode>
+				<attribute kind="AutoRouterPref" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="Decorator" status="meta">
 					<value></value>
 				</attribute>
@@ -213,6 +240,15 @@
 					<value></value>
 				</attribute>
 				<attribute kind="GeneralPreferences" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="GradientFillColor" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="GradientFillDirection" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="HelpURL" status="meta">
 					<value></value>
 				</attribute>
 				<attribute kind="Icon" status="meta">
@@ -227,11 +263,26 @@
 				<attribute kind="IsAbstract" status="meta">
 					<value>false</value>
 				</attribute>
+				<attribute kind="IsGradientFillEnabled" status="meta">
+					<value>false</value>
+				</attribute>
 				<attribute kind="IsHotspotEnabled" status="meta">
+					<value>true</value>
+				</attribute>
+				<attribute kind="IsModelAutoRouted" status="meta">
 					<value>true</value>
 				</attribute>
 				<attribute kind="IsNameEnabled" status="meta">
 					<value>true</value>
+				</attribute>
+				<attribute kind="IsResizable" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="IsRoundRectangleEnabled" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="IsShadowCastEnabled" status="meta">
+					<value>false</value>
 				</attribute>
 				<attribute kind="IsTypeInfoShown" status="meta">
 					<value>true</value>
@@ -248,11 +299,23 @@
 				<attribute kind="PortIcon" status="meta">
 					<value></value>
 				</attribute>
+				<attribute kind="RoundRectangleRadius" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowColor" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowDirection" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ShadowThickness" status="meta">
+					<value></value>
+				</attribute>
 				<attribute kind="SubTypeIcon" status="meta">
 					<value></value>
 				</attribute>
 			</atom>
-			<connection id="id-0068-00000001" kind="SourceToConnector" role="SourceToConnector" relid="0x8">
+			<connection id="id-0068-00000001" kind="SourceToConnector" role="SourceToConnector" guid="{fc7f11b5-c328-4433-a240-9b11ab2c5fb1}" relid="0x8">
 				<name>SourceToConnector</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>Sw</value>
@@ -266,7 +329,7 @@
 				<connpoint role="dst" target="id-0066-00000001"/>
 				<connpoint role="src" target="id-0066-00000003"/>
 			</connection>
-			<connection id="id-0068-00000002" kind="ConnectorToDestination" role="ConnectorToDestination" relid="0x9">
+			<connection id="id-0068-00000002" kind="ConnectorToDestination" role="ConnectorToDestination" guid="{cd8a0186-4c44-495d-912b-23f1550f4aa2}" relid="0x9">
 				<name>ConnectorToDestination</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>Ne</value>
@@ -280,7 +343,7 @@
 				<connpoint role="src" target="id-0066-00000001"/>
 				<connpoint role="dst" target="id-0066-00000003"/>
 			</connection>
-			<connection id="id-0068-00000003" kind="AssociationClass" role="AssociationClass" relid="0xa">
+			<connection id="id-0068-00000003" kind="AssociationClass" role="AssociationClass" guid="{d1b1e240-f9d1-48a3-8220-3af6240458ba}" relid="0xa">
 				<name>AssociationClass</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>Se</value>
@@ -288,7 +351,7 @@
 				<connpoint role="dst" target="id-0066-00000001"/>
 				<connpoint role="src" target="id-0066-00000002"/>
 			</connection>
-			<connection id="id-0068-00000004" kind="Containment" role="Containment" relid="0xb">
+			<connection id="id-0068-00000004" kind="Containment" role="Containment" guid="{2db21b55-ba30-45fc-b1a3-b40c93cc0091}" relid="0xb">
 				<name>Containment</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>Wn</value>
@@ -305,7 +368,7 @@
 				<connpoint role="dst" target="id-0066-00000003"/>
 				<connpoint role="src" target="id-0066-00000003"/>
 			</connection>
-			<connection id="id-0068-00000005" kind="HasAspect" role="HasAspect" relid="0xd">
+			<connection id="id-0068-00000005" kind="HasAspect" role="HasAspect" guid="{1ec36705-5133-40f8-a4d7-79f1157009a9}" relid="0xd">
 				<name>HasAspect</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>Sn</value>
@@ -313,7 +376,7 @@
 				<connpoint role="dst" target="id-0066-00000003"/>
 				<connpoint role="src" target="id-0069-00000001"/>
 			</connection>
-			<connection id="id-0068-00000006" kind="Containment" role="Containment" relid="0xe">
+			<connection id="id-0068-00000006" kind="Containment" role="Containment" guid="{4a8f8678-a04e-49bf-b7d0-6fd685c12dac}" relid="0xe">
 				<name>Containment</name>
 				<regnode name="autorouterPref" isopaque="yes">
 					<value>We</value>
@@ -330,10 +393,16 @@
 				<connpoint role="src" target="id-0066-00000002"/>
 				<connpoint role="dst" target="id-0066-00000003"/>
 			</connection>
-			<set id="id-0069-00000001" kind="Aspect" role="Aspect" relid="0x0" members="id-0066-00000002 id-0066-00000003">
+			<set id="id-0069-00000001" kind="Aspect" role="Aspect" guid="{55273174-0628-43e7-b54c-5012b24fc5dc}" relid="0x0" members="id-0066-00000002 id-0066-00000003">
 				<name>FSM</name>
 				<regnode name="PartRegs" isopaque="yes">
 					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>135,49</value>
+						</regnode>
+					</regnode>
 					<regnode name="Visualization" isopaque="yes">
 						<value></value>
 						<regnode name="Position" isopaque="yes">
