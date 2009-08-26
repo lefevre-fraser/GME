@@ -114,23 +114,6 @@ BEGIN
     IDS_PROJNAME            "Decorator"
 END
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_INPLACEEDITSLDIALOG DIALOGEX 0, 0, 76, 16
-STYLE DS_SETFOREGROUND | WS_CHILD | WS_VISIBLE | WS_BORDER
-BEGIN
-    EDITTEXT        IDC_INPLACETEXTEDIT,0,0,75,16,ES_AUTOHSCROLL | NOT WS_BORDER
-END
-
-IDD_INPLACEEDITMLDIALOG DIALOGEX 0, 0, 76, 16
-STYLE DS_SETFOREGROUND | WS_CHILD | WS_VISIBLE | WS_BORDER
-BEGIN
-    EDITTEXT        IDC_INPLACETEXTEDIT,0,0,75,16,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | NOT WS_BORDER
-END
-
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////

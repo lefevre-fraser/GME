@@ -21,15 +21,10 @@ class CInPlaceEditDialog : public CDialog
 	DECLARE_DYNAMIC(CInPlaceEditDialog)
 
 public:
-	CInPlaceEditDialog(short iDD, CWnd* pParent = NULL);   // standard constructor
+	CInPlaceEditDialog();
 	virtual ~CInPlaceEditDialog();
 
-// Dialog Data
-	//{{AFX_DATA(CInPlaceEditDialog)
-	CEdit	m_edtInPlace;
-	//}}AFX_DATA
-
-	short m_IDD;
+	CEdit* editWnd;
 	CString	m_Text;
 
 protected:
@@ -44,8 +39,7 @@ public:
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg LRESULT OnEndEditingWithOk(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnEndInPlaceEditing(WPARAM wParam, LPARAM lParam);
 	//}}AFX_MSG
 
 protected:
@@ -64,6 +58,7 @@ protected:
 	CFont*					m_font;
 	bool					m_bPermanentCWnd;
 	bool					m_bInflateToRight;
+	bool					m_bMultiLine;
 	bool					m_bDlgResult;
 	bool					m_leftMouseButtonPressed;
 	EditState				m_editState;
@@ -71,7 +66,7 @@ protected:
 public:
 	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect,
 						  const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, CFont* font,
-						  bool isPermanentCWnd, bool inflateToRight = true);
+						  bool isPermanentCWnd, bool inflateToRight = true, bool multiLine = false);
 	CString GetText() const;
 
 // Overrides
@@ -80,8 +75,6 @@ public:
     public:
     virtual BOOL PreTranslateMessage(MSG* pMsg);
     //}}AFX_VIRTUAL
-
-	CRect	GetWindowSizeFromResource(void) const;
 };
 
 //{{AFX_INSERT_LOCATION}}

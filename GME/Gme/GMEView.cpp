@@ -563,6 +563,9 @@ CGMEView::CGMEView()
 	isInConnectionCustomizeOperation= false;
 	isCursorChangedByEdgeCustomize	= false;
 	selectedContextConnection		= NULL;
+	decoratorEditDlg				= NULL;
+	decoratorEditCtrl				= NULL;
+	isDecoratorEditCtrlMultiLine	= false;
 
 	prevDropEffect					= DROPEFFECT_NONE;
 	inDrag							= false;
@@ -6935,8 +6938,39 @@ void CGMEView::OnUpdateEditCancel(CCmdUI* pCmdUI)
 BOOL CGMEView::PreTranslateMessage(MSG* pMsg)
 {
 	ASSERT( m_hWnd != NULL && theApp.m_GMEView_hAccel != NULL && pMsg != NULL );
-	if( TranslateAccelerator(m_hWnd, theApp.m_GMEView_hAccel, pMsg) )
-		return TRUE;
+	if (!inElementDecoratorOperation) {
+		if (TranslateAccelerator(m_hWnd, theApp.m_GMEView_hAccel, pMsg))
+			return TRUE;
+	} else {
+		if (decoratorEditDlg != NULL) {
+			if (decoratorEditCtrl != NULL) {
+				if (pMsg->message == WM_LBUTTONDOWN) {
+					CRect editRect;
+					::GetWindowRect(decoratorEditCtrl, &editRect);
+					BOOL inRect = editRect.PtInRect(pMsg->pt);
+					if (inRect == FALSE) {
+						::SendMessage(decoratorEditDlg, WM_USER_ENDINPLACEEDITING, 1, 1);
+						return TRUE;
+					}
+				}
+				HWND captureWnd = ::GetCapture();
+				if (captureWnd != decoratorEditCtrl)
+					::SetCapture(decoratorEditCtrl);
+			}
+			if ((pMsg->message == WM_KEYDOWN ||
+				 pMsg->message == WM_KEYUP ||
+				 pMsg->message == WM_CHAR) &&
+				(pMsg->wParam == VK_RETURN ||
+				 pMsg->wParam == VK_ESCAPE))
+			{
+				if (!isDecoratorEditCtrlMultiLine || pMsg->wParam != VK_RETURN) {
+					::SendMessage(decoratorEditDlg, WM_USER_ENDINPLACEEDITING, pMsg->wParam == VK_RETURN, 0);
+					decoratorEditDlg = NULL;
+					return TRUE;
+				}
+			}
+		}
+	}
 
 	return CScrollZoomView::PreTranslateMessage(pMsg);
 }
@@ -6994,11 +7028,44 @@ void CGMEView::SetEditCursor(void)
 	isCursorChangedByDecorator = false;
 }
 
+BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam)
+{
+	char windowTitle[32];
+	::GetWindowText(hwnd, windowTitle, 31);
+	if (CString("DecoratorEditDlg") == CString(windowTitle)) {
+		*((HWND*)lParam) = hwnd;
+		return FALSE;
+	}
+	return TRUE;
+}
+
+void CGMEView::StartDecoratorOperation(void)
+{
+	::EnumChildWindows(this->m_hWnd, EnumChildProc, (LPARAM)(&decoratorEditDlg));
+	if (decoratorEditDlg != NULL) {
+		CPoint pt(1, 5);
+		decoratorEditCtrl = ::ChildWindowFromPoint(decoratorEditDlg, pt);
+		if (decoratorEditCtrl != NULL) {
+			WINDOWINFO wi;
+			BOOL success = ::GetWindowInfo(decoratorEditCtrl, &wi);
+			if (success != FALSE)
+				isDecoratorEditCtrlMultiLine = ((wi.dwStyle & ES_MULTILINE) != 0);
+		}
+	}
+}
+
+void CGMEView::EndDecoratorOperation(void)
+{
+	decoratorEditDlg = NULL;
+	decoratorEditCtrl = NULL;
+}
+
 void CGMEView::CancelDecoratorOperation(bool notify)
 {
 	if (inElementDecoratorOperation) {
 		if (::GetCapture() != NULL)
 			::ReleaseCapture();
+		EndDecoratorOperation();
 		shouldCommitOperation = false;
 		if (originalRect.IsRectEmpty() == FALSE) {
 			if (decoratorOrAnnotator)

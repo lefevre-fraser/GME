@@ -26,7 +26,7 @@
 #define _AFX_ALL_WARNINGS
 
 #if defined(_DEBUG)
-//#define ADDCRASHTESTMENU
+#define ADDCRASHTESTMENU
 // also change it in PartBrowser/StdAfx.h
 //#define ACTIVEXGMEVIEW
 #endif
@@ -65,6 +65,7 @@ extern CComModule _Module;
 #define WM_USER_PANNREFRESH				(WM_USER + 113)
 #define WM_USER_DECOR_COMMITTRAN_REQ	(WM_USER + 114)	// used for deferred transaction commits in decorator events
 #define WM_USER_DECOR_VIEWREFRESH_REQ	(WM_USER + 115)	// used for deferred view refreshes in decorator events
+#define WM_USER_ENDINPLACEEDITING		(WM_USER + 116)	// used for closing the dialog with given nResult
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

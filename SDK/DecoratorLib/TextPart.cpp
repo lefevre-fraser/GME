@@ -9,9 +9,8 @@
 #include "TextPart.h"
 #include "PortLabelPart.h"
 #include "DecoratorExceptions.h"
-#include "InPlaceEditSingleLineDialog.h"
-#include "InPlaceEditMultiLineDialog.h"
-//#include "InPlaceNativeDialog.h"
+#include "InPlaceEditDialog.h"
+#include "DialogTemplate.h"
 
 namespace DecoratorSDK {
 
@@ -346,11 +345,12 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 		BOOL success = ::LPtoDP(transformHDC, &editLeftTopPt, 1);
 		CRect editLocation(editLeftTopPt, cSize);
 
-		CInPlaceEditDialog* inPlaceEditDlg = NULL;
+		CInPlaceEditDialog* inPlaceEditDlg = new CInPlaceEditDialog();
+		CDialogTemplate dlgTemplate(_T("DecoratorEditDlg"), DS_SETFOREGROUND | WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 76, 16);
+		DWORD editStyle = WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL;
 		if (m_bMultiLine)
-			inPlaceEditDlg = new CInPlaceEditMultiLineDialog(cWnd);
-		else
-			inPlaceEditDlg = new CInPlaceEditSingleLineDialog(cWnd);
+			editStyle |= ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN;
+		dlgTemplate.AddEditBox(_T("Edit"), editStyle, 0, 0, 0, 75, 16, IDC_INPLACETEXTEDIT);
 
 		bool inflateToRight = true;
 		PortLabelPart* portLabelPart = dynamic_cast_PortLabelPart();
@@ -360,9 +360,9 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 		CPoint screenPt = point;
 		cWnd->ClientToScreen(&screenPt);
 		inPlaceEditDlg->SetProperties(m_strText, this, editLocation, screenPt, m_parentWnd, cWnd, scaled_font,
-									  isPermanentCWnd, inflateToRight);
-		success = inPlaceEditDlg->Create(m_bMultiLine ? IDD_INPLACEEDITMLDIALOG : IDD_INPLACEEDITSLDIALOG, cWnd);
-		if (success == TRUE)
+									  isPermanentCWnd, inflateToRight, m_bMultiLine);
+		success = inPlaceEditDlg->CreateIndirect(dlgTemplate, cWnd);
+		if (success != FALSE)
 			success = inPlaceEditDlg->ShowWindow(SW_SHOWNORMAL);
 
 		return true;

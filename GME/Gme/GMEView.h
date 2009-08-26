@@ -121,6 +121,9 @@ public:
 	CPoint					customizeConnectionCurrCursor;
 	bool					isCursorChangedByEdgeCustomize;
 	HCURSOR					customizeConnectionCursorBackup;
+	HWND					decoratorEditDlg;
+	HWND					decoratorEditCtrl;
+	bool					isDecoratorEditCtrlMultiLine;
 	// for connection context menu
 	CGuiConnection*			selectedContextConnection;
 	PathCustomizationType	contextConnectionCustomizationType;
@@ -335,6 +338,8 @@ public:
 	void					ClearConnSpecs();
 	void					RunComponent(CString compname);
 	void					SetEditCursor(void);
+	void					StartDecoratorOperation(void);
+	void					EndDecoratorOperation(void);
 	void					CancelDecoratorOperation(bool notify = true);
 	bool					ShouldSupressConnectionCheckAlert(void) const { return m_supressConnectionCheckAlert; };
 	void					ClearSupressConnectionCheckAlert(void) { m_supressConnectionCheckAlert = false; };

@@ -76,6 +76,7 @@ STDMETHODIMP CAnnotatorEventSink::LabelEditingStarted(LONG left, LONG top, LONG 
 	m_view->inElementDecoratorOperation = true;
 	m_view->decoratorOrAnnotator = false;
 	m_view->shouldCommitOperation = false;
+	m_view->StartDecoratorOperation();
 
 	return S_OK;
 }
@@ -102,6 +103,7 @@ STDMETHODIMP CAnnotatorEventSink::LabelChanged(BSTR newLabel)
 	m_view->BeginTransaction();
 	m_view->inOpenedDecoratorTransaction = true;
 	m_view->shouldCommitOperation = true;
+	m_view->EndDecoratorOperation();
 
 	return S_OK;
 }
@@ -155,6 +157,7 @@ STDMETHODIMP CAnnotatorEventSink::GeneralOperationStarted(ULONGLONG operationDat
 	m_view->decoratorOrAnnotator = false;
 	m_view->inOpenedDecoratorTransaction = true;
 	m_view->shouldCommitOperation = false;
+	m_view->StartDecoratorOperation();
 
 	return S_OK;
 }
@@ -166,6 +169,7 @@ STDMETHODIMP CAnnotatorEventSink::GeneralOperationFinished(ULONGLONG* operationD
 
 	m_view->inElementDecoratorOperation = false;
 	m_view->shouldCommitOperation = true;
+	m_view->EndDecoratorOperation();
 
 	return S_OK;
 }

@@ -67,7 +67,6 @@
 #define IDD_SEARCH_DIALOG               188
 #define IDD_PRINTOPTIONS                196
 #define IDR_TOOLBAR_COMPONENTS          197
-#define IDC_INPLACETEXTEDIT             201
 #define IDD_PRINTDLGORD                 202
 #define IDD_PRNSETUPDLGORD              203
 #define ID_PANNWIN                      206
@@ -77,8 +76,6 @@
 #define ID_VIEW_APPLOOK_WIN_2000        210
 #define IDR_TOOLBAR_WINS                211
 #define ID_VIEW_APPLOOK_OFF_XP          211
-#define IDD_INPLACEEDITSLDIALOG         211
-#define IDD_INPLACEEDITMLDIALOG         212
 #define IDR_MYTOOLBARS_MENU             212
 #define ID_VIEW_APPLOOK_WIN_XP          212
 #define IDR_TOOLBAR_NAVIG               213

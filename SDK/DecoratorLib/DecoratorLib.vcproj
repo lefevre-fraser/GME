@@ -271,6 +271,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DialogTemplate.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DiamondVectorPart.cpp"
 				>
 			</File>
@@ -292,18 +296,6 @@
 			</File>
 			<File
 				RelativePath=".\InPlaceEditDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\InPlaceEditMultiLineDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\InPlaceEditSingleLineDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\InPlaceNativeDialog.cpp"
 				>
 			</File>
 			<File
@@ -497,6 +489,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DialogTemplate.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DiamondVectorPart.h"
 				>
 			</File>
@@ -514,18 +510,6 @@
 			</File>
 			<File
 				RelativePath=".\InPlaceEditDialog.h"
-				>
-			</File>
-			<File
-				RelativePath=".\InPlaceEditMultiLineDialog.h"
-				>
-			</File>
-			<File
-				RelativePath=".\InPlaceEditSingleLineDialog.h"
-				>
-			</File>
-			<File
-				RelativePath=".\InPlaceNativeDialog.h"
 				>
 			</File>
 			<File

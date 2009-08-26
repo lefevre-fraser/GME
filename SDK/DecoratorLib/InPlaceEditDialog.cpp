@@ -4,16 +4,13 @@
 #include "stdafx.h"
 #include "TextPart.h"
 #include "InPlaceEditDialog.h"
-#include "InPlaceEditMultiLineDialog.h"
-
-#define WM_USER_ENDEDITINGWITHOK	(WM_USER + 115)
 
 // CInPlaceEditDialog dialog
 
 IMPLEMENT_DYNAMIC(CInPlaceEditDialog, CDialog)
-CInPlaceEditDialog::CInPlaceEditDialog(short iDD, CWnd* pParent /*=NULL*/)
-	: CDialog(iDD, pParent),
-	m_IDD(iDD),
+CInPlaceEditDialog::CInPlaceEditDialog() :
+	CDialog(),
+	editWnd(NULL),
 	m_bDlgResult(false)
 {
 }
@@ -26,7 +23,6 @@ void CInPlaceEditDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CInPlaceEditDialog)
-	DDX_Control(pDX, IDC_TEXTEDIT, m_edtInPlace);
 	//}}AFX_DATA_MAP
 }
 
@@ -53,54 +49,54 @@ BEGIN_MESSAGE_MAP(CInPlaceEditDialog, CDialog)
 	ON_BN_CLICKED(IDCANCEL, OnBnClickedCancel)
 	ON_BN_CLICKED(IDOK, OnBnClickedOk)
 	ON_WM_LBUTTONDOWN()
-	ON_MESSAGE(WM_USER_ENDEDITINGWITHOK, OnEndEditingWithOk)
+	ON_MESSAGE(WM_USER_ENDINPLACEEDITING, OnEndInPlaceEditing)
 END_MESSAGE_MAP()
 
 
 // CInPlaceEditDialog message handlers
 
-BOOL CInPlaceEditDialog::OnInitDialog() 
+BOOL CInPlaceEditDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	m_edtInPlace.SetWindowText(m_Text);
+	editWnd = (CEdit*)GetDlgItem(IDC_INPLACETEXTEDIT);
+	editWnd->SetWindowText(m_Text);
 
-	CRect rectInResource = GetWindowSizeFromResource();
+	CRect rectInResource(0, 0, 76, 19);
 	long width = (long)(m_initialRect.Width() * 1.5) + 4;
 	double heightRatio = 1.0;
-	if (IsKindOf(RUNTIME_CLASS(CInPlaceEditMultiLineDialog)))
+	if (m_bMultiLine)
 		heightRatio = 1.5;
 	long height = (long)(m_initialRect.Height() * heightRatio) + 4;
 	long left = m_bInflateToRight ? m_initialRect.left : (m_initialRect.left - (long)(m_initialRect.Width() * 0.5));
 
 	MoveWindow(left, m_initialRect.top, width, height);
 
-	m_edtInPlace.SetFont(m_font);
+	editWnd->SetFont(m_font);
 	long dWidth = width - rectInResource.Width();
 	long dHeight = height - rectInResource.Height();
 	if (dWidth != 0 || dHeight != 0) {
 		CRect editRect;
-		m_edtInPlace.GetWindowRect(&editRect);
-		m_edtInPlace.MoveWindow(0, 0, editRect.Width() + dWidth, editRect.Height() + dHeight);
+		editWnd->GetWindowRect(&editRect);
+		editWnd->MoveWindow(0, 0, editRect.Width() + dWidth, editRect.Height() + dHeight);
 	}
 
-	m_edtInPlace.SetFocus();
-
 	// Smart positioning of the caret
-	m_edtInPlace.ScreenToClient(&m_mouseClick);
-	int n = m_edtInPlace.CharFromPos(m_mouseClick);
+	editWnd->ScreenToClient(&m_mouseClick);
+	int n = editWnd->CharFromPos(m_mouseClick);
 	int nLineIndex = HIWORD(n);
 	int nCharIndex = LOWORD(n);
 	TRACE("nLineIndex = %d, nCharIndex = %d\n", nCharIndex, nCharIndex);
-	m_edtInPlace.SetSel(nCharIndex, nCharIndex);
-
-	// Capture the mouse, this allows the dialog to close when the user clicks outside.
-	// The dialog has no "close" button.
-	m_edtInPlace.SetCapture();
+	editWnd->SetSel(nCharIndex, nCharIndex);
 
 	m_parentPart->LabelEditingStarted(m_initialRect);
 
 	m_editState = Initial;
+
+	// Capture the mouse, this allows the dialog to close when the user clicks outside.
+	// The dialog has no "close" button.
+	editWnd->SetCapture();
+	editWnd->SetFocus();
 
 	return FALSE;	// return TRUE unless you set the focus to a control
 					// EXCEPTION: OCX Property Pages should return FALSE
@@ -116,7 +112,7 @@ void CInPlaceEditDialog::OnDestroy()
 void CInPlaceEditDialog::OnBnClickedCancel()
 {
 	// TODO: Add your control notification handler code here
-	m_edtInPlace.GetWindowText(m_Text);
+	editWnd->GetWindowText(m_Text);
 	ReleaseCapture();
 	m_bDlgResult = false;
 
@@ -127,7 +123,7 @@ void CInPlaceEditDialog::OnBnClickedCancel()
 void CInPlaceEditDialog::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
-	m_edtInPlace.GetWindowText(m_Text);
+	editWnd->GetWindowText(m_Text);
 	if (UpdateData(true)) {
 		ReleaseCapture();
 		m_bDlgResult = true;
@@ -137,57 +133,23 @@ void CInPlaceEditDialog::OnBnClickedOk()
 	}
 }
 
-void CInPlaceEditDialog::OnLButtonDown(UINT nFlags, CPoint point)
+LRESULT CInPlaceEditDialog::OnEndInPlaceEditing(WPARAM wParam, LPARAM lParam)
 {
-	RECT r;
-
-	POINT p;
-	p.x = point.x;
-	p.y = point.y;
-
-	ClientToScreen(&p);
-
-	GetWindowRect(&r);
-
-	if (!PtInRect(&r, p)) {
-		// If the user clicked outside of the dialog, close (and apply changes).
-		OnBnClickedOk();	// Windows Explorer default behavior
-		return;
+	// wParam > 0: OK, else Cancel
+	// lParam > 0: mouse click initiated else keyboard input initiated
+	if (wParam > 0) {
+		if (lParam > 0 || !m_bMultiLine)
+			OnBnClickedOk();	// Windows Explorer default behavior
 	} else {
-		// inside the dialog. Since this window
-		// has the mouse captured, its children
-		// get no messages. So, check to see
-		// if the click was in one of its children
-		// and tell him.
-
-		// If the user clicks inside the dialog
-		// but not on any of the controls,
-		// ChildWindowFromPoint returns a
-		// pointer to the dialog. In this
-		// case we do not resend the message
-		// (obviously) because it would cause
-		// a stack overflow.
-
-		CWnd* child = ChildWindowFromPoint(point);
-
-		if (child && child != this) {
-			child->SendMessage(WM_LBUTTONDOWN, nFlags, MAKELPARAM(point.x, point.y));
-			return;
-		}
+		OnBnClickedCancel();
 	}
-
-	CDialog::OnLButtonDown(nFlags, point);
-}
-
-LRESULT CInPlaceEditDialog::OnEndEditingWithOk(WPARAM wParam, LPARAM lParam)
-{
-	OnBnClickedOk();	// Windows Explorer default behavior
 	return 0;
 }
 
-void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect,
-									   const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, CFont* font,
-									   bool isPermanentCWnd, bool inflateToRight)
+void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart,
+									   const CRect& initialRect, const CPoint& mouseClick, HWND parentWnd,
+									   CWnd* parentCWnd, CFont* font, bool isPermanentCWnd, bool inflateToRight,
+									   bool multiLine)
 {
 	m_Text						= text;
 	m_parentPart				= parentPart;
@@ -198,6 +160,7 @@ void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPa
 	m_font						= font;
 	m_bPermanentCWnd			= isPermanentCWnd;
 	m_bInflateToRight			= inflateToRight;
+	m_bMultiLine				= multiLine;
 	m_leftMouseButtonPressed	= false;
 }
 
@@ -209,112 +172,11 @@ CString CInPlaceEditDialog::GetText() const
 BOOL CInPlaceEditDialog::PreTranslateMessage(MSG* pMsg) 
 {
 	// Fix (Adrian Roman): Sometimes if the editor loses capture it is should be setcaptured again
-	CWnd* captureCWnd = m_edtInPlace.GetCapture();
-	if (pMsg->message == WM_LBUTTONDOWN) {
-		m_leftMouseButtonPressed = true;
-	} else if (pMsg->message == WM_LBUTTONUP) {
-		m_leftMouseButtonPressed = false;
-	}
-	CRect editRect;
-	m_edtInPlace.GetWindowRect(&editRect);
-	BOOL inRect = editRect.PtInRect(pMsg->pt);
-	switch(m_editState) {
-		case Initial:
-			{
-				if (m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_LBUTTONDOWN)
-					m_editState = LButtonDownOutside;
-			}
-			break;
-		case LButtonDownOutside:
-			{
-				if (m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_MOUSEMOVE)
-					m_editState = MouseMoveAfterDown;
-				else if (!m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_LBUTTONUP)
-					m_editState = LButtonUpOutside;
-				else
-					m_editState = Initial;
-			}
-			break;
-		case MouseMoveAfterDown:
-			{
-				if (!m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_LBUTTONUP)
-					m_editState = LButtonUpOutside;
-				else if (!(m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_MOUSEMOVE))
-					m_editState = Initial;
-			}
-			break;
-		case LButtonUpOutside:
-			{
-				if (!(!m_leftMouseButtonPressed && inRect == FALSE && pMsg->message == WM_MOUSELEAVE))
-					m_editState = Initial;
-			}
-			break;
-	}
-	if (m_editState == LButtonUpOutside && pMsg->message == WM_MOUSELEAVE) {
-		// No recapture, quitting with ok (commit)
-		this->PostMessage(WM_USER_ENDEDITINGWITHOK, 0, 0);
-	} else if (captureCWnd ==  NULL || captureCWnd->m_hWnd != m_edtInPlace.m_hWnd) {
+	CWnd* captureCWnd = GetCapture();
+	if (captureCWnd ==  NULL || captureCWnd->m_hWnd != editWnd->m_hWnd) {
 		// Recapture
-		m_edtInPlace.SetCapture();
+		editWnd->SetCapture();
 	}
 
 	return CDialog::PreTranslateMessage(pMsg);
-}
-
-// CodeGuru: Finding Display Size of Dialog From Resource
-//		by Shridhar Guravannavar
-CRect CInPlaceEditDialog::GetWindowSizeFromResource(void) const
-{
-	CRect rectSize;
-
-	// if the dialog resource resides in a DLL ...
-	//
-
-	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(m_IDD), RT_DIALOG);
-
-	ASSERT(hInst != NULL);
-
-	HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(m_IDD), RT_DIALOG);
-	ASSERT(hRsrc != NULL);
-
-	HGLOBAL hTemplate = ::LoadResource(hInst, hRsrc);
-	ASSERT(hTemplate != NULL);
-
-	DLGTEMPLATE* pTemplate = (DLGTEMPLATE*)::LockResource(hTemplate);
-
-	//Load coresponding DLGINIT resource
-	//(if we have any ActiveX components)
-	//
-	void* lpDlgInit;
-	HGLOBAL hDlgInit = NULL;
-	CDialog dlg;
-
-	HRSRC hsDlgInit = ::FindResource(hInst, MAKEINTRESOURCE(m_IDD), RT_DLGINIT);
-	if (hsDlgInit != NULL) {
-		// load it
-		hDlgInit = ::LoadResource(hInst, hsDlgInit);
-		ASSERT(hDlgInit != NULL);
-
-		// lock it
-		lpDlgInit = ::LockResource(hDlgInit);
-		ASSERT(lpDlgInit != NULL);
-
-		dlg.CreateIndirect(pTemplate, NULL, lpDlgInit);
-	} else {
-		dlg.CreateIndirect(pTemplate, NULL);
-	}
-
-	CRect rect;
-	dlg.GetWindowRect(rectSize);
-
-	dlg.DestroyWindow();
-
-	::UnlockResource(hTemplate);
-	::FreeResource(hTemplate);
-	if (hDlgInit) {
-		::UnlockResource(hDlgInit);
-		::FreeResource(hDlgInit);
-	}
-
-	return rectSize;
 }
