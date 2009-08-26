@@ -42,10 +42,11 @@ CDecoratorImpl::~CDecoratorImpl()
 
 STDMETHODIMP CDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: read all important data from MGA and cache them for later use
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	if (pFCO && !m_bInitCallFromEx)
 		return E_DECORATOR_USING_DEPRECATED_FUNCTION;
@@ -55,10 +56,11 @@ STDMETHODIMP CDecoratorImpl::Initialize(IMgaProject* pProject, IMgaMetaPart* pPa
 
 STDMETHODIMP CDecoratorImpl::Destroy()
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: At least free all references to MGA objects
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	VERIFY_INITIALIZATION
 
@@ -98,7 +100,10 @@ STDMETHODIMP CDecoratorImpl::GetFeatures(feature_code* pFeatureCodes)
 	// TODO: Return supported features (combine multiple features with bitwise-OR)
 	// Available feature codes are found in MgaDecorator.idl
 	// (curently not used by GME)
-	*pFeatureCodes = F_HASLABEL | F_MOUSEEVENTS | F_RESIZEAFTERMOD;
+	if (m_pElementDecorator != NULL)
+		*pFeatureCodes = m_pElementDecorator->GetFeatures();
+	else
+		*pFeatureCodes = F_HASLABEL | F_MOUSEEVENTS | F_RESIZEAFTERMOD;
 
 	return S_OK;
 }
@@ -301,12 +306,13 @@ STDMETHODIMP CDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 
 STDMETHODIMP CDecoratorImpl::Draw(HDC hdc)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: (In case of old decorator) Draw your object.
 	// Saving & restoring the HDC is a good practice, however it is not a strict requirement
 	// Use DecoratorSDK::getFacilities() for brushes/pens/fonts.
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
@@ -329,10 +335,11 @@ STDMETHODIMP CDecoratorImpl::SaveState()
 STDMETHODIMP CDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* pPart, IMgaFCO* pFCO,
 										  IMgaCommonDecoratorEvents* eventSink, ULONGLONG parentWnd)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: handle extra parameters, call Initialize with the rest
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	m_bInitCallFromEx = true;
 
@@ -355,11 +362,11 @@ STDMETHODIMP CDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* p
 
 STDMETHODIMP CDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: gdipGraphics is a Gdiplus::Graphics* variable, it is advisable to use this for drawing and don't use the HDC
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
 	VERIFY_INITIALIZATION
 	VERIFY_LOCATION
 
@@ -385,9 +392,12 @@ STDMETHODIMP CDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 
 STDMETHODIMP CDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: memorize selected state, it might be needed for some operations later
 	//
+
 	VERIFY_INITIALIZATION
 
 	HRESULT retVal = S_OK;
@@ -405,13 +415,14 @@ STDMETHODIMP CDecoratorImpl::SetSelected(VARIANT_BOOL vbIsSelected)
 
 STDMETHODIMP CDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, for example change the mouse cursor, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -431,13 +442,14 @@ STDMETHODIMP CDecoratorImpl::MouseMoved(ULONG nFlags, LONG pointx, LONG pointy, 
 
 STDMETHODIMP CDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -457,13 +469,14 @@ STDMETHODIMP CDecoratorImpl::MouseLeftButtonDown(ULONG nFlags, LONG pointx, LONG
 
 STDMETHODIMP CDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -483,13 +496,14 @@ STDMETHODIMP CDecoratorImpl::MouseLeftButtonUp(ULONG nFlags, LONG pointx, LONG p
 
 STDMETHODIMP CDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -509,6 +523,8 @@ STDMETHODIMP CDecoratorImpl::MouseLeftButtonDoubleClick(ULONG nFlags, LONG point
 
 STDMETHODIMP CDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
@@ -516,7 +532,6 @@ STDMETHODIMP CDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFla
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -536,13 +551,14 @@ STDMETHODIMP CDecoratorImpl::MouseRightButtonDown(ULONGLONG hCtxMenu, ULONG nFla
 
 STDMETHODIMP CDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -562,13 +578,14 @@ STDMETHODIMP CDecoratorImpl::MouseRightButtonUp(ULONG nFlags, LONG pointx, LONG 
 
 STDMETHODIMP CDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -588,13 +605,14 @@ STDMETHODIMP CDecoratorImpl::MouseRightButtonDoubleClick(ULONG nFlags, LONG poin
 
 STDMETHODIMP CDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -614,13 +632,14 @@ STDMETHODIMP CDecoratorImpl::MouseMiddleButtonDown(ULONG nFlags, LONG pointx, LO
 
 STDMETHODIMP CDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -640,13 +659,14 @@ STDMETHODIMP CDecoratorImpl::MouseMiddleButtonUp(ULONG nFlags, LONG pointx, LONG
 
 STDMETHODIMP CDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -666,13 +686,14 @@ STDMETHODIMP CDecoratorImpl::MouseMiddleButtonDoubleClick(ULONG nFlags, LONG poi
 
 STDMETHODIMP CDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// nFlags shows additional button states (see WM_MOUSEMOVE MSDN page for example, see MK_CONTROL, MK_SHIFT, etc constants)
 	// you can use transformHDC HDC to transform point coordinates to screen coordinates (GMEView can be zoomed and scrolled)
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -692,6 +713,8 @@ STDMETHODIMP CDecoratorImpl::MouseWheelTurned(ULONG nFlags, LONG distance, LONG 
 
 STDMETHODIMP CDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
@@ -700,7 +723,6 @@ STDMETHODIMP CDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObj
 	// See OnDragEnter, OnDragOver, OnDrop MFC notifications in MSDN or GME source
 	// pCOleDataObject is a COleDataObject pointer
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -722,6 +744,8 @@ STDMETHODIMP CDecoratorImpl::DragEnter(ULONG* dropEffect, ULONGLONG pCOleDataObj
 
 STDMETHODIMP CDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObject, ULONG keyState, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
@@ -730,7 +754,6 @@ STDMETHODIMP CDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObje
 	// See OnDragEnter, OnDragOver, OnDrop MFC notifications in MSDN or GME source
 	// pCOleDataObject is a COleDataObject pointer
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -752,6 +775,8 @@ STDMETHODIMP CDecoratorImpl::DragOver(ULONG* dropEffect, ULONGLONG pCOleDataObje
 
 STDMETHODIMP CDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
@@ -760,7 +785,6 @@ STDMETHODIMP CDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, L
 	// See OnDragEnter, OnDragOver, OnDrop MFC notifications in MSDN or GME source
 	// pCOleDataObject is a COleDataObject pointer
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -780,12 +804,13 @@ STDMETHODIMP CDecoratorImpl::Drop(ULONGLONG pCOleDataObject, ULONG dropEffect, L
 
 STDMETHODIMP CDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// hDropInfo is a HDROP type variable, you should use this to extract the needed data
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -805,12 +830,13 @@ STDMETHODIMP CDecoratorImpl::DropFile(ULONGLONG hDropInfo, LONG pointx, LONG poi
 
 STDMETHODIMP CDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LONG pointx, LONG pointy, ULONGLONG transformHDC)
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you respond to the message, you should return
 	// S_DECORATOR_EVENT_HANDLED, else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	// In menuItemId you should get back one of the menu IDs you previously added to the context menu
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
@@ -830,11 +856,12 @@ STDMETHODIMP CDecoratorImpl::MenuItemSelected(ULONG menuItemId, ULONG nFlags, LO
 
 STDMETHODIMP CDecoratorImpl::OperationCanceled()
 {
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 	//
 	// TODO: if you handle the message, you should return S_DECORATOR_EVENT_HANDLED,
 	// else you should return S_DECORATOR_EVENT_NOT_HANDLED
 	//
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	HRESULT retVal = S_OK;
 	try {
