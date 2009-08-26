@@ -1881,6 +1881,8 @@
                 <File Id="DecoratorSmart.h" Name="DecoratorSmart.h"  Source="..\SDK\DecoratorLib\DecoratorSmart.h" />
                 <File Id="DecoratorUtil.cpp" Name="DecoratorUtil.cpp"  Source="..\SDK\DecoratorLib\DecoratorUtil.cpp" />
                 <File Id="DecoratorUtil.h" Name="DecoratorUtil.h"  Source="..\SDK\DecoratorLib\DecoratorUtil.h" />
+                <File Id="DialogTemplate.cpp" Name="DialogTemplate.cpp"  Source="..\SDK\DecoratorLib\DialogTemplate.cpp" />
+                <File Id="DialogTemplate.h" Name="DialogTemplate.h"  Source="..\SDK\DecoratorLib\DialogTemplate.h" />
                 <File Id="DiamondVectorPart.cpp" Name="DiamondVectorPart.cpp"  Source="..\SDK\DecoratorLib\DiamondVectorPart.cpp" />
                 <File Id="DiamondVectorPart.h" Name="DiamondVectorPart.h"  Source="..\SDK\DecoratorLib\DiamondVectorPart.h" />
                 <File Id="DecoratorLib_Dibapi.cpp" Name="Dibapi.cpp"  Source="..\SDK\DecoratorLib\Dibapi.cpp" />
@@ -1892,12 +1894,6 @@
                 <File Id="InheritanceVectorPart.h" Name="InheritanceVectorPart.h"  Source="..\SDK\DecoratorLib\InheritanceVectorPart.h" />
                 <File Id="InPlaceEditDialog.cpp" Name="InPlaceEditDialog.cpp"  Source="..\SDK\DecoratorLib\InPlaceEditDialog.cpp" />
                 <File Id="InPlaceEditDialog.h" Name="InPlaceEditDialog.h"  Source="..\SDK\DecoratorLib\InPlaceEditDialog.h" />
-                <File Id="InPlaceEditMultiLineDialog.cpp" Name="InPlaceEditMultiLineDialog.cpp"  Source="..\SDK\DecoratorLib\InPlaceEditMultiLineDialog.cpp" />
-                <File Id="InPlaceEditMultiLineDialog.h" Name="InPlaceEditMultiLineDialog.h"  Source="..\SDK\DecoratorLib\InPlaceEditMultiLineDialog.h" />
-                <File Id="InPlaceEditSingleLineDialog.cpp" Name="InPlaceEditSingleLineDialog.cpp"  Source="..\SDK\DecoratorLib\InPlaceEditSingleLineDialog.cpp" />
-                <File Id="InPlaceEditSingleLineDialog.h" Name="InPlaceEditSingleLineDialog.h"  Source="..\SDK\DecoratorLib\InPlaceEditSingleLineDialog.h" />
-                <File Id="InPlaceNativeDialog.cpp" Name="InPlaceNativeDialog.cpp"  Source="..\SDK\DecoratorLib\InPlaceNativeDialog.cpp" />
-                <File Id="InPlaceNativeDialog.h" Name="InPlaceNativeDialog.h"  Source="..\SDK\DecoratorLib\InPlaceNativeDialog.h" />
                 <File Id="LabelPart.cpp" Name="LabelPart.cpp"  Source="..\SDK\DecoratorLib\LabelPart.cpp" />
                 <File Id="LabelPart.h" Name="LabelPart.h"  Source="..\SDK\DecoratorLib\LabelPart.h" />
                 <File Id="MaskedBitmapPart.cpp" Name="MaskedBitmapPart.cpp"  Source="..\SDK\DecoratorLib\MaskedBitmapPart.cpp" />
