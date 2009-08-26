@@ -584,5 +584,12 @@ for (std::set&lt;BON::Connection&gt;::iterator it2 = conns.begin(); it2 != conns
     url="L3/BON2Ex/BON2Component.cpp"><filename>BON2Component.cpp</filename></ulink>
     and <ulink
     url="L3/BON2Ex/BON2Component.h"><filename>BON2Component.h</filename></ulink>.</para>
+
+    <para><ulink url="Lesson2.html">&lt;&lt; Previous Lesson</ulink></para>
+
+    <para><ulink url="Index.html#toc">Complete List</ulink></para>
+
+    <para><ulink type="" url="Lesson4.html">Next Lesson
+    &gt;&gt;</ulink></para>
   </section>
 </article>
