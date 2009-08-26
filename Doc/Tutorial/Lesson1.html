@@ -309,7 +309,7 @@ doubleclick its header to maximize it.
 
 
 <center>
-<img SRC="L1/F1/Fig1_1.gif">
+<img SRC="L1/F1/Fig1_1.png">
 <br><b>Fig 1.1 GME <a href="L1/F1/networking.xme"> metamodel</a> with an empty paradigm sheet</b>
 </center>
 <p><br>
@@ -362,7 +362,7 @@ atoms, a connection, and an FCO.
 
 The next step is to indicate relationships between entities. Relationships are 
 represented by lines, so switch the editor mode to "Add Connection" ( <img 
-SRC="Icons/AddConnMode.gif" align=top> ).
+SRC="Icons/AddConnMode.png" align=top> ).
 <p>
 
 Let us start with NetInterface. We want to show that Ports and Hosts are 
@@ -383,7 +383,7 @@ implement. The UML notation for containment is a line connecting an object to
 its container, with a small black diamond on the "container" end of the line. 
 Containment is easier to draw than inheritance; no triangles are involved. Just 
 click the <i>contained</i> object first (remain in "Add Connection" mode, <img 
-SRC="Icons/AddConnMode.gif" align=top> ), and the <i>container</i> second.
+SRC="Icons/AddConnMode.png" align=top> ), and the <i>container</i> second.
 Whenever your coursor is above an object that can be a candidate for a
 connection, the border of&nbsp; the object gets red. Moreover, when the cursor
 is near one of the side lines of the box, a little red square will appear in the
@@ -432,7 +432,7 @@ and association (Fig 1.2).
 
 
 <center>
-<img SRC="L1/F2/Fig1_2.gif">
+<img SRC="L1/F2/Fig1_2.png">
 <br><b>Fig 1.2 <a href="L1/F2/networking.xme"> Class diagram</a> with entities and relationships</b>
 </center>
 <p><br>
@@ -517,7 +517,7 @@ folder. Follow these steps (see Fig 1.3):
 
 
 <center>
-<img SRC="L1/F3/Fig1_3.gif">
+<img SRC="L1/F3/Fig1_3.png">
 <br><b>Fig 1.3 The Attributes dialog pane</b>
 </center>
 <p><br>
@@ -556,7 +556,7 @@ that we will create later.
 <p>
 
 Aspects are a type of <i>set</i>: the objects contained in this aspect are known 
-as its members. Switch to "Set Edit" editor mode ( <img SRC="Icons/SetMode.gif" 
+as its members. Switch to "Set Edit" editor mode ( <img SRC="Icons/SetMode.png" 
 align=top> ). Right-click the new aspect, and then include all other entities in 
 the diagram by left-clicking them. The result is shown in Fig 1.4.(You could include
 the NetInterface abstract base class, thus you would not be required to include the  
@@ -565,7 +565,7 @@ classes derived from it.)
 
 
 <center>
-<img SRC="L1/F4/Fig1_4.gif">
+<img SRC="L1/F4/Fig1_4.png">
 <br><b>Fig 1.4 Defining and populating an aspect in your <a href="L1/F4/networking.xme">metamodel</a></b>
 </center>
 <p><br>
@@ -680,7 +680,7 @@ Let's start by creating attributes for the Router entity:
  <li>
   The Family attribute has now been perfectly defined, but it still must be 
   associated with the meta-entity (or meta-entities) that will use it. Switch to 
-  "Add Connection" mode ( <img SRC="Icons/AddConnMode.gif" align=top> ) and 
+  "Add Connection" mode ( <img SRC="Icons/AddConnMode.png" align=top> ) and 
   connect the new attribute to the Router entity. An attribute can be used in 
   several entities by drawing multiple connections. This particular attribute is 
   only used by Routers.
@@ -757,7 +757,7 @@ The attribute aspect of the metamodel should resemble Fig 1.5.<p><br>
 
 
 <center>
-<img SRC="L1/F5/Fig1_5.gif">
+<img SRC="L1/F5/Fig1_5.png">
 <br><b>Fig 1.5 The Attributes aspect of this <a href="L1/F5/networking.xme">metamodel</a></b></center>
 <p><br>
 
@@ -767,7 +767,7 @@ The attribute aspect of the metamodel should resemble Fig 1.5.<p><br>
 <p>
 
 Now we will convert the metamodel into a GME paradigm. Click the button 
-with the cogwheel icon ( <img SRC="Icons/MGAInterpreter.gif" align=top> ) in 
+with the cogwheel icon ( <img SRC="Icons/MGAInterpreter.png" align=top> ) in 
 the toolbar. Click "OK" on the "Configure Aspect Mapping" dialog. The next 
 dialog selects the location of the paradigm XML file.
 <p>
@@ -805,7 +805,7 @@ the root object; the model available for insertion is NetDiagram. This is the
 first sign of customization! Insert a NewNetDiagram, and open it. The part browser 
 now shows Host, Network, and Router, just as it should. Create a Host and a 
 Network. Give them names like "mailhost" and "localnet", respectively. 
-Test the connections: in Add Connection mode ( <img SRC="Icons/AddConnMode.gif" 
+Test the connections: in Add Connection mode ( <img SRC="Icons/AddConnMode.png" 
 align=top> ), connect "mailhost" to "localnet". Now test the attributes: 
 mailhost has an IP Address, localnet has a Network Address and a NetMask. The 
 configured modeling environment really knows what to do!
@@ -833,7 +833,7 @@ the one in Fig 1.6.
 
 
 <center>
-<img SRC="L1/F6/Fig1_6.gif">
+<img SRC="L1/F6/Fig1_6.png">
 <br><b>Fig 1.6 The first version of the <a href="L1/F6/mynetwork.xme"> network model</a></b>
 </center>
 <p><br>
@@ -967,7 +967,7 @@ ways:
 
 Hopefully, the upgraded model now displays our custom icons. If not, the system 
 is probably unable to find the icon directory. To correct this problem, open 
-the "File/Settings..." dialog, and add the name of the icon directory to the 
+the "Tools/Options..." dialog, and add the name of the icon directory to the 
 "User Icon Path" field. (If the icons were saved to the "Icons" subdirectory 
 next to the paradigm file, we do not need to do anything, thanks to the special 
 item "$PARADIGMDIR\Icons" which is normally located in the "System Icon Path".) 
@@ -981,7 +981,7 @@ typical network of a small company in Fig 1.7.
 <p><br>
 
 
-<center><img SRC="L1/F7/Fig1_7.gif">
+<center><img SRC="L1/F7/Fig1_7.png">
 <br><b>Fig 1.7 <a href="L1/F7/mynetwork.xme"> Diagram</a> of a typical <a href="L1/F7/networking.xme"> network</a> in a small company</b>
 </center>
 <p><br>
