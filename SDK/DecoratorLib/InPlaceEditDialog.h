@@ -39,7 +39,7 @@ public:
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
-	afx_msg LRESULT OnEndInPlaceEditing(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnInPlaceEditing(WPARAM wParam, LPARAM lParam);
 	//}}AFX_MSG
 
 protected:

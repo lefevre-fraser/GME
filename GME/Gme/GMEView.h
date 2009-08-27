@@ -124,6 +124,9 @@ public:
 	HWND					decoratorEditDlg;
 	HWND					decoratorEditCtrl;
 	bool					isDecoratorEditCtrlMultiLine;
+	bool					isCtrlDown;
+	bool					isAltDown;
+	bool					isShiftDown;
 	// for connection context menu
 	CGuiConnection*			selectedContextConnection;
 	PathCustomizationType	contextConnectionCustomizationType;

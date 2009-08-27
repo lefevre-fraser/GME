@@ -49,7 +49,7 @@ BEGIN_MESSAGE_MAP(CInPlaceEditDialog, CDialog)
 	ON_BN_CLICKED(IDCANCEL, OnBnClickedCancel)
 	ON_BN_CLICKED(IDOK, OnBnClickedOk)
 	ON_WM_LBUTTONDOWN()
-	ON_MESSAGE(WM_USER_ENDINPLACEEDITING, OnEndInPlaceEditing)
+	ON_MESSAGE(WM_USER_INPLACEEDITING, OnInPlaceEditing)
 END_MESSAGE_MAP()
 
 
@@ -133,15 +133,21 @@ void CInPlaceEditDialog::OnBnClickedOk()
 	}
 }
 
-LRESULT CInPlaceEditDialog::OnEndInPlaceEditing(WPARAM wParam, LPARAM lParam)
+LRESULT CInPlaceEditDialog::OnInPlaceEditing(WPARAM wParam, LPARAM lParam)
 {
 	// wParam > 0: OK, else Cancel
 	// lParam > 0: mouse click initiated else keyboard input initiated
-	if (wParam > 0) {
+	if (wParam == VK_RETURN) {
 		if (lParam > 0 || !m_bMultiLine)
 			OnBnClickedOk();	// Windows Explorer default behavior
-	} else {
+	} else if (wParam == VK_ESCAPE) {
 		OnBnClickedCancel();
+	} else if (wParam == ID_EDIT_SELECT_ALL) {
+		editWnd->SetSel(0, -1);
+	} else if (wParam == ID_EDIT_UNDO) {
+		editWnd->Undo();
+	} else if (wParam == ID_EDIT_REDO) {
+//		editWnd->Redo();	// There's no Redo on CEdit interface! :P
 	}
 	return 0;
 }

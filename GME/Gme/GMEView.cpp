@@ -566,6 +566,9 @@ CGMEView::CGMEView()
 	decoratorEditDlg				= NULL;
 	decoratorEditCtrl				= NULL;
 	isDecoratorEditCtrlMultiLine	= false;
+	isCtrlDown						= false;
+	isAltDown						= false;
+	isShiftDown						= false;
 
 	prevDropEffect					= DROPEFFECT_NONE;
 	inDrag							= false;
@@ -6418,6 +6421,8 @@ void CGMEView::OnUpdateCntxAttributes(CCmdUI* pCmdUI)
 void CGMEView::OnEditUndo() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditUndo\r\n");
+	if (inElementDecoratorOperation)
+		return;
 	theApp.mgaProject->Undo();
 	this->SetFocus();
 }
@@ -6425,6 +6430,8 @@ void CGMEView::OnEditUndo()
 void CGMEView::OnEditRedo() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditRedo\r\n");
+	if (inElementDecoratorOperation)
+		return;
 	theApp.mgaProject->Redo();
 	this->SetFocus();
 }
@@ -6949,24 +6956,81 @@ BOOL CGMEView::PreTranslateMessage(MSG* pMsg)
 					::GetWindowRect(decoratorEditCtrl, &editRect);
 					BOOL inRect = editRect.PtInRect(pMsg->pt);
 					if (inRect == FALSE) {
-						::SendMessage(decoratorEditDlg, WM_USER_ENDINPLACEEDITING, 1, 1);
+						::SendMessage(decoratorEditDlg, WM_USER_INPLACEEDITING, VK_RETURN, 1);
 						return TRUE;
 					}
 				}
 				HWND captureWnd = ::GetCapture();
 				if (captureWnd != decoratorEditCtrl)
 					::SetCapture(decoratorEditCtrl);
-			}
-			if ((pMsg->message == WM_KEYDOWN ||
-				 pMsg->message == WM_KEYUP ||
-				 pMsg->message == WM_CHAR) &&
-				(pMsg->wParam == VK_RETURN ||
-				 pMsg->wParam == VK_ESCAPE))
-			{
-				if (!isDecoratorEditCtrlMultiLine || pMsg->wParam != VK_RETURN) {
-					::SendMessage(decoratorEditDlg, WM_USER_ENDINPLACEEDITING, pMsg->wParam == VK_RETURN, 0);
-					decoratorEditDlg = NULL;
-					return TRUE;
+				if (pMsg->message == WM_KEYDOWN ||
+					pMsg->message == WM_SYSKEYDOWN ||
+					pMsg->message == WM_KEYUP ||
+					pMsg->message == WM_SYSKEYUP)
+				{
+					bool downOrUp = (pMsg->message == WM_KEYDOWN || pMsg->message == WM_SYSKEYDOWN);
+					switch (pMsg->wParam) {
+						case VK_CONTROL:	isCtrlDown	= downOrUp;	break;
+						case VK_MENU:		isAltDown	= downOrUp;	break;
+						case VK_SHIFT:		isShiftDown	= downOrUp;	break;
+					}
+				}
+				if (pMsg->message == WM_KEYDOWN ||
+					pMsg->message == WM_KEYUP ||
+					pMsg->message == WM_CHAR)
+				{
+					if (pMsg->message == WM_KEYDOWN &&
+						(pMsg->wParam == VK_RETURN ||
+						 pMsg->wParam == VK_ESCAPE))
+					{
+						if (!isDecoratorEditCtrlMultiLine || pMsg->wParam != VK_RETURN) {
+							::SendMessage(decoratorEditDlg, WM_USER_INPLACEEDITING, pMsg->wParam, 0);
+							decoratorEditDlg = NULL;
+							return TRUE;
+						}
+					}
+				}
+				if (pMsg->message == WM_KEYDOWN ||
+					pMsg->message == WM_KEYUP ||
+					pMsg->message == WM_CHAR ||
+					pMsg->message == WM_SYSKEYDOWN ||
+					pMsg->message == WM_SYSKEYUP ||
+					pMsg->message == WM_SYSCHAR)
+				{
+					bool omit = false;
+					WPARAM command = 0;
+					if (pMsg->wParam == 'A' && isCtrlDown && !isAltDown && !isShiftDown)
+					{
+						omit = true;
+						if (pMsg->message == WM_KEYUP)
+							command = ID_EDIT_SELECT_ALL;
+					}
+					if ((pMsg->wParam == 'Z' && isCtrlDown && !isAltDown && !isShiftDown) ||
+						(pMsg->wParam == VK_BACK && isCtrlDown && !isAltDown && !isShiftDown))
+					{
+						omit = true;
+						if (pMsg->message == WM_KEYUP)
+							command = ID_EDIT_UNDO;
+					}
+					if (pMsg->wParam == VK_BACK && !isCtrlDown && isAltDown && !isShiftDown)
+					{
+						omit = true;
+						if (pMsg->message == WM_SYSKEYUP)
+							command = ID_EDIT_UNDO;
+					}
+					if ((pMsg->wParam == 'Y' && isCtrlDown && !isAltDown && !isShiftDown) ||
+						(pMsg->wParam == 'Z' && isCtrlDown && !isAltDown && isShiftDown))
+					{
+						omit = true;
+					}
+					if (pMsg->message == WM_SYSKEYUP && pMsg->wParam == VK_BACK && !isCtrlDown && isAltDown && isShiftDown)
+					{
+						omit = true;
+					}
+					if (command > 0)
+						::SendMessage(decoratorEditDlg, WM_USER_INPLACEEDITING, command, 0);
+					if (omit)
+						return TRUE;
 				}
 			}
 		}
@@ -7041,6 +7105,9 @@ BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam)
 
 void CGMEView::StartDecoratorOperation(void)
 {
+	isCtrlDown	= false;
+	isAltDown	= false;
+	isShiftDown	= false;
 	::EnumChildWindows(this->m_hWnd, EnumChildProc, (LPARAM)(&decoratorEditDlg));
 	if (decoratorEditDlg != NULL) {
 		CPoint pt(1, 5);
@@ -7056,9 +7123,12 @@ void CGMEView::StartDecoratorOperation(void)
 
 void CGMEView::EndDecoratorOperation(void)
 {
-	decoratorEditDlg = NULL;
-	decoratorEditCtrl = NULL;
-}
+	decoratorEditDlg	= NULL;
+	decoratorEditCtrl	= NULL;
+	isCtrlDown			= false;
+	isAltDown			= false;
+	isShiftDown			= false;
+}						
 
 void CGMEView::CancelDecoratorOperation(bool notify)
 {
@@ -8418,6 +8488,8 @@ void CGMEView::SyncOnGrid(CGuiObject *obj, int aspectIndexFrom, int aspectIndexT
 void CGMEView::OnEditSelectall()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditSelectall in "+path+name+"\r\n");
+	if (inElementDecoratorOperation)
+		return;
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
 	RemoveAllAnnotationFromSelection();
