@@ -1657,7 +1657,6 @@
             <Component Id="TutorialL6F2" Guid="{DECEADE2-4656-4BE4-9E78-26216E354828}">
                 <File Id="Fig6_2.png" Name="Fig6_2.png" KeyPath="yes" Source="..\Doc\Tutorial\L6\F2\Fig6_2.png" />
                 <File Id="TutorialL6F2_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L6\F2\networking.xme" />
-                <File Id="networkingtemp.xme" Name="networkingtemp.xme"  Source="..\Doc\Tutorial\L6\F2\networkingtemp.xme" />
             </Component>
         </DirectoryRef>
 
