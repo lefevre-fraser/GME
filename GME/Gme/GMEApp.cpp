@@ -1852,177 +1852,168 @@ void CGMEApp::OnFileImportxml()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileImportxml ");
 
-	bool keep_on( true); // if true then keep working even after a failed import: try to apply an xslt script
-	long tryCount = 0;
 	CString file_name;
 	CString new_file_name = "";
 
-	while (keep_on && tryCount < 2)
+	MSGTRY
 	{
-		keep_on = false;
-		MSGTRY
+		CComPtr<IMgaParser> parser;
+		COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
+		ASSERT( parser != NULL );
+
+		CFileDialog dlg(TRUE, "xme", (LPCTSTR) new_file_name,
+			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
+			OFN_FILEMUSTEXIST,
+			"GME Exported Files (*.xme;*.xml)|*.xme; *.xml|All Files (*.*)|*.*||");
+		if( dlg.DoModal() != IDOK )
 		{
-			CComPtr<IMgaParser> parser;
-			COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
-			ASSERT( parser != NULL );
+			CGMEEventLogger::LogGMEEvent("Cancelled\r\n");
+			return;
+		}
+		CGMEEventLogger::LogGMEEvent(dlg.GetPathName()+"\r\n");
 
-			CFileDialog dlg(TRUE, "xme", (LPCTSTR) new_file_name,
-				OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
-				OFN_FILEMUSTEXIST,
-				"GME Exported Files (*.xme;*.xml)|*.xme; *.xml|All Files (*.*)|*.*||");
-			if( dlg.DoModal() != IDOK )
-			{
-				CGMEEventLogger::LogGMEEvent("Cancelled\r\n");
-				return;
-			}
-			CGMEEventLogger::LogGMEEvent(dlg.GetPathName()+"\r\n");
+		if (dlg.GetFileExt().CompareNoCase("xml") == 0 ) {
+			AfxMessageBox(
+					"Newer versions of GME use the \".xme.\" filename extension\n"
+					"for exported XML data files.\n"
+					"Please, rename your existing files to avoid further problems!\n", 
+					MB_OK | MB_ICONINFORMATION);
+		}
 
-			if (dlg.GetFileExt().CompareNoCase("xml") == 0 ) {
-				AfxMessageBox(
-						"Newer versions of GME use the \".xme.\" filename extension\n"
-						"for exported XML data files.\n"
-						"Please, rename your existing files to avoid further problems!\n", 
-						MB_OK | MB_ICONINFORMATION);
-			}
+		bool newproject = !mgaProject;
+		if (newproject) {
+			CString dataconn;
+			COMTRY {
+				CComBstrObj paradigm, parversion, basename, version;
+				CComVariant parguid;
 
-			bool newproject = !mgaProject;
-			if (newproject) {
-				CString dataconn;
-				COMTRY {
-					CComBstrObj paradigm, parversion, basename, version;
-					CComVariant parguid;
+				COMTHROW( parser->GetXMLInfo(PutInBstr(dlg.GetPathName()), PutOut(paradigm), PutOut(parversion), &parguid, PutOut(basename), PutOut(version)) );
 
-					COMTHROW( parser->GetXMLInfo(PutInBstr(dlg.GetPathName()), PutOut(paradigm), PutOut(parversion), &parguid, PutOut(basename), PutOut(version)) );
+				CMgaOpenDlg opdlg(CMgaOpenDlg::ImportDialog);
+				opdlg.SetFileNameHint( PutInCString(basename));//opdlg.filenamehint = basename;
+				dataconn = opdlg.AskConnectionString(false);
+				if (dataconn.IsEmpty()) {
+				   CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileImportxml exited because empty connection string has been given");
+				   return;
+				}
 
-					CMgaOpenDlg opdlg(CMgaOpenDlg::ImportDialog);
-					opdlg.SetFileNameHint( PutInCString(basename));//opdlg.filenamehint = basename;
-					dataconn = opdlg.AskConnectionString(false);
-					if (dataconn.IsEmpty()) {
-					   CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileImportxml exited because empty connection string has been given");
-					   return;
-					}
-
-					{
-						CComPtr<IMgaRegistrar> reg;
-						COMTHROW( reg.CoCreateInstance(L"Mga.MgaRegistrar") );
-						CComBstrObj conn;
-						HRESULT h1 = reg->QueryParadigm(paradigm, PutOut(conn), &parguid, REGACCESS_PRIORITY);
-						CComVariant pg2;
-						conn.Empty();
-						HRESULT h2 = reg->QueryParadigm(paradigm, PutOut(conn), &pg2, REGACCESS_PRIORITY);
-						char buf[300];
-						if(h2 != S_OK) {
-							ASSERT(h1 != S_OK);
-							CString msg = "Could not find paradigm paradigm '" + CString(paradigm) + "'\n" 
-									" (Eg.: In GME3 the MetaGME2000 paradigm was renamed to MetaGME)\n"
-									"Do you want to import with an other registered paradigm ?";
-							if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
-								CComObjPtr<IMgaLauncher> launcher;
-								COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
-								if (SUCCEEDED(launcher->MetaDlg(METADLG_NONE))) {
-									// parguid = true;
-									parguid.Clear();
-									paradigm.Empty();
-									COMTHROW( launcher->get_ParadigmName(PutOut(paradigm)) );
-								}
-								else {
-									return;   // safe before create
-								}
+				{
+					CComPtr<IMgaRegistrar> reg;
+					COMTHROW( reg.CoCreateInstance(L"Mga.MgaRegistrar") );
+					CComBstrObj conn;
+					HRESULT h1 = reg->QueryParadigm(paradigm, PutOut(conn), &parguid, REGACCESS_PRIORITY);
+					CComVariant pg2;
+					conn.Empty();
+					HRESULT h2 = reg->QueryParadigm(paradigm, PutOut(conn), &pg2, REGACCESS_PRIORITY);
+					char buf[300];
+					if(h2 != S_OK) {
+						ASSERT(h1 != S_OK);
+						CString msg = "Could not find paradigm paradigm '" + CString(paradigm) + "'\n" 
+								" (Eg.: In GME3 the MetaGME2000 paradigm was renamed to MetaGME)\n"
+								"Do you want to import with an other registered paradigm ?";
+						if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
+							CComObjPtr<IMgaLauncher> launcher;
+							COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
+							if (SUCCEEDED(launcher->MetaDlg(METADLG_NONE))) {
+								// parguid = true;
+								parguid.Clear();
+								paradigm.Empty();
+								COMTHROW( launcher->get_ParadigmName(PutOut(paradigm)) );
 							}
 							else {
 								return;   // safe before create
 							}
 						}
 						else {
-							CComBstrObj parguid1, parguid2;
-							GUID gg;
-
-							CopyTo(parguid,gg);
-							CopyTo(gg, parguid1);
-
-							CopyTo(pg2,gg);
-							CopyTo(gg, parguid2);
-
-							if(h1 != S_OK) {
-								sprintf(buf, "Could not locate paradigm %s\nVersion ID: %s\n"
-											 "Do you want to upgrade to the current version instead?\nCurrent ID: %s", 
-											 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
-											 if(AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
-												parguid = pg2;
-											 }
-											 else {
-												AfxMessageBox("Import canceled");
-												return; // safe before create
-											 }	
-
-							}
-							else if(parguid1.Compare(parguid2)) {
-								sprintf(buf, "This model was exported using paradigm %s\nVersion ID: %s\n"
-											 "Do you want to upgrade to the current version?\nCurrent ID: %s", 
-											 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
-											 int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
-											 if(answer == IDYES) {
-												parguid = pg2;
-											 }
-											 else if(answer == IDCANCEL) {
-												AfxMessageBox("Import canceled");
-												return;  // safe before create
-											 }
-							}
+							return;   // safe before create
 						}
 					}
-					COMTHROW( mgaProject.CoCreateInstance(L"Mga.MgaProject") );
-#pragma warning(disable: 4310) // cast truncates constant value
-					COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
-					HRESULT hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
-					if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
-						char buf[300];
-						CComBstrObj parguid1;
+					else {
+						CComBstrObj parguid1, parguid2;
 						GUID gg;
+
 						CopyTo(parguid,gg);
 						CopyTo(gg, parguid1);
-						sprintf(buf, "Could not open paradigm %s\nVersion ID: %s", 
-							PutInCString(paradigm), PutInCString(parguid1));
 
-						AfxMessageBox(buf);
+						CopyTo(pg2,gg);
+						CopyTo(gg, parguid2);
+
+						if(h1 != S_OK) {
+							sprintf(buf, "Could not locate paradigm %s\nVersion ID: %s\n"
+										 "Do you want to upgrade to the current version instead?\nCurrent ID: %s", 
+										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
+										 if(AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
+											parguid = pg2;
+										 }
+										 else {
+											AfxMessageBox("Import canceled");
+											return; // safe before create
+										 }	
+
+						}
+						else if(parguid1.Compare(parguid2)) {
+							sprintf(buf, "This model was exported using paradigm %s\nVersion ID: %s\n"
+										 "Do you want to upgrade to the current version?\nCurrent ID: %s", 
+										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
+										 int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
+										 if(answer == IDYES) {
+											parguid = pg2;
+										 }
+										 else if(answer == IDCANCEL) {
+											AfxMessageBox("Import canceled");
+											return;  // safe before create
+										 }
+						}
 					}
-					if(hr == E_MGA_COMPONENT_ERROR) {
-						AfxMessageBox("ERROR: Some automatic addon components could not start up\n");
-					}
-					COMTHROW(hr);
-					AfterOpenOrCreateProject(dataconn); 
-				} catch(hresult_exception &e) {
-					CloseProject();
-					DisplayError("Could not create the project", e.hr); 
-					throw;
 				}
+				COMTHROW( mgaProject.CoCreateInstance(L"Mga.MgaProject") );
+#pragma warning(disable: 4310) // cast truncates constant value
+				COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
+#pragma warning(default: 4310) // cast truncates constant value
+				HRESULT hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
+				if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
+					char buf[300];
+					CComBstrObj parguid1;
+					GUID gg;
+					CopyTo(parguid,gg);
+					CopyTo(gg, parguid1);
+					sprintf(buf, "Could not open paradigm %s\nVersion ID: %s", 
+						PutInCString(paradigm), PutInCString(parguid1));
+
+					AfxMessageBox(buf);
+				}
+				if(hr == E_MGA_COMPONENT_ERROR) {
+					AfxMessageBox("ERROR: Some automatic addon components could not start up\n");
+				}
+				COMTHROW(hr);
+				AfterOpenOrCreateProject(dataconn); 
+			} catch(hresult_exception &e) {
+				CloseProject();
+				DisplayError("Could not create the project", e.hr); 
+				throw;
 			}
-
-			//UpdateProjectName(); // moved below
-
-			CWaitCursor wait;
-			if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
-
-			keep_on = true;
-			file_name = dlg.GetPathName();
-			if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( "Importing ") + file_name + "...", 1);
-			COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(dlg.GetPathName())) );
-			
-			// mgaproject has been filled with data, let's update title:
-			UpdateProjectName();
-
-			if(newproject && (proj_type_is_mga||proj_type_is_xmlbackend)) {
-				OnFileSave();
-			}
-
-			if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( dlg.GetPathName() + " was successfully imported.", 1);
-			else AfxMessageBox(dlg.GetPathName() + " was successfully imported.");
-			keep_on = false;
 		}
-		MSGCATCH("Error importing XML file",;)
-		tryCount++;
-	} // while keep_on
+
+		//UpdateProjectName(); // moved below
+
+		CWaitCursor wait;
+		if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
+
+		file_name = dlg.GetPathName();
+		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( "Importing ") + file_name + "...", 1);
+		COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(dlg.GetPathName())) );
+		
+		// mgaproject has been filled with data, let's update title:
+		UpdateProjectName();
+
+		if(newproject && (proj_type_is_mga||proj_type_is_xmlbackend)) {
+			OnFileSave();
+		}
+
+		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( dlg.GetPathName() + " was successfully imported.", 1);
+		else AfxMessageBox(dlg.GetPathName() + " was successfully imported.");
+	}
+	MSGCATCH("Error importing XML file",;)
 
 	if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));
 }
@@ -2556,154 +2547,145 @@ void CGMEApp::ImportDroppedFile( const CString& fname)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEApp::ImportFile ");
 
-	bool keep_on( true); // if true then keep working even after a failed import: try to apply an xslt script
-	long tryCount = 0;
 	CString file_name = fname;
 
-	while (keep_on && tryCount < 2)
+	MSGTRY
 	{
-		keep_on = false;
-		MSGTRY
-		{
-			CComPtr<IMgaParser> parser;
-			COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
-			ASSERT( parser != NULL );
+		CComPtr<IMgaParser> parser;
+		COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
+		ASSERT( parser != NULL );
 
-			bool newproject = !mgaProject;
-			if (newproject) {
-				CString dataconn;
-				COMTRY {
-					CComBstrObj paradigm, parversion, basename, version;
-					CComVariant parguid;
+		bool newproject = !mgaProject;
+		if (newproject) {
+			CString dataconn;
+			COMTRY {
+				CComBstrObj paradigm, parversion, basename, version;
+				CComVariant parguid;
 
-					COMTHROW( parser->GetXMLInfo(PutInBstr(file_name), PutOut(paradigm), PutOut(parversion), &parguid, PutOut(basename), PutOut(version)) );
+				COMTHROW( parser->GetXMLInfo(PutInBstr(file_name), PutOut(paradigm), PutOut(parversion), &parguid, PutOut(basename), PutOut(version)) );
 
-					CMgaOpenDlg opdlg(CMgaOpenDlg::ImportDialog);
-					opdlg.SetFileNameHint( PutInCString( basename));//opdlg.filenamehint = basename;
-					dataconn = opdlg.AskConnectionString(false);
-					if (dataconn.IsEmpty()) {
-					   return;
-					}
+				CMgaOpenDlg opdlg(CMgaOpenDlg::ImportDialog);
+				opdlg.SetFileNameHint( PutInCString( basename));//opdlg.filenamehint = basename;
+				dataconn = opdlg.AskConnectionString(false);
+				if (dataconn.IsEmpty()) {
+				   return;
+				}
 
-					{
-						CComPtr<IMgaRegistrar> reg;
-						COMTHROW( reg.CoCreateInstance(L"Mga.MgaRegistrar") );
-						CComBstrObj conn;
-						HRESULT h1 = reg->QueryParadigm(paradigm, PutOut(conn), &parguid, REGACCESS_PRIORITY);
-						CComVariant pg2;
-						conn.Empty();
-						HRESULT h2 = reg->QueryParadigm(paradigm, PutOut(conn), &pg2, REGACCESS_PRIORITY);
-						char buf[300];
-						if(h2 != S_OK) {
-							ASSERT(h1 != S_OK);
-							CString msg = "Could not find paradigm paradigm '" + CString(paradigm) + "'\n" 
-									" (Eg.: In GME3 the MetaGME2000 paradigm was renamed to MetaGME)\n"
-									"Do you want to import with an other registered paradigm ?";
-							if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
-								CComObjPtr<IMgaLauncher> launcher;
-								COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
-								if (SUCCEEDED(launcher->MetaDlg(METADLG_NONE))) {
-									// parguid = true;
-									parguid.Clear();
-									paradigm.Empty();
-									COMTHROW( launcher->get_ParadigmName(PutOut(paradigm)) );
-								}
-								else {
-									return;   // safe before create
-								}
+				{
+					CComPtr<IMgaRegistrar> reg;
+					COMTHROW( reg.CoCreateInstance(L"Mga.MgaRegistrar") );
+					CComBstrObj conn;
+					HRESULT h1 = reg->QueryParadigm(paradigm, PutOut(conn), &parguid, REGACCESS_PRIORITY);
+					CComVariant pg2;
+					conn.Empty();
+					HRESULT h2 = reg->QueryParadigm(paradigm, PutOut(conn), &pg2, REGACCESS_PRIORITY);
+					char buf[300];
+					if(h2 != S_OK) {
+						ASSERT(h1 != S_OK);
+						CString msg = "Could not find paradigm paradigm '" + CString(paradigm) + "'\n" 
+								" (Eg.: In GME3 the MetaGME2000 paradigm was renamed to MetaGME)\n"
+								"Do you want to import with an other registered paradigm ?";
+						if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
+							CComObjPtr<IMgaLauncher> launcher;
+							COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
+							if (SUCCEEDED(launcher->MetaDlg(METADLG_NONE))) {
+								// parguid = true;
+								parguid.Clear();
+								paradigm.Empty();
+								COMTHROW( launcher->get_ParadigmName(PutOut(paradigm)) );
 							}
 							else {
 								return;   // safe before create
 							}
 						}
 						else {
-							CComBstrObj parguid1, parguid2;
-							GUID gg;
-
-							CopyTo(parguid,gg);
-							CopyTo(gg, parguid1);
-
-							CopyTo(pg2,gg);
-							CopyTo(gg, parguid2);
-
-							if(h1 != S_OK) {
-								sprintf(buf, "Could not locate paradigm %s\nVersion ID: %s\n"
-											 "Do you want to upgrade to the current version instead?\nCurrent ID: %s", 
-											 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
-											 if(AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
-												parguid = pg2;
-											 }
-											 else {
-												AfxMessageBox("Import canceled");
-												return; // safe before create
-											 }	
-
-							}
-							else if(parguid1.Compare(parguid2)) {
-								sprintf(buf, "This model was exported using paradigm %s\nVersion ID: %s\n"
-											 "Do you want to upgrade to the current version?\nCurrent ID: %s", 
-											 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
-											 int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
-											 if(answer == IDYES) {
-												parguid = pg2;
-											 }
-											 else if(answer == IDCANCEL) {
-												AfxMessageBox("Import canceled");
-												return;  // safe before create
-											 }
-							}
+							return;   // safe before create
 						}
 					}
-					COMTHROW( mgaProject.CoCreateInstance(L"Mga.MgaProject") );
-#pragma warning(disable: 4310) // cast truncates constant value
-					COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
-					HRESULT hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
-					if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
-						char buf[300];
-						CComBstrObj parguid1;
+					else {
+						CComBstrObj parguid1, parguid2;
 						GUID gg;
+
 						CopyTo(parguid,gg);
 						CopyTo(gg, parguid1);
-						sprintf(buf, "Could not open paradigm %s\nVersion ID: %s", 
-							PutInCString(paradigm), PutInCString(parguid1));
 
-						AfxMessageBox(buf);
+						CopyTo(pg2,gg);
+						CopyTo(gg, parguid2);
+
+						if(h1 != S_OK) {
+							sprintf(buf, "Could not locate paradigm %s\nVersion ID: %s\n"
+										 "Do you want to upgrade to the current version instead?\nCurrent ID: %s", 
+										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
+										 if(AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
+											parguid = pg2;
+										 }
+										 else {
+											AfxMessageBox("Import canceled");
+											return; // safe before create
+										 }	
+
+						}
+						else if(parguid1.Compare(parguid2)) {
+							sprintf(buf, "This model was exported using paradigm %s\nVersion ID: %s\n"
+										 "Do you want to upgrade to the current version?\nCurrent ID: %s", 
+										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
+										 int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
+										 if(answer == IDYES) {
+											parguid = pg2;
+										 }
+										 else if(answer == IDCANCEL) {
+											AfxMessageBox("Import canceled");
+											return;  // safe before create
+										 }
+						}
 					}
-					if(hr == E_MGA_COMPONENT_ERROR) {
-						AfxMessageBox("ERROR: Some automatic addon components could not start up\n");
-					}
-					COMTHROW(hr);
-					AfterOpenOrCreateProject(dataconn); 
-				} catch(hresult_exception &e) {
-					CloseProject();
-					DisplayError("Could not create the project", e.hr); 
-					throw;
 				}
+				COMTHROW( mgaProject.CoCreateInstance(L"Mga.MgaProject") );
+#pragma warning(disable: 4310) // cast truncates constant value
+				COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
+#pragma warning(default: 4310) // cast truncates constant value
+				HRESULT hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
+				if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
+					char buf[300];
+					CComBstrObj parguid1;
+					GUID gg;
+					CopyTo(parguid,gg);
+					CopyTo(gg, parguid1);
+					sprintf(buf, "Could not open paradigm %s\nVersion ID: %s", 
+						PutInCString(paradigm), PutInCString(parguid1));
+
+					AfxMessageBox(buf);
+				}
+				if(hr == E_MGA_COMPONENT_ERROR) {
+					AfxMessageBox("ERROR: Some automatic addon components could not start up\n");
+				}
+				COMTHROW(hr);
+				AfterOpenOrCreateProject(dataconn); 
+			} catch(hresult_exception &e) {
+				CloseProject();
+				DisplayError("Could not create the project", e.hr); 
+				throw;
 			}
-
-			//UpdateProjectName(); // moved below
-
-			CWaitCursor wait;
-			if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
-
-			keep_on = true;
-			COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(file_name)) );
-			
-			// mgaproject has been filled with data, let's update title:
-			UpdateProjectName();
-
-			if(newproject && (proj_type_is_mga||proj_type_is_xmlbackend)) {
-				OnFileSave();
-			}
-
-			if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( file_name + " was successfully imported.", 1);
-			else AfxMessageBox(file_name + " was successfully imported.");
-			keep_on = false;
 		}
-		MSGCATCH("Error importing XML file",;)
-		tryCount++;
-	} // while keep_on
+
+		//UpdateProjectName(); // moved below
+
+		CWaitCursor wait;
+		if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
+
+		COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(file_name)) );
+		
+		// mgaproject has been filled with data, let's update title:
+		UpdateProjectName();
+
+		if(newproject && (proj_type_is_mga||proj_type_is_xmlbackend)) {
+			OnFileSave();
+		}
+
+		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( file_name + " was successfully imported.", 1);
+		else AfxMessageBox(file_name + " was successfully imported.");
+	}
+	MSGCATCH("Error importing XML file",;)
 
 	if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));
 }
