@@ -1853,10 +1853,11 @@ void CGMEApp::OnFileImportxml()
 	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileImportxml ");
 
 	bool keep_on( true); // if true then keep working even after a failed import: try to apply an xslt script
+	long tryCount = 0;
 	CString file_name;
 	CString new_file_name = "";
 
-	while (keep_on)
+	while (keep_on && tryCount < 2)
 	{
 		keep_on = false;
 		MSGTRY
@@ -2014,12 +2015,13 @@ void CGMEApp::OnFileImportxml()
 			if(newproject && (proj_type_is_mga||proj_type_is_xmlbackend)) {
 				OnFileSave();
 			}
+
 			if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( dlg.GetPathName() + " was successfully imported.", 1);
-			else AfxMessageBox( dlg.GetPathName() + " was successfully imported.");
+			else AfxMessageBox(dlg.GetPathName() + " was successfully imported.");
 			keep_on = false;
 		}
 		MSGCATCH("Error importing XML file",;)
-
+		tryCount++;
 	} // while keep_on
 
 	if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));
@@ -2555,9 +2557,10 @@ void CGMEApp::ImportDroppedFile( const CString& fname)
 	CGMEEventLogger::LogGMEEvent("CGMEApp::ImportFile ");
 
 	bool keep_on( true); // if true then keep working even after a failed import: try to apply an xslt script
+	long tryCount = 0;
 	CString file_name = fname;
 
-	while (keep_on)
+	while (keep_on && tryCount < 2)
 	{
 		keep_on = false;
 		MSGTRY
@@ -2699,6 +2702,7 @@ void CGMEApp::ImportDroppedFile( const CString& fname)
 			keep_on = false;
 		}
 		MSGCATCH("Error importing XML file",;)
+		tryCount++;
 	} // while keep_on
 
 	if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));
