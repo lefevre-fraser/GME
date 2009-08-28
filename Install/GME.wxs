@@ -1460,48 +1460,48 @@
         
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L1_F1">
             <Component Id="TutorialL1F1" Guid="{AB118D9D-F844-4007-BD22-51F6294223BD}">
-                <File Id="Fig1_1.gif" Name="Fig1_1.gif" KeyPath="yes" Source="..\Doc\Tutorial\L1\F1\Fig1_1.gif" />
+                <File Id="Fig1_1.png" Name="Fig1_1.png" KeyPath="yes" Source="..\Doc\Tutorial\L1\F1\Fig1_1.png" />
                 <File Id="TutorialL1F1_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L1\F1\networking.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L1_F2">
             <Component Id="TutorialL1F2" Guid="{8EDDA785-6349-45B7-8EF8-D10096730369}">
-                <File Id="Fig1_2.gif" Name="Fig1_2.gif" KeyPath="yes" Source="..\Doc\Tutorial\L1\F2\Fig1_2.gif" />
+                <File Id="Fig1_2.png" Name="Fig1_2.png" KeyPath="yes" Source="..\Doc\Tutorial\L1\F2\Fig1_2.png" />
                 <File Id="TutorialL1F2_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L1\F2\networking.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L1_F3">
             <Component Id="TutorialL1F3" Guid="{ADF1EA9D-E4F4-4C92-A008-7321907AC741}">
-                <File Id="Fig1_3.gif" Name="Fig1_3.gif" KeyPath="yes" Source="..\Doc\Tutorial\L1\F3\Fig1_3.gif" />
+                <File Id="Fig1_3.png" Name="Fig1_3.png" KeyPath="yes" Source="..\Doc\Tutorial\L1\F3\Fig1_3.png" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L1_F4">
             <Component Id="TutorialL1F4" Guid="{274A63A9-331C-4F57-B158-F0BE9A3F98A0}">
-                <File Id="Fig1_4.gif" Name="Fig1_4.gif" KeyPath="yes" Source="..\Doc\Tutorial\L1\F4\Fig1_4.gif" />
+                <File Id="Fig1_4.png" Name="Fig1_4.png" KeyPath="yes" Source="..\Doc\Tutorial\L1\F4\Fig1_4.png" />
                 <File Id="TutorialL1F4_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L1\F4\networking.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L1_F5">
             <Component Id="TutorialL1F5" Guid="{1677B6BD-444D-4B32-8A46-318593C0F5FA}">
-                <File Id="Fig1_5.gif" Name="Fig1_5.gif" KeyPath="yes" Source="..\Doc\Tutorial\L1\F5\Fig1_5.gif" />
+                <File Id="Fig1_5.png" Name="Fig1_5.png" KeyPath="yes" Source="..\Doc\Tutorial\L1\F5\Fig1_5.png" />
                 <File Id="TutorialL1F5_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L1\F5\networking.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L1_F6">
             <Component Id="TutorialL1F6" Guid="{0B724163-332A-4406-9544-05B97CF82477}">
-                <File Id="Fig1_6.gif" Name="Fig1_6.gif" KeyPath="yes" Source="..\Doc\Tutorial\L1\F6\Fig1_6.gif" />
+                <File Id="Fig1_6.png" Name="Fig1_6.png" KeyPath="yes" Source="..\Doc\Tutorial\L1\F6\Fig1_6.png" />
                 <File Id="TutorialL1F6_mynetwork.xme" Name="mynetwork.xme"  Source="..\Doc\Tutorial\L1\F6\mynetwork.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L1_F7">
             <Component Id="TutorialL1F7" Guid="{EA7C682C-5BFA-4F86-995C-EAB1325F41D9}">
-                <File Id="Fig1_7.gif" Name="Fig1_7.gif" KeyPath="yes" Source="..\Doc\Tutorial\L1\F7\Fig1_7.gif" />
+                <File Id="Fig1_7.png" Name="Fig1_7.png" KeyPath="yes" Source="..\Doc\Tutorial\L1\F7\Fig1_7.png" />
                 <File Id="TutorialL1F7_mynetwork.xme" Name="mynetwork.xme"  Source="..\Doc\Tutorial\L1\F7\mynetwork.xme" />
                 <File Id="TutorialL1F7_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L1\F7\networking.xme" />
             </Component>
@@ -1509,21 +1509,21 @@
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L2_F1">
             <Component Id="TutorialL2F1" Guid="{98A9EDA2-864C-480A-B1D0-AB2388669926}">
-                <File Id="Fig2_1.gif" Name="Fig2_1.gif" KeyPath="yes" Source="..\Doc\Tutorial\L2\F1\Fig2_1.gif" />
+                <File Id="Fig2_1.png" Name="Fig2_1.png" KeyPath="yes" Source="..\Doc\Tutorial\L2\F1\Fig2_1.png" />
                 <File Id="TutorialL2F1_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L2\F1\networking.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L2_F2">
             <Component Id="TutorialL2F2" Guid="{14B54F34-BFD6-4784-96C6-174E937CB3CE}">
-                <File Id="Fig2_2.gif" Name="Fig2_2.gif" KeyPath="yes" Source="..\Doc\Tutorial\L2\F2\Fig2_2.gif" />
+                <File Id="Fig2_2.png" Name="Fig2_2.png" KeyPath="yes" Source="..\Doc\Tutorial\L2\F2\Fig2_2.png" />
                 <File Id="TutorialL2F2_mynetwork.xme" Name="mynetwork.xme"  Source="..\Doc\Tutorial\L2\F2\mynetwork.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L2_F3">
             <Component Id="TutorialL2F3" Guid="{33B82F23-C80C-4455-BCFE-D946126DEB04}">
-                <File Id="Fig2_3.gif" Name="Fig2_3.gif" KeyPath="yes" Source="..\Doc\Tutorial\L2\F3\Fig2_3.gif" />
+                <File Id="Fig2_3.png" Name="Fig2_3.png" KeyPath="yes" Source="..\Doc\Tutorial\L2\F3\Fig2_3.png" />
                 <File Id="TutorialL2F3_mynetwork.xme" Name="mynetwork.xme"  Source="..\Doc\Tutorial\L2\F3\mynetwork.xme" />
                 <File Id="TutorialL2F3_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L2\F3\networking.xme" />
             </Component>
@@ -1581,57 +1581,57 @@
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L4_F4">
             <Component Id="TutorialL4F4" Guid="{006810E2-09A3-4BAF-A84C-7D81BE207FC9}">
-                <File Id="Fig4_4.gif" Name="Fig4_4.gif" KeyPath="yes" Source="..\Doc\Tutorial\L4\F4\Fig4_4.gif" />
+                <File Id="Fig4_4.png" Name="Fig4_4.png" KeyPath="yes" Source="..\Doc\Tutorial\L4\F4\Fig4_4.png" />
                 <File Id="TutorialL4F4_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L4\F4\networking.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L4_F5">
             <Component Id="TutorialL4F5" Guid="{DAAFC8CB-0F28-4383-B838-01A00D357E1A}">
-                <File Id="Fig4_5.gif" Name="Fig4_5.gif" KeyPath="yes" Source="..\Doc\Tutorial\L4\F5\Fig4_5.gif" />
+                <File Id="Fig4_5.png" Name="Fig4_5.png" KeyPath="yes" Source="..\Doc\Tutorial\L4\F5\Fig4_5.png" />
                 <File Id="TutorialL4F5_mynetwork.xme" Name="mynetwork.xme"  Source="..\Doc\Tutorial\L4\F5\mynetwork.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L4_F6">
             <Component Id="TutorialL4F6" Guid="{EBC3BDD8-CE0B-4FCF-99D9-8FF7D4ABA792}">
-                <File Id="Fig4_6.gif" Name="Fig4_6.gif" KeyPath="yes" Source="..\Doc\Tutorial\L4\F6\Fig4_6.gif" />
+                <File Id="Fig4_6.png" Name="Fig4_6.png" KeyPath="yes" Source="..\Doc\Tutorial\L4\F6\Fig4_6.png" />
                 <File Id="TutorialL4F6_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L4\F6\networking.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L4_F7">
             <Component Id="TutorialL4F7" Guid="{D51CC5AE-594A-432F-8F8F-A0E0BE5863AE}">
-                <File Id="Fig4_7.gif" Name="Fig4_7.gif" KeyPath="yes" Source="..\Doc\Tutorial\L4\F7\Fig4_7.gif" />
+                <File Id="Fig4_7.png" Name="Fig4_7.png" KeyPath="yes" Source="..\Doc\Tutorial\L4\F7\Fig4_7.png" />
                 <File Id="TutorialL4F7_mynetwork.xme" Name="mynetwork.xme"  Source="..\Doc\Tutorial\L4\F7\mynetwork.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L5_F1">
             <Component Id="TutorialL5F1" Guid="{F0EEB0B0-3042-4656-A950-44D1160FDDD9}">
-                <File Id="Fig5_1.gif" Name="Fig5_1.gif" KeyPath="yes" Source="..\Doc\Tutorial\L5\F1\Fig5_1.gif" />
+                <File Id="Fig5_1.png" Name="Fig5_1.png" KeyPath="yes" Source="..\Doc\Tutorial\L5\F1\Fig5_1.png" />
                 <File Id="TutorialL5F1_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L5\F1\networking.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L5_F2">
             <Component Id="TutorialL5F2" Guid="{630A3409-8318-4874-8CB6-257A2835CF97}">
-                <File Id="Fig5_2.gif" Name="Fig5_2.gif" KeyPath="yes" Source="..\Doc\Tutorial\L5\F2\Fig5_2.gif" />
+                <File Id="Fig5_2.png" Name="Fig5_2.png" KeyPath="yes" Source="..\Doc\Tutorial\L5\F2\Fig5_2.png" />
                 <File Id="Fig5_2_new.JPG" Name="Fig5_2_new.JPG"  Source="..\Doc\Tutorial\L5\F2\Fig5_2_new.JPG" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L5_F3">
             <Component Id="TutorialL5F3" Guid="{21E539C2-DE90-4ADF-AF75-57670191C0C2}">
-                <File Id="Fig5_3_1.gif" Name="Fig5_3_1.gif" KeyPath="yes" Source="..\Doc\Tutorial\L5\F3\Fig5_3_1.gif" />
-                <File Id="Fig5_3_2.gif" Name="Fig5_3_2.gif"  Source="..\Doc\Tutorial\L5\F3\Fig5_3_2.gif" />
+                <File Id="Fig5_3_1.png" Name="Fig5_3_1.png" KeyPath="yes" Source="..\Doc\Tutorial\L5\F3\Fig5_3_1.png" />
+                <File Id="Fig5_3_2.png" Name="Fig5_3_2.png"  Source="..\Doc\Tutorial\L5\F3\Fig5_3_2.png" />
                 <File Id="TutorialL5F3_mynetwork.xme" Name="mynetwork.xme"  Source="..\Doc\Tutorial\L5\F3\mynetwork.xme" />
             </Component>
         </DirectoryRef>
         
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L5_F4">
             <Component Id="TutorialL5F4" Guid="{37E07785-AC30-4AE1-9AD6-54E413A1656A}">
-                <File Id="Fig5_4.gif" Name="Fig5_4.gif" KeyPath="yes" Source="..\Doc\Tutorial\L5\F4\Fig5_4.gif" />
+                <File Id="Fig5_4.png" Name="Fig5_4.png" KeyPath="yes" Source="..\Doc\Tutorial\L5\F4\Fig5_4.png" />
                 <File Id="TutorialL5F4_mynetwork.xme" Name="mynetwork.xme"  Source="..\Doc\Tutorial\L5\F4\mynetwork.xme" />
                 <File Id="TutorialL5F4_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L5\F4\networking.xme" />
             </Component>
@@ -1639,23 +1639,23 @@
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L5_F5">
             <Component Id="TutorialL5F5" Guid="{EB35E41F-6E1E-4C62-9169-DC62B7A9D4F2}">
-                <File Id="Fig5_5_1.gif" Name="Fig5_5_1.gif" KeyPath="yes" Source="..\Doc\Tutorial\L5\F5\Fig5_5_1.gif" />
-                <File Id="Fig5_5_2.gif" Name="Fig5_5_2.gif"  Source="..\Doc\Tutorial\L5\F5\Fig5_5_2.gif" />
-                <File Id="Fig5_5_3.gif" Name="Fig5_5_3.gif"  Source="..\Doc\Tutorial\L5\F5\Fig5_5_3.gif" />
+                <File Id="Fig5_5_1.png" Name="Fig5_5_1.png" KeyPath="yes" Source="..\Doc\Tutorial\L5\F5\Fig5_5_1.png" />
+                <File Id="Fig5_5_2.png" Name="Fig5_5_2.png"  Source="..\Doc\Tutorial\L5\F5\Fig5_5_2.png" />
+                <File Id="Fig5_5_3.png" Name="Fig5_5_3.png"  Source="..\Doc\Tutorial\L5\F5\Fig5_5_3.png" />
                 <File Id="TutorialL5F5_mynetwork.xme" Name="mynetwork.xme"  Source="..\Doc\Tutorial\L5\F5\mynetwork.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L6_F1">
             <Component Id="TutorialL6F1" Guid="{1FD84808-AAEB-49E5-9686-39E30D9ED321}">
-                <File Id="Fig6_1.gif" Name="Fig6_1.gif" KeyPath="yes" Source="..\Doc\Tutorial\L6\F1\Fig6_1.gif" />
+                <File Id="Fig6_1.png" Name="Fig6_1.png" KeyPath="yes" Source="..\Doc\Tutorial\L6\F1\Fig6_1.png" />
                 <File Id="TutorialL6F1_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L6\F1\networking.xme" />
             </Component>
         </DirectoryRef>
 
         <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS_L6_F2">
             <Component Id="TutorialL6F2" Guid="{DECEADE2-4656-4BE4-9E78-26216E354828}">
-                <File Id="Fig6_2.gif" Name="Fig6_2.gif" KeyPath="yes" Source="..\Doc\Tutorial\L6\F2\Fig6_2.gif" />
+                <File Id="Fig6_2.png" Name="Fig6_2.png" KeyPath="yes" Source="..\Doc\Tutorial\L6\F2\Fig6_2.png" />
                 <File Id="TutorialL6F2_networking.xme" Name="networking.xme"  Source="..\Doc\Tutorial\L6\F2\networking.xme" />
                 <File Id="networkingtemp.xme" Name="networkingtemp.xme"  Source="..\Doc\Tutorial\L6\F2\networkingtemp.xme" />
             </Component>
