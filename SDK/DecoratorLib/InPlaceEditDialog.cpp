@@ -63,7 +63,7 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	editWnd->SetWindowText(m_Text);
 
 	CRect rectInResource(0, 0, 76, 19);
-	long width = (long)(m_initialRect.Width() * 1.5) + 4;
+	long width = (long)(m_initialRect.Width() * 1.5) + 40;
 	double heightRatio = 1.0;
 	if (m_bMultiLine)
 		heightRatio = 1.5;
