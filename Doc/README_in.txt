@@ -31,6 +31,11 @@ guaranteed.
 ************************************************
 
 
+Release Notes of Release r9.8.28
+-------------------------------
+  - Fixed: decorator in-place edit bug
+  - Fixed: XML import freeze
+
 Release Notes of Release r9.8.19
 -------------------------------
   - GUI uses the DisplayedName property if role name and 
