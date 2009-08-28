@@ -314,7 +314,7 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 
 		CSize cSize;
 		if (!m_bMultiLine) {
-			cSize = dc.GetTextExtent(m_strText);
+			cSize = dc.GetTextExtent(m_strText == "" ? " " : m_strText);
 		} else {
 			// Determine Text Width and Height
 			CSize oSize;
