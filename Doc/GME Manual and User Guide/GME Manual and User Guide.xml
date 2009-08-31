@@ -70,7 +70,7 @@
                       </listitem>
 
                       <listitem>
-                        <para>Anti aliased fonts and edges</para>
+                        <para>Anti aliased fonts and edges (configurable in the Tools/Options dialog)</para>
                       </listitem>
                     </itemizedlist></para>
                 </listitem>
@@ -142,7 +142,7 @@
                       </listitem>
 
                       <listitem>
-                        <para>Connections becomes bold when selected</para>
+                        <para>Connections become bold when selected</para>
                       </listitem>
 
                       <listitem>
@@ -1894,6 +1894,20 @@
                       directories can be set for system-wide use or for the
                       current user only. GME searches first in the user
                       directories followed by the system directories.</para>
+                      <para>AutoRouter related features are configurable here also.
+                      The global auto-routing policy can be turned on/off
+                      (for more information please check out the section on AutoRouting).
+                      You can also set if the AutoRouter should avoid labels with the
+                      connection lines or not (the default setting is off).</para>
+                      <para>In the Miscellaneous group the edge and the font smoothing
+                      mode can be controlled distinctively besides many other things.
+                      If you find that your monitor
+                      displays the lines in a blurry manner, edge/font smoothing (or also
+                      called anti-aliasing) can be the source of the problem besides
+                      the monitor's settings. If you turn off the anti-aliasing completely,
+                      you will have a more crisp outline of curves and fonts, but it
+                      can be also not nice to the human eyes. With these setting the choice
+                      is upon you.</para>
                     </listitem>
 
                     <listitem>
