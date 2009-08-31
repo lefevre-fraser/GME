@@ -54,7 +54,6 @@ protected:
 
 	CRect				m_originalLocation;
 	CPoint				m_originalMousePosition;
-	CPoint				m_previousMousePosition;
 	HCURSOR				m_originalCursor;
 	bool				m_bCursorSaved;
 	mutable CSize		m_minSize;

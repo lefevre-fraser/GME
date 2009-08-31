@@ -74,10 +74,77 @@ bool ResizeLogic::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 				RestoreCursor();
 			}
 		} else {
-			long deltax = point.x - m_previousMousePosition.x;
-			long deltay = point.y - m_previousMousePosition.y;
+			long deltax = point.x - m_originalMousePosition.x;
+			long deltay = point.y - m_originalMousePosition.y;
 			// Change size/m_targetLocation
-			CRect newTargetLocation = m_targetLocation;
+			CRect newTargetLocation = m_originalLocation;
+			long widthMinLimit = max(5, m_minSize.cx);
+			long heightMinLimit = max(5, m_minSize.cy);
+			// Horizontal limiting
+			switch(m_resizeState) {
+				case RightEdgeResize:
+				case TopRightCornerResize:
+				case BottomRightCornerResize:
+					{
+						if (newTargetLocation.Width() + deltax < widthMinLimit)
+							deltax = widthMinLimit - newTargetLocation.Width();
+					}
+					break;
+				case LeftEdgeResize:
+				case TopLeftCornerResize:
+				case BottomLeftCornerResize:
+					{
+						if (newTargetLocation.Width() - deltax < widthMinLimit)
+							deltax = newTargetLocation.Width() - widthMinLimit;
+					}
+					break;
+			}
+			// Vertical limiting
+			switch(m_resizeState) {
+				case BottomEdgeResize:
+				case BottomRightCornerResize:
+				case BottomLeftCornerResize:
+					{
+						if (newTargetLocation.Height() + deltay < heightMinLimit)
+							deltay = heightMinLimit - newTargetLocation.Height();
+					}
+					break;
+				case TopEdgeResize:
+				case TopLeftCornerResize:
+				case TopRightCornerResize:
+					{
+						if (newTargetLocation.Height() - deltay < heightMinLimit)
+							deltay = newTargetLocation.Height() - heightMinLimit;
+					}
+					break;
+			}
+			// Nop filtering
+			switch(m_resizeState) {
+				case RightEdgeResize:
+				case LeftEdgeResize:
+					{
+						if (deltax == 0)
+							return true;
+					}
+					break;
+				case BottomEdgeResize:
+				case TopEdgeResize:
+					{
+						if (deltay == 0)
+							return true;
+					}
+					break;
+				case TopLeftCornerResize:
+				case TopRightCornerResize:
+				case BottomRightCornerResize:
+				case BottomLeftCornerResize:
+					{
+						if (deltax == 0 && deltay == 0)
+							return true;
+					}
+					break;
+			}
+			// Adjust rect
 			switch(m_resizeState) {
 				case RightEdgeResize:			newTargetLocation.InflateRect(0,		0,			deltax,	0		);	break;
 				case BottomEdgeResize:			newTargetLocation.InflateRect(0,		0,			0,		deltay	);	break;
@@ -89,38 +156,11 @@ bool ResizeLogic::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 				case BottomLeftCornerResize:	newTargetLocation.InflateRect(-deltax,	0,			0,		deltay	);	break;
 				case MoveOperation:				newTargetLocation.OffsetRect(deltax, deltay);							break;
 			}
-			long widthMinLimit = max(5, m_minSize.cx);
-			long heightMinLimit = max(5, m_minSize.cy);
-			if ((m_resizeState == RightEdgeResize || m_resizeState == LeftEdgeResize) &&
-				newTargetLocation.Width() < widthMinLimit)
-			{
-				return true;	// Don't resize
-			} else if ((m_resizeState == BottomEdgeResize || m_resizeState == TopEdgeResize) &&
-						newTargetLocation.Height() < heightMinLimit)
-			{
-				return true;	// Don't resize
-			} else if (m_targetLocation.Width () == widthMinLimit && m_targetLocation.Height () == heightMinLimit &&
-						deltax <= 0 && deltay <= 0)
-			{
-				return true;	// Don't resize
-			} else if (m_resizeState == TopLeftCornerResize || m_resizeState == BottomLeftCornerResize ||
-						m_resizeState == TopRightCornerResize || m_resizeState == BottomRightCornerResize)
-			{
-				if (newTargetLocation.Width() < widthMinLimit) {
-					newTargetLocation.left = m_targetLocation.left;
-					newTargetLocation.right = m_targetLocation.right;
-				}
-				if (newTargetLocation.Height() < heightMinLimit) {
-					newTargetLocation.top = m_targetLocation.top;
-					newTargetLocation.bottom = m_targetLocation.bottom;
-				}
-			}
 			m_targetLocation = newTargetLocation;
 			if (m_resizeState == MoveOperation)
 				m_parentPart->WindowMoving(nFlags, m_targetLocation);
 			else
 				m_parentPart->WindowResizing(nFlags, m_targetLocation);
-			m_previousMousePosition = point;
 			return true;
 		}
 	} else {
@@ -136,7 +176,6 @@ bool ResizeLogic::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC tran
 		ResizeType resizeTypeCandidate = DeterminePotentialResize(point);
 		if (resizeTypeCandidate != NotInResize) {
 			m_originalMousePosition = point;
-			m_previousMousePosition = point;
 			m_originalLocation = m_targetLocation;
 			m_resizeState = resizeTypeCandidate;
 			if (resizeTypeCandidate == MoveOperation)
