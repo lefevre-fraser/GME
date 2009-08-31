@@ -6945,7 +6945,13 @@ void CGMEView::OnUpdateEditCancel(CCmdUI* pCmdUI)
 BOOL CGMEView::PreTranslateMessage(MSG* pMsg)
 {
 	ASSERT( m_hWnd != NULL && theApp.m_GMEView_hAccel != NULL && pMsg != NULL );
-	if (!inElementDecoratorOperation) {
+	if (!inElementDecoratorOperation ||
+		(decoratorEditDlg == NULL &&
+		 (pMsg->message == WM_KEYDOWN ||
+		  pMsg->message == WM_KEYUP ||
+		  pMsg->message == WM_CHAR) &&
+		  pMsg->wParam == VK_ESCAPE))
+	{
 		if (TranslateAccelerator(m_hWnd, theApp.m_GMEView_hAccel, pMsg))
 			return TRUE;
 	} else {
@@ -7152,10 +7158,8 @@ void CGMEView::CancelDecoratorOperation(bool notify)
 			CComPtr<IMgaElementDecorator> newDecorator;
 			if (objectInDecoratorOperation != NULL) {
 				CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
-				if (pAspect != NULL) {
-					CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
-					newDecorator2 = newDecorator;
-				}
+				if (pAspect != NULL)
+					newDecorator = pAspect->GetNewDecorator();
 			} else if (annotatorInDecoratorOperation != NULL) {
 				newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
 			}
