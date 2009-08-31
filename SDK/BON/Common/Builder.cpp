@@ -419,6 +419,7 @@ CBuilderReference *CBuilderFolder::CreateNewReference(CString kindName, CBuilder
 
 
 	CBuilderReference* oo = CBuilderFactory::Create(CComQIPtr<IMgaReference>(i), NULL);
+	oo->PutReferred(refTo);
 	rootObjects.AddTail(oo);
 	return oo;
 }
@@ -2105,6 +2106,7 @@ CBuilderReference *CBuilderModel::CreateNewReference(CString refPartName, CBuild
 	
 	ASSERT( i != NULL );
 	CBuilderReference* oo = CBuilderFactory::Create(CComQIPtr<IMgaReference>(i), this);
+	oo->PutReferred(refTo);
 	objectlist->AddTail(oo);
 	children.AddTail(oo);
 
