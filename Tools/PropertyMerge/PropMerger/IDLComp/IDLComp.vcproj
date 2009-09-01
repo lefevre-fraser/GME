@@ -24,7 +24,7 @@
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
 			ManagedExtensions="4"
-			ExcludeBuckets="14;15"
+			ExcludeBuckets="1;3;5;7;8;9;10;12;13;14;15;16;18;21"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -99,6 +99,7 @@
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
 			ManagedExtensions="4"
+			ExcludeBuckets="1;3;5;7;8;9;10;12;13;14;15;16;18;21"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
