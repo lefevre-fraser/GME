@@ -4686,14 +4686,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 				if (object == NULL)
 					object = self ? self->FindObject(point, true, true) : 0;
 
-				if (isContextInitiatedOperation || inElementDecoratorOperation) {
-					if (isContextInitiatedOperation) {
-						if (::GetCapture() != NULL)
-							::ReleaseCapture();
-						inElementDecoratorOperation = true;
-						CScrollZoomView::OnLButtonDown(nFlags, ppoint);
-						return;
-					}
+				if (inElementDecoratorOperation) {
 					CComPtr<IMgaElementDecorator> newDecorator;
 					if (decoratorOrAnnotator) {
 						ASSERT(objectInDecoratorOperation != NULL);
@@ -5605,6 +5598,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				ctxClkSt.lpoint = local;
 				ctxClkSt.dpoint = ppoint;
 				selectedObjectOfContext = selection;
+				selectedAnnotationOfContext = NULL;
 				::DestroyMenu(decoratorAdditionalMenu);
 			} else if (contextAnnotation != NULL) {
 				HMENU decoratorAdditionalMenu = ::CreatePopupMenu();
@@ -5625,6 +5619,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				UINT cmdId = (UINT)subMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
 															global.x,global.y,GetParent());
 				selectedAnnotationOfContext = contextAnnotation;
+				selectedObjectOfContext = NULL;
 				::DestroyMenu(decoratorAdditionalMenu);
 			} else {
 				CMenu menu;
@@ -9514,6 +9509,7 @@ LRESULT CGMEView::OnDecoratorCommitTransactionRequest(WPARAM wParam, LPARAM lPar
 	objectInDecoratorOperation = NULL;
 	annotatorInDecoratorOperation = NULL;
 	isInConnectionCustomizeOperation = false;
+	isContextInitiatedOperation = false;
 	selectedContextConnection = NULL;
 	return 0;
 }
