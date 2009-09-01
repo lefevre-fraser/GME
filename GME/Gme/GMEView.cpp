@@ -5618,6 +5618,10 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				}
 				UINT cmdId = (UINT)subMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
 															global.x,global.y,GetParent());
+				// Save state for possible later use, see OnCmdMsg
+				ctxClkSt.nFlags = nFlags;
+				ctxClkSt.lpoint = local;
+				ctxClkSt.dpoint = ppoint;
 				selectedAnnotationOfContext = contextAnnotation;
 				selectedObjectOfContext = NULL;
 				::DestroyMenu(decoratorAdditionalMenu);
