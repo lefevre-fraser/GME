@@ -189,7 +189,7 @@ STDMETHODIMP CMgaProject::CreateEx(BSTR projectname, BSTR paradigmname, VARIANT 
 		
 		HRESULT suhr = S_OK;
 		try {
-			CComBSTR   fname("Root Folder");
+			CComBSTR   fname("RootFolder");
             // BGY: commented out because xml backend has different connection string format
 			/*LPCOLESTR p = wcsrchr(projectname, '\\');
 			if(p) {
