@@ -560,6 +560,8 @@ CGMEView::CGMEView()
 	selectedObjectOfContext			= NULL;
 	selectedAnnotationOfContext		= NULL;
 	selectedConnection				= NULL;
+	isLeftMouseButtonDown			= false;
+	isConnectionJustSelected		= false;
 	isInConnectionCustomizeOperation= false;
 	isCursorChangedByEdgeCustomize	= false;
 	selectedContextConnection		= NULL;
@@ -2264,6 +2266,8 @@ void CGMEView::ChangeAttrPrefFco(CGuiFco* guiFco)
 				selectedConnection->SetSelect(false);
 			conn->SetSelect(true);
 			selectedConnection = conn;
+			if (isLeftMouseButtonDown)
+				isConnectionJustSelected = true;
 		}
 	} else {
 		if (selectedConnection != NULL)
@@ -4512,6 +4516,8 @@ bool CGMEView::ChangePrnAspect(CString aspName)
 
 void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 {
+	isLeftMouseButtonDown = false;
+	isConnectionJustSelected = false;
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnLButtonUp in " + path + name + "\r\n");
 
 	CPoint ppoint = point;
@@ -4644,6 +4650,8 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 							else
 								annotatorInDecoratorOperation = annotation;
 						}
+					} else {
+						SetConnectionCustomizeCursor(point);
 					}
 				}
 			}	//case
@@ -4655,6 +4663,7 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnLButtonDown in "+path+name+"\r\n");
+	isLeftMouseButtonDown = true;
 	if (!(nFlags & MK_LBUTTON)) {
 		// PETER: this was needed to discard "got focus" situations: eg.: add-on dialog appears during attribute editing
 		return;
@@ -7411,6 +7420,41 @@ HRESULT CGMEView::DumpModelGeometryXML(LPCTSTR filePath)
 	return hr;
 }
 
+void CGMEView::SetConnectionCustomizeCursor(const CPoint& point)
+{
+	if (selectedConnection != NULL) {
+		ConnectionPartMoveType connectionPartMoveType;
+		bool horizontalOrVerticalEdge = false;
+		bool isPartFixed;
+		int edgeIndex = selectedConnection->IsPathAt(point, connectionPartMoveType, horizontalOrVerticalEdge, isPartFixed);
+		if (edgeIndex >= 0 && !isPartFixed) {
+			HCURSOR wantedCursor;
+			if (connectionPartMoveType == HorizontalEdgeMove) {
+				wantedCursor = LoadCursor(NULL, IDC_SIZEWE);
+			} else if (connectionPartMoveType == VerticalEdgeMove) {
+				wantedCursor = LoadCursor(NULL, IDC_SIZENS);
+			} else if (connectionPartMoveType == AdjacentEdgeMove) {
+				wantedCursor = LoadCursor(NULL, IDC_SIZEALL);
+			} else if (connectionPartMoveType == InsertNewCustomPoint) {
+				wantedCursor = LoadCursor(NULL, IDC_HAND);
+			} else if (connectionPartMoveType == ModifyExistingCustomPoint) {
+				wantedCursor = LoadCursor(NULL, IDC_CROSS);
+			} else {
+				ASSERT(false);
+			}
+			HCURSOR cursorBackup = ::SetCursor(wantedCursor);
+			if (!isCursorChangedByEdgeCustomize)
+				customizeConnectionCursorBackup = cursorBackup;
+			isCursorChangedByEdgeCustomize = true;
+		} else {
+			if (isCursorChangedByEdgeCustomize) {
+				::SetCursor(customizeConnectionCursorBackup);
+				isCursorChangedByEdgeCustomize = false;
+			}
+		}
+	}
+}
+
 void CGMEView::OnConncntxProperties()
 {
 	OnContextProperties(); // We now use the Launcher COM interface.
@@ -8827,6 +8871,11 @@ void CGMEView::OnNcMouseMove(UINT nHitTest, CPoint point)
 
 void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 {
+	if (!isLeftMouseButtonDown || (GetKeyState(VK_LBUTTON) & 0x8000) == 0) {
+		isConnectionJustSelected = false;
+		isLeftMouseButtonDown = false;
+	}
+
 	CGMEView *self = const_cast<CGMEView *>(this);
 	CPoint point(screenpoint);
 	CoordinateTransfer(point);
@@ -8911,36 +8960,8 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 				}
 			}
 		} else {
-			if (selectedConnection != NULL) {
-				ConnectionPartMoveType connectionPartMoveType;
-				bool horizontalOrVerticalEdge = false;
-				bool isPartFixed;
-				int edgeIndex = selectedConnection->IsPathAt(point, connectionPartMoveType, horizontalOrVerticalEdge, isPartFixed);
-				if (edgeIndex >= 0 && !isPartFixed) {
-					HCURSOR wantedCursor;
-					if (connectionPartMoveType == HorizontalEdgeMove) {
-						wantedCursor = LoadCursor(NULL, IDC_SIZEWE);
-					} else if (connectionPartMoveType == VerticalEdgeMove) {
-						wantedCursor = LoadCursor(NULL, IDC_SIZENS);
-					} else if (connectionPartMoveType == AdjacentEdgeMove) {
-						wantedCursor = LoadCursor(NULL, IDC_SIZEALL);
-					} else if (connectionPartMoveType == InsertNewCustomPoint) {
-						wantedCursor = LoadCursor(NULL, IDC_HAND);
-					} else if (connectionPartMoveType == ModifyExistingCustomPoint) {
-						wantedCursor = LoadCursor(NULL, IDC_CROSS);
-					} else {
-						ASSERT(false);
-					}
-					HCURSOR cursorBackup = ::SetCursor(wantedCursor);
-					if (!isCursorChangedByEdgeCustomize)
-						customizeConnectionCursorBackup = cursorBackup;
-					isCursorChangedByEdgeCustomize = true;
-				} else {
-					if (isCursorChangedByEdgeCustomize) {
-						::SetCursor(customizeConnectionCursorBackup);
-						isCursorChangedByEdgeCustomize = false;
-					}
-				}
+			if (selectedConnection != NULL && !isConnectionJustSelected) {
+				SetConnectionCustomizeCursor(point);
 			} else {
 				if (isCursorChangedByEdgeCustomize) {
 					::SetCursor(customizeConnectionCursorBackup);

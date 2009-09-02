@@ -104,6 +104,8 @@ public:
 	CGuiObject*				selectedObjectOfContext;
 	CGuiAnnotator*			selectedAnnotationOfContext;
 	CGuiConnection*			selectedConnection;
+	bool					isConnectionJustSelected;
+	bool					isLeftMouseButtonDown;
 	// for connection customize operation
 	bool					isInConnectionCustomizeOperation;
 	PathCustomizationType	customizeConnectionType;
@@ -348,6 +350,7 @@ public:
 	void					ClearSupressConnectionCheckAlert(void) { m_supressConnectionCheckAlert = false; };
 	void					SupressConnectionCheckAlert(void) { m_supressConnectionCheckAlert = true; };
 	HRESULT					DumpModelGeometryXML(LPCTSTR filePath);
+	void					SetConnectionCustomizeCursor(const CPoint& point);
 
 	virtual int				OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
 
