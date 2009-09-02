@@ -15,9 +15,9 @@ GMEGraph::GMEGraph( IMgaProject *project, IMgaModel* model, IMgaMetaAspect* aspe
 }
 
 GMEGraph::~GMEGraph()
-{    
+{
     for( unsigned int i=0; i<m_nodes.size(); ++i )
-    {        
+    {
         if( m_nodes[i]->m_fco != NULL )
         {
             m_nodes[i]->m_fco->Release();
@@ -31,7 +31,7 @@ GMEGraph::~GMEGraph()
                 m_nodes[i]->m_ports[j]->m_fco = NULL;
             }
         }
-    }        
+    }
 
     clear();
 }
@@ -63,55 +63,70 @@ void GMEGraph::fillNodes( IMgaProject *project, IMgaParts* parts )
             COMTHROW( fco->get_RegistryValue(L"decorator",&decoratorProgID) );
 
             CComObjPtr<IMgaDecorator> decorator;
-            if( decoratorProgID.Length() == 0 )            
-                decorator.CoCreateInstance(L"Mga.BoxDecorator");
-            else
-                decorator.CoCreateInstance(decoratorProgID);
+			CComPtr<IMgaElementDecorator> newDecorator;
+            if (decoratorProgID.Length() == 0)
+                decoratorProgID = L"Mga.BoxDecorator";
 
-            COMTHROW( decorator->Initialize( project, metaPart, fco ) );
-            COMTHROW( decorator->GetPreferredSize( &sx, &sy ) );
-            COMTHROW( decorator->SetLocation( x, y, x+sx, y+sy ) );
-                   
-            Node * node = new Node( sx, sy );
-            node->m_x = x;
-            node->m_y = y;
-            node->m_fco = fco;
-            node->m_fco->AddRef();
-                                        
-            CComObjPtr<IMgaFCOs> fcos;
-            COMTHROW( decorator->GetPorts(PutOut(fcos)) );
-            long fcoNum = 0;
-            if( fcos!=NULL )
-                COMTHROW( fcos->get_Count(&fcoNum) );
-            for( int j=0; j<fcoNum; ++j )
-            {
-                CComObjPtr<IMgaFCO> port_fco;
-                COMTHROW( fcos->get_Item(j+1, PutOut(port_fco)) );
+			try {
+				HRESULT hres = newDecorator.CoCreateInstance(PutInBstr(decoratorProgID));
+				if (FAILED(hres) && hres != CO_E_CLASSSTRING) {	// might be an old decorator
+					hres = decorator.CoCreateInstance(PutInBstr(decoratorProgID));
+				}
+				if (hres == S_OK && newDecorator)
+					decorator = CComQIPtr<IMgaDecorator>(newDecorator);
+				if (hres == S_OK && decorator) {
+					if (newDecorator)
+						COMTHROW(newDecorator->InitializeEx(project, metaPart, fco, NULL, (ULONGLONG)GetDesktopWindow()));
+					else
+						COMTHROW(decorator->Initialize(project, metaPart, fco));
 
-                long port_sx, port_sy, port_ex, port_ey;
-                COMTHROW( decorator->GetPortLocation( port_fco, &port_sx, &port_sy, &port_ex, &port_ey ) );
+					COMTHROW( decorator->GetPreferredSize( &sx, &sy ) );
+					COMTHROW( decorator->SetLocation( x, y, x+sx, y+sy ) );
 
-                int x1 = port_ex;
-                int x2 = port_sx;
-                if( x2 < x1 )
-                {
-                    x1 = port_sx;
-                    x2 = port_ex;                        
-                }
-                int y1 = port_ey;
-                int y2 = port_sy;
-                if( y2 < y1 )
-                {
-                    y1 = port_sy;
-                    y2 = port_ey;                        
-                }
+					Node * node = new Node( sx, sy );
+					node->m_x = x;
+					node->m_y = y;
+					node->m_fco = fco;
+					node->m_fco->AddRef();
 
-                Node * port = new Node( node, x1, y1, x2-x1, y2-y1 );
-                port->m_fco = port_fco;
-                port->m_fco->AddRef();
-                node->m_ports.push_back( port );
-            }
-            m_nodes.push_back( node );
+					CComObjPtr<IMgaFCOs> fcos;
+					COMTHROW( decorator->GetPorts(PutOut(fcos)) );
+					long fcoNum = 0;
+					if( fcos!=NULL )
+						COMTHROW( fcos->get_Count(&fcoNum) );
+					for( int j=0; j<fcoNum; ++j )
+					{
+						CComObjPtr<IMgaFCO> port_fco;
+						COMTHROW( fcos->get_Item(j+1, PutOut(port_fco)) );
+
+						long port_sx, port_sy, port_ex, port_ey;
+						COMTHROW( decorator->GetPortLocation( port_fco, &port_sx, &port_sy, &port_ex, &port_ey ) );
+
+						int x1 = port_ex;
+						int x2 = port_sx;
+						if( x2 < x1 )
+						{
+							x1 = port_sx;
+							x2 = port_ex;
+						}
+						int y1 = port_ey;
+						int y2 = port_sy;
+						if( y2 < y1 )
+						{
+							y1 = port_sy;
+							y2 = port_ey;
+						}
+
+						Node * port = new Node( node, x1, y1, x2-x1, y2-y1 );
+						port->m_fco = port_fco;
+						port->m_fco->AddRef();
+						node->m_ports.push_back( port );
+					}
+					m_nodes.push_back( node );
+				}
+			}
+			catch (hresult_exception&) {
+			}
         }
     }
 }
@@ -162,7 +177,7 @@ void GMEGraph::fillConnections( IMgaProject *project, IMgaParts* parts )
                     nodeTo->m_edges.push_back( e );
                     if( nodeTo->m_parent != NULL )
                         nodeTo->m_parent->m_edges.push_back(e);
-                }                
+                }
             }
         }
     }
@@ -215,13 +230,13 @@ void GMEGraph::setRoutingPrefs( Edge * e, CString connPrefs )
             if( !N && !E && !S &&  W ) e->cannotStartToEast  = true;
             if(  N && !E && !S && !W ) e->cannotStartToSouth = true;
             if( !N &&  E && !S && !W ) e->cannotStartToWest  = true;
-        }        
+        }
     }
 
     if( nodeToIsPort )
     {
         if( e->m_nodeTo->m_x < e->m_nodeTo->m_parent->m_sx/2 )
-            e->cannotEndFromEast = true;                    
+            e->cannotEndFromEast = true;
         else
             e->cannotEndFromWest = true;
     }
@@ -243,6 +258,6 @@ void GMEGraph::setRoutingPrefs( Edge * e, CString connPrefs )
             if( !N && !E && !S &&  W ) e->cannotEndFromEast  = true;
             if(  N && !E && !S && !W ) e->cannotEndFromSouth = true;
             if( !N &&  E && !S && !W ) e->cannotEndFromWest  = true;
-        }        
+        }
     }
 }
