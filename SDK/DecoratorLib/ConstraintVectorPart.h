@@ -26,8 +26,6 @@ class ConstraintVectorPart: public VectorPart
 protected:
 	COLORREF				m_crFill;
 	double					m_thicknessRatio;
-	long					m_constraintWidth;
-	long					m_constraintHeight;
 
 public:
 	ConstraintVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, COLORREF fillColor,
@@ -36,8 +34,6 @@ public:
 
 // =============== resembles IMgaElementDecorator
 public:
-	virtual CSize			GetPreferredSize	(void) const;
-
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 };

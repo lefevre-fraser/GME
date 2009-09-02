@@ -104,9 +104,9 @@ CSize ReferenceBitmapPart::GetPreferredSize(void) const
 	if (m_referencedPart != NULL) {
 		CSize plSize = m_referencedPart->GetPreferredSize();
 		return plSize + CSize(m_lBorderWidth * 2, m_lBorderWidth * 2);
-	} else {
-		return TypeableBitmapPart::GetPreferredSize();
 	}
+
+	return TypeableBitmapPart::GetPreferredSize();
 }
 
 void ReferenceBitmapPart::SetLocation(const CRect& location)

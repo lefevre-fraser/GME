@@ -19,22 +19,12 @@ namespace DecoratorSDK {
 
 DiamondVectorPart::DiamondVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink,
 									 long diamondWidth, long diamondHeight):
-	VectorPart(pPart, eventSink),
-	m_diamondWidth(diamondWidth),
-	m_diamondHeight(diamondHeight)
+	VectorPart(pPart, eventSink, diamondWidth, diamondHeight)
 {
 }
 
 DiamondVectorPart::~DiamondVectorPart()
 {
-}
-
-CSize DiamondVectorPart::GetPreferredSize(void) const
-{
-	CSize prefSize = ResizablePart::GetPreferredSize();
-	if (prefSize != CSize(0, 0))
-		return prefSize;
-	return CSize(m_diamondWidth, m_diamondHeight);
 }
 
 // New functions

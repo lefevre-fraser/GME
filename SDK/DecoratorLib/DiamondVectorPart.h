@@ -23,18 +23,12 @@ namespace DecoratorSDK {
 
 class DiamondVectorPart: public VectorPart
 {
-protected:
-	long						m_diamondWidth;
-	long						m_diamondHeight;
-
 public:
 	DiamondVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, long diamondWidth, long diamondHeight);
 	virtual ~DiamondVectorPart();
 
 // =============== resembles IMgaElementDecorator
 public:
-	virtual CSize			GetPreferredSize	(void) const;
-
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 };

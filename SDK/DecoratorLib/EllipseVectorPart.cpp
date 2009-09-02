@@ -19,22 +19,12 @@ namespace DecoratorSDK {
 
 EllipseVectorPart::EllipseVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink,
 									 long ellipseWidth, long ellipseHeight):
-	VectorPart(pPart, eventSink),
-	m_ellipseWidth(ellipseWidth),
-	m_ellipseHeight(ellipseHeight)
+	VectorPart(pPart, eventSink, ellipseWidth, ellipseHeight)
 {
 }
 
 EllipseVectorPart::~EllipseVectorPart()
 {
-}
-
-CSize EllipseVectorPart::GetPreferredSize(void) const
-{
-	CSize prefSize = ResizablePart::GetPreferredSize();
-	if (prefSize != CSize(0, 0))
-		return prefSize;
-	return CSize(m_ellipseWidth, m_ellipseHeight);
 }
 
 // New functions

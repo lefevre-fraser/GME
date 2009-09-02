@@ -18,7 +18,7 @@ namespace DecoratorSDK {
 //################################################################################################
 
 BitmapPart::BitmapPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
-	VectorPart			(pPart, eventSink),
+	VectorPart			(pPart, eventSink, 0, 0),
 	m_pBitmap			(NULL),
 	m_pTileVector		(NULL),
 	m_crBorder			(COLOR_BLACK),

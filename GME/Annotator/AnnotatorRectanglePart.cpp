@@ -18,7 +18,7 @@ namespace AnnotatorDecor {
 //################################################################################################
 
 AnnotatorRectanglePart::AnnotatorRectanglePart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
-	VectorPart(pPart, eventSink),
+	VectorPart(pPart, eventSink, 0, 0),
 	m_bRoundCornerRect		(false),
 	m_bRoundCornerRadius	(9)
 {

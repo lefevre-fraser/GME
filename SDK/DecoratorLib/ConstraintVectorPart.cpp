@@ -19,24 +19,14 @@ namespace DecoratorSDK {
 
 ConstraintVectorPart::ConstraintVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, COLORREF fillColor,
 										   double thicknessRatio, long constraintWidth, long constraintHeight):
-	VectorPart			(pPart, eventSink),
+	VectorPart			(pPart, eventSink, constraintWidth, constraintHeight),
 	m_crFill			(fillColor),
-	m_thicknessRatio	(thicknessRatio),
-	m_constraintWidth	(constraintWidth),
-	m_constraintHeight	(constraintHeight)
+	m_thicknessRatio	(thicknessRatio)
 {
 }
 
 ConstraintVectorPart::~ConstraintVectorPart()
 {
-}
-
-CSize ConstraintVectorPart::GetPreferredSize(void) const
-{
-	CSize prefSize = ResizablePart::GetPreferredSize();
-	if (prefSize != CSize(0, 0))
-		return prefSize;
-	return CSize(m_constraintWidth, m_constraintHeight);
 }
 
 // New functions

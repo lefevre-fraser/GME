@@ -23,17 +23,12 @@ namespace DecoratorSDK {
 
 class EllipseVectorPart: public VectorPart
 {
-	long						m_ellipseWidth;
-	long						m_ellipseHeight;
-
 public:
 	EllipseVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, long ellipseWidth, long ellipseHeight);
 	virtual ~EllipseVectorPart();
 
 // =============== resembles IMgaElementDecorator
 public:
-	virtual CSize			GetPreferredSize	(void) const;
-
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 };

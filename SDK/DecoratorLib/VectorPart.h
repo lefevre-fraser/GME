@@ -215,10 +215,13 @@ protected:
 	Gdiplus::Pen*				m_CurrentPen;
 	bool						m_bShadowCasted;
 
+	long						m_iDefaultWidth;
+	long						m_iDefaultHeight;
+
 	std::vector<CoordCommand*>	m_coordCommands;
 
 public:
-	VectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
+	VectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, long defaultWidth, long defaultHeight);
 	virtual ~VectorPart();
 
 	void			AddCommand					(const VectorCommand& cmd) { m_Commands.push_back(cmd); };
@@ -231,6 +234,8 @@ public:
 
 // =============== resembles IMgaElementDecorator
 public:
+	virtual CSize			GetPreferredSize	(void) const;
+
 	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

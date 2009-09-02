@@ -19,22 +19,12 @@ namespace DecoratorSDK {
 
 TriangleVectorPart::TriangleVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink,
 									   long triangleWidth, long triangleHeight):
-	VectorPart(pPart, eventSink),
-	m_triangleWidth(triangleWidth),
-	m_triangleHeight(triangleHeight)
+	VectorPart(pPart, eventSink, triangleWidth, triangleHeight)
 {
 }
 
 TriangleVectorPart::~TriangleVectorPart()
 {
-}
-
-CSize TriangleVectorPart::GetPreferredSize(void) const
-{
-	CSize prefSize = ResizablePart::GetPreferredSize();
-	if (prefSize != CSize(0, 0))
-		return prefSize;
-	return CSize(m_triangleWidth, m_triangleHeight);
 }
 
 // New functions

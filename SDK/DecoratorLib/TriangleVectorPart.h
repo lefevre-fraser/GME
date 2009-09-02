@@ -23,18 +23,12 @@ namespace DecoratorSDK {
 
 class TriangleVectorPart: public VectorPart
 {
-protected:
-	long						m_triangleWidth;
-	long						m_triangleHeight;
-
 public:
 	TriangleVectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, long triangleWidth, long triangleHeight);
 	virtual ~TriangleVectorPart();
 
 // =============== resembles IMgaElementDecorator
 public:
-	virtual CSize			GetPreferredSize	(void) const;
-
 	virtual void			InitializeEx		(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 };

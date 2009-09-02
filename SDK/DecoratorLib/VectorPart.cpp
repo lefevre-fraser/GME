@@ -119,7 +119,7 @@ VectorCommand::~VectorCommand()
 //
 //################################################################################################
 
-VectorPart::VectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
+VectorPart::VectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink, long defaultWidth, long defaultHeight):
 	ResizablePart				(pPart, eventSink),
 	m_bCastShadow				(false),
 	m_iShadowThickness			(9),
@@ -130,7 +130,9 @@ VectorPart::VectorPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& even
 	m_shadowPath				(NULL),
 	m_bInMainPathDefinition		(false),
 	m_bInShadowPathDefinition	(false),
-	m_bShadowCasted				(false)
+	m_bShadowCasted				(false),
+	m_iDefaultWidth				(defaultWidth),
+	m_iDefaultHeight			(defaultHeight)
 {
 	penColorVariableName		= PREF_COLOR;
 	brushColorVariableName		= PREF_FILLCOLOR;
@@ -183,6 +185,14 @@ VectorCommand VectorPart::GetCommand(long index) const
 {
 	ASSERT(index >= 0 && index < GetCommandNumber());
 	return m_Commands[index];
+}
+
+CSize VectorPart::GetPreferredSize(void) const
+{
+	CSize prefSize = ResizablePart::GetPreferredSize();
+	if (prefSize != CSize(0, 0))
+		return prefSize;
+	return CSize(m_iDefaultWidth, m_iDefaultHeight);
 }
 
 void VectorPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
