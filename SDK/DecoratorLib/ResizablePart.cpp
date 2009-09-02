@@ -20,8 +20,6 @@ namespace DecoratorSDK {
 
 ResizablePart::ResizablePart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	PartBase			(pPart, eventSink),
-	m_bReadCustomSize	(true),
-	m_bResetSize		(false),
 	resizeLogic			(NULL)
 {
 	resizeLogic.SetParentPart(this);
@@ -56,7 +54,7 @@ CSize ResizablePart::GetPreferredSize(void) const
 	long cx = 0;
 	long cy = 0;
 
-	if (m_bResizable && m_bReadCustomSize) {
+	if (m_bResizable) {
 		COMTRY {
 			CComPtr<IMgaMetaAspect> mAspect;
 			COMTHROW(m_spPart->get_ParentAspect(&mAspect));
@@ -67,6 +65,7 @@ CSize ResizablePart::GetPreferredSize(void) const
 			CComPtr<IMgaTerritory> terr;
 			CComBSTR bstrVal;
 			CComPtr<IMgaPart> part;
+			CComBSTR regName(PREF_PREFERREDSIZE);
 			if (!inTrans) {
 				COMTHROW(m_spProject->CreateTerritory(NULL, &terr));
 				COMTHROW(m_spProject->BeginTransaction(terr, TRANSACTION_READ_ONLY));
@@ -77,19 +76,15 @@ CSize ResizablePart::GetPreferredSize(void) const
 				COMTHROW(terrFco->get_Status(&status));
 				if (status == OBJECT_EXISTS) {
 					COMTHROW(terrFco->get_Part(mAspect, &part));
-					if (part) {
-						CComBSTR regName(PREF_PREFERREDSIZE);
+					if (part)
 						COMTHROW(part->get_RegistryValue(regName, &bstrVal));
-					}
 				}
 
 				m_spProject->CommitTransaction();
 			} else {
 				COMTHROW(m_spFCO->get_Part(mAspect, &part));
-				if (part) {
-					CComBSTR regName(PREF_PREFERREDSIZE);
+				if (part)
 					COMTHROW(part->get_RegistryValue(regName, &bstrVal));
-				}
 			}
 
 			if (bstrVal) {
@@ -162,8 +157,13 @@ bool ResizablePart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC tran
 
 bool ResizablePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_bResizable && m_bActive && ResizablePart::GetPreferredSize() != CSize(0, 0))
-		return resizeLogic.MouseRightButtonDown(hCtxMenu, nFlags, point, transformHDC);
+	if (m_bResizable && m_bActive && ResizablePart::GetPreferredSize() != CSize(0, 0)) {
+		CRect ptRect = GetLocation();
+		if (ptRect.PtInRect(point)) {
+			::AppendMenu(hCtxMenu, MF_STRING | MF_ENABLED, CTX_MENU_ID_RESETSIZE, CTX_MENU_STR_RESETSIZE);
+			return true;
+		}
+	}
 
 	return false;
 }
@@ -172,9 +172,33 @@ bool ResizablePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint&
 {
 	bool handled = false;
 	if (m_bResizable) {
-		m_bReadCustomSize = false;
-		handled = resizeLogic.MenuItemSelected(menuItemId, nFlags, point, transformHDC);
-		m_bReadCustomSize = true;
+		if (menuItemId == CTX_MENU_ID_RESETSIZE) {
+			m_parentPart->GeneralOperationStarted(NULL);
+			CComBSTR regName(PREF_PREFERREDSIZE);
+			// Getting regnode
+			CComPtr<IMgaMetaAspect> mAspect;
+			COMTHROW(m_spPart->get_ParentAspect(&mAspect));
+
+			long status;
+			COMTHROW(m_spProject->get_ProjectStatus(&status));
+			bool inTrans = (status & 0x08L) != 0;
+			CComPtr<IMgaPart> part;
+			CComPtr<IMgaRegNode> ccpMgaRegNode;
+			if (!inTrans) {
+				ASSERT(false);	// We cannot commit a transaction here, cause it would destroy ourselves
+			} else {
+				COMTHROW(m_spFCO->get_Part(mAspect, &part));
+				if (part)
+					CComBSTR regName(PREF_PREFERREDSIZE);
+					COMTHROW(part->get_RegistryNode(regName, &ccpMgaRegNode));
+			}
+			if (ccpMgaRegNode) {
+				// Delete the registry entries
+				COMTHROW(ccpMgaRegNode->RemoveTree());
+			}
+			m_parentPart->GeneralOperationFinished(NULL);
+			handled = true;
+		}
 	}
 
 	return handled;
@@ -230,7 +254,7 @@ void ResizablePart::WindowResizingFinished(UINT nFlags, CRect& location)
 					CPoint pt = location.TopLeft();
 					COMTHROW(part->SetGmeAttrs(0, pt.x, pt.y));
 					// Save preferred size part
-					CSize size(m_bResetSize ? 0 : location.Width(), m_bResetSize ? 0 : location.Height());
+					CSize size(location.Width(), location.Height());
 					if (size.cx >= 0 && size.cy >= 0) {
 						OLECHAR bbc[40];
 						swprintf(bbc, 40, OLESTR("%ld,%ld"), size.cx, size.cy);
@@ -246,12 +270,10 @@ void ResizablePart::WindowResizingFinished(UINT nFlags, CRect& location)
 		}
 		catch(hresult_exception &e)
 		{
-			m_bResetSize = false;
 			ASSERT(FAILED(e.hr));
 			SetErrorInfo(e.hr);
 		}
 	}
-	m_bResetSize = false;
 	PartBase::WindowResizingFinished(nFlags, location);
 }
 

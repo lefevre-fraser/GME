@@ -29,6 +29,31 @@ ResizeLogic::~ResizeLogic()
 {
 }
 
+short ResizeLogic::GetResizeFeatures(void) const
+{
+	return m_resizeFeatures;
+}
+
+void ResizeLogic::SetResizeFeatures(short resizeFeatures)
+{
+	m_resizeFeatures = resizeFeatures;
+}
+
+CRect ResizeLogic::GetResizeTargetLocation(void) const
+{
+	return m_targetLocation;
+}
+
+void ResizeLogic::SetResizeTargetLocation(CRect targetLocation)
+{
+	m_targetLocation = targetLocation;
+}
+
+void ResizeLogic::SetParentPart(PartBase* pPart)
+{
+	m_parentPart = pPart;
+}
+
 void ResizeLogic::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
 {
 	m_resizeState				= NotInResize;
@@ -55,7 +80,6 @@ void ResizeLogic::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 void ResizeLogic::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 							   HWND parentWnd, PreferenceMap& preferences)
 {
-	m_parentWnd = parentWnd;
 	Initialize(pProject, pPart, pFCO);
 }
 
@@ -211,42 +235,6 @@ bool ResizeLogic::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transf
 	return false;
 }
 
-bool ResizeLogic::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	if (m_parentPart->IsActive()) {
-		CRect ptRect = m_parentPart->GetLocation();
-		if (ptRect.PtInRect(point)) {
-			::AppendMenu(hCtxMenu, MF_STRING | MF_ENABLED, CTX_MENU_ID_RESETSIZE, CTX_MENU_STR_RESETSIZE);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool ResizeLogic::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC)
-{
-	if (menuItemId == CTX_MENU_ID_RESETSIZE) {
-		CRect pRect = m_parentPart->GetLocation();
-		CSize normalPreferredSize = m_parentPart->GetPreferredSize();
-		long deltax = normalPreferredSize.cx - pRect.Width();
-		long deltay = normalPreferredSize.cy - pRect.Height();
-		ResizablePart* resizablePart = NULL;
-		if (m_parentPart != NULL)
-			resizablePart = m_parentPart->dynamic_cast_ResizablePart();
-		if (resizablePart != NULL)
-			resizablePart->m_bResetSize = true;
-		m_parentPart->WindowResizingStarted(nFlags, pRect);
-		pRect.InflateRect(0, 0, deltax, deltay);
-		m_parentPart->WindowResizing(nFlags, pRect);
-		m_parentPart->WindowResized(nFlags, CSize(deltax, deltay));
-		m_parentPart->WindowResizingFinished(nFlags, pRect);
-		return true;
-	}
-
-	return false;
-}
-
 bool ResizeLogic::OperationCanceledByGME(void)
 {
 	if (m_resizeState != NotInResize) {
@@ -323,6 +311,21 @@ ResizeLogic::ResizeType ResizeLogic::DeterminePotentialResize(CPoint cursorPoint
 	}
 
 	return NotInResize;
+}
+
+bool ResizeLogic::IsSizeChanged(void) const
+{
+	return m_targetLocation.EqualRect(m_originalLocation) == FALSE;
+}
+
+CRect ResizeLogic::GetOriginalLocation(void) const
+{
+	return m_originalLocation;
+}
+
+void ResizeLogic::SetMinimumSize(CSize minSize) const
+{
+	m_minSize = minSize;
 }
 
 void ResizeLogic::ChangeCursorForm(ResizeType resizeType, bool notify)

@@ -46,7 +46,6 @@ public:
 
 protected:
 	PartBase*			m_parentPart;
-	HWND				m_parentWnd;
 
 	ResizeType			m_resizeState;
 	short				m_resizeFeatures;
@@ -62,11 +61,11 @@ public:
 	ResizeLogic(PartBase* pPart);
 	virtual ~ResizeLogic();
 
-	virtual short	GetResizeFeatures			(void) const			{ return m_resizeFeatures; };
-	virtual void	SetResizeFeatures			(short resizeFeatures)	{ m_resizeFeatures = resizeFeatures; };
-	virtual CRect	GetResizeTargetLocation		(void) const			{ return m_targetLocation; };
-	virtual void	SetResizeTargetLocation		(CRect targetLocation)	{ m_targetLocation = targetLocation; };
-	virtual void	SetParentPart				(PartBase* pPart)		{ m_parentPart = pPart; };
+	virtual short	GetResizeFeatures			(void) const;
+	virtual void	SetResizeFeatures			(short resizeFeatures);
+	virtual CRect	GetResizeTargetLocation		(void) const;
+	virtual void	SetResizeTargetLocation		(CRect targetLocation);
+	virtual void	SetParentPart				(PartBase* pPart);
 
 // =============== resembles IMgaElementDecorator
 	virtual void	Initialize					(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
@@ -79,14 +78,12 @@ public:
 	virtual bool	MouseMoved					(UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MouseLeftButtonUp			(UINT nFlags, const CPoint& point, HDC transformHDC);
-	virtual bool	MouseRightButtonDown		(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC);
-	virtual bool	MenuItemSelected			(UINT menuItemId, UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	OperationCanceledByGME		(void);
 
 	ResizeType		DeterminePotentialResize	(CPoint cursorPoint) const;
-	bool			IsSizeChanged				(void) const { return m_targetLocation.EqualRect(m_originalLocation) == FALSE; };
-	CRect			GetOriginalLocation			(void) const { return m_originalLocation; };
-	void			SetMinimumSize				(CSize minSize) const { m_minSize = minSize; };
+	bool			IsSizeChanged				(void) const;
+	CRect			GetOriginalLocation			(void) const;
+	void			SetMinimumSize				(CSize minSize) const;
 
 private:
 	void			ChangeCursorForm			(ResizeType resizeType, bool notify = true);

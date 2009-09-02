@@ -24,11 +24,10 @@ namespace DecoratorSDK {
 
 class ResizablePart: public PartBase
 {
-public:
-	bool			m_bReadCustomSize;	// For temporary use, when you want to determine intended size
-	bool			m_bResetSize;		// For temporary use, siganling that size reset is needed
+protected:
 	ResizeLogic		resizeLogic;
 
+public:
 	ResizablePart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~ResizablePart();
 
@@ -36,7 +35,6 @@ public:
 	ResizablePart*	dynamic_cast_ResizablePart(void)	{ return this; }
 
 // =============== resembles IMgaElementDecorator
-public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);
 	virtual void			Destroy				(void);
