@@ -256,160 +256,194 @@ bool PartBase::OperationCanceledByGME(void)
 
 void PartBase::Refresh(refresh_mode_enum refreshMode)
 {
-	m_eventSink->Refresh(refreshMode);
+	if (m_eventSink)
+		m_eventSink->Refresh(refreshMode);
 }
 
 void PartBase::CursorChanged(long newCursorID)
 {
-	m_eventSink->CursorChanged(newCursorID);
+	if (m_eventSink)
+		m_eventSink->CursorChanged(newCursorID);
 }
 
 void PartBase::CursorRestored(void)
 {
-	m_eventSink->CursorRestored();
+	if (m_eventSink)
+		m_eventSink->CursorRestored();
 }
 
 void PartBase::OperationCanceledByDecorator(void)
 {
-	m_eventSink->OperationCanceled();
+	if (m_eventSink)
+		m_eventSink->OperationCanceled();
 }
 
 void PartBase::LabelEditingStarted(CRect& location)
 {
-	m_eventSink->LabelEditingStarted(location.left, location.top, location.right, location.bottom);
+	if (m_eventSink)
+		m_eventSink->LabelEditingStarted(location.left, location.top, location.right, location.bottom);
 }
 
 void PartBase::LabelEditingFinished(CRect& location)
 {
-	m_eventSink->LabelEditingFinished(location.left, location.top, location.right, location.bottom);
+	if (m_eventSink)
+		m_eventSink->LabelEditingFinished(location.left, location.top, location.right, location.bottom);
 }
 
 void PartBase::LabelChanged(CString& newLabel)
 {
-	CComBSTR newLabelBStr(newLabel);
-	m_eventSink->LabelChanged(newLabelBStr);
+	if (m_eventSink) {
+		CComBSTR newLabelBStr(newLabel);
+		m_eventSink->LabelChanged(newLabelBStr);
+	}
 }
 
 void PartBase::LabelMovingStarted(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelMovingStarted(nFlags, location.left, location.top, location.right, location.bottom);
+	if (m_eventSink)
+		m_eventSink->LabelMovingStarted(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
 void PartBase::LabelMoving(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelMoving(nFlags, location.left, location.top, location.right, location.bottom);
+	if (m_eventSink)
+		m_eventSink->LabelMoving(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
 void PartBase::LabelMovingFinished(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelMovingFinished(nFlags, location.left, location.top, location.right, location.bottom);
+	if (m_eventSink)
+		m_eventSink->LabelMovingFinished(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
 void PartBase::LabelMoved(UINT nFlags, CPoint& point)
 {
-	m_eventSink->LabelMoved(nFlags, point.x, point.y);
+	if (m_eventSink)
+		m_eventSink->LabelMoved(nFlags, point.x, point.y);
 }
 
 void PartBase::LabelResizingStarted(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelResizingStarted(nFlags, location.left, location.top, location.right, location.bottom);
+	if (m_eventSink)
+		m_eventSink->LabelResizingStarted(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
 void PartBase::LabelResizing(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelResizing(nFlags, location.left, location.top, location.right, location.bottom);
+	if (m_eventSink)
+		m_eventSink->LabelResizing(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
 void PartBase::LabelResizingFinished(UINT nFlags, CRect& location)
 {
-	m_eventSink->LabelResizingFinished(nFlags, location.left, location.top, location.right, location.bottom);
+	if (m_eventSink)
+		m_eventSink->LabelResizingFinished(nFlags, location.left, location.top, location.right, location.bottom);
 }
 
 void PartBase::LabelResized(UINT nFlags, CSize& size)
 {
-	m_eventSink->LabelResized(nFlags, size.cx, size.cy);
+	if (m_eventSink)
+		m_eventSink->LabelResized(nFlags, size.cx, size.cy);
 }
 
 void PartBase::GeneralOperationStarted(void* operationData)
 {
-	m_eventSink->GeneralOperationStarted((ULONGLONG)operationData);
+	if (m_eventSink)
+		m_eventSink->GeneralOperationStarted((ULONGLONG)operationData);
 }
 
 void PartBase::GeneralOperationFinished(void** operationData)
 {
-	m_eventSink->GeneralOperationFinished((ULONGLONG*)operationData);
+	if (m_eventSink)
+		m_eventSink->GeneralOperationFinished((ULONGLONG*)operationData);
 }
 
 void PartBase::WindowMovingStarted(UINT nFlags, CRect& location)
 {
-	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
-	if (edes)
-		edes->WindowMovingStarted(nFlags, location.left, location.top, location.right, location.bottom);
-	else
-		ASSERT(false);
+	if (m_eventSink) {
+		CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+		if (edes)
+			edes->WindowMovingStarted(nFlags, location.left, location.top, location.right, location.bottom);
+		else
+			ASSERT(false);
+	}
 }
 
 void PartBase::WindowMoving(UINT nFlags, CRect& location)
 {
-	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
-	if (edes)
-		edes->WindowMoving(nFlags, location.left, location.top, location.right, location.bottom);
-	else
-		ASSERT(false);
+	if (m_eventSink) {
+		CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+		if (edes)
+			edes->WindowMoving(nFlags, location.left, location.top, location.right, location.bottom);
+		else
+			ASSERT(false);
+	}
 }
 
 void PartBase::WindowMovingFinished(UINT nFlags, CRect& location)
 {
-	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
-	if (edes)
-		edes->WindowMovingFinished(nFlags, location.left, location.top, location.right, location.bottom);
-	else
-		ASSERT(false);
+	if (m_eventSink) {
+		CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+		if (edes)
+			edes->WindowMovingFinished(nFlags, location.left, location.top, location.right, location.bottom);
+		else
+			ASSERT(false);
+	}
 }
 
 void PartBase::WindowMoved(UINT nFlags, CPoint& point)
 {
-	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
-	if (edes)
-		edes->WindowMoved(nFlags, point.x, point.y);
-	else
-		ASSERT(false);
+	if (m_eventSink) {
+		CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+		if (edes)
+			edes->WindowMoved(nFlags, point.x, point.y);
+		else
+			ASSERT(false);
+	}
 }
 
 void PartBase::WindowResizingStarted(UINT nFlags, CRect& location)
 {
-	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
-	if (edes)
-		edes->WindowResizingStarted(nFlags, location.left, location.top, location.right, location.bottom);
-	else
-		ASSERT(false);
+	if (m_eventSink) {
+		CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+		if (edes)
+			edes->WindowResizingStarted(nFlags, location.left, location.top, location.right, location.bottom);
+		else
+			ASSERT(false);
+	}
 }
 
 void PartBase::WindowResizing(UINT nFlags, CRect& location)
 {
-	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
-	if (edes)
-		edes->WindowResizing(nFlags, location.left, location.top, location.right, location.bottom);
-	else
-		ASSERT(false);
+	if (m_eventSink) {
+		CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+		if (edes)
+			edes->WindowResizing(nFlags, location.left, location.top, location.right, location.bottom);
+		else
+			ASSERT(false);
+	}
 }
 
 void PartBase::WindowResizingFinished(UINT nFlags, CRect& location)
 {
-	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
-	if (edes)
-		edes->WindowResizingFinished(nFlags, location.left, location.top, location.right, location.bottom);
-	else
-		ASSERT(false);
+	if (m_eventSink) {
+		CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+		if (edes)
+			edes->WindowResizingFinished(nFlags, location.left, location.top, location.right, location.bottom);
+		else
+			ASSERT(false);
+	}
 }
 
 void PartBase::WindowResized(UINT nFlags, CSize& size)
 {
-	CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
-	if (edes)
-		edes->WindowResized(nFlags, size.cx, size.cy);
-	else
-		ASSERT(false);
+	if (m_eventSink) {
+		CComQIPtr<IMgaElementDecoratorEvents> edes(m_eventSink);
+		if (edes)
+			edes->WindowResized(nFlags, size.cx, size.cy);
+		else
+			ASSERT(false);
+	}
 }
 
 ECoordRefPoint PartBase::GetAlignment(ELocation loc) const

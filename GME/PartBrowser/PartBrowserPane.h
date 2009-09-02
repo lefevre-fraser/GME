@@ -10,7 +10,6 @@
 #include "StdAfx.h"
 #include <vector>
 #include <Gdiplus.h>
-#include "PartBrowserDecoratorEventSink.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -22,7 +21,6 @@ public:
 	CComPtr<IMgaMetaPart>						part;
 	CComPtr<IMgaDecorator>						decorator;
 	CComPtr<IMgaElementDecorator>				newDecorator;
-	CComObjPtr<CPartBrowserDecoratorEventSink>	decorEventSink;
 };
 
 

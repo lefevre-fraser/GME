@@ -289,14 +289,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PartBrowserDecoratorEventSink.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\PartBrowserDecoratorEventSink.rgs"
-				>
-			</File>
-			<File
 				RelativePath=".\PartBrowserDlg.cpp"
 				>
 			</File>
@@ -372,10 +364,6 @@
 			</File>
 			<File
 				RelativePath=".\PartBrowserCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PartBrowserDecoratorEventSink.h"
 				>
 			</File>
 			<File

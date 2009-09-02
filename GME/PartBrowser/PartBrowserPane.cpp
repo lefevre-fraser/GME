@@ -119,7 +119,6 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 			if (IsPartDisplayable(metaPart)) {
 				PartWithDecorator triple;
 				triple.part = metaPart;
-				triple.decorEventSink = NULL;
 
 				CComPtr<IMgaMetaRole> mmRole;
 				COMTHROW(metaPart->get_Role(&mmRole));
@@ -130,7 +129,6 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				CComBSTR decoratorProgId = GetDecoratorProgId(mFco);
 
 				try {
-					CComPtr<IMgaElementDecoratorEvents> decorEventSinkIface;
 					HRESULT hres = newDecorator.CoCreateInstance(PutInBstr(decoratorProgId));
 					if (FAILED(hres) && hres != CO_E_CLASSSTRING) {	// might be an old decorator
 						hres = decorator.CoCreateInstance(PutInBstr(decoratorProgId));
@@ -141,13 +139,9 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 					}
 
 					if (newDecorator) {
-						CComObjPtr<CPartBrowserDecoratorEventSink>	decorEventSink;
-						::CreateComObject(decorEventSink);
-						triple.decorEventSink = decorEventSink;
-						HRESULT hr = ::QueryInterface((IMgaElementDecoratorEvents*)triple.decorEventSink.p, &decorEventSinkIface);
 						triple.newDecorator = newDecorator;
 						decorator = CComQIPtr<IMgaDecorator>(newDecorator);
-						COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, decorEventSinkIface, (ULONGLONG)m_hWnd));
+						COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, NULL /*decorEventSinkIface*/, (ULONGLONG)m_hWnd));
 					} else {
 						COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
 					}
@@ -182,10 +176,6 @@ void CPartBrowserPane::DestroyDecorators(void)
 			(*jj).decorator.Release();
 			(*jj).decorator = NULL;
 			(*jj).part.Release();
-			if ((*jj).decorEventSink != NULL) {
-				(*jj).decorEventSink.Release();
-				(*jj).decorEventSink = NULL;
-			}
 		}
 		(*ii).clear();
 	}

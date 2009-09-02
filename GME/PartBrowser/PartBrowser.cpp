@@ -3,7 +3,6 @@
 #include "stdafx.h"
 #include "PartBrowser.h"
 #include "PartBrowserCtrl.h"
-#include "PartBrowserDecoratorEventSink.h"
 #include "PartBrowser_i.c"
 
 #ifdef _DEBUG
@@ -22,7 +21,6 @@ const WORD _wVerMinor = 0;
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_PartBrowserDecoratorEventSink, CPartBrowserDecoratorEventSink)
 END_OBJECT_MAP()
 
 
@@ -108,7 +106,7 @@ STDAPI DllRegisterServer(void)
 	if (!COleObjectFactoryEx::UpdateRegistryAll(TRUE))
 		return ResultFromScode(SELFREG_E_CLASS);
 
-	return _Module.UpdateRegistryFromResource(IDR_DECORATOREVENTSINK, TRUE);
+	return NOERROR;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -124,5 +122,5 @@ STDAPI DllUnregisterServer(void)
 	if (!COleObjectFactoryEx::UpdateRegistryAll(FALSE))
 		return ResultFromScode(SELFREG_E_CLASS);
 
-	return _Module.UpdateRegistryFromResource(IDR_DECORATOREVENTSINK, FALSE);
+	return NOERROR;
 }

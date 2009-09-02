@@ -80,13 +80,4 @@ library PartBrowserLib
 		[default, source] dispinterface _DPartBrowserEvents;
 	};
 
-	//  Class information for CPartBrowserDecoratorEventSink
-
-	[ uuid(6AC7B017-F8AC-4cec-83F1-B0D4B3381734) ]
-	coclass PartBrowserDecoratorEventSink
-	{
-		[default] interface IMgaElementDecoratorEvents;
-		interface ISupportErrorInfo;
-	};
-
 };
