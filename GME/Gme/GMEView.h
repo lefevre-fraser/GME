@@ -561,7 +561,8 @@ protected:
 	afx_msg void OnTryToSnapHorzVertPath();
 	afx_msg void OnDeleteConnEdgeCustomData();
 	afx_msg void OnDeleteConnPointCustomData();
-	afx_msg void OnDeleteConnRouteCustomData();
+	afx_msg void OnDeleteConnRouteCustomDataThisAspect();
+	afx_msg void OnDeleteConnRouteCustomDataAllAspects();
 	afx_msg void OnShowContextMenu();
 	afx_msg void OnPrintMetafile();
 	afx_msg void OnZoomIn();
@@ -588,7 +589,8 @@ protected:
 	afx_msg void OnUpdateTryToSnapHorzVertPath( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDeleteConnEdgeCustomData( CCmdUI* pCmdUI );
 	afx_msg void OnUpdateDeleteConnPointCustomData( CCmdUI* pCmdUI );
-	afx_msg void OnUpdateDeleteConnRouteCustomData( CCmdUI* pCmdUI );
+	afx_msg void OnUpdateDeleteConnRouteCustomDataThisAspect( CCmdUI* pCmdUI );
+	afx_msg void OnUpdateDeleteConnRouteCustomDataAllAspects( CCmdUI* pCmdUI );
 #if defined(ADDCRASHTESTMENU)
 	afx_msg void OnCrashTestIllegalWrite();
 	afx_msg void OnCrashTestIllegalRead();

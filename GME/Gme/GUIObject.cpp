@@ -3284,9 +3284,18 @@ void CGuiConnection::WriteCustomPathData(bool handleTransaction)
 		bstrVal = EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC;
 	else
 		CopyTo(valStr, bstrVal);
+
 	if (handleTransaction)
 		view->BeginTransaction();
-	COMTHROW(mgaFco->put_RegistryValue(pathBstr, bstrVal));
+
+	if (valStr == "") {
+		CComPtr<IMgaRegNode> ccpMgaRegNode;
+		COMTHROW(mgaFco->get_RegistryNode(pathBstr, &ccpMgaRegNode));
+		COMTHROW(ccpMgaRegNode->RemoveTree());
+	} else {
+		COMTHROW(mgaFco->put_RegistryValue(pathBstr, bstrVal));
+	}
+
 	if (handleTransaction)
 		view->CommitTransaction();
 }
@@ -3413,6 +3422,11 @@ bool CGuiConnection::DeleteAllPathCustomizationsForAnAspect(long asp)
 bool CGuiConnection::DeleteAllPathCustomizationsForCurrentAspect(void)
 {
 	return DeleteAllPathCustomizationsForAnAspect(view->currentAspect->index);
+}
+
+void CGuiConnection::DeleteAllPathCustomizationsForAllAspects(void)
+{
+	customPathData.clear();
 }
 
 void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat)

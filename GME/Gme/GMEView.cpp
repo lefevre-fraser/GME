@@ -357,7 +357,8 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_TRYTOSNAPHORZVERTPATH, OnTryToSnapHorzVertPath)
 	ON_COMMAND(ID_DELETECONNEDGECUSTOMDATA, OnDeleteConnEdgeCustomData)
 	ON_COMMAND(ID_DELETECONNPOINTCUSTOMDATA, OnDeleteConnPointCustomData)
-	ON_COMMAND(ID_DELETECONNROUTECUSTOMDATA, OnDeleteConnRouteCustomData)
+	ON_COMMAND(ID_DELETECONNCUSTOMDATA_THISASPECT, OnDeleteConnRouteCustomDataThisAspect)
+	ON_COMMAND(ID_DELETECONNCUSTOMDATA_ALLASPECTS, OnDeleteConnRouteCustomDataAllAspects)
 	ON_COMMAND(ID_JUMPTOFIRSTOBJ, OnJumpToFirstObject)
 	ON_COMMAND(ID_JUMPTONEXTOBJ, OnJumpToNextObject)
 	ON_COMMAND(ID_SHOWCONTEXTMENU, OnShowContextMenu)
@@ -377,7 +378,8 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_UPDATE_COMMAND_UI(ID_TRYTOSNAPHORZVERTPATH, OnUpdateTryToSnapHorzVertPath)
 	ON_UPDATE_COMMAND_UI(ID_DELETECONNEDGECUSTOMDATA, OnUpdateDeleteConnEdgeCustomData)
 	ON_UPDATE_COMMAND_UI(ID_DELETECONNPOINTCUSTOMDATA, OnUpdateDeleteConnPointCustomData)
-	ON_UPDATE_COMMAND_UI(ID_DELETECONNROUTECUSTOMDATA, OnUpdateDeleteConnRouteCustomData)
+	ON_UPDATE_COMMAND_UI(ID_DELETECONNCUSTOMDATA_THISASPECT, OnUpdateDeleteConnRouteCustomDataThisAspect)
+	ON_UPDATE_COMMAND_UI(ID_DELETECONNCUSTOMDATA_ALLASPECTS, OnUpdateDeleteConnRouteCustomDataAllAspects)
 #if defined(ADDCRASHTESTMENU)
 	ON_COMMAND(ID_CRASHTEST_ILLEGALWRITE, OnCrashTestIllegalWrite)
 	ON_COMMAND(ID_CRASHTEST_ILLEGALREAD, OnCrashTestIllegalRead)
@@ -2838,7 +2840,6 @@ void CGMEView::SetCenterObject(CComPtr<IMgaFCO> centerObj)
 			guiObj = NULL;
 		}
 
-		// TODO: Connections
 		if (guiObj) {
 			CGMEEventLogger::LogGMEEvent("CGMEView::SetCenterObject("+guiObj->GetName()+" "+guiObj->GetID()+") in "+path+name+"\r\n");
 			if (!guiObj->IsVisible()) {
@@ -7684,11 +7685,21 @@ void CGMEView::OnDeleteConnPointCustomData()
 	OnDeleteConnEdgeCustomData();
 }
 
-void CGMEView::OnDeleteConnRouteCustomData()
+void CGMEView::OnDeleteConnRouteCustomDataThisAspect()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnRouteCustomData in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnRouteCustomDataThisAspect in "+path+name+"\r\n");
 	if (selectedContextConnection != NULL) {
 		selectedContextConnection->DeleteAllPathCustomizationsForCurrentAspect();
+		selectedContextConnection->WriteCustomPathData();
+	}
+	selectedContextConnection = NULL;
+}
+
+void CGMEView::OnDeleteConnRouteCustomDataAllAspects()
+{
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnRouteCustomDataAllAspects in "+path+name+"\r\n");
+	if (selectedContextConnection != NULL) {
+		selectedContextConnection->DeleteAllPathCustomizationsForAllAspects();
 		selectedContextConnection->WriteCustomPathData();
 	}
 	selectedContextConnection = NULL;
@@ -7823,10 +7834,16 @@ void CGMEView::OnUpdateDeleteConnPointCustomData(CCmdUI* pCmdUI)
 				   selectedContextConnection->HasPathCustomizationForTypeAndCurrentAspect(CustomPointCustomization, contextConnectionEdgeIndex));
 }
 
-void CGMEView::OnUpdateDeleteConnRouteCustomData(CCmdUI* pCmdUI)
+void CGMEView::OnUpdateDeleteConnRouteCustomDataThisAspect(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(selectedContextConnection != NULL &&
 				   selectedContextConnection->HasPathCustomizationForCurrentAspect());
+}
+
+void CGMEView::OnUpdateDeleteConnRouteCustomDataAllAspects(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(selectedContextConnection != NULL &&
+				   selectedContextConnection->HasPathCustomization());
 }
 
 #if defined(ADDCRASHTESTMENU)

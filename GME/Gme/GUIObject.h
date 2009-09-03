@@ -472,6 +472,7 @@ public:
 	void DeletePathCustomization(const CustomPathData& pathData);
 	bool DeleteAllPathCustomizationsForAnAspect(long asp);
 	bool DeleteAllPathCustomizationsForCurrentAspect(void);
+	void DeleteAllPathCustomizationsForAllAspects(void);
 	void RemoveDeletedPathCustomizations(const std::vector<CustomPathData>& customPathDat);
 	void SnapCoordIfApplicable(CustomPathData* coordToSet, const CPoint& last, const CPoint& pt);
 	bool VerticalAndHorizontalSnappingOfConnectionLineSegments(long asp, int edgeIndex = -1);
