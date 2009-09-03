@@ -37,7 +37,7 @@ public:
 	virtual ~BitmapPart();
 
 	// This is a trick to speed up dynamic_cast
-	BitmapPart*		dynamic_cast_BitmapPart(void)		{ return this; }
+	virtual BitmapPart*		dynamic_cast_BitmapPart(void)		{ return this; }
 
 // =============== resembles IMgaElementDecorator
 public:

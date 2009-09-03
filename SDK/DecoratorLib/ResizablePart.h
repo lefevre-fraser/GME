@@ -32,7 +32,7 @@ public:
 	virtual ~ResizablePart();
 
 	// This is a trick to speed up dynamic_cast
-	ResizablePart*	dynamic_cast_ResizablePart(void)	{ return this; }
+	virtual ResizablePart*	dynamic_cast_ResizablePart(void)	{ return this; }
 
 // =============== resembles IMgaElementDecorator
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

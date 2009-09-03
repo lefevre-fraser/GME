@@ -32,7 +32,7 @@ public:
 	virtual ~PortLabelPart();
 
 	// This is a trick to speed up dynamic_cast
-	PortLabelPart*	dynamic_cast_PortLabelPart(void)	{ return this; }
+	virtual PortLabelPart*	dynamic_cast_PortLabelPart(void)	{ return this; }
 
 // =============== resembles IMgaElementDecorator
 	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,

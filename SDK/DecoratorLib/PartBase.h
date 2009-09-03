@@ -56,9 +56,9 @@ public:
 	virtual ~PartBase();
 
 	// This is a trick to speed up dynamic_cast
-	ResizablePart*	dynamic_cast_ResizablePart(void)	{ return NULL; }
-	BitmapPart*		dynamic_cast_BitmapPart(void)		{ return NULL; }
-	PortLabelPart*	dynamic_cast_PortLabelPart(void)	{ return NULL; }
+	virtual ResizablePart*	dynamic_cast_ResizablePart(void)	{ return NULL; }
+	virtual BitmapPart*		dynamic_cast_BitmapPart(void)		{ return NULL; }
+	virtual PortLabelPart*	dynamic_cast_PortLabelPart(void)	{ return NULL; }
 
 	virtual void	SetParentPart				(PartBase* pPart) { m_parentPart = pPart; };
 
