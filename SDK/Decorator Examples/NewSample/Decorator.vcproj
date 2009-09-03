@@ -67,6 +67,7 @@
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -87,6 +88,7 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(GME_ROOT)\GME\Lib;$(GME_ROOT)\Lib"
 				ModuleDefinitionFile=".\DecoratorApp.def"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Release/Decorator.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"

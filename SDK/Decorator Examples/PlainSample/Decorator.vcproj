@@ -38,7 +38,8 @@
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"/>
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
@@ -54,6 +55,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories=""
 				ModuleDefinitionFile=".\DecoratorApp.def"
+				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Release/Decorator.pdb"
 				SubSystem="2"
 				ImportLibrary=".\Release/Decorator.lib"
