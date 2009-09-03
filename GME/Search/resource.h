@@ -14,6 +14,7 @@
 #define IDC_EDITNAME                    201
 #define IDC_BUTTON_GO                   202
 #define IDC_STATIC_RESULTS              203
+#define IDC_BUTTON_CLEAR                203
 #define IDC_LISTRESULTS                 204
 #define IDC_STATICNAME                  205
 #define IDC_STATICROLE                  206
