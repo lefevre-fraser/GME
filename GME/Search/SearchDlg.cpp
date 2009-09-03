@@ -111,6 +111,7 @@ BEGIN_MESSAGE_MAP(CSearchDlg, CDialog)
     ON_NOTIFY(NM_DBLCLK, IDC_TREE_SEARCH_HISTORY, &CSearchDlg::OnNMDblclkTreeSearchHistory)
     ON_BN_CLICKED(IDC_CHECKSPLSEARCH, &CSearchDlg::OnCheckSplSearch)
     ON_NOTIFY(LVN_COLUMNCLICK, IDC_LISTRESULTS, &CSearchDlg::OnLvnColumnclickListresults)
+    ON_BN_CLICKED(IDC_BUTTON_CLEAR, &CSearchDlg::OnBnClickedButtonClear)
 END_MESSAGE_MAP()
 
 BOOL CSearchDlg::OnInitDialog()
@@ -1027,4 +1028,10 @@ void CSearchDlg::OnLvnColumnclickListresults(NMHDR *pNMHDR, LRESULT *pResult)
 
    ascending[pNMLV->iSubItem] = !ascending[pNMLV->iSubItem];
     *pResult = 0;
+}
+
+void CSearchDlg::OnBnClickedButtonClear()
+{
+    m_treeSearchHistory.DeleteAllItems();
+    SaveSearchHistory();
 }

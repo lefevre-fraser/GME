@@ -202,6 +202,7 @@ public:
     CStatic m_stcRefCtrl;
     CButton m_chkConnCtrl;
     afx_msg void OnLvnColumnclickListresults(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnBnClickedButtonClear();
 };
 
 //{{AFX_INSERT_LOCATION}}
