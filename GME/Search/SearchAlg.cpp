@@ -724,7 +724,7 @@ int CSearch::Matches(IMgaFCO* fco,bool first)
     CBstr bstrKindName;
     CComPtr<IMgaMetaFCO> cmeta;
     COMTHROW( fco->get_Meta(&cmeta) );
-    COMTHROW( fco->get_Name(bstrKindName) );
+    COMTHROW( cmeta->get_Name(bstrKindName) );
     CString kindName = bstrKindName;
 
     if( filter.IsCaseIgnored()) // case ignored, make values lowercase
