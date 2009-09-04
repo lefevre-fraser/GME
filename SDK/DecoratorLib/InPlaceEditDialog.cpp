@@ -63,12 +63,19 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	editWnd->SetWindowText(m_Text);
 
 	CRect rectInResource(0, 0, 76, 19);
-	long width = (long)(m_initialRect.Width() * 1.5) + 40;
-	double heightRatio = 1.0;
+	double widthDeltaRatio = 0.5;
+	long widthBoost = (long)(m_initialRect.Width() * widthDeltaRatio);
+	widthBoost = min(max(widthBoost, 40), 200);	// Limiting minimum & maximum
+	long width = m_initialRect.Width() + widthBoost;
+	double heightDeltaRatio = 0.0;
 	if (m_bMultiLine)
-		heightRatio = 1.5;
-	long height = (long)(m_initialRect.Height() * heightRatio) + 4;
-	long left = m_bInflateToRight ? m_initialRect.left : (m_initialRect.left - (long)(m_initialRect.Width() * 0.5));
+		heightDeltaRatio = 0.5;
+	long heightBoost = (long)(m_initialRect.Height() * heightDeltaRatio) + 4;
+	heightBoost = min(heightBoost, 80);	// Limiting maximum
+	long height = m_initialRect.Height() + heightBoost;
+	height = max(height, 16);	// Limiting minimum
+	// Inflate to the left in case of right port
+	long left = m_initialRect.left - (m_bInflateToRight ? 0 : widthBoost);
 
 	MoveWindow(left, m_initialRect.top, width, height);
 
