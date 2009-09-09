@@ -106,6 +106,8 @@ public:
 	CGuiConnection*			selectedConnection;
 	bool					isConnectionJustSelected;
 	bool					isLeftMouseButtonDown;
+	bool					mouseButtonUpAfterDragDrop;		// Needed for LButtonUp initiated in-place edit, cause drag&drop SetCapture swallows the LButtonUp!!!
+	bool					doNotDeselectAfterInPlaceEdit;	// Connected to previous: disable deselection code, if in-place edit took place (up was handled)
 	// for connection customize operation
 	bool					isInConnectionCustomizeOperation;
 	PathCustomizationType	customizeConnectionType;

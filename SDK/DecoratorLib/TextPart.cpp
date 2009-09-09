@@ -214,7 +214,7 @@ bool TextPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 	return false;
 }
 
-bool TextPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
+bool TextPart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	return HandleTextEditOperation(false, point, transformHDC);
 }

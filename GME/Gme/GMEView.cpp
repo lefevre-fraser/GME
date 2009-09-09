@@ -565,6 +565,8 @@ CGMEView::CGMEView()
 	isLeftMouseButtonDown			= false;
 	isConnectionJustSelected		= false;
 	isInConnectionCustomizeOperation= false;
+	mouseButtonUpAfterDragDrop		= false;
+	doNotDeselectAfterInPlaceEdit	= false;
 	isCursorChangedByEdgeCustomize	= false;
 	selectedContextConnection		= NULL;
 	decoratorEditDlg				= NULL;
@@ -4535,6 +4537,8 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 				CGMEView* self = const_cast<CGMEView*> (this);
 				CGuiObject*	object	= self		? self->FindObject(point, true) : 0;
 //				CGuiPort*	port	= object	? object->FindPort(point, true) : 0;
+				if (object == NULL)
+					object = self ? self->FindObject(point, true, true) : 0;
 
 				if (inElementDecoratorOperation) {
 					CComPtr<IMgaElementDecorator> newDecorator;
@@ -4637,6 +4641,10 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 						CClientDC transformDC(this);
 						OnPrepareDC(&transformDC);
 						HRESULT retVal = newDecorator->MouseLeftButtonUp(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
+						if (retVal == S_DECORATOR_EVENT_HANDLED) {
+							if (mouseButtonUpAfterDragDrop)
+								doNotDeselectAfterInPlaceEdit = true;
+						}
 						if (retVal != S_OK &&
 							retVal != S_DECORATOR_EVENT_HANDLED &&
 							retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
@@ -4658,7 +4666,9 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 			}	//case
 		}	// switch
 	}	// if (!tmpConnectMode)
-	CScrollZoomView::OnLButtonUp(nFlags, ppoint);
+	if (!mouseButtonUpAfterDragDrop)
+		CScrollZoomView::OnLButtonUp(nFlags, ppoint);
+	mouseButtonUpAfterDragDrop = false;
 }
 
 void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
@@ -4905,10 +4915,14 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 					DROPEFFECT dropEffect = CGMEDoc::DoDragDrop(&selected, &selectedAnnotations, &desc,
 						DROPEFFECT_MOVE | DROPEFFECT_COPY | DROPEFFECT_LINK, &rectAwake,this);
 
-					if(validGuiObjects && dropEffect == DROPEFFECT_NONE) {
-						if(nFlags & MK_CONTROL) {
+					if (validGuiObjects && dropEffect == DROPEFFECT_NONE) {
+						if (inDrag && alreadySelected != NULL && (selection || annotation)) {
+							mouseButtonUpAfterDragDrop = true;
+							OnLButtonUp(nFlags, point);
+						}
+						if (nFlags & MK_CONTROL) {
 							if (selection) {
-								if(alreadySelected) {
+								if (alreadySelected) {
 									this->SendUnselEvent4Object( selected.GetHead());
 									selected.RemoveHead();
 									selection = selected.GetCount() ? selected.GetHead() : 0;
@@ -4930,7 +4944,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 									*/ ;
 							}
 						}
-						else {
+						else if (!doNotDeselectAfterInPlaceEdit) {
 							this->SendUnselEvent4List( &selected);
 							selected.RemoveAll();
 							RemoveAllAnnotationFromSelection();
@@ -4949,6 +4963,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 								}
 							}
 						}
+						doNotDeselectAfterInPlaceEdit = false;
 					}
 					else {
 						ChangeAttrPrefObjs(selected);
@@ -4977,7 +4992,6 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 */
 					}
 					inDrag = false;
-
 				}
 				else {
 					this->SendUnselEvent4List( &selected);
