@@ -131,6 +131,7 @@ CGMEApp::CGMEApp() :
 	multipleView = false;
 	useAutoRouting = true;
 	labelAvoidance = false;
+	edgeSnapAngle = 4.0;
 	defZoomLev = "100";
 	mouseOverNotify = false;
 	maintainHistory = false;
@@ -1501,6 +1502,8 @@ void CGMEApp::GetSettings()
 		VARIANT_BOOL labelavoidance;
 		COMTHROW( registrar->get_LabelAvoidance(REGACCESS_USER, &labelavoidance) );
 		labelAvoidance = (labelavoidance != VARIANT_FALSE);
+
+		COMTHROW( registrar->get_EdgeSnapTresholdAngle(REGACCESS_USER, &edgeSnapAngle) );
 
 		// Default Zoom Level
 		CComBSTR bstr_zl;

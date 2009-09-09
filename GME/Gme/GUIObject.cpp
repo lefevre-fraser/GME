@@ -3451,7 +3451,7 @@ void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPat
 
 void CGuiConnection::SnapCoordIfApplicable(CustomPathData* coordToSet, const CPoint& last, const CPoint& pt)
 {
-	double radEps = 4.0 / 360.0 * 2 * M_PI;
+	double radEps = theApp.edgeSnapAngle / 360.0 * 2 * M_PI;
 	RoutingDirection dir = GetDir(last - pt);
 	if (dir == Dir_Skew) {
 		bool modify = false;

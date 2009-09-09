@@ -70,6 +70,10 @@ public:
 	STDMETHOD(put_LabelAvoidance)(regaccessmode_enum mode, VARIANT_BOOL enabled);
 	STDMETHOD(GetLabelAvoidanceDisp)(regaccessmode_enum mode, VARIANT_BOOL *enabled) { return get_LabelAvoidance( mode, enabled); }
 	STDMETHOD(SetLabelAvoidanceDisp)(regaccessmode_enum mode, VARIANT_BOOL enabled) { return put_LabelAvoidance( mode, enabled); }
+	STDMETHOD(get_EdgeSnapTresholdAngle)(regaccessmode_enum mode, double *angle);
+	STDMETHOD(put_EdgeSnapTresholdAngle)(regaccessmode_enum mode, double angle);
+	STDMETHOD(GetEdgeSnapTresholdAngleDisp)(regaccessmode_enum mode, double *angle) { return get_EdgeSnapTresholdAngle( mode, angle); }
+	STDMETHOD(SetEdgeSnapTresholdAngleDisp)(regaccessmode_enum mode, double angle) { return put_EdgeSnapTresholdAngle( mode, angle); }
 	STDMETHOD(get_ScriptEngine)(regaccessmode_enum mode, BSTR *path);
 	STDMETHOD(put_ScriptEngine)(regaccessmode_enum mode, BSTR path);
 	STDMETHOD(GetScriptEngineDisp)(regaccessmode_enum mode, BSTR *path) { return get_ScriptEngine( mode, path); }

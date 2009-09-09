@@ -605,6 +605,62 @@ STDMETHODIMP CMgaRegistrar::put_LabelAvoidance(regaccessmode_enum mode, VARIANT_
 	COMCATCH(;)
 }
 
+
+STDMETHODIMP CMgaRegistrar::get_EdgeSnapTresholdAngle(regaccessmode_enum mode, double *angle)
+{
+	COMTRY
+	{
+		LONG res;
+		CString str;
+		if(mode & RM_USER) {
+			CRegKey mga;
+			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
+			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+			if(res == ERROR_SUCCESS) {
+				str	= QueryValue(mga, "EdgeSnapTresholdAngle");
+				if(!str.IsEmpty()) {
+					REVOKE_SYS2(mode);
+				}
+			}
+		}
+		if(mode & (RM_SYSDOREAD)) {
+			CRegKey mga;
+			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
+			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+			if(res == ERROR_SUCCESS) {
+				str = QueryValue(mga, "EdgeSnapTresholdAngle");
+			}
+		}
+		if (str == "")
+			*angle = 4.0;
+		else
+			*angle = atof(str);
+	}
+	COMCATCH(;)
+}
+
+
+STDMETHODIMP CMgaRegistrar::put_EdgeSnapTresholdAngle(regaccessmode_enum mode, double angle)
+{
+	COMTRY
+	{
+		CString str;
+		str.Format("%lf", angle);
+		if(mode & RM_USER) {
+			CRegKey mga;
+			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
+			ERRTHROW( mga.SetStringValue( "EdgeSnapTresholdAngle", str));
+		}
+		if(mode & (RM_SYS | RM_TEST)) {
+			CRegKey mga;
+			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "EdgeSnapTresholdAngle", str));
+		}
+	}
+	COMCATCH(;)
+}
+
+
 STDMETHODIMP CMgaRegistrar::get_ScriptEngine(regaccessmode_enum mode, BSTR *path) {
 	CHECK_OUT(path);
 

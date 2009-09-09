@@ -46,6 +46,8 @@ public:
 	CString	m_ext_editor;
 	BOOL	m_useAutoRouting;
 	BOOL	m_labelavoidance;
+	CString	m_edgeSnapAngleStr;
+	double	m_edgeSnapAngle;
 	BOOL	m_sendOverObj;
 	BOOL	m_timeStamps;
 	BOOL	m_navigationHistory;

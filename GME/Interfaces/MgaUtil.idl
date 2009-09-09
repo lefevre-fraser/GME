@@ -320,6 +320,18 @@ interface IMgaRegistrar : IDispatch
 	[helpstring("setter for property LabelAvoidance")]
 	HRESULT SetLabelAvoidanceDisp([in] regaccessmode_enum mode, [in] VARIANT_BOOL enabled);
 
+	[propget, helpstring("property EdgeSnapTresholdAngle")]
+	HRESULT EdgeSnapTresholdAngle([in] regaccessmode_enum mode, [out, retval] double *angle);
+
+	[propput, helpstring("property EdgeSnapTresholdAngle")]
+	HRESULT EdgeSnapTresholdAngle([in] regaccessmode_enum mode, [in] double angle);
+
+	[helpstring("getter for property EdgeSnapTresholdAngle")]
+	HRESULT GetEdgeSnapTresholdAngleDisp([in] regaccessmode_enum mode, [out, retval] double *angle);
+
+	[helpstring("setter for property EdgeSnapTresholdAngle")]
+	HRESULT SetEdgeSnapTresholdAngleDisp([in] regaccessmode_enum mode, [in] double angle);
+
 	// --- Scripting
 	[propget, helpstring("property ScriptEngine")]
 	HRESULT ScriptEngine([in] regaccessmode_enum mode, [out, retval] BSTR *path);
