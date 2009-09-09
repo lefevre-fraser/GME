@@ -1898,7 +1898,13 @@
                       The global auto-routing policy can be turned on/off
                       (for more information please check out the section on AutoRouting).
                       You can also set if the AutoRouter should avoid labels with the
-                      connection lines or not (the default setting is off).</para>
+                      connection lines or not (the default setting is off).
+                      The connection horizontal/vertical snap treshold angle
+                      comes to play when you edit fully customizable connections.
+                      In that case this angle is used to determine if snapping should
+                      be applied or not. You should give the angle in degrees and
+                      not in radian. Holding down the control key supresses the snap algorithm.
+                      For further details please check the secion on AutoRouting.</para>
                       <para>In the Miscellaneous group the edge and the font smoothing
                       mode can be controlled distinctively besides many other things.
                       If you find that your monitor
@@ -2872,7 +2878,9 @@
 
         <para>In the context menu, there's also the possibility to delete the
         customization for just a given edge, or delete all customization of
-        the connection.</para>
+        the connection for the actual aspect. Also you can delete all customization
+        data for all aspect for the particular connection using the proper
+        context menu point.</para>
 
         <figure>
           <title>Context menu with options to delete customization</title>
@@ -2930,6 +2938,11 @@
           along the whole connection using the "<guimenuitem>Try to apply
           horizontal/vertical snap along the whole connection</guimenuitem>"
           context menu item.</para>
+
+          <para>You can tune the most important parameter of the logic
+          (the snap treshold angle) int the Tools Options dialog.
+          You should give the angle in degrees (and not in radian).
+          See the previous screenshot of the dialog in this section.</para>
 
           <para>GME tries to obtain the data of an auto-routed connection path
           and feed that edge information into the fully customizable path's
