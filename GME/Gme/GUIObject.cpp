@@ -3451,15 +3451,15 @@ void CGuiConnection::RemoveDeletedPathCustomizations(const std::vector<CustomPat
 
 void CGuiConnection::SnapCoordIfApplicable(CustomPathData* coordToSet, const CPoint& last, const CPoint& pt)
 {
-	double radEps = 2.0 / 360.0 * 2 * M_PI;
+	double radEps = 4.0 / 360.0 * 2 * M_PI;
 	RoutingDirection dir = GetDir(last - pt);
 	if (dir == Dir_Skew) {
 		bool modify = false;
 		RoutingDirection dirToGo = GetSkewDir(last - pt);
-		if (dirToGo == Dir_Left || dirToGo == Dir_Right) {
+		if ((dirToGo == Dir_Left || dirToGo == Dir_Right) && last.y != pt.y) {
 			if (abs(last.y - pt.y) <= 3) {
 				modify = true;
-			} else if (abs(last.x - pt.x) != 0) {
+			} else if (last.x != pt.x) {
 				double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
 				TRACE2("Horizontal alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
 				if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
@@ -3467,10 +3467,10 @@ void CGuiConnection::SnapCoordIfApplicable(CustomPathData* coordToSet, const CPo
 			}
 			if (modify)
 				coordToSet->SetY(last.y);
-		} else if (dirToGo == Dir_Top || dirToGo == Dir_Bottom) {
+		} else if (last.x != pt.x) {	// dirToGo == Dir_Top || dirToGo == Dir_Bottom (also can be Dir_Skew but this would be error and no_dir in case of singularity)
 			if (abs(last.x - pt.x) <= 3) {
 				modify = true;
-			} else if (abs(last.y - pt.y) != 0) {
+			} else if (last.y != pt.y) {
 				double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
 				TRACE2("Vertical alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
 				if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
@@ -3503,7 +3503,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 				} else {
 					last = points.GetHead();
 				}
-				if (edgeIndex == -1 || i == edgeIndex - 1 || i == edgeIndex)	// Apply snapping only to the point neighbour edges
+				if (edgeIndex == -1 || i == edgeIndex || i == edgeIndex + 1)	// Apply snapping only to the point neighbour edges
 					SnapCoordIfApplicable(&(*ii), last, pt);
 				lastData = &(*ii);
 				i++;
@@ -3511,7 +3511,7 @@ bool CGuiConnection::VerticalAndHorizontalSnappingOfConnectionLineSegments(long 
 		}
 	}
 	// see the very last connection line segment
-	if (lastData != NULL && (edgeIndex == -1 || i == edgeIndex - 1 || i == edgeIndex)) {
+	if (lastData != NULL && (edgeIndex == -1 || i == edgeIndex || i == edgeIndex + 1)) {
 		CPoint pt(lastData->GetX(), lastData->GetY());
 		CPoint last = points.GetTail();
 		SnapCoordIfApplicable(lastData, last, pt);
