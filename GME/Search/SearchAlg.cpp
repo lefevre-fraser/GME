@@ -664,11 +664,15 @@ void CSearch::SearchResults(CComPtr<IMgaFCOs> old_results,CComPtr<IMgaFCOs> disp
         }
         else if (rret == OBJTYPE_REFERENCE && filter.GetReferences())
         {
-            if (CheckAtom((IMgaAtom*)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaReference*)(MGACOLL_ITER.p)));
+            if (CheckReference((IMgaReference*)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaReference*)(MGACOLL_ITER.p)));
         }
         else if (rret == OBJTYPE_SET && filter.GetSets())
         {
             if(CheckSet((IMgaSet*)(MGACOLL_ITER.p)))COMTHROW(results->Append((IMgaSet*)(MGACOLL_ITER.p)));
+        }
+        else if(rret == OBJTYPE_CONNECTION && filter.GetConnections())  
+        {
+            if (CheckConnection((IMgaConnection*)(MGACOLL_ITER.p))) COMTHROW(results->Append((IMgaConnection*)(MGACOLL_ITER.p)));
         }
     } MGACOLL_ITERATE_END;
 }
