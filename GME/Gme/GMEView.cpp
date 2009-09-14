@@ -8254,10 +8254,14 @@ void CGMEView::OnCntxInterpret()
 			CComPtr<IMgaFCOs> selfcos;
 			COMTHROW(selfcos.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
 			COMTHROW(currentModel.QueryInterface(&focus));
-			POSITION pos = selected.GetHeadPosition();
-			while (pos) {
-				CGuiFco *gfco = selected.GetNext(pos);
-				COMTHROW(selfcos->Append(gfco->mgaFco));
+			if (!selected.IsEmpty()) {
+				POSITION pos = selected.GetHeadPosition();
+				while (pos) {
+					CGuiFco *gfco = selected.GetNext(pos);
+					COMTHROW(selfcos->Append(gfco->mgaFco));
+				}
+			} else {
+				COMTHROW(selfcos->Append(currentModel));
 			}
 
 			if(theApp.bNoProtect) COMTHROW( launcher->put_Parameter(CComVariant(true)));
@@ -8304,7 +8308,7 @@ void CGMEView::OnUpdateCntxCheck(CCmdUI* pCmdUI)
 
 void CGMEView::OnUpdateCntxInterpret(CCmdUI* pCmdUI)
 {
-	pCmdUI->Enable(!selected.IsEmpty());
+	pCmdUI->Enable(TRUE);	// selected.IsEmpty() means we'll activete the interpeter for the current model (currentModel)
 }
 
 void CGMEView::OnUpdateCntxLocate(CCmdUI* pCmdUI)
