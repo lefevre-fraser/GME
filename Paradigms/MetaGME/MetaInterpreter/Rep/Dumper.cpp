@@ -1087,7 +1087,7 @@ void Dumper::doDump()
 		const std::string asp_name = (*it)->getName();
 		if (already_dumped[ asp_name])
 		{
-			global_vars.err << MSG_ERROR  << "Error: Duplicate name found \"" << asp_name << "\".\n";
+			global_vars.err << MSG_WARNING  << "Error: Duplicate name found \"" << asp_name << "\" (aspect and kind names should be unique).\n";
 		}
 	}}
 
