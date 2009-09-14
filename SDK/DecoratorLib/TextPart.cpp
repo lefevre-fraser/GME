@@ -312,15 +312,16 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 		dc.SelectObject(scaled_font);
 		// Do scaling and offset because of possible zoom and horizontal/vertical scrolling
 
+		// Determine the minimal size
+		CSize minSize;
+		minSize = dc.GetTextExtent(CString(_T(" ")));
+		// Measure text
 		CSize cSize;
 		if (!m_bMultiLine) {
 			cSize = dc.GetTextExtent(m_strText == "" ? " " : m_strText);
 		} else {
 			// Determine Text Width and Height
-			CSize oSize;
-			// Determine the line Height
-			oSize = dc.GetTextExtent(CString(_T(" ")));
-			cSize.cy = oSize.cy;
+			cSize.cy = minSize.cy;
 			// Text Width
 			cSize.cx = 0;
 			CString oStr;
@@ -332,7 +333,7 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 					// Eliminate last '\r'
 					if (_T('\r') == oStr.GetAt(iLen))
 						oStr = oStr.Left(iLen);
-					oSize = dc.GetTextExtent(oStr);
+					CSize oSize = dc.GetTextExtent(oStr);
 					if (cSize.cx < oSize.cx)
 						cSize.cx = oSize.cx;
 				}
@@ -347,10 +348,10 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 
 		CInPlaceEditDialog* inPlaceEditDlg = new CInPlaceEditDialog();
 		CDialogTemplate dlgTemplate(_T("DecoratorEditDlg"), DS_SETFOREGROUND | WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 76, 16);
-		DWORD editStyle = WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL;
+		DWORD editStyle = WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL;	// ES_AUTOHSCROLL is important for proper auto width handling!
 		if (m_bMultiLine)
 			editStyle |= ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN;
-		dlgTemplate.AddEditBox(_T("Edit"), editStyle, 0, 0, 0, 75, 16, IDC_INPLACETEXTEDIT);
+		dlgTemplate.AddRichEdit(_T("Edit"), editStyle, 0, 0, 0, 75, 16, IDC_INPLACETEXTEDIT);
 
 		bool inflateToRight = true;
 		PortLabelPart* portLabelPart = dynamic_cast_PortLabelPart();
@@ -359,11 +360,31 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 				inflateToRight = false;
 		CPoint screenPt = point;
 		cWnd->ClientToScreen(&screenPt);
-		inPlaceEditDlg->SetProperties(m_strText, this, editLocation, screenPt, m_parentWnd, cWnd, scaled_font,
-									  isPermanentCWnd, inflateToRight, m_bMultiLine);
+		CRect boundsLimit;
+		cWnd->GetClientRect(&boundsLimit);
+		inPlaceEditDlg->SetProperties(m_strText, this, editLocation, minSize, boundsLimit, screenPt, m_parentWnd,
+									  cWnd, scaled_font, isPermanentCWnd, inflateToRight, m_bMultiLine);
+		success = AfxInitRichEdit2();	// See http://support.microsoft.com/kb/166132
 		success = inPlaceEditDlg->CreateIndirect(dlgTemplate, cWnd);
-		if (success != FALSE)
+		if (success == 1) {
 			success = inPlaceEditDlg->ShowWindow(SW_SHOWNORMAL);
+		} else {
+			LPVOID lpMsgBuf;
+			::FormatMessage(
+				FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+				NULL,
+				GetLastError(),
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+				(LPTSTR) &lpMsgBuf,
+				0,
+				NULL
+			);
+			// Display the string.
+			//MessageBox(NULL, lpMsgBuf, "GetLastError", MB_OK | MB_ICONINFORMATION);
+			::OutputDebugString((LPCSTR)lpMsgBuf);
+			// Free the buffer.
+			::LocalFree(lpMsgBuf);
+		}
 
 		return true;
 	}

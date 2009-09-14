@@ -58,33 +58,6 @@ CDialogTemplate::~CDialogTemplate()
 	delete [] ((char*)dialogTemplate);
 }
 
-void CDialogTemplate::AddComponent(LPCSTR type, LPCSTR caption, DWORD style, DWORD exStyle,
-								   int x, int y, int w, int h, WORD id)
-{
-	DLGITEMTEMPLATE item;
-
-	item.style = style;
-	item.x     = x;
-	item.y     = y;
-	item.cx    = w;
-	item.cy    = h;
-	item.id    = id;
-
-	item.dwExtendedStyle = exStyle;
-
-	AppendData(&item, sizeof(DLGITEMTEMPLATE));
-
-	AppendString(type);
-	AppendString(caption);
-
-	WORD creationDataLength = 0;
-	AppendData(&creationDataLength, sizeof(WORD));
-
-	// Increment the component count
-
-	dialogTemplate->cdit++;
-}
-
 void CDialogTemplate::AddButton(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y,
 								int w, int h, WORD id)
 {
@@ -139,8 +112,23 @@ void CDialogTemplate::AddComboBox(LPCSTR caption, DWORD style, DWORD exStyle, in
 	AppendData(&creationDataLength, sizeof(WORD));
 }
 
+void CDialogTemplate::AddRichEdit(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y,
+								  int w, int h, WORD id)
+{
+	AddComponent(0x0081, RICHEDIT_CLASS, caption, style, exStyle, x, y, w, h, id);
+
+	WORD creationDataLength = 0;
+	AppendData(&creationDataLength, sizeof(WORD));
+}
+
 void CDialogTemplate::AddStandardComponent(WORD type, LPCSTR caption, DWORD style,
 										   DWORD exStyle, int x, int y, int w, int h, WORD id)
+{
+	AddComponent(type, NULL, caption, style, exStyle, x, y, w, h, id);
+}
+
+void CDialogTemplate::AddComponent(WORD type, LPCSTR classId, LPCSTR caption, DWORD style,
+								   DWORD exStyle, int x, int y, int w, int h, WORD id)
 {
 	DLGITEMTEMPLATE item;
 
@@ -159,10 +147,14 @@ void CDialogTemplate::AddStandardComponent(WORD type, LPCSTR caption, DWORD styl
 
 	AppendData(&item, sizeof(DLGITEMTEMPLATE));
 
-	WORD preType = 0xFFFF;
+	if (classId == NULL) {
+		WORD preType = 0xFFFF;
 
-	AppendData(&preType, sizeof(WORD));
-	AppendData(&type, sizeof(WORD));
+		AppendData(&preType, sizeof(WORD));
+		AppendData(&type, sizeof(WORD));
+	} else {
+		AppendString(classId);
+	}
 
 	AppendString(caption);
 

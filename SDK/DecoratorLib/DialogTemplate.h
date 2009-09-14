@@ -21,16 +21,17 @@ public:
 	virtual ~CDialogTemplate();
 	operator const DLGTEMPLATE*() const;
 
-	void AddComponent	(LPCSTR type, LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
 	void AddButton		(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
 	void AddEditBox		(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
 	void AddStatic		(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
 	void AddListBox		(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
 	void AddScrollBar	(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
 	void AddComboBox	(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddRichEdit	(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
 
 protected:
 	void AddStandardComponent(WORD type, LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddComponent(WORD type, LPCSTR classId, LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
 	void AlignData(int size);
 	void AppendString(LPCSTR string);
 	void AppendData(void* data, int dataLength);

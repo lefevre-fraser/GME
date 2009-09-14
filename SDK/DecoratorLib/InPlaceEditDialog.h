@@ -24,7 +24,7 @@ public:
 	CInPlaceEditDialog();
 	virtual ~CInPlaceEditDialog();
 
-	CEdit* editWnd;
+	CRichEditCtrl* m_richWnd;
 	CString	m_Text;
 
 protected:
@@ -36,10 +36,12 @@ public:
 	// Generated message map functions
 	//{{AFX_MSG(CInPlaceEditDialog)
 	virtual BOOL OnInitDialog();
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
 	afx_msg LRESULT OnInPlaceEditing(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnRequestResize(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 
 protected:
@@ -54,6 +56,12 @@ protected:
 	CWnd*					m_parentCWnd;
 	HWND					m_parentHWnd;
 	CRect					m_initialRect;
+	CSize					m_minSize;
+	CRect					m_boundsLimit;
+	long					m_minLeft;
+	long					m_minTop;
+	long					m_maxRight;
+	long					m_maxBottom;
 	CPoint					m_mouseClick;	// Screen coordinates of the mouse click which invoked the in-place edit
 	CFont*					m_font;
 	bool					m_bPermanentCWnd;
@@ -65,16 +73,17 @@ protected:
 
 public:
 	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect,
-						  const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, CFont* font,
-						  bool isPermanentCWnd, bool inflateToRight = true, bool multiLine = false);
+						  const CSize& minSize, const CRect& boundsLimit, const CPoint& mouseClick, HWND parentWnd,
+						  CWnd* parentCWnd, CFont* font, bool isPermanentCWnd, bool inflateToRight = true,
+						  bool multiLine = false);
 	CString GetText() const;
 
 // Overrides
-    // ClassWizard generated virtual function overrides
-    //{{AFX_VIRTUAL(CInPlaceEditDialog)
-    public:
-    virtual BOOL PreTranslateMessage(MSG* pMsg);
-    //}}AFX_VIRTUAL
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CInPlaceEditDialog)
+	public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	//}}AFX_VIRTUAL
 };
 
 //{{AFX_INSERT_LOCATION}}
