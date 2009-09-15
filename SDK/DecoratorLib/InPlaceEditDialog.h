@@ -30,6 +30,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual void PostNcDestroy(void);
+	void MeasureText(CDC* cdc, CSize& minSize, CSize& cSize);
 
 	DECLARE_MESSAGE_MAP()
 public:
@@ -55,18 +56,14 @@ protected:
 	DecoratorSDK::TextPart*	m_parentPart;
 	CWnd*					m_parentCWnd;
 	bool					m_bPermanentCWnd;
-	HWND					m_parentHWnd;
+	HDC						m_transformHDC;
 	CRect					m_initialRect;
 	CRect					m_labelRect;
 	CSize					m_minSize;
 	CRect					m_boundsLimit;
-	long					m_minLeft;
-	long					m_minTop;
-	long					m_maxRight;
-	long					m_maxBottom;
 	CPoint					m_mouseClick;	// Screen coordinates of the mouse click which invoked the in-place edit
+	long					m_iFontKey;
 	CFont*					m_font;
-	double					m_viewZoom;
 	bool					m_bInflateToRight;
 	bool					m_bMultiLine;
 	bool					m_bDlgResult;
@@ -74,10 +71,9 @@ protected:
 	EditState				m_editState;
 
 public:
-	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect,
-						  const CRect& labelRect, const CSize& minSize, const CRect& boundsLimit,
-						  const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, bool isPermanentCWnd,
-						  CFont* font, double viewZoom, bool inflateToRight = true, bool multiLine = false);
+	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& labelRect,
+						  const CPoint& mouseClick, CWnd* parentCWnd, bool isPermanentCWnd, HDC transformHDC,
+						  long iFontKey, bool inflateToRight = true, bool multiLine = false);
 	CString GetText() const;
 
 // Overrides
