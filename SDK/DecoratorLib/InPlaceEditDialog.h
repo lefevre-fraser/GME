@@ -56,6 +56,7 @@ protected:
 	CWnd*					m_parentCWnd;
 	HWND					m_parentHWnd;
 	CRect					m_initialRect;
+	CRect					m_labelRect;
 	CSize					m_minSize;
 	CRect					m_boundsLimit;
 	long					m_minLeft;
@@ -73,9 +74,9 @@ protected:
 
 public:
 	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect,
-						  const CSize& minSize, const CRect& boundsLimit, const CPoint& mouseClick, HWND parentWnd,
-						  CWnd* parentCWnd, CFont* font, bool isPermanentCWnd, bool inflateToRight = true,
-						  bool multiLine = false);
+						  const CRect& labelRect, const CSize& minSize, const CRect& boundsLimit,
+						  const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, CFont* font,
+						  bool isPermanentCWnd, bool inflateToRight = true, bool multiLine = false);
 	CString GetText() const;
 
 // Overrides

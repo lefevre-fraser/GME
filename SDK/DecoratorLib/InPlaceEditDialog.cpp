@@ -73,7 +73,12 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	m_richWnd->RequestResize();
 
 	// Smart positioning of the caret
+	CRect richWndCRect;
+	m_richWnd->GetClientRect(&richWndCRect);
 	m_richWnd->ScreenToClient(&m_mouseClick);
+	m_mouseClick.x = m_mouseClick.x * m_initialRect.Width() / m_labelRect.Width();
+	m_mouseClick.y = m_mouseClick.y * m_initialRect.Height() / m_labelRect.Height();
+
 	int n = m_richWnd->CharFromPos(m_mouseClick);
 	int nLineIndex = HIWORD(n);
 	int nCharIndex = LOWORD(n);
@@ -198,13 +203,15 @@ void CInPlaceEditDialog::OnRequestResize(NMHDR* pNMHDR, LRESULT* pResult)
 }
 
 void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart,
-									   const CRect& initialRect, const CSize& minSize, const CRect& boundsLimit,
-									   const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, CFont* font,
-									   bool isPermanentCWnd, bool inflateToRight, bool multiLine)
+									   const CRect& initialRect, const CRect& labelRect, const CSize& minSize,
+									   const CRect& boundsLimit, const CPoint& mouseClick, HWND parentWnd,
+									   CWnd* parentCWnd, CFont* font, bool isPermanentCWnd, bool inflateToRight,
+									   bool multiLine)
 {
 	m_Text						= text;
 	m_parentPart				= parentPart;
 	m_initialRect				= initialRect;
+	m_labelRect					= labelRect;
 	m_minSize					= minSize;
 	m_boundsLimit				= boundsLimit;
 	m_mouseClick				= mouseClick;

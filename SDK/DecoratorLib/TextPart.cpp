@@ -358,33 +358,20 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 		if (portLabelPart != NULL)
 			if (portLabelPart->GetLocationAdjust() == L_WEST)
 				inflateToRight = false;
-		CPoint screenPt = point;
+
+		POINT dPt = { point.x, point.y };
+		success = ::LPtoDP(transformHDC, &dPt, 1);
+		CPoint screenPt(dPt.x, dPt.y);
 		cWnd->ClientToScreen(&screenPt);
+
 		CRect boundsLimit;
 		cWnd->GetClientRect(&boundsLimit);
-		inPlaceEditDlg->SetProperties(m_strText, this, editLocation, minSize, boundsLimit, screenPt, m_parentWnd,
+		inPlaceEditDlg->SetProperties(m_strText, this, editLocation, ptRect, minSize, boundsLimit, screenPt, m_parentWnd,
 									  cWnd, scaled_font, isPermanentCWnd, inflateToRight, m_bMultiLine);
 		success = AfxInitRichEdit2();	// See http://support.microsoft.com/kb/166132
 		success = inPlaceEditDlg->CreateIndirect(dlgTemplate, cWnd);
-		if (success == 1) {
+		if (success == 1)
 			success = inPlaceEditDlg->ShowWindow(SW_SHOWNORMAL);
-		} else {
-			LPVOID lpMsgBuf;
-			::FormatMessage(
-				FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-				NULL,
-				GetLastError(),
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-				(LPTSTR) &lpMsgBuf,
-				0,
-				NULL
-			);
-			// Display the string.
-			//MessageBox(NULL, lpMsgBuf, "GetLastError", MB_OK | MB_ICONINFORMATION);
-			::OutputDebugString((LPCSTR)lpMsgBuf);
-			// Free the buffer.
-			::LocalFree(lpMsgBuf);
-		}
 
 		return true;
 	}
