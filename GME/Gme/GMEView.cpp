@@ -4918,7 +4918,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 					if (validGuiObjects && dropEffect == DROPEFFECT_NONE) {
 						if (inDrag && alreadySelected != NULL && (selection || annotation)) {
 							mouseButtonUpAfterDragDrop = true;
-							OnLButtonUp(nFlags, point);
+							OnLButtonUp(nFlags, ppoint);
 						}
 						if (nFlags & MK_CONTROL) {
 							if (selection) {
@@ -5200,7 +5200,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 		}
 	}
 	dragSource = 0;
-	CScrollZoomView::OnLButtonDown(nFlags, point);
+	CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 }
 
 void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
@@ -5348,7 +5348,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 								CGMEConsole::theInstance->Message( "Reference target is child of a folder, thus it is shown in the TreeBrowser only.", MSG_INFO);
 								CGMEBrowser::theInstance->FocusItem( referred_id);//CComBSTR( mgaObjectId));//FireLocateMgaObject( (LPCTSTR) (CString) referred_id);
 								//CGMEBrowser::theInstance->FocusItem( CComBSTR( (LPCTSTR) CString( referred_id)));
-								CScrollZoomView::OnLButtonDblClk(nFlags, point);
+								CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 								return;
 							}
 						}

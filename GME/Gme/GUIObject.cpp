@@ -1595,7 +1595,6 @@ bool CGuiObject::IsInside(CPoint& pt, bool lookNearToo)
 
 bool CGuiObject::IsLabelInside(CPoint& pt, bool lookNearToo)
 {
-	CRect loca = GetLocation();
 	CRect loc = GetNameLocation();
 	if (lookNearToo)
 		loc.InflateRect(3, 3);
