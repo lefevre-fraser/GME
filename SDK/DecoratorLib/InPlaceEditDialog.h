@@ -54,6 +54,7 @@ protected:
 
 	DecoratorSDK::TextPart*	m_parentPart;
 	CWnd*					m_parentCWnd;
+	bool					m_bPermanentCWnd;
 	HWND					m_parentHWnd;
 	CRect					m_initialRect;
 	CRect					m_labelRect;
@@ -65,7 +66,7 @@ protected:
 	long					m_maxBottom;
 	CPoint					m_mouseClick;	// Screen coordinates of the mouse click which invoked the in-place edit
 	CFont*					m_font;
-	bool					m_bPermanentCWnd;
+	double					m_viewZoom;
 	bool					m_bInflateToRight;
 	bool					m_bMultiLine;
 	bool					m_bDlgResult;
@@ -75,8 +76,8 @@ protected:
 public:
 	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& initialRect,
 						  const CRect& labelRect, const CSize& minSize, const CRect& boundsLimit,
-						  const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, CFont* font,
-						  bool isPermanentCWnd, bool inflateToRight = true, bool multiLine = false);
+						  const CPoint& mouseClick, HWND parentWnd, CWnd* parentCWnd, bool isPermanentCWnd,
+						  CFont* font, double viewZoom, bool inflateToRight = true, bool multiLine = false);
 	CString GetText() const;
 
 // Overrides

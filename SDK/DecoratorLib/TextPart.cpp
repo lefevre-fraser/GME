@@ -297,26 +297,66 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 
 		CDC dc;
 		dc.Attach(transformHDC);
-		// font scaling
+		// start font scaling pass 1
 		Gdiplus::Font* originalFont = getFacilities().GetFont(m_iFontKey)->gdipFont;
-		LOGFONT lf;
-		originalFont->GetLogFontA(getFacilities().getGraphics(), &lf);
+		LOGFONT lf1;
+		originalFont->GetLogFontA(getFacilities().getGraphics(), &lf1);
 		CSize windowExt = dc.GetWindowExt();
 		CSize viewPortExt = dc.GetViewportExt();
 		ASSERT(viewPortExt.cx / windowExt.cx == viewPortExt.cy / windowExt.cy);
-		double zoom = (double)viewPortExt.cx / (double)windowExt.cx;
-		lf.lfHeight = (long)(lf.lfHeight * zoom);
-		CFont* scaled_font = new CFont();
-		scaled_font->CreateFontIndirect(&lf);
-		// end font scaling
-		dc.SelectObject(scaled_font);
-		// Do scaling and offset because of possible zoom and horizontal/vertical scrolling
+		double viewZoom = (double)viewPortExt.cx / (double)windowExt.cx;
+		lf1.lfHeight = (long)(lf1.lfHeight * viewZoom);
+		CFont* scaled_font1 = new CFont();
+		scaled_font1->CreateFontIndirect(&lf1);
+		// end font scaling pass 1
+		CFont* oldFont = dc.SelectObject(scaled_font1);
 
-		// Determine the minimal size
+		// Determine the minimal size pass 1
 		CSize minSize;
 		minSize = dc.GetTextExtent(CString(_T(" ")));
-		// Measure text
+		// Measure text pass 1
 		CSize cSize;
+		if (!m_bMultiLine) {
+			cSize = dc.GetTextExtent(m_strText == "" ? " " : m_strText);
+		} else {
+			// Determine Text Width and Height
+			cSize.cy = minSize.cy;
+			// Text Width
+			cSize.cx = 0;
+			CString oStr;
+			int i = 0;
+			// Parse the string; the lines in a multiline Edit are separated by "\r\n"
+			for(i = 0; TRUE == ::AfxExtractSubString(oStr, m_strText, i, _T('\n')); i++) {
+				int iLen = oStr.GetLength() - 1;
+				if (iLen >= 0) {
+					// Eliminate last '\r'
+					if (_T('\r') == oStr.GetAt(iLen))
+						oStr = oStr.Left(iLen);
+					CSize oSize = dc.GetTextExtent(oStr);
+					if (cSize.cx < oSize.cx)
+						cSize.cx = oSize.cx;
+				}
+			}
+			// Text Height
+			cSize.cy *= i;
+		}
+
+		// start font scaling pass 2
+		LOGFONT lf2;
+		originalFont->GetLogFontA(getFacilities().getGraphics(), &lf2);
+		double horizontalZoom = (double)ptRect.Width() * viewZoom / (double)cSize.cx;
+		double verticalZoom = (double)ptRect.Height() * viewZoom / (double)cSize.cy;
+		double zoom2 = min(horizontalZoom, verticalZoom);
+		lf2.lfHeight = (long)(lf2.lfHeight * viewZoom * zoom2);
+		CFont* scaled_font2 = new CFont();
+		scaled_font2->CreateFontIndirect(&lf2);
+		// end font scaling pass 2
+		dc.SelectObject(oldFont);
+		oldFont = dc.SelectObject(scaled_font2);
+
+		// Determine the minimal size pass 2
+		minSize = dc.GetTextExtent(CString(_T(" ")));
+		// Measure text pass 2
 		if (!m_bMultiLine) {
 			cSize = dc.GetTextExtent(m_strText == "" ? " " : m_strText);
 		} else {
@@ -367,11 +407,13 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 		CRect boundsLimit;
 		cWnd->GetClientRect(&boundsLimit);
 		inPlaceEditDlg->SetProperties(m_strText, this, editLocation, ptRect, minSize, boundsLimit, screenPt, m_parentWnd,
-									  cWnd, scaled_font, isPermanentCWnd, inflateToRight, m_bMultiLine);
-		success = AfxInitRichEdit2();	// See http://support.microsoft.com/kb/166132
+									  cWnd, isPermanentCWnd, scaled_font2, viewZoom, inflateToRight, m_bMultiLine);
+		success = ::AfxInitRichEdit2();	// See http://support.microsoft.com/kb/166132
 		success = inPlaceEditDlg->CreateIndirect(dlgTemplate, cWnd);
 		if (success == 1)
 			success = inPlaceEditDlg->ShowWindow(SW_SHOWNORMAL);
+
+		delete scaled_font1;
 
 		return true;
 	}

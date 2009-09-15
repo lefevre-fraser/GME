@@ -76,8 +76,8 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	CRect richWndCRect;
 	m_richWnd->GetClientRect(&richWndCRect);
 	m_richWnd->ScreenToClient(&m_mouseClick);
-	m_mouseClick.x = m_mouseClick.x * m_initialRect.Width() / m_labelRect.Width();
-	m_mouseClick.y = m_mouseClick.y * m_initialRect.Height() / m_labelRect.Height();
+	m_mouseClick.x = (long)(m_mouseClick.x * m_initialRect.Width() / (m_labelRect.Width() * m_viewZoom));
+	m_mouseClick.y = (long)(m_mouseClick.y * m_initialRect.Height() / (m_labelRect.Height() * m_viewZoom));
 
 	int n = m_richWnd->CharFromPos(m_mouseClick);
 	int nLineIndex = HIWORD(n);
@@ -205,8 +205,8 @@ void CInPlaceEditDialog::OnRequestResize(NMHDR* pNMHDR, LRESULT* pResult)
 void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart,
 									   const CRect& initialRect, const CRect& labelRect, const CSize& minSize,
 									   const CRect& boundsLimit, const CPoint& mouseClick, HWND parentWnd,
-									   CWnd* parentCWnd, CFont* font, bool isPermanentCWnd, bool inflateToRight,
-									   bool multiLine)
+									   CWnd* parentCWnd, bool isPermanentCWnd, CFont* font, double viewZoom,
+									   bool inflateToRight, bool multiLine)
 {
 	m_Text						= text;
 	m_parentPart				= parentPart;
@@ -217,8 +217,9 @@ void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPa
 	m_mouseClick				= mouseClick;
 	m_parentHWnd				= parentWnd;
 	m_parentCWnd				= parentCWnd;
-	m_font						= font;
 	m_bPermanentCWnd			= isPermanentCWnd;
+	m_font						= font;
+	m_viewZoom					= viewZoom;
 	m_bInflateToRight			= inflateToRight;
 	m_bMultiLine				= multiLine;
 	m_leftMouseButtonPressed	= false;
