@@ -19,6 +19,8 @@ class CGMEChildFrame;
 
 class CGMEDoc : public CDocument
 {
+friend class CGMEView;
+
 protected: // create from serialization only
 	CGMEDoc();
 	DECLARE_DYNCREATE(CGMEDoc)
@@ -26,6 +28,7 @@ protected: // create from serialization only
 // Attributes
 public:
 	static CGMEDoc *theInstance;
+protected:
 	bool     m_isClosing;
 	GMEModeCode editMode;
 
@@ -36,7 +39,8 @@ public:
 
 // Operations
 public:
-	GMEModeCode GetEditMode()								{ return editMode; }
+	GMEModeCode GetEditMode() const;
+	void SetEditMode(GMEModeCode mode, const CString& statusMsg);
 	int  HowManyViewsAreOpen();
 	void InvalidateAllViews(bool thorough = false, bool fullAutoRoute = false);
 	void ResetAllViews();

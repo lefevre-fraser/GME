@@ -2718,6 +2718,7 @@ void CGMEView::ModeChange()
 	CGuiFco::GrayOutFcos(connections,pDoc->GetEditMode() == GME_VISUAL_MODE);
 	tmpConnectMode = false;
 	Invalidate();
+	DoPannWinRefresh();
 }
 
 int CGMEView::OnToolHitTest( CPoint point, TOOLINFO* pTI ) const
@@ -5488,6 +5489,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				CGuiFco::GrayOutFcos(connections,false);
 			}
 			Invalidate();
+			DoPannWinRefresh();
 		}
 		break;
 	case GME_ZOOM_MODE:

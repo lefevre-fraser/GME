@@ -709,6 +709,18 @@ void CGMEDoc::ShowObject(LPCTSTR objectID)
 	ShowObject(unk);
 }
 
+GMEModeCode CGMEDoc::GetEditMode() const
+{
+	return editMode;
+}
+
+void CGMEDoc::SetEditMode(GMEModeCode mode, const CString& statusMsg)
+{
+	editMode = mode;
+	CMainFrame::theInstance->WriteStatusMode(statusMsg);
+	ViewModeChange();
+}
+
 int  CGMEDoc::HowManyViewsAreOpen()
 {
 	int i = 0;
@@ -839,9 +851,7 @@ void CGMEDoc::SetMode(long mode)
 void CGMEDoc::OnModeAutoconnect() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeAutoconnect\r\n");
-	editMode = GME_AUTOCONNECT_MODE;
-	CMainFrame::theInstance->WriteStatusMode("AUTOCONNECT");
-	ViewModeChange();
+	SetEditMode(GME_AUTOCONNECT_MODE, "AUTOCONNECT");
 }
 
 void CGMEDoc::OnUpdateModeAutoconnect(CCmdUI* pCmdUI) 
@@ -852,9 +862,7 @@ void CGMEDoc::OnUpdateModeAutoconnect(CCmdUI* pCmdUI)
 void CGMEDoc::OnModeDisconnect() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeDisconnect\r\n");
-	editMode = GME_DISCONNECT_MODE;
-	CMainFrame::theInstance->WriteStatusMode("DISCONNECT");
-	ViewModeChange();
+	SetEditMode(GME_DISCONNECT_MODE, "DISCONNECT");
 }
 
 void CGMEDoc::OnUpdateModeDisconnect(CCmdUI* pCmdUI) 
@@ -865,9 +873,7 @@ void CGMEDoc::OnUpdateModeDisconnect(CCmdUI* pCmdUI)
 void CGMEDoc::OnModeEdit() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeEdit\r\n");
-	editMode = GME_EDIT_MODE;
-	CMainFrame::theInstance->WriteStatusMode("EDIT");
-	ViewModeChange();
+	SetEditMode(GME_EDIT_MODE, "EDIT");
 }
 
 void CGMEDoc::OnUpdateModeEdit(CCmdUI* pCmdUI) 
@@ -878,9 +884,7 @@ void CGMEDoc::OnUpdateModeEdit(CCmdUI* pCmdUI)
 void CGMEDoc::OnModeSet() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeSet\r\n");
-	editMode = GME_SET_MODE;
-	CMainFrame::theInstance->WriteStatusMode("SET");
-	ViewModeChange();
+	SetEditMode(GME_SET_MODE, "SET");
 }
 
 void CGMEDoc::OnUpdateModeSet(CCmdUI* pCmdUI) 
@@ -891,9 +895,7 @@ void CGMEDoc::OnUpdateModeSet(CCmdUI* pCmdUI)
 void CGMEDoc::OnModeZoom() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeZoom\r\n");
-	editMode = GME_ZOOM_MODE;
-	CMainFrame::theInstance->WriteStatusMode("ZOOM");
-	ViewModeChange();
+	SetEditMode(GME_ZOOM_MODE, "ZOOM");
 }
 
 void CGMEDoc::OnUpdateModeZoom(CCmdUI* pCmdUI) 
@@ -904,9 +906,7 @@ void CGMEDoc::OnUpdateModeZoom(CCmdUI* pCmdUI)
 void CGMEDoc::OnModeVisualize() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeVisualize\r\n");
-	editMode = GME_VISUAL_MODE;
-	CMainFrame::theInstance->WriteStatusMode("VISUALIZE");
-	ViewModeChange();
+	SetEditMode(GME_VISUAL_MODE, "VISUALIZE");
 }
 
 void CGMEDoc::OnUpdateModeVisualize(CCmdUI* pCmdUI) 
@@ -917,9 +917,7 @@ void CGMEDoc::OnUpdateModeVisualize(CCmdUI* pCmdUI)
 void CGMEDoc::OnModeShortConnect()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeShortConnect\r\n");
-	editMode = GME_SHORTAUTOCONNECT_MODE;
-	CMainFrame::theInstance->WriteStatusMode("AUTOCONNECT");
-	ViewModeChange();
+	SetEditMode(GME_SHORTAUTOCONNECT_MODE, "AUTOCONNECT");
 }
 
 void CGMEDoc::OnUpdateModeShortConnect(CCmdUI* pCmdUI)
@@ -930,9 +928,7 @@ void CGMEDoc::OnUpdateModeShortConnect(CCmdUI* pCmdUI)
 void CGMEDoc::OnModeShortDisconnect()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeShortDisconnect\r\n");
-	editMode = GME_SHORTDISCONNECT_MODE;
-	CMainFrame::theInstance->WriteStatusMode("DISCONNECT");
-	ViewModeChange();
+	SetEditMode(GME_SHORTDISCONNECT_MODE, "DISCONNECT");
 }
 
 void CGMEDoc::OnUpdateModeShortDisconnect(CCmdUI* pCmdUI)
