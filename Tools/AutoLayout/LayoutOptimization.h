@@ -18,7 +18,7 @@ class LayoutSolution;
 class LayoutOptimizerListener
 {
 public:
-    virtual void update( int percentage, LayoutSolution * sol, double score ) = 0;
+    virtual bool update( int percentage, LayoutSolution * sol, double score ) = 0;
 };
 
 class LayoutOptimizer

@@ -27,7 +27,9 @@ public:
 
     void initialzie( IMgaProject * project, IMgaModel* model );
 
-    virtual void update( int percentage, LayoutSolution * sol, double score );
+    virtual bool update( int percentage, LayoutSolution * sol, double score );
+
+	bool IsInterruptRequested(void) const;
 
 // Dialog Data
 	//{{AFX_DATA(CDlgAutoLayout)
@@ -37,6 +39,8 @@ public:
 	CProgressCtrl	m_progressAspect;
 	CButton	m_graph;
 	BOOL	m_startFromScratch;
+	CButton	m_startButton;
+	CButton	m_interruptButton;
 	//}}AFX_DATA
 
 
@@ -67,12 +71,14 @@ protected:
     CComObjPtr<IMgaMetaAspects> m_metaAspects;    
 
     int                         m_updateTime;
+	bool						m_bInterruptRequested;
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgAutoLayout)
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
 	virtual BOOL OnInitDialog();
-	afx_msg void OnButton1();
+	afx_msg void OnButtonStart();
+	afx_msg void OnButtonInterrupt();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

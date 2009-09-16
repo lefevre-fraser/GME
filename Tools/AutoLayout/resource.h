@@ -1,15 +1,16 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by Component.rc
 //
 #define IDS_PROJNAME                    100
 #define IDD_DIALOG_AUTOLAYOUT           201
-#define IDC_BUTTON1                     201
+#define IDC_BUTTON_START                201
 #define IDC_BUTTON_GRAPH                202
 #define IDC_PROGRESS_OPT                204
 #define IDC_LIST_ASPECTS                206
 #define IDC_PROGRESS_ASPECT             209
 #define IDC_CHECK_STARTFROMSCRATCH      210
+#define IDC_BUTTON_INTERRUPT            211
 
 // Next default values for new objects
 // 
@@ -17,7 +18,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        203
 #define _APS_NEXT_COMMAND_VALUE         32768
-#define _APS_NEXT_CONTROL_VALUE         211
+#define _APS_NEXT_CONTROL_VALUE         212
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

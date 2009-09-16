@@ -19,8 +19,9 @@ void LayoutOptimizer::optimize( LayoutOptimizerListener * listener, bool startFr
     int i,j;
     int x = 0;
     int m = 100;
+	bool noInterrupt = true;
 
-    for( i=0; i<m_graph->getNumberOfSubGraphs(); ++i )
+    for( i=0; i<m_graph->getNumberOfSubGraphs() && noInterrupt; ++i )
     {
         LayoutOptProblem       problem( m_graph, i, startFromScratch );
         GAOptimizer::Optimizer optimizer;
@@ -28,36 +29,42 @@ void LayoutOptimizer::optimize( LayoutOptimizerListener * listener, bool startFr
         optimizer.init( &problem, 500, 20 );
 
         LayoutSolution * best;
-        for( j=0; j<m; ++j )
+        for( j=0; j<m && noInterrupt; ++j )
         {
             optimizer.step(800);
             best = (LayoutSolution*)optimizer.getBest();
             if( listener != NULL )
-                listener->update( (int)(100 * (i*m+j) / double(m_graph->getNumberOfSubGraphs() * m)), best, optimizer.getMaxFitness() );
+                noInterrupt = listener->update( (int)(100 * (i*m+j) / double(m_graph->getNumberOfSubGraphs() * m)), best, optimizer.getMaxFitness() );
         }
 
-        // get best, place it, write back positions to m_graph
-        best->crop();
-        best->move( x, 0 );
-        x += (best->m_xmax - best->m_xmin);
-        for( j=0; j<best->m_nodes.size(); ++j )
-        {
-            best->m_nodes[j].m_node->m_x = best->m_nodes[j].m_x;
-            best->m_nodes[j].m_node->m_y = best->m_nodes[j].m_y;
-        }
+		if ( noInterrupt )
+		{
+			// get best, place it, write back positions to m_graph
+			best->crop();
+			best->move( x, 0 );
+			x += (best->m_xmax - best->m_xmin);
+			for( j=0; j<best->m_nodes.size(); ++j )
+			{
+				best->m_nodes[j].m_node->m_x = best->m_nodes[j].m_x;
+				best->m_nodes[j].m_node->m_y = best->m_nodes[j].m_y;
+			}
+		}
     }
 
-    // place not connected nodes
-    int y = YMARGIN;
-    for( i=0; i<m_graph->m_nodes.size(); ++i )
-    {
-        if( !(m_graph->m_nodes[i]->m_connectedToOthers) )
-        {
-            m_graph->m_nodes[i]->m_x = x;
-            m_graph->m_nodes[i]->m_y = y;
-            y += m_graph->m_nodes[i]->m_sy + 2 * YMARGIN;
-        }
-    }
+	if ( noInterrupt )
+	{
+		// place not connected nodes
+		int y = YMARGIN;
+		for( i=0; i<m_graph->m_nodes.size(); ++i )
+		{
+			if( !(m_graph->m_nodes[i]->m_connectedToOthers) )
+			{
+				m_graph->m_nodes[i]->m_x = x;
+				m_graph->m_nodes[i]->m_y = y;
+				y += m_graph->m_nodes[i]->m_sy + 2 * YMARGIN;
+			}
+		}
+	}
 }
 
 LayoutOptProblem::LayoutOptProblem( Graph * graph, int subGraph, bool startFromScratch )

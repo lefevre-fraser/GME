@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -27,18 +27,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "1 TYPELIB ""ComponentLib.tlb""\r\n"
     "\0"
@@ -47,7 +47,6 @@ END
 #endif    // APSTUDIO_INVOKED
 
 
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -70,15 +69,13 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "Interpreter Module\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "Interpreter\0"
-            VALUE "LegalCopyright", "Copyright 2000\0"
-            VALUE "OriginalFilename", "Interpreter.DLL\0"
-            VALUE "ProductName", "Interpreter Module\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
-            VALUE "OLESelfRegister", "\0"
+            VALUE "FileDescription", "Interpreter Module"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "Interpreter"
+            VALUE "LegalCopyright", "Copyright 2000"
+            VALUE "OriginalFilename", "Interpreter.DLL"
+            VALUE "ProductName", "Interpreter Module"
+            VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
     BLOCK "VarFileInfo"
@@ -86,8 +83,6 @@ BEGIN
         VALUE "Translation", 0x409, 1200
     END
 END
-
-#endif    // !_MAC
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -97,32 +92,28 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_COMPICON            ICON    DISCARDABLE     "compicon.ico"
+IDI_COMPICON            ICON                    "compicon.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
-IDD_DIALOG_AUTOLAYOUT DIALOG DISCARDABLE  0, 0, 630, 466
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_DIALOG_AUTOLAYOUT DIALOGEX 0, 0, 630, 466
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "GME AutoLayout Component"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     LTEXT           "Aspects to optimize",IDC_STATIC,503,18,62,8
-    LISTBOX         IDC_LIST_ASPECTS,503,30,109,119,LBS_NOINTEGRALHEIGHT | 
-                    LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
-    DEFPUSHBUTTON   "Optimize Selected",IDC_BUTTON1,503,178,110,14
-    CONTROL         "Progress1",IDC_PROGRESS_OPT,"msctls_progress32",
-                    WS_BORDER,503,220,109,11
-    CONTROL         "Button2",IDC_BUTTON_GRAPH,"Button",BS_OWNERDRAW | 
-                    WS_TABSTOP,15,18,459,433
+    LISTBOX         IDC_LIST_ASPECTS,503,30,109,119,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "Optimize Selected",IDC_BUTTON_START,503,178,110,14
+    CONTROL         "Progress1",IDC_PROGRESS_OPT,"msctls_progress32",WS_BORDER,503,220,109,11
+    CONTROL         "Button2",IDC_BUTTON_GRAPH,"Button",BS_OWNERDRAW | WS_TABSTOP,15,18,459,433
     GROUPBOX        "Layout",IDC_STATIC,7,7,475,452
     GROUPBOX        "",IDC_STATIC,493,7,130,452
-    CONTROL         "Progress2",IDC_PROGRESS_ASPECT,"msctls_progress32",
-                    WS_BORDER,503,202,109,11
-    CONTROL         "Start from scratch",IDC_CHECK_STARTFROMSCRATCH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,503,161,71,10
+    CONTROL         "Progress2",IDC_PROGRESS_ASPECT,"msctls_progress32",WS_BORDER,503,202,109,11
+    CONTROL         "Start from scratch",IDC_CHECK_STARTFROMSCRATCH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,503,161,71,10
+    PUSHBUTTON      "Interrupt",IDC_BUTTON_INTERRUPT,503,242,109,14
 END
 
 
@@ -132,7 +123,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO 
 BEGIN
     IDD_DIALOG_AUTOLAYOUT, DIALOG
     BEGIN
@@ -153,7 +144,7 @@ END
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_PROJNAME            "Component"
 END

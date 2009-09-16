@@ -22,6 +22,7 @@ CDlgAutoLayout::CDlgAutoLayout(CWnd* pParent /*=NULL*/)
 	m_startFromScratch = TRUE;
 	//}}AFX_DATA_INIT
     m_currentSolution = NULL;
+	m_bInterruptRequested = false;
 }
 
 CDlgAutoLayout::~CDlgAutoLayout()
@@ -37,7 +38,7 @@ void CDlgAutoLayout::initialzie( IMgaProject * project, IMgaModel* model )
     COMTHROW( m_metaModel->get_Aspects( PutOut(m_metaAspects) ) );    
 }
 
-void CDlgAutoLayout::update( int percentage, LayoutSolution * sol, double score  )
+bool CDlgAutoLayout::update( int percentage, LayoutSolution * sol, double score  )
 {
     m_score = score;
     m_currentSolution = sol;
@@ -53,8 +54,27 @@ void CDlgAutoLayout::update( int percentage, LayoutSolution * sol, double score 
         Invalidate(FALSE);
         UpdateWindow();
     }
+
+	// About this technique see "PeekMessage Elsewhere in Your Application" section
+	// in "Idle Loop Processing" article in MSDN:
+	// http://msdn.microsoft.com/en-us/library/3dy7kd92%28VS.80%29.aspx
+	MSG msg;
+	while (::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
+	{
+		if (!AfxGetApp()->PumpMessage())
+		{
+			break;
+		}
+	}
+
+	return !IsInterruptRequested();
 }
-  
+
+bool CDlgAutoLayout::IsInterruptRequested(void) const
+{
+	return m_bInterruptRequested;
+}
+
 void CDlgAutoLayout::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
@@ -64,14 +84,16 @@ void CDlgAutoLayout::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PROGRESS_ASPECT, m_progressAspect);
 	DDX_Control(pDX, IDC_BUTTON_GRAPH, m_graph);
 	DDX_Check(pDX, IDC_CHECK_STARTFROMSCRATCH, m_startFromScratch);
+	DDX_Control(pDX, IDC_BUTTON_START, m_startButton);
+	DDX_Control(pDX, IDC_BUTTON_INTERRUPT, m_interruptButton);
 	//}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CDlgAutoLayout, CDialog)
 	//{{AFX_MSG_MAP(CDlgAutoLayout)
 	ON_WM_DRAWITEM()
-	ON_BN_CLICKED(IDC_BUTTON1, OnButton1)
+	ON_BN_CLICKED(IDC_BUTTON_START, OnButtonStart)
+	ON_BN_CLICKED(IDC_BUTTON_INTERRUPT, OnButtonInterrupt)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -105,8 +127,9 @@ BOOL CDlgAutoLayout::OnInitDialog()
 
     m_progressOptimization.ShowWindow( SW_HIDE );
     m_progressAspect.ShowWindow( SW_HIDE );
-	
-	
+
+	m_interruptButton.EnableWindow(FALSE);
+
 	return TRUE;
 }
 
@@ -181,12 +204,16 @@ void CDlgAutoLayout::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
     }
 }
 
-
-void CDlgAutoLayout::OnButton1()
+void CDlgAutoLayout::OnButtonStart()
 {
     try
     {
         UpdateData();
+		CWnd* checkBoxWnd = GetDlgItem(IDC_CHECK_STARTFROMSCRATCH);
+		if (checkBoxWnd != NULL)
+			checkBoxWnd->EnableWindow(FALSE);
+		m_startButton.EnableWindow(FALSE);
+		m_interruptButton.EnableWindow(TRUE);
 
         m_progressOptimization.ShowWindow( SW_SHOW );
         m_progressAspect.ShowWindow( SW_SHOW );
@@ -199,7 +226,7 @@ void CDlgAutoLayout::OnButton1()
         if( selNum == 0 )
             return;
 
-        for( int i=0; i<m_listAspects.GetCount(); ++i )
+        for( int i=0; i<m_listAspects.GetCount() && !IsInterruptRequested(); ++i )
         {
             if( m_listAspects.GetSel(i) > 0 )
             {
@@ -212,36 +239,39 @@ void CDlgAutoLayout::OnButton1()
                 // oprimize aspect layout
                 GMEGraph graph( m_project, m_model, aspect );
                 LayoutOptimizer optimizer( &graph );
-                m_updateTime = 0;
-                optimizer.optimize( this, m_startFromScratch>0 );    
-                m_currentSolution = NULL;
-                m_graph.Invalidate(FALSE);
+				m_updateTime = 0;
+				optimizer.optimize( this, m_startFromScratch>0 );    
+				if ( !IsInterruptRequested() )
+				{
+					m_currentSolution = NULL;
+					m_graph.Invalidate(FALSE);
 
-                // write back results to gme
-                CComObjPtr<IMgaParts> parts;
-                long   n;
-                COMTHROW( m_model->get_AspectParts(aspect, 0, PutOut(parts)) );
-                COMTHROW( parts->get_Count(&n) );
+					// write back results to gme
+					CComObjPtr<IMgaParts> parts;
+					long   n;
+					COMTHROW( m_model->get_AspectParts(aspect, 0, PutOut(parts)) );
+					COMTHROW( parts->get_Count(&n) );
 
-                for( int i=0; i<n; ++i )
-                {
-                    CComObjPtr<IMgaPart>     part;
-                    CComObjPtr<IMgaFCO>      fco;
-                    CComBSTR                 icon;
-                    long                     x,y;
+					for( int i=0; i<n; ++i )
+					{
+						CComObjPtr<IMgaPart>     part;
+						CComObjPtr<IMgaFCO>      fco;
+						CComBSTR                 icon;
+						long                     x,y;
 
-                    COMTHROW( parts->get_Item(i+1, PutOut(part)) );
-                    COMTHROW( part->get_FCO(PutOut(fco)) );
+						COMTHROW( parts->get_Item(i+1, PutOut(part)) );
+						COMTHROW( part->get_FCO(PutOut(fco)) );
 
-                    for( unsigned int j=0; j<graph.m_nodes.size(); ++j )
-                    {
-                        if( fco == graph.m_nodes[j]->m_fco )
-                        {
-                            COMTHROW( part->GetGmeAttrs(&icon, &x, &y) );
-                            COMTHROW( part->SetGmeAttrs(icon, graph.m_nodes[j]->m_x, graph.m_nodes[j]->m_y) );
-                        }
-                    }
-                }
+						for( unsigned int j=0; j<graph.m_nodes.size(); ++j )
+						{
+							if( fco == graph.m_nodes[j]->m_fco )
+							{
+								COMTHROW( part->GetGmeAttrs(&icon, &x, &y) );
+								COMTHROW( part->SetGmeAttrs(icon, graph.m_nodes[j]->m_x, graph.m_nodes[j]->m_y) );
+							}
+						}
+					}
+				}
             }
         }
 
@@ -253,6 +283,18 @@ void CDlgAutoLayout::OnButton1()
         AfxMessageBox("An internal error occurred in AutoLayout component. Error code = 1");
         CDialog::OnCancel();
     }
-    
-    CDialog::OnOK();
+
+	if (IsInterruptRequested())
+		CDialog::OnCancel();
+	else
+		CDialog::OnOK();
+}
+
+void CDlgAutoLayout::OnButtonInterrupt()
+{
+	int nRet = ::AfxMessageBox("Are you sure you want to stop the auto-layouting procedure?", MB_YESNO | MB_ICONWARNING);
+	if (nRet == IDYES)
+		m_bInterruptRequested = true;
+	else
+		ASSERT(nRet == IDNO);
 }
