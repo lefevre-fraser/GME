@@ -635,6 +635,14 @@ void CInPlaceManager::OnEditMultiLineEnd()
 	CString strLine;
 	ListItem.Value.stringVal.RemoveAll();
 	int nLineLength=m_MultiEditCtrl.GetWindowTextLength();
+	// To Zoltan's comment:
+	// http://groups.google.com/group/microsoft.public.vc.mfc/browse_thread/thread/f75d48b8655dde0e
+	// There are two errors with CEdit GetLine
+	// 1.: GetLine cannot return less than two characters, so if there's just one character, we should still supply
+	//     a buffer for two characters (in ANSI: two bytes)
+	// 2.: If the edit control is empty, the GetLine call returns two null terminators
+	//     (this caused the phenomena Zoltan encountered)
+	// ****
 	// zolmol: avoid trimming in case when the field is cleared: nLineLength = 0 and nLines = 1 
 	//         (corrupted strLine inserted into ListItem caused memory damage when released)
 	if( nLineLength > 0 )
@@ -642,7 +650,11 @@ void CInPlaceManager::OnEditMultiLineEnd()
 		for(int i=0;i<nLines;i++)
 		{
 			strLine="";
-			//nLineLength=m_MultiEditCtrl.LineLength(i); - does not work
+			nLineLength=m_MultiEditCtrl.LineLength(i);
+			// We should supply at least two bytes length buffer
+			// Note, that everything works in ANSI here, Unicode would need changes here
+			if (nLineLength <= 1)
+				nLineLength = 2;
 			int nRet=m_MultiEditCtrl.GetLine(i,strLine.GetBuffer(nLineLength), nLineLength);
 			ASSERT( nRet >= 0);
 			strLine.ReleaseBuffer(nRet);
