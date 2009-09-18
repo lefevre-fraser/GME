@@ -22,7 +22,7 @@ CDlgAutoLayout::CDlgAutoLayout(CWnd* pParent /*=NULL*/)
 	m_startFromScratch = TRUE;
 	//}}AFX_DATA_INIT
     m_currentSolution = NULL;
-	m_bInterruptRequested = false;
+	m_bAbortionRequested = false;
 }
 
 CDlgAutoLayout::~CDlgAutoLayout()
@@ -67,12 +67,12 @@ bool CDlgAutoLayout::update( int percentage, LayoutSolution * sol, double score 
 		}
 	}
 
-	return !IsInterruptRequested();
+	return !IsAbortionRequested();
 }
 
-bool CDlgAutoLayout::IsInterruptRequested(void) const
+bool CDlgAutoLayout::IsAbortionRequested(void) const
 {
-	return m_bInterruptRequested;
+	return m_bAbortionRequested;
 }
 
 void CDlgAutoLayout::DoDataExchange(CDataExchange* pDX)
@@ -85,7 +85,7 @@ void CDlgAutoLayout::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_GRAPH, m_graph);
 	DDX_Check(pDX, IDC_CHECK_STARTFROMSCRATCH, m_startFromScratch);
 	DDX_Control(pDX, IDC_BUTTON_START, m_startButton);
-	DDX_Control(pDX, IDC_BUTTON_INTERRUPT, m_interruptButton);
+	DDX_Control(pDX, IDC_BUTTON_ABORT, m_abortButton);
 	//}}AFX_DATA_MAP
 }
 
@@ -93,7 +93,7 @@ BEGIN_MESSAGE_MAP(CDlgAutoLayout, CDialog)
 	//{{AFX_MSG_MAP(CDlgAutoLayout)
 	ON_WM_DRAWITEM()
 	ON_BN_CLICKED(IDC_BUTTON_START, OnButtonStart)
-	ON_BN_CLICKED(IDC_BUTTON_INTERRUPT, OnButtonInterrupt)
+	ON_BN_CLICKED(IDC_BUTTON_ABORT, OnButtonAbort)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -128,7 +128,7 @@ BOOL CDlgAutoLayout::OnInitDialog()
     m_progressOptimization.ShowWindow( SW_HIDE );
     m_progressAspect.ShowWindow( SW_HIDE );
 
-	m_interruptButton.EnableWindow(FALSE);
+	m_abortButton.EnableWindow(FALSE);
 
 	return TRUE;
 }
@@ -213,7 +213,7 @@ void CDlgAutoLayout::OnButtonStart()
 		if (checkBoxWnd != NULL)
 			checkBoxWnd->EnableWindow(FALSE);
 		m_startButton.EnableWindow(FALSE);
-		m_interruptButton.EnableWindow(TRUE);
+		m_abortButton.EnableWindow(TRUE);
 
         m_progressOptimization.ShowWindow( SW_SHOW );
         m_progressAspect.ShowWindow( SW_SHOW );
@@ -226,7 +226,7 @@ void CDlgAutoLayout::OnButtonStart()
         if( selNum == 0 )
             return;
 
-        for( int i=0; i<m_listAspects.GetCount() && !IsInterruptRequested(); ++i )
+        for( int i=0; i<m_listAspects.GetCount() && !IsAbortionRequested(); ++i )
         {
             if( m_listAspects.GetSel(i) > 0 )
             {
@@ -241,7 +241,7 @@ void CDlgAutoLayout::OnButtonStart()
                 LayoutOptimizer optimizer( &graph );
 				m_updateTime = 0;
 				optimizer.optimize( this, m_startFromScratch>0 );    
-				if ( !IsInterruptRequested() )
+				if ( !IsAbortionRequested() )
 				{
 					m_currentSolution = NULL;
 					m_graph.Invalidate(FALSE);
@@ -284,17 +284,17 @@ void CDlgAutoLayout::OnButtonStart()
         CDialog::OnCancel();
     }
 
-	if (IsInterruptRequested())
+	if (IsAbortionRequested())
 		CDialog::OnCancel();
 	else
 		CDialog::OnOK();
 }
 
-void CDlgAutoLayout::OnButtonInterrupt()
+void CDlgAutoLayout::OnButtonAbort()
 {
-	int nRet = ::AfxMessageBox("Are you sure you want to stop the auto-layouting procedure?", MB_YESNO | MB_ICONWARNING);
+	int nRet = ::AfxMessageBox("Are you sure you want to abort the auto-layouting procedure?", MB_YESNO | MB_ICONWARNING);
 	if (nRet == IDYES)
-		m_bInterruptRequested = true;
+		m_bAbortionRequested = true;
 	else
 		ASSERT(nRet == IDNO);
 }

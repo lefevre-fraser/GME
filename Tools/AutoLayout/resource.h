@@ -10,7 +10,7 @@
 #define IDC_LIST_ASPECTS                206
 #define IDC_PROGRESS_ASPECT             209
 #define IDC_CHECK_STARTFROMSCRATCH      210
-#define IDC_BUTTON_INTERRUPT            211
+#define IDC_BUTTON_ABORT                211
 
 // Next default values for new objects
 // 

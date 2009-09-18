@@ -19,9 +19,9 @@ void LayoutOptimizer::optimize( LayoutOptimizerListener * listener, bool startFr
     int i,j;
     int x = 0;
     int m = 100;
-	bool noInterrupt = true;
+	bool noAbort = true;
 
-    for( i=0; i<m_graph->getNumberOfSubGraphs() && noInterrupt; ++i )
+    for( i=0; i<m_graph->getNumberOfSubGraphs() && noAbort; ++i )
     {
         LayoutOptProblem       problem( m_graph, i, startFromScratch );
         GAOptimizer::Optimizer optimizer;
@@ -29,15 +29,15 @@ void LayoutOptimizer::optimize( LayoutOptimizerListener * listener, bool startFr
         optimizer.init( &problem, 500, 20 );
 
         LayoutSolution * best;
-        for( j=0; j<m && noInterrupt; ++j )
+        for( j=0; j<m && noAbort; ++j )
         {
             optimizer.step(800);
             best = (LayoutSolution*)optimizer.getBest();
             if( listener != NULL )
-                noInterrupt = listener->update( (int)(100 * (i*m+j) / double(m_graph->getNumberOfSubGraphs() * m)), best, optimizer.getMaxFitness() );
+                noAbort = listener->update( (int)(100 * (i*m+j) / double(m_graph->getNumberOfSubGraphs() * m)), best, optimizer.getMaxFitness() );
         }
 
-		if ( noInterrupt )
+		if ( noAbort )
 		{
 			// get best, place it, write back positions to m_graph
 			best->crop();
@@ -51,7 +51,7 @@ void LayoutOptimizer::optimize( LayoutOptimizerListener * listener, bool startFr
 		}
     }
 
-	if ( noInterrupt )
+	if ( noAbort )
 	{
 		// place not connected nodes
 		int y = YMARGIN;

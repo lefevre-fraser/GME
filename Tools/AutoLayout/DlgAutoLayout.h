@@ -29,7 +29,7 @@ public:
 
     virtual bool update( int percentage, LayoutSolution * sol, double score );
 
-	bool IsInterruptRequested(void) const;
+	bool IsAbortionRequested(void) const;
 
 // Dialog Data
 	//{{AFX_DATA(CDlgAutoLayout)
@@ -40,7 +40,7 @@ public:
 	CButton	m_graph;
 	BOOL	m_startFromScratch;
 	CButton	m_startButton;
-	CButton	m_interruptButton;
+	CButton	m_abortButton;
 	//}}AFX_DATA
 
 
@@ -71,14 +71,14 @@ protected:
     CComObjPtr<IMgaMetaAspects> m_metaAspects;    
 
     int                         m_updateTime;
-	bool						m_bInterruptRequested;
+	bool						m_bAbortionRequested;
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgAutoLayout)
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnButtonStart();
-	afx_msg void OnButtonInterrupt();
+	afx_msg void OnButtonAbort();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
