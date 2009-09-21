@@ -10,7 +10,7 @@
 
 #include "Resource.h"
 #include "TypeableLabelPart.h"
-#include "EllipseVectorPart.h"
+#include "ConnectorVectorPart.h"
 #include "InheritanceVectorPart.h"
 #include "DiamondVectorPart.h"
 #include "ConstraintVectorPart.h"
@@ -84,9 +84,9 @@ void MetaCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 			if (shape == NULLSHAPE) {
 				throw DecoratorException((DecoratorExceptionCode)E_METADECORATOR_KINDNOTSUPPORTED);
 			} else if (shape == CONNECTOR) {
-				AddObjectPart(new DecoratorSDK::EllipseVectorPart(this, m_eventSink,
-																  static_cast<long> (2 * META_CONNECTOR_RAIDUS),
-																  static_cast<long> (2 * META_CONNECTOR_RAIDUS)));
+				AddObjectPart(new DecoratorSDK::ConnectorVectorPart(this, m_eventSink,
+																	static_cast<long> (2 * META_CONNECTOR_RAIDUS),
+																	static_cast<long> (2 * META_CONNECTOR_RAIDUS)));
 				if (!pFCO)
 					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (shape == CONSTRAINT) {

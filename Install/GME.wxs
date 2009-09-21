@@ -1857,6 +1857,8 @@
                 <File Id="ClassLabelPart.h" Name="ClassLabelPart.h"  Source="..\SDK\DecoratorLib\ClassLabelPart.h" />
                 <File Id="CompositePart.cpp" Name="CompositePart.cpp"  Source="..\SDK\DecoratorLib\CompositePart.cpp" />
                 <File Id="CompositePart.h" Name="CompositePart.h"  Source="..\SDK\DecoratorLib\CompositePart.h" />
+                <File Id="ConnectorVectorPart.cpp" Name="ConnectorVectorPart.cpp"  Source="..\SDK\DecoratorLib\ConnectorVectorPart.cpp" />
+                <File Id="ConnectorVectorPart.h" Name="ConnectorVectorPart.h"  Source="..\SDK\DecoratorLib\ConnectorVectorPart.h" />
                 <File Id="ConstraintFunctionVectorPart.cpp" Name="ConstraintFunctionVectorPart.cpp"  Source="..\SDK\DecoratorLib\ConstraintFunctionVectorPart.cpp" />
                 <File Id="ConstraintFunctionVectorPart.h" Name="ConstraintFunctionVectorPart.h"  Source="..\SDK\DecoratorLib\ConstraintFunctionVectorPart.h" />
                 <File Id="ConstraintVectorPart.cpp" Name="ConstraintVectorPart.cpp"  Source="..\SDK\DecoratorLib\ConstraintVectorPart.cpp" />

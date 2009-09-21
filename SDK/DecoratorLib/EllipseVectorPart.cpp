@@ -47,21 +47,11 @@ void EllipseVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 	AddCommand(VectorCommand(VectorCommand::EndPath));
 	AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
 	AddCommand(VectorCommand(VectorCommand::CastShadowPath));
-
-	bool bColor = false;
-	COLORREF crColor = COLOR_BLACK;
-	PreferenceMap::iterator it = preferences.find(PREF_COLOR);
-	if (it != preferences.end()) {
-		bColor = true;
-		crColor = it->second.uValue.crValue;
-	} else {
-		bColor = getFacilities().getPreference(pFCO, m_spMetaFCO, PREF_COLOR, crColor);
-	}
-	AbsoluteCoordCommand* colorCmd = new AbsoluteCoordCommand(crColor);
+	AbsoluteCoordCommand* fillColorCmd = new AbsoluteCoordCommand(m_crBrush);
 	AbsoluteCoordCommand* grayedCmd = new AbsoluteCoordCommand(COLOR_GRAYED_OUT);
-	m_coordCommands.push_back(colorCmd);
+	m_coordCommands.push_back(fillColorCmd);
 	m_coordCommands.push_back(grayedCmd);
-	AddCommand(VectorCommand(colorCmd, grayedCmd, VectorCommand::StrokeAndFillPath));
+	AddCommand(VectorCommand(fillColorCmd, grayedCmd, VectorCommand::StrokeAndFillPath));
 }
 
 }; // namespace DecoratorSDK

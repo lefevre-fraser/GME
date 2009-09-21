@@ -53,7 +53,11 @@ void TriangleVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IM
 	AddCommand(VectorCommand(VectorCommand::EndPath));
 	AddCommand(VectorCommand(VectorCommand::CopyShadowPath));
 	AddCommand(VectorCommand(VectorCommand::CastShadowPath));
-	AddCommand(VectorCommand(VectorCommand::StrokeAndFillPath));
+	AbsoluteCoordCommand* fillColorCmd = new AbsoluteCoordCommand(m_crBrush);
+	AbsoluteCoordCommand* grayedCmd = new AbsoluteCoordCommand(COLOR_GRAYED_OUT);
+	m_coordCommands.push_back(fillColorCmd);
+	m_coordCommands.push_back(grayedCmd);
+	AddCommand(VectorCommand(fillColorCmd, grayedCmd, VectorCommand::StrokeAndFillPath));
 }
 
 }; // namespace DecoratorSDK

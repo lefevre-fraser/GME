@@ -10,9 +10,7 @@
 
 
 #include "StdAfx.h"
-#include "ClassComplexPart.h"
-
-#include "AnnotationDefs.h"
+#include "TextPart.h"
 
 
 namespace AnnotatorDecor {
@@ -28,16 +26,6 @@ class AnnotatorTextPart: public DecoratorSDK::TextPart
 protected:
 	CComPtr<IMgaRegNode>	m_regRoot;
 	CString					m_strName;
-	COLORREF				m_crBgColor;
-	COLORREF				m_crShadow;
-	COLORREF				m_crGradient;
-	bool					m_bGradientFill;
-	long					m_iGradientDirection;
-	bool					m_bCastShadow;
-	long					m_iShadowDepth;
-	long					m_iShadowDirection;
-	bool					m_bRoundCornerRect;
-	long					m_iRoundCornerRadius;
 	LOGFONT					m_logFont;
 
 public:

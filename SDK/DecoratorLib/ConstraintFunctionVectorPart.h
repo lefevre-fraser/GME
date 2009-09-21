@@ -1,6 +1,6 @@
 //################################################################################################
 //
-// Inheritance vector part decorator class
+// Constraint Function vector part decorator class
 //	ConstraintFunctionVectorPart.h
 //
 //################################################################################################

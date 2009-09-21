@@ -11,7 +11,7 @@
 #include "Resource.h"
 #include "DecoratorStd.h"
 #include "TriangleVectorPart.h"
-#include "EllipseVectorPart.h"
+#include "ConnectorVectorPart.h"
 #include "ConstraintVectorPart.h"
 #include "UMLClassPart.h"
 #include "TypeableLabelPart.h"
@@ -79,9 +79,9 @@ void UMLCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 				if (!pFCO)
 					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (name == UML_CONNECTOR_NAME || name == UML_CONNECTOR_PATTERN_NAME) {
-				AddObjectPart(new DecoratorSDK::EllipseVectorPart(this, m_eventSink,
-																  static_cast<long> (UML_CONNECTOR_WIDTH),
-																  static_cast<long> (UML_CONNECTOR_HEIGHT)));
+				AddObjectPart(new DecoratorSDK::ConnectorVectorPart(this, m_eventSink,
+																	static_cast<long> (UML_CONNECTOR_WIDTH),
+																	static_cast<long> (UML_CONNECTOR_HEIGHT)));
 				if (!pFCO)
 					AddTextPart(new DecoratorSDK::TypeableLabelPart(this, m_eventSink));
 			} else if (name == UML_CONSTRAINT_NAME) {

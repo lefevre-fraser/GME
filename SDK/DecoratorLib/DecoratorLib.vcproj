@@ -231,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ConnectorVectorPart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ConstraintFunctionVectorPart.cpp"
 				>
 			</File>
@@ -450,6 +454,10 @@
 			</File>
 			<File
 				RelativePath=".\CompositePart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ConnectorVectorPart.h"
 				>
 			</File>
 			<File

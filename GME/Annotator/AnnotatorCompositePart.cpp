@@ -98,9 +98,12 @@ void AnnotatorCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPt
 	}
 
 	PartBase::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
-	GetTextPart()->SetParam(m_strName, m_vValue);
-	GetTextPart()->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
-	GetObjectPart()->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	DecoratorSDK::TextPart* txtPart = GetTextPart();
+	PartBase* objPart = GetObjectPart();
+	txtPart->SetParam(m_strName, m_vValue);
+	objPart->SetParam(m_strName, m_vValue);
+	txtPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+	objPart->InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
 
 void AnnotatorCompositePart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
