@@ -30,9 +30,11 @@ class CSmallMessageBox : public CDialog
 
 	public :
 		CString		m_strMessage;
+		bool		m_bCloseRequested;
+		bool		m_bModeless;
 
 	public :
-		void IncrementProgress();
+		bool IncrementProgress();
 		void DoModeless( int iRange );
 		void UndoModeless();
 

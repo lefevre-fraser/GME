@@ -675,6 +675,7 @@ namespace OclGmeCM
 		bool bWasCritical = false;
 		bool bStopEvaluation = false;
 		long lPriority = 1;
+		bool closeNotRequested = true;
 
 		int loopcount = vecInputs.size();
 		for ( int i = 0 ; i < loopcount && ! bStopEvaluation ; i++ ) {
@@ -699,8 +700,11 @@ namespace OclGmeCM
 
 			// Refresh Progress
 
-			if ( bShowProgress )
-				dlgProgress.IncrementProgress();
+			if ( bShowProgress ) {
+				closeNotRequested = dlgProgress.IncrementProgress();
+				if ( !closeNotRequested )
+					bStopEvaluation = true;
+			}
 
 			// Check the result
 
@@ -753,7 +757,7 @@ namespace OclGmeCM
 			return ( iResult != IDOK ) ? E_MGA_CONSTRAINT_VIOLATION : S_OK;
 		}
 		else
-			if ( bShowProgress )
+			if ( bShowProgress && closeNotRequested )
 				CSmallMessageBox().DoModal();
 		return S_OK;
 	}

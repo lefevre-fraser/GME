@@ -27,6 +27,7 @@ CSmallMessageBox::CSmallMessageBox( CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CSmallMessageBox)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
+	m_bCloseRequested = false;
 }
 
 
@@ -58,16 +59,25 @@ BOOL CSmallMessageBox::OnInitDialog()
 	m_lblMessage.SetWindowText( "No Constraint violations were found." );
 	m_ctrlProgress.SetRange32( 0, 100 );
 	m_ctrlProgress.SetPos( 100 );
-	m_btnOK.EnableWindow( true );
+	m_btnOK.EnableWindow( TRUE );
 	m_btnOK.SetWindowText( "OK" );
 	m_btnOK.ShowWindow( SW_SHOW );
+	m_bModeless = false;
 
 	return TRUE;
 }
 
 void CSmallMessageBox::OnClickOK()
 {
-	CDialog::OnOK();
+	if (m_bModeless) {
+		int nRet = ::AfxMessageBox("Are you sure you want to abort the constraint checking?", MB_YESNO | MB_ICONWARNING);
+		if (nRet == IDYES)
+			m_bCloseRequested = true;
+		else
+			ASSERT(nRet == IDNO);
+	} else {
+		CDialog::OnOK();
+	}
 }
 
 BOOL CSmallMessageBox::PreTranslateMessage( MSG* pMsg )
@@ -75,9 +85,23 @@ BOOL CSmallMessageBox::PreTranslateMessage( MSG* pMsg )
 	return ( pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_ESCAPE ) ? FALSE : CDialog::PreTranslateMessage( pMsg );
 }
 
-void CSmallMessageBox::IncrementProgress()
+bool CSmallMessageBox::IncrementProgress()
 {
 	m_ctrlProgress.SetPos( m_ctrlProgress.GetPos() + 1 );
+
+	// About this technique see "PeekMessage Elsewhere in Your Application" section
+	// in "Idle Loop Processing" article in MSDN:
+	// http://msdn.microsoft.com/en-us/library/3dy7kd92%28VS.80%29.aspx
+	MSG msg;
+	while (::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
+	{
+		if (!AfxGetApp()->PumpMessage())
+		{
+			break;
+		}
+	}
+
+	return !m_bCloseRequested;
 }
 
 void CSmallMessageBox::DoModeless( int iRange )
@@ -88,7 +112,8 @@ void CSmallMessageBox::DoModeless( int iRange )
 	m_lblMessage.SetWindowText( "Evaluation of Constraints is in progress...." );
 	m_ctrlProgress.SetRange32( 0, iRange );
 	m_ctrlProgress.SetPos( 0 );
-	// m_btnOK.SetWindowText( "Cancel" );
+	m_btnOK.SetWindowText( "Abort" );
+	m_bModeless = true;
 }
 
 void CSmallMessageBox::UndoModeless()
