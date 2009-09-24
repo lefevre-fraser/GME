@@ -5,6 +5,7 @@
 #include "objectinspector.h"
 #include "CompassCheckDlg.h"
 #include "CompassData.h"
+#include "InPlaceCommon.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -28,6 +29,19 @@ CCompassCheckDlg::CCompassCheckDlg(CWnd* pParent /*=NULL*/)
 
     m_bInited = true;
 	m_bClosed = false;
+}
+
+
+void CCompassCheckDlg::SetParameters(const CPoint& ptRightTop, UINT uCompassVal)
+{
+	m_ptRightTop		= ptRightTop;
+	m_uCompassVal		= uCompassVal;
+}
+
+
+UINT CCompassCheckDlg::GetCompassVal(void) const
+{
+	return m_uCompassVal;
 }
 
 
@@ -83,22 +97,22 @@ BOOL CCompassCheckDlg::OnInitDialog()
 
 	m_bNorth=m_bEast=m_bSouth=m_bWest=FALSE;
 
-	if(uCompassVal&CMPS_NORTH)
+	if(m_uCompassVal&CMPS_NORTH)
 	{
 		m_bNorth=TRUE;
 	}
 
-	if(uCompassVal&CMPS_EAST)
+	if(m_uCompassVal&CMPS_EAST)
 	{
 		m_bEast=TRUE;
 	}
 	
-	if(uCompassVal&CMPS_SOUTH)
+	if(m_uCompassVal&CMPS_SOUTH)
 	{
 		m_bSouth=TRUE;
 	}
 
-	if(uCompassVal&CMPS_WEST)
+	if(m_uCompassVal&CMPS_WEST)
 	{
 		m_bWest=TRUE;
 	}
@@ -117,29 +131,29 @@ void CCompassCheckDlg::OnOK()
 
 	UpdateData(TRUE);
 
-	uCompassVal=0;
+	m_uCompassVal=0;
 
 	if(m_bNorth)
 	{
-		uCompassVal|=CMPS_NORTH;
+		m_uCompassVal|=CMPS_NORTH;
 
 	}
 
 	if(m_bSouth)
 	{
-		uCompassVal|=CMPS_SOUTH;
+		m_uCompassVal|=CMPS_SOUTH;
 
 	}
 
 	if(m_bEast)
 	{
-		uCompassVal|=CMPS_EAST;
+		m_uCompassVal|=CMPS_EAST;
 
 	}
 
 	if(m_bWest)
 	{
-		uCompassVal|=CMPS_WEST;
+		m_uCompassVal|=CMPS_WEST;
 
 	}
 

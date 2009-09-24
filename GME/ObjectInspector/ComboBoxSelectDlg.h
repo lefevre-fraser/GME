@@ -15,16 +15,20 @@ class CComboBoxSelectDlg : public CDialog
 {
 	bool m_bInited;
 	bool m_bClosed;
+
 // Construction
 public:
 	CComboBoxSelectDlg(CWnd* pParent = NULL);   // standard constructor
 
 // Attributes
+protected :
+	CHooverListBox	m_lstBox;
+	CRect			m_RectBound;
+	CFont*			m_pFontWnd;
+	CListItem*		m_pListItem;
+
 public :
-	CHooverListBox m_lstBox;
-	CRect m_rectWnd;
-	CFont* m_pFontWnd;
-	CListItem* m_pListItem;
+	void SetParameters(const CRect& rectBound, CListItem* pListItem, CFont* pFontWnd);
 
 // Dialog Data
 	//{{AFX_DATA(CComboBoxSelectDlg)
@@ -37,7 +41,7 @@ public :
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CComboBoxSelectDlg)
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -47,9 +51,9 @@ protected:
 	//{{AFX_MSG(CComboBoxSelectDlg)
 	afx_msg BOOL OnNcActivate(BOOL bActive);
 	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
 	afx_msg LONG OnComboSelEnd(UINT lParam, LONG wParam);
 	void OnOK();
+	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
 

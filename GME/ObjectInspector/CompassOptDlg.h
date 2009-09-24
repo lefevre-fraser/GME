@@ -12,7 +12,6 @@
 
 class CCompassOptDlg : public CDialog
 {
-	bool m_bFirst;
 	bool m_bInited;
 	bool m_bClosed;
 	
@@ -20,25 +19,31 @@ class CCompassOptDlg : public CDialog
 public:
 	CCompassOptDlg(CWnd* pParent = NULL);   // standard constructor
 
-	CPoint m_ptRightTop;
-	UINT uCompassVal;
+// Attributes
+protected :
+	CPoint	m_ptRightTop;
+	UINT	m_uCompassVal;
+
+public :
+	void SetParameters(const CPoint& ptRightTop, UINT uCompassVal);
+	UINT GetCompassVal(void) const;
+
 // Dialog Data
 	//{{AFX_DATA(CCompassOptDlg)
 	enum { IDD = IDD_COMPASS_OPTION };
 	int		m_nRadio;
 	//}}AFX_DATA
 
-
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CCompassOptDlg)
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-    CBitmap m_background;
+	CBitmap m_background;
 
 	// Generated message map functions
 	//{{AFX_MSG(CCompassOptDlg)
@@ -63,10 +68,9 @@ protected:
 	afx_msg void OnRadioWest();
 	afx_msg void OnDoubleclickedRadioWest();
 	afx_msg void OnPaint();
+	virtual void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-
-	void OnOK();
 };
 
 //{{AFX_INSERT_LOCATION}}

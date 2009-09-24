@@ -535,6 +535,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\InPlaceCommon.cpp"
+				>
+			</File>
+			<File
 				RelativePath="InPlaceEdit.cpp"
 				>
 				<FileConfiguration
@@ -1094,6 +1098,10 @@
 			</File>
 			<File
 				RelativePath="HooverListBox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InPlaceCommon.h"
 				>
 			</File>
 			<File

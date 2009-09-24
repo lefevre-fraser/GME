@@ -34,6 +34,7 @@
 #include "stdafx.h"
 #include <math.h>
 #include "ColourPopup.h"
+#include "InPlaceCommon.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -861,13 +862,16 @@ void CColourPopup::OnLButtonUp(UINT nFlags, CPoint point)
 		return;
 	}
 
-    DWORD pos = GetMessagePos();
-    point = CPoint(LOWORD(pos), HIWORD(pos));
-
-    if (m_WindowRect.PtInRect(point))
-        EndSelection(IDOK);
-    else
-        EndSelection(IDCANCEL);
+	CPoint sPoint = point;
+	ClientToScreen(&sPoint);
+	CRect cRect;
+	GetClientRect(&cRect);
+	if (cRect.PtInRect(point)) {
+		EndSelection(IDOK);
+	} else {
+		EndSelection(IDCANCEL);
+		RelayMouseClickToInspectorList(m_pParentWnd, sPoint);
+	}
 }
 
 BOOL CColourPopup::OnQueryNewPalette() 

@@ -5,6 +5,7 @@
 #include "objectinspector.h"
 #include "CompassOptDlg.h"
 #include "CompassData.h"
+#include "InPlaceCommon.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -25,6 +26,19 @@ CCompassOptDlg::CCompassOptDlg(CWnd* pParent /*=NULL*/)
 
 	m_bInited = true;
 	m_bClosed = false;
+}
+
+
+void CCompassOptDlg::SetParameters(const CPoint& ptRightTop, UINT uCompassVal)
+{
+	m_ptRightTop		= ptRightTop;
+	m_uCompassVal		= uCompassVal;
+}
+
+
+UINT CCompassOptDlg::GetCompassVal(void) const
+{
+	return m_uCompassVal;
 }
 
 
@@ -77,24 +91,13 @@ BOOL CCompassOptDlg::OnNcActivate(BOOL bActive)
 		if (!bActive && !m_bClosed) {
 			m_bClosed = true;
 			EndDialog(IDCANCEL);
+		    DWORD pos = GetMessagePos();
+		    CPoint msgPoint(LOWORD(pos), HIWORD(pos));
+			RelayMouseClickToInspectorList(m_pParentWnd, msgPoint);
 		}
 		// OnOK();
 	}
 	return FALSE;
-
-    /*
-	if(!m_bInited)
-        return CDialog::OnNcActivate(bActive);
-
-	if(m_bFirst)
-	{
-		m_bFirst=true;
-	}
-	else
-	{
-		OnOK();
-	}
-	return FALSE;*/
 }
 
 
@@ -102,7 +105,7 @@ BOOL CCompassOptDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	ASSERT(CCompassData::bIsSingle(uCompassVal));
+	ASSERT(CCompassData::bIsSingle(m_uCompassVal));
 	
 	CRect rectWnd;
 	GetWindowRect(rectWnd);
@@ -111,56 +114,54 @@ BOOL CCompassOptDlg::OnInitDialog()
 
 
 
-	if(uCompassVal&CMPS_CENTER)
+	if(m_uCompassVal&CMPS_CENTER)
 	{
 		m_nRadio=0;
 	}
 
 
-	if(uCompassVal&CMPS_NORTH)
+	if(m_uCompassVal&CMPS_NORTH)
 	{
 		m_nRadio=1;
 	}
 
-	if(uCompassVal&CMPS_EAST)
+	if(m_uCompassVal&CMPS_EAST)
 	{
 		m_nRadio=3;
 	}
 	
-	if(uCompassVal&CMPS_SOUTH)
+	if(m_uCompassVal&CMPS_SOUTH)
 	{
 		m_nRadio=5;
 	}
 
-	if(uCompassVal&CMPS_WEST)
+	if(m_uCompassVal&CMPS_WEST)
 	{
 		m_nRadio=7;
 	}
 
-	if(uCompassVal&CMPS_NORTHEAST)
+	if(m_uCompassVal&CMPS_NORTHEAST)
 	{
 		m_nRadio=2;
 	}
 
-	if(uCompassVal&CMPS_SOUTHEAST)
+	if(m_uCompassVal&CMPS_SOUTHEAST)
 	{
 		m_nRadio=4;
 	}
 
-	if(uCompassVal&CMPS_SOUTHWEST)
+	if(m_uCompassVal&CMPS_SOUTHWEST)
 	{
 		m_nRadio=6;
 	}
 
-	if(uCompassVal&CMPS_NORTHWEST)
+	if(m_uCompassVal&CMPS_NORTHWEST)
 	{
 		m_nRadio=8;
 	}
 
 	UpdateData(FALSE);
 	
-	m_bFirst=true;
-
 	m_bInited=true;
 
     m_background.LoadBitmap( IDB_COMPASS_OPT );
@@ -175,61 +176,61 @@ void CCompassOptDlg::OnOK()
 
 	UpdateData(TRUE);
 
-	uCompassVal=0;
+	m_uCompassVal=0;
 
 	switch(m_nRadio)
 	{
 		case 0:
 		{
-			uCompassVal|=CMPS_CENTER;
+			m_uCompassVal|=CMPS_CENTER;
 
 		}break;
 
 		case 1:
 		{
-			uCompassVal|=CMPS_NORTH;
+			m_uCompassVal|=CMPS_NORTH;
 
 		}break;
 		
 		case 2:
 		{
-			uCompassVal|=CMPS_NORTHEAST;
+			m_uCompassVal|=CMPS_NORTHEAST;
 
 		}break;
 
 		case 3:
 		{
-			uCompassVal|=CMPS_EAST;
+			m_uCompassVal|=CMPS_EAST;
 
 		}break;
 
 		case 4:
 		{
-			uCompassVal|=CMPS_SOUTHEAST;
+			m_uCompassVal|=CMPS_SOUTHEAST;
 
 		}break;
 
 		case 5:
 		{
-			uCompassVal|=CMPS_SOUTH;
+			m_uCompassVal|=CMPS_SOUTH;
 
 		}break;
 
 		case 6:
 		{
-			uCompassVal|=CMPS_SOUTHWEST;
+			m_uCompassVal|=CMPS_SOUTHWEST;
 
 		}break;
 
 		case 7:
 		{
-			uCompassVal|=CMPS_WEST;
+			m_uCompassVal|=CMPS_WEST;
 
 		}break;
 
 		case 8:
 		{
-			uCompassVal|=CMPS_NORTHWEST;
+			m_uCompassVal|=CMPS_NORTHWEST;
 
 		}break;
 

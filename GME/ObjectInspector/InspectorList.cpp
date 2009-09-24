@@ -30,6 +30,7 @@ CInspectorList::~CInspectorList()
 BEGIN_MESSAGE_MAP(CInspectorList, CListBox)
 	//{{AFX_MSG_MAP(CInspectorList)
 	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONDBLCLK()
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
 	ON_CONTROL_REFLECT(LBN_SELCHANGE, OnSelChange)
@@ -409,7 +410,7 @@ void CInspectorList::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	if(GetCount()==0)return;
 
-	if(m_bIsDividerDrag	)
+	if(m_bIsDividerDrag)
 	{
 		m_bIsDividerDrag=FALSE;
 		m_Settings.m_nDivider = point.x;
@@ -515,7 +516,6 @@ void CInspectorList::OnEditorClicked()
 	m_InPlaceManager.OnClickEditorButton();
 
 }
-
 
 
 bool CInspectorList::InsertItem(CListItem ListItem, int nIndex)
@@ -753,7 +753,6 @@ void CInspectorList::UpdateItem(const CListItem &srcListItem, CListItem &dstList
 }
 
 
-
 bool CInspectorList::RemoveItem(int nIndex)
 {
 	if(nIndex<=m_ListItemArray.GetUpperBound())
@@ -781,42 +780,46 @@ void CInspectorList::ResetContent()
 }
 
 
-
 void CInspectorList::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-	OnPlusMinusClick(point);
+	if (!OnPlusMinusClick(point))
+		OnLButtonDown(nFlags, point);
 
 	//CListBox::OnLButtonDblClk(nFlags, point);
 }
 
 
-
-void CInspectorList::OnPlusMinusClick(CPoint point)
+bool CInspectorList::OnPlusMinusClick(CPoint point)
 {
 	BOOL bOutside;
 	int nIndex=ItemFromPoint(point,bOutside);
-	if(nIndex==65535)return;
-	if(!bOutside)
-	{
-		CListItem ListItem=m_ListItemArray.GetAt(nIndex);
-		if(!ListItem.bIsContainer)return;
+	if (nIndex==65535)
+		return false;
+	if (bOutside)
+		return false;
 
-		CRect rectItem;
-		GetItemRect(nIndex,rectItem);
-		CRect rectLeftMargin(rectItem);
-		rectLeftMargin.right=INSP_LEFT_MARGIN;
-		int nXPlusMinusOffset=(rectLeftMargin.Width()-INSP_PLUS_MINUS_BUTTON_SIZE)/2;
-		int nYPlusMinusOffset=(rectLeftMargin.Height()-INSP_PLUS_MINUS_BUTTON_SIZE)/2;
-		CRect rectPlusMinus(rectLeftMargin.left+nXPlusMinusOffset,
-							rectLeftMargin.top+nYPlusMinusOffset,
-							rectLeftMargin.left+nXPlusMinusOffset+INSP_PLUS_MINUS_BUTTON_SIZE,
-							rectLeftMargin.top+nYPlusMinusOffset+INSP_PLUS_MINUS_BUTTON_SIZE);
-		if(rectPlusMinus.PtInRect(point))
-		{
-			// If it was a click on the correct place
-			DoCollapseExpand(nIndex);
-		}
+	CListItem ListItem=m_ListItemArray.GetAt(nIndex);
+	if(!ListItem.bIsContainer)
+		return false;
+
+	CRect rectItem;
+	GetItemRect(nIndex,rectItem);
+	CRect rectLeftMargin(rectItem);
+	rectLeftMargin.right=INSP_LEFT_MARGIN;
+	int nXPlusMinusOffset=(rectLeftMargin.Width()-INSP_PLUS_MINUS_BUTTON_SIZE)/2;
+	int nYPlusMinusOffset=(rectLeftMargin.Height()-INSP_PLUS_MINUS_BUTTON_SIZE)/2;
+	CRect rectPlusMinus(rectLeftMargin.left+nXPlusMinusOffset,
+						rectLeftMargin.top+nYPlusMinusOffset,
+						rectLeftMargin.left+nXPlusMinusOffset+INSP_PLUS_MINUS_BUTTON_SIZE,
+						rectLeftMargin.top+nYPlusMinusOffset+INSP_PLUS_MINUS_BUTTON_SIZE);
+	if(rectPlusMinus.PtInRect(point))
+	{
+		// If it was a click on the correct place
+		DoCollapseExpand(nIndex);
+		return true;
 	}
+
+	return false;
 }
 
 

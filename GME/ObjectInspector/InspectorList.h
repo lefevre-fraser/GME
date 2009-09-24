@@ -73,7 +73,7 @@ public:
 	bool FindByKey(DWORD, DWORD, CListItem&);
 
 	bool OnRightSideClick(CPoint point);
-	void OnPlusMinusClick(CPoint point);
+	bool OnPlusMinusClick(CPoint point);
 	void DoCollapseExpand(int);
 	void ResetContent();
 	CInspectorListSettings m_Settings;

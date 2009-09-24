@@ -6,6 +6,7 @@
 #include "ComboBoxSelectDlg.h"
 #include "InspectorDefs.h"
 #include "ItemData.h"
+#include "InPlaceCommon.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -24,8 +25,17 @@ CComboBoxSelectDlg::CComboBoxSelectDlg(CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CComboBoxSelectDlg)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
+
 	m_bInited = true;
 	m_bClosed = false;
+}
+
+
+void CComboBoxSelectDlg::SetParameters(const CRect& rectBound, CListItem* pListItem, CFont* pFontWnd)
+{
+	m_RectBound			= rectBound;
+	m_pListItem			= pListItem;
+	m_pFontWnd			= pFontWnd;
 }
 
 
@@ -56,6 +66,9 @@ BOOL CComboBoxSelectDlg::OnNcActivate(BOOL bActive)
 		if (!bActive && !m_bClosed) {
 			m_bClosed = true;
 			EndDialog(IDCANCEL);
+		    DWORD pos = GetMessagePos();
+		    CPoint msgPoint(LOWORD(pos), HIWORD(pos));
+			RelayMouseClickToInspectorList(m_pParentWnd, msgPoint);
 		}
 		// OnOK();
 	}
@@ -66,8 +79,8 @@ BOOL CComboBoxSelectDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	SetWindowPos( NULL, m_rectWnd.left, m_rectWnd.top, m_rectWnd.Width(), m_rectWnd.Height(), SWP_NOZORDER );
-	CRect rect( 0, 0, m_rectWnd.Width(), m_rectWnd.Height() + INSP_COMBOBOX_LINE_HEIGHT );
+	SetWindowPos( NULL, m_RectBound.left, m_RectBound.top, m_RectBound.Width(), m_RectBound.Height(), SWP_NOZORDER );
+	CRect rect( 0, 0, m_RectBound.Width(), m_RectBound.Height() + INSP_COMBOBOX_LINE_HEIGHT );
 	m_lstBox.Create( LBS_NOTIFY | WS_VSCROLL, rect, this, IDC_COMBO_LISTBOX );
 	m_lstBox.SetFont( m_pFontWnd );
 

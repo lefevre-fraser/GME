@@ -557,17 +557,17 @@ void CInPlaceManager::OnClickArrowButton(bool rightSideClick)
 
 void CInPlaceManager::DisplayCompassCheck(CRect rectBound)
 {
-	CCompassCheckDlg dlg;
+	CCompassCheckDlg dlg(m_pInspectorList);
 
 	CListItem& ListItem=m_pInspectorList->m_ListItemArray.ElementAt(m_nCurrentIndex);
-	dlg.uCompassVal=ListItem.Value.compassVal;
-
+	UINT uCompassVal=ListItem.Value.compassVal;
 	CPoint ptDlgTopRight(rectBound.right,rectBound.top);
-	dlg.m_ptRightTop=ptDlgTopRight;
-	m_pInspectorList->ClientToScreen(&dlg.m_ptRightTop);
+	m_pInspectorList->ClientToScreen(&ptDlgTopRight);
+	dlg.SetParameters(ptDlgTopRight, uCompassVal);
+
 	if(dlg.DoModal()==IDOK)
 	{
-		ListItem.Value.SetCompassValue(dlg.uCompassVal);
+		ListItem.Value.SetCompassValue(dlg.GetCompassVal());
 
 		ListItem.SetDirty();
 
@@ -579,18 +579,17 @@ void CInPlaceManager::DisplayCompassCheck(CRect rectBound)
 
 void CInPlaceManager::DisplayCompassOpt(CRect rectBound)
 {
-	CCompassOptDlg dlg;
+	CCompassOptDlg dlg(m_pInspectorList);
 
 	CListItem& ListItem=m_pInspectorList->m_ListItemArray.ElementAt(m_nCurrentIndex);
-	dlg.uCompassVal=ListItem.Value.compassVal;
-
+	UINT uCompassVal=ListItem.Value.compassVal;
 	CPoint ptDlgTopRight(rectBound.right,rectBound.top);
-	dlg.m_ptRightTop=ptDlgTopRight;
-	m_pInspectorList->ClientToScreen(&dlg.m_ptRightTop);
+	m_pInspectorList->ClientToScreen(&ptDlgTopRight);
+	dlg.SetParameters(ptDlgTopRight, uCompassVal);
 
 	if(dlg.DoModal()==IDOK)
 	{
-		ListItem.Value.SetCompassExclValue(dlg.uCompassVal);
+		ListItem.Value.SetCompassExclValue(dlg.GetCompassVal());
 		ListItem.SetDirty();
 
 		m_pInspectorList->NotifyParent(m_nCurrentIndex);
@@ -602,15 +601,11 @@ void CInPlaceManager::DisplayCompassOpt(CRect rectBound)
 
 void CInPlaceManager::DisplayCombo(CRect rectBound)
 {
-	CComboBoxSelectDlg dlg;
-
-	dlg.m_pFontWnd = &m_pInspectorList->m_entryFont;
+	CComboBoxSelectDlg dlg(m_pInspectorList);
 
 	CListItem& ListItem = m_pInspectorList->m_ListItemArray.ElementAt( m_nCurrentIndex );
-	dlg.m_pListItem = &ListItem;
-
 	m_pInspectorList->ClientToScreen( &rectBound );
-	dlg.m_rectWnd = rectBound;
+	dlg.SetParameters(rectBound, &ListItem, &m_pInspectorList->m_entryFont);
 
 	if ( dlg.DoModal() == IDOK ) {
 		ListItem.SetDirty();

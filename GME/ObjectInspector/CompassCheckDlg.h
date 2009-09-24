@@ -14,12 +14,20 @@ class CCompassCheckDlg : public CDialog
 {
 	bool m_bInited;
 	bool m_bClosed;
+
 // Construction
 public:
 	CCompassCheckDlg(CWnd* pParent = NULL);   // standard constructor
-	CPoint m_ptRightTop;
 
-	UINT uCompassVal;
+// Attributes
+protected :
+	CPoint m_ptRightTop;
+	UINT m_uCompassVal;
+
+public :
+	void SetParameters(const CPoint& ptRightTop, UINT uCompassVal);
+	UINT GetCompassVal(void) const;
+
 // Dialog Data
 	//{{AFX_DATA(CCompassCheckDlg)
 	enum { IDD = IDD_DIALOG_COMPASS };
@@ -47,10 +55,10 @@ protected:
 	afx_msg BOOL OnNcActivate(BOOL bActive);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
+	virtual void OnOK();
+	virtual void OnCancel();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-	void OnOK();
-	void OnCancel();
 };
 
 //{{AFX_INSERT_LOCATION}}
