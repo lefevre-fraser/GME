@@ -394,8 +394,12 @@ int FileGenerator::GenFile(const char *patfilename, CBuilderObject* context) {
 
 void CComponent::InvokeEx(CBuilder &builder,CBuilderObject *focus, CBuilderObjectList &selected, long param) 
 {
-	CString script(builder.GetParameter("script"));
+	if (focus == NULL) {
+		AfxMessageBox("Please select an element in an opened model!", MB_OK | MB_ICONSTOP);
+		return;
+	}
 
+	CString script(builder.GetParameter("script"));
 
 	if(script.IsEmpty()) {
 		static char filter[] = "Pattern Files (*.pat)|*.pat|" "All Files (*.*)|*.*||";
