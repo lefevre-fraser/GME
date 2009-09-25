@@ -77,7 +77,7 @@ do { \
 	}
 
 inline bool CheckOut_IsBound(BSTR b) { return b != NULL; }
-inline bool CheckOut_IsBound(const VARIANT &v) { return v.vt != VT_EMPTY; }
+inline bool CheckOut_IsBound(const VARIANT &v) { return !(v.vt == VT_EMPTY || v.vt == VT_NULL); }
 inline bool CheckOut_IsBound(const IUnknown *p) { return p != NULL; }
 inline bool CheckOut_IsBound(const int) { return false; }
 inline bool CheckOut_IsBound(const short) { return false; }
