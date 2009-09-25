@@ -15,7 +15,7 @@ import "mga.idl";
 
 
 // Error codes
-typedef enum decorator_error {
+typedef enum decorator_return_code {
 [helpstring("Specified parameter name is unknown")]
 	E_DECORATOR_UNKNOWN_PARAMETER	=	0x80737001,
 [helpstring("Initialization with null pointer to MgaProject or MgaMetaPart")]
@@ -34,7 +34,7 @@ typedef enum decorator_error {
 	S_DECORATOR_EVENT_HANDLED	= 0x00737001,
 [helpstring("Event not handled.")]
 	S_DECORATOR_EVENT_NOT_HANDLED	= 0x00737002
-} decorator_error;
+} decorator_return_code;
 
 // Feature codes
 typedef unsigned long feature_code;
