@@ -4011,9 +4011,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
     <code>IMgaDecorator</code> COM interface for implementation, and used the
     plain Windows GDI graphical subsystem to draw the graphics. Newer GME
     versions use <code>IMgaElementDecorator</code> interface and
-    <acronym>GDI+</acronym> (Gdiplus) for drawing the objects. New GME
+    <code>GDI+</code> (Gdiplus) for drawing the objects. New GME
     versions still support old decorators, but mixing the old GDI and the new
-    <acronym>GDI+</acronym> technology can confuse the system (resulting in
+    <code>GDI+</code> technology can confuse the system (resulting in
     graphical errors), so it is highly advisable to update old decorators to
     the new scheme. Also, it is advisable to use Release version decorators
     with Release version GME, and Debug version decorators with Debug version
@@ -4021,8 +4021,9 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
     <para>GME instantiates a separate decorator for each object in each
     aspect, so we have to keep our decorator code as compact as possible.
-    Decorator components always have to be in-process servers. Using C++,
-    <acronym>GDI+</acronym>, <acronym>ATL</acronym> or <acronym>MFC</acronym>
+    Decorator components always have to be in-process servers. Using
+    <code>DecoratorLib</code>, <code>C++</code>, <code>GDI+</code>,
+    <code>ATL</code> and/or <code>MFC</code>
     is the recommended way to develop decorators.</para>
 
     <section>
@@ -4436,8 +4437,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         Other functions of this native Windows interface is
         <code>DragLeave</code>, <code>DragOver</code> and <code>Drop</code>,
         these messages work with each other. For a simple example you may take
-        a look at the <code>SampleDecorator</code> code in the
-        <code>NewDecoratorKit</code> in the <acronym>SDK</acronym>.</para>
+        a look at the <code>NewSample</code> decorator code in the
+        <filename moreinfo="none">SDK\Decorator Examples</filename> direcotry.</para>
 
         <para><code>dropEffect</code>: On entry, a pointer to the value of the
         <code>pdwEffect</code> parameter of the <code>DoDragDrop</code>
@@ -4500,8 +4501,8 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
         query and treat this handle.</para>
 
         <para>For a simple example you may take a look at the
-        <code>SampleDecorator</code> code in the <code>NewDecoratorKit</code>
-        in the SDK.</para>
+        <code>NewSample</code> decorator code in the <filename moreinfo="none">SDK\Decorator Examples</filename>
+        directory.</para>
 
         <para>For the explanation of the coordinate and coordinate
         transformation parameters, see <link
@@ -4999,31 +5000,34 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para>The resulting configuration is a ready-to-compile Visual Studio
       2008 Solution leveraging capabilites of the new
-      <code>DecoratorLib</code> library. The user is expected to implement the
+      <code>DecoratorLib</code> library and shows the same demo features as the
+      <code>NewSample</code> sample decorator code. The user is expected to implement the
       component by modifying appropriate files of the skeleton code. For
-      further details see the section on <code>DecoratorLib</code>.</para>
+      further details see the section on <code>DecoratorLib</code> and decorator example codes.
+  </para>
 
       <para>After building the project, the decorator
       <filename>.dll</filename> is registered.</para>
     </section>
 
     <section>
-      <title>Using the Decorator skeleton example code</title>
+      <title>Using the Decorator sample/skeleton codes</title>
 
       <para>The recommended method for decorator development is the Decorator
       Wizard, see previous section. If for some reason you want to edit
-      skeleton codes directly, there are still two types of skeleton project
-      provided in the SDK.</para>
+      sample codes directly, there are still two types of sample projects
+      provided in the <filename moreinfo="none">C:\Program
+      Files\GME\SDK\Decorator Examples</filename> directory.</para>
 
-      <para>The <code>NewDecoratorKit</code> sample takes advantage of the
+      <para>The <code>NewSample</code> sample takes advantage of the
       class hierarchy and utilities provided by the new
-      <code>DecoratorKit</code> library. The source code is intended to be
-      used with Microsoft Visual Studio 2008. Because of the new DecoratorKit,
+      <code>DecoratorLib</code> library. The source code is intended to be
+      used with Microsoft Visual Studio 2008. Because of the new <code>DecoratorLib</code>,
       the sample can inherit resizability properties and in-place label
       editing features from the infrastructure. It also demonstrates context
       menu usage and drag-drop handling.</para>
 
-      <para>In case of the <code>NewDecoratorKit</code> decorator you first
+      <para>In case of the <code>NewSample</code> decorator you first
       have to adjust <code>DecoratorLib.vcproj</code> project file path (this
       is part of the solution) in the Visual Studio Solution file.
       Unfortunately in case of Solution (<code>.sln</code>) files Visual
@@ -5032,7 +5036,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
       the SDK sample so you have to tune it. This is not a problem with the
       Wizard because it does this all automatically.</para>
 
-      <para>The <code>DecoratorKit</code> source code provides a really
+      <para>The <code>PlainSample</code> source code provides a really
       stripped down example implementation containing only the flat
       implementation of the interface and not leveraging the new
       <code>DecoratorLib</code>. The example still demonstrates very simple
@@ -5150,7 +5154,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para>It is recommended to use the Decorator Wizard to start the
       development. If you start from scratch for some reason, you can start
-      your project based on the <code>NewDecoratorKit</code> sample decorator,
+      your project based on the <code>NewSample</code> sample decorator,
       or one of the existing decorators, which are part of the GME source
       code: MgaDecorators, UML decorator (source can be found in the SDK also)
       or Meta decorator.</para>
@@ -5194,7 +5198,7 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para>The main task is to decide which decorator parts represent the
       functionality needed by the decorator and instantiate them at the proper
-      time. In the <code>NewDecoratorKit</code> example this place is the
+      time. In the <code>NewSample</code> example this place is the
       <code>SampleCompositePart::InitializeEx</code> function, where currently
       we add a vector part and a label part to the encapsulating composite
       part. The UML and the Meta decorator source contains a switch here, the
