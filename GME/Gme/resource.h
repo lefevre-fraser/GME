@@ -452,12 +452,7 @@
 #define ID_CNTX_REVERSECONNECTION       33053
 #define ID_JUMPALONGCONN                33055
 #define ID_BACKALONGCONN                33056
-#define IDS_EMERGENC_YXML               33057
-#define IDS_EMERGENCY_XML               33057
-#define IDS_EMERGENCY_PROJ              33058
 #define ID_JUMPTOFIRSTOBJ               33059
-#define IDS_EMERGENCY_NOPROJ            33059
-#define IDS_CRASHDUMP_INFO              33060
 #define ID_JUMPTONEXTOBJ                33061
 #define ID_SHOWCONTEXTMENU              33063
 #define ID_CNTX_SHOWPORTINPARENT        33068

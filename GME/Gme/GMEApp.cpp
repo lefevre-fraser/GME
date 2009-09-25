@@ -473,24 +473,34 @@ BOOL CGMEApp::EmergencySave(EmergencySaveMode saveMode)
 		}
 		if (proj_type_is_xmlbackend) {
 			if (saveMode != DoTheSaveOnly)
-				emergencySaveMsg.LoadString(IDS_EMERGENCY_XML);
+				emergencySaveMsg = "Emergency event. Please, restart GME. "
+								   "Your current work is found in the local checkout directory.";
 		} else {
 			if (saveMode != DoTheSaveOnly)
-				emergencySaveMsg.FormatMessage(IDS_EMERGENCY_PROJ, (hr == S_OK)? "has" : "may have", embackupname);
+				emergencySaveMsg.FormatMessage("Emergency event. Your current work %1 been saved to %2.\n"
+											   "The original project file has not been modified.\n"
+											   "We apologize for the inconvenience.",
+											   (hr == S_OK)? "has" : "may have",
+											   embackupname);
 
 			m_RecentProjectList.Add(embackupname);
 			m_RecentProjectList.WriteList();
 		}
 	} else {
 		if (saveMode != DoTheSaveOnly)
-			emergencySaveMsg.LoadString(IDS_EMERGENCY_NOPROJ);
+			emergencySaveMsg = "Emergency event. Please, restart GME.";
 	}
 	if (saveMode == SaveAndBringUpMessageBox) {
 		AfxMessageBox(emergencySaveMsg);
 	} else if (saveMode == BringUpDialogOnly) {
 		emergencyBackupName = embackupname;
-		CString miniDumpMsg;
-		miniDumpMsg.LoadString(IDS_CRASHDUMP_INFO);
+		CString miniDumpMsg = "GME is able to generate a Microsoft MiniDump report file about this particular crash issue. "
+							  "Developers can use this file to analyze the crash, so it can significantly improve the "
+							  "quality of the program. The crash dump contains call stack, CPU register dump, and other "
+							  "crash related information. Please click the checkbox below if you are willing to generate "
+							  "the crash dump. A File Explorer window will open automatically after that, so you can send "
+							  "the recent crash dump(s) easier to the following "
+							  "e-mail address: gme-supp@isis.vanderbilt.edu";
 		EmergencySaveDlg cdl(NULL);
 		cdl.SetStrings(emergencySaveMsg, miniDumpMsg);
 		if (cdl.DoModal() == IDOK) {
