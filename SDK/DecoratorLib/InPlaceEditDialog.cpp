@@ -215,7 +215,7 @@ void CInPlaceEditDialog::OnBnClickedOk()
 
 LRESULT CInPlaceEditDialog::OnInPlaceEditing(WPARAM wParam, LPARAM lParam)
 {
-	// wParam > 0: OK, else Cancel
+	// wParam == VK_RETURN -> OK, wParam == VK_ESCAPE -> Cancel, else: command 
 	// lParam > 0: mouse click initiated else keyboard input initiated
 	if (wParam == VK_RETURN) {
 		if (lParam > 0 || !m_bMultiLine)
