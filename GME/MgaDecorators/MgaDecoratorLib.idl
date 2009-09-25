@@ -17,6 +17,9 @@ library MGADECORATORLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
+	enum decorator_return_code;
+	enum refresh_mode_enum;
+
 	[
 		uuid(3FA0768D-F832-4C6A-973D-5D8E3EF05FFA),
 		helpstring("BoxDecorator Class")
