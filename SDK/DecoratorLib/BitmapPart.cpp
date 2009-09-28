@@ -112,12 +112,20 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 				crGayedOut = it->second.uValue.crValue;
 			m_pBitmap = getFacilities().getMaskedBitmap(bitmapResID, crTransparent, crGayedOut );
 		}
-		m_pTileVector = preferences.find(PREF_TILES)->second.uValue.pTiles;
+		PreferenceMap::iterator tileIt = preferences.find(PREF_TILES);
+		if (tileIt != preferences.end())
+			m_pTileVector = tileIt->second.uValue.pTiles;
+		else
+			m_pTileVector = getFacilities().getTileVector(TILE_ATOMDEFAULT);
 	}
 	if (!m_pBitmap) {
 		CString strIcon;
 		getFacilities().getPreference(pFCO, spMetaFCO, PREF_ICON, strIcon);
-		m_pTileVector = preferences.find(PREF_TILESUNDEF)->second.uValue.pTiles;
+		PreferenceMap::iterator tileIt = preferences.find(PREF_TILESUNDEF);
+		if (tileIt != preferences.end())
+			m_pTileVector = tileIt->second.uValue.pTiles;
+		else
+			m_pTileVector = getFacilities().getTileVector(TILE_ATOMDEFAULT);
 		if (!strIcon.IsEmpty()) {
 #ifndef OLD_DECORATOR_LOOKANDFEEL
 			if (m_bOverlay)
@@ -138,7 +146,11 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 #else
 			m_pBitmap = getFacilities().getBitmap(strIcon);
 #endif
-			m_pTileVector = preferences.find(PREF_TILESDEFAULT)->second.uValue.pTiles;
+			PreferenceMap::iterator tileIt = preferences.find(PREF_TILESDEFAULT);
+			if (tileIt != preferences.end())
+				m_pTileVector = tileIt->second.uValue.pTiles;
+			else
+				m_pTileVector = getFacilities().getTileVector(TILE_ATOMDEFAULT);
 		}
 	}
 

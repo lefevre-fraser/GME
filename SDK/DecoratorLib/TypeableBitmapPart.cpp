@@ -77,12 +77,20 @@ void TypeableBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IM
 #else
 			pBitmap = getFacilities().getBitmap(*it->second.uValue.pstrValue);
 #endif
-			pTileVector = preferences.find(PREF_TILES)->second.uValue.pTiles;
+			PreferenceMap::iterator tileIt = preferences.find(PREF_TILES);
+			if (tileIt != preferences.end())
+				pTileVector = tileIt->second.uValue.pTiles;
+			else
+				pTileVector = getFacilities().getTileVector(TILE_ATOMDEFAULT);
 		}
 		if (!pBitmap) {
 			CString strIcon;
 			if (getFacilities().getPreference(m_spFCO, (m_iTypeInfo == 2) ? PREF_SUBTYPEICON : PREF_INSTANCEICON, strIcon)) {
-				pTileVector = preferences.find(PREF_TILESUNDEF)->second.uValue.pTiles;
+				PreferenceMap::iterator tileIt = preferences.find(PREF_TILESUNDEF);
+				if (tileIt != preferences.end())
+					pTileVector = tileIt->second.uValue.pTiles;
+				else
+					pTileVector = getFacilities().getTileVector(TILE_ATOMDEFAULT);
 				if (!strIcon.IsEmpty()) {
 #ifndef OLD_DECORATOR_LOOKANDFEEL
 					if (m_bOverlay)
