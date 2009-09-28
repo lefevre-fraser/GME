@@ -262,8 +262,22 @@ void CSearchDlg::OnButtonGo()
         CComPtr<IMgaFolder> rootInput;
         COMTHROW(ccpProject->get_RootFolder(&rootInput));
         CInput inp;
-        inp.GetInput(m_edtNameFirst,m_edtRoleNameFirst,m_edtKindNameFirst,m_edtAttributeFirst,m_edtNameSecond,m_edtRoleNameSecond,m_edtKindNameSecond,m_edtAttributeSecond,m_edtAttrValue,
+        try
+        {
+            //this might throw error related to regular expression
+            inp.GetInput(m_edtNameFirst,m_edtRoleNameFirst,m_edtKindNameFirst,m_edtAttributeFirst,m_edtNameSecond,m_edtRoleNameSecond,m_edtKindNameSecond,m_edtAttributeSecond,m_edtAttrValue,
             m_chkMod,m_chkAtom,m_chkRef,m_chkSet,m_chkConnection,m_chkSplSearch,m_chkFullWord,NULL,0,m_chkMatchCase,m_radioScope,m_radioLogical);
+        }
+        catch(...)
+        {
+            m_pgsSearch.ShowWindow(SW_HIDE);
+            m_pgsSearch.SetPos(1);
+            AfxMessageBox("Make sure your input is correct. If you are using"
+                " regular expression elements\n like *, + etc make sure you are"
+                " following proper syntax");
+
+            return;
+        }
 
 
         CSearch searchGME(inp);

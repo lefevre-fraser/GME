@@ -526,7 +526,6 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
         //aceess the corresponding attribute by using the index stored in a vector
         Attribute& attribute = expressionStack[indices[index]];
 
-
         CString objVal=expressionStack[indices[index]].value;
         if(!objVal.IsEmpty())
         {

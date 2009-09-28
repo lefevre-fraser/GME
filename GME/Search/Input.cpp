@@ -57,7 +57,7 @@ void CInput::GetInput(CString strNameFirst, CString strRoleFirst, CString strKin
     m_bFull=full;
 
     //get regular expression forms
-    m_regNameFirst=GetRegExp(strNameFirst);
+    m_regNameFirst = GetRegExp(strNameFirst);
     m_regRoleFirst = GetRegExp(strRoleFirst);
     m_regKindFirst = GetRegExp(strKindFirst);
     m_regAttributeFirst = GetRegExp(strAttributeFirst);
