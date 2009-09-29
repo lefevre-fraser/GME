@@ -4,6 +4,7 @@
 //	OCLType.h
 //
 //###############################################################################################################################################
+
 #include "Solve4786.h"
 #include "OCLType.h"
 
@@ -419,17 +420,51 @@ namespace OclMeta
 	void TypeManager::RegisterFeature( CallResult& callResult )
 	{
 		if ( callResult.bIsValid ) {
-			try  {
-				OclSignature::Feature::FeatureKind eKind = callResult.uResult.pFeature->GetKind();
-				switch ( eKind ) {
-					case OclSignature::Feature::FK_OPERATOR 		: ( (Operator*) callResult.uResult.pFeature )->GetImplementation()->m_pTypeManager = this; break;
-					case OclSignature::Feature::FK_FUNCTION 		: ( (Function*) callResult.uResult.pFeature )->GetImplementation()->m_pTypeManager = this; break;
-					case OclSignature::Feature::FK_ATTRIBUTE 		: ( (Attribute*) callResult.uResult.pFeature )->GetImplementation()->m_pTypeManager = this; break;
-					case OclSignature::Feature::FK_ASSOCIATION 	: ( (Association*) callResult.uResult.pFeature )->GetImplementation()->m_pTypeManager = this; break;
-					case OclSignature::Feature::FK_METHOD 			: ( (Method*) callResult.uResult.pFeature )->GetImplementation()->m_pTypeManager = this; break;
-					case OclSignature::Feature::FK_ITERATOR 		: ( (Iterator*) callResult.uResult.pFeature )->GetImplementation()->m_pTypeManager = this; break;
-				}
-			} catch (...) {}
+			OclSignature::Feature::FeatureKind eKind = callResult.uResult.pFeature->GetKind();
+			switch ( eKind ) {
+				case OclSignature::Feature::FK_OPERATOR 		:
+					{
+						OclImplementation::Operator* impl = ( (Operator*) callResult.uResult.pFeature )->GetImplementation();
+						if (impl != NULL)
+							impl->m_pTypeManager = this;
+					}
+					break;
+				case OclSignature::Feature::FK_FUNCTION 		:
+					{
+						OclImplementation::Function* impl = ( (Function*) callResult.uResult.pFeature )->GetImplementation();
+						if (impl != NULL)
+							impl->m_pTypeManager = this;
+					}
+					break;
+				case OclSignature::Feature::FK_ATTRIBUTE 		:
+					{
+						OclImplementation::Attribute* impl = ( (Attribute*) callResult.uResult.pFeature )->GetImplementation();
+						if (impl != NULL)
+							impl->m_pTypeManager = this;
+					}
+					break;
+				case OclSignature::Feature::FK_ASSOCIATION		:
+					{
+						OclImplementation::Association* impl = ( (Association*) callResult.uResult.pFeature )->GetImplementation();
+						if (impl != NULL)
+							impl->m_pTypeManager = this;
+					}
+					break;
+				case OclSignature::Feature::FK_METHOD 			:
+					{
+						OclImplementation::Method* impl = ( (Method*) callResult.uResult.pFeature )->GetImplementation();
+						if (impl != NULL)
+							impl->m_pTypeManager = this;
+					}
+					break;
+				case OclSignature::Feature::FK_ITERATOR 		:
+					{
+						OclImplementation::Iterator* impl = ( (Iterator*) callResult.uResult.pFeature )->GetImplementation();
+						if (impl != NULL)
+							impl->m_pTypeManager = this;
+					}
+					break;
+			}
 		}
 	}
 
