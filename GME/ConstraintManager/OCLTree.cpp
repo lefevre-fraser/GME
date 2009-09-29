@@ -312,11 +312,9 @@ namespace OclTree
 			violation.vecVariables.push_back( nam );
 			string str = vecItems[ i ].item.Print();
 			violation.vecObjects.push_back( str );
-#ifdef _WIN32
 			IUnknown* iu;
 			iu = vecItems[ i ].item.GetObject();
 			violation.vecObjectsPtr.push_back(iu);
-#endif
 		}
 		context.vecViolations.push_back( violation );
 		context.iViolationCount++;

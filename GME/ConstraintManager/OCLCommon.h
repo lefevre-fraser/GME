@@ -8,18 +8,6 @@
 #ifndef OCLCommon_h
 #define OCLCommon_h
 
-/*
-in case of GME STLport is used (under VC 7.x)
-in case of UDM MSVC's own STL
-*/
-
-#ifndef FOR_GME
-#ifdef _WIN32
-#if (_MSC_VER == 1200)
-#include <stl_user_config.h>
-#endif
-#endif
-#endif
 #include <vector>
 #include <map>
 #include <set>

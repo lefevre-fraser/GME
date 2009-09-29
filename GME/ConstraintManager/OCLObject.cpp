@@ -118,12 +118,10 @@ namespace OclMeta
 		return ( IsUndefined() ) ? "undefined" : Ptr()->Print();
 	}
 
-#ifdef _WIN32
 	IUnknown* Object::GetObject() const
 	{
 		return ( IsUndefined() ) ? NULL : Ptr()->GetObject();
 	}
-#endif
 
 }; // namespace OclMeta
 
