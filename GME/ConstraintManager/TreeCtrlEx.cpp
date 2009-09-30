@@ -2,7 +2,7 @@
 // 
 // CTreeCtrlEx - Multiple selection tree control for MFC
 // 
-// Copyright © 1997-2001 Bendik Engebretsen
+// Copyright © 1997-2003 Bendik Engebretsen
 // bendik@techsoft.no
 // http://www.techsoft.no/bendik/
 //
@@ -29,11 +29,14 @@
 //				  Cristian Rodriguez!
 // Jun 20, 2001	: Fixed quirk with label editing/doubleclick. Once more, thanks 
 //				  to Cristian Rodriguez. Also added treectrl wndclass registration.
+// Jan 24, 2003 : Fixed bug when treeview has the TVS_DISABLEDRAGDROP style. Thanks to
+//				  Fernanda Diniz Tavarez
+// Mar 20, 2003 : Fixed 'blinking' problem with TVS_SINGLEEXPAND style. Thanks to 
+//				  H.-Joachim Riedel.
+// Jun 10, 2003 : Migrated to Visual C++.NET / MFC 7.X
 
 #include "stdafx.h"
 #include "TreeCtrlEx.h"
-#include <afximpl.h>
-
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -55,8 +58,8 @@ BEGIN_MESSAGE_MAP(CTreeCtrlEx, CTreeCtrl)
 	ON_NOTIFY_REFLECT_EX(TVN_ITEMEXPANDING, OnItemexpanding)
 	ON_NOTIFY_REFLECT_EX(NM_SETFOCUS, OnSetfocus)
 	ON_NOTIFY_REFLECT_EX(NM_KILLFOCUS, OnKillfocus)
-	ON_WM_RBUTTONDOWN()
 	ON_NOTIFY_REFLECT_EX(TVN_SELCHANGED, OnSelchanged)
+	ON_WM_RBUTTONDOWN()
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_TIMER()
 	ON_WM_NCHITTEST()
@@ -67,16 +70,13 @@ IMPLEMENT_DYNAMIC(CTreeCtrlEx, CTreeCtrl)
 
 BOOL CTreeCtrlEx::Create(DWORD dwStyle, DWORD dwExStyle, const RECT& rect, CWnd* pParentWnd, UINT nID)
 {
-	// initialize common controls
-	VERIFY(AfxDeferRegisterClass(AFX_WNDCOMMCTL_TREEVIEW_REG));
-	//virtual BOOL CreateEx(DWORD dwExStyle, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
-	// changed for VC7's sake
-	return CreateEx( dwExStyle, /*WC_TREEVIEW, NULL, */
-		dwStyle, 
-		rect, //rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top,
-		pParentWnd, //pParentWnd->GetSafeHwnd(), 
-		nID //(HMENU)nID 
-		);
+#if _MFC_VER < 0x0700
+	return CreateEx( dwExStyle, WC_TREEVIEW, NULL, dwStyle,
+		rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top, 
+		pParentWnd->GetSafeHwnd(), (HMENU)nID );
+#else
+	return CTreeCtrl::CreateEx( dwExStyle, dwStyle, rect, pParentWnd, nID );
+#endif
 }
 
 BOOL CTreeCtrlEx::Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID)
@@ -189,7 +189,7 @@ void CTreeCtrlEx::OnMouseMove( UINT nFlags, CPoint point )
 			// TVN_BEGINDRAG notification for the parent!
 
 			CWnd* pWnd = GetParent();
-			if ( pWnd )
+			if ( pWnd && !( GetStyle() & TVS_DISABLEDRAGDROP ) )
 			{
 				NM_TREEVIEW tv;
 
@@ -612,7 +612,7 @@ BOOL CTreeCtrlEx::SelectItemEx(HTREEITEM hItem, BOOL bSelect/*=TRUE*/)
 	{
 		if ( !bSelect )
 		{
-			SelectItem(NULL);
+			SelectItem( NULL );
 			return TRUE;
 		}
 
@@ -689,8 +689,8 @@ BOOL CTreeCtrlEx::SelectItems( HTREEITEM hFromItem, HTREEITEM hToItem )
 
 void CTreeCtrlEx::ClearSelection(BOOL bMultiOnly/*=FALSE*/)
 {
-	if ( !bMultiOnly )
-		SelectItem( NULL );
+//	if ( !bMultiOnly )
+//		SelectItem( NULL );
 
 	for ( HTREEITEM hItem=GetRootItem(); hItem!=NULL; hItem=GetNextVisibleItem( hItem ) )
 		if ( GetItemState( hItem, TVIS_SELECTED ) & TVIS_SELECTED )
