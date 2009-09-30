@@ -1,7 +1,7 @@
 //###############################################################################################################################################
 //
 //	Object Constraint Language Generic Manager
-//	GMEViolationDialog.cp
+//	GMEViolationDialog.cpp
 //
 //###############################################################################################################################################
 
@@ -9,7 +9,6 @@
 #include "GMEViolationDialog.h"
 #include "OCLCommonEx.h"
 #include "OCLGMECMFacade.h"
-#include "afximpl.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
