@@ -36,17 +36,23 @@ namespace GMEConsole
 
 		static void Clear()
 		{
-			COMTHROW(gmeoleapp->put_ConsoleContents(L""));
+			if (gmeoleapp != 0) {
+				COMTHROW(gmeoleapp->put_ConsoleContents(L""));
+			}
 		}
 
 		static void SetContents(const CString& contents)
 		{
-			COMTHROW(gmeoleapp->put_ConsoleContents( CComBSTR(contents.GetLength(),contents)));
+			if (gmeoleapp != 0) {
+				COMTHROW(gmeoleapp->put_ConsoleContents( CComBSTR(contents.GetLength(),contents)));
+			}
 		}
 
 		static void NavigateTo(const CString& url)
 		{
-			COMTHROW(gmeoleapp->ConsoleNavigateTo(CComBSTR(url.GetLength(), url)));
+			if (gmeoleapp != 0) {
+				COMTHROW(gmeoleapp->ConsoleNavigateTo(CComBSTR(url.GetLength(), url)));
+			}
 		}
 
 		class Error
