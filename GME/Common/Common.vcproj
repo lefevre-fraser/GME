@@ -87,6 +87,10 @@
 				RelativePath="CommonStl.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\stdafx.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -122,6 +126,14 @@
 			</File>
 			<File
 				RelativePath="CommonVersionInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\targetver.h"
 				>
 			</File>
 		</Filter>

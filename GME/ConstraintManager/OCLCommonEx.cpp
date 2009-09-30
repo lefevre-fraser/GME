@@ -10,6 +10,8 @@
 #include "Regexp.h"
 #include "TokenEx.h"
 #include <algorithm>
+#include <string>
+#include <cctype>
 
 namespace OclCommonEx {
 
@@ -55,7 +57,7 @@ namespace OclCommonEx {
 			}
 			else if ( arrBounds.GetSize() == 1 ) {
 				int iMultiplicity = 0;
-				if ( sscanf( (LPCTSTR) arrBounds[ 0 ], "%d", &iMultiplicity ) != 1 ) {
+				if ( sscanf( (LPCTSTR) arrBounds[ 0 ], "%ld", &iMultiplicity ) != 1 ) {
 					bError = true;
 					break;
 				}
@@ -72,7 +74,7 @@ namespace OclCommonEx {
 				int iMultiplicityMin = 0;
 				int iMultiplicityMax = 0;
 
-				if( sscanf( (LPCTSTR) arrBounds[ 0 ], "%d", &iMultiplicityMin ) != 1 ) {
+				if( sscanf( (LPCTSTR) arrBounds[ 0 ], "%ld", &iMultiplicityMin ) != 1 ) {
 					bError = true;
 					break;
 				}
@@ -85,7 +87,7 @@ namespace OclCommonEx {
 						bMultiple = true;
 				}
 
-				if( sscanf( (LPCTSTR) arrBounds[ 1 ], "%d", &iMultiplicityMax ) != 1 ) {
+				if( sscanf( (LPCTSTR) arrBounds[ 1 ], "%ld", &iMultiplicityMax ) != 1 ) {
 					if ( arrBounds[ 1 ] != "*" ) {
 						bError = true;
 						break;
@@ -302,14 +304,18 @@ namespace OclCommonEx {
 	{
 		if ( strValue.empty() )
 			return strValue;
-		return std::string( _strlwr( (char*)strValue.substr( 0, 1 ).c_str() ) ) + strValue.substr( 1 );
+		std::string strVal = strValue;
+		std::transform(strVal.begin(), strVal.begin() + 1, strVal.begin(), std::tolower);
+		return strVal;
 	}
 
 	std::string UpperFirst( const std::string& strValue )
 	{
 		if ( strValue.empty() )
 			return strValue;
-		return std::string( _strupr( (char*)strValue.substr( 0, 1 ).c_str() ) ) + strValue.substr( 1 );
+		std::string strVal = strValue;
+		std::transform(strVal.begin(), strVal.begin() + 1, strVal.begin(), std::toupper);
+		return strVal;
 	}
 
 	CString LowerFirst( const CString& strValue )

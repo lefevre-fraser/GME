@@ -9,7 +9,11 @@
 
 #include "OCLObjectExBasic.h"
 #include "math.h"
-#include "algorithm" // needed for ms stl
+#include <algorithm> // needed for ms stl
+#include <string>
+#include <cctype>
+
+
 namespace OclBasic
 {
 	typedef OclCommon::FormalParameterVector 	FPV;
@@ -172,7 +176,7 @@ namespace OclBasic
 		void operator()()
 		{
 			DECL_STRING( strValue, GetThis() );
-			strValue = _strupr( (char*)strValue.c_str() );
+			std::transform(strValue.begin(), strValue.end(), strValue.begin(), std::toupper);
 			SetResult( CREATE_STRING( GetTypeManager(), strValue ) );
 		}
 	};
@@ -182,7 +186,7 @@ namespace OclBasic
 		void operator()()
 		{
 			DECL_STRING( strValue, GetThis() );
-			strValue = _strlwr( (char*)strValue.c_str() );
+			std::transform(strValue.begin(), strValue.end(), strValue.begin(), std::tolower);
 			SetResult( CREATE_STRING( GetTypeManager(), strValue ) );
 		}
 	};
