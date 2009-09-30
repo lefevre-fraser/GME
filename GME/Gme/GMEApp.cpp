@@ -29,7 +29,6 @@
 #include "GMEEventLogger.h"
 #include "GMEPrintDialog.h"
 #include "ExceptionHandler.h"
-#include "EmergencySaveDlg.h"
 #include "CrashTest.h"
 #include <Gdiplus.h>
 #include "GraphicsUtil.h"
@@ -443,72 +442,41 @@ BOOL CGMEApp::PreTranslateMessage(MSG* pMsg)
 
 void CGMEApp::EmergencyTerminate()
 {
-	theApp.EmergencySave(SaveAndBringUpMessageBox);
+	theApp.EmergencySave();
 }
 
-BOOL CGMEApp::EmergencySave(EmergencySaveMode saveMode)
+void CGMEApp::EmergencySave(void)
 {
 	CGMEEventLogger::LogGMEEvent("EMERGENCY EVENT\r\n");
-	CString emergencySaveMsg;
-	CString embackupname;
 	if (mgaProject && (proj_type_is_mga || proj_type_is_xmlbackend)) {
-		if (saveMode == DoTheSaveOnly && emergencyBackupName.GetLength() > 0) {
-			embackupname = emergencyBackupName;
-		} else {
-			embackupname = currentConnection;
-			int p = embackupname.ReverseFind('.');
-			if ((p == -1) || embackupname.Find('\\', p) != -1)
-				p = embackupname.GetLength();
-			CString emcode;
-			static int emnum;
-			emcode.Format("-emergency%ld", ++emnum);
-			embackupname.Insert(p, emcode);
-		}
-		HRESULT hr = S_OK;
-		if (saveMode == SaveAndBringUpMessageBox || saveMode == DoTheSaveOnly) {
+		CString embackupname = currentConnection;
+		int p = embackupname.ReverseFind('.');
+		if ((p == -1) || embackupname.Find('\\', p) != -1)
+			p = embackupname.GetLength();
+		CString emcode;
+		static int emnum;
+		emcode.Format("-emergency%ld", ++emnum);
+		embackupname.Insert(p, emcode);
 #pragma warning(disable: 4310) // cast truncates constant value
-			hr = mgaProject->Save(PutInBstr(embackupname), VARIANT_TRUE);
+		HRESULT hr = mgaProject->Save(PutInBstr(embackupname), VARIANT_TRUE);
 #pragma warning(default: 4310) // cast truncates constant value
-			emergencyBackupName.Empty();
-		}
 		if (proj_type_is_xmlbackend) {
-			if (saveMode != DoTheSaveOnly)
-				emergencySaveMsg = "Emergency event. Please, restart GME. "
-								   "Your current work is found in the local checkout directory.";
+			AfxMessageBox("Emergency event. Please, restart GME. "
+						  "Your current work is found in the local checkout directory.");
 		} else {
-			if (saveMode != DoTheSaveOnly)
-				emergencySaveMsg.FormatMessage("Emergency event. Your current work %1 been saved to %2.\n"
-											   "The original project file has not been modified.\n"
-											   "We apologize for the inconvenience.",
-											   (hr == S_OK)? "has" : "may have",
-											   embackupname);
-
+			CString emergencySaveMsg;
+			emergencySaveMsg.FormatMessage("Emergency event. Your current work %1 been saved to %2.\n"
+										   "The original project file has not been modified.\n"
+										   "We apologize for the inconvenience.",
+										   (hr == S_OK)? "has" : "might have",
+										   embackupname);
+			AfxMessageBox(emergencySaveMsg);
 			m_RecentProjectList.Add(embackupname);
 			m_RecentProjectList.WriteList();
 		}
 	} else {
-		if (saveMode != DoTheSaveOnly)
-			emergencySaveMsg = "Emergency event. Please, restart GME.";
+		AfxMessageBox("Emergency event. Please, restart GME.");
 	}
-	if (saveMode == SaveAndBringUpMessageBox) {
-		AfxMessageBox(emergencySaveMsg);
-	} else if (saveMode == BringUpDialogOnly) {
-		emergencyBackupName = embackupname;
-		CString miniDumpMsg = "GME is able to generate a Microsoft MiniDump report file about this particular crash issue. "
-							  "Developers can use this file to analyze the crash, so it can significantly improve the "
-							  "quality of the program. The crash dump contains call stack, CPU register dump, and other "
-							  "crash related information. Please click the checkbox below if you are willing to generate "
-							  "the crash dump. A File Explorer window will open automatically after that, so you can send "
-							  "the recent crash dump(s) easier to the following "
-							  "e-mail address: gme-supp@isis.vanderbilt.edu";
-		EmergencySaveDlg cdl(NULL);
-		cdl.SetStrings(emergencySaveMsg, miniDumpMsg);
-		if (cdl.DoModal() == IDOK) {
-			return cdl.ShouldWriteMiniDump();
-		}
-		return FALSE;
-	}
-	return TRUE;
 }
 
 int CGMEApp::Run()
@@ -533,7 +501,7 @@ int CGMEApp::Run()
 			retVal = CWinApp::Run();
 		}
 		__except(ExceptionHandler::UnhandledExceptionFilterOfMain(GetExceptionCode(), GetExceptionInformation())) {
-			EmergencySave(DoTheSaveOnly);
+			EmergencySave();
 
 			// Modified by Peter:let's exit after emergency event
 			abort_on_close = true;

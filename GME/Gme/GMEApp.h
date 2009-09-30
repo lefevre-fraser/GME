@@ -39,7 +39,6 @@ class CGuiPreferenceManager;
 class CGMEApp : public CWinAppEx
 {
 	friend class CGMEOLEApp;
-	friend class ExceptionHandler;
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CGMEApp();
@@ -76,13 +75,7 @@ public:
 private:
 	virtual int Run();
 	static void EmergencyTerminate();
-	enum EmergencySaveMode {
-		SaveAndBringUpMessageBox	= 1,
-		BringUpDialogOnly			= 2,
-		DoTheSaveOnly				= 3
-	};
-	BOOL EmergencySave(EmergencySaveMode saveMode);
-	CString emergencyBackupName;
+	void EmergencySave();
 	bool proj_type_is_mga;
 	bool proj_type_is_xmlbackend;
 	bool abort_on_close;

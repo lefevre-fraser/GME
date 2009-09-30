@@ -602,10 +602,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\EmergencySaveDlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath="EnumVar.cpp"
 				>
 				<FileConfiguration
@@ -1804,10 +1800,6 @@
 			</File>
 			<File
 				RelativePath=".\DynMenu.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EmergencySaveDlg.h"
 				>
 			</File>
 			<File

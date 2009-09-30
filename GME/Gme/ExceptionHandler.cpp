@@ -20,7 +20,9 @@
 //	http://msdn2.microsoft.com/en-us/magazine/cc301692.aspx
 //
 // Oleg Starodumov
+//	effective minidumps
 //	http://www.debuginfo.com/articles/effminidumps.html
+//	minidump examples
 //	http://www.debuginfo.com/examples/effmdmpexamples.html
 //
 /////////////////////////////////////////////////////////////////////////////
@@ -35,7 +37,6 @@
 #include "ExceptionHandler.h"
 #include "ExceptionXMLTags.h"
 #include "GMEVersion.h"
-#include "GMEApp.h"
 #include <float.h>
 
 //#pragma comment(linker, "/defaultlib:dbghelp.lib")
@@ -360,7 +361,6 @@ BOOL							ExceptionHandler::m_gotVersionInfo;
 BOOL							ExceptionHandler::m_wow64Process;
 HANDLE							ExceptionHandler::m_hProcess;
 CRITICAL_SECTION				ExceptionHandler::m_crashDumpLock;
-BOOL							ExceptionHandler::m_createMinidump = TRUE;
 TCHAR							ExceptionHandler::m_szMinidumpDir[MAX_PATH];
 MINIDUMP_TYPE					ExceptionHandler::m_minidumpType = MiniDumpNormal;
 HMODULE							ExceptionHandler::m_hDbgHelpDll = NULL;
@@ -392,7 +392,6 @@ ExceptionHandler::ExceptionHandler(void)
 		fnIsWow64Process(m_hProcess, &m_wow64Process);
 	}
 
-	m_createMinidump = false;
 	m_minidumpType = MiniDumpNormal;
 
 	if (SUCCEEDED(SHGetFolderPath(NULL,
@@ -415,7 +414,7 @@ ExceptionHandler::~ExceptionHandler(void)
 }
 
 
-LONG WINAPI ExceptionHandler::UnhandledExceptionFilterOfMain(unsigned long /*xcptnum*/, PEXCEPTION_POINTERS pExp)
+LONG WINAPI ExceptionHandler::UnhandledExceptionFilterOfMain(unsigned long xcptnum, PEXCEPTION_POINTERS pExp)
 {
 	m_FirstUnhandledExceptionFilterFired = true;
 
@@ -440,16 +439,23 @@ LONG WINAPI ExceptionHandler::UnhandledExceptionFilter(PEXCEPTION_POINTERS pExp)
 void ExceptionHandler::UnhandledExceptionFilterCore (const char* msg, PEXCEPTION_POINTERS pExp)
 {
 	EnterCriticalSection(&m_crashDumpLock);
-
-	m_createMinidump = theApp.EmergencySave(CGMEApp::BringUpDialogOnly);
-	if (m_createMinidump) {
+	int retVal =
+		AfxMessageBox("Do you want to generate a crash dump (MiniDump) file?\n\n"
+					  "GME is able to generate a Microsoft MiniDump report file about this particular crash issue. "
+					  "Developers can use this file to analyze the crash, so it can significantly improve the "
+					  "quality of the program. The crash dump contains call stack, CPU register dump, and other "
+					  "crash related information. Please click the checkbox below if you are willing to generate "
+					  "the crash dump. A File Explorer window will open automatically after that, so you can send "
+					  "the recent crash dump(s) easier to the following e-mail address: gme-supp@isis.vanderbilt.edu",
+					  MB_YESNO | MB_ICONSTOP);
+	if (retVal = IDYES) {
 		LoadDbgHelpDll();
 		GenerateUserStreamData(msg, pExp);
 //		TRACE0(m_UserCrashData);
 		TCHAR generatedFileName[MAX_PATH];
 		GenerateFileName(generatedFileName);
 		GenerateMiniDump(pExp, generatedFileName);
-		ShellExecute(NULL, "explore", m_szMinidumpDir, NULL, NULL, SW_SHOWNORMAL);
+//		ShellExecute(NULL, "explore", m_szMinidumpDir, NULL, NULL, SW_SHOWNORMAL);
 	}
 
 	LeaveCriticalSection(&m_crashDumpLock);
@@ -521,9 +527,6 @@ void ExceptionHandler::GenerateFileName(TCHAR* pGeneratedFilePath)
 void ExceptionHandler::GenerateMiniDump(PEXCEPTION_POINTERS pExceptionInfo, TCHAR* pGeneratedFilePath)
 {
 	if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_STACK_OVERFLOW)
-		return;
-
-	if (!m_createMinidump)
 		return;
 
 	if (m_hDbgHelpDll == NULL)
