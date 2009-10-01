@@ -3,6 +3,7 @@
 
 #include <afxole.h>
 #include "mfcdual.h"
+#include "Gme.h"
 
 class CGMEDataDescriptor
 {

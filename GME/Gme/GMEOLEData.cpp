@@ -6,6 +6,8 @@
 #include "mga.h"
 #include "parser.h"
 
+#include "CommonMfc.h"
+
 #include "GMEstd.h"
 
 #include "GMEOLEData.h"

@@ -9,6 +9,7 @@
 #include "mga.h"
 #include "MgaDecorator.h"
 #include "..\Annotator\AnnotationDefs.h"
+#include "CommonSmart.h"
 
 
 /*
