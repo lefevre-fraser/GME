@@ -440,14 +440,16 @@ void ExceptionHandler::UnhandledExceptionFilterCore (const char* msg, PEXCEPTION
 {
 	EnterCriticalSection(&m_crashDumpLock);
 	int retVal =
-		AfxMessageBox("Do you want to generate a crash dump (MiniDump) file?\n\n"
-					  "GME is able to generate a Microsoft MiniDump report file about this particular crash issue. "
-					  "Developers can use this file to analyze the crash, so it can significantly improve the "
+		AfxMessageBox("GME encountered an error! Do you want to generate a crash dump file?\n\n"
+					  "GME is able to generate a crash dump (Microsoft MiniDump) report file about this particular crash "
+					  "issue. Developers can use this file to analyze the crash, so it can significantly improve the "
 					  "quality of the program. The crash dump contains call stack, CPU register dump, and other "
 					  "crash related information. Please click the checkbox below if you are willing to generate "
-					  "the crash dump. A File Explorer window will open automatically after that, so you can send "
-					  "the recent crash dump(s) easier to the following e-mail address: gme-supp@isis.vanderbilt.edu",
-					  MB_YESNO | MB_ICONSTOP);
+					  "the crash dump. You can find the crashdump file in the "
+					  "\"%OSDir%\\Documents and Settings\\%UserName%\\Application Data\\GME\" folder on Windows XP or "
+					  "\"%OSDir%\\Users\\%UserName%\\AppData\\Roaming\\GME\" folder on Windows Vista or Windows 7. "
+					  "You can send the recent crash dump(s) to the following e-mail address: gme-supp@isis.vanderbilt.edu",
+					  MB_ICONEXCLAMATION | MB_YESNO);
 	if (retVal = IDYES) {
 		LoadDbgHelpDll();
 		GenerateUserStreamData(msg, pExp);
@@ -455,7 +457,7 @@ void ExceptionHandler::UnhandledExceptionFilterCore (const char* msg, PEXCEPTION
 		TCHAR generatedFileName[MAX_PATH];
 		GenerateFileName(generatedFileName);
 		GenerateMiniDump(pExp, generatedFileName);
-//		ShellExecute(NULL, "explore", m_szMinidumpDir, NULL, NULL, SW_SHOWNORMAL);
+//		ShellExecute(NULL, "explore", m_szMinidumpDir, NULL, NULL, SW_SHOWNORMAL);	// Open up a Windows Explorer
 	}
 
 	LeaveCriticalSection(&m_crashDumpLock);

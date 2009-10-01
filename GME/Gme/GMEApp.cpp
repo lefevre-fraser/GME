@@ -461,12 +461,11 @@ void CGMEApp::EmergencySave(void)
 		HRESULT hr = mgaProject->Save(PutInBstr(embackupname), VARIANT_TRUE);
 #pragma warning(default: 4310) // cast truncates constant value
 		if (proj_type_is_xmlbackend) {
-			AfxMessageBox("Emergency event. Please, restart GME. "
-						  "Your current work is found in the local checkout directory.");
+			AfxMessageBox("Your current work can be found in the local checkout directory.");
 		} else {
 			CString emergencySaveMsg;
-			emergencySaveMsg.FormatMessage("Emergency event. Your current work %1 been saved to %2.\n"
-										   "The original project file has not been modified.\n"
+			emergencySaveMsg.FormatMessage("Your current work %1 been saved to %2.\n"
+										   "The original project file has not been modified. "
 										   "We apologize for the inconvenience.",
 										   (hr == S_OK)? "has" : "might have",
 										   embackupname);
@@ -474,8 +473,6 @@ void CGMEApp::EmergencySave(void)
 			m_RecentProjectList.Add(embackupname);
 			m_RecentProjectList.WriteList();
 		}
-	} else {
-		AfxMessageBox("Emergency event. Please, restart GME.");
 	}
 }
 
