@@ -19,6 +19,7 @@ class PartWithDecorator
 {
 public:
 	CComPtr<IMgaMetaPart>						part;
+	CString										name;	// Calculated, cached for speedup
 	CComPtr<IMgaDecorator>						decorator;
 	CComPtr<IMgaElementDecorator>				newDecorator;
 };

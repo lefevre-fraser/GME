@@ -117,8 +117,8 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 		MGACOLL_ITERATE(IMgaMetaPart, metaParts) {
 			metaPart = MGACOLL_ITER;
 			if (IsPartDisplayable(metaPart)) {
-				PartWithDecorator triple;
-				triple.part = metaPart;
+				PartWithDecorator tuple;
+				tuple.part = metaPart;
 
 				CComPtr<IMgaMetaRole> mmRole;
 				COMTHROW(metaPart->get_Role(&mmRole));
@@ -127,6 +127,21 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				CComPtr<IMgaDecorator> decorator;
 				CComPtr<IMgaElementDecorator> newDecorator;
 				CComBSTR decoratorProgId = GetDecoratorProgId(mFco);
+
+				CString nameString;
+				CComBSTR bstrKindName;
+				COMTHROW(mFco->get_Name(&bstrKindName));
+				CComBSTR bstrRoleName;
+				COMTHROW(mmRole->get_Name(&bstrRoleName));
+				if (bstrKindName == bstrRoleName) {
+					CComBSTR bstrDisplayedName;
+					COMTHROW(mFco->get_DisplayedName(&bstrDisplayedName));
+					CopyTo(bstrDisplayedName,nameString);
+				}
+				else {
+					CopyTo(bstrRoleName,nameString);
+				}
+				tuple.name = nameString;
 
 				try {
 					HRESULT hres = newDecorator.CoCreateInstance(PutInBstr(decoratorProgId));
@@ -139,7 +154,7 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 					}
 
 					if (newDecorator) {
-						triple.newDecorator = newDecorator;
+						tuple.newDecorator = newDecorator;
 						decorator = CComQIPtr<IMgaDecorator>(newDecorator);
 						COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, NULL /*decorEventSinkIface*/, (ULONGLONG)m_hWnd));
 					} else {
@@ -152,14 +167,25 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				long sx, sy;
 				COMTHROW(decorator->GetPreferredSize(&sx, &sy));
 				COMTHROW(decorator->SetLocation(0, 0, sx, sy));
-				triple.decorator = decorator;
+				tuple.decorator = decorator;
 
-				pdt.push_back(triple);
+				// Insert/append in alphabetical order
+				std::vector<PartWithDecorator>::iterator ii = pdt.begin();
+				while (ii != pdt.end()) {
+					if ((*ii).name >= tuple.name)
+						break;
+					++ii;
+				}
+				if (ii == pdt.end())
+					pdt.push_back(tuple);
+				else
+					pdt.insert(ii, tuple);
 			}
 		}
 		MGACOLL_ITERATE_END;
 	}
 	catch (hresult_exception&) {
+		return;
 	}
 	pdts.push_back(pdt);
 }
@@ -364,26 +390,7 @@ void CPartBrowserPane::ChangeAspect(int index)
 			if (maxSize.cy < size.cy)
 				maxSize.cy = size.cy;
 
-			CComPtr<IMgaMetaRole> mmRole;
-			COMTHROW((*ii).part->get_Role(&mmRole));
-			CComPtr<IMgaMetaFCO> kind;
-			COMTHROW(mmRole->get_Kind(&kind));
-
-			CString nameCString;
-			CComBSTR bstrKindName;
-			COMTHROW(kind->get_Name(&bstrKindName));
-			CComBSTR bstrRoleName;
-			COMTHROW(mmRole->get_Name(&bstrRoleName));
-			if (bstrKindName == bstrRoleName) {
-				CComBSTR bstrDisplayedName;
-				COMTHROW(kind->get_DisplayedName(&bstrDisplayedName));
-				CopyTo(bstrDisplayedName,nameCString);
-			}
-			else {
-				CopyTo(bstrRoleName,nameCString);
-			}
-
-			int text_cx = textMetric.GetTextExtent(nameCString).cx;
+			int text_cx = textMetric.GetTextExtent((*ii).name).cx;
 			if (maxSize.cx < text_cx)
 				maxSize.cx = text_cx;
 		}
