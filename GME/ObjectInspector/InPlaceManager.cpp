@@ -642,14 +642,15 @@ void CInPlaceManager::OnEditMultiLineEnd()
 	//         (corrupted strLine inserted into ListItem caused memory damage when released)
 	if( nLineLength > 0 )
 	{
+		// We should supply at least two bytes length buffer, GetLine has a bug, see above
+		if (nLineLength <= 1)
+			nLineLength = 2;
 		for(int i=0;i<nLines;i++)
 		{
 			strLine="";
-			nLineLength=m_MultiEditCtrl.LineLength(i);
-			// We should supply at least two bytes length buffer
+			// nLineLength=m_MultiEditCtrl.LineLength(i);
+			// LineLenth can have a bug!
 			// Note, that everything works in ANSI here, Unicode would need changes here
-			if (nLineLength <= 1)
-				nLineLength = 2;
 			int nRet=m_MultiEditCtrl.GetLine(i,strLine.GetBuffer(nLineLength), nLineLength);
 			ASSERT( nRet >= 0);
 			strLine.ReleaseBuffer(nRet);
