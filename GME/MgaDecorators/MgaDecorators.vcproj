@@ -401,6 +401,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\collapsesign.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\expandsign.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\res\icon_instance.bmp"
 				>
 			</File>

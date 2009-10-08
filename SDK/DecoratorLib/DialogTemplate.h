@@ -17,7 +17,8 @@
 class CDialogTemplate
 {
 public:
-	CDialogTemplate(LPCSTR caption, DWORD style, int x, int y, int w, int h, LPCSTR font = NULL, WORD fontSize = 8);
+	CDialogTemplate(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h,
+					LPCSTR font = NULL, WORD fontSize = 8);
 	virtual ~CDialogTemplate();
 	operator const DLGTEMPLATE*() const;
 

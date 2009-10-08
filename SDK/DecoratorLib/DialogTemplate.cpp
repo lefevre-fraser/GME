@@ -4,7 +4,8 @@
 #include "stdafx.h"
 #include "DialogTemplate.h"
 
-CDialogTemplate::CDialogTemplate(LPCSTR caption, DWORD style, int x, int y, int w, int h, LPCSTR font, WORD fontSize)
+CDialogTemplate::CDialogTemplate(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h,
+								 LPCSTR font, WORD fontSize)
 {
 	usedBufferLength = sizeof(DLGTEMPLATE);
 	totalBufferLength = 4 * usedBufferLength;
@@ -24,7 +25,7 @@ CDialogTemplate::CDialogTemplate(LPCSTR caption, DWORD style, int x, int y, int 
 	dialogTemplate->cy    = h;
 	dialogTemplate->cdit  = 0;
 
-	dialogTemplate->dwExtendedStyle = 0;
+	dialogTemplate->dwExtendedStyle = exStyle;
 
 	// The dialog box doesn't have a menu or a special class
 

@@ -11,7 +11,8 @@ IMPLEMENT_DYNAMIC(CInPlaceEditDialog, CDialog)
 CInPlaceEditDialog::CInPlaceEditDialog() :
 	CDialog(),
 	m_richWnd(NULL),
-	m_bDlgResult(false)
+	m_bDlgResult(false),
+	m_realParentCWnd(NULL)
 {
 }
 
@@ -38,7 +39,7 @@ void CInPlaceEditDialog::PostNcDestroy(void)
 	}
 	m_parentPart->LabelEditingFinished(m_initialRect);
 	if (!m_bPermanentCWnd)
-		m_parentCWnd->Detach();
+		m_intendedParentCWnd->Detach();
 	delete m_font;
 	delete this;
 }
@@ -90,6 +91,8 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+	m_realParentCWnd = GetParent();
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	CDC dc;
 	dc.Attach(m_transformHDC);
@@ -127,15 +130,17 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 
 	POINT editLeftTopPt = { m_labelRect.left, m_labelRect.top };
 	BOOL success = ::LPtoDP(m_transformHDC, &editLeftTopPt, 1);
+	m_intendedParentCWnd->ClientToScreen(&editLeftTopPt);
+	m_realParentCWnd->ScreenToClient(&editLeftTopPt);
 	m_initialRect = CRect(editLeftTopPt, cSize);
 
 	POINT dPt = { m_mouseClick.x, m_mouseClick.y };
 	success = ::LPtoDP(m_transformHDC, &dPt, 1);
 	CPoint screenPt(dPt.x, dPt.y);
-	m_parentCWnd->ClientToScreen(&screenPt);
+	m_realParentCWnd->ClientToScreen(&screenPt);
 	m_mouseClick = screenPt;
 
-	m_parentCWnd->GetClientRect(&m_boundsLimit);
+	m_realParentCWnd->GetClientRect(&m_boundsLimit);
 
 	delete scaled_font1;
 	///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -161,12 +166,10 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	int n = m_richWnd->CharFromPos(m_mouseClick);
 	int nLineIndex = HIWORD(n);
 	int nCharIndex = LOWORD(n);
-	TRACE("nLineIndex = %d, nCharIndex = %d\n", nCharIndex, nCharIndex);
+	TRACE2("nLineIndex = %d, nCharIndex = %d\n", nCharIndex, nCharIndex);
 	m_richWnd->SetSel(nCharIndex, nCharIndex);
 
 	m_parentPart->LabelEditingStarted(m_initialRect);
-
-	m_editState = Initial;
 
 	// Capture the mouse, this allows the dialog to close when the user clicks outside.
 	// The dialog has no "close" button.
@@ -179,7 +182,9 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 
 BOOL CInPlaceEditDialog::OnEraseBkgnd(CDC* pDC)
 {
-	return TRUE;
+	return TRUE;	// We pretend that we processed the message
+					// We don't paint anything, because RichEdit20 covers the whole dialog surface anyway
+					// So we block grey-white flicker that way during resize
 }
 
 void CInPlaceEditDialog::OnDestroy()
@@ -289,7 +294,7 @@ void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPa
 	m_parentPart				= parentPart;
 	m_labelRect					= labelRect;
 	m_mouseClick				= mouseClick;
-	m_parentCWnd				= parentCWnd;
+	m_intendedParentCWnd		= parentCWnd;
 	m_bPermanentCWnd			= isPermanentCWnd;
 	m_transformHDC				= transformHDC;
 	m_iFontKey					= iFontKey;

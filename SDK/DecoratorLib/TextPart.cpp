@@ -296,11 +296,15 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 		}
 
 		CInPlaceEditDialog* inPlaceEditDlg = new CInPlaceEditDialog();
-		CDialogTemplate dlgTemplate(_T("DecoratorEditDlg"), DS_SETFOREGROUND | WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 76, 16);
+		CDialogTemplate dlgTemplate(_T(""),
+									DS_SETFOREGROUND | WS_CHILD | WS_VISIBLE | WS_BORDER,
+									0,
+									0, 0, 76, 16);
 		DWORD editStyle = WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL;	// ES_AUTOHSCROLL is important for proper auto width handling!
 		if (m_bMultiLine)
 			editStyle |= ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN;
-		dlgTemplate.AddRichEdit(_T("Edit"), editStyle, 0, 0, 0, 75, 16, IDC_INPLACETEXTEDIT);
+
+		dlgTemplate.AddRichEdit(_T("REDT"), editStyle, 0, 0, 0, 75, 16, IDC_INPLACETEXTEDIT);
 
 		bool inflateToRight = true;
 		PortLabelPart* portLabelPart = dynamic_cast_PortLabelPart();

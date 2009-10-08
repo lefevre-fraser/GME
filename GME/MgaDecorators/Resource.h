@@ -20,7 +20,6 @@
 #define IDB_DEFAULTMODELPORT            176
 #define IDB_MODELPORT                   176
 #define IDB_ICON_TYPE                   201
-#define IDC_TEXTEDIT                    201
 #define IDB_ICON_SUBTYPE                202
 #define IDB_ICON_INSTANCE               203
 #define IDB_ICON_REFERENCE              204

@@ -46,16 +46,10 @@ public:
 	//}}AFX_MSG
 
 protected:
-	enum EditState {
-		Initial				= 0,
-		LButtonDownOutside	= 1,
-		MouseMoveAfterDown	= 2,
-		LButtonUpOutside	= 3
-	};
-
 	DecoratorSDK::TextPart*	m_parentPart;
-	CWnd*					m_parentCWnd;
+	CWnd*					m_intendedParentCWnd;
 	bool					m_bPermanentCWnd;
+	CWnd*					m_realParentCWnd;
 	HDC						m_transformHDC;
 	CRect					m_initialRect;
 	CRect					m_labelRect;
@@ -68,7 +62,6 @@ protected:
 	bool					m_bMultiLine;
 	bool					m_bDlgResult;
 	bool					m_leftMouseButtonPressed;
-	EditState				m_editState;
 
 public:
 	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& labelRect,
