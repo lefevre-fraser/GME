@@ -194,7 +194,13 @@
                       <listitem>
                         <para>Console: Improvements return/up/down</para>
                       </listitem>
-                    </itemizedlist></para>
+
+                      <listitem>
+                        <para>Console: Ability to load HTML content into the
+                        console window by selecting a htm/html file with the
+                        'Load Script' menu.</para>
+                      </listitem>
+                  </itemizedlist></para>
                 </listitem>
               </itemizedlist></para>
           </listitem>
@@ -1909,8 +1915,7 @@
                       mode can be controlled distinctively besides many other things.</para>
 
                       <figure float="0">
-                        <title>Connection customization horizontal/vertical edge snap
-                        threshold value settings</title>
+                        <title>GME properties, edge and font smoothing options</title>
 
                         <mediaobject>
                           <imageobject>
@@ -3538,6 +3543,11 @@ it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal�
 
       <para><code>PresAspect</code> and <code>NextAspect</code> cycle through
       the aspects of the current model.</para>
+
+      <para>Now console has the ability to load HTML content into the
+      console window if a htm/html extension file is selected with the 'Load Script'
+      dialog. This action won't affect the recent script list, because the HTMl
+      content is not a script.</para>
     </section>
   </section>
 
