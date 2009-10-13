@@ -688,11 +688,18 @@ void CConsoleCtrl::LoadScriptDlg()
 		"JScript Files (*.js)|*.js|"
 		"VBScript Files (*.vbs)|*.vbs|"
 		"Text Files (*.txt)|*.txt|"
+		"HTML Files (*.html;*.htm)|*.html;*.htm|"
 		"All Files (*.*)|*.*||");
 
 	if( dlg.DoModal() == IDOK) 
 	{
 		CString fpath = dlg.GetPathName();
+		CString ext = dlg.GetFileExt().MakeLower();
+		if (ext == "html" || ext == "htm") {
+			m_browser.Navigate2(fpath);
+			return;
+		}
+
 		LoadScript( fpath);
 
 		if( m_recent1.IsEmpty())
