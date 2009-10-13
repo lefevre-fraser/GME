@@ -2900,10 +2900,14 @@ void CGuiConnection::GetPointList(CPointList& points) const
 
 	if (!routerPath || points.GetSize() <= 0)
 	{
-		CPoint start = srcPort->GetLocation().CenterPoint() + src->GetLocation().TopLeft();
-		CPoint end   = dstPort->GetLocation().CenterPoint() + dst->GetLocation().TopLeft();
-		points.AddHead(start);
-		points.AddTail(end);
+		if (srcPort != NULL) {
+			CPoint start = srcPort->GetLocation().CenterPoint() + src->GetLocation().TopLeft();
+			points.AddHead(start);
+		}
+		if (dstPort != NULL) {
+			CPoint end = dstPort->GetLocation().CenterPoint() + dst->GetLocation().TopLeft();
+			points.AddTail(end);
+		}
 	}
 }
 
@@ -2973,6 +2977,8 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 	GetPointList(points);
 
 	int numEdges = points.GetSize() - 1;
+	if (numEdges == -1 || routerPath == NULL)
+		return -1;
 	CPoint last = emptyPoint;
 	CPoint lastlast = emptyPoint;
 	POSITION pos = points.GetHeadPosition();
@@ -3135,7 +3141,6 @@ long CGuiConnection::IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& 
 	CPointList points;
 	GetPointList(points);
 
-	int numEdges = points.GetSize() - 1;
 	CPoint last;
 	CPoint lastlast;
 	POSITION pos = points.GetHeadPosition();
@@ -3172,7 +3177,7 @@ std::vector<long> CGuiConnection::GetRelevantCustomizedEdgeIndexes(void)
 	long asp = view->currentAspect->index;
 	std::vector<long> customizedEdgeIndexes;
 	std::vector<CustomPathData>::iterator ii = customPathData.begin();
-	while (ii != customPathData.end()) {
+	while (ii != customPathData.end() && edgeCount > 0) {
 		if ((*ii).GetAspect() == asp || asp == -1) {
 			if (IsAutoRouted() && (*ii).GetType() == SimpleEdgeDisplacement && (*ii).GetEdgeCount() == edgeCount ||
 			   !IsAutoRouted() && (*ii).GetType() != SimpleEdgeDisplacement)
