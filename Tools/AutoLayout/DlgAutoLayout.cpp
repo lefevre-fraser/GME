@@ -256,8 +256,6 @@ void CDlgAutoLayout::OnButtonStart()
 					{
 						CComObjPtr<IMgaPart>     part;
 						CComObjPtr<IMgaFCO>      fco;
-						CComBSTR                 icon;
-						long                     x,y;
 
 						COMTHROW( parts->get_Item(i+1, PutOut(part)) );
 						COMTHROW( part->get_FCO(PutOut(fco)) );
@@ -266,8 +264,7 @@ void CDlgAutoLayout::OnButtonStart()
 						{
 							if( fco == graph.m_nodes[j]->m_fco )
 							{
-								COMTHROW( part->GetGmeAttrs(&icon, &x, &y) );
-								COMTHROW( part->SetGmeAttrs(icon, graph.m_nodes[j]->m_x, graph.m_nodes[j]->m_y) );
+								COMTHROW( part->SetGmeAttrs(0, graph.m_nodes[j]->m_x, graph.m_nodes[j]->m_y) );
 							}
 						}
 					}
