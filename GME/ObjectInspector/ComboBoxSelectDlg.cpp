@@ -66,8 +66,8 @@ BOOL CComboBoxSelectDlg::OnNcActivate(BOOL bActive)
 		if (!bActive && !m_bClosed) {
 			m_bClosed = true;
 			EndDialog(IDCANCEL);
-		    DWORD pos = GetMessagePos();
-		    CPoint msgPoint(LOWORD(pos), HIWORD(pos));
+			DWORD pos = GetMessagePos();
+			CPoint msgPoint(LOWORD(pos), HIWORD(pos));
 			RelayMouseClickToInspectorList(m_pParentWnd, msgPoint);
 		}
 		// OnOK();

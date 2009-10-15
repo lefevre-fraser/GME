@@ -76,7 +76,7 @@ BOOL CCompassCheckDlg::OnNcActivate(BOOL bActive)
 		m_bInited=false;
 	}
 	else
-	{		
+	{
 		if (!bActive && !m_bClosed) {
 			m_bClosed = true;
 			OnOK();
