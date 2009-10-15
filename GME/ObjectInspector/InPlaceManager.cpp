@@ -649,7 +649,7 @@ void CInPlaceManager::OnEditMultiLineEnd()
 		{
 			strLine="";
 			// nLineLength=m_MultiEditCtrl.LineLength(i);
-			// LineLenth can have a bug!
+			// LineLength can have a bug!
 			// Note, that everything works in ANSI here, Unicode would need changes here
 			int nRet=m_MultiEditCtrl.GetLine(i,strLine.GetBuffer(nLineLength), nLineLength);
 			ASSERT( nRet >= 0);

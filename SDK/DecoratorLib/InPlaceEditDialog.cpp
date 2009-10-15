@@ -11,9 +11,11 @@ IMPLEMENT_DYNAMIC(CInPlaceEditDialog, CDialog)
 CInPlaceEditDialog::CInPlaceEditDialog() :
 	CDialog(),
 	m_richWnd(NULL),
-	m_bDlgResult(false),
+	m_bDlgResult(true),
 	m_realParentCWnd(NULL)
 {
+	m_bInited = true;
+	m_bClosed = false;
 }
 
 CInPlaceEditDialog::~CInPlaceEditDialog()
@@ -25,23 +27,6 @@ void CInPlaceEditDialog::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CInPlaceEditDialog)
 	//}}AFX_DATA_MAP
-}
-
-void CInPlaceEditDialog::PostNcDestroy(void)
-{
-	CDialog::PostNcDestroy();
-
-	if (m_bDlgResult) {
-		m_parentPart->LabelChanged(m_Text);
-		// transaction operation begin
-		m_parentPart->ExecuteOperation(m_Text);
-		// transaction operation end
-	}
-	m_parentPart->LabelEditingFinished(m_initialRect);
-	if (!m_bPermanentCWnd)
-		m_intendedParentCWnd->Detach();
-	delete m_font;
-	delete this;
 }
 
 void CInPlaceEditDialog::MeasureText(CDC* cdc, CSize& minSize, CSize& cSize)
@@ -75,12 +60,11 @@ void CInPlaceEditDialog::MeasureText(CDC* cdc, CSize& minSize, CSize& cSize)
 }
 
 BEGIN_MESSAGE_MAP(CInPlaceEditDialog, CDialog)
+	ON_WM_NCACTIVATE()
 	ON_WM_ERASEBKGND()
-	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDCANCEL, OnBnClickedCancel)
 	ON_BN_CLICKED(IDOK, OnBnClickedOk)
 	ON_WM_LBUTTONDOWN()
-	ON_MESSAGE(WM_USER_INPLACEEDITING, OnInPlaceEditing)
 	ON_NOTIFY(EN_REQUESTRESIZE, IDC_INPLACETEXTEDIT, OnRequestResize)
 END_MESSAGE_MAP()
 
@@ -131,16 +115,16 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	POINT editLeftTopPt = { m_labelRect.left, m_labelRect.top };
 	BOOL success = ::LPtoDP(m_transformHDC, &editLeftTopPt, 1);
 	m_intendedParentCWnd->ClientToScreen(&editLeftTopPt);
-	m_realParentCWnd->ScreenToClient(&editLeftTopPt);
 	m_initialRect = CRect(editLeftTopPt, cSize);
 
 	POINT dPt = { m_mouseClick.x, m_mouseClick.y };
 	success = ::LPtoDP(m_transformHDC, &dPt, 1);
 	CPoint screenPt(dPt.x, dPt.y);
-	m_realParentCWnd->ClientToScreen(&screenPt);
+	m_intendedParentCWnd->ClientToScreen(&screenPt);
 	m_mouseClick = screenPt;
 
-	m_realParentCWnd->GetClientRect(&m_boundsLimit);
+	m_intendedParentCWnd->GetClientRect(&m_boundsLimit);
+	m_intendedParentCWnd->ClientToScreen(&m_boundsLimit);
 
 	delete scaled_font1;
 	///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -167,17 +151,33 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	int nLineIndex = HIWORD(n);
 	int nCharIndex = LOWORD(n);
 	TRACE2("nLineIndex = %d, nCharIndex = %d\n", nCharIndex, nCharIndex);
-	m_richWnd->SetSel(nCharIndex, nCharIndex);
 
 	m_parentPart->LabelEditingStarted(m_initialRect);
 
-	// Capture the mouse, this allows the dialog to close when the user clicks outside.
-	// The dialog has no "close" button.
-	m_richWnd->SetCapture();
-	m_richWnd->SetFocus();
+	ShowWindow(SW_SHOWNORMAL);	// For safety
+	SetFocus();					// For safety
+	m_richWnd->SetSel(nCharIndex, nCharIndex);
+
+	m_bInited = true;
 
 	return FALSE;	// return TRUE unless you set the focus to a control
 					// EXCEPTION: OCX Property Pages should return FALSE
+}
+
+BOOL CInPlaceEditDialog::OnNcActivate(BOOL bActive)
+{
+	if (m_bInited)
+	{
+		m_bInited=false;
+	}
+	else
+	{
+		if (!bActive && !m_bClosed) {
+			m_bClosed = true;
+			EndDialog(IDOK);
+		}
+	}
+	return FALSE;	// CDialog::OnNcActivate(bActive);
 }
 
 BOOL CInPlaceEditDialog::OnEraseBkgnd(CDC* pDC)
@@ -187,54 +187,15 @@ BOOL CInPlaceEditDialog::OnEraseBkgnd(CDC* pDC)
 					// So we block grey-white flicker that way during resize
 }
 
-void CInPlaceEditDialog::OnDestroy()
-{
-	ReleaseCapture();
-
-	CDialog::OnDestroy();
-}
-
 void CInPlaceEditDialog::OnBnClickedCancel()
 {
-	// TODO: Add your control notification handler code here
-	m_richWnd->GetWindowText(m_Text);
-	ReleaseCapture();
 	m_bDlgResult = false;
-
-	DestroyWindow();
-//	OnCancel();	-> calls EndDialog, which is for Modal dialogs, avoid it!
+	CDialog::OnCancel();
 }
 
 void CInPlaceEditDialog::OnBnClickedOk()
 {
-	// TODO: Add your control notification handler code here
-	m_richWnd->GetWindowText(m_Text);
-	if (UpdateData(true)) {
-		ReleaseCapture();
-		m_bDlgResult = true;
-
-		DestroyWindow();
-//		OnOK();	-> calls EndDialog, which is for Modal dialogs, avoid it!
-	}
-}
-
-LRESULT CInPlaceEditDialog::OnInPlaceEditing(WPARAM wParam, LPARAM lParam)
-{
-	// wParam == VK_RETURN -> OK, wParam == VK_ESCAPE -> Cancel, else: command 
-	// lParam > 0: mouse click initiated else keyboard input initiated
-	if (wParam == VK_RETURN) {
-		if (lParam > 0 || !m_bMultiLine)
-			OnBnClickedOk();	// Windows Explorer default behavior
-	} else if (wParam == VK_ESCAPE) {
-		OnBnClickedCancel();
-	} else if (wParam == ID_EDIT_SELECT_ALL) {
-		m_richWnd->SetSel(0, -1);
-	} else if (wParam == ID_EDIT_UNDO) {
-		m_richWnd->Undo();
-	} else if (wParam == ID_EDIT_REDO) {
-		m_richWnd->Redo();
-	}
-	return 0;
+	CDialog::OnOK();
 }
 
 void CInPlaceEditDialog::OnRequestResize(NMHDR* pNMHDR, LRESULT* pResult)
@@ -300,7 +261,6 @@ void CInPlaceEditDialog::SetProperties(const CString& text, DecoratorSDK::TextPa
 	m_iFontKey					= iFontKey;
 	m_bInflateToRight			= inflateToRight;
 	m_bMultiLine				= multiLine;
-	m_leftMouseButtonPressed	= false;
 }
 
 CString CInPlaceEditDialog::GetText() const
@@ -308,14 +268,18 @@ CString CInPlaceEditDialog::GetText() const
 	return m_Text;
 }
 
-BOOL CInPlaceEditDialog::PreTranslateMessage(MSG* pMsg) 
+void CInPlaceEditDialog::EndDialog(int nResult)
 {
-	// Fix (Adrian Roman): Sometimes if the editor loses capture it is should be setcaptured again
-	CWnd* captureCWnd = GetCapture();
-	if (captureCWnd ==  NULL || captureCWnd->m_hWnd != m_richWnd->m_hWnd) {
-		// Recapture
-		m_richWnd->SetCapture();
-	}
+	m_bClosed = true;
 
-	return CDialog::PreTranslateMessage(pMsg);
+	if (m_bDlgResult) {
+		m_richWnd->GetWindowText(m_Text);
+		m_parentPart->LabelChanged(m_Text);
+		// transaction operation begin
+		m_parentPart->ExecuteOperation(m_Text);
+		// transaction operation end
+	}
+	m_parentPart->LabelEditingFinished(m_initialRect);
+
+	CDialog::EndDialog(nResult);
 }

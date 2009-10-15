@@ -295,10 +295,10 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 			cWnd = CWnd::FromHandle(m_parentWnd);
 		}
 
-		CInPlaceEditDialog* inPlaceEditDlg = new CInPlaceEditDialog();
+		CInPlaceEditDialog inPlaceEditDlg;
 		CDialogTemplate dlgTemplate(_T(""),
-									DS_SETFOREGROUND | WS_CHILD | WS_VISIBLE | WS_BORDER,
-									0,
+									WS_POPUP | WS_VISIBLE | WS_BORDER,	// Window Styles
+									0,	// Extended Window Styles
 									0, 0, 76, 16);
 		DWORD editStyle = WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL;	// ES_AUTOHSCROLL is important for proper auto width handling!
 		if (m_bMultiLine)
@@ -312,12 +312,16 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 			if (portLabelPart->GetLocationAdjust() == L_WEST)
 				inflateToRight = false;
 
-		inPlaceEditDlg->SetProperties(m_strText, this, ptRect, point, cWnd, isPermanentCWnd, transformHDC,
-									  m_iFontKey, inflateToRight, m_bMultiLine);
+		inPlaceEditDlg.SetProperties(m_strText, this, ptRect, point, cWnd, isPermanentCWnd, transformHDC,
+									 m_iFontKey, inflateToRight, m_bMultiLine);
 		BOOL success = ::AfxInitRichEdit2();	// See http://support.microsoft.com/kb/166132
-		success = inPlaceEditDlg->CreateIndirect(dlgTemplate, cWnd);
-		if (success == 1)
-			success = inPlaceEditDlg->ShowWindow(SW_SHOWNORMAL);
+		success = inPlaceEditDlg.InitModalIndirect(dlgTemplate, cWnd);
+		INT retVal = 0;
+		if (success != FALSE)
+			retVal = inPlaceEditDlg.DoModal();
+
+		if (!isPermanentCWnd)
+			cWnd->Detach();
 
 		return true;
 	}

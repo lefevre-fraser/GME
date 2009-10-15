@@ -22,6 +22,7 @@ class CInPlaceEditDialog : public CDialog
 
 public:
 	CInPlaceEditDialog();
+
 	virtual ~CInPlaceEditDialog();
 
 	CRichEditCtrl* m_richWnd;
@@ -29,7 +30,6 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	virtual void PostNcDestroy(void);
 	void MeasureText(CDC* cdc, CSize& minSize, CSize& cSize);
 
 	DECLARE_MESSAGE_MAP()
@@ -37,15 +37,16 @@ public:
 	// Generated message map functions
 	//{{AFX_MSG(CInPlaceEditDialog)
 	virtual BOOL OnInitDialog();
+	afx_msg BOOL OnNcActivate(BOOL bActive);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
-	afx_msg LRESULT OnInPlaceEditing(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnRequestResize(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 
 protected:
+	bool					m_bInited;
+	bool					m_bClosed;
 	DecoratorSDK::TextPart*	m_parentPart;
 	CWnd*					m_intendedParentCWnd;
 	bool					m_bPermanentCWnd;
@@ -61,7 +62,6 @@ protected:
 	bool					m_bInflateToRight;
 	bool					m_bMultiLine;
 	bool					m_bDlgResult;
-	bool					m_leftMouseButtonPressed;
 
 public:
 	void	SetProperties(const CString& text, DecoratorSDK::TextPart* parentPart, const CRect& labelRect,
@@ -73,7 +73,7 @@ public:
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CInPlaceEditDialog)
 	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
+    virtual void EndDialog(int nResult);
 	//}}AFX_VIRTUAL
 };
 

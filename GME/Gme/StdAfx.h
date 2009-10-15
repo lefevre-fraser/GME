@@ -65,7 +65,6 @@ extern CComModule _Module;
 #define WM_USER_PANNREFRESH				(WM_USER + 113)
 #define WM_USER_DECOR_COMMITTRAN_REQ	(WM_USER + 114)	// used for deferred transaction commits in decorator events
 #define WM_USER_DECOR_VIEWREFRESH_REQ	(WM_USER + 115)	// used for deferred view refreshes in decorator events
-#define WM_USER_INPLACEEDITING			(WM_USER + 116)	// used for closing the dialog with given nResult, or issuing commands (select all, undo, redo)
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
