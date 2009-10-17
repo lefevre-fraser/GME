@@ -19,8 +19,8 @@ static long	ResolveCoord(CoordinateConstants coordConst, const CRect& extents)
 		case ZeroConstant:	return 0;
 		case LeftMost:		return extents.left;
 		case TopMost:		return extents.top;
-		case RightMost:		return extents.right;
-		case BottomMost:	return extents.bottom;
+		case RightMost:		return extents.right > extents.left ? extents.right - 1 : extents.right;
+		case BottomMost:	return extents.bottom > extents.top ? extents.bottom - 1 : extents.bottom;
 		case OneConstant:	return 1;
 	}
 	return -1;
