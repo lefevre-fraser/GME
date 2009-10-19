@@ -369,7 +369,7 @@ CString							ExceptionHandler::m_FaultingModuleName;
 std::vector<CString>			ExceptionHandler::m_openedXmlTags;
 UINT							ExceptionHandler::m_maxStackDepth = 100;
 UINT							ExceptionHandler::m_maxTypeDumpDepth = 5;
-INT								ExceptionHandler::m_refCount = 0;
+INT								ExceptionHandler::m_callCount = 0;
 
 
 ExceptionHandler::ExceptionHandler(void)
@@ -440,9 +440,9 @@ LONG WINAPI ExceptionHandler::UnhandledExceptionFilter(PEXCEPTION_POINTERS pExp)
 void ExceptionHandler::UnhandledExceptionFilterCore (const char* msg, PEXCEPTION_POINTERS pExp)
 {
 	EnterCriticalSection(&m_crashDumpLock);
-	m_refCount++;
+	m_callCount++;
 
-	if (m_refCount <= 2) {	// avoid stack overflow/infinite loop
+	if (m_callCount <= 2) {	// avoid stack overflow/infinite loop
 		int retVal =
 			AfxMessageBox("GME encountered an error! Do you want to generate a crash dump file?\n\n"
 						  "The error can be analyzed with the help of this crash dump (Microsoft MiniDump) report file, "
@@ -465,7 +465,7 @@ void ExceptionHandler::UnhandledExceptionFilterCore (const char* msg, PEXCEPTION
 		}
 	}
 
-	m_refCount--;
+	m_callCount--;
 	LeaveCriticalSection(&m_crashDumpLock);
 }
 
