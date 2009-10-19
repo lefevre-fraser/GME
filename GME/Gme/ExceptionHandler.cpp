@@ -369,6 +369,7 @@ CString							ExceptionHandler::m_FaultingModuleName;
 std::vector<CString>			ExceptionHandler::m_openedXmlTags;
 UINT							ExceptionHandler::m_maxStackDepth = 100;
 UINT							ExceptionHandler::m_maxTypeDumpDepth = 5;
+INT								ExceptionHandler::m_refCount = 0;
 
 
 ExceptionHandler::ExceptionHandler(void)
@@ -439,27 +440,32 @@ LONG WINAPI ExceptionHandler::UnhandledExceptionFilter(PEXCEPTION_POINTERS pExp)
 void ExceptionHandler::UnhandledExceptionFilterCore (const char* msg, PEXCEPTION_POINTERS pExp)
 {
 	EnterCriticalSection(&m_crashDumpLock);
-	int retVal =
-		AfxMessageBox("GME encountered an error! Do you want to generate a crash dump file?\n\n"
-					  "GME is able to generate a crash dump (Microsoft MiniDump) report file about this particular crash "
-					  "issue. Developers can use this file to analyze the crash, so it can significantly improve the "
-					  "quality of the program. The crash dump contains call stack, CPU register dump, and other "
-					  "crash related information. Please click the checkbox below if you are willing to generate "
-					  "the crash dump. You can find the crashdump file in the "
-					  "\"%OSDir%\\Documents and Settings\\%UserName%\\Application Data\\GME\" folder on Windows XP or "
-					  "\"%OSDir%\\Users\\%UserName%\\AppData\\Roaming\\GME\" folder on Windows Vista or Windows 7. "
-					  "You can send the recent crash dump(s) to the following e-mail address: gme-supp@isis.vanderbilt.edu",
-					  MB_ICONEXCLAMATION | MB_YESNO);
-	if (retVal = IDYES) {
-		LoadDbgHelpDll();
-		GenerateUserStreamData(msg, pExp);
-//		TRACE0(m_UserCrashData);
-		TCHAR generatedFileName[MAX_PATH];
-		GenerateFileName(generatedFileName);
-		GenerateMiniDump(pExp, generatedFileName);
-//		ShellExecute(NULL, "explore", m_szMinidumpDir, NULL, NULL, SW_SHOWNORMAL);	// Open up a Windows Explorer
+	m_refCount++;
+
+	if (m_refCount <= 2) {	// avoid stack overflow/infinite loop
+		int retVal =
+			AfxMessageBox("GME encountered an error! Do you want to generate a crash dump file?\n\n"
+						  "The error can be analyzed with the help of this crash dump (Microsoft MiniDump) report file, "
+						  "so it can significantly improve the quality of the program. "
+						  "The file contains call stack, CPU register dump, and other crash related information. "
+						  "Please click the checkbox below if you are willing to generate the crash dump. "
+						  "You can find the file in the "
+						  "\"%OSDir%\\Documents and Settings\\%UserName%\\Application Data\\GME\" folder on Windows XP or "
+						  "\"%OSDir%\\Users\\%UserName%\\AppData\\Roaming\\GME\" folder on Windows Vista or Windows 7. "
+						  "You can send the recent crash dump(s) to the following e-mail address: gme-supp@isis.vanderbilt.edu",
+						  MB_ICONEXCLAMATION | MB_YESNO);
+		if (retVal = IDYES) {
+			LoadDbgHelpDll();
+			GenerateUserStreamData(msg, pExp);
+//			TRACE0(m_UserCrashData);
+			TCHAR generatedFileName[MAX_PATH];
+			GenerateFileName(generatedFileName);
+			GenerateMiniDump(pExp, generatedFileName);
+//			ShellExecute(NULL, "explore", m_szMinidumpDir, NULL, NULL, SW_SHOWNORMAL);	// Open up a Windows Explorer
+		}
 	}
 
+	m_refCount--;
 	LeaveCriticalSection(&m_crashDumpLock);
 }
 

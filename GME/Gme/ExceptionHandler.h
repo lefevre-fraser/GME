@@ -101,6 +101,7 @@ class ExceptionHandler
 	static std::vector<CString>			m_openedXmlTags;
 	static UINT							m_maxStackDepth;
 	static UINT							m_maxTypeDumpDepth;
+	static INT							m_refCount;	// To avoid recursive crash reports, like in case of crash in OnActivate, AfxMessageBox causes another Activate, see JIRA GME-216
 
 public:
 	ExceptionHandler(void);
