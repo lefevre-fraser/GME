@@ -2504,24 +2504,24 @@ void CGMEView::ShowHelp(CComPtr<IMgaFCO> fco)
 }
 
 // ??
-void CGMEView::ShowModel(CComPtr<IMgaModel> model,CString *aspect)
+void CGMEView::ShowModel(CComPtr<IMgaModel> model, const CString& aspect)
 {
 	// FIX for JIRA bug: GME-135
-	if( !model) return;
+	if (!model) return;
 #if !defined (ACTIVEXGMEVIEW)
 	// endFIX
-	CString newAspect = aspect ? *aspect : currentAspect->name;
+	CString newAspect = aspect != "" ? aspect : currentAspect->name;
 	CGMEDoc *doc = GetDocument();
 	CGMEView *view = doc->FindView(model);
 	CComPtr<IMgaFCO> fakeObj;
 	if(!view)
-		doc->SetNextToView(model,newAspect, fakeObj);
+		doc->SetNextToView(model, newAspect, fakeObj);
 	else
 		view->ChangeAspect(newAspect);
 	CMainFrame::theInstance->CreateNewView(view, model);
 	if( theApp.isHistoryEnabled())
 	{
-		doc->tellHistorian( model, newAspect);
+		doc->tellHistorian(model, newAspect);
 		doc->clearForwHistory();
 	}
 #endif
@@ -3974,17 +3974,22 @@ void CGMEView::SetObjectLocation(CComPtr<IMgaFCO> &child,CComPtr<IMgaMetaRole> &
 	delete guiFco;
 }
 
-void CGMEView::GetRefereeChain(IMgaFCOs *refChain, IMgaFCO* fco)
+void CGMEView::GetRefereeChain(IMgaFCOs* visitedRefs, IMgaFCO* fco)
 {
-	CComQIPtr<IMgaReference> ref(fco);
-	if(ref) {
-		// Avoid circular references
-		long res;
-		if ((refChain->Find(ref, 1L, &res)) == E_NOTFOUND) {
-			refChain->Append(ref);
-			CComPtr<IMgaFCO> refFco;
-			COMTHROW(ref->get_Referred(&refFco));
-			GetRefereeChain(refChain,refFco);
+	CComQIPtr<IMgaReference> spReference(fco);
+	CComPtr<IMgaFCO> spReferenced;
+	if (spReference) {
+		while (spReference) {
+			spReferenced = NULL;
+
+			// Avoid circular references
+			long res;
+			if ((visitedRefs->Find(spReference, 1L, &res)) == E_NOTFOUND) {
+				COMTHROW(visitedRefs->Append(spReference));
+				COMTHROW(spReference->get_Referred(&spReferenced));
+			}
+
+			spReference = spReferenced;
 		}
 	}
 }
@@ -5286,7 +5291,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 		if(selection) {
 			CGMEEventLogger::LogGMEEvent(    "LButton double clicked on "+selection->GetName()+" "+selection->GetID()+"\r\n");
-			CString aspectName = currentAspect->name;;
+			CString aspectName = currentAspect->name;
 			CComPtr<IMgaFCO> mgaFco = selection->mgaFco;
 			CComPtr<IMgaModel> model;
 			CComPtr<IMgaReference> ref;
@@ -5346,6 +5351,33 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 								CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 								return;
 							}
+						} else {
+							try {
+								BeginTransaction(TRANSACTION_READ_ONLY);
+
+								// Get the first aspect of the referenced element's parent model
+								CComPtr<IMgaMetaFCO> spMetaFCO;
+								COMTHROW(model->get_Meta(&spMetaFCO));
+								CComQIPtr<IMgaMetaModel> spMetaModel = spMetaFCO;
+
+								CComPtr<IMgaMetaAspects> spAspects;
+								COMTHROW(spMetaModel->get_Aspects(&spAspects));
+								ASSERT(spAspects);
+								long nAspects = 0;
+								COMTHROW(spAspects->get_Count(&nAspects));
+								CComPtr<IMgaMetaAspect> spAspect;
+								if (nAspects > 0) {
+									COMTHROW(spAspects->get_Item(1, &spAspect));
+								}
+								CComBSTR nm;
+								COMTHROW(spAspect->get_Name(&nm));
+								aspectName = nm;
+
+								CommitTransaction();
+							}
+							catch (hresult_exception &e) {
+								AbortTransaction(e.hr);
+							}
 						}
 					}
 					else
@@ -5369,7 +5401,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 				}
 			}
 			if(model != 0) {
-				ShowModel(model,&aspectName);
+				ShowModel(model, aspectName);
 #if !defined (ACTIVEXGMEVIEW)
 				CGMEView *view = CGMEDoc::theInstance->FindView(model);
 				if(view)

@@ -313,7 +313,7 @@ public:
 	void					RetrievePath();
 	void					SetBgColor();
 	void					ShowHelp(CComPtr<IMgaFCO> fco);
-	void					ShowModel(CComPtr<IMgaModel> model, CString* aspect = 0);
+	void					ShowModel(CComPtr<IMgaModel> model, const CString& aspect = CString(""));
 	void					GetModelInContext(CComPtr<IMgaModel>& model);
 	void					FindDerivedFrom(CComPtr<IMgaModel> model, CComPtr<IMgaModel>& type);
 	void					ChangeAttrPrefObjs(CGuiObjectList& objlist);
