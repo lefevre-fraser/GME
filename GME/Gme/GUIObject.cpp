@@ -2918,6 +2918,42 @@ int CGuiConnection::GetEdgeCount(void) const
 	return points.GetSize() - 1;
 }
 
+CRect CGuiConnection::GetBounds(void) const
+{
+	CPointList points;
+	GetPointList(points);
+
+	POSITION pos = points.GetHeadPosition();
+	long xmin = LONG_MAX;
+	long xmax = LONG_MIN;
+	long ymin = LONG_MAX;
+	long ymax = LONG_MIN;
+	CRect bounds;
+	bounds.SetRectEmpty();
+	if (pos) {
+		while (pos) {
+			CPoint& pt = points.GetNext(pos);
+			if (pt.x > xmax)
+				xmax = pt.x;
+			if (pt.x < xmin)
+				xmin = pt.x;
+			if (pt.y > ymax)
+				ymax = pt.y;
+			if (pt.y < ymin)
+				ymin = pt.y;
+		}
+		bounds = CRect(xmin, ymin, xmax, ymax);
+	}
+
+	return bounds;
+}
+
+CPoint CGuiConnection::GetCenter(void) const
+{
+	CRect bounds = GetBounds();
+	return bounds.CenterPoint();
+}
+
 bool CGuiConnection::AdjustCoordLimits(CPointList& points, int edgeIndex, bool isPathEnd, bool xOrY, POSITION pos,
 									   int ptCoord, int lastlastCoord, int& coordMinLimit, int& coordMaxLimit) const
 {

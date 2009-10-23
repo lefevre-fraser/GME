@@ -2837,22 +2837,48 @@ void CGMEView::SetCenterObject(CComPtr<IMgaFCO> centerObj)
 			guiObj = NULL;
 		}
 
-		if (guiObj) {
-			CGMEEventLogger::LogGMEEvent("CGMEView::SetCenterObject("+guiObj->GetName()+" "+guiObj->GetID()+") in "+path+name+"\r\n");
-			if (!guiObj->IsVisible()) {
+		CGuiConnection* connection = NULL;
+		if (guiObj == NULL) {
+			try {
+				BeginTransaction(TRANSACTION_READ_ONLY);
+				connection = CGuiFco::FindConnection(centerObj, connections);
+				CommitTransaction();
+			}
+			catch(hresult_exception e) {
+				AbortTransaction(e.hr);
+				connection = NULL;
+			}
+		}
+
+		if (guiObj || connection) {
+			if (guiObj)
+				CGMEEventLogger::LogGMEEvent("CGMEView::SetCenterFCO("+guiObj->GetName()+" "+guiObj->GetID()+") in "+path+name+"\r\n");
+			else
+				CGMEEventLogger::LogGMEEvent("CGMEView::SetCenterFCO("+connection->GetName()+" "+connection->GetID()+") in "+path+name+"\r\n");
+			if (guiObj && !guiObj->IsVisible() ||
+				connection && !connection->IsVisible())
+			{
 				int aspNum = guiMeta->aspects.GetCount();
 				for (int aindex = 0; aindex < aspNum; aindex++) {
-					if (guiObj->IsVisible(aindex)) {
+					if (guiObj && guiObj->IsVisible(aindex) ||
+						connection && connection->IsVisible(aindex))
+					{
 						ChangeAspect(aindex);
 						CMainFrame::theInstance->ChangePartBrowserAspect(aindex);
 						break;
 					}
 				}
 			}
-			if (guiObj->IsVisible()) {
+			if (guiObj && guiObj->IsVisible() ||
+				connection && connection->IsVisible())
+			{
 				CDC* pDC = GetDC();
 				OnPrepareDC(pDC);
-				CPoint centerPt = guiObj->GetCenter();
+				CPoint centerPt;
+				if (guiObj)
+					centerPt = guiObj->GetCenter();
+				else
+					centerPt = connection->GetCenter();
 				CRect wndRect;
 				GetClientRect(&wndRect);
 				pDC->DPtoLP(&wndRect);
@@ -2870,31 +2896,18 @@ void CGMEView::SetCenterObject(CComPtr<IMgaFCO> centerObj)
 				selected.RemoveAll();
 				RemoveAllAnnotationFromSelection();
 				ClearConnectionSelection();
-				this->SendSelecEvent4Object( guiObj);
-				selected.AddTail(guiObj);
+				if (guiObj) {
+					this->SendSelecEvent4Object( guiObj);
+					selected.AddTail(guiObj);
+				}
 				ScrollToPosition(spos);
-				ChangeAttrPrefFco(guiObj);
+				if (guiObj)
+					ChangeAttrPrefFco(guiObj);
+				else
+					ChangeAttrPrefFco(connection);	// sets selectedConnection
 				Invalidate();
 				this->SendNow();
 				ReleaseDC(pDC);
-			}
-		} else {
-			CGuiConnection* connection = NULL;
-			try {
-				BeginTransaction(TRANSACTION_READ_ONLY);
-				connection = CGuiFco::FindConnection(centerObj, connections);
-				CommitTransaction();
-			}
-			catch(hresult_exception e) {
-				AbortTransaction(e.hr);
-				connection = NULL;
-			}
-			if (connection) {
-				this->SendUnselEvent4List(&selected);
-				selected.RemoveAll();
-				RemoveAllAnnotationFromSelection();
-				ClearConnectionSelection();
-				ChangeAttrPrefFco(connection);
 			}
 		}
 	}

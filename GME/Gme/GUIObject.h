@@ -447,6 +447,8 @@ public:
 	bool GetARPref(int dir) const { return autorouterPrefs[dir]; }
 	void GetPointList(CPointList& points) const;
 	int GetEdgeCount(void) const;
+	CRect GetBounds(void) const;
+	CPoint GetCenter(void) const;
 	bool AdjustCoordLimits(CPointList& points, int edgeIndex, bool isPathEnd, bool xOrY, POSITION pos,
 						   int ptCoord, int lastlastCoord, int& coordMinLimit, int& coordMaxLimit) const;
 	int GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint& endPoint, CPoint& thirdPoint,
