@@ -124,8 +124,8 @@ BOOL CSearchDlg::OnInitDialog()
     //column headers
     m_lstResults.InsertColumn(1, "Object", LVCFMT_LEFT, 100, 0);
     m_lstResults.InsertColumn(2, "Path", LVCFMT_LEFT, 210, 1);
-    m_lstResults.InsertColumn(3, "Type", LVCFMT_LEFT, 95, 2);
-    m_lstResults.InsertColumn(4, "Value", LVCFMT_LEFT, 210, 3);
+    m_lstResults.InsertColumn(3, "Kind", LVCFMT_LEFT, 95, 2);
+   // m_lstResults.InsertColumn(4, "Value", LVCFMT_LEFT, 210, 3);
     m_lstResults.SetExtendedStyle(m_lstResults.GetExtendedStyle()|LVS_EX_FULLROWSELECT);
 
     specialSearchFCO = NULL;
@@ -342,12 +342,10 @@ void CSearchDlg::BuildExtendedName(IMgaFolder *named, CString &extName)
 //display all found items at once
 void CSearchDlg::DisplayResults()
 {
-    //	AfxMessageBox("Displaying Results");
     int count = 0;
     CString name;
-    CString path, type, valu;
-    bool attr_value_to_be_shown = !m_edtAttrValue.IsEmpty() && !m_edtAttributeFirst.IsEmpty();
-
+    CString path, kind;
+   
     if(!m_chkSplSearch) //only want to wipe this out on a regular search
 	{
 		specialSearchFCO = NULL;
@@ -364,64 +362,48 @@ void CSearchDlg::DisplayResults()
     {
         path = "";
         name = "";
-        type = "";
-        valu = "";
+        kind = "";
+        
         CBstr bstr;
         COMTHROW( MGACOLL_ITER->get_Name(bstr) );
         name += bstr;
 
         BuildExtendedName(MGACOLL_ITER.p, path);
 
-        objtype_enum rret;
-        COMTHROW( MGACOLL_ITER->get_ObjType( &rret) );
-        if (rret == OBJTYPE_ATOM)
-            type = "ATOM";
-        else if (rret == OBJTYPE_MODEL)
-            type = "MODEL";
-        else if (rret == OBJTYPE_REFERENCE)
-            type = "REFERENCE";
-        else if (rret == OBJTYPE_SET)
-            type = "SET";
-        else if(rret == OBJTYPE_CONNECTION)
-            type = "CONNECTION";
+        //get the KindName, instead of displaying the type such as Model, Atom etc
+        //the kind name will be shown
+        CBstr bstrKindName;
+        CComPtr<IMgaMetaFCO> cmeta;
+        COMTHROW( MGACOLL_ITER->get_Meta(&cmeta) );
+        COMTHROW( cmeta->get_Name(bstrKindName) );
+
+        //set the kind to kind name
+        kind = bstrKindName;
 
         //use LVITEM to insert item into list control, LVITEM is needed so that
         //lParam can be supplide which will be used during sort
         //Object
         LVITEM lvItem;
-        lvItem.lParam=count;
-        lvItem.iItem=count;
-        lvItem.iSubItem=0;
+        lvItem.lParam = count;
+        lvItem.iItem = count;
+        lvItem.iSubItem = 0;
         lvItem.pszText=name.GetBuffer();
-        lvItem.mask=LVIF_PARAM | LVIF_TEXT;
+        lvItem.mask = LVIF_PARAM | LVIF_TEXT;
         m_lstResults.InsertItem(&lvItem);
         
         //don't supply lParam for subitems, if you do that the subitems won't get
         //displayed properly
         //path
-        lvItem.mask=LVIF_TEXT;
+        lvItem.mask = LVIF_TEXT;
         lvItem.iSubItem = 1;
-        lvItem.pszText=path.GetBuffer();
+        lvItem.pszText = path.GetBuffer();
         m_lstResults.SetItem(&lvItem);
  
-        //type
-        lvItem.iSubItem=2;
-        lvItem.pszText=type.GetBuffer();
+        //kind
+        lvItem.iSubItem = 2;
+        lvItem.pszText = kind.GetBuffer();
         m_lstResults.SetItem(&lvItem);
       
-        if( attr_value_to_be_shown)
-        {
-            try {
-                CComBSTR bstr;
-                COMTHROW( MGACOLL_ITER->get_StrAttrByName( CComBSTR( m_edtAttributeFirst), &bstr));
-                valu += bstr;
-                m_lstResults.SetItemText(count, 3, valu);
-            }
-            catch(hresult_exception&) { // prepare for the unexpected
-                m_lstResults.SetItemText(count, 3, "<<Not found>>");
-            }
-        }
-
         count++;
 
         //let the user know the searcher is still alive for especially long result lists
