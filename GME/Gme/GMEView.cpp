@@ -4392,16 +4392,17 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 								annotatorInDecoratorOperation = NULL;
 								inOpenedDecoratorTransaction = false;
 								isContextInitiatedOperation = false;
+								inElementDecoratorOperation = false;
 								return;
 							} else if (!inElementDecoratorOperation) {
 								AbortTransaction(S_OK);
 								inOpenedDecoratorTransaction = false;
 								isContextInitiatedOperation = false;
+								inElementDecoratorOperation = false;
 								return;
-							} else {
-								if (::GetCapture() != NULL)
-									::ReleaseCapture();
 							}
+							if (::GetCapture() != NULL)
+								::ReleaseCapture();
 							inOpenedDecoratorTransaction = false;
 							isContextInitiatedOperation = false;
 						} else {
@@ -4655,8 +4656,30 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 						OnPrepareDC(&transformDC);
 						HRESULT retVal = newDecorator->MouseLeftButtonUp(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
 						if (retVal == S_DECORATOR_EVENT_HANDLED) {
-							if (mouseButtonUpAfterDragDrop)
+							if (mouseButtonUpAfterDragDrop) {
 								doNotDeselectAfterInPlaceEdit = true;
+
+								if (inOpenedDecoratorTransaction) {
+									if (shouldCommitOperation) {
+										CommitTransaction();
+										shouldCommitOperation = false;
+										objectInDecoratorOperation = NULL;
+										annotatorInDecoratorOperation = NULL;
+										inOpenedDecoratorTransaction = false;
+										isContextInitiatedOperation = false;
+									} else if (!inElementDecoratorOperation) {
+										AbortTransaction(S_OK);
+										inOpenedDecoratorTransaction = false;
+										isContextInitiatedOperation = false;
+									} else {
+										if (::GetCapture() != NULL)
+											::ReleaseCapture();
+									}
+									inElementDecoratorOperation = false;
+									inOpenedDecoratorTransaction = false;
+									isContextInitiatedOperation = false;
+								}
+							}
 						}
 						if (retVal != S_OK &&
 							retVal != S_DECORATOR_EVENT_HANDLED &&
@@ -4746,6 +4769,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 								} else {
 									AbortTransaction(S_OK);
 								}
+								inElementDecoratorOperation = false;
 								inOpenedDecoratorTransaction = false;
 								isContextInitiatedOperation = false;
 							}
@@ -4819,18 +4843,20 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 									annotatorInDecoratorOperation = NULL;
 									inOpenedDecoratorTransaction = false;
 									isContextInitiatedOperation = false;
+									inElementDecoratorOperation = false;
 									CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 									return;
 								} else if (!inElementDecoratorOperation) {
 									AbortTransaction(S_OK);
 									inOpenedDecoratorTransaction = false;
 									isContextInitiatedOperation = false;
+									inElementDecoratorOperation = false;
 									CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 									return;
-								} else {
-									if (::GetCapture() != NULL)
-										::ReleaseCapture();
 								}
+								if (::GetCapture() != NULL)
+									::ReleaseCapture();
+								inElementDecoratorOperation = false;
 							} else {
 								if (inElementDecoratorOperation) {
 									if (decoratorOrAnnotator)
@@ -5256,18 +5282,20 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 							annotatorInDecoratorOperation = NULL;
 							inOpenedDecoratorTransaction = false;
 							isContextInitiatedOperation = false;
+							inElementDecoratorOperation = false;
 							CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 							return;
 						} else if (!inElementDecoratorOperation) {
 							AbortTransaction(S_OK);
 							inOpenedDecoratorTransaction = false;
 							isContextInitiatedOperation = false;
+							inElementDecoratorOperation = false;
 							CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 							return;
-						} else {
-							if (::GetCapture() != NULL)
-								::ReleaseCapture();
 						}
+						if (::GetCapture() != NULL)
+							::ReleaseCapture();
+						inElementDecoratorOperation = false;
 						inOpenedDecoratorTransaction = false;
 						isContextInitiatedOperation = false;
 					} else {
@@ -6286,6 +6314,7 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 							}
 							inOpenedDecoratorTransaction = false;
 							isContextInitiatedOperation = false;
+							inElementDecoratorOperation = false;
 						}
 					} else if (retVal != S_OK &&
 								retVal != S_DECORATOR_EVENT_NOT_HANDLED &&

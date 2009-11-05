@@ -85,12 +85,7 @@ STDMETHODIMP CDecoratorEventSink::LabelEditingStarted(LONG left, LONG top, LONG 
 
 STDMETHODIMP CDecoratorEventSink::LabelEditingFinished(LONG left, LONG top, LONG right, LONG bottom)
 {
-	if (m_view->inOpenedDecoratorTransaction) {
-		// Deferred Commit operation, we cannot do commit now because it would kill the underlying decoprator also
-		// Commit results in a whle refresh: complete destruction and regeneration of Gui* wrapper classes, and this destroys decorators also
-		m_view->PostMessage(WM_USER_DECOR_COMMITTRAN_REQ, 0, 0);
-	} else {
-		m_view->inOpenedDecoratorTransaction = false;
+	if (!m_view->inOpenedDecoratorTransaction) {
 		m_view->shouldCommitOperation = false;
 		m_view->inElementDecoratorOperation = false;
 		m_view->objectInDecoratorOperation = NULL;
