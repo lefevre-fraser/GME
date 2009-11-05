@@ -910,6 +910,7 @@ BitmapGen::BitmapGen( const CString& strName, COLORREF crTransparentColor, COLOR
 {
 	load( strName );
 }
+
 BitmapGen::~BitmapGen()
 {
 	if( m_pImage) 

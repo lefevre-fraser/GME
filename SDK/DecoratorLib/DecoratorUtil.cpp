@@ -672,15 +672,15 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 			strEx2 = strName.Right(5).MakeLower();
 		
 		if ( strExt != ".bmp" && strExt != ".gif" && strExt != ".png"
-			&& strExt != ".jpg" && strExt != ".jpe" && strEx2 != ".jpeg" 
-			&& strExt != ".res" )
+			&& strExt != ".jpg" && strExt != ".jpe" && strEx2 != ".jpeg"
+			&& strExt != ".res"  && strExt != ".wmf" && strEx2 != ".emf")
 			strExt = "";
 	}
 
 	if( strExt.IsEmpty()) // if no extension then try the different formats
 	{
 		bool success = false;
-		static char * exts[] = { ".bmp", ".gif", ".png", ".jpg", ".jpe", ".jpeg" };
+		static char * exts[] = { ".bmp", ".gif", ".png", ".jpg", ".jpe", ".jpeg", ".wmf", ".emf" };
 		for( int i = 0; !success && i < 6; ++i)
 		{
 			CString strName2 = strName + exts[i];
