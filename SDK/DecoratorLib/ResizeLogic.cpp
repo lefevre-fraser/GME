@@ -180,6 +180,37 @@ bool ResizeLogic::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 				case BottomLeftCornerResize:	newTargetLocation.InflateRect(-deltax,	0,			0,		deltay	);	break;
 				case MoveOperation:				newTargetLocation.OffsetRect(deltax, deltay);							break;
 			}
+			// keep aspect ratio if it's a corner resize
+			if ((nFlags & MK_CONTROL) != 0) {
+				double aspect_ratio = (double)m_originalLocation.Width() / (double)m_originalLocation.Height();
+				long other_y = (long)(newTargetLocation.Width() / aspect_ratio);
+				long other_x = (long)(newTargetLocation.Height() * aspect_ratio);
+				if (other_y > newTargetLocation.Height()) {
+					long dy = other_y - newTargetLocation.Height();
+					if (m_resizeState == TopRightCornerResize ||
+						m_resizeState == TopLeftCornerResize ||
+						m_resizeState == TopEdgeResize)
+					{
+						newTargetLocation.top -= dy;
+					} else {
+						newTargetLocation.bottom += dy;
+					}
+				} else if (other_x > newTargetLocation.Width()) {
+					long dx = other_x - newTargetLocation.Width();
+					if (m_resizeState == TopLeftCornerResize ||
+						m_resizeState == BottomLeftCornerResize ||
+						m_resizeState == LeftEdgeResize)
+					{
+						newTargetLocation.left -= dx;
+					} else {
+						newTargetLocation.right += dx;
+					}
+				} else {
+					// Cannot be satisfied completely because of the rounding
+					//ASSERT((double)newTargetLocation.Width() / (double)newTargetLocation.Height() ==
+					//	   (double)m_originalLocation.Width() / (double)m_originalLocation.Height());
+				}
+			}
 			m_targetLocation = newTargetLocation;
 			if (m_resizeState == MoveOperation)
 				m_parentPart->WindowMoving(nFlags, m_targetLocation);
