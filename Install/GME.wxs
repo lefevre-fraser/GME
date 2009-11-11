@@ -54,6 +54,8 @@
 
     <?include GME_dyn.wxi ?>
     
+
+    
     <Product Name='GME' Id='*' UpgradeCode='dfdd761e-0979-4897-ac89-71f006d92bf8'
         Language='1033' Codepage='1252' Version='$(var.VERSIONSTR)' Manufacturer='Vanderbilt University, ISIS'>
         
@@ -249,12 +251,12 @@
         <!-- MERGE MODULES -->
         <!-- =========================================================== -->
         <DirectoryRef Id='TARGETDIR'>
-            <Merge Id="CRT" Language="0" SourceFile="C:\Program Files\Common Files\Merge Modules\Microsoft_VC90_CRT_x86.msm" DiskId="1" />
-            <Merge Id="CRT Policy" Language="0" SourceFile="C:\Program Files\Common Files\Merge Modules\policy_9_0_Microsoft_VC90_CRT_x86.msm" DiskId="1" />
-            <Merge Id="MFC" Language="0" SourceFile="C:\Program Files\Common Files\Merge Modules\Microsoft_VC90_MFC_x86.msm" DiskId="1" />
-            <Merge Id="MFC Policy" Language="0" SourceFile="C:\Program Files\Common Files\Merge Modules\policy_9_0_Microsoft_VC90_MFC_x86.msm" DiskId="1" />
-            <Merge Id="ATL" Language="0" SourceFile="C:\Program Files\Common Files\Merge Modules\Microsoft_VC90_ATL_x86.msm" DiskId="1" />
-            <Merge Id="ATL Policy" Language="0" SourceFile="C:\Program Files\Common Files\Merge Modules\policy_9_0_Microsoft_VC90_ATL_x86.msm" DiskId="1" />
+            <Merge Id="CRT" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC90_CRT_x86.msm" DiskId="1" />
+            <Merge Id="CRT Policy" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\policy_9_0_Microsoft_VC90_CRT_x86.msm" DiskId="1" />
+            <Merge Id="MFC" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC90_MFC_x86.msm" DiskId="1" />
+            <Merge Id="MFC Policy" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\policy_9_0_Microsoft_VC90_MFC_x86.msm" DiskId="1" />
+            <Merge Id="ATL" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC90_ATL_x86.msm" DiskId="1" />
+            <Merge Id="ATL Policy" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\policy_9_0_Microsoft_VC90_ATL_x86.msm" DiskId="1" />
         </DirectoryRef>
 
         <!-- =========================================================== -->
