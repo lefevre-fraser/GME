@@ -436,20 +436,50 @@ void CSearchDlg::OnDblclkListResults(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CSearchDlg::OnSize(UINT nType, int cx, int cy)
 {
+    CRect dialogRect;
+    GetWindowRect( & dialogRect); ScreenToClient(&dialogRect);
+
     CDialog::OnSize(nType, cx, cy);
     const int bottomMargin = 10;
+    const int rightMargin = 10;
     if( cx >= 0 && cy >= 0 && m_lstResults.GetSafeHwnd()&& m_treeSearchHistory.GetSafeHwnd())
     {
-        int bottomPos = (cy-bottomMargin)>0 ? (cy-bottomMargin):0;
-        CRect rectResultsList; m_lstResults.GetWindowRect( &rectResultsList); ScreenToClient( &rectResultsList);
-        rectResultsList.bottom= bottomPos;
-        m_lstResults.SetWindowPos( NULL, rectResultsList.left, rectResultsList.top, rectResultsList.Width(), rectResultsList.Height(), SWP_NOMOVE|SWP_NOZORDER|SWP_SHOWWINDOW);
+        int bottomPos = (cy - bottomMargin) > 0 ? (cy - bottomMargin) : 0;
 
-        CRect rectPrevSearches;
-        m_treeSearchHistory.GetWindowRect(rectPrevSearches); ScreenToClient(rectPrevSearches);
+        int rightPos = (cx - rightMargin) > 0? (cx - rightMargin) : 0;
+        
+        CRect rectResultsList; m_lstResults.GetWindowRect( &rectResultsList); ScreenToClient( &rectResultsList);
+        CRect rectPrevSearches;m_treeSearchHistory.GetWindowRect(rectPrevSearches); ScreenToClient(rectPrevSearches);
+        
+        //set search history tree to fixed width, it  will move to reflect
+        //resizing but would have fixed width
         rectPrevSearches.bottom = bottomPos;
+        rectPrevSearches.left = rightPos - rectPrevSearches.Width();
+        rectPrevSearches.right =  rightPos;
+
         m_treeSearchHistory.SetWindowPos(NULL, rectPrevSearches.left, rectPrevSearches.top, rectPrevSearches.Width(), 
-            rectPrevSearches.Height(), SWP_NOMOVE|SWP_NOZORDER|SWP_SHOWWINDOW);
+        rectPrevSearches.Height(), SWP_NOZORDER|SWP_SHOWWINDOW);
+
+        //set the title to appropriate position
+        //because search history changed its position the title "Previous Searches"
+        //also needs to be moved
+        CRect rectPrevSearchesTitle; 
+        CWnd *prevSrchTitle = GetDlgItem (IDC_PREVSRCH_TITLE);
+        prevSrchTitle->GetWindowRect(&rectPrevSearchesTitle);ScreenToClient(&rectPrevSearchesTitle);
+
+        int width = rectPrevSearchesTitle.Width();
+        rectPrevSearchesTitle.left = rectPrevSearches.left;
+        rectPrevSearchesTitle.right = rectPrevSearchesTitle.left + width;
+        prevSrchTitle->SetWindowPos(NULL, rectPrevSearchesTitle.left, rectPrevSearchesTitle.top, rectPrevSearchesTitle.Width(),
+            rectPrevSearchesTitle.Height(), SWP_NOZORDER | SWP_SHOWWINDOW);
+
+        //compute width for search results based on search history's location
+        //search results list will be resized to take all the width after search history
+        // is placed
+        rectResultsList.bottom = bottomPos;
+        rectResultsList.right = rectPrevSearches.left - 10;
+
+        m_lstResults.SetWindowPos( NULL, rectResultsList.left, rectResultsList.top, rectResultsList.Width() , rectResultsList.Height(), SWP_NOMOVE|SWP_NOZORDER|SWP_SHOWWINDOW);
     }
 }
 
