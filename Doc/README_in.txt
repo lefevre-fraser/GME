@@ -31,6 +31,11 @@ guaranteed.
 ************************************************
 
 
+
+Release Notes of Release r9.11.11
+-------------------------------
+  - This is a service release for r9.8.28
+    
 Release Notes of Release r9.8.28
 -------------------------------
   - Fixed: decorator in-place edit bug
