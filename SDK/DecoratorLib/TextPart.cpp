@@ -22,7 +22,7 @@ namespace DecoratorSDK {
 
 TextPart::TextPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	PartBase			(pPart, eventSink),
-	resizeLogic			(NULL),
+	resizeLogic			(NULL, NULL),
 	m_bCursorSaved		(false),
 	m_eTextLocation		(L_SOUTH),
 	m_bTextEnabled		(true),	// ?

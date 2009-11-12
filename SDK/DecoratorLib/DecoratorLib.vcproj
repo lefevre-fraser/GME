@@ -371,6 +371,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SetSizeDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SizeTrackerDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Stdafx.cpp"
 				>
 				<FileConfiguration
@@ -590,6 +598,14 @@
 			</File>
 			<File
 				RelativePath=".\SetBitmapPart.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SetSizeDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SizeTrackerDialog.h"
 				>
 			</File>
 			<File

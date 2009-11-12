@@ -66,6 +66,19 @@ namespace DecoratorSDK
 		PS_UNDEFINED	= 2
 	};
 
+	enum ResizeType {
+		NotInResize				= 0,
+		RightEdgeResize			= 1,	// Horizontal resize
+		BottomEdgeResize		= 2,	// Vertical resize
+		LeftEdgeResize			= 3,	// Horizontal resize
+		TopEdgeResize			= 4,	// Vertical resize
+		TopLeftCornerResize		= 5,	// H + V resize
+		TopRightCornerResize	= 6,	// H + V resize
+		BottomRightCornerResize	= 7,	// H + V resize
+		BottomLeftCornerResize	= 8,	// H + V resize
+		MoveOperation			= 9
+	};
+
 	static const char* PREF_LABELLOCATION 			= "namePosition";
 	static const char* PREF_ICON					= "icon";
 	static const char* PREF_PORTICON				= "porticon";
@@ -175,12 +188,14 @@ namespace DecoratorSDK
 
 	static const char* CTX_MENU_STR_RENAME				= "Rename";
 	static const char* CTX_MENU_STR_RESETSIZE			= "Reset to original size";
+	static const char* CTX_MENU_STR_SETSIZE				= "Set size";
 	static const char* CTX_MENU_STR_EXPANDMODEL			= "Expand model";
 	static const char* CTX_MENU_STR_COLLAPSEMODEL		= "Collapse model";
 	static const unsigned int CTX_MENU_ID_RENAME		= DECORATOR_CTX_MENU_MINID + 0;
 	static const unsigned int CTX_MENU_ID_RESETSIZE		= DECORATOR_CTX_MENU_MINID + 1;
-	static const unsigned int CTX_MENU_ID_EXPANDMODEL	= DECORATOR_CTX_MENU_MINID + 2;
-	static const unsigned int CTX_MENU_ID_COLLAPSEMODEL	= DECORATOR_CTX_MENU_MINID + 3;
+	static const unsigned int CTX_MENU_ID_SETSIZE		= DECORATOR_CTX_MENU_MINID + 2;
+	static const unsigned int CTX_MENU_ID_EXPANDMODEL	= DECORATOR_CTX_MENU_MINID + 3;
+	static const unsigned int CTX_MENU_ID_COLLAPSEMODEL	= DECORATOR_CTX_MENU_MINID + 4;
 
 	static const char* STEREOTYPE_LEFTA					= "<<";
 	static const char* STEREOTYPE_RIGHTA				= ">>";

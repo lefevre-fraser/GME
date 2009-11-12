@@ -16,6 +16,8 @@
 
 namespace DecoratorSDK {
 
+class CSetSizeDialog;
+
 //################################################################################################
 //
 // CLASS : ResizablePart
@@ -26,6 +28,8 @@ class ResizablePart: public PartBase
 {
 protected:
 	ResizeLogic		resizeLogic;
+	CSetSizeDialog*	m_setSizeDlg;
+	bool			inSizeDlgProcedure;
 
 public:
 	ResizablePart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);

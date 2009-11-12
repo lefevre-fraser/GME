@@ -64,7 +64,6 @@ BEGIN_MESSAGE_MAP(CInPlaceEditDialog, CDialog)
 	ON_WM_ERASEBKGND()
 	ON_BN_CLICKED(IDCANCEL, OnBnClickedCancel)
 	ON_BN_CLICKED(IDOK, OnBnClickedOk)
-	ON_WM_LBUTTONDOWN()
 	ON_NOTIFY(EN_REQUESTRESIZE, IDC_INPLACETEXTEDIT, OnRequestResize)
 END_MESSAGE_MAP()
 
@@ -168,7 +167,7 @@ BOOL CInPlaceEditDialog::OnNcActivate(BOOL bActive)
 {
 	if (m_bInited)
 	{
-		m_bInited=false;
+		m_bInited = false;
 	}
 	else
 	{

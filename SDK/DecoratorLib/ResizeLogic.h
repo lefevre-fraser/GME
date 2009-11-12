@@ -11,6 +11,7 @@
 
 #include "StdAfx.h"
 #include "PartBase.h"
+#include "SizeTrackerDialog.h"
 
 
 namespace DecoratorSDK {
@@ -24,19 +25,6 @@ namespace DecoratorSDK {
 class ResizeLogic
 {
 public:
-	enum ResizeType {
-		NotInResize				= 0,
-		RightEdgeResize			= 1,	// Horizontal resize
-		BottomEdgeResize		= 2,	// Vertical resize
-		LeftEdgeResize			= 3,	// Horizontal resize
-		TopEdgeResize			= 4,	// Vertical resize
-		TopLeftCornerResize		= 5,	// H + V resize
-		TopRightCornerResize	= 6,	// H + V resize
-		BottomRightCornerResize	= 7,	// H + V resize
-		BottomLeftCornerResize	= 8,	// H + V resize
-		MoveOperation			= 9
-	};
-
 	enum ResizeFeatures {
 		Resizeable				= 0x0001,
 		Movable					= 0x0002,
@@ -46,6 +34,7 @@ public:
 
 protected:
 	PartBase*			m_parentPart;
+	HWND				m_parentWnd;
 
 	ResizeType			m_resizeState;
 	short				m_resizeFeatures;
@@ -55,10 +44,12 @@ protected:
 	CPoint				m_originalMousePosition;
 	HCURSOR				m_originalCursor;
 	bool				m_bCursorSaved;
-	mutable CSize		m_minSize;
+	CSize				m_minSize;
+
+	CSizeTrackerDialog*	sizeTrackerDlg;
 
 public:
-	ResizeLogic(PartBase* pPart);
+	ResizeLogic(PartBase* pPart, HWND parentWnd);
 	virtual ~ResizeLogic();
 
 	virtual short	GetResizeFeatures			(void) const;
@@ -83,7 +74,7 @@ public:
 	ResizeType		DeterminePotentialResize	(CPoint cursorPoint) const;
 	bool			IsSizeChanged				(void) const;
 	CRect			GetOriginalLocation			(void) const;
-	void			SetMinimumSize				(CSize minSize) const;
+	void			SetMinimumSize				(CSize minSize);
 
 private:
 	void			ChangeCursorForm			(ResizeType resizeType, bool notify = true);

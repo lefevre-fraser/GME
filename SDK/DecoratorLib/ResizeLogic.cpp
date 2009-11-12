@@ -9,6 +9,8 @@
 #include "ResizeLogic.h"
 #include "DecoratorExceptions.h"
 #include "ResizablePart.h"
+#include "SizeTrackerDialog.h"
+#include "DialogTemplate.h"
 
 
 namespace DecoratorSDK {
@@ -19,8 +21,10 @@ namespace DecoratorSDK {
 //
 //################################################################################################
 
-ResizeLogic::ResizeLogic(PartBase* pPart):
-	m_parentPart(pPart)
+ResizeLogic::ResizeLogic(PartBase* pPart, HWND parentWnd):
+	m_parentPart	(pPart),
+	m_parentWnd		(parentWnd),
+	sizeTrackerDlg	(NULL)
 {
 	m_minSize.SetSize(0, 0);
 }
@@ -70,9 +74,9 @@ void ResizeLogic::Destroy(void)
 void ResizeLogic::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	if ((m_resizeFeatures & DrawResizeCorner) != 0) {
-		// draw resize corner
+		// draw resize corner: currently done by GME
 	} else if ((m_resizeFeatures & DrawSelectionRectangle) != 0) {
-		// draw selection rectangle
+		// draw selection rectangle: currently done by GME
 	}
 }
 
@@ -80,6 +84,7 @@ void ResizeLogic::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 void ResizeLogic::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 							   HWND parentWnd, PreferenceMap& preferences)
 {
+	m_parentWnd = parentWnd;
 	Initialize(pProject, pPart, pFCO);
 }
 
@@ -212,10 +217,13 @@ bool ResizeLogic::MouseMoved(UINT nFlags, const CPoint& point, HDC transformHDC)
 				}
 			}
 			m_targetLocation = newTargetLocation;
-			if (m_resizeState == MoveOperation)
+			if (m_resizeState == MoveOperation) {
 				m_parentPart->WindowMoving(nFlags, m_targetLocation);
-			else
+			} else {
 				m_parentPart->WindowResizing(nFlags, m_targetLocation);
+				if (sizeTrackerDlg != NULL)
+					sizeTrackerDlg->AdjustPositionAndText(point, m_targetLocation);
+			}
 			return true;
 		}
 	} else {
@@ -233,10 +241,30 @@ bool ResizeLogic::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC tran
 			m_originalMousePosition = point;
 			m_originalLocation = m_targetLocation;
 			m_resizeState = resizeTypeCandidate;
-			if (resizeTypeCandidate == MoveOperation)
+			if (resizeTypeCandidate == MoveOperation) {
 				m_parentPart->WindowMovingStarted(nFlags, m_targetLocation);
-			else
+			} else {
 				m_parentPart->WindowResizingStarted(nFlags, m_targetLocation);
+
+				bool isPermanentCWnd = true;
+				CWnd* cWnd = CWnd::FromHandlePermanent(m_parentWnd);
+				if (cWnd == NULL) {
+					isPermanentCWnd = false;
+					cWnd = CWnd::FromHandle(m_parentWnd);
+				}
+
+				CDialogTemplate dlgTemplate(_T(""),
+											WS_CHILD | WS_VISIBLE | WS_BORDER,	// Window Styles
+											0,	// Extended Window Styles
+											0, 0, SizeTrackerWidth, SizeTrackerHeight);
+				dlgTemplate.AddStatic(_T("EDT"), WS_VISIBLE, 0, 0, 0, SizeTrackerWidth - 1, SizeTrackerHeight, IDC_INPLACETEXTEDIT);
+
+				sizeTrackerDlg = new CSizeTrackerDialog;
+				sizeTrackerDlg->SetParameters(m_targetLocation, point, resizeTypeCandidate, cWnd, isPermanentCWnd, transformHDC);
+				BOOL success = sizeTrackerDlg->CreateIndirect(dlgTemplate, cWnd);
+				if (success != FALSE)
+					success = sizeTrackerDlg->ShowWindow(SW_SHOWNORMAL);
+			}
 			return true;
 		}
 	}
@@ -257,6 +285,8 @@ bool ResizeLogic::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC transf
 			long deltay = m_targetLocation.Height() - m_originalLocation.Height();
 			m_parentPart->WindowResized(nFlags, CSize(deltax, deltay));
 			m_parentPart->WindowResizingFinished(nFlags, m_targetLocation);
+			if (sizeTrackerDlg != NULL)
+				delete sizeTrackerDlg;
 		}
 		m_resizeState = NotInResize;
 		RestoreCursor();
@@ -272,11 +302,13 @@ bool ResizeLogic::OperationCanceledByGME(void)
 		m_resizeState = NotInResize;
 		RestoreCursor();
 		m_targetLocation = m_originalLocation;
+		if (sizeTrackerDlg != NULL)
+			delete sizeTrackerDlg;
 	}
 	return true;
 }
 
-ResizeLogic::ResizeType ResizeLogic::DeterminePotentialResize(CPoint cursorPoint) const
+ResizeType ResizeLogic::DeterminePotentialResize(CPoint cursorPoint) const
 {
 	// Topleft corner
 	long actualSensitivity = 0;
@@ -354,7 +386,7 @@ CRect ResizeLogic::GetOriginalLocation(void) const
 	return m_originalLocation;
 }
 
-void ResizeLogic::SetMinimumSize(CSize minSize) const
+void ResizeLogic::SetMinimumSize(CSize minSize)
 {
 	m_minSize = minSize;
 }

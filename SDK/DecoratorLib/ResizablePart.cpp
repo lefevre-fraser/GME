@@ -8,6 +8,8 @@
 #include "StdAfx.h"
 #include "ResizablePart.h"
 #include "DecoratorExceptions.h"
+#include "DialogTemplate.h"
+#include "SetSizeDialog.h"
 
 
 namespace DecoratorSDK {
@@ -20,9 +22,11 @@ namespace DecoratorSDK {
 
 ResizablePart::ResizablePart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink):
 	PartBase			(pPart, eventSink),
-	resizeLogic			(NULL)
+	resizeLogic			(NULL, NULL),
+	m_setSizeDlg		(NULL)
 {
 	resizeLogic.SetParentPart(this);
+	inSizeDlgProcedure = false;
 }
 
 ResizablePart::~ResizablePart()
@@ -157,10 +161,13 @@ bool ResizablePart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC tran
 
 bool ResizablePart::MouseRightButtonDown(HMENU hCtxMenu, UINT nFlags, const CPoint& point, HDC transformHDC)
 {
-	if (m_bResizable && m_bActive && ResizablePart::GetPreferredSize() != CSize(0, 0)) {
+	if (m_bResizable && m_bActive) {
 		CRect ptRect = GetLocation();
 		if (ptRect.PtInRect(point)) {
-			::AppendMenu(hCtxMenu, MF_STRING | MF_ENABLED, CTX_MENU_ID_RESETSIZE, CTX_MENU_STR_RESETSIZE);
+			::AppendMenu(hCtxMenu, MF_STRING | MF_ENABLED, CTX_MENU_ID_SETSIZE, CTX_MENU_STR_SETSIZE);
+			if (ResizablePart::GetPreferredSize() != CSize(0, 0)) {
+				::AppendMenu(hCtxMenu, MF_STRING | MF_ENABLED, CTX_MENU_ID_RESETSIZE, CTX_MENU_STR_RESETSIZE);
+			}
 			return true;
 		}
 	}
@@ -172,7 +179,43 @@ bool ResizablePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint&
 {
 	bool handled = false;
 	if (m_bResizable) {
-		if (menuItemId == CTX_MENU_ID_RESETSIZE) {
+		if (menuItemId == CTX_MENU_ID_SETSIZE) {
+			bool isPermanentCWnd = true;
+			CWnd* cWnd = CWnd::FromHandlePermanent(m_parentWnd);
+			if (cWnd == NULL) {
+				isPermanentCWnd = false;
+				cWnd = CWnd::FromHandle(m_parentWnd);
+			}
+
+			CDialogTemplate dlgTemplate(_T("Set size"),
+										DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU,	// Window Styles
+										0,	// Extended Window Styles
+										0, 0, SetSizeDialogWidth, SetSizeDialogHeight, "MS Shell Dlg", 8);
+			dlgTemplate.AddButton("OK", WS_VISIBLE, 0, 6, 42, 50, 14, IDOK);
+			dlgTemplate.AddButton("Cancel", WS_VISIBLE, 0, 60, 42, 50, 14, IDCANCEL);
+			dlgTemplate.AddStatic("Width:", WS_VISIBLE, 0, 6, 6, 26, 8, WidthTextCtrlId);
+			dlgTemplate.AddStatic("Height:", WS_VISIBLE, 0, 6, 24, 26, 8, HeightTextCtrlId);
+			dlgTemplate.AddEditBox("", WS_VISIBLE | ES_AUTOHSCROLL, 0, 36, 6, 72, 14, WidthEditCtrlId);
+			dlgTemplate.AddEditBox("", WS_VISIBLE | ES_AUTOHSCROLL, 0, 36, 24, 72, 14, HeightEditCtrlId);
+
+			CSetSizeDialog setSizeDlg;
+			setSizeDlg.SetParameters(this, GetLocation(), point, resizeLogic.DeterminePotentialResize(point),
+									 cWnd, isPermanentCWnd, transformHDC, nFlags);
+			BOOL success = setSizeDlg.InitModalIndirect(dlgTemplate, cWnd);
+			INT retVal = 0;
+			if (success != FALSE) {
+				inSizeDlgProcedure = true;
+				m_setSizeDlg = &setSizeDlg;
+				retVal = setSizeDlg.DoModal();
+			}
+			m_setSizeDlg = NULL;
+			inSizeDlgProcedure = false;
+
+			if (!isPermanentCWnd)
+				cWnd->Detach();
+
+			handled = true;
+		} else if (menuItemId == CTX_MENU_ID_RESETSIZE) {
 			m_parentPart->GeneralOperationStarted(NULL);
 			CComBSTR regName(PREF_PREFERREDSIZE);
 			// Getting regnode
@@ -224,7 +267,8 @@ void ResizablePart::WindowResizingFinished(UINT nFlags, CRect& location)
 {
 	ASSERT(m_bResizable);
 	SetLocation(location);
-	if (m_bResizable && resizeLogic.IsSizeChanged()) {
+	if (m_bResizable && ((inSizeDlgProcedure && m_setSizeDlg->GetDlgResult()) ||
+						 (!inSizeDlgProcedure && resizeLogic.IsSizeChanged()))) {
 		COMTRY {
 			CComPtr<IMgaMetaAspect> mAspect;
 			COMTHROW(m_spPart->get_ParentAspect(&mAspect));

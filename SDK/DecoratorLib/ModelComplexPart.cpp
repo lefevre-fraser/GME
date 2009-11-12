@@ -154,11 +154,11 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 
 	if (hasStoredCustomSize) {
 		CSize calcSize = CSize(min(size.cx, lWidth), min(size.cy, lHeight));
-		resizeLogic.SetMinimumSize(calcSize);
+		const_cast<DecoratorSDK::ModelComplexPart*>(this)->resizeLogic.SetMinimumSize(calcSize);
 		return size;
 	}
 
-	resizeLogic.SetMinimumSize(CSize(lWidth, lHeight));
+	const_cast<DecoratorSDK::ModelComplexPart*>(this)->resizeLogic.SetMinimumSize(CSize(lWidth, lHeight));
 	return CSize(max((long) WIDTH_MODEL, lWidth), max((long) HEIGHT_MODEL, lHeight));
 }
 

@@ -928,6 +928,12 @@ void BitmapGen::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, c
 	if (gdip == NULL)
 		gdip2 = getFacilities().getGraphics();
 	Gdiplus::Status st = Gdiplus::Win32Error;
+	int srcWidth = srcRect.Width();
+	int srcHeight = srcRect.Height();
+	if (m_pImage->GetType() == Gdiplus::ImageTypeMetafile) {
+		srcWidth = m_pImage->GetWidth();
+		srcHeight = m_pImage->GetHeight();
+	}
 	/* Technique is only available in GDI+ 1.1, which is only distributed with Vista :(((
 	if (greyScale) {
 		// The common method is to get the gray value of a pixel by the following equation
@@ -948,9 +954,9 @@ void BitmapGen::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, c
 		geryScaleColorConversion(3, 3) = 1.0;
 		geryScaleColorConversion(4, 4) = 1.0;
 		// Affine transformation matrix: http://msdn.microsoft.com/en-us/library/ms536397(VS.85).aspx
-		Gdiplus::RectF srcRectF((float)srcRect.left, (float)srcRect.top, (float)srcRect.Width(), (float)srcRect.Height());
-		Gdiplus::Matrix affineTransform((float)dstRect.Width() / (float)srcRect.Width(), 0.0,
-										0.0, (float)dstRect.Height() / (float)srcRect.Height(),
+		Gdiplus::RectF srcRectF((float)srcRect.left, (float)srcRect.top, (float)srcWidth, (float)srcHeight);
+		Gdiplus::Matrix affineTransform((float)dstRect.Width() / (float)srcWidth, 0.0,
+										0.0, (float)dstRect.Height() / (float)srcHeight,
 										(float)(dstRect.left - srcRect.left), (float)(dstRect.top - srcRect.top));
 		// Greyscale technique (instead of colormatrix): decrease saturation
 		// http://weseetips.com/2008/05/27/how-to-convert-images-to-grayscale-by-using-hls-colorspace/
@@ -975,7 +981,7 @@ void BitmapGen::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, c
 		imgAttribs.SetColorMatrix(&greyFadeColorMatrix);
 	}
 	Gdiplus::Rect destRect(dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
-	st = gdip2->DrawImage(m_pImage, destRect, srcRect.left, srcRect.top, srcRect.Width(), srcRect.Height(),
+	st = gdip2->DrawImage(m_pImage, destRect, srcRect.left, srcRect.top, srcWidth, srcHeight,
 						  Gdiplus::UnitPixel, &imgAttribs);
 	if (st == Gdiplus::Win32Error) // in case of corrupted image file (although successfully loaded)
 		gdip2->FillRectangle(&Gdiplus::SolidBrush(Gdiplus::Color::Red), dstRect.left, dstRect.top, dstRect.Width(), dstRect.Height());
@@ -999,9 +1005,59 @@ void BitmapGen::load( const CString& strName )
 				m_pImage = Gdiplus::Image::FromFile( CA2W( (LPCTSTR) imageFileName));
 				if( m_pImage && m_pImage->GetLastStatus() == Gdiplus::Ok)
 				{
-					ASSERT( m_pImage->GetWidth() > 0); // valid sizes, otherwise AutoRouter fails
-					ASSERT( m_pImage->GetHeight() > 0); 
-					setSize( m_pImage->GetWidth(), m_pImage->GetHeight() );
+					UINT widthToSet = m_pImage->GetWidth();
+					UINT heightToSet = m_pImage->GetHeight();
+					ASSERT( widthToSet > 0);	// valid sizes, otherwise AutoRouter fails
+					ASSERT( heightToSet > 0);
+					if (m_pImage->GetType() == Gdiplus::ImageTypeMetafile) {
+						int primaryScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+						int primaryScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+						if (widthToSet > 0.9 * primaryScreenWidth ||
+							heightToSet > 0.9 * primaryScreenHeight)
+						{
+							// Override if it's too big
+							// Note: if we can figure out the actual size from the wmf/emf file, then remove this limitation
+							widthToSet = WIDTH_MODEL;
+							heightToSet = HEIGHT_MODEL;
+						}
+#ifdef _DEBUG
+/*						// How many properties (pieces of metadata) are in the image?
+						UINT count = m_pImage->GetPropertyCount();
+						if (count > 0) {
+							// Allocate a buffer to receive an array of PROPIDs.
+							PROPID* propIDs = new PROPID[count];
+
+							m_pImage->GetPropertyIdList(count, propIDs);
+
+							// List the retrieved IDs.
+							for(UINT j = 0; j < count; ++j)
+								TRACE1("%x\n", propIDs[j]);
+
+							delete [] propIDs;
+						}*/
+
+/*						Gdiplus::RectF boundsRectF;
+						Gdiplus::Unit unit = Gdiplus::UnitPixel;
+						m_pImage->GetBounds(&boundsRectF, &unit);
+						TRACE2("BoundsRectPixel: %f %f\n", boundsRectF.X, boundsRectF.Y);
+						unit = Gdiplus::UnitWorld;
+						m_pImage->GetBounds(&boundsRectF, &unit);
+						TRACE2("BoundsRectWorld: %f %f\n", boundsRectF.X, boundsRectF.Y);
+						TRACE2("Resolution: %f %f\n", m_pImage->GetHorizontalResolution(),
+													  m_pImage->GetVerticalResolution());
+
+						Gdiplus::Metafile* metafile = (Gdiplus::Metafile*)m_pImage;
+						if (metafile != NULL) {
+							Gdiplus::MetafileHeader metafileHeader;
+							metafile->GetMetafileHeader(&metafileHeader);
+							Gdiplus::Rect rect;
+							metafileHeader.GetBounds(&rect);
+							TRACE("MetaHeaderBoundsRect: %ld %ld %ld %ld\n", rect.GetLeft(), rect.GetTop(), rect.GetRight(), rect.GetBottom());
+							TRACE2("MetaHeaderDPI: %f %f\n", metafileHeader.GetDpiX(), metafileHeader.GetDpiY());
+						}*/
+#endif
+					}
+					setSize( widthToSet, heightToSet );
 					success = true;
 				}
 			}
