@@ -1936,6 +1936,10 @@
                 <File Id="DecoratorLib_Stdafx.h" Name="Stdafx.h"  Source="..\SDK\DecoratorLib\Stdafx.h" />
                 <File Id="StereoLabelPart.cpp" Name="StereoLabelPart.cpp"  Source="..\SDK\DecoratorLib\StereoLabelPart.cpp" />
                 <File Id="StereoLabelPart.h" Name="StereoLabelPart.h"  Source="..\SDK\DecoratorLib\StereoLabelPart.h" />
+                <File Id="SetSizeDialog.cpp" Name="SetSizeDialog.cpp"  Source="..\SDK\DecoratorLib\SetSizeDialog.cpp" />
+                <File Id="SetSizeDialog.h" Name="SetSizeDialog.h"  Source="..\SDK\DecoratorLib\SetSizeDialog.h" />
+                <File Id="SizeTrackerDialog.cpp" Name="SizeTrackerDialog.cpp"  Source="..\SDK\DecoratorLib\SizeTrackerDialog.cpp" />
+                <File Id="SizeTrackerDialog.h" Name="SizeTrackerDialog.h"  Source="..\SDK\DecoratorLib\SizeTrackerDialog.h" />
                 <File Id="DecoratorLib_targetver.h" Name="targetver.h"  Source="..\SDK\DecoratorLib\targetver.h" />
                 <File Id="TextPart.cpp" Name="TextPart.cpp"  Source="..\SDK\DecoratorLib\TextPart.cpp" />
                 <File Id="TextPart.h" Name="TextPart.h"  Source="..\SDK\DecoratorLib\TextPart.h" />
