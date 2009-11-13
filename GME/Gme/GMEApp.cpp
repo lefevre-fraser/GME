@@ -333,6 +333,10 @@ BOOL CGMEApp::InitInstance()
 	COleObjectFactory::RegisterAll();
 		// Note: MDI applications register all server objects without regard
 		//  to the /Embedding or /Automation on the command line.
+	// Note: we switched the default REGCLS_MULTIPLEUSE behavior to REGCLS_SINGLEUSE,
+	// see GMEOLEApp.cpp's MY_IMPLEMENT_OLECREATE macro, and
+	// "How to use single or multiple instances of an OLE object in MFC by using Visual C++" KB article:
+	// http://support.microsoft.com/kb/141154
 
 
 	// create main MDI Frame window

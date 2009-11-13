@@ -145,8 +145,21 @@ BEGIN_INTERFACE_MAP(CGMEOLEApp, CCmdTarget)
 	DUAL_ERRORINFO_PART(CGMEOLEApp)
 END_INTERFACE_MAP()
 
+// Note: we use an own IMPLEMENT_OLECREATE macro here in order to register a REGCLS_SINGLEUSE class factory
+// For MDI OLE server's the default mechanism is REGCLS_MULTIPLEUSE (bMultiInstance == FALSE), but here we pass TRUE
+// For more explanation see: "How to use single or multiple instances of an OLE object in MFC by using Visual C++" KB article:
+// http://support.microsoft.com/kb/141154
+
+// The skeleton for this macro snippet was copied from MFC 9.0's afxdisp.h instead of the KB article's example
+// Then I set the bMultiInstance to TRUE
+#define MY_IMPLEMENT_OLECREATE(class_name, external_name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
+	COleObjectFactory class_name::factory(class_name::guid, \
+		RUNTIME_CLASS(class_name), TRUE, _T(external_name)); \
+	AFX_COMDAT const GUID class_name::guid = \
+		{ l, w1, w2, { b1, b2, b3, b4, b5, b6, b7, b8 } }; \
+
 // {C7DCCC2E-1642-4a40-8060-51A7B9FAE488}
-IMPLEMENT_OLECREATE(CGMEOLEApp, "GME.Application", 0xC7DCCC2E, 0x1642, 0x4a40, 0x80, 0x60, 0x51, 0xA7, 0xB9, 0xFA, 0xE4, 0x88)
+MY_IMPLEMENT_OLECREATE(CGMEOLEApp, "GME.Application", 0xC7DCCC2E, 0x1642, 0x4a40, 0x80, 0x60, 0x51, 0xA7, 0xB9, 0xFA, 0xE4, 0x88)
 
 /////////////////////////////////////////////////////////////////////////////
 // CGMEOLEApp message handlers
