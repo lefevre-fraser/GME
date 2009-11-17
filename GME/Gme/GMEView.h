@@ -347,6 +347,7 @@ public:
 	void					SupressConnectionCheckAlert(void) { m_supressConnectionCheckAlert = true; };
 	HRESULT					DumpModelGeometryXML(LPCTSTR filePath);
 	void					SetConnectionCustomizeCursor(const CPoint& point);
+	bool					IsInstance(void) const;
 
 	virtual int				OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
 

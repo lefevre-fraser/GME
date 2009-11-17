@@ -4797,7 +4797,8 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						if (annotation)
 							newDecorator = annotation->GetDecorator(currentAspect->index);
 					}
-					if (selectedConnection != NULL) {	// Start edge moving operation if needed
+					if (selectedConnection != NULL && !IsInstance()) {	// customization not allowed in instances
+						// Start edge moving operation if needed
 						bool isPartFixed = false;
 						customizeConnectionEdgeIndex = selectedConnection->GetEdgeIndex(
 																		point,
@@ -7388,7 +7389,7 @@ void CGMEView::SetConnectionCustomizeCursor(const CPoint& point)
 		bool horizontalOrVerticalEdge = false;
 		bool isPartFixed;
 		int edgeIndex = selectedConnection->IsPathAt(point, connectionPartMoveType, horizontalOrVerticalEdge, isPartFixed);
-		if (edgeIndex >= 0 && !isPartFixed) {
+		if (edgeIndex >= 0 && !isPartFixed && !IsInstance()) {	// customization not allowed in instances
 			HCURSOR wantedCursor;
 			if (connectionPartMoveType == HorizontalEdgeMove) {
 				wantedCursor = LoadCursor(NULL, IDC_SIZEWE);
@@ -7414,6 +7415,11 @@ void CGMEView::SetConnectionCustomizeCursor(const CPoint& point)
 			}
 		}
 	}
+}
+
+bool CGMEView::IsInstance(void) const
+{
+	return !isType && isSubType;
 }
 
 void CGMEView::OnConncntxProperties()
