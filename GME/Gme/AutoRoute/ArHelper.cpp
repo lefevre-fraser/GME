@@ -422,12 +422,12 @@ bool IsLineMeetVLine(const CPoint& start, const CPoint& end, long y1, long y2, l
 bool IsLineClipRect(const CPoint& start, const CPoint& end, const CRect& rect)
 {
 	if( rect.PtInRect(start) || rect.PtInRect(end) )
-		return 1;
+		return true;
 
-	return IsLineMeetHLine(start, end, rect.left, rect.right -1, rect.top) ||
-		IsLineMeetHLine(start, end, rect.left, rect.right -1, rect.bottom - 1) ||
-		IsLineMeetVLine(start, end, rect.top, rect.bottom -1, rect.left) ||
-		IsLineMeetVLine(start, end, rect.top, rect.bottom -1, rect.right -1);
+	return IsLineMeetHLine(start, end, rect.left, rect.right - 1, rect.top) ||
+		   IsLineMeetHLine(start, end, rect.left, rect.right - 1, rect.bottom - 1) ||
+		   IsLineMeetVLine(start, end, rect.top, rect.bottom - 1, rect.left) ||
+		   IsLineMeetVLine(start, end, rect.top, rect.bottom - 1, rect.right - 1);
 }
 
 bool Intersect(long a1, long a2, long b1, long b2)

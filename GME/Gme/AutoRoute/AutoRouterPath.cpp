@@ -257,20 +257,31 @@ bool CAutoRouterPath::IsPathAt(const CPoint& point, long nearness) const
 	return GetEdgePosAt(point, nearness) != NULL;
 }
 
-bool CAutoRouterPath::IsPathClip(const CRect& r) const
+bool CAutoRouterPath::IsPathClip(const CRect& r, bool isStartOrEndRect) const
 {
 	CPoint a;
 	CPoint b;
 
 	POSITION pos = points.GetTailEdge(a, b);
+	int i = 0;
+	int numEdges = points.GetSize() - 1;
 	while( pos != NULL )
 	{
-		if( IsLineClipRect(a, b, r) )
+		if( isStartOrEndRect && ( i == 0 || i == numEdges - 1 ) )
+		{
+			if (IsPointIn(a, r, 1) &&
+				IsPointIn(b, r, 1))
+			{
+				return true;
+			}
+		}
+		else if( IsLineClipRect(a, b, r) )
 		{
 			return true;
 		}
 
 		points.GetPrevEdge(pos, a, b);
+		i++;
 	}
 
 	return false;

@@ -1421,14 +1421,12 @@ long CAutoRouterGraph::AutoRoute(long aspect)
 					while (boxiter != boxes.end())
 					{
 						const CRect boxRect = (*boxiter)->GetRect();
-						if ((startBoxRect.IsRectEmpty() || !IsRectIn(startBoxRect, boxRect)) &&
-							(endBoxRect.IsRectEmpty() || !IsRectIn(endBoxRect, boxRect)))
+						bool isStartOrEndRect = (!startBoxRect.IsRectEmpty() && IsRectIn(startBoxRect, boxRect) ||
+												 !endBoxRect.IsRectEmpty() && IsRectIn(endBoxRect, boxRect));
+						if (path->IsPathClip(boxRect, isStartOrEndRect))
 						{
-							if (path->IsPathClip(boxRect))
-							{
-								path->MarkPathCustomizationsForDeletion(aspect);
-								updated = -2;
-							}
+							path->MarkPathCustomizationsForDeletion(aspect);
+							updated = -2;
 						}
 
 						++boxiter;

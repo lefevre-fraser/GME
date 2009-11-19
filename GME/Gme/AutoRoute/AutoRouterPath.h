@@ -103,7 +103,7 @@ public:
 
 	bool IsEmpty(void) const;
 	bool IsPathAt(const CPoint& point, long nearness) const;
-	bool IsPathClip(const CRect& r) const;
+	bool IsPathClip(const CRect& r, bool isStartOrEndRect = false) const;
 
 	void SetAttributes(long attr);
 	long GetAttributes(void) const;
