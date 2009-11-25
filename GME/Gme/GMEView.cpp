@@ -504,7 +504,6 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_MESSAGE(WM_USER_ZOOM, OnZoom)
 	ON_MESSAGE(WM_USER_PANNREFRESH, OnPannRefresh)
 	ON_MESSAGE(WM_PANN_SCROLL, OnPannScroll)
-	ON_MESSAGE(WM_USER_DECOR_COMMITTRAN_REQ, OnDecoratorCommitTransactionRequest)
 	ON_MESSAGE(WM_USER_DECOR_VIEWREFRESH_REQ, OnDecoratorViewRefreshRequest)
 	ON_COMMAND(ID_VIEW_SHOWSELMODEL, OnShowSelectedModel)
 	ON_COMMAND(ID_VIEW_FOCUSBROWSER, OnFocusBrowser)
@@ -9508,21 +9507,6 @@ LRESULT CGMEView::OnPannScroll(WPARAM wParam, LPARAM lParam)
 	current.y += rely;
 	ScrollToPosition(current);				    // set upper left position
 	Invalidate();
-	return 0;
-}
-
-LRESULT CGMEView::OnDecoratorCommitTransactionRequest(WPARAM wParam, LPARAM lParam)
-{
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDecoratorCommitTransactionRequest() in " + path + name + "\r\n");
-	CommitTransaction();
-	inOpenedDecoratorTransaction = false;
-	shouldCommitOperation = false;
-	inElementDecoratorOperation = false;
-	objectInDecoratorOperation = NULL;
-	annotatorInDecoratorOperation = NULL;
-	isInConnectionCustomizeOperation = false;
-	isContextInitiatedOperation = false;
-	selectedContextConnection = NULL;
 	return 0;
 }
 

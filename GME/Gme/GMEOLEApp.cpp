@@ -502,6 +502,13 @@ void CGMEOLEApp::ShowFCO(LPDISPATCH mgaFCO, BOOL inParent)
 
 	PRECONDITION_ACTIVE_PROJECT
 
+	// JIRA GME-219, CGMEView::OnInitialUpdate would throw this anyway
+	long status;
+	COMTHROW(theApp.mgaProject->get_ProjectStatus(&status));
+	bool inTrans = (status & 0x08L) != 0;
+	if (inTrans)
+		COMTHROW(E_MGA_ALREADY_IN_TRANSACTION);
+
 	if (CGMEDoc::theInstance) {
 		CGMEDoc::theInstance->ShowObject(mgaFCO, inParent);
 	}

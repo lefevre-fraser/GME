@@ -567,7 +567,6 @@ protected:
 	afx_msg LRESULT OnZoom(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPannScroll(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPannRefresh(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnDecoratorCommitTransactionRequest(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnDecoratorViewRefreshRequest(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnCntxNamePositionSouth();
 	afx_msg void OnCntxNamePositionNorth();

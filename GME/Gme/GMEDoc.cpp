@@ -549,7 +549,12 @@ void CGMEDoc::ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent)
 {
 	// Be prepared for in-transaction and out-transaction scenarios
 	// mgaFCO must be transfered to current territory
-		
+
+	// Additional note (JIRA GME-219):
+	// In case this function is used through the IGMEOLEApp interface, the call won't be successful, because
+	// CMainFrame::CreateNewView will initiate a CGMEView::OnInitialUpdate (docTemplate->InitialUpdateFrame),
+	// which cannot handle an open transaction
+
 	bool isModel = true;
 	if(alienObject == NULL) {
 		return;
