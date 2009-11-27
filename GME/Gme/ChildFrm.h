@@ -18,21 +18,13 @@ public:
 	CChildFrame();
 
 // Attributes
-public:
-	CString title;
+protected:
+	CString m_title;
 	bool sendEvent;
-	CView *view;
+	CView* view;
 
 // Operations
 public:
-	virtual void OnUpdateFrameTitle(BOOL /* x */) { 
-		TCHAR szOld[256];
-		if (GetWindowText(szOld, _countof(szOld)) != title.GetLength() ||
-			lstrcmp(szOld, title) != 0) {
-			SetWindowText(title); 
-		}
-	};
-
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CChildFrame)
@@ -42,6 +34,12 @@ public:
 // Implementation
 public:
 	virtual ~CChildFrame();
+
+	CString GetTitle(void) const;
+	void SetTitle(const CString& title);
+	void SetSendEvent(bool sendEventParam);
+	void SetView(CView* viewParam);
+
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
@@ -58,6 +56,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnUpdateFrameTitle(BOOL bAddToTitle);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 

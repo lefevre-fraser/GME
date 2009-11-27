@@ -1070,7 +1070,7 @@ void CGMEDoc::closeActiveWnd()
 	CGMEView* v = CGMEView::GetActiveView();
 	if( !v) return;
 	v->alive = false;
-	v->frame->sendEvent = true;
+	v->frame->SetSendEvent(true);
 	v->frame->PostMessage(WM_CLOSE);
 #endif
 }
@@ -1082,7 +1082,7 @@ void CGMEDoc::closeAllWnd()
 #if !defined (ACTIVEXGMEVIEW)
 		CGMEView* v = (CGMEView *) GetNextView( pos);
 		v->alive = false;
-		v->frame->sendEvent = true;
+		v->frame->SetSendEvent(true);
 		v->frame->SendMessage(WM_CLOSE);
 #endif
 	}
@@ -1099,7 +1099,7 @@ void CGMEDoc::closeAllButActiveWnd()
 		if( v != actv)
 		{
 			v->alive = false;
-			v->frame->sendEvent = true;
+			v->frame->SetSendEvent(true);
 			v->frame->SendMessage(WM_CLOSE);
 		}
 #endif

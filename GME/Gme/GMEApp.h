@@ -143,9 +143,9 @@ public:
 	void OpenProject(const CString &conn);
 	void SaveProject(const CString &conn);
 	void CreateProject(const CString &metaname, const CString &dataconn);
-	void UpdateProjectName();		  
-	void AfterOpenOrCreateProject(const CString &conn); 
-	void UpdateComponentLists(bool restart_addons =  false); 
+	void UpdateProjectName();
+	void AfterOpenOrCreateProject(const CString &conn);
+	void UpdateComponentLists(bool restart_addons =  false);
 	void UpdateDynMenus(CMenu *filemenu);
 	void FindConstraintManager();
 	void RunComponent(const CString &progid);

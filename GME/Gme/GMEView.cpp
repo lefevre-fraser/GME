@@ -99,7 +99,7 @@ STDMETHODIMP CViewDriver::GlobalEvent(globalevent_enum event)
 		COMTHROW(view->currentModel->get_Status(&status));
 		if (status != OBJECT_EXISTS) {
 			view->alive = false;
-			view->frame->sendEvent = false;
+			view->frame->SetSendEvent(false);
 			view->frame->PostMessage(WM_CLOSE);
 		}
 		if (view->alive) {
@@ -118,7 +118,7 @@ STDMETHODIMP CViewDriver::GlobalEvent(globalevent_enum event)
 		while(pos) {
 			CGMEView *v = viewsToKill.GetNext(pos);
 			v->alive = false;
-			v->frame->sendEvent = false;
+			v->frame->SetSendEvent(false);
 			v->frame->PostMessage(WM_CLOSE);
 		}
 		viewsToKill.RemoveAll();
@@ -970,7 +970,7 @@ void CGMEView::OnInitialUpdate()
 	BeginWaitCursor();
 	CScrollZoomView::OnInitialUpdate();
 	frame = (CChildFrame *)(GetParentFrame());
-	frame->view = this;
+	frame->SetView(this);
 
 	dropTarget.Register(this);
 	EnableToolTips(TRUE);
@@ -2381,8 +2381,7 @@ void CGMEView::SetName()
 
 			RetrievePath();
 
-			frame->title = name + " - " + path;
-			frame->OnUpdateFrameTitle(true);
+			SetTitles();
 
 			SetNameProperty();
 		}
@@ -2944,7 +2943,12 @@ void CGMEView::SetNameProperty()
 	ctrl = frame->propBar.GetDlgItem(IDC_NAME);
 	ASSERT(ctrl);
 	ctrl->SetWindowText( name );
-	frame->title = name + " - " + path;
+	SetTitles();
+}
+
+void CGMEView::SetTitles(void)
+{
+	frame->SetTitle(name + " - " + path);
 	frame->OnUpdateFrameTitle(true);
 }
 
@@ -2986,8 +2990,7 @@ void CGMEView::SetTypeNameProperty()
 	}
 	RetrievePath();
 	ctrl->SetWindowText(txt);
-	frame->title = name + " - " + path;
-	frame->OnUpdateFrameTitle(true);
+	SetTitles();
 }
 
 void CGMEView::SetProperties()
@@ -4454,8 +4457,7 @@ void CGMEView::OnKillfocusNameProp()
 				CommitTransaction();
 				RetrievePath();
 				name = txt;
-				frame->title = name + " - " + path;
-				frame->OnUpdateFrameTitle(true);
+				SetTitles();
 			}
 			catch(hresult_exception &e) {
 				AbortTransaction(e.hr);
@@ -7047,7 +7049,7 @@ BOOL CGMEView::PreTranslateMessage(MSG* pMsg)
 void CGMEView::OnFileClose()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnFileClose() in "+path+name+"\r\n");
-	frame->sendEvent = true;
+	frame->SetSendEvent(true);
 	frame->PostMessage(WM_CLOSE);
 }
 

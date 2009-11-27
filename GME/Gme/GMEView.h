@@ -245,6 +245,7 @@ public:
 	void					SetProperties();
 	void					SetTypeNameProperty();
 	void					SetNameProperty();
+	void					SetTitles(void);
 	void					GetNameProperty(CString& txt);
 	void					SetKindNameProperty();
 	int						GetAspectProperty();

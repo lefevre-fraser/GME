@@ -42,6 +42,26 @@ CChildFrame::~CChildFrame()
 {
 }
 
+CString CChildFrame::GetTitle(void) const
+{
+	return m_title;
+}
+
+void CChildFrame::SetTitle(const CString& title)
+{
+	m_title = title;
+}
+
+void CChildFrame::SetSendEvent(bool sendEventParam)
+{
+	sendEventParam = sendEventParam;
+}
+
+void CChildFrame::SetView(CView* viewParam)
+{
+	view = viewParam;
+}
+
 BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying
@@ -128,6 +148,14 @@ void CChildFrame::OnSize(UINT nType, int cx, int cy)
 	// when the first childwnd is created
 	// when the childwnd's are maximized
 	theApp.UpdateMainTitle();
+}
+
+void CChildFrame::OnUpdateFrameTitle(BOOL bAddToTitle) {
+	TCHAR szOld[256];
+	if (GetWindowText(szOld, _countof(szOld)) != m_title.GetLength() ||
+		lstrcmp(szOld, m_title) != 0) {
+		SetWindowText(m_title); 
+	}
 }
 
 BOOL CChildFrame::PreTranslateMessage(MSG* pMsg)

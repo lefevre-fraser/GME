@@ -53,7 +53,7 @@ CComModule _Module;
 /////////////////////////////////////////////////////////////////////////////
 // CGMEApp
 
-BEGIN_MESSAGE_MAP(CGMEApp, CWinApp)
+BEGIN_MESSAGE_MAP(CGMEApp, CWinAppEx)
 	//{{AFX_MSG_MAP(CGMEApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
@@ -94,10 +94,10 @@ BEGIN_MESSAGE_MAP(CGMEApp, CWinApp)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_UNDO, OnUpdateEditUndo)
 	//}}AFX_MSG_MAP
 	// Standard file based document commands
-//	ON_COMMAND(ID_FILE_NEW, CWinApp::OnFileNew)
-//	ON_COMMAND(ID_FILE_OPEN, CWinApp::OnFileOpen)
+//	ON_COMMAND(ID_FILE_NEW, CWinAppEx::OnFileNew)
+//	ON_COMMAND(ID_FILE_OPEN, CWinAppEx::OnFileOpen)
 	// Standard print setup command
-	ON_COMMAND(ID_FILE_PRINT_SETUP, OnUniquePrintSetup) // CWinApp::OnFilePrintSetup)
+	ON_COMMAND(ID_FILE_PRINT_SETUP, OnUniquePrintSetup) // CWinAppEx::OnFilePrintSetup)
 	// MRU - most recently used project menu
 	ON_UPDATE_COMMAND_UI(ID_FILE_MRU_PRJ1, OnUpdateRecentProjectMenu)
 	ON_COMMAND_EX_RANGE(ID_FILE_MRU_PRJ1, ID_FILE_MRU_PRJ16, OnOpenRecentProject)
@@ -124,7 +124,7 @@ CGMEApp theApp;
 // CGMEApp construction
 
 CGMEApp::CGMEApp() :
-    m_RecentProjectList(0, "Recent Project List", "Project%d", 4)
+    m_RecentProjectList(0, "Recent Project List", "Project%d", 10)
   , m_compFilterOn( false)
 {
 	multipleView = false;
@@ -251,7 +251,7 @@ BOOL CGMEApp::InitInstance()
 		AfxSetAmbientActCtx(FALSE);
 	}
 
-	CWinApp::InitInstance();
+	CWinAppEx::InitInstance();
 
 	// CG: The following block was added by the Splash Screen component.
 	CGMECommandLineInfo cmdInfo;
@@ -436,7 +436,7 @@ BOOL CGMEApp::PreTranslateMessage(MSG* pMsg)
 	if (CSplashWnd::PreTranslateAppMessage(pMsg))
 		return TRUE;
 
-	return CWinApp::PreTranslateMessage(pMsg);
+	return CWinAppEx::PreTranslateMessage(pMsg);
 }
 
 
@@ -496,10 +496,10 @@ int CGMEApp::Run()
 
 	int retVal = 0;
 	if (bNoProtect) {
-		retVal = CWinApp::Run();
+		retVal = CWinAppEx::Run();
 	} else {
 		__try {
-			retVal = CWinApp::Run();
+			retVal = CWinAppEx::Run();
 		}
 		__except(ExceptionHandler::UnhandledExceptionFilterOfMain(GetExceptionCode(), GetExceptionInformation())) {
 			EmergencySave();
@@ -1088,7 +1088,7 @@ void CGMEApp::AfterOpenOrCreateProject(const CString &conn) {
 		m_RecentProjectList.Add(conn);
 		m_RecentProjectList.WriteList();
 		if (!CGMEDoc::theInstance) {
-			CWinApp::OnFileNew();
+			CWinAppEx::OnFileNew();
 		}
 // start autosave
 		if (autosaveEnabled) {
@@ -1642,7 +1642,7 @@ BOOL CGMEApp::SaveAllModified()
 int CGMEApp::ExitInstance() 
 {
 	CloseProject(false);
-	return CWinApp::ExitInstance();
+	return CWinAppEx::ExitInstance();
 }
 
 void CGMEApp::OnFileNew() 
