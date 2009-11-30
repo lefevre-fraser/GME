@@ -862,6 +862,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_Models( IGMEOLEColl** coll)
 	{
 		LPDISPATCH lpDisp = pThis->GetModels();
 		lpDisp->QueryInterface(IID_IGMEOLEColl, (LPVOID*)coll);
+		lpDisp->Release();
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -875,6 +876,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_MgaProject( IMgaProject** project)
 	{
 		LPDISPATCH lpDisp = pThis->GetMgaProject();
 		lpDisp->QueryInterface(IID_IMgaProject, (LPVOID*)project);
+		lpDisp->Release();
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -888,6 +890,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_OleIt( IGMEOLEIt** model)
 	{
 		LPDISPATCH lpDisp = pThis->GetOleIt();
 		lpDisp->QueryInterface(IID_IGMEOLEIt, (LPVOID*)model);
+		lpDisp->Release();
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
