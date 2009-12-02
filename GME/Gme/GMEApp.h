@@ -144,6 +144,7 @@ public:
 	void SaveProject(const CString &conn);
 	void CreateProject(const CString &metaname, const CString &dataconn);
 	void UpdateProjectName();
+	void UpdateMainFrameTitle(const CString& projName);
 	void AfterOpenOrCreateProject(const CString &conn);
 	void UpdateComponentLists(bool restart_addons =  false);
 	void UpdateDynMenus(CMenu *filemenu);

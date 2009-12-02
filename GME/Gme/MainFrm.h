@@ -164,6 +164,7 @@ protected:
 	afx_msg void OnUpdateWindowNewverticaltabgroup(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateWindowMovetoprevioustabgroup(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateWindowMovetonexttabgroup(CCmdUI* pCmdUI);
+	afx_msg LRESULT OnGetTabTooltip(WPARAM wp, LPARAM lp);
 
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

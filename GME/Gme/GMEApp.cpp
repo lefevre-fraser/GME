@@ -724,6 +724,17 @@ void CGMEApp::UpdateProjectName() {
 
 	if(CGMEDoc::theInstance)
 		CGMEDoc::theInstance->SetTitle(projectName);
+	UpdateMainFrameTitle(projectName);
+}
+
+void CGMEApp::UpdateMainFrameTitle(const CString& projName)
+{
+	CString projectName = projName;
+	CMDIChildWnd* pChild  = CMainFrame::theInstance->MDIGetActive();
+	if (pChild) {
+		CChildFrame* childFrame = (CChildFrame*)pChild;
+		projectName = childFrame->GetTitle() + " - " + childFrame->GetAppTitle();
+	}
 	CMainFrame::theInstance->UpdateTitle(projectName);
 }
 
@@ -2351,7 +2362,7 @@ void CGMEApp::OnEditProjectproperties()
 	if(dlg.DoModal() == IDOK) {
 		if(CGMEDoc::theInstance)
 			CGMEDoc::theInstance->SetTitle(projectName);
-		CMainFrame::theInstance->UpdateTitle(projectName);
+		UpdateMainFrameTitle(projectName);
 	}
 }
 
@@ -2862,8 +2873,8 @@ bool CGMEApp::SetWorkingDirectory( LPCTSTR pPath)
 
 void CGMEApp::UpdateMainTitle()
 {
-	if( CMainFrame::theInstance)
-		CMainFrame::theInstance->UpdateTitle( projectName);
+	if (CMainFrame::theInstance)
+		UpdateMainFrameTitle(projectName);
 }
 
 void CGMEApp::OnFocusBrowser()

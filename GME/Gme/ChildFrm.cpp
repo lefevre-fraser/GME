@@ -52,6 +52,16 @@ void CChildFrame::SetTitle(const CString& title)
 	m_title = title;
 }
 
+CString CChildFrame::GetAppTitle(void) const
+{
+	return m_appTitle;
+}
+
+void CChildFrame::SetAppTitle(const CString& appTitle)
+{
+	m_appTitle = appTitle;
+}
+
 void CChildFrame::SetSendEvent(bool sendEventParam)
 {
 	sendEventParam = sendEventParam;
@@ -178,4 +188,10 @@ BOOL CChildFrame::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CMDIChildWndEx::PreTranslateMessage(pMsg);
+}
+
+BOOL CChildFrame::GetToolbarButtonToolTipText(CMFCToolBarButton* toolBarButton, CString& toolTipText)
+{
+	toolTipText = m_appTitle;
+	return TRUE;
 }

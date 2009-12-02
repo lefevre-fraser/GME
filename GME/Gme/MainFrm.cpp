@@ -13,6 +13,7 @@
 #include "..\XmlBackEnd\svauto.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "ChildFrm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -129,6 +130,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW_NEWVERTICALTABGROUP, &CMainFrame::OnUpdateWindowNewverticaltabgroup)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW_MOVETOPREVIOUSTABGROUP, &CMainFrame::OnUpdateWindowMovetoprevioustabgroup)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW_MOVETONEXTTABGROUP, &CMainFrame::OnUpdateWindowMovetonexttabgroup)
+	ON_REGISTERED_MESSAGE(AFX_WM_ON_GET_TAB_TOOLTIP, &CMainFrame::OnGetTabTooltip)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -410,6 +412,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	mdiTabParams.m_bTabIcons = FALSE;						// set to TRUE to enable document icons on MDI tabs
 	mdiTabParams.m_bAutoColor = TRUE;						// set to FALSE to disable auto-coloring of MDI tabs
 	mdiTabParams.m_bDocumentMenu = TRUE;					// enable the document menu at the right edge of the tab area
+	mdiTabParams.m_bEnableTabSwap = TRUE;					// enable the user to change the tabs positions by dragging the tabs
+	mdiTabParams.m_bFlatFrame = TRUE;						// give each tab window has a flat frame
+	mdiTabParams.m_bTabCloseButton = FALSE;					// enable each tab window to display the Close button on the right edge of the tab.
+	mdiTabParams.m_bTabCustomTooltips = TRUE;				// enable the tabs to display tooltips.
+	mdiTabParams.m_tabLocation = CMFCTabCtrl::LOCATION_TOP;	// Specifies that the tabs labels are located at the top of the page
 	EnableMDITabbedGroups(TRUE, mdiTabParams);
 
 	CMFCToolBar::EnableQuickCustomization();
@@ -1475,6 +1482,28 @@ void CMainFrame::OnUpdateWindowMovetonexttabgroup(CCmdUI* pCmdUI)
 	{
 		pCmdUI->Enable(TRUE);
 	}
+}
+
+LRESULT CMainFrame::OnGetTabTooltip(WPARAM /*wParam*/, LPARAM lParam)
+{
+	CMFCTabToolTipInfo* pInfo = (CMFCTabToolTipInfo*)lParam;
+	ASSERT(pInfo != NULL);
+
+	if (pInfo)
+	{
+		CMFCBaseTabCtrl* tabControl = pInfo->m_pTabWnd;
+		ASSERT_VALID(tabControl);
+		if (tabControl->IsMDITab())
+		{
+			CWnd* tabPaneWnd = tabControl->GetTabWndNoWrapper(pInfo->m_nTabIndex);
+			CChildFrame* childFrame = dynamic_cast<CChildFrame*>(tabPaneWnd);
+			if (childFrame != NULL) {
+				pInfo->m_strText = childFrame->GetTitle() + " - " + childFrame->GetAppTitle();
+			}
+		}
+	}
+
+	return 0;
 }
 
 void CMainFrame::ShowNavigationAndModeToolbars(bool isVisible)

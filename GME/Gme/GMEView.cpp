@@ -2948,7 +2948,8 @@ void CGMEView::SetNameProperty()
 
 void CGMEView::SetTitles(void)
 {
-	frame->SetTitle(name + " - " + path);
+	frame->SetTitle(name);
+	frame->SetAppTitle(path);
 	frame->OnUpdateFrameTitle(true);
 }
 
@@ -6999,6 +7000,8 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 	}
 	TRACE("CGMEView::OnActivateView final false\n");
 	m_refreshpannwin = false;
+	if (bActivate)
+		theApp.UpdateMainTitle();
 	CScrollZoomView::OnActivateView(bActivate, pActivateView, pDeactiveView);
 }
 

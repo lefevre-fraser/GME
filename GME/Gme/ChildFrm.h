@@ -20,6 +20,7 @@ public:
 // Attributes
 protected:
 	CString m_title;
+	CString m_appTitle;
 	bool sendEvent;
 	CView* view;
 
@@ -37,6 +38,8 @@ public:
 
 	CString GetTitle(void) const;
 	void SetTitle(const CString& title);
+	CString GetAppTitle(void) const;
+	void SetAppTitle(const CString& appTitle);
 	void SetSendEvent(bool sendEventParam);
 	void SetView(CView* viewParam);
 
@@ -58,6 +61,7 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnUpdateFrameTitle(BOOL bAddToTitle);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual BOOL GetToolbarButtonToolTipText(CMFCToolBarButton* toolBarButton, CString& toolTipText);
 };
 
 /////////////////////////////////////////////////////////////////////////////
