@@ -374,5 +374,5 @@ void CGMEBrowser::OnCycleObjsInspGmeActiveBrowserCtrl(VARIANT_BOOL frwd)
 
 void CGMEBrowser::OnRootFolderNameChangedGmeActiveBrowserCtrl()
 {
-	theApp.UpdateProjectName();
+	theApp.UpdateProjectName(true);
 }

@@ -61,7 +61,6 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnUpdateFrameTitle(BOOL bAddToTitle);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	virtual BOOL GetToolbarButtonToolTipText(CMFCToolBarButton* toolBarButton, CString& toolTipText);
 };
 
 /////////////////////////////////////////////////////////////////////////////

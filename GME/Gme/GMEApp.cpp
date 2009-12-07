@@ -700,7 +700,7 @@ void CGMEApp::ChangedProjectConnStrings() {
 
 
 // throws exceptions!!
-void CGMEApp::UpdateProjectName() {
+void CGMEApp::UpdateProjectName(bool retrievePath) {
 	if( mgaProject == NULL ) {
 		projectName.Empty();
 	}
@@ -724,34 +724,59 @@ void CGMEApp::UpdateProjectName() {
 
 	if(CGMEDoc::theInstance)
 		CGMEDoc::theInstance->SetTitle(projectName);
-	UpdateMainFrameTitle(projectName);
+	UpdateMainFrameTitle(projectName, retrievePath);
 }
 
-void CGMEApp::UpdateMainFrameTitle(const CString& projName)
+void CGMEApp::UpdateMainFrameTitle(const CString& projName, bool retrievePath)
 {
 	CString projectName = projName;
+
+	if (retrievePath) {
+		CDocument* pDocument = CGMEDoc::theInstance;
+		if (pDocument) {
+			POSITION pos = pDocument->GetFirstViewPosition();
+			while (pos != NULL) {
+#if !defined(ACTIVEXGMEVIEW)
+				CGMEView* pView = (CGMEView*) pDocument->GetNextView(pos);
+				ASSERT(pView);
+				pView->RetrievePath();
+				pView->SetTitles();
+			}
+#endif
+		}
+	}
 	CMDIChildWnd* pChild  = CMainFrame::theInstance->MDIGetActive();
-	if (pChild) {
-		CChildFrame* childFrame = (CChildFrame*)pChild;
+	if (pChild && pChild->IsKindOf(RUNTIME_CLASS(CChildFrame))) {
+#if !defined (ACTIVEXGMEVIEW)
+		if (retrievePath) {
+			CGMEView* view = (CGMEView*)pChild->GetActiveView();
+			if (view) {
+				view->RetrievePath();
+				view->SetTitles();
+			}
+		}
+#endif
+		CChildFrame* childFrame = STATIC_DOWNCAST(CChildFrame, pChild);
 		projectName = childFrame->GetTitle() + " - " + childFrame->GetAppTitle();
 	}
 	CMainFrame::theInstance->UpdateTitle(projectName);
 }
 
-void CGMEApp::FindConstraintManager() {
-		CComPtr<IMgaComponents> comps;
-		COMTHROW( mgaProject->get_AddOnComponents(&comps));
-		MGACOLL_ITERATE(IMgaComponent, comps) {
-			CComBSTR name;
-			COMTHROW(MGACOLL_ITER->get_ComponentName(&name));
-			if(name == "ConstraintManager") {
-				mgaConstMgr = CComQIPtr<IMgaComponentEx>(MGACOLL_ITER); 
+void CGMEApp::FindConstraintManager()
+{
+	CComPtr<IMgaComponents> comps;
+	COMTHROW( mgaProject->get_AddOnComponents(&comps));
+	MGACOLL_ITERATE(IMgaComponent, comps) {
+		CComBSTR name;
+		COMTHROW(MGACOLL_ITER->get_ComponentName(&name));
+		if(name == "ConstraintManager") {
+			mgaConstMgr = CComQIPtr<IMgaComponentEx>(MGACOLL_ITER); 
 #pragma warning(disable: 4310) // cast truncates constant value
-				COMTHROW(mgaConstMgr->put_InteractiveMode(VARIANT_TRUE));
+			COMTHROW(mgaConstMgr->put_InteractiveMode(VARIANT_TRUE));
 #pragma warning(default: 4310) // cast truncates constant value
-				break;
-			}
-		} MGACOLL_ITERATE_END;
+			break;
+		}
+	} MGACOLL_ITERATE_END;
 }
 
 
@@ -901,60 +926,61 @@ void CGMEApp::UpdateComponentToolbar()
 }
 
 
-void CGMEApp::UpdateComponentLists(bool restart_addons) {
-		ClearDisabledComps();	
-		plugins .RemoveAll();
-		pluginTooltips.RemoveAll();
-		interpreters.RemoveAll();
-		interpreterTooltips.RemoveAll();
-		CStringArray tempaddons; tempaddons.Copy(addons);
-		addons.RemoveAll();
-		mgaConstMgr = NULL;
-		if(mgaMetaProject) {
-			CComBSTR b;
-			COMTHROW(mgaMetaProject->get_Name(&b));
-			CComPtr<IMgaRegistrar> reg;
-			COMTHROW(reg.CoCreateInstance(CComBSTR("Mga.MgaRegistrar")));
-			{
-				CComVariant v;
-				COMTHROW(reg->get_AssociatedComponents(b, COMPONENTTYPE_PLUGIN, REGACCESS_BOTH, &v));
-				CopyTo(v, plugins);
-			}
-			{
-				CComVariant v;
-				COMTHROW(reg->get_AssociatedComponents(b, COMPONENTTYPE_INTERPRETER, REGACCESS_BOTH, &v));
-				CopyTo(v, interpreters);
-			}
-			{
-				CComVariant v;
-				COMTHROW(reg->get_AssociatedComponents(b, COMPONENTTYPE_ADDON, REGACCESS_BOTH, &v));
+void CGMEApp::UpdateComponentLists(bool restart_addons)
+{
+	ClearDisabledComps();	
+	plugins .RemoveAll();
+	pluginTooltips.RemoveAll();
+	interpreters.RemoveAll();
+	interpreterTooltips.RemoveAll();
+	CStringArray tempaddons; tempaddons.Copy(addons);
+	addons.RemoveAll();
+	mgaConstMgr = NULL;
+	if(mgaMetaProject) {
+		CComBSTR b;
+		COMTHROW(mgaMetaProject->get_Name(&b));
+		CComPtr<IMgaRegistrar> reg;
+		COMTHROW(reg.CoCreateInstance(CComBSTR("Mga.MgaRegistrar")));
+		{
+			CComVariant v;
+			COMTHROW(reg->get_AssociatedComponents(b, COMPONENTTYPE_PLUGIN, REGACCESS_BOTH, &v));
+			CopyTo(v, plugins);
+		}
+		{
+			CComVariant v;
+			COMTHROW(reg->get_AssociatedComponents(b, COMPONENTTYPE_INTERPRETER, REGACCESS_BOTH, &v));
+			CopyTo(v, interpreters);
+		}
+		{
+			CComVariant v;
+			COMTHROW(reg->get_AssociatedComponents(b, COMPONENTTYPE_ADDON, REGACCESS_BOTH, &v));
 
-				CopyTo(v, addons);
-				if(restart_addons) {
-					bool redo = false;
-					if(tempaddons.GetSize() != addons.GetSize()) redo = true;
-					else {
-						for(int j = 0 ; j < tempaddons.GetSize(); j++) {
-							if(addons[j].Compare(tempaddons[j])) {
-								redo = true;
-								break;
-							}
+			CopyTo(v, addons);
+			if(restart_addons) {
+				bool redo = false;
+				if(tempaddons.GetSize() != addons.GetSize()) redo = true;
+				else {
+					for(int j = 0 ; j < tempaddons.GetSize(); j++) {
+						if(addons[j].Compare(tempaddons[j])) {
+							redo = true;
+							break;
 						}
 					}
-					if(redo && AfxMessageBox("AddOn configuration has changed.\nRestart addons?", MB_YESNO) == IDYES) {
-						COMTHROW(mgaProject->EnableAutoAddOns(VARIANT_FALSE));
+				}
+				if(redo && AfxMessageBox("AddOn configuration has changed.\nRestart addons?", MB_YESNO) == IDYES) {
+					COMTHROW(mgaProject->EnableAutoAddOns(VARIANT_FALSE));
 #pragma warning(disable: 4310) // cast truncates constant value
-						COMTHROW(mgaProject->EnableAutoAddOns(VARIANT_TRUE));
+					COMTHROW(mgaProject->EnableAutoAddOns(VARIANT_TRUE));
 #pragma warning(default: 4310) // cast truncates constant value
-					}
 				}
 			}
-			// access constraint mgr
-			FindConstraintManager();
-	
 		}
-		dynmenus_need_refresh = true;
-		UpdateComponentToolbar();
+		// access constraint mgr
+		FindConstraintManager();
+
+	}
+	dynmenus_need_refresh = true;
+	UpdateComponentToolbar();
 }
 
 void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
@@ -1051,7 +1077,8 @@ void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 
 
 // throws exceptions!!
-void CGMEApp::AfterOpenOrCreateProject(const CString &conn) {
+void CGMEApp::AfterOpenOrCreateProject(const CString &conn)
+{
 	UpdateProjectName();
 	if( mgaProject != NULL ) {
 		abort_on_close = false;
@@ -2871,10 +2898,10 @@ bool CGMEApp::SetWorkingDirectory( LPCTSTR pPath)
 	//return sc == 0;
 }
 
-void CGMEApp::UpdateMainTitle()
+void CGMEApp::UpdateMainTitle(bool retrievePath)
 {
 	if (CMainFrame::theInstance)
-		UpdateMainFrameTitle(projectName);
+		UpdateMainFrameTitle(projectName, retrievePath);
 }
 
 void CGMEApp::OnFocusBrowser()

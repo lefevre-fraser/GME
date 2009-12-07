@@ -189,9 +189,3 @@ BOOL CChildFrame::PreTranslateMessage(MSG* pMsg)
 
 	return CMDIChildWndEx::PreTranslateMessage(pMsg);
 }
-
-BOOL CChildFrame::GetToolbarButtonToolTipText(CMFCToolBarButton* toolBarButton, CString& toolTipText)
-{
-	toolTipText = m_appTitle;
-	return TRUE;
-}

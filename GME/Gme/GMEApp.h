@@ -143,8 +143,8 @@ public:
 	void OpenProject(const CString &conn);
 	void SaveProject(const CString &conn);
 	void CreateProject(const CString &metaname, const CString &dataconn);
-	void UpdateProjectName();
-	void UpdateMainFrameTitle(const CString& projName);
+	void UpdateProjectName(bool retrievePath = false);
+	void UpdateMainFrameTitle(const CString& projName, bool retrievePath = false);
 	void AfterOpenOrCreateProject(const CString &conn);
 	void UpdateComponentLists(bool restart_addons =  false);
 	void UpdateDynMenus(CMenu *filemenu);
@@ -163,7 +163,7 @@ public:
 	void ChangedProjectConnStrings();
 	void GetSettings();
 
-	void UpdateMainTitle();
+	void UpdateMainTitle(bool retrievePath = false);
 
 // Overrides
 	// ClassWizard generated virtual function overrides

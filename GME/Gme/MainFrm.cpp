@@ -1496,8 +1496,8 @@ LRESULT CMainFrame::OnGetTabTooltip(WPARAM /*wParam*/, LPARAM lParam)
 		if (tabControl->IsMDITab())
 		{
 			CWnd* tabPaneWnd = tabControl->GetTabWndNoWrapper(pInfo->m_nTabIndex);
-			CChildFrame* childFrame = dynamic_cast<CChildFrame*>(tabPaneWnd);
-			if (childFrame != NULL) {
+			if (tabPaneWnd->IsKindOf(RUNTIME_CLASS(CChildFrame))) {
+				CChildFrame* childFrame = STATIC_DOWNCAST(CChildFrame, tabPaneWnd);
 				pInfo->m_strText = childFrame->GetTitle() + " - " + childFrame->GetAppTitle();
 			}
 		}
