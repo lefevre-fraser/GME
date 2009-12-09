@@ -430,9 +430,9 @@ void CAutoRouterPath::ApplyCustomizationsAfterAutoConnectPointsAndStuff(void)
 	if (customPathData.empty())
 		return;
 
+	int numEdges = points.GetSize() - 1;
 	if (isAutoRoutingOn) {
 		std::vector<CustomPathData>::iterator ii = customPathData.begin();
-		int numEdges = points.GetSize() - 1;
 		while (ii != customPathData.end()) {
 			if ((*ii).GetEdgeCount() != numEdges &&
 				(*ii).GetType() == SimpleEdgeDisplacement)
@@ -458,17 +458,38 @@ void CAutoRouterPath::ApplyCustomizationsAfterAutoConnectPointsAndStuff(void)
 				if ((*ii).GetType() == SimpleEdgeDisplacement) {
 					RoutingDirection dir = GetDir(*endpoint - *startpoint);
 					bool isHorizontalVar = (IsHorizontal(dir) != 0);
+					bool doNotApply = false;
 					if ((*ii).IsHorizontalOrVertical() == isHorizontalVar) {
-						if ((*ii).IsHorizontalOrVertical()) {
-							startpoint->y = (*ii).GetY();
-							endpoint->y = (*ii).GetY();
-						} else {
-							startpoint->x = (*ii).GetX();
-							endpoint->x = (*ii).GetX();
+						int xToSet = (*ii).GetX();
+						int yToSet = (*ii).GetY();
+						// Check if the edge displacement at the end of the path
+						// is still within the boundary limits of the start or the end box
+						if (currEdgeIndex == 0 || currEdgeIndex == numEdges - 1) {
+							CRect startRect = startport->GetRect();
+							CRect endRect = endport->GetRect();
+							int minLimit = (currEdgeIndex == 0 ?
+								((*ii).IsHorizontalOrVertical() ? startRect.top : startRect.left) :
+								((*ii).IsHorizontalOrVertical() ? endRect.top : endRect.left));
+							int maxLimit = (currEdgeIndex == 0 ?
+								((*ii).IsHorizontalOrVertical() ? startRect.bottom : startRect.right) :
+								((*ii).IsHorizontalOrVertical() ? endRect.bottom : endRect.right));
+							int valueToSet = (*ii).IsHorizontalOrVertical() ? yToSet : xToSet;
+							if (valueToSet < minLimit || valueToSet > maxLimit)
+								doNotApply = true;
 						}
-					} else {
+						if (!doNotApply) {
+							if ((*ii).IsHorizontalOrVertical()) {
+								startpoint->y = yToSet;
+								endpoint->y = yToSet;
+							} else {
+								startpoint->x = xToSet;
+								endpoint->x = xToSet;
+							}
+						}
+					}
+					if ((*ii).IsHorizontalOrVertical() != isHorizontalVar || doNotApply) {
 						// something went wrong, invalid data: direction (horz/vert) not match
-						ASSERT(false);
+//						ASSERT(false);
 						pathDataToDelete.push_back(*ii);
 						ii = customPathData.erase(ii);
 						increment = false;
