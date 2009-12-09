@@ -1410,7 +1410,7 @@ long CAutoRouterGraph::AutoRoute(long aspect)
 		{
 			CAutoRouterPath* path = *pathiter;
 
-//			if (path->IsAutoRouted()) {	// uncomment this if you don't want the check to run for fully customizable connections
+			if (path->IsAutoRouted()) {	// comment this if you want the check to run for fully customizable connections
 				if (path->AreTherePathCustomizations())
 				{
 					const CRect startBoxRect = path->GetStartBox();
@@ -1432,7 +1432,7 @@ long CAutoRouterGraph::AutoRoute(long aspect)
 						++boxiter;
 					}
 				}
-//			}
+			}
 
 			++pathiter;
 		}
