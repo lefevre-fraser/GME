@@ -22,11 +22,11 @@ public:
 
 	CComPtr<IMgaProject> m_ccpProject;
 	CComPtr<IMgaTerritory> m_ccpTerritory;
-	CComPtr<IMgaComponentEx> m_ccpConstMgr;
 
 
 	void CreateContext(IMgaEventSink& rMgaEventSink,LPUNKNOWN pMgaProject);
 	void CloseContext();
+	CComPtr<IMgaComponentEx> FindConstraintManager();
 	
 	bool AbortTransaction();
 	bool CommitTransaction();

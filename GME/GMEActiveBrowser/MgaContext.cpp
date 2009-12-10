@@ -109,9 +109,6 @@ void CMgaContext::CloseContext()
 	// Disabling Transactions	
 	SetTransactionState(0);
 	
-	// Releasing Constraint Manager
-	m_ccpConstMgr.Release();
-
 	// Deleting Territory
 	if(m_ccpTerritory.p!=NULL)
 	{
@@ -136,6 +133,12 @@ void CMgaContext::CreateContext(IMgaEventSink &rEventSink,LPUNKNOWN pMgaProject)
 	// Creating Territory
 	COMTHROW( m_ccpProject->CreateTerritory(&rEventSink,&m_ccpTerritory,NULL) );
 
+	SetTransactionState(0);
+}
+
+CComPtr<IMgaComponentEx> CMgaContext::FindConstraintManager()
+{
+	CComPtr<IMgaComponentEx> constrMgr;
 	// Finding constraint manager among the addons
 	CComPtr<IMgaComponents> comps;
 	COMTHROW( m_ccpProject->get_AddOnComponents(&comps));
@@ -145,12 +148,12 @@ void CMgaContext::CreateContext(IMgaEventSink &rEventSink,LPUNKNOWN pMgaProject)
 		COMTHROW(MGACOLL_ITER->get_ComponentName(&name));
 		if(name == "ConstraintManager") 
 		{
-			m_ccpConstMgr = CComQIPtr<IMgaComponentEx>(MGACOLL_ITER); 
+			constrMgr = CComQIPtr<IMgaComponentEx>(MGACOLL_ITER); 
 			break;
 		}
 	} MGACOLL_ITERATE_END;
-	
-	SetTransactionState(0);
+
+	return constrMgr;
 }
 
 void CMgaContext::SetEventTransactionMode(bool bOnOff)

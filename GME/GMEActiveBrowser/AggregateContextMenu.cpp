@@ -432,12 +432,15 @@ void CAggregateContextMenu::OnEditDelete()
 
 void CAggregateContextMenu::OnCheckAllConstraint()
 {
-	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
-	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
+	CGMEActiveBrowserApp* pApp = (CGMEActiveBrowserApp*)AfxGetApp();
+	CMgaContext* pMgaContext = &pApp->m_CurrentProject.m_MgaContext;
 
-	// Invoke constraint manager
-	pMgaContext->m_ccpConstMgr->ObjectsInvokeEx(pMgaContext->m_ccpProject,NULL,NULL,GME_BROWSER_START);
-
+	CComPtr<IMgaComponentEx> constrMgr;
+	if (pMgaContext)
+		constrMgr = pMgaContext->FindConstraintManager();
+	ASSERT(constrMgr);
+	if (constrMgr)	// Invoke constraint manager
+		COMTHROW(constrMgr->ObjectsInvokeEx(pMgaContext->m_ccpProject, NULL, NULL, GME_BROWSER_START));
 }
 
 void CAggregateContextMenu::OnInterpret()
@@ -644,12 +647,11 @@ void CAggregateContextMenu::CreateForSingleItem()
 	VERIFY(LoadMenu(CG_IDR_POPUP_AGGREGATE_PROPERTY_PAGE_SINGLE_ITEM));
 
 	// Check constraint
-	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
-	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
-	if(!pMgaContext->m_ccpConstMgr)
-	{
-		EnableMenuItem(ID_POPUP_CONSTRAINTS_CHECK,MF_GRAYED);
-	}
+	CGMEActiveBrowserApp* pApp = (CGMEActiveBrowserApp*)AfxGetApp();
+	CMgaContext* pMgaContext = &pApp->m_CurrentProject.m_MgaContext;
+	CComPtr<IMgaComponentEx> constrMgr = pMgaContext->FindConstraintManager();
+	if (!constrMgr)
+		EnableMenuItem(ID_POPUP_CONSTRAINTS_CHECK, MF_GRAYED);
 
 	// Setting Paste
 	COleDataObject OleDataObj;
@@ -1093,10 +1095,9 @@ void CAggregateContextMenu::CreateForAll()
 	}
 
 	// Check all constraint
-	if(!pMgaContext->m_ccpConstMgr)
-	{
-		EnableMenuItem(ID_POPUP_SORT_CONSTRAINTS_CHECKALL,MF_GRAYED);
-	}
+	CComPtr<IMgaComponentEx> constrMgr = pMgaContext->FindConstraintManager();
+	if (!constrMgr)
+		EnableMenuItem(ID_POPUP_SORT_CONSTRAINTS_CHECKALL, MF_GRAYED);
 
 	// Sort options
 	CheckMenuRadioItem(ID_POPUP_SORT_NAME,
@@ -1109,19 +1110,25 @@ void CAggregateContextMenu::CreateForAll()
 
 void CAggregateContextMenu::OnCheckConstraint()
 {
-	HTREEITEM hItem=m_pParent->m_TreeAggregate.GetSelectedItem();
-	LPUNKNOWN pUnknown=NULL;
+	CGMEActiveBrowserApp* pApp = (CGMEActiveBrowserApp*)AfxGetApp();
+	CMgaContext* pMgaContext = &pApp->m_CurrentProject.m_MgaContext;
 
-	if(m_pParent->m_TreeAggregate.m_MgaMap.LookupObjectUnknown(hItem,pUnknown))
+	CComPtr<IMgaComponentEx> constrMgr;
+	if (pMgaContext)
+		constrMgr = pMgaContext->FindConstraintManager();
+	if (!constrMgr)
+		return;
+
+	HTREEITEM hItem = m_pParent->m_TreeAggregate.GetSelectedItem();
+	LPUNKNOWN pUnknown = NULL;
+
+	if (m_pParent->m_TreeAggregate.m_MgaMap.LookupObjectUnknown(hItem, pUnknown))
 	{
 		CComQIPtr<IMgaObject> ccpMgaObject(pUnknown);
-		if(ccpMgaObject!=NULL)
+		if (ccpMgaObject != NULL)
 		{
-			CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
-			CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
-				
-			pMgaContext->m_ccpConstMgr->ObjectsInvokeEx(pMgaContext->m_ccpProject,ccpMgaObject,NULL,GME_BROWSER_START);
-
+			// Invoke constraint manager
+			COMTHROW(constrMgr->ObjectsInvokeEx(pMgaContext->m_ccpProject, ccpMgaObject, NULL, GME_BROWSER_START));
 		}
 	}
 }

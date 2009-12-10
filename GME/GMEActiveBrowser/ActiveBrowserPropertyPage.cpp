@@ -1574,12 +1574,18 @@ void CAggregatePropertyPage::AttachLibrary()
 					CComQIPtr<IMgaFolder> ccpFolder(pUnknown);
 					if(!ccpFolder)return;
 					
-					CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
-					CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
+					CGMEActiveBrowserApp* pApp = (CGMEActiveBrowserApp*)AfxGetApp();
+					CMgaContext* pMgaContext = &pApp->m_CurrentProject.m_MgaContext;
 					
 					// toggle off Constraint Manager
-					if( pMgaContext && pMgaContext->m_ccpConstMgr) COMTHROW( pMgaContext->m_ccpConstMgr->Enable( false));
-					if( pMgaContext && pMgaContext->m_ccpProject)  COMTHROW( pMgaContext->m_ccpProject->Notify( APPEVENT_LIB_ATTACH_BEGIN));
+					CComPtr<IMgaComponentEx> constrMgr;
+					if (pMgaContext) {
+						constrMgr = pMgaContext->FindConstraintManager();
+						if (constrMgr)
+							COMTHROW(constrMgr->Enable(false));
+						if (pMgaContext->m_ccpProject)
+							COMTHROW(pMgaContext->m_ccpProject->Notify(APPEVENT_LIB_ATTACH_BEGIN));
+					}
 
 					pMgaContext->BeginTransaction(FALSE);
 
@@ -1587,8 +1593,12 @@ void CAggregatePropertyPage::AttachLibrary()
 					pMgaContext->CommitTransaction();
 					
 					// toggle back Constraint Manager (done only after commit, so that it will not catch the events happened in the transaction)
-					if( pMgaContext && pMgaContext->m_ccpConstMgr) COMTHROW( pMgaContext->m_ccpConstMgr->Enable( true));
-					if( pMgaContext && pMgaContext->m_ccpProject)  COMTHROW( pMgaContext->m_ccpProject->Notify( APPEVENT_LIB_ATTACH_END));
+					if (pMgaContext) {
+						if (constrMgr)
+							COMTHROW(constrMgr->Enable(true));
+						if(pMgaContext->m_ccpProject)
+							COMTHROW(pMgaContext->m_ccpProject->Notify(APPEVENT_LIB_ATTACH_END));
+					}
 
 					CComBSTR msg( L"Library attached: ");
 					msg.Append( dlg.m_strConnString); msg.Append( L" (Note: Constraint Manager was turned off during attach to speed it up.)");

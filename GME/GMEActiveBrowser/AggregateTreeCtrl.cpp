@@ -1231,12 +1231,19 @@ BOOL CAggregateTreeCtrl::DoDropWithoutChecking(eDragOperation doDragOp, COleData
 {
 	MGATREECTRL_LOGEVENT("CAggregateTreeCtrl::DoDropWithoutChecking\r\n");
 
-	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
-	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
+	CGMEActiveBrowserApp* pApp = (CGMEActiveBrowserApp*)AfxGetApp();
+	CMgaContext* pMgaContext = &pApp->m_CurrentProject.m_MgaContext;
 
-	if( pMgaContext && pMgaContext->m_ccpConstMgr) COMTHROW( pMgaContext->m_ccpConstMgr->Enable( false));
+	CComPtr<IMgaComponentEx> constrMgr;
+	if (pMgaContext)
+		constrMgr = pMgaContext->FindConstraintManager();
+	if (constrMgr)
+		COMTHROW(constrMgr->Enable(false));
 	BOOL res = DoDrop( doDragOp, pDataObject, point);
-	if( pMgaContext && pMgaContext->m_ccpConstMgr) COMTHROW( pMgaContext->m_ccpConstMgr->Enable( true));
+	if (constrMgr) {
+		COMTHROW(constrMgr->Enable(true));
+//		constrMgr.Release();
+	}
 
 	return res;
 }
