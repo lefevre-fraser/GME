@@ -81,7 +81,7 @@ namespace Util
 	Exception& Exception::operator << ( int  pint)
 	{
 		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%d", pint);
+		sprintf_s( chBuffer, "%d", pint);
 		addParameter( std::string( chBuffer ) );
 		return *this;
 	}
@@ -89,7 +89,7 @@ namespace Util
 	Exception& Exception::operator << ( long plong)
 	{
 		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%d", plong);
+		sprintf_s( chBuffer, "%d", plong);
 		addParameter( std::string( chBuffer ) );
 		return *this;
 	}
@@ -103,7 +103,7 @@ namespace Util
 	Exception& Exception::operator << ( float pfloat)
 	{
 		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%f", pfloat );
+		sprintf_s( chBuffer, "%f", pfloat );
 		addParameter( std::string( chBuffer ) );
 		return *this;
 	}
@@ -111,7 +111,7 @@ namespace Util
 	Exception& Exception::operator << ( double pdoub)
 	{
 		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%f", pdoub );
+		sprintf_s( chBuffer, "%f", pdoub );
 		addParameter( std::string( chBuffer ) );
 		return *this;
 	}
