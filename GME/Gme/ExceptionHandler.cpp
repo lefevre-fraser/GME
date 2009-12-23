@@ -443,6 +443,8 @@ void ExceptionHandler::UnhandledExceptionFilterCore (const char* msg, PEXCEPTION
 	m_callCount++;
 
 	if (m_callCount <= 2) {	// avoid stack overflow/infinite loop
+		if (::GetCapture() != NULL)	// If the crash was during an in-place edit or any other operation which issues SetCapture, then release it!
+			::ReleaseCapture();
 		int retVal =
 			AfxMessageBox("GME encountered an error! Do you want to generate a crash dump file?\n\n"
 						  "The error can be analyzed with the help of this crash dump (Microsoft MiniDump) report file, "
@@ -454,7 +456,7 @@ void ExceptionHandler::UnhandledExceptionFilterCore (const char* msg, PEXCEPTION
 						  "\"%OSDir%\\Users\\%UserName%\\AppData\\Roaming\\GME\" folder on Windows Vista or Windows 7. "
 						  "You can send the recent crash dump(s) to the following e-mail address: gme-supp@isis.vanderbilt.edu",
 						  MB_ICONEXCLAMATION | MB_YESNO);
-		if (retVal = IDYES) {
+		if (retVal == IDYES) {
 			LoadDbgHelpDll();
 			GenerateUserStreamData(msg, pExp);
 //			TRACE0(m_UserCrashData);
