@@ -320,6 +320,7 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 		if (success != FALSE)
 			retVal = inPlaceEditDlg.DoModal();
 
+		cWnd->SetFocus();	// Give back focus to GME (JIRA GME-226)
 		if (!isPermanentCWnd)
 			cWnd->Detach();
 
