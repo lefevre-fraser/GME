@@ -4559,15 +4559,16 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 				if (inElementDecoratorOperation) {
 					CComPtr<IMgaElementDecorator> newDecorator;
 					if (decoratorOrAnnotator) {
-						ASSERT(objectInDecoratorOperation != NULL);
-						CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
-						if (pAspect != NULL) {
-							CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
-							newDecorator = newDecorator2;
+						if (objectInDecoratorOperation != NULL) {
+							CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+							if (pAspect != NULL) {
+								CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
+								newDecorator = newDecorator2;
+							}
 						}
 					} else {
-						ASSERT(annotatorInDecoratorOperation != NULL);
-						newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
+						if (annotatorInDecoratorOperation != NULL)
+							newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
 					}
 					if (newDecorator) {
 						CClientDC transformDC(this);
@@ -4747,15 +4748,16 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 				if (inElementDecoratorOperation) {
 					CComPtr<IMgaElementDecorator> newDecorator;
 					if (decoratorOrAnnotator) {
-						ASSERT(objectInDecoratorOperation != NULL);
-						CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
-						if (pAspect != NULL) {
-							CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
-							newDecorator = newDecorator2;
+						if (objectInDecoratorOperation != NULL) {
+							CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+							if (pAspect != NULL) {
+								CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
+								newDecorator = newDecorator2;
+							}
 						}
 					} else {
-						ASSERT(annotatorInDecoratorOperation != NULL);
-						newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
+						if (annotatorInDecoratorOperation != NULL)
+							newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
 					}
 					if (newDecorator) {
 						CClientDC transformDC(this);
@@ -8894,15 +8896,18 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 		if (inElementDecoratorOperation) {
 			CComPtr<IMgaElementDecorator> newDecorator;
 			if (decoratorOrAnnotator) {
-				ASSERT(objectInDecoratorOperation != NULL);
-				CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
-				if (pAspect != NULL) {
-					CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
-					newDecorator = newDecorator2;
+				// It can be NULL: if we start a label edit operation and we double click on another label
+				// then in-spite of the modal behavior of the in-place dialog GMEView gets MouseMoves
+				if (objectInDecoratorOperation != NULL) {
+					CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+					if (pAspect != NULL) {
+						CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
+						newDecorator = newDecorator2;
+					}
 				}
 			} else {
-				ASSERT(annotatorInDecoratorOperation != NULL);
-				newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
+				if (annotatorInDecoratorOperation != NULL)
+					newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
 			}
 			if (newDecorator) {
 				CClientDC transformDC(this);
