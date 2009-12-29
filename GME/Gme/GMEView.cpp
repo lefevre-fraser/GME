@@ -4332,6 +4332,11 @@ BOOL CGMEView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 	if (IsCursorChangedByDecorator() || isCursorChangedByEdgeCustomize)
 		return TRUE;
 
+	if (nHitTest != HTCLIENT) {
+		SetCursor(editCursor);	// JIRA GME-222
+		return FALSE;
+	}
+
 	if( GetFocus() != this )
 		SetCursor(editCursor);
 	else {
@@ -8960,6 +8965,8 @@ void CGMEView::OnNcMouseMove(UINT nHitTest, CPoint point)
 {
 	if (nHitTest != HTCLIENT && !IsInElementDecoratorOperation() && IsCursorChangedByDecorator())
 		SetEditCursor();
+	else
+		CScrollZoomView::OnNcMouseMove(nHitTest, point);
 }
 
 void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
