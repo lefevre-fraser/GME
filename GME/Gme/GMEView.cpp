@@ -549,15 +549,15 @@ CGMEView::CGMEView()
 
 	drawGrid						= false;
 
-	isCursorChangedByDecorator		= false;
-	originalRect.SetRectEmpty();
-	inElementDecoratorOperation		= false;
-	inOpenedDecoratorTransaction	= false;
-	isContextInitiatedOperation		= false;
-	shouldCommitOperation			= false;
-	decoratorOrAnnotator			= true;
-	objectInDecoratorOperation		= NULL;
-	annotatorInDecoratorOperation	= NULL;
+	SetIsCursorChangedByDecorator	(false);
+	SetOriginalRectEmpty			();
+	SetInElementDecoratorOperation	(false);
+	SetInOpenedDecoratorTransaction	(false);
+	SetIsContextInitiatedOperation	(false);
+	SetShouldCommitOperation		(false);
+	SetDecoratorOrAnnotator			(true);
+	SetObjectInDecoratorOperation	(NULL);
+	SetAnnotatorInDecoratorOperation(NULL);
 	selectedObjectOfContext			= NULL;
 	selectedAnnotationOfContext		= NULL;
 	selectedConnection				= NULL;
@@ -4329,7 +4329,7 @@ BOOL CGMEView::OnEraseBkgnd(CDC* pDC)
 
 BOOL CGMEView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
-	if (isCursorChangedByDecorator || isCursorChangedByEdgeCustomize)
+	if (IsCursorChangedByDecorator() || isCursorChangedByEdgeCustomize)
 		return TRUE;
 
 	if( GetFocus() != this )
@@ -4387,31 +4387,31 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 					OnPrepareDC(&transformDC);
 					retVal = newDecorator->DropFile((ULONGLONG)p_hDropInfo, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
 					if (retVal == S_DECORATOR_EVENT_HANDLED) {
-						if (inOpenedDecoratorTransaction) {
-							if (shouldCommitOperation) {
+						if (IsInOpenedDecoratorTransaction()) {
+							if (ShouldCommitOperation()) {
 								CommitTransaction();
-								shouldCommitOperation = false;
-								objectInDecoratorOperation = NULL;
-								annotatorInDecoratorOperation = NULL;
-								inOpenedDecoratorTransaction = false;
-								isContextInitiatedOperation = false;
-								inElementDecoratorOperation = false;
+								SetShouldCommitOperation(false);
+								SetObjectInDecoratorOperation(NULL);
+								SetAnnotatorInDecoratorOperation(NULL);
+								SetInOpenedDecoratorTransaction(false);
+								SetIsContextInitiatedOperation(false);
+								SetInElementDecoratorOperation(false);
 								return;
-							} else if (!inElementDecoratorOperation) {
+							} else if (!IsInElementDecoratorOperation()) {
 								AbortTransaction(S_OK);
-								inOpenedDecoratorTransaction = false;
-								isContextInitiatedOperation = false;
-								inElementDecoratorOperation = false;
+								SetInOpenedDecoratorTransaction(false);
+								SetIsContextInitiatedOperation(false);
+								SetInElementDecoratorOperation(false);
 								return;
 							}
 							if (::GetCapture() != NULL)
 								::ReleaseCapture();
-							inOpenedDecoratorTransaction = false;
-							isContextInitiatedOperation = false;
+							SetInOpenedDecoratorTransaction(false);
+							SetIsContextInitiatedOperation(false);
 						} else {
-							if (inElementDecoratorOperation) {
-								if (decoratorOrAnnotator)
-									objectInDecoratorOperation = object;
+							if (IsInElementDecoratorOperation()) {
+								if (IsDecoratorOrAnnotator())
+									SetObjectInDecoratorOperation(object);
 								else
 									ASSERT(false);
 							}
@@ -4424,16 +4424,16 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 						CancelDecoratorOperation();
 						COMTHROW(retVal);
 					}
-					if (inElementDecoratorOperation) {
-						if (decoratorOrAnnotator)
-							objectInDecoratorOperation = object;
+					if (IsInElementDecoratorOperation()) {
+						if (IsDecoratorOrAnnotator())
+							SetObjectInDecoratorOperation(object);
 						else
 							ASSERT(false);
 					}
 				}
 			}
 		}
-		if (inElementDecoratorOperation)
+		if (IsInElementDecoratorOperation())
 			return;
 		if (retVal == S_DECORATOR_EVENT_HANDLED)
 			return;
@@ -4556,36 +4556,38 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 				if (object == NULL)
 					object = self ? self->FindObject(point, true, true) : 0;
 
-				if (inElementDecoratorOperation) {
+				if (IsInElementDecoratorOperation()) {
 					CComPtr<IMgaElementDecorator> newDecorator;
-					if (decoratorOrAnnotator) {
-						if (objectInDecoratorOperation != NULL) {
-							CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+					if (IsDecoratorOrAnnotator()) {
+						CGuiObject* objInOp = GetObjectInDecoratorOperation();
+						if (objInOp != NULL) {
+							CGuiAspect* pAspect = objInOp->GetCurrentAspect();
 							if (pAspect != NULL) {
 								CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 								newDecorator = newDecorator2;
 							}
 						}
 					} else {
-						if (annotatorInDecoratorOperation != NULL)
-							newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
+						CGuiAnnotator* annInOp = GetAnnotatorInDecoratorOperation();
+						if (annInOp != NULL)
+							newDecorator = annInOp->GetDecorator(currentAspect->index);
 					}
 					if (newDecorator) {
 						CClientDC transformDC(this);
 						OnPrepareDC(&transformDC);
 						HRESULT retVal = newDecorator->MouseLeftButtonUp(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
 						if (retVal == S_DECORATOR_EVENT_HANDLED) {
-							if (inOpenedDecoratorTransaction) {
-								if (shouldCommitOperation) {
+							if (IsInOpenedDecoratorTransaction()) {
+								if (ShouldCommitOperation()) {
 									CommitTransaction();
-									shouldCommitOperation = false;
-									objectInDecoratorOperation = NULL;
-									annotatorInDecoratorOperation = NULL;
+									SetShouldCommitOperation(false);
+									SetObjectInDecoratorOperation(NULL);
+									SetAnnotatorInDecoratorOperation(NULL);
 								} else {
 									AbortTransaction(S_OK);
 								}
-								inOpenedDecoratorTransaction = false;
-								isContextInitiatedOperation = false;
+								SetInOpenedDecoratorTransaction(false);
+								SetIsContextInitiatedOperation(false);
 							}
 							break;
 						} else if (retVal != S_OK &&
@@ -4662,25 +4664,25 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 							if (mouseButtonUpAfterDragDrop) {
 								doNotDeselectAfterInPlaceEdit = true;
 
-								if (inOpenedDecoratorTransaction) {
-									if (shouldCommitOperation) {
+								if (IsInOpenedDecoratorTransaction()) {
+									if (ShouldCommitOperation()) {
 										CommitTransaction();
-										shouldCommitOperation = false;
-										objectInDecoratorOperation = NULL;
-										annotatorInDecoratorOperation = NULL;
-										inOpenedDecoratorTransaction = false;
-										isContextInitiatedOperation = false;
-									} else if (!inElementDecoratorOperation) {
+										SetShouldCommitOperation(false);
+										SetObjectInDecoratorOperation(NULL);
+										SetAnnotatorInDecoratorOperation(NULL);
+										SetInOpenedDecoratorTransaction(false);
+										SetIsContextInitiatedOperation(false);
+									} else if (!IsInElementDecoratorOperation()) {
 										AbortTransaction(S_OK);
-										inOpenedDecoratorTransaction = false;
-										isContextInitiatedOperation = false;
+										SetInOpenedDecoratorTransaction(false);
+										SetIsContextInitiatedOperation(false);
 									} else {
 										if (::GetCapture() != NULL)
 											::ReleaseCapture();
 									}
-									inElementDecoratorOperation = false;
-									inOpenedDecoratorTransaction = false;
-									isContextInitiatedOperation = false;
+									SetInElementDecoratorOperation(false);
+									SetInOpenedDecoratorTransaction(false);
+									SetIsContextInitiatedOperation(false);
 								}
 							}
 						}
@@ -4692,11 +4694,11 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 							CancelDecoratorOperation();
 							COMTHROW(retVal);
 						}
-						if (inElementDecoratorOperation) {
-							if (decoratorOrAnnotator)
-								objectInDecoratorOperation = object;
+						if (IsInElementDecoratorOperation()) {
+							if (IsDecoratorOrAnnotator())
+								SetObjectInDecoratorOperation(object);
 							else
-								annotatorInDecoratorOperation = annotation;
+								SetAnnotatorInDecoratorOperation(annotation);
 						}
 					} else {
 						SetConnectionCustomizeCursor(point);
@@ -4745,37 +4747,39 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 				if (object == NULL)
 					object = self ? self->FindObject(point, true, true) : 0;
 
-				if (inElementDecoratorOperation) {
+				if (IsInElementDecoratorOperation()) {
 					CComPtr<IMgaElementDecorator> newDecorator;
-					if (decoratorOrAnnotator) {
-						if (objectInDecoratorOperation != NULL) {
-							CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+					if (IsDecoratorOrAnnotator()) {
+						CGuiObject* objInOp = GetObjectInDecoratorOperation();
+						if (objInOp != NULL) {
+							CGuiAspect* pAspect = objInOp->GetCurrentAspect();
 							if (pAspect != NULL) {
 								CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 								newDecorator = newDecorator2;
 							}
 						}
 					} else {
-						if (annotatorInDecoratorOperation != NULL)
-							newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
+						CGuiAnnotator* annInOp = GetAnnotatorInDecoratorOperation();
+						if (annInOp != NULL)
+							newDecorator = annInOp->GetDecorator(currentAspect->index);
 					}
 					if (newDecorator) {
 						CClientDC transformDC(this);
 						OnPrepareDC(&transformDC);
 						HRESULT retVal = newDecorator->MouseLeftButtonDown(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
 						if (retVal == S_DECORATOR_EVENT_HANDLED) {
-							if (inOpenedDecoratorTransaction) {
-								if (shouldCommitOperation) {
+							if (IsInOpenedDecoratorTransaction()) {
+								if (ShouldCommitOperation()) {
 									CommitTransaction();
-									shouldCommitOperation = false;
-									objectInDecoratorOperation = NULL;
-									annotatorInDecoratorOperation = NULL;
+									SetShouldCommitOperation(false);
+									SetObjectInDecoratorOperation(NULL);
+									SetAnnotatorInDecoratorOperation(NULL);
 								} else {
 									AbortTransaction(S_OK);
 								}
-								inElementDecoratorOperation = false;
-								inOpenedDecoratorTransaction = false;
-								isContextInitiatedOperation = false;
+								SetInElementDecoratorOperation(false);
+								SetInOpenedDecoratorTransaction(false);
+								SetIsContextInitiatedOperation(false);
 							}
 						} else if (retVal != S_OK &&
 								   retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
@@ -4840,34 +4844,34 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						OnPrepareDC(&transformDC);
 						HRESULT retVal = newDecorator->MouseLeftButtonDown(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
 						if (retVal == S_DECORATOR_EVENT_HANDLED) {
-							if (inOpenedDecoratorTransaction) {
-								if (shouldCommitOperation) {
+							if (IsInOpenedDecoratorTransaction()) {
+								if (ShouldCommitOperation()) {
 									CommitTransaction();
-									shouldCommitOperation = false;
-									objectInDecoratorOperation = NULL;
-									annotatorInDecoratorOperation = NULL;
-									inOpenedDecoratorTransaction = false;
-									isContextInitiatedOperation = false;
-									inElementDecoratorOperation = false;
+									SetShouldCommitOperation(false);
+									SetObjectInDecoratorOperation(NULL);
+									SetAnnotatorInDecoratorOperation(NULL);
+									SetInOpenedDecoratorTransaction(false);
+									SetIsContextInitiatedOperation(false);
+									SetInElementDecoratorOperation(false);
 									CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 									return;
-								} else if (!inElementDecoratorOperation) {
+								} else if (!IsInElementDecoratorOperation()) {
 									AbortTransaction(S_OK);
-									inOpenedDecoratorTransaction = false;
-									isContextInitiatedOperation = false;
-									inElementDecoratorOperation = false;
+									SetInOpenedDecoratorTransaction(false);
+									SetIsContextInitiatedOperation(false);
+									SetInElementDecoratorOperation(false);
 									CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 									return;
 								}
 								if (::GetCapture() != NULL)
 									::ReleaseCapture();
-								inElementDecoratorOperation = false;
+								SetInElementDecoratorOperation(false);
 							} else {
-								if (inElementDecoratorOperation) {
-									if (decoratorOrAnnotator)
-										objectInDecoratorOperation = object;
+								if (IsInElementDecoratorOperation()) {
+									if (IsDecoratorOrAnnotator())
+										SetObjectInDecoratorOperation(object);
 									else
-										annotatorInDecoratorOperation = annotation;
+										SetAnnotatorInDecoratorOperation(annotation);
 								}
 								CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 								return;
@@ -4879,15 +4883,15 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 							CancelDecoratorOperation();
 							COMTHROW(retVal);
 						}
-						if (inElementDecoratorOperation) {
-							if (decoratorOrAnnotator)
-								objectInDecoratorOperation = object;
+						if (IsInElementDecoratorOperation()) {
+							if (IsDecoratorOrAnnotator())
+								SetObjectInDecoratorOperation(object);
 							else
-								annotatorInDecoratorOperation = annotation;
+								SetAnnotatorInDecoratorOperation(annotation);
 						}
 					}
 				}
-				if (inElementDecoratorOperation || isInConnectionCustomizeOperation) {
+				if (IsInElementDecoratorOperation() || isInConnectionCustomizeOperation) {
 					CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 					return;
 				}
@@ -5279,36 +5283,36 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 				OnPrepareDC(&transformDC);
 				HRESULT retVal = newDecorator->MouseLeftButtonDoubleClick(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
 				if (retVal == S_DECORATOR_EVENT_HANDLED) {
-					if (inOpenedDecoratorTransaction) {
-						if (shouldCommitOperation) {
+					if (IsInOpenedDecoratorTransaction()) {
+						if (ShouldCommitOperation()) {
 							CommitTransaction();
-							shouldCommitOperation = false;
-							objectInDecoratorOperation = NULL;
-							annotatorInDecoratorOperation = NULL;
-							inOpenedDecoratorTransaction = false;
-							isContextInitiatedOperation = false;
-							inElementDecoratorOperation = false;
+							SetShouldCommitOperation(false);
+							SetObjectInDecoratorOperation(NULL);
+							SetAnnotatorInDecoratorOperation(NULL);
+							SetInOpenedDecoratorTransaction(false);
+							SetIsContextInitiatedOperation(false);
+							SetInElementDecoratorOperation(false);
 							CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 							return;
-						} else if (!inElementDecoratorOperation) {
+						} else if (!IsInElementDecoratorOperation()) {
 							AbortTransaction(S_OK);
-							inOpenedDecoratorTransaction = false;
-							isContextInitiatedOperation = false;
-							inElementDecoratorOperation = false;
+							SetInOpenedDecoratorTransaction(false);
+							SetIsContextInitiatedOperation(false);
+							SetInElementDecoratorOperation(false);
 							CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 							return;
 						}
 						if (::GetCapture() != NULL)
 							::ReleaseCapture();
-						inElementDecoratorOperation = false;
-						inOpenedDecoratorTransaction = false;
-						isContextInitiatedOperation = false;
+						SetInElementDecoratorOperation(false);
+						SetInOpenedDecoratorTransaction(false);
+						SetIsContextInitiatedOperation(false);
 					} else {
-						if (inElementDecoratorOperation) {
-							if (decoratorOrAnnotator)
-								objectInDecoratorOperation = object;
+						if (IsInElementDecoratorOperation()) {
+							if (IsDecoratorOrAnnotator())
+								SetObjectInDecoratorOperation(object);
 							else
-								annotatorInDecoratorOperation = annotation;
+								SetAnnotatorInDecoratorOperation(annotation);
 						}
 						CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 						return;
@@ -5320,15 +5324,15 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 					CancelDecoratorOperation();
 					COMTHROW(retVal);
 				}
-				if (inElementDecoratorOperation) {
-					if (decoratorOrAnnotator)
-						objectInDecoratorOperation = object;
+				if (IsInElementDecoratorOperation()) {
+					if (IsDecoratorOrAnnotator())
+						SetObjectInDecoratorOperation(object);
 					else
-						annotatorInDecoratorOperation = annotation;
+						SetAnnotatorInDecoratorOperation(annotation);
 				}
 			}
 		}
-		if (inElementDecoratorOperation) {
+		if (IsInElementDecoratorOperation()) {
 			CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 			return;
 		}
@@ -6251,7 +6255,7 @@ void CGMEView::OnEditNudgeup()
 BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)
 {
 	if (nID == ID_EDIT_CANCEL) {	// capture ESC for decorator or connection customization operation cancel
-		if (inElementDecoratorOperation)
+		if (IsInElementDecoratorOperation())
 			CancelDecoratorOperation();
 		if (isInConnectionCustomizeOperation) {
 			isInConnectionCustomizeOperation = false;
@@ -6298,28 +6302,28 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 					newDecorator = selectedAnnotationOfContext->GetDecorator(currentAspect->index);
 				}
 				if (newDecorator) {
-					isContextInitiatedOperation = true;
+					SetIsContextInitiatedOperation(true);
 					if (selectedObjectOfContext != NULL)
-						objectInDecoratorOperation = selectedObjectOfContext;
+						SetObjectInDecoratorOperation(selectedObjectOfContext);
 					else
-						annotatorInDecoratorOperation = selectedAnnotationOfContext;
+						SetAnnotatorInDecoratorOperation(selectedAnnotationOfContext);
 					CClientDC transformDC(this);
 					OnPrepareDC(&transformDC);
 					HRESULT retVal = newDecorator->MenuItemSelected(nID, ctxClkSt.nFlags, ctxClkSt.lpoint.x, ctxClkSt.lpoint.y,
 																	(ULONGLONG)transformDC.m_hDC);
 					if (retVal == S_DECORATOR_EVENT_HANDLED) {
-						if (inOpenedDecoratorTransaction) {
-							if (shouldCommitOperation) {
+						if (IsInOpenedDecoratorTransaction()) {
+							if (ShouldCommitOperation()) {
 								CommitTransaction();
-								shouldCommitOperation = false;
-								objectInDecoratorOperation = NULL;
-								annotatorInDecoratorOperation = NULL;
+								SetShouldCommitOperation(false);
+								SetObjectInDecoratorOperation(NULL);
+								SetAnnotatorInDecoratorOperation(NULL);
 							} else {
 								AbortTransaction(S_OK);
 							}
-							inOpenedDecoratorTransaction = false;
-							isContextInitiatedOperation = false;
-							inElementDecoratorOperation = false;
+							SetInOpenedDecoratorTransaction(false);
+							SetIsContextInitiatedOperation(false);
+							SetInElementDecoratorOperation(false);
 						}
 					} else if (retVal != S_OK &&
 								retVal != S_DECORATOR_EVENT_NOT_HANDLED &&
@@ -6519,7 +6523,7 @@ void CGMEView::OnUpdateCntxAttributes(CCmdUI* pCmdUI)
 void CGMEView::OnEditUndo() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditUndo\r\n");
-	if (inElementDecoratorOperation)
+	if (IsInElementDecoratorOperation())
 		return;
 	theApp.mgaProject->Undo();
 	this->SetFocus();
@@ -6528,7 +6532,7 @@ void CGMEView::OnEditUndo()
 void CGMEView::OnEditRedo() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditRedo\r\n");
-	if (inElementDecoratorOperation)
+	if (IsInElementDecoratorOperation())
 		return;
 	theApp.mgaProject->Redo();
 	this->SetFocus();
@@ -7101,7 +7105,7 @@ void CGMEView::RunComponent(CString compname)
 void CGMEView::SetEditCursor(void)
 {
 	SetCursor(editCursor);
-	isCursorChangedByDecorator = false;
+	SetIsCursorChangedByDecorator(false);
 }
 
 void CGMEView::StartDecoratorOperation(void)
@@ -7114,42 +7118,138 @@ void CGMEView::EndDecoratorOperation(void)
 
 void CGMEView::CancelDecoratorOperation(bool notify)
 {
-	if (inElementDecoratorOperation) {
+	if (IsInElementDecoratorOperation()) {
 		if (::GetCapture() != NULL)
 			::ReleaseCapture();
 		EndDecoratorOperation();
-		shouldCommitOperation = false;
-		if (originalRect.IsRectEmpty() == FALSE) {
-			if (decoratorOrAnnotator)
-				objectInDecoratorOperation->ResizeObject(originalRect);
+		SetShouldCommitOperation(false);
+		if (GetOriginalRect().IsRectEmpty() == FALSE) {
+			if (IsDecoratorOrAnnotator())
+				GetObjectInDecoratorOperation()->ResizeObject(GetOriginalRect());
 //			else
-//				annotatorInDecoratorOperation->ResizeObject(originalRect);
+//				GetAnnotatorInDecoratorOperation()->ResizeObject(GetOriginalRect());
 			Invalidate();
-			originalRect.SetRectEmpty();
+			SetOriginalRectEmpty();
 		}
-		inElementDecoratorOperation = false;
-		if (isCursorChangedByDecorator)
+		SetInElementDecoratorOperation(false);
+		if (IsCursorChangedByDecorator())
 			SetEditCursor();
 		if (notify) {
 			CComPtr<IMgaElementDecorator> newDecorator;
-			if (objectInDecoratorOperation != NULL) {
-				CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+			if (GetObjectInDecoratorOperation() != NULL) {
+				CGuiAspect* pAspect = GetObjectInDecoratorOperation()->GetCurrentAspect();
 				if (pAspect != NULL)
 					newDecorator = pAspect->GetNewDecorator();
-			} else if (annotatorInDecoratorOperation != NULL) {
-				newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
+			} else if (GetAnnotatorInDecoratorOperation() != NULL) {
+				newDecorator = GetAnnotatorInDecoratorOperation()->GetDecorator(currentAspect->index);
 			}
 			if (newDecorator)
 				HRESULT retVal = newDecorator->OperationCanceled();
 		}
-		objectInDecoratorOperation = NULL;
-		annotatorInDecoratorOperation = NULL;
-		isContextInitiatedOperation = false;
+		SetObjectInDecoratorOperation(NULL);
+		SetAnnotatorInDecoratorOperation(NULL);
+		SetIsContextInitiatedOperation(false);
 	}
-	if (inOpenedDecoratorTransaction) {
+	if (IsInOpenedDecoratorTransaction()) {
 		AbortTransaction(S_OK);
-		inOpenedDecoratorTransaction = false;
+		SetInOpenedDecoratorTransaction(false);
 	}
+}
+
+
+bool CGMEView::IsCursorChangedByDecorator(void) const
+{
+	return isCursorChangedByDecorator;
+}
+
+void CGMEView::SetIsCursorChangedByDecorator(bool isCurChanged)
+{
+	isCursorChangedByDecorator = isCurChanged;
+}
+
+CRect CGMEView::GetOriginalRect(void) const
+{
+	return originalRect;
+}
+
+void CGMEView::SetOriginalRect(const CRect& rect)
+{
+	originalRect = rect;
+}
+
+void CGMEView::SetOriginalRectEmpty(void)
+{
+	originalRect.SetRectEmpty();
+}
+
+bool CGMEView::IsInElementDecoratorOperation(void) const
+{
+	return inElementDecoratorOperation;
+}
+
+void CGMEView::SetInElementDecoratorOperation(bool isIn)
+{
+	inElementDecoratorOperation = isIn;
+}
+
+bool CGMEView::IsInOpenedDecoratorTransaction(void) const
+{
+	return inOpenedDecoratorTransaction;
+}
+
+void CGMEView::SetInOpenedDecoratorTransaction(bool inOpenedTr)
+{
+	inOpenedDecoratorTransaction = inOpenedTr;
+}
+
+bool CGMEView::IsContextInitiatedOperation(void) const
+{
+	return isContextInitiatedOperation;
+}
+
+void CGMEView::SetIsContextInitiatedOperation(bool isCtxInit)
+{
+	isContextInitiatedOperation = isCtxInit;
+}
+
+bool CGMEView::ShouldCommitOperation(void) const
+{
+	return shouldCommitOperation;
+}
+
+void CGMEView::SetShouldCommitOperation(bool shouldCommitOp)
+{
+	shouldCommitOperation = shouldCommitOp;
+}
+
+bool CGMEView::IsDecoratorOrAnnotator(void) const
+{
+	return decoratorOrAnnotator;
+}
+
+void CGMEView::SetDecoratorOrAnnotator(bool decorOrAnnot)
+{
+	decoratorOrAnnotator = decorOrAnnot;
+}
+
+CGuiObject* CGMEView::GetObjectInDecoratorOperation(void) const
+{
+	return objectInDecoratorOperation;
+}
+
+void CGMEView::SetObjectInDecoratorOperation(CGuiObject* obj)
+{
+	objectInDecoratorOperation = obj;
+}
+
+CGuiAnnotator*CGMEView::GetAnnotatorInDecoratorOperation(void) const
+{
+	return annotatorInDecoratorOperation;
+}
+
+void CGMEView::SetAnnotatorInDecoratorOperation(CGuiAnnotator* ann)
+{
+	annotatorInDecoratorOperation = ann;
 }
 
 XERCES_CPP_NAMESPACE_USE
@@ -8528,7 +8628,7 @@ void CGMEView::SyncOnGrid(CGuiObject *obj, int aspectIndexFrom, int aspectIndexT
 void CGMEView::OnEditSelectall()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditSelectall in "+path+name+"\r\n");
-	if (inElementDecoratorOperation)
+	if (IsInElementDecoratorOperation())
 		return;
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
@@ -8858,7 +8958,7 @@ void CGMEView::OnResetSticky()
 
 void CGMEView::OnNcMouseMove(UINT nHitTest, CPoint point)
 {
-	if (nHitTest != HTCLIENT && !inElementDecoratorOperation && isCursorChangedByDecorator)
+	if (nHitTest != HTCLIENT && !IsInElementDecoratorOperation() && IsCursorChangedByDecorator())
 		SetEditCursor();
 }
 
@@ -8893,21 +8993,23 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 			object = self ? self->FindObject(point, true, true) : 0;
 		CGuiAnnotator* annotation = FindAnnotation(point);
 
-		if (inElementDecoratorOperation) {
+		if (IsInElementDecoratorOperation()) {
 			CComPtr<IMgaElementDecorator> newDecorator;
-			if (decoratorOrAnnotator) {
+			if (IsDecoratorOrAnnotator()) {
+				CGuiObject* objInOp = GetObjectInDecoratorOperation();
 				// It can be NULL: if we start a label edit operation and we double click on another label
 				// then in-spite of the modal behavior of the in-place dialog GMEView gets MouseMoves
-				if (objectInDecoratorOperation != NULL) {
-					CGuiAspect* pAspect = objectInDecoratorOperation->GetCurrentAspect();
+				if (objInOp != NULL) {
+					CGuiAspect* pAspect = objInOp->GetCurrentAspect();
 					if (pAspect != NULL) {
 						CComQIPtr<IMgaElementDecorator> newDecorator2(pAspect->GetDecorator());
 						newDecorator = newDecorator2;
 					}
 				}
 			} else {
-				if (annotatorInDecoratorOperation != NULL)
-					newDecorator = annotatorInDecoratorOperation->GetDecorator(currentAspect->index);
+				CGuiAnnotator* annInOp = GetAnnotatorInDecoratorOperation();
+				if (annInOp != NULL)
+					newDecorator = annInOp->GetDecorator(currentAspect->index);
 			}
 			if (newDecorator) {
 				CClientDC transformDC(this);
@@ -8964,7 +9066,7 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 					isCursorChangedByEdgeCustomize = false;
 				}
 			}
-			if (isCursorChangedByDecorator)
+			if (IsCursorChangedByDecorator())
 				SetEditCursor();
 		}
 	}

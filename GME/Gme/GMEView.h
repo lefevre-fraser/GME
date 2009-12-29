@@ -86,6 +86,7 @@ public:
 	static bool				instanceDrop;
 
 	// === Start of decorator operation specific variables ===
+private:
 	bool					isCursorChangedByDecorator;
 	CRect					originalRect;
 	bool					inElementDecoratorOperation;
@@ -95,6 +96,7 @@ public:
 	bool					decoratorOrAnnotator;
 	CGuiObject*				objectInDecoratorOperation;
 	CGuiAnnotator*			annotatorInDecoratorOperation;
+public:
 	struct ContextClickState {
 		UINT		nFlags;
 		CPoint		lpoint;
@@ -343,6 +345,27 @@ public:
 	void					StartDecoratorOperation(void);
 	void					EndDecoratorOperation(void);
 	void					CancelDecoratorOperation(bool notify = true);
+
+	bool					IsCursorChangedByDecorator(void) const;
+	void					SetIsCursorChangedByDecorator(bool isCurChanged);
+	CRect					GetOriginalRect(void) const;
+	void					SetOriginalRect(const CRect& rect);
+	void					SetOriginalRectEmpty(void);
+	bool					IsInElementDecoratorOperation(void) const;
+	void					SetInElementDecoratorOperation(bool isIn);
+	bool					IsInOpenedDecoratorTransaction(void) const;
+	void					SetInOpenedDecoratorTransaction(bool inOpenedTr);
+	bool					IsContextInitiatedOperation(void) const;
+	void					SetIsContextInitiatedOperation(bool isCtxInit);
+	bool					ShouldCommitOperation(void) const;
+	void					SetShouldCommitOperation(bool shouldCommitOp);
+	bool					IsDecoratorOrAnnotator(void) const;
+	void					SetDecoratorOrAnnotator(bool decorOrAnnot);
+	CGuiObject*				GetObjectInDecoratorOperation(void) const;
+	void					SetObjectInDecoratorOperation(CGuiObject* obj);
+	CGuiAnnotator*			GetAnnotatorInDecoratorOperation(void) const;
+	void					SetAnnotatorInDecoratorOperation(CGuiAnnotator* ann);
+
 	bool					ShouldSupressConnectionCheckAlert(void) const { return m_supressConnectionCheckAlert; };
 	void					ClearSupressConnectionCheckAlert(void) { m_supressConnectionCheckAlert = false; };
 	void					SupressConnectionCheckAlert(void) { m_supressConnectionCheckAlert = true; };
