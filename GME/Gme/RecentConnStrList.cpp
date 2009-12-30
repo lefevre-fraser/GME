@@ -111,7 +111,8 @@ void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI, bool enable)
 
 		// insert mnemonic + the file name
 		CString buf;
-		buf.Format("&%ld ", (iMRU + 1 + m_nStart) % 10);
+		if (iMRU < 10)	// Do not overlap mnemonic (in case of more than 10 (actually 9) MRU item)
+			buf.Format("&%ld ", (iMRU + 1 + m_nStart) % 10);
 		pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex,
 			MF_STRING | MF_BYPOSITION, pCmdUI->m_nID,
 			buf + strName);

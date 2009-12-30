@@ -124,7 +124,7 @@ CGMEApp theApp;
 // CGMEApp construction
 
 CGMEApp::CGMEApp() :
-    m_RecentProjectList(0, "Recent Project List", "Project%d", 10)
+    m_RecentProjectList(0, "Recent Project List", "Project%d", 8)
   , m_compFilterOn( false)
 {
 	multipleView = false;
