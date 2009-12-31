@@ -8233,6 +8233,9 @@ void CGMEView::OnUpdateFileCheckSelected(CCmdUI* pCmdUI)
 void CGMEView::OnFileCheck()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnFileCheck in "+path+name+"\r\n");
+	ASSERT(theApp.mgaConstMgr);
+	if (!theApp.mgaConstMgr)
+		return;
 	if(currentModel)
 	{
 		// message boxes displayed from constraint manager if in interactive mode
@@ -8246,6 +8249,9 @@ void CGMEView::OnFileCheck()
 void CGMEView::OnFileCheckSelected()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnFileCheckSelected in "+path+name+"\r\n");
+	ASSERT(theApp.mgaConstMgr);
+	if (!theApp.mgaConstMgr)
+		return;
 	GMEEVENTLOG_GUIOBJS(selected);
 	POSITION pos = selected.GetHeadPosition();
 	if(pos)
@@ -8281,7 +8287,7 @@ void CGMEView::OnCntxCheck()
 	GMEEVENTLOG_GUIFCOS(selected);
 
 	ASSERT(theApp.mgaConstMgr);
-	if(!theApp.mgaConstMgr) 
+	if (!theApp.mgaConstMgr)
 		return;
 
 	MSGTRY

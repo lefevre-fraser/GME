@@ -482,6 +482,9 @@ void CGMEApp::EmergencySave(void)
 
 int CGMEApp::Run()
 {
+	CoFreeUnusedLibraries();	// JIRA 221: GME 9.12.15 Crashing
+								// Unload ConstraintManager.dll, GME crashes if the system unloads it by itself
+
 	Gdiplus::GdiplusStartupInput  gdiplusStartupInput;
 	Gdiplus::GdiplusStartupOutput  gdiplusStartupOutput;
 	ULONG_PTR gdiplusToken;
@@ -2249,7 +2252,8 @@ void CGMEApp::OnFileCheckall()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileCheckall\r\n");
 	ASSERT(mgaConstMgr);
-	if(!mgaConstMgr) return;
+	if (!mgaConstMgr)
+		return;
 	// message boxes displayed from constraint manager if in interactive mode
 	mgaConstMgr->ObjectsInvokeEx(mgaProject, NULL, NULL, NULL);
 }
@@ -2258,6 +2262,8 @@ void CGMEApp::OnFileDisplayConstraints()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileDisplayConstraints\r\n");
 	ASSERT(mgaConstMgr);
+	if (!mgaConstMgr)
+		return;
 	mgaConstMgr->ObjectsInvokeEx(mgaProject, NULL, NULL, CONSTMGR_SHOW_CONSTRAINTS);
 	
 }
