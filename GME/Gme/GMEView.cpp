@@ -149,8 +149,8 @@ STDMETHODIMP CViewDriver::ObjectEvent(IMgaObject *obj, unsigned long eventmask,V
 		CPendingObjectPosRequest *req = dynamic_cast<CPendingObjectPosRequest *> (view->pendingRequests.GetNext(ppos));
 		if (req) {
 			if ( req->object->mgaFco == obj ) {
-					view->pendingRequests.RemoveAt(tmp);
-					delete req;
+				view->pendingRequests.RemoveAt(tmp);
+				delete req;
 			}
 		}
 	}
@@ -1447,6 +1447,14 @@ void CGMEView::BeginTransaction(transactiontype_enum mode)
 	if(!inEventHandler && ++inTransaction == 1) {
 		inRWTransaction = (mode == TRANSACTION_GENERAL);
 		COMTHROW(theApp.mgaProject->BeginTransaction(terry,mode));
+	}
+	if (!inEventHandler && inTransaction > 0 && inRWTransaction) {
+		while (!pendingRequests.IsEmpty()) {
+			CPendingRequest* req = pendingRequests.RemoveHead();
+			if( CGMEDoc::theInstance && !CGMEDoc::theInstance->m_isClosing)
+				req->Execute(this);
+			delete req;
+		}
 	}
 }
 
