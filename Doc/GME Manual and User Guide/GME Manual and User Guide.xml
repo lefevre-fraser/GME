@@ -18,7 +18,7 @@
     </affiliation>
 
     <copyright>
-      <year>2000-2009</year>
+      <year>2000-2010</year>
 
       <holder>Vanderbilt University</holder>
     </copyright>
@@ -33,6 +33,14 @@
 
   <section>
     <title>What is new</title>
+    
+     <section>
+      <title>What is new in version 10</title>
+
+      <para>Among the significant improvements in this version
+      are:
+      </para>
+    </section>
 
     <section>
       <title>What is new in version 9</title>
