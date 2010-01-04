@@ -64,7 +64,7 @@ void CChildFrame::SetAppTitle(const CString& appTitle)
 
 void CChildFrame::SetSendEvent(bool sendEventParam)
 {
-	sendEventParam = sendEventParam;
+	sendEvent = sendEventParam;
 }
 
 void CChildFrame::SetView(CView* viewParam)
