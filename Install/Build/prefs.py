@@ -14,7 +14,7 @@ import time
 prefs = {
 	"clean" : False,
 	"verbose" : False,
-	"version_major" : time.localtime()[0] % 10,
+	"version_major" : (time.localtime()[0] - 2000),
 	"version_minor" : time.localtime()[1],
 	"version_patch" : time.localtime()[2]
 	}
