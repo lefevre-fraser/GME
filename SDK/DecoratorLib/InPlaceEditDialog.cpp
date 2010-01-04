@@ -87,7 +87,10 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	CSize viewPortExt = dc.GetViewportExt();
 	ASSERT(viewPortExt.cx / windowExt.cx == viewPortExt.cy / windowExt.cy);
 	double viewZoom = (double)viewPortExt.cx / (double)windowExt.cx;
+	long old_lfheight = lf1.lfHeight;
 	lf1.lfHeight = (long)(lf1.lfHeight * viewZoom);
+	if (lf1.lfHeight == 0)	// scaled to too small, set back to -1 or +1
+		lf1.lfHeight = old_lfheight / abs(old_lfheight);
 	CFont* scaled_font1 = new CFont();
 	scaled_font1->CreateFontIndirect(&lf1);
 	// end font scaling pass 1
@@ -101,7 +104,10 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	LOGFONT lf2;
 	originalFont->GetLogFontA(DecoratorSDK::getFacilities().getGraphics(), &lf2);
 	double zoom2 = (double)m_labelRect.Height() * viewZoom / (double)cSize.cy;	// Correction zoom
+	old_lfheight = lf2.lfHeight;
 	lf2.lfHeight = (long)(lf2.lfHeight * viewZoom * zoom2);
+	if (lf2.lfHeight == 0)	// scaled to too small, set back to -1 or +1
+		lf2.lfHeight = old_lfheight / abs(old_lfheight);
 	m_font = new CFont();
 	m_font->CreateFontIndirect(&lf2);
 	// end font scaling pass 2
@@ -216,9 +222,9 @@ void CInPlaceEditDialog::OnRequestResize(NMHDR* pNMHDR, LRESULT* pResult)
 	if (requestedRect.Height() > m_boundsLimit.Height())
 		dHeight = m_boundsLimit.Height() - requestedRect.Height();
 	if (requestedRect.Width() < m_minSize.cx)
-		dWidth = m_boundsLimit.Width() - requestedRect.Width();
+		dWidth = m_minSize.cx - requestedRect.Width();
 	if (requestedRect.Height() < m_minSize.cy)
-		dHeight = m_boundsLimit.Height() - requestedRect.Height();
+		dHeight = m_minSize.cy - requestedRect.Height();
 	if (dWidth != 0 || dHeight != 0)
 		requestedRect.InflateRect(0, 0, dWidth, dHeight);
 
