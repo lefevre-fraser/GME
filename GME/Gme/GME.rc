@@ -342,14 +342,14 @@ BEGIN
     END
     POPUP "&Tools"
     BEGIN
-        POPUP "&Check Constraints"
+        POPUP "&Constraints"
         BEGIN
             MENUITEM "Check &Selected",             ID_FILE_CHECKSEL
             MENUITEM "Chec&k",                      ID_FILE_CHECK
             MENUITEM "C&heck All",                  ID_FILE_CHECKALL
             MENUITEM "&Trace Constraints",          ID_FILE_CHECKTRACE
+            MENUITEM "&Display Constraints",        ID_FILE_DISPLAY_CONSTRAINTS
         END
-        MENUITEM "&Display Constraints",        ID_FILE_DISPLAY_CONSTRAINTS
         MENUITEM SEPARATOR
         MENUITEM "Re&gister Components...",     ID_FILE_REGCOMPONENTS
         MENUITEM "Run In&terpreter",            ID_FILE_RUNINTERPRETER
