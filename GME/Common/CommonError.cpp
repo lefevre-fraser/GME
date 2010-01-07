@@ -40,7 +40,7 @@ hresult_exception::~hresult_exception()
 const char *hresult_exception::what() const
 {
 	static char message[80];
-	sprintf(message, "HRESULT (0x%08lx) exception", hr);
+	sprintf_s(message, sizeof(message), "HRESULT (0x%08lx) exception", hr);
 	return message;
 }
 
