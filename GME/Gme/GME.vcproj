@@ -1091,19 +1091,7 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="changes.txt"
-			>
-		</File>
-		<File
 			RelativePath="GME.reg"
-			>
-		</File>
-		<File
-			RelativePath="ReadMe.txt"
-			>
-		</File>
-		<File
-			RelativePath="..\RequestedFeatureList.txt"
 			>
 		</File>
 	</Files>
