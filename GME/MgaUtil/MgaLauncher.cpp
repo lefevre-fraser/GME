@@ -900,6 +900,8 @@ STDMETHODIMP CMgaLauncher::AnnotationBrowser(IMgaObject *obj, IMgaRegNode *focus
 			dlg.m_model = model;
 			if (dlg.DoModal() == IDOK) {
 				dlg.UpdateAnnotations();
+			} else {
+				return E_MGA_MUST_ABORT;	// JIRA GME-236: special ret code, indicating that the dialog was cancelled
 			}
 		}
 		else {

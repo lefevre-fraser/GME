@@ -334,7 +334,7 @@ public:
 	void					ZoomRect(CRect srect);
 	void					ZoomToFCOs(CRect rect);
 	void					ShowRegistryBrowser(CComPtr<IMgaFCO> fco);
-	void					ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> focus);
+	bool					ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> focus);
 	void					SyncAspects(CGuiMetaAspect* srcAspect, CGuiMetaAspectList& dstAspects, CGuiObjectList& movingObjects,
 										CGuiObjectList& sedentaryObjects, bool priorityForSrcVisible, bool priorityForSelected);
 	void					SyncOnGrid(CGuiObject *obj, int aspectIndexFrom, int aspectIndexTo);

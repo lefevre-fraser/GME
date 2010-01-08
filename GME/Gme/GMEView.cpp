@@ -8441,21 +8441,33 @@ void CGMEView::ShowRegistryBrowser(CComPtr<IMgaFCO> fco)
 	}
 }
 
-void CGMEView::ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> focus)
+bool CGMEView::ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> focus)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::ShowAnnotationBrowser in "+path+name+"\r\n");
+	bool success = true;
 	try {
 		BeginTransaction();
 		CComObjPtr<IMgaLauncher> launcher;
 		COMTHROW( launcher.CoCreateInstance(L"Mga.MgaLauncher") );
-		COMTHROW( launcher->AnnotationBrowser(fco, focus) );
-		CommitTransaction();
+		HRESULT hr = launcher->AnnotationBrowser(fco, focus);
+		if (hr == E_MGA_MUST_ABORT) {	// JIRA GME-236 special ret code, indicating that the dialog was cancelled
+			throw hresult_exception(S_OK);
+		} if (FAILED(hr)) {
+			ASSERT(("COMTHROW: Throwing HRESULT exception. Press IGNORE", false));
+			throw hresult_exception(hr);
+		} else {
+			CommitTransaction();
+		}
 	}
 	catch(hresult_exception &e) {
+		success = false;
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to access annotations",MB_OK | MB_ICONSTOP);
-		CGMEEventLogger::LogGMEEvent("    Unable to access annotations.\r\n");
+		if (e.hr != S_OK) {
+			AfxMessageBox("Unable to access annotations",MB_OK | MB_ICONSTOP);
+			CGMEEventLogger::LogGMEEvent("    Unable to access annotations.\r\n");
+		}
 	}
+	return success;
 }
 
 void CGMEView::OnEditSync()
@@ -9225,16 +9237,20 @@ void CGMEView::OnCntxInsertannotation()
 		CComPtr<IMgaFCO> fcoToShow;
 		currentModel.QueryInterface(&fcoToShow);
 
-		ShowAnnotationBrowser(fcoToShow, rootReg);
-
-		// ANNTODO: new object id list
-		CommitTransaction();
+		if (ShowAnnotationBrowser(fcoToShow, rootReg)) {
+			// ANNTODO: new object id list
+			CommitTransaction();
+		} else {
+			throw hresult_exception(S_OK);	// the dialog was cancelled
+		}
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to insert annotation",MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent("    Unable to insert annotation.\r\n");
-		return;
+		if (e.hr != S_OK) {
+			AfxMessageBox("Unable to insert annotation",MB_ICONSTOP | MB_OK);
+			CGMEEventLogger::LogGMEEvent("    Unable to insert annotation.\r\n");
+			return;
+		}
 	}
 	Invalidate(true);
 }
