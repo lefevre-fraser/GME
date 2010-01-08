@@ -524,8 +524,9 @@ afx_msg LONG CInspectorDlg::OnNameEditEndCancel(UINT /*wParam*/, LONG /*lParam*/
 	if(m_NameCtrl.GetModify())
 	{
 		m_NameCtrl.SetWindowText(m_strName);
-		CObjectInspectorCtrl* pParent=(CObjectInspectorCtrl*)GetParent();
-		if( pParent) pParent->UndoRedo();
+		// The following instructions would issue a whole undo to the MgaProject, causing JIRA GME-231
+		//CObjectInspectorCtrl* pParent=(CObjectInspectorCtrl*)GetParent();
+		//if( pParent) pParent->UndoRedo();
 	}
 	return TRUE;
 }
