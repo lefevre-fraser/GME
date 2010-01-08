@@ -564,7 +564,6 @@ CGMEView::CGMEView()
 	isLeftMouseButtonDown			= false;
 	isConnectionJustSelected		= false;
 	isInConnectionCustomizeOperation= false;
-	mouseButtonUpAfterDragDrop		= false;
 	doNotDeselectAfterInPlaceEdit	= false;
 	isCursorChangedByEdgeCustomize	= false;
 	selectedContextConnection		= NULL;
@@ -4674,29 +4673,27 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 						OnPrepareDC(&transformDC);
 						HRESULT retVal = newDecorator->MouseLeftButtonUp(nFlags, point.x, point.y, (ULONGLONG)transformDC.m_hDC);
 						if (retVal == S_DECORATOR_EVENT_HANDLED) {
-							if (mouseButtonUpAfterDragDrop) {
-								doNotDeselectAfterInPlaceEdit = true;
+							doNotDeselectAfterInPlaceEdit = true;
 
-								if (IsInOpenedDecoratorTransaction()) {
-									if (ShouldCommitOperation()) {
-										CommitTransaction();
-										SetShouldCommitOperation(false);
-										SetObjectInDecoratorOperation(NULL);
-										SetAnnotatorInDecoratorOperation(NULL);
-										SetInOpenedDecoratorTransaction(false);
-										SetIsContextInitiatedOperation(false);
-									} else if (!IsInElementDecoratorOperation()) {
-										AbortTransaction(S_OK);
-										SetInOpenedDecoratorTransaction(false);
-										SetIsContextInitiatedOperation(false);
-									} else {
-										if (::GetCapture() != NULL)
-											::ReleaseCapture();
-									}
-									SetInElementDecoratorOperation(false);
+							if (IsInOpenedDecoratorTransaction()) {
+								if (ShouldCommitOperation()) {
+									CommitTransaction();
+									SetShouldCommitOperation(false);
+									SetObjectInDecoratorOperation(NULL);
+									SetAnnotatorInDecoratorOperation(NULL);
 									SetInOpenedDecoratorTransaction(false);
 									SetIsContextInitiatedOperation(false);
+								} else if (!IsInElementDecoratorOperation()) {
+									AbortTransaction(S_OK);
+									SetInOpenedDecoratorTransaction(false);
+									SetIsContextInitiatedOperation(false);
+								} else {
+									if (::GetCapture() != NULL)
+										::ReleaseCapture();
 								}
+								SetInElementDecoratorOperation(false);
+								SetInOpenedDecoratorTransaction(false);
+								SetIsContextInitiatedOperation(false);
 							}
 						}
 						if (retVal != S_OK &&
@@ -4720,9 +4717,7 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 			}	//case
 		}	// switch
 	}	// if (!tmpConnectMode)
-	if (!mouseButtonUpAfterDragDrop)
-		CScrollZoomView::OnLButtonUp(nFlags, ppoint);
-	mouseButtonUpAfterDragDrop = false;
+	CScrollZoomView::OnLButtonUp(nFlags, ppoint);
 }
 
 void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
@@ -4978,7 +4973,6 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 
 					if (validGuiObjects && dropEffect == DROPEFFECT_NONE) {
 						if (inDrag && alreadySelected != NULL && (selection || annotation)) {
-							mouseButtonUpAfterDragDrop = true;
 							OnLButtonUp(nFlags, ppoint);
 						}
 						if (nFlags & MK_CONTROL) {
