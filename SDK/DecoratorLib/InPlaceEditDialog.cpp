@@ -239,6 +239,8 @@ void CInPlaceEditDialog::OnRequestResize(NMHDR* pNMHDR, LRESULT* pResult)
 	BOOL isIntersectionNotEmpty = limitedRect.IntersectRect(requestedRect, m_boundsLimit);
 	ASSERT(isIntersectionNotEmpty != FALSE);
 
+	dWidth = 0;
+	dHeight = 0;
 	if (limitedRect.Width() < m_minSize.cx)
 		dWidth = m_minSize.cx - limitedRect.Width();
 	if (limitedRect.Height() < m_minSize.cy)
