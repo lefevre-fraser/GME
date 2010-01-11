@@ -371,6 +371,7 @@ public:
 	HRESULT					DumpModelGeometryXML(LPCTSTR filePath);
 	void					SetConnectionCustomizeCursor(const CPoint& point);
 	bool					IsInstance(void) const;
+	void					TryToExecutePendingRequests(void);
 
 	virtual int				OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
 
@@ -591,6 +592,7 @@ protected:
 	afx_msg LRESULT OnPannScroll(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPannRefresh(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnDecoratorViewRefreshRequest(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnExecutePendingRequests(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnCntxNamePositionSouth();
 	afx_msg void OnCntxNamePositionNorth();
 	afx_msg void OnCntxNamePositionEast();

@@ -505,6 +505,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_MESSAGE(WM_USER_PANNREFRESH, OnPannRefresh)
 	ON_MESSAGE(WM_PANN_SCROLL, OnPannScroll)
 	ON_MESSAGE(WM_USER_DECOR_VIEWREFRESH_REQ, OnDecoratorViewRefreshRequest)
+	ON_MESSAGE(WM_USER_EXECUTEPENDINGREQUESTS, OnExecutePendingRequests)
 	ON_COMMAND(ID_VIEW_SHOWSELMODEL, OnShowSelectedModel)
 	ON_COMMAND(ID_VIEW_FOCUSBROWSER, OnFocusBrowser)
 	ON_COMMAND(ID_VIEW_FOCUSINSPECTOR, OnFocusInspector)
@@ -1447,14 +1448,7 @@ void CGMEView::BeginTransaction(transactiontype_enum mode)
 		inRWTransaction = (mode == TRANSACTION_GENERAL);
 		COMTHROW(theApp.mgaProject->BeginTransaction(terry,mode));
 	}
-	if (!inEventHandler && inTransaction > 0 && inRWTransaction) {
-		while (!pendingRequests.IsEmpty()) {
-			CPendingRequest* req = pendingRequests.RemoveHead();
-			if( CGMEDoc::theInstance && !CGMEDoc::theInstance->m_isClosing)
-				req->Execute(this);
-			delete req;
-		}
-	}
+	TryToExecutePendingRequests();
 }
 
 void CGMEView::CommitTransaction()
@@ -1462,15 +1456,7 @@ void CGMEView::CommitTransaction()
 	if(inEventHandler)
 		return;
 	VERIFY(inTransaction > 0);
-	if (inRWTransaction) {
-		while (!pendingRequests.IsEmpty()) {
-			CPendingRequest* req = pendingRequests.RemoveHead();
-			if( CGMEDoc::theInstance && !CGMEDoc::theInstance->m_isClosing)
-				req->Execute(this);
-			delete req;
-		}
-
-	}
+	TryToExecutePendingRequests();
 	if(inTransaction == 1)
 		COMTHROW(theApp.mgaProject->CommitTransaction());
 	inTransaction--;
@@ -3932,6 +3918,7 @@ void CGMEView::FillModelGrid()
 	modelGrid.SetSource(this);
 	CGuiObject* obj;
 	POSITION pos = children.GetHeadPosition();
+	bool postPendingRequestEvent = false;
 	while(pos) {
 		CGuiFco* fco = children.GetNext(pos);
 		ASSERT(fco != NULL);
@@ -3948,11 +3935,14 @@ void CGMEView::FillModelGrid()
 			// obj->SetCenter(pt);
 			CPendingObjectPosRequest *req = new CPendingObjectPosRequest(obj, pt, obj->GetLocation(), obj->GetParentAspect());
 			pendingRequests.AddHead(req);
+			postPendingRequestEvent = true;
 
 			obj->SetCenter(pt, -1, false);
 		}
 		modelGrid.Set(obj);
 	}
+	if (postPendingRequestEvent)
+		PostMessage(WM_USER_EXECUTEPENDINGREQUESTS);
 	EndWaitCursor();
 }
 
@@ -7535,6 +7525,18 @@ bool CGMEView::IsInstance(void) const
 	return !isType && isSubType;
 }
 
+void CGMEView::TryToExecutePendingRequests(void)
+{
+	if (!inEventHandler && inTransaction > 0 && inRWTransaction) {
+		while (!pendingRequests.IsEmpty()) {
+			CPendingRequest* req = pendingRequests.RemoveHead();
+			if( CGMEDoc::theInstance && !CGMEDoc::theInstance->m_isClosing)
+				req->Execute(this);
+			delete req;
+		}
+	}
+}
+
 void CGMEView::OnConncntxProperties()
 {
 	OnContextProperties(); // We now use the Launcher COM interface.
@@ -9675,6 +9677,15 @@ LRESULT CGMEView::OnDecoratorViewRefreshRequest(WPARAM wParam, LPARAM lParam)
 			break;
 		default: break;	// RM_NOREFRESH, RM_REDRAW_SELF
 	}
+	return 0;
+}
+
+LRESULT CGMEView::OnExecutePendingRequests(WPARAM wParam, LPARAM lParam)
+{
+	CGMEEventLogger::LogGMEEvent("CGMEView::OnExecutePendingRequests() in " + path + name + "\r\n");
+
+	TryToExecutePendingRequests();
+
 	return 0;
 }
 
