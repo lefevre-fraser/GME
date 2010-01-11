@@ -679,11 +679,17 @@ void CInPlaceManager::OnEditSingleLineEnd()
 		case ITEMDATA_STRING:
 			{
 				ListItem.Value.SetStringValue(strText);
-				ListItem.SetDirty();
 
-				m_pInspectorList->NotifyParent(m_nCurrentIndex);
+				if(!ListItem.Value.Validate()) {
+					m_pInspectorList->MessageBox("Invalid (non ASCII) string data: "+strText,"Object Inspector",MB_ICONERROR);
+					m_pInspectorList->SetFocus();
+				} 
+				else {
+					ListItem.SetDirty();
+					m_pInspectorList->NotifyParent(m_nCurrentIndex);
 
-				m_pInspectorList->Invalidate();
+					m_pInspectorList->Invalidate();
+				}
 			}break;
 
 		case ITEMDATA_INTEGER:

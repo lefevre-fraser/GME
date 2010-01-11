@@ -112,6 +112,21 @@ CItemData::CItemData(CItemData&srcItemData)
 	*this=srcItemData;
 }
 
+bool CItemData::IsAsciiString()
+{
+	INT_PTR strCnt = stringVal.GetCount();
+	for(INT_PTR strIdx = 0; strIdx < strCnt; strIdx++) {
+		const CString &str = stringVal[strIdx];
+		int strLen = str.GetLength();
+		for (int chIdx = 0; chIdx < strLen; chIdx++) {
+			if (unsigned(str.GetAt(chIdx)) > 127) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 bool CItemData::Validate()
 {
 	bool retVal=false;
@@ -123,7 +138,7 @@ bool CItemData::Validate()
 			}break;
 		case ITEMDATA_STRING:
 			{
-				retVal=stringVal.GetSize()==0?false:true;				
+				retVal=IsAsciiString();				
 			}break;
 		case ITEMDATA_FIXED_LIST:
 			{

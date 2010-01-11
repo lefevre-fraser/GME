@@ -437,7 +437,6 @@ void CInspectorDlg::ShowPanel(int nPanel,bool bIsVisible)
 	}		
 }
 
-
 void CInspectorDlg::OnItemChangedAttribute(int nItem)
 {
 	CListItem ListItem;
@@ -447,7 +446,6 @@ void CInspectorDlg::OnItemChangedAttribute(int nItem)
 
 	pParent->WriteAttributeItemToMga(ListItem);
 }
-
 
 
 void CInspectorDlg::OnItemChangedPreference(int nItem)

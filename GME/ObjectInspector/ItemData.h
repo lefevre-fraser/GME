@@ -40,6 +40,8 @@ public:
 	void toString();
 	bool toString(CString &)const;
 	bool Validate();
+	bool IsAsciiString();
+
 	CItemData();
 	virtual ~CItemData();
 
@@ -56,8 +58,8 @@ public:
 	CItemData(CStringArray& strArr, BYTE cDispLineNum){CommonInit();SetStringValue(strArr,cDispLineNum);};	
 	CItemData(CString& str){SetStringValue(str);};
 	CItemData(CStringArray& strArr,CStringArray& strArrNames, UINT nSelection){CommonInit();SetListValue(strArr, strArrNames,nSelection);};	
-	CItemData(CStringArray& strArr, UINT nSelection){CommonInit();SetListValue(strArr,nSelection);};	
-	
+	CItemData(CStringArray& strArr, UINT nSelection){CommonInit();SetListValue(strArr,nSelection);};
+
 	// Set functions: set the value and the data type
 	void SetIntValue(int i);
 	void SetDoubleValue(double d);
