@@ -30,7 +30,7 @@ public:
 	
 	bool AbortTransaction();
 	bool CommitTransaction();
-	bool BeginTransaction(bool bIsReadOnly=TRUE);
+	bool BeginTransaction(bool bIsReadOnly = true);
 	bool IsInTransaction();
 	CMgaContext();
 	virtual ~CMgaContext();

@@ -167,7 +167,7 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 							// Starting transaction
 							CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 							CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
-							pMgaContext->BeginTransaction(FALSE);
+							pMgaContext->BeginTransaction(false);
 							COMTHROW( ccpParentFolder->CreateFolder(ccpMetaFolder,&ccpNewFolder) );
 							COMTHROW( ccpNewFolder->put_Name(bszDispName) );
 							// Ending transaction
@@ -193,7 +193,7 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 							// Starting transaction
 							CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 							CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
-							pMgaContext->BeginTransaction(FALSE);
+							pMgaContext->BeginTransaction(false);
 						
 							// Creating and naming the new FCO
 							COMTHROW( ccpParentFolder->CreateRootObject(ccpMetaFCO,&ccpNewFCO) );
@@ -223,7 +223,7 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 						// Starting transaction
 						CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 						CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
-						pMgaContext->BeginTransaction(FALSE);
+						pMgaContext->BeginTransaction(false);
 
 						COMTHROW( ccpParentModel->CreateChildObject(ccpMetaRole,&ccpNewFCO) );
 						COMTHROW( ccpNewFCO->put_Name(bszDispName) );
@@ -388,7 +388,7 @@ void CAggregateContextMenu::OnEditDelete()
 	    // Starting transaction
 	    CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 	    pMgaContext = &pApp->m_CurrentProject.m_MgaContext;
-	    pMgaContext->BeginTransaction(FALSE);
+	    pMgaContext->BeginTransaction(false);
 
 	    while(hSelItem)
 	    {
@@ -542,7 +542,7 @@ void CAggregateContextMenu::OnProperties()
 			CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 			
 			// Starting transaction
-			pMgaContext->BeginTransaction(FALSE);
+			pMgaContext->BeginTransaction(false);
 			COMTHROW( ccpMgaLauncher->PropDlg(ccpMgaObject));
 			// Ending transaction
 			pMgaContext->CommitTransaction();
@@ -606,7 +606,7 @@ void CAggregateContextMenu::OnRegistry()
 			CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 			
 			// Starting transaction
-			pMgaContext->BeginTransaction(FALSE);
+			pMgaContext->BeginTransaction(false);
 			COMTHROW( ccpMgaLauncher->RegistryBrowser(ccpMgaObject));
 			// Ending transaction
 			pMgaContext->CommitTransaction();
@@ -1207,7 +1207,7 @@ void CAggregateContextMenu::OnMFSourceControlUpdate()
 		MSGTRY 
 		{
 			// Starting transaction
-			pMgaContext->BeginTransaction( TRUE); // it is readonly
+			pMgaContext->BeginTransaction(true); // it is readonly
 
 			if( ccpMgaModel)
 				COMTHROW( ccpMgaModel->get_ID( &id));
@@ -1261,7 +1261,7 @@ void CAggregateContextMenu::OnUsersOwner()
 		MSGTRY 
 		{
 			// Starting transaction
-			pMgaContext->BeginTransaction( TRUE); // it is readonly
+			pMgaContext->BeginTransaction(true); // it is readonly
 
 			if( ccpMgaModel)
 				COMTHROW( ccpMgaModel->get_ID( &id));
@@ -1323,7 +1323,7 @@ void CAggregateContextMenu::OnFollowRef()
 		MSGTRY 
 		{
 			// Starting transaction
-			pMgaContext->BeginTransaction( TRUE); // it is readonly
+			pMgaContext->BeginTransaction(true); // it is readonly
 
 
 			if( ccpMgaRef)

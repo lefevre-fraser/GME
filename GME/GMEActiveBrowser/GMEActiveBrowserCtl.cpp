@@ -366,7 +366,7 @@ LPUNKNOWN CGMEActiveBrowserCtrl::GetSelectedMgaObjects()
 
 	try
 	{
-		pMgaContext->BeginTransaction(FALSE);
+		pMgaContext->BeginTransaction(false);
 		
 		COMTHROW(ccpSelectedObjects.CoCreateInstance(L"Mga.MgaObjects"));
 		

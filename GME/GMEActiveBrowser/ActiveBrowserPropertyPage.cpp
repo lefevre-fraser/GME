@@ -1004,7 +1004,7 @@ void CAggregatePropertyPage::DoCopyClosure()
 
 		// ask the last closure id in a RO transaction
 		CMgaContext* pMgaContext = &pApp->m_CurrentProject.m_MgaContext;
-		pMgaContext->BeginTransaction( TRUE); // readonly
+		pMgaContext->BeginTransaction(true); // readonly
 		try {
 			COMTHROW( cl->GetLastClosureId( pMgaContext->m_ccpProject, &_markThem));
 			pMgaContext->CommitTransaction();
@@ -1037,7 +1037,7 @@ void CAggregatePropertyPage::DoCopyClosure()
 
 		if( _markThem != -1) // save this if elements need to be marked
 		{
-			pMgaContext->BeginTransaction( FALSE);
+			pMgaContext->BeginTransaction(false);
 			try {
 				COMTHROW( cl->PutLastClosureId( pMgaContext->m_ccpProject, _markThem));
 				pMgaContext->CommitTransaction();
@@ -1587,7 +1587,7 @@ void CAggregatePropertyPage::AttachLibrary()
 							COMTHROW(pMgaContext->m_ccpProject->Notify(APPEVENT_LIB_ATTACH_BEGIN));
 					}
 
-					pMgaContext->BeginTransaction(FALSE);
+					pMgaContext->BeginTransaction(false);
 
 					COMTHROW(ccpFolder->AttachLibraryV3( CComBSTR( dlg.m_strConnString), dlg.m_bOptimized, NULL));
 					pMgaContext->CommitTransaction();
@@ -1635,7 +1635,7 @@ void CAggregatePropertyPage::RefreshLibrary()
 			CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 			CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 
-			pMgaContext->BeginTransaction(FALSE);
+			pMgaContext->BeginTransaction(false);
 
 			CComBSTR bszLibName;						
 			COMTHROW(ccpFolder->get_LibraryName(&bszLibName));
@@ -1661,7 +1661,7 @@ void CAggregatePropertyPage::RefreshLibrary()
 
 			if(dlg.DoModal() == IDOK) 
 			{
-				pMgaContext->BeginTransaction(FALSE);
+				pMgaContext->BeginTransaction(false);
 					
 				long errs;
 				COMTHROW(ccpFolder->RefreshLibraryV3( CComBSTR( dlg.m_strConnString), dlg.m_bOptimized, &errs) );
@@ -1694,7 +1694,7 @@ void CAggregatePropertyPage::LibraryDependencies()
 			CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 			CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 
-			pMgaContext->BeginTransaction(FALSE);
+			pMgaContext->BeginTransaction(false);
 
 			CComBSTR bszLibName;						
 			COMTHROW(ccpFolder->get_LibraryName(&bszLibName));
@@ -1818,7 +1818,7 @@ void CAggregatePropertyPage::OnEndLabelEditTreeAggregate(NMHDR* pNMHDR, LRESULT*
 			CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 
 			MSGTRY{
-				pMgaContext->BeginTransaction(FALSE);
+				pMgaContext->BeginTransaction(false);
 
 				bool isLibraryRoot = false;
 
@@ -2401,7 +2401,7 @@ void CAggregatePropertyPage::GotoIUnkPtr( IMgaObject * p_obj)
 			_bstr_t item[ 100];
 			int     itemcount = 0;
 
-			pMgaContext->BeginTransaction( TRUE); // read-only transaction
+			pMgaContext->BeginTransaction(true); // read-only transaction
 
 			// coll of ptrs
 			COMTHROW( coll->Append( obj));
@@ -4011,7 +4011,7 @@ void CAggregatePropertyPage::accessRights( bool pbProtectIt)
 			CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 			CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 
-			pMgaContext->BeginTransaction(FALSE);
+			pMgaContext->BeginTransaction(false);
 
 			COMTHROW(ccpObj->PutReadOnlyAccessWithPropagate( pbProtectIt ? VARIANT_TRUE:VARIANT_FALSE));
 			pMgaContext->CommitTransaction();
@@ -4043,7 +4043,7 @@ void CAggregatePropertyPage::LibraryAmbiguityChk()
 			CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 
 			CComBSTR msg;
-			pMgaContext->BeginTransaction(FALSE);
+			pMgaContext->BeginTransaction(false);
 
 			CComPtr<IMgaFolders> fols;
 			std::map< CComBSTR, std::vector< CComBSTR > > guidmap;
