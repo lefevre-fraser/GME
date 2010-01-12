@@ -716,7 +716,7 @@ void CGMEApp::UpdateProjectName(bool retrievePath) {
 	
 		MSGTRY
 		{
-			COMTHROW(mgaProject->BeginTransaction(terry,TRANSACTION_GENERAL));
+			COMTHROW(mgaProject->BeginTransaction(terry,TRANSACTION_READ_ONLY));
 			COMTHROW(mgaProject->get_Name(&nm));
 			COMTHROW(mgaProject->CommitTransaction());
 		}

@@ -1635,7 +1635,7 @@ void CAggregatePropertyPage::RefreshLibrary()
 			CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 			CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 
-			pMgaContext->BeginTransaction(false);
+			pMgaContext->BeginTransaction(true);
 
 			CComBSTR bszLibName;						
 			COMTHROW(ccpFolder->get_LibraryName(&bszLibName));
