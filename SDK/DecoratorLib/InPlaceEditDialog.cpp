@@ -36,6 +36,18 @@ void CInPlaceEditDialog::MeasureText(CDC* cdc, CSize& minSize, CSize& cSize)
 	if (!m_bMultiLine) {
 		cSize = cdc->GetTextExtent(m_Text == "" ? " " : m_Text);
 	} else {
+		CString trimmedText = m_Text;
+		// Delete the last new line
+		int tLen = trimmedText.GetLength();
+		if (tLen > 0) {
+			if (trimmedText.Right(1) == '\n')
+				trimmedText.Delete(tLen - 1);
+		}
+		tLen = trimmedText.GetLength();
+		if (tLen > 0) {
+			if (trimmedText.Right(1) == '\r')
+				trimmedText.Delete(tLen - 1);
+		}
 		// Determine Text Width and Height
 		cSize.cy = minSize.cy;
 		// Text Width
@@ -43,7 +55,7 @@ void CInPlaceEditDialog::MeasureText(CDC* cdc, CSize& minSize, CSize& cSize)
 		CString oStr;
 		int i = 0;
 		// Parse the string; the lines in a multiline Edit are separated by "\r\n"
-		for(i = 0; TRUE == ::AfxExtractSubString(oStr, m_Text, i, _T('\n')); i++) {
+		for(i = 0; TRUE == ::AfxExtractSubString(oStr, trimmedText, i, _T('\n')); i++) {
 			int iLen = oStr.GetLength() - 1;
 			if (iLen >= 0) {
 				// Eliminate last '\r'
