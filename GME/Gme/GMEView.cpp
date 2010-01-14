@@ -4406,6 +4406,8 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 								SetInElementDecoratorOperation(false);
 								return;
 							}
+							// Note: DecoratorLib in-place edit currently not use SetCapture,
+							// but ReleaseCapture can be handy if some decorator issues SetCapture
 							if (::GetCapture() != NULL)
 								::ReleaseCapture();
 							SetInOpenedDecoratorTransaction(false);
@@ -4678,6 +4680,8 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 									SetInOpenedDecoratorTransaction(false);
 									SetIsContextInitiatedOperation(false);
 								} else {
+									// Note: DecoratorLib in-place edit currently not use SetCapture,
+									// but ReleaseCapture can be handy if some decorator issues SetCapture
 									if (::GetCapture() != NULL)
 										::ReleaseCapture();
 								}
@@ -4861,6 +4865,8 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 									CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 									return;
 								}
+								// Note: DecoratorLib in-place edit currently not use SetCapture,
+								// but ReleaseCapture can be handy if some decorator issues SetCapture
 								if (::GetCapture() != NULL)
 									::ReleaseCapture();
 								SetInElementDecoratorOperation(false);
@@ -5299,6 +5305,8 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 							CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
 							return;
 						}
+						// Note: DecoratorLib in-place edit currently not use SetCapture,
+						// but ReleaseCapture can be handy if some decorator issues SetCapture
 						if (::GetCapture() != NULL)
 							::ReleaseCapture();
 						SetInElementDecoratorOperation(false);
@@ -7116,6 +7124,8 @@ void CGMEView::EndDecoratorOperation(void)
 void CGMEView::CancelDecoratorOperation(bool notify)
 {
 	if (IsInElementDecoratorOperation()) {
+		// Note: DecoratorLib in-place edit currently not use SetCapture,
+		// but ReleaseCapture can be handy if some decorator issues SetCapture
 		if (::GetCapture() != NULL)
 			::ReleaseCapture();
 		EndDecoratorOperation();

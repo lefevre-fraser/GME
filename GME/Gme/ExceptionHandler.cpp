@@ -444,7 +444,8 @@ void ExceptionHandler::UnhandledExceptionFilterCore (const char* msg, PEXCEPTION
 
 	if (m_callCount <= 2) {	// avoid stack overflow/infinite loop
 		if (::GetCapture() != NULL)	// If the crash was during an in-place edit or any other operation which issues SetCapture, then release it!
-			::ReleaseCapture();
+			::ReleaseCapture();		// (Note: DecoratorLib in-place edit currently not use SetCapture,
+									//  but ReleaseCapture can be handy if some decorator issues SetCapture)
 		int retVal =
 			AfxMessageBox("GME encountered an error! Do you want to generate a crash dump file?\n\n"
 						  "The error can be analyzed with the help of this crash dump (Microsoft MiniDump) report file, "

@@ -31,6 +31,9 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	void MeasureText(CDC* cdc, CSize& minSize, CSize& cSize);
+	bool IsAsciiString(const CString& textToValidate);
+	bool IsValidString(const CString& textToValidate);
+	void SignalBackToGme(void);
 
 	DECLARE_MESSAGE_MAP()
 public:
@@ -45,8 +48,9 @@ public:
 	//}}AFX_MSG
 
 protected:
-	bool					m_bInited;
+	bool					m_bToInit;
 	bool					m_bClosed;
+	bool					m_bSignaledBack;
 	DecoratorSDK::TextPart*	m_parentPart;
 	CWnd*					m_intendedParentCWnd;
 	bool					m_bPermanentCWnd;

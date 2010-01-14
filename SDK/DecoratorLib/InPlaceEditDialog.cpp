@@ -14,8 +14,9 @@ CInPlaceEditDialog::CInPlaceEditDialog() :
 	m_bDlgResult(true),
 	m_realParentCWnd(NULL)
 {
-	m_bInited = true;
+	m_bToInit = true;
 	m_bClosed = false;
+	m_bSignaledBack = false;
 }
 
 CInPlaceEditDialog::~CInPlaceEditDialog()
@@ -69,6 +70,43 @@ void CInPlaceEditDialog::MeasureText(CDC* cdc, CSize& minSize, CSize& cSize)
 		// Text Height
 		cSize.cy *= i;
 	}
+}
+
+bool CInPlaceEditDialog::IsAsciiString(const CString& textToValidate)
+{
+	int strLen = textToValidate.GetLength();
+	for (int chIdx = 0; chIdx < strLen; chIdx++) {
+		if (unsigned(textToValidate.GetAt(chIdx)) > 127) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool CInPlaceEditDialog::IsValidString(const CString& textToValidate)
+{
+	return IsAsciiString(textToValidate);
+}
+
+void CInPlaceEditDialog::SignalBackToGme(void)
+{
+	if (!m_bSignaledBack) {
+		if (m_bDlgResult) {
+			CString textToValidate;
+			m_richWnd->GetWindowText(textToValidate);
+			if (IsValidString(textToValidate)) {
+				m_Text = textToValidate;
+				m_parentPart->LabelChanged(m_Text);
+				// transaction operation begin
+				m_parentPart->ExecuteOperation(m_Text);
+				// transaction operation end
+			} else {
+				m_intendedParentCWnd->MessageBox("Invalid (non ASCII) string data: " + textToValidate, "In-place Editor", MB_ICONERROR);
+			}
+		}
+		m_parentPart->LabelEditingFinished(m_initialRect);
+	}
+	m_bSignaledBack = true;
 }
 
 BEGIN_MESSAGE_MAP(CInPlaceEditDialog, CDialog)
@@ -175,7 +213,7 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	SetFocus();					// For safety
 	m_richWnd->SetSel(nCharIndex, nCharIndex);
 
-	m_bInited = true;
+	m_bToInit = true;
 
 	return FALSE;	// return TRUE unless you set the focus to a control
 					// EXCEPTION: OCX Property Pages should return FALSE
@@ -183,9 +221,9 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 
 BOOL CInPlaceEditDialog::OnNcActivate(BOOL bActive)
 {
-	if (m_bInited)
+	if (m_bToInit)
 	{
-		m_bInited = false;
+		m_bToInit = false;
 	}
 	else
 	{
@@ -194,7 +232,7 @@ BOOL CInPlaceEditDialog::OnNcActivate(BOOL bActive)
 			EndDialog(IDOK);
 		}
 	}
-	return FALSE;	// CDialog::OnNcActivate(bActive);
+	return TRUE;	// CDialog::OnNcActivate(bActive);
 }
 
 BOOL CInPlaceEditDialog::OnEraseBkgnd(CDC* pDC)
@@ -207,11 +245,13 @@ BOOL CInPlaceEditDialog::OnEraseBkgnd(CDC* pDC)
 void CInPlaceEditDialog::OnBnClickedCancel()
 {
 	m_bDlgResult = false;
+	SignalBackToGme();
 	CDialog::OnCancel();
 }
 
 void CInPlaceEditDialog::OnBnClickedOk()
 {
+	SignalBackToGme();
 	CDialog::OnOK();
 }
 
@@ -291,14 +331,7 @@ void CInPlaceEditDialog::EndDialog(int nResult)
 {
 	m_bClosed = true;
 
-	if (m_bDlgResult) {
-		m_richWnd->GetWindowText(m_Text);
-		m_parentPart->LabelChanged(m_Text);
-		// transaction operation begin
-		m_parentPart->ExecuteOperation(m_Text);
-		// transaction operation end
-	}
-	m_parentPart->LabelEditingFinished(m_initialRect);
+	SignalBackToGme();
 
 	CDialog::EndDialog(nResult);
 }
