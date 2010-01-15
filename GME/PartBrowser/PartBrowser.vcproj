@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="WINDOWS-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
+			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -111,7 +111,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
+			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -207,27 +207,21 @@
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{0B16B893-5512-48B8-B764-EE72C522EAD8}"
-			RelativePathToProject=".\Core\Core.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{3ED3216E-B64C-4D0B-881F-68BFF2CB3E83}"
-			RelativePathToProject=".\Meta\Meta.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{86DAEF74-2527-41E5-82CE-52C31C5BBE8E}"
-			RelativePathToProject=".\Mga\Mga.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}"
-			RelativePathToProject=".\MgaDecorators\MgaDecorators.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{CA09AB5C-BFAC-4152-AE0B-D5AFC400A5E7}"
-			RelativePathToProject=".\MgaUtil\MgaUtil.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{73A7151A-1044-417B-ACC8-88C48F0AFDCC}"
-			RelativePathToProject=".\Parser\Parser.vcproj"
 		/>
 	</References>
 	<Files>
