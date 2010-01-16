@@ -1894,6 +1894,10 @@ void CGMEApp::OnFileImportxml()
 			return;
 		}
 		CGMEEventLogger::LogGMEEvent(dlg.GetPathName()+"\r\n");
+		CString fullPath = dlg.GetPathName();
+		CString fname = dlg.GetFileName();
+		CString folderPath = fullPath.Left(fullPath.GetLength() - fname.GetLength());
+		CString ftitle = dlg.GetFileTitle();
 
 		if (dlg.GetFileExt().CompareNoCase("xml") == 0 ) {
 			AfxMessageBox(
@@ -1913,7 +1917,11 @@ void CGMEApp::OnFileImportxml()
 				COMTHROW( parser->GetXMLInfo(PutInBstr(dlg.GetPathName()), PutOut(paradigm), PutOut(parversion), &parguid, PutOut(basename), PutOut(version)) );
 
 				CMgaOpenDlg opdlg(CMgaOpenDlg::ImportDialog);
-				opdlg.SetFileNameHint( PutInCString(basename));//opdlg.filenamehint = basename;
+				if (ftitle.IsEmpty())
+					opdlg.SetFileNameHint(PutInCString(basename));
+				else
+					opdlg.SetFileNameHint(ftitle);
+				opdlg.SetFolderPathHint(folderPath);
 				dataconn = opdlg.AskConnectionString(false);
 				if (dataconn.IsEmpty()) {
 				   CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileImportxml exited because empty connection string has been given");
@@ -2569,7 +2577,7 @@ void CGMEApp::OnUniquePrintSetup()
 	DoPrintDialog(&setup);
 }
 
-void CGMEApp::ImportDroppedFile( const CString& fname)
+void CGMEApp::ImportDroppedFile(const CString& fname)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEApp::ImportFile ");
 
@@ -2590,8 +2598,24 @@ void CGMEApp::ImportDroppedFile( const CString& fname)
 
 				COMTHROW( parser->GetXMLInfo(PutInBstr(file_name), PutOut(paradigm), PutOut(parversion), &parguid, PutOut(basename), PutOut(version)) );
 
+				int fnameStart = fname.ReverseFind('\\');
+				if (fnameStart == -1)
+					fnameStart = fname.ReverseFind('/');
+				CString ftitle;
+				CString fpath;
+				if (fnameStart != -1) {
+					fpath = fname.Left(fnameStart + 1);
+					ftitle = fname.Right(fname.GetLength() - fnameStart - 1);
+					int extStart = ftitle.Find('.');
+					if (extStart != -1)
+						ftitle = ftitle.Left(extStart);
+				}
 				CMgaOpenDlg opdlg(CMgaOpenDlg::ImportDialog);
-				opdlg.SetFileNameHint( PutInCString( basename));//opdlg.filenamehint = basename;
+				if (ftitle.IsEmpty())
+					opdlg.SetFileNameHint(PutInCString(basename));
+				else
+					opdlg.SetFileNameHint(ftitle);
+				opdlg.SetFolderPathHint(fpath);
 				dataconn = opdlg.AskConnectionString(false);
 				if (dataconn.IsEmpty()) {
 				   return;

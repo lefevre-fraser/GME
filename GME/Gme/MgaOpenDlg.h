@@ -26,14 +26,18 @@ public:
 public:
 	CMgaOpenDlg(DialogTypes dType = OpenDialog, CWnd* pParent = NULL);   // standard constructor
 
-	void SetFileNameHint( CString hint);
+	void SetFileNameHint(const CString& hint);
+	void SetFolderPathHint(const CString& hint);
 
 	bool pressed_back;
 
 	CString AskConnectionString(bool meta);
-	CString AskMGAConnectionString( const CString& spec_ext = "");
-	static CString PruneConnectionString(const CString &conn);
+	CString AskMGAConnectionString(const CString& spec_ext = "");
+private:
+	CString PruneConnectionString(const CString& conn);
+	CString FilterInvalidCharacters(const CString& path, bool isPath = false);
 
+public:
 // Dialog Data
 	//{{AFX_DATA(CMgaOpenDlg)
 	enum { IDD = IDD_MGAOPEN };
@@ -51,7 +55,8 @@ public:
 // Implementation
 protected:
 	
-	CString filenamehint;
+	CString fileNameHint;
+	CString folderPathHint;
 	BOOL flag_isopen;
 	bool flag_back;
 	bool flag_create;
@@ -60,6 +65,7 @@ protected:
 	CString filemsg;
     CString xmlfilemsg;
 
+public:
 	// Generated message map functions
 	//{{AFX_MSG(CMgaOpenDlg)
 	virtual BOOL OnInitDialog();

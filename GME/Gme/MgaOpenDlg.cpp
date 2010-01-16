@@ -99,44 +99,45 @@ static char metafilter[] = "MGA Meta Files (*.mta)|*.mta|XML Paradigm Files (*.x
 	"Microsoft Access Files (*.mdb)|*.mdb|All files (*.*)|*.*||";
 
 
-CString CMgaOpenDlg::AskMGAConnectionString( const CString& spec_ext) {
-		CString filters = mgaonlyfilter;
-		if( !spec_ext.IsEmpty())
+CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
+{
+	CString filters = mgaonlyfilter;
+	if( !spec_ext.IsEmpty())
+	{
+		CString SPEC_EXT = spec_ext; SPEC_EXT.MakeUpper();
+		CString spec_filter;
+		// as "MGA Files (*.mga)|*.mga|"
+		spec_filter.Format( "%s Files (*.%s)|*.%s|", SPEC_EXT, spec_ext, spec_ext);
+		// insert this filter at the beginning (thus preferred)
+		filters.Insert( 0, spec_filter);
+	}
+
+	CString conn;
+	CFileDialog dlg(flag_isopen ? TRUE : FALSE, NULL, NULL, 
+			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | 
+			0, filters);
+
+	// if preferred path was set by the user then change to that directory
+	if( !theApp.m_preferredPath.IsEmpty())
+	{
+		OPENFILENAME &ofn = dlg.GetOFN();
+		// better be successful in order to use in ofn structure
+		if( theApp.SetWorkingDirectory( theApp.m_preferredPath))
+			ofn.lpstrInitialDir = theApp.m_preferredPath;
+	}
+
+	if( dlg.DoModal() == IDOK )	{
+		conn = CString("MGA=") + dlg.GetPathName();
+		if(dlg.GetFileExt() == "") // no extension specified by the user
 		{
-			CString SPEC_EXT = spec_ext; SPEC_EXT.MakeUpper();
-			CString spec_filter;
-			// as "MGA Files (*.mga)|*.mga|"
-			spec_filter.Format( "%s Files (*.%s)|*.%s|", SPEC_EXT, spec_ext, spec_ext);
-			// insert this filter at the beginning (thus preferred)
-			filters.Insert( 0, spec_filter);
+			conn += ".";
+			// if spec_ext is NOT empty then 
+			// filterindex = 1 stands for special extension
+			//             = 2 is the MGA
+			conn += dlg.m_ofn.nFilterIndex == 1 && !spec_ext.IsEmpty() ? spec_ext:"mga";
 		}
-
-		CString conn;
-		CFileDialog dlg(flag_isopen ? TRUE : FALSE, NULL, NULL, 
-				OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | 
-				0, filters);
-
-		// if preferred path was set by the user then change to that directory
-		if( !theApp.m_preferredPath.IsEmpty())
-		{
-			OPENFILENAME &ofn = dlg.GetOFN();
-			// better be successful in order to use in ofn structure
-			if( theApp.SetWorkingDirectory( theApp.m_preferredPath))
-				ofn.lpstrInitialDir = theApp.m_preferredPath;
-		}
-
-		if( dlg.DoModal() == IDOK )	{
-			conn = CString("MGA=") + dlg.GetPathName();
-			if(dlg.GetFileExt() == "") // no extension specified by the user
-			{
-				conn += ".";
-				// if spec_ext is NOT empty then 
-				// filterindex = 1 stands for special extension
-				//             = 2 is the MGA
-				conn += dlg.m_ofn.nFilterIndex == 1 && !spec_ext.IsEmpty() ? spec_ext:"mga";
-			}
-		}
-		return conn;
+	}
+	return conn;
 }
 
 CString CMgaOpenDlg::AskConnectionString(bool meta)
@@ -151,7 +152,7 @@ CString CMgaOpenDlg::AskConnectionString(bool meta)
 			{
 				CDatabase db;
 				
-				CString hint = filenamehint;
+				CString hint = fileNameHint;
 				int pos = hint.ReverseFind('\\');
 				if(pos >= 0) hint = hint.Mid(pos+1);
 				pos = hint.Find('.');
@@ -166,9 +167,11 @@ CString CMgaOpenDlg::AskConnectionString(bool meta)
 			}
 			else if( m_radio == 1 )
 			{
-				CFileDialog dlg(true, NULL, filenamehint.IsEmpty() ? (LPCSTR)filenamehint : NULL, 
-					OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | 
+				CFileDialog dlg(true, NULL, fileNameHint.IsEmpty() ? NULL : (LPCSTR)fileNameHint,
+					OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
 					(flag_create ? 0 : OFN_FILEMUSTEXIST), meta ? metafilter : mgafilter);
+				if (!folderPathHint.IsEmpty())
+					dlg.m_ofn.lpstrInitialDir = folderPathHint.GetBuffer(_MAX_PATH);
 
 				if( dlg.DoModal() == IDOK )
 				{
@@ -268,7 +271,7 @@ CString CMgaOpenDlg::AskConnectionString(bool meta)
 	return conn;
 }
 
-CString CMgaOpenDlg::PruneConnectionString(const CString &conn)
+CString CMgaOpenDlg::PruneConnectionString(const CString& conn)
 {
 	CString ret;
 
@@ -304,6 +307,30 @@ CString CMgaOpenDlg::PruneConnectionString(const CString &conn)
 	}
 
 	return ret;
+}
+
+CString CMgaOpenDlg::FilterInvalidCharacters(const CString& path, bool isPath)
+{
+	CString str = path;
+	// are there invalid characters in the suggested file name?
+	if (str.FindOneOf( _T("\\/:*?\"<>|")) != -1)
+	{
+		TCHAR nc = _T('_');
+		int rpl = 0;
+		if (!isPath) {
+			rpl += str.Replace(_T('\\'), nc);
+			rpl += str.Replace(_T('/'), nc);
+			rpl += str.Replace(_T(':'), nc);
+		}
+		rpl += str.Replace(_T('*'), nc);
+		rpl += str.Replace(_T('?'), nc);
+		rpl += str.Replace(_T('"'), nc);
+		rpl += str.Replace(_T('<'), nc);
+		rpl += str.Replace(_T('>'), nc);
+		rpl += str.Replace(_T('|'), nc);
+		// rpl chars replaced in total
+	}
+	return str;
 }
 
 void CMgaOpenDlg::DoDataExchange(CDataExchange* pDX)
@@ -366,23 +393,12 @@ void CMgaOpenDlg::OnNext()
 	CDialog::OnOK();
 }
 
-void CMgaOpenDlg::SetFileNameHint( CString hint)
+void CMgaOpenDlg::SetFileNameHint(const CString& hint)
 {
-	// are there invalid characters in the suggested file name?
-	if( -1 != hint.FindOneOf( _T("\\/:*?\"<>|")))
-	{
-		TCHAR nc = _T('_');
-		int rpl = 0;
-		rpl += hint.Replace(_T('\\'), nc);
-		rpl += hint.Replace(_T('/'), nc);
-		rpl += hint.Replace(_T(':'), nc);
-		rpl += hint.Replace(_T('*'), nc);
-		rpl += hint.Replace(_T('?'), nc);
-		rpl += hint.Replace(_T('"'), nc);
-		rpl += hint.Replace(_T('<'), nc);
-		rpl += hint.Replace(_T('>'), nc);
-		rpl += hint.Replace(_T('|'), nc);
-		// rpl chars replaced in total
-	}
-	filenamehint = hint;
+	fileNameHint = FilterInvalidCharacters(hint);
+}
+
+void CMgaOpenDlg::SetFolderPathHint(const CString& hint)
+{
+	folderPathHint = FilterInvalidCharacters(hint, true);
 }
