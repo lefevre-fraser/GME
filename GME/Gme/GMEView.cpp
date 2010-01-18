@@ -9694,7 +9694,9 @@ LRESULT CGMEView::OnExecutePendingRequests(WPARAM wParam, LPARAM lParam)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnExecutePendingRequests() in " + path + name + "\r\n");
 
+	BeginTransaction();
 	TryToExecutePendingRequests();
+	CommitTransaction();
 
 	return 0;
 }
