@@ -190,25 +190,26 @@ void CGMEBrowser::OnCRonObjectActivebrowserCtlr1(LPUNKNOWN selected)
 
 BOOL CGMEBrowser::PreTranslateMessage(MSG* pMsg) 
 {
-	// JIRA GME-217
-	// SYSKEYDOWN and othey SYSKEY messages come if the <Alt> key is pressed. The JIRA issue
-	// is about the non working menu points and the OLE containers needs very careful and fragile message handling
-	// (see various PreTranslateMessage variations (here, ObjectInspector, Search, etc.), so I'll handle the <Alt>.
-	// note
-	// 1. If all messages would be treated by the default PreTranslateMessage there would be problem with the
-	// undo (Ctrl+Z), Escape and some other functionalities during in=place editing in the treeview or in the combobox
-	// 2. The combobox (CAutoComboBox) contains explicit SetFocus call in case of VK_TAB
-	// 3. If I try to use hybrid approach like in case of some other OLE containers, when majority of the messages are
-	// handled by the default PreTranslateMessage and some special keys (like Enter, Escape, Ctrl+V, Tab) are handled
-	// by us then pressing the Tabulator key (VK_TAB) results an infinite loop inside the OccManager in MFC.
-	if (pMsg->message == WM_SYSKEYDOWN || pMsg->message == WM_SYSKEYUP || pMsg->message == WM_SYSCHAR) {
-		return CDockablePane::PreTranslateMessage(pMsg);
+	if( pMsg->message == WM_KEYDOWN )
+	{
+		switch(pMsg->wParam)
+		{
+			case VK_RETURN:
+			case VK_ESCAPE:
+			case VK_DELETE:
+			// Modification by Volgyesi (undo problems)
+			case VK_CONTROL:
+			case 'z':
+			case 'Z':
+			// Modification End
+			case VK_TAB:	// for JIRA GME-178
+				::TranslateMessage(pMsg);
+				::DispatchMessage(pMsg);
+				return TRUE;
+		}
 	}
 
-	// New browser is not a dialog, it's a property sheet, baby...
-	::TranslateMessage(pMsg);
-	::DispatchMessage(pMsg);
-	return TRUE;
+	return CDockablePane::PreTranslateMessage(pMsg);
 }
 
 void CGMEBrowser::ShowAttrPref(bool isAttr, LPUNKNOWN selected) {
