@@ -703,6 +703,7 @@
                                 <ProgId Id="Mga.MgaRegistrar.1" Description="MgaRegistrar Class">
                                     <ProgId Id="Mga.MgaRegistrar" Description="MgaRegistrar Class" />
                                 </ProgId>
+                                <Interface Id="{F1D6BB05-42EE-11D4-B3F4-005004D38590}" Name="IMgaRegistrar"  ProxyStubClassId="{00020424-0000-0000-C000-000000000046}" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
                             </Class>
                         </AppId>    
                     
