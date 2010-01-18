@@ -116,14 +116,16 @@ def build_VS(sln_path, config_name, project_name=""):
     DTE.MainWindow.Visible = True
     DTE.Solution.Open( sln_path )
     builder = DTE.Solution.SolutionBuild
+		failed = 0
     if prefs['clean']:
         builder.Clean(1)
     if (project_name):
         builder.BuildProject(config_name, project_name, 1)
+        failed = builder.LastBuildInfo
     else:
-        builder.SolutionConfigurations.Item(config_name).Activate()
-        builder.Build(1);
-    failed = builder.LastBuildInfo
+        for project in DTE.Solution.Projects:
+            builder.BuildProject(config_name, project.Name, 1)
+            failed = failed + builder.LastBuildInfo
     DTE.Quit()
     if failed > 0:
         raise BuildException, "In solution " + sln_path + ": " + str(failed) + " project(s) failed to compile."
