@@ -2511,6 +2511,7 @@ STDMETHODIMP CMgaRegistrar::RegisterComponentLibrary(BSTR path, regaccessmode_en
 			//C# dll:
 			int retVal = CDotNetUtils::CallManagedFunction(path, L"GME.CSharp.Registrar", L"DLLRegisterServer", mode);
 			ASSERT(retVal == 0);
+			// FIXME: don't we need FreeLibrary ?
 		}
 		else
 		{

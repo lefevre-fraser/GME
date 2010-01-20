@@ -92,6 +92,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../Lib"
 				ModuleDefinitionFile=".\MgaUtil.def"
+				AddModuleNamesToAssembly=""
+				EmbedManagedResourceFile=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Release/MgaUtil.pdb"
 				GenerateMapFile="true"
@@ -370,6 +372,30 @@
 			<File
 				RelativePath="MgaClosure.cpp"
 				>
+			</File>
+			<File
+				RelativePath=".\MgaClrUtil.cs"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="csc MgaClrUtil.cs"
+						CommandLine="csc /t:library /out:&quot;res\$(InputName).dll&quot; /pdb:&quot;res\$(InputName).pdb&quot; &quot;$(InputPath)&quot;"
+						Outputs="res\$(InputName).dll"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="csc MgaClrUtil.cs"
+						CommandLine="csc /t:library /out:&quot;res\$(InputName).dll&quot; /pdb:&quot;res\$(InputName).pdb&quot; &quot;$(InputPath)&quot;"
+						Outputs="res\$(InputName).dll"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="MgaEventLogger.cpp"
@@ -717,6 +743,10 @@
 			</File>
 			<File
 				RelativePath="..\Gme\res\GME.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res\GmeClrUtil.dll"
 				>
 			</File>
 			<File

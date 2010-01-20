@@ -87,6 +87,7 @@
 #define IDD_CLOSURESIMPLECP             2070
 #define IDD_ALTERNMSPDLG                2071
 #define IDS_REGISTRAR_NAME              2072
+#define IDR_CLR_ASSEMBLY1               2074
 #define IDR_COMPONENTPROXY              2090
 #define IDC_PROGRESS1                   2150
 #define IDC_STATIC1                     2151
@@ -241,7 +242,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        2074
+#define _APS_NEXT_RESOURCE_VALUE        2075
 #define _APS_NEXT_COMMAND_VALUE         32779
 #define _APS_NEXT_CONTROL_VALUE         2294
 #define _APS_NEXT_SYMED_VALUE           2091

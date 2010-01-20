@@ -9,7 +9,6 @@
 #include "RegistryBrowserDlg.h"
 #include "AnnotationBrowserDlg.h"
 #include "CommonComponent.h"
-#include "DotNetUtils.h"
 
 
 /* Deprecated Web based help

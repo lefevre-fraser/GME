@@ -2,25 +2,23 @@
 #include "DotNetUtils.h"
 #include <MSCOREE.H>
 #include <corerror.h>
+#include "resource.h"
+
+#include "atlsafe.h"
 
 #import "C:\\windows\\Microsoft.NET\\Framework\\v2.0.50727\\mscorlib.tlb" auto_rename
 using namespace mscorlib;
+
+// http://blogs.msdn.com/oldnewthing/archive/2004/10/25/247180.aspx
+EXTERN_C IMAGE_DOS_HEADER __ImageBase;
+#define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
+
 
 
 typedef HRESULT (WINAPI * tCorBindToRuntimeEx)(LPWSTR,LPWSTR,DWORD,REFCLSID,REFIID,LPVOID*);
 
 
 int CDotNetUtils::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodName, int mode)
-{
-	return CallManagedFunction(assemblyPath, typeName, methodName, NULL, mode);
-}
-
-int CDotNetUtils::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodName, CComPtr<IMgaProject> param)
-{
-	return CallManagedFunction(assemblyPath, typeName, methodName, param, 0);
-}
-
-int CDotNetUtils::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR methodName, CComPtr<IMgaProject> param, int mode)
 {
 	//
 	// Query 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v2.0.50727\Install' DWORD value
@@ -60,109 +58,111 @@ int CDotNetUtils::CallManagedFunction(BSTR assemblyPath, BSTR typeName, BSTR met
 	if (!cor) {
 		AfxMessageBox("CallManagedFunction: couldn't load mscoree.dll (.NET Framework provider dll)");
 		return 3;
-	} else {
-		tCorBindToRuntimeEx pCorBindToRuntimeEx = (tCorBindToRuntimeEx) GetProcAddress(cor, "CorBindToRuntimeEx");
-		if (!pCorBindToRuntimeEx) {
-			AfxMessageBox("CallManagedFunction: couldn't load CorBindToRuntimeEx function entry from mscoree.dll (.NET Framework provider dll)");
-			return 3;
-		} else {
-			LPWSTR pszVer = L"v2.0.50727";
-			LPWSTR pszFlavor = L"wks";
-			ICorRuntimeHost *pHost = NULL;
-
-			HRESULT hr = pCorBindToRuntimeEx(pszVer,
-											 pszFlavor,
-											 STARTUP_LOADER_OPTIMIZATION_SINGLE_DOMAIN | STARTUP_CONCURRENT_GC,
-											 CLSID_CorRuntimeHost,
-											 IID_ICorRuntimeHost,
-											 (void **)&pHost);
-
-			if (!SUCCEEDED(hr)) {
-				CString csTemp;
-				if (hr == CLR_E_SHIM_RUNTIMELOAD)
-					csTemp.Format("CallManagedFunction: CorBindToRuntimeEx failed because of mismatching .NET Framework version (CLR_E_SHIM_RUNTIMELOAD).");
-				else
-					csTemp.Format("CallManagedFunction: CorBindToRuntimeEx failed: %ld", hr);
-				AfxMessageBox(csTemp);
-				return 1;
-			}
-
-			TRACE("Loaded version 2.0.50727 of the CLR\n");
-
-			pHost->Start(); // Start the CLR
-
-			//
-			// Get a pointer to the default domain in the CLR
-			//
-			_AppDomainPtr pDefaultDomain = NULL;
-			IUnknownPtr   pAppDomainPunk = NULL;
-
-			hr = pHost->GetDefaultDomain(&pAppDomainPunk);
-			ASSERT(pAppDomainPunk);
-
-			hr = pAppDomainPunk->QueryInterface(__uuidof(_AppDomain), (void**) &pDefaultDomain);
-			ASSERT(pDefaultDomain);
-
-			try
-			{
-				_ObjectHandlePtr pObjectHandle;
-				_ObjectPtr pObject; 
-				_TypePtr pType;
-				SAFEARRAY* psa;
-
-				// Create an instance of a type from an assembly
-				pObjectHandle = pDefaultDomain->CreateInstanceFrom(assemblyPath, typeName);
-
-				variant_t vtobj = pObjectHandle->Unwrap();								// Get an _Object (as variant) from the _ObjectHandle
-				vtobj.pdispVal->QueryInterface(__uuidof(_Object), (void**)&pObject);	// QI the variant for the Object iface
-				pType = pObject->GetType();												// Get the _Type iface
-				psa = SafeArrayCreateVector(VT_VARIANT, 0, 1);							// Create a safearray (0 length)
-				
-				{
-					VARIANT typeNameParam;
-					VariantInit(&typeNameParam);
-					CComPtr<IDispatch> p;
-					if (!param) {
-						typeNameParam.vt = VT_I4;
-						typeNameParam.intVal = mode;
-					} else {
-						typeNameParam.vt = VT_DISPATCH;
-						p = param;
-						typeNameParam.pdispVal = p;
-					}
-					LONG index = 0;
-
-					SafeArrayPutElement(psa, &index, &typeNameParam);
-				}
-
-				//_variant_t retVal = 
-				pType->InvokeMember_3(methodName,										// Invoke "Test" method on pType
-									  BindingFlags_InvokeMethod,
-									  NULL,
-									  vtobj,
-									  psa);
-
-				//if (retVal.vt == VT_I4)
-				//{
-				//	int ret = retVal.intVal;
-				//}
-
-				SafeArrayDestroy(psa);													// Destroy safearray
-			}
-			catch(_com_error& error)
-			{
-				CString csTemp;
-				csTemp.Format("CallManagedFunction exception, ERROR: %s", (_TCHAR*)error.Description());
-				AfxMessageBox(csTemp);
-			}
-
-			pHost->Stop();
-			pHost->Release();
-		}
-
+	}
+	tCorBindToRuntimeEx pCorBindToRuntimeEx = (tCorBindToRuntimeEx) GetProcAddress(cor, "CorBindToRuntimeEx");
+	if (!pCorBindToRuntimeEx) {
+		AfxMessageBox("CallManagedFunction: couldn't load CorBindToRuntimeEx function entry from mscoree.dll (.NET Framework provider dll)");
 		FreeLibrary(cor);
+		return 3;
+	}
+	LPWSTR pszVer = L"v2.0.50727";
+	LPWSTR pszFlavor = L"wks";
+	ICorRuntimeHost *pHost = NULL;
+
+	HRESULT hr = pCorBindToRuntimeEx(pszVer,
+									 pszFlavor,
+									 STARTUP_LOADER_OPTIMIZATION_SINGLE_DOMAIN | STARTUP_CONCURRENT_GC,
+									 CLSID_CorRuntimeHost,
+									 IID_ICorRuntimeHost,
+									 (void **)&pHost);
+
+	if (!SUCCEEDED(hr)) {
+		CString csTemp;
+		if (hr == CLR_E_SHIM_RUNTIMELOAD)
+			csTemp.Format("CallManagedFunction: CorBindToRuntimeEx failed because of mismatching .NET Framework version (CLR_E_SHIM_RUNTIMELOAD).");
+		else
+			csTemp.Format("CallManagedFunction: CorBindToRuntimeEx failed: %ld", hr);
+		AfxMessageBox(csTemp);
+		FreeLibrary(cor);
+		return 1;
 	}
 
-	return 0;
+	TRACE("Loaded version 2.0.50727 of the CLR\n");
+
+	pHost->Start(); // Start the CLR
+
+	//
+	// Get a pointer to the default domain in the CLR
+	//
+	_AppDomainPtr pDefaultDomain = NULL;
+	IUnknownPtr   pAppDomainPunk = NULL;
+
+	hr = pHost->GetDefaultDomain(&pAppDomainPunk);
+	ASSERT(pAppDomainPunk);
+
+	hr = pAppDomainPunk->QueryInterface(__uuidof(_AppDomain), (void**) &pDefaultDomain);
+	ASSERT(pDefaultDomain);
+
+	BSTR uncaughtException = 0;
+	int retval = 0;
+
+	try
+	{
+		// Load MgaClrUtil.dll from resource
+		HRSRC hResInfo = FindResource(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDR_CLR_ASSEMBLY1),  RT_RCDATA);
+		HGLOBAL hGlobal = LoadResource(HINST_THISCOMPONENT, hResInfo);
+		LPVOID data = LockResource(hGlobal);
+		DWORD size = SizeofResource(HINST_THISCOMPONENT, hResInfo);
+		ATL::CComSafeArray<BYTE> ByteArray;
+		ByteArray.Add(size, reinterpret_cast<BYTE const*>(data), TRUE);
+
+		_AssemblyPtr util = pDefaultDomain->Load_3(*ByteArray.GetSafeArrayPtr());
+
+		// Pass in location for ManagedExceptionCallback
+		_variant_t exceptionStringLocation;
+		exceptionStringLocation = (int)&uncaughtException;
+#ifdef _WIN64
+#error int isn't big enough for a pointer on _WIN64
+#endif
+		ATL::CComSafeArray<VARIANT> arguments;
+		arguments.Add(exceptionStringLocation.Detach(), 0);
+		arguments.Add(_variant_t(assemblyPath).Detach(), 0);
+		arguments.Add(_variant_t(typeName).Detach(), 0);
+		arguments.Add(_variant_t(methodName).Detach(), 0);
+		arguments.Add(_variant_t(mode).Detach(), 0);
+		_variant_t helper = util->CreateInstance_3(_bstr_t("GME.MgaUtil.RegistrationHelper"),
+			0, BindingFlags_Default, 0, arguments, 0, 0);
+		// KMS: for some reason, CreateInstance_3 doesn't throw an exception if the Type isn't found.
+		// Check if the return value is VT_EMPTY
+		if (helper == _variant_t())
+		{
+			retval = 1;
+		}
+	}
+	catch(_com_error& error)
+	{
+		CString csTemp;
+		csTemp.Format("CallManagedFunction exception, ERROR: %s", (_TCHAR*)error.Description());
+		if (uncaughtException != 0)
+		{
+			csTemp += _T("\n\nAdditional information:\n");
+			csTemp += uncaughtException;
+			SysFreeString(uncaughtException);
+		}
+		AfxMessageBox(csTemp);
+		retval = 1;
+	}
+
+	pHost->Stop();
+	pHost->Release();
+
+	FreeLibrary(cor);
+
+	return retval;
 }
 
+extern "C" void __declspec(dllexport) __stdcall ManagedExceptionCallback(void * pBSTR, BSTR exception)
+{
+	BSTR* target = (BSTR*)pBSTR;
+	*target = SysAllocString(exception);
+}
