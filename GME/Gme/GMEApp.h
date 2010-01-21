@@ -164,6 +164,7 @@ public:
 	void GetSettings();
 
 	void UpdateMainTitle(bool retrievePath = false);
+	bool IsUndoPossible(void) const;
 
 // Overrides
 	// ClassWizard generated virtual function overrides

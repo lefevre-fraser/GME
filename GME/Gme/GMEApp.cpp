@@ -1654,18 +1654,11 @@ void CGMEApp::OnFileOpen()
 
 }
 
-
-#define PROJECT_STATUS_CHANGED 4
-
 BOOL CGMEApp::SaveAllModified() 
 {
 	if (mgaProject != NULL && (proj_type_is_mga || proj_type_is_xmlbackend)) {
-		long l;
-		COMTHROW(mgaProject->get_ProjectStatus(&l));
-		int ret;
-		if (!(l & PROJECT_STATUS_CHANGED))
-			ret = IDNO;
-		else
+		int ret = IDNO;
+		if (IsUndoPossible())
 			ret = AfxMessageBox("Save project '" + projectName + "'?",  MB_YESNOCANCEL);
 		if (ret == IDCANCEL) {
 			return FALSE;
@@ -1818,12 +1811,9 @@ void CGMEApp::OnFileAbortProject()
 	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileAbortProject\r\n");
 	((CMainFrame*)m_pMainWnd)->clearMgaProj();
 
-	if(!mgaProject) return;
-	long l;
-	COMTHROW(mgaProject->get_ProjectStatus(&l));
-	if(!abort_on_close && (l & PROJECT_STATUS_CHANGED) &&
-		AfxMessageBox("Discard edits to project " + projectName + "?", 
-		MB_OKCANCEL) == IDCANCEL) {
+	if(!abort_on_close && IsUndoPossible() &&
+		AfxMessageBox("Discard edits to project " + projectName + "?", MB_OKCANCEL) == IDCANCEL)
+	{
 		return;
 	}
 	abort_on_close = true;
@@ -2452,14 +2442,7 @@ void CGMEApp::OnUpdateEditUndo(CCmdUI* pCmdUI)
 
 void CGMEApp::OnUpdateEditRedo(CCmdUI* pCmdUI) 
 {
-	if(guiMetaProject != NULL) {
-		short undoSize;
-		short redoSize;
-		mgaProject->UndoRedoSize(&undoSize,&redoSize);
-		pCmdUI->Enable(redoSize > 0);
-	}
-	else
-		pCmdUI->Enable(FALSE);
+	pCmdUI->Enable(IsUndoPossible() ? TRUE : FALSE);
 }
 
 void CGMEApp::OnUpdateEditClearUndo(CCmdUI* pCmdUI) 
@@ -2932,6 +2915,21 @@ void CGMEApp::UpdateMainTitle(bool retrievePath)
 {
 	if (CMainFrame::theInstance)
 		UpdateMainFrameTitle(projectName, retrievePath);
+}
+
+bool CGMEApp::IsUndoPossible(void) const
+{
+	if(!mgaProject)
+		return false;
+
+	if (guiMetaProject != NULL) {
+		short undoSize;
+		short redoSize;
+		mgaProject->UndoRedoSize(&undoSize,&redoSize);
+		return undoSize > 0;
+	}
+
+	return false;
 }
 
 void CGMEApp::OnFocusBrowser()
