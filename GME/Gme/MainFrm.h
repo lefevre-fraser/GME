@@ -156,6 +156,8 @@ protected:
 	afx_msg void OnMdiNewHorzTabGroup();
 	afx_msg void OnMdiNewVertGroup();
 	LRESULT OnToolbarCreateNew(WPARAM wp,LPARAM lp);
+	afx_msg BOOL OnBarCheck(UINT nID);
+	afx_msg void OnUpdateControlBarMenus(CCmdUI* pCmdUI);
 	afx_msg void OnWindowNewhorizontaltabgroup();
 	afx_msg void OnWindowNewverticaltabgroup();
 	afx_msg void OnWindowMovetoprevioustabgroup();

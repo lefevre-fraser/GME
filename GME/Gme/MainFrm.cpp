@@ -113,11 +113,13 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND_EX(IDW_TOOLBAR_COMPONENT, OnBarCheck)
 	ON_COMMAND_EX(IDW_TOOLBAR_MODE, OnBarCheck)
 	ON_COMMAND_EX(IDW_TOOLBAR_NAVIG, OnBarCheck)
-	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_MAIN, OnUpdateControlBarMenu)
-	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_WINS, OnUpdateControlBarMenu)
-	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_COMPONENT, OnUpdateControlBarMenu)
-	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_MODE, OnUpdateControlBarMenu)
-	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_NAVIG, OnUpdateControlBarMenu)
+	ON_COMMAND_EX(IDW_TOOLBAR_MODELING, OnBarCheck)
+	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_MAIN, OnUpdateControlBarMenus)
+	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_WINS, OnUpdateControlBarMenus)
+	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_COMPONENT, OnUpdateControlBarMenus)
+	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_MODE, OnUpdateControlBarMenus)
+	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_NAVIG, OnUpdateControlBarMenus)
+	ON_UPDATE_COMMAND_UI(IDW_TOOLBAR_MODELING, OnUpdateControlBarMenus)
 	ON_COMMAND(ID_BUTTON33020, OnBtnBack)
 	ON_COMMAND(ID_BUTTON33022, OnBtnHome)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON33020, OnUpdateBtnBack)
@@ -1410,6 +1412,33 @@ LRESULT CMainFrame::OnToolbarCreateNew(WPARAM wp,LPARAM lp)
 
 	pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."));
 	return lres;
+}
+
+void CMainFrame::OnUpdateControlBarMenus(CCmdUI* pCmdUI)
+{
+	switch (pCmdUI->m_nID) {
+		case IDW_TOOLBAR_MAIN:		pCmdUI->SetCheck(m_wndToolBarMain.IsVisible());		break;
+		case IDW_TOOLBAR_WINS:		pCmdUI->SetCheck(m_wndToolBarWins.IsVisible());		break;
+		case IDW_TOOLBAR_COMPONENT:	pCmdUI->SetCheck(m_wndComponentBar.IsVisible());	break;
+		case IDW_TOOLBAR_MODE:		pCmdUI->SetCheck(m_wndModeBar.IsVisible());			break;
+		case IDW_TOOLBAR_NAVIG:		pCmdUI->SetCheck(m_wndNaviBar.IsVisible());			break;
+		case IDW_TOOLBAR_MODELING:	pCmdUI->SetCheck(m_wndToolBarModeling.IsVisible());	break;
+		default: ASSERT(false);
+	}
+}
+
+BOOL CMainFrame::OnBarCheck(UINT nID)
+{
+	switch (nID) {
+		case IDW_TOOLBAR_MAIN:		ShowPane(&m_wndToolBarMain,		!m_wndToolBarMain.IsVisible(),		FALSE, FALSE); break;
+		case IDW_TOOLBAR_WINS:		ShowPane(&m_wndToolBarWins,		!m_wndToolBarWins.IsVisible(),		FALSE, FALSE); break;
+		case IDW_TOOLBAR_COMPONENT:	ShowPane(&m_wndComponentBar,	!m_wndComponentBar.IsVisible(),		FALSE, FALSE); break;
+		case IDW_TOOLBAR_MODE:		ShowPane(&m_wndModeBar,			!m_wndModeBar.IsVisible(),			FALSE, FALSE); break;
+		case IDW_TOOLBAR_NAVIG:		ShowPane(&m_wndNaviBar,			!m_wndNaviBar.IsVisible(),			FALSE, FALSE); break;
+		case IDW_TOOLBAR_MODELING:	ShowPane(&m_wndToolBarModeling,	!m_wndToolBarModeling.IsVisible(),	FALSE, FALSE); break;
+		default: return FALSE;
+	}
+	return TRUE;
 }
 
 void CMainFrame::OnWindowNewhorizontaltabgroup()

@@ -215,7 +215,12 @@ BEGIN
     BEGIN
         POPUP "&Toolbars"
         BEGIN
-            MENUITEM "<Toolbar List>",              ID_VIEW_TOOLBARS
+            MENUITEM "&Standard",                   IDW_TOOLBAR_MAIN
+            MENUITEM "&Modeling",                   IDW_TOOLBAR_MODELING
+            MENUITEM "&Windows",                    IDW_TOOLBAR_WINS
+            MENUITEM "&Component",                  IDW_TOOLBAR_COMPONENT
+            MENUITEM "&Mode",                       IDW_TOOLBAR_MODE
+            MENUITEM "&Navigator",                  IDW_TOOLBAR_NAVIG
         END
         MENUITEM "&Full Screen",                ID_VIEW_FULLSCREEN
         MENUITEM "Cl&ear Console",              ID_VIEW_CLEARCONSOLE
@@ -332,6 +337,7 @@ BEGIN
         POPUP "&Toolbars"
         BEGIN
             MENUITEM "&Standard",                   IDW_TOOLBAR_MAIN
+            MENUITEM "&Modeling",                   IDW_TOOLBAR_MODELING
             MENUITEM "&Windows",                    IDW_TOOLBAR_WINS
             MENUITEM "&Component",                  IDW_TOOLBAR_COMPONENT
             MENUITEM "&Mode",                       IDW_TOOLBAR_MODE
