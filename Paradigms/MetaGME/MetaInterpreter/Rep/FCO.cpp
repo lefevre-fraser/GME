@@ -20,6 +20,7 @@ extern Globals global_vars;
 /*static*/ const std::string FCO::Decorator_str = "Decorator";
 /*static*/ const std::string FCO::IsHotspotEnabled_str = "IsHotspotEnabled";
 /*static*/ const std::string FCO::IsTypeShown_str = "IsTypeShown";
+/*static*/ const std::string FCO::IsTypeInfoShown_str = "IsTypeInfoShown";
 /*static*/ const std::string FCO::GeneralPreferences_str = "GeneralPreferences";
 /*static*/ const std::string FCO::NamePosition_str = "NamePosition";
 /*static*/ const std::string FCO::SubTypeIcon_str = "SubTypeIcon";
@@ -46,6 +47,7 @@ FCO::FCO( BON::FCO& ptr, BON::FCO& resp_ptr)
 	, m_isAbstract( false)
 	, m_bAttrIsHotspotEnabled( true)
 	, m_bAttrIsTypeShown( false)
+	, m_bAttrIsTypeInfoShown( false)
 	, m_bAttrIsNameEnabled( true)
 	, m_bAttrIsResizable( false)
 	, m_iAttrNamePosition( 0)
@@ -165,6 +167,13 @@ void FCO::initAttributes()
 	{
 		m_bAttrIsTypeShown		= m_ptr->getAttribute( IsTypeShown_str)->getBooleanValue();		// def val: FALSE (dumped if TRUE)
 		istypeshown_set = true;
+	}
+
+	bool istypeinfoshown_set = false;
+	if( m_ptr->getAttribute( IsTypeInfoShown_str)->getStatus() >= BON::AS_Here)
+	{
+		m_bAttrIsTypeInfoShown		= m_ptr->getAttribute( IsTypeInfoShown_str)->getBooleanValue();		// def val: FALSE (dumped if TRUE)
+		istypeinfoshown_set = true;
 	}
 	
 	bool isnameenabled_set = false;
@@ -358,6 +367,12 @@ void FCO::initAttributes()
 		{
 			m_bAttrIsTypeShown		= m_bAttrIsTypeShown || (*it)->getAttribute( IsTypeShown_str)->getBooleanValue();
 			istypeshown_set = true;
+		}
+
+		if( !istypeinfoshown_set && (*it)->getAttribute( IsTypeInfoShown_str)->getStatus() >= BON::AS_Here)
+		{
+			m_bAttrIsTypeInfoShown		= m_bAttrIsTypeInfoShown || (*it)->getAttribute( IsTypeInfoShown_str)->getBooleanValue();
+			istypeinfoshown_set = true;
 		}
 		
 		if( !isnameenabled_set && (*it)->getAttribute( IsNameEnabled_str)->getStatus() >= BON::AS_Here)
@@ -976,6 +991,27 @@ std::string FCO::dumpTypeShown()
 
 		if( icon)
 			mmm += indStr() + "<regnode name = \"isTypeShown\" value =\"true\"></regnode>\n";
+	}
+	return mmm;
+}
+
+std::string FCO::dumpTypeInfoShown()
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		mmm += (*it)->dumpTypeInfoShown();
+	}
+
+	//if ( this->m_ptr)
+	{
+		bool &icon = m_bAttrIsTypeInfoShown;//m_ptr->getAttribute( IsTypeShown_str)->getBooleanValue();
+
+		if( icon)
+			mmm += indStr() + "<regnode name = \"isTypeInfoShown\" value =\"true\"></regnode>\n";
 	}
 	return mmm;
 }
