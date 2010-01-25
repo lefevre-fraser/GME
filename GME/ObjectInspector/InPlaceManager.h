@@ -47,8 +47,8 @@ private:
 
 	void DisplayArrowButton(CRect rectBound);
 	void DisplayEditorButton(CRect rectBound);
-	void DisplayMultilineEdit(CRect rectBound);
-	void DisplaySingleLineEdit(CRect rectBound);
+	void DisplayMultilineEdit(CRect rectBound, bool readOnly);
+	void DisplaySingleLineEdit(CRect rectBound, bool readOnly);
 	void DisplayColorCombo(CRect rectBound, bool rightSideClick);
 
 	void HideArrowButton();

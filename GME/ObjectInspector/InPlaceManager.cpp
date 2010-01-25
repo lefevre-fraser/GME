@@ -45,8 +45,6 @@ void CInPlaceManager::ShowInPlace(CRect rectInPlace, int nIndex)
 
 	CListItem& ListItem=m_pInspectorList->m_ListItemArray.ElementAt(nIndex);
 
-	if(ListItem.bIsReadOnly) return;
-
 	ListItem.Value.toString();
 	switch(ListItem.Value.dataType)
 	{
@@ -59,9 +57,11 @@ void CInPlaceManager::ShowInPlace(CRect rectInPlace, int nIndex)
 		{
 			if(ListItem.Value.cLineNum>1)
 			{
-				DisplayEditorButton(rectInPlace);
-				
-				DisplayMultilineEdit(rectInPlace);
+				if(!ListItem.bIsReadOnly) {
+					DisplayEditorButton(rectInPlace);
+				}
+
+				DisplayMultilineEdit(rectInPlace, ListItem.bIsReadOnly);
 				CString strText; // zolmol modification
 				int uLim = ListItem.Value.stringVal.GetUpperBound(); // if empty uLim == -1
 				for(int i=0;i<=uLim;i++)
@@ -77,7 +77,7 @@ void CInPlaceManager::ShowInPlace(CRect rectInPlace, int nIndex)
 			}
 			else
 			{
-				DisplaySingleLineEdit(rectInPlace);
+				DisplaySingleLineEdit(rectInPlace, ListItem.bIsReadOnly);
 
 				m_SingleEditCtrl.SetWindowText(ListItem.Value.stringVal[0]);
 
@@ -90,14 +90,16 @@ void CInPlaceManager::ShowInPlace(CRect rectInPlace, int nIndex)
 
 	case ITEMDATA_FIXED_LIST:
 		{
-			DisplayArrowButton(rectInPlace);
+			if(!ListItem.bIsReadOnly) {
+				DisplayArrowButton(rectInPlace);
+			}
 
 		}break;
 
 
 	case ITEMDATA_INTEGER:
 		{
-			DisplaySingleLineEdit(rectInPlace);
+			DisplaySingleLineEdit(rectInPlace, ListItem.bIsReadOnly);
 
 			m_SingleEditCtrl.SetWindowText(ListItem.Value.stringVal[0]);
 			int nLength=ListItem.Value.stringVal[0].GetLength();
@@ -107,7 +109,7 @@ void CInPlaceManager::ShowInPlace(CRect rectInPlace, int nIndex)
 		}break;
 	case ITEMDATA_DOUBLE:
 		{
-			DisplaySingleLineEdit(rectInPlace);
+			DisplaySingleLineEdit(rectInPlace, ListItem.bIsReadOnly);
 
 			m_SingleEditCtrl.SetWindowText(ListItem.Value.stringVal[0]);
 			int nLength=ListItem.Value.stringVal[0].GetLength();
@@ -117,27 +119,35 @@ void CInPlaceManager::ShowInPlace(CRect rectInPlace, int nIndex)
 		}break;
 	case ITEMDATA_BOOLEAN:
 		{
-			DisplayArrowButton(rectInPlace);
+			if(!ListItem.bIsReadOnly) {
+				DisplayArrowButton(rectInPlace);
+			}
 		}break;
 
 	case ITEMDATA_COLOR	:
 		{
-			DisplayArrowButton(rectInPlace);
+			if(!ListItem.bIsReadOnly) {
+				DisplayArrowButton(rectInPlace);
+			}
 		}break;
 
 	case ITEMDATA_COMPASS:
 		{
-			DisplayArrowButton(rectInPlace);
+			if(!ListItem.bIsReadOnly) {
+				DisplayArrowButton(rectInPlace);
+			}
 		}break;
 
 	case ITEMDATA_COMPASS_EXCL:
 		{
-			DisplayArrowButton(rectInPlace);
+			if(!ListItem.bIsReadOnly) {
+				DisplayArrowButton(rectInPlace);
+			}
 		}break;
 	}
 }
 
-void CInPlaceManager::DisplayMultilineEdit(CRect rectBound)
+void CInPlaceManager::DisplayMultilineEdit(CRect rectBound, bool readOnly)
 {
 
 	rectBound.bottom--;
@@ -165,10 +175,11 @@ void CInPlaceManager::DisplayMultilineEdit(CRect rectBound)
 			m_MultiEditCtrl.Invalidate();
 		}
 	}
+	m_MultiEditCtrl.SetReadOnly(readOnly ? TRUE : FALSE);
 }
 
 
-void CInPlaceManager::DisplaySingleLineEdit(CRect rectBound)
+void CInPlaceManager::DisplaySingleLineEdit(CRect rectBound, bool readOnly)
 {
 
 	rectBound.bottom--;
@@ -177,8 +188,8 @@ void CInPlaceManager::DisplaySingleLineEdit(CRect rectBound)
 	if(!::IsWindow(m_SingleEditCtrl.GetSafeHwnd()))
 	{
 		m_SingleEditCtrl.Create(WS_CHILD| WS_VISIBLE|ES_AUTOHSCROLL|ES_LEFT,rectBound,m_pInspectorList,IDC_EDITBOX_SINGLELINE);
-
-
+		
+		
 		m_SingleEditCtrl.SetFont(&m_pInspectorList->m_entryFont);
 		m_SingleEditCtrl.SetFocus();
 
@@ -198,6 +209,7 @@ void CInPlaceManager::DisplaySingleLineEdit(CRect rectBound)
 			m_SingleEditCtrl.Invalidate();
 		}
 	}
+	m_SingleEditCtrl.SetReadOnly(readOnly ? TRUE : FALSE);
 }
 
 void CInPlaceManager::DisplayColorCombo(CRect rectBound, bool rightSideClick)
