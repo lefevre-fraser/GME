@@ -32,6 +32,7 @@
 #include "CrashTest.h"
 #include <Gdiplus.h>
 #include "GraphicsUtil.h"
+#include <signal.h>
 
 
 #ifdef _DEBUG
@@ -49,6 +50,33 @@ CComModule _Module;
 
 
 /////////////////////////////////////////////////////////////////////////////
+
+void __cdecl onSignalAbort(int code)
+{
+    // It's possible that this signal handler will get called twice
+    // in a single execution of the application.  (On multiple threads,
+    // for example.)  Since raise() resets the signal handler, put it back.
+    signal(SIGABRT, onSignalAbort);
+
+    RaiseException(EXC_SIGNAL_ABORT, 0, 0, 0);
+}
+
+/*int __cdecl _purecall(void)
+{
+    RaiseException(EXC_PURE_CALL, 0, 0, 0);
+    return 0;
+}*/
+
+void onTerminate(void)
+{
+    RaiseException(EXC_TERMINATE, 0, 0, 0);
+}
+
+void onUnexpected(void)
+{
+    RaiseException(EXC_UNEXPECTED, 0, 0, 0);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CGMEApp
@@ -136,7 +164,11 @@ CGMEApp::CGMEApp() :
 	maintainHistory = false;
 	realFmtStr = "%.12g";
 	// TODO: add construction code here,
-	set_terminate(EmergencyTerminate);
+
+	signal(SIGABRT, onSignalAbort);
+	set_terminate(onTerminate);
+	set_unexpected(onUnexpected);
+
 	// Place all significant initialization in InitInstance
 	SIZE size;
 	size.cx = 16;
@@ -443,11 +475,6 @@ BOOL CGMEApp::PreTranslateMessage(MSG* pMsg)
 
 /////////////////////////////////////////////////////////////////////////////
 // CGMEApp emergency
-
-void CGMEApp::EmergencyTerminate()
-{
-	theApp.EmergencySave();
-}
 
 void CGMEApp::EmergencySave(void)
 {

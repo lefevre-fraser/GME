@@ -22,6 +22,8 @@ public:
 	static void IllegalReadInCRuntime(void);
 	static void IllegalCodeRead(void);
 	static void DivideByZero(void);
+	static void Abort(void);
+	static void Terminate(void);
 };
 
 #endif // !defined(CRASH_TEST_INCLUDED)

@@ -618,12 +618,16 @@ protected:
 	afx_msg void OnCrashTestIllegalReadInCRuntime();
 	afx_msg void OnCrashTestIllegalCodeRead();
 	afx_msg void OnCrashTestDivideByZero();
+	afx_msg void OnCrashTestAbort();
+	afx_msg void OnCrashTestTerminate();
 	afx_msg void OnUpdateCrashTestMenu(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateCrashTestIllegalWrite(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateCrashTestIllegalRead(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateCrashTestIllegalReadInCRuntime(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateCrashTestIllegalCodeRead(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateCrashTestDivideByZero(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateCrashTestAbort(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateCrashTestTerminate(CCmdUI* pCmdUI);
 #endif
 	afx_msg void OnShowSelectedModel();
 	afx_msg void OnFocusBrowser();

@@ -74,7 +74,6 @@ public:
 
 private:
 	virtual int Run();
-	static void EmergencyTerminate();
 	void EmergencySave();
 	bool proj_type_is_mga;
 	bool proj_type_is_xmlbackend;

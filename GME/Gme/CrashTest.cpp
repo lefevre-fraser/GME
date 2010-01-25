@@ -53,3 +53,12 @@ void CrashTest::DivideByZero(void)
 	y = y / y;
 }
 
+void CrashTest::Abort(void)
+{
+	abort();
+}
+
+void CrashTest::Terminate(void)
+{
+	terminate();
+}

@@ -628,6 +628,8 @@ BEGIN
         MENUITEM "Illegal Read in C runtime",   ID_CRASHTEST_ILLEGALREADINCRUNTIME
         MENUITEM "Illegal code read (jump to zero address)", ID_CRASHTEST_ILLEGALCODEREAD
         MENUITEM "Divide by zero",              ID_CRASHTEST_DIVIDEBYZERO
+        MENUITEM "Abort",                       ID_CRASHTEST_ABORT
+        MENUITEM "Terminate",                   ID_CRASHTEST_TERMINATE
     END
 END
 

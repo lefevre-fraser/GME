@@ -386,12 +386,16 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_CRASHTEST_ILLEGALREADINCRUNTIME, OnCrashTestIllegalReadInCRuntime)
 	ON_COMMAND(ID_CRASHTEST_ILLEGALCODEREAD, OnCrashTestIllegalCodeRead)
 	ON_COMMAND(ID_CRASHTEST_DIVIDEBYZERO, OnCrashTestDivideByZero)
+	ON_COMMAND(ID_CRASHTEST_ABORT, OnCrashTestAbort)
+	ON_COMMAND(ID_CRASHTEST_TERMINATE, OnCrashTestTerminate)
 	ON_UPDATE_COMMAND_UI(IDR_CRASH_TEST_MENU, OnUpdateCrashTestMenu)
 	ON_UPDATE_COMMAND_UI(ID_CRASHTEST_ILLEGALWRITE, OnUpdateCrashTestIllegalWrite)
 	ON_UPDATE_COMMAND_UI(ID_CRASHTEST_ILLEGALREAD, OnUpdateCrashTestIllegalRead)
 	ON_UPDATE_COMMAND_UI(ID_CRASHTEST_ILLEGALREADINCRUNTIME, OnUpdateCrashTestIllegalReadInCRuntime)
 	ON_UPDATE_COMMAND_UI(ID_CRASHTEST_ILLEGALCODEREAD, OnUpdateCrashTestIllegalCodeRead)
 	ON_UPDATE_COMMAND_UI(ID_CRASHTEST_DIVIDEBYZERO, OnUpdateCrashTestDivideByZero)
+	ON_UPDATE_COMMAND_UI(ID_CRASHTEST_ABORT, OnUpdateCrashTestAbort)
+	ON_UPDATE_COMMAND_UI(ID_CRASHTEST_TERMINATE, OnUpdateCrashTestTerminate)
 #endif
 	ON_COMMAND(ID_CNTX_PREFERENCES, OnCntxPreferences)
 	ON_COMMAND(ID_EDIT_PREFERENCES, OnEditPreferences)
@@ -7938,29 +7942,39 @@ void CGMEView::OnUpdateDeleteConnRouteCustomDataAllAspects(CCmdUI* pCmdUI)
 }
 
 #if defined(ADDCRASHTESTMENU)
-void CGMEView::OnCrashTestIllegalWrite(void) 
+void CGMEView::OnCrashTestIllegalWrite(void)
 {
 	CrashTest::IllegalWrite();
 }
 
-void CGMEView::OnCrashTestIllegalRead(void) 
+void CGMEView::OnCrashTestIllegalRead(void)
 {
 	CrashTest::IllegalRead();
 }
 
-void CGMEView::OnCrashTestIllegalReadInCRuntime(void) 
+void CGMEView::OnCrashTestIllegalReadInCRuntime(void)
 {
 	CrashTest::IllegalReadInCRuntime();
 }
 
-void CGMEView::OnCrashTestIllegalCodeRead(void) 
+void CGMEView::OnCrashTestIllegalCodeRead(void)
 {
 	CrashTest::IllegalCodeRead();
 }
 
-void CGMEView::OnCrashTestDivideByZero(void) 
+void CGMEView::OnCrashTestDivideByZero(void)
 {
 	CrashTest::DivideByZero();
+}
+
+void CGMEView::OnCrashTestAbort()
+{
+	CrashTest::Abort();
+}
+
+void CGMEView::OnCrashTestTerminate()
+{
+	CrashTest::Terminate();
 }
 
 void CGMEView::OnUpdateCrashTestMenu(CCmdUI* pCmdUI)
@@ -7989,6 +8003,16 @@ void CGMEView::OnUpdateCrashTestIllegalCodeRead(CCmdUI* pCmdUI)
 }
 
 void CGMEView::OnUpdateCrashTestDivideByZero(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable();
+}
+
+void CGMEView::OnUpdateCrashTestAbort(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable();
+}
+
+void CGMEView::OnUpdateCrashTestTerminate(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable();
 }
