@@ -22,7 +22,6 @@ public: // constant strings
 	static const std::string Decorator_str;//"Decorator"
 	static const std::string IsHotspotEnabled_str;//"IsHotspotEnabled"
 	static const std::string IsTypeShown_str;//"IsTypeShown"
-	static const std::string IsTypeInfoShown_str;//"IsTypeInfoShown"
 	static const std::string GeneralPreferences_str;//"GeneralPreferences"
 	static const std::string NamePosition_str;//"NamePosition"
 	static const std::string SubTypeIcon_str;//"SubTypeIcon"
@@ -151,7 +150,6 @@ public:
 	std::string dumpDecorator();
 	std::string dumpHotspotEnabled();
 	std::string dumpTypeShown();
-	std::string dumpTypeInfoShown();
 	std::string dumpGeneralPref();
 	std::string dumpNamePosition() const;
 	std::string dumpSubTypeIcon() const;
@@ -185,7 +183,6 @@ protected:
 
 	bool m_bAttrIsHotspotEnabled;
 	bool m_bAttrIsTypeShown;
-	bool m_bAttrIsTypeInfoShown;
 	bool m_bAttrIsNameEnabled;
 	bool m_bAttrIsResizable;
 

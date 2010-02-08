@@ -18,7 +18,9 @@ class Sheet;
 
 class ModelRep : public FCO 
 {
-public: // types
+public: // constant strings
+	static const std::string IsTypeInfoShown_str;//"IsTypeInfoShown"
+	// types
 	// roles
 	typedef RoleRep RoleSeriesValue;
 	typedef std::vector<RoleSeriesValue> RoleSeries;
@@ -39,6 +41,8 @@ public:
 	/*virtual*/ std::string doDump();
 
 	inline Any::KIND_TYPE getMyKind() const { return Any::MODEL; }
+
+	/*virtual*/ void initAttributes();
 
 	// Roles
 	void addRole( RoleMapKey whose, RoleRep& role);
@@ -68,6 +72,8 @@ public:
 	AspectRep * getMyFirstAspectFromSet( const std::vector<AspectRep *> & aspect_set) const;
 	bool findAspect( const AspectRep * one_asp) const;
 
+	std::string dumpTypeInfoShown();
+
 	// search
 public:
 	int searchMyAspectsForPart( PartRep& part) const; // how many of my aspects contain part as an aspect member
@@ -86,6 +92,8 @@ protected:
 
 	AspectRepPtrList m_initialAspectList;
 	AspectRepPtrList m_finalAspectList;
+
+	bool m_bAttrIsTypeInfoShown;
 
 private: // forbid copying
 	ModelRep( const ModelRep&);

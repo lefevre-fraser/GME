@@ -14,6 +14,7 @@
 #include "globals.h"
 extern Globals global_vars;
 
+/*static*/ const std::string ModelRep::IsTypeInfoShown_str = "IsTypeInfoShown";
 
 ModelRep::ModelRep( BON::FCO& ptr, BON::FCO& resp_ptr)
 	: FCO( ptr, resp_ptr)
@@ -21,6 +22,7 @@ ModelRep::ModelRep( BON::FCO& ptr, BON::FCO& resp_ptr)
 	, m_finalRoleMap()
 	, m_initialAspectList()
 	, m_finalAspectList()
+	, m_bAttrIsTypeInfoShown( true )
 {
 }
 
@@ -33,6 +35,32 @@ ModelRep::~ModelRep()
 	m_finalAspectList.clear();
 }
 
+void ModelRep::initAttributes()
+{
+	
+	FCO::initAttributes();
+
+	bool istypeinfoshown_set = false;
+	if( m_ptr->getAttribute( IsTypeInfoShown_str)->getStatus() >= BON::AS_Here)
+	{
+		m_bAttrIsTypeInfoShown		= m_ptr->getAttribute( IsTypeInfoShown_str)->getBooleanValue();		// def val: FALSE (dumped if TRUE)
+		istypeinfoshown_set = true;
+	}
+	
+	
+	std::set< BON::FCO >::const_iterator it = m_equivs.begin();
+	for ( ; it != m_equivs.end(); ++it)
+	{
+		if ( *it == m_ptr) continue;
+		if ((*it)->getObjectMeta().name().find("Proxy") != std::string::npos) continue;
+
+		if( !istypeinfoshown_set && (*it)->getAttribute( IsTypeInfoShown_str)->getStatus() >= BON::AS_Here)
+		{
+			m_bAttrIsTypeInfoShown		= m_bAttrIsTypeInfoShown || (*it)->getAttribute( IsTypeInfoShown_str)->getBooleanValue();
+			istypeinfoshown_set = true;
+		}
+	}
+}
 	
 void ModelRep::addRole( FCO* whose, RoleSeriesValue& role) 
 { 
@@ -450,6 +478,33 @@ void ModelRep::getAspectNames(CStringList &list) const
 }
 
 
+std::string ModelRep::dumpTypeInfoShown()
+{
+	std::string mmm;
+	std::vector<FCO*> ancestors;
+	bool typeInfoShown = m_bAttrIsTypeInfoShown;
+
+	/*
+	// Cannot implement this properly (inheritance). 
+	// Not enough information here to decide if this property is inherited or not
+	getImpAncestors( ancestors);
+	std::vector<FCO*>::iterator it = ancestors.begin();
+	for( ; it != ancestors.end(); ++it)
+	{
+		ModelRep * mod_ptr = dynamic_cast< ModelRep *> (*it);
+		if (mod_ptr) {
+			typeInfoShown |= mod_ptr->m_bAttrIsTypeInfoShown;
+		}
+	}
+	*/
+
+	if( typeInfoShown) {
+		mmm += indStr() + "<regnode name = \"isTypeInfoShown\" value =\"true\"></regnode>\n";
+	}
+	return mmm;
+}
+
+
 std::string ModelRep::doDump()
 {
 	bool error = false;
@@ -473,6 +528,7 @@ std::string ModelRep::doDump()
 	mmm += dumpDecorator();
 	mmm += dumpHotspotEnabled();
 	mmm += dumpTypeShown();
+	mmm += dumpTypeInfoShown();
 	mmm += dumpSubTypeIcon();
 	mmm += dumpInstanceIcon();
 	mmm += dumpNameWrap();
