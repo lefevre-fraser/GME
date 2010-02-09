@@ -63,14 +63,15 @@
             Manufacturer='Vanderbilt University, ISIS'
             InstallerVersion='300' Languages='1033' Compressed='yes' SummaryCodepage='1252' 
             InstallPrivileges='elevated' InstallScope='perMachine' Platform='x86'/>
-        
+
+
         <Upgrade Id="575c3a35-c428-49be-a50a-4ffd09c5de88">
             <UpgradeVersion Minimum="$(var.VERSIONSTR)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/>
-            <UpgradeVersion Minimum="1.0.0" IncludeMinimum="yes" Maximum="$(var.VERSIONSTR)" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED"/>
+            <UpgradeVersion OnlyDetect="no" Minimum="1.0.0" IncludeMinimum="yes" Maximum="$(var.VERSIONSTR)" IncludeMaximum="no" Property="PREVIOUSFOUND"/>
         </Upgrade>
         
         <InstallExecuteSequence>
-            <RemoveExistingProducts After="InstallInitialize" />
+            <RemoveExistingProducts After="InstallValidate" />
         </InstallExecuteSequence>
 
         <Media Id='1' Cabinet='GME.cab' EmbedCab='yes' />
