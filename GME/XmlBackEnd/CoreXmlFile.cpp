@@ -6544,6 +6544,23 @@ void CCoreXmlFile::createSubversionedFolder()
 	// hashed folder structure (optional)
 	if( m_hashFileNames)
 	{
+		// add session folder to server (if no hash folders are used, the session folder will be added
+		// by the content folder - see later)
+		succ = addSVN( sessionFolder, true /*=recursive*/); 
+		if( !succ) {
+			sendMsg( "Exception: Could not add session folder to server.", MSG_ERROR);
+			AfxMessageBox( "Could not add session folder to server.");
+			HR_THROW(E_FILEOPEN);
+		}
+
+		// commit session folder (see previous comment)
+		succ = commitSVN( sessionFolder, true);
+		if( !succ) {
+			sendMsg( "Exception: Could not commit session folder.", MSG_ERROR);
+			AfxMessageBox( "Could not commit session folder.");
+			HR_THROW(E_FILEOPEN);
+		}
+
 		succ = createHashedFolders();
 		if( !succ) {
 			sendMsg( "Exception: Could not create initial directory structure.", MSG_ERROR);
