@@ -65,7 +65,7 @@
             InstallPrivileges='elevated' InstallScope='perMachine' Platform='x86'/>
 
 
-        <Upgrade Id="575c3a35-c428-49be-a50a-4ffd09c5de88">
+        <Upgrade Id="dfdd761e-0979-4897-ac89-71f006d92bf8">
             <UpgradeVersion Minimum="$(var.VERSIONSTR)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/>
             <UpgradeVersion OnlyDetect="no" Minimum="1.0.0" IncludeMinimum="yes" Maximum="$(var.VERSIONSTR)" IncludeMaximum="no" Property="PREVIOUSFOUND"/>
         </Upgrade>
