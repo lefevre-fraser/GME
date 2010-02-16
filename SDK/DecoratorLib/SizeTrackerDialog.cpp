@@ -54,6 +54,8 @@ BOOL CSizeTrackerDialog::OnInitDialog()
 
 	m_staticWnd = (CStatic*)GetDlgItem(IDC_INPLACETEXTEDIT);
 
+	TRACE1("CONSTRUCT: %X\n", m_staticWnd);
+
 	AdjustPositionAndText(m_mouseClick, m_initialRect);
 	m_staticWnd->MoveWindow(0, 0, SizeTrackerWidth - 1, SizeTrackerHeight);
 
@@ -112,7 +114,12 @@ void CSizeTrackerDialog::SetParameters(const CRect& initialRect, const CPoint& m
 }
 
 void CSizeTrackerDialog::AdjustPositionAndText(const CPoint& point, const CRect& location)
-{
+{	
+	if(!::IsWindow(m_staticWnd->m_hWnd)) // Quick fix by Tihamer.
+	{
+		m_staticWnd = (CStatic*)GetDlgItem(IDC_INPLACETEXTEDIT);
+	}
+
 	m_staticWnd->SetWindowText(GetStrToDisplay(location));
 	CPoint adjPos = GetAdjustedPosition(point);
 	MoveWindow(adjPos.x, adjPos.y, SizeTrackerWidth, SizeTrackerHeight);
