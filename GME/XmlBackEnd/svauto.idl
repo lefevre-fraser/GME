@@ -17,7 +17,7 @@ interface ISvnExec : IDispatch{
 	[id(3), helpstring("method AddLockableProperty")] HRESULT AddLockableProperty(BSTR path);
 	[id(4), helpstring("method GetLatest")] HRESULT GetLatest(BSTR path);
 	[id(5), helpstring("method LightCheckOut")] HRESULT LightCheckOut(BSTR path, BSTR localDir);
-	[id(6), helpstring("method Commit")] HRESULT Commit(BSTR path, VARIANT_BOOL keepLocked);
+	[id(6), helpstring("method Commit")] HRESULT Commit(BSTR path, BSTR comment, VARIANT_BOOL keepLocked);
 	[id(7), helpstring("method Add")] HRESULT Add(BSTR path, VARIANT_BOOL recursive);
 	[id(8), helpstring("method SrvMkDir")] HRESULT SrvMkDir(BSTR path);
 	[id(9), helpstring("method Resolve")] HRESULT Resolve(BSTR path, VARIANT_BOOL recursive);

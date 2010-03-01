@@ -264,8 +264,9 @@ STDMETHODIMP CSvnTester::commit(BSTR p_path, VARIANT_BOOL p_byAPI, VARIANT_BOOL 
 
 				std::string path;
 				CopyTo( p_path, path);
+				std::string comment("test commit");
 
-				m_apiSvn->commitAll( path, false);
+				m_apiSvn->commitAll( path, comment, false);
 			}
 			else throw hresult_exception(E_FAIL);
 #else

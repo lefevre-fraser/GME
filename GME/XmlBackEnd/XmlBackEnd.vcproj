@@ -261,6 +261,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CommitDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Common\CommonError.cpp"
 				>
 			</File>
@@ -501,6 +505,10 @@
 			</File>
 			<File
 				RelativePath=".\CertificateDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CommitDialog.h"
 				>
 			</File>
 			<File

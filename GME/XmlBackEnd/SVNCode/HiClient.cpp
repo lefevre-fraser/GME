@@ -281,14 +281,14 @@ bool HiClient::lightCheckOut( const std::string& p_path, const std::string& p_lo
 	return 0 < sub_checkout( p_path.c_str(), p_localDir.c_str(), Revision(), Revision(), /*recurse =*/ true, /*ignoreExt =*/ false);
 }
 
-bool HiClient::commitAll           ( const std::string& p_path, bool p_keepCheckedOut)
+bool HiClient::commitAll           ( const std::string& p_path, const std::string& p_comment, bool p_keepCheckedOut)
 {
 	log( "commitAll", p_path);
 
 	Pool requestPool;
 
 	Targets tgt( p_path.c_str()); // commit might return -1 if there were no things to commit (diff was 0)
-	return 0 < sub_commit( tgt, "no message", /*recurse =*/ true, /*noUnlock =*/ p_keepCheckedOut);
+	return 0 < sub_commit( tgt, p_comment.c_str(), /*recurse =*/ true, /*noUnlock =*/ p_keepCheckedOut);
 }
 
 bool HiClient::add                 ( const std::string& p_path, bool p_recursive)

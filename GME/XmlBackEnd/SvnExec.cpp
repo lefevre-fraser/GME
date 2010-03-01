@@ -101,15 +101,17 @@ STDMETHODIMP CSvnExec::LightCheckOut(BSTR p_path, BSTR p_localDir)
 #endif
 }
 
-STDMETHODIMP CSvnExec::Commit(BSTR p_path, VARIANT_BOOL p_keepLocked)
+STDMETHODIMP CSvnExec::Commit(BSTR p_path, BSTR p_comment, VARIANT_BOOL p_keepLocked)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 #if(USESVN)
 	std::string ph;
 	CopyTo( p_path, ph);
-	
-	bool res = m_impl->commitAll( ph, vb2b( p_keepLocked));
+	std::string comment;
+	CopyTo( p_comment, comment);
+
+	bool res = m_impl->commitAll( ph, comment, vb2b( p_keepLocked));
 
 	return res? S_OK: E_FAIL;
 #else

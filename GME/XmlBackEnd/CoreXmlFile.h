@@ -645,7 +645,7 @@ protected:
 	int          createHashedFolders    ();
 	void         commitHashedFolders    ();
 	void         socoAdd                ( const std::string& p_path, bool p_recursive);
-	void         socoCommit             ( const std::string& p_path, bool p_initial);
+	void         socoCommit             ( const std::string& p_path, const std::string& p_comment, bool p_initial);
 
 	void         createClearCaseProj     ();
 	void         createNonversioned      ();
@@ -730,8 +730,8 @@ protected:
 	bool         mkdirSVN               ( const std::string& p_url, const std::string& p_newDirName, const std::string& p_localPath);
 	bool         addSVN                 ( const std::string& p_file, bool p_recursive = false);
     void         findAllRwObjs          ( const std::string& p_folderPath, std::vector< std::string>& p_rw_file_vec);
-	bool         bulkCommitSVN          ( const std::string& p_dir , bool p_noUnlock  = false);
-	bool         commitSVN              ( const std::string& p_dirOrFile, bool p_initialCommit = false, bool p_noUnlock = false);
+	bool         bulkCommitSVN          ( const std::string& p_dir, const std::string& p_comment, bool p_noUnlock  = false);
+	bool         commitSVN              ( const std::string& p_dirOrFile, const std::string& p_comment, bool p_initialCommit = false, bool p_noUnlock = false);
 	bool         updateSVN              ( const std::string& p_dirOrFile);
 	void         svnSetup               ( bool createOrOpen);
 	void         testSubversion         ();

@@ -21,6 +21,7 @@
 #include "FileHelp.h"
 #include "DirSupplier.h"
 #include "Transcoder.h"
+#include "CommitDialog.h"
 
 using namespace XERCES_CPP_NAMESPACE;
 using std::string;
@@ -1587,7 +1588,7 @@ STDMETHODIMP CCoreXmlFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode)
 		}
 
 		// initial commit
-		succ = commitSVN( m_contentPath, true);
+		succ = commitSVN( m_contentPath, std::string("auto: OpenProject()"), true);
 		if( !succ) {
 			sendMsg( "Exception: Could not commit session folder.", MSG_ERROR);
 			AfxMessageBox( "Could not commit session folder.");
@@ -3286,7 +3287,7 @@ void CCoreXmlFile::createProjectFile()
 	else if( isSV())
 	{
 		bool s1 = addSVN( m_projectFileName);
-		bool s2 = commitSVN( m_projectFileName, true);
+		bool s2 = commitSVN( m_projectFileName, std::string("auto: createProjectFile()"), true);
 
 		if( !s1 || !s2)
 		{
@@ -4710,7 +4711,7 @@ void CCoreXmlFile::addToSourceControl(XmlObject * container, bool p_fileExisted)
 		}
 		
 		if( !m_userOpts.m_useBulkCommit)                         // if bulk commit then avoid individual commits
-			sc_com = commitSVN( fileName, !p_fileExisted);
+			sc_com = commitSVN( fileName, std::string("auto: addToSourceControl()"), !p_fileExisted);
 
 		if( !(sc_com && sc_pro && sc_add))
 		{
@@ -4801,7 +4802,7 @@ void PublicStorage::acquireSVN( const char * obj)
 
 void PublicStorage::releaseSVN( const char * obj)
 {
-	bool sc = m_parent->commitSVN( obj, false);
+	bool sc = m_parent->commitSVN( obj, std::string("auto: PublicStorage::releaseSVN()"), false);
 	ASSERT( sc);
 	if( !sc)
 	{
@@ -5873,7 +5874,7 @@ bool CCoreXmlFile::makeSureFileExistsInVerSys( const std::string& p_fname, const
 				sc_add = addSVN( fulllocalfname);
 				if( p_needsLock) // apply lock attribute except if directed otherwise
 					sc_pro = lockablePropertySVN( fulllocalfname);
-				sc_com = commitSVN( fulllocalfname, true);
+				sc_com = commitSVN( fulllocalfname, std::string("auto: makeSureFileExistsInVerSys()"), true);
 
 				if( !( sc_add && sc_pro && sc_com))
 				{
@@ -5968,6 +5969,7 @@ void CCoreXmlFile::checkInAll()
 
 void CCoreXmlFile::checkInAll( bool keepCheckedOut )
 {
+
 	if( isSS())
 	{
 		// source safe
@@ -6062,9 +6064,15 @@ void CCoreXmlFile::checkInAll( bool keepCheckedOut )
 		{
 			//sendMsg( "Nothing committed or could not commit all in directory " + m_folderPath, MSG_WARNING);
 		}
+		std::string comment;
+		CCommitDialog cDlg;
+		if (cDlg.DoModal() == IDOK) {
+			CT2CA comment_str(cDlg.m_comment);
+			comment = comment_str;
+		}
 		if( m_userOpts.m_useBulkCommit)
 		{
-			bool sc_com = bulkCommitSVN( m_folderPath, keepCheckedOut);
+			bool sc_com = bulkCommitSVN( m_folderPath, std::string(comment), keepCheckedOut);
 			if( !sc_com)
 			{
 				sendMsg( "Nothing committed or could not commit all in directory " + m_folderPath, MSG_WARNING);
@@ -6374,7 +6382,7 @@ void CCoreXmlFile::commitHashedFolders()
 		{
 			lev1[0] = ans[i]; // form a name 
 			socoAdd( lev1, true /*=recursive*/); 
-			socoCommit( lev1, true);
+			socoCommit( lev1, std::string("auto: commitHashedFolders()"), true);
 		}
 	}
 	else if( m_hashVal == 2)
@@ -6393,7 +6401,7 @@ void CCoreXmlFile::commitHashedFolders()
 			{
 				lev[1] = ans[j];
 				socoAdd( lev, true /*=recursive*/); 
-				socoCommit( lev, true);
+				socoCommit( lev, std::string("auto: commitHashedFolders()"), true);
 			}
 		}
 	}
@@ -6419,7 +6427,7 @@ void CCoreXmlFile::socoAdd     ( const std::string& p_path, bool p_recursive)
 	}
 }
 
-void CCoreXmlFile::socoCommit( const std::string& p_path, bool p_initial)
+void CCoreXmlFile::socoCommit( const std::string& p_path, const std::string& p_comment, bool p_initial)
 {
 	if( isSS())
 	{
@@ -6430,7 +6438,7 @@ void CCoreXmlFile::socoCommit( const std::string& p_path, bool p_initial)
 	}
 	else if( isSV())
 	{
-		bool sc = commitSVN( p_path, p_initial /*initial commit*/);
+		bool sc = commitSVN( p_path, p_comment, p_initial /*initial commit*/);
 		if( !sc)
 		{
 			sendMsg( "Could not commit " + p_path + " into versioning system.", MSG_ERROR);
@@ -6554,7 +6562,7 @@ void CCoreXmlFile::createSubversionedFolder()
 		}
 
 		// commit session folder (see previous comment)
-		succ = commitSVN( sessionFolder, true);
+		succ = commitSVN( sessionFolder, std::string("auto: createSubversionedFolder()"), true);
 		if( !succ) {
 			sendMsg( "Exception: Could not commit session folder.", MSG_ERROR);
 			AfxMessageBox( "Could not commit session folder.");
@@ -6578,7 +6586,7 @@ void CCoreXmlFile::createSubversionedFolder()
 	}
 
 	// initial commit
-	succ = commitSVN( m_contentPath, true);
+	succ = commitSVN( m_contentPath, std::string("auto: createSubversionedFolder()"), true);
 	if( !succ) {
 		sendMsg( "Exception: Could not commit initial directory structure.", MSG_ERROR);
 		AfxMessageBox( "Could not commit initial directory structure.");
@@ -6916,11 +6924,11 @@ void CCoreXmlFile::findAllRwObjs( const std::string& p_folderPath, std::vector< 
 	}
 }
 
-bool CCoreXmlFile::bulkCommitSVN( const std::string& p_dir, bool p_noUnlock /* = false*/) // noUnlock <==> keeplocked
+bool CCoreXmlFile::bulkCommitSVN( const std::string& p_dir, const std::string& p_comment, bool p_noUnlock /* = false*/) // noUnlock <==> keeplocked
 {
 	if( m_svnByAPI)
 	{
-		m_comSvn->Commit( CComBSTR( p_dir.c_str()), p_noUnlock? VARIANT_TRUE: VARIANT_FALSE);
+		m_comSvn->Commit( CComBSTR( p_dir.c_str()), CComBSTR( p_comment.c_str()), p_noUnlock? VARIANT_TRUE: VARIANT_FALSE);
 		if( !p_noUnlock) // if noUnlock was not requested, then a file should be unlocked after commit
 			// except, when it was not changed: in this case it needs a manual unlock
 		{
@@ -6980,14 +6988,14 @@ bool CCoreXmlFile::bulkCommitSVN( const std::string& p_dir, bool p_noUnlock /* =
 	return true;
 }
 
-bool CCoreXmlFile::commitSVN( const std::string& p_dirOrFile, bool p_initialCommit /* = false*/, bool p_noUnlock /* = false*/) // noUnlock <==> keeplocked
+bool CCoreXmlFile::commitSVN( const std::string& p_dirOrFile, const std::string& p_comment, bool p_initialCommit /* = false*/, bool p_noUnlock /* = false*/) // noUnlock <==> keeplocked
 {
 	if( m_svnByAPI)
 	{
 		//bool sc = m_svn->commitAll( p_dirOrFile, p_noUnlock);
 		//if( !sc && !p_noUnlock) // if noUnlock was not requested, then a file should be unlocked after commit
 			// except, when it was not changed: in this case it needs a manual unlock
-		HRESULT hr_c = m_comSvn->Commit( CComBSTR( p_dirOrFile.c_str()), p_noUnlock?VARIANT_TRUE:VARIANT_FALSE);
+		HRESULT hr_c = m_comSvn->Commit( CComBSTR( p_dirOrFile.c_str()), CComBSTR( p_comment.c_str()), p_noUnlock?VARIANT_TRUE:VARIANT_FALSE);
 		if( FAILED( hr_c) && !p_noUnlock) // if noUnlock was not requested, then a file should be unlocked after commit
 		{                                 // except, when it was not changed: in this case it needs a manual unlock
 			if( FileHelp::isFile( p_dirOrFile) && !FileHelp::isFileReadOnly( p_dirOrFile))

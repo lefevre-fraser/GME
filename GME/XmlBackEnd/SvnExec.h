@@ -48,7 +48,7 @@ public:
 	STDMETHOD(AddLockableProperty)(BSTR path);
 	STDMETHOD(GetLatest)(BSTR path);
 	STDMETHOD(LightCheckOut)(BSTR path, BSTR localDir);
-	STDMETHOD(Commit)(BSTR path, VARIANT_BOOL keepLocked);
+	STDMETHOD(Commit)(BSTR path, BSTR comment, VARIANT_BOOL keepLocked);
 	STDMETHOD(Add)(BSTR path, VARIANT_BOOL recursive);
 	STDMETHOD(SrvMkDir)(BSTR path);
 	STDMETHOD(Resolve)(BSTR path, VARIANT_BOOL recursive);
