@@ -272,7 +272,7 @@ public:
 		HRESULT hr = check_location_compatibility(pvar, m_coll.size() ? m_coll.front() : NULL);
 		if(hr != S_OK) return hr;
 
-		COLLTYPE::iterator iter = m_coll.insert(m_coll.begin()+ pos, NULL);
+		COLLTYPE::iterator iter = m_coll.insert(m_coll.begin()+ pos, static_cast<ITFTYPE*>(NULL));
 		hr = GETALL_COPYTYPE::copy(&*iter, &pvar);
 		return hr;
 	}

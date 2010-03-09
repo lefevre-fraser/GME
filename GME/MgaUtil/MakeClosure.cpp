@@ -5,6 +5,7 @@
 #include <map>
 #include <set>
 #include <algorithm>
+#include <iterator>
 //
 // C O M M E N T
 // In this file the term "The RootFolder" means the default root folder any project is placed in

@@ -726,7 +726,7 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 		}
 		delete pBMP;
 	}
-	m_mapBitmaps.insert( std::map<CString,BitmapBase*>::value_type( strID, NULL ) );
+	m_mapBitmaps.insert( std::map<CString,BitmapBase*>::value_type( strID, static_cast<BitmapBase*>(NULL) ) );
 	return NULL;
 }
 
