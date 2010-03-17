@@ -8,11 +8,10 @@ namespace GMEConsole
 {
 	class Console
 	{
+	public:
 
 		static CComPtr<IGMEOLEApp> gmeoleapp;
 		
-	public:
-
 		static void SetupConsole(CComPtr<IMgaProject> project); 
 
 		static void WriteLine(const CString& message, msgtype_enum type)
