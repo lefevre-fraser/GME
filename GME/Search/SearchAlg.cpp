@@ -689,10 +689,10 @@ bool CSearch::PerformLogical(int x,int y)
     {
      //and
     case 0:
-        return (x==-1 && y==1)||(x==1 && y==-1) ||(x==1&&y==1);
+        return (x != 0) && (y != 0);
      //or
     case 1:
-        return x==1 || y==1;
+        return x==1 || y==1 || (x == -1 && y == -1);
     //xor
     case 2:
         return (x==-1 && y==1)||(x==1 && y==-1)||(x==1 && y==0)||(x==0 && y==1);
