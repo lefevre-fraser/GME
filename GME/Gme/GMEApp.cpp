@@ -1681,11 +1681,16 @@ void CGMEApp::OnFileOpen()
 
 }
 
+
+#define PROJECT_STATUS_CHANGED 4
+
 BOOL CGMEApp::SaveAllModified() 
 {
 	if (mgaProject != NULL && (proj_type_is_mga || proj_type_is_xmlbackend)) {
 		int ret = IDNO;
-		if (IsUndoPossible())
+		long l;
+		COMTHROW(mgaProject->get_ProjectStatus(&l));
+		if (IsUndoPossible() && (l & PROJECT_STATUS_CHANGED))
 			ret = AfxMessageBox("Save project '" + projectName + "'?",  MB_YESNOCANCEL);
 		if (ret == IDCANCEL) {
 			return FALSE;
@@ -1838,9 +1843,11 @@ void CGMEApp::OnFileAbortProject()
 	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileAbortProject\r\n");
 	((CMainFrame*)m_pMainWnd)->clearMgaProj();
 
-	if(!abort_on_close && IsUndoPossible() &&
-		AfxMessageBox("Discard edits to project " + projectName + "?", MB_OKCANCEL) == IDCANCEL)
-	{
+	long l;
+	COMTHROW(mgaProject->get_ProjectStatus(&l));
+	if(!abort_on_close && IsUndoPossible() && (l & PROJECT_STATUS_CHANGED) &&
+		AfxMessageBox("Discard edits to project " + projectName + "?", 
+		MB_OKCANCEL) == IDCANCEL) {
 		return;
 	}
 	abort_on_close = true;
