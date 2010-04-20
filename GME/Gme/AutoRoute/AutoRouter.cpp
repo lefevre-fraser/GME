@@ -262,6 +262,8 @@ void CAutoRouter::AddConnection(CGuiConnection* conn)
 		return;
 	if (!conn->IsVisible())
 		return;
+	if (!conn->srcPort || !conn->dstPort)
+		return;
 
 	CAutoRouterPort* asrc = conn->srcPort->GetRouterPort();
 	CAutoRouterPort* adst = conn->dstPort->GetRouterPort();
