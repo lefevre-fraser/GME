@@ -546,7 +546,8 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
 
             switch(typeList[index])
             {
-            case ATTVAL_STRING:		
+            case ATTVAL_STRING:
+			case ATTVAL_ENUM:
                 if(! SUCCEEDED( cObj->get_StrAttrByName((CBstrIn)strAttribute, bstrS) ) ) attribute.eval=FALSE;
 
                 strActualValue = bstrS;
