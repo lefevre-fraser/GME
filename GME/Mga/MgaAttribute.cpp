@@ -222,7 +222,7 @@ STDMETHODIMP CMgaAttribute::put_Value(VARIANT newVal) {
 
 STDMETHODIMP CMgaAttribute::get_StringValue(BSTR *pVal) {
 		if(!(mgaproject->preferences & MGAPREF_RELAXED_RDATTRTYPES) &&
-			attrtyp != ATTVAL_STRING) return E_MGA_ACCESS_TYPE;
+			attrtyp != ATTVAL_STRING && inputtyp != ATTVAL_ENUM) return E_MGA_ACCESS_TYPE;
 		COMTRY {
 			CHECK_OUTSTRPAR(pVal);
 			CComVariant v;
