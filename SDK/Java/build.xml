@@ -17,7 +17,7 @@
             
 
     <target name="compile" depends="init">
-        <javac destdir="./bin" source="1.5" target="1.5">
+        <javac destdir="./bin" source="1.5" target="1.5" debug="true">
             <src path="./java"/>
         	<exclude name="org/isis/gme/attributeview/**"/>
         	<exclude name="org/isis/gme/mgadecorator/**"/>
