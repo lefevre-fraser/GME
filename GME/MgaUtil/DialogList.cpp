@@ -64,7 +64,7 @@ BOOL CDialogList::OnInitDialog()
 	}
 	else {
 		static CString chkboxtexts[] = { 
-			"One-time resolution", 
+			"Remember this decision", 
 			"Apply this selection in future until Shift is pressed" 
 		};
 		ASSERT(cb_mode <= sizeof(chkboxtexts)/sizeof(chkboxtexts[0]));

@@ -295,7 +295,7 @@ STDMETHODIMP CMgaResolver::get_FolderByStr(IMgaFolder *parent,
 
 				// update map
 
-				if (cdl.mb_check_once == FALSE)
+				if (cdl.mb_check_once == TRUE)
 					this->map_put_FolderByStr(parent_mfolder.p, kind, *p);
 
 				return S_OK;
@@ -623,7 +623,7 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 		COMTHROW( fco_ix.CopyTo(p) );
 
 		// update mapping
-		if (cdl.mb_check_once == FALSE)
+		if (cdl.mb_check_once == TRUE)
 			this->map_put_KindByStr(parent_mf.p, kind, objtype, *p);
 
 		return S_OK;
@@ -1032,7 +1032,7 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 
 					// update map
 
-					if (cdl.mb_check_once == FALSE)
+					if (cdl.mb_check_once == TRUE)
 						this->map_put_RoleByStr(parent_meta.p, 
 							kind, objtype, role, aspect, *p);
 
@@ -1215,7 +1215,7 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
 
 					// update map
 
-					if (cdl.mb_check_once == FALSE)
+					if (cdl.mb_check_once == TRUE)
 						this->map_put_AttrByStr(parent_metafco.p, kind, *p);
 
 					return S_OK;
