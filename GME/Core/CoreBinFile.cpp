@@ -795,6 +795,7 @@ void CCoreBinFile::SaveProject()
 	ASSERT( !ofs.is_open() );
 	ASSERT( metaprojectid.size() == 16 );
 
+	ofs.clear();
 	ofs.open(filename.c_str(), std::ios::out | std::ios::binary);
 	if( ofs.fail() || !ofs.is_open() ) {
 		ofs.close();
@@ -920,6 +921,7 @@ void CCoreBinFile::LoadProject()
 	resolvelist.clear();
 
 	ifs.close();
+	ofs.clear();
 	ofs.open(filename.c_str(), std::ios::app | std::ios::binary);
 	read_only = false;
 	if( ofs.fail() || !ofs.is_open() )	read_only = true;
