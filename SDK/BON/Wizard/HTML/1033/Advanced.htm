@@ -399,11 +399,11 @@ function UpdateEventMask()
 
 function UpdateNames() {
     var componentName = window.external.FindSymbol('COMPONENT_NAME');
-    window.external.AddSymbol("COCLASS_PROGID", "MGA.Decorator." + componentName);
+    window.external.AddSymbol("COCLASS_PROGID", "MGA.Interpreter." + componentName);
     COCLASS_PROGID.value = window.external.FindSymbol('COCLASS_PROGID');
-    window.external.AddSymbol("COCLASS_NAME", "MGA Decorator CoClass (" + componentName + ")");
+    window.external.AddSymbol("COCLASS_NAME", "MGA Interpreter CoClass (" + componentName + ")");
     COCLASS_NAME.value = window.external.FindSymbol('COCLASS_NAME');
-    window.external.AddSymbol("TYPELIB_NAME", "MGA Decorator TypeLibrary (" + componentName + ")");
+    window.external.AddSymbol("TYPELIB_NAME", "MGA Interpreter TypeLibrary (" + componentName + ")");
     TYPELIB_NAME.value = window.external.FindSymbol('TYPELIB_NAME');
 }
 
