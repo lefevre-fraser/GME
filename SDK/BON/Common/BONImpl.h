@@ -623,7 +623,7 @@ namespace BON
 	class ReferencePortImpl
 		: public ConnectionEndImpl
 	{
-		// Member Vairables
+		// Member Variables
 		private :
 			FCOImpl* 					m_pFCO;
 			ReferenceImpl*				m_pContainer;

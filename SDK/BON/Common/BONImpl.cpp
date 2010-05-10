@@ -3289,6 +3289,11 @@ namespace BON
 			for ( ManySetLink::iterator itS1 = m_sets.begin() ; itS1 != m_sets.end() ; itS1++ )
 				for ( SetSet::iterator itS2 = itS1->second.second.begin() ; itS2 != itS1->second.second.end() ; itS2++ )
 					(*itS2)->onReleasedAsSet( this, true );
+
+			// Need to copy here, since ReferencePortImpl::setDeleted will remove from m_refPorts
+			ReferencePortSet ports = m_refPorts;
+			for ( ReferencePortSet::iterator it = ports.begin() ; it != ports.end() ; it++ )
+				(*it)->setDeleted();
 		}
 
 		for ( ManyAttributeLink::iterator it = m_attributes.begin() ; it != m_attributes.end() ; ++it )
