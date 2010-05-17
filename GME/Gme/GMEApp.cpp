@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include <afxwin.h> // for CWaitCursor
 #include "GMEApp.h"
+#include "GMEVersion.h"
 
 
 #include "Gme_i.c"
@@ -28,7 +29,7 @@
 #include "GMEOLEApp.h"
 #include "GMEEventLogger.h"
 #include "GMEPrintDialog.h"
-#include "ExceptionHandler.h"
+#include "CrashRpt.h"
 #include "CrashTest.h"
 #include <Gdiplus.h>
 #include "GraphicsUtil.h"
@@ -50,33 +51,6 @@ CComModule _Module;
 
 
 /////////////////////////////////////////////////////////////////////////////
-
-void __cdecl onSignalAbort(int code)
-{
-    // It's possible that this signal handler will get called twice
-    // in a single execution of the application.  (On multiple threads,
-    // for example.)  Since raise() resets the signal handler, put it back.
-    signal(SIGABRT, onSignalAbort);
-
-    RaiseException(EXC_SIGNAL_ABORT, 0, 0, 0);
-}
-
-/*int __cdecl _purecall(void)
-{
-    RaiseException(EXC_PURE_CALL, 0, 0, 0);
-    return 0;
-}*/
-
-void onTerminate(void)
-{
-    RaiseException(EXC_TERMINATE, 0, 0, 0);
-}
-
-void onUnexpected(void)
-{
-    RaiseException(EXC_UNEXPECTED, 0, 0, 0);
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CGMEApp
@@ -164,10 +138,6 @@ CGMEApp::CGMEApp() :
 	maintainHistory = false;
 	realFmtStr = "%.12g";
 	// TODO: add construction code here,
-
-	signal(SIGABRT, onSignalAbort);
-	set_terminate(onTerminate);
-	set_unexpected(onUnexpected);
 
 	// Place all significant initialization in InitInstance
 	SIZE size;
@@ -524,6 +494,24 @@ int CGMEApp::Run()
 	gdiplusStartupOutput.NotificationHook(&gdiplusHookToken);
 	graphics.Initialize();
 
+
+	// KMS: set up CrashRpt info
+	CR_INSTALL_INFO info;
+	memset(&info, 0, sizeof(CR_INSTALL_INFO));
+	info.cb = sizeof(CR_INSTALL_INFO);
+	info.pszAppName = _T("GME");
+	info.pszAppVersion = _T(GME_VERSION_ID);
+	info.pszEmailSubject = _T("GME CrashRpt");
+	info.pszEmailTo = _T("gme-supp@isis.vanderbilt.edu");
+	if (crInstall(&info)!=0)
+	{
+		TCHAR buff[256];
+		crGetLastErrorMsg(buff, 256);
+		AfxMessageBox(buff);
+		return FALSE;
+	}
+
+
 	int retVal = 0;
 	if (bNoProtect) {
 		retVal = CWinAppEx::Run();
@@ -531,7 +519,7 @@ int CGMEApp::Run()
 		__try {
 			retVal = CWinAppEx::Run();
 		}
-		__except(ExceptionHandler::UnhandledExceptionFilterOfMain(GetExceptionCode(), GetExceptionInformation())) {
+		__except(crExceptionFilter(GetExceptionCode(), GetExceptionInformation())) {
 			EmergencySave();
 
 			// Modified by Peter:let's exit after emergency event

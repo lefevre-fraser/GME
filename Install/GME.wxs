@@ -464,6 +464,24 @@
         </DirectoryRef>
         
         <DirectoryRef Id="INSTALLDIR_BIN">
+            <Component Id="CrashRpt.dll" Guid="68dc993c-b996-43ed-b25c-02f156571789">
+                <File Id="CrashRpt.dll" Name="CrashRpt.dll" KeyPath="yes" Source="..\GME\lib\CrashRpt\bin\CrashRpt.dll" />
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="INSTALLDIR_BIN">
+            <Component Id="crashrpt_lang.ini" Guid="e1249db1-d553-4515-a492-521f90cd483a">
+                <File Id="crashrpt_lang.ini" Name="crashrpt_lang.ini" KeyPath="yes" Source="..\GME\lib\CrashRpt\bin\crashrpt_lang.ini" />
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="INSTALLDIR_BIN">
+            <Component Id="CrashSender.exe" Guid="05ef9dc1-d5bc-46e8-8fb6-4518e045e321">
+                <File Id="CrashSender.exe" Name="CrashSender.exe" KeyPath="yes" Source="..\GME\lib\CrashRpt\bin\CrashSender.exe" />
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="libapr_1.dll" Guid="5a068588-5484-49a8-afe5-cdaf0a352ba1">
                 <File Id="libapr_1.dll" Name="libapr-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libapr-1.dll" />
             </Component>
@@ -950,8 +968,9 @@
                             </ProgId>
                         </Class>
                         <Class Id="{F729BE0C-ACE5-470B-8F98-DAE52D6A5949}" Context="InprocServer32" Description="CoreXmlFile Class" ThreadingModel="both" Programmable="yes">
-                            <ProgId Id="Mga.CoreXmlFile" Description="CoreXmlFile Class" />
-                            <ProgId Id="Mga.CoreXmlFile.1" Description="CoreXmlFile Class" />
+                            <ProgId Id="Mga.CoreXmlFile.1" Description="CoreXmlFile Class">
+	                        <ProgId Id="Mga.CoreXmlFile" Description="CoreXmlFile Class" />
+                            </ProgId>
                         </Class>
                     </TypeLib>
                 </File>
@@ -2196,6 +2215,9 @@
                 <ComponentRef Id='ConstraintManager.dll' />
                 <ComponentRef Id='Core.dll' />
                 <ComponentRef Id='GMEActiveBrowser.ocx' />
+                <ComponentRef Id='CrashRpt.dll' />
+                <ComponentRef Id='crashrpt_lang.ini' />
+                <ComponentRef Id='CrashSender.exe' />
                 <ComponentRef Id='libapr_1.dll' />
                 <ComponentRef Id='libapriconv_1.dll' />
                 <ComponentRef Id='libaprutil_1.dll' />

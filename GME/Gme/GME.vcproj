@@ -32,6 +32,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Copying required CrashRpt files"
+				CommandLine="copy /y ..\Lib\CrashRpt\bin\CrashRpt.dll &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\CrashSender.exe &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\crashrpt_lang.ini &quot;$(OutDir)&quot;&#x0D;&#x0A;"
+				Outputs="$(OutDir)\crashrpt_lang.ini"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -54,7 +57,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="../Common;../Interfaces;../Include;../Gme"
+				AdditionalIncludeDirectories="../Common;../Interfaces;../Include;../Gme;../Lib/CrashRpt/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -83,11 +86,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdiplus.lib xerces-c_2.lib"
+				AdditionalDependencies="gdiplus.lib xerces-c_2.lib CrashRpt.lib"
 				OutputFile=".\Release/GME.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\lib"
+				AdditionalLibraryDirectories="..\lib;..\lib\CrashRpt\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Release/GME.pdb"
 				GenerateMapFile="true"
@@ -135,6 +138,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Copying required CrashRpt files"
+				CommandLine="copy /y ..\Lib\CrashRpt\bin\CrashRptd.dll &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\CrashSenderd.exe &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\crashrpt_lang.ini &quot;$(OutDir)&quot;&#x0D;&#x0A;"
+				Outputs="$(OutDir)\crashrpt_lang.ini"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -154,7 +160,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Common;../Interfaces;../Include;../Gme"
+				AdditionalIncludeDirectories="../Common;../Interfaces;../Include;../Gme;../Lib/CrashRpt/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -184,11 +190,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdiplus.lib xerces-c_2D.lib"
+				AdditionalDependencies="gdiplus.lib xerces-c_2D.lib CrashRptd.lib"
 				OutputFile=".\Debug/GME.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\lib"
+				AdditionalLibraryDirectories="..\lib;..\lib\CrashRpt\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/GME.pdb"
 				GenerateMapFile="true"
@@ -225,6 +231,7 @@
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{EC447287-A21A-4DE2-822A-55F20A5805D4}"
+			RelativePathToProject=".\PartBrowser\PartBrowser.vcproj"
 		/>
 	</References>
 	<Files>
@@ -326,10 +333,6 @@
 			</File>
 			<File
 				RelativePath="EnumVar.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ExceptionHandler.cpp"
 				>
 			</File>
 			<File
@@ -643,10 +646,6 @@
 			</File>
 			<File
 				RelativePath="EnumVar.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ExceptionHandler.h"
 				>
 			</File>
 			<File
