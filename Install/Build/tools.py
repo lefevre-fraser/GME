@@ -116,7 +116,7 @@ def build_VS(sln_path, config_name, project_name=""):
     DTE.MainWindow.Visible = True
     DTE.Solution.Open( sln_path )
     builder = DTE.Solution.SolutionBuild
-		failed = 0
+    failed = 0
     if prefs['clean']:
         builder.Clean(1)
     if (project_name):
@@ -161,7 +161,7 @@ def xmp2mta(xml_file, paradigm):
     """
     toolmsg("Parsing and registering " + xml_file + " (" + paradigm + ")")
     regsitrar = win32com.client.Dispatch( "MGA.MgaRegistrar" )
-    regsitrar.RegisterParadigmFromData( "XML=" + xml_file, paradigm, 2 )
+    regsitrar.RegisterParadigmFromData( "XML=" + xml_file, paradigm, 1 )
 
 
 def query_GUID(paradigm ):
@@ -175,7 +175,7 @@ def query_GUID(paradigm ):
     returns the GUID as a string
     """ 
     regsitrar = win32com.client.Dispatch( "MGA.MgaRegistrar" )
-    return regsitrar.ParadigmGUIDString(2, paradigm)
+    return regsitrar.ParadigmGUIDString(3, paradigm)
 
 
 def test_WiX():
