@@ -481,6 +481,12 @@
             </Component>
         </DirectoryRef>
 
+        <DirectoryRef Id="INSTALLDIR">
+            <Component Id="CrashRpt.license" Guid="51c163aa-fa0a-4ad8-b849-0a3f3a0cd934">
+                <File Id="CrashRpt.license" Name="CrashRpt.license" KeyPath="yes" Source="..\GME\lib\CrashRpt\License.txt" />
+            </Component>
+        </DirectoryRef>
+
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="libapr_1.dll" Guid="5a068588-5484-49a8-afe5-cdaf0a352ba1">
                 <File Id="libapr_1.dll" Name="libapr-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libapr-1.dll" />
@@ -2218,6 +2224,7 @@
                 <ComponentRef Id='CrashRpt.dll' />
                 <ComponentRef Id='crashrpt_lang.ini' />
                 <ComponentRef Id='CrashSender.exe' />
+                <ComponentRef Id='CrashRpt.license' />
                 <ComponentRef Id='libapr_1.dll' />
                 <ComponentRef Id='libapriconv_1.dll' />
                 <ComponentRef Id='libaprutil_1.dll' />
