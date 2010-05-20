@@ -141,7 +141,6 @@ STDMETHODIMP CViewDriver::ObjectEvent(IMgaObject *obj, unsigned long eventmask,V
 		return S_OK;
 	CGMEView::inEventHandler = true;
 
-
 	// Clear all invalidated PendingRequests
 	POSITION ppos = view->pendingRequests.GetHeadPosition();
 	while (ppos) {
@@ -261,6 +260,7 @@ int CGMEView::instanceCount = 0;
 int CGMEView::inTransaction = 0;
 bool CGMEView::inRWTransaction = false;
 bool CGMEView::inEventHandler = false;
+
 
 HCURSOR CGMEView::autoconnectCursor;
 HCURSOR CGMEView::autoconnect2Cursor;
@@ -596,6 +596,8 @@ CGMEView::CGMEView()
 
 	driver							= new CComObject<CViewDriver>;
 	driver->view					= this;
+
+	executingPendingRequests		= false;
 
 	contextSelection				= 0;
 	contextAnnotation				= 0;
@@ -1452,7 +1454,6 @@ void CGMEView::BeginTransaction(transactiontype_enum mode)
 		inRWTransaction = (mode == TRANSACTION_GENERAL);
 		COMTHROW(theApp.mgaProject->BeginTransaction(terry,mode));
 	}
-	TryToExecutePendingRequests();
 }
 
 void CGMEView::CommitTransaction()
@@ -1460,7 +1461,6 @@ void CGMEView::CommitTransaction()
 	if(inEventHandler)
 		return;
 	VERIFY(inTransaction > 0);
-	TryToExecutePendingRequests();
 	if(inTransaction == 1)
 		COMTHROW(theApp.mgaProject->CommitTransaction());
 	inTransaction--;
@@ -3937,9 +3937,11 @@ void CGMEView::FillModelGrid()
 				return;
 			}
 			// obj->SetCenter(pt);
-			CPendingObjectPosRequest *req = new CPendingObjectPosRequest(obj, pt, obj->GetLocation(), obj->GetParentAspect());
-			pendingRequests.AddHead(req);
-			postPendingRequestEvent = true;
+			if (!executingPendingRequests) {
+				CPendingObjectPosRequest *req = new CPendingObjectPosRequest(obj, pt, obj->GetLocation(), obj->GetParentAspect());
+				pendingRequests.AddHead(req);
+				postPendingRequestEvent = true;
+			}
 
 			obj->SetCenter(pt, -1, false);
 		}
@@ -9717,11 +9719,19 @@ LRESULT CGMEView::OnDecoratorViewRefreshRequest(WPARAM wParam, LPARAM lParam)
 LRESULT CGMEView::OnExecutePendingRequests(WPARAM wParam, LPARAM lParam)
 {
 	CGMEEventLogger::LogGMEEvent("CGMEView::OnExecutePendingRequests() in " + path + name + "\r\n");
+	
+	executingPendingRequests = true;
+	try {
+		BeginTransaction();
+		TryToExecutePendingRequests();
+		CommitTransaction();
+	}
+	catch(hresult_exception &e) {
+		// silent failure (not critical)
+		AbortTransaction(e.hr);
+	}
 
-	BeginTransaction();
-	TryToExecutePendingRequests();
-	CommitTransaction();
-
+	executingPendingRequests = false;
 	return 0;
 }
 

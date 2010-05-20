@@ -11,7 +11,6 @@
 #include "..\Annotator\AnnotationDefs.h"
 #include "CommonSmart.h"
 
-
 /*
 	ATTENTION !
 

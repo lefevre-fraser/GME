@@ -200,7 +200,9 @@ public:
 	bool					isModelAutoRouted;
 	COLORREF				bgColor;
 	CChildFrame*			frame;
+
 	CPendingRequestList		pendingRequests;
+	bool					executingPendingRequests;
 	CDC*					onScreen;
 
 	static bool							m_bUseStretchBlt;		// Supposed workaround for Vista black view problem: use StretchBlt instead of BitBlt
