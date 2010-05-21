@@ -155,6 +155,58 @@ void FCO::inDeleteObject() {
 			CoreObjMark(parent, OBJEVENT_LOSTCHILD);
 }
 
+// PreDelete Notification by Tihamer for the PAMS SynchTool
+void FCO::PreDeleteNotify()
+{
+/*
+	
+	long status;
+	COMTHROW(get_Status(&status));
+	metaid_type typ = GetMetaID(self);
+	if(status == OBJECT_DELETED) return;  // since collections contain objects, it may happen!!!
+*/
+	metaid_type typ = GetMetaID(self);
+
+	if(typ == DTID_MODEL || typ == DTID_FOLDER) 
+	{
+		CoreObjs children = self[ATTRID_FCOPARENT + ATTRID_COLLECTION];
+		ITERATE_THROUGH(children) ObjForCore(ITER)->PreDeleteNotify();
+	}
+
+	// Notification
+	
+	try 
+	{
+		long chmask = OBJEVENT_PRE_DESTROYED;
+		
+		CMgaProject::addoncoll::iterator ai, abeg = mgaproject->alladdons.begin(), aend = mgaproject->alladdons.end();
+		if(abeg != aend) 
+		{
+			CComVariant nil;
+			COMTHROW(mgaproject->pushterr(*mgaproject->reserveterr));
+			for(ai = abeg; ai != aend; ) 
+			{
+				CComPtr<CMgaAddOn> t = *ai++;	
+				unsigned long mmask;
+				if((mmask = (t->eventmask & chmask)) != 0) {
+					CComPtr<IMgaObject> tt;
+					getinterface(&tt);
+
+					if(t->handler->ObjectEvent(tt, mmask, nil) != S_OK) {
+						ASSERT(("Notification failed", false));
+					}
+				    t->notified = true;
+				}
+			}
+			COMTHROW(mgaproject->popterr());
+		}
+	} 
+	catch(hresult_exception&)
+	{
+		ASSERT(0);
+	}
+}
+
 HRESULT FCO::DeleteObject() { 
 		COMTRY_IN_TRANSACTION {
 			CheckWrite();
@@ -167,6 +219,9 @@ HRESULT FCO::DeleteObject() {
 			if(!CoreObj(self[ATTRID_PARENT]).IsContainer()) {  
 				COMTHROW(E_MGA_OP_REFUSED);  
 			}
+
+			PreDeleteNotify();
+
 			inDeleteObject();
 
 			docheck(mgaproject);

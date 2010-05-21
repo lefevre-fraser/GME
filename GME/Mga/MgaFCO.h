@@ -337,6 +337,9 @@ END_COM_MAP()
 private:
 //Notification
 	unsigned long changemask, notifymask, temporalmask;
+
+// PreDelete Notification by Tihamer for the PAMS SynchTool
+	void PreDeleteNotify();
 public:
 	class NoAddRefCoreObj : public CoreObj {	// CoreObj, but non-addref/release-ing
 	public:
