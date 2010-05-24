@@ -30,11 +30,83 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r10.?.?
+--------------------------------
+	- This is a service release for r9.8.28
+    Hence, it is binary compatible with that.
+  - Fixing bugs: GME-270 (GUI random crashes with multiuser projects)
 
+Release Notes of Release r10.2.9
+---------------------------------
+	- This is a service release for r9.8.28
+    Hence, it is binary compatible with that.
+  - Fixing bugs: GME-233, GME-244
 
-Release Notes of Release r9.11.11
--------------------------------
+Release Notes of Release r10.2.8
+---------------------------------
   - This is a service release for r9.8.28
+    Hence, it is binary compatible with that.
+  - Fixing bugs: GME-249, GME-250
+  - Read-only attributes/preferences/properties can be
+    copied (copy&paste) from the attribute panel
+  - Toolbar menu fixes
+  - "Show type info" meta attribute is implemented
+
+Release Notes of Release r10.1.22
+---------------------------------
+  - This is a service release for r9.8.28
+    Hence, it is binary compatible with that.
+  - Fixed bugs: GME-246
+
+Release Notes of Release r10.1.19
+---------------------------------
+  - This is a service release for r9.8.28
+    Hence, it is binary compatible with that.
+  - Fixed bugs: GME-217, GME-225, GME-227, GME-240, GME-241, GME-242
+  - Addditional checks in the GUI for non-ASCII characters 
+    (we do not support them)
+
+Release Notes of Release r10.1.11
+---------------------------------
+  - This is a service release for r9.8.28
+    Hence, it is binary compatible with that.
+  - Bugfix: crashes related inplace editing (decortator)
+  - Smaller cosmetic fixes
+  - Known problem: component registration does not work
+    on Windows 7 (32 bit)
+
+Release Notes of Release r10.1.4
+---------------------------------
+  - This is a service release for r9.8.28
+    Hence, it is binary compatible with that.
+  - Bugfix: crashes related to automatic unloading of
+    the Constraint Manager
+    
+Release Notes of Release r9.12.29
+---------------------------------
+  - This is a service release for r9.8.28
+    Hence, it is binary compatible with that.
+  - Bugfix: random crashes while editing labels, crash (exception) 
+    handling
+
+Release Notes of Release r9.12.21
+---------------------------------
+  - This is a service release for r9.8.28
+    Hence, it is binary compatible with that.
+  - It contains all features/bugfixes backported from the current
+    HEAD (except COM interfaces changes)
+
+Release Notes of Release r9.12.15
+---------------------------------
+  - This is a service release for r9.8.28
+    Hence, it is binary compatible with that.
+  - It fixes a bug which prevented the Constraint Manager
+    to be disabled  
+  
+Release Notes of Release r9.11.12
+---------------------------------
+  - This is a service release for r9.8.28 with minor bugfixes
+    Hence, it is binary compatible with that.
     
 Release Notes of Release r9.8.28
 -------------------------------
