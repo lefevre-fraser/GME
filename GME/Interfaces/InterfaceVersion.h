@@ -4,7 +4,7 @@
 
 // CHECKSUM Core.idl = B6534C3E
 // CHECKSUM Meta.idl = DF870113
-// CHECKSUM Mga.idl = 534AEB6A
+// CHECKSUM Mga.idl = 71217380
 // CHECKSUM MgaUtil.idl = 8FA82FC3
 // CHECKSUM MgaDecorator.idl = FBD111E7
 // CHECKSUM Gme.idl = B603BECA
