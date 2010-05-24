@@ -117,6 +117,8 @@ typedef enum objectevent_enum {
 		OBJEVENT_CREATED    =   0x80000000,             
 [ helpstring("The object has been destroyed (limited access is available)")]
 		OBJEVENT_DESTROYED  =   0x40000000,             
+[ helpstring("The object is going to be deleted.")]
+		OBJEVENT_PRE_DESTROYED    =   0x20000000,             
 [ helpstring("Attribute changed")]
 		OBJEVENT_ATTR       =   0x00000001,             
 [ helpstring("Registry changed")]
