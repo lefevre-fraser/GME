@@ -216,7 +216,7 @@ def build_msi():
 def zip_pdb():
     "Collect and zip all debug information (*.pdb)"
     zipname = os.path.join(GME_ROOT, "Install", "GME-" + prefs['version_string'] + "-symbols.zip")
-    tools.collect_and_zip(GME_ROOT, zipname, "*.pdb")
+    tools.collect_and_zip(GME_ROOT, zipname, "*.pdb *.dll *.exe *.ocx")
     pass
 
 def publish():

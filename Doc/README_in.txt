@@ -30,11 +30,24 @@ guaranteed.
 1. Release Notes
 ************************************************
 
-Release Notes of Release r10.?.?
+Release Notes of Release r10.7.1
 --------------------------------
-	- This is a service release for r9.8.28
-    Hence, it is binary compatible with that.
-  - Fixing bugs: GME-270 (GUI random crashes with multiuser projects)
+	- This release contains minor changes to the COM interface definitions. 
+	  Please, re-compile existing interpreters, add-ons, decorators
+  - Fixing GME-270: GUI random crashes with multiuser projects
+  - OBJEVENT_PRE_DESTROYED event is introduced in the MGA layer for 
+    easier handling of to be deleted objects
+  - New crash reporting facility (using CrashRpt)
+  - Fix crash with reference ports when the referee is deleted before the refport
+  - Fixing GME-262: CoClasses should be named Interpreter not Decorator
+  - Fixing GME-267: "One-time resolution" now reads "Remember this decision" and the logic is inverted
+  - Fixing GME-266: searching for enumeration values as strings
+  - Allow querying enum attributes as strings in the MGA layer (still not allowing to set these value types as strings).
+  - Fixing crash when displaying connections without endpoints
+  - Fixing GME-210: all empty inputs should match everything
+  - Fixing GME-264: dont ask user to save file that has no modifications
+  - Fixing GME-258: multiuser backend commit messages
+  - Fixing GME-253: missing session folder when creating multiuser projects
 
 Release Notes of Release r10.2.9
 ---------------------------------
