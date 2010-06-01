@@ -59,8 +59,6 @@ CGmeDlg::CGmeDlg(CWnd* pParent /*=NULL*/)
 	m_ext_editor = _T("");
 	m_useAutoRouting = TRUE;
 	m_labelavoidance = FALSE;
-	m_edgeSnapAngleStr = "4.0";
-	m_edgeSnapAngle = 4.0;
 	m_sendOverObj = FALSE;
 	m_timeStamps = FALSE;
 	m_navigationHistory = FALSE;
@@ -86,7 +84,6 @@ void CGmeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EXT_EDITOR, m_ext_editor);
 	DDX_Check(pDX, IDC_AUTOROUTEDEFAULT, m_useAutoRouting);
 	DDX_Check(pDX, IDC_LABELAVOIDANCE, m_labelavoidance);
-	DDX_Text(pDX, IDC_SNAPANGLEEDIT, m_edgeSnapAngleStr);
 	DDX_Check(pDX, IDC_SENDOVEROBJECT, m_sendOverObj);
 	DDX_Check(pDX, IDC_TIMESTAMPING, m_timeStamps);
 	DDX_Check(pDX, IDC_NAVIGATIONHISTORY, m_navigationHistory);
@@ -322,9 +319,6 @@ BOOL CGmeDlg::OnInitDialog()
 		COMTHROW( registrar->get_LabelAvoidance(REGACCESS_USER, &labelavoidance) );
 		m_labelavoidance = (labelavoidance == VARIANT_FALSE) ? FALSE : TRUE;
 
-		COMTHROW( registrar->get_EdgeSnapTresholdAngle(REGACCESS_USER, &m_edgeSnapAngle) );
-		m_edgeSnapAngleStr.Format("%lf", m_edgeSnapAngle);
-
 		// Script
 		COMTHROW( registrar->get_ScriptEngine(REGACCESS_USER, PutOut(m_scriptEngine)) );
 		if (m_scriptEngine == "")
@@ -419,9 +413,6 @@ void CGmeDlg::OnOK()
 
 	VARIANT_BOOL labelavoidance = (m_labelavoidance == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
 	COMTHROW( registrar->put_LabelAvoidance(REGACCESS_USER, labelavoidance) );
-
-	m_edgeSnapAngle = atof(m_edgeSnapAngleStr);
-	COMTHROW( registrar->put_EdgeSnapTresholdAngle(REGACCESS_USER, m_edgeSnapAngle) );
 
 	// ScriptEngine
 	// m_scriptEngine <- current item from m_scriptEngines ??

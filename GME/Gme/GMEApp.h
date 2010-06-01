@@ -63,7 +63,6 @@ public:
 	bool	multipleView;
 	bool	useAutoRouting;
 	bool	labelAvoidance;
-	double	edgeSnapAngle;
 
 	HACCEL m_GMEView_hAccel;
 	CRecentConnStrList m_RecentProjectList;
