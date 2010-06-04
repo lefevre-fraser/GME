@@ -33,7 +33,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
-				CommandLine="copy ..\lib\libeay32.dll  &quot;$(OutDir)&quot;&#x0D;&#x0A;copy ..\lib\ssleay32.dll  &quot;$(OutDir)&quot;&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\xerces-c_2_*D.dll &quot;$(OutDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
+				CommandLine="copy ..\lib\libeay32.dll  &quot;$(OutDir)&quot;&#x0D;&#x0A;copy ..\lib\ssleay32.dll  &quot;$(OutDir)&quot;&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\xerces-c_2_*D.dll &quot;$(OutDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot; &amp;&amp; ^&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
@@ -133,7 +133,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration (requires elevated priviledges on Windows Vista)..."
-				CommandLine="copy ..\lib\libeay32.dll  &quot;$(OutDir)&quot;&#x0D;&#x0A;copy ..\lib\ssleay32.dll  &quot;$(OutDir)&quot;&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\xerces-c_2_?.dll &quot;$(OutDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				CommandLine="copy ..\lib\libeay32.dll  &quot;$(OutDir)&quot;&#x0D;&#x0A;copy ..\lib\ssleay32.dll  &quot;$(OutDir)&quot;&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll $(OutDir)&#x0D;&#x0A;copy ..\lib\xerces-c_2_?.dll &quot;$(OutDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot; &amp;&amp; ^&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
 				Outputs="$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
