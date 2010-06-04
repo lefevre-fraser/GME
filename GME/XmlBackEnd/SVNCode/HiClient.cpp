@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "HiClient.h"
 #include <fstream>
+#include "ProgressWindow.h"
 
 #if(USESVN)
 #include "Pool.h"
@@ -80,6 +81,11 @@ bool HiClient::isLockedByUser      ( const std::string& p_path, std::string& p_u
 	ClientUtil::InfoHelp::InfoVec inf;
 
 	log( "isLockedByUser", p_path + p_username);
+	
+	CString progressStr;
+	progressStr.Format("Check lock status: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	bool suc = info2Qck( p_path.c_str(), false, inf);
 	ASSERT( suc);
 	ASSERT( inf.size() == 1);
@@ -115,6 +121,9 @@ bool HiClient::isLockedByUser      ( const std::string& p_path, std::string& p_u
 #endif
 	}
 
+	progressStr.Format("(%s) DONE.\r\n", (LPCTSTR)p_username.c_str());
+	UpdateProgress(progressStr);
+
 	return res;
 }
 
@@ -123,12 +132,21 @@ bool HiClient::isVersioned         ( const std::string& p_path, bool p_isADir /*
 	Pool reqPool;
 
 	log( "isVersioned", p_path + (p_isADir?" dir ": " file "));
+
+	CString progressStr;
+	progressStr.Format("Check if versioned: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	ClientUtil::InfoHelp::InfoVec inf;
 	// PETER - SVNSPEEDHACK BEGIN
 	// bool res = info2Qck( p_path.c_str(), false, inf, p_suppressErrorMsg);
 	Revision rev( svn_path_is_url(p_path.c_str()) ? svn_opt_revision_head : svn_opt_revision_unspecified);
 	bool res =  sub_info2( p_path.c_str(), rev, rev, false, inf, p_suppressErrorMsg);
 	// PETER - SVNSPEEDHACK BEGIN
+
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("yes") : _T("no"));
+	UpdateProgress(progressStr);
+
 	return res;
 }
 
@@ -142,6 +160,11 @@ bool HiClient::info                ( const std::string& p_path, bool p_recursive
 	std::string own;
 
 	log( "info", p_path);
+
+	CString progressStr;
+	progressStr.Format("Subversion info: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	ClientUtil::InfoHelp::InfoVec inf;
 	if( sub_info2( p_path.c_str(), Revision(), Revision(), p_recursive, inf, true)) // non-recursive info only
 	{
@@ -211,6 +234,10 @@ bool HiClient::info                ( const std::string& p_path, bool p_recursive
 
 	p_lastChangingAuthor = aut;
 	p_lockOwner          = own;
+
+	progressStr.Format(" DONE.\r\n");
+	UpdateProgress(progressStr);
+
 	return rv;
 }
 
@@ -218,12 +245,20 @@ bool HiClient::tryLock             ( const std::string& p_path)
 {
 	log( "tryLock", p_path);
 
+	CString progressStr;
+	progressStr.Format("Try to lock: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	bool res = false;
 	if( isLockedByOthers( p_path)) return res;
 
 	Pool reqPool;
 
 	res = sub_lock( Targets( p_path.c_str()), /*comment =*/ "nc" , /*force =*/ false );
+
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
 	return res;
 }
 
@@ -231,10 +266,18 @@ bool HiClient::unLock              ( const std::string& p_path)
 {
 	log( "unLock", p_path);
 
+	CString progressStr;
+	progressStr.Format("Unlock: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	Pool reqPool;
 
-	return sub_unlock( Targets( p_path.c_str()));
+	bool res = sub_unlock( Targets( p_path.c_str()));
 
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
+	return res;
 }
 
 bool HiClient::unLock              ( const std::vector< std::string> & p_pathVec)
@@ -242,33 +285,62 @@ bool HiClient::unLock              ( const std::vector< std::string> & p_pathVec
 	if( p_pathVec.size() == 0) return false;
 	log( "unLockVec", p_pathVec.front());
 
+	CString progressStr;
+	progressStr.Format("Unlock: ");
+
 	Pool reqPool;
 	Targets tgts( p_pathVec.front().c_str());
 	std::vector< std::string>::const_iterator it = p_pathVec.begin();
 	std::vector< std::string>::const_iterator en = p_pathVec.end();
-	for( ++it; it != en; ++it)      // safe to perform ++it in the initialize phase, since it's not empty
+	for( ++it; it != en; ++it) {      // safe to perform ++it in the initialize phase, since it's not empty
 		tgts.add( (*it).c_str());
+		progressStr.Append((*it).c_str());
+		progressStr.Append(", ");
+	}
+	UpdateProgress(progressStr);
 
-	return sub_unlock( tgts);
+	bool res = sub_unlock( tgts);
+
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
+	return res;
 }
 
 bool HiClient::lockableProp        ( const std::string& p_path)
 {
 	log( "lockableProp", p_path);
 
+	CString progressStr;
+	progressStr.Format("Set lockable property: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	Pool reqPool;
 
-	return sub_propertySet( p_path.c_str(), "svn:needs-lock", /*value =*/ "na", /*recurse =*/ false, /*force =*/ false );
+	bool res = sub_propertySet( p_path.c_str(), "svn:needs-lock", /*value =*/ "na", /*recurse =*/ false, /*force =*/ false );
+
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
+	return res;
 }
 
 bool HiClient::getLatest           ( const std::string& p_path)
 {
 	log( "getLatest", p_path);
 
+	CString progressStr;
+	progressStr.Format("Get latest: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	Pool reqPool;
 
 	UPDATE_RES res;
 	bool succ = sub_update( Targets( p_path.c_str()), Revision(), /*recurse =*/ true, /*ignoreExt =*/ false, res);
+
+	progressStr.Format("(%s) DONE.\r\n", succ ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
 	return succ;
 }
 
@@ -276,60 +348,118 @@ bool HiClient::lightCheckOut( const std::string& p_path, const std::string& p_lo
 {
 	log( "checkOut", p_path);
 
+	CString progressStr;
+	progressStr.Format("Checkout: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	Pool reqPool;
 
-	return 0 < sub_checkout( p_path.c_str(), p_localDir.c_str(), Revision(), Revision(), /*recurse =*/ true, /*ignoreExt =*/ false);
+	bool res =  0 < sub_checkout( p_path.c_str(), p_localDir.c_str(), Revision(), Revision(), /*recurse =*/ true, /*ignoreExt =*/ false);
+
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
+	return res;
 }
 
 bool HiClient::commitAll           ( const std::string& p_path, const std::string& p_comment, bool p_keepCheckedOut)
 {
 	log( "commitAll", p_path);
 
+	CString progressStr;
+	progressStr.Format("Commit all: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	Pool requestPool;
 
 	Targets tgt( p_path.c_str()); // commit might return -1 if there were no things to commit (diff was 0)
-	return 0 < sub_commit( tgt, p_comment.c_str(), /*recurse =*/ true, /*noUnlock =*/ p_keepCheckedOut);
+	bool res = 0 < sub_commit( tgt, p_comment.c_str(), /*recurse =*/ true, /*noUnlock =*/ p_keepCheckedOut);
+
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
+	return res;
 }
 
 bool HiClient::add                 ( const std::string& p_path, bool p_recursive)
 {
 	log( "add", p_path);
 
+	CString progressStr;
+	progressStr.Format("Add: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	Pool reqPool;
 
-	return 0 < sub_add( p_path.c_str(), p_recursive);
+	bool res = 0 < sub_add( p_path.c_str(), p_recursive);
+
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
+	return res;
 }
 
 bool HiClient::mkDirOnServer       ( const std::string& p_path)
 {
 	log( "mkDirOnServer", p_path);
 
+	CString progressStr;
+	progressStr.Format("Make repository dir: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	Pool reqPool;
 
-	return 0 < sub_mkdir2( Targets( p_path.c_str()), "nm");
+	bool res = 0 < sub_mkdir2( Targets( p_path.c_str()), "nm");
+
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
+	return res;
 }
 
 bool HiClient::cleanup( const std::string& p_path)
 {
 	log( "cleanup", p_path);
 
+	CString progressStr;
+	progressStr.Format("Cleanup: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	Pool reqPool;
 	
-	return sub_cleanup( p_path.c_str());
+	bool res = sub_cleanup( p_path.c_str());
+
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
+	return res;
 }
 
 bool HiClient::resolve( const std::string& p_path, bool p_recursive)
 {
 	log( "resolve", p_path);
 
+	CString progressStr;
+	progressStr.Format("Resolve: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
+
 	Pool reqPool;
 
-	return sub_resolved( p_path.c_str(), p_recursive);
+	bool res = sub_resolved( p_path.c_str(), p_recursive);
+	
+	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
+	UpdateProgress(progressStr);
+
+	return res;
 }
 
 bool HiClient::status( const std::string& p_path, bool p_assembleStatusMsg, std::string& p_statMsg)
 {
 	log( "status", p_path);
+
+	CString progressStr;
+	progressStr.Format("Status: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
 
 	Pool reqPool;
 
@@ -392,6 +522,10 @@ bool HiClient::status( const std::string& p_path, bool p_assembleStatusMsg, std:
 		if( p_assembleStatusMsg)
 			p_statMsg = "svn status command failed";
 	}
+
+	progressStr.Format("(%s) DONE.\r\n", (LPCTSTR)p_statMsg.c_str());
+	UpdateProgress(progressStr);
+
 	return rv;
 }
 
@@ -399,6 +533,10 @@ bool HiClient::status( const std::string& p_path, bool p_assembleStatusMsg, std:
 bool HiClient::statusOnServer( const std::string& p_path, bool p_assembleStatusMsg, std::string& p_statMsg, bool* p_outOfDate, bool *p_repoEntryModified)
 {
 	log( "statusOnServer", p_path);
+
+	CString progressStr;
+	progressStr.Format("Status on server: %s", (LPCTSTR)p_path.c_str());
+	UpdateProgress(progressStr);
 
 	Pool reqPool;
 
@@ -484,6 +622,10 @@ bool HiClient::statusOnServer( const std::string& p_path, bool p_assembleStatusM
 		if( p_assembleStatusMsg)
 			p_statMsg = "svn status command failed";
 	}
+
+	progressStr.Format("(%s) DONE.\r\n", (LPCTSTR)p_statMsg.c_str());
+	UpdateProgress(progressStr);
+
 	return rv;
 }
 
@@ -491,6 +633,9 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 {
 	if( pathVec.size() == 0) return true;
 	log( "speedLock", pathVec.front());
+
+	CString progressStr;
+	progressStr.Format("Speed lock: ");
 
 	Pool requestPool;
 
@@ -504,6 +649,9 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 		const char *pathent;
 		svn_wc_adm_access_t *adm_access;
 
+		progressStr.Append(pathVec[i].c_str());
+		progressStr.Append(", ");
+
 		pathent = svn_dirent_internal_style(pathVec[i].c_str(), requestPool.pool());
 		dirent = svn_dirent_dirname( pathent, requestPool.pool());
 		err = svn_wc_adm_open( &adm_access, NULL, dirent, FALSE, FALSE, requestPool.pool());
@@ -512,6 +660,7 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 			char errbuff[BUFSIZ];
 			const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
 			msg.append(errbuff2 ? errbuff2 : errbuff);
+			UpdateProgress(_T(" FAILED.\r\n"));
 			return false;
 		}
 
@@ -522,6 +671,7 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 			char errbuff[BUFSIZ];
 			const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
 			msg.append(errbuff2 ? errbuff2 : errbuff);
+			UpdateProgress(_T(" FAILED.\r\n"));
 			return false;
 		}
 
@@ -531,6 +681,7 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 			char errbuff[BUFSIZ];
 			const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
 			msg.append(errbuff2 ? errbuff2 : errbuff);
+			UpdateProgress(_T(" FAILED.\r\n"));
 			return false;
 		}
 
@@ -544,6 +695,7 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 	if(ctx == NULL)
 	{
 		msg.append("Unable to create subversion client context");
+		UpdateProgress(_T(" FAILED.\r\n"));
 		return false;
 	}
 
@@ -557,14 +709,17 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 		char errbuff[BUFSIZ];
 		const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
 		msg.append(errbuff2 ? errbuff2 : errbuff);
+		UpdateProgress(_T(" FAILED.\r\n"));
 		return false;
     }
 
 	if (! m_notify2->m_OK ) {
 		msg.append(m_notify2->m_msg);
+		UpdateProgress(_T(" FAILED.\r\n"));
 		return false;
 	}
 	
+	UpdateProgress(_T(" DONE.\r\n"));
 	return true;
 }
 

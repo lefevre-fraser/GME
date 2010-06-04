@@ -309,6 +309,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ProgressWindow.cpp"
+				>
+			</File>
+			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -548,6 +552,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ProgressWindow.h"
+				>
+			</File>
+			<File
 				RelativePath="Resource.h"
 				>
 			</File>
@@ -677,6 +685,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
 		<File
 			RelativePath=".\edf.dtd"
 			>

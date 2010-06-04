@@ -46,23 +46,26 @@
 #define IDC_COMBO_URL_AND_PATH          230
 #define IDC_CHECK1                      231
 #define IDC_RADIO_CACHED                232
-#define IDC_LOCK_BUTTON2                232
-#define IDC_UNLOCK_BUTTON               232
-#define IDD_DIALOG_COMMIT               232
-#define IDC_RADIO_USPW                  233
-#define IDC_RADIO_PPK                   234
-#define IDC_EDIT_REALM                  235
-#define IDC_UPDATE_BUTTON               236
-#define IDC_TESTCONN_BUTTON             237
-#define IDC_EDIT_COMMENT                238
+#define IDC_LOCK_BUTTON2                233
+#define IDC_UNLOCK_BUTTON               234
+#define IDD_DIALOG_COMMIT               235
+#define IDC_RADIO_USPW                  236
+#define IDD_DIALOG_PROGRESS             237
+#define IDC_RADIO_PPK                   238
+#define IDC_EDIT_REALM                  239
+#define IDC_UPDATE_BUTTON               240
+#define IDC_TESTCONN_BUTTON             241
+#define IDC_EDIT_COMMENT                242
+#define IDC_PROGRESS_BAR                243
+#define IDC_EDIT_PROGRESS               244
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        233
+#define _APS_NEXT_RESOURCE_VALUE        245
 #define _APS_NEXT_COMMAND_VALUE         32768
-#define _APS_NEXT_CONTROL_VALUE         239
+#define _APS_NEXT_CONTROL_VALUE         241
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

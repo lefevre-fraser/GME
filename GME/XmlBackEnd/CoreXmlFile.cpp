@@ -22,6 +22,7 @@
 #include "DirSupplier.h"
 #include "Transcoder.h"
 #include "CommitDialog.h"
+#include "ProgressWindow.h"
 
 using namespace XERCES_CPP_NAMESPACE;
 using std::string;
@@ -1785,6 +1786,7 @@ STDMETHODIMP CCoreXmlFile::CommitTransaction()
 		if( m_userOpts.m_measureTime) sendMsg( std::string( "CommitAbort ") + asctime( tm3) + buff, MSG_INFO);
 #endif
 #endif
+		CloseProgressWindow();
 		return E_FAIL;
 	}
 	else
@@ -1828,7 +1830,7 @@ STDMETHODIMP CCoreXmlFile::CommitTransaction()
 #endif
 #endif
 		m_protectList.onCommited();
-
+		CloseProgressWindow();
 		return S_OK;
 	}
 }
@@ -1884,6 +1886,9 @@ STDMETHODIMP CCoreXmlFile::AbortTransaction()
 	m_fullLockNeeded = false;
 	CloseObject();    
 	m_inTransaction = false;
+
+	CloseProgressWindow();
+
 	return S_OK;
 }
 
@@ -4071,6 +4076,8 @@ void CCoreXmlFile::readAll( bool fullLoad )
 {
 	UnresolvedPointerVec pointers;
 
+	UpdateProgress(_T("Parse XML database"));
+
 	// todo: preconditions
 #ifdef _DEBUG
 #if(DETAILS_ABOUT_XMLBACKEND)
@@ -4149,6 +4156,7 @@ void CCoreXmlFile::readAll( bool fullLoad )
 #endif
 #endif
 	}
+	UpdateProgress(_T(" DONE.\r\n"));
 }
 
 void CCoreXmlFile::getLatestAndLoad()

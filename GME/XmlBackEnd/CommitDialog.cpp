@@ -37,6 +37,7 @@ void CCommitDialog::OnOK()
 	CString commentLine;
 	for (int i=0; i < m_commentEdit.GetLineCount(); i++) {
 		int len = m_commentEdit.LineLength(m_commentEdit.LineIndex(i));
+		len = max(len, sizeof(WORD)/sizeof(TCHAR)); // first WORD is used to store the max length internally...
 		m_commentEdit.GetLine(i, commentLine.GetBuffer(len), len);
 		commentLine.ReleaseBuffer(len);
 		m_comment += commentLine + _T("\n");

@@ -7,6 +7,9 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
 #include "afxres.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -34,14 +37,15 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\n"
-    "\0"
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\0"
 END
 
 3 TEXTINCLUDE 
 BEGIN
-    "1 TYPELIB ""XmlBackEnd.tlb""\r\n"
-    "\0"
+    "1 TYPELIB ""XmlBackEnd.tlb""\r\0"
 END
 
 #endif    // APSTUDIO_INVOKED
@@ -227,6 +231,15 @@ BEGIN
     EDITTEXT        IDC_EDIT_COMMENT,7,22,242,78,ES_MULTILINE | ES_AUTOHSCROLL | ES_WANTRETURN
 END
 
+IDD_DIALOG_PROGRESS DIALOGEX 0, 0, 316, 110
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Multiuser operations"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_PROGRESS_BAR,"msctls_progress32",PBS_SMOOTH | PBS_MARQUEE | WS_BORDER,7,7,302,14
+    EDITTEXT        IDC_EDIT_PROGRESS,7,32,302,71,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -307,6 +320,14 @@ BEGIN
         RIGHTMARGIN, 249
         TOPMARGIN, 7
         BOTTOMMARGIN, 123
+    END
+
+    IDD_DIALOG_PROGRESS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
     END
 END
 #endif    // APSTUDIO_INVOKED
