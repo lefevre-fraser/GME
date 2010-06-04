@@ -32,6 +32,12 @@ guaranteed.
 
 Release Notes of Release r10.7.1
 --------------------------------
+	- Rolled back breaking COM interface changes.  
+	  Hence, it is binary compatible with r9.8.28 and later.
+	- New multiuser progress dialog (GME-271)
+	  
+Release Notes of Release r10.7.1
+--------------------------------
 	- This release contains minor changes to the COM interface definitions. 
 	  Please, re-compile existing interpreters, add-ons, decorators
   - Fixing GME-270: GUI random crashes with multiuser projects
