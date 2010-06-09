@@ -40,6 +40,7 @@ public:
 	{
 		CDialog::OnInitDialog();
 		//m_bar.SetMarquee(TRUE, 0);  // this needs UNICODE to be defined (why?)
+		m_bar.ModifyStyle(0, PBS_MARQUEE);
 		::SendMessage(m_bar.GetSafeHwnd(), PBM_SETMARQUEE, TRUE, 0);
 		return TRUE;
 	}
