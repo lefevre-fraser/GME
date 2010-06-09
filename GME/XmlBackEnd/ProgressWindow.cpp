@@ -16,8 +16,7 @@ class CProgressDialog : public CDialog
 
 public:
 	CProgressDialog(CWnd* pParent = NULL) :
-		CDialog(CProgressDialog::IDD, pParent),
-		m_log(_T("")) 
+		CDialog(CProgressDialog::IDD, pParent)
 	{
 	}
 
@@ -29,7 +28,7 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX)
 	{
 		CDialog::DoDataExchange(pDX);
-		DDX_Text(pDX, IDC_EDIT_PROGRESS, m_log);
+		DDX_Control(pDX, IDC_EDIT_PROGRESS, m_log);
 		DDX_Control(pDX, IDC_PROGRESS_BAR, m_bar);
 	}
 
@@ -46,16 +45,22 @@ public:
 	}
 
 protected:
-	CString m_log;
+	CEdit m_log;
 	CProgressCtrl m_bar;
 public:
 	afx_msg LRESULT OnSendLogLine(WPARAM wParam, LPARAM lParam)
 	{
 		LPCTSTR line = (LPCTSTR)lParam;
-		m_log += line;
+
+		CString logStr;
+		m_log.GetWindowText(logStr);
+		logStr += line;
+		m_log.SetWindowText(logStr);
+
+		m_log.LineScroll(m_log.GetLineCount());
+
 		delete [] line; // dynamically allocated by the main thread
 
-		UpdateData(FALSE);
 		return TRUE;
 	}
 };
