@@ -627,6 +627,20 @@ CBuilderObject::~CBuilderObject()
 		delete list;
 	}
 
+	pos = outConnections2.GetStartPosition();
+	while(pos) {
+		CBuilderConnectionList *list;
+		outConnections2.GetNextAssoc(pos,name,list);
+		delete list;
+	}
+	pos = inConnections2.GetStartPosition();
+	while(pos) {
+		CBuilderConnectionList *list;
+		inConnections2.GetNextAssoc(pos,name,list);
+		delete list;
+	}
+
+
 	ASSERT( CBuilder::theInstance );
 	CBuilder::theInstance->ForgetObjectRef(ciObject);
 }
@@ -2734,6 +2748,11 @@ int MyMessageBox(LPCTSTR lpszText, UINT nType = MB_OK)
 
 CBuilderFactory::~CBuilderFactory()
 {
+	if( connectionBuildFunctions )
+	{
+		delete connectionBuildFunctions;
+		connectionBuildFunctions = NULL;
+	}
 	if( modelBuildFunctions )
 	{
 		delete modelBuildFunctions;
