@@ -307,7 +307,7 @@ int CGMEActiveBrowserCtrl::CreateActiveBrowser()
 		CString strTitle;
 		VERIFY(strTitle.LoadString(IDS_PROPSHT_CAPTION));
 
-		if (!m_pPropFrame->Create(NULL, strTitle, WS_CHILD, rect, this)) {
+		if (!m_pPropFrame->CreateEx(WS_EX_CONTROLPARENT, NULL, strTitle,  WS_CHILD, rect, this)) {
 			delete m_pPropFrame;
 			m_pPropFrame = NULL;
 			return -1;

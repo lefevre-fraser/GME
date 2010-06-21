@@ -53,6 +53,8 @@ int CActiveBrowserPropertyFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
+	m_pModelessPropSheet->ModifyStyleEx(0, WS_EX_CONTROLPARENT);
+
 	// Resize the mini frame so that it fits around the child property
 	// sheet.
 	CRect rectClient, rectWindow;
