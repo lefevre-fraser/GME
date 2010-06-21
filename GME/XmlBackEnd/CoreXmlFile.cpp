@@ -1612,6 +1612,8 @@ STDMETHODIMP CCoreXmlFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode)
 	if(ro_mode!=NULL) 
 		*ro_mode = VARIANT_FALSE;
 
+	CloseProgressWindow();
+
 	return S_OK;
 }
 
@@ -1662,6 +1664,8 @@ STDMETHODIMP CCoreXmlFile::CreateProject(BSTR connection)
 	m_opened   = true;
 	m_modified = false;
 
+	CloseProgressWindow();
+
 	return S_OK;
 }
 
@@ -1688,6 +1692,8 @@ STDMETHODIMP CCoreXmlFile::SaveProject(BSTR connection, VARIANT_BOOL keepoldname
 
 	m_modified = false;
 	m_savedOnce = true;
+
+	CloseProgressWindow();
 
 	return S_OK;
 }
