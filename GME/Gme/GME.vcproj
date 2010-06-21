@@ -33,7 +33,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Copying required CrashRpt files"
-				CommandLine="copy /y ..\Lib\CrashRpt\bin\CrashRpt.dll &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\CrashSender.exe &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\crashrpt_lang.ini &quot;$(OutDir)&quot;&#x0D;&#x0A;"
+				CommandLine="copy /y ..\Lib\CrashRpt\bin\CrashRptd.dll &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\CrashSenderd.exe &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\crashrpt_lang.ini &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y /b &quot;$(OutDir)\crashrpt_lang.ini&quot;+,, &quot;$(OutDir)\crashrpt_lang.ini&quot;"
 				Outputs="$(OutDir)\crashrpt_lang.ini"
 			/>
 			<Tool
@@ -139,7 +139,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Copying required CrashRpt files"
-				CommandLine="copy /y ..\Lib\CrashRpt\bin\CrashRptd.dll &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\CrashSenderd.exe &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\crashrpt_lang.ini &quot;$(OutDir)&quot;&#x0D;&#x0A;"
+				CommandLine="copy /y ..\Lib\CrashRpt\bin\CrashRptd.dll &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\CrashSenderd.exe &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y ..\Lib\CrashRpt\bin\crashrpt_lang.ini &quot;$(OutDir)&quot; &amp;&amp; ^&#x0D;&#x0A;copy /y /b &quot;$(OutDir)\crashrpt_lang.ini&quot;+,, &quot;$(OutDir)\crashrpt_lang.ini&quot;"
 				Outputs="$(OutDir)\crashrpt_lang.ini"
 			/>
 			<Tool
