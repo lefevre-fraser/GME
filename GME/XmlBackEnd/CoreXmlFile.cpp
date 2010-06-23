@@ -1720,11 +1720,9 @@ STDMETHODIMP CCoreXmlFile::CloseProject( VARIANT_BOOL abort)
 		clearAll();
 		resetSettings();
 		XMLPlatformUtils::Terminate();
+		CloseProgressWindow();
 	}
 	COMCATCH(CloseProgressWindow();)
-
-	CloseProgressWindow();
-	return S_OK;
 }
 
 STDMETHODIMP CCoreXmlFile::DeleteProject()
