@@ -245,12 +245,12 @@ bool HiClient::tryLock             ( const std::string& p_path)
 {
 	log( "tryLock", p_path);
 
+	bool res = false;
+	if( isLockedByOthers( p_path)) return res;
+
 	CString progressStr;
 	progressStr.Format("Try to lock: %s", (LPCTSTR)p_path.c_str());
 	UpdateProgress(progressStr);
-
-	bool res = false;
-	if( isLockedByOthers( p_path)) return res;
 
 	Pool reqPool;
 
