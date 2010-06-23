@@ -93,7 +93,9 @@ public:
 
 	virtual int ExitInstance()
 	{
-		m_dlg.DestroyWindow();
+		if (m_dlg.GetSafeHwnd()) {
+			m_dlg.DestroyWindow();
+		}
 		return CWinThread::ExitInstance();
 	}
 
@@ -107,7 +109,9 @@ protected:
 public:
 	afx_msg void OnSendLogLine(WPARAM wParam, LPARAM lParam)
 	{
-		m_dlg.PostMessage(WM_PROGRESSWINDOW_SENDLOGLINE, wParam, lParam);
+		if (m_dlg.GetSafeHwnd()) {
+			m_dlg.PostMessage(WM_PROGRESSWINDOW_SENDLOGLINE, wParam, lParam);
+		}
 	}
 
 	afx_msg void OnClose(WPARAM , LPARAM )
