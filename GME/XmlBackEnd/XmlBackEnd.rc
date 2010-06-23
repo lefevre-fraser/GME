@@ -10,8 +10,7 @@
 #ifndef APSTUDIO_INVOKED
 #include "targetver.h"
 #endif
-#include "afxres.h"
-
+#include "afxres.h"
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -232,7 +231,7 @@ BEGIN
 END
 
 IDD_DIALOG_PROGRESS DIALOGEX 0, 0, 316, 110
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
 CAPTION "Multiuser operations"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
@@ -372,8 +371,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-1 TYPELIB "XmlBackEnd.tlb"
-
+1 TYPELIB "XmlBackEnd.tlb"
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 
