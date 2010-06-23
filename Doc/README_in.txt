@@ -30,13 +30,22 @@ guaranteed.
 1. Release Notes
 ************************************************
 
-Release Notes of Release r10.7.1
+Release Notes of Release r10.6.23
+---------------------------------
+  - Added autoscroll to the multiuser progress window
+  - Memory leak fixes in BON
+  - Fixing GME-274 and GME-256: GME hangs after clicking the scirpt button(s)
+  - Fixing GME-277: automatic closing of the multiuser progress window
+  - Added extra runtime checks when sending messages to the multiuser progress window
+  - Removed the close (system) menu from the multiuser progress window
+
+Release Notes of Release r10.6.4
 --------------------------------
 	- Rolled back breaking COM interface changes.  
 	  Hence, it is binary compatible with r9.8.28 and later.
 	- New multiuser progress dialog (GME-271)
 	  
-Release Notes of Release r10.7.1
+Release Notes of Release r10.6.1
 --------------------------------
 	- This release contains minor changes to the COM interface definitions. 
 	  Please, re-compile existing interpreters, add-ons, decorators
