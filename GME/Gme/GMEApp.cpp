@@ -1285,9 +1285,24 @@ void CGMEApp::OpenProject(const CString &conn) {
 			VARIANT_BOOL ro_mode;
 			if( conn.Left(5) == "MGX=\"")
 			{
-				if( E_FILEOPEN == hr) // multi user project could not be open
+				if( E_FILEOPEN == hr) {
 					consoleMessage( "Could not open project!", MSG_ERROR);
-				else if( E_UNKNOWN_STORAGE == hr) { } // so additional comment in this case
+				}
+				else if( E_MGA_PARADIGM_INVALID == hr) {
+					consoleMessage( "Project could not access its original version of paradigm!", MSG_ERROR);
+				}
+				else if( E_MGA_PARADIGM_NOTREG == hr) {
+					consoleMessage( "Project could not access its paradigm!", MSG_ERROR);
+				}
+				else if( E_MGA_META_INCOMPATIBILITY == hr) {
+					consoleMessage( "Versioned project is not compatible with the registered paradigm!", MSG_ERROR);
+				}
+				else if( E_UNKNOWN_STORAGE == hr) { 
+					// no additional comment in this case
+				}
+				else {
+					consoleMessage( "Could not open project (unknown error)!", MSG_ERROR);
+				}
 				CloseProject();
 				return; // ensures no more exception handlers or explanatory messages (or QueryProjectInfo calls)
 			}
