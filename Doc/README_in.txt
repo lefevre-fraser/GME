@@ -30,6 +30,11 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r10.6.24
+---------------------------------
+	- This is a minor update, fixing bugs with the multiuser
+	  progress window
+
 Release Notes of Release r10.6.23
 ---------------------------------
   - Added autoscroll to the multiuser progress window
