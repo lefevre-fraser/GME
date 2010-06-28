@@ -1528,93 +1528,98 @@ STDMETHODIMP CCoreXmlFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode)
 
 	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 
-	resetSettings();
+	COMTRY {
+		resetSettings();
 
-	parseConnectionString( connection );
-	setFileNames();
+		parseConnectionString( connection );
+		setFileNames();
 
-	m_userOpts.reset();
-	m_userOpts.load( m_folderPath);
-	m_userOpts.display( this);
+		m_userOpts.reset();
+		m_userOpts.load( m_folderPath);
+		m_userOpts.display( this);
 
-	readProjectFile();
+		readProjectFile();
 
-	bool cache_loading_succeeded = false;
-	if( m_userOpts.m_partialLoad)
-		cache_loading_succeeded = readBinaryCache();
-	// if usecache option is false or if cache not read succesfully
+		bool cache_loading_succeeded = false;
+		if( m_userOpts.m_partialLoad) {
+			cache_loading_succeeded = readBinaryCache();
+		}
+		// if usecache option is false or if cache not read succesfully
 
-	//if( !m_userOpts.m_partialLoad)
-	if( !m_userOpts.m_partialLoad || !cache_loading_succeeded) // part_load was not requested or it was, but failed
-		//if( !m_userOpts.m_partialLoad || !readBinaryCache())
-		//if( true )
-	{                
-		// binary cache is not found, get latest and read all
-		if( m_sourceControl != SC_NONE )
-			getLatestVersion();
+		//if( !m_userOpts.m_partialLoad)
+		if( !m_userOpts.m_partialLoad || !cache_loading_succeeded) // part_load was not requested or it was, but failed
+			//if( !m_userOpts.m_partialLoad || !readBinaryCache())
+			//if( true )
+		{                
+			// binary cache is not found, get latest and read all
+			if( m_sourceControl != SC_NONE ) {
+				getLatestVersion();
+			}
 
-		readAll( true );
-		//if( m_userOpts.m_partialLoad) writeBinaryCache();
-	}
-	else
-	{
-		if( m_sourceControl != SC_NONE )
-			getLatestVersion();        
-
-		readAll( false );
-		//// graph has been read  successfully, get latest and update graph
-		//if( m_sourceControl != SC_NONE )
-		//    getLatestAndLoad();
-	}
-
-	// Check for the new session folder, create one on-demand
-	std::string sessionFolder =  m_folderPath + "\\" + HelperFiles::sessionFolderName;
-	DWORD atts = ::GetFileAttributes(sessionFolder.c_str());
-	if (atts == INVALID_FILE_ATTRIBUTES || !(atts | FILE_ATTRIBUTE_DIRECTORY) ) {
-		sendMsg( "Detecting old session format. Upgrading to newer one (dedicated session folder).", MSG_INFO);
-		
-		BOOL  succ = ::CreateDirectory( sessionFolder.c_str(), NULL);
-		if( succ != TRUE)
+			readAll( true );
+			//if( m_userOpts.m_partialLoad) writeBinaryCache();
+		}
+		else
 		{
-			sendMsg( "Exception: Could not create session folder: " + sessionFolder, MSG_ERROR);
-			AfxMessageBox( (std::string( "Could not create session folder: ") + sessionFolder).c_str());
-			HR_THROW(E_FILEOPEN);
-		}
-		// add to server
-		succ = addSVN( sessionFolder, true /*=recursive*/); 
-		if( !succ) {
-			sendMsg( "Exception: Could not add session folder to server.", MSG_ERROR);
-			AfxMessageBox( "Could not add session folder to server.");
-			HR_THROW(E_FILEOPEN);
+			if( m_sourceControl != SC_NONE ) {
+				getLatestVersion(); 
+			}
+
+			readAll( false );
+			//// graph has been read  successfully, get latest and update graph
+			//if( m_sourceControl != SC_NONE )
+			//    getLatestAndLoad();
 		}
 
-		// initial commit
-		succ = commitSVN( m_contentPath, std::string("auto: OpenProject()"), true);
-		if( !succ) {
-			sendMsg( "Exception: Could not commit session folder.", MSG_ERROR);
-			AfxMessageBox( "Could not commit session folder.");
-			HR_THROW(E_FILEOPEN);
+		// Check for the new session folder, create one on-demand
+		std::string sessionFolder =  m_folderPath + "\\" + HelperFiles::sessionFolderName;
+		DWORD atts = ::GetFileAttributes(sessionFolder.c_str());
+		if (atts == INVALID_FILE_ATTRIBUTES || !(atts | FILE_ATTRIBUTE_DIRECTORY) ) {
+			sendMsg( "Detecting old session format. Upgrading to newer one (dedicated session folder).", MSG_INFO);
+			
+			BOOL  succ = ::CreateDirectory( sessionFolder.c_str(), NULL);
+			if( succ != TRUE)
+			{
+				sendMsg( "Exception: Could not create session folder: " + sessionFolder, MSG_ERROR);
+				AfxMessageBox( (std::string( "Could not create session folder: ") + sessionFolder).c_str());
+				HR_THROW(E_FILEOPEN);
+			}
+			// add to server
+			succ = addSVN( sessionFolder, true /*=recursive*/); 
+			if( !succ) {
+				sendMsg( "Exception: Could not add session folder to server.", MSG_ERROR);
+				AfxMessageBox( "Could not add session folder to server.");
+				HR_THROW(E_FILEOPEN);
+			}
+
+			// initial commit
+			succ = commitSVN( m_contentPath, std::string("auto: OpenProject()"), true);
+			if( !succ) {
+				sendMsg( "Exception: Could not commit session folder.", MSG_ERROR);
+				AfxMessageBox( "Could not commit session folder.");
+				HR_THROW(E_FILEOPEN);
+			}
 		}
+
+		// m_sourceControl has to be filled for these methods below (setParent)
+		m_signer.setParent( this);
+		m_signer.in(); // signing on does username verification also
+		m_protectList.setParent( this);
+
+		// purge my protect list
+		m_protectList.onLoad();
+
+		m_opened    = true;
+		m_modified  = false;
+		m_savedOnce = true;
+
+		if(ro_mode!=NULL) 
+			*ro_mode = VARIANT_FALSE;
+
+		CloseProgressWindow();
+
 	}
-
-	// m_sourceControl has to be filled for these methods below (setParent)
-	m_signer.setParent( this);
-	m_signer.in(); // signing on does username verification also
-	m_protectList.setParent( this);
-
-	// purge my protect list
-	m_protectList.onLoad();
-
-	m_opened    = true;
-	m_modified  = false;
-	m_savedOnce = true;
-
-	if(ro_mode!=NULL) 
-		*ro_mode = VARIANT_FALSE;
-
-	CloseProgressWindow();
-
-	return S_OK;
+	COMCATCH(CloseProgressWindow();)
 }
 
 STDMETHODIMP CCoreXmlFile::CreateProject(BSTR connection)
