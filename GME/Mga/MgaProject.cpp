@@ -468,6 +468,10 @@ STDMETHODIMP CMgaProject::Open(BSTR projectname, VARIANT_BOOL *ro_mode)
 		metapr = 0;
 		projconn.Empty(); 
 		parconn.Empty();
+		// We've already called SetErrorInfo, don't call it again
+		if (e.hr == E_MGA_COMPONENT_ERROR) {
+			return e.hr;
+		}
 	)
 }
 
@@ -1214,7 +1218,8 @@ void CMgaProject::StartAutoAddOns() {
 				CComQIPtr<IMgaVersionInfo> vv=addon;
 				MgaInterfaceVersion_enum v = MgaInterfaceVersion_None;
 				if(vv) COMTHROW(vv->get_version(&v));
-				if(v != MgaInterfaceVersion_Current) HR_THROW(E_MGA_COMPONENT_ERROR);
+				if(v != MgaInterfaceVersion_Current)
+					HR_THROW(E_MGA_COMPONENT_ERROR);
 
 				COMTHROW( addon->Initialize(this));
 				autocomps.push_front(addon.Detach());
@@ -1225,6 +1230,7 @@ void CMgaProject::StartAutoAddOns() {
 		}
 		inautoaddoncreate = false;
 		if(errs) {
+				SetErrorInfo(errs);
 				COMTHROW(E_MGA_COMPONENT_ERROR); // change error type
 		}		
 	}

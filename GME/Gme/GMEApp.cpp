@@ -1369,7 +1369,12 @@ void CGMEApp::OpenProject(const CString &conn) {
 				else break;
 			}
 			if(hr == E_MGA_COMPONENT_ERROR) {
-				AfxMessageBox("ERROR: Some automatic addon components could not start up\n");
+				BSTR errorInfo;
+				GetErrorInfo(&errorInfo);
+				_bstr_t err("ERROR: automatic addon components '");
+				err += errorInfo;
+				err += "' could not start up.\n";
+				AfxMessageBox(err);
 			}
 			COMTHROW(hr);
 		}
@@ -1461,7 +1466,12 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 			DiagnoseParadigm(metaname);
 		}
 	    if(hr == E_MGA_COMPONENT_ERROR) {
-			AfxMessageBox("ERROR: Some automatic addon components could not start up\n");
+				BSTR errorInfo;
+				GetErrorInfo(&errorInfo);
+				_bstr_t err("ERROR: automatic addon components '");
+				err += errorInfo;
+				err += "' could not start up.\n";
+				AfxMessageBox(err);
 		}
 		if( hr == E_UNKNOWN_STORAGE && conn.Left(5) == "MGX=\"") {
 			CloseProject();
@@ -2038,7 +2048,12 @@ void CGMEApp::OnFileImportxml()
 					AfxMessageBox(buf);
 				}
 				if(hr == E_MGA_COMPONENT_ERROR) {
-					AfxMessageBox("ERROR: Some automatic addon components could not start up\n");
+					BSTR errorInfo;
+					GetErrorInfo(&errorInfo);
+					_bstr_t err("ERROR: automatic addon components '");
+					err += errorInfo;
+					err += "' could not start up.\n";
+					AfxMessageBox(err);
 				}
 				COMTHROW(hr);
 				AfterOpenOrCreateProject(dataconn); 
@@ -2724,7 +2739,12 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 					AfxMessageBox(buf);
 				}
 				if(hr == E_MGA_COMPONENT_ERROR) {
-					AfxMessageBox("ERROR: Some automatic addon components could not start up\n");
+					BSTR errorInfo;
+					GetErrorInfo(&errorInfo);
+					_bstr_t err("ERROR: automatic addon components '");
+					err += errorInfo;
+					err += "' could not start up.\n";
+					AfxMessageBox(err);
 				}
 				COMTHROW(hr);
 				AfterOpenOrCreateProject(dataconn); 

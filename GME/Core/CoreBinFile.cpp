@@ -333,7 +333,8 @@ void CCoreBinFile::OpenMetaProject()
 
 void CCoreBinFile::CloseMetaProject()
 {
-	CloseProject();
+	if( IsOpened() && metaproject != NULL )
+		CloseProject();
 
 	CloseMetaObject();
 
