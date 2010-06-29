@@ -137,6 +137,7 @@ UseBulkCommit = true \n\
 
 bool XmlObjComp::operator()( XmlObject * p1, XmlObject * p2) const
 {
+	if( (!p1) && (!p2)) return false;
     if( !p1) return true;
     if( !p2) return false;
     return GUID_less()( p1->m_guid, p2->m_guid);
@@ -1306,7 +1307,9 @@ STDMETHODIMP CCoreXmlFile::put_AttributeValue(VARIANT p)
 			if( it2->second == m_metaAttributeId && !m_openedObject->isContainer() )
 			{
 				XmlObject * cont = getContainer(m_openedObject);
-				m_modifiedObjects.insert( cont );
+				if (NULL != cont) {
+					m_modifiedObjects.insert( cont );
+				}
 			}
 
 			XmlAttrPointer * pointerAttr = (XmlAttrPointer*)it->second;
