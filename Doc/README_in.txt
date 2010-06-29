@@ -30,6 +30,14 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r10.6.29
+---------------------------------
+	- Fixing GME-287: unhandled exceptions in CCoreXmlFile:ProjectOpen.
+	- Fixing GME-285: Multiuser project open silently fails
+	- Inform user which automatic addons failed to start
+	- Multiuser backend crash fix: comp. operator for 
+	  std::set did not handle NULL values properly.
+
 Release Notes of Release r10.6.24
 ---------------------------------
 	- This is a minor update, fixing bugs with the multiuser
