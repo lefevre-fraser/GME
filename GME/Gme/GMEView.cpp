@@ -4397,7 +4397,16 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 					if (retVal == S_DECORATOR_EVENT_HANDLED) {
 						if (IsInOpenedDecoratorTransaction()) {
 							if (ShouldCommitOperation()) {
-								CommitTransaction();
+								try {
+									CommitTransaction();
+								} catch (hresult_exception& e) {
+									// GME-292: the commit may fail
+									AbortTransaction(e.hr);
+									if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
+										CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
+										AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+									}
+								}
 								SetShouldCommitOperation(false);
 								SetObjectInDecoratorOperation(NULL);
 								SetAnnotatorInDecoratorOperation(NULL);
@@ -4589,7 +4598,16 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 						if (retVal == S_DECORATOR_EVENT_HANDLED) {
 							if (IsInOpenedDecoratorTransaction()) {
 								if (ShouldCommitOperation()) {
-									CommitTransaction();
+									try {
+										CommitTransaction();
+									} catch (hresult_exception& e) {
+										// GME-292: the commit may fail
+										AbortTransaction(e.hr);
+										if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
+											CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
+											AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+										}
+									}
 									SetShouldCommitOperation(false);
 									SetObjectInDecoratorOperation(NULL);
 									SetAnnotatorInDecoratorOperation(NULL);
@@ -4675,7 +4693,16 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 
 							if (IsInOpenedDecoratorTransaction()) {
 								if (ShouldCommitOperation()) {
-									CommitTransaction();
+									try {
+										CommitTransaction();
+									} catch (hresult_exception& e) {
+										// GME-292: the commit may fail
+										AbortTransaction(e.hr);
+										if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
+											CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
+											AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+										}
+									}
 									SetShouldCommitOperation(false);
 									SetObjectInDecoratorOperation(NULL);
 									SetAnnotatorInDecoratorOperation(NULL);
@@ -4782,6 +4809,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 										CommitTransaction();
 									} catch (hresult_exception& e) {
 										// GME-292: the commit may fail
+										AbortTransaction(e.hr);
 										if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
 											CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
 											AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
@@ -4866,6 +4894,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 										CommitTransaction();
 									} catch (hresult_exception& e) {
 										// GME-292: the commit may fail
+										AbortTransaction(e.hr);
 										if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
 											CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
 											AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
@@ -5310,7 +5339,16 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 				if (retVal == S_DECORATOR_EVENT_HANDLED) {
 					if (IsInOpenedDecoratorTransaction()) {
 						if (ShouldCommitOperation()) {
-							CommitTransaction();
+							try {
+								CommitTransaction();
+							} catch (hresult_exception& e) {
+								// GME-292: the commit may fail
+								AbortTransaction(e.hr);
+								if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
+									CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
+									AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+								}
+							}
 							SetShouldCommitOperation(false);
 							SetObjectInDecoratorOperation(NULL);
 							SetAnnotatorInDecoratorOperation(NULL);
@@ -6341,7 +6379,16 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 					if (retVal == S_DECORATOR_EVENT_HANDLED) {
 						if (IsInOpenedDecoratorTransaction()) {
 							if (ShouldCommitOperation()) {
-								CommitTransaction();
+								try {
+									CommitTransaction();
+								} catch (hresult_exception& e) {
+									// GME-292: the commit may fail
+									AbortTransaction(e.hr);
+									if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
+										CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
+										AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+									}
+								}
 								SetShouldCommitOperation(false);
 								SetObjectInDecoratorOperation(NULL);
 								SetAnnotatorInDecoratorOperation(NULL);
