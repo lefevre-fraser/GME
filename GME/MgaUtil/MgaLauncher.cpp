@@ -739,32 +739,6 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					if(AfxMessageBox(aa, MB_YESNO) !=IDYES) return S_OK;
 				}
 			}
-			/*
-			//hack for C# components (unfortunately, it doesn't work)
-			//problem: the C# components keep loads of references to Com objects,
-			//finalizers are executed when GME closes, but at that time, the project is closed; 
-			//therefore, we have zombie objects to destructs.
-			
-			CComQIPtr<IMgaComponentEx> compex = component;
-			bool called = false;
-			if (compex)
-			{
-				CComVariant out;
-				compex->get_ComponentParameter(CComBSTR("type"),&out);
-
-				if (out.bstrVal != NULL && (LPCSTR)(_bstr_t)(out.bstrVal) == CString("csharp"))
-				{
-					CComVariant path;
-					compex->get_ComponentParameter(CComBSTR("path"),&path);
-					CComVariant fullname;
-					compex->get_ComponentParameter(CComBSTR("fullname"),&fullname);
-
-					CComPtr<IMgaProject> proj(project);
-					CDotNetUtils::CallManagedFunction(path.bstrVal, fullname.bstrVal, L"InvokeEx", proj);
-					called = true;
-				}
-			}
-			if (!called)*/
 			{
 				if(parameter.vt != VT_BOOL || parameter.boolVal != VARIANT_TRUE) { 
 					try	{

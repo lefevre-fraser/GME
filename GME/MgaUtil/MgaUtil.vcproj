@@ -334,10 +334,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DotNetUtils.cpp"
-				>
-			</File>
-			<File
 				RelativePath="FolderPropertiesDlg.cpp"
 				>
 			</File>
@@ -372,30 +368,6 @@
 			<File
 				RelativePath="MgaClosure.cpp"
 				>
-			</File>
-			<File
-				RelativePath=".\MgaClrUtil.cs"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="csc MgaClrUtil.cs"
-						CommandLine="csc /t:library /out:&quot;res\$(InputName).dll&quot; /debug /pdb:&quot;res\$(InputName).pdb&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-						Outputs="res\$(InputName).dll"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="csc MgaClrUtil.cs"
-						CommandLine="csc /t:library /out:&quot;res\$(InputName).dll&quot; /debug /pdb:&quot;res\$(InputName).pdb&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-						Outputs="res\$(InputName).dll"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="MgaEventLogger.cpp"
@@ -617,10 +589,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DotNetUtils.h"
-				>
-			</File>
-			<File
 				RelativePath="FolderPropertiesDlg.h"
 				>
 			</File>
@@ -743,10 +711,6 @@
 			</File>
 			<File
 				RelativePath="..\Gme\res\GME.ico"
-				>
-			</File>
-			<File
-				RelativePath=".\res\GmeClrUtil.dll"
 				>
 			</File>
 			<File

@@ -10,7 +10,7 @@
 
 #include <atlbase.h>
 #include <objbase.h>
-
+#include <comdef.h>
 
 
 #ifdef _DEBUG
@@ -410,16 +410,31 @@ void CCompDlg::OnInstall()
 void CCompDlg::RegisterDll(const CString &path)
 {
 	CComPtr<IMgaRegistrar> registrar;
+	HRESULT hr = E_FAIL;
 	if (CUACUtils::isVistaOrLater()) {
-		CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar, GetSafeHwnd());
+		hr = CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar, GetSafeHwnd());
 	}
 	else {
-		registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
+		hr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
 	}
 
-	if( (!registrar) || 
-		 FAILED(registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode))) ) {
-		::AfxMessageBox(_T("Unable to register component. Maybe due to insufficient rights."), MB_ICONSTOP | MB_OK);
+	if(!registrar) {
+		std::string errorMessage = "Unable to create component registrar: ";
+		errorMessage += static_cast<const char*>(_com_error(hr).ErrorMessage());
+		::AfxMessageBox(errorMessage.c_str());
+	} else if (FAILED(registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode))) ) {
+		std::string errorMessage = "Unable to register component: ";
+
+		CComPtr<IErrorInfo> info;
+		COMTHROW(GetErrorInfo(0, &info));
+		if (info) {
+			CComBSTR description;
+			COMTHROW(info->GetDescription(&description));
+			errorMessage += static_cast<const char*>(_bstr_t(description));
+		} else {
+			errorMessage += static_cast<const char*>(_com_error(hr).ErrorMessage());
+		}
+		AfxMessageBox(errorMessage.c_str(), MB_ICONSTOP | MB_OK);
 	}
 }
 

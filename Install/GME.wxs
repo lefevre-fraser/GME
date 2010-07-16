@@ -718,8 +718,27 @@
                 </File>
             </Component>
         </DirectoryRef>
-        
-        <DirectoryRef Id="INSTALLDIR_BIN">
+
+      <DirectoryRef Id="INSTALLDIR_BIN">
+        <Component Id="MgaDotNetServices.dll" Guid="A3DC6441-CB78-4225-8B25-16B1A14A0A81">
+          <File Id="MgaDotNetServices.dll" Name="MgaDotNetServices.dll" KeyPath="yes" Source="..\GME\MgaDotNetServices\bin\Release\MgaDotNetServices.dll" />
+          <Class Id="{0BB0C371-6835-4F09-A156-0BD8E3DF8216}" Context="InprocServer32" Description="MGA.DotNetServices.Registrar" ThreadingModel="both" ForeignServer="mscoree.dll">
+            <ProgId Id="MGA.DotNetRegistrar" Description="MGA.DotNetServices.Registrar" />
+          </Class>
+          <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+          <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32\1.0.0.0" Name="Class" Value="MGA.DotNetServices.Registrar" Type="string" Action="write" />
+          <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32\1.0.0.0" Name="Assembly" Value="MgaDotNetServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
+          <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32\1.0.0.0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />
+          <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32\1.0.0.0" Name="CodeBase" Value="file:///[#MgaDotNetServices.dll]" Type="string" Action="write" />
+          <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32" Name="Class" Value="MGA.DotNetServices.Registrar" Type="string" Action="write" />
+          <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32" Name="Assembly" Value="MgaDotNetServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
+          <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />
+          <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32" Name="CodeBase" Value="file:///[#MgaDotNetServices.dll]" Type="string" Action="write" />
+          <RegistryValue Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" Action="write" />
+        </Component>
+      </DirectoryRef>
+
+      <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="MgaUtil.dll" Guid="e476f906-c2f1-40ec-ad45-56b98c31b80d">
                 <File Id="MgaUtil.dll" Name="MgaUtil.dll" KeyPath="yes" Source="..\GME\MgaUtil\Release\MgaUtil.dll">
                     <TypeLib Id="{461F30AE-3BF0-11D4-B3F0-005004D38590}" Description="MGA Utilities Type Library" Language="0" MajorVersion="1" MinorVersion="0">
@@ -2235,6 +2254,7 @@
                 <ComponentRef Id='MetaParadigmFiles' />
                 <ComponentRef Id='Mga.dll' />
                 <ComponentRef Id='MgaDecorators.dll' />
+                <ComponentRef Id='MgaDotNetServices.dll'/>
                 <ComponentRef Id='MgaUtil.dll' />
                 <ComponentRef Id='MONTraverser.dll' />
                 <ComponentRef Id='NamespaceConfig.dll' />

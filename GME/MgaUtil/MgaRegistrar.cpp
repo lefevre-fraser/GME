@@ -2,7 +2,13 @@
 #include "MgaRegistrar.h"
 #include "atlconv.h"
 #include "CommonComponent.h"
-#include "DotNetUtils.h"
+
+#import "mscorlib.tlb"
+#ifdef _DEBUG
+#import "..\MgaDotNetServices\bin\Debug\MgaDotNetServices.tlb"
+#else
+#import "..\MgaDotNetServices\bin\Release\MgaDotNetServices.tlb"
+#endif
 
 
 #ifdef _DEBUG
@@ -2060,7 +2066,23 @@ STDMETHODIMP CMgaRegistrar::get_LocalDllPath(BSTR progid, BSTR* pVal) {
 
 		LONG res = comp.Open(HKEY_CLASSES_ROOT, "CLSID\\" + m_strClassId + "\\InprocServer32", KEY_READ);
 		CString m_strPath;
-		if(res == ERROR_SUCCESS) m_strPath = QueryValue(comp, "" );
+		if(res == ERROR_SUCCESS) {
+			m_strPath = QueryValue(comp, "" );
+			if (m_strPath == "mscoree.dll") {
+				char data[MAX_PATH];
+				ULONG num_bytes = sizeof(data) / sizeof(data[0]);
+				if (comp.QueryValue("CodeBase", 0, data, &num_bytes) == ERROR_SUCCESS) {
+					m_strPath = data;
+					m_strPath = m_strPath.Right(m_strPath.GetLength() - 8);
+					m_strPath.Replace('/', '\\');
+				} else {
+					if (comp.QueryValue("Assembly", 0, data, &num_bytes) == ERROR_SUCCESS) {
+						m_strPath = "GAC: ";
+						m_strPath += data;
+					}
+				}
+			}
+		}
 		CopyTo(m_strPath, pVal);
 
 	}
@@ -2452,10 +2474,18 @@ STDMETHODIMP CMgaRegistrar::RegisterComponentLibrary(BSTR path, regaccessmode_en
 		
 		if( DLLRegisterServer == NULL )
 		{
-			//C# dll:
-			int retVal = CDotNetUtils::CallManagedFunction(path, L"GME.CSharp.Registrar", L"DLLRegisterServer", mode);
-			ASSERT(retVal == 0);
-			// FIXME: don't we need FreeLibrary ?
+			FreeLibrary(hModule);
+			//CLR dll:
+			using namespace MgaDotNetServices;
+			CComPtr<_Registrar> reg;
+			COMTHROW(reg.CoCreateInstance(L"MGA.DotNetRegistrar"));
+			try {
+				reg->Register(_bstr_t(path));
+			} catch (_com_error& e) {
+				SetErrorInfo(e.Error(), e.Description());
+				return e.Error();
+			}
+
 			return S_OK;
 		}
 		else
