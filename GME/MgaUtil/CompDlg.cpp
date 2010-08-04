@@ -422,19 +422,22 @@ void CCompDlg::RegisterDll(const CString &path)
 		std::string errorMessage = "Unable to create component registrar: ";
 		errorMessage += static_cast<const char*>(_com_error(hr).ErrorMessage());
 		::AfxMessageBox(errorMessage.c_str());
-	} else if (FAILED(registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode))) ) {
-		std::string errorMessage = "Unable to register component: ";
+	} else {
+		hr = registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode));
+		if (FAILED(hr)) {
+			std::string errorMessage = "Unable to register component: ";
 
-		CComPtr<IErrorInfo> info;
-		COMTHROW(GetErrorInfo(0, &info));
-		if (info) {
-			CComBSTR description;
-			COMTHROW(info->GetDescription(&description));
-			errorMessage += static_cast<const char*>(_bstr_t(description));
-		} else {
-			errorMessage += static_cast<const char*>(_com_error(hr).ErrorMessage());
+			CComPtr<IErrorInfo> info;
+			COMTHROW(GetErrorInfo(0, &info));
+			if (info) {
+				CComBSTR description;
+				COMTHROW(info->GetDescription(&description));
+				errorMessage += static_cast<const char*>(_bstr_t(description));
+			} else {
+				errorMessage += static_cast<const char*>(_com_error(hr).ErrorMessage());
+			}
+			AfxMessageBox(errorMessage.c_str(), MB_ICONSTOP | MB_OK);
 		}
-		AfxMessageBox(errorMessage.c_str(), MB_ICONSTOP | MB_OK);
 	}
 }
 
