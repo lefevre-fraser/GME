@@ -1754,9 +1754,9 @@ bool Dumper::build()
 		if (FAILED(hr)) {
 
 			if( global_vars.silent_mode)
-				TO("Error occured while registering new paradigm.");
+				TO("Error occurred while registering new paradigm.");
 			else
-				AfxMessageBox("Error occured while registering new paradigm.", MB_ICONSTOP | MB_OK);
+				AfxMessageBox("Error occurred while registering new paradigm.", MB_ICONSTOP | MB_OK);
 		}
 	}
 }

@@ -84,7 +84,7 @@ goto eof
 
 :errorlabel
 set tlevel=%ERRORLEVEL%
-echo Error occured. Code: %ERRORLEVEL%
+echo Error occurred. Code: %ERRORLEVEL%
 pause
 exit /b %tlevel%
 

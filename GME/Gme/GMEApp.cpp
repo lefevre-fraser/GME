@@ -640,15 +640,13 @@ void CGMEApp::CloseProject(bool updateStatusBar)
 	mgaMetaProject = NULL;
 	UpdateComponentLists();
 
-#pragma warning(disable: 4310) // cast truncates constant value
 	if( mgaProject != NULL ) {
 		mgaClient = NULL;
 		if(mgaProject->Close(abort_on_close ? VARIANT_TRUE : VARIANT_FALSE) != S_OK) {
-			AfxMessageBox(CString("Error occured ") + (abort_on_close ? "aborting" : "closing") + " the project");
+			AfxMessageBox(CString("Error occurred ") + (abort_on_close ? "aborting" : "closing") + " the project");
 		}
 		mgaProject.Release();
 	}
-#pragma warning(default: 4310) // cast truncates constant value
 	
 
 	if(updateStatusBar) {

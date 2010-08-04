@@ -245,7 +245,7 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 				}
 				
 				const char *str = m_env->GetStringUTFChars(msg, 0);
-				sprintf(buf, "Java exception occured at component invokation: %s", str);;
+				sprintf(buf, "Java exception occurred at component invokation: %s", str);;
 				m_env->ReleaseStringUTFChars(msg, str);
 				
 				
@@ -254,7 +254,7 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 				AfxMessageBox(buf);
 			}catch(...){
 				m_env->ExceptionClear();
-				AfxMessageBox("Java exception occured at component invokation, the cause is unrecoverable.");
+				AfxMessageBox("Java exception occurred at component invokation, the cause is unrecoverable.");
 			}
 
 			project->AbortTransaction(); 

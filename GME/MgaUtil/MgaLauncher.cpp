@@ -767,7 +767,7 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					}
 					catch(...)
 					{
-						AfxMessageBox("An application error has occured in component " + compname + ".\n"
+						AfxMessageBox("An application error has occurred in component " + compname + ".\n"
 							"The system might not be in a stable state any more.\n"
 							"Please save your work and restart the GME.");
 					} 

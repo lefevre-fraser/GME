@@ -56,7 +56,7 @@ public class InvokeException extends RuntimeException
 	protected String description;
 
 	/**
-	 * Creates an exception that occured during {@link Dispatch#invoke}.
+	 * Creates an exception that occurred during {@link Dispatch#invoke}.
 	 * The fields of this object correspond to the fields of the <code>EXCEPINFO</code> Automation structure.
 	 *
 	 * @param errorCode an error code identifying the error.

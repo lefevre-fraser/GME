@@ -29,7 +29,7 @@ class GMEComComponent(object):
         mga  = gencache.EnsureModule("{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}", 0, 1, 0)
         meta = gencache.EnsureModule("{0ADEEC71-D83A-11D3-B36B-005004D38590}", 0, 1, 0)
     except Exception,e:
-        raise Exception("An error occured during GME Python component initialization.\n%s" % e)
+        raise Exception("An error occurred during GME Python component initialization.\n%s" % e)
      
     # Component specific parts for GME registration (uncomment and/or change)
     _component_type_ = mga.constants.COMPONENTTYPE_INTERPRETER
@@ -56,7 +56,7 @@ class GMEComComponent(object):
             self.Version = mgautil.constants.MgaInterfaceVersion_Current
 
         except Exception,e:
-            raise Exception("An error occured during GME Python component initialization.\n%s" % e)
+            raise Exception("An error occurred during GME Python component initialization.\n%s" % e)
         return None
 
     def Enable(self, b):
@@ -99,7 +99,7 @@ class GMEComComponent(object):
             self.project = self.mga.IMgaProject(project)
             self.project_path = os.path.dirname(str(self.project.ProjectConnStr[len(gme_connection_string_prefix):]))
         except Exception, e:
-            raise Exception("An error occured during component execution.\n%s" % e)
+            raise Exception("An error occurred during component execution.\n%s" % e)
         return winerror.S_OK
 
     def RegisterSelf(self, systemwide, icon_path=""):

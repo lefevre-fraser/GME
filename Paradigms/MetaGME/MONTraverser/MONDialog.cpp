@@ -247,7 +247,7 @@ static char THIS_FILE[] = __FILE__;
 			}
 		}
 		catch ( const CFileException *) {
-			AfxMessageBox( "Error has occured during writing in the file!" );
+			AfxMessageBox( "Error has occurred during writing in the file!" );
 		}
 
 		if ( m_pFile ) {
