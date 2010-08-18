@@ -2932,7 +2932,7 @@ bool CCoreXmlFile::checkOutFiles(XmlObjSet& containers)
 		SAFEARRAYBOUND bounds;
 		bounds.lLbound = 0;
 		bounds.cElements = readOnlyFiles.size();
-		// create an array (client will free with SafeArrayDestroy())
+	
 		pSA = SafeArrayCreate( VT_BSTR, 1, &bounds);
 		BSTR *theStrings;
 		SafeArrayAccessData( pSA, (void**) &theStrings);
@@ -2942,6 +2942,7 @@ bool CCoreXmlFile::checkOutFiles(XmlObjSet& containers)
 		}
 		SafeArrayUnaccessData( pSA);
 		CComVariant var_arr(pSA);
+		SafeArrayDestroy( pSA);
 
 		VARIANT_BOOL succ_vt = VARIANT_FALSE;
 		CComBSTR succ_msg;
@@ -2959,7 +2960,7 @@ bool CCoreXmlFile::checkOutFiles(XmlObjSet& containers)
 			return false;
 		}
 	}
-	// PETER - SVNSPEEDHACK BEGIN
+	// PETER - SVNSPEEDHACK END
 
 	XmlObjSetIter it;
 	XmlObjSet     containersUsedByOthers;

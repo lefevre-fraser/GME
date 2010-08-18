@@ -410,7 +410,6 @@ STDMETHODIMP CSvnExec::SpeedLock( VARIANT targets, VARIANT_BOOL* success, BSTR* 
 			}
 		}
 		SafeArrayUnaccessData( p_pathVecSA);
-		SafeArrayDestroy( targets.parray);
 	}
 
 #if(USESVN)
