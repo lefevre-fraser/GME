@@ -40,8 +40,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuRep", "QuRep\QuRep.vcproj
 		{8789990A-1CEB-457D-9E99-C718A6D89781} = {8789990A-1CEB-457D-9E99-C718A6D89781}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpBonExtension", "CSharpBonExtension\CSharpBonExtension.csproj", "{319187C8-844C-401E-B3DD-0E9BB54D97F0}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DecoratorLib", "..\..\SDK\DecoratorLib\DecoratorLib.vcproj", "{77FEBD41-CD6C-4D55-B561-3957F7151CC2}"
 EndProject
 Global
@@ -150,18 +148,6 @@ Global
 		{3D2AD525-7A56-44AC-9755-5F7A2917CB3B}.ReleaseNoUserInput|Mixed Platforms.Build.0 = Release|Win32
 		{3D2AD525-7A56-44AC-9755-5F7A2917CB3B}.ReleaseNoUserInput|Win32.ActiveCfg = Release|Win32
 		{3D2AD525-7A56-44AC-9755-5F7A2917CB3B}.ReleaseNoUserInput|Win32.Build.0 = Release|Win32
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.Debug|Win32.Build.0 = Debug|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.Release|Win32.ActiveCfg = Release|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.Release|Win32.Build.0 = Release|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.ReleaseNoUserInput|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.ReleaseNoUserInput|Mixed Platforms.Build.0 = Release|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.ReleaseNoUserInput|Win32.ActiveCfg = Release|Any CPU
-		{319187C8-844C-401E-B3DD-0E9BB54D97F0}.ReleaseNoUserInput|Win32.Build.0 = Release|Any CPU
 		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Debug|Win32.ActiveCfg = Debug|Win32
