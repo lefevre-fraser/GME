@@ -712,8 +712,14 @@ void CCoreProject::UnregisterObject(metaid_type metaid, objid_type objid)
 	idpair.metaid = metaid;
 	idpair.objid = objid;
 
-	ASSERT( object_lookup.find(idpair) != object_lookup.end() );
-	object_lookup.erase( idpair );
+	if( object_lookup.find(idpair) != object_lookup.end() ) // TL: This used to be an assert
+	{
+		object_lookup.erase( idpair );
+	}
+	else
+	{
+		ASSERT(0); // Leave it as an assert, too
+	}
 }
 
 void CCoreProject::CastProject(ICoreProject *project) const

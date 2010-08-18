@@ -62,6 +62,9 @@ CCoreObject::~CCoreObject()
 	// If this assertion fails, then we have killed the CCoreObject already.
 	// Probably the reference count on this is wrong.
 
+	// TL: If the project COM object is freed before the model element COM objects, this assertion does not hold.
+	// This is a situation when you use garbage collected environments.
+
 	// first kill the aggregated components
 	aggregates.clear();
 

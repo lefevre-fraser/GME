@@ -918,7 +918,8 @@ void CGMEApp::UpdateComponentToolbar()
 			// If icon is not found either in the DLL or a standalone file
 			if(!hIcon)
 			{
-				hIcon = LoadIcon(IDI_COMPNOTFOUND); // Displaying component not found icon
+				// Displaying component not found icon: red X
+				hIcon = (HICON)LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_COMPNOTFOUND), IMAGE_ICON, 16,16, LR_DEFAULTCOLOR); 
 			}
 
 			//Adding button icon
