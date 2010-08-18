@@ -634,8 +634,7 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 	if( pathVec.size() == 0) return true;
 	log( "speedLock", pathVec.front());
 
-	CString progressStr;
-	progressStr.Format("Speed lock: ");
+	CString progressStr("Speed lock: ");
 
 	Pool requestPool;
 
@@ -660,7 +659,8 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 			char errbuff[BUFSIZ];
 			const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
 			msg.append(errbuff2 ? errbuff2 : errbuff);
-			UpdateProgress(_T(" FAILED.\r\n"));
+			progressStr.Append(_T(" FAILED.\r\n"));
+			UpdateProgress(progressStr);
 			return false;
 		}
 
@@ -671,7 +671,8 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 			char errbuff[BUFSIZ];
 			const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
 			msg.append(errbuff2 ? errbuff2 : errbuff);
-			UpdateProgress(_T(" FAILED.\r\n"));
+			progressStr.Append(_T(" FAILED.\r\n"));
+			UpdateProgress(progressStr);
 			return false;
 		}
 
@@ -681,7 +682,8 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 			char errbuff[BUFSIZ];
 			const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
 			msg.append(errbuff2 ? errbuff2 : errbuff);
-			UpdateProgress(_T(" FAILED.\r\n"));
+			progressStr.Append(_T(" FAILED.\r\n"));
+			UpdateProgress(progressStr);
 			return false;
 		}
 
@@ -695,7 +697,8 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 	if(ctx == NULL)
 	{
 		msg.append("Unable to create subversion client context");
-		UpdateProgress(_T(" FAILED.\r\n"));
+		progressStr.Append(_T(" FAILED.\r\n"));
+		UpdateProgress(progressStr);
 		return false;
 	}
 
@@ -709,17 +712,20 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 		char errbuff[BUFSIZ];
 		const char* errbuff2 = svn_err_best_message(err, errbuff, BUFSIZ);
 		msg.append(errbuff2 ? errbuff2 : errbuff);
-		UpdateProgress(_T(" FAILED.\r\n"));
+		progressStr.Append(_T(" FAILED.\r\n"));
+		UpdateProgress(progressStr);
 		return false;
     }
 
 	if (! m_notify2->m_OK ) {
 		msg.append(m_notify2->m_msg);
-		UpdateProgress(_T(" FAILED.\r\n"));
+		progressStr.Append(_T(" FAILED.\r\n"));
+		UpdateProgress(progressStr);
 		return false;
 	}
 	
-	UpdateProgress(_T(" DONE.\r\n"));
+	progressStr.Append(_T(" DONE.\r\n"));
+	UpdateProgress(progressStr);
 	return true;
 }
 
