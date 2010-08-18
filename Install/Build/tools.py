@@ -16,7 +16,9 @@ from prefs import prefs
 #
 ZIP_PRG = os.path.abspath("zip.exe")
 WIX_CANDLE_PRG = "candle.exe"
-WIX_LIGHT_PRG = "light.exe -sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension" # See comments in GME.wxs
+WIX_CANDLE_ARG = ""
+WIX_LIGHT_PRG = "light.exe"
+WIX_LIGHT_ARG = "-sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension" # See comments in GME.wxs
 
 #
 # Classes
@@ -179,7 +181,10 @@ def query_GUID(paradigm ):
 def test_WiX():
     "Test for WiX. Raises exception if not found."
     toolmsg("Trying to execute WiX tool candle.exe")
-    system(WIX_CANDLE_PRG + " %s" % ("" if prefs['verbose'] else ">NUL"))
+    exepath = WIX_CANDLE_PRG
+    if os.environ['WIX']:
+        exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
+    system('"%s" %s' % (exepath, "" if prefs['verbose'] else ">NUL"))
     
 def build_WiX(wxs_file):
     """
@@ -193,8 +198,16 @@ def build_WiX(wxs_file):
     (projectname, ext) = os.path.splitext(filename)
     
     toolmsg("Building " + filename + " in " + dirname)
-    cmd_line = "%s %s %s" % (WIX_CANDLE_PRG, filename,  ("" if prefs['verbose'] else ">NUL"))
+    
+    exepath = WIX_CANDLE_PRG
+    if os.environ['WIX']:
+        exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
+    cmd_line = '"%s" %s %s %s' % (exepath, WIX_CANDLE_ARG, filename,  ("" if prefs['verbose'] else ">NUL"))
     system(cmd_line, dirname)
-    cmd_line = "%s %s.wixobj %s" % (WIX_LIGHT_PRG, projectname, ("" if prefs['verbose'] else ">NUL"))
+    
+    exepath = WIX_LIGHT_PRG
+    if os.environ['WIX']:
+        exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
+    cmd_line = '"%s" %s %s.wixobj %s' % (exepath, WIX_LIGHT_ARG, projectname, ("" if prefs['verbose'] else ">NUL"))
     system(cmd_line, dirname)
         
