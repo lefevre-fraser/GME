@@ -30,6 +30,19 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r10.8.18
+---------------------------------
+  - Fixing GME-281: Crash while closing XML progress dialog
+  - Fixing race conditions in the threading logic in the 
+    multiuser backend
+  - Fixing SAFEARRAY ownerhip and allocation strategy in the
+    multiuser backend
+  - Fixing multiuser progress window messages (speed locking)
+  - Adding support for registering .NET components
+  - Fixing GME-292: fix crash when a decorator editing operation 
+    causes a constraint violation
+  
+
 Release Notes of Release r10.6.29
 ---------------------------------
 	- Fixing GME-287: unhandled exceptions in CCoreXmlFile:ProjectOpen.
