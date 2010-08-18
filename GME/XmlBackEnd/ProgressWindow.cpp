@@ -80,7 +80,9 @@ class CProgressThread : public CWinThread
 
 public:
 	CProgressThread() {}
-	virtual ~CProgressThread() {}
+	virtual ~CProgressThread() {
+
+	}
 
 
 	virtual BOOL InitInstance() 
@@ -140,13 +142,18 @@ void CloseProgressWindow()
 	}
 	pThread->PostThreadMessage(WM_PROGRESSWINDOW_CLOSE, NULL, NULL);
 	::WaitForSingleObject (pThread->m_hThread, INFINITE);
+	delete pThread;
 	pThread = NULL; // CProgressThread kills itself
 }
 
 void UpdateProgress(LPCTSTR msg)
 {
 	if (!pThread) {
-		pThread = (CProgressThread*)AfxBeginThread (RUNTIME_CLASS (CProgressThread));
+		pThread = (CProgressThread*)AfxBeginThread (RUNTIME_CLASS (CProgressThread),
+													THREAD_PRIORITY_NORMAL,
+													0, CREATE_SUSPENDED);
+		pThread->m_bAutoDelete = FALSE;
+		pThread->ResumeThread();
 		pThread->initDone.Lock();
 	}
 	LPCTSTR str = (LPCTSTR)msg;
