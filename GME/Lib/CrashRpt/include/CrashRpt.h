@@ -32,7 +32,7 @@
 
 /*! \file   CrashRpt.h
  *  \brief  Defines the interface for the CrashRpt.DLL.
- *  \date   2003-2009
+ *  \date   2003-2010
  *  \author Michael Carruth 
  *  \author zeXspectrum 
  */
@@ -42,10 +42,6 @@
 
 #include <windows.h>
 #include <dbghelp.h>
-
-#ifdef __cplusplus // Use undecorated names
-extern "C" {
-#endif
 
 // Define SAL macros to be empty if some old Visual Studio used
 #ifndef __reserved
@@ -61,24 +57,16 @@ extern "C" {
   #define __out_ecount_z(x)
 #endif
 
-
-#ifndef CRASHRPT_LIB // If CrashRpt is used as DLL
-#define CRASHRPT_DECLSPEC_DLLEXPORT __declspec(dllexport) 
-#define CRASHRPT_DECLSPEC_DLLIMPORT __declspec(dllimport) 
-#else // If CrashRpt is used as static library
-#define CRASHRPT_DECLSPEC_DLLEXPORT 
-#define CRASHRPT_DECLSPEC_DLLIMPORT
+#ifdef __cplusplus
+#define CRASHRPT_EXTERNC extern "C"
+#else
+#define CRASHRPT_EXTERNC
 #endif
 
-// This is needed for exporting/importing functions from/to CrashRpt.dll
-#ifdef CRASHRPT_EXPORTS
- #define CRASHRPTAPI CRASHRPT_DECLSPEC_DLLEXPORT WINAPI 
-#else 
- #define CRASHRPTAPI CRASHRPT_DECLSPEC_DLLIMPORT WINAPI
-#endif
+#define CRASHRPTAPI(rettype) CRASHRPT_EXTERNC rettype WINAPI
 
 //! Current CrashRpt version
-#define CRASHRPT_VER 1204
+#define CRASHRPT_VER 1206
 
 /*! \defgroup CrashRptAPI CrashRpt Functions */
 /*! \defgroup DeprecatedAPI Obsolete Functions */
@@ -160,8 +148,7 @@ typedef BOOL (CALLBACK *LPGETLOGFILE) (__reserved LPVOID lpvState);
  * 
  */
 
-LPVOID 
-CRASHRPTAPI 
+CRASHRPTAPI(LPVOID)
 InstallW(
    __in_opt LPGETLOGFILE pfnCallback,
    LPCWSTR pszEmailTo,    
@@ -172,8 +159,7 @@ InstallW(
  *  \copydoc InstallW()
  */
 
-LPVOID 
-CRASHRPTAPI 
+CRASHRPTAPI(LPVOID)
 InstallA(
    __in_opt LPGETLOGFILE pfnCallback,
    LPCSTR pszEmailTo,    
@@ -208,8 +194,7 @@ InstallA(
  *    The \a lpState parameter is unused and should be NULL.
  */
 
-void 
-CRASHRPTAPI 
+CRASHRPTAPI(void)
 Uninstall(
    __reserved LPVOID lpState                            
    );
@@ -245,8 +230,7 @@ Uninstall(
  *
  */
 
-void 
-CRASHRPTAPI 
+CRASHRPTAPI(void)
 AddFileW(
    __reserved LPVOID lpState,                         
    LPCWSTR pszFile,                         
@@ -258,8 +242,7 @@ AddFileW(
  *  \copydoc AddFileW()
  */
 
-void 
-CRASHRPTAPI 
+CRASHRPTAPI(void)
 AddFileA(
    __reserved LPVOID lpState,                         
    LPCSTR pszFile,                         
@@ -303,8 +286,7 @@ AddFileA(
  *
  */
 
-void 
-CRASHRPTAPI 
+CRASHRPTAPI(void)
 GenerateErrorReport(
    __reserved LPVOID lpState,
    PEXCEPTION_POINTERS pExInfo
@@ -316,6 +298,9 @@ GenerateErrorReport(
 #define CR_HTTP 0 //!< Send error report via HTTP connection.
 #define CR_SMTP 1 //!< Send error report via SMTP connection.
 #define CR_SMAPI 2 //!< Send error report via simple MAPI (using default mail client).
+
+//! Special priority constant that allows to skip certain delivery method.
+#define CR_NEGATIVE_PRIORITY ((UINT)-1)
 
 // Flags for CR_INSTALL_INFO::dwFlags
 #define CR_INST_STRUCTURED_EXCEPTION_HANDLER   0x1    //!< Install SEH handler (deprecated name, use \ref CR_INST_SEH_EXCEPTION_HANDLER instead.
@@ -338,9 +323,10 @@ GenerateErrorReport(
 
 #define CR_INST_NO_GUI                         0x2000 //!< Do not show GUI, send report silently (use for non-GUI apps only).
 #define CR_INST_HTTP_BINARY_ENCODING           0x4000 //!< Use multi-part HTTP uploads with binary attachment encoding.
-#define CR_INST_DONT_SEND_REPORT               0x8000 //!< Save error reports locally, do not send them.
+#define CR_INST_DONT_SEND_REPORT               0x8000 //!< Don't send error report immediately, just save it locally.
 #define CR_INST_APP_RESTART                    0x10000 //!< Restart the application on crash.
 #define CR_INST_NO_MINIDUMP                    0x20000 //!< Do not include minidump file to crash report.
+#define CR_INST_SEND_QUEUED_REPORTS            0x40000 //!< CrashRpt should send error reports that are waiting to be delivered.
 
 /*! \ingroup CrashRptStructs
  *  \struct CR_INSTALL_INFOW()
@@ -388,8 +374,8 @@ GenerateErrorReport(
  *
  *    \a uPriorities is an array that defines the preferred ways of sending error reports. 
  *         The available ways are: HTTP connection, SMTP connection or simple MAPI (default mail client).
- *         A priority is an integer number. The greater positive number defines the greater priority. If the number is negative,
- *         the respective way is skipped.
+ *         A priority is a non-negative integer number or special constant \ref CR_NEGATIVE_PRIORITY. The greater positive number defines the greater priority. 
+ *         Specify the \ref CR_NEGATIVE_PRIORITY to skip the given way.
  *         The element having index \ref CR_HTTP defines priority for using HTML connection.
  *         The element having index \ref CR_SMTP defines priority for using SMTP connection.
  *         The element having index \ref CR_SMAPI defines priority for using the default mail client.
@@ -424,8 +410,9 @@ GenerateErrorReport(
  *             is supported for backwards compatibility and not recommended to use.
  *             For additional information, see \ref sending_error_reports.
  *    <tr><td> \ref CR_INST_DONT_SEND_REPORT     
- *        <td> <b>Available since v.1.2.2</b> This parameter means 'do not send error report, just save it locally'. 
- *             Use this if you have direct access to the machine where crash happens and do not need to send report over the Internet.  
+ *        <td> <b>Available since v.1.2.2</b> This parameter means 'do not send error report immediately on crash, just save it locally'. 
+ *             Use this if you have direct access to the machine where crash happens and do not need 
+ *             to send report over the Internet.
  *    <tr><td> \ref CR_INST_APP_RESTART     
  *        <td> <b>Available since v.1.2.4</b> This parameter allows to automatically restart the application on crash. The command line
  *             for the application is taken from \a pszRestartCmdLine parameter. To avoid cyclic restarts of an application which crashes on startup, 
@@ -433,6 +420,12 @@ GenerateErrorReport(
  *    <tr><td> \ref CR_INST_NO_MINIDUMP     
  *        <td> <b>Available since v.1.2.4</b> Specify this parameter if you want minidump file not to be included into crash report. The default
  *             behavior is to include the minidump file.
+ *
+ *    <tr><td> \ref CR_INST_SEND_QUEUED_REPORTS     
+ *        <td> <b>Available since v.1.2.5</b> Specify this parameter to send all queued reports. Those
+ *             report files are by default stored in <i>%LOCAL_APPDATA%\CrashRpt\UnsentCrashReports\%AppName%_%AppVersion%</i> folder.
+ *             If this is specified, CrashRpt checks if it's time to remind user about recent errors in the application and offers to send
+ *             all queued error reports.
  *
  *   </table>
  *
@@ -595,8 +588,7 @@ typedef PCR_INSTALL_INFOA PCR_INSTALL_INFO;
  *      CrAutoInstallHelper
  */
 
-int
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crInstallW(
   __in PCR_INSTALL_INFOW pInfo
 );
@@ -605,8 +597,7 @@ crInstallW(
  *  \copydoc crInstallW()
  */
 
-int
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crInstallA(
   __in PCR_INSTALL_INFOA pInfo
 );
@@ -641,8 +632,7 @@ crInstallA(
  *      CrAutoInstallHelper
  */
 
-int
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crUninstall();
 
 
@@ -704,8 +694,7 @@ crUninstall();
  *       crUninstallFromCurrentThread(), CrThreadAutoInstallHelper
  */
 
-int 
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crInstallToCurrentThread();
 
 /*! \ingroup CrashRptAPI
@@ -755,8 +744,7 @@ crInstallToCurrentThread();
  *    crInstallToCurrentThread()
  */
 
-int 
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crInstallToCurrentThread2(DWORD dwFlags);
 
 /*! \ingroup CrashRptAPI  
@@ -782,8 +770,7 @@ crInstallToCurrentThread2(DWORD dwFlags);
  *       crUninstallFromCurrentThread(), CrThreadAutoInstallHelper
  */
 
-int 
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crUninstallFromCurrentThread();
 
 /*! \ingroup DeprecatedAPI  
@@ -819,8 +806,7 @@ crUninstallFromCurrentThread();
  *  \sa crAddFileW(), crAddFileA(), crAddFile()
  */
 
-int
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crAddFileW(
    LPCWSTR pszFile,
    LPCWSTR pszDesc 
@@ -831,8 +817,7 @@ crAddFileW(
  */
 
 
-int
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crAddFileA(
    LPCSTR pszFile,
    LPCSTR pszDesc 
@@ -903,8 +888,7 @@ crAddFileA(
  *  \sa crAddFile2W(), crAddFile2A(), crAddFile2()
  */
 
-int
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crAddFile2W(
    LPCWSTR pszFile,
    LPCWSTR pszDestFile,
@@ -916,8 +900,7 @@ crAddFile2W(
  *  \copydoc crAddFile2W()
  */
 
-int
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crAddFile2A(
    LPCSTR pszFile,
    LPCSTR pszDestFile,
@@ -967,8 +950,7 @@ crAddFile2A(
  *   crAddFile2()
  */
 
-int
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crAddScreenshot(
    DWORD dwFlags
    );
@@ -1000,8 +982,7 @@ crAddScreenshot(
  *   crAddFile2(), crAddScreenshot()
  */
 
-int
-CRASHRPTAPI
+CRASHRPTAPI(int)
 crAddPropertyW(
    LPCWSTR pszPropName,
    LPCWSTR pszPropValue
@@ -1011,13 +992,11 @@ crAddPropertyW(
  *  \copydoc crAddPropertyW()
  */
 
-int
-CRASHRPTAPI
+CRASHRPTAPI(int)
 crAddPropertyA(
    LPCSTR pszPropName,
    LPCSTR pszPropValue
    );
-
 
 /*! \brief Character set-independent mapping of crAddPropertyW() and crAddPropertyA() functions. 
  *  \ingroup CrashRptAPI
@@ -1026,6 +1005,65 @@ crAddPropertyA(
 #define crAddProperty crAddPropertyW
 #else
 #define crAddProperty crAddPropertyA
+#endif //UNICODE
+
+/*! \ingroup CrashRptAPI  
+ *  \brief Adds a registry key dump to the crash report.
+ * 
+ *  \return This function returns zero if succeeded.
+ *
+ *  \param[in] pszRegKey        Registry key to dump, required.
+ *  \param[in] pszDstFileName   Name of the destination file, required. 
+ *  \param[in] dwFlags          Flags.
+ *  
+ *  \remarks 
+ *
+ *  Use this function to add a dump of a Windows registry key into the crash report. This function
+ *  is available since v.1.2.6.
+ *
+ *  The \a pszRegKey parameter must be the name of the registry key. 
+ *  The content of the key specified by the \a pszRegKey parameter will be stored in human-readable XML
+ *  format and included into the error report as \a pszDstFileName file. 
+ *
+ *  The \a dwFlags parameter is reserved for future use and should be set to zero.
+ *
+ *  The following example shows how to dump two registry keys to regkey.xml file:
+ *  \code
+ *  
+ *  crAddRegKey(_T("HKEY_CURRENT_USER\\Software\\MyApp"), _T("regkey.xml"));
+ *  crAddRegKey(_T("HKEY_LOCAL_MACHINE\\Software\\MyApp"), _T("regkey.xml"));
+ *
+ *  \endcode
+ *
+ *  \sa
+ *   crAddFile2(), crAddScreenshot(), crAddProperty()
+ */
+
+CRASHRPTAPI(int)
+crAddRegKeyW(   
+   LPCWSTR pszRegKey,
+   LPCWSTR pszDstFileName,
+   DWORD dwFlags
+   );
+
+/*! \ingroup CrashRptAPI
+ *  \copydoc crAddRegKeyW()
+ */
+
+CRASHRPTAPI(int)
+crAddRegKeyA(   
+   LPCSTR pszRegKey,
+   LPCSTR pszDstFileName,
+   DWORD dwFlags
+   );
+
+/*! \brief Character set-independent mapping of crAddRegKeyW() and crAddRegKeyA() functions. 
+ *  \ingroup CrashRptAPI
+ */
+#ifdef UNICODE
+#define crAddRegKey crAddRegKeyW
+#else
+#define crAddRegKey crAddRegKeyA
 #endif //UNICODE
 
 
@@ -1152,8 +1190,7 @@ typedef CR_EXCEPTION_INFO *PCR_EXCEPTION_INFO;
  *    \endcode
  */
 
-int 
-CRASHRPTAPI 
+CRASHRPTAPI(int)
 crGenerateErrorReport(   
    __in_opt CR_EXCEPTION_INFO* pExceptionInfo
    );
@@ -1197,13 +1234,13 @@ crGenerateErrorReport(
  *     \endcode 
  */
 
-int 
-CRASHRPTAPI
+CRASHRPTAPI(int)
 crExceptionFilter(
   unsigned int code, 
   __in_opt struct _EXCEPTION_POINTERS* ep);
 
 #define CR_NONCONTINUABLE_EXCEPTION  32  //!< Non continuable sofware exception. 
+#define CR_THROW                     33  //!< Throw C++ typed exception.
 
 /*! \ingroup CrashRptAPI  
  *  \brief Emulates a predefined crash situation.
@@ -1240,6 +1277,7 @@ crExceptionFilter(
  *    - \ref CR_CPP_SIGTERM This raises SIGTERM signal (program termination request).
  *    - \ref CR_NONCONTINUABLE_EXCEPTION This raises a noncontinuable software exception (expected result 
  *         is the same as in \ref CR_SEH_EXCEPTION).
+ *    - \ref CR_THROW This throws a C++ typed exception (expected result is the same as in \ref CR_CPP_TERMINATE_CALL).
  *
  *  The \ref CR_SEH_EXCEPTION uses null pointer write operation to cause the access violation.
  *
@@ -1255,10 +1293,9 @@ crExceptionFilter(
  *
  */
 
-int
-CRASHRPTAPI
+CRASHRPTAPI(int)
 crEmulateCrash(
-  unsigned ExceptionType);
+  unsigned ExceptionType) throw (...);
 
 
 
@@ -1294,8 +1331,7 @@ crEmulateCrash(
  *  \sa crGetLastErrorMsgA(), crGetLastErrorMsgW(), crGetLastErrorMsg()
  */
 
-int
-CRASHRPTAPI
+CRASHRPTAPI(int)
 crGetLastErrorMsgW(
   __out_ecount_z(uBuffSize) LPWSTR pszBuffer, 
   UINT uBuffSize);
@@ -1305,8 +1341,7 @@ crGetLastErrorMsgW(
  *
  */
 
-int
-CRASHRPTAPI
+CRASHRPTAPI(int)
 crGetLastErrorMsgA(
   __out_ecount_z(uBuffSize) LPSTR pszBuffer, 
   UINT uBuffSize);
@@ -1320,11 +1355,6 @@ crGetLastErrorMsgA(
 #else
 #define crGetLastErrorMsg crGetLastErrorMsgA
 #endif //UNICODE
-
-
-#ifdef __cplusplus
-}
-#endif
 
 
 //// Helper wrapper classes
