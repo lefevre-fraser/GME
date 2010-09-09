@@ -657,6 +657,8 @@ STDMETHODIMP CMgaRegNode::get_Value(BSTR *pVal) {
 				}
 			}
 			if(load_status == ATTSTATUS_UNDEFINED) {
+				// n.b. this is a fancy way of saying *pVal = NULL;
+				// FIXME: *pVal is NULL here and we return S_OK
 				CComBSTR x;   *pVal = x.Detach();
 			}
 
