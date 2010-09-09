@@ -210,7 +210,7 @@ void CGenParser::endElement(const XMLCh* const name)
 			// we compose and set the error message for exceptions
 			// [which come from the MGA layer because of meta incompatibility]
 			std::string str;
-			Format(str, "Improper use of object error in file %s at line %d, char %d.", xmlfile.c_str(), err_line, err_column);
+			Format(str, "Improper use of object error in file %s at line %ld, char %ld.", xmlfile.c_str(), err_line, err_column);
 			CopyTo(str, errorinfo);
 		}
 
