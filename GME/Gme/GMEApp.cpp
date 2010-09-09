@@ -502,12 +502,14 @@ int CGMEApp::Run()
 	info.pszAppVersion = _T(GME_VERSION_ID);
 	info.pszEmailSubject = _T("GME CrashRpt");
 	info.pszEmailTo = _T("gme-supp@isis.vanderbilt.edu");
-	if (crInstall(&info)!=0)
-	{
-		TCHAR buff[256];
-		crGetLastErrorMsg(buff, 256);
-		AfxMessageBox(buff);
-		return FALSE;
+	if (!bNoProtect) {
+		if (crInstall(&info) != 0)
+		{
+			TCHAR buff[256];
+			crGetLastErrorMsg(buff, 256);
+			AfxMessageBox(buff);
+			return FALSE;
+		}
 	}
 
 
@@ -2047,10 +2049,10 @@ void CGMEApp::OnFileImportxml()
 					AfxMessageBox(buf);
 				}
 				if(hr == E_MGA_COMPONENT_ERROR) {
-					BSTR errorInfo;
+					CComBSTR errorInfo;
 					GetErrorInfo(&errorInfo);
 					_bstr_t err("ERROR: automatic addon components '");
-					err += errorInfo;
+					err += (BSTR)errorInfo;
 					err += "' could not start up.\n";
 					AfxMessageBox(err);
 				}
