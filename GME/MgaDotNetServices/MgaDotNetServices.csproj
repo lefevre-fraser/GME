@@ -71,7 +71,7 @@
 	)
 )
 
-"%25WindowsSdkDir%25"\bin\tlbexp $(TargetPath)
+"%25WindowsSdkDir%25"\bin\tlbexp "$(TargetPath)"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
