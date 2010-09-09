@@ -231,6 +231,10 @@ STDMETHODIMP CMgaProject::CreateEx(BSTR projectname, BSTR paradigmname, VARIANT 
 		metapr = 0;
 		projconn.Empty(); 
 		parconn.Empty();
+		// We've already called SetErrorInfo, don't call it again
+		if (e.hr == E_MGA_COMPONENT_ERROR) {
+			return e.hr;
+		}
 	)
 }
 
