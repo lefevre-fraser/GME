@@ -1,9 +1,9 @@
 // AutoRouterPort.h : Declaration of the CAutoRouterPort
 
 #pragma once
-#include "resource.h"       // main symbols
+#include "../resource.h"       // main symbols
 
-#include "AutoRoute/ArHelper.h" 
+#include "ArHelper.h" 
 
 #include "AutoRouterBox.h"
 

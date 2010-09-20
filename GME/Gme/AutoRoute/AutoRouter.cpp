@@ -1,13 +1,13 @@
 
 #include "stdafx.h"
 
-#include "GuiMeta.h"
-#include "GuiObject.h"
+#include "../GuiMeta.h"
+#include "../GuiObject.h"
 #include "AutoRouterGraph.h"
 #include "AutoRouterPort.h"
 #include "AutoRouter.h"
 
-#include "GMEView.h"
+#include "../GMEView.h"
 
 ////////////////////////////////// CAutoRouter //////////////////////////////////
 

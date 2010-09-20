@@ -1,11 +1,11 @@
 // AutoRouterPath.h : Declaration of the CAutoRouterPath
 
 #pragma once
-#include "resource.h"       // main symbols
+#include "../resource.h"       // main symbols
 
 #include <vector>
 
-#include "AutoRoute/ArHelper.h"
+#include "ArHelper.h"
 
 #include "AutoRouterPort.h"
 #include "AutoRouterBox.h"

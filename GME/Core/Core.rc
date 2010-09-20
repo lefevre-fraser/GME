@@ -97,10 +97,9 @@ END
 
 IDR_COREPROJECT         REGISTRY DISCARDABLE    "CoreProject.rgs"
 IDR_METASTATICPROJECT   REGISTRY DISCARDABLE    "MetaStaticProject.rgs"
-IDR_COREREPOSITORY      REGISTRY DISCARDABLE    "CoreRepository.rgs"
 IDR_COREBINFILE         REGISTRY DISCARDABLE    "CoreBinFile.rgs"
 IDR_COREMETAPROJECT     REGISTRY DISCARDABLE    "CoreMetaProject.rgs"
-IDR_COREODBC            REGISTRY DISCARDABLE    "CoreODBC.rgs"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

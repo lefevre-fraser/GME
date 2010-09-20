@@ -1,11 +1,11 @@
 // AutoRouterBox.h : Declaration of the CAutoRouterBox
 
 #pragma once
-#include "resource.h"       // main symbols
+#include "../resource.h"       // main symbols
 
 
 
-#include "AutoRoute/ArHelper.h"
+#include "ArHelper.h"
 
 #define ED_MAXCOORD		100000
 #define ED_MINCOORD		0

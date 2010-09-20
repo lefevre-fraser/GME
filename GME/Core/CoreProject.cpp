@@ -2,12 +2,10 @@
 #include "stdafx.h"
 
 #include "CoreProject.h"
-#include "CoreRepository.h"
 #include "CoreObject.h"
 #include "CoreTransactionItem.h"
 #include "CoreTerritory.h"
 #include "CoreBinFile.h"
-#include "CoreODBC.h"
 #include "CoreMetaProject.h"
 //#include "XmlBackEnd.h"
 
@@ -187,21 +185,7 @@ STDMETHODIMP CCoreProject::OpenProject(BSTR connection, ICoreMetaProject *p, VAR
 
 		CComObjPtr<ICoreStorage> corestorage;
 
-		if( con == "DBQ" || con == "SERVER" || con == "DSN" )
-		{
-			CComObjPtr<CCoreRepository> repository;
-			CreateComObject(repository);
-			
-			corestorage = repository;
-		}
-		else if( con == "ODBC") 
-		{
-			CComObjPtr<CCoreODBC> database;
-			CreateComObject(database);
-
-			corestorage = database;
-		}
-		else if( con == "MGA" )
+		if( con == "MGA" )
 		{
 			CComObjPtr<CCoreBinFile> binfile;
 			CreateComObject(binfile);
@@ -281,26 +265,12 @@ STDMETHODIMP CCoreProject::CreateProject(BSTR connection, ICoreMetaProject *p)
 
 		CComObjPtr<ICoreStorage> corestorage;
 
-		if( con == "DBQ" || con == "SERVER" || con == "DSN" )
-		{
-			CComObjPtr<CCoreRepository> repository;
-			CreateComObject(repository);
-			
-			corestorage = repository;
-		}
-		else if( con == "MGA" )
+		if( con == "MGA" )
 		{
 			CComObjPtr<CCoreBinFile> binfile;
 			CreateComObject(binfile);
 
 			corestorage = binfile;
-		}
-		else if( con == "ODBC" )
-		{
-			CComObjPtr<CCoreODBC> database;
-			CreateComObject(database);
-
-			corestorage = database;
 		}
         else if( con == "MGX" )
 		{

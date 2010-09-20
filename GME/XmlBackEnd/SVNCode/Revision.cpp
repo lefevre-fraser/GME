@@ -21,7 +21,7 @@
  */
 
 
-#include "StdAfx.h"
+#include "../StdAfx.h"
 
 #if(USESVN)
 

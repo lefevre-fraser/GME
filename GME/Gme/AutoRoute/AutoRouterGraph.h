@@ -1,9 +1,9 @@
 // AutoRouterGraph.h : Declaration of the CAutoRouterGraph
 
 #pragma once
-#include "resource.h"       // main symbols
+#include "../resource.h"       // main symbols
 
-#include "AutoRoute/ArHelper.h" 
+#include "ArHelper.h" 
 #include "AutoRouterPath.h"
 #include "AutoRouterEdge.h"
 #include "AutoRouterPort.h"

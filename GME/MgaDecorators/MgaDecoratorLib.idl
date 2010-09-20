@@ -2,10 +2,10 @@
 import "oaidl.idl";
 import "ocidl.idl";
 
-#include "Mga.idl";
-#include "MgaUtil.idl";
-#include "Gme.idl";
-#include "MgaDecorator.idl";
+#include "Mga.idl"
+#include "MgaUtil.idl"
+#include "Gme.idl"
+#include "MgaDecorator.idl"
 
 [
 	uuid(F5D9A9A0-5A1C-40B8-9EEF-4890FEECC8CD),

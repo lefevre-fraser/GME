@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CA09AB5C-BFAC-4152-AE0B-D5AFC400A5E7}</ProjectGuid>
+    <RootNamespace>MgaUtil</RootNamespace>
+    <Keyword>AtlProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfAtl>Dynamic</UseOfAtl>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfAtl>Dynamic</UseOfAtl>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <CustomBuildStep />
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>../Common;../Interfaces;../include/htmlhelp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>imagehlp.lib;htmlhelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\MgaUtil.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <BaseAddress>0x60800000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <RegisterOutput>true</RegisterOutput>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <CustomBuildStep />
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../Common;../Interfaces;../include/htmlhelp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>imagehlp.lib;htmlhelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\MgaUtil.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <BaseAddress>0x60800000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <RegisterOutput>true</RegisterOutput>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AlterNmspDlg.cpp" />
+    <ClCompile Include="AnnotationAspectList.cpp" />
+    <ClCompile Include="AnnotationBrowserDlg.cpp" />
+    <ClCompile Include="AnnotationList.cpp" />
+    <ClCompile Include="AnnotationNode.cpp" />
+    <ClCompile Include="AnnotationPanel.cpp" />
+    <ClCompile Include="AnnotationUtil.cpp" />
+    <ClCompile Include="ClosureDlg.cpp" />
+    <ClCompile Include="ClosureKindSel.cpp" />
+    <ClCompile Include="ClosureRes.cpp" />
+    <ClCompile Include="ClosureSimple.cpp" />
+    <ClCompile Include="ClosureSmart.cpp" />
+    <ClCompile Include="colorbtn.cpp" />
+    <ClCompile Include="..\Common\CommonError.cpp" />
+    <ClCompile Include="..\Common\CommonMfc.cpp" />
+    <ClCompile Include="..\Common\CommonSmart.cpp" />
+    <ClCompile Include="..\Common\CommonStl.cpp" />
+    <ClCompile Include="CompDlg.cpp" />
+    <ClCompile Include="CompInfoDlg.cpp" />
+    <ClCompile Include="ComponentProxy.cpp" />
+    <ClCompile Include="ConnPropertiesDlg.cpp" />
+    <ClCompile Include="DialogList.cpp" />
+    <ClCompile Include="DirDialog.cpp" />
+    <ClCompile Include="FolderPropertiesDlg.cpp" />
+    <ClCompile Include="GmeDlg.cpp" />
+    <ClCompile Include="GUIDCreate.cpp" />
+    <ClCompile Include="MakeClosure.cpp" />
+    <ClCompile Include="MakeKindClosure.cpp" />
+    <ClCompile Include="MakeSimpleClosure.cpp" />
+    <ClCompile Include="MetaDlg.cpp" />
+    <ClCompile Include="MetaPurgeDialog.cpp" />
+    <ClCompile Include="MgaClosure.cpp" />
+    <ClCompile Include="MgaEventLogger.cpp" />
+    <ClCompile Include="MgaLauncher.cpp" />
+    <ClCompile Include="MgaProgressDlg.cpp" />
+    <ClCompile Include="MgaRegistrar.cpp" />
+    <ClCompile Include="MgaResolver.cpp" />
+    <ClCompile Include="MgaUtilApp.cpp" />
+    <ClCompile Include="PropertiesDlg.cpp" />
+    <ClCompile Include="RegBrwNode.cpp" />
+    <ClCompile Include="RegistryBrowserDlg.cpp" />
+    <ClCompile Include="RegistryPanel.cpp" />
+    <ClCompile Include="RegistryTree.cpp" />
+    <ClCompile Include="SplitterBar.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UACUtils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MgaUtil.def" />
+    <None Include="res\AddOnStatus.bmp" />
+    <None Include="res\colorbtn.rc2" />
+    <None Include="res\CompImageList.bmp" />
+    <None Include="ComponentProxy.rgs" />
+    <None Include="..\Gme\res\GME.ico" />
+    <None Include="res\icon_reghere.ico" />
+    <None Include="res\icon_reginherit.ico" />
+    <None Include="res\icon_reginvalid.ico" />
+    <None Include="res\icon_regmeta.ico" />
+    <None Include="res\icon_regundef.ico" />
+    <None Include="mgaclosure.rgs" />
+    <None Include="MgaEventLogger.rgs" />
+    <None Include="MgaLauncher.rgs" />
+    <None Include="MgaProgressDlg.rgs" />
+    <None Include="MgaRegistrar.rgs" />
+    <None Include="MgaResolver.rgs" />
+    <None Include="res\MgaUtil.rc2" />
+    <None Include="MgaUtilLib.rgs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MgaUtil.rc">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OUTDIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OUTDIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="MgaUtilLib.idl">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SuppressStartupBanner Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SuppressStartupBanner>
+      <TargetEnvironment Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Win32</TargetEnvironment>
+      <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateStublessProxies>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MgaUtilLib.tlb</TypeLibraryName>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MgaUtilLib.h</HeaderFileName>
+      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MgaUtilLib_i.c</InterfaceIdentifierFileName>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SuppressStartupBanner Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</SuppressStartupBanner>
+      <TargetEnvironment Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Win32</TargetEnvironment>
+      <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateStublessProxies>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MgaUtilLib.tlb</TypeLibraryName>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MgaUtilLib.h</HeaderFileName>
+      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MgaUtilLib_i.c</InterfaceIdentifierFileName>
+    </Midl>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AlterNmspDlg.h" />
+    <ClInclude Include="AnnotationAspectList.h" />
+    <ClInclude Include="AnnotationBrowserDlg.h" />
+    <ClInclude Include="AnnotationList.h" />
+    <ClInclude Include="AnnotationNode.h" />
+    <ClInclude Include="AnnotationPanel.h" />
+    <ClInclude Include="AnnotationUtil.h" />
+    <ClInclude Include="ClosureDlg.h" />
+    <ClInclude Include="ClosureKindSel.h" />
+    <ClInclude Include="ClosureRes.h" />
+    <ClInclude Include="ClosureSimple.h" />
+    <ClInclude Include="ClosureSmart.h" />
+    <ClInclude Include="colorbtn.h" />
+    <ClInclude Include="ComHelp.h" />
+    <ClInclude Include="..\Common\CommonStl.h" />
+    <ClInclude Include="CompDlg.h" />
+    <ClInclude Include="CompInfoDlg.h" />
+    <ClInclude Include="ComponentProxy.h" />
+    <ClInclude Include="ConnPropertiesDlg.h" />
+    <ClInclude Include="DialogList.h" />
+    <ClInclude Include="DirDialog.h" />
+    <ClInclude Include="FolderPropertiesDlg.h" />
+    <ClInclude Include="GmeDlg.h" />
+    <ClInclude Include="GUIDCreate.h" />
+    <ClInclude Include="MakeClosure.h" />
+    <ClInclude Include="MakeKindClosure.h" />
+    <ClInclude Include="MakeSimpleClosure.h" />
+    <ClInclude Include="MetaDlg.h" />
+    <ClInclude Include="MetaPurgeDialog.h" />
+    <ClInclude Include="MgaClosure.h" />
+    <ClInclude Include="MgaEventLogger.h" />
+    <ClInclude Include="MgaLauncher.h" />
+    <ClInclude Include="MgaProgressDlg.h" />
+    <ClInclude Include="MgaRegistrar.h" />
+    <ClInclude Include="MgaResolver.h" />
+    <ClInclude Include="MgaUtilApp.h" />
+    <ClInclude Include="PropertiesDlg.h" />
+    <ClInclude Include="RegBrwNode.h" />
+    <ClInclude Include="RegistryBrowserDlg.h" />
+    <ClInclude Include="RegistryPanel.h" />
+    <ClInclude Include="RegistryTree.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="SplitterBar.h" />
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="UACUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{bef31e1e-bb02-4687-a543-a6ad5d522869}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Interfaces\Interfaces.vcxproj">
+      <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\MgaDotNetServices\MgaDotNetServices.csproj">
+      <Project>{955209a1-8107-43c2-b0a7-729b03908c64}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Mga\Mga.vcxproj">
+      <Project>{86daef74-2527-41e5-82ce-52c31c5bbe8e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="MgaUtil.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

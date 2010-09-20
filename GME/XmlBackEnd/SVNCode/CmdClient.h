@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "CallLogger.h"
 
 class CmdClient

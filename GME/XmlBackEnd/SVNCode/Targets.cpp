@@ -20,7 +20,7 @@
  * Modified by Zoltan Molnar, Vanderbilt University, 2008
  */
 
-#include "StdAfx.h"
+#include "../StdAfx.h"
 
 #if(USESVN)
 

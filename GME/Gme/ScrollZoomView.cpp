@@ -45,7 +45,7 @@ bool CScrollZoomView::bScrollLinesRequested	= false;
 CScrollZoomView::CScrollZoomView()
 {
 	// Init everything to zero
-	AFX_ZERO_INIT_OBJECT(CView);
+	// AFX_ZERO_INIT_OBJECT(CView);
 
 	m_nMapMode = MM_NONE;
 	m_zoomP.x = m_zoomP.y = 0;

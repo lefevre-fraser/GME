@@ -2,7 +2,7 @@
 #ifndef __ARHELPER_H
 #define __ARHELPER_H
 
-#include "GmeStd.h"
+#include "../GmeStd.h"
 #include "Gme.h"
 #include <vector>
 

@@ -8,6 +8,7 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 import "Core.idl";
+import "Gme.idl";
 import "svauto.idl";
 	
 [

@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "../StdAfx.h"
 #include "HiClient.h"
 #include <fstream>
-#include "ProgressWindow.h"
+#include "../ProgressWindow.h"
 
 #if(USESVN)
 #include "Pool.h"

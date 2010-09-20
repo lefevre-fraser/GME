@@ -5,10 +5,8 @@
 #define IDS_PROJNAME                    100
 #define IDR_COREPROJECT                 101
 #define IDR_METASTATICPROJECT           102
-#define IDR_COREREPOSITORY              105
 #define IDR_COREBINFILE                 203
 #define IDR_COREMETAPROJECT             204
-#define IDR_COREODBC                    205
 #define IDR_COREXMLFILE                 206
 
 // Next default values for new objects

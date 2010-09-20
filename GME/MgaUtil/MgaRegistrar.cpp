@@ -5,9 +5,9 @@
 
 #import "mscorlib.tlb"
 #ifdef _DEBUG
-#import "..\MgaDotNetServices\bin\Debug\MgaDotNetServices.tlb"
+#import "../Debug/sMgaDotNetServices.tlb"
 #else
-#import "..\MgaDotNetServices\bin\Release\MgaDotNetServices.tlb"
+#import "../Release/MgaDotNetServices.tlb"
 #endif
 
 

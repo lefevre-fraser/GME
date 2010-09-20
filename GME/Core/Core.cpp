@@ -33,9 +33,7 @@
 #include "CommonSmart.h"
 
 #include "CoreProject.h"
-#include "CoreRepository.h"
 #include "CoreBinFile.h"
-#include "CoreODBC.h"
 #include "CoreMetaProject.h"
 
 #ifdef _MERGE_PROXYSTUB
@@ -46,9 +44,7 @@ CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
 OBJECT_ENTRY(CLSID_CoreProject, CCoreProject)
-OBJECT_ENTRY(CLSID_CoreRepository, CCoreRepository)
 OBJECT_ENTRY(CLSID_CoreBinFile, CCoreBinFile)
-OBJECT_ENTRY(CLSID_CoreODBC, CCoreODBC)
 OBJECT_ENTRY(CLSID_CoreMetaProject, CCoreMetaProject)
 END_OBJECT_MAP()
 

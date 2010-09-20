@@ -1,0 +1,491 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{10471163-556B-4BE1-A12E-C917F90F8346}</ProjectGuid>
+    <RootNamespace>GME</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfAtl>Dynamic</UseOfAtl>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfAtl>Dynamic</UseOfAtl>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <CustomBuildStep>
+      <Message>Copying required CrashRpt files</Message>
+      <Command>copy /y ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
+copy /y ..\Lib\CrashRpt\bin\CrashSender.exe "$(OutDir)" &amp;&amp; ^
+copy /y ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)" &amp;&amp; ^
+copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
+</Command>
+      <Outputs>$(OutDir)crashrpt_lang.ini;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>../Common;../Interfaces;../Include;../Lib/CrashRpt/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>gdiplus.lib;xerces-c_2.lib;CrashRpt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib;..\lib\CrashRpt\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <CustomBuildStep>
+      <Message>Copying required CrashRpt files</Message>
+      <Command>copy /y ..\Lib\CrashRpt\bin\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
+copy /y ..\Lib\CrashRpt\bin\CrashSenderd.exe "$(OutDir)" &amp;&amp; ^
+copy /y ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)" &amp;&amp; ^
+copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
+</Command>
+      <Outputs>$(OutDir)crashrpt_lang.ini;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../Common;../Interfaces;../Include;../Lib/CrashRpt/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>gdiplus.lib;xerces-c_2D.lib;CrashRptd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib;..\lib\CrashRpt\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SDK\DecoratorLib\DecoratorLib.vcxproj">
+      <Project>{77febd41-cd6c-4d55-b561-3957f7151cc2}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\Annotator\Annotator.vcxproj">
+      <Project>{835438ed-280c-4863-9c03-a62f3d504005}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{bef31e1e-bb02-4687-a543-a6ad5d522869}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Console\Console.vcxproj">
+      <Project>{9aa127a4-56e0-4594-8bf9-e1195e9e2097}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\ConstraintManager\ConstraintManager.vcxproj">
+      <Project>{4620cc8e-aa35-432a-8abe-41e22840890e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\GMEActiveBrowser\GMEActiveBrowser.vcxproj">
+      <Project>{6e19b252-97c9-45f8-b210-aa5d986aa2a7}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\Interfaces\Interfaces.vcxproj">
+      <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\MgaDecorators\MgaDecorators.vcxproj">
+      <Project>{66d5fec3-17c7-4b20-9a3a-07a1b585314f}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\MgaUtil\MgaUtil.vcxproj">
+      <Project>{ca09ab5c-bfac-4152-ae0b-d5afc400a5e7}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\Mga\Mga.vcxproj">
+      <Project>{86daef74-2527-41e5-82ce-52c31c5bbe8e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectInspector\ObjectInspector.vcxproj">
+      <Project>{e7ba4ae5-62cd-468c-9ce3-82557810c9e9}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\PanningView\PanningView.vcxproj">
+      <Project>{53accfa8-118e-4c33-b21c-77a418628428}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\Parser\Parser.vcxproj">
+      <Project>{73a7151a-1044-417b-acc8-88c48f0afdcc}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\PartBrowser\PartBrowser.vcxproj">
+      <Project>{ec447287-a21a-4de2-822a-55f20a5805d4}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\Search\Search.vcxproj">
+      <Project>{693c0d2e-2469-4dec-a7c6-dd76346efd56}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AboutDlg.cpp" />
+    <ClCompile Include="AnnotatorEventSink.cpp" />
+    <ClCompile Include="AutoRoute\ArEdgeLs.cpp" />
+    <ClCompile Include="AutoRoute\ArGraph.cpp" />
+    <ClCompile Include="AutoRoute\ArHelper.cpp" />
+    <ClCompile Include="AspectSyncDlg.cpp" />
+    <ClCompile Include="AutoRoute\AutoRouter.cpp" />
+    <ClCompile Include="AutoRoute\AutoRouterBox.cpp" />
+    <ClCompile Include="AutoRoute\AutoRouterEdge.cpp" />
+    <ClCompile Include="AutoRoute\AutoRouterGraph.cpp" />
+    <ClCompile Include="AutoRoute\AutoRouterPath.cpp" />
+    <ClCompile Include="AutoRoute\AutoRouterPort.cpp" />
+    <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="..\Common\CommonError.cpp" />
+    <ClCompile Include="..\Common\CommonMfc.cpp" />
+    <ClCompile Include="..\Common\CommonSmart.cpp" />
+    <ClCompile Include="ConnityDlg.cpp" />
+    <ClCompile Include="console.cpp" />
+    <ClCompile Include="CrashTest.cpp" />
+    <ClCompile Include="DecoratorEventSink.cpp" />
+    <ClCompile Include="DynMenu.cpp" />
+    <ClCompile Include="EnumVar.cpp" />
+    <ClCompile Include="gmeactivebrowser.cpp" />
+    <ClCompile Include="GMEApp.cpp" />
+    <ClCompile Include="GMEBrowser.cpp" />
+    <ClCompile Include="GMEChildFrame.cpp" />
+    <ClCompile Include="GMEChildFrameWrapper.cpp" />
+    <ClCompile Include="GMEConsole.cpp" />
+    <ClCompile Include="GMEDoc.cpp" />
+    <ClCompile Include="GmeDocTemplate.cpp" />
+    <ClCompile Include="GMEEventLogger.cpp" />
+    <ClCompile Include="GMEObjectInspector.cpp" />
+    <ClCompile Include="GMEOLEApp.cpp" />
+    <ClCompile Include="GMEOLEAspect.cpp" />
+    <ClCompile Include="GMEOLEColl.cpp" />
+    <ClCompile Include="GMEOLEData.cpp" />
+    <ClCompile Include="GMEOLEIt.cpp" />
+    <ClCompile Include="GMEOLEModel.cpp" />
+    <ClCompile Include="GMEOLEPanel.cpp" />
+    <ClCompile Include="GMEPanningWindow.cpp" />
+    <ClCompile Include="GMEPartBrowser.cpp" />
+    <ClCompile Include="GmePrintDialog.cpp" />
+    <ClCompile Include="GMESearch.cpp" />
+    <ClCompile Include="GMEView.cpp" />
+    <ClCompile Include="GraphicsUtil.cpp" />
+    <ClCompile Include="GuiMeta.cpp" />
+    <ClCompile Include="GUIObject.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="mfcdual.cpp" />
+    <ClCompile Include="MgaOpenDlg.cpp" />
+    <ClCompile Include="ModelGrid.cpp" />
+    <ClCompile Include="ModelPropertiesDlgBar.cpp" />
+    <ClCompile Include="NewXmlbackendProjDlg.cpp" />
+    <ClCompile Include="objectinspector.cpp" />
+    <ClCompile Include="PanningWindowWrapper.cpp" />
+    <ClCompile Include="ParadigmPropertiesDlg.cpp" />
+    <ClCompile Include="PartBrowserWrapper.cpp" />
+    <ClCompile Include="PendingObjectPosRequest.cpp" />
+    <ClCompile Include="PendingRequest.cpp" />
+    <ClCompile Include="PreviewWnd.cpp" />
+    <ClCompile Include="ProjectPropertiesDlg.cpp" />
+    <ClCompile Include="RecentConnStrList.cpp" />
+    <ClCompile Include="Regexp.cpp" />
+    <ClCompile Include="ScrollZoomView.cpp" />
+    <ClCompile Include="search.cpp" />
+    <ClCompile Include="Splash.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SyncAspListCtrl.cpp" />
+    <ClCompile Include="SyncObjsListCtrl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AnnotatorEventSink.rgs" />
+    <None Include="DecoratorEventSink.rgs" />
+    <None Include="aboutpic.bmp" />
+    <None Include="res\atomport.bmp" />
+    <None Include="res\bitmap1.bmp" />
+    <None Include="res\bitmap_l.bmp" />
+    <None Include="res\bmp00001.bmp" />
+    <None Include="res\bmp00002.bmp" />
+    <None Include="res\bmp00003.bmp" />
+    <None Include="res\compnotfound.ico" />
+    <None Include="res\cur00001.cur" />
+    <None Include="res\cur00002.cur" />
+    <None Include="res\cur00003.cur" />
+    <None Include="res\cur00004.cur" />
+    <None Include="res\cur00005.cur" />
+    <None Include="res\cur00006.cur" />
+    <None Include="res\cursor1.cur" />
+    <None Include="res\dummybar.bmp" />
+    <None Include="res\GME.ico" />
+    <None Include="res\GME.rc2" />
+    <None Include="res\GMEDoc.ico" />
+    <None Include="res\icon1.ico" />
+    <None Include="res\metaopen.bmp" />
+    <None Include="res\mgaopen.bmp" />
+    <None Include="res\NullRef.bmp" />
+    <None Include="res\refport.bmp" />
+    <None Include="res\SetDefault.bmp" />
+    <None Include="res\setport.bmp" />
+    <None Include="Splsh16.bmp" />
+    <None Include="res\Toolbar.bmp" />
+    <None Include="res\toolbar1.bmp" />
+    <None Include="res\ToolbarComponents.bmp" />
+    <None Include="res\ToolbarComponents24.bmp" />
+    <None Include="res\ToolbarMain.bmp" />
+    <None Include="res\ToolbarMain24.bmp" />
+    <None Include="res\ToolbarMode.bmp" />
+    <None Include="res\ToolbarMode24.bmp" />
+    <None Include="res\ToolbarModeling.bmp" />
+    <None Include="res\ToolbarModeling24.bmp" />
+    <None Include="res\ToolbarNavig.bmp" />
+    <None Include="res\ToolbarNavig24.bmp" />
+    <None Include="res\ToolbarWins.bmp" />
+    <None Include="res\ToolbarWins24.bmp" />
+    <None Include="res\typemark.ico" />
+    <None Include="res\visual_c.cur" />
+    <CustomBuild Include="..\..\Doc\README_in.txt">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cl /EP "%(FullPath)"  /I../GME &gt;"%(RootDir)%(Directory)"README.txt
+</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GMEVersion.h;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)README.txt;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cl /EP "%(FullPath)"  /I../GME &gt;"%(RootDir)%(Directory)"README.txt
+</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GMEVersion.h;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)README.txt;%(Outputs)</Outputs>
+    </CustomBuild>
+    <None Include="GME.reg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="GmeLib.idl">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TargetEnvironment Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Win32</TargetEnvironment>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GmeLib.tlb</TypeLibraryName>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GmeLib.h</HeaderFileName>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TargetEnvironment Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Win32</TargetEnvironment>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GmeLib.tlb</TypeLibraryName>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GmeLib.h</HeaderFileName>
+    </Midl>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnnotatorEventSink.h" />
+    <ClInclude Include="AutoRoute\ArEdgeLs.h" />
+    <ClInclude Include="AutoRoute\ArGraph.h" />
+    <ClInclude Include="AutoRoute\ArHelper.h" />
+    <ClInclude Include="AspectSyncDlg.h" />
+    <ClInclude Include="AttrEnableButton.h" />
+    <ClInclude Include="AutoRoute\AutoRouter.h" />
+    <ClInclude Include="AutoRoute\AutoRouterBox.h" />
+    <ClInclude Include="AutoRoute\AutoRouterEdge.h" />
+    <ClInclude Include="AutoRoute\AutoRouterGraph.h" />
+    <ClInclude Include="AutoRoute\AutoRouterPath.h" />
+    <ClInclude Include="AutoRoute\AutoRouterPort.h" />
+    <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="ConnityDlg.h" />
+    <ClInclude Include="console.h" />
+    <ClInclude Include="CrashTest.h" />
+    <ClInclude Include="DecoratorEventSink.h" />
+    <ClInclude Include="DynMenu.h" />
+    <ClInclude Include="EnumVar.h" />
+    <ClInclude Include="ExceptionXMLTags.h" />
+    <ClInclude Include="gmeactivebrowser.h" />
+    <ClInclude Include="GMEApp.h" />
+    <ClInclude Include="GMEBrowser.h" />
+    <ClInclude Include="GMEChildFrame.h" />
+    <ClInclude Include="GMEChildFrameWrapper.h" />
+    <ClInclude Include="GMEConsole.h" />
+    <ClInclude Include="GMEDoc.h" />
+    <ClInclude Include="GmeDocTemplate.h" />
+    <ClInclude Include="GMEEventLogger.h" />
+    <ClInclude Include="GMEObjectInspector.h" />
+    <ClInclude Include="GMEOLEApp.h" />
+    <ClInclude Include="GMEOLEAspect.h" />
+    <ClInclude Include="GMEOLEColl.h" />
+    <ClInclude Include="GMEOLEData.h" />
+    <ClInclude Include="GMEOLEError.h" />
+    <ClInclude Include="GMEOLEIt.h" />
+    <ClInclude Include="GMEOLEModel.h" />
+    <ClInclude Include="GMEOLEPanel.h" />
+    <ClInclude Include="GMEPanningWindow.h" />
+    <ClInclude Include="GMEPartBrowser.h" />
+    <ClInclude Include="GmePrintDialog.h" />
+    <ClInclude Include="GMESearch.h" />
+    <ClInclude Include="GMEStd.h" />
+    <ClInclude Include="GMEVersion.h" />
+    <ClInclude Include="GMEView.h" />
+    <ClInclude Include="GraphicsUtil.h" />
+    <ClInclude Include="GuiMeta.h" />
+    <ClInclude Include="GUIObject.h" />
+    <ClInclude Include="MainDlgBar.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="mfcdual.h" />
+    <ClInclude Include="MgaOpenDlg.h" />
+    <ClInclude Include="ModelGrid.h" />
+    <ClInclude Include="ModelPropertiesDlgBar.h" />
+    <ClInclude Include="NewXmlbackendProjDlg.h" />
+    <ClInclude Include="objectinspector.h" />
+    <ClInclude Include="PanningWindowWrapper.h" />
+    <ClInclude Include="ParadigmPropertiesDlg.h" />
+    <ClInclude Include="PartBrowserWrapper.h" />
+    <ClInclude Include="PendingObjectPosRequest.h" />
+    <ClInclude Include="PendingRequest.h" />
+    <ClInclude Include="PreviewWnd.h" />
+    <ClInclude Include="ProjectPropertiesDlg.h" />
+    <ClInclude Include="Regexp.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ScrollZoomView.h" />
+    <ClInclude Include="search.h" />
+    <ClInclude Include="Splash.h" />
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="SyncAspListCtrl.h" />
+    <ClInclude Include="SyncObjsListCtrl.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GME.rc">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OUTDIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OUTDIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="GME.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

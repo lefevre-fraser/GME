@@ -34,7 +34,7 @@ extern CComModule _Module;
 
 #include "SvnConfig.h"
 
-#include "CoreLib.h"
+#include "XmlBackEnd.h"
 #include "CommonSmart.h"
 #include "CommonStl.h"
 #include "CoreUtilities.h"

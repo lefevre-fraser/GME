@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Interface Files">
+      <UniqueIdentifier>{2536ced0-82b0-4103-afd9-39f1e4ab3b4c}</UniqueIdentifier>
+      <Extensions>*.idl</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{e5822588-d674-493b-b540-e197f28900d9}</UniqueIdentifier>
+      <Extensions>*.h</Extensions>
+    </Filter>
+    <Filter Include="Builder">
+      <UniqueIdentifier>{68f3f9e0-4f25-45ec-8b29-f36bdd406596}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="Core.idl">
+      <Filter>Interface Files</Filter>
+    </Midl>
+    <Midl Include="Gme.idl">
+      <Filter>Interface Files</Filter>
+    </Midl>
+    <Midl Include="Meta.idl">
+      <Filter>Interface Files</Filter>
+    </Midl>
+    <Midl Include="Mga.idl">
+      <Filter>Interface Files</Filter>
+    </Midl>
+    <Midl Include="MgaDecorator.idl">
+      <Filter>Interface Files</Filter>
+    </Midl>
+    <Midl Include="MgaUtil.idl">
+      <Filter>Interface Files</Filter>
+    </Midl>
+    <Midl Include="Parser.idl">
+      <Filter>Interface Files</Filter>
+    </Midl>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="InterfaceColl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceVersion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\Release\IFChecksumProg.exe">
+      <Filter>Builder</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

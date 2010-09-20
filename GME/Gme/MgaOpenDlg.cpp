@@ -290,9 +290,7 @@ CString CMgaOpenDlg::PruneConnectionString(const CString& conn)
 
 		CString key((const char*)part, r);
 
-		if( key == "DSN" ||
-			key == "SERVER" ||
-			key == "UID" ||
+		if( key == "UID" ||
 			key == "PWD" ||
 			key == "USER" ||
 			key == "PASSWORD" )

@@ -78,31 +78,12 @@ library CORELib
 		interface ISupportErrorInfo;
 	};
 
-	[
-		uuid(09D9DCA2-3E09-11D3-B2F7-005004D38590),
-		helpstring("CoreRepository Class")
-	]
-	coclass CoreRepository
-	{
-		[default] interface ICoreStorage;
-		interface ISupportErrorInfo;
-	};
 
 	[
 		uuid(7281C07A-3E09-11D3-B2F7-005004D38590),
 		helpstring("CoreBinFile Class")
 	]
 	coclass CoreBinFile
-	{
-		[default] interface ICoreStorage;
-		interface ISupportErrorInfo;
-	};
-
-	[
-		uuid(7281C47A-3E09-11D3-B2F7-005004D38590),
-		helpstring("CoreODBC Class")
-	]
-	coclass CoreODBC
 	{
 		[default] interface ICoreStorage;
 		interface ISupportErrorInfo;

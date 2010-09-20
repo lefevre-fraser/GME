@@ -446,7 +446,7 @@ public:
 
 class ATL_NO_VTABLE CCoreXmlFile : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<ICoreStorage, &IID_ICoreStorage, &LIBID_CORELib>,
+	public IDispatchImpl<ICoreStorage, &IID_ICoreStorage, &LIBID_XMLBACKENDLib>,
 	public ISupportErrorInfoImpl<&IID_ICoreStorage>,
 	public CComCoClass<CCoreXmlFile, &CLSID_CoreXmlFile>
 {

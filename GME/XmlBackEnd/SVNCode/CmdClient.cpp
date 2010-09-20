@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "../StdAfx.h"
 #include "CmdClient.h"
-#include "FileHelp.h"
-#include "MsgConsole.h"
+#include "../FileHelp.h"
+#include "../MsgConsole.h"
 #include <fstream>
 #include <direct.h>
 

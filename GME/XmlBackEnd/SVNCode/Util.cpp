@@ -20,8 +20,8 @@
  * Modified by Zoltan Molnar, Vanderbilt University, 2008
  */
 
-#include "StdAfx.h"
-#include "..\\MsgConsole.h"
+#include "../StdAfx.h"
+#include "../MsgConsole.h"
 
 #if(USESVN)
 

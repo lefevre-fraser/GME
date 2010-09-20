@@ -21,11 +21,11 @@
  */
 
 
-#include "StdAfx.h"
+#include "../StdAfx.h"
 
 #if(USESVN)
 
-#include ".\threaddata.h"
+#include "threaddata.h"
 
 ThreadData::ThreadData(void)
 {
