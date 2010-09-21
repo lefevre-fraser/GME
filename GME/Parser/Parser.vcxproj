@@ -50,6 +50,8 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">RegisterOutput</CustomBuildBeforeTargets>
+    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">RegisterOutput</CustomBuildBeforeTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep />
@@ -90,11 +92,7 @@
     </Link>
     <CustomBuildStep>
       <Command>copy ..\Lib\xerces-c_2_8.dll "$(OutDir)"</Command>
-    </CustomBuildStep>
-    <CustomBuildStep>
       <Message>copy ..\Lib\xerces-c_2_8.dll "$(OutDir)"</Message>
-    </CustomBuildStep>
-    <CustomBuildStep>
       <Outputs>$(OutDir)\xerces-c_2_8.dll</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
