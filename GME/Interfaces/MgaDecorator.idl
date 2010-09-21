@@ -1,18 +1,7 @@
-// MgaDecorator.idl : IDL source for MgaDecorator.dll
-//
-
-// This file will be processed by the MIDL tool to
-// produce the type library (MgaDecorator.tlb) and marshalling code.
-
 import "oaidl.idl";
 import "ocidl.idl";
 
-#ifndef MGAIDL_IMPORTED
 import "mga.idl";
-#endif
-
-#define MGADECORATORIDL_IMPORTED
-
 
 // Error codes
 typedef enum decorator_error {

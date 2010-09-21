@@ -4,10 +4,10 @@ import "ocidl.idl";
 
 #include "DecoratorConfig.h"
 
-#include <meta.idl>
-#include <mga.idl>
-#include <gme.idl>
-#include <MgaDecorator.idl>
+import "meta.idl";
+import "mga.idl";
+import "gme.idl";
+import "MgaDecorator.idl";
 
 
 [

@@ -1,15 +1,8 @@
-
 import "oaidl.idl";
 import "ocidl.idl";
 
-#ifndef INTERFACECOLL_INCLUDED
 #include "InterfaceColl.h"
-#endif
-#define COREIDL_IMPORTED
-
-#ifndef INTERFACEVERSION_INCLUDED
 #include "InterfaceVersion.h"
-#endif
 
 // --------------------------- Core IDL
 

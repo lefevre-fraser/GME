@@ -173,7 +173,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="..\..\GME\Interfaces\MgaDecorator.idl">
+    <Midl Include="DecoratorLib.idl">
       <Filter>Source Files</Filter>
     </Midl>
   </ItemGroup>

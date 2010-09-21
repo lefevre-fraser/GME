@@ -40,7 +40,7 @@ END
 
 3 TEXTINCLUDE 
 BEGIN
-    "1 TYPELIB ""MgaDecoratorLib.tlb""\r\n"
+    "1 TYPELIB ""MgaDecorators.tlb""\r\n"
     "\0"
 END
 
@@ -136,7 +136,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-1 TYPELIB "MgaDecoratorLib.tlb"
+1 TYPELIB "MgaDecorators.tlb"
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED

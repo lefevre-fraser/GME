@@ -3,7 +3,7 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 import "Meta.idl";
-import "Gme.idl";
+//import "Gme.idl";
 
 #include "InterfaceColl.h"
 

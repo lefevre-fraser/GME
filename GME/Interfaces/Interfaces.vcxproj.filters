@@ -9,9 +9,14 @@
       <UniqueIdentifier>{e5822588-d674-493b-b540-e197f28900d9}</UniqueIdentifier>
       <Extensions>*.h</Extensions>
     </Filter>
-    <Filter Include="Builder">
-      <UniqueIdentifier>{68f3f9e0-4f25-45ec-8b29-f36bdd406596}</UniqueIdentifier>
-    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="InterfaceColl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceVersion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Core.idl">
@@ -35,18 +40,5 @@
     <Midl Include="Parser.idl">
       <Filter>Interface Files</Filter>
     </Midl>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="InterfaceColl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InterfaceVersion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\Release\IFChecksumProg.exe">
-      <Filter>Builder</Filter>
-    </CustomBuild>
   </ItemGroup>
 </Project>

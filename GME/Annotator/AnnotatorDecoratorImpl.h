@@ -11,7 +11,7 @@
 
 
 #include "StdAfx.h"
-#include "DecoratorLib.h"
+#include GENERATEDLIBHEADER
 #include "resource.h"       // main symbols
 #include "DecoratorInterface.h"
 

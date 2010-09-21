@@ -33,6 +33,7 @@ extern CComModule _Module;
 
 #include "resource.h"
 #include "Core.h"
+#include "Gme.h"
 #include "MetaLib.h"
 #include "CommonSmart.h"
 #include "CommonStl.h"

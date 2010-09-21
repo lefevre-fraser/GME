@@ -39,7 +39,7 @@
 extern CComModule _Module;
 #include <atlcom.h>
 
-#define GENERATEDLIBHEADER	"DecoratorLib.h"
+#define GENERATEDLIBHEADER	"DecoratorLib_h.h"
 
 
 //{{AFX_INSERT_LOCATION}}

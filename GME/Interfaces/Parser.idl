@@ -1,15 +1,9 @@
-
 import "oaidl.idl";
 import "ocidl.idl";
 
-#ifndef MGAIDL_IMPORTED
-import "Mga.idl";
-#endif
-
-
-#ifndef INTERFACEVERSION_INCLUDED
 #include "InterfaceVersion.h"
-#endif
+
+import "Mga.idl";
 
 // --------------------------- Parser IDL
 

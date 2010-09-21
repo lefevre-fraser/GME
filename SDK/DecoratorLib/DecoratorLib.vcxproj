@@ -48,6 +48,7 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)D</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -66,7 +67,6 @@
     </ClCompile>
     <ResourceCompile />
     <Lib>
-      <OutputFile>$(TargetDir)$(ProjectName)D.lib</OutputFile>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <Xdcmake>
@@ -97,7 +97,6 @@
     </ClCompile>
     <ResourceCompile />
     <Lib>
-      <OutputFile>$(TargetDir)$(ProjectName).lib</OutputFile>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <Xdcmake>
@@ -167,7 +166,7 @@
     <ClCompile Include="VectorPart.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="..\..\GME\Interfaces\MgaDecorator.idl" />
+    <Midl Include="DecoratorLib.idl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AtomBitmapPart.h" />

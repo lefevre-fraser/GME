@@ -1,21 +1,10 @@
-
 import "oaidl.idl";
 import "ocidl.idl";
 
-#ifndef MGAIDL_IMPORTED
-import "Mga.idl";
-#endif
-
-#ifndef INTERFACECOLL_INCLUDED
 #include "InterfaceColl.h"
-#endif
-
-#ifndef INTERFACEVERSION_INCLUDED
 #include "InterfaceVersion.h"
-#endif
 
-
-#define GMEIDL_IMPORTED
+import "Mga.idl";
 
 interface IGMEOLEColl;
 
@@ -408,3 +397,4 @@ interface IMgaVersionInfo : IUnknown
 };
 
 //-------------------------------------------------------------------------------
+

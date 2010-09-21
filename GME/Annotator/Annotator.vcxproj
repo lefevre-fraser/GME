@@ -54,8 +54,6 @@
     <CustomBuildStep />
     <Midl>
       <AdditionalIncludeDirectories>$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces</AdditionalIncludeDirectories>
-      <HeaderFileName>
-      </HeaderFileName>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ClCompile>
@@ -73,7 +71,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>gdiplus.lib</AdditionalDependencies>
@@ -93,8 +91,6 @@
     <CustomBuildStep />
     <Midl>
       <AdditionalIncludeDirectories>$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces</AdditionalIncludeDirectories>
-      <HeaderFileName>
-      </HeaderFileName>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ClCompile>
@@ -110,7 +106,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>gdiplus.lib</AdditionalDependencies>
@@ -154,16 +150,7 @@
     <None Include="DecoratorApp.def" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="DecoratorLib.idl">
-      <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateStublessProxies>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DecoratorLib.tlb</TypeLibraryName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DecoratorLib.h</HeaderFileName>
-      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DecoratorLib_i.c</InterfaceIdentifierFileName>
-      <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateStublessProxies>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">DecoratorLib.tlb</TypeLibraryName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">DecoratorLib.h</HeaderFileName>
-      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">DecoratorLib_i.c</InterfaceIdentifierFileName>
-    </Midl>
+    <Midl Include="DecoratorLib.idl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnnotationDefs.h" />

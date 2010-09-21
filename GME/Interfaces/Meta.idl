@@ -1,15 +1,9 @@
-
 import "oaidl.idl";
 import "ocidl.idl";
 
-#ifndef INTERFACECOLL_INCLUDED
 #include "InterfaceColl.h"
-#endif
-#define METAIDL_IMPORTED
-
-#ifndef INTERFACEVERSION_INCLUDED
 #include "InterfaceVersion.h"
-#endif
+
 
 // --------------------------- Meta IDL
 
@@ -1038,3 +1032,5 @@ MGACOLL_INTERFACE(c8ec3723-c1fd-11d3-9ad2-00aa00b6fe27, MgaMetaModel)
 MGACOLL_INTERFACE(c8432623-c1fd-11d3-9ad2-00aa00b6fe27, MgaMetaConnJoint)
 MGACOLL_INTERFACE(c8124623-c51d-11d3-9ad2-00aa00b6fe27, MgaMetaPointerItem)
 MGACOLL_INTERFACE(c8124623-c51d-1ad3-9ad2-11aa0176fe27, MgaMetaEnumItem)
+
+

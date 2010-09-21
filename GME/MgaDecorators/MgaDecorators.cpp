@@ -8,7 +8,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include <initguid.h>
-#include "MgaDecoratorLib.h"
+#include GENERATEDLIBHEADER
 
 #include "MgaDecoratorLib_i.c"
 #include "BoxDecoratorImpl.h"

@@ -48,7 +48,7 @@ extern CComModule _Module;
 #include "CommonMgaTrukk.h"
 #include <stdio.h>
 
-#define GENERATEDLIBHEADER	"MgaDecoratorLib.h"
+#define GENERATEDLIBHEADER	"MgaDecoratorLib_h.h"
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

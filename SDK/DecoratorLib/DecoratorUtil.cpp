@@ -11,8 +11,9 @@
 #include <math.h>
 
 #include "DecoratorDefs.h"
-#include "DecoratorLib_h.h"
+#include GENERATEDLIBHEADER
 #include "BitmapUtil.h"
+
 
 static long stereotypeCharacterType = 0;
 

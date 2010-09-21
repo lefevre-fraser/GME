@@ -1,19 +1,10 @@
-
 import "oaidl.idl";
 import "ocidl.idl";
 
-#ifndef METAIDL_IMPORTED
-import "Meta.idl";
-#endif
-
-#ifndef INTERFACECOLL_INCLUDED
 #include "InterfaceColl.h"
-#endif
-#define MGAIDL_IMPORTED
-
-#ifndef INTERFACEVERSION_INCLUDED
 #include "InterfaceVersion.h"
-#endif
+
+import "Meta.idl";
 
 // --------------------------- Mga IDL
 
@@ -1455,4 +1446,5 @@ MGACOLL_INTERFACE(c5aac2f0-c1fd-11d3-9ad2-00aa00b6fe26, MgaObject)
 interface IMgaO : IDispatch
 {
 };
+
 

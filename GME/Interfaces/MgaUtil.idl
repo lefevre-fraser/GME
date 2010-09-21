@@ -1,19 +1,10 @@
-
 import "oaidl.idl";
 import "ocidl.idl";
 
-#ifndef MGAIDL_IMPORTED
-import "Mga.idl";
-#endif
-
-#ifndef INTERFACECOLL_INCLUDED
 #include "InterfaceColl.h"
-#endif
-#define MGAUTILIDL_IMPORTED
-
-#ifndef INTERFACEVERSION_INCLUDED
 #include "InterfaceVersion.h"
-#endif
+
+import "Mga.idl";
 
 typedef enum mgautil_error {
 [helpstring("ComponentProxy was not initialized with a Dispatch based interpreter")]
@@ -744,4 +735,3 @@ interface IMgaEventLogger : IDispatch
 
 }
 
-//0B989672-7179-46ba-9352-D1EDB0222B7E

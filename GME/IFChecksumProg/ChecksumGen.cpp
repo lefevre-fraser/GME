@@ -90,7 +90,9 @@ int main(int argc, char **argv) {
 				fprintf(f, "#define INTERFACE_VERSION 0x%08X%s", ++ver, line_end);
 			}
 		}
+		else if(strncmp(buf, "#ifndef INTERFACEVERSION_INCLUDED", line_end-buf) == 0);
 		else if(strncmp(buf, "#define INTERFACEVERSION_INCLUDED", line_end-buf) == 0);
+		else if(strncmp(buf, "#endif", line_end-buf) == 0);
 		else {
 			int i;
 			for(i = 0; isspace(buf[i]); i++);

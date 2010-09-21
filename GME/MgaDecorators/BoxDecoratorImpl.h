@@ -11,7 +11,7 @@
 
 
 #include "StdAfx.h"
-#include "MgaDecoratorLib.h"
+#include GENERATEDLIBHEADER
 #include "resource.h"
 
 namespace DecoratorSDK {

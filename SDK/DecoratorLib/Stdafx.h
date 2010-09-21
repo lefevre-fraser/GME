@@ -48,7 +48,7 @@ extern CComModule _Module;
 #include "DecoratorMfc.h"
 #include <stdio.h>
 
-#ifdef LIBCOMPILE
+#ifdef LIBCOMPILE 
 #define GENERATEDLIBHEADER	"DecoratorLib_h.h"
 #endif
 
