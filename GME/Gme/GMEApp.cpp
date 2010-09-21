@@ -2587,7 +2587,18 @@ void CGMEApp::RunComponent(const CString &compname)
 
 		if(theApp.bNoProtect) COMTHROW( launcher->put_Parameter(CComVariant(true)));
 		if(launcher->RunComponent(PutInBstr(compname), mgaProject, focus, selfcos, GME_MENU_START) != S_OK) {
-			AfxMessageBox("Component execution failed");
+			CComObjPtr<IErrorInfo> errinfo;
+			GetErrorInfo(0, PutOut(errinfo));
+			if (errinfo) {
+				_bstr_t desc;
+				errinfo->GetDescription(desc.GetAddress());
+				std::string error;
+				error += "Component execution failed: ";
+				error += static_cast<const char*>(desc);
+				AfxMessageBox(error.c_str());
+			} else {
+				AfxMessageBox("Component execution failed");
+			}
 		}
 	}
 }
