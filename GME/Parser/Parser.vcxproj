@@ -88,6 +88,15 @@
       <TargetMachine>MachineX86</TargetMachine>
       <RegisterOutput>true</RegisterOutput>
     </Link>
+    <CustomBuildStep>
+      <Command>copy ..\Lib\xerces-c_2_8.dll "$(OutDir)"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>copy ..\Lib\xerces-c_2_8.dll "$(OutDir)"</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(OutDir)\xerces-c_2_8.dll</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep />
@@ -122,6 +131,11 @@
       <TargetMachine>MachineX86</TargetMachine>
       <RegisterOutput>true</RegisterOutput>
     </Link>
+    <CustomBuildStep>
+      <Outputs>$(OutDir)\xerces-c_2_8.dll</Outputs>
+      <Message>copy ..\Lib\xerces-c_2_8.dll "$(OutDir)"</Message>
+      <Command>copy ..\Lib\xerces-c_2_8.dll "$(OutDir)"</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Common\CommonError.cpp" />
