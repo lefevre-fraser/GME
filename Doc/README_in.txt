@@ -9,12 +9,10 @@
 0. Important Upgrade Information
 ************************************************
 
-YOU NEED TO UNINSTALL ALL PREVIOUS VERSIONS OF GME
-(INCLUDING GME 6) USING THE CONTROL PANEL ADD/REMOVE
-PROGRAMS UTILITY BEFORE INSTALLING THE NEW RELEASE.
-OTHERWISE, GME IS NOT GOING TO WORK CORRECTLY!!!
+You must uninstall GME versions prior to version
+9.1.12 using the Control Panel before installing GME.
 
-Every new release of GME may introduce  changes to its
+Every new release of GME may introduce changes to its
 COM interfaces and to the Builder Object Network (C++ 
 interpreter framework). Therefore, it is essential to
 update the source code of all user implemented interpreters, 
