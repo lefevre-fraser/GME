@@ -912,6 +912,7 @@ STDMETHODIMP COMCLASS::Initialize(struct IMgaProject *p) {
 		COMTHROW(pThis->rawcomp.addon->put_EventMask(ADDON_EVENTMASK));
 
 #endif
+		// FIXME: This always fails in Addons (E_MGA_NAME_NOT_FOUND)
 		GMEConsole::Console::SetupConsole(p);
 		return pThis->rawcomp.Initialize(p);
 	} COMCATCH(;);
