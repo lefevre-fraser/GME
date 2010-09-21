@@ -18,7 +18,7 @@
 //  -- keep them in sync
 //  -- never decrease it
 cpp_quote("#ifndef INTERFACE_VERSION")
-cpp_quote("#define INTERFACE_VERSION 0x000200E7")
+cpp_quote("#define INTERFACE_VERSION 0x000200E6")
 cpp_quote("#endif //INTERFACE_VERSION")
-#define INTERFACE_VERSION 0x000200E7
+#define INTERFACE_VERSION 0x000200E6
 #endif
