@@ -77,8 +77,6 @@ typedef stdext::hash_map< metaobjidpair_type
                         > objects_type;
 typedef objects_type::iterator objects_iterator;
 
-extern objects_iterator no_object;
-
 
 // --------------------------- CCoreBinFile
 
@@ -367,7 +365,7 @@ template<>
 class BinAttr<VALTYPE_POINTER> : public BinAttrBase
 {
 public:
-	BinAttr() : a(no_object), isEmpty(true) { }
+	BinAttr() : isEmpty(true) { }
 
 	objects_iterator a;
 	bool isEmpty;
@@ -377,8 +375,8 @@ public:
 	void Set(CCoreBinFile *binfile, objects_iterator b)
 	{
 		ASSERT( binfile != NULL );
-		ASSERT( isEmpty ); // was: ASSERT( a == no_object)
-		ASSERT( b != binfile->objects.end()); // was: ASSERT( b != no_object && b != binfile->objects.end() );
+		ASSERT( isEmpty ); 
+		ASSERT( b != binfile->objects.end());
 
 		binfile->modified = true;
 
@@ -419,7 +417,6 @@ public:
 			objs.erase(i);
 		}
 
-		a = no_object;
 		isEmpty = true;
 
 		metaobjidpair_type idpair;

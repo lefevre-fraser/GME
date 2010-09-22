@@ -170,6 +170,7 @@ void CChildFrame::OnUpdateFrameTitle(BOOL bAddToTitle) {
 
 BOOL CChildFrame::PreTranslateMessage(MSG* pMsg)
 {
+
 	if (pMsg->message == WM_MBUTTONUP) {
 		CMFCTabCtrl* tabCtrl = GetRelatedTabGroup();
 		long xPos = GET_X_LPARAM(pMsg->lParam);

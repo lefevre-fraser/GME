@@ -278,15 +278,12 @@ bool BinObject::HasEmptyPointers() const
 	return true;
 }
 
-objects_iterator no_object = objects_iterator(); // was: no_object(NULL, NULL);
-
 // --------------------------- CCoreBinFile
 
 CCoreBinFile::CCoreBinFile()
 {
 	metaid = METAID_NONE;
 	attrid = ATTRID_NONE;
-	opened_object = no_object;
 	intrans = false;
 	modified = false;
 	isEmpty = true;
@@ -682,7 +679,6 @@ STDMETHODIMP CCoreBinFile::OpenObject(objid_type objid)
 		if( (opened_object == objects.end()) ||
 			opened_object->second.deleted )
 		{
-			opened_object = no_object;
 			isEmpty = true;
 			HR_THROW(E_NOTFOUND);
 		}
@@ -701,7 +697,6 @@ STDMETHODIMP CCoreBinFile::CreateObject(objid_type *objid)
 	{
 		modified = true;
 
-		opened_object = no_object;
 		isEmpty = true;
 
 		ASSERT( metaid != METAID_NONE );
@@ -733,7 +728,6 @@ STDMETHODIMP CCoreBinFile::CreateObject(objid_type *objid)
 
 STDMETHODIMP CCoreBinFile::CloseObject()
 {
-	opened_object = no_object;
 	isEmpty =  true;
 	return S_OK;
 }
@@ -760,7 +754,6 @@ STDMETHODIMP CCoreBinFile::DeleteObject()
 	deleted_objects.push_front(opened_object);
 
 	opened_object->second.deleted = true;
-	opened_object = no_object;
 	isEmpty = true;
 
 	return S_OK;
@@ -782,7 +775,6 @@ void CCoreBinFile::CancelProject()
 	intrans = false;
 	modified = false;
 
-	opened_object = no_object;
 	isEmpty = true;
 	deleted_objects.clear();
 	created_objects.clear();
@@ -917,7 +909,6 @@ void CCoreBinFile::LoadProject()
 		++i;
 	}
 
-	opened_object = no_object;
 	isEmpty = true;
 	resolvelist.clear();
 
@@ -1134,146 +1125,3 @@ STDMETHODIMP CCoreBinFile::get_StorageType(long *p)
 	return S_OK;
 }
 
-// --------------------------- BinAttr<VALTYPE_POINTER>
-//moved to the header file
-//template<> 
-//void BinAttr<VALTYPE_POINTER>::Get(CCoreBinFile *binfile, VARIANT *p) const
-//{
-//	if( a == no_object )
-//	{
-//		metaobjidpair_type idpair;
-//		idpair.metaid = METAID_NONE;
-//		idpair.objid = OBJID_NONE;
-//		CopyTo(idpair, p);
-//	}
-//	else
-//		CopyTo(a->first, p);
-//}
-//
-//template<>
-//void BinAttr<VALTYPE_POINTER>::Set(CCoreBinFile *binfile, objects_iterator b)
-//{
-//	ASSERT( binfile != NULL );
-//	ASSERT( a == no_object );
-//	ASSERT( b != no_object && b != binfile->objects.end() );
-//
-//	binfile->modified = true;
-//
-//	a = b;
-//
-//	ASSERT( binfile->opened_object->second.Find(attrid) == this );
-//
-//	BinAttrBase *base = a->second.Find(attrid + ATTRID_COLLECTION);
-//	ASSERT( base != NULL );
-//	
-//	ASSERT( base->GetValType() == VALTYPE_COLLECTION );
-//	std::vector<objects_iterator> &objs = ((BinAttr<VALTYPE_COLLECTION>*)base)->a;
-//
-//#ifdef DEBUG_CONTAINERS
-//	std::vector<objects_iterator>::iterator i = find(objs.begin(), objs.end(), a);
-//	ASSERT( i == objs.end() );
-//#endif
-//
-//	objs.push_back(binfile->opened_object);
-//}
-//
-//template<>
-//void BinAttr<VALTYPE_POINTER>::Set(CCoreBinFile *binfile, VARIANT p)
-//{
-//	if( a != no_object )
-//	{
-//		BinAttrBase *base = a->second.Find(attrid + ATTRID_COLLECTION);
-//		ASSERT( base != NULL );
-//		
-//		ASSERT( base->GetValType() == VALTYPE_COLLECTION );
-//		std::vector<objects_iterator> &objs = ((BinAttr<VALTYPE_COLLECTION>*)base)->a;
-//
-//		ASSERT( binfile->opened_object->second.Find(attrid) == this );
-//
-//		std::vector<objects_iterator>::iterator i = std::find(objs.begin(), objs.end(), binfile->opened_object);
-//		ASSERT( i != objs.end() );
-//
-//		objs.erase(i);
-//	}
-//
-//	a = no_object;
-//
-//	metaobjidpair_type idpair;
-//	CopyTo(p, idpair);
-//
-//	if( idpair.metaid == METAID_NONE )
-//	{
-//		ASSERT( idpair.objid == OBJID_NONE );
-//	}
-//	else
-//	{
-//		ASSERT( idpair.objid != OBJID_NONE );
-//
-//		Set(binfile, binfile->objects.find(idpair));
-//	}
-//}
-//
-//template<>
-//void BinAttr<VALTYPE_POINTER>::Write(CCoreBinFile *binfile) const
-//{
-//	if( a == no_object )
-//	{
-//		binfile->write((metaid_type)METAID_NONE);
-//	}
-//	else
-//	{
-//		ASSERT( a->first.metaid != METAID_NONE );
-//		ASSERT( a->first.objid != OBJID_NONE );
-//
-//		binfile->write((metaid_type)a->first.metaid);
-//		binfile->write((objid_type)a->first.objid);
-//	}
-//}
-//
-//template<>
-//void BinAttr<VALTYPE_POINTER>::Read(CCoreBinFile *binfile)
-//{
-//	ASSERT( a == no_object );
-//
-//	metaid_type metaid;
-//	binfile->read(metaid);
-//
-//	if( metaid != METAID_NONE )
-//	{
-//		objid_type objid;
-//		binfile->read(objid);
-//
-//		ASSERT( objid != OBJID_NONE );
-//
-//		binfile->resolvelist.push_front();
-//		CCoreBinFile::resolve_type &b = binfile->resolvelist.front();
-//
-//		ASSERT( binfile->opened_object != no_object );
-//
-//		b.obj = binfile->opened_object;
-//		b.attrid = attrid;
-//		b.idpair.metaid = metaid;
-//		b.idpair.objid = objid;
-//	}
-//}
-
-// --------------------------- BinAttr<VALTYPE_COLLECTION>
-
-//template<>
-//void BinAttr<VALTYPE_COLLECTION>::Get(CCoreBinFile *binfile, VARIANT *p) const
-//{
-//	ASSERT( p != NULL && p->vt == VT_EMPTY );
-//
-//	std::vector<metaobjidpair_type> idpairs;
-//
-//	std::vector<objects_iterator>::const_iterator i = a.begin();
-//	std::vector<objects_iterator>::const_iterator e = a.end();
-//	while( i != e )
-//	{
-//		idpairs.push_back( (*i)->first );
-//
-//		++i;
-//	}
-//
-//	CopyTo(idpairs, p);
-//}

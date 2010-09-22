@@ -42,17 +42,20 @@ bool CScrollZoomView::bScrollLinesRequested	= false;
 /////////////////////////////////////////////////////////////////////////////
 // CScrollZoomView construction/destruction
 
-CScrollZoomView::CScrollZoomView()
+CScrollZoomView::CScrollZoomView() : 
+	m_nMapMode(MM_NONE), 
+	m_totalLog(0,0), 
+	m_totalDev(0,0), 
+	m_pageDev(0,0), 
+	m_lineDev(0,0), 
+	m_scalePercent(0), 
+	m_bCenter(FALSE), 
+	m_bInsideUpdate(FALSE), 
+	m_zoomP(0,0),
+	m_zoomScroll(false),
+	m_noHscroll(true),
+	m_noVscroll(true)
 {
-	// Init everything to zero
-	// AFX_ZERO_INIT_OBJECT(CView);
-
-	m_nMapMode = MM_NONE;
-	m_zoomP.x = m_zoomP.y = 0;
-	m_zoomScroll = false;
-	m_noHscroll = true; // hack terge
-	m_noVscroll = true; // hack terge
-
 }
 
 CScrollZoomView::~CScrollZoomView()
