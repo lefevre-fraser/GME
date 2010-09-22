@@ -1035,12 +1035,13 @@ void CObjectInspectorCtrl::WriteNameToMga(const CString &strName)
 		COMTHROW(m_project->get_ProjectStatus(&lProjectStatus));
 		bool bInTransaction = ((lProjectStatus & 0x08) != 0);
 
-		ASSERT(!bInTransaction);
 
-		if(!bInTransaction)
+		if(bInTransaction)
 		{
-			COMTHROW(m_project->BeginTransaction(m_territory,TRANSACTION_GENERAL));
-		}	
+			return;	
+		}
+
+		COMTHROW(m_project->BeginTransaction(m_territory,TRANSACTION_GENERAL));
 
 		// Writing change to MGA
 		POSITION posFCO=m_FCOList.GetHeadPosition();
@@ -1091,10 +1092,7 @@ void CObjectInspectorCtrl::WriteNameToMga(const CString &strName)
 
 		}
 
-		if(!bInTransaction)
-		{
-			COMTHROW(m_project->CommitTransaction());
-		}		
+		COMTHROW(m_project->CommitTransaction());
 
 		if( rootfolder_name_edited)
 		{
