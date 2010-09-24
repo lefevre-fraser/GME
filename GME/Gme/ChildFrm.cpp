@@ -161,7 +161,11 @@ void CChildFrame::OnSize(UINT nType, int cx, int cy)
 }
 
 void CChildFrame::OnUpdateFrameTitle(BOOL bAddToTitle) {
-	CMDIChildWndEx::OnUpdateFrameTitle(FALSE);	
+	TCHAR szOld[256];
+	if (GetWindowText(szOld, _countof(szOld)) != m_title.GetLength() ||
+		lstrcmp(szOld, m_title) != 0) {
+		SetWindowText(m_title); 
+	}
 }
 
 BOOL CChildFrame::PreTranslateMessage(MSG* pMsg)

@@ -655,6 +655,8 @@ void CMainFrame::CreateNewView(CView *view, CComPtr<IMgaModel>& model)
 			return;
 		}
 		docTemplate->InitialUpdateFrame(pFrame,pDocument);
+		m_wndClientArea.UpdateMDITabbedGroups(TRUE);  // The framework by default calls this via OnUpdateFrameTitle 
+		                                              // (overloaded in our implementation without calling the base class intentionally)
 
 #if defined(ACTIVEXGMEVIEW)
 		CMainFrame* pMainFrame = (CMainFrame*)theApp.m_pMainWnd;

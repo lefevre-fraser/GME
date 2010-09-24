@@ -2945,9 +2945,9 @@ void CGMEView::SetNameProperty()
 
 void CGMEView::SetTitles(void)
 {
-	frame->SetAppTitle(path);
 	frame->SetTitle(name);
-	frame->SetWindowText(name);
+	frame->SetAppTitle(path);
+	frame->OnUpdateFrameTitle(true);
 }
 
 void CGMEView::GetNameProperty(CString &txt)
