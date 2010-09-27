@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <map>
 #include <vector>
+#include "Gme.h"
 
 // ******************************************************************************
 //                             C L A S S  BinGuid

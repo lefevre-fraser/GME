@@ -1,15 +1,8 @@
-
 import "oaidl.idl";
 import "ocidl.idl";
 
-
-//--------------------------------------------------------------------------------------------
-// --------------------------- Meta Library
-import "Mga.idl";
-import "MgaDecorator.idl";
 import "Gme.idl";
-
-
+import "Core.idl";
 
 [
 	uuid(0ADEEC71-D83A-11D3-B36B-005004CC8592),
@@ -20,6 +13,18 @@ library GmeLib
 {
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
+
+	importlib("..\Core\CoreLib.tlb");
+	importlib("..\Meta\MetaLib.tlb");
+	importlib("..\Mga\MgaLib.tlb");
+
+	// Decorator interfaces (listed here to include them in typelib)
+	interface IMgaDecorator;
+	interface IMgaCommonDecoratorEvents;
+	interface IMgaDecoratorCommon;
+	interface IMgaElementDecoratorEvents;
+	interface IMgaElementDecorator;
+
 
 	//  Class information for CMgaDataSource
 	[ uuid(FCB7DB63-9F59-46a6-9FEF-5C2679AEA69A) ]
@@ -37,7 +42,7 @@ library GmeLib
 		[default] interface IGMEOLEApp;
 		[source]  interface IMgaComponent;
 		[source]  interface IMgaComponentEx;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 		interface ISupportErrorInfo;
 	};
 

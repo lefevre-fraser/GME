@@ -38,7 +38,7 @@ class ATL_NO_VTABLE CMgaProject :
 	public CComCoClass<CMgaProject, &CLSID_MgaProject>,
 	public IDispatchImpl<IMgaProject, &IID_IMgaProject, &LIBID_MGALib>,
 	public ISupportErrorInfoImpl<&IID_IMgaProject>,
-	public IMgaVersionInfoImpl
+	public IGMEVersionInfoImpl
 {
 
     DEFSIG;
@@ -59,7 +59,7 @@ BEGIN_COM_MAP(CMgaProject)
 	COM_INTERFACE_ENTRY(IMgaProject)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY_IID(IID_ISupportErrorInfo, IMyErrorInfoBase)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaVersionInfo, IMgaVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
 
 

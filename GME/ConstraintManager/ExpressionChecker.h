@@ -37,7 +37,7 @@ class ATL_NO_VTABLE CExpressionChecker :
 	public CComCoClass<CExpressionChecker, &CLSID_ExpressionChecker>,
 	public ISupportErrorInfo,
 	public IDispatchImpl<IMgaComponentEx, &IID_IMgaComponentEx, &LIBID_CONSTRAINTMANAGERLib>,
-	public IMgaVersionInfoImpl
+	public IGMEVersionInfoImpl
 {
 public:
 	CExpressionChecker()
@@ -53,7 +53,7 @@ BEGIN_COM_MAP(CExpressionChecker)
 	COM_INTERFACE_ENTRY_IID(IID_IMgaComponent, IMgaComponentEx)
 	COM_INTERFACE_ENTRY_IID(IID_IDispatch, IMgaComponentEx)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaVersionInfo, IMgaVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // IMgaComponentEx

@@ -12,7 +12,7 @@ class ATL_NO_VTABLE CComponentProxy :
 	public CComCoClass<CComponentProxy, &CLSID_ComponentProxy>,
 	public IMgaComponentProxy,
 	public IMgaComponentEx,
-	public IMgaVersionInfo
+	public IGMEVersionInfo
 {
 public:
 	CComponentProxy()
@@ -27,7 +27,7 @@ BEGIN_COM_MAP(CComponentProxy)
 	COM_INTERFACE_ENTRY(IMgaComponentProxy)
 	COM_INTERFACE_ENTRY(IMgaComponent)
 	COM_INTERFACE_ENTRY(IMgaComponentEx)
-	COM_INTERFACE_ENTRY(IMgaVersionInfo)
+	COM_INTERFACE_ENTRY(IGMEVersionInfo)
 END_COM_MAP()
 
 
@@ -53,8 +53,8 @@ public:
 	STDMETHOD(put_ComponentParameter)(/*[in]*/ BSTR name, /*[in]*/ VARIANT newVal);
 	STDMETHOD(get_ComponentParameter)(/*[in]*/ BSTR name, /*[out, retval]*/ VARIANT *pVal);
 	
-	// IMgaVersionInfo
-	STDMETHOD(get_version)(/*[out, retval]*/ MgaInterfaceVersion_enum *pVal);
+	// IGMEVersionInfo
+	STDMETHOD(get_version)(/*[out, retval]*/ GMEInterfaceVersion_enum *pVal);
 
 protected:
 	CComDispatchDriver m_dispatch;

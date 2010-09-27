@@ -48,10 +48,6 @@ extern CComModule _Module;
 #include "DecoratorMfc.h"
 #include <stdio.h>
 
-#ifdef LIBCOMPILE 
-#define GENERATEDLIBHEADER	"DecoratorLib_h.h"
-#endif
-
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

@@ -4,6 +4,7 @@ import "ocidl.idl";
 #include "InterfaceColl.h"
 #include "InterfaceVersion.h"
 
+import "Meta.idl";
 import "Mga.idl";
 
 typedef enum mgautil_error {

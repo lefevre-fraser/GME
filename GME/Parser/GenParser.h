@@ -9,7 +9,7 @@ XERCES_CPP_NAMESPACE_USE
 template<class DERIVED>
 struct CGenParserFunc ;
 
-class CMetaParser;
+class CMgaMetaParser;
 
 
 // --------------------------- XmlStr
@@ -130,7 +130,7 @@ public:
 public:
 
 	// Used to be: CGenParserFunc_Base *elementfuncs;
-	//CGenParserFunc <CMetaParser> *elementfuncs;
+	//CGenParserFunc <CMgaMetaParser> *elementfuncs;
 
 	void StartNone(const attributes_type &attributes) { }
 	void EndNone() { }

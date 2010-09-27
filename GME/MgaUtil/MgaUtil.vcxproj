@@ -276,9 +276,15 @@
       <Project>{bef31e1e-bb02-4687-a543-a6ad5d522869}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\Core\Core.vcxproj">
+      <Project>{0b16b893-5512-48b8-b764-ee72c522ead8}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Interfaces\Interfaces.vcxproj">
       <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Meta\Meta.vcxproj">
+      <Project>{3ed3216e-b64c-4d0b-881f-68bff2cb3e83}</Project>
     </ProjectReference>
     <ProjectReference Include="..\MgaDotNetServices\MgaDotNetServices.csproj">
       <Project>{955209a1-8107-43c2-b0a7-729b03908c64}</Project>

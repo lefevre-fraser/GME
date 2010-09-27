@@ -61,7 +61,7 @@ class ATL_NO_VTABLE CCoreProject :
 	public CComCoClass<CCoreProject, &CLSID_CoreProject>,
 	public IDispatchImpl<ICoreProject, &IID_ICoreProject, &LIBID_CORELib>,
 	public ISupportErrorInfoImpl<&IID_ICoreProject>,
-	public IMgaVersionInfoImpl
+	public IGMEVersionInfoImpl
 {
 public:
 	CCoreProject();
@@ -74,7 +74,7 @@ BEGIN_COM_MAP(CCoreProject)
 	COM_INTERFACE_ENTRY(ICoreProject)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaVersionInfo, IMgaVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // ------- COM methods

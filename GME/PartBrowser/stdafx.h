@@ -44,10 +44,9 @@
 extern CComModule _Module;
 #include <atlcom.h>
 
-#include "..\Interfaces\Meta.h"
-#include "..\Interfaces\MgaUtil.h"
-#include "..\Interfaces\GME.h"
-#include "..\Interfaces\MgaDecorator.h"
+#include "Meta.h"
+#include "MgaUtil.h"
+#include "GME.h"
 #include "CommonError.h"
 #include "CommonSmart.h"
 #include "CommonMfc.h"

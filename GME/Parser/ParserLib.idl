@@ -3,8 +3,8 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 import "Parser.idl";
-import "MgaUtil.idl";
-import "Gme.idl";
+import "Core.idl";
+
 
 // --------------------------- Parser Library
 
@@ -18,17 +18,19 @@ library PARSERLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
+	importlib("..\Core\CoreLib.tlb");
+	importlib("..\Meta\MetaLib.tlb");
 	importlib("..\Mga\MgaLib.tlb");
 
 	[
 		uuid(70C41B25-E3CE-11D3-B37A-005004D38590),
-		helpstring("MetaParser Class")
+		helpstring("MgaMetaParser Class")
 	]
-	coclass MetaParser
+	coclass MgaMetaParser
 	{
-		[default] interface IMetaParser;
+		[default] interface IMgaMetaParser;
 		interface ISupportErrorInfo;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 
 	[
@@ -38,7 +40,7 @@ library PARSERLib
 	coclass MgaDumper
 	{
 		[default] interface IMgaDumper;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 
 	[
@@ -48,7 +50,7 @@ library PARSERLib
 	coclass MgaParser
 	{
 		[default] interface IMgaParser;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 
 };

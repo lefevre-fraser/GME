@@ -13,7 +13,8 @@
 #include <vector>
 #include <map>
 #include <exception>
-
+#include "MgaUtil.h"
+#include "Gme.h"
 
 class CompareCComObj
 {
@@ -31,7 +32,7 @@ class ATL_NO_VTABLE CMgaParser :
 	public CComCoClass<CMgaParser, &CLSID_MgaParser>,
 	public ISupportErrorInfoImpl<&IID_IMgaParser>,
 	public IDispatchImpl<IMgaParser, &IID_IMgaParser, &LIBID_PARSERLib>,
-	public IMgaVersionInfoImpl,
+	public IGMEVersionInfoImpl,
 	public CGenParser
 {
 public:
@@ -48,7 +49,7 @@ BEGIN_COM_MAP(CMgaParser)
 	COM_INTERFACE_ENTRY(IMgaParser)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaVersionInfo, IMgaVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // ------- Methods

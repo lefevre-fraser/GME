@@ -173,11 +173,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="DecoratorLib.idl">
-      <Filter>Source Files</Filter>
-    </Midl>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="AtomBitmapPart.h">
       <Filter>Header Files</Filter>
     </ClInclude>

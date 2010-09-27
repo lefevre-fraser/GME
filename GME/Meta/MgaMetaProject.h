@@ -13,7 +13,7 @@ class ATL_NO_VTABLE CMgaMetaProject :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaMetaProject, &CLSID_MgaMetaProject>,
 	public IDispatchImpl<IMgaMetaProject, &IID_IMgaMetaProject, &LIBID_METALib>,
-	public IMgaVersionInfoImpl
+	public IGMEVersionInfoImpl
 {
 public:
 	CMgaMetaProject();
@@ -26,7 +26,7 @@ DECLARE_REGISTRY_RESOURCEID(IDR_MGAMETAPROJECT)
 BEGIN_COM_MAP(CMgaMetaProject)
 	COM_INTERFACE_ENTRY(IMgaMetaProject)
 	COM_INTERFACE_ENTRY2(IDispatch, IMgaMetaProject)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaVersionInfo, IMgaVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // ------- Methods

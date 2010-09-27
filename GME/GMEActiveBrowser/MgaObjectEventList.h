@@ -9,6 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "Mga.h"
 #include "ObjectEventWrapper.h"
 
 class CMgaObjectEventList: public CPtrList

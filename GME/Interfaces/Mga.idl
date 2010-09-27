@@ -1446,5 +1446,3 @@ MGACOLL_INTERFACE(c5aac2f0-c1fd-11d3-9ad2-00aa00b6fe26, MgaObject)
 interface IMgaO : IDispatch
 {
 };
-
-

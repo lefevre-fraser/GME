@@ -1,4 +1,4 @@
-// MetaParser.cpp : Implementation of DLL Exports.
+// MgaMetaParser.cpp : Implementation of DLL Exports.
 
 
 // Note: Proxy/Stub Information
@@ -15,12 +15,12 @@
 //      need to remove the following define from dlldatax.c.
 //      #define USE_STUBLESS_PROXY
 //
-//      Modify the custom build rule for MetaParser.idl by adding the following 
+//      Modify the custom build rule for MgaMetaParser.idl by adding the following 
 //      files to the Outputs.
-//          MetaParser_p.c
+//          MgaMetaParser_p.c
 //          dlldata.c
 //      To build a separate proxy/stub DLL, 
-//      run nmake -f MetaParserps.mk in the project directory.
+//      run nmake -f MgaMetaParserps.mk in the project directory.
 
 #include "stdafx.h"
 #include "resource.h"
@@ -30,7 +30,7 @@
 #include "Parser_i.c"
 #include "ParserLib_i.c"
 #include "Meta_i.c"
-#include "Gme_i.c"
+#include "Core_i.c"
 
 #include "CommonError.h"
 #include "CommonSmart.h"
@@ -47,7 +47,7 @@ extern "C" HINSTANCE hProxyDll;
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_MetaParser, CMetaParser)
+OBJECT_ENTRY(CLSID_MgaMetaParser, CMgaMetaParser)
 OBJECT_ENTRY(CLSID_MgaDumper, CMgaDumper)
 OBJECT_ENTRY(CLSID_MgaParser, CMgaParser)
 END_OBJECT_MAP()

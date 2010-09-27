@@ -191,19 +191,19 @@ bool CheckInterfaceVersions()	{
 		char hrbuf[20];
 		if(hr != S_OK) AfxMessageBox(CString("Coinitialize failure. Err: #") + _ltoa(hr,hrbuf,16));
 		for(LPCOLESTR *p = components; *p; p++) {
-			MgaInterfaceVersion verid = MgaInterfaceVersion_None;
+			GMEInterfaceVersion verid = GMEInterfaceVersion_None;
 			CComPtr<IUnknown> unk;
 			CString ee;
 			if(S_OK != (hr = unk.CoCreateInstance(*p))) {
 				errstring.Format("Cannot create object %%S (Err: #%X)", hr);
 gerr:
 				CString a;
-				a.Format(errstring, *p, verid/0x1000, verid%0x1000, MgaInterfaceVersion_Current/0x1000,MgaInterfaceVersion_Current%0x1000);
+				a.Format(errstring, *p, verid/0x1000, verid%0x1000, GMEInterfaceVersion_Current/0x1000,GMEInterfaceVersion_Current%0x1000);
 				AfxMessageBox(a);
 				err = true;
 				continue;
 			}
-			CComQIPtr<IMgaVersionInfo> vinf = unk;
+			CComQIPtr<IGMEVersionInfo> vinf = unk;
 			if(!vinf) {
 				errstring = "Incompatible version of object %S (does not support version information)";
 				goto gerr;
@@ -212,7 +212,7 @@ gerr:
 				errstring = "Get_Version failed for object %S";
 				goto gerr;
 			}
-			if(verid != MgaInterfaceVersion_Current) {
+			if(verid != GMEInterfaceVersion_Current) {
 				errstring = "Interface version for class %S (%d.%d) differs from GME interface version (%d.%d)";
 				goto gerr;
 			}

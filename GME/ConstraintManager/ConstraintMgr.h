@@ -38,7 +38,7 @@ class ATL_NO_VTABLE CConstraintMgr :
 	public CComCoClass<CConstraintMgr, &CLSID_ConstraintManager>,
 	public IDispatchImpl<IMgaComponentEx, &IID_IMgaComponentEx, &LIBID_CONSTRAINTMANAGERLib>,
 	public ISupportErrorInfo,
-	public IMgaVersionInfoImpl
+	public IGMEVersionInfoImpl
 {
 public:
 	CConstraintMgr()
@@ -54,7 +54,7 @@ BEGIN_COM_MAP(CConstraintMgr)
 	COM_INTERFACE_ENTRY_IID(IID_IMgaComponent, IMgaComponentEx)
 	COM_INTERFACE_ENTRY_IID(IID_IDispatch, IMgaComponentEx)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaVersionInfo, IMgaVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // IMgaComponentEx

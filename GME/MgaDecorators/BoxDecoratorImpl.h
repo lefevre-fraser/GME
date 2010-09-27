@@ -8,10 +8,8 @@
 #ifndef __BOXDECORATORIMPL_H_
 #define __BOXDECORATORIMPL_H_
 
-
-
 #include "StdAfx.h"
-#include GENERATEDLIBHEADER
+#include "Gme.h"
 #include "resource.h"
 
 namespace DecoratorSDK {
@@ -60,12 +58,12 @@ public:
 	STDMETHOD( GetLabelLocation )				( /*[out]*/ LONG* sx, /*[out]*/ LONG* sy, /*[out]*/ LONG* ex, /*[out]*/ LONG* ey );
 	STDMETHOD( GetPortLocation )				( /*[in]*/ IMgaFCO* fco, /*[out]*/ LONG* sx, /*[out]*/ LONG* sy, /*[out]*/ LONG* ex, /*[out]*/ LONG* ey );
 	STDMETHOD( GetPorts )						( /*[out, retval]*/ IMgaFCOs** portFCOs );
-	STDMETHOD( Draw )							( /*[in]*/ HDC hdc );
+	STDMETHOD( Draw )							( /*[in]*/ ULONG hdc );
 	STDMETHOD( SaveState )						( void );
 
 	// =============== IMgaElementDecorator
 	STDMETHOD( InitializeEx )					( /*[in]*/ IMgaProject* pProject, /*[in]*/ IMgaMetaPart* pPart, /*[in]*/ IMgaFCO* pFCO, /*[in]*/ IMgaCommonDecoratorEvents* eventSink, /*[in]*/ ULONGLONG parentWnd );
-	STDMETHOD( DrawEx )							( /*[in]*/ HDC hdc, /*[in]*/ ULONGLONG gdipGraphics );
+	STDMETHOD( DrawEx )							( /*[in]*/ ULONG hdc, /*[in]*/ ULONGLONG gdipGraphics );
 	STDMETHOD( SetSelected )					( /*[in]*/ VARIANT_BOOL bIsSelected );
 	STDMETHOD( MouseMoved )						( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );
 	STDMETHOD( MouseLeftButtonDown )			( /*[in]*/ ULONG nFlags, /*[in]*/ LONG pointx, /*[in]*/ LONG pointy, /*[in]*/ ULONGLONG transformHDC );

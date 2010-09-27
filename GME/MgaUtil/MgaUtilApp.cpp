@@ -7,7 +7,7 @@
 
 #include "MgaUtil_i.c"
 #include "MgaUtilLib_i.c"
-#include "Gme_i.c"
+#include "Core_i.c"
 
 #include "MgaResolver.h"
 #include "MgaRegistrar.h"

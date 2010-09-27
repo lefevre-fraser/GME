@@ -41,7 +41,7 @@
 #include "CommonSmart.h"
 #include "CommonMgaTrukk.h"
 
-#include "..\Mga\MgaLib.h"
+#include "Mga.h"
 #include <afxwin.h>
 
 //{{AFX_INSERT_LOCATION}}

@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <direct.h>
+#include "MgaUtil.h"
 
 #define GMEEVENTLOG_GUIOBJS(guiobjlist) \
 { \

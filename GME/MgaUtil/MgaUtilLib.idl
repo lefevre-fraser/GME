@@ -1,10 +1,9 @@
-
 import "oaidl.idl";
 import "ocidl.idl";
 
+import "Core.idl";
+import "Mga.idl";
 import "MgaUtil.idl";
-import "Parser.idl";
-import "Gme.idl";
 
 // --------------------------- MgaUtil Library
 
@@ -18,6 +17,7 @@ library MGAUTILLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
+	importlib("../Core/CoreLib.tlb");
 	importlib("../Meta/MetaLib.tlb");
 	importlib("../Mga/MgaLib.tlb");
 
@@ -37,7 +37,7 @@ library MGAUTILLib
 	coclass MgaRegistrar
 	{
 		[default] interface IMgaRegistrar;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 
 	[
@@ -67,7 +67,7 @@ library MGAUTILLib
 		[default] interface IMgaComponentProxy;
 		interface IMgaComponent;
 		interface IMgaComponentEx;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 		//[default, source] dispinterface IMgaComponentDispatch;
 	};
 

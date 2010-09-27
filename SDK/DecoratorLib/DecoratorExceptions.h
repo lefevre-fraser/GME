@@ -10,7 +10,7 @@
 
 
 #include "StdAfx.h"
-#include GENERATEDLIBHEADER
+#include "Gme.h"
 #include <exception>
 
 

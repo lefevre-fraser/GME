@@ -12,8 +12,9 @@
 
 #include "ConstraintManager_i.c"
 #include "ConstraintMgr.h"
-#include "Gme_i.c"
+#include "Core_i.c"
 #include "Mga_i.c"
+#include "MgaUtil.h"
 #include "ExpressionChecker.h"
 
 CComModule _Module;

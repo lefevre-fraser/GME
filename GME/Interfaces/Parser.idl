@@ -18,10 +18,10 @@ typedef enum inserttype_enum {
 	object,
 	uuid(70C41B24-E3CE-11D3-B37A-005004D38590),
 	dual,
-	helpstring("IMetaParser Interface"),
+	helpstring("IMgaMetaParser Interface"),
 	pointer_default(unique)
 ]
-interface IMetaParser : IDispatch
+interface IMgaMetaParser : IDispatch
 {
 	[helpstring("method Parse")]
 	HRESULT Parse([in] BSTR xmlfile, [in] BSTR connection);

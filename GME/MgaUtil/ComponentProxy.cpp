@@ -165,8 +165,8 @@ STDMETHODIMP CComponentProxy::get_ComponentParameter(/*[in]*/ BSTR name, /*[out,
 	return m_dispatch.Invoke1(OLESTR("GetComponentParameter"), &vname, pVal);
 }
 
-// IMgaVersionInfo implementation
-STDMETHODIMP CComponentProxy::get_version(/*[out, retval]*/ MgaInterfaceVersion_enum *pVal)
+// IGMEVersionInfo implementation
+STDMETHODIMP CComponentProxy::get_version(/*[out, retval]*/ GMEInterfaceVersion_enum *pVal)
 {
 	CHECK_INIT;
 	CComVariant vval;
@@ -175,9 +175,9 @@ STDMETHODIMP CComponentProxy::get_version(/*[out, retval]*/ MgaInterfaceVersion_
 	if (SUCCEEDED(hr)) {
 		hr = vval.ChangeType(VT_I4);
 		if (SUCCEEDED(hr)) {
-			*pVal = (MgaInterfaceVersion_enum)vval.lVal;
-			if (*pVal == MgaInterfaceVersion_None) {
-				*pVal = MgaInterfaceVersion_Current;
+			*pVal = (GMEInterfaceVersion_enum)vval.lVal;
+			if (*pVal == GMEInterfaceVersion_None) {
+				*pVal = GMEInterfaceVersion_Current;
 			}
 		}
 	}

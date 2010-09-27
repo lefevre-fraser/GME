@@ -37,7 +37,7 @@ class ATL_NO_VTABLE CMgaDumper :
 	public CComCoClass<CMgaDumper, &CLSID_MgaDumper>,
 	public ISupportErrorInfoImpl<&IID_IMgaDumper>,
 	public IDispatchImpl<IMgaDumper, &IID_IMgaDumper, &LIBID_PARSERLib>,
-	public IMgaVersionInfoImpl
+	public IGMEVersionInfoImpl
 {
 public:
 	CMgaDumper()
@@ -56,7 +56,7 @@ BEGIN_COM_MAP(CMgaDumper)
 	COM_INTERFACE_ENTRY(IMgaDumper)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaVersionInfo, IMgaVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // ------- Methods

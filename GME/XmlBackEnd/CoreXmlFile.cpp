@@ -23,6 +23,7 @@
 #include "Transcoder.h"
 #include "CommitDialog.h"
 #include "ProgressWindow.h"
+#include "Mga.h"
 
 using namespace XERCES_CPP_NAMESPACE;
 using std::string;

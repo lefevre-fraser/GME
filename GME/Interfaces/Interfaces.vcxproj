@@ -40,8 +40,6 @@
     <Midl>
       <HeaderFileName>
       </HeaderFileName>
-      <GenerateClientFiles>None</GenerateClientFiles>
-      <GenerateServerFiles>None</GenerateServerFiles>
     </Midl>
     <CustomBuild>
       <Command>..\Release\IFChecksumProg.exe InterfaceVersion.h InterfaceVersion.trg</Command>
@@ -53,8 +51,6 @@
     <Midl>
       <HeaderFileName>
       </HeaderFileName>
-      <GenerateClientFiles>None</GenerateClientFiles>
-      <GenerateServerFiles>None</GenerateServerFiles>
     </Midl>
     <CustomBuild>
       <Command>..\Release\IFChecksumProg.exe InterfaceVersion.h InterfaceVersion.trg</Command>
@@ -92,10 +88,6 @@
     <Midl Include="Mga.idl">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MGA</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MGA</PreprocessorDefinitions>
-    </Midl>
-    <Midl Include="MgaDecorator.idl">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MGADECORATOR</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MGADECORATOR</PreprocessorDefinitions>
     </Midl>
     <Midl Include="MgaUtil.idl">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MGAUTIL</PreprocessorDefinitions>

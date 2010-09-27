@@ -15,7 +15,7 @@
 #include <vector>
 #include <map>
 
-#include GENERATEDLIBHEADER
+#include "Gme.h"
 
 #include "DecoratorDefs.h"
 

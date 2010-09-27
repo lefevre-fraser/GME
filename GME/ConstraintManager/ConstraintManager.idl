@@ -1,16 +1,8 @@
-// ConstraintManager.idl : IDL source for ConstraintManager.dll
-//
+import "oaidl.idl";
+import "ocidl.idl";
 
-// This file will be processed by the MIDL tool to
-// produce the type library (ConstraintManager.tlb) and marshalling code.
-
-#ifndef MGAUTILIDL_IMPORTED
-import "mgautil.idl";
-#endif
-
-#ifndef GMEIDL_IMPORTED
-import "gme.idl";
-#endif
+import "Mga.idl";
+import "Core.idl";
 
 [
 	uuid(D69D91D0-4550-4A5D-848C-9BBA92693D22),
@@ -22,6 +14,10 @@ library CONSTRAINTMANAGERLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
+	importlib("..\Core\CoreLib.tlb");
+	importlib("..\Meta\MetaLib.tlb");
+	importlib("..\Mga\MgaLib.tlb");
+
 	[
 		uuid(44055854-A45B-4357-9D2C-FC66D6C0DFFA),
 		helpstring("ConstraintManager Class")
@@ -31,7 +27,7 @@ library CONSTRAINTMANAGERLib
 		[default] interface IMgaComponentEx;
 		interface IMgaEventSink;
 		interface ISupportErrorInfo;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 
 	};
 	[
@@ -43,6 +39,6 @@ library CONSTRAINTMANAGERLib
 		[default] interface IMgaComponentEx;
 		interface IMgaEventSink;
 		interface ISupportErrorInfo;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 };

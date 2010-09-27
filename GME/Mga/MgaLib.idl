@@ -1,9 +1,9 @@
 import "oaidl.idl";
 import "ocidl.idl";
 
+import "Core.idl";
 import "Mga.idl";
-import "MgaUtil.idl";
-import "Gme.idl";
+
 
 #include "InterfaceColl.h"
 
@@ -22,6 +22,10 @@ library MGALib
 	importlib("..\Meta\MetaLib.tlb");
 	importlib("..\Core\CoreLib.tlb");
 
+	// Component interfaces (listed here to include them in typelib)
+	interface IMgaComponent;
+	interface IMgaComponentEx;
+
 	enum accesstype_enum;
 	enum transactiontype_enum;
 	enum attstatus_enum;
@@ -32,7 +36,7 @@ library MGALib
 	enum preference_flags;
 	enum opmask_codes;
 	enum opmask_shifts;
-	enum MgaInterfaceVersion_enum;
+	enum GMEInterfaceVersion_enum;
 
 
 	[
@@ -43,7 +47,7 @@ library MGALib
 	{
 		[default] interface IMgaProject;
 		interface ISupportErrorInfo;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 
 	[

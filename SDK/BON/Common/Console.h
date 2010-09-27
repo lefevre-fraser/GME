@@ -1,6 +1,7 @@
 #pragma once
 #include "ComHelp.h"
 #include "GMECOM.h"
+#include "Gme.h"
 //#include "Formatter.h"
 
 

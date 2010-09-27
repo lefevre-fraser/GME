@@ -5,6 +5,7 @@
 #include "GMESyntacticSemanticDialog.h"
 #include "GMEConstraintBrowserDialog.h"
 #include "OCLCommonEx.h"
+#include "Gme.h"
 
 //##############################################################################################################################################
 //

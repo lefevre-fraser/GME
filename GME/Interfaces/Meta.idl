@@ -142,6 +142,7 @@ interface IMgaMetaRegNode : IDispatch
 ]
 interface IMgaConstraint : IDispatch
 {
+
 	[propget, helpstring("property Name")]
 	HRESULT Name([out, retval] BSTR *p);
 

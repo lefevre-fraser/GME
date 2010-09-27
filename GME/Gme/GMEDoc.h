@@ -12,6 +12,7 @@
 #include "GMEStd.h"
 #include "GuiObject.h"
 #include "GMEOLEData.h"
+#include "MgaUtil.h"
 #include <list>
 #include <string>
 

@@ -4,6 +4,7 @@
 #define __MGARESOLVER_H_
 
 #include "resource.h"       // main symbols
+#include "Gme.h"
 
 #define RESOLV_ERR_COM_ERR 0x87640001 // COM function call error
 

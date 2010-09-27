@@ -1,9 +1,3 @@
-// ObjectInspector.odl : type library source for ActiveX Control project.
-
-// This file will be processed by the Make Type Library (mktyplib) tool to
-// produce the type library (ObjectInspector.tlb) that will become a resource in
-// ObjectInspector.ocx.
-
 #include <olectl.h>
 #include <idispids.h>
 

@@ -8,7 +8,6 @@
 #include "StdAfx.h"
 #include "DecoratorEventSink.h"
 #include "GMEView.h"
-#include "MgaDecorator_i.c"
 
 
 //################################################################################################

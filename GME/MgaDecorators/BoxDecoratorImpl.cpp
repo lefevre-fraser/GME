@@ -6,10 +6,11 @@
 //################################################################################################
 
 #include "StdAfx.h"
-#include "BoxDecoratorImpl.h"
 #include "BoxDecorator.h"
 #include "DecoratorExceptions.h"
 #include "DecoratorInterface.h"
+#include "MgaDecoratorLib_h.h"
+#include "BoxDecoratorImpl.h"
 
 
 //################################################################################################
@@ -264,7 +265,7 @@ STDMETHODIMP CBoxDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 	return retVal;
 }
 
-STDMETHODIMP CBoxDecoratorImpl::Draw(HDC hdc)
+STDMETHODIMP CBoxDecoratorImpl::Draw(ULONG hdc)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -307,7 +308,7 @@ STDMETHODIMP CBoxDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart
 	return retVal;
 }
 
-STDMETHODIMP CBoxDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
+STDMETHODIMP CBoxDecoratorImpl::DrawEx(ULONG hdc, ULONGLONG gdipGraphics)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -317,7 +318,7 @@ STDMETHODIMP CBoxDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 	HRESULT retVal = S_OK;
 
 	CDC dc;
-	dc.Attach(hdc);
+	dc.Attach((HDC)hdc);
 	{
 		try {
 			m_pElementDecorator->Draw(&dc, (Gdiplus::Graphics*)gdipGraphics);

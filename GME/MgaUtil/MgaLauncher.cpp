@@ -722,14 +722,14 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 			AfxMessageBox(CString("Could not start component ") + compname);
 		}
 		else {
-			CComQIPtr<IMgaVersionInfo> vi = component;
+			CComQIPtr<IGMEVersionInfo> vi = component;
 			if(!vi) {
 					if(AfxMessageBox(	"This component does not provide interface version information\n"
 										"It is probably incompatible with GME\n"
 										"Do you want to proceed anyway?" , MB_YESNO) !=IDYES) return S_OK;
 			}
 			else {
-				MgaInterfaceVersion vv;
+				GMEInterfaceVersion vv;
 				COMTHROW(vi->get_version(&vv));
 				if(vv != INTERFACE_VERSION) {
 					CString aa;

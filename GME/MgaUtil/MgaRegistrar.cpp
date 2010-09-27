@@ -2,6 +2,7 @@
 #include "MgaRegistrar.h"
 #include "atlconv.h"
 #include "CommonComponent.h"
+#include "Parser.h"
 
 #import "mscorlib.tlb"
 #ifdef _DEBUG
@@ -1220,8 +1221,8 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigmFromData(BSTR connstr, BSTR *newname
 			  }
 			}
 
-			CComObjPtr<IMetaParser> parser;
-			COMTHROW( parser.CoCreateInstance(OLESTR("MGA.MetaParser")) );
+			CComObjPtr<IMgaMetaParser> parser;
+			COMTHROW( parser.CoCreateInstance(OLESTR("MGA.MgaMetaParser")) );
 			ASSERT( parser != NULL );
 
 			COMTHROW( parser->Parse(PutInBstr(file), PutInBstr(conn)) );

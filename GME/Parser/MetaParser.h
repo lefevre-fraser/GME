@@ -1,6 +1,6 @@
 
-#ifndef MGA_METAPARSER_H
-#define MGA_METAPARSER_H
+#ifndef MGA_MgaMetaParser_H
+#define MGA_MgaMetaParser_H
 
 #ifndef MGA_GENPARSER_H
 #include "GenParser.h"
@@ -9,14 +9,14 @@
 #include "resource.h"
 #include "CommonVersionInfo.h"
 
-// --------------------------- CMetaParser
+// --------------------------- CMgaMetaParser
 
-class ATL_NO_VTABLE CMetaParser : 
+class ATL_NO_VTABLE CMgaMetaParser : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMetaParser, &CLSID_MetaParser>,
-	public ISupportErrorInfoImpl<&IID_IMetaParser>,
-	public IDispatchImpl<IMetaParser, &IID_IMetaParser, &LIBID_PARSERLib>,
-	public IMgaVersionInfoImpl,
+	public CComCoClass<CMgaMetaParser, &CLSID_MgaMetaParser>,
+	public ISupportErrorInfoImpl<&IID_IMgaMetaParser>,
+	public IDispatchImpl<IMgaMetaParser, &IID_IMgaMetaParser, &LIBID_PARSERLib>,
+	public IGMEVersionInfoImpl,
 	public CGenParser
 {
 	enum pass_type{FIRST_PASS,SECOND_PASS};
@@ -24,17 +24,17 @@ class ATL_NO_VTABLE CMetaParser :
 	bool foundconstraints;
 	bool explicitguid;
 public:
-	CMetaParser();
-	~CMetaParser();
+	CMgaMetaParser();
+	~CMgaMetaParser();
 
-DECLARE_REGISTRY_RESOURCEID(IDR_METAPARSER)
+DECLARE_REGISTRY_RESOURCEID(IDR_MgaMetaParser)
 DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-BEGIN_COM_MAP(CMetaParser)
-	COM_INTERFACE_ENTRY(IMetaParser)
+BEGIN_COM_MAP(CMgaMetaParser)
+	COM_INTERFACE_ENTRY(IMgaMetaParser)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaVersionInfo, IMgaVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // ------- Methods
@@ -50,7 +50,7 @@ public:
 	static const std::string GetNextToken(std::string::const_iterator &i, 
 		std::string::const_iterator &e, std::string::const_iterator end);
 
-	typedef CGenParserFunc<CMetaParser> elementfunc;
+	typedef CGenParserFunc<CMgaMetaParser> elementfunc;
 
 	static elementfunc elementfuncs_firstpass[];
 	static elementfunc elementfuncs_secondpass[];
@@ -87,4 +87,4 @@ public:
 	void fireEndFunction(const std::string& name);
 };
 
-#endif//MGA_METAPARSER_H
+#endif//MGA_MgaMetaParser_H

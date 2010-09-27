@@ -1,20 +1,20 @@
 HKCR
 {
-	Mga.MetaParser.1 = s 'MetaParser Class'
+	Mga.MgaMetaParser.1 = s 'MgaMetaParser Class'
 	{
 		CLSID = s '{70C41B25-E3CE-11D3-B37A-005004D38590}'
 	}
-	Mga.MetaParser = s 'MetaParser Class'
+	Mga.MgaMetaParser = s 'MgaMetaParser Class'
 	{
 		CLSID = s '{70C41B25-E3CE-11D3-B37A-005004D38590}'
-		CurVer = s 'Mga.MetaParser.1'
+		CurVer = s 'Mga.MgaMetaParser.1'
 	}
 	NoRemove CLSID
 	{
-		ForceRemove {70C41B25-E3CE-11D3-B37A-005004D38590} = s 'MetaParser Class'
+		ForceRemove {70C41B25-E3CE-11D3-B37A-005004D38590} = s 'MgaMetaParser Class'
 		{
-			ProgID = s 'Mga.MetaParser.1'
-			VersionIndependentProgID = s 'Mga.MetaParser'
+			ProgID = s 'Mga.MgaMetaParser.1'
+			VersionIndependentProgID = s 'Mga.MgaMetaParser'
 			ForceRemove 'Programmable'
 			InprocServer32 = s '%MODULE%'
 			{

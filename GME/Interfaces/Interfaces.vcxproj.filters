@@ -31,9 +31,6 @@
     <Midl Include="Mga.idl">
       <Filter>Interface Files</Filter>
     </Midl>
-    <Midl Include="MgaDecorator.idl">
-      <Filter>Interface Files</Filter>
-    </Midl>
     <Midl Include="MgaUtil.idl">
       <Filter>Interface Files</Filter>
     </Midl>

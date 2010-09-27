@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "objectinspector.h"
 #include "ItemData.h"
+#include "MgaUtil.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE

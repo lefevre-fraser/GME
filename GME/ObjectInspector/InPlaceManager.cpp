@@ -10,6 +10,7 @@
 #include "CompassOptDlg.h"
 #include "ComboBoxSelectDlg.h"
 #include "ColourPopup.h"
+#include "MgaUtil.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE

@@ -42,7 +42,6 @@
 #include "CommonMfc.h"
 #include "CommonMgaTrukk.h"
 
-#include "..\Mga\MgaLib.h"
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

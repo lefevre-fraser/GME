@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "PartBrowserPane.h"
 #include "PartBrowserPaneFrame.h"
-#include "..\Interfaces\MgaDecorator.h"
 #include "..\Annotator\AnnotationDefs.h"
 #include "..\GME\GMEOLEData.h"
 #include "Gme_i.c"
@@ -443,9 +442,9 @@ void CPartBrowserPane::OnPaint()
 			std::vector<PartWithDecorator> pdtv = pdts[currentAspectIndex];
 			for (std::vector<PartWithDecorator>::iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
 				if ((*ii).newDecorator) {
-					COMTHROW((*ii).newDecorator->DrawEx(dc.m_hDC, (ULONGLONG)(&gdipGraphics)));
+					COMTHROW((*ii).newDecorator->DrawEx((ULONG)dc.m_hDC, (ULONGLONG)(&gdipGraphics)));
 				} else {
-					COMTHROW((*ii).decorator->Draw(dc.m_hDC));
+					COMTHROW((*ii).decorator->Draw((ULONG)dc.m_hDC));
 				}
 			}
 		}

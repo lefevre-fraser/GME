@@ -2,10 +2,11 @@
 import "oaidl.idl";
 import "ocidl.idl";
 
-import "Meta.idl";
-//import "Gme.idl";
-
 #include "InterfaceColl.h"
+
+import "Meta.idl";
+import "Core.idl";
+
 
 // --------------------------- Meta Library
 
@@ -51,7 +52,7 @@ library METALib
 	coclass MgaMetaProject
 	{
 		[default] interface IMgaMetaProject;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 
 	[

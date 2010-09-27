@@ -8,8 +8,9 @@
 #include "stdafx.h"
 #include <initguid.h>
 #include "Resource.h"
-#include GENERATEDLIBHEADER
+#include "Gme.h"
 #include "DecoratorConfig.h"
+#include "DecoratorLib_h.h"
 #include "DecoratorLib_i.c"
 #include "AnnotatorDecoratorImpl.h"
 

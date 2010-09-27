@@ -1,5 +1,6 @@
 // MgaProject.cpp : Implementation of CMgaProject
 #include "stdafx.h"
+#include "MgaUtil.h"
 #include "CommonComponent.h"
 #include "MgaFCO.h"
 #include "MgaFilter.h"
@@ -1219,10 +1220,10 @@ void CMgaProject::StartAutoAddOns() {
 				CComPtr<IMgaComponent> addon;
 				COMTHROW(CreateMgaComponent(addon, *i)); // Was: COMTHROW( addon.CoCreateInstance(*i) );
 				ASSERT( addon != NULL );
-				CComQIPtr<IMgaVersionInfo> vv=addon;
-				MgaInterfaceVersion_enum v = MgaInterfaceVersion_None;
+				CComQIPtr<IGMEVersionInfo> vv=addon;
+				GMEInterfaceVersion_enum v = GMEInterfaceVersion_None;
 				if(vv) COMTHROW(vv->get_version(&v));
-				if(v != MgaInterfaceVersion_Current)
+				if(v != GMEInterfaceVersion_Current)
 					HR_THROW(E_MGA_COMPONENT_ERROR);
 
 				COMTHROW( addon->Initialize(this));

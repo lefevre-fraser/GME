@@ -95,7 +95,7 @@ END
 // REGISTRY
 //
 
-IDR_METAPARSER          REGISTRY DISCARDABLE    "MetaParser.rgs"
+IDR_MgaMetaParser          REGISTRY DISCARDABLE    "MetaParser.rgs"
 IDR_MGADUMPER           REGISTRY DISCARDABLE    "MgaDumper.rgs"
 IDR_MGAPARSER           REGISTRY DISCARDABLE    "MgaParser.rgs"
 

@@ -7,19 +7,19 @@
 
 #include <stdio.h>
 #include <fstream>//fstream.h
-// --------------------------- CMetaParser
+// --------------------------- CMgaMetaParser
 
-CMetaParser::CMetaParser():currentPass(FIRST_PASS)
+CMgaMetaParser::CMgaMetaParser():currentPass(FIRST_PASS)
 {
 }
 
-CMetaParser::~CMetaParser()
+CMgaMetaParser::~CMgaMetaParser()
 {
 }
 
 // ------- Methods
 
-STDMETHODIMP CMetaParser::Parse(BSTR filename, BSTR connection)
+STDMETHODIMP CMgaMetaParser::Parse(BSTR filename, BSTR connection)
 {
 	try
 	{
@@ -121,7 +121,7 @@ STDMETHODIMP CMetaParser::Parse(BSTR filename, BSTR connection)
 	return S_OK;
 }
 
-void CMetaParser::CloseAll()
+void CMgaMetaParser::CloseAll()
 {
 	elements.clear();
 
@@ -133,7 +133,7 @@ void CMetaParser::CloseAll()
 
 // ------- Attributes
 
-const std::string CMetaParser::GetNextToken(std::string::const_iterator &i,
+const std::string CMgaMetaParser::GetNextToken(std::string::const_iterator &i,
 	std::string::const_iterator &e, std::string::const_iterator end)
 {
 	i = e;
@@ -148,7 +148,7 @@ const std::string CMetaParser::GetNextToken(std::string::const_iterator &i,
 }
 
 
-void CMetaParser::fireStartFunction(const std::string & namestr, const attributes_type& attributes)
+void CMgaMetaParser::fireStartFunction(const std::string & namestr, const attributes_type& attributes)
 {
 	if(currentPass == FIRST_PASS)
 	{
@@ -176,7 +176,7 @@ void CMetaParser::fireStartFunction(const std::string & namestr, const attribute
 }
 
 
-void CMetaParser::fireEndFunction(const std::string & namestr)
+void CMgaMetaParser::fireEndFunction(const std::string & namestr)
 {
 	if(currentPass == FIRST_PASS)
 	{
@@ -206,7 +206,7 @@ void CMetaParser::fireEndFunction(const std::string & namestr)
 
 // ------- ElementFuncs
 
-CMetaParser::elementfunc CMetaParser::elementfuncs_firstpass[] = 
+CMgaMetaParser::elementfunc CMgaMetaParser::elementfuncs_firstpass[] = 
 {
 	elementfunc("paradigm", StartParadigm, EndNone),
 	elementfunc("comment", StartNone, EndComment),
@@ -228,7 +228,7 @@ CMetaParser::elementfunc CMetaParser::elementfuncs_firstpass[] =
 	elementfunc("", NULL, NULL)
 };
 
-CMetaParser::elementfunc CMetaParser::elementfuncs_secondpass[] = 
+CMgaMetaParser::elementfunc CMgaMetaParser::elementfuncs_secondpass[] = 
 {
 	elementfunc("folder", StartFolder2, EndNone),
 	elementfunc("model", StartFCO2, EndNone),
@@ -246,7 +246,7 @@ CMetaParser::elementfunc CMetaParser::elementfuncs_secondpass[] =
 
 // ------- Element Handlers
 
-void CMetaParser::StartParadigm(const attributes_type &attributes)
+void CMgaMetaParser::StartParadigm(const attributes_type &attributes)
 {
 	GetCurrent().object = metaproject;
 
@@ -280,7 +280,7 @@ void CMetaParser::StartParadigm(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::EndComment()
+void CMgaMetaParser::EndComment()
 {
 	if( GetPrevName() == "paradigm" )
 	{
@@ -290,7 +290,7 @@ void CMetaParser::EndComment()
 		HR_THROW(E_INVALID_DTD);
 }
 
-void CMetaParser::EndAuthor()
+void CMgaMetaParser::EndAuthor()
 {
 	if( GetPrevName() == "paradigm" )
 	{
@@ -300,7 +300,7 @@ void CMetaParser::EndAuthor()
 		HR_THROW(E_INVALID_DTD);
 }
 
-void CMetaParser::EndDispName()
+void CMgaMetaParser::EndDispName()
 {
 	if( GetPrevious().object == NULL )
 		return;
@@ -323,7 +323,7 @@ void CMetaParser::EndDispName()
 	}
 }
 
-void CMetaParser::StartFolder(const attributes_type &attributes)
+void CMgaMetaParser::StartFolder(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaFolder> folder;
 
@@ -352,7 +352,7 @@ void CMetaParser::StartFolder(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::StartFolder2(const attributes_type &attributes)
+void CMgaMetaParser::StartFolder2(const attributes_type &attributes)
 {
 	ASSERT( GetCurrent().object == NULL );
 
@@ -440,7 +440,7 @@ void CMetaParser::StartFolder2(const attributes_type &attributes)
 
 }
 
-void CMetaParser::StartAtom(const attributes_type &attributes)
+void CMgaMetaParser::StartAtom(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaAtom> atom;
 
@@ -471,7 +471,7 @@ void CMetaParser::StartAtom(const attributes_type &attributes)
 	COMTHROW(atom->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
 }
 
-void CMetaParser::StartConnection(const attributes_type &attributes)
+void CMgaMetaParser::StartConnection(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaConnection> conn;
 
@@ -502,7 +502,7 @@ void CMetaParser::StartConnection(const attributes_type &attributes)
 	COMTHROW(conn->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
 }
 
-void CMetaParser::StartConnJoint(const attributes_type &attributes)
+void CMgaMetaParser::StartConnJoint(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaConnJoint> joint;
 
@@ -514,7 +514,7 @@ void CMetaParser::StartConnJoint(const attributes_type &attributes)
 	GetCurrent().object = joint;
 }
 
-void CMetaParser::StartPointerSpec(const attributes_type &attributes)
+void CMgaMetaParser::StartPointerSpec(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaPointerSpec> spec;
 
@@ -553,7 +553,7 @@ void CMetaParser::StartPointerSpec(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::StartPointerItem(const attributes_type &attributes)
+void CMgaMetaParser::StartPointerItem(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaPointerItem> item;
 
@@ -571,7 +571,7 @@ void CMetaParser::StartPointerItem(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::StartReference(const attributes_type &attributes)
+void CMgaMetaParser::StartReference(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaReference> reference;
 
@@ -602,7 +602,7 @@ void CMetaParser::StartReference(const attributes_type &attributes)
 	COMTHROW(reference->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
 }
 
-void CMetaParser::StartSet(const attributes_type &attributes)
+void CMgaMetaParser::StartSet(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaSet> set;
 
@@ -634,7 +634,7 @@ void CMetaParser::StartSet(const attributes_type &attributes)
 	COMTHROW(set->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
 }
 
-void CMetaParser::StartModel(const attributes_type &attributes)
+void CMgaMetaParser::StartModel(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaModel> model;
 
@@ -666,7 +666,7 @@ void CMetaParser::StartModel(const attributes_type &attributes)
 	COMTHROW(model->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
 }
 
-void CMetaParser::StartFCO2(const attributes_type &attributes)
+void CMgaMetaParser::StartFCO2(const attributes_type &attributes)
 {
 	ASSERT( GetCurrent().object == NULL );
 
@@ -730,7 +730,7 @@ void CMetaParser::StartFCO2(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::StartAttrDef(const attributes_type &attributes)
+void CMgaMetaParser::StartAttrDef(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaAttribute> attr;
 
@@ -789,7 +789,7 @@ void CMetaParser::StartAttrDef(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::StartEnumItem(const attributes_type &attributes)
+void CMgaMetaParser::StartEnumItem(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaEnumItem> item;
 
@@ -808,7 +808,7 @@ void CMetaParser::StartEnumItem(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::StartRole2(const attributes_type &attributes)
+void CMgaMetaParser::StartRole2(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaModel> prev;
 	GetPrevObj(prev);
@@ -841,7 +841,7 @@ void CMetaParser::StartRole2(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::StartAspect2(const attributes_type &attributes)
+void CMgaMetaParser::StartAspect2(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaAspect> aspect;
 
@@ -891,7 +891,7 @@ void CMetaParser::StartAspect2(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::StartPart2(const attributes_type &attributes)
+void CMgaMetaParser::StartPart2(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaPart> part;
 
@@ -939,7 +939,7 @@ void CMetaParser::StartPart2(const attributes_type &attributes)
 
 }
 
-void CMetaParser::StartRegNode(const attributes_type &attributes)
+void CMgaMetaParser::StartRegNode(const attributes_type &attributes)
 {
 	if( GetPrevious().object == NULL )
 		return;
@@ -980,7 +980,7 @@ void CMetaParser::StartRegNode(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::StartConstraint(const attributes_type &attributes)
+void CMgaMetaParser::StartConstraint(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaConstraint> c;
 
@@ -1030,7 +1030,7 @@ void CMetaParser::StartConstraint(const attributes_type &attributes)
 	}
 }
 
-void CMetaParser::EndConstraint()
+void CMgaMetaParser::EndConstraint()
 {
 	CComObjPtr<IMgaMetaConstraint> c;
 

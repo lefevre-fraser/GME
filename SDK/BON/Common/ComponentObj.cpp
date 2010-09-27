@@ -54,7 +54,7 @@
 
 #include "ComHelp.h"
 
-#include "ComponentLib_h.h"
+#include "ComponentLib.h"
 
 #include <ComponentConfig.h>
 
@@ -64,6 +64,8 @@
 
 
 #include "ComponentLib_i.c"
+#include "Core_i.c"
+#include "Mga_i.c"
 
 
 #ifdef _DEBUG
@@ -325,7 +327,7 @@ BEGIN_INTERFACE_MAP(CComponentObj, CCmdTarget)
 	INTERFACE_PART(CComponentObj, IID_IMgaComponentEx, Component)
 #endif
 	INTERFACE_PART(CComponentObj, IID_IMgaComponent, Component)
-	INTERFACE_PART(CComponentObj, IID_IMgaVersionInfo, VersionInfo)
+	INTERFACE_PART(CComponentObj, IID_IGMEVersionInfo, VersionInfo)
 END_INTERFACE_MAP()
 
 // We register the ComponentClass
@@ -1008,14 +1010,14 @@ STDMETHODIMP COMCLASS::QueryInterface(REFIID riid, void** ppv)
 	return pThis->ExternalQueryInterface(&riid, ppv);
 }
 
-STDMETHODIMP COMCLASS::get_version(enum MgaInterfaceVersion *pVal)
+STDMETHODIMP COMCLASS::get_version(enum GMEInterfaceVersion *pVal)
 {
 	COMPROLOGUE;
 
 	if( pVal == NULL )
 		return E_POINTER;
 
-	*pVal = MgaInterfaceVersion_Current;
+	*pVal = GMEInterfaceVersion_Current;
 	return S_OK;
 }
 

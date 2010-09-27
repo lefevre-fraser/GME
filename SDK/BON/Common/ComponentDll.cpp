@@ -137,8 +137,14 @@ STDAPI DllRegisterServer(void)
 */
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	if (!COleObjectFactory::UpdateRegistryAll(TRUE))
+	if (!CUACUtils::isElevated()) {
+		AfxMessageBox(_T("Component registration requires elevated rights on Windows Vista or later."), MB_ICONSTOP | MB_OK);
 		return SELFREG_E_CLASS;
+	}
+
+	if (!COleObjectFactory::UpdateRegistryAll(TRUE)) {
+		return SELFREG_E_CLASS;
+	}
 
 	// Note:
 	// We can register the typelib either from the .tlb file

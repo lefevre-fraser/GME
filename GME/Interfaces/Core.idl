@@ -574,3 +574,27 @@ MGACOLL_INTERFACE(43D12111-12CA-11D3-A6EC-0060082DF884, CoreMetaObject)
 MGACOLL_INTERFACE(43D12127-12CA-11D3-A6EC-0060082DF884, CoreMetaAttribute)
 MGACOLL_INTERFACE(43D12111-22CA-11D3-A6EC-0060082DF884, CoreObject)
 MGACOLL_INTERFACE(43D12127-22CA-11D3-A6EC-0060082DF884, CoreAttribute)
+
+// --------------------------- VersionInfo
+
+typedef enum GMEInterfaceVersion_enum
+{
+	GMEInterfaceVersion_None = 0,
+	GMEInterfaceVersion_Legacy = 4,
+	GMEInterfaceVersion_Current = INTERFACE_VERSION
+} GMEInterfaceVersion_enum;
+
+cpp_quote("#define GMEInterfaceVersion GMEInterfaceVersion_enum")
+
+[
+	oleautomation,
+	uuid(9A228010-020B-11d2-BBB3-0040051F7117),
+	helpstring("GME VersionInfo Interface")
+]
+interface IGMEVersionInfo : IUnknown
+{
+	[propget, helpstring("property version")]
+	HRESULT version([out, retval] GMEInterfaceVersion_enum *pVal);
+};
+
+//-------------------------------------------------------------------------------

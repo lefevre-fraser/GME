@@ -4,12 +4,8 @@ import "ocidl.idl";
 
 #include "DecoratorConfig.h"
 
-import "meta.idl";
-import "mga.idl";
-import "gme.idl";
-import "MgaDecorator.idl";
-
-
+import "Gme.idl";
+import "Core.idl";
 [
 	uuid(TYPELIB_UUID),
 	version(1.0),
@@ -20,6 +16,11 @@ library DecoratorLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
+	importlib("..\Core\CoreLib.tlb");
+	importlib("..\Meta\MetaLib.tlb");
+	importlib("..\Mga\MgaLib.tlb");
+	importlib("..\Gme\GmeLib.tlb");
+
 	[
 		uuid(COCLASS_UUID),
 		helpstring(COCLASS_NAME)
@@ -27,7 +28,7 @@ library DecoratorLib
 	coclass AnnotatorDecorator
 	{
 		[default] interface IMgaElementDecorator;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 
 };

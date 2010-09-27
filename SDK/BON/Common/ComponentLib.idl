@@ -1,17 +1,11 @@
+import "oaidl.idl";
+import "ocidl.idl";
 
-// This file will be processed by the MIDL compiler to produce the
-// type library (ComponentLib.tlb).
+#include "ComponentConfig.h"
+#include "InterfaceColl.h"
 
-#include <ComponentConfig.h>
-
-#include <InterfaceColl.h>
-#include <meta.idl>
-#include <mga.idl>
-#include <mgautil.idl>
-#include <gme.idl>
-#include <mgadecorator.idl>
-#include <parser.idl>
-
+import "core.idl";
+import "mga.idl";
 
 [
 	uuid(TYPELIB_UUID),
@@ -21,6 +15,10 @@
 library MgaComponentLib
 {
 	importlib("stdole32.tlb");
+	importlib("stdole32.tlb");
+	importlib("core.dll");
+	importlib("mga.dll");
+	
 
 	[
 		// you have to copy this GUID to the ComponentObj.cpp,
@@ -32,7 +30,7 @@ library MgaComponentLib
 	{
 		[default] interface IMgaComponentEx;
 		interface IMgaComponent;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 };
 

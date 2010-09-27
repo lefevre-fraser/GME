@@ -14,7 +14,6 @@
 
 #include "StdAfx.h"
 #include "mga.h"
-#include "MgaDecorator.h"
 #include "GmeLib.h"
 #include "resource.h"
 

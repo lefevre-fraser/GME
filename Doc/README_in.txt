@@ -523,7 +523,7 @@ Release Notes of Release r4.8.25
  
  - MetaGME: got rid of ParadigmSheet attributes (project properties are used instead)
  
- - MetaParser does not generate checksum as GUID, if one is found in the paradigm file
+ - MgaMetaParser does not generate checksum as GUID, if one is found in the paradigm file
  
  - Custom versioning for projects and paradigms is introduced (eg.: version column in paradigm dialogs)
  

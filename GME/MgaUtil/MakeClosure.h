@@ -1,6 +1,8 @@
 #ifndef MAKE_CLOSURE_H
 #define MAKE_CLOSURE_H
 
+#include "Gme.h"
+
 class GmeEqual
 {
 	public:

@@ -1,20 +1,9 @@
-// PartBrowser.idl : type library source for ActiveX Control project.
-
-// This file will be processed by the MIDL compiler tool to
-// produce the type library (PartBrowser.tlb) that will become a resource in
-// PartBrowser.ocx.
-
 #include <olectl.h>
 #include <idispids.h>
 
 import "oaidl.idl";
 import "ocidl.idl";
 
-import "Core.idl";
-#ifndef METAIDL_IMPORTED
-import "Meta.idl";
-#endif
-import "MgaDecorator.idl";
 
 
 [ uuid(EA3F7431-913A-421F-9B9C-BEB6A735285A), version(1.0),

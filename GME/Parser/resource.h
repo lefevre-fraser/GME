@@ -3,7 +3,7 @@
 // Used by Parser.rc
 //
 #define IDS_PROJNAME                    100
-#define IDR_METAPARSER                  101
+#define IDR_MgaMetaParser                  101
 #define IDR_MGAPARSER                   102
 #define IDR_MGADUMPER                   205
 #define EDFDTD                          206

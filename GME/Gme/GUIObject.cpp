@@ -596,9 +596,10 @@ bool CGuiAnnotator::IsResizable(void) const
 
 void CGuiAnnotator::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 {
+	ASSERT(sizeof(ULONG) == sizeof(HDC));
 	if (decoratorData[parentAspect]->decorator) {
 		try {
-			COMTHROW(decoratorData[parentAspect]->decorator->DrawEx(pDC, (ULONGLONG)gdip));
+			COMTHROW(decoratorData[parentAspect]->decorator->DrawEx((ULONG)pDC, (ULONGLONG)gdip));
 		}
 		catch (hresult_exception &) {
 			AfxMessageBox("Error in annotator [method Draw()]");
@@ -1909,9 +1910,9 @@ void CGuiObject::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 	try {
 		CGuiAspect* aspect = GetCurrentAspect();
 		if (aspect->GetNewDecorator())
-			COMTHROW(GetCurrentAspect()->GetNewDecorator()->DrawEx(pDC, (ULONGLONG)gdip));
+			COMTHROW(GetCurrentAspect()->GetNewDecorator()->DrawEx((ULONG)pDC, (ULONGLONG)gdip));
 		else
-			COMTHROW(GetCurrentAspect()->GetDecorator()->Draw(pDC));
+			COMTHROW(GetCurrentAspect()->GetDecorator()->Draw((ULONG)pDC));
 	}
 	catch (hresult_exception &) {
 		AfxMessageBox("Error in decorator [method Draw()]");

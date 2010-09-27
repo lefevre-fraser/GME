@@ -7,6 +7,7 @@
 
 #include "StdAfx.h"
 #include "DecoratorConfig.h"
+#include "DecoratorLib_h.h"
 #include "AnnotatorDecoratorImpl.h"
 #include "AnnotatorDecorator.h"
 #include "DecoratorExceptions.h"
@@ -256,7 +257,7 @@ STDMETHODIMP CAnnotatorDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 	return retVal;
 }
 
-STDMETHODIMP CAnnotatorDecoratorImpl::Draw(HDC hdc)
+STDMETHODIMP CAnnotatorDecoratorImpl::Draw(ULONG hdc)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -299,7 +300,7 @@ STDMETHODIMP CAnnotatorDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMe
 	return retVal;
 }
 
-STDMETHODIMP CAnnotatorDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
+STDMETHODIMP CAnnotatorDecoratorImpl::DrawEx(ULONG hdc, ULONGLONG gdipGraphics)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -309,7 +310,7 @@ STDMETHODIMP CAnnotatorDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 	HRESULT retVal = S_OK;
 
 	CDC dc;
-	dc.Attach(hdc);
+	dc.Attach((HDC)hdc);
 	{
 		try {
 			m_pElementDecorator->Draw(&dc, (Gdiplus::Graphics*)gdipGraphics);

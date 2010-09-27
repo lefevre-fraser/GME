@@ -168,7 +168,7 @@ void Component::initMembers( Project& project)
 
 	if ( global_vars.silent_mode)
 	{
-		CComPtr<IMgaProject> mgaProject = project->getProjectI();
+		CComPtr<IMgaProject> mgaProject = project->getProjectI().p;
 		CComBSTR    connString;
 		BONCOMTHROW(mgaProject->get_ProjectConnStr(&connString));
 		std::string path = Util::Copy( connString);

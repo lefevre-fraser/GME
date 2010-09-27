@@ -9,7 +9,7 @@ class ATL_NO_VTABLE CMgaRegistrar :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaRegistrar, &CLSID_MgaRegistrar>,
 	public IDispatchImpl<IMgaRegistrar, &IID_IMgaRegistrar, &LIBID_MGAUTILLib>,
-	public IMgaVersionInfoImpl
+	public IGMEVersionInfoImpl
 {
 public:
 	CMgaRegistrar() { }
@@ -20,7 +20,7 @@ DECLARE_PROTECT_FINAL_CONSTRUCT()
 BEGIN_COM_MAP(CMgaRegistrar)
 	COM_INTERFACE_ENTRY(IMgaRegistrar)
 	COM_INTERFACE_ENTRY(IDispatch)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaVersionInfo, IMgaVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // ------- Methods

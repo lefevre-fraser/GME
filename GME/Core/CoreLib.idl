@@ -2,12 +2,9 @@
 import "oaidl.idl";
 import "ocidl.idl";
 
-import "Core.idl";
-import "Gme.idl";
-
-#ifndef INTERFACECOLL_INCLUDED
 #include "InterfaceColl.h"
-#endif
+
+import "Core.idl";
 
 // --------------------------- Core Library 
 
@@ -32,7 +29,7 @@ library CORELib
 	{
 		[default] interface ICoreProject;
 		interface ISupportErrorInfo;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 
 	[

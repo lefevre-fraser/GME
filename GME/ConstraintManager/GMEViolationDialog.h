@@ -14,6 +14,7 @@
 
 #include "GMEConstraintEx.h"
 #include "ConstraintManager.h"
+#include "Gme.h"
 
 namespace OclGmeCM {
 	struct EvaluationRecord;

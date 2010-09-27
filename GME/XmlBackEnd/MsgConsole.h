@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Gme.h"
+
 class MsgConsole
 {
 	CComPtr<IGMEOLEApp>   m_gme;

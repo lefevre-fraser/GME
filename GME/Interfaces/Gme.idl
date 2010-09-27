@@ -4,6 +4,8 @@ import "ocidl.idl";
 #include "InterfaceColl.h"
 #include "InterfaceVersion.h"
 
+
+import "Meta.idl";
 import "Mga.idl";
 
 interface IGMEOLEColl;
@@ -370,31 +372,168 @@ interface IGMEOLEColl : IDispatch
 	[propget, id(DISPID_NEWENUM)] HRESULT _NewEnum([out, retval] IUnknown** e);
 };
 
-// --------------------------- Gme IDL
+
+// --------------------------- Decorators
 
 
+// Error codes
+typedef enum decorator_error {
+[helpstring("Specified parameter name is unknown")]
+	E_DECORATOR_UNKNOWN_PARAMETER	=	0x80737001,
+[helpstring("Initialization with null pointer to MgaProject or MgaMetaPart")]
+	E_DECORATOR_INIT_WITH_NULL	=	0x80737002,
+[helpstring("Decorator is not initialized. Call Initialize() before use it.")]
+	E_DECORATOR_UNINITIALIZED	=	0x80737003,
+[helpstring("Object location is not initialized. Call SetLocation() before calling this function.")]
+	E_DECORATOR_LOCISNOTSET = 0x80737004,
+[helpstring("Specified port (based on IMgaFCO) not found.")]
+	E_DECORATOR_PORTNOTFOUND	=	0x80737005,
+[helpstring("In case of new decorator interface use the new InitializeEx and supply parent HWND.")]
+	E_DECORATOR_USING_DEPRECATED_FUNCTION	= 0x80737006,
+[helpstring("Not implemented method.")]
+	E_DECORATOR_NOT_IMPLEMENTED	= 0x80737007,
+[helpstring("Event handled / consumed.")]
+	S_DECORATOR_EVENT_HANDLED	= 0x00737001,
+[helpstring("Event not handled.")]
+	S_DECORATOR_EVENT_NOT_HANDLED	= 0x00737002
+} decorator_error;
 
-// --------------------------- VersionInfo
+// Feature codes
+typedef unsigned long feature_code;
+const unsigned long F_RESIZABLE	= 1<<0;
+const unsigned long	F_MOUSEEVENTS =	1<<1;
+const unsigned long	F_HASLABEL =	1<<2;
+const unsigned long	F_HASSTATE = 1<<3;
+const unsigned long	F_HASPORTS = 1<<4;
+const unsigned long	F_ANIMATION = 1<<5;
+const unsigned long	F_IMGPATH = 1<<6;
+const unsigned long	F_RESIZEAFTERMOD = 1<<7;
 
-typedef enum MgaInterfaceVersion_enum
-{
-	MgaInterfaceVersion_None = 0,
-	MgaInterfaceVersion_Legacy = 4,
-	MgaInterfaceVersion_Current = INTERFACE_VERSION
-} MgaInterfaceVersion_enum;
+// Refresh modes
+typedef enum  refresh_mode_enum {
+	RM_NOREFRESH				= 0,
+	RM_REDRAW_SELF				= 1,
+	RM_REGENERATE_SELF			= 2,
+	RM_REGENERATE_PARENT_ALSO	= 3,
+	RM_REGENERATE_ALL_VIEWS		= 4
+} refresh_mode_enum;
 
-cpp_quote("#define MgaInterfaceVersion MgaInterfaceVersion_enum")
 
 [
+	object,
+	uuid(1E13054E-5AD1-41EB-8FF1-C3901D99FDCC),
 	oleautomation,
-	uuid(9A228010-020B-11d2-BBB3-0040051F7117),
-	helpstring("Mga VersionInfo Interface")
+	helpstring("IMgaDecorator Interface"),
+	pointer_default(unique)
 ]
-interface IMgaVersionInfo : IUnknown
+interface IMgaDecorator : IUnknown
 {
-	[propget, helpstring("property version")]
-	HRESULT version([out, retval] MgaInterfaceVersion_enum *pVal);
+	[id(1), helpstring("method Initialize")] HRESULT Initialize([in] IMgaProject* project, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj);
+	[id(2), helpstring("method Destroy")] HRESULT Destroy();
+	[id(3), helpstring("method GetMnemonic")] HRESULT GetMnemonic([out] BSTR* mnemonic);
+	[id(4), helpstring("method GetFeatures")] HRESULT GetFeatures([out] feature_code* features);
+	[id(5), helpstring("method SetParam")] HRESULT SetParam([in] BSTR name, [in] VARIANT value);
+	[id(6), helpstring("method GetParam")] HRESULT GetParam([in] BSTR name, [out] VARIANT* value);
+	[id(7), helpstring("method SetActive")] HRESULT SetActive([in] VARIANT_BOOL isActive);
+	[id(8), helpstring("method GetPreferredSize")] HRESULT GetPreferredSize([out] long* sizex, [out] long* sizey);
+	[id(9), helpstring("method SetLocation")] HRESULT SetLocation([in] long sx, [in] long sy, [in] long ex, [in] long ey);
+	[id(10), helpstring("method GetLocation")] HRESULT GetLocation([out] long* sx, [out] long* sy, [out] long* ex, [out] long* ey);
+	[id(11), helpstring("method GetLabelLocation")] HRESULT GetLabelLocation([out] long* sx, [out] long* sy, [out] long* ex, [out] long* ey);
+	[id(12), helpstring("method GetPortLocation")] HRESULT GetPortLocation([in] IMgaFCO* fco, [out] long* sx, [out] long* sy, [out] long* ex, [out] long* ey);
+	[id(13), helpstring("method GetPorts")] HRESULT GetPorts([out, retval] IMgaFCOs** portFCOs);
+	[id(14), helpstring("method Draw")] HRESULT Draw([in] ULONG hdc);
+	[id(15), helpstring("method SaveState")] HRESULT SaveState();
 };
 
-//-------------------------------------------------------------------------------
+[
+	object,
+	uuid(D25188F5-3ECF-433e-85C5-8B9574CA264C),
+	oleautomation,
+	helpstring("IMgaCommonDecoratorEvents Interface"),
+	pointer_default(unique)
+]
+interface IMgaCommonDecoratorEvents : IUnknown
+{
+	[id(1), helpstring("method Refresh needed")] HRESULT Refresh([in] refresh_mode_enum refreshMode);
+	[id(2), helpstring("method the editing operation is canceled")] HRESULT OperationCanceled();
+	[id(3), helpstring("method CursorChanged")] HRESULT CursorChanged([in] LONG newCursorID);
+	[id(4), helpstring("method CursorRestored")] HRESULT CursorRestored();
+
+	[id(5), helpstring("method LabelEditingStarted")] HRESULT LabelEditingStarted([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(6), helpstring("method LabelEditingFinished")] HRESULT LabelEditingFinished([in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(7), helpstring("method LabelChanged")] HRESULT LabelChanged([in] BSTR newLabel);
+	[id(8), helpstring("method LabelMovingStarted")] HRESULT LabelMovingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(9), helpstring("method LabelMoving")] HRESULT LabelMoving([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(10), helpstring("method LabelMovingFinished")] HRESULT LabelMovingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(11), helpstring("method LabelMoved")] HRESULT LabelMoved([in] LONG nFlags, [in] LONG x, [in] LONG y);
+	[id(12), helpstring("method LabelResizingStarted")] HRESULT LabelResizingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(13), helpstring("method LabelResizing")] HRESULT LabelResizing([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(14), helpstring("method LabelResizingFinished")] HRESULT LabelResizingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(15), helpstring("method LabelResized")] HRESULT LabelResized([in] LONG nFlags, [in] LONG cx, [in] LONG cy);
+
+	[id(16), helpstring("method GeneralOperationStarted")] HRESULT GeneralOperationStarted([in] ULONGLONG operationData);
+	[id(17), helpstring("method GeneralOperationFinished")] HRESULT GeneralOperationFinished([out] ULONGLONG* operationData);
+};
+
+[
+	object,
+	uuid(91004115-2D1F-44a8-B6A0-09A2750BF278),
+	oleautomation,
+	helpstring("IMgaDecoratorCommon Interface"),
+	pointer_default(unique)
+]
+interface IMgaDecoratorCommon : IMgaDecorator
+{
+	[id(20), helpstring("method InitializeEx")] HRESULT InitializeEx([in] IMgaProject* project, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj, [in] IMgaCommonDecoratorEvents* eventSink, [in] ULONGLONG parentWnd);
+	[id(21), helpstring("method DrawEx")] HRESULT DrawEx([in] ULONG hdc, [in] ULONGLONG gdip);
+	[id(22), helpstring("method SetSelected")] HRESULT SetSelected([in] VARIANT_BOOL isSelected);
+	[id(23), helpstring("method MouseMoved")] HRESULT MouseMoved([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(24), helpstring("method MouseLeftButtonDown")] HRESULT MouseLeftButtonDown([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(25), helpstring("method MouseLeftButtonUp")] HRESULT MouseLeftButtonUp([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(26), helpstring("method MouseLeftButtonDoubleClick")] HRESULT MouseLeftButtonDoubleClick([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(27), helpstring("method MouseRightButtonDown")] HRESULT MouseRightButtonDown([in] ULONGLONG hCtxMenu, [in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(28), helpstring("method MouseRightButtonUp")] HRESULT MouseRightButtonUp([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(29), helpstring("method MouseRightButtonDoubleClick")] HRESULT MouseRightButtonDoubleClick([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(30), helpstring("method MouseMiddleButtonDown")] HRESULT MouseMiddleButtonDown([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(31), helpstring("method MouseMiddleButtonUp")] HRESULT MouseMiddleButtonUp([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(32), helpstring("method MouseMiddleButtonDoubleClick")] HRESULT MouseMiddleButtonDoubleClick([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(33), helpstring("method MouseWheelTurned")] HRESULT MouseWheelTurned([in] ULONG nFlags, [in] LONG distance, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(34), helpstring("method MenuItemSelected")] HRESULT MenuItemSelected([in] ULONG menuItemId, [in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(35), helpstring("method OperationCanceled")] HRESULT OperationCanceled();
+	[id(36), helpstring("method DragEnter")] HRESULT DragEnter([out] ULONG* dropEffect, [in] ULONGLONG pCOleDataObject, [in] ULONG keyState, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(37), helpstring("method DragOver")] HRESULT DragOver([out] ULONG* dropEffect, [in] ULONGLONG pCOleDataObject, [in] ULONG keyState, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(38), helpstring("method Drop")] HRESULT Drop([in] ULONGLONG pCOleDataObject, [in] ULONG dropEffect, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+	[id(39), helpstring("method DropFile")] HRESULT DropFile([in] ULONGLONG hDropInfo, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);
+};
+
+[
+	object,
+	uuid(1D63D045-28C9-4902-8E5F-46F4AC1F8C5B),
+	oleautomation,
+	helpstring("IMgaElementDecoratorEvents Interface"),
+	pointer_default(unique)
+]
+interface IMgaElementDecoratorEvents : IMgaCommonDecoratorEvents
+{
+	[id(25), helpstring("method WindowMovingStarted")] HRESULT WindowMovingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(26), helpstring("method WindowMoving")] HRESULT WindowMoving([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(27), helpstring("method WindowMovingFinished")] HRESULT WindowMovingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(28), helpstring("method WindowMoved")] HRESULT WindowMoved([in] LONG nFlags, [in] LONG x, [in] LONG y);
+
+	[id(29), helpstring("method WindowResizingStarted")] HRESULT WindowResizingStarted([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(30), helpstring("method WindowResizing")] HRESULT WindowResizing([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(31), helpstring("method WindowResizingFinished")] HRESULT WindowResizingFinished([in] LONG nFlags, [in] LONG left, [in] LONG top, [in] LONG right, [in] LONG bottom);
+	[id(32), helpstring("method WindowResized")] HRESULT WindowResized([in] LONG nFlags, [in] LONG cx, [in] LONG cy);
+};
+
+[
+	object,
+	uuid(2BEAD76C-126E-405D-AAC6-B9CA39067006),
+	oleautomation,
+	helpstring("IMgaElementDecorator Interface"),
+	pointer_default(unique)
+]
+interface IMgaElementDecorator : IMgaDecoratorCommon
+{
+};
 
