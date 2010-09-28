@@ -1059,23 +1059,14 @@ Antlr (PCCTS)
   Copyright (c) 1989-1998 Parr Research Corporation with Purdue University and
   	AHPCRC, University of Minnesota
 
-Xalan and Xerces
-  Copyright (c) 1999-2004 The Apache Software Foundation. All rights reserved.
-
-STLport
-  Copyright (c) 1994 Hewlett-Packard Company
-  Copyright (c) 1996-1999 Silicon Graphics Computer Systems, Inc.
-  Copyright (c) 1997 Moscow Center for SPARC Technology
-  Copyright (c) 1999, 2000, 2001, 2002 Boris Fomitchev
+Xerces
+  Copyright (c) 1999-2004 The Apache Software Foundation.
 
 TokenEx
   Copyright (c) 1999  Daniel Madden <daniel.madden@compaq.com>
 
 TreeCtrlEx
   Copyright (c) 1997-2001 Bendik Engebretsen <bendik@techsoft.no>
-  
-SizeCBar
-  Copyright (c) 1998, 1999 by Cristi Posea. All rights reserved.
   
 Regexp
   Copyright (c) 1986 by University of Toronto. (Henry Spencer)
@@ -1084,16 +1075,31 @@ ColourPicker, ColourPopup
   Copyright (c) 1998  Chris Maunder <chrismaunder@codeguru.com> and 
   	Alexander Bischofberger <bischofb@informatik.tu-muenchen.de>
 
-TableEditor
+MFC Grid Control - inplace editing class (CInPlaceEdit)
   Copyright (c) 1998-2002 Chris Maunder <cmaunder@mail.com>. All Rights Reserved.
-
-Unittest.py
-  Copyright (c) 1999, 2000, 2001 Steve Purcell
 
 zlib
   Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler
+  
+CrashRpt
+  Copyright (c) 2003, Michael Carruth
 
- 
+Subversion
+  Copyright (c) 2000-2009 CollabNet.
+
+APR (Apache Portable Runtime)
+  Copyright (c) 1999-2004 The Apache Software Foundation. 
+    
+OpenSSL
+  Copyright (c) 1998-2008 The OpenSSL Project.
+  
+Serf
+  Copyright 2002-2004 Justin Erenkrantz and Greg Stein
+
+neon HTTP/WebDAV client library
+  Copyright (c)  2001-2008 Joe Orton     
+  
+  
 *****************************************************
 Appendix A. The Apache Software License, Version 1.1
 *****************************************************
