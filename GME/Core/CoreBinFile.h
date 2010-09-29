@@ -4,7 +4,7 @@
 
 #include <fstream>//fstream.h
 #include <list>//slist
-#include <hash_map>
+#include <map>
 #include <vector>
 #include <algorithm>
 
@@ -166,10 +166,7 @@ public:
 // ------- Attribute
 
 public:
-	typedef stdext::hash_map< BinAttrBase*
-	                        , CComVariant
-	                        , ptr_compare<BinAttrBase>
-	                        > undos_type;
+	typedef std::map<BinAttrBase*, CComVariant> undos_type;
 	typedef undos_type::iterator undos_iterator;
 
 	undos_type undos;
