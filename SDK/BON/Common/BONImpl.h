@@ -157,6 +157,7 @@ namespace BON
 			bool 					isDestructionActive() const;
 
 			ProjectPtr				getProjectI() const;
+			TerritoryPtr			getTerritoryI() const;
 			const MON::Project&		getProjectMeta() const;
 
 			std::string				getName() const;

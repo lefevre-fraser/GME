@@ -6,6 +6,7 @@
 #include "GMECOM.h"
 #include <ComponentConfig.h>
 #include "Exceptions.h"
+#include "MgaUtil.h"
 
 
 #if defined(BUILDER_OBJECT_NETWORK)

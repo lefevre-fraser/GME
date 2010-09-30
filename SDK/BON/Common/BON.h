@@ -25,7 +25,6 @@
 #include "Utils.h"
 #include "ComponentLib.h"
 #include "gme.h"
-#include "mgautil.h"
 #include "Common.h"
 #include "MON.h"
 

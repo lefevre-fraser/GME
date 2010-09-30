@@ -6,7 +6,7 @@
 
 #include "ComponentDll.h"
 #include "ComponentObj.h"
-#include <ComponentConfig.h>
+#include "ComponentConfig.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

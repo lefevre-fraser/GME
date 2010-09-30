@@ -489,6 +489,11 @@ namespace BON
 		return m_spProject;
 	}
 
+	TerritoryPtr ProjectImpl::getTerritoryI() const
+	{
+		return m_spTerritory;
+	}
+
 	const MON::Project& ProjectImpl::getProjectMeta() const
 	{
 		return m_meta;
