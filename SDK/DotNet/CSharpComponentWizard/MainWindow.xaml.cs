@@ -24,8 +24,10 @@ namespace CSharpComponentWizard
         public const string VS2010_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\VisualStudio\10.0";
         public const string VS2010_PROJECTFOLDER_REGISTRY_KEYNAME = "VisualStudioProjectsLocation";
         public const string VS2010_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME = "UserProjectTemplatesLocation";
+        public const string VS2010_INSTALLDIR_KEYNAME = "InstallDir";
         public const string MSSDK_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\Microsoft SDKs\Windows";
-        public const string MSSDK_INSTALLFOLDER_REGISTRY_KEYNAME = "CurrentInstallFolder";        
+        public const string MSSDK_INSTALLFOLDER_REGISTRY_KEYNAME = "CurrentInstallFolder";
+
         public const string GUIDREGEXP = @"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$";
 
         public Regex GuidExp = new Regex(GUIDREGEXP, RegexOptions.Compiled);
@@ -112,7 +114,7 @@ namespace CSharpComponentWizard
 
                 if (outputfolder == String.Empty)
                 {
-                    throw new Exception("Something went wrong around the output folder specified...");
+                    throw new Exception("Something went wrong around the specified output folder...");
                 }
 
                 if (SolutionGenerator.SelectedInterface == ComponentInterface.Dependent)
@@ -135,7 +137,12 @@ namespace CSharpComponentWizard
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error occured!", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show(ex.Message, "Error occured!", MessageBoxButton.OK, MessageBoxImage.Error);
+                txb_GenerationResultSummary.Text = "Generation failed";
+                txb_GenerationResultDetails.Text = "Error occured while generating your Visual Studio 2010 solution. " + Environment.NewLine;
+                txb_GenerationResultDetails.Text += "We recommend you to start the whole process again! " + Environment.NewLine + Environment.NewLine;
+                txb_GenerationResultDetails.Text += "The specific error was: " + ex.Message;
+                btn_OpenSolution.IsEnabled = false;
             }
         }
         
@@ -301,7 +308,7 @@ namespace CSharpComponentWizard
 
         private void GenerationCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            this.lbl_Step.Content = "Completed.";
+            this.lbl_Step.Content = txb_GenerationResultSummary.Text;
             this.tbc_WizardTab.SelectedIndex = 6;
         }
 
@@ -345,6 +352,33 @@ namespace CSharpComponentWizard
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 txb_TargetFolder.Text = dialog.SelectedPath;
+            }
+        }
+
+        // SolutionName textChanged
+        private void txb_SolutionName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (ValidateInputTab_1())
+            {
+                btn_Next1.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next1.IsEnabled = false;
+            }
+        }
+
+        // Refresh path TextBox tooltip with full path
+        private void txb_TargetFolder_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            txb_TargetFolder.ToolTip = txb_TargetFolder.Text;
+            if (ValidateInputTab_1())
+            {
+                btn_Next1.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next1.IsEnabled = false;
             }
         }
 
@@ -416,6 +450,10 @@ namespace CSharpComponentWizard
         // RadioButton events for Component type selection
         private void rbb_Interpreter_Checked(object sender, RoutedEventArgs e)
         {
+            if (this.IsLoaded == false)
+            {
+                return;
+            }
             SolutionGenerator.SelectedType = CompType.Interpreter;
             txb_IconInfo.Visibility = Visibility.Hidden;
             txb_IconPath.IsEnabled = true;
@@ -425,10 +463,24 @@ namespace CSharpComponentWizard
             {
                 ((CheckBox)this.FindName("ckb_a" + i)).IsEnabled = false;
             }
+
+            if (ValidateInputTab_4())
+            {
+                btn_Next4.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next4.IsEnabled = false;
+            }
         }
 
         private void rbb_Interpreter_Unchecked(object sender, RoutedEventArgs e)
         {
+            if (this.IsLoaded == false)
+            {
+                return;
+            }
+            
             SolutionGenerator.SelectedType = CompType.Addon;
             txb_IconInfo.Visibility = Visibility.Visible;
             txb_IconPath.IsEnabled = false;
@@ -437,6 +489,15 @@ namespace CSharpComponentWizard
             for (int i = 0; i <= 24; ++i)
             {
                 ((CheckBox)this.FindName("ckb_a" + i)).IsEnabled = true;
+            }
+
+            if (ValidateInputTab_4())
+            {
+                btn_Next4.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next4.IsEnabled = false;
             }
         }
         
@@ -463,12 +524,28 @@ namespace CSharpComponentWizard
                 c.B = 0xC3;
                 txb_Guid.Background = new SolidColorBrush(c);
             }
+
+            if (ValidateInputTab_3())
+            {
+                btn_Next3.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next3.IsEnabled = false;
+            }
         }
 
-        // Refresh path TextBox tooltip with full path
-        private void txb_TargetFolder_TextChanged(object sender, TextChangedEventArgs e)
+        // ParadigmName Changed
+        private void txb_ParadigmName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            txb_TargetFolder.ToolTip = txb_TargetFolder.Text;
+            if (ValidateInputTab_3())
+            {
+                btn_Next3.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next3.IsEnabled = false;
+            }
         }
 
         // RadioButton event for Registration scope selector
@@ -496,6 +573,16 @@ namespace CSharpComponentWizard
                 txb_MgaPath.IsEnabled = true;
                 btn_BrowseMga.IsEnabled = true;
                 ckb_AllParadigms.IsEnabled = false;
+
+                if (ValidateInputTab_2())
+                {
+                    btn_Next2.IsEnabled = true;
+                }
+                else
+                {
+                    btn_Next2.IsEnabled = false;
+                }
+
             }
         }
 
@@ -507,6 +594,27 @@ namespace CSharpComponentWizard
                 txb_MgaPath.IsEnabled = false;
                 btn_BrowseMga.IsEnabled = false;
                 ckb_AllParadigms.IsEnabled = true;
+
+                if (ValidateInputTab_2())
+                {
+                    btn_Next2.IsEnabled = true;
+                }
+                else
+                {
+                    btn_Next2.IsEnabled = false;
+                }
+            }
+        }
+
+        private void txb_MgaPath_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (ValidateInputTab_2())
+            {
+                btn_Next2.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next2.IsEnabled = false;
             }
         }
 
@@ -515,12 +623,85 @@ namespace CSharpComponentWizard
         {
             int i = Int32.Parse(((CheckBox)sender).Name.Substring(5));
             SolutionGenerator.AddonEventSelection[i] = true;
+
+            if (ValidateInputTab_4())
+            {
+                btn_Next4.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next4.IsEnabled = false;
+            }
         }
 
         private void ckb_Unchecked(object sender, RoutedEventArgs e)
         {
             int i = Int32.Parse(((CheckBox)sender).Name.Substring(5));
             SolutionGenerator.AddonEventSelection[i] = false;
+
+            if (ValidateInputTab_4())
+            {
+                btn_Next4.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next4.IsEnabled = false;
+            }
+        }
+
+        private void txb_IconPath_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (ValidateInputTab_5())
+            {
+                btn_Next5.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next5.IsEnabled = false;
+            }
+        }
+
+        private void txb_ComponentName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (ValidateInputTab_5())
+            {
+                btn_Next5.IsEnabled = true;
+            }
+            else
+            {
+                btn_Next5.IsEnabled = false;
+            }
+        }
+
+        private void btn_OpenSolution_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string pathToOpen = txb_TargetFolder.Text + @"\" + txb_SolutionName.Text + @"\" + txb_SolutionName.Text + ".sln";
+
+                string DevenvLocation = String.Empty;
+                RegistryKey masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
+                if (masterKey == null)
+                {
+                    throw new Exception("Cannot locate Visual Studio 2010");
+                }
+                else
+                {
+                    DevenvLocation = masterKey.GetValue(MainWindow.VS2010_INSTALLDIR_KEYNAME).ToString();
+                }
+                masterKey.Close();
+
+                DevenvLocation += "devenv.exe";
+
+                System.Diagnostics.ProcessStartInfo pinfo = new System.Diagnostics.ProcessStartInfo();
+                pinfo.Arguments = pathToOpen;
+                pinfo.FileName = DevenvLocation;
+                System.Diagnostics.Process myProc = System.Diagnostics.Process.Start(pinfo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

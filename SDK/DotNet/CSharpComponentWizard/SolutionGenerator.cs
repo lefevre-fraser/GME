@@ -40,7 +40,7 @@ namespace CSharpComponentWizard
     {
         public static Dictionary<int, string> AddonEvents;
         
-        public static CompType SelectedType = CompType.Addon;
+        public static CompType SelectedType = CompType.Interpreter;
         public static ComponentInterface SelectedInterface = ComponentInterface.Dependent;
         public static Registration SelectedRegistration = Registration.Systemwide;
         public static bool[] AddonEventSelection = new bool[25];
@@ -325,7 +325,15 @@ namespace CSharpComponentWizard
 
         public static void GenerateDomainSpecificInterface()
         {
-            string ParadigmName = GeneratorFacade.Main(MgaPath, TargetFolder + @"\" + SolutionName, "GME.CSharp." + SolutionName);
+            try
+            {
+                string ParadigmName = GeneratorFacade.Main(MgaPath, TargetFolder + @"\" + SolutionName, "GME.CSharp." + SolutionName);
+            } 
+            catch(Exception)
+            {
+                throw;
+            }
+
             if (GeneratorFacade.Errors.Count != 0)
             {
                 MessageBox.Show("Error occured during the domain specific interface generation:" + GeneratorFacade.Errors.ToString());
