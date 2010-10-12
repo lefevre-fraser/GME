@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "MgaUtil.h"
+
 #include "Dumper.h"
 #include "AspectSpecDlg.h"
 #include "GlobalAspOrder.h"
