@@ -115,6 +115,7 @@ def build_VS(sln_path, config_name):
     toolmsg(msg)
 
     import subprocess
+    # , '/fl', '/flp:Verbosity=diagnostic'
     args = ['msbuild', sln_path, '/t:' + ("Clean;" * prefs['clean']) + 'Build', '/p:Configuration=' + config_name]
     with open(os.devnull, "w") as nulfp:
         # n.b. stderr=subprocess.STDOUT fails mysteriously
