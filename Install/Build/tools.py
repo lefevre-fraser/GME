@@ -96,9 +96,9 @@ def system(command, dirname=None):
 
 
 def test_VS():
-    "Test for Microsoft Visual Studio 2008. Raises exception if not found."
+    "Test for Microsoft Visual Studio 2010. Raises exception if not found."
     toolmsg("Trying to create VisualStudio.DTE object")
-    win32com.client.Dispatch("VisualStudio.DTE.9.0")
+    win32com.client.Dispatch("VisualStudio.DTE.10.0")
 
 
 def build_VS(sln_path, config_name, project_name=""):
@@ -114,7 +114,7 @@ def build_VS(sln_path, config_name, project_name=""):
     msg = "Cleaning and " * prefs['clean']
     msg += "Compiling " + sln_path + " [" + project_name + "] (" + config_name + ") "
     toolmsg(msg)
-    DTE = win32com.client.Dispatch("VisualStudio.DTE.9.0")
+    DTE = win32com.client.Dispatch("VisualStudio.DTE.10.0")
     DTE.MainWindow.Visible = True
     DTE.Solution.Open( sln_path )
     builder = DTE.Solution.SolutionBuild

@@ -41,11 +41,11 @@ def check_prerequisites():
         print "Current dev. source tree:", GME_ROOT
         raise
     
-    # Test for Microsoft Visual Studio 2008
+    # Test for Microsoft Visual Studio 2010
     try:
         tools.test_VS()
     except:
-        print "Microsoft Visual Studio 2008 is not installed!"
+        print "Microsoft Visual Studio 2010 is not installed!"
         raise
     
     # Test for zip utility
