@@ -17,7 +17,7 @@ import win32com
 #
 # Constants
 #
-GME_ROOT = os.path.normpath(os.path.abspath("../.."))
+GME_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 #
 # Build steps
