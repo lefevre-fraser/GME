@@ -82,6 +82,19 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <CustomBuildStep>
+      <Command>copy ..\lib\libeay32.dll  "$(OutDir)"
+copy ..\lib\ssleay32.dll  "$(OutDir)"
+copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)"
+copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)"
+copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)"
+copy ..\lib\xerces-c_2_*D.dll "$(OutDir)"
+regsvr32 /s /c "$(TargetPath)" &amp;&amp; ^
+echo regsvr32 exec. time &gt; "$(IntDir)\regsvr32.trg"
+</Command>
+      <Message>Copying .dlls and registering $(TargetFileName)</Message>
+      <Outputs>$(IntDir)\regsvr32.trg</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep />
@@ -124,6 +137,19 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <CustomBuildStep>
+      <Command>copy ..\lib\libeay32.dll  "$(OutDir)"
+copy ..\lib\ssleay32.dll  "$(OutDir)"
+copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)"
+copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)"
+copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)"
+copy ..\lib\xerces-c_2_?.dll "$(OutDir)"
+regsvr32 /s /c "$(TargetPath)" &amp;&amp; ^
+echo regsvr32 exec. time &gt; "$(IntDir)\regsvr32.trg"
+</Command>
+      <Message>Copying .dlls and registering $(TargetFileName)</Message>
+      <Outputs>$(IntDir)\regsvr32.trg</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Midl Include="ccauto.IDL">
