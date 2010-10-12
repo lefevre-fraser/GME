@@ -88,7 +88,7 @@ def system(command, dirname=None):
         dirname : if set, execute the command within this directory
     """
     if dirname is not None:
-        command = "cd %s && %s" % (dirname, command)
+        command = "cd /d %s && %s" % (dirname, command)
     toolmsg("Executing " + command)
     ret = os.system( command )
     if ret != 0:
@@ -100,10 +100,9 @@ def test_VS():
     toolmsg("Trying to create VisualStudio.DTE object")
     win32com.client.Dispatch("VisualStudio.DTE.10.0")
 
-
-def build_VS(sln_path, config_name, project_name=""):
+def build_VS(sln_path, config_name):
     """
-    Builds a Microsoft Visual Studio 2008 project or entire solution.
+    Builds a Microsoft Visual Studio 2010 project or entire solution.
     It cleans the project/solution before building it if the global 'clean' preference
     is set.
     params
@@ -112,23 +111,14 @@ def build_VS(sln_path, config_name, project_name=""):
         config_name  : name of the build configuration (e.g.: "Release")
     """
     msg = "Cleaning and " * prefs['clean']
-    msg += "Compiling " + sln_path + " [" + project_name + "] (" + config_name + ") "
+    msg += "Compiling " + sln_path + "(" + config_name + ") "
     toolmsg(msg)
-    DTE = win32com.client.Dispatch("VisualStudio.DTE.10.0")
-    DTE.MainWindow.Visible = True
-    DTE.Solution.Open( sln_path )
-    builder = DTE.Solution.SolutionBuild
-    if prefs['clean']:
-        builder.Clean(1)
-    if (project_name):
-        builder.BuildProject(config_name, project_name, 1)
-    else:
-        builder.SolutionConfigurations.Item(config_name).Activate()
-        builder.Build(1);
-    failed = builder.LastBuildInfo
-    DTE.Quit()
-    if failed > 0:
-        raise BuildException, "In solution " + sln_path + ": " + str(failed) + " project(s) failed to compile."
+
+    import subprocess
+    args = ['msbuild', sln_path, '/t:' + ("Clean;" * prefs['clean']) + 'Build', '/p:Configuration=' + config_name]
+    with open(os.devnull, "w") as nulfp:
+        # n.b. stderr=subprocess.STDOUT fails mysteriously
+        subprocess.check_call(args, stdout=(None if prefs['verbose'] else nulfp), stderr=None)
 
 def xme2mga(xml_file, paradigm):
     """
