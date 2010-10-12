@@ -257,18 +257,18 @@ public:
 		}
 
 		DWORD dwReturnLength = 0;
-		TOKEN_ELEVATION_TYPE tet;
-		::ZeroMemory(&tet, sizeof(tet));
+		TOKEN_ELEVATION te;
+		::ZeroMemory(&te, sizeof(te));
 
 		if ( ::GetTokenInformation(
 					hToken,
-					TokenElevationType,
-					&tet,
-					sizeof(tet),
+					TokenElevation,
+					&te,
+					sizeof(te),
 					&dwReturnLength ) )
 		{
-				ASSERT( dwReturnLength == sizeof( tet ) );
-				return (tet == TokenElevationTypeFull);
+				ASSERT( dwReturnLength == sizeof( te ) );
+				return (te.TokenIsElevated != 0);
 		}
 
 		::CloseHandle( hToken );
