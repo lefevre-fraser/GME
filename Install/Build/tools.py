@@ -107,7 +107,6 @@ def build_VS(sln_path, config_name):
     is set.
     params
         sln_path     : full path to the solution (.sln) file
-        project_name : (optional) relative path to the project (.vcproj) file
         config_name  : name of the build configuration (e.g.: "Release")
     """
     msg = "Cleaning and " * prefs['clean']
@@ -119,7 +118,8 @@ def build_VS(sln_path, config_name):
     args = ['msbuild', sln_path, '/t:' + ("Clean;" * prefs['clean']) + 'Build', '/p:Configuration=' + config_name]
     with open(os.devnull, "w") as nulfp:
         # n.b. stderr=subprocess.STDOUT fails mysteriously
-        subprocess.check_call(args, stdout=(None if prefs['verbose'] else nulfp), stderr=None)
+        import sys
+        subprocess.check_call(args, stdout=(sys.stdout if prefs['verbose'] else nulfp), stderr=None, shell=True)
 
 def xme2mga(xml_file, paradigm):
     """
