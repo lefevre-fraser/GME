@@ -77,6 +77,8 @@ def compile_GME():
     "Compile GME core components"
     sln_file = os.path.join(GME_ROOT, "GME", "GME.sln");
     tools.build_VS( sln_file, "Release" )
+    sln_file = os.path.join(GME_ROOT, "GME", "GMEDecorators.sln");
+    tools.build_VS( sln_file, "Release" )
     cmd_dir = os.path.join(GME_ROOT, "GME");
     tools.system( "call regrelease.bat <NUL".split(), cmd_dir)
 

@@ -1,7 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Annotator", "Annotator\Annotator.vcxproj", "{835438ED-280C-4863-9C03-A62F3D504005}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{BEF31E1E-BB02-4687-A543-A6AD5D522869}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Console", "Console\Console.vcxproj", "{9AA127A4-56E0-4594-8BF9-E1195E9E2097}"
@@ -10,7 +8,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConstraintManager", "Constr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj", "{0B16B893-5512-48B8-B764-EE72C522EAD8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gme", "Gme\GME.vcxproj", "{10471163-556B-4BE1-A12E-C917F90F8346}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GME", "Gme\GME.vcxproj", "{10471163-556B-4BE1-A12E-C917F90F8346}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GMEActiveBrowser", "GMEActiveBrowser\GMEActiveBrowser.vcxproj", "{6E19B252-97C9-45F8-B210-AA5D986AA2A7}"
 EndProject
@@ -21,8 +19,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Meta", "Meta\Meta.vcxproj", "{3ED3216E-B64C-4D0B-881F-68BFF2CB3E83}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mga", "Mga\Mga.vcxproj", "{86DAEF74-2527-41E5-82CE-52C31C5BBE8E}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MgaDecorators", "MgaDecorators\MgaDecorators.vcxproj", "{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MgaUtil", "MgaUtil\MgaUtil.vcxproj", "{CA09AB5C-BFAC-4152-AE0B-D5AFC400A5E7}"
 EndProject
@@ -38,8 +34,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PartBrowser", "PartBrowser\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PanningView", "PanningView\PanningView.vcxproj", "{53ACCFA8-118E-4C33-B21C-77A418628428}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DecoratorLib", "..\SDK\DecoratorLib\DecoratorLib.vcxproj", "{77FEBD41-CD6C-4D55-B561-3957F7151CC2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MgaDotNetServices", "MgaDotNetServices\MgaDotNetServices.csproj", "{955209A1-8107-43C2-B0A7-729B03908C64}"
 EndProject
 Global
@@ -50,14 +44,6 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{835438ED-280C-4863-9C03-A62F3D504005}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{835438ED-280C-4863-9C03-A62F3D504005}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{835438ED-280C-4863-9C03-A62F3D504005}.Debug|Win32.ActiveCfg = Debug|Win32
-		{835438ED-280C-4863-9C03-A62F3D504005}.Debug|Win32.Build.0 = Debug|Win32
-		{835438ED-280C-4863-9C03-A62F3D504005}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{835438ED-280C-4863-9C03-A62F3D504005}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{835438ED-280C-4863-9C03-A62F3D504005}.Release|Win32.ActiveCfg = Release|Win32
-		{835438ED-280C-4863-9C03-A62F3D504005}.Release|Win32.Build.0 = Release|Win32
 		{BEF31E1E-BB02-4687-A543-A6AD5D522869}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{BEF31E1E-BB02-4687-A543-A6AD5D522869}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{BEF31E1E-BB02-4687-A543-A6AD5D522869}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -138,14 +124,6 @@ Global
 		{86DAEF74-2527-41E5-82CE-52C31C5BBE8E}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{86DAEF74-2527-41E5-82CE-52C31C5BBE8E}.Release|Win32.ActiveCfg = Release|Win32
 		{86DAEF74-2527-41E5-82CE-52C31C5BBE8E}.Release|Win32.Build.0 = Release|Win32
-		{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}.Debug|Win32.Build.0 = Debug|Win32
-		{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}.Release|Win32.ActiveCfg = Release|Win32
-		{66D5FEC3-17C7-4B20-9A3A-07A1B585314F}.Release|Win32.Build.0 = Release|Win32
 		{CA09AB5C-BFAC-4152-AE0B-D5AFC400A5E7}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{CA09AB5C-BFAC-4152-AE0B-D5AFC400A5E7}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{CA09AB5C-BFAC-4152-AE0B-D5AFC400A5E7}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -202,14 +180,6 @@ Global
 		{53ACCFA8-118E-4C33-B21C-77A418628428}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{53ACCFA8-118E-4C33-B21C-77A418628428}.Release|Win32.ActiveCfg = Release|Win32
 		{53ACCFA8-118E-4C33-B21C-77A418628428}.Release|Win32.Build.0 = Release|Win32
-		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Debug|Win32.Build.0 = Debug|Win32
-		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Release|Win32.ActiveCfg = Release|Win32
-		{77FEBD41-CD6C-4D55-B561-3957F7151CC2}.Release|Win32.Build.0 = Release|Win32
 		{955209A1-8107-43C2-B0A7-729B03908C64}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{955209A1-8107-43C2-B0A7-729B03908C64}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{955209A1-8107-43C2-B0A7-729B03908C64}.Debug|Win32.ActiveCfg = Debug|Any CPU
