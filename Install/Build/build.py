@@ -106,18 +106,6 @@ def compile_tools():
     sln_file = os.path.join(GME_ROOT, "Tools", "AutoLayout", "AutoLayout.sln");
     tools.build_VS( sln_file, "Release" )
     
-    # GME Merge
-    sln_file = os.path.join(GME_ROOT, "Tools", "GMEMerge", "GMEMerge.sln");
-    tools.build_VS( sln_file, "Release" )
-    
-    # Pattern Processor
-    sln_file = os.path.join(GME_ROOT, "SDK", "PatternProcessor", "PatternProcessor.sln");
-    tools.build_VS( sln_file, "Release" )
-    
-    # ExtractCrashDumpXML 
-    sln_file = os.path.join(GME_ROOT, "Tools", "ExtractCrashDumpXML", "ExtractCrashDumpXML.sln");
-    tools.build_VS( sln_file, "Release" )
-    
     # GMEplink
     sln_file = os.path.join(GME_ROOT, "Tools", "GMEplink", "GMEplink.sln");
     tools.build_VS( sln_file, "Release" )
