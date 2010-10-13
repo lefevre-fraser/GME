@@ -8,6 +8,7 @@
 #include "ComponentObj.h"
 #include "ComponentConfig.h"
 #include "CommonError.h"
+#include "MgaUtil.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

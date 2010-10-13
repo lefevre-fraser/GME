@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "MgaDecorator.h"
-#include "MgaDecorator_i.c"
 #include "Mga.h"
 #include "Mga_i.c"
 #include "Meta.h"
 #include "Meta_i.c"
+#include "Gme.h"
+#include "Gme_i.c"
 #include "JavaInterface.h"
 
 #define COMCHECK( hr ) if( FAILED(hr) ) ThrowCOMException( env, hr )
@@ -94,7 +94,7 @@ JNIEXPORT void JNICALL Java_org_isis_gme_mgadecorator_MgaDecorator_draw
     hr = ((IUnknown*)decorator)->QueryInterface( IID_IMgaDecorator, (void**)&decorator2 );
     COMCHECK( hr );
 
-    hr = decorator2->Draw( (HDC)hdc );
+    hr = decorator2->Draw( (ULONG)hdc );
 
     /*CDC * dc = CDC::FromHandle( (HDC)hdc );
     dc->MoveTo(0,0);
