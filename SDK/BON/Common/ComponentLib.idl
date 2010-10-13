@@ -15,7 +15,6 @@ import "mga.idl";
 library MgaComponentLib
 {
 	importlib("stdole32.tlb");
-	importlib("stdole32.tlb");
 	importlib("core.dll");
 	importlib("mga.dll");
 	
