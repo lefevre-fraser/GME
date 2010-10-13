@@ -8,7 +8,7 @@
 
 //#include "ComHelp.h"
 //#include "GMECOM.h"
-#include "ComponentLib_h.h"
+#include "ComponentLib.h"
 #include "ComponentConfig.h"
 #include "RawComponent.h"
 #include "CommonSmart.h"

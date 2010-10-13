@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CommonSmart.h"
 #include "GMEGraph.h"
+#include "Gme.h"
 
 GMEGraph::GMEGraph( IMgaProject *project, IMgaModel* model, IMgaMetaAspect* aspect )
 {

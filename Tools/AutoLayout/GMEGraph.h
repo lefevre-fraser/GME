@@ -2,7 +2,7 @@
 #define _GMEGRAPH_H_
 
 #include "Graph.h"
-#include "ComponentLib_h.h"
+#include "ComponentLib.h"
 
 class GMEGraph : public Graph
 {
