@@ -3,11 +3,11 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 #include "DecoratorConfig.h"
+#include "InterfaceColl.h"
 
-#include <meta.idl>
-#include <mga.idl>
-#include <gme.idl>
-#include <MgaDecorator.idl>
+import "core.idl";
+import "mga.idl";
+import "gme.idl";
 
 [
 	uuid(4696E82A-ABFD-4b36-BC6B-4248CC56FD89),
@@ -18,6 +18,10 @@ library UMLDECORATORLib
 {
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
+	import "core.idl";
+	import "mga.idl";
+	import "meta.idl";
+	import "gme.idl";
 
 	[
 		uuid(26AC9143-6F73-4e6a-B942-F641B37F87B5),
@@ -26,7 +30,7 @@ library UMLDECORATORLib
 	coclass UMLDecorator
 	{
 		[default] interface IMgaElementDecorator;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 
 };
