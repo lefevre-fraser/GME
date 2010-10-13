@@ -87,12 +87,21 @@ def system(command, dirname=None):
         command : command to execute
         dirname : if set, execute the command within this directory
     """
-    if dirname is not None:
-        command = "cd /d %s && %s" % (dirname, command)
+#    if dirname is not None:
+#        command = "cd /d %s && %s" % (dirname, command)
     toolmsg("Executing " + command)
-    ret = os.system( command )
-    if ret != 0:
-        raise BuildException, command + " failed. Exit code: " + str(ret)
+    #ret = os.system( command )
+    #if ret != 0:
+    #    raise BuildException, command + " failed. Exit code: " + str(ret)
+    import subprocess
+    args = command.split(" ")
+    if dirname is not None:
+        args[0:0] = 'cd', '/d', '%s', '&&'
+    with open(os.devnull, "w") as nulfp:
+        # n.b. stderr=subprocess.STDOUT fails mysteriously
+        import sys
+        subprocess.check_call(args, stdout=(sys.stdout if prefs['verbose'] else nulfp), stderr=None, shell=True)
+
 
 
 def test_VS():
