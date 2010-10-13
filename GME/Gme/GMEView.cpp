@@ -7515,16 +7515,20 @@ HRESULT CGMEView::DumpModelGeometryXML(LPCTSTR filePath)
 				// Now serialize the DOM tree with pretty print format.
 				//
 
-				DOMWriter* theSerializer = impl->createDOMWriter();
+				DOMLSSerializer* theSerializer = impl->createLSSerializer();
 				theSerializer->setNewLine(X("\n\r"));
-				theSerializer->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true);
-				XMLFormatTarget* myFormatTarget = new LocalFileFormatTarget(filePath);
-				theSerializer->writeNode(myFormatTarget, *doc);
+				theSerializer->getDomConfig()->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
 
+				XMLFormatTarget* myFormatTarget = new LocalFileFormatTarget(filePath);
+				DOMLSOutput* theOutput = impl->createLSOutput();
+				theOutput->setByteStream(myFormatTarget);
+				theSerializer->write( doc, theOutput );
+				
 				// Free up stuff
 
 				delete myFormatTarget;
 				theSerializer->release();
+				theOutput->release();
 
 				doc->release();
 			}
