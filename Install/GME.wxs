@@ -164,9 +164,6 @@
                             <Directory Id='INSTALLDIR_PARADIGMS_HFSM_HFSMSIMULATOR' Name='HFSMSimulator'/>
                         </Directory>
                         <Directory Id='INSTALLDIR_PARADIGMS_METAGME' Name='MetaGME'>
-                            <Directory Id='INSTALLDIR_PARADIGMS_METAGME_MONTRAVERSER' Name='MONTraverser'>
-                                <Directory Id='INSTALLDIR_PARADIGMS_METAGME_MONTRAVERSER_RESOURCES' Name='resources' />
-                            </Directory>
                         </Directory>
                         <Directory Id='INSTALLDIR_PARADIGMS_SF' Name='SF'>
                             <Directory Id='INSTALLDIR_PARADIGMS_SF_BON2SFINTERPRETER' Name='BON2SFInterpreter'/>
@@ -305,7 +302,7 @@
 	    
 	    <DirectoryRef Id='INSTALLDIR_BIN'>
 	        <Component Id='Annotator.dll' Guid='d8ad8dd3-141c-4a64-be06-931b20b2492f'>
-	            <File Id="Annotator.dll" Name="Annotator.dll" KeyPath="yes" Source="..\GME\Annotator\Release\Annotator.dll">
+	            <File Id="Annotator.dll" Name="Annotator.dll" KeyPath="yes" Source="..\GME\Release\Annotator.dll">
 	                <TypeLib Id="{F0E585D5-1697-4698-B374-D73B0D6127D0}" Description="GME Annotator Type Library" Language="0" MajorVersion="1" MinorVersion="0">
                         <Class Id="{D3CF55F1-D1AA-433E-982B-D2A6E22D8299}" Context="InprocServer32" Description="MGA Decorator CoClass (Annotator)" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="MGA.Decorator.Annotator.1" Description="MGA Decorator CoClass (Annotator)">
@@ -346,7 +343,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Console.ocx" Guid="c12c3f01-65ee-4db4-aaeb-b6cae21795b1">
-                <File Id="Console.ocx" Name="Console.ocx" KeyPath="yes" Source="..\GME\Console\Release\Console.ocx">
+                <File Id="Console.ocx" Name="Console.ocx" KeyPath="yes" Source="..\GME\Release\Console.ocx">
                     <TypeLib Id="{339FD307-717B-4698-AC13-4ACCCF5D4C91}" Description="Console ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
                         <Class Id="{A9B2B82A-B753-4FB0-8F0B-3661BC307053}" Context="InprocServer32" Description="GME Console Property Page" />
                         <Class Id="{CD42B6DD-CCC7-4D4A-A82D-124AF08A6737}" Context="InprocServer32" Description="ScriptHost Class" ThreadingModel="apartment" Programmable="yes">
@@ -364,7 +361,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="ConstraintManager.dll" Guid="c3f75502-11d9-44cb-b84a-8d0ba458894b">
-                <File Id="ConstraintManager.dll" Name="ConstraintManager.dll" KeyPath="yes" Source="..\GME\ConstraintManager\Release\ConstraintManager.dll">
+                <File Id="ConstraintManager.dll" Name="ConstraintManager.dll" KeyPath="yes" Source="..\GME\Release\ConstraintManager.dll">
                     <TypeLib Id="{D69D91D0-4550-4A5D-848C-9BBA92693D22}" Description="ConstraintManager 1.0 Type Library" Language="0" MajorVersion="1" MinorVersion="0">
                         <Class Id="{44055854-A45B-4357-9D2C-FC66D6C0DFFA}" Context="InprocServer32" Description="ConstraintManager Class" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="Mga.AddOn.ConstraintManager.1" Description="ConstraintManager Class">
@@ -402,7 +399,7 @@
         
          <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Core.dll" Guid="5a19a282-1cbe-4a3f-80d0-52caa4aff44e">
-                <File Id="Core.dll" Name="Core.dll" KeyPath="yes" Source="..\GME\Core\Release\Core.dll">                    
+                <File Id="Core.dll" Name="Core.dll" KeyPath="yes" Source="..\GME\Release\Core.dll">                    
                     <TypeLib Id="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" Description="MGA Core Type Library" Language="0" MajorVersion="1" MinorVersion="0">
                         <Class Id="{7281C07A-3E09-11D3-B2F7-005004D38590}" Context="InprocServer32" Description="CoreBinFile Class" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="Mga.CoreBinFile.1" Description="CoreBinFile Class">
@@ -426,7 +423,7 @@
         
          <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="GMEActiveBrowser.ocx" Guid="92105001-49cc-4eba-b891-5b12c3e8b5f9">
-                <File Id="GMEActiveBrowser.ocx" Name="GMEActiveBrowser.ocx" KeyPath="yes" Source="..\GME\GMEActiveBrowser\Release\GMEActiveBrowser.ocx">
+                <File Id="GMEActiveBrowser.ocx" Name="GMEActiveBrowser.ocx" KeyPath="yes" Source="..\GME\Release\GMEActiveBrowser.ocx">
                     <TypeLib Id="{FDA9EDB8-ED6A-468F-A3A9-E9361FEED051}" Description="GMEActiveBrowser ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
                         <Class Id="{4B4C56DA-A2A0-4AE3-BC4B-B07151DE732C}" Context="InprocServer32" Description="GMEActiveBrowser Property Page" />
                         <Class Id="{DD4F2DEB-D064-4844-9EE1-04673C872E7B}" Context="InprocServer32" Description="GMEActiveBrowser Control" ThreadingModel="apartment" Version="1.0" Control="yes" Insertable="yes">
@@ -442,12 +439,10 @@
                 <File Id="InterfaceVersion.h" Name="InterfaceVersion.h" KeyPath="yes" Source="..\GME\Interfaces\InterfaceVersion.h" />
                 <File Id="InterfaceColl.h" Name="InterfaceColl.h" Source="..\GME\Interfaces\InterfaceColl.h" />
                 <File Id="GMEVersion.h" Name="GMEVersion.h" Source="..\GME\Gme\GMEVersion.h" />
-                <File Id="ConstMgr.idl" Name="ConstMgr.idl" Source="..\GME\Interfaces\ConstMgr.idl" />
                 <File Id="Core.idl" Name="Core.idl" Source="..\GME\Interfaces\Core.idl" />
                 <File Id="Gme.idl" Name="Gme.idl" Source="..\GME\Interfaces\Gme.idl" />
                 <File Id="Meta.idl" Name="Meta.idl" Source="..\GME\Interfaces\Meta.idl" />
                 <File Id="Mga.idl" Name="Mga.idl" Source="..\GME\Interfaces\Mga.idl" />
-                <File Id="MgaDecorator.idl" Name="MgaDecorator.idl" Source="..\GME\Interfaces\MgaDecorator.idl" />
                 <File Id="MgaUtil.idl" Name="MgaUtil.idl" Source="..\GME\Interfaces\MgaUtil.idl" />
                 <File Id="Parser.idl" Name="Parser.idl" Source="..\GME\Interfaces\Parser.idl" />
             </Component>
@@ -503,7 +498,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Meta.dll" Guid="527ea6f5-ed90-48cc-ac80-d4e4ccd1a335">
-                <File Id="Meta.dll" Name="Meta.dll" KeyPath="yes" Source="..\GME\Meta\release\Meta.dll">
+                <File Id="Meta.dll" Name="Meta.dll" KeyPath="yes" Source="..\GME\release\Meta.dll">
                     <TypeLib Id="{0ADEEC71-D83A-11D3-B36B-005004D38590}" Description="MGA Meta Type Library" Language="0" MajorVersion="1" MinorVersion="0">
                         <Class Id="{8216325A-B7C8-1AD3-ABAE-000000000000}" Context="InprocServer32" Description="MgaMetaEnumItem Class" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="Mga.MgaMetaEnumItem.1" Description="MgaMetaEnumItem Class">
@@ -658,7 +653,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Mga.dll" Guid="d2a805f5-0d58-46a1-b270-6f88af1e25b1">
-                <File Id="Mga.dll" Name="Mga.dll" KeyPath="yes" Source="..\GME\Mga\Release\Mga.dll">
+                <File Id="Mga.dll" Name="Mga.dll" KeyPath="yes" Source="..\GME\Release\Mga.dll">
                     <TypeLib Id="{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}" Description="MGA Mga Type Library" Language="0" MajorVersion="1" MinorVersion="0">
                         <Class Id="{1DF52E42-BCC0-4439-B3CD-75610AC372A3}" Context="InprocServer32" Description="MgaO Class" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="Mga.MgaO.1" Description="MgaO Class">
@@ -697,7 +692,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="MgaDecorators.dll" Guid="c6cc5198-9163-42c3-ac67-cbd43f1a0bc6">
-                <File Id="MgaDecorators.dll" Name="MgaDecorators.dll" KeyPath="yes" Source="..\GME\MgaDecorators\Release\MgaDecorators.dll">
+                <File Id="MgaDecorators.dll" Name="MgaDecorators.dll" KeyPath="yes" Source="..\GME\Release\MgaDecorators.dll">
                     <TypeLib Id="{F5D9A9A0-5A1C-40B8-9EEF-4890FEECC8CD}" Description="MgaDecoratorLib 1.0 Type Library" Language="0" MajorVersion="1" MinorVersion="0">
                         <Class Id="{3FA0768D-F832-4C6A-973D-5D8E3EF05FFA}" Context="InprocServer32" Description="BoxDecorator Class" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="Mga.BoxDecorator.1" Description="BoxDecorator Class">
@@ -711,7 +706,7 @@
 
       <DirectoryRef Id="INSTALLDIR_BIN">
         <Component Id="MgaDotNetServices.dll" Guid="A3DC6441-CB78-4225-8B25-16B1A14A0A81">
-          <File Id="MgaDotNetServices.dll" Name="MgaDotNetServices.dll" KeyPath="yes" Source="..\GME\MgaDotNetServices\bin\Release\MgaDotNetServices.dll" />
+          <File Id="MgaDotNetServices.dll" Name="MgaDotNetServices.dll" KeyPath="yes" Source="..\GME\Release\MgaDotNetServices.dll" />
           <Class Id="{0BB0C371-6835-4F09-A156-0BD8E3DF8216}" Context="InprocServer32" Description="MGA.DotNetServices.Registrar" ThreadingModel="both" ForeignServer="mscoree.dll">
             <ProgId Id="MGA.DotNetRegistrar" Description="MGA.DotNetServices.Registrar" />
           </Class>
@@ -730,7 +725,7 @@
 
       <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="MgaUtil.dll" Guid="e476f906-c2f1-40ec-ad45-56b98c31b80d">
-                <File Id="MgaUtil.dll" Name="MgaUtil.dll" KeyPath="yes" Source="..\GME\MgaUtil\Release\MgaUtil.dll">
+                <File Id="MgaUtil.dll" Name="MgaUtil.dll" KeyPath="yes" Source="..\GME\Release\MgaUtil.dll">
                     <TypeLib Id="{461F30AE-3BF0-11D4-B3F0-005004D38590}" Description="MGA Utilities Type Library" Language="0" MajorVersion="1" MinorVersion="0">
                         <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
                             <Class Id="{F1D6BB06-42EE-11D4-B3F4-005004D38590}" Context="InprocServer32" Description="MgaRegistrar Class" ThreadingModel="apartment" Programmable="yes">
@@ -780,32 +775,7 @@
                 <RegistryValue Root="HKCR" Key="CLSID\{F1D6BB06-42EE-11D4-B3F4-005004D38590}" Name="LocalizedString" Value="@[!MgaUtil.dll],-2072" Type="string" Action="write" />
             </Component>
         </DirectoryRef>
-        
-        <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME">
-            <Component Id="MONTraverser.dll" Guid="418f4972-c123-4bbb-9991-551e426205e4">
-                <File Id="MONTraverser.dll" Name="MONTraverser.dll" KeyPath="yes" Source="..\Paradigms\MetaGME\MONTraverser\Release\MONTraverser.dll">
-                    <TypeLib Id="BD75CE5A-59A3-4F51-B171-87AB7EAC267D" Description="MGA Interpreter TypeLibrary (MONTraverser)" Language="0" MajorVersion="1" MinorVersion="0">
-                        <Class Id="{137C4461-FC38-4813-AC39-A6F194FEEB2D}" Context="InprocServer32" Description="MGA.Interpreter.MONTraverser">
-                            <ProgId Id="MGA.Interpreter.MONTraverser" Description="MGA.Interpreter.MONTraverser" />
-                        </Class>
-                    </TypeLib>    
-                </File>
-                <RegistryKey Root='HKLM' Key='Software\GME\Components\MGA.Interpreter.MONTraverser'>
-                    <RegistryValue Name='Description' Type='string' Value='MONTraverser'/>
-                    <RegistryValue Name='Icon' Type='string' Value=',IDI_COMPICON'/>
-                    <RegistryValue Name='Paradigm' Type='string' Value='*'/>
-                    <RegistryValue Name='Tooltip' Type='string' Value='MONTraverser'/>
-                    <RegistryValue Name='Type' Type='integer' Value='9'/>
-                    <RegistryKey Key='Associated'>
-                        <RegistryValue Name='HFSM' Type='string' Value=''/>
-                        <RegistryValue Name='MetaGME' Type='string' Value=''/>
-                        <RegistryValue Name='SF' Type='string' Value=''/>
-                        <RegistryValue Name='UML' Type='string' Value=''/>
-                    </RegistryKey>
-		        </RegistryKey>
-            </Component>
-        </DirectoryRef>
-        
+
         <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME">
             <Component Id="NamespaceConfig.dll" Guid="f7665b7d-2d2c-4152-ae5c-f7ebf65be517">
                 <File Id="NamespaceConfig.dll" Name="NamespaceConfig.dll" KeyPath="yes" Source="..\Paradigms\MetaGME\NamespaceConfig\Release\NamespaceConfig.dll">
@@ -830,7 +800,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="ObjectInspector.ocx" Guid="a4f8ebb1-2ee5-4755-a00c-bc6ff59baf5e">
-                <File Id="ObjectInspector.ocx" Name="ObjectInspector.ocx" KeyPath="yes" Source="..\GME\ObjectInspector\Release\ObjectInspector.ocx">
+                <File Id="ObjectInspector.ocx" Name="ObjectInspector.ocx" KeyPath="yes" Source="..\GME\Release\ObjectInspector.ocx">
                     <TypeLib Id="{92B54998-8E88-41A2-924F-7354CAD14565}" Description="ObjectInspector ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
                         <Class Id="{0B4B5A75-BF21-4C8B-A705-E2666E1D9B15}" Context="InprocServer32" Description="ObjectInspector Property Page" />
                         <Class Id="{B786F53C-297F-4DB8-8060-D45057217AEE}" Context="InprocServer32" Description="ObjectInspector Control" ThreadingModel="apartment" Version="1.0" Control="yes">
@@ -850,7 +820,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="PanningView.ocx" Guid="3e230ebb-8c3e-44e2-ade8-78ce8c31b6d3">
-                <File Id="PanningView.ocx" Name="PanningView.ocx" KeyPath="yes" Source="..\GME\PanningView\Release\PanningView.ocx">
+                <File Id="PanningView.ocx" Name="PanningView.ocx" KeyPath="yes" Source="..\GME\Release\PanningView.ocx">
                     <TypeLib Id="{B6ED16CA-512F-48B7-B5DB-1C064821F7DB}" Description="PanningView ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
                         <Class Id="{458D3476-B3FF-4545-9645-C247A7C17E36}" Context="InprocServer32" Description="PanningView Property Page" />
                         <Class Id="{B0C28BAA-7E44-404C-BEAD-83735356F1D2}" Context="InprocServer32" Description="PanningView Control" ThreadingModel="apartment" Version="1.0" Control="yes">
@@ -863,7 +833,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Parser.dll" Guid="71935c0b-4c3e-48de-b514-5fd5187a4343">
-                <File Id="Parser.dll" Name="Parser.dll" KeyPath="yes" Source="..\GME\Parser\Release\Parser.dll">
+                <File Id="Parser.dll" Name="Parser.dll" KeyPath="yes" Source="..\GME\Release\Parser.dll">
                     <TypeLib Id="{70C41B15-E3CE-11D3-B37A-005004D38590}" Description="MGA Parser Type Library" Language="0" MajorVersion="1" MinorVersion="0">
                         <Class Id="{70C41B25-E3CE-11D3-B37A-005004D38590}" Context="InprocServer32" Description="MetaParser Class" ThreadingModel="apartment" Programmable="yes">
                             <ProgId Id="Mga.MetaParser.1" Description="MetaParser Class">
@@ -890,7 +860,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="PartBrowser.ocx" Guid="89b7e530-06ae-4da1-851f-bd546e18a5ba">
-                <File Id="PartBrowser.ocx" Name="PartBrowser.ocx" KeyPath="yes" Source="..\GME\PartBrowser\Release\PartBrowser.ocx">
+                <File Id="PartBrowser.ocx" Name="PartBrowser.ocx" KeyPath="yes" Source="..\GME\Release\PartBrowser.ocx">
                     <TypeLib Id="{EA3F7431-913A-421F-9B9C-BEB6A735285A}" Description="PartBrowser ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
                         <Class Id="{8E82D238-D222-493D-8ED2-3175A5B1086C}" Context="InprocServer32" Description="PartBrowser Property Page" />
                         <Class Id="{1FF57057-D598-4FC2-8F9D-708F59B9C017}" Context="InprocServer32" Description="PartBrowser Control" ThreadingModel="apartment" Version="1.0" Control="yes" Insertable="yes">
@@ -915,7 +885,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="Search.ocx" Guid="81b6b085-13d2-47a5-8312-519f12a337e9">
-                <File Id="Search.ocx" Name="Search.ocx" KeyPath="yes" Source="..\GME\Search\Release\Search.ocx">
+                <File Id="Search.ocx" Name="Search.ocx" KeyPath="yes" Source="..\GME\Release\Search.ocx">
                     <TypeLib Id="{E65EEDEF-18B7-4F67-BBC7-0E22D0D34C28}" Description="Search ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
                         <Class Id="{F299943A-2397-45B1-8C77-A9D29F2FE58E}" Context="InprocServer32" Description="GME Search Property Page" />
                         <Class Id="{E5FE98F1-B7AD-4ABE-89DB-87DDD9DB753E}" Context="InprocServer32" Description="GME Search Control" ThreadingModel="apartment" Version="1.0" Control="yes">
@@ -965,7 +935,7 @@
         
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="XmlBackEnd.dll" Guid="bda363bb-dd37-4123-9450-785d8c246873">
-                <File Id="XmlBackEnd.dll" Name="XmlBackEnd.dll" KeyPath="yes" Source="..\GME\XmlBackEnd\Release\XmlBackEnd.dll">
+                <File Id="XmlBackEnd.dll" Name="XmlBackEnd.dll" KeyPath="yes" Source="..\GME\Release\XmlBackEnd.dll">
                     <TypeLib Id="{09107441-E750-4516-B6D0-DE6358FDBA9B}" Description="XmlBackEnd 1.0 Type Library" Language="0" MajorVersion="1" MinorVersion="0">
                         <Class Id="{0C398158-C207-406D-8402-8D45274E5F85}" Context="InprocServer32" Description="SvnExec Class" ThreadingModel="both" Programmable="yes">
                             <ProgId Id="Mga.XmlBackEnd.SvnExec.1" Description="SvnExec Class">
@@ -1026,7 +996,8 @@
                 <File Id="BON2SFInterpreterSource_BON2Component.cpp" Name="BON2Component.cpp" Source="..\Paradigms\SF\BON2SFInterpreter\BON2Component.cpp" />
                 <File Id="BON2SFInterpreterSource_BON2Component.h" Name="BON2Component.h"  Source="..\Paradigms\SF\BON2SFInterpreter\BON2Component.h" />
                 <File Id="BON2SFInterpreter.sln" Name="BON2SFInterpreter.sln" KeyPath="yes" Source="..\Paradigms\SF\BON2SFInterpreter\BON2SFInterpreter.sln" />
-                <File Id="BON2SFInterpreter.vcproj" Name="BON2SFInterpreter.vcproj"  Source="..\Paradigms\SF\BON2SFInterpreter\BON2SFInterpreter.vcproj" />                
+                <File Id="BON2SFInterpreter.vcxproj" Name="BON2SFInterpreter.vcxproj"  Source="..\Paradigms\SF\BON2SFInterpreter\BON2SFInterpreter.vcxproj" />
+                <File Id="BON2SFInterpreter.vcxproj.filters" Name="BON2SFInterpreter.vcxproj.filters"  Source="..\Paradigms\SF\BON2SFInterpreter\BON2SFInterpreter.vcxproj.filters" />
                 <File Id="BON2SFInterpreterSource_CompIcon.ico" Name="CompIcon.ico"  Source="..\Paradigms\SF\BON2SFInterpreter\CompIcon.ico" />
                 <File Id="BON2SFInterpreterSource_Component.def" Name="Component.def"  Source="..\Paradigms\SF\BON2SFInterpreter\Component.def" />
                 <File Id="BON2SFInterpreterSource_Component.rc" Name="Component.rc"  Source="..\Paradigms\SF\BON2SFInterpreter\Component.rc" />
@@ -1071,7 +1042,8 @@
                 <File Id="BON2SFSample.sln" Name="BON2SFSample.sln" KeyPath="yes" Source="..\Paradigms\SF\BON2SFSample\BON2SFSample.sln" />
                 <File Id="BON2SFSampleSource_BON2Component.cpp" Name="BON2Component.cpp" Source="..\Paradigms\SF\BON2SFSample\BON2Component.cpp" />
                 <File Id="BON2SFSampleSource_BON2Component.h" Name="BON2Component.h" Source="..\Paradigms\SF\BON2SFSample\BON2Component.h" />
-                <File Id="BON2SFSample.vcproj" Name="BON2SFSample.vcproj" Source="..\Paradigms\SF\BON2SFSample\BON2SFSample.vcproj" />
+                <File Id="BON2SFSample.vcxproj" Name="BON2SFSample.vcxproj" Source="..\Paradigms\SF\BON2SFSample\BON2SFSample.vcxproj" />
+                <File Id="BON2SFSample.vcxproj.filters" Name="BON2SFSample.vcxproj.filters" Source="..\Paradigms\SF\BON2SFSample\BON2SFSample.vcxproj.filters" />
                 <File Id="BON2SFSampleSource_CompIcon.ico" Name="CompIcon.ico" Source="..\Paradigms\SF\BON2SFSample\CompIcon.ico" />
                 <File Id="BON2SFSampleSource_Component.def" Name="Component.def" Source="..\Paradigms\SF\BON2SFSample\Component.def" />
                 <File Id="BON2SFSampleSource_Component.rc" Name="Component.rc" Source="..\Paradigms\SF\BON2SFSample\Component.rc" />
@@ -1124,7 +1096,8 @@
                 <File Id="HFSMSimulatorSource_Component.rc" Name="Component.rc"  Source="..\Paradigms\HFSM\HFSMSimulator\Component.rc" />
                 <File Id="HFSMSimulatorSource_ComponentConfig.h" Name="ComponentConfig.h"  Source="..\Paradigms\HFSM\HFSMSimulator\ComponentConfig.h" />
                 <File Id="HFSMSimulator.sln" Name="HFSMSimulator.sln" KeyPath="yes" Source="..\Paradigms\HFSM\HFSMSimulator\HFSMSimulator.sln" />
-                <File Id="HFSMSimulator.vcproj" Name="HFSMSimulator.vcproj"  Source="..\Paradigms\HFSM\HFSMSimulator\HFSMSimulator.vcproj" />
+                <File Id="HFSMSimulator.vcxproj" Name="HFSMSimulator.vcxproj"  Source="..\Paradigms\HFSM\HFSMSimulator\HFSMSimulator.vcxproj" />
+                <File Id="HFSMSimulator.vcxproj.filters" Name="HFSMSimulator.vcxproj.filters"  Source="..\Paradigms\HFSM\HFSMSimulator\HFSMSimulator.vcxproj.filters" />
                 <File Id="HFSMSimulatorSource_Resource.h" Name="Resource.h"  Source="..\Paradigms\HFSM\HFSMSimulator\Resource.h" />
                 <File Id="HFSMSimulatorSource_StdAfx.cpp" Name="StdAfx.cpp"  Source="..\Paradigms\HFSM\HFSMSimulator\StdAfx.cpp" />
                 <File Id="HFSMSimulatorSource_StdAfx.h" Name="StdAfx.h"  Source="..\Paradigms\HFSM\HFSMSimulator\StdAfx.h" />
@@ -1169,29 +1142,6 @@
             </Component>
         </DirectoryRef>
 
-        <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME_MONTRAVERSER_RESOURCES">
-            <Component Id="MONTraverserResource" Guid="{B4F91FE0-361B-47F9-8652-3E0016C2D811}">
-                <File Id="comp_icon.ico" Name="comp_icon.ico" KeyPath="yes" Source="..\Paradigms\MetaGME\MONTraverser\resources\comp_icon.ico" />
-                <File Id="meta_icons.bmp" Name="meta_icons.bmp"  Source="..\Paradigms\MetaGME\MONTraverser\resources\meta_icons.bmp" />
-            </Component>
-        </DirectoryRef>
-        
-        <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME_MONTRAVERSER">
-            <Component Id="MONTraverserSource" Guid="{F0718970-833F-4A9D-AF82-4D137028AC61}">
-                <File Id="MONTraverserSource_Bon2Component.cpp" Name="Bon2Component.cpp" Source="..\Paradigms\MetaGME\MONTraverser\Bon2Component.cpp" />
-                <File Id="MONTraverserSource_Bon2Component.h" Name="Bon2Component.h"  Source="..\Paradigms\MetaGME\MONTraverser\Bon2Component.h" />
-                <File Id="MONTraverserSource_component.def" Name="component.def"  Source="..\Paradigms\MetaGME\MONTraverser\component.def" />
-                <File Id="MONTraverserSource_Component.rc" Name="Component.rc"  Source="..\Paradigms\MetaGME\MONTraverser\Component.rc" />
-                <File Id="MONTraverserSource_ComponentConfig.h" Name="ComponentConfig.h"  Source="..\Paradigms\MetaGME\MONTraverser\ComponentConfig.h" />
-                <File Id="MONDialog.cpp" Name="MONDialog.cpp"  Source="..\Paradigms\MetaGME\MONTraverser\MONDialog.cpp" />
-                <File Id="MONDialog.h" Name="MONDialog.h"  Source="..\Paradigms\MetaGME\MONTraverser\MONDialog.h" />
-                <File Id="MONTraverser.vcproj" Name="MONTraverser.vcproj" KeyPath="yes" Source="..\Paradigms\MetaGME\MONTraverser\MONTraverser.vcproj" />
-                <File Id="MONTraverserSource_resource.h" Name="resource.h"  Source="..\Paradigms\MetaGME\MONTraverser\resource.h" />
-                <File Id="MONTraverserSource_StdAfx.cpp" Name="StdAfx.cpp"  Source="..\Paradigms\MetaGME\MONTraverser\StdAfx.cpp" />
-                <File Id="MONTraverserSource_StdAfx.h" Name="StdAfx.h"  Source="..\Paradigms\MetaGME\MONTraverser\StdAfx.h" />
-            </Component>
-        </DirectoryRef>
-        
         <DirectoryRef Id="INSTALLDIR_PARADIGMS_SF_DEMO">
             <Component Id="SFDemo" Guid="{F9C50B52-EE34-457E-8124-FEB1AF02919E}">
                 <File Id="FFT.c" Name="FFT.c" Source="..\Paradigms\SF\demo\FFT.c" />
@@ -1291,7 +1241,8 @@
                 <File Id="Guardian.h" Name="Guardian.h"  Source="..\Paradigms\SF\SFInterpreter\Guardian.h" />
                 <File Id="SFInterpreterSource_Resource.h" Name="Resource.h"  Source="..\Paradigms\SF\SFInterpreter\Resource.h" />
                 <File Id="SFInterpreter.sln" Name="SFInterpreter.sln" KeyPath="yes" Source="..\Paradigms\SF\SFInterpreter\SFInterpreter.sln" />
-                <File Id="SFInterpreter.vcproj" Name="SFInterpreter.vcproj"  Source="..\Paradigms\SF\SFInterpreter\SFInterpreter.vcproj" />                
+                <File Id="SFInterpreter.vcxproj" Name="SFInterpreter.vcxproj"  Source="..\Paradigms\SF\SFInterpreter\SFInterpreter.vcxproj" />                
+                <File Id="SFInterpreter.vcxproj.filters" Name="SFInterpreter.vcxproj.filters"  Source="..\Paradigms\SF\SFInterpreter\SFInterpreter.vcxproj.filters" />                
                 <File Id="SFInterpreterSource_StdAfx.cpp" Name="StdAfx.cpp"  Source="..\Paradigms\SF\SFInterpreter\StdAfx.cpp" />
                 <File Id="SFInterpreterSource_StdAfx.h" Name="StdAfx.h"  Source="..\Paradigms\SF\SFInterpreter\StdAfx.h" />
             </Component>
@@ -1358,7 +1309,8 @@
                 <File Id="UMLDecorator.rc" Name="UMLDecorator.rc"  Source="..\Paradigms\UML\decorator\UMLDecorator.rc" />
                 <File Id="UMLDecorator.rgs" Name="UMLDecorator.rgs"  Source="..\Paradigms\UML\decorator\UMLDecorator.rgs" />
                 <File Id="UMLDecorator.sln" Name="UMLDecorator.sln" KeyPath="yes" Source="..\Paradigms\UML\decorator\UMLDecorator.sln" />
-                <File Id="UMLDecorator.vcproj" Name="UMLDecorator.vcproj"  Source="..\Paradigms\UML\decorator\UMLDecorator.vcproj" />
+                <File Id="UMLDecorator.vcxproj" Name="UMLDecorator.vcxproj"  Source="..\Paradigms\UML\decorator\UMLDecorator.vcxproj" />
+                <File Id="UMLDecorator.vcxproj.filters" Name="UMLDecorator.vcxproj.filters"  Source="..\Paradigms\UML\decorator\UMLDecorator.vcxproj.filters" />
                 <File Id="UMLDecoratorApp.cpp" Name="UMLDecoratorApp.cpp"  Source="..\Paradigms\UML\decorator\UMLDecoratorApp.cpp" />
                 <File Id="UMLDecoratorApp.def" Name="UMLDecoratorApp.def"  Source="..\Paradigms\UML\decorator\UMLDecoratorApp.def" />
                 <File Id="UMLDecoratorImpl.cpp" Name="UMLDecoratorImpl.cpp" Source="..\Paradigms\UML\decorator\UMLDecoratorImpl.cpp" />
@@ -1910,10 +1862,10 @@
                 <File Id="DecoratorInterface.cpp" Name="DecoratorInterface.cpp"  Source="..\SDK\DecoratorLib\DecoratorInterface.cpp" />
                 <File Id="DecoratorInterface.h" Name="DecoratorInterface.h"  Source="..\SDK\DecoratorLib\DecoratorInterface.h" />
                 <File Id="DecoratorLib.ico" Name="DecoratorLib.ico"  Source="..\SDK\DecoratorLib\DecoratorLib.ico" />
-                <File Id="DecoratorLib.idl" Name="DecoratorLib.idl"  Source="..\SDK\DecoratorLib\DecoratorLib.idl" />
                 <File Id="DecoratorLib.rc" Name="DecoratorLib.rc"  Source="..\SDK\DecoratorLib\DecoratorLib.rc" />
                 <File Id="DecoratorLib.sln" Name="DecoratorLib.sln" KeyPath="yes" Source="..\SDK\DecoratorLib\DecoratorLib.sln" />
-                <File Id="DecoratorLib.vcproj" Name="DecoratorLib.vcproj"  Source="..\SDK\DecoratorLib\DecoratorLib.vcproj" />
+                <File Id="DecoratorLib.vcxproj" Name="DecoratorLib.vcxproj"  Source="..\SDK\DecoratorLib\DecoratorLib.vcxproj" />
+                <File Id="DecoratorLib.vcxproj.filters" Name="DecoratorLib.vcxproj.filters"  Source="..\SDK\DecoratorLib\DecoratorLib.vcxproj.filters" />
                 <File Id="DecoratorMfc.cpp" Name="DecoratorMfc.cpp"  Source="..\SDK\DecoratorLib\DecoratorMfc.cpp" />
                 <File Id="DecoratorMfc.h" Name="DecoratorMfc.h"  Source="..\SDK\DecoratorLib\DecoratorMfc.h" />
                 <File Id="DecoratorSmart.cpp" Name="DecoratorSmart.cpp"  Source="..\SDK\DecoratorLib\DecoratorSmart.cpp" />
@@ -2095,7 +2047,8 @@
                 <File Id="DecoratorExamplesNewSample_Decorator.rc" Name="Decorator.rc" KeyPath="yes" Source="..\SDK\Decorator Examples\NewSample\Decorator.rc" />
                 <File Id="DecoratorExamplesNewSample_Decorator.rgs" Name="Decorator.rgs" Source="..\SDK\Decorator Examples\NewSample\Decorator.rgs" />
                 <File Id="DecoratorExamplesNewSample_Decorator.sln" Name="Decorator.sln" Source="..\SDK\Decorator Examples\NewSample\Decorator.sln" />
-                <File Id="DecoratorExamplesNewSample_Decorator.vcproj" Name="Decorator.vcproj" Source="..\SDK\Decorator Examples\NewSample\Decorator.vcproj" />
+                <File Id="DecoratorExamplesNewSample_Decorator.vcxproj" Name="Decorator.vcxproj" Source="..\SDK\Decorator Examples\NewSample\Decorator.vcxproj" />
+                <File Id="DecoratorExamplesNewSample_Decorator.vcxproj.filters" Name="Decorator.vcxproj.filters" Source="..\SDK\Decorator Examples\NewSample\Decorator.vcxproj.filters" />
                 <File Id="DecoratorExamplesNewSample_DecoratorApp.cpp" Name="DecoratorApp.cpp" Source="..\SDK\Decorator Examples\NewSample\DecoratorApp.cpp" />
                 <File Id="DecoratorExamplesNewSample_DecoratorApp.def" Name="DecoratorApp.def" Source="..\SDK\Decorator Examples\NewSample\DecoratorApp.def" />
                 <File Id="DecoratorExamplesNewSample_DecoratorCompositePart.cpp" Name="DecoratorCompositePart.cpp" Source="..\SDK\Decorator Examples\NewSample\DecoratorCompositePart.cpp" />
@@ -2246,7 +2199,6 @@
                 <ComponentRef Id='MgaDecorators.dll' />
                 <ComponentRef Id='MgaDotNetServices.dll'/>
                 <ComponentRef Id='MgaUtil.dll' />
-                <ComponentRef Id='MONTraverser.dll' />
                 <ComponentRef Id='NamespaceConfig.dll' />
                 <ComponentRef Id='ObjectInspector.ocx' />
                 <ComponentRef Id='OnlineHelp' />
@@ -2281,8 +2233,6 @@
                 <ComponentRef Id='HFSMSimulatorSource' />
                 <ComponentRef Id='HFSMParadigmFiles' />
                 <ComponentRef Id='JavaBONSFExample' />
-                <ComponentRef Id='MONTraverserResource' />
-                <ComponentRef Id='MONTraverserSource' />
                 <ComponentRef Id='SFDemo' />
                 <ComponentRef Id='SFDemoInclude' />
                 <ComponentRef Id='SFDemoLib' />
