@@ -52,7 +52,7 @@ public:
     virtual void startElement(const XMLCh* const name, AttributeList& attributes);
     virtual void endElement(const XMLCh* const name);
 
-	virtual void characters(const XMLCh* const chars, const unsigned int length);
+	virtual void characters(const XMLCh* const chars,const XMLSize_t);
 
     virtual void error(const SAXParseException& exception);
     virtual void fatalError(const SAXParseException& exception);

@@ -27,12 +27,7 @@ public:
     // -----------------------------------------------------------------------
     //  Implementations of the format target interface
     // -----------------------------------------------------------------------
-    void writeChars
-    (
-        const   XMLByte* const  toWrite
-        , const unsigned int    count
-        , XMLFormatter* const   formatter
-    );
+    void writeChars(const   XMLByte* const  toWrite, const XMLSize_t count, XMLFormatter* const   formatter);
 
 	
 	Transcoder& operator << ( Modes mode);

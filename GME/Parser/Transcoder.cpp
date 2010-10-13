@@ -130,9 +130,7 @@ Transcoder::operator <<( const std::string& toWrite)
 // ---------------------------------------------------------------------------
 //  Transcoder: Overrides of the output formatter target interface
 // ---------------------------------------------------------------------------
-void Transcoder::writeChars(const XMLByte* const toWrite,
-                                  const unsigned int count,
-                                  XMLFormatter* const formatter)
+void Transcoder::writeChars(const   XMLByte* const  toWrite, const XMLSize_t count, XMLFormatter* const   formatter)
 {
 	ASSERT( sizeof( XMLByte) == sizeof( char));
 	write( (const char * const)toWrite, count);//zolmol: cast from const unsigned char * const

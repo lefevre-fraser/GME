@@ -80,7 +80,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\Parser.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -93,9 +93,9 @@
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
-      <Command>copy ..\Lib\xerces-c_2_8.dll "$(OutDir)"</Command>
-      <Message>copy ..\Lib\xerces-c_2_8.dll "$(OutDir)"</Message>
-      <Outputs>$(OutDir)\xerces-c_2_8.dll</Outputs>
+      <Command>copy ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Command>
+      <Message>copy ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Message>
+      <Outputs>$(OutDir)\xerces-c_3_1.dll</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -118,7 +118,7 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\Parser.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -131,9 +131,9 @@
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
-      <Outputs>$(OutDir)\xerces-c_2_8.dll</Outputs>
-      <Message>copy ..\Lib\xerces-c_2_8.dll "$(OutDir)"</Message>
-      <Command>copy ..\Lib\xerces-c_2_8.dll "$(OutDir)"</Command>
+      <Outputs>$(OutDir)\xerces-c_3_1.dll</Outputs>
+      <Message>copy ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Message>
+      <Command>copy ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>

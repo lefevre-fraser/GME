@@ -15,6 +15,12 @@
 #define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
 #endif
 
+#ifdef DEBUG
+#define _HAS_ITERATOR_DEBUGGING 1
+#endif
+#define _SECURE_SCL 1
+
+
 #include "targetver.h"
 
 #define _CRT_SECURE_NO_WARNINGS

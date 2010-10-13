@@ -53,6 +53,10 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">RegisterOutput</CustomBuildBeforeTargets>
+    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">RegisterOutput</CustomBuildBeforeTargets>
+    <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep />
@@ -73,7 +77,7 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_2D.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3D.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib\subv_$(Configuration);../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\XmlBackEnd.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -83,6 +87,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
       <Command>copy ..\lib\libeay32.dll  "$(OutDir)"
@@ -90,12 +95,9 @@ copy ..\lib\ssleay32.dll  "$(OutDir)"
 copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)"
 copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)"
 copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)"
-copy ..\lib\xerces-c_2_*D.dll "$(OutDir)"
-regsvr32 /s /c "$(TargetPath)" &amp;&amp; ^
-echo regsvr32 exec. time &gt; "$(IntDir)\regsvr32.trg"
-</Command>
-      <Message>Copying .dlls and registering $(TargetFileName)</Message>
-      <Outputs>$(IntDir)\regsvr32.trg</Outputs>
+copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
+      <Message>Copying dependency DLLs...</Message>
+      <Outputs> ..\lib\libeay32.dll</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -125,7 +127,7 @@ echo regsvr32 exec. time &gt; "$(IntDir)\regsvr32.trg"
     <Link>
       <AdditionalOptions>
  %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>xerces-c_2.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib\subv_$(Configuration);../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -137,6 +139,7 @@ echo regsvr32 exec. time &gt; "$(IntDir)\regsvr32.trg"
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
       <Command>copy ..\lib\libeay32.dll  "$(OutDir)"
@@ -144,12 +147,9 @@ copy ..\lib\ssleay32.dll  "$(OutDir)"
 copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)"
 copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)"
 copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)"
-copy ..\lib\xerces-c_2_?.dll "$(OutDir)"
-regsvr32 /s /c "$(TargetPath)" &amp;&amp; ^
-echo regsvr32 exec. time &gt; "$(IntDir)\regsvr32.trg"
-</Command>
-      <Message>Copying .dlls and registering $(TargetFileName)</Message>
-      <Outputs>$(IntDir)\regsvr32.trg</Outputs>
+copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
+      <Message>Copying dependency DLLs...</Message>
+      <Outputs> ..\lib\libeay32.dll</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>

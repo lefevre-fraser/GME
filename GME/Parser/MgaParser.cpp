@@ -58,7 +58,7 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 			XMLPlatformUtils::Initialize();
 
 			SAXParser parser;
-			parser.setDoValidation(true);
+			parser.setValidationScheme(SAXParser::Val_Always);
 			parser.setDocumentHandler(this);
 			parser.setErrorHandler(this);
 			parser.setEntityResolver(this);
@@ -89,7 +89,7 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 
 			// the other passes
 
-			parser.setDoValidation(false);
+			parser.setValidationScheme(SAXParser::Val_Never);
 
 			while( !ranges.empty() && ranges.front().begin != (counter_type)-1 )
 			{
@@ -194,7 +194,7 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 			XMLPlatformUtils::Initialize();
 
 			SAXParser parser;
-			parser.setDoValidation(true);
+			parser.setValidationScheme(SAXParser::Val_Always);
 			parser.setDocumentHandler(this);
 			parser.setErrorHandler(this);
 			parser.setEntityResolver(this);
@@ -224,7 +224,7 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 
 			// the other passes
 
-			parser.setDoValidation(false);
+			parser.setValidationScheme(SAXParser::Val_Never);
 
 			while( !ranges.empty() && ranges.front().begin != (counter_type)-1 )
 			{
@@ -313,7 +313,7 @@ STDMETHODIMP CMgaParser::GetXMLInfo(BSTR filename, BSTR *paradigm, BSTR* parvers
 			XMLPlatformUtils::Initialize();
 
 			SAXParser parser;
-			parser.setDoValidation(false);
+			parser.setValidationScheme(SAXParser::Val_Never);
 			parser.setDocumentHandler(this);
 			parser.setErrorHandler(this);
 			parser.setEntityResolver(this);
@@ -1817,7 +1817,7 @@ STDMETHODIMP CMgaParser::GetClipXMLInfo(BSTR filename, IMgaObject *target, VARIA
 			XMLPlatformUtils::Initialize();
 
 			SAXParser parser;
-			parser.setDoValidation(false);
+			parser.setValidationScheme(SAXParser::Val_Never);
 			parser.setDocumentHandler(this);
 			parser.setErrorHandler(this);
 			parser.setEntityResolver(this);

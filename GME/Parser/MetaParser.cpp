@@ -42,7 +42,8 @@ STDMETHODIMP CMgaMetaParser::Parse(BSTR filename, BSTR connection)
 			explicitguid = false;
 			{
 				SAXParser parser;
-				parser.setDoValidation(true);
+				//parser.setDoValidation(true);
+				parser.setValidationScheme(SAXParser::Val_Always);
 				parser.setDocumentHandler(this);
 				parser.setErrorHandler(this);
 				parser.setEntityResolver(this);
@@ -55,7 +56,7 @@ STDMETHODIMP CMgaMetaParser::Parse(BSTR filename, BSTR connection)
 
 			{
 				SAXParser parser;
-				parser.setDoValidation(false);
+				parser.setValidationScheme(SAXParser::Val_Never);
 				parser.setDocumentHandler(this);
 				parser.setErrorHandler(this);
 				parser.setEntityResolver(this);

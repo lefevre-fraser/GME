@@ -3325,7 +3325,7 @@ void CCoreXmlFile::readProjectFile()
 	// example: <GME VSSDatabase="\\bogyom\GMEXMLBackEndTest\sorucesafedb\srcsafe.ini" VSSPath="$\test1"></GME>
 
 
-	DOMBuilder * parser = getFreshParser( "ProjectFileReader");
+	DOMLSParser * parser = getFreshParser( "ProjectFileReader");
 
 	ASSERT( parser != NULL );
 	if( !parser)
@@ -3335,7 +3335,7 @@ void CCoreXmlFile::readProjectFile()
 	}
 
 	DOMErrorHandler* err_handler = new DOMErrorPrinter( &m_console);
-	parser->setErrorHandler( err_handler);
+	parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, err_handler);
 
 	bool fexists   = FileHelp::fileExist( m_projectFileName);
 	bool suc       = false;
@@ -3774,7 +3774,7 @@ void CCoreXmlFile::readXMLFile( const char * fileName, UnresolvedPointerVec& poi
 
 	CTime lastWriteTime( attr.ftLastWriteTime );
 
-	DOMBuilder * parser = NULL;
+	DOMLSParser * parser = NULL;
 	try
 	{
 		DOMImplementationLS * domimpl = 0;
@@ -4984,7 +4984,7 @@ void SignManager::in_or_off( bool in)
 void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 {
 	DOMImplementationLS    * domimpl = NULL;
-	DOMBuilder             * parser  = m_parent->getFreshParser( "SignatureFileUpdater", &domimpl);
+	DOMLSParser             * parser  = m_parent->getFreshParser( "SignatureFileUpdater", &domimpl);
 
 	ASSERT( parser != NULL );
 	if( !parser) {
@@ -5172,16 +5172,20 @@ void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 	{
 		XMLCh* x_filenm = XMLString::transcode( m_localFileName.c_str());
 		XMLFormatTarget* outfile = new LocalFileFormatTarget( x_filenm);
+		DOMLSOutput* theOutput = domimpl->createLSOutput();
+		theOutput->setByteStream(outfile);
 		XMLString::release( &x_filenm);
 
-		DOMWriter* writer = domimpl->createDOMWriter();
-		if( writer && writer->canSetFeature( XMLUni::fgDOMXMLDeclaration, false))
-			writer->setFeature( XMLUni::fgDOMXMLDeclaration, false);
+		DOMLSSerializer* writer = domimpl->createLSSerializer();
+		if( writer && writer->getDomConfig()->canSetParameter( XMLUni::fgDOMXMLDeclaration, false))
+			writer->getDomConfig()->setParameter( XMLUni::fgDOMXMLDeclaration, false);
 
-		writer->writeNode( outfile, *doc );
+		
+		
+		writer->write( doc, theOutput );
 		delete outfile;
 		delete writer;
-
+		theOutput->release();
 		// delete the parser object
 		delete parser;
 	}
@@ -5189,6 +5193,7 @@ void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 	{
 		if( parser) delete parser;
 		m_parent->sendMsg( "DOMWriter exception during signature file update!", MSG_ERROR);
+		
 		
 		HR_THROW(E_FILEOPEN);
 	}
@@ -5198,7 +5203,7 @@ SignManager::SignFileDataVec SignManager::getUserData()
 {
 	SignFileDataVec res;
 
-	DOMBuilder * parser = m_parent->getFreshParser( "SignatureFileAnalyzer");
+	DOMLSParser * parser = m_parent->getFreshParser( "SignatureFileAnalyzer");
 
 	ASSERT( parser != NULL );
 	if( !parser)
@@ -5371,7 +5376,7 @@ void ProtectList::writeProtLisp()
 void ProtectList::writeProtList()
 {
 	DOMImplementationLS          * domimpl = NULL; 
-	DOMBuilder                   * parser  = NULL;
+	DOMLSParser                   * parser  = NULL;
 
 	try {
 
@@ -5437,17 +5442,20 @@ void ProtectList::writeProtList()
 		//do a DOM save as follows:
 		XMLCh* x_fname = XMLString::transcode( m_localFileName.c_str());
 		XMLFormatTarget* outfile = new LocalFileFormatTarget( x_fname);
+		DOMLSOutput* theOutput = domimpl->createLSOutput();
+		theOutput->setByteStream(outfile);
 
-		DOMWriter* writer = domimpl->createDOMWriter();
+		DOMLSSerializer * writer = domimpl->createLSSerializer();
 
-		if( writer->canSetFeature( XMLUni::fgDOMWRTDiscardDefaultContent, true))
-			writer->setFeature( XMLUni::fgDOMWRTDiscardDefaultContent, true);
-		if( writer->canSetFeature( XMLUni::fgDOMXMLDeclaration, false))
-			writer->setFeature( XMLUni::fgDOMXMLDeclaration, false);
+
+		if( writer->getDomConfig()->canSetParameter( XMLUni::fgDOMWRTDiscardDefaultContent, true))
+			writer->getDomConfig()->setParameter( XMLUni::fgDOMWRTDiscardDefaultContent, true);
+		if( writer->getDomConfig()->canSetParameter( XMLUni::fgDOMXMLDeclaration, false))
+			writer->getDomConfig()->setParameter( XMLUni::fgDOMXMLDeclaration, false);
 
 		doc->normalizeDocument();
 
-		writer->writeNode( outfile, *doc );
+		writer->write(doc, theOutput);
 
 		XMLString::release( &x_fname);
 		XMLString::release( &ITEM_xiteral);
@@ -5458,7 +5466,7 @@ void ProtectList::writeProtList()
 
 		delete outfile;
 		delete writer;
-
+		theOutput->release();
 		// delete the parser object
 		delete parser;
 	}
@@ -5473,7 +5481,7 @@ void ProtectList::writeProtList()
 void ProtectList::purgeProtList( CTime& p_lastSyncTime)
 {
 	DOMImplementationLS          * domimpl = NULL; 
-	DOMBuilder                   * parser  = NULL;
+	DOMLSParser                   * parser  = NULL;
 
 	try {
 
@@ -5567,21 +5575,24 @@ void ProtectList::purgeProtList( CTime& p_lastSyncTime)
 		XMLCh* x_fname = XMLString::transcode( m_localFileName.c_str());
 		XMLFormatTarget* outfile = new LocalFileFormatTarget( x_fname);
 
-		DOMWriter* writer = domimpl->createDOMWriter();
+		DOMLSOutput* theOutput = domimpl->createLSOutput();
+		theOutput->setByteStream(outfile);
+
+		DOMLSSerializer* writer = domimpl->createLSSerializer();
+
 		if( writer == NULL)
 		{
 			m_parent->sendMsg( "Exception: Could not create DOM Writer for '" + m_localFileName + "'!", MSG_ERROR);
 			HR_THROW(E_FILEOPEN);
 		}
-
-		if( writer->canSetFeature( XMLUni::fgDOMWRTDiscardDefaultContent, true))
-			writer->setFeature( XMLUni::fgDOMWRTDiscardDefaultContent, true);
-		if( writer->canSetFeature( XMLUni::fgDOMXMLDeclaration, false))
-			writer->setFeature( XMLUni::fgDOMXMLDeclaration, false);
-
+		
+		if( writer->getDomConfig()->canSetParameter( XMLUni::fgDOMWRTDiscardDefaultContent, true))
+			writer->getDomConfig()->setParameter( XMLUni::fgDOMWRTDiscardDefaultContent, true);
+		if( writer->getDomConfig()->canSetParameter( XMLUni::fgDOMXMLDeclaration, false))
+			writer->getDomConfig()->setParameter( XMLUni::fgDOMXMLDeclaration, false);
 		doc->normalizeDocument();
 
-		writer->writeNode( outfile, *doc );
+		writer->write( doc, theOutput );
 		delete outfile;
 		delete writer;
 
@@ -7560,7 +7571,7 @@ void CCoreXmlFile::finiParsers()
 
 // pretends to delete a parser 
 // but deletes it only in unique strategy case
-void CCoreXmlFile::deleteParser( DOMBuilder* *p_parser)
+void CCoreXmlFile::deleteParser( DOMLSParser* *p_parser)
 {
 	if( !m_strategyShared)
 	{
@@ -7572,25 +7583,25 @@ void CCoreXmlFile::deleteParser( DOMBuilder* *p_parser)
 	}
 }
 
-void CCoreXmlFile::newDOMObjs(  XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMBuilder* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler)
+void CCoreXmlFile::newDOMObjs(  XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMLSParser* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler)
 {
 	DOMImplementationLS * domimpl = DOMImplementationRegistry::getDOMImplementation( XMLString::transcode("XML 1.0"));//NULL
 	ASSERT( domimpl != NULL );
 	
-	DOMBuilder * parser = !domimpl? 0: domimpl->createDOMBuilder( DOMImplementationLS::MODE_SYNCHRONOUS, NULL );
+	DOMLSParser * parser = !domimpl? 0: domimpl->createLSParser( DOMImplementationLS::MODE_SYNCHRONOUS, NULL );
 	ASSERT( parser != NULL );
 
 	DOMErrorHandler* err_handler = new DOMErrorPrinter( &m_console);
 	ASSERT( err_handler != NULL);
 	if( parser && err_handler)
-		parser->setErrorHandler( err_handler);
+		parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, err_handler);
 
 	*p_domImpl = domimpl;
 	*p_domParser = parser;
 	*p_domErrHandler = err_handler;
 }
 
-void CCoreXmlFile::giveDOMObjs( XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMBuilder* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler)
+void CCoreXmlFile::giveDOMObjs( XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMLSParser* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler)
 {
 	if( m_strategyShared)
 	{
@@ -7630,7 +7641,7 @@ void CCoreXmlFile::giveDOMObjs( XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_do
 //	}
 //}
 //
-XERCES_CPP_NAMESPACE::DOMDocument* CCoreXmlFile::enclosedParse( const std::string& p_fileName, DOMBuilder* p_parser, bool *p_success)
+XERCES_CPP_NAMESPACE::DOMDocument* CCoreXmlFile::enclosedParse( const std::string& p_fileName, DOMLSParser* p_parser, bool *p_success)
 {
 	ASSERT( p_parser);
 	ASSERT( p_success);
@@ -7679,10 +7690,10 @@ XERCES_CPP_NAMESPACE::DOMDocument* CCoreXmlFile::enclosedParse( const std::strin
 	return doc;
 }
 
-DOMBuilder* CCoreXmlFile::getFreshParser( const std::string& p_whoIsTheUser, DOMImplementationLS ** p_ptrRetDomImpl /* = 0 */)
+DOMLSParser* CCoreXmlFile::getFreshParser( const std::string& p_whoIsTheUser, DOMImplementationLS ** p_ptrRetDomImpl /* = 0 */)
 {
 	DOMImplementationLS * domimpl = NULL;
-	DOMBuilder*           parser  = NULL;
+	DOMLSParser*           parser  = NULL;
 	
 	
 	//
@@ -7721,7 +7732,7 @@ DOMBuilder* CCoreXmlFile::getFreshParser( const std::string& p_whoIsTheUser, DOM
 	//
 	try {
 
-		parser = !domimpl? 0: domimpl->createDOMBuilder( DOMImplementationLS::MODE_SYNCHRONOUS, NULL );
+		parser = !domimpl? 0: domimpl->createLSParser( DOMImplementationLS::MODE_SYNCHRONOUS, NULL );
 
 	}
 	catch(const DOMException& e) {

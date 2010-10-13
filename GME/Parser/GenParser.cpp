@@ -9,6 +9,7 @@
 #include <xercesc/framework\MemBufInputSource.hpp>
 #include <stdio.h>
 #include <string>
+#include "atlstr.h"
 
 // --------------------------- XmlStr
 
@@ -122,6 +123,9 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 	{
 		cur_line = (int)locator->getLineNumber();
 		cur_column = (int)locator->getColumnNumber();
+		// CString msg;
+		// msg.Format("Line %d, Col: %d\n", cur_line, cur_column);
+		// OutputDebugString(msg);
 	}
 #endif
 
@@ -219,7 +223,7 @@ void CGenParser::endElement(const XMLCh* const name)
 
 }
 
-void CGenParser::characters(const XMLCh* const chars, const unsigned int length)
+void CGenParser::characters(const XMLCh* const chars, const XMLSize_t length)
 {
 	if( !elements.empty() )
 		elements.back().chardata += XmlStr(chars, length);

@@ -75,7 +75,7 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 			XMLPlatformUtils::Initialize();
 
 			SAXParser parser;
-			parser.setDoValidation(true);
+			parser.setValidationScheme(SAXParser::Val_Always);
 			parser.setDocumentHandler(this);
 			parser.setErrorHandler(this);
 			parser.setEntityResolver(this);
@@ -105,7 +105,7 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 
 			// the other passes
 
-			parser.setDoValidation(false);
+			parser.setValidationScheme(SAXParser::Val_Never);
 
 			while( !ranges.empty() && ranges.front().begin != (counter_type)-1 )
 			{

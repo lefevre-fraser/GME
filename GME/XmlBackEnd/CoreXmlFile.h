@@ -794,24 +794,24 @@ public:
 protected: // parser opts
 
 	XERCES_CPP_NAMESPACE::DOMDocument*
-	             enclosedParse          ( const std::string& p_fileName, XERCES_CPP_NAMESPACE::DOMBuilder* p_parser, bool *p_success);
+	             enclosedParse          ( const std::string& p_fileName, XERCES_CPP_NAMESPACE::DOMLSParser* p_parser, bool *p_success);
 
 	//XERCES_CPP_NAMESPACE::DOMImplementationLS * giveDomImpl();
 	//XERCES_CPP_NAMESPACE::DOMBuilder*           giveDomParser( XERCES_CPP_NAMESPACE::DOMImplementationLS * domimpl);
-	void         giveDOMObjs( XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMBuilder* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler);
-	void         newDOMObjs( XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMBuilder* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler);
+	void         giveDOMObjs( XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMLSParser* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler);
+	void         newDOMObjs( XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMLSParser* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler);
 	void         initParsers            ();
-	void         deleteParser           (XERCES_CPP_NAMESPACE::DOMBuilder* *p_parser);
+	void         deleteParser           (XERCES_CPP_NAMESPACE::DOMLSParser* *p_parser);
 	void         finiParsers            ();
 
 	bool                                 m_strategyShared;
 
 	DOMImplementationLS *                m_domImpl;
-	DOMBuilder *                         m_domParser;
+	DOMLSParser *                         m_domParser;
 	DOMErrorHandler*                     m_domErrHandler;
 
 public: // parser creation for other tasks than the individual xml file scannning
-	DOMBuilder*  getFreshParser          ( const std::string& p_whoIsTheUser, DOMImplementationLS ** p_ptrRetDomImpl = 0);
+	DOMLSParser*  getFreshParser          ( const std::string& p_whoIsTheUser, DOMImplementationLS ** p_ptrRetDomImpl = 0);
 
 protected:
 	// meta project

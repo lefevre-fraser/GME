@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 #include "CoreBinFile.h"
 #include "CommonCollection.h"
@@ -613,12 +612,12 @@ STDMETHODIMP CCoreBinFile::put_AttributeValue(VARIANT p)
 	{
 		BinAttrBase *attr = opened_object->second.Find(attrid);
 
-		std::pair<BinAttrBase *const, CComVariant> r(attr, CComVariant());
+	/*	std::pair<BinAttrBase *const, CComVariant> r(attr, CComVariant());
 		std::pair<undos_iterator, bool> t = undos.insert(r);
 
 		if( t.second )
 			attr->Get(this, PutOut(t.first->second));
-
+			*/
 		attr->Set(this, p);
 	}
 	COMCATCH(;)
