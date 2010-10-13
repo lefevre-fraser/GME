@@ -33,11 +33,11 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+    <Import Project="..\..\..\SDK\BON\Common\GMEInterpreter.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+    <Import Project="..\..\..\SDK\BON\Common\GMEInterpreter.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -58,7 +58,6 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
       <Outputs>$(OutDir)regsvr32.trg;%(Outputs)</Outputs>
     </CustomBuildStep>
     <Midl>
-      <AdditionalIncludeDirectories>$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TargetEnvironment>Win32</TargetEnvironment>
       <TypeLibraryName>.\Release/UMLDecorator.tlb</TypeLibraryName>
       <HeaderFileName>
@@ -69,7 +68,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GME_ROOT)\SDK\DecoratorLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -114,7 +113,6 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
       <Outputs>$(OutDir)regsvr32.trg;%(Outputs)</Outputs>
     </CustomBuildStep>
     <Midl>
-      <AdditionalIncludeDirectories>$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TargetEnvironment>Win32</TargetEnvironment>
       <TypeLibraryName>.\Debug/UMLDecorator.tlb</TypeLibraryName>
       <HeaderFileName>
@@ -122,7 +120,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(GME_ROOT)\SDK\DecoratorLib;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GME_ROOT)\SDK\DecoratorLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -245,6 +243,10 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
     <ProjectReference Include="..\..\..\SDK\DecoratorLib\DecoratorLib.vcxproj">
       <Project>{77febd41-cd6c-4d55-b561-3957f7151cc2}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

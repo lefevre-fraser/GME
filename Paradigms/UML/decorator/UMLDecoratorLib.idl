@@ -17,11 +17,9 @@ import "gme.idl";
 library UMLDECORATORLib
 {
 	importlib("stdole32.tlb");
-	importlib("stdole2.tlb");
-	import "core.idl";
-	import "mga.idl";
-	import "meta.idl";
-	import "gme.idl";
+	importlib("core.dll");
+	importlib("mga.dll");
+	importlib("meta.dll");
 
 	[
 		uuid(26AC9143-6F73-4e6a-B942-F641B37F87B5),
