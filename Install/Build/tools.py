@@ -14,7 +14,7 @@ from prefs import prefs
 #
 # Constants
 #
-ZIP_PRG = os.path.abspath("zip.exe")
+ZIP_PRG = os.path.abspath(os.path.join(os.path.dirname(__file__), "zip.exe"))
 WIX_CANDLE_PRG = "candle.exe"
 WIX_CANDLE_ARG = ""
 WIX_LIGHT_PRG = "light.exe"
@@ -39,12 +39,12 @@ def toolmsg(str):
 
 def test_SVN():
     "Test for SVN client. Raises exception if not found."
-    system("svn -v >NUL")
+    system(['svn', '-v', '>NUL'])
 
 
 def test_zip():
     "Test for ZIP utility. Raises exception if not found."
-    system(ZIP_PRG + " >NUL")
+    system([ZIP_PRG, '>NUL'])
     
     
 def zip(dirname, zipname, list=None):
@@ -57,11 +57,10 @@ def zip(dirname, zipname, list=None):
         zipname : the name of the zip archive (will be created in 'dirname')
         list    : name of the list file (see above)
     """
+    cmd_line = [ZIP_PRG, '-9', '-r']
     if list is not None:
-        list_arg = "-i@" + list
-    else:
-        list_arg = ""
-    cmd_line = "%s -9 -r %s %s . >NUL" % (ZIP_PRG, list_arg, zipname)
+        cmd_line.append("-i@" + list)
+    cmd_line.extend([zipname, '.', '>NUL'])
     system(cmd_line, dirname)
     
 def collect_and_zip(dirname, zipname, pattern=None):
@@ -72,35 +71,26 @@ def collect_and_zip(dirname, zipname, pattern=None):
         zipname : the name of the zip archive (will be created in 'dirname')
         pattern : file name pattern for selecting files to be included
     """
-    if list is not None:
-        pattern_arg = "-i " + pattern
-    else:
-        pattern_arg = ""
-    cmd_line = "%s -9 -r %s . %s >NUL" % (ZIP_PRG, zipname, pattern_arg)
+    cmd_line = [ZIP_PRG, '-9', '-r', zipname, '.']
+    if pattern is not None:
+        cmd_line.extend(["-i ", pattern])
+    cmd_line.append('>NUL')
     system(cmd_line, dirname)
 
 
-def system(command, dirname=None):
+def system(args, dirname=None):
     """
     Executes a system command (throws an exception on error)
     params
-        command : command to execute
+        args : [command, arg1, arg2, ...]
         dirname : if set, execute the command within this directory
     """
-#    if dirname is not None:
-#        command = "cd /d %s && %s" % (dirname, command)
-    toolmsg("Executing " + command)
-    #ret = os.system( command )
-    #if ret != 0:
-    #    raise BuildException, command + " failed. Exit code: " + str(ret)
+    toolmsg("Executing " + str(args))
     import subprocess
-    args = command.split(" ")
-    if dirname is not None:
-        args[0:0] = ('cd', '/d', dirname, '&&')
     with open(os.devnull, "w") as nulfp:
         # n.b. stderr=subprocess.STDOUT fails mysteriously
         import sys
-        subprocess.check_call(args, stdout=(sys.stdout if prefs['verbose'] else nulfp), stderr=None, shell=True)
+        subprocess.check_call(args, stdout=(sys.stdout if prefs['verbose'] else nulfp), stderr=subprocess.STDOUT, shell=True, cwd=dirname)
 
 
 
@@ -182,9 +172,9 @@ def test_WiX():
     "Test for WiX. Raises exception if not found."
     toolmsg("Trying to execute WiX tool candle.exe")
     exepath = WIX_CANDLE_PRG
-    if os.environ['WIX']:
+    if 'WIX' in os.environ.keys():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
-    system('"%s" %s' % (exepath, "" if prefs['verbose'] else ">NUL"))
+    system([exepath])
     
 def build_WiX(wxs_file):
     """
@@ -200,14 +190,13 @@ def build_WiX(wxs_file):
     toolmsg("Building " + filename + " in " + dirname)
     
     exepath = WIX_CANDLE_PRG
-    if os.environ['WIX']:
+    if 'WIX' in os.environ.keys():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
-    cmd_line = '"%s" %s %s %s' % (exepath, WIX_CANDLE_ARG, filename,  ("" if prefs['verbose'] else ">NUL"))
+    cmd_line = [exepath] + WIX_CANDLE_ARG.split() + [filename]
     system(cmd_line, dirname)
     
     exepath = WIX_LIGHT_PRG
-    if os.environ['WIX']:
+    if 'WIX' in os.environ.keys():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
-    cmd_line = '"%s" %s %s.wixobj %s' % (exepath, WIX_LIGHT_ARG, projectname, ("" if prefs['verbose'] else ">NUL"))
+    cmd_line = [exepath] + WIX_LIGHT_ARG.split() + [projectname]
     system(cmd_line, dirname)
-        
