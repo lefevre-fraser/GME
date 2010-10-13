@@ -96,7 +96,7 @@ def system(command, dirname=None):
     import subprocess
     args = command.split(" ")
     if dirname is not None:
-        args[0:0] = 'cd', '/d', '%s', '&&'
+        args[0:0] = ('cd', '/d', dirname, '&&')
     with open(os.devnull, "w") as nulfp:
         # n.b. stderr=subprocess.STDOUT fails mysteriously
         import sys
