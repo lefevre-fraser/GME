@@ -7,6 +7,8 @@
 
 #include "GMEOLEData.h"
 #include "DecoratorMfc.h"
+#include "Parser.h"
+#include "Gme_i.c"
 
 //#include "GMEstd.h"
 #define GME_GRID_SIZE	7
