@@ -1727,6 +1727,7 @@
                 <File Id="Formatter.cpp" Name="Formatter.cpp"  Source="..\SDK\BON\Common\Formatter.cpp" />
                 <File Id="Formatter.h" Name="Formatter.h"  Source="..\SDK\BON\Common\Formatter.h" />
                 <File Id="GMECOM.H" Name="GMECOM.H"  Source="..\SDK\BON\Common\GMECOM.H" />
+                <File Id="GMEInterpreter.props" Name="GMEInterpreter.props"  Source="..\SDK\BON\Common\GMEInterpreter.props" />
                 <File Id="MON.cpp" Name="MON.cpp"  Source="..\SDK\BON\Common\MON.cpp" />
                 <File Id="MON.h" Name="MON.h"  Source="..\SDK\BON\Common\MON.h" />
                 <File Id="MONImpl.cpp" Name="MONImpl.cpp"  Source="..\SDK\BON\Common\MONImpl.cpp" />
