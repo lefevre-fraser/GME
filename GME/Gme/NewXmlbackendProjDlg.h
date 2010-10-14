@@ -24,7 +24,6 @@ public:
 	CEdit   m_svnUrlCtrl;
 	CStatic m_svnUrlLabel;
 	CButton m_svnBorder;
-	CButton m_svnTryBtn;
 	CString	m_location;
 	CString	m_projectName;
 	CString m_svnUrl;
@@ -55,7 +54,6 @@ protected:
 	virtual void OnOK();
 	afx_msg void OnSourceControlChanged();
 	afx_msg void OnBnClickedCheckSplittosubdirs();
-	afx_msg void OnBnClickedButtonSvnTry();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

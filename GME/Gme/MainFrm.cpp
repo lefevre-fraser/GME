@@ -10,7 +10,6 @@
 #include "GMEChildFrame.h"
 #include "Splash.h"
 #include "GMEEventLogger.h"
-#include "..\XmlBackEnd\svauto.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "ChildFrm.h"

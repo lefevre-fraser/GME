@@ -5,7 +5,6 @@
 #include "gme.h"
 #include "NewXmlbackendProjDlg.h"
 #include <direct.h>
-#include "..\XmlBackEnd\svauto.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -37,7 +36,6 @@ void CNewXmlbackendProjDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_SVNDATABASE, m_svnUrlCtrl);
 	DDX_Control(pDX, IDC_STATIC_SUBVERSION_URLLABEL, m_svnUrlLabel);
 	DDX_Control(pDX, IDC_STATIC_SVN, m_svnBorder);
-	DDX_Control(pDX, IDC_BUTTON_SVNTRY, m_svnTryBtn);
 	DDX_Text(pDX, IDC_EDIT_LOCATION, m_location);
 	DDX_Text(pDX, IDC_EDIT_PROJNAME, m_projectName);
 	DDX_Text(pDX, IDC_EDIT_SVNDATABASE, m_svnUrl);
@@ -49,7 +47,6 @@ void CNewXmlbackendProjDlg::DoDataExchange(CDataExchange* pDX)
 
 void CNewXmlbackendProjDlg::enableSubversionControls( bool enable )
 {
-	m_svnTryBtn.EnableWindow( enable);
 	m_svnBorder.EnableWindow( enable );
 	m_svnUrlLabel.EnableWindow( enable );
 	m_svnUrlCtrl.EnableWindow( enable );
@@ -67,7 +64,6 @@ BEGIN_MESSAGE_MAP(CNewXmlbackendProjDlg, CDialog)
 	ON_BN_CLICKED(IDC_RADIO_SUBVERSION, OnSourceControlChanged)
 	ON_BN_CLICKED(IDC_RADIO_NONE, OnSourceControlChanged)
 	ON_BN_CLICKED(IDC_CHECK_SPLITTOSUBDIRS, OnBnClickedCheckSplittosubdirs)
-	ON_BN_CLICKED(IDC_BUTTON_SVNTRY, OnBnClickedButtonSvnTry)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -255,38 +251,3 @@ void CNewXmlbackendProjDlg::OnBnClickedCheckSplittosubdirs()
 	m_hashAlgoControl.EnableWindow( 1 == m_hashedFileStorage);
 }
 
-void CNewXmlbackendProjDlg::OnBnClickedButtonSvnTry()
-{
-	UpdateData( TRUE);
-	if( m_sourceControlType != 0 || m_svnUrl.IsEmpty()) {
-		AfxMessageBox( "Please select Subversion for the Source Control option and provide a URL for the server");
-		return;
-	}
-
-	CComPtr<ISvnTester> p;
-	p.CoCreateInstance( L"Mga.XmlbackEnd.SvnTester");
-	if( !p) {
-		AfxMessageBox( "Test connection failed because could not create test object.");
-		return;
-	}
-
-	CComBSTR       url   = m_svnUrl;
-	CComBSTR       res;
-
-	if( SUCCEEDED( p->info( url, VARIANT_FALSE, &res)))
-	{
-		CString r; CopyTo( res, r);
-		r.Replace( "\n", "\r\n");
-
-		CComPtr<ISvnWorkBench> wb;
-		HRESULT hr = wb.CoCreateInstance( L"Mga.XmlBackEnd.SvnWorkBench");
-		if( FAILED( hr) || !wb) {
-			AfxMessageBox( "Could not create Svn Work Bench to show the result!");
-			return;
-		}
-
-		wb->ShowResultDlg( CComBSTR( (LPCTSTR) r));
-	}
-	else
-		AfxMessageBox( "Test connection failed with " + m_svnUrl);
-}
