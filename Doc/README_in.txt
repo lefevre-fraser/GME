@@ -28,6 +28,22 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r10.10.10
+---------------------------------
+  - This is a service release for r10.8.18
+    Hence, it is binary compatible with that.
+  - Fixing ObjectInspector bug ("could not write..." error messages)
+  - Upgrade to Subversion-1.6.13/OpenSSL-0.9.8o 
+    compiled with VS2010. Remove GPL neon lib.
+  - Fixing several memory leaks in apr/svn 
+  - Fixing GME-280: dont throw exceptions beyond the COM boundary
+  - Remove internal XmlBackend SVN COM interfaces. 
+    Remove Multi User>Subversion... dialog
+  - Remove SVN by CMD access method from MU backend
+  - Remove ClearCase and SourceSafe support from MU backend
+   
+  
+
 Release Notes of Release r10.8.18
 ---------------------------------
   - Fixing GME-281: Crash while closing XML progress dialog
@@ -71,7 +87,7 @@ Release Notes of Release r10.6.4
 	  
 Release Notes of Release r10.6.1
 --------------------------------
-	- This release contains minor changes to the COM interface definitions. 
+  - This release contains minor changes to the COM interface definitions. 
 	  Please, re-compile existing interpreters, add-ons, decorators
   - Fixing GME-270: GUI random crashes with multiuser projects
   - OBJEVENT_PRE_DESTROYED event is introduced in the MGA layer for 
@@ -90,7 +106,7 @@ Release Notes of Release r10.6.1
 
 Release Notes of Release r10.2.9
 ---------------------------------
-	- This is a service release for r9.8.28
+  - This is a service release for r9.8.28
     Hence, it is binary compatible with that.
   - Fixing bugs: GME-233, GME-244
 
