@@ -1,7 +1,7 @@
 /************************************************************************************* 
   This file is a part of CrashRpt library.
 
-  CrashRpt is Copyright (c) 2003, Michael Carruth
+  Copyright (c) 2003, Michael Carruth
   All rights reserved.
  
   Redistribution and use in source and binary forms, with or without modification, 
@@ -66,7 +66,7 @@
 #define CRASHRPTAPI(rettype) CRASHRPT_EXTERNC rettype WINAPI
 
 //! Current CrashRpt version
-#define CRASHRPT_VER 1206
+#define CRASHRPT_VER 1207
 
 /*! \defgroup CrashRptAPI CrashRpt Functions */
 /*! \defgroup DeprecatedAPI Obsolete Functions */
@@ -327,6 +327,7 @@ GenerateErrorReport(
 #define CR_INST_APP_RESTART                    0x10000 //!< Restart the application on crash.
 #define CR_INST_NO_MINIDUMP                    0x20000 //!< Do not include minidump file to crash report.
 #define CR_INST_SEND_QUEUED_REPORTS            0x40000 //!< CrashRpt should send error reports that are waiting to be delivered.
+#define CR_INST_STORE_ZIP_ARCHIVES             0x80000 //!< CrashRpt should store both uncompressed error report files and ZIP archives.
 
 /*! \ingroup CrashRptStructs
  *  \struct CR_INSTALL_INFOW()
@@ -348,7 +349,7 @@ GenerateErrorReport(
  *       "name@example.com". If this equals to NULL, the crash report won't be sent using E-mail client.
  *       Keep this NULL if you plan to use large error reports (more than several MB in size), because
  *       large emails may be rejected by the mail server.
- *       To define a custom port for SMTP connection, use the following address format: "http://user@example.com:port",
+ *       To define a custom port for SMTP connection, use the following address format: "user@example.com:port",
  *       where \a port is the placeholder for the port number. 
  *
  *    \a pszEmailSubject is the subject of the email message. If this parameter is NULL,
@@ -364,13 +365,12 @@ GenerateErrorReport(
  *    \a pszCrashSenderPath is the absolute path to the directory where CrashSender.exe is located. 
  *       The crash sender process is responsible for letting end user know about the crash and 
  *       sending the error report.
- *       This parameter can be NULL. If NULL, it is assumed that CrashRpt.exe is located in
+ *       If this is NULL, it is assumed that CrashSender.exe is located in
  *       the same directory as CrashRpt.dll.
  *
  *    \a pfnCrashCallback is a pointer to the LPGETLOGFILE() crash callback function. The crash callback function is
- *         called by CrashRpt when crash occurs and allows user to add custom files to the 
- *         error report or perform other actions. This parameter can be NULL.
- *         If NULL, crash callback is not called.
+ *         called by CrashRpt when crash occurs and allows user to be notified.
+ *         If this is NULL, crash callback is not called.
  *
  *    \a uPriorities is an array that defines the preferred ways of sending error reports. 
  *         The available ways are: HTTP connection, SMTP connection or simple MAPI (default mail client).
@@ -412,7 +412,8 @@ GenerateErrorReport(
  *    <tr><td> \ref CR_INST_DONT_SEND_REPORT     
  *        <td> <b>Available since v.1.2.2</b> This parameter means 'do not send error report immediately on crash, just save it locally'. 
  *             Use this if you have direct access to the machine where crash happens and do not need 
- *             to send report over the Internet.
+ *             to send report over the Internet. You can use this in couple with \ref CR_INST_STORE_ZIP_ARCHIVES flag to store zipped error reports
+ *             along with uncompressed error report files.
  *    <tr><td> \ref CR_INST_APP_RESTART     
  *        <td> <b>Available since v.1.2.4</b> This parameter allows to automatically restart the application on crash. The command line
  *             for the application is taken from \a pszRestartCmdLine parameter. To avoid cyclic restarts of an application which crashes on startup, 
@@ -423,9 +424,14 @@ GenerateErrorReport(
  *
  *    <tr><td> \ref CR_INST_SEND_QUEUED_REPORTS     
  *        <td> <b>Available since v.1.2.5</b> Specify this parameter to send all queued reports. Those
- *             report files are by default stored in <i>%LOCAL_APPDATA%\CrashRpt\UnsentCrashReports\%AppName%_%AppVersion%</i> folder.
+ *             report files are by default stored in <i>%LOCAL_APPDATA%\\CrashRpt\\UnsentCrashReports\\%AppName%_%AppVersion%</i> folder.
  *             If this is specified, CrashRpt checks if it's time to remind user about recent errors in the application and offers to send
  *             all queued error reports.
+ *
+ *    <tr><td> \ref CR_INST_STORE_ZIP_ARCHIVES     
+ *        <td> <b>Available since v.1.2.7</b> This parameter can be used in couple with \ref CR_INST_DONT_SEND_REPORT flag to store not only uncompressed
+ *             error report files, but also ZIP archives. By default (if this flag omitted) CrashRpt stores all error report files
+ *             in uncompressed state.
  *
  *   </table>
  *
@@ -1302,7 +1308,7 @@ crEmulateCrash(
 /*! \ingroup CrashRptAPI 
  *  \brief Gets the last CrashRpt error message.
  *
- *  \return This function returns length of error message in characters.
+ *  \return This function returns length of error message in characters. If output buffer is invalid, returns a negative number.
  *
  *  \param[out] pszBuffer Pointer to the buffer.
  *  \param[in]  uBuffSize Size of buffer in characters.
