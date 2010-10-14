@@ -1104,7 +1104,8 @@ void CCorePointerAttrBase::RemoveFromCollection()
 		ASSERT( IsValidIterator(collection, backref) );
 
 		collection.erase( backref );
-		backref = objects_iterator(); // was: backref = NULL;
+		// KMS: assigning a singular iterator is undefined. I saw a crash when registering MetaGME
+		// backref = objects_iterator(); // was: backref = NULL;
 		isEmpty = true;
 	}
 	else
