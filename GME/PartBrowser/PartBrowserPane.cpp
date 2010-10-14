@@ -83,9 +83,9 @@ bool CPartBrowserPane::FindObject(CPoint &pt, PartWithDecorator& pdt)
 		return NULL;
 
 	try {
-		std::vector<PartWithDecorator> pdtv = pdts[currentAspectIndex];
+		const std::vector<PartWithDecorator>& pdtv = pdts[currentAspectIndex];
 		// calculate the maximum size
-		for (std::vector<PartWithDecorator>::iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
+		for (std::vector<PartWithDecorator>::const_iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
 			ASSERT((*ii).decorator != NULL);
 			long x1 = 0; long y1 = 0;
 			long x2 = 0; long y2 = 0;
@@ -241,9 +241,9 @@ void CPartBrowserPane::Resize(CRect r)
 	CPoint pt = CPoint(leftStartPos, topMargin);
 
 	try {
-		std::vector<PartWithDecorator> pdtv = pdts[currentAspectIndex];
+		const std::vector<PartWithDecorator>& pdtv = pdts[currentAspectIndex];
 		// calculate the maximum size
-		for (std::vector<PartWithDecorator>::iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
+		for (std::vector<PartWithDecorator>::const_iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
 			ASSERT((*ii).decorator != NULL);
 			long sizeX = 0;
 			long sizeY = 0;
@@ -254,8 +254,8 @@ void CPartBrowserPane::Resize(CRect r)
 			if (objColumn == 0) {
 				rowHeight = size.cy;
 
-				std::vector<PartWithDecorator>::iterator iibak = ii;
-				for (std::vector<PartWithDecorator>::iterator jj = ++ii; jj != pdtv.end() && (objColumn + 1) < objNumInRow; ++jj) {
+				std::vector<PartWithDecorator>::const_iterator iibak = ii;
+				for (std::vector<PartWithDecorator>::const_iterator jj = ++ii; jj != pdtv.end() && (objColumn + 1) < objNumInRow; ++jj) {
 					ASSERT((*jj).decorator != NULL);
 					long sizeX2 = 0;
 					long sizeY2 = 0;
@@ -372,9 +372,9 @@ void CPartBrowserPane::ChangeAspect(int index)
 	maxSize.cy = 10;
 
 	try {
-		std::vector<PartWithDecorator> pdtv = pdts[currentAspectIndex];
+		const std::vector<PartWithDecorator>& pdtv = pdts[currentAspectIndex];
 		// calculate the maximum size
-		for (std::vector<PartWithDecorator>::iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
+		for (std::vector<PartWithDecorator>::const_iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
 			ASSERT((*ii).part != NULL);
 			ASSERT((*ii).decorator != NULL);
 
@@ -439,8 +439,8 @@ void CPartBrowserPane::OnPaint()
 
 	if (pdts.size() > 0 && currentAspectIndex >= 0) {
 		try {
-			std::vector<PartWithDecorator> pdtv = pdts[currentAspectIndex];
-			for (std::vector<PartWithDecorator>::iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
+			const std::vector<PartWithDecorator>& pdtv = pdts[currentAspectIndex];
+			for (std::vector<PartWithDecorator>::const_iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
 				if ((*ii).newDecorator) {
 					COMTHROW((*ii).newDecorator->DrawEx((ULONG)dc.m_hDC, (ULONGLONG)(&gdipGraphics)));
 				} else {
