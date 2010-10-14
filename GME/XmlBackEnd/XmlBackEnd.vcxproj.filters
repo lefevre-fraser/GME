@@ -107,9 +107,6 @@
     <ClCompile Include="SVNCode\Targets.cpp">
       <Filter>Source Files\SVNCode</Filter>
     </ClCompile>
-    <ClCompile Include="SVNCode\ThreadData.cpp">
-      <Filter>Source Files\SVNCode</Filter>
-    </ClCompile>
     <ClCompile Include="SVNCode\Util.cpp">
       <Filter>Source Files\SVNCode</Filter>
     </ClCompile>
@@ -212,9 +209,6 @@
       <Filter>Header Files\SVNHead</Filter>
     </ClInclude>
     <ClInclude Include="SVNCode\Targets.h">
-      <Filter>Header Files\SVNHead</Filter>
-    </ClInclude>
-    <ClInclude Include="SVNCode\ThreadData.h">
       <Filter>Header Files\SVNHead</Filter>
     </ClInclude>
     <ClInclude Include="SVNCode\Util.h">

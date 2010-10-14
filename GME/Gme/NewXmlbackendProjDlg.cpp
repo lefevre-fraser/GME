@@ -130,6 +130,7 @@ void CNewXmlbackendProjDlg::OnOK()
 	if( m_sourceControlType == 0 && 
 	    (m_svnUrl.Left( 6) != "svn://" 
 	    && m_svnUrl.Left(10) != "svn+ssh://"
+	    && m_svnUrl.Left(7) != "http://"
 	    && m_svnUrl.Left(8) != "https://"))
 	{
 		AfxMessageBox( "URL must be provided in one of the svn://host[/dir], svn+ssh://[username@]host[/dir] or https://host[/dir] form");

@@ -31,35 +31,9 @@
 #include <string>
 #include "svn_path.h"
 #include "svn_pools.h"
-#include "ThreadData.h"
 #include <locale.h> // for LC_ALL
 
 //#define _ 
-
-/*static*/ //Pool *              Util::m_requestPool      = 0;
-/*static*/ apr_pool_t*         Util::g_pool             = 0;
-/*static*/ bool                Util::g_inInit           = false;
-/*static*/ bool                Util::g_initException    = false;
-/*static*/ ThreadData          Util::m_globalData;
-/*static*/ char                Util::g_initFormatBuffer[formatBufferSize];
-
-/*static*/ std::ofstream       Util::g_logStream;
-/*static*/ int                 Util::g_logLevel         = Util::noLog;
-
-/**
- * initialize the environment for all requests
- * @param env   the JNI environment for this request
- */
-//void Util::globalInit()
-//{
-//	if (apr_initialize() != APR_SUCCESS)
-//	{
-//		printf("apr_initialize() failed.\n");
-//		exit(1);
-//	}
-//
-//	g_pool = svn_pool_create (NULL);
-//}
 
 /**
  * initialize the environment for all requests
@@ -75,16 +49,6 @@ bool Util::globalInit()
 		return true;
     }
     run = true;
-    // do not run this part more than one time. 
-    // this leaves a small time window when two threads create their first
-    // SVNClient & SVNAdmin at the same time, but I do not see a better 
-    // option without APR already initialized
-    if(g_inInit)
-    {
-        return false;
-    }
-    g_inInit = true;
-    //g_initEnv = env;
 
     apr_status_t status;
 
@@ -189,16 +153,15 @@ bool Util::globalInit()
     textdomain(PACKAGE_NAME);
 #endif
 
-    /* Create our top-level pool. */
-    g_pool = svn_pool_create (NULL);
 
 #if defined(WIN32) || defined(__CYGWIN__)
+    apr_pool_t* pool = svn_pool_create (NULL);
     /* See http://svn.collab.net/repos/svn/trunk/notes/asp-dot-net-hack.txt */
     /* ### This code really only needs to be invoked by consumers of
        ### the libsvn_wc library, which basically means SVNClient. */
     if (getenv ("SVN_ASP_DOT_NET_HACK"))
     {
-        svn_error_t *err = svn_wc_set_adm_dir("_svn", g_pool);
+        svn_error_t *err = svn_wc_set_adm_dir("_svn", pool);
         if (err)
         {
             if (stderr)
@@ -211,105 +174,17 @@ bool Util::globalInit()
             return FALSE;
         }
     }
+	svn_pool_destroy(pool);
 #endif
 
-    //// build all mutexes
-    //g_finalizedObjectsMutex = new JNIMutex(g_pool);
-    //if(isExceptionThrown())
-    //{
-    //    return false;
-    //}
-
-    //g_logMutex = new JNIMutex(g_pool);
-    //if(isExceptionThrown())
-    //{
-    //    return false;
-    //}
-
-    //g_globalPoolMutext = new JNIMutex(g_pool);
-    //if(isExceptionThrown())
-    //{
-    //    return false;
-    //}
-
-    //// initialized the thread local storage
-    //if(!JNIThreadData::initThreadData())
-    //{
-    //    return false;
-    //}
-
-    //setEnv(env);
-    //if(isExceptionThrown())
-    //{
-    //    return false;
-    //}
-
-    //g_initEnv = NULL;
-	m_globalData.init();
-    g_inInit = false;
-    return true;
-}
-
-//static
-bool Util::isOtherExceptionThrown()
-{
-	return false;
-}
-
-//static
-bool Util::isExceptionThrown()
-{
-	if(g_inInit) // during init -> look in the global member
-	{
-		return g_initException;
-	}
-
-	// look in the thread local storage
-	//JNIThreadData *data = JNIThreadData::getThreadData();
-	//return data == NULL || data->m_exceptionThrown;
-	return m_globalData.m_exceptionThrown;
-}
-
-//static 
-void Util::setExceptionThrown()
-{
-	if (g_inInit)
-	{
-		// During global initialization, store any errors that occur
-		// in in a global variable (since thread-local storage may not
-		// yet be available).
-		g_initException = true;
-	}
-	else
-	{
-		// When global initialization is complete, thread-local
-		// storage should be available, so store the error there.
-		//JNIThreadData *data = JNIThreadData::getThreadData();
-		//data->m_exceptionThrown = true;
-		m_globalData.m_exceptionThrown = true;
-	}
+	return true;
 }
 
 /*static*/ void Util::throwNullPointerException( const char * p_msg)
 {
-	std::cout << "Exception " << p_msg << std::endl;
-    //if (getLogLevel() >= errorLog)
-    {
-        logMessage("NullPointerException thrown");
-    }
-
-	setExceptionThrown();
+	throw std::invalid_argument(p_msg);
 }
 
-
-/**
- * returns the global (not request specific) pool
- * @return global pool
- */
-/*static*/ apr_pool_t * Util::getPool()
-{
-	return g_pool;
-}
 
 /**
  * build the error message from the svn error into buffer. This method calls 
@@ -352,15 +227,6 @@ void Util::assembleErrorMessage(svn_error_t *err, int depth,
 
 }
 
-//static
-std::string Util::makeSVNErrorMessage(svn_error_t *err)
-{
-    if(err == NULL)
-        return "";
-    std::string buffer;
-    assembleErrorMessage(err, 0, APR_SUCCESS, buffer);
-    return buffer;
-}
 
 /**
  * process a svn error by wraping in into a ClientExpection
@@ -376,14 +242,6 @@ std::string Util::makeSVNErrorMessage(svn_error_t *err)
 	}
 	//std::cout << "Error " << ( p_err->message?p_err->message:"<<nomsg>>") << std::endl;
 
-    if(isOtherExceptionThrown())
-    {
-        svn_error_clear( p_err);
-		MsgConsole::ssendMsg( "[Util::handleSVNError] Unknown exception thrown.", MSG_ERROR);
-		AfxMessageBox( "[Util::handleSVNError] Unknown exception thrown.");
-        return;
-    } 
-	
 	std::string buffer;
     assembleErrorMessage( p_err, 0, APR_SUCCESS, buffer);
 	buffer = "SVN Error details follow:\n" + buffer;
@@ -480,87 +338,6 @@ std::string Util::makeSVNErrorMessage(svn_error_t *err)
 
 	}
 	return NULL;
-}
-
-/** 
- * Return the request pool. The request pool will be destroyed after each 
- * request (call) 
- * @return the pool to be used for this request
- */
-/*static*/ Pool * Util::getRequestPool()
-{
-    //return JNIThreadData::getThreadData()->m_requestPool;
-	return m_globalData.m_requestPool;
-	//return m_requestPool;
-}
-/**
- * Set the request pool in thread local storage
- * @param pool  the request pool
- */
-/*static*/ void Util::setRequestPool(Pool *pool)
-{
-    //JNIThreadData::getThreadData()->m_requestPool = pool;
-    //m_requestPool = pool;
-	m_globalData.m_requestPool = pool;
-}
-
-char * Util::getFormatBuffer()
-{
-	if(g_inInit) // during init -> use the global buffer
-	{
-		return g_initFormatBuffer;
-	}
-	// use the buffer in the thread local storage
-	//JNIThreadData *data = JNIThreadData::getThreadData();
-	//if(data == NULL) // if that does not exists -> use the global buffer
-	//{
-	//	return g_initFormatBuffer;
-	//}
-	//return data->m_formatBuffer;
-	return m_globalData.m_formatBuffer;
-}
-
-/** 
- * initialite the log file
- * @param level the log level
- * @param the name of the log file
- */
-void Util::initLogFile(int level, const std::string& path)
-{
-    // lock this operation
-    //JNICriticalSection cs(*g_logMutex);
-    if(g_logLevel > noLog) // if the log file has been opened
-    {
-        g_logStream.close();
-    }
-    // remember the log level
-    g_logLevel = level;
-    //JNIStringHolder myPath(path);
-	const char * myPath = path.c_str();
-    if(g_logLevel > noLog) // if a new log file is needed
-    {
-        // open it
-        g_logStream.open(myPath, std::ios::app);
-    }
-}
-
-/**
- * Returns the current log level
- * @return the log level
- */
-int Util::getLogLevel()
-{
-    return g_logLevel;
-}
-/**
- * write a message to the log file if needed
- * @param the log message
- */
-void Util::logMessage(const char *message)
-{
-    // lock the log file
-    //JNICriticalSection cs(*g_logMutex);
-    g_logStream << message << std::endl;
 }
 
 #endif

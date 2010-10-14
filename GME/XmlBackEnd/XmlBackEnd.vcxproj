@@ -125,8 +125,6 @@ copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalOptions>
- %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>xerces-c_3.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib\subv_$(Configuration);../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
@@ -197,7 +195,6 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
     <ClCompile Include="SVNCode\Prompter.cpp" />
     <ClCompile Include="SVNCode\Revision.cpp" />
     <ClCompile Include="SVNCode\Targets.cpp" />
-    <ClCompile Include="SVNCode\ThreadData.cpp" />
     <ClCompile Include="SVNCode\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -243,7 +240,6 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
     <ClInclude Include="SVNCode\Prompter.h" />
     <ClInclude Include="SVNCode\Revision.h" />
     <ClInclude Include="SVNCode\Targets.h" />
-    <ClInclude Include="SVNCode\ThreadData.h" />
     <ClInclude Include="SVNCode\Util.h" />
     <ClInclude Include="xml_smart_ptr.h" />
   </ItemGroup>

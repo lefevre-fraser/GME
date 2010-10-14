@@ -35,20 +35,6 @@
 extern std::string g_userName;
 extern std::string g_passWord;
 
-//Client::Client(void)
-//	: m_notify2( 0)
-//	, m_prompter( 0)
-//	, m_commitMessageBuilder( 0)
-//	, m_userName( g_userName)
-//	, m_passWord( g_passWord)
-//{
-//	Util::globalInit();
-//	Util::setRequestPool( new Pool());
-//	setPrompt( Prompter::makePrompter( new TextPromptImpl()));
-//	// we set this:
-//	notification2( new NotifyHelp());
-//}
-
 Client::Client( const std::string& p_userName, const std::string& p_passWord)
 	: m_notify2( 0)
 	, m_prompter( 0)
@@ -57,7 +43,6 @@ Client::Client( const std::string& p_userName, const std::string& p_passWord)
 	, m_passWord( p_passWord)
 {
 	Util::globalInit();
-	Util::setRequestPool( new Pool());
 	setPrompt( Prompter::makePrompter( new GPromptImpl()));
 	// we set this:
 	notification2( new ClientUtil::NotifyHelp());
@@ -65,11 +50,6 @@ Client::Client( const std::string& p_userName, const std::string& p_passWord)
 
 Client::~Client(void)
 {
-	Pool * ptr = Util::getRequestPool();
-	if( ptr) 
-		delete ptr;
-	Util::setRequestPool( 0);
-
 	if( m_prompter) delete m_prompter;
 	m_prompter = 0;
 
@@ -919,9 +899,6 @@ svn_error_t * ClientUtil::OtherHelp::checkCancel(void *cancelBaton)
 void ClientUtil::StatusHelp::statusReceiver( void *baton, const char *path, 
 		svn_wc_status2_t *status)
 {
-	//if(Util::isExceptionThrown())
-	//	return;
-
 	StatusBaton *status_baton = (StatusBaton*) baton;
 	StatusEntry status_entry;
 	status_entry.m_path = apr_pstrdup( status_baton->m_pool, path);
@@ -1026,9 +1003,6 @@ svn_error_t *ClientUtil::InfoHelp::infoReceiver(void *baton,
 								  const svn_info_t *info,
 								  apr_pool_t *pool)
 {
-	if(Util::isExceptionThrown())
-		return SVN_NO_ERROR;
-
 	// we don't create here java Status object as we don't want too many local 
 	// references
 	InfoBaton *info_baton = (InfoBaton*) baton; // convert the baton to the specific structure we passed in

@@ -22,78 +22,27 @@
 
 #pragma once
 #include "svn_client.h"
-#include "Pool.h"
+#include "apr.h"
 #include <string>
 
-class ThreadData;
 /**
- * class to hold a number of JNI relate utility methods. No Objects of this 
- * class are ever created
+ * Class of utility methods. No Objects of this class are ever created
  */
 
 class Util
 {
 public:
-	enum { formatBufferSize = 2048 };
+	static bool globalInit();
 
-	static char *         getFormatBuffer();
+	static svn_error_t* preprocessPath(const char* &path, apr_pool_t* pool);
 
-	static bool           globalInit();
+	static void throwNullPointerException(const char*);
 
-	static svn_error_t *  preprocessPath(const char *&path, apr_pool_t * pool);
-
-	static void           logMessage(const char *message);
-	static int            getLogLevel();
-	static void           initLogFile(int level, const std::string& path);
-
-	static bool           isOtherExceptionThrown();
-	static bool           isExceptionThrown();
-	static void           setExceptionThrown();
-	static void           throwNullPointerException( const char *);
-
-	static Pool*          getRequestPool();
-	static void           setRequestPool(Pool *pool);
-	
-	static void           assembleErrorMessage(svn_error_t *err, int depth,
+	static void assembleErrorMessage(svn_error_t* err, int depth,
 	                           apr_status_t parent_apr_err,
 	                           std::string& buffer);
 
-	static std::string    makeSVNErrorMessage(svn_error_t *err); 
-	static void           handleSVNError( svn_error_t *);
-
-	static apr_pool_t *   getPool(); 
-
+	static void handleSVNError(svn_error_t* p_err);
 private:
-
-	//static Pool *m_requestPool; // was in a Thread Local Storage
-
-	/**
-	* global master pool. All other pool are subpools of this pool
-	*/
-	static apr_pool_t* g_pool;
-
-	/**
-	* flag, that one thread is in the init code. Cannot use mutex here since 
-	* apr is not initialized yes
-	*/
-	static bool g_inInit;
-	/**
-	* flag, that an exception occured during our initialization
-	*/
-	static bool g_initException;
-
-	enum { noLog, errorLog, exceptionLog, entryLog } LogLevel;
-	/** 
-	* the log level of this module
-	*/ 
-	static int g_logLevel;
-	/**
-	* the stream to write log messages to
-	*/
-	static std::ofstream g_logStream;
-
-	static char           g_initFormatBuffer[formatBufferSize];
-
-	static ThreadData     m_globalData; 
-
+	Util();
 };
