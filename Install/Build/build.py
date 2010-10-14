@@ -286,6 +286,9 @@ try:
                                 "version="])
     include_steps = []
     exclude_steps = []
+    if args:
+        print usage
+        sys.exit()
     for opt, val in opts:
         if opt in ("-h", "--help"):
             print usage
