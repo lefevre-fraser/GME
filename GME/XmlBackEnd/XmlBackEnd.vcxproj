@@ -90,11 +90,11 @@
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
-      <Command>copy ..\lib\libeay32.dll  "$(OutDir)"
-copy ..\lib\ssleay32.dll  "$(OutDir)"
-copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)"
-copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)"
-copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)"
+      <Command>copy ..\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
+copy ..\lib\ssleay32.dll  "$(OutDir)" &amp;&amp; ^
+copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)" &amp;&amp; ^
+copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)" &amp;&amp; ^
+copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)" &amp;&amp; ^
 copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
       <Message>Copying dependency DLLs...</Message>
       <Outputs> ..\lib\libeay32.dll</Outputs>
@@ -142,11 +142,11 @@ copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
-      <Command>copy ..\lib\libeay32.dll  "$(OutDir)"
-copy ..\lib\ssleay32.dll  "$(OutDir)"
-copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)"
-copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)"
-copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)"
+      <Command>copy ..\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
+copy ..\lib\ssleay32.dll  "$(OutDir)" &amp;&amp; ^
+copy ..\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)" &amp;&amp; ^
+copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)" &amp;&amp; ^
+copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)" &amp;&amp; ^
 copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
       <Message>Copying dependency DLLs...</Message>
       <Outputs> ..\lib\libeay32.dll</Outputs>
