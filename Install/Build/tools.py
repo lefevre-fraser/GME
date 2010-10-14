@@ -198,5 +198,5 @@ def build_WiX(wxs_file):
     exepath = WIX_LIGHT_PRG
     if 'WIX' in os.environ.keys():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
-    cmd_line = [exepath] + WIX_LIGHT_ARG.split() + [projectname]
+    cmd_line = [exepath] + WIX_LIGHT_ARG.split() + [projectname + ".wixobj"]
     system(cmd_line, dirname)
