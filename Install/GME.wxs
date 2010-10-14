@@ -255,6 +255,7 @@
             <Merge Id="MFC Policy" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\policy_9_0_Microsoft_VC90_MFC_x86.msm" DiskId="1" />
             <Merge Id="ATL" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC90_ATL_x86.msm" DiskId="1" />
             <Merge Id="ATL Policy" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\policy_9_0_Microsoft_VC90_ATL_x86.msm" DiskId="1" />
+            <Merge Id="CRT100" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_CRT_x86.msm" DiskId="1" />
         </DirectoryRef>
 
         <!-- =========================================================== -->
@@ -2205,6 +2206,7 @@
                 <MergeRef Id='MFC Policy' />
                 <MergeRef Id='ATL' />
                 <MergeRef Id='ATL Policy' />
+                <MergeRef Id='CRT100' />
             </Feature>
             
             <Feature Id='Samples' Title='Samples' Description='These are sample paradigms and interpreters with source code'

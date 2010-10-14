@@ -3,7 +3,7 @@
 #define USESVN  1
 
 #if(USESVN)
-#define USENEON 1	// (GPL licensing!)
+//#define USENEON 1	// (GPL licensing!)
 #define USESERF 1
 
 
