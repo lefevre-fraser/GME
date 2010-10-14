@@ -65,8 +65,8 @@ void CCertificateDlg::OnBnClickedOk()
 {
 	UpdateData();
 
-	CButton* rdo1 = (CButton*) GetDlgItem( IDC_RADIO1);
-	CButton* rdo2 = (CButton*) GetDlgItem( IDC_RADIO2);
+	CButton* rdo1 = (CButton*) GetDlgItem( IDC_RADIO_PERMANENTLY);
+	CButton* rdo2 = (CButton*) GetDlgItem( IDC_RADIO_TEMPORARILY);
 	CButton* rdo3 = (CButton*) GetDlgItem( IDC_RADIO3);
 
 	m_response = PermanentAccept;

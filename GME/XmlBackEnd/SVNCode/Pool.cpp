@@ -37,10 +37,13 @@
 Pool::Pool()
 {
 	//JNICriticalSection criticalSection(*JNIUtil::getGlobalPoolMutex());
-	m_pool = svn_pool_create(Util::getPool());
-	// we need to store in the static
-	Util::setRequestPool( this);
-	//Util::setRequestPool(this);
+	m_pool = svn_pool_create(NULL);
+}
+
+Pool::Pool(Pool& parent)
+{
+	//JNICriticalSection criticalSection(*JNIUtil::getGlobalPoolMutex());
+	m_pool = svn_pool_create(parent.pool());
 }
 
 /**
@@ -49,11 +52,9 @@ Pool::Pool()
 Pool::~Pool()
 {
 	//JNICriticalSection criticalSection(*JNIUtil::getGlobalPoolMutex());
-	Util::setRequestPool(NULL); // will nullify the ptr's value
-
 	if(m_pool)
 	{
-		svn_pool_destroy (m_pool);
+		svn_pool_destroy(m_pool);
 	}
 
 }
@@ -62,7 +63,7 @@ Pool::~Pool()
  * Returns the apr pool.
  * @return the apr pool
  */
-apr_pool_t * Pool::pool () const
+apr_pool_t * Pool::pool() const
 {
 	return m_pool;
 }

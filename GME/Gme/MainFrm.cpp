@@ -91,9 +91,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_VIEW_REFRESH_SOURCECONTROL, OnViewMultiUserRefreshSourceControl)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_REFRESH_SOURCECONTROL, OnUpdateViewMultiUserRefreshSourceControl)
 	ON_COMMAND(ID_MULTIUSER_ACTIVEUSERS, OnViewMultiUserActiveUsers)
-	ON_COMMAND(ID_MULTIUSER_SUBVERSION,  OnViewMultiUserSubversion)
 	ON_UPDATE_COMMAND_UI(ID_MULTIUSER_ACTIVEUSERS, OnUpdateViewMultiUserActiveUsers)
-	ON_UPDATE_COMMAND_UI(ID_MULTIUSER_SUBVERSION, OnUpdateViewMultiUserSubversion)
 	ON_COMMAND(ID_VIEW_CLEARCONSOLE, OnViewClearConsole)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_CLEARCONSOLE, OnUpdateViewClearConsole)
 	ON_WM_CLOSE()
@@ -1174,23 +1172,6 @@ void CMainFrame::OnUpdateViewMultiUserActiveUsers(CCmdUI* pCmdUI)
 void CMainFrame::OnUpdateViewMultiUserSubversion(CCmdUI* pCmdUI) 
 {
 	pCmdUI->Enable( !CGMEDoc::theInstance || !theApp.isMgaProj()); // always TRUE (also when no project is open) except when mga_proj is open
-}
-
-void CMainFrame::OnViewMultiUserSubversion()
-{
-	try
-	{
-		CComPtr<ISvnWorkBench> wb;
-		HRESULT hr = wb.CoCreateInstance( L"Mga.XmlBackEnd.SvnWorkBench");
-		if( FAILED( hr) || !wb) {
-			AfxMessageBox( "Could not create Svn Work Bench!");
-			return;
-		}
-
-		wb->SetClues( CComBSTR( (LPCTSTR) theApp.connString()));
-		wb->ShowWorkBenchDlg();
-	}
-	catch(...) { ASSERT(0); }
 }
 
 void CMainFrame::OnViewClearConsole() 

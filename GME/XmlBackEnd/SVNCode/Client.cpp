@@ -105,8 +105,8 @@ long Client::sub_checkout(const char *moduleName, const char *destPath,
 						Revision &revision, Revision &pegRevision, 
 						bool recurse, bool ignoreExternals)
 {
-	Pool requestPool;
-	apr_pool_t * apr_pool = requestPool.pool ();
+	Pool reqPool;
+	apr_pool_t * apr_pool = reqPool.pool();
 
 	if(moduleName == NULL)
 	{
@@ -119,8 +119,8 @@ long Client::sub_checkout(const char *moduleName, const char *destPath,
 		return -1;
 	}
 
-	Path url(moduleName);
-	Path path(destPath);
+	Path url(moduleName, reqPool.pool());
+	Path path(destPath, reqPool.pool());
 	svn_error_t *Err = url.error_occured();
 	if(Err != NULL)
 	{
@@ -135,7 +135,7 @@ long Client::sub_checkout(const char *moduleName, const char *destPath,
 	}
 	svn_revnum_t retval;
 
-	svn_client_ctx_t *ctx = getContext(NULL);
+	svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
 	if(ctx == NULL)
 	{
 		return -1;
@@ -162,17 +162,17 @@ long Client::sub_checkout(const char *moduleName, const char *destPath,
 long Client::sub_commit(Targets &targets, const char *message, bool recurse,
 					  bool noUnlock)
 {
-	Pool requestPool;
-	apr_pool_t * apr_pool = requestPool.pool ();
+	Pool reqPool;
+	apr_pool_t * apr_pool = reqPool.pool();
 	svn_client_commit_info_t *commit_info = NULL;
-	const apr_array_header_t *targets2 = targets.array(requestPool);
+	const apr_array_header_t *targets2 = targets.array(reqPool);
 	svn_error_t *Err = targets.error_occured();
 	if(Err != NULL)
 	{
 		Util::handleSVNError(Err);
 		return -1;
 	}
-	svn_client_ctx_t *ctx = getContext(message);
+	svn_client_ctx_t *ctx = getContext(message, apr_pool);
 	if(ctx == NULL)
 	{
 		return -1;
@@ -192,17 +192,17 @@ long Client::sub_commit(Targets &targets, const char *message, bool recurse,
 long Client::sub_commit3(Targets &targets, const char *message, bool recurse,
 					  bool noUnlock)
 {
-	Pool requestPool;
-	apr_pool_t * apr_pool = requestPool.pool ();
+	Pool reqPool;
+	apr_pool_t * apr_pool = reqPool.pool();
 	svn_commit_info_t *commit3_info = NULL;
-	const apr_array_header_t *targets2 = targets.array(requestPool);
+	const apr_array_header_t *targets2 = targets.array(reqPool);
 	svn_error_t *Err = targets.error_occured();
 	if(Err != NULL)
 	{
 		Util::handleSVNError(Err);
 		return -1;
 	}
-	svn_client_ctx_t *ctx = getContext(message);
+	svn_client_ctx_t *ctx = getContext(message, apr_pool);
 	if(ctx == NULL)
 	{
 		return -1;
@@ -233,16 +233,18 @@ long Client::sub_commit3(Targets &targets, const char *message, bool recurse,
 bool Client::sub_update(Targets &targets, Revision &revision, bool recurse,
 					bool ignoreExternals, std::vector< long>& res)
 {
-	Pool requestPool;
-	apr_pool_t * apr_pool = requestPool.pool ();
+	Pool reqPoolParent;
+	// This function leaks if we don't use two pools
+	Pool reqPool(reqPoolParent);
+	apr_pool_t * apr_pool = reqPool.pool();
 
-	svn_client_ctx_t *ctx = getContext(NULL);
+	svn_client_ctx_t *ctx = getContext(NULL, apr_pool);
 	apr_array_header_t *retval;
 	if(ctx == NULL)
 	{
 		return false;
 	}
-	const apr_array_header_t *array = targets.array(requestPool);
+	const apr_array_header_t *array = targets.array(reqPool);
 	svn_error_t *Err = targets.error_occured();
 	if(Err != NULL)
 	{
@@ -280,14 +282,14 @@ bool Client::sub_update(Targets &targets, Revision &revision, bool recurse,
 
 bool Client::sub_cleanup(const char *path)
 {
-	Pool requestPool;
-	apr_pool_t * apr_pool = requestPool.pool ();
+	Pool reqPool;
+	apr_pool_t * apr_pool = reqPool.pool();
 	if(path == NULL)
 	{
 		Util::throwNullPointerException("path");
 		return false;
 	}
-	Path intPath(path);
+	Path intPath(path, reqPool.pool());
 	svn_error_t *Err = intPath.error_occured();
 	if(Err != NULL)
 	{
@@ -295,7 +297,7 @@ bool Client::sub_cleanup(const char *path)
 		return false;
 	}
 
-	svn_client_ctx_t *ctx = getContext(NULL);
+	svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
 	if(ctx == NULL)
 	{
 		return false;
@@ -313,21 +315,21 @@ bool Client::sub_cleanup(const char *path)
 
 bool Client::sub_resolved(const char *path, bool recurse)
 {
-	Pool requestPool;
-	apr_pool_t * apr_pool = requestPool.pool ();
+	Pool reqPool;
+	apr_pool_t * apr_pool = reqPool.pool();
 	if(path == NULL)
 	{
 		Util::throwNullPointerException("path");
 		return false;
 	}
-	Path intPath(path);
+	Path intPath(path, reqPool.pool());
 	svn_error_t *Err = intPath.error_occured();
 	if(Err != NULL)
 	{
 		Util::handleSVNError(Err);
 		return false;
 	}
-	svn_client_ctx_t *ctx = getContext(NULL);
+	svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
 	if(ctx == NULL)
 	{
 		return false;
@@ -350,7 +352,7 @@ bool Client::sub_resolved(const char *path, bool recurse)
 bool Client::sub_propertySet(const char *path, const char *name, 
 						const char *value, bool recurse, bool force)
 {
-	Pool requestPool;
+	Pool reqPool;
 	if(path == NULL)
 	{
 		Util::throwNullPointerException("path");
@@ -366,11 +368,11 @@ bool Client::sub_propertySet(const char *path, const char *name,
 		Util::throwNullPointerException("value");
 		return false;
 	}
-	svn_string_t *val = svn_string_create(value, requestPool.pool());
+	svn_string_t *val = svn_string_create(value, reqPool.pool());
 
 
 	//propertySet(path, name, val->data, recurse, force);                     // modified from val to val->data
-    Path intPath(path);
+    Path intPath(path, reqPool.pool());
     svn_error_t *Err = intPath.error_occured();
     if(Err != NULL)
     {
@@ -378,7 +380,7 @@ bool Client::sub_propertySet(const char *path, const char *name,
         return false;
     }
 
-    svn_client_ctx_t *ctx = getContext(NULL);
+    svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
     if(ctx == NULL)
         return false;
     Err = svn_client_propset2 (name, val, 
@@ -386,7 +388,7 @@ bool Client::sub_propertySet(const char *path, const char *name,
                                 recurse, 
                                 force,
                                 ctx,
-								requestPool.pool());//Util::getRequestPool()->pool());
+								reqPool.pool());
     if(Err!= NULL)
 	{
         Util::handleSVNError(Err); // previously just handled the error and fall through to return true
@@ -399,16 +401,16 @@ bool Client::sub_propertySet(const char *path, const char *name,
 bool Client::sub_lock(Targets &targets, const char *comment, 
 		bool force)
 {
-	Pool requestPool;
-	const apr_array_header_t *targetsApr = targets.array(requestPool);
+	Pool reqPool;
+	const apr_array_header_t *targetsApr = targets.array(reqPool);
 	svn_error_t *Err = targets.error_occured();
 	if(Err != NULL)
 	{
 		Util::handleSVNError(Err);
 		return false;
 	}
-	apr_pool_t * apr_pool = requestPool.pool ();
-	svn_client_ctx_t *ctx = getContext(NULL);
+	apr_pool_t * apr_pool = reqPool.pool();
+	svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
 	Err = svn_client_lock(targetsApr, comment, force, ctx, apr_pool);
 
 	if (Err != NULL)
@@ -428,16 +430,16 @@ bool Client::sub_lock(Targets &targets, const char *comment,
 
 bool Client::sub_unlock(Targets &targets)
 {
-	Pool requestPool;
-	const apr_array_header_t *targetsApr = targets.array(requestPool);
+	Pool reqPool;
+	const apr_array_header_t *targetsApr = targets.array(reqPool);
 	svn_error_t *Err = targets.error_occured();
 	if(Err != NULL)
 	{
 		Util::handleSVNError(Err);
 		return false;
 	}
-	apr_pool_t * apr_pool = requestPool.pool ();
-	svn_client_ctx_t *ctx = getContext(NULL);
+	apr_pool_t * apr_pool = reqPool.pool();
+	svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
 	Err = svn_client_unlock(targetsApr, true, ctx, apr_pool);
 
 	if (Err != NULL)
@@ -454,7 +456,7 @@ ClientUtil::StatusInfo Client::sub_single_status(const char *path, bool onServer
 {
 	ClientUtil::StatusInfo null_pair;
 	ClientUtil::StatusHelp::StatusBaton statusBaton;
-	Pool requestPool;
+	Pool reqPool;
 	svn_revnum_t youngest = SVN_INVALID_REVNUM;
 	svn_opt_revision_t rev;
 
@@ -464,7 +466,7 @@ ClientUtil::StatusInfo Client::sub_single_status(const char *path, bool onServer
 		return null_pair;
 	}
 
-	svn_client_ctx_t *ctx = getContext(NULL);
+	svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
 	if(ctx == NULL)
 	{
 		return null_pair;
@@ -472,8 +474,8 @@ ClientUtil::StatusInfo Client::sub_single_status(const char *path, bool onServer
 
 
 	rev.kind = svn_opt_revision_unspecified;
-	statusBaton.m_pool = requestPool.pool();
-	Path intPath(path);
+	statusBaton.m_pool = reqPool.pool();
+	Path intPath(path, reqPool.pool());
 	svn_error_t *Err = intPath.error_occured();
 	if(Err != NULL)
 	{
@@ -490,7 +492,7 @@ ClientUtil::StatusInfo Client::sub_single_status(const char *path, bool onServer
 		FALSE,          // no_ignore,
 		FALSE,          // ignore externals
 		ctx,
-		requestPool.pool());
+		reqPool.pool());
 
 	if(Err == NULL)
 	{
@@ -547,7 +549,7 @@ ClientUtil::StatusExtInfoVec Client::sub_extended_status( const char *p_path, bo
 {
 	ClientUtil::StatusExtInfoVec res;
 	ClientUtil::StatusHelp::StatusBaton statusBaton;
-	Pool requestPool;
+	Pool reqPool;
 	svn_revnum_t youngest = SVN_INVALID_REVNUM;
 	svn_opt_revision_t rev;
 
@@ -557,7 +559,7 @@ ClientUtil::StatusExtInfoVec Client::sub_extended_status( const char *p_path, bo
 		return res;
 	}
 
-	svn_client_ctx_t *ctx = getContext(NULL);
+	svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
 	if(ctx == NULL)
 	{
 		return res;
@@ -565,8 +567,8 @@ ClientUtil::StatusExtInfoVec Client::sub_extended_status( const char *p_path, bo
 
 
 	rev.kind = svn_opt_revision_unspecified;
-	statusBaton.m_pool = requestPool.pool();
-	Path intPath( p_path);
+	statusBaton.m_pool = reqPool.pool();
+	Path intPath(p_path, reqPool.pool());
 	svn_error_t *Err = intPath.error_occured();
 	if(Err != NULL)
 	{
@@ -583,7 +585,7 @@ ClientUtil::StatusExtInfoVec Client::sub_extended_status( const char *p_path, bo
 		FALSE,          // no_ignore,
 		FALSE,          // ignore externals
 		ctx,
-		requestPool.pool());
+		reqPool.pool());
 
 	if(Err == NULL)
 	{
@@ -635,10 +637,8 @@ ClientUtil::StatusExtInfoVec Client::sub_extended_status( const char *p_path, bo
 }
 
 
-svn_client_ctx_t * Client::getContext(const char *p_strMessage)
+svn_client_ctx_t * Client::getContext(const char *p_strMessage, apr_pool_t *pool)
 {
-	_ASSERT( Util::getRequestPool());
-	apr_pool_t *pool = Util::getRequestPool()->pool();
 	svn_auth_baton_t *ab;
 	svn_client_ctx_t *ctx;
 	svn_error_t *err = NULL;
@@ -674,21 +674,21 @@ svn_client_ctx_t * Client::getContext(const char *p_strMessage)
 	if(m_prompter != NULL)
 	{
 		/* Two basic prompt providers: username/password, and just username.*/
-		provider = m_prompter->getProviderSimple();
+		provider = m_prompter->getProviderSimple(pool);
 		APR_ARRAY_PUSH (providers, svn_auth_provider_object_t *) = provider;
 
-		provider = m_prompter->getProviderUsername();
+		provider = m_prompter->getProviderUsername(pool);
 		APR_ARRAY_PUSH (providers, svn_auth_provider_object_t *) = provider;
 
 		/* Three ssl prompt providers, for server-certs, client-certs,
 		and client-cert-passphrases.  */
-		provider = m_prompter->getProviderServerSSLTrust();
+		provider = m_prompter->getProviderServerSSLTrust(pool);
 		APR_ARRAY_PUSH (providers, svn_auth_provider_object_t *) = provider;
 
-		provider = m_prompter->getProviderClientSSL();
+		provider = m_prompter->getProviderClientSSL(pool);
 		APR_ARRAY_PUSH (providers, svn_auth_provider_object_t *) = provider;
 
-		provider = m_prompter->getProviderClientSSLPassword();
+		provider = m_prompter->getProviderClientSSLPassword(pool);
 		APR_ARRAY_PUSH (providers, svn_auth_provider_object_t *) = provider;
 	}
 
@@ -733,7 +733,7 @@ svn_client_ctx_t * Client::getContext(const char *p_strMessage)
 
 	// 1.3 logic?
 	// if not filled (is NULL) means that Subversion should try log_msg_func
-	ctx->log_msg_baton2 = ClientUtil::CommitHelp::createLogMsgBaton( p_strMessage, m_commitMessageBuilder);
+	ctx->log_msg_baton2 = ClientUtil::CommitHelp::createLogMsgBaton(p_strMessage, m_commitMessageBuilder, pool);
 	ctx->log_msg_func2  = ClientUtil::CommitHelp::logMsg;
 
 	ctx->log_msg_baton  = 0; // safety 1st
@@ -875,7 +875,7 @@ svn_error_t * ClientUtil::CommitHelp::logMsg(const char **log_msg,
 }
 
 // static 
-void * ClientUtil::CommitHelp::createLogMsgBaton( const char * p_strMessage, CommitHelp::MsgBuilder * p_msgComposer)
+void * ClientUtil::CommitHelp::createLogMsgBaton( const char * p_strMessage, CommitHelp::MsgBuilder * p_msgComposer, apr_pool_t *pool)
 {
 	// the baton created by this method will affect 
 	// how CommitHelp::logMsg() will deal with the 
@@ -883,7 +883,7 @@ void * ClientUtil::CommitHelp::createLogMsgBaton( const char * p_strMessage, Com
 
 	if( p_strMessage != NULL || p_msgComposer)
 	{
-		LogMsgBaton *baton = (LogMsgBaton *) apr_palloc (Util::getRequestPool()->pool(), sizeof (*baton));
+		LogMsgBaton *baton = (LogMsgBaton *) apr_palloc (pool, sizeof (*baton));
 
 		baton->m_message = p_strMessage; // beware: ptr assignment only !!
 		baton->m_messageHandler = p_msgComposer;
@@ -894,7 +894,7 @@ void * ClientUtil::CommitHelp::createLogMsgBaton( const char * p_strMessage, Com
 	
 	// create a baton with dummy string value for empty p_strMessages as well:
 	static const char * def_str = "Default";
-	LogMsgBaton *baton = (LogMsgBaton *) apr_palloc (Util::getRequestPool()->pool(), sizeof (*baton));
+	LogMsgBaton *baton = (LogMsgBaton *) apr_palloc (pool, sizeof (*baton));
 	baton->m_message = def_str; // beware: ptr assignment only !!
 	return baton;
 }
@@ -972,7 +972,7 @@ bool Client::info2Qck( const char* p_path, bool p_recurse, ClientUtil::InfoHelp:
 bool Client::sub_info2(const char *path, Revision &revision, Revision &pegRevision, bool recurse, ClientUtil::InfoHelp::InfoVec& p_infoVect, bool p_suppressIllegalUrlErrorMsg)
 {
 	ClientUtil::InfoHelp::InfoBaton info_baton;
-	Pool requestPool;
+	Pool reqPool;
 
 	if(path == NULL)
 	{
@@ -980,12 +980,12 @@ bool Client::sub_info2(const char *path, Revision &revision, Revision &pegRevisi
 		return false;
 	}
 
-	svn_client_ctx_t *ctx = getContext(NULL);
+	svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
 	if(ctx == NULL)
 	{
 		return false;
 	}
-	Path checkedPath(path);
+	Path checkedPath(path, reqPool.pool());
 	svn_error_t *Err = checkedPath.error_occured();
 	if(Err != NULL)
 	{
@@ -993,7 +993,7 @@ bool Client::sub_info2(const char *path, Revision &revision, Revision &pegRevisi
 		return false;
 	}
 
-	info_baton.m_pool = requestPool.pool();
+	info_baton.m_pool = reqPool.pool();
 
 	Err = svn_client_info (
 		checkedPath.c_str(), 
@@ -1003,7 +1003,7 @@ bool Client::sub_info2(const char *path, Revision &revision, Revision &pegRevisi
 		&info_baton,             // callback function's input baton parameter
 		recurse ? TRUE :FALSE,
 		ctx,
-		requestPool.pool());
+		reqPool.pool());
 
 	if (Err == NULL)
 	{
@@ -1071,8 +1071,8 @@ svn_error_t *ClientUtil::InfoHelp::infoReceiver(void *baton,
 
 int Client::sub_add( const char *p_pathOrUrl, bool p_rec)
 {
-	Pool requestPool;
-	apr_pool_t * apr_pool = requestPool.pool ();
+	Pool reqPool;
+	apr_pool_t * apr_pool = reqPool.pool();
 
 	if(p_pathOrUrl == NULL)
 	{
@@ -1080,7 +1080,7 @@ int Client::sub_add( const char *p_pathOrUrl, bool p_rec)
 		return -1;
 	}
 
-	Path url(p_pathOrUrl);
+	Path url(p_pathOrUrl, reqPool.pool());
 
 	svn_error_t *Err = url.error_occured();
 	if(Err != NULL)
@@ -1089,7 +1089,7 @@ int Client::sub_add( const char *p_pathOrUrl, bool p_rec)
 		return -1;
 	}
 
-	svn_client_ctx_t *ctx = getContext(NULL);
+	svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
 	if(ctx == NULL)
 	{
 		return -1;
@@ -1113,21 +1113,21 @@ int Client::sub_add( const char *p_pathOrUrl, bool p_rec)
 
 long Client::sub_mkdir(Targets &targets, const char * p_msg)
 {
-	Pool requestPool;
-	apr_pool_t * apr_pool = requestPool.pool ();
+	Pool reqPool;
+	apr_pool_t * apr_pool = reqPool.pool();
 	svn_client_commit_info_t *commit_info = NULL;
 	// 
 	// svn_client_mkdir takes svn_client_commit_info_t
 	// svn_client_mkdir2 takes svn_commit_info_t
 	//
-	const apr_array_header_t *targets2 = targets.array(requestPool);
+	const apr_array_header_t *targets2 = targets.array(reqPool);
 	svn_error_t *Err = targets.error_occured();
 	if(Err != NULL)
 	{
 		Util::handleSVNError(Err);
 		return -1;
 	}
-	svn_client_ctx_t *ctx = getContext( p_msg);
+	svn_client_ctx_t *ctx = getContext(p_msg, reqPool.pool());
 	if(ctx == NULL)
 	{
 		return -1;
@@ -1149,18 +1149,18 @@ long Client::sub_mkdir(Targets &targets, const char * p_msg)
 
 long Client::sub_mkdir2( Targets& targets, const char * p_msg)
 {
-	Pool requestPool;
-	apr_pool_t * apr_pool = requestPool.pool ();
+	Pool reqPool;
+	apr_pool_t * apr_pool = reqPool.pool();
 	svn_commit_info_t        *commit2_info = NULL;
 
-	const apr_array_header_t *targets2 = targets.array(requestPool);
+	const apr_array_header_t *targets2 = targets.array(reqPool);
 	svn_error_t *Err = targets.error_occured();
 	if(Err != NULL)
 	{
 		Util::handleSVNError(Err);
 		return -1;
 	}
-	svn_client_ctx_t *ctx = getContext( p_msg);
+	svn_client_ctx_t *ctx = getContext(p_msg, reqPool.pool());
 	if(ctx == NULL)
 	{
 		return -1;

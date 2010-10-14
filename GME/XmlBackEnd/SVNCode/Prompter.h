@@ -135,11 +135,11 @@ public:
 
 	~Prompter();
 
-	svn_auth_provider_object_t *getProviderUsername();
-	svn_auth_provider_object_t *getProviderSimple();
-	svn_auth_provider_object_t *getProviderServerSSLTrust();
-	svn_auth_provider_object_t *getProviderClientSSL();
-	svn_auth_provider_object_t *getProviderClientSSLPassword();
+	svn_auth_provider_object_t *getProviderUsername(apr_pool_t *pool);
+	svn_auth_provider_object_t *getProviderSimple(apr_pool_t *pool);
+	svn_auth_provider_object_t *getProviderServerSSLTrust(apr_pool_t *pool);
+	svn_auth_provider_object_t *getProviderClientSSL(apr_pool_t *pool);
+	svn_auth_provider_object_t *getProviderClientSSLPassword(apr_pool_t *pool);
 
 	enum PrompUserPass
 	{

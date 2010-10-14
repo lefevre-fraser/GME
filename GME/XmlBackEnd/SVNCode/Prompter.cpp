@@ -373,9 +373,8 @@ Prompter* Prompter::makePrompter( PromptImpl* p_promptImpl)
     return new Prompter( p_promptImpl);
 }
 
-svn_auth_provider_object_t*   Prompter::getProviderSimple()
+svn_auth_provider_object_t*   Prompter::getProviderSimple(apr_pool_t *pool)
 {
-    apr_pool_t *pool = Util::getRequestPool()->pool();
     svn_auth_provider_object_t *provider;
     svn_client_get_simple_prompt_provider (&provider,
                                            CallbackHelpers::simple_prompt, /* prompt function */
@@ -386,9 +385,8 @@ svn_auth_provider_object_t*   Prompter::getProviderSimple()
     return provider;
 }
 
-svn_auth_provider_object_t*   Prompter::getProviderUsername()
+svn_auth_provider_object_t*   Prompter::getProviderUsername(apr_pool_t *pool)
 {
-    apr_pool_t *pool = Util::getRequestPool()->pool();
     svn_auth_provider_object_t *provider;
     svn_client_get_username_prompt_provider (&provider,
                                              CallbackHelpers::username_prompt, /* prompt function */
@@ -399,9 +397,8 @@ svn_auth_provider_object_t*   Prompter::getProviderUsername()
     return provider;
 }
 
-svn_auth_provider_object_t*   Prompter::getProviderServerSSLTrust()
+svn_auth_provider_object_t*   Prompter::getProviderServerSSLTrust(apr_pool_t *pool)
 {
-    apr_pool_t *pool = Util::getRequestPool()->pool();
     svn_auth_provider_object_t *provider;
     svn_client_get_ssl_server_trust_prompt_provider
 		(&provider, CallbackHelpers::ssl_server_trust_prompt, m_impl, pool);
@@ -409,9 +406,8 @@ svn_auth_provider_object_t*   Prompter::getProviderServerSSLTrust()
     return provider;
 }
 
-svn_auth_provider_object_t*   Prompter::getProviderClientSSL()
+svn_auth_provider_object_t*   Prompter::getProviderClientSSL(apr_pool_t *pool)
 {
-    apr_pool_t *pool = Util::getRequestPool()->pool();
     svn_auth_provider_object_t *provider;
     svn_client_get_ssl_client_cert_prompt_provider
           (&provider, CallbackHelpers::ssl_client_cert_prompt, m_impl, 2, /* retry limit */pool);
@@ -419,9 +415,8 @@ svn_auth_provider_object_t*   Prompter::getProviderClientSSL()
     return provider;
 }
 
-svn_auth_provider_object_t*   Prompter::getProviderClientSSLPassword()
+svn_auth_provider_object_t*   Prompter::getProviderClientSSLPassword(apr_pool_t *pool)
 {
-    apr_pool_t *pool = Util::getRequestPool()->pool();
     svn_auth_provider_object_t *provider;
     svn_client_get_ssl_client_cert_pw_prompt_provider
           (&provider, CallbackHelpers::ssl_client_cert_pw_prompt, m_impl, 2 /* retry limit */,

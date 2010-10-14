@@ -8,14 +8,11 @@
 #include <set>
 #include <xercesc/dom/dom.hpp>
 #include "..\Mga\MgaGeneric.h"
-#include "Ssauto.h"
-#include "ccauto.h"
-#include "svauto.h"
 #include "XmlBackEnd.h" // for EXTERN_C const CLSID CLSID_CoreXmlFile;
-#include "CmdClient.h"
 #include "OperOptions.h"
 #include "MsgConsole.h"
 #include "Transcoder.h"
+#include "HiClient.h"
 
 const metaobjidpair_type ROOT_ID_PAIR = {METAID_ROOT, OBJID_ROOT};
 
@@ -372,13 +369,8 @@ protected:
 	std::vector< ProtectEntry >       m_list;
 	CCoreXmlFile*                     m_parent;
 
-	CComObjPtr<IVSSItem>              m_vssItem;
 	const char *                      m_ccsItem;
 private:
-	void acquireSS               ( CComObjPtr<IVSSItem>& obj);
-	void releaseSS               ( CComObjPtr<IVSSItem>& obj);
-	void acquireCC               ( const char * obj);
-	void releaseCC               ( const char * obj);
 	void acquireSVN              ( const char * obj);
 	void releaseSVN              ( const char * obj);
 
@@ -386,8 +378,6 @@ protected:
 	void                   acquireFile ();
 	void                   releaseFile ();
 	inline std::string     userName    ();
-	inline bool            isSS        ();
-	inline bool            isCC        ();
 	inline bool            isSV        ();
 
 public:
@@ -454,8 +444,6 @@ public:
 	enum SourceControl
 	{
 		SC_NONE,
-		SC_SOURCESAFE,
-		SC_CLEARCASE,
 		SC_SUBVERSION
 	};
 
@@ -519,15 +507,15 @@ public:
 protected:
 	void         fillParentMap          ();
 
-	void         closeMetaProject       ();
+	void         closeMetaProject       () /*throw()*/;
 
 	void         openMetaObject         ();
 
-	void         closeMetaObject        ();
+	void         closeMetaObject        () /*throw()*/;
 
 	void         openMetaAttribute      ();
 
-	void         closeMetaAttribute     ();
+	void         closeMetaAttribute     () /*throw()*/;
 
 	void         parseConnectionString  ( BSTR connection );
 
@@ -640,29 +628,19 @@ protected:
 	// source control
 	bool         getUserCredentialInfo  ( int p_svnText, bool p_requireLogin);
 
-	CComObjPtr<IVSSItem>  createFolderSS( CComObjPtr<IVSSItem> p_parentItem, CComBSTR p_subProjName, CComBSTR p_localSpec);
 	void         createProjectFolder    ();
 	int          createHashedFolders    ();
 	void         commitHashedFolders    ();
 	void         socoAdd                ( const std::string& p_path, bool p_recursive);
 	void         socoCommit             ( const std::string& p_path, const std::string& p_comment, bool p_initial);
 
-	void         createClearCaseProj     ();
 	void         createNonversioned      ();
-
-	void         createSourceSafeDatabase();
-
-	void         openSourceSafeDatabase ();
 
 	void         getSourceSafePath      (XmlObject * obj, std::string& str);
 
 	bool         isContainerReadOnly    (XmlObject * obj);
 
 	bool         isContinerCheckedOut   (XmlObject * obj);
-
-	void         getSSCurrentOwner      (XmlObject * obj, std::string& user, bool& newfile);
-
-	void         getSSLastCommiter      (XmlObject * obj, std::string& user);
 
 	void         checkOutContainer      (XmlObject * obj);
 	void         rollBackTheCheckOutContainer( XmlObject * obj);
@@ -674,24 +652,6 @@ protected:
 	void         checkInAll             ();
 
 	void         checkInAll             ( bool keepCheckedOut );
-
-	bool         createClearCaseApp     ();
-
-	bool         isPathUnderClearCase   ( const char * path );
-
-	bool         isFileCheckedOutCC     ( const char * path );
-
-	int          getCheckOutStateCC     ( const char * path );
-
-	void         checkOutFileCC         ( const char * path );
-
-	void         checkInFileCC          ( const char * path );
-
-	void         addFileToCC            ( const char * path );
-
-	void         addDirToCC             ( const char * path );
-
-	void         getLatestVerCC         ( const char * path );
 
 	void         showUsedFiles          ( XmlObjSet& containers, bool p_latentMessage = false );
 
@@ -712,9 +672,6 @@ protected:
 	//bool         fileModifiedByOthers   ( const std::string& p_file, const CTime& p_myTime);
 
 	bool         makeSureFileExistsInVerSys( const std::string& p_fname, const std::string& p_initialcontent, bool p_needsLock = true);
-	// previously was called getStatusFileSS
-	bool         getFileHandleSS        ( const std::string& p_fname, CComObjPtr<IVSSItem>& ptr);
-	//bool         getStatusFileCC        ( const std::string& p_fname, const std::string& p_initialcontent);
 
 	// SVN section:
 	void         getSVLastCommiter      ( XmlObject * obj, std::string& user);
@@ -725,7 +682,7 @@ protected:
 	bool         infoSVN                ( const std::string& p_url, bool p_recursive, std::string& p_resultMsg, std::string& p_author, std::string& p_owner);
 
 	bool         lockablePropertySVN    ( const std::string& p_file);
-	bool         applyLockSVN           ( const std::string& p_file); // throws if failed to lock
+	bool         applyLockSVN           ( const std::string& p_file); // throws hresult_exception if failed to lock
 	bool         removeLockSVN          ( const std::string& p_file);
 	bool         mkdirSVN               ( const std::string& p_url, const std::string& p_newDirName, const std::string& p_localPath);
 	bool         addSVN                 ( const std::string& p_file, bool p_recursive = false);
@@ -739,16 +696,13 @@ protected:
 	void         createSubversionedFolder();
 
 	std::string                 m_svnUrl;
-	bool                        m_svnByAPI;
 	bool                        m_hashFileNames;
 	int                         m_hashVal;
 	bool                        m_hashInfoFound;
-	bool                        m_svnAccessMethodFound;
 	bool                        m_svnShowCmdLineWindows;
 	bool                        m_svnRedirectOutput;
 
-	CmdClient                   *m_cmdSvn;
-	CComPtr< ISvnExec>          m_comSvn;
+	std::auto_ptr<HiClient> m_svn;
 
 	bool		 m_needsSessionRefresh;
 	void         protect                ( XmlObject * obj, OpCode oc);
@@ -766,8 +720,6 @@ protected:
 	
 	void         replaceUserName        ( const std::string& p_username);
 	std::string  userName               ();
-	inline bool  isSS                   ();
-	inline bool  isCC                   ();
 	inline bool  isSV                   ();
 
 	bool                        userFilter             ( CTimeSpan& p_elapsed);
@@ -801,7 +753,7 @@ protected: // parser opts
 	void         giveDOMObjs( XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMLSParser* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler);
 	void         newDOMObjs( XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMLSParser* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler);
 	void         initParsers            ();
-	void         deleteParser           (XERCES_CPP_NAMESPACE::DOMLSParser* *p_parser);
+	void         deleteParser           (XERCES_CPP_NAMESPACE::DOMLSParser* *p_parser, DOMErrorHandler* *p_err_handler);
 	void         finiParsers            ();
 
 	bool                                 m_strategyShared;
@@ -844,19 +796,10 @@ protected:
 	// source control info
 	int                             m_sourceControl;
 
-	// sourcesafe
-	std::string                     m_vssDatabaseStr;
 	std::string                     m_vssParentPath;
 	std::string                     m_vssPath;
-	CComObjPtr<IVSSDatabase>        m_vssDatabase;
 	std::string                     m_vssUser;
 	std::string                     m_vssPassword;
-
-	// clearcase
-	std::string                     m_clearCaseString;
-	CComObjPtr<IClearCase>          m_clearCase;
-	CComObjPtr<IClearTool>          m_clearTool;
-
 	// objects
 	XmlObjVec                       m_objects;
 	GUIDToXmlObjectMap              m_objectsByGUID;

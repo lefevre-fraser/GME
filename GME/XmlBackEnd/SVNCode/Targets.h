@@ -27,6 +27,7 @@ struct svn_error_t;
 class Pool;
 #include "Path.h"
 #include <vector>
+#include <apr_pools.h>
 
 class Targets
 {
@@ -34,9 +35,10 @@ private:
 	std::vector<Path>     m_targets;
 	svn_error_t *         m_error_occured;
 	bool                  m_doesNotContainsPath;
+	apr_pool_t* m_pool;
 
 public:
-	Targets(const char *path);
+	Targets(const char *path, apr_pool_t* pool);
 	void add(const char *path);
 	~Targets();
 

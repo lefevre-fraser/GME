@@ -937,21 +937,6 @@
             <Component Id="XmlBackEnd.dll" Guid="bda363bb-dd37-4123-9450-785d8c246873">
                 <File Id="XmlBackEnd.dll" Name="XmlBackEnd.dll" KeyPath="yes" Source="..\GME\Release\XmlBackEnd.dll">
                     <TypeLib Id="{09107441-E750-4516-B6D0-DE6358FDBA9B}" Description="XmlBackEnd 1.0 Type Library" Language="0" MajorVersion="1" MinorVersion="0">
-                        <Class Id="{0C398158-C207-406D-8402-8D45274E5F85}" Context="InprocServer32" Description="SvnExec Class" ThreadingModel="both" Programmable="yes">
-                            <ProgId Id="Mga.XmlBackEnd.SvnExec.1" Description="SvnExec Class">
-                                <ProgId Id="Mga.XmlBackEnd.SvnExec" Description="SvnExec Class" />
-                            </ProgId>
-                        </Class>
-                        <Class Id="{3176E8E1-80FA-43DB-9974-70C514A04718}" Context="InprocServer32" Description="SvnWorkBench Class" ThreadingModel="both" Programmable="yes">
-                            <ProgId Id="Mga.XmlBackEnd.SvnWorkBench.1" Description="SvnWorkBench Class">
-                                <ProgId Id="Mga.XmlBackEnd.SvnWorkBench" Description="SvnWorkBench Class" />
-                            </ProgId>
-                        </Class>
-                        <Class Id="{5CDD4F2C-3CFF-419A-A7C7-B1C9E9962ABC}" Context="InprocServer32" Description="SvnTester Class" ThreadingModel="both" Programmable="yes">
-                            <ProgId Id="Mga.XmlBackEnd.SvnTester.1" Description="SvnTester Class">
-                                <ProgId Id="Mga.XmlBackEnd.SvnTester" Description="SvnTester Class" />
-                            </ProgId>
-                        </Class>
                         <Class Id="{F729BE0C-ACE5-470B-8F98-DAE52D6A5949}" Context="InprocServer32" Description="CoreXmlFile Class" ThreadingModel="both" Programmable="yes">
                             <ProgId Id="Mga.CoreXmlFile.1" Description="CoreXmlFile Class">
 	                        <ProgId Id="Mga.CoreXmlFile" Description="CoreXmlFile Class" />

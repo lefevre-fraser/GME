@@ -2,7 +2,7 @@
 
 #include "Transcoder.h"
 #include <xercesc/util/XMLUniDefs.hpp>
-
+#include "xml_smart_ptr.h"
 
 static const XMLCh  gXMLDecl1[] =
 {
@@ -108,11 +108,9 @@ Transcoder::operator <<( const XMLCh* const toWrite)
 Transcoder& 
 Transcoder::operator <<( const char * const toWrite)
 {
-    XMLCh * fUnicodeForm = XMLString::transcode( toWrite);
+    smart_XMLCh fUnicodeForm = XMLString::transcode( toWrite);
 	
-	Transcoder::operator<<( fUnicodeForm);
-	
-	delete fUnicodeForm;
+	Transcoder::operator<<(static_cast<const XMLCh*>(fUnicodeForm));
 
 	return *this;
 }

@@ -131,7 +131,6 @@ protected:
 	afx_msg void OnViewMultiUserRefreshSourceControl();
 	afx_msg void OnUpdateViewMultiUserRefreshSourceControl(CCmdUI* pCmdUI);
 	afx_msg void OnViewMultiUserActiveUsers();
-	afx_msg void OnViewMultiUserSubversion();
 	afx_msg void OnUpdateViewMultiUserActiveUsers(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewMultiUserSubversion(CCmdUI* pCmdUI);
 	afx_msg void OnViewClearConsole();

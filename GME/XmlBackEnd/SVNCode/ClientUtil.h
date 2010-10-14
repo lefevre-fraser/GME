@@ -77,7 +77,7 @@ public:
 		}; 
 
 		// creates the baton class given to the callback
-		static void* createLogMsgBaton( const char * p_strMessage, CommitHelp::MsgBuilder * p_msgComposer);
+		static void* createLogMsgBaton( const char * p_strMessage, CommitHelp::MsgBuilder * p_msgComposer, apr_pool_t *pool);
 
 
 		// callback, which is called by commit-y operations

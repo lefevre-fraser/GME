@@ -46,12 +46,10 @@ public:
 	static int            getLogLevel();
 	static void           initLogFile(int level, const std::string& path);
 
-	static void           handleAPRError(int error, const char *op);
 	static bool           isOtherExceptionThrown();
 	static bool           isExceptionThrown();
 	static void           setExceptionThrown();
 	static void           throwNullPointerException( const char *);
-	static void           throwError(const char *message);
 
 	static Pool*          getRequestPool();
 	static void           setRequestPool(Pool *pool);

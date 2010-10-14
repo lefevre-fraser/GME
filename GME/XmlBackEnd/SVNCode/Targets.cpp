@@ -40,23 +40,24 @@ Targets::~Targets()
 	m_targets.clear();
 }
 
-Targets::Targets(const char *path)
+Targets::Targets(const char *path, apr_pool_t* pool)
 {
-	m_targets.push_back (path);
+	m_pool = pool;
+	m_targets.push_back(Path(path, pool));
 	m_error_occured = NULL;
 	m_doesNotContainsPath = false;
 }
 
 void Targets::add(const char *path)
 {
-	m_targets.push_back (path);
+	m_targets.push_back(Path(path, m_pool));
 }
 
 const apr_array_header_t *Targets::array (const Pool & pool)
 {
 	std::vector<Path>::const_iterator it;
 
-	apr_pool_t *apr_pool = pool.pool ();
+	apr_pool_t *apr_pool = pool.pool();
 	apr_array_header_t *apr_targets =
 		apr_array_make (apr_pool,
 		m_targets.size(),

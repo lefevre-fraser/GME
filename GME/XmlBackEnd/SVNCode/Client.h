@@ -74,7 +74,7 @@ protected:
 	long sub_mkdir( Targets& targets, const char * p_msg);
 	long sub_mkdir2( Targets& targets, const char * p_msg);
 
-	svn_client_ctx_t * getContext(const char *p_message);
+	svn_client_ctx_t * getContext(const char *p_message, apr_pool_t *pool);
 
 	//void * getCommitMessageBaton(const char *message);
 

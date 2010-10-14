@@ -23,12 +23,9 @@ CNewXmlbackendProjDlg::CNewXmlbackendProjDlg(CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CNewXmlbackendProjDlg)
 	m_location = _T("");
 	m_projectName = _T("");
-	m_vssDatabase = _T("");
-	m_vssPath = _T("");
 	m_svnUrl  = _T("");
 	m_sourceControlType = 0;
 	m_hashedFileStorage = 0;
-	m_svnAccessMethod   = 0;
 	//}}AFX_DATA_INIT
 }
 
@@ -38,43 +35,20 @@ void CNewXmlbackendProjDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CNewXmlbackendProjDlg)
 	DDX_Control(pDX, IDC_EDIT_SVNDATABASE, m_svnUrlCtrl);
-	DDX_Control(pDX, IDC_EDIT_VSSPATH, m_vssPathCtrl);
-	DDX_Control(pDX, IDC_EDIT_VSSDATABASE, m_vssDatabaseCtrl);
-	DDX_Control(pDX, IDC_BUTTON_BROWSE_VSSDB, m_vssBrowseButton);
-	DDX_Control(pDX, IDC_STATIC_VSSPROJ, m_vssProjLabel);
-	DDX_Control(pDX, IDC_STATIC_VSSDB, m_vssDbLabel);
 	DDX_Control(pDX, IDC_STATIC_SUBVERSION_URLLABEL, m_svnUrlLabel);
-	DDX_Control(pDX, IDC_STATIC_VSS, m_vssBorder);
 	DDX_Control(pDX, IDC_STATIC_SVN, m_svnBorder);
 	DDX_Control(pDX, IDC_BUTTON_SVNTRY, m_svnTryBtn);
 	DDX_Text(pDX, IDC_EDIT_LOCATION, m_location);
 	DDX_Text(pDX, IDC_EDIT_PROJNAME, m_projectName);
-	DDX_Text(pDX, IDC_EDIT_VSSDATABASE, m_vssDatabase);
-	DDX_Text(pDX, IDC_EDIT_VSSPATH, m_vssPath);
 	DDX_Text(pDX, IDC_EDIT_SVNDATABASE, m_svnUrl);
-	DDX_Radio(pDX, IDC_RADIO_VSS, m_sourceControlType);
+	DDX_Radio(pDX, IDC_RADIO_SUBVERSION, m_sourceControlType);
 	DDX_Check(pDX, IDC_CHECK_SPLITTOSUBDIRS, m_hashedFileStorage);
 	DDX_Control(pDX, IDC_COMBO_SPLITALG, m_hashAlgoControl);
-	DDX_Radio(pDX, IDC_RADIO_SVNAPI, m_svnAccessMethod);
 	//}}AFX_DATA_MAP
-}
-
-void CNewXmlbackendProjDlg::enableSourceSafeControls( bool enable )
-{
-	m_vssBorder.EnableWindow( enable );
-	m_vssBrowseButton.EnableWindow( enable );
-	m_vssProjLabel.EnableWindow( enable );
-	m_vssDbLabel.EnableWindow( enable );
-	m_vssDatabaseCtrl.EnableWindow( enable );
-	m_vssPathCtrl.EnableWindow( enable );
 }
 
 void CNewXmlbackendProjDlg::enableSubversionControls( bool enable )
 {
-	if( GetDlgItem(IDC_STATIC_SVN_SECTION1)) GetDlgItem( IDC_STATIC_SVN_SECTION1)->EnableWindow( enable);
-	if( GetDlgItem(IDC_RADIO_SVNAPI)) GetDlgItem(IDC_RADIO_SVNAPI)->EnableWindow( enable);
-	if( GetDlgItem(IDC_RADIO_SVNCMDL)) GetDlgItem(IDC_RADIO_SVNCMDL)->EnableWindow( enable);
-
 	m_svnTryBtn.EnableWindow( enable);
 	m_svnBorder.EnableWindow( enable );
 	m_svnUrlLabel.EnableWindow( enable );
@@ -90,11 +64,8 @@ void CNewXmlbackendProjDlg::enableSubversionControls( bool enable )
 BEGIN_MESSAGE_MAP(CNewXmlbackendProjDlg, CDialog)
 	//{{AFX_MSG_MAP(CNewXmlbackendProjDlg)
 	ON_BN_CLICKED(IDC_BUTTON_BROWSE_LOC, OnButtonBrowseLoc)
-	ON_BN_CLICKED(IDC_BUTTON_BROWSE_VSSDB, OnButtonBrowseVssdb)
 	ON_BN_CLICKED(IDC_RADIO_SUBVERSION, OnSourceControlChanged)
-	ON_BN_CLICKED(IDC_RADIO_CLEARCASE, OnSourceControlChanged)
 	ON_BN_CLICKED(IDC_RADIO_NONE, OnSourceControlChanged)
-	ON_BN_CLICKED(IDC_RADIO_VSS, OnSourceControlChanged)
 	ON_BN_CLICKED(IDC_CHECK_SPLITTOSUBDIRS, OnBnClickedCheckSplittosubdirs)
 	ON_BN_CLICKED(IDC_BUTTON_SVNTRY, OnBnClickedButtonSvnTry)
 	//}}AFX_MSG_MAP
@@ -129,24 +100,11 @@ void CNewXmlbackendProjDlg::OnButtonBrowseLoc()
 	}
 }
 
-void CNewXmlbackendProjDlg::OnButtonBrowseVssdb() 
-{
-	CFileDialog dlg(true, NULL, "srcsafe.ini", OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, "SourceSafe Database (srcsafe.ini)|srcsafe.ini||" );
-
-	if( dlg.DoModal() == IDOK )	
-	{
-		UpdateData();
-		m_vssDatabase = dlg.GetPathName();
-		UpdateData(FALSE);
-	}
-}
-
 void CNewXmlbackendProjDlg::OnSourceControlChanged() 
 {
 	UpdateData();
 
-	enableSourceSafeControls( m_sourceControlType == 0 );
-	enableSubversionControls( m_sourceControlType == 1 );
+	enableSubversionControls( m_sourceControlType == 0 );
 }
 
 void CNewXmlbackendProjDlg::OnOK()
@@ -169,19 +127,12 @@ void CNewXmlbackendProjDlg::OnOK()
 		if( IDOK != AfxMessageBox( m_location + " does not seem to exist, but it might be created during the checkout process. Do you want to continue?", MB_YESNO))
 			return; // if answered NO, return, which means dialog is not closed
 
-	if( m_sourceControlType == 1 && 
+	if( m_sourceControlType == 0 && 
 	    (m_svnUrl.Left( 6) != "svn://" 
 	    && m_svnUrl.Left(10) != "svn+ssh://"
 	    && m_svnUrl.Left(8) != "https://"))
 	{
 		AfxMessageBox( "URL must be provided in one of the svn://host[/dir], svn+ssh://[username@]host[/dir] or https://host[/dir] form");
-		return;
-	}
-
-	if( m_sourceControlType == 1 && 
-	    m_svnAccessMethod != 0 && m_svnAccessMethod != 1)
-	{
-		AfxMessageBox( "Subversion can be used either though API or CMD.exe. Please select one of them.");
 		return;
 	}
 
@@ -199,23 +150,10 @@ void CNewXmlbackendProjDlg::OnOK()
 
 	if( m_sourceControlType == 0 )
 	{
-		if( !m_vssDatabase.IsEmpty() )
-		{
-			m_connectionString += " vssDatabase=\"";
-			m_connectionString += m_vssDatabase;
-			m_connectionString += "\" vssPath=\"";
-			m_connectionString += m_vssPath;
-			m_connectionString += "\"";
-		}	
-	}
-	else if( m_sourceControlType == 1 )
-	{
 		//if( !m_svnUrl.IsEmpty())
 		m_connectionString += " svn=\"";
 		m_connectionString += m_svnUrl;
 		m_connectionString += "\"";
-		m_connectionString += " svnaccess=";
-		m_connectionString += m_svnAccessMethod?"\"CMD\"":"\"API\""; // 1 is CMD
 		char gmepath[200];
 		if(SHGetSpecialFolderPath( NULL, gmepath, CSIDL_APPDATA, true)) //most likely C:\Documents and Settings\<username>\Application Data
 		{
@@ -264,10 +202,6 @@ void CNewXmlbackendProjDlg::OnOK()
 		}
 
 	}
-	else if( m_sourceControlType == 2 )
-	{
-		m_connectionString += " clearCase=\"true\"";
-	}
 
 	if( m_hashedFileStorage == BST_CHECKED)
 	{
@@ -300,8 +234,6 @@ void CNewXmlbackendProjDlg::OnOK()
 
 BOOL CNewXmlbackendProjDlg::OnInitDialog()
 {
-	m_vssDatabase = "\\\\Atlantis\\project\\GME\\multiusertest\\AVSS\\srcsafe.ini";
-	m_vssPath     = "$/project";
 	// init m_svnUrl like this while testing to avoid typing too much
 	m_svnUrl = "svn+ssh://zolmol@svn.isis.vanderbilt.edu/export/svn/testrepo/gme/zoli";
 	m_svnUrl = "https://svn.isis.vanderbilt.edu/testrepo/gme/zoli";
@@ -309,8 +241,7 @@ BOOL CNewXmlbackendProjDlg::OnInitDialog()
 	m_svnUrl = "svn+ssh://<usernamehere>@<hostnamehere>";
 	CDialog::OnInitDialog();
 
-	enableSourceSafeControls( m_sourceControlType == 0 );
-	enableSubversionControls( m_sourceControlType == 1 );
+	enableSubversionControls( m_sourceControlType == 0 );
 	m_hashAlgoControl.SetCurSel( 0);
 	m_hashAlgoControl.EnableWindow(  1 == m_hashedFileStorage);
 
@@ -326,12 +257,8 @@ void CNewXmlbackendProjDlg::OnBnClickedCheckSplittosubdirs()
 void CNewXmlbackendProjDlg::OnBnClickedButtonSvnTry()
 {
 	UpdateData( TRUE);
-	if( m_sourceControlType != 1 || m_svnUrl.IsEmpty()) {
+	if( m_sourceControlType != 0 || m_svnUrl.IsEmpty()) {
 		AfxMessageBox( "Please select Subversion for the Source Control option and provide a URL for the server");
-		return;
-	}
-	if( m_svnAccessMethod != 0 && m_svnAccessMethod != 1) {
-		AfxMessageBox( "Please select how to invoke Subversion. Through API or Cmd.exe?");
 		return;
 	}
 
@@ -344,9 +271,8 @@ void CNewXmlbackendProjDlg::OnBnClickedButtonSvnTry()
 
 	CComBSTR       url   = m_svnUrl;
 	CComBSTR       res;
-	VARIANT_BOOL   byapi = m_svnAccessMethod == 0?VARIANT_TRUE : VARIANT_FALSE;
 
-	if( SUCCEEDED( p->info( url, byapi, VARIANT_FALSE, &res)))
+	if( SUCCEEDED( p->info( url, VARIANT_FALSE, &res)))
 	{
 		CString r; CopyTo( res, r);
 		r.Replace( "\n", "\r\n");

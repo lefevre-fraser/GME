@@ -35,9 +35,9 @@
 * @see Path::Path (const std::string &)
 * @param path Path string
 */
-Path::Path (const char * pi_path)
+Path::Path (const char * pi_path, apr_pool_t* pool)
 {
-	init (pi_path);
+	init(pi_path, pool);
 }
 
 /**
@@ -47,9 +47,9 @@ Path::Path (const char * pi_path)
 *
 * @param path Path string
 */
-Path::Path (const std::string & pi_path)
+Path::Path (const std::string & pi_path, apr_pool_t* pool)
 {
-	init (pi_path.c_str ());
+	init(pi_path.c_str(), pool);
 }
 
 /**
@@ -59,7 +59,7 @@ Path::Path (const std::string & pi_path)
 */
 Path::Path (const Path & pi_path)
 {
-	init (pi_path.c_str ());
+	init(pi_path.c_str(), pi_path.m_pool);
 }
 
 /**
@@ -68,8 +68,9 @@ Path::Path (const Path & pi_path)
 * @param path Path string
 */
 void
-Path::init (const char * pi_path)
+Path::init(const char * pi_path, apr_pool_t* pool)
 {
+	m_pool = pool;
 	if(*pi_path == 0)
 	{
 		m_error_occured = NULL;
@@ -77,8 +78,7 @@ Path::init (const char * pi_path)
 	}
 	else
 	{
-		m_error_occured = Util::preprocessPath(pi_path, 
-			Util::getRequestPool()->pool() );
+		m_error_occured = Util::preprocessPath(pi_path, m_pool);
 
 		m_path = pi_path;
 	}
@@ -108,7 +108,7 @@ Path::c_str() const
 Path&
 Path::operator=(const Path & pi_path)
 {
-	init (pi_path.c_str ());
+	init(pi_path.c_str(), pi_path.m_pool);
 	return *this;
 }
 
@@ -124,8 +124,8 @@ bool Path::isValid(const char *p)
 		return false;
 	}
 
-	Pool requestPool;
-	svn_error_t *err = svn_path_check_valid(p, requestPool.pool());
+	Pool reqPool;
+	svn_error_t *err = svn_path_check_valid(p, reqPool.pool());
 	if (err == SVN_NO_ERROR)
 	{
 		return true;

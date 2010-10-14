@@ -34,6 +34,7 @@ class Pool
 {
 public:
 	Pool();
+	Pool(Pool& parent);
 	~Pool();
 	apr_pool_t * pool() const;
 

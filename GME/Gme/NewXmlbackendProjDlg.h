@@ -21,24 +21,15 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CNewXmlbackendProjDlg)
 	enum { IDD = IDD_NEW_MULTIUSER_PROJ_DLG };
-	CEdit	m_vssPathCtrl;
-	CEdit	m_vssDatabaseCtrl;
 	CEdit   m_svnUrlCtrl;
-	CButton	m_vssBrowseButton;
-	CStatic	m_vssProjLabel;
-	CStatic	m_vssDbLabel;
 	CStatic m_svnUrlLabel;
-	CButton	m_vssBorder;
 	CButton m_svnBorder;
 	CButton m_svnTryBtn;
 	CString	m_location;
 	CString	m_projectName;
-	CString	m_vssDatabase;
-	CString	m_vssPath;
 	CString m_svnUrl;
 	int     m_sourceControlType;
 	int     m_hashedFileStorage;
-	int     m_svnAccessMethod;
 	CComboBox m_hashAlgoControl;
 	//}}AFX_DATA
 
@@ -54,7 +45,6 @@ public:
 
 // Implementation
 protected:
-	void enableSourceSafeControls( bool enable );
 	void enableSubversionControls( bool enable );
 
 	virtual BOOL OnInitDialog();
@@ -62,7 +52,6 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CNewXmlbackendProjDlg)
 	afx_msg void OnButtonBrowseLoc();
-	afx_msg void OnButtonBrowseVssdb();
 	virtual void OnOK();
 	afx_msg void OnSourceControlChanged();
 	afx_msg void OnBnClickedCheckSplittosubdirs();

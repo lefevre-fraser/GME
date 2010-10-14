@@ -250,20 +250,6 @@ bool Util::globalInit()
     return true;
 }
 
-void Util::handleAPRError(int error, const char *op)
-{
-	char *buffer = getFormatBuffer();
-	if(buffer == NULL)
-	{
-		return;
-	}
-	apr_snprintf(buffer, formatBufferSize, 
-		"an error occurred in function %s with return value %d",
-		op, error);
-
-	throwError(buffer);
-} 
-
 //static
 bool Util::isOtherExceptionThrown()
 {
@@ -313,13 +299,6 @@ void Util::setExceptionThrown()
     }
 
 	setExceptionThrown();
-}
-
-//static
-void Util::throwError(const char *message)
-{
-	//raiseThrowable(JAVA_PACKAGE"/JNIError", message);
-	throw std::string( message);
 }
 
 

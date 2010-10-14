@@ -21,12 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="ccauto.IDL">
-      <Filter>Source Files</Filter>
-    </Midl>
-    <Midl Include="SvAuto.idl">
-      <Filter>Source Files</Filter>
-    </Midl>
     <Midl Include="XmlBackEnd.idl">
       <Filter>Source Files</Filter>
     </Midl>
@@ -77,31 +71,13 @@
     <ClCompile Include="StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SvnBench.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SvnExec.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SvnHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SvnLoginDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SvnTestDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SvnTester.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SvnWorkBench.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Transcoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VSSLoginDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="XmlBackEnd.cpp">
@@ -111,9 +87,6 @@
       <Filter>Source Files\SVNCode</Filter>
     </ClCompile>
     <ClCompile Include="SVNCode\Client.cpp">
-      <Filter>Source Files\SVNCode</Filter>
-    </ClCompile>
-    <ClCompile Include="SVNCode\CmdClient.cpp">
       <Filter>Source Files\SVNCode</Filter>
     </ClCompile>
     <ClCompile Include="SVNCode\HiClient.cpp">
@@ -148,16 +121,6 @@
     <None Include="CoreXmlFile.rgs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="SvnExec.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="SvnTester.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="SvnWorkBench.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="ClassDiagram1.cd" />
     <None Include="edf.dtd" />
     <None Include="xmga.dtd" />
   </ItemGroup>
@@ -167,9 +130,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ccauto.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CertificateDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -209,22 +169,10 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Ssauto.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="StdAfx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SvnBench.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SvnConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SvnExec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SvnHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SvnLoginDlg.h">
@@ -233,19 +181,10 @@
     <ClInclude Include="SvnTestDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SvnTester.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SvnWorkBench.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Transcoder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VSSLoginDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SVNCode\CallLogger.h">
@@ -255,9 +194,6 @@
       <Filter>Header Files\SVNHead</Filter>
     </ClInclude>
     <ClInclude Include="SVNCode\ClientUtil.h">
-      <Filter>Header Files\SVNHead</Filter>
-    </ClInclude>
-    <ClInclude Include="SVNCode\CmdClient.h">
       <Filter>Header Files\SVNHead</Filter>
     </ClInclude>
     <ClInclude Include="SVNCode\HiClient.h">
@@ -283,6 +219,9 @@
     </ClInclude>
     <ClInclude Include="SVNCode\Util.h">
       <Filter>Header Files\SVNHead</Filter>
+    </ClInclude>
+    <ClInclude Include="xml_smart_ptr.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

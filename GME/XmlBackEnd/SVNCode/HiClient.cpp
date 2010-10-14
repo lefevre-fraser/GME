@@ -142,6 +142,8 @@ bool HiClient::isVersioned         ( const std::string& p_path, bool p_isADir /*
 	// bool res = info2Qck( p_path.c_str(), false, inf, p_suppressErrorMsg);
 	Revision rev( svn_path_is_url(p_path.c_str()) ? svn_opt_revision_head : svn_opt_revision_unspecified);
 	bool res =  sub_info2( p_path.c_str(), rev, rev, false, inf, p_suppressErrorMsg);
+	// FIXME: res is if an error occurred, not if p_path is under version control. Need to check inf!
+	// This can lead to crashes
 	// PETER - SVNSPEEDHACK BEGIN
 
 	progressStr.Format("(%s) DONE.\r\n", res ? _T("yes") : _T("no"));
@@ -254,7 +256,7 @@ bool HiClient::tryLock             ( const std::string& p_path)
 
 	Pool reqPool;
 
-	res = sub_lock( Targets( p_path.c_str()), /*comment =*/ "nc" , /*force =*/ false );
+	res = sub_lock(Targets(p_path.c_str(), reqPool.pool()), /*comment =*/ "nc" , /*force =*/ false );
 
 	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
 	UpdateProgress(progressStr);
@@ -272,7 +274,7 @@ bool HiClient::unLock              ( const std::string& p_path)
 
 	Pool reqPool;
 
-	bool res = sub_unlock( Targets( p_path.c_str()));
+	bool res = sub_unlock(Targets(p_path.c_str(), reqPool.pool()));
 
 	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
 	UpdateProgress(progressStr);
@@ -289,7 +291,7 @@ bool HiClient::unLock              ( const std::vector< std::string> & p_pathVec
 	progressStr.Format("Unlock: ");
 
 	Pool reqPool;
-	Targets tgts( p_pathVec.front().c_str());
+	Targets tgts(p_pathVec.front().c_str(), reqPool.pool());
 	std::vector< std::string>::const_iterator it = p_pathVec.begin();
 	std::vector< std::string>::const_iterator en = p_pathVec.end();
 	for( ++it; it != en; ++it) {      // safe to perform ++it in the initialize phase, since it's not empty
@@ -336,7 +338,7 @@ bool HiClient::getLatest           ( const std::string& p_path)
 	Pool reqPool;
 
 	UPDATE_RES res;
-	bool succ = sub_update( Targets( p_path.c_str()), Revision(), /*recurse =*/ true, /*ignoreExt =*/ false, res);
+	bool succ = sub_update(Targets(p_path.c_str(), reqPool.pool()), Revision(), /*recurse =*/ true, /*ignoreExt =*/ false, res);
 
 	progressStr.Format("(%s) DONE.\r\n", succ ? _T("succeeded") : _T("failed"));
 	UpdateProgress(progressStr);
@@ -370,9 +372,9 @@ bool HiClient::commitAll           ( const std::string& p_path, const std::strin
 	progressStr.Format("Commit all: %s", (LPCTSTR)p_path.c_str());
 	UpdateProgress(progressStr);
 
-	Pool requestPool;
+	Pool reqPool;
 
-	Targets tgt( p_path.c_str()); // commit might return -1 if there were no things to commit (diff was 0)
+	Targets tgt(p_path.c_str(), reqPool.pool()); // commit might return -1 if there were no things to commit (diff was 0)
 	bool res = 0 < sub_commit( tgt, p_comment.c_str(), /*recurse =*/ true, /*noUnlock =*/ p_keepCheckedOut);
 
 	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
@@ -409,7 +411,7 @@ bool HiClient::mkDirOnServer       ( const std::string& p_path)
 
 	Pool reqPool;
 
-	bool res = 0 < sub_mkdir2( Targets( p_path.c_str()), "nm");
+	bool res = 0 < sub_mkdir2(Targets(p_path.c_str(), reqPool.pool()), "nm");
 
 	progressStr.Format("(%s) DONE.\r\n", res ? _T("succeeded") : _T("failed"));
 	UpdateProgress(progressStr);
@@ -636,12 +638,12 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 
 	CString progressStr("Speed lock: ");
 
-	Pool requestPool;
+	Pool reqPool;
 
 	svn_error_t *err;
 	apr_array_header_t* targets;
 	
-	targets = apr_array_make( requestPool.pool(), pathVec.size(), sizeof(const char *));
+	targets = apr_array_make( reqPool.pool(), pathVec.size(), sizeof(const char *));
 	for( std::vector< std::string>::size_type i = 0; i < pathVec.size(); ++i) {
 		const svn_wc_entry_t *entry;
 		const char *dirent;
@@ -651,9 +653,9 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 		progressStr.Append(pathVec[i].c_str());
 		progressStr.Append(", ");
 
-		pathent = svn_dirent_internal_style(pathVec[i].c_str(), requestPool.pool());
-		dirent = svn_dirent_dirname( pathent, requestPool.pool());
-		err = svn_wc_adm_open( &adm_access, NULL, dirent, FALSE, FALSE, requestPool.pool());
+		pathent = svn_dirent_internal_style(pathVec[i].c_str(), reqPool.pool());
+		dirent = svn_dirent_dirname( pathent, reqPool.pool());
+		err = svn_wc_adm_open( &adm_access, NULL, dirent, FALSE, FALSE, reqPool.pool());
 		if (err)
 		{
 			char errbuff[BUFSIZ];
@@ -665,7 +667,7 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 		}
 
 
-		err = svn_wc_entry( &entry, pathent, adm_access, FALSE, requestPool.pool());
+		err = svn_wc_entry( &entry, pathent, adm_access, FALSE, reqPool.pool());
 		if (err)
 		{
 			char errbuff[BUFSIZ];
@@ -693,7 +695,7 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 		}
 	}
 
-	svn_client_ctx_t *ctx = getContext(NULL);
+	svn_client_ctx_t *ctx = getContext(NULL, reqPool.pool());
 	if(ctx == NULL)
 	{
 		msg.append("Unable to create subversion client context");
@@ -705,7 +707,7 @@ bool HiClient::speedLock( const std::vector< std::string> & pathVec, std::string
 	m_notify2->m_msg.clear();
 	m_notify2->m_OK = true;
 
-	err = svn_client_lock(targets, "", FALSE, ctx, requestPool.pool());
+	err = svn_client_lock(targets, "", FALSE, ctx, reqPool.pool());
   
 	if (err)
     {

@@ -153,24 +153,6 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Midl Include="ccauto.IDL">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/no_warn %(AdditionalOptions)</AdditionalOptions>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)ccauto.tlb</TypeLibraryName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </HeaderFileName>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/no_warn %(AdditionalOptions)</AdditionalOptions>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)ccauto.tlb</TypeLibraryName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </HeaderFileName>
-    </Midl>
-    <Midl Include="SvAuto.idl">
-      <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateStublessProxies>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\XmlBackEnd.tlb</TypeLibraryName>
-      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SvAuto_i.c</InterfaceIdentifierFileName>
-      <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateStublessProxies>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\XmlBackEnd.tlb</TypeLibraryName>
-      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SvAuto_i.c</InterfaceIdentifierFileName>
-    </Midl>
     <Midl Include="XmlBackEnd.idl">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateStublessProxies>
@@ -203,19 +185,12 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SvnBench.cpp" />
-    <ClCompile Include="SvnExec.cpp" />
-    <ClCompile Include="SvnHelper.cpp" />
     <ClCompile Include="SvnLoginDlg.cpp" />
     <ClCompile Include="SvnTestDlg.cpp" />
-    <ClCompile Include="SvnTester.cpp" />
-    <ClCompile Include="SvnWorkBench.cpp" />
     <ClCompile Include="Transcoder.cpp" />
-    <ClCompile Include="VSSLoginDlg.cpp" />
     <ClCompile Include="XmlBackEnd.cpp" />
     <ClCompile Include="SVNCode\CallLogger.cpp" />
     <ClCompile Include="SVNCode\Client.cpp" />
-    <ClCompile Include="SVNCode\CmdClient.cpp" />
     <ClCompile Include="SVNCode\HiClient.cpp" />
     <ClCompile Include="SVNCode\Path.cpp" />
     <ClCompile Include="SVNCode\Pool.cpp" />
@@ -228,10 +203,6 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
   <ItemGroup>
     <None Include="XmlBackEnd.def" />
     <None Include="CoreXmlFile.rgs" />
-    <None Include="SvnExec.rgs" />
-    <None Include="SvnTester.rgs" />
-    <None Include="SvnWorkBench.rgs" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="edf.dtd" />
     <None Include="xmga.dtd" />
   </ItemGroup>
@@ -244,7 +215,6 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ccauto.h" />
     <ClInclude Include="CertificateDlg.h" />
     <ClInclude Include="CommitDialog.h" />
     <ClInclude Include="CoreXmlFile.h" />
@@ -258,23 +228,15 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
     <ClInclude Include="OperOptions.h" />
     <ClInclude Include="ProgressWindow.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="Ssauto.h" />
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="SvnBench.h" />
     <ClInclude Include="SvnConfig.h" />
-    <ClInclude Include="SvnExec.h" />
-    <ClInclude Include="SvnHelper.h" />
     <ClInclude Include="SvnLoginDlg.h" />
     <ClInclude Include="SvnTestDlg.h" />
-    <ClInclude Include="SvnTester.h" />
-    <ClInclude Include="SvnWorkBench.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Transcoder.h" />
-    <ClInclude Include="VSSLoginDlg.h" />
     <ClInclude Include="SVNCode\CallLogger.h" />
     <ClInclude Include="SVNCode\Client.h" />
     <ClInclude Include="SVNCode\ClientUtil.h" />
-    <ClInclude Include="SVNCode\CmdClient.h" />
     <ClInclude Include="SVNCode\HiClient.h" />
     <ClInclude Include="SVNCode\Path.h" />
     <ClInclude Include="SVNCode\Pool.h" />
@@ -283,6 +245,7 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
     <ClInclude Include="SVNCode\Targets.h" />
     <ClInclude Include="SVNCode\ThreadData.h" />
     <ClInclude Include="SVNCode\Util.h" />
+    <ClInclude Include="xml_smart_ptr.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">

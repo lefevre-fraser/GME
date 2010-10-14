@@ -161,10 +161,6 @@ void OperatingOptions::loadSettings( const std::string& p_folder, const std::str
 			{
 				m_prefUrl = parseStr( line, "PreferredUrl");
 			}
-			else if( 0 == line.find( "AccessMethod"))
-			{
-				m_prefAccessMethod = parseStr( line, "AccessMethod");
-			}
 			//else if( 0 == line.find( "AlwaysFullLock=true"))
 			//{
 			//	m_alwaysFullLock = true;
@@ -257,7 +253,7 @@ void OperatingOptions::display( CCoreXmlFile * const parent)
 	//	+ (m_doConnSegmentLock?"true,":"false,")
 	//	+ (m_doModelParentLock?"true,":"false,")
 	//	+ (m_doBaseTypeLock?"true}":"false}"), MSG_INFO);
-	char buff[250]; sprintf( buff, "%.2f, equal with %i minutes", m_purgeDelayFactor, (int)(m_purgeDelayFactor * 60));
+	char buff[250]; sprintf( buff, "%.2f, equal to %i minutes", m_purgeDelayFactor, (int)(m_purgeDelayFactor * 60));
 	CTime back = CTime::GetCurrentTime() - CTimeSpan( 0, 0, (int)(m_purgeDelayFactor * 60), 0);
 
 	parent->sendMsg( std::string( "PurgeDelayed=") + buff, MSG_INFO);

@@ -23,6 +23,7 @@
 #pragma once
 
 #include <string>
+#include <apr_pools.h>
 struct svn_error_t;
 
 /**
@@ -33,6 +34,7 @@ class Path
 private:
 	// the path to be stored
 	std::string m_path;
+	apr_pool_t* m_pool;
 
 	svn_error_t *m_error_occured;
 
@@ -41,7 +43,7 @@ private:
 	*
 	* @param pi_path Path string
 	*/
-	void init(const char * pi_path);
+	void init(const char * pi_path, apr_pool_t* pool);
 
 public:
 	/**
@@ -51,7 +53,7 @@ public:
 	*
 	* @param pi_path Path string
 	*/
-	Path(const std::string & pi_path = "");
+	Path(const std::string & pi_path, apr_pool_t* pool);
 
 	/**
 	* Constructor
@@ -59,7 +61,7 @@ public:
 	* @see Path::Path (const std::string &)
 	* @param pi_path Path string
 	*/
-	Path(const char * pi_path);
+	Path(const char * pi_path, apr_pool_t* pool);
 
 	/**
 	* Copy constructor

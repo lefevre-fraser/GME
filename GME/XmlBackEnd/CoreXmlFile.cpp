@@ -9,14 +9,13 @@
 #include <sys/timeb.h>
 #include "CoreXmlFile.h"
 #include "CommonCollection.h"
-#include "VSSLoginDlg.h"
 #include "SvnLoginDlg.h"
 #include "FilesInUseDlg.h"
 #include "FilesInUseDetailsDlg.h"
 #include "DomErrorPrinter.h"
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/framework/LocalFileFormatTarget.hpp> 
-#include "SvnExec.h"
+#include "HiClient.h"
 #include "SvnTestDlg.h"
 #include "FileHelp.h"
 #include "DirSupplier.h"
@@ -27,6 +26,8 @@
 
 using namespace XERCES_CPP_NAMESPACE;
 using std::string;
+
+#include "xml_smart_ptr.h"
 
 #define DETAILS_ABOUT_XMLBACKEND 0
 #define RESOLVE_PTRS_2ND_ATTEMPT 0
@@ -98,9 +99,6 @@ DefCheckOutOnAction = true\n\
 # may select from https and svn+ssh protocols and their corresponding urls\n\
 #PreferredUrl = https://.... \n\
 #PreferredUrl = svn+ssh://... \n\
-\n\
-# use this option to specify your preferred access method: CMD or API\n\
-#AccessMethod = API # or CMD\n\
 \n\
 # Speed-up commits to the repository by aggregation.\n\
 UseBulkCommit = true \n\
@@ -325,7 +323,7 @@ void XmlAttrLong::fromString(const char * str)
 
 void XmlAttrLong::toString(std::string& str) const
 {
-    static char buf[100];
+    char buf[25];
     sprintf( buf, "%ld", m_value );
     str = buf;
 }
@@ -364,7 +362,7 @@ void XmlAttrReal::fromString(const char * str)
 
 void XmlAttrReal::toString(std::string& str) const
 {
-    static char buf[100];
+    char buf[100];
     sprintf( buf, "%.6f", m_value );
     str = buf;
 }
@@ -481,7 +479,7 @@ void XmlAttrLock::fromString(const char * str)
 
 void XmlAttrLock::toString(std::string& str) const
 {
-    static char buf[100];
+    char buf[25];
     sprintf( buf, "%d", m_value );
     str = buf;
 }
@@ -597,12 +595,9 @@ CCoreXmlFile::CCoreXmlFile()
 	m_openedObject          = NULL;
 	m_sourceControl         = SC_NONE;
 	m_savedOnce             = false;
-	m_svnByAPI              = false;
 	m_hashFileNames         = false;
 	m_hashInfoFound         = false;
 	m_hashVal               = -1;
-	m_comSvn                = CComPtr<ISvnExec>(0);
-	m_cmdSvn                = 0;
 	m_domImpl               = 0;
 	m_domParser             = 0;
 	m_domErrHandler         = 0;
@@ -616,6 +611,9 @@ CCoreXmlFile::CCoreXmlFile()
 CCoreXmlFile::~CCoreXmlFile()
 {
 	clearAll();
+	if (m_strategyShared) {
+		deleteParser(&m_domParser, &m_domErrHandler);
+	}
 	XMLPlatformUtils::Terminate();
 }
 
@@ -837,9 +835,9 @@ void CCoreXmlFile::applySmallChange( XmlObjSet& p_conts)
 
 bool CCoreXmlFile::specialUserInquiryHandled( VARIANT p)
 {
-	static std::string magic_str = "UpdateSourceControlInfo";
-	static std::string magi2_str = "WhoControlsThisObj";
-	static std::string magi3_str = "ShowActiveUsers";
+	static const std::string magic_str = "UpdateSourceControlInfo";
+	static const std::string magi2_str = "WhoControlsThisObj";
+	static const std::string magi3_str = "ShowActiveUsers";
 
 	bool ret = false;
 
@@ -1414,7 +1412,7 @@ STDMETHODIMP CCoreXmlFile::OpenObject(objid_type objid)
 	{
 		m_openedObject = objectFromObjId(idpair);
 
-		if( m_openedObject->m_deleted )
+		if( !m_openedObject || m_openedObject->m_deleted )
 			m_openedObject = NULL;
 	}
 	COMCATCH(;)
@@ -1512,17 +1510,10 @@ STDMETHODIMP CCoreXmlFile::DeleteObject()
 
 void CCoreXmlFile::resetSettings()
 {
-	m_svnByAPI              = false;
 	m_hashFileNames         = false;
 	m_hashInfoFound         = false;
 	m_hashVal               = -1;
-	m_comSvn = CComPtr<ISvnExec>( 0);
-	if( m_cmdSvn)
-	{
-		delete m_cmdSvn;
-		m_cmdSvn = 0;
-	}
-
+	m_svn.reset();
 }
 
 STDMETHODIMP CCoreXmlFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode)
@@ -1630,50 +1621,47 @@ STDMETHODIMP CCoreXmlFile::CreateProject(BSTR connection)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 
-	resetSettings();
+	COMTRY {
+		resetSettings();
 
-	if( m_opened || m_metaProject == NULL )
-		COMRETURN(E_INVALID_USAGE);
+		if( m_opened || m_metaProject == NULL )
+			COMRETURN(E_INVALID_USAGE);
 
-	parseConnectionString( connection );
-	setFileNames();
-	m_hashInfoFound = true;     // upon creation we select the hash/nonhash question
-	m_svnAccessMethodFound = true; // and the access method too
-	// user options can't be provided in this scenario
-	//m_userOpts.load( m_folderPath, this);
+		parseConnectionString( connection );
+		setFileNames();
+		m_hashInfoFound = true;     // upon creation we select the hash/nonhash question
+		// user options can't be provided in this scenario
+		//m_userOpts.load( m_folderPath, this);
 
-	// clear data structures
-	clearAll();
+		// clear data structures
+		clearAll();
 
-	// query the metaobject for the root
-	CComObjPtr<ICoreMetaObject> mo;
-	COMTHROW( m_metaProject->get_Object(METAID_ROOT, PutOut(mo)) );
-	ASSERT( mo != NULL );
+		// query the metaobject for the root
+		CComObjPtr<ICoreMetaObject> mo;
+		COMTHROW( m_metaProject->get_Object(METAID_ROOT, PutOut(mo)) );
+		ASSERT( mo != NULL );
 
-	// create the root
-	m_root = new XmlObject(mo,true);
-	addObject( m_root );
+		// create the root
+		m_root = new XmlObject(mo,true);
+		addObject( m_root );
 
-	if( m_clearCaseString.size() > 0 )
-		createClearCaseProj();
-	else if( m_svnUrl.size() > 0)
-		createSubversionedFolder();
-	else if( m_vssDatabaseStr.size() > 0 )
-		createSourceSafeDatabase();
-	else //AfxMessageBox( "Project has not been created under a source control system");
-		createNonversioned();
+		if( m_svnUrl.size() > 0)
+			createSubversionedFolder();
+		else //AfxMessageBox( "Project has not been created under a source control system");
+			createNonversioned();
 
-	createProjectFile();
+		createProjectFile();
 
-	// m_sourceControl has to be filled for these methods below (setParent)
-	m_signer.setParent( this);
-	m_signer.in(); // signing on does username verification also
-	m_protectList.setParent( this);
+		// m_sourceControl has to be filled for these methods below (setParent)
+		m_signer.setParent( this);
+		m_signer.in(); // signing on does username verification also
+		m_protectList.setParent( this);
 
-	m_opened   = true;
-	m_modified = false;
+		m_opened   = true;
+		m_modified = false;
 
-	CloseProgressWindow();
+		CloseProgressWindow();
+	} COMCATCH(CloseProgressWindow();)
 
 	return S_OK;
 }
@@ -1682,27 +1670,29 @@ STDMETHODIMP CCoreXmlFile::SaveProject(BSTR connection, VARIANT_BOOL keepoldname
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	// reload options in order to allow 'change-of-mind' for users
-	m_userOpts.reset();
-	m_userOpts.load( m_folderPath);
-	m_userOpts.display( this);
+	COMTRY {
+		// reload options in order to allow 'change-of-mind' for users
+		m_userOpts.reset();
+		m_userOpts.load( m_folderPath);
+		m_userOpts.display( this);
 
-	if( m_userOpts.m_partialLoad) writeBinaryCache();
-	writeAll();
+		if( m_userOpts.m_partialLoad) writeBinaryCache();
+		writeAll();
 
-	if( m_sourceControl != SC_NONE )
-	{
-		if( !m_savedOnce )
-			checkInAll(true);
-		else
-			checkInAll();
+		if( m_sourceControl != SC_NONE )
+		{
+			if( !m_savedOnce )
+				checkInAll(true);
+			else
+				checkInAll();
 
-	}
+		}
 
-	m_modified = false;
-	m_savedOnce = true;
+		m_modified = false;
+		m_savedOnce = true;
 
-	CloseProgressWindow();
+		CloseProgressWindow();
+	} COMCATCH(CloseProgressWindow();)
 
 	return S_OK;
 }
@@ -1756,152 +1746,156 @@ STDMETHODIMP CCoreXmlFile::CommitTransaction()
 {    
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	if( !m_inTransaction )
-		COMRETURN(E_INVALID_USAGE);
+	COMTRY {
+		if( !m_inTransaction )
+			COMRETURN(E_INVALID_USAGE);
 
-	ASSERT( m_opened );
+		ASSERT( m_opened );
 
-	bool failed = false;
+		bool failed = false;
 
-#ifdef _DEBUG
-#if(DETAILS_ABOUT_XMLBACKEND)
-	time_t time1, time2, time3;
-	struct tm *tm1, *tm2, *tm3;
-	time( &time1); tm1 = localtime( &time1);
-	//if( m_userOpts.m_measureTime) sendMsg( std::string( "CommitBegin ") + asctime( tm1 ), MSG_INFO);
-#endif
-#endif
+	#ifdef _DEBUG
+	#if(DETAILS_ABOUT_XMLBACKEND)
+		time_t time1, time2, time3;
+		struct tm *tm1, *tm2, *tm3;
+		time( &time1); tm1 = localtime( &time1);
+		//if( m_userOpts.m_measureTime) sendMsg( std::string( "CommitBegin ") + asctime( tm1 ), MSG_INFO);
+	#endif
+	#endif
 
-	XmlObjSet to_be_checked_out_containers;
-	getCheckOutContainers(m_modifiedObjects, to_be_checked_out_containers);
+		XmlObjSet to_be_checked_out_containers;
+		getCheckOutContainers(m_modifiedObjects, to_be_checked_out_containers);
 
-#ifdef _DEBUG
-#if(DETAILS_ABOUT_XMLBACKEND)
-	time( &time2); tm2 = localtime( &time2);
-	//if( m_userOpts.m_measureTime) sendMsg( std::string( "CommitMidle ") + asctime( tm2 ), MSG_INFO);
-#endif
-#endif
+	#ifdef _DEBUG
+	#if(DETAILS_ABOUT_XMLBACKEND)
+		time( &time2); tm2 = localtime( &time2);
+		//if( m_userOpts.m_measureTime) sendMsg( std::string( "CommitMidle ") + asctime( tm2 ), MSG_INFO);
+	#endif
+	#endif
 
-	CloseObject();
+		CloseObject();
 
-	//m_needClose = false;
+		//m_needClose = false;
 
-	if( !checkOutFiles(to_be_checked_out_containers) )
-	{
-#ifdef _DEBUG
-#if(DETAILS_ABOUT_XMLBACKEND)
-		time( &time3);
-		tm3 = localtime( &time3);
+		if( !checkOutFiles(to_be_checked_out_containers) )
+		{
+	#ifdef _DEBUG
+	#if(DETAILS_ABOUT_XMLBACKEND)
+			time( &time3);
+			tm3 = localtime( &time3);
 
-		double dur = difftime( time3, time1);
-		char buff[100];
-		sprintf( buff, " [Took total of  %6.0f secs]", dur );
+			double dur = difftime( time3, time1);
+			char buff[100];
+			sprintf( buff, " [Took total of  %6.0f secs]", dur );
 
-		if( m_userOpts.m_measureTime) sendMsg( std::string( "CommitAbort ") + asctime( tm3) + buff, MSG_INFO);
-#endif
-#endif
-		CloseProgressWindow();
-		return E_FAIL;
-	}
-	else
-	{
-		m_trivialChanges = true;
-		m_fullLockNeeded = false;
-		m_createdObjects.clear();
-		m_deletedObjects.clear();
-		m_modifiedObjects.clear();
-		m_undoMap.clear();
-		m_inTransaction = false;
-
-#ifdef _DEBUG
-#if(DETAILS_ABOUT_XMLBACKEND)
-
-		if( m_userOpts.m_createLog) {
-			//while( -1 != mylog.find( "\r\n"))
-			//{
-			//    int p = mylog.find( "\r\n");
-			//    mylog.replace( p, 2, "<br>");
-			//}
-			if( mylog.size() != 0 && mylog != "<br>")
-				sendMsg( mylog, MSG_INFO);
-			mylog.clear(); // clear the log
+			if( m_userOpts.m_measureTime) sendMsg( std::string( "CommitAbort ") + asctime( tm3) + buff, MSG_INFO);
+	#endif
+	#endif
+			CloseProgressWindow();
+			return E_FAIL;
 		}
-#endif
-#endif
-		//if( m_needClose )
-		//  m_gme->CloseProject( TRUE );
+		else
+		{
+			m_trivialChanges = true;
+			m_fullLockNeeded = false;
+			m_createdObjects.clear();
+			m_deletedObjects.clear();
+			m_modifiedObjects.clear();
+			m_undoMap.clear();
+			m_inTransaction = false;
 
-#ifdef _DEBUG
-#if(DETAILS_ABOUT_XMLBACKEND)
-		time( &time3);
-		tm3 = localtime( &time3);
+	#ifdef _DEBUG
+	#if(DETAILS_ABOUT_XMLBACKEND)
 
-		double dur = difftime( time3, time1);
-		char buff[100];
-		sprintf( buff, " [Took total of  %6.0f secs]", dur );
+			if( m_userOpts.m_createLog) {
+				//while( -1 != mylog.find( "\r\n"))
+				//{
+				//    int p = mylog.find( "\r\n");
+				//    mylog.replace( p, 2, "<br>");
+				//}
+				if( mylog.size() != 0 && mylog != "<br>")
+					sendMsg( mylog, MSG_INFO);
+				mylog.clear(); // clear the log
+			}
+	#endif
+	#endif
+			//if( m_needClose )
+			//  m_gme->CloseProject( TRUE );
 
-		if( m_userOpts.m_measureTime) sendMsg( std::string( "CommitSucce ") + asctime( tm3) + buff, MSG_INFO);
-#endif
-#endif
-		m_protectList.onCommited();
-		CloseProgressWindow();
-		return S_OK;
-	}
+	#ifdef _DEBUG
+	#if(DETAILS_ABOUT_XMLBACKEND)
+			time( &time3);
+			tm3 = localtime( &time3);
+
+			double dur = difftime( time3, time1);
+			char buff[100];
+			sprintf( buff, " [Took total of  %6.0f secs]", dur );
+
+			if( m_userOpts.m_measureTime) sendMsg( std::string( "CommitSucce ") + asctime( tm3) + buff, MSG_INFO);
+	#endif
+	#endif
+			m_protectList.onCommited();
+			CloseProgressWindow();
+			return S_OK;
+		}
+	} COMCATCH(CloseProgressWindow();)
 }
 
 STDMETHODIMP CCoreXmlFile::AbortTransaction()
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	if( !m_inTransaction )
-		COMRETURN(E_INVALID_USAGE);
+	COMTRY {
+		if( !m_inTransaction )
+			COMRETURN(E_INVALID_USAGE);
 
-	ASSERT( m_opened );
+		ASSERT( m_opened );
 
-	// undelete deleted objects
-	for( XmlObjSetIter it=m_deletedObjects.begin(); it!=m_deletedObjects.end(); ++it )
-		(*it)->m_deleted = false;
+		// undelete deleted objects
+		for( XmlObjSetIter it=m_deletedObjects.begin(); it!=m_deletedObjects.end(); ++it )
+			(*it)->m_deleted = false;
 
-	// delete created objects
-	int minIndex = m_objects.size();
-	for( XmlObjVecIter it2=m_createdObjects.begin(); it2!=m_createdObjects.end(); ++it2 )
-	{
-		XmlObject* obj = *it2;
-		m_objectsByGUID.erase(obj->m_guid);
-		if( obj->m_index < minIndex )
-			minIndex = obj->m_index;
-	}
-	m_objects.resize( minIndex );
-
-	// rollback attributum changes
-	for( UndoMapIter it3=m_undoMap.begin(); it3!=m_undoMap.end(); ++it3 )
-	{
-		XmlObject * obj = it3->second.m_object;
-		if( it3->first->getType() == VALTYPE_POINTER )
+		// delete created objects
+		int minIndex = m_objects.size();
+		for( XmlObjVecIter it2=m_createdObjects.begin(); it2!=m_createdObjects.end(); ++it2 )
 		{
-			XmlAttrPointer * pointerAttr = (XmlAttrPointer*)it3->first;
-			metaobjidpair_type idpair;
-			CopyTo(it3->second.m_value, idpair);
-			XmlObject * parent = objectFromObjId(idpair);
-			setPointer( obj, it3->second.m_attrId, parent );
+			XmlObject* obj = *it2;
+			m_objectsByGUID.erase(obj->m_guid);
+			if( obj->m_index < minIndex )
+				minIndex = obj->m_index;
 		}
-		else
+		m_objects.resize( minIndex );
+
+		// rollback attributum changes
+		for( UndoMapIter it3=m_undoMap.begin(); it3!=m_undoMap.end(); ++it3 )
 		{
-			it3->first->fromVariant(it3->second.m_value);
+			XmlObject * obj = it3->second.m_object;
+			if( it3->first->getType() == VALTYPE_POINTER )
+			{
+				XmlAttrPointer * pointerAttr = (XmlAttrPointer*)it3->first;
+				metaobjidpair_type idpair;
+				CopyTo(it3->second.m_value, idpair);
+				XmlObject * parent = objectFromObjId(idpair);
+				setPointer( obj, it3->second.m_attrId, parent );
+			}
+			else
+			{
+				it3->first->fromVariant(it3->second.m_value);
+			}
 		}
-	}
-	m_protectList.onAborted();
-	m_undoMap.clear();
+		m_protectList.onAborted();
+		m_undoMap.clear();
 
-	m_deletedObjects.clear();
-	m_createdObjects.clear();
-	m_modifiedObjects.clear();
-	m_trivialChanges = true;
-	m_fullLockNeeded = false;
-	CloseObject();    
-	m_inTransaction = false;
+		m_deletedObjects.clear();
+		m_createdObjects.clear();
+		m_modifiedObjects.clear();
+		m_trivialChanges = true;
+		m_fullLockNeeded = false;
+		CloseObject();    
+		m_inTransaction = false;
 
-	CloseProgressWindow();
+		CloseProgressWindow();
+	} COMCATCH(CloseProgressWindow();)
 
 	return S_OK;
 }
@@ -2003,15 +1997,10 @@ void CCoreXmlFile::parseConnectionString( BSTR connection )
 
 	m_contentPath    = "";
 	m_folderPath     = "";
-	m_vssUser        = "";
-	m_vssPassword    = "";
-	m_vssDatabaseStr = "";
-	m_vssParentPath  = "";
 	m_svnUrl         = "";
 
 	std::string to_hash = "";
 	std::string to_hash_with_val = "";
-	m_svnAccessMethodFound = false;
 
 	for( int i=0; i<size; ++i )
 	{
@@ -2045,24 +2034,12 @@ void CCoreXmlFile::parseConnectionString( BSTR connection )
 						m_vssUser = val;
 					else if( stricmp( key.c_str(), "password" ) == 0 )
 						m_vssPassword = val;
-					else if( stricmp( key.c_str(), "vssDatabase" ) == 0 )
-						m_vssDatabaseStr = val;
-					else if( stricmp( key.c_str(), "vssPath" ) == 0 )
-						m_vssParentPath = val;
-					else if( stricmp( key.c_str(), "clearCase" ) == 0 )
-						m_clearCaseString = val;
 					else if( stricmp( key.c_str(), "svn" ) == 0 )
 						m_svnUrl = val;
 					else if( stricmp( key.c_str(), "hash") == 0 )
 						to_hash = val;
 					else if( stricmp( key.c_str(), "hval") == 0 )
 						to_hash_with_val = val;
-					else if( stricmp( key.c_str(), "svnaccess") == 0) {
-						if( !m_svnAccessMethodFound) { 
-							m_svnAccessMethodFound = true; 
-							m_svnByAPI = val != "CMD";
-						}
-					}
 
 					keyCollecting = true;
 					key = "";
@@ -2157,19 +2134,6 @@ void CCoreXmlFile::svnOptions()
 				//		m_hashVal = (IDYES == AfxMessageBox( "Use 3 digit hashed subdirectories?", MB_YESNO))?3:2;
 				//}
 			}
-		}
-
-		if( !m_svnAccessMethodFound) // connection string might have contained it
-		{
-			m_svnByAPI = true;
-			if( m_svnByAPI) m_svnByAPI = IDYES == AfxMessageBox( "Use Subversion through API?", MB_YESNO);
-			else            m_svnByAPI = IDNO ==  AfxMessageBox( "Use Subversion through CMD.exe?", MB_YESNO);
-		}
-
-		if( !m_svnByAPI)
-		{
-			m_svnShowCmdLineWindows = IDYES == AfxMessageBox( "Show command line windows?", MB_YESNO);
-			m_svnRedirectOutput     = !m_svnShowCmdLineWindows?true:IDYES == AfxMessageBox( "Redirect output to GME console?", MB_YESNO);
 		}
 	}
 }
@@ -2913,7 +2877,7 @@ bool CCoreXmlFile::checkOutFiles(XmlObjSet& containers)
 #endif
 
 	// PETER - SVNSPEEDHACK BEGIN
-	if( m_sourceControl == SC_SUBVERSION && m_svnByAPI ) {
+	if( m_sourceControl == SC_SUBVERSION) {
 		XmlObjSetIter it;
 		std::vector< std::string> readOnlyFiles;
 
@@ -2929,34 +2893,15 @@ bool CCoreXmlFile::checkOutFiles(XmlObjSet& containers)
 			return true;
 		}
 
-		SAFEARRAY *pSA;
-		SAFEARRAYBOUND bounds;
-		bounds.lLbound = 0;
-		bounds.cElements = readOnlyFiles.size();
-	
-		pSA = SafeArrayCreate( VT_BSTR, 1, &bounds);
-		BSTR *theStrings;
-		SafeArrayAccessData( pSA, (void**) &theStrings);
-		for( std::vector< std::string>::size_type i = 0; i < readOnlyFiles.size(); ++i)
-		{
-			theStrings[i] = CComBSTR( readOnlyFiles[i].c_str()).Detach();
-		}
-		SafeArrayUnaccessData( pSA);
-		CComVariant var_arr(pSA);
-		SafeArrayDestroy( pSA);
+		std::string msg;
+		bool succ = m_svn->speedLock(readOnlyFiles, msg);
 
-		VARIANT_BOOL succ_vt = VARIANT_FALSE;
-		CComBSTR succ_msg;
-		COMTHROW( m_comSvn->SpeedLock(var_arr, &succ_vt, &succ_msg) );
-
-		if (succ_vt == VARIANT_TRUE) {
+		if (succ) {
 			return true;
 		}
 		else {
-			std::string succ_msg_str;
 			sendMsg( "Could not check out all files needed to complete operation.", MSG_ERROR);
-			CopyTo(succ_msg, succ_msg_str);
-			sendMsg( succ_msg_str, MSG_INFO);
+			sendMsg( msg, MSG_INFO);
 			sendMsg( "Rollback follows.", MSG_INFO);
 			return false;
 		}
@@ -2974,28 +2919,7 @@ bool CCoreXmlFile::checkOutFiles(XmlObjSet& containers)
 		XmlObject * obj = *it;
 		ASSERT( obj != NULL );
 
-		if( m_sourceControl == SC_CLEARCASE )
-		{
-			string fileName;
-			getContainerFileName( obj, fileName, true );
-
-			FILE * f = fopen( fileName.c_str(), "r" );
-			if( f!=NULL )
-			{
-				fclose(f);
-				int checkoutState = getCheckOutStateCC( fileName.c_str() );
-
-				if( checkoutState == CS_OTHER_USER )
-				{
-					checkdOutByOthers = true;
-					readOnlyFiles.insert( obj );
-					containersUsedByOthers.insert( obj );
-				}
-				else if( checkoutState == SC_NONE )
-					readOnlyFiles.insert( obj );
-			}
-		}
-		else if( isContainerReadOnly(obj) )
+		if( isContainerReadOnly(obj) )
 		{
 			readOnlyFiles.insert( obj );
 			if( m_sourceControl != SC_NONE )
@@ -3262,10 +3186,8 @@ void CCoreXmlFile::createProjectFile()
 		HR_THROW(E_FILEOPEN);
 	}
 	fprintf( f, "<GME " );
-	if( m_vssDatabaseStr.size() > 0 )
-		fprintf( f, "VSSDatabase=\"%s\" VSSPath=\"%s\"", m_vssDatabaseStr.c_str(), m_vssPath.c_str() );
 	if( m_svnUrl.size() > 0)
-		fprintf( f, "svn=\"%s\" access=\"%s\"", svnSshMangling( m_svnUrl).c_str(), m_svnByAPI?"API":"CMD" );
+		fprintf( f, "svn=\"%s\"", svnSshMangling( m_svnUrl).c_str());
 	if( m_hashFileNames)
 		fprintf( f, " hash=\"true\" hval=\"%s\"", (m_hashVal == 5)?"1+2":(m_hashVal == 2)?"2": (m_hashVal == 3)? "3":"4");
 	else
@@ -3274,37 +3196,7 @@ void CCoreXmlFile::createProjectFile()
 	fprintf( f, "</GME>\n" );
 	fclose( f );
 
-	// if project under source control, the project file should be added to source control    
-	if( isSS())
-	{
-		// get project item
-		CComObjPtr<IVSSItem> projectItem;
-		CComBSTR path = m_vssPath.c_str();
-		COMTHROW( m_vssDatabase->get_VSSItem( path, false, &(projectItem.p)) );
-
-		// add to source control projecct
-		CComObjPtr<IVSSItem> item;
-		CComBSTR fileName2 = m_projectFileName.c_str();
-
-		projectItem->Add( fileName2, NULL, 0, &(item.p));   // TODO error handling
-	}
-	else if( isCC())
-	{
-		try
-		{
-			// add project file
-			addFileToCC( m_projectFileName.c_str() );
-			//checkInFileCC( m_projectFileName.c_str() );
-			//checkInFileCC( m_folderPath.c_str() );
-			//checkInFileCC( m_parentFolderPath.c_str() );
-		}
-		catch(...)
-		{
-			AfxMessageBox("ClearCase error! Cannot add project to ClearCase. Errocode=2");
-			m_sourceControl = SC_NONE;
-		}
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		bool s1 = addSVN( m_projectFileName);
 		bool s2 = commitSVN( m_projectFileName, std::string("auto: createProjectFile()"), true);
@@ -3324,28 +3216,27 @@ void CCoreXmlFile::readProjectFile()
 	// possible attributes: VSSDatabase, VSSPath
 	// example: <GME VSSDatabase="\\bogyom\GMEXMLBackEndTest\sorucesafedb\srcsafe.ini" VSSPath="$\test1"></GME>
 
+	std::auto_ptr<DOMLSParser> parser(getFreshParser( "ProjectFileReader"));
 
-	DOMLSParser * parser = getFreshParser( "ProjectFileReader");
-
-	ASSERT( parser != NULL );
-	if( !parser)
+	ASSERT( parser.get() != NULL );
+	if(parser.get() == NULL)
 	{
 		sendMsg( "Exception: Could not create parser!", MSG_ERROR);
 		HR_THROW(E_FILEOPEN);
 	}
 
-	DOMErrorHandler* err_handler = new DOMErrorPrinter( &m_console);
-	parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, err_handler);
+	std::auto_ptr<DOMErrorHandler> err_handler(new DOMErrorPrinter( &m_console));
+	parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, err_handler.get());
 
 	bool fexists   = FileHelp::fileExist( m_projectFileName);
 	bool suc       = false;
 	XERCES_CPP_NAMESPACE::DOMDocument * doc = 0;
-	if( fexists) doc = enclosedParse( m_projectFileName, parser, &suc);
+	if( fexists) doc = enclosedParse( m_projectFileName, parser.get(), &suc);
 	if( !doc || !suc)
 	{
 		//sendMsg( "Could not find or parse project file " + m_projectFileName, MSG_ERROR);
 		setFileNames( true); // reset the file name to a newly found one
-		doc = enclosedParse( m_projectFileName, parser, &suc);
+		doc = enclosedParse( m_projectFileName, parser.get(), &suc);
 		if( !doc || !suc)
 		{
 			if( fexists) sendMsg( "Could not parse project file '" + m_projectFileName + "'!", MSG_ERROR);
@@ -3360,17 +3251,15 @@ void CCoreXmlFile::readProjectFile()
 		HR_THROW(E_FILEOPEN);
 	}
 
-	XMLCh* x_vssDatabase = XMLString::transcode("VSSDatabase");
-	XMLCh* x_svnLocator  = XMLString::transcode("svn");
-	XMLCh* x_svnAccess   = XMLString::transcode("access");
-	XMLCh* x_hashedDirs  = XMLString::transcode("hash");
-	XMLCh* x_hashValue   = XMLString::transcode("hval");
+	smart_XMLCh x_vssDatabase = XMLString::transcode("VSSDatabase");
+	smart_XMLCh x_svnLocator  = XMLString::transcode("svn");
+	smart_XMLCh x_hashedDirs  = XMLString::transcode("hash");
+	smart_XMLCh x_hashValue   = XMLString::transcode("hval");
 
-	char * vssDatabase = XMLString::transcode(e->getAttribute( x_vssDatabase));
-	char * svnLocator  = XMLString::transcode(e->getAttribute( x_svnLocator));
-	char * svnAccess   = XMLString::transcode(e->getAttribute( x_svnAccess));
-	char * hashedDirs  = XMLString::transcode(e->getAttribute( x_hashedDirs));
-	char * hashValue   = XMLString::transcode(e->getAttribute( x_hashValue));
+	smart_Ch vssDatabase = XMLString::transcode(e->getAttribute( x_vssDatabase));
+	smart_Ch svnLocator  = XMLString::transcode(e->getAttribute( x_svnLocator));
+	smart_Ch hashedDirs  = XMLString::transcode(e->getAttribute( x_hashedDirs));
+	smart_Ch hashValue   = XMLString::transcode(e->getAttribute( x_hashValue));
 
 	if( !strcmp( hashedDirs, "true")) 
 	{
@@ -3391,34 +3280,13 @@ void CCoreXmlFile::readProjectFile()
 		m_hashInfoFound = true; // this will skip asking questions about hashing
 	}
 
-	if( strlen(vssDatabase) != 0 )
-	{
-		m_vssDatabaseStr = vssDatabase;
-		XMLCh* x_vssPath     = XMLString::transcode("VSSPath");
-		char * vssPath   = XMLString::transcode(e->getAttribute( x_vssPath));
-
-		m_vssPath = vssPath;
-
-		XMLString::release( &vssPath);//delete vssPath;
-		XMLString::release( &x_vssPath);
-
-		openSourceSafeDatabase();
-	}
-	else if( strlen( svnLocator) != 0 )
+	if( strlen( svnLocator) != 0 )
 	{
 		m_svnUrl = svnLocator;
 		if( m_svnUrl != m_userOpts.m_prefUrl && !m_userOpts.m_prefUrl.empty()) // pref not empty and !equal
 		{
 			sendMsg( "Preferred url substitutes that loaded from the project file!", MSG_INFO);
 			m_svnUrl = m_userOpts.m_prefUrl;
-		}
-
-		if( svnAccess != 0 && svnAccess != "")
-		{
-			m_svnAccessMethodFound = true;
-			m_svnByAPI = true;  // default: API
-			if( !strcmp( svnAccess, "CMD"))
-				m_svnByAPI = false;
 		}
 
 		m_vssUser = m_userOpts.m_useAccountInfo? m_userOpts.m_defUserName.c_str(): userNameFromSvnSshUrl();
@@ -3434,33 +3302,6 @@ void CCoreXmlFile::readProjectFile()
 
 		_chdir( m_folderPath.c_str()); // change to the newly created local dir
 	}
-	else
-	{        
-		m_sourceControl = SC_NONE;
-		m_vssDatabaseStr = "";
-		m_vssPath        = "";
-
-		// check if the project is under clearcase
-		if( createClearCaseApp() )
-		{
-			if( isPathUnderClearCase( m_parentFolderPath.c_str() ) )
-				m_sourceControl = SC_CLEARCASE;
-		}
-	}
-
-	XMLString::release( &vssDatabase);//delete vssDatabase;
-	XMLString::release( &x_vssDatabase);
-	XMLString::release( &x_svnLocator);
-	XMLString::release( &x_svnAccess);
-	XMLString::release( &svnLocator);
-	XMLString::release( &svnAccess);
-	XMLString::release( &x_hashedDirs);
-	XMLString::release( &x_hashValue);
-	XMLString::release( &hashedDirs);
-	XMLString::release( &hashValue);
-
-	delete err_handler;
-	delete parser;
 }
 
 void CCoreXmlFile::writeAll()
@@ -3775,10 +3616,10 @@ void CCoreXmlFile::readXMLFile( const char * fileName, UnresolvedPointerVec& poi
 	CTime lastWriteTime( attr.ftLastWriteTime );
 
 	DOMLSParser * parser = NULL;
+	DOMErrorHandler* err_handler = 0;
 	try
 	{
 		DOMImplementationLS * domimpl = 0;
-		DOMErrorHandler*      err_handler = 0;
 		giveDOMObjs( &domimpl, &parser, &err_handler);
 
 		if( !domimpl || !parser)
@@ -3833,12 +3674,12 @@ void CCoreXmlFile::readXMLFile( const char * fileName, UnresolvedPointerVec& poi
 
 		readObject( doc_e, pointers, NULL, fullLoad, lastWriteTime );
 
-		deleteParser( &parser);//delete parser;
+		deleteParser( &parser, &err_handler);//delete parser;
 	}
 	catch(...)
 	{
 		if( parser != NULL )
-			deleteParser( &parser);//delete parser;
+			deleteParser( &parser, &err_handler);//delete parser;
 
 		sendMsg( std::string( "Exception during reading ") + fileName + " file!", MSG_ERROR);
 		HR_THROW(E_FILEOPEN);
@@ -3856,11 +3697,9 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 #ifdef DEBUG
 	// if the object is deleted do not deal with it
 	// possible optimization: limit analysis to ( parent == 0) case only (when incoming parameter is 0)
-	XMLCh* x_deleted = XMLString::transcode( ParserLiterals::Main::deleted);
-	char * deletedStr = XMLString::transcode( e->getAttribute( x_deleted));
+	smart_XMLCh x_deleted = XMLString::transcode( ParserLiterals::Main::deleted);
+	smart_Ch deletedStr = XMLString::transcode( e->getAttribute( x_deleted));
 	bool deleted = (strcmp( deletedStr, "true" ) == 0);
-	XMLString::release( &x_deleted);
-	XMLString::release( &deletedStr);
 	if( deleted)
 	{
 		ASSERT(0); // deleted XML attribute is no longer present in deleted XML files
@@ -3868,35 +3707,26 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 	}
 #endif
 
-	XMLCh * x_metaId = XMLString::transcode( ParserLiterals::Main::metaId);
-	XMLCh * x_id     = XMLString::transcode( ParserLiterals::Main::id);
+	smart_XMLCh x_metaId = XMLString::transcode( ParserLiterals::Main::metaId);
+	smart_XMLCh x_id     = XMLString::transcode( ParserLiterals::Main::id);
 
 	// get metaid, and id
-	char * metaIdStr  = XMLString::transcode( e->getAttribute( x_metaId));
-	char * objGUIDStr = XMLString::transcode( e->getAttribute( x_id));
+	smart_Ch metaIdStr  = XMLString::transcode( e->getAttribute( x_metaId));
+	smart_Ch objGUIDStr = XMLString::transcode( e->getAttribute( x_id));
 
 	long metaid = atoi( metaIdStr);
 	GUID   guid = str2guid( objGUIDStr );
-
-	XMLString::release( &metaIdStr);
-	XMLString::release( &objGUIDStr);
-	XMLString::release( &x_metaId);
-	XMLString::release( &x_id);
-
 
 	// is container deleted/obsolete? 
 	// if nonrootfolder and its explicit parent must be 0
 	if( metaid != METAID_ROOT && parent == 0)
 	{
 		// is its XML Parent attribute empty
-		XMLCh* x_parent       = XMLString::transcode( ParserLiterals::Main::parent);
-		char* parent_xml_attr = XMLString::transcode( e->getAttribute( x_parent));
+		smart_XMLCh x_parent       = XMLString::transcode( ParserLiterals::Main::parent);
+		smart_Ch parent_xml_attr = XMLString::transcode( e->getAttribute( x_parent));
 
 		// is object obsolete?
 		bool obs = parent_xml_attr == 0 || strcmp( parent_xml_attr, "") == 0;
-
-		XMLString::release( &x_parent);
-		XMLString::release( &parent_xml_attr);
 
 		if( obs) return;
 	}
@@ -3951,7 +3781,7 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 		// see http://escher.isis.vanderbilt.edu/JIRA/browse/GME-152
 		// it won't find 'MGA Version' of rootfolder if space2underscore and
 		// underscore2space conversions are in effect
-		char * attrVal = XMLString::transcode(e->getAttribute(attribToken));
+		smart_Ch attrVal = XMLString::transcode(e->getAttribute(attribToken));
 
 		// multiline case?
 		bool spec_value_found = false; // will ensure smooth upgrade from old style xmlbackend
@@ -3967,12 +3797,11 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 				DOMNode * node = children->item(i);
 				if( node->getNodeType() == DOMNode::CDATA_SECTION_NODE ) // the first CDATA element is taken
 				{
-					char * sp_va = XMLString::transcode( ((DOMCDATASection*)node)->getTextContent());
+					smart_Ch sp_va = XMLString::transcode( ((DOMCDATASection*)node)->getTextContent());
 
 					spec_value = sp_va;
 					spec_value_found = true;
 
-					XMLString::release( &sp_va);
 					break;
 				}
 			}
@@ -4011,8 +3840,6 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 					it2->second->fromString( spec_value.c_str());
 			}
 		}
-
-		XMLString::release( &attrVal);//delete [] attrVal;
 	}
 
 	// implicit parent pointer
@@ -4242,23 +4069,6 @@ bool CCoreXmlFile::getUserCredentialInfo( int p_svnText, bool p_requireLogin)
 		}
 		aborted = dlg.wasAborted();
 	}
-	else
-	{
-		CVSSLoginDlg dlg;
-		dlg.m_project  = m_projectFileName.c_str();
-		dlg.m_database = m_vssDatabaseStr.c_str();
-		dlg.m_user     = m_userOpts.m_useAccountInfo? m_userOpts.m_defUserName.c_str(): "";
-		dlg.m_password = m_userOpts.m_useAccountInfo? m_userOpts.m_defPassword.c_str(): "";
-
-		// execute DoModal only if one of the booleans below is false
-		if( m_userOpts.m_useAccountInfo && m_userOpts.m_automaticLogin || dlg.DoModal() == IDOK )
-		{
-			m_vssUser     = dlg.m_user;
-			m_vssPassword = dlg.m_password;
-			return true;
-		}
-		aborted = dlg.wasAborted();
-	}
 
 	// we are sure that not IDOK was pressed
 	if( p_requireLogin)
@@ -4268,201 +4078,6 @@ bool CCoreXmlFile::getUserCredentialInfo( int p_svnText, bool p_requireLogin)
 		HR_THROW( E_UNKNOWN_STORAGE); // this will imply a relatively silent abort, with no further assertions
 
 	return false;
-}
-
-CComObjPtr<IVSSItem> CCoreXmlFile::createFolderSS( CComObjPtr<IVSSItem> p_parentItem, CComBSTR p_subProjName, CComBSTR p_localSpec)
-{
-	CComObjPtr<IVSSItem> item;
-	COMTHROW( p_parentItem->NewSubproject( p_subProjName, NULL, &(item.p) ));
-
-	COMTHROW( item->put_LocalSpec( p_localSpec) );
-
-	return item;
-}
-
-void CCoreXmlFile::createSourceSafeDatabase()
-{
-	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
-
-	m_sourceControl = SC_NONE;
-
-	std::string  msg;
-
-	// create source control project if specified one
-	if( m_vssDatabaseStr.size() > 0 )
-	{
-		if( m_vssUser.size() > 0 || getUserCredentialInfo( 0, true) )
-		{
-			// try to open the sorusafe database
-			try
-			{
-				COMTHROW( CoCreateInstance(CLSID_VSSDatabase, NULL, CLSCTX_ALL, IID_IVSSDatabase, (void**)&(m_vssDatabase.p) ));
-
-				CComBSTR path  = m_vssDatabaseStr.c_str();
-				CComBSTR user2 = m_vssUser.c_str();
-				CComBSTR pwd2  = m_vssPassword.c_str();
-
-				COMTHROW( m_vssDatabase->Open( path, user2, pwd2 ) );
-
-				CComObjPtr<IVSSItem> item;
-				CComBSTR parentProject = m_vssParentPath.c_str();
-				COMTHROW( m_vssDatabase->get_VSSItem( parentProject, false, &(item.p)) );
-
-				// create project folder locally
-				BOOL res;
-				res = CreateDirectory( m_folderPath.c_str(), NULL);
-				if( !res)  
-				{
-					sendMsg( "Exception: Could not create project folder '" + m_folderPath + "'!", MSG_ERROR);
-					HR_THROW(E_FILEOPEN);
-				}
-
-				// create project folder on the server
-				CComObjPtr<IVSSItem> proj_main_item = createFolderSS( item, m_projectName.c_str(), m_folderPath.c_str());
-				if( !proj_main_item) 
-				{
-					sendMsg( "Exception: Could not create versioned folder '" + m_projectName + "'!", MSG_ERROR);
-					HR_THROW(E_FILEOPEN);
-				}
-
-				//CComObjPtr<IVSSItem> item2;
-				//CComBSTR subProjectName = m_projectName.c_str();
-				//COMTHROW( item->NewSubproject( subProjectName, NULL, &(item2.p) ));
-
-				//CComBSTR localSpec = m_folderPath.c_str();
-				//COMTHROW( item2->put_LocalSpec(localSpec) );
-
-				if( m_hashFileNames)
-				{
-					int succ = 0;
-					// create folders locally
-					succ = createHashedFolders();
-					if( !succ) {
-						
-						sendMsg( "Exception: Could not create initial directory structure!", MSG_ERROR);
-						AfxMessageBox( "Could not create initial directory structure.");
-						HR_THROW(E_FILEOPEN);
-					}
-
-					// add/create folders to/in versioning system
-					// create project folder on the server
-
-					CComObjPtr<IVSSItem>      null_item(0);
-
-					// first add the content folder
-					CComObjPtr<IVSSItem> proj_cont_item = createFolderSS( proj_main_item, m_contentConst, m_contentPath.c_str());
-					succ = null_item != proj_cont_item;
-
-					// then the subfolders
-					DirSupplier ds( m_hashFileNames, m_hashVal);
-
-					if( m_hashVal == 2)
-					{
-						for( Dir256Iterator it = ds.begin256(); succ && it != ds.end256(); ++it)
-							succ = null_item != createFolderSS( proj_cont_item, (*it).c_str(), (m_contentPath + "\\" + *it).c_str());
-					}
-					else if( m_hashVal == 5)
-					{
-						CComObjPtr<IVSSItem> proj_lev1_item;
-						CComObjPtr<IVSSItem> proj_lev2_item;
-						std::string          f_lev1, s_lev1,s_lev2;
-						for( Dir16Iterator it = ds.begin16(); succ && it != ds.end16(); ++it)
-						{
-							s_lev1 = *it;
-							f_lev1 = m_contentPath + "\\" + s_lev1;
-
-							proj_lev1_item = createFolderSS( proj_cont_item, s_lev1.c_str(), f_lev1.c_str());
-							succ = null_item != proj_lev1_item;
-
-							for( Dir256Iterator jt = ds.begin256(); succ && jt != ds.end256(); ++jt)
-							{
-								s_lev2 = *jt;
-								succ = null_item != createFolderSS( proj_lev1_item, s_lev2.c_str(), (f_lev1 + "\\" + s_lev2).c_str()); 
-							}
-						}
-					}
-
-					if( !succ) {
-						sendMsg( "Exception: Could not create initial project structure on server!", MSG_ERROR);
-						AfxMessageBox( "Could not create initial project structure on server.");
-						HR_THROW(E_FILEOPEN);
-					}
-				}
-
-				m_sourceControl = SC_SOURCESAFE;
-			}
-			catch(...)
-			{
-				// error during the sourcesafe project creation
-				msg = "Exception during SourceSafe project creation.";
-			}
-		}
-		else
-		{
-			// not logged into sourcesafe
-			msg = "Not logged in.";
-		}
-	} else msg = "No SourceSafe Database specification found.";
-
-	if( m_sourceControl == SC_NONE )
-	{
-		// TODO: error message
-		AfxMessageBox( ("The project is not under any source control system!\nReason: " + msg).c_str(), MB_ICONEXCLAMATION);
-	}
-
-}
-
-void CCoreXmlFile::openSourceSafeDatabase()
-{
-	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
-
-	if( m_vssUser.size() > 0 || getUserCredentialInfo( 0, false) )
-	{
-		// try to open the sorusafe database
-		COMTHROW( CoCreateInstance(CLSID_VSSDatabase, NULL, CLSCTX_ALL, IID_IVSSDatabase, (void**)&(m_vssDatabase.p) ));
-
-		CComBSTR path  = m_vssDatabaseStr.c_str();
-		CComBSTR user2 = m_vssUser.c_str();
-		CComBSTR pwd2  = m_vssPassword.c_str();
-
-		HRESULT hr = m_vssDatabase->Open( path, user2, pwd2 );
-
-		if( hr == 0 )
-		{
-			m_sourceControl = SC_SOURCESAFE;
-
-			CComObjPtr<IVSSItem> item;
-			CComBSTR path2 = m_vssPath.c_str();
-			COMTHROW( m_vssDatabase->get_VSSItem( path2, false, &(item.p)) );
-
-			CComBSTR localSpec = m_folderPath.c_str();
-			COMTHROW( item->put_LocalSpec(localSpec) );
-		}
-		else
-		{
-			char buf[200];
-			sprintf( buf, "Could not connect to SourceSafe database. Error code: %x (%d). You may lose synchronization with the version controlled project. You won't be able to modify read-only files.", hr, hr );
-			AfxMessageBox( buf, MB_ICONEXCLAMATION );
-			m_sourceControl = SC_NONE;
-		}
-	}
-	else
-	{
-		AfxMessageBox( "You did not log in the SourceSafe database. You may lose synchronization with the version controlled project. You won't be able to modify read-only files.", MB_ICONEXCLAMATION );
-		m_sourceControl = SC_NONE;
-	}
-}
-
-void CCoreXmlFile::getSourceSafePath(XmlObject * obj, std::string& str)
-{
-	ASSERT( m_sourceControl == SC_SOURCESAFE );
-
-	std::string fileName;
-	getContainerFileName( obj, fileName, false );
-
-	str = m_vssPath;
-	str += "\\";
-	str += fileName;
 }
 
 bool CCoreXmlFile::isContainerReadOnly(XmlObject * obj)
@@ -4485,26 +4100,7 @@ bool CCoreXmlFile::isContinerCheckedOut(XmlObject * obj)
 {
 	ASSERT( m_sourceControl != SC_NONE );
 
-	if( isSS())
-	{
-		std::string fullPath;
-		getSourceSafePath( obj, fullPath );
-		CComBSTR fullPath2 = fullPath.c_str();
-
-		CComObjPtr<IVSSItem> item;        
-		long checkOutState;
-		COMTHROW( m_vssDatabase->get_VSSItem( fullPath2, false, &(item.p)) );
-		COMTHROW( item->get_IsCheckedOut(&checkOutState) );
-
-		return checkOutState == VSSFILE_CHECKEDOUT;
-	}
-	else if( isCC())
-	{
-		std::string fileName;
-		getContainerFileName( obj, fileName, true );
-		return isFileCheckedOutCC( fileName.c_str() );
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		// freshly added, test this. 98765
 		std::string fileName;
@@ -4515,137 +4111,11 @@ bool CCoreXmlFile::isContinerCheckedOut(XmlObject * obj)
 	return false;
 }
 
-void CCoreXmlFile::getSSLastCommiter(XmlObject * obj, std::string& user)
-{
-	ASSERT( m_sourceControl == SC_SOURCESAFE );
-	ASSERT( obj->isContainer() );
-	user = "<UnknownUser>";
-
-	// currently does not work, because IVSSVersions is a special collection
-	//char buf[300];
-
-	//std::string fullPath;
-	//getSourceSafePath( obj, fullPath );
-	//CComBSTR fullPath2 = fullPath.c_str();
-
-	//try { // by zolmol
-	//	CComObjPtr<IVSSItem> item;
-	//	COMTHROW( m_vssDatabase->get_VSSItem( fullPath2, false, &(item.p)));
-
-	//	long ver_nmb = -1;
-	//	COMTHROW( item->get_VersionNumber( &ver_nmb));
-
-	//	CComObjPtr<IVSSVersions> vers;
-	//	COMTHROW( item->get_Versions( 0, &(vers.p)));
-
-	//	long cnt = 0;
-	//	if( vers) COMTHROW( vers->get_Count( &cnt));
-	//	if( cnt > 0 && ver_nmb >= 1 && ver_nmb <= cnt)
-	//	{
-	//		CComVariant vv; vv = ver_nmb;
-	//		CComObjPtr<IVSSVersion> ver;
-	//		COMTHROW( item->get_Version( vv, &(ver.p)));
-	//		COMTHROW( vers->get_Item( ver_nmb, &(ver.p)));
-
-	//		CComBSTR nm;
-	//		if( ver) COMTHROW( ver->get_Username( &nm));
-
-	//		sprintf( buf, "%S", nm );
-
-	//		user = buf;
-	//	}
-	//	// else
-	//	{
-	//	}
-	//} catch(hresult_exception&) {
-	//	user = "";
-	//}
-}
-
-void CCoreXmlFile::getSSCurrentOwner(XmlObject * obj, string& user, bool& newfile) // getSSCheckOutUser
-{
-	ASSERT( m_sourceControl == SC_SOURCESAFE );
-	ASSERT( obj->isContainer() );
-
-	char buf[300];
-	newfile = false;
-
-	string fullPath;
-	getSourceSafePath( obj, fullPath );
-	CComBSTR fullPath2 = fullPath.c_str();
-	try { // by zolmol
-		// get_VSSItem() may fail in case a new element has been created recently
-		CComObjPtr<IVSSItem> item;
-		if( S_OK == m_vssDatabase->get_VSSItem( fullPath2, false, &(item.p)))
-		{
-			CComObjPtr<IVSSCheckouts> checkouts;
-			COMTHROW( item->get_Checkouts( &(checkouts.p) ));
-			long checkoutNum;
-			COMTHROW( checkouts->get_Count( &checkoutNum ) );
-			if( checkoutNum > 0 )
-			{
-				CComObjPtr<IVSSCheckout> checkout;
-				VARIANT index;
-				index.vt = VT_INT;
-				index.intVal = 1;
-				COMTHROW( checkouts->get_Item(index, &(checkout.p)));
-
-				CComBSTR userName;
-				COMTHROW( checkout->get_Username( &userName ));
-
-				string name, type;
-				getContainerName( obj, name, type );
-
-				sprintf( buf, "%S", userName );
-
-				user = buf;
-			}
-			else
-			{
-				// not checked out
-				user = "";
-			}
-		}
-		else // by zolmol
-		{
-			// new element not yet saved 
-			//ATLASSERT(( "New element not yet saved, thus not found in VSS", 0));
-			user = ""; // as if not checked out
-			newfile = true;
-		}
-	} catch(hresult_exception&) { // by zolmol
-		// new element not yet saved 
-		//ATLASSERT(( "New element not yet saved, thus not found in VSS", 0));
-		user = ""; // as if not checked out
-		newfile = true;
-	}
-}
-
 void CCoreXmlFile::checkOutContainer(XmlObject * obj)
 {
 	ASSERT( m_sourceControl != SC_NONE );
 
-	if( isSS())
-	{
-		std::string fullPath;
-		getSourceSafePath( obj, fullPath );
-		CComBSTR fullPath2 = fullPath.c_str();
-
-		CComObjPtr<IVSSItem> item;
-		COMTHROW( m_vssDatabase->get_VSSItem( fullPath2, false, &(item.p)) );
-		//COMTHROW( item->Checkout( L"", NULL, VSSFLAG_TIMEMOD ) ); // previously was NULL // VSSFLAG_TIMEMOD, VSSFLAG_TIMENOW (default), or VSSFLAG_TIMEUPD
-		std::string fileName;
-		getContainerFileName( obj, fileName);
-		CComBSTR loca = fileName.c_str();
-		COMTHROW( item->Checkout( L"", loca, VSSFLAG_TIMEMOD ) ); // previously was NULL // VSSFLAG_TIMEMOD, VSSFLAG_TIMENOW (default), or VSSFLAG_TIMEUPD
-	}
-	else if( isCC())
-	{
-		std::string fileName;
-		getContainerFileName( obj, fileName, true );
-		checkOutFileCC( fileName.c_str() );
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		std::string file_name;
 		getContainerFileName( obj, file_name, true);
@@ -4662,22 +4132,7 @@ void CCoreXmlFile::rollBackTheCheckOutContainer(XmlObject * obj)
 
 	try
 	{
-		if( isSS())
-		{
-			std::string fullPath;
-			getSourceSafePath( obj, fullPath );
-			CComBSTR fullPath2 = fullPath.c_str();
-
-			CComObjPtr<IVSSItem> item;
-			COMTHROW( m_vssDatabase->get_VSSItem( fullPath2, false, &(item.p)) );
-			CComBSTR loca = fileName.c_str();
-			COMTHROW( item->UndoCheckout( loca, 0));
-		}
-		else if( isCC())
-		{
-			checkInFileCC( fileName.c_str() );
-		}
-		else if( isSV())
+		if( isSV())
 		{
 			bool sc = removeLockSVN( fileName);
 			if( !sc) HR_THROW( E_FAIL);
@@ -4696,33 +4151,7 @@ void CCoreXmlFile::addToSourceControl(XmlObject * container, bool p_fileExisted)
 	std::string fileName;
 	getContainerFileName(container, fileName);
 
-	if( isSS())
-	{
-		// get project item
-		CComObjPtr<IVSSItem> projectItem;
-		CComBSTR path;
-		if( m_hashFileNames && ( m_hashVal == 2 || m_hashVal == 5))
-			path = (m_vssPath + fileName.substr( m_folderPath.size(), fileName.size() - m_folderPath.size() - strlen("\\ce21dcacd8dced44896c385d004c6fa4.xml"))).c_str();
-		else
-			path = m_vssPath.c_str();
-
-		COMTHROW( m_vssDatabase->get_VSSItem( path, false, &(projectItem.p)) );
-
-		// add to source control projecct
-		CComObjPtr<IVSSItem> item;
-		CComBSTR fileName2 = fileName.c_str();
-		if( projectItem->Add( fileName2, NULL, 0, &(item.p)) == 0 )
-		{
-			// check it out
-			checkOutContainer( container );
-		}
-	}
-	else if( isCC())
-	{
-		// parent folder must be checked out
-		addFileToCC( fileName.c_str() );
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		bool sc_add = true;
 		bool sc_pro = true;
@@ -4741,7 +4170,7 @@ void CCoreXmlFile::addToSourceControl(XmlObject * container, bool p_fileExisted)
 			if(      !sc_add) sendMsg( "Could not add file " + fileName, MSG_ERROR);
 			else if( !sc_pro) sendMsg( "Could not set lockable property for " + fileName, MSG_ERROR);
 			else if( !sc_com) sendMsg( "Could not commit file " + fileName, MSG_ERROR);
-			throw hresult_exception( -1);
+			throw hresult_exception(E_FAIL);
 		}
 	}
 }
@@ -4780,37 +4209,8 @@ void PublicStorage::init( const std::string& p_initialContent)
 		return;
 	}
 
-	if( isSS())
-		// setting m_vssItem
-		m_parent->getFileHandleSS( m_fileName, m_vssItem);
-	else if( isCC())
-		// setting m_ccsItem
+	if( isSV())
 		m_ccsItem = m_localFileName.c_str(); // ok, as long as m_localFileName doesn't change
-	else if( isSV())
-		m_ccsItem = m_localFileName.c_str(); // same as above
-}
-
-void PublicStorage::acquireSS( CComObjPtr<IVSSItem>& obj)
-{
-	long co_stat;
-	COMTHROW( obj->get_IsCheckedOut( &co_stat));
-	if( co_stat != VSSFILE_CHECKEDOUT_ME)
-		COMTHROW( obj->Checkout( L"", 0, VSSFLAG_TIMEMOD));
-}
-
-void PublicStorage::releaseSS( CComObjPtr<IVSSItem>& obj)
-{
-	COMTHROW( obj->Checkin( L"", 0, 0));
-}
-
-void PublicStorage::acquireCC( const char * obj)
-{
-	m_parent->checkOutFileCC( obj);
-}
-
-void PublicStorage::releaseCC( const char * obj)
-{
-	m_parent->checkInFileCC( obj);
 }
 
 void PublicStorage::acquireSVN( const char * obj)
@@ -4842,15 +4242,7 @@ void PublicStorage::releaseSVN( const char * obj)
 
 void PublicStorage::acquireFile()
 {
-	if( isSS())
-	{
-		acquireSS( m_vssItem);
-	}
-	else if( isCC())
-	{
-		acquireCC( m_ccsItem);
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		acquireSVN( m_ccsItem);
 	}
@@ -4858,23 +4250,13 @@ void PublicStorage::acquireFile()
 
 void PublicStorage::releaseFile()
 {
-	if( isSS())
-	{
-		releaseSS( m_vssItem);
-	}
-	else if( isCC())
-	{
-		releaseCC( m_ccsItem);
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		releaseSVN( m_ccsItem);
 	}
 }
 
 std::string PublicStorage::userName() { return m_parent->userName(); }
-bool        PublicStorage::isSS()     { return m_parent->isSS();     }
-bool        PublicStorage::isCC()     { return m_parent->isCC();     }
 bool        PublicStorage::isSV()     { return m_parent->isSV();     }
 
 
@@ -4894,18 +4276,7 @@ void SignManager::setParent( CCoreXmlFile* p_parent)
 
 bool SignManager::anybodyElseHolding()
 {
-	if( isSS())
-	{
-		long checkOutState = VSSFILE_CHECKEDOUT;
-		COMTHROW( m_vssItem->get_IsCheckedOut(&checkOutState));
-		return checkOutState == VSSFILE_CHECKEDOUT; // checked out by somebody else
-	}
-	else if( isCC())
-	{
-		int checkOutState = m_parent->getCheckOutStateCC( m_ccsItem);
-		return checkOutState == CCoreXmlFile::CS_OTHER_USER; // checked out by somebody else
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		return m_parent->isCheckedOutByElseSVN( m_ccsItem);
 	}
@@ -4917,7 +4288,7 @@ void SignManager::in_or_off( bool in)
 	const char * msg_in = "Could not sign in yet. Press OK to try again.";
 	const char * msg_out= "Could not sign out yet. Press OK to try again.";
 
-	if( !isSS() && !isCC() && !isSV()) return;
+	if(!isSV()) return;
 	try
 	{
 		bool lost_patience          = false; // once this will turn true further attempts will cease
@@ -5016,30 +4387,26 @@ void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 	{
 		doc = 0;
 
-		char* e_msg = XMLString::transcode( e.getMessage());
+		smart_Ch e_msg = XMLString::transcode( e.getMessage());
 		m_parent->sendMsg( (std::string( "XMLException during parsing. Message: ") + e_msg).c_str(), MSG_ERROR);
-
-		XMLString::release( &e_msg);
 	}
 	catch (const DOMException& e) 
 	{
 		doc = 0;
 
-		char*              e_msg    = 0;
 		const unsigned int maxChars = 2047;
 		XMLCh              errText[maxChars + 1];
 
 		if( DOMImplementation::loadDOMExceptionMsg( e.code, errText, maxChars))
 		{
-			e_msg = XMLString::transcode( errText);
+			smart_Ch e_msg = XMLString::transcode( errText);
 			m_parent->sendMsg( (std::string( "DOMException during parsing. Message: ") + e_msg).c_str(), MSG_ERROR);
 		}
 		else
 		{
-			e_msg = XMLString::transcode( e.getMessage());
+			smart_Ch e_msg = XMLString::transcode( e.getMessage());
 			m_parent->sendMsg( (std::string( "DOMException during parsing. Message: ") + e_msg).c_str(), MSG_ERROR);
 		}
-		XMLString::release( &e_msg);
 	}
 	catch (...) {
 
@@ -5072,21 +4439,21 @@ void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 			HR_THROW(E_FILEOPEN);
 		}
 
-		XMLCh * x_users = XMLString::transcode( ParserLiterals::Signer::users);
+		smart_XMLCh x_users = XMLString::transcode( ParserLiterals::Signer::users);
 		ASSERT( XMLString::equals( x_users, doc_e->getTagName()));
 
-		XMLCh* x_user = XMLString::transcode( ParserLiterals::Signer::user);
+		smart_XMLCh x_user = XMLString::transcode( ParserLiterals::Signer::user);
 
 		DOMNodeList *uss = doc_e->getElementsByTagName( x_user);
 
-		XMLCh* x_name = XMLString::transcode( ParserLiterals::Signer::name);
-		XMLCh* x_since= XMLString::transcode( ParserLiterals::Signer::since);
-		XMLCh* x_until= XMLString::transcode( ParserLiterals::Signer::until);
-		XMLCh* x_empty= XMLString::transcode( ParserLiterals::empty);
-		XMLCh* x_newln= XMLString::transcode( ParserLiterals::newln);
+		smart_XMLCh x_name = XMLString::transcode( ParserLiterals::Signer::name);
+		smart_XMLCh x_since= XMLString::transcode( ParserLiterals::Signer::since);
+		smart_XMLCh x_until= XMLString::transcode( ParserLiterals::Signer::until);
+		smart_XMLCh x_empty= XMLString::transcode( ParserLiterals::empty);
+		smart_XMLCh x_newln= XMLString::transcode( ParserLiterals::newln);
 
-		XMLCh* x_time = XMLString::transcode( (LPCTSTR) p_entry.m_time.Format( _T("[%Y-%m-%d %H:%M:%S]")));
-		XMLCh* x_username = XMLString::transcode( p_entry.m_username.c_str());
+		smart_XMLCh x_time = XMLString::transcode( (LPCTSTR) p_entry.m_time.Format( _T("[%Y-%m-%d %H:%M:%S]")));
+		smart_XMLCh x_username = XMLString::transcode( p_entry.m_username.c_str());
 
 		bool found_already = false;
 		int len = (int) uss->getLength();
@@ -5095,7 +4462,7 @@ void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 			DOMNode * node = uss->item(i);
 			DOMElement* us = (DOMElement*) node; // user
 
-			char * name = XMLString::transcode( us->getAttribute( x_name));
+			smart_Ch name = XMLString::transcode( us->getAttribute( x_name));
 
 			if( 0 == stricmp( name, p_entry.m_username.c_str())) // user info found
 			{
@@ -5124,8 +4491,6 @@ void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 					found_already = true;
 				}
 			}
-
-			XMLString::release( &name);
 		}
 
 		// if this is the first time the user logs in (entry not found yet):
@@ -5147,16 +4512,6 @@ void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 			doc_e->appendChild( ntxt);
 		}
 
-		XMLString::release( &x_users);
-		XMLString::release( &x_user);
-		XMLString::release( &x_name);
-		XMLString::release( &x_since);
-		XMLString::release( &x_until);
-		XMLString::release( &x_empty);
-		XMLString::release( &x_newln);
-
-		XMLString::release( &x_time);
-		XMLString::release( &x_username);
 	}
 	catch(...)
 	{
@@ -5170,11 +4525,10 @@ void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 	// do a DOM save as follows:
 	try
 	{
-		XMLCh* x_filenm = XMLString::transcode( m_localFileName.c_str());
+		smart_XMLCh x_filenm = XMLString::transcode( m_localFileName.c_str());
 		XMLFormatTarget* outfile = new LocalFileFormatTarget( x_filenm);
 		DOMLSOutput* theOutput = domimpl->createLSOutput();
 		theOutput->setByteStream(outfile);
-		XMLString::release( &x_filenm);
 
 		DOMLSSerializer* writer = domimpl->createLSSerializer();
 		if( writer && writer->getDomConfig()->canSetParameter( XMLUni::fgDOMXMLDeclaration, false))
@@ -5227,14 +4581,13 @@ SignManager::SignFileDataVec SignManager::getUserData()
 			HR_THROW(E_FILEOPEN);
 		}
 
-		XMLCh* x_users = XMLString::transcode( ParserLiterals::Signer::users);
+		smart_XMLCh x_users = XMLString::transcode( ParserLiterals::Signer::users);
 		ASSERT( XMLString::equals( x_users, doc_e->getTagName()));
-		XMLString::release( &x_users);
 
-		XMLCh* x_user = XMLString::transcode( ParserLiterals::Signer::user);
-		XMLCh* x_name = XMLString::transcode( ParserLiterals::Signer::name);
-		XMLCh* x_since= XMLString::transcode( ParserLiterals::Signer::since);
-		XMLCh* x_until= XMLString::transcode( ParserLiterals::Signer::until);
+		smart_XMLCh x_user = XMLString::transcode( ParserLiterals::Signer::user);
+		smart_XMLCh x_name = XMLString::transcode( ParserLiterals::Signer::name);
+		smart_XMLCh x_since= XMLString::transcode( ParserLiterals::Signer::since);
+		smart_XMLCh x_until= XMLString::transcode( ParserLiterals::Signer::until);
 
 		DOMNodeList *uss = doc_e->getElementsByTagName( x_user);
 
@@ -5243,23 +4596,15 @@ SignManager::SignFileDataVec SignManager::getUserData()
 			DOMNode * node = uss->item(i);
 			DOMElement* us = (DOMElement*) node; // user
 
-			char * name = XMLString::transcode( us->getAttribute( x_name));
-			char * since= XMLString::transcode( us->getAttribute( x_since));
-			char * until= XMLString::transcode( us->getAttribute( x_until));
+			smart_Ch name = XMLString::transcode( us->getAttribute( x_name));
+			smart_Ch since= XMLString::transcode( us->getAttribute( x_since));
+			smart_Ch until= XMLString::transcode( us->getAttribute( x_until));
 
-			SignFileData data( name, since, until);
+			SignFileData data = SignFileData(std::string(name), std::string(since), std::string(until));
 			if( std::find( res.begin(), res.end(), data) == res.end()) // not found
 				res.push_back( data);
 
-			XMLString::release( &name);
-			XMLString::release( &since);
-			XMLString::release( &until);
 		}
-
-		XMLString::release( &x_user);
-		XMLString::release( &x_name);
-		XMLString::release( &x_since);
-		XMLString::release( &x_until);
 
 		// delete the parser object
 		delete parser;
@@ -5295,7 +4640,7 @@ void ProtectList::onLoad()
 {
 	ASSERT( m_parent);
 	if( !m_parent) return;
-	if( !isSS() && !isCC() && !isSV()) return;
+	if(!isSV()) return;
 
 	try
 	{
@@ -5312,13 +4657,13 @@ void ProtectList::onLoad()
 
 void ProtectList::onAborted()
 {
-	if( !isSS() && !isCC() && !isSV()) return;
+	if(!isSV()) return;
 	clearProtList();
 }
 
 void ProtectList::onCommited()
 {
-	if( !isSS() && !isCC() && !isSV()) return;
+	if(!isSV()) return;
 	if( !needed()) return;
 
 	try {
@@ -5338,7 +4683,7 @@ void ProtectList::onCommited()
 
 void ProtectList::addEntry( const ProtectEntry& p_pe)
 {
-	if( !isSS() && !isCC() && !isSV()) return;
+	if(!isSV()) return;
 
 	m_list.push_back( p_pe);
 }
@@ -5402,11 +4747,11 @@ void ProtectList::writeProtList()
 			HR_THROW(E_FILEOPEN);
 		}
 
-		XMLCh* ITEM_xiteral = XMLString::transcode( ParserLiterals::Protector::item);
-		XMLCh* WHEN_xiteral = XMLString::transcode( ParserLiterals::Protector::when);
-		XMLCh* OPER_xiteral = XMLString::transcode( ParserLiterals::Protector::oper);
-		XMLCh* GUID_xiteral = XMLString::transcode( ParserLiterals::Protector::gd);
-		XMLCh* OBJS_xiteral = XMLString::transcode( ParserLiterals::Protector::objects);
+		smart_XMLCh ITEM_xiteral = XMLString::transcode( ParserLiterals::Protector::item);
+		smart_XMLCh WHEN_xiteral = XMLString::transcode( ParserLiterals::Protector::when);
+		smart_XMLCh OPER_xiteral = XMLString::transcode( ParserLiterals::Protector::oper);
+		smart_XMLCh GUID_xiteral = XMLString::transcode( ParserLiterals::Protector::gd);
+		smart_XMLCh OBJS_xiteral = XMLString::transcode( ParserLiterals::Protector::objects);
 
 		ASSERT( XMLString::equals( OBJS_xiteral, doc_e->getTagName()));
 
@@ -5418,10 +4763,10 @@ void ProtectList::writeProtList()
 			string gd;
 			guid2str( m_list[i].m_guid, gd );
 
-			XMLCh* val_gd = XMLString::transcode( gd.c_str());
-			XMLCh* val_tm = XMLString::transcode( (LPCTSTR) m_list[i].m_time.Format( _T("[%Y-%m-%d %H:%M:%S]")));
-			XMLCh* val_op = XMLString::transcode( OpCodeStr[ m_list[i].m_op]);
-			XMLCh* x_newln= XMLString::transcode( "\n");
+			smart_XMLCh val_gd = XMLString::transcode( gd.c_str());
+			smart_XMLCh val_tm = XMLString::transcode( (LPCTSTR) m_list[i].m_time.Format( _T("[%Y-%m-%d %H:%M:%S]")));
+			smart_XMLCh val_op = XMLString::transcode( OpCodeStr[ m_list[i].m_op]);
+			smart_XMLCh x_newln= XMLString::transcode( "\n");
 
 			DOMElement *nch = doc->createElement( ITEM_xiteral);
 			nch->setAttribute( GUID_xiteral, val_gd);
@@ -5432,15 +4777,10 @@ void ProtectList::writeProtList()
 
 			DOMText* ntxt = doc->createTextNode( x_newln); // as fprintf(f, "\n");
 			doc_e->appendChild( ntxt);
-
-			XMLString::release( &val_gd);
-			XMLString::release( &val_tm);
-			XMLString::release( &val_op);
-			XMLString::release( &x_newln);
 		}
 
 		//do a DOM save as follows:
-		XMLCh* x_fname = XMLString::transcode( m_localFileName.c_str());
+		smart_XMLCh x_fname = XMLString::transcode( m_localFileName.c_str());
 		XMLFormatTarget* outfile = new LocalFileFormatTarget( x_fname);
 		DOMLSOutput* theOutput = domimpl->createLSOutput();
 		theOutput->setByteStream(outfile);
@@ -5456,13 +4796,6 @@ void ProtectList::writeProtList()
 		doc->normalizeDocument();
 
 		writer->write(doc, theOutput);
-
-		XMLString::release( &x_fname);
-		XMLString::release( &ITEM_xiteral);
-		XMLString::release( &WHEN_xiteral);
-		XMLString::release( &OPER_xiteral);
-		XMLString::release( &GUID_xiteral);
-		XMLString::release( &OBJS_xiteral);
 
 		delete outfile;
 		delete writer;
@@ -5507,10 +4840,10 @@ void ProtectList::purgeProtList( CTime& p_lastSyncTime)
 			HR_THROW(E_FILEOPEN);
 		}
 
-		XMLCh* ITEM_xiteral = XMLString::transcode( ParserLiterals::Protector::item);
-		XMLCh* WHEN_xiteral = XMLString::transcode( ParserLiterals::Protector::when);
-		XMLCh* OBJS_xiteral = XMLString::transcode( ParserLiterals::Protector::objects);
-		XMLCh* x_newline    = XMLString::transcode( ParserLiterals::newln);
+		smart_XMLCh ITEM_xiteral = XMLString::transcode( ParserLiterals::Protector::item);
+		smart_XMLCh WHEN_xiteral = XMLString::transcode( ParserLiterals::Protector::when);
+		smart_XMLCh OBJS_xiteral = XMLString::transcode( ParserLiterals::Protector::objects);
+		smart_XMLCh x_newline    = XMLString::transcode( ParserLiterals::newln);
 
 		ASSERT( XMLString::equals( OBJS_xiteral, doc_e->getTagName()));
 
@@ -5526,7 +4859,7 @@ void ProtectList::purgeProtList( CTime& p_lastSyncTime)
 
 			outdated = false;
 
-			char * when = XMLString::transcode( us->getAttribute( WHEN_xiteral));
+			smart_Ch when = XMLString::transcode( us->getAttribute( WHEN_xiteral));
 
 			int y(-1), M(-1), d(-1), h(-1), m(-1), s(-1);
 			if( 6 == sscanf( when, "[%u-%u-%u %u:%u:%u]", &y, &M, &d, &h, &m, &s))
@@ -5538,8 +4871,6 @@ void ProtectList::purgeProtList( CTime& p_lastSyncTime)
 					doc_e->removeChild( node); // because of this we loop --i
 				}
 			}
-
-			XMLString::release( &when);
 		}
 
 		doc->normalizeDocument();
@@ -5560,9 +4891,8 @@ void ProtectList::purgeProtList( CTime& p_lastSyncTime)
 			{
 				DOMText * txt  = (DOMText*) node;
 
-				char* nlines = XMLString::transcode( txt->getData());
+				smart_Ch nlines = XMLString::transcode( txt->getData());
 				std::string newlines( nlines);
-				XMLString::release( &nlines);
 
 				if( newlines.size() > 1 && std::string::npos == newlines.find_first_not_of( '\n')) // nothing else just '\n' characters
 				{
@@ -5572,7 +4902,7 @@ void ProtectList::purgeProtList( CTime& p_lastSyncTime)
 		}
 
 		//do a DOM save as follows:
-		XMLCh* x_fname = XMLString::transcode( m_localFileName.c_str());
+		smart_XMLCh x_fname = XMLString::transcode( m_localFileName.c_str());
 		XMLFormatTarget* outfile = new LocalFileFormatTarget( x_fname);
 
 		DOMLSOutput* theOutput = domimpl->createLSOutput();
@@ -5598,12 +4928,6 @@ void ProtectList::purgeProtList( CTime& p_lastSyncTime)
 
 		// delete the parser object
 		delete parser;
-
-		XMLString::release( &x_fname);
-		XMLString::release( &x_newline);
-		XMLString::release( &ITEM_xiteral);
-		XMLString::release( &WHEN_xiteral);
-		XMLString::release( &OBJS_xiteral);
 	}
 	catch(...)
 	{
@@ -5625,7 +4949,7 @@ void CCoreXmlFile::protect( XmlObject * obj, OpCode oc)
 
 bool CCoreXmlFile::findOnProtectedLists( GUID p_gd, std::string& p_scapegoatUser)
 {
-	if( !isSS() && !isCC() && !isSV()) return false;
+	if(!isSV()) return false;
 
 	std::string str_gd; guid2str( p_gd, str_gd);
 
@@ -5664,23 +4988,12 @@ bool CCoreXmlFile::refreshSignFile()
 void CCoreXmlFile::replaceUserName( const std::string& p_userName)
 {
 	m_vssUser = p_userName;
-	m_comSvn->ReplaceUserName( CComBSTR( m_vssUser.c_str()));
+	m_svn->replaceUserName(p_userName);
 }
 
 std::string CCoreXmlFile::userName()
 {
-	if( isSS())
-		return m_vssUser;
-	else if( isCC())
-	{
-		// get windows (and clearcase) username
-		char user_name[200];
-		unsigned long user_name_sz = 200;
-		GetUserName( user_name, &user_name_sz );
-
-		return user_name;
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		return m_vssUser;
 	}
@@ -5688,8 +5001,6 @@ std::string CCoreXmlFile::userName()
 		return "";
 }
 
-bool CCoreXmlFile::isSS() { return m_sourceControl == CCoreXmlFile::SC_SOURCESAFE; }
-bool CCoreXmlFile::isCC() { return m_sourceControl == CCoreXmlFile::SC_CLEARCASE; }
 bool CCoreXmlFile::isSV() { return m_sourceControl == CCoreXmlFile::SC_SUBVERSION; }
 
 bool CCoreXmlFile::userFilter( CTimeSpan& p_elapsed)
@@ -5773,26 +5084,7 @@ void CCoreXmlFile::refreshSessionFolder()
 /*
 bool CCoreXmlFile::refreshOneFile( const std::string& p_fname)
 {
-	if( isSS())
-	{
-		CComPtr<IVSSItem> one_file;
-		if( S_OK != m_vssDatabase->get_VSSItem( CComBSTR( (m_vssPath + "\\" + p_fname).c_str()) , false, &(one_file.p))
-			|| one_file == 0)
-		{
-			// handle error case
-			return false;
-		}
-
-		ASSERT( one_file);
-		return S_OK == one_file->Get( 0, VSSFLAG_TIMEMOD);
-	}
-	else if( isCC())
-	{
-		// get latest 
-		//getLatestCC();
-		return false;
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		updateSVN( p_fname);
 	}
@@ -5850,27 +5142,7 @@ bool CCoreXmlFile::makeSureFileExistsInVerSys( const std::string& p_fname, const
 
 	try
 	{
-		if( isSS())
-		{
-			CComObjPtr<IVSSItem> it;
-			found = S_OK == m_vssDatabase->get_VSSItem( CComBSTR( (m_vssPath + "\\" + p_fname).c_str()) , false, &(it.p));
-		}
-		else if( isCC())
-		{
-			try {
-				bool ischdout = isFileCheckedOutCC( fulllocalfname.c_str());
-				if( ischdout)
-				{
-					int l = 0;
-					++l;
-				}
-				checkOutFileCC( fulllocalfname.c_str());
-				found = true;
-			} catch(...) {
-				found = false;
-			}
-		}
-		else if( isSV())
+		if( isSV())
 		{
 			found = FileHelp::fileExist( fulllocalfname) && isVersionedInSVN( fulllocalfname);
 		}
@@ -5878,28 +5150,13 @@ bool CCoreXmlFile::makeSureFileExistsInVerSys( const std::string& p_fname, const
 		if( !found)
 		{
 			FILE * f = fopen( fulllocalfname.c_str(), "w");
-			if( !f) throw hresult_exception( -1);
+			if( !f) throw hresult_exception(E_FAIL);
 
 			fprintf( f, "%s", p_initialcontent.c_str());
 			fclose( f);
 
 			// add newly created file
-			if( isSS())
-			{
-				// acquire project handle
-				CComObjPtr<IVSSItem> projectItem;
-				COMTHROW( m_vssDatabase->get_VSSItem( CComBSTR( m_vssPath.c_str()), false, &(projectItem.p)) );
-
-				// add a new element to the VSS
-				CComObjPtr<IVSSItem> it;
-				COMTHROW( projectItem->Add( CComBSTR( fulllocalfname.c_str()), L"", 0, &(it.p)));
-			}
-			else if( isCC())
-			{
-				checkOutFileCC( m_folderPath.c_str() ); // this is needed when adding new files, but is it's status somehow already checked out?
-				addFileToCC( fulllocalfname.c_str());
-			}
-			else if( isSV())
+			if( isSV())
 			{
 				//bool ok = isVersionedInSVN( fulllocalfname);
 				bool sc_add = true;
@@ -5915,7 +5172,7 @@ bool CCoreXmlFile::makeSureFileExistsInVerSys( const std::string& p_fname, const
 					if(      !sc_add) sendMsg( "Could not add file " + fulllocalfname, MSG_ERROR);
 					else if( !sc_pro) sendMsg( "Could not apply lockable property for file " + fulllocalfname, MSG_ERROR);
 					else if( !sc_com) sendMsg( "Could not commit file " + fulllocalfname, MSG_ERROR);
-					throw hresult_exception( -1);
+					throw hresult_exception(E_FAIL);
 				}
 			}
 
@@ -5932,57 +5189,15 @@ bool CCoreXmlFile::makeSureFileExistsInVerSys( const std::string& p_fname, const
 	return found;
 }
 
-bool CCoreXmlFile::getFileHandleSS( const std::string& p_fname, CComObjPtr<IVSSItem>& result_ptr)
-{
-	try
-	{
-		if( isSS())
-		{
-			COMTHROW( m_vssDatabase->get_VSSItem( CComBSTR( (m_vssPath + "\\" + p_fname).c_str()) , false, &(result_ptr.p)));
-		}
-	}
-	catch( hresult_exception& e)
-	{
-		char buff[200]; sprintf( buff, "Could not get file from source control. Exception code: 0x%x", e.hr);
-		sendMsg( buff, MSG_ERROR);
-		AfxMessageBox( buff);
-		return false;
-	}
-	return true;
-}
-
 void CCoreXmlFile::getLatestVersion()
 {
-	try
+	if( isSV())
 	{
-		if( isSS())
-		{
-			CComObjPtr<IVSSItem> projectItem;
-			CComBSTR path = m_vssPath.c_str();
-			COMTHROW( m_vssDatabase->get_VSSItem( path, false, &(projectItem.p)) );
-			//COMTHROW( projectItem->Get( NULL, VSSFLAG_TIMEMOD ) ); // previously was 0 // VSSFLAG_TIMEMOD, VSSFLAG_TIMENOW (default), or VSSFLAG_TIMEUPD
-			CComBSTR loca = m_folderPath.c_str();
-			COMTHROW( projectItem->Get( &loca, VSSFLAG_TIMEMOD ) ); // previously was 0 // VSSFLAG_TIMEMOD, VSSFLAG_TIMENOW (default), or VSSFLAG_TIMEUPD
+		bool succ = m_svn->getLatest(m_folderPath);
+		if (!succ) {
+			AfxMessageBox( "Could not get latest version from server!");
+			HR_THROW( E_UNKNOWN_STORAGE); // furthermore will be silently handled
 		}
-		else if( isCC())
-		{
-			// if we use dynamic views we do not need it
-			//getLatestVerCC( m_folderPath.c_str() );
-		}
-		else if( isSV())
-		{
-	//		//getLatestSVN( m_folderPath);
-			if( m_svnByAPI) {
-				//m_svn->getLatest( m_folderPath);
-				COMTHROW( m_comSvn->GetLatest( CComBSTR( m_folderPath.c_str())));
-			}
-			else          m_cmdSvn->getLatest( m_folderPath);
-		}
-	}
-	catch( hresult_exception& )
-	{
-		AfxMessageBox( "Could not get latest version from server!");
-		HR_THROW( E_UNKNOWN_STORAGE); // furthermore will be silently handled
 	}
 }
 
@@ -6003,94 +5218,7 @@ void CCoreXmlFile::checkInAll()
 
 void CCoreXmlFile::checkInAll( bool keepCheckedOut )
 {
-
-	if( isSS())
-	{
-		// source safe
-		CComObjPtr<IVSSItem> projectItem;
-		CComBSTR path = m_vssPath.c_str();
-		COMTHROW( m_vssDatabase->get_VSSItem( path, false, &(projectItem.p)) );
-		if( keepCheckedOut )
-			COMTHROW( projectItem->Checkin( NULL, NULL, VSSFLAG_KEEPYES ) );
-		else
-			COMTHROW( projectItem->Checkin( NULL, NULL, 0 ) );
-	}
-	else if( isCC())
-	{
-		// clear case
-
-		//// get windows (and clearcase) username
-		//char userName[200];
-		//unsigned long userNameSize = 200;
-		//GetUserName( userName, &userNameSize );
-
-		// get list of checked out files
-		CComObjPtr<ICCCheckedOutFileQuery> checkedOutFileQuery;
-
-		COMTHROW( m_clearCase->CreateCheckedOutFileQuery( PutOut(checkedOutFileQuery) ));
-
-		VARIANT v;
-		v.vt = VT_ARRAY | VT_BSTR;
-		SAFEARRAYBOUND rgsabound[1];  //Denotes number of dimensions
-		rgsabound[0].lLbound   = 0;
-		rgsabound[0].cElements = 1;
-		v.parray = SafeArrayCreate(VT_VARIANT, 1, rgsabound);
-		long count = 0;
-
-		CComVariant name = m_folderPath.c_str();
-		COMTHROW( SafeArrayPutElement(v.parray, &count, (void *) &name) );
-
-		// get list of checked out files
-		CComBSTR user = userName().c_str();
-		COMTHROW( checkedOutFileQuery->put_PathArray( v ) );
-		COMTHROW( checkedOutFileQuery->put_User(user) );
-		CComObjPtr<ICCCheckedOutFiles> files;
-		COMTHROW( checkedOutFileQuery->Apply( PutOut(files) ));
-
-		// checkin files
-		long fileCount;
-		COMTHROW( files->get_Count( &fileCount ) );
-		for( int i=0; i<fileCount; ++i )
-		{
-			CComObjPtr<ICCVersion>    version;
-			CComBSTR                  comment = "";
-
-			CComObjPtr<ICCCheckedOutFile> checkedOutFile;
-			COMTHROW( files->get_Item( i+1, PutOut(checkedOutFile) ) );
-			checkedOutFile->CheckIn( comment, 1, comment, ccKeep, PutOut(version) );
-
-			CComBSTR path;
-			checkedOutFile->get_Path(&path);
-			char buf[MAX_PATH];
-			sprintf(buf, "%S", path);
-
-			// check out if keepcheck out is true
-			if( keepCheckedOut )
-			{            
-				checkOutFileCC(buf);
-			}
-
-			// sync time 
-			if( strlen(buf) >= m_folderPath.length() + 1 && strncmp( buf, m_folderPath.c_str(), m_folderPath.length()) == 0)
-			{
-				std::string str_gd;
-				str_gd = &buf[ m_folderPath.length() + 1]; // 1 for the '\'
-				int pos = str_gd.rfind( ".xml");
-				if( pos != std::string::npos)
-				{
-					str_gd = str_gd.substr( 0, pos);
-					GUID gd = str2guid( str_gd.c_str());
-
-					GUIDToXmlObjectMapIter it2 = m_objectsByGUID.find( gd );
-					if( it2 != m_objectsByGUID.end() )
-					{
-						timeSync( buf, it2->second );
-					}
-				}
-			}
-		}
-	}
-	else if( isSV())
+	if( isSV())
 	{// sometimes there is nothing to commit here, let's try for a while to not execute this
 		// if keepCheckedOut => use --no-unlock: won't unlock the targets
 		//bool sc_com = commitSVN( m_folderPath, true, keepCheckedOut);
@@ -6113,251 +5241,6 @@ void CCoreXmlFile::checkInAll( bool keepCheckedOut )
 			}
 		}
 	}
-}
-
-bool CCoreXmlFile::createClearCaseApp()
-{
-	try
-	{
-		if( m_clearCase.p == NULL )
-		{
-			COMTHROW( m_clearCase.CoCreateInstance( CLSID_Application ) );
-			COMTHROW( m_clearTool.CoCreateInstance( CLSID_ClearTool ) );
-		}
-		return true;
-	}
-	catch(...)
-	{
-		//AfxMessageBox( "Cannot connect to ClearCase. Check the ClearCase installation!" );
-		return false;
-	}
-}
-
-void CCoreXmlFile::createClearCaseProj()
-{
-	m_sourceControl = SC_CLEARCASE;
-
-	// check if the folder under ClearCase source control
-	bool is_app = createClearCaseApp();
-	if( !is_app) {
-		// since the user intends to create a ClearCase project we must notify that: 
-		AfxMessageBox( "Cannot connect to ClearCase. Check the ClearCase installation!", MB_ICONSTOP);
-		HR_THROW( E_FILEOPEN);
-	}
-
-	bool is_under_cc = isPathUnderClearCase( m_parentFolderPath.c_str());
-	if( !is_under_cc) {
-		AfxMessageBox( "This given project folder is not under ClearCase source control!" );
-		HR_THROW( E_FILEOPEN);
-	}
-
-	try {
-		// create and add project folder to source control
-		checkOutFileCC( m_parentFolderPath.c_str() );   // maybe this not needed if we keep it checked out
-		addDirToCC( m_folderPath.c_str() );
-	} catch(...) {
-		AfxMessageBox("ClearCase error! Cannot add project to ClearCase. Errocode=1");
-		throw;
-	}
-
-	if( m_hashFileNames)
-	{
-		try {
-			// create contents folder
-			addDirToCC( m_contentPath.c_str());
-			checkOutFileCC( m_contentPath.c_str());
-
-			// create hashed folders
-			DirSupplier     ds( m_hashFileNames, m_hashVal);
-			if( m_hashVal == 2)
-			{
-				for( Dir256Iterator it = ds.begin256(); it != ds.end256(); ++it)
-					addDirToCC( (m_contentPath + "\\" + *it).c_str());
-			}
-			else if( m_hashVal == 5)
-			{
-				for( Dir16Iterator it = ds.begin16(); it != ds.end16(); ++it)
-				{
-					addDirToCC( (m_contentPath + "\\" + *it).c_str());
-					checkOutFileCC( (m_contentPath + "\\" + *it).c_str());
-
-					for( Dir256Iterator jt = ds.begin256(); jt != ds.end256(); ++jt)
-						addDirToCC( (m_contentPath + "\\" + *it + "\\" + *jt).c_str());
-				}
-			}
-		} catch(...) {
-			sendMsg( "Exception: Could not create initial directory structure!", MSG_ERROR);
-			AfxMessageBox( "Could not create initial directory structure.");
-			HR_THROW(E_FILEOPEN);
-		}
-	} // m_hashFileNames
-}
-
-bool CCoreXmlFile::isPathUnderClearCase( const char * path )
-{   
-	ASSERT( m_clearCase.p != NULL );
-
-	CComObjPtr<ICCVersion> version;
-
-	CComBSTR path2 = path;
-	VARIANT  path3;
-
-	path3.bstrVal = path2.m_str;
-	path3.vt      = VT_BSTR;
-
-	HRESULT hres = m_clearCase->get_Version( path3, PutOut(version) );
-
-	return (hres==S_OK);
-}
-
-bool CCoreXmlFile::isFileCheckedOutCC( const char * path )
-{
-	CComObjPtr<ICCVersion>        version;
-	CComBSTR                      path1 = path;
-	VARIANT                       path2;
-	//HRESULT                       hres;
-	VARIANT_BOOL                  isCheckdOut = 0;
-
-	path2.vt      = VT_BSTR;
-	path2.bstrVal = path1;
-
-	COMTHROW( m_clearCase->get_Version( path2, PutOut(version) ) );
-	COMTHROW( version->get_IsCheckedOut( &isCheckdOut ) );
-
-	return (isCheckdOut!=0);
-}
-
-int CCoreXmlFile::getCheckOutStateCC( const char * path )
-{
-	// get windows (and clearcase) username
-	//char userName[200];
-	//unsigned long userNameSize = 200;
-	//GetUserName( userName, &userNameSize );
-
-	// get list of checked out files by current user
-	CComObjPtr<ICCCheckedOutFileQuery> checkedOutFileQuery;
-
-	COMTHROW( m_clearCase->CreateCheckedOutFileQuery( PutOut(checkedOutFileQuery) ));
-
-	VARIANT v;
-	v.vt = VT_ARRAY | VT_BSTR;
-	SAFEARRAYBOUND rgsabound[1];  //Denotes number of dimensions
-	rgsabound[0].lLbound   = 0;
-	rgsabound[0].cElements = 1;
-	v.parray = SafeArrayCreate(VT_VARIANT, 1, rgsabound);
-	long count = 0;
-
-	CComVariant name = m_folderPath.c_str();
-	COMTHROW( SafeArrayPutElement(v.parray, &count, (void *) &name) );
-
-	CComBSTR user = userName().c_str();
-	COMTHROW( checkedOutFileQuery->put_PathArray( v ) );
-	COMTHROW( checkedOutFileQuery->put_User(user) );
-	CComObjPtr<ICCCheckedOutFiles> files;
-	COMTHROW( checkedOutFileQuery->Apply( PutOut(files) ));
-
-	long fileCount;
-	COMTHROW( files->get_Count( &fileCount ) );
-	for( int i=0; i<fileCount; ++i )
-	{
-		CComObjPtr<ICCVersion>    version;
-		CComBSTR                  comment = "";
-
-		CComObjPtr<ICCCheckedOutFile> checkedOutFile;
-		COMTHROW( files->get_Item( i+1, PutOut(checkedOutFile) ) );
-
-		CComBSTR path2;
-		checkedOutFile->get_Path(&path2);
-		char path3[MAX_PATH];
-		sprintf(path3, "%S", path2);
-
-		if( stricmp(path, path3) == 0 )
-		{
-			return CS_CURRENT_USER;
-		}
-	}
-
-	if( isFileCheckedOutCC( path ) )
-		return CS_OTHER_USER;
-
-	return CS_NOT_CHECKEDOUT;
-}
-
-void CCoreXmlFile::checkOutFileCC( const char * path )
-{
-	CComObjPtr<ICCVersion>        version;
-	CComObjPtr<ICCCheckedOutFile> checkedOutFile;
-	CComBSTR                      path1 = path;
-	CComBSTR                      comment = "";
-	VARIANT                       path2;
-	//HRESULT                       hres;
-
-	path2.vt      = VT_BSTR;
-	path2.bstrVal = path1;
-
-	//COMTHROW( m_clearCase->get_Version( path2, PutOut(version) ) );
-	HRESULT kr = m_clearCase->get_Version( path2, PutOut(version) );
-	if( FAILED( kr)) throw hresult_exception( kr);
-	version->CheckOut( ccTryReserved, comment, 0, ccVersion_Default, 0, 0, PutOut(checkedOutFile) );
-	//COMTHROW( version->CheckOut( ccReserved, comment, 0, ccVersion_Default, 0, 0, PutOut(checkedOutFile) ) );
-}
-
-void CCoreXmlFile::checkInFileCC( const char * path )
-{
-	CComObjPtr<ICCVersion>        version;
-	CComObjPtr<ICCCheckedOutFile> checkedOutFile;
-	CComBSTR                      path1 = path;
-	CComBSTR                      comment = "";
-	CComBSTR                      empty = "";
-
-	if( m_clearCase->get_CheckedOutFile( path1, PutOut(checkedOutFile) ) == S_OK )
-	{
-		if( checkedOutFile.p != NULL )
-		{
-			HRESULT hres = checkedOutFile->CheckIn( comment, 1, empty, ccKeep, PutOut(version) );
-		}
-	}
-}
-
-void CCoreXmlFile::addFileToCC( const char * path )
-{
-	// parent folder must be checked out!
-	CComObjPtr<ICCCheckedOutFile> checkedOutFile;
-
-	CComBSTR fileName         = path;
-	CComBSTR comment          = "";
-	CComBSTR elementTypeName1 = "text_file";
-
-	VARIANT elmentTypeName;
-	elmentTypeName.vt = VT_BSTR;        
-	elmentTypeName.bstrVal = elementTypeName1;
-
-	m_clearCase->CreateElement(fileName,comment,1,elmentTypeName,PutOut(checkedOutFile)); 
-}
-
-void CCoreXmlFile::addDirToCC( const char * path )
-{
-	// parent folder must be checked out!
-	CComObjPtr<ICCCheckedOutFile> checkedOutFile;
-
-	CComBSTR fileName         = path;
-	CComBSTR comment          = "";
-	CComBSTR elementTypeName1 = "directory";
-
-	VARIANT elmentTypeName;
-	elmentTypeName.vt = VT_BSTR;        
-	elmentTypeName.bstrVal = elementTypeName1;
-
-	m_clearCase->CreateElement(fileName, comment,1,elmentTypeName,PutOut(checkedOutFile));
-}
-
-void CCoreXmlFile::getLatestVerCC( const char * path )
-{
-	std::string cmd = "update ";
-	cmd += path;
-	CComBSTR cmd2 = cmd.c_str();
-	BSTR output;
-	COMTHROW( m_clearTool->CmdExec( cmd2, &output ) );
 }
 
 void CCoreXmlFile::createNonversioned()
@@ -6443,15 +5326,7 @@ void CCoreXmlFile::commitHashedFolders()
 
 void CCoreXmlFile::socoAdd     ( const std::string& p_path, bool p_recursive)
 {
-	if( isSS())
-	{
-		//addDirToSS(
-	}
-	else if( isCC())
-	{
-		addDirToCC( p_path.c_str());//, p_recursive);
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		addSVN( p_path, p_recursive);
 	}
@@ -6463,14 +5338,7 @@ void CCoreXmlFile::socoAdd     ( const std::string& p_path, bool p_recursive)
 
 void CCoreXmlFile::socoCommit( const std::string& p_path, const std::string& p_comment, bool p_initial)
 {
-	if( isSS())
-	{
-	}
-	else if( isCC())
-	{
-		checkInFileCC( p_path.c_str());
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		bool sc = commitSVN( p_path, p_comment, p_initial /*initial commit*/);
 		if( !sc)
@@ -6504,23 +5372,8 @@ void CCoreXmlFile::testSubversion()
 
 void CCoreXmlFile::createSubversionClientImpl()
 {
-	if( m_svnByAPI)
-	{
-		HRESULT hr = m_comSvn.CoCreateInstance( CLSID_SvnExec); // or "Mga.XmlBackEnd.SvnExec"
-		if( SUCCEEDED( hr) && m_comSvn)
-			hr = m_comSvn->Init( CComBSTR( m_vssUser.c_str()), CComBSTR( m_vssPassword.c_str()));
-		if( FAILED( hr) || !m_comSvn) {
-			if( hr == E_NOTIMPL) AfxMessageBox( "SVN client library is not implemented!"); // look for the #if(USESVN) macro
-			else                 AfxMessageBox( "SVN implementation client object could not be created!");
-			throw -1;
-		}
-
-		hr = m_comSvn->Logging( m_userOpts.m_createSvnLog? VARIANT_TRUE: VARIANT_FALSE, CComBSTR( m_userOpts.m_svnLogFileName.c_str()));
-	}
-	else
-	{
-		m_cmdSvn = new CmdClient( m_svnShowCmdLineWindows, m_svnRedirectOutput); 
-	}
+	m_svn = std::auto_ptr<HiClient>(new HiClient(m_vssUser, m_vssPassword));
+	m_svn->setLog(m_userOpts.m_createSvnLog, m_userOpts.m_svnLogFileName);
 }
 
 void CCoreXmlFile::svnSetup( bool p_createOrOpen)
@@ -6632,27 +5485,17 @@ void CCoreXmlFile::getSVLastCommiter(XmlObject * obj, string& user)
 {
 	ASSERT( m_sourceControl == SC_SUBVERSION );
 	ASSERT( obj->isContainer() );
-	ASSERT( m_svnByAPI);
 
 	std::string fname;
 	getContainerFileName( obj, fname, true);
 
-	bool ret;
-	if( m_svnByAPI) {
-		//ret = m_svn->info( fname, false /*recursive*/, false /*info msg*/, std::string(), user /* = author*/, std::string() /* = holder*/);
-		CComBSTR buser;
-		COMTHROW( m_comSvn->Info( CComBSTR( fname.c_str()), VARIANT_FALSE /*rec?*/, VARIANT_FALSE /*infomessage?*/, &CComBSTR(), &buser, &CComBSTR()));
-		CopyTo( buser, user);
-	}
-	else         ret = m_cmdSvn->info( fname, false /*recursive*/, false /*info msg*/, std::string(), user /* = author*/, std::string() /* = holder*/);
-
+	m_svn->info(fname, false, false, std::string(), user, std::string());
 }
 
 void CCoreXmlFile::getSVCurrentOwner(XmlObject * obj, string& user, bool& newfile) // getSVCheckOutUser
 {
 	ASSERT( m_sourceControl == SC_SUBVERSION );
 	ASSERT( obj->isContainer() );
-	ASSERT( m_svnByAPI);
 
 	std::string fname;
 	getContainerFileName( obj, fname, true);
@@ -6660,35 +5503,16 @@ void CCoreXmlFile::getSVCurrentOwner(XmlObject * obj, string& user, bool& newfil
 	std::string holder;
 	bool        ret = false;
 
-	if( m_svnByAPI) {
-		//ret = m_svn->isLockedByUser( fname, holder);
-		VARIANT_BOOL is_verd;
-		VARIANT_BOOL vb_locked;
-		CComBSTR     bs_holder;
-		COMTHROW( m_comSvn->IsVersioned( CComBSTR( fname.c_str()), VARIANT_FALSE /*isdir*/, VARIANT_TRUE /*suppress error*/, &is_verd)); 
-		if( is_verd == VARIANT_TRUE)
-		{
-			newfile = false;
-			COMTHROW( m_comSvn->IsLocked( CComBSTR( fname.c_str()), &vb_locked, &bs_holder));
-			CopyTo( bs_holder, holder);
-			ret = vb_locked == VARIANT_TRUE;
-		}
-		else
-			newfile = true;
+	bool verd = m_svn->isVersioned(fname, false, true);
+	if(verd)
+	{
+		newfile = false;
+		ret = m_svn->isLockedByUser(fname, holder);
 	}
 	else
-	{
-		bool is_verd = m_cmdSvn->isVersioned( fname, false, true);
-		if( is_verd)
-		{
-			newfile = false;
-			ret = m_cmdSvn->isLockedByUser( fname, holder);
-		}
-		else
-			newfile = true;
-	}
+		newfile = true;
 
-	if( ret)
+	if(ret)
 	{
 		user    = holder;
 	}
@@ -6721,28 +5545,17 @@ void CCoreXmlFile::getSVCurrentOwner(XmlObject * obj, string& user, bool& newfil
 
 bool CCoreXmlFile::isCheckedOutByElseSVN( const std::string& p_file)
 {
-	if( m_svnByAPI)
+	bool versioned = m_svn->isVersioned(p_file, false, false);
+	ASSERT(versioned);
+	//ASSERT( m_svn->isVersioned( p_file));
+	std::string holder;
+	bool locked = m_svn->isLockedByUser(p_file, holder);
+	if(locked)
 	{
-		VARIANT_BOOL vb_versioned;
-		COMTHROW( m_comSvn->IsVersioned( CComBSTR( p_file.c_str()), VARIANT_FALSE /*isDir?*/, VARIANT_FALSE /*suppress?*/, &vb_versioned));
-		ASSERT( vb_versioned == VARIANT_TRUE);
-		//ASSERT( m_svn->isVersioned( p_file));
-		VARIANT_BOOL vb_locked;
-		CComBSTR bs_holder;
-		COMTHROW( m_comSvn->IsLocked( CComBSTR( p_file.c_str()), &vb_locked, &bs_holder));
-		if( vb_locked == VARIANT_TRUE)
-		{
-			std::string holder;
-			CopyTo( bs_holder, holder);
-			return holder != m_vssUser; // not us
-		}
-		return false;
-		//return m_svn->isLockedByOthers( p_file);
+		return holder != m_vssUser; // not us
 	}
-	else
-	{
-		return m_cmdSvn->isCheckedOutByElse( p_file);
-	}
+	return false;
+	//return m_svn->isLockedByOthers( p_file);
 }
 
 //void CCoreXmlFile::checkOutSVN( const std::string& p_file)
@@ -6759,22 +5572,15 @@ bool CCoreXmlFile::isCheckedOutByElseSVN( const std::string& p_file)
 //	}
 //}
 
-bool CCoreXmlFile::applyLockSVN( const std::string& p_file) // throws
+bool CCoreXmlFile::applyLockSVN( const std::string& p_file) // throws hresult_exception
 {
 	bool succ = false;
 
-	if( m_svnByAPI) { 
-		//succ = m_svn->tryLock( p_file);
-		VARIANT_BOOL vb_succ;
-		COMTHROW( m_comSvn->TryLock( CComBSTR( p_file.c_str()), &vb_succ));
-		succ = vb_succ == VARIANT_TRUE;
-	}
-	else         succ = m_cmdSvn->tryLock( p_file);
-
-	if( !succ)
+	succ = m_svn->tryLock(p_file);
+	if(!succ)
 	{
 		AfxMessageBox( (p_file + " lock() returned false in applyLockSVN").c_str());
-		HR_THROW( E_FAIL);
+		HR_THROW(E_FAIL);
 	}
 
 	return succ;
@@ -6782,66 +5588,28 @@ bool CCoreXmlFile::applyLockSVN( const std::string& p_file) // throws
 
 bool CCoreXmlFile::removeLockSVN( const std::string& p_file)
 {
-	if( m_svnByAPI) { 
-		//return m_svn->unLock( p_file);
-		VARIANT_BOOL vb_succ;
-		COMTHROW( m_comSvn->UnLock( CComBSTR( p_file.c_str()), &vb_succ));
-		return vb_succ == VARIANT_TRUE;
-	}
-	else         return m_cmdSvn->unLock( p_file);
+	return m_svn->unLock(p_file);
 }
 
 bool CCoreXmlFile::mkdirSVN( const std::string& p_url, const std::string& p_dirName, const std::string& p_localDestPath)
 {
 	std::string dir = p_url + "/" + p_dirName;
 
-	if( m_svnByAPI)
-	{
-		//bool sc = m_svn->mkDirOnServer( dir);
-		//if( !sc) return false;
-		HRESULT hr_m = m_comSvn->SrvMkDir( CComBSTR( dir.c_str()));
-		if( FAILED( hr_m))
-			return false;
+	bool sc = m_svn->mkDirOnServer( dir);
+	if(!sc) return false;
 
-		//getLatestSVN( 
-		//sc = m_svn->lightCheckOut( dir, p_localDestPath);
-		//return sc;
-		HRESULT hr_c = m_comSvn->LightCheckOut( CComBSTR( dir.c_str()), CComBSTR( p_localDestPath.c_str()));
-		return SUCCEEDED( hr_c);
-	}
-	else
-	{
-		bool sc = m_cmdSvn->mkdirOnServer( dir); //WAS: return m_cmdSvn->mkdirWithUpdate( p_url, p_localDestPath, p_dirName);
-		if( !sc) return false;
-
-		sc = m_cmdSvn->lightCheckOut( dir, p_localDestPath);
-
-		// change to the local directory after creation and checkout
-		int r;
-		r = _chdir( p_localDestPath.c_str());
-
-		return sc && !r;
-	}
+	sc = m_svn->lightCheckOut( dir, p_localDestPath);
+	return sc;
 }
 
 bool CCoreXmlFile::lockablePropertySVN( const std::string& p_file)
 {
-	if( m_svnByAPI) { 
-		//return m_svn->lockableProp( p_file);
-		HRESULT hr = m_comSvn->AddLockableProperty( CComBSTR( p_file.c_str()));
-		return SUCCEEDED( hr);
-	}
-	else         return m_cmdSvn->lockableProp( p_file);
+	return m_svn->lockableProp(p_file);
 }
 
 bool CCoreXmlFile::addSVN( const std::string& p_entity, bool p_recursive /*= false*/)
 {
-	if( m_svnByAPI) {
-		//return m_svn->add( p_entity, p_recursive);
-		HRESULT hr = m_comSvn->Add( CComBSTR( p_entity.c_str()), p_recursive?VARIANT_TRUE : VARIANT_FALSE);
-		return SUCCEEDED( hr);
-	}
-	else         return m_cmdSvn->add( p_entity, p_recursive);
+	return m_svn->add( p_entity, p_recursive);
 }
 
 //
@@ -6854,79 +5622,6 @@ HRESULT UseTheseStrings( short size, BSTR names[])
 		MessageBox(NULL, name, "Msg", MB_OK);
 	}
 	return S_OK;
-}
-
-void fillUpVariantArray( const std::vector< std::string>& p_files, VARIANT *pStrings)
-{
-	if( p_files.size() == 0) return;
-
-	VariantInit( pStrings);
-	pStrings->vt = VT_ARRAY | VT_BSTR;
-	SAFEARRAY *pSA;
-	SAFEARRAYBOUND bounds;
-	bounds.lLbound = 0;
-	bounds.cElements = p_files.size();
-
-	// create an array (client will free with SafeArrayDestroy())
-	pSA = SafeArrayCreate( VT_BSTR, 1, &bounds);
-
-	BSTR *theStrings;
-	SafeArrayAccessData( pSA, (void**) &theStrings);
-	for( std::vector< std::string>::size_type i = 0; i < p_files.size(); ++i)
-	{
-		theStrings[i] = CComBSTR( p_files[i].c_str());
-	}
-
-	SafeArrayUnaccessData( pSA);
-
-	// set the ret value
-	pStrings->parray = pSA;
-}
-
-void retAnArrayOfStrings( VARIANT *pStrings)
-{
-	// init and set the type of variant
-	VariantInit( pStrings);
-	pStrings->vt = VT_ARRAY | VT_BSTR;
-	int nCount = 5;
-	SAFEARRAY *pSA;
-	SAFEARRAYBOUND bounds = { nCount, 0 };
-
-	// create an array (client will free with SafeArrayDestroy())
-	pSA = SafeArrayCreate( VT_BSTR, 1, &bounds);
-
-	BSTR *theStrings;
-	SafeArrayAccessData( pSA, (void**)& theStrings);
-	theStrings[0] = SysAllocString( L"");
-	theStrings[1] = SysAllocString( L"");
-
-	SafeArrayUnaccessData( pSA);
-
-	// set the ret value
-	pStrings->parray = pSA;
-}
-
-void useArrayOfStrings( VARIANT strings)
-{
-	if(( strings.vt & VT_ARRAY) && (strings.vt & VT_BSTR))
-	{
-		// grab the array
-		SAFEARRAY *pSA = strings.parray;
-		BSTR *bstrArray;
-
-		// lock it down
-		SafeArrayAccessData( pSA, (void**)&bstrArray);
-
-		// read each item
-		for( ULONG i = 0; i < pSA->rgsabound->cElements; ++i)
-		{
-			CComBSTR temp = bstrArray[i];
-		}
-
-		// unlcok
-		SafeArrayUnaccessData( pSA);
-		SafeArrayDestroy( pSA);
-	}
 }
 
 void CCoreXmlFile::findAllRwObjs( const std::string& p_folderPath, std::vector< std::string>& rw_file_vec)
@@ -6960,146 +5655,89 @@ void CCoreXmlFile::findAllRwObjs( const std::string& p_folderPath, std::vector< 
 
 bool CCoreXmlFile::bulkCommitSVN( const std::string& p_dir, const std::string& p_comment, bool p_noUnlock /* = false*/) // noUnlock <==> keeplocked
 {
-	if( m_svnByAPI)
+	bool res = m_svn->commitAll(p_dir, p_comment, p_noUnlock);
+	if( !p_noUnlock) // if noUnlock was not requested, then a file should be unlocked after commit
+		// except, when it was not changed: in this case it needs a manual unlock
 	{
-		m_comSvn->Commit( CComBSTR( p_dir.c_str()), CComBSTR( p_comment.c_str()), p_noUnlock? VARIANT_TRUE: VARIANT_FALSE);
-		if( !p_noUnlock) // if noUnlock was not requested, then a file should be unlocked after commit
-			// except, when it was not changed: in this case it needs a manual unlock
+		// find all 'rw' files, those need to be unlocked
+		//std::vector< std::string> rwfiles;
+		//findAllRwObjs( p_dir, rwfiles);
+
+		//if( 0 < rwfiles.size())
+		//{
+		//	VARIANT var_arr;
+		//	fillUpVariantArray( rwfiles, &var_arr);
+
+		//	VARIANT_BOOL succ_vt;
+		//	m_comSvn->BulkUnLock( var_arr, &succ_vt);
+		//}
+		// the approach above does not work, because Client::sub_unlock will
+		// not unlock several files at once, even though its parameter Target 
+		// would allow this.
+		//
+		// we will unlock files one by one:
+		std::string fileName;
+		for( XmlObjVecIter it=m_objects.begin(); it!=m_objects.end(); ++it )
 		{
-			// find all 'rw' files, those need to be unlocked
-			//std::vector< std::string> rwfiles;
-			//findAllRwObjs( p_dir, rwfiles);
+			if( !(*it)->isContainer() )
+				continue;
 
-			//if( 0 < rwfiles.size())
-			//{
-			//	VARIANT var_arr;
-			//	fillUpVariantArray( rwfiles, &var_arr);
+			getContainerFileName( *it, fileName);
 
-			//	VARIANT_BOOL succ_vt;
-			//	m_comSvn->BulkUnLock( var_arr, &succ_vt);
-			//}
-			// the approach above does not work, because Client::sub_unlock will
-			// not unlock several files at once, even though its parameter Target 
-			// would allow this.
-			//
-			// we will unlock files one by one:
-			std::string fileName;
-			for( XmlObjVecIter it=m_objects.begin(); it!=m_objects.end(); ++it )
-			{
-				if( !(*it)->isContainer() )
-					continue;
+			bool f_existed = false;
+			if( FileHelp::isFileReadOnly2( fileName, &f_existed))
+				continue; // file exists, is read-only, means no lock on it
 
-				getContainerFileName( *it, fileName);
-
-				bool f_existed = false;
-				if( FileHelp::isFileReadOnly2( fileName, &f_existed))
-					continue; // file exists, is read-only, means no lock on it
-
-				// unlock one file at a time
-				VARIANT_BOOL vb_succ;
-				m_comSvn->UnLock( CComBSTR( fileName.c_str()), &vb_succ);
-				if( vb_succ != VARIANT_TRUE)
-					AfxMessageBox( "Commit/Unlock pair failed");
-			}
+			// unlock one file at a time
+			bool succ = m_svn->unLock(fileName);
+			if(!succ)
+				AfxMessageBox( "Commit/Unlock pair failed");
 		}
-	}
-	else  // cmd line implementation here
-	{
-		m_cmdSvn->commit( p_dir, false, p_noUnlock);
-		if( !p_noUnlock) // if noUnlock was not requested, then a file should be unlocked after commit
-			// except, when it was not changed: in this case it needs a manual unlock
-		{
-			std::vector< std::string> rwfiles;
-			findAllRwObjs( p_dir, rwfiles);
-
-			if( 0 < rwfiles.size())
-			{
-				m_cmdSvn->bulkUnLock( rwfiles);
-			}
-		}
-
 	}
 	return true;
 }
 
 bool CCoreXmlFile::commitSVN( const std::string& p_dirOrFile, const std::string& p_comment, bool p_initialCommit /* = false*/, bool p_noUnlock /* = false*/) // noUnlock <==> keeplocked
 {
-	if( m_svnByAPI)
+	bool sc = m_svn->commitAll( p_dirOrFile, p_comment, p_noUnlock);
+	// if noUnlock was not requested, then a file should be unlocked after commit
+	// except, when it was not changed: in this case it needs a manual unlock
+	if( !sc && !p_noUnlock)
 	{
-		//bool sc = m_svn->commitAll( p_dirOrFile, p_noUnlock);
-		//if( !sc && !p_noUnlock) // if noUnlock was not requested, then a file should be unlocked after commit
-			// except, when it was not changed: in this case it needs a manual unlock
-		HRESULT hr_c = m_comSvn->Commit( CComBSTR( p_dirOrFile.c_str()), CComBSTR( p_comment.c_str()), p_noUnlock?VARIANT_TRUE:VARIANT_FALSE);
-		if( FAILED( hr_c) && !p_noUnlock) // if noUnlock was not requested, then a file should be unlocked after commit
-		{                                 // except, when it was not changed: in this case it needs a manual unlock
-			if( FileHelp::isFile( p_dirOrFile) && !FileHelp::isFileReadOnly( p_dirOrFile))
+		if( FileHelp::isFile( p_dirOrFile) && !FileHelp::isFileReadOnly( p_dirOrFile))
+		{
+			bool succ = m_svn->unLock( p_dirOrFile);
+			if (succ)
 			{
-				//sc = m_svn->unLock( p_dirOrFile);
-				//if( !sc)
-				VARIANT_BOOL vb_succ;
-				COMTHROW( m_comSvn->UnLock( CComBSTR( p_dirOrFile.c_str()), &vb_succ));
-				if( vb_succ != VARIANT_TRUE)
-					AfxMessageBox( "Commit/Unlock pair failed");
-				else
-					hr_c = S_OK; // reset hr_c to success if unlock succeeded
+				sc = true;
 			}
-			//else if( 0) // a dir
-			//{
-			//	sc = m_svn->unLock( p_dirOrFile); // will it work?
-			//	if( sc) AfxMessageBox( "Dir unlock worked");
-			//	else    AfxMessageBox( "Dir Commit/Unlock pair failed");
-			//}
+			else
+			{
+				AfxMessageBox("Commit/Unlock pair failed");
+			}
 		}
-		//return sc;
-		return SUCCEEDED( hr_c);
 	}
-	else
-		return m_cmdSvn->commit( p_dirOrFile, p_initialCommit, p_noUnlock);
+	return sc;
 }
 
 bool CCoreXmlFile::updateSVN( const std::string& p_dirOrFile)
 {
-	if( m_svnByAPI) {
-		//return m_svn->getLatest( p_dirOrFile);
-		HRESULT hr = m_comSvn->GetLatest( CComBSTR( p_dirOrFile.c_str()));
-		return SUCCEEDED( hr);
-	}
-	else         return m_cmdSvn->getLatest( p_dirOrFile);
+	return m_svn->getLatest( p_dirOrFile);
 }
 
 bool CCoreXmlFile::isVersionedInSVN( const std::string& p_file, bool p_isADir /*= false*/, bool p_suppressErrorMsg /*=false*/)
 {
-	if( m_svnByAPI) {
-		//return m_svn->isVersioned( p_file, p_isADir, p_suppressErrorMsg);
-		VARIANT_BOOL vb_versioned;
-		COMTHROW( m_comSvn->IsVersioned( CComBSTR( p_file.c_str()), p_isADir?VARIANT_TRUE:VARIANT_FALSE, p_suppressErrorMsg?VARIANT_TRUE:VARIANT_FALSE, &vb_versioned));
-		return vb_versioned == VARIANT_TRUE;
-	}
-	else         return m_cmdSvn->isVersioned( p_file, p_isADir, p_suppressErrorMsg);
+	return m_svn->isVersioned( p_file, p_isADir, p_suppressErrorMsg);
 }
 
 bool CCoreXmlFile::infoSVN( const std::string& p_url, bool p_recursive, std::string& p_resultMsg, std::string& p_author, std::string& p_holder)
 {
-	if( m_svnByAPI) {
-		//return m_svn->info( p_url, p_recursive, true /* = assemble_info_msg*/, p_resultMsg, p_author, p_holder);
-		CComBSTR bs_infoResult;
-		CComBSTR bs_author;
-		CComBSTR bs_holder;
-		HRESULT hr = m_comSvn->Info( CComBSTR( p_url.c_str()), p_recursive?VARIANT_TRUE:VARIANT_FALSE, VARIANT_TRUE, &bs_infoResult, &bs_author, &bs_holder);
-		if( SUCCEEDED( hr)) {
-			CopyTo( bs_infoResult, p_resultMsg);
-			CopyTo( bs_author, p_author);
-			CopyTo( bs_holder, p_holder);
-			return true;
-		}
-		else return false;
-	}
-	else         return m_cmdSvn->info( p_url, p_recursive, true /* = assemble_info_msg*/, p_resultMsg, p_author, p_holder);
+	return m_svn->info(p_url, p_recursive, true, p_resultMsg, p_author, p_holder);
 }
 
 void CCoreXmlFile::showUsedFiles( XmlObjSet& containers, bool p_latentMessage /* = false */ )
 {
-	if( isSS() || isSV())
+	if(isSV())
 	{
 		CFilesInUseDetailsDlg dlg( 0, p_latentMessage);
 		char buf[300];
@@ -7109,13 +5747,11 @@ void CCoreXmlFile::showUsedFiles( XmlObjSet& containers, bool p_latentMessage /*
 			string user; bool nfile;
 			if( p_latentMessage)                    // info about latently changed files
 			{
-				if(      isSS()) getSSLastCommiter( *it, user);
-				else if( isSV()) getSVLastCommiter( *it, user);
+				getSVLastCommiter( *it, user);
 			}
 			else                                    // info about owned files
 			{
-				if(      isSS()) getSSCurrentOwner( *it, user, nfile); // to handle when nfile is true
-				else if( isSV()) getSVCurrentOwner( *it, user, nfile); // to handle when nfile is true
+				getSVCurrentOwner( *it, user, nfile); // to handle when nfile is true
 			}
 
 			if( user.size() > 0 )
@@ -7129,7 +5765,7 @@ void CCoreXmlFile::showUsedFiles( XmlObjSet& containers, bool p_latentMessage /*
 		}
 		dlg.DoModal();
 	}
-	else // = isCC()
+	else
 	{
 		AfxMessageBox( "No detailed information available." );
 	}
@@ -7153,13 +5789,12 @@ void CCoreXmlFile::whoControlsThis( XmlObject * container /*= 0*/)
 	if( !container) return;
 	ASSERT( container->isContainer() );
 
-	if( isSS() || isSV())
+	if(isSV())
 	{
 		std::string user, nm, msg;
 		bool newfile = false;
 
-		if(      isSS()) getSSCurrentOwner( container, user, newfile );
-		else if( isSV()) getSVCurrentOwner( container, user, newfile ); // does a status info refresh too
+		getSVCurrentOwner( container, user, newfile ); // does a status info refresh too
 
 		AttribMapIter itnm = container->m_attributes.find( ATTRID_NAME);
 		if( itnm != container->m_attributes.end()) 
@@ -7176,10 +5811,6 @@ void CCoreXmlFile::whoControlsThis( XmlObject * container /*= 0*/)
 		AfxMessageBox( msg.c_str(), MB_ICONINFORMATION);
 		//bool ismodbyothers = fileModifiedByOthers( container);
 	}
-	else if( isCC())
-	{
-		ASSERT(0);
-	}
 	else 
 		AfxMessageBox( "Container is not held exclusively since the project is not under sourcecontrol.");
 }
@@ -7188,62 +5819,7 @@ void CCoreXmlFile::updateSourceControlInfo( XmlObject * container )
 {
 	ASSERT( container->isContainer() );
 
-	if( isSS())
-	{
-		string user; bool newfile = false;
-		getSSCurrentOwner( container, user, newfile );
-		bool ismodbyothers = false;
-		try {
-			ismodbyothers = fileModifiedByOthers( container); // might throw in VSS case for orphans
-		} catch( hresult_exception& )
-		{
-			ismodbyothers = false;
-			newfile = true;
-			std::string link = makelink( container);
-			sendMsg( std::string( "Orphan found: ") + link, MSG_ERROR);
-		}
-		long lInfo( 0x0), lStat( 0x0);
-		if( user.size() == 0 )
-			lInfo = 0x0;  // not checked out
-		else if( stricmp( user.c_str(), m_vssUser.c_str() ) == 0 )
-			lInfo = FS_LOCAL; // checked out by local user
-		else
-			lInfo = FS_OTHER; // checked out by other user
-
-		if( ismodbyothers)
-			lStat = FS_MODIFIEDBYOTHERS;
-		else if( newfile)
-			lStat = FS_NOTYETSAVED;
-		else
-			lStat = 0x0;
-
-		setSourceControlNodes( container, lInfo, lStat);
-	}
-	else if( isCC())
-	{
-		string fileName;
-		getContainerFileName( container, fileName, true );
-		int state = getCheckOutStateCC( fileName.c_str() );
-
-		long lInfo( 0x0), lStat( 0x0);
-
-		//if( ismodbyothers) // what about these?
-		//    lStat = FS_MODIFIEDBYOTHERS;
-		//else if( newfile)
-		//    lStat = FS_NOTYETSAVED;
-		//else
-		//    lStat = 0x0;
-
-		if( state == CS_NOT_CHECKEDOUT )
-			lInfo = 0x0;
-		else if( state == CS_CURRENT_USER )
-			lInfo = FS_LOCAL;
-		else
-			lInfo = FS_OTHER;
-
-		setSourceControlNodes( container, lInfo, lStat);
-	}
-	else if( isSV())
+	if( isSV())
 	{
 		string file_name;
 		getContainerFileName( container, file_name, true );
@@ -7405,109 +5981,11 @@ bool CCoreXmlFile::fileModifiedByOthers( XmlObject * obj )
 	bool mydec = false;
 	CTime lastWriteTime( attr.ftLastWriteTime );
 	bool rv = lastWriteTime > obj->m_lastWriteTime;
-	if( isCC())
+	if( isSV())
 	{
-		return rv;
-	}
-	else if( isSV())
-	{
-		VARIANT_BOOL is_utd = VARIANT_FALSE;
-		if( m_svnByAPI)
-		{
-			m_comSvn->IsUpToDate( CComBSTR( filename.c_str()), &is_utd);
-			rv = is_utd == VARIANT_TRUE;
-		}
-		else
-		{
-			bool out_of_date = false;
-			m_cmdSvn->statusOnServer( filename, false, std::string(), &out_of_date);
-			rv = out_of_date;
-		}
-
-	}
-	else if( isSS())
-	{
-		{
-			std::string fullPath;
-			getSourceSafePath( obj, fullPath );
-			CComBSTR vssFullPath2 = fullPath.c_str();
-
-			std::string fileName12;
-			getContainerFileName( obj, fileName12, false );
-
-			CComObjPtr<IVSSItem> item;
-			// obtain file handle in VSS
-			COMTHROW( m_vssDatabase->get_VSSItem( vssFullPath2, false, &(item.p)) );
-
-			long is_chout;
-			COMTHROW( item->get_IsCheckedOut( &is_chout));
-
-			VARIANT_BOOL is_dife;
-			COMTHROW( item->get_IsDifferent( CComBSTR(( m_folderPath + "\\" + fileName12).c_str()), &is_dife));
-			// if file is different->change happened. Who did the change?
-			// Either we were the ones who changed it or somebody else did it.
-			// If we did the change, then we should have our .xml file conforming to the VSS .xml file
-			// indifferent whether the save operation was done with 'leaving checkouts' or not.
-			// .xml file change occurs upon Save, and Save checks in files (think in VSS terms here)
-			// even if it still holds them as checked out for further work
-			if( is_dife == VARIANT_TRUE && ( is_chout == VSSFILE_CHECKEDOUT || is_chout == VSSFILE_NOTCHECKEDOUT)) //!= VSSFILE_CHECKEDOUT_ME) // either NOT CO, or CO by somebody else
-			{
-				int l( 0);
-				++l; // server version can be only newer
-				mydec = true;
-			}
-			// we could just return mydec's value here
-			// without dealing further with .tmp files...
-			return mydec;
-
-			// construct temp file name:
-			CComBSTR temppath( m_folderPath.c_str());
-			//int dex = _mkdir( (m_folderPath + "\\temp").c_str());
-			//if( dex == 0 || dex == EEXIST)
-			//    temppath.Append( "\\temp");
-			temppath.Append( "\\");
-			temppath.Append( fileName12.c_str());
-
-			// get version:
-			long vnmb = 0;
-			COMTHROW( item->get_VersionNumber( &vnmb));
-
-			char buff[15];sprintf( buff, "%i", vnmb);
-			temppath.Append( buff);
-			temppath.Append( ".tmp"); // to distinguish from the xml backend files 
-
-			// get file into tempdir:
-			COMTHROW( item->Get( &temppath, VSSFLAG_TIMEMOD ) ); // previously was NULL // VSSFLAG_TIMEMOD, VSSFLAG_TIMENOW (default), or VSSFLAG_TIMEUPD
-
-			VARIANT_BOOL is_diff;
-			COMTHROW( item->get_IsDifferent( temppath, &is_diff));
-			ASSERT( is_diff == VARIANT_FALSE);
-
-			std::string temppath_str;
-			CopyTo( temppath, temppath_str);
-			BOOL res = GetFileAttributesEx( temppath_str.c_str(), GetFileExInfoStandard, &attr );
-			DWORD dwerror = res ? ERROR_SUCCESS : GetLastError(); // res == 0 in case of failure
-			if( dwerror == ERROR_FILE_NOT_FOUND) // != ERROR_SUCCESS)
-			{
-				// in case of new objects have been introduced the respective files 
-				// are not found (FILE_NOT_FOUND) and the obj->lastwritetime is 0
-				ASSERT( obj->m_lastWriteTime == 0);
-				//return false;
-			}else{
-				CTime nlastWriteTime( attr.ftLastWriteTime );
-				rv = nlastWriteTime > obj->m_lastWriteTime;
-				int hDisk = nlastWriteTime.GetHour();
-				int mDisk = nlastWriteTime.GetMinute();
-				int sDisk = nlastWriteTime.GetSecond();
-				int hObjt = obj->m_lastWriteTime.GetHour();
-				int mObjt = obj->m_lastWriteTime.GetMinute();
-				int sObjt = obj->m_lastWriteTime.GetSecond();
-				CTimeSpan sp = nlastWriteTime - obj->m_lastWriteTime;
-				int sSpan = sp.GetSeconds();
-				++sSpan;
-				//sp.Format(
-			}
-		}ASSERT( mydec == rv); // my decision could be the same as 'rv'
+		// FIXME: this may fail
+		bool repo_entry_modified;
+		m_svn->statusOnServer(filename, false, std::string(), &rv, &repo_entry_modified);
 	}
 	return rv;
 }
@@ -7571,21 +6049,20 @@ void CCoreXmlFile::finiParsers()
 
 // pretends to delete a parser 
 // but deletes it only in unique strategy case
-void CCoreXmlFile::deleteParser( DOMLSParser* *p_parser)
+void CCoreXmlFile::deleteParser( DOMLSParser* *p_parser, DOMErrorHandler* *p_err_handler)
 {
 	if( !m_strategyShared)
 	{
-		if( *p_parser) 
-		{
-			delete *p_parser;
-			*p_parser = 0;
-		}
+		delete *p_parser;
+		*p_parser = 0;
+		delete *p_err_handler;
+		*p_err_handler = 0;
 	}
 }
 
 void CCoreXmlFile::newDOMObjs(  XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMLSParser* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler)
 {
-	DOMImplementationLS * domimpl = DOMImplementationRegistry::getDOMImplementation( XMLString::transcode("XML 1.0"));//NULL
+	DOMImplementationLS * domimpl = DOMImplementationRegistry::getDOMImplementation( smart_XMLCh(XMLString::transcode("XML 1.0")));//NULL
 	ASSERT( domimpl != NULL );
 	
 	DOMLSParser * parser = !domimpl? 0: domimpl->createLSParser( DOMImplementationLS::MODE_SYNCHRONOUS, NULL );
@@ -7658,9 +6135,8 @@ XERCES_CPP_NAMESPACE::DOMDocument* CCoreXmlFile::enclosedParse( const std::strin
 		if( p_success) *p_success = false;
 	}
 	catch (const XMLException& e) {
-		char* e_msg = XMLString::transcode( e.getMessage());
+		smart_Ch e_msg = XMLString::transcode( e.getMessage());
 		sendMsg( "An error occurred during parsing of " + p_fileName + ". Message: " + e_msg, MSG_ERROR);
-		XMLString::release( &e_msg);
 		if( p_success) *p_success = false;
 	}
 	catch (const DOMException& e) {
@@ -7668,15 +6144,13 @@ XERCES_CPP_NAMESPACE::DOMDocument* CCoreXmlFile::enclosedParse( const std::strin
 		XMLCh errText[maxChars + 1];
 		if( DOMImplementation::loadDOMExceptionMsg( e.code, errText, maxChars))
 		{
-			char* e_msg = XMLString::transcode( errText);
+			smart_Ch e_msg = XMLString::transcode( errText);
 			sendMsg( "An error occurred during parsing of " + p_fileName + ". Message: " + e_msg, MSG_ERROR);
-			XMLString::release( &e_msg);
 		}
 		else
 		{
-			char* e_msg = XMLString::transcode( e.getMessage());
+			smart_Ch e_msg = XMLString::transcode( e.getMessage());
 			sendMsg( "An error occurred during parsing of " + p_fileName + ". Message: " + e_msg, MSG_ERROR);
-			XMLString::release( &e_msg);
 		}
 		
 		if( p_success) *p_success = false;
@@ -7739,7 +6213,6 @@ DOMLSParser* CCoreXmlFile::getFreshParser( const std::string& p_whoIsTheUser, DO
 
 		parser = 0;
 
-		char*              e_msg    = 0;
 		const unsigned int maxChars = 2047;
 		XMLCh errText[maxChars + 1];
 		const char         s_msg[]  = "DOMException during parser object creation for ";
@@ -7747,15 +6220,14 @@ DOMLSParser* CCoreXmlFile::getFreshParser( const std::string& p_whoIsTheUser, DO
 
 		if( DOMImplementation::loadDOMExceptionMsg( e.code, errText, maxChars))
 		{
-			e_msg = XMLString::transcode( errText);
+			smart_Ch e_msg = XMLString::transcode( errText);
 			sendMsg( s_msg + p_whoIsTheUser + m_msg + e_msg, MSG_ERROR);
 		}
 		else
 		{
-			e_msg = XMLString::transcode( e.getMessage());
+			smart_Ch e_msg = XMLString::transcode( e.getMessage());
 			sendMsg( s_msg + p_whoIsTheUser + m_msg + e_msg, MSG_ERROR);
 		}
-		XMLString::release( &e_msg);
 	}
 	catch(...) {
 
@@ -7771,6 +6243,5 @@ DOMLSParser* CCoreXmlFile::getFreshParser( const std::string& p_whoIsTheUser, DO
 
 		return parser;
 	}
-
 	return 0;
 }
