@@ -64,7 +64,7 @@ typedef std::list<CCoreTerritory*> created_territorys_type;//slist
 class ATL_NO_VTABLE CCoreProject : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CCoreProject, &CLSID_CoreProject>,
-	public IDispatchImpl<ICoreProject, &IID_ICoreProject, &LIBID_CORELib>,
+	public IDispatchImpl<ICoreProject, &IID_ICoreProject, &LIBID_CoreLib>,
 	public ISupportErrorInfoImpl<&IID_ICoreProject>,
 	public IGMEVersionInfoImpl
 {

@@ -27,7 +27,7 @@ typedef lockmaps_type::iterator lockmaps_iterator;
 
 class ATL_NO_VTABLE CCoreTerritory : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<ICoreTerritory, &IID_ICoreTerritory, &LIBID_CORELib>,
+	public IDispatchImpl<ICoreTerritory, &IID_ICoreTerritory, &LIBID_CoreLib>,
 	public ISupportErrorInfoImpl<&IID_ICoreTerritory>,
 	public CCoreTransactionItem,
 	public CCoreFinalTrItem
