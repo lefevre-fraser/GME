@@ -131,9 +131,6 @@ namespace CSharpComponentWizard
 
                 SolutionGenerator.GenerateSignature(outputfolder);
                 worker.ReportProgress(100);
-
-                // The progressbar doesn't make sense without this :)
-                System.Threading.Thread.Sleep(250);
             }
             catch (Exception ex)
             {
