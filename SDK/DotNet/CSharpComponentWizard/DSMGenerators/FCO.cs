@@ -96,7 +96,7 @@ namespace DSM.Generators
             #region Relationship
             public static readonly string Relationship =
 @"
-        public IEnumerable<{0}> {4}
+        public IEnumerable<{0}> {0}{4}
         {{
             get {{ return Get{1}{3}s(); }}
         }}
@@ -124,7 +124,7 @@ namespace DSM.Generators
 ";
             public static readonly string RelationshipInterface =
 @"
-        IEnumerable<{0}> {3}{{get;}}
+        IEnumerable<{0}> {0}{3}{{get;}}
         IEnumerable<{0}> Get{1}{2}s();
 ";
             #endregion

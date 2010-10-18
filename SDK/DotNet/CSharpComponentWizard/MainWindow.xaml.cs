@@ -693,6 +693,7 @@ namespace CSharpComponentWizard
                 System.Diagnostics.ProcessStartInfo pinfo = new System.Diagnostics.ProcessStartInfo();
                 pinfo.Arguments = pathToOpen;
                 pinfo.FileName = DevenvLocation;
+                pinfo.Verb = "runas"; // Registering needs elevated privileges
                 System.Diagnostics.Process myProc = System.Diagnostics.Process.Start(pinfo);
             }
             catch (Exception ex)
