@@ -248,26 +248,6 @@
   <ItemGroup>
     <ResourceCompile Include="DecoratorLib.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\GME\Common\Common.vcxproj">
-      <Project>{bef31e1e-bb02-4687-a543-a6ad5d522869}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GME\Gme\GME.vcxproj">
-      <Project>{10471163-556b-4be1-a12e-c917f90f8346}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GME\Interfaces\Interfaces.vcxproj">
-      <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GME\Meta\Meta.vcxproj">
-      <Project>{3ed3216e-b64c-4d0b-881f-68bff2cb3e83}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GME\Mga\Mga.vcxproj">
-      <Project>{86daef74-2527-41e5-82ce-52c31c5bbe8e}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
