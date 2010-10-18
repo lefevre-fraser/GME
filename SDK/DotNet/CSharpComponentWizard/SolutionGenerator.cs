@@ -315,7 +315,7 @@ namespace CSharpComponentWizard
             SNLocation += @"\bin\sn.exe";
 
             System.Diagnostics.ProcessStartInfo pinfo = new System.Diagnostics.ProcessStartInfo();
-            pinfo.Arguments = "-k " + outputfolder + "\\AssemblySignature.snk";
+            pinfo.Arguments = "-k \"" + outputfolder + "\\AssemblySignature.snk\"";
             pinfo.CreateNoWindow = true;
             pinfo.UseShellExecute = true;
             pinfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
