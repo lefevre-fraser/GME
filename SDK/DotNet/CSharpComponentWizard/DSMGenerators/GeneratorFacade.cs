@@ -22,7 +22,7 @@ namespace DSM
         public static List<string> generatedFiles = new List<string>();
 
         // Generator Entry Point
-        public static string Main(string projectPathFull, string targetPath, string namespaceName)
+        public static string main(string projectPathFull, string targetPath, string namespaceName)
         {
 
             Clear();
@@ -34,7 +34,7 @@ namespace DSM
                 bool ro_mode = true;
                 project.Open("MGA=" + projectPathFull, out ro_mode);
                 territory = project.BeginTransactionInNewTerr(transactiontype_enum.TRANSACTION_READ_ONLY);
-                MGALib.IMgaFolder root = project.RootFolder as MGALib.IMgaFolder;                
+                MGALib.IMgaFolder root = project.RootFolder as MGALib.IMgaFolder;
 
                 Generator.ClassName = root.Name;
                 Generator.NamespaceName = namespaceName;
@@ -76,12 +76,18 @@ namespace DSM
 
                 return Generator.ClassName;
             }
+            catch(Exception e)
+            {
+                MessageBox.Show("Error generationg domain-specific interface: " + e.Message);
+                return null;
+            }
             finally
             {
                 if (territory != null)
                 {
                     territory.Destroy();
                     project.AbortTransaction();
+                    
                 }
                 project.Close(true);
 

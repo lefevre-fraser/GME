@@ -327,7 +327,7 @@ namespace CSharpComponentWizard
         {
             try
             {
-                string ParadigmName = GeneratorFacade.Main(MgaPath, TargetFolder + @"\" + SolutionName, "GME.CSharp." + SolutionName);
+                string ParadigmName = GeneratorFacade.main(MgaPath, TargetFolder + @"\" + SolutionName, "GME.CSharp." + SolutionName);
             } 
             catch(Exception)
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using MGALib;
 
 namespace DSM.Generators
 {
@@ -34,7 +35,7 @@ namespace DSM.Generators
                 {{
                     if (this.mgaObject.ParentFolder == MgaGateway.project.RootFolder)
                     {{
-                        return new RootFolder(MgaGateway.project as MGALib.IMgaFolder);
+                        return new RootFolder(MgaGateway.project as IMgaFolder);
                     }}
                     else
                     {{
@@ -226,7 +227,7 @@ namespace {0}
         }
 
 
-        public FCO(MGALib.IMgaAtom mgaObject)
+        public FCO(IMgaAtom mgaObject)
         {
             className = mgaObject.Name;
             baseInterfaceName = "IFCO";
@@ -269,25 +270,25 @@ namespace {0}
         {
             get
             {
-                foreach (MGALib.IMgaObject mgaObject in this.MgaObjects)
+                foreach (IMgaObject mgaObject in this.MgaObjects)
                 {
-                    MGALib.IMgaFCO fco = mgaObject as MGALib.IMgaFCO;
-                    foreach (MGALib.IMgaConnPoint conn in fco.PartOfConns)
+                    IMgaFCO fco = mgaObject as IMgaFCO;
+                    foreach (IMgaConnPoint conn in fco.PartOfConns)
                     {
                         if (conn.Owner.Meta.Name.Contains("Derived") &&
                             conn.Owner.Meta.Name.Contains("Inheritance"))
                         {
-                            foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
+                            foreach (IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
                                 if (connOther.target.ID != mgaObject.ID)
                                 {
                                     //we have found an inheritance: connOther.target
-                                    foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
+                                    foreach (IMgaConnPoint conn2 in connOther.target.PartOfConns)
                                     {
                                         if (conn2.Owner.Meta.Name.Contains("Base") &&
                                             conn2.Owner.Meta.Name.Contains("Inheritance"))
                                         {
-                                            foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
+                                            foreach (IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                             {
                                                 if (connOther2.target.ID != conn2.target.ID)
                                                 {
@@ -330,25 +331,25 @@ namespace {0}
         {
             get
             {
-                foreach (MGALib.IMgaObject mgaObject in this.MgaObjects)
+                foreach (IMgaObject mgaObject in this.MgaObjects)
                 {
-                    MGALib.IMgaFCO fco = mgaObject as MGALib.IMgaFCO;
-                    foreach (MGALib.IMgaConnPoint conn in fco.PartOfConns)
+                    IMgaFCO fco = mgaObject as IMgaFCO;
+                    foreach (IMgaConnPoint conn in fco.PartOfConns)
                     {
                         if (conn.Owner.Meta.Name.Contains("Base") &&
                             conn.Owner.Meta.Name.Contains("Inheritance"))
                         {
-                            foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
+                            foreach (IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
                                 if (connOther.target.ID != mgaObject.ID)
                                 {
                                     //we have found an inheritance: connOther.target
-                                    foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
+                                    foreach (IMgaConnPoint conn2 in connOther.target.PartOfConns)
                                     {
                                         if (conn2.Owner.Meta.Name.Contains("Derived") &&
                                             conn2.Owner.Meta.Name.Contains("Inheritance"))
                                         {
-                                            foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
+                                            foreach (IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                             {
                                                 if (connOther2.target.ID != conn2.target.ID)
                                                 {
@@ -441,18 +442,18 @@ namespace {0}
         private string generateOwnAttributes(ref List<string> names, ref StringBuilder forInterface)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (MGALib.IMgaObject mgaObject in this.MgaObjects)
+            foreach (IMgaObject mgaObject in this.MgaObjects)
             {
-                MGALib.IMgaFCO fco = mgaObject as MGALib.IMgaFCO;
-                foreach (MGALib.IMgaConnPoint conn in fco.PartOfConns)
+                IMgaFCO fco = mgaObject as IMgaFCO;
+                foreach (IMgaConnPoint conn in fco.PartOfConns)
                 {
-                    foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
+                    foreach (IMgaConnPoint connOther in conn.Owner.ConnPoints)
                     {
                         if (connOther.target.ID != mgaObject.ID && connOther.target.Meta.Name.Contains("Attribute"))
                         {
                             if (connOther.target.Meta.Name == "FieldAttribute")
                             {
-                                foreach (MGALib.IMgaAttribute attr in connOther.target.Attributes)
+                                foreach (IMgaAttribute attr in connOther.target.Attributes)
                                 {
                                     if (attr.Meta.Name == "DataType")
                                     {
@@ -495,7 +496,7 @@ namespace {0}
                                     StringBuilder enum1 = new StringBuilder();
 
                                     StringBuilder stuff = new StringBuilder();
-                                    foreach (MGALib.MgaAttribute attr in connOther.target.Attributes)
+                                    foreach (MgaAttribute attr in connOther.target.Attributes)
                                     {
                                         if (attr.Meta.Name == "MenuItems")
                                         {
@@ -603,23 +604,23 @@ namespace {0}
         {
             get
             {
-                foreach (MGALib.IMgaObject mgaObject in this.MgaObjects)
+                foreach (IMgaObject mgaObject in this.MgaObjects)
                 {
-                    MGALib.IMgaFCO fco = mgaObject as MGALib.IMgaFCO;
-                    foreach (MGALib.IMgaConnPoint conn in fco.PartOfConns)
+                    IMgaFCO fco = mgaObject as IMgaFCO;
+                    foreach (IMgaConnPoint conn in fco.PartOfConns)
                     {
                         if (conn.Owner.Meta.Name == "ConnectorToDestination" || conn.Owner.Meta.Name == "SourceToConnector")
                         {
-                            foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
+                            foreach (IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
                                 if (connOther.target.ID != mgaObject.ID)
                                 {
                                     //connOther.target: Connector
-                                    foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
+                                    foreach (IMgaConnPoint conn2 in connOther.target.PartOfConns)
                                     {
                                         if (conn2.Owner.Meta.Name == "AssociationClass")
                                         {
-                                            foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
+                                            foreach (IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                             {
                                                 if (connOther2.target.ID != connOther.target.ID)
                                                 {
@@ -738,103 +739,118 @@ namespace {0}
         {
             get
             {
-                foreach (MGALib.IMgaObject mgaObject in this.MgaObjects)
+                foreach (IMgaObject mgaObject in this.MgaObjects)
                 {
-                    MGALib.IMgaFCO fco = mgaObject as MGALib.IMgaFCO;
-                    foreach (MGALib.IMgaConnPoint conn in fco.PartOfConns)
+                    IMgaFCO fco = mgaObject as IMgaFCO;
+                    foreach (IMgaConnPoint connPoint in fco.PartOfConns)
                     {
-                        if (conn.Owner.Meta.Name == "ConnectorToDestination" || conn.Owner.Meta.Name == "SourceToConnector")
+                        if (connPoint.Owner.Meta.Name == "ConnectorToDestination" || connPoint.Owner.Meta.Name == "SourceToConnector")
                         {
-                            string dir = conn.Owner.Meta.Name;
+                            IMgaSimpleConnection conn = (IMgaSimpleConnection)connPoint.Owner;
 
-                            string DstOrSrc = (dir == "ConnectorToDestination") ? "Src" : "Dst";
-
-                            foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
+                            bool isSrc = false;
+                            if (connPoint.Owner.Meta.Name == "SourceToConnector")
                             {
-                                if (connOther.target.ID != mgaObject.ID)
-                                {
-                                    //connOther.target: Connector
-                                    Connection connection = null;
+                                isSrc = true;
+                            }
 
-                                    //get the connection
-                                    foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
+                            IMgaFCO connectionKnot = conn.dst;
+                            if (connectionKnot.Meta.Name != "Connector") // Bidirectional, both directions must be handled
+                            {
+                                connectionKnot = conn.src;
+                            }
+
+                            IMgaConnPoints neighborConnPoints = connectionKnot.PartOfConns;
+
+
+                            Connection connection = null;
+
+                            //get the connection
+                            foreach (IMgaConnPoint asscoClassConnPoint in neighborConnPoints)
+                            {
+                                if (asscoClassConnPoint.Owner.Meta.Name == "AssociationClass")
+                                {
+                                    IMgaSimpleConnection assocClassConnection = (IMgaSimpleConnection)asscoClassConnPoint.Owner;
+                                    IMgaFCO assocClass = assocClassConnection.src;
+
+                                    if (assocClass.Meta.Name != "Connection")
                                     {
-                                        if (conn2.Owner.Meta.Name == "AssociationClass")
+                                        assocClass = assocClassConnection.dst;
+                                    }
+
+
+                                    if (assocClass.MetaBase.Name.Contains("Proxy"))
+                                    {
+                                        if (Object.ProxyCache.ContainsKey(assocClass.Name))
+                                            connection = Object.ElementsByName[Object.ProxyCache[assocClass.Name]] as Connection;
+                                        else
+                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + assocClass.Name + "' is not found");
+                                    }
+                                    else
+                                    {
+                                        if (Object.ElementsByName.ContainsKey(assocClass.Name))
+                                            connection = Object.ElementsByName[assocClass.Name] as Connection;
+                                        else
                                         {
-                                            foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
-                                            {
-                                                if (connOther2.target.ID != connOther.target.ID)
-                                                {
-                                                    //connOther2.target: connection
-                                                    if (connOther2.target.MetaBase.Name.Contains("Proxy"))
-                                                    {
-                                                        if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                            connection = Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as Connection;
-                                                        else
-                                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
-                                                    }
-                                                    else
-                                                    {
-                                                        if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
-                                                            connection = Object.ElementsByName[connOther2.target.Name] as Connection;
-                                                        else
-                                                        {
-                                                            //todo
-                                                            DSM.GeneratorFacade.Errors.Add(connOther2.target.Name + " is not found");
-                                                            //throw new Exception(connOther2.target.Name + " is not cached");
-                                                        }
-                                                    }
-                                                }
-                                            }
+                                            DSM.GeneratorFacade.Errors.Add(assocClass.Name + " is not found");
+
                                         }
                                     }
 
-                                    //get the other one
-                                    foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
+
+                                    String otherEndConnectionName = null;
+                                    if (isSrc)
                                     {
-                                        if (conn2.Owner.Meta.Name != "AssociationClass" && conn2.Owner.Meta.Name != dir)
+                                        otherEndConnectionName = "ConnectorToDestination";
+                                    }
+                                    else
+                                    {
+                                        otherEndConnectionName = "SourceToConnector";
+                                    }
+
+
+                                    //get the other one
+                                    foreach (IMgaConnPoint otherSideConnPoint in neighborConnPoints)
+                                    {
+                                        if (otherSideConnPoint.Owner.Meta.Name == otherEndConnectionName)
                                         {
-                                            foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
+                                            IMgaSimpleConnection otherSideConn = (IMgaSimpleConnection)otherSideConnPoint.Owner;
+
+                                            IMgaFCO otherFCO = otherSideConn.dst;
+                                            if (otherFCO.Meta.Name == "Connector")
                                             {
-                                                if (connOther2.target.ID != connOther.target.ID)
+                                                otherFCO = otherSideConn.src;
+                                            }
+
+                                            string roleNameAttr = (isSrc ? "dst" : "src") + "Rolename";
+
+                                            string roleName = otherSideConn.get_StrAttrByName(roleNameAttr);
+
+
+
+                                            if (otherFCO.MetaBase.Name.Contains("Proxy"))
+                                            {
+                                                if (Object.ProxyCache.ContainsKey(otherFCO.Name))
+                                                    yield return new FCOConnection(
+                                                        Object.ElementsByName[Object.ProxyCache[otherFCO.Name]] as FCO,
+                                                        connection,
+                                                        isSrc ? "Dst" : "Src",
+                                                        roleName);
+                                                else
+                                                    DSM.GeneratorFacade.Errors.Add("Proxy '" + otherFCO.Name + "' is not found");
+                                            }
+                                            else
+                                            {
+                                                if (Object.ElementsByName.ContainsKey(otherFCO.Name))
+                                                    yield return new FCOConnection(
+                                                        Object.ElementsByName[otherFCO.Name] as FCO,
+                                                        connection,
+                                                        isSrc ? "Dst" : "Src",
+                                                        roleName);
+                                                else
                                                 {
-                                                    //connOther2.target: dst
-                                                    string Role;
-                                                    try
-                                                    {
-                                                        Role = connOther2.Owner.get_StrAttrByName(DstOrSrc.ToLower() + "Rolename");
-                                                    }
-                                                    catch
-                                                    {
-                                                        Role = DstOrSrc;
-                                                    }
-                                                    
-                                                    if (connOther2.target.MetaBase.Name.Contains("Proxy"))
-                                                    {
-                                                        if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                            yield return new FCOConnection(
-                                                                Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO,
-                                                                connection, 
-                                                                DstOrSrc, 
-                                                                Role);
-                                                        else
-                                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
-                                                    }
-                                                    else
-                                                    {
-                                                        if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
-                                                            yield return new FCOConnection(
-                                                                Object.ElementsByName[connOther2.target.Name] as FCO,
-                                                                connection,
-                                                                DstOrSrc,
-                                                                Role);
-                                                        else
-                                                        {
-                                                            //todo
-                                                            DSM.GeneratorFacade.Errors.Add(connOther2.target.Name + " is not found");
-                                                            //throw new Exception(connOther2.target.Name + " is not cached");
-                                                        }
-                                                    }
+                                                    //todo
+                                                    DSM.GeneratorFacade.Errors.Add(otherFCO.Name + " is not found");
                                                 }
                                             }
                                         }
@@ -845,6 +861,7 @@ namespace {0}
                     }
                 }
             }
+            
         }
 
         public string GenerateRelationships(ref List<string> names, ref StringBuilder forInterface)
