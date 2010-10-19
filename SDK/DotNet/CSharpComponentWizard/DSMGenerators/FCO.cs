@@ -97,36 +97,39 @@ namespace DSM.Generators
             #region Relationship
             public static readonly string Relationship =
 @"
-        public IEnumerable<{0}> {0}{4}
+        public IEnumerable<{0}> {0}_{4}
         {{
-            get {{ return Get{1}{3}s(); }}
+            get {{ return Get{1}_{3}(); }}
         }}
 
-        public IEnumerable<{0}> Get{1}{3}s()
+        public IEnumerable<{0}> Get{1}_{3}()
         {{
             MgaConnPoints points = mgaObject.PartOfConns;
             foreach (MgaConnPoint point in points)
             {{
                 //point.owner is the connection object
+                
                 if (point.Owner.MetaBase.Name == ""{1}"")
                 {{
-                    foreach (MgaConnPoint connPoint in point.Owner.ConnPoints)
-                    {{
-{2}
-                    }}
+                    IMgaSimpleConnection conn = (IMgaSimpleConnection) point.Owner;
+
+                    if (conn.{3} == MgaObject) continue;
+                    IMgaFCO target = conn.{3};
+                 
+{2}                   
                 }}
             }}
         }}
 ";
             public static readonly string RelationshipInner =
 @"
-                        if (connPoint.target.ID != this.ID  && connPoint.target.MetaBase.Name == ""{0}"")
-                            yield return new {1}(connPoint.target as {2});
+                        if (target.MetaBase.Name == ""{0}"")
+                            yield return new {1}(target as {2});
 ";
             public static readonly string RelationshipInterface =
 @"
-        IEnumerable<{0}> {0}{3}{{get;}}
-        IEnumerable<{0}> Get{1}{2}s();
+        IEnumerable<{0}> {0}_{3}{{get;}}
+        IEnumerable<{0}> Get{1}_{2}();
 ";
             #endregion
             #region Connection
@@ -834,7 +837,7 @@ namespace {0}
                                                     yield return new FCOConnection(
                                                         Object.ElementsByName[Object.ProxyCache[otherFCO.Name]] as FCO,
                                                         connection,
-                                                        isSrc ? "Dst" : "Src",
+                                                        isSrc ? "dst" : "src",
                                                         roleName);
                                                 else
                                                     DSM.GeneratorFacade.Errors.Add("Proxy '" + otherFCO.Name + "' is not found");
@@ -845,7 +848,7 @@ namespace {0}
                                                     yield return new FCOConnection(
                                                         Object.ElementsByName[otherFCO.Name] as FCO,
                                                         connection,
-                                                        isSrc ? "Dst" : "Src",
+                                                        isSrc ? "dst" : "src",
                                                         roleName);
                                                 else
                                                 {
@@ -885,15 +888,11 @@ namespace {0}
             StringBuilder sb = new StringBuilder();
             foreach (FCOConnection dst in Relations)
             {
-                if (!names.Contains(dst.Conn.className))
+                sb.Append(generateRelationship(dst));
+                if (this.HasChildren)
                 {
-                    sb.Append(generateRelationship(dst));
-                    if (this.HasChildren)
-                    {
-                        forInterface.Append(generateRelationshipForInterface(dst));
-                    }
-                    names.Add(dst.Conn.className);
-                }
+                    forInterface.Append(generateRelationshipForInterface(dst));
+                }              
             }
             return sb.ToString();
         }
