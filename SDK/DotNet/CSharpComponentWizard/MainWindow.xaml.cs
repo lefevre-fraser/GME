@@ -31,10 +31,22 @@ namespace CSharpComponentWizard
         public const string GUIDREGEXP = @"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$";
 
         public Regex GuidExp = new Regex(GUIDREGEXP, RegexOptions.Compiled);
+        public ErrorWindow errorWindow;
+
+        // Displays DS errors in new window
+        public delegate void ErrorWindowDelegate(List<string> errors);
+        public ErrorWindowDelegate errorwindowdel;
+
+        // Set content of last tab if error occurs
+        public delegate void ErrorOccuredDelegate(string error);
+        public ErrorOccuredDelegate erroroccureddel;
 
         public MainWindow()
         {
             InitializeComponent();
+            errorWindow = new ErrorWindow(this);
+            errorwindowdel = errorWindow.Display;
+            erroroccureddel = this.SetError;
 
             for (int i = 0; i <= 24; ++i)
             {
@@ -68,6 +80,8 @@ namespace CSharpComponentWizard
             SolutionGenerator.AddonEvents.Add(22, "OBJEVENT_USERBITS");
             SolutionGenerator.AddonEvents.Add(23, "OBJEVENT_PRE_DESTROYED");
             SolutionGenerator.AddonEvents.Add(24, "OBJEVENT_DESTROYED");
+
+            SolutionGenerator.mw = this;
             
             // Generate Guid
             this.txb_Guid.Text = Guid.NewGuid().ToString().ToUpper();
@@ -134,15 +148,21 @@ namespace CSharpComponentWizard
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message, "Error occured!", MessageBoxButton.OK, MessageBoxImage.Error);
-                txb_GenerationResultSummary.Text = "Generation failed";
-                txb_GenerationResultDetails.Text = "Error occured while generating your Visual Studio 2010 solution. " + Environment.NewLine;
-                txb_GenerationResultDetails.Text += "We recommend you to start the whole process again! " + Environment.NewLine + Environment.NewLine;
-                txb_GenerationResultDetails.Text += "The specific error was: " + ex.Message;
-                btn_OpenSolution.IsEnabled = false;
+                object[] args = new object[1];
+                args[0] = ex.Message;
+                this.Dispatcher.Invoke(erroroccureddel, args);
             }
         }
-        
+
+        public void SetError(string s)
+        {
+            txb_GenerationResultSummary.Text = "Generation failed";
+            txb_GenerationResultDetails.Text = "Error occured while generating your Visual Studio 2010 solution. " + Environment.NewLine;
+            txb_GenerationResultDetails.Text += "We recommend you to start the whole process again! " + Environment.NewLine + Environment.NewLine;
+            txb_GenerationResultDetails.Text += "The specific error was: " + s;
+            btn_OpenSolution.IsEnabled = false;
+        }
+
         /*
          *  Step validators
         */        
@@ -170,7 +190,7 @@ namespace CSharpComponentWizard
         
         private bool ValidateInputTab_3()
         {
-            if (this.txb_ParadigmName.Text == String.Empty)
+            if (this.txb_ParadigmName.Text == String.Empty && this.txb_ParadigmName.IsEnabled)
             {
                 return false;
             }
@@ -411,7 +431,7 @@ namespace CSharpComponentWizard
         // Exit either at the first step or at the end
         private void btn_Exit_Click(object sender, RoutedEventArgs e)
         {
-            if(((Button)sender).Name == "btn_ExitSuccess")
+            if(((Button)sender).Name == "btn_ExitLastPage")
             {
                 this.Close();
                 return;
@@ -535,6 +555,11 @@ namespace CSharpComponentWizard
         // ParadigmName Changed
         private void txb_ParadigmName_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (!this.IsLoaded)
+            {
+                return;
+            }
+            
             if (ValidateInputTab_3())
             {
                 btn_Next3.IsEnabled = true;
@@ -570,6 +595,9 @@ namespace CSharpComponentWizard
                 txb_MgaPath.IsEnabled = true;
                 btn_BrowseMga.IsEnabled = true;
                 ckb_AllParadigms.IsEnabled = false;
+                txb_ParadigmName.IsEnabled = false;
+                txb_ParadigmName.Text = "This will be retrieved from .MGA file";
+                txb_ParadigmName.FontStyle = FontStyles.Italic;
 
                 if (ValidateInputTab_2())
                 {
@@ -591,6 +619,9 @@ namespace CSharpComponentWizard
                 txb_MgaPath.IsEnabled = false;
                 btn_BrowseMga.IsEnabled = false;
                 ckb_AllParadigms.IsEnabled = true;
+                txb_ParadigmName.IsEnabled = true;
+                txb_ParadigmName.Text = String.Empty;
+                txb_ParadigmName.FontStyle = FontStyles.Normal;
 
                 if (ValidateInputTab_2())
                 {

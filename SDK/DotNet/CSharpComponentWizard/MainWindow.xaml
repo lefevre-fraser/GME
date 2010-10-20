@@ -30,7 +30,7 @@
             <Image Source="/CSharpComponentWizard;component/Images/GMEIcon.gif" VerticalAlignment="Top"
                    HorizontalAlignment="Left" Margin="20,10,0,0" Width="63" Height="62"></Image>
             <Line X1="0" Y1="80" X2="500" Y2="80" Stroke="Black" StrokeThickness="1"/>
-            <Label Name="lbl_Title" Content="GME C# Component Wizard" Height="38" HorizontalAlignment="Left" Margin="115,10,0,0" VerticalAlignment="Top" FontSize="18" Width="265" FontFamily="Segoe UI" FontWeight="Bold">
+            <Label Name="lbl_Title" Content="GME C# Component Wizard" Height="38" HorizontalAlignment="Left" Margin="109,10,0,0" VerticalAlignment="Top" FontSize="18" Width="265" FontFamily="Segoe UI" FontWeight="Bold">
                 <Label.BitmapEffect>
                     <DropShadowBitmapEffect ShadowDepth="6" Softness="0.75" Opacity="0.4" />
                 </Label.BitmapEffect>
@@ -122,7 +122,7 @@
                     </TextBlock>
 
                     <Label Content="Name of paradigm:" Height="28" HorizontalAlignment="Left" Margin="21,115,0,0" Name="lbl_ParadignName" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI" />
-                    <TextBox Height="23" HorizontalAlignment="Left" Margin="25,140,0,0" Name="txb_ParadigmName" VerticalAlignment="Top" Width="288" Background="White" TextChanged="txb_ParadigmName_TextChanged" />
+                    <TextBox IsEnabled="False" Height="23" HorizontalAlignment="Left" Margin="25,140,0,0" Name="txb_ParadigmName" VerticalAlignment="Top" Width="288" Background="White" TextChanged="txb_ParadigmName_TextChanged" Text="This will be retrieved from .MGA file" FontStyle="Italic" />
                     <CheckBox IsEnabled="False" Content="All paradigms" Height="16" Margin="334,143,0,0" Name="ckb_AllParadigms" VerticalAlignment="Top" Checked="ckb_AllParadigms_Checked" Unchecked="ckb_AllParadigms_Unchecked" HorizontalAlignment="Left" Width="90" />
                     <Label Content="Component GUID" Height="28" HorizontalAlignment="Left" Margin="21,204,0,0" Name="lbl_Guid" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI" />
                     <TextBox Name="txb_Guid" Height="23" HorizontalAlignment="Left" Margin="25,229,0,0" VerticalAlignment="Top" Width="288" TextChanged="Guid_Changed" Background="#FFD7F2C3"/>
@@ -250,11 +250,11 @@
                         Completed.
                     </TextBlock>
 
-                    <TextBlock Name="txb_GenerationResultDetails" Height="25" HorizontalAlignment="Left" Margin="16,60,0,0" VerticalAlignment="Top" TextWrapping="Wrap" Width="429" FontFamily="Segoe UI" FontSize="13">
+                    <TextBlock Name="txb_GenerationResultDetails" Height="128" HorizontalAlignment="Left" Margin="16,60,0,0" VerticalAlignment="Top" TextWrapping="Wrap" Width="429" FontFamily="Segoe UI" FontSize="13">
                         Your Visual Studio 2010 solution has been successfully generated.
                     </TextBlock>
-                    <Button Content="Exit" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_ExitSuccess" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Exit_Click" />
-                    <Button Content="Open your solution" Height="30" HorizontalAlignment="Left" Margin="169,166,0,0" Name="btn_OpenSolution" VerticalAlignment="Top" Width="171" Click="btn_OpenSolution_Click" />
+                    <Button Content="Exit" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_ExitLastPage" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Exit_Click" />
+                    <Button Content="Open your solution" Height="30" HorizontalAlignment="Left" Margin="169,216,0,0" Name="btn_OpenSolution" VerticalAlignment="Top" Width="171" Click="btn_OpenSolution_Click" />
                 </Grid>
             </TabItem>
         </TabControl>

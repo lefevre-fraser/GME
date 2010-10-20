@@ -38,6 +38,7 @@ namespace CSharpComponentWizard
     
     public static class SolutionGenerator
     {
+        public static MainWindow mw;
         public static Dictionary<int, string> AddonEvents;
         
         public static CompType SelectedType = CompType.Interpreter;
@@ -114,9 +115,8 @@ namespace CSharpComponentWizard
                 sln.AddFromTemplate(TemplatePath, outputfolder, SolutionName, false);
                 sln.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.Write("Unexpected error occured: " + e.Message);
                 throw;
             }
             finally
@@ -327,17 +327,23 @@ namespace CSharpComponentWizard
         {
             try
             {
-                string ParadigmName = GeneratorFacade.main(MgaPath, TargetFolder + @"\" + SolutionName, "GME.CSharp." + SolutionName);
+                // Overwrite ParadigmName if DS interface is generated
+                SolutionGenerator.ParadigmName = GeneratorFacade.main(MgaPath, TargetFolder + @"\" + SolutionName, "GME.CSharp." + SolutionName);
+                
+                if (GeneratorFacade.Errors.Count != 0)
+                {
+                    throw new Exception("Error occured during the domain specific interface generation.");
+                }
             } 
             catch(Exception)
             {
+                object[] args = new object[1];
+                args[0] = GeneratorFacade.Errors;
+                if (GeneratorFacade.Errors.Count != 0)
+                {
+                    SolutionGenerator.mw.Dispatcher.Invoke(SolutionGenerator.mw.errorwindowdel, args);
+                }
                 throw;
-            }
-
-            if (GeneratorFacade.Errors.Count != 0)
-            {
-                MessageBox.Show("Error occured during the domain specific interface generation:" + GeneratorFacade.Errors.ToString());
-                throw new Exception("Error occured during the domain specific interface generation:" + GeneratorFacade.Errors.ToString());
             }
                     
             // Add files to the projectfile
