@@ -38,8 +38,8 @@ namespace DSM.Generators
 ";
             public static readonly string EndPointInner =
 @"
-                    if (connPoint.target.MetaBase.Name == ""{0}"" && connPoint.ConnRole == ""{1}"")
-                        return new {2}(connPoint.target as {3});
+                   if (target.Meta.Name == ""{0}"")
+                      return new {2}(target as {3});
 ";
             public static readonly string EndPoint =
 @"
@@ -47,10 +47,8 @@ namespace DSM.Generators
         {{
             get
             {{
-                foreach (MgaConnPoint connPoint in this.mgaObject.ConnPoints)
-                {{
-                    {2}
-                }}
+                IMgaFCO target = (mgaObject as IMgaSimpleConnection).{3};
+{2}
 
                 return null;
             }}
@@ -197,7 +195,7 @@ namespace DSM.Generators
                     }
                 }
 
-                sb.AppendFormat(Connection.Template.EndPoint, current.src.className, "Src", inner.ToString());
+                sb.AppendFormat(Connection.Template.EndPoint, current.src.className, "Src", inner.ToString(), "src");
             }
             {
                 StringBuilder inner = new StringBuilder();
@@ -211,7 +209,7 @@ namespace DSM.Generators
                             inner.AppendFormat(Connection.Template.EndPointInner, child.Rel.className, "dst", child.Rel.ProperClassName, child.Rel.memberType);
                     }
                 }
-                sb.AppendFormat(Connection.Template.EndPoint, current.dst.className, "Dst", inner.ToString());
+                sb.AppendFormat(Connection.Template.EndPoint, current.dst.className, "Dst", inner.ToString(), "dst");
             }
                         
             return sb.ToString();
