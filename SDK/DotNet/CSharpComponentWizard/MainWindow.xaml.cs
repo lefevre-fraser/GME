@@ -433,6 +433,7 @@ namespace CSharpComponentWizard
         {
             if(((Button)sender).Name == "btn_ExitLastPage")
             {
+                this.errorWindow.Close();
                 this.Close();
                 return;
             }
@@ -444,6 +445,7 @@ namespace CSharpComponentWizard
             switch (MessageBox.Show(messageBoxText, caption, button, icon))
             {
                 case MessageBoxResult.Yes:
+                    this.errorWindow.Close();
                     this.Close();
                     break;
                 case MessageBoxResult.No:

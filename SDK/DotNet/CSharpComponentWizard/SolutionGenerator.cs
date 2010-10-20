@@ -329,7 +329,7 @@ namespace CSharpComponentWizard
             {
                 // Overwrite ParadigmName if DS interface is generated
                 SolutionGenerator.ParadigmName = GeneratorFacade.main(MgaPath, TargetFolder + @"\" + SolutionName, "GME.CSharp." + SolutionName);
-                
+
                 if (GeneratorFacade.Errors.Count != 0)
                 {
                     throw new Exception("Error occured during the domain specific interface generation.");

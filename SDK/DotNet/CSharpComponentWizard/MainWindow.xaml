@@ -35,7 +35,7 @@
                     <DropShadowBitmapEffect ShadowDepth="6" Softness="0.75" Opacity="0.4" />
                 </Label.BitmapEffect>
             </Label>
-            <Label Content="Step 1 of 6" Height="28" Margin="0,46,17,0" Name="lbl_Step" VerticalAlignment="Top" FontFamily="Segoe UI" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right" Width="71" />
+            <Label FlowDirection="RightToLeft" Content="Step 1 of 6" Height="28" Margin="0,46,17,0" Name="lbl_Step" VerticalAlignment="Top" FontFamily="Segoe UI" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right" Width="149" />
         </Grid>
         <TabControl BorderThickness="0" Grid.Row="1" Margin="0,-2,0,0" Padding="0" Name="tbc_WizardTab">
             <TabControl.Resources>
