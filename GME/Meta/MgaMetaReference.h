@@ -11,7 +11,7 @@
 class ATL_NO_VTABLE CMgaMetaReference : 
 	public CComCoClass<CMgaMetaReference, &CLSID_MgaMetaReference>,
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IMgaMetaReference, &IID_IMgaMetaReference, &LIBID_METALib>,
+	public IDispatchImpl<IMgaMetaReference, &IID_IMgaMetaReference, &LIBID_MGAMetaLib>,
 	public CMgaMetaFCO
 {
 public:

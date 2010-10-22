@@ -11,7 +11,7 @@ class CCoreMetaObject;
 class ATL_NO_VTABLE CCoreMetaProject : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CCoreMetaProject, &CLSID_CoreMetaProject>,
-	public IDispatchImpl<ICoreMetaProject, &IID_ICoreMetaProject, &LIBID_CoreLib>,
+	public IDispatchImpl<ICoreMetaProject, &IID_ICoreMetaProject, &LIBID_MGACoreLib>,
 	public ISupportErrorInfoImpl<&IID_ICoreMetaProject>
 {
 public:

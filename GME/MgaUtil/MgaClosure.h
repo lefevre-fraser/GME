@@ -7,7 +7,7 @@
 class ATL_NO_VTABLE CMgaClosure 
 	: public CComObjectRootEx<CComSingleThreadModel>
 	, public CComCoClass<CMgaClosure, &CLSID_MgaClosure>
-	, public IDispatchImpl<IMgaClosure, &IID_IMgaClosure, &LIBID_MGAUTILLib>  
+	, public IDispatchImpl<IMgaClosure, &IID_IMgaClosure, &LIBID_MGAUtilLib>  
 {
 public:
 	CMgaClosure() { }

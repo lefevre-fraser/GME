@@ -13,7 +13,7 @@
 // --------------------------- CMgaMetaBase
 
 class ATL_NO_VTABLE CMgaMetaBase :
-	public IDispatchImpl<IMgaMetaBase, &IID_IMgaMetaBase, &LIBID_METALib>,
+	public IDispatchImpl<IMgaMetaBase, &IID_IMgaMetaBase, &LIBID_MGAMetaLib>,
 	public CMgaMetaRegNodes
 {
 public:

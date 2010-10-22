@@ -13,7 +13,7 @@ import "Core.idl";
 	version(1.0),
 	helpstring("MGA Core Type Library")
 ]
-library CoreLib
+library MGACoreLib
 {
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");

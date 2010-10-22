@@ -12,7 +12,7 @@ class CMgaMetaBase;
 class ATL_NO_VTABLE CMgaMetaProject : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaMetaProject, &CLSID_MgaMetaProject>,
-	public IDispatchImpl<IMgaMetaProject, &IID_IMgaMetaProject, &LIBID_METALib>,
+	public IDispatchImpl<IMgaMetaProject, &IID_IMgaMetaProject, &LIBID_MGAMetaLib>,
 	public IGMEVersionInfoImpl
 {
 public:

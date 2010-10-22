@@ -15,7 +15,7 @@ import "Core.idl";
 	version(1.0),
 	helpstring("MGA Meta Type Library")
 ]
-library METALib
+library MGAMetaLib
 {
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");

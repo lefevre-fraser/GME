@@ -11,7 +11,7 @@
 class ATL_NO_VTABLE CMgaEventLogger :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaEventLogger, &CLSID_MgaEventLogger>,
-	public IDispatchImpl<IMgaEventLogger, &IID_IMgaEventLogger, &LIBID_MGAUTILLib>  
+	public IDispatchImpl<IMgaEventLogger, &IID_IMgaEventLogger, &LIBID_MGAUtilLib>  
 {
 public:
 	CMgaEventLogger();

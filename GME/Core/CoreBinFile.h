@@ -82,7 +82,7 @@ typedef objects_type::iterator objects_iterator;
 
 class ATL_NO_VTABLE CCoreBinFile : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<ICoreStorage, &IID_ICoreStorage, &LIBID_CoreLib>,
+	public IDispatchImpl<ICoreStorage, &IID_ICoreStorage, &LIBID_MGACoreLib>,
 	public ISupportErrorInfoImpl<&IID_ICoreStorage>,
 	public CComCoClass<CCoreBinFile, &CLSID_CoreBinFile>
 {

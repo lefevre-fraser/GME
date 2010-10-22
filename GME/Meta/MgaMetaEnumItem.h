@@ -7,7 +7,7 @@
 class ATL_NO_VTABLE CMgaMetaEnumItem : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaMetaEnumItem, &CLSID_MgaMetaEnumItem>,
-	public IDispatchImpl<IMgaMetaEnumItem, &IID_IMgaMetaEnumItem, &LIBID_METALib>
+	public IDispatchImpl<IMgaMetaEnumItem, &IID_IMgaMetaEnumItem, &LIBID_MGAMetaLib>
 {
 public:
 	IUnknown *GetUnknown() const { return (IMgaMetaEnumItem*)this; }

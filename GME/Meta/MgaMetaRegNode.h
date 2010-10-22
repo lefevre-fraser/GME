@@ -42,7 +42,7 @@ public: \
 class ATL_NO_VTABLE CMgaMetaRegNode : 
 	public CComCoClass<CMgaMetaRegNode, &CLSID_MgaMetaRegNode>,
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IMgaMetaRegNode, &IID_IMgaMetaRegNode, &LIBID_METALib>,
+	public IDispatchImpl<IMgaMetaRegNode, &IID_IMgaMetaRegNode, &LIBID_MGAMetaLib>,
 	public CMgaMetaRegNodes
 {
 public:

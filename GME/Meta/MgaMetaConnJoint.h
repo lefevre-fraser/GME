@@ -7,7 +7,7 @@
 class ATL_NO_VTABLE CMgaMetaConnJoint : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaMetaConnJoint, &CLSID_MgaMetaConnJoint>,
-	public IDispatchImpl<IMgaMetaConnJoint, &IID_IMgaMetaConnJoint, &LIBID_METALib>
+	public IDispatchImpl<IMgaMetaConnJoint, &IID_IMgaMetaConnJoint, &LIBID_MGAMetaLib>
 {
 public:
 	IUnknown *GetUnknown() const { return (IMgaMetaConnJoint*)this; }

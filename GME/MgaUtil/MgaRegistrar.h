@@ -8,7 +8,7 @@
 class ATL_NO_VTABLE CMgaRegistrar : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaRegistrar, &CLSID_MgaRegistrar>,
-	public IDispatchImpl<IMgaRegistrar, &IID_IMgaRegistrar, &LIBID_MGAUTILLib>,
+	public IDispatchImpl<IMgaRegistrar, &IID_IMgaRegistrar, &LIBID_MGAUtilLib>,
 	public IGMEVersionInfoImpl
 {
 public:

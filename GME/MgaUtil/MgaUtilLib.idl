@@ -12,7 +12,7 @@ import "MgaUtil.idl";
 	version(1.0),
 	helpstring("MGA Utilities Type Library")
 ]
-library MGAUTILLib
+library MGAUtilLib
 {
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
