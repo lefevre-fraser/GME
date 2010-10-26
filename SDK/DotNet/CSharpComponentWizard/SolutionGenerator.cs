@@ -38,6 +38,8 @@ namespace CSharpComponentWizard
     
     public static class SolutionGenerator
     {
+        public const string ENTRYPOINTCODE_REPLACESTRING = "$GET_ROOTFOLDER_CODE$";
+        
         public static MainWindow mw;
         public static Dictionary<int, string> AddonEvents;
         
@@ -272,6 +274,7 @@ namespace CSharpComponentWizard
                 FileReadStream.Close();
 
                 ContentString = ContentString.Replace("MyInterpreter", SolutionName);
+                ContentString = SolutionGenerator.AddEntryPointCode(ContentString);
 
                 StreamWriter FileWriteStream = new StreamWriter(outputfolder + @"\MyInterpreter.cs");
                 FileWriteStream.Write(ContentString);
@@ -376,5 +379,28 @@ namespace CSharpComponentWizard
             }
             
         }
+
+        public static string AddEntryPointCode(string ContentString)
+        {
+            if(SolutionGenerator.SelectedInterface == ComponentInterface.Dependent)
+            {
+                string getrootfolder_domain_specific = @"RootFolder rf = new RootFolder(project.RootFolder);";
+                getrootfolder_domain_specific += Environment.NewLine + "\t\t\t";
+                getrootfolder_domain_specific += @"GMEConsole.Out.Write(rf.Name);";
+
+                ContentString = ContentString.Replace(ENTRYPOINTCODE_REPLACESTRING, getrootfolder_domain_specific);
+            }
+            else // Independent
+            {
+                string getrootfolder_csharp = @"IMgaFolder rootFolder = project.RootFolder;";
+                getrootfolder_csharp += Environment.NewLine + "\t\t\t";
+                getrootfolder_csharp += @"GMEConsole.Out.WriteLine(rootFolder.Name);";
+
+                ContentString = ContentString.Replace(ENTRYPOINTCODE_REPLACESTRING, getrootfolder_csharp);
+            }
+
+            return ContentString;
+        }
+    
     }
 }

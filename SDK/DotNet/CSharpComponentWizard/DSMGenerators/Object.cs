@@ -62,7 +62,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using MGALib;
-using METALib;
+using MGAMetaLib;
 ";
 
             public static readonly string Object =

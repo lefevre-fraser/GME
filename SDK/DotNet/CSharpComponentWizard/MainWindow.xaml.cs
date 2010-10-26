@@ -734,5 +734,10 @@ namespace CSharpComponentWizard
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            this.errorWindow.Close();
+        }
     }
 }
