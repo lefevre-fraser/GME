@@ -767,6 +767,9 @@ void ObjTreeCheckINTORelations(CMgaProject *mgaproject, CoreObj &self, coreobjha
 		metaid_type st = GetMetaID(ITER);
 		if(st == DTID_SETNODE || st == DTID_CONNROLE) {
 			CoreObj rel_owner = ITER.GetMgaObj();
+			if (!rel_owner) {
+				continue;	// connection/set might be deleted due to a previous relation
+			}
 			if(internals.find(rel_owner) == internals.end()) {
 				int ttt = st == DTID_CONNROLE ? MM_CONN : MM_SET;
 				setcheck(mgaproject, rel_owner, CHK_CHANGED);

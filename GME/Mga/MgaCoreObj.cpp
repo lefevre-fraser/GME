@@ -134,7 +134,9 @@ CoreObj CoreObj::GetMgaObj() {
 		default:				ai = ATTRID_ATTRPARENT;
 		}
 		r = r[ai];
-		ASSERT(r);
+		if (!r) {
+			break;
+		}
 	}
 	return r;
 }
