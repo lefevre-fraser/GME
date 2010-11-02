@@ -6,77 +6,77 @@ REM	Please consult with Peter before editing this file
 REM 
 
 echo Core.dll:
-regsvr32 /s "Debug\Core.dll"
+regsvr32 /s "%~dp0Debug\Core.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Meta.dll:
-regsvr32 /s "Debug\Meta.dll"
+regsvr32 /s "%~dp0Debug\Meta.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Mga.dll:
-regsvr32 /s "Debug\Mga.dll"
+regsvr32 /s "%~dp0Debug\Mga.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo MgaUtil.dll:
-regsvr32 /s "Debug\MgaUtil.dll"
+regsvr32 /s "%~dp0Debug\MgaUtil.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Parser.dll:
-regsvr32 /s "Debug\Parser.dll"
+regsvr32 /s "%~dp0Debug\Parser.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo ConstraintManager.dll:
-regsvr32 /s "Debug\ConstraintManager.dll"
+regsvr32 /s "%~dp0Debug\ConstraintManager.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo GMEActiveBrowser.ocx:
-regsvr32 /s "Debug\GMEActiveBrowser.ocx"
+regsvr32 /s "%~dp0Debug\GMEActiveBrowser.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo MgaDecorators.dll:
-regsvr32 /s "Debug\MgaDecorators.dll"
+regsvr32 /s "%~dp0Debug\MgaDecorators.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Annotator.dll:
-regsvr32 /s "Debug\Annotator.dll"
+regsvr32 /s "%~dp0Debug\Annotator.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo ObjectInspector.ocx:
-regsvr32 /s "Debug\ObjectInspector.ocx"
+regsvr32 /s "%~dp0Debug\ObjectInspector.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Search.ocx:
-regsvr32 /s "Debug\Search.ocx"
+regsvr32 /s "%~dp0Debug\Search.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Console.ocx:
-regsvr32 /s "Debug\Console.ocx"
+regsvr32 /s "%~dp0Debug\Console.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo XmlBackEnd.dll:
-regsvr32 /s "Debug\XmlBackEnd.dll"
+regsvr32 /s "%~dp0Debug\XmlBackEnd.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo PartBrowser.ocx:
-regsvr32 /s "Debug\PartBrowser.ocx"
+regsvr32 /s "%~dp0Debug\PartBrowser.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo PanningView.ocx:
-regsvr32 /s "Debug\PanningView.ocx"
+regsvr32 /s "%~dp0Debug\PanningView.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 

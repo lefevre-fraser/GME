@@ -5,78 +5,80 @@ REM
 REM	Please consult with Peter before editing this file
 REM 
 
+REM FIXME Do we need to regasm mgadotnetservices.dll?
+
 echo Core.dll:
-regsvr32 /s "Release\Core.dll"
+regsvr32 /s "%~dp0Release\Core.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Meta.dll:
-regsvr32 /s "Release\Meta.dll"
+regsvr32 /s "%~dp0Release\Meta.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Mga.dll:
-regsvr32 /s "Release\Mga.dll"
+regsvr32 /s "%~dp0Release\Mga.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo MgaUtil.dll:
-regsvr32 /s "Release\MgaUtil.dll"
+regsvr32 /s "%~dp0Release\MgaUtil.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Parser.dll:
-regsvr32 /s "Release\Parser.dll"
+regsvr32 /s "%~dp0Release\Parser.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo ConstraintManager.dll:
-regsvr32 /s "Release\ConstraintManager.dll"
+regsvr32 /s "%~dp0Release\ConstraintManager.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo GMEActiveBrowser.ocx:
-regsvr32 /s "Release\GMEActiveBrowser.ocx"
+regsvr32 /s "%~dp0Release\GMEActiveBrowser.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo MgaDecorators.dll:
-regsvr32 /s "Release\MgaDecorators.dll"
+regsvr32 /s "%~dp0Release\MgaDecorators.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Annotator.dll:
-regsvr32 /s "Release\Annotator.dll"
+regsvr32 /s "%~dp0Release\Annotator.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo ObjectInspector.ocx:
-regsvr32 /s "Release\ObjectInspector.ocx"
+regsvr32 /s "%~dp0Release\ObjectInspector.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Search.ocx:
-regsvr32 /s "Release\Search.ocx"
+regsvr32 /s "%~dp0Release\Search.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo Console.ocx:
-regsvr32 /s "Release\Console.ocx"
+regsvr32 /s "%~dp0Release\Console.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo XmlBackEnd.dll:
-regsvr32 /s "Release\XmlBackEnd.dll"
+regsvr32 /s "%~dp0Release\XmlBackEnd.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo PartBrowser.ocx:
-regsvr32 /s "Release\PartBrowser.ocx"
+regsvr32 /s "%~dp0Release\PartBrowser.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo PanningView.ocx:
-regsvr32 /s "Release\PanningView.ocx"
+regsvr32 /s "%~dp0Release\PanningView.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
