@@ -1,6 +1,5 @@
 // MgaComplexOps.cpp : Implementation of FCO Copy/Move/Derive/Delete operations
 #include "stdafx.h"
-#include <iostream>
 #include "MgaFCO.h"
 #include <map>
 #include "MgaComplexOps.h"
