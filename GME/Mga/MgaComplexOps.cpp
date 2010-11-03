@@ -592,9 +592,15 @@ bool ObjTreeReconnectFoldersToo(CoreObj self, coreobjpairhash &crealist, CoreObj
 					children.Sort();
 				}
 				ITERATE_THROUGH(children) {
-					if(ObjTreeReconnect(ITER,crealist, derivtgt)) {
-						containedexternal = true;
-						if(n == DTID_CONNROLE) break; // stop processing rolesegments after an ext ref.
+					if (GetMetaID(ITER) == DTID_FOLDER) {
+						if(ObjTreeReconnectFoldersToo(ITER, crealist, derivtgt)) {
+							containedexternal = true;
+						}
+					} else {
+						if(ObjTreeReconnect(ITER, crealist, derivtgt)) {
+							containedexternal = true;
+							if(n == DTID_CONNROLE) break; // stop processing rolesegments after an ext ref.
+						}
 					}
 				}
 			}
