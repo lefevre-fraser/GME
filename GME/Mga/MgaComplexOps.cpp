@@ -1,5 +1,6 @@
 // MgaComplexOps.cpp : Implementation of FCO Copy/Move/Derive/Delete operations
 #include "stdafx.h"
+#include <iostream>
 #include "MgaFCO.h"
 #include <map>
 #include "MgaComplexOps.h"
@@ -762,34 +763,92 @@ void ObjTreeCheckRelationsFoldersToo(CMgaProject *mgaproject, CoreObj &self, cor
 void ObjTreeCheckINTORelations(CMgaProject *mgaproject, CoreObj &self, coreobjhash &internals) {
 	metaid_type n = GetMetaID(self);
 	ASSERT(n >= DTID_MODEL && n <= DTID_SET);
+	if (n == DTID_REFERENCE) {
+		// GME-311: need to delete connections into refport 'conn_seg' iff 
+		//   connection 'rel_owner' is not in internals and 'conn_seg' is the actual connection end (not an intermediary)
+		CoreObjs conn_segs = self[ATTRID_SEGREF + ATTRID_COLLECTION];
+		ITERATE_THROUGH(conn_segs) {
+			metaid_type st = GetMetaID(ITER);
+			ASSERT(st == DTID_CONNROLESEG);
+			if (st != DTID_CONNROLESEG) {
+				continue;
+			}
+			CoreObj role = ITER[ATTRID_CONNSEG];
+			CoreObj rel_owner = ITER.GetMgaObj();
+			if (!rel_owner || !role) {
+				continue;	// connection might be deleted due to a previous relation
+			}
+			ASSERT(GetMetaID(role) == DTID_CONNROLE);
+			ASSERT(GetMetaID(rel_owner) == DTID_CONNECTION);
+			#ifdef _DEBUG
+			CComBSTR conn_name = rel_owner[ATTRID_NAME], role_name = role[ATTRID_NAME];
+			#endif
+			ASSERT(ObjForCore(rel_owner)->simpleconn()); // KMS: don't think we can get here without a simpleconn
+			if (internals.find(rel_owner) == internals.end() && ObjForCore(rel_owner)->simpleconn()) {
+				setcheck(mgaproject, rel_owner, CHK_CHANGED);
+				switch(MODEMASK(MM_CONN, MM_INTO)) {
+				case MM_ERROR: COMTHROW(E_MGA_OP_REFUSED);
+					break;
+				case MM_CLEAR:
+					CoreObjs refport_refs = role[ATTRID_CONNSEG+ATTRID_COLLECTION]; // i.e. refport containers
+					long count;
+					COMTHROW(refport_refs->get_Count(&count));
+					if (count == 0) {
+						// i.e. not a refport
+						ASSERT(FALSE);
+						continue;
+					}
+					CComPtr<ICoreObject> refport_ref;
+					COMTHROW(refport_refs->get_Item(1, &refport_ref));
+					CoreObj end_refport_ref(refport_ref.p);
+					// i.e. if (end_refport_ref == ITER)
+					if (GetMetaID(end_refport_ref) == GetMetaID(ITER) && end_refport_ref.GetObjID() == ITER.GetObjID())
+						ObjForCore(rel_owner)->inDeleteObject();
+					break;
+				}
+			}
+		}
+	}
+
 	CoreObjs xrefs = self[ATTRID_XREF + ATTRID_COLLECTION]; 
 	ITERATE_THROUGH(xrefs) {
 		metaid_type st = GetMetaID(ITER);
-		if(st == DTID_SETNODE || st == DTID_CONNROLE) {
-			CoreObj rel_owner = ITER.GetMgaObj();
-			if (!rel_owner) {
-				continue;	// connection/set might be deleted due to a previous relation
-			}
-			if(internals.find(rel_owner) == internals.end()) {
-				int ttt = st == DTID_CONNROLE ? MM_CONN : MM_SET;
-				setcheck(mgaproject, rel_owner, CHK_CHANGED);
-				switch(MODEMASK(ttt, MM_INTO)) {
-				case MM_ERROR: COMTHROW(E_MGA_OP_REFUSED);
-					break;
-				case MM_CLEAR: 
-					if( st == DTID_CONNROLE && ObjForCore(rel_owner)->simpleconn() ||
-					    MODEFLAG(ttt, MM_FULLDELETE)) {
-					    ObjForCore(rel_owner)->inDeleteObject();
-					} 
-					else {
-						CoreObjMark(self, st == DTID_CONNROLE ? OBJEVENT_DISCONNECTED : OBJEVENT_SETEXCLUDED);
-						CoreObjMark(rel_owner, OBJEVENT_RELATION);
-						SingleObjTreeDelete(ITER);
-					}
-					break;
-				}
-			}	
+		if(st != DTID_SETNODE && st != DTID_CONNROLE) {
+			continue;
 		}
+		CoreObj rel_owner = ITER.GetMgaObj();
+		if (!rel_owner) {
+			continue;	// connection/set might be deleted due to a previous relation
+		}
+
+		if(internals.find(rel_owner) == internals.end()) {
+			int ttt = st == DTID_CONNROLE ? MM_CONN : MM_SET;
+			setcheck(mgaproject, rel_owner, CHK_CHANGED);
+			switch(MODEMASK(ttt, MM_INTO)) {
+			case MM_ERROR: COMTHROW(E_MGA_OP_REFUSED);
+				break;
+			case MM_CLEAR: 
+				if (st == DTID_CONNROLE && ObjForCore(rel_owner)->simpleconn()) {
+					// GME-297: don't delete connections connecting to refports
+					// (outside connections to inside refports are deleted above)
+					long count = 0;
+					CoreObjs refport_refs = ITER[ATTRID_CONNSEG+ATTRID_COLLECTION]; // i.e. refport containers
+					COMTHROW(refport_refs->get_Count(&count));
+					if (count == 0) {
+						// this connection role is connected directly; it is not connected to a refport
+						ObjForCore(rel_owner)->inDeleteObject();
+					}
+				} else if (MODEFLAG(ttt, MM_FULLDELETE)) {
+					ObjForCore(rel_owner)->inDeleteObject();
+				} 
+				else {
+					CoreObjMark(self, st == DTID_CONNROLE ? OBJEVENT_DISCONNECTED : OBJEVENT_SETEXCLUDED);
+					CoreObjMark(rel_owner, OBJEVENT_RELATION);
+					SingleObjTreeDelete(ITER);
+				}
+				break;
+			}
+		}	
 	}
 	{
 	CoreObjs refs = self[ATTRID_REFERENCE + ATTRID_COLLECTION]; 
@@ -1356,7 +1415,7 @@ HRESULT FCO::MoveFCOs(IMgaFCOs *movelist, IMgaMetaRoles *rlist,IMgaFCOs **objs) 
 					ASSERT(targettype == DTID_MODEL);
 					CComPtr<IMgaMetaRole> r;
 					if(rlist) COMTHROW(rlist->get_Item(i+1, &r));
-					if(!r) {   // NO metanaem given, inherit that of original object
+					if(!r) {   // NO metaname given, inherit that of original object
 						CComPtr<IMgaMetaFCO> mf; 
 						COMTHROW(get_Meta(&mf));
 						CComQIPtr<IMgaMetaModel> parentmeta = mf;
