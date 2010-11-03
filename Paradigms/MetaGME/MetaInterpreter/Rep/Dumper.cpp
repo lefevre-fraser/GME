@@ -1098,6 +1098,9 @@ void Dumper::doDump()
 
 bool Dumper::checkAll()
 {
+	const MON::Object& meta = this->m_BON_Project_Root_Folder->getObjectMeta();
+	if (meta.project().displayedName() != "MetaGME")
+		global_vars.err << MSG_WARNING  << "Warning: file's paradigm '" << meta.project().displayedName() << "' is not MetaGME\n";
 	bool res0 = checkRootFolder();
 	bool res1 = checkAllFCOs();
 	bool res2 = checkOrphanAttributes();
