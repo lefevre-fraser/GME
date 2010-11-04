@@ -53,7 +53,8 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 																	DecoratorSDK::COLOR_TRANSPARENT,
 																	DecoratorSDK::COLOR_GRAYED_OUT);
 				CComPtr<IMgaFCO> mgaFco = m_spFCO;
-				while(objtype == OBJTYPE_REFERENCE) {
+				bool is_reference = objtype == OBJTYPE_REFERENCE;
+				while (objtype == OBJTYPE_REFERENCE) {
 					CComPtr<IMgaReference> ref;
 					COMTHROW(mgaFco.QueryInterface(&ref));
 					mgaFco = NULL;
@@ -68,7 +69,7 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 					CString strStereotype;
 					if (DecoratorSDK::getFacilities().getAttribute(mgaFco ? mgaFco : m_spFCO, UML_STEREOTYPE_ATTR, strStereotype)) {
 						if (!strStereotype.IsEmpty()) {
-							m_StereotypePart = new UMLStereoLabelPart(this, m_eventSink, mgaFco ? mgaFco : m_spFCO);
+							m_StereotypePart = new UMLStereoLabelPart(this, m_eventSink, mgaFco ? mgaFco : m_spFCO, !is_reference);
 							m_StereotypePart->SetText(strStereotype);
 						}
 					}
@@ -80,7 +81,7 @@ void UMLClassPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMeta
 				CString strStereotype;
 				if (DecoratorSDK::getFacilities().getAttribute(m_spFCO, UML_STEREOTYPE_ATTR, strStereotype)) {
 					if (!strStereotype.IsEmpty()) {
-						m_StereotypePart = new UMLStereoLabelPart(this, m_eventSink, m_spFCO);
+						m_StereotypePart = new UMLStereoLabelPart(this, m_eventSink, m_spFCO, false);
 						m_StereotypePart->SetText(strStereotype);
 					}
 				}

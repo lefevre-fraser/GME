@@ -18,10 +18,11 @@ namespace UMLDecor {
 //
 //################################################################################################
 
-UMLStereoLabelPart::UMLStereoLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents> eventSink, CComPtr<IMgaFCO>& pFCO):
+UMLStereoLabelPart::UMLStereoLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents> eventSink, CComPtr<IMgaFCO>& pFCO, bool bTextEditable):
 	DecoratorSDK::StereoLabelPart(pPart, eventSink),
 	m_spActualFCO(pFCO)
 {
+	m_bTextEditable = bTextEditable;
 }
 
 UMLStereoLabelPart::~UMLStereoLabelPart()

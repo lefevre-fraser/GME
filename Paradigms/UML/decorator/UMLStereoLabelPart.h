@@ -27,7 +27,7 @@ protected:
 	CComPtr<IMgaFCO>	m_spActualFCO;
 
 public:
-	UMLStereoLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents> eventSink, CComPtr<IMgaFCO>& pFCO);
+	UMLStereoLabelPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents> eventSink, CComPtr<IMgaFCO>& pFCO, bool bTextEditable);
 	virtual ~UMLStereoLabelPart();
 
 	virtual void	ExecuteOperation			(const CString& newString);
