@@ -46,7 +46,7 @@ void ClassLabelPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 								   CRect(loc.left, loc.top + m_labelRelYPosition - size.cy,
 										 loc.right, loc.top + m_labelRelYPosition),
 								   pFont,
-								   (m_bActive) ? m_crText : COLOR_GRAYED_OUT,
+								   (m_bActive) ? m_crText : COLOR_GREY,
 								   TA_BOTTOM | TA_CENTER,
 								   m_iMaxTextLength,
 								   "",
