@@ -225,8 +225,12 @@ class CUACUtils
 public:
 
 	// Vista-dependent icon constants (copied from Commctrl.h)
+#ifndef BCM_FIRST
 	static const DWORD BCM_FIRST = 0x1600;
+#endif
+#ifndef BCM_SETSHIELD
 	static const DWORD BCM_SETSHIELD = (BCM_FIRST + 0x000C);
+#endif
 
 	static bool isVistaOrLater() 
 	{
