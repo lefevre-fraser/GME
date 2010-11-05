@@ -61,6 +61,7 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnUpdateFrameTitle(BOOL bAddToTitle);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual void RegisterTaskbarTab(CMDIChildWndEx* pWndBefore = NULL) { } // disable each tab showing up on the taskbar in windows 7
 };
 
 /////////////////////////////////////////////////////////////////////////////
