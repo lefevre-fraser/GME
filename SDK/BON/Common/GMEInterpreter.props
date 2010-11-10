@@ -5,12 +5,6 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <Midl>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
-    </Midl>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup>
-    <Midl>
       <AdditionalIncludeDirectories>.;$(GME_ROOT)\Gme\$(Configuration);$(GME_ROOT)\bin;$(GME_ROOT)\Interfaces;$(GME_ROOT)\Gme\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <ValidateAllParameters>true</ValidateAllParameters>

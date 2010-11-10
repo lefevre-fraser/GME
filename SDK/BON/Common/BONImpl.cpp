@@ -3885,6 +3885,15 @@ namespace BON
 	void FCOImpl::onObjectCreated()
 	{
 		FCO( this->getType() );
+		if (getParentModelI())
+		{
+			ReferenceSet references = getParentModelI()->getReferencesI();
+			for ( ReferenceSet::iterator it = references.begin() ; it != references.end() ; ++it )
+			{
+				(**it).m_bAllChildPorts = false;
+			}
+		}
+		
 		try {
 			std::set<ReferencePort> rps = getReferencePorts();
 			for( std::set<ReferencePort>::const_iterator it = rps.begin(); it != rps.end(); ++it)
