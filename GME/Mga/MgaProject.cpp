@@ -549,6 +549,7 @@ STDMETHODIMP CMgaProject::Save(BSTR newname, VARIANT_BOOL keepoldname)
 					//if(!(ppp & LOCKING_READ)) self[ATTRID_MDATE] = Now();
                     // BGY: this modifies the root every save time, which is bad for the
                     // xmlbackend (it always tries to check out the root)
+					GlobalNotify(GLOBALEVENT_SAVE_PROJECT);
 					COMTHROW(CommitTransaction());
 				} catch(hresult_exception &) {
 					t->Flush();
@@ -1343,6 +1344,10 @@ STDMETHODIMP CMgaProject::CommitTransaction()
 		}
 		COMTHROW(CommitNotify());		
 		COMTHROW(dataproject->PopTerritory());
+		short nestedCount;
+		dataproject->get_NestedTransactionCount(&nestedCount);
+		if (nestedCount == 1 && !read_only)
+			COMTHROW(GlobalNotify(GLOBALEVENT_COMMIT_TRANSACTION));
 		COMTHROW(dataproject->CommitTransaction(read_only ? TRANSTYPE_READFIRST: TRANSTYPE_FIRST));
         baseterr = activeterr= NULL;
 		read_only = false;
@@ -1596,7 +1601,7 @@ STDMETHODIMP CMgaProject::Redo() {
 			CComPtr<IMgaTerritory> t;
 			COMTHROW(CreateTerritory(NULL, &t));
 			COMTHROW(BeginTransaction(t, TRANSACTION_READ_ONLY));
-			GlobalNotify(GLOBALEVENT_UNDO);
+			GlobalNotify(GLOBALEVENT_REDO);
 			COMTHROW(CommitTransaction());
 		}
     }
