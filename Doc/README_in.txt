@@ -29,7 +29,7 @@ guaranteed.
 ************************************************
 
 Release Notes of Release r10.10.10
-----------------------------------
+---------------------------------
   - This is a service release for r10.8.18
     Hence, it is binary compatible with that.
   - Fixing ObjectInspector bug ("could not write..." error messages)
