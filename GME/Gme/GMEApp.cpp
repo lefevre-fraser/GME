@@ -2504,7 +2504,14 @@ void CGMEApp::OnUpdateEditUndo(CCmdUI* pCmdUI)
 
 void CGMEApp::OnUpdateEditRedo(CCmdUI* pCmdUI) 
 {
-	pCmdUI->Enable(IsUndoPossible() ? TRUE : FALSE);
+	if(guiMetaProject != NULL) {
+		short undoSize;
+		short redoSize;
+		mgaProject->UndoRedoSize(&undoSize,&redoSize);
+		pCmdUI->Enable(redoSize > 0);
+	}
+	else
+		pCmdUI->Enable(FALSE);
 }
 
 void CGMEApp::OnUpdateEditClearUndo(CCmdUI* pCmdUI) 
