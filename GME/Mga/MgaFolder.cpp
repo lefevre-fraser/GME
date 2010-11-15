@@ -76,6 +76,7 @@ HRESULT FCO::CopyFolders(IMgaFolders *copylist, IMgaFolders **objs)
 		std::vector<CoreObj> nobjs(cnt);
 		MGACOLL_ITERATE(IMgaFolder, copylist) {
 			CoreObj oldobj = CoreObj(MGACOLL_ITER);
+			ObjForCore(oldobj)->SelfMark(OBJEVENT_COPIED);
 			ObjTreeCopyFoldersToo(mgaproject, oldobj, nobjs[i], crealist);  // copy
 			assignnewchild(nobjs[i]);
 			

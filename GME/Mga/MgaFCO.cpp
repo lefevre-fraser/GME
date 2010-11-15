@@ -829,7 +829,107 @@ HRESULT FCO::put_RegistryValue( BSTR path,  BSTR newval) {
 	} COMCATCH(;)
 }
 
+//-------------------------------------------------------------------------------------
+// lph: Change description for ATTR, REGISTRY and PROPERTIES notifications
 
+typedef std::vector<CComVariant> ModificationsVector;
+
+void getRegistryModifications(CoreObj &cobj, CComBSTR &path, ModificationsVector &mv) {
+	CComVariant current  = cobj[ATTRID_REGNODEVALUE];
+	CComVariant previous;
+	COMTHROW(cobj->get_PreviousAttrValue(ATTRID_REGNODEVALUE, &previous));
+	if (previous != current) {
+		CComBSTR label = "REGISTRY:";
+		label.Append(path);
+		CComVariant ident = label;
+		mv.push_back(ident);
+		mv.push_back(previous);
+	}
+	ITERATE_THROUGH(cobj[ATTRID_REGNOWNER+ATTRID_COLLECTION]) {
+		CComBSTR cname = ITER[ATTRID_NAME];
+		CComBSTR cpath = path;
+		cpath.Append("/");
+		cpath.Append(cname);
+		getRegistryModifications(ITER, cpath, mv);
+	}
+}
+
+HRESULT get_Modifications(FCO *fco, unsigned long changemask, CComVariant *mods) {
+	ModificationsVector modifications;
+	if (changemask & OBJEVENT_REGISTRY) {
+		ITERATE_THROUGH(fco->self[ATTRID_REGNOWNER+ATTRID_COLLECTION]) {
+			CComBSTR path = ITER[ATTRID_NAME];
+			getRegistryModifications(ITER, path, modifications);
+		}
+	}
+	if (changemask & OBJEVENT_ATTR) {
+		CComPtr<IMgaMetaFCO> mfco;
+		COMTHROW(fco->get_Meta(&mfco));
+		ITERATE_THROUGH(fco->self[ATTRID_ATTRPARENT+ATTRID_COLLECTION]) {
+			CComPtr<IMgaMetaAttribute> ma;
+			COMTHROW(mfco->get_AttributeByRef(ITER[ATTRID_META], &ma));
+			attval_enum vt;
+			COMTHROW(ma->get_ValueType(&vt));
+			if (vt == ATTVAL_ENUM) vt = ATTVAL_STRING;
+			attrid_type aid = ATTRID_ATTRTYPESBASE + vt;
+			CComVariant current = ITER[aid];
+			static const VARTYPE vartypes[] = { VT_NULL, VT_BSTR, VT_I4, VT_R8, VT_BOOL, VT_DISPATCH, VT_BSTR };
+			if(vartypes[vt] != current.vt) {
+				COMTHROW(current.ChangeType(vartypes[vt]));
+			}
+			CComVariant previous;
+			COMTHROW(ITER->get_PreviousAttrValue(aid, &previous));
+			if(vartypes[vt] != previous.vt) {
+				COMTHROW(previous.ChangeType(vartypes[vt]));
+			}
+			if (previous != current) {
+				CComBSTR name;
+				COMTHROW(ma->get_Name(&name));
+				CComBSTR label = "ATTR:";
+				label.Append(name);
+				CComVariant ident = label;
+				modifications.push_back(ident);
+				modifications.push_back(previous);
+			}
+		}
+	}
+	if (changemask & OBJEVENT_PROPERTIES) {
+		CComVariant name = fco->self[ATTRID_NAME];
+		CComVariant pname;
+		fco->self->get_PreviousAttrValue(ATTRID_NAME, &pname);
+		if (pname != name) {
+			CComVariant ident = "PROPERTIES:Name";
+			modifications.push_back(ident);
+			modifications.push_back(pname);
+		}
+/* lph: possibly necessary, but not yet
+		CComVariant perm = fco->self[ATTRID_PERMISSIONS];
+		CComVariant pperm;
+		COMTHROW(fco->self->get_PreviousAttrValue(ATTRID_PERMISSIONS, &pperm));
+		if (pperm != perm) {
+			CComVariant ident = "PROPERTIES:Permissions";
+			modifications.push_back(ident);
+			modifications.push_back(pperm);
+		}
+*/
+	}
+	if (modifications.size() > 0) {
+		SAFEARRAY *pVariantsArray = NULL;
+		SAFEARRAYBOUND rgsabound[1];
+		rgsabound[0].lLbound = 0;
+		rgsabound[0].cElements = modifications.size();
+		pVariantsArray = SafeArrayCreate(VT_VARIANT, 1, rgsabound);
+		for (LONG i=0; i<LONG(modifications.size()); i++) {
+			SafeArrayPutElement(pVariantsArray, &i, &modifications[i]);
+		}
+		CComVariant varOut;
+		varOut.vt = VT_ARRAY | VT_VARIANT;
+		varOut.parray = pVariantsArray;
+		varOut.Detach(mods);
+	}
+	return S_OK;
+}
+//-------------------------------------------------------------------------------------
 
 #define REQUIRE_NOTIFICATION_SUCCESS 1   // return with error if addons/rwhandlers fail
 
@@ -841,7 +941,9 @@ HRESULT FCO::objrwnotify() {
 			if(chmask & OBJEVENT_DESTROYED) chmask = OBJEVENT_DESTROYED;
 			CMgaProject::addoncoll::iterator ai, abeg = mgaproject->alladdons.begin(), aend = mgaproject->alladdons.end();
 			if(abeg != aend) {
-				CComVariant nil;
+				CComVariant mods;
+				if(!(chmask & OBJEVENT_CREATED) && (chmask & (OBJEVENT_REGISTRY+OBJEVENT_ATTR+OBJEVENT_PROPERTIES)))
+					COMTHROW(get_Modifications(this, chmask, &mods));
 				COMTHROW(mgaproject->pushterr(*mgaproject->reserveterr));
 				for(ai = abeg; ai != aend; ) {
 					CComPtr<CMgaAddOn> t = *ai++;	// it is important to incr ii here, while obj 
@@ -852,9 +954,9 @@ HRESULT FCO::objrwnotify() {
 						getinterface(&tt);
 
 #if(REQUIRE_NOTIFICATION_SUCCESS)
-						COMTHROW(t->handler->ObjectEvent(tt, mmask, nil));
+						COMTHROW(t->handler->ObjectEvent(tt, mmask, mods));
 #else
-						if((s = t->handler->ObjectEvent(tt, mmask, nil)) != S_OK) {
+						if((s = t->handler->ObjectEvent(tt, mmask, mods)) != S_OK) {
 							ASSERT(("Notification failed", false));
 						}
 #endif

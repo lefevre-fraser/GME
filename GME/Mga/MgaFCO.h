@@ -340,6 +340,7 @@ private:
 
 // PreDelete Notification by Tihamer for the PAMS SynchTool
 	void PreDeleteNotify();
+
 public:
 	class NoAddRefCoreObj : public CoreObj {	// CoreObj, but non-addref/release-ing
 	public:
@@ -596,6 +597,9 @@ public:
 	void objrecordchange();
 	void objforgetchange();
 	void removeterrfromlist(CMgaTerritory *t);
+
+	// lph: notification service for precursory object events (used by PRE_DESTROYED and PRE_STATUS)
+	HRESULT PreNotify(unsigned long changemask, CComVariant param);
 
 	template <class Q>
 	void getinterface(Q **p, CMgaTerritory *terr = NULL) {

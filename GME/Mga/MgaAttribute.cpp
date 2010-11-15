@@ -147,26 +147,39 @@ STDMETHODIMP CMgaAttribute::get_HasChanged(VARIANT_BOOL *pVal) {
 }
 
 
-STDMETHODIMP CMgaAttribute::Clear() {
-	COMTRY_IN_TRANSACTION {
-		fco->CheckWrite();
-		CoreObjs attrs = fco->self[ATTRID_ATTRPARENT+ATTRID_COLLECTION];
-		ITERATE_THROUGH(attrs) {
-			if(mref == ITER[ATTRID_META]) {
-				COMTHROW(ITER->Delete());
-				load_status = ATTSTATUS_INVALID;
-				break;
-			}
-		}
-	} COMCATCH_IN_TRANSACTION(;);
-}
-
 class attrnotifytask : public DeriveTreeTask {
 	bool Do(CoreObj self, std::vector<CoreObj> *peers = NULL) {
 		ObjForCore(self)->SelfMark(OBJEVENT_ATTR);
 		return true;
 	}
 };
+
+
+STDMETHODIMP CMgaAttribute::Clear() {
+	COMTRY_IN_TRANSACTION {
+		fco->CheckWrite();
+		CoreObjs attrs = fco->self[ATTRID_ATTRPARENT+ATTRID_COLLECTION];
+		ITERATE_THROUGH(attrs) {
+			if(mref == ITER[ATTRID_META]) {
+				// lph: Pre-Notification PRE_STATUS (the attribute is being changed to its default value)
+				CComQIPtr<IMgaMetaAttribute> ma(mgaproject->FindMetaRef(mref));
+				CComBSTR name;
+				COMTHROW(ma->get_Name(&name));
+				CComBSTR desc = "ATTR,";
+				desc.Append(name);
+				desc.Append(",Cleared");
+				fco->PreNotify(OBJEVENT_PRE_STATUS, CComVariant(desc));
+				//---------------------------------------------------------------------------------------
+				COMTHROW(ITER->Delete());
+				load_status = ATTSTATUS_INVALID;
+				// lph: added notification of attribute mod
+				attrnotifytask().DoWithDeriveds(fco->self);
+				//-----------------------------------------
+				break;
+			}
+		}
+	} COMCATCH_IN_TRANSACTION(;);
+}
 
 
 STDMETHODIMP CMgaAttribute::put_Value(VARIANT newVal) {
@@ -188,6 +201,15 @@ STDMETHODIMP CMgaAttribute::put_Value(VARIANT newVal) {
 					load_status = ATTSTATUS_INVALID;
 					valueobj = NULL;
 					COMTHROW(mgaproject->dataproject->CreateObject(DTID_ATTRTYPESBASE+attrtyp, &valueobj.ComPtr()));
+					// lph: Pre-Notification PRE_STATUS (the attribute is being changed from its default value)
+					CComQIPtr<IMgaMetaAttribute> ma(mgaproject->FindMetaRef(mref));
+					CComBSTR name;
+					COMTHROW(ma->get_Name(&name));
+					CComBSTR desc = "ATTR,";
+					desc.Append(name);
+					desc.Append(",Defined");
+					fco->PreNotify(OBJEVENT_PRE_STATUS, CComVariant(desc));
+					//-----------------------------------------------------------------------------------------
 					valueobj[ATTRID_META]=mref;
 					valueobj[ATTRID_ATTRPARENT]=fco->self;
 					load_status = ATTSTATUS_HERE;
@@ -856,6 +878,12 @@ STDMETHODIMP CMgaRegNode::RemoveTree() {
 			long dummy;
 			valueobj <<= findregvalueobj(fco->self, mypath, dummy, false);
 			if(valueobj) {
+				// lph: Pre-Notification PRE_STATUS (the registry node is being destroyed)
+				CComBSTR desc = "REGISTRY,";
+				desc.Append(mypath);
+				desc.Append(",Removed");
+				fco->PreNotify(OBJEVENT_PRE_STATUS, CComVariant(desc));
+				//--------------------------------------------------------------------------
 				RegistryChildrenRemove(valueobj);
 				COMTHROW(valueobj->Delete());			
 				load_status = ATTSTATUS_INVALID;

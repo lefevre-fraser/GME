@@ -174,25 +174,25 @@ void FCO::PreDeleteNotify()
 	}
 
 	// Notification
-	
-	try 
-	{
-		long chmask = OBJEVENT_PRE_DESTROYED;
-		
+	PreNotify(OBJEVENT_PRE_DESTROYED, CComVariant());
+}
+
+// Added by lph (Taken from PreDeleteNotify) Notification service for precursory object events
+HRESULT FCO::PreNotify(unsigned long changemask, CComVariant param) {
+	COMTRY {
 		CMgaProject::addoncoll::iterator ai, abeg = mgaproject->alladdons.begin(), aend = mgaproject->alladdons.end();
 		if(abeg != aend) 
 		{
-			CComVariant nil;
 			COMTHROW(mgaproject->pushterr(*mgaproject->reserveterr));
 			for(ai = abeg; ai != aend; ) 
 			{
 				CComPtr<CMgaAddOn> t = *ai++;	
 				unsigned long mmask;
-				if((mmask = (t->eventmask & chmask)) != 0) {
+				if((mmask = (t->eventmask & changemask)) != 0) {
 					CComPtr<IMgaObject> tt;
 					getinterface(&tt);
 
-					if(t->handler->ObjectEvent(tt, mmask, nil) != S_OK) {
+					if(t->handler->ObjectEvent(tt, mmask, param) != S_OK) {
 						ASSERT(("Notification failed", false));
 					}
 				    t->notified = true;
@@ -200,11 +200,7 @@ void FCO::PreDeleteNotify()
 			}
 			COMTHROW(mgaproject->popterr());
 		}
-	} 
-	catch(hresult_exception&)
-	{
-		ASSERT(0);
-	}
+	} COMCATCH(;)
 }
 
 HRESULT FCO::DeleteObject() { 
@@ -1084,6 +1080,7 @@ HRESULT FCO::CopyFCOs(IMgaFCOs *copylist, IMgaMetaRoles *rlist,IMgaFCOs **objs) 
 		std::vector<CoreObj> nobjs(cnt);
 		MGACOLL_ITERATE(IMgaFCO, copylist) {
 			CoreObj oldobj = CoreObj(MGACOLL_ITER);
+			ObjForCore(oldobj)->SelfMark(OBJEVENT_COPIED);
 			int derdist = GetRealSubtypeDist(oldobj);
 			ObjTreeCopy(mgaproject, oldobj, nobjs[i], crealist);  // copy
 			if(derdist) ObjTreeDist(nobjs[i], derdist);

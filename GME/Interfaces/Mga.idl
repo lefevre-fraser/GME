@@ -110,11 +110,11 @@ typedef enum objectevent_enum {
 [ helpstring("The object has been destroyed (limited access is available)")]
 		OBJEVENT_DESTROYED  =   0x40000000,             
 [ helpstring("The object is going to be deleted.")]
-		OBJEVENT_PRE_DESTROYED  =   0x20000000,
-[ helpstring("Attribute or registry node is going to be cleared or removed.")]
-		OBJEVENT_PRE_CLEARED =   0x10000000,
-[ helpstring("The object is going to be copied.")]
-		OBJEVENT_COPIED     =   0x08000000, 
+		OBJEVENT_PRE_DESTROYED  = 0x20000000,
+[ helpstring("Status of attribute/registry node is going to change.")]
+		OBJEVENT_PRE_STATUS =   0x10000000,
+[ helpstring("The object is being copied.")]
+		OBJEVENT_COPIED     =   0x08000000,
 [ helpstring("Attribute changed")]
 		OBJEVENT_ATTR       =   0x00000001,             
 [ helpstring("Registry changed")]
