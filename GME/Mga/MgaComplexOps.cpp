@@ -773,19 +773,19 @@ void ObjTreeCheckINTORelations(CMgaProject *mgaproject, CoreObj &self, coreobjha
 		//   connection 'rel_owner' is not in internals and 'conn_seg' is the actual connection end (not an intermediary)
 		CoreObjs conn_segs = self[ATTRID_SEGREF + ATTRID_COLLECTION];
 		ITERATE_THROUGH(conn_segs) {
-			metaid_type st = GetMetaID(ITER);
+			CoreObj conn_seg = ITER;
+			metaid_type st = GetMetaID(conn_seg);
 			ASSERT(st == DTID_CONNROLESEG);
 			if (st != DTID_CONNROLESEG) {
 				continue;
 			}
-			CoreObj role = ITER[ATTRID_CONNSEG];
-			CoreObj rel_owner = ITER.GetMgaObj();
-			if (!rel_owner || !role) {
+			CoreObj rel_owner = conn_seg.GetMgaObj();
+			if (!rel_owner) {
 				continue;	// connection might be deleted due to a previous relation
 			}
-			ASSERT(GetMetaID(role) == DTID_CONNROLE);
 			ASSERT(GetMetaID(rel_owner) == DTID_CONNECTION);
 			#ifdef _DEBUG
+			CoreObj role = conn_seg[ATTRID_CONNSEG];
 			CComBSTR conn_name = rel_owner[ATTRID_NAME], role_name = role[ATTRID_NAME];
 			#endif
 			ASSERT(ObjForCore(rel_owner)->simpleconn()); // KMS: don't think we can get here without a simpleconn
@@ -795,21 +795,10 @@ void ObjTreeCheckINTORelations(CMgaProject *mgaproject, CoreObj &self, coreobjha
 				case MM_ERROR: COMTHROW(E_MGA_OP_REFUSED);
 					break;
 				case MM_CLEAR:
-					CoreObjs refport_refs = role[ATTRID_CONNSEG+ATTRID_COLLECTION]; // i.e. refport containers
-					long count;
-					COMTHROW(refport_refs->get_Count(&count));
-					if (count == 0) {
-						// i.e. not a refport
-						ASSERT(FALSE);
-						continue;
-					}
-					CComPtr<ICoreObject> refport_ref;
-					COMTHROW(refport_refs->get_Item(1, &refport_ref));
-					CoreObj end_refport_ref(refport_ref.p);
-					// i.e. if (end_refport_ref == ITER)
-					if (GetMetaID(end_refport_ref) == GetMetaID(ITER) && end_refport_ref.GetObjID() == ITER.GetObjID())
+					if (conn_seg[ATTRID_SEGORDNUM] == 1) {
 						ObjForCore(rel_owner)->inDeleteObject();
-					break;
+						break;
+					}
 				}
 			}
 		}
