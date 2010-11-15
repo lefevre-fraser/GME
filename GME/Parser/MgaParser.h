@@ -97,6 +97,7 @@ public:
 	typedef std::vector<librecord> librecords;
 	librecords libstodo;
 	CComVariant projectguid;
+	CComBSTR	projectversion;
 
 // ------- Logging
 

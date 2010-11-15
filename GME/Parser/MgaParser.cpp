@@ -262,6 +262,9 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 		libstodo.clear();
 		
 		COMTHROW( project->put_GUID(projectguid) );
+		if (projectversion) {
+			COMTHROW( project->put_Version(projectversion) );
+		}
 
 		COMTHROW( project->CommitTransaction() );
 		COMTHROW( project->Notify(APPEVENT_XML_IMPORT_END));
@@ -769,6 +772,14 @@ void CMgaParser::StartProject(const attributes_type &attributes)
 			CopyTo(bstr, guid);
 
 			CopyTo(guid, projectguid);
+		}
+		else if( i->first == "version" )
+		{	
+			CComBSTR currversion;
+			COMTHROW( project->get_Version(&currversion) );
+			if (currversion.Length() == 0) {
+				CopyTo(i->second, &projectversion); 
+			}
 		}
 		else if( i->first == "metaname")
 		{
