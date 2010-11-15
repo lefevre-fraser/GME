@@ -43,13 +43,14 @@ class TestRefportConnectionInvariantUnderMoves(unittest.TestCase):
         import mgadiff
         if not mgadiff.compare(self.correct_file, self.output_file):
             self.fail("Reference file '%s' does not match output '%s'" % (self.correct_file, self.output_file))
-        #print "Reference file '%s' matches output '%s'" % (self.correct_file, self.output_file)
+        print "Reference file '%s' matches output '%s'" % (self.correct_file, self.output_file)
 
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(TestRefportConnectionInvariantUnderMoves(input_file="test1.mga", fco_to_move="/Test1/Folder1/A/B", destination_model="/Test1/Folder2/C"))
     suite.addTest(TestRefportConnectionInvariantUnderMoves(input_file="test2.mga", fco_to_move="/Test2/Subtypes/A/BSubtypeRef", destination_model="/Test2/Destination/Destination"))
     suite.addTest(TestRefportConnectionInvariantUnderMoves(input_file="test1.mga", fco_to_move="/Test1/Folder1/A/RefB", destination_model="/Test1/Folder2/C", name="test3"))
+    suite.addTest(TestRefportConnectionInvariantUnderMoves(input_file="test4.mga", fco_to_move="/Test4/Folder1/A/RefRefB", destination_model="/Test4/Folder2/C"))
     return suite
 
 if __name__ == "__main__":
