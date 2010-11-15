@@ -1535,8 +1535,13 @@ STDMETHODIMP CCoreDataAttribute<BASE, VALTYPE>::get_PreviousValue(VARIANT *p)
 
 		if( IsDirty() )
 		{
-			ASSERT( values.size() >= 2 );
-			UserCopyTo(*(++values.begin()), p);
+			// lph: Return last committed value.  Previously returned last set value (commented below).
+			ICoreStorage *storage = SetStorageThisAttribute();
+			ASSERT( storage != NULL );
+			storage->get_AttributeValue(p);
+
+			//ASSERT( values.size() >= 2 );
+			//UserCopyTo(*(++values.begin()), p);
 		}
 		else
 		{
