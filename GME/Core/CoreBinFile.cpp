@@ -532,7 +532,12 @@ void CCoreBinFile::read(bindata &b)
 	if(ifs.eof()) COMTHROW(E_FILEOPEN);
 	ASSERT( len >= 0 );
 
-	b.resize(len);
+	try {
+		b.resize(len);
+	} catch (std::bad_alloc&) {
+		// KMS: could get here if the project is corrupt and len is incorrect
+		COMTHROW(E_OUTOFMEMORY);
+	}
 	if( len > 0 )
 		ifs.read( (char *) &b[0], len);
 }
