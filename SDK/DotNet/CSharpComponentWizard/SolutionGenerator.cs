@@ -56,23 +56,25 @@ namespace CSharpComponentWizard
         public static string NewGuid;       // NewGuid, because Guid is a type
         public static string MgaPath;
 
+        public static string ProjectTemplateLocation;
+        public static string TemplateFileName;
+
       
         public static string GenerateSolution()
         {
             DTE2 dte;
             object obj;
-            string TemplateFileName;
             string outputfolder = "";
 
             try
             {
                 if (SolutionGenerator.SelectedType == CompType.Addon)
                 {
-                    TemplateFileName = "CSharpAddon.zip";
+                    SolutionGenerator.TemplateFileName = "CSharpAddon.zip";
                 }
                 else // interpreter
                 {
-                    TemplateFileName = "CSharpInterpreter.zip";
+                    SolutionGenerator.TemplateFileName = "CSharpInterpreter.zip";
                 }
 
                 System.Type type = System.Type.GetTypeFromProgID("VisualStudio.DTE.10.0");
@@ -89,7 +91,6 @@ namespace CSharpComponentWizard
                 }
 
                 // Determine the ProjectTemplateFolder of custom templates
-                string ProjectTemplateLocation;
                 RegistryKey masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
                 if (masterKey == null)
                 {
@@ -97,15 +98,15 @@ namespace CSharpComponentWizard
                 }
                 else
                 {
-                    ProjectTemplateLocation = masterKey.GetValue(MainWindow.VS2010_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME).ToString();
+                    SolutionGenerator.ProjectTemplateLocation = masterKey.GetValue(MainWindow.VS2010_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME).ToString();
                 }
                 masterKey.Close();
 
 
                 // Unpack the sufficent template project
                 Stream TemplateStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                            System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".Templates." + TemplateFileName);
-                FileStream FileWriter = new FileStream(ProjectTemplateLocation + "\\" + TemplateFileName, FileMode.Create);
+                            System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".Templates." + SolutionGenerator.TemplateFileName);
+                FileStream FileWriter = new FileStream(SolutionGenerator.ProjectTemplateLocation + "\\" + SolutionGenerator.TemplateFileName, FileMode.Create);
                 byte[] ReadFile = new byte[TemplateStream.Length];
                 TemplateStream.Read(ReadFile, 0, ReadFile.Length);
                 FileWriter.Write(ReadFile, 0, ReadFile.Length);
@@ -113,7 +114,7 @@ namespace CSharpComponentWizard
 
                 sln.Create(outputfolder, solutionName);
 
-                string TemplatePath = sln.GetProjectTemplate(TemplateFileName, "CSharp");
+                string TemplatePath = sln.GetProjectTemplate(SolutionGenerator.TemplateFileName, "CSharp");
                 sln.AddFromTemplate(TemplatePath, outputfolder, SolutionName, false);
                 sln.Close();
             }

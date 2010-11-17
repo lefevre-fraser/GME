@@ -134,7 +134,7 @@ namespace CSharpComponentWizard
                 if (SolutionGenerator.SelectedInterface == ComponentInterface.Dependent)
                 {
                     SolutionGenerator.GenerateDomainSpecificInterface();
-                }                
+                }
                 worker.ReportProgress(60);
 
                 SolutionGenerator.PostProcessComponentConfig(outputfolder);
@@ -144,13 +144,18 @@ namespace CSharpComponentWizard
                 worker.ReportProgress(80);
 
                 SolutionGenerator.GenerateSignature(outputfolder);
-                worker.ReportProgress(100);
+                worker.ReportProgress(95);
             }
             catch (Exception ex)
             {
                 object[] args = new object[1];
                 args[0] = ex.Message;
                 this.Dispatcher.Invoke(erroroccureddel, args);
+            }
+            finally
+            {
+                File.Delete(SolutionGenerator.ProjectTemplateLocation + "\\" + SolutionGenerator.TemplateFileName);
+                worker.ReportProgress(100);                
             }
         }
 
