@@ -11,6 +11,8 @@
 
 #include "CompassData.h"
 
+void str_split( CString str, CStringArray &returnArray);
+
 enum itemdata_enum
 {
 	ITEMDATA_NULL			= 0,

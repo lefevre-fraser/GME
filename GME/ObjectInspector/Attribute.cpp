@@ -20,26 +20,7 @@ TCHAR *project_attribute_tooltips[] = {
 	_T("Current version string"),
 	_T("Arbitrary comments"),
 };
-// Split Function
-inline void str_split( CString str, CStringArray &returnArray)
-{
-   int  iNum     = 0;
-   int  iCurrPos = 0;
-   while( -1 != (iCurrPos = str.FindOneOf(_T("\n"))))
-   {
-       returnArray.Add(str.Left(iCurrPos));
-       returnArray[iNum].TrimRight("\r\n");
-       str = str.Right(str.GetLength() - iCurrPos - 1);
-       iNum++;
-   }
 
-   if (str.GetLength() > 0)      // the last one...
-   {
-       returnArray.Add(str);
-       returnArray[iNum].TrimRight("\r\n");
-       iNum++;
-   }
-}
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

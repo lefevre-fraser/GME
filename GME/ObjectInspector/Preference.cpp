@@ -40,6 +40,7 @@ char *CPreference::m_szConnectionPreferenceTable[][5]=
 	{"COLOR",				"color",			"0x000000",		"Color",								"Connection line color. Set this value to change the connection line color."},
 	{"COLOR",				"nameColor",		"0x000000",		"Name color",							"Connection label color. Set this value to change the connection label color."},
 	{"STRING",				"help",				"",				"Help URL",								"Sets this value to specify the URL containig the help information belonging to the connection."},
+	{"MULTISTRING",		    "description",		"",				"Description",							"Free format description of the model element for documentation purposes."},
 	{"LINE_STYLE_LIST",		"srcStyle",			"butt",			"Source end style",						"Sets this value to specify the source end style of the connection. Eg. Arrow."},
 	{"LINE_STYLE_LIST",		"dstStyle",			"butt",			"Destination end style",				"Sets this value to specify the destination end style of the connection. Eg. Arrow."},
 	{"LINE_TYPE_LIST",		"lineType",			"solid",		"Line type",							"Sets this value to specify the connection line type. Eg. Dashed."},
@@ -69,6 +70,7 @@ char* CPreference::m_szAtomPreferenceTable[][5]=
 	{"BOOLEAN_LIST",	"roundCornerRect",	"false",		"Round rectangle corner enabled","Is rounding of rectangle corner feature enabled."},
 	{"STRING",			"roundCornerRadius","9",			"Round rectangle corner radius","Radius of round rectangle corner."},
 	{"STRING",			"help",				"",				"Help URL",						"Sets this value to specify the URL containig the help information belonging to the atom."},
+	{"MULTISTRING",		"description",		"",				"Description",					"Free format description of the model element for documentation purposes."},
 	{"COMPASS_OPTION",	"namePosition",		"4",			"Name Location",				"Sets the name label location relative to the atom icon. Eg. North."},
 	{"STRING",			"nameWrap",			"0",			"NameWrap number",				"Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled."},
 	{"BOOLEAN_LIST",	"isNameEnabled",	"true",			"Name enabled",					"Displays the name."},
@@ -103,6 +105,7 @@ char* CPreference::m_szModelPreferenceTable[][5]=
 	{"STRING",			"roundCornerRadius","9",			"Round rectangle corner radius",		"Radius of round rectangle corner."},
 	{"COLOR",			"portColor",		"0x000000",		"Port name color",						"Port name color for the displayed ports of this model."},
 	{"STRING",			"help",				"",				"Help URL",								"Sets this value to specify the URL containig the help information belonging to the model."},
+	{"MULTISTRING",		"description",		"",				"Description",							"Free format description of the model element for documentation purposes."},
 	{"COMPASS_OPTION",	"namePosition",		"4",			"Name Location",						"Sets the name label location relative to the atom icon. Eg. North."},
 	{"STRING",			"nameWrap",			"0",			"NameWrap number",						"Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled."},
 	{"BOOLEAN_LIST",	"isNameEnabled",	"true",			"Name enabled",							"Displays the name."},
@@ -138,6 +141,7 @@ char* CPreference::m_szProxyPreferenceTable[][5]=
 	{"BOOLEAN_LIST",	"roundCornerRect",	"false",		"Round rectangle corner enabled",		"Is rounding of rectangle corner feature enabled."},
 	{"STRING",			"roundCornerRadius","9",			"Round rectangle corner radius",		"Radius of round rectangle corner."},
 	{"STRING",			"help",				"",				"Help URL",								"Sets this value to specify the URL containig the help information belonging to the proxy."},
+	{"MULTISTRING",		"description",		"",				"Description",							"Free format description of the model element for documentation purposes."},
 	{"COMPASS_OPTION",	"namePosition",		"4",			"Name Location",						"Sets the name label location relative to the proxy icon. Eg. North."},
 	{"STRING",			"nameWrap",			"0",			"NameWrap number",						"Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled."},
 	{"BOOLEAN_LIST",	"isNameEnabled",	"true",			"Name enabled",							"Displays the name."},
@@ -170,6 +174,7 @@ char* CPreference::m_szSetPreferenceTable[][5]=
 	{"BOOLEAN_LIST",	"roundCornerRect",	"false",		"Round rectangle corner enabled","Is rounding of rectangle corner feature enabled."},
 	{"STRING",			"roundCornerRadius","9",			"Round rectangle corner radius","Radius of round rectangle corner."},
 	{"STRING",			"help",				"",				"Help URL",						"Sets this value to specify the URL containig the help information belonging to the set."},
+	{"MULTISTRING",		"description",		"",				"Description",					"Free format description of the model element for documentation purposes."},
 	{"COMPASS_OPTION",	"namePosition",		"4",			"Name Location",				"Sets the name label location relative to the set icon. Eg. North."},
 	{"STRING",			"nameWrap",			"0",			"NameWrap number",				"Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled."},
 	{"BOOLEAN_LIST",	"isNameEnabled",	"true",			"Name enabled",					"Displays the name."},
@@ -789,6 +794,20 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 	{
 		ListItem.Value.SetStringValue(strValue);
 		ListItem.DefValue.SetStringValue((*pTableRow)[2]);
+		ListItems.Add(ListItem);
+	}
+
+	else if(strEntryType=="MULTISTRING")
+	{
+		CStringArray strValueArray;
+		str_split(strValue, strValueArray);
+		ListItem.Value.SetStringValue(strValueArray,3);
+
+		CString strDefValue = (*pTableRow)[2];
+		CStringArray strDefValueArray;
+		str_split(strDefValue, strDefValueArray);
+		ListItem.DefValue.SetStringValue(strDefValueArray,3);
+		
 		ListItems.Add(ListItem);
 	}
 
