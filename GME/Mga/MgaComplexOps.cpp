@@ -761,7 +761,7 @@ void ObjTreeCheckRelationsFoldersToo(CMgaProject *mgaproject, CoreObj &self, cor
 ///////////////////
 // !!! RECURSIVE 
 ///////////////////
-void ObjTreeCheckINTORelations(CMgaProject *mgaproject, CoreObj &self, coreobjhash &internals) {
+void ObjCheckINTORelations(CMgaProject* mgaproject, CoreObj& self, coreobjhash& internals) {
 	metaid_type n = GetMetaID(self);
 	ASSERT(n >= DTID_MODEL && n <= DTID_SET);
 	if (n == DTID_REFERENCE) {
@@ -861,6 +861,13 @@ void ObjTreeCheckINTORelations(CMgaProject *mgaproject, CoreObj &self, coreobjha
 		}
 	}
 	}
+}
+
+
+void ObjTreeCheckINTORelations(CMgaProject *mgaproject, CoreObj &self, coreobjhash &internals) {
+	metaid_type n = GetMetaID(self);
+	ASSERT(n >= DTID_MODEL && n <= DTID_SET);
+	ObjCheckINTORelations(mgaproject, self, internals);
 	
 	if(n == DTID_MODEL) {
 		CoreObjs children = self[ATTRID_FCOPARENT + ATTRID_COLLECTION];
@@ -870,106 +877,13 @@ void ObjTreeCheckINTORelations(CMgaProject *mgaproject, CoreObj &self, coreobjha
 	}
 }
 
+
 void ObjTreeCheckINTORelationsFoldersToo(CMgaProject *mgaproject, CoreObj &self, coreobjhash &internals) {
 	metaid_type n = GetMetaID(self);
 	ASSERT(n >= DTID_MODEL && n <= DTID_FOLDER);
 	if ( n >= DTID_MODEL && n <= DTID_SET)
 	{
-
-		if (n == DTID_REFERENCE) {
-			// GME-311: need to delete connections into refport 'conn_seg' iff 
-			//   connection 'rel_owner' is not in internals and 'conn_seg' is the actual connection end (not an intermediary)
-			CoreObjs conn_segs = self[ATTRID_SEGREF + ATTRID_COLLECTION];
-			ITERATE_THROUGH(conn_segs) {
-				CoreObj conn_seg = ITER;
-				metaid_type st = GetMetaID(conn_seg);
-				ASSERT(st == DTID_CONNROLESEG);
-				if (st != DTID_CONNROLESEG) {
-					continue;
-				}
-				CoreObj rel_owner = conn_seg.GetMgaObj();
-				if (!rel_owner) {
-					continue;	// connection might be deleted due to a previous relation
-				}
-				ASSERT(GetMetaID(rel_owner) == DTID_CONNECTION);
-				#ifdef _DEBUG
-				CoreObj role = conn_seg[ATTRID_CONNSEG];
-				CComBSTR conn_name = rel_owner[ATTRID_NAME], role_name = role[ATTRID_NAME];
-				#endif
-				ASSERT(ObjForCore(rel_owner)->simpleconn()); // KMS: don't think we can get here without a simpleconn
-				if (internals.find(rel_owner) == internals.end() && ObjForCore(rel_owner)->simpleconn()) {
-					setcheck(mgaproject, rel_owner, CHK_CHANGED);
-					switch(MODEMASK(MM_CONN, MM_INTO)) {
-					case MM_ERROR: COMTHROW(E_MGA_OP_REFUSED);
-						break;
-					case MM_CLEAR:
-						if (conn_seg[ATTRID_SEGORDNUM] == 1) {
-							ObjForCore(rel_owner)->inDeleteObject();
-							break;
-						}
-					}
-				}
-			}
-		}
-
-
-
-		CoreObjs xrefs = self[ATTRID_XREF + ATTRID_COLLECTION]; 
-		ITERATE_THROUGH(xrefs) {
-			metaid_type st = GetMetaID(ITER);
-			if(st == DTID_SETNODE || st == DTID_CONNROLE) {
-				CoreObj rel_owner = ITER.GetMgaObj();
-				if(internals.find(rel_owner) == internals.end()) {
-					int ttt = st == DTID_CONNROLE ? MM_CONN : MM_SET;
-					setcheck(mgaproject, rel_owner, CHK_CHANGED);
-					switch(MODEMASK(ttt, MM_INTO)) {
-					case MM_ERROR: COMTHROW(E_MGA_OP_REFUSED);
-						break;
-					case MM_CLEAR: 
-						if (st == DTID_CONNROLE && ObjForCore(rel_owner)->simpleconn()) {
-							// GME-297: don't delete connections connecting to refports
-							// (outside connections to inside refports are deleted above)
-							long count = 0;
-							CoreObjs refport_refs = ITER[ATTRID_CONNSEG+ATTRID_COLLECTION]; // i.e. refport containers
-							COMTHROW(refport_refs->get_Count(&count));
-							if (count == 0) {
-								// this connection role is connected directly; it is not connected to a refport
-								ObjForCore(rel_owner)->inDeleteObject();
-							}
-						} else if (MODEFLAG(ttt, MM_FULLDELETE)) {
-							ObjForCore(rel_owner)->inDeleteObject();
-						} 
-						else {
-							CoreObjMark(self, st == DTID_CONNROLE ? OBJEVENT_DISCONNECTED : OBJEVENT_SETEXCLUDED);
-							CoreObjMark(rel_owner, OBJEVENT_RELATION);
-							SingleObjTreeDelete(ITER);
-						}
-						break;
-					}
-				}	
-			}
-		}
-		{
-			CoreObjs refs = self[ATTRID_REFERENCE + ATTRID_COLLECTION]; 
-			ITERATE_THROUGH(refs) {
-				CoreObj rel_owner = ITER;
-				if(internals.find(rel_owner) == internals.end()) {
-					setcheck(mgaproject, rel_owner, CHK_CHANGED);
-					switch(MODEMASK(MM_REF, MM_INTO)) {
-					case MM_ERROR: COMTHROW(E_MGA_OP_REFUSED);
-					case MM_CLEAR: 
-						if(MODEFLAG(MM_REF, MM_FULLDELETE)) {
-							ObjForCore(rel_owner)->inDeleteObject();
-						}
-						else { 
-							rel_owner[ATTRID_REFERENCE] = NULLCOREOBJ;
-							CoreObjMark(self, OBJEVENT_REFRELEASED);
-							CoreObjMark(rel_owner, OBJEVENT_RELATION);
-						}
-					}
-				}
-			}
-		}
+		ObjCheckINTORelations(mgaproject, self, internals);
 	}
 	if(n == DTID_MODEL || n == DTID_FOLDER) {
 		CoreObjs children = self[ATTRID_FCOPARENT + ATTRID_COLLECTION];
