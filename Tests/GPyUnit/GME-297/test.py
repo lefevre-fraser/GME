@@ -29,11 +29,19 @@ class TestRefportConnectionInvariantUnderMoves(unittest.TestCase):
         self.project.Open("MGA=" + self.input_file)
         self.territory = self.project.BeginTransactionInNewTerr()
 
-        modelb = self.project.ObjectByPath(self.fco_to_move)
-        modelb.Name
-        tomove = win32com.client.DispatchEx("Mga.MgaFCOs")
-        tomove.Append(modelb)
-        self.project.ObjectByPath(self.destination_model).MoveFCOs(tomove, None, None)
+        fco_to_move = self.project.ObjectByPath(self.fco_to_move)
+        OBJTYPE_FOLDER = 6
+        if fco_to_move.ObjType == OBJTYPE_FOLDER:
+            tomove = win32com.client.DispatchEx("Mga.MgaFolders")
+        else:
+            tomove = win32com.client.DispatchEx("Mga.MgaFCOs")
+        tomove.Append(fco_to_move)
+
+        destination = self.project.ObjectByPath(self.destination_model)
+        if destination.ObjType == OBJTYPE_FOLDER:
+            destination.MoveFolders(tomove, None)
+        else:
+            destination.MoveFCOs(tomove, None, None)
 
         self.project.CommitTransaction()
         self.project.Save("MGA=" + self.output_file)
@@ -51,6 +59,7 @@ def suite():
     suite.addTest(TestRefportConnectionInvariantUnderMoves(input_file="test2.mga", fco_to_move="/Test2/Subtypes/A/BSubtypeRef", destination_model="/Test2/Destination/Destination"))
     suite.addTest(TestRefportConnectionInvariantUnderMoves(input_file="test1.mga", fco_to_move="/Test1/Folder1/A/RefB", destination_model="/Test1/Folder2/C", name="test3"))
     suite.addTest(TestRefportConnectionInvariantUnderMoves(input_file="test4.mga", fco_to_move="/Test4/Folder1/A/RefRefB", destination_model="/Test4/Folder2/C"))
+    suite.addTest(TestRefportConnectionInvariantUnderMoves(input_file="test5.mga", fco_to_move="/Test4/Folder2", destination_model="/Test4/Folder3"))
     return suite
 
 if __name__ == "__main__":
