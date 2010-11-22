@@ -875,6 +875,45 @@ void ObjTreeCheckINTORelationsFoldersToo(CMgaProject *mgaproject, CoreObj &self,
 	ASSERT(n >= DTID_MODEL && n <= DTID_FOLDER);
 	if ( n >= DTID_MODEL && n <= DTID_SET)
 	{
+
+		if (n == DTID_REFERENCE) {
+			// GME-311: need to delete connections into refport 'conn_seg' iff 
+			//   connection 'rel_owner' is not in internals and 'conn_seg' is the actual connection end (not an intermediary)
+			CoreObjs conn_segs = self[ATTRID_SEGREF + ATTRID_COLLECTION];
+			ITERATE_THROUGH(conn_segs) {
+				CoreObj conn_seg = ITER;
+				metaid_type st = GetMetaID(conn_seg);
+				ASSERT(st == DTID_CONNROLESEG);
+				if (st != DTID_CONNROLESEG) {
+					continue;
+				}
+				CoreObj rel_owner = conn_seg.GetMgaObj();
+				if (!rel_owner) {
+					continue;	// connection might be deleted due to a previous relation
+				}
+				ASSERT(GetMetaID(rel_owner) == DTID_CONNECTION);
+				#ifdef _DEBUG
+				CoreObj role = conn_seg[ATTRID_CONNSEG];
+				CComBSTR conn_name = rel_owner[ATTRID_NAME], role_name = role[ATTRID_NAME];
+				#endif
+				ASSERT(ObjForCore(rel_owner)->simpleconn()); // KMS: don't think we can get here without a simpleconn
+				if (internals.find(rel_owner) == internals.end() && ObjForCore(rel_owner)->simpleconn()) {
+					setcheck(mgaproject, rel_owner, CHK_CHANGED);
+					switch(MODEMASK(MM_CONN, MM_INTO)) {
+					case MM_ERROR: COMTHROW(E_MGA_OP_REFUSED);
+						break;
+					case MM_CLEAR:
+						if (conn_seg[ATTRID_SEGORDNUM] == 1) {
+							ObjForCore(rel_owner)->inDeleteObject();
+							break;
+						}
+					}
+				}
+			}
+		}
+
+
+
 		CoreObjs xrefs = self[ATTRID_XREF + ATTRID_COLLECTION]; 
 		ITERATE_THROUGH(xrefs) {
 			metaid_type st = GetMetaID(ITER);
@@ -887,8 +926,17 @@ void ObjTreeCheckINTORelationsFoldersToo(CMgaProject *mgaproject, CoreObj &self,
 					case MM_ERROR: COMTHROW(E_MGA_OP_REFUSED);
 						break;
 					case MM_CLEAR: 
-						if( st == DTID_CONNROLE && ObjForCore(rel_owner)->simpleconn() ||
-							MODEFLAG(ttt, MM_FULLDELETE)) {
+						if (st == DTID_CONNROLE && ObjForCore(rel_owner)->simpleconn()) {
+							// GME-297: don't delete connections connecting to refports
+							// (outside connections to inside refports are deleted above)
+							long count = 0;
+							CoreObjs refport_refs = ITER[ATTRID_CONNSEG+ATTRID_COLLECTION]; // i.e. refport containers
+							COMTHROW(refport_refs->get_Count(&count));
+							if (count == 0) {
+								// this connection role is connected directly; it is not connected to a refport
+								ObjForCore(rel_owner)->inDeleteObject();
+							}
+						} else if (MODEFLAG(ttt, MM_FULLDELETE)) {
 							ObjForCore(rel_owner)->inDeleteObject();
 						} 
 						else {
