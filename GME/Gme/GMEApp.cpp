@@ -29,7 +29,14 @@
 #include "GMEOLEApp.h"
 #include "GMEEventLogger.h"
 #include "GMEPrintDialog.h"
+
 #include "CrashRpt.h"
+#ifdef _DEBUG
+#pragma comment(lib, "CrashRptd.lib")
+#else
+#pragma comment(lib, "CrashRpt.lib")
+#endif
+
 #include "CrashTest.h"
 #include <Gdiplus.h>
 #include "GraphicsUtil.h"
@@ -544,6 +551,8 @@ int CGMEApp::Run()
 			EndWaitCursor();
 
 			retVal = -1;
+			// KMS: As our state may be corrupted, TerminateProcess so we don't run any atexits
+			TerminateProcess(GetCurrentProcess(), GetExceptionCode());
 			// End by Peter
 		}
 	}
