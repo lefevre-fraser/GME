@@ -10,6 +10,13 @@
 #include "AnnotationBrowserDlg.h"
 #include "CommonComponent.h"
 
+#include "CrashRpt.h"
+#ifdef _DEBUG
+#pragma comment(lib, "CrashRptd.lib")
+#else
+#pragma comment(lib, "CrashRpt.lib")
+#endif
+
 
 /* Deprecated Web based help
 #define GME_UMAN_HOME				"http://www.isis.vanderbilt.edu/projects/GME/Doc/UsersManual/"
@@ -635,6 +642,24 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 	COMCATCH(;)
 }
 
+static int __stdcall nopExceptionFilter(unsigned int code, struct _EXCEPTION_POINTERS* ep) {
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+// returns 0 if an exception was caught
+bool __stdcall InvokeExWithCrashRpt(IMgaComponentEx* compex, IMgaProject* project, IMgaFCO* focusobj, IMgaFCOs* selectedobjs, long param, HRESULT& hr) {
+	__try {
+		__try {
+			hr = compex->InvokeEx(project, focusobj, selectedobjs, param);
+		} __except(crExceptionFilter(GetExceptionCode(), GetExceptionInformation())) {
+			return 0;
+		}
+		// If run outside of GME, CrashRpt will not be set up, and crExceptionFilter will return EXCEPTION_CONTINUE_SEARCH
+	} __except(nopExceptionFilter(GetExceptionCode(), GetExceptionInformation())) {
+		return 0;
+	}
+	return 1;
+}
 
 STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaFCO *focusobj, IMgaFCOs *selectedobjs, long param)
 {
@@ -744,8 +769,16 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					try	{
 						COMTHROW(component->Initialize(project));
 						CComQIPtr<IMgaComponentEx> compex = component;
-						if(compex) {
-							COMTHROW(compex->InvokeEx(project, focusobj, CComQIPtr<IMgaFCOs>(selectedobjs), param));
+						if (compex) {
+							HRESULT hr;
+							if (!InvokeExWithCrashRpt(compex, project, focusobj, selectedobjs, param, hr)) {
+								project->AbortTransaction();
+								AfxMessageBox("An error has occurred in component " + compname + ".\n"
+									"GME may not be in a stable state.\n"
+									"Please save your work and restart GME.");
+							} else {
+								COMTHROW(hr);
+							}
 						}
 						else {
 							CComPtr<IMgaTerritory> terr;
@@ -763,13 +796,15 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 						}
 					}
 					catch(hresult_exception &e)	{
+						project->AbortTransaction();
 						DisplayError("Component error", e.hr);
 					}
 					catch(...)
 					{
-						AfxMessageBox("An application error has occurred in component " + compname + ".\n"
-							"The system might not be in a stable state any more.\n"
-							"Please save your work and restart the GME.");
+						project->AbortTransaction();
+						AfxMessageBox("An error has occurred in component " + compname + ".\n"
+							"GME may not be in a stable state.\n"
+							"Please save your work and restart GME.");
 					} 
 				}
 				else {		// running unprotected
