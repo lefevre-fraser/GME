@@ -112,8 +112,21 @@ CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
 		filters.Insert( 0, spec_filter);
 	}
 
+	const char* initialFile = NULL; // NULL or points into currentMgaPath
+	char currentMgaPath[MAX_PATH];
+	if (theApp.isMgaProj()) {
+		CString conn = theApp.connString();
+		const char* zsConn = conn;
+		zsConn += 4; // skip MGA=
+		char* filename;
+		if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &filename) || filename == 0) {
+		} else {
+			initialFile = filename;
+		}
+	}
+
 	CString conn;
-	CFileDialog dlg(flag_isopen ? TRUE : FALSE, NULL, NULL, 
+	CFileDialog dlg(flag_isopen ? TRUE : FALSE, NULL, initialFile, 
 			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | 
 			0, filters);
 
