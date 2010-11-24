@@ -758,9 +758,6 @@ void ObjTreeCheckRelationsFoldersToo(CMgaProject *mgaproject, CoreObj &self, cor
 //  - MM_CLEAR: the corresponding pointer is cleared
 //  - MM_CLEAR & MM_FULLDELETE: the object itself is cleared
 //  - MM_DO:    nothing happens 
-///////////////////
-// !!! RECURSIVE 
-///////////////////
 void ObjCheckINTORelations(CMgaProject* mgaproject, CoreObj& self, coreobjhash& internals) {
 	metaid_type n = GetMetaID(self);
 	ASSERT(n >= DTID_MODEL && n <= DTID_SET);
@@ -864,6 +861,9 @@ void ObjCheckINTORelations(CMgaProject* mgaproject, CoreObj& self, coreobjhash& 
 }
 
 
+///////////////////
+// !!! RECURSIVE 
+///////////////////
 void ObjTreeCheckINTORelations(CMgaProject *mgaproject, CoreObj &self, coreobjhash &internals) {
 	metaid_type n = GetMetaID(self);
 	ASSERT(n >= DTID_MODEL && n <= DTID_SET);
@@ -878,6 +878,9 @@ void ObjTreeCheckINTORelations(CMgaProject *mgaproject, CoreObj &self, coreobjha
 }
 
 
+///////////////////
+// !!! RECURSIVE 
+///////////////////
 void ObjTreeCheckINTORelationsFoldersToo(CMgaProject *mgaproject, CoreObj &self, coreobjhash &internals) {
 	metaid_type n = GetMetaID(self);
 	ASSERT(n >= DTID_MODEL && n <= DTID_FOLDER);
