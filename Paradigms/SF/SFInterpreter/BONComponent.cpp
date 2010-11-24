@@ -73,11 +73,10 @@ void CComponent::InvokeEx(CBuilder &builder,CBuilderObject *focus, CBuilderObjec
 {
 	// ASSERT(!(selected.IsEmpty()));
 	// CBuilderObject *sfBuilder = selected.GetHead();
-	if (!focus) {
+	if (!focus && !selected.IsEmpty()) {
 		focus = selected.GetHead();
 	}
-	ASSERT(focus);
-	if(!focus->IsKindOf(RUNTIME_CLASS(CCompoundBuilder))) {
+	if(!focus || !focus->IsKindOf(RUNTIME_CLASS(CCompoundBuilder))) {
 		AfxMessageBox("Interpretation must start from a Compound model!");
 		return;
 	}
