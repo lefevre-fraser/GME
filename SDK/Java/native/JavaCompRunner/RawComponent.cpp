@@ -84,7 +84,20 @@ void RawComponent::loadJavaVM()
     m_javaVMDll = LoadLibrary(buf);
     if(m_javaVMDll == NULL)
     {
-        AfxMessageBox("Error loading java. Cannot find jvm.dll.");
+		LPTSTR errorText = NULL;
+
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS,
+		   NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		   (LPTSTR)&errorText, 0, NULL);
+
+		if (NULL != errorText) {
+			std::string err = "Error loading java. Cannot load jvm.dll: ";
+			err += errorText;
+			AfxMessageBox(err.c_str());
+			LocalFree(errorText);
+		} else {
+	        AfxMessageBox("Error loading java. Cannot find jvm.dll.");
+		}
         unloadJavaVM();
         throw regkey;  
     }
