@@ -114,6 +114,9 @@ def compile_tools():
 
 def compile_samples():
     "Compile sample components"
+
+    sln_file = os.path.join(GME_ROOT, "SDK", "PatternProcessor", "PatternProcessor.sln");
+    tools.build_VS( sln_file, "Release" )
     
     # SF Paradigm
     sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "SFInterpreter", "SFInterpreter.sln");
