@@ -263,7 +263,7 @@
         <!-- =========================================================== -->
         <DirectoryRef Id='INSTALLDIR_BIN'>
             <Component Id='GME.exe' Guid='62188D4B-8663-40f9-86F9-F89D65F5DE64'>
-                <File Id='GME.exe' Name='GME.exe' DiskId='1' Source='..\GME\Gme\Release\GME.exe' KeyPath='yes' Checksum='yes'> 
+                <File Id='GME.exe' Name='GME.exe' DiskId='1' Source='..\GME\Release\GME.exe' KeyPath='yes' Checksum='yes'> 
                     <Shortcut Id='ApplicationStartMenuShortcut' Name='GME' Icon='GME.ico'
 		            Description='Generic Modeling Environment' Directory='ShortcutFolder'
 			        Advertise="yes" />
@@ -929,8 +929,8 @@
         </DirectoryRef>
         
         <DirectoryRef Id="INSTALLDIR_BIN">
-            <Component Id="xerces_c_2_8.dll" Guid="69573e13-9d78-4e75-b353-6d109d9fedcd">
-                <File Id="xerces_c_2_8.dll" Name="xerces-c_2_8.dll" KeyPath="yes" Source="..\GME\lib\xerces-c_2_8.dll" />
+            <Component Id="xerces_c_3_1.dll" Guid="69573e13-9d78-4e75-b353-6d109d9fedcd">
+                <File Id="xerces_c_3_1.dll" Name="xerces-c_3_1.dll" KeyPath="yes" Source="..\GME\lib\xerces-c_3_1.dll" />
             </Component>
         </DirectoryRef>
         
@@ -1138,7 +1138,7 @@
                 <File Id="lpfilter.h" Name="lpfilter.h"  Source="..\Paradigms\SF\demo\lpfilter.h" />
                 <File Id="main.c" Name="main.c"  Source="..\Paradigms\SF\demo\main.c" />
                 <File Id="mdemo.sln" Name="mdemo.sln"  Source="..\Paradigms\SF\demo\mdemo.sln" />
-                <File Id="mdemo.vcproj" Name="mdemo.vcproj"  Source="..\Paradigms\SF\demo\mdemo.vcproj" />
+                <File Id="mdemo.vcpxroj" Name="mdemo.vcxproj"  Source="..\Paradigms\SF\demo\mdemo.vcxproj" />
                 <File Id="ui.cfg" Name="ui.cfg"  Source="..\Paradigms\SF\demo\ui.cfg" />
             </Component>
         </DirectoryRef>
@@ -2064,7 +2064,7 @@
                 <File Id="DecoratorExamplesPlainSample_Decorator.rc" Name="Decorator.rc" Source="..\SDK\Decorator Examples\PlainSample\Decorator.rc" />
                 <File Id="DecoratorExamplesPlainSample_Decorator.rgs" Name="Decorator.rgs" Source="..\SDK\Decorator Examples\PlainSample\Decorator.rgs" />
                 <File Id="DecoratorExamplesPlainSample_Decorator.sln" Name="Decorator.sln" Source="..\SDK\Decorator Examples\PlainSample\Decorator.sln" />
-                <File Id="DecoratorExamplesPlainSample_Decorator.vcproj" Name="Decorator.vcproj" Source="..\SDK\Decorator Examples\PlainSample\Decorator.vcproj" />
+                <File Id="DecoratorExamplesPlainSample_Decorator.vcxproj" Name="Decorator.vcxproj" Source="..\SDK\Decorator Examples\PlainSample\Decorator.vcxproj" />
                 <File Id="DecoratorExamplesPlainSample_DecoratorApp.cpp" Name="DecoratorApp.cpp" Source="..\SDK\Decorator Examples\PlainSample\DecoratorApp.cpp" />
                 <File Id="DecoratorExamplesPlainSample_DecoratorApp.def" Name="DecoratorApp.def" Source="..\SDK\Decorator Examples\PlainSample\DecoratorApp.def" />
                 <File Id="DecoratorExamplesPlainSample_DecoratorConfig.h" Name="DecoratorConfig.h" Source="..\SDK\Decorator Examples\PlainSample\DecoratorConfig.h" />
@@ -2196,7 +2196,7 @@
                 <ComponentRef Id='Search.ocx' />
                 <ComponentRef Id='ssleay32.dll' />
                 <ComponentRef Id='TableEditor.dll' />
-                <ComponentRef Id='xerces_c_2_8.dll' />
+                <ComponentRef Id='xerces_c_3_1.dll' />
                 <ComponentRef Id='XmlBackEnd.dll' />
                 <ComponentRef Id='GMEplink.exe' />
                 
