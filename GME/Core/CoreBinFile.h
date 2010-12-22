@@ -8,6 +8,56 @@
 #include <vector>
 #include <algorithm>
 
+#include "windows.h"
+class membuf
+{
+	public:
+	membuf() : 
+		begin(0), end(0), hFile(INVALID_HANDLE_VALUE), hFileMappingObject(INVALID_HANDLE_VALUE)
+		{ }
+	
+	int open(const char* filename) {
+		hFile = CreateFileA(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
+		if (hFile == INVALID_HANDLE_VALUE) {
+			return 1;
+		}
+		hFileMappingObject = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
+		if (hFileMappingObject == INVALID_HANDLE_VALUE) {
+			return 1;
+		}
+		begin = (char*)MapViewOfFile(hFileMappingObject, FILE_MAP_READ, 0, 0, 0);
+		if (begin == 0) {
+			return 1;
+		}
+		DWORD filesize = GetFileSize(hFile, NULL);
+		if (filesize == INVALID_FILE_SIZE) {
+			return 1;
+		}
+		end = begin + filesize;
+		return 0;
+	}
+
+	~membuf() {
+		UnmapViewOfFile(begin);
+		CloseHandle(hFileMappingObject);
+		CloseHandle(hFile);
+	}
+
+	char* getBegin() const {
+		return begin;
+	}
+	char* getEnd() const {
+		return end;
+	}
+
+	private:
+		membuf(const membuf&);
+		membuf& operator=(const membuf&);
+
+		HANDLE hFile,hFileMappingObject;
+		char* begin, * end;
+};
+
 class CCoreBinFile;
 
 // --------------------------- BinAttr
@@ -143,15 +193,18 @@ public:
 // ------- Ios
 
 public:
-	std::ifstream ifs;
+	char* cifs;
+	char* cifs_eof;
+
 	std::ofstream ofs;
 
 public:
-	void read(unsigned char &a) { ifs.read((char*)&a, sizeof(char)); }
-	void read(short &a) { ifs.read((char*)&a, sizeof(short)); }
-	void read(int &a) { ifs.read((char*)&a, sizeof(int)); }
-	void read(long &a)  { ifs.read((char*)&a, sizeof(long)); }
-	void read(double &a)  { ifs.read((char*)&a, sizeof(double)); }
+#define CoreBinFile_read(a, size) if (size > cifs_eof - cifs) HR_THROW(E_FILEOPEN); memcpy(&a, cifs, size); cifs += size;
+	void read(unsigned char &a) { CoreBinFile_read(a, sizeof(unsigned char)); }
+	void read(short &a) { CoreBinFile_read(a, sizeof(short)); }
+	void read(int &a) { CoreBinFile_read(a, sizeof(int)); }
+	void read(long &a)  { CoreBinFile_read(a, sizeof(long)); }
+	void read(double &a)  { CoreBinFile_read(a, sizeof(double)); }
 	void read(CComBstrObj &a);
 	void read(bindata &a);
 

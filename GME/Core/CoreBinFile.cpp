@@ -52,6 +52,7 @@ BinAttrBase *BinAttrBase::Create(valtype_type valtype)
 		HR_THROW(E_METAPROJECT);
 	}
 
+	// FIXME: can't take this if branch (is nothrow new intended?)
 	if( binattr == NULL )
 		HR_THROW(E_OUTOFMEMORY);
 
@@ -524,12 +525,9 @@ void CCoreBinFile::CloseMetaAttribute()
 
 void CCoreBinFile::read(bindata &b)
 {
-	ASSERT( ifs.is_open() );
-
 	int len;
 	
 	read(len);
-	if(ifs.eof()) COMTHROW(E_FILEOPEN);
 	ASSERT( len >= 0 );
 
 	try {
@@ -538,14 +536,17 @@ void CCoreBinFile::read(bindata &b)
 		// KMS: could get here if the project is corrupt and len is incorrect
 		COMTHROW(E_OUTOFMEMORY);
 	}
-	if( len > 0 )
-		ifs.read( (char *) &b[0], len);
+	if( len > 0 ) {
+		if (len > cifs_eof - cifs) {
+			HR_THROW(E_FILEOPEN);
+		}
+		memcpy(&b[0], cifs, len);
+		cifs += len;
+	}
 }
 
 void CCoreBinFile::read(CComBstrObj &ss)
 {
-	ASSERT( ifs.is_open() );
-
 	std::string s;
 
 	int len;
@@ -554,8 +555,14 @@ void CCoreBinFile::read(CComBstrObj &ss)
 	ASSERT( len >= 0 );
 
 	s.resize(len);
-	if( len > 0 )
-		ifs.read( (char *) &s[0], len);
+	if( len > 0 ) {
+		if (len > cifs_eof - cifs) {
+			HR_THROW(E_FILEOPEN);
+		}
+		memcpy(&s[0], cifs, len);
+		cifs += len;
+	}
+
 
 	CopyTo(s, ss);
 }
@@ -769,8 +776,8 @@ void CCoreBinFile::CancelProject()
 {
 	CloseMetaObject();
 
-	if( ifs.is_open() )
-		ifs.close();
+	cifs = 0;
+	cifs_eof = 0;
 
 	if( ofs.is_open() )
 		ofs.close();
@@ -833,9 +840,13 @@ void CCoreBinFile::LoadProject()
 {
 	InitMaxObjIDs();
 
-	ifs.open(filename.c_str(), std::ios::in | std::ios::binary);//previously ios::nocreate had been used but no file is created if opened for read only
-	if( ifs.fail() )
-		HR_THROW(E_FILEOPEN);
+	{
+	membuf file_buffer;
+	if (file_buffer.open(filename.c_str()) != 0) {
+		HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
+	}
+	cifs = file_buffer.getBegin();
+	cifs_eof = file_buffer.getEnd();
 
 	bindata guid;
 	read(guid);
@@ -915,8 +926,8 @@ void CCoreBinFile::LoadProject()
 
 	isEmpty = true;
 	resolvelist.clear();
+	}
 
-	ifs.close();
 	ofs.clear();
 	ofs.open(filename.c_str(), std::ios::app | std::ios::binary);
 	read_only = false;
