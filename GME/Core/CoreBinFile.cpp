@@ -12,7 +12,7 @@
 
 // --------------------------- BinAttr
 
-BinAttrBase *BinAttrBase::Create(valtype_type valtype)
+BinAttrBase *BinAttrBase::Create(BinAttrBase& attr, valtype_type valtype)
 {
 	ASSERT( valtype != VALTYPE_NONE );
 
@@ -21,31 +21,31 @@ BinAttrBase *BinAttrBase::Create(valtype_type valtype)
 	switch(valtype)
 	{
 	case VALTYPE_LONG:
-		binattr = new BinAttr<VALTYPE_LONG>;
+		binattr = new ((void*)(&attr)) BinAttr<VALTYPE_LONG>();
 		break;
 
 	case VALTYPE_STRING:
-		binattr = new BinAttr<VALTYPE_STRING>;
+		binattr = new ((void*)(&attr)) BinAttr<VALTYPE_STRING>();
 		break;
 
 	case VALTYPE_BINARY:
-		binattr = new BinAttr<VALTYPE_BINARY>;
+		binattr = new ((void*)(&attr)) BinAttr<VALTYPE_BINARY>;
 		break;
 
 	case VALTYPE_LOCK:
-		binattr = new BinAttr<VALTYPE_LOCK>;
+		binattr = new ((void*)(&attr)) BinAttr<VALTYPE_LOCK>;
 		break;
 
 	case VALTYPE_POINTER:
-		binattr = new BinAttr<VALTYPE_POINTER>;
+		binattr = new ((void*)(&attr)) BinAttr<VALTYPE_POINTER>;
 		break;
 
 	case VALTYPE_COLLECTION:
-		binattr = new BinAttr<VALTYPE_COLLECTION>;
+		binattr = new ((void*)(&attr)) BinAttr<VALTYPE_COLLECTION>;
 		break;
 
 	case VALTYPE_REAL:
-		binattr = new BinAttr<VALTYPE_REAL>;
+		binattr = new ((void*)(&attr)) BinAttr<VALTYPE_REAL>;
 		break;
 
 	default:
@@ -87,7 +87,7 @@ bool BinObject::HasGuidAndStatAttributes( bool* p_guidFound, bool* p_statusFound
 	binattrs_iterator e = binattrs.end();
 	while( i != e)
 	{
-		switch( (*i)->attrid)
+		switch( (i)->attrid)
 		{
 			case ATTRID_GUID1: ++a1;break;
 			case ATTRID_GUID2: ++a2;break;
@@ -116,10 +116,15 @@ void BinObject::CreateGuidAttributes( CCoreBinFile* p_bf)
 	getMeAGuid( &l1.lVal, &l2.lVal, &l3.lVal, &l4.lVal);
 
 	// create BinAttrs of LONG type
-	BinAttrBase *binattr1 = BinAttrBase::Create( VALTYPE_LONG);
-	BinAttrBase *binattr2 = BinAttrBase::Create( VALTYPE_LONG);
-	BinAttrBase *binattr3 = BinAttrBase::Create( VALTYPE_LONG);
-	BinAttrBase *binattr4 = BinAttrBase::Create( VALTYPE_LONG);
+	BinAttrUnion binattr1space; 
+	BinAttrBase* binattr1 = BinAttrBase::Create(binattr1space, VALTYPE_LONG);
+	BinAttrUnion binattr2space;
+	BinAttrBase* binattr2 = BinAttrBase::Create(binattr2space, VALTYPE_LONG);
+	BinAttrUnion binattr3space;
+	BinAttrBase* binattr3 = BinAttrBase::Create(binattr3space, VALTYPE_LONG);
+	BinAttrUnion binattr4space;
+	BinAttrBase* binattr4 = BinAttrBase::Create(binattr4space, VALTYPE_LONG);
+
 
 	// fill the only public field
 	binattr1->attrid = ATTRID_GUID1;
@@ -136,10 +141,10 @@ void BinObject::CreateGuidAttributes( CCoreBinFile* p_bf)
 	// insert the objects into the container
 	// these objects will be destructed later 
 	// by BinObject::DestroyAttributes
-	binattrs.push_back( binattr1);
-	binattrs.push_back( binattr2);
-	binattrs.push_back( binattr3);
-	binattrs.push_back( binattr4);
+	binattrs.push_back(std::move(binattr1space));
+	binattrs.push_back(std::move(binattr1space));
+	binattrs.push_back(std::move(binattr1space));
+	binattrs.push_back(std::move(binattr1space));
 }
 
 // this method will create a status attribute for mga objects
@@ -147,7 +152,8 @@ void BinObject::CreateGuidAttributes( CCoreBinFile* p_bf)
 void BinObject::CreateStatusAttribute( CCoreBinFile* p_bf)
 {
 	// create BinAttr of LONG type
-	BinAttrBase *binattr = BinAttrBase::Create( VALTYPE_LONG);
+	BinAttrUnion binattrspace;
+	BinAttrBase* binattr = BinAttrBase::Create(binattrspace, VALTYPE_LONG);
 
 	// fill the only public field
 	binattr->attrid = ATTRID_FILESTATUS;
@@ -158,7 +164,7 @@ void BinObject::CreateStatusAttribute( CCoreBinFile* p_bf)
 	// insert the objects into the container
 	// these objects will be destructed later 
 	// by BinObject::DestroyAttributes
-	binattrs.push_back( binattr);
+	binattrs.push_back(std::move(binattrspace));
 }
 
 void BinObject::CreateAttributes(ICoreMetaObject *metaobject)
@@ -174,6 +180,8 @@ void BinObject::CreateAttributes(ICoreMetaObject *metaobject)
 	metaattributelist_type metaattributelist;
 	GetAll<ICoreMetaAttributes, ICoreMetaAttribute>(metaattributes, metaattributelist);
 
+	binattrs.reserve(metaattributelist.size());
+
 	metaattributelist_type::iterator i = metaattributelist.begin();
 	metaattributelist_type::iterator e = metaattributelist.end();
 	while( i != e )
@@ -184,13 +192,14 @@ void BinObject::CreateAttributes(ICoreMetaObject *metaobject)
 		attrid_type attrid = ATTRID_NONE;
 		COMTHROW( (*i)->get_AttrID(&attrid) );
 
-		BinAttrBase *binattr = BinAttrBase::Create(valtype);
-		ASSERT( binattr != NULL );
+		BinAttrUnion binattrspace;
+		BinAttrBase *binattr = BinAttrBase::Create(binattrspace, valtype);
+		BinAttrBase::Create(binattrspace, valtype);
 
 		ASSERT( attrid != ATTRID_NONE );
 		binattr->attrid = attrid;
 
-		binattrs.push_front(binattr);
+		binattrs.push_back(std::move(binattrspace));
 
 		++i;
 	}
@@ -198,14 +207,6 @@ void BinObject::CreateAttributes(ICoreMetaObject *metaobject)
 
 void BinObject::DestroyAttributes()
 {
-	binattrs_iterator i = binattrs.begin();
-	binattrs_iterator e = binattrs.end();
-	while( i != e )
-	{
-		delete *i;
-		++i;
-	}
-
 	binattrs.clear();
 }
 
@@ -215,13 +216,71 @@ void BinObject::Read(CCoreBinFile *binfile)
 	ASSERT( binattrs.empty() );
 
 	valtype_type valtype;
+
+	// First count how many attributes this object has, so we can intelligently size this->binattrs
+	size_t num_attrs = 0;
+	char* cifs_save = binfile->cifs;
+	for (;;)
+	{
+		binfile->read(valtype);
+		if( valtype == VALTYPE_NONE )
+			break;
+		num_attrs++;
+
+		attrid_type attrid;
+		binfile->read(attrid);
+
+		// These need to be the same as CCoreBinFile::Read()s, but without the expense
+		switch(valtype)
+		{
+		case VALTYPE_LONG:
+			{ long x; binfile->read(x); }
+			break;
+
+		case VALTYPE_STRING:
+			{ int len; binfile->read(len); binfile->cifs += len; } // FIXME maybe cifs > cifs_eof
+			break;
+
+		case VALTYPE_BINARY:
+			{ int len; binfile->read(len); binfile->cifs += len; } // FIXME maybe cifs > cifs_eof
+			break;
+
+		case VALTYPE_LOCK:
+			break;
+
+		case VALTYPE_POINTER:
+			{
+				metaid_type metaid;
+				binfile->read(metaid);
+				if( metaid != METAID_NONE )
+				{
+					objid_type objid;
+					binfile->read(objid);
+				}
+			}
+
+		case VALTYPE_COLLECTION:
+			break;
+
+		case VALTYPE_REAL:
+			{ double x; binfile->read(x); }
+			break;
+
+		default:
+			HR_THROW(E_METAPROJECT);
+		}
+	}
+	binfile->cifs = cifs_save;
+	binattrs.reserve(num_attrs);
+
 	for(;;)
 	{
 		binfile->read(valtype);
 		if( valtype == VALTYPE_NONE )
 			break;
 
-		BinAttrBase *binattr = BinAttrBase::Create(valtype);
+		BinAttrUnion binattrspace;
+		BinAttrBase *binattr = BinAttrBase::Create(binattrspace, valtype);
 		ASSERT( binattr != NULL );
 
 		attrid_type attrid;
@@ -230,9 +289,11 @@ void BinObject::Read(CCoreBinFile *binfile)
 
 		binattr->attrid = attrid;
 
+		// Possible pitfall: binattr == &binattrspace. It is possible the compiler will figure this out, and call BinAttrUnion::Read() (which we don't want)
 		binattr->Read(binfile);
 
-		binattrs.push_front(binattr);
+		// TODO: this move could be avoided
+		binattrs.push_back(std::move(binattrspace));
 	}
 };
 
@@ -245,12 +306,12 @@ void BinObject::Write(CCoreBinFile *binfile)
 	binattrs_iterator e = binattrs.end();
 	while( i != e )
 	{
-		ASSERT( (*i)->GetValType() != VALTYPE_NONE );
-		ASSERT( (*i)->attrid != ATTRID_NONE );
+		ASSERT( (i)->GetValType() != VALTYPE_NONE );
+		ASSERT( (i)->attrid != ATTRID_NONE );
 
-		binfile->write( (*i)->GetValType() );
-		binfile->write( (*i)->attrid );
-		(*i)->Write(binfile);
+		binfile->write( (i)->GetValType() );
+		binfile->write( (i)->attrid );
+		(i)->Write(binfile);
 
 		++i;
 	}
@@ -267,9 +328,9 @@ bool BinObject::HasEmptyPointers() const
 	binattrs_type::const_iterator e = binattrs.end();
 	while( i != e )
 	{
-		if( (*i)->GetValType() == VALTYPE_POINTER )
+		if( (i)->GetValType() == VALTYPE_POINTER )
 		{
-			if( !( ( ( BinAttr<VALTYPE_POINTER>*)(*i))->isEmpty))
+			if( !( ( ( BinAttr<VALTYPE_POINTER>*)(&*i))->isEmpty))
 				return false;
 		}
 		++i;
@@ -559,6 +620,7 @@ void CCoreBinFile::read(CComBstrObj &ss)
 		if (len > cifs_eof - cifs) {
 			HR_THROW(E_FILEOPEN);
 		}
+		// FIXME: why copy into std::string at all?
 		memcpy(&s[0], cifs, len);
 		cifs += len;
 	}

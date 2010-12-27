@@ -70,7 +70,7 @@ public:
 
 	attrid_type attrid;
 
-	static BinAttrBase *Create(valtype_type valtype);
+	static BinAttrBase *Create(BinAttrBase& attr, valtype_type valtype);
 
 	virtual valtype_type GetValType() const NOTHROW = 0;
 	virtual void Set(CCoreBinFile *binfile, VARIANT p) = 0;
@@ -79,7 +79,42 @@ public:
 	virtual void Read(CCoreBinFile *binfile) = 0;
 };
 
-typedef std::list<BinAttrBase*> binattrs_type;//slist
+class BinAttrUnion : public BinAttrBase
+{
+public:
+	BinAttrUnion() { }
+	virtual ~BinAttrUnion() { }
+
+	virtual valtype_type GetValType() const NOTHROW { DebugBreak(); return 0; }
+	virtual void Set(CCoreBinFile *binfile, VARIANT p) { DebugBreak(); }
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { DebugBreak(); }
+	virtual void Write(CCoreBinFile *binfile) const { DebugBreak(); }
+	virtual void Read(CCoreBinFile *binfile) { DebugBreak(); }
+
+	BinAttrUnion(BinAttrUnion&& that) {
+		// This copies the virtual function table (i.e. runtime type) too!
+		memcpy(this, &that, sizeof(BinAttrUnion));
+		BinAttrUnion empty;
+		// Copy an empty BinAttrUnion over that so resources are not released twice
+		memcpy(&that, &empty, sizeof(BinAttrUnion));
+	}
+	BinAttrUnion& operator=(BinAttrUnion&& that) {
+		memcpy(this, &that, sizeof(BinAttrUnion));
+		BinAttrUnion empty;
+		memcpy(&that, &empty, sizeof(BinAttrUnion));
+		return *this;
+	}
+	BinAttrUnion(const BinAttrUnion& that) {
+		// FIXME
+	}
+	BinAttrUnion& operator=(const BinAttrUnion&& that) {
+		// FIXME
+	}
+	// BinAttrUnion is guaranteed to have enough space to contain any BinAttr<*>
+	int pad[5];
+};
+
+typedef std::vector<BinAttrUnion> binattrs_type;
 typedef binattrs_type::iterator binattrs_iterator;
 
 template<valtype_enum VALTYPE>
@@ -93,6 +128,7 @@ class BinObject
 public:
 	~BinObject() { DestroyAttributes(); }
 
+        // binattrs actually contains elements of type BinAttr<*>
 	binattrs_type binattrs;
 	bool deleted;
 
@@ -104,13 +140,13 @@ public:
 	{
 		binattrs_iterator i = binattrs.begin();
 		binattrs_iterator e = binattrs.end();
-		while( i != e && (*i)->attrid != attrid )
+		while( i != e && (i)->attrid != attrid )
 			++i;
 
 		if( i == e )
 			HR_THROW(E_BINFILE);
 
-		return *i;
+		return &*i;
 	}
 
 	void CreateAttributes(ICoreMetaObject *metaobject);
@@ -384,8 +420,11 @@ template<>
 class BinAttr<VALTYPE_COLLECTION> : public BinAttrBase
 {
 public:
-	std::vector<objects_iterator> a;
+	// a must not be moved, as BinAttr<VALTYPE_POINTER> indexes into it. Allocate a separately so we can still move BinAttrs
+	std::auto_ptr<std::vector<objects_iterator>> a;
 
+	BinAttr() : a(new std::vector<objects_iterator>) { }
+	virtual ~BinAttr() { }
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_COLLECTION; }
 	virtual void Set(CCoreBinFile *binfile, VARIANT p) { ASSERT(false); }
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const
@@ -394,8 +433,8 @@ public:
 
 		std::vector<metaobjidpair_type> idpairs;
 
-		std::vector<objects_iterator>::const_iterator i = a.begin();
-		std::vector<objects_iterator>::const_iterator e = a.end();
+		std::vector<objects_iterator>::const_iterator i = a->begin();
+		std::vector<objects_iterator>::const_iterator e = a->end();
 		while( i != e )
 		{
 			idpairs.push_back( (*i)->first );
@@ -439,7 +478,7 @@ public:
 		ASSERT( base != NULL );
 		
 		ASSERT( base->GetValType() == VALTYPE_COLLECTION );
-		std::vector<objects_iterator> &objs = ((BinAttr<VALTYPE_COLLECTION>*)base)->a;
+		std::vector<objects_iterator> &objs = *((BinAttr<VALTYPE_COLLECTION>*)base)->a;
 
 	#ifdef DEBUG_CONTAINERS
 		std::vector<objects_iterator>::iterator i = find(objs.begin(), objs.end(), a);
@@ -457,7 +496,7 @@ public:
 			ASSERT( base != NULL );
 			
 			ASSERT( base->GetValType() == VALTYPE_COLLECTION );
-			std::vector<objects_iterator> &objs = ((BinAttr<VALTYPE_COLLECTION>*)base)->a;
+			std::vector<objects_iterator> &objs = *((BinAttr<VALTYPE_COLLECTION>*)base)->a;
 
 			ASSERT( binfile->opened_object->second.Find(attrid) == this );
 
@@ -538,6 +577,15 @@ public:
 		}
 	}
 };
+
+
+static_assert(sizeof(BinAttr<VALTYPE_LONG>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
+static_assert(sizeof(BinAttr<VALTYPE_REAL>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
+static_assert(sizeof(BinAttr<VALTYPE_STRING>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
+static_assert(sizeof(BinAttr<VALTYPE_BINARY>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
+static_assert(sizeof(BinAttr<VALTYPE_LOCK>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
+static_assert(sizeof(BinAttr<VALTYPE_COLLECTION>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
+static_assert(sizeof(BinAttr<VALTYPE_POINTER>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
 
 
 #endif//MGA_COREBINFILE_H
