@@ -608,25 +608,21 @@ void CCoreBinFile::read(bindata &b)
 
 void CCoreBinFile::read(CComBstrObj &ss)
 {
-	std::string s;
-
 	int len;
 
 	read(len);
 	ASSERT( len >= 0 );
 
-	s.resize(len);
 	if( len > 0 ) {
 		if (len > cifs_eof - cifs) {
 			HR_THROW(E_FILEOPEN);
 		}
-		// FIXME: why copy into std::string at all?
-		memcpy(&s[0], cifs, len);
+		CopyTo(cifs, len, &ss.p);
 		cifs += len;
+	} else {
+		std::string s;
+		CopyTo(s, ss);
 	}
-
-
-	CopyTo(s, ss);
 }
 
 void CCoreBinFile::write(const bindata &b)
