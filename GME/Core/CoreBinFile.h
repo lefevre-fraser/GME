@@ -94,14 +94,12 @@ public:
 	BinAttrUnion(BinAttrUnion&& that) {
 		// This copies the virtual function table (i.e. runtime type) too!
 		memcpy(this, &that, sizeof(BinAttrUnion));
-		BinAttrUnion empty;
 		// Copy an empty BinAttrUnion over that so resources are not released twice
-		memcpy(&that, &empty, sizeof(BinAttrUnion));
+		new ((void*)(&that)) BinAttrUnion();
 	}
 	BinAttrUnion& operator=(BinAttrUnion&& that) {
 		memcpy(this, &that, sizeof(BinAttrUnion));
-		BinAttrUnion empty;
-		memcpy(&that, &empty, sizeof(BinAttrUnion));
+		new ((void*)(&that)) BinAttrUnion();
 		return *this;
 	}
 	BinAttrUnion(const BinAttrUnion& that) {
