@@ -1895,7 +1895,7 @@ void CCoreCollectionAttribute::CopyCollectionFromStorage(VARIANT &v)
 		++i;
 	}
 
-	p->Fill(collection.begin(), collection.end());
+	p->FillAll(collection);
 
 	v.pdispVal = p.Detach();
 	v.vt = VT_DISPATCH;

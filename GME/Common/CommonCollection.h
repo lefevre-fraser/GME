@@ -228,6 +228,21 @@ public:
 		}
 	}
 
+	template<class COLLTYPE_>
+	void Reserve(COLLTYPE_& col, size_t num_additional) { }
+	template<>
+	void Reserve(std::vector<ITFTYPE*>& col, size_t num_additional)
+	{
+		col.reserve(col.size() + num_additional);
+	}
+
+	template<class COLLTYPE2>
+	void FillAll(COLLTYPE2& col)
+	{
+		Reserve(m_coll, col.size());
+		Fill(col.begin(), col.end());
+	}
+
 	void Add(OBJTYPE *i)
 	{
 		ASSERT( i != NULL );

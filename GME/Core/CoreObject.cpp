@@ -169,7 +169,7 @@ STDMETHODIMP CCoreObject::get_Attributes(ICoreAttributes **p)
 		CComObjPtr<COMTYPE> q;
 		CreateComObject(q);
 
-		q->Fill(attributes.begin(), attributes.end());
+		q->FillAll(attributes);
 		MoveTo(q,p);
 	}
 	COMCATCH(;)

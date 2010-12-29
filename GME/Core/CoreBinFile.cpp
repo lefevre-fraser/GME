@@ -295,6 +295,7 @@ void BinObject::Read(CCoreBinFile *binfile)
 		// TODO: this move could be avoided
 		binattrs.push_back(std::move(binattrspace));
 	}
+	ASSERT(binattrs.size() == num_attrs);
 };
 
 void BinObject::Write(CCoreBinFile *binfile)
