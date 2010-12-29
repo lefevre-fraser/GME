@@ -109,7 +109,12 @@ public:
 		// FIXME
 	}
 	// BinAttrUnion is guaranteed to have enough space to contain any BinAttr<*>
+	// (Ideally we'd do union { char [sizeof(BinAttrBase) - sizeof(BinAttr<*>) }, but that requires method definitions for BinAttr<*>::* to be separated from the declaration)
+#ifdef _DEBUG
 	int pad[5];
+#else
+	int pad[4];
+#endif
 };
 
 typedef std::vector<BinAttrUnion> binattrs_type;
