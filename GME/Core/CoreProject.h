@@ -2,11 +2,6 @@
 #ifndef MGA_COREPROJECT_H
 #define MGA_COREPROJECT_H
 
-#ifdef DEBUG
-#define _HAS_ITERATOR_DEBUGGING 1
-#endif
-#define _SECURE_SCL 1
-
 #include <list>
 //#include <slist>
 #include <hash_map>
