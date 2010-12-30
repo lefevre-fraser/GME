@@ -26,7 +26,7 @@ class membuf
 			return 1;
 		}
 		begin = (char*)MapViewOfFile(hFileMappingObject, FILE_MAP_READ, 0, 0, 0);
-		if (begin == 0) {
+		if (begin == NULL) {
 			return 1;
 		}
 		DWORD filesize = GetFileSize(hFile, NULL);
@@ -131,7 +131,7 @@ class BinObject
 public:
 	~BinObject() { DestroyAttributes(); }
 
-        // binattrs actually contains elements of type BinAttr<*>
+	// binattrs actually contains elements of type BinAttr<*>
 	binattrs_type binattrs;
 	bool deleted;
 
