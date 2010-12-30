@@ -1809,24 +1809,7 @@ void CCoreCollectionAttribute::CopyCollectionFromMemory(VARIANT &v)
 	CComObjPtr<COMTYPE> p;
 	CreateComObject(p);
 
-	/*
-	CCoreTerritory *territory = GetTerritory();
-	ASSERT( territory != NULL );
-
-	objects_iterator i = collection.begin();
-	objects_iterator e = collection.end();
-	while( i != e )
-	{
-		CCoreAttribute *attribute = (*i)->FindAttribute(ATTRID_LOCK);
-		ASSERT( attribute->GetValType() == VALTYPE_LOCK );
-
-		if( territory->GetLocking((CCoreLockAttribute*)attribute) != LOCKING_NONE )
-			p->Add(*i);
-
-		++i;
-	}
-	*/
-	p->Fill(collection.begin(), collection.end());
+	p->FillAll(collection);
 
 	v.pdispVal = p.Detach();
 	v.vt = VT_DISPATCH;
