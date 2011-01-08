@@ -734,8 +734,20 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 
 			CString c1((BSTR) targ_kind_name);
 			CString c2(kind);
+			CString c3;
 
-			if ((c2 == "") || (c2 == c1)) {
+			if (isAlterationSet() && (m_alter_option == CH_PREFIX || m_alter_option == CH_MIGRATE))
+			{
+				CComBSTR role2 = prefixIt(role);
+				CopyTo(role2, c3);
+			}
+			else if (isAlterationSet() && m_alter_option == CH_TRUNCATE)
+			{
+				CComBSTR role2 = truncIt(role);
+				CopyTo(role2, c3);
+			}
+
+			if ((c2 == "") || (c2 == c1) || (c3 != "" && c1 == c3)) {
 
 				COMTHROW(targ_fco->get_ObjType(&targ_objtype));
 
