@@ -829,9 +829,12 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 			return FALSE;
 		}
 			
-		bool res = CGMEDataSource::ParseXMLData(pDataObject, ccpTargetObject, doDragOp == DRAGOP_CLOSURE_MERGE);
-		
-		return res?TRUE:FALSE;
+		try {
+			bool res = CGMEDataSource::ParseXMLData(pDataObject, ccpTargetObject, doDragOp == DRAGOP_CLOSURE_MERGE);
+			return res?TRUE:FALSE;
+		} catch (hresult_exception& e) {
+			return FALSE;
+		}
 	}
 	// PETER: end
 	
