@@ -542,18 +542,8 @@ int CGMEApp::Run()
 		__except(crExceptionFilter(GetExceptionCode(), GetExceptionInformation())) {
 			EmergencySave();
 
-			// Modified by Peter:let's exit after emergency event
-			abort_on_close = true;
-			BeginWaitCursor();
-			if(CGMEDoc::theInstance) {
-				CGMEDoc::theInstance->OnCloseDocument(true);
-			}
-			EndWaitCursor();
-
-			retVal = -1;
-			// KMS: As our state may be corrupted, TerminateProcess so we don't run any atexits
+			// KMS: As our state may be corrupted, TerminateProcess so we don't run any atexits and crash again
 			TerminateProcess(GetCurrentProcess(), GetExceptionCode());
-			// End by Peter
 		}
 	}
 	// Closing GDI+
@@ -835,9 +825,9 @@ void CGMEApp::UpdateComponentToolbar()
 			{
 				int buttonIndex = componentBar.ButtonToIndex(pCurrent);
 				componentBar.RemoveButton(buttonIndex);
-				componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
-				componentBar.AdjustSizeImmediate(TRUE);
-				componentBar.RecalcLayout();	// CPane::RecalcLayout
+				//componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
+				//componentBar.AdjustSizeImmediate(TRUE);
+				//componentBar.RecalcLayout();	// CPane::RecalcLayout
 			}
 		}
 
@@ -956,6 +946,8 @@ void CGMEApp::UpdateComponentToolbar()
 			CMFCToolBarButton toolBarButton(commandID, nIndex, componentName + '\n' + toolTip, TRUE);
 
 			componentBar.InsertButton(toolBarButton);
+		}
+		if (plugins.GetSize() + interpreters.GetSize() != 0) {
 			componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
 			componentBar.AdjustSizeImmediate(TRUE);
 			componentBar.RecalcLayout();	// CPane::RecalcLayout
