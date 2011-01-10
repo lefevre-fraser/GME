@@ -81,7 +81,6 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\Debug/JavaCompRegister.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
@@ -124,12 +123,12 @@
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
-      <ProgramDatabaseFile>.\Release/JavaCompRegister.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
