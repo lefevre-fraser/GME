@@ -1892,9 +1892,34 @@ void CGMEApp::OnFileExportxml()
 		COMTHROW( dumper.CoCreateInstance(L"Mga.MgaDumper") );
 		ASSERT( dumper != NULL );
 
-		CFileDialog dlg(FALSE, "xme", NULL,
-			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-			"Exported Files (*.xme)|*.xme|GME 1.x XML Format (*.xml)|*.xml|All Files (*.*)|*.*||");
+		CString initialFile;
+		CString initialDir;
+		if (theApp.isMgaProj()) {
+			CString conn = theApp.connString();
+			const char* zsConn = conn;
+			zsConn += 4; // skip MGA=
+			char currentMgaPath[MAX_PATH];
+			char* filename;
+			if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &filename) || filename == 0) {
+			} else {
+				initialFile = filename;
+				if (initialFile.Left(3) == "mga") {
+					initialFile.Truncate(initialFile.GetLength() - 3);
+					initialFile += "xme";
+				}
+				filename--;
+				*filename = '\0';
+				initialDir = currentMgaPath;
+			}
+		}
+
+		CFileDialog dlg(FALSE, "xme", initialFile,
+			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR,
+			"Exported Files (*.xme)|*.xme|All Files (*.*)|*.*||");
+		if (initialDir)
+		{
+			dlg.GetOFN().lpstrInitialDir = initialDir;
+		}
 		if( dlg.DoModal() != IDOK )
 		{
 			CGMEEventLogger::LogGMEEvent("Canceled\r\n");
@@ -1903,14 +1928,6 @@ void CGMEApp::OnFileExportxml()
 		CGMEEventLogger::LogGMEEvent(dlg.GetPathName()+"\r\n");
 
 		CWaitCursor wait;
-		if(dlg.m_ofn.nFilterIndex == 2) {
-			AfxMessageBox(
-				"WARNING Saving in GME 1.x XML format.\n"
-				"Libraries are converted to normal model data,\n"
-				"thus resulting XML file may need some editing\n"
-				"to avoid paradigm violations on import");
-			COMTHROW(dumper->put_FormatVersion(0));
-		}
 		COMTHROW( dumper->DumpProject(theApp.mgaProject,PutInBstr(dlg.GetPathName())) );
 
 		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( "Project successfully exported into ") + dlg.GetPathName() + ".", 1);
