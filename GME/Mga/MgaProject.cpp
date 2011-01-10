@@ -1290,7 +1290,7 @@ STDMETHODIMP CMgaProject::BeginTransaction(IMgaTerritory *ter, transactiontype_e
 		CComPtr<IMgaTerritory> ttemp;
 		if(baseterr) COMTHROW(E_MGA_ALREADY_IN_TRANSACTION);
 		if(!ter) {
-			CreateTerritory(NULL,&ttemp);
+			COMTHROW(CreateTerritory(NULL,&ttemp));
 			ter = ttemp;
 		}
 		ASSERT(mode == TRANSACTION_GENERAL || mode == TRANSACTION_READ_ONLY  || mode == TRANSACTION_NON_NESTED);
@@ -1320,7 +1320,7 @@ STDMETHODIMP CMgaProject::BeginTransactionInNewTerr( transactiontype_enum mode, 
 
 		// create a new territory
 		CComPtr<IMgaTerritory> ttemp;
-		CreateTerritory(NULL,&ttemp);
+		COMTHROW(CreateTerritory(NULL,&ttemp));
 		
 		// begin transaction
 		BeginTransaction( ttemp, mode);
