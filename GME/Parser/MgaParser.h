@@ -21,6 +21,7 @@ class CompareCComObj
  public:
 	 bool operator()( const CComObjPtr<IMgaFCO>& p1, const CComObjPtr<IMgaFCO>& p2) const
 	 {
+		 // FIXME: comparing IMgaFCO* is not defined
 		 return p1.p < p2.p;
 	 }
 };
