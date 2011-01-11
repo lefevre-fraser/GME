@@ -11,6 +11,7 @@
 #import "../Release/MgaDotNetServices.tlb"
 #endif
 
+#include "atlsafe.h"
 
 #ifdef _DEBUG
 void ERRTHROW(LONG err)
@@ -1751,8 +1752,43 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigm(BSTR name, regaccessmode_enum mod
 	COMCATCH(;)
 }
 
+// throws hresult_exception
+void GetComponents(HKEY hive, CStringArray& ret) {
+	CRegKey comps;
+	LONG res = comps.Open(hive, rootreg + "\\Components", KEY_READ);
+	if (res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND)
+		COMTHROW(HRESULT_FROM_WIN32(res));
+	if (res == ERROR_SUCCESS) {
+		for (int index = 0;; ++index) {
+			TCHAR name[1024];
+			LONG err = RegEnumKey(comps, index, name, 1024);
+			if (err == ERROR_NO_MORE_ITEMS)
+				break;
+			ERRTHROW(err);
 
-// It also adds broken registry entries (e.g. the ones where the type is missing)
+			CRegKey comp;
+			err = comp.Open(comps, name, KEY_READ);
+			DWORD type2;
+			if (err == ERROR_SUCCESS)
+				err = comp.QueryDWORDValue("Type", type2);
+			if (err != ERROR_SUCCESS)
+				continue;
+			if((type2 & COMPONENTTYPE_SYSREGREF) != 0) { 
+				continue;
+			}
+			// Make sure name is not present already
+			int j;
+			for (j = 0; j < ret.GetSize(); j++) {
+				if (!ret[j].CompareNoCase(name))
+					break;
+			}
+			if (j != ret.GetSize())
+				continue;
+			ret.Add(name);
+		}
+	}
+}
+
 STDMETHODIMP CMgaRegistrar::get_Components(regaccessmode_enum mode, VARIANT *progids)
 {
 	CHECK_OUT(progids);
@@ -1760,69 +1796,10 @@ STDMETHODIMP CMgaRegistrar::get_Components(regaccessmode_enum mode, VARIANT *pro
 	COMTRY
 	{
 		CStringArray ret;
-		if(mode & RM_USER) {
-			CRegKey comps;
-			LONG res = comps.Open(HKEY_CURRENT_USER, rootreg+"\\Components", KEY_READ);
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			if(res == ERROR_SUCCESS) {
-				for(int index = 0;; ++index) {
-					TCHAR name[1024];
-					LONG err = RegEnumKey(comps, index, name, 1024);
-					if( err == ERROR_NO_MORE_ITEMS )
-						break;
-					ERRTHROW( err );
-
-					CRegKey comp;
-					err = comp.Open(comps, name, KEY_READ);
-					DWORD type2;
-					if(err == ERROR_SUCCESS) err = comp.QueryDWORDValue( "Type", type2);
-					if(err == ERROR_SUCCESS &&
-					   (type2 & COMPONENTTYPE_SYSREGREF) != 0) { 
-						LONG res = comp.Open(HKEY_LOCAL_MACHINE, rootreg+"\\Components\\"+name, KEY_READ);
-						if(res != ERROR_SUCCESS) {		   // delete dangling sysregref key   
-							comps.RecurseDeleteKey(name);
-						}
-						continue;
-					}
-					REVOKE_SYS2(mode);
-					ret.Add(name);
-				}
-
-			}
-		}
-		int retlen = ret.GetSize();
-
- 		if(mode & RM_SYSDOREAD) {
-		 	CRegKey comps;
-			LONG res = comps.Open(HKEY_LOCAL_MACHINE, rootreg+"\\Components", KEY_READ);
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			if(res == ERROR_SUCCESS) {
-				for(int index = 0;; ++index) {
-					TCHAR name[1024];
-					LONG err = RegEnumKey(comps, index, name, 1024);
-					if( err == ERROR_NO_MORE_ITEMS )
-						break;
-					ERRTHROW( err );
-					int j;
-					for(j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
-						if(!ret[j].CompareNoCase(name)) break;
-					}
-					if(j != retlen) continue;
-
-					CRegKey comp;
-					err = comp.Open(comps, name, KEY_READ);
-					DWORD type2;
-					if(err == ERROR_SUCCESS) err = comp.QueryDWORDValue( "Type", type2);
-					if(err == ERROR_SUCCESS &&
-						!(type2 & COMPONENTTYPE_ALL)) break;    // none of the component types
-
-					ret.Add(name);
-				}
-
-			}
-		}
-
-
+		if (mode & REGACCESS_USER)
+			GetComponents(HKEY_CURRENT_USER, ret);
+		if (mode & REGACCESS_SYSTEM)
+			GetComponents(HKEY_LOCAL_MACHINE, ret);
 		CopyTo(ret, progids);
 	}
 	COMCATCH(;)
@@ -1881,6 +1858,7 @@ STDMETHODIMP CMgaRegistrar::RegisterComponent(BSTR progid, componenttype_enum ty
 	COMCATCH(;)
 }
 
+// FIXME: mode is ignored. It should be removed next interface-breaking change
 STDMETHODIMP CMgaRegistrar::QueryComponent(BSTR progid, componenttype_enum *type, BSTR *desc, regaccessmode_enum mode)
 {
 	CHECK_OUT(type);
@@ -1889,39 +1867,32 @@ STDMETHODIMP CMgaRegistrar::QueryComponent(BSTR progid, componenttype_enum *type
 
 	COMTRY
 	{
-		if(mode & RM_USER) {
+		DWORD dwType = -1;
+		CString strDesc;
+		HKEY hives[] = { HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE };
+		for (int i = 0; i < 2; i++) {
 			CRegKey comp;
-			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg+"\\Components\\"+progidstr, KEY_READ);
+			LONG res = comp.Open(hives[i], rootreg+"\\Components\\"+progidstr, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				DWORD type2;
-				ERRTHROW( comp.QueryDWORDValue( "Type", type2) );
-
-				if((type2 & COMPONENTTYPE_ALL)) { 
-					*type = (componenttype_enum)type2;
-
-					if(desc) CopyTo(QueryValue(comp, "Description"), desc);
-					return S_OK;
+				comp.QueryDWORDValue("Type", dwType);
+				ULONG count;
+				res = comp.QueryStringValue("Description", NULL, &count);
+				if (strDesc == "" && res == ERROR_SUCCESS) {
+					CString ret;
+					if (comp.QueryStringValue("Description", ret.GetBufferSetLength(count), &count) == ERROR_SUCCESS)
+						strDesc = ret;
 				}
 			}
 		}
-		if(mode & RM_SYSDOREAD) {
-			CRegKey comp;
-			LONG res = comp.Open(HKEY_LOCAL_MACHINE, rootreg+"\\Components\\"+progidstr, KEY_READ);
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			if(res == ERROR_SUCCESS) {
-				DWORD type2;
-				ERRTHROW( comp.QueryDWORDValue( "Type", type2) );
-
-				if((type2 & COMPONENTTYPE_ALL)) { 
-					*type = (componenttype_enum)type2;
-
-					if(desc) CopyTo(QueryValue(comp, "Description"), desc);
-					return S_OK;
-				}
-			}
-		}
-		COMTHROW(E_NOTFOUND);
+		if (dwType == -1 || !(dwType & COMPONENTTYPE_ALL))
+			COMTHROW(E_NOTFOUND);
+		
+		if (type)
+			*type = (componenttype_enum)dwType;
+		if (desc && strDesc != "")
+			CopyTo(strDesc, desc);
+		return S_OK;
 	}
 	COMCATCH(;)
 }
@@ -1943,9 +1914,8 @@ STDMETHODIMP CMgaRegistrar::UnregisterComponent(BSTR progid, regaccessmode_enum 
 			}
 
 			if((mode & RM_USER) || (type2 & COMPONENTTYPE_SYSREGREF) != 0 ) {
-			
-				if(!res) res = comps.RecurseDeleteKey(PutInCString(progid));
-				if(res == ERROR_FILE_NOT_FOUND) res = ERROR_SUCCESS;
+				if (!res) res = comps.RecurseDeleteKey(PutInCString(progid));
+				if (res == ERROR_FILE_NOT_FOUND) res = ERROR_SUCCESS;
 				ERRTHROW(res);
 			}
 		}
@@ -2002,6 +1972,7 @@ STDMETHODIMP CMgaRegistrar::put_ComponentExtraInfo(regaccessmode_enum mode,
 	} COMCATCH(;)
 }
 
+// FIXME: mode is ignored. It should be removed next interface-breaking change
 STDMETHODIMP CMgaRegistrar::get_ComponentExtraInfo(regaccessmode_enum mode, 
 												   BSTR progid, BSTR name, BSTR* pVal) {
 	CHECK_OUT(pVal);
@@ -2009,31 +1980,20 @@ STDMETHODIMP CMgaRegistrar::get_ComponentExtraInfo(regaccessmode_enum mode,
 
 	COMTRY
 	{
-		if(mode & RM_USER) {
+		HKEY hives[] = { HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE };
+		for (int i = 0; i < 2; i++) {
 			CRegKey comp;
-			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg+"\\Components\\"+progidstr, KEY_READ);
+			LONG res = comp.Open(hives[i], rootreg+"\\Components\\"+progidstr, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				DWORD type2;
-				ERRTHROW( comp.QueryDWORDValue( "Type", type2));
-
-				if((type2 & COMPONENTTYPE_ALL)) { 
-					CopyTo(QueryValue(comp, PutInCString(name)), pVal);
-					return S_OK;
-				}
-			}
-		}
-		if(mode & RM_SYSDOREAD) {
-			CRegKey comp;
-			LONG res = comp.Open(HKEY_LOCAL_MACHINE, rootreg+"\\Components\\"+progidstr, KEY_READ);
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			if(res == ERROR_SUCCESS) {
-				DWORD type2;
-				ERRTHROW( comp.QueryDWORDValue( "Type", type2));
-
-				if((type2 & COMPONENTTYPE_ALL)) { 
-					CopyTo(QueryValue(comp, PutInCString(name)), pVal);
-					return S_OK;
+				ULONG count;
+				res = comp.QueryStringValue(PutInCString(name), NULL, &count);
+				if (res == ERROR_SUCCESS) {
+					CString ret;
+					if (comp.QueryStringValue(PutInCString(name), ret.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
+						CopyTo(ret, pVal);
+						return S_OK;
+					}
 				}
 			}
 		}
@@ -2090,6 +2050,55 @@ STDMETHODIMP CMgaRegistrar::get_LocalDllPath(BSTR progid, BSTR* pVal) {
 	COMCATCH(;)
 }
 
+enum Tristate_t {
+	Tristate_Enabled,
+	Tristate_Disabled,
+	Tristate_Not_Specified,
+};
+
+bool Combine_Tristate(Tristate_t user, Tristate_t system, bool default_ = false) {
+	if (user != Tristate_Not_Specified) {
+		return user == Tristate_Enabled;
+	}
+	if (system != Tristate_Not_Specified) {
+		return system == Tristate_Enabled;
+	}
+	return default_;
+}
+
+Tristate_t IsAssociated_hive(const CString& progidstr, const CString& paradigmstr, HKEY hive) {
+	CRegKey acomp;
+
+	if (acomp.Open(hive, rootreg + "\\Components\\" + progidstr + "\\Associated", KEY_READ) != ERROR_SUCCESS) {
+		return Tristate_Not_Specified;
+	}
+	ULONG count;
+	DWORD res = acomp.QueryValue(paradigmstr, NULL, NULL, &count);
+	if (res != ERROR_SUCCESS) {
+		return Tristate_Not_Specified;
+	}
+	CString val;
+	if (acomp.QueryStringValue(paradigmstr, val.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
+		val.ReleaseBuffer();
+		if (val == "Disabled") {
+			return Tristate_Disabled;
+		}
+	}
+	return Tristate_Enabled;
+}
+
+bool IsAssociated_regaccess(const CString& progidstr, const CString& paradigmstr, regaccessmode_enum mode) {
+	if (mode & REGACCESS_BOTH) {
+		return  Combine_Tristate(
+				IsAssociated_hive(progidstr, paradigmstr, HKEY_CURRENT_USER),
+				IsAssociated_hive(progidstr, paradigmstr, HKEY_LOCAL_MACHINE));
+	} else if (mode & REGACCESS_USER) {
+		return IsAssociated_hive(progidstr, paradigmstr, HKEY_CURRENT_USER) == Tristate_Enabled;
+	} else if (mode & REGACCESS_SYSTEM) {
+		return IsAssociated_hive(progidstr, paradigmstr, HKEY_LOCAL_MACHINE) == Tristate_Enabled;
+	}
+	return false;
+}
 
 STDMETHODIMP CMgaRegistrar::get_AssociatedComponents(BSTR paradigm, 
 	componenttype_enum type, regaccessmode_enum mode, VARIANT *progids)
@@ -2099,116 +2108,25 @@ STDMETHODIMP CMgaRegistrar::get_AssociatedComponents(BSTR paradigm,
 
 	COMTRY
 	{
-
-		CString paradigm2;
-		CopyTo(paradigm, paradigm2);
-
-		regaccessmode_enum mode1 = mode;
-		if(mode1 & RM_USER) {		
-			CRegKey par;
-			LONG res = par.Open(HKEY_CURRENT_USER, rootreg + "\\Paradigms\\" + paradigm2, KEY_READ);
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			if(res == ERROR_SUCCESS) mode1 = REGACCESS_USER;  //if paradigm is user-defined, associations must be user too 
-		}		
-		if(mode1 & RM_SYSDOREAD) {
-			CRegKey par;
-			LONG res = par.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Paradigms\\" + paradigm2, KEY_READ);
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			if(res != ERROR_SUCCESS) COMTHROW(E_NOTFOUND);
-		}
-		
-		
 		CStringArray ret;
-		TCHAR name[1024];
 
-		CRegKey syscomps;
-		syscomps.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Components", KEY_READ );
+		CString paradigmstr;
+		CopyTo(paradigm, paradigmstr);
 
-		if(mode & RM_USER) {		
-			CRegKey comps;
-			LONG res = comps.Open(HKEY_CURRENT_USER, rootreg + "\\Components", KEY_READ );
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			if(res == ERROR_SUCCESS) {
-				for(int index = 0;; ++index) {
-					LONG err = RegEnumKey(comps, index, name, sizeof(name));
-					if( err == ERROR_NO_MORE_ITEMS ) break;
-//					ERRTHROW( err );
-					if(err != ERROR_SUCCESS) continue;
-
-					CRegKey comp;
-					if( comp.Open(comps, name, KEY_READ) != ERROR_SUCCESS) continue;
-
-					DWORD comptype;
-					if( comp.QueryDWORDValue( "Type", comptype) != ERROR_SUCCESS) continue;
-
-					if( comptype & COMPONENTTYPE_SYSREGREF) {
-						LONG res = ERROR_FILE_NOT_FOUND;
-						if(syscomps) {
-							CRegKey syscomp;
-							res = syscomp.Open(syscomps, name, KEY_READ);
-							if(!res) res = syscomp.QueryDWORDValue( "Type", comptype);
-						}
-						if(res != ERROR_SUCCESS) {   // delete dangling SYSREGREF-s
-							ERRTHROW(comp.Close());
-							ERRTHROW(comps.DeleteSubKey(name));
-						}
-					}
-
-
-					if( ((componenttype_enum)comptype & type) == 0 ) continue;
-
-					if( 1) { //((componenttype_enum)comptype & COMPONENTTYPE_PARADIGM_INDEPENDENT) == 0 )	{
-						CRegKey assocs;
-						if( assocs.Open(comp, "Associated", KEY_READ) != ERROR_SUCCESS) continue;
-
-						DWORD count;
-						if( assocs.QueryValue(paradigm2, NULL, NULL, &count) != ERROR_SUCCESS ) continue;
-					}
-					ret.Add(name);
-				}
+		CStringArray components;
+		if (mode & REGACCESS_USER)
+			GetComponents(HKEY_CURRENT_USER, components);
+		if (mode & REGACCESS_SYSTEM)
+			GetComponents(HKEY_LOCAL_MACHINE, components);
+		for (int i = 0; i < components.GetSize(); i++) {
+			componenttype_enum comptype = COMPONENTTYPE_NONE;
+			PutInBstr progid(components.GetAt(i));
+			CComBSTR desc;
+			COMTHROW(QueryComponent(progid, &comptype, &desc, REGACCESS_BOTH));
+			if ((comptype & type) && IsAssociated_regaccess(components.GetAt(i), paradigmstr, mode)) {
+				ret.Add(components.GetAt(i));
 			}
-
 		}
-		int retlen;
-		if(retlen = ret.GetSize()) REVOKE_SYS2(mode);
-		if(mode & RM_SYSDOREAD) {		
-			CRegKey comps;
-			LONG res = comps.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Components", KEY_READ );
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			if(res == ERROR_SUCCESS) {
-				for(int index = 0;; ++index) {
-					LONG err = RegEnumKey(comps, index, name, sizeof(name));
-					if( err == ERROR_NO_MORE_ITEMS ) break;
-//					ERRTHROW( err );
-					if(err != ERROR_SUCCESS) continue;
-
-					CRegKey comp;
-					if( comp.Open(comps, name, KEY_READ) != ERROR_SUCCESS) continue;
-
-					DWORD comptype;
-					if( comp.QueryDWORDValue( "Type", comptype) != ERROR_SUCCESS) continue;
-
-					if( ((componenttype_enum)comptype & type) == 0 ) continue;
-
-					if(1) {// ((componenttype_enum)comptype & COMPONENTTYPE_PARADIGM_INDEPENDENT) == 0 )	{
-						CRegKey assocs;
-						if( assocs.Open(comp, "Associated", KEY_READ) != ERROR_SUCCESS) continue;
-	
-						DWORD count;
-						if( assocs.QueryValue( paradigm2, NULL, NULL, &count) != ERROR_SUCCESS ) continue;
-					}
-
-					int j;
-					for(j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
-						if(!ret[j].CompareNoCase(name)) break;
-					}
-					if(j != retlen) continue;
-					ret.Add(name);
-				}
-			}
-
-		}
-
 		CopyTo(ret, progids);
 	}
 	COMCATCH(;)
@@ -2220,89 +2138,21 @@ STDMETHODIMP CMgaRegistrar::get_AssociatedParadigms(BSTR progid, regaccessmode_e
 
 	COMTRY
 	{
+
 		CStringArray ret;
-		TCHAR name[1024];
 		CString progidstr = PutInCString(progid);
-		int mode1 = mode;
-		bool somethingfound = false;
 
-		CRegKey comp;
-		if(mode & RM_USER) {		
-			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg + "\\Components\\" + progidstr, KEY_READ );
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			if(res == ERROR_SUCCESS) {
-				DWORD comptype;
-				ERRTHROW( comp.QueryDWORDValue( "Type", comptype) );
-	
-				if(comptype & COMPONENTTYPE_SYSREGREF) {
-					ATLASSERT(comptype == COMPONENTTYPE_SYSREGREF);
-				}
-				else {
-					somethingfound = true;
-					REVOKE_SYS2(mode);
-					if( ((componenttype_enum)comptype & COMPONENTTYPE_PARADIGM_INDEPENDENT) != 0 ) {
-						COMTHROW( get_Paradigms(mode, paradigms));
-						return S_OK;
-					}	
-					CRegKey assocs;
-					ERRTHROW( assocs.Open(comp, "Associated", KEY_READ) );
-	
-					for(int index = 0;; ++index) {
-						DWORD namesize = sizeof(name);
-						LONG err = RegEnumValue(assocs, index, name, &namesize, NULL, NULL, NULL, NULL);
-						if( err == ERROR_NO_MORE_ITEMS )
-							break;
-						ERRTHROW( err );
-	
-						CComBSTR cs;
-						CComVariant guid;
-						if(QueryParadigm(CComBSTR(name), &cs, &guid, REGACCESS_PRIORITY) != S_OK) continue;
-						ret.Add(name);
-					}
-				}
-			}
-		}
-		int retlen = ret.GetSize();
-		if(retlen) REVOKE_SYS2(mode);
-		if(mode & RM_SYSDOREAD) {		
-			LONG res = comp.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Components\\" + progidstr, KEY_READ );
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			if(res == ERROR_SUCCESS) {
-
-				somethingfound = true;
-				DWORD comptype;
-				ERRTHROW( comp.QueryDWORDValue( "Type", comptype) );
-
-				if( ((componenttype_enum)comptype & COMPONENTTYPE_PARADIGM_INDEPENDENT) != 0 ) {
-					VariantClear(paradigms);
-					COMTHROW( get_Paradigms(mode, paradigms));
-					return S_OK;
-				}	
-				CRegKey assocs;
-				ERRTHROW( assocs.Open(comp, "Associated", KEY_READ) );
-
-				for(int index = 0;; ++index) {
-					DWORD namesize = sizeof(name);
-					LONG err = RegEnumValue(assocs, index, name, &namesize, NULL, NULL, NULL, NULL);
-					if( err == ERROR_NO_MORE_ITEMS )
-						break;
-					ERRTHROW( err );
-
-					CComBSTR cs;
-					CComVariant guid;
-					if(QueryParadigm(CComBSTR(name), &cs, &guid, REGACCESS_SYSTEM) != S_OK) continue;
-					
-					int j;
-					for(j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
-						if(!ret[j].CompareNoCase(name)) break;
-					}
-					if(j != retlen) continue;
-					ret.Add(name);
-				}
+		VARIANT all_paradigms_;
+		COMTHROW(get_Paradigms(REGACCESS_BOTH, &all_paradigms_));
+		ATL::CComSafeArray<BSTR> all_paradigms;
+		all_paradigms.Attach(all_paradigms_.parray);
+		for (ULONG i = 0; i < all_paradigms.GetCount(); i++) {
+			BSTR paradigm = all_paradigms.GetAt(i);
+			if (IsAssociated_regaccess(progidstr, PutInCString(paradigm), mode)) {
+				ret.Add(static_cast<const CString&>(PutInCString(paradigm)));
 			}
 		}
 
-		if(!somethingfound) COMTHROW(E_NOTFOUND);
 		CopyTo(ret, paradigms);
 	}
 	COMCATCH(;)
@@ -2326,7 +2176,6 @@ STDMETHODIMP CMgaRegistrar::Associate(BSTR progid, BSTR paradigm, regaccessmode_
 				CRegKey comps;
 				if(!res) res = ( comps.Create(mga, "Components") );
 				if(!res) res = ( comp.Create(comps, pname) );
-				if(!res) res = ( comp.SetDWORDValue( "Type", (DWORD)COMPONENTTYPE_SYSREGREF));
 			}
 			if(!res) res = assocs.Create(comp, "Associated");
 			if(!res) assocs.SetStringValue( PutInCString(paradigm), "");
@@ -2365,7 +2214,10 @@ STDMETHODIMP CMgaRegistrar::Disassociate(BSTR progid, BSTR paradigm, regaccessmo
 			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg + "\\Components\\" + pname);
 			CRegKey assocs;
 			if(!res) res = assocs.Open(comp, "Associated");
-			if(!res) res = assocs.DeleteValue(PutInCString(paradigm));
+			if (res == ERROR_FILE_NOT_FOUND) 
+				res = assocs.Create(comp, "Associated");
+			if (!res)
+				res = assocs.SetStringValue(PutInCString(paradigm), "Disabled");
 			if(res == ERROR_FILE_NOT_FOUND) res = ERROR_SUCCESS;
 			ERRTHROW(res);
 		}
@@ -2384,7 +2236,6 @@ STDMETHODIMP CMgaRegistrar::Disassociate(BSTR progid, BSTR paradigm, regaccessmo
 	COMCATCH(;)
 }
 
-
 STDMETHODIMP CMgaRegistrar::IsAssociated(BSTR progid, BSTR paradigm, 
 										VARIANT_BOOL *is_ass, VARIANT_BOOL *can_ass, regaccessmode_enum mode){
 	CHECK_IN(progid);
@@ -2394,37 +2245,13 @@ STDMETHODIMP CMgaRegistrar::IsAssociated(BSTR progid, BSTR paradigm,
 
 	COMTRY
 	{
-		LONG res;
-		DWORD dummy;
 		componenttype_enum type;
 
 		COMTHROW(QueryComponent(progid, &type, NULL, REGACCESS_PRIORITY));
 
-		if(is_ass) *is_ass = VARIANT_FALSE;
-		if(can_ass) *can_ass = VARIANT_FALSE;
+		if (is_ass) *is_ass = IsAssociated_regaccess(progidstr, parc, mode) ? VARIANT_TRUE : VARIANT_FALSE;
 
-		if(mode & RM_USER) {
-			CRegKey comp, acomp;
-			res = comp.Open(HKEY_CURRENT_USER, rootreg+"\\Components\\"+progidstr, KEY_READ);
-			if(res == ERROR_SUCCESS) {
-				mode = REGACCESS_USER;
-
-				res = acomp.Open(comp,"Associated", KEY_READ);
-				if(res == ERROR_SUCCESS) res = acomp.QueryValue( parc, NULL, NULL, &dummy);
-				if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-			}
-		}
-		if(mode & RM_SYSDOREAD) {
-			CRegKey comp, acomp;
-			res = comp.Open(HKEY_LOCAL_MACHINE, rootreg+"\\Components\\"+progidstr, KEY_READ);
-	
-			if(res == ERROR_SUCCESS) res = acomp.Open(comp,"Associated", KEY_READ);
-			if(res == ERROR_SUCCESS) res = acomp.QueryValue( parc, NULL, NULL, &dummy);
-
-			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
-		}
-		if(is_ass) *is_ass = (res == ERROR_SUCCESS) ? VARIANT_TRUE : VARIANT_FALSE;
-
+		if (can_ass) *can_ass = VARIANT_FALSE;
 		VARIANT_BOOL can = VARIANT_FALSE;
 		CComBSTR pars;
 		get_ComponentExtraInfo(mode,progid,CComBSTR("Paradigm"), &pars);
