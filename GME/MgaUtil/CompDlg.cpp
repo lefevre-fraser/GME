@@ -77,12 +77,8 @@ BOOL CCompDlg::OnInitDialog()
 	MSGTRY
 	{
 		if( !CUACUtils::isVistaOrLater() ) {
-			CComPtr<IMgaRegistrar> registrar;
-			COMTHROW( registrar.CoCreateInstance(OLESTR("MGA.MgaRegistrar")) );
-			ASSERT( registrar != NULL );
-
-			if(registrar->RegisterComponent(CComBSTR("AAA"), 
-				componenttype_enum(COMPONENTTYPE_INTERPRETER+COMPONENTTYPE_PARADIGM_INDEPENDENT), CComBSTR("Dummy"), REGACCESS_TEST) != S_OK) {
+			CRegKey accessTest;
+			if (accessTest.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", KEY_READ | KEY_WRITE) == ERROR_ACCESS_DENIED) {
 				GetDlgItem(IDC_RADIOSYS)->EnableWindow(false);
 				GetDlgItem(IDC_RADIOBOTH)->EnableWindow(false);
 			}

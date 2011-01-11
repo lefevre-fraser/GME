@@ -273,7 +273,8 @@ BOOL CGmeDlg::OnInitDialog()
 
 		m_isave = m_iconpath;
 		m_sysisave = m_sysiconpath;
-		if(registrar->put_IconPath(REGACCESS_TEST, CComBSTR("XXX")) != S_OK) {
+		CRegKey accessTest;
+		if (accessTest.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", KEY_READ | KEY_WRITE) == ERROR_ACCESS_DENIED) {
 			GetDlgItem(IDC_SYSICONPATH)->EnableWindow(false);
 			GetDlgItem(IDC_ADDSYSICONPATH)->EnableWindow(false);
 		}

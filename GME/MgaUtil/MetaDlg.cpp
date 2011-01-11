@@ -75,10 +75,8 @@ BOOL CMetaDlg::OnInitDialog()
 		}
 
 		{
-			GUID dummy;
-			CComVariant dummy2;
-			CopyTo(dummy, &dummy2);
-			if(registrar->RegisterParadigm(CComBSTR("AAA"), CComBSTR("AAA.MTA"), CComBSTR("1.0"), dummy2, REGACCESS_TEST) != S_OK) {
+			CRegKey accessTest;
+			if (accessTest.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", KEY_READ | KEY_WRITE) == ERROR_ACCESS_DENIED) {
 				GetDlgItem(IDC_RADIOSYS)->EnableWindow(false);
 				GetDlgItem(IDC_RADIOUSER)->EnableWindow(false);
 				GetDlgItem(IDC_RADIOBOTH)->EnableWindow(false);
