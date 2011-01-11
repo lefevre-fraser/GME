@@ -22,7 +22,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCompDlg)
 	enum { IDD = IDD_COMPDLG };
-	CButton	m_toggle;
+	CButton	m_enable_disable;
 	CButton	m_remove;
 	CButton m_install;
 	CListCtrl	m_list;
@@ -51,7 +51,7 @@ protected:
 	afx_msg void OnActivedisp();
 	afx_msg void OnActiveInactive();
 	afx_msg void OnAllcomps();
-	afx_msg void OnToggle();
+	afx_msg void OnEnableDisable();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -61,6 +61,7 @@ protected:
 	void RegisterDll(const CString &path);
 	void RegisterPattern(const CString &path);
 	void RegisterUnknownFile(const CString &path);
+	void UpdateEnableDisable();
 
 public:
 	CString paradigm;

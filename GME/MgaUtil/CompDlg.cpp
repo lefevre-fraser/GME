@@ -42,7 +42,7 @@ void CCompDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCompDlg)
-	DDX_Control(pDX, Toggle, m_toggle);
+	DDX_Control(pDX, IDC_ENABLE_DISABLE, m_enable_disable);
 	DDX_Control(pDX, IDC_REMOVE, m_remove);
 	DDX_Control(pDX, IDC_INSTALL, m_install);
 	DDX_Control(pDX, IDC_LIST, m_list);
@@ -59,7 +59,7 @@ BEGIN_MESSAGE_MAP(CCompDlg, CDialog)
 	ON_BN_CLICKED(IDC_ACTIVEDISP, OnActivedisp)
 	ON_BN_CLICKED(IDC_ACTIVE_INACTIVE, OnActiveInactive)
 	ON_BN_CLICKED(IDC_ALLCOMPS, OnAllcomps)
-	ON_BN_CLICKED(Toggle, OnToggle)
+	ON_BN_CLICKED(IDC_ENABLE_DISABLE, OnEnableDisable)
 	//}}AFX_MSG_MAP
 	ON_WM_SIZE()
 	ON_BN_CLICKED(IDC_RADIOSYS, &CCompDlg::OnBnClickedRadiosys)
@@ -132,7 +132,7 @@ void CCompDlg::RefreshShieldIcons()
 		bool shieldOn = regacc_translate(m_accessmode) != REGACCESS_USER;
 		CUACUtils::SetShieldIcon(m_install, true);
 		CUACUtils::SetShieldIcon(m_remove, true);
-		CUACUtils::SetShieldIcon(m_toggle, shieldOn);
+		CUACUtils::SetShieldIcon(m_enable_disable, shieldOn);
 	}
 }
 
@@ -143,7 +143,7 @@ void CCompDlg::ResetItems()
 	ASSERT( registrar != NULL );
 
 	m_remove.EnableWindow(false);
-	m_toggle.EnableWindow(false);
+	m_enable_disable.EnableWindow(false);
 
 	UpdateData();
 	VERIFYTHROW( m_list.DeleteAllItems() != 0 );
@@ -243,6 +243,26 @@ void CCompDlg::ResetItems()
 			m_list.SetItemState(index, LVIS_SELECTED, LVIS_SELECTED);
 		}
 	}
+	UpdateEnableDisable();
+}
+
+void CCompDlg::UpdateEnableDisable() {
+	POSITION pos = m_list.GetFirstSelectedItemPosition();
+	if (pos != NULL) {
+		int i = m_list.GetNextSelectedItem(pos);
+		CString progid = m_list.GetItemText(i, 2);
+		CComPtr<IMgaRegistrar> registrar;
+		registrar.CoCreateInstance(L"Mga.MgaRegistrar");
+		ASSERT(registrar != NULL);
+		VARIANT_BOOL is_ass, can_ass;
+		HRESULT hr = registrar->IsAssociated(PutInBstr(progid), PutInBstr(paradigm), &is_ass, &can_ass, REGACCESS_PRIORITY);
+		ASSERT(SUCCEEDED(hr));
+		if (SUCCEEDED(hr) && is_ass == VARIANT_TRUE) {
+			m_enable_disable.SetWindowTextA("Disable");
+			return;
+		}
+	}
+	m_enable_disable.SetWindowTextA("Enable");
 }
 
 void CCompDlg::OnOK() 
@@ -263,12 +283,18 @@ void CCompDlg::OnOK()
 
 BOOL CCompDlg::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult) 
 {
-	if( wParam == IDC_LIST && ((NMHDR*)lParam)->code == LVN_ITEMCHANGED )
+	if( wParam == IDC_LIST && ((NMHDR*)lParam)->code == LVN_ITEMCHANGED &&
+		((NMLISTVIEW*)lParam)->uNewState == (LVIS_FOCUSED|LVIS_SELECTED))
 	{
 		POSITION pos = m_list.GetFirstSelectedItemPosition();
 		m_remove.EnableWindow(pos != NULL);
-		m_toggle.EnableWindow(pos != NULL);
+		m_enable_disable.EnableWindow(pos != NULL);
 		to_select = m_list.GetItemText(m_list.GetNextSelectedItem(pos),0);
+		UpdateEnableDisable();
+		return TRUE;
+	} else if (wParam == IDC_LIST && ((NMHDR*)lParam)->code == NM_DBLCLK )
+	{
+		OnEnableDisable();
 		return TRUE;
 	}
 	
@@ -324,7 +350,7 @@ void CCompDlg::OnRemove()
 }
 
 
-void CCompDlg::OnToggle() 
+void CCompDlg::OnEnableDisable() 
 {
 	UpdateData();
 	MSGTRY
@@ -618,7 +644,7 @@ void CCompDlg::OnSize(UINT nType, int cx, int cy)
 		MoveControl(IDC_ACTIVEDISP,				0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDC_ACTIVE_INACTIVE,		0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDC_ALLCOMPS,				0, deltaHeight, 0, 0, defer, &dwp);
-		MoveControl(Toggle,						0, deltaHeight, 0, 0, defer, &dwp);
+                MoveControl(IDC_ENABLE_DISABLE,                 0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDC_RADIOSYS,				0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDC_RADIOUSER,				0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDC_RADIOBOTH,				0, deltaHeight, 0, 0, defer, &dwp);

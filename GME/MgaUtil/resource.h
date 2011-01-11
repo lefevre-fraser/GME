@@ -110,7 +110,7 @@
 #define IDC_STATIC_VALUE                2171
 #define IDC_SYSICONPATH                 2172
 #define IDC_ADDSYSICONPATH              2173
-#define Toggle                          2174
+#define IDC_ENABLE_DISABLE              2174
 #define IDC_EXT_EDITOR                  2174
 #define IDC_EXT_BUTTON                  2175
 #define IDC_NAME                        2176
