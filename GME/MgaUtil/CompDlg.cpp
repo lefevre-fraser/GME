@@ -194,8 +194,8 @@ void CCompDlg::ResetItems()
 			else is_ass = can_ass = VARIANT_TRUE;
 
 			HRESULT hr = registrar->GetLocalDllPathDisp(progids[i], PutOut(localDllDispPath));
-			ASSERT(SUCCEEDED(hr));
-			localDllDispPathStr = (const char*)PutInCString(localDllDispPath);
+                        if (SUCCEEDED(hr))
+                                localDllDispPathStr = (const char*)PutInCString(localDllDispPath);
 /*#define BUFSIZE 1024
 			TCHAR buffer[BUFSIZE]=TEXT("");
 			DWORD retval = GetFullPathName(localDllDispPathStr, BUFSIZE, buffer, NULL);
@@ -420,7 +420,7 @@ void CCompDlg::RegisterDll(const CString &path)
 
 	if(!registrar) {
 		std::string errorMessage = "Unable to create component registrar: ";
-		errorMessage += static_cast<const char*>(_com_error(hr).ErrorMessage());
+		errorMessage += _com_error(hr).ErrorMessage();
 		::AfxMessageBox(errorMessage.c_str());
 	} else {
 		hr = registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode));
@@ -434,7 +434,7 @@ void CCompDlg::RegisterDll(const CString &path)
 				COMTHROW(info->GetDescription(&description));
 				errorMessage += static_cast<const char*>(_bstr_t(description));
 			} else {
-				errorMessage += static_cast<const char*>(_com_error(hr).ErrorMessage());
+				errorMessage += _com_error(hr).ErrorMessage();
 			}
 			AfxMessageBox(errorMessage.c_str(), MB_ICONSTOP | MB_OK);
 		}
