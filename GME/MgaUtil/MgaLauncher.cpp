@@ -643,6 +643,7 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 }
 
 static int __stdcall nopExceptionFilter(unsigned int code, struct _EXCEPTION_POINTERS* ep) {
+	// FIXME: if (ep->ExceptionRecord->ExceptionFlags & EXCEPTION_NONCONTINUABLE)
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
@@ -764,35 +765,46 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					if(AfxMessageBox(aa, MB_YESNO) !=IDYES) return S_OK;
 				}
 			}
-			{
-				if(parameter.vt != VT_BOOL || parameter.boolVal != VARIANT_TRUE) { 
+			if(parameter.vt != VT_BOOL || parameter.boolVal != VARIANT_TRUE) { 
+				CComQIPtr<IMgaComponentEx> compex = component;
+				if (compex) {
+					CComQIPtr<ISupportErrorInfo> supportErrorInfo = component;
+					HRESULT hr = component->Initialize(project);
+					// Need to catch SEH exceptions (especially for Win7 x64: see GME-318)
+					if (SUCCEEDED(hr) && !InvokeExWithCrashRpt(compex, project, focusobj, selectedobjs, param, hr)) {
+						project->AbortTransaction();
+						AfxMessageBox("An error has occurred in component " + compname + ".\n"
+							"GME may not be in a stable state.\n"
+							"Please save your work and restart GME.");
+					} else {
+						if (!SUCCEEDED(hr)) {
+							BSTR desc = NULL;
+							if (supportErrorInfo && GetErrorInfo(&desc)) {
+								CString msg;
+								CopyTo(desc, msg);
+								msg = "Component error: " + msg;
+								AfxMessageBox(msg, MB_OK | MB_ICONSTOP);
+								SysFreeString(desc);
+							} else {
+								DisplayError("Component error", hr);
+							}
+							project->AbortTransaction();
+						}
+					}
+				} else {
 					try	{
 						COMTHROW(component->Initialize(project));
-						CComQIPtr<IMgaComponentEx> compex = component;
-						if (compex) {
-							HRESULT hr;
-							if (!InvokeExWithCrashRpt(compex, project, focusobj, selectedobjs, param, hr)) {
-								project->AbortTransaction();
-								AfxMessageBox("An error has occurred in component " + compname + ".\n"
-									"GME may not be in a stable state.\n"
-									"Please save your work and restart GME.");
-							} else {
-								COMTHROW(hr);
-							}
+						CComPtr<IMgaTerritory> terr;
+						COMTHROW(project->CreateTerritory(NULL, &terr));
+						COMTHROW(project->BeginTransaction(terr));
+						try	{
+							COMTHROW( component->Invoke(project, selectedobjs, param) );
+							COMTHROW(project->CommitTransaction());
 						}
-						else {
-							CComPtr<IMgaTerritory> terr;
-							COMTHROW(project->CreateTerritory(NULL, &terr));
-							COMTHROW(project->BeginTransaction(terr));
-							try	{		
-								COMTHROW( component->Invoke(project, selectedobjs, param) );
-								COMTHROW(project->CommitTransaction());
-							}
-							catch(...)
-							{
-								project->AbortTransaction();
-								throw;
-							}
+						catch(...)
+						{
+							project->AbortTransaction();
+							throw;
 						}
 					}
 					catch(hresult_exception &e)	{
@@ -807,35 +819,38 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 							"Please save your work and restart GME.");
 					} 
 				}
-				else {		// running unprotected
-					try	{
-						COMTHROW(component->Initialize(project));
-						CComQIPtr<IMgaComponentEx> compex = component;
-						if(compex) {
-							COMTHROW(compex->InvokeEx(project, focusobj, CComQIPtr<IMgaFCOs>(selectedobjs), param));
-						}
-						else {
-							CComPtr<IMgaTerritory> terr;
-							COMTHROW(project->CreateTerritory(NULL, &terr));
-							COMTHROW(project->BeginTransaction(terr));
-							try	{		
-								COMTHROW( component->Invoke(project, selectedobjs, param) );
-								COMTHROW(project->CommitTransaction());
-							}
-							catch(...)
-							{
-								project->AbortTransaction();
-								throw;
-							}
-						}
-					}
-					catch(hresult_exception &e)	{
-						DisplayError("Component error", e.hr);
-					}
-				}				
 			}
+			else {		// running unprotected
+				try	{
+					COMTHROW(component->Initialize(project));
+					CComQIPtr<IMgaComponentEx> compex = component;
+					if(compex) {
+						COMTHROW(compex->InvokeEx(project, focusobj, CComQIPtr<IMgaFCOs>(selectedobjs), param));
+					}
+					else {
+						CComPtr<IMgaTerritory> terr;
+						COMTHROW(project->CreateTerritory(NULL, &terr));
+						COMTHROW(project->BeginTransaction(terr));
+						try	{		
+							COMTHROW( component->Invoke(project, selectedobjs, param) );
+							COMTHROW(project->CommitTransaction());
+						}
+						catch(...)
+						{
+							project->AbortTransaction();
+							throw;
+						}
+					}
+				}
+				catch(hresult_exception &e)	{
+					DisplayError("Component error", e.hr);
+				}
+			}				
 		}
-	} COMCATCH(;);
+//		component.Release();
+//		CoFreeUnusedLibraries();
+//	} COMCATCH(CoFreeUnusedLibraries(););
+	} COMCATCH();
 }
 
 // ------ Helper functions

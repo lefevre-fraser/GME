@@ -108,7 +108,7 @@ inline bool CheckOut_IsBound(const SAFEARRAY *p) { return p != NULL; }
 
 void SetErrorInfo(LPOLESTR desc) NOTHROW;
 void SetErrorInfo(HRESULT hr, LPOLESTR desc2 = NULL) NOTHROW;
-void GetErrorInfo(BSTR *p) NOTHROW;
+bool GetErrorInfo(BSTR *p) NOTHROW;
 void GetErrorInfo(HRESULT hr, BSTR *p) NOTHROW;
 
 //		One or more arguments are invalid

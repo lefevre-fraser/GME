@@ -29,8 +29,7 @@ void CopyTo(const char *p, int len, BSTR *b)
 	if( len <= 0 )
 		return;
 
-	UINT acp = GetACP();
-	int blen = MultiByteToWideChar(acp, 0, p, len, NULL, 0);
+	int blen = MultiByteToWideChar(CP_UTF8, 0, p, len, NULL, 0);
 
 	if( blen <= 0 )
 		HR_THROW(E_CONVERSION);
@@ -39,7 +38,7 @@ void CopyTo(const char *p, int len, BSTR *b)
 	if( *b == NULL )
 		HR_THROW(E_OUTOFMEMORY);
 
-	int tlen = MultiByteToWideChar(acp, 0, p, len, *b, blen);
+	int tlen = MultiByteToWideChar(CP_UTF8, 0, p, len, *b, blen);
 
 	if( tlen <= 0 )
 		HR_THROW(E_CONVERSION);
@@ -56,9 +55,7 @@ int GetCharLength(const OLECHAR *p, int olelen)
 	if( olelen == 0 )
 		return 0;
 
-	UINT acp = GetACP();
-
-	int charlen = WideCharToMultiByte(acp, 0, p, olelen,
+	int charlen = WideCharToMultiByte(CP_UTF8, 0, p, olelen,
 		NULL, 0, NULL, NULL);
 
 	// zero if failed
@@ -75,9 +72,7 @@ void CopyTo(const OLECHAR *p, int olelen, char *s, int charlen)
 	if( charlen <= 0 )
 		return;
 
-	UINT acp = GetACP();
-
-	int len = WideCharToMultiByte(acp, 0, p, olelen, 
+	int len = WideCharToMultiByte(CP_UTF8, 0, p, olelen, 
 		s, charlen, NULL, NULL);
 
 	// zero if failed
