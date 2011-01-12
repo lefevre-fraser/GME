@@ -1805,6 +1805,17 @@ STDMETHODIMP CMgaRegistrar::get_Components(regaccessmode_enum mode, VARIANT *pro
 	COMCATCH(;)
 }
 
+template<typename Functor>
+void TokenizeParadigmString(const CString& paradigms, Functor x) {
+	CStringList ret;
+	int curPos = 0;
+	CString token = paradigms.Tokenize(" ;,\n\t", curPos);
+	while (token != "") {
+		x(token);
+		token = paradigms.Tokenize(" ;,\n\t", curPos);
+	}
+}
+
 STDMETHODIMP CMgaRegistrar::RegisterComponent(BSTR progid, componenttype_enum type, BSTR desc, regaccessmode_enum mode)
 {
 	COMTRY
@@ -1829,7 +1840,9 @@ STDMETHODIMP CMgaRegistrar::RegisterComponent(BSTR progid, componenttype_enum ty
 
 			ERRTHROW( comp.SetStringValue( "Description", PutInCString(desc)));
 			if(paradigms.Length()) {
-				ERRTHROW( comp.SetStringValue( "Paradigm", PutInCString(paradigms)));
+				TokenizeParadigmString(PutInCString(paradigms), [&comp](const CString& par) {
+					ERRTHROW(comp.SetStringValue("Paradigm", par));
+				});
 			}
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
@@ -1844,9 +1857,9 @@ STDMETHODIMP CMgaRegistrar::RegisterComponent(BSTR progid, componenttype_enum ty
 				ERRTHROW( comp.SetDWORDValue( "Type", (DWORD)type));
 
 				ERRTHROW( comp.SetStringValue( "Description", PutInCString(desc)));
-				if(paradigms.Length()) {
-					ERRTHROW( comp.SetStringValue( "Paradigm", PutInCString(paradigms)));
-				}
+				TokenizeParadigmString(PutInCString(paradigms), [&comp](const CString& par) {
+					ERRTHROW(comp.SetStringValue("Paradigm", par));
+				});
 			}
 			else {
 				CRegKey comp;
@@ -2270,14 +2283,10 @@ STDMETHODIMP CMgaRegistrar::IsAssociated(BSTR progid, BSTR paradigm,
 		}
 		else {
 			can = VARIANT_FALSE;
-			const OLECHAR *p = wcstok(pars, L" \n\t");
-			while(p) {
-				if(!_wcsicmp(p, paradigm)) {
+			TokenizeParadigmString(PutInCString(pars), [&paradigm, &can](const CString& paradigm2) {
+				if (static_cast<const CString &>(PutInCString(paradigm)) == paradigm2)
 					can = VARIANT_TRUE;
-					break;
-				}
-				p = wcstok(NULL, L" \n\t");
-			}
+			});
 		}	
 		if(can_ass) *can_ass = can;
 		
@@ -2375,19 +2384,9 @@ STDMETHODIMP CMgaRegistrar::RegisterComponentLibrary(BSTR path, regaccessmode_en
 						CString paradigms;
 						COMTHROW( component->get_Paradigm(PutOut(paradigms)) );
 
-						paradigms += ' ';
-						paradigms.TrimLeft(" \n\t");
-						while( !paradigms.IsEmpty() )
-						{
-							int i = paradigms.FindOneOf(" \n\t");
-							ASSERT( i > 0 );
-
-							if(paradigms.Left(i).Compare("*")) {
-							   COMTHROW( Associate(progid, PutInBstr(paradigms.Left(i)), mode) );
-							}
-							paradigms = paradigms.Mid(i);
-							paradigms.TrimLeft(" \n\t");
-						}
+						TokenizeParadigmString(paradigms, [this,&mode,&progid](const CString& par){
+							COMTHROW(Associate(progid, PutInBstr(par), mode));
+						});
 					}
 				}
 
