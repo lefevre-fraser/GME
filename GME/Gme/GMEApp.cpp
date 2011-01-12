@@ -2264,6 +2264,7 @@ void CGMEApp::OnFileRegcomponents()
 			}
 			MGACOLL_ITERATE_END;
 		}
+		// FIXME: huge kludge here: enables CCompDlg to show which addons are running
 		COMTHROW(launcher->put_Parameter(CComVariant(runningcomps)));
 
 		CGMEEventLogger::LogGMEEvent(CString(runningcomps)+"\r\n");
