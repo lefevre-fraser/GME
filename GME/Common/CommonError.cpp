@@ -151,7 +151,7 @@ void SetErrorInfo(HRESULT hr, LPOLESTR desc2)
 	}
 }
 
-void GetErrorInfo(BSTR *desc)
+bool GetErrorInfo(BSTR *desc)
 {
 	ASSERT( desc != NULL );
 
@@ -166,7 +166,9 @@ void GetErrorInfo(BSTR *desc)
 	catch(hresult_exception &)
 	{
 		// do nothing
+		return false;
 	}
+	return true;
 }
 
 void GetErrorInfo(HRESULT hr, BSTR *p)
@@ -185,5 +187,16 @@ void GetErrorInfo(HRESULT hr, BSTR *p)
 		*p = SysAllocString(desc);
 	}
 	else
-		GetErrorInfo(p);
+	{
+		LPWSTR errorText = NULL;
+		FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_ALLOCATE_BUFFER |FORMAT_MESSAGE_IGNORE_INSERTS,  
+		   NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&errorText, 0, NULL);
+		if (errorText != NULL) {
+			SysFreeString(*p);
+			*p = SysAllocString(errorText);
+			LocalFree(errorText);
+		} else {
+			GetErrorInfo(p);
+		}
+	}
 }
