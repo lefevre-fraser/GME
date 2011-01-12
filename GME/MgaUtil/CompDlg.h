@@ -73,6 +73,8 @@ public:
 	afx_msg void OnBnClickedRadiosys();
 	afx_msg void OnBnClickedRadiouser();
 	afx_msg void OnBnClickedRadioboth();
+	afx_msg void OnAllCompsHeader(NMHDR* pNMHDR, LRESULT* pResult);
+	static int CALLBACK CCompDlg::SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 
 private:
 	bool	firstResize;

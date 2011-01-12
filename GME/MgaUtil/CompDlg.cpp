@@ -65,7 +65,34 @@ BEGIN_MESSAGE_MAP(CCompDlg, CDialog)
 	ON_BN_CLICKED(IDC_RADIOSYS, &CCompDlg::OnBnClickedRadiosys)
 	ON_BN_CLICKED(IDC_RADIOUSER, &CCompDlg::OnBnClickedRadiouser)
 	ON_BN_CLICKED(IDC_RADIOBOTH, &CCompDlg::OnBnClickedRadioboth)
+	ON_NOTIFY(HDN_ITEMCLICK, 0, OnAllCompsHeader)
 END_MESSAGE_MAP()
+
+
+struct SortParam {
+	CCompDlg* dlg;
+	int columnIndex;
+};
+
+int CALLBACK CCompDlg::SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort) {
+	SortParam& param = *(SortParam*)lParamSort;
+	
+	CString a = param.dlg->m_list.GetItemText(lParam1, param.columnIndex);
+	CString b = param.dlg->m_list.GetItemText(lParam2, param.columnIndex);
+
+	return _tcscmp(a, b);
+}
+
+
+void CCompDlg::OnAllCompsHeader(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	NMLISTVIEW *pLV = (NMLISTVIEW *) pNMHDR;
+	SortParam s = { this, pLV->iItem };
+	m_list.SortItemsEx(SortFunc, (DWORD)(void*)&s);
+	
+	*pResult = 0;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CCompDlg message handlers
@@ -220,7 +247,8 @@ void CCompDlg::ResetItems()
 				WCHAR * f = wcstok(l,L" ");
 				while(f) {
 					if(!desc.Compare(CComBSTR(f)) || !progids[i].Compare(CComBSTR(f))) {
-						m_list.SetItemState(index, INDEXTOSTATEIMAGEMASK(2), LVIS_STATEIMAGEMASK);
+						// FIXME: this component is running, would be nice to show to the user, but an exclamation mark means nothing
+						// m_list.SetItemState(index, INDEXTOSTATEIMAGEMASK(2), LVIS_STATEIMAGEMASK);
 						break;
 					}
 					f = wcstok(NULL, L" ");
@@ -312,15 +340,16 @@ void CCompDlg::OnRemove()
 			CString progid = m_list.GetItemText(m_list.GetNextSelectedItem(pos), 2);
 
 			CComPtr<IMgaRegistrar> registrar;
+			HRESULT registrarHr;
 			if (CUACUtils::isVistaOrLater()) {
-				CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar, GetSafeHwnd());
+				registrarHr = CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar, GetSafeHwnd());
 			}
 			else {
-				registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
+				registrarHr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
 			}
 
-			if( !registrar ) {
-				::AfxMessageBox(_T("Unable to unregister component. Maybe due to insufficient rights."), MB_ICONSTOP | MB_OK);
+			if (!registrar) {
+				DisplayError("Unable to remove component", registrarHr);
 				return;
 			}
 
@@ -329,16 +358,14 @@ void CCompDlg::OnRemove()
 			componenttype_enum type;
 
 			CComBstrObj desc;
-			HRESULT hr = registrar->QueryComponent(PutInBstr(progid), &type, PutOut(desc), regacc_translate(m_accessmode));
-			ASSERT(E_NOTFOUND == hr);
 			switch(regacc_translate(m_accessmode)) {
 				case REGACCESS_USER:
-					if(S_OK == registrar->QueryComponent(PutInBstr(progid), &type, PutOut(desc), REGACCESS_SYSTEM)) {
+					if (S_OK == registrar->QueryComponent(PutInBstr(progid), &type, PutOut(desc), REGACCESS_SYSTEM)) {
 						AfxMessageBox("Warning: Component is still present in system registry");
 					}
 					break;
 				case REGACCESS_SYSTEM:
-					if(S_OK == registrar->QueryComponent(PutInBstr(progid), &type, PutOut(desc), REGACCESS_USER)) {
+					if (S_OK == registrar->QueryComponent(PutInBstr(progid), &type, PutOut(desc), REGACCESS_USER)) {
 						AfxMessageBox("Warning: Component is still present in user registry");
 					}
 					break;
@@ -362,32 +389,35 @@ void CCompDlg::OnEnableDisable()
 			VARIANT_BOOL is_ass, can_ass;
 			
 			CComPtr<IMgaRegistrar> registrar;
+			HRESULT registrarHr;
 			if (CUACUtils::isVistaOrLater() && (regacc_translate(m_accessmode) != REGACCESS_USER) ) {
-				CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
+				registrarHr = CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
 			}
 			else {
-				registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
+				registrarHr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
 			}
 
-			if( !registrar ) {
-				::AfxMessageBox(_T("Unable to disable/enable component. Maybe due to insufficient rights."), MB_ICONSTOP | MB_OK);
+			if (!registrar) {
+				DisplayError("Unable to enable/disable component", registrarHr);
 				return;
 			}
 
 			HRESULT hr = registrar->IsAssociated(progid, PutInBstr(paradigm), &is_ass, &can_ass, REGACCESS_PRIORITY);
-			if(hr != S_OK) AfxMessageBox("Cannot Activate this component");
-			if(is_ass) hr = (registrar->Disassociate(progid, PutInBstr(paradigm), regacc_translate(m_accessmode)) );
-			else {
+			if (hr != S_OK)
+				DisplayError("Cannot enable/disable this component", hr);
+			CString enable_or_disable;
+			if (is_ass) {
+				enable_or_disable = "disable";
+				hr = registrar->Disassociate(progid, PutInBstr(paradigm), regacc_translate(m_accessmode));
+			} else {
+				enable_or_disable = "enable";
 				if(!can_ass) {
 					if(AfxMessageBox("This component reports to be incompatible with the paradigm\nAre you sure you want to proceed?", MB_YESNO) != IDYES) return;
 				}
 				hr = (registrar->Associate(progid, PutInBstr(paradigm), regacc_translate(m_accessmode)) );
 			}
 			if(hr != S_OK) {
-				if(regacc_translate(m_accessmode) == REGACCESS_USER) {
-					AfxMessageBox("The toggle operation failed\nCheck if access mode is appropriate");
-				}
-				else AfxMessageBox("The toggle operation failed");;
+				DisplayError("The " + enable_or_disable + " operation failed", hr);
 			}
 
 			ResetItems();
@@ -432,34 +462,20 @@ void CCompDlg::OnInstall()
 void CCompDlg::RegisterDll(const CString &path)
 {
 	CComPtr<IMgaRegistrar> registrar;
-	HRESULT hr = E_FAIL;
+	HRESULT hr;
 	if (CUACUtils::isVistaOrLater()) {
 		hr = CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar, GetSafeHwnd());
-	}
-	else {
+	} else {
 		hr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
 	}
 
-	if(!registrar) {
-		std::string errorMessage = "Unable to create component registrar: ";
-		errorMessage += _com_error(hr).ErrorMessage();
-		::AfxMessageBox(errorMessage.c_str());
-	} else {
-		hr = registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode));
-		if (FAILED(hr)) {
-			std::string errorMessage = "Unable to register component: ";
-
-			CComPtr<IErrorInfo> info;
-			COMTHROW(GetErrorInfo(0, &info));
-			if (info) {
-				CComBSTR description;
-				COMTHROW(info->GetDescription(&description));
-				errorMessage += static_cast<const char*>(_bstr_t(description));
-			} else {
-				errorMessage += _com_error(hr).ErrorMessage();
-			}
-			AfxMessageBox(errorMessage.c_str(), MB_ICONSTOP | MB_OK);
-		}
+	if (!registrar) {
+		DisplayError("Unable to create component registrar", hr);
+		return;
+	}
+	hr = registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode));
+	if (FAILED(hr)) {
+		DisplayError("Unable to register component", hr);
 	}
 }
 
@@ -479,15 +495,16 @@ void CCompDlg::RegisterPattern(const CString &path)
 
 	regaccessmode_enum acmode = regacc_translate(m_accessmode);
 	CComPtr<IMgaRegistrar> registrar;
+	HRESULT registrarHr;
 	if (CUACUtils::isVistaOrLater() && (acmode != REGACCESS_USER) ) {
-		CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
+		registrarHr = CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
 	}
 	else {
-		registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
+		registrarHr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
 	}
 
-	if( !registrar ) {
-		::AfxMessageBox(_T("Unable to register pattern component. Maybe due to insufficient rights."), MB_ICONSTOP | MB_OK);
+	if (!registrar) {
+		DisplayError("Unable to register pattern component", registrarHr);
 		return;
 	}
 
