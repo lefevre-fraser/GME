@@ -73,8 +73,7 @@ def collect_and_zip(dirname, zipname, pattern=None):
     """
     cmd_line = [ZIP_PRG, '-9', '-r', zipname, '.']
     if pattern is not None:
-        cmd_line.extend(["-i ", pattern])
-    cmd_line.append('>NUL')
+        cmd_line.extend(["-i"] + pattern.split())
     system(cmd_line, dirname)
 
 
