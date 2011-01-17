@@ -419,6 +419,7 @@
                                 <ProgId Id="Mga.CoreProject" Description="CoreProject Class" />
                             </ProgId>
                         </Class>
+                        <Interface Id="{9A228010-020B-11D2-BBB3-0040051F7117}" Name="IGMEVersionInfo" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
                     </TypeLib>    
                 </File>
             </Component>
