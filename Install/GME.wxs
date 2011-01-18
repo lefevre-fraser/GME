@@ -689,6 +689,38 @@
                                 <ProgId Id="Mga.MgaObjects" Description="MgaObjects Class" />
                             </ProgId>
                         </Class>
+                        <Interface Id="{11BB02D9-2E2C-11D3-B36D-0060082DF884}" Name="IMgaComponent" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{270B4F92-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaProject" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{270B4F96-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaFolder" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{270B4F98-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaFCO" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{270B4F9A-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaModel" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{270B4F9C-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaAtom" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{270B4F9E-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaPart" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{270B4FA0-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaConnection" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{32D1F3A3-D276-11D3-9AD5-00AA00B6FE26}" Name="IMgaTerritory" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{32D1F3A5-D276-11D3-9AD5-00AA00B6FE26}" Name="IMgaEventSink" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{32D1F3A7-D276-11D3-9AD5-00AA00B6FE26}" Name="IMgaObject" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{80A6D661-D411-11D3-9AD5-00AA00B6FE26}" Name="IMgaAddOn" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{83BA3233-B758-11D3-ABAE-000000000000}" Name="IMgaReference" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{83BA3235-B758-11D3-ABAE-000000000000}" Name="IMgaSet" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{83BA3237-B758-11D3-ABAE-000000000000}" Name="IMgaSimpleConnection" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{83BA323D-B758-11D3-ABAE-000000000000}" Name="IMgaRegNode" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C356B135-961D-4B6C-8B1F-257E19117CC1}" Name="IMgaO" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C59C2210-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaFolders" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C5AAC2F0-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaObjects" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C5F4C2F0-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaFCOs" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C6F3F340-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaAttributes" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C71A26F0-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaParts" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C79F1840-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaRegNodes" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C7F19C60-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaConnPoints" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C87CAA70-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaTerritories" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C8A5EC80-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaAddOns" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C8CDA760-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaComponents" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C8F6E970-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaFilter" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{C9D8DF93-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaClients" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{CB8FA000-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaConnPoint" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{CBF20084-BD43-11D3-9AD2-00AA00B6FE26}" Name="IMgaAttribute" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{F07EE1A2-2D53-449B-A2DA-45A1A9110E53}" Name="IMgaClient" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
                     </TypeLib>    
                 </File>
             </Component>
