@@ -599,6 +599,38 @@
                                 <ProgId Id="Mga.MgaMetaFCOs" Description="MgaMetaFCOs Class" />
                             </ProgId>
                         </Class>
+                      <Interface Id="{83254259-B758-21D3-7BAE-000000000000}" Name="IMgaMetaEnumItem" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83518A5B-B758-11D3-ABAE-006928360000}" Name="IMgaMetaPointerItem" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA323D-B758-11D3-ABAE-000002387500}" Name="IMgaMetaRegNode" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA3241-B758-11D3-ABAE-000000000000}" Name="IMgaConstraint" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA3243-B758-11D3-ABAE-000000000000}" Name="IMgaMetaProject" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA3245-B758-11D3-ABAE-000000000000}" Name="IMgaMetaFolder" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA3247-B758-11D3-ABAE-000000000000}" Name="IMgaMetaFCO" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA3249-B758-11D3-ABAE-000000000000}" Name="IMgaMetaModel" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA324B-B758-11D3-ABAE-000000000000}" Name="IMgaMetaAspect" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA324D-B758-11D3-ABAE-000000000000}" Name="IMgaMetaRole" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA324F-B758-11D3-ABAE-000000000000}" Name="IMgaMetaAtom" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA3251-B758-11D3-ABAE-000000000000}" Name="IMgaMetaReference" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA3253-B758-11D3-ABAE-000000000000}" Name="IMgaMetaSet" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA3255-B758-11D3-ABAE-000000000000}" Name="IMgaMetaConnection" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA3257-B758-11D3-ABAE-000000000000}" Name="IMgaMetaConnJoint" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA3259-B758-11D3-ABAE-000000000000}" Name="IMgaMetaAttribute" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{83BA325B-B758-11D3-ABAE-000000000000}" Name="IMgaMetaPointerSpec" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{A70CAB45-DD94-11D3-9308-444553540000}" Name="IMgaMetaPart" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C61352B0-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaMetaAspects" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C66A6C60-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaMetaFCOs" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C6922740-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaMetaAttributes" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C6B85AF0-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaMetaFolders" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C761F8C0-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaMetaPointerSpecs" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C795ED20-C1FD-11D3-9AD2-00AA00B6FE27}" Name="IMgaMetaRegNodes" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C8124623-C51D-11D3-9AD2-00AA00B6FE27}" Name="IMgaMetaPointerItems" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C8124623-C51D-1AD3-9AD2-11AA0176FE27}" Name="IMgaMetaEnumItems" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C8432623-C1FD-11D3-9AD2-00AA00B6FE27}" Name="IMgaMetaConnJoints" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C851E130-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaMetaRoles" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C8EC3720-C1FD-11D3-9AD2-00AA00B6FE26}" Name="IMgaConstraints" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C8EC3720-C1FD-11D3-9AD2-00AA00B6FE27}" Name="IMgaMetaParts" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{C8EC3723-C1FD-11D3-9AD2-00AA00B6FE27}" Name="IMgaMetaModels" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{DB1E0FB7-C9CB-11D3-9AD2-00AA00B6FE26}" Name="IMgaMetaBase" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
                     </TypeLib>
                 </File>
             </Component>
@@ -802,6 +834,11 @@
                                 <ProgId Id="Mga.MgaClosure" Description="MgaClosure Class" />
                             </ProgId>
                         </Class>
+                        <Interface Id="{461F30B0-3BF0-11D4-B3F0-005004D38590}" Name="IMgaResolver" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{52871786-9C85-408F-A7D1-AE507905A540}" Name="IMgaComponentDispatch" ProxyStubClassId32="{00020420-0000-0000-C000-000000000046}" />
+                        <Interface Id="{74348E5A-C76D-4C2E-88D5-D968C01CE432}" Name="IMgaClosure" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{9D46C230-31A5-4248-B61E-4223FA6A7F7A}" Name="IMgaEventLogger" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                        <Interface Id="{D03EC326-447B-11D4-B3F6-005004D38590}" Name="IMgaLauncher" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
                     </TypeLib>                        
                 </File>
                 <!-- These are needed for Vista support (along with the AppId for the MgaRegistrar -->
@@ -886,6 +923,9 @@
                                 <ProgId Id="Mga.MgaDumper" Description="MgaDumper Class" />
                             </ProgId>
                         </Class>
+                      <Interface Id="{70C41B24-E3CE-11D3-B37A-005004D38590}" Name="IMgaMetaParser" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{94D6FB53-1F7C-11D4-B3D0-005004D38590}" Name="IMgaParser" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+                      <Interface Id="{A5D0DAE6-16EE-11D4-B3C2-005004D38590}" Name="IMgaDumper" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
                     </TypeLib>    
                 </File>
                 <File Id="edf.dtd" Name="edf.dtd" Source="..\GME\Parser\edf.dtd" />
