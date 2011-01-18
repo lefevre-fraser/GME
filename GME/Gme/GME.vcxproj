@@ -249,6 +249,7 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
     <ClCompile Include="SyncObjsListCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Install\GME.wxs" />
     <None Include="AnnotatorEventSink.rgs" />
     <None Include="DecoratorEventSink.rgs" />
     <None Include="aboutpic.bmp" />

@@ -363,6 +363,7 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="GME.reg" />
+    <None Include="..\..\Install\GME.wxs" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="GmeLib.idl">
