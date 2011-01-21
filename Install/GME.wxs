@@ -444,11 +444,23 @@
                 <File Id="InterfaceColl.h" Name="InterfaceColl.h" Source="..\GME\Interfaces\InterfaceColl.h" />
                 <File Id="GMEVersion.h" Name="GMEVersion.h" Source="..\GME\Gme\GMEVersion.h" />
                 <File Id="Core.idl" Name="Core.idl" Source="..\GME\Interfaces\Core.idl" />
+                <File Id="Core.h" Name="Core.h" Source="..\GME\Interfaces\Core.h" />
+                <File Id="Core_i.c" Name="Core_i.c" Source="..\GME\Interfaces\Core_i.c" />
                 <File Id="Gme.idl" Name="Gme.idl" Source="..\GME\Interfaces\Gme.idl" />
+                <File Id="Gme.h" Name="Gme.h" Source="..\GME\Interfaces\Gme.h" />
+                <File Id="Gme_i.c" Name="Gme_i.c" Source="..\GME\Interfaces\Gme_i.c" />
                 <File Id="Meta.idl" Name="Meta.idl" Source="..\GME\Interfaces\Meta.idl" />
+                <File Id="Meta.h" Name="Meta.h" Source="..\GME\Interfaces\Meta.h" />
+                <File Id="Meta_i.c" Name="Meta_i.c" Source="..\GME\Interfaces\Meta_i.c" />
                 <File Id="Mga.idl" Name="Mga.idl" Source="..\GME\Interfaces\Mga.idl" />
+                <File Id="Mga.h" Name="Mga.h" Source="..\GME\Interfaces\Mga.h" />
+                <File Id="Mga_i.c" Name="Mga_i.c" Source="..\GME\Interfaces\Mga_i.c" />
                 <File Id="MgaUtil.idl" Name="MgaUtil.idl" Source="..\GME\Interfaces\MgaUtil.idl" />
+                <File Id="MgaUtil.h" Name="MgaUtil.h" Source="..\GME\Interfaces\MgaUtil.h" />
+                <File Id="MgaUtil_i.c" Name="MgaUtil_i.c" Source="..\GME\Interfaces\MgaUtil_i.c" />
                 <File Id="Parser.idl" Name="Parser.idl" Source="..\GME\Interfaces\Parser.idl" />
+                <File Id="Parser.h" Name="Parser.h" Source="..\GME\Interfaces\Parser.h" />
+                <File Id="Parser_i.c" Name="Parser_i.c" Source="..\GME\Interfaces\Parser_i.c" />
             </Component>
         </DirectoryRef>
         
