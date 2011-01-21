@@ -364,6 +364,7 @@
     </None>
     <None Include="GME.reg" />
     <None Include="..\..\Install\GME.wxs" />
+    <None Include="GME.exe.config" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="GmeLib.idl">
