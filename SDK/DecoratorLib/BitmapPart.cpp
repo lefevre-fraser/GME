@@ -53,8 +53,6 @@ void BitmapPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 							  HWND parentWnd, PreferenceMap& preferences)
 {
-	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
-
 	CComPtr<IMgaMetaFCO> spMetaFCO;
 	if (!pFCO) {
 		CComPtr<IMgaMetaRole> spRole;
@@ -135,6 +133,8 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 #else
 			m_pBitmap = getFacilities().getBitmap(strIcon);
 #endif
+			if (strIcon.Right(4) == ".emf" || strIcon.Right(4) == ".wmf")
+				preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(true);
 		}
 		if (!m_pBitmap) {
 			strIcon = *preferences.find(PREF_ICONDEFAULT)->second.uValue.pstrValue;
@@ -169,6 +169,8 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	} else {
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDCORNERRADIUS, m_bRoundCornerRadius, false);
 	}
+
+	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	if (m_bCastShadow) {
 		SimpleCoordCommand* leftMost		= new SimpleCoordCommand(LeftMost);
