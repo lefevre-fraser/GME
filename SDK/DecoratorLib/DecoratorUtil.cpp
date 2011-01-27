@@ -675,7 +675,7 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 		
 		if ( strExt != ".bmp" && strExt != ".gif" && strExt != ".png"
 			&& strExt != ".jpg" && strExt != ".jpe" && strEx2 != ".jpeg"
-			&& strExt != ".res"  && strExt != ".wmf" && strEx2 != ".emf")
+			&& strExt != ".res"  && strExt != ".wmf" && strExt != ".emf")
 			strExt = "";
 	}
 
