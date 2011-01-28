@@ -1229,9 +1229,13 @@ void CMgaProject::StartAutoAddOns() {
 
 				COMTHROW( addon->Initialize(this));
 				autocomps.push_front(addon.Detach());
-			} catch(hresult_exception &) {
+			} catch(hresult_exception &e) {
+				BSTR err = NULL;
+				GetErrorInfo(e.hr, &err);
 				errs += " ";
 				errs += i->p;
+				errs += ": ";
+				errs += err;
 			}
 		}
 		inautoaddoncreate = false;
