@@ -20,8 +20,6 @@ library MgaComponentLib
 	
 
 	[
-		// you have to copy this GUID to the ComponentObj.cpp,
-
 		uuid(COCLASS_UUID),
 		helpstring(COCLASS_NAME)
 	]
