@@ -599,6 +599,8 @@ CGuiMetaAspect::CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt, CGuiMetaModel* o,
 				else {
 					CopyTo(bstrRoleName,label);
 				}
+				CString roleName;
+				CopyTo(bstrRoleName, roleName);
 
 				objtype_enum type;
 				COMTHROW(kind->get_ObjType(&type));
@@ -606,22 +608,22 @@ CGuiMetaAspect::CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt, CGuiMetaModel* o,
 					case OBJTYPE_MODEL:
 						if (!insertModelMenu)
 							insertModelMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Model");
-						insertModelMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), label, "Help");
+						insertModelMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), roleName, label, "Help");
 						break;
 					case OBJTYPE_ATOM:
 						if (!insertAtomMenu)
 							insertAtomMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Atom");
-						insertAtomMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), label, "Help");
+						insertAtomMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), roleName, label, "Help");
 						break;
 					case OBJTYPE_REFERENCE:
 						if (!insertReferenceMenu)
 							insertReferenceMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Reference");
-						insertReferenceMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), label, "Help");
+						insertReferenceMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), roleName, label, "Help");
 						break;
 					case OBJTYPE_SET:
 						if (!insertSetMenu)
 							insertSetMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Set");
-						insertSetMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), label, "Help");
+						insertSetMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), roleName, label, "Help");
 						break;
 				}
 			}

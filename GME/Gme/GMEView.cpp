@@ -4187,9 +4187,20 @@ void CGMEView::InsertNewPart(const CString& roleName, const CPoint& pt)
 			return;
 		}
 		COMTHROW(currentModel->CreateChildObject(role,&child));
-		CComBSTR nm;
-		COMTHROW(role->get_DisplayedName(&nm));
-		COMTHROW(child->put_Name(nm));
+		CComBSTR realRoleName;
+		CComPtr<IMgaMetaFCO> childMeta;
+		COMTHROW(child->get_Meta(&childMeta));
+		CComBSTR kindName;
+		COMTHROW(childMeta->get_Name(&kindName));
+		CComBSTR bstrRoleName;
+		COMTHROW(role->get_DisplayedName(&bstrRoleName));
+		if (kindName == bstrRoleName) {
+			CComBSTR kindDisplayName;
+			COMTHROW(childMeta->get_DisplayedName(&kindDisplayName));
+			COMTHROW(child->put_Name(kindDisplayName));
+		} else {
+			COMTHROW(child->put_Name(bstrRoleName));
+		}
 
 		CComBSTR bstr;
 		COMTHROW(child->get_ID(&bstr));

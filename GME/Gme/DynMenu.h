@@ -33,7 +33,7 @@ public:
 	bool IsEmpty() const		{ return items.GetCount() == 0; }
 	int GetCount() const		{ return items.GetCount(); }
 
-	void AddItem(int id, const CString& label, const CString& helpMsg);
+	void AddItem(int id, const CString& roleName, const CString& displayName, const CString& helpMsg);
 	CDynMenuItem* FindItem(int id);
 };
 

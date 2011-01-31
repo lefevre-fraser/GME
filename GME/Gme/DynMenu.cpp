@@ -17,14 +17,14 @@ CDynMenu::~CDynMenu()
 		delete items.GetNext(pos);
 }
 
-void CDynMenu::AddItem(int id, const CString& label, const CString& helpMsg)
+void CDynMenu::AddItem(int id, const CString& roleName, const CString& displayName, const CString& helpMsg)
 {
 	if(minID < 0)
 		minID = id;
 	maxID = id;
-	CDynMenuItem* item = new CDynMenuItem(id, label, helpMsg);
+	CDynMenuItem* item = new CDynMenuItem(id, roleName, helpMsg);
 	items.AddTail(item);
-	menu.AppendMenu(MF_ENABLED | MF_UNCHECKED | MF_STRING, id, label);
+	menu.AppendMenu(MF_ENABLED | MF_UNCHECKED | MF_STRING, id, displayName);
 }
 
 CDynMenuItem* CDynMenu::FindItem(int id)
