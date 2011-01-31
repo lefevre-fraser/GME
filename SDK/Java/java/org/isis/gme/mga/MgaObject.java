@@ -122,7 +122,7 @@ public class MgaObject extends Dispatch
     {                       
         Variant parent     = new Variant( new Dispatch() );
         Variant parent_ref = new Variant( parent );                  
-        call( "GetParent", parent_ref, null );                
+        call( "GetParent", parent_ref, 0 );                
         if( parent.getDispatch().isNull() )
             return null;
         else      
