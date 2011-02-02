@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // ComponentObj.cpp : implementation file
 //
-// In case of standard and simple components, this file does not need tobe modified
+// In case of standard and simple components, this file does not need to be modified
 // However, if anything except Component.[cpp,h] or RawComponent.[cpp,h] is to be modified,
 // this is the likely and preferred candidate
 //////////////////////////////////////////////////////////////////////////////
@@ -97,21 +97,14 @@ static char THIS_FILE[] = __FILE__;
 
 
 #ifdef GME_ADDON
-wchar_t GmeDllDesc[] = L"<GMEDLLDESC> add-on,*," WCHAR(COMPONENT_NAME) L"," WCHAR(COCLASS_PROGID) L"<END>";
 #define CETYPE	COMPONENTTYPE_ADDON
 #else
 #ifdef GME_INTERPRETER
-wchar_t GmeDllDesc[] = L"<GMEDLLDESC> interpreter," WCHAR(PARADIGMS) L"," WCHAR(COMPONENT_NAME) L"," WCHAR(COCLASS_PROGID) L"<END>";
 #define CETYPE	COMPONENTTYPE_INTERPRETER
 #else
 #error No GME Componenttype (one of GME_ADDON or GME_INTERPRETER) is defined
 #endif
 #endif
-
-
-#undef WCHAR_L
-#undef WCHAR
-
 #ifdef GME_ADDON
 /////////////////////////////////////////////////////////////////////////////
 // CEventSink
@@ -126,8 +119,6 @@ CEventSink::CEventSink()
 	//	object is active, the constructor calls AfxOleLockApp.
 
 	AfxOleLockApp();
-
-
 }
 
 CEventSink::~CEventSink()
@@ -136,7 +127,6 @@ CEventSink::~CEventSink()
 	// 	with OLE automation, the destructor calls AfxOleUnlockApp.
 
 	AfxOleUnlockApp();
-	AfxMessageBox( "Destoyed" );
 }
 
 BEGIN_MESSAGE_MAP(CEventSink, CCmdTarget)
@@ -165,12 +155,11 @@ void CEventSink::OnFinalRelease()
 	CCmdTarget::OnFinalRelease();
 }
 
-#define COMCLASS			CEventSink::XComponent
+#define COMCLASS		CEventSink::XComponent
 #define COMPROLOGUE		METHOD_PROLOGUE(CEventSink,Component)
 
 STDMETHODIMP COMCLASS::GlobalEvent(globalevent_enum event) {
 	COMPROLOGUE;
-	// BY PAKA BEGIN
 	#ifdef BUILDER_OBJECT_NETWORK_V2
 		try {
 			pThis->comp->bon2Comp.globalEventPerformed( event );
@@ -185,11 +174,10 @@ STDMETHODIMP COMCLASS::GlobalEvent(globalevent_enum event) {
 	#else
 		return pThis->comp->rawcomp.GlobalEvent(event);
 	#endif // BUILDER_OBJECT_NETWORK_V2
-	// BY PAKA END
 }
+
 STDMETHODIMP COMCLASS::ObjectEvent(IMgaObject * obj, unsigned long eventmask, VARIANT v) {
 	COMPROLOGUE;
-	// BY PAKA BEGIN
 	#ifdef BUILDER_OBJECT_NETWORK_V2
 		try {
 			BON::Object object = BON::Object::attach( obj );
@@ -215,7 +203,6 @@ STDMETHODIMP COMCLASS::ObjectEvent(IMgaObject * obj, unsigned long eventmask, VA
 	#else
 		return pThis->comp->rawcomp.ObjectEvent(obj, eventmask, v);
 	#endif // BUILDER_OBJECT_NETWORK_V2
-	// BY PAKA END
 }
 
 STDMETHODIMP_(ULONG) COMCLASS::AddRef()
@@ -262,11 +249,9 @@ CComponentObj::CComponentObj()
 #ifdef RAWCOMPONENT_H
 	rawcomp.interactive = interactive;
 #endif // RAWCOMPONENT_H
-	// BY PAKA BEGIN
-	#ifdef BUILDER_OBJECT_NETWORK_V2
-		bon2Comp.m_bIsInteractive = interactive;
-	#endif BUILDER_OBJECT_NETWORK_V2
-	// BY PAKA END
+#ifdef BUILDER_OBJECT_NETWORK_V2
+	bon2Comp.m_bIsInteractive = interactive;
+#endif // BUILDER_OBJECT_NETWORK_V2
 }
 
 void CComponentObj::RegisterActiveObject()
@@ -285,6 +270,7 @@ CComponentObj::~CComponentObj()
 	// 	with OLE automation, the destructor calls AfxOleUnlockApp.
 
 	ASSERT( registeractiveobjectret == 0 );
+	GMEConsole::Console::ReleaseConsole();
 
 	AfxOleUnlockApp();
 }
@@ -379,6 +365,7 @@ STDMETHODIMP COMCLASS::Invoke(IMgaProject *gme, IMgaFCOs *psa, long param)
 
 	ASSERT( gme != NULL );
 
+	COMTRY {
 	long prefs;
 	COMTHROW(gme->get_Preferences(&prefs));
 
@@ -387,11 +374,11 @@ STDMETHODIMP COMCLASS::Invoke(IMgaProject *gme, IMgaFCOs *psa, long param)
 
 	CBuilderObjectList objects;
 	if(psa) {
-	  MGACOLL_ITERATE(IMgaFCO, psa) {
-		CBuilderObject* o = CBuilder::theInstance->FindObject(MGACOLL_ITER);
-		ASSERT( o != NULL );
-		objects.AddTail(o);
-	  } MGACOLL_ITERATE_END;
+		MGACOLL_ITERATE(IMgaFCO, psa) {
+			CBuilderObject* o = CBuilder::theInstance->FindObject(MGACOLL_ITER);
+			ASSERT( o != NULL );
+			objects.AddTail(o);
+		} MGACOLL_ITERATE_END;
 	}
 
 #ifndef DEPRECATED_BON_INVOKE_IMPLEMENTED
@@ -414,6 +401,7 @@ STDMETHODIMP COMCLASS::Invoke(IMgaProject *gme, IMgaFCOs *psa, long param)
 #endif
 
 	COMTHROW(gme->put_Preferences(prefs));
+	} COMCATCH(;)
 	return S_OK;
 }
 
@@ -622,7 +610,7 @@ STDMETHODIMP COMCLASS::get_ComponentParameter(BSTR name, VARIANT *pVal) {
 	COMPROLOGUE;
 	CComVariant vv;
 	CString bb;
-	if(pThis->parmap.Lookup(CString(name), bb)) {
+	if (pThis->parmap.Lookup(CString(name), bb)) {
 		vv = CComBSTR(bb);
 		vv.Detach(pVal);
 	}
@@ -632,14 +620,13 @@ STDMETHODIMP COMCLASS::put_ComponentParameter(BSTR name, VARIANT newVal) {
 	COMPROLOGUE;
 	CComVariant dest;
 	HRESULT hr = ::VariantChangeType(&dest, &newVal, VARIANT_NOVALUEPROP, VT_BSTR);
-	if(hr == S_OK) pThis->parmap.SetAt(CString(name), CString(dest.bstrVal));
+	if (hr == S_OK) pThis->parmap.SetAt(CString(name), CString(dest.bstrVal));
 	return hr;
 }
 
 
 #else // BUILDER_OBJECT_NETWORK
 
-// BY PAKA BEGIN
 #ifdef BUILDER_OBJECT_NETWORK_V2
 // If BUILDER OBJECT NETWORK 2 IS USED
 
@@ -676,6 +663,7 @@ STDMETHODIMP COMCLASS::InvokeEx( IMgaProject *gme,  IMgaFCO *currentobj,  IMgaFC
 	COMPROLOGUE;
 	CPushRoutingFrame temp( NULL ); // hack!!
 
+	COMTRY {
 	ASSERT( gme != NULL );
 
 	long prefs;
@@ -726,6 +714,7 @@ STDMETHODIMP COMCLASS::InvokeEx( IMgaProject *gme,  IMgaFCO *currentobj,  IMgaFC
 			COMTHROW( gme->AbortTransaction() );
 		#endif
 	}
+	} COMCATCH(;)
 
 	return S_OK;
 }
@@ -737,6 +726,7 @@ STDMETHODIMP COMCLASS::ObjectsInvokeEx( IMgaProject *gme,  IMgaObject *currentob
 
 	ASSERT( gme != NULL );
 
+	COMTRY {
 	long prefs;
 	COMTHROW( gme->get_Preferences( &prefs ) );
 	COMTHROW( gme->put_Preferences( prefs | MGAPREF_RELAXED_RDATTRTYPES | MGAPREF_RELAXED_WRATTRTYPES ) );
@@ -774,6 +764,7 @@ STDMETHODIMP COMCLASS::ObjectsInvokeEx( IMgaProject *gme,  IMgaObject *currentob
 		AfxMessageBox( "Unhandled and unknown exception was thrown in BON2Component ObjectInvokeEx!" );
 		COMTHROW( gme->AbortTransaction() );
 	}
+	} COMCATCH(;)
 
 	return S_OK;
 }
@@ -858,7 +849,6 @@ STDMETHODIMP COMCLASS::put_ComponentParameter( BSTR name, VARIANT newVal )
 }
 
 #else
-// BY PAKA END
 
 // If BUILDER OBJECT NETWORK IS NOT USED, THESE METHODS ARE CALLS INTO RawComponent
 
@@ -952,9 +942,7 @@ STDMETHODIMP COMCLASS::put_ComponentParameter( BSTR name, VARIANT newVal )
 	return S_OK;
 }
 
-// BY PAKA BEGIN
 #endif // BUILDER_OBJECT_NETWORK_V2
-// BY PAKA END
 
 #endif // BUILDER_OBJECT_NETWORK
 

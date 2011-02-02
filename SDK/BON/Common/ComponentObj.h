@@ -8,7 +8,6 @@
 #include "Exceptions.h"
 #include "MgaUtil.h"
 
-
 #if defined(BUILDER_OBJECT_NETWORK)
 #else
 // BY PAKA BEGIN
@@ -21,14 +20,7 @@
 // BY PAKA END
 #endif // BUILDER_OBJECT_NETWORK
 
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
-// InterpreterObj.h : header file
-//
-
-
 
 class CComponentObj;
 
@@ -181,7 +173,6 @@ public:
 
 #endif // RAWCOMPONENT_H
 
-// BY PAKA BEGIN
 #ifdef BUILDER_OBJECT_NETWORK_V2
 	BON::Component 				bon2Comp;
 
@@ -191,10 +182,8 @@ public:
 #endif // GME_ADDON
 
 #endif // BUILDER_OBJECT_NETWORK_V2
-// BY PAKA END
 
 	void HandleError( Util::Exception* pEx );
-
 }; // CComponentObj
 
 

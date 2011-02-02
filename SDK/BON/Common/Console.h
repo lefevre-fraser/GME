@@ -14,6 +14,10 @@ namespace GMEConsole
 		static CComPtr<IGMEOLEApp> gmeoleapp;
 		
 		static void SetupConsole(CComPtr<IMgaProject> project); 
+		static void ReleaseConsole() {
+			if (gmeoleapp)
+				gmeoleapp.Release();
+		}
 
 		static void WriteLine(const CString& message, msgtype_enum type)
 		{
@@ -37,7 +41,8 @@ namespace GMEConsole
 		static void Clear()
 		{
 			if (gmeoleapp != 0) {
-				COMTHROW(gmeoleapp->put_ConsoleContents(L""));
+				CComBSTR empty(L"");
+				COMTHROW(gmeoleapp->put_ConsoleContents(empty));
 			}
 		}
 
@@ -82,7 +87,12 @@ namespace GMEConsole
 		class Info
 		{
 		public:
+			// deprecated
 			static void writeLine(const CString& message)
+			{
+				Console::WriteLine(message,MSG_INFO);
+			}
+			static void WriteLine(const CString& message)
 			{
 				Console::WriteLine(message,MSG_INFO);
 			}
