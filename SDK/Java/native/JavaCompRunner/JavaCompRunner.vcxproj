@@ -123,14 +123,15 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
     <ClCompile Include="ComHelp.cpp" />
     <ClCompile Include="$(GME_ROOT)\GME\Common\CommonError.cpp" />
     <ClCompile Include="$(GME_ROOT)\GME\Common\CommonSmart.cpp" />
-    <ClCompile Include="$(GME_ROOT)\SDK\BON\Common\ComponentDll.cpp" />
+    <ClCompile Include="$(GME_ROOT)\SDK\BON\Common\ComponentDll.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(GME_ROOT)\SDK\BON\Common\ComponentObj.cpp" />
     <ClCompile Include="$(GME_ROOT)\SDK\BON\Common\Console.cpp" />
     <ClCompile Include="$(GME_ROOT)\SDK\BON\Common\Exceptions.cpp" />
     <ClCompile Include="$(GME_ROOT)\SDK\BON\Common\Formatter.cpp" />
     <ClCompile Include="ComponentDll.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="RawComponent.cpp" />
     <ClCompile Include="StdAfx.cpp">
