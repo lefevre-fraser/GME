@@ -87,7 +87,7 @@ namespace GME.CSharp
         }
 
 
-        public GMEConsole CreateFromProject(MGALib.MgaProject project)
+        public static GMEConsole CreateFromProject(MGALib.MgaProject project)
         {
             GMEConsole console = new GMEConsole();
             try
@@ -122,8 +122,7 @@ namespace GME.CSharp
 
         override public Encoding Encoding
         {
-            get { return Encoding.ASCII; }
-
+            get { return Encoding.Unicode; }
         }
 
         override public void WriteLine(string str)
