@@ -12,9 +12,7 @@ using MGALib;
 namespace GME.CSharp.MyInterpreter
 {
     /// <summary>
-    /// This class implements the necessary COM interfaces for a GME interpreter component. Nonstatic variables in this class
-    /// are initialized with each invocation, static members are not, and they preserve their value across calls from the same GME process. 
-    /// This is true for all classes in your component.
+    /// This class implements the necessary COM interfaces for a GME interpreter component.
     /// </summary>
     [Guid(ComponentConfig.guid),
     ProgId(ComponentConfig.progID),
@@ -40,8 +38,6 @@ namespace GME.CSharp.MyInterpreter
         /// <summary>
         /// This function is called for each interpreter invocation before Main.
         /// Don't perform MGA operations here unless you open a tansaction.
-        /// Typically, you initialize your static variables here: 
-        /// constructors/initializations for static classes and fields are executed once at loading time, not for every interpreter invocation.
         /// </summary>
         /// <param name="project">The handle of the project opened in GME, for which the interpreter was called.</param>
         public void Initialize(MgaProject project)
