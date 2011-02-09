@@ -11,17 +11,25 @@ namespace GME.CSharp
     /// Automatically redirects console messages to the GME console output, if GME is available.
     /// Otherwise prints the output to System console.
     /// </summary>
-    public static class GMEConsole
+    public class GMEConsole
     {
 
         /// <summary>
         /// The GME application variable
         /// </summary>
-        static public IGMEOLEApp gme = null;
-        private static GMETextWriter error = new GMETextWriter(msgtype_enum.MSG_ERROR);
-        private static GMETextWriter warning = new GMETextWriter(msgtype_enum.MSG_WARNING);
-        private static GMETextWriter info = new GMETextWriter(msgtype_enum.MSG_INFO);
-        private static GMETextWriter normal = new GMETextWriter(msgtype_enum.MSG_NORMAL);
+        public IGMEOLEApp gme = null;
+        private GMETextWriter error;
+        private GMETextWriter warning;
+        private GMETextWriter info;
+        private GMETextWriter normal;
+
+        public GMEConsole()
+        {
+            error = new GMETextWriter(msgtype_enum.MSG_ERROR, this);
+            warning = new GMETextWriter(msgtype_enum.MSG_WARNING, this);
+            info = new GMETextWriter(msgtype_enum.MSG_INFO, this);
+            normal = new GMETextWriter(msgtype_enum.MSG_NORMAL, this);
+        }
 
         /// <summary>
         /// Handles error messages
@@ -30,10 +38,9 @@ namespace GME.CSharp
         /// If console is initialized, the message appears in GME console, if not, then in standard error.
         /// If DEBUG is defined, it also appears in VS output window.
         /// </summary>
-        public static TextWriter Error
+        public TextWriter Error
         {
-
-            get { return error; }            
+            get { return error; }
         }
 
         /// <summary>
@@ -41,9 +48,8 @@ namespace GME.CSharp
         /// The message to be written. GME Console does not handle special characters and trims white-spaces.
         /// Example: GMEConsole.Out.Write("RootFolder name : {0}.", rf.Name);
         /// </summary>
-        public static TextWriter Out
+        public TextWriter Out
         {
-
             get { return normal; }
         }
 
@@ -53,12 +59,10 @@ namespace GME.CSharp
         /// The message to be written. GME Console does not handle special characters and trims white-spaces.
         /// Example: GMEConsole.Warning.Write("RootFolder name is not changed : {0}.", rf.Name);
         /// </summary>
-        public static TextWriter Warning
+        public TextWriter Warning
         {
-
             get { return warning; }
         }
-
 
 
         /// <summary>
@@ -66,7 +70,7 @@ namespace GME.CSharp
         /// The message to be written. GME Console does not handle special characters and trims white-spaces.
         /// Example: GMEConsole.Info.Write("RootFolder name is changed : {0}.", rf.Name);
         /// </summary>
-        public static TextWriter Info
+        public TextWriter Info
         {
             get { return info; }
         }
@@ -74,7 +78,7 @@ namespace GME.CSharp
         /// <summary>
         /// Clear the console
         /// </summary>
-        public static void Clear()
+        public void Clear()
         {
             if (gme != null)
                 gme.ConsoleClear();
@@ -82,22 +86,44 @@ namespace GME.CSharp
                 System.Console.Clear();
         }
 
+
+        public GMEConsole CreateFromProject(MGALib.MgaProject project)
+        {
+            GMEConsole console = new GMEConsole();
+            try
+            {
+                // Initializing console               
+                console.gme = (IGMEOLEApp)project.GetClientByName("GME.Application").OLEServer;
+            }
+            catch (System.Runtime.InteropServices.COMException ex)
+            {
+                // if GME is not present, the interpreter is called from standalone test application
+                if (ex.ErrorCode != -2023423888) // HResult 0x87650070: "Search by name failed"
+                {
+                    throw;
+                }
+                console.gme = null;
+            }
+            return console;
+        }
     }
 
 
     public class GMETextWriter : System.IO.TextWriter
     {
         private msgtype_enum type;
+        private GMEConsole console;
 
-        public GMETextWriter(msgtype_enum type)
+        public GMETextWriter(msgtype_enum type, GMEConsole console)
         {
             this.type = type;
+            this.console = console;
         }
 
         override public Encoding Encoding
         {
-            get {return Encoding.ASCII;} 
-                
+            get { return Encoding.ASCII; }
+
         }
 
         override public void WriteLine(string str)
@@ -107,7 +133,7 @@ namespace GME.CSharp
 
         override public void Write(string str)
         {
-            if (GMEConsole.gme == null)
+            if (console.gme == null)
             {
                 switch (type)
                 {
@@ -122,15 +148,15 @@ namespace GME.CSharp
                         break;
                     case msgtype_enum.MSG_ERROR:
                         Console.Error.Write(str);
-                        #if(DEBUG)
-                            System.Diagnostics.Debug.Write(str);
-                        #endif
+#if(DEBUG)
+                        System.Diagnostics.Debug.Write(str);
+#endif
                         break;
                 }
             }
             else
             {
-                GMEConsole.gme.ConsoleMessage(str, type);
+                console.gme.ConsoleMessage(str, type);
             }
         }
     }
