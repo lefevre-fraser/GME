@@ -54,6 +54,9 @@ void Component::initialize( Project& project )
 {
 	// ======================
 	// Insert application specific code here
+#ifdef GME_ADDON
+	project->setAutoCommit( false);
+#endif
 }
 
 // ====================================================
