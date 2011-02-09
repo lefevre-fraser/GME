@@ -78,7 +78,7 @@
                         <Bold>Desired solution name</Bold>
                     </TextBlock>
                     <Button Content="Browse" Height="23" HorizontalAlignment="Left" Margin="229,199,0,0" Name="btn_Browse" VerticalAlignment="Top" Width="73" Click="btn_Browse_Click" />
-                    <Button IsEnabled="False" Content="Next »" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Next1" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" />
+                    <Button IsEnabled="False" Content="Next »" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Next1" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" IsDefault="True" />
                     <Button Content="Exit" Height="30" HorizontalAlignment="Right" Margin="0,334,115,0" Name="btn_Exit1" VerticalAlignment="Top" Width="90" FontSize="14" FontWeight="Normal" Click="btn_Exit_Click" />
                 </Grid>
             </TabItem>
@@ -106,7 +106,7 @@
                         <Bold>Paradigm MGA</Bold>
                     </TextBlock>
 
-                    <Button IsEnabled="False" Content="Next »" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Next2" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" />
+                    <Button IsEnabled="False" Content="Next »" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Next2" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" IsDefault="True" />
                     <Button Content="« Back" Height="30" HorizontalAlignment="Right" Margin="0,334,115,0" Name="btn_Back2" VerticalAlignment="Top" Width="90" FontSize="14" FontWeight="Normal" Click="btn_Back_Click" />
                     <Label Content="GME Interface:" Height="28" HorizontalAlignment="Left" Margin="21,158,0,0" Name="label2" VerticalAlignment="Top" FontSize="13" />
                 </Grid>
@@ -132,7 +132,7 @@
                     <TextBlock Name="txb_GuidError" Visibility="Hidden" Foreground="Red" Height="23" Margin="235,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Segoe UI" HorizontalAlignment="Left" Width="78">
                     <Bold>Invalid GUID</Bold>
                     </TextBlock>
-                    <Button IsEnabled="False" Content="Next »" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Next3" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" />
+                    <Button IsEnabled="False" Content="Next »" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Next3" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" IsDefault="True" />
                     <Button Content="« Back" Height="30" HorizontalAlignment="Right" Margin="0,334,115,0" Name="btn_Back3" VerticalAlignment="Top" Width="90" FontSize="14" FontWeight="Normal" Click="btn_Back_Click" />                    
                 </Grid>
             </TabItem>
@@ -180,7 +180,7 @@
                     <CheckBox IsEnabled="False" Content="Pre destroyed" Height="16" HorizontalAlignment="Left" Margin="363,272,0,0" Name="ckb_a23" VerticalAlignment="Top" Checked="ckb_Checked" Unchecked="ckb_Unchecked" />
                     <CheckBox IsEnabled="False" Content="Destroyed" Height="16" HorizontalAlignment="Left" Margin="363,292,0,0" Name="ckb_a24" VerticalAlignment="Top" Checked="ckb_Checked" Unchecked="ckb_Unchecked" />
 
-                    <Button Content="Next »" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Next4" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" />
+                    <Button Content="Next »" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Next4" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" IsDefault="True" />
                     <Button Content="« Back" Height="30" Margin="0,334,115,0" Name="btn_Back4" VerticalAlignment="Top" FontSize="14" FontWeight="Normal" Click="btn_Back_Click" HorizontalAlignment="Right" Width="90" />
                 </Grid>
             </TabItem>
@@ -213,7 +213,7 @@
                         <Bold>Disabled for AddOn type</Bold>
                     </TextBlock>
                     <Button Content="Browse" IsEnabled="True" Height="23" HorizontalAlignment="Left" Margin="216,225,0,0" Name="btn_BrowseIcon" VerticalAlignment="Top" Width="73" Click="btn_BrowseIcon_Click" />
-                    <Button IsEnabled="False" Content="Next »" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Next5" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" />
+                    <Button IsEnabled="False" Content="Next »" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Next5" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" IsDefault="True" />
                     <Button Content="« Back" Height="30" HorizontalAlignment="Right" Margin="0,334,115,0" Name="btn_Back5" VerticalAlignment="Top" Width="90" FontSize="14" FontWeight="Normal" Click="btn_Back_Click" />
                 </Grid>
             </TabItem>
@@ -239,7 +239,7 @@
                     <RadioButton GroupName="Register" Content="This user" Height="16" HorizontalAlignment="Left" Margin="180,204,0,0" Name="rbb_User" VerticalAlignment="Top" Checked="rbb_User_Checked" />
                     <RadioButton GroupName="Register" Content="Both" Height="16" HorizontalAlignment="Left" Margin="180,226,0,0" Name="rbb_Both" VerticalAlignment="Top" Checked="rbb_Both_Checked" />
                     <Button Content="« Back" Height="30" HorizontalAlignment="Right" Margin="0,334,115,0" Name="btn_Back6" VerticalAlignment="Top" Width="90" FontSize="14" FontWeight="Normal" Click="btn_Back_Click" />
-                    <Button Content="Generate" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Generate" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" />
+                    <Button Content="Generate" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_Generate" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Next_Click" IsDefault="True"/>
                     <Label Name="lbl_pleasewait" Visibility="Hidden" Content="Please wait..." Height="28" Margin="0,311,14,0" VerticalAlignment="Top" FontStyle="Italic" HorizontalAlignment="Right" Width="77" FontWeight="Normal" Foreground="#FF797979" />
                     <ProgressBar Visibility="Hidden" Height="19" HorizontalAlignment="Left" Margin="16,279,0,0" Name="pgb_generationprogress" VerticalAlignment="Top" Width="451" />
                 </Grid>
@@ -253,7 +253,7 @@
                     <TextBlock Name="txb_GenerationResultDetails" Height="128" HorizontalAlignment="Left" Margin="16,60,0,0" VerticalAlignment="Top" TextWrapping="Wrap" Width="429" FontFamily="Segoe UI" FontSize="13">
                         Your Visual Studio 2010 solution has been successfully generated.
                     </TextBlock>
-                    <Button Content="Exit" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_ExitLastPage" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Exit_Click" />
+                    <Button Content="Exit" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_ExitLastPage" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Exit_Click" IsDefault="True"/>
                     <Button Content="Open your solution" Height="30" HorizontalAlignment="Left" Margin="169,216,0,0" Name="btn_OpenSolution" VerticalAlignment="Top" Width="171" Click="btn_OpenSolution_Click" />
                 </Grid>
             </TabItem>
