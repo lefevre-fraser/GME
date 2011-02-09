@@ -24,7 +24,7 @@ namespace GME.CSharp.MyAddon
         // Event handlers for addons
         #region MgaEventSink members
         public void GlobalEvent(globalevent_enum @event)
-        {            
+        {
             if (@event == globalevent_enum.GLOBALEVENT_CLOSE_PROJECT)
             {
                 Marshal.FinalReleaseComObject(addon);
@@ -36,12 +36,16 @@ namespace GME.CSharp.MyAddon
             }
 
             // TODO: Handle global events
-
-            MessageBox.Show(@event.ToString());          
+            // MessageBox.Show(@event.ToString());
         }
 
-        public void ObjectEvent(MgaObject subject /* the object the event(s) happened to */, 
-                                                uint eventMask /* events ORed together */, object param /* not used */)
+        /// <summary>
+        /// Called when an FCO or folder changes
+        /// </summary>
+        /// <param name="subject">the object the event(s) happened to</param>
+        /// <param name="eventMask">objectevent_enum values ORed together</param>
+        /// <param name="param">extra information provided for cetertain event types</param>
+        public void ObjectEvent(MgaObject subject, uint eventMask, object param)
         {
             if (!componentEnabled)
             {
@@ -51,7 +55,7 @@ namespace GME.CSharp.MyAddon
             // TODO: Handle object events (OR eventMask with the members of objectevent_enum)
             // Warning: Only those events are received that you have subscribed for by setting ComponentConfig.eventMask
 
-            MessageBox.Show(eventMask.ToString());
+            // MessageBox.Show(eventMask.ToString());
 
         }
 
@@ -65,18 +69,18 @@ namespace GME.CSharp.MyAddon
             p.CreateAddOn(this, out addon);
             // Setting event mask (see ComponentConfig.eventMask)
             unchecked
-			{
-				addon.EventMask = (uint)ComponentConfig.eventMask;
-			}
+            {
+                addon.EventMask = (uint)ComponentConfig.eventMask;
+            }
         }
 
         public void InvokeEx(MgaProject project, MgaFCO currentobj, MgaFCOs selectedobjs, int param)
         {
             throw new NotImplementedException(); // Not called by addon
         }
-		
-		
-		#region Component Information
+
+
+        #region Component Information
         public string ComponentName
         {
             get { return GetType().Name; }
@@ -89,7 +93,7 @@ namespace GME.CSharp.MyAddon
                 return ComponentConfig.progID;
             }
         }
-        
+
         public componenttype_enum ComponentType
         {
             get { return ComponentConfig.componentType; }
@@ -121,7 +125,7 @@ namespace GME.CSharp.MyAddon
                 interactiveMode = value;
             }
         }
-        #endregion       
+        #endregion
 
         #region Custom Parameters
         SortedDictionary<string, object> componentParameters = null;
@@ -138,11 +142,11 @@ namespace GME.CSharp.MyAddon
                 return GetType().FullName;
 
             object value;
-            if(componentParameters!= null && componentParameters.TryGetValue(Name, out value))
+            if (componentParameters != null && componentParameters.TryGetValue(Name, out value))
             {
                 return value;
             }
-                        
+
             return null;
         }
 
@@ -189,7 +193,6 @@ namespace GME.CSharp.MyAddon
         public static void GMERegister(Type t)
         {
             Registrar.RegisterComponentsInGMERegistry();
-
         }
 
         [ComUnregisterFunctionAttribute]
@@ -199,5 +202,5 @@ namespace GME.CSharp.MyAddon
         }
 
         #endregion
-	}
-}    
+    }
+}
