@@ -247,7 +247,8 @@ namespace CSharpComponentWizard
         private void btn_Next_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            if (button.Name == "btn_Next1" && this.ValidateInputTab_1())
+            // FIXME: fix generator and reenable
+            if (false && button.Name == "btn_Next1" && this.ValidateInputTab_1())
             {
                 this.tbc_WizardTab.SelectedIndex = 1;
                 this.lbl_Step.Content = "Step 2 of 6";
@@ -256,8 +257,11 @@ namespace CSharpComponentWizard
                 SolutionGenerator.SolutionName = txb_SolutionName.Text;
                 SolutionGenerator.TargetFolder = txb_TargetFolder.Text;
             }
-            else if (button.Name == "btn_Next2" && this.ValidateInputTab_2())
+            // else if (button.Name == "btn_Next2" && this.ValidateInputTab_2())
+            if (button.Name == "btn_Next1" && this.ValidateInputTab_1())
             {
+                ckb_GenerateDSI.IsChecked = false;
+                this.txb_ComponentName.Text = txb_SolutionName.Text;
                 this.tbc_WizardTab.SelectedIndex = 2;
                 this.lbl_Step.Content = "Step 3 of 6";
 
@@ -337,7 +341,9 @@ namespace CSharpComponentWizard
         private void btn_Back_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            if (button.Name == "btn_Back2")
+            if (button.Name == "btn_Back2" ||
+                // FIXME remove when paradigm-specific code is reenabled
+                button.Name == "btn_Back3")
             {
                 this.tbc_WizardTab.SelectedIndex = 0;
                 this.lbl_Step.Content = "Step 1 of 6";
