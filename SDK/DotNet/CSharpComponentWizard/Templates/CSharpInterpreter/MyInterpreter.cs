@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -35,8 +35,8 @@ namespace GME.CSharp.MyInterpreter
             GME_BGCONTEXT_START = 18,	// Using the context menu by right clicking the background of the GME modeling window
             GME_ICON_START = 32,		// Not used by GME
             GME_SILENT_MODE = 128 		// Not used by GME, available to testers not using GME
-        } 
-    
+        }
+
         /// <summary>
         /// This function is called for each interpreter invocation before Main.
         /// Don't perform MGA operations here unless you open a tansaction.
@@ -48,7 +48,7 @@ namespace GME.CSharp.MyInterpreter
         {
             // TODO: Add your initialization code here...            
         }
-        
+
         /// <summary>
         /// The main entry point of the interpreter. A transaction is already open,
         /// GMEConsole is avaliable. A general try-catch block catches all the exceptions
@@ -76,6 +76,9 @@ namespace GME.CSharp.MyInterpreter
 
         #region IMgaComponentEx Members
 
+        MgaGateway MgaGateway { get; set; }
+        GMEConsole GMEConsole { get; set; }
+
         public void InvokeEx(MgaProject project, MgaFCO currentobj, MgaFCOs selectedobjs, int param)
         {
             if (!enabled)
@@ -85,37 +88,14 @@ namespace GME.CSharp.MyInterpreter
 
             try
             {
-                MgaGateway.territory = null;
-                try
-                {
-                    // Initializing console               
-                    GMEConsole.gme = (IGMEOLEApp)project.GetClientByName("GME.Application").OLEServer;                    
-                }
-                catch (COMException ex)
-                {
-                    // if GME is not present, the interpreter is called from standalone test application
-                    if (ex.ErrorCode != -2023423888) // HResult 0x87650070: "Search by name failed"
-                    {
-                        throw;
-                    }
-                    GMEConsole.gme = null;
-                }
-                MgaGateway.project = project;
+                GMEConsole = GMEConsole.CreateFromProject(project);
+                MgaGateway = new MgaGateway(project);
                 project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
-                MgaGateway.BeginTransaction(); // Remove this line for custom transactions, change if read-only interpretation
-                Main(project, currentobj, selectedobjs, Convert(param));
-                MgaGateway.CommitTransaction(); // Remove this line for custom transactions
-            }
-            catch (Exception ex)
-            {                
-                GMEConsole.Error.WriteLine(ex.Message);
-                // Remove this line for custom transactions. 
-                // Be careful: if a transaction is left open, GME is in inconsistent state
-                if (MgaGateway.territory != null)
+                MgaGateway.PerformInTransaction(delegate
                 {
-                    MgaGateway.AbortTransaction();
-                }
+                    Main(project, currentobj, selectedobjs, Convert(param));
+                });
             }
             finally
             {
@@ -123,12 +103,11 @@ namespace GME.CSharp.MyInterpreter
                 {
                     MgaGateway.territory.Destroy();
                 }
-                MgaGateway.territory = null;
-                MgaGateway.project = null;
+                MgaGateway = null;
                 project = null;
                 currentobj = null;
                 selectedobjs = null;
-                GMEConsole.gme = null;
+                GMEConsole = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
@@ -139,7 +118,7 @@ namespace GME.CSharp.MyInterpreter
             switch (param)
             {
                 case (int)ComponentStartMode.GME_BGCONTEXT_START:
-                    return ComponentStartMode.GME_BGCONTEXT_START;                
+                    return ComponentStartMode.GME_BGCONTEXT_START;
                 case (int)ComponentStartMode.GME_BROWSER_START:
                     return ComponentStartMode.GME_BROWSER_START;
 
@@ -160,7 +139,7 @@ namespace GME.CSharp.MyInterpreter
                 case (int)ComponentStartMode.GME_SILENT_MODE:
                     return ComponentStartMode.GME_SILENT_MODE;
             }
-            
+
             return ComponentStartMode.GME_SILENT_MODE;
         }
 
@@ -177,7 +156,7 @@ namespace GME.CSharp.MyInterpreter
                 return ComponentConfig.progID;
             }
         }
-        
+
         public componenttype_enum ComponentType
         {
             get { return ComponentConfig.componentType; }
@@ -209,7 +188,7 @@ namespace GME.CSharp.MyInterpreter
                 interactiveMode = value;
             }
         }
-        #endregion       
+        #endregion
 
         #region Custom Parameters
         SortedDictionary<string, object> componentParameters = null;
@@ -226,11 +205,11 @@ namespace GME.CSharp.MyInterpreter
                 return GetType().FullName;
 
             object value;
-            if(componentParameters!= null && componentParameters.TryGetValue(Name, out value))
+            if (componentParameters != null && componentParameters.TryGetValue(Name, out value))
             {
                 return value;
             }
-                        
+
             return null;
         }
 

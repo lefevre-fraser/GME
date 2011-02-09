@@ -9,34 +9,60 @@ using MGACoreLib;
 
 namespace GME.CSharp
 {
-    static class MgaGateway
+    class MgaGateway
     {
-        public static IMgaProject project = null;
-        public static IMgaTerritory territory = null;
-		// TODO: Add your static variables here. 
-        // Never forget to initialize static variables in each invocation of the component.
-        // Static variables preserves their values across the invocations from the same GME process.
+        public MgaGateway(IMgaProject project)
+        {
+            this.project = project;
+        }
 
+        public IMgaProject project = null;
+        public IMgaTerritory territory = null;
 
-        // TODO: Add your generic MGA access functions here
-#region TRANSACTION HANDLING
-        public static void BeginTransaction(transactiontype_enum mode = transactiontype_enum.TRANSACTION_GENERAL)
+        #region TRANSACTION HANDLING
+        public void BeginTransaction(transactiontype_enum mode = transactiontype_enum.TRANSACTION_GENERAL)
         {
             project.BeginTransaction(territory, mode);
         }
 
-        public static void CommitTransaction()
+        public void CommitTransaction()
         {
-            project.CommitTransaction();
+            if ((project.ProjectStatus & 8) != 0)
+            {
+                project.CommitTransaction();
+            }
         }
 
-        public static void AbortTransaction()
+        public void AbortTransaction()
         {
-            project.AbortTransaction();
+            if ((project.ProjectStatus & 8) != 0)
+            {
+                project.AbortTransaction();
+            }
         }
-#endregion
-#region UTILITIES
-	public static IMgaMetaBase GetMetaByName(string name)
+
+        public delegate void voidDelegate();
+        public void PerformInTransaction(voidDelegate d, transactiontype_enum mode = transactiontype_enum.TRANSACTION_GENERAL)
+        {
+            BeginTransaction(mode);
+            try
+            {
+                d();
+                CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    AbortTransaction();
+                }
+                catch { }
+                throw e;
+            }
+        }
+        #endregion
+        #region UTILITIES
+        public IMgaMetaBase GetMetaByName(string name)
         {
             try
             {
@@ -50,7 +76,7 @@ namespace GME.CSharp
 #pragma warning restore 0168
         }
 
-#endregion
+        #endregion
 
 
     }

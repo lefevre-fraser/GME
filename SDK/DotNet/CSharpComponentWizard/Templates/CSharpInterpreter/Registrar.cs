@@ -13,50 +13,41 @@ namespace GME.CSharp
     [ComVisible(false)]
     public class RegistrationException : ApplicationException
     {
-        public RegistrationException(string message):base(message){}
+        public RegistrationException(string message) : base(message) { }
     }
 
     [ComVisible(false)]
-    public class Registrar
+    public static class Registrar
     {
-       
-        public Registrar()
-        {
-        }
-
-
         public static void RegisterComponentsInGMERegistry()
         {
-			if (ComponentConfig.iconPath == null)
-            {               
-                ComponentConfig.iconPath =  System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + '\\' + ComponentConfig.iconName;                                
-            }
-			
-			try
+            if (ComponentConfig.iconPath == null)
             {
-                MgaRegistrar registrar = new MgaRegistrar();
-                if ((int)GMEInterfaceVersion_enum.GMEInterfaceVersion_Current != (int)((IGMEVersionInfo)registrar).version)
-                {
-                    throw new RegistrationException("GMEInterfaceVersion mismatch: this assembly is using " +
-                        (int)GMEInterfaceVersion_enum.GMEInterfaceVersion_Current +
-                        " but the GME interface version is " + (int)((IGMEVersionInfo)registrar).version +
-                        "\n\nPlease install a compatible GME version or update the interop dlls.");
-                }
-             
-                registrar.RegisterComponent(ComponentConfig.progID, ComponentConfig.componentType, ComponentConfig.componentName, ComponentConfig.registrationMode);
-                registrar.set_ComponentExtraInfo(ComponentConfig.registrationMode, ComponentConfig.progID, "Icon", ComponentConfig.iconPath);
-              
-                if (!ComponentConfig.paradigmName.Equals("*"))
-                {
-                    registrar.Associate(
-                       ComponentConfig.progID,
-                        ComponentConfig.paradigmName,
-                        ComponentConfig.registrationMode);
-                }
+                ComponentConfig.iconPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + '\\' + ComponentConfig.iconName;
             }
-            catch (Exception e)
+
+            MgaRegistrar registrar = new MgaRegistrar();
+            CheckGMEInterfaceVersion(registrar);
+            registrar.RegisterComponent(ComponentConfig.progID, ComponentConfig.componentType, ComponentConfig.componentName, ComponentConfig.registrationMode);
+            registrar.set_ComponentExtraInfo(ComponentConfig.registrationMode, ComponentConfig.progID, "Icon", ComponentConfig.iconPath);
+
+            if (!ComponentConfig.paradigmName.Equals("*"))
             {
-                System.Windows.Forms.MessageBox.Show(e.Message);
+                registrar.Associate(
+                   ComponentConfig.progID,
+                    ComponentConfig.paradigmName,
+                    ComponentConfig.registrationMode);
+            }
+        }
+
+        private static void CheckGMEInterfaceVersion(MgaRegistrar registrar)
+        {
+            if ((int)GMEInterfaceVersion_enum.GMEInterfaceVersion_Current != (int)((IGMEVersionInfo)registrar).version)
+            {
+                throw new RegistrationException("GMEInterfaceVersion mismatch: this assembly is using " +
+                    (int)GMEInterfaceVersion_enum.GMEInterfaceVersion_Current +
+                    " but the GME interface version is " + (int)((IGMEVersionInfo)registrar).version +
+                    "\n\nPlease install a compatible GME version or update the interop dlls.");
             }
 
         }
@@ -64,26 +55,10 @@ namespace GME.CSharp
 
         public static void UnregisterComponentsInGMERegistry()
         {
-            try
-            {
+            MgaRegistrar registrar = new MgaRegistrar();
+            CheckGMEInterfaceVersion(registrar);
 
-                MgaRegistrar registrar = new MgaRegistrar();
-                if ((int)GMEInterfaceVersion_enum.GMEInterfaceVersion_Current != (int)((IGMEVersionInfo)registrar).version)
-                {
-                    throw new RegistrationException("GMEInterfaceVersion mismatch: this assembly is using " +
-                        (int)GMEInterfaceVersion_enum.GMEInterfaceVersion_Current +
-                        " but the GME interface version is " + (int)((IGMEVersionInfo)registrar).version +
-                        "\n\nPlease install a compatible GME version or update the interop dlls.");
-                }
-
-                registrar.UnregisterComponent(ComponentConfig.progID, ComponentConfig.registrationMode);
-
-            }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show(e.Message);
-            }
-
+            registrar.UnregisterComponent(ComponentConfig.progID, ComponentConfig.registrationMode);
         }
     }
 }
