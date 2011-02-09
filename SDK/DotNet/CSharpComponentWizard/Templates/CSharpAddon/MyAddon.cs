@@ -25,6 +25,11 @@ namespace GME.CSharp.MyAddon
         #region MgaEventSink members
         public void GlobalEvent(globalevent_enum @event)
         {            
+            if (@event == globalevent_enum.GLOBALEVENT_CLOSE_PROJECT)
+            {
+                Marshal.FinalReleaseComObject(addon);
+                addon = null;
+            }
             if (!componentEnabled)
             {
                 return;
