@@ -87,7 +87,7 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 static char mgafilter[] = "MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
 	"Microsoft Access Files (*.mdb)|*.mdb|All files (*.*)|*.*||";
 
-static char xmemgafilter[] = "GME Model Files(*.mga;*.xme)|*.mga; *.xme|MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
+static char xmemgafilter[] = "GME Model Files (*.mga;*.xme)|*.mga; *.xme|MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
 	"Microsoft Access Files (*.mdb)|*.mdb|All files (*.*)|*.*||";
 
 /*static char mgafilter[] = "MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
