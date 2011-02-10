@@ -1687,7 +1687,7 @@ HINSTANCE GotoURL(LPCTSTR url, int showcmd)
 void CGMEApp::OnFileOpen() 
 {
 	CMgaOpenDlg dlg(CMgaOpenDlg::OpenDialog);
-	CString conn = dlg.AskConnectionString(false);
+	CString conn = dlg.AskConnectionString(true);
 
 	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileOpen "+conn+"\r\n");
 
@@ -1699,7 +1699,24 @@ void CGMEApp::OnFileOpen()
 	if( mgaProject != NULL )
 		CloseProject();
 
-	OpenProject(conn);
+	if (conn.Left(4) == "XML=") {
+		//wer
+		MSGTRY {
+			CString fullPath = conn.Right(conn.GetLength() - 4);
+			TCHAR buffer[MAX_PATH];
+			TCHAR* filepart = NULL;
+			GetFullPathName(fullPath, MAX_PATH, buffer, &filepart);
+			if (filepart == NULL) {
+				COMTHROW(E_FILEOPEN);
+			}
+			CString fname = conn.Right(conn.ReverseFind('\\'));
+			CString filename = filepart;
+			CString title = filename.Left(filename.ReverseFind('.'));
+			Importxml(fullPath, filepart, title);
+		} MSGCATCH("Error opening XML file",;)
+	} else {
+		OpenProject(conn);
+	}
 
 }
 
@@ -1901,7 +1918,7 @@ void CGMEApp::OnFileExportxml()
 			if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &filename) || filename == 0) {
 			} else {
 				initialFile = filename;
-				if (initialFile.Left(3) == "mga") {
+				if (initialFile.Right(3) == "mga") {
 					initialFile.Truncate(initialFile.GetLength() - 3);
 					initialFile += "xme";
 				}
@@ -1938,15 +1955,10 @@ void CGMEApp::OnFileImportxml()
 {
 	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileImportxml ");
 
-	CString file_name;
 	CString new_file_name = "";
 
 	MSGTRY
 	{
-		CComPtr<IMgaParser> parser;
-		COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
-		ASSERT( parser != NULL );
-
 		CFileDialog dlg(TRUE, "xme", (LPCTSTR) new_file_name,
 			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
 			OFN_FILEMUSTEXIST,
@@ -1959,10 +1971,21 @@ void CGMEApp::OnFileImportxml()
 		CGMEEventLogger::LogGMEEvent(dlg.GetPathName()+"\r\n");
 		CString fullPath = dlg.GetPathName();
 		CString fname = dlg.GetFileName();
-		CString folderPath = fullPath.Left(fullPath.GetLength() - fname.GetLength());
 		CString ftitle = dlg.GetFileTitle();
+		Importxml(fullPath, fname, ftitle);
+	}
+	MSGCATCH("Error importing XML file",;)
+}		
+		
+void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
+{
+		CComPtr<IMgaParser> parser;
+		COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
+		ASSERT( parser != NULL );
 
-		if (dlg.GetFileExt().CompareNoCase("xml") == 0 ) {
+		CString folderPath = fullPath.Left(fullPath.GetLength() - fname.GetLength());
+
+		if (fullPath.Right(3).CompareNoCase("xml") == 0 ) {
 			AfxMessageBox(
 					"Newer versions of GME use the \".xme.\" filename extension\n"
 					"for exported XML data files.\n"
@@ -1977,7 +2000,7 @@ void CGMEApp::OnFileImportxml()
 				CComBstrObj paradigm, parversion, basename, version;
 				CComVariant parguid;
 
-				COMTHROW( parser->GetXMLInfo(PutInBstr(dlg.GetPathName()), PutOut(paradigm), PutOut(parversion), &parguid, PutOut(basename), PutOut(version)) );
+				COMTHROW( parser->GetXMLInfo(PutInBstr(fullPath), PutOut(paradigm), PutOut(parversion), &parguid, PutOut(basename), PutOut(version)) );
 
 				CMgaOpenDlg opdlg(CMgaOpenDlg::ImportDialog);
 				if (ftitle.IsEmpty())
@@ -2097,9 +2120,9 @@ void CGMEApp::OnFileImportxml()
 		CWaitCursor wait;
 		if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
 
-		file_name = dlg.GetPathName();
+		CString file_name = fullPath;
 		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( "Importing ") + file_name + "...", 1);
-		COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(dlg.GetPathName())) );
+		COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(fullPath)) );
 		
 		// mgaproject has been filled with data, let's update title:
 		UpdateProjectName();
@@ -2108,10 +2131,8 @@ void CGMEApp::OnFileImportxml()
 			OnFileSave();
 		}
 
-		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( dlg.GetPathName() + " was successfully imported.", 1);
-		else AfxMessageBox(dlg.GetPathName() + " was successfully imported.");
-	}
-	MSGCATCH("Error importing XML file",;)
+		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( fullPath + " was successfully imported.", 1);
+		else AfxMessageBox(fullPath + " was successfully imported.");
 
 	if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));
 }

@@ -31,7 +31,7 @@ public:
 
 	bool pressed_back;
 
-	CString AskConnectionString(bool meta);
+	CString AskConnectionString(bool allowXme);
 	CString AskMGAConnectionString(const CString& spec_ext = "");
 private:
 	CString PruneConnectionString(const CString& conn);

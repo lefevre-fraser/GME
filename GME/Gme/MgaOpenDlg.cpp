@@ -87,6 +87,9 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 static char mgafilter[] = "MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
 	"Microsoft Access Files (*.mdb)|*.mdb|All files (*.*)|*.*||";
 
+static char xmemgafilter[] = "GME Model Files(*.mga;*.xme)|*.mga; *.xme|MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
+	"Microsoft Access Files (*.mdb)|*.mdb|All files (*.*)|*.*||";
+
 /*static char mgafilter[] = "MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
 	"Microsoft Access Files (*.mdb)|*.mdb||";*/
 
@@ -153,7 +156,7 @@ CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
 	return conn;
 }
 
-CString CMgaOpenDlg::AskConnectionString(bool meta)
+CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 {
 	CString conn;
 
@@ -182,7 +185,7 @@ CString CMgaOpenDlg::AskConnectionString(bool meta)
 			{
 				CFileDialog dlg(true, NULL, fileNameHint.IsEmpty() ? NULL : (LPCSTR)fileNameHint,
 					OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
-					(flag_create ? 0 : OFN_FILEMUSTEXIST), meta ? metafilter : mgafilter);
+					(flag_create ? 0 : OFN_FILEMUSTEXIST), allowXme ? xmemgafilter : mgafilter);
 				if (!folderPathHint.IsEmpty())
 					dlg.m_ofn.lpstrInitialDir = folderPathHint.GetBuffer(_MAX_PATH);
 
@@ -205,11 +208,11 @@ CString CMgaOpenDlg::AskConnectionString(bool meta)
 						{
 						case 4:
 						case 1:
-							conn = CString("MGA=") + dlg.GetPathName() + (meta ? ".mta" : ".mga");
+							conn = CString("MGA=") + dlg.GetPathName() + ".mga";
 							break;
 
 						case 2:
-							conn = CString("XML=") + dlg.GetPathName() + (meta ? ".xmp" : ".xme");
+							conn = CString("XML=") + dlg.GetPathName() + ".xme";
 							break;
 
 						case 3:

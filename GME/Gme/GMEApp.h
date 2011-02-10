@@ -139,6 +139,7 @@ public:
 	bool SafeCloseProject();
 	void CloseProject(bool updateStatusBar = true);
 	void OpenProject(const CString &conn);
+	void Importxml(CString fullPath, CString fname, CString ftitle);
 	void SaveProject(const CString &conn);
 	void CreateProject(const CString &metaname, const CString &dataconn);
 	void UpdateProjectName(bool retrievePath = false);
