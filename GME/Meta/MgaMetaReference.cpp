@@ -11,7 +11,7 @@ STDMETHODIMP CMgaMetaReference::CheckPath(BSTR path, VARIANT_BOOL *p)
 
 	COMTRY
 	{
-		ASSERT( metaproject != NULL );
+		ASSERT( metaprojectref != NULL );
 
 		pathitems_type pathitems;
 		metaproject->CreatePathItems(begin(path), end(path), pathitems);
@@ -29,7 +29,7 @@ STDMETHODIMP CMgaMetaReference::CheckPath(BSTR path, VARIANT_BOOL *p)
 
 void CMgaMetaReference::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaproject != NULL );
+	ASSERT( metaprojectref != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaFCO::Traverse(metaproject, me);

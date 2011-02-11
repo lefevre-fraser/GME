@@ -8,18 +8,17 @@
 
 CMgaMetaBase::~CMgaMetaBase()
 {
-	if( metaproject != NULL )
+	if (metaprojectref != NULL)
 		metaproject->UnregisterMetaBase(metaref, this);
 
 #ifdef _DEBUG
-	metaproject = NULL;
 	metaref = 0;
 #endif
 }
 
 HRESULT CMgaMetaBase::PutMetaRef(metaref_type p)
 {
-	ASSERT( metaproject != NULL );
+	ASSERT( metaprojectref != NULL );
 
 	if( p == metaref )
 		return S_OK;
@@ -33,7 +32,7 @@ HRESULT CMgaMetaBase::PutMetaRef(metaref_type p)
 
 void CMgaMetaBase::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaproject != NULL );
+	ASSERT( metaprojectref != NULL );
 
 	me.Load();
 	metaref_type metaref = me.GetLongValue(ATTRID_METAREF);
@@ -49,7 +48,7 @@ void CMgaMetaBase::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 
 	metaproject->RegisterMetaBase(metaref, base);
 
-	base->metaproject = metaproject;
+	base->metaprojectref = metaproject;
 	base->metaref = metaref;
 
 	TraverseCollection(metaproject, me, ATTRID_REGNODES_COLL);

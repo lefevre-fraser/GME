@@ -121,7 +121,7 @@ STDMETHODIMP CMgaMetaModel::LegalConnectionRoles(BSTR paths, IMgaMetaRoles **p)
 		// prepare the jointpaths
 		jointpaths_type jointpaths;
 
-		ASSERT( metaproject != NULL );
+		ASSERT( metaprojectref != NULL );
 		metaproject->CreateJointPaths(paths, jointpaths);
 
 		// traverse the roles
@@ -168,7 +168,7 @@ STDMETHODIMP CMgaMetaModel::LegalReferenceRoles(BSTR path, IMgaMetaRoles **p)
 		// prepare the pathitems
 		pathitems_type pathitems;
 
-		ASSERT( metaproject != NULL );
+		ASSERT( metaprojectref != NULL );
 		metaproject->CreatePathItems(begin(path), end(path), pathitems);
 
 		// traverse the roles
@@ -215,7 +215,7 @@ STDMETHODIMP CMgaMetaModel::LegalSetRoles(BSTR path, IMgaMetaRoles **p)
 		// prepare the pathitems
 		pathitems_type pathitems;
 
-		ASSERT( metaproject != NULL );
+		ASSERT( metaprojectref != NULL );
 		metaproject->CreatePathItems(begin(path), end(path), pathitems);
 
 		// traverse the roles
@@ -302,7 +302,7 @@ STDMETHODIMP CMgaMetaModel::CreateRole(IMgaMetaFCO *kind, IMgaMetaRole **p)
 	if( kind == NULL )
 		COMRETURN(E_POINTER);
 
-	ASSERT( metaproject != NULL );
+	ASSERT( metaprojectref != NULL );
 
 	COMTRY
 	{
@@ -327,7 +327,7 @@ STDMETHODIMP CMgaMetaModel::CreateRole(IMgaMetaFCO *kind, IMgaMetaRole **p)
 
 void CMgaMetaModel::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaproject != NULL );
+	ASSERT( metaprojectref != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaFCO::Traverse(metaproject, me);

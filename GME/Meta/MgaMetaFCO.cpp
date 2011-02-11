@@ -119,7 +119,7 @@ HRESULT CMgaMetaFCO::get_DefinedAttributeByName(IMgaMetaFCO *me, BSTR name,
 
 void CMgaMetaFCO::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaproject != NULL );
+	ASSERT( metaprojectref != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaBase::Traverse(metaproject, me);

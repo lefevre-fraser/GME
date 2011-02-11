@@ -2,13 +2,8 @@
 #ifndef MGA_MGAMETABASE_H
 #define MGA_MGAMETABASE_H
 
-#ifndef MGA_MGAMETAPROJECT_h
 #include "MgaMetaProject.h"
-#endif
-
-#ifndef MGA_MGAMETAREGNODE_H
 #include "MgaMetaRegNode.h"
-#endif
 
 // --------------------------- CMgaMetaBase
 
@@ -17,7 +12,7 @@ class ATL_NO_VTABLE CMgaMetaBase :
 	public CMgaMetaRegNodes
 {
 public:
-	CMgaMetaBase() : metaproject(NULL) { }
+	CMgaMetaBase() { }
 	~CMgaMetaBase();
 
 public:
@@ -25,7 +20,11 @@ public:
 
 	static void Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me);
 
-	CMgaMetaProject *metaproject;
+	CComPtr<IMgaMetaProject> metaprojectref;
+	CMgaMetaProject* getMetaProject() {
+		return static_cast<CMgaMetaProject*>(static_cast<IMgaMetaProject*>(metaprojectref));
+	}
+	__declspec(property(get = getMetaProject)) CMgaMetaProject *metaproject;
 	metaref_type metaref;
 };
 

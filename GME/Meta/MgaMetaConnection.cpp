@@ -12,7 +12,7 @@ STDMETHODIMP CMgaMetaConnection::CheckPaths(BSTR paths, VARIANT_BOOL *p)
 
 	COMTRY
 	{
-		ASSERT( metaproject != NULL );
+		ASSERT( metaprojectref != NULL );
 
 		jointpaths_type jointpaths;
 		metaproject->CreateJointPaths(paths, jointpaths);
@@ -48,7 +48,7 @@ STDMETHODIMP CMgaMetaConnection::CreateJoint(IMgaMetaConnJoint **p)
 {
 	CHECK_OUT(p);
 
-	ASSERT( metaproject != NULL );
+	ASSERT( metaprojectref != NULL );
 
 	COMTRY
 	{
@@ -69,7 +69,7 @@ STDMETHODIMP CMgaMetaConnection::CreateJoint(IMgaMetaConnJoint **p)
 
 void CMgaMetaConnection::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaproject != NULL );
+	ASSERT( metaprojectref != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaFCO::Traverse(metaproject, me);
