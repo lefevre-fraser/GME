@@ -228,7 +228,8 @@
                             <Directory Id='INSTALLDIR_SDK_DECORATOREXAMPLES_PLAINSAMPLE' Name='PlainSample' />
                           </Directory>
                         <Directory Id='INSTALLDIR_SDK_JAVA' Name='Java' />
-                        <Directory Id='INSTALLDIR_SDK_PATTERNPROCESSOR' Name='PatternProcessor' />
+                      <Directory Id='INSTALLDIR_SDK_DOTNET' Name='DotNet' />
+                      <Directory Id='INSTALLDIR_SDK_PATTERNPROCESSOR' Name='PatternProcessor' />
                         <Directory Id='INSTALLDIR_SDK_SCRIPTS' Name='Scripts' />
                     </Directory>
                     <Directory Id='INSTALLDIR_TOOLS' Name='Tools' />
@@ -2164,6 +2165,12 @@
             </Component>
         </DirectoryRef>
 
+      <DirectoryRef Id="INSTALLDIR_SDK_DOTNET">
+        <Component Id="CSharpComponentWizard.exe" Guid="DB3B2614-7590-4F6D-8BCA-AEB8EB9A47FC">
+          <File Id="CSharpComponentWizard.exe" Source="..\SDK\DotNet\CSharpComponentWizard\bin\Release\CSharpComponentWizard.exe"/>
+        </Component>
+      </DirectoryRef>
+      
         <DirectoryRef Id="INSTALLDIR_BIN">
             <Component Id="JAUT.dll" Guid="0c4a6e0b-c860-4819-9ef6-69230df410f4">
                 <File Id="JAUT.dll" Name="JAUT.dll" KeyPath="yes" Source="..\SDK\java\native\Jaut\Release\JAUT.dll">
@@ -2403,6 +2410,7 @@
                 <ComponentRef Id='DecoratorExamplesPlainSample' />
                 <ComponentRef Id='DecoratorExamplesNewSample' />
                 <ComponentRef Id='Interfaces' />
+                <ComponentRef Id='CSharpComponentWizard.exe' />
                 <ComponentRef Id='JAUT.dll' />
                 <ComponentRef Id='JavaClasses' />
                 <ComponentRef Id='JavaCompRegister.exe' />
