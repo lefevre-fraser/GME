@@ -214,6 +214,7 @@ def build_msi():
 
 def zip_pdb():
     "Collect and zip all debug information (*.pdb)"
+    tools.system(r"call install\symbols_source_server.cmd <NUL".split(), GME_ROOT)
     zipname = os.path.join(GME_ROOT, "Install", "GME-" + prefs['version_string'] + "-symbols.zip")
     tools.collect_and_zip(GME_ROOT, zipname, "*.pdb *.dll *.exe *.ocx")
     pass
