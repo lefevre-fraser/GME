@@ -104,7 +104,6 @@
             <Directory Id='ProgramFilesFolder'>
                 <Directory Id='INSTALLDIR' Name='GME'>
                     <Directory Id='INSTALLDIR_BIN' Name='Bin'/>
-                    <Directory Id='INSTALLDIR_CONTRIB' Name='Contrib'/>
                     <Directory Id='INSTALLDIR_DOC' Name='Doc'>
                         <Directory Id='INSTALLDIR_DOC_TUTORIALS' Name='Tutorials'>
                             <Directory Id='INSTALLDIR_DOC_TUTORIALS_ICONS' Name='Icons'/>
@@ -2425,11 +2424,6 @@
                     <!-- TODO: automatic setup of the VC9 wizard(s) --> 
                 </Feature>
             </Feature>
-            
-            <Feature Id='Contrib' Title='Contrib' Description='Contributed tools and models from third party developers'
-                Level='1'>
-            </Feature>
-            
             
         </Feature>
 
