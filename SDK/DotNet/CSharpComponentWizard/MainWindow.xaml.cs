@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using EnvDTE;
 using System.IO;
 using Microsoft.Win32;
-using EnvDTE80;
-using EnvDTE100;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.ComponentModel;
-using System.Windows.Threading;
-using System.Threading;
 using System.Windows.Media;
+using System.Reflection;
 
 
 namespace CSharpComponentWizard
-{    
+{
     public partial class MainWindow : System.Windows.Window
     {
         // DEFINES       
@@ -25,7 +19,7 @@ namespace CSharpComponentWizard
         public const string VS2010_PROJECTFOLDER_REGISTRY_KEYNAME = "VisualStudioProjectsLocation";
         public const string VS2010_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME = "UserProjectTemplatesLocation";
         public const string VS2010_INSTALLDIR_KEYNAME = "InstallDir";
-        public const string MSSDK_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\Microsoft SDKs\Windows";      
+        public const string MSSDK_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\Microsoft SDKs\Windows";
         public const string MSSDK_INSTALLFOLDER_REGISTRY_KEYNAME = "CurrentInstallFolder";
 
         public const string GUIDREGEXP = @"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$";
@@ -43,6 +37,13 @@ namespace CSharpComponentWizard
 
         public MainWindow()
         {
+            System.Type type = System.Type.GetTypeFromProgID("VisualStudio.DTE.10.0");
+            if (type == null || Activator.CreateInstance(type, true) == null)
+            {
+                MessageBox.Show(Assembly.GetExecutingAssembly().GetName().Name + " requires Visual Studio 2010 Professional or better. It cannot work with Visual C# Express.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Environment.Exit(11);
+            }
+
             InitializeComponent();
             errorWindow = new ErrorWindow(this);
             errorwindowdel = errorWindow.Display;
@@ -82,7 +83,7 @@ namespace CSharpComponentWizard
             SolutionGenerator.AddonEvents.Add(24, "OBJEVENT_DESTROYED");
 
             SolutionGenerator.mw = this;
-            
+
             // Generate Guid
             this.txb_Guid.Text = Guid.NewGuid().ToString().ToUpper();
 
@@ -95,10 +96,9 @@ namespace CSharpComponentWizard
             else
             {
                 this.txb_TargetFolder.Text = masterKey.GetValue(MainWindow.VS2010_PROJECTFOLDER_REGISTRY_KEYNAME).ToString();
+                masterKey.Close();
             }
             this.txb_TargetFolder.ToolTip = this.txb_TargetFolder.Text;
-            masterKey.Close();
-            
         }
 
         private void Generate()
@@ -155,7 +155,7 @@ namespace CSharpComponentWizard
             finally
             {
                 File.Delete(SolutionGenerator.ProjectTemplateLocation + "\\" + SolutionGenerator.TemplateFileName);
-                worker.ReportProgress(100);                
+                worker.ReportProgress(100);
             }
         }
 
@@ -170,10 +170,10 @@ namespace CSharpComponentWizard
 
         /*
          *  Step validators
-        */        
+        */
         private bool ValidateInputTab_1()
         {
-            if(!Directory.Exists(txb_TargetFolder.Text))
+            if (!Directory.Exists(txb_TargetFolder.Text))
             {
                 return false;
             }
@@ -192,7 +192,7 @@ namespace CSharpComponentWizard
             }
             return true;
         }
-        
+
         private bool ValidateInputTab_3()
         {
             if (this.txb_ParadigmName.Text == String.Empty && this.txb_ParadigmName.IsEnabled)
@@ -266,7 +266,7 @@ namespace CSharpComponentWizard
                 this.lbl_Step.Content = "Step 3 of 6";
 
                 // Save input (to be on the safe side)
-                if((bool)ckb_GenerateDSI.IsChecked)
+                if ((bool)ckb_GenerateDSI.IsChecked)
                 {
                     SolutionGenerator.SelectedInterface = ComponentInterface.Dependent;
                 }
@@ -274,7 +274,7 @@ namespace CSharpComponentWizard
                 {
                     SolutionGenerator.SelectedInterface = ComponentInterface.Independent;
                 }
-                SolutionGenerator.MgaPath = txb_MgaPath.Text;                
+                SolutionGenerator.MgaPath = txb_MgaPath.Text;
             }
             else if (button.Name == "btn_Next3" && this.ValidateInputTab_3())
             {
@@ -317,7 +317,7 @@ namespace CSharpComponentWizard
                 else
                 {
                     this.lbl_SumParadigmName.Content = this.txb_ParadigmName.Text;
-                }                
+                }
                 this.lbl_SumSolutionName.Content = this.txb_SolutionName.Text;
                 this.lbl_SumOutputFolder.Content = this.txb_TargetFolder.Text;
             }
@@ -442,26 +442,8 @@ namespace CSharpComponentWizard
         // Exit either at the first step or at the end
         private void btn_Exit_Click(object sender, RoutedEventArgs e)
         {
-            if(((Button)sender).Name == "btn_ExitLastPage")
-            {
-                this.errorWindow.Close();
-                this.Close();
-                return;
-            }
-            
-            string messageBoxText = "Are you sure?";
-            string caption = "Exit GME component wizard...";
-            MessageBoxButton button = MessageBoxButton.YesNo;
-            MessageBoxImage icon = MessageBoxImage.Question;
-            switch (MessageBox.Show(messageBoxText, caption, button, icon))
-            {
-                case MessageBoxResult.Yes:
-                    this.errorWindow.Close();
-                    this.Close();
-                    break;
-                case MessageBoxResult.No:
-                    break;
-            }
+            this.errorWindow.Close();
+            this.Close();
         }
 
         // Checkbox events for the "All paradigms" CheckBox
@@ -488,7 +470,7 @@ namespace CSharpComponentWizard
             txb_IconInfo.Visibility = Visibility.Hidden;
             txb_IconPath.IsEnabled = true;
             btn_BrowseIcon.IsEnabled = true;
-            
+
             for (int i = 0; i <= 24; ++i)
             {
                 ((CheckBox)this.FindName("ckb_a" + i)).IsEnabled = false;
@@ -510,7 +492,7 @@ namespace CSharpComponentWizard
             {
                 return;
             }
-            
+
             SolutionGenerator.SelectedType = CompType.Addon;
             txb_IconInfo.Visibility = Visibility.Visible;
             txb_IconPath.IsEnabled = false;
@@ -530,11 +512,11 @@ namespace CSharpComponentWizard
                 btn_Next4.IsEnabled = false;
             }
         }
-        
+
         // GUID validator (to display errorlabel)
         private void Guid_Changed(object sender, TextChangedEventArgs e)
         {
-            if(!GuidExp.IsMatch(txb_Guid.Text))
+            if (!GuidExp.IsMatch(txb_Guid.Text))
             {
                 txb_GuidError.Visibility = Visibility.Visible;
                 Color c = new Color();
@@ -572,7 +554,7 @@ namespace CSharpComponentWizard
             {
                 return;
             }
-            
+
             if (ValidateInputTab_3())
             {
                 btn_Next3.IsEnabled = true;
