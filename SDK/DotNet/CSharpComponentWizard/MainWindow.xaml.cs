@@ -163,7 +163,7 @@ namespace CSharpComponentWizard
         {
             txb_GenerationResultSummary.Text = "Generation failed";
             txb_GenerationResultDetails.Text = "Error occured while generating your Visual Studio 2010 solution. " + Environment.NewLine;
-            txb_GenerationResultDetails.Text += "We recommend you to start the whole process again! " + Environment.NewLine + Environment.NewLine;
+            txb_GenerationResultDetails.Text += "We recommend you start the whole process again. " + Environment.NewLine + Environment.NewLine;
             txb_GenerationResultDetails.Text += "The specific error was: " + s;
             btn_OpenSolution.IsEnabled = false;
         }
@@ -247,8 +247,7 @@ namespace CSharpComponentWizard
         private void btn_Next_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            // FIXME: fix generator and reenable
-            if (false && button.Name == "btn_Next1" && this.ValidateInputTab_1())
+            if (button.Name == "btn_Next1" && this.ValidateInputTab_1())
             {
                 this.tbc_WizardTab.SelectedIndex = 1;
                 this.lbl_Step.Content = "Step 2 of 6";
@@ -257,6 +256,7 @@ namespace CSharpComponentWizard
                 SolutionGenerator.SolutionName = txb_SolutionName.Text;
                 SolutionGenerator.TargetFolder = txb_TargetFolder.Text;
             }
+            // FIXME: fix generator and reenable
             // else if (button.Name == "btn_Next2" && this.ValidateInputTab_2())
             if (button.Name == "btn_Next1" && this.ValidateInputTab_1())
             {

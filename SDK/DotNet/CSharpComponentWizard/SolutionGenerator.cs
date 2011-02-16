@@ -111,10 +111,6 @@ namespace CSharpComponentWizard
                 sln.AddFromTemplate(TemplatePath, outputfolder, SolutionName, false);
                 sln.Close();
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 obj = dte = null;
