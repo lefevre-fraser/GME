@@ -385,12 +385,12 @@ public class MgaFCO extends MgaObject
         return (String)get( "RegistryValue", path );
     }
          
-    /*public void setRegistryValue(String path, String lastParam)
+    public void setRegistryValue(String path, String value)
     {
-            Dispatch.CallSub(this, "RegistryValue", path, lastParam);
+    	call("SetRegistryValueDisp", path, value);
     }
      
-    public MgaConstraints getConstraints(boolean lastParam)
+    /*public MgaConstraints getConstraints(boolean lastParam)
     {
             return new MgaConstraints(Dispatch.call(this, "Constraints", new Variant(lastParam)).toDispatch());
     }
