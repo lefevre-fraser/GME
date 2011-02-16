@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Windows;
-using EnvDTE;
 using System.IO;
 using Microsoft.Win32;
 using EnvDTE80;
 using EnvDTE100;
-using System.Text.RegularExpressions;
-using System.Windows.Controls;
-using System.ComponentModel;
-using System.Windows.Threading;
-using System.Threading;
 using DSM;
 
 namespace CSharpComponentWizard
