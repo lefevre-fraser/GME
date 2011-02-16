@@ -75,6 +75,8 @@ namespace CSharpComponentWizard
                 dte = (DTE2)obj;
                 Solution4 sln = (Solution4)dte.Solution;
 
+                if (TargetFolder == null)
+                    throw new NullReferenceException();
                 outputfolder = TargetFolder + @"\" + SolutionName;
                 string solutionName = SolutionName + ".sln";
 
