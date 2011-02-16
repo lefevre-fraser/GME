@@ -75,9 +75,7 @@ namespace CSharpComponentWizard
                 dte = (DTE2)obj;
                 Solution4 sln = (Solution4)dte.Solution;
 
-                if (TargetFolder == null)
-                    throw new NullReferenceException();
-                outputfolder = TargetFolder + @"\" + SolutionName;
+                outputfolder = Path.Combine(TargetFolder, SolutionName);
                 string solutionName = SolutionName + ".sln";
 
                 if (Directory.Exists(outputfolder))
@@ -101,7 +99,7 @@ namespace CSharpComponentWizard
                 // Unpack the sufficent template project
                 Stream TemplateStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(
                             System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".Templates." + SolutionGenerator.TemplateFileName);
-                FileStream FileWriter = new FileStream(SolutionGenerator.ProjectTemplateLocation + "\\" + SolutionGenerator.TemplateFileName, FileMode.Create);
+                FileStream FileWriter = new FileStream(Path.Combine(SolutionGenerator.ProjectTemplateLocation, SolutionGenerator.TemplateFileName), FileMode.Create);
                 byte[] ReadFile = new byte[TemplateStream.Length];
                 TemplateStream.Read(ReadFile, 0, ReadFile.Length);
                 FileWriter.Write(ReadFile, 0, ReadFile.Length);
@@ -122,7 +120,7 @@ namespace CSharpComponentWizard
 
         public static void PostProcessComponentConfig(string outputfolder)
         {
-            StreamReader ComponentConfigReadStream = new StreamReader(outputfolder + @"\ComponentConfig.cs");
+            StreamReader ComponentConfigReadStream = new StreamReader(Path.Combine(outputfolder, "ComponentConfig.cs"));
             string ContentString = ComponentConfigReadStream.ReadToEnd();
             ComponentConfigReadStream.Close();
 
@@ -189,7 +187,7 @@ namespace CSharpComponentWizard
 
                 if (IconPath != String.Empty && File.Exists(IconPath))
                 {
-                    File.Copy(IconPath, outputfolder + @"\Component.ico", true);
+                    File.Copy(IconPath, Path.Combine(outputfolder, "Component.ico"), true);
                 }
 
                 // Set IconPath
@@ -219,7 +217,7 @@ namespace CSharpComponentWizard
             // Fill in guid
             ContentString = ContentString.Replace(@"$guid$", NewGuid);
 
-            StreamWriter ComponentConfigWriteStream = new StreamWriter(outputfolder + @"\ComponentConfig.cs");
+            StreamWriter ComponentConfigWriteStream = new StreamWriter(Path.Combine(outputfolder, "ComponentConfig.cs"));
             ComponentConfigWriteStream.Write(ContentString);
             ComponentConfigWriteStream.Close();
         }
@@ -230,21 +228,21 @@ namespace CSharpComponentWizard
             if (SolutionGenerator.SelectedType == CompType.Addon)
             {
                 // Rename namespace, classname, and filename
-                StreamReader ComponentConfigReadStream = new StreamReader(outputfolder + @"\MyAddon.cs");
+                StreamReader ComponentConfigReadStream = new StreamReader(Path.Combine(outputfolder, "MyAddon.cs"));
                 string ContentString = ComponentConfigReadStream.ReadToEnd();
                 ComponentConfigReadStream.Close();
 
                 ContentString = ContentString.Replace("MyAddon", SolutionName);
 
-                StreamWriter ComponentConfigWriteStream = new StreamWriter(outputfolder + @"\MyAddon.cs");
+                StreamWriter ComponentConfigWriteStream = new StreamWriter(Path.Combine(outputfolder, "MyAddon.cs"));
                  ComponentConfigWriteStream.Write(ContentString);
                 ComponentConfigWriteStream.Close();
 
-                File.Move(outputfolder + @"\MyAddon.cs", outputfolder + @"\" + SolutionName + ".cs");
+                File.Move(Path.Combine(outputfolder, "MyAddon.cs"), Path.Combine(outputfolder, SolutionName + ".cs"));
 
 
                 // Rename filereference in the csproj file
-                ComponentConfigReadStream = new StreamReader(outputfolder + @"\" + SolutionName + ".csproj");
+                ComponentConfigReadStream = new StreamReader(Path.Combine(outputfolder, SolutionName + ".csproj"));
                 ContentString = ComponentConfigReadStream.ReadToEnd();
                 ComponentConfigReadStream.Close();
 
@@ -254,29 +252,29 @@ namespace CSharpComponentWizard
                 ContentString = ContentString.Replace("<!--DELETE", "");
                 ContentString = ContentString.Replace("DELETE-->", "");
 
-                ComponentConfigWriteStream = new StreamWriter(outputfolder + @"\" + SolutionName + ".csproj");
+                ComponentConfigWriteStream = new StreamWriter(Path.Combine(outputfolder, SolutionName + ".csproj"));
                 ComponentConfigWriteStream.Write(ContentString);
                 ComponentConfigWriteStream.Close();
             }
             else // interpreter
             {
                 // Rename namespace, classname, and filename
-                StreamReader FileReadStream = new StreamReader(outputfolder + @"\MyInterpreter.cs");
+                StreamReader FileReadStream = new StreamReader(Path.Combine(outputfolder, "MyInterpreter.cs"));
                 string ContentString = FileReadStream.ReadToEnd();
                 FileReadStream.Close();
 
                 ContentString = ContentString.Replace("MyInterpreter", SolutionName);
                 ContentString = SolutionGenerator.AddEntryPointCode(ContentString);
 
-                StreamWriter FileWriteStream = new StreamWriter(outputfolder + @"\MyInterpreter.cs");
+                StreamWriter FileWriteStream = new StreamWriter(Path.Combine(outputfolder, "MyInterpreter.cs"));
                 FileWriteStream.Write(ContentString);
                 FileWriteStream.Close();
 
-                File.Move(outputfolder + @"\MyInterpreter.cs", outputfolder + @"\" + SolutionName + ".cs");
+                File.Move(Path.Combine(outputfolder, "MyInterpreter.cs"), Path.Combine(outputfolder, SolutionName + ".cs"));
 
 
                 // Rename filereference in the csproj file
-                FileReadStream = new StreamReader(outputfolder + @"\" + SolutionName + ".csproj");
+                FileReadStream = new StreamReader(Path.Combine(outputfolder, "" + SolutionName + ".csproj"));
                 ContentString = FileReadStream.ReadToEnd();
                 FileReadStream.Close();
 
@@ -286,7 +284,7 @@ namespace CSharpComponentWizard
                 ContentString = ContentString.Replace("<!--DELETE", "");
                 ContentString = ContentString.Replace("DELETE-->", "");
 
-                FileWriteStream = new StreamWriter(outputfolder + @"\" + SolutionName + ".csproj");
+                FileWriteStream = new StreamWriter(Path.Combine(outputfolder, "" + SolutionName + ".csproj"));
                 FileWriteStream.Write(ContentString);
                 FileWriteStream.Close();
             }           
@@ -354,13 +352,13 @@ namespace CSharpComponentWizard
             try
             {
                 // Rename filereference in the csproj file
-                StreamReader FileReadStream = new StreamReader(TargetFolder + @"\" + SolutionName + @"\" + SolutionName + ".csproj");
+                StreamReader FileReadStream = new StreamReader(Path.Combine(TargetFolder, SolutionName) + @"\" + SolutionName + ".csproj");
                 string ContentString = FileReadStream.ReadToEnd();
                 FileReadStream.Close();
 
                 ContentString = ContentString.Replace(@"<!--$ADDITIONALFILES$-->", AddString);
 
-                StreamWriter FileWriteStream = new StreamWriter(TargetFolder + @"\" + SolutionName + @"\" + SolutionName + ".csproj");
+                StreamWriter FileWriteStream = new StreamWriter(Path.Combine(TargetFolder, SolutionName) + @"\" + SolutionName + ".csproj");
                 FileWriteStream.Write(ContentString);
                 FileWriteStream.Close();
             }

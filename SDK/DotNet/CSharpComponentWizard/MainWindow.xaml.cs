@@ -154,7 +154,7 @@ namespace CSharpComponentWizard
             }
             finally
             {
-                File.Delete(SolutionGenerator.ProjectTemplateLocation + "\\" + SolutionGenerator.TemplateFileName);
+                File.Delete(Path.Combine(SolutionGenerator.ProjectTemplateLocation, SolutionGenerator.TemplateFileName));
                 worker.ReportProgress(100);
             }
         }
