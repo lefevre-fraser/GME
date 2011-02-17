@@ -1172,38 +1172,10 @@ HRESULT FCO::Open( openmode mode)  {
 	} COMCATCH(;);
 };
 
-
-// results in a single object with all local subobjects removed
-void SingleObjTreeUnLock(CoreObj &self) {
-	CComPtr<ICoreAttributes> atts;
-	COMTHROW(self->get_Attributes(&atts));
-	MGACOLL_ITERATE(ICoreAttribute, atts) {
-			attrid_type ai;
-			CComPtr<ICoreMetaAttribute> mattr;
-			COMTHROW(MGACOLL_ITER->get_MetaAttribute(&mattr));
-			COMTHROW(mattr->get_AttrID(&ai));
-			if(ai >= ATTRID_COLLECTION) {
-				ai -= ATTRID_COLLECTION;
-				if(LINKREF_ATTR(ai) && ai != ATTRID_PARENT) {
-					CoreObjs collmembers = self[ai + ATTRID_COLLECTION].CachedColl();
-					ITERATE_THROUGH(collmembers) {
-						SingleObjTreeUnLock(ITER);
-					}
-				}
-			}
-	} MGACOLL_ITERATE_END;
-	self[ATTRID_LOCK] = LOCKING_NONE;
-}
-
-
 HRESULT FCO::Close () {
 	COMTRY {
-		SingleObjTreeUnLock(self);
-	} COMCATCH(;) 
+		self[ATTRID_LOCK] = LOCKING_NONE;	} COMCATCH(;) 
 }
-
-
-
 
 FCOPtr::FCOPtr(FCOPtr const &o) {
 	p = o.p;
