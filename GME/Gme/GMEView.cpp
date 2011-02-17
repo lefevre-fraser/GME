@@ -3775,9 +3775,11 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 			}
 	*/
 		}
-		catch(hresult_exception e) {
+		catch (hresult_exception& e) {
 			AbortTransaction(e.hr);
-//			AfxMessageBox("Unable to insert objects",MB_ICONSTOP | MB_OK);	// in most cases there was an error msg already...
+			_bstr_t err;
+			GetErrorInfo(e.hr, err.GetAddress());
+			AfxMessageBox((std::string("Unable to insert objects: ") + static_cast<const char*>(err)).c_str(), MB_ICONSTOP | MB_OK); // in most cases there was an error msg already...
 			newObjectIDs.RemoveAll();
 		}
 		return false;
@@ -3826,9 +3828,11 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 				return false;
 			}
 		}
-		catch(hresult_exception e) {
+		catch(hresult_exception& e) {
 			AbortTransaction(e.hr);
-			AfxMessageBox("Unable to insert objects",MB_ICONSTOP | MB_OK);
+			_bstr_t err;
+			GetErrorInfo(e.hr, err.GetAddress());
+			AfxMessageBox((std::string("Unable to insert objects: ") + static_cast<const char*>(err)).c_str(), MB_ICONSTOP | MB_OK);
 			CGMEEventLogger::LogGMEEvent("    Unable to insert objects.\r\n");
 			newObjectIDs.RemoveAll();
             Reset(true); //BGY
