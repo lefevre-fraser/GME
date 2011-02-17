@@ -88,6 +88,9 @@ bool CMgaContext::CommitTransaction()
 
 bool CMgaContext::AbortTransaction()
 {
+	if(m_bEventTransactionMode)
+		return true;
+
 	if(m_nPendingTransactions==0)
 		return false;
 

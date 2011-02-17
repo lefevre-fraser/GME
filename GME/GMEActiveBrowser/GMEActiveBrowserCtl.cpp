@@ -179,13 +179,13 @@ STDMETHODIMP CGMEActiveBrowserCtrl::XEventSink::GlobalEvent(globalevent_enum eve
 	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 
 	// Stopping transaction handling
-	pMgaContext->SetEventTransactionMode(TRUE);
+	pMgaContext->SetEventTransactionMode(true);
 
 	// Forwarding MGA messages to the control
-	pThis->OnMgaGlobalEvent( event);
+	pThis->OnMgaGlobalEvent(event);
 
 	// Starting transaction handling
-	pMgaContext->SetEventTransactionMode(FALSE);
+	pMgaContext->SetEventTransactionMode(false);
 	return S_OK;
 }
 
