@@ -83,9 +83,10 @@ BOOL CAspectSyncDlg::OnInitDialog()
 
 		nItem = m_dstAspectList.InsertItem(aspectCount++, metaAspect->name);
 		m_dstAspectList.SetItemData(nItem, (DWORD)metaAspect);
-
-		if (m_dstAspects.Find(metaAspect)) {
+		if (m_srcAspect != metaAspect) {
 			m_dstAspectList.SetItemState(nItem, LVIS_SELECTED, LVIS_SELECTED);
+		} else {
+			m_dstAspectList.SetItemState(nItem, LVIS_SELECTED, 0);
 		}
 	}
 
