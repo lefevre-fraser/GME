@@ -32,7 +32,7 @@ HRESULT CMgaMetaBase::PutMetaRef(metaref_type p)
 
 void CMgaMetaBase::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 
 	me.Load();
 	metaref_type metaref = me.GetLongValue(ATTRID_METAREF);

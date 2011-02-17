@@ -113,7 +113,7 @@ STDAPI DllUnregisterServer(void)
 
 void TraverseObject(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	me.Load();
@@ -187,7 +187,7 @@ void TraverseObject(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 
 void TraverseCollection(CMgaMetaProject *metaproject, CCoreObjectPtr &me, attrid_type attrid)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	coreobjects_type coreobjects;

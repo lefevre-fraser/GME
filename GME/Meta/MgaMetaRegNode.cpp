@@ -147,7 +147,7 @@ STDMETHODIMP CMgaMetaRegNode::Delete()
 
 void CMgaMetaRegNode::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	TraverseCollection(metaproject, me, ATTRID_REGNODES_COLL);

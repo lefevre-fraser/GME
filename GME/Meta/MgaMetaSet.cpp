@@ -29,7 +29,7 @@ STDMETHODIMP CMgaMetaSet::CheckPath(BSTR path, VARIANT_BOOL *p)
 
 void CMgaMetaSet::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaFCO::Traverse(metaproject, me);

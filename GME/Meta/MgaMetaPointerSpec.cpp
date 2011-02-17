@@ -28,7 +28,7 @@ STDMETHODIMP CMgaMetaPointerSpec::get_Parent(IDispatch **p)
 
 void CMgaMetaPointerSpec::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	TraverseCollection(metaproject, me, ATTRID_PTRITEMS_COLL);

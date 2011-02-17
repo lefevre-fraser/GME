@@ -69,7 +69,7 @@ STDMETHODIMP CMgaMetaConnection::CreateJoint(IMgaMetaConnJoint **p)
 
 void CMgaMetaConnection::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaFCO::Traverse(metaproject, me);

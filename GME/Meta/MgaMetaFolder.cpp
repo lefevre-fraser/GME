@@ -126,7 +126,7 @@ STDMETHODIMP CMgaMetaFolder::get_DefinedAttributeByName(BSTR name,
 
 void CMgaMetaFolder::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaBase::Traverse(metaproject, me);

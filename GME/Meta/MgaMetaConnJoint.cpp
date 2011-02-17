@@ -9,7 +9,7 @@
 
 void CMgaMetaConnJoint::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	TraverseCollection(metaproject, me, ATTRID_PTRSPECS_COLL);

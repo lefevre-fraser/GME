@@ -78,7 +78,7 @@ STDMETHODIMP CMgaMetaPart::put_IsLinked(VARIANT_BOOL p)
 
 void CMgaMetaPart::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaBase::Traverse(metaproject, me);

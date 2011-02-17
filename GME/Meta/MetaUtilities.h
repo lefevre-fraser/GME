@@ -377,7 +377,7 @@ HRESULT ComDefineBase(CMgaMetaBase *me, metaid_type metaid, attrid_type pointer,
 	ASSERT( me != NULL );
 
 	CMgaMetaProject *metaproject = me->metaproject;
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 
 	COMTRY
 	{
@@ -403,7 +403,7 @@ HRESULT ComAddLink(CMgaMetaBase *me, metaid_type metaid,
 	ASSERT( me != NULL );
 
 	CMgaMetaProject *metaproject = me->metaproject;
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 
 	COMTRY
 	{

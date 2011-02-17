@@ -327,7 +327,7 @@ STDMETHODIMP CMgaMetaModel::CreateRole(IMgaMetaFCO *kind, IMgaMetaRole **p)
 
 void CMgaMetaModel::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaFCO::Traverse(metaproject, me);

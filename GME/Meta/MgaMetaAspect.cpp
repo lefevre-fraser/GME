@@ -38,7 +38,7 @@ STDMETHODIMP CMgaMetaAspect::CreatePart(IMgaMetaRole *role, IMgaMetaPart **p)
 
 void CMgaMetaAspect::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaBase::Traverse(metaproject, me);

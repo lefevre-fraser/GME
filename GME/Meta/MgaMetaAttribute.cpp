@@ -87,7 +87,7 @@ STDMETHODIMP CMgaMetaAttribute::get_Viewable(VARIANT_BOOL *p)
 
 void CMgaMetaAttribute::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
-	ASSERT( metaprojectref != NULL );
+	ASSERT( metaproject != NULL );
 	ASSERT( me != NULL );
 
 	CMgaMetaBase::Traverse(metaproject, me);
