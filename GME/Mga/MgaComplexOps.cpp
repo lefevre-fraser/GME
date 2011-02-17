@@ -1044,6 +1044,8 @@ HRESULT FCO::CopyFCOs(IMgaFCOs *copylist, IMgaMetaRoles *rlist,IMgaFCOs **objs) 
 
 		std::vector<CoreObj> nobjs(cnt);
 		MGACOLL_ITERATE(IMgaFCO, copylist) {
+			long relId;
+			COMTHROW(MGACOLL_ITER->get_RelID(&relId)); // GME-335:essentially CheckRead
 			CoreObj oldobj = CoreObj(MGACOLL_ITER);
 			ObjForCore(oldobj)->SelfMark(OBJEVENT_COPIED);
 			int derdist = GetRealSubtypeDist(oldobj);
