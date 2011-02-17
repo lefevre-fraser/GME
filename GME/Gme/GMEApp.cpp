@@ -202,7 +202,10 @@ bool CheckInterfaceVersions()	{
 			CComPtr<IUnknown> unk;
 			CString ee;
 			if(S_OK != (hr = unk.CoCreateInstance(*p))) {
-				errstring.Format("Cannot create object %%S (Err: #%X)", hr);
+				{
+					_com_error error(hr);
+					errstring.Format("Cannot create object %%S (Err: #%X, %s)", hr, error.ErrorMessage());
+				}
 gerr:
 				CString a;
 				a.Format(errstring, *p, verid/0x1000, verid%0x1000, GMEInterfaceVersion_Current/0x1000,GMEInterfaceVersion_Current%0x1000);
@@ -1423,9 +1426,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 					// PETER: Create new MgaProject COM object (workaround MGA addon bug)
 					mgaProject.Release();
 					COMTHROW( mgaProject.CoCreateInstance(OLESTR("Mga.MgaProject")) );
-					#pragma warning(disable: 4310) // cast truncates constant value
 					COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
-					#pragma warning(default: 4310) // cast truncates constant value
 					
 					HRESULT hr = mgaProject->OpenEx(PutInBstr(conn), pname, g2);
 					if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
@@ -2730,11 +2731,12 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 					conn.Empty();
 					HRESULT h2 = reg->QueryParadigm(paradigm, PutOut(conn), &pg2, REGACCESS_PRIORITY);
 					char buf[300];
-					if(h2 != S_OK) {
+					if (h2 != S_OK) {
 						ASSERT(h1 != S_OK);
-						CString msg = "Could not find paradigm paradigm '" + CString(paradigm) + "'\n" 
-								" (Eg.: In GME3 the MetaGME2000 paradigm was renamed to MetaGME)\n"
-								"Do you want to import with an other registered paradigm ?";
+						CString msg = "Could not find paradigm paradigm '" + CString(paradigm);
+						if (CString(paradigm) == "MetaGME2000")
+							msg += "'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)";
+						msg += "\nDo you want to import with an other registered paradigm ?";
 						if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
 							CComObjPtr<IMgaLauncher> launcher;
 							COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
@@ -2765,28 +2767,25 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 						if(h1 != S_OK) {
 							sprintf(buf, "Could not locate paradigm %s\nVersion ID: %s\n"
 										 "Do you want to upgrade to the current version instead?\nCurrent ID: %s", 
-										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
-										 if(AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
-											parguid = pg2;
-										 }
-										 else {
-											AfxMessageBox("Import canceled");
-											return; // safe before create
-										 }	
-
+							PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
+							if (AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
+								parguid = pg2;
+							} else {
+								AfxMessageBox("Import canceled");
+								return; // safe before create
+							}	
 						}
 						else if(parguid1.Compare(parguid2)) {
 							sprintf(buf, "This model was exported using paradigm %s\nVersion ID: %s\n"
 										 "Do you want to upgrade to the current version?\nCurrent ID: %s", 
 										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
-										 int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
-										 if(answer == IDYES) {
-											parguid = pg2;
-										 }
-										 else if(answer == IDCANCEL) {
-											AfxMessageBox("Import canceled");
-											return;  // safe before create
-										 }
+							int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
+							if (answer == IDYES) {
+								parguid = pg2;
+							} else if (answer == IDCANCEL) {
+								AfxMessageBox("Import canceled");
+								return;  // safe before create
+							}
 						}
 					}
 				}
