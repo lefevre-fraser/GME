@@ -1,8 +1,8 @@
 #include "GMEVersion.h"
 
               Generic Modeling Environment
-                 GME v10 GME_VERSION_ID
-       Copyright © 2000-2010 Vanderbilt University
+                 GME v11 GME_VERSION_ID
+       Copyright © 2000-2011 Vanderbilt University
 
 
 ************************************************
