@@ -2225,6 +2225,14 @@ STDMETHODIMP CMgaRegistrar::Disassociate(BSTR progid, BSTR paradigm, regaccessmo
 		if(mode & RM_USER) {		
 			CRegKey comp;
 			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg + "\\Components\\" + pname);
+			if (res == ERROR_FILE_NOT_FOUND) {
+				CRegKey comp1, mga;
+				res = comp1.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Components\\" + pname, KEY_READ);
+				if(!res) res = mga.Create(HKEY_CURRENT_USER, rootreg);
+				CRegKey comps;
+				if(!res) res = ( comps.Create(mga, "Components") );
+				if(!res) res = ( comp.Create(comps, pname) );
+			}
 			CRegKey assocs;
 			if(!res) res = assocs.Open(comp, "Associated");
 			if (res == ERROR_FILE_NOT_FOUND) 
