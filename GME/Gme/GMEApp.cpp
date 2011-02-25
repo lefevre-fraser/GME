@@ -1701,7 +1701,6 @@ void CGMEApp::OnFileOpen()
 		CloseProject();
 
 	if (conn.Left(4) == "XML=") {
-		//wer
 		MSGTRY {
 			CString fullPath = conn.Right(conn.GetLength() - 4);
 			TCHAR buffer[MAX_PATH];
@@ -1710,12 +1709,26 @@ void CGMEApp::OnFileOpen()
 			if (filepart == NULL) {
 				COMTHROW(E_FILEOPEN);
 			}
-			CString fname = conn.Right(conn.ReverseFind('\\'));
 			CString filename = filepart;
 			CString title = filename.Left(filename.ReverseFind('.'));
 			Importxml(fullPath, filepart, title);
-		} MSGCATCH("Error opening XML file",;)
+		} MSGCATCH("Error opening XME file",;)
 	} else {
+		if (conn.Left(4) == "MGX=") {
+			CString fullPath = conn.Right(conn.GetLength() - 4);
+			TCHAR buffer[MAX_PATH];
+			TCHAR* filepart = NULL;
+			GetFullPathName(fullPath, MAX_PATH, buffer, &filepart);
+			if (filepart == NULL) {
+				DisplayError("Error opening MGX file", E_FILEOPEN);
+				return;
+			}
+			// FIXME: KMS: yes, the quotes are necessary...
+			conn = "MGX=\"";
+			// FIXME: KMS: yes, a trailing slash makes it not work
+			conn += fullPath.Left(fullPath.GetLength() - strlen(filepart) - 1);
+			conn += "\"";
+		}
 		OpenProject(conn);
 	}
 
@@ -1748,6 +1761,13 @@ BOOL CGMEApp::SaveAllModified()
 int CGMEApp::ExitInstance() 
 {
 	CloseProject(false);
+
+#ifdef _DEBUG
+	// Do this under Debug to silence memory leaks
+	// Don't do it under Release, since we may yet crash, and it's wasteful since we're exiting anyway
+	crUninstall();
+#endif
+
 	return CWinAppEx::ExitInstance();
 }
 

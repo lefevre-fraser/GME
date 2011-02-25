@@ -85,21 +85,15 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 }
 
 static char mgafilter[] = "MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
-	"Microsoft Access Files (*.mdb)|*.mdb|All files (*.*)|*.*||";
+	"All files (*.*)|*.*||";
 
-static char xmemgafilter[] = "GME Model Files (*.mga;*.xme)|*.mga; *.xme|MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
-	"Microsoft Access Files (*.mdb)|*.mdb|All files (*.*)|*.*||";
-
-/*static char mgafilter[] = "MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
-	"Microsoft Access Files (*.mdb)|*.mdb||";*/
-
-/*static char mgafilter[] = "MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
-	"Microsoft Access Files (*.mdb)|*.mdb|MGX Files (*.mgx)|*.mgx||";*/
+static char xmemgafilter[] = "GME Model Files (*.mga;*.xme;*.mgx)|*.mga; *.xme; *.mgx|MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
+	"Multi-user files (*.mgx)|*.mgx|All files (*.*)|*.*||";
 
 static char mgaonlyfilter[] = "MGA Files (*.mga)|*.mga||";
 
 static char metafilter[] = "MGA Meta Files (*.mta)|*.mta|XML Paradigm Files (*.xmp)|*.xmp|"
-	"Microsoft Access Files (*.mdb)|*.mdb|All files (*.*)|*.*||";
+	"All files (*.*)|*.*||";
 
 
 CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
@@ -162,7 +156,7 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 
 	try
 	{
-		if( DoModal() == IDOK && !pressed_back )
+		if( (allowXme && (m_radio = 1)) || (DoModal() == IDOK && !pressed_back) )
 		{
 			if( m_radio == 0 || m_radio == 2)
 			{
