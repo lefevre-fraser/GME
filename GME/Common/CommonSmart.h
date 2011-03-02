@@ -149,6 +149,7 @@ public:
 	CComBstrObj() : p(NULL) { }
 	CComBstrObj(LPCOLESTR q) { p = SysAllocString(q); }
 	CComBstrObj(const CComBstrObj &q) : p(NULL) { if(q.p) { p = SysAllocStringLen(q, q.Length()); } }
+	CComBstrObj(CComBstrObj &&q) { p = q.p; q.p = NULL; }
 	~CComBstrObj() { if(p) SysFreeString(p); }
 
 	const CComBstrObj &operator=(const CComBstrObj &q) { if(p) SysFreeString(p);
