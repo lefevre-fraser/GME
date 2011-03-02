@@ -61,11 +61,11 @@ class membuf
 class CCoreBinFile;
 
 // --------------------------- BinAttr
-
-class BinAttrBase
+class __declspec(novtable) BinAttrBase
 {
 public:
 	BinAttrBase() : attrid(ATTRID_NONE) { }
+	BinAttrBase(attrid_type attrid) : attrid(attrid) { }
 	virtual ~BinAttrBase() { }
 
 	attrid_type attrid;
@@ -83,6 +83,7 @@ class BinAttrUnion : public BinAttrBase
 {
 public:
 	BinAttrUnion() { }
+	explicit BinAttrUnion(attrid_type attrid) : BinAttrBase(attrid) { }
 	virtual ~BinAttrUnion() { }
 
 	virtual valtype_type GetValType() const NOTHROW { DebugBreak(); return 0; }
@@ -103,9 +104,6 @@ public:
 		return *this;
 	}
 	BinAttrUnion(const BinAttrUnion& that) {
-		// FIXME
-	}
-	BinAttrUnion& operator=(const BinAttrUnion&& that) {
 		// FIXME
 	}
 	// BinAttrUnion is guaranteed to have enough space to contain any BinAttr<*>

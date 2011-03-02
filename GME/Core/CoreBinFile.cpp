@@ -116,13 +116,17 @@ void BinObject::CreateGuidAttributes( CCoreBinFile* p_bf)
 	getMeAGuid( &l1.lVal, &l2.lVal, &l3.lVal, &l4.lVal);
 
 	// create BinAttrs of LONG type
-	BinAttrUnion binattr1space; 
+	binattrs.emplace_back(ATTRID_NONE);
+	BinAttrUnion& binattr1space = binattrs.back(); 
 	BinAttrBase* binattr1 = BinAttrBase::Create(binattr1space, VALTYPE_LONG);
-	BinAttrUnion binattr2space;
+	binattrs.emplace_back(ATTRID_NONE);
+	BinAttrUnion& binattr2space = binattrs.back(); 
 	BinAttrBase* binattr2 = BinAttrBase::Create(binattr2space, VALTYPE_LONG);
-	BinAttrUnion binattr3space;
+	binattrs.emplace_back(ATTRID_NONE);
+	BinAttrUnion& binattr3space = binattrs.back(); 
 	BinAttrBase* binattr3 = BinAttrBase::Create(binattr3space, VALTYPE_LONG);
-	BinAttrUnion binattr4space;
+	binattrs.emplace_back(ATTRID_NONE);
+	BinAttrUnion& binattr4space = binattrs.back(); 
 	BinAttrBase* binattr4 = BinAttrBase::Create(binattr4space, VALTYPE_LONG);
 
 
@@ -138,13 +142,6 @@ void BinObject::CreateGuidAttributes( CCoreBinFile* p_bf)
 	binattr3->Set( p_bf, l3);
 	binattr4->Set( p_bf, l4);
 
-	// insert the objects into the container
-	// these objects will be destructed later 
-	// by BinObject::DestroyAttributes
-	binattrs.push_back(std::move(binattr1space));
-	binattrs.push_back(std::move(binattr1space));
-	binattrs.push_back(std::move(binattr1space));
-	binattrs.push_back(std::move(binattr1space));
 }
 
 // this method will create a status attribute for mga objects
@@ -152,7 +149,8 @@ void BinObject::CreateGuidAttributes( CCoreBinFile* p_bf)
 void BinObject::CreateStatusAttribute( CCoreBinFile* p_bf)
 {
 	// create BinAttr of LONG type
-	BinAttrUnion binattrspace;
+	binattrs.emplace_back(ATTRID_NONE);
+	BinAttrUnion& binattrspace = binattrs.back(); 
 	BinAttrBase* binattr = BinAttrBase::Create(binattrspace, VALTYPE_LONG);
 
 	// fill the only public field
@@ -160,11 +158,6 @@ void BinObject::CreateStatusAttribute( CCoreBinFile* p_bf)
 
 	// set the value
 	binattr->Set( p_bf, CComVariant( 0L));
-
-	// insert the objects into the container
-	// these objects will be destructed later 
-	// by BinObject::DestroyAttributes
-	binattrs.push_back(std::move(binattrspace));
 }
 
 void BinObject::CreateAttributes(ICoreMetaObject *metaobject)
@@ -192,14 +185,13 @@ void BinObject::CreateAttributes(ICoreMetaObject *metaobject)
 		attrid_type attrid = ATTRID_NONE;
 		COMTHROW( (*i)->get_AttrID(&attrid) );
 
-		BinAttrUnion binattrspace;
+		binattrs.emplace_back(ATTRID_NONE);
+		BinAttrUnion& binattrspace = binattrs.back(); 
 		BinAttrBase *binattr = BinAttrBase::Create(binattrspace, valtype);
 		BinAttrBase::Create(binattrspace, valtype);
 
 		ASSERT( attrid != ATTRID_NONE );
 		binattr->attrid = attrid;
-
-		binattrs.push_back(std::move(binattrspace));
 
 		++i;
 	}
@@ -279,7 +271,8 @@ void BinObject::Read(CCoreBinFile *binfile)
 		if( valtype == VALTYPE_NONE )
 			break;
 
-		BinAttrUnion binattrspace;
+		binattrs.emplace_back(ATTRID_NONE);
+		BinAttrUnion& binattrspace = binattrs.back();
 		BinAttrBase *binattr = BinAttrBase::Create(binattrspace, valtype);
 		ASSERT( binattr != NULL );
 
@@ -291,9 +284,6 @@ void BinObject::Read(CCoreBinFile *binfile)
 
 		// Possible pitfall: binattr == &binattrspace. It is possible the compiler will figure this out, and call BinAttrUnion::Read() (which we don't want)
 		binattr->Read(binfile);
-
-		// TODO: this move could be avoided
-		binattrs.push_back(std::move(binattrspace));
 	}
 	ASSERT(binattrs.size() == num_attrs);
 };
