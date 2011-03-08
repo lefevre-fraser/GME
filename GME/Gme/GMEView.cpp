@@ -5,6 +5,7 @@
 #include "GMEApp.h"
 #include <math.h>
 #include <algorithm>
+#include <new>
 #include "GMEstd.h"
 
 #include "GuiMeta.h"
@@ -66,12 +67,6 @@ int setZoomPercents[GME_ZOOM_LEVEL_NUM] = {
 //#define CONSIDER_ONLY_FIRST_ACTIVATE
 #endif
 
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CViewDriver
@@ -834,11 +829,16 @@ void CGMEView::OnDraw(CDC* pDC)
 		pos = children.GetHeadPosition();
 		while (pos) {
 			CGuiFco* fco = children.GetNext(pos);
-			ASSERT(fco != NULL);
+                  ASSERT(fco != NULL);
 			if (fco->IsVisible()) {
 				CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
-				if (!conn)
+				if (!conn) {
+					// GME-339: Gdiplus::Graphics may modify pDC (e.g. SetViewportOrgEx) when a new-style decorator runs
+					// a modified pDC makes old-style (i.e. no DrawEx) decorators render incorrectly (e.g. when the scrollbar is scrolled)
+					gdip.~Graphics();
+					::new ((void*)&gdip) Gdiplus::Graphics(pDC->m_hDC);
 					fco->Draw(pDC->m_hDC, &gdip);
+				}
 			}
 		}
 		DrawConnections(pDC->m_hDC, &gdip);
