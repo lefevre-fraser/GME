@@ -55,7 +55,7 @@ void RawComponent::loadJavaVM()
     sprintf( memory, "" );
     RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", 0, KEY_EXECUTE, &regkey);
     type = REG_SZ;
-    bufSize = 100;
+    bufSize = sizeof(memory) / sizeof(memory[0]);
     RegQueryValueEx(regkey, "JavaMemory", NULL, &type, (LPBYTE)memory, &bufSize );
     RegCloseKey(regkey);
 
@@ -116,20 +116,42 @@ void RawComponent::loadJavaVM()
     jsize           machineNum;
     jsize           buflen = 1;
     JavaVMInitArgs  args;
-    JavaVMOption    options[2];
+    JavaVMOption    options[5];
+	args.nOptions = 0;
 
-    sprintf(buf, "-Djava.class.path=%s", classPath);
-	options[0].optionString = buf;
+	std::string libraryPathStr;
+	std::string classPathStr = std::string("-Djava.class.path=") + classPath;
+	{
+		char gme_root[MAX_PATH];
+		size_t gme_root_size;
+		if (getenv_s(&gme_root_size, gme_root, "GME_ROOT") == 0) {
+			classPathStr += std::string(";") + gme_root + "\\SDK\\java\\gme.jar";
+
+			libraryPathStr = "-Djava.library.path";
+			libraryPathStr += std::string("=") + gme_root + "\\bin";
+			libraryPathStr += std::string(";") + gme_root + "\\SDK\\java\\native\\Jaut\\Release";
+			libraryPathStr += std::string(";") + gme_root + "\\SDK\\java\\native\\Jaut\\Debug";
+			options[args.nOptions].optionString = const_cast<char*>(libraryPathStr.c_str());
+			args.nOptions++;
+		}
+	}
+	options[args.nOptions].optionString = const_cast<char*>(classPathStr.c_str());
+	args.nOptions++;
 
     args.version = JNI_VERSION_1_2;
     if( strlen(memory) > 0 )
     {
-        args.nOptions = 2;
         sprintf(memory_buf, "-Xmx%s", memory);
-	    options[1].optionString = memory_buf;
+        options[args.nOptions].optionString = memory_buf;
+        args.nOptions++;
     }
-    else
-        args.nOptions = 1;
+
+	// Remote debugger support
+	// TODO: read from reg key
+	// options[args.nOptions].optionString = "-Xdebug";
+	// args.nOptions++;
+	// options[args.nOptions].optionString = "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000";
+	// args.nOptions++;
 
     args.options = options;
 	args.ignoreUnrecognized = JNI_FALSE;
@@ -245,7 +267,8 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 				if (throwableClass == NULL) {
 					throw; /* class not found */
 				}
-				jmethodID msgMethod = m_env->GetMethodID(throwableClass,"getMessage","()Ljava/lang/String;");
+                        //jmethodID msgMethod = m_env->GetMethodID(throwableClass,"getMessage","()Ljava/lang/String;");
+                        jmethodID msgMethod = m_env->GetMethodID(throwableClass,"toString","()Ljava/lang/String;");
 				if (msgMethod == NULL) {
 					throw; /* method not found */
 				}
