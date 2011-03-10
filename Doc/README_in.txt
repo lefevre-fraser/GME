@@ -14,7 +14,7 @@ You must uninstall GME versions prior to version
 
 Every new release of GME may introduce changes to its
 COM interfaces and to the Builder Object Network (C++ 
-interpreter framework). Therefore, it is essential to
+interpreter framework). Therefore, it is recommended to
 update the source code of all user implemented interpreters, 
 to recompile and to re-register these interpreters after
 upgrading GME.
@@ -27,6 +27,21 @@ guaranteed.
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Release r11.0.539
+----------------------------------
+  - Binary compatibility with r10.8.18
+  - Changes in the COM type libraries may require changes to compile existing interpreters:
+    - Type libraries have been renamed:
+      - METALib to MGAMetaLib
+      - CORELib to MGACoreLib
+      - UTILLib to MGAUtilLib
+    - IMgaVersionInfo was renamed to IGMEVersionInfo, and moved to MGACoreLib
+    - IMgaDecoratorCommon::DrawEx parameters were changed to ULONG and ULONGLONG
+  - Fixed bug with disabling components in User mode when they are enabled in System mode (GME-320)
+  - Fixed bug with in Set Mode where unselected Atoms and Models didn't have a name label (GME-305)
+  - Installer includes registry entries for more IMga COM interfaces, which fixes "No such interface" errors under Java and other non-STA code (GME-257)
+  - Other bugfixes. See http://escher.isis.vanderbilt.edu/JIRA/browse/GME
 
 Release Notes of Release r10.10.10
 ----------------------------------
