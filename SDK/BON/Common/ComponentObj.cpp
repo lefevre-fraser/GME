@@ -715,8 +715,6 @@ STDMETHODIMP COMCLASS::InvokeEx( IMgaProject *gme,  IMgaFCO *currentobj,  IMgaFC
 		#endif
 	}
 	} COMCATCH(;)
-
-	return S_OK;
 }
 
 STDMETHODIMP COMCLASS::ObjectsInvokeEx( IMgaProject *gme,  IMgaObject *currentobj,  IMgaObjects *selectedobjs,  long param)
