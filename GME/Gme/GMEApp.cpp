@@ -1348,12 +1348,14 @@ void CGMEApp::OpenProject(const CString &conn) {
 					if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {
 						guidpar = true;
 						tryit = true;
+						newparname = parn;
 					}
 				}
 				if(hr == E_MGA_PARADIGM_NOTREG) {
-					msg = "WARNING: Project could not access its paradigm '" + CString(parn) + "'\n" 
-						" (Eg.: In GME3 the MetaGME2000 paradigm was renamed to MetaGME)\n"
-						"Do you want to open it with an other registered paradigm ?";
+					CString msg = "Could not find paradigm paradigm '" + CString(parn);
+					if (CString(parn) == "MetaGME2000")
+						msg += "'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)";
+					msg += "\nDo you want to import with an other registered paradigm ?";
 					if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {
 					
 						CComObjPtr<IMgaLauncher> launcher;
@@ -2046,9 +2048,10 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 					char buf[300];
 					if(h2 != S_OK) {
 						ASSERT(h1 != S_OK);
-						CString msg = "Could not find paradigm paradigm '" + CString(paradigm) + "'\n" 
-								" (Eg.: In GME3 the MetaGME2000 paradigm was renamed to MetaGME)\n"
-								"Do you want to import with an other registered paradigm ?";
+						CString msg = "Could not find paradigm paradigm '" + CString(paradigm);
+						if (CString(paradigm) == "MetaGME2000")
+							msg += "'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)";
+						msg += "\nDo you want to import with an other registered paradigm ?";
 						if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
 							CComObjPtr<IMgaLauncher> launcher;
 							COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
