@@ -782,11 +782,11 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 							if (supportErrorInfo && GetErrorInfo(&desc)) {
 								CString msg;
 								CopyTo(desc, msg);
-								msg = "Component error: " + msg;
+								msg = "Interpreter returned error: " + msg;
 								AfxMessageBox(msg, MB_OK | MB_ICONSTOP);
 								SysFreeString(desc);
 							} else {
-								DisplayError("Component error", hr);
+								DisplayError("Interpreter returned error", hr);
 							}
 							project->AbortTransaction();
 						}
@@ -809,7 +809,7 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					}
 					catch(hresult_exception &e)	{
 						project->AbortTransaction();
-						DisplayError("Component error", e.hr);
+						DisplayError("Interpreter returned error", e.hr);
 					}
 					catch(...)
 					{
@@ -843,7 +843,7 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					}
 				}
 				catch(hresult_exception &e)	{
-					DisplayError("Component error", e.hr);
+					DisplayError("Interpreter returned error", e.hr);
 				}
 			}				
 		}
