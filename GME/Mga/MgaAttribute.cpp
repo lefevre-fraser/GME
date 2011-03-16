@@ -839,7 +839,7 @@ STDMETHODIMP CMgaRegNode::get_ParentNode(IMgaRegNode **pVal) {
 			fco->CheckRead();
 			CHECK_OUTPTRPAR(pVal);
       
-			BSTR p = wcsrchr(mypath, '/');
+			BSTR p = wcsrchr(mypath, L'/');
 			if(p) {
 				CComBSTR xpath;
 				xpath.Attach(::SysAllocStringLen(mypath,p-mypath));
