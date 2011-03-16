@@ -2311,8 +2311,9 @@ STDMETHODIMP CMgaRegistrar::RegisterComponentLibrary(BSTR path, regaccessmode_en
 	COMTRY
 	{
 		HMODULE hModule = LoadLibrary(CString(path));
-		if( hModule == 0 )
-			HR_THROW(E_FAIL);
+		if( hModule == 0 ) {
+			HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
+		}
 
 		CTLREGPROC DLLRegisterServer =
 			(CTLREGPROC)::GetProcAddress(hModule,"DllRegisterServer" );
