@@ -64,8 +64,6 @@ protected:
 	void OnEditCopyClosure();
 	void OnEditCopySmart();
 	void OnEditCut();
-	void OnEditRedo();
-	void OnEditUndo();
 	void OnCustomItems(UINT nID);
 	BOOL DispatchCommand(UINT nSelectedID);
 private:

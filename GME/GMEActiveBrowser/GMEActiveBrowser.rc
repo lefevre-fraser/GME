@@ -13,13 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -103,7 +101,7 @@ IDB_IMAGELIST_AGGREGATE_STATE BITMAP                  "StateIco.bmp"
 // Dialog
 //
 
-IDD_PROPPAGE_GMEACTIVEBROWSER DIALOG  0, 0, 250, 62
+IDD_PROPPAGE_GMEACTIVEBROWSER DIALOG 0, 0, 250, 62
 STYLE DS_SETFONT | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -192,7 +190,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_PROPPAGE_GMEACTIVEBROWSER, DIALOG
     BEGIN
@@ -265,16 +263,13 @@ IDR_GMEACTIVEBROWSER    REGISTRY                "GMEActiveBrowser.rgs"
 // Menu
 //
 
-CG_IDR_POPUP_AGGREGATE_PROPERTY_PAGE_MULTIPLE_ITEMS MENU 
+CG_IDR_POPUP_AGGREGATE_PROPERTY_PAGE_MULTIPLE_ITEMS MENU
 BEGIN
     POPUP "_POPUP_"
     BEGIN
         MENUITEM "&Properties",                 ID_POPUP_PROPERTIES
         MENUITEM "&Attributes",                 ID_POPUP_ATTRIBUTES
         MENUITEM "Pr&eferences",                ID_POPUP_PREFERENCES
-        MENUITEM SEPARATOR
-        MENUITEM "&Undo",                       ID_POPUP_EDIT_UNDO
-        MENUITEM "&Redo",                       ID_POPUP_EDIT_REDO
         MENUITEM SEPARATOR
         MENUITEM "&Copy",                       ID_EDIT_COPY
         MENUITEM "C&opy Closure",               ID_EDIT_COPYCLOSURE
@@ -292,7 +287,7 @@ BEGIN
     END
 END
 
-CG_IDR_POPUP_AGGREGATE_PROPERTY_PAGE_GENERAL MENU 
+CG_IDR_POPUP_AGGREGATE_PROPERTY_PAGE_GENERAL MENU
 BEGIN
     POPUP "_POPUP_"
     BEGIN
@@ -301,12 +296,6 @@ BEGIN
             MENUITEM "&Name",                       ID_POPUP_SORT_NAME
             MENUITEM "&Type",                       ID_POPUP_SORT_TYPE
             MENUITEM "&Creation",                   ID_POPUP_SORT_CREATION
-        END
-        MENUITEM SEPARATOR
-        POPUP "&Edit"
-        BEGIN
-            MENUITEM "&Undo",                       ID_POPUP_EDIT_UNDO
-            MENUITEM "&Redo",                       ID_POPUP_EDIT_REDO
         END
         MENUITEM SEPARATOR
         POPUP "&Constraints"
@@ -318,7 +307,7 @@ BEGIN
     END
 END
 
-CG_IDR_POPUP_AGGREGATE_PROPERTY_PAGE_SINGLE_ITEM MENU 
+CG_IDR_POPUP_AGGREGATE_PROPERTY_PAGE_SINGLE_ITEM MENU
 BEGIN
     POPUP "_POPUP_"
     BEGIN
@@ -330,9 +319,6 @@ BEGIN
         MENUITEM "&Refresh Library...",         ID_POPUP_REFRESH_LIBRARY
         MENUITEM SEPARATOR
         MENUITEM "INSERTIONS",                  ID_POPUP_INSERTIONS
-        MENUITEM SEPARATOR
-        MENUITEM "&Undo",                       ID_POPUP_EDIT_UNDO
-        MENUITEM "&Redo",                       ID_POPUP_EDIT_REDO
         MENUITEM SEPARATOR
         MENUITEM "&Copy",                       ID_EDIT_COPY
         MENUITEM "C&opy Closure",               ID_EDIT_COPYCLOSURE
@@ -393,24 +379,24 @@ IDI_LIBRARY             ICON                    "Library.ico"
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_GMEACTIVEBROWSER    "GMEActiveBrowser Control"
     IDS_GMEACTIVEBROWSER_PPG "GMEActiveBrowser Property Page"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_GMEACTIVEBROWSER_PPG_CAPTION "General"
     IDS_PROPSHT_CAPTION     "PropertySheet"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "Model Browser"
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

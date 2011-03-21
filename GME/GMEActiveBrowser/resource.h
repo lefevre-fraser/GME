@@ -51,8 +51,6 @@
 #define ID_POPUP_SORT_CREATION          32772
 #define ID_POPUP_SORT_CONSTRAINTS_CHECKALL 32773
 #define ID_POPUP_DISPLAYOPTIONS         32774
-#define ID_POPUP_EDIT_UNDO              32776
-#define ID_POPUP_EDIT_REDO              32777
 #define ID_POPUP_EDIT_DELETE            32778
 #define ID_POPUP_PROPERTIES             32779
 #define ID_POPUP_ATTRIBUTES             32780

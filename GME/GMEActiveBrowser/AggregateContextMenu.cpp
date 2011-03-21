@@ -78,8 +78,6 @@ BOOL CAggregateContextMenu::DispatchCommand(UINT nSelectedID)
 	{
 		switch(nSelectedID)
 		{
-			case ID_POPUP_EDIT_UNDO:	OnEditUndo();break;
-			case ID_POPUP_EDIT_REDO:	OnEditRedo();break;
 			case ID_EDIT_CUT:			OnEditCut();break;
 			case ID_EDIT_COPY:			OnEditCopy();break;
 			case ID_EDIT_COPYCLOSURE:	OnEditCopyClosure();break;
@@ -235,36 +233,6 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 			}
 		}
 	}
-
-}
-
-void CAggregateContextMenu::OnEditUndo()
-{
-	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
-	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
-	
-	short nRedoSize,nUndoSize;
-	pMgaContext->m_ccpProject->UndoRedoSize(&nUndoSize,&nRedoSize);
-
-	if(nUndoSize>0)
-	{
-		COMTHROW(pMgaContext->m_ccpProject->Undo());
-	}
-}
-
-void CAggregateContextMenu::OnEditRedo()
-{
-	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
-	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
-	
-	short nRedoSize,nUndoSize;
-	pMgaContext->m_ccpProject->UndoRedoSize(&nUndoSize,&nRedoSize);
-
-	if(nRedoSize>0)
-	{
-		COMTHROW(pMgaContext->m_ccpProject->Redo());
-	}
-
 
 }
 
@@ -1083,16 +1051,6 @@ void CAggregateContextMenu::CreateForAll()
 	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;	
 	short nRedoSize,nUndoSize;
 	COMTHROW(pMgaContext->m_ccpProject->UndoRedoSize(&nUndoSize,&nRedoSize));
-
-	if(nUndoSize<=0)
-	{
-		EnableMenuItem(ID_POPUP_EDIT_UNDO,MF_GRAYED);
-	}
-
-	if(nRedoSize<=0)
-	{
-		EnableMenuItem(ID_POPUP_EDIT_REDO,MF_GRAYED);
-	}
 
 	// Check all constraint
 	CComPtr<IMgaComponentEx> constrMgr = pMgaContext->FindConstraintManager();
