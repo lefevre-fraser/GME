@@ -309,7 +309,7 @@ BEGIN
     CONTROL         "Enable short-circuit logical operators\nOperators (&&&&, ||, =>) can change the evaluation.",
                     BSEP_CHKSC_LOGICAL,"Button",BS_AUTOCHECKBOX | BS_TOP | 
                     BS_MULTILINE | WS_TABSTOP,15,15,169,20
-    CONTROL         "Enable short-circuit predefined iterators.\nIterators terminates immediatelly after result is available.",
+    CONTROL         "Enable short-circuit predefined iterators.\nIterators terminates immediately after result is available.",
                     BSEP_CHKSC_ITERATOR,"Button",BS_AUTOCHECKBOX | BS_TOP | 
                     BS_MULTILINE | WS_TABSTOP,15,37,188,20
     CONTROL         "Enable tracking (i.e. debuging) of evaluation.\nReporting exceptions, false values returned by features.",
