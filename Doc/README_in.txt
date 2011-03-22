@@ -31,7 +31,13 @@ guaranteed.
 Release Notes of Release r11.0.539
 ----------------------------------
   - Binary compatibility with r10.8.18
-  - Changes in the COM type libraries may require changes to compile existing interpreters:
+  - Changes in the SDK requires changes to existing interpreters:
+    - Change ComponentLib.idl properties to output Header File: $(InputName).h
+    - For Visual Studio 2010 projects: Add $(GME_ROOT)\SDK\BON\Common\GMEInterpreter.props to both Release and Debug configurations
+    - For Visual Studio 2008 projects:
+      - Add $(GME_ROOT)\Interfaces and $(GME_ROOT)\GME\Interfaces to C/C++>General>Additional Include Directories
+      - Add $(GME_ROOT)\bin and $(GME_ROOT)\GME\Release to MIDL>General>Additional Include Directories
+  - Changes in the COM type libraries may require changes to compile existing raw interpreters and decorators:
     - Type libraries have been renamed:
       - METALib to MGAMetaLib
       - CORELib to MGACoreLib
@@ -39,7 +45,7 @@ Release Notes of Release r11.0.539
     - IMgaVersionInfo was renamed to IGMEVersionInfo, and moved to MGACoreLib
     - IMgaDecoratorCommon::DrawEx parameters were changed to ULONG and ULONGLONG
   - Fixed bug with disabling components in User mode when they are enabled in System mode (GME-320)
-  - Fixed bug with in Set Mode where unselected Atoms and Models didn't have a name label (GME-305)
+  - Fixed bug in Set Mode where unselected Atoms and Models didn't have a name label (GME-305)
   - Installer includes registry entries for more IMga COM interfaces, which fixes "No such interface" errors under Java and other non-STA code (GME-257)
   - Other bugfixes. See http://escher.isis.vanderbilt.edu/JIRA/browse/GME
 
