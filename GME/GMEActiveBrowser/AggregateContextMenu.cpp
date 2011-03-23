@@ -641,6 +641,18 @@ void CAggregateContextMenu::CreateForSingleItem()
 
 	if(m_pParent->m_TreeAggregate.m_MgaMap.LookupObjectProxy(hItem,MgaObjectProxy))
 	{
+		{ // Remove Multi-user submenu if not an mgx
+		CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
+		CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
+		CComBSTR connStr;
+		if (SUCCEEDED(pMgaContext->m_ccpProject->get_ProjectConnStr(&connStr))) {
+			if (wmemcmp(L"MGX=", connStr.m_str, 4) != 0) {
+				GetSubMenu(0)->DeleteMenu(21, MF_BYPOSITION);
+			}
+		}
+		}
+
+		int insertionsSeparatorPosition = 6;
 		switch(MgaObjectProxy.m_TypeInfo)
 		{
 			case OBJTYPE_FOLDER:
@@ -684,8 +696,8 @@ void CAggregateContextMenu::CreateForSingleItem()
 				CMenu* pPopup=GetSubMenu(0);
 				if(m_InsertionMinID==m_InsertionMaxID)	 // There were no insertions
 				{										 // deleting INSERTIONS
-					pPopup->DeleteMenu(ID_POPUP_INSERTIONS,MF_BYCOMMAND); 
-					pPopup->DeleteMenu(7,MF_BYPOSITION); // deleting separator
+					pPopup->DeleteMenu(ID_POPUP_INSERTIONS,MF_BYCOMMAND);
+					pPopup->DeleteMenu(insertionsSeparatorPosition, MF_BYPOSITION); // deleting separator
 				}
 				else
 				{
@@ -708,7 +720,7 @@ void CAggregateContextMenu::CreateForSingleItem()
 					if(m_InsertionMinID==m_InsertionMaxID)
 					{	
 						pPopup->DeleteMenu(ID_POPUP_INSERTIONS,MF_BYCOMMAND); // deleting INSERTIONS
-						pPopup->DeleteMenu(7,MF_BYPOSITION); // deleting separator
+						pPopup->DeleteMenu(insertionsSeparatorPosition, MF_BYPOSITION); // deleting separator
 					}
 					else
 					{
@@ -718,26 +730,23 @@ void CAggregateContextMenu::CreateForSingleItem()
 
 					DeleteMenu( ID_POPUP_REFRESH_LIBRARY, MF_BYCOMMAND);
 					DeleteMenu( ID_POPUP_ATTACH_LIBRARY, MF_BYCOMMAND);
-					//EnableMenuItem(ID_POPUP_REFRESH_LIBRARY,MF_GRAYED);
-					//EnableMenuItem(ID_POPUP_ATTACH_LIBRARY,MF_GRAYED);
 
 				}break;
 
 			case OBJTYPE_REFERENCE:
 				{
 					InsertMenu( ID_POPUP_REFRESH_LIBRARY, MF_BYCOMMAND, ID_POPUP_FOLLOWREF, "&Follow Reference");
+					insertionsSeparatorPosition++;
 				}// no break here!
 			default:
 				{
 					// Delete "INSERTIONS" item plus one separator
 					CMenu* pPopup=GetSubMenu(0);
 					pPopup->DeleteMenu(ID_POPUP_INSERTIONS,MF_BYCOMMAND);
-					pPopup->DeleteMenu(7,MF_BYPOSITION);
+					pPopup->DeleteMenu(insertionsSeparatorPosition, MF_BYPOSITION);
 					
 					DeleteMenu( ID_POPUP_REFRESH_LIBRARY, MF_BYCOMMAND);
 					DeleteMenu( ID_POPUP_ATTACH_LIBRARY, MF_BYCOMMAND);
-					//EnableMenuItem(ID_POPUP_REFRESH_LIBRARY,MF_GRAYED);
-					//EnableMenuItem(ID_POPUP_ATTACH_LIBRARY,MF_GRAYED);
 				}
 		}
 
