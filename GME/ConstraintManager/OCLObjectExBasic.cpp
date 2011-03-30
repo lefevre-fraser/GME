@@ -265,7 +265,7 @@ namespace OclBasic
 	std::string Real::Print() const
 	{
 		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%lf", m_Value );
+		_stprintf_s( chBuffer, "%lf", m_Value );
 		return "ocl::Real { " + std::string( chBuffer ) + " }";
 	}
 
@@ -319,7 +319,7 @@ namespace OclBasic
 		double lValue;
 		Real::GetValue( lValue );
 		char chBuffer[ 100 ];
-		sprintf( chBuffer, "%ld", (long) lValue );
+		_stprintf_s( chBuffer, "%ld", (long) lValue );
 		return "ocl::Integer { " + std::string( chBuffer ) + " }";
 	}
 

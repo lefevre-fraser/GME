@@ -125,13 +125,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AParser.cpp" />
-    <ClCompile Include="ATokenBuffer.cpp" />
+    <ClCompile Include="AParser.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/wd4996 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="ATokenBuffer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/wd4996 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="..\Common\CommonError.cpp" />
     <ClCompile Include="..\Common\CommonSmart.cpp" />
     <ClCompile Include="ConstraintManager.cpp" />
     <ClCompile Include="ConstraintMgr.cpp" />
-    <ClCompile Include="DLexerBase.cpp" />
+    <ClCompile Include="DLexerBase.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/wd4996 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="ExpressionChecker.cpp" />
     <ClCompile Include="GMEConstraintBrowserDialog.cpp" />
     <ClCompile Include="GMEConstraintEx.cpp" />
@@ -140,7 +146,9 @@
     <ClCompile Include="GMESmallMessageBox.cpp" />
     <ClCompile Include="GMESyntacticSemanticDialog.cpp" />
     <ClCompile Include="GMEViolationDialog.cpp" />
-    <ClCompile Include="ocl.cpp" />
+    <ClCompile Include="ocl.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/wd4996 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="OCLCommon.cpp" />
     <ClCompile Include="OCLCommonEx.cpp" />
     <ClCompile Include="OclConstraint.cpp" />
@@ -155,7 +163,9 @@
     <ClCompile Include="OCLObject.cpp" />
     <ClCompile Include="OCLObjectExBasic.cpp" />
     <ClCompile Include="OCLObjectExGME.cpp" />
-    <ClCompile Include="OCLParser.cpp" />
+    <ClCompile Include="OCLParser.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/wd4996 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="OCLParserStatic.cpp" />
     <ClCompile Include="OCLRefCount.cpp" />
     <ClCompile Include="OCLSignature.cpp" />
