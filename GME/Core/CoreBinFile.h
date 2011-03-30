@@ -59,6 +59,7 @@ class membuf
 };
 
 class CCoreBinFile;
+class BinAttrUnion;
 
 // --------------------------- BinAttr
 class __declspec(novtable) BinAttrBase
@@ -77,9 +78,11 @@ public:
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const = 0;
 	virtual void Write(CCoreBinFile *binfile) const = 0;
 	virtual void Read(CCoreBinFile *binfile) = 0;
+	// virtual move constructor
+	virtual void move(BinAttrUnion&& dest) = 0;
 };
 
-class BinAttrUnion : public BinAttrBase
+class __declspec(novtable) BinAttrUnion : public BinAttrBase
 {
 public:
 	BinAttrUnion() { }
@@ -91,16 +94,19 @@ public:
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { DebugBreak(); }
 	virtual void Write(CCoreBinFile *binfile) const { DebugBreak(); }
 	virtual void Read(CCoreBinFile *binfile) { DebugBreak(); }
+	virtual void move(BinAttrUnion&& dest) { DebugBreak(); }
 
+	// that is a subtype of BinAttrUnion
+	// that must not be BinAttrUnion because of __declspec(novtable)
 	BinAttrUnion(BinAttrUnion&& that) {
-		// This copies the virtual function table (i.e. runtime type) too!
-		memcpy(this, &that, sizeof(BinAttrUnion));
-		// Copy an empty BinAttrUnion over that so resources are not released twice
-		new ((void*)(&that)) BinAttrUnion();
+		// volatile to read the vtable of that
+		BinAttrUnion* volatile that_ = &that;
+		that_->move(std::move(*this));
 	}
+
 	BinAttrUnion& operator=(BinAttrUnion&& that) {
-		memcpy(this, &that, sizeof(BinAttrUnion));
-		new ((void*)(&that)) BinAttrUnion();
+		BinAttrUnion* volatile that_ = &that;
+		that_->move(std::move(*this));
 		return *this;
 	}
 	BinAttrUnion(const BinAttrUnion& that) {
@@ -344,6 +350,11 @@ public:
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { CopyTo(a, p); }
 	virtual void Write(CCoreBinFile *binfile) const { binfile->write(a); }
 	virtual void Read(CCoreBinFile *binfile) { binfile->read(a); }
+
+    BinAttr(BinAttr<VALTYPE_LONG>&& that) : BinAttrBase(that.attrid), a(that.a) { }
+    virtual void move(BinAttrUnion&& dest) {
+        new (&dest) BinAttr<VALTYPE_LONG>(std::move(*this));
+    }
 };
 
 // --------------------------- BinAttr<VALTYPE_REAL>
@@ -363,6 +374,10 @@ public:
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { CopyTo(a, p); }
 	virtual void Write(CCoreBinFile *binfile) const { binfile->write(a); }
 	virtual void Read(CCoreBinFile *binfile) { binfile->read(a); }
+	BinAttr(BinAttr<VALTYPE_REAL>&& that) : BinAttrBase(that.attrid), a(that.a) { }
+	virtual void move(BinAttrUnion&& dest) {
+		new (&dest) BinAttr<VALTYPE_REAL>(std::move(*this));
+	}
 };
 
 // --------------------------- BinAttr<VALTYPE_STRING>
@@ -371,6 +386,8 @@ template<>
 class BinAttr<VALTYPE_STRING> : public BinAttrBase
 {
 public:
+	BinAttr() { }
+
 	CComBstrObj a;
 
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_STRING; }
@@ -380,6 +397,10 @@ public:
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { CopyTo(a, p); }
 	virtual void Write(CCoreBinFile *binfile) const { binfile->write(a); }
 	virtual void Read(CCoreBinFile *binfile) { binfile->read(a); }
+	BinAttr(BinAttr<VALTYPE_STRING>&& that) : BinAttrBase(that.attrid), a(std::move(that.a)) { }
+	virtual void move(BinAttrUnion&& dest) {
+		new (&dest) BinAttr<VALTYPE_STRING>(std::move(*this));
+	}
 };
 
 // --------------------------- BinAttr<VALTYPE_BINARY>
@@ -388,6 +409,8 @@ template<>
 class BinAttr<VALTYPE_BINARY> : public BinAttrBase
 {
 public:
+	BinAttr() { }
+
 	bindata a;
 
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_BINARY; }
@@ -397,6 +420,10 @@ public:
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { CopyTo(a, p); }
 	virtual void Write(CCoreBinFile *binfile) const { binfile->write(a); }
 	virtual void Read(CCoreBinFile *binfile) { binfile->read(a); }
+	BinAttr(BinAttr<VALTYPE_BINARY>&& that) : BinAttrBase(that.attrid), a(std::move(that.a)) { }
+	virtual void move(BinAttrUnion&& dest) {
+		new (&dest) BinAttr<VALTYPE_BINARY>(std::move(*this));
+	}
 };
 
 // --------------------------- BinAttr<VALTYPE_LOCK>
@@ -414,6 +441,10 @@ public:
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { CopyTo(a, p); }
 	virtual void Write(CCoreBinFile *binfile) const { }
 	virtual void Read(CCoreBinFile *binfile) { a = 0; }
+	BinAttr(BinAttr<VALTYPE_LOCK>&& that) : BinAttrBase(that.attrid), a(that.a) { }
+	virtual void move(BinAttrUnion&& dest) {
+		new (&dest) BinAttr<VALTYPE_LOCK>(std::move(*this)); 
+	}
 };
 // --------------------------- BinAttr<VALTYPE_COLLECTION>
 
@@ -421,11 +452,9 @@ template<>
 class BinAttr<VALTYPE_COLLECTION> : public BinAttrBase
 {
 public:
-	// a must not be moved, as BinAttr<VALTYPE_POINTER> indexes into it. Allocate a separately so we can still move BinAttrs
-	std::auto_ptr<std::vector<objects_iterator>> a;
+	std::vector<objects_iterator> a;
 
-	BinAttr() : a(new std::vector<objects_iterator>) { }
-	virtual ~BinAttr() { }
+	BinAttr() { }
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_COLLECTION; }
 	virtual void Set(CCoreBinFile *binfile, VARIANT p) { ASSERT(false); }
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const
@@ -434,8 +463,8 @@ public:
 
 		std::vector<metaobjidpair_type> idpairs;
 
-		std::vector<objects_iterator>::const_iterator i = a->begin();
-		std::vector<objects_iterator>::const_iterator e = a->end();
+		std::vector<objects_iterator>::const_iterator i = a.begin();
+		std::vector<objects_iterator>::const_iterator e = a.end();
 		while( i != e )
 		{
 			idpairs.push_back( (*i)->first );
@@ -447,6 +476,12 @@ public:
 	}
 	virtual void Write(CCoreBinFile *binfile) const { }
 	virtual void Read(CCoreBinFile *binfile) { }
+	// N3126 §23.2.1/9: Every iterator referring to an element in one container before the swap shall refer to the same element in the other container after the swap.
+	// supposing this applies to std::move, BinAttr<VALTYPE_POINTER> iterator should remain valid
+	BinAttr(BinAttr<VALTYPE_COLLECTION>&& that) : BinAttrBase(that.attrid), a(std::move(that.a)) { }
+	virtual void move(BinAttrUnion&& dest) {
+		new (&dest) BinAttr<VALTYPE_COLLECTION>(std::move(*this));
+	}
 };
 
 // --------------------------- BinAttr<VALTYPE_POINTER>
@@ -479,7 +514,7 @@ public:
 		ASSERT( base != NULL );
 		
 		ASSERT( base->GetValType() == VALTYPE_COLLECTION );
-		std::vector<objects_iterator> &objs = *((BinAttr<VALTYPE_COLLECTION>*)base)->a;
+		std::vector<objects_iterator> &objs = ((BinAttr<VALTYPE_COLLECTION>*)base)->a;
 
 	#ifdef DEBUG_CONTAINERS
 		std::vector<objects_iterator>::iterator i = find(objs.begin(), objs.end(), a);
@@ -497,7 +532,7 @@ public:
 			ASSERT( base != NULL );
 			
 			ASSERT( base->GetValType() == VALTYPE_COLLECTION );
-			std::vector<objects_iterator> &objs = *((BinAttr<VALTYPE_COLLECTION>*)base)->a;
+			std::vector<objects_iterator> &objs = ((BinAttr<VALTYPE_COLLECTION>*)base)->a;
 
 			ASSERT( binfile->opened_object->second.Find(attrid) == this );
 
@@ -576,6 +611,10 @@ public:
 			b.idpair.metaid = metaid;
 			b.idpair.objid = objid;
 		}
+	}
+	BinAttr(BinAttr<VALTYPE_POINTER>&& that) : BinAttrBase(that.attrid), a(std::move(that.a)), isEmpty(that.isEmpty) { }
+	virtual void move(BinAttrUnion&& dest) {
+		new (&dest) BinAttr<VALTYPE_POINTER>(std::move(*this));
 	}
 };
 
