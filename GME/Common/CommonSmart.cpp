@@ -15,7 +15,7 @@ int CComBstrObj::Compare(BSTR q) const
 	return wcsncmp(p, q, pl);
 }
 
-void CopyTo(const char *p, int len, BSTR *b)
+void CopyTo(const char *p, int len, BSTR *b, UINT codepage)
 {
 	ASSERT( len >= 0 );
 	ASSERT( b != NULL );
@@ -29,7 +29,7 @@ void CopyTo(const char *p, int len, BSTR *b)
 	if( len <= 0 )
 		return;
 
-	int blen = MultiByteToWideChar(CP_UTF8, 0, p, len, NULL, 0);
+	int blen = MultiByteToWideChar(codepage, 0, p, len, NULL, 0);
 
 	if( blen <= 0 )
 		HR_THROW(E_CONVERSION);
@@ -38,7 +38,7 @@ void CopyTo(const char *p, int len, BSTR *b)
 	if( *b == NULL )
 		HR_THROW(E_OUTOFMEMORY);
 
-	int tlen = MultiByteToWideChar(CP_UTF8, 0, p, len, *b, blen);
+	int tlen = MultiByteToWideChar(codepage, 0, p, len, *b, blen);
 
 	if( tlen <= 0 )
 		HR_THROW(E_CONVERSION);
@@ -48,14 +48,14 @@ void CopyTo(const char *p, int len, BSTR *b)
 	(*b)[blen] = L'\0';
 }
 
-int GetCharLength(const OLECHAR *p, int olelen)
+int GetCharLength(const OLECHAR *p, int olelen, UINT codepage)
 {
 	ASSERT( olelen >= -1 );
 
 	if( olelen == 0 )
 		return 0;
 
-	int charlen = WideCharToMultiByte(CP_UTF8, 0, p, olelen,
+	int charlen = WideCharToMultiByte(codepage, 0, p, olelen,
 		NULL, 0, NULL, NULL);
 
 	// zero if failed
@@ -64,7 +64,7 @@ int GetCharLength(const OLECHAR *p, int olelen)
 	return charlen;
 }
 
-void CopyTo(const OLECHAR *p, int olelen, char *s, int charlen)
+void CopyTo(const OLECHAR *p, int olelen, char *s, int charlen, UINT codepage)
 {
 	ASSERT( olelen >= -1 && charlen >= 0 );
 	ASSERT( charlen == 0 || p != NULL );
@@ -72,7 +72,7 @@ void CopyTo(const OLECHAR *p, int olelen, char *s, int charlen)
 	if( charlen <= 0 )
 		return;
 
-	int len = WideCharToMultiByte(CP_UTF8, 0, p, olelen, 
+	int len = WideCharToMultiByte(codepage, 0, p, olelen, 
 		s, charlen, NULL, NULL);
 
 	// zero if failed

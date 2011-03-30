@@ -608,7 +608,7 @@ void CCoreBinFile::read(CComBstrObj &ss)
 		if (len > cifs_eof - cifs) {
 			HR_THROW(E_FILEOPEN);
 		}
-		CopyTo(cifs, len, &ss.p);
+		CopyTo(cifs, len, &ss.p, CP_UTF8);
 		cifs += len;
 	} else {
 		std::string s;
@@ -633,16 +633,20 @@ void CCoreBinFile::write(const CComBstrObj &ss)
 {
 	ASSERT( ofs.is_open() );
 
-	std::string s;
-	CopyTo(ss, s);
+	int len = GetCharLength(ss, SysStringLen(ss.p), CP_UTF8);
+	char* s = NULL;
+	if (len) {
+		s = new char[len];
+		CopyTo(ss.p, s, len, CP_UTF8);
+	}
 
-	int len = s.size();
 	ASSERT( len >= 0 );
 	
 	write(len);
 
 	if( len > 0 )
 		ofs.write( (const char *) &s[0], len);
+	delete[] s;
 }
 
 // ------- Attribute

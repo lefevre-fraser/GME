@@ -210,12 +210,12 @@ inline void MoveTo(BSTR *p, CComBstrObj &b) { MoveTo(p, &b.p); }
 
 // these THROW exceptions
 
-void CopyTo(const char *p, int len, BSTR *b);
+void CopyTo(const char *p, int len, BSTR *b, UINT codepage=CP_ACP);
 
 // if olelen is -1, then OLECHAR is NULL terminated and the charlen includes this NULL
-int GetCharLength(const OLECHAR *p, int olelen);
+int GetCharLength(const OLECHAR *p, int olelen, UINT codepage=CP_ACP);
 
-void CopyTo(const OLECHAR *p, int olelen, char *s, int charlen);
+void CopyTo(const OLECHAR *p, int olelen, char *s, int charlen, UINT codepage=CP_ACP);
 
 void CopyTo(const OLECHAR *p, GUID &guid);
 void CopyTo(const GUID &guid, BSTR *p);
@@ -224,7 +224,7 @@ void CopyTo(const GUID &guid, BSTR *p);
 
 inline void CopyTo(const char *p, int len, CComBstrObj &b) { CopyTo(p, len, &b.p); }
 inline int GetCharLength(BSTR p) { return GetCharLength(p, SysStringLen(p)); }
-inline void CopyTo(BSTR p, char *s, int charlen) { CopyTo(p, SysStringLen(p), s, charlen); }
+inline void CopyTo(BSTR p, char *s, int charlen, UINT codepage=CP_ACP) { CopyTo(p, SysStringLen(p), s, charlen, codepage); }
 inline void CopyTo(const GUID &guid, CComBstrObj &b) { CopyTo(guid, &b.p); }
 
 // --------------------------- CComBSTR
