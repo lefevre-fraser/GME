@@ -273,7 +273,7 @@ void CGMEOLEApp::ExportProject(LPCTSTR connstr)
 		COMTHROW( dumper.CoCreateInstance(L"Mga.MgaDumper") );
 		ASSERT( dumper != NULL );
 
-		COMTHROW( dumper->DumpProject(theApp.mgaProject,PutInBstr(connstr)) );
+		COMTHROW( dumper->DumpProject(theApp.mgaProject,PutInBstr(CString(connstr))) );
 
 	}
 	catch (hresult_exception &){
@@ -295,7 +295,7 @@ void CGMEOLEApp::ImportProject(LPCTSTR connstr)
 
 		if(theApp.mgaConstMgr) COMTHROW(theApp.mgaConstMgr->Enable(false));
 
-		COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(connstr)) );
+		COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(CString(connstr))) );
 
 	}
 	catch (hresult_exception &){

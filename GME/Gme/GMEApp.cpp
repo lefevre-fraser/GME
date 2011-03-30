@@ -2218,7 +2218,7 @@ void CGMEApp::OnFileXMLUpdate()
 		COMTHROW( dumper.CoCreateInstance(L"Mga.MgaDumper") );
 		ASSERT( dumper != NULL );
 
-		COMTHROW( dumper->DumpProject(theApp.mgaProject, PutInBstr(xmlname)) );
+		COMTHROW( dumper->DumpProject(theApp.mgaProject, PutInBstr(CString(xmlname))) );
 
 
 		SafeCloseProject();
@@ -2253,7 +2253,7 @@ void CGMEApp::OnFileXMLUpdate()
 		COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
 		ASSERT( parser != NULL );
 	    if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
-	    COMTHROW(parser->ParseProject(mgaProject, PutInBstr(xmlname)) );
+	    COMTHROW(parser->ParseProject(mgaProject, PutInBstr(CString(xmlname))) );
 		{
 			char buf[200];
 			sprintf(buf, "The model has been updated\nCurrent ID: %s\nThe original model has been saved to %s", 

@@ -154,6 +154,12 @@ public:
 
 	const CComBstrObj &operator=(const CComBstrObj &q) { if(p) SysFreeString(p);
 		p = SysAllocStringLen(q, q.Length()); return *this; }
+	CComBstrObj& operator=(CComBstrObj&& q) {
+		if (p) SysFreeString(p);
+		p = q.p;
+		q.p = NULL;
+		return *this;
+	}
 	operator BSTR() const { return p; }
 	unsigned int Length() const { return p ? SysStringLen(p) : 0; }
 	void Empty() { if( p ) { SysFreeString(p); p = NULL; } }
