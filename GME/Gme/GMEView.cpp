@@ -221,17 +221,13 @@ STDMETHODIMP CViewDriver::ObjectEvent(IMgaObject *obj, unsigned long eventmask,V
 				CGuiConnection *conn = CGuiFco::FindConnection(fco,view->connections);
 				if(guiObj) {
 					if(eventmask & OBJEVENT_PROPERTIES) {
-						CComBSTR bstr;
-						COMTHROW(object->get_Name(&bstr));
-						CopyTo(bstr,guiObj->GetName());
+						COMTHROW(object->get_Name(PutOut(guiObj->GetName()));
 						view->Invalidate();
 					}
 				}
 				else if(conn) {
 					if(eventmask & OBJEVENT_PROPERTIES) {
-						CComBSTR bstr;
-						COMTHROW(object->get_Name(&bstr));
-						CopyTo(bstr,conn->name);
+						COMTHROW(object->get_Name(PutOut(conn->name)));
 						// ?? 
 						view->Invalidate();
 					}
@@ -1008,23 +1004,11 @@ void CGMEView::OnInitialUpdate()
 		}
 
 		COMTHROW(currentModel->Open());
-		{
-			CComBSTR bstr;
-			COMTHROW(currentModel->get_Name(&bstr));
-			CopyTo(bstr,name);
-		}
+		COMTHROW(currentModel->get_Name(PutOut(name)));
 		CComPtr<IMgaMetaFCO> meta;
 		COMTHROW(currentModel->get_Meta(&meta));
-		{
-			CComBSTR bstr;
-			COMTHROW(meta->get_Name(&bstr));
-			CopyTo(bstr,kindName);
-		}
-		{
-			CComBSTR bstr;
-			COMTHROW(meta->get_DisplayedName(&bstr));
-			CopyTo(bstr,kindDisplayedName);
-		}
+		COMTHROW(meta->get_Name(PutOut(kindName)));
+		COMTHROW(meta->get_DisplayedName(PutOut(kindDisplayedName));
 
 		CComBSTR modid;
 		COMTHROW( currentModel->get_ID( &modid));
@@ -1807,10 +1791,7 @@ CGuiFco* CGMEView::CreateGuiObject(CComPtr<IMgaFCO>& fco, CGuiFcoList* objList, 
 		((CGuiSet *)guiFco)->InitObject(this);
 		((CGuiSet *)guiFco)->SetAspect(currentAspect->index);
 		if (objList != NULL && !currentSetID.IsEmpty()) {
-			CComBSTR bstr;
-			fco->get_ID(&bstr);
-			CString setID;
-			CopyTo(bstr, setID);
+			fco->get_ID(PutOut(setID));
 			if(setID == currentSetID) {
 				if (guiFco != NULL)
 					currentSet = guiFco->dynamic_cast_CGuiSet();
@@ -1830,13 +1811,13 @@ CGuiFco* CGMEView::CreateGuiObject(CComPtr<IMgaFCO>& fco, CGuiFcoList* objList, 
 	if (!isCGuiConnection) {
 		CGuiObject* guiObj = static_cast<CGuiObject*> (guiFco);
 		guiObj->ReadAllLocations();
-		CopyTo(bstr, guiObj->name);
+		guiObj->name = bstr;
 		if (objList != NULL)
 			objList->AddTail(guiObj);
 	} else {
 		CGuiConnection* guiConn = static_cast<CGuiConnection*> (guiFco);
 		VERIFY(guiConn);
-		CopyTo(bstr, guiConn->name);
+		guiConn->name = bstr;
 		if (objList != NULL)
 			objList->AddTail(guiConn);
 		if (connList != NULL)
@@ -1859,9 +1840,7 @@ void CGMEView::CreateGuiObjects(CComPtr<IMgaFCOs>& fcos, CGuiFcoList& objList, C
 // ??
 bool CGMEView::CreateGuiObjects()
 {
-	CComBSTR bstr;
-	COMTHROW(currentModel->get_Name(&bstr));
-	CopyTo(bstr,name);
+	COMTHROW(currentModel->get_Name(PutOut(name)));
 
 	CreateAnnotators();
 
@@ -1871,12 +1850,9 @@ bool CGMEView::CreateGuiObjects()
 	{
 		isModelAutoRouted = theApp.useAutoRouting;	// update view's value to the app settings
 
-		CComBSTR pathBstr;
-		CopyTo(MODELAUTOROUTING, pathBstr);
+		CComBSTR pathBstr = MODELAUTOROUTING;
 		CComBSTR bstrVal;
-		COMTHROW(currentModel->get_RegistryValue(pathBstr, &bstrVal));
-		CString val;
-		CopyTo(bstrVal, val);
+		COMTHROW(currentModel->get_RegistryValue(pathBstr, PutOut(val)));
 		if (!val.IsEmpty()) {
 			if (val == "false")
 				isModelAutoRouted = false;
@@ -2007,9 +1983,7 @@ void CGMEView::Reset(bool doInvalidate)
 
 		currentSetID.Empty();
 		if(currentSet) {
-			CComBSTR bstr;
-			currentSet->mgaFco->get_ID(&bstr);
-			CopyTo(bstr,currentSetID);
+			currentSet->mgaFco->get_ID(PutOut(currentSetID));
 			currentSet = 0;
 		}
 
@@ -2371,9 +2345,7 @@ void CGMEView::SetName()
 	if(currentModel != 0) {
 		try {
 			BeginTransaction(TRANSACTION_READ_ONLY);
-			CComBSTR bstr;
-			COMTHROW(currentModel->get_Name(&bstr));
-			CopyTo(bstr,name);
+			COMTHROW(currentModel->get_Name(PutOut(name)));
 			CommitTransaction();
 
 			RetrievePath();
@@ -2980,11 +2952,9 @@ void CGMEView::SetTypeNameProperty()
 	ctrl = frame->propBar.GetDlgItem(IDC_TYPENAME);
 	ASSERT(ctrl);
 	CComPtr<IMgaFCO> fco;
-	CComBSTR bstr;
 	CString txt = "N/A";
 	if(baseType != 0) {
-		COMTHROW(baseType->get_Name(&bstr));
-		CopyTo(bstr,txt);
+		COMTHROW(baseType->get_Name(PutOut(txt)));
 	}
 	RetrievePath();
 	ctrl->SetWindowText(txt);
@@ -3509,10 +3479,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 					MGACOLL_ITERATE(IMgaFCO, newFcos) {
 						CComPtr<IMgaFCO> newFco;
 						newFco = MGACOLL_ITER;
-						CComBSTR bstr;
-						COMTHROW(newFco->get_ID(&bstr));
 						CString newID;
-						CopyTo(bstr,newID);
+						COMTHROW(newFco->get_ID(PutOut(newID)));
 						newObjectIDs.AddHead(newID);
 					}
 					MGACOLL_ITERATE_END;
@@ -3530,10 +3498,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 					MGACOLL_ITERATE(IMgaFCO,fcos) {
 						CComPtr<IMgaFCO> fco;
 						COMTHROW(terry->OpenFCO(MGACOLL_ITER, &fco));
-						CComBSTR bstr;
-						COMTHROW(fco->get_Name(&bstr));
 						CString fcoName;
-						CopyTo(bstr,fcoName);
+						COMTHROW(fco->get_Name(PutOut(fcoName)));
 /*
 						CComPtr<IMgaModel> model;
 						HRESULT hr;
@@ -3586,10 +3552,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 
 							newFcos->Append(obj);
 
-							CComBSTR bstr;
-							COMTHROW(obj->get_ID(&bstr));
 							CString newID;
-							CopyTo(bstr,newID);
+							COMTHROW(obj->get_ID(PutOut(newID)));
 							newObjectIDs.AddHead(newID);
 						}
 					}
@@ -3623,9 +3587,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 								COMTHROW(mgaRef->put_Referred(fco));
 
 								CComBSTR bstr;
-								COMTHROW(mgaRef->get_ID(&bstr));
 								CString newID;
-								CopyTo(bstr,newID);
+								COMTHROW(mgaRef->get_ID(PutOut(newID)));
 								newObjectIDs.AddHead(newID);
 							}
 							catch(hresult_exception e) {
@@ -3672,10 +3635,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 									COMTHROW(currentModel->CreateReference(role,fco,&ref));
 									newFcos->Append(ref);
 
-									CComBSTR bstr;
-									COMTHROW(ref->get_ID(&bstr));
 									CString newID;
-									CopyTo(bstr,newID);
+									COMTHROW(ref->get_ID(PutOut(newID)));
 									newObjectIDs.AddHead(newID);
 
 									CComBSTR nmb;
@@ -3790,10 +3751,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 			bool ok = false;
 			if(!CGuiFco::IsPrimary(guiMeta,currentAspect,metaRole)) {
 				if(currentAspect->IsPrimaryByRoleName(metaRole)) {
-					CComBSTR nm;
-					COMTHROW(metaRole->get_Name(&nm));
 					CString roleName;
-					CopyTo(nm,roleName);
+					COMTHROW(metaRole->get_Name(PutOut(roleName)));
 					metaRole = 0;
 					if(currentAspect->GetRoleByName(roleName,metaRole))
 						ok = true;
@@ -3808,9 +3767,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 				COMTHROW(metaRole->get_DisplayedName(&nm));
 				COMTHROW(child->put_Name(nm));
 				CComBSTR bstr;
-				COMTHROW(child->get_ID(&bstr));
 				CString newID;
-				CopyTo(bstr,newID);
+				COMTHROW(child->get_ID(PutOut(newID)));
 				newObjectIDs.AddHead(newID);
 
 				SetObjectLocation(child,metaRole,point);
@@ -4206,10 +4164,8 @@ void CGMEView::InsertNewPart(const CString& roleName, const CPoint& pt)
 			COMTHROW(child->put_Name(bstrRoleName));
 		}
 
-		CComBSTR bstr;
-		COMTHROW(child->get_ID(&bstr));
 		CString newID;
-		CopyTo(bstr,newID);
+		COMTHROW(child->get_ID(PutOut(newID)));
 		newObjectIDs.AddHead(newID);
 
 		SetObjectLocation(child, role, pt);
@@ -4486,9 +4442,7 @@ void CGMEView::OnKillfocusNameProp()
 		if(currentModel != 0) {
 			try {
 				BeginTransaction();
-				CComBSTR bstr;
-				CopyTo(txt,bstr);
-				COMTHROW(currentModel->put_Name(bstr));
+				COMTHROW(currentModel->put_Name(_bstr_t(txt)));
 				CommitTransaction();
 				RetrievePath();
 				name = txt;
