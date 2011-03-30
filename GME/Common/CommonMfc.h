@@ -223,7 +223,7 @@ inline void CopyTo(const CStringArray &array, VARIANT *p)
 
 // --------------------------- Error
 
-void DisplayError(const char *msg, HRESULT hr) NOTHROW;
+void DisplayError(const TCHAR *msg, HRESULT hr) NOTHROW;
 
 #define MSGTRY try
 
