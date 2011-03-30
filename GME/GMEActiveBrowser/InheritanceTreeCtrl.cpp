@@ -149,7 +149,7 @@ void CInheritanceTreeCtrl::StoreState()
 		// Getting item state
 		UINT nItemState=CTreeCtrlEx::GetItemState(hItem,0x000000ff);
 		CString strItemState;
-		strItemState.Format("%ul",nItemState);
+		strItemState.Format(_T("%ul"),nItemState);
 
 		// Searching the map for the Mga pointer
 		LPUNKNOWN pUnknown;
@@ -224,8 +224,8 @@ void CInheritanceTreeCtrl::RestoreState()
 				CString strItemState;
 				if(m_StateBuffer.Lookup(strID,strItemState))
 				{
-					char* pszEndPtr=NULL;
-					UINT nItemState=strtoul(strItemState,&pszEndPtr,10);														
+					TCHAR* pszEndPtr=NULL;
+					UINT nItemState = _tcstoul(strItemState, &pszEndPtr, 10);
 					CMgaMappedTreeCtrl::SetItemState(hItem,nItemState);
 				}
 			}

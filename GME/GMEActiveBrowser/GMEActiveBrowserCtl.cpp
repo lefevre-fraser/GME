@@ -247,7 +247,7 @@ void CGMEActiveBrowserCtrl::OnDraw( CDC* pdc, const CRect& rcBounds, const CRect
 		m_pPropFrame->MoveWindow(rcBounds, TRUE);
 	} else {
 		pdc->FillRect(rcBounds, CBrush::FromHandle((HBRUSH) GetStockObject(WHITE_BRUSH)));
-		pdc->TextOut(rcBounds.left + 1, rcBounds.top + 1, "GME ActiveBrowser");
+		pdc->TextOut(rcBounds.left + 1, rcBounds.top + 1, _T("GME ActiveBrowser"));
 	}
 }
 
@@ -688,7 +688,7 @@ void CGMEActiveBrowserCtrl::OpenProject(LPCTSTR pProjectName)
 
 	}catch (hresult_exception &)
 	{
-		MessageBox("Error opening project","Error",MB_ICONERROR|MB_OK);
+		MessageBox(_T("Error opening project"),_T("Error"),MB_ICONERROR|MB_OK);
 	}
 
 }

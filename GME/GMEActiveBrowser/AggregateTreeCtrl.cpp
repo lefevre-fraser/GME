@@ -220,9 +220,9 @@ void CAggregateTreeCtrl::MaintainRegistry()
 
 	HKEY hKey;                  // handle to key to enumerate
 	DWORD dwIndex=0;            // subkey index
-	char szName[255];           // subkey name
+	TCHAR szName[255];           // subkey name
 	DWORD lName=254;				// size of subkey buffer
-	char szClass[255];          // class string buffer
+	TCHAR szClass[255];          // class string buffer
 	DWORD lClass;				// size of class string buffer
 	FILETIME ftLastWriteTime;	// last write time
 	
@@ -237,7 +237,7 @@ void CAggregateTreeCtrl::MaintainRegistry()
     SystemTimeToFileTime(&stSystemTime, &ftOldestWriteTime); 
 
    	// Getting the key of Tree Data
-	hKey=AfxGetApp()->GetSectionKey("TreeData");
+	hKey=AfxGetApp()->GetSectionKey(_T("TreeData"));
 
 	for(dwIndex=0;
 		ERROR_NO_MORE_ITEMS!=
@@ -431,7 +431,7 @@ void CAggregateTreeCtrl::StoreState()
 		// Getting item state
 		UINT nItemState=CTreeCtrlEx::GetItemState(hItem,0x000000ff);
 		CString strItemState;
-		strItemState.Format("%ul",nItemState);
+		strItemState.Format(_T("%ul"),nItemState);
 
 		// Searching the map for the Mga pointer
 		LPUNKNOWN pUnknown;
@@ -506,8 +506,8 @@ void CAggregateTreeCtrl::RestoreState()
 				CString strItemState;
 				if(m_StateBuffer.Lookup(strID,strItemState))
 				{
-					char* pszEndPtr=NULL;
-					UINT nItemState=strtoul(strItemState,&pszEndPtr,10);														
+					TCHAR* pszEndPtr=NULL;
+					UINT nItemState=_tcstoul(strItemState,&pszEndPtr,10);														
 					CMgaMappedTreeCtrl::SetItemState(hItem,nItemState);
 				}
 			}
@@ -563,7 +563,7 @@ int CAggregateTreeCtrl::ItemCompareProc(LPARAM lParamItem1, LPARAM lParamItem2, 
 			{
 				CString strItem1 = pTreeCtrl->GetItemText(hItem1);
 				CString strItem2 = pTreeCtrl->GetItemText(hItem2);
-				return -strcmp(strItem2, strItem1);
+				return -_tcscmp(strItem2, strItem1);
 			}break;
 		case SORT_BYTYPE:
 			{
@@ -578,7 +578,7 @@ int CAggregateTreeCtrl::ItemCompareProc(LPARAM lParamItem1, LPARAM lParamItem2, 
 					{
 						CString strItem1 = pTreeCtrl->GetItemText(hItem1);
 						CString strItem2 = pTreeCtrl->GetItemText(hItem2);
-						return -strcmp(strItem2, strItem1);
+						return -_tcscmp(strItem2, strItem1);
 
 					}
 
@@ -703,7 +703,7 @@ void CAggregateTreeCtrl::MakeSureGUIDIsUniqueForSmartCopy( CComPtr<IMgaFCO>& fco
 	if (t_guid != GUID_NULL)
 	{
 		CString str_guid;
-		str_guid.Format("{%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}",
+		str_guid.Format(_T("{%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}"),
 			t_guid.Data1, t_guid.Data2, t_guid.Data3,
 			t_guid.Data4[0], t_guid.Data4[1], t_guid.Data4[2], t_guid.Data4[3],
 			t_guid.Data4[4], t_guid.Data4[5], t_guid.Data4[6], t_guid.Data4[7]);
@@ -813,7 +813,7 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 	CComQIPtr<IMgaObject> ccpTargetObject(MgaObjectProxy.m_pMgaObject);
 	if(!ccpTargetObject) 
 	{
-		MessageBox("Invalid target type.","Error",MB_OK|MB_ICONERROR);
+		MessageBox(_T("Invalid target type."),_T("Error"),MB_OK|MB_ICONERROR);
 		return FALSE;
 	}
 
@@ -821,11 +821,11 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 	if (!CGMEDataSource::IsGmeNativeDataAvailable(pDataObject,pMgaContext->m_ccpProject)) 
 	{
 		if (!CGMEDataSource::IsXMLDataAvailable(pDataObject))  {
-			MessageBox("Unknown clipboard format.","Error",MB_OK|MB_ICONERROR);
+			MessageBox(_T("Unknown clipboard format."),_T("Error"),MB_OK|MB_ICONERROR);
 			return FALSE;
 		}
 		if (doDragOp != DRAGOP_COPY && doDragOp != DRAGOP_CLOSURE && doDragOp != DRAGOP_CLOSURE_MERGE) {
-			MessageBox("Only copy operation is supported on GME XML clipboard format.","Error",MB_OK|MB_ICONERROR);
+			MessageBox(_T("Only copy operation is supported on GME XML clipboard format."),_T("Error"),MB_OK|MB_ICONERROR);
 			return FALSE;
 		}
 			
@@ -892,7 +892,7 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 				}
 				pMgaContext->CommitTransaction ();
 			}
-		} MSGCATCH ("Error completing PartBrowser drop operation", pMgaContext->AbortTransaction ();)	
+		} MSGCATCH (_T("Error completing PartBrowser drop operation"), pMgaContext->AbortTransaction ();)	
 
 		return bRetVal;
 	}
@@ -960,7 +960,7 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 								CComBSTR msg( L"Object '"), nm;
 								COMTHROW( MGACOLL_ITER->get_Name( &nm));
 								msg.Append( nm);
-								msg.Append( "' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]");
+								msg.Append( _T("' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]"));
 								Utils::put2Console( Utils::get_GME( pMgaContext->m_ccpProject), msg, MSG_ERROR);
 									pMgaContext->AbortTransaction();//COMTHROW( hr);
 								return FALSE;//break; // although it was inside a MGACOLL_ITERATE, we aborted the trans
@@ -985,7 +985,7 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 								CComBSTR msg( L"Object '"), nm;
 								COMTHROW( MGACOLL_ITER->get_Name( &nm));
 								msg.Append( nm);
-								msg.Append( "' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]");
+								msg.Append( L"' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]");
 								Utils::put2Console( Utils::get_GME( pMgaContext->m_ccpProject), msg, MSG_ERROR);
 									pMgaContext->AbortTransaction();//COMTHROW( hr);
 								return FALSE;//break; // although it was inside a MGACOLL_ITERATE, we aborted the trans
@@ -1009,7 +1009,7 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 			{
 				COMTHROW( ccpDroppedFolders->get_Count( &fol_cnt));
 				if ( fol_cnt > 0)
-					AfxMessageBox("Cannot insert folders into a model");
+					AfxMessageBox(_T("Cannot insert folders into a model"));
 			}
 
 			CComQIPtr<IMgaModel> ccpTargetModel(MgaObjectProxy.m_pMgaObject);
@@ -1203,7 +1203,7 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 									CComBSTR msg( L"Object '"), nm;
 									COMTHROW( ccpFCO->get_Name( &nm));
 									msg.Append( nm);
-									msg.Append( "' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]");
+									msg.Append( L"' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]");
 									Utils::put2Console( Utils::get_GME( pMgaContext->m_ccpProject), msg, MSG_ERROR);
 
 									pMgaContext->AbortTransaction();//COMTHROW( hr);
@@ -1223,7 +1223,7 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 		}
 		pMgaContext->CommitTransaction();
 
-	}MSGCATCH("Error completing drop operation",pMgaContext->AbortTransaction();)	
+	}MSGCATCH(_T("Error completing drop operation"), pMgaContext->AbortTransaction();)	
 
 
 

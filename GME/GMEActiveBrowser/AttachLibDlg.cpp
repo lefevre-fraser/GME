@@ -58,16 +58,16 @@ void CAttachLibDlg::OnOK()
 void CAttachLibDlg::OnBrowse() 
 {
 
-	static char BASED_CODE szFilter[] = "Binary Project Files (*.mga)|*.mga|Multiuser Project Files (*.mgx)|*.mgx|All Files (*.*)|*.*||";
+	static TCHAR BASED_CODE szFilter[] = _T("Binary Project Files (*.mga)|*.mga|Multiuser Project Files (*.mgx)|*.mgx|All Files (*.*)|*.*||");
 
-	CFileDialog dlg(TRUE,"mga",NULL,NULL,szFilter, this);
+	CFileDialog dlg(TRUE,_T("mga"),NULL,NULL,szFilter, this);
 	if(dlg.DoModal()!=IDOK) return;
 
-	bool is_mga = dlg.GetFileExt().CompareNoCase( "mga") == 0;
+	bool is_mga = dlg.GetFileExt().CompareNoCase( _T("mga")) == 0;
 	if( is_mga)
-		m_strConnString = "MGA=" + dlg.GetPathName();
+		m_strConnString = _T("MGA=") + dlg.GetPathName();
 	else
-		m_strConnString = "MGX=\"" + dlg.GetPathName().Left( dlg.GetPathName().ReverseFind( '\\')) + "\"";
+		m_strConnString = _T("MGX=\"") + dlg.GetPathName().Left( dlg.GetPathName().ReverseFind( '\\')) + _T("\"");
 
 	UpdateData(FALSE);
 	
@@ -76,7 +76,7 @@ void CAttachLibDlg::OnBrowse()
 BOOL CAttachLibDlg::OnInitDialog() 
 {
 	// convenience for beta-testers
-	int pos = m_strConnString.Find( " (optimized)");
+	int pos = m_strConnString.Find( _T(" (optimized)"));
 	if( pos != -1) // remove if found
 	{
 		m_bOptimized = TRUE;
@@ -87,15 +87,15 @@ BOOL CAttachLibDlg::OnInitDialog()
 	// show the expanded path as a hint
 	// when env variable found
 	CString hint = m_strConnString;
-	pos = hint.Find( "%");
+	pos = hint.Find( _T("%"));
 	if( pos != -1) // found
 	{
-		int npos = hint.Find( "%", pos + 1); //next pos
+		int npos = hint.Find( _T("%"), pos + 1); //next pos
 		if( npos != -1 && npos > pos + 1)
 		{
 			// get the value of the environment variable between the two %'s
-			char *value = getenv( hint.Mid( pos + 1, npos - pos - 1));
-			hint.Replace( "%" + hint.Mid( pos + 1, npos - pos - 1) + "%", value);
+			TCHAR *value = _tgetenv( hint.Mid( pos + 1, npos - pos - 1));
+			hint.Replace( _T("%") + hint.Mid( pos + 1, npos - pos - 1) + _T("%"), value);
 		}
 	}
 
@@ -103,7 +103,7 @@ BOOL CAttachLibDlg::OnInitDialog()
 	CWnd *ptr = GetDlgItem( IDC_CONNSTR);
 	if( ptr && hint != m_strConnString)
 	{
-		// replace "Mga Connection String" with expanded path
+		// replace _T("Mga Connection String") with expanded path
 		ptr->SetWindowText( (LPCTSTR) hint);
 	}
 

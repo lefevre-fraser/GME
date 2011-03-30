@@ -202,7 +202,7 @@ void CAggregatePropertyPage::OnItemExpandingTreeAggregate(NMHDR* pNMHDR, LRESULT
 						reqBuildAggregateTree(hItem,ccpMgaObject,2);
 						m_TreeAggregate.SortItems(hItem);
 						pMgaContext->CommitTransaction ();								
-					}MSGCATCH("Error completing the operation",pMgaContext->AbortTransaction();)	
+					}MSGCATCH(_T("Error completing the operation"),pMgaContext->AbortTransaction();)	
 					
 					
 				}
@@ -596,7 +596,7 @@ void CAggregatePropertyPage::reqBuildAggregateTree(HTREEITEM hParent,IMgaObject*
 		case OBJTYPE_PART:;		// Not handled
 		default:
 			{
-				TRACE("Unknown MGA object type detected building the aggregation tree\n");
+				TRACE(_T("Unknown MGA object type detected building the aggregation tree\n"));
 				ASSERT(0);
 				return;
 			}
@@ -756,7 +756,7 @@ void CAggregatePropertyPage::OpenProject()
 		m_TreeAggregate.SortItems();	
 		pMgaContext->CommitTransaction();
 
-	}MSGCATCH("Error opening aggregate tab",pMgaContext->AbortTransaction();)	
+	}MSGCATCH(_T("Error opening aggregate tab"),pMgaContext->AbortTransaction();)	
 	
 	
 
@@ -803,7 +803,7 @@ void CAggregatePropertyPage::CloseProject()
 				m_TreeAggregate.SaveTreeStateToRegistry(m_strProjectName);
 				// Close transaction
 				pMgaContext->CommitTransaction();
-			}MSGCATCH("Error closing the aggragate tab",pMgaContext->AbortTransaction();)	
+			}MSGCATCH(_T("Error closing the aggragate tab"),pMgaContext->AbortTransaction();)	
 			
 			
 		}
@@ -906,7 +906,7 @@ void CAggregatePropertyPage::DoCopy()
 	}
 	else
 	{
-		MessageBox("Connections cannot be  copied.","Copy Error", MB_ICONERROR);
+		MessageBox(_T("Connections cannot be  copied."),_T("Copy Error"), MB_ICONERROR);
 	}
 
 	CGMEDataDescriptor::destructList( rectSelectedList);
@@ -1114,7 +1114,7 @@ void CAggregatePropertyPage::DoCopyClosure()
 	}
 	else
 	{
-		MessageBox("No object selected","Copy Error", MB_ICONERROR);
+		MessageBox(_T("No object selected"),_T("Copy Error"), MB_ICONERROR);
 	}
 
 	CGMEDataDescriptor::destructList( rectSelectedList);
@@ -1275,7 +1275,7 @@ void CAggregatePropertyPage::DoCopySmart( int k /*= 0*/)
 	}
 	else
 	{
-		MessageBox("No object selected","Copy Error", MB_ICONERROR);
+		MessageBox(_T("No object selected"),_T("Copy Error"), MB_ICONERROR);
 	}
 
 	CGMEDataDescriptor::destructList( rectSelectedList);
@@ -1367,7 +1367,7 @@ void CAggregatePropertyPage::DoDrag( CPoint ptDrag)
 	}
 	else
 	{
-		MessageBox("Connections cannot be dropped or copied.","Error", MB_ICONERROR);
+		MessageBox(_T("Connections cannot be dropped or copied."),_T("Error"), MB_ICONERROR);
 	}
 
 	CGMEDataDescriptor::destructList( rectSelectedList);
@@ -1541,24 +1541,24 @@ void CAggregatePropertyPage::AttachLibrary()
 	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 
 	CAttachLibDlg dlg;	
-	dlg.m_strCaption="Attach Library";
+	dlg.m_strCaption=_T("Attach Library");
 	
 	if(dlg.DoModal() == IDOK && !dlg.m_strConnString.IsEmpty()) 
 	{
-		// be flexible in MGA case ( if "MGX" is not present )
-		if( dlg.m_strConnString.Left(4) == "MGX=")
+		// be flexible in MGA case ( if _T("MGX") is not present )
+		if( dlg.m_strConnString.Left(4) == _T("MGX="))
 		{
 			// add quotes to the folderpath if not there
-			if( dlg.m_strConnString.Mid(4,1) != "\"" && dlg.m_strConnString.Right(1) != "\"")
-				dlg.m_strConnString = "MGX=\"" + dlg.m_strConnString.Mid( 4) + "\"";
+			if( dlg.m_strConnString.Mid(4,1) != _T("\"") && dlg.m_strConnString.Right(1) != _T("\""))
+				dlg.m_strConnString = _T("MGX=\"") + dlg.m_strConnString.Mid( 4) + _T("\"");
 		}
 		else // MGA is presumed in this case
 		{
 			// add extension
-			if( dlg.m_strConnString.Find( ".") == -1) dlg.m_strConnString += ".mga";  
+			if( dlg.m_strConnString.Find( _T(".")) == -1) dlg.m_strConnString += _T(".mga");  
 
 			// add the 'MGA=' prefix
-			if( dlg.m_strConnString.Left(4) != "MGA=") dlg.m_strConnString.Insert(0, "MGA=");
+			if( dlg.m_strConnString.Left(4) != _T("MGA=")) dlg.m_strConnString.Insert(0, _T("MGA="));
 		}
 
 		MSGTRY {
@@ -1609,7 +1609,7 @@ void CAggregatePropertyPage::AttachLibrary()
 			}
 	
 		}
-		MSGCATCH("Error while trying to attach library",pMgaContext->AbortTransaction();)	
+		MSGCATCH(_T("Error while trying to attach library"),pMgaContext->AbortTransaction();)	
 		Refresh();
 	}
 }
@@ -1650,13 +1650,13 @@ void CAggregatePropertyPage::RefreshLibrary()
 			if(!bszLibName)
 			{
 		
-				AfxMessageBox("Selected node is not a library");
+				AfxMessageBox(_T("Selected node is not a library"));
 				return;
 			}
 		
 			CAttachLibDlg dlg;
 			dlg.m_strConnString=bszLibName;
-			dlg.m_strCaption="Refresh Library";
+			dlg.m_strCaption=_T("Refresh Library");
 			dlg.m_bOptimized = was_opt;
 
 			if(dlg.DoModal() == IDOK) 
@@ -1668,7 +1668,7 @@ void CAggregatePropertyPage::RefreshLibrary()
 				ccpFolder.Release();
 				pMgaContext->CommitTransaction();
 			}
-		} MSGCATCH("Error while refreshing library",pMgaContext->AbortTransaction();)	
+		} MSGCATCH(_T("Error while refreshing library"),pMgaContext->AbortTransaction();)	
 		Refresh();
 	}
 }
@@ -1701,12 +1701,12 @@ void CAggregatePropertyPage::LibraryDependencies()
 		
 			if(!bszLibName)
 			{
-				AfxMessageBox("Selected node is not a library");
+				AfxMessageBox(_T("Selected node is not a library"));
 			}
 			else
 			{
 				CString msg0; CopyTo( bszLibName, msg0);
-				msg0 = "Library [" + msg0 + "] dependencies";
+				msg0 = _T("Library [") + msg0 + _T("] dependencies");
 
 				CComPtr<IMgaFolders> coll_inc, coll_iby;
 
@@ -1714,16 +1714,16 @@ void CAggregatePropertyPage::LibraryDependencies()
 				COMTHROW( ccpFolder->GetVirtuallyIncludes  ( &coll_inc));
 
 				CString msg1, msg2;
-				composeInfo( "Included virtually in:\n", coll_iby, msg1);
-				composeInfo( "Virtually includes:\n", coll_inc, msg2);
+				composeInfo( _T("Included virtually in:\n"), coll_iby, msg1);
+				composeInfo( _T("Virtually includes:\n"), coll_inc, msg2);
 
-				AfxMessageBox( msg0 + "\n\n" + msg1 + "\n\n" + msg2, MB_ICONINFORMATION);
+				AfxMessageBox( msg0 + _T("\n\n") + msg1 + _T("\n\n") + msg2, MB_ICONINFORMATION);
 			}
 
 			//pMgaContext->CommitTransaction();
 			pMgaContext->AbortTransaction();
 
-		} MSGCATCH("Error while viewing library dependencies",pMgaContext->AbortTransaction();)	
+		} MSGCATCH(_T("Error while viewing library dependencies"),pMgaContext->AbortTransaction();)	
 		//Refresh();
 	}
 }
@@ -1737,7 +1737,7 @@ bool CAggregatePropertyPage::askUserAndDeleteLibrary( CComPtr<IMgaFolder> p_ccpF
 	if( !bszLibName)
 	{
 		ASSERT( 0);
-		AfxMessageBox( "Selected node is not a library");
+		AfxMessageBox( _T("Selected node is not a library"));
 		return false;
 	}
 
@@ -1752,13 +1752,13 @@ bool CAggregatePropertyPage::askUserAndDeleteLibrary( CComPtr<IMgaFolder> p_ccpF
 	CopyTo( depb, deps);
 	if( deps.IsEmpty())
 	{
-		deps = "No dependent libraries found.";
+		deps = _T("No dependent libraries found.");
 	}
 	else
 	{
-		deps = "Dependent libraries found:\n" + deps;
+		deps = _T("Dependent libraries found:\n") + deps;
 	}
-	deps += "\n\nDelete " + ln + "?";
+	deps += _T("\n\nDelete ") + ln + _T("?");
 	if( IDYES == AfxMessageBox( deps, MB_YESNO))
 	{
 		//p_ccpFolder->PutReadOnlyAccess( VARIANT_FALSE);
@@ -1790,7 +1790,7 @@ void CAggregatePropertyPage::OnContextMenu(CWnd*, CPoint point)
 	MSGTRY{
 		CAggregateContextMenu menu(this);
 		menu.Run(point);
-	} MSGCATCH("Cannot complete operation",pMgaContext->AbortTransaction();)
+	} MSGCATCH(_T("Cannot complete operation"),pMgaContext->AbortTransaction();)
 
 
 }
@@ -1860,7 +1860,7 @@ void CAggregatePropertyPage::OnEndLabelEditTreeAggregate(NMHDR* pNMHDR, LRESULT*
 					pApp->GetCtrl()->FireRootFolderNameChanged();
 				}
 
-			}MSGCATCH("Error retrieving object name",pMgaContext->AbortTransaction();)	
+			}MSGCATCH(_T("Error retrieving object name"),pMgaContext->AbortTransaction();)	
 		}
 	}
 
@@ -2346,7 +2346,7 @@ void CAggregatePropertyPage::GotoIUnk(BSTR Id)
 			}
 		}
 		pMgaContext->CommitTransaction ();								
-	}MSGCATCH("Error completing the operation",pMgaContext->AbortTransaction();)	
+	}MSGCATCH(_T("Error completing the operation"),pMgaContext->AbortTransaction();)	
 	if (worked)
 		pApp->GetCtrl()->FireClickMgaObject(pUnknown);
 
@@ -2464,7 +2464,7 @@ void CAggregatePropertyPage::GotoIUnkPtr( IMgaObject * p_obj)
 		}
 		pMgaContext->CommitTransaction();
 	}
-	MSGCATCH( "Error completing the operation", pMgaContext->AbortTransaction();)
+	MSGCATCH( _T("Error completing the operation"), pMgaContext->AbortTransaction();)
 
 	if( worked)
 		pApp->GetCtrl()->FireClickMgaObject( pUnknown);
@@ -2491,7 +2491,7 @@ void CAggregatePropertyPage::Refresh()
 		m_TreeAggregate.SortItems();
 
 		m_TreeAggregate.RestoreState();
-	}MSGCATCH("Error refreshing tree browser data",pMgaContext->AbortTransaction();)	
+	}MSGCATCH(_T("Error refreshing tree browser data"),pMgaContext->AbortTransaction();)	
 	// Ending transaction
 	pMgaContext->CommitTransaction();
 
@@ -2582,10 +2582,10 @@ void CAggregatePropertyPage::OnKeyDownTreeAggregate(NMHDR* pNMHDR, LRESULT* pRes
 					if( m_TreeAggregate.DoDrop( DRAGOP_COPY, &OleDataObject, CPoint( 0, 0))) {
 						// what about set focus back
 						m_TreeAggregate.SetFocus();
-					} else msg = "Cannot paste data from the clipboard. Please select valid target item.";
-				} else msg = "Cannot recover data from the clipboard.";
+					} else msg = _T("Cannot paste data from the clipboard. Please select valid target item.");
+				} else msg = _T("Cannot recover data from the clipboard.");
 
-				if( !msg.IsEmpty()) MessageBox( msg, "Paste Error", MB_ICONERROR);
+				if( !msg.IsEmpty()) MessageBox( msg, _T("Paste Error"), MB_ICONERROR);
 			}
 		}break;
 	case 0x46: //VK_F:
@@ -2677,7 +2677,7 @@ BOOL CAggregatePropertyPage::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMD
 
 void CAggregatePropertyPage::OnSearch() 
 {
-	AfxMessageBox("Pushed.");	
+	AfxMessageBox(_T("Pushed."));	
 }
 
 BOOL CAggregatePropertyPage::OnSetActive() 
@@ -2700,7 +2700,7 @@ void CAggregatePropertyPage::OnBeginDragTreeAggregate(NMHDR* pNMHDR, LRESULT* pR
 
 	MSGTRY{
 		DoDrag(pNMTreeView->ptDrag);
-	} MSGCATCH("Error while dragging",pMgaContext->AbortTransaction();)
+	} MSGCATCH(_T("Error while dragging"),pMgaContext->AbortTransaction();)
 	
 
 	*pResult = 0;
@@ -3130,7 +3130,7 @@ void CInheritancePropertyPage::SetupTree()
 		// Ending transaction
 		pMgaContext->CommitTransaction();
 
-	}MSGCATCH("Error retrieving data for inheritance tab",pMgaContext->AbortTransaction();)	
+	}MSGCATCH(_T("Error retrieving data for inheritance tab"),pMgaContext->AbortTransaction();)	
 
 
 	// Select the current item
@@ -3186,7 +3186,7 @@ void CInheritancePropertyPage::SetupTree2()
 		// Ending transaction
 		pMgaContext->CommitTransaction();
 
-	}MSGCATCH("Error retrieving data for inheritance tab",pMgaContext->AbortTransaction();)	
+	}MSGCATCH(_T("Error retrieving data for inheritance tab"),pMgaContext->AbortTransaction();)	
 }
 
 void CInheritancePropertyPage::Refresh()
@@ -3208,7 +3208,7 @@ void CInheritancePropertyPage::Refresh()
 			SetupTree(); 
 		m_TreeInheritance.RestoreState();
 
-	}MSGCATCH("Error refreshing tree browser data",pMgaContext->AbortTransaction();)	
+	}MSGCATCH(_T("Error refreshing tree browser data"),pMgaContext->AbortTransaction();)	
 	// Ending transaction
 	pMgaContext->CommitTransaction();
 }
@@ -3460,7 +3460,7 @@ void CMetaPropertyPage::SetupTree()
 	COMTHROW(ccpMetaProject->get_RootFolder(&ccpRootMetaFolder));
 
 	
-	InsertIntoMetaTree(NULL,ccpRootMetaFolder,"");
+	InsertIntoMetaTree(NULL,ccpRootMetaFolder,_T(""));
 	
 	CMetaObjectList ObjListParents;
 	CMetaObjectList ObjListChildren;
@@ -3583,7 +3583,7 @@ void CMetaPropertyPage::ProcessConnection(CString &strConnectionToolTip, IMgaMet
 {
 	CComPtr<IMgaMetaConnection> ccpMetaConnection(pIMetaConnection);
 	
-	strConnectionToolTip="Name: "+GetDisplayedName(ccpMetaConnection)+"\r\n";
+	strConnectionToolTip=_T("Name: ")+GetDisplayedName(ccpMetaConnection)+_T("\r\n");
 	
 	// Is the connection simple? Not simple connections are not implemented here!!!
 	VARIANT_BOOL bIsSimple=VARIANT_FALSE;
@@ -3604,15 +3604,15 @@ void CMetaPropertyPage::ProcessConnection(CString &strConnectionToolTip, IMgaMet
 			i++;
 			// Formatting tooltip
 			CString strJoint;
-			strJoint.Format("Joint %d: \r\n",i);
+			strJoint.Format(_T("Joint %d: \r\n"),i);
 			strConnectionToolTip+=strJoint;
 
 			// Iterator renamed for sake of readability
 			ccpMgaMetaConnJoint = MGACOLL_ITER;
 	
 			// Getting pointer specifications (source and destination)
-			CComBSTR bszSourceName("src");
-			CComBSTR bszDestName("dst");
+			CComBSTR bszSourceName(_T("src"));
+			CComBSTR bszDestName(_T("dst"));
 
 			CComPtr<IMgaMetaPointerSpec> ccpMgaMetaPointerSpecSrc;
 			CComPtr<IMgaMetaPointerSpec> ccpMgaMetaPointerSpecDest;
@@ -3622,7 +3622,7 @@ void CMetaPropertyPage::ProcessConnection(CString &strConnectionToolTip, IMgaMet
 														&ccpMgaMetaPointerSpecSrc) )
 			{
 				// Source side *************************************************
-				CString strSrcToolTip("[Source:]\r\n");
+				CString strSrcToolTip(_T("[Source:]\r\n"));
 
 				CComPtr<IMgaMetaPointerItems> ccpMgaMetaPointerItemsSrc;
 				ccpMgaMetaPointerSpecSrc->get_Items(&ccpMgaMetaPointerItemsSrc);
@@ -3635,14 +3635,14 @@ void CMetaPropertyPage::ProcessConnection(CString &strConnectionToolTip, IMgaMet
 					COMTHROW(MGACOLL_ITER->get_Desc(&bszDesc));
 
 					// Formatting description
-					strSrcToolTip+="\t"+CString(bszDesc)+"\r\n";			
+					strSrcToolTip+=_T("\t")+CString(bszDesc)+_T("\r\n");			
 
 				}MGACOLL_ITERATE_END;  // Source Pointer Items
 				strConnectionToolTip+=strSrcToolTip;	
 			}
 			else
 			{
-				CString strSrcToolTip("[Source:] <not found>\r\n");
+				CString strSrcToolTip(_T("[Source:] <not found>\r\n"));
 				strConnectionToolTip+=strSrcToolTip;	
 			}
 
@@ -3650,7 +3650,7 @@ void CMetaPropertyPage::ProcessConnection(CString &strConnectionToolTip, IMgaMet
 														&ccpMgaMetaPointerSpecDest))
 			{
 				// Destination side ********************************************
-				CString strDestToolTip("[Destination:] \r\n");
+				CString strDestToolTip(_T("[Destination:] \r\n"));
 
 				CComPtr<IMgaMetaPointerItems> ccpMgaMetaPointerItemsDest;
 				ccpMgaMetaPointerSpecDest->get_Items(&ccpMgaMetaPointerItemsDest);
@@ -3663,13 +3663,13 @@ void CMetaPropertyPage::ProcessConnection(CString &strConnectionToolTip, IMgaMet
 					COMTHROW(MGACOLL_ITER->get_Desc(&bszDesc));
 
 					// Formatting description
-					strDestToolTip+="\t"+CString(bszDesc)+"\r\n";					
+					strDestToolTip+=_T("\t")+CString(bszDesc)+_T("\r\n");					
 				}MGACOLL_ITERATE_END; // Destination pointer items
 				strConnectionToolTip+=strDestToolTip;	
 			}
 			else
 			{
-				CString strDestToolTip("[Destination:] <not found>\r\n");
+				CString strDestToolTip(_T("[Destination:] <not found>\r\n"));
 				strConnectionToolTip+=strDestToolTip;	
 			}
 						
@@ -3679,7 +3679,7 @@ void CMetaPropertyPage::ProcessConnection(CString &strConnectionToolTip, IMgaMet
 	else
 	{
 		// Not simple connection case is not implemented!!!!		
-		strConnectionToolTip="Information available only for simple connections.";
+		strConnectionToolTip=_T("Information available only for simple connections.");
 	}
 
 }
@@ -3720,7 +3720,7 @@ void CMetaPropertyPage::OpenProject()
 
 	MSGTRY{
 		SetupTree();
-	}MSGCATCH("Error opening meta tab",pMgaContext->AbortTransaction();)	
+	}MSGCATCH(_T("Error opening meta tab"),pMgaContext->AbortTransaction();)	
 
 }
 
@@ -3790,7 +3790,7 @@ void CMetaPropertyPage::OnDblclkTreeMeta(NMHDR* pNMHDR, LRESULT* pResult)
 					}
 				}
 			}
-		}MSGCATCH("Error retrieving connection properties",pMgaContext->AbortTransaction();)	
+		}MSGCATCH(_T("Error retrieving connection properties"),pMgaContext->AbortTransaction();)	
 
 	}
 	*pResult = -1;
@@ -3899,9 +3899,9 @@ HTREEITEM CMetaPropertyPage::InsertIntoMetaTree(HTREEITEM hParent,IMgaMetaBase* 
 
 	// Inserting item into the meta tree
 	CString strName;
-	if(strRoleName!="")
+	if(strRoleName!=_T(""))
 	{
-		strName=strRoleName+" ("+GetDisplayedName(ccpMetaObject)+")";
+		strName=strRoleName+_T(" (")+GetDisplayedName(ccpMetaObject)+_T(")");
 	}
 	else
 	{
@@ -3965,10 +3965,10 @@ bool CAggregatePropertyPage::askUserAndDetach( CComPtr<IMgaObject> object)
 				{
 					CComBSTR nm;
 					COMTHROW( fco->get_Name( &nm));
-					CString msg = "There are objects primary derived from: \"";
+					CString msg = _T("There are objects primary derived from: \"");
 					msg += nm;
-					msg += "\". Would you like to delete them as well?\n";
-					msg += "If you answer 'No' the derived objects will be detached, thus preserved.";
+					msg += _T("\". Would you like to delete them as well?\n");
+					msg += _T("If you answer 'No' the derived objects will be detached, thus preserved.");
 
 					// this answer will be applied to all deriveds of this fco
 					int resp = AfxMessageBox( msg, MB_YESNOCANCEL);
@@ -4016,7 +4016,7 @@ void CAggregatePropertyPage::accessRights( bool pbProtectIt)
 			COMTHROW(ccpObj->PutReadOnlyAccessWithPropagate( pbProtectIt ? VARIANT_TRUE:VARIANT_FALSE));
 			pMgaContext->CommitTransaction();
 
-		} MSGCATCH("Error while applying new access rights",pMgaContext->AbortTransaction();)	
+		} MSGCATCH(_T("Error while applying new access rights"),pMgaContext->AbortTransaction();)	
 		Refresh();
 	}
 }
@@ -4052,7 +4052,7 @@ void CAggregatePropertyPage::LibraryAmbiguityChk()
 			CComBSTR gd_of_project;
 			COMTHROW( ccpFolder->GetGuidDisp( &gd_of_project));
 			// save its guid
-			guidmap[ gd_of_project].push_back( CComBSTR( "Main Project"));
+			guidmap[ gd_of_project].push_back( CComBSTR( _T("Main Project")));
 
 			// check toplevel folders
 			COMTHROW( ccpFolder->get_ChildFolders( &fols));
@@ -4082,12 +4082,12 @@ void CAggregatePropertyPage::LibraryAmbiguityChk()
 			{
 				if( it->second.size() > 1) // duplicates found
 				{
-					if( msg.Length() > 0) msg.Append( "\n\n");
+					if( msg.Length() > 0) msg.Append( _T("\n\n"));
 					msg.AppendBSTR( it->first);
-					msg.Append( "\nShared by multiple toplevel libraries:");
+					msg.Append( _T("\nShared by multiple toplevel libraries:"));
 					for( unsigned int i = 0; i < it->second.size(); ++i)
 					{
-						msg.Append( "\n\t");
+						msg.Append( _T("\n\t"));
 						msg.AppendBSTR( it->second[i]);
 					}
 				}
@@ -4099,12 +4099,12 @@ void CAggregatePropertyPage::LibraryAmbiguityChk()
 				AfxMessageBox( msgs, MB_OK | MB_ICONSTOP);
 			}
 			else
-				AfxMessageBox( "No duplicate GUID found among the toplevel libraries.", MB_ICONINFORMATION);
+				AfxMessageBox( _T("No duplicate GUID found among the toplevel libraries."), MB_ICONINFORMATION);
 
 			//pMgaContext->CommitTransaction();
 			pMgaContext->AbortTransaction();
 
-		} MSGCATCH("Error while analyzing library guid ambiguities",pMgaContext->AbortTransaction();)	
+		} MSGCATCH(_T("Error while analyzing library guid ambiguities"),pMgaContext->AbortTransaction();)	
 		//Refresh();
 	}
 }
@@ -4123,7 +4123,7 @@ void CAggregatePropertyPage::ProjectSourceControlUpdate( CComBSTR id)
 		// no transaction needed
 		COMTHROW( pMgaContext->m_ccpProject->UpdateSourceControlInfo( id));
 	}
-	MSGCATCH("Error while updating source control info!",;)
+	MSGCATCH(_T("Error while updating source control info!"),;)
 
 	Refresh();
 }
@@ -4141,7 +4141,7 @@ void CAggregatePropertyPage::SourceControlObjectOwner( CComBSTR p_id)
 		// no transaction needed
 		COMTHROW( pMgaContext->m_ccpProject->SourceControlObjectOwner( p_id));
 	}
-	MSGCATCH("Error while fetching source control info!",;)
+	MSGCATCH(_T("Error while fetching source control info!"),;)
 
 	Refresh();
 }
@@ -4159,7 +4159,7 @@ void CAggregatePropertyPage::SourceControlActiveUsers()
 		// no transaction needed
 		COMTHROW( pMgaContext->m_ccpProject->SourceControlActiveUsers());
 	}
-	MSGCATCH("Error while fetching source control info!",;)
+	MSGCATCH(_T("Error while fetching source control info!"),;)
 
 	Refresh();
 }
@@ -4193,11 +4193,11 @@ void CAggregatePropertyPage::composeInfo( CString p_msgText, CComPtr<IMgaFolders
 					CString cs, gs;
 					CopyTo( connstr, cs);
 					CopyTo( guiddsp, gs);
-					lst += cs + " " + gs + "\n";
+					lst += cs + _T(" ") + gs + _T("\n");
 				}
 			}
 		}
 	}
 
-	msg = p_msgText + (lst.IsEmpty()?"None":lst);
+	msg = p_msgText + (lst.IsEmpty()?_T("None"):lst);
 }

@@ -42,16 +42,16 @@ CAggregateOptions::~CAggregateOptions()
 void CAggregateOptions::SaveToRegistry()
 {
 		CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
-		pApp->WriteProfileInt("Settings","Display Models",m_bDispModel);
-		pApp->WriteProfileInt("Settings","Display Atoms",m_bDispAtom);
-		pApp->WriteProfileInt("Settings","Display References",m_bDispReference);
-		pApp->WriteProfileInt("Settings","Display Sets",m_bDispSet);
-		pApp->WriteProfileInt("Settings","Display Connections",m_bDispConnections);
+		pApp->WriteProfileInt(_T("Settings"),_T("Display Models"),m_bDispModel);
+		pApp->WriteProfileInt(_T("Settings"),_T("Display Atoms"),m_bDispAtom);
+		pApp->WriteProfileInt(_T("Settings"),_T("Display References"),m_bDispReference);
+		pApp->WriteProfileInt(_T("Settings"),_T("Display Sets"),m_bDispSet);
+		pApp->WriteProfileInt(_T("Settings"),_T("Display Connections"),m_bDispConnections);
 
-		pApp->WriteProfileInt("Settings","Sort Option",m_soSortOptions);
-		pApp->WriteProfileInt("Settings","Store Tree In Registry",m_bStoreTreeInRegistry);
+		pApp->WriteProfileInt(_T("Settings"),_T("Sort Option"),m_soSortOptions);
+		pApp->WriteProfileInt(_T("Settings"),_T("Store Tree In Registry"),m_bStoreTreeInRegistry);
 
-		pApp->WriteProfileInt("Settings","Dynamic Loading",m_bIsDynamicLoading);
+		pApp->WriteProfileInt(_T("Settings"),_T("Dynamic Loading"),m_bIsDynamicLoading);
 }
 
 void CAggregateOptions::LoadFromRegistry()
@@ -60,50 +60,50 @@ void CAggregateOptions::LoadFromRegistry()
 
 		CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 		
-		int nValue=pApp->GetProfileInt("Settings","Display Models",NO_VALUE);
+		int nValue=pApp->GetProfileInt(_T("Settings"),_T("Display Models"),NO_VALUE);
 		if(nValue!=NO_VALUE)
 		{
 			m_bDispModel=nValue;
 		}
 
-		nValue=pApp->GetProfileInt("Settings","Display Atoms",NO_VALUE);
+		nValue=pApp->GetProfileInt(_T("Settings"),_T("Display Atoms"),NO_VALUE);
 		if(nValue!=NO_VALUE)
 		{
 			m_bDispAtom=nValue;
 		}
 
-		nValue=pApp->GetProfileInt("Settings","Display Connections",NO_VALUE);
+		nValue=pApp->GetProfileInt(_T("Settings"),_T("Display Connections"),NO_VALUE);
 		if(nValue!=NO_VALUE)
 		{
 			m_bDispConnections=nValue;
 		}
 
-		nValue=pApp->GetProfileInt("Settings","Display References",NO_VALUE);
+		nValue=pApp->GetProfileInt(_T("Settings"),_T("Display References"),NO_VALUE);
 		if(nValue!=NO_VALUE)
 		{
 			m_bDispReference=nValue;
 		}
 
-		nValue=pApp->GetProfileInt("Settings","Display Sets",NO_VALUE);
+		nValue=pApp->GetProfileInt(_T("Settings"),_T("Display Sets"),NO_VALUE);
 		if(nValue!=NO_VALUE)
 		{
 			m_bDispSet=nValue;
 		}
 
-		nValue=pApp->GetProfileInt("Settings","Store Tree In Registry",NO_VALUE);
+		nValue=pApp->GetProfileInt(_T("Settings"),_T("Store Tree In Registry"),NO_VALUE);
 		if(nValue!=NO_VALUE)
 		{
 			m_bStoreTreeInRegistry=nValue;
 		}
 
-		nValue=pApp->GetProfileInt("Settings","Dynamic Loading",NO_VALUE);
+		nValue=pApp->GetProfileInt(_T("Settings"),_T("Dynamic Loading"),NO_VALUE);
 		if(nValue!=NO_VALUE)
 		{
 			m_bIsDynamicLoading=nValue;
 		}
 
 
-		nValue=pApp->GetProfileInt("Settings","Sort Option",NO_VALUE);
+		nValue=pApp->GetProfileInt(_T("Settings"),_T("Sort Option"),NO_VALUE);
 		if(nValue!=NO_VALUE)
 		{
 			m_soSortOptions=(eSortOptions)nValue;

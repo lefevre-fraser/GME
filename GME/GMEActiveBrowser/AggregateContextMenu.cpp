@@ -63,7 +63,7 @@ BOOL CAggregateContextMenu::Run(CPoint point)
 	UINT nItemID=pPopup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON |TPM_NONOTIFY|TPM_RETURNCMD, point.x, point.y,
 							m_pParent);
 
-	TRACE1("Selected menu item ID: %d\n",nItemID);
+	TRACE1(_T("Selected menu item ID: %d\n"),nItemID);
 	return DispatchCommand(nItemID);
 }
 
@@ -159,7 +159,7 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 
 							CComBSTR bszDispName;
 							ccpMetaFolder->get_DisplayedName(&bszDispName);
-							bszDispName=CString("New")+CString(bszDispName);
+							bszDispName=CString(_T("New"))+CString(bszDispName);
 							
 
 							// Starting transaction
@@ -186,7 +186,7 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 							// Setting name to the newly created object
 							CComBSTR bszDispName;
 							ccpMetaFCO->get_DisplayedName(&bszDispName);
-							bszDispName=CString("New")+CString(bszDispName);
+							bszDispName=CString(_T("New"))+CString(bszDispName);
 							
 							// Starting transaction
 							CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
@@ -216,7 +216,7 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 						// Setting name to the newly created object
 						CComBSTR bszDispName;
 						ccpMetaRole->get_DisplayedName(&bszDispName);
-						bszDispName=CString("New")+CString(bszDispName);
+						bszDispName=CString(_T("New"))+CString(bszDispName);
 						
 						// Starting transaction
 						CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
@@ -266,13 +266,13 @@ void CAggregateContextMenu::OnEditPaste()
 
 	if (OleDataObject.AttachClipboard() == FALSE) 
 	{
-		m_pParent->MessageBox("Cannot recover data from the clipboard.","Paste Error",MB_ICONERROR);
+		m_pParent->MessageBox(_T("Cannot recover data from the clipboard."),_T("Paste Error"),MB_ICONERROR);
 	}
 	else
 	{
 		if(!m_pParent->m_TreeAggregate.DoDrop(DRAGOP_COPY,&OleDataObject,CPoint(0,0)))
 		{
-			m_pParent->MessageBox("Cannot paste data from the clipboard. Please select valid target item.","Paste Error",MB_ICONERROR);
+			m_pParent->MessageBox(_T("Cannot paste data from the clipboard. Please select valid target item."),_T("Paste Error"),MB_ICONERROR);
 		}
 	}
 }
@@ -283,13 +283,13 @@ void CAggregateContextMenu::OnEditPasteSpecialAsReference()
 
 	if (OleDataObject.AttachClipboard() == FALSE) 
 	{
-		m_pParent->MessageBox("Cannot recover data from the clipboard.","Paste Error",MB_ICONERROR);
+		m_pParent->MessageBox(_T("Cannot recover data from the clipboard."),_T("Paste Error"),MB_ICONERROR);
 	}
 	else
 	{
 		if(!m_pParent->m_TreeAggregate.DoDrop(DRAGOP_REFERENCE,&OleDataObject,CPoint(0,0)))
 		{
-			m_pParent->MessageBox("Cannot paste data from the clipboard. Please select valid target item.","Paste Error",MB_ICONERROR);
+			m_pParent->MessageBox(_T("Cannot paste data from the clipboard. Please select valid target item."),_T("Paste Error"),MB_ICONERROR);
 		}
 	}
 }
@@ -300,13 +300,13 @@ void CAggregateContextMenu::OnEditPasteSpecialAsSubtype()
 
 	if (OleDataObject.AttachClipboard() == FALSE) 
 	{
-		m_pParent->MessageBox("Cannot recover data from the clipboard.","Paste Error",MB_ICONERROR);
+		m_pParent->MessageBox(_T("Cannot recover data from the clipboard."),_T("Paste Error"),MB_ICONERROR);
 	}
 	else
 	{
 		if(!m_pParent->m_TreeAggregate.DoDrop(DRAGOP_SUBTYPE,&OleDataObject,CPoint(0,0)))
 		{
-			m_pParent->MessageBox("Cannot paste data from the clipboard. Please select valid target item.","Paste Error",MB_ICONERROR);
+			m_pParent->MessageBox(_T("Cannot paste data from the clipboard. Please select valid target item."),_T("Paste Error"),MB_ICONERROR);
 		}
 	}
 }
@@ -317,13 +317,13 @@ void CAggregateContextMenu::OnEditPasteSpecialAsInstance()
 
 	if (OleDataObject.AttachClipboard() == FALSE) 
 	{
-		m_pParent->MessageBox("Cannot recover data from the clipboard.","Paste Error",MB_ICONERROR);
+		m_pParent->MessageBox(_T("Cannot recover data from the clipboard."),_T("Paste Error"),MB_ICONERROR);
 	}
 	else
 	{
 		if(!m_pParent->m_TreeAggregate.DoDrop(DRAGOP_INSTANCE,&OleDataObject,CPoint(0,0)))
 		{
-			m_pParent->MessageBox("Cannot paste data from the clipboard. Please select valid target item.","Paste Error",MB_ICONERROR);
+			m_pParent->MessageBox(_T("Cannot paste data from the clipboard. Please select valid target item."),_T("Paste Error"),MB_ICONERROR);
 		}
 	}
 }
@@ -334,13 +334,13 @@ void CAggregateContextMenu::OnEditPasteClosure( bool merge)
 
 	if (OleDataObject.AttachClipboard() == FALSE) 
 	{
-		m_pParent->MessageBox("Cannot recover data from the clipboard.","Paste Error",MB_ICONERROR);
+		m_pParent->MessageBox(_T("Cannot recover data from the clipboard."),_T("Paste Error"),MB_ICONERROR);
 	}
 	else
 	{
 		if(!m_pParent->m_TreeAggregate.DoDropWithoutChecking( merge?DRAGOP_CLOSURE_MERGE:DRAGOP_CLOSURE, &OleDataObject,CPoint(0,0)))
   		{
-  			m_pParent->MessageBox("Cannot paste data from the clipboard. Please select valid target item.","Paste Error",MB_ICONERROR);
+  			m_pParent->MessageBox(_T("Cannot paste data from the clipboard. Please select valid target item."),_T("Paste Error"),MB_ICONERROR);
 		}
 	}
 }
@@ -422,7 +422,7 @@ void CAggregateContextMenu::OnInterpret()
 
 	// Collection for the selected FCOs
 	CComPtr<IMgaFCOs> ccpSelFCOs;
-	COMTHROW(ccpSelFCOs.CoCreateInstance(OLESTR("Mga.MgaFCOs")));
+	COMTHROW(ccpSelFCOs.CoCreateInstance(L"Mga.MgaFCOs"));
 
 	
 	/* Iterating through the selected items in the tree control creating an FCO collection*/
@@ -662,8 +662,8 @@ void CAggregateContextMenu::CreateForSingleItem()
 
 				if( hItem == m_pParent->m_TreeAggregate.GetRootItem()) // RootFolder
 				{
-					ModifyMenu( ID_POPUP_REFRESH_LIBRARY, MF_BYCOMMAND, ID_POPUP_LIBRARY_AMBIGUITYCHK, "Chec&k GUID ambiguity...");
-					ModifyMenu( ID_POPUP_ATTRIBUTES, MF_BYCOMMAND|MF_STRING, ID_POPUP_ATTRIBUTES, "&Project Preferences");
+					ModifyMenu( ID_POPUP_REFRESH_LIBRARY, MF_BYCOMMAND, ID_POPUP_LIBRARY_AMBIGUITYCHK, _T("Chec&k GUID ambiguity..."));
+					ModifyMenu( ID_POPUP_ATTRIBUTES, MF_BYCOMMAND|MF_STRING, ID_POPUP_ATTRIBUTES, _T("&Project Preferences"));
 				}
 				else
 				{
@@ -674,7 +674,7 @@ void CAggregateContextMenu::CreateForSingleItem()
 					if( m_pParent->m_TreeAggregate.IsLibrary(MgaObjectProxy.m_pMgaObject, &has_dependency))
 					{   // library folder
 						if( has_dependency)
-							InsertMenu( ID_POPUP_REFRESH_LIBRARY, MF_BYCOMMAND|MF_STRING, ID_POPUP_LIBRARY_DEPENDENCIES, "D&ependencies...");
+							InsertMenu( ID_POPUP_REFRESH_LIBRARY, MF_BYCOMMAND|MF_STRING, ID_POPUP_LIBRARY_DEPENDENCIES, _T("D&ependencies..."));
 						
 						DeleteMenu( ID_POPUP_ATTACH_LIBRARY, MF_BYCOMMAND);
 					}
@@ -735,7 +735,7 @@ void CAggregateContextMenu::CreateForSingleItem()
 
 			case OBJTYPE_REFERENCE:
 				{
-					InsertMenu( ID_POPUP_REFRESH_LIBRARY, MF_BYCOMMAND, ID_POPUP_FOLLOWREF, "&Follow Reference");
+					InsertMenu( ID_POPUP_REFRESH_LIBRARY, MF_BYCOMMAND, ID_POPUP_FOLLOWREF, _T("&Follow Reference"));
 					insertionsSeparatorPosition++;
 				}// no break here!
 			default:
@@ -804,7 +804,7 @@ void CAggregateContextMenu::SetFolderChildren(LPUNKNOWN pUnknown)
 	// will automatically destroy it
 	if(mnuInsertFolder.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertFolder.GetSafeHmenu(),"Insert &Folder");
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertFolder.GetSafeHmenu(),_T("Insert &Folder"));
 		mnuInsertFolder.Detach();
 	}
 
@@ -879,28 +879,28 @@ void CAggregateContextMenu::SetFolderChildren(LPUNKNOWN pUnknown)
 	// Append Atom
 	if(mnuInsertAtom.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertAtom.GetSafeHmenu(),"Insert &Atom");
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertAtom.GetSafeHmenu(),_T("Insert &Atom"));
 		mnuInsertAtom.Detach();
 	}
 	
 	// Append Model
 	if(mnuInsertModel.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertModel.GetSafeHmenu(),"Insert &Model");
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertModel.GetSafeHmenu(),_T("Insert &Model"));
 		mnuInsertModel.Detach();
 	}
 
 	// Append Reference
 	if(mnuInsertReference.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertReference.GetSafeHmenu(),"Insert &Reference");
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertReference.GetSafeHmenu(),_T("Insert &Reference"));
 		mnuInsertReference.Detach();
 	}
 
 	// Append Set
 	if(mnuInsertSet.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertSet.GetSafeHmenu(),"Insert &Set");
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertSet.GetSafeHmenu(),_T("Insert &Set"));
 		mnuInsertSet.Detach();
 	}
 
@@ -1025,28 +1025,28 @@ void CAggregateContextMenu::SetModelChildren(LPUNKNOWN pUnknown)
 	// Append Atom
 	if(mnuInsertAtom.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertAtom.GetSafeHmenu(),"Insert &Atom");
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertAtom.GetSafeHmenu(),_T("Insert &Atom"));
 		mnuInsertAtom.Detach();
 	}
 	
 	// Append Model
 	if(mnuInsertModel.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertModel.GetSafeHmenu(),"Insert &Model");
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertModel.GetSafeHmenu(),_T("Insert &Model"));
 		mnuInsertModel.Detach();
 	}
 
 	// Append Reference
 	if(mnuInsertReference.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertReference.GetSafeHmenu(),"Insert &Reference");
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertReference.GetSafeHmenu(),_T("Insert &Reference"));
 		mnuInsertReference.Detach();
 	}
 
 	// Append Set
 	if(mnuInsertSet.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertSet.GetSafeHmenu(),"Insert &Set");
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertSet.GetSafeHmenu(),_T("Insert &Set"));
 		mnuInsertSet.Detach();
 	}
 }
@@ -1159,7 +1159,7 @@ void CAggregateContextMenu::OnMFSourceControlUpdate()
 		{
 			m_pParent->ProjectSourceControlUpdate(0);
 		}
-		MSGCATCH("Error while updating source control info for the project!",;)
+		MSGCATCH(_T("Error while updating source control info for the project!"),;)
 	}
 	else if(m_pParent->m_TreeAggregate.m_MgaMap.LookupObjectUnknown(hItem,pUnknown))
 	{
@@ -1185,14 +1185,14 @@ void CAggregateContextMenu::OnMFSourceControlUpdate()
 			pMgaContext->CommitTransaction();
 
 		} 
-		MSGCATCH("Error while updating source control info!",pMgaContext->AbortTransaction();)
+		MSGCATCH(_T("Error while updating source control info!"),pMgaContext->AbortTransaction();)
 
 		MSGTRY 
 		{
 			// it will open and commit its own transaction
 			m_pParent->ProjectSourceControlUpdate( id);
 		}
-		MSGCATCH("Error while updating source control info!",;)
+		MSGCATCH(_T("Error while updating source control info!"),;)
 
 		//if( ccpMgaModel || ccpMgaFolder)
 		//	m_pParent->Refresh();
@@ -1206,7 +1206,7 @@ void CAggregateContextMenu::OnUsersActive()
 		// it will open and commit its own transaction
 		m_pParent->SourceControlActiveUsers();
 	} 
-	MSGCATCH("Error while updating source control info!",;)
+	MSGCATCH(_T("Error while updating source control info!"),;)
 }
 
 void CAggregateContextMenu::OnUsersOwner()
@@ -1238,14 +1238,14 @@ void CAggregateContextMenu::OnUsersOwner()
 			// Ending transaction
 			pMgaContext->CommitTransaction();
 		} 
-		MSGCATCH("Error while updating source control info!",pMgaContext->AbortTransaction();)
+		MSGCATCH(_T("Error while updating source control info!"),pMgaContext->AbortTransaction();)
 
 		MSGTRY
 		{
 			// it will open and commit its own transaction
 			m_pParent->SourceControlObjectOwner( id);
 		}
-		MSGCATCH("Error while updating source control info!",;)
+		MSGCATCH(_T("Error while updating source control info!"),;)
 
 
 		//if( ccpMgaModel || ccpMgaFolder)
@@ -1302,14 +1302,14 @@ void CAggregateContextMenu::OnFollowRef()
 			// Ending transaction
 			pMgaContext->CommitTransaction();
 		} 
-		MSGCATCH( "Error while following reference!", pMgaContext->AbortTransaction();)
+		MSGCATCH( _T("Error while following reference!"), pMgaContext->AbortTransaction();)
 
 		MSGTRY			
 		{
-			if( !ccpTgt) AfxMessageBox( "Null reference can't be followed!");
+			if( !ccpTgt) AfxMessageBox( _T("Null reference can't be followed!"));
 			else         m_pParent->GotoIUnkPtr( ccpTgt);
 		} 
-		MSGCATCH( "Error while following reference!", ;)
+		MSGCATCH( _T("Error while following reference!"), ;)
 	}
 }
 
