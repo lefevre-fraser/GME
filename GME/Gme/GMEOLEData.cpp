@@ -222,7 +222,7 @@ bool CGMEDataSource::ParseXMLData(COleDataObject *pDataObject, IMgaObject *targe
 	ASSERT( target != NULL );
 
 	// create a temporary filename
-	char *fname = _tempnam("c:\\temp", "tmp");
+      TCHAR *fname = _ttempnam(_T("c:\\temp"), _T("tmp"));
 	CString filename = fname;
 	free(fname);
 
@@ -265,7 +265,7 @@ bool CGMEDataSource::ParseXMLData(COleDataObject *pDataObject, IMgaObject *targe
 		CComBstrObj acckind, version; 
 		VARIANT_BOOL is_acc_target;
 		COMTHROW( parser->GetClipXMLInfo( PutInBstr(filename), target, &is_acc_target, PutOut( acckind), PutOut( version)) );
-		CString ver = "0"; // defval
+		CString ver = _T("0"); // defval
 		if( version) // clipboard main token found, otherwise use defval
 			CopyTo( version, ver);
 
@@ -275,31 +275,31 @@ bool CGMEDataSource::ParseXMLData(COleDataObject *pDataObject, IMgaObject *targe
 		CComPtr<IGMEOLEApp> t_GME = CGMEDataSource::get_GME( t_project);
 		
 		CComBSTR msg, done;
-		done.Append("Done.");
-		if( ver == "0")
+		done.Append(_T("Done."));
+		if( ver == _T("0"))
 		{
-			msg.Append("Inserting XML data...");
+			msg.Append(_T("Inserting XML data..."));
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( msg, MSG_INFO));
 			COMTHROW( parser->ParseFCOs(target, PutInBstr(filename)) );
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( done, MSG_INFO));
 		}
-		else if( ver == "4")
+		else if( ver == _T("4"))
 		{
-			msg.Append("Inserting XML SmartCopied data...");
+			msg.Append(_T("Inserting XML SmartCopied data..."));
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( msg, MSG_INFO));
 			COMTHROW( parser->ParseClos4( target, PutInBstr(filename), merge?MERGE:ADDITION ));
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( done, MSG_INFO));
 		}
-		else if ( ver == "1" || ver == "")
+		else if ( ver == _T("1") || ver == _T(""))
 		{
-			msg.Append("Inserting XML CopyClosured data...");
+			msg.Append(_T("Inserting XML CopyClosured data..."));
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( msg, MSG_INFO));
 			COMTHROW( parser->ParseClos1(target, PutInBstr(filename)) );
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( done, MSG_INFO));
 		}
 		else
 		{
-			msg.Append("Error: Unknown clipboard closure format");
+			msg.Append(_T("Error: Unknown clipboard closure format"));
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( msg, MSG_INFO));
 
 			ASSERT(0);
@@ -323,11 +323,11 @@ bool CGMEDataSource::ParseXMLData(COleDataObject *pDataObject, IMgaObject *targe
 			CString desc;
 			COMTHROW( errinfo->GetDescription(PutOut(desc)) );
 
-			AfxMessageBox(CString("Error while parsing XML file: ") + desc);
+			AfxMessageBox(CString(_T("Error while parsing XML file: ")) + desc);
 		}
 		catch(hresult_exception &)
 		{
-			AfxMessageBox("Fatal error while parsing XML file!");
+			AfxMessageBox(_T("Fatal error while parsing XML file!"));
 		}
 
 		throw e;
@@ -372,7 +372,7 @@ BOOL CGMEDataSource::OnRenderFileData(LPFORMATETC lpFormatEtc, CFile* pFile)
 
 		try
 		{
-			char *fname = _tempnam("c:\\temp", "tmp");
+			TCHAR *fname = _ttempnam(_T("c:\\temp"), _T("tmp"));
 			CString filename = fname;
 			free(fname);
 		
@@ -440,7 +440,7 @@ BOOL CGMEClosureDataSource::OnRenderFileData(LPFORMATETC lpFormatEtc, CFile* pFi
 
 		try
 		{
-			char *fname = _tempnam("c:\\temp", "tmp");
+			TCHAR *fname = _ttempnam(_T("c:\\temp"), _T("tmp"));
 			CString filename = fname;
 			free(fname);
 		
@@ -588,7 +588,7 @@ STDMETHODIMP CGMEDataSource::XMgaDataSource::get_Project(IUnknown **p)
 {
 	CComPtr<IGMEOLEApp> gme;
 	if ( (project != NULL)) {		
-		CComBSTR bstrName("GME.Application");
+		CComBSTR bstrName(L"GME.Application");
 		CComPtr<IMgaClient> pClient;
 		HRESULT hr = project->GetClientByName(bstrName, &pClient);
 		if (SUCCEEDED(hr) && pClient) {
