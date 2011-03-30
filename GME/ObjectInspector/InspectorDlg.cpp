@@ -401,8 +401,8 @@ LONG CInspectorDlg::OnItemChanged(WPARAM wParam, LPARAM lParam)
 /*
 #ifdef _DEBUG
 	CString strTemp;
-	strTemp.Format("Item Changed: %u on Page %u",wParam,lParam);
-	MessageBox(strTemp,"Item Changed");
+	strTemp.Format(_T("Item Changed: %u on Page %u"),wParam,lParam);
+	MessageBox(strTemp,_T("Item Changed"));
 #endif
 */
 	if(lParam==INSP_PREF_PANEL)

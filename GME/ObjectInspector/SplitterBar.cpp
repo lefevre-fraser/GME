@@ -42,7 +42,7 @@ BOOL CSplitterBar::Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UIN
 {
 	CWnd* pWnd = this;
 	m_bHorizontal=bHorizontal;
-	return pWnd->Create(NULL, "", dwStyle, rect, pParentWnd, nID);
+	return pWnd->Create(NULL, _T(""), dwStyle, rect, pParentWnd, nID);
 }
 
 /////////////////////////////////////////////////////////////////////////////

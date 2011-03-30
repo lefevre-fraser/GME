@@ -85,8 +85,8 @@ BOOL CComboBoxSelectDlg::OnInitDialog()
 	m_lstBox.SetFont( m_pFontWnd );
 
 	if ( m_pListItem->Value.dataType == ITEMDATA_BOOLEAN ) {
-		m_lstBox.AddString("True");
-		m_lstBox.AddString("False");
+		m_lstBox.AddString(_T("True"));
+		m_lstBox.AddString(_T("False"));
 		m_lstBox.SetCurSel( m_pListItem->Value.boolVal );
 	}
 	else {

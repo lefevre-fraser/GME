@@ -62,11 +62,11 @@ CProperty::~CProperty()
 void CProperty::CreateGeneralList(const CMgaFCOPtrList& MgaFCOPtrList,const CMgaFolderPtrList& MgaFolderPtrList,CArray<CListItem,CListItem&> &ListItemArray)
 {
 
-	// Adding "General Properties" container
+	// Adding _T("General Properties") container
 	CListItem GeneralListItem;
 	GeneralListItem.bIsReadOnly=true;
 	GeneralListItem.bIsContainer=true;
-	GeneralListItem.strName="General Properties";
+	GeneralListItem.strName=_T("General Properties");
 
 	ListItemArray.Add(GeneralListItem);
 
@@ -132,16 +132,16 @@ void CProperty::CreateGeneralList(const CMgaFCOPtrList& MgaFCOPtrList,const CMga
 
 	// Type
 	ListItem.bIsDifferentValue=bIsTypeDirty;
-	ListItem.strName="Type";
-	ListItem.strToolTip="Type of the object.";
+	ListItem.strName=_T("Type");
+	ListItem.strToolTip=_T("Type of the object.");
 	ListItem.Value.SetStringValue(strType);
 
 	ListItemArray.Add(ListItem);
 	
 	// Kind
 	ListItem.bIsDifferentValue=bIsKindNameDirty;
-	ListItem.strName="Kind";
-	ListItem.strToolTip="Kind of the object.";
+	ListItem.strName=_T("Kind");
+	ListItem.strToolTip=_T("Kind of the object.");
 	ListItem.Value.SetStringValue(strKindName);
 
 	ListItemArray.Add(ListItem);
@@ -150,30 +150,30 @@ void CProperty::CreateGeneralList(const CMgaFCOPtrList& MgaFCOPtrList,const CMga
 	if(!bIsMultiple)
 	{
 		ListItem.bIsDifferentValue=false;
-		ListItem.strName="Object ID";
-		ListItem.strToolTip="Unique ID of the object.";
+		ListItem.strName=_T("Object ID");
+		ListItem.strToolTip=_T("Unique ID of the object.");
 		ListItem.Value.SetStringValue(strObjectID);
 
 		ListItemArray.Add(ListItem);
 
 		ListItem.bIsDifferentValue=false;
-		ListItem.strName="Relative ID";
-		ListItem.strToolTip="Relative ID of the object, corresponds with creation order. The object with greater relative ID was created later.";
+		ListItem.strName=_T("Relative ID");
+		ListItem.strToolTip=_T("Relative ID of the object, corresponds with creation order. The object with greater relative ID was created later.");
 		ListItem.Value.SetStringValue(strRelID);
 
 		ListItemArray.Add(ListItem);
 
 		ListItem.bIsDifferentValue=false;
-		ListItem.strName="Meta ID";
-		ListItem.strToolTip="Meta ID of the object.";
+		ListItem.strName=_T("Meta ID");
+		ListItem.strToolTip=_T("Meta ID of the object.");
 		ListItem.Value.SetStringValue(strMetaID);
 
 		ListItemArray.Add(ListItem);
 
 
 		ListItem.bIsDifferentValue=false;
-		ListItem.strName="GUID";
-		ListItem.strToolTip="Universally unique ID of the object.";
+		ListItem.strName=_T("GUID");
+		ListItem.strToolTip=_T("Universally unique ID of the object.");
 		ListItem.Value.SetStringValue(strGUID);
 
 		ListItemArray.Add(ListItem);
@@ -190,7 +190,7 @@ void CProperty::GetGeneralProperties(const CComPtr<IMgaObject>& ccpMgaObject,
 									 bool bIsFirst)
 {
 		
-		static CString strTypeNameArray[] = { "Invalid", "Model", "Atom", "Reference", "Connection", "Set", "Folder" };
+		static CString strTypeNameArray[] = { _T("Invalid"), _T("Model"), _T("Atom"), _T("Reference"), _T("Connection"), _T("Set"), _T("Folder") };
 		CString strTemp;
 		objtype_enum oeObjType;
 		COMTHROW(ccpMgaObject->get_ObjType(&oeObjType));
@@ -232,16 +232,16 @@ void CProperty::GetGeneralProperties(const CComPtr<IMgaObject>& ccpMgaObject,
 				// If it is an instance
 				if(vtbIsInstance != VARIANT_FALSE) 
 				{
-					strTemp.Format("%s (instance of %s)",strTypeNameArray[oeObjType],baseName);
+					strTemp.Format(_T("%s (instance of %s)"),strTypeNameArray[oeObjType],baseName);
 				}
 				else
 				{
-					strTemp.Format("%s (subtype of %s)",strTypeNameArray[oeObjType],baseName);
+					strTemp.Format(_T("%s (subtype of %s)"),strTypeNameArray[oeObjType],baseName);
 				}
 			}
 			else // Archetype
 			{
-				strTemp.Format("%s (Archetype)",strTypeNameArray[oeObjType]);
+				strTemp.Format(_T("%s (Archetype)"),strTypeNameArray[oeObjType]);
 			}
 		}
 		else
@@ -264,7 +264,7 @@ void CProperty::GetGeneralProperties(const CComPtr<IMgaObject>& ccpMgaObject,
 		///////////////// Kind ////////////////////////////////////
 		
 		// Getting kind
-		strTemp = "N/A";
+		strTemp = _T("N/A");
 
 		// Get Meta
 		CComPtr<IMgaMetaBase> ccpMetaBase;
@@ -293,18 +293,18 @@ void CProperty::GetGeneralProperties(const CComPtr<IMgaObject>& ccpMgaObject,
 			// Querying ObjectID
 			CComBSTR bstrObjectID;
 		 	COMTHROW(ccpMgaObject->get_ID(&bstrObjectID));
-  			strObjectID.Format("%s",CString(bstrObjectID));
+  			strObjectID.Format(_T("%s"),CString(bstrObjectID));
 
 			// Getting RelID (this carries the creation order of an MgaObject)
 			long lRelID;
 			COMTHROW(ccpMgaObject->get_RelID(&lRelID));
-			strRelID.Format("0x%08X",lRelID);
+			strRelID.Format(_T("0x%08X"),lRelID);
 		
 	
 			// Get Meta ID
 			metaref_type mtMetaID = 0;
 			COMTHROW(ccpMetaBase->get_MetaRef(&mtMetaID));
-			strMetaID.Format("%ld",(long)mtMetaID);
+			strMetaID.Format(_T("%ld"),(long)mtMetaID);
 
 			// Get GUID
 			CComBSTR bstrGUID;
@@ -318,11 +318,11 @@ void CProperty::GetGeneralProperties(const CComPtr<IMgaObject>& ccpMgaObject,
 void CProperty::CreateFCOList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListItem,CListItem&> &ListItemArray)
 {
 
-	// Adding "FCO Properties" container
+	// Adding _T("FCO Properties") container
 	CListItem FCOListItem;
 	FCOListItem.bIsContainer=true;
 	FCOListItem.bIsReadOnly=true;
-	FCOListItem.strName="FCO Properties";
+	FCOListItem.strName=_T("FCO Properties");
 
 	ListItemArray.Add(FCOListItem);
 
@@ -346,7 +346,7 @@ void CProperty::CreateFCOList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListIt
 		CComPtr<IMgaMetaRole> ccpMetaRole;
 		COMTHROW(ccpMgaFCO->get_MetaRole(&ccpMetaRole));
 		
-		strTemp = "N/A";
+		strTemp = _T("N/A");
 		if(ccpMetaRole != 0) 
 		{
 			CComBSTR bstrRoleName;
@@ -407,7 +407,7 @@ void CProperty::CreateFCOList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListIt
 
 				if (!bFirst) 
 				{
-					strTemp += "; "; 
+					strTemp += _T("; "); 
 				} 
 				else 
 				{
@@ -431,7 +431,7 @@ void CProperty::CreateFCOList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListIt
 
 				if (vbtIsPrimary != VARIANT_FALSE) 
 				{
-					strTemp += " (Primary)";
+					strTemp += _T(" (Primary)");
 				}
 			}
 			MGACOLL_ITERATE_END;
@@ -460,16 +460,16 @@ void CProperty::CreateFCOList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListIt
 
 	// Role
 	ListItem.bIsDifferentValue=bIsRoleDirty;
-	ListItem.strName="Role";
-	ListItem.strToolTip="Role name of the FCO.";
+	ListItem.strName=_T("Role");
+	ListItem.strToolTip=_T("Role name of the FCO.");
 	ListItem.Value.SetStringValue(strRole);
 
 	ListItemArray.Add(ListItem);
 
 	// Aspect
 	ListItem.bIsDifferentValue=bIsAspectDirty;
-	ListItem.strName="Aspect";
-	ListItem.strToolTip="Aspects which this FCO contains.";
+	ListItem.strName=_T("Aspect");
+	ListItem.strToolTip=_T("Aspects which this FCO contains.");
 	ListItem.Value.SetStringValue(strAspect);
 
 	ListItemArray.Add(ListItem);
@@ -481,12 +481,12 @@ void CProperty::CreateFCOList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListIt
 void CProperty::CreateMarsList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListItem,CListItem&> &ListItemArray)
 {
 
-	// Adding "MARS Properties" container
+	// Adding _T("MARS Properties") container
 	CListItem MarsListItem;
 	MarsListItem.bIsContainer=true;
 	MarsListItem.bIsReadOnly=true;
-	MarsListItem.strName="MARS Properties";
-	MarsListItem.strToolTip="Common properties for M(odel),A(tom),R(eference),S(et) model elements";
+	MarsListItem.strName=_T("MARS Properties");
+	MarsListItem.strToolTip=_T("Common properties for M(odel),A(tom),R(eference),S(et) model elements");
 
 	ListItemArray.Add(MarsListItem);
 
@@ -509,7 +509,7 @@ void CProperty::CreateMarsList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListI
 
 		/////////////////////////////// Dependency //////////////////////////////////
 
-		strTemp="N/A";
+		strTemp=_T("N/A");
 		CComPtr<IMgaFCO> ccpAncestorFCO;
 		COMTHROW(ccpMgaFCO->get_DerivedFrom(&ccpAncestorFCO));
 		if(ccpAncestorFCO) 
@@ -522,11 +522,11 @@ void CProperty::CreateMarsList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListI
 		 		COMTHROW(ccpMgaDependReference->CompareToBase(&wDepends));
 				if(wDepends > 0)
 				{
-					strTemp="False";
+					strTemp=_T("False");
 				}
 				else 
 				{
-					strTemp="True";
+					strTemp=_T("True");
 				}
 			}
 			else 
@@ -537,11 +537,11 @@ void CProperty::CreateMarsList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListI
 			 		COMTHROW(ccpMgaSet->CompareToBase(&wDepends));
 					if(wDepends > 0)
 					{
-						strTemp="False";
+						strTemp=_T("False");
 					}
 					else 
 					{
-						strTemp="True";
+						strTemp=_T("True");
 					}
 				}
 			}
@@ -561,7 +561,7 @@ void CProperty::CreateMarsList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListI
 
 
 		//////////////////////////////// Referece ////////////////////////////////
-		strTemp="N/A";
+		strTemp=_T("N/A");
 		CComPtr<IMgaReference> ccpMgaReference;
 		if(ccpMgaFCO.QueryInterface(&ccpMgaReference) == S_OK) // If FCO is a reference
 		{
@@ -583,11 +583,11 @@ void CProperty::CreateMarsList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListI
 				CComBSTR bstrMetaReferredName;
 				COMTHROW(ccpMetaReferredFCO->get_DisplayedName(&bstrMetaReferredName));
 
-				strTemp.Format(" %s (%s, ObjectID=%s)",CString(bstrReferredName),CString(bstrMetaReferredName),CString(bstrReferredID));
+				strTemp.Format(_T(" %s (%s, ObjectID=%s)"),CString(bstrReferredName),CString(bstrMetaReferredName),CString(bstrReferredID));
 			}
 			else // NULL reference
 			{
-				strTemp="<Null reference>";
+				strTemp=_T("<Null reference>");
 			}	
 		}
 		
@@ -613,16 +613,16 @@ void CProperty::CreateMarsList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListI
 
 	// Depends
 	ListItem.bIsDifferentValue=bIsDependsDirty;
-	ListItem.strName="Depends";
-	ListItem.strToolTip="Dependencies of the FCO.";
+	ListItem.strName=_T("Depends");
+	ListItem.strToolTip=_T("Dependencies of the FCO.");
 	ListItem.Value.SetStringValue(strDepends);
 
 	ListItemArray.Add(ListItem);
 
 	// Refers
 	ListItem.bIsDifferentValue=bIsRefersDirty;
-	ListItem.strName="References";
-	ListItem.strToolTip="FCO to which this reference refers.";
+	ListItem.strName=_T("References");
+	ListItem.strToolTip=_T("FCO to which this reference refers.");
 	ListItem.Value.SetStringValue(strRefers);
 
 	ListItemArray.Add(ListItem);
@@ -634,11 +634,11 @@ void CProperty::CreateMarsList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListI
 void CProperty::CreateConnectionList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListItem,CListItem&> &ListItemArray)
 {
 
-	// Adding "Connection Properties" container
+	// Adding _T("Connection Properties") container
 	CListItem ConnListItem;
 	ConnListItem.bIsContainer=true;
 	ConnListItem.bIsReadOnly=true;
-	ConnListItem.strName="Connection Properties";
+	ConnListItem.strName=_T("Connection Properties");
 	
 
 	ListItemArray.Add(ConnListItem);
@@ -738,8 +738,8 @@ void CProperty::CreateConnectionList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<
 		if (vtbIsParentsEqual != VARIANT_FALSE)  // If parents are equal
 		{
 
-			strSrcPortName ="-";
-			strDstPortName ="-";
+			strSrcPortName =_T("-");
+			strDstPortName =_T("-");
 		} 
 		else 
 		{
@@ -781,32 +781,32 @@ void CProperty::CreateConnectionList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<
 	
 	// strSource
 	ListItem.bIsDifferentValue=bIsSourceDirty;
-	ListItem.strName="Source";
-	ListItem.strToolTip="Connection source side.";
+	ListItem.strName=_T("Source");
+	ListItem.strToolTip=_T("Connection source side.");
 	ListItem.Value.SetStringValue(strSource);
 
 	ListItemArray.Add(ListItem);
 
 	// strSourcePort
 	ListItem.bIsDifferentValue=bIsSourcePortDirty;
-	ListItem.strName="Source Port";
-	ListItem.strToolTip="Connection source side port.";
+	ListItem.strName=_T("Source Port");
+	ListItem.strToolTip=_T("Connection source side port.");
 	ListItem.Value.SetStringValue(strSourcePort);
 
 	ListItemArray.Add(ListItem);
 
 	// strDest
 	ListItem.bIsDifferentValue=bIsDestDirty;
-	ListItem.strName="Destination";
-	ListItem.strToolTip="Connection destination side.";
+	ListItem.strName=_T("Destination");
+	ListItem.strToolTip=_T("Connection destination side.");
 	ListItem.Value.SetStringValue(strDest);
 
 	ListItemArray.Add(ListItem);
 
 	// strSourcePort
 	ListItem.bIsDifferentValue=bIsDestPortDirty;
-	ListItem.strName="Destination Port";
-	ListItem.strToolTip="Connection destination side port.";
+	ListItem.strName=_T("Destination Port");
+	ListItem.strToolTip=_T("Connection destination side port.");
 	ListItem.Value.SetStringValue(strDestPort);
 
 	ListItemArray.Add(ListItem);
@@ -817,11 +817,11 @@ void CProperty::CreateConnectionList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<
 
 void CProperty::CreateFolderList(const CMgaFolderPtrList& MgaFolderPtrList,CArray<CListItem,CListItem&> &ListItemArray)
 {
-	// Adding "Folder Properties" container
+	// Adding _T("Folder Properties") container
 	CListItem FolderListItem;
 	FolderListItem.bIsContainer=true;
 	FolderListItem.bIsReadOnly=true;
-	FolderListItem.strName="Folder Properties";
+	FolderListItem.strName=_T("Folder Properties");
 	
 
 	ListItemArray.Add(FolderListItem);
@@ -865,8 +865,8 @@ void CProperty::CreateFolderList(const CMgaFolderPtrList& MgaFolderPtrList,CArra
 	ListItem.bIsReadOnly=true;
 	// strLibraryRef
 	ListItem.bIsDifferentValue=bIsLibraryRefDirty;
-	ListItem.strName="Library Name";
-	ListItem.strToolTip="Library is a folder incorporating an MGA file using the same paradigm as meta.";
+	ListItem.strName=_T("Library Name");
+	ListItem.strToolTip=_T("Library is a folder incorporating an MGA file using the same paradigm as meta.");
 	ListItem.Value.SetStringValue(strLibraryRef);
 
 	ListItemArray.Add(ListItem);

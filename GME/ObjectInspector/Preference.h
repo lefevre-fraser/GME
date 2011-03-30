@@ -19,15 +19,15 @@
 #define PREF_SET			0x10
 
 
-typedef char*(*TableRowType)[5];
+typedef TCHAR*(*TableRowType)[5];
 
 class CPreference
 {
-	static char* m_szConnectionPreferenceTable[][5];
-	static char* m_szAtomPreferenceTable[][5];
-	static char* m_szModelPreferenceTable[][5];
-	static char* m_szProxyPreferenceTable[][5];
-	static char* m_szSetPreferenceTable[][5];
+	static TCHAR* m_szConnectionPreferenceTable[][5];
+	static TCHAR* m_szAtomPreferenceTable[][5];
+	static TCHAR* m_szModelPreferenceTable[][5];
+	static TCHAR* m_szProxyPreferenceTable[][5];
+	static TCHAR* m_szSetPreferenceTable[][5];
 
 public:
 	void WriteItemToMga(CListItem ListItem, const CMgaFCOPtrList& MgaFCOPtrList, bool bIsForKind);
@@ -44,9 +44,9 @@ public:
 	int FindRegPathInAtomTable(const CString& strPath);
 	int FindRegPathInConnectionTable(const CString& strPath);
 	void SetupPreferences(BYTE cFlags);
-	static char* m_szLineStyleList[];
-	static char* m_szLineTypeList[];
-	static char* m_szBooleanList[];
+	static TCHAR* m_szLineStyleList[];
+	static TCHAR* m_szLineTypeList[];
+	static TCHAR* m_szBooleanList[];
 	
 	CArray<CListItem,CListItem&> m_ListItemArray;
 	void CreateList( const CMgaFCOPtrList& MgaFCOPtrList);
@@ -65,7 +65,7 @@ private:
 	int nSetTableLength;
 
 	// Helper for System Backround Color
-	char m_szSysBckGrnd[9];
+	TCHAR m_szSysBckGrnd[9];
 
 	// Helper variable for placing auto router switch settings in case of model preferences
 	bool isAutRouterPrefsCategoryAdded;

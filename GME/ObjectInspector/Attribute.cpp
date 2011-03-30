@@ -147,7 +147,7 @@ void CAttribute::CreateList(CComPtr<IMgaProject> ccpProject, CArray<CListItem,CL
 	{
 		CListItem ListItem;
 
-		ListItem.strName = "Author";
+		ListItem.strName = _T("Author");
 		ListItem.dwKeyValue = PROJECT_AUTHOR;
 		ListItem.bIsDefault = false;
 		ListItem.bIsDifferentValue = false;
@@ -158,7 +158,7 @@ void CAttribute::CreateList(CComPtr<IMgaProject> ccpProject, CArray<CListItem,CL
 		CString strValue(bstr);
 		ListItem.Value.SetStringValue(strValue);
 
-		ListItem.DefValue.SetStringValue("");
+		ListItem.DefValue.SetStringValue(_T(""));
 		
 		ListItemArray.Add(ListItem);
 	}
@@ -166,7 +166,7 @@ void CAttribute::CreateList(CComPtr<IMgaProject> ccpProject, CArray<CListItem,CL
 	{
 		CListItem ListItem;
 
-		ListItem.strName = "Version";
+		ListItem.strName = _T("Version");
 		ListItem.dwKeyValue = PROJECT_VERSION;
 		ListItem.bIsDefault = false;
 		ListItem.bIsDifferentValue = false;
@@ -177,7 +177,7 @@ void CAttribute::CreateList(CComPtr<IMgaProject> ccpProject, CArray<CListItem,CL
 		CString strValue(bstr);
 		ListItem.Value.SetStringValue(strValue);
 
-		ListItem.DefValue.SetStringValue("");
+		ListItem.DefValue.SetStringValue(_T(""));
 		
 		ListItemArray.Add(ListItem);
 	}
@@ -185,7 +185,7 @@ void CAttribute::CreateList(CComPtr<IMgaProject> ccpProject, CArray<CListItem,CL
 	{
 		CListItem ListItem;
 
-		ListItem.strName = "Comment";
+		ListItem.strName = _T("Comment");
 		ListItem.dwKeyValue = PROJECT_COMMENT;
 		ListItem.bIsDefault = false;
 		ListItem.bIsDifferentValue = false;
@@ -200,7 +200,7 @@ void CAttribute::CreateList(CComPtr<IMgaProject> ccpProject, CArray<CListItem,CL
 		ListItem.Value.SetStringValue(strValueArray,6);
 
 		// Setting default value
-		CString strDefValue = "";
+		CString strDefValue = _T("");
 		CStringArray strDefValueArray;
 		strDefValueArray.Add(strDefValue);
 		ListItem.DefValue.SetStringValue(strDefValueArray,6);
@@ -314,7 +314,7 @@ bool CAttribute::CreateListItem(CListItem &ListItem, const CComVariant &ccvtValu
 				
 				// Converting to int
 				CString strLineNum(bstrMultiLinePref);
-				int nLineNumMin = atoi(strLineNum);
+				int nLineNumMin = _tstoi(strLineNum);
 				const int nLineNumMax = 32;
 				
 				if(nLineNumMin<2) // Single line edit box
@@ -493,7 +493,7 @@ void CAttribute::WriteItemToMga(CListItem ListItem,const CMgaFCOPtrList& MgaFCOP
 					CString strValue;
 					ListItem.Value.toString(strValue);
 
-					strValue.Replace("\r\n","\n");
+					strValue.Replace(_T("\r\n"), _T("\n"));
 
 					CComBSTR bstrValue(strValue);
 					COMTHROW(ccpCurrFCO->put_StrAttrByName(bstrAttrName,bstrValue));					
@@ -536,7 +536,7 @@ void CAttribute::WriteItemToMga(CListItem ListItem, CComPtr<IMgaProject> ccpProj
 {
 	CString strValue;
 	ListItem.Value.toString(strValue);
-	strValue.Replace("\r\n","\n");
+	strValue.Replace(_T("\r\n"), _T("\n"));
 	CComBSTR bstrValue(strValue);
 
 	switch (ListItem.dwKeyValue) {

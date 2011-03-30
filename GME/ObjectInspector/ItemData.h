@@ -35,7 +35,7 @@ class CItemData
 	friend class CInspectorList;
 	void CommonInit();
 public:
-	static const char * m_defFMTSTR;
+	static const TCHAR * m_defFMTSTR;
 	static CString      m_fmtStr;
 	static void         getRealFmtString();
 

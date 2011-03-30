@@ -19,15 +19,15 @@ static char THIS_FILE[]=__FILE__;
 
 // LINE_STYLE_LIST (butt,arrow,diamond)
 #define LINE_STYLE_LIST_SIZE 10
-char *CPreference::m_szLineStyleList[]={"butt", "arrow", "diamond", "apex", "bullet", "empty diamond", "empty apex", "empty bullet", "left half arrow", "right half arrow" };
+TCHAR *CPreference::m_szLineStyleList[]={_T("butt"), _T("arrow"), _T("diamond"), _T("apex"), _T("bullet"), _T("empty diamond"), _T("empty apex"), _T("empty bullet"), _T("left half arrow"), _T("right half arrow") };
 
 // LINE_TYPE_LIST (solid,dash)
 #define LINE_TYPE_LIST_SIZE 2
-char *CPreference::m_szLineTypeList[]={"solid", "dash"};
+TCHAR *CPreference::m_szLineTypeList[]={_T("solid"), _T("dash")};
 
 // BOOLEAN_LIST
 #define BOOLEAN_LIST_SIZE 2
-char *CPreference::m_szBooleanList[]={"true", "false"};
+TCHAR *CPreference::m_szBooleanList[]={_T("true"), _T("false")};
 
 
 
@@ -35,157 +35,157 @@ char *CPreference::m_szBooleanList[]={"true", "false"};
 
 // Connection Preferences
 /**** Type ************* Path In Registry ** Default Value ** Name to display ************ Help Text *******************************************************************************************************************************************************/
-char *CPreference::m_szConnectionPreferenceTable[][5]=
+TCHAR *CPreference::m_szConnectionPreferenceTable[][5]=
 {
-	{"COLOR",				"color",			"0x000000",		"Color",								"Connection line color. Set this value to change the connection line color."},
-	{"COLOR",				"nameColor",		"0x000000",		"Name color",							"Connection label color. Set this value to change the connection label color."},
-	{"STRING",				"help",				"",				"Help URL",								"Sets this value to specify the URL containig the help information belonging to the connection."},
-	{"MULTISTRING",		    "description",		"",				"Description",							"Free format description of the model element for documentation purposes."},
-	{"LINE_STYLE_LIST",		"srcStyle",			"butt",			"Source end style",						"Sets this value to specify the source end style of the connection. Eg. Arrow."},
-	{"LINE_STYLE_LIST",		"dstStyle",			"butt",			"Destination end style",				"Sets this value to specify the destination end style of the connection. Eg. Arrow."},
-	{"LINE_TYPE_LIST",		"lineType",			"solid",		"Line type",							"Sets this value to specify the connection line type. Eg. Dashed."},
-	{"STRING",				"labelFormatStr",	"",				"Label format string",					"Sets this value to form a centered connection label from the connection attributes. Eg. %name%"},
-	{"STRING",				"srcLabel1",		"<blank>",		"Source primary attribute",				"Displays an attribute as a label on the source side of the connection."},
-	{"STRING",				"srcLabel2",		"<blank>",		"Source secondary attribute",			"Displays an attribute as a label on the source side of the connection."},
-	{"STRING",				"dstLabel1",		"<blank>",		"Destination primary attribute",		"Displays an attribute as a label on the destination side of the connection."},
-	{"STRING",				"dstLabel2",		"<blank>",		"Destination secondary attribute",		"Displays an attribute as a label on the destination side of the connection."},
-	{"BOOLEAN_LIST",		"isAutoRouted",		"true",			"Is auto routed",						"Is the connection treated by the auto router."}
+	{_T("COLOR"),				_T("color"),			_T("0x000000"),		_T("Color"),								_T("Connection line color. Set this value to change the connection line color.")},
+	{_T("COLOR"),				_T("nameColor"),		_T("0x000000"),		_T("Name color"),							_T("Connection label color. Set this value to change the connection label color.")},
+	{_T("STRING"),				_T("help"),				_T(""),				_T("Help URL"),								_T("Sets this value to specify the URL containig the help information belonging to the connection.")},
+	{_T("MULTISTRING"),		    _T("description"),		_T(""),				_T("Description"),							_T("Free format description of the model element for documentation purposes.")},
+	{_T("LINE_STYLE_LIST"),		_T("srcStyle"),			_T("butt"),			_T("Source end style"),						_T("Sets this value to specify the source end style of the connection. Eg. Arrow.")},
+	{_T("LINE_STYLE_LIST"),		_T("dstStyle"),			_T("butt"),			_T("Destination end style"),				_T("Sets this value to specify the destination end style of the connection. Eg. Arrow.")},
+	{_T("LINE_TYPE_LIST"),		_T("lineType"),			_T("solid"),		_T("Line type"),							_T("Sets this value to specify the connection line type. Eg. Dashed.")},
+	{_T("STRING"),				_T("labelFormatStr"),	_T(""),				_T("Label format string"),					_T("Sets this value to form a centered connection label from the connection attributes. Eg. %name%")},
+	{_T("STRING"),				_T("srcLabel1"),		_T("<blank>"),		_T("Source primary attribute"),				_T("Displays an attribute as a label on the source side of the connection.")},
+	{_T("STRING"),				_T("srcLabel2"),		_T("<blank>"),		_T("Source secondary attribute"),			_T("Displays an attribute as a label on the source side of the connection.")},
+	{_T("STRING"),				_T("dstLabel1"),		_T("<blank>"),		_T("Destination primary attribute"),		_T("Displays an attribute as a label on the destination side of the connection.")},
+	{_T("STRING"),				_T("dstLabel2"),		_T("<blank>"),		_T("Destination secondary attribute"),		_T("Displays an attribute as a label on the destination side of the connection.")},
+	{_T("BOOLEAN_LIST"),		_T("isAutoRouted"),		_T("true"),			_T("Is auto routed"),						_T("Is the connection treated by the auto router.")}
 };
 
 
 // Atom Preferences
 /**** Type ************* Path In Registry ** Default Value ** Name to display ************ Help Text *******************************************************************************************************************************************************/
-char* CPreference::m_szAtomPreferenceTable[][5]=
+TCHAR* CPreference::m_szAtomPreferenceTable[][5]=
 {
-	{"COLOR",			"color",			"0x000000",		"Color",						"Atom color. Set this value to change the atom line color."},
-	{"COLOR",			"nameColor",		"0x000000",		"Name color",					"Atom name label color. Set this value to change the atom name label color."},
-	{"COLOR",			"fillColor",		"0xFFFFFF",		"Fill color",					"Atom background fill color for the closed models."},
-	{"BOOLEAN_LIST",	"gradientFill",		"false",		"Gradient fill enabled",		"Is the gradient fill feature enabled."},
-	{"COLOR",			"gradientColor",	"0xc0c0c0",		"Gradient (2nd fill) color",	"Atom gradient background color (the other fill color)."},
-	{"STRING",			"gradientDirection","0",			"Gradient direction (angle)",	"Direction of the gradient fill."},
-	{"BOOLEAN_LIST",	"itemShadowCast",	"false",		"Shadow casting enabled",		"Is the shadow casting feature enabled."},
-	{"COLOR",			"shadowColor",		"0xc0c0c0",		"Shadow color",					"Atom shadow color."},
-	{"STRING",			"shadowThickness",	"9",			"Shadow thickness/offset",		"Thickness/offset of the shadow."},
-	{"STRING",			"shadowDirection",	"45",			"Shadow direction (angle)",		"Direction of the shadow (angle)."},
-	{"BOOLEAN_LIST",	"roundCornerRect",	"false",		"Round rectangle corner enabled","Is rounding of rectangle corner feature enabled."},
-	{"STRING",			"roundCornerRadius","9",			"Round rectangle corner radius","Radius of round rectangle corner."},
-	{"STRING",			"help",				"",				"Help URL",						"Sets this value to specify the URL containig the help information belonging to the atom."},
-	{"MULTISTRING",		"description",		"",				"Description",					"Free format description of the model element for documentation purposes."},
-	{"COMPASS_OPTION",	"namePosition",		"4",			"Name Location",				"Sets the name label location relative to the atom icon. Eg. North."},
-	{"STRING",			"nameWrap",			"0",			"NameWrap number",				"Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled."},
-	{"BOOLEAN_LIST",	"isNameEnabled",	"true",			"Name enabled",					"Displays the name."},
-	{"COMPASS_CHECK",	"autorouterPref",	"neswNESW",		"Auto Router Preference",		"Sets the allowed stick point of the connections from and to this atom."},
-	{"BOOLEAN_LIST",	"isHotspotEnabled",	"true",			"Hotspots enabled",				"Enables the hotspot feature in connection mode."},
-	{"BOOLEAN_LIST",	"isTypeShown",		"false",		"Type displayed",				"Displays the type (subtype) if the atom is an Instance"},
-	{"STRING",			"decorator",		"",				"Decorator",					"ProgID of an process COM component followed by optional parameters for installing  custom drawing code.\r\n Syntax: <ProgID> [<Param1=Value>...<ParamX=ValueX>]"},
-	{"STRING",			"icon",				"",				"Icon name",					"Image(.bmp,.gif) file name to display the atom. Icon search paths can be set in File/Settings menu."},
-	{"STRING",			"porticon",			"",				"Port icon name",				"Specifies the image(.bmp,.gif) file name to display the atom if it is a port in a model."},
-	{"STRING",			"subTypeIcon",		"",				"Subtype icon name",			"Image(.bmp,.gif) file name to display the atom if it a subtype. Icon search paths can be set in File/Settings menu."},
-	{"STRING",			"instanceIcon",		"",				"Instance icon name",			"Image(.bmp,.gif) file name to display the atom if it an instance. Icon search paths can be set in File/Settings menu."}
+	{_T("COLOR"),			_T("color"),			_T("0x000000"),		_T("Color"),						_T("Atom color. Set this value to change the atom line color.")},
+	{_T("COLOR"),			_T("nameColor"),		_T("0x000000"),		_T("Name color"),					_T("Atom name label color. Set this value to change the atom name label color.")},
+	{_T("COLOR"),			_T("fillColor"),		_T("0xFFFFFF"),		_T("Fill color"),					_T("Atom background fill color for the closed models.")},
+	{_T("BOOLEAN_LIST"),	_T("gradientFill"),		_T("false"),		_T("Gradient fill enabled"),		_T("Is the gradient fill feature enabled.")},
+	{_T("COLOR"),			_T("gradientColor"),	_T("0xc0c0c0"),		_T("Gradient (2nd fill) color"),	_T("Atom gradient background color (the other fill color).")},
+	{_T("STRING"),			_T("gradientDirection"),_T("0"),			_T("Gradient direction (angle)"),	_T("Direction of the gradient fill.")},
+	{_T("BOOLEAN_LIST"),	_T("itemShadowCast"),	_T("false"),		_T("Shadow casting enabled"),		_T("Is the shadow casting feature enabled.")},
+	{_T("COLOR"),			_T("shadowColor"),		_T("0xc0c0c0"),		_T("Shadow color"),					_T("Atom shadow color.")},
+	{_T("STRING"),			_T("shadowThickness"),	_T("9"),			_T("Shadow thickness/offset"),		_T("Thickness/offset of the shadow.")},
+	{_T("STRING"),			_T("shadowDirection"),	_T("45"),			_T("Shadow direction (angle)"),		_T("Direction of the shadow (angle).")},
+	{_T("BOOLEAN_LIST"),	_T("roundCornerRect"),	_T("false"),		_T("Round rectangle corner enabled"),_T("Is rounding of rectangle corner feature enabled.")},
+	{_T("STRING"),			_T("roundCornerRadius"),_T("9"),			_T("Round rectangle corner radius"),_T("Radius of round rectangle corner.")},
+	{_T("STRING"),			_T("help"),				_T(""),				_T("Help URL"),						_T("Sets this value to specify the URL containig the help information belonging to the atom.")},
+	{_T("MULTISTRING"),		_T("description"),		_T(""),				_T("Description"),					_T("Free format description of the model element for documentation purposes.")},
+	{_T("COMPASS_OPTION"),	_T("namePosition"),		_T("4"),			_T("Name Location"),				_T("Sets the name label location relative to the atom icon. Eg. North.")},
+	{_T("STRING"),			_T("nameWrap"),			_T("0"),			_T("NameWrap number"),				_T("Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled.")},
+	{_T("BOOLEAN_LIST"),	_T("isNameEnabled"),	_T("true"),			_T("Name enabled"),					_T("Displays the name.")},
+	{_T("COMPASS_CHECK"),	_T("autorouterPref"),	_T("neswNESW"),		_T("Auto Router Preference"),		_T("Sets the allowed stick point of the connections from and to this atom.")},
+	{_T("BOOLEAN_LIST"),	_T("isHotspotEnabled"),	_T("true"),			_T("Hotspots enabled"),				_T("Enables the hotspot feature in connection mode.")},
+	{_T("BOOLEAN_LIST"),	_T("isTypeShown"),		_T("false"),		_T("Type displayed"),				_T("Displays the type (subtype) if the atom is an Instance")},
+	{_T("STRING"),			_T("decorator"),		_T(""),				_T("Decorator"),					_T("ProgID of an process COM component followed by optional parameters for installing  custom drawing code.\r\n Syntax: <ProgID> [<Param1=Value>...<ParamX=ValueX>]")},
+	{_T("STRING"),			_T("icon"),				_T(""),				_T("Icon name"),					_T("Image(.bmp,.gif) file name to display the atom. Icon search paths can be set in File/Settings menu.")},
+	{_T("STRING"),			_T("porticon"),			_T(""),				_T("Port icon name"),				_T("Specifies the image(.bmp,.gif) file name to display the atom if it is a port in a model.")},
+	{_T("STRING"),			_T("subTypeIcon"),		_T(""),				_T("Subtype icon name"),			_T("Image(.bmp,.gif) file name to display the atom if it a subtype. Icon search paths can be set in File/Settings menu.")},
+	{_T("STRING"),			_T("instanceIcon"),		_T(""),				_T("Instance icon name"),			_T("Image(.bmp,.gif) file name to display the atom if it an instance. Icon search paths can be set in File/Settings menu.")}
 };
 
 
 // Model Preferences - item [3][2] is corrected in the constructor
 /**** Type ************* Path In Registry ** Default Value ** Name to display ************ Help Text *******************************************************************************************************************************************************/
-char* CPreference::m_szModelPreferenceTable[][5]=
+TCHAR* CPreference::m_szModelPreferenceTable[][5]=
 {
-	{"COLOR",			"color",			"0xc0c0c0",		"Color",								"Model color. Set this value to change the model line color."},
-	{"COLOR",			"nameColor",		"0x000000",		"Name color",							"Model name label color. Set this value to change the model name label color."},
-	{"COLOR",			"borderColor",		"0x000000",		"Border color",							"Model border color. Set this value to change the model border color."},
-	{"COLOR",			"backgroundColor",	NULL,/*->Const*/"Background color",						"Window background color for the open models."},
-	{"COLOR",			"fillColor",		"0xFFFFFF",		"Fill color",							"Model background fill color for the closed models."},
-	{"BOOLEAN_LIST",	"gradientFill",		"false",		"Gradient fill enabled",				"Is the gradient fill feature enabled."},
-	{"COLOR",			"gradientColor",	"0xc0c0c0",		"Gradient (2nd fill) color",			"Model gradient background color for the closed models (the other fill color)."},
-	{"STRING",			"gradientDirection","0",			"Gradient direction (angle)",			"Direction of the gradient (angle)."},
-	{"BOOLEAN_LIST",	"itemShadowCast",	"false",		"Shadow casting enabled",				"Is the shadow casting feature enabled."},
-	{"COLOR",			"shadowColor",		"0xc0c0c0",		"Shadow color",							"Model shadow color for the closed models."},
-	{"STRING",			"shadowThickness",	"9",			"Shadow thickness/offset",				"Thickness/offset of the shadow."},
-	{"STRING",			"shadowDirection",	"45",			"Shadow direction (angle)",				"Direction of the shadow (angle)."},
-	{"BOOLEAN_LIST",	"roundCornerRect",	"false",		"Round rectangle corner enabled",		"Is rounding of rectangle corner feature enabled."},
-	{"STRING",			"roundCornerRadius","9",			"Round rectangle corner radius",		"Radius of round rectangle corner."},
-	{"COLOR",			"portColor",		"0x000000",		"Port name color",						"Port name color for the displayed ports of this model."},
-	{"STRING",			"help",				"",				"Help URL",								"Sets this value to specify the URL containig the help information belonging to the model."},
-	{"MULTISTRING",		"description",		"",				"Description",							"Free format description of the model element for documentation purposes."},
-	{"COMPASS_OPTION",	"namePosition",		"4",			"Name Location",						"Sets the name label location relative to the atom icon. Eg. North."},
-	{"STRING",			"nameWrap",			"0",			"NameWrap number",						"Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled."},
-	{"BOOLEAN_LIST",	"isNameEnabled",	"true",			"Name enabled",							"Displays the name."},
-	{"BOOLEAN_LIST",	"isModelAutoRouted","true",			"Is auto routed",						"Are the models' connections treated by the auto router by default."},
-	{"COMPASS_CHECK",	"autorouterPref",	"neswNESW",		"Auto Router Preference",				"Sets the allowed stick point of the connections from and to this model."},
-	{"BOOLEAN_LIST",	"isHotspotEnabled",	"true",			"Hotspots enabled",						"Enables the hotspot feature in connection mode."},
-	{"BOOLEAN_LIST",	"isTypeShown",		"false",		"Type displayed",						"Displays the type (subtype) if the model is an Instance"},
-	{"BOOLEAN_LIST",	"isTypeInfoShown",	"false",		"Typeinfo displayed",					"Displays T, S or I letter according to that the model is Type, Subtype or Instance"},
-	{"STRING",			"decorator",		"",				"Decorator",							"ProgID of an process COM component followed by optional parameters for installing  custom drawing code.\r\n Syntax: <ProgID> [<Param1=Value>...<ParamX=ValueX>]"},
-	{"STRING",			"icon",				"",				"Icon name",							"Image(.bmp,.gif) file name to display the model. Icon search paths can be set in File/Settings menu."},
-	{"STRING",			"porticon",			"",				"Port icon name",						"Specifies the image(.bmp,.gif) file name to display this model if it is a port in another model."},
-	{"STRING",			"subTypeIcon",		"",				"Subtype icon name",					"Image(.bmp,.gif) file name to display the model if it a subtype. Icon search paths can be set in File/Settings menu."},
-	{"STRING",			"instanceIcon",		"",				"Instance icon name",					"Image(.bmp,.gif) file name to display the model if it an instance. Icon search paths can be set in File/Settings menu."},
-	{"BOOLEAN_LIST",	"portLabelInside",	"true",			"PortLabel shown inside container?",	"Portname label may be shown either inside or outside the container."},
-	{"STRING",			"portLabelLength",	"3",			"PortLabel Length",						"Sets the text length shown when displaying portnames. If 0 total length is shown."}
+	{_T("COLOR"),			_T("color"),			_T("0xc0c0c0"),		_T("Color"),								_T("Model color. Set this value to change the model line color.")},
+	{_T("COLOR"),			_T("nameColor"),		_T("0x000000"),		_T("Name color"),							_T("Model name label color. Set this value to change the model name label color.")},
+	{_T("COLOR"),			_T("borderColor"),		_T("0x000000"),		_T("Border color"),							_T("Model border color. Set this value to change the model border color.")},
+	{_T("COLOR"),			_T("backgroundColor"),	NULL,/*->Const*/_T("Background color"),						_T("Window background color for the open models.")},
+	{_T("COLOR"),			_T("fillColor"),		_T("0xFFFFFF"),		_T("Fill color"),							_T("Model background fill color for the closed models.")},
+	{_T("BOOLEAN_LIST"),	_T("gradientFill"),		_T("false"),		_T("Gradient fill enabled"),				_T("Is the gradient fill feature enabled.")},
+	{_T("COLOR"),			_T("gradientColor"),	_T("0xc0c0c0"),		_T("Gradient (2nd fill) color"),			_T("Model gradient background color for the closed models (the other fill color).")},
+	{_T("STRING"),			_T("gradientDirection"),_T("0"),			_T("Gradient direction (angle)"),			_T("Direction of the gradient (angle).")},
+	{_T("BOOLEAN_LIST"),	_T("itemShadowCast"),	_T("false"),		_T("Shadow casting enabled"),				_T("Is the shadow casting feature enabled.")},
+	{_T("COLOR"),			_T("shadowColor"),		_T("0xc0c0c0"),		_T("Shadow color"),							_T("Model shadow color for the closed models.")},
+	{_T("STRING"),			_T("shadowThickness"),	_T("9"),			_T("Shadow thickness/offset"),				_T("Thickness/offset of the shadow.")},
+	{_T("STRING"),			_T("shadowDirection"),	_T("45"),			_T("Shadow direction (angle)"),				_T("Direction of the shadow (angle).")},
+	{_T("BOOLEAN_LIST"),	_T("roundCornerRect"),	_T("false"),		_T("Round rectangle corner enabled"),		_T("Is rounding of rectangle corner feature enabled.")},
+	{_T("STRING"),			_T("roundCornerRadius"),_T("9"),			_T("Round rectangle corner radius"),		_T("Radius of round rectangle corner.")},
+	{_T("COLOR"),			_T("portColor"),		_T("0x000000"),		_T("Port name color"),						_T("Port name color for the displayed ports of this model.")},
+	{_T("STRING"),			_T("help"),				_T(""),				_T("Help URL"),								_T("Sets this value to specify the URL containig the help information belonging to the model.")},
+	{_T("MULTISTRING"),		_T("description"),		_T(""),				_T("Description"),							_T("Free format description of the model element for documentation purposes.")},
+	{_T("COMPASS_OPTION"),	_T("namePosition"),		_T("4"),			_T("Name Location"),						_T("Sets the name label location relative to the atom icon. Eg. North.")},
+	{_T("STRING"),			_T("nameWrap"),			_T("0"),			_T("NameWrap number"),						_T("Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled.")},
+	{_T("BOOLEAN_LIST"),	_T("isNameEnabled"),	_T("true"),			_T("Name enabled"),							_T("Displays the name.")},
+	{_T("BOOLEAN_LIST"),	_T("isModelAutoRouted"),_T("true"),			_T("Is auto routed"),						_T("Are the models' connections treated by the auto router by default.")},
+	{_T("COMPASS_CHECK"),	_T("autorouterPref"),	_T("neswNESW"),		_T("Auto Router Preference"),				_T("Sets the allowed stick point of the connections from and to this model.")},
+	{_T("BOOLEAN_LIST"),	_T("isHotspotEnabled"),	_T("true"),			_T("Hotspots enabled"),						_T("Enables the hotspot feature in connection mode.")},
+	{_T("BOOLEAN_LIST"),	_T("isTypeShown"),		_T("false"),		_T("Type displayed"),						_T("Displays the type (subtype) if the model is an Instance")},
+	{_T("BOOLEAN_LIST"),	_T("isTypeInfoShown"),	_T("false"),		_T("Typeinfo displayed"),					_T("Displays T, S or I letter according to that the model is Type, Subtype or Instance")},
+	{_T("STRING"),			_T("decorator"),		_T(""),				_T("Decorator"),							_T("ProgID of an process COM component followed by optional parameters for installing  custom drawing code.\r\n Syntax: <ProgID> [<Param1=Value>...<ParamX=ValueX>]")},
+	{_T("STRING"),			_T("icon"),				_T(""),				_T("Icon name"),							_T("Image(.bmp,.gif) file name to display the model. Icon search paths can be set in File/Settings menu.")},
+	{_T("STRING"),			_T("porticon"),			_T(""),				_T("Port icon name"),						_T("Specifies the image(.bmp,.gif) file name to display this model if it is a port in another model.")},
+	{_T("STRING"),			_T("subTypeIcon"),		_T(""),				_T("Subtype icon name"),					_T("Image(.bmp,.gif) file name to display the model if it a subtype. Icon search paths can be set in File/Settings menu.")},
+	{_T("STRING"),			_T("instanceIcon"),		_T(""),				_T("Instance icon name"),					_T("Image(.bmp,.gif) file name to display the model if it an instance. Icon search paths can be set in File/Settings menu.")},
+	{_T("BOOLEAN_LIST"),	_T("portLabelInside"),	_T("true"),			_T("PortLabel shown inside container?"),	_T("Portname label may be shown either inside or outside the container.")},
+	{_T("STRING"),			_T("portLabelLength"),	_T("3"),			_T("PortLabel Length"),						_T("Sets the text length shown when displaying portnames. If 0 total length is shown.")}
 };
 
 
 // Reference (Proxy) Preferences
 /**** Type ************* Path In Registry ** Default Value ** Name to display ************ Help Text *******************************************************************************************************************************************************/
-char* CPreference::m_szProxyPreferenceTable[][5]=
+TCHAR* CPreference::m_szProxyPreferenceTable[][5]=
 {
-	{"COLOR",			"color",			"0xc0c0c0",		"Color",								"Proxy color. Set this value to change the proxy line color."},
-	{"COLOR",			"nameColor",		"0x000000",		"Name color",							"Proxy name label color. Set this value to change the proxy name label color."},
-	{"COLOR",			"fillColor",		"0xFFFFFF",		"Fill color",							"Proxy background fill color for the closed models."},
-	{"BOOLEAN_LIST",	"gradientFill",		"false",		"Gradient fill enabled",				"Is the gradient fill feature enabled."},
-	{"COLOR",			"gradientColor",	"0xc0c0c0",		"Gradient (2nd fill) color",			"Proxy gradient background color for the closed models (the other fill color)."},
-	{"STRING",			"gradientDirection","0",			"Gradient direction (angle)",			"Direction of the gradient fill."},
-	{"BOOLEAN_LIST",	"itemShadowCast",	"false",		"Shadow casting enabled",				"Is the shadow casting feature enabled."},
-	{"COLOR",			"shadowColor",		"0xc0c0c0",		"Shadow color",							"Proxy shadow color."},
-	{"STRING",			"shadowThickness",	"9",			"Shadow thickness/offset",				"Thickness/offset of the shadow."},
-	{"STRING",			"shadowDirection",	"45",			"Shadow direction (angle)",				"Direction of the shadow (angle)."},
-	{"BOOLEAN_LIST",	"roundCornerRect",	"false",		"Round rectangle corner enabled",		"Is rounding of rectangle corner feature enabled."},
-	{"STRING",			"roundCornerRadius","9",			"Round rectangle corner radius",		"Radius of round rectangle corner."},
-	{"STRING",			"help",				"",				"Help URL",								"Sets this value to specify the URL containig the help information belonging to the proxy."},
-	{"MULTISTRING",		"description",		"",				"Description",							"Free format description of the model element for documentation purposes."},
-	{"COMPASS_OPTION",	"namePosition",		"4",			"Name Location",						"Sets the name label location relative to the proxy icon. Eg. North."},
-	{"STRING",			"nameWrap",			"0",			"NameWrap number",						"Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled."},
-	{"BOOLEAN_LIST",	"isNameEnabled",	"true",			"Name enabled",							"Displays the name."},
-	{"COMPASS_CHECK",	"autorouterPref",	"neswNESW",		"Auto Router Preference",				"Sets the allowed stick point of the connections from and to this proxy."},
-	{"BOOLEAN_LIST",	"isHotspotEnabled",	"true",			"Hotspots enabled",						"Enables the hotspot feature in connection mode."},
-	{"COLOR",			"borderColor",		"0x000000",		"Border color",							"Proxy border color. Set this value to change the proxy border color."},
-	{"COLOR",			"portColor",		"0x000000",		"Port name color",						"Port name color for the displayed ports of this proxy."},
-	{"STRING",			"decorator",		"",				"Decorator",							"ProgID of an process COM component followed by optional parameters for installing  custom drawing code.\r\n Syntax: <ProgID> [<Param1=Value>...<ParamX=ValueX>]"},
-	{"STRING",			"icon",				"",				"Icon name",							"Image(.bmp,.gif) file name to display the proxy. Icon search paths can be set in File/Settings menu."},
-	{"STRING",			"porticon",			"",				"Port icon name",						"Specifies the image(.bmp,.gif) file name to display the proxy if it is a port in a proxy."},
-	{"BOOLEAN_LIST",	"portLabelInside",	"true",			"PortLabel shown inside container?",	"Portname label may be shown either inside or outside the container."},
-	{"STRING",			"portLabelLength",	"3",			"PortLabel Length",						"Sets the text length shown when displaying portnames. If 0 total length is shown."}
+	{_T("COLOR"),			_T("color"),			_T("0xc0c0c0"),		_T("Color"),								_T("Proxy color. Set this value to change the proxy line color.")},
+	{_T("COLOR"),			_T("nameColor"),		_T("0x000000"),		_T("Name color"),							_T("Proxy name label color. Set this value to change the proxy name label color.")},
+	{_T("COLOR"),			_T("fillColor"),		_T("0xFFFFFF"),		_T("Fill color"),							_T("Proxy background fill color for the closed models.")},
+	{_T("BOOLEAN_LIST"),	_T("gradientFill"),		_T("false"),		_T("Gradient fill enabled"),				_T("Is the gradient fill feature enabled.")},
+	{_T("COLOR"),			_T("gradientColor"),	_T("0xc0c0c0"),		_T("Gradient (2nd fill) color"),			_T("Proxy gradient background color for the closed models (the other fill color).")},
+	{_T("STRING"),			_T("gradientDirection"),_T("0"),			_T("Gradient direction (angle)"),			_T("Direction of the gradient fill.")},
+	{_T("BOOLEAN_LIST"),	_T("itemShadowCast"),	_T("false"),		_T("Shadow casting enabled"),				_T("Is the shadow casting feature enabled.")},
+	{_T("COLOR"),			_T("shadowColor"),		_T("0xc0c0c0"),		_T("Shadow color"),							_T("Proxy shadow color.")},
+	{_T("STRING"),			_T("shadowThickness"),	_T("9"),			_T("Shadow thickness/offset"),				_T("Thickness/offset of the shadow.")},
+	{_T("STRING"),			_T("shadowDirection"),	_T("45"),			_T("Shadow direction (angle)"),				_T("Direction of the shadow (angle).")},
+	{_T("BOOLEAN_LIST"),	_T("roundCornerRect"),	_T("false"),		_T("Round rectangle corner enabled"),		_T("Is rounding of rectangle corner feature enabled.")},
+	{_T("STRING"),			_T("roundCornerRadius"),_T("9"),			_T("Round rectangle corner radius"),		_T("Radius of round rectangle corner.")},
+	{_T("STRING"),			_T("help"),				_T(""),				_T("Help URL"),								_T("Sets this value to specify the URL containig the help information belonging to the proxy.")},
+	{_T("MULTISTRING"),		_T("description"),		_T(""),				_T("Description"),							_T("Free format description of the model element for documentation purposes.")},
+	{_T("COMPASS_OPTION"),	_T("namePosition"),		_T("4"),			_T("Name Location"),						_T("Sets the name label location relative to the proxy icon. Eg. North.")},
+	{_T("STRING"),			_T("nameWrap"),			_T("0"),			_T("NameWrap number"),						_T("Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled.")},
+	{_T("BOOLEAN_LIST"),	_T("isNameEnabled"),	_T("true"),			_T("Name enabled"),							_T("Displays the name.")},
+	{_T("COMPASS_CHECK"),	_T("autorouterPref"),	_T("neswNESW"),		_T("Auto Router Preference"),				_T("Sets the allowed stick point of the connections from and to this proxy.")},
+	{_T("BOOLEAN_LIST"),	_T("isHotspotEnabled"),	_T("true"),			_T("Hotspots enabled"),						_T("Enables the hotspot feature in connection mode.")},
+	{_T("COLOR"),			_T("borderColor"),		_T("0x000000"),		_T("Border color"),							_T("Proxy border color. Set this value to change the proxy border color.")},
+	{_T("COLOR"),			_T("portColor"),		_T("0x000000"),		_T("Port name color"),						_T("Port name color for the displayed ports of this proxy.")},
+	{_T("STRING"),			_T("decorator"),		_T(""),				_T("Decorator"),							_T("ProgID of an process COM component followed by optional parameters for installing  custom drawing code.\r\n Syntax: <ProgID> [<Param1=Value>...<ParamX=ValueX>]")},
+	{_T("STRING"),			_T("icon"),				_T(""),				_T("Icon name"),							_T("Image(.bmp,.gif) file name to display the proxy. Icon search paths can be set in File/Settings menu.")},
+	{_T("STRING"),			_T("porticon"),			_T(""),				_T("Port icon name"),						_T("Specifies the image(.bmp,.gif) file name to display the proxy if it is a port in a proxy.")},
+	{_T("BOOLEAN_LIST"),	_T("portLabelInside"),	_T("true"),			_T("PortLabel shown inside container?"),	_T("Portname label may be shown either inside or outside the container.")},
+	{_T("STRING"),			_T("portLabelLength"),	_T("3"),			_T("PortLabel Length"),						_T("Sets the text length shown when displaying portnames. If 0 total length is shown.")}
 };
 
 
 // Set Preferences
 /**** Type ************* Path In Registry ** Default Value ** Name to display ************ Help Text *******************************************************************************************************************************************************/
-char* CPreference::m_szSetPreferenceTable[][5]=
+TCHAR* CPreference::m_szSetPreferenceTable[][5]=
 {
-	{"COLOR",			"color",			"0x000000",		"Color",						"Set color. Set this value to change the set line color."},
-	{"COLOR",			"nameColor",		"0x000000",		"Name color",					"Set name label color. Set this value to change the set name label color."},
-	{"COLOR",			"fillColor",		"0xFFFFFF",		"Fill color",					"Set background fill color for the closed models."},
-	{"BOOLEAN_LIST",	"gradientFill",		"false",		"Gradient fill enabled",		"Is the gradient fill feature enabled."},
-	{"COLOR",			"gradientColor",	"0xc0c0c0",		"Gradient (2nd fill) color",	"Set gradient background color (the other fill color)."},
-	{"STRING",			"gradientDirection","0",			"Gradient direction (angle)",	"Direction of the gradient fill."},
-	{"BOOLEAN_LIST",	"itemShadowCast",	"false",		"Shadow casting enabled",		"Is the shadow casting feature enabled."},
-	{"COLOR",			"shadowColor",		"0xc0c0c0",		"Shadow color",					"Set shadow color."},
-	{"STRING",			"shadowThickness",	"9",			"Shadow thickness/offset",		"Thickness/offset of the shadow."},
-	{"STRING",			"shadowDirection",	"45",			"Shadow direction (angle)",		"Direction of the shadow (angle)."},
-	{"BOOLEAN_LIST",	"roundCornerRect",	"false",		"Round rectangle corner enabled","Is rounding of rectangle corner feature enabled."},
-	{"STRING",			"roundCornerRadius","9",			"Round rectangle corner radius","Radius of round rectangle corner."},
-	{"STRING",			"help",				"",				"Help URL",						"Sets this value to specify the URL containig the help information belonging to the set."},
-	{"MULTISTRING",		"description",		"",				"Description",					"Free format description of the model element for documentation purposes."},
-	{"COMPASS_OPTION",	"namePosition",		"4",			"Name Location",				"Sets the name label location relative to the set icon. Eg. North."},
-	{"STRING",			"nameWrap",			"0",			"NameWrap number",				"Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled."},
-	{"BOOLEAN_LIST",	"isNameEnabled",	"true",			"Name enabled",					"Displays the name."},
-	{"COMPASS_CHECK",	"autorouterPref",	"neswNESW",		"Auto Router Preference",		"Sets the allowed stick point of the connections from and to this set."},
-	{"BOOLEAN_LIST",	"isHotspotEnabled",	"true",			"Hotspots enabled",				"Enables the hotspot feature in connection mode."},
-	{"BOOLEAN_LIST",	"isTypeShown",		"false",		"Type displayed",				"Displays the type (subtype) if the set is an Instance"},
-	{"STRING",			"decorator",		"",				"Decorator",					"ProgID of an process COM component followed by optional parameters for installing  custom drawing code.\r\n Syntax: <ProgID> [<Param1=Value>...<ParamX=ValueX>]"},
-	{"STRING",			"icon",				"",				"Icon name",					"Image(.bmp,.gif) file name to display the set. Icon search paths can be set in File/Settings menu."},
-	{"STRING",			"porticon",			"",				"Port icon name",				"Specifies the image(.bmp,.gif) file name to display the set if it is a port in a model."},
-	{"STRING",			"subTypeIcon",		"",				"Subtype icon name",			"Image(.bmp,.gif) file name to display the set if it a subtype. Icon search paths can be set in File/Settings menu."},
-	{"STRING",			"instanceIcon",		"",				"Instance icon name",			"Image(.bmp,.gif) file name to display the set if it an instance. Icon search paths can be set in File/Settings menu."}
+	{_T("COLOR"),			_T("color"),			_T("0x000000"),		_T("Color"),						_T("Set color. Set this value to change the set line color.")},
+	{_T("COLOR"),			_T("nameColor"),		_T("0x000000"),		_T("Name color"),					_T("Set name label color. Set this value to change the set name label color.")},
+	{_T("COLOR"),			_T("fillColor"),		_T("0xFFFFFF"),		_T("Fill color"),					_T("Set background fill color for the closed models.")},
+	{_T("BOOLEAN_LIST"),	_T("gradientFill"),		_T("false"),		_T("Gradient fill enabled"),		_T("Is the gradient fill feature enabled.")},
+	{_T("COLOR"),			_T("gradientColor"),	_T("0xc0c0c0"),		_T("Gradient (2nd fill) color"),	_T("Set gradient background color (the other fill color).")},
+	{_T("STRING"),			_T("gradientDirection"),_T("0"),			_T("Gradient direction (angle)"),	_T("Direction of the gradient fill.")},
+	{_T("BOOLEAN_LIST"),	_T("itemShadowCast"),	_T("false"),		_T("Shadow casting enabled"),		_T("Is the shadow casting feature enabled.")},
+	{_T("COLOR"),			_T("shadowColor"),		_T("0xc0c0c0"),		_T("Shadow color"),					_T("Set shadow color.")},
+	{_T("STRING"),			_T("shadowThickness"),	_T("9"),			_T("Shadow thickness/offset"),		_T("Thickness/offset of the shadow.")},
+	{_T("STRING"),			_T("shadowDirection"),	_T("45"),			_T("Shadow direction (angle)"),		_T("Direction of the shadow (angle).")},
+	{_T("BOOLEAN_LIST"),	_T("roundCornerRect"),	_T("false"),		_T("Round rectangle corner enabled"),_T("Is rounding of rectangle corner feature enabled.")},
+	{_T("STRING"),			_T("roundCornerRadius"),_T("9"),			_T("Round rectangle corner radius"),_T("Radius of round rectangle corner.")},
+	{_T("STRING"),			_T("help"),				_T(""),				_T("Help URL"),						_T("Sets this value to specify the URL containig the help information belonging to the set.")},
+	{_T("MULTISTRING"),		_T("description"),		_T(""),				_T("Description"),					_T("Free format description of the model element for documentation purposes.")},
+	{_T("COMPASS_OPTION"),	_T("namePosition"),		_T("4"),			_T("Name Location"),				_T("Sets the name label location relative to the set icon. Eg. North.")},
+	{_T("STRING"),			_T("nameWrap"),			_T("0"),			_T("NameWrap number"),				_T("Sets the number of characters in a line of the name. If it is 0, then wrapping is disabled.")},
+	{_T("BOOLEAN_LIST"),	_T("isNameEnabled"),	_T("true"),			_T("Name enabled"),					_T("Displays the name.")},
+	{_T("COMPASS_CHECK"),	_T("autorouterPref"),	_T("neswNESW"),		_T("Auto Router Preference"),		_T("Sets the allowed stick point of the connections from and to this set.")},
+	{_T("BOOLEAN_LIST"),	_T("isHotspotEnabled"),	_T("true"),			_T("Hotspots enabled"),				_T("Enables the hotspot feature in connection mode.")},
+	{_T("BOOLEAN_LIST"),	_T("isTypeShown"),		_T("false"),		_T("Type displayed"),				_T("Displays the type (subtype) if the set is an Instance")},
+	{_T("STRING"),			_T("decorator"),		_T(""),				_T("Decorator"),					_T("ProgID of an process COM component followed by optional parameters for installing  custom drawing code.\r\n Syntax: <ProgID> [<Param1=Value>...<ParamX=ValueX>]")},
+	{_T("STRING"),			_T("icon"),				_T(""),				_T("Icon name"),					_T("Image(.bmp,.gif) file name to display the set. Icon search paths can be set in File/Settings menu.")},
+	{_T("STRING"),			_T("porticon"),			_T(""),				_T("Port icon name"),				_T("Specifies the image(.bmp,.gif) file name to display the set if it is a port in a model.")},
+	{_T("STRING"),			_T("subTypeIcon"),		_T(""),				_T("Subtype icon name"),			_T("Image(.bmp,.gif) file name to display the set if it a subtype. Icon search paths can be set in File/Settings menu.")},
+	{_T("STRING"),			_T("instanceIcon"),		_T(""),				_T("Instance icon name"),			_T("Image(.bmp,.gif) file name to display the set if it an instance. Icon search paths can be set in File/Settings menu.")}
 };
 /***********************************************************************************************************************************************************************************************************************************************************/
 
@@ -208,7 +208,7 @@ CPreference::CPreference()
 
 	// Get system background color
 	COLORREF crSysBckg=::GetSysColor(COLOR_WINDOW);
-	sprintf(m_szSysBckGrnd,"0x%02x%02x%02x",GetRValue(crSysBckg), GetGValue(crSysBckg), GetBValue(crSysBckg));
+	swprintf(m_szSysBckGrnd, sizeof(m_szSysBckGrnd)/sizeof(m_szSysBckGrnd[0]), _T("0x%02x%02x%02x"),GetRValue(crSysBckg), GetGValue(crSysBckg), GetBValue(crSysBckg));
 
 	// Correcting table
 	m_szModelPreferenceTable[3][2]=m_szSysBckGrnd;
@@ -231,7 +231,7 @@ void CPreference::SetupPreferences(BYTE cFlags)
 
 	if(cFlags<1 || cFlags>=32)
 	{
-		ASSERT(("Invalid cFlags parameter SetupPreferences(...)",0));
+		ASSERT((_T("Invalid cFlags parameter SetupPreferences(...)"),0));
 		return;
 	}
 
@@ -353,7 +353,7 @@ void CPreference::SetupPreferences(BYTE cFlags)
 	// ERROR: wrong cFlags parameter
 	else
 	{
-		ASSERT(("Invalid cFlags parameter SetupPreferences(...)",0));
+		ASSERT((_T("Invalid cFlags parameter SetupPreferences(...)"),0));
 	}
 
 }
@@ -445,7 +445,7 @@ void CPreference::CreateList(const CMgaFCOPtrList& MgaFCOPtrList)
 
 	CListItem ListItem;
 	ListItem.bIsContainer=true;
-	ListItem.strName="General Preferences";
+	ListItem.strName=_T("General Preferences");
 
 	m_ListItemArray.Add(ListItem);
 
@@ -481,7 +481,7 @@ void CPreference::CreateList(const CMgaFCOPtrList& MgaFCOPtrList)
 			case OBJTYPE_SET:
 				cFlag|=PREF_SET;break;
 
-			default: ASSERT(("Invalid MGA object type found creating preference list",FALSE));break;
+			default: ASSERT((_T("Invalid MGA object type found creating preference list"),FALSE));break;
 		}
 	}
 
@@ -581,13 +581,13 @@ void CPreference::SetCategories( const CString& strPath, bool bIsAfter)
 
 	if(!bIsAfter)
 	{
-		if(strPath=="srcStyle")
+		if(strPath==_T("srcStyle"))
 		{
-			strName="Connection Preferences";
+			strName=_T("Connection Preferences");
 		}
-		else if((strPath=="autorouterPref" || strPath=="isModelAutoRouted") && !isAutRouterPrefsCategoryAdded)
+		else if((strPath==_T("autorouterPref") || strPath==_T("isModelAutoRouted")) && !isAutRouterPrefsCategoryAdded)
 		{
-			strName="Auto Router Preferences";
+			strName=_T("Auto Router Preferences");
 			isAutRouterPrefsCategoryAdded = true;
 		}
 		else
@@ -670,12 +670,12 @@ int CPreference::GetRegistryValue(CComPtr<IMgaFCO>&ccpMgaFCO,CString strPath, CS
 
 	else if(lRegNodeStatus==-2)  // ATTRSTATUS_INVALID - It does happen.
 	{
-		strRegValue="";
+		strRegValue=_T("");
 	}
 
 	else
 	{
-		ASSERT(("Undocumented(and undesired) MGA feature",false));
+		ASSERT((_T("Undocumented(and undesired) MGA feature"),false));
 	}
 	return 0;
 }
@@ -727,7 +727,7 @@ void CPreference::GetDefaultValue(CString strCurrPath, objtype_enum oeType, CStr
 			}
 			break;
 
-		default: ASSERT(("Invalid MGA object type found creating preference list",FALSE));break;
+		default: ASSERT((_T("Invalid MGA object type found creating preference list"),FALSE));break;
 	}
 }
 
@@ -753,27 +753,27 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 
 	CString strPrefName=(*pTableRow)[1];
 
-	if(strPrefName=="isAutoRouted")
+	if(strPrefName==_T("isAutoRouted"))
 	{
 		ListItem.dwUserData=AUTOROUTER_STATE_CONN;
 	}
-	else if(strPrefName=="isModelAutoRouted")
+	else if(strPrefName==_T("isModelAutoRouted"))
 	{
 		ListItem.dwUserData=AUTOROUTER_STATE_MODEL;
 	}
 
 	CString strEntryType=(*pTableRow)[0];
 
-	if(strEntryType=="COLOR")
+	if(strEntryType==_T("COLOR"))
 	{
 		// Change value format from MGA 0xrrggbb to Windows 0xbbggrr
 		CString strNewVal;
 
-		char*endptr;
-		long l=strtol(strValue,&endptr,16);
-		if(*endptr=='\0')
+		TCHAR* endptr;
+		long l = _tcstol(strValue, &endptr, 16);
+		if(*endptr == _T('\0'))
 		{
-			strNewVal.Format("0x%02x%02x%02x",GetRValue(l), GetGValue(l), GetBValue(l));
+			strNewVal.Format(_T("0x%02x%02x%02x"),GetRValue(l), GetGValue(l), GetBValue(l));
 		}
 		else
 		{
@@ -790,14 +790,14 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 		ListItems.Add(ListItem);
 	}
 
-	else if(strEntryType=="STRING")
+	else if(strEntryType==_T("STRING"))
 	{
 		ListItem.Value.SetStringValue(strValue);
 		ListItem.DefValue.SetStringValue((*pTableRow)[2]);
 		ListItems.Add(ListItem);
 	}
 
-	else if(strEntryType=="MULTISTRING")
+	else if(strEntryType==_T("MULTISTRING"))
 	{
 		CStringArray strValueArray;
 		str_split(strValue, strValueArray);
@@ -811,7 +811,7 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 		ListItems.Add(ListItem);
 	}
 
-	else if(strEntryType=="COMPASS_OPTION")
+	else if(strEntryType==_T("COMPASS_OPTION"))
 	{
 		UINT uCompassValue= CCompassData::ParseMgaCompassValueOption(strValue);
 		ListItem.Value.SetCompassExclValue(uCompassValue);
@@ -821,7 +821,7 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 		ListItems.Add(ListItem);
 	}
 
-	else if(strEntryType=="COMPASS_CHECK")
+	else if(strEntryType==_T("COMPASS_CHECK"))
 	{
 		// Dst: small case; Src: capital
 		UINT uSrcVal,uDstVal,uSrcDefVal,uDstDefVal;
@@ -833,8 +833,8 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 		// Setting source
 		ListItemSrc.Value.SetCompassValue(uSrcVal);
 		ListItemSrc.DefValue.SetCompassValue(uSrcDefVal);
-		ListItemSrc.strName+=" (Source)";
-		ListItemSrc.strToolTip+=" (Source side)";
+		ListItemSrc.strName+=_T(" (Source)");
+		ListItemSrc.strToolTip+=_T(" (Source side)");
 		ListItemSrc.dwUserData=AUTOROUTER_SOURCE;
 
 		ListItems.Add(ListItemSrc);
@@ -842,20 +842,20 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 		// Setting destination
 		ListItem.Value.SetCompassValue(uDstVal);
 		ListItem.DefValue.SetCompassValue(uDstDefVal);
-		ListItem.strName+=" (Destination)";
-		ListItem.strToolTip+=" (Destination side)";
+		ListItem.strName+=_T(" (Destination)");
+		ListItem.strToolTip+=_T(" (Destination side)");
 		ListItem.dwUserData=AUTOROUTER_DESTINATION;
 		ListItems.Add(ListItem);
 
-		// Creating "Miscellaneous Preferences" category
+		// Creating _T("Miscellaneous Preferences") category
 		CListItem ListItemMisc;
 		ListItemMisc.bIsContainer=true;
-		ListItemMisc.strName="Miscellaneous Preferences";
+		ListItemMisc.strName=_T("Miscellaneous Preferences");
 		ListItems.Add(ListItemMisc);
 
 	}
 
-	else if(strEntryType=="LINE_STYLE_LIST")
+	else if(strEntryType==_T("LINE_STYLE_LIST"))
 	{
 		CString strDefValue=(*pTableRow)[2];
 		CStringArray strArr;
@@ -884,7 +884,7 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 		ListItems.Add(ListItem);
 
 	}
-	else if(strEntryType=="LINE_TYPE_LIST")
+	else if(strEntryType==_T("LINE_TYPE_LIST"))
 	{
 		CString strDefValue=(*pTableRow)[2];
 		CStringArray strArr;
@@ -914,7 +914,7 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 
 	}
 
-	else if(strEntryType=="BOOLEAN_LIST")
+	else if(strEntryType==_T("BOOLEAN_LIST"))
 	{
 		CString strDefValue=(*pTableRow)[2];
 		CStringArray strArr;
@@ -948,7 +948,7 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 	}
 
 
-	else if(strEntryType=="ATTR_LIST")
+	else if(strEntryType==_T("ATTR_LIST"))
 	{
 		if(!bIsMultiple)
 		{
@@ -958,7 +958,7 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 
 			// Get default value and set it as the first element
 			CString strTemp=(*pTableRow)[2];
-			strArr.Add("");
+			strArr.Add(_T(""));
 			strLabelArr.Add(strTemp);
 			int nDefIndex=0;
 
@@ -983,7 +983,7 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 				strTemp=bstrName;
 				strLabelArr.Add(strTemp);
 
-				strTemp="%" + strTemp + "%";
+				strTemp=_T("%") + strTemp + _T("%");
 				strArr.Add(strTemp);
 
 
@@ -1009,7 +1009,7 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 	{
 		// If you created a new type in the tables, add a piece of converter code above
 		// for it.
-		ASSERT(("Unknown preference type has been specified in the preference tables.",0));
+		ASSERT((_T("Unknown preference type has been specified in the preference tables."),0));
 	}
 
 
@@ -1064,7 +1064,7 @@ TableRowType CPreference::GetTableRow(CString strCurrPath, objtype_enum oeType)
 
 		default:
 			{
-				ASSERT(("Invalid MGA object type found creating preference list",FALSE));break;
+				ASSERT((_T("Invalid MGA object type found creating preference list"),FALSE));break;
 			}
 	}
 
@@ -1101,12 +1101,12 @@ void CPreference::Write2Mga(const CString& strValue,const CComPtr<IMgaFCO>& ccpM
 			// Hacked by Paka in order to always do something in the project !!!
 			// If there is nothing in the Project (NOT the MetaProject) to be commited, then the user gets confused
 			// because the Project does not change and nothing has to be refreshed
-			 COMTHROW( ccpMgaRegNode->put_Value( CComBSTR( "Dummy" ) ) );
+			 COMTHROW( ccpMgaRegNode->put_Value( CComBSTR( _T("Dummy") ) ) );
 			// Hacked part end
 
 			// Delete the registry entries
 			COMTHROW(ccpMgaRegNode->RemoveTree());
-				// For "kind" we set registry values in the meta
+				// For _T("kind") we set registry values in the meta
 			CComPtr<IMgaMetaFCO> ccpMetaFCO;
 			COMTHROW(ccpMgaFCO->get_Meta(&ccpMetaFCO));
 
@@ -1129,7 +1129,7 @@ void CPreference::ListValue2MgaValue(const CListItem& ListItem, CString& strValu
 	{
 		case ITEMDATA_COLOR	:
 		{
-			strValue.Format("0x%02x%02x%02x",
+			strValue.Format(_T("0x%02x%02x%02x"),
 							GetRValue(ListItem.Value.colorVal),
 							GetGValue(ListItem.Value.colorVal),
 							GetBValue(ListItem.Value.colorVal));
@@ -1201,7 +1201,7 @@ void CPreference::IssuePossiblePathConversion(CListItem ListItem, const CMgaFCOP
 		// Firing the event
 		if ((ListItem.dwUserData == AUTOROUTER_STATE_CONN ||
 			 ListItem.dwUserData == AUTOROUTER_STATE_MODEL) &&
-			 strValue == "false")
+			 strValue == _T("false"))
 		{
 			if (ListItem.dwUserData == AUTOROUTER_STATE_CONN)
 				pParent->IgnoreNextEvents();

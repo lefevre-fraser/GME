@@ -216,7 +216,7 @@ void CObjectInspectorCtrl::OnDraw(
 		CRect edge(rcBounds);
 		pdc->DrawEdge(&edge, EDGE_BUMP, BF_RECT);
 		
-		CString label("ObjectInspector OCX");
+		CString label(_T("ObjectInspector OCX"));
 
 		BITMAP bm;
 		CBitmap bitmap;
@@ -235,7 +235,7 @@ void CObjectInspectorCtrl::OnDraw(
 		dcMem.SelectObject(oldbitmap);
 		
 		pdc->SetTextAlign(TA_CENTER);
-		pdc->TextOut(rcBounds.Width()/2, rcBounds.Height()/2, CString("ObjectInspector ActiveX Control"));
+		pdc->TextOut(rcBounds.Width()/2, rcBounds.Height()/2, CString(_T("ObjectInspector ActiveX Control")));
 	}
 }
 
@@ -476,7 +476,7 @@ void CObjectInspectorCtrl::SetMgaObjects(LPUNKNOWN newValue)
 		m_FolderList.RemoveAll();
 		m_objects=NULL;
 
-		CWnd::MessageBox("Object Inspector could not hand over the project data due to an unexpected error. We apoligize for the inconvenience.","Object inspector",MB_ICONERROR);
+		CWnd::MessageBox(_T("Object Inspector could not hand over the project data due to an unexpected error. We apoligize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
 
 	}
 	SetModifiedFlag();
@@ -519,7 +519,7 @@ void CObjectInspectorCtrl::RefreshPanels()
 	{
 		ASSERT(0);
 		m_project->AbortTransaction();
-		CWnd::MessageBox("Object Inspector could not load object data due to an unexpected MGA error. We apoligize for the inconvenience.","Object inspector",MB_ICONERROR);
+		CWnd::MessageBox(_T("Object Inspector could not load object data due to an unexpected MGA error. We apoligize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
 	}
 
 	m_inspectorDlg.Refresh();
@@ -909,7 +909,7 @@ void CObjectInspectorCtrl::WriteAttributeItemToMga(CListItem ListItem)
 	{
 		ASSERT(0);
 		m_project->AbortTransaction();
-		CWnd::MessageBox("Object Inspector could not write attribute data due to an unexpected error. We apologize for the inconvenience.","Object inspector",MB_ICONERROR);
+		CWnd::MessageBox(_T("Object Inspector could not write attribute data due to an unexpected error. We apologize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
 	}
 
 }
@@ -962,7 +962,7 @@ void CObjectInspectorCtrl::WritePreferenceItemToMga(CListItem ListItem, bool bIs
 		{
 			ccpMetaProject->AbortTransaction();
 		}
-		CWnd::MessageBox("Object Inspector could not write object preference data due to an unexpected MGA error. We apoligize for the inconvenience.","Object inspector",MB_ICONERROR);
+		CWnd::MessageBox(_T("Object Inspector could not write object preference data due to an unexpected MGA error. We apoligize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
 	}
 	
 }
@@ -991,7 +991,7 @@ void CObjectInspectorCtrl::RefreshName()
 		}
 		else
 		{
-			strName+=";"+CString(bstrName);
+			strName+=_T(";")+CString(bstrName);
 		}
 
 	}
@@ -1014,7 +1014,7 @@ void CObjectInspectorCtrl::RefreshName()
 		}
 		else
 		{
-			strName+=";"+CString(bstrName);
+			strName+=_T(";")+CString(bstrName);
 		}
 
 	}
@@ -1103,7 +1103,7 @@ void CObjectInspectorCtrl::WriteNameToMga(const CString &strName)
 	{
 		ASSERT(0);
 		m_project->AbortTransaction();
-		CWnd::MessageBox("Object Inspector could not write object name due to an unexpected MGA error. We apoligize for the inconvenience.","Object inspector",MB_ICONERROR);
+		CWnd::MessageBox(_T("Object Inspector could not write object name due to an unexpected MGA error. We apoligize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
 	}
 
 }

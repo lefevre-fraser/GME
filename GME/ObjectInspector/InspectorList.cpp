@@ -343,7 +343,7 @@ void CInspectorList::DoCollapseExpand(int nIndex)
 		{
 			CListItem ChildListItem=ListItem.m_ContainedListItemArray.GetAt(i);
 			m_ListItemArray.InsertAt(nChildIndex+i,ChildListItem);
-			InsertString(nChildIndex+i,"");
+			InsertString(nChildIndex+i,_T(""));
 
 		}
 
@@ -530,7 +530,7 @@ bool CInspectorList::InsertItem(CListItem ListItem, int nIndex)
 	if(!m_bCategories||nUpperBound==-1)
 	{
 		m_ListItemArray.InsertAt(nIndex,ListItem);
-		InsertString(nIndex,"");
+		InsertString(nIndex,_T(""));
 	}
 	else
 	{
@@ -556,7 +556,7 @@ bool CInspectorList::InsertItem(CListItem ListItem, int nIndex)
 		else
 		{
 			m_ListItemArray.InsertAt(nIndex,ListItem);
-			InsertString(nIndex,"");
+			InsertString(nIndex,_T(""));
 
 		}
 
@@ -613,7 +613,7 @@ bool CInspectorList::AddItem(CListItem ListItem)
 	if(!m_bCategories||nUpperBound==-1)
 	{
 		m_ListItemArray.Add(ListItem);
-		AddString("");
+		AddString(_T(""));
 	}
 	else
 	{
@@ -639,7 +639,7 @@ bool CInspectorList::AddItem(CListItem ListItem)
 		else
 		{
 			m_ListItemArray.Add(ListItem);
-			AddString("");
+			AddString(_T(""));
 		}
 	}
 
@@ -854,7 +854,7 @@ void CInspectorList::SetHelp(int nIndex)
 
 	if(nIndex==-1)
 	{
-		pInspectorDlg->SetHelp("","");
+		pInspectorDlg->SetHelp(_T(""),_T(""));
 		return;
 	}
 
@@ -862,7 +862,7 @@ void CInspectorList::SetHelp(int nIndex)
 	int nSelCount=GetSelCount();
 	if(nSelCount>1)
 	{
-		pInspectorDlg->SetHelp("Multiple Selection","Select one item to edit its properties \r\nor press Ctrl+D to make selected items default.");
+		pInspectorDlg->SetHelp(_T("Multiple Selection"),_T("Select one item to edit its properties \r\nor press Ctrl+D to make selected items default."));
 	}
 	else
 	{

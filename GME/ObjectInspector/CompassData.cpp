@@ -15,13 +15,13 @@ static char THIS_FILE[]=__FILE__;
 
 bool CCompassData::ParseCompassValue(CString strValue, UINT &uValue)
 {
-	char szDelimiters[]=",;\t ";
-	char* token=NULL;
+	TCHAR szDelimiters[] = _T(",;\t ");
+	TCHAR* token=NULL;
 						
-	char *str=new char[strValue.GetLength()+1];
-	strcpy(str,strValue);
+	TCHAR *str = new TCHAR[strValue.GetLength()+1];
+	_tcscpy(str,strValue);
 
-	token=strtok(str,szDelimiters);
+	token=_tcstok(str,szDelimiters);
 
 	bool bIsProcessed=false;
 	UINT uCompassTemp=0;
@@ -31,61 +31,61 @@ bool CCompassData::ParseCompassValue(CString strValue, UINT &uValue)
 		bIsProcessed=false;
 		
 		CString strTemp;
-		strTemp="North";
+		strTemp = _T("North");
 		if(!strTemp.CompareNoCase(token))
 		{
 			uCompassTemp|=CMPS_NORTH;
 			bIsProcessed=true;
 		}
 
-		strTemp="South";
+		strTemp = _T("South");
 		if(!strTemp.CompareNoCase(token))
 		{
 			uCompassTemp|=CMPS_SOUTH;
 			bIsProcessed=true;
 		}
-		strTemp="East";
+		strTemp = _T("East");
 		if(!strTemp.CompareNoCase(token))
 		{
 			uCompassTemp|=CMPS_EAST;
 			bIsProcessed=true;
 		}
 
-		strTemp="West";
+		strTemp = _T("West");
 		if(!strTemp.CompareNoCase(token))
 		{
 			uCompassTemp|=CMPS_WEST;
 			bIsProcessed=true;
 		}
 
-		strTemp="Northeast";
+		strTemp = _T("Northeast");
 		if(!strTemp.CompareNoCase(token))
 		{
 			uCompassTemp|=CMPS_NORTHEAST;
 			bIsProcessed=true;
 		}
 
-		strTemp="Southeast";
+		strTemp = _T("Southeast");
 		if(!strTemp.CompareNoCase(token))
 		{
 			uCompassTemp|=CMPS_SOUTHEAST;
 			bIsProcessed=true;
 		}
 
-		strTemp="SouthWest";
+		strTemp = _T("SouthWest");
 		if(!strTemp.CompareNoCase(token))
 		{
 			uCompassTemp|=CMPS_SOUTHWEST;
 			bIsProcessed=true;
 		}
 
-		strTemp="NorthWest";
+		strTemp = _T("NorthWest");
 		if(!strTemp.CompareNoCase(token))
 		{
 			uCompassTemp|=CMPS_NORTHWEST;
 			bIsProcessed=true;
 		}
-		strTemp="Center";
+		strTemp = _T("Center");
 		if(!strTemp.CompareNoCase(token))
 		{
 			uCompassTemp|=CMPS_CENTER;
@@ -94,7 +94,7 @@ bool CCompassData::ParseCompassValue(CString strValue, UINT &uValue)
 
 		if(!bIsProcessed)break;
 		// Next token
-		token=strtok(NULL,szDelimiters);
+		token = _tcstok(NULL,szDelimiters);
 	}
 	delete[] str;
 
@@ -110,47 +110,47 @@ CString CCompassData::toString(UINT uData)
 
 	if(uData&CMPS_NORTH)
 	{
-		strRetVal+="North;";
+		strRetVal += _T("North;");
 	}
 
 	if(uData&CMPS_EAST)
 	{
-		strRetVal+="East;";
+		strRetVal += _T("East;");
 	}
 	
 	if(uData&CMPS_SOUTH)
 	{
-		strRetVal+="South;";
+		strRetVal += _T("South;");
 	}
 
 	if(uData&CMPS_WEST)
 	{
-		strRetVal+="West;";
+		strRetVal += _T("West;");
 	}
 
 	if(uData&CMPS_NORTHEAST)
 	{
-		strRetVal+="Northeast;";
+		strRetVal += _T("Northeast;");
 	}
 
 	if(uData&CMPS_SOUTHEAST)
 	{
-		strRetVal+="Southeast;";
+		strRetVal += _T("Southeast;");
 	}
 
 	if(uData&CMPS_SOUTHWEST)
 	{
-		strRetVal+="Southwest;";
+		strRetVal += _T("Southwest;");
 	}
 
 	if(uData&CMPS_NORTHWEST)
 	{
-		strRetVal+="Northwest;";
+		strRetVal += _T("Northwest;");
 	}
 
 	if(uData&CMPS_CENTER)
 	{
-		strRetVal+="Center;";
+		strRetVal += _T("Center;");
 	}
 
 	// Trimming the last semicolon
@@ -221,53 +221,53 @@ UINT CCompassData::ParseMgaCompassValueOption(const CString &strValue)
 		UINT uCompassTemp=0;
 		
 		CString strTemp;
-		strTemp="0";
+		strTemp = _T("0");
 		if(!strTemp.CompareNoCase(strValue))
 		{
 			uCompassTemp|=CMPS_NORTH;
 		}
 
-		strTemp="4";
+		strTemp = _T("4");
 		if(!strTemp.CompareNoCase(strValue))
 		{
 			uCompassTemp|=CMPS_SOUTH;
 		}
-		strTemp="2";
+		strTemp = _T("2");
 		if(!strTemp.CompareNoCase(strValue))
 		{
 			uCompassTemp|=CMPS_EAST;
 		}
 
-		strTemp="6";
+		strTemp = _T("6");
 		if(!strTemp.CompareNoCase(strValue))
 		{
 			uCompassTemp|=CMPS_WEST;
 		}
 
-		strTemp="1";
+		strTemp = _T("1");
 		if(!strTemp.CompareNoCase(strValue))
 		{
 			uCompassTemp|=CMPS_NORTHEAST;
 		}
 
-		strTemp="3";
+		strTemp = _T("3");
 		if(!strTemp.CompareNoCase(strValue))
 		{
 			uCompassTemp|=CMPS_SOUTHEAST;
 		}
 
-		strTemp="5";
+		strTemp = _T("5");
 		if(!strTemp.CompareNoCase(strValue))
 		{
 			uCompassTemp|=CMPS_SOUTHWEST;
 		}
 
-		strTemp="7";
+		strTemp = _T("7");
 		if(!strTemp.CompareNoCase(strValue))
 		{
 			uCompassTemp|=CMPS_NORTHWEST;
 		}
-		strTemp="8";
+		strTemp = _T("8");
 		if(!strTemp.CompareNoCase(strValue))
 		{
 			uCompassTemp|=CMPS_CENTER;
@@ -287,43 +287,43 @@ void CCompassData::ParseMgaCompassValueCheck(const CString &strValue, UINT &uSma
 	uCapitalValue=0;
 
 // Small case value
-	if(strValue.Find('n')!=-1)
+	if(strValue.Find(_T('n'))!=-1)
 	{
 		uSmallCaseValue|=CMPS_NORTH;
 	}
 
-	if(strValue.Find('e')!=-1)
+	if(strValue.Find(_T('e'))!=-1)
 	{
 		uSmallCaseValue|=CMPS_EAST;
 	}
 
-	if(strValue.Find('s')!=-1)
+	if(strValue.Find(_T('s'))!=-1)
 	{
 		uSmallCaseValue|=CMPS_SOUTH;
 	}
 
-	if(strValue.Find('w')!=-1)
+	if(strValue.Find(_T('w'))!=-1)
 	{
 		uSmallCaseValue|=CMPS_WEST;
 	}
 
 // Capital value
-	if(strValue.Find('N')!=-1)
+	if(strValue.Find(_T('N'))!=-1)
 	{
 		uCapitalValue|=CMPS_NORTH;
 	}
 
-	if(strValue.Find('E')!=-1)
+	if(strValue.Find(_T('E'))!=-1)
 	{
 		uCapitalValue|=CMPS_EAST;
 	}
 
-	if(strValue.Find('S')!=-1)
+	if(strValue.Find(_T('S'))!=-1)
 	{
 		uCapitalValue|=CMPS_SOUTH;
 	}
 
-	if(strValue.Find('W')!=-1)
+	if(strValue.Find(_T('W'))!=-1)
 	{
 		uCapitalValue|=CMPS_WEST;
 	}
@@ -336,20 +336,20 @@ void CCompassData::toMgaStringCheck(CString& strValue, UINT uData, bool bIsCapit
 
 	if(uData&CMPS_NORTH)
 	{
-		strValue+=bIsCapital?"N":"n";	
+		strValue+=bIsCapital ? _T("N") : _T("n");
 	}
 	if(uData&CMPS_EAST)
 	{
-		strValue+=bIsCapital?"E":"e";
+		strValue+=bIsCapital?_T("E"):_T("e");
 	}
 	if(uData&CMPS_SOUTH)
 	{
-		strValue+=bIsCapital?"S":"s";
+		strValue+=bIsCapital?_T("S"):_T("s");
 	}
 
 	if(uData&CMPS_WEST)
 	{
-		strValue+=bIsCapital?"W":"w";
+		strValue+=bIsCapital?_T("W"):_T("w");
 	}
 
 }
@@ -407,5 +407,5 @@ void CCompassData::toMgaStringOption(CString& strValue, UINT uData)
 		ASSERT(0); // Invalid compass value
 	}
 
-	strValue.Format("%u",uMgaValue);
+	strValue.Format(_T("%u"),uMgaValue);
 }

@@ -54,8 +54,8 @@ LONG CInspectorSheet::OnItemChanged(WPARAM wParam, LPARAM /*lParam*/)
 /*
 #ifdef _DEBUG
 	CString strTemp;
-	strTemp.Format("Item Changed: %u",wParam);
-	MessageBox(strTemp,"Item Changed");
+	strTemp.Format(_T("Item Changed: %u"),wParam);
+	MessageBox(strTemp,_T("Item Changed"));
 #endif
 */
 	GetParent()->SendMessage(LBN_ON_ITEM_CHANGED,wParam,GetCurFocus());

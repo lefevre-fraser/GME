@@ -21,7 +21,7 @@ void str_split( CString str, CStringArray &returnArray)
    while( -1 != (iCurrPos = str.FindOneOf(_T("\n"))))
    {
        returnArray.Add(str.Left(iCurrPos));
-       returnArray[iNum].TrimRight("\r\n");
+       returnArray[iNum].TrimRight(_T("\r\n"));
        str = str.Right(str.GetLength() - iCurrPos - 1);
        iNum++;
    }
@@ -29,13 +29,13 @@ void str_split( CString str, CStringArray &returnArray)
    if (str.GetLength() > 0)      // the last one...
    {
        returnArray.Add(str);
-       returnArray[iNum].TrimRight("\r\n");
+       returnArray[iNum].TrimRight(_T("\r\n"));
        iNum++;
    }
 }
 
-/*static*/ const char * CItemData::m_defFMTSTR = "%.12g";
-/*static*/ CString      CItemData::m_fmtStr    = "%.12g";
+/*static*/ const TCHAR * CItemData::m_defFMTSTR = _T("%.12g");
+/*static*/ CString      CItemData::m_fmtStr    = _T("%.12g");
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -172,9 +172,9 @@ bool CItemData::Validate()
 				retVal=false;
 				if(stringVal.GetSize()==1)				
 				{
-					char*endptr;
-					long l=strtol(stringVal[0],&endptr,10);
-					if(*endptr=='\0')
+					TCHAR* endptr;
+					long l = _tcstol(stringVal[0], &endptr, 10);
+					if(*endptr==_T('\0'))
 					{
 						intVal=l;
 						retVal=true;
@@ -190,9 +190,9 @@ bool CItemData::Validate()
 				retVal=false;
 				if(stringVal.GetSize()==1)				
 				{
-					char*endptr;
-					double d=strtod(stringVal[0],&endptr);
-					if(*endptr=='\0')
+					TCHAR* endptr;
+					double d = _tcstod(stringVal[0], &endptr);
+					if(*endptr == _T('\0'))
 					{
 						doubleVal=d;
 						retVal=true;
@@ -210,12 +210,12 @@ bool CItemData::Validate()
 				retVal=false;
 				if(stringVal.GetSize()==1)				
 				{
-					if(stringVal[0]=="True")
+					if(stringVal[0]==_T("True"))
 					{
 						boolVal=true;
 						retVal=true;
 					}
-					else if(stringVal[0]=="False")
+					else if(stringVal[0]==_T("False"))
 					{
 						boolVal=false;
 						retVal=true;
@@ -233,9 +233,9 @@ bool CItemData::Validate()
 				retVal=false;
 				if(stringVal.GetSize()==1)				
 				{
-					char*endptr;
-					long l=strtol(stringVal[0],&endptr,16);
-					if(*endptr=='\0')
+					TCHAR* endptr;
+					long l = _tcstol(stringVal[0], &endptr, 16);
+					if(*endptr == _T('\0'))
 					{
 						colorVal=l;
 						retVal=true;
@@ -413,9 +413,9 @@ bool CItemData::toString(CString& strString)const
 				{
 					strString+=stringVal[i];
 					if( i != nUpperBound)
-						strString+="\r\n";
+						strString+=_T("\r\n");
 				}
-				//WAS: Trimming last "\r\n"
+				//WAS: Trimming last _T("\r\n")
 				//WAS: strString=strString.Left(strString.GetLength()-2);
 				bRetVal=true;
 			}
@@ -444,7 +444,7 @@ bool CItemData::toString(CString& strString)const
 
 	case ITEMDATA_INTEGER:
 		{
-			strString.Format("%d",intVal);
+			strString.Format(_T("%d"),intVal);
 			bRetVal=true;
 		}break;
 	case ITEMDATA_DOUBLE:
@@ -456,18 +456,18 @@ bool CItemData::toString(CString& strString)const
 		{
 			if(boolVal)
 			{
-				strString="True";
+				strString=_T("True");
 			}
 			else
 			{
-				strString="False";
+				strString=_T("False");
 			}
 			bRetVal=true;
 		}break;
 
 	case ITEMDATA_COLOR	:
 		{
-			strString.Format("Red: %u; Green: %u; Blue: %u;",GetRValue(colorVal),GetGValue(colorVal),GetBValue(colorVal));			
+			strString.Format(_T("Red: %u; Green: %u; Blue: %u;"),GetRValue(colorVal),GetGValue(colorVal),GetBValue(colorVal));			
 			bRetVal=true;
 		}break;
 

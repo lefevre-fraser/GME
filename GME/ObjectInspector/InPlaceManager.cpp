@@ -69,7 +69,7 @@ void CInPlaceManager::ShowInPlace(CRect rectInPlace, int nIndex)
 				{
 					strText+=ListItem.Value.stringVal[i];
 					if( i != uLim)
-						strText+="\r\n";
+						strText+=_T("\r\n");
 				}
 				// there is no newline at the end of the last line
 				m_MultiEditCtrl.SetWindowText(strText);//WAS: strText.Left(strText.GetLength()-2)
@@ -199,7 +199,7 @@ void CInPlaceManager::DisplaySingleLineEdit(CRect rectBound, bool readOnly)
 	{
 		if(!m_SingleEditCtrl.IsWindowVisible())
 		{
-			m_SingleEditCtrl.SetWindowText("");
+			m_SingleEditCtrl.SetWindowText(_T(""));
 			m_SingleEditCtrl.MoveWindow(rectBound.left,rectBound.top,rectBound.Width(),rectBound.Height());
 			m_SingleEditCtrl.ShowWindow(SW_SHOW);
 			m_SingleEditCtrl.SetFocus();
@@ -379,7 +379,7 @@ void CInPlaceManager::OnClickEditorButton()
 	{
 		CString extension;
 		bool content_type_valid = true;
-		if( ListItem.strContentType.GetAt(0) == '.') // starts with '.' -> interpret it as extension
+		if( ListItem.strContentType.GetAt(0) == _T('.')) // starts with '.' -> interpret it as extension
 			extension = ListItem.strContentType;
 		else // interpret it as MIME type (Content-Type), and lookup the extension corresponding to it
 			content_type_valid = CInPlaceManager::findInfoInMimeDB( ListItem.strContentType, szAppPath, extension);
@@ -417,7 +417,7 @@ void CInPlaceManager::OnClickEditorButton()
 	{
 		CString strLine = ListItem.Value.stringVal[i];
 		strLine.TrimRight(_T("\r\n"));
-		tempFile.WriteString(strLine + "\n");
+		tempFile.WriteString(strLine + _T("\n"));
 	}
 
 	tempFile.Close();
@@ -427,7 +427,7 @@ void CInPlaceManager::OnClickEditorButton()
 	{
 		if( !szAppPath.IsEmpty()) // GMEEditor value found in MimeDB
 		{
-			CString szCommandLine = " ";
+			CString szCommandLine = _T(" ");
 			szCommandLine += szTempFileName;
 			int nCommandLineLength = szCommandLine.GetLength();
 
@@ -446,9 +446,9 @@ void CInPlaceManager::OnClickEditorButton()
 		if( !launched)
 		{
 			// success codes are strictly greater than 32
-			int retcode = (int) ShellExecute( (HWND) m_EditorButton, "edit", szTempFileName, 0, 0, SW_SHOWNORMAL);
+			int retcode = (int) ShellExecute( (HWND) m_EditorButton, _T("edit"), szTempFileName, 0, 0, SW_SHOWNORMAL);
 			if( retcode == SE_ERR_NOASSOC) // failed because no such verb (edit) exists for this extension
-				retcode = (int) ShellExecute( (HWND) m_EditorButton, "open", szTempFileName, 0, 0, SW_SHOWNORMAL);
+				retcode = (int) ShellExecute( (HWND) m_EditorButton, _T("open"), szTempFileName, 0, 0, SW_SHOWNORMAL);
 
 			launched = retcode > 32;
 			// if it was not launched successfully, use the specified editor
@@ -467,7 +467,7 @@ void CInPlaceManager::OnClickEditorButton()
 		catch (hresult_exception &) {
 		}
 
-		CString szCommandLine = " ";
+		CString szCommandLine = _T(" ");
 		szCommandLine += szTempFileName;
 		int nCommandLineLength = szCommandLine.GetLength();
 
@@ -485,7 +485,7 @@ void CInPlaceManager::OnClickEditorButton()
 	}
 
 	// DWORD h = ::WaitForSingleObject(processInfo.hProcess, INFINITE);
-	if( launched) m_EditorButton.MessageBox("Click OK to finish.", "Using External Text Editor", MB_ICONINFORMATION);
+	if( launched) m_EditorButton.MessageBox(_T("Click OK to finish."), _T("Using External Text Editor"), MB_ICONINFORMATION);
 
 	// open temporary file
 	if (tempFile.Open(szTempFileName, CFile::modeRead | CFile::typeText) == 0) {
@@ -660,7 +660,7 @@ void CInPlaceManager::OnEditMultiLineEnd()
 			nLineLength = 2;
 		for(int i=0;i<nLines;i++)
 		{
-			strLine="";
+			strLine=_T("");
 			// nLineLength=m_MultiEditCtrl.LineLength(i);
 			// LineLength can have a bug!
 			// Note, that everything works in ANSI here, Unicode would need changes here
@@ -694,7 +694,7 @@ void CInPlaceManager::OnEditSingleLineEnd()
 				ListItem.Value.SetStringValue(strText);
 
 				if(!ListItem.Value.Validate()) {
-					m_pInspectorList->MessageBox("Invalid (non ASCII) string data: "+strText,"Object Inspector",MB_ICONERROR);
+					m_pInspectorList->MessageBox(_T("Invalid (non ASCII) string data: ")+strText,_T("Object Inspector"),MB_ICONERROR);
 					m_pInspectorList->SetFocus();
 				} 
 				else {
@@ -711,7 +711,7 @@ void CInPlaceManager::OnEditSingleLineEnd()
 
 			if(!ListItem.Value.Validate())
 			{
-				m_pInspectorList->MessageBox("Invalid integer data: "+strText,"Object Inspector",MB_ICONERROR);
+				m_pInspectorList->MessageBox(_T("Invalid integer data: ")+strText,_T("Object Inspector"),MB_ICONERROR);
 				// Restoring correct value
 				ListItem.Value.toString();
 				m_pInspectorList->SetFocus();
@@ -731,7 +731,7 @@ void CInPlaceManager::OnEditSingleLineEnd()
 
 			if(!ListItem.Value.Validate())
 			{
-				m_pInspectorList->MessageBox("Invalid floating point data: "+strText,"Object Inspector",MB_ICONERROR);
+				m_pInspectorList->MessageBox(_T("Invalid floating point data: ")+strText,_T("Object Inspector"),MB_ICONERROR);
 				// Restoring correct value
 				ListItem.Value.toString();
 				m_pInspectorList->SetFocus();
@@ -799,7 +799,7 @@ void CInPlaceManager::OnEditEnd()
 
 	// an Extension value exists hopefully
 	ULONG buff_len = 32; // we don't expect wider extensions than 32
-	CString ext(' ', buff_len);
+	CString ext(_T(' '), buff_len);
 	TCHAR* buff = ext.GetBufferSetLength( buff_len);
 	res = rk.QueryStringValue( EXTENSION_VALUE, buff, &buff_len);
 	ext.ReleaseBufferSetLength( buff_len);
@@ -808,7 +808,7 @@ void CInPlaceManager::OnEditEnd()
 		ext.Empty(); // will not return succesfully
 
 	buff_len = MAX_PATH;
-	CString pref_app(' ', buff_len);
+	CString pref_app(_T(' '), buff_len);
 	buff = pref_app.GetBufferSetLength( buff_len);
 	res = rk.QueryStringValue( GMEEDITOR_VALUE, buff, &buff_len);
 	pref_app.ReleaseBufferSetLength( buff_len);
