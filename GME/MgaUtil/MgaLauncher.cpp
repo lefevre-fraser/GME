@@ -850,7 +850,7 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 //		component.Release();
 //		CoFreeUnusedLibraries();
 //	} COMCATCH(CoFreeUnusedLibraries(););
-	} COMCATCH();
+	} COMCATCH(;);
 }
 
 // ------ Helper functions
