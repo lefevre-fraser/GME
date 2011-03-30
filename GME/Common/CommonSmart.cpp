@@ -45,7 +45,7 @@ void CopyTo(const char *p, int len, BSTR *b)
 	
 	ASSERT( tlen == blen );
 
-	(*b)[blen] = '\0';
+	(*b)[blen] = L'\0';
 }
 
 int GetCharLength(const OLECHAR *p, int olelen)
