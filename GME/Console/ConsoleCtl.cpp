@@ -10,6 +10,7 @@
 #include <mshtml.h>         //IWeb objects
 #include <limits.h>
 #include <afx.h>
+#include "Strsafe.h"
 
 #define BUTTON_ICON_SIZE		16
 
@@ -149,11 +150,11 @@ BOOL CConsoleCtrl::CConsoleCtrlFactory::UpdateRegistry(BOOL bRegister)
 // CConsoleCtrl::CConsoleCtrl - Constructor
 
 CConsoleCtrl::CConsoleCtrl()
-: m_recent1("")
-, m_recent2("")
-, m_recent3("")
-, m_recent4("")
-, m_recent5("")
+: m_recent1(_T(""))
+, m_recent2(_T(""))
+, m_recent3(_T(""))
+, m_recent4(_T(""))
+, m_recent5(_T(""))
 , m_hIco1(NULL)
 , m_hIco2(NULL)
 , m_hIco3(NULL)
@@ -342,7 +343,7 @@ void CConsoleCtrl::OnDraw(
 		CRect edge(rcBounds);
 		pdc->DrawEdge(&edge, EDGE_BUMP, BF_RECT);
 		
-		CString label("GME Console OCX");
+		CString label(_T("GME Console OCX"));
 
 		BITMAP bm;
 		CBitmap bitmap;
@@ -434,7 +435,7 @@ int CConsoleCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		rect, 
 		this, 
 		IDD_BROWSER);
-	m_browser.LoadFromResource("BLANK.HTML");
+	m_browser.LoadFromResource(_T("BLANK.HTML"));
 
 	m_edit.Create((ES_AUTOHSCROLL | WS_VISIBLE | WS_CHILD), rect, this, IDD_EDIT);
 	m_edit.LimitText(300);
@@ -502,7 +503,7 @@ void CConsoleCtrl::Message(LPCTSTR str, short type)
     {
 		CString line;
 		
-		line.Format("<IMG SRC=\"%s\" ALIGN=MIDDLE > %s<BR>", icons[type], str);
+		line.Format(_T("<IMG SRC=\"%s\" ALIGN=MIDDLE > %s<BR>"), icons[type], str);
 
 		VARIANT_BOOL time_stamping = VARIANT_FALSE; // default
 		try {
@@ -526,7 +527,7 @@ void CConsoleCtrl::Message(LPCTSTR str, short type)
 			CComPtr<IHTMLElement> pElement;
 			COMTHROW(pHtmlDoc->get_body( &pElement ));
 			ASSERT(pElement != NULL);
-			CComBSTR where("BeforeEnd");
+			CComBSTR where(L"BeforeEnd");
 			CComBSTR text(line);
 			COMTHROW(pElement->insertAdjacentHTML(where, text));
 
@@ -548,7 +549,7 @@ void CConsoleCtrl::Message(LPCTSTR str, short type)
 void CConsoleCtrl::Clear() 
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
-	m_browser.LoadFromResource("BLANK.HTML");
+	m_browser.LoadFromResource(_T("BLANK.HTML"));
 }
 
 BSTR CConsoleCtrl::GetContents() 
@@ -627,12 +628,12 @@ void CConsoleCtrl::OnShowMenu()
 	CMenu p;
 	if( p.CreatePopupMenu())
 	{
-		p.AppendMenu( MF_STRING, IDC_LOADSCRIPT_COMMAND,   "Load Script");
+		p.AppendMenu( MF_STRING, IDC_LOADSCRIPT_COMMAND,   _T("Load Script"));
 		if( !m_edit.GetLoadedScriptFileName().IsEmpty())
-			p.AppendMenu( MF_STRING,IDC_RELOAD_COMMAND, "Reload Current"); // or IDC_RELOADRUN_COMMAND
+			p.AppendMenu( MF_STRING,IDC_RELOAD_COMMAND, _T("Reload Current")); // or IDC_RELOADRUN_COMMAND
 		if( !m_recent1.IsEmpty()) // m_recent1 can tell us if there is anything in the recent list
-			p.AppendMenu( MF_POPUP, (UINT_PTR) r.GetSafeHmenu(), "Recent Scripts");
-		p.AppendMenu( MF_STRING, IDC_SELECTENGINE_COMMAND,   "Settings");
+			p.AppendMenu( MF_POPUP, (UINT_PTR) r.GetSafeHmenu(), _T("Recent Scripts"));
+		p.AppendMenu( MF_STRING, IDC_SELECTENGINE_COMMAND,   _T("Settings"));
 		
 		CRect rc;
 		m_cmdButton.GetWindowRect( &rc);
@@ -645,22 +646,22 @@ void CConsoleCtrl::RunScript()
 {
 	if( !m_edit.GetLoadedScript().IsEmpty())
 	{
-		Message( CString( "Executing script: ") + m_edit.GetLoadedScriptFileName(), MSG_INFO);
+		Message( CString( _T("Executing script: ")) + m_edit.GetLoadedScriptFileName(), MSG_INFO);
 		m_edit.ExecuteScript( m_edit.GetLoadedScript());
 	}
 	else
-		Message( "Script not found!", MSG_INFO);
+		Message( _T("Script not found!"), MSG_INFO);
 }
 
 void CConsoleCtrl::LoadScript( const CString& p_fileName)
 {
-	m_edit.SetLoadedScript(""); // erase old loaded script contents
+	m_edit.SetLoadedScript(_T("")); // erase old loaded script contents
 
 	CStdioFile _file;
 
 	// open file
 	if( _file.Open( p_fileName, CFile::modeRead | CFile::typeText) == 0) {
-		Message( "Unable to open file.", MSG_ERROR);
+		Message( _T("Unable to open file."), MSG_ERROR);
 		return;
 	}
 
@@ -675,27 +676,27 @@ void CConsoleCtrl::LoadScript( const CString& p_fileName)
 	m_edit.SetLoadedScript( script_buf);
 	m_edit.SetScriptFileName( p_fileName);
 
-	Message( CString( "Loaded script: ") + p_fileName, MSG_INFO);
+	Message( CString( _T("Loaded script: ")) + p_fileName, MSG_INFO);
 	Invalidate();
 }
 
 void CConsoleCtrl::LoadScriptDlg()
 {
-	CFileDialog dlg(TRUE, "py", 0,
+	CFileDialog dlg(TRUE, _T("py"), 0,
 		OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-		"Script Files (*.js;*.py;*.vbs)|*.js;*.vbs;*.py|"
-		"Python Script Files (*.py)|*.py|"
-		"JScript Files (*.js)|*.js|"
-		"VBScript Files (*.vbs)|*.vbs|"
-		"Text Files (*.txt)|*.txt|"
-		"HTML Files (*.html;*.htm)|*.html;*.htm|"
-		"All Files (*.*)|*.*||");
+		_T("Script Files (*.js;*.py;*.vbs)|*.js;*.vbs;*.py|")
+		_T("Python Script Files (*.py)|*.py|")
+		_T("JScript Files (*.js)|*.js|")
+		_T("VBScript Files (*.vbs)|*.vbs|")
+		_T("Text Files (*.txt)|*.txt|")
+		_T("HTML Files (*.html;*.htm)|*.html;*.htm|")
+		_T("All Files (*.*)|*.*||"));
 
 	if( dlg.DoModal() == IDOK) 
 	{
 		CString fpath = dlg.GetPathName();
 		CString ext = dlg.GetFileExt().MakeLower();
-		if (ext == "html" || ext == "htm") {
+		if (ext == _T("html") || ext == _T("htm")) {
 			m_browser.Navigate2(fpath);
 			return;
 		}
@@ -757,7 +758,7 @@ void CConsoleCtrl::selectEngine()
 		COMTHROW( launcher->GmeDlg());
 	}
 	catch(...) {
-		Message( "Error while trying to show GME settings dialog", MSG_ERROR);
+		Message( _T("Error while trying to show GME settings dialog"), MSG_ERROR);
 	}
 }
 
@@ -808,20 +809,22 @@ BOOL CConsoleCtrl::OnToolTipNotify(UINT id, NMHDR *pNMHDR, LRESULT *pResult)
 		//tip.Format("Control ID = %d", nID);
 		switch( nID)
 		{
-			      case IDC_RETURN_COMMAND:       tip = "Executes the command typed into the edit field";
-			break;case IDC_RUNSCRIPT_COMMAND:    tip = "Executes " + m_edit.GetLoadedScriptFileName();
-			break;case IDC_MENU_COMMAND:         tip = "Load scripts and access recent scripts";
-			break;case IDC_CLEARCONSOLE_COMMAND: tip = "Clear the console";
-			break;case IDC_PREV_COMMAND:         tip = "Previous command in history";
-			break;case IDC_NEXT_COMMAND:         tip = "Next command in history";
-			break;case IDD_EDIT:                 tip = "Enter a command here";
+			      case IDC_RETURN_COMMAND:       tip = _T("Executes the command typed into the edit field");
+			break;case IDC_RUNSCRIPT_COMMAND:    tip = _T("Executes ") + m_edit.GetLoadedScriptFileName();
+			break;case IDC_MENU_COMMAND:         tip = _T("Load scripts and access recent scripts");
+			break;case IDC_CLEARCONSOLE_COMMAND: tip = _T("Clear the console");
+			break;case IDC_PREV_COMMAND:         tip = _T("Previous command in history");
+			break;case IDC_NEXT_COMMAND:         tip = _T("Next command in history");
+			break;case IDD_EDIT:                 tip = _T("Enter a command here");
 		}
 	}
 
+	CStringA aTip(tip);
+	CStringW wTip(tip);
 	if( pNMHDR->code == TTN_NEEDTEXTA)
-		lstrcpyn(pTTTA->szText, tip, sizeof(pTTTA->szText));
+		StringCchCopyA((char*)pTTTA->szText, sizeof(pTTTA->szText) / sizeof(char) - 1, aTip);
 	else
-		::MultiByteToWideChar( CP_ACP , 0, tip, -1, pTTTW->szText, sizeof(pTTTW->szText));
+		StringCchCopyW((wchar_t*)pTTTW->szText, sizeof(pTTTW->szText) / sizeof(wchar_t) - 1, wTip);
 
 	*pResult = 0;
 	return TRUE;    // message was handled

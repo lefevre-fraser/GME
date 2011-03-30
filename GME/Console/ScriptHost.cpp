@@ -30,9 +30,9 @@ STDMETHODIMP CScriptHost::InitEngine(void* console, BSTR engineProgid)
 		COMTHROW(m_iscriptParse->InitNew());
 		if (m_gmeptr != NULL)
 		{
-			_bstr_t project("project");
-			_bstr_t gme("gme");
-			_bstr_t this_model("it");
+			_bstr_t project(L"project");
+			_bstr_t gme(L"gme");
+			_bstr_t this_model(L"it");
 			COMTHROW(m_iscript->AddNamedItem(gme, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
 			if( m_mgaproj != NULL) COMTHROW(m_iscript->AddNamedItem(project, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
 			if( m_actMod  != NULL) COMTHROW(m_iscript->AddNamedItem(this_model, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
@@ -63,7 +63,7 @@ STDMETHODIMP CScriptHost::ProcessString(BSTR input)
 	}
 	catch(hresult_exception &e) 
 	{ 
-		m_console->Message( "Input parsing failed!", MSG_ERROR);
+		m_console->Message( _T("Input parsing failed!"), MSG_ERROR);
 		return e.hr;
 	}
 	return S_OK;
@@ -84,19 +84,19 @@ STDMETHODIMP CScriptHost::GetItemInfo(
 		return E_FAIL;
 	if (dwReturnMask&SCRIPTINFO_IUNKNOWN)
 	{
-		if (m_gmeptr && (_bstr_t)pstrName == _bstr_t("gme"))
+		if (m_gmeptr && (_bstr_t)pstrName == _bstr_t(L"gme"))
 		{
 			CComPtr<IUnknown> punk(m_gmeptr);
 			((IUnknown*)punk)->AddRef(); 
 			*ppiunkItem = punk;
 		}
-		else if (m_mgaproj && (_bstr_t)pstrName == _bstr_t("project"))
+		else if (m_mgaproj && (_bstr_t)pstrName == _bstr_t(L"project"))
 		{
 			CComPtr<IUnknown> punk(m_mgaproj);
 			((IUnknown*)punk)->AddRef(); 
 			*ppiunkItem = punk;
 		}
-		else if (m_actMod && (_bstr_t)pstrName == _bstr_t("it"))
+		else if (m_actMod && (_bstr_t)pstrName == _bstr_t(L"it"))
 		{
 			CComPtr<IUnknown> punk(m_actMod);
 			((IUnknown*)punk)->AddRef(); 
@@ -145,13 +145,13 @@ STDMETHODIMP CScriptHost::OnScriptError(
 		// write to console 
 		CString desc = expinfo.bstrDescription;
 		// make the error description html readable
-		desc.Replace( "<", "&lt;");		// replacing <
-		desc.Replace( ">", "&gt;");		// >
-		desc.Replace("\r\n", "<br>");	// 0d0a newlines
-		desc.Replace("\n", "<br>");		// 0a newlines
+		desc.Replace( _T("<"), _T("&lt;"));		// replacing <
+		desc.Replace( _T(">"), _T("&gt;"));		// >
+		desc.Replace(_T("\r\n"), _T("<br>"));	// 0d0a newlines
+		desc.Replace(_T("\n"), _T("<br>"));		// 0a newlines
 
-		char err[5000];
-		sprintf(err, "Scripting Error at Position: %ld Line: %lu<br>%s", ch, line, (const char*)desc);
+		TCHAR err[5000];
+		_stprintf_s(err, _T("Scripting Error at Position: %ld Line: %lu<br>%s"), ch, line, (const TCHAR*)desc);
 		m_console->Message((LPCTSTR)err, MSG_ERROR);
 	}
 	catch(hresult_exception &e) 
@@ -204,7 +204,7 @@ STDMETHODIMP CScriptHost::SetGMEApp(IDispatch *gmeapp)
 		CComPtr<IDispatch> gip(gmeapp);
 		COMTHROW(gip.QueryInterface(&m_gmeptr));
 
-		_bstr_t gme("gme");
+		_bstr_t gme(L"gme");
 		COMTHROW(m_iscript->AddNamedItem(gme, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
 		COMTHROW(m_iscript->SetScriptState(SCRIPTSTATE_CONNECTED));
 	}
@@ -234,8 +234,8 @@ STDMETHODIMP CScriptHost::SetGMEProj(IDispatch *gmeapp)
 
 		COMTHROW( m_gmeptr->get_OleIt( &m_actMod ));
 
-		_bstr_t project("project");
-		_bstr_t this_model("it");
+		_bstr_t project(L"project");
+		_bstr_t this_model(L"it");
 		COMTHROW(m_iscript->AddNamedItem(project, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
 		COMTHROW(m_iscript->AddNamedItem(this_model, SCRIPTITEM_ISVISIBLE|SCRIPTITEM_ISSOURCE));
 		COMTHROW(m_iscript->SetScriptState(SCRIPTSTATE_CONNECTED));

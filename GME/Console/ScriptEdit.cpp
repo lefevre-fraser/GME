@@ -18,7 +18,7 @@ BEGIN_MESSAGE_MAP(CScriptEdit, CEdit)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-/*static*/ const char* CScriptEdit::defPrompt = ">";
+/*static*/ const TCHAR* CScriptEdit::defPrompt = _T(">");
 CScriptEdit::CScriptEdit()
 {
 
@@ -35,16 +35,16 @@ bool CScriptEdit::Init(CConsoleCtrl *cons)
 	{
 		m_console = cons;
 		COMTHROW(m_host.CreateInstance(CLSID_ScriptHost));
-		_bstr_t engine("JScript");
+		_bstr_t engine(L"JScript");
 		COMTHROW(m_host->InitEngine((void*)m_console, engine));
 		this->LimitText( 256);     // modify in accordance with GetLine( ..., 256) in OnKeyUp()
 		this->SetWindowText( defPrompt); // to attract user attention
 	}
 	catch(hresult_exception &e) 
 	{ 
-		char s[200];
-		sprintf(s, "Scripting Initialization Error: %ld", e.hr);
-		m_console->Message((LPCTSTR)s, MSG_ERROR);
+		TCHAR s[200];
+		_stprintf_s(s, _T("Scripting Initialization Error: %ld"), e.hr);
+		m_console->Message(s, MSG_ERROR);
 		return false;
 	}
 
@@ -74,7 +74,7 @@ void CScriptEdit::OnKeyUp( UINT nChar, UINT /*nRepCnt*/, UINT /*nFlags*/ )
 	{
 		lastup = -1;
 		SetSel(0, -1);
-		ReplaceSel("");
+		ReplaceSel(_T(""));
 	}
 	else if (nChar == VK_UP)
 	{
@@ -136,15 +136,15 @@ void CScriptEdit::OnKeyUp( UINT nChar, UINT /*nRepCnt*/, UINT /*nFlags*/ )
 		}
 
 		
-		static const char *cls_c = "!cls";
-		static const char *run_c = "!run";
-		static const char *lod_c = "!load ";
-		static const char *rel_c = "!rel"; // reload
-		static const char *rlr_c = "!rlr"; // reload & run
+		static const TCHAR *cls_c = _T("!cls");
+		static const TCHAR *run_c = _T("!run");
+		static const TCHAR *lod_c = _T("!load ");
+		static const TCHAR *rel_c = _T("!rel"); // reload
+		static const TCHAR *rlr_c = _T("!rlr"); // reload & run
 		bool             handled = false;
 
 		if(      inp == run_c) handled = true, m_console->RunScript();
-		else if( inp == lod_c) handled = true, m_console->LoadScript( inp.Mid( strlen( lod_c)));
+		else if( inp == lod_c) handled = true, m_console->LoadScript( inp.Mid( _tcslen( lod_c)));
 		else if( inp == rel_c) handled = true, m_console->LoadScript( m_loadedFileName);
 		else if( inp == rlr_c) handled = true, m_console->LoadScript( m_loadedFileName), m_console->RunScript();
 		else if( inp == cls_c) handled = true, m_console->Clear();
@@ -167,8 +167,8 @@ void CScriptEdit::SetGMEApp(IDispatch *disp)
 	}
 	catch(hresult_exception &e) 
 	{ 
-		char s[1000];
-		sprintf(s, "Scripting Error: 0x%x", e.hr);
+		TCHAR s[1000];
+		_stprintf_s(s, _T("Scripting Error: 0x%x"), e.hr);
 		m_console->Message((LPCTSTR)s, MSG_ERROR);
 	}
 }
@@ -181,9 +181,9 @@ void CScriptEdit::SetGMEProj(IDispatch *disp)
 	}
 	catch(hresult_exception &e) 
 	{ 
-		char s[1000];
-		sprintf(s, "Scripting Error: 0x%x", e.hr);
-		m_console->Message((LPCTSTR)s, MSG_ERROR);
+		TCHAR s[1000];
+		_stprintf_s(s, _T("Scripting Error: 0x%x"), e.hr);
+		m_console->Message(s, MSG_ERROR);
 	}
 }
 
@@ -203,7 +203,7 @@ void CScriptEdit::OnEnSetfocus()
 	this->GetWindowText( buff);
 	if( buff == defPrompt) // if found the default prompt
 	{
-		this->SetWindowText( ""); // when it has start typing remove '>'
+		this->SetWindowText( _T("")); // when it has start typing remove '>'
 	}
 }
 
@@ -212,11 +212,11 @@ void CScriptEdit::ExecuteScript( CString& p_str)
 	try {
 		// load engine info from registry 
 		CComPtr<IMgaRegistrar> registrar;
-		COMTHROW(registrar.CoCreateInstance(CComBSTR("Mga.MgaRegistrar")));
+		COMTHROW(registrar.CoCreateInstance(L"Mga.MgaRegistrar"));
 		ASSERT( registrar != NULL );
 		BSTR eng = NULL;
 		COMTHROW( registrar->get_ScriptEngine(REGACCESS_USER, &eng) );
-		_bstr_t engine("JScript");
+		_bstr_t engine(L"JScript");
 		if (eng != NULL  &&  ((_bstr_t)eng).length() != 0)
 			engine = eng;
 
@@ -225,12 +225,12 @@ void CScriptEdit::ExecuteScript( CString& p_str)
 		COMTHROW(m_host->ProcessString(input));
 	}
 	catch(hresult_exception& e) {
-		char s[1000];
-		sprintf(s, "Scripting Error: 0x%x", e.hr);
-		m_console->Message((LPCTSTR)s, MSG_ERROR);
+		TCHAR s[1000];
+		_stprintf_s(s, _T("Scripting Error: 0x%x"), e.hr);
+		m_console->Message(s, MSG_ERROR);
 	}
 	catch(...) {
-		m_console->Message( "Exception handled.", MSG_ERROR);
+		m_console->Message( _T("Exception handled."), MSG_ERROR);
 	}
 
 	SetSel(0, -1);

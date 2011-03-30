@@ -35,7 +35,7 @@ public:
 	void showNext();
 	void returnHit();
 protected:
-	static const char* defPrompt;
+	static const TCHAR* defPrompt;
 
 	CConsoleCtrl *m_console;
 	IScriptHostPtr m_host;

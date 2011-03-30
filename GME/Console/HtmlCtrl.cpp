@@ -129,7 +129,7 @@ void CHtmlCtrl::OnBeforeNavigate2( LPCTSTR lpszURL,
 	LPCTSTR lpszHeaders,
 	BOOL* pbCancel )
 {
-	const char MGA_PROTOCOL[] = "mga:";
+	const TCHAR MGA_PROTOCOL[] = _T("mga:");
 	int len = _tcslen(MGA_PROTOCOL);
 	if (_tcsnicmp(lpszURL, MGA_PROTOCOL, len)==0) {
 		OnMgaURL(lpszURL + len);
