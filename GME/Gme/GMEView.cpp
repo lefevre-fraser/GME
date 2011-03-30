@@ -221,7 +221,7 @@ STDMETHODIMP CViewDriver::ObjectEvent(IMgaObject *obj, unsigned long eventmask,V
 				CGuiConnection *conn = CGuiFco::FindConnection(fco,view->connections);
 				if(guiObj) {
 					if(eventmask & OBJEVENT_PROPERTIES) {
-						COMTHROW(object->get_Name(PutOut(guiObj->GetName()));
+						COMTHROW(object->get_Name(PutOut(guiObj->GetName())));
 						view->Invalidate();
 					}
 				}
@@ -1008,7 +1008,7 @@ void CGMEView::OnInitialUpdate()
 		CComPtr<IMgaMetaFCO> meta;
 		COMTHROW(currentModel->get_Meta(&meta));
 		COMTHROW(meta->get_Name(PutOut(kindName)));
-		COMTHROW(meta->get_DisplayedName(PutOut(kindDisplayedName));
+		COMTHROW(meta->get_DisplayedName(PutOut(kindDisplayedName)));
 
 		CComBSTR modid;
 		COMTHROW( currentModel->get_ID( &modid));
@@ -1791,6 +1791,7 @@ CGuiFco* CGMEView::CreateGuiObject(CComPtr<IMgaFCO>& fco, CGuiFcoList* objList, 
 		((CGuiSet *)guiFco)->InitObject(this);
 		((CGuiSet *)guiFco)->SetAspect(currentAspect->index);
 		if (objList != NULL && !currentSetID.IsEmpty()) {
+			CString setID;
 			fco->get_ID(PutOut(setID));
 			if(setID == currentSetID) {
 				if (guiFco != NULL)
@@ -1852,6 +1853,7 @@ bool CGMEView::CreateGuiObjects()
 
 		CComBSTR pathBstr = MODELAUTOROUTING;
 		CComBSTR bstrVal;
+		CString val;
 		COMTHROW(currentModel->get_RegistryValue(pathBstr, PutOut(val)));
 		if (!val.IsEmpty()) {
 			if (val == "false")
