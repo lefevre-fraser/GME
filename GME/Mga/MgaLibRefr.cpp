@@ -3307,55 +3307,55 @@ void RefreshManager::collectDependencies( CoreObj& p_container)
 void RefreshManager::restoreDependencies()
 {
 	// step 1
-	m_reporter.show( CComBSTR("[Step 1] Restoring references to the new library..."), false);
+	m_reporter.show( CComBSTR(L"[Step 1] Restoring references to the new library..."), false);
 	
 	adaptTopRefs();
 	adaptDerRefs();
 	restoreRefsToLib();
 
 	// step 2
-	m_reporter.show( CComBSTR("[Step 1] Done."), false);
-	m_reporter.show( CComBSTR("[Step 2] Restoring connections to the new library..."), false);
+	m_reporter.show( CComBSTR(L"[Step 1] Done."), false);
+	m_reporter.show( CComBSTR(L"[Step 2] Restoring connections to the new library..."), false);
 
 	restoreMixedConns( m_newLib);
 
 	// step 3
-	m_reporter.show( CComBSTR("[Step 2] Done."), false);
-	m_reporter.show( CComBSTR("[Step 3] Updating subtypes and instances derived from the library..."), false);
+	m_reporter.show( CComBSTR(L"[Step 2] Done."), false);
+	m_reporter.show( CComBSTR(L"[Step 3] Updating subtypes and instances derived from the library..."), false);
 
 	syncStructureFromLib();
 
 	// step 4
-	m_reporter.show( CComBSTR("[Step 3] Done."), false);
-	m_reporter.show( CComBSTR("[Step 4] Updating new connections in subtypes and instances..."), false);
+	m_reporter.show( CComBSTR(L"[Step 3] Done."), false);
+	m_reporter.show( CComBSTR(L"[Step 4] Updating new connections in subtypes and instances..."), false);
 
 	syncFreshConns();
 
 	// step 5
-	m_reporter.show( CComBSTR("[Step 4] Done."), false);
-	m_reporter.show( CComBSTR("[Step 5] Reattaching subtypes and instances..."), false);
+	m_reporter.show( CComBSTR(L"[Step 4] Done."), false);
+	m_reporter.show( CComBSTR(L"[Step 5] Reattaching subtypes and instances..."), false);
 	
 	reattachSubtypesInstances();
 
 	// step 6?
 	reapplyLibFlagToChangedLibs();
 
-	m_reporter.show( CComBSTR("[Step 5] Refresh done."), false);
+	m_reporter.show( CComBSTR(L"[Step 5] Refresh done."), false);
 }
 
 int RefreshManager::getNumOfErrors( MyCComBSTR& msg)
 {
 	int k = m_reporter.getErrors();
-	char buf[32];
-	sprintf( buf, "%d", k);
+	TCHAR buf[32];
+	_stprintf_s( buf, _T("%d"), k);
 	msg.Append( L"Warnings: ");
 	msg.Append( buf);
 
 	return k;
 }
 
-/*static*/ const CComBSTR Creator::SrcName = "src"; // keep in sync with FCO::SrcName in MgaConnection.cpp
-/*static*/ const CComBSTR Creator::DstName = "dst"; // keep in sync with FCO::DstName
+/*static*/ const CComBSTR Creator::SrcName = L"src"; // keep in sync with FCO::SrcName in MgaConnection.cpp
+/*static*/ const CComBSTR Creator::DstName = L"dst"; // keep in sync with FCO::DstName
 
 /*static*/
 HRESULT Creator::SimpleConn( CComPtr<IMgaModel>&      p_parent

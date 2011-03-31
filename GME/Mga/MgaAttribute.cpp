@@ -962,10 +962,10 @@ STDMETHODIMP CMgaPart::GetGmeAttrs(BSTR *icon,long *x,long *y) {
 		COMTRY {
 			fco->CheckRead();
 			CComBSTR vval;
-			if(icon) COMTHROW(get_RegistryValue(CComBSTR("Icon"), icon));
+			if(icon) COMTHROW(get_RegistryValue(CComBSTR(L"Icon"), icon));
 			if(x || y) {
 				CComBSTR bb;
-				COMTHROW(get_RegistryValue(CComBSTR("Position"), &bb));
+				COMTHROW(get_RegistryValue(CComBSTR(L"Position"), &bb));
 				long ld, *lx = x?x:&ld, *ly = y?y:&ld;
 				if(!bb) { *lx = -1; *ly = -1;  }
 				else if(swscanf(bb,OLESTR("%ld,%ld"), lx, ly) != 2) COMTHROW(E_MGA_BAD_POSITIONVALUE);
@@ -977,12 +977,12 @@ STDMETHODIMP CMgaPart::SetGmeAttrs(BSTR icon,long x,long y) {
 		COMTRY_IN_TRANSACTION {
 			fco->CheckWrite();
 			CComBSTR vval;
-			if(icon != NULL) COMTHROW(put_RegistryValue(CComBSTR("Icon"), icon));
+			if(icon != NULL) COMTHROW(put_RegistryValue(CComBSTR(L"Icon"), icon));
 			if(x >= 0 && y >= 0) {
 				OLECHAR bbc[40];
 				swprintf(bbc, 40, OLESTR("%ld,%ld"), x, y);
 				CComBSTR bb(bbc);
-				COMTHROW(put_RegistryValue(CComBSTR("Position"), bb));
+				COMTHROW(put_RegistryValue(CComBSTR(L"Position"), bb));
 			}
 		} COMCATCH_IN_TRANSACTION(;)
 };
