@@ -48,8 +48,17 @@ inline void CopyTo(VARIANT &v, std::string &s)
 }
 
 void vFormat(std::string &s, const char *format, va_list args);
+void vFormat(std::wstring &s, const wchar_t *format, va_list args);
 
 inline void Format(std::string &s, const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+
+	vFormat(s, format, args);
+}
+
+inline void Format(std::wstring &s, const wchar_t *format, ...)
 {
 	va_list args;
 	va_start(args, format);
