@@ -158,30 +158,30 @@ STDMETHODIMP CViewDriver::ObjectEvent(IMgaObject *obj, unsigned long eventmask,V
 				COMTHROW( obj->get_ID( &id)); // get the id of the deleted object
 				view->GetDocument()->eraseFromHistory( PutInCString( id)); // clear from history
 			}
-			TRACE("   OBJEVENT_DESTROYED\n");
+			TRACE(_T("   OBJEVENT_DESTROYED\n"));
 			viewsToKill.AddTail(view);
 			attrNeedsRefresh = true;
 		}
 		if(eventmask & OBJEVENT_NEWCHILD) {
-			TRACE("   OBJEVENT_NEWCHILD\n");
+			TRACE(_T("   OBJEVENT_NEWCHILD\n"));
 			view->needsReset = true;
 		}
 		if(eventmask & OBJEVENT_LOSTCHILD) {
-			TRACE("   OBJEVENT_LOSTCHILD\n");
+			TRACE(_T("   OBJEVENT_LOSTCHILD\n"));
 			view->needsReset = true;
 		}
 		if(eventmask & OBJEVENT_REGISTRY) {
 			view->needsReset = true;
 		}
 		if(eventmask & OBJEVENT_PROPERTIES) {
-			TRACE("   OBJEVENT_PROPERTIES\n");
+			TRACE(_T("   OBJEVENT_PROPERTIES\n"));
 			view->SetName();
 			attrNeedsRefresh = true;
 		}
 	}
 	else if(IsEqualObject(obj,view->baseType)) {
 		if(eventmask & OBJEVENT_PROPERTIES) {
-			TRACE("   OBJEVENT_PROPERTIES\n");
+			TRACE(_T("   OBJEVENT_PROPERTIES\n"));
 			view->SetTypeNameProperty();
 		}
 	}
@@ -189,12 +189,12 @@ STDMETHODIMP CViewDriver::ObjectEvent(IMgaObject *obj, unsigned long eventmask,V
 		// CHILD EVENT!!!
 		if(eventmask & OBJEVENT_CREATED) {
 			view->needsReset = true;
-			TRACE("   OBJEVENT_CREATED\n");
+			TRACE(_T("   OBJEVENT_CREATED\n"));
 		}
 		else if(eventmask & OBJEVENT_DESTROYED) {
 			view->needsReset = true;
 			attrNeedsRefresh = true;
-			TRACE("   OBJEVENT_DESTROYED\n");
+			TRACE(_T("   OBJEVENT_DESTROYED\n"));
 		}
 		else if(eventmask & OBJEVENT_SETINCLUDED || eventmask & OBJEVENT_SETEXCLUDED) {
 			view->needsReset = true;
@@ -1057,17 +1057,17 @@ void CGMEView::OnInitialUpdate()
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to open model",MB_OK | MB_ICONSTOP);
-		CGMEEventLogger::LogGMEEvent("CGMEView::OnInitialUpdate - Unable to open model.\r\n");
+		AfxMessageBox(_T("Unable to open model"),MB_OK | MB_ICONSTOP);
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnInitialUpdate - Unable to open model.\r\n"));
 		frame->PostMessage(WM_CLOSE);
 		EndWaitCursor();
 		return;
 	}
 
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnInitialUpdate() - opened model: "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnInitialUpdate() - opened model: ")+path+name+_T("\r\n"));
 
 	// AutoRoute();
-	TRACE("CGMEView::OnInitialUpdate DoPannWinRefresh\n");
+	TRACE(_T("CGMEView::OnInitialUpdate DoPannWinRefresh\n"));
 	DoPannWinRefresh(); // terge - new window opened
 	SetScroll();
 	SetCenterObject(centerObj);
@@ -1134,26 +1134,26 @@ void CGMEView::PrintHeaderRect(CDC* pDC, CRect &rectDraw)
 	CString line1;
 	CString line2;
 	line1 = name;
-	line2 = "Paradigm: " + theApp.guiMetaProject->displayedName;
-	line2 += "     Project: " + theApp.projectName;
-	line2 += "     Model: " + kindDisplayedName;
-	line2 += "     Aspect: " + currentAspect->displayedName;
+	line2 = _T("Paradigm: ") + theApp.guiMetaProject->displayedName;
+	line2 += _T("     Project: ") + theApp.projectName;
+	line2 += _T("     Model: ") + kindDisplayedName;
+	line2 += _T("     Aspect: ") + currentAspect->displayedName;
 	CString tim;
 	{
 		struct tm *newtime;
-		char am_pm[] = "AM";
+		TCHAR am_pm[] = _T("AM");
 		time_t long_time;
 		time( &long_time );                /* Get time as long integer. */
 		newtime = localtime( &long_time ); /* Convert to local time. */
 		if( newtime->tm_hour > 12 )        /* Set up extension. */
-			strcpy( am_pm, "PM" );
+			_tcscpy( am_pm, _T("PM") );
 		if( newtime->tm_hour > 12 )        /* Convert from 24-hour */
 			newtime->tm_hour -= 12;		   /*   to 12-hour clock.  */
 		if( newtime->tm_hour == 0 )        /* Set hour to 12 if midnight. */
 			newtime->tm_hour = 12;
-		tim.Format("%.19s  %s", asctime( newtime ), am_pm );
+		tim.Format(_T("%.19s  %s"), asctime( newtime ), am_pm );
 	}
-	line2 += "     Time: " + tim;
+	line2 += _T("     Time: ") + tim;
 
 	// Setup mapping mode to have 50 pixel in 1 inch
 	pDC->SetMapMode(MM_ISOTROPIC);
@@ -1330,7 +1330,7 @@ void CGMEView::PrepareAspectPrn(CPrintInfo* pInfo)
 
 void CGMEView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnPrint\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnPrint\r\n"));
 	CGmePrintDialog* pdlg = (CGmePrintDialog*)(pInfo->m_pPD);
 	int headerY = 0;
 
@@ -1856,7 +1856,7 @@ bool CGMEView::CreateGuiObjects()
 		CString val;
 		COMTHROW(currentModel->get_RegistryValue(pathBstr, PutOut(val)));
 		if (!val.IsEmpty()) {
-			if (val == "false")
+			if (val == _T("false"))
 				isModelAutoRouted = false;
 			else
 				isModelAutoRouted = true;
@@ -1937,7 +1937,7 @@ void CGMEView::Reset(bool doInvalidate)
 //	if (gmeviewA)
 	if (m_isActive)
 	{
-		TRACE("CGMEView::Reset GetActiveView\n");
+		TRACE(_T("CGMEView::Reset GetActiveView\n"));
 		/*gmeviewA->*/m_refreshpannwin = true; 
 	}
 	CComPtr<IMgaFCO> selConn;
@@ -2151,8 +2151,8 @@ void CGMEView::Reset(bool doInvalidate)
 	}
 	catch (hresult_exception& e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to refresh model");
-		CGMEEventLogger::LogGMEEvent("CGMEView::Reset - Unable to refresh model.\r\n");
+		AfxMessageBox(_T("Unable to refresh model"));
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::Reset - Unable to refresh model.\r\n"));
 		frame->PostMessage(WM_CLOSE);
 		EndWaitCursor();
 		return;
@@ -2182,8 +2182,8 @@ void CGMEView::Reset(bool doInvalidate)
 		}
 	}
 	catch (hresult_exception&) {
-		AfxMessageBox("Unable to refresh selected status to decorators");
-		CGMEEventLogger::LogGMEEvent("CGMEView::Reset - Unable to refresh selected status to decorators.\r\n");
+		AfxMessageBox(_T("Unable to refresh selected status to decorators"));
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::Reset - Unable to refresh selected status to decorators.\r\n"));
 	}
 
 	if (selConn != NULL) {
@@ -2271,7 +2271,7 @@ void CGMEView::ChangeAttrPrefFco() // currentModel
 
 void CGMEView::ShowProperties(CGuiFco* guiFco)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ShowProperties("+guiFco->GetName()+" "+guiFco->GetID()+")\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ShowProperties(")+guiFco->GetName()+_T(" ")+guiFco->GetID()+_T(")\r\n"));
     ChangeAttrPrefFco(guiFco);
 
 	CGMEObjectInspector::theInstance->ShowPanel(2);
@@ -2279,7 +2279,7 @@ void CGMEView::ShowProperties(CGuiFco* guiFco)
 
 void CGMEView::ShowProperties()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ShowProperties()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ShowProperties()\r\n"));
     ChangeAttrPrefFco();
 
 	CGMEObjectInspector::theInstance->ShowPanel(2);
@@ -2287,7 +2287,7 @@ void CGMEView::ShowProperties()
 
 void CGMEView::ShowAttributes(CGuiFco* guiFco)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ShowAttributes("+guiFco->GetName()+" "+guiFco->GetID()+")\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ShowAttributes(")+guiFco->GetName()+_T(" ")+guiFco->GetID()+_T(")\r\n"));
 	ChangeAttrPrefFco(guiFco);
 
 	CGMEObjectInspector::theInstance->ShowPanel(0);
@@ -2296,7 +2296,7 @@ void CGMEView::ShowAttributes(CGuiFco* guiFco)
 // TODO
 void CGMEView::ShowAttributes()	// currentModel
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ShowAttributes() on "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ShowAttributes() on ")+path+name+_T("\r\n"));
 	ChangeAttrPrefFco();
 
 	CGMEObjectInspector::theInstance->ShowPanel(0);
@@ -2304,7 +2304,7 @@ void CGMEView::ShowAttributes()	// currentModel
 
 void CGMEView::ShowPreferences(CGuiFco *guiFco)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ShowPreferences("+guiFco->GetName()+" "+guiFco->GetID()+")\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ShowPreferences(")+guiFco->GetName()+_T(" ")+guiFco->GetID()+_T(")\r\n"));
 	ChangeAttrPrefFco(guiFco);
 
 	CGMEObjectInspector::theInstance->ShowPanel(1);
@@ -2314,7 +2314,7 @@ void CGMEView::ShowPreferences(CGuiFco *guiFco)
 // TODO
 void CGMEView::ShowPreferences()	// currentModel
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ShowPreferences()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ShowPreferences()\r\n"));
 	ChangeAttrPrefFco();
 
 	CGMEObjectInspector::theInstance->ShowPanel(1);
@@ -2324,20 +2324,20 @@ void CGMEView::RetrievePath()
 {
 	if ( currentModel ) {
 		BeginTransaction(TRANSACTION_READ_ONLY);
-		path = "";
+		path = _T("");
 		CComPtr<IMgaObject> spObject = currentModel.p;
 		while ( true ) {
 			CComPtr<IMgaObject> spParent;
 			if ( SUCCEEDED( spObject->GetParent( &spParent ) ) && spParent ) {;
 				CComBSTR bstrName;
 				COMTHROW( spParent->get_Name( &bstrName ) );
-				path = CString( bstrName ) + "/" + path;
+				path = CString( bstrName ) + _T("/") + path;
 				spObject = spParent;
 			}
 			else
 				break;
 		}
-		path = "/" + path;
+		path = _T("/") + path;
 		CommitTransaction();
 	}
 }
@@ -2426,7 +2426,7 @@ void CGMEView::SetZoomPoint(int curzoom, CPoint point)
 
 void CGMEView::ZoomIn(CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ZoomIn() in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ZoomIn() in ")+path+name+_T("\r\n"));
 //	zoomIdx = min(GME_ZOOM_LEVEL_NUM-1, zoomIdx+1);
 	int curzoom = m_zoomVal;
 	frame->propBar.NextZoomVal(m_zoomVal);
@@ -2441,7 +2441,7 @@ void CGMEView::ZoomIn(CPoint point)
 
 void CGMEView::ZoomOut(CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ZoomOut() in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ZoomOut() in ")+path+name+_T("\r\n"));
 //	zoomIdx = max(0, zoomIdx-1);
 	int curzoom = m_zoomVal;
 	frame->propBar.PrevZoomVal(m_zoomVal);
@@ -2459,7 +2459,7 @@ void CGMEView::ShowHelp(CComPtr<IMgaFCO> fco)
 	try {
 		BeginTransaction(TRANSACTION_READ_ONLY);
 
-		CGMEEventLogger::GMEEventPrintf("CGMEView::ShowHelp(%Z) in "+path+name+"\r\n",fco,NULL);
+		CGMEEventLogger::GMEEventPrintf(_T("CGMEView::ShowHelp(%Z) in ")+path+name+_T("\r\n"),fco,NULL);
 		CComObjPtr<IMgaLauncher> launcher;
 		COMTHROW( launcher.CoCreateInstance(L"Mga.MgaLauncher") );
 		COMTHROW( launcher->ShowHelp(fco) );
@@ -2467,8 +2467,8 @@ void CGMEView::ShowHelp(CComPtr<IMgaFCO> fco)
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to access context-specific help information!",MB_OK | MB_ICONSTOP);
-		CGMEEventLogger::LogGMEEvent("CGMEView::ShowHelp - Unable to access context-specific help information.\r\n");
+		AfxMessageBox(_T("Unable to access context-specific help information!"),MB_OK | MB_ICONSTOP);
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::ShowHelp - Unable to access context-specific help information.\r\n"));
 	}
 }
 
@@ -2479,7 +2479,7 @@ void CGMEView::ShowModel(CComPtr<IMgaModel> model, const CString& aspect)
 	if (!model) return;
 #if !defined (ACTIVEXGMEVIEW)
 	// endFIX
-	CString newAspect = aspect != "" ? aspect : currentAspect->name;
+	CString newAspect = aspect != _T("") ? aspect : currentAspect->name;
 	CGMEDoc *doc = GetDocument();
 	CGMEView *view = doc->FindView(model);
 	CComPtr<IMgaFCO> fakeObj;
@@ -2510,7 +2510,7 @@ void CGMEView::FindDerivedFrom(CComPtr<IMgaModel> model,CComPtr<IMgaModel> &type
 	CComPtr<IMgaFCO> der;
 	try {
 		BeginTransaction(TRANSACTION_READ_ONLY);
-		CGMEEventLogger::GMEEventPrintf("CGMEView::FindDerivedFrom(model=%Z,type=%z)\r\n",model,type);
+		CGMEEventLogger::GMEEventPrintf(_T("CGMEView::FindDerivedFrom(model=%Z,type=%z)\r\n"),model,type);
 		COMTHROW(model->get_DerivedFrom(&der));
 		if(der != 0)
 			COMTHROW(der.QueryInterface(&type));
@@ -2518,8 +2518,8 @@ void CGMEView::FindDerivedFrom(CComPtr<IMgaModel> model,CComPtr<IMgaModel> &type
 	}
 	catch(hresult_exception e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to find type model",MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent("    Unable to find type model\r\n");
+		AfxMessageBox(_T("Unable to find type model"),MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to find type model\r\n"));
 	}
 }
 
@@ -2669,7 +2669,7 @@ void CGMEView::IncrementalAutoRoute()
 
 void CGMEView::ModeChange()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ModeChange in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ModeChange in ")+path+name+_T("\r\n"));
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
 	RemoveAllAnnotationFromSelection();
@@ -2699,7 +2699,7 @@ int CGMEView::OnToolHitTest( CPoint point, TOOLINFO* pTI ) const
 		pTI->rect = CRect(point.x - 3, point.y - 3, point.x + 3, point.y + 3);
 		pTI->uId = 1;
 		CString str;
-		str.Format("%p y=%f (%d,%d,%d,%d) prev=%p next=%p",
+		str.Format(_T("%p y=%f (%d,%d,%d,%d) prev=%p next=%p"),
 			edge, edge->position_y,
 			edge->startpoint->x, edge->startpoint->y,
 			edge->endpoint->x, edge->endpoint->y,
@@ -2716,7 +2716,8 @@ int CGMEView::OnToolHitTest( CPoint point, TOOLINFO* pTI ) const
 		pTI->rect = CRect(point.x - 8, point.y - 8, point.x + 8, point.y + 8);
 		pTI->uId = 1;
 		CString str = conn->GetInfoText();
-		pTI->lpszText = _strdup(str);
+		// FIXME: does this leak?
+		pTI->lpszText = _tcsdup(str);
 		return 1;
 	}
 
@@ -2726,7 +2727,7 @@ int CGMEView::OnToolHitTest( CPoint point, TOOLINFO* pTI ) const
 		CRect rect = object->GetLocation();
 		CGuiPort *port = object->FindPort(point);
 		if(port && port->IsRealPort()) {
-			portinfo = " : " + port->GetInfoText();
+			portinfo = _T(" : ") + port->GetInfoText();
 			rect = port->GetLocation() + rect.TopLeft();
 		}
 		if(object != oldObject || port != oldPort) {
@@ -2741,7 +2742,7 @@ int CGMEView::OnToolHitTest( CPoint point, TOOLINFO* pTI ) const
 		pTI->hwnd = m_hWnd;
 		pTI->rect = rect;
 		pTI->uId = 1;
-		pTI->lpszText = _strdup(object->GetInfoText() + portinfo);
+		pTI->lpszText = _tcsdup(object->GetInfoText() + portinfo);
 		return 1;
 	}
 	oldObject = 0;
@@ -2821,9 +2822,9 @@ void CGMEView::SetCenterObject(CComPtr<IMgaFCO> centerObj)
 
 		if (guiObj || connection) {
 			if (guiObj)
-				CGMEEventLogger::LogGMEEvent("CGMEView::SetCenterFCO("+guiObj->GetName()+" "+guiObj->GetID()+") in "+path+name+"\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("CGMEView::SetCenterFCO(")+guiObj->GetName()+_T(" ")+guiObj->GetID()+_T(") in ")+path+name+_T("\r\n"));
 			else
-				CGMEEventLogger::LogGMEEvent("CGMEView::SetCenterFCO("+connection->GetName()+" "+connection->GetID()+") in "+path+name+"\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("CGMEView::SetCenterFCO(")+connection->GetName()+_T(" ")+connection->GetID()+_T(") in ")+path+name+_T("\r\n"));
 			if (guiObj && !guiObj->IsVisible() ||
 				connection && !connection->IsVisible())
 			{
@@ -2954,7 +2955,7 @@ void CGMEView::SetTypeNameProperty()
 	ctrl = frame->propBar.GetDlgItem(IDC_TYPENAME);
 	ASSERT(ctrl);
 	CComPtr<IMgaFCO> fco;
-	CString txt = "N/A";
+	CString txt = _T("N/A");
 	if(baseType != 0) {
 		COMTHROW(baseType->get_Name(PutOut(txt)));
 	}
@@ -3118,9 +3119,9 @@ bool CGMEView::FindAnnotations(CRect &rect,CGuiAnnotatorList &annotatorList)
 void CGMEView::DisconnectAll(CGuiObject *end,CGuiPort *endPort,bool onlyVisible)
 {
 	if(endPort)
-		CGMEEventLogger::LogGMEEvent("CGMEView::DisconnectAll(end="+end->GetName()+" "+end->GetID()+" endPort="+endPort->GetName()+" "+endPort->GetID()+")\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::DisconnectAll(end=")+end->GetName()+_T(" ")+end->GetID()+_T(" endPort=")+endPort->GetName()+_T(" ")+endPort->GetID()+_T(")\r\n"));
 	else
-		CGMEEventLogger::LogGMEEvent("CGMEView::DisconnectAll(end="+end->GetName()+" "+end->GetID()+")\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::DisconnectAll(end=")+end->GetName()+_T(" ")+end->GetID()+_T(")\r\n"));
 	CGuiConnectionList conns;
 	FindConnections(end,endPort,conns);
 	POSITION pos = conns.GetHeadPosition();
@@ -3137,8 +3138,8 @@ void CGMEView::DisconnectAll(CGuiObject *end,CGuiPort *endPort,bool onlyVisible)
 			}
 			catch(hresult_exception e) {
 				AbortTransaction(e.hr);
-				AfxMessageBox("Unable to delete connection",MB_ICONSTOP | MB_OK);
-				CGMEEventLogger::LogGMEEvent("    Unable to delete connection.\r\n");
+				AfxMessageBox(_T("Unable to delete connection"),MB_ICONSTOP | MB_OK);
+				CGMEEventLogger::LogGMEEvent(_T("    Unable to delete connection.\r\n"));
 			}
 		}
 	}
@@ -3172,7 +3173,7 @@ void CGMEView::FindConnections(CGuiObject *end1,CGuiPort *end1Port,CGuiObject *e
 
 bool CGMEView::DeleteConnection(CGuiConnection *guiConn,bool checkAspect)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::DeleteConnection("+guiConn->GetName()+" "+guiConn->GetID()+") in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::DeleteConnection(")+guiConn->GetName()+_T(" ")+guiConn->GetID()+_T(") in ")+path+name+_T("\r\n"));
 	bool ok = false;
 	BeginWaitCursor();
 	try {
@@ -3185,8 +3186,8 @@ bool CGMEView::DeleteConnection(CGuiConnection *guiConn,bool checkAspect)
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to delete connection",MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent("    Unable to delete connection.\r\n");
+		AfxMessageBox(_T("Unable to delete connection"),MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to delete connection.\r\n"));
 	}
 	this->SetFocus();
 	return ok;
@@ -3202,7 +3203,7 @@ bool CGMEView::CheckBeforeDeleteObjects(CGuiObjectList &objectList,CString &txt)
 			CGuiObject *guiObj = objectList.GetNext(pos);
 			if(!guiObj->IsPrimary(guiMeta,currentAspect)) {
 				ok = false;
-				txt += "\n   " + guiObj->name;
+				txt += _T("\n   ") + guiObj->name;
 			}
 		}
 		CommitTransaction();
@@ -3217,11 +3218,11 @@ bool CGMEView::DeleteObjects(CGuiObjectList &objectList)
 {
 	bool brw_refresh_needed = false;
 	try {
-		CGMEEventLogger::LogGMEEvent("CGMEView::DeleteObjects in "+path+name+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::DeleteObjects in ")+path+name+_T("\r\n"));
 		CString msg;
 		if(!CheckBeforeDeleteObjects(objectList,msg)) {
-			AfxMessageBox("The following object(s) cannot be deleted: " + msg);
-			CGMEEventLogger::LogGMEEvent("    The following object(s) cannot be deleted: "+msg+"\r\n");
+			AfxMessageBox(_T("The following object(s) cannot be deleted: ") + msg);
+			CGMEEventLogger::LogGMEEvent(_T("    The following object(s) cannot be deleted: ")+msg+_T("\r\n"));
 			return true;
 		}
 		BeginWaitCursor();
@@ -3268,11 +3269,11 @@ bool CGMEView::DeleteObjects(CGuiObjectList &objectList)
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
 		if( e.hr == E_MGA_MUST_ABORT)
-			CGMEEventLogger::LogGMEEvent("    Archetype delete cancelled by user.\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    Archetype delete cancelled by user.\r\n"));
 		else
 		{
-			AfxMessageBox("Unable to delete models",MB_ICONSTOP | MB_OK);
-			CGMEEventLogger::LogGMEEvent("    Unable to delete models.\r\n");
+			AfxMessageBox(_T("Unable to delete models"),MB_ICONSTOP | MB_OK);
+			CGMEEventLogger::LogGMEEvent(_T("    Unable to delete models.\r\n"));
 		}
 		EndWaitCursor();
 		return false;
@@ -3287,7 +3288,7 @@ bool CGMEView::DeleteObjects(CGuiObjectList &objectList)
 void CGMEView::DeleteAnnotations(CGuiAnnotatorList &annotatorList)
 {
 	try {
-		CGMEEventLogger::LogGMEEvent("CGMEView::DeleteAnnotations() in "+path+name+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::DeleteAnnotations() in ")+path+name+_T("\r\n"));
 		GMEEVENTLOG_GUIANNOTATORS(annotatorList);
 		BeginWaitCursor();
 		BeginTransaction();
@@ -3303,8 +3304,8 @@ void CGMEView::DeleteAnnotations(CGuiAnnotatorList &annotatorList)
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to delete annotations",MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent("    Unable to delete annotations.\r\n");
+		AfxMessageBox(_T("Unable to delete annotations"),MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to delete annotations.\r\n"));
 		EndWaitCursor();
 		return;
 	}
@@ -3315,22 +3316,22 @@ void CGMEView::DeleteAnnotations(CGuiAnnotatorList &annotatorList)
 
 bool CGMEView::DoPasteItem(COleDataObject* pDataObject,bool drag,bool move,bool reference,bool derive,bool instance,bool closure,bool merge, CGuiObject *ref,CPoint pt)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::DoPasteItem");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::DoPasteItem"));
 	if(drag)
-		CGMEEventLogger::LogGMEEvent(" DRAG");
+		CGMEEventLogger::LogGMEEvent(_T(" DRAG"));
 	if(move)
-		CGMEEventLogger::LogGMEEvent(" MOVE");
+		CGMEEventLogger::LogGMEEvent(_T(" MOVE"));
 	if(reference)
-		CGMEEventLogger::LogGMEEvent(" REFERENCE");
+		CGMEEventLogger::LogGMEEvent(_T(" REFERENCE"));
 	if(derive)
-		CGMEEventLogger::LogGMEEvent(" DERIVE");
+		CGMEEventLogger::LogGMEEvent(_T(" DERIVE"));
 	if(instance)
-		CGMEEventLogger::LogGMEEvent(" INSTANCE");
+		CGMEEventLogger::LogGMEEvent(_T(" INSTANCE"));
 	if(closure)
-		CGMEEventLogger::LogGMEEvent(" CLOSURE");
+		CGMEEventLogger::LogGMEEvent(_T(" CLOSURE"));
 	if(merge)
-		CGMEEventLogger::LogGMEEvent(" SMART");
-	CGMEEventLogger::LogGMEEvent(" in "+path+name+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T(" SMART"));
+	CGMEEventLogger::LogGMEEvent(_T(" in ")+path+name+_T("\r\n"));
 	if(ref)
 		VERIFY(reference);
 	ASSERT(pDataObject != NULL);
@@ -3357,7 +3358,7 @@ bool CGMEView::DoPasteItem(COleDataObject* pDataObject,bool drag,bool move,bool 
 	catch(hresult_exception &)
 	{
 		// general cleanup
-		TRACE0("failed to embed/link an OLE object\n");
+		TRACE(_T("failed to embed/link an OLE object\n"));
 		return false;
 	}
 	this->SetFocus();
@@ -3369,8 +3370,8 @@ void CGMEView::MakeSureGUIDIsUniqueForSmartCopy( CComPtr<IMgaFCO>& fco)
 	// this method prevents cloned objects having the same guid
 	// as their original ones
 	CComBSTR bstr;
-	COMTHROW( fco->get_RegistryValue( CComBSTR( "guid"), &bstr));
-	if( bstr == 0 || bstr == "") return; // no guid present, no need to replace it
+	COMTHROW( fco->get_RegistryValue( CComBSTR( L"guid"), &bstr));
+	if( bstr == 0 || bstr == L"") return; // no guid present, no need to replace it
 
 	GUID t_guid = GUID_NULL;
 	::CoCreateGuid(&t_guid);
@@ -3378,33 +3379,33 @@ void CGMEView::MakeSureGUIDIsUniqueForSmartCopy( CComPtr<IMgaFCO>& fco)
 	if (t_guid != GUID_NULL)
 	{
 		CString str_guid;
-		str_guid.Format("{%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}",
+		str_guid.Format(_T("{%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}"),
 			t_guid.Data1, t_guid.Data2, t_guid.Data3,
 			t_guid.Data4[0], t_guid.Data4[1], t_guid.Data4[2], t_guid.Data4[3],
 			t_guid.Data4[4], t_guid.Data4[5], t_guid.Data4[6], t_guid.Data4[7]);
 		
 		// thus replace the old guid with a new one
-		COMTHROW( fco->put_RegistryValue( CComBSTR( "guid"), CComBSTR(str_guid)));
+		COMTHROW( fco->put_RegistryValue( CComBSTR( L"guid"), CComBSTR(str_guid)));
 	}
 
 	// store the previous guid in prev subnode
-	COMTHROW( fco->put_RegistryValue( CComBSTR( "guid/prev"), bstr));
+	COMTHROW( fco->put_RegistryValue( CComBSTR( L"guid/prev"), bstr));
 }
 
 bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,bool reference,bool derive,bool instance,CGuiObject *ref,CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::DoPasteNative");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::DoPasteNative"));
 	if(drag)
-		CGMEEventLogger::LogGMEEvent(" DRAG");
+		CGMEEventLogger::LogGMEEvent(_T(" DRAG"));
 	if(move)
-		CGMEEventLogger::LogGMEEvent(" MOVE");
+		CGMEEventLogger::LogGMEEvent(_T(" MOVE"));
 	if(reference)
-		CGMEEventLogger::LogGMEEvent(" REFERENCE");
+		CGMEEventLogger::LogGMEEvent(_T(" REFERENCE"));
 	if(derive)
-		CGMEEventLogger::LogGMEEvent(" DERIVE");
+		CGMEEventLogger::LogGMEEvent(_T(" DERIVE"));
 	if(instance)
-		CGMEEventLogger::LogGMEEvent(" INSTANCE");
-	CGMEEventLogger::LogGMEEvent(" in "+path+name+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T(" INSTANCE"));
+	CGMEEventLogger::LogGMEEvent(_T(" in ")+path+name+_T("\r\n"));
 	CComPtr<IDataObject> p = pDataObject->GetIDataObject(FALSE);
 	CComPtr<IMgaDataSource> pt;
 	COMTHROW(p.QueryInterface(&pt));
@@ -3530,8 +3531,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 						COMTHROW(doc->resolver->get_RoleByMeta(currentModel,kind,OBJTYPE_NULL,role,aspect,&newRole));
 						if(newRole == 0)
 						{
-							AfxMessageBox("Cannot insert object derived from " + fcoName);
-							CGMEEventLogger::LogGMEEvent("    Cannot insert object derived from "+fcoName+"\r\n");
+							AfxMessageBox(_T("Cannot insert object derived from ") + fcoName);
+							CGMEEventLogger::LogGMEEvent(_T("    Cannot insert object derived from ")+fcoName+_T("\r\n"));
 						}
 						else {
 							CComPtr<IMgaFCO> obj;
@@ -3539,15 +3540,15 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 							VARIANT_BOOL inst = instance ? VARIANT_TRUE : VARIANT_FALSE;
 #pragma warning(default: 4310) // cast truncates constant value
 							if((hr = currentModel->DeriveChildObject(fco,newRole,inst,&obj)) != S_OK) {
-								CString msg( (LPCTSTR) fcoName); msg += " cannot be derived! Some of its ancestors or descendants may be already derived!";
+								CString msg( (LPCTSTR) fcoName); msg += _T(" cannot be derived! Some of its ancestors or descendants may be already derived!");
 								if( hr == E_MGA_NOT_DERIVABLE)
 								{
-									if( !CGMEConsole::theInstance) AfxMessageBox( msg + " [Error code E_MGA_NOT_DERIVABLE]");
-									else CGMEConsole::theInstance->Message( msg + " [Error code E_MGA_NOT_DERIVABLE]", MSG_ERROR);
+									if( !CGMEConsole::theInstance) AfxMessageBox( msg + _T(" [Error code E_MGA_NOT_DERIVABLE]"));
+									else CGMEConsole::theInstance->Message( msg + _T(" [Error code E_MGA_NOT_DERIVABLE]"), MSG_ERROR);
 								}
 								else
 									AfxMessageBox( msg);
-								CGMEEventLogger::LogGMEEvent("    " + msg + " \r\n");
+								CGMEEventLogger::LogGMEEvent(_T("    ") + msg + _T(" \r\n"));
 								normalExit = false;
 								break;
 							}
@@ -3568,18 +3569,18 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 				}
 				else if(reference) {
 					if(ref) {
-						CGMEEventLogger::LogGMEEvent("    ref="+ref->GetName()+" "+ref->GetID()+"\r\n");
+						CGMEEventLogger::LogGMEEvent(_T("    ref=")+ref->GetName()+_T(" ")+ref->GetID()+_T("\r\n"));
 						CComPtr<IMgaReference> mgaRef;
 						COMTHROW(ref->mgaFco.QueryInterface(&mgaRef));
 						long count;
 						COMTHROW(fcos->get_Count(&count));
 						/* if(count != 1) {
-							AfxMessageBox("Only a single object can be dropped on a reference for redirection!");
+							AfxMessageBox(_T("Only a single object can be dropped on a reference for redirection!"));
 							throw hresult_exception(E_FAIL);
 						} */
 						if(count < 1) {
-							AfxMessageBox("Cannot redirect reference to specified object!");
-							CGMEEventLogger::LogGMEEvent("    Cannot redirect reference to specified object.\r\n");
+							AfxMessageBox(_T("Cannot redirect reference to specified object!"));
+							CGMEEventLogger::LogGMEEvent(_T("    Cannot redirect reference to specified object.\r\n"));
 							throw hresult_exception(E_FAIL);
 						}
 						CComPtr<IMgaFCO> fco;
@@ -3595,9 +3596,9 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 							}
 							catch(hresult_exception e) {
 								AbortTransaction(e.hr);
-								CGMEEventLogger::LogGMEEvent( "    Cannot redirect reference to specified object.\r\n");
-								const char* t1 = "Cannot redirect reference to specified object because of active connections!";
-								const char* t2 = "Cannot redirect reference to specified object.";
+								CGMEEventLogger::LogGMEEvent( _T("    Cannot redirect reference to specified object.\r\n"));
+								const TCHAR* t1 = _T("Cannot redirect reference to specified object because of active connections!");
+								const TCHAR* t2 = _T("Cannot redirect reference to specified object.");
 								if( e.hr == E_MGA_REFPORTS_USED)
 								{
 									if( !CGMEConsole::theInstance) AfxMessageBox( t1);
@@ -3629,8 +3630,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 								COMTHROW(doc->resolver->get_RefRoleByMeta(currentModel,aspect,fco,&role));
 								if(role == 0)
 								{
-									AfxMessageBox("Cannot create reference");
-									CGMEEventLogger::LogGMEEvent("    Cannot create reference.\r\n");
+									AfxMessageBox(_T("Cannot create reference"));
+									CGMEEventLogger::LogGMEEvent(_T("    Cannot create reference.\r\n"));
 								}
 								else {
 									CComPtr<IMgaFCO> ref;
@@ -3646,7 +3647,7 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 									// After Larry's wishes
 									/* CString nm;
 									CopyTo(nmb,nm);
-									nm += "Ref";
+									nm += _T("Ref");
 									CopyTo(nm,nmb); */
 									COMTHROW(ref->put_Name(nmb));
 								}
@@ -3742,7 +3743,7 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 			AbortTransaction(e.hr);
 			_bstr_t err;
 			GetErrorInfo(e.hr, err.GetAddress());
-			AfxMessageBox((std::string("Unable to insert objects: ") + static_cast<const char*>(err)).c_str(), MB_ICONSTOP | MB_OK); // in most cases there was an error msg already...
+			AfxMessageBox((std::wstring(L"Unable to insert objects: ") + static_cast<const wchar_t*>(err)).c_str(), MB_ICONSTOP | MB_OK); // in most cases there was an error msg already...
 			newObjectIDs.RemoveAll();
 		}
 		return false;
@@ -3783,8 +3784,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 			}
 			else {
 				CommitTransaction();
-				AfxMessageBox("Paradigm violation: cannot insert new part!");
-				CGMEEventLogger::LogGMEEvent("    Paradigm violation: cannot insert new part.\r\n");
+				AfxMessageBox(_T("Paradigm violation: cannot insert new part!"));
+				CGMEEventLogger::LogGMEEvent(_T("    Paradigm violation: cannot insert new part.\r\n"));
 				return false;
 			}
 		}
@@ -3792,8 +3793,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 			AbortTransaction(e.hr);
 			_bstr_t err;
 			GetErrorInfo(e.hr, err.GetAddress());
-			AfxMessageBox((std::string("Unable to insert objects: ") + static_cast<const char*>(err)).c_str(), MB_ICONSTOP | MB_OK);
-			CGMEEventLogger::LogGMEEvent("    Unable to insert objects.\r\n");
+			AfxMessageBox((std::wstring(L"Unable to insert objects: ") + static_cast<const wchar_t*>(err)).c_str(), MB_ICONSTOP | MB_OK);
+			CGMEEventLogger::LogGMEEvent(_T("    Unable to insert objects.\r\n"));
 			newObjectIDs.RemoveAll();
             Reset(true); //BGY
 			return false;
@@ -3824,7 +3825,7 @@ void CGMEView::PasteAnnotations(CComPtr<IMgaModel> &targetModel, CComPtr<IMgaReg
 				collision = false;
 			}
 			else {
-				nodePath.Append("Copy");
+				nodePath.Append(_T("Copy"));
 			}
 		}
 
@@ -3896,7 +3897,7 @@ void CGMEView::FillModelGrid()
 		CPoint pt = obj->GetLocation().CenterPoint();
 		if(!modelGrid.IsAvailable(obj)) {
 			if(!modelGrid.GetClosestAvailable(obj,pt)) {
-				AfxMessageBox("Too Many Models! Internal Program Error!",MB_OK | MB_ICONSTOP);
+				AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
 				EndWaitCursor();
 				return;
 			}
@@ -3929,7 +3930,7 @@ void CGMEView::SetObjectLocation(CComPtr<IMgaFCO> &child,CComPtr<IMgaMetaRole> &
 	// CPoint npt = loc.CenterPoint();
 	// if(!modelGrid.IsAvailable(loc)) {
 	// 	if(!modelGrid.GetClosestAvailable(loc.Size(),npt)) {
-	//		AfxMessageBox("Too Many Models! Internal Program Error!",MB_OK | MB_ICONSTOP);
+	//		AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
 	//		EndWaitCursor();
 	//		return;
 	//	}
@@ -3979,7 +3980,7 @@ void CGMEView::GetRefereeChain(IMgaFCOs* visitedRefs, IMgaFCO* fco)
 
 bool CGMEView::Connect(CGuiObject *src,CGuiPort *srcPort, int srcHotSide, CGuiObject *dst,CGuiPort *dstPort, int dstHotSide, bool nosticky)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::Connect src="+src->GetName()+" "+src->GetID()+",dst="+dst->GetName()+" "+dst->GetID()+" in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::Connect src=")+src->GetName()+_T(" ")+src->GetID()+_T(",dst=")+dst->GetName()+_T(" ")+dst->GetID()+_T(" in ")+path+name+_T("\r\n"));
 	bool ret = false;
 	CGMEDoc *doc = GetDocument();
 	try {
@@ -3991,11 +3992,11 @@ bool CGMEView::Connect(CGuiObject *src,CGuiPort *srcPort, int srcHotSide, CGuiOb
 
 		if (srcPort) {
 			srcPort = srcPort->IsRealPort() ? srcPort : NULL;
-			if (srcPort) CGMEEventLogger::LogGMEEvent("    srcPort="+srcPort->GetName()+" "+srcPort->GetID()+"\r\n");
+			if (srcPort) CGMEEventLogger::LogGMEEvent(_T("    srcPort=")+srcPort->GetName()+_T(" ")+srcPort->GetID()+_T("\r\n"));
 		}
 		if (dstPort) {
 			dstPort = dstPort->IsRealPort() ? dstPort : NULL;
-			if (dstPort) CGMEEventLogger::LogGMEEvent("    dstPort="+dstPort->GetName()+" "+dstPort->GetID()+"\r\n");
+			if (dstPort) CGMEEventLogger::LogGMEEvent(_T("    dstPort=")+dstPort->GetName()+_T(" ")+dstPort->GetID()+_T("\r\n"));
 		}
 #pragma warning(disable: 4310) // cast truncates constant value
 		COMTHROW(doc->resolver->put_IsStickyEnabled(nosticky ? VARIANT_FALSE :VARIANT_TRUE));
@@ -4048,30 +4049,30 @@ bool CGMEView::Connect(CGuiObject *src,CGuiPort *srcPort, int srcHotSide, CGuiOb
 			CString routerPrefStr;
 			switch (srcHotSide) {
 			case GME_NORTH:
-				routerPrefStr = "N";
+				routerPrefStr = _T("N");
 				break;
 			case GME_SOUTH:
-				routerPrefStr = "S";
+				routerPrefStr = _T("S");
 				break;
 			case GME_WEST:
-				routerPrefStr = "W";
+				routerPrefStr = _T("W");
 				break;
 			case GME_EAST:
-				routerPrefStr = "E";
+				routerPrefStr = _T("E");
 				break;
 			}
 			switch (dstHotSide) {
 			case GME_NORTH:
-				routerPrefStr += "n";
+				routerPrefStr += _T("n");
 				break;
 			case GME_SOUTH:
-				routerPrefStr += "s";
+				routerPrefStr += _T("s");
 				break;
 			case GME_WEST:
-				routerPrefStr += "w";
+				routerPrefStr += _T("w");
 				break;
 			case GME_EAST:
-				routerPrefStr += "e";
+				routerPrefStr += _T("e");
 				break;
 			}
 			if (!routerPrefStr.IsEmpty()) {
@@ -4085,14 +4086,14 @@ bool CGMEView::Connect(CGuiObject *src,CGuiPort *srcPort, int srcHotSide, CGuiOb
 		}
 		else {
 			CommitTransaction();
-			CGMEEventLogger::LogGMEEvent("    Paradigm violation: cannot connect selected objects!\r\n");
-			AfxMessageBox("Paradigm violation: cannot connect selected objects!",MB_ICONSTOP | MB_OK);
+			CGMEEventLogger::LogGMEEvent(_T("    Paradigm violation: cannot connect selected objects!\r\n"));
+			AfxMessageBox(_T("Paradigm violation: cannot connect selected objects!"),MB_ICONSTOP | MB_OK);
 		}
 	}
 	catch(hresult_exception &e) {
-		CGMEEventLogger::LogGMEEvent("    Cannot Connect, hresult_exception in CGMEView::Connect\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    Cannot Connect, hresult_exception in CGMEView::Connect\r\n"));
 		AbortTransaction(e.hr);
-//		AfxMessageBox("Unable to connect specified parts!",MB_ICONSTOP | MB_OK);
+//		AfxMessageBox(_T("Unable to connect specified parts!"),MB_ICONSTOP | MB_OK);
         Reset(true); // BGY: something similar needed, otherwise the created conenction not 
         // deleted form the gui if the committransaction failed
 		ret = false;
@@ -4139,14 +4140,14 @@ void CGMEView::ConvertNeededConnections(void)
 
 void CGMEView::InsertNewPart(const CString& roleName, const CPoint& pt)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::InsertNewPart("+roleName+") in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::InsertNewPart(")+roleName+_T(") in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaFCO> child;
 	CComPtr<IMgaMetaRole> role;
 	try {
 		BeginTransaction();
 		if(!currentAspect->GetRoleByName(roleName, role, true)) {
-			AfxMessageBox("Internal Program Error in CGMEView::InsertNewPart");
-			CGMEEventLogger::LogGMEEvent("    Internal Program Error in CGMEView::InsertNewPart.\r\n");
+			AfxMessageBox(_T("Internal Program Error in CGMEView::InsertNewPart"));
+			CGMEEventLogger::LogGMEEvent(_T("    Internal Program Error in CGMEView::InsertNewPart.\r\n"));
 			AbortTransaction(E_FAIL);
 			return;
 		}
@@ -4176,8 +4177,8 @@ void CGMEView::InsertNewPart(const CString& roleName, const CPoint& pt)
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
 		newObjectIDs.RemoveAll();
-		AfxMessageBox("Unable to insert new part",MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent("    Unable to insert new part.\r\n");
+		AfxMessageBox(_T("Unable to insert new part"),MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to insert new part.\r\n"));
 		return;
 	}
 	ChangeAttrPrefObjs(selected);
@@ -4189,15 +4190,15 @@ void CGMEView::InsertNewPart(const CString& roleName, const CPoint& pt)
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to update parent",MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent("    Unable to update parent.\r\n");
+		AfxMessageBox(_T("Unable to update parent"),MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to update parent.\r\n"));
 	}
 	Invalidate(true);
 }
 
 void CGMEView::ChangeAspect(CString aspName, bool p_eraseStack /*=true*/)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ChangeAspect("+aspName+") in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ChangeAspect(")+aspName+_T(") in ")+path+name+_T("\r\n"));
 	if(currentAspect->name != aspName) {
 		CGuiMetaAspect *newAsp = guiMeta->FindAspect(aspName);
 		if(newAsp) {
@@ -4209,7 +4210,7 @@ void CGMEView::ChangeAspect(CString aspName, bool p_eraseStack /*=true*/)
 			{
 				if( m_isActive) // only the active view's changeaspect event is recorded
 				{
-					GetDocument()->tellHistorian( currentModel, currentAspect?currentAspect->name:"");
+					GetDocument()->tellHistorian( currentModel, currentAspect?currentAspect->name:_T(""));
 				}
 
 				if( p_eraseStack)
@@ -4239,7 +4240,7 @@ void CGMEView::ChangeAspect(CString aspName, bool p_eraseStack /*=true*/)
 //			if (gmeviewA)
 			if (m_isActive)
 			{
-				TRACE("CGMEView::ChangeAspect activeView\n");
+				TRACE(_T("CGMEView::ChangeAspect activeView\n"));
 				/*gmeviewA->*/m_refreshpannwin = true; 
 			}
 			Invalidate();
@@ -4347,7 +4348,7 @@ BOOL CGMEView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 
 void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDropFiles in " + path + name + "\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDropFiles in ") + path + name + _T("\r\n"));
 	if (GetDocument()->GetEditMode() == GME_EDIT_MODE) {
 		CPoint point;
 		DragQueryPoint(p_hDropInfo, &point);
@@ -4376,8 +4377,8 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 									// GME-292: the commit may fail
 									AbortTransaction(e.hr);
 									if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
-										CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
-										AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+										CGMEEventLogger::LogGMEEvent(_T("    Couldn't commit transaction.\r\n"));
+										AfxMessageBox(_T("Couldn't commit transaction."),MB_ICONSTOP | MB_OK);
 									}
 								}
 								SetShouldCommitOperation(false);
@@ -4452,7 +4453,7 @@ void CGMEView::OnKillfocusNameProp()
 			}
 			catch(hresult_exception &e) {
 				AbortTransaction(e.hr);
-				AfxMessageBox("Unable to set model name");
+				AfxMessageBox(_T("Unable to set model name"));
 				SetNameProperty();
 			}
 		}
@@ -4474,7 +4475,7 @@ void CGMEView::OnSelChangeAspectProp()
 		ResolveConnections();
 		if( theApp.isHistoryEnabled())
 		{
-			GetDocument()->tellHistorian( currentModel, currentAspect?currentAspect->name:"");
+			GetDocument()->tellHistorian( currentModel, currentAspect?currentAspect->name:_T(""));
 			GetDocument()->clearForwHistory();
 		}
 
@@ -4493,7 +4494,7 @@ void CGMEView::OnSelChangeAspectProp()
 		RemoveAllAnnotationFromSelection();
 		ClearConnectionSelection();
 
-		TRACE("CGMEView::OnSelChangeAspectProp\n");
+		TRACE(_T("CGMEView::OnSelChangeAspectProp\n"));
 		m_refreshpannwin = true;
 		Invalidate();
 	}
@@ -4501,7 +4502,7 @@ void CGMEView::OnSelChangeAspectProp()
 
 bool CGMEView::ChangePrnAspect(CString aspName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ChangePrnAspect("+aspName+") in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ChangePrnAspect(")+aspName+_T(") in ")+path+name+_T("\r\n"));
 	if(currentAspect->name == aspName)
 		return true;
 	CGuiMetaAspect *newAsp = guiMeta->FindAspect(aspName);
@@ -4527,7 +4528,7 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	isLeftMouseButtonDown = false;
 	isConnectionJustSelected = false;
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnLButtonUp in " + path + name + "\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnLButtonUp in ") + path + name + _T("\r\n"));
 
 	CPoint ppoint = point;
 	if (!tmpConnectMode) {
@@ -4538,7 +4539,7 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 		switch(doc->GetEditMode()) {
 		case GME_EDIT_MODE:
 			{
-				CGMEEventLogger::LogGMEEvent("    mode=GME_EDIT_MODE\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("    mode=GME_EDIT_MODE\r\n"));
 
 				CGMEView* self = const_cast<CGMEView*> (this);
 				CGuiObject*	object	= self		? self->FindObject(point, true) : 0;
@@ -4575,8 +4576,8 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 										// GME-292: the commit may fail
 										AbortTransaction(e.hr);
 										if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
-											CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
-											AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+											CGMEEventLogger::LogGMEEvent(_T("    Couldn't commit transaction.\r\n"));
+											AfxMessageBox(_T("Couldn't commit transaction."),MB_ICONSTOP | MB_OK);
 										}
 									}
 									SetShouldCommitOperation(false);
@@ -4670,8 +4671,8 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 										// GME-292: the commit may fail
 										AbortTransaction(e.hr);
 										if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
-											CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
-											AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+											CGMEEventLogger::LogGMEEvent(_T("    Couldn't commit transaction.\r\n"));
+											AfxMessageBox(_T("Couldn't commit transaction."),MB_ICONSTOP | MB_OK);
 										}
 									}
 									SetShouldCommitOperation(false);
@@ -4720,7 +4721,7 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 
 void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnLButtonDown in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnLButtonDown in ")+path+name+_T("\r\n"));
 	isLeftMouseButtonDown = true;
 	if (!(nFlags & MK_LBUTTON)) {
 		// PETER: this was needed to discard "got focus" situations: eg.: add-on dialog appears during attribute editing
@@ -4745,7 +4746,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 		switch(doc->GetEditMode()) {
 		case GME_EDIT_MODE:
 			{
-				CGMEEventLogger::LogGMEEvent("    mode=GME_EDIT_MODE\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("    mode=GME_EDIT_MODE\r\n"));
 
 				CGMEView* self = const_cast<CGMEView*> (this);
 				CGuiObject*	object	= self		? self->FindObject(point, true) : 0;
@@ -4782,8 +4783,8 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 										// GME-292: the commit may fail
 										AbortTransaction(e.hr);
 										if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
-											CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
-											AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+											CGMEEventLogger::LogGMEEvent(_T("    Couldn't commit transaction.\r\n"));
+											AfxMessageBox(_T("Couldn't commit transaction."),MB_ICONSTOP | MB_OK);
 										}
 									}
 									SetShouldCommitOperation(false);
@@ -4836,7 +4837,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 																		customizeConnectionEdgeYMinLimit,
 																		customizeConnectionEdgeYMaxLimit);
 						if (customizeConnectionEdgeIndex >= 0 && !isPartFixed) {
-							TRACE("Starting edge customize operation of %ld.: (%ld, %ld)-(%ld, %ld)-(%ld, %ld) min/max: X(%ld, %ld) Y(%ld, %ld) h/v: %d\n",
+							TRACE(_T("Starting edge customize operation of %ld.: (%ld, %ld)-(%ld, %ld)-(%ld, %ld) min/max: X(%ld, %ld) Y(%ld, %ld) h/v: %d\n"),
 									customizeConnectionEdgeIndex,
 									customizeConnectionEdgeStartPoint.x, customizeConnectionEdgeStartPoint.y,
 									customizeConnectionEdgeEndPoint.x, customizeConnectionEdgeEndPoint.y,
@@ -4867,8 +4868,8 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 										// GME-292: the commit may fail
 										AbortTransaction(e.hr);
 										if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
-											CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
-											AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+											CGMEEventLogger::LogGMEEvent(_T("    Couldn't commit transaction.\r\n"));
+											AfxMessageBox(_T("Couldn't commit transaction."),MB_ICONSTOP | MB_OK);
 										}
 									}
 									SetShouldCommitOperation(false);
@@ -4932,7 +4933,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 				POSITION alreadySelected = 0;
 				if((selection != 0) || (annotation != 0)) {
 					if (selection) {
-						CGMEEventLogger::LogGMEEvent("    LButton over "+selection->GetName()+" "+selection->GetID()+"\r\n"); 
+						CGMEEventLogger::LogGMEEvent(_T("    LButton over ")+selection->GetName()+_T(" ")+selection->GetID()+_T("\r\n")); 
 						alreadySelected = selected.Find(selection);
 						if(alreadySelected)
 						{
@@ -4950,7 +4951,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						selected.AddHead(selection);
 					}
 					if (annotation) {
-						CGMEEventLogger::LogGMEEvent("    LButton over "+annotation->GetName()+"\r\n"); 
+						CGMEEventLogger::LogGMEEvent(_T("    LButton over ")+annotation->GetName()+_T("\r\n")); 
 						alreadySelected = selectedAnnotations.Find(annotation);
 						if (alreadySelected) {
 							RemoveAnnotationFromSelection(alreadySelected);
@@ -5047,12 +5048,12 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						int num;
 						if((num = currentModel->CheckForReferences(selected)) > 0) {
 							char txt[128];
-							sprintf(txt,"Selected model(s) cannot be deleted due to %ld reference(s)",num);
+							sprintf(txt,_T("Selected model(s) cannot be deleted due to %ld reference(s)"),num);
 							AfxMessageBox(txt,MB_OK | MB_ICONSTOP);
 						}
 						else if((num = currentModel->CheckForInherited(selected)) > 0) {
 							char txt[128];
-							sprintf(txt,"Selected model(s) cannot be deleted due to %ld inherited part(s)",num);
+							sprintf(txt,_T("Selected model(s) cannot be deleted due to %ld inherited part(s)"),num);
 							AfxMessageBox(txt,MB_OK | MB_ICONSTOP);
 						}
 						else {
@@ -5105,7 +5106,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 		case GME_AUTOCONNECT_MODE:
 		case GME_SHORTAUTOCONNECT_MODE:
 			{
-				CGMEEventLogger::LogGMEEvent("    mode=GME_AUTOCONNECT_MODE\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("    mode=GME_AUTOCONNECT_MODE\r\n"));
 				if(connTmp) {
 					if(connSrc == 0) {
 						connSrc = connTmp;
@@ -5126,7 +5127,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 		case GME_DISCONNECT_MODE:
 		case GME_SHORTDISCONNECT_MODE:
 			{
-				CGMEEventLogger::LogGMEEvent("    mode=GME_DISCONNECT_MODE\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("    mode=GME_DISCONNECT_MODE\r\n"));
 				CGuiObject *selection = FindObject(point);
 				if(selection) {
 					CGuiPort *port = 0;
@@ -5140,18 +5141,18 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 							if(conns.GetCount() < 2) {
 								if(conns.GetCount() == 1) {
 									if(!DeleteConnection(conns.GetHead())) {
-										AfxMessageBox("Connection cannot be deleted!");
+										AfxMessageBox(_T("Connection cannot be deleted!"));
 									}
 								}
 								else if(conns.GetCount() == 0) {
-									AfxMessageBox("Selected object is not connected!");
+									AfxMessageBox(_T("Selected object is not connected!"));
 								}
 								ClearConnSpecs();
 								if( doc->GetEditMode() == GME_SHORTDISCONNECT_MODE)
 									GetDocument()->SetMode(0); // switch back to GME_EDIT_MODE
 							}
 						} else {
-							AfxMessageBox("Cannot find port to connection!");
+							AfxMessageBox(_T("Cannot find port to connection!"));
 						}
 					}
 					else {
@@ -5159,10 +5160,10 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 						FindConnections(connSrc,connSrcPort,selection,port,conns);
 						if(conns.GetCount()) {
 							if(!DeleteConnection(conns.GetHead()))
-								AfxMessageBox("Connection cannot be deleted!");
+								AfxMessageBox(_T("Connection cannot be deleted!"));
 						}
 						else
-							AfxMessageBox("Selected objects are not connected!");
+							AfxMessageBox(_T("Selected objects are not connected!"));
 						ClearConnSpecs();
 						if( doc->GetEditMode() == GME_SHORTDISCONNECT_MODE)
 							GetDocument()->SetMode(0); // switch back to GME_EDIT_MODE
@@ -5172,7 +5173,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 					CGuiConnection *conn = router.FindConnection(point);
 					if(conn) {
 						if(!DeleteConnection(conn))
-							AfxMessageBox("Connection cannot be deleted!");
+							AfxMessageBox(_T("Connection cannot be deleted!"));
 						ClearConnSpecs();
 						if( doc->GetEditMode() == GME_SHORTDISCONNECT_MODE)
 							GetDocument()->SetMode(0); // switch back to GME_EDIT_MODE
@@ -5183,7 +5184,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 			break;
 		case GME_SET_MODE:
 			{
-				CGMEEventLogger::LogGMEEvent("    mode=GME_SET_MODE\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("    mode=GME_SET_MODE\r\n"));
 				if(!currentSet)
 					break;
 				CGuiFco *fco = 0;
@@ -5191,7 +5192,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 					BeginTransaction(TRANSACTION_READ_ONLY);
 					CGuiObject *object = FindObject(point);
 					if(object) {
-						CGMEEventLogger::LogGMEEvent("    LButton over "+object->GetName()+" "+object->GetID()+"\r\n");
+						CGMEEventLogger::LogGMEEvent(_T("    LButton over ")+object->GetName()+_T(" ")+object->GetID()+_T("\r\n"));
 						if(currentSet->CheckMember(object))
 							fco = object;
 					}
@@ -5221,7 +5222,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 			break;
 		case GME_ZOOM_MODE:
 			{
-				CGMEEventLogger::LogGMEEvent("    mode=GME_ZOOM_MODE\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("    mode=GME_ZOOM_MODE\r\n"));
                 CRectTracker tracker;
 				tracker.m_rect = CRect(0,0,0,0);
                 if(tracker.TrackRubberBand(this, trackPoint,TRUE)) 
@@ -5241,10 +5242,10 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 			break;
 		case GME_VISUAL_MODE:
 			{
-				CGMEEventLogger::LogGMEEvent("    mode=GME_VISUAL_MODE\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("    mode=GME_VISUAL_MODE\r\n"));
 				CGuiObject *obj = FindObject(point);
 				if(obj) {
-					CGMEEventLogger::LogGMEEvent("    LButton over "+obj->GetName()+" "+obj->GetID()+"\r\n");
+					CGMEEventLogger::LogGMEEvent(_T("    LButton over ")+obj->GetName()+_T(" ")+obj->GetID()+_T("\r\n"));
 					obj->ToggleGrayOut();
 					CGuiFco::GrayOutNonInternalConnections(connections);
 					Invalidate();
@@ -5252,7 +5253,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 				else {
 					CGuiConnection *conn = router.FindConnection(point);
 					if(conn) {
-						CGMEEventLogger::LogGMEEvent("    LButton over "+conn->GetName()+" "+conn->GetID()+"\r\n");
+						CGMEEventLogger::LogGMEEvent(_T("    LButton over ")+conn->GetName()+_T(" ")+conn->GetID()+_T("\r\n"));
 						conn->ToggleGrayOut();
 						conn->GrayOutEndPoints();
 						Invalidate();
@@ -5260,7 +5261,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 					else {
 						CGuiAnnotator *ann = FindAnnotation(point);
 						if (ann) {
-							CGMEEventLogger::LogGMEEvent("    LButton over "+ann->GetName()+"\r\n");
+							CGMEEventLogger::LogGMEEvent(_T("    LButton over ")+ann->GetName()+_T("\r\n"));
 							ann->ToggleGrayOut();
 							Invalidate();
 						}
@@ -5278,7 +5279,7 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnLButtonDblClk in " + path + name + "\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnLButtonDblClk in ") + path + name + _T("\r\n"));
 	CPoint ppoint = point;
 	if (GetDocument()->GetEditMode() == GME_EDIT_MODE) {
 		CoordinateTransfer(point);	// DPtoLP
@@ -5316,8 +5317,8 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 								// GME-292: the commit may fail
 								AbortTransaction(e.hr);
 								if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
-									CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
-									AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+									CGMEEventLogger::LogGMEEvent(_T("    Couldn't commit transaction.\r\n"));
+									AfxMessageBox(_T("Couldn't commit transaction."),MB_ICONSTOP | MB_OK);
 								}
 							}
 							SetShouldCommitOperation(false);
@@ -5376,7 +5377,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 		CGuiObject *selection = FindObject(point);
 
 		if(selection) {
-			CGMEEventLogger::LogGMEEvent(    "LButton double clicked on "+selection->GetName()+" "+selection->GetID()+"\r\n");
+			CGMEEventLogger::LogGMEEvent(    _T("LButton double clicked on ")+selection->GetName()+_T(" ")+selection->GetID()+_T("\r\n"));
 			CString aspectName = currentAspect->name;
 			CComPtr<IMgaFCO> mgaFco = selection->mgaFco;
 			CComPtr<IMgaModel> model;
@@ -5428,10 +5429,10 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 									}
 								}
 							}
-//							AfxMessageBox("Referenced model is a root model. Opening model."); // instead show target selected
+//							AfxMessageBox(_T("Referenced model is a root model. Opening model.")); // instead show target selected
 							else // obj is not a model, referred is also not a model
 							{
-								CGMEConsole::theInstance->Message( "Reference target is child of a folder, thus it is shown in the TreeBrowser only.", MSG_INFO);
+								CGMEConsole::theInstance->Message( _T("Reference target is child of a folder, thus it is shown in the TreeBrowser only."), MSG_INFO);
 								CGMEBrowser::theInstance->FocusItem( referred_id);//CComBSTR( mgaObjectId));//FireLocateMgaObject( (LPCTSTR) (CString) referred_id);
 								//CGMEBrowser::theInstance->FocusItem( CComBSTR( (LPCTSTR) CString( referred_id)));
 								CScrollZoomView::OnLButtonDblClk(nFlags, ppoint);
@@ -5468,8 +5469,8 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 					}
 					else
 					{
-						AfxMessageBox("Unable to show referred object of null reference!");
-						CGMEEventLogger::LogGMEEvent("    Unable to show referred object of null reference.\r\n");
+						AfxMessageBox(_T("Unable to show referred object of null reference!"));
+						CGMEEventLogger::LogGMEEvent(_T("    Unable to show referred object of null reference.\r\n"));
 					}
 				}
 			}
@@ -5496,7 +5497,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			}
 		}
 		else if (annotation) {
-			CGMEEventLogger::LogGMEEvent(    "LButton double clicked on "+annotation->GetName()+"\r\n");
+			CGMEEventLogger::LogGMEEvent(    _T("LButton double clicked on ")+annotation->GetName()+_T("\r\n"));
 			CComPtr<IMgaFCO> fcoToShow;
 			currentModel.QueryInterface(&fcoToShow);
 			ShowAnnotationBrowser(fcoToShow, annotation->rootNode);
@@ -5507,7 +5508,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			struct _timeb measuerementStartTime;
 			_ftime(&measuerementStartTime);
 			CString structSizeStr;
-			structSizeStr.Format("sizeof(CAutoRouterEdge) = %ld\n", sizeof(CAutoRouterEdge));
+			structSizeStr.Format(_T("sizeof(CAutoRouterEdge) = %ld\n"), sizeof(CAutoRouterEdge));
 			OutputDebugString(structSizeStr);
 			for (long i = 0; i < 10; i++)
 				AutoRoute();
@@ -5516,11 +5517,11 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			unsigned long elapsedSeconds = (unsigned long)(measuerementEndTime.time - measuerementStartTime.time);
 			long elapsedMilliSeconds = ((long)measuerementEndTime.millitm - measuerementStartTime.millitm);
 			CString elapsedTimeStr;
-			elapsedTimeStr.Format("Ellapsed: %lu s + %d ms\n", elapsedSeconds, elapsedMilliSeconds);
+			elapsedTimeStr.Format(_T("Ellapsed: %lu s + %d ms\n"), elapsedSeconds, elapsedMilliSeconds);
 			OutputDebugString(elapsedTimeStr);
 			Reset();*/
 			// XML dump test
-//			HRESULT hr = DumpModelGeometryXML("C:\\XMLDump.xml");
+//			HRESULT hr = DumpModelGeometryXML(_T("C:\\XMLDump.xml"));
 //#else
 			OnViewParent();	// double click on model background brings up the parent model
 							// user requested standard behavior
@@ -5533,7 +5534,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnRButtonDown in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnRButtonDown in ")+path+name+_T("\r\n"));
 	CPoint local = point;
 	CPoint ppoint = point;
 	CoordinateTransfer(local);	// DPtoLP
@@ -5563,14 +5564,14 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 		contextAnnotation = NULL;
 	}
 	if (contextSelection)
-		CGMEEventLogger::LogGMEEvent("    RButton over "+contextSelection->GetName()+" "+contextSelection->GetID()+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    RButton over ")+contextSelection->GetName()+_T(" ")+contextSelection->GetID()+_T("\r\n"));
 	else if (contextAnnotation)
-		CGMEEventLogger::LogGMEEvent("    RButton over "+contextAnnotation->GetName()+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    RButton over ")+contextAnnotation->GetName()+_T("\r\n"));
 
 	switch(doc->GetEditMode()) {
 	case GME_SET_MODE:
 		{
-			CGMEEventLogger::LogGMEEvent("    mode=GME_SET_MODE\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    mode=GME_SET_MODE\r\n"));
 			selected.RemoveAll();
 			RemoveAllAnnotationFromSelection();
 			ClearConnectionSelection();
@@ -5606,14 +5607,14 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 		break;
 	case GME_ZOOM_MODE:
 		{
-			CGMEEventLogger::LogGMEEvent("    mode=GME_ZOOM_MODE\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    mode=GME_ZOOM_MODE\r\n"));
 			ZoomOut(ppoint);
 			Invalidate();
 		}
 		break;
 	case GME_VISUAL_MODE:
 		{
-			CGMEEventLogger::LogGMEEvent("    mode=GME_VISUAL_MODE\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    mode=GME_VISUAL_MODE\r\n"));
 			CGuiObject* obj = NULL;
 			if (contextSelection)
 				obj = contextSelection->dynamic_cast_CGuiObject();
@@ -5642,7 +5643,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 		break;
 	case GME_EDIT_MODE:
 		{
-			CGMEEventLogger::LogGMEEvent("    mode=GME_EDIT_MODE\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    mode=GME_EDIT_MODE\r\n"));
 			CPoint global = point;
 			ClientToScreen(&global);
 
@@ -5689,7 +5690,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 			}
 
 			if (contextPort != NULL) {
-				CString itemname = CString( "[") + (contextSelection?(contextSelection->GetInfoText() + CString(" : ")): CString("")) + contextPort->GetInfoText() + CString( "]");
+				CString itemname = CString( _T("[")) + (contextSelection?(contextSelection->GetInfoText() + CString(_T(" : "))): CString(_T(""))) + contextPort->GetInfoText() + CString( _T("]"));
 
 				CMenu menu;
 				menu.LoadMenu(IDR_PORTCONTEXT_MENU);
@@ -5726,8 +5727,8 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				menu.LoadMenu(selectedContextConnection != NULL ? IDR_CONNCONTEXT_MENU : IDR_CONTEXT_MENU);
 				CMenu* subMenu = menu.GetSubMenu(0);
 				if (::GetMenuItemCount(decoratorAdditionalMenu) > 0) {
-					subMenu->InsertMenu(0, MF_BYPOSITION | MF_SEPARATOR, 0, "");
-					subMenu->InsertMenu(0, MF_BYPOSITION | MF_POPUP | MF_ENABLED, (UINT_PTR)(decoratorAdditionalMenu), "Decorator Edit");
+					subMenu->InsertMenu(0, MF_BYPOSITION | MF_SEPARATOR, 0, _T(""));
+					subMenu->InsertMenu(0, MF_BYPOSITION | MF_POPUP | MF_ENABLED, (UINT_PTR)(decoratorAdditionalMenu), _T("Decorator Edit"));
 				}
 				UINT cmdId = (UINT)subMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
 															global.x,global.y,GetParent());
@@ -5751,8 +5752,8 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				menu.LoadMenu(IDR_ANNCONTEXT_MENU);
 				CMenu* subMenu = menu.GetSubMenu(0);
 				if (::GetMenuItemCount(decoratorAdditionalMenu) > 0) {
-					subMenu->InsertMenu(0, MF_BYPOSITION | MF_SEPARATOR, 0, "");
-					subMenu->InsertMenu(0, MF_BYPOSITION | MF_POPUP | MF_ENABLED, (UINT_PTR)(decoratorAdditionalMenu), "Decorator Edit");
+					subMenu->InsertMenu(0, MF_BYPOSITION | MF_SEPARATOR, 0, _T(""));
+					subMenu->InsertMenu(0, MF_BYPOSITION | MF_POPUP | MF_ENABLED, (UINT_PTR)(decoratorAdditionalMenu), _T("Decorator Edit"));
 				}
 				UINT cmdId = (UINT)subMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
 															global.x,global.y,GetParent());
@@ -5771,7 +5772,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 #if defined(ADDCRASHTESTMENU)
 				CMenu crashTestMenu;
 				crashTestMenu.LoadMenu(IDR_CRASH_TEST_MENU);
-				submenu->AppendMenu(MF_POPUP, (UINT_PTR)((HMENU)crashTestMenu), "Debug");
+				submenu->AppendMenu(MF_POPUP, (UINT_PTR)((HMENU)crashTestMenu), _T("Debug"));
 #endif
 				submenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
 												global.x,global.y,GetParent());
@@ -5782,11 +5783,11 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 
 	case GME_AUTOCONNECT_MODE:
 	case GME_SHORTAUTOCONNECT_MODE:
-		CGMEEventLogger::LogGMEEvent("    mode=GME_AUTOCONNECT_MODE\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    mode=GME_AUTOCONNECT_MODE\r\n"));
 	case GME_DISCONNECT_MODE:
 	case GME_SHORTDISCONNECT_MODE:
 		{
-			CGMEEventLogger::LogGMEEvent("    mode=GME_DISCONNECT_MODE\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    mode=GME_DISCONNECT_MODE\r\n"));
 			CPoint global = point;
 			ClientToScreen(&global);
 			if (contextSelection) {
@@ -5885,7 +5886,7 @@ void CGMEView::OnAppCommand(CWnd* pWnd, UINT nCmd, UINT nDevice, UINT nKey)
 
 DROPEFFECT CGMEView::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeyState, CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDragEnter in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDragEnter in ")+path+name+_T("\r\n"));
 	ASSERT(prevDropEffect == DROPEFFECT_NONE);
 
 	if(isType && CGMEDataSource::IsGmeNativeDataAvailable(pDataObject,theApp.mgaProject)) {
@@ -5939,7 +5940,7 @@ DROPEFFECT CGMEView::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeyState, 
 
 void CGMEView::OnDragLeave()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDragLeave from "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDragLeave from ")+path+name+_T("\r\n"));
  	CClientDC dc(this);
 	OnPrepareDC(&dc);
 	if(prevDropEffect != DROPEFFECT_NONE) {
@@ -5951,7 +5952,7 @@ void CGMEView::OnDragLeave()
 
 DROPEFFECT CGMEView::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState, CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDragOver in "+path+name+"\r\n"); 
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDragOver in ")+path+name+_T("\r\n")); 
 	//this event happens too much, logfile size could explode...
 	if(!CGMEDataSource::IsGmeNativeDataAvailable(pDataObject,theApp.mgaProject))
 //	if(!pDataObject->IsDataAvailable(CGMEDataSource::cfGMEDesc))
@@ -5967,7 +5968,7 @@ DROPEFFECT CGMEView::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState, C
 	HRESULT retVal = S_OK;
 	DROPEFFECT dropEffect = DROPEFFECT_NONE;
 	if(obj) {
-		CGMEEventLogger::LogGMEEvent("    Dragging over: "+obj->GetName()+" "+obj->GetID()+" in "+path+name+"\r\n");//better this way, not logging dragging over empty space
+		CGMEEventLogger::LogGMEEvent(_T("    Dragging over: ")+obj->GetName()+_T(" ")+obj->GetID()+_T(" in ")+path+name+_T("\r\n"));//better this way, not logging dragging over empty space
 
 		CGuiAspect* pAspect = obj->GetCurrentAspect();
 		if (pAspect != NULL) {
@@ -6037,15 +6038,15 @@ DROPEFFECT CGMEView::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState, C
 
 BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDrop in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDrop in ")+path+name+_T("\r\n"));
 	if(dropEffect & DROPEFFECT_MOVE)
-		CGMEEventLogger::LogGMEEvent("    DROPEFFECT_MOVE\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    DROPEFFECT_MOVE\r\n"));
 	if(dropEffect & DROPEFFECT_LINK)
-		CGMEEventLogger::LogGMEEvent("    DROPEFFECT_LINK\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    DROPEFFECT_LINK\r\n"));
 	if(dropEffect & DROPEFFECT_COPY)
-		CGMEEventLogger::LogGMEEvent("    DROPEFFECT_COPY\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    DROPEFFECT_COPY\r\n"));
 	if(dropEffect == DROPEFFECT_NONE) //DROPEFFECT_NONE==0
-		CGMEEventLogger::LogGMEEvent("    DROPEFFECT_NONE\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    DROPEFFECT_NONE\r\n"));
 	ASSERT_VALID(this);
 	CGMEDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
@@ -6064,7 +6065,7 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 		if ((dropEffect & DROPEFFECT_MOVE) && inDrag)
 		{
 			ASSERT((selected.GetCount() + selectedAnnotations.GetCount()) > 0);
-			CGMEEventLogger::LogGMEEvent("    Dropping:\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    Dropping:\r\n"));
 			GMEEVENTLOG_GUIOBJS(selected);
 			GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
 			Invalidate();
@@ -6100,8 +6101,8 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 			}
 			catch(hresult_exception e) {                
 				AbortTransaction(e.hr);
-				CGMEEventLogger::LogGMEEvent("    Unable to complete drop operation.\r\n");
-				AfxMessageBox("Unable to complete drop operation",MB_ICONSTOP | MB_OK);
+				CGMEEventLogger::LogGMEEvent(_T("    Unable to complete drop operation.\r\n"));
+				AfxMessageBox(_T("Unable to complete drop operation"),MB_ICONSTOP | MB_OK);
 				Reset(true);
 				return FALSE;
 			}
@@ -6161,13 +6162,13 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 //		GetDocument()->InvalidateAllViews(true);
 		return TRUE;
 	}
-	CGMEEventLogger::LogGMEEvent("    Nothing Dropped\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("    Nothing Dropped\r\n"));
 	return FALSE;
 }
 
 void CGMEView::OnViewParent()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnViewParent from "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnViewParent from ")+path+name+_T("\r\n"));
 	ShowModel(parent);
 }
 
@@ -6197,7 +6198,7 @@ void CGMEView::OnUpdateViewGrid(CCmdUI* pCmdUI)
 
 void CGMEView::OnEditNudgedown()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditNudgedown in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditNudgedown in ")+path+name+_T("\r\n"));
 
 	try {
 		BeginTransaction();
@@ -6210,8 +6211,8 @@ void CGMEView::OnEditNudgedown()
 	}
 	catch(hresult_exception e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to nudge objects",MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent("    Unable to nudge objects.\r\n");
+		AfxMessageBox(_T("Unable to nudge objects"),MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to nudge objects.\r\n"));
 		return;
 	}
 	ResetParent();
@@ -6221,7 +6222,7 @@ void CGMEView::OnEditNudgedown()
 
 void CGMEView::OnEditNudgeleft()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditNudgeleft in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditNudgeleft in ")+path+name+_T("\r\n"));
 
 	try {
 		BeginTransaction();
@@ -6233,8 +6234,8 @@ void CGMEView::OnEditNudgeleft()
 	}
 	catch(hresult_exception e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to nudge objects",MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent("    Unable to nudge objects.\r\n");
+		AfxMessageBox(_T("Unable to nudge objects"),MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to nudge objects.\r\n"));
 		return;
 	}
 	ResetParent();
@@ -6244,7 +6245,7 @@ void CGMEView::OnEditNudgeleft()
 
 void CGMEView::OnEditNudgeright()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditNudgeright in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditNudgeright in ")+path+name+_T("\r\n"));
 
 	try {
 		BeginTransaction();
@@ -6256,8 +6257,8 @@ void CGMEView::OnEditNudgeright()
 	}
 	catch(hresult_exception e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to nudge objects",MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent("    Unable to nudge objects.\r\n");
+		AfxMessageBox(_T("Unable to nudge objects"),MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to nudge objects.\r\n"));
 		return;
 	}
 	ResetParent();
@@ -6267,7 +6268,7 @@ void CGMEView::OnEditNudgeright()
 
 void CGMEView::OnEditNudgeup()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditNudgeup in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditNudgeup in ")+path+name+_T("\r\n"));
 
 	try {
 		BeginTransaction();
@@ -6279,8 +6280,8 @@ void CGMEView::OnEditNudgeup()
 	}
 	catch(hresult_exception e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to nudge objects",MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent("    Unable to nudge objects.\r\n");
+		AfxMessageBox(_T("Unable to nudge objects"),MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to nudge objects.\r\n"));
 		return;
 	}
 	ResetParent();
@@ -6356,8 +6357,8 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 									// GME-292: the commit may fail
 									AbortTransaction(e.hr);
 									if (e.hr != E_MGA_CONSTRAINT_VIOLATION) {
-										CGMEEventLogger::LogGMEEvent("    Couldn't commit transaction.\r\n");
-										AfxMessageBox("Couldn't commit transaction.",MB_ICONSTOP | MB_OK);
+										CGMEEventLogger::LogGMEEvent(_T("    Couldn't commit transaction.\r\n"));
+										AfxMessageBox(_T("Couldn't commit transaction."),MB_ICONSTOP | MB_OK);
 									}
 								}
 								SetShouldCommitOperation(false);
@@ -6386,11 +6387,11 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 
 void CGMEView::OnEditDelete()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditDelete in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditDelete in ")+path+name+_T("\r\n"));
 
 	if (selectedConnection && selected.IsEmpty() && selectedAnnotations.IsEmpty()) {
 		if(!DeleteConnection(selectedConnection))
-			AfxMessageBox("Connection cannot be deleted!");
+			AfxMessageBox(_T("Connection cannot be deleted!"));
 	} else {
 		GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
 		DeleteAnnotations(selectedAnnotations);
@@ -6417,7 +6418,7 @@ void CGMEView::OnUpdateEditDelete(CCmdUI* pCmdUI)
 
 void CGMEView::OnContextProperties()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnContextProperties in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnContextProperties in ")+path+name+_T("\r\n"));
     if (contextSelection) {
 		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if (guiObj)
@@ -6474,7 +6475,7 @@ void CGMEView::AttributepanelPage(long page)
 
 void CGMEView::OnCntxPreferences()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxPreferences in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxPreferences in ")+path+name+_T("\r\n"));
 	if (contextSelection) {
 		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if(guiObj)
@@ -6496,7 +6497,7 @@ void CGMEView::OnCntxPreferences()
 
 void CGMEView::OnCntxDisconnectall()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxDisconnectall in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxDisconnectall in ")+path+name+_T("\r\n"));
 	if (!isType)
 		return;
 	if (contextSelection) {
@@ -6514,8 +6515,8 @@ void CGMEView::OnCntxDisconnectall()
 			}
 			catch(hresult_exception e) {
 				AbortTransaction(e.hr);
-				AfxMessageBox("Could not complete disconnect operation",MB_OK | MB_ICONSTOP);
-				CGMEEventLogger::LogGMEEvent("    Could not complete disconnect operation.\r\n");
+				AfxMessageBox(_T("Could not complete disconnect operation"),MB_OK | MB_ICONSTOP);
+				CGMEEventLogger::LogGMEEvent(_T("    Could not complete disconnect operation.\r\n"));
 			}
 		}
 	}
@@ -6529,7 +6530,7 @@ void CGMEView::OnUpdateCntxDisconnectall(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxAttributes()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxAttributes in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxAttributes in ")+path+name+_T("\r\n"));
 	if (contextSelection) {
 		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if (guiObj)
@@ -6559,15 +6560,15 @@ void CGMEView::OnUpdateCntxAttributes(CCmdUI* pCmdUI)
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to get model attributes",MB_OK | MB_ICONSTOP);
-		CGMEEventLogger::LogGMEEvent("    Unable to get model attributes.\r\n");
+		AfxMessageBox(_T("Unable to get model attributes"),MB_OK | MB_ICONSTOP);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to get model attributes.\r\n"));
 	}
 	pCmdUI->Enable(enable);
 }
 
 void CGMEView::OnEditUndo() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditUndo\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditUndo\r\n"));
 	if (IsInElementDecoratorOperation())
 		return;
 	theApp.mgaProject->Undo();
@@ -6576,7 +6577,7 @@ void CGMEView::OnEditUndo()
 
 void CGMEView::OnEditRedo() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditRedo\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditRedo\r\n"));
 	if (IsInElementDecoratorOperation())
 		return;
 	theApp.mgaProject->Redo();
@@ -6585,7 +6586,7 @@ void CGMEView::OnEditRedo()
 
 void CGMEView::OnEditCopy()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditCopy in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditCopy in ")+path+name+_T("\r\n"));
 	if(selected.GetCount() + selectedAnnotations.GetCount() > 0) {
 		GMEEVENTLOG_GUIOBJS(selected);
 		GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
@@ -6602,7 +6603,7 @@ void CGMEView::OnEditCopy()
 
 void CGMEView::OnEditCopyClosure()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditCopyClosure in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditCopyClosure in ")+path+name+_T("\r\n"));
 	if(selected.GetCount() > 0) {
 		GMEEVENTLOG_GUIOBJS(selected);
 		GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
@@ -6619,7 +6620,7 @@ void CGMEView::OnEditCopyClosure()
 
 void CGMEView::OnEditCopySmart()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditCopySmart in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditCopySmart in ")+path+name+_T("\r\n"));
 	if(selected.GetCount() > 0) {
 		GMEEVENTLOG_GUIOBJS(selected);
 		GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
@@ -6655,7 +6656,7 @@ void CGMEView::OnUpdateEditCopySmart(CCmdUI* pCmdUI)
 
 void CGMEView::OnEditCut()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditCut in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditCut in ")+path+name+_T("\r\n"));
 	if(selected.GetCount() + selectedAnnotations.GetCount() > 0) {
 		if(isType) GMEEVENTLOG_GUIOBJS(selected);
 		GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
@@ -6685,7 +6686,7 @@ void CGMEView::OnUpdateEditCut(CCmdUI* pCmdUI)
 
 void CGMEView::OnEditPaste()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditPaste in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditPaste in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -6707,11 +6708,11 @@ void CGMEView::OnUpdateEditPaste(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxCopy()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxCopy in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxCopy in ")+path+name+_T("\r\n"));
 	if (contextSelection) {
 		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if(guiObj) {
-			CGMEEventLogger::LogGMEEvent("    "+guiObj->GetName()+" "+guiObj->GetID()+"\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    ")+guiObj->GetName()+_T(" ")+guiObj->GetID()+_T("\r\n"));
 			CGuiObjectList list;
 			CGuiAnnotatorList dummyList;
 			list.AddTail(guiObj);
@@ -6727,7 +6728,7 @@ void CGMEView::OnCntxCopy()
 		contextPort = 0;
 	}
 	else if (contextAnnotation) {
-		CGMEEventLogger::LogGMEEvent("    "+contextAnnotation->GetName()+"/r/n");
+		CGMEEventLogger::LogGMEEvent(_T("    ")+contextAnnotation->GetName()+_T("/r/n"));
 		CGuiObjectList dummyList;
 		CGuiAnnotatorList list;
 		list.AddTail(contextAnnotation);
@@ -6744,11 +6745,11 @@ void CGMEView::OnCntxCopy()
 
 void CGMEView::OnCntxCopyClosure()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxCopyClosure in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxCopyClosure in ")+path+name+_T("\r\n"));
 	if (contextSelection) {
 		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if (guiObj) {
-			CGMEEventLogger::LogGMEEvent("    "+guiObj->GetName()+" "+guiObj->GetID()+"\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    ")+guiObj->GetName()+_T(" ")+guiObj->GetID()+_T("\r\n"));
 			CGuiObjectList list;
 			CGuiAnnotatorList dummyList;
 			list.AddTail(guiObj);
@@ -6764,7 +6765,7 @@ void CGMEView::OnCntxCopyClosure()
 		contextPort = 0;
 	}
 	else if (contextAnnotation) {
-		CGMEEventLogger::LogGMEEvent("    "+contextAnnotation->GetName()+"/r/n");
+		CGMEEventLogger::LogGMEEvent(_T("    ")+contextAnnotation->GetName()+_T("/r/n"));
 		CGuiObjectList dummyList;
 		CGuiAnnotatorList list;
 		list.AddTail(contextAnnotation);
@@ -6781,11 +6782,11 @@ void CGMEView::OnCntxCopyClosure()
 
 void CGMEView::OnCntxCopySmart()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxCopySmart in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxCopySmart in ")+path+name+_T("\r\n"));
 	if (contextSelection) {
 		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if (guiObj) {
-			CGMEEventLogger::LogGMEEvent("    "+guiObj->GetName()+" "+guiObj->GetID()+"\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    ")+guiObj->GetName()+_T(" ")+guiObj->GetID()+_T("\r\n"));
 			CGuiObjectList list;
 			CGuiAnnotatorList dummyList;
 			list.AddTail(guiObj);
@@ -6807,7 +6808,7 @@ void CGMEView::OnCntxCopySmart()
 			CGuiConnection* guiConn = contextSelection->dynamic_cast_CGuiConnection();
 			if( guiConn) // a valid connection
 			{
-				CGMEEventLogger::LogGMEEvent("    "+guiConn->GetName()+" "+guiConn->GetID()+"\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("    ")+guiConn->GetName()+_T(" ")+guiConn->GetID()+_T("\r\n"));
 				CGuiFcoList list;
 				CGuiAnnotatorList dummyList;
 				list.AddTail(guiConn);
@@ -6822,7 +6823,7 @@ void CGMEView::OnCntxCopySmart()
 		contextPort = 0;
 	}
 	else if (contextAnnotation) {
-		CGMEEventLogger::LogGMEEvent("    "+contextAnnotation->GetName()+"/r/n");
+		CGMEEventLogger::LogGMEEvent(_T("    ")+contextAnnotation->GetName()+_T("/r/n"));
 		CGuiFcoList dummyList;
 		CGuiAnnotatorList list;
 		list.AddTail(contextAnnotation);
@@ -6840,11 +6841,11 @@ void CGMEView::OnCntxCopySmart()
 
 void CGMEView::OnCntxCut()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxCut in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxCut in ")+path+name+_T("\r\n"));
 	if(isType && contextSelection) {
 		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if(guiObj) {
-			CGMEEventLogger::LogGMEEvent("    "+guiObj->GetName()+" "+guiObj->GetID()+"\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    ")+guiObj->GetName()+_T(" ")+guiObj->GetID()+_T("\r\n"));
 			CGuiObjectList list;
 			CGuiAnnotatorList dummyList;
 			list.AddTail(guiObj);
@@ -6861,7 +6862,7 @@ void CGMEView::OnCntxCut()
 		contextPort = 0;
 	}
 	else if (contextAnnotation) {
-		CGMEEventLogger::LogGMEEvent("    "+contextAnnotation->GetName()+"/r/n");
+		CGMEEventLogger::LogGMEEvent(_T("    ")+contextAnnotation->GetName()+_T("/r/n"));
 		CGuiObjectList dummyList;
 		CGuiAnnotatorList list;
 		list.AddTail(contextAnnotation);
@@ -6887,11 +6888,11 @@ void CGMEView::OnUpdateCntxCut(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxDelete()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxDelete in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxDelete in ")+path+name+_T("\r\n"));
 	if(isType && contextSelection) {
 		CGuiObject* guiObj = contextSelection->dynamic_cast_CGuiObject();
 		if(guiObj) {
-			CGMEEventLogger::LogGMEEvent("    "+guiObj->GetName()+" "+guiObj->GetID()+"\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    ")+guiObj->GetName()+_T(" ")+guiObj->GetID()+_T("\r\n"));
 			CGuiObjectList list;
 			list.AddTail(guiObj);
 			DeleteObjects(list);
@@ -6900,7 +6901,7 @@ void CGMEView::OnCntxDelete()
 		contextPort = 0;
 	}
 	if( contextAnnotation) {
-		CGMEEventLogger::LogGMEEvent("    "+contextAnnotation->GetName()+"/r/n");
+		CGMEEventLogger::LogGMEEvent(_T("    ")+contextAnnotation->GetName()+_T("/r/n"));
 		CGuiAnnotatorList list;
 		list.AddTail(contextAnnotation);
 		DeleteAnnotations(list);
@@ -6918,7 +6919,7 @@ void CGMEView::OnUpdateCntxDelete(CCmdUI* pCmdUI)
 
 void CGMEView::OnSelfcntxCopy()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnSelfcntxCopy in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnSelfcntxCopy in ")+path+name+_T("\r\n"));
 	OnEditCopy();
 }
 
@@ -6929,13 +6930,13 @@ void CGMEView::OnUpdateSelfcntxCopy(CCmdUI* pCmdUI)
 
 void CGMEView::OnSelfcntxCopyClosure()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnSelfcntxCopyClosure in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnSelfcntxCopyClosure in ")+path+name+_T("\r\n"));
 	OnEditCopyClosure();
 }
 
 void CGMEView::OnSelfcntxCopySmart()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnSelfcntxCopySmart in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnSelfcntxCopySmart in ")+path+name+_T("\r\n"));
 	OnEditCopySmart();
 }
 
@@ -6971,7 +6972,7 @@ void CGMEView::OnUpdateSelfcntxDelete(CCmdUI* pCmdUI)
 
 void CGMEView::OnSelfcntxPaste()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnSelfcntxPaste in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnSelfcntxPaste in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -6992,7 +6993,7 @@ void CGMEView::OnActivateFrame( UINT nState, CFrameWnd* pFrameWnd )
 //	if (gmeviewA)
 	if (m_isActive)
 	{
-		TRACE("CGMEView::OnActivateFrame\n");
+		TRACE(_T("CGMEView::OnActivateFrame\n"));
 		/*gmeviewA->*/m_refreshpannwin = true; 
 	}
 	CScrollZoomView::OnActivateFrame(nState, pFrameWnd);
@@ -7001,8 +7002,8 @@ void CGMEView::OnActivateFrame( UINT nState, CFrameWnd* pFrameWnd )
 
 void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView)
 {
-	CString s = bActivate ? "ACTIVATE ":"DEACTIVATE ";
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnActivateView "+s+path+name+"\r\n");
+	CString s = bActivate ? _T("ACTIVATE "):_T("DEACTIVATE ");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnActivateView ")+s+path+name+_T("\r\n"));
 	//I tried logging pActivateView and pDeactiveView, but they always seemed to be "this"
 	//anyways, OnActivateView is called on both views, so you would know if going from
 	//one to another by the ACTIVATE/DEACTIVATE - Brian
@@ -7014,7 +7015,7 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 		) {
 		if( theApp.isHistoryEnabled())
 		{
-			GetDocument()->tellHistorian( currentModId, currentAspect?currentAspect->name:"");
+			GetDocument()->tellHistorian( currentModId, currentAspect?currentAspect->name:_T(""));
 		}
 
 		modelGrid.Clear();
@@ -7045,11 +7046,11 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 	{
 //		if (gmeviewA  &&  guiMeta)
 		{
-			TRACE("CGMEView::OnActivateView DoPannWinRefresh\n");
+			TRACE(_T("CGMEView::OnActivateView DoPannWinRefresh\n"));
 			DoPannWinRefresh();
 		}
 	}
-	TRACE("CGMEView::OnActivateView final false\n");
+	TRACE(_T("CGMEView::OnActivateView final false\n"));
 	m_refreshpannwin = false;
 	if (bActivate)
 		theApp.UpdateMainTitle();
@@ -7059,7 +7060,7 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 
 void CGMEView::OnEditCancel()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditCancel in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditCancel in ")+path+name+_T("\r\n"));
 	if(tmpConnectMode) {
 		tmpConnectMode = false;
 		ClearConnSpecs();
@@ -7102,29 +7103,29 @@ BOOL CGMEView::PreTranslateMessage(MSG* pMsg)
 
 void CGMEView::OnFileClose()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnFileClose() in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnFileClose() in ")+path+name+_T("\r\n"));
 	frame->SetSendEvent(true);
 	frame->PostMessage(WM_CLOSE);
 }
 
 void CGMEView::OnFileInterpret()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnFileInterpret in "+path+name+"\r\n");
-	RunComponent("");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnFileInterpret in ")+path+name+_T("\r\n"));
+	RunComponent(_T(""));
 }
 
 void CGMEView::RunComponent(CString compname)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnRunComponent "+compname+" in "+path+name+"\r\n");
-	CGMEEventLogger::LogGMEEvent("    Selected FCOs:");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnRunComponent ")+compname+_T(" in ")+path+name+_T("\r\n"));
+	CGMEEventLogger::LogGMEEvent(_T("    Selected FCOs:"));
 	GMEEVENTLOG_GUIFCOS(selected);
 	MSGTRY
 	{
 		CComObjPtr<IMgaLauncher> launcher;
 		COMTHROW( launcher.CoCreateInstance(L"Mga.MgaLauncher") );
 		if(!launcher) {
-			AfxMessageBox("Cannot start up component launcher");
-			CGMEEventLogger::LogGMEEvent("    Cannot start up component launcher.\r\n");
+			AfxMessageBox(_T("Cannot start up component launcher"));
+			CGMEEventLogger::LogGMEEvent(_T("    Cannot start up component launcher.\r\n"));
 		}
 		else {
 			CComPtr<IMgaFCO> focus;
@@ -7139,12 +7140,12 @@ void CGMEView::RunComponent(CString compname)
 
 			if(theApp.bNoProtect) COMTHROW( launcher->put_Parameter(CComVariant(true)));
 			if(launcher->RunComponent(NULL, theApp.mgaProject, focus, selfcos, GME_MAIN_START) != S_OK) {
-				AfxMessageBox("Component execution failed");
-				CGMEEventLogger::LogGMEEvent("    Component execution failed.\r\n");
+				AfxMessageBox(_T("Component execution failed"));
+				CGMEEventLogger::LogGMEEvent(_T("    Component execution failed.\r\n"));
 			}
 		}
 	}
-	MSGCATCH("Error while trying to run the interpreter",;)
+	MSGCATCH(_T("Error while trying to run the interpreter"),;)
 }
 
 void CGMEView::SetEditCursor(void)
@@ -7317,6 +7318,10 @@ public :
 		fUnicodeForm = XMLString::transcode(toTranscode);
 	}
 
+	XStr(const wchar_t* const toTranscode)
+	{
+		XMLString::copyString(fUnicodeForm, toTranscode);
+	}
 	~XStr()
 	{
 		XMLString::release(&fUnicodeForm);
@@ -7376,7 +7381,7 @@ HRESULT CGMEView::DumpModelGeometryXML(LPCTSTR filePath)
 					DOMElement* aspectElem = doc->createElement(X("aspect"));
 					aspectsElem->appendChild(aspectElem);
 					CString intValStr;
-					intValStr.Format("%ld", asp->index);
+					intValStr.Format(_T("%ld"), asp->index);
 					aspectElem->setAttribute(X("index"), X(intValStr));					
 					aspectElem->setAttribute(X("name"), X(asp->name));
 
@@ -7402,25 +7407,25 @@ HRESULT CGMEView::DumpModelGeometryXML(LPCTSTR filePath)
 								CRect loc = obj->GetLocation();
 								DOMElement* locElem = doc->createElement(X("location"));
 								objElem->appendChild(locElem);
-								intValStr.Format("%ld", loc.left);
+								intValStr.Format(_T("%ld"), loc.left);
 								locElem->setAttribute(X("left"), X(intValStr));
-								intValStr.Format("%ld", loc.top);
+								intValStr.Format(_T("%ld"), loc.top);
 								locElem->setAttribute(X("top"), X(intValStr));
-								intValStr.Format("%ld", loc.right);
+								intValStr.Format(_T("%ld"), loc.right);
 								locElem->setAttribute(X("right"), X(intValStr));
-								intValStr.Format("%ld", loc.bottom);
+								intValStr.Format(_T("%ld"), loc.bottom);
 								locElem->setAttribute(X("bottom"), X(intValStr));
 
 								CRect nameLoc = obj->GetNameLocation();
 								DOMElement* nameLocElem = doc->createElement(X("namelocation"));
 								objElem->appendChild(nameLocElem);
-								intValStr.Format("%ld", nameLoc.left);
+								intValStr.Format(_T("%ld"), nameLoc.left);
 								nameLocElem->setAttribute(X("left"), X(intValStr));
-								intValStr.Format("%ld", nameLoc.top);
+								intValStr.Format(_T("%ld"), nameLoc.top);
 								nameLocElem->setAttribute(X("top"), X(intValStr));
-								intValStr.Format("%ld", nameLoc.right);
+								intValStr.Format(_T("%ld"), nameLoc.right);
 								nameLocElem->setAttribute(X("right"), X(intValStr));
-								intValStr.Format("%ld", nameLoc.bottom);
+								intValStr.Format(_T("%ld"), nameLoc.bottom);
 								nameLocElem->setAttribute(X("bottom"), X(intValStr));
 							}
 							CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
@@ -7441,9 +7446,9 @@ HRESULT CGMEView::DumpModelGeometryXML(LPCTSTR filePath)
 									CPoint pt = points.GetNext(pos);
 									DOMElement* ptElem = doc->createElement(X("pt"));
 									pointsElem->appendChild(ptElem);
-									intValStr.Format("%ld", pt.x);
+									intValStr.Format(_T("%ld"), pt.x);
 									ptElem->setAttribute(X("x"), X(intValStr));
-									intValStr.Format("%ld", pt.y);
+									intValStr.Format(_T("%ld"), pt.y);
 									ptElem->setAttribute(X("y"), X(intValStr));
 								}
 
@@ -7464,11 +7469,11 @@ HRESULT CGMEView::DumpModelGeometryXML(LPCTSTR filePath)
 										}
 										labelsElem->appendChild(labelElem);
 										CPoint pt = labelset.GetLocation(i);
-										intValStr.Format("%ld", pt.x);
+										intValStr.Format(_T("%ld"), pt.x);
 										labelElem->setAttribute(X("x"), X(intValStr));
-										intValStr.Format("%ld", pt.y);
+										intValStr.Format(_T("%ld"), pt.y);
 										labelElem->setAttribute(X("y"), X(intValStr));
-										intValStr.Format("%ld", labelset.GetAlignment(i));
+										intValStr.Format(_T("%ld"), labelset.GetAlignment(i));
 										labelElem->setAttribute(X("alignment"), X(intValStr));
 										labelElem->setAttribute(X("label"), X(label));
 									}
@@ -7598,13 +7603,13 @@ void CGMEView::OnConncntxProperties()
 
 void CGMEView::OnConncntxDelete()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnConncntxDelete in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnConncntxDelete in ")+path+name+_T("\r\n"));
 	if(isType) {
 		CGuiConnection* conn = NULL;
 		if (contextSelection)
 			conn = contextSelection->dynamic_cast_CGuiConnection();
 		if(!conn || !DeleteConnection(conn))
-			AfxMessageBox("Connection cannot be deleted!");
+			AfxMessageBox(_T("Connection cannot be deleted!"));
 		contextSelection = 0;
 		contextPort = 0;
 	}
@@ -7617,7 +7622,7 @@ void CGMEView::OnUpdateConncntxDelete(CCmdUI* pCmdUI)
 
 void CGMEView::OnShowContextMenu() // called from Accelerators like SHIFT+F10 or Property (VK_APPS)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnShowContextMenu in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnShowContextMenu in ")+path+name+_T("\r\n"));
 
 	CGMEDoc *doc = GetDocument();
 	if( doc && doc->GetEditMode() == GME_EDIT_MODE)
@@ -7670,7 +7675,7 @@ void CGMEView::OnShowContextMenu() // called from Accelerators like SHIFT+F10 or
 
 void CGMEView::OnJumpToFirstObject()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnJumpToFirstObject in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnJumpToFirstObject in ")+path+name+_T("\r\n"));
 
 	CGuiObject* first = FindFirstObject();
 
@@ -7682,7 +7687,7 @@ void CGMEView::OnJumpToFirstObject()
 
 void CGMEView::OnJumpToNextObject()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnJumpToNextObject in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnJumpToNextObject in ")+path+name+_T("\r\n"));
 
 	CGuiObject* next = FindNextObject();
 
@@ -7694,7 +7699,7 @@ void CGMEView::OnJumpToNextObject()
 
 void CGMEView::OnConnCntxFollow() // 'Go to Dst' context command of a connection 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnConnCntxFollow in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnConnCntxFollow in ")+path+name+_T("\r\n"));
 	if (contextSelection) {
 		CGuiConnection* conn = contextSelection->dynamic_cast_CGuiConnection();
 		FollowLine( conn, false, ::GetKeyState( VK_CONTROL) < 0);
@@ -7705,7 +7710,7 @@ void CGMEView::OnConnCntxFollow() // 'Go to Dst' context command of a connection
 
 void CGMEView::OnConnCntxRevfollow() // 'Go to Src' context command of a connection
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnConnCntxRevfollow in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnConnCntxRevfollow in ")+path+name+_T("\r\n"));
 	if (contextSelection) {
 		CGuiConnection* conn = contextSelection->dynamic_cast_CGuiConnection();
 		FollowLine( conn, true, ::GetKeyState( VK_CONTROL) < 0);
@@ -7716,7 +7721,7 @@ void CGMEView::OnConnCntxRevfollow() // 'Go to Src' context command of a connect
 
 void CGMEView::OnPortCntxFollowConnection() // 'Follow Connection' context command of a port
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnPortCntxFollowConnection in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnPortCntxFollowConnection in ")+path+name+_T("\r\n"));
 	if( contextPort)
 	{
 		FollowLine( contextPort, false, ::GetKeyState( VK_CONTROL) < 0);
@@ -7727,7 +7732,7 @@ void CGMEView::OnPortCntxFollowConnection() // 'Follow Connection' context comma
 
 void CGMEView::OnPortCntxRevfollowConnection() // 'Follow Reverse Connection' context command of a port
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxRevfollowConnection in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxRevfollowConnection in ")+path+name+_T("\r\n"));
 	if( contextPort)
 	{
 		FollowLine( contextPort, true, ::GetKeyState( VK_CONTROL) < 0);
@@ -7738,14 +7743,14 @@ void CGMEView::OnPortCntxRevfollowConnection() // 'Follow Reverse Connection' co
 
 void CGMEView::OnCntxFollowConnection() // 'Follow Connection' context command of an fco
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxFollowConnection in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxFollowConnection in ")+path+name+_T("\r\n"));
 	if( selected.GetCount() > 0)
 		FollowLine( selected.GetHead(), false, ::GetKeyState( VK_CONTROL) < 0);
 }
 
 void CGMEView::OnCntxRevfollowConnection() // 'Follow Reverse Connection' context command of an fco
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxRevfollowConnection in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxRevfollowConnection in ")+path+name+_T("\r\n"));
 	if( selected.GetCount() > 0)
 		FollowLine( selected.GetHead(), true, ::GetKeyState( VK_CONTROL) < 0);
 }
@@ -7768,14 +7773,14 @@ void CGMEView::OnCntxPortLocateInBrw() // 'Locate Port in Browser' context comma
 
 void CGMEView::OnJumpAlongConnection() // 'Jump Along Conn' command on the Navigation toolbar
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnJumpAlongConnection in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnJumpAlongConnection in ")+path+name+_T("\r\n"));
 	if( selected.GetCount() > 0)
 		FollowLine( selected.GetHead(), false, ::GetKeyState( VK_CONTROL) < 0);
 }
 
 void CGMEView::OnBackAlongConnection() // 'Jump back Along Conn' on Navigation toolbar
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnBackAlongConnection in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnBackAlongConnection in ")+path+name+_T("\r\n"));
 	if( selected.GetCount() > 0)
 		FollowLine( selected.GetHead(), true, ::GetKeyState( VK_CONTROL) < 0);
 }
@@ -7788,7 +7793,7 @@ void CGMEView::OnTryToSnapHorzVertPath()
 
 void CGMEView::OnDeleteConnEdgeCustomData()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnEdgeCustomData in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDeleteConnEdgeCustomData in ")+path+name+_T("\r\n"));
 	if (selectedContextConnection != NULL && contextConnectionEdgeIndex >= 0) {
 		if (contextConnectionCustomizationType == SimpleEdgeDisplacement) {
 			if (contextConnectionPartMoveMethod == HorizontalEdgeMove ||
@@ -7822,7 +7827,7 @@ void CGMEView::OnDeleteConnPointCustomData()
 
 void CGMEView::OnDeleteConnRouteCustomDataThisAspect()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnRouteCustomDataThisAspect in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDeleteConnRouteCustomDataThisAspect in ")+path+name+_T("\r\n"));
 	if (selectedContextConnection != NULL) {
 		selectedContextConnection->DeleteAllPathCustomizationsForCurrentAspect();
 		selectedContextConnection->WriteCustomPathData();
@@ -7832,7 +7837,7 @@ void CGMEView::OnDeleteConnRouteCustomDataThisAspect()
 
 void CGMEView::OnDeleteConnRouteCustomDataAllAspects()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDeleteConnRouteCustomDataAllAspects in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDeleteConnRouteCustomDataAllAspects in ")+path+name+_T("\r\n"));
 	if (selectedContextConnection != NULL) {
 		selectedContextConnection->DeleteAllPathCustomizationsForAllAspects();
 		selectedContextConnection->WriteCustomPathData();
@@ -8060,7 +8065,7 @@ void CGMEView::OnUpdateCrashTestTerminate(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxClear()	// set refs to null, delete all members from set
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxClear in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxClear in ")+path+name+_T("\r\n"));
 	if (!isType)
 		return;
 	CGuiObject* obj = NULL;
@@ -8070,7 +8075,7 @@ void CGMEView::OnCntxClear()	// set refs to null, delete all members from set
 		obj = contextSelection->dynamic_cast_CGuiCompoundReference();
 	if (obj) {
 		try {
-			CGMEEventLogger::LogGMEEvent("    "+obj->GetName()+" "+obj->GetID()+"\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    ")+obj->GetName()+_T(" ")+obj->GetID()+_T("\r\n"));
 			BeginTransaction();
 			CComPtr<IMgaReference> mgaRef;
 			COMTHROW(obj->mgaFco.QueryInterface(&mgaRef));
@@ -8080,8 +8085,8 @@ void CGMEView::OnCntxClear()	// set refs to null, delete all members from set
 		}
 		catch(hresult_exception e) {
 			AbortTransaction(e.hr);
-			const char* t1 = "Cannot clear reference because of active connections!";
-			const char* t2 = "Cannot clear reference.";
+			const TCHAR* t1 = _T("Cannot clear reference because of active connections!");
+			const TCHAR* t2 = _T("Cannot clear reference.");
 			if( e.hr == E_MGA_REFPORTS_USED)
 			{
 				if( !CGMEConsole::theInstance) AfxMessageBox( t1);
@@ -8098,7 +8103,7 @@ void CGMEView::OnCntxClear()	// set refs to null, delete all members from set
 			set = contextSelection->dynamic_cast_CGuiSet();
 		if (set) {
 			try {
-				CGMEEventLogger::LogGMEEvent("    "+set->GetName()+" "+set->GetID()+"\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("    ")+set->GetName()+_T(" ")+set->GetID()+_T("\r\n"));
 				BeginTransaction();
 				CComPtr<IMgaSet> mgaSet;
 				COMTHROW(set->mgaFco.QueryInterface(&mgaSet));
@@ -8126,7 +8131,7 @@ void CGMEView::OnUpdateCntxClear(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxReset()	// revert to base i.e. reestablish dependency chain for refs and sets
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxReset in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxReset in ")+path+name+_T("\r\n"));
 	CGuiObject* obj = NULL;
 	if (contextSelection)
 		obj = contextSelection->dynamic_cast_CGuiReference();
@@ -8134,7 +8139,7 @@ void CGMEView::OnCntxReset()	// revert to base i.e. reestablish dependency chain
 		obj = contextSelection->dynamic_cast_CGuiCompoundReference();
 	if (obj) {
 		try {
-			CGMEEventLogger::LogGMEEvent("    "+obj->GetName()+" "+obj->GetID()+"\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    ")+obj->GetName()+_T(" ")+obj->GetID()+_T("\r\n"));
 			BeginTransaction();
 			CComPtr<IMgaReference> mgaRef;
 			COMTHROW(obj->mgaFco.QueryInterface(&mgaRef));
@@ -8151,7 +8156,7 @@ void CGMEView::OnCntxReset()	// revert to base i.e. reestablish dependency chain
 			set = contextSelection->dynamic_cast_CGuiSet();
 		if (set) {
 			try {
-				CGMEEventLogger::LogGMEEvent("    "+set->GetName()+" "+set->GetID()+"\r\n");
+				CGMEEventLogger::LogGMEEvent(_T("    ")+set->GetName()+_T(" ")+set->GetID()+_T("\r\n"));
 				BeginTransaction();
 				CComPtr<IMgaSet> mgaSet;
 				COMTHROW(set->mgaFco.QueryInterface(&mgaSet));
@@ -8179,19 +8184,19 @@ void CGMEView::OnUpdateCntxReset(CCmdUI* pCmdUI)
 
 void CGMEView::OnEditPreferences()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditPreferences in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditPreferences in ")+path+name+_T("\r\n"));
 	ShowPreferences();
 }
 
 void CGMEView::OnHelpHelp()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnHelpHelp in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnHelpHelp in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaFCO> fco;
 	POSITION pos = selected.GetHeadPosition();
 	if( pos) // if any object selected
 	{
 		CGuiObject *obj = selected.GetAt( pos);
-		CGMEEventLogger::LogGMEEvent("CGMEView::OnHelpHelp for selected: "+obj->GetID()+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnHelpHelp for selected: ")+obj->GetID()+_T("\r\n"));
 		fco = obj->mgaFco;
 	}
 	else
@@ -8202,11 +8207,11 @@ void CGMEView::OnHelpHelp()
 
 void CGMEView::OnCntxHelp()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxHelp in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxHelp in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaFCO> fco;
 	if (contextSelection)
 	{
-		CGMEEventLogger::LogGMEEvent("    "+contextSelection->GetName()+" "+contextSelection->GetID()+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    ")+contextSelection->GetName()+_T(" ")+contextSelection->GetID()+_T("\r\n"));
 		fco = contextSelection->mgaFco;
 	}
 	else
@@ -8222,7 +8227,7 @@ void CGMEView::OnCntxHelp()
 
 void CGMEView::OnEditShowtype()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditShowtype in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditShowtype in ")+path+name+_T("\r\n"));
 	contextSelection = 0;	// just to be on the safe side
 	contextPort = 0;
 	CComPtr<IMgaModel> type;
@@ -8238,7 +8243,7 @@ void CGMEView::OnUpdateEditShowtype(CCmdUI* pCmdUI)
 
 void CGMEView::OnEditShowbasetype()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnShowbasetype in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnShowbasetype in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaModel> type;
 	FindDerivedFrom(currentModel,type);
 	ShowModel(type);
@@ -8253,7 +8258,7 @@ void CGMEView::OnUpdateEditShowbasetype(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxShowtype()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxShowtype in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxShowtype in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaModel> model;
 	GetModelInContext(model);
 	CComPtr<IMgaModel> type;
@@ -8272,7 +8277,7 @@ void CGMEView::OnUpdateCntxShowtype(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxShowbasetype()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxShowbasetype in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxShowbasetype in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaModel> model;
 	GetModelInContext(model);
 	CComPtr<IMgaModel> type;
@@ -8310,7 +8315,7 @@ void CGMEView::OnUpdateFileCheckSelected(CCmdUI* pCmdUI)
 
 void CGMEView::OnFileCheck()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnFileCheck in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnFileCheck in ")+path+name+_T("\r\n"));
 	ASSERT(theApp.mgaConstMgr);
 	if (!theApp.mgaConstMgr)
 		return;
@@ -8320,13 +8325,13 @@ void CGMEView::OnFileCheck()
 		theApp.mgaConstMgr->ObjectsInvokeEx(theApp.mgaProject, currentModel, NULL, NULL);
 	}
 	else
-		AfxMessageBox("No context selection for CM.");
+		AfxMessageBox(_T("No context selection for CM."));
 }
 
 
 void CGMEView::OnFileCheckSelected()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnFileCheckSelected in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnFileCheckSelected in ")+path+name+_T("\r\n"));
 	ASSERT(theApp.mgaConstMgr);
 	if (!theApp.mgaConstMgr)
 		return;
@@ -8355,13 +8360,13 @@ void CGMEView::OnFileCheckSelected()
 #endif
 	}
 	else
-		AfxMessageBox("No context selection for CM.");
+		AfxMessageBox(_T("No context selection for CM."));
 }
 
 void CGMEView::OnCntxCheck()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxCheck\r\n");
-	CGMEEventLogger::LogGMEEvent("    Selected FCOs:");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxCheck\r\n"));
+	CGMEEventLogger::LogGMEEvent(_T("    Selected FCOs:"));
 	GMEEVENTLOG_GUIFCOS(selected);
 
 	ASSERT(theApp.mgaConstMgr);
@@ -8381,20 +8386,20 @@ void CGMEView::OnCntxCheck()
 		}
 		theApp.mgaConstMgr->ObjectsInvokeEx(theApp.mgaProject, selfco, NULL, NULL);
 	}
-	MSGCATCH("Error while trying to check the selected or current model",;)
+	MSGCATCH(_T("Error while trying to check the selected or current model"),;)
 }
 
 void CGMEView::OnCntxInterpret()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxInterpret in "+path+name+"\r\n");
-	CGMEEventLogger::LogGMEEvent("    Selected FCOs:");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxInterpret in ")+path+name+_T("\r\n"));
+	CGMEEventLogger::LogGMEEvent(_T("    Selected FCOs:"));
 	GMEEVENTLOG_GUIFCOS(selected);
 	MSGTRY
 	{
 		CComObjPtr<IMgaLauncher> launcher;
 		COMTHROW( launcher.CoCreateInstance(L"Mga.MgaLauncher") );
 		if(!launcher) {
-			AfxMessageBox("Cannot start up component launcher");
+			AfxMessageBox(_T("Cannot start up component launcher"));
 		}
 		else {
 			CComPtr<IMgaFCO> focus;
@@ -8413,19 +8418,19 @@ void CGMEView::OnCntxInterpret()
 
 			if(theApp.bNoProtect) COMTHROW( launcher->put_Parameter(CComVariant(true)));
 			if(launcher->RunComponent(NULL, theApp.mgaProject, focus, selfcos, contextSelection ? GME_CONTEXT_START :  GME_BGCONTEXT_START) != S_OK) {
-				AfxMessageBox("Component execution failed");
+				AfxMessageBox(_T("Component execution failed"));
 			}
 		}
 	}
-	MSGCATCH("Error while trying to run the interpreter",;)
+	MSGCATCH(_T("Error while trying to run the interpreter"),;)
 }
 
 void CGMEView::OnCntxLocate()
 {
 	// ?? 
 	// position the Object Browser to the selected or current object
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxLocate\r\n");
-	CGMEEventLogger::LogGMEEvent("    Selected FCO:");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxLocate\r\n"));
+	CGMEEventLogger::LogGMEEvent(_T("    Selected FCO:"));
 	GMEEVENTLOG_GUIFCOS(selected);
 
 	MSGTRY
@@ -8445,7 +8450,7 @@ void CGMEView::OnCntxLocate()
 		CommitTransaction();
 		CGMEBrowser::theInstance->FocusItem(IDObj);
 	}
-	MSGCATCH("Error while trying to check the selected or current model",;)
+	MSGCATCH(_T("Error while trying to check the selected or current model"),;)
 }
 
 void CGMEView::OnUpdateCntxCheck(CCmdUI* pCmdUI)
@@ -8465,11 +8470,11 @@ void CGMEView::OnUpdateCntxLocate(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxRegistry()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxRegistry in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxRegistry in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaFCO> fco;
 	if (contextSelection)
 	{
-		CGMEEventLogger::LogGMEEvent("    "+contextSelection->GetName()+" "+contextSelection->GetID()+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    ")+contextSelection->GetName()+_T(" ")+contextSelection->GetID()+_T("\r\n"));
 		fco = contextSelection->mgaFco;
 	}
 	else
@@ -8484,7 +8489,7 @@ void CGMEView::OnCntxRegistry()
 
 void CGMEView::OnEditRegistry()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditRegistry in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditRegistry in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaFCO> fco;
 	COMTHROW(currentModel.QueryInterface(&fco));
 	ShowRegistryBrowser(fco);
@@ -8492,7 +8497,7 @@ void CGMEView::OnEditRegistry()
 
 void CGMEView::OnEditAnnotations()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditAnnotations in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditAnnotations in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaFCO> fco;
 	COMTHROW(currentModel.QueryInterface(&fco));
 	ShowAnnotationBrowser(fco, NULL);
@@ -8501,7 +8506,7 @@ void CGMEView::OnEditAnnotations()
 
 void CGMEView::ShowRegistryBrowser(CComPtr<IMgaFCO> fco)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ShowRegistryBrowser in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ShowRegistryBrowser in ")+path+name+_T("\r\n"));
 	try {
 		BeginTransaction();
 
@@ -8512,14 +8517,14 @@ void CGMEView::ShowRegistryBrowser(CComPtr<IMgaFCO> fco)
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to access object registry",MB_OK | MB_ICONSTOP);
-		CGMEEventLogger::LogGMEEvent("    Unable to access object registry.\r\n");
+		AfxMessageBox(_T("Unable to access object registry"),MB_OK | MB_ICONSTOP);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to access object registry.\r\n"));
 	}
 }
 
 bool CGMEView::ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> focus)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ShowAnnotationBrowser in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ShowAnnotationBrowser in ")+path+name+_T("\r\n"));
 	bool success = true;
 	try {
 		BeginTransaction();
@@ -8529,7 +8534,7 @@ bool CGMEView::ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> 
 		if (hr == E_MGA_MUST_ABORT) {	// JIRA GME-236 special ret code, indicating that the dialog was cancelled
 			throw hresult_exception(S_OK);
 		} if (FAILED(hr)) {
-			ASSERT(("COMTHROW: Throwing HRESULT exception. Press IGNORE", false));
+			ASSERT((_T("COMTHROW: Throwing HRESULT exception. Press IGNORE"), false));
 			throw hresult_exception(hr);
 		} else {
 			CommitTransaction();
@@ -8539,8 +8544,8 @@ bool CGMEView::ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> 
 		success = false;
 		AbortTransaction(e.hr);
 		if (e.hr != S_OK) {
-			AfxMessageBox("Unable to access annotations",MB_OK | MB_ICONSTOP);
-			CGMEEventLogger::LogGMEEvent("    Unable to access annotations.\r\n");
+			AfxMessageBox(_T("Unable to access annotations"),MB_OK | MB_ICONSTOP);
+			CGMEEventLogger::LogGMEEvent(_T("    Unable to access annotations.\r\n"));
 		}
 	}
 	return success;
@@ -8548,7 +8553,7 @@ bool CGMEView::ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> 
 
 void CGMEView::OnEditSync()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditSync in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditSync in ")+path+name+_T("\r\n"));
 	CAspectSyncDlg dlg;
 
 	POSITION apos = guiMeta->aspects.GetHeadPosition();
@@ -8614,14 +8619,14 @@ void CGMEView::OnUpdateEditSync(CCmdUI* pCmdUI)
 
 void CGMEView::SyncAspects(CGuiMetaAspect *srcAspect, CGuiMetaAspectList &dstAspects, CGuiObjectList &movingObjects, CGuiObjectList &sedentaryObjects,  bool priorityForSrcVisible, bool priorityForSelected)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::SyncAspects in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::SyncAspects in ")+path+name+_T("\r\n"));
 	if(srcAspect)
-		CGMEEventLogger::LogGMEEvent("    srcAspect="+srcAspect->name+"\r\n");
-	CGMEEventLogger::LogGMEEvent("    moving objects:");
+		CGMEEventLogger::LogGMEEvent(_T("    srcAspect=")+srcAspect->name+_T("\r\n"));
+	CGMEEventLogger::LogGMEEvent(_T("    moving objects:"));
 	GMEEVENTLOG_GUIOBJS(movingObjects);
-	CGMEEventLogger::LogGMEEvent("    sedentary objects:");
+	CGMEEventLogger::LogGMEEvent(_T("    sedentary objects:"));
 	GMEEVENTLOG_GUIOBJS(sedentaryObjects);
-	CGMEEventLogger::LogGMEEvent("    dstAspects:\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("    dstAspects:\r\n"));
 	try {
 		BeginTransaction(TRANSACTION_GENERAL);
 		BeginWaitCursor();
@@ -8633,7 +8638,7 @@ void CGMEView::SyncAspects(CGuiMetaAspect *srcAspect, CGuiMetaAspectList &dstAsp
 			CGuiMetaAspect *dstAspect = dstAspects.GetNext(apos);
 			if (dstAspect == srcAspect)
 				continue;
-			CGMEEventLogger::LogGMEEvent("    "+dstAspect->name+"\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("    ")+dstAspect->name+_T("\r\n"));
 
 			modelGrid.Clear();
 
@@ -8702,8 +8707,8 @@ void CGMEView::SyncAspects(CGuiMetaAspect *srcAspect, CGuiMetaAspectList &dstAsp
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		AfxMessageBox("Unable to synchronize aspects",MB_OK | MB_ICONSTOP);
-		CGMEEventLogger::LogGMEEvent("    Unable to synchronize aspects.\r\n");
+		AfxMessageBox(_T("Unable to synchronize aspects"),MB_OK | MB_ICONSTOP);
+		CGMEEventLogger::LogGMEEvent(_T("    Unable to synchronize aspects.\r\n"));
 		EndWaitCursor();
 		return;
 	}
@@ -8717,7 +8722,7 @@ void CGMEView::SyncOnGrid(CGuiObject *obj, int aspectIndexFrom, int aspectIndexT
 
 	if (!modelGrid.IsAvailable(obj, aspectIndexFrom)) {//is enough space to occupy the pos taken from the aspFrom aspect?
 		if (!modelGrid.GetClosestAvailable(obj, center, aspectIndexTo)) { // if cannot get any position close to the position got above
-			AfxMessageBox("Too Many Models! Internal Program Error!",MB_OK | MB_ICONSTOP);
+			AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
 			throw hresult_exception();
 		}
 	}
@@ -8728,7 +8733,7 @@ void CGMEView::SyncOnGrid(CGuiObject *obj, int aspectIndexFrom, int aspectIndexT
 
 void CGMEView::OnEditSelectall()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditSelectall in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditSelectall in ")+path+name+_T("\r\n"));
 	if (IsInElementDecoratorOperation())
 		return;
 	this->SendUnselEvent4List( &selected);
@@ -8793,7 +8798,7 @@ void CGMEView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
 
 void CGMEView::OnEditPastespecialAssubtype()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditPastespecialAssubtype in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditPastespecialAssubtype in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8804,7 +8809,7 @@ void CGMEView::OnEditPastespecialAssubtype()
 
 void CGMEView::OnEditPastespecialAsinstance()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditPastespecialAsinstance in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditPastespecialAsinstance in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8815,7 +8820,7 @@ void CGMEView::OnEditPastespecialAsinstance()
 
 void CGMEView::OnEditPastespecialAsreference()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditPastespecialAsreference in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditPastespecialAsreference in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8826,7 +8831,7 @@ void CGMEView::OnEditPastespecialAsreference()
 
 void CGMEView::OnEditPastespecialAsclosure()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditPastespecialAsclosure in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditPastespecialAsclosure in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8837,7 +8842,7 @@ void CGMEView::OnEditPastespecialAsclosure()
 
 void CGMEView::OnEditPastespecialAdditive()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditPastespecialAdditive in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditPastespecialAdditive in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8848,7 +8853,7 @@ void CGMEView::OnEditPastespecialAdditive()
 
 void CGMEView::OnEditPastespecialMerge()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnEditPastespecialMerge in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditPastespecialMerge in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8889,7 +8894,7 @@ void CGMEView::OnUpdateEditPastespecialMerge(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxPastespecialAsinstance()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxPastespecialAsinstance in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxPastespecialAsinstance in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8905,7 +8910,7 @@ void CGMEView::OnUpdateCntxPastespecialAsinstance(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxPastespecialAsreference()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxPastespecialAsreference in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxPastespecialAsreference in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8921,7 +8926,7 @@ void CGMEView::OnUpdateCntxPastespecialAsreference(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxPastespecialAssubtype()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxPastespecialAssubtype in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxPastespecialAssubtype in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8938,7 +8943,7 @@ void CGMEView::OnUpdateCntxPastespecialAssubtype(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxPastespecialAsclosure()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxPastespecialAsclosure in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxPastespecialAsclosure in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8955,7 +8960,7 @@ void CGMEView::OnUpdateCntxPastespecialAsclosure(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxPastespecialAdditive()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxPastespecialAdditive in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxPastespecialAdditive in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8972,7 +8977,7 @@ void CGMEView::OnUpdateCntxPastespecialAdditive(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxPastespecialMerge()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxPastespecialMerge in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxPastespecialMerge in ")+path+name+_T("\r\n"));
 	if(isType) {
 		COleDataObject clipboardData;
 		clipboardData.AttachClipboard();
@@ -8989,7 +8994,7 @@ void CGMEView::OnUpdateCntxPastespecialMerge(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxRedirectionpaste()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxRedirectionpaste in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxRedirectionpaste in ")+path+name+_T("\r\n"));
 	if(isType && contextSelection) {
 		CGuiObject* ref = contextSelection->dynamic_cast_CGuiReference();
 		if (!ref)
@@ -9021,7 +9026,7 @@ void CGMEView::OnUpdateCntxRedirectionpaste(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxConnect()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxConnect in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxConnect in ")+path+name+_T("\r\n"));
 	if (contextSelection) {
 		CGuiObject* obj = contextSelection->dynamic_cast_CGuiObject();
 		if (obj) {
@@ -9273,7 +9278,7 @@ void CGMEView::OnUpdateCntxInsertannotation(CCmdUI* pCmdUI)
 
 void CGMEView::OnCntxInsertannotation()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxInsertannotation in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxInsertannotation in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaRegNode> rootReg;
 	try {
 		BeginTransaction();
@@ -9283,7 +9288,7 @@ void CGMEView::OnCntxInsertannotation()
 		while (!found) {
 			rootReg = NULL;
 			CString path;
-			path.Format("%s/%s%d", AN_ROOT, AN_DEFANNOTATION_NAME, annID++);
+			path.Format(_T("%s/%s%d"), AN_ROOT, AN_DEFANNOTATION_NAME, annID++);
 			CComBSTR bstr(path);
 			COMTHROW(currentModel->get_RegistryNode(bstr, &rootReg));
 			long status;
@@ -9300,7 +9305,7 @@ void CGMEView::OnCntxInsertannotation()
 		CComBSTR aspName(AN_ASPECTS);
 		COMTHROW(rootReg->get_SubNodeByName(aspName, &aspRoot));
 		CString pos;
-		pos.Format("%d,%d", contextMenuLocation.x, contextMenuLocation.y);
+		pos.Format(_T("%d,%d"), contextMenuLocation.x, contextMenuLocation.y);
 		CComBSTR posval(pos);
 		COMTHROW(aspRoot->put_Value(posval));
 
@@ -9323,8 +9328,8 @@ void CGMEView::OnCntxInsertannotation()
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
 		if (e.hr != S_OK) {
-			AfxMessageBox("Unable to insert annotation",MB_ICONSTOP | MB_OK);
-			CGMEEventLogger::LogGMEEvent("    Unable to insert annotation.\r\n");
+			AfxMessageBox(_T("Unable to insert annotation"),MB_ICONSTOP | MB_OK);
+			CGMEEventLogger::LogGMEEvent(_T("    Unable to insert annotation.\r\n"));
 			return;
 		}
 	}
@@ -9333,7 +9338,7 @@ void CGMEView::OnCntxInsertannotation()
 
 void CGMEView::OnCntxAnnotations()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxAnnotations in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxAnnotations in ")+path+name+_T("\r\n"));
 	CComPtr<IMgaFCO> fco;
 	currentModel.QueryInterface(&fco);
 	ShowAnnotationBrowser(fco, contextAnnotation ? contextAnnotation->rootNode : NULL);
@@ -9353,18 +9358,18 @@ void CGMEView::OnUpdateCntxAutoRouters( CCmdUI* pCmdUI )
 			CommitTransaction();
 			CString strPref( bstrPref );
 			switch ( pCmdUI->m_nID ) {
-				case ID_CNTX_SRCAR_NORTH : 	pCmdUI->SetCheck( ( strPref.Find( "N" ) != -1 ) ? 1 : 0 ); return;
-				case ID_CNTX_SRCAR_SOUTH : 	pCmdUI->SetCheck( ( strPref.Find( "S" ) != -1 ) ? 1 : 0 ); return;
-				case ID_CNTX_SRCAR_WEST :	pCmdUI->SetCheck( ( strPref.Find( "W" ) != -1 ) ? 1 : 0 ); return;
-				case ID_CNTX_SRCAR_EAST :	pCmdUI->SetCheck( ( strPref.Find( "E" ) != -1 ) ? 1 : 0 ); return;
-				case ID_CNTX_DSTAR_NORTH :	pCmdUI->SetCheck( ( strPref.Find( "n" ) != -1 ) ? 1 : 0 ); return;
-				case ID_CNTX_DSTAR_SOUTH :	pCmdUI->SetCheck( ( strPref.Find( "s" ) != -1 ) ? 1 : 0 ); return;
-				case ID_CNTX_DSTAR_WEST :	pCmdUI->SetCheck( ( strPref.Find( "w" ) != -1 ) ? 1 : 0 ); return;
-				case ID_CNTX_DSTAR_EAST :	pCmdUI->SetCheck( ( strPref.Find( "e" ) != -1 ) ? 1 : 0 ); return;
+				case ID_CNTX_SRCAR_NORTH : 	pCmdUI->SetCheck( ( strPref.Find( _T("N") ) != -1 ) ? 1 : 0 ); return;
+				case ID_CNTX_SRCAR_SOUTH : 	pCmdUI->SetCheck( ( strPref.Find( _T("S") ) != -1 ) ? 1 : 0 ); return;
+				case ID_CNTX_SRCAR_WEST :	pCmdUI->SetCheck( ( strPref.Find( _T("W") ) != -1 ) ? 1 : 0 ); return;
+				case ID_CNTX_SRCAR_EAST :	pCmdUI->SetCheck( ( strPref.Find( _T("E") ) != -1 ) ? 1 : 0 ); return;
+				case ID_CNTX_DSTAR_NORTH :	pCmdUI->SetCheck( ( strPref.Find( _T("n") ) != -1 ) ? 1 : 0 ); return;
+				case ID_CNTX_DSTAR_SOUTH :	pCmdUI->SetCheck( ( strPref.Find( _T("s") ) != -1 ) ? 1 : 0 ); return;
+				case ID_CNTX_DSTAR_WEST :	pCmdUI->SetCheck( ( strPref.Find( _T("w") ) != -1 ) ? 1 : 0 ); return;
+				case ID_CNTX_DSTAR_EAST :	pCmdUI->SetCheck( ( strPref.Find( _T("e") ) != -1 ) ? 1 : 0 ); return;
 			}
 			int iCnt = 0;
 			bool bSet = pCmdUI->m_nID == ID_CNTX_SRCAR_SET || pCmdUI->m_nID == ID_CNTX_DSTAR_SET;
-			CString str = ( pCmdUI->m_nID == ID_CNTX_SRCAR_SET || pCmdUI->m_nID == ID_CNTX_SRCAR_CLEAR ) ? "NEWS" : "news";
+			CString str = ( pCmdUI->m_nID == ID_CNTX_SRCAR_SET || pCmdUI->m_nID == ID_CNTX_SRCAR_CLEAR ) ? _T("NEWS") : _T("news");
 			for ( int i = 0 ; i < 4 ; i++ )
 				if ( strPref.Find( str.Mid( i, 1 ) ) != -1 ) iCnt++;
 			if ( iCnt == 4 && bSet || iCnt == 0 && ! bSet )
@@ -9375,81 +9380,81 @@ void CGMEView::OnUpdateCntxAutoRouters( CCmdUI* pCmdUI )
 
 void CGMEView::OnCntxSrcarSouth()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxSrcarSouth in "+path+name+"\r\n");
-	SwapAutoRouterPref( "S" );
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxSrcarSouth in ")+path+name+_T("\r\n"));
+	SwapAutoRouterPref( _T("S") );
 }
 
 void CGMEView::OnCntxSrcarNorth()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxSrcarNorth in "+path+name+"\r\n");
-	SwapAutoRouterPref( "N" );
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxSrcarNorth in ")+path+name+_T("\r\n"));
+	SwapAutoRouterPref( _T("N") );
 }
 
 void CGMEView::OnCntxSrcarEast()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxSrcarEast in "+path+name+"\r\n");
-	SwapAutoRouterPref( "E" );
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxSrcarEast in ")+path+name+_T("\r\n"));
+	SwapAutoRouterPref( _T("E") );
 }
 
 void CGMEView::OnCntxSrcarWest()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxSrcarWest in "+path+name+"\r\n");
-	SwapAutoRouterPref( "W" );
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxSrcarWest in ")+path+name+_T("\r\n"));
+	SwapAutoRouterPref( _T("W") );
 }
 
 void CGMEView::OnCntxDstarEast()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxDstarEast in "+path+name+"\r\n");
-	SwapAutoRouterPref( "e" );
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxDstarEast in ")+path+name+_T("\r\n"));
+	SwapAutoRouterPref( _T("e") );
 }
 
 void CGMEView::OnCntxDstarNorth()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxDstarNorth in "+path+name+"\r\n");
-	SwapAutoRouterPref( "n" );
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxDstarNorth in ")+path+name+_T("\r\n"));
+	SwapAutoRouterPref( _T("n") );
 }
 
 void CGMEView::OnCntxDstarSouth()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxDstarSouth in "+path+name+"\r\n");
-	SwapAutoRouterPref( "s" );
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxDstarSouth in ")+path+name+_T("\r\n"));
+	SwapAutoRouterPref( _T("s") );
 }
 
 void CGMEView::OnCntxDstarWest()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxDstarWest in "+path+name+"\r\n");
-	SwapAutoRouterPref( "w" );
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxDstarWest in ")+path+name+_T("\r\n"));
+	SwapAutoRouterPref( _T("w") );
 }
 
 void CGMEView::OnCntxDstarClear()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxDstarClear in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxDstarClear in ")+path+name+_T("\r\n"));
 	SetAllAutoRouterPref( false, true );
 }
 
 void CGMEView::OnCntxSrcarClear()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxSrcarClear in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxSrcarClear in ")+path+name+_T("\r\n"));
 	SetAllAutoRouterPref( true, true );
 }
 
 void CGMEView::OnCntxDstarSet()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxDstarSet in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxDstarSet in ")+path+name+_T("\r\n"));
 	SetAllAutoRouterPref( false, false );
 }
 
 void CGMEView::OnCntxSrcarSet()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnCntxSrcarSet in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnCntxSrcarSet in ")+path+name+_T("\r\n"));
 	SetAllAutoRouterPref( true, false );
 }
 
 void CGMEView::SwapAutoRouterPref( const CString& strP )
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::SwapAutoRouterPref in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::SwapAutoRouterPref in ")+path+name+_T("\r\n"));
 	if( contextSelection ) {
-		CGMEEventLogger::LogGMEEvent("    "+contextSelection->GetName()+" "+contextSelection->GetID()+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    ")+contextSelection->GetName()+_T(" ")+contextSelection->GetID()+_T("\r\n"));
 		CComPtr<IMgaFCO> spFCO = contextSelection->mgaFco;
 		if ( spFCO ) {
 			BeginTransaction(TRANSACTION_GENERAL);
@@ -9458,12 +9463,12 @@ void CGMEView::SwapAutoRouterPref( const CString& strP )
 			CString strPref( bstrPref );
 			int iPos = strPref.Find( strP );
 			if ( iPos == -1 )
-				if ( strP == "n" || strP == "s" || strP == "w" || strP == "e" )
+				if ( strP == _T("n") || strP == _T("s") || strP == _T("w") || strP == _T("e") )
 					strPref = strP + strPref;
 				else
 					strPref += strP;
 			else
-				strPref.Replace( strP, "" );
+				strPref.Replace( strP, _T("") );
 			COMTHROW( spFCO->put_RegistryValue( CComBSTR( AUTOROUTER_PREF ), CComBSTR( strPref ) ) );
 			CommitTransaction();
 		}
@@ -9472,19 +9477,19 @@ void CGMEView::SwapAutoRouterPref( const CString& strP )
 
 void CGMEView::SetAllAutoRouterPref( bool bSrc, bool bClear )
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::SetAllAutoRouterPref in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::SetAllAutoRouterPref in ")+path+name+_T("\r\n"));
 	if( contextSelection ) {
-		CGMEEventLogger::LogGMEEvent("    "+contextSelection->GetName()+" "+contextSelection->GetID()+"\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("    ")+contextSelection->GetName()+_T(" ")+contextSelection->GetID()+_T("\r\n"));
 		CComPtr<IMgaFCO> spFCO = contextSelection->mgaFco;
 		if ( spFCO ) {
 			BeginTransaction(TRANSACTION_GENERAL);
 			CComBSTR bstrPref;
 			COMTHROW( spFCO->get_RegistryValue( CComBSTR( AUTOROUTER_PREF ), &bstrPref ) );
 			CString strPref( bstrPref );
-			CString src = "NEWS";
-			CString dst = "news";
+			CString src = _T("NEWS");
+			CString dst = _T("news");
 			for ( int i = 0 ; i < 4 ; i++ )
-				strPref.Replace( ( bSrc ) ? src.Mid( i, 1 ) : dst.Mid( i, 1 ), "" );
+				strPref.Replace( ( bSrc ) ? src.Mid( i, 1 ) : dst.Mid( i, 1 ), _T("") );
 			if ( ! bClear )
 				if ( bSrc )
 					strPref = src + strPref;
@@ -9498,10 +9503,10 @@ void CGMEView::SetAllAutoRouterPref( bool bSrc, bool bClear )
 
 void CGMEView::OnPrintMetafile() 
 {
-	CString filePath = ""; // "c:\\tmp\\meta.emf";
+	CString filePath = _T(""); // "c:\\tmp\\meta.emf";
 	// call FileOpenDialog
-	CFileDialog filedlg(FALSE, "emf", NULL, OFN_OVERWRITEPROMPT|OFN_HIDEREADONLY,
-		"Enhanced Metafile Files (*.emf)|*.emf|All Files (*.*)|*.*||");
+	CFileDialog filedlg(FALSE, _T("emf"), NULL, OFN_OVERWRITEPROMPT|OFN_HIDEREADONLY,
+		_T("Enhanced Metafile Files (*.emf)|*.emf|All Files (*.*)|*.*||"));
 	if (filedlg.DoModal() != IDOK)
 		return;
 	filePath = filedlg.GetPathName();
@@ -9510,7 +9515,7 @@ void CGMEView::OnPrintMetafile()
 	BOOL ret = cDC.CreateEnhanced(pDC,filePath,NULL,_T("GME Model"));
 	ReleaseDC(pDC);
 	if (ret == FALSE) {
-		AfxMessageBox("Unable to create metafile.", MB_OK | MB_ICONSTOP);
+		AfxMessageBox(_T("Unable to create metafile."), MB_OK | MB_ICONSTOP);
 		return;
 	}
 
@@ -9631,7 +9636,7 @@ void CGMEView::ZoomPercent(long percent)
 
 LRESULT CGMEView::OnZoom(WPARAM, LPARAM lParam)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnZoom() in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnZoom() in ")+path+name+_T("\r\n"));
 	// BOOL userdef = (BOOL)wParam;
 	int zoom = (int)lParam;
 
@@ -9718,7 +9723,7 @@ LRESULT CGMEView::OnPannRefresh(WPARAM, LPARAM)
 
 LRESULT CGMEView::OnPannScroll(WPARAM wParam, LPARAM lParam)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnPannScroll() in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnPannScroll() in ")+path+name+_T("\r\n"));
 	int relx = (DWORD)wParam;
 	int rely = (DWORD)lParam;
 	CPoint current = GetScrollPosition();       // upper corner of scrolling
@@ -9731,7 +9736,7 @@ LRESULT CGMEView::OnPannScroll(WPARAM wParam, LPARAM lParam)
 
 LRESULT CGMEView::OnDecoratorViewRefreshRequest(WPARAM wParam, LPARAM lParam)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnDecoratorViewRefreshRequest() in " + path + name + "\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDecoratorViewRefreshRequest() in ") + path + name + _T("\r\n"));
 	refresh_mode_enum refreshMode = (refresh_mode_enum) lParam;
 	switch(refreshMode) {
 		case RM_REGENERATE_PARENT_ALSO:
@@ -9756,7 +9761,7 @@ LRESULT CGMEView::OnDecoratorViewRefreshRequest(WPARAM wParam, LPARAM lParam)
 
 LRESULT CGMEView::OnExecutePendingRequests(WPARAM wParam, LPARAM lParam)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnExecutePendingRequests() in " + path + name + "\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnExecutePendingRequests() in ") + path + name + _T("\r\n"));
 	
 	executingPendingRequests = true;
 	try {
@@ -9815,7 +9820,7 @@ void CGMEView::OnUpdateCntxNamePositionWest( CCmdUI* pCmdUI )
 
 void CGMEView::UpdateNamePositionMenuItem( CCmdUI* pCmdUI, int p_this_value)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::UpdateNamePositionMenuItem\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::UpdateNamePositionMenuItem\r\n"));
 
 	ASSERT(p_this_value == 0 || p_this_value == 2 || p_this_value == 4 || p_this_value == 6);
 
@@ -9852,7 +9857,7 @@ void CGMEView::UpdateNamePositionMenuItem( CCmdUI* pCmdUI, int p_this_value)
 	catch(hresult_exception &e) {
 		all_equal = false;
 		AbortTransaction(e.hr);
-		CGMEEventLogger::LogGMEEvent("CGMEView::UpdateNamePositionMenuItem - Unable to get NamePosition preference value.\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::UpdateNamePositionMenuItem - Unable to get NamePosition preference value.\r\n"));
 	}
 
 	// set the radiobutton like icon on/off based on the all_equal
@@ -9861,7 +9866,7 @@ void CGMEView::UpdateNamePositionMenuItem( CCmdUI* pCmdUI, int p_this_value)
 
 void CGMEView::ChangeNamePosition( int p_val)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::ChangeNamePosition\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ChangeNamePosition\r\n"));
 
 	try {
 		BeginTransaction();
@@ -9876,7 +9881,7 @@ void CGMEView::ChangeNamePosition( int p_val)
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
-		CGMEEventLogger::LogGMEEvent("CGMEView::ChangeNamePosition - Unable to change NamePosition preference value.\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::ChangeNamePosition - Unable to change NamePosition preference value.\r\n"));
 	}
 }
 
@@ -9885,14 +9890,14 @@ void CGMEView::ChangeNamePosition( int p_val)
 //
 void CGMEView::SetNamePositionVal(CComPtr<IMgaFCO>& p_ccpMgaFCO, int val)
 {	
-	CGMEEventLogger::LogGMEEvent("CGMEView::SetNamePositionVal\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::SetNamePositionVal\r\n"));
 
 	ASSERT( p_ccpMgaFCO);
 	if( !p_ccpMgaFCO) return;
 
-	static const CComBSTR bstrRegPath("namePosition");
+	static const CComBSTR bstrRegPath(L"namePosition");
 	CString valString;
-	valString.Format("%d", val);
+	valString.Format(_T("%d"), val);
 	CComBSTR bstrValue( valString);
 
 	// For a specific object we modify the registry value
@@ -9905,7 +9910,7 @@ bool CGMEView::GetNamePositionVal(CComPtr<IMgaFCO>& p_ccpMgaFCO, int* p_valRet)
 	ASSERT( p_valRet);
 	if( !p_ccpMgaFCO) return false;
 
-	static const CComBSTR bstrRegPath("namePosition");
+	static const CComBSTR bstrRegPath(L"namePosition");
 	CString strRegValue;
 
 	// Getting regnode
@@ -9958,13 +9963,13 @@ bool CGMEView::GetNamePositionVal(CComPtr<IMgaFCO>& p_ccpMgaFCO, int* p_valRet)
 	}
 	else if(lRegNodeStatus==-2)  // ATTRSTATUS_INVALID - It does happen.
 	{
-		strRegValue="";
+		strRegValue=_T("");
 	}
 	else
 	{
 		ASSERT(("Undocumented(and undesired) MGA feature",false));
-		CGMEEventLogger::LogGMEEvent("CGMEView::GetNamePositionVal: Undocumented(and undesired) MGA feature\r\n");
-		strRegValue="";
+		CGMEEventLogger::LogGMEEvent(_T("CGMEView::GetNamePositionVal: Undocumented(and undesired) MGA feature\r\n"));
+		strRegValue=_T("");
 	}
 
 	int val = -1;
@@ -10000,10 +10005,10 @@ bool CGMEView::AskUserAndDetachIfNeeded( CComPtr<IMgaFCO>& mgaFco)
 				{
 					CComBSTR nm;
 					COMTHROW( mgaFco->get_Name( &nm));
-					CString msg = "There are objects primary derived from: \"";
+					CString msg = _T("There are objects primary derived from: \"");
 					msg += nm;
-					msg += "\". Would you like to delete them as well?\n";
-					msg += "If you answer 'No' the derived objects will be detached, thus preserved.";
+					msg += _T("\". Would you like to delete them as well?\n");
+					msg += _T("If you answer 'No' the derived objects will be detached, thus preserved.");
 
 					// this answer will be applied to all deriveds of this fco
 					int resp = AfxMessageBox( msg, MB_YESNOCANCEL);
@@ -10098,7 +10103,7 @@ void CGMEView::OnShowSelectedModel()
 
 					if( special_case_id_of_next_fco.Length() > 0)
 					{
-						CGMEConsole::theInstance->Message( "Reference target is child of a folder, thus it is shown in the TreeBrowser only.", MSG_INFO);
+						CGMEConsole::theInstance->Message( _T("Reference target is child of a folder, thus it is shown in the TreeBrowser only."), MSG_INFO);
 						CGMEBrowser::theInstance->FocusItem( special_case_id_of_next_fco);
 					}
 					else if( next_fco && next_mod) ShowModel( next_mod);
@@ -10159,7 +10164,7 @@ void CGMEView::OnHistoryForw()
 
 void CGMEView::OnKeyConnect()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEView::OnKeyConnect in "+path+name+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnKeyConnect in ")+path+name+_T("\r\n"));
 	if( lastObject) {
 		CGuiObject *obj = lastObject;
 		if(obj) {

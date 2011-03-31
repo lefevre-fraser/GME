@@ -64,8 +64,8 @@ public:
 			{
 			}
 
-			HistoryElem( const std::string& p_id
-			           , const std::string& p_aspect)
+			HistoryElem( const std::wstring& p_id
+			           , const std::wstring& p_aspect)
 				: m_id( p_id)
 				, m_an( p_aspect)
 			{
@@ -87,8 +87,8 @@ public:
 				return *this;
 			}
 			
-			const std::string& id() const { return m_id; }
-			const std::string& aspect() const { return m_an; }
+			const std::wstring& id() const { return m_id; }
+			const std::wstring& aspect() const { return m_an; }
 
 			bool operator==( const HistoryElem& peer) const
 			{
@@ -101,8 +101,8 @@ public:
 			}
 
 		private:
-			std::string m_id;
-			std::string m_an; // aspect name
+			std::wstring m_id;
+			std::wstring m_an; // aspect name
 		};
 
 	public:
@@ -121,7 +121,7 @@ public:
 		void popF( HistoryElem& e);
 		void frontB( HistoryElem& e);
 
-		void eraseOccurences( const std::string& p_id);
+		void eraseOccurences( const std::wstring& p_id);
 		void erasePrevOccurencesB( const HistoryElem& e);
 
 	private:

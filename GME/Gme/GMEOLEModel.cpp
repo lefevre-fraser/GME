@@ -137,7 +137,7 @@ void CGMEOLEModel::DumpWindowsMetaFile(LPCTSTR filePath)
 	CMetaFileDC cDC;
 	BOOL ret = cDC.CreateEnhanced(m_view->GetDC(),filePath,NULL,_T("GME Model"));
 	if (ret == FALSE) {
-		AfxMessageBox("Unable to create metafile.", MB_OK | MB_ICONSTOP);
+		AfxMessageBox(_T("Unable to create metafile."), MB_OK | MB_ICONSTOP);
 		return;
 	}
 

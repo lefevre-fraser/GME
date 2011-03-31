@@ -117,7 +117,7 @@ int CGMESearch::OnCreate(LPCREATESTRUCT lpCreateStruct)
     if(m_search.GetMgaProject()==NULL)
         return 0;*/
 
-    if(!m_search.Create("Search",WS_CHILD | WS_VISIBLE,CRect(0,0,230,300),this,IDC_SEARCHCTRL))
+    if(!m_search.Create(_T("Search"),WS_CHILD | WS_VISIBLE,CRect(0,0,230,300),this,IDC_SEARCHCTRL))
         return -1;
 	
 //	if(!m_search.Create("Search",WS_CHILD | WS_VISIBLE,CRect(0,0,230,300),this,IDC_SEARCHCTRL))

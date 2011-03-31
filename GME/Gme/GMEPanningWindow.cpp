@@ -49,7 +49,7 @@ int CGMEPanningWindow::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if (!m_PanningWindowWrapper.Create("PanningWindow", WS_CHILD | WS_VISIBLE, CRect(0, 0, 150, 150), this, IDC_PANNINGWINDOWCTRL1))
+	if (!m_PanningWindowWrapper.Create(_T("PanningWindow"), WS_CHILD | WS_VISIBLE, CRect(0, 0, 150, 150), this, IDC_PANNINGWINDOWCTRL1))
 		return -1;
 
 	return 0;

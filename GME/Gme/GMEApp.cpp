@@ -127,22 +127,22 @@ CGMEApp theApp;
 // You may change it if you prefer to choose a specific identifier.
 
 
-/*static*/ const char * CGMEApp::m_no_model_open_string = "_NO_MODEL_IS_OPEN_";
+/*static*/ const TCHAR * CGMEApp::m_no_model_open_string = _T("_NO_MODEL_IS_OPEN_");
 
 /////////////////////////////////////////////////////////////////////////////
 // CGMEApp construction
 
 CGMEApp::CGMEApp() :
-    m_RecentProjectList(0, "Recent Project List", "Project%d", 8)
+    m_RecentProjectList(0, _T("Recent Project List"), _T("Project%d"), 8)
   , m_compFilterOn( false)
 {
 	multipleView = false;
 	useAutoRouting = true;
 	labelAvoidance = false;
-	defZoomLev = "100";
+	defZoomLev = _T("100");
 	mouseOverNotify = false;
 	maintainHistory = false;
-	realFmtStr = "%.12g";
+	realFmtStr = _T("%.12g");
 	// TODO: add construction code here,
 
 	// Place all significant initialization in InitInstance
@@ -165,17 +165,17 @@ public:
 		if(bFlag && !strcmp(pszParam, "d")) bNoProtect = true;
  		else if(bFlag && !strcmp(pszParam, "l")) bOpenLast = true;
 		else if(bFlag && !strcmp(pszParam, "REGSERVER")) {
-			char c[200];
-			GetModuleFileName(NULL, c, sizeof(c));
+			TCHAR c[200];
+			GetModuleFileName(NULL, c, sizeof(c)/sizeof(c[0]));
 			CComPtr<ITypeLib> it;
 			HRESULT hr = LoadTypeLibEx(CComBSTR(c),REGKIND_REGISTER, &it);
-			if(hr == S_OK) { AfxMessageBox("Registered"); exit(0); }
-			else { AfxMessageBox("Registration error: " + hr); exit(-1); }
+			if(hr == S_OK) { AfxMessageBox(_T("Registered")); exit(0); }
+			else { AfxMessageBox(_T("Registration error: ") + hr); exit(-1); }
 		}
 		else if(bFlag && !strcmp(pszParam, "UNREGSERVER")) {
 			HRESULT hr = UnRegisterTypeLib(LIBID_GmeLib, 1, 0, LANG_NEUTRAL, SYS_WIN32);
-			if(hr == S_OK) { AfxMessageBox("Unregistered"); exit(0); }
-			else { AfxMessageBox("Unregistration error: " + hr); exit(-1); }
+			if(hr == S_OK) { AfxMessageBox(_T("Unregistered")); exit(0); }
+			else { AfxMessageBox(_T("Unregistration error: ") + hr); exit(-1); }
 		}
 		else CCommandLineInfo::ParseParam(pszParam, bFlag, bLast);
 	}
@@ -195,8 +195,8 @@ bool CheckInterfaceVersions()	{
 			NULL };
 		CString errstring;
 		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-		char hrbuf[20];
-		if(hr != S_OK) AfxMessageBox(CString("Coinitialize failure. Err: #") + _ltoa(hr,hrbuf,16));
+		TCHAR hrbuf[20];
+		if(hr != S_OK) AfxMessageBox(CString(_T("Coinitialize failure. Err: #")) + _ltot(hr,hrbuf,16));
 		for(LPCOLESTR *p = components; *p; p++) {
 			GMEInterfaceVersion verid = GMEInterfaceVersion_None;
 			CComPtr<IUnknown> unk;
@@ -204,7 +204,7 @@ bool CheckInterfaceVersions()	{
 			if(S_OK != (hr = unk.CoCreateInstance(*p))) {
 				{
 					_com_error error(hr);
-					errstring.Format("Cannot create object %%S (Err: #%X, %s)", hr, error.ErrorMessage());
+					errstring.Format(_T("Cannot create object %%s (Err: #%X, %s)"), hr, error.ErrorMessage());
 				}
 gerr:
 				CString a;
@@ -215,15 +215,15 @@ gerr:
 			}
 			CComQIPtr<IGMEVersionInfo> vinf = unk;
 			if(!vinf) {
-				errstring = "Incompatible version of object %S (does not support version information)";
+				errstring = _T("Incompatible version of object %s (does not support version information)");
 				goto gerr;
 			}
 			if(S_OK != vinf->get_version(&verid)) {
-				errstring = "Get_Version failed for object %S";
+				errstring = _T("Get_Version failed for object %s");
 				goto gerr;
 			}
 			if(verid != GMEInterfaceVersion_Current) {
-				errstring = "Interface version for class %S (%d.%d) differs from GME interface version (%d.%d)";
+				errstring = _T("Interface version for class %s (%d.%d) differs from GME interface version (%d.%d)");
 				goto gerr;
 			}
 		}
@@ -390,7 +390,7 @@ BOOL CGMEApp::InitInstance()
 			CGMEEventLogger::LogGMEEvent("GME started\r\n");
 		}
 	}
-	MSGCATCH("Error while trying to get logfile settings",;);
+	MSGCATCH(_T("Error while trying to get logfile settings"),;);
 
 	if( (CMainFrame*)m_pMainWnd)
 	{
@@ -424,8 +424,8 @@ BOOL CGMEApp::InitInstance()
 		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
 	if( cmdInfo.m_nShellCommand == CCommandLineInfo::FileOpen ) {
 		CString conn = cmdInfo.m_strFileName;
-		if(conn.Find("=") < 0) {
-			conn.Insert(0,"MGA=");
+		if(conn.Find(_T("=")) < 0) {
+			conn.Insert(0,_T("MGA="));
 		}
 		OpenProject(conn);
 
@@ -477,19 +477,19 @@ void CGMEApp::EmergencySave(void)
 			p = embackupname.GetLength();
 		CString emcode;
 		static int emnum;
-		emcode.Format("-emergency%ld", ++emnum);
+		emcode.Format(_T("-emergency%ld"), ++emnum);
 		embackupname.Insert(p, emcode);
 #pragma warning(disable: 4310) // cast truncates constant value
 		HRESULT hr = mgaProject->Save(PutInBstr(embackupname), VARIANT_TRUE);
 #pragma warning(default: 4310) // cast truncates constant value
 		if (proj_type_is_xmlbackend) {
-			AfxMessageBox("Your current work can be found in the local checkout directory.");
+			AfxMessageBox(_T("Your current work can be found in the local checkout directory."));
 		} else {
 			CString emergencySaveMsg;
-			emergencySaveMsg.FormatMessage("Your current work %1 been saved to %2.\n"
-										   "The original project file has not been modified. "
-										   "We apologize for the inconvenience.",
-										   (hr == S_OK)? "has" : "might have",
+			emergencySaveMsg.FormatMessage(_T("Your current work %1 been saved to %2.\n")
+										   _T("The original project file has not been modified. ")
+										   _T("We apologize for the inconvenience."),
+										   (hr == S_OK)? _T("has") : _T("might have"),
 										   embackupname);
 			AfxMessageBox(emergencySaveMsg);
 			m_RecentProjectList.Add(embackupname);
@@ -565,7 +565,7 @@ void CGMEApp::Autosave()
 	if(mgaProject == NULL || (0&&!proj_type_is_mga) || (!autosaveEnabled)) {
 		// The KillTimer function does not remove WM_TIMER messages 
 		// already posted to the message queue ...
-		CGMEEventLogger::LogGMEEvent("WARNING: CGMEApp::Autosave was called with no active project or autosave disabled.\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("WARNING: CGMEApp::Autosave was called with no active project or autosave disabled.\r\n"));
 		return;
 	}
 
@@ -575,7 +575,7 @@ void CGMEApp::Autosave()
 		int p = currentConnection.ReverseFind('\\');
 		CString fname = currentConnection.Mid(p + 1);
 
-		conn = CString("MGA=") + autosaveDir + CString("\\") + fname + GME_AUTOSAVE_EXTENSION;
+		conn = CString(_T("MGA=")) + autosaveDir + CString(_T("\\")) + fname + GME_AUTOSAVE_EXTENSION;
 	}
 	else {
 		conn = currentConnection + GME_AUTOSAVE_EXTENSION;
@@ -598,8 +598,8 @@ void CGMEApp::Autosave()
 	}
 
 	if (inTrans) {
-		CGMEEventLogger::LogGMEEvent("WARNING: CGMEApp::Autosave failed " + 
-			conn + ". We are in transaction.\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("WARNING: CGMEApp::Autosave failed ") + 
+			conn + _T(". We are in transaction.\r\n"));
 		return;
 	}
 
@@ -608,12 +608,12 @@ void CGMEApp::Autosave()
 #pragma warning(disable: 4310) // cast truncates constant value
 		COMTHROW(mgaProject->Save(CComBSTR(conn), VARIANT_TRUE));
 #pragma warning(default: 4310) // cast truncates constant value
-		CGMEEventLogger::LogGMEEvent("CGMEApp::Autosave succeeded " + 
-			conn + "\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("CGMEApp::Autosave succeeded ") + 
+			conn + _T("\r\n"));
 	}
 	catch(hresult_exception &e) {
-		CGMEEventLogger::LogGMEEvent("WARNING: CGMEApp::Autosave failed " + 
-			conn + " " + e.what() + "\r\n");
+		CGMEEventLogger::LogGMEEvent(_T("WARNING: CGMEApp::Autosave failed ") + 
+			conn + _T(" ") + e.what() + _T("\r\n"));
 	}
 }
 
@@ -659,22 +659,22 @@ void CGMEApp::CloseProject(bool updateStatusBar)
 	if( mgaProject != NULL ) {
 		mgaClient = NULL;
 		if(mgaProject->Close(abort_on_close ? VARIANT_TRUE : VARIANT_FALSE) != S_OK) {
-			AfxMessageBox(CString("Error occurred ") + (abort_on_close ? "aborting" : "closing") + " the project");
+			AfxMessageBox(CString(_T("Error occurred ")) + (abort_on_close ? _T("aborting") : _T("closing")) + _T(" the project"));
 		}
 		mgaProject.Release();
 	}
 	
 
 	if(updateStatusBar) {
-		CMainFrame::theInstance->WriteStatusParadigm("-");
-		CMainFrame::theInstance->WriteStatusMode("EDIT");
+		CMainFrame::theInstance->WriteStatusParadigm(_T("-"));
+		CMainFrame::theInstance->WriteStatusMode(_T("EDIT"));
 		CMainFrame::theInstance->WriteStatusZoom(100);
 	}
 	projectName.Empty();
 	ChangedProjectConnStrings();
 
 	if(CGMEDoc::theInstance)
-		CGMEDoc::theInstance->SetTitle("");
+		CGMEDoc::theInstance->SetTitle(_T(""));
 	if(CMainFrame::theInstance) {
 		CMainFrame::theInstance->SetTitle(m_pszAppName);
 		CMainFrame::theInstance->UpdateTitle(0);//WAS: "" .By passing 0 instead of "" we won't get title such as "GME-" after a project was closed
@@ -702,7 +702,7 @@ void CGMEApp::ChangedProjectConnStrings() {
 		TCHAR cd[200];
 		GetCurrentDirectory(200, cd);
 		projectDir = cd;
-		if (conn.Find("MGA=") == 0) {
+		if (conn.Find(_T("MGA=")) == 0) {
 			proj_type_is_mga = true;
 			int epos = conn.ReverseFind('\\');
 			if(epos >= 4) {
@@ -713,13 +713,13 @@ void CGMEApp::ChangedProjectConnStrings() {
 		}
 		else proj_type_is_mga = false;
 
-        if( conn.Find("MGX=") == 0 ) 
+        if( conn.Find(_T("MGX=")) == 0 ) 
             proj_type_is_xmlbackend = true;
         else
             proj_type_is_xmlbackend = false;
 	}       
 	if(!metaconn.IsEmpty()) {
-		if (metaconn.Find("MGA=") == 0) {
+		if (metaconn.Find(_T("MGA=")) == 0) {
 			int epos = metaconn.ReverseFind('\\');
 			if(epos >= 4) {
 				paradigmDir = metaconn.Mid(4, epos-4);
@@ -748,7 +748,7 @@ void CGMEApp::UpdateProjectName(bool retrievePath) {
 			COMTHROW(mgaProject->get_Name(&nm));
 			COMTHROW(mgaProject->CommitTransaction());
 		}
-		MSGCATCH("Error getting project name", mgaProject->AbortTransaction())
+		MSGCATCH(_T("Error getting project name"), mgaProject->AbortTransaction())
 
 		CopyTo(nm,projectName);
 	}
@@ -788,7 +788,7 @@ void CGMEApp::UpdateMainFrameTitle(const CString& projName, bool retrievePath)
 		}
 #endif
 		CChildFrame* childFrame = STATIC_DOWNCAST(CChildFrame, pChild);
-		projectName = childFrame->GetTitle() + " - " + childFrame->GetAppTitle();
+		projectName = childFrame->GetTitle() + _T(" - ") + childFrame->GetAppTitle();
 	}
 	CMainFrame::theInstance->UpdateTitle(projectName);
 }
@@ -800,7 +800,7 @@ void CGMEApp::FindConstraintManager()
 	MGACOLL_ITERATE(IMgaComponent, comps) {
 		CComBSTR name;
 		COMTHROW(MGACOLL_ITER->get_ComponentName(&name));
-		if(name == "ConstraintManager") {
+		if(name == _T("ConstraintManager")) {
 			mgaConstMgr = CComQIPtr<IMgaComponentEx>(MGACOLL_ITER); 
 #pragma warning(disable: 4310) // cast truncates constant value
 			COMTHROW(mgaConstMgr->put_InteractiveMode(VARIANT_TRUE));
@@ -1001,7 +1001,7 @@ void CGMEApp::UpdateComponentLists(bool restart_addons)
 						}
 					}
 				}
-				if(redo && AfxMessageBox("AddOn configuration has changed.\nRestart addons?", MB_YESNO) == IDYES) {
+				if(redo && AfxMessageBox(_T("AddOn configuration has changed.\nRestart addons?"), MB_YESNO) == IDYES) {
 					COMTHROW(mgaProject->EnableAutoAddOns(VARIANT_FALSE));
 #pragma warning(disable: 4310) // cast truncates constant value
 					COMTHROW(mgaProject->EnableAutoAddOns(VARIANT_TRUE));
@@ -1019,8 +1019,8 @@ void CGMEApp::UpdateComponentLists(bool restart_addons)
 
 void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 {
-	CString runPluginLabel = "R&un Plug-In";
-	CString runInterpreterLabel = "Run In&terpreter";
+	CString runPluginLabel = _T("R&un Plug-In");
+	CString runInterpreterLabel = _T("Run In&terpreter");
 	CString label;
 	// [ Begin workaround
 	// If you just go left to the Window menu next to the Tools menu, and back to the Tools menu (so not even abandoming the menubar)
@@ -1038,7 +1038,7 @@ void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 		for(UINT idxa = 0; idxa < mainMenu->GetMenuItemCount(); idxa++) {
 			CString labela;
 			mainMenu->GetMenuString(idxa, labela, MF_BYPOSITION);
-			if (!labela.CompareNoCase("&Tools")) {
+			if (!labela.CompareNoCase(_T("&Tools"))) {
 				toolmenu = mainMenu->GetSubMenu(idxa);
 				break;
 			}
@@ -1193,31 +1193,31 @@ bool DiagnoseParadigm(CString metaname, bool syscheck = false) {
 	try {
 		HRESULT hr = reg.CoCreateInstance(CComBSTR(L"Mga.MgaRegistrar"));
 		if(hr != S_OK) {
-			throw CString("Cannot create the registrar component\n"
-						  "We recommend you to reinstall GME");
+			throw CString(_T("Cannot create the registrar component\n")
+						  _T("We recommend you to reinstall GME"));
 		}
 		CComBSTR conn;
 		CComVariant guid;
 		hr = reg->QueryParadigm(CComBSTR(metaname), &conn, &guid, 
 			syscheck ? REGACCESS_SYSTEM : REGACCESS_PRIORITY);
 		if(hr != S_OK) {
-			throw CString("Cannot access registry info for paradigm " + metaname +
-						  "\nWe recommend you remove and re-register the paradigm");
+			throw CString(_T("Cannot access registry info for paradigm ") + metaname +
+						  _T("\nWe recommend you remove and re-register the paradigm"));
 		}
 		CComObjPtr<IMgaMetaProject> paradigm;
 		hr =  paradigm.CoCreateInstance(OLESTR("MGA.MgaMetaProject"));
 		if(hr != S_OK) {
-			throw CString("Cannot create the meta component\n"
-						  "We recommend you reinstall GME");
+			throw CString(_T("Cannot create the meta component\n")
+						  _T("We recommend you reinstall GME"));
 		}
 
 		hr = paradigm->Open(conn);
 
 		if(hr != S_OK) {
-			throw CString("Cannot open the paradigm " + metaname + "\n"
-						  "Probable cause is file non-existence,\n"
-						  "insufficient access, or format error\n"
-						  "Connection string: " + CString(conn));
+			throw CString(_T("Cannot open the paradigm ") + metaname + _T("\n")
+						  _T("Probable cause is file non-existence,\n")
+						  _T("insufficient access, or format error\n")
+						  _T("Connection string: ") + CString(conn));
 		}
 
 
@@ -1228,15 +1228,15 @@ bool DiagnoseParadigm(CString metaname, bool syscheck = false) {
 		hr |= paradigm->Close();
 
 		if(hr != S_OK) {
-			throw CString("Cannot read the paradigm " + metaname + "\n"
-						  "Probable cause is file format error\n"
-						  "Connection string: " + CString(conn));
+			throw CString(_T("Cannot read the paradigm ") + metaname + _T("\n")
+						  _T("Probable cause is file format error\n")
+						  _T("Connection string: ") + CString(conn));
 		}
 		if(!( parname == CComBSTR( (LPCTSTR) metaname))) {
-			throw CString("The paradigm opened '" + CString(parname) + "'\n"
-		 				  "differs from the requested paradigm '"+ metaname + "'\n"
-						  "We recommend you unregister '" + metaname + "'\n"
-						  "Connection string: " + CString(conn));
+			throw CString(_T("The paradigm opened '") + CString(parname) + _T("'\n")
+		 				  _T("differs from the requested paradigm '")+ metaname + _T("'\n")
+						  _T("We recommend you unregister '") + metaname + _T("'\n")
+						  _T("Connection string: ") + CString(conn));
 
 		}
 
@@ -1247,12 +1247,12 @@ bool DiagnoseParadigm(CString metaname, bool syscheck = false) {
 		CopyTo(guid, g);
 		CopyTo(g, parg2);
 		if(parg1 != parg2) {
-			throw CString("The GUID in paradigm '" + CString(parname) + "'\n"
-						  "{" + CString(parg1) + "}\n"
-		 				  "differs from the requested GUID for '"+ metaname + "'\n"
-						  "{" + CString(parg2) + "}\n"
-						  "We recommend you unregister '" + metaname + "'\n"
-						  "Connection string: " + CString(conn));
+			throw CString(_T("The GUID in paradigm '") + CString(parname) + _T("'\n")
+						  _T("{") + CString(parg1) + _T("}\n")
+		 				  _T("differs from the requested GUID for '")+ metaname + _T("'\n")
+						  _T("{") + CString(parg2) + _T("}\n")
+						  _T("We recommend you unregister '") + metaname + _T("'\n")
+						  _T("Connection string: ") + CString(conn));
 		}
 	} catch( CString &c) {
 		if(!syscheck) {
@@ -1260,12 +1260,12 @@ bool DiagnoseParadigm(CString metaname, bool syscheck = false) {
 			CComBSTR cc; CComVariant gg;
 			if(reg && E_NOTFOUND != reg->QueryParadigm(CComBSTR(metaname), &cc, &gg, REGACCESS_SYSTEM)) {
 				if(DiagnoseParadigm(metaname, true)) {
-					AfxMessageBox("SYSTEM registry for '" + metaname + "' is correct\n"
-								"We recommend you remove the USER registration for " + metaname);
+					AfxMessageBox(_T("SYSTEM registry for '") + metaname + _T("' is correct\n")
+								_T("We recommend you remove the USER registration for ") + metaname);
 				}
 				else {
-					AfxMessageBox("SYSTEM registry for '" + metaname + "' is also incorrect\n"
-								"We recommend you reinstall the paradigm.");
+					AfxMessageBox(_T("SYSTEM registry for '") + metaname + _T("' is also incorrect\n")
+								_T("We recommend you reinstall the paradigm."));
 				}
 			}
 		}
@@ -1300,32 +1300,32 @@ void CGMEApp::OpenProject(const CString &conn) {
 			long version;
 			CComVariant parg;
 			VARIANT_BOOL ro_mode;
-			if( conn.Left(5) == "MGX=\"")
+			if( conn.Left(5) == _T("MGX=\""))
 			{
 				if( E_FILEOPEN == hr) {
-					consoleMessage( "Could not open project!", MSG_ERROR);
+					consoleMessage( _T("Could not open project!"), MSG_ERROR);
 				}
 				else if( E_MGA_PARADIGM_INVALID == hr) {
-					consoleMessage( "Project could not access its original version of paradigm!", MSG_ERROR);
+					consoleMessage( _T("Project could not access its original version of paradigm!"), MSG_ERROR);
 				}
 				else if( E_MGA_PARADIGM_NOTREG == hr) {
-					consoleMessage( "Project could not access its paradigm!", MSG_ERROR);
+					consoleMessage( _T("Project could not access its paradigm!"), MSG_ERROR);
 				}
 				else if( E_MGA_META_INCOMPATIBILITY == hr) {
-					consoleMessage( "Versioned project is not compatible with the registered paradigm!", MSG_ERROR);
+					consoleMessage( _T("Versioned project is not compatible with the registered paradigm!"), MSG_ERROR);
 				}
 				else if( E_UNKNOWN_STORAGE == hr) { 
 					// no additional comment in this case
 				}
 				else {
-					consoleMessage( "Could not open project (unknown error)!", MSG_ERROR);
+					consoleMessage( _T("Could not open project (unknown error)!"), MSG_ERROR);
 				}
 				CloseProject();
 				return; // ensures no more exception handlers or explanatory messages (or QueryProjectInfo calls)
 			}
 
 			if(S_OK != mgaProject->QueryProjectInfo(PutInBstr(conn), &version, &parn, &parv, &parg, &ro_mode)) {
-				AfxMessageBox("Cannot query project information. Possible cause: missing/corrupt project file or database");
+				AfxMessageBox(_T("Cannot query project information. Possible cause: missing/corrupt project file or database"));
 				COMTHROW(hr);
 			}
 			while(hr) {
@@ -1335,16 +1335,16 @@ void CGMEApp::OpenProject(const CString &conn) {
 				bool tryit = false;
 
 				if(hr == E_MGA_MODULE_INCOMPATIBILITY) {
-					msg = "WARNING: The project data is not in the current MGA format\n"
-						"Do you want to upgrade it?";
+					msg = _T("WARNING: The project data is not in the current MGA format\n")
+						_T("Do you want to upgrade it?");
 					if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {
 						tryit = true;
 					}
 				}
 				if(hr == E_MGA_PARADIGM_INVALID) {
-					msg = "WARNING: Project could not access its original version of\n"
-						"paradigm '" + CString(parn) + "'\n"
-						"Do you want to try with the current version of the paradigm?";
+					msg = _T("WARNING: Project could not access its original version of\n")
+						_T("paradigm '") + CString(parn) + _T("'\n")
+						_T("Do you want to try with the current version of the paradigm?");
 					if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {
 						guidpar = true;
 						tryit = true;
@@ -1352,10 +1352,10 @@ void CGMEApp::OpenProject(const CString &conn) {
 					}
 				}
 				if(hr == E_MGA_PARADIGM_NOTREG) {
-					CString msg = "Could not find paradigm paradigm '" + CString(parn);
-					if (CString(parn) == "MetaGME2000")
-						msg += "'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)";
-					msg += "\nDo you want to import with an other registered paradigm ?";
+					CString msg = _T("Could not find paradigm paradigm '") + CString(parn);
+					if (CString(parn) == _T("MetaGME2000"))
+						msg += _T("'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
+					msg += _T("\nDo you want to import with an other registered paradigm ?");
 					if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {
 					
 						CComObjPtr<IMgaLauncher> launcher;
@@ -1370,9 +1370,9 @@ void CGMEApp::OpenProject(const CString &conn) {
 					}
 				}
 				if(hr == E_MGA_META_INCOMPATIBILITY && (parv.Length() > 0)) {
-					msg = "WARNING: Versioned project is not compatible with the paradigm '" + CString(parn) + "'\n" 
-						" (Eg.: Same version string was assigned to incompatible paradigms)\n"
-						"Do you want to open it based on the paradigm GUID?";
+					msg = _T("WARNING: Versioned project is not compatible with the paradigm '") + CString(parn) + _T("'\n") 
+						_T(" (Eg.: Same version string was assigned to incompatible paradigms)\n")
+						_T("Do you want to open it based on the paradigm GUID?");
 					if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {
 						guidpar = parg;
 						tryit = true;
@@ -1390,7 +1390,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 			if(hr == E_MGA_COMPONENT_ERROR) {
 				BSTR errorInfo;
 				GetErrorInfo(&errorInfo);
-				_bstr_t err("ERROR: automatic addon components could not start up:\n");
+				_bstr_t err(_T("ERROR: automatic addon components could not start up:\n"));
 				err += errorInfo;
 				AfxMessageBox(err);
 			}
@@ -1398,7 +1398,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 		}
 
 		if(readable_only != VARIANT_FALSE) {
-			AfxMessageBox("WARNING: Project file is read-only\nChange file access or use Save As to save your work");
+			AfxMessageBox(_T("WARNING: Project file is read-only\nChange file access or use Save As to save your work"));
 		}
 		else {
 			CComVariant g, g2;
@@ -1420,8 +1420,8 @@ void CGMEApp::OpenProject(const CString &conn) {
 				mgareg->VersionFromGUID(pname, g2, &pver2, REGACCESS_PRIORITY);
 			}
 			if(guidcmp(g, g2) && versioncmp(pver, pver2)) {
-				int answer = AfxMessageBox("The paradigm used to open this file is not the current version\n"
-								"Do you want to upgrade to the current paradigm?"	,MB_YESNO);
+				int answer = AfxMessageBox(_T("The paradigm used to open this file is not the current version\n")
+								_T("Do you want to upgrade to the current paradigm?")	,MB_YESNO);
 				if(answer == IDYES) {
 					COMTHROW(mgaProject->Close());
 
@@ -1432,13 +1432,13 @@ void CGMEApp::OpenProject(const CString &conn) {
 					
 					HRESULT hr = mgaProject->OpenEx(PutInBstr(conn), pname, g2);
 					if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
-						AfxMessageBox("Paradigm error");
+						AfxMessageBox(_T("Paradigm error"));
 						DiagnoseParadigm(CString(pname));
 					}
 					else if(hr != S_OK) {
-						AfxMessageBox("Upgrade failed, probably due to incompatibility.\n"
-									   "You can probably reopen the file without upgrade,\n"
-									   "and use the 'Upgrade through XML' function later.");
+						AfxMessageBox(_T("Upgrade failed, probably due to incompatibility.\n")
+									   _T("You can probably reopen the file without upgrade,\n")
+									   _T("and use the 'Upgrade through XML' function later."));
 					}
 					else readable_only = false;
 					COMTHROW(hr);
@@ -1447,7 +1447,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 		}
 		AfterOpenOrCreateProject(conn);
 	}
-	MSGCATCH("Could not open project", CloseProject())
+	MSGCATCH(_T("Could not open project"), CloseProject())
 	
 	UpdateProjectName();
 
@@ -1463,7 +1463,7 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 		CWaitCursor wait;
 
 		// create the project
-		msg = "Fatal error while initializing project";
+		msg = _T("Fatal error while initializing project");
 		ASSERT( mgaProject == 0 );
 		COMTHROW( mgaProject.CoCreateInstance(L"Mga.MgaProject") );
 		ASSERT( mgaProject != NULL );
@@ -1471,11 +1471,11 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 #pragma warning(disable: 4310) // cast truncates constant value
 		COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
 #pragma warning(default: 4310) // cast truncates constant value
-		msg = "Could not create project";
+		msg = _T("Could not create project");
 		HRESULT hr = mgaProject->Create(PutInBstr(conn), PutInBstr(metaname)) ;
 	    if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
 			TCHAR buf[200];
-		    sprintf(buf, "Could not open current version of paradigm %s", 
+		    _stprintf_s(buf, _T("Could not open current version of paradigm %s"), 
 				metaname);
 
 			AfxMessageBox(buf);
@@ -1484,11 +1484,11 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 	    if(hr == E_MGA_COMPONENT_ERROR) {
 				BSTR errorInfo;
 				GetErrorInfo(&errorInfo);
-				_bstr_t err("ERROR: automatic addon components could not start up:\n");
+				_bstr_t err(L"ERROR: automatic addon components could not start up:\n");
 				err += errorInfo;
 				AfxMessageBox(err);
 		}
-		if( hr == E_UNKNOWN_STORAGE && conn.Left(5) == "MGX=\"") {
+		if( hr == E_UNKNOWN_STORAGE && conn.Left(5) == _T("MGX=\"")) {
 			CloseProject();
 			return; // no more exception handler explanatory messages
 		}
@@ -1496,7 +1496,7 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 
 		AfterOpenOrCreateProject(conn);
 	}
-	MSGCATCH("Could not create project", CloseProject())
+	MSGCATCH(_T("Could not create project"), CloseProject())
 }
 
 
@@ -1504,7 +1504,7 @@ void CGMEApp::SaveProject(const CString &conn) {
 	if( mgaProject != NULL ) {
 		HRESULT hr = mgaProject->Save(CComBSTR(conn));
 		if(hr != S_OK) {
-			AfxMessageBox("ERROR: Could not save project\nCheck access permissions");
+			AfxMessageBox(_T("ERROR: Could not save project\nCheck access permissions"));
 		}
 	}
 
@@ -1560,11 +1560,11 @@ void CGMEApp::GetSettings()
 		if(enablelogging != VARIANT_FALSE)
 		{
 			CGMEEventLogger::initialize();
-			CGMEEventLogger::LogGMEEvent("CGMEApp::GetSettings() Event Logging Enabled\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("CGMEApp::GetSettings() Event Logging Enabled\r\n"));
 		}
 		else
 		{
-			CGMEEventLogger::LogGMEEvent("CGMEApp::GetSettings() Event Logging Disabled\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("CGMEApp::GetSettings() Event Logging Disabled\r\n"));
 			CGMEEventLogger::StopLogging();
 		}
 
@@ -1599,7 +1599,7 @@ void CGMEApp::GetSettings()
 		COMTHROW( registrar->GetNavigation( REGACCESS_USER, &history_maintained));
 		maintainHistory = ( history_maintained != VARIANT_FALSE);
 	}
-	MSGCATCH("Error while trying to get program settings",;);
+	MSGCATCH(_T("Error while trying to get program settings"),;);
 	if(CGMEDoc::theInstance) {
 		// Global AutoRouting policy changed, convert opened views if necessary
 		if (!useAutoRouting && oldUseAutoRouting) {
@@ -1656,7 +1656,7 @@ HINSTANCE GotoURL(LPCTSTR url, int showcmd)
                  if( pos == NULL)
 				 {
 					// No quotes found
-                    pos = strstr( key, _T("%1")); // Check for % 1, without quotes
+                    pos = _tcsstr( key, _T("%1")); // Check for % 1, without quotes
                     if( pos == NULL)    // No  parameter at all...
                          pos = key+lstrlen( key)-1;
                      else
@@ -1669,7 +1669,8 @@ HINSTANCE GotoURL(LPCTSTR url, int showcmd)
                  lstrcat(pos, _T(" "));
                  lstrcat(pos, url);
   
-                 hResult = (HINSTANCE)WinExec( key,showcmd);
+				 // FIXME: should use CreateProcess
+                 hResult = (HINSTANCE)WinExec( CStringA(key),showcmd);
              }
          }
 	}
@@ -1692,7 +1693,7 @@ void CGMEApp::OnFileOpen()
 	CMgaOpenDlg dlg(CMgaOpenDlg::OpenDialog);
 	CString conn = dlg.AskConnectionString(true);
 
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileOpen "+conn+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileOpen ")+conn+_T("\r\n"));
 
 	if( conn.IsEmpty() )
 		return;
@@ -1702,7 +1703,7 @@ void CGMEApp::OnFileOpen()
 	if( mgaProject != NULL )
 		CloseProject();
 
-	if (conn.Left(4) == "XML=") {
+	if (conn.Left(4) == _T("XML=")) {
 		MSGTRY {
 			CString fullPath = conn.Right(conn.GetLength() - 4);
 			TCHAR buffer[MAX_PATH];
@@ -1714,22 +1715,22 @@ void CGMEApp::OnFileOpen()
 			CString filename = filepart;
 			CString title = filename.Left(filename.ReverseFind('.'));
 			Importxml(fullPath, filepart, title);
-		} MSGCATCH("Error opening XME file",;)
+		} MSGCATCH(_T("Error opening XME file"),;)
 	} else {
-		if (conn.Left(4) == "MGX=") {
+		if (conn.Left(4) == _T("MGX=")) {
 			CString fullPath = conn.Right(conn.GetLength() - 4);
 			TCHAR buffer[MAX_PATH];
 			TCHAR* filepart = NULL;
 			GetFullPathName(fullPath, MAX_PATH, buffer, &filepart);
 			if (filepart == NULL) {
-				DisplayError("Error opening MGX file", E_FILEOPEN);
+				DisplayError(_T("Error opening MGX file"), E_FILEOPEN);
 				return;
 			}
 			// FIXME: KMS: yes, the quotes are necessary...
-			conn = "MGX=\"";
+			conn = _T("MGX=\"");
 			// FIXME: KMS: yes, a trailing slash makes it not work
-			conn += fullPath.Left(fullPath.GetLength() - strlen(filepart) - 1);
-			conn += "\"";
+			conn += fullPath.Left(fullPath.GetLength() - _tcslen(filepart) - 1);
+			conn += _T("\"");
 		}
 		OpenProject(conn);
 	}
@@ -1746,7 +1747,7 @@ BOOL CGMEApp::SaveAllModified()
 		long l;
 		COMTHROW(mgaProject->get_ProjectStatus(&l));
 		if (IsUndoPossible() && (l & PROJECT_STATUS_CHANGED))
-			ret = AfxMessageBox("Save project '" + projectName + "'?",  MB_YESNOCANCEL);
+			ret = AfxMessageBox(_T("Save project '") + projectName + _T("'?"),  MB_YESNOCANCEL);
 		if (ret == IDCANCEL) {
 			return FALSE;
 		} else if (ret == IDNO) {
@@ -1775,7 +1776,7 @@ int CGMEApp::ExitInstance()
 
 void CGMEApp::OnFileNew() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileNew\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileNew\r\n"));
 
 	MSGTRY	{
 		CString metaname;
@@ -1813,7 +1814,7 @@ void CGMEApp::OnFileNew()
 			OnFileSave();
 		}
 	}
-	MSGCATCH("Error creating new project",;)
+	MSGCATCH(_T("Error creating new project"),;)
 
 }
 
@@ -1829,7 +1830,7 @@ BOOL CGMEApp::OnOpenRecentProject(UINT nID)
 
 	ASSERT(conn.GetLength() != 0);
 
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnOpenRecentProject "+conn+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnOpenRecentProject ")+conn+_T("\r\n"));
 
 	CWaitCursor wait;
 
@@ -1848,7 +1849,7 @@ bool CGMEApp::SafeCloseProject() {
 	if(mgaProject != NULL && (proj_type_is_mga||proj_type_is_xmlbackend)) {
 		HRESULT hr = mgaProject->Save(NULL);
 		if(hr != S_OK) {
-			AfxMessageBox("ERROR: Could not save project\nCheck access permissions");
+			AfxMessageBox(_T("ERROR: Could not save project\nCheck access permissions"));
 			return false;
 		}
 		abort_on_close = true;
@@ -1863,7 +1864,7 @@ bool CGMEApp::SafeCloseProject() {
 
 void CGMEApp::OnFileCloseproject() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileCloseproject\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileCloseproject\r\n"));
 	SaveAllModified();
 }
 
@@ -1871,19 +1872,19 @@ void CGMEApp::OnFileCloseproject()
 void CGMEApp::OnFileSaveAs() {
 	CMgaOpenDlg dlg(CMgaOpenDlg::SaveAsDialog);
 	CString spec_ext;
-	if( currentConnection.Left(4) == "MGA=") // if MGA format
+	if( currentConnection.Left(4) == _T("MGA=")) // if MGA format
 	{
 		int rps = currentConnection.ReverseFind('.');
 		if( rps != -1 && rps < currentConnection.GetLength())
 		{
 			spec_ext = currentConnection.Mid( rps + 1);
-			if( spec_ext.CompareNoCase( "mga") == 0)    // oh, just the plain 'mga' extension
-				spec_ext = "";                          // we need not have specific behaviour
+			if( spec_ext.CompareNoCase( _T("mga")) == 0)    // oh, just the plain 'mga' extension
+				spec_ext = _T("");                          // we need not have specific behaviour
 		}
 	}
 	CString conn = dlg.AskMGAConnectionString( spec_ext);
 
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileSaveAs "+conn+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileSaveAs ")+conn+_T("\r\n"));
 
 	if( conn.IsEmpty() )
 		return;
@@ -1894,21 +1895,21 @@ void CGMEApp::OnFileSaveAs() {
 
 void CGMEApp::OnFileSave() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileSave\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileSave\r\n"));
 	BeginWaitCursor();
-	SaveProject("");
+	SaveProject(_T(""));
 	EndWaitCursor();
 }
 
 void CGMEApp::OnFileAbortProject() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileAbortProject\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileAbortProject\r\n"));
 	((CMainFrame*)m_pMainWnd)->clearMgaProj();
 
 	long l;
 	COMTHROW(mgaProject->get_ProjectStatus(&l));
 	if(!abort_on_close && IsUndoPossible() && (l & PROJECT_STATUS_CHANGED) &&
-		AfxMessageBox("Discard edits to project " + projectName + "?", 
+		AfxMessageBox(_T("Discard edits to project ") + projectName + _T("?"), 
 		MB_OKCANCEL) == IDCANCEL) {
 		return;
 	}
@@ -1923,7 +1924,7 @@ void CGMEApp::OnFileAbortProject()
 
 void CGMEApp::OnFileExportxml() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileExportxml ");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileExportxml "));
 	MSGTRY
 	{
 		CComPtr<IMgaDumper> dumper;
@@ -1934,16 +1935,16 @@ void CGMEApp::OnFileExportxml()
 		CString initialDir;
 		if (theApp.isMgaProj()) {
 			CString conn = theApp.connString();
-			const char* zsConn = conn;
+			const TCHAR* zsConn = conn;
 			zsConn += 4; // skip MGA=
-			char currentMgaPath[MAX_PATH];
-			char* filename;
+			TCHAR currentMgaPath[MAX_PATH];
+			TCHAR* filename;
 			if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &filename) || filename == 0) {
 			} else {
 				initialFile = filename;
-				if (initialFile.Right(3) == "mga") {
+				if (initialFile.Right(3) == _T("mga")) {
 					initialFile.Truncate(initialFile.GetLength() - 3);
-					initialFile += "xme";
+					initialFile += _T("xme");
 				}
 				filename--;
 				*filename = '\0';
@@ -1951,53 +1952,53 @@ void CGMEApp::OnFileExportxml()
 			}
 		}
 
-		CFileDialog dlg(FALSE, "xme", initialFile,
+		CFileDialog dlg(FALSE, _T("xme"), initialFile,
 			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR,
-			"Exported Files (*.xme)|*.xme|All Files (*.*)|*.*||");
+			_T("Exported Files (*.xme)|*.xme|All Files (*.*)|*.*||"));
 		if (initialDir)
 		{
 			dlg.GetOFN().lpstrInitialDir = initialDir;
 		}
 		if( dlg.DoModal() != IDOK )
 		{
-			CGMEEventLogger::LogGMEEvent("Canceled\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("Canceled\r\n"));
 			return;
 		}
-		CGMEEventLogger::LogGMEEvent(dlg.GetPathName()+"\r\n");
+		CGMEEventLogger::LogGMEEvent(dlg.GetPathName()+_T("\r\n"));
 
 		CWaitCursor wait;
 		COMTHROW( dumper->DumpProject(theApp.mgaProject,PutInBstr(dlg.GetPathName())) );
 
-		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( "Project successfully exported into ") + dlg.GetPathName() + ".", 1);
+		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( _T("Project successfully exported into ")) + dlg.GetPathName() + _T("."), 1);
 	}
-	MSGCATCH("Error while generating XML file",;)
+	MSGCATCH(_T("Error while generating XML file"),;)
 }
 
 
 void CGMEApp::OnFileImportxml() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileImportxml ");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileImportxml "));
 
-	CString new_file_name = "";
+	CString new_file_name = _T("");
 
 	MSGTRY
 	{
-		CFileDialog dlg(TRUE, "xme", (LPCTSTR) new_file_name,
+		CFileDialog dlg(TRUE, _T("xme"), (LPCTSTR) new_file_name,
 			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
 			OFN_FILEMUSTEXIST,
-			"GME Exported Files (*.xme;*.xml)|*.xme; *.xml|All Files (*.*)|*.*||");
+			_T("GME Exported Files (*.xme;*.xml)|*.xme; *.xml|All Files (*.*)|*.*||"));
 		if( dlg.DoModal() != IDOK )
 		{
-			CGMEEventLogger::LogGMEEvent("Cancelled\r\n");
+			CGMEEventLogger::LogGMEEvent(_T("Cancelled\r\n"));
 			return;
 		}
-		CGMEEventLogger::LogGMEEvent(dlg.GetPathName()+"\r\n");
+		CGMEEventLogger::LogGMEEvent(dlg.GetPathName()+_T("\r\n"));
 		CString fullPath = dlg.GetPathName();
 		CString fname = dlg.GetFileName();
 		CString ftitle = dlg.GetFileTitle();
 		Importxml(fullPath, fname, ftitle);
 	}
-	MSGCATCH("Error importing XML file",;)
+	MSGCATCH(_T("Error importing XML file"),;)
 }		
 		
 void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
@@ -2008,11 +2009,11 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 
 		CString folderPath = fullPath.Left(fullPath.GetLength() - fname.GetLength());
 
-		if (fullPath.Right(3).CompareNoCase("xml") == 0 ) {
+		if (fullPath.Right(3).CompareNoCase(_T("xml")) == 0 ) {
 			AfxMessageBox(
-					"Newer versions of GME use the \".xme.\" filename extension\n"
-					"for exported XML data files.\n"
-					"Please, rename your existing files to avoid further problems!\n", 
+					_T("Newer versions of GME use the \".xme.\" filename extension\n")
+					_T("for exported XML data files.\n")
+					_T("Please, rename your existing files to avoid further problems!\n"), 
 					MB_OK | MB_ICONINFORMATION);
 		}
 
@@ -2033,7 +2034,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 				opdlg.SetFolderPathHint(folderPath);
 				dataconn = opdlg.AskConnectionString(false);
 				if (dataconn.IsEmpty()) {
-				   CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileImportxml exited because empty connection string has been given");
+				   CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileImportxml exited because empty connection string has been given"));
 				   return;
 				}
 
@@ -2045,13 +2046,13 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 					CComVariant pg2;
 					conn.Empty();
 					HRESULT h2 = reg->QueryParadigm(paradigm, PutOut(conn), &pg2, REGACCESS_PRIORITY);
-					char buf[300];
+					TCHAR buf[300];
 					if(h2 != S_OK) {
 						ASSERT(h1 != S_OK);
-						CString msg = "Could not find paradigm paradigm '" + CString(paradigm);
-						if (CString(paradigm) == "MetaGME2000")
-							msg += "'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)";
-						msg += "\nDo you want to import with an other registered paradigm ?";
+						CString msg = _T("Could not find paradigm paradigm '") + CString(paradigm);
+						if (CString(paradigm) == _T("MetaGME2000"))
+							msg += _T("'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
+						msg += _T("\nDo you want to import with an other registered paradigm ?");
 						if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
 							CComObjPtr<IMgaLauncher> launcher;
 							COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
@@ -2080,28 +2081,28 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 						CopyTo(gg, parguid2);
 
 						if(h1 != S_OK) {
-							sprintf(buf, "Could not locate paradigm %s\nVersion ID: %s\n"
-										 "Do you want to upgrade to the current version instead?\nCurrent ID: %s", 
+							_stprintf_s(buf, _T("Could not locate paradigm %s\nVersion ID: %s\n")
+										 _T("Do you want to upgrade to the current version instead?\nCurrent ID: %s"), 
 										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
 										 if(AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
 											parguid = pg2;
 										 }
 										 else {
-											AfxMessageBox("Import canceled");
+											AfxMessageBox(_T("Import canceled"));
 											return; // safe before create
 										 }	
 
 						}
 						else if(parguid1.Compare(parguid2)) {
-							sprintf(buf, "This model was exported using paradigm %s\nVersion ID: %s\n"
-										 "Do you want to upgrade to the current version?\nCurrent ID: %s", 
+							_stprintf_s(buf, _T("This model was exported using paradigm %s\nVersion ID: %s\n")
+										 _T("Do you want to upgrade to the current version?\nCurrent ID: %s"), 
 										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
 										 int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
 										 if(answer == IDYES) {
 											parguid = pg2;
 										 }
 										 else if(answer == IDCANCEL) {
-											AfxMessageBox("Import canceled");
+											AfxMessageBox(_T("Import canceled"));
 											return;  // safe before create
 										 }
 						}
@@ -2113,12 +2114,12 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 #pragma warning(default: 4310) // cast truncates constant value
 				HRESULT hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
 				if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
-					char buf[300];
+					TCHAR buf[300];
 					CComBstrObj parguid1;
 					GUID gg;
 					CopyTo(parguid,gg);
 					CopyTo(gg, parguid1);
-					sprintf(buf, "Could not open paradigm %s\nVersion ID: %s", 
+					_stprintf_s(buf, _T("Could not open paradigm %s\nVersion ID: %s"), 
 						PutInCString(paradigm), PutInCString(parguid1));
 
 					AfxMessageBox(buf);
@@ -2126,7 +2127,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 				if(hr == E_MGA_COMPONENT_ERROR) {
 					CComBSTR errorInfo;
 					GetErrorInfo(&errorInfo);
-					_bstr_t err("ERROR: automatic addon components could not start up:\n");
+					_bstr_t err(L"ERROR: automatic addon components could not start up:\n");
 					err += (BSTR)errorInfo;
 					AfxMessageBox(err);
 				}
@@ -2134,7 +2135,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 				AfterOpenOrCreateProject(dataconn); 
 			} catch(hresult_exception &e) {
 				CloseProject();
-				DisplayError("Could not create the project", e.hr); 
+				DisplayError(_T("Could not create the project"), e.hr); 
 				throw;
 			}
 		}
@@ -2145,7 +2146,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 		if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
 
 		CString file_name = fullPath;
-		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( "Importing ") + file_name + "...", 1);
+		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( _T("Importing ")) + file_name + _T("..."), 1);
 		COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(fullPath)) );
 		
 		// mgaproject has been filled with data, let's update title:
@@ -2155,8 +2156,8 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 			OnFileSave();
 		}
 
-		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( fullPath + " was successfully imported.", 1);
-		else AfxMessageBox(fullPath + " was successfully imported.");
+		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( fullPath + _T(" was successfully imported."), 1);
+		else AfxMessageBox(fullPath + _T(" was successfully imported."));
 
 	if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));
 }
@@ -2165,15 +2166,15 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 
 void CGMEApp::OnFileXMLUpdate() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileXMLUpdate\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileXMLUpdate\r\n"));
     ASSERT(mgaProject);
     ASSERT(mgaMetaProject);
 
 	TCHAR xmlname[MAX_PATH];
-	GetTempFileName(".", "XEX",0, xmlname);
+	GetTempFileName(_T("."), _T("XEX"),0, xmlname);
 	
-	if(currentConnection.Find("MGA=") != 0) {
-		AfxMessageBox("Function is available only for .mga models");
+	if(currentConnection.Find(_T("MGA=")) != 0) {
+		AfxMessageBox(_T("Function is available only for .mga models"));
 	}
 
 	CString fname = currentConnection.Mid(4);
@@ -2206,8 +2207,8 @@ void CGMEApp::OnFileXMLUpdate()
 			CopyTo(gg, currentguid);
 
 			if(!parguid1.Compare(currentguid)) {
-				char buf[200];
-				sprintf(buf, "There is no need to upgrade this model\nIts Meta Version ID is the current ID\nCurrent ID: %s", 
+				TCHAR buf[200];
+				_stprintf_s(buf, _T("There is no need to upgrade this model\nIts Meta Version ID is the current ID\nCurrent ID: %s"), 
 					PutInCString(currentguid));
 				AfxMessageBox(buf);
 				return;
@@ -2227,12 +2228,12 @@ void CGMEApp::OnFileXMLUpdate()
 		backupname = fname;
 		int p = backupname.ReverseFind('.');
 		if(!p || backupname.Find('\\',p) != -1) p = backupname.GetLength();
-		backupname.Insert(p,"-backup");
+		backupname.Insert(p,_T("-backup"));
 		DeleteFile(backupname);
 		if(!MoveFile(fname, backupname)) {
 			backupname = fname;
-			char buf[300];
-			sprintf( buf, "Could not save original file '%s' to '%s'", fname, backupname); 
+			TCHAR buf[300];
+			_stprintf_s( buf, _T("Could not save original file '%s' to '%s'"), fname, backupname); 
 			AfxMessageBox(buf);
 			COMTHROW(E_NOTFOUND);
 		}
@@ -2242,7 +2243,7 @@ void CGMEApp::OnFileXMLUpdate()
 		CreateProject(PutInCString(parname), currentConnection);
 
 		if(!mgaProject || !mgaMetaProject) {
-			AfxMessageBox("Error creating project");
+			AfxMessageBox(_T("Error creating project"));
 			return;
 		}
 
@@ -2255,23 +2256,23 @@ void CGMEApp::OnFileXMLUpdate()
 	    if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
 	    COMTHROW(parser->ParseProject(mgaProject, PutInBstr(CString(xmlname))) );
 		{
-			char buf[200];
-			sprintf(buf, "The model has been updated\nCurrent ID: %s\nThe original model has been saved to %s", 
+			TCHAR buf[200];
+			_stprintf_s(buf, _T("The model has been updated\nCurrent ID: %s\nThe original model has been saved to %s"), 
 					PutInCString(currentguid), backupname);
 			AfxMessageBox(buf);
 		}
 	}
 	catch(hresult_exception &e)	{
-		char buf[200];
+		TCHAR buf[200];
 		if(backupname.IsEmpty()) {
-			sprintf(buf, "The upgrade failed: %ld\nThe model has not been closed", e.hr);
+			_stprintf_s(buf, _T("The upgrade failed: %ld\nThe model has not been closed"), e.hr);
 			AfxMessageBox(buf);
 		}
 		else {
 			if(backupname.Compare(fname)) {
 				if(MoveFile(backupname, fname)) backupname = fname;
 			}
-			sprintf(buf, "The upgrade failed: %ld\nThe original model is in file %s", e.hr, backupname);
+			_stprintf_s(buf, _T("The upgrade failed: %ld\nThe original model is in file %s"), e.hr, backupname);
 			AfxMessageBox(buf);
 		}
 	}
@@ -2283,7 +2284,7 @@ void CGMEApp::OnFileXMLUpdate()
 
 void CGMEApp::OnFileRegcomponents() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileRegcomponents ");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileRegcomponents "));
 	MSGTRY
 	{
 		CComObjPtr<IMgaLauncher> launcher;
@@ -2301,7 +2302,7 @@ void CGMEApp::OnFileRegcomponents()
 				CComBSTR p;
 				if(compx) COMTHROW(compx->get_ComponentProgID(&p));
 				else COMTHROW(MGACOLL_ITER->get_ComponentName(&p));
-				if(runningcomps) runningcomps += " ";
+				if(runningcomps) runningcomps += _T(" ");
 				runningcomps += p;
 			}
 			MGACOLL_ITERATE_END;
@@ -2309,24 +2310,24 @@ void CGMEApp::OnFileRegcomponents()
 		// FIXME: huge kludge here: enables CCompDlg to show which addons are running
 		COMTHROW(launcher->put_Parameter(CComVariant(runningcomps)));
 
-		CGMEEventLogger::LogGMEEvent(CString(runningcomps)+"\r\n");
+		CGMEEventLogger::LogGMEEvent(CString(runningcomps)+_T("\r\n"));
 
 		COMTHROW( launcher->ComponentDlg(COMPONENTDLG_INTERP));
 		UpdateComponentLists(true);
 	}
-	MSGCATCH("Error while trying to register the interpreter",;)
+	MSGCATCH(_T("Error while trying to register the interpreter"),;)
 }
 
 void CGMEApp::OnFileSettings() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileSettings\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileSettings\r\n"));
 	MSGTRY
 	{
 		CComObjPtr<IMgaLauncher> launcher;
 		COMTHROW( launcher.CoCreateInstance(L"Mga.MgaLauncher") );
 		COMTHROW( launcher->GmeDlg());
 	}
-	MSGCATCH("Error while trying to get GME settings",;)
+	MSGCATCH(_T("Error while trying to get GME settings"),;)
 	GetSettings();
 }
 
@@ -2352,26 +2353,26 @@ void CGMEApp::OnFileClearLocks()
 		COMTHROW( project->CheckLocks(PutInBstr(conn), VARIANT_TRUE) );
 #pragma warning(default: 4310) // cast truncates constant value
 
-		AfxMessageBox("Database locks are cleared");
+		AfxMessageBox(_T("Database locks are cleared"));
 	}
-	MSGCATCH("Error while clearing locks in database",;)
+	MSGCATCH(_T("Error while clearing locks in database"),;)
 }
 
 void CGMEApp::OnHelpContents() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnHelpContents\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnHelpContents\r\n"));
 
 	MSGTRY {
 		CComObjPtr<IMgaLauncher> launcher;
 		COMTHROW( launcher.CoCreateInstance(L"Mga.MgaLauncher") );
 		COMTHROW( launcher->ShowHelp(NULL) );
 	}
-	MSGCATCH("Error while showing help contents.",;)
+	MSGCATCH(_T("Error while showing help contents."),;)
 }
 
 void CGMEApp::OnFileCheckall() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileCheckall\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileCheckall\r\n"));
 	ASSERT(mgaConstMgr);
 	if (!mgaConstMgr)
 		return;
@@ -2381,7 +2382,7 @@ void CGMEApp::OnFileCheckall()
 
 void CGMEApp::OnFileDisplayConstraints() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileDisplayConstraints\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileDisplayConstraints\r\n"));
 	ASSERT(mgaConstMgr);
 	if (!mgaConstMgr)
 		return;
@@ -2393,7 +2394,7 @@ void CGMEApp::OnFileDisplayConstraints()
 
 void CGMEApp::OnFileRegparadigms() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnFileRegparadigms\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileRegparadigms\r\n"));
 	MSGTRY
 	{
 		CComPtr<IMgaLauncher> launcher;
@@ -2422,7 +2423,7 @@ void CGMEApp::OnFileRegparadigms()
 					CComBSTR p;
 					if(compx) COMTHROW(compx->get_ComponentProgID(&p));
 					else COMTHROW(MGACOLL_ITER->get_ComponentName(&p));
-					if(runningcomps) runningcomps += " ";
+					if(runningcomps) runningcomps += _T(" ");
 					runningcomps += p;
 				}
 				MGACOLL_ITERATE_END;
@@ -2433,7 +2434,7 @@ void CGMEApp::OnFileRegparadigms()
 
 			if(workonrunningparadigm) UpdateComponentLists(true);
 		}
-	} MSGCATCH("Error registering paradigms", ;);
+	} MSGCATCH(_T("Error registering paradigms"), ;);
 }
 
 
@@ -2511,7 +2512,7 @@ void CGMEApp::OnUpdateRecentProjectMenu(CCmdUI* pCmdUI)
 
 void CGMEApp::OnEditProjectproperties() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnEditProjectproperties " + projectName +"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnEditProjectproperties ") + projectName +_T("\r\n"));
 	CProjectPropertiesDlg dlg;
 	if(dlg.DoModal() == IDOK) {
 		if(CGMEDoc::theInstance)
@@ -2523,28 +2524,28 @@ void CGMEApp::OnEditProjectproperties()
 
 void CGMEApp::OnEditUndo() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnEditUndo\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnEditUndo\r\n"));
 	mgaProject->Undo();
 }
 
 void CGMEApp::OnEditRedo() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnEditRedo\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnEditRedo\r\n"));
 	mgaProject->Redo();
 }
 
 void CGMEApp::OnEditClearUndo() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnEditClearUndo\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnEditClearUndo\r\n"));
 	if( mgaProject == NULL )
 		return;
 
-	if(AfxMessageBox("You are about to loose all Undo/Redo information. Proceed?",MB_YESNO | MB_ICONQUESTION) == IDYES) {
+	if(AfxMessageBox(_T("You are about to loose all Undo/Redo information. Proceed?"),MB_YESNO | MB_ICONQUESTION) == IDYES) {
 		MSGTRY
 		{
 			COMTHROW( mgaProject->FlushUndoQueue() );
 		}
-		MSGCATCH("Error while clearing the undo queue",;)
+		MSGCATCH(_T("Error while clearing the undo queue"),;)
 	}
 }
 
@@ -2619,7 +2620,7 @@ if(idx == 0) return;
 */
 
 void CGMEApp::OnRunPlugin(UINT nID) {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnRunPlugin "+plugins[nID - ID_FILE_RUNPLUGIN1]+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnRunPlugin ")+plugins[nID - ID_FILE_RUNPLUGIN1]+_T("\r\n"));
 
 	// Focus must be killed to flush ObjectInspector and Browser
 	::SetFocus(NULL);
@@ -2628,7 +2629,7 @@ void CGMEApp::OnRunPlugin(UINT nID) {
 }
 
 void CGMEApp::OnRunInterpreter(UINT nID) {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::OnRunInterpreter "+interpreters[nID - ID_FILE_INTERPRET1]+"\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnRunInterpreter ")+interpreters[nID - ID_FILE_INTERPRET1]+_T("\r\n"));
 
 	// Focus must be killed to flush ObjectInspector and Browser
 	::SetFocus(NULL);
@@ -2644,7 +2645,7 @@ void CGMEApp::RunComponent(const CString &compname)
 	CComPtr<IMgaLauncher> launcher;
 	launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher") );
 	if(!launcher) {
-		AfxMessageBox("Cannot start up component launcher");
+		AfxMessageBox(_T("Cannot start up component launcher"));
 	}
 	else {
 		CComPtr<IMgaFCO> focus;
@@ -2672,12 +2673,12 @@ void CGMEApp::RunComponent(const CString &compname)
 			if (errinfo) {
 				_bstr_t desc;
 				errinfo->GetDescription(desc.GetAddress());
-				std::string error;
-				error += "Component execution failed: ";
-				error += static_cast<const char*>(desc);
+				std::wstring error;
+				error += L"Component execution failed: ";
+				error += desc;
 				AfxMessageBox(error.c_str());
 			} else {
-				AfxMessageBox("Component execution failed");
+				AfxMessageBox(_T("Component execution failed"));
 			}
 		}
 	}
@@ -2703,7 +2704,7 @@ void CGMEApp::OnUniquePrintSetup()
 
 void CGMEApp::ImportDroppedFile(const CString& fname)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEApp::ImportFile ");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::ImportFile "));
 
 	CString file_name = fname;
 
@@ -2753,13 +2754,13 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 					CComVariant pg2;
 					conn.Empty();
 					HRESULT h2 = reg->QueryParadigm(paradigm, PutOut(conn), &pg2, REGACCESS_PRIORITY);
-					char buf[300];
+					TCHAR buf[300];
 					if (h2 != S_OK) {
 						ASSERT(h1 != S_OK);
-						CString msg = "Could not find paradigm paradigm '" + CString(paradigm);
-						if (CString(paradigm) == "MetaGME2000")
-							msg += "'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)";
-						msg += "\nDo you want to import with an other registered paradigm ?";
+						CString msg = _T("Could not find paradigm paradigm '") + CString(paradigm);
+						if (CString(paradigm) == _T("MetaGME2000"))
+							msg += _T("'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
+						msg += _T("\nDo you want to import with an other registered paradigm ?");
 						if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
 							CComObjPtr<IMgaLauncher> launcher;
 							COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
@@ -2788,25 +2789,25 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 						CopyTo(gg, parguid2);
 
 						if(h1 != S_OK) {
-							sprintf(buf, "Could not locate paradigm %s\nVersion ID: %s\n"
-										 "Do you want to upgrade to the current version instead?\nCurrent ID: %s", 
+							_stprintf_s(buf, _T("Could not locate paradigm %s\nVersion ID: %s\n")
+										 _T("Do you want to upgrade to the current version instead?\nCurrent ID: %s"), 
 							PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
 							if (AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
 								parguid = pg2;
 							} else {
-								AfxMessageBox("Import canceled");
+								AfxMessageBox(_T("Import canceled"));
 								return; // safe before create
 							}	
 						}
 						else if(parguid1.Compare(parguid2)) {
-							sprintf(buf, "This model was exported using paradigm %s\nVersion ID: %s\n"
-										 "Do you want to upgrade to the current version?\nCurrent ID: %s", 
+							_stprintf_s(buf, _T("This model was exported using paradigm %s\nVersion ID: %s\n")
+										 _T("Do you want to upgrade to the current version?\nCurrent ID: %s"), 
 										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
 							int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
 							if (answer == IDYES) {
 								parguid = pg2;
 							} else if (answer == IDCANCEL) {
-								AfxMessageBox("Import canceled");
+								AfxMessageBox(_T("Import canceled"));
 								return;  // safe before create
 							}
 						}
@@ -2818,12 +2819,12 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 #pragma warning(default: 4310) // cast truncates constant value
 				HRESULT hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
 				if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
-					char buf[300];
+					TCHAR buf[300];
 					CComBstrObj parguid1;
 					GUID gg;
 					CopyTo(parguid,gg);
 					CopyTo(gg, parguid1);
-					sprintf(buf, "Could not open paradigm %s\nVersion ID: %s", 
+					_stprintf_s(buf, _T("Could not open paradigm %s\nVersion ID: %s"), 
 						PutInCString(paradigm), PutInCString(parguid1));
 
 					AfxMessageBox(buf);
@@ -2831,7 +2832,7 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 				if(hr == E_MGA_COMPONENT_ERROR) {
 					BSTR errorInfo;
 					GetErrorInfo(&errorInfo);
-					_bstr_t err("ERROR: automatic addon components could not start up:\n");
+					_bstr_t err(L"ERROR: automatic addon components could not start up:\n");
 					err += errorInfo;
 					AfxMessageBox(err);
 				}
@@ -2839,7 +2840,7 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 				AfterOpenOrCreateProject(dataconn); 
 			} catch(hresult_exception &e) {
 				CloseProject();
-				DisplayError("Could not create the project", e.hr); 
+				DisplayError(_T("Could not create the project"), e.hr); 
 				throw;
 			}
 		}
@@ -2858,10 +2859,10 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 			OnFileSave();
 		}
 
-		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( file_name + " was successfully imported.", 1);
-		else AfxMessageBox(file_name + " was successfully imported.");
+		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( file_name + _T(" was successfully imported."), 1);
+		else AfxMessageBox(file_name + _T(" was successfully imported."));
 	}
-	MSGCATCH("Error importing XML file",;)
+	MSGCATCH(_T("Error importing XML file"),;)
 
 	if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));
 }
@@ -2880,11 +2881,11 @@ void CGMEApp::RegisterDroppedFile( const CString& fname, bool userReg/* = true*/
 		CComBSTR newname;
 		COMTHROW(registrar->RegisterParadigmFromData(PutInBstr( fname), &newname, reg_access));
 
-		CMainFrame::theInstance->m_console.Message( "Done.", 1);
+		CMainFrame::theInstance->m_console.Message( _T("Done."), 1);
 	}
 	catch( hresult_exception &)
 	{
-		CMainFrame::theInstance->m_console.Message( "Error while registering paradigm!", 3);
+		CMainFrame::theInstance->m_console.Message( _T("Error while registering paradigm!"), 3);
 	}
 }
 
@@ -2973,8 +2974,8 @@ void CGMEApp::DisableCompForKinds( const CString& pComp, const CString& pKindSeq
 	int nm_of_tokens = 0; // will count the parsed kind names
 	int pos = 0;
 	CString t_kind;
-	t_kind = pKindSeq.Tokenize( ";", pos); // tokenize by ';'
-	while( t_kind != "")
+	t_kind = pKindSeq.Tokenize( _T(";"), pos); // tokenize by ';'
+	while( t_kind != _T(""))
 	{
 		ONE_COMP_LIST &my_comps = m_compsOfKind[ t_kind ];
 		ONE_COMP_LIST::const_iterator it = my_comps.find( pComp);
@@ -2982,7 +2983,7 @@ void CGMEApp::DisableCompForKinds( const CString& pComp, const CString& pKindSeq
 			m_compsOfKind[ t_kind ].insert( pComp);
 
 		++nm_of_tokens;
-		t_kind = pKindSeq.Tokenize( ";", pos); // move to next token
+		t_kind = pKindSeq.Tokenize( _T(";"), pos); // move to next token
 	}
 }
 
@@ -3110,7 +3111,7 @@ void CGMEApp::OnFocusBrowser()
 				return;
 			}
 		}
-		MSGCATCH("Error getting project rootfolder", mgaProject->AbortTransaction())
+		MSGCATCH(_T("Error getting project rootfolder"), mgaProject->AbortTransaction())
 	}
 
 	MSGTRY
@@ -3125,7 +3126,7 @@ void CGMEApp::OnFocusBrowser()
 		if( id.Length() > 0) 
 			CGMEBrowser::theInstance->FocusItem( id);
 	}
-	MSGCATCH("Error getting project rootfolder", mgaProject->AbortTransaction())
+	MSGCATCH(_T("Error getting project rootfolder"), mgaProject->AbortTransaction())
 }
 
 void CGMEApp::OnFocusInspector()

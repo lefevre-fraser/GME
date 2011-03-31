@@ -75,12 +75,12 @@ void CNewXmlbackendProjDlg::OnButtonBrowseLoc()
 {
 	BROWSEINFO bi;
 
-	char szDisplayName[MAX_PATH];
-	char szPath[MAX_PATH];
+	TCHAR szDisplayName[MAX_PATH];
+	TCHAR szPath[MAX_PATH];
 
 	bi.hwndOwner      = m_hWnd;
 	bi.pidlRoot       = NULL;
-	bi.lpszTitle      = "Select the project location.";
+	bi.lpszTitle      = _T("Select the project location.");
 	bi.pszDisplayName = szDisplayName;
 	bi.ulFlags        = BIF_RETURNONLYFSDIRS;
 	bi.lpfn           = NULL;
@@ -108,7 +108,7 @@ void CNewXmlbackendProjDlg::OnOK()
 	UpdateData();
 	if( m_projectName.Trim().IsEmpty() || m_location.Trim().IsEmpty())
 	{
-		AfxMessageBox( "Project location and name must not be empty!");
+		AfxMessageBox( _T("Project location and name must not be empty!"));
 		return;
 	}
 
@@ -116,31 +116,31 @@ void CNewXmlbackendProjDlg::OnOK()
 	if( GetFileAttributesEx( m_location, GetFileExInfoStandard, &attr ) )
 	{
 		if( FILE_ATTRIBUTE_DIRECTORY != ( attr.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-			if( IDOK != AfxMessageBox( m_location + " does not seem to be a directory. Do you still want to use this location for your project?", MB_YESNO))
+			if( IDOK != AfxMessageBox( m_location + _T(" does not seem to be a directory. Do you still want to use this location for your project?"), MB_YESNO))
 				return; // if answered NO, return, which means dialog is not closed
 	}
 	else
-		if( IDOK != AfxMessageBox( m_location + " does not seem to exist, but it might be created during the checkout process. Do you want to continue?", MB_YESNO))
+		if( IDOK != AfxMessageBox( m_location + _T(" does not seem to exist, but it might be created during the checkout process. Do you want to continue?"), MB_YESNO))
 			return; // if answered NO, return, which means dialog is not closed
 
 	if( m_sourceControlType == 0 && 
-	    (m_svnUrl.Left( 6) != "svn://" 
-	    && m_svnUrl.Left(10) != "svn+ssh://"
-	    && m_svnUrl.Left(7) != "http://"
-	    && m_svnUrl.Left(8) != "https://"))
+	    (m_svnUrl.Left( 6) != _T("svn://") 
+	    && m_svnUrl.Left(10) != _T("svn+ssh://")
+	    && m_svnUrl.Left(7) != _T("http://")
+	    && m_svnUrl.Left(8) != _T("https://")))
 	{
-		AfxMessageBox( "URL must be provided in one of the svn://host[/dir], svn+ssh://[username@]host[/dir] or https://host[/dir] form");
+		AfxMessageBox( _T("URL must be provided in one of the svn://host[/dir], svn+ssh://[username@]host[/dir] or https://host[/dir] form"));
 		return;
 	}
 
-	m_connectionString = "MGX=\"";
+	m_connectionString = _T("MGX=\"");
 	m_connectionString += m_location.Trim();
 	// http://escher.isis.vanderbilt.edu/JIRA/browse/GME-148 : JIRA entry created
 	// if m_location contains a tailing '\' then no need for this
 	if( m_location.TrimRight().Right(1) != '\\')
-		m_connectionString += "\\";
+		m_connectionString += _T("\\");
 	m_connectionString += m_projectName.Trim();
-	m_connectionString += "\"";
+	m_connectionString += _T("\"");
 
 	if( m_svnUrl.Right(1) == '/') // cut off tailing '/'
 		m_svnUrl = m_svnUrl.Left( m_svnUrl.GetLength() - 1 );
@@ -148,10 +148,10 @@ void CNewXmlbackendProjDlg::OnOK()
 	if( m_sourceControlType == 0 )
 	{
 		//if( !m_svnUrl.IsEmpty())
-		m_connectionString += " svn=\"";
+		m_connectionString += _T(" svn=\"");
 		m_connectionString += m_svnUrl;
-		m_connectionString += "\"";
-		char gmepath[200];
+		m_connectionString += _T("\"");
+		TCHAR gmepath[200];
 		if(SHGetSpecialFolderPath( NULL, gmepath, CSIDL_APPDATA, true)) //most likely C:\Documents and Settings\<username>\Application Data
 		{
 			WIN32_FILE_ATTRIBUTE_DATA attr;
@@ -159,67 +159,67 @@ void CNewXmlbackendProjDlg::OnOK()
 			CString path;
 
 			int nb_errs = 0;
-			path = CString( gmepath) + "\\Subversion";
+			path = CString( gmepath) + _T("\\Subversion");
 			res = GetFileAttributesEx( path, GetFileExInfoStandard, &attr );
 			if( res && ( FILE_ATTRIBUTE_DIRECTORY == (attr.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))) { } else
-				nb_errs += _mkdir( (LPCTSTR) path);
+				nb_errs += _tmkdir( (LPCTSTR) path);
 
-			path = CString( gmepath) + "\\Subversion\\auth";
+			path = CString( gmepath) + _T("\\Subversion\\auth");
 			res = GetFileAttributesEx( path, GetFileExInfoStandard, &attr );
 			if( res && ( FILE_ATTRIBUTE_DIRECTORY == (attr.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))) { } else
-				nb_errs += _mkdir( (LPCTSTR) path);
+				nb_errs += _tmkdir( (LPCTSTR) path);
 
 			if( nb_errs == 0)
 			{
-				path = CString(gmepath) + "\\Subversion\\auth\\svn.simple";
+				path = CString(gmepath) + _T("\\Subversion\\auth\\svn.simple");
 				res = GetFileAttributesEx( path, GetFileExInfoStandard, &attr );
 				if( res && ( FILE_ATTRIBUTE_DIRECTORY == (attr.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))) { } else
 				{
-					nb_errs += _mkdir((LPCTSTR) path); //in case dir is not there, make it, if it was there will fail
+					nb_errs += _tmkdir((LPCTSTR) path); //in case dir is not there, make it, if it was there will fail
 					if( !nb_errs) 
-						AfxMessageBox( path + " directory created that the credentials could be stored later.");
+						AfxMessageBox( path + _T(" directory created that the credentials could be stored later."));
 				}
 
-				path = CString(gmepath) + "\\Subversion\\auth\\svn.ssl.server";
+				path = CString(gmepath) + _T("\\Subversion\\auth\\svn.ssl.server");
 				res = GetFileAttributesEx( path, GetFileExInfoStandard, &attr );
 				if( res && ( FILE_ATTRIBUTE_DIRECTORY == (attr.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))) { } else
 				{
-					int l_errs = _mkdir((LPCTSTR) path); //in case dir is not there, make it, if it was there will fail
+					int l_errs = _tmkdir((LPCTSTR) path); //in case dir is not there, make it, if it was there will fail
 					if( !l_errs)
-						AfxMessageBox( path + " directory created that the certificates could be stored later.");
+						AfxMessageBox( path + _T(" directory created that the certificates could be stored later."));
 
 					nb_errs += l_errs;
 				}
 			}
 
 			if( nb_errs)
-				AfxMessageBox( CString( "Could not create the local directories where credentials would be stored: \n") + 
-				CString( gmepath) + "\\Subversion\\auth\\svn.simple\n" + 
-				CString( gmepath) + "\\Subversion\\auth\\svn.ssl.server");
+				AfxMessageBox( CString( _T("Could not create the local directories where credentials would be stored: \n")) + 
+				CString( gmepath) + _T("\\Subversion\\auth\\svn.simple\n") + 
+				CString( gmepath) + _T("\\Subversion\\auth\\svn.ssl.server"));
 		}
 
 	}
 
 	if( m_hashedFileStorage == BST_CHECKED)
 	{
-		m_connectionString += " hash=\"true\"";
+		m_connectionString += _T(" hash=\"true\"");
 		int csel = m_hashAlgoControl.GetCurSel();
 		if( csel < m_hashAlgoControl.GetCount() && csel >= 0)
 		{
 			CString res;
 			m_hashAlgoControl.GetLBText( csel, res);
 
-			if(      res == "4096")
-				m_connectionString += " hval=\"4096\"";
-			else if( res == "256")
-				m_connectionString += " hval=\"256\"";
-			else if( res == "3")
-				m_connectionString += " hval=\"3\"";
-			else if( res == "4")
-				m_connectionString += " hval=\"4\"";
+			if(      res == _T("4096"))
+				m_connectionString += _T(" hval=\"4096\"");
+			else if( res == _T("256"))
+				m_connectionString += _T(" hval=\"256\"");
+			else if( res == _T("3"))
+				m_connectionString += _T(" hval=\"3\"");
+			else if( res == _T("4"))
+				m_connectionString += _T(" hval=\"4\"");
 			else
 			{
-				AfxMessageBox( "Invalid hash method selected");
+				AfxMessageBox( _T("Invalid hash method selected"));
 				return;
 			}
 		}
@@ -232,10 +232,10 @@ void CNewXmlbackendProjDlg::OnOK()
 BOOL CNewXmlbackendProjDlg::OnInitDialog()
 {
 	// init m_svnUrl like this while testing to avoid typing too much
-	m_svnUrl = "svn+ssh://zolmol@svn.isis.vanderbilt.edu/export/svn/testrepo/gme/zoli";
-	m_svnUrl = "https://svn.isis.vanderbilt.edu/testrepo/gme/zoli";
+	m_svnUrl = _T("svn+ssh://zolmol@svn.isis.vanderbilt.edu/export/svn/testrepo/gme/zoli");
+	m_svnUrl = _T("https://svn.isis.vanderbilt.edu/testrepo/gme/zoli");
 	// init like this when going live
-	m_svnUrl = "svn+ssh://<usernamehere>@<hostnamehere>";
+	m_svnUrl = _T("svn+ssh://<usernamehere>@<hostnamehere>");
 	CDialog::OnInitDialog();
 
 	enableSubversionControls( m_sourceControlType == 0 );

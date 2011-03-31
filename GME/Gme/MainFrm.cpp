@@ -29,13 +29,13 @@ afx_msg BOOL CComponentBar::OnTT(UINT, NMHDR * pNMHDR, LRESULT * ) {
 
 	if(nIndex == 1)
 	{
-		strncpy(pTTT->szText, "Check constraints", 79);
+		_tcsncpy(pTTT->szText, _T("Check constraints"), 79);
 		return FALSE;
 	}
 
 	if(nIndex == 2)
 	{
-		strncpy(pTTT->szText, "Interpret the current model", 79);
+		_tcsncpy(pTTT->szText, _T("Interpret the current model"), 79);
 		return FALSE;
 	}
 
@@ -46,11 +46,11 @@ afx_msg BOOL CComponentBar::OnTT(UINT, NMHDR * pNMHDR, LRESULT * ) {
 		UINT nID = pButton->m_nID;
 
 		if(nID >= ID_FILE_RUNPLUGIN1 && nID <= ID_FILE_RUNPLUGIN8) {
-			strncpy(pTTT->szText, theApp.pluginTooltips[nID-ID_FILE_RUNPLUGIN1], 79);
+			_tcsncpy(pTTT->szText, theApp.pluginTooltips[nID-ID_FILE_RUNPLUGIN1], 79);
 			return FALSE;
 		}
 		if(nID >= ID_FILE_INTERPRET1 && nID <= ID_FILE_INTERPRET18) {
-			strncpy(pTTT->szText, theApp.interpreterTooltips[nID-ID_FILE_INTERPRET1], 79);
+			_tcsncpy(pTTT->szText, theApp.interpreterTooltips[nID-ID_FILE_INTERPRET1], 79);
 				return FALSE;
 		}
 	}
@@ -254,7 +254,7 @@ int CMainFrame::CreateToolBars()
 		!m_wndToolBarMain.LoadToolBar(IDR_TOOLBAR_MAIN, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_MAIN_TOOLBAR24 : 0)
 		)
 	{
-		TRACE0("Failed to create main toolbar\n");
+		TRACE(_T("Failed to create main toolbar\n"));
 		return -1;      // fail to create
 	}
 
@@ -277,7 +277,7 @@ int CMainFrame::CreateToolBars()
 		!m_wndToolBarModeling.LoadToolBar(IDR_TOOLBAR_MODELING, 0, 0, FALSE, 0, 0, bHiColorIcons ? IDB_MODELING_TOOLBAR24 : 0)
 		)
 	{
-		TRACE0("Failed to create modeling toolbar\n");
+		TRACE(_T("Failed to create modeling toolbar\n"));
 		return -1;      // fail to create
 	}
 
@@ -648,7 +648,7 @@ void CMainFrame::CreateNewView(CView *view, CComPtr<IMgaModel>& model)
 
 		CFrameWnd *pFrame = docTemplate->CreateNewFrame(pDocument, NULL);
 		if(pFrame == NULL) {
-			AfxMessageBox("Failed to create window",MB_OK | MB_ICONSTOP);
+			AfxMessageBox(_T("Failed to create window"),MB_OK | MB_ICONSTOP);
 			return;
 		}
 		docTemplate->InitialUpdateFrame(pFrame,pDocument);
@@ -722,7 +722,7 @@ void CMainFrame::WriteStatusParadigm(const CString& txt)
 void CMainFrame::WriteStatusZoom(int zoomPct)
 {
 	CString txt;
-	txt.Format("%d%%", zoomPct);
+	txt.Format(_T("%d%%"), zoomPct);
 	WriteStatusText(zoomPaneNo,txt);
 }
 
@@ -1185,14 +1185,14 @@ void CMainFrame::OnUpdateViewClearConsole(CCmdUI* pCmdUI)
 
 void CMainFrame::OnDropFiles(HDROP p_hDropInfo)
 {
-	CGMEEventLogger::LogGMEEvent("MainFrame:OnDropFiles\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("MainFrame:OnDropFiles\r\n"));
 	
 	// get the number of files dropped
 	UINT nFiles = DragQueryFile( p_hDropInfo, 0xFFFFFFFF, NULL, 0);
 	if( nFiles < 1)
 	{
-		CGMEEventLogger::LogGMEEvent("Can't inquire file information!\r\n");
-		m_console.Message( "No file dropped or can't inquire file information!", 3);
+		CGMEEventLogger::LogGMEEvent(_T("Can't inquire file information!\r\n"));
+		m_console.Message( _T("No file dropped or can't inquire file information!"), 3);
 	}
 
 	bool one_just_opened = false; // we opened/imported one project just now -> disables opening of more .mga files
@@ -1208,52 +1208,52 @@ void CMainFrame::OnDropFiles(HDROP p_hDropInfo)
 				is_dir = (fstatus.st_mode & _S_IFDIR) == _S_IFDIR;
 			
 			CString conn( szFileName);
-			if( is_dir || conn.Right(4).CompareNoCase(".mga") == 0 || conn.Right(4).CompareNoCase(".mgx") == 0)
+			if( is_dir || conn.Right(4).CompareNoCase(_T(".mga")) == 0 || conn.Right(4).CompareNoCase(_T(".mgx")) == 0)
 			{
 				if( one_just_opened)
-					m_console.Message( "Project already open. No other MGA file can be dropped!", 3);
+					m_console.Message( _T("Project already open. No other MGA file can be dropped!"), 3);
 				else if( theApp.guiMetaProject == NULL && theApp.mgaProject == 0)
 				{
-					if( conn.Right(4).CompareNoCase(".mga") == 0) {
-						m_console.Message( "Opening " + conn + ".", 1);
-						conn = "MGA=" + conn;
+					if( conn.Right(4).CompareNoCase(_T(".mga")) == 0) {
+						m_console.Message( _T("Opening ") + conn + _T("."), 1);
+						conn = _T("MGA=") + conn;
 					} else {
 						int pos = conn.ReverseFind( '\\'); // we don't need the file name, only the path
 						if( is_dir)
-							conn = "MGX=\"" + conn + "\""; // directory dropped
+							conn = _T("MGX=\"") + conn + _T(")\""); // directory dropped
 						else if( pos != -1)
-							conn = "MGX=\"" + conn.Left( pos) + "\""; // the .mgx file dropped, cut off the file part
-						m_console.Message( "Opening multiuser project " + conn + ".", 1);
+							conn = _T("MGX=\"") + conn.Left( pos) + _T("\""); // the .mgx file dropped, cut off the file part
+						m_console.Message( _T("Opening multiuser project ") + conn + _T("."), 1);
 					}
 					theApp.OpenProject(conn);
 					one_just_opened = true;
 				}
 				else
-					m_console.Message( "Another MGA file can't be opened while a project is open.", 3);
+					m_console.Message( _T("Another MGA file can't be opened while a project is open."), 3);
 			}
-			else if( conn.Right(4).CompareNoCase(".xme")==0)
+			else if( conn.Right(4).CompareNoCase(_T(".xme"))==0)
 			{
-				m_console.Message( "Importing " + conn + ".", 1);	
+				m_console.Message( _T("Importing ") + conn + _T("."), 1);	
 				theApp.ImportDroppedFile(conn);
 				one_just_opened = true;
 			}
-			else if( conn.Right(4).CompareNoCase(".xmp")==0 || conn.Right(4).CompareNoCase(".mta")==0)
+			else if( conn.Right(4).CompareNoCase(_T(".xmp"))==0 || conn.Right(4).CompareNoCase(_T(".mta"))==0)
 			{
 				if( theApp.guiMetaProject == NULL && theApp.mgaProject == 0) // no project opened
 				{
-					m_console.Message( "Registering " + conn + " as a paradigm.", 1);
+					m_console.Message( _T("Registering ") + conn + _T(" as a paradigm."), 1);
 
-					theApp.RegisterDroppedFile( conn.Right(4).CompareNoCase(".xmp")==0?"XML=" + conn:"MGA=" + conn);
+					theApp.RegisterDroppedFile( conn.Right(4).CompareNoCase(_T(".xmp"))==0?_T("XML=") + conn:_T("MGA=") + conn);
 					one_just_opened = false; // we did not open a file, just registered
 				}
 				else
-					m_console.Message( "Can't register paradigm file while project is open!", 3);
+					m_console.Message( _T("Can't register paradigm file while project is open!"), 3);
 			}
 			else
-				m_console.Message( ".MGX, .MGA, .XME, .MTA, .XMP files may be dropped only. Can't open file: " + conn + "!", 3);
+				m_console.Message( _T(".MGX, .MGA, .XME, .MTA, .XMP files may be dropped only. Can't open file: ") + conn + _T("!"), 3);
 		}
 		else
-			m_console.Message( "Can't inquire file information!", 3);
+			m_console.Message( _T("Can't inquire file information!"), 3);
 	}
 }
 
@@ -1509,7 +1509,7 @@ LRESULT CMainFrame::OnGetTabTooltip(WPARAM /*wParam*/, LPARAM lParam)
 			CWnd* tabPaneWnd = tabControl->GetTabWndNoWrapper(pInfo->m_nTabIndex);
 			if (tabPaneWnd->IsKindOf(RUNTIME_CLASS(CChildFrame))) {
 				CChildFrame* childFrame = STATIC_DOWNCAST(CChildFrame, tabPaneWnd);
-				pInfo->m_strText = childFrame->GetTitle() + " - " + childFrame->GetAppTitle();
+				pInfo->m_strText = childFrame->GetTitle() + _T(" - ") + childFrame->GetAppTitle();
 			}
 		}
 	}

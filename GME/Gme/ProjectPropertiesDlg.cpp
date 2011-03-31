@@ -81,7 +81,7 @@ void CProjectPropertiesDlg::OnOK()
 			CComBSTR bstr;
 			CString str;
 			comment.GetWindowText(str);
-			str.Replace("\r\n","\n");
+			str.Replace(_T("\r\n"),_T("\n"));
 			CopyTo(str,bstr);
 			COMTHROW(theApp.mgaProject->put_Comment(bstr));
 		}
@@ -96,7 +96,7 @@ void CProjectPropertiesDlg::OnOK()
 	}
 	catch(hresult_exception e) {
 		theApp.mgaProject->AbortTransaction();
-		AfxMessageBox("Error writing project properties");
+		AfxMessageBox(_T("Error writing project properties"));
 	}
 	CDialog::OnOK();
 }
@@ -156,7 +156,7 @@ BOOL CProjectPropertiesDlg::OnInitDialog()
 			COMTHROW(theApp.mgaProject->get_Comment(&bstr));
 			CString str;
 			CopyTo(bstr,str);
-			str.Replace("\n", "\r\n");
+			str.Replace(_T("\n"), _T("\r\n"));
 			comment.SetWindowText(str);
 		}
 		{
@@ -203,7 +203,7 @@ BOOL CProjectPropertiesDlg::OnInitDialog()
 	}
 	catch(hresult_exception e) {
 		theApp.mgaProject->AbortTransaction();
-		AfxMessageBox("Error reading project properties");
+		AfxMessageBox(_T("Error reading project properties"));
 	}
 	
 	return TRUE;  // return TRUE unless you set the focus to a control

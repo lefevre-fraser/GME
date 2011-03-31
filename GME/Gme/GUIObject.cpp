@@ -248,14 +248,14 @@ void CGuiPort::ReadARPreferences()
 {
 	CString val;
 	if (GetPreference(val, AUTOROUTER_PREF)) {
-		autorouterPrefs[GME_START_NORTH] = (val.Find("N") != -1);
-		autorouterPrefs[GME_START_EAST] = (val.Find("E") != -1);
-		autorouterPrefs[GME_START_SOUTH] = (val.Find("S") != -1);
-		autorouterPrefs[GME_START_WEST] = (val.Find("W") != -1);
-		autorouterPrefs[GME_END_NORTH] = (val.Find("n") != -1);
-		autorouterPrefs[GME_END_EAST] = (val.Find("e") != -1);
-		autorouterPrefs[GME_END_SOUTH] = (val.Find("s") != -1);
-		autorouterPrefs[GME_END_WEST] = (val.Find("w") != -1);
+		autorouterPrefs[GME_START_NORTH] = (val.Find(_T("N")) != -1);
+		autorouterPrefs[GME_START_EAST] = (val.Find(_T("E")) != -1);
+		autorouterPrefs[GME_START_SOUTH] = (val.Find(_T("S")) != -1);
+		autorouterPrefs[GME_START_WEST] = (val.Find(_T("W")) != -1);
+		autorouterPrefs[GME_END_NORTH] = (val.Find(_T("n")) != -1);
+		autorouterPrefs[GME_END_EAST] = (val.Find(_T("e")) != -1);
+		autorouterPrefs[GME_END_SOUTH] = (val.Find(_T("s")) != -1);
+		autorouterPrefs[GME_END_WEST] = (val.Find(_T("w")) != -1);
 	}
 	else {
 		if (parent->GetParent()->dynamic_cast_CGuiCompound() != NULL) {
@@ -315,7 +315,7 @@ bool CGuiPort::IsVisible()			// called on a tmp obj that only exists to get this
 	VERIFY(parent);
 	VERIFY(parent->parent);
 	CComPtr<IMgaFCO> fco = parent->parent->mgaFco;
-	CComBSTR bstr = "GME/ports";
+	CComBSTR bstr = L"GME/ports";
 	CComPtr<IMgaRegNode> root;
 	COMTHROW(fco->get_RegistryNode(bstr,&root));
 	CComPtr<IMgaRegNodes> nodes;
@@ -331,7 +331,7 @@ bool CGuiPort::IsVisible()			// called on a tmp obj that only exists to get this
 		COMTHROW(reg->get_FCOValue(&portFco));
 		if(IsEqualObject(portFco,mgaFco)) {
 			CComPtr<IMgaRegNode> subreg;
-			CComBSTR path = "visible";
+			CComBSTR path = L"visible";
 			COMTHROW(reg->get_SubNodeByName(path,&subreg));
 			if(subreg != 0) {
 				CComBSTR val;
@@ -355,16 +355,16 @@ void CGuiPort::SetVisible(bool v)	// called on a tmp obj that only exists to set
 	VERIFY(parent->parent);
 	CComPtr<IMgaFCO> fco = parent->parent->mgaFco;
 	CComBSTR id;
-	CComBSTR bstr = "GME/ports/";
+	CComBSTR bstr = L"GME/ports/";
 	COMTHROW(mgaFco->get_ID(&id));
 	bstr += id;
 	CComPtr<IMgaRegNode> reg;
 	COMTHROW(fco->get_RegistryNode(bstr,&reg));
 	COMTHROW(reg->put_FCOValue(mgaFco));
-	CComBSTR path = "visible";
+	CComBSTR path = L"visible";
 	CComPtr<IMgaRegNode> subreg;
 	COMTHROW(reg->get_SubNodeByName(path,&subreg));
-	CComBSTR bstrval = v ? "1" : "0";
+	CComBSTR bstrval = v ? L"1" : L"0";
 	COMTHROW(subreg->put_Value(bstrval));
 }
 
@@ -455,7 +455,7 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel>& pModel, CComPtr<IMgaRegNode>& m
 		if( st > ATTSTATUS_HERE)
 			special = true;
 
-		id = view->name + ":" + name;		// Fake id
+		id = view->name + _T(":") + name;		// Fake id
 
 		CComPtr<IMgaRegNode> aspRootNode;
 		CComBSTR aspRootName(AN_ASPECTS);
@@ -565,7 +565,7 @@ void CGuiAnnotator::InitDecorator(int asp)
 															decoratorData[asp]->location.right, decoratorData[asp]->location.bottom));
 	}
 	catch (hresult_exception &) {
-		AfxMessageBox("Cannot initialize annotator for annotation: " + name, MB_OK | MB_ICONSTOP);
+		AfxMessageBox(_T("Cannot initialize annotator for annotation: ") + name, MB_OK | MB_ICONSTOP);
 		decoratorData[asp]->decorator = NULL;
 	}
 }
@@ -587,7 +587,7 @@ bool CGuiAnnotator::IsResizable(void) const
 			return ((fc & F_RESIZABLE) != 0);
 		}
 		catch (hresult_exception &) {
-			AfxMessageBox("Error in annotator [method IsResizable()]");
+			AfxMessageBox(_T("Error in annotator [method IsResizable()]"));
 		}
 	}
 
@@ -602,7 +602,7 @@ void CGuiAnnotator::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 			COMTHROW(decoratorData[parentAspect]->decorator->DrawEx((ULONG)pDC, (ULONGLONG)gdip));
 		}
 		catch (hresult_exception &) {
-			AfxMessageBox("Error in annotator [method Draw()]");
+			AfxMessageBox(_T("Error in annotator [method Draw()]"));
 		}
 	}
 }
@@ -650,7 +650,7 @@ void  CGuiAnnotator::SetLocation(const CRect& toLoc, int aspect, bool doMga)
 		COMTHROW(decoratorData[aspect]->decorator->SetLocation(loc.left, loc.top, loc.right, loc.bottom));
 	}
 	catch (hresult_exception &) {
-		AfxMessageBox("Cannot set location of annotation " + name);
+		AfxMessageBox(_T("Cannot set location of annotation ") + name);
 	}
 
 	if (doMga) {
@@ -738,7 +738,7 @@ void CGuiAnnotator::GrayOutAnnotations(CGuiAnnotatorList& list, bool set)
 
 void CGuiAnnotator::NudgeAnnotations(CGuiAnnotatorList& annotatorList, int right, int down)
 {
-	CGMEEventLogger::LogGMEEvent("CGuiAnnotator::NudgeAnnotations ");
+	CGMEEventLogger::LogGMEEvent(_T("CGuiAnnotator::NudgeAnnotations "));
 	GMEEVENTLOG_GUIANNOTATORS(annotatorList);
 	ASSERT(right == 0 || down == 0); // cannot nudge diagonally for now
 	POSITION pos = annotatorList.GetHeadPosition();
@@ -807,7 +807,7 @@ void CGuiAnnotator::FindUpperLeft(CGuiAnnotatorList& anns, int& left, int& top)
 
 void CGuiAnnotator::ShiftAnnotations(CGuiAnnotatorList& annList, CPoint& shiftBy)
 {
-	CGMEEventLogger::LogGMEEvent("CGuiAnnotator::ShiftAnnotations ");
+	CGMEEventLogger::LogGMEEvent(_T("CGuiAnnotator::ShiftAnnotations "));
 	GMEEVENTLOG_GUIANNOTATORS(annList);
 	POSITION pos = annList.GetHeadPosition();
 	while(pos) {
@@ -828,7 +828,7 @@ int CGuiAnnotator::Hide(CComPtr<IMgaRegNode>& mRootNode )
 	// thus we made the value of the annotator defined 'HERE'
 	// which will decide whether an annotation regnode is virtual (inherited) or not
 
-	CComBSTR bstr("1");
+	CComBSTR bstr(L"1");
 
 	// inheritance broken node inserted
 	CComPtr<IMgaRegNode> brokNode;
@@ -872,7 +872,7 @@ bool CGuiAnnotator::Showable( CComPtr<IMgaRegNode>& mRootNode )
 				{
 					CComBSTR bstr;
 					COMTHROW( hideNode->get_Value( &bstr));
-					if( bstr == "1")
+					if( bstr == L"1")
 						hidden_set = true;
 				}
 			}
@@ -888,7 +888,7 @@ bool CGuiAnnotator::Showable( CComPtr<IMgaRegNode>& mRootNode )
 		if (inheritNode) {
 			CComBSTR bstr;
 			COMTHROW(inheritNode->get_Value( &bstr));
-			if (bstr == "1") // if "inheritable" is 1 show it
+			if (bstr == L"1") // if "inheritable" is 1 show it
 				return true;
 		}
 	}
@@ -1225,7 +1225,7 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 	CStringList values;
 
 	if (!decorStr.IsEmpty()) {	// no decorator progId and no paarmeters => use default box decorator later
-		if (decorStr.FindOneOf("\n\t ,=") == -1) {	// just a progId, no parameters
+		if (decorStr.FindOneOf(_T("\n\t ,=")) == -1) {	// just a progId, no parameters
 			progId = decorStr;
 		} else {	// there is some parameter
 			LPTSTR lpsz = new TCHAR[decorStr.GetLength()+1];
@@ -1304,7 +1304,7 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 			hres = decor.CoCreateInstance(PutInBstr(progId));
 		}
 		if (FAILED(hres)) {	// fall back to default decorator
-			CMainFrame::theInstance->m_console.Message("Cannot create " + progId + " decorator! Trying default (" + GME_DEFAULT_DECORATOR + ") decorator.", 3);
+			CMainFrame::theInstance->m_console.Message(_T("Cannot create ") + progId + _T(" decorator! Trying default (") + GME_DEFAULT_DECORATOR + _T(") decorator."), 3);
 			progId = GME_DEFAULT_DECORATOR;
 			COMTHROW(newDecor.CoCreateInstance(PutInBstr(progId)));
 		}
@@ -1334,7 +1334,7 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 			COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
 	}
 	catch (hresult_exception&) {
-		CMainFrame::theInstance->m_console.Message("Cannot create " + progId + " decorator.", 3);
+		CMainFrame::theInstance->m_console.Message(_T("Cannot create ") + progId + _T(" decorator."), 3);
 	}
 	guiAspects[asp] = new CGuiAspect(metaAspect, this, metaAspect->index, asp, decor, newDecor, decoratorEventSink);
 	parentAspect = 0;
@@ -1765,7 +1765,7 @@ void CGuiObject::FindUpperLeft(CGuiObjectList& objs, int& left, int& top)
 
 void CGuiObject::ShiftModels(CGuiObjectList& objList, CPoint& shiftBy)
 {
-	CGMEEventLogger::LogGMEEvent("CGuiObject::ShiftModels ");
+	CGMEEventLogger::LogGMEEvent(_T("CGuiObject::ShiftModels "));
 	GMEEVENTLOG_GUIOBJS(objList);
 
 	CGuiObject* first_obj = objList.IsEmpty() ? 0 : objList.GetHead();
@@ -1793,7 +1793,7 @@ void CGuiObject::ShiftModels(CGuiObjectList& objList, CPoint& shiftBy)
 		VERIFY(obj->IsVisible());
 		CPoint point = obj->GetCenter() + shiftBy;
 		if(!modelGrid.GetClosestAvailable(obj, point)) {
-			AfxMessageBox("Too Many Models! Internal Program Error!",MB_OK | MB_ICONSTOP);
+			AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
 			return;
 		}
 		obj->SetCenter(point);
@@ -1803,7 +1803,7 @@ void CGuiObject::ShiftModels(CGuiObjectList& objList, CPoint& shiftBy)
 
 void CGuiObject::ResizeObject(const CRect& newLocation/*, bool doMga*/)
 {
-	CGMEEventLogger::LogGMEEvent("CGuiObject::ResizeObject\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGuiObject::ResizeObject\n"));
 
 	VERIFY(IsVisible());
 	SetLocation((CRect)newLocation, -1, false/*doMga, true*/);
@@ -1813,7 +1813,7 @@ void CGuiObject::ResizeObject(const CRect& newLocation/*, bool doMga*/)
 
 bool CGuiObject::NudgeObjects(CGuiObjectList& modelList, int right, int down)
 {
-	CGMEEventLogger::LogGMEEvent("CGuiObject::NudgeObjects ");
+	CGMEEventLogger::LogGMEEvent(_T("CGuiObject::NudgeObjects "));
 	GMEEVENTLOG_GUIOBJS(modelList);
 	ASSERT(right == 0 || down == 0); // cannot nudge diagonally for now
 
@@ -1892,7 +1892,7 @@ bool CGuiObject::IsResizable(void)
 		return ((fc & F_RESIZABLE) != 0);
 	}
 	catch (hresult_exception &) {
-		AfxMessageBox("Error in CGuiObject [method IsResizable()]");
+		AfxMessageBox(_T("Error in CGuiObject [method IsResizable()]"));
 	}
 
 	return false;
@@ -1915,7 +1915,7 @@ void CGuiObject::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 			COMTHROW(GetCurrentAspect()->GetDecorator()->Draw((ULONG)pDC));
 	}
 	catch (hresult_exception &) {
-		AfxMessageBox("Error in decorator [method Draw()]");
+		AfxMessageBox(_T("Error in decorator [method Draw()]"));
 	}
 
 // #define _ARDEBUG
@@ -2025,8 +2025,8 @@ CGuiMetaAspect* CGuiModel::GetKindAspect(CComPtr<IMgaMetaPart> metaPart)
 			COMTHROW(metaRole->get_Name(&bstr));
 			CString roleName;
 			CopyTo(bstr,roleName);
-			AfxMessageBox("Missing aspect mapping specification for model " + name + " aspect " + kindAspect +
-					" role " + roleName + "!\nFirst aspect " + metaAspect->name + " is used!");
+			AfxMessageBox(_T("Missing aspect mapping specification for model ") + name + _T(" aspect ") + kindAspect +
+					_T(" role ") + roleName + _T("!\nFirst aspect ") + metaAspect->name + _T(" is used!"));
 			*/
 		}
 	}
@@ -2065,9 +2065,9 @@ CString CReference::GetInfoText(CString &name)
 {
 	CString txt;
 	if(IsNull())
-		txt = name + " -> null ";
+		txt = name + _T(" -> null ");
 	else
-		txt.Format("%s -> %s (%s) ", name, targetName, targetKindDisplayedName);
+		txt.Format(_T("%s -> %s (%s) "), name, targetName, targetKindDisplayedName);
 	return CString(txt);
 }
 ///////////////////////////////////////
@@ -2137,8 +2137,8 @@ CGuiMetaAspect* CGuiCompoundReference::GetKindAspect(CComPtr<IMgaMetaPart> metaP
 			COMTHROW(metaRole->get_Name(&bstr));
 			CString roleName;
 			CopyTo(bstr,roleName);
-			AfxMessageBox("Missing aspect mapping specification for model " + name + " aspect " + kindAspect +
-					" role " + roleName + "!\nFirst aspect " + metaAspect->name + " is used!");
+			AfxMessageBox(_T("Missing aspect mapping specification for model ") + name + _T(" aspect ") + kindAspect +
+					_T(" role ") + roleName + _T("!\nFirst aspect ") + metaAspect->name + _T(" is used!"));
 			*/
 		}
 	}
@@ -2184,7 +2184,7 @@ bool CGuiSet::CheckMember(CGuiFco* fco)
 
 	metaref_type mr = fco->GetRoleMetaRef();
 	CString path;
-	path.Format("%d", mr);
+	path.Format(_T("%d"), mr);
 	CComBSTR bstr;
 	CopyTo(path, bstr);
 
@@ -2320,18 +2320,18 @@ void CGuiConnectionLabel::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConn
 	if (label.IsEmpty())
 		return;
 
-	label.Replace("%name%", conn->name);
-	label.Replace("%kind%", conn->kindDisplayedName);
-	label.Replace("%role%", conn->roleDisplayedName);
+	label.Replace(_T("%name%"), conn->name);
+	label.Replace(_T("%kind%"), conn->kindDisplayedName);
+	label.Replace(_T("%role%"), conn->roleDisplayedName);
 
 	CGuiMetaAttributeList *metaAttrs = conn->GetMetaAttributes();
 	POSITION pos = metaAttrs->GetHeadPosition();
 	while (pos) {
 		CGuiMetaAttribute *metaAttr = metaAttrs->GetNext(pos);
 		CString attrName;
-		attrName += "%";
+		attrName += _T("%");
 		attrName += metaAttr->name;
-		attrName += "%";
+		attrName += _T("%");
 		label.Replace(attrName, conn->attributeCache[metaAttr->name]);
 	}
 
@@ -2441,28 +2441,28 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role
 	{
 		CString pref;
 		GetPreference(pref, CONN_LINE_TYPE_PREF);
-		lineType = (pref == "dash") ? GME_LINE_DASH : GME_LINE_SOLID;
+		lineType = (pref == _T("dash")) ? GME_LINE_DASH : GME_LINE_SOLID;
 	}
 	{
 		CString pref;
 		GetPreference(pref, CONN_SRC_END_STYLE_PREF);
-		if ( pref == "arrow" )
+		if ( pref == _T("arrow") )
 			srcStyle = GME_ARROW_END;
-		else if ( pref == "diamond" )
+		else if ( pref == _T("diamond") )
 			srcStyle = GME_DIAMOND_END;
-		else if ( pref == "empty diamond" )
+		else if ( pref == _T("empty diamond") )
 			srcStyle = GME_EMPTYDIAMOND_END;
-		else if ( pref == "apex" )
+		else if ( pref == _T("apex") )
 			srcStyle = GME_APEX_END;
-		else if ( pref == "empty apex" )
+		else if ( pref == _T("empty apex") )
 			srcStyle = GME_EMPTYAPEX_END;
-		else if ( pref == "bullet" )
+		else if ( pref == _T("bullet") )
 			srcStyle = GME_BULLET_END;
-		else if ( pref == "empty bullet" )
+		else if ( pref == _T("empty bullet") )
 			srcStyle = GME_EMPTYBULLET_END;
-		else if ( pref == "left half arrow" )
+		else if ( pref == _T("left half arrow") )
 			srcStyle = GME_HALFARROWLEFT_END;
-		else if ( pref == "right half arrow" )
+		else if ( pref == _T("right half arrow") )
 			srcStyle = GME_HALFARROWRIGHT_END;
 		else
 			srcStyle = GME_BUTT_END;
@@ -2470,23 +2470,23 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role
 	{
 		CString pref;
 		GetPreference(pref, CONN_DST_END_STYLE_PREF);
-		if ( pref == "arrow" )
+		if ( pref == _T("arrow") )
 			dstStyle = GME_ARROW_END;
-		else if ( pref == "diamond" )
+		else if ( pref == _T("diamond") )
 			dstStyle = GME_DIAMOND_END;
-		else if ( pref == "empty diamond" )
+		else if ( pref == _T("empty diamond") )
 			dstStyle = GME_EMPTYDIAMOND_END;
-		else if ( pref == "apex" )
+		else if ( pref == _T("apex") )
 			dstStyle = GME_APEX_END;
-		else if ( pref == "empty apex" )
+		else if ( pref == _T("empty apex") )
 			dstStyle = GME_EMPTYAPEX_END;
-		else if ( pref == "bullet" )
+		else if ( pref == _T("bullet") )
 			dstStyle = GME_BULLET_END;
-		else if ( pref == "empty bullet" )
+		else if ( pref == _T("empty bullet") )
 			dstStyle = GME_EMPTYBULLET_END;
-		else if ( pref == "left half arrow" )
+		else if ( pref == _T("left half arrow") )
 			dstStyle = GME_HALFARROWLEFT_END;
-		else if ( pref == "right half arrow" )
+		else if ( pref == _T("right half arrow") )
 			dstStyle = GME_HALFARROWRIGHT_END;
 		else
 			dstStyle = GME_BUTT_END;
@@ -2524,26 +2524,26 @@ void CGuiConnection::GiveConnectionEndErroMessage(const CString& mainMsg, const 
 {
 	if (!view->ShouldSupressConnectionCheckAlert()) {
 		CString msgEx;
-		msgEx.Append("Connection properties:\n");
-		msgEx.Append("\nName: ");
+		msgEx.Append(_T("Connection properties:\n"));
+		msgEx.Append(_T("\nName: "));
 		msgEx.Append(name);
-		msgEx.Append("\nKind Name: ");
+		msgEx.Append(_T("\nKind Name: "));
 		msgEx.Append(kindDisplayedName);
-		msgEx.Append("\nRole Name: ");
+		msgEx.Append(_T("\nRole Name: "));
 		msgEx.Append(roleDisplayedName);
-		msgEx.Append("\nID: ");
+		msgEx.Append(_T("\nID: "));
 		msgEx.Append(id);
-		msgEx.Append("\nEndpoint properties:");
+		msgEx.Append(_T("\nEndpoint properties:"));
 		if (otherPort) {
-			msgEx.Append("\n\tName: ");
+			msgEx.Append(_T("\n\tName: "));
 			msgEx.Append(otherPort->name);
-			msgEx.Append("\n\tID: ");
+			msgEx.Append(_T("\n\tID: "));
 			msgEx.Append(otherPort->id);
 		} else {
-			msgEx.Append("\n\tOther Endpoint is also null.");
+			msgEx.Append(_T("\n\tOther Endpoint is also null."));
 		}
-		msgEx.Append("\nMissing endpoints sometimes can be generated by UDM based interpreters.");
-		msgEx.Append("\nCancel button supress further connection error messages like this.");
+		msgEx.Append(_T("\nMissing endpoints sometimes can be generated by UDM based interpreters."));
+		msgEx.Append(_T("\nCancel button supress further connection error messages like this."));
 		int retVal = view->MessageBox(msgEx, mainMsg, MB_OKCANCEL | MB_ICONERROR);
 		if (retVal == IDCANCEL)
 			view->SupressConnectionCheckAlert();
@@ -2699,9 +2699,9 @@ void CGuiConnection::Resolve()
 			}
 			if (src_err || dst_err) {
 				if (src_err) {
-					GiveConnectionEndErroMessage("Source endpoint error", dstPort);
+					GiveConnectionEndErroMessage(_T("Source endpoint error"), dstPort);
 				} else if (dst_err) {
-					GiveConnectionEndErroMessage("Destination endpoint error", srcPort);
+					GiveConnectionEndErroMessage(_T("Destination endpoint error"), srcPort);
 				}
 			} else
 
@@ -2821,10 +2821,10 @@ void CGuiConnection::RefreshAttributeCache()
 
 		if (tp == ATTVAL_BOOLEAN) {
 			VERIFY(attrValue.vt == VT_BOOL);
-			aval = attrValue.boolVal ? "True" : "False";
+			aval = attrValue.boolVal ? _T("True") : _T("False");
 		}
 		else if (tp == ATTVAL_REFERENCE) {
-			aval = "Reference attr. label not supported";	// Sorry, maybe later
+			aval = _T("Reference attr. label not supported");	// Sorry, maybe later
 		}
 		else if (tp == ATTVAL_ENUM) {
 			VERIFY(attrValue.vt == VT_BSTR);
@@ -2836,12 +2836,12 @@ void CGuiConnection::RefreshAttributeCache()
 				if (idx != -1)
 					aval = (guiMenuCtrl->items[idx]).label;
 				else
-					aval = "N/A";
+					aval = _T("N/A");
 			}
 			else {
-				aval = "N/A";
+				aval = _T("N/A");
 			} */
-			aval = "N/A";
+			aval = _T("N/A");
 			CComPtr<IMgaMetaEnumItems> metaEnumItems;
 			COMTHROW(metaAttr->get_EnumItems(&metaEnumItems));
 
@@ -2873,14 +2873,14 @@ void CGuiConnection::ReadARPreferences()
 {
 	CString val;
 	if (GetPreference(val, AUTOROUTER_PREF)) {
-		autorouterPrefs[GME_START_NORTH]	= (val.Find("N") != -1);
-		autorouterPrefs[GME_START_EAST]		= (val.Find("E") != -1);
-		autorouterPrefs[GME_START_SOUTH]	= (val.Find("S") != -1);
-		autorouterPrefs[GME_START_WEST]		= (val.Find("W") != -1);
-		autorouterPrefs[GME_END_NORTH]		= (val.Find("n") != -1);
-		autorouterPrefs[GME_END_EAST]		= (val.Find("e") != -1);
-		autorouterPrefs[GME_END_SOUTH]		= (val.Find("s") != -1);
-		autorouterPrefs[GME_END_WEST]		= (val.Find("w") != -1);
+		autorouterPrefs[GME_START_NORTH]	= (val.Find(_T("N")) != -1);
+		autorouterPrefs[GME_START_EAST]		= (val.Find(_T("E")) != -1);
+		autorouterPrefs[GME_START_SOUTH]	= (val.Find(_T("S")) != -1);
+		autorouterPrefs[GME_START_WEST]		= (val.Find(_T("W")) != -1);
+		autorouterPrefs[GME_END_NORTH]		= (val.Find(_T("n")) != -1);
+		autorouterPrefs[GME_END_EAST]		= (val.Find(_T("e")) != -1);
+		autorouterPrefs[GME_END_SOUTH]		= (val.Find(_T("s")) != -1);
+		autorouterPrefs[GME_END_WEST]		= (val.Find(_T("w")) != -1);
 	} else {
 		autorouterPrefs[GME_START_NORTH]	= false;
 		autorouterPrefs[GME_START_EAST]		= false;
@@ -3302,12 +3302,12 @@ void CGuiConnection::ReadCustomPathData(void)
 		if (pref != EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC) {	// -1 is a magic number for deleted data
 			CString subStr;
 			int curPos = 0;
-			subStr = pref.Tokenize(";", curPos);
-			while (subStr != "") {
+			subStr = pref.Tokenize(_T(";"), curPos);
+			while (subStr != _T("")) {
 				CustomPathData pathData;
 				if (pathData.Deserialize(subStr))
 					customPathData.push_back(pathData);
-				subStr = pref.Tokenize(";", curPos);
+				subStr = pref.Tokenize(_T(";"), curPos);
 			}
 		}
 	}
@@ -3319,14 +3319,14 @@ void CGuiConnection::WriteCustomPathData(bool handleTransaction)
 	for (std::vector<CustomPathData>::iterator ii = customPathData.begin(); ii != customPathData.end(); ++ii) {
 		CString edgeStr;
 		(*ii).Serialize(edgeStr);
-		if (valStr != "")
-			valStr.Append(";");
+		if (valStr != _T(""))
+			valStr.Append(_T(";"));
 		valStr.Append(edgeStr);
 	}
 	VERIFY(mgaFco);
 	CComBSTR pathBstr = CUSTOMCONNECTIONDATA;
 	CComBSTR bstrVal;
-	if (valStr == "")
+	if (valStr == _T(""))
 		bstrVal = EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC;
 	else
 		CopyTo(valStr, bstrVal);
@@ -3334,7 +3334,7 @@ void CGuiConnection::WriteCustomPathData(bool handleTransaction)
 	if (handleTransaction)
 		view->BeginTransaction();
 
-	if (valStr == "") {
+	if (valStr == _T("")) {
 		CComPtr<IMgaRegNode> ccpMgaRegNode;
 		COMTHROW(mgaFco->get_RegistryNode(pathBstr, &ccpMgaRegNode));
 		COMTHROW(ccpMgaRegNode->RemoveTree());
@@ -3507,7 +3507,7 @@ void CGuiConnection::SnapCoordIfApplicable(CustomPathData* coordToSet, const CPo
 				modify = true;
 			} else if (last.x != pt.x) {
 				double alpha = atan2(-((double)pt.y - last.y), (double)pt.x - last.x);
-				TRACE2("Horizontal alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
+				TRACE(_T("Horizontal alpha %lf %lf\n"), alpha / M_PI * 180.0, alpha);
 				if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
 					modify = true;
 			}
@@ -3518,7 +3518,7 @@ void CGuiConnection::SnapCoordIfApplicable(CustomPathData* coordToSet, const CPo
 				modify = true;
 			} else if (last.y != pt.y) {
 				double alpha = atan2((double)pt.x - last.x, -((double)pt.y - last.y));
-				TRACE2("Vertical alpha %lf %lf\n", alpha / M_PI * 180.0, alpha);
+				TRACE(_T("Vertical alpha %lf %lf\n"), alpha / M_PI * 180.0, alpha);
 				if (abs(alpha + M_PI) < radEps || abs(alpha) < radEps || abs(alpha - M_PI) < radEps)
 					modify = true;
 			}
@@ -3581,7 +3581,7 @@ void CGuiConnection::SetAutoRouted(bool autoRouteState)
 
 bool CGuiConnection::NeedsRouterPathConversion(bool expectedAutoRouterState)
 {
-	TRACE3("NeedsRouterPathConversion %d %d %d\n", connRegAutoRouteNotSet, isAutoRouted,
+	TRACE(_T("NeedsRouterPathConversion %d %d %d\n"), connRegAutoRouteNotSet, isAutoRouted,
 			!HasPathCustomizationForTypeAndCurrentAspect(CustomPointCustomization));
 	return (connRegAutoRouteNotSet && isAutoRouted == expectedAutoRouterState &&
 			!HasPathCustomizationForTypeAndCurrentAspect(CustomPointCustomization));
@@ -3623,7 +3623,7 @@ bool CGuiConnection::ReadAutoRouteState(void)
 	bool connRegAutoRoute = view->isModelAutoRouted;
 	// The connection setting overrides the global or model settings
 	if (GetPreference(autoRoutingStateStr, CONNECTIONAUTOROUTING)) {
-		if (autoRoutingStateStr == "false")
+		if (autoRoutingStateStr == _T("false"))
 			connRegAutoRoute = false;
 		else
 			connRegAutoRoute = true;
@@ -3638,7 +3638,7 @@ void CGuiConnection::WriteAutoRouteState(bool handleTransaction)
 {
 	VERIFY(mgaFco);
 	CComBSTR pathBstr = CONNECTIONAUTOROUTING;
-	CString valStr = isAutoRouted ? "true" : "false";
+	CString valStr = isAutoRouted ? _T("true") : _T("false");
 	CComBSTR bstrVal;
 	CopyTo(valStr, bstrVal);
 	if (handleTransaction)

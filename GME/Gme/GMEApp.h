@@ -126,7 +126,7 @@ public:
 	// called from CGMEView:
 	void UpdateCompList4CurrentKind( const CString& kind);
 
-	static const char * m_no_model_open_string;
+	static const TCHAR * m_no_model_open_string;
 
 	// directory preferred by the user
 	CString m_preferredPath;

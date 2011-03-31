@@ -135,7 +135,7 @@ int CGMEBrowser::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if(!m_GMEActiveBrowser.Create("ttt",WS_CHILD | WS_VISIBLE,CRect(0,0,100,100),this,IDC_GME_ACTIVE_BROWSER_CTRL))
+	if(!m_GMEActiveBrowser.Create(_T("ttt"),WS_CHILD | WS_VISIBLE,CRect(0,0,100,100),this,IDC_GME_ACTIVE_BROWSER_CTRL))
 		return -1;
 
 /*	m_szMin = CSize(200,200);

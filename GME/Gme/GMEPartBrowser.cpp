@@ -54,12 +54,12 @@ int CGMEPartBrowser::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if (!m_PartBrowserWrapper.Create("PartBrowser", WS_CHILD | WS_VISIBLE, CRect(0, 0, 300, 150), this, IDC_PARTBROWSERCTRL1))
+	if (!m_PartBrowserWrapper.Create(_T("PartBrowser"), WS_CHILD | WS_VISIBLE, CRect(0, 0, 300, 150), this, IDC_PARTBROWSERCTRL1))
 		return -1;
 
 	// older versions of Windows* (NT 3.51 for instance) fail with DEFAULT_GUI_FONT
 	if (!m_font.CreateStockObject(DEFAULT_GUI_FONT))
-		if (!m_font.CreatePointFont(80, "MS Sans Serif"))
+		if (!m_font.CreatePointFont(80, _T("MS Sans Serif")))
 			return -1;
 	m_PartBrowserWrapper.SetFont(&m_font);
 

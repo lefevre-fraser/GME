@@ -216,7 +216,7 @@ void CGraphics::CreateFonts(CFont** font, Gdiplus::Font** gdipFont, int boldness
 		font[i] = new CFont();
 		font[i]->CreateFont(fontSizes[i],0,0,0,boldness,0,0,0,ANSI_CHARSET,
 							OUT_DEVICE_PRECIS,CLIP_DEFAULT_PRECIS,
-							PROOF_QUALITY,FF_SWISS,"Arial");
+							PROOF_QUALITY,FF_SWISS,_T("Arial"));
 
 		CDC dc;
 		dc.CreateCompatibleDC(NULL);
@@ -250,7 +250,7 @@ Gdiplus::Pen* CGraphics::GetGdipPen(Gdiplus::Graphics* gdip, COLORREF color, boo
 									bool isViewMagnified, int width)
 {
 	CString chBuffer;
-	chBuffer.Format("%x-%d-%d-%d-%ld", color, isPrinting, lineType, isViewMagnified, width);
+	chBuffer.Format(_T("%x-%d-%d-%d-%ld"), color, isPrinting, lineType, isViewMagnified, width);
 	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapGdipPens.find(chBuffer);
 	if (it != m_mapGdipPens.end())
 		return it->second;
@@ -480,9 +480,8 @@ void CGraphics::DrawGdipText(Gdiplus::Graphics* gdip, const CString& txt, const 
 	Gdiplus::PointF pointF(static_cast<float> (pt.x),
 						   static_cast<float> (pt.y));
 
-	CA2W wcTxt(txt);
 	Gdiplus::RectF rectF;
-	gdip->MeasureString(wcTxt, txt.GetLength(), font, pointF, &rectF);
+	gdip->MeasureString(txt, txt.GetLength(), font, pointF, &rectF);
 	Gdiplus::SizeF size;
 	rectF.GetSize(&size);
 	float xOffset = 0;
@@ -502,7 +501,7 @@ void CGraphics::DrawGdipText(Gdiplus::Graphics* gdip, const CString& txt, const 
 		// nothing
 	}
 	rectF.Offset(xOffset, yOffset);
-	gdip->DrawString(wcTxt, txt.GetLength(), font, rectF, &format, &textBrush);
+	gdip->DrawString(txt, txt.GetLength(), font, rectF, &format, &textBrush);
 }
 
 Gdiplus::RectF CGraphics::MeasureText2(Gdiplus::Graphics* gdip, const CString& txt, const CPoint& pt, Gdiplus::Font* font)
@@ -510,9 +509,8 @@ Gdiplus::RectF CGraphics::MeasureText2(Gdiplus::Graphics* gdip, const CString& t
 	Gdiplus::PointF pointF(static_cast<float> (pt.x),
 						   static_cast<float> (pt.y));
 
-	CA2W wcTxt(txt);
 	Gdiplus::RectF rectF;
-	gdip->MeasureString(wcTxt, txt.GetLength(), font, pointF, &rectF);
+	gdip->MeasureString(txt, txt.GetLength(), font, pointF, &rectF);
 	return rectF;
 }
 

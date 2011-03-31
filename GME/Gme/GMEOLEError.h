@@ -64,7 +64,7 @@ if (theApp.guiMetaProject != NULL) { \
 #define SHOW_ERROR( z) \
 	{ \
 		AfxThrowOleDispatchException(ID_ERROR_NOT_FOUND, \
-			_T(z)); \
+			(z)); \
 	} 
 
 #define THROW_IF_NULL( x, y) \

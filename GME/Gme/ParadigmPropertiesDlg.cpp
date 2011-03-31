@@ -118,7 +118,7 @@ BOOL CParadigmPropertiesDlg::OnInitDialog()
 	}
 	catch(hresult_exception e) {
 		theApp.mgaProject->AbortTransaction();
-		AfxMessageBox("Error reading paradigm properties");
+		AfxMessageBox(_T("Error reading paradigm properties"));
 	}
 		
 	return TRUE;  // return TRUE unless you set the focus to a control

@@ -26,54 +26,54 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 
 	switch (dType){
 	case OpenDialog:
-		title = "Open";
-		filemsg = "Open project file";
-        xmlfilemsg = "Open multi user project";
+		title = _T("Open");
+		filemsg = _T("Open project file");
+        xmlfilemsg = _T("Open multi user project");
 		flag_isopen = true;
 		flag_back = false;
 		flag_create = false;
 		flag_meta = false;
 		break;
 	case SaveDialog:
-		title = "Save";
-		filemsg = "Save project file";
-		xmlfilemsg = "Save multi user project";
+		title = _T("Save");
+		filemsg = _T("Save project file");
+		xmlfilemsg = _T("Save multi user project");
 		flag_isopen = false;
 		flag_back = false;
 		flag_create = false;
 		flag_meta = false;
 		break;
 	case SaveAsDialog:
-		title = "Save As";
-		filemsg = "Save project file";
-		xmlfilemsg = "Save multi user project";
+		title = _T("Save As");
+		filemsg = _T("Save project file");
+		xmlfilemsg = _T("Save multi user project");
 		flag_isopen = false;
 		flag_back = false;
 		flag_create = false;
 		flag_meta = false;
 		break;
 	case NewDialog:
-		title = "New";
-		filemsg = "Create project file";
-        xmlfilemsg = "Create multi user project";
+		title = _T("New");
+		filemsg = _T("Create project file");
+        xmlfilemsg = _T("Create multi user project");
 		flag_isopen = true;
 		flag_back = true;
 		flag_create = true;
 		flag_meta = false;
 		break;
 	case ImportDialog:
-		title = "Import to new project";
-		filemsg = "Create project file";
-		xmlfilemsg = "Create multi user project";
+		title = _T("Import to new project");
+		filemsg = _T("Create project file");
+		xmlfilemsg = _T("Create multi user project");
 		flag_isopen = true;
 		flag_back = false;
 		flag_create = true;
 		flag_meta = false;
 		break;
 	case ClearLocksDialog:
-		title = "Select project";
-		filemsg = "Open project file";
-		xmlfilemsg = "Open multi user project";
+		title = _T("Select project");
+		filemsg = _T("Open project file");
+		xmlfilemsg = _T("Open multi user project");
 		flag_isopen = true;
 		flag_back = false;
 		flag_create = false;
@@ -84,16 +84,16 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 	
 }
 
-static char mgafilter[] = "MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
-	"All files (*.*)|*.*||";
+static TCHAR mgafilter[] = _T("MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|")
+	_T("All files (*.*)|*.*||");
 
-static char xmemgafilter[] = "GME Model Files (*.mga;*.xme;*.mgx)|*.mga; *.xme; *.mgx|MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|"
-	"Multi-user files (*.mgx)|*.mgx|All files (*.*)|*.*||";
+static TCHAR xmemgafilter[] = _T("GME Model Files (*.mga;*.xme;*.mgx)|*.mga; *.xme; *.mgx|MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|")
+	_T("Multi-user files (*.mgx)|*.mgx|All files (*.*)|*.*||");
 
-static char mgaonlyfilter[] = "MGA Files (*.mga)|*.mga||";
+static TCHAR mgaonlyfilter[] = _T("MGA Files (*.mga)|*.mga||");
 
-static char metafilter[] = "MGA Meta Files (*.mta)|*.mta|XML Paradigm Files (*.xmp)|*.xmp|"
-	"All files (*.*)|*.*||";
+static TCHAR metafilter[] = _T("MGA Meta Files (*.mta)|*.mta|XML Paradigm Files (*.xmp)|*.xmp|")
+	_T("All files (*.*)|*.*||");
 
 
 CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
@@ -104,18 +104,18 @@ CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
 		CString SPEC_EXT = spec_ext; SPEC_EXT.MakeUpper();
 		CString spec_filter;
 		// as "MGA Files (*.mga)|*.mga|"
-		spec_filter.Format( "%s Files (*.%s)|*.%s|", SPEC_EXT, spec_ext, spec_ext);
+		spec_filter.Format( _T("%s Files (*.%s)|*.%s|"), SPEC_EXT, spec_ext, spec_ext);
 		// insert this filter at the beginning (thus preferred)
 		filters.Insert( 0, spec_filter);
 	}
 
-	const char* initialFile = NULL; // NULL or points into currentMgaPath
-	char currentMgaPath[MAX_PATH];
+	const TCHAR* initialFile = NULL; // NULL or points into currentMgaPath
+	TCHAR currentMgaPath[MAX_PATH];
 	if (theApp.isMgaProj()) {
 		CString conn = theApp.connString();
-		const char* zsConn = conn;
+		const TCHAR* zsConn = conn;
 		zsConn += 4; // skip MGA=
-		char* filename;
+		TCHAR* filename;
 		if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &filename) || filename == 0) {
 		} else {
 			initialFile = filename;
@@ -137,14 +137,14 @@ CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
 	}
 
 	if( dlg.DoModal() == IDOK )	{
-		conn = CString("MGA=") + dlg.GetPathName();
-		if(dlg.GetFileExt() == "") // no extension specified by the user
+		conn = CString(_T("MGA=")) + dlg.GetPathName();
+		if(dlg.GetFileExt() == _T("")) // no extension specified by the user
 		{
-			conn += ".";
+			conn += _T(".");
 			// if spec_ext is NOT empty then 
 			// filterindex = 1 stands for special extension
 			//             = 2 is the MGA
-			conn += dlg.m_ofn.nFilterIndex == 1 && !spec_ext.IsEmpty() ? spec_ext:"mga";
+			conn += dlg.m_ofn.nFilterIndex == 1 && !spec_ext.IsEmpty() ? spec_ext:_T("mga");
 		}
 	}
 	return conn;
@@ -168,9 +168,9 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 				pos = hint.Find('.');
 				if(pos >= 0) hint = hint.Left(pos);
 
-				if( db.OpenEx("DSN="+hint, CDatabase::forceOdbcDialog) ) {
+				if( db.OpenEx(_T("DSN=")+hint, CDatabase::forceOdbcDialog) ) {
 					conn.Empty();
-					if(m_radio == 2) conn = "ODBC;";
+					if(m_radio == 2) conn = _T("ODBC;");
 					conn += PruneConnectionString(db.GetConnect());
 				}
 				db.Close();
@@ -188,29 +188,29 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 					CString ext = dlg.GetFileExt();
 					ext.MakeLower();
 
-					if( ext == "mga" || ext == "mta" )
-						conn = CString("MGA=") + dlg.GetPathName();
-                    else if( ext == "mgx" )
-						conn = CString("MGX=") + dlg.GetPathName();
-					else if( (ext == "xml") || (ext == "xme") || (ext == "xmp") )
-						conn = CString("XML=") + dlg.GetPathName();
-					else if( ext == "mdb" )
-						conn = CString("DBQ=") + dlg.GetPathName();
-					else if( ext == "" )
+					if( ext == _T("mga") || ext == _T("mta") )
+						conn = CString(_T("MGA=")) + dlg.GetPathName();
+                    else if( ext == _T("mgx") )
+						conn = CString(_T("MGX=")) + dlg.GetPathName();
+					else if( (ext == _T("xml")) || (ext == _T("xme")) || (ext == _T("xmp")) )
+						conn = CString(_T("XML=")) + dlg.GetPathName();
+					else if( ext == _T("mdb") )
+						conn = CString(_T("DBQ=")) + dlg.GetPathName();
+					else if( ext == _T("") )
 					{
 						switch( dlg.m_ofn.nFilterIndex )
 						{
 						case 4:
 						case 1:
-							conn = CString("MGA=") + dlg.GetPathName() + ".mga";
+							conn = CString(_T("MGA=")) + dlg.GetPathName() + _T(".mga");
 							break;
 
 						case 2:
-							conn = CString("XML=") + dlg.GetPathName() + ".xme";
+							conn = CString(_T("XML=")) + dlg.GetPathName() + _T(".xme");
 							break;
 
 						case 3:
-							conn = CString("DBQ=") + dlg.GetPathName() + ".mdb";
+							conn = CString(_T("DBQ=")) + dlg.GetPathName() + _T(".mdb");
 							break;
 						}
 					}
@@ -220,15 +220,15 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 						{
 						case 4:
 						case 1:
-							conn = CString("MGA=") + dlg.GetPathName();
+							conn = CString(_T("MGA=")) + dlg.GetPathName();
 							break;
 
 						case 2:
-							conn = CString("XML=") + dlg.GetPathName();
+							conn = CString(_T("XML=")) + dlg.GetPathName();
 							break;
 
 						case 3:
-							conn = CString("DBQ=") + dlg.GetPathName();
+							conn = CString(_T("DBQ=")) + dlg.GetPathName();
 							break;
 						}
 					}
@@ -248,12 +248,12 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
                     // open existing multiuser project
                     BROWSEINFO bi;
 
-                    char szDisplayName[MAX_PATH];
-                    char szPath[MAX_PATH];
+                    TCHAR szDisplayName[MAX_PATH];
+                    TCHAR szPath[MAX_PATH];
 
 	                bi.hwndOwner      = m_hWnd;
 	                bi.pidlRoot       = NULL;
-	                bi.lpszTitle      = "Select the project location.";
+	                bi.lpszTitle      = _T("Select the project location.");
 	                bi.pszDisplayName = szDisplayName;
 	                bi.ulFlags        = BIF_RETURNONLYFSDIRS;
 	                bi.lpfn           = NULL;
@@ -265,9 +265,9 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
                     {
                         if( SHGetPathFromIDList(idlist, szPath) ) 
                         {
-                            conn = "MGX=\"";
+                            conn = _T("MGX=\"");
                             conn += szPath;
-                            conn += "\"";
+                            conn += _T("\"");
                         }
                     }
                 }
@@ -292,21 +292,21 @@ CString CMgaOpenDlg::PruneConnectionString(const CString& conn)
 		if( q < 0 )
 			q = conn.GetLength();
 
-		CString part((const char*)conn + p, q-p);
+		CString part((const TCHAR*)conn + p, q-p);
 
 		int r = part.Find('=');
 		if( r < 0 )
 			r = part.GetLength();
 
-		CString key((const char*)part, r);
+		CString key((const TCHAR*)part, r);
 
-		if( key == "UID" ||
-			key == "PWD" ||
-			key == "USER" ||
-			key == "PASSWORD" )
+		if( key == _T("UID") ||
+			key == _T("PWD") ||
+			key == _T("USER") ||
+			key == _T("PASSWORD") )
 		{
 			if( !ret.IsEmpty() )
-				ret += ";";
+				ret += _T(";");
 
 			ret += part;
 		}

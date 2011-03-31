@@ -38,71 +38,71 @@ CustomPathData& CustomPathData::operator=(const CustomPathData& other)
 
 void CustomPathData::Serialize(CString& outChannel)
 {
-	outChannel.Format("%ld,%ld,%ld,%d,%ld", GetVersion(), GetAspect(), GetEdgeIndex(),
+	outChannel.Format(_T("%ld,%ld,%ld,%d,%ld"), GetVersion(), GetAspect(), GetEdgeIndex(),
 											GetEdgeCount(), GetType());
 	CString additionalDataStr;
-	additionalDataStr.Format(",%ld,%ld,%ld,%ld", IsHorizontalOrVertical() ? 1 : 0,
+	additionalDataStr.Format(_T(",%ld,%ld,%ld,%ld"), IsHorizontalOrVertical() ? 1 : 0,
 												 GetX(), GetY(), GetLongDataCount());
 	outChannel.Append(additionalDataStr);
 	for(long i = 0; i < GetLongDataCount(); i++) {
-		additionalDataStr.Format(",%ld", l[i]);
+		additionalDataStr.Format(_T(",%ld"), l[i]);
 		outChannel.Append(additionalDataStr);
 	}
-	additionalDataStr.Format(",%ld", GetDoubleDataCount());
+	additionalDataStr.Format(_T(",%ld"), GetDoubleDataCount());
 	outChannel.Append(additionalDataStr);
 	for(long i = 0; i < GetDoubleDataCount(); i++) {
-		additionalDataStr.Format(",%lf", d[i]);
+		additionalDataStr.Format(_T(",%lf"), d[i]);
 		outChannel.Append(additionalDataStr);
 	}
 }
 
 bool CustomPathData::Deserialize(const CString& inChannel)
 {
-	TRACE1("\tResulting token: %s\n", inChannel);
+	TRACE(_T("\tResulting token: %s\n"), inChannel);
 	int curSubPos = 0;
-	CString versionStr = inChannel.Tokenize(",", curSubPos);
-	SetVersion(strtol(versionStr, NULL, 10));
+	CString versionStr = inChannel.Tokenize(_T(","), curSubPos);
+	SetVersion(_tcstol(versionStr, NULL, 10));
 	ASSERT(GetVersion() == CONNECTIONCUSTOMIZATIONDATAVERSION);
 	if (GetVersion() != CONNECTIONCUSTOMIZATIONDATAVERSION) {
 		// TODO: Convert from older version to newer
 		return false;
 	}
-	CString aspectStr = inChannel.Tokenize(",", curSubPos);
-	SetAspect(strtol(aspectStr, NULL, 10));
-	CString edgeIndexStr = inChannel.Tokenize(",", curSubPos);
-	SetEdgeIndex(strtol(edgeIndexStr, NULL, 10));
-	CString edgeCountStr = inChannel.Tokenize(",", curSubPos);
-	SetEdgeCount(strtol(edgeCountStr, NULL, 10));
-	CString edgeCustomTypeStr = inChannel.Tokenize(",", curSubPos);
-	SetType((PathCustomizationType)strtol(edgeCustomTypeStr, NULL, 10));
-	TRACE("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld", GetAspect(), GetEdgeIndex(), GetEdgeCount(), GetType());
-	CString directionStr = inChannel.Tokenize(",", curSubPos);
-	SetHorizontalOrVertical(strtol(directionStr, NULL, 10) != 0);
-	CString positionStr = inChannel.Tokenize(",", curSubPos);
-	SetX(strtol(positionStr, NULL, 10));
-	positionStr = inChannel.Tokenize(",", curSubPos);
-	SetY(strtol(positionStr, NULL, 10));
-	positionStr = inChannel.Tokenize(",", curSubPos);
-	long numOfExtraLongData = strtol(positionStr, NULL, 10);
+	CString aspectStr = inChannel.Tokenize(_T(","), curSubPos);
+	SetAspect(_tcstol(aspectStr, NULL, 10));
+	CString edgeIndexStr = inChannel.Tokenize(_T(","), curSubPos);
+	SetEdgeIndex(_tcstol(edgeIndexStr, NULL, 10));
+	CString edgeCountStr = inChannel.Tokenize(_T(","), curSubPos);
+	SetEdgeCount(_tcstol(edgeCountStr, NULL, 10));
+	CString edgeCustomTypeStr = inChannel.Tokenize(_T(","), curSubPos);
+	SetType((PathCustomizationType)_tcstol(edgeCustomTypeStr, NULL, 10));
+	TRACE(_T("\tAsp %ld, Ind %ld, Cnt %d, Typ %ld"), GetAspect(), GetEdgeIndex(), GetEdgeCount(), GetType());
+	CString directionStr = inChannel.Tokenize(_T(","), curSubPos);
+	SetHorizontalOrVertical(_tcstol(directionStr, NULL, 10) != 0);
+	CString positionStr = inChannel.Tokenize(_T(","), curSubPos);
+	SetX(_tcstol(positionStr, NULL, 10));
+	positionStr = inChannel.Tokenize(_T(","), curSubPos);
+	SetY(_tcstol(positionStr, NULL, 10));
+	positionStr = inChannel.Tokenize(_T(","), curSubPos);
+	long numOfExtraLongData = _tcstol(positionStr, NULL, 10);
 	ASSERT(numOfExtraLongData >= 0 && numOfExtraLongData <= 4);
-	TRACE(", Dir %ld, x %ld, y %ld, num %ld", IsHorizontalOrVertical(), GetX(), GetY(), numOfExtraLongData);
+	TRACE(_T(", Dir %ld, x %ld, y %ld, num %ld"), IsHorizontalOrVertical(), GetX(), GetY(), numOfExtraLongData);
 	for(long i = 0; i < numOfExtraLongData; i++) {
-		positionStr = inChannel.Tokenize(",", curSubPos);
-		AddLongData(strtol(positionStr, NULL, 10));
-		TRACE2(", l%ld %ld", i, l[i]);
+		positionStr = inChannel.Tokenize(_T(","), curSubPos);
+		AddLongData(_tcstol(positionStr, NULL, 10));
+		TRACE(_T(", l%ld %ld"), i, l[i]);
 	}
-	TRACE0("\n");
+	TRACE(_T("\n"));
 
-	positionStr = inChannel.Tokenize(",", curSubPos);
-	long numOfExtraDoubleData = strtol(positionStr, NULL, 10);
+	positionStr = inChannel.Tokenize(_T(","), curSubPos);
+	long numOfExtraDoubleData = _tcstol(positionStr, NULL, 10);
 	ASSERT(numOfExtraDoubleData >= 0 && numOfExtraDoubleData <= 8);
-	TRACE1(", num %ld", numOfExtraDoubleData);
+	TRACE(_T(", num %ld"), numOfExtraDoubleData);
 	for(long i = 0; i < numOfExtraDoubleData; i++) {
-		positionStr = inChannel.Tokenize(",", curSubPos);
-		AddDoubleData(atof(positionStr));
-		TRACE2(", l%ld %lf", i, d[i]);
+		positionStr = inChannel.Tokenize(_T(","), curSubPos);
+		AddDoubleData(_ttof(positionStr));
+		TRACE(_T(", l%ld %lf"), i, d[i]);
 	}
-	TRACE0("\n");
+	TRACE(_T("\n"));
 	return true;
 }
 
@@ -1160,16 +1160,16 @@ void CPointListPath::AssertValidPos(POSITION pos) const
 
 void CPointListPath::DumpPoints(const CString& msg) const
 {
-	TRACE0(msg);
-	TRACE0(", points dump begin:\n");
+	TRACE(msg);
+	TRACE(_T(", points dump begin:\n"));
 	POSITION pos = GetHeadPosition();
 	int i = 0;
 	while(pos != NULL) {
 		CPoint p = GetNext(pos);
-		TRACE3("%ld.: (%ld, %ld)\n", i, p.x, p.y);
+		TRACE(_T("%ld.: (%ld, %ld)\n"), i, p.x, p.y);
 		i++;
 	}
-	TRACE0("points dump end.\n");
+	TRACE(_T("points dump end.\n"));
 }
 
 #endif

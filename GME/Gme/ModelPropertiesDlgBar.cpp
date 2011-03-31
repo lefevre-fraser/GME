@@ -30,7 +30,7 @@ void CModelPropertiesDlgBar::ShowType()
 	GetDlgItem(IDC_TYPEMARK)->MoveWindow(6,8,16,16);
 	GetDlgItem(IDC_TYPEMARK)->ShowWindow(SW_SHOW);
 	GetDlgItem(IDC_INSTANCEMARK)->ShowWindow(SW_HIDE);
-	GetDlgItem(IDC_BASETYPE_LABEL)->SetWindowText("Base:");
+	GetDlgItem(IDC_BASETYPE_LABEL)->SetWindowText(_T("Base:"));
 }
 
 void CModelPropertiesDlgBar::ShowInstance()
@@ -38,7 +38,7 @@ void CModelPropertiesDlgBar::ShowInstance()
 	GetDlgItem(IDC_TYPEMARK)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_INSTANCEMARK)->MoveWindow(6,8,16,16);
 	GetDlgItem(IDC_INSTANCEMARK)->ShowWindow(SW_SHOW);
-	GetDlgItem(IDC_BASETYPE_LABEL)->SetWindowText("Type:");
+	GetDlgItem(IDC_BASETYPE_LABEL)->SetWindowText(_T("Type:"));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ void CModelPropertiesDlgBar::writeNumToEdit(CEdit *edit, int kk)
 	edit->SetSel(0, -1);
 	_itoa(kk, buff, 10);
 	CString str = buff;
-	str += "%";
+	str += _T("%");
 	edit->ReplaceSel(str);
 }
 
@@ -73,9 +73,9 @@ void CModelPropertiesDlgBar::OnOK()
 		return;
 	if (fwin->m_hWnd == edit->m_hWnd)
 	{
-		char buff[100];
-		edit->GetLine(0, buff, sizeof(buff)-1);
-		int kk = atoi(buff);
+		TCHAR buff[100];
+		edit->GetLine(0, buff, sizeof(buff)/sizeof(buff[0])-1);
+		int kk = _ttoi(buff);
 		kk = abs(kk);
 		if (!kk)
 			kk = 100;
@@ -118,23 +118,23 @@ void CModelPropertiesDlgBar::SetZoomList(int *list)
 		CString str;
 		if (m_zoomlist[k] > 0)
 		{
-			char buff[100];
-			_itoa(m_zoomlist[k], buff, 10);
+			TCHAR buff[100];
+			_itot(m_zoomlist[k], buff, 10);
 			str = buff;
-			str += "%";
+			str += _T("%");
 		}
 		else
 		{
 			switch (m_zoomlist[k])
 			{
 			case ZOOM_WIDTH:
-				str = "Fit Width";
+				str = _T("Fit Width");
 				break;
 			case ZOOM_HEIGHT:
-				str = "Fit Height";
+				str = _T("Fit Height");
 				break;
 			case ZOOM_ALL:
-				str = "Fit All";
+				str = _T("Fit All");
 				break;
 			}
 		}
@@ -159,9 +159,9 @@ void CModelPropertiesDlgBar::NextZoomVal(int &kk)
 	CEdit* edit = (CEdit*)(zoom->GetDlgItem(IDC_TYPENAME));
 	if (!edit)
 		return;
-	char buff[100];
-	edit->GetLine(0, buff, sizeof(buff)-1);
-	kk = atoi(buff);
+	TCHAR buff[100];
+	edit->GetLine(0, buff, sizeof(buff)/sizeof(buff[0])-1);
+	kk = _ttoi(buff);
 	if (!kk)
 		kk = 100;
 	int i;
@@ -182,9 +182,9 @@ void CModelPropertiesDlgBar::PrevZoomVal(int &kk)
 	CEdit* edit = (CEdit*)(zoom->GetDlgItem(IDC_TYPENAME));
 	if (!edit)
 		return;
-	char buff[100];
-	edit->GetLine(0, buff, sizeof(buff)-1);
-	kk = atoi(buff);
+	TCHAR buff[100];
+	edit->GetLine(0, buff, sizeof(buff)/sizeof(buff[0])-1);
+	kk = _ttoi(buff);
 	if (!kk)
 		kk = 100;
 	int i;

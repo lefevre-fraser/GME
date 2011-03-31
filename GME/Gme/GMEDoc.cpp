@@ -83,7 +83,7 @@ CGMEDoc::CGMEDoc()
 	    COMTHROW( resolver.CoCreateInstance(L"Mga.MgaResolver"));
 	}
 	catch(hresult_exception e) {
-		AfxMessageBox("Fatal error: cannot create MGA Resolver component!",MB_OK | MB_ICONSTOP);
+		AfxMessageBox(_T("Fatal error: cannot create MGA Resolver component!"),MB_OK | MB_ICONSTOP);
 	}
 }
 
@@ -378,7 +378,7 @@ void CGMEDoc::CopySmartToClipboard( CGuiFcoList* list, CGuiAnnotatorList *annLis
 
 	if( number_of_elems == 0) 
 	{
-		AfxMessageBox("No object selected", MB_ICONERROR);
+		AfxMessageBox(_T("No object selected"), MB_ICONERROR);
 		return;
 	}
 
@@ -395,7 +395,7 @@ void CGMEDoc::CopySmartToClipboard( CGuiFcoList* list, CGuiAnnotatorList *annLis
 	// if container selected no other kinds allowed
 	//if( any_container && !all_containers || number_of_elems > 1 && all_containers)
 	//{
-	//	AfxMessageBox("Invalid selection for smart copy. You can select either one container or several non-containers.", MB_ICONERROR);
+	//	AfxMessageBox(_T("Invalid selection for smart copy. You can select either one container or several non-containers."), MB_ICONERROR);
 	//	return;
 	//}
 
@@ -653,7 +653,7 @@ void CGMEDoc::ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent)
 		if (!theApp.multipleView) {
 			view = FindView(model);
 			if(!view) {
-				SetNextToView(model,"", fco);
+				SetNextToView(model,_T(""), fco);
 			}
 			else {
 #if !defined (ACTIVEXGMEVIEW)
@@ -667,7 +667,7 @@ void CGMEDoc::ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent)
 			}
 		}
 		else {
-			SetNextToView(model,"", fco);
+			SetNextToView(model,_T(""), fco);
 		}
 
 		CMainFrame::theInstance->CreateNewView(view, model);
@@ -856,7 +856,7 @@ void CGMEDoc::SetMode(long mode)
 void CGMEDoc::OnModeAutoconnect() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeAutoconnect\r\n");
-	SetEditMode(GME_AUTOCONNECT_MODE, "AUTOCONNECT");
+	SetEditMode(GME_AUTOCONNECT_MODE, _T("AUTOCONNECT"));
 }
 
 void CGMEDoc::OnUpdateModeAutoconnect(CCmdUI* pCmdUI) 
@@ -867,7 +867,7 @@ void CGMEDoc::OnUpdateModeAutoconnect(CCmdUI* pCmdUI)
 void CGMEDoc::OnModeDisconnect() 
 {
 	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeDisconnect\r\n");
-	SetEditMode(GME_DISCONNECT_MODE, "DISCONNECT");
+	SetEditMode(GME_DISCONNECT_MODE, _T("DISCONNECT"));
 }
 
 void CGMEDoc::OnUpdateModeDisconnect(CCmdUI* pCmdUI) 
@@ -877,8 +877,8 @@ void CGMEDoc::OnUpdateModeDisconnect(CCmdUI* pCmdUI)
 
 void CGMEDoc::OnModeEdit() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeEdit\r\n");
-	SetEditMode(GME_EDIT_MODE, "EDIT");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::OnModeEdit\r\n"));
+	SetEditMode(GME_EDIT_MODE, _T("EDIT"));
 }
 
 void CGMEDoc::OnUpdateModeEdit(CCmdUI* pCmdUI) 
@@ -888,8 +888,8 @@ void CGMEDoc::OnUpdateModeEdit(CCmdUI* pCmdUI)
 
 void CGMEDoc::OnModeSet() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeSet\r\n");
-	SetEditMode(GME_SET_MODE, "SET");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::OnModeSet\r\n"));
+	SetEditMode(GME_SET_MODE, _T("SET"));
 }
 
 void CGMEDoc::OnUpdateModeSet(CCmdUI* pCmdUI) 
@@ -899,8 +899,8 @@ void CGMEDoc::OnUpdateModeSet(CCmdUI* pCmdUI)
 
 void CGMEDoc::OnModeZoom() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeZoom\r\n");
-	SetEditMode(GME_ZOOM_MODE, "ZOOM");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::OnModeZoom\r\n"));
+	SetEditMode(GME_ZOOM_MODE, _T("ZOOM"));
 }
 
 void CGMEDoc::OnUpdateModeZoom(CCmdUI* pCmdUI) 
@@ -910,8 +910,8 @@ void CGMEDoc::OnUpdateModeZoom(CCmdUI* pCmdUI)
 
 void CGMEDoc::OnModeVisualize() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeVisualize\r\n");
-	SetEditMode(GME_VISUAL_MODE, "VISUALIZE");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::OnModeVisualize\r\n"));
+	SetEditMode(GME_VISUAL_MODE, _T("VISUALIZE"));
 }
 
 void CGMEDoc::OnUpdateModeVisualize(CCmdUI* pCmdUI) 
@@ -921,8 +921,8 @@ void CGMEDoc::OnUpdateModeVisualize(CCmdUI* pCmdUI)
 
 void CGMEDoc::OnModeShortConnect()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeShortConnect\r\n");
-	SetEditMode(GME_SHORTAUTOCONNECT_MODE, "AUTOCONNECT");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::OnModeShortConnect\r\n"));
+	SetEditMode(GME_SHORTAUTOCONNECT_MODE, _T("AUTOCONNECT"));
 }
 
 void CGMEDoc::OnUpdateModeShortConnect(CCmdUI* pCmdUI)
@@ -932,8 +932,8 @@ void CGMEDoc::OnUpdateModeShortConnect(CCmdUI* pCmdUI)
 
 void CGMEDoc::OnModeShortDisconnect()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnModeShortDisconnect\r\n");
-	SetEditMode(GME_SHORTDISCONNECT_MODE, "DISCONNECT");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::OnModeShortDisconnect\r\n"));
+	SetEditMode(GME_SHORTDISCONNECT_MODE, _T("DISCONNECT"));
 }
 
 void CGMEDoc::OnUpdateModeShortDisconnect(CCmdUI* pCmdUI)
@@ -949,7 +949,7 @@ void CGMEDoc::OnUpdateFileClose(CCmdUI* pCmdUI)
 
 void CGMEDoc::OnCloseDocument(bool suppressErrors) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnCloseDocument\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::OnCloseDocument\r\n"));
 	m_isClosing = true;
 	POSITION pos = GetFirstViewPosition();
 	while (pos) {
@@ -973,7 +973,7 @@ void CGMEDoc::OnCloseDocument(bool suppressErrors)
 
 BOOL CGMEDoc::OnNewDocument()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnNewDocument\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::OnNewDocument\r\n"));
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
@@ -985,7 +985,7 @@ BOOL CGMEDoc::OnNewDocument()
 
 BOOL CGMEDoc::OnOpenDocument(LPCTSTR /*lpszPathName*/)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnOpenDocument\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::OnOpenDocument\r\n"));
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 	
@@ -997,7 +997,7 @@ BOOL CGMEDoc::OnOpenDocument(LPCTSTR /*lpszPathName*/)
 
 void CGMEDoc::OnViewRefresh()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::OnViewRefresh\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::OnViewRefresh\r\n"));
 	ResetAllViews();
 	CGMEBrowser::theInstance->RefreshAll();
 }
@@ -1017,7 +1017,7 @@ void CGMEDoc::back()
 			presentModel( prev.id().c_str(), prev.aspect().c_str());
 		}
 		else
-			CGMEConsole::theInstance->Message( "Could not go further backward", 1);
+			CGMEConsole::theInstance->Message( _T("Could not go further backward"), 1);
 	}
 }
 
@@ -1033,7 +1033,7 @@ void CGMEDoc::forw()
 			presentModel( e.id().c_str(), e.aspect().c_str());
 		}
 		else
-			CGMEConsole::theInstance->Message( "Could not go further forward", 1);
+			CGMEConsole::theInstance->Message( _T("Could not go further forward"), 1);
 	}
 }
 
@@ -1048,7 +1048,7 @@ void CGMEDoc::home()
 			presentModel( home.id().c_str(), home.aspect().c_str());
 		}
 		else
-			CGMEConsole::theInstance->Message( "Could not go home", 1);
+			CGMEConsole::theInstance->Message( _T("Could not go home"), 1);
 
 		//m_historian.totalBrainWash();
 	}
@@ -1156,7 +1156,7 @@ void CGMEDoc::tellHistorian( CComBSTR& modid, CString asp)
 	if( theApp.multipleView) return; // do not bother with history in this scenario
 	if( !modid || modid.Length() == 0) return;
 
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::tellHistorian(str,asp)\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::tellHistorian(str,asp)\r\n"));
 
 	Historian::HistoryElem e( (LPCTSTR) PutInCString( modid), (LPCTSTR) asp);
 	m_historian.erasePrevOccurencesB( e);
@@ -1169,7 +1169,7 @@ void CGMEDoc::tellHistorian( CComPtr<IMgaModel>& model, CString asp)
 	if( theApp.multipleView) return; // do not bother with history in this scenario
 	if( !model)              return;
 
-	CGMEEventLogger::LogGMEEvent("CGMEDoc::tellHistorian(ptr,asp)\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEDoc::tellHistorian(ptr,asp)\r\n"));
 
 	try	{
 		long status;
@@ -1375,7 +1375,7 @@ void CGMEDoc::Historian::erasePrevOccurencesB( const HistoryElem& elem)
 	}
 }
 
-void CGMEDoc::Historian::eraseOccurences( const std::string& p_id)
+void CGMEDoc::Historian::eraseOccurences( const std::wstring& p_id)
 {
 	HISTLIST_ITER it;
 	

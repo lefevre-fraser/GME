@@ -95,38 +95,38 @@ public:
 	};
 
 	// %Z for first fco %z for second ONLY WORKS IN TRANSACTION - this function does not make it's own transaction
-	static void GMEEventPrintf(const char *format, IMgaObject *objOne, IMgaObject *objTwo, ...) //Only works in Transaction!!!!!!!!!
+	static void GMEEventPrintf(const TCHAR *format, IMgaObject *objOne, IMgaObject *objTwo, ...) //Only works in Transaction!!!!!!!!!
 	{
 		if(comLogger != NULL)
 		{
 			CString output(format);
-			if(output.Find("%Z")) {
+			if(output.Find(_T("%Z"))) {
 				if(objOne == NULL)
-					output.Replace(CString("%Z"),CString(""));
+					output.Replace(CString(_T("%Z")),CString(_T("")));
 				else
 				{
 					CComBSTR ID;
 					CComPtr<IMgaObject> ONE = objOne;
 					COMTHROW(ONE->get_ID(&ID));
-					output.Replace(CString("%Z"),CString(ID));
+					output.Replace(CString(_T("%Z")),CString(ID));
 				}
 			}
 
-			if(output.Find("%z")) {
+			if(output.Find(_T("%z"))) {
 				if(objTwo == NULL)
-					output.Replace(CString("%z"),CString(""));
+					output.Replace(CString(_T("%z")),CString(_T("")));
 				else
 				{
 					CComBSTR ID;
 					CComPtr<IMgaObject> TWO = objTwo;
 					COMTHROW(TWO->get_ID(&ID));
-					output.Replace(CString("%z"),CString(ID));
+					output.Replace(CString(_T("%z")),CString(ID));
 				}
 			}
-			char buffer[250];
+			TCHAR buffer[250];
 			va_list v1;
 			va_start(v1,objTwo);
-			vsprintf(buffer,output,v1);
+			_vstprintf_s(buffer,output,v1);
 			va_end(v1);
 
 			CComBSTR b = buffer;

@@ -19,7 +19,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #define CATCHALL_AND_CALL_END \
-	catch( const char * p) \
+	catch( const wchar_t * p) \
 	{ \
 		end(); \
 		SHOW_ERROR( p ); \
@@ -27,7 +27,7 @@ static char THIS_FILE[] = __FILE__;
 	catch(...) \
 	{ \
 		end(); \
-		SHOW_ERROR( "Unhandled error occurred" ); \
+		SHOW_ERROR( L"Unhandled error occurred" ); \
 	} \
 	end();
 
@@ -271,9 +271,9 @@ CComPtr<IMgaMetaRole> CGMEOLEIt::connMetaRolePtrInBetween( CComPtr<IMgaModel> p_
 	CComBSTR to_connect_as_src = roleNameOf( p_srcRole1);
 	CComBSTR to_connect_as_dst = roleNameOf( p_dstRole1);
 
-	to_connect_as_src.Append(" ");
+	to_connect_as_src.Append(_T(" "));
 	to_connect_as_src.AppendBSTR( roleNameOf( p_srcRole2)); // now we have a path like: "model port" composed of roles
-	to_connect_as_dst.Append(" ");
+	to_connect_as_dst.Append(_T(" "));
 	to_connect_as_dst.AppendBSTR( roleNameOf( p_dstRole2));
 
 	return connMetaRolePtrInBetween( p_model, to_connect_as_src, to_connect_as_dst);
@@ -282,8 +282,8 @@ CComPtr<IMgaMetaRole> CGMEOLEIt::connMetaRolePtrInBetween( CComPtr<IMgaModel> p_
 //static 
 CComPtr<IMgaMetaRole> CGMEOLEIt::connMetaRolePtrInBetween( CComPtr<IMgaModel> p_model, const CComBSTR& src_localpath, const CComBSTR& dst_localpath)
 {
-	CComBSTR src_nm( "src");
-	CComBSTR dst_nm( "dst");
+	CComBSTR src_nm( L"src");
+	CComBSTR dst_nm( L"dst");
 
 	// check for connection allowed in p_model between p_src and p_dst
 
@@ -342,9 +342,9 @@ CComPtr<IMgaMetaRole> CGMEOLEIt::connMetaRolePtrInBetween( CComPtr<IMgaModel> p_
 					CComBSTR ds; // "role1 role2" or "role" most tipically (see local path defined in meta.idl)
 					COMTHROW( (*item_it)->get_Desc( &ds ));
 
-					if( nm == "src" && ds == src_localpath)
+					if( nm == _T("src") && ds == src_localpath)
 						src_found = true;
-					if( nm == "dst" && ds == dst_localpath)
+					if( nm == _T("dst") && ds == dst_localpath)
 						dst_found = true;
 				}
 			}
@@ -520,11 +520,11 @@ bool CGMEOLEIt::createObjs( CComPtr<IMgaModel>& p_parent, LPCTSTR p_partToCreate
 	COMTHROW( p_parent->CreateChildObject( metarole, PutOut( newfco)));
 	THROW_IF_NULL( newfco, _T("Invalid new object pointer"));
 
-	CComBSTR new_name("New"); new_name.Append( p_partToCreate);
+	CComBSTR new_name(L"New"); new_name.Append( p_partToCreate);
 	CComBSTR b_given_name( p_givenName);
 
 	if( newfco)
-		COMTHROW( newfco->put_Name( b_given_name == ""? new_name : b_given_name ));
+		COMTHROW( newfco->put_Name( b_given_name == _T("")? new_name : b_given_name ));
 
 	ASSERT( p_pNewObj);
 	*p_pNewObj = newfco.Detach();
@@ -579,11 +579,11 @@ bool CGMEOLEIt::cloneObjs( CComPtr<IMgaModel>& p_parent, IMgaFCO* p_existingFcoP
 		CComPtr<IMgaFCO> newfco;
 		COMTHROW( coll->get_Item( 1, &newfco));
 
-		CComBSTR new_name("Cloned"); new_name.Append(p_existingFcoName);
+		CComBSTR new_name(L"Cloned"); new_name.Append(p_existingFcoName);
 		CComBSTR given_name( p_givenName);
 
 		if( newfco)
-			COMTHROW( newfco->put_Name( given_name == "" ? new_name : given_name));
+			COMTHROW( newfco->put_Name( given_name == _T("") ? new_name : given_name));
 
 		ASSERT( p_pNewObj);
 		*p_pNewObj = newfco.Detach();
@@ -707,21 +707,21 @@ END_INTERFACE_MAP()
 
 BOOL CGMEOLEIt::GetValid() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GetValid()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::GetValid()\r\n"));
 
 	return AmIValid() ? TRUE : FALSE;
 }
 
 void CGMEOLEIt::SetValid(BOOL) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SetValid()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::SetValid()\r\n"));
 
 	SetNotSupported();
 }
 
 LPDISPATCH CGMEOLEIt::GetMgaModel() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GetMgaModel()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::GetMgaModel()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -751,14 +751,14 @@ LPDISPATCH CGMEOLEIt::GetMgaModel()
 
 void CGMEOLEIt::SetMgaModel(LPDISPATCH) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SetMgaModel()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::SetMgaModel()\r\n"));
 
 	SetNotSupported();
 }
 
 void CGMEOLEIt::Print() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Print()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Print()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 
@@ -767,7 +767,7 @@ void CGMEOLEIt::Print()
 
 void CGMEOLEIt::PrintDialog() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::PrintDialog()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::PrintDialog()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 
@@ -777,14 +777,14 @@ void CGMEOLEIt::PrintDialog()
 
 void CGMEOLEIt::DumpWindowsMetaFile(LPCTSTR filePath) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::DumpWindowsMetaFile()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::DumpWindowsMetaFile()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 
 	CMetaFileDC cDC;
 	BOOL ret = cDC.CreateEnhanced(m_theView->GetDC(),filePath,NULL,_T("GME Model"));
 	if (ret == FALSE) {
-		AfxMessageBox("Unable to create metafile.", MB_OK | MB_ICONSTOP);
+		AfxMessageBox(_T("Unable to create metafile."), MB_OK | MB_ICONSTOP);
 		return;
 	}
 
@@ -799,7 +799,7 @@ void CGMEOLEIt::DumpWindowsMetaFile(LPCTSTR filePath)
 
 void CGMEOLEIt::CheckConstraints() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::CheckConstraints()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::CheckConstraints()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 	PRECONDITION_ACTIVE_CONSTMGR
@@ -809,7 +809,7 @@ void CGMEOLEIt::CheckConstraints()
 
 void CGMEOLEIt::RunComponent(LPCTSTR appID) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::RunComponent()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::RunComponent()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 
@@ -818,16 +818,16 @@ void CGMEOLEIt::RunComponent(LPCTSTR appID)
 
 void CGMEOLEIt::RunComponentDialog() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::RunComponentDialog()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::RunComponentDialog()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 
-	m_theView->RunComponent("");
+	m_theView->RunComponent(_T(""));
 }
 
 LPDISPATCH CGMEOLEIt::GetAspects() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GetAspects()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::GetAspects()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 
@@ -848,14 +848,14 @@ LPDISPATCH CGMEOLEIt::GetAspects()
 
 void CGMEOLEIt::SetAspects(LPDISPATCH) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SetAspects()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::SetAspects()\r\n"));
 
 	SetNotSupported();
 }
 
 void CGMEOLEIt::Close() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Close()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Close()\r\n"));
 
 	PRECONDITION_VALID_MODEL;
 
@@ -864,7 +864,7 @@ void CGMEOLEIt::Close()
 
 void CGMEOLEIt::GrayOutFCO(BOOL bGray, BOOL bNeighbours, LPDISPATCH mgaFCOs) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GrayOutFCO()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::GrayOutFCO()\r\n"));
 
 	PRECONDITION_VALID_MODEL;
 
@@ -910,7 +910,7 @@ void CGMEOLEIt::GrayOutFCO(BOOL bGray, BOOL bNeighbours, LPDISPATCH mgaFCOs)
 
 void CGMEOLEIt::GrayOutHide() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GrayOutHide()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::GrayOutHide()\r\n"));
 
 	PRECONDITION_VALID_MODEL;
 
@@ -924,7 +924,7 @@ void CGMEOLEIt::GrayOutHide()
 
 void CGMEOLEIt::ShowSetMembers(LPDISPATCH mgaFCO) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ShowSetMembers()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ShowSetMembers()\r\n"));
 
 	PRECONDITION_VALID_MODEL;
   
@@ -978,7 +978,7 @@ void CGMEOLEIt::ShowSetMembers(LPDISPATCH mgaFCO)
 
 void CGMEOLEIt::HideSetMembers() 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::HideSetMembers()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::HideSetMembers()\r\n"));
 
 	PRECONDITION_VALID_MODEL;
 	 
@@ -991,7 +991,7 @@ void CGMEOLEIt::HideSetMembers()
 
 void CGMEOLEIt::Zoom(long percent) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Zoom()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Zoom()\r\n"));
 
 	PRECONDITION_VALID_MODEL;
 
@@ -1001,7 +1001,7 @@ void CGMEOLEIt::Zoom(long percent)
 
 void CGMEOLEIt::ZoomTo(LPDISPATCH mgaFCOs) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ZoomTo()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ZoomTo()\r\n"));
 
 	PRECONDITION_VALID_MODEL;
  
@@ -1046,7 +1046,7 @@ void CGMEOLEIt::ZoomTo(LPDISPATCH mgaFCOs)
 
 void CGMEOLEIt::Scroll(long bar, long scroll) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Scroll()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Scroll()\r\n"));
 
 	PRECONDITION_VALID_MODEL;
 
@@ -1083,7 +1083,7 @@ void CGMEOLEIt::Scroll(long bar, long scroll)
 
 HRESULT CGMEOLEIt::DumpModelGeometryXML(LPCTSTR filePath) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::DumpModelGeometryXML()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::DumpModelGeometryXML()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 
@@ -1137,21 +1137,21 @@ CComPtr<IMgaFCO> CGMEOLEIt::fcoByPath( const CComPtr<IMgaModel>& mod, LPCTSTR p_
 	}
 
 
-	std::string path( path_ptr);
-	if( path.compare( "./") == 0) return CComPtr<IMgaFCO>( mod);
+	std::wstring path( path_ptr);
+	if( path.compare( _T("./")) == 0) return CComPtr<IMgaFCO>( mod);
 
 	bool went_up = false;
 	bool null_ptr_found = newparent == 0;
 	while( !null_ptr_found && !path.empty() &&
-		   ( path.compare("..") == 0 
-		   || path.substr(0, 3).compare( "../") == 0))
+		   ( path.compare(_T("..")) == 0 
+		   || path.substr(0, 3).compare( _T("../")) == 0))
 	{
 		newparent = myParent( newparent);
 		null_ptr_found = newparent == 0;
 		went_up = true;
 
 		if( path.length() > 2) path = path.substr( 3); // passing one directory : '../'
-		else path = "";
+		else path = _T("");
 	}
 
 	if( null_ptr_found) // rootfolder reached => invalid path
@@ -1169,7 +1169,7 @@ CComPtr<IMgaFCO> CGMEOLEIt::fcoByPath( const CComPtr<IMgaModel>& mod, LPCTSTR p_
 
 void CGMEOLEIt::ShowFCO( LPCTSTR p_objName, BOOL p_inParent)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ShowFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ShowFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL			// calls AmIValid
 
@@ -1195,7 +1195,7 @@ void CGMEOLEIt::ShowFCO( LPCTSTR p_objName, BOOL p_inParent)
 
 void CGMEOLEIt::ShowFCOPtr( LPDISPATCH p_obj, BOOL p_inParent)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ShowFCOPtr\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ShowFCOPtr\r\n"));
 
 	PRECONDITION_VALID_MODEL			// calls AmIValid
 
@@ -1212,7 +1212,7 @@ void CGMEOLEIt::ShowFCOPtr( LPDISPATCH p_obj, BOOL p_inParent)
 
 LPDISPATCH CGMEOLEIt::Child( LPCTSTR p_objName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Child\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Child\r\n"));
 
 	PRECONDITION_VALID_MODEL			// calls AmIValid
 
@@ -1234,7 +1234,7 @@ LPDISPATCH CGMEOLEIt::Child( LPCTSTR p_objName)
 
 LPDISPATCH CGMEOLEIt::Create( LPCTSTR p_partName, LPCTSTR p_objname)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Create\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Create\r\n"));
 
 	PRECONDITION_VALID_MODEL			// calls AmIValid
 
@@ -1255,7 +1255,7 @@ LPDISPATCH CGMEOLEIt::Create( LPCTSTR p_partName, LPCTSTR p_objname)
 
 LPDISPATCH CGMEOLEIt::CreateInChild( LPCTSTR p_childAsParent, LPCTSTR p_part, LPCTSTR p_objname)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::CreateInChild\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::CreateInChild\r\n"));
 
 	PRECONDITION_VALID_MODEL			// calls AmIValid
 
@@ -1280,7 +1280,7 @@ LPDISPATCH CGMEOLEIt::CreateInChild( LPCTSTR p_childAsParent, LPCTSTR p_part, LP
 
 LPDISPATCH CGMEOLEIt::CreateInChildFCO( LPDISPATCH p_childAsParent, LPCTSTR p_part, LPCTSTR p_objname)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Create\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Create\r\n"));
 
 	PRECONDITION_VALID_MODEL			// calls AmIValid
 
@@ -1307,7 +1307,7 @@ LPDISPATCH CGMEOLEIt::CreateInChildFCO( LPDISPATCH p_childAsParent, LPCTSTR p_pa
 
 LPDISPATCH CGMEOLEIt::Duplicate( LPCTSTR p_existingObjName, LPCTSTR p_objName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Duplicate\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Duplicate\r\n"));
 
 	PRECONDITION_VALID_MODEL			// calls AmIValid
 
@@ -1322,7 +1322,7 @@ LPDISPATCH CGMEOLEIt::Duplicate( LPCTSTR p_existingObjName, LPCTSTR p_objName)
 		THROW_IF_NULL( model, _T("Invalid parent model"));
 		CComPtr<IMgaFCO> exist_obj( getChildInByName( model, p_existingObjName));
 		THROW_IF_NULL( exist_obj, _T("Duplicable object not found"));
-		cloneObjs( model, exist_obj, "" , p_objName, &obj_ptr);
+		cloneObjs( model, exist_obj, _T("") , p_objName, &obj_ptr);
 	}
 	CATCHALL_AND_CALL_END;
 	return obj_ptr.Detach();
@@ -1330,7 +1330,7 @@ LPDISPATCH CGMEOLEIt::Duplicate( LPCTSTR p_existingObjName, LPCTSTR p_objName)
 
 LPDISPATCH CGMEOLEIt::DuplicateFCO( LPDISPATCH p_existingFCO, LPCTSTR p_objName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::DuplicateFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::DuplicateFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL			// calls AmIValid
 
@@ -1346,7 +1346,7 @@ LPDISPATCH CGMEOLEIt::DuplicateFCO( LPDISPATCH p_existingFCO, LPCTSTR p_objName)
 		CComQIPtr<IMgaFCO> exist_fco( putInTerr( p_existingFCO));
 		THROW_IF_NULL( exist_fco, _T("Invalid object pointer"));
 
-		cloneObjs( model, exist_fco, "", p_objName, &obj_ptr);
+		cloneObjs( model, exist_fco, _T(""), p_objName, &obj_ptr);
 	}
 	CATCHALL_AND_CALL_END;
 
@@ -1355,7 +1355,7 @@ LPDISPATCH CGMEOLEIt::DuplicateFCO( LPDISPATCH p_existingFCO, LPCTSTR p_objName)
 
 void CGMEOLEIt::Rename( LPCTSTR p_oldName, LPCTSTR p_newName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Rename\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Rename\r\n"));
 
 	PRECONDITION_VALID_MODEL			// calls AmIValid
 
@@ -1377,7 +1377,7 @@ void CGMEOLEIt::Rename( LPCTSTR p_oldName, LPCTSTR p_newName)
 
 void CGMEOLEIt::SetName( LPDISPATCH p_lpDisp, LPCTSTR p_name)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SetName\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::SetName\r\n"));
 
 	PRECONDITION_VALID_MODEL			// calls AmIValid
 
@@ -1397,7 +1397,7 @@ void CGMEOLEIt::SetName( LPDISPATCH p_lpDisp, LPCTSTR p_name)
 
 void CGMEOLEIt::Include( LPCTSTR psetnm, LPCTSTR pfconm)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Include\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Include\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -1421,7 +1421,7 @@ void CGMEOLEIt::Include( LPCTSTR psetnm, LPCTSTR pfconm)
 
 void CGMEOLEIt::IncludeFCO( LPDISPATCH pset, LPDISPATCH pfco)
 { 
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::IncludeFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::IncludeFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -1446,7 +1446,7 @@ void CGMEOLEIt::IncludeFCO( LPDISPATCH pset, LPDISPATCH pfco)
 }
 void CGMEOLEIt::Exclude( LPCTSTR psetnm, LPCTSTR pfconm)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Exclude\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Exclude\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -1470,7 +1470,7 @@ void CGMEOLEIt::Exclude( LPCTSTR psetnm, LPCTSTR pfconm)
 }
 void CGMEOLEIt::ExcludeFCO( LPDISPATCH pset, LPDISPATCH pfco)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ExcludeFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ExcludeFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -1497,7 +1497,7 @@ void CGMEOLEIt::ExcludeFCO( LPDISPATCH pset, LPDISPATCH pfco)
 
 LPDISPATCH CGMEOLEIt::Connect( LPCTSTR p_srcName, LPCTSTR p_dstName, LPCTSTR p_connName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Connect\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Connect\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -1519,7 +1519,7 @@ LPDISPATCH CGMEOLEIt::Connect( LPCTSTR p_srcName, LPCTSTR p_dstName, LPCTSTR p_c
 		CComBSTR conn_name( p_connName);
 		try
 		{
-			if( conn_name != "")
+			if( conn_name != _T(""))
 				metarole = metaRolePtrInByName( model, conn_name);
 		}catch(...) 
 		{ 
@@ -1539,7 +1539,7 @@ LPDISPATCH CGMEOLEIt::Connect( LPCTSTR p_srcName, LPCTSTR p_dstName, LPCTSTR p_c
 
 void CGMEOLEIt::Disconnect( LPCTSTR p_srcName, LPCTSTR p_dstName, LPCTSTR p_connName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Disconnect\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Disconnect\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -1550,8 +1550,8 @@ void CGMEOLEIt::Disconnect( LPCTSTR p_srcName, LPCTSTR p_dstName, LPCTSTR p_conn
 	start();
 	try
 	{
-		CComBSTR src_role( "src");
-		CComBSTR dst_role( "dst");
+		CComBSTR src_role( L"src");
+		CComBSTR dst_role( L"dst");
 
 		CComQIPtr<IMgaModel> model( putInTerr( m_theMgaModel));
 		THROW_IF_NULL( model, _T("Invalid parent model"));
@@ -1599,7 +1599,7 @@ void CGMEOLEIt::Disconnect( LPCTSTR p_srcName, LPCTSTR p_dstName, LPCTSTR p_conn
 				}
 				bool name_checked = true; // name or kind could be checked. The Disconnect uses: NAME
 				CComBSTR conn_name( p_connName);
-				if( conn_name != "") // if name provided
+				if( conn_name != _T("")) // if name provided
 				{
 					name_checked = false;
 
@@ -1627,7 +1627,7 @@ void CGMEOLEIt::Disconnect( LPCTSTR p_srcName, LPCTSTR p_dstName, LPCTSTR p_conn
 
 LPDISPATCH CGMEOLEIt::ConnectThruPort( LPCTSTR p_srcRole1, LPCTSTR p_srcRole2, LPCTSTR p_dstRole1, LPCTSTR p_dstRole2, LPCTSTR p_connName) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ConnectThruPort\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ConnectThruPort\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -1653,36 +1653,36 @@ LPDISPATCH CGMEOLEIt::ConnectThruPort( LPCTSTR p_srcRole1, LPCTSTR p_srcRole2, L
 		objtype_enum type1_info = myTypeIs( src1);
 		objtype_enum type2_info = myTypeIs( dst1);
 
-		if( type1_info == OBJTYPE_MODEL && CComBSTR( p_srcRole2) != "")
+		if( type1_info == OBJTYPE_MODEL && CComBSTR( p_srcRole2) != _T(""))
 		{
 			// for models only:
 			sport = getChildInByName( CComQIPtr<IMgaModel>(src1), p_srcRole2);
 		}
-		else if( type1_info == OBJTYPE_REFERENCE && CComBSTR( p_srcRole2) != "")
+		else if( type1_info == OBJTYPE_REFERENCE && CComBSTR( p_srcRole2) != _T(""))
 		{
 			refPortFinderAndChainBuilder( p_srcRole2, src1, sport, srefs );
 		}
 
-		if( type2_info == OBJTYPE_MODEL && CComBSTR( p_dstRole2) != "")
+		if( type2_info == OBJTYPE_MODEL && CComBSTR( p_dstRole2) != _T(""))
 		{
 			dport = getChildInByName( CComQIPtr<IMgaModel>(dst1), p_dstRole2);
 		}
-		else if( type2_info == OBJTYPE_REFERENCE && CComBSTR( p_dstRole2) != "")
+		else if( type2_info == OBJTYPE_REFERENCE && CComBSTR( p_dstRole2) != _T(""))
 		{
 			refPortFinderAndChainBuilder( p_dstRole2, dst1, dport, drefs);
 		}
 
 		bool error;
-		error = CComBSTR( p_srcRole2) != "" && !sport;  // if sport == NULL and the p_srcRole2 != NULL then error state
+		error = CComBSTR( p_srcRole2) != _T("") && !sport;  // if sport == NULL and the p_srcRole2 != NULL then error state
 		THROW_IF_BOOL( error, _T("SourceRole2 object not found"));
-		error = CComBSTR( p_dstRole2) != "" && !dport;       // if dport == NULL and the p_dstRole2 != NULL then error state
+		error = CComBSTR( p_dstRole2) != _T("") && !dport;       // if dport == NULL and the p_dstRole2 != NULL then error state
 		THROW_IF_BOOL( error, _T("DestinationRole2 object not found"));
 
 		CComPtr<IMgaMetaRole> metarole;
 		CComBSTR conn_name( p_connName);
 		try
 		{
-			if( conn_name != "")
+			if( conn_name != _T(""))
 				metarole = metaRolePtrInByName( model, conn_name);
 		}catch(...)
 		{
@@ -1720,7 +1720,7 @@ LPDISPATCH CGMEOLEIt::ConnectThruPort( LPCTSTR p_srcRole1, LPCTSTR p_srcRole2, L
 
 LPDISPATCH CGMEOLEIt::ConnectThruPortFCO( LPDISPATCH p_src1, LPDISPATCH p_src2Port, LPDISPATCH p_dst1, LPDISPATCH p_dst2Port, LPCTSTR p_connName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ConnectThruPortFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ConnectThruPortFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -1794,7 +1794,7 @@ LPDISPATCH CGMEOLEIt::ConnectThruPortFCO( LPDISPATCH p_src1, LPDISPATCH p_src2Po
 		CComBSTR conn_name( p_connName);
 		try
 		{
-			if( conn_name != "")
+			if( conn_name != _T(""))
 				metarole = metaRolePtrInByName( model, conn_name);
 		}catch(...)
 		{
@@ -1843,8 +1843,8 @@ void CGMEOLEIt::DisconnectThruPort( LPCTSTR p_srcRole1, LPCTSTR p_srcRole2, LPCT
 	start();
 	try
 	{
-		CComBSTR src_role( "src");
-		CComBSTR dst_role( "dst");
+		CComBSTR src_role( L"src");
+		CComBSTR dst_role( L"dst");
 
 		CComQIPtr<IMgaModel> model( putInTerr( m_theMgaModel));
 		THROW_IF_NULL( model, _T("Invalid parent model"));
@@ -1881,9 +1881,9 @@ void CGMEOLEIt::DisconnectThruPort( LPCTSTR p_srcRole1, LPCTSTR p_srcRole2, LPCT
 		}
 
 		bool error;
-		error = CComBSTR( p_srcRole2) != "" && !sport;
+		error = CComBSTR( p_srcRole2) != _T("") && !sport;
 		THROW_IF_BOOL( error, _T("SourceRole2 object not found"));
-		error = CComBSTR( p_dstRole2) != "" && !dport;
+		error = CComBSTR( p_dstRole2) != _T("") && !dport;
 		THROW_IF_BOOL( error, _T("DestinationRole2 object not found"));
 		// will look for a connection inside model
 		// between 
@@ -1939,7 +1939,7 @@ void CGMEOLEIt::DisconnectThruPort( LPCTSTR p_srcRole1, LPCTSTR p_srcRole2, LPCT
 				}
 				bool name_checked = true;
 				CComBSTR conn_name( p_connName);
-				if( conn_name != "") // if name provided
+				if( conn_name != _T("")) // if name provided
 				{
 					name_checked = false;
 
@@ -1967,7 +1967,7 @@ void CGMEOLEIt::DisconnectThruPort( LPCTSTR p_srcRole1, LPCTSTR p_srcRole2, LPCT
 
 LPDISPATCH CGMEOLEIt::ConnectFCOs( LPDISPATCH p_src, LPDISPATCH p_dst, LPCTSTR p_connName) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ConnectFCOs\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ConnectFCOs\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -1991,7 +1991,7 @@ LPDISPATCH CGMEOLEIt::ConnectFCOs( LPDISPATCH p_src, LPDISPATCH p_dst, LPCTSTR p
 
 		try
 		{
-			if( conn_name != "")
+			if( conn_name != _T(""))
 				metarole = metaRolePtrInByName( model, conn_name);
 		}catch(...)
 		{
@@ -2010,7 +2010,7 @@ LPDISPATCH CGMEOLEIt::ConnectFCOs( LPDISPATCH p_src, LPDISPATCH p_dst, LPCTSTR p
 
 void CGMEOLEIt::DisconnectFCOs( LPDISPATCH p_src, LPDISPATCH p_dst, LPCTSTR p_connName) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::DisconnectFCOs\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::DisconnectFCOs\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2021,8 +2021,8 @@ void CGMEOLEIt::DisconnectFCOs( LPDISPATCH p_src, LPDISPATCH p_dst, LPCTSTR p_co
 	start();
 	try
 	{
-		CComBSTR src_role( "src");
-		CComBSTR dst_role( "dst");
+		CComBSTR src_role( L"src");
+		CComBSTR dst_role( L"dst");
 
 		CComQIPtr<IMgaModel> model( putInTerr( m_theMgaModel));
 		THROW_IF_NULL( model, _T("Invalid parent model"));
@@ -2070,7 +2070,7 @@ void CGMEOLEIt::DisconnectFCOs( LPDISPATCH p_src, LPDISPATCH p_dst, LPCTSTR p_co
 				}
 				bool name_checked = true; // name or kind could be checked. DisconnectFCO uses: NAME
 				CComBSTR conn_name( p_connName);
-				if( conn_name != "") // if name provided
+				if( conn_name != _T("")) // if name provided
 				{
 					name_checked = false;
 
@@ -2098,7 +2098,7 @@ void CGMEOLEIt::DisconnectFCOs( LPDISPATCH p_src, LPDISPATCH p_dst, LPCTSTR p_co
 
 void CGMEOLEIt::Refer( LPCTSTR prefnm, LPCTSTR pfconm)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Refer\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Refer\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2123,7 +2123,7 @@ void CGMEOLEIt::Refer( LPCTSTR prefnm, LPCTSTR pfconm)
 
 void CGMEOLEIt::ReferFCO( LPDISPATCH pref, LPDISPATCH pfco)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ReferFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ReferFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2150,7 +2150,7 @@ void CGMEOLEIt::ReferFCO( LPDISPATCH pref, LPDISPATCH pfco)
 
 void CGMEOLEIt::ClearRef( LPCTSTR prefnm)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ClearRef\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ClearRef\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2173,7 +2173,7 @@ void CGMEOLEIt::ClearRef( LPCTSTR prefnm)
 
 void CGMEOLEIt::ClearRefFCO( LPDISPATCH pref)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::ClearRefFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::ClearRefFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2199,7 +2199,7 @@ void CGMEOLEIt::ClearRefFCO( LPDISPATCH pref)
 
 void CGMEOLEIt::FollowRef( LPCTSTR prefnm)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::FollowRef\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::FollowRef\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2226,7 +2226,7 @@ void CGMEOLEIt::FollowRef( LPCTSTR prefnm)
 
 void CGMEOLEIt::FollowRefFCO( LPDISPATCH pref)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::FollowRefFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::FollowRefFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2252,14 +2252,14 @@ void CGMEOLEIt::FollowRefFCO( LPDISPATCH pref)
 
 LPDISPATCH CGMEOLEIt::NullFCO()
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::NullFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::NullFCO\r\n"));
 	CComPtr<IMgaFCO> nullobj;
 	return nullobj.Detach();
 }
 
 void CGMEOLEIt::SetAttribute( LPCTSTR p_partName, LPCTSTR p_attrName, VARIANT& p_attrValue)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SetAttribute\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::SetAttribute\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2286,7 +2286,7 @@ void CGMEOLEIt::SetAttribute( LPCTSTR p_partName, LPCTSTR p_attrName, VARIANT& p
 
 VARIANT CGMEOLEIt::GetAttribute( LPCTSTR p_partName, LPCTSTR p_attrName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GetAttribute\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::GetAttribute\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2314,7 +2314,7 @@ VARIANT CGMEOLEIt::GetAttribute( LPCTSTR p_partName, LPCTSTR p_attrName)
 
 void CGMEOLEIt::SetAttributeFCO( LPDISPATCH p_fco, LPCTSTR p_attrName, VARIANT& p_attrValue)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SetAttributeFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::SetAttributeFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2343,7 +2343,7 @@ void CGMEOLEIt::SetAttributeFCO( LPDISPATCH p_fco, LPCTSTR p_attrName, VARIANT& 
 
 VARIANT CGMEOLEIt::GetAttributeFCO( LPDISPATCH p_fco, LPCTSTR p_attrName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GetAttributeFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::GetAttributeFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2374,7 +2374,7 @@ VARIANT CGMEOLEIt::GetAttributeFCO( LPDISPATCH p_fco, LPCTSTR p_attrName)
 
 LPDISPATCH CGMEOLEIt::SubType( LPCTSTR p_baseName, LPCTSTR p_subtypeName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Subtype\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Subtype\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2406,7 +2406,7 @@ LPDISPATCH CGMEOLEIt::SubType( LPCTSTR p_baseName, LPCTSTR p_subtypeName)
 
 LPDISPATCH CGMEOLEIt::Instantiate( LPCTSTR p_baseName, LPCTSTR p_instanceName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Instantiate\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Instantiate\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2438,7 +2438,7 @@ LPDISPATCH CGMEOLEIt::Instantiate( LPCTSTR p_baseName, LPCTSTR p_instanceName)
 
 LPDISPATCH CGMEOLEIt::SubTypeFCO( LPDISPATCH p_base, LPCTSTR p_subtypeName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SubTypeFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::SubTypeFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2472,7 +2472,7 @@ LPDISPATCH CGMEOLEIt::SubTypeFCO( LPDISPATCH p_base, LPCTSTR p_subtypeName)
 
 LPDISPATCH CGMEOLEIt::InstantiateFCO( LPDISPATCH p_base, LPCTSTR p_instanceName)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::InstantiateFCO\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::InstantiateFCO\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2507,7 +2507,7 @@ LPDISPATCH CGMEOLEIt::InstantiateFCO( LPDISPATCH p_base, LPCTSTR p_instanceName)
 
 void CGMEOLEIt::BeginTransaction( )
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::BeginTransaction\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::BeginTransaction\r\n"));
 
 	beginTrans();
 	m_isInUserInitiatedTransaction = true;
@@ -2516,7 +2516,7 @@ void CGMEOLEIt::BeginTransaction( )
 
 void CGMEOLEIt::CommitTransaction( )
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::CommitTransaction\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::CommitTransaction\r\n"));
 
 	commitTrans();
 	m_isInUserInitiatedTransaction = false;
@@ -2524,7 +2524,7 @@ void CGMEOLEIt::CommitTransaction( )
 
 void CGMEOLEIt::AbortTransaction( )
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::AbortTransaction\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::AbortTransaction\r\n"));
 
 	abortTrans();
 	m_isInUserInitiatedTransaction = false;
@@ -2532,7 +2532,7 @@ void CGMEOLEIt::AbortTransaction( )
 
 VARIANT_BOOL CGMEOLEIt::IsInTransaction( )
 { 
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::IsInTransaction\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::IsInTransaction\r\n"));
 
 	CComPtr<IMgaTerritory> act_terr;
 	COMTHROW( theApp.mgaProject->get_ActiveTerritory( &act_terr));
@@ -2542,7 +2542,7 @@ VARIANT_BOOL CGMEOLEIt::IsInTransaction( )
 
 LPDISPATCH CGMEOLEIt::PutInTerritory( LPDISPATCH one_obj)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::PutInTerritory\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::PutInTerritory\r\n"));
 
 	return putInTerr( one_obj);
 }
@@ -2550,7 +2550,7 @@ LPDISPATCH CGMEOLEIt::PutInTerritory( LPDISPATCH one_obj)
 
 void CGMEOLEIt::Help(  )
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Help\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Help\r\n"));
 
 	static const char * htmlhelp = 
 							"Scripting HELP<br>\
@@ -2570,7 +2570,7 @@ void CGMEOLEIt::Help(  )
 
 void CGMEOLEIt::SetSelected( LPCTSTR list) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SetSelected()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::SetSelected()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2588,8 +2588,8 @@ void CGMEOLEIt::SetSelected( LPCTSTR list)
 		
 		CString tok,m = list;
 		int i = 0;
-		tok = m.Tokenize( " ", i);
-		while( tok != "")
+		tok = m.Tokenize( _T(" "), i);
+		while( tok != _T(""))
 		{
 			CComPtr<IMgaFCO> ch;
 			CComBSTR nm( (LPCTSTR) tok);
@@ -2598,7 +2598,7 @@ void CGMEOLEIt::SetSelected( LPCTSTR list)
 			{
 				COMTHROW( coll->Append( ch ));
 			}
-			tok = m.Tokenize( " ", i);
+			tok = m.Tokenize( _T(" "), i);
 		}
 		
 		long l = 0;
@@ -2643,7 +2643,7 @@ void CGMEOLEIt::SetSelected( LPCTSTR list)
 
 BSTR CGMEOLEIt::GetSelected( ) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GetSelected()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::GetSelected()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2677,8 +2677,8 @@ BSTR CGMEOLEIt::GetSelected( )
 				CComQIPtr<IMgaFCO> tfco( putInTerr( fco));
 				CComBSTR nm;
 				COMTHROW( tfco->get_Name( &nm));
-				TRACE( "setselectedFCO input collection: %s", nm);
-				if( !string_res.Length() == 0) string_res.Append(" ");
+				TRACE( _T("setselectedFCO input collection: %s"), nm);
+				if( !string_res.Length() == 0) string_res.Append(_T(" "));
 				string_res.AppendBSTR( nm);
 			}
 		}
@@ -2690,7 +2690,7 @@ BSTR CGMEOLEIt::GetSelected( )
 
 void CGMEOLEIt::SetSelectedFCOs( LPDISPATCH p_dispColl)
 { 
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SetSelectedFCOs()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::SetSelectedFCOs()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2748,7 +2748,7 @@ void CGMEOLEIt::SetSelectedFCOs( LPDISPATCH p_dispColl)
 
 LPDISPATCH CGMEOLEIt::GetSelectedFCOs( ) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GetSelectedFCOs()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::GetSelectedFCOs()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2793,7 +2793,7 @@ void CGMEOLEIt::moveAspect( int dir)
 
 CString CGMEOLEIt::GetCurrentAspect(void) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::GetCurrentAspect()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::GetCurrentAspect()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 
@@ -2802,7 +2802,7 @@ CString CGMEOLEIt::GetCurrentAspect(void)
 
 void CGMEOLEIt::SetCurrentAspect(const CString& aspectName) 
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::SetCurrentAspect()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::SetCurrentAspect()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 
@@ -2811,7 +2811,7 @@ void CGMEOLEIt::SetCurrentAspect(const CString& aspectName)
 
 void CGMEOLEIt::NextAspect( )
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::NextAspect()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::NextAspect()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2823,7 +2823,7 @@ void CGMEOLEIt::NextAspect( )
 
 void CGMEOLEIt::PrevAspect( )
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::PrevAspect()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::PrevAspect()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2885,7 +2885,7 @@ void CGMEOLEIt::moveView( int dir )
 }
 void CGMEOLEIt::Next( )
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Next()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Next()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2897,7 +2897,7 @@ void CGMEOLEIt::Next( )
 
 void CGMEOLEIt::Prev( )
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Prev()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Prev()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2913,15 +2913,15 @@ void CGMEOLEIt::setObjPos( CComPtr<IMgaFCO> pChild, LPCTSTR pAspectName, long pa
 	if( !pChild) return;
 
 	CString path;
-	path.Format( "PartRegs/%s/Position", pAspectName);
+	path.Format( _T("PartRegs/%s/Position"), pAspectName);
 	CString valu;
-	valu.Format( "%u,%u", parX, parY);
+	valu.Format( _T("%u,%u"), parX, parY);
 	COMTHROW( pChild->put_RegistryValue( PutInBstr(path), PutInBstr(valu)));
 }
 
 void CGMEOLEIt::Position( LPCTSTR pObjName, LPCTSTR pAspectName, long parX, long parY)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::Position()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Position()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -2944,7 +2944,7 @@ void CGMEOLEIt::Position( LPCTSTR pObjName, LPCTSTR pAspectName, long parX, long
 
 void CGMEOLEIt::PositionFCO( LPDISPATCH pObjPtr, LPCTSTR pAspectName, long parX, long parY)
 {
-	CGMEEventLogger::LogGMEEvent("CGMEOLEIt::PositionFCO()\r\n");
+	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::PositionFCO()\r\n"));
 
 	PRECONDITION_VALID_MODEL		// calls AmIValid
 
@@ -3724,7 +3724,7 @@ STDMETHODIMP CGMEOLEIt::XDual::SetSelectedFCOs(THIS_ IMgaFCOs* fcos_to_select)
 
 	TRY_DUAL(IID_IGMEOLEIt)
 	{
-		TRACE( "XDual::SetSelectedFCOs");
+		TRACE( _T("XDual::SetSelectedFCOs"));
 		pThis->SetSelectedFCOs( fcos_to_select);
 		return NOERROR;
 	}
@@ -3737,7 +3737,7 @@ STDMETHODIMP CGMEOLEIt::XDual::GetSelectedFCOs(THIS_ IMgaFCOs** selected_fcos)
 
 	TRY_DUAL(IID_IGMEOLEIt)
 	{
-		TRACE( "XDual::GetSelectedFCOs");
+		TRACE( _T("XDual::GetSelectedFCOs"));
 		LPDISPATCH lpDisp = pThis->GetSelectedFCOs();
 		lpDisp->QueryInterface(IID_IMgaFCOs, (LPVOID*)selected_fcos);
 

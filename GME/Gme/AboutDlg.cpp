@@ -221,7 +221,7 @@ BOOL CDLLInfoDlg::OnInitDialog()
 	
 	CRect rect;
 	m_DLLList.GetClientRect(&rect);
-	m_DLLList.InsertColumn(0, "Dynamic Library Path", LVCFMT_LEFT, rect.Size().cx-::GetSystemMetrics(SM_CXVSCROLL));
+	m_DLLList.InsertColumn(0, _T("Dynamic Library Path"), LVCFMT_LEFT, rect.Size().cx-::GetSystemMetrics(SM_CXVSCROLL));
 	// TODO: Add extra initialization here
 	HMODULE modules[1024];
 	DWORD	needed;
@@ -246,7 +246,7 @@ BOOL CDLLInfoDlg::OnInitDialog()
 	}
 	
 	if (!success) {
-		AfxMessageBox("Error in EnumProcessModules().");
+		AfxMessageBox(_T("Error in EnumProcessModules()."));
 	}
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE

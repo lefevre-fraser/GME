@@ -54,7 +54,7 @@ int CGMEChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CView::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if (!m_ChildFrame.Create("ChildFrame", WS_CHILD | WS_VISIBLE, CRect(0, 0, 300, 150), this, IDC_CHILDFRAMECTRL1))
+	if (!m_ChildFrame.Create(_T("ChildFrame"), WS_CHILD | WS_VISIBLE, CRect(0, 0, 300, 150), this, IDC_CHILDFRAMECTRL1))
 		return -1;
 
 	return 0;

@@ -54,7 +54,7 @@ int CGMEObjectInspector::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 	
-	if(!m_ObjectInspector.Create("ObjectInspector",WS_CHILD | WS_VISIBLE,CRect(0,0,230,300),this,IDC_OBJECT_INSPECTOR_CTRL))
+	if(!m_ObjectInspector.Create(_T("ObjectInspector"),WS_CHILD | WS_VISIBLE,CRect(0,0,230,300),this,IDC_OBJECT_INSPECTOR_CTRL))
 		return -1;
 
 	return 0;
