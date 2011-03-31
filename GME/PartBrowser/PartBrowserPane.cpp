@@ -37,7 +37,7 @@ CPartBrowserPane::CPartBrowserPane():
 	backgroundColor = ::GetSysColor(COLOR_APPWORKSPACE);
 	txtMetricFont.CreateFont(fontSizes[GME_NAME_FONT], 0, 0, 0, FW_NORMAL, false, 0, 0, ANSI_CHARSET,
 							 OUT_DEVICE_PRECIS, CLIP_DEFAULT_PRECIS,
-							 PROOF_QUALITY, FF_SWISS, "Arial");
+							 PROOF_QUALITY, FF_SWISS, _T("Arial"));
 }
 
 CPartBrowserPane::~CPartBrowserPane()
@@ -318,7 +318,7 @@ void CPartBrowserPane::SetCurrentProject(CComPtr<IMgaProject> project)
 void CPartBrowserPane::SetMetaModel(CComPtr<IMgaMetaModel> meta)
 {
 	CComPtr<IMgaRegistrar> registrar;
-	COMTHROW(registrar.CoCreateInstance(CComBSTR("Mga.MgaRegistrar")));
+	COMTHROW(registrar.CoCreateInstance(CComBSTR(L"Mga.MgaRegistrar")));
 	ASSERT(registrar != NULL);
 	edgesmoothmode_enum edgeSmoothMode;
 	COMTHROW(registrar->get_EdgeSmoothMode(REGACCESS_USER, &edgeSmoothMode));
