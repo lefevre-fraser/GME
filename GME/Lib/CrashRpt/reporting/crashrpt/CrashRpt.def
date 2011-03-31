@@ -2,5 +2,5 @@ LIBRARY	"CrashRpt"
 
 EXPORTS   
 crExceptionFilter
-crGetLastErrorMsgA
-crInstallA
+crGetLastErrorMsgW
+crInstallW
