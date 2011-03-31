@@ -90,13 +90,13 @@ void CMgaDumper::InitDump(IMgaProject *p, BSTR xmlfile)
 	if( p == NULL )
 		HR_THROW(E_INVALIDARG);
 
-	std::string filename;
+	std::tstring filename;
 	CopyTo(xmlfile, filename);
 
 	if( filename.empty() )
 		HR_THROW(E_INVALIDARG);
 
-	ofs.init( filename.c_str(), "UTF-8");
+	ofs.init( filename.c_str(), _T("UTF-16"));
 
 	elems.clear();
 
@@ -148,7 +148,7 @@ STDMETHODIMP CMgaDumper::DumpProject(IMgaProject *p, BSTR xmlfile)
 	{
 		InitDump(p, xmlfile);
 
-		ofs << "<!DOCTYPE project SYSTEM \"mga.dtd\">\n\n";
+		ofs << L"<!DOCTYPE project SYSTEM \"mga.dtd\">\n\n";
 
 		Dump(p);
 
@@ -195,25 +195,25 @@ STDMETHODIMP CMgaDumper::DumpFCOs(IMgaProject *proj, IMgaFCOs *p, IMgaFolders *f
 
 		InitDump(project, xmlfile);
 
-		ofs << "<!DOCTYPE clipboard SYSTEM \"mga.dtd\" [\n";
-		ofs << "\t<!ELEMENT clipboard (folder|model|atom|reference|set|connection|regnode)*>\n";
+		ofs << L"<!DOCTYPE clipboard SYSTEM \"mga.dtd\" [\r\n";
+		ofs << L"\t<!ELEMENT clipboard (folder|model|atom|reference|set|connection|regnode)*>\r\n";
 		//ofs << "\t<!ATTLIST clipboard acceptingkind CDATA	#IMPLIED>\n";
 		//ofs << "]>\n\n";
-		ofs << "\t<!ATTLIST clipboard\n";
-		ofs << "\t\tacceptingkind CDATA #IMPLIED\n";
-		ofs << "\t\tparadigmnamehint CDATA #IMPLIED\n";//TODO: could be extended with targetnamespacehint, srcnamespacehint
-		ofs << "\t>\n";
-		ofs << "]>\n\n";
+		ofs << L"\t<!ATTLIST clipboard\r\n";
+		ofs << L"\t\tacceptingkind CDATA #IMPLIED\r\n";
+		ofs << L"\t\tparadigmnamehint CDATA #IMPLIED\r\n";//TODO: could be extended with targetnamespacehint, srcnamespacehint
+		ofs << L"\t>\r\n";
+		ofs << L"]>\r\n\r\n";
 
 
 
-		StartElem("clipboard");
+		StartElem(_T("clipboard"));
 
 		// dumping originating paradigm name as a hint for the parser
 		CComObjPtr<IMgaMetaProject> metaproject;
 		COMTHROW( project->get_RootMeta(PutOut(metaproject)) );
 		ASSERT( metaproject != NULL );
-		if( metaproject) Attr("paradigmnamehint", metaproject, &IMgaMetaProject::get_Name);
+		if( metaproject) Attr(_T("paradigmnamehint"), metaproject, &IMgaMetaProject::get_Name);
 
 		CComObjPtrVector<IMgaFolder>::iterator fi = m_selFolders.begin();
 		while( fi != m_selFolders.end() )
@@ -248,9 +248,9 @@ STDMETHODIMP CMgaDumper::DumpFCOs(IMgaProject *proj, IMgaFCOs *p, IMgaFolders *f
 
 		if( !m_selRegNodes.empty())
 		{
-			StartElem("regnode");
-			Attr("name", "annotations");
-			StartElem("value");
+			StartElem(_T("regnode"));
+			Attr(_T("name"), _T("annotations"));
+			StartElem(_T("value"));
 			EndElem(); //value
 
 			for( CComObjPtrVector<IMgaRegNode>::iterator ri = m_selRegNodes.begin(); ri != m_selRegNodes.end(); ++ri)
@@ -273,7 +273,7 @@ inline void CMgaDumper::Indent(int i)
 		ofs << '\t';
 }
 
-inline void CMgaDumper::StartElem(const char *name)
+inline void CMgaDumper::StartElem(const TCHAR *name)
 {
 	ASSERT( name != NULL );
 
@@ -281,7 +281,7 @@ inline void CMgaDumper::StartElem(const char *name)
 	{
 		ASSERT( !elems.back().indata );
 
-		ofs << ">\n";
+		ofs << L">\n";
 		elems.back().inbody = true;
 	}
 
@@ -291,20 +291,20 @@ inline void CMgaDumper::StartElem(const char *name)
 	elems.back().indata = false;
 
 	Indent(elems.size()-1);
-	ofs << '<' << name;
+	ofs << L'<' << name;
 }
 
-inline void CMgaDumper::Attr(const char *name, const char *value)
+inline void CMgaDumper::Attr(const TCHAR *name, const TCHAR *value)
 {
 	ASSERT( name != NULL );
 	ASSERT( value != NULL );
 
 	ASSERT( !elems.empty() && !elems.back().inbody );
 	
-	ofs << ' ' << name << "=\"" << Transcoder::StdEscape << value << Transcoder::NoEscape << '"';
+	ofs << L' ' << name << L"=\"" << Transcoder::StdEscape << value << Transcoder::NoEscape << L'"';
 }
 
-inline void CMgaDumper::Attr(const char *name, const char *value, int len)
+inline void CMgaDumper::Attr(const TCHAR *name, const TCHAR *value, int len)
 {
 	ASSERT( name != NULL );
 	ASSERT( value != NULL );
@@ -312,14 +312,14 @@ inline void CMgaDumper::Attr(const char *name, const char *value, int len)
 
 	ASSERT( !elems.empty() && !elems.back().inbody && !elems.back().indata );
 
-	ofs << ' ' << name << "=\"" << Transcoder::StdEscape << std::string( value, len) << Transcoder::NoEscape << '"';
+	ofs << L' ' << name << L"=\"" << Transcoder::StdEscape << std::tstring( value, len) << Transcoder::NoEscape << L'"';
 }
 
-bool CMgaDumper::HasMarkup(const char *value, int len)
+bool CMgaDumper::HasMarkup(const TCHAR *value, int len)
 {
 	while( --len >= 0 )
 	{
-		char c = *(value++);
+		TCHAR c = *(value++);
 		if( c == '<' || c == '>' || c == '&' || c == '\'' || c == '\"' )
 			return true;
 	}
@@ -327,7 +327,7 @@ bool CMgaDumper::HasMarkup(const char *value, int len)
 	return false;
 }
 
-inline void CMgaDumper::Data(const char *value, int len)
+inline void CMgaDumper::Data(const TCHAR *value, int len)
 {
 	ASSERT( value != NULL );
 	ASSERT( len >= 0 );
@@ -335,11 +335,11 @@ inline void CMgaDumper::Data(const char *value, int len)
 
 	if( !elems.back().inbody )
 	{
-		ofs << ">";
+		ofs << L">";
 		elems.back().inbody = true;
 	}
 
-	ofs << Transcoder::StdEscape << std::string( value, len) << Transcoder::NoEscape;
+	ofs << Transcoder::StdEscape << std::tstring( value, len) << Transcoder::NoEscape;
 
 	elems.back().indata = true;
 
@@ -354,11 +354,11 @@ inline void CMgaDumper::EndElem()
 		if( !elems.back().indata )
 			Indent(elems.size()-1);
 
-		ofs << "</" << elems.back().name << ">\n";
+		ofs << L"</" << elems.back().name << L">\n";
 	}
 	else
 	{
-		ofs << "/>\n";
+		ofs << L"/>\n";
 	}
 
 	elems.pop_back();
@@ -474,16 +474,16 @@ void CMgaDumper::Dump(IMgaProject *project)
 	CComBstrObj bstr;
 	GUID guid;
 
-	StartElem("project");
+	StartElem(_T("project"));
 
 	COMTHROW( project->get_GUID(PutOut(variant)) );
 	CopyTo(variant, guid);
 	CopyTo(guid, PutOut(bstr));
-	Attr("guid", bstr);
+	Attr(_T("guid"), bstr);
 
-	Attr("cdate", project, &IMgaProject::get_CreateTime);
-	Attr("mdate", project, &IMgaProject::get_ChangeTime);
-	Attr("version", project, &IMgaProject::get_Version);
+	Attr(_T("cdate"), project, &IMgaProject::get_CreateTime);
+	Attr(_T("mdate"), project, &IMgaProject::get_ChangeTime);
+	Attr(_T("version"), project, &IMgaProject::get_Version);
 
 	CComObjPtr<IMgaMetaProject> metaproject;
 	COMTHROW( project->get_RootMeta(PutOut(metaproject)) );
@@ -494,21 +494,21 @@ void CMgaDumper::Dump(IMgaProject *project)
 	COMTHROW( metaproject->get_GUID(PutOut(variant)) );
 	CopyTo(variant, guid);
 	CopyTo(guid, PutOut(bstr));
-	Attr("metaguid", bstr);
-	Attr("metaversion", metaproject, &IMgaMetaProject::get_Version);
-	Attr("metaname", metaproject, &IMgaMetaProject::get_Name);
+	Attr(_T("metaguid"), bstr);
+	Attr(_T("metaversion"), metaproject, &IMgaMetaProject::get_Version);
+	Attr(_T("metaname"), metaproject, &IMgaMetaProject::get_Name);
 	
 
 
-	StartElem("name");
+	StartElem(_T("name"));
 	Data(project, &IMgaProject::get_Name);
 	EndElem();
 
-	StartElem("comment");
+	StartElem(_T("comment"));
 	Data(project, &IMgaProject::get_Comment);
 	EndElem();
 
-	StartElem("author");
+	StartElem(_T("author"));
 	Data(project, &IMgaProject::get_Author);
 	EndElem();
 
@@ -523,9 +523,9 @@ void CMgaDumper::Dump(IMgaFolder *folder)
 {
 	ASSERT( folder != NULL );
 
-	StartElem("folder");
+	StartElem(_T("folder"));
 
-	Attr("id", folder, &IMgaFolder::get_ID);
+	Attr(_T("id"), folder, &IMgaFolder::get_ID);
 
 	if( m_closureDump && m_v2)
 	{
@@ -539,33 +539,33 @@ void CMgaDumper::Dump(IMgaFolder *folder)
 			CComBstrObj guid_str;
 			COMTHROW( regnode->get_Value( PutOut(guid_str)));
 			if( guid_str.Length() == GLOBAL_ID_LEN) // using { 8-4-4-4-12} form
-				Attr( "closureguid", guid_str);
+				Attr( _T("closureguid"), guid_str);
 		}
 
 
-		Attr( "closurename", folder, &IMgaFolder::get_Name);
+		Attr( _T("closurename"), folder, &IMgaFolder::get_Name);
 
 	}
 
 	if(dumpversion >= 1) {
 		if( m_dumpRelids)
 		{
-			LAttr("relid", folder, &IMgaFolder::get_RelID);
-			LAttr("childrelidcntr", folder, &IMgaFolder::get_ChildRelIDCounter);
+			LAttr(_T("relid"), folder, &IMgaFolder::get_RelID);
+			LAttr(_T("childrelidcntr"), folder, &IMgaFolder::get_ChildRelIDCounter);
 		}
 
 		CComBstrObj libname;
 		COMTHROW( folder->get_LibraryName(PutOut(libname)) );
-		if(libname) Attr("libref",libname);
+		if(libname) Attr(_T("libref"),libname);
 
 		VARIANT_BOOL readonly;
 		COMTHROW( folder->HasReadOnlyAccess( &readonly));
-		if( readonly) Attr( "perm", "1");
+		if( readonly) Attr( _T("perm"), _T("1"));
 	}
 
 	CComObjPtr<IMgaMetaFolder> metafolder;
 	COMTHROW( folder->get_MetaFolder(PutOut(metafolder)) );
-	Attr("kind", metafolder, &IMgaMetaFolder::get_Name);
+	Attr(_T("kind"), metafolder, &IMgaMetaFolder::get_Name);
 
 	if( m_dumpGuids) // this is true if Project is dumped and mgaversion of project is 2
 	{
@@ -574,14 +574,14 @@ void CMgaDumper::Dump(IMgaFolder *folder)
 			CComBstrObj bs;
 			HRESULT hr = folder->GetGuidDisp( PutOut( bs));
 			if( SUCCEEDED( hr) && bs && bs.Length() == 38) // {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} <-- dumping that form (38 chars long including braces)
-				Attr( "guid", bs);//Attr( "guid", IMgaObject::GetGuidDisp);
+				Attr( _T("guid"), bs);//Attr( _T("guid"), IMgaObject::GetGuidDisp);
 
 		} catch( hresult_exception& )
 		{
 		}
 	}
 
-	StartElem("name");
+	StartElem(_T("name"));
 	Data(folder, &IMgaFolder::get_Name);
 	EndElem();
 
@@ -613,22 +613,22 @@ void CMgaDumper::Dump(IMgaRegNode *regnode)
 {
 	ASSERT( regnode != NULL );
 
-	StartElem("regnode");
+	StartElem(_T("regnode"));
 
-	Attr("name", regnode, &IMgaRegNode::get_Name);
+	Attr(_T("name"), regnode, &IMgaRegNode::get_Name);
 
 	VARIANT_BOOL b;
 	COMTHROW( regnode->get_Opacity(&b) );
 
 	if( b != VARIANT_FALSE )
-		Attr("isopaque", "yes");
+		Attr(_T("isopaque"), _T("yes"));
 
 	long status;
 	COMTHROW( regnode->get_Status( &status ) );
 	if( status == -2) // ATTSTATUS_UNDEFINED
-		Attr("status", "undefined");
+		Attr(_T("status"), _T("undefined"));
 
-	StartElem("value");
+	StartElem(_T("value"));
 	Data(regnode, &IMgaRegNode::get_Value);
 	EndElem();
 
@@ -728,16 +728,16 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 
 	if( dump_attrs )
 	{
-		Attr("id", fco, &IMgaFCO::get_ID);
+		Attr(_T("id"), fco, &IMgaFCO::get_ID);
 
 		CComObjPtr<IMgaMetaFCO> metafco;
 		COMTHROW( fco->get_Meta(PutOut(metafco)) );
-		Attr("kind", metafco, &IMgaMetaFCO::get_Name);
+		Attr(_T("kind"), metafco, &IMgaMetaFCO::get_Name);
 
 		CComObjPtr<IMgaMetaRole> role;
 		COMTHROW( fco->get_MetaRole(PutOut(role)) );
 		if( role != NULL )
-			Attr("role", role, &IMgaMetaRole::get_Name);
+			Attr(_T("role"), role, &IMgaMetaRole::get_Name);
 
 		if( m_dumpGuids) // this is true if Project is dumped and mgaversion of project is 2
 		{
@@ -746,7 +746,7 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 				CComBstrObj bs;
 				HRESULT hr = fco->GetGuidDisp( PutOut( bs));
 				if( SUCCEEDED( hr) && bs && bs.Length() == 38) // {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} <-- dumping that form (38 chars long including braces)
-					Attr( "guid", bs);//Attr( "guid", IMgaFCO::GetGuidDisp);
+					Attr( _T("guid"), bs);//Attr( _T("guid"), IMgaFCO::GetGuidDisp);
 
 			} catch( hresult_exception& )
 			{
@@ -759,9 +759,9 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 			CComBstrObj guid_str; // this form will not create the node if is not present
 			COMTHROW( fco->get_RegistryValue( CComBSTR( GLOBAL_ID_STR), PutOut( guid_str)));
 			if( guid_str != 0 && guid_str.Length() == GLOBAL_ID_LEN) // using { 8-4-4-4-12} form
-				Attr( "closureguid", guid_str);
+				Attr( _T("closureguid"), guid_str);
 
-			Attr( "closurename", fco, &IMgaFCO::get_Name);
+			Attr( _T("closurename"), fco, &IMgaFCO::get_Name);
 
 		}
 
@@ -772,15 +772,15 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 		if(derivedfrom != NULL )
 		{
 			if (CheckInClosure(derivedfrom)) {
-				Attr("derivedfrom", derivedfrom, &IMgaFCO::get_ID);
+				Attr(_T("derivedfrom"), derivedfrom, &IMgaFCO::get_ID);
 
 				VARIANT_BOOL b;
 
 				COMTHROW( fco->get_IsInstance(&b) );
-				Attr("isinstance", b != VARIANT_FALSE ? "yes" : "no");
+				Attr(_T("isinstance"), b != VARIANT_FALSE ? _T("yes") : _T("no"));
 
 				COMTHROW( fco->get_IsPrimaryDerived(&prim) );
-				Attr("isprimary", prim != VARIANT_FALSE ? "yes" : "no");
+				Attr(_T("isprimary"), prim != VARIANT_FALSE ? _T("yes") : _T("no"));
 			}
 			else {
 				lost_basetype = true;
@@ -791,40 +791,40 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 				if ( m_dumpLibraryStubs && !CheckInClosure(derivedfrom) && !isInLibrary( fco) && isInLibrary( derivedfrom)) { //derived from a type defined in a library
 					CComBSTR name;
 					COMTHROW( derivedfrom->get_AbsPath( &name));
-					std::string nm;
+					std::tstring nm;
 					CopyTo( name, nm);
 					
-					Attr("closurelibderivedfrom", nm);
+					Attr(_T("closurelibderivedfrom"), nm);
 
 					VARIANT_BOOL b;
 
 					COMTHROW( fco->get_IsInstance(&b) );
-					Attr("isinstance", b != VARIANT_FALSE ? "yes" : "no");
+					Attr(_T("isinstance"), b != VARIANT_FALSE ? _T("yes") : _T("no"));
 
 					COMTHROW( fco->get_IsPrimaryDerived(&prim) );
-					Attr("isprimary", prim != VARIANT_FALSE ? "yes" : "no");
+					Attr(_T("isprimary"), prim != VARIANT_FALSE ? _T("yes") : _T("no"));
 				}
 				else if( m_v2)
 				{
 					CComBSTR name;
 
 					COMTHROW( derivedfrom->get_AbsPath( &name));
-					std::string nm;
+					std::tstring nm;
 					CopyTo( name, nm);
 					
 					COMTHROW( fco->get_AbsPath( &name));
-					std::string nm2;
+					std::tstring nm2;
 					CopyTo( name, nm2);
 
-					Attr("closure2derivedfrom", makeRel( nm, nm2));
+					Attr(_T("closure2derivedfrom"), makeRel( nm, nm2));
 
 					VARIANT_BOOL b;
 
 					COMTHROW( fco->get_IsInstance(&b) );
-					Attr("isinstance", b != VARIANT_FALSE ? "yes" : "no");
+					Attr(_T("isinstance"), b != VARIANT_FALSE ? _T("yes") : _T("no"));
 
 					COMTHROW( fco->get_IsPrimaryDerived(&prim) );
-					Attr("isprimary", prim != VARIANT_FALSE ? "yes" : "no");
+					Attr(_T("isprimary"), prim != VARIANT_FALSE ? _T("yes") : _T("no"));
 				}
 			}
 
@@ -833,20 +833,20 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 				CComBstrObj guid;
 				COMTHROW( derivedfrom->get_RegistryValue( CComBSTR( GLOBAL_ID_STR), PutOut( guid)));
 				if( guid != 0 && guid.Length() == GLOBAL_ID_LEN)
-					Attr( "smartDerivedFromGUID", guid);
+					Attr( _T("smartDerivedFromGUID"), guid);
 			}
 		}
 		if(prim && (dumpversion >= 1) && (!lost_basetype) && m_dumpRelids)
-			LAttr("relid", fco, &IMgaFCO::get_RelID);
+			LAttr(_T("relid"), fco, &IMgaFCO::get_RelID);
 
 		VARIANT_BOOL readonly;
 		COMTHROW( fco->HasReadOnlyAccess( &readonly));
-		if( readonly) Attr( "perm", "1");
+		if( readonly) Attr( _T("perm"), _T("1"));
 	}
 
 	if( dump_name )
 	{
-		StartElem("name");
+		StartElem(_T("name"));
 		Data(fco, &IMgaFCO::get_Name);
 		EndElem();
 	}
@@ -878,10 +878,10 @@ void CMgaDumper::Dump(IMgaModel *model)
 {
 	ASSERT( model != NULL );
 
-	StartElem("model");
+	StartElem(_T("model"));
 
 	DumpFCO(model, true, false, false);	
-	if(dumpversion >= 1 && m_dumpRelids) LAttr("childrelidcntr", model, &IMgaModel::get_ChildRelIDCounter);
+	if(dumpversion >= 1 && m_dumpRelids) LAttr(_T("childrelidcntr"), model, &IMgaModel::get_ChildRelIDCounter);
 	DumpFCO(model, false, true, true);	
 
 	Dump(model, &IMgaModel::get_ChildFCOs);
@@ -921,13 +921,13 @@ void CMgaDumper::Dump(IMgaConstraint *constraint)
 {
 	ASSERT( constraint != NULL );
 
-	StartElem("constraint");
+	StartElem(_T("constraint"));
 
-	StartElem("name");
+	StartElem(_T("name"));
 	Data(constraint, &IMgaConstraint::get_Name);
 	EndElem();
 
-	StartElem("value");
+	StartElem(_T("value"));
 	Data(constraint, &IMgaConstraint::get_Expression);
 	EndElem();
 
@@ -938,25 +938,25 @@ void CMgaDumper::Dump(IMgaAttribute *attribute)
 {
 	ASSERT( attribute != NULL );
 
-	StartElem("attribute");
+	StartElem(_T("attribute"));
 	
 	CComObjPtr<IMgaMetaAttribute> metaattr;
 	COMTHROW( attribute->get_Meta(PutOut(metaattr)) );
-	Attr("kind", metaattr, &IMgaMetaAttribute::get_Name);
+	Attr(_T("kind"), metaattr, &IMgaMetaAttribute::get_Name);
 
 	long status;
 	COMTHROW( attribute->get_Status(&status) );
 	if( status < 0 )
-		Attr("status", "meta");
+		Attr(_T("status"), _T("meta"));
 	else if( status > 0 )
-		Attr("status", "inherited");
+		Attr(_T("status"), _T("inherited"));
 
-	StartElem("value");
+	StartElem(_T("value"));
 
 	attval_enum attval;
 	COMTHROW( metaattr->get_ValueType(&attval) );
 
-	std::string data;
+	std::tstring data;
 
 	switch(attval)
 	{
@@ -974,7 +974,7 @@ void CMgaDumper::Dump(IMgaAttribute *attribute)
 		{
 			long l;
 			COMTHROW( attribute->get_IntValue(&l) );
-			Format(data, "%ld", l);
+			Format(data, _T("%ld"), l);
 			break;
 		}
 
@@ -982,7 +982,7 @@ void CMgaDumper::Dump(IMgaAttribute *attribute)
 		{
 			double d;
 			COMTHROW( attribute->get_FloatValue(&d) );
-			Format(data, "%g", d);
+			Format(data, _T("%g"), d);
 			break;
 		}
 
@@ -992,9 +992,9 @@ void CMgaDumper::Dump(IMgaAttribute *attribute)
 			COMTHROW( attribute->get_BoolValue(&b) );
 
 			if( b != VARIANT_FALSE )
-				data = "true";
+				data = _T("true");
 			else
-				data = "false";
+				data = _T("false");
 
 			break;
 		}
@@ -1029,7 +1029,7 @@ void CMgaDumper::Dump(IMgaAtom *atom)
 {
 	ASSERT( atom != NULL );
 
-	StartElem("atom");
+	StartElem(_T("atom"));
 
 	DumpFCO(atom);
 
@@ -1040,7 +1040,7 @@ void CMgaDumper::Dump(IMgaReference *reference)
 {
 	ASSERT( reference != NULL );
 
-	StartElem("reference");
+	StartElem(_T("reference"));
 
 	DumpFCO(reference, true, false, false);
 
@@ -1050,7 +1050,7 @@ void CMgaDumper::Dump(IMgaReference *reference)
 	if( fco != NULL)
 	{
 		if( CheckInClosure( fco)) // regular dump or the fco is really in the closure
-			Attr("referred", fco, &IMgaFCO::get_ID);
+			Attr(_T("referred"), fco, &IMgaFCO::get_ID);
 		
 		if( m_closureDump)
 		{
@@ -1058,26 +1058,26 @@ void CMgaDumper::Dump(IMgaReference *reference)
 			{
 				CComBSTR name;
 				COMTHROW( fco->get_AbsPath( &name));
-				std::string nm;
+				std::tstring nm;
 				CopyTo( name, nm);
 				
-				Attr("closurelibreferred", nm);
+				Attr(_T("closurelibreferred"), nm);
 			}
 
 			// dump the relativepath of the referred object if v2
-			else if( m_v2) // "else" introd freshly, not to dump to paths, the parser will check first for closurelibreferred
+			else if( m_v2) // _T("else") introd freshly, not to dump to paths, the parser will check first for closurelibreferred
 			{
 				CComBSTR name;
 				COMTHROW( fco->get_AbsPath( &name));
-				std::string nm;
+				std::tstring nm;
 				CopyTo( name, nm);
 
 				COMTHROW( reference->get_AbsPath( &name));
-				std::string nm2;
+				std::tstring nm2;
 				CopyTo( name, nm2);
 
 				
-				Attr("closure2referred", makeRel( nm, nm2));
+				Attr(_T("closure2referred"), makeRel( nm, nm2));
 			}
 
 			// dump guid of fco if m_v2
@@ -1086,7 +1086,7 @@ void CMgaDumper::Dump(IMgaReference *reference)
 				CComBstrObj ref_guid;
 				COMTHROW( fco->get_RegistryValue( CComBSTR( GLOBAL_ID_STR), PutOut( ref_guid)));
 				if( ref_guid != 0 && ref_guid.Length() == GLOBAL_ID_LEN) // valid guid
-					Attr( "smartReferredGUID", ref_guid);
+					Attr( _T("smartReferredGUID"), ref_guid);
 			}
 		}
 	}
@@ -1099,7 +1099,7 @@ void CMgaDumper::Dump(IMgaReference *reference)
 		short stat;
 		COMTHROW( reference->CompareToBase(&stat));
 		if(!stat) {
-			Attr("isbound", "yes" );
+			Attr(_T("isbound"), _T("yes") );
 		}
 	}
 
@@ -1112,7 +1112,7 @@ void CMgaDumper::Dump(IMgaConnection *connection)
 {
 	ASSERT( connection != NULL );
 
-	StartElem("connection");
+	StartElem(_T("connection"));
 
 	bool skipdump = false;
 
@@ -1123,7 +1123,7 @@ void CMgaDumper::Dump(IMgaConnection *connection)
 		short stat;
 		COMTHROW( connection->CompareToBase(NULL, &stat));
 		if(!stat) {
-			Attr("isbound", "yes" );
+			Attr(_T("isbound"), _T("yes") );
 			skipdump = true;
 		}
 	}
@@ -1142,7 +1142,7 @@ void CMgaDumper::Dump(IMgaSet *set)
 {
 	ASSERT( set != NULL );
 
-	StartElem("set");
+	StartElem(_T("set"));
 
 	DumpFCO(set, true, false, false);
 	bool skipdump = false;
@@ -1153,7 +1153,7 @@ void CMgaDumper::Dump(IMgaSet *set)
 		short stat;
 		COMTHROW( set->CompareToBase(&stat));
 		if(!stat) {
-			Attr("isbound", "yes" );
+			Attr(_T("isbound"), _T("yes") );
 			skipdump = true;
 		}
 	}
@@ -1172,12 +1172,12 @@ void CMgaDumper::Dump(IMgaSet *set)
 
 			if( m_v2)
 			{
-				std::string memberguids = DumpMixedGUIDRefs( members); // uses m_currAbsPath
-				if( !memberguids.empty()) Attr( "smartMemberGUIDs", memberguids);
+				std::tstring memberguids = DumpMixedGUIDRefs( members); // uses m_currAbsPath
+				if( !memberguids.empty()) Attr( _T("smartMemberGUIDs"), memberguids);
 			}
 		}
 
-		DumpIDRefs("members", members); // might use m_currAbsPath
+		DumpIDRefs(_T("members"), members); // might use m_currAbsPath
 	}
 
 	DumpFCO(set, false, true, true);
@@ -1189,9 +1189,9 @@ void CMgaDumper::Dump(IMgaConnPoint *connpoint)
 {
 	ASSERT( connpoint != NULL );
 
-	StartElem("connpoint");
+	StartElem(_T("connpoint"));
 
-	Attr("role", connpoint, &IMgaConnPoint::get_ConnRole);
+	Attr(_T("role"), connpoint, &IMgaConnPoint::get_ConnRole);
 	
 	CComObjPtr<IMgaFCO> target;
 	COMTHROW( connpoint->get_Target(PutOut(target)) );
@@ -1210,11 +1210,11 @@ void CMgaDumper::Dump(IMgaConnPoint *connpoint)
 		short stat;
 		COMTHROW( conn->CompareToBase(connpoint, &stat));
 		if(!stat) {
-			Attr("isbound", "yes" );
+			Attr(_T("isbound"), _T("yes") );
 		}
 	}
 
-	Attr("target", target, &IMgaFCO::get_ID);
+	Attr(_T("target"), target, &IMgaFCO::get_ID);
 
 	if( m_closureDump)
 	{
@@ -1227,19 +1227,19 @@ void CMgaDumper::Dump(IMgaConnPoint *connpoint)
 		{
 			CComBSTR name;
 			COMTHROW( target->get_AbsPath( &name));
-			std::string nm;
+			std::tstring nm;
 			CopyTo( name, nm);
 			
-			Attr("closurelibtarget", nm);
+			Attr(_T("closurelibtarget"), nm);
 		}
 		else if( m_v2) // closure v2
 		{
 			CComBSTR name;
 			COMTHROW( target->get_AbsPath( &name));
-			std::string nm;
+			std::tstring nm;
 			CopyTo( name, nm);
 
-			Attr("closure2target", makeRel( nm, m_currAbsPath));
+			Attr(_T("closure2target"), makeRel( nm, m_currAbsPath));
 		} 
 	}
 
@@ -1247,16 +1247,16 @@ void CMgaDumper::Dump(IMgaConnPoint *connpoint)
 	CComObjPtrVector<IMgaFCO> refs;
 	COMTHROW( connpoint->get_References(PutOut(refs)) );
 	// m_currAbsPath is set above, at the "closure2target" dump
-	DumpIDRefs("refs", refs);
+	DumpIDRefs(_T("refs"), refs);
 
 	EndElem();
 }
 
-void CMgaDumper::DumpIDRefs(const char *name, CComObjPtrVector<IMgaFCO> &fcos)
+void CMgaDumper::DumpIDRefs(const TCHAR *name, CComObjPtrVector<IMgaFCO> &fcos)
 {
 	if( !fcos.empty() )
 	{
-		std::string idrefs, clos_idrefs;
+		std::tstring idrefs, clos_idrefs;
 
 		CComObjPtrVector<IMgaFCO>::iterator i = fcos.begin();
 		CComObjPtrVector<IMgaFCO>::iterator e = fcos.end();
@@ -1266,7 +1266,7 @@ void CMgaDumper::DumpIDRefs(const char *name, CComObjPtrVector<IMgaFCO> &fcos)
 			{
 				CComBSTR name;
 				COMTHROW( (*i)->get_AbsPath( &name));
-				std::string nm;
+				std::tstring nm;
 				CopyTo( name, nm);
 
 				if( !clos_idrefs.empty() )
@@ -1282,7 +1282,7 @@ void CMgaDumper::DumpIDRefs(const char *name, CComObjPtrVector<IMgaFCO> &fcos)
 			CComBstrObj bstr;
 			COMTHROW( (*i)->get_ID(PutOut(bstr)) );
 
-			std::string id;
+			std::tstring id;
 			CopyTo(bstr, id);
 
 			if( !idrefs.empty() )
@@ -1298,14 +1298,14 @@ void CMgaDumper::DumpIDRefs(const char *name, CComObjPtrVector<IMgaFCO> &fcos)
 
 		if( m_closureDump && m_v2 && !clos_idrefs.empty()) // closure v2
 		{
-			std::string clos_name("closure2"); clos_name += name;
+			std::tstring clos_name(_T("closure2")); clos_name += name;
 			Attr( clos_name.c_str(), clos_idrefs);
 		}
 	}
 }
-std::string CMgaDumper::DumpGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos)
+std::tstring CMgaDumper::DumpGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos)
 {
-	std::string guidrefs;
+	std::tstring guidrefs;
 
 	for( CComObjPtrVector<IMgaFCO>::iterator i = fcos.begin(); i != fcos.end(); ++i)
 	{
@@ -1314,7 +1314,7 @@ std::string CMgaDumper::DumpGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos)
 
 		if( bstr != 0 && bstr.Length() == GLOBAL_ID_LEN)
 		{
-			std::string guid;
+			std::tstring guid;
 			CopyTo(bstr, guid);
 
 			if( !guidrefs.empty() )
@@ -1323,24 +1323,24 @@ std::string CMgaDumper::DumpGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos)
 			guidrefs += guid;
 		}
 		else
-			return ""; // if one guid not found, then all are disregarded
+			return _T(""); // if one guid not found, then all are disregarded
 	}
 
 	return guidrefs;
 }
 
-std::string CMgaDumper::DumpMixedGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos)
+std::tstring CMgaDumper::DumpMixedGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos)
 {
 	// this method produces a sequence of the {guid}=path forms
 	//{E200BEEB-34BC-4271-A134-AA5728C38124}\\/@../@module_ref1|kind=module_ref|relpos=0
-	std::string guidrefs;
+	std::tstring guidrefs;
 
 	for( CComObjPtrVector<IMgaFCO>::iterator i = fcos.begin(); i != fcos.end(); ++i)
 	{
 
 		CComBSTR name;
 		COMTHROW( (*i)->get_AbsPath( &name));
-		std::string nm;
+		std::tstring nm;
 		CopyTo( name, nm);
 
 		if( !guidrefs.empty() )
@@ -1351,7 +1351,7 @@ std::string CMgaDumper::DumpMixedGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos)
 
 		if( bstr != 0 && bstr.Length() == GLOBAL_ID_LEN)
 		{
-			std::string guid;
+			std::tstring guid;
 			CopyTo(bstr, guid);
 
 
@@ -1375,12 +1375,12 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaRegNode> *v)
 	//small speed up, build a vector of strings first, then sort the strings
 	//while doing the sort operations on the original vector, so we don't have
 	//to call the get_Name function each time we look at a RegNode
-	std::vector<std::string> vPrime;
+	std::vector<std::tstring> vPrime;
 	for (int i=0; i<n; i++)
 	{
 		CComBSTR bstr;
 		COMTHROW((*v)[i]->get_Name(&bstr));
-		std::string s;
+		std::tstring s;
 		CopyTo(bstr,s);
 		vPrime.push_back(s);
 	}
@@ -1388,7 +1388,7 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaRegNode> *v)
 	//in place insertion sort
 	for (int x=1; x<n; x++) 
 	{
-		std::string index = vPrime[x];
+		std::tstring index = vPrime[x];
 		CComObjPtr<IMgaRegNode> indexRegNode = (*v)[x];
 		int y = x;
 
@@ -1415,14 +1415,14 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaAttribute> *v)
 	//small speed up, build a vector of strings first, then sort the strings
 	//while doing the sort operations on the original vector, so we don't have
 	//to get the Kind Name every time
-	std::vector<std::string> vPrime;
+	std::vector<std::tstring> vPrime;
 	for (int i=0; i<n; i++)
 	{
 		CComBSTR bstr;
 		CComPtr<IMgaMetaAttribute> meta;
 		COMTHROW((*v)[i]->get_Meta(&meta));
 		COMTHROW(meta->get_Name(&bstr));
-		std::string s;
+		std::tstring s;
 		CopyTo(bstr,s);
 		vPrime.push_back(s);
 	}
@@ -1430,7 +1430,7 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaAttribute> *v)
 	//in place insertion sort
 	for (int x=1; x<n; x++) 
 	{
-		std::string index = vPrime[x];
+		std::tstring index = vPrime[x];
 		CComObjPtr<IMgaAttribute> indexAttr = (*v)[x];
 		int y = x;
 
@@ -1456,14 +1456,14 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaConnPoint> *v)
 	//small speed up, build a vector of strings first, then sort the strings
 	//while doing the sort operations on the original vector, so we don't have
 	//to get the Target ID every time
-	std::vector<std::string> vPrime;
+	std::vector<std::tstring> vPrime;
 	for (int i=0; i<n; i++)
 	{
 		CComBSTR bstr;
 		CComPtr<IMgaFCO> fco;
 		COMTHROW((*v)[i]->get_Target(&fco));
 		COMTHROW(fco->get_ID(&bstr));
-		std::string s;
+		std::tstring s;
 		CopyTo(bstr,s);
 		vPrime.push_back(s);
 	}
@@ -1471,7 +1471,7 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaConnPoint> *v)
 	//in place insertion sort
 	for (int x=1; x<n; x++) 
 	{
-		std::string index = vPrime[x];
+		std::tstring index = vPrime[x];
 		CComObjPtr<IMgaConnPoint> indexConnPoint = (*v)[x];
 		int y = x;
 
@@ -1497,12 +1497,12 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaFolder> *v)
 	//small speed up, build a vector of strings first, then sort the strings
 	//while doing the sort operations on the original vector, so we don't have
 	//to call the get_ID function each time we look at a Folder
-	std::vector<std::string> vPrime;
+	std::vector<std::tstring> vPrime;
 	for (int i=0; i<n; i++)
 	{
 		CComBSTR bstr;
 		COMTHROW((*v)[i]->get_ID(&bstr));
-		std::string s;
+		std::tstring s;
 		CopyTo(bstr,s);
 		vPrime.push_back(s);
 	}	
@@ -1510,7 +1510,7 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaFolder> *v)
 	//in place insertion sort
 	for (int x=1; x<n; x++) 
 	{
-		std::string index = vPrime[x];
+		std::tstring index = vPrime[x];
 		CComObjPtr<IMgaFolder> indexFolder = (*v)[x];
 		int y = x;
 
@@ -1537,12 +1537,12 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaFCO> *v)
 	//small speed up, build a vector of strings first, then sort the strings
 	//while doing the sort operations on the original vector, so we don't have
 	//to call the get_ID function each time we look at an FCO
-	std::vector<std::string> vPrime;
+	std::vector<std::tstring> vPrime;
 	for (int i=0; i<n; i++)
 	{
 		CComBSTR bstr;
 		COMTHROW((*v)[i]->get_ID(&bstr));
-		std::string s;
+		std::tstring s;
 		CopyTo(bstr,s);
 		vPrime.push_back(s);
 	}
@@ -1550,7 +1550,7 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaFCO> *v)
 	//in place insertion sort
 	for (int x=1; x<n; x++) 
 	{
-		std::string index = vPrime[x];
+		std::tstring index = vPrime[x];
 		CComObjPtr<IMgaFCO> indexFCO = (*v)[x];
 		int y = x;
 
@@ -1727,23 +1727,23 @@ STDMETHODIMP CMgaDumper::DumpClos( IMgaFCOs *p_sel_fcos, IMgaFolders *p_sel_fold
 		
 		if ( false) // clipboard format
 		{
-			ofs << "<!DOCTYPE clipboard SYSTEM \"mgaclosure.dtd\" [\n";
-			ofs << "\t<!ELEMENT clipboard (folder|model|atom|reference|set|connection|regnode)*>\n";
-			ofs << "\t<!ATTLIST clipboard\n";
-			ofs << "\t\tclosureversion CDATA #IMPLIED\n";
-			ofs << "\t\tacceptingkind CDATA #IMPLIED\n";
-			ofs << "\t\tparadigmnamehint CDATA #IMPLIED\n"; // just for compatibility with raw copied data
-			ofs << "\t>\n";
-			ofs << "]>\n\n";
+			ofs << L"<!DOCTYPE clipboard SYSTEM \"mgaclosure.dtd\" [\n";
+			ofs << L"\t<!ELEMENT clipboard (folder|model|atom|reference|set|connection|regnode)*>\n";
+			ofs << L"\t<!ATTLIST clipboard\n";
+			ofs << L"\t\tclosureversion CDATA #IMPLIED\n";
+			ofs << L"\t\tacceptingkind CDATA #IMPLIED\n";
+			ofs << L"\t\tparadigmnamehint CDATA #IMPLIED\n"; // just for compatibility with raw copied data
+			ofs << L"\t>\n";
+			ofs << L"]>\n\n";
 
-			StartElem("clipboard");
-			Attr("closureversion", "1");
+			StartElem(_T("clipboard"));
+			Attr(_T("closureversion"), _T("1"));
 			Dump( project); 
 			EndElem();
 		}
 		else
 		{
-			ofs << "<!DOCTYPE project SYSTEM \"mgaclosure.dtd\">\n\n";
+			ofs << L"<!DOCTYPE project SYSTEM \"mgaclosure.dtd\">\n\n";
 
 			Dump( project); 
 		}
@@ -1767,11 +1767,11 @@ STDMETHODIMP CMgaDumper::DumpClosR(
 	m_dumpLibraryStubs	= (dump_options & 0x1) == 0x1; // dump library stubs ( absolute path used as closurelibreferred, closurelibderivedfrom, closurelibtarget attribute)
 	m_v2				= (dump_options & 0x2) == 0x2; // dump the closure2members, closure2refs like attributes
 
-	std::string version_string;
+	std::tstring version_string;
 	if( dump_options & 0x4)
-		version_string = "4";
+		version_string = _T("4");
 	else
-		version_string = "1";
+		version_string = _T("1");
 	
 	//CopyTo( abspath, m_currParAbsPath);
 
@@ -1815,18 +1815,18 @@ STDMETHODIMP CMgaDumper::DumpClosR(
 		putInTerritory( m_selFolders);
 		putInTerritory( parentless_folders);
 
-		ofs << "<!DOCTYPE clipboard SYSTEM \"mgaclosure.dtd\" [\n";
-		ofs << "\t<!ELEMENT clipboard (folder|model|atom|reference|set|connection|regnode)*>\n";
-		ofs << "\t<!ATTLIST clipboard\n";
-		ofs << "\t\tclosureversion CDATA #IMPLIED\n";
-		ofs << "\t\tacceptingkind CDATA #IMPLIED\n";
-		ofs << "\t\tparadigmnamehint CDATA #IMPLIED\n"; // just for compatibility with raw copied data
-		ofs << "\t>\n";
-		ofs << "]>\n\n";
+		ofs << L"<!DOCTYPE clipboard SYSTEM \"mgaclosure.dtd\" [\n";
+		ofs << L"\t<!ELEMENT clipboard (folder|model|atom|reference|set|connection|regnode)*>\n";
+		ofs << L"\t<!ATTLIST clipboard\n";
+		ofs << L"\t\tclosureversion CDATA #IMPLIED\n";
+		ofs << L"\t\tacceptingkind CDATA #IMPLIED\n";
+		ofs << L"\t\tparadigmnamehint CDATA #IMPLIED\n"; // just for compatibility with raw copied data
+		ofs << L"\t>\n";
+		ofs << L"]>\n\n";
 
-		StartElem("clipboard");
-		Attr("closureversion", version_string);
-		Attr("acceptingkind", CComBstrObj( acceptingkinds));
+		StartElem(_T("clipboard"));
+		Attr(_T("closureversion"), version_string);
+		Attr(_T("acceptingkind"), CComBstrObj( acceptingkinds));
 
 		for( CComObjPtrVector<IMgaFolder>::iterator j = parentless_folders.begin(); j != parentless_folders.end(); ++j )
 		{
@@ -1879,14 +1879,14 @@ STDMETHODIMP CMgaDumper::DumpClosR(
 
 void CMgaDumper::DumpConnDetails( CComObjPtr<IMgaConnection> connection)
 {
-	const char * role_attr []       = { "smart0Role="         , "smart1Role="         };
-	const char * targetGUID_attr [] = { "smart0TargetGUID="   , "smart1TargetGUID="   };
-	const char * target_attr []     = { "smart0Target="       , "smart1Target="       };
-	const char * refchainGUID_attr[]= { "smart0RefChainGUID=" , "smart1RefChainGUID=" };
-	const char * refchain_attr []   = { "smart0RefChain="     , "smart1RefChain="     };
-	const char * isbound_attr []    = { "smart0IsBound="      , "smart1IsBound="      };
+	const TCHAR * role_attr []       = { _T("smart0Role=")         , _T("smart1Role=")         };
+	const TCHAR * targetGUID_attr [] = { _T("smart0TargetGUID=")   , _T("smart1TargetGUID=")   };
+	const TCHAR * target_attr []     = { _T("smart0Target=")       , _T("smart1Target=")       };
+	const TCHAR * refchainGUID_attr[]= { _T("smart0RefChainGUID=") , _T("smart1RefChainGUID=") };
+	const TCHAR * refchain_attr []   = { _T("smart0RefChain=")     , _T("smart1RefChain=")     };
+	const TCHAR * isbound_attr []    = { _T("smart0IsBound=")      , _T("smart1IsBound=")      };
 
-	std::string array[2]; // { source_info, destin_info };
+	std::tstring array[2]; // { source_info, destin_info };
 	CComObjPtrVector<IMgaConnPoint> cps;
 	COMTHROW( connection->get_ConnPoints( PutOut( cps)));
 
@@ -1894,13 +1894,13 @@ void CMgaDumper::DumpConnDetails( CComObjPtr<IMgaConnection> connection)
 	{
 		for( unsigned int i = 0; i < cps.size(); ++i)
 		{
-			CComBSTR role_bstr;std::string role_str;
+			CComBSTR role_bstr;std::tstring role_str;
 			COMTHROW( cps[i]->get_ConnRole( &role_bstr));
 			int w = 0; // which?
-			if( role_bstr == CComBSTR("dst")) w = 1; // otherwise will fill arr[0]
+			if( role_bstr == CComBSTR(L"dst")) w = 1; // otherwise will fill arr[0]
 			CopyTo( role_bstr, role_str);
 			
-			array[w] += std::string( role_attr[w]) + "\"" + role_str + "\" ";
+			array[w] += std::tstring( role_attr[w]) + _T("\"") + role_str + _T("\" ");
 
 			CComObjPtr<IMgaFCO> target;
 			COMTHROW( cps[i]->get_Target(PutOut(target)) );
@@ -1912,8 +1912,8 @@ void CMgaDumper::DumpConnDetails( CComObjPtr<IMgaConnection> connection)
 			COMTHROW( target->get_RegistryValue( CComBSTR(GLOBAL_ID_STR), &guid));
 			if( guid != 0 && guid.Length() == GLOBAL_ID_LEN) // valid
 			{
-				std::string guid_str; CopyTo( guid, guid_str);
-				array[w] += std::string( targetGUID_attr[w]) + "\"" + guid_str + "\" ";
+				std::tstring guid_str; CopyTo( guid, guid_str);
+				array[w] += std::tstring( targetGUID_attr[w]) + _T("\"") + guid_str + _T("\" ");
 			}
 
 			CComBSTR nameBstr;
@@ -1921,41 +1921,41 @@ void CMgaDumper::DumpConnDetails( CComObjPtr<IMgaConnection> connection)
 			CopyTo( nameBstr, m_currAbsPath); // will be used by the DumpConnPoint also
 				
 			nameBstr.Empty(); 
-			std::string t_name;
+			std::tstring t_name;
 			COMTHROW( target->get_AbsPath( &nameBstr));
 			CopyTo( nameBstr, t_name);
 
 			//Attr("closure2target", makeRel( t_name, m_currAbsPath));
-			std::string relpath_to_end = makeRel( t_name, m_currAbsPath);
-			ASSERT( relpath_to_end.substr(0, 4) == "/@..");
+			std::tstring relpath_to_end = makeRel( t_name, m_currAbsPath);
+			ASSERT( relpath_to_end.substr(0, 4) == _T("/@.."));
 			// the path to connection end is calculated relative to the connection
 			// so if we cut off the first node, then it will be relative to the container
-			array[w] += std::string( target_attr[w]) + "\"" + relpath_to_end.substr(4) + "\" ";
+			array[w] += std::tstring( target_attr[w]) + _T("\"") + relpath_to_end.substr(4) + _T("\" ");
 
 			CComObjPtrVector<IMgaFCO> refs;
 			COMTHROW( cps[i]->get_References(PutOut(refs)) );
 
-			std::string guidrefs = DumpGUIDRefs( refs);
-			if( !guidrefs.empty()) array[w] += std::string( refchainGUID_attr[w]) + "\"" + guidrefs + "\" ";
+			std::tstring guidrefs = DumpGUIDRefs( refs);
+			if( !guidrefs.empty()) array[w] += std::tstring( refchainGUID_attr[w]) + _T("\"") + guidrefs + _T("\" ");
 
-			std::string chain;
+			std::tstring chain;
 			for( CComObjPtrVector<IMgaFCO>::iterator j = refs.begin(); j != refs.end(); ++j)
 			{
 				CComBSTR name;
 				COMTHROW( (*j)->get_AbsPath( &name));
-				std::string nm;
+				std::tstring nm;
 				CopyTo( name, nm);
 
 				if( !chain.empty() )
 					chain += ' ';
 
-				std::string rel_path_to = makeRel( nm, m_currAbsPath);
-				ASSERT( rel_path_to.substr( 0, 4) == "/@..");
+				std::tstring rel_path_to = makeRel( nm, m_currAbsPath);
+				ASSERT( rel_path_to.substr( 0, 4) == _T("/@.."));
 				// rel path converted from relative to the m_currAbsPath to relative to the container
 				chain += rel_path_to.substr(4);
 			}
 
-			array[w] += std::string( refchain_attr[w]) + "\"" + chain + "\" ";
+			array[w] += std::tstring( refchain_attr[w]) + _T("\"") + chain + _T("\" ");
 			
 			CComObjPtr<IMgaFCO> base;
 			COMTHROW( connection->get_DerivedFrom(PutOut(base)));
@@ -1964,7 +1964,7 @@ void CMgaDumper::DumpConnDetails( CComObjPtr<IMgaConnection> connection)
 				COMTHROW( connection->CompareToBase( cps[i], &stat));
 				if(!stat) {
 					//Attr("isbound", "yes" );
-					array[w] += std::string( isbound_attr[w]) + "\"yes\" ";
+					array[w] += std::tstring( isbound_attr[w]) + _T("\"yes\" ");
 				}
 			}
 		}

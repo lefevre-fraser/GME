@@ -2320,7 +2320,7 @@ void CAggregatePropertyPage::GotoIUnk(BSTR Id)
 				item[itemcount++] = id;
 				iitem = parent;
 				parent.Release();
-			} while (!m_TreeAggregate.m_MgaMap.SearchTreeItem((wchar_t*)((char*)id),hNewItem, pUnknown));
+			} while (!m_TreeAggregate.m_MgaMap.SearchTreeItem(id,hNewItem, pUnknown));
 			pMgaContext->CommitTransaction();
 			// open the parents in backward order
 			worked = true;
@@ -2330,7 +2330,7 @@ void CAggregatePropertyPage::GotoIUnk(BSTR Id)
 			m_TreeAggregate.SendMessage(WM_KEYDOWN, (WPARAM)107, (LPARAM)0);
 			for (itemcount-=2; itemcount > 0; itemcount--)
 			{
-				if (m_TreeAggregate.m_MgaMap.SearchTreeItem((wchar_t*)((char*)item[itemcount]),hNewItem, pUnknown))
+				if (m_TreeAggregate.m_MgaMap.SearchTreeItem(item[itemcount],hNewItem, pUnknown))
 				{
 					m_TreeAggregate.EnsureVisible(hNewItem);
 					m_TreeAggregate.ClearSelection(TRUE);

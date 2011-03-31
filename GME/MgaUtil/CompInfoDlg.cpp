@@ -60,10 +60,10 @@ void CCompInfoDlg::OnOK()
 	int v;
 
 	if(m_progid.Find('.') < 0) {
-		AfxMessageBox("ProgID must contain at least one '.'");
+		AfxMessageBox(_T("ProgID must contain at least one '.'"));
 	}
-	else if(sscanf(m_version, "%d", &v) != 1 || v <= 0) {
-		AfxMessageBox("Version ID must start with a number > 0");
+	else if(_stscanf_s(m_version, _T("%d"), &v) != 1 || v <= 0) {
+		AfxMessageBox(_T("Version ID must start with a number > 0"));
 	}
 	else {
 		m_execeng.GetLBText(m_execeng.GetCurSel(),engine);
@@ -89,7 +89,7 @@ BOOL CCompInfoDlg::OnInitDialog()
 			if(hr != S_OK || ! (type & COMPONENTTYPE_EXECENGINE)) continue;
 			CString name(progids[i]);
 			int p = m_execeng.AddString(name);
-			if(name.Find("attern") >= 0) sel = p;
+			if(name.Find(_T("attern")) >= 0) sel = p;
 	}
 	m_execeng.SetCurSel(sel);
 	return TRUE;  // return TRUE unless you set the focus to a control

@@ -190,13 +190,13 @@ BOOL CViolationDialog::OnInitDialog()
 		lvItem.mask = LVIF_TEXT;
 		lvItem.iSubItem = 1;
 		CString strText = m_vecRecords[ i ].spConstraint->GetContextType().c_str();// OclCommonEx::Convert( m_vecRecords[ i ].spConstraint->GetContextType() );
-		lvItem.pszText = (char*)(LPCTSTR)strText; //.GetBuffer( strText.GetLength() );
+		lvItem.pszText = (TCHAR*)(LPCTSTR)strText; //.GetBuffer( strText.GetLength() );
 		m_lstConstraints.SetItem( &lvItem );
 //		strText.ReleaseBuffer();
 
 		lvItem.iSubItem = 2;
 		strText = m_vecRecords[ i ].spConstraint->GetName().c_str(); // OclCommonEx::Convert( m_vecRecords[ i ].spConstraint->GetName() );
-		lvItem.pszText = (char*)(LPCTSTR)strText; //.GetBuffer( strText.GetLength() );
+		lvItem.pszText = (TCHAR*)(LPCTSTR)strText; //.GetBuffer( strText.GetLength() );
 		m_lstConstraints.SetItem( &lvItem );
 //		strText.ReleaseBuffer();
 	}
@@ -509,7 +509,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			lvItem.iImage = 0;
 			lvItem.lParam = i;
 			CString strTemp = vi.vecVariables[ i ].c_str(); // OclCommonEx::Convert( vi.vecVariables[ i ] );
-			lvItem.pszText = (char*)(LPCTSTR)strTemp;//.GetBuffer( strTemp.GetLength() );
+			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp;//.GetBuffer( strTemp.GetLength() );
 			m_lstObjects.InsertItem( &lvItem );
 
 //			strTemp.ReleaseBuffer();
@@ -520,7 +520,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			lvItem.mask = LVIF_TEXT;
 			lvItem.iSubItem = 1;
 			strTemp = vi.vecObjects[ i ].c_str(); // OclCommonEx::Convert( vi.vecObjects[ i ] );
-			lvItem.pszText = (char*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
+			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
 			m_lstObjects.SetItem( &lvItem );
 
 //			strTemp.ReleaseBuffer();
@@ -570,7 +570,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 				lvItem.lParam = it->second.serial*1000 +i;
 				CString strTemp;
 				strTemp.Format( "%d", it->second.serial*1000 + i + 1 );
-				lvItem.pszText = (char*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
+				lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
 				m_lstExpression.InsertItem( &lvItem );
 
 //				strTemp.ReleaseBuffer();
@@ -581,7 +581,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 				lvItem.mask = LVIF_TEXT;
 				lvItem.iSubItem = 1;
 				strTemp = arrText.GetAt( i );
-				lvItem.pszText = (char*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
+				lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
 				m_lstExpression.SetItem( &lvItem );
 
 //				strTemp.ReleaseBuffer();
@@ -629,7 +629,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			lvItem.lParam = i;
 			CString strTemp;
 			strTemp.Format( "%d", i + 1 );
-			lvItem.pszText = (char*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
+			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
 			m_lstExpression.InsertItem( &lvItem );
 
 //			strTemp.ReleaseBuffer();
@@ -640,7 +640,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			lvItem.mask = LVIF_TEXT;
 			lvItem.iSubItem = 1;
 			strTemp = arrText.GetAt( i );
-			lvItem.pszText = (char*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
+			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
 			m_lstExpression.SetItem( &lvItem );
 
 //			strTemp.ReleaseBuffer();
@@ -678,7 +678,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 				strTemp = "?";
 			else
 				strTemp.Format( "%d", vi.position.iLine );
-			lvItem.pszText = (char*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
+			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
 			m_lstErrors.InsertItem( &lvItem );
 
 //			strTemp.ReleaseBuffer();
@@ -693,7 +693,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			lvItem.mask = LVIF_TEXT;
 			lvItem.iSubItem = 1;
 			strTemp.Format( "%d", vi.position.iColumn );
-			lvItem.pszText = (char*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
+			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
 			m_lstErrors.SetItem( &lvItem );
 
 //			strTemp.ReleaseBuffer();
@@ -705,7 +705,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			lvItem.mask = LVIF_TEXT;
 			lvItem.iSubItem = 1;
 			strTemp = vi.strMessage.c_str(); // OclCommonEx::Convert( vi.strMessage );
-			lvItem.pszText = (char*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
+			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
 			m_lstErrors.SetItem( &lvItem );
 
 //			strTemp.ReleaseBuffer();
@@ -715,7 +715,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 
 			lvItem.iSubItem = 2;
 			strTemp = vi.strSignature.c_str(); // OclCommonEx::Convert( vi.strSignature );
-			lvItem.pszText = (char*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
+			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
 			m_lstErrors.SetItem( &lvItem );
 
 //			strTemp.ReleaseBuffer();

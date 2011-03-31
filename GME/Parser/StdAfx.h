@@ -40,6 +40,33 @@ extern CComModule _Module;
 typedef IMgaConstraint IMgaMetaConstraint;
 typedef IMgaConstraints IMgaMetaConstraints;
 
+#include <string>
+namespace std {
+#ifdef UNICODE
+	typedef wstring tstring;
+#else
+	typedef string tstring;
+#endif
+}
+static void CopyTo(const BSTR from, std::wstring& to)
+{
+	if (from != NULL) {
+		to = from;
+	} else {
+		to = L"";
+	}
+}
+#include "comutil.h"
+#include "comdef.h"
+static _bstr_t PutInBstr(const std::wstring& str)
+{
+	return _bstr_t(str.c_str());
+}
+static _bstr_t PutInBstr(const std::string& str)
+{
+	return _bstr_t(str.c_str());
+}
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

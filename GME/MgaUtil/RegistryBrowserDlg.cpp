@@ -375,7 +375,7 @@ void CRegistryBrowserDlg::OnOK()
 			UpdateData(TRUE);
 			if (oldnode->status == ATTSTATUS_HERE) {
 				oldnode->value = m_regnodeValue;
-				oldnode->value.Replace("\r\n","\n"); // Remove Win32 GUI line ends
+				oldnode->value.Replace(_T("\r\n"),_T("\n")); // Remove Win32 GUI line ends
 			}
 		}
 	}

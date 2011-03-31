@@ -16,27 +16,27 @@ const GUID CATID_ActiveScript = { 0xf0b7a1a1, 0x9847, 0x11cf, { 0x8f, 0x20, 0x0,
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/*static*/ const char* CGmeDlg::m_strZWidth			= "Fit Width";
-/*static*/ const char* CGmeDlg::m_strZHeight		= "Fit Height";
-/*static*/ const char* CGmeDlg::m_strZAll			= "Fit All";
+/*static*/ const TCHAR* CGmeDlg::m_strZWidth			= _T("Fit Width");
+/*static*/ const TCHAR* CGmeDlg::m_strZHeight		= _T("Fit Height");
+/*static*/ const TCHAR* CGmeDlg::m_strZAll			= _T("Fit All");
 
-/*static*/ const char* CGmeDlg::m_strFmtStrg		= "%g";
-/*static*/ const char* CGmeDlg::m_strFmtStrf		= "%f";
-/*static*/ const char* CGmeDlg::m_strFmtStrE		= "%E";
-/*static*/ const char* CGmeDlg::m_strFmtStre		= "%e";
-/*static*/ const char* CGmeDlg::m_strFmtStrg2		= "%.12g"; // the default one
-/*static*/ const char* CGmeDlg::m_strFmtStrf2		= "%lf";
+/*static*/ const TCHAR* CGmeDlg::m_strFmtStrg		= _T("%g");
+/*static*/ const TCHAR* CGmeDlg::m_strFmtStrf		= _T("%f");
+/*static*/ const TCHAR* CGmeDlg::m_strFmtStrE		= _T("%E");
+/*static*/ const TCHAR* CGmeDlg::m_strFmtStre		= _T("%e");
+/*static*/ const TCHAR* CGmeDlg::m_strFmtStrg2		= _T("%.12g"); // the default one
+/*static*/ const TCHAR* CGmeDlg::m_strFmtStrf2		= _T("%lf");
 
-/*static*/ const char* CGmeDlg::m_strESStrD			= "No Smooth";
-/*static*/ const char* CGmeDlg::m_strESStrHS		= "High Speed Mode";
-/*static*/ const char* CGmeDlg::m_strESStrHQ		= "High Quality Mode";
+/*static*/ const TCHAR* CGmeDlg::m_strESStrD			= _T("No Smooth");
+/*static*/ const TCHAR* CGmeDlg::m_strESStrHS		= _T("High Speed Mode");
+/*static*/ const TCHAR* CGmeDlg::m_strESStrHQ		= _T("High Quality Mode");
 
-/*static*/ const char* CGmeDlg::m_strFSStrSD		= "System Default";
-/*static*/ const char* CGmeDlg::m_strFSStrSBPPGF	= "Single Bit Per Pixel Grid Fit";
-/*static*/ const char* CGmeDlg::m_strFSStrSBPP		= "Single Bit Per Pixel";
-/*static*/ const char* CGmeDlg::m_strFSStrAAGF		= "Anti Alias Grid Fit";
-/*static*/ const char* CGmeDlg::m_strFSStrAA		= "Anti Alias";
-/*static*/ const char* CGmeDlg::m_strFSStrCTGF		= "Clear Type Grid Fit";
+/*static*/ const TCHAR* CGmeDlg::m_strFSStrSD		= _T("System Default");
+/*static*/ const TCHAR* CGmeDlg::m_strFSStrSBPPGF	= _T("Single Bit Per Pixel Grid Fit");
+/*static*/ const TCHAR* CGmeDlg::m_strFSStrSBPP		= _T("Single Bit Per Pixel");
+/*static*/ const TCHAR* CGmeDlg::m_strFSStrAAGF		= _T("Anti Alias Grid Fit");
+/*static*/ const TCHAR* CGmeDlg::m_strFSStrAA		= _T("Anti Alias");
+/*static*/ const TCHAR* CGmeDlg::m_strFSStrCTGF		= _T("Clear Type Grid Fit");
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -108,18 +108,18 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CGmeDlg message handlers
 
-static char icofilter[] = "Icon files (*.ico;*.bmp)|*.ico;*.bmp|All Files (*.*)|*.*||";
-static char bakfilter[] = "Backup files (*.bak)|*.bak|All Files (*.*)|*.*||";
-static char exefilter[] = "Executable files (*.exe)|*.exe|All Files (*.*)|*.*||";
+static TCHAR icofilter[] = _T("Icon files (*.ico;*.bmp)|*.ico;*.bmp|All Files (*.*)|*.*||");
+static TCHAR bakfilter[] = _T("Backup files (*.bak)|*.bak|All Files (*.*)|*.*||");
+static TCHAR exefilter[] = _T("Executable files (*.exe)|*.exe|All Files (*.*)|*.*||");
 
 //AFX_MANAGE_STATE( AfxGetStaticModuleState()); 
 
 
-CString CGmeDlg::getDirectory( const CString& text = "Specify the icons directory")
+CString CGmeDlg::getDirectory( const CString& text = _T("Specify the icons directory"))
 {
 	BROWSEINFO bi;
 	TCHAR szDir[MAX_PATH];
-	CString Dir = "";
+	CString Dir = _T("");
 	LPITEMIDLIST pidl;
 	LPMALLOC pMalloc;	
 	OleInitialize(NULL);
@@ -147,10 +147,10 @@ CString CGmeDlg::getDirectory( const CString& text = "Specify the icons director
 		}
 		else
 		{	// Selected 'Not to save'
-			return "";
+			return _T("");
 		}
 		Dir = szDir;
-		//Dir += "\\";
+		//Dir += _T("\\");
 	}
 	// end of getting directory info 
 	return Dir;
@@ -201,7 +201,7 @@ void CGmeDlg::fillScripEngineList()
     HRESULT             hResult = S_OK;
 
 
-	m_ScriptEgines.InsertColumn( 0, "", LVCFMT_LEFT, 205, -1 );
+	m_ScriptEgines.InsertColumn( 0, _T(""), LVCFMT_LEFT, 205, -1 );
     memcpy(&ourCatID, &CATID_ActiveScript, sizeof(ourCatID));
 //    memcpy(&ourCatID, &CATID_ActiveScriptParse, sizeof(ourCatID));
 
@@ -226,7 +226,7 @@ void CGmeDlg::fillScripEngineList()
         hResult = ProgIDFromCLSID(ourCLSID, &str);
 
         {
-			COLE2CT pszString(str);
+			CString pszString(str);
 			
 			LVITEM lvItem;
 			lvItem.mask = LVIF_PARAM | LVIF_STATE | LVIF_TEXT;  
@@ -243,8 +243,9 @@ void CGmeDlg::fillScripEngineList()
 			lvItem.iSubItem = 0;
 			lvItem.lParam = lvItem.iItem;
 
-			lvItem.pszText = (char*)pszString;
+			lvItem.pszText = pszString.GetBuffer(pszString.GetLength());
 			int ret = m_ScriptEgines.InsertItem( &lvItem );
+			pszString.ReleaseBuffer();
         }
     }
 	if (!sel)
@@ -274,7 +275,7 @@ BOOL CGmeDlg::OnInitDialog()
 		m_isave = m_iconpath;
 		m_sysisave = m_sysiconpath;
 		CRegKey accessTest;
-		if (accessTest.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", KEY_READ | KEY_WRITE) == ERROR_ACCESS_DENIED) {
+		if (accessTest.Open(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\GME"), KEY_READ | KEY_WRITE) == ERROR_ACCESS_DENIED) {
 			GetDlgItem(IDC_SYSICONPATH)->EnableWindow(false);
 			GetDlgItem(IDC_ADDSYSICONPATH)->EnableWindow(false);
 		}
@@ -322,7 +323,7 @@ BOOL CGmeDlg::OnInitDialog()
 
 		// Script
 		COMTHROW( registrar->get_ScriptEngine(REGACCESS_USER, PutOut(m_scriptEngine)) );
-		if (m_scriptEngine == "")
+		if (m_scriptEngine == _T(""))
 			m_scriptEngine = _T("JScript");
 
 		// Zoom
@@ -362,7 +363,7 @@ BOOL CGmeDlg::OnInitDialog()
 		// Font smoothing mode
 		fillFontSmoothModeComboBox();
 	}
-	MSGCATCH("Error while initializing GmeDlg",;)
+	MSGCATCH(_T("Error while initializing GmeDlg"),;)
 
 	AutosaveControlManager();
 	ExtControlManager();
@@ -467,7 +468,7 @@ void CGmeDlg::OnAutosaveDirButton()
 	//dlg.DoModal();
 	UpdateData(TRUE);
 	//m_autosave_dir = dlg.GetPath();
-	m_autosave_dir = getDirectory("Select output directory for autosave");
+	m_autosave_dir = getDirectory(_T("Select output directory for autosave"));
 	UpdateData(FALSE);
 }
 
@@ -563,10 +564,10 @@ void CGmeDlg::fillZoomComboBox(int *list)
 		CString str;
 		if (m_zoomList[k] > 0)
 		{
-			char buff[100];
-			_itoa(m_zoomList[k], buff, 10);
+			TCHAR buff[100];
+			_itot(m_zoomList[k], buff, 10);
 			str = buff;
-			str += "%";
+			str += _T("%");
 		}
 		/*else	// commented out for a while (see COMMENT above)
 		{
@@ -604,10 +605,10 @@ CString CGmeDlg::getZoomValueFromReg()
 	CString str;
 	if (level > 0)
 	{
-		char buff[100];
-		_itoa(level, buff, 10);
+		TCHAR buff[100];
+		_itot(level, buff, 10);
 		str = buff;
-		str += "%";
+		str += _T("%");
 	}
 	/*else // for now do not accept: ZOOM_WIDTH, ZOOM_HEIGHT, ZOOM_ALL values from the registry, see COMMENT above
 	{
@@ -626,13 +627,13 @@ CString CGmeDlg::getZoomValueFromReg()
 	}*/
 	
 	if( str.IsEmpty())
-		str = "100%";
+		str = _T("100%");
 	return str;
 }
 
 CString CGmeDlg::getZoomValue()
 {
-	CString res("100");
+	CString res(_T("100"));
 	CWnd* zoom = 0;
 	zoom = GetDlgItem(IDC_ZOOMS);
 	if (zoom)
@@ -641,7 +642,7 @@ CString CGmeDlg::getZoomValue()
 		edit = (CEdit*)(zoom->GetDlgItem(1001));
 		if (edit)
 		{
-			char buff[100];
+			TCHAR buff[100];
 			edit->GetLine(0, buff, sizeof(buff)-1);
 
 			int zv = 0;
@@ -668,7 +669,7 @@ CString CGmeDlg::getZoomValue()
 			if( l != 1 || zv < ZOOM_MIN || zv > ZOOM_MAX)
 				zv = 100;
 
-			_itoa(zv, buff, 10);
+			_itot(zv, buff, 10);
 			res = buff;
 		}
 	}
@@ -733,8 +734,8 @@ CString CGmeDlg::getFmtStrValue()
 		edit = (CEdit*)( combo->GetDlgItem(1001));
 		if( edit)
 		{
-			char buff[100];
-			edit->GetLine(0, buff, sizeof(buff)-1);
+			TCHAR buff[100];
+			edit->GetLine(0, buff, sizeof(buff));
 			res = buff;
 		}
 	}
@@ -745,8 +746,8 @@ void CGmeDlg::fillUndoComboBox()
 {
 	CComboBox* sz_list = 0;
 	sz_list = (CComboBox*)GetDlgItem(IDC_UNDOSIZE);
-	sz_list->AddString("1");
-	sz_list->AddString("10");
+	sz_list->AddString(_T("1"));
+	sz_list->AddString(_T("10"));
 
 	CString regv = getUndoQueueSizeFromReg();
 	int pos = sz_list->FindStringExact( -1, regv);
@@ -761,14 +762,14 @@ CString CGmeDlg::getUndoQueueSizeFromReg()
 	CString queuesize;
 	COMTHROW( registrar->GetUndoQueueSize( REGACCESS_USER, PutOut( queuesize)) );
 	if( queuesize.IsEmpty())
-		queuesize = "10";
+		queuesize = _T("10");
 
 	return queuesize;
 }
 
 CString CGmeDlg::getUndoQueueSizeValue()
 {
-	CString res( "10");
+	CString res( _T("10"));
 	CWnd* combo = 0;
 	combo = GetDlgItem(IDC_UNDOSIZE);
 	if( combo)
@@ -777,9 +778,9 @@ CString CGmeDlg::getUndoQueueSizeValue()
 		edit = (CEdit*)( combo->GetDlgItem(1001));
 		if( edit)
 		{
-			char buff[100];
-			edit->GetLine(0, buff, sizeof(buff)-1);
-			int value = atoi( buff);
+			TCHAR buff[100];
+			edit->GetLine(0, buff, sizeof(buff));
+			int value = _ttoi( buff);
 			if( value > 0 && value < 100) // above 0 and below 100
 				res = buff;
 		}
@@ -827,8 +828,8 @@ edgesmoothmode_enum CGmeDlg::getEdgeSmoothModeValue()
 		edit = (CEdit*)(combo->GetDlgItem(1001));
 		if (edit)
 		{
-			char buff[100];
-			edit->GetLine(0, buff, sizeof(buff)-1);
+			TCHAR buff[100];
+			edit->GetLine(0, buff, sizeof(buff));
 			res = buff;
 		}
 	}
@@ -888,8 +889,8 @@ fontsmoothmode_enum CGmeDlg::getFontSmoothModeValue()
 		edit = (CEdit*)(combo->GetDlgItem(1001));
 		if (edit)
 		{
-			char buff[100];
-			edit->GetLine(0, buff, sizeof(buff)-1);
+			TCHAR buff[100];
+			edit->GetLine(0, buff, sizeof(buff));
 			res = buff;
 		}
 	}

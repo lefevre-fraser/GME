@@ -70,12 +70,12 @@ CString CAnnotationUtil::ResolveNewLinesToCRLF(const CString& str)
 	for (int i = 0; i < str.GetLength(); i++) {
 		if (str[i] == '\x0A') {
 			if (i > 0 && str[i - 1] != '\x0D')
-				outStr.Append("\x0D");
+				outStr.Append(_T("\x0D"));
 		}
 		outStr.Append(CString(str[i]));
 		if (str[i] == '\x0D') {
 			if (i < str.GetLength() - 1 && str[i + 1] != '\x0A')
-				outStr.Append("\x0A");
+				outStr.Append(_T("\x0A"));
 		}
 	}
 	return outStr;
@@ -84,7 +84,7 @@ CString CAnnotationUtil::ResolveNewLinesToCRLF(const CString& str)
 CString CAnnotationUtil::ResolveNewLinesToLF(const CString& str)
 {
 	CString outStr = str;
-	outStr.Replace("\x0D\x0A", "\x0A");
-	outStr.Replace("\x0D", "\x0A");
+	outStr.Replace(_T("\x0D\x0A"), _T("\x0A"));
+	outStr.Replace(_T("\x0D"), _T("\x0A"));
 	return outStr;
 }

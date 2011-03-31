@@ -82,13 +82,13 @@ void AlterNmspDlg::OnOK()
 	 || m_vRadAlter == 2 && m_strTrunc.IsEmpty()
 	 || m_vRadAlter == 3 && ( m_strPrefix.IsEmpty() || m_strTrunc.IsEmpty()))
 	{
-		AfxMessageBox( "Please do NOT specify empty string in the edit box!");
+		AfxMessageBox( _T("Please do NOT specify empty string in the edit box!"));
 		return; // don't allow these scenarios
 	}
 
 	// completing the namespaces with the operator: '::'
-	if( !m_strPrefix.IsEmpty() && m_strPrefix.Right(2) != "::") m_strPrefix += "::";
-	if( !m_strTrunc.IsEmpty()  && m_strTrunc.Right(2)  != "::") m_strTrunc  += "::";
+	if( !m_strPrefix.IsEmpty() && m_strPrefix.Right(2) != _T("::")) m_strPrefix += _T("::");
+	if( !m_strTrunc.IsEmpty()  && m_strTrunc.Right(2)  != _T("::")) m_strTrunc  += _T("::");
 
 	UpdateData( FALSE);
 	//m_storedStrPrefix = m_strPrefix;
@@ -124,9 +124,9 @@ void AlterNmspDlg::OnBnClickedRadAlter3()
 }
 void AlterNmspDlg::OnBnClickedButton1()
 {
-	AfxMessageBox("Kinds may differ in this paradigm compared to the originating one. You might choose to "
-		"prefix the originating object kinds and roles with a specific namespace string. "
-		"You might also choose to disregard namespace related information from the XML data by using the Trunc option. "
-		"To migrate from one namespace to another you can specify the namespace string to be removed (in the 2nd edit box) and the namespace "
-		"string to be used then as a prefix (in the 1st edit box).", MB_OK | MB_ICONINFORMATION);
+	AfxMessageBox(_T("Kinds may differ in this paradigm compared to the originating one. You might choose to ")
+		_T("prefix the originating object kinds and roles with a specific namespace string. ")
+		_T("You might also choose to disregard namespace related information from the XML data by using the Trunc option. ")
+		_T("To migrate from one namespace to another you can specify the namespace string to be removed (in the 2nd edit box) and the namespace ")
+		_T("string to be used then as a prefix (in the 1st edit box)."), MB_OK | MB_ICONINFORMATION);
 }

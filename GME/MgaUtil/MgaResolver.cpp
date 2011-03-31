@@ -313,9 +313,9 @@ STDMETHODIMP CMgaResolver::get_FolderByStr(IMgaFolder *parent,
 			COMTHROW( parent_mfolder->get_Name(&parmfolder_name) );
 
 			CString sz_format;
-			sz_format.Format(	"Paradigm violation!  Parent folder %S of type %S\n"
-								"cannot contain a child folder\n"
-								"of type %S",
+			sz_format.Format(	_T("Paradigm violation!  Parent folder %s of type %s\n")
+								_T("cannot contain a child folder\n")
+								_T("of type %s"),
 								(BSTR) parfolder_name, (BSTR) parmfolder_name,
 								kind
 			);
@@ -370,7 +370,7 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 
 		CString sentence;
 		if(CComBSTR(kind).Length()) {
-			sentence = "Specified metaobject '" + CString(kind) + "'";
+			sentence = _T("Specified metaobject '") + CString(kind) + _T("'");
 			COMTHROW( 
 				((hr = parent_mf->get_LegalRootObjectByName(kind, &mfco)) == E_NOTFOUND) ?
 				S_OK : hr
@@ -428,7 +428,7 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 				// match on name object occurs, but incompatible user spec'd objtype
 
 
-				sentence += " is of invalid object type. ";
+				sentence += _T(" is of invalid object type. ");
 			}
 
 			// either a fail on name match && proper objtype,
@@ -438,7 +438,7 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 
 			else {
 
-				sentence += " is not found. ";
+				sentence += _T(" is not found. ");
 
 			}
 		}
@@ -471,9 +471,9 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 
 				CString sz_format;
 
-				sz_format.Format(	"%sParent folder %S\n"
-									"of type %S\n"
-									"cannot have any children.",
+				sz_format.Format(	_T("%sParent folder %s\n")
+									_T("of type %s\n")
+									_T("cannot have any children."),
 									sentence,
 									(BSTR) parent_name,
 									(BSTR) mparent_name
@@ -495,7 +495,7 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 		}
 
 		
-		CDialogList cdl(sentence + "Resolve Object Kind of ObjType "+helper_ObjTypeStr(objtype),
+		CDialogList cdl(sentence + _T("Resolve Object Kind of ObjType ")+helper_ObjTypeStr(objtype),
 			CDialogList::CHKTEXT_ONETIMER);
 		CComPtr<IMgaMetaFCO> fco_ix;
 		CList<int,int> valid_obj_map;
@@ -534,16 +534,16 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 				CString sz_format;
 				CString sz_format_tmp;
 
-				sz_format_tmp.Format(	"Paradigm Violation!  Parent folder %S\n"
-										"of type %S\n"
-										"cannot have any children\n",
+				sz_format_tmp.Format(	_T("Paradigm Violation!  Parent folder %s\n")
+										_T("of type %s\n")
+										_T("cannot have any children\n"),
 										(BSTR) parent_name,
 										(BSTR) mparent_name
 				);
 				sz_format += sz_format_tmp;
 
 				if (objtype != OBJTYPE_NULL) {
-					sz_format_tmp.Format(	"of object type %s\n",
+					sz_format_tmp.Format(	_T("of object type %s\n"),
 											helper_ObjTypeStr(objtype)
 											);
 					sz_format += sz_format_tmp;
@@ -579,7 +579,7 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 			if(this->mb_is_interactive && sentence.GetLength()) {
 				CComBSTR newname;
 				COMTHROW(fco_ix->get_Name(&newname));
-				sentence += "\nUsing the only valid choice '" + CString(newname) + "' instead.";
+				sentence += _T("\nUsing the only valid choice '") + CString(newname) + _T("' instead.");
 
 				CComPtr<IMgaProject> mgaProject;
 				COMTHROW(parent->get_Project(&mgaProject));
@@ -608,7 +608,7 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 
 		if ((cdl.DoModal() != IDOK) || (cdl.mn_selection_index == LB_ERR)) {
 //			#pragma bookmark (note: insert helpful message box here get_KindByStr[1] )
-//			AfxMessageBox("no items chosen from dialog");
+//			AfxMessageBox(_T("no items chosen from dialog"));
 			return RESOLV_ERR_get_KindByStr;
 		}
 
@@ -747,7 +747,7 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 				CopyTo(role2, c3);
 			}
 
-			if ((c2 == "") || (c2 == c1) || (c3 != "" && c1 == c3)) {
+			if ((c2 == _T("")) || (c2 == c1) || (c3 != _T("") && c1 == c3)) {
 
 				COMTHROW(targ_fco->get_ObjType(&targ_objtype));
 
@@ -782,7 +782,7 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 								CString cb1((BSTR) name);
 								CString cb2(aspect);
 
-								if ((cb2 == "") || (cb2 == cb1 )) {
+								if ((cb2 == _T("")) || (cb2 == cb1 )) {
 
 									// finally-- success!
 
@@ -885,7 +885,7 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 					COMTHROW( targ_roles->get_Item(1, &targ_role) );
 					ASSERT(targ_role != NULL);
 
-					if (CString(aspect) == "") { // done
+					if (CString(aspect) == _T("")) { // done
 
 						COMTHROW( targ_role.CopyTo(p) );
 
@@ -951,7 +951,7 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 				} // eo if (count == 1)
 
 				CList<int, int> valid_role_map;
-				CDialogList cdl("Resolve Role Type", CDialogList::CHKTEXT_ONETIMER);
+				CDialogList cdl(_T("Resolve Role Type"), CDialogList::CHKTEXT_ONETIMER);
 
 				for (int z = 1; z <= role_count; z++) {
 
@@ -959,7 +959,7 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 					COMTHROW( targ_roles->get_Item(z, &targ_role) );
 					ASSERT(targ_role != NULL);
 
-					if (CString(aspect) == "") { // done
+					if (CString(aspect) == _T("")) { // done
 
 						CComBSTR role_name;
 
@@ -1071,29 +1071,29 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 			CString sz_format;
 			CString sz_format_tmp;
 
-			sz_format_tmp.Format(	"Paradigm Violation!  Cannot create within parent Model %S\n"
-									"of type %S an object\n",
+			sz_format_tmp.Format(	_T("Paradigm Violation!  Cannot create within parent Model %s\n")
+									_T("of type %s an object\n"),
 									(BSTR) parent_name,
 									(BSTR) mparent_name);
 			sz_format+=sz_format_tmp;
 
-			if (CString(kind) != "") {
+			if (CString(kind) != _T("")) {
 
-				sz_format_tmp.Format("with kind %S\n",
+				sz_format_tmp.Format(_T("with kind %s\n"),
 								kind);
 				sz_format+=sz_format_tmp;
 			}
 
 			if (objtype != OBJTYPE_NULL) {
 
-				sz_format_tmp.Format("of type %s\n",
+				sz_format_tmp.Format(_T("of type %s\n"),
 								helper_ObjTypeStr(objtype));
 				sz_format+=sz_format_tmp;
 			}
 
-			if (CString(aspect) != "") {
+			if (CString(aspect) != _T("")) {
 
-				sz_format_tmp.Format("in aspect %S",
+				sz_format_tmp.Format(_T("in aspect %s"),
 								aspect);
 				sz_format+=sz_format_tmp;
 			}
@@ -1191,7 +1191,7 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
 
 				CComPtr<IMgaMetaAttribute> imma_ix;
 				CString sz_dialog_name;
-				sz_dialog_name.Format("Resolve Attribute Kind (for %S):",kind);
+				sz_dialog_name.Format(_T("Resolve Attribute Kind (for %s):"),kind);
 				CDialogList cdl( sz_dialog_name, CDialogList::CHKTEXT_ONETIMER, true );
 
 				MGACOLL_ITERATE(IMgaMetaAttribute, mattrs) {
@@ -1249,9 +1249,9 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
 			COMTHROW( parent_metafco->get_Name(&meta_name) );
   
 			
-			sz_format.Format(	"No such attribute %S\n"
-								"can be found in %s %S\n"
-								"of kind %S",
+			sz_format.Format(	_T("No such attribute %s\n")
+								_T("can be found in %s %s\n")
+								_T("of kind %s"),
 					kind,
 					helper_ObjTypeStr(objtype),
 					name.m_str,
@@ -1355,24 +1355,24 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 		COMTHROW( src->get_MetaRole(& meta_src_role) );
 		COMTHROW( dst->get_MetaRole(& meta_dst_role) );
 
-		CString path = "src ";
+		CString path = _T("src ");
 		CString tmp;
 		metaref_type mr;
 		COMTHROW( meta_src_role->get_MetaRef(&mr) );
-		tmp.Format("%d ",mr);
+		tmp.Format(_T("%d "),mr);
 		path += tmp;
 		if(src_port!=NULL) {
 			COMTHROW( src_port->get_MetaRole( & meta_src_port_role ) );
 			ASSERT(meta_src_port_role!=NULL);
 
 			COMTHROW( meta_src_port_role->get_MetaRef(&mr) );
-			tmp.Format("%d ",mr);
+			tmp.Format(_T("%d "),mr);
 			path += tmp;
 		}
-		path += ", dst ";
+		path += _T(", dst ");
 
 		COMTHROW( meta_dst_role->get_MetaRef(&mr) );
-		tmp.Format("%d ",mr);
+		tmp.Format(_T("%d "),mr);
 		path += tmp;
 
 		if(dst_port != NULL) {
@@ -1380,7 +1380,7 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 			ASSERT(meta_dst_port_role!=NULL);
 
 			COMTHROW( meta_dst_port_role->get_MetaRef(&mr) );
-			tmp.Format("%d ",mr);
+			tmp.Format(_T("%d "),mr);
 			path += tmp;
 		}
 
@@ -1400,7 +1400,7 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 
 		// now get valid roles for input aspect (if any)
 
-		CDialogList cdl("Select Connection Role Type", CDialogList::CHKTEXT_STICKY);
+		CDialogList cdl(_T("Select Connection Role Type"), CDialogList::CHKTEXT_STICKY);
 		CList<int, int> valid_role_map;
 		CComPtr<IMgaMetaRole> immr_ix;
 
@@ -1569,8 +1569,8 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 			COMTHROW( meta_dst_role->get_Name(&name) );
 			CString sz_dst_role_name(name);
 
-			CString sz_src_port("<no port>");
-			CString sz_src_port_role("<no role>");
+			CString sz_src_port(_T("<no port>"));
+			CString sz_src_port_role(_T("<no role>"));
 			if (src_port != NULL) {
 				name.Empty();
 				COMTHROW( src_port->get_Name(&name) );
@@ -1581,8 +1581,8 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 				sz_src_port_role = CString(name);
 			}
 
-			CString sz_dst_port("<no port>");
-			CString sz_dst_port_role("<no role>");
+			CString sz_dst_port(_T("<no port>"));
+			CString sz_dst_port_role(_T("<no role>"));
 			if (dst_port != NULL) {
 				name.Empty();
 				COMTHROW( dst_port->get_Name(&name) );
@@ -1597,8 +1597,8 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 			CString sz_format_tmp;
 
 			sz_format_tmp.Format(
-				"Paradigm violation!  Cannot make connection for \n"
-				"source: %s (%s)",
+				_T("Paradigm violation!  Cannot make connection for \n")
+				_T("source: %s (%s)"),
 				sz_src_name, sz_src_role_name
 			);
 
@@ -1608,16 +1608,16 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 			if (src_port != NULL) {
 
 				sz_format_tmp.Format(
-					" through port: %s (%s)",
+					_T(" through port: %s (%s)"),
 					sz_src_port, sz_src_port_role				
 				);
 
 				sz_format += sz_format_tmp;
 			}
-			sz_format += CString("\nto\n");
+			sz_format += CString(_T("\nto\n"));
 				
 			sz_format_tmp.Format(
-				"destination: %s (%s)",
+				_T("destination: %s (%s)"),
 				sz_dst_name, sz_dst_role_name
 			);
 			sz_format += sz_format_tmp;
@@ -1625,24 +1625,24 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 			if (dst_port != NULL) {
 
 				sz_format_tmp.Format(
-					" through port: %s (%s)",
+					_T(" through port: %s (%s)"),
 					sz_dst_port, sz_dst_port_role				
 				);
 
 				sz_format += sz_format_tmp;
 			}
 
-			sz_format += CString("\n");
+			sz_format += CString(_T("\n"));
 
-			if (sz_aspect_name != "") {
+			if (sz_aspect_name != _T("")) {
 
-				sz_format_tmp.Format("in aspect %s \n",
+				sz_format_tmp.Format(_T("in aspect %s \n"),
 					sz_aspect_name);
 				sz_format += sz_format_tmp;
 
 			}
 
-			sz_format_tmp.Format(				"within parent: %s (%s)",
+			sz_format_tmp.Format(				_T("within parent: %s (%s)"),
 				sz_parent_name, sz_parent_role
 			);
 			sz_format += sz_format_tmp;
@@ -1696,7 +1696,7 @@ STDMETHODIMP CMgaResolver::get_RefRoleByMeta(IMgaModel *parent,
 
 		// copy roles into the dialog
 
-		CDialogList cdl("Select Reference Role Type", CDialogList::CHKTEXT_ONETIMER);
+		CDialogList cdl(_T("Select Reference Role Type"), CDialogList::CHKTEXT_ONETIMER);
 		CList<int, int> valid_role_map;
 		CComPtr<IMgaMetaRole> immr_ix;
 
@@ -1875,16 +1875,16 @@ STDMETHODIMP CMgaResolver::get_RefRoleByMeta(IMgaModel *parent,
 			CString sz_format_tmp;
 
 			sz_format_tmp.Format(
-				"Cannot insert reference for \n"
-				"source: %s (%s) \n",
+				_T("Cannot insert reference for \n")
+				_T("source: %s (%s) \n"),
 				sz_src_name, sz_src_role_name
 				);
 			sz_format += sz_format_tmp;
 
-			if (sz_aspect_name != "") {
+			if (sz_aspect_name != _T("")) {
 
 				sz_format_tmp.Format(
-					"in aspect %s \n",
+					_T("in aspect %s \n"),
 					sz_aspect_name
 					);
 				sz_format += sz_format_tmp;
@@ -1893,7 +1893,7 @@ STDMETHODIMP CMgaResolver::get_RefRoleByMeta(IMgaModel *parent,
 			}
 
 			sz_format_tmp.Format(
-				"within parent: %s (%s)",
+				_T("within parent: %s (%s)"),
 				sz_parent_name, sz_parent_role
 			);
 			sz_format += sz_format_tmp;
@@ -2327,7 +2327,7 @@ CComPtr<IGMEOLEApp>	CMgaResolver::get_GME(CComPtr<IMgaProject> project)
 {
 	CComPtr<IGMEOLEApp> gme;
 	if (mb_is_interactive && (project != NULL)) {		
-		CComBSTR bstrName("GME.Application");
+		CComBSTR bstrName(L"GME.Application");
 		CComPtr<IMgaClient> pClient;
 		HRESULT hr = project->GetClientByName(bstrName, &pClient);
 		if (SUCCEEDED(hr) && pClient) {

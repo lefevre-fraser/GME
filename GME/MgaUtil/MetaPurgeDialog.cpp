@@ -65,26 +65,26 @@ BOOL CMetaPurgeDialog::OnInitDialog()
 		LV_COLUMN lvc;
 		lvc.mask = LVCF_WIDTH | LVCF_TEXT;
 
-		lvc.pszText = "S";
+		lvc.pszText = _T("S");
 		lvc.cx = 20;
 		VERIFYTHROW( m_list.InsertColumn(0, &lvc) != -1 );
 
-		lvc.pszText = "Version";
+		lvc.pszText = _T("Version");
 		lvc.cx = 50;
 		VERIFYTHROW( m_list.InsertColumn(1, &lvc) != -1 );
 
-		lvc.pszText = "GUID";
+		lvc.pszText = _T("GUID");
 		lvc.cx = 250;
 		VERIFYTHROW( m_list.InsertColumn(2, &lvc) != -1 );
 
 
-		lvc.pszText = "Connection String";
+		lvc.pszText = _T("Connection String");
 		lvc.cx = 300;
 		VERIFYTHROW( m_list.InsertColumn(3, &lvc) != -1 );
 
 		ResetItems();
 	}
-	MSGCATCH("Error while initializing MetaPurgeDlg",;)
+	MSGCATCH(_T("Error while initializing MetaPurgeDlg"),;)
 		
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -130,7 +130,7 @@ void CMetaPurgeDialog::ResetItems()
 
 		CString connstr;
 		CString version;
-		char statc = 'u';
+		TCHAR statc = 'u';
 		HRESULT hr = registrar->QueryParadigm(CComBSTR(paradigm), PutOut(connstr), &vv, REGACCESS_USER);
 		if(hr == E_NOTFOUND) {
 			statc = 's';
@@ -138,16 +138,16 @@ void CMetaPurgeDialog::ResetItems()
 		} 
 		if(hr != S_OK) {
 			statc = ' ';
-			connstr = "<<error reading this reg.entry>>";
+			connstr = _T("<<error reading this reg.entry>>");
 		}
 
 		hr = registrar->VersionFromGUID(CComBSTR(paradigm), vv, PutOut(version), statc ==  'u' ? REGACCESS_USER : REGACCESS_SYSTEM);
 		if (FAILED(hr)) {
-			version = "N/A";
+			version = _T("N/A");
 		}
 
 		int j;
-		VERIFYTHROW( (j = m_list.InsertItem(i, CString(currentguid == guidnames[i] ? "*" : " ") + statc)) != -1 );
+		VERIFYTHROW( (j = m_list.InsertItem(i, CString(currentguid == guidnames[i] ? _T("*") : _T(" ")) + statc)) != -1 );
 		VERIFYTHROW( m_list.SetItemText(j, 1, version) != 0 );
 		VERIFYTHROW( m_list.SetItemText(j, 2, PutInCString(guidnames[i])) != 0 );
 		VERIFYTHROW( m_list.SetItemText(j, 3, connstr) != 0 );
@@ -174,13 +174,13 @@ void CMetaPurgeDialog::OnPurge()
 			CopyTo(gg, vv);
 			COMTHROW( registrar->UnregisterParadigmGUID(CComBSTR(paradigm), vv, cur[1] == 's' ? REGACCESS_SYSTEM : REGACCESS_USER) );
 			CString delcstr = m_list.GetItemText(i,3);
-			if(m_delfiles != 0 || delcstr.Find("MGA=") != 0) continue;
+			if(m_delfiles != 0 || delcstr.Find(_T("MGA=")) != 0) continue;
 			DeleteFile(LPCTSTR(delcstr)+4);
 		}
 
 		ResetItems();
 	}
-	MSGCATCH("Error while removing items",;)
+	MSGCATCH(_T("Error while removing items"),;)
 }
 
 void CMetaPurgeDialog::OnSetcurrent() 
@@ -206,7 +206,7 @@ void CMetaPurgeDialog::OnSetcurrent()
 
 		ResetItems();
 	}
-	MSGCATCH("Error while setting current version",;)
+	MSGCATCH(_T("Error while setting current version"),;)
 }
 
 void CMetaPurgeDialog::OnClose() 

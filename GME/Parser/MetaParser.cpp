@@ -134,8 +134,8 @@ void CMgaMetaParser::CloseAll()
 
 // ------- Attributes
 
-const std::string CMgaMetaParser::GetNextToken(std::string::const_iterator &i,
-	std::string::const_iterator &e, std::string::const_iterator end)
+const std::tstring CMgaMetaParser::GetNextToken(std::tstring::const_iterator &i,
+	std::tstring::const_iterator &e, std::tstring::const_iterator end)
 {
 	i = e;
 	while( i != end && *i == ' ' )
@@ -145,11 +145,11 @@ const std::string CMgaMetaParser::GetNextToken(std::string::const_iterator &i,
 	while( e != end && *e != ' ' )
 		++e;
 
-	return std::string(i, e);
+	return std::tstring(i, e);
 }
 
 
-void CMgaMetaParser::fireStartFunction(const std::string & namestr, const attributes_type& attributes)
+void CMgaMetaParser::fireStartFunction(const std::tstring & namestr, const attributes_type& attributes)
 {
 	if(currentPass == FIRST_PASS)
 	{
@@ -177,7 +177,7 @@ void CMgaMetaParser::fireStartFunction(const std::string & namestr, const attrib
 }
 
 
-void CMgaMetaParser::fireEndFunction(const std::string & namestr)
+void CMgaMetaParser::fireEndFunction(const std::tstring & namestr)
 {
 	if(currentPass == FIRST_PASS)
 	{
@@ -209,40 +209,40 @@ void CMgaMetaParser::fireEndFunction(const std::string & namestr)
 
 CMgaMetaParser::elementfunc CMgaMetaParser::elementfuncs_firstpass[] = 
 {
-	elementfunc("paradigm", StartParadigm, EndNone),
-	elementfunc("comment", StartNone, EndComment),
-	elementfunc("author", StartNone, EndAuthor),
-	elementfunc("dispname", StartNone, EndDispName),
-	elementfunc("folder", StartFolder, EndNone),
-	elementfunc("atom", StartAtom, EndNone),
-	elementfunc("model", StartModel, EndNone),
-	elementfunc("connection", StartConnection, EndNone),
-	elementfunc("reference", StartReference, EndNone),
-	elementfunc("set", StartSet, EndNone),
-	elementfunc("attrdef", StartAttrDef, EndNone),
-	elementfunc("regnode", StartRegNode, EndNone),
-	elementfunc("connjoint", StartConnJoint, EndNone),
-	elementfunc("pointerspec", StartPointerSpec, EndNone),
-	elementfunc("pointeritem", StartPointerItem, EndNone),
-	elementfunc("enumitem", StartEnumItem, EndNone),
-	elementfunc("constraint", StartConstraint, EndConstraint),
-	elementfunc("", NULL, NULL)
+	elementfunc(_T("paradigm"), StartParadigm, EndNone),
+	elementfunc(_T("comment"), StartNone, EndComment),
+	elementfunc(_T("author"), StartNone, EndAuthor),
+	elementfunc(_T("dispname"), StartNone, EndDispName),
+	elementfunc(_T("folder"), StartFolder, EndNone),
+	elementfunc(_T("atom"), StartAtom, EndNone),
+	elementfunc(_T("model"), StartModel, EndNone),
+	elementfunc(_T("connection"), StartConnection, EndNone),
+	elementfunc(_T("reference"), StartReference, EndNone),
+	elementfunc(_T("set"), StartSet, EndNone),
+	elementfunc(_T("attrdef"), StartAttrDef, EndNone),
+	elementfunc(_T("regnode"), StartRegNode, EndNone),
+	elementfunc(_T("connjoint"), StartConnJoint, EndNone),
+	elementfunc(_T("pointerspec"), StartPointerSpec, EndNone),
+	elementfunc(_T("pointeritem"), StartPointerItem, EndNone),
+	elementfunc(_T("enumitem"), StartEnumItem, EndNone),
+	elementfunc(_T("constraint"), StartConstraint, EndConstraint),
+	elementfunc(_T(""), NULL, NULL)
 };
 
 CMgaMetaParser::elementfunc CMgaMetaParser::elementfuncs_secondpass[] = 
 {
-	elementfunc("folder", StartFolder2, EndNone),
-	elementfunc("model", StartFCO2, EndNone),
-	elementfunc("atom", StartFCO2, EndNone),
-	elementfunc("connection", StartFCO2, EndNone),
-	elementfunc("reference", StartFCO2, EndNone),
-	elementfunc("set", StartFCO2, EndNone),
-	elementfunc("role", StartRole2, EndNone),
-	elementfunc("aspect", StartAspect2, EndNone),
-	elementfunc("part", StartPart2, EndNone),
-	elementfunc("regnode", StartRegNode, EndNone),
-	elementfunc("dispname", StartNone, EndDispName),
-	elementfunc("", NULL, NULL)
+	elementfunc(_T("folder"), StartFolder2, EndNone),
+	elementfunc(_T("model"), StartFCO2, EndNone),
+	elementfunc(_T("atom"), StartFCO2, EndNone),
+	elementfunc(_T("connection"), StartFCO2, EndNone),
+	elementfunc(_T("reference"), StartFCO2, EndNone),
+	elementfunc(_T("set"), StartFCO2, EndNone),
+	elementfunc(_T("role"), StartRole2, EndNone),
+	elementfunc(_T("aspect"), StartAspect2, EndNone),
+	elementfunc(_T("part"), StartPart2, EndNone),
+	elementfunc(_T("regnode"), StartRegNode, EndNone),
+	elementfunc(_T("dispname"), StartNone, EndDispName),
+	elementfunc(_T(""), NULL, NULL)
 };
 
 // ------- Element Handlers
@@ -255,14 +255,13 @@ void CMgaMetaParser::StartParadigm(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", metaproject, &IMgaMetaProject::put_Name);
-		Attr(i, "version", metaproject, &IMgaMetaProject::put_Version);
+		Attr(i, _T("name"), metaproject, &IMgaMetaProject::put_Name);
+		Attr(i, _T("version"), metaproject, &IMgaMetaProject::put_Version);
 		
 		/*  New Paradigm GUID logic */	
-		if( i->first == "guid" )
+		if( i->first == _T("guid") )
 		{
-			CComBstrObj bstr;
-			CopyTo(i->second, bstr);
+			_bstr_t bstr = i->second.c_str();
 
 			GUID guid;
 			CopyTo(bstr, guid);
@@ -274,8 +273,8 @@ void CMgaMetaParser::StartParadigm(const attributes_type &attributes)
 			explicitguid = true;
 		}
 
-		Attr(i, "cdate", metaproject, &IMgaMetaProject::put_CreatedAt);
-		Attr(i, "mdate", metaproject, &IMgaMetaProject::put_ModifiedAt);
+		Attr(i, _T("cdate"), metaproject, &IMgaMetaProject::put_CreatedAt);
+		Attr(i, _T("mdate"), metaproject, &IMgaMetaProject::put_ModifiedAt);
 
 		++i;
 	}
@@ -283,7 +282,7 @@ void CMgaMetaParser::StartParadigm(const attributes_type &attributes)
 
 void CMgaMetaParser::EndComment()
 {
-	if( GetPrevName() == "paradigm" )
+	if( GetPrevName() == _T("paradigm") )
 	{
 		COMTHROW( metaproject->put_Comment(PutInBstr(GetCurrData())) );
 	}
@@ -293,7 +292,7 @@ void CMgaMetaParser::EndComment()
 
 void CMgaMetaParser::EndAuthor()
 {
-	if( GetPrevName() == "paradigm" )
+	if( GetPrevName() == _T("paradigm") )
 	{
 		COMTHROW( metaproject->put_Author(PutInBstr(GetCurrData())) );
 	}
@@ -306,11 +305,11 @@ void CMgaMetaParser::EndDispName()
 	if( GetPrevious().object == NULL )
 		return;
 
-	if( GetPrevName() == "paradigm" )
+	if( GetPrevName() == _T("paradigm") )
 	{
 		COMTHROW( metaproject->put_DisplayedName(PutInBstr(GetCurrData())) );
 	}
-	else if( GetPrevName() == "constraint" )
+	else if( GetPrevName() == _T("constraint") )
 	{
 		CComObjPtr<IMgaMetaConstraint> c;
 		GetPrevObj(c);
@@ -328,7 +327,7 @@ void CMgaMetaParser::StartFolder(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaFolder> folder;
 
-	if( GetPrevName() == "paradigm" )
+	if( GetPrevName() == _T("paradigm") )
 	{
 		COMTHROW( metaproject->get_RootFolder(PutOut(folder)) );
 	}
@@ -346,8 +345,8 @@ void CMgaMetaParser::StartFolder(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", folder, &IMgaMetaFolder::put_Name);
-		Attr(i, "metaref", folder, &IMgaMetaFolder::put_MetaRef);
+		Attr(i, _T("name"), folder, &IMgaMetaFolder::put_Name);
+		Attr(i, _T("metaref"), folder, &IMgaMetaFolder::put_MetaRef);
 
 		++i;
 	}
@@ -359,7 +358,7 @@ void CMgaMetaParser::StartFolder2(const attributes_type &attributes)
 
 	CComObjPtr<IMgaMetaFolder> folder;
 
-	if( GetPrevName() == "paradigm" )
+	if( GetPrevName() == _T("paradigm") )
 	{
 		ASSERT( metaproject != NULL );
 		COMTHROW( metaproject->get_RootFolder(PutOut(folder)) );
@@ -369,11 +368,11 @@ void CMgaMetaParser::StartFolder2(const attributes_type &attributes)
 		CComObjPtr<IMgaMetaFolder> prev;
 		GetPrevObj(prev);
 
-		HRESULT hr = prev->get_DefinedFolderByName(PutInBstr(GetByName(attributes, "name")),
+		HRESULT hr = prev->get_DefinedFolderByName(PutInBstr(GetByName(attributes, _T("name"))),
 			VARIANT_FALSE, PutOut(folder));
 
 		if( hr == E_NOTFOUND )
-			ThrowXmlError("Parent folder %s was not found", GetByName(attributes, "name").c_str());
+			ThrowXmlError(_T("Parent folder %s was not found"), GetByName(attributes, _T("name")).c_str());
 		else
 			COMTHROW(hr);
 	}
@@ -385,14 +384,14 @@ void CMgaMetaParser::StartFolder2(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		if( i->first == "subfolders" )
+		if( i->first == _T("subfolders") )
 		{
-			std::string::const_iterator ip = i->second.begin();
-			std::string::const_iterator ep = ip;
-			std::string::const_iterator xp = i->second.end();
+			std::tstring::const_iterator ip = i->second.begin();
+			std::tstring::const_iterator ep = ip;
+			std::tstring::const_iterator xp = i->second.end();
 			for(;;)
 			{
-				std::string token = GetNextToken(ip, ep, xp);
+				std::tstring token = GetNextToken(ip, ep, xp);
 				if( ip == xp )
 					break;
 
@@ -403,21 +402,21 @@ void CMgaMetaParser::StartFolder2(const attributes_type &attributes)
 					VARIANT_TRUE, PutOut(child));
 
 				if( hr == E_NOTFOUND )
-					ThrowXmlError("Defined folder %s was not found", token.c_str());
+					ThrowXmlError(_T("Defined folder %s was not found"), token.c_str());
 				else
 					COMTHROW(hr);
 
 				COMTHROW( folder->AddLegalChildFolder(child) );
 			}
 		}
-		else if( i->first == "rootobjects" )
+		else if( i->first == _T("rootobjects") )
 		{
-			std::string::const_iterator ip = i->second.begin();
-			std::string::const_iterator ep = ip;
-			std::string::const_iterator xp = i->second.end();
+			std::tstring::const_iterator ip = i->second.begin();
+			std::tstring::const_iterator ep = ip;
+			std::tstring::const_iterator xp = i->second.end();
 			for(;;)
 			{
-				std::string token = GetNextToken(ip, ep, xp);
+				std::tstring token = GetNextToken(ip, ep, xp);
 				if( ip == xp )
 					break;
 
@@ -428,7 +427,7 @@ void CMgaMetaParser::StartFolder2(const attributes_type &attributes)
 					VARIANT_TRUE, PutOut(fco));
 
 				if( hr == E_NOTFOUND )
-					ThrowXmlError("No definition for FCO %s was not found", token.c_str());
+                              ThrowXmlError(_T("No definition for FCO %s was not found"), token.c_str());
 				else
 					COMTHROW(hr);
 
@@ -445,7 +444,7 @@ void CMgaMetaParser::StartAtom(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaAtom> atom;
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaMetaFolder> prev;
 		GetPrevObj(prev);
@@ -465,18 +464,18 @@ void CMgaMetaParser::StartAtom(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", atom, &IMgaMetaAtom::put_Name);
-		Attr(i, "metaref", atom, &IMgaMetaAtom::put_MetaRef);
+		Attr(i, _T("name"), atom, &IMgaMetaAtom::put_Name);
+		Attr(i, _T("metaref"), atom, &IMgaMetaAtom::put_MetaRef);
 		++i;
 	}
-	COMTHROW(atom->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
+	COMTHROW(atom->put_AliasingEnabled((GetByName(attributes, _T("aliasenabled")) == _T("yes") ) ? VARIANT_TRUE : VARIANT_FALSE));
 }
 
 void CMgaMetaParser::StartConnection(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaConnection> conn;
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaMetaFolder> prev;
 		GetPrevObj(prev);
@@ -496,11 +495,11 @@ void CMgaMetaParser::StartConnection(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", conn, &IMgaMetaConnection::put_Name);
-		Attr(i, "metaref", conn, &IMgaMetaConnection::put_MetaRef);
+		Attr(i, _T("name"), conn, &IMgaMetaConnection::put_Name);
+		Attr(i, _T("metaref"), conn, &IMgaMetaConnection::put_MetaRef);
 		++i;
 	}
-	COMTHROW(conn->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
+	COMTHROW(conn->put_AliasingEnabled((GetByName(attributes, _T("aliasenabled")) == _T("yes") ) ? VARIANT_TRUE : VARIANT_FALSE));
 }
 
 void CMgaMetaParser::StartConnJoint(const attributes_type &attributes)
@@ -519,13 +518,13 @@ void CMgaMetaParser::StartPointerSpec(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaPointerSpec> spec;
 
-	if( GetPrevName() == "connjoint" )
+	if( GetPrevName() == _T("connjoint") )
 	{
 		CComObjPtr<IMgaMetaConnJoint> prev;
 		GetPrevObj(prev);
 		COMTHROW( prev->CreatePointerSpec(PutOut(spec)) );
 	}
-	else if( GetPrevName() == "reference" )
+	else if( GetPrevName() == _T("reference") )
 	{
 		CComObjPtr<IMgaMetaReference> prev;
 		GetPrevObj(prev);
@@ -533,7 +532,7 @@ void CMgaMetaParser::StartPointerSpec(const attributes_type &attributes)
 	}
 	else
 	{
-		ASSERT( GetPrevName() == "set" );
+		ASSERT( GetPrevName() == _T("set") );
 
 		CComObjPtr<IMgaMetaSet> prev;
 		GetPrevObj(prev);
@@ -547,8 +546,8 @@ void CMgaMetaParser::StartPointerSpec(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		if( i->first == "name" )
-			COMTHROW( spec->put_Name(PutInBstr(i->second)) );
+		if( i->first == _T("name") )
+			COMTHROW( spec->put_Name(PutInBstr(i->second.c_str())) );
 
 		++i;
 	}
@@ -566,7 +565,7 @@ void CMgaMetaParser::StartPointerItem(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "desc", item, &IMgaMetaPointerItem::put_Desc);
+		Attr(i, _T("desc"), item, &IMgaMetaPointerItem::put_Desc);
 
 		++i;
 	}
@@ -576,7 +575,7 @@ void CMgaMetaParser::StartReference(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaReference> reference;
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaMetaFolder> prev;
 		GetPrevObj(prev);
@@ -596,18 +595,18 @@ void CMgaMetaParser::StartReference(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", reference, &IMgaMetaReference::put_Name);
-		Attr(i, "metaref", reference, &IMgaMetaReference::put_MetaRef);
+		Attr(i, _T("name"), reference, &IMgaMetaReference::put_Name);
+		Attr(i, _T("metaref"), reference, &IMgaMetaReference::put_MetaRef);
 		++i;
 	}
-	COMTHROW(reference->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
+	COMTHROW(reference->put_AliasingEnabled((GetByName(attributes, _T("aliasenabled")) == _T("yes") ) ? VARIANT_TRUE : VARIANT_FALSE));
 }
 
 void CMgaMetaParser::StartSet(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaSet> set;
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaMetaFolder> prev;
 		GetPrevObj(prev);
@@ -627,19 +626,19 @@ void CMgaMetaParser::StartSet(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", set, &IMgaMetaSet::put_Name);
-		Attr(i, "metaref", set, &IMgaMetaSet::put_MetaRef);
+		Attr(i, _T("name"), set, &IMgaMetaSet::put_Name);
+		Attr(i, _T("metaref"), set, &IMgaMetaSet::put_MetaRef);
 
 		++i;
 	}
-	COMTHROW(set->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
+	COMTHROW(set->put_AliasingEnabled((GetByName(attributes, _T("aliasenabled")) == _T("yes") ) ? VARIANT_TRUE : VARIANT_FALSE));
 }
 
 void CMgaMetaParser::StartModel(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaModel> model;
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaMetaFolder> prev;
 		GetPrevObj(prev);
@@ -659,12 +658,12 @@ void CMgaMetaParser::StartModel(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", model, &IMgaMetaModel::put_Name);
-		Attr(i, "metaref", model, &IMgaMetaModel::put_MetaRef);
+		Attr(i, _T("name"), model, &IMgaMetaModel::put_Name);
+		Attr(i, _T("metaref"), model, &IMgaMetaModel::put_MetaRef);
 
 		++i;
 	}
-	COMTHROW(model->put_AliasingEnabled((GetByName(attributes, "aliasenabled") == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE));
+	COMTHROW(model->put_AliasingEnabled((GetByName(attributes, _T("aliasenabled")) == _T("yes") ) ? VARIANT_TRUE : VARIANT_FALSE));
 }
 
 void CMgaMetaParser::StartFCO2(const attributes_type &attributes)
@@ -674,23 +673,23 @@ void CMgaMetaParser::StartFCO2(const attributes_type &attributes)
 	CComObjPtr<IMgaMetaFCO> fco;
 	HRESULT hr;
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaMetaFolder> prev;
 		GetPrevObj(prev);
-		hr = prev->get_DefinedFCOByName(PutInBstr(GetByName(attributes, "name")),
+		hr = prev->get_DefinedFCOByName(PutInBstr(GetByName(attributes, _T("name"))),
 			VARIANT_FALSE, PutOut(fco));
 	}
 	else
 	{
 		CComObjPtr<IMgaMetaModel> prev;
 		GetPrevObj(prev);
-		hr = prev->get_DefinedFCOByName(PutInBstr(GetByName(attributes, "name")),
+		hr = prev->get_DefinedFCOByName(PutInBstr(GetByName(attributes, _T("name"))),
 			VARIANT_FALSE, PutOut(fco));
 	}
 
 	if( hr == E_NOTFOUND )
-		ThrowXmlError("Parent FCO %s was not found", GetByName(attributes, "name").c_str());
+		ThrowXmlError(_T("Parent FCO %s was not found"), GetByName(attributes, _T("name")).c_str());
 	else
 		COMTHROW(hr);
 
@@ -701,14 +700,14 @@ void CMgaMetaParser::StartFCO2(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		if( i->first == "attributes" )
+		if( i->first == _T("attributes") )
 		{
-			std::string::const_iterator ip = i->second.begin();
-			std::string::const_iterator ep = ip;
-			std::string::const_iterator xp = i->second.end();
+			std::tstring::const_iterator ip = i->second.begin();
+			std::tstring::const_iterator ep = ip;
+			std::tstring::const_iterator xp = i->second.end();
 			for(;;)
 			{
-				std::string token = GetNextToken(ip, ep, xp);
+				std::tstring token = GetNextToken(ip, ep, xp);
 				if( ip == xp )
 					break;
 
@@ -719,7 +718,7 @@ void CMgaMetaParser::StartFCO2(const attributes_type &attributes)
 					VARIANT_TRUE, PutOut(attr));
 
 				if( hr == E_NOTFOUND )
-					ThrowXmlError("Defined attribute %s was not found", token.c_str());
+					ThrowXmlError(_T("Defined attribute %s was not found"), token.c_str());
 				else
 					COMTHROW(hr);
 
@@ -735,7 +734,7 @@ void CMgaMetaParser::StartAttrDef(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaMetaAttribute> attr;
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaMetaFolder> prev;
 		GetPrevObj(prev);
@@ -757,25 +756,25 @@ void CMgaMetaParser::StartAttrDef(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", attr, &IMgaMetaAttribute::put_Name);
-		Attr(i, "defvalue", attr, &IMgaMetaAttribute::put_DefaultValue);
-		Attr(i, "metaref", attr, &IMgaMetaAttribute::put_MetaRef);
+		Attr(i, _T("name"), attr, &IMgaMetaAttribute::put_Name);
+		Attr(i, _T("defvalue"), attr, &IMgaMetaAttribute::put_DefaultValue);
+		Attr(i, _T("metaref"), attr, &IMgaMetaAttribute::put_MetaRef);
 
-		if( i->first == "valuetype" )
+		if( i->first == _T("valuetype") )
 		{
 			attval_enum attval;
 
-			if( i->second == "integer" )
+			if( i->second == _T("integer") )
 				attval = ATTVAL_INTEGER;
-			else if( i->second == "double" )
+			else if( i->second == _T("double") )
 				attval = ATTVAL_DOUBLE;
-			else if( i->second == "boolean" )
+			else if( i->second == _T("boolean") )
 				attval = ATTVAL_BOOLEAN;
-			else if( i->second == "string" )
+			else if( i->second == _T("string") )
 				attval = ATTVAL_STRING;
-			else if( i->second == "enum" )
+			else if( i->second == _T("enum") )
 				attval = ATTVAL_ENUM;
-			else if( i->second == "dynamic" )
+			else if( i->second == _T("dynamic") )
 				attval = ATTVAL_DYNAMIC;
 			else
 				HR_THROW(E_XMLPARSER);
@@ -783,7 +782,7 @@ void CMgaMetaParser::StartAttrDef(const attributes_type &attributes)
 			COMTHROW( attr->put_ValueType(attval) );
 		}
 
-		if( i->first == "viewable" && i->second == "no")
+		if( i->first == _T("viewable") && i->second == _T("no"))
 			attr->put_Viewable( VARIANT_FALSE);
 
 		++i;
@@ -802,8 +801,8 @@ void CMgaMetaParser::StartEnumItem(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "dispname", item, &IMgaMetaEnumItem::put_DisplayedName);
-		Attr(i, "value", item, &IMgaMetaEnumItem::put_Value);
+		Attr(i, _T("dispname"), item, &IMgaMetaEnumItem::put_DisplayedName);
+		Attr(i, _T("value"), item, &IMgaMetaEnumItem::put_Value);
 
 		++i;
 	}
@@ -815,11 +814,11 @@ void CMgaMetaParser::StartRole2(const attributes_type &attributes)
 	GetPrevObj(prev);
 
 	CComObjPtr<IMgaMetaFCO> fco;
-	HRESULT hr = prev->get_DefinedFCOByName(PutInBstr(GetByName(attributes, "kind")),
+	HRESULT hr = prev->get_DefinedFCOByName(PutInBstr(GetByName(attributes, _T("kind"))),
 		VARIANT_TRUE, PutOut(fco));
 
 	if( hr == E_NOTFOUND )
-		ThrowXmlError("Kind FCO %s was not found", GetByName(attributes, "kind").c_str());
+		ThrowXmlError(_T("Kind FCO %s was not found"), GetByName(attributes, _T("kind")).c_str());
 	else
 		COMTHROW(hr);
 
@@ -835,8 +834,8 @@ void CMgaMetaParser::StartRole2(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", role, &IMgaMetaRole::put_Name);
-		Attr(i, "metaref", role, &IMgaMetaRole::put_MetaRef);
+		Attr(i, _T("name"), role, &IMgaMetaRole::put_Name);
+		Attr(i, _T("metaref"), role, &IMgaMetaRole::put_MetaRef);
 
 		++i;
 	}
@@ -860,17 +859,17 @@ void CMgaMetaParser::StartAspect2(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", aspect, &IMgaMetaAspect::put_Name);
-		Attr(i, "metaref", aspect, &IMgaMetaAspect::put_MetaRef);
+		Attr(i, _T("name"), aspect, &IMgaMetaAspect::put_Name);
+		Attr(i, _T("metaref"), aspect, &IMgaMetaAspect::put_MetaRef);
 
-		if( i->first == "attributes" )
+		if( i->first == _T("attributes") )
 		{
-			std::string::const_iterator ip = i->second.begin();
-			std::string::const_iterator ep = ip;
-			std::string::const_iterator xp = i->second.end();
+			std::tstring::const_iterator ip = i->second.begin();
+			std::tstring::const_iterator ep = ip;
+			std::tstring::const_iterator xp = i->second.end();
 			for(;;)
 			{
-				std::string token = GetNextToken(ip, ep, xp);
+				std::tstring token = GetNextToken(ip, ep, xp);
 				if( ip == xp )
 					break;
 
@@ -880,7 +879,7 @@ void CMgaMetaParser::StartAspect2(const attributes_type &attributes)
 				HRESULT hr = model->get_AttributeByName(PutInBstr(token), PutOut(attr));
 
 				if( hr == E_NOTFOUND )
-					ThrowXmlError("Attribute %s was not found", token.c_str());
+					ThrowXmlError(_T("Attribute %s was not found"), token.c_str());
 				else
 					COMTHROW(hr);
 
@@ -900,17 +899,17 @@ void CMgaMetaParser::StartPart2(const attributes_type &attributes)
 	GetPrevObj(prev);
 
 	ASSERT( elements.size() >= 3 );
-	ASSERT( elements[elements.size()-3].name == "model" );
+	ASSERT( elements[elements.size()-3].name == _T("model") );
 
 	CComObjPtr<IMgaMetaModel> model;
 	COMTHROW( elements[elements.size()-3].object.QueryInterface(model) );
 	ASSERT( model != NULL );
 
 	CComObjPtr<IMgaMetaRole> role;
-	HRESULT hr = model->get_RoleByName(PutInBstr(GetByName(attributes, "role")), PutOut(role));
+	HRESULT hr = model->get_RoleByName(PutInBstr(GetByName(attributes, _T("role"))), PutOut(role));
 
 	if( hr == E_NOTFOUND )
-		ThrowXmlError("Role %s was not found", GetByName(attributes, "role").c_str());
+		ThrowXmlError(_T("Role %s was not found"), GetByName(attributes, _T("role")).c_str());
 	else
 		COMTHROW(hr);
 
@@ -923,16 +922,16 @@ void CMgaMetaParser::StartPart2(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "kindaspect", part, &IMgaMetaPart::put_KindAspect);
-		Attr(i, "metaref", part, &IMgaMetaPart::put_MetaRef);
+		Attr(i, _T("kindaspect"), part, &IMgaMetaPart::put_KindAspect);
+		Attr(i, _T("metaref"), part, &IMgaMetaPart::put_MetaRef);
 
-		if( i->first == "primary" )
+		if( i->first == _T("primary") )
 		{
-			COMTHROW( part->put_IsPrimary(i->second == "yes" ? VARIANT_TRUE : VARIANT_FALSE) );
+			COMTHROW( part->put_IsPrimary(i->second == _T("yes") ? VARIANT_TRUE : VARIANT_FALSE) );
 		}
-		else if( i->first == "linked" )
+		else if( i->first == _T("linked") )
 		{
-			COMTHROW( part->put_IsLinked(i->second == "yes" ? VARIANT_TRUE : VARIANT_FALSE) );
+			COMTHROW( part->put_IsLinked(i->second == _T("yes") ? VARIANT_TRUE : VARIANT_FALSE) );
 		}
 
 		++i;
@@ -947,15 +946,15 @@ void CMgaMetaParser::StartRegNode(const attributes_type &attributes)
 
 	CComObjPtr<IMgaMetaRegNode> regnode;
 
-	const std::string &name = GetByName(attributes, "name");
+	const std::tstring &name = GetByName(attributes, _T("name"));
 
-	if( GetPrevName() == "part" )
+	if( GetPrevName() == _T("part") )
 	{
 		CComObjPtr<IMgaMetaPart> prev;
 		GetPrevObj(prev);
 		COMTHROW( prev->get_RegistryNode(PutInBstr(name), PutOut(regnode)) );
 	}
-	else if( GetPrevName() == "regnode" )
+	else if( GetPrevName() == _T("regnode") )
 	{
 		CComObjPtr<IMgaMetaRegNode> prev;
 		GetPrevObj(prev);
@@ -975,7 +974,7 @@ void CMgaMetaParser::StartRegNode(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "value", regnode, &IMgaMetaRegNode::put_Value);
+		Attr(i, _T("value"), regnode, &IMgaMetaRegNode::put_Value);
 
 		++i;
 	}
@@ -999,28 +998,28 @@ void CMgaMetaParser::StartConstraint(const attributes_type &attributes)
 	attributes_iterator e = attributes.end();
 	while( i != e )
 	{
-		Attr(i, "name", c, &IMgaMetaConstraint::put_Name);
-		Attr(i, "eventmask", c, &IMgaMetaConstraint::put_EventMask);
-		Attr(i, "priority", c, &IMgaMetaConstraint::put_Priority);
-		Attr(i, "defdfornamesp", c, &IMgaMetaConstraint::SetDefinedForNamespace);
+		Attr(i, _T("name"), c, &IMgaMetaConstraint::put_Name);
+		Attr(i, _T("eventmask"), c, &IMgaMetaConstraint::put_EventMask);
+		Attr(i, _T("priority"), c, &IMgaMetaConstraint::put_Priority);
+		Attr(i, _T("defdfornamesp"), c, &IMgaMetaConstraint::SetDefinedForNamespace);
 
-		if( i->first == "depth" )
+		if( i->first == _T("depth") )
 		{
 			constraint_depth_enum depth;
-			if( i->second == "0" )
+			if( i->second == _T("0") )
 				depth = CONSTRAINT_DEPTH_ZERO;
-			else if( i->second == "any" )
+			else if( i->second == _T("any") )
 				depth = CONSTRAINT_DEPTH_ANY;
 			else
 				depth = CONSTRAINT_DEPTH_ONE;
 			COMTHROW( c->put_Depth(depth) );
 		}
-		else if( i->first == "type" )
+		else if( i->first == _T("type") )
 		{
 			constraint_type_enum type;
-			if( i->second == "ondemand" )
+			if( i->second == _T("ondemand") )
 				type = CONSTRAINT_TYPE_ONDEMAND;
-			else if( i->second == "function" )
+			else if( i->second == _T("function") )
 				type = CONSTRAINT_TYPE_FUNCTION;
 			else
 				type = CONSTRAINT_TYPE_EVENTBASED;

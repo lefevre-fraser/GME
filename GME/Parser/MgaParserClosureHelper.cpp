@@ -11,7 +11,7 @@
 #include "helper.h"
 
 // goes up in the object hierarchy as indicated by the number of '..'s in 'originalPath' and returns the new parent and remaining path info
-void CMgaParser::stepUpInHierarchy( CComObjPtr<IMgaObject>& pCurrentObj, const std::string& originalPath, CComObjPtr<IMgaObject>& pNewParent, std::string& remainingPath)
+void CMgaParser::stepUpInHierarchy( CComObjPtr<IMgaObject>& pCurrentObj, const std::tstring& originalPath, CComObjPtr<IMgaObject>& pNewParent, std::tstring& remainingPath)
 {
 	CComObjPtr<IMgaFCO> cur_fco;
 	CComObjPtr<IMgaFolder> cur_fld;
@@ -21,9 +21,9 @@ void CMgaParser::stepUpInHierarchy( CComObjPtr<IMgaObject>& pCurrentObj, const s
 
 	bool isfco = (cur_fco != NULL);
 
-	std::string m = originalPath;
+	std::tstring m = originalPath;
 	
-	while( m.substr(0,4) == "/@..")
+	while( m.substr(0,4) == _T("/@.."))
 	{
 		CComObjPtr<IMgaModel> mod;
 		if( isfco) COMTHROW( cur_fco->get_ParentModel( PutOut( mod)) );
@@ -46,7 +46,7 @@ void CMgaParser::stepUpInHierarchy( CComObjPtr<IMgaObject>& pCurrentObj, const s
 			}
 			else // rootfolder reached: wrong path information
 			{
-				remainingPath = "";
+				remainingPath = _T("");
 				return; // pNewParent remains empty
 			}
 		}
@@ -60,17 +60,17 @@ void CMgaParser::stepUpInHierarchy( CComObjPtr<IMgaObject>& pCurrentObj, const s
 	else if( cur_fld)     pNewParent = cur_fld;
 }
 
-void CMgaParser::findFCOWithRelPathAndGUID( CComObjPtr<IMgaObject> obj_rel_to, const std::string& relpath , const std::string& guid, CComObjPtr<IMgaFCO>& pFoundFCO)
+void CMgaParser::findFCOWithRelPathAndGUID( CComObjPtr<IMgaObject> obj_rel_to, const std::tstring& relpath , const std::tstring& guid, CComObjPtr<IMgaFCO>& pFoundFCO)
 {
 	// rel_path gives an indication how much to step up in the hierarchy
 	CComObjPtr<IMgaObject> new_parent;
-	stepUpInHierarchy( obj_rel_to, relpath, new_parent, std::string());
+	stepUpInHierarchy( obj_rel_to, relpath, new_parent, std::tstring());
 	if( new_parent) // valid parent
 		findFCOWithGUIDInTree( new_parent, guid, pFoundFCO);
 }
 
 
-void CMgaParser::findFCOWithGUID( CComObjPtr<IMgaObject> prev, const std::string& guid, CComObjPtr<IMgaFCO>& pFoundFco)
+void CMgaParser::findFCOWithGUID( CComObjPtr<IMgaObject> prev, const std::tstring& guid, CComObjPtr<IMgaFCO>& pFoundFco)
 {
 	CComObjPtr<IMgaModel> m;
 	CComObjPtr<IMgaFolder> f;
@@ -101,7 +101,7 @@ void CMgaParser::findFCOWithGUID( CComObjPtr<IMgaObject> prev, const std::string
 
 }
 
-void CMgaParser::findFCOWithGUIDInTree( CComObjPtr<IMgaObject> pParent, const std::string& guid, CComObjPtr<IMgaFCO>& pFoundFCO)
+void CMgaParser::findFCOWithGUIDInTree( CComObjPtr<IMgaObject> pParent, const std::tstring& guid, CComObjPtr<IMgaFCO>& pFoundFCO)
 {
 #if(1)
 	// breadth-first
@@ -200,9 +200,9 @@ bool CMgaParser::findObjectIn( const CComObjPtr<IMgaObject>& p_parent, const CCo
 	if( !m_mergeAllowed) return false; 
 
 	// TODO : use role to narrow search
-	//std::string role_in_clipdata = GetByName(p_attributes, "role");
+	//std::tstring role_in_clipdata = GetByName(p_attributes, "role");
 
-	std::string id_in_clipdata = GetByName(p_attributes, "closureguid"); // guid
+	std::tstring id_in_clipdata = GetByName(p_attributes, _T("closureguid")); // guid
 	ASSERT( id_in_clipdata.length() == GLOBAL_ID_LEN); 
 
 	bool found = false;
@@ -278,12 +278,12 @@ bool CMgaParser::findObjectIn( const CComObjPtr<IMgaObject>& p_parent, const CCo
 	if( !found                    // id not stored in registry (or different ids found only)
 	   && p_typeRequested != 'C') // but the names may allow us to merge
 	{                             // except if Connection (usually having same names)
-		const std::string* s = 0;
-		s = GetByNameX(p_attributes, "closurename");
-		if( s != 0 && s->compare("") != 0)
+		const std::tstring* s = 0;
+		s = GetByNameX(p_attributes, _T("closurename"));
+		if( s != 0 && s->compare(_T("")) != 0)
 		{
 			CComObjPtr<IMgaObject> obj2;
-			findObjOnRelPath( CComObjPtr<IMgaObject>(p_parent), *s, obj2, "mergable object");
+			findObjOnRelPath( CComObjPtr<IMgaObject>(p_parent), *s, obj2, _T("mergable object"));
 			if( obj2) COMTHROW( obj2.QueryInterface( p_obj));
 			found = p_obj != 0;
 		}
@@ -294,8 +294,8 @@ bool CMgaParser::findObjectIn( const CComObjPtr<IMgaObject>& p_parent, const CCo
 bool CMgaParser::findObject( const CComObjPtr<IMgaModel>& p_prev, const attributes_type& p_attributes, CComObjPtr<IMgaFCO>& p_obj, const char p_typeRequested)
 {
 	CComObjPtrVector<IMgaFCO> chld;
-	if( GetByNameX( p_attributes, "kind"))
-		COMTHROW( p_prev->GetChildrenOfKind( PutInBstrAttr(p_attributes, "kind"), PutOut( chld)));
+	if( GetByNameX( p_attributes, _T("kind")))
+		COMTHROW( p_prev->GetChildrenOfKind( PutInBstrAttr(p_attributes, _T("kind")), PutOut( chld)));
 	else
 		COMTHROW(p_prev->get_ChildFCOs( PutOut( chld)));
 
@@ -306,8 +306,8 @@ bool CMgaParser::findObject( const CComObjPtr<IMgaFolder>& p_prev, const attribu
 {
 	CComObjPtrVector<IMgaFCO> chld;
 	
-	if( GetByNameX( p_attributes, "kind"))
-		COMTHROW( p_prev->GetChildrenOfKind( PutInBstrAttr(p_attributes, "kind"), PutOut( chld)));
+	if( GetByNameX( p_attributes, _T("kind")))
+		COMTHROW( p_prev->GetChildrenOfKind( PutInBstrAttr(p_attributes, _T("kind")), PutOut( chld)));
 	else
 		COMTHROW(p_prev->get_ChildFCOs( PutOut( chld)));
 
@@ -322,9 +322,9 @@ bool CMgaParser::findFolderIn( const CComObjPtr<IMgaFolder>& p_prev, const attri
 	CComObjPtrVector<IMgaFolder> chld;
 	COMTHROW(p_prev->get_ChildFolders( PutOut( chld)));
 
-	std::string req_kind = GetByName( p_attributes, "kind");
+	std::tstring req_kind = GetByName( p_attributes, _T("kind"));
 
-	std::string id_in_clipdata = GetByName(p_attributes, "closureguid");
+	std::tstring id_in_clipdata = GetByName(p_attributes, _T("closureguid"));
 	ASSERT( id_in_clipdata.length() == GLOBAL_ID_LEN);
 
 	bool found = false;
@@ -349,24 +349,24 @@ bool CMgaParser::findFolderIn( const CComObjPtr<IMgaFolder>& p_prev, const attri
 	}
 	if( !found)  // id not stored in registry (or different ids found only)
 	{           // but the names may allow us to merge
-		const std::string* s = 0;
-		s = GetByNameX(p_attributes, "closurename");
-		if( s != 0 && s->compare("") != 0)
+		const std::tstring* s = 0;
+		s = GetByNameX(p_attributes, _T("closurename"));
+		if( s != 0 && s->compare(_T("")) != 0)
 		{
 			CComObjPtr<IMgaObject> obj2;
-			findObjOnRelPath( CComObjPtr<IMgaObject>(p_prev), *s, obj2, "mergable object");
+			findObjOnRelPath( CComObjPtr<IMgaObject>(p_prev), *s, obj2, _T("mergable object"));
 			if( obj2) COMTHROW( obj2.QueryInterface( p_folder));
 			found = p_folder != 0;
 		}
 	}
 	return found;
 }
-void CMgaParser::findObjOnAbsPath( CComObjPtr<IMgaProject> p_project, const std::string& p_absPath , CComObjPtr<IMgaObject>& p_obj, const std::string& text)
+void CMgaParser::findObjOnAbsPath( CComObjPtr<IMgaProject> p_project, const std::tstring& p_absPath , CComObjPtr<IMgaObject>& p_obj, const std::tstring& text)
 {
-	COMTHROW( p_project->get_ObjectByPath( PutInBstr( p_absPath), PutOut( p_obj)) );
+	COMTHROW( p_project->get_ObjectByPath( _bstr_t(p_absPath.c_str()), PutOut( p_obj)) );
 	if( !p_obj) // if nonunique is allowed
 	{
-		COMTHROW( p_project->get_NthObjectByPath( 0, PutInBstr( p_absPath), PutOut( p_obj)) );
+		COMTHROW( p_project->get_NthObjectByPath( 0, _bstr_t(p_absPath.c_str()), PutOut( p_obj)) );
 
 		if( p_obj)
 		{
@@ -375,7 +375,7 @@ void CMgaParser::findObjOnAbsPath( CComObjPtr<IMgaProject> p_project, const std:
 			if( m_GME) 
 			{
 				CComBSTR bstr;
-				bstr.Append("Name ambiguity, selected: ");
+				bstr.Append(_T("Name ambiguity, selected: "));
 				bstr.AppendBSTR( makeLink( p_obj));
 				
 				if( !text.empty())
@@ -392,7 +392,7 @@ void CMgaParser::findObjOnAbsPath( CComObjPtr<IMgaProject> p_project, const std:
 	}
 }
 
-void CMgaParser::findObjOnRelPath( CComObjPtr<IMgaObject> obj_rel_to, const std::string& relpath , CComObjPtr<IMgaObject>& obj, const std::string& text)
+void CMgaParser::findObjOnRelPath( CComObjPtr<IMgaObject> obj_rel_to, const std::tstring& relpath , CComObjPtr<IMgaObject>& obj, const std::tstring& text)
 {
 	ASSERT( !relpath.empty());
 	ASSERT( obj_rel_to);
@@ -405,9 +405,9 @@ void CMgaParser::findObjOnRelPath( CComObjPtr<IMgaObject> obj_rel_to, const std:
 
 	bool isfco = (cur_fco != NULL);
 
-	std::string m = relpath;
+	std::tstring m = relpath;
 	
-	while( m.substr(0,4) == "/@..")
+	while( m.substr(0,4) == _T("/@.."))
 	{
 		CComObjPtr<IMgaModel> mod;
 		if( isfco) COMTHROW( cur_fco->get_ParentModel( PutOut( mod)) );
@@ -478,17 +478,17 @@ bool CMgaParser::findPlaceForElem(
 							   , CComObjPtr<IMgaObject>& place
 							)
 {
-	const std::string *nm = GetByNameX(attributes, "closurepath");
+	const std::tstring *nm = GetByNameX(attributes, _T("closurepath"));
 	if( nm != NULL)
 	{
-		if( nm->compare("") == 0)
+		if( nm->compare(_T("")) == 0)
 		{
 			place = m_target;
 			return true;
 		}
 		else
 		{
-			findObjOnRelPath( m_target, *nm, place, "place");
+			findObjOnRelPath( m_target, *nm, place, _T("place"));
 			if( place)
 				return true;
 			else
@@ -520,9 +520,9 @@ bool CMgaParser::findPlaceForElem(
 		place = m_target;//<!> let's try this
 		
 		CComBSTR bstr("Correct place not found for object: ");
-		bstr.Append( makeNameViewable( GetByName( attributes, "closurename")).c_str());
+		bstr.Append( makeNameViewable( GetByName( attributes, _T("closurename"))).c_str());
 		bstr.Append(". Search path used: ");
-		bstr.Append( makeViewable( GetByName(attributes, "closurepath")).c_str());
+		bstr.Append( makeViewable( GetByName(attributes, _T("closurepath"))).c_str());
 		bstr.Append(". Trying to insert into the target object: ");
 		bstr.AppendBSTR( makeLink( place));
 		bstr.Append(".");
@@ -539,7 +539,7 @@ bool CMgaParser::findPlaceForElem(
 {
 	CComPtr<IGMEOLEApp> gme;
 	if ( (project != NULL)) {		
-		CComBSTR bstrName("GME.Application");
+		CComBSTR bstrName(L"GME.Application");
 		CComPtr<IMgaClient> pClient;
 		HRESULT hr = project->GetClientByName(bstrName, &pClient);
 		if (SUCCEEDED(hr) && pClient) {
@@ -646,15 +646,15 @@ bool CMgaParser::isNeedFor2ndStep()
 
 void CMgaParser::tryToFindMissedReferreds()
 {
-	std::map< CComObjPtr<IMgaFCO>, std::string, CompareCComObj >::iterator it = m_notFoundReferredObject.begin();
-	std::map< CComObjPtr<IMgaFCO>, std::string, CompareCComObj >::iterator itend = m_notFoundReferredObject.end();
+	std::map< CComObjPtr<IMgaFCO>, std::tstring, CompareCComObj >::iterator it = m_notFoundReferredObject.begin();
+	std::map< CComObjPtr<IMgaFCO>, std::tstring, CompareCComObj >::iterator itend = m_notFoundReferredObject.end();
 	for( ; it != itend; ++it)
 	{
 		if( !it->first) continue;
 		bool error = false;
 
 		CComObjPtr<IMgaObject> target;
-		findObjOnRelPath( CComObjPtr<IMgaObject>( it->first), it->second, target, "referred object");
+		findObjOnRelPath( CComObjPtr<IMgaObject>( it->first), it->second, target, _T("referred object"));
 		if( target)
 		{
 			CComObjPtr<IMgaReference> ref;
@@ -693,8 +693,8 @@ void CMgaParser::tryToFindMissedReferreds()
 
 void CMgaParser::tryToFindMissedSetMembers()
 {
-	std::map< CComObjPtr<IMgaFCO>, std::vector< std::string >, CompareCComObj >::iterator it = m_notFoundSetMembers.begin();
-	std::map< CComObjPtr<IMgaFCO>, std::vector< std::string >, CompareCComObj >::iterator itend = m_notFoundSetMembers.end();
+	std::map< CComObjPtr<IMgaFCO>, std::vector< std::tstring >, CompareCComObj >::iterator it = m_notFoundSetMembers.begin();
+	std::map< CComObjPtr<IMgaFCO>, std::vector< std::tstring >, CompareCComObj >::iterator itend = m_notFoundSetMembers.end();
 	for( ; it != itend; ++it)
 	{
 		if( !it->first || it->second.empty()) continue;
@@ -704,15 +704,15 @@ void CMgaParser::tryToFindMissedSetMembers()
 
 		if( !set) continue;
 
-		std::vector< std::string >::iterator member_it = it->second.begin();
-		std::vector< std::string >::iterator member_it_end = it->second.end();
+		std::vector< std::tstring >::iterator member_it = it->second.begin();
+		std::vector< std::tstring >::iterator member_it_end = it->second.end();
 		for( ; member_it != member_it_end; ++member_it)
 		{
 			if( member_it->empty()) continue;
 
 			bool error = false;
 			CComObjPtr<IMgaObject> member;
-			findObjOnRelPath( CComObjPtr<IMgaObject>( it->first), *member_it, member, "set member");
+			findObjOnRelPath( CComObjPtr<IMgaObject>( it->first), *member_it, member, _T("set member"));
 			if( member)
 			{
 				CComObjPtr<IMgaFCO> fco_member;
@@ -785,11 +785,11 @@ void CMgaParser::tryToFindMissedSetMembers()
 
 void CMgaParser::msgSC( CComBSTR& msg, msgtype_enum type)
 {
-	static const char * sc_text = "[Smartcopy Parser] ";
+	static const TCHAR * sc_text = _T("[Smartcopy Parser] ");
 	CComBSTR m2;
-	std::string t;
+	std::tstring t;
 	CopyTo( msg, t);
-	if( t.substr( 0, strlen( sc_text)) != sc_text)
+	if( t.substr( 0, _tcslen( sc_text)) != sc_text)
 	{
 		m2.Append( sc_text);
 		m2.AppendBSTR( msg);

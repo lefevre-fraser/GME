@@ -18,7 +18,7 @@ class CClosureRes : public CDialog
 // Construction
 public:
 	CClosureRes(CWnd* pParent = NULL);   // standard constructor
-	std::vector< std::string >	m_metaKindsAndFolders;
+	std::vector< std::wstring >	m_metaKindsAndFolders;
 
 // Dialog Data
 	//{{AFX_DATA(CClosureRes)

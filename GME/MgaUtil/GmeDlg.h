@@ -88,21 +88,21 @@ private:
 
 	int m_zoomList[MAX_ZOOM];
 
-	static const char* m_strZWidth;   // "Fit Width";
-	static const char* m_strZHeight;  // "Fit Height";
-	static const char* m_strZAll;     // "Fit All";
+	static const TCHAR* m_strZWidth;   // "Fit Width";
+	static const TCHAR* m_strZHeight;  // "Fit Height";
+	static const TCHAR* m_strZAll;     // "Fit All";
 
 	void fillZoomComboBox(int *list);
 	CString getZoomValueFromReg();
 	CString getZoomValue();
 	void setZoomValue(CString& val);
 
-	static const char* m_strFmtStrg;
-	static const char* m_strFmtStrf;
-	static const char* m_strFmtStre;
-	static const char* m_strFmtStrE;
-	static const char* m_strFmtStrg2;
-	static const char* m_strFmtStrf2;
+	static const TCHAR* m_strFmtStrg;
+	static const TCHAR* m_strFmtStrf;
+	static const TCHAR* m_strFmtStre;
+	static const TCHAR* m_strFmtStrE;
+	static const TCHAR* m_strFmtStrg2;
+	static const TCHAR* m_strFmtStrf2;
 
 	void fillFmtStrComboBox();
 	CString getFmtStrFromReg();
@@ -112,20 +112,20 @@ private:
 	CString getUndoQueueSizeFromReg();
 	CString getUndoQueueSizeValue();
 
-	static const char* m_strESStrD;
-	static const char* m_strESStrHS;
-	static const char* m_strESStrHQ;
+	static const TCHAR* m_strESStrD;
+	static const TCHAR* m_strESStrHS;
+	static const TCHAR* m_strESStrHQ;
 
 	void fillEdgeSmoothModeComboBox();
 	CString getEdgeSmoothModeStrFromReg();
 	edgesmoothmode_enum getEdgeSmoothModeValue();
 
-	static const char* m_strFSStrSD;
-	static const char* m_strFSStrSBPPGF;
-	static const char* m_strFSStrSBPP;
-	static const char* m_strFSStrAAGF;
-	static const char* m_strFSStrAA;
-	static const char* m_strFSStrCTGF;
+	static const TCHAR* m_strFSStrSD;
+	static const TCHAR* m_strFSStrSBPPGF;
+	static const TCHAR* m_strFSStrSBPP;
+	static const TCHAR* m_strFSStrAAGF;
+	static const TCHAR* m_strFSStrAA;
+	static const TCHAR* m_strFSStrCTGF;
 
 	void fillFontSmoothModeComboBox();
 	CString getFontSmoothModeStrFromReg();

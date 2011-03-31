@@ -58,7 +58,7 @@ BOOL CFolderPropertiesDlg::OnInitDialog()
 //		view->BeginTransaction(true);
 		{
 			COMTHROW(folder->get_RelID(&relid));
-			m_relid.Format("0x%08X", relid);
+			m_relid.Format(_T("0x%08X"), relid);
 		}
 		UpdateData(FALSE);
 		{
@@ -80,7 +80,7 @@ BOOL CFolderPropertiesDlg::OnInitDialog()
 			kind.SetWindowText(txt);
 			metaref_type mid = 0;
 			COMTHROW(metaFolder->get_MetaRef(&mid));
-			txt.Format("%ld",(long)mid);
+			txt.Format(_T("%ld"),(long)mid);
 			metaid.SetWindowText(txt);
 		}
 		{
@@ -93,7 +93,7 @@ BOOL CFolderPropertiesDlg::OnInitDialog()
 		{
 			ID_type id = 0;
  			COMTHROW(folder->get_ID(&id));
-  			CString txt = CString("")+id;
+  			CString txt = CString(_T(""))+id;
   			objectid.SetWindowText(txt);
 		}
 

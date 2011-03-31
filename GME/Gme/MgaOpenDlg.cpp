@@ -177,7 +177,7 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 			}
 			else if( m_radio == 1 )
 			{
-				CFileDialog dlg(true, NULL, fileNameHint.IsEmpty() ? NULL : (LPCSTR)fileNameHint,
+				CFileDialog dlg(true, NULL, fileNameHint.IsEmpty() ? NULL : (LPCTSTR)fileNameHint,
 					OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
 					(flag_create ? 0 : OFN_FILEMUSTEXIST), allowXme ? xmemgafilter : mgafilter);
 				if (!folderPathHint.IsEmpty())

@@ -213,7 +213,7 @@ bool CGMEDataSource::IsXMLDataAvailable(COleDataObject *pDataObject)
 {
 	ASSERT( pDataObject != NULL );
 
-	return pDataObject->IsDataAvailable(CF_TEXT) != FALSE;
+	return pDataObject->IsDataAvailable(CF_UNICODETEXT) != FALSE;
 }
 
 bool CGMEDataSource::ParseXMLData(COleDataObject *pDataObject, IMgaObject *target, bool merge = false)
@@ -229,7 +229,7 @@ bool CGMEDataSource::ParseXMLData(COleDataObject *pDataObject, IMgaObject *targe
 	try
 	{
 		// get the memory file
-		CFile *memfile = pDataObject->GetFileData(CF_TEXT);
+		CFile *memfile = pDataObject->GetFileData(CF_UNICODETEXT);
 		if( memfile == NULL )
 			return false;
 		memfile->SeekToBegin();
@@ -356,15 +356,15 @@ HGLOBAL CGMEDataSource::CreateDescriptor(CGMEDataDescriptor* desc)
 void CGMEDataSource::DelayXMLDump()
 {
 	FORMATETC fe = {
-    CF_TEXT, NULL, DVASPECT_CONTENT, -1, TYMED_ISTREAM|TYMED_HGLOBAL
+    CF_UNICODETEXT, NULL, DVASPECT_CONTENT, -1, TYMED_ISTREAM|TYMED_HGLOBAL
 	};
           
-	DelayRenderFileData(CF_TEXT, &fe);
+	DelayRenderFileData(CF_UNICODETEXT, &fe);
 }
 
 BOOL CGMEDataSource::OnRenderFileData(LPFORMATETC lpFormatEtc, CFile* pFile)
 {
-	if( lpFormatEtc->cfFormat == CF_TEXT )
+	if( lpFormatEtc->cfFormat == CF_UNICODETEXT )
 	{
 		ASSERT( pFile != NULL );
 
@@ -406,9 +406,6 @@ BOOL CGMEDataSource::OnRenderFileData(LPFORMATETC lpFormatEtc, CFile* pFile)
 				pFile->Write(buff, c);
 			} while( c == buffsize );
 
-			buff[0] = 0;
-			pFile->Write(buff, 1);
-
 			file.Close();
 			CFile::Remove(filename);
 		}
@@ -432,7 +429,7 @@ BOOL CGMEDataSource::OnRenderFileData(LPFORMATETC lpFormatEtc, CFile* pFile)
 // ****************************************************************************************************
 BOOL CGMEClosureDataSource::OnRenderFileData(LPFORMATETC lpFormatEtc, CFile* pFile)
 {
-	if( lpFormatEtc->cfFormat == CF_TEXT )
+	if( lpFormatEtc->cfFormat == CF_UNICODETEXT )
 	{
 		ASSERT( pFile != NULL );
 

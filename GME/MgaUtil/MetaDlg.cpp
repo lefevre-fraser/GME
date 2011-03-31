@@ -71,12 +71,12 @@ BOOL CMetaDlg::OnInitDialog()
 		ASSERT( registrar != NULL );
 
 		if(flags == METADLG_PARREG) {
-				GetDlgItem(IDOK)->SetWindowText("Components...");
+				GetDlgItem(IDOK)->SetWindowText(_T("Components..."));
 		}
 
 		{
 			CRegKey accessTest;
-			if (accessTest.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", KEY_READ | KEY_WRITE) == ERROR_ACCESS_DENIED) {
+			if (accessTest.Open(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\GME"), KEY_READ | KEY_WRITE) == ERROR_ACCESS_DENIED) {
 				GetDlgItem(IDC_RADIOSYS)->EnableWindow(false);
 				GetDlgItem(IDC_RADIOUSER)->EnableWindow(false);
 				GetDlgItem(IDC_RADIOBOTH)->EnableWindow(false);
@@ -86,29 +86,29 @@ BOOL CMetaDlg::OnInitDialog()
 		LV_COLUMN lvc;
 		lvc.mask = LVCF_WIDTH | LVCF_TEXT;
 
-		lvc.pszText = "Paradigm";
+		lvc.pszText = _T("Paradigm");
 		lvc.cx = 100;
 		VERIFYTHROW( m_list.InsertColumn(0, &lvc) != -1 );
 
-		lvc.pszText = "S";
+		lvc.pszText = _T("S");
 		lvc.cx = 20;
 		VERIFYTHROW( m_list.InsertColumn(1, &lvc) != -1 );
 
-		lvc.pszText = "Version";
+		lvc.pszText = _T("Version");
 		lvc.cx = 50;
 		VERIFYTHROW( m_list.InsertColumn(2, &lvc) != -1 );
 
-		lvc.pszText = "Connection string";
+		lvc.pszText = _T("Connection string");
 		lvc.cx = 500;
 		VERIFYTHROW( m_list.InsertColumn(3, &lvc) != -1 );
 
-		lvc.pszText = "GUID";
+		lvc.pszText = _T("GUID");
 		lvc.cx = 300;
 		VERIFYTHROW( m_list.InsertColumn(4, &lvc) != -1 );
 
 		ResetItems();
 	}
-	MSGCATCH("Error while initializing MetaDlg",;)
+	MSGCATCH(_T("Error while initializing MetaDlg"),;)
 		
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -140,13 +140,13 @@ void CMetaDlg::ResetItems()
 		CopyTo(paradigms[i], name);
 		CComVariant v;
 
-		CString mode = "u";
+		CString mode = _T("u");
 		if( registrar->QueryParadigm(paradigms[i], PutOut(cstr), PutOut(v), REGACCESS_USER) != S_OK) {
-			mode = "s";
+			mode = _T("s");
 			if( registrar->QueryParadigm(paradigms[i], PutOut(cstr), PutOut(v), REGACCESS_SYSTEM) != S_OK) {
-				AfxMessageBox("Error reading registry data for paradigm " + name);
-				mode = "?";
-				cstr = "????";
+				AfxMessageBox(_T("Error reading registry data for paradigm ") + name);
+				mode = _T("?");
+				cstr = _T("????");
 			}
 		}
 		if(v.vt != VT_EMPTY) {
@@ -158,7 +158,7 @@ void CMetaDlg::ResetItems()
 		
 		HRESULT hr = registrar->VersionFromGUID(paradigms[i], v, PutOut(version), mode ==  'u' ? REGACCESS_USER : REGACCESS_SYSTEM);
 		if (FAILED(hr)) {
-			version = "N/A";
+			version = _T("N/A");
 		}
 
 		int j = m_list.InsertItem(i, name);
@@ -175,12 +175,12 @@ void CMetaDlg::ResetItems()
 	}
 }
 
-static char filter[] = 
-	"Paradigm Files (*.xmp)|*.xmp|"
-	"Exported Files (*.xme;*.xml)|*.xme; *.xml|"
-	"MGA Meta Files (*.mta)|*.mta|"
-	"Microsoft Access Files (*.mdb)|*.mdb|"
-	"All Files (*.*)|*.*||";
+static TCHAR filter[] = 
+	_T("Paradigm Files (*.xmp)|*.xmp|")
+	_T("Exported Files (*.xme;*.xml)|*.xme; *.xml|")
+	_T("MGA Meta Files (*.mta)|*.mta|")
+	_T("Microsoft Access Files (*.mdb)|*.mdb|")
+	_T("All Files (*.*)|*.*||");
 
 
 void CMetaDlg::OnAddfile() 
@@ -200,45 +200,45 @@ void CMetaDlg::OnAddfile()
 		CString ext = dlg.GetFileExt();
 		ext.MakeLower();
 
-		if( ext == "" )
+		if( ext == _T("") )
 		{
 			switch( dlg.m_ofn.nFilterIndex )
 			{
 			case 1:
-				conn = CString("XML=") + dlg.GetPathName() + ".xmp";
+				conn = CString(_T("XML=")) + dlg.GetPathName() + _T(".xmp");
 				break;
 
 			case 2:
-				conn = CString("MGA=") + dlg.GetPathName() + ".mta";
+				conn = CString(_T("MGA=")) + dlg.GetPathName() + _T(".mta");
 				break;
 
 			case 3:
-				conn = CString("DBQ=") + dlg.GetPathName() + ".mdb";
+				conn = CString(_T("DBQ=")) + dlg.GetPathName() + _T(".mdb");
 				break;
 			}
 
 		}
-		else if( ext == "xmp" || ext == "xml" )
-			conn = CString("XML=") + dlg.GetPathName();
-		else if( ext == "mta" )
-			conn = CString("MGA=") + dlg.GetPathName();
-		else if( ext == "mdb" )
-			conn = CString("DBQ=") + dlg.GetPathName();
+		else if( ext == _T("xmp") || ext == _T("xml") )
+			conn = CString(_T("XML=")) + dlg.GetPathName();
+		else if( ext == _T("mta") )
+			conn = CString(_T("MGA=")) + dlg.GetPathName();
+		else if( ext == _T("mdb") )
+			conn = CString(_T("DBQ=")) + dlg.GetPathName();
 		else
 		{
 			switch( dlg.m_ofn.nFilterIndex )
 			{
 			case 1:
 			case 2:
-				conn = CString("XML=") + dlg.GetPathName();
+				conn = CString(_T("XML=")) + dlg.GetPathName();
 				break;
 
 			case 3:
-				conn = CString("MGA=") + dlg.GetPathName();
+				conn = CString(_T("MGA=")) + dlg.GetPathName();
 				break;
 
 			case 4:
-				conn = CString("DBQ=") + dlg.GetPathName();
+				conn = CString(_T("DBQ=")) + dlg.GetPathName();
 				break;
 			}
 		}
@@ -256,7 +256,7 @@ void CMetaDlg::OnAddfile()
 		to_select = newname;
 		ResetItems();
 	}
-	MSGCATCH("Error while registering paradigm",;)
+	MSGCATCH(_T("Error while registering paradigm"),;)
 }
 
 void CMetaDlg::OnRemove() 
@@ -277,19 +277,19 @@ void CMetaDlg::OnRemove()
 			switch(regacc_translate(m_accessmode)) {
 			case REGACCESS_USER: 
 				if(S_OK == registrar->QueryParadigm(PutInBstr(name), &dummyc, &dummyg, REGACCESS_SYSTEM)) {
-					AfxMessageBox("Warning: Paradigm is still present in system registry");
+					AfxMessageBox(_T("Warning: Paradigm is still present in system registry"));
 				}
 				break;
 			case REGACCESS_SYSTEM: 
 				if(S_OK == registrar->QueryParadigm(PutInBstr(name), &dummyc, &dummyg, REGACCESS_USER)) {
-					AfxMessageBox("Warning: Paradigm is still present in user registry");
+					AfxMessageBox(_T("Warning: Paradigm is still present in user registry"));
 				}
 				break;
 			}
 			ResetItems();
 		}
 	}
-	MSGCATCH("Error while removing paradigm",;)
+	MSGCATCH(_T("Error while removing paradigm"),;)
 }
 
 void CMetaDlg::OnAddDB() 
@@ -327,10 +327,10 @@ void CMetaDlg::OnAddDB()
 		}
 		db.Close();
 	}
-	MSGCATCH("Error while registering paradigm",;)
+	MSGCATCH(_T("Error while registering paradigm"),;)
 	catch(...)
 	{
-		DisplayError("Error while registering paradigm", E_EXCEPTION);
+		DisplayError(_T("Error while registering paradigm"), E_EXCEPTION);
 	}
 }
 
@@ -342,7 +342,7 @@ BOOL CMetaDlg::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 		m_remove.EnableWindow(pos != NULL);
 		GetDlgItem(IDOK)->EnableWindow(pos != NULL);
 		m_purge.EnableWindow(pos != NULL);
-		to_select = pos ? m_list.GetItemText(m_list.GetNextSelectedItem(pos),0) : "";
+		to_select = pos ? m_list.GetItemText(m_list.GetNextSelectedItem(pos),0) : _T("");
 		return TRUE;
 	}
 	else if( wParam == IDC_LIST && ((NMHDR*)lParam)->code == NM_DBLCLK )
@@ -364,7 +364,7 @@ void CMetaDlg::OnOK()
 		int i = m_list.GetNextSelectedItem(pos);
 		connstr = m_list.GetItemText(i, 3);
 		if(connstr[0] == '?') {
-			AfxMessageBox("Error with selected paradigm");
+			AfxMessageBox(_T("Error with selected paradigm"));
 			return;
 		}
 		name = m_list.GetItemText(i, 0);

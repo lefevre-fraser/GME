@@ -200,11 +200,11 @@ TCHAR* CPreference::m_szSetPreferenceTable[][5]=
 
 CPreference::CPreference()
 {
-	nConnTableLength = sizeof(m_szConnectionPreferenceTable)/sizeof(char*)/5;
-	nAtomTableLength = sizeof(m_szAtomPreferenceTable)/sizeof(char*)/5;
-	nModelTableLength= sizeof(m_szModelPreferenceTable)/sizeof(char*)/5;
-	nProxyTableLength= sizeof(m_szProxyPreferenceTable)/sizeof(char*)/5;
-	nSetTableLength=   sizeof(m_szSetPreferenceTable)/sizeof(char*)/5;
+	nConnTableLength = sizeof(m_szConnectionPreferenceTable)/sizeof(TCHAR*)/5;
+	nAtomTableLength = sizeof(m_szAtomPreferenceTable)/sizeof(TCHAR*)/5;
+	nModelTableLength= sizeof(m_szModelPreferenceTable)/sizeof(TCHAR*)/5;
+	nProxyTableLength= sizeof(m_szProxyPreferenceTable)/sizeof(TCHAR*)/5;
+	nSetTableLength=   sizeof(m_szSetPreferenceTable)/sizeof(TCHAR*)/5;
 
 	// Get system background color
 	COLORREF crSysBckg=::GetSysColor(COLOR_WINDOW);

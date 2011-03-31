@@ -63,7 +63,7 @@ public:
 	STDMETHOD(ParseClos4)(IMgaObject *p, BSTR filename, int options); // smart
 	STDMETHOD(ParseProject)(IMgaProject *p, BSTR filename);
 
-	std::string GetClipXMLInfo2();
+	std::tstring GetClipXMLInfo2();
 
 	void CloseAll();
 
@@ -72,8 +72,8 @@ public:
 public:
 	virtual void startElement(const XMLCh* const name, AttributeList& attributes);
     virtual void endElement(const XMLCh* const name);
-	void fireStartFunction(const std::string& name, const attributes_type& attributes);
-	void fireEndFunction(const std::string& name);
+	void fireStartFunction(const std::tstring& name, const attributes_type& attributes);
+	void fireEndFunction(const std::tstring& name);
 
 	struct range_type
 	{
@@ -91,14 +91,14 @@ public:
 	};
 
 	typedef struct librecord {
-		std::string libname;
+		std::tstring libname;
 		CComPtr<IMgaFolder> f;
 	} librecord;
 
 	typedef std::vector<librecord> librecords;
 	librecords libstodo;
 	CComVariant projectguid;
-	CComBSTR	projectversion;
+	_bstr_t	projectversion;
 
 // ------- Logging
 
@@ -135,8 +135,8 @@ public:
 
 	long project_prefs, project_prefs_orig;
 
-	std::string constraint_name;
-	std::string constraint_value;
+	std::tstring constraint_name;
+	std::tstring constraint_value;
 
 	counter_type max_counter;
 	int pass_count;
@@ -144,15 +144,15 @@ public:
 // ------- Lookup
 
 public:
-	void LookupByID(const std::string &id, CComObjPtr<IMgaObject> &object);
-	void LookupByID(const std::string &id, CComObjPtr<IMgaFCO> &fco);
-	void RegisterLookup(const std::string &id, IMgaObject *object);
+	void LookupByID(const std::tstring &id, CComObjPtr<IMgaObject> &object);
+	void LookupByID(const std::tstring &id, CComObjPtr<IMgaFCO> &fco);
+	void RegisterLookup(const std::tstring &id, IMgaObject *object);
 	void RegisterLookup(const attributes_type &attributes, IMgaObject *object);
 
 	//void RegisterReadOnlyStatus( const attributes_type &attributes);
 	bool GetIntendedReadOnlyFlag( bool *p_isReadOnly);
 
-	typedef stdext::hash_map<std::string, CComBstrObj> id_lookup_type;
+	typedef stdext::hash_map<std::tstring, CComBstrObj> id_lookup_type;
 	typedef id_lookup_type::iterator id_lookup_iterator;
 
 	id_lookup_type id_lookup;
@@ -181,26 +181,26 @@ public:
 	bool findPlaceForElem( const attributes_type &attributes, deriv_type& deriv, CComObjPtr<IMgaFolder>& place_fld, CComObjPtr<IMgaModel>& place_mdl);
 
 	bool parseConnection( CComObjPtr<IMgaObject> prev, const attributes_type &attributes, CComObjPtr<IMgaFCO>& pFoundSrcObj, CComObjPtr<IMgaFCO>& pFoundDstObj, CComObjPtr<IMgaFCOs>& pFoundSrcRefChain, CComObjPtr<IMgaFCOs>& pFoundDstRefChain);
-	bool findConnectionEnd( CComObjPtr<IMgaObject> prev, const std::string& isbound, const std::string& role, const std::string& targetGUID, const std::string& target, const std::string& refchainGUID, const std::string& refchain, CComObjPtr<IMgaFCO>& pFoundObj, CComObjPtr<IMgaFCOs>& pFoundRefChain);
+	bool findConnectionEnd( CComObjPtr<IMgaObject> prev, const std::tstring& isbound, const std::tstring& role, const std::tstring& targetGUID, const std::tstring& target, const std::tstring& refchainGUID, const std::tstring& refchain, CComObjPtr<IMgaFCO>& pFoundObj, CComObjPtr<IMgaFCOs>& pFoundRefChain);
 	bool findObject( const CComObjPtr<IMgaModel>& prev, const attributes_type& attributes, CComObjPtr<IMgaFCO>& obj, const char type);
 	bool findObject( const CComObjPtr<IMgaFolder>& prev, const attributes_type& attributes, CComObjPtr<IMgaFCO>& obj, const char type);
 	bool findObjectIn( const CComObjPtr<IMgaObject>& parent, const CComObjPtrVector<IMgaFCO>& vec, const attributes_type& attributes, CComObjPtr<IMgaFCO>& obj, const char type);
 	bool findFolderIn( const CComObjPtr<IMgaFolder>& prev, const attributes_type& attributes, CComObjPtr<IMgaFolder>& fol);
-	void findObjOnRelPath( CComObjPtr<IMgaObject> obj_rel_to, const std::string& relpath , CComObjPtr<IMgaObject>& obj, const std::string& text = "");
-	void findObjOnAbsPath( CComObjPtr<IMgaProject> project, const std::string& abspath , CComObjPtr<IMgaObject>& obj, const std::string& text = "");
-	void findFCOWithRelPathAndGUID( CComObjPtr<IMgaObject> obj_rel_to, const std::string& relpath, const std::string& guid, CComObjPtr<IMgaFCO>& pFoundFco);
-	void findFCOWithGUIDInTree( CComObjPtr<IMgaObject> pParent, const std::string& guid, CComObjPtr<IMgaFCO>& pFoundFCO);
-	void findFCOWithGUID( CComObjPtr<IMgaObject> prev, const std::string& guid, CComObjPtr<IMgaFCO>& pFoundFCO);
-	void stepUpInHierarchy( CComObjPtr<IMgaObject>& pCurrentObj, const std::string& originalPath, CComObjPtr<IMgaObject>& pNewParent, std::string& remainingPath);
+	void findObjOnRelPath( CComObjPtr<IMgaObject> obj_rel_to, const std::tstring& relpath , CComObjPtr<IMgaObject>& obj, const std::tstring& text);
+	void findObjOnAbsPath( CComObjPtr<IMgaProject> project, const std::tstring& abspath , CComObjPtr<IMgaObject>& obj, const std::tstring& text);
+	void findFCOWithRelPathAndGUID( CComObjPtr<IMgaObject> obj_rel_to, const std::tstring& relpath, const std::tstring& guid, CComObjPtr<IMgaFCO>& pFoundFco);
+	void findFCOWithGUIDInTree( CComObjPtr<IMgaObject> pParent, const std::tstring& guid, CComObjPtr<IMgaFCO>& pFoundFCO);
+	void findFCOWithGUID( CComObjPtr<IMgaObject> prev, const std::tstring& guid, CComObjPtr<IMgaFCO>& pFoundFCO);
+	void stepUpInHierarchy( CComObjPtr<IMgaObject>& pCurrentObj, const std::tstring& originalPath, CComObjPtr<IMgaObject>& pNewParent, std::tstring& remainingPath);
 
 	static bool isNullRef( CComObjPtr<IMgaFCO>& ref);
 	static bool isEmptySet( CComObjPtr<IMgaFCO>& set);
 	bool isNeedFor2ndStep();
 	void tryToFindMissedReferreds();
 	void tryToFindMissedSetMembers();
-	std::map< CComObjPtr<IMgaFCO>, std::string, CompareCComObj > m_notFoundReferredObject;
-	std::map< CComObjPtr<IMgaFCO>, std::vector< std::string >, CompareCComObj > m_notFoundSetMembers;
-	std::string m_clVerStr;
+	std::map< CComObjPtr<IMgaFCO>, std::tstring, CompareCComObj > m_notFoundReferredObject;
+	std::map< CComObjPtr<IMgaFCO>, std::vector< std::tstring >, CompareCComObj > m_notFoundSetMembers;
+	std::tstring m_clVerStr;
 
 	bool manual_relid_mode;
 	long relid;

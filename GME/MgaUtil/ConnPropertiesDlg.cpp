@@ -46,7 +46,7 @@ CConnPropertiesDlg::CConnPropertiesDlg(
 	//}}AFX_DATA_INIT
 	isType = typ;
 	editflag = false;
-	m_relid.Format("0x%08X", relid);
+	m_relid.Format(_T("0x%08X"), relid);
 }
 
 

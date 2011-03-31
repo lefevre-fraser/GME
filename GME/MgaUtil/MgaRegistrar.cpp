@@ -28,7 +28,7 @@ void ERRTHROW(LONG err)
 const CString rootreg(_T("SOFTWARE\\GME"));
 
 
-CString QueryValue(CRegKey &key, const char *name)
+CString QueryValue(CRegKey &key, const TCHAR *name)
 {
 	CString buffer;
 	TCHAR *bufp = buffer.GetBuffer(4096);
@@ -74,8 +74,8 @@ STDMETHODIMP CMgaRegistrar::get_IconPath(regaccessmode_enum mode, BSTR *path)
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "IconPath");
-				str.TrimRight(" ;,\t");
+				str	= QueryValue(mga, _T("IconPath"));
+				str.TrimRight(_T(" ;,\t"));
 				if(!str.IsEmpty()) REVOKE_SYS2(mode);
 			}
 		}
@@ -84,9 +84,9 @@ STDMETHODIMP CMgaRegistrar::get_IconPath(regaccessmode_enum mode, BSTR *path)
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				CString str2 = QueryValue(mga, "IconPath");
-				str2.TrimLeft(" ;,\t");
-				if(!str.IsEmpty() && !str2.IsEmpty()) str += ";";
+				CString str2 = QueryValue(mga, _T("IconPath"));
+				str2.TrimLeft(_T(" ;,\t"));
+				if(!str.IsEmpty() && !str2.IsEmpty()) str += _T(";");
 				str	+= str2;
 			}
 		}
@@ -99,17 +99,16 @@ STDMETHODIMP CMgaRegistrar::put_IconPath(regaccessmode_enum mode, BSTR path)
 {
 	COMTRY
 	{
-		CString str;
-		CopyTo(path, str);
+		CString str = path;
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "IconPath", str ));
+			ERRTHROW( mga.SetStringValue( _T("IconPath"), str ));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "IconPath", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("IconPath"), str));
 		}
 	}
 	COMCATCH(;)
@@ -126,7 +125,7 @@ STDMETHODIMP CMgaRegistrar::get_ShowMultipleView(regaccessmode_enum mode, VARIAN
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "ShowMultipleView");
+				str	= QueryValue(mga, _T("ShowMultipleView"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -137,10 +136,10 @@ STDMETHODIMP CMgaRegistrar::get_ShowMultipleView(regaccessmode_enum mode, VARIAN
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "ShowMultipleView");
+				str = QueryValue(mga, _T("ShowMultipleView"));
 			}
 		}
-		*enabled = (str == "1") ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
+		*enabled = (str == _T("1")) ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
 	}
 	COMCATCH(;)
 }
@@ -149,16 +148,16 @@ STDMETHODIMP CMgaRegistrar::put_ShowMultipleView(regaccessmode_enum mode, VARIAN
 {
 	COMTRY
 	{
-		CString str = (enabled == VARIANT_FALSE) ? "0" : "1";
+		CString str = (enabled == VARIANT_FALSE) ? _T("0") : _T("1");
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "ShowMultipleView", str));
+			ERRTHROW( mga.SetStringValue( _T("ShowMultipleView"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "ShowMultipleView", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("ShowMultipleView"), str));
 		}
 	}
 	COMCATCH(;)
@@ -175,7 +174,7 @@ STDMETHODIMP CMgaRegistrar::get_EventLoggingEnabled(regaccessmode_enum mode, VAR
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "EventLoggingEnabled");
+				str	= QueryValue(mga, _T("EventLoggingEnabled"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -186,10 +185,10 @@ STDMETHODIMP CMgaRegistrar::get_EventLoggingEnabled(regaccessmode_enum mode, VAR
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "EventLoggingEnabled");
+				str = QueryValue(mga, _T("EventLoggingEnabled"));
 			}
 		}
-		*enabled = (str == "1") ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
+		*enabled = (str == _T("1")) ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
 	}
 	COMCATCH(;)
 }
@@ -198,16 +197,16 @@ STDMETHODIMP CMgaRegistrar::put_EventLoggingEnabled(regaccessmode_enum mode, VAR
 {
 	COMTRY
 	{
-		CString str = (enabled == VARIANT_FALSE) ? "0" : "1";
+		CString str = (enabled == VARIANT_FALSE) ? _T("0") : _T("1");
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "EventLoggingEnabled", str));
+			ERRTHROW( mga.SetStringValue( _T("EventLoggingEnabled"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "EventLoggingEnabled", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("EventLoggingEnabled"), str));
 		}
 	}
 	COMCATCH(;)
@@ -224,7 +223,7 @@ STDMETHODIMP CMgaRegistrar::get_AutosaveEnabled(regaccessmode_enum mode, VARIANT
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "AutosaveEnabled");
+				str	= QueryValue(mga, _T("AutosaveEnabled"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -235,10 +234,10 @@ STDMETHODIMP CMgaRegistrar::get_AutosaveEnabled(regaccessmode_enum mode, VARIANT
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "AutosaveEnabled");
+				str = QueryValue(mga, _T("AutosaveEnabled"));
 			}
 		}
-		*enabled = (str == "1") ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
+		*enabled = (str == _T("1")) ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
 	}
 	COMCATCH(;)
 }
@@ -247,16 +246,16 @@ STDMETHODIMP CMgaRegistrar::put_AutosaveEnabled(regaccessmode_enum mode, VARIANT
 {
 	COMTRY
 	{
-		CString str = (enabled == VARIANT_FALSE) ? "0" : "1";
+		CString str = (enabled == VARIANT_FALSE) ? _T("0") : _T("1");
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "AutosaveEnabled", str));
+			ERRTHROW( mga.SetStringValue( _T("AutosaveEnabled"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "AutosaveEnabled", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("AutosaveEnabled"), str));
 		}
 	}
 	COMCATCH(;)
@@ -273,7 +272,7 @@ STDMETHODIMP CMgaRegistrar::get_AutosaveFreq(regaccessmode_enum mode, long *secs
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "AutosaveFreq");
+				str	= QueryValue(mga, _T("AutosaveFreq"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -284,10 +283,10 @@ STDMETHODIMP CMgaRegistrar::get_AutosaveFreq(regaccessmode_enum mode, long *secs
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "AutosaveFreq");
+				str = QueryValue(mga, _T("AutosaveFreq"));
 			}
 		}
-		if (_stscanf((LPCTSTR)str, "%ld", secs) != 1) {
+		if (_stscanf((LPCTSTR)str, _T("%ld"), secs) != 1) {
 			*secs = 60;	// Default value: 1 minute
 		}
 	}
@@ -299,16 +298,16 @@ STDMETHODIMP CMgaRegistrar::put_AutosaveFreq(regaccessmode_enum mode, long secs)
 	COMTRY
 	{
 		CString str;
-		str.Format("%ld", secs);
+		str.Format(_T("%ld"), secs);
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "AutosaveFreq", str));
+			ERRTHROW( mga.SetStringValue( _T("AutosaveFreq"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "AutosaveFreq", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("AutosaveFreq"), str));
 		}
 	}
 	COMCATCH(;)
@@ -325,7 +324,7 @@ STDMETHODIMP CMgaRegistrar::get_AutosaveUseDir(regaccessmode_enum mode, VARIANT_
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "AutosaveUseDir");
+				str	= QueryValue(mga, _T("AutosaveUseDir"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -336,10 +335,10 @@ STDMETHODIMP CMgaRegistrar::get_AutosaveUseDir(regaccessmode_enum mode, VARIANT_
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "AutosaveUseDir");
+				str = QueryValue(mga, _T("AutosaveUseDir"));
 			}
 		}
-		*enabled = (str == "1") ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
+		*enabled = (str == _T("1")) ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
 	}
 	COMCATCH(;)
 }
@@ -348,16 +347,16 @@ STDMETHODIMP CMgaRegistrar::put_AutosaveUseDir(regaccessmode_enum mode, VARIANT_
 {
 	COMTRY
 	{
-		CString str = (enabled == VARIANT_FALSE) ? "0" : "1";
+		CString str = (enabled == VARIANT_FALSE) ? _T("0") : _T("1");
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "AutosaveUseDir", str));
+			ERRTHROW( mga.SetStringValue( _T("AutosaveUseDir"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "AutosaveUseDir", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("AutosaveUseDir"), str));
 		}
 	}
 	COMCATCH(;)
@@ -376,7 +375,7 @@ STDMETHODIMP CMgaRegistrar::get_AutosaveDir(regaccessmode_enum mode, BSTR *dir)
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "AutosaveDir");
+				str	= QueryValue(mga, _T("AutosaveDir"));
 			}
 		}
 		if(mode & (RM_SYSDOREAD)) {
@@ -384,7 +383,7 @@ STDMETHODIMP CMgaRegistrar::get_AutosaveDir(regaccessmode_enum mode, BSTR *dir)
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "AutosaveDir");
+				str = QueryValue(mga, _T("AutosaveDir"));
 			}
 		}
 		CopyTo(str, dir);
@@ -396,17 +395,16 @@ STDMETHODIMP CMgaRegistrar::put_AutosaveDir(regaccessmode_enum mode, BSTR dir)
 {
 	COMTRY
 	{
-		CString str;
-		CopyTo(dir, str);
+		CString str = dir;
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "AutosaveDir", str));
+			ERRTHROW( mga.SetStringValue( _T("AutosaveDir"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "AutosaveDir", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("AutosaveDir"), str));
 		}
 	}
 	COMCATCH(;)
@@ -424,7 +422,7 @@ STDMETHODIMP CMgaRegistrar::get_ExternalEditorEnabled(regaccessmode_enum mode, V
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "ExternalEditorEnabled");
+				str	= QueryValue(mga, _T("ExternalEditorEnabled"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -435,10 +433,10 @@ STDMETHODIMP CMgaRegistrar::get_ExternalEditorEnabled(regaccessmode_enum mode, V
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "ExternalEditorEnabled");
+				str = QueryValue(mga, _T("ExternalEditorEnabled"));
 			}
 		}
-		*enabled = (str == "1") ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
+		*enabled = (str == _T("1")) ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
 	}
 	COMCATCH(;)
 }
@@ -447,16 +445,16 @@ STDMETHODIMP CMgaRegistrar::put_ExternalEditorEnabled(regaccessmode_enum mode, V
 {
 	COMTRY
 	{
-		CString str = (enabled == VARIANT_FALSE) ? "0" : "1";
+		CString str = (enabled == VARIANT_FALSE) ? _T("0") : _T("1");
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "ExternalEditorEnabled", str));
+			ERRTHROW( mga.SetStringValue( _T("ExternalEditorEnabled"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "ExternalEditorEnabled", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("ExternalEditorEnabled"), str));
 		}
 	}
 	COMCATCH(;)
@@ -475,7 +473,7 @@ STDMETHODIMP CMgaRegistrar::get_ExternalEditor(regaccessmode_enum mode, BSTR *pa
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "ExternalEditor");
+				str	= QueryValue(mga, _T("ExternalEditor"));
 			}
 		}
 		if(mode & (RM_SYSDOREAD)) {
@@ -483,7 +481,7 @@ STDMETHODIMP CMgaRegistrar::get_ExternalEditor(regaccessmode_enum mode, BSTR *pa
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "ExternalEditor");
+				str = QueryValue(mga, _T("ExternalEditor"));
 			}
 		}
 		CopyTo(str, path);
@@ -495,17 +493,16 @@ STDMETHODIMP CMgaRegistrar::put_ExternalEditor(regaccessmode_enum mode, BSTR pat
 {
 	COMTRY
 	{
-		CString str;
-		CopyTo(path, str);
+		CString str = path;
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "ExternalEditor", str));
+			ERRTHROW( mga.SetStringValue( _T("ExternalEditor"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "ExternalEditor", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("ExternalEditor"), str));
 		}
 	}
 	COMCATCH(;)
@@ -523,7 +520,7 @@ STDMETHODIMP CMgaRegistrar::get_UseAutoRouting(regaccessmode_enum mode, VARIANT_
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "UseAutoRouting");
+				str	= QueryValue(mga, _T("UseAutoRouting"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -534,10 +531,10 @@ STDMETHODIMP CMgaRegistrar::get_UseAutoRouting(regaccessmode_enum mode, VARIANT_
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "UseAutoRouting");
+				str = QueryValue(mga, _T("UseAutoRouting"));
 			}
 		}
-		*enabled = (str == "0") ? VARIANT_FALSE : VARIANT_TRUE; // Default value: true
+		*enabled = (str == _T("0")) ? VARIANT_FALSE : VARIANT_TRUE; // Default value: true
 	}
 	COMCATCH(;)
 }
@@ -547,16 +544,16 @@ STDMETHODIMP CMgaRegistrar::put_UseAutoRouting(regaccessmode_enum mode, VARIANT_
 {
 	COMTRY
 	{
-		CString str = (enabled == VARIANT_FALSE) ? "0" : "1";
+		CString str = (enabled == VARIANT_FALSE) ? _T("0") : _T("1");
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "UseAutoRouting", str));
+			ERRTHROW( mga.SetStringValue( _T("UseAutoRouting"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "UseAutoRouting", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("UseAutoRouting"), str));
 		}
 	}
 	COMCATCH(;)
@@ -574,7 +571,7 @@ STDMETHODIMP CMgaRegistrar::get_LabelAvoidance(regaccessmode_enum mode, VARIANT_
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "LabelAvoidance");
+				str	= QueryValue(mga, _T("LabelAvoidance"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -585,10 +582,10 @@ STDMETHODIMP CMgaRegistrar::get_LabelAvoidance(regaccessmode_enum mode, VARIANT_
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "LabelAvoidance");
+				str = QueryValue(mga, _T("LabelAvoidance"));
 			}
 		}
-		*enabled = (str == "1") ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
+		*enabled = (str == _T("1")) ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
 	}
 	COMCATCH(;)
 }
@@ -598,16 +595,16 @@ STDMETHODIMP CMgaRegistrar::put_LabelAvoidance(regaccessmode_enum mode, VARIANT_
 {
 	COMTRY
 	{
-		CString str = (enabled == VARIANT_FALSE) ? "0" : "1";
+		CString str = (enabled == VARIANT_FALSE) ? _T("0") : _T("1");
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "LabelAvoidance", str));
+			ERRTHROW( mga.SetStringValue( _T("LabelAvoidance"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "LabelAvoidance", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("LabelAvoidance"), str));
 		}
 	}
 	COMCATCH(;)
@@ -625,8 +622,8 @@ STDMETHODIMP CMgaRegistrar::get_ScriptEngine(regaccessmode_enum mode, BSTR *path
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "ScriptEngine");
-				str.TrimRight(" ;,\t");
+				str	= QueryValue(mga, _T("ScriptEngine"));
+				str.TrimRight(_T(" ;,\t"));
 				if(!str.IsEmpty()) REVOKE_SYS2(mode);
 			}
 		}
@@ -635,9 +632,9 @@ STDMETHODIMP CMgaRegistrar::get_ScriptEngine(regaccessmode_enum mode, BSTR *path
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				CString str2 = QueryValue(mga, "ScriptEngine");
-				str2.TrimLeft(" ;,\t");
-				if(!str.IsEmpty() && !str2.IsEmpty()) str += ";";
+				CString str2 = QueryValue(mga, _T("ScriptEngine"));
+				str2.TrimLeft(_T(" ;,\t"));
+				if(!str.IsEmpty() && !str2.IsEmpty()) str += _T(";");
 				str	+= str2;
 			}
 		}
@@ -649,17 +646,16 @@ STDMETHODIMP CMgaRegistrar::get_ScriptEngine(regaccessmode_enum mode, BSTR *path
 STDMETHODIMP CMgaRegistrar::put_ScriptEngine(regaccessmode_enum mode, BSTR path) {
 	COMTRY
 	{
-		CString str;
-		CopyTo(path, str);
+		CString str = path;
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue("ScriptEngine", str) );//z7
+			ERRTHROW( mga.SetStringValue(_T("ScriptEngine"), str) );//z7
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue("ScriptEngine", str) );//z7
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue(_T("ScriptEngine"), str) );//z7
 		}
 	}
 	COMCATCH(;)
@@ -677,7 +673,7 @@ STDMETHODIMP CMgaRegistrar::GetDefZoomLevel(regaccessmode_enum p_mode, BSTR *p_z
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "DefaultZoomLevel");
+				str	= QueryValue(mga, _T("DefaultZoomLevel"));
 				if(!str.IsEmpty()) REVOKE_SYS2(p_mode);
 			}
 		}
@@ -686,7 +682,7 @@ STDMETHODIMP CMgaRegistrar::GetDefZoomLevel(regaccessmode_enum p_mode, BSTR *p_z
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "DefaultZoomLevel");
+				str = QueryValue(mga, _T("DefaultZoomLevel"));
 			}
 		}
 		CopyTo(str, p_zlev);
@@ -699,17 +695,16 @@ STDMETHODIMP CMgaRegistrar::SetDefZoomLevel(regaccessmode_enum p_mode, BSTR p_zl
 {
 	COMTRY
 	{
-		CString str;
-		CopyTo(p_zlev, str);
+		CString str = p_zlev;
 		if(p_mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "DefaultZoomLevel", str));
+			ERRTHROW( mga.SetStringValue( _T("DefaultZoomLevel"), str));
 		}
 		if(p_mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(p_mode & RM_SYS) ERRTHROW( mga.SetStringValue( "DefaultZoomLevel", str));
+			if(p_mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("DefaultZoomLevel"), str));
 		}
 	}
 	COMCATCH(;)
@@ -727,7 +722,7 @@ STDMETHODIMP CMgaRegistrar::GetMouseOverNotify(regaccessmode_enum mode, VARIANT_
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "MouseOverNotify");
+				str	= QueryValue(mga, _T("MouseOverNotify"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -738,10 +733,10 @@ STDMETHODIMP CMgaRegistrar::GetMouseOverNotify(regaccessmode_enum mode, VARIANT_
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "MouseOverNotify");
+				str = QueryValue(mga, _T("MouseOverNotify"));
 			}
 		}
-		*enabled = (str == "1") ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
+		*enabled = (str == _T("1")) ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
 	}
 	COMCATCH(;)
 }
@@ -751,16 +746,16 @@ STDMETHODIMP CMgaRegistrar::SetMouseOverNotify(regaccessmode_enum mode, VARIANT_
 {
 	COMTRY
 	{
-		CString str = (enabled == VARIANT_FALSE) ? "0" : "1";
+		CString str = (enabled == VARIANT_FALSE) ? _T("0") : _T("1");
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "MouseOverNotify", str));
+			ERRTHROW( mga.SetStringValue( _T("MouseOverNotify"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "MouseOverNotify", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("MouseOverNotify"), str));
 		}
 	}
 	COMCATCH(;)
@@ -778,7 +773,7 @@ STDMETHODIMP CMgaRegistrar::GetRealNmbFmtStr(regaccessmode_enum p_mode, BSTR *p_
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "RealNmbFmtStr");
+				str	= QueryValue(mga, _T("RealNmbFmtStr"));
 				if(!str.IsEmpty()) REVOKE_SYS2(p_mode);
 			}
 		}
@@ -787,7 +782,7 @@ STDMETHODIMP CMgaRegistrar::GetRealNmbFmtStr(regaccessmode_enum p_mode, BSTR *p_
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "RealNmbFmtStr");
+				str = QueryValue(mga, _T("RealNmbFmtStr"));
 			}
 		}
 		CopyTo(str, p_fmtStr);
@@ -800,17 +795,16 @@ STDMETHODIMP CMgaRegistrar::SetRealNmbFmtStr(regaccessmode_enum p_mode, BSTR p_f
 {
 	COMTRY
 	{
-		CString str;
-		CopyTo(p_fmtStr, str);
+		CString str = p_fmtStr;
 		if(p_mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "RealNmbFmtStr", str));
+			ERRTHROW( mga.SetStringValue( _T("RealNmbFmtStr"), str));
 		}
 		if(p_mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(p_mode & RM_SYS) ERRTHROW( mga.SetStringValue( "RealNmbFmtStr", str));
+			if(p_mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("RealNmbFmtStr"), str));
 		}
 	}
 	COMCATCH(;)
@@ -827,7 +821,7 @@ STDMETHODIMP CMgaRegistrar::GetTimeStamping(regaccessmode_enum p_mode, VARIANT_B
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "TimeStamping");
+				str	= QueryValue(mga, _T("TimeStamping"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(p_mode);
 				}
@@ -838,10 +832,10 @@ STDMETHODIMP CMgaRegistrar::GetTimeStamping(regaccessmode_enum p_mode, VARIANT_B
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "TimeStamping");
+				str = QueryValue(mga, _T("TimeStamping"));
 			}
 		}
-		*p_enabled = (str == "1") ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
+		*p_enabled = (str == _T("1")) ? VARIANT_TRUE : VARIANT_FALSE; // Default value: false
 	}
 	COMCATCH(;)
 }
@@ -850,16 +844,16 @@ STDMETHODIMP CMgaRegistrar::SetTimeStamping(regaccessmode_enum p_mode, VARIANT_B
 {
 	COMTRY
 	{
-		CString str = (p_enabled == VARIANT_FALSE) ? "0" : "1";
+		CString str = (p_enabled == VARIANT_FALSE) ? _T("0") : _T("1");
 		if(p_mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "TimeStamping", str));
+			ERRTHROW( mga.SetStringValue( _T("TimeStamping"), str));
 		}
 		if(p_mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(p_mode & RM_SYS) ERRTHROW( mga.SetStringValue( "TimeStamping", str));
+			if(p_mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("TimeStamping"), str));
 		}
 	}
 	COMCATCH(;)
@@ -876,7 +870,7 @@ STDMETHODIMP CMgaRegistrar::GetNavigation(regaccessmode_enum p_mode, VARIANT_BOO
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "Navigation");
+				str	= QueryValue(mga, _T("Navigation"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(p_mode);
 				}
@@ -887,10 +881,10 @@ STDMETHODIMP CMgaRegistrar::GetNavigation(regaccessmode_enum p_mode, VARIANT_BOO
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "Navigation");
+				str = QueryValue(mga, _T("Navigation"));
 			}
 		}
-		*p_enabled = (str == "0") ? VARIANT_FALSE : VARIANT_TRUE; // Default value: true
+		*p_enabled = (str == _T("0")) ? VARIANT_FALSE : VARIANT_TRUE; // Default value: true
 	}
 	COMCATCH(;)
 }
@@ -899,16 +893,16 @@ STDMETHODIMP CMgaRegistrar::SetNavigation(regaccessmode_enum p_mode, VARIANT_BOO
 {
 	COMTRY
 	{
-		CString str = (p_enabled == VARIANT_FALSE) ? "0" : "1";
+		CString str = (p_enabled == VARIANT_FALSE) ? _T("0") : _T("1");
 		if(p_mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "Navigation", str));
+			ERRTHROW( mga.SetStringValue( _T("Navigation"), str));
 		}
 		if(p_mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(p_mode & RM_SYS) ERRTHROW( mga.SetStringValue( "Navigation", str));
+			if(p_mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("Navigation"), str));
 		}
 	}
 	COMCATCH(;)
@@ -926,7 +920,7 @@ STDMETHODIMP CMgaRegistrar::GetUndoQueueSize(regaccessmode_enum p_mode, BSTR *p_
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "UndoQueueSize");
+				str	= QueryValue(mga, _T("UndoQueueSize"));
 				if(!str.IsEmpty()) REVOKE_SYS2(p_mode);
 			}
 		}
@@ -935,7 +929,7 @@ STDMETHODIMP CMgaRegistrar::GetUndoQueueSize(regaccessmode_enum p_mode, BSTR *p_
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "UndoQueueSize");
+				str = QueryValue(mga, _T("UndoQueueSize"));
 			}
 		}
 		CopyTo(str, p_qusz);
@@ -948,17 +942,16 @@ STDMETHODIMP CMgaRegistrar::SetUndoQueueSize(regaccessmode_enum p_mode, BSTR p_q
 {
 	COMTRY
 	{
-		CString str;
-		CopyTo(p_qusz, str);
+		CString str = p_qusz;
 		if(p_mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "UndoQueueSize", str));
+			ERRTHROW( mga.SetStringValue( _T("UndoQueueSize"), str));
 		}
 		if(p_mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(p_mode & RM_SYS) ERRTHROW( mga.SetStringValue( "UndoQueueSize", str));
+			if(p_mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("UndoQueueSize"), str));
 		}
 	}
 	COMCATCH(;)
@@ -975,7 +968,7 @@ STDMETHODIMP CMgaRegistrar::get_EdgeSmoothMode(regaccessmode_enum mode, edgesmoo
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "EdgeSmoothMode");
+				str	= QueryValue(mga, _T("EdgeSmoothMode"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -986,10 +979,10 @@ STDMETHODIMP CMgaRegistrar::get_EdgeSmoothMode(regaccessmode_enum mode, edgesmoo
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "EdgeSmoothMode");
+				str = QueryValue(mga, _T("EdgeSmoothMode"));
 			}
 		}
-		*smoothMode = (edgesmoothmode_enum)(str.IsEmpty() ? 2 : strtol(str, NULL, 10));
+		*smoothMode = (edgesmoothmode_enum)(str.IsEmpty() ? 2 : _tcstol(str, NULL, 10));
 	}
 	COMCATCH(;)
 }
@@ -999,16 +992,16 @@ STDMETHODIMP CMgaRegistrar::put_EdgeSmoothMode(regaccessmode_enum mode, edgesmoo
 	COMTRY
 	{
 		CString str;
-		str.Format("%d", smoothMode);
+		str.Format(_T("%d"), smoothMode);
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "EdgeSmoothMode", str));
+			ERRTHROW( mga.SetStringValue( _T("EdgeSmoothMode"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "EdgeSmoothMode", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("EdgeSmoothMode"), str));
 		}
 	}
 	COMCATCH(;)
@@ -1025,7 +1018,7 @@ STDMETHODIMP CMgaRegistrar::get_FontSmoothMode(regaccessmode_enum mode, fontsmoo
 			res = mga.Open(HKEY_CURRENT_USER, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str	= QueryValue(mga, "FontSmoothMode");
+				str	= QueryValue(mga, _T("FontSmoothMode"));
 				if(!str.IsEmpty()) {
 					REVOKE_SYS2(mode);
 				}
@@ -1036,10 +1029,10 @@ STDMETHODIMP CMgaRegistrar::get_FontSmoothMode(regaccessmode_enum mode, fontsmoo
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				str = QueryValue(mga, "FontSmoothMode");
+				str = QueryValue(mga, _T("FontSmoothMode"));
 			}
 		}
-		*smoothMode = (fontsmoothmode_enum)(str.IsEmpty() ? 4 : strtol(str, NULL, 10));
+		*smoothMode = (fontsmoothmode_enum)(str.IsEmpty() ? 4 : _tcstol(str, NULL, 10));
 	}
 	COMCATCH(;)
 }
@@ -1049,16 +1042,16 @@ STDMETHODIMP CMgaRegistrar::put_FontSmoothMode(regaccessmode_enum mode, fontsmoo
 	COMTRY
 	{
 		CString str;
-		str.Format("%d", smoothMode);
+		str.Format(_T("%d"), smoothMode);
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
-			ERRTHROW( mga.SetStringValue( "FontSmoothMode", str));
+			ERRTHROW( mga.SetStringValue( _T("FontSmoothMode"), str));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
-			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( "FontSmoothMode", str));
+			if(mode & RM_SYS) ERRTHROW( mga.SetStringValue( _T("FontSmoothMode"), str));
 		}
 	}
 	COMCATCH(;)
@@ -1073,7 +1066,7 @@ STDMETHODIMP CMgaRegistrar::get_Paradigms(regaccessmode_enum mode, VARIANT *name
 		CStringArray ret;
 		if(mode & RM_USER) {
 			CRegKey pars;
-			LONG res = pars.Open(HKEY_CURRENT_USER, rootreg+"\\Paradigms", KEY_READ);
+			LONG res = pars.Open(HKEY_CURRENT_USER, rootreg+_T("\\Paradigms"), KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				for(int index = 0;; ++index) {
@@ -1093,7 +1086,7 @@ STDMETHODIMP CMgaRegistrar::get_Paradigms(regaccessmode_enum mode, VARIANT *name
 
 		if(mode & RM_SYSDOREAD) {
 			CRegKey pars;
-			LONG res = pars.Open(HKEY_LOCAL_MACHINE, rootreg+"\\Paradigms", KEY_READ);
+			LONG res = pars.Open(HKEY_LOCAL_MACHINE, rootreg+_T("\\Paradigms"), KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				for(int index = 0;; ++index) {
@@ -1151,18 +1144,18 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigmFromData(BSTR connstr, BSTR *newname
 		CString conn = connstr;
 		CString connrecent;
 		// we have to parse it
-		if( conn.Left(4) == "XML=" )
+		if( conn.Left(4) == _T("XML=") )
 		{
 			CString file = conn.Mid(4);
 
-			conn = "MGA=";
+			conn = _T("MGA=");
 			conn += file;
 
-			if( conn.Right(4).CompareNoCase(".xml") == 0 || 
-				conn.Right(4).CompareNoCase(".xmp") == 0 ) {
+			if( conn.Right(4).CompareNoCase(_T(".xml")) == 0 || 
+				conn.Right(4).CompareNoCase(_T(".xmp")) == 0 ) {
 				conn.Delete(conn.GetLength() - 4, 4);
 			}
-			conn += ".mta";
+			conn += _T(".mta");
 #define FILEPART(x) (((LPCTSTR)x)+4)
 			DWORD info = GetFileAttributes(FILEPART(conn));
 			if(info != 0xFFFFFFFF ) {	// save old version of paradigm under another name
@@ -1179,19 +1172,19 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigmFromData(BSTR connstr, BSTR *newname
 					CopyTo(prevguid,gg);
 					CComBstrObj guidstr;
 					CopyTo(gg, guidstr);
-					connrecent = conn.Left(conn.GetLength()-4)+"-"+CString(PutInCString(guidstr))+".mta";
+					connrecent = conn.Left(conn.GetLength()-4)+_T("-")+CString(PutInCString(guidstr))+_T(".mta");
 
 					bool sysmove = false, usermove = false;
 					conn1.Empty();
 					if(QueryParadigm(name, PutOut(conn1), &prevguid, REGACCESS_SYSTEM) == S_OK &&
 						conn1 == CComBSTR(conn)) {  // if it was correctly registered in system
 						if(RegisterParadigm(name, PutInBstr(connrecent), prevversion, prevguid, REGACCESS_TEST) != S_OK) {
-							AfxMessageBox("Cannot register this paradigm file\n"
-										  "an existing '.mta' file with the same name\n"
-										  "is registered in the system registry\n"
-										  "which you are not permitted to change.\n"
-										  "You need to change the name or location\n"
-										  "of the new paradigm file");
+							AfxMessageBox(_T("Cannot register this paradigm file\n")
+										  _T("an existing '.mta' file with the same name\n")
+										  _T("is registered in the system registry\n")
+										  _T("which you are not permitted to change.\n")
+										  _T("You need to change the name or location\n")
+										  _T("of the new paradigm file"));
 							return E_INVALID_USAGE;
 						}
 						sysmove = true;;
@@ -1214,10 +1207,10 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigmFromData(BSTR connstr, BSTR *newname
 					}
 				}
 			  } catch(hresult_exception(&e)) {
-					AfxMessageBox(CString("Failure saving previous version of paradigm\n") + 
+					AfxMessageBox(CString(_T("Failure saving previous version of paradigm\n")) + 
 									e.what() + 
-									(e.hr == E_BINFILE?" [Binary paradigm file (.mta) incompatibility]\nPossible reason: GME version 6 changed the binary format of paradigms.":"") +
-									"\nOld version will be overwritten");
+									(e.hr == E_BINFILE?_T(" [Binary paradigm file (.mta) incompatibility]\nPossible reason: GME version 6 changed the binary format of paradigms."):_T("")) +
+									_T("\nOld version will be overwritten"));
 					connrecent.Empty();
 			  }
 			}
@@ -1326,53 +1319,53 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR versi
 			ERRTHROW(mga.Create(HKEY_CURRENT_USER, rootreg) );
 
 			CRegKey pars;
-			ERRTHROW( pars.Create(mga, "Paradigms") );
+			ERRTHROW( pars.Create(mga, _T("Paradigms")) );
 
 			CRegKey par;
-			ERRTHROW( par.Create(pars, PutInCString(name)) );
+			ERRTHROW( par.Create(pars, CString(name)) );
 
 
-			ERRTHROW( par.SetStringValue( "CurrentVersion", PutInCString(guid3)));
+			ERRTHROW( par.SetStringValue( _T("CurrentVersion"), PutInCString(guid3)));
 			if (!cver.IsEmpty()) {
 				ERRTHROW( par.SetStringValue( cver, PutInCString(guid3)));
 			}
 			CRegKey parg;
 			ERRTHROW( parg.Create(par, PutInCString(guid3)) );
 
-			ERRTHROW( parg.SetStringValue( "ConnStr", PutInCString(connstr)));
+			ERRTHROW( parg.SetStringValue( _T("ConnStr"), CString(connstr)));
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
 			ERRTHROW(mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
 
 			CRegKey pars;
-			ERRTHROW( pars.Create(mga, "Paradigms") );
+			ERRTHROW( pars.Create(mga, _T("Paradigms")) );
 
 			CRegKey par;
 
 			if(mode & RM_SYS) {
-				ERRTHROW( par.Create(pars, PutInCString(name)) );
-				CString gg	= QueryValue(par, "GUID");
-				CString gc	= QueryValue(par, "ConnStr");
-				par.DeleteValue("GUID");
-				par.DeleteValue("ConnStr");
+				ERRTHROW( par.Create(pars, CString(name)) );
+				CString gg	= QueryValue(par, _T("GUID"));
+				CString gc	= QueryValue(par, _T("ConnStr"));
+				par.DeleteValue(_T("GUID"));
+				par.DeleteValue(_T("ConnStr"));
 				if(!gc.IsEmpty() && !gg.IsEmpty()) {
 					CRegKey parg2;
 					ERRTHROW( parg2.Create(par, gg) );
-					ERRTHROW( parg2.SetStringValue( "ConnStr", gc) );
+					ERRTHROW( parg2.SetStringValue( _T("ConnStr"), gc) );
 				}
 
-				ERRTHROW( par.SetStringValue( "CurrentVersion", PutInCString(guid3)));
+				ERRTHROW( par.SetStringValue( _T("CurrentVersion"), PutInCString(guid3)));
 				if (!cver.IsEmpty()) {
 					ERRTHROW( par.SetStringValue( cver, PutInCString(guid3)));
 				}
 				CRegKey parg;
 				ERRTHROW( parg.Create(par, PutInCString(guid3)) );
 	
-				ERRTHROW( parg.SetStringValue( "ConnStr", PutInCString(connstr)));
+				ERRTHROW( parg.SetStringValue( _T("ConnStr"), CString(connstr)));
 			}
 			else {
-				LONG res = par.Open(pars, PutInCString(name));
+				LONG res = par.Open(pars, CString(name));
 				if(res != ERROR_SUCCESS && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			}
 		}
@@ -1392,7 +1385,7 @@ STDMETHODIMP CMgaRegistrar::QueryParadigmAllGUIDs(BSTR parname, VARIANT *guidstr
 		CStringArray ret;
 		if(mode & RM_USER) {
 			CRegKey par;
-			LONG res = par.Open(HKEY_CURRENT_USER, rootreg+"\\Paradigms\\" + pname, KEY_READ);
+			LONG res = par.Open(HKEY_CURRENT_USER, rootreg+_T("\\Paradigms\\") + pname, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				for(int index = 0;; ++index) {
@@ -1412,10 +1405,10 @@ STDMETHODIMP CMgaRegistrar::QueryParadigmAllGUIDs(BSTR parname, VARIANT *guidstr
 
 		if(mode & RM_SYSDOREAD) {
 			CRegKey par;
-			LONG res = par.Open(HKEY_LOCAL_MACHINE, rootreg+"\\Paradigms\\" + pname, KEY_READ);
+			LONG res = par.Open(HKEY_LOCAL_MACHINE, rootreg+_T("\\Paradigms\\") + pname, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				CString cur = QueryValue(par, "CurrentVersion");
+				CString cur = QueryValue(par, _T("CurrentVersion"));
 				if(!cur.IsEmpty()) {  // New style: Connection strings are stored under GUID subkeys
 				  for(int index = 0;; ++index) {
 					TCHAR name[1024];
@@ -1432,7 +1425,7 @@ STDMETHODIMP CMgaRegistrar::QueryParadigmAllGUIDs(BSTR parname, VARIANT *guidstr
 				  }
 				}
 				else {
-					CString name = QueryValue(par, "GUID");
+					CString name = QueryValue(par, _T("GUID"));
 					int j;
 					for(j = 0; j < retlen; j++) {		// Make sure, name is not present already, if yes system copy is ignored
 						if(!ret[j].CompareNoCase(name)) break;
@@ -1456,7 +1449,7 @@ STDMETHODIMP CMgaRegistrar::QueryParadigm(BSTR parname, BSTR *connstr, VARIANT *
 
 	COMTRY
 	{
-		CString pname = PutInCString(parname);
+		CString pname = parname;
 
 		CRegKey subk;
 		CString guidact;
@@ -1473,11 +1466,11 @@ STDMETHODIMP CMgaRegistrar::QueryParadigm(BSTR parname, BSTR *connstr, VARIANT *
 
 		if(mode & RM_USER) {
 			CRegKey par;
-			res = par.Open(HKEY_CURRENT_USER, rootreg + "\\Paradigms\\" + pname, KEY_READ);
+			res = par.Open(HKEY_CURRENT_USER, rootreg + _T("\\Paradigms\\") + pname, KEY_READ);
 			if(res == ERROR_SUCCESS) {
 				// REVOKE_SYS2(mode);						// paradigm found, ignore system settings
 				if(inguidstr == NULL) {
-					guidact = QueryValue(par, "CurrentVersion");
+					guidact = QueryValue(par, _T("CurrentVersion"));
 					if(guidact.IsEmpty()) res = ERROR_FILE_NOT_FOUND;
 				}
 				else	guidact = inguidstr;
@@ -1489,11 +1482,11 @@ STDMETHODIMP CMgaRegistrar::QueryParadigm(BSTR parname, BSTR *connstr, VARIANT *
 
 		if(mode & RM_SYSDOREAD) {
 			CRegKey par;
-			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Paradigms\\" + pname, KEY_READ);
+			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\") + pname, KEY_READ);
 			if(res == ERROR_SUCCESS) {
-				CString cur = QueryValue(par, "CurrentVersion");
+				CString cur = QueryValue(par, _T("CurrentVersion"));
 				if(cur.IsEmpty()) {
-					guidact = QueryValue(par, "GUID");
+					guidact = QueryValue(par, _T("GUID"));
 					if(inguidstr != NULL && inguidstr != CComBSTR(guidact)) COMTHROW(E_NOTFOUND);
 					subk.Attach(par.Detach());
 				}
@@ -1508,7 +1501,7 @@ STDMETHODIMP CMgaRegistrar::QueryParadigm(BSTR parname, BSTR *connstr, VARIANT *
 		if(subk == NULL) return(E_NOTFOUND);  // !!!!!!!
 
 
-		CopyTo(QueryValue(subk, "ConnStr"), connstr);
+		CopyTo(QueryValue(subk, _T("ConnStr")), connstr);
 
 		if(inguidstr == NULL) {
 			GUID g;
@@ -1550,7 +1543,7 @@ STDMETHODIMP CMgaRegistrar::VersionFromGUID(BSTR name, VARIANT guid, BSTR *ver, 
 
 		if(mode & RM_USER) {
 			CRegKey par;
-			res = par.Open(HKEY_CURRENT_USER, rootreg + "\\Paradigms\\"+name, KEY_READ);
+			res = par.Open(HKEY_CURRENT_USER, rootreg + _T("\\Paradigms\\")+name, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				mode = REGACCESS_USER;
@@ -1569,7 +1562,7 @@ STDMETHODIMP CMgaRegistrar::VersionFromGUID(BSTR name, VARIANT guid, BSTR *ver, 
 						CString cver(value);
 						if (cver.Compare(PutInCString(guidbstr)) == 0) {
 							CString namestr(name);
-							if (namestr.CompareNoCase("CurrentVersion") != 0) {
+							if (namestr.CompareNoCase(_T("CurrentVersion")) != 0) {
 								found = true;
 								CopyTo(namestr, ver);
 							}
@@ -1580,7 +1573,7 @@ STDMETHODIMP CMgaRegistrar::VersionFromGUID(BSTR name, VARIANT guid, BSTR *ver, 
 		}
 		if(mode & (RM_SYSDOREAD)) {
 			CRegKey par;
-			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Paradigms\\"+name, KEY_READ);
+			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\")+name, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				for(int index = 0;; ++index) {
@@ -1598,7 +1591,7 @@ STDMETHODIMP CMgaRegistrar::VersionFromGUID(BSTR name, VARIANT guid, BSTR *ver, 
 						CString cver(value);
 						if (cver.Compare(PutInCString(guidbstr)) == 0) {
 							CString namestr(name);
-							if (namestr.CompareNoCase("CurrentVersion") != 0) {
+							if (namestr.CompareNoCase(_T("CurrentVersion")) != 0) {
 								found = true;
 								CopyTo(namestr, ver);
 							}
@@ -1616,7 +1609,7 @@ STDMETHODIMP CMgaRegistrar::GUIDFromVersion(BSTR name, BSTR ver, VARIANT* guid, 
 {
 	CHECK_OUT(guid);
 
-	CString verstr = PutInCString(ver);
+	CString verstr = ver;
 	CString gstr;
 
 	COMTRY
@@ -1625,7 +1618,7 @@ STDMETHODIMP CMgaRegistrar::GUIDFromVersion(BSTR name, BSTR ver, VARIANT* guid, 
 
 		if(mode & RM_USER) {
 			CRegKey par;
-			res = par.Open(HKEY_CURRENT_USER, rootreg + "\\Paradigms\\"+name, KEY_READ);
+			res = par.Open(HKEY_CURRENT_USER, rootreg + _T("\\Paradigms\\")+name, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) { 
 				gstr = QueryValue(par, verstr);
@@ -1636,7 +1629,7 @@ STDMETHODIMP CMgaRegistrar::GUIDFromVersion(BSTR name, BSTR ver, VARIANT* guid, 
 		}
 		if(mode & (RM_SYSDOREAD)) {
 			CRegKey par;
-			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Paradigms\\"+name, KEY_READ);
+			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\")+name, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) { 
 				gstr = QueryValue(par, verstr);
@@ -1666,8 +1659,8 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigmGUID(BSTR name, VARIANT v, regacce
 
 		if(mode & RM_USER) {
 			CRegKey par;
-			ERRTHROW( par.Open(HKEY_CURRENT_USER, rootreg + "\\Paradigms\\"+name) );
-			CString cur = QueryValue(par, "CurrentVersion");
+			ERRTHROW( par.Open(HKEY_CURRENT_USER, rootreg + _T("\\Paradigms\\")+name) );
+			CString cur = QueryValue(par, _T("CurrentVersion"));
 			if(cur.Compare(PutInCString(guidbstr)) == 0) {
 				COMTHROW(E_INVALID_USAGE);
 			}
@@ -1695,8 +1688,8 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigmGUID(BSTR name, VARIANT v, regacce
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey par;
-			ERRTHROW( par.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Paradigms\\"+name) );
-			CString cur = QueryValue(par, "CurrentVersion");
+			ERRTHROW( par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\")+name) );
+			CString cur = QueryValue(par, _T("CurrentVersion"));
 			if(cur.Compare(PutInCString(guidbstr)) == 0) {
 				COMTHROW(E_INVALID_USAGE);
 			}
@@ -1733,14 +1726,14 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigm(BSTR name, regaccessmode_enum mod
 	{
 		if(mode & RM_USER) {
 			CRegKey pars;
-			LONG res = pars.Open(HKEY_CURRENT_USER, rootreg + "\\Paradigms");
-			if(!res) res = pars.RecurseDeleteKey(PutInCString(name));
+			LONG res = pars.Open(HKEY_CURRENT_USER, rootreg + _T("\\Paradigms"));
+			if(!res) res = pars.RecurseDeleteKey(CString(name));
 			if(res == ERROR_FILE_NOT_FOUND) res = ERROR_SUCCESS;
 			ERRTHROW(res);
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey pars;
-			LONG res = pars.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Paradigms");
+			LONG res = pars.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms"));
 			if(!res) {
 				if(mode & RM_SYS) res = pars.RecurseDeleteKey(PutInCString(name));
 				if(mode & RM_TEST) res = pars.Open(pars, PutInCString(name));
@@ -1755,7 +1748,7 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigm(BSTR name, regaccessmode_enum mod
 // throws hresult_exception
 void GetComponents(HKEY hive, CStringArray& ret) {
 	CRegKey comps;
-	LONG res = comps.Open(hive, rootreg + "\\Components", KEY_READ);
+	LONG res = comps.Open(hive, rootreg + _T("\\Components"), KEY_READ);
 	if (res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND)
 		COMTHROW(HRESULT_FROM_WIN32(res));
 	if (res == ERROR_SUCCESS) {
@@ -1770,7 +1763,7 @@ void GetComponents(HKEY hive, CStringArray& ret) {
 			err = comp.Open(comps, name, KEY_READ);
 			DWORD type2;
 			if (err == ERROR_SUCCESS)
-				err = comp.QueryDWORDValue("Type", type2);
+				err = comp.QueryDWORDValue(_T("Type"), type2);
 			if (err != ERROR_SUCCESS)
 				continue;
 			if((type2 & COMPONENTTYPE_SYSREGREF) != 0) { 
@@ -1809,10 +1802,10 @@ template<typename Functor>
 void TokenizeParadigmString(const CString& paradigms, Functor x) {
 	CStringList ret;
 	int curPos = 0;
-	CString token = paradigms.Tokenize(" ;,\n\t", curPos);
-	while (token != "") {
+	CString token = paradigms.Tokenize(_T(" ;,\n\t"), curPos);
+	while (token != _T("")) {
 		x(token);
-		token = paradigms.Tokenize(" ;,\n\t", curPos);
+		token = paradigms.Tokenize(_T(" ;,\n\t"), curPos);
 	}
 }
 
@@ -1832,16 +1825,16 @@ STDMETHODIMP CMgaRegistrar::RegisterComponent(BSTR progid, componenttype_enum ty
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_CURRENT_USER, rootreg) );
 			CRegKey comps;
-			ERRTHROW( comps.Create(mga, "Components") );
+			ERRTHROW( comps.Create(mga, _T("Components")) );
 			CRegKey comp;
 			ERRTHROW( comp.Create(comps, PutInCString(progid)) );
 
-			ERRTHROW( comp.SetDWORDValue( "Type", (DWORD)type));
+			ERRTHROW( comp.SetDWORDValue( _T("Type"), (DWORD)type));
 
-			ERRTHROW( comp.SetStringValue( "Description", PutInCString(desc)));
+			ERRTHROW( comp.SetStringValue( _T("Description"), PutInCString(desc)));
 			if(paradigms.Length()) {
 				TokenizeParadigmString(PutInCString(paradigms), [&comp](const CString& par) {
-					ERRTHROW(comp.SetStringValue("Paradigm", par));
+					ERRTHROW(comp.SetStringValue(_T("Paradigm"), par));
 				});
 			}
 		}
@@ -1849,16 +1842,16 @@ STDMETHODIMP CMgaRegistrar::RegisterComponent(BSTR progid, componenttype_enum ty
 			CRegKey mga;
 			ERRTHROW( mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
 			CRegKey comps;
-			ERRTHROW( comps.Create(mga, "Components") );
+			ERRTHROW( comps.Create(mga, _T("Components")) );
 			if(mode & RM_SYS) {
 				CRegKey comp;
 				ERRTHROW( comp.Create(comps, PutInCString(progid)) );
 	
-				ERRTHROW( comp.SetDWORDValue( "Type", (DWORD)type));
+				ERRTHROW( comp.SetDWORDValue( _T("Type"), (DWORD)type));
 
-				ERRTHROW( comp.SetStringValue( "Description", PutInCString(desc)));
+				ERRTHROW( comp.SetStringValue( _T("Description"), PutInCString(desc)));
 				TokenizeParadigmString(PutInCString(paradigms), [&comp](const CString& par) {
-					ERRTHROW(comp.SetStringValue("Paradigm", par));
+					ERRTHROW(comp.SetStringValue(_T("Paradigm"), par));
 				});
 			}
 			else {
@@ -1885,15 +1878,15 @@ STDMETHODIMP CMgaRegistrar::QueryComponent(BSTR progid, componenttype_enum *type
 		HKEY hives[] = { HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE };
 		for (int i = 0; i < 2; i++) {
 			CRegKey comp;
-			LONG res = comp.Open(hives[i], rootreg+"\\Components\\"+progidstr, KEY_READ);
+			LONG res = comp.Open(hives[i], rootreg+_T("\\Components\\")+progidstr, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				comp.QueryDWORDValue("Type", dwType);
+				comp.QueryDWORDValue(_T("Type"), dwType);
 				ULONG count;
-				res = comp.QueryStringValue("Description", NULL, &count);
-				if (strDesc == "" && res == ERROR_SUCCESS) {
+				res = comp.QueryStringValue(_T("Description"), NULL, &count);
+				if (strDesc == _T("") && res == ERROR_SUCCESS) {
 					CString ret;
-					if (comp.QueryStringValue("Description", ret.GetBufferSetLength(count), &count) == ERROR_SUCCESS)
+					if (comp.QueryStringValue(_T("Description"), ret.GetBufferSetLength(count), &count) == ERROR_SUCCESS)
 						strDesc = ret;
 				}
 			}
@@ -1903,7 +1896,7 @@ STDMETHODIMP CMgaRegistrar::QueryComponent(BSTR progid, componenttype_enum *type
 		
 		if (type)
 			*type = (componenttype_enum)dwType;
-		if (desc && strDesc != "")
+		if (desc && strDesc != _T(""))
 			CopyTo(strDesc, desc);
 		return S_OK;
 	}
@@ -1917,13 +1910,13 @@ STDMETHODIMP CMgaRegistrar::UnregisterComponent(BSTR progid, regaccessmode_enum 
 //		if(mode & RM_USER) {
 		if(mode & (RM_USER | RM_SYS) ){
 			CRegKey comps;
-			LONG res = comps.Open(HKEY_CURRENT_USER, rootreg + "\\Components");
+			LONG res = comps.Open(HKEY_CURRENT_USER, rootreg + _T("\\Components"));
 
 			DWORD type2 = 0;
 			if(!res) {
 				CRegKey comp;
 				res =  comp.Open(comps, PutInCString(progid), KEY_READ);
-				if(!res) comp.QueryDWORDValue( "Type", type2);
+				if(!res) comp.QueryDWORDValue( _T("Type"), type2);
 			}
 
 			if((mode & RM_USER) || (type2 & COMPONENTTYPE_SYSREGREF) != 0 ) {
@@ -1934,7 +1927,7 @@ STDMETHODIMP CMgaRegistrar::UnregisterComponent(BSTR progid, regaccessmode_enum 
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey comps;
-			LONG res = comps.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Components");
+			LONG res = comps.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Components"));
 			if(!res) {
 				if(mode & RM_SYS) res = comps.RecurseDeleteKey(PutInCString(progid));
 				if(mode & RM_TEST) res = comps.Open(comps, PutInCString(progid));
@@ -1955,11 +1948,11 @@ STDMETHODIMP CMgaRegistrar::put_ComponentExtraInfo(regaccessmode_enum mode,
 	{
 		if(mode & RM_USER) {
 			CRegKey comp;
-			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg+"\\Components\\"+progidstr);
+			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg+_T("\\Components\\")+progidstr);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				DWORD type2;
-				ERRTHROW( comp.QueryDWORDValue( "Type", type2));
+				ERRTHROW( comp.QueryDWORDValue( _T("Type"), type2));
 
 				if((type2 & COMPONENTTYPE_ALL)) { 
 					if(!newVal) { ERRTHROW( comp.DeleteValue(PutInCString(name)) );  }
@@ -1969,11 +1962,11 @@ STDMETHODIMP CMgaRegistrar::put_ComponentExtraInfo(regaccessmode_enum mode,
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey comp;
-			LONG res = comp.Open(HKEY_LOCAL_MACHINE, rootreg+"\\Components\\"+progidstr);
+			LONG res = comp.Open(HKEY_LOCAL_MACHINE, rootreg+_T("\\Components\\")+progidstr);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				DWORD type2;
-				ERRTHROW( comp.QueryDWORDValue( "Type", type2));
+				ERRTHROW( comp.QueryDWORDValue( _T("Type"), type2));
 
 				if((mode & RM_SYS) && (type2 & COMPONENTTYPE_ALL)) { 
 					if(!newVal) { ERRTHROW( comp.DeleteValue(PutInCString(name)) );  }
@@ -1996,7 +1989,7 @@ STDMETHODIMP CMgaRegistrar::get_ComponentExtraInfo(regaccessmode_enum mode,
 		HKEY hives[] = { HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE };
 		for (int i = 0; i < 2; i++) {
 			CRegKey comp;
-			LONG res = comp.Open(hives[i], rootreg+"\\Components\\"+progidstr, KEY_READ);
+			LONG res = comp.Open(hives[i], rootreg+_T("\\Components\\")+progidstr, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				ULONG count;
@@ -2024,34 +2017,34 @@ STDMETHODIMP CMgaRegistrar::get_LocalDllPath(BSTR progid, BSTR* pVal) {
 		CRegKey comp;
 		CString m_strClassId;
 		for(int i = 0; i < 10; i++) {
-			LONG res = comp.Open(HKEY_CLASSES_ROOT, m_strProgId + "\\CLSID", KEY_READ);
+			LONG res = comp.Open(HKEY_CLASSES_ROOT, m_strProgId + _T("\\CLSID"), KEY_READ);
 			if(res == ERROR_SUCCESS) {
-				m_strClassId = QueryValue(comp,"" );
+				m_strClassId = QueryValue(comp,_T("") );
 				break;
 			}
 			else {
-				res = comp.Open(HKEY_CLASSES_ROOT, m_strProgId + "\\CurVer", KEY_READ);
+				res = comp.Open(HKEY_CLASSES_ROOT, m_strProgId + _T("\\CurVer"), KEY_READ);
 				if(res != ERROR_SUCCESS) COMTHROW(E_NOTFOUND);
-				m_strProgId = QueryValue(comp, "" );
+				m_strProgId = QueryValue(comp, _T("") );
 				comp.Close();
 			}
 		}
 		if(m_strClassId.IsEmpty()) COMTHROW(E_NOTFOUND);
 
-		LONG res = comp.Open(HKEY_CLASSES_ROOT, "CLSID\\" + m_strClassId + "\\InprocServer32", KEY_READ);
+		LONG res = comp.Open(HKEY_CLASSES_ROOT, _T("CLSID\\") + m_strClassId + _T("\\InprocServer32"), KEY_READ);
 		CString m_strPath;
 		if(res == ERROR_SUCCESS) {
-			m_strPath = QueryValue(comp, "" );
-			if (m_strPath == "mscoree.dll") {
-				char data[MAX_PATH];
+			m_strPath = QueryValue(comp, _T("") );
+			if (m_strPath == _T("mscoree.dll")) {
+				TCHAR data[MAX_PATH];
 				ULONG num_bytes = sizeof(data) / sizeof(data[0]);
-				if (comp.QueryValue("CodeBase", 0, data, &num_bytes) == ERROR_SUCCESS) {
+				if (comp.QueryValue(_T("CodeBase"), 0, data, &num_bytes) == ERROR_SUCCESS) {
 					m_strPath = data;
 					m_strPath = m_strPath.Right(m_strPath.GetLength() - 8);
 					m_strPath.Replace('/', '\\');
 				} else {
-					if (comp.QueryValue("Assembly", 0, data, &num_bytes) == ERROR_SUCCESS) {
-						m_strPath = "GAC: ";
+					if (comp.QueryValue(_T("Assembly"), 0, data, &num_bytes) == ERROR_SUCCESS) {
+						m_strPath = _T("GAC: ");
 						m_strPath += data;
 					}
 				}
@@ -2082,7 +2075,7 @@ bool Combine_Tristate(Tristate_t user, Tristate_t system, bool default_ = false)
 Tristate_t IsAssociated_hive(const CString& progidstr, const CString& paradigmstr, HKEY hive) {
 	CRegKey acomp;
 
-	if (acomp.Open(hive, rootreg + "\\Components\\" + progidstr + "\\Associated", KEY_READ) != ERROR_SUCCESS) {
+	if (acomp.Open(hive, rootreg + _T("\\Components\\") + progidstr + _T("\\Associated"), KEY_READ) != ERROR_SUCCESS) {
 		return Tristate_Not_Specified;
 	}
 	ULONG count;
@@ -2093,7 +2086,7 @@ Tristate_t IsAssociated_hive(const CString& progidstr, const CString& paradigmst
 	CString val;
 	if (acomp.QueryStringValue(paradigmstr, val.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
 		val.ReleaseBuffer();
-		if (val == "Disabled") {
+		if (val == _T("Disabled")) {
 			return Tristate_Disabled;
 		}
 	}
@@ -2123,8 +2116,7 @@ STDMETHODIMP CMgaRegistrar::get_AssociatedComponents(BSTR paradigm,
 	{
 		CStringArray ret;
 
-		CString paradigmstr;
-		CopyTo(paradigm, paradigmstr);
+		CString paradigmstr = paradigm;
 
 		CStringArray components;
 		if (mode & REGACCESS_USER)
@@ -2180,33 +2172,33 @@ STDMETHODIMP CMgaRegistrar::Associate(BSTR progid, BSTR paradigm, regaccessmode_
 		bool somethingdone = false;
 		if(mode & RM_USER) {		
 			CRegKey comp;
-			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg + "\\Components\\" + pname);
+			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg + _T("\\Components\\") + pname);
 			CRegKey assocs;
 			if(res == ERROR_FILE_NOT_FOUND) {   // try to create a shadow registry
 				CRegKey comp1, mga;
-				res = comp1.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Components\\" + pname, KEY_READ);
+				res = comp1.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Components\\") + pname, KEY_READ);
 				if(!res) res = mga.Create(HKEY_CURRENT_USER, rootreg);
 				CRegKey comps;
-				if(!res) res = ( comps.Create(mga, "Components") );
+				if(!res) res = ( comps.Create(mga, _T("Components")) );
 				if(!res) res = ( comp.Create(comps, pname) );
 			}
-			if(!res) res = assocs.Create(comp, "Associated");
-			if(!res) assocs.SetStringValue( PutInCString(paradigm), "");
+			if(!res) res = assocs.Create(comp, _T("Associated"));
+			if(!res) assocs.SetStringValue( PutInCString(paradigm), _T(""));
 			if(!res) somethingdone = true;
 			if(res == ERROR_FILE_NOT_FOUND) res = ERROR_SUCCESS;
 			ERRTHROW(res);
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey comp;
-			LONG res = comp.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Components\\" + pname);
+			LONG res = comp.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Components\\") + pname);
 			if(mode & RM_SYS) {
 				CRegKey assocs;
-				if(!res) res = assocs.Create(comp, "Associated");
-				if(!res) res = assocs.SetStringValue( PutInCString(paradigm), "");
+				if(!res) res = assocs.Create(comp, _T("Associated"));
+				if(!res) res = assocs.SetStringValue( PutInCString(paradigm), _T(""));
 			}
 			else {
 				CRegKey assocs;
-				LONG res = assocs.Open(comp, "Associated");
+				LONG res = assocs.Open(comp, _T("Associated"));
 				if(res != ERROR_SUCCESS && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			}
 			if(!res) somethingdone = true;
@@ -2224,29 +2216,29 @@ STDMETHODIMP CMgaRegistrar::Disassociate(BSTR progid, BSTR paradigm, regaccessmo
 	{
 		if(mode & RM_USER) {		
 			CRegKey comp;
-			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg + "\\Components\\" + pname);
+			LONG res = comp.Open(HKEY_CURRENT_USER, rootreg + _T("\\Components\\") + pname);
 			if (res == ERROR_FILE_NOT_FOUND) {
 				CRegKey comp1, mga;
-				res = comp1.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Components\\" + pname, KEY_READ);
+				res = comp1.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Components\\") + pname, KEY_READ);
 				if(!res) res = mga.Create(HKEY_CURRENT_USER, rootreg);
 				CRegKey comps;
-				if(!res) res = ( comps.Create(mga, "Components") );
+				if(!res) res = ( comps.Create(mga, _T("Components")) );
 				if(!res) res = ( comp.Create(comps, pname) );
 			}
 			CRegKey assocs;
-			if(!res) res = assocs.Open(comp, "Associated");
+			if(!res) res = assocs.Open(comp, _T("Associated"));
 			if (res == ERROR_FILE_NOT_FOUND) 
-				res = assocs.Create(comp, "Associated");
+				res = assocs.Create(comp, _T("Associated"));
 			if (!res)
-				res = assocs.SetStringValue(PutInCString(paradigm), "Disabled");
+				res = assocs.SetStringValue(PutInCString(paradigm), _T("Disabled"));
 			if(res == ERROR_FILE_NOT_FOUND) res = ERROR_SUCCESS;
 			ERRTHROW(res);
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey comp;
-			LONG res = comp.Open(HKEY_LOCAL_MACHINE, rootreg + "\\Components\\" + pname);
+			LONG res = comp.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Components\\") + pname);
 			CRegKey assocs;
-			if(!res) res = assocs.Open(comp, "Associated");
+			if(!res) res = assocs.Open(comp, _T("Associated"));
 			if(mode & RM_SYS) {
 				if(!res) res = assocs.DeleteValue(PutInCString(paradigm));
 			}
@@ -2275,13 +2267,13 @@ STDMETHODIMP CMgaRegistrar::IsAssociated(BSTR progid, BSTR paradigm,
 		if (can_ass) *can_ass = VARIANT_FALSE;
 		VARIANT_BOOL can = VARIANT_FALSE;
 		CComBSTR pars;
-		get_ComponentExtraInfo(mode,progid,CComBSTR("Paradigm"), &pars);
+		get_ComponentExtraInfo(mode,progid,CComBSTR(L"Paradigm"), &pars);
 		if(!pars && !(type & COMPONENTTYPE_SCRIPT)) {
 			CComPtr<IMgaComponent> comp;
 			CreateMgaComponent(comp, progid);
 			if(!comp) COMTHROW(E_NOTFOUND);
 			COMTHROW(comp->get_Paradigm(&pars));
-			put_ComponentExtraInfo(REGACCESS_BOTH, progid, CComBSTR("Paradigm"), pars);  // just try
+			put_ComponentExtraInfo(REGACCESS_BOTH, progid, CComBSTR(L"Paradigm"), pars);  // just try
 		}
 		if(!pars) {
 			can = type & COMPONENTTYPE_PARADIGM_INDEPENDENT ? VARIANT_TRUE : VARIANT_FALSE;
@@ -2316,7 +2308,7 @@ STDMETHODIMP CMgaRegistrar::RegisterComponentLibrary(BSTR path, regaccessmode_en
 		}
 
 		CTLREGPROC DLLRegisterServer =
-			(CTLREGPROC)::GetProcAddress(hModule,"DllRegisterServer" );
+			(CTLREGPROC)::GetProcAddress(hModule, "DllRegisterServer");
 		
 		if( DLLRegisterServer == NULL )
 		{
@@ -2382,7 +2374,7 @@ STDMETHODIMP CMgaRegistrar::RegisterComponentLibrary(BSTR path, regaccessmode_en
 								CLSID tempGUID;
 								HRESULT hr = CLSIDFromProgID(olestr, &tempGUID);
 								if(hr == S_OK && tempGUID == typeattr->guid) {
-									progid = olestr;
+									progid = CComBstrObj(olestr);
 								}
 							}
 						}

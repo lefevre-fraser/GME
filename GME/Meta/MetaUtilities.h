@@ -541,6 +541,11 @@ struct CComBstrObj_lightequal
 			return false;
 		}
 	}
+
+	bool operator()( const CComBstrObj &pFullNmInParadigm, BSTR pUnknownFormat) const
+	{
+		return operator()(pFullNmInParadigm, CComBstrObj(pUnknownFormat));
+	}
 };
 
 

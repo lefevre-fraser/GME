@@ -57,7 +57,7 @@ void CRegistryTree::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 			dlg->UpdateData(TRUE);
 			if (oldnode->status == ATTSTATUS_HERE) {
 				oldnode->value = dlg->m_regnodeValue;
-				oldnode->value.Replace("\r\n","\n"); // Remove Win32 GUI line ends
+				oldnode->value.Replace(_T("\r\n"),_T("\n")); // Remove Win32 GUI line ends
 			}
 		}
 	}
@@ -70,25 +70,25 @@ void CRegistryTree::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 			dlg->m_regnodePath = newnode->path;
 			switch (newnode->status) {
 			case ATTSTATUS_HERE:
-				dlg->m_regnodeStatus = "HERE";
+				dlg->m_regnodeStatus = _T("HERE");
 				break;
 			case ATTSTATUS_METADEFAULT:
-				dlg->m_regnodeStatus = "METADEFAULT";
+				dlg->m_regnodeStatus = _T("METADEFAULT");
 				break;
 			case ATTSTATUS_UNDEFINED:
-				dlg->m_regnodeStatus = "UNDEFINED";
+				dlg->m_regnodeStatus = _T("UNDEFINED");
 				break;
 			case ATTSTATUS_INVALID:
-				dlg->m_regnodeStatus = "INVALID";
+				dlg->m_regnodeStatus = _T("INVALID");
 				break;
 			default:
 				CString inherited;
-				inherited.Format("INHERITED (distance: %ld)", newnode->status);
+				inherited.Format(_T("INHERITED (distance: %ld)"), newnode->status);
 				dlg->m_regnodeStatus = inherited;
 				break;
 			}
 			dlg->m_regnodeValue = newnode->value;
-			dlg->m_regnodeValue.Replace("\n", "\r\n"); // Add Win32 GUI line ends
+			dlg->m_regnodeValue.Replace(_T("\n"), _T("\r\n")); // Add Win32 GUI line ends
 			dlg->UpdateData(FALSE);
 		}
 	}
@@ -154,11 +154,11 @@ void CRegistryTree::OnCntxAddnode()
 	CRegBrwNode *oldNode = (hItem == TVI_ROOT) ? NULL : (CRegBrwNode*)GetItemData(hItem);
 	
 	CRegBrwNode *newNode = new CRegBrwNode();
-	newNode->name = "New Node";
+	newNode->name = _T("New Node");
 	newNode->parent = oldNode;
 	newNode->status = ATTSTATUS_HERE;
-	newNode->value = "";
-	newNode->path = (hItem == TVI_ROOT) ? newNode->name : oldNode->path + "/" + newNode->name;
+	newNode->value = _T("");
+	newNode->path = (hItem == TVI_ROOT) ? newNode->name : oldNode->path + _T("/") + newNode->name;
 	
 	int imageNum;
 	dlg->m_imageMap.Lookup(IDI_ICON_REGHERE, imageNum);
@@ -181,21 +181,21 @@ void CRegistryTree::OnCntxClearnode()
 	if (hItem) {
 		CRegBrwNode* node= (CRegBrwNode*)GetItemData(hItem);
 		node->status = ATTSTATUS_UNDEFINED;
-		node->value = "";
+		node->value = _T("");
 		CRegistryBrowserDlg *dlg = (CRegistryBrowserDlg *)(GetParent());
-		dlg->m_regnodeStatus = "UNDEFINED";
-		dlg->m_regnodeValue = "";
+		dlg->m_regnodeStatus = _T("UNDEFINED");
+		dlg->m_regnodeValue = _T("");
 		dlg->UpdateData(FALSE);
 		int imageNum;
 		dlg->m_imageMap.Lookup(IDI_ICON_REGUNDEF, imageNum);
 		SetItemImage(hItem, imageNum, imageNum);
-		AfxMessageBox("Inherited nodes will not be shown until you save the changes.\nClick on the OK button, and start the Registry Browser again to see them !", MB_ICONINFORMATION | MB_OK);
+		AfxMessageBox(_T("Inherited nodes will not be shown until you save the changes.\nClick on the OK button, and start the Registry Browser again to see them !"), MB_ICONINFORMATION | MB_OK);
 	}
 }
 
 void CRegistryTree::OnCntxRemoveall() 
 {
-	if( AfxMessageBox("Would you like to delete all nodes?", MB_YESNO | MB_ICONWARNING) == IDYES)
+	if( AfxMessageBox(_T("Would you like to delete all nodes?"), MB_YESNO | MB_ICONWARNING) == IDYES)
 	{
 		HTREEITEM hNextItem, hItem = GetRootItem();
 		while ( hItem != NULL)
@@ -205,7 +205,7 @@ void CRegistryTree::OnCntxRemoveall()
 			DeleteItem(hItem);
 			hItem = hNextItem;
 		}
-		AfxMessageBox("Inherited nodes will not be shown until you save the changes.\nClick on the OK button, and start the Registry Browser again to see them !", MB_ICONINFORMATION | MB_OK);
+		AfxMessageBox(_T("Inherited nodes will not be shown until you save the changes.\nClick on the OK button, and start the Registry Browser again to see them !"), MB_ICONINFORMATION | MB_OK);
 	}
 }
 
@@ -215,7 +215,7 @@ void CRegistryTree::OnCntxRemovetree()
 	if (hItem) {
 		RemoveSubTree(hItem);
 		DeleteItem(hItem);
-		AfxMessageBox("Inherited nodes will not be shown until you save the changes.\nClick on the OK button, and start the Registry Browser again to see them !", MB_ICONINFORMATION | MB_OK);
+		AfxMessageBox(_T("Inherited nodes will not be shown until you save the changes.\nClick on the OK button, and start the Registry Browser again to see them !"), MB_ICONINFORMATION | MB_OK);
 	}
 	
 }
@@ -248,13 +248,13 @@ void CRegistryTree::OnEndlabeledit(NMHDR* pNMHDR, LRESULT* pResult)
 				CRegBrwNode *node = (CRegBrwNode*)GetItemData(hItem);
 				if (node) {
 					if (CString(pTVDispInfo->item.pszText).Find('/') != -1) {
-						AfxMessageBox("Cannot rename registry node.\nThe name you specified contains '/' character. Specify a different name!", MB_ICONSTOP | MB_OK);
+						AfxMessageBox(_T("Cannot rename registry node.\nThe name you specified contains '/' character. Specify a different name!"), MB_ICONSTOP | MB_OK);
 						*pResult = FALSE;
 						return;
 					}
 
 					if ( (node->status != ATTSTATUS_HERE) || ItemHasChildren(hItem)) {
-						AfxMessageBox("Only leaf nodes defined in this FCO can be renamed.", MB_ICONSTOP | MB_OK);
+						AfxMessageBox(_T("Only leaf nodes defined in this FCO can be renamed."), MB_ICONSTOP | MB_OK);
 						*pResult = FALSE;
 						return;
 					}
@@ -266,7 +266,7 @@ void CRegistryTree::OnEndlabeledit(NMHDR* pNMHDR, LRESULT* pResult)
 					while (hNextItem) {
 						CString nodeName = GetItemText(hNextItem);
 						if ((nodeName == pTVDispInfo->item.pszText) && (hNextItem != hItem)) {
-							AfxMessageBox("Cannot rename registry node.\nA node with the name you specified already exists. Specify a different name!", MB_ICONSTOP | MB_OK);
+							AfxMessageBox(_T("Cannot rename registry node.\nA node with the name you specified already exists. Specify a different name!"), MB_ICONSTOP | MB_OK);
 							CEdit *eLabel = EditLabel(hItem);
 							eLabel->SetWindowText(pTVDispInfo->item.pszText);
 							eLabel->SetSel(0,-1);

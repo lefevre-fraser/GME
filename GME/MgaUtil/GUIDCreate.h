@@ -4,7 +4,7 @@
 class GuidCreate
 {
 public:
-	static const char * format_str;
+	static const TCHAR * format_str;
 	static CComBSTR newGuid();
 };
 

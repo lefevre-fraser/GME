@@ -3,6 +3,7 @@
 #define MGA_GENPARSER_H
 
 #include <xercesc/sax/HandlerBase.hpp>
+#include <comutil.h>
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -14,7 +15,7 @@ class CMgaMetaParser;
 
 // --------------------------- XmlStr
 
-class XmlStr : public std::string
+class XmlStr : public std::tstring
 {
 public:
 	XmlStr() { };
@@ -29,7 +30,7 @@ public:
 class CGenParser : public HandlerBase
 {
 public:
-	typedef std::vector< std::pair<std::string, std::string> > attributes_type;
+	typedef std::vector< std::pair<std::tstring, std::tstring> > attributes_type;
 	typedef attributes_type::const_iterator attributes_iterator;
 
 
@@ -39,7 +40,7 @@ public:
 
 public:
 	void SetErrorInfo2(HRESULT hr);
-	void ThrowXmlError(const char *format, ...);
+	void ThrowXmlError(const TCHAR *format, ...);
 
 // ------- Handler Base
 
@@ -58,8 +59,8 @@ public:
     virtual void fatalError(const SAXParseException& exception);
 
 	virtual void setDocumentLocator(const Locator *const locator);
-	virtual void fireStartFunction(const std::string& name, const attributes_type& attributes) = 0;
-	virtual void fireEndFunction(const std::string& name) = 0;
+	virtual void fireStartFunction(const std::tstring& name, const attributes_type& attributes) = 0;
+	virtual void fireEndFunction(const std::tstring& name) = 0;
 
 public:
 	const Locator *locator;
@@ -70,12 +71,12 @@ public:
 	
 
 
-	static const std::string *GetByNameX(const attributes_type &attributes, const char *name);
+	static const std::tstring *GetByNameX(const attributes_type &attributes, const TCHAR *name);
 
-	static const std::string &GetByName(const attributes_type &attributes, const char *name)
+	static const std::tstring &GetByName(const attributes_type &attributes, const TCHAR *name)
 	{
-		const std::string *p = GetByNameX(attributes, name);
-		const static std::string nullstr;
+		const std::tstring *p = GetByNameX(attributes, name);
+		const static std::tstring nullstr;
 
 		if( p == NULL ) p = &nullstr;
 //			HR_THROW(E_INVALID_DTD);
@@ -84,7 +85,7 @@ public:
 	}
 
 	template<class INTERFACE, class FUNC_INTERFACE>
-	void Attr(attributes_iterator i, const char *name, INTERFACE p, 
+	void Attr(attributes_iterator i, const TCHAR *name, INTERFACE p, 
 		HRESULT (__stdcall FUNC_INTERFACE::*func)(BSTR))
 	{
 		if( i->first == name )
@@ -96,11 +97,11 @@ public:
 		}
 	}
 
-	static long toLong(std::string s);
-	static unsigned long toULong(std::string s);
+	static long toLong(std::tstring s);
+	static unsigned long toULong(std::tstring s);
 
 	template<class INTERFACE, class FUNC_INTERFACE>
-	void Attr(attributes_iterator i, const char *name, INTERFACE p,
+	void Attr(attributes_iterator i, const TCHAR *name, INTERFACE p,
 	HRESULT (__stdcall FUNC_INTERFACE::*func)(long))
 	{
 		if( i->first == name )
@@ -113,7 +114,7 @@ public:
 	}
 
 	template<class INTERFACE, class FUNC_INTERFACE>
-	void Attr(attributes_iterator i, const char *name, INTERFACE p,
+	void Attr(attributes_iterator i, const TCHAR *name, INTERFACE p,
 	HRESULT (__stdcall FUNC_INTERFACE::*func)(unsigned long))
 	{
 		if( i->first == name )
@@ -138,8 +139,8 @@ public:
 // ------- Properties
 
 public:
-	std::string xmlfile;
-	CComBstrObj errorinfo;
+	std::tstring xmlfile;
+	_bstr_t errorinfo;
 	long err_line;
 	long err_column;
 
@@ -148,10 +149,10 @@ public:
 
 	struct element_type
 	{
-		std::string name;
-		std::string chardata;
+		std::tstring name;
+		std::tstring chardata;
 		CComObjPtr<IUnknown> object;
-		std::string exstrinfo;
+		std::tstring exstrinfo;
 		long   exnuminfo;
 
 		counter_type begin;
@@ -171,8 +172,8 @@ public:
 		return *i;
 	}
 
-	std::string &GetCurrData() { return GetCurrent().chardata; }
-	const std::string &GetPrevName() const { return GetPrevious().name; }
+	std::tstring &GetCurrData() { return GetCurrent().chardata; }
+	const std::tstring &GetPrevName() const { return GetPrevious().name; }
 	
 	template<class T>
 	void GetPrevObj(CComObjPtr<T> &obj) const
@@ -182,13 +183,13 @@ public:
 		ASSERT( obj != NULL );
 	}
 
-	PutInBstr PutInBstrAttr(const attributes_type &attributes, const char *name)
+	_bstr_t PutInBstrAttr(const attributes_type &attributes, const TCHAR *name)
 	{
-		const std::string *s = GetByNameX(attributes, name);
+		const std::tstring *s = GetByNameX(attributes, name);
 		if( s == NULL )
-			return "";
+			return _bstr_t("");
 
-		return *s;
+		return _bstr_t(s->c_str());
 	}
 };
 
@@ -198,7 +199,7 @@ struct CGenParserFunc_Base
 {
 	CGenParserFunc_Base(const char *n) : name(n) { }
 
-	std::string name;
+	std::tstring name;
 
 	virtual void Start(CGenParser *parser, const CGenParser::attributes_type &attributes) = 0;
 	virtual void End(CGenParser *parser) = 0;
@@ -210,9 +211,9 @@ struct CGenParserFunc //: public CGenParserFunc_Base
 	typedef void (DERIVED::*StartFunc)(const CGenParser::attributes_type &);
 	typedef void (DERIVED::*EndFunc)();
 
-	CGenParserFunc(const char *n) : name(n) { }
+	CGenParserFunc(const TCHAR *n) : name(n) { }
 
-	std::string name;
+	std::tstring name;
 
 	virtual void Start(CGenParser *parser, const CGenParser::attributes_type &attributes)
 	{ 
@@ -224,7 +225,7 @@ struct CGenParserFunc //: public CGenParserFunc_Base
 		(static_cast<DERIVED*>(parser)->*end)();
 	}
 
-	CGenParserFunc(const char *n, StartFunc s, EndFunc e) : 
+	CGenParserFunc(const TCHAR *n, StartFunc s, EndFunc e) : 
 		name(n), start(s), end(e) { }
 
 	StartFunc start;

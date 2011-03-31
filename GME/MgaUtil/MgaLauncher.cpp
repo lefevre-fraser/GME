@@ -10,6 +10,9 @@
 #include "AnnotationBrowserDlg.h"
 #include "CommonComponent.h"
 
+#include <comutil.h>
+#include <comdef.h>
+
 #include "CrashRpt.h"
 #ifdef _DEBUG
 #pragma comment(lib, "CrashRptd.lib")
@@ -47,7 +50,7 @@ STDMETHODIMP CMgaLauncher::put_ParadigmName(BSTR p)
 {
 	COMTRY
 	{
-		CopyTo(p, paradigmname);
+		paradigmname = p;
 	}
 	COMCATCH(;)
 }
@@ -74,7 +77,7 @@ STDMETHODIMP CMgaLauncher::get_ParadigmName(BSTR *p)
 
 	COMTRY
 	{
-		CopyTo(paradigmname, p);
+            CopyTo(paradigmname, p);
 	}
 	COMCATCH(;)
 }
@@ -295,7 +298,7 @@ STDMETHODIMP CMgaLauncher::PropDlg(IMgaObject * obj)
 //						kind.SetWindowText(txt);
 						metaref_type mid = 0;
 						COMTHROW(metaFco->get_MetaRef(&mid));
-						metaid.Format("%ld",(long)mid);
+						metaid.Format(_T("%ld"),(long)mid);
 					}
 
 
@@ -303,7 +306,7 @@ STDMETHODIMP CMgaLauncher::PropDlg(IMgaObject * obj)
 
 						bool first = true;
 
-						aspect = "-";
+						aspect = _T("-");
 						CComPtr<IMgaParts> parts;
 						COMTHROW(fco->get_Parts(&parts));
 
@@ -311,7 +314,7 @@ STDMETHODIMP CMgaLauncher::PropDlg(IMgaObject * obj)
 
 						if(parts != NULL) {
 
-							aspect = "";
+							aspect = _T("");
 
 							MGACOLL_ITERATE(IMgaPart,parts) {
 
@@ -324,7 +327,7 @@ STDMETHODIMP CMgaLauncher::PropDlg(IMgaObject * obj)
 								COMTHROW( impart_ix->get_MetaAspect(&asp) );
 								COMTHROW( asp->get_Name(&aspname) );
 
-								if (!first) { aspect += "; "; } 
+								if (!first) { aspect += _T("; "); } 
 								else { first = false; }
 
 								aspect += CString(aspname);
@@ -340,7 +343,7 @@ STDMETHODIMP CMgaLauncher::PropDlg(IMgaObject * obj)
 
 								if (vb_pri_asp != VARIANT_FALSE) {
 
-									aspect += " (primary)";
+									aspect += _T(" (primary)");
 								}
 							}
 							MGACOLL_ITERATE_END;
@@ -369,11 +372,11 @@ STDMETHODIMP CMgaLauncher::PropDlg(IMgaObject * obj)
 
 							COMTHROW( fco->put_Name( CComBSTR(ccpd.name)) );
 						}
-						long rl = strtol(ccpd.m_relid,NULL,0);
+						long rl = _tcstol(ccpd.m_relid,NULL,0);
 						if(rl != relid) {
-							if(rl <= 0) AfxMessageBox("Invalid RelID value, ignored");
-							else if(IDOK ==AfxMessageBox("Setting Relative ID-s" 
-													" is a dangerous operation.\nProceed?",
+							if(rl <= 0) AfxMessageBox(_T("Invalid RelID value, ignored"));
+							else if(IDOK ==AfxMessageBox(_T("Setting Relative ID-s") 
+													_T(" is a dangerous operation.\nProceed?"),
 													MB_OKCANCEL)) {
 
 								COMTHROW( fco->put_RelID( rl) );
@@ -384,10 +387,10 @@ STDMETHODIMP CMgaLauncher::PropDlg(IMgaObject * obj)
 
 				} else {
 
-					AfxMessageBox("Non-simple connections currently unsupported object type for Properties.");
+					AfxMessageBox(_T("Non-simple connections currently unsupported object type for Properties."));
 				}
 
-//				AfxMessageBox("Connections currently unsupported object type for Properties.");
+//				AfxMessageBox(_T("Connections currently unsupported object type for Properties."));
 
 			} else {
 
@@ -401,11 +404,11 @@ STDMETHODIMP CMgaLauncher::PropDlg(IMgaObject * obj)
 
 						COMTHROW( fco->put_Name( CComBSTR(cpd.name)) );
 					}
-					long rl = strtol(cpd.m_relid,NULL,0);
+					long rl = _tcstol(cpd.m_relid,NULL,0);
 					if(rl != cpd.relid) {
-						if(rl <= 0) AfxMessageBox("Invalid RelID value, ignored");
-						else if(IDOK ==AfxMessageBox("Setting Relative ID-s" 
-												" is a dangerous operation.\nProceed?",
+						if(rl <= 0) AfxMessageBox(_T("Invalid RelID value, ignored"));
+						else if(IDOK ==AfxMessageBox(_T("Setting Relative ID-s") 
+												_T(" is a dangerous operation.\nProceed?"),
 												MB_OKCANCEL)) {
 								COMTHROW( fco->put_RelID( rl) );
 							}
@@ -426,11 +429,11 @@ STDMETHODIMP CMgaLauncher::PropDlg(IMgaObject * obj)
 
 						COMTHROW( folder->put_Name( CComBSTR(cpd.name)) );
 					}
-					long rl = strtol(cpd.m_relid,NULL,0);
+					long rl = _tcstol(cpd.m_relid,NULL,0);
 					if(rl != cpd.relid) {
-						if(rl <= 0) AfxMessageBox("Invalid RelID value, ignored");
-						else if(IDOK ==AfxMessageBox("Setting Relative ID-s" 
-												" is a dangerous operation.\nProceed?",
+						if(rl <= 0) AfxMessageBox(_T("Invalid RelID value, ignored"));
+						else if(IDOK ==AfxMessageBox(_T("Setting Relative ID-s") 
+												_T(" is a dangerous operation.\nProceed?"),
 												MB_OKCANCEL)) {
 								COMTHROW( folder->put_RelID( rl) );
 							}
@@ -440,11 +443,11 @@ STDMETHODIMP CMgaLauncher::PropDlg(IMgaObject * obj)
 		}
 		else {
 
-			AfxMessageBox("Unsupported object type for Properties.");
+			AfxMessageBox(_T("Unsupported object type for Properties."));
 
 		}
 
-//		AfxMessageBox("dummy PropDlg() implementation");
+//		AfxMessageBox(_T("dummy PropDlg() implementation"));
 
 	}
 	COMCATCH(;)
@@ -458,7 +461,7 @@ STDMETHODIMP CMgaLauncher::AttrDlg(IMgaObject * obj)
 	{
 
 #ifdef _DEBUG
-		AfxMessageBox("dummy AttrDlg() implementation-- only in Debug version");
+		AfxMessageBox(_T("dummy AttrDlg() implementation-- only in Debug version"));
 #endif
 
 	}
@@ -508,7 +511,7 @@ HINSTANCE GotoURL(LPCTSTR url, int showcmd)
                 if( pos == NULL)
 				{
 					// No quotes found
-                    pos = strstr( key, _T("%1")); // Check for % 1, without quotes
+                    pos = _tcsstr( key, _T("%1")); // Check for % 1, without quotes
                     if( pos == NULL)    // No  parameter at all...
                         pos = key+lstrlen( key)-1;
                     else
@@ -521,7 +524,8 @@ HINSTANCE GotoURL(LPCTSTR url, int showcmd)
                 lstrcat(pos, _T(" "));
                 lstrcat(pos, url);
   
-				hResult = (HINSTANCE)WinExec( key,showcmd);
+				// FIXME: should use CreateProcess
+				hResult = (HINSTANCE)WinExec( CStringA(key),showcmd);
 			}
 		}
 	}
@@ -548,7 +552,7 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 			}
 
 			CComBSTR bstrVal;
-			CComBSTR bstr = "help";
+			CComBSTR bstr = L"help";
 			COMTHROW((imf != NULL) ? 
 				imf->get_RegistryValue(bstr,&bstrVal)
 				:
@@ -607,19 +611,19 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 
 			if (!url.IsEmpty())
 			{
-				CString gmeRoot("../");
+				CString gmeRoot(_T("../"));
 				// Use an absolute path based on the GME_ROOT environment variable, instead of a relative path if we can
-				char* gme_root_env = NULL;
-				gme_root_env = getenv("GME_ROOT");
+				TCHAR* gme_root_env = NULL;
+				gme_root_env = _tgetenv(_T("GME_ROOT"));
 				if (gme_root_env) {
-					long len = strlen(gme_root_env);
+					long len = _tcslen(gme_root_env);
 					bool hasSlashAtTheEnd = (gme_root_env[len - 1] == '\\' || gme_root_env[len - 1] == '/');
 					gmeRoot = gme_root_env;
 					if (!hasSlashAtTheEnd)
 						gmeRoot = gmeRoot + "/";
 				}
-				gmeRoot.Replace("\\", "/");
-				CString fullUrl = CString("ms-its:") + gmeRoot + GME_UMAN_HOME + url;
+				gmeRoot.Replace(_T("\\"), _T("/"));
+				CString fullUrl = CString(_T("ms-its:")) + gmeRoot + GME_UMAN_HOME + url;
 				CWnd* mainWnd = AfxGetMainWnd();
 				HWND hwndCaller = NULL;
 				if (mainWnd != NULL)
@@ -627,15 +631,15 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 				HWND helpWnd = NULL;
 				helpWnd = ::HtmlHelp(hwndCaller, fullUrl, HH_DISPLAY_TOPIC, 0);
 				if (helpWnd == NULL && url != GME_UMAN_CONTENTS) {
-					fullUrl = CString("ms-its:") + gmeRoot + GME_UMAN_HOME + GME_UMAN_CONTENTS;
+					fullUrl = CString(_T("ms-its:")) + gmeRoot + GME_UMAN_HOME + GME_UMAN_CONTENTS;
 					helpWnd = ::HtmlHelp(hwndCaller, fullUrl, HH_DISPLAY_TOPIC, 0);
 				}
 				if (helpWnd == NULL)
-					AfxMessageBox("Couldn't find help file or help topic: " + fullUrl, MB_OK | MB_ICONSTOP);
+					AfxMessageBox(_T("Couldn't find help file or help topic: ") + fullUrl, MB_OK | MB_ICONSTOP);
 			}
 			else
 			{
-				AfxMessageBox("No default help is available for selection!", MB_OK | MB_ICONSTOP);
+				AfxMessageBox(_T("No default help is available for selection!"), MB_OK | MB_ICONSTOP);
 			}
 		}
 	}
@@ -693,8 +697,8 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 
 			if( comps.GetSize() == 0 )
 			{
-				if( AfxMessageBox("There are no registered interpreters for this paradigm. "
-					"Do you want to install your interpreter now?", MB_YESNO) != IDYES )
+				if( AfxMessageBox(_T("There are no registered interpreters for this paradigm. ")
+					_T("Do you want to install your interpreter now?"), MB_YESNO) != IDYES )
 					COMRETURN(S_FALSE);
 			}
 		
@@ -703,7 +707,7 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 			else
 			{
 				CCompDlg dlg;
-				dlg.onOKoper = "Interpret...";
+				dlg.onOKoper = _T("Interpret...");
 
 				dlg.paradigm = parname;
 				dlg.type = COMPONENTTYPE_INTERPRETER;
@@ -725,43 +729,43 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 		CString compname = prgid;
 		if(type & COMPONENTTYPE_SCRIPT) {
 			CComBSTR engine, scriptfile;
-			COMTHROW(registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, prgid, CComBSTR("ExecEngine"), &engine));
-			COMTHROW(registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, prgid, CComBSTR("ScriptFile"), &scriptfile));
+			COMTHROW(registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, prgid, CComBSTR(L"ExecEngine"), &engine));
+			COMTHROW(registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, prgid, CComBSTR(L"ScriptFile"), &scriptfile));
 			if(!engine || !scriptfile) {
-				AfxMessageBox("Incomplete registration for script component "+ compname);
+				AfxMessageBox(_T("Incomplete registration for script component ")+ compname);
 			}
-			compname += " (" + CString(engine) + ")";
+			compname += _T(" (") + CString(engine) + _T(")");
 			COMTHROW( component.CoCreateInstance(engine) );
 			CComQIPtr<IMgaComponentEx> compex = component;
 			if(!compex) {
-				AfxMessageBox("Exec.engine is only supported with extended component interface");
+				AfxMessageBox(_T("Exec.engine is only supported with extended component interface"));
 				COMRETURN(E_MGA_NOT_SUPPORTED);
 			}
 			if(scriptfile) {
-				COMTHROW(compex->put_ComponentParameter(CComBSTR("script"), CComVariant(scriptfile)));
+				COMTHROW(compex->put_ComponentParameter(CComBSTR(L"script"), CComVariant(scriptfile)));
 			}
 		}
 		else COMTHROW(CreateMgaComponent(component, prgid));  // Before DispatchProxy: COMTHROW(component.CoCreateInstance(prgid));
 
 
 		if(component == NULL) {
-			AfxMessageBox(CString("Could not start component ") + compname);
+			AfxMessageBox(CString(_T("Could not start component ")) + compname);
 		}
 		else {
 			CComQIPtr<IGMEVersionInfo> vi = component;
 			if(!vi) {
-					if(AfxMessageBox(	"This component does not provide interface version information\n"
-										"It is probably incompatible with GME\n"
-										"Do you want to proceed anyway?" , MB_YESNO) !=IDYES) return S_OK;
+					if(AfxMessageBox(	_T("This component does not provide interface version information\n")
+										_T("It is probably incompatible with GME\n")
+										_T("Do you want to proceed anyway?") , MB_YESNO) !=IDYES) return S_OK;
 			}
 			else {
 				GMEInterfaceVersion vv;
 				COMTHROW(vi->get_version(&vv));
 				if(vv != INTERFACE_VERSION) {
 					CString aa;
-					aa.Format("The interface version number of this component (%d.%d) differs from the GME version (%d.%d)\n"
-								"This will probably result in serious malfunctions\n"
-								"Do you want to proceed anyway?", vv/0x10000,vv%0x10000, INTERFACE_VERSION/0x10000, INTERFACE_VERSION%0x10000); 
+					aa.Format(_T("The interface version number of this component (%d.%d) differs from the GME version (%d.%d)\n")
+								_T("This will probably result in serious malfunctions\n")
+								_T("Do you want to proceed anyway?"), vv/0x10000,vv%0x10000, INTERFACE_VERSION/0x10000, INTERFACE_VERSION%0x10000); 
 					if(AfxMessageBox(aa, MB_YESNO) !=IDYES) return S_OK;
 				}
 			}
@@ -773,20 +777,19 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					// Need to catch SEH exceptions (especially for Win7 x64: see GME-318)
 					if (SUCCEEDED(hr) && !InvokeExWithCrashRpt(compex, project, focusobj, selectedobjs, param, hr)) {
 						project->AbortTransaction();
-						AfxMessageBox("An error has occurred in component " + compname + ".\n"
-							"GME may not be in a stable state.\n"
-							"Please save your work and restart GME.");
+						AfxMessageBox(_T("An error has occurred in component ") + compname + _T(".\n")
+							_T("GME may not be in a stable state.\n")
+							_T("Please save your work and restart GME."));
 					} else {
 						if (!SUCCEEDED(hr)) {
-							BSTR desc = NULL;
-							if (supportErrorInfo && GetErrorInfo(&desc)) {
-								CString msg;
-								CopyTo(desc, msg);
+							_bstr_t desc;
+							if (supportErrorInfo && GetErrorInfo(desc.GetAddress())) {
+								CString msg = static_cast<const TCHAR*>(desc);
 								msg = "Interpreter returned error: " + msg;
 								AfxMessageBox(msg, MB_OK | MB_ICONSTOP);
 								SysFreeString(desc);
 							} else {
-								DisplayError("Interpreter returned error", hr);
+								DisplayError(_T("Interpreter returned error"), hr);
 							}
 							project->AbortTransaction();
 						}
@@ -809,14 +812,14 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					}
 					catch(hresult_exception &e)	{
 						project->AbortTransaction();
-						DisplayError("Interpreter returned error", e.hr);
+						DisplayError(_T("Interpreter returned error"), e.hr);
 					}
 					catch(...)
 					{
 						project->AbortTransaction();
-						AfxMessageBox("An error has occurred in component " + compname + ".\n"
-							"GME may not be in a stable state.\n"
-							"Please save your work and restart GME.");
+						AfxMessageBox(_T("An error has occurred in component ") + compname + _T(".\n")
+							_T("GME may not be in a stable state.\n")
+							_T("Please save your work and restart GME."));
 					} 
 				}
 			}
@@ -843,7 +846,7 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					}
 				}
 				catch(hresult_exception &e)	{
-					DisplayError("Interpreter returned error", e.hr);
+					DisplayError(_T("Interpreter returned error"), e.hr);
 				}
 			}				
 		}
@@ -866,21 +869,21 @@ CString CMgaLauncher::PruneConnectionString(const CString &conn)
 		if( q < 0 )
 			q = conn.GetLength();
 
-		CString part((const char*)conn + p, q-p);
+		CString part((const TCHAR*)conn + p, q-p);
 
 		int r = part.Find('=');
 		if( r < 0 )
 			r = part.GetLength();
 
-		CString key((const char*)part, r);
+		CString key((const TCHAR*)part, r);
 
-		if( key == "UID" ||
-			key == "PWD" ||
-			key == "USER" ||
-			key == "PASSWORD" )
+		if( key == _T("UID") ||
+			key == _T("PWD") ||
+			key == _T("USER") ||
+			key == _T("PASSWORD") )
 		{
 			if( !ret.IsEmpty() )
-				ret += ";";
+				ret += _T(";");
 
 			ret += part;
 		}
@@ -926,7 +929,7 @@ STDMETHODIMP CMgaLauncher::AnnotationBrowser(IMgaObject *obj, IMgaRegNode *focus
 			}
 		}
 		else {
-			AfxMessageBox("Unsupported object type for Annotation Browser.");
+			AfxMessageBox(_T("Unsupported object type for Annotation Browser."));
 		}
 	}
 	COMCATCH(;)

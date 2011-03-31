@@ -18,7 +18,7 @@ STDMETHODIMP CMgaProgressDlg::SetTitle(BSTR t)
 {
 	COMTRY
 	{
-		CopyTo(t, title);
+		title = t;
 
 		if( dlg.m_hWnd != NULL )
 			dlg.SetWindowText(title);
@@ -35,7 +35,7 @@ STDMETHODIMP CMgaProgressDlg::SetLine(int line, BSTR msg)
 
 	COMTRY
 	{
-		CopyTo(msg, lines[line]);
+		lines[line] = msg;
 
 		if( dlg.m_hWnd != NULL )
 			dlg.GetDlgItem(nIDs[line])->SetWindowText(lines[line]);

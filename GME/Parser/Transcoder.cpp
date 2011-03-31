@@ -42,7 +42,7 @@ Transcoder::~Transcoder()
 	if ( is_open()) close();
 }
 
-void Transcoder::init( const char * f, const char * const encodingName)
+void Transcoder::init( const TCHAR * f, const TCHAR * const encodingName)
 {
 	ASSERT( !m_pFormatter);
 
@@ -59,10 +59,12 @@ void Transcoder::init( const char * f, const char * const encodingName)
 
 	ASSERT( !is_open() );
 
-	open( f, std::ios::out | std::ios::trunc);
+	open(f, std::ios::out | std::ios::trunc | std::ios::binary);
 	if( fail() || !is_open() )
 		HR_THROW(E_INVALID_FILENAME);
 
+	// write BOM
+	*m_pFormatter << (XMLCh) 0xFEFF;
     *m_pFormatter << gXMLDecl1 << m_pFormatter->getEncodingName() << gXMLDecl2; //will dump '<?xml version="1.0" encoding="UTF-8"?> 
 }
 
@@ -104,7 +106,7 @@ Transcoder::operator <<( const char * const toWrite)
 	
 	operator<<( fUnicodeForm);
 	
-	delete fUnicodeForm;
+	XMLString::release(&fUnicodeForm);
 
 	return *this;
 }
@@ -112,7 +114,7 @@ Transcoder::operator <<( const char * const toWrite)
 Transcoder& 
 Transcoder::operator <<( const char toWrite)
 {
-	char tmp[2] = { toWrite, 0 };
+	wchar_t tmp[2] = { toWrite, 0 };
 
 	operator<<( tmp);
 
@@ -120,7 +122,7 @@ Transcoder::operator <<( const char toWrite)
 }
 
 Transcoder& 
-Transcoder::operator <<( const std::string& toWrite)
+Transcoder::operator <<( const std::tstring& toWrite)
 {
 	operator<<( toWrite.c_str());
 

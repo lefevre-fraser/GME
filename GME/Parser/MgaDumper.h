@@ -73,39 +73,40 @@ public:
 
 // ------- Low level stuff
 	void Indent(int i);
-	void StartElem(const char *name);
-	void Attr(const char *name, const char *value);
-	void Attr(const char *name, const char *value, int len);
-	static bool HasMarkup(const char *value, int len);
-	void Data(const char *value, int len);
+	void StartElem(const TCHAR *name);
+	void Attr(const TCHAR *name, const TCHAR *value);
+	void Attr(const TCHAR *name, const TCHAR *value, int len);
+	static bool HasMarkup(const TCHAR *value, int len);
+	void Data(const TCHAR *value, int len);
 	void EndElem();
 
-	void Attr(const char *name, std::string &value)
+	void Attr(const TCHAR *name, std::tstring &value)
 	{
 		Attr(name, value.data(), value.length());
 	}
 
-	void Attr(const char *name, const CComBstrObj &value)
+	void Attr(const TCHAR *name, const CComBstrObj &value)
 	{
-		std::string t;
+		std::tstring t;
 		CopyTo(value, t);
 		Attr(name, t);
 	}
 
-	void Data(std::string &value)
+	void Data(std::tstring &value)
 	{
 		Data(value.data(), value.length());
 	}
 
 	void Data(const CComBstrObj &value)
 	{
-		std::string t;
-		CopyTo(value, t);
+		std::tstring t;
+		if (value.p != NULL)
+			CopyTo(value, t);
 		Data(t);
 	}
 
 	template<class INTERFACE, class FUNC_INTERFACE>
-	void Attr(const char *name, INTERFACE p, HRESULT (__stdcall FUNC_INTERFACE::*func)(BSTR *))
+	void Attr(const TCHAR *name, INTERFACE p, HRESULT (__stdcall FUNC_INTERFACE::*func)(BSTR *))
 	{
 		FUNC_INTERFACE *q = p;
 		ASSERT( q != NULL );
@@ -117,7 +118,7 @@ public:
 	}
 
 	template<class INTERFACE, class FUNC_INTERFACE>
-	void LAttr(const char *name, INTERFACE p, HRESULT (__stdcall FUNC_INTERFACE::*func)(long *))
+	void LAttr(const TCHAR *name, INTERFACE p, HRESULT (__stdcall FUNC_INTERFACE::*func)(long *))
 	{
 		FUNC_INTERFACE *q = p;
 		ASSERT( q != NULL );
@@ -125,8 +126,8 @@ public:
 		long value;
 		COMTHROW( (q->*func)(&value) );
 
-		char buf[16] = "0x";
-		_ltoa(value,buf+2, 16);
+		TCHAR buf[16] = _T("0x");
+		_ltot(value,buf+2, 16);
 
 		Attr(name, buf);
 	}
@@ -138,7 +139,10 @@ public:
 		ASSERT( q != NULL );
 
 		CComBstrObj value;
-		COMTHROW( (q->*func)(PutOut(value)) );
+		COMTHROW( (q->*func)(&value.p) );
+		//ASSERT(value.p);
+		//if (value.p == 0)
+		//	DebugBreak();
 
 		Data(value);
 	}
@@ -193,9 +197,9 @@ public:
 	void DumpFCO(IMgaFCO *fco, bool dump_attrs = true,
 		bool dump_name = true, bool dump_elems = true);
 	void DumpConstraints(IMgaObject *object);
-	void DumpIDRefs(const char *name, CComObjPtrVector<IMgaFCO> &fcos);
-	std::string DumpGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos);
-	std::string DumpMixedGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos);
+	void DumpIDRefs(const TCHAR *name, CComObjPtrVector<IMgaFCO> &fcos);
+	std::tstring DumpGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos);
+	std::tstring DumpMixedGUIDRefs( CComObjPtrVector<IMgaFCO>& fcos);
 	void DumpConnDetails(CComObjPtr<IMgaConnection> connection);
 
 // ------- Sorters
@@ -215,7 +219,7 @@ public:
 
 	struct elem
 	{
-		std::string name;
+		std::tstring name;
 		bool inbody;
 		bool indata;
 	};
@@ -249,9 +253,9 @@ public:
 	void putInTerritory( CComObjPtrVector<IMgaFCO>&);
 	void putInTerritory( CComObjPtrVector<IMgaFolder>&);
 
-	//std::string m_curTopPath; // used for the 'closurename' calc
-	std::string m_currAbsPath;//? it is needed any more?
-	//std::string m_currParAbsPath; // used for 'closurepath' calc
+	//std::tstring m_curTopPath; // used for the 'closurename' calc
+	std::tstring m_currAbsPath;//? it is needed any more?
+	//std::tstring m_currParAbsPath; // used for 'closurepath' calc
 	bool m_v2;
 
 };

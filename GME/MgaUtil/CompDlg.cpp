@@ -32,7 +32,7 @@ CCompDlg::CCompDlg(CWnd* pParent /*=NULL*/)
 	//}}AFX_DATA_INIT
 
 	type = COMPONENTTYPE_ALL;
-	onOKoper = "Close";
+	onOKoper = _T("Close");
 
 	firstResize = true;
 }
@@ -105,7 +105,7 @@ BOOL CCompDlg::OnInitDialog()
 	{
 		if( !CUACUtils::isVistaOrLater() ) {
 			CRegKey accessTest;
-			if (accessTest.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", KEY_READ | KEY_WRITE) == ERROR_ACCESS_DENIED) {
+			if (accessTest.Open(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\GME"), KEY_READ | KEY_WRITE) == ERROR_ACCESS_DENIED) {
 				GetDlgItem(IDC_RADIOSYS)->EnableWindow(false);
 				GetDlgItem(IDC_RADIOBOTH)->EnableWindow(false);
 			}
@@ -118,19 +118,19 @@ BOOL CCompDlg::OnInitDialog()
 		LV_COLUMN lvc;
 		lvc.mask = LVCF_WIDTH | LVCF_TEXT;
 
-		lvc.pszText = "Name";
+		lvc.pszText = _T("Name");
 		lvc.cx = 150;
 		VERIFYTHROW( m_list.InsertColumn(0, &lvc) != -1 );
 
-		lvc.pszText = "Type";
+		lvc.pszText = _T("Type");
 		lvc.cx = 80;
 		VERIFYTHROW( m_list.InsertColumn(1, &lvc) != -1 );
 
-		lvc.pszText = "ProgID";
+		lvc.pszText = _T("ProgID");
 		lvc.cx = 200;
 		VERIFYTHROW( m_list.InsertColumn(2, &lvc) != -1 );
 
-		lvc.pszText = "Path";
+		lvc.pszText = _T("Path");
 		lvc.cx = 300;
 		VERIFYTHROW( m_list.InsertColumn(3, &lvc) != -1 );
 
@@ -146,7 +146,7 @@ BOOL CCompDlg::OnInitDialog()
 		RefreshShieldIcons();
 		
 	}
-	MSGCATCH("Error while initializing CompDlg",;)
+	MSGCATCH(_T("Error while initializing CompDlg"),;)
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -200,8 +200,8 @@ void CCompDlg::ResetItems()
 		HRESULT hr = registrar->QueryComponent(progids[i], &qtype, PutOut(desc), REGACCESS_PRIORITY );
 		if(hr != S_OK) {
 			err_ass = true;
-			desc = L"???";
-			localDllDispPath = L"???";
+			desc = CComBstrObj(L"???");
+			localDllDispPath = CComBstrObj(L"???");
 			qtype = COMPONENTTYPE_NONE;
 		}
 		else {
@@ -218,7 +218,7 @@ void CCompDlg::ResetItems()
 
 			HRESULT hr = registrar->GetLocalDllPathDisp(progids[i], PutOut(localDllDispPath));
                         if (SUCCEEDED(hr))
-                                localDllDispPathStr = (const char*)PutInCString(localDllDispPath);
+                                localDllDispPathStr = (const TCHAR*)PutInCString(localDllDispPath);
 /*#define BUFSIZE 1024
 			TCHAR buffer[BUFSIZE]=TEXT("");
 			DWORD retval = GetFullPathName(localDllDispPathStr, BUFSIZE, buffer, NULL);
@@ -236,11 +236,11 @@ void CCompDlg::ResetItems()
 		switch(qtype & COMPONENTTYPE_ALL)
 		{
 		case COMPONENTTYPE_INTERPRETER:
-			ctype = "Interpreter";
+			ctype = _T("Interpreter");
 			break;
 
 		case COMPONENTTYPE_ADDON:
-			ctype = "Add-on";
+			ctype = _T("Add-on");
 
 			if(parameter.vt == VT_BSTR) {
 				CComBSTR l = parameter.bstrVal;
@@ -257,11 +257,11 @@ void CCompDlg::ResetItems()
 			break;
 
 		case COMPONENTTYPE_PLUGIN:
-			ctype = "Plug-in";
+			ctype = _T("Plug-in");
 			break;
 
 		default:
-			ctype = "???";
+			ctype = _T("???");
 		}
 
 		VERIFYTHROW( m_list.SetItemText(index, 1, ctype) != 0 );
@@ -286,11 +286,11 @@ void CCompDlg::UpdateEnableDisable() {
 		HRESULT hr = registrar->IsAssociated(PutInBstr(progid), PutInBstr(paradigm), &is_ass, &can_ass, REGACCESS_PRIORITY);
 		ASSERT(SUCCEEDED(hr));
 		if (SUCCEEDED(hr) && is_ass == VARIANT_TRUE) {
-			m_enable_disable.SetWindowTextA("Disable");
+			m_enable_disable.SetWindowText(_T("Disable"));
 			return;
 		}
 	}
-	m_enable_disable.SetWindowTextA("Enable");
+	m_enable_disable.SetWindowText(_T("Enable"));
 }
 
 void CCompDlg::OnOK() 
@@ -349,7 +349,7 @@ void CCompDlg::OnRemove()
 			}
 
 			if (!registrar) {
-				DisplayError("Unable to remove component", registrarHr);
+				DisplayError(_T("Unable to remove component"), registrarHr);
 				return;
 			}
 
@@ -361,19 +361,19 @@ void CCompDlg::OnRemove()
 			switch(regacc_translate(m_accessmode)) {
 				case REGACCESS_USER:
 					if (S_OK == registrar->QueryComponent(PutInBstr(progid), &type, PutOut(desc), REGACCESS_SYSTEM)) {
-						AfxMessageBox("Warning: Component is still present in system registry");
+						AfxMessageBox(_T("Warning: Component is still present in system registry"));
 					}
 					break;
 				case REGACCESS_SYSTEM:
 					if (S_OK == registrar->QueryComponent(PutInBstr(progid), &type, PutOut(desc), REGACCESS_USER)) {
-						AfxMessageBox("Warning: Component is still present in user registry");
+						AfxMessageBox(_T("Warning: Component is still present in user registry"));
 					}
 					break;
 			}
 			ResetItems();
 		}
 	}
-	MSGCATCH("Error while removing component",;)
+	MSGCATCH(_T("Error while removing component"),;)
 }
 
 
@@ -398,38 +398,38 @@ void CCompDlg::OnEnableDisable()
 			}
 
 			if (!registrar) {
-				DisplayError("Unable to enable/disable component", registrarHr);
+				DisplayError(_T("Unable to enable/disable component"), registrarHr);
 				return;
 			}
 
 			HRESULT hr = registrar->IsAssociated(progid, PutInBstr(paradigm), &is_ass, &can_ass, REGACCESS_PRIORITY);
 			if (hr != S_OK)
-				DisplayError("Cannot enable/disable this component", hr);
+				DisplayError(_T("Cannot enable/disable this component"), hr);
 			CString enable_or_disable;
 			if (is_ass) {
-				enable_or_disable = "disable";
+				enable_or_disable = _T("disable");
 				hr = registrar->Disassociate(progid, PutInBstr(paradigm), regacc_translate(m_accessmode));
 			} else {
-				enable_or_disable = "enable";
+				enable_or_disable = _T("enable");
 				if(!can_ass) {
-					if(AfxMessageBox("This component reports to be incompatible with the paradigm\nAre you sure you want to proceed?", MB_YESNO) != IDYES) return;
+					if(AfxMessageBox(_T("This component reports to be incompatible with the paradigm\nAre you sure you want to proceed?"), MB_YESNO) != IDYES) return;
 				}
 				hr = (registrar->Associate(progid, PutInBstr(paradigm), regacc_translate(m_accessmode)) );
 			}
 			if(hr != S_OK) {
-				DisplayError("The " + enable_or_disable + " operation failed", hr);
+				DisplayError(_T("The ") + enable_or_disable + _T(" operation failed"), hr);
 			}
 
 			ResetItems();
 		}
 	}
-	MSGCATCH("Error while (dis)associating component",;)
+	MSGCATCH(_T("Error while (dis)associating component"),;)
 }
 
-static char filter[] = 
-	"Component Files (*.dll; *.ocx)|*.dll; *.ocx|"
-	"Pattern Files (*.pat)|*.pat|"
-	"All Files (*.*)|*.*||";
+static TCHAR filter[] = 
+	_T("Component Files (*.dll; *.ocx)|*.dll; *.ocx|")
+	_T("Pattern Files (*.pat)|*.pat|")
+	_T("All Files (*.*)|*.*||");
 
 void CCompDlg::OnInstall() 
 {
@@ -445,10 +445,10 @@ void CCompDlg::OnInstall()
 
 		CString ext = dlg.GetFileExt();
 
-		if(ext.CompareNoCase("DLL") == 0) {
+		if(ext.CompareNoCase(_T("DLL")) == 0) {
 				RegisterDll(dlg.GetPathName());
 		}
-		else if(ext.CompareNoCase("PAT") == 0){
+		else if(ext.CompareNoCase(_T("PAT")) == 0){
 				RegisterPattern(dlg.GetPathName());
 		}
 		else {
@@ -456,7 +456,7 @@ void CCompDlg::OnInstall()
 		}
 		ResetItems();
 	}
-	MSGCATCH("Error while installing component",;)
+	MSGCATCH(_T("Error while installing component"),;)
 }
 
 void CCompDlg::RegisterDll(const CString &path)
@@ -470,12 +470,12 @@ void CCompDlg::RegisterDll(const CString &path)
 	}
 
 	if (!registrar) {
-		DisplayError("Unable to create component registrar", hr);
+		DisplayError(_T("Unable to create component registrar"), hr);
 		return;
 	}
 	hr = registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode));
 	if (FAILED(hr)) {
-		DisplayError("Unable to register component", hr);
+		DisplayError(_T("Unable to register component"), hr);
 	}
 }
 
@@ -483,12 +483,14 @@ void CCompDlg::RegisterDll(const CString &path)
 void CCompDlg::RegisterPattern(const CString &path)
 {
 
+	// FIXME: should use TCHAR
 	char buf[300];
 	{
+		// FIXME: will this read a UTF-16 file?
 		std::ifstream fin(path, std::ios::in);//z! ios::nocreate used previously, but if opened for read it won't create in this way
 		if(fin.good()) fin.getline(buf, 300);
 		if(!fin.good()) {
-			AfxMessageBox("Could not open or read the specified file: " + path);
+			AfxMessageBox(_T("Could not open or read the specified file: ") + path);
 			return;
 		}
 	}
@@ -504,15 +506,15 @@ void CCompDlg::RegisterPattern(const CString &path)
 	}
 
 	if (!registrar) {
-		DisplayError("Unable to register pattern component", registrarHr);
+		DisplayError(_T("Unable to register pattern component"), registrarHr);
 		return;
 	}
 
 	CCompInfoDlg dlg(registrar);
 	dlg.m_filename = path;
 
-	char paren, info[200];
-	if(sscanf(buf, " $!COMMENT( %[^)]%c", info, &paren) != 2 || paren != ')') {
+	TCHAR paren, info[200];
+	if(_stscanf_s(CString(buf), _T(" $!COMMENT( %[^)]%c"), info, &paren) != 2 || paren != ')') {
 nothing_understood:
 		AfxMessageBox("Cannot read component info in file " + path);
 	}
@@ -520,7 +522,7 @@ nothing_understood:
 	
 	
 // NAME=nnn, DESCRIPTION=ddd, PROGID=ii, PARADIGM=xx,yy, VERSION=vvv,
-		char *p = strtok(info,",");
+		TCHAR *p = _tcstok(info, _T(","));
 		bool ready = false;
 		bool parsing_paradigm = false;
 		bool good = false;
@@ -542,21 +544,21 @@ nothing_understood:
 				i_name.TrimRight();
 				CString i_value = item.Mid(k1+1);
 				i_value.TrimLeft();
-				if(i_name.Compare("NAME") == 0) {
+				if(i_name.Compare(_T("NAME")) == 0) {
 					dlg.m_name = i_value;
 				}
-				else if(i_name.Compare("DESCRIPTION") == 0 ||
-					i_name.Compare("DESC") == 0) {
+				else if(i_name.Compare(_T("DESCRIPTION")) == 0 ||
+					i_name.Compare(_T("DESC")) == 0) {
 					dlg.m_description = i_value;
 				}
-				else if(i_name.Compare("PROGID") == 0) {
+				else if(i_name.Compare(_T("PROGID")) == 0) {
 					dlg.m_progid = i_value;
 				}
-				else if(i_name.Compare("PARADIGM") == 0) {
+				else if(i_name.Compare(_T("PARADIGM")) == 0) {
 					dlg.m_paradigm = i_value;
 					parsing_paradigm  = true;
 				}
-				else if(i_name.Compare("VERSION") == 0) {
+				else if(i_name.Compare(_T("VERSION")) == 0) {
 					dlg.m_version = i_value;
 				}
 				else goto item_err;
@@ -564,26 +566,26 @@ nothing_understood:
 			}
 			else {
 				if(parsing_paradigm) {
-					dlg.m_paradigm += "," + item;
+					dlg.m_paradigm += _T(",") + item;
 				}
 				else {
 	item_err:
-					AfxMessageBox("Syntax error parsing component info: " + item); 
+					AfxMessageBox(_T("Syntax error parsing component info: ") + item); 
 				}
 			}
-			p = strtok(NULL, ",");
+			p = _tcstok(NULL, _T(","));
 		}
 		if(!good) goto nothing_understood;
 	}
 
 	if(dlg.m_progid.IsEmpty() && !dlg.m_name.IsEmpty()) {
-		dlg.m_progid = "MGA.Pattern." + dlg.m_name;
+		dlg.m_progid = _T("MGA.Pattern.") + dlg.m_name;
 	}
 	if(dlg.m_description.IsEmpty() && !dlg.m_name.IsEmpty()) {
 		dlg.m_description = dlg.m_name;
 	}
 	if(dlg.m_version.IsEmpty()) {
-		dlg.m_version = "1.0";
+		dlg.m_version = _T("1.0");
 	}
 
 	if(dlg.DoModal() != IDOK) return;
@@ -595,17 +597,17 @@ nothing_understood:
 	COMTHROW(registrar->RegisterComponent(progid, 
 				(componenttype_enum)(COMPONENTTYPE_INTERPRETER|COMPONENTTYPE_SCRIPT),
 				PutInBstr(dlg.m_description), acmode));
-	COMTHROW(registrar->put_ComponentExtraInfo(acmode, progid, CComBSTR("Name"), CComBSTR(dlg.m_name)));
-	COMTHROW(registrar->put_ComponentExtraInfo(acmode, progid, CComBSTR("ExecEngine"), CComBSTR(dlg.engine)));
-	COMTHROW(registrar->put_ComponentExtraInfo(acmode, progid, CComBSTR("ScriptFile"), CComBSTR(path)));
-	COMTHROW(registrar->put_ComponentExtraInfo(acmode, progid, CComBSTR("ScriptVersion"), CComBSTR(dlg.m_version)));
+	COMTHROW(registrar->put_ComponentExtraInfo(acmode, progid, CComBSTR(L"Name"), CComBSTR(dlg.m_name)));
+	COMTHROW(registrar->put_ComponentExtraInfo(acmode, progid, CComBSTR(L"ExecEngine"), CComBSTR(dlg.engine)));
+	COMTHROW(registrar->put_ComponentExtraInfo(acmode, progid, CComBSTR(L"ScriptFile"), CComBSTR(path)));
+	COMTHROW(registrar->put_ComponentExtraInfo(acmode, progid, CComBSTR(L"ScriptVersion"), CComBSTR(dlg.m_version)));
 
-	char *mpardup = (char *)alloca(dlg.m_paradigm.GetLength()+1);
-	strcpy(mpardup, dlg.m_paradigm);
-	const char *par = strtok(mpardup,"\t ,");
+	TCHAR *mpardup = (TCHAR *)alloca((dlg.m_paradigm.GetLength()+1)*sizeof(TCHAR));
+	_tcscpy(mpardup, dlg.m_paradigm);
+	const TCHAR *par = _tcstok(mpardup,_T("\t ,"));
 	while(par) {
 		COMTHROW(registrar->Associate(progid, CComBSTR(par), acmode));
-		par = strtok(NULL, "\t ,");
+		par = _tcstok(NULL, _T("\t ,"));
 	}
 }
 

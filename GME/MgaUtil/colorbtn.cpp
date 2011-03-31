@@ -257,8 +257,8 @@ void CColorBtn::OnClicked()
 
 BOOL CColorBtn::Store()
 {
-    return (AfxGetApp()->WriteProfileBinary("ColorData", "ColorTable",(LPBYTE)CColorBtnDlg::colors,sizeof(COLORREF)*20) &&
-            AfxGetApp()->WriteProfileBinary("ColorData", "MRU",(LPBYTE)CColorBtnDlg::used,sizeof(BYTE)*20));
+    return (AfxGetApp()->WriteProfileBinary(_T("ColorData"), _T("ColorTable"),(LPBYTE)CColorBtnDlg::colors,sizeof(COLORREF)*20) &&
+            AfxGetApp()->WriteProfileBinary(_T("ColorData"), _T("MRU"),CColorBtnDlg::used,sizeof(CColorBtnDlg::used)));
 
 }
 
@@ -269,7 +269,7 @@ BOOL CColorBtn::Load()
 
     // This function allocates the memory it needs
 
-    AfxGetApp()->GetProfileBinary("ColorData", "ColorTable",&data,&size);	
+    AfxGetApp()->GetProfileBinary(_T("ColorData"), _T("ColorTable"),&data,&size);	
 
     if (data)
     {
@@ -278,7 +278,7 @@ BOOL CColorBtn::Load()
         memcpy((void *)CColorBtnDlg::colors,(void *)data,size);
         free((void *)data);
 
-        AfxGetApp()->GetProfileBinary("ColorData", "MRU",&data,&size);	
+        AfxGetApp()->GetProfileBinary(_T("ColorData"), _T("MRU"),&data,&size);	
 
         if (data)
         {

@@ -692,15 +692,14 @@ void CMakeClosure::markObj( CComObjPtr<T> obj)
 		COMTHROW( obj->get_RegistryValue( CComBSTR( m_markerNode), &buf0));
 
 		// check if the new marker appears already in the marker list
-		std::string str_buf;
-		CopyTo( buf0, str_buf);
+		std::wstring str_buf = buf0;
 
-		char buf1[12];
-		sprintf( buf1, ",%i", m_markWith);
-		std::string new_mrk( buf1);
+		TCHAR buf1[12];
+		swprintf_s( buf1, L",%i", m_markWith);
+		std::wstring new_mrk( buf1);
 
-		str_buf += ","; // will ease the eos comparison
-		new_mrk += ","; // and the exact match is guaranteed
+		str_buf += L","; // will ease the eos comparison
+		new_mrk += L","; // and the exact match is guaranteed
 		
 		if( str_buf.find( new_mrk) == std::string::npos) // if marker not present
 		{

@@ -16,7 +16,7 @@ public:
     Transcoder();
     ~Transcoder();
 
-	void init( const char *, const char * const);
+	void init( const TCHAR *, const TCHAR * const);
 	void finalize();
 	enum Modes
 	{
@@ -33,7 +33,7 @@ public:
 	Transcoder& operator << ( const XMLCh* const toWrite);
 	Transcoder& operator << ( const char * const toWrite);
 	Transcoder& operator << ( const char toWrite);
-	Transcoder& operator << ( const std::string& toWrite);
+	Transcoder& operator << ( const std::tstring& toWrite);
 
 private :
     XMLFormatter* m_pFormatter;

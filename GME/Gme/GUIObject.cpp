@@ -2320,9 +2320,9 @@ void CGuiConnectionLabel::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiConn
 	if (label.IsEmpty())
 		return;
 
-	label.Replace("%name%", (LPCSTR)(conn->name));
-	label.Replace("%kind%", (LPCSTR)(conn->kindDisplayedName));
-	label.Replace("%role%", (LPCSTR)(conn->roleDisplayedName));
+	label.Replace("%name%", conn->name);
+	label.Replace("%kind%", conn->kindDisplayedName);
+	label.Replace("%role%", conn->roleDisplayedName);
 
 	CGuiMetaAttributeList *metaAttrs = conn->GetMetaAttributes();
 	POSITION pos = metaAttrs->GetHeadPosition();
@@ -3324,8 +3324,7 @@ void CGuiConnection::WriteCustomPathData(bool handleTransaction)
 		valStr.Append(edgeStr);
 	}
 	VERIFY(mgaFco);
-	CComBSTR pathBstr;
-	CopyTo(CUSTOMCONNECTIONDATA, pathBstr);
+	CComBSTR pathBstr = CUSTOMCONNECTIONDATA;
 	CComBSTR bstrVal;
 	if (valStr == "")
 		bstrVal = EMPTYCONNECTIONCUSTOMIZATIONDATAMAGIC;
@@ -3638,8 +3637,7 @@ bool CGuiConnection::ReadAutoRouteState(void)
 void CGuiConnection::WriteAutoRouteState(bool handleTransaction)
 {
 	VERIFY(mgaFco);
-	CComBSTR pathBstr;
-	CopyTo(CONNECTIONAUTOROUTING, pathBstr);
+	CComBSTR pathBstr = CONNECTIONAUTOROUTING;
 	CString valStr = isAutoRouted ? "true" : "false";
 	CComBSTR bstrVal;
 	CopyTo(valStr, bstrVal);

@@ -51,6 +51,5 @@ void CGMEActiveBrowser::FocusItem(BSTR Id)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
-	_bstr_t bid(Id);
-	InvokeHelper(0x6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, (char*)bid);
+	InvokeHelper(0x6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Id);
 }

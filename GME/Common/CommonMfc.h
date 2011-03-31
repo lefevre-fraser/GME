@@ -11,9 +11,11 @@
 // --------------------------- CString
 
 inline void CopyTo(const CStringA &s, BSTR *b) { CopyTo(s, s.GetLength(), b); }
+inline void CopyTo(const CStringW &s, BSTR *b) { *b = CComBSTR(s).Detach(); }
 inline void CopyTo(const CStringA &s, VARIANT *v) { CopyTo(s, s.GetLength(), v); }
 inline void CopyTo(const CStringA &s, CComBstrObj &a) { CopyTo(s, s.GetLength(), a); }
 inline void CopyTo(const CStringW &s, CComBstrObj &a) { a = CComBstrObj(s); }
+inline void CopyTo(const CStringW &s, CComBSTR &a) { a = CComBSTR(s); }
 inline void CopyTo(const CStringA &s, CComVariant &a) { CopyTo(s, s.GetLength(), a); }
 
 inline void CopyTo(BSTR b, CStringA &s)
@@ -27,7 +29,7 @@ inline void CopyTo(BSTR b, CStringA &s)
 inline void CopyBSTRTo(const BSTR b, CStringW& s)
 {
 	int len = SysStringLen(b);
-	memcpy(s.GetBufferSetLength(len), b, len);
+	memcpy(s.GetBufferSetLength(len*sizeof(wchar_t)), b, len*sizeof(wchar_t));
 	s.ReleaseBuffer(len);
 }
 
@@ -97,6 +99,8 @@ public:
 	template<class T>
 	PutInCString(T t) { CopyTo(t, b); }
 
+	template<>
+	PutInCString(BSTR t) { b = t; }
 	operator const CString &() { return b; }
 	operator const TCHAR *() { return b; }
 

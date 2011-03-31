@@ -198,7 +198,7 @@ void CDlgWnd::OnOpen()
         DWORD attr = GetFileAttributes(ss);
         if (attr == 0xFFFFFFFF)
         {
-            const char *ss2;
+            const TCHAR *ss2;
 
             // Directory not found but maybe it's an invalid drive
             _TCHAR rootdir[4] = _T("?:\\");
@@ -211,7 +211,7 @@ void CDlgWnd::OnOpen()
                 return;
             }
             else if (len >= 2 && ss[0] == '\\' && ss[1] == '\\' && 
-                     ( (ss2 = strchr((const char *)ss+2, '\\')) == NULL || strchr(ss2+1, '\\') == NULL) )
+                     ( (ss2 = _tcschr((const TCHAR *)ss+2, '\\')) == NULL || _tcschr(ss2+1, '\\') == NULL) )
             {
                 AfxMessageBox(ss + _T("\nThis is not a valid folder."));
                 pEdit->SetFocus();
@@ -221,32 +221,29 @@ void CDlgWnd::OnOpen()
             {
                 // Appears to be a valid drive (or relative path)
                 CString mess(ss);
-                mess += _T("\nThis folder does not exist.\n\n"
-                      "Do you want to create it?");
+                mess += _T("\nThis folder does not exist.\n\n")
+                      _T("Do you want to create it?");
                 if (AfxMessageBox(mess, MB_YESNO) == IDYES)
                 {
-                    // MakeSureDirectoryPathExists is not part of Windows but is
-                    // in the IMAGHLP.DLL which is always present.  This call
-                    // requires linking with IMAGHLP.LIB.
-                    if (!::MakeSureDirectoryPathExists(ss + _T("\\")))
+                    if (!::SHCreateDirectoryEx(NULL, ss + _T("\\"), NULL))
                     {
                         switch (GetDriveType(rootdir))
                         {
                         case DRIVE_CDROM:
-                            AfxMessageBox(_T("You cannot create this folder\n"
-                                          "as the CD ROM medium is read-only."));
+                            AfxMessageBox(_T("You cannot create this folder\n")
+                                          _T("as the CD ROM medium is read-only."));
                             break;
                         case DRIVE_REMOVABLE:
-                            AfxMessageBox(_T("You cannot create this folder.\n"
-                                          "The medium may be write-protected."));
+                            AfxMessageBox(_T("You cannot create this folder.\n")
+                                          _T("The medium may be write-protected."));
                             break;
                         case DRIVE_REMOTE:
-                            AfxMessageBox(_T("You do not have permission to create\n"
-                                          "this folder on the network."));
+                            AfxMessageBox(_T("You do not have permission to create\n")
+                                          _T("this folder on the network."));
                             break;
                         default:
-                            AfxMessageBox(_T("You do not have permission\n"
-                                          "to create this folder."));
+                            AfxMessageBox(_T("You do not have permission\n")
+                                          _T("to create this folder."));
                             break;
                         }
                         pEdit->SetFocus();
@@ -359,7 +356,7 @@ void CDirEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
         int len = ss.GetLength();
 
         // Remove trailing backslash unless root directory or network root
-        if (strcmp(ss,"\\") != 0 && strcmp(ss,"\\\\") != 0 && strcmp((const char *)ss+1,":\\") != 0 &&
+        if (_tcscmp(ss,_T("\\")) != 0 && _tcscmp(ss,_T("\\\\")) != 0 && _tcscmp((const TCHAR *)ss+1,_T(":\\")) != 0 &&
             len > 0 && ss[len-1] == '\\' )
         {
             ss = ss.Left(--len);
@@ -367,7 +364,7 @@ void CDirEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 
         if (len == 0 || 
             len == 1 && ss[0] == '\\' ||
-            len >= 2 && ss[0] == '\\' && ss[1] == '\\' && strchr((const char *)ss+2, '\\') == NULL ||
+            len >= 2 && ss[0] == '\\' && ss[1] == '\\' && _tcschr((const TCHAR *)ss+2, '\\') == NULL ||
             len == 2 && ss[1] == ':' ||
             len == 3 && ss[1] == ':' && ss[2] == '\\' )
         {
@@ -391,29 +388,29 @@ void CDirEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
                 {
                     // Appears to be a valid drive (or relative path)
                     CString mess(ss);
-                    mess += _T("\nThis folder does not exist.\n\n"
-                          "Do you want to create it?");
+                    mess += _T("\nThis folder does not exist.\n\n")
+                          _T("Do you want to create it?");
                     if (AfxMessageBox(mess, MB_YESNO) == IDYES)
                     {
-                        if (!::MakeSureDirectoryPathExists(ss + _T("\\")))
+                        if (!::SHCreateDirectoryEx(NULL, ss + _T("\\"), NULL))
                         {
                             switch (GetDriveType(rootdir))
                             {
                             case DRIVE_CDROM:
-                                AfxMessageBox(_T("You cannot create this folder\n"
-                                              "as the CD ROM medium is read-only."));
+                                AfxMessageBox(_T("You cannot create this folder\n")
+                                              _T("as the CD ROM medium is read-only."));
                                 break;
                             case DRIVE_REMOVABLE:
-                                AfxMessageBox(_T("You cannot create this folder.\n"
-                                              "The medium may be write-protected."));
+                                AfxMessageBox(_T("You cannot create this folder.\n")
+                                              _T("The medium may be write-protected."));
                                 break;
                             case DRIVE_REMOTE:
-                                AfxMessageBox(_T("You do not have permission to create\n"
-                                              "this folder on the network."));
+                                AfxMessageBox(_T("You do not have permission to create\n")
+                                              _T("this folder on the network."));
                                 break;
                             default:
-                                AfxMessageBox(_T("You do not have permission or\n"
-                                              "otherwise cannot create this folder."));
+                                AfxMessageBox(_T("You do not have permission or\n")
+                                              _T("otherwise cannot create this folder."));
                                 break;
                             }
                             return;
@@ -428,7 +425,7 @@ void CDirEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
             GetWindowText(ss);
             if (ss[ss.GetLength()-1] != '\\')
             {
-                ss += "\\";
+                ss += _T("\\");
                 SetWindowText(ss);
             }
             SetSel(ss.GetLength(), -1);
@@ -482,7 +479,7 @@ void CDirEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
             int count = 0;                  // Number of matching directory names
             CString strMatch;               // The last directory found that matches
 
-            BOOL bContinue = ff.FindFile(ss + "*");
+            BOOL bContinue = ff.FindFile(ss + _T("*"));
 
             while (bContinue)
             {
@@ -716,7 +713,7 @@ void CDirDialog::OnFolderChange()
     int len = m_strPath.GetLength();
     if (len > 0 && m_strPath[len-1] != '\\')
     {
-        m_strPath += "\\";
+        m_strPath += _T("\\");
         ++len;
     }
     pp->GetDlgItem(IDC_DIR)->SetWindowText(m_strPath);

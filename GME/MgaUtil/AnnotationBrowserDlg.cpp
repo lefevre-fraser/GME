@@ -13,8 +13,8 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-const char * show_str = "Show";
-const char * hide_str = "Hide";
+const TCHAR * show_str = _T("Show");
+const TCHAR * hide_str = _T("Hide");
 /////////////////////////////////////////////////////////////////////////////
 // CAnnotationBrowserDlg dialog
 
@@ -146,7 +146,7 @@ BOOL CAnnotationBrowserDlg::OnInitDialog()
 			CopyTo(bstr_tmp,m_modelKind);
 		}
 		else {
-			m_modelKind = "N/A";
+			m_modelKind = _T("N/A");
 		}
 
 		CComPtr<IMgaMetaRole> metaRole;
@@ -157,7 +157,7 @@ BOOL CAnnotationBrowserDlg::OnInitDialog()
 			CopyTo(bstr_tmp, m_modelRole);
 		}
 		else {
-			m_modelRole = "N/A";
+			m_modelRole = _T("N/A");
 		}
 	}
 	catch (hresult_exception &){
@@ -343,7 +343,7 @@ void CAnnotationBrowserDlg::UpdateFontStr(void) {
 	if (height < 0) {
 		height = -MulDiv(height, 72, GetDeviceCaps(GetDC()->m_hDC, LOGPIXELSY));
 	}
-	m_anFont.Format("%s, %d, %s%s", m_anLogFont.lfFaceName, height, m_anLogFont.lfWeight <= 500 ? "Regular" : "Bold", m_anLogFont.lfItalic ? ", Italic" : "");
+	m_anFont.Format(_T("%s, %d, %s%s"), m_anLogFont.lfFaceName, height, m_anLogFont.lfWeight <= 500 ? _T("Regular") : _T("Bold"), m_anLogFont.lfItalic ? _T(", Italic") : _T(""));
 }
 
 void CAnnotationBrowserDlg::SavePanelToNode(CAnnotationNode *node) {

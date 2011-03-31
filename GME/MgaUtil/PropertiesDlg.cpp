@@ -61,7 +61,7 @@ BOOL CPropertiesDlg::OnInitDialog()
 //		view->BeginTransaction(true);
 		{
 			COMTHROW(fco->get_RelID(&relid));
-			m_relid.Format("0x%08X", relid);
+			m_relid.Format(_T("0x%08X"), relid);
 		}
 		UpdateData(FALSE);
 		{
@@ -75,11 +75,11 @@ BOOL CPropertiesDlg::OnInitDialog()
 		{
 			objtype_enum otype;
 			COMTHROW(fco->get_ObjType(&otype));
-			CString names[] = { "Invalid", "Model", "Atom", "Reference", "Connection", "Set", "Folder" };
+			CString names[] = { _T("Invalid"), _T("Model"), _T("Atom"), _T("Reference"), _T("Connection"), _T("Set"), _T("Folder") };
 
 			CString nm;
 			
-			nm.Format("%s Properties", names[otype]);
+			nm.Format(_T("%s Properties"), names[otype]);
 
 			this->SetWindowText(nm);
 
@@ -95,22 +95,22 @@ BOOL CPropertiesDlg::OnInitDialog()
 					VARIANT_BOOL b;
 					COMTHROW(fco->get_IsInstance(&b));
 					if(b != VARIANT_FALSE) {
-						nm.Format("%s (instance of %s)",names[otype],tnm);
+						nm.Format(_T("%s (instance of %s)"),names[otype],tnm);
 #pragma bookmark (allow name changes for now__ it is allowed in propbar anyways)
 //						nameBox.SetReadOnly(true);
 					}
 					else
-						nm.Format("%s (subtype of %s)",names[otype],tnm);
+						nm.Format(_T("%s (subtype of %s)"),names[otype],tnm);
 				}
 				else
-					nm.Format("%s (archetype)",names[otype]);
+					nm.Format(_T("%s (archetype)"),names[otype]);
 			}
 			type.SetWindowText(nm);
 		}
 		{
 			CComPtr<IMgaMetaFCO> metaFco;
 			COMTHROW(fco->get_Meta(&metaFco));
-			CString txt = "N/A";
+			CString txt = _T("N/A");
 			if(metaFco != 0) {
 				CComBSTR bstr;
 				COMTHROW(metaFco->get_DisplayedName(&bstr));
@@ -119,13 +119,13 @@ BOOL CPropertiesDlg::OnInitDialog()
 			kind.SetWindowText(txt);
 			metaref_type mid = 0;
 			COMTHROW(metaFco->get_MetaRef(&mid));
-			txt.Format("%ld",(long)mid);
+			txt.Format(_T("%ld"),(long)mid);
 			metaid.SetWindowText(txt);
 		}
 		{
 			CComPtr<IMgaMetaRole> metaRole;
 			COMTHROW(fco->get_MetaRole(&metaRole));
-			CString txt = "N/A";
+			CString txt = _T("N/A");
 			if(metaRole != 0) {
 				CComBSTR bstr;
 				COMTHROW(metaRole->get_DisplayedName(&bstr));
@@ -136,11 +136,11 @@ BOOL CPropertiesDlg::OnInitDialog()
 		{
 			ID_type id = 0;
  			COMTHROW(fco->get_ID(&id));
-  			CString txt = CString("")+id;
+  			CString txt = CString(_T(""))+id;
   			objectid.SetWindowText(txt);
 		}
 		{
-			etc.SetWindowText("N/A");
+			etc.SetWindowText(_T("N/A"));
 			CComPtr<IMgaReference> ref;
 			if(fco.QueryInterface(&ref) == S_OK) {
 				CComPtr<IMgaFCO> refd;
@@ -161,15 +161,15 @@ BOOL CPropertiesDlg::OnInitDialog()
 						CopyTo(bstr,kindDisplayedName);
 					}
 					CString txt;
-					txt.Format("-> %s (%s)",name,kindDisplayedName);
+					txt.Format(_T("-> %s (%s)"),name,kindDisplayedName);
 					etc.SetWindowText(txt);
 				}
 				else
-					etc.SetWindowText("-> null");
+					etc.SetWindowText(_T("-> null"));
 			}
 		}
 		{
-			CString txt = "N/A";
+			CString txt = _T("N/A");
 			CComPtr<IMgaFCO> asc;
 			COMTHROW(fco->get_DerivedFrom(&asc));
 			if(asc) {
@@ -178,18 +178,18 @@ BOOL CPropertiesDlg::OnInitDialog()
 				if(fco.QueryInterface(&ref) == S_OK) {
 		 			COMTHROW(ref->CompareToBase(&depends));
 					if(depends > 0)
-						txt = "Not a dependent";
+						txt = _T("Not a dependent");
 					else 
-						txt = "Dependent";
+						txt = _T("Dependent");
 				}
 				else {
 					CComPtr<IMgaSet> set;
 					if(fco.QueryInterface(&set) == S_OK) {
 			 			COMTHROW(set->CompareToBase(&depends));
 						if(depends > 0)
-							txt = "Not a Dependent";
+							txt = _T("Not a Dependent");
 						else 
-							txt = "Dependent";
+							txt = _T("Dependent");
 					}
 				}
 			}
@@ -201,7 +201,7 @@ BOOL CPropertiesDlg::OnInitDialog()
 
 			bool first = true;
 
-			CString txt = "-";
+			CString txt = _T("-");
 
 			objtype_enum objtype;
 
@@ -219,7 +219,7 @@ BOOL CPropertiesDlg::OnInitDialog()
 
 			if((parts != NULL)) {
 
-				txt = "";
+				txt = _T("");
 
 				MGACOLL_ITERATE(IMgaPart,parts) {
 
@@ -232,7 +232,7 @@ BOOL CPropertiesDlg::OnInitDialog()
 					COMTHROW( impart_ix->get_MetaAspect(&asp) );
 					COMTHROW( asp->get_Name(&aspname) );
 
-					if (!first) { txt += "; "; } 
+					if (!first) { txt += _T("; "); } 
 					else { first = false; }
 
 					txt += CString(aspname);
@@ -248,7 +248,7 @@ BOOL CPropertiesDlg::OnInitDialog()
 
 					if (vb_pri_asp != VARIANT_FALSE) {
 
-						txt += " (primary)";
+						txt += _T(" (primary)");
 					}
 				}
 				MGACOLL_ITERATE_END;

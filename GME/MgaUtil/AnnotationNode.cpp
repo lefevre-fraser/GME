@@ -68,7 +68,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
-			if (bstr == "1")
+			if (bstr == L"1")
 				m_canBeRederived = true;
 		}
 	}
@@ -85,7 +85,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 	}
 	catch (hresult_exception &) {
 		ASSERT(("Error while reading annotation from registry.", false));
-		m_name = "ERROR!!!";
+		m_name = _T("ERROR!!!");
 	}
 	
 	// Annotation text
@@ -97,7 +97,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 	}
 	catch (hresult_exception &) {
 		ASSERT(("Error while reading annotation from registry.", false));
-		m_text = "Unable to read annotation text.";
+		m_text = _T("Unable to read annotation text.");
 	}
 
 	// 'Inheritable'
@@ -109,7 +109,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
-			if (bstr == "1")
+			if (bstr == L"1")
 				m_inheritable = true;
 		}
 	}
@@ -126,7 +126,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
-			if (bstr == "1")
+			if (bstr == L"1")
 				m_hidden = true;
 		}
 	}
@@ -261,7 +261,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
-			if (bstr == "1")
+			if (bstr == L"1")
 				m_bGradientFill = true;
 			else
 				m_bGradientFill = false;
@@ -299,7 +299,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
-			if (bstr == "1")
+			if (bstr == L"1")
 				m_bCastShadow = true;
 			else
 				m_bCastShadow = false;
@@ -356,7 +356,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
-			if (bstr == "1")
+			if (bstr == L"1")
 				m_bRoundCornerRect = true;
 			else
 				m_bRoundCornerRect = false;
@@ -510,7 +510,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 	// either broken in the past (canBeRederived) or broken right now(broken_inh)
 	if( m_canBeRederived || broken_inheritance) {
 		try {
-			CComBSTR bstr("1");
+			CComBSTR bstr(L"1");
 			CComPtr<IMgaRegNode> lfNode;
 			CComBSTR lfName(AN_BROKEN_DERIV);
 			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
@@ -524,7 +524,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 	// Store 'inheritable' preference
 	{
 		try {
-			CString str(m_inheritable?"1":"0");
+			CString str(m_inheritable?_T("1"):_T("0"));
 			CComBSTR bstr(str);
 			CComPtr<IMgaRegNode> lfNode;
 			CComBSTR lfName(AN_INHERITABLE);
@@ -539,7 +539,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 	// Store 'hidden' preference
 	{
 		try {
-			CString str(m_hidden?"1":"0");
+			CString str(m_hidden?_T("1"):_T("0"));
 			CComBSTR bstr(str);
 			CComPtr<IMgaRegNode> lfNode;
 			CComBSTR lfName(AN_HIDDEN);
@@ -654,7 +654,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 	// Store 'gradientfill' preference
 	{
 		try {
-			CString str(m_bGradientFill ? "1" : "0");
+			CString str(m_bGradientFill ? _T("1") : _T("0"));
 			CComBSTR bstr(str);
 			CComPtr<IMgaRegNode> lfNode;
 			CComBSTR lfName(AN_GRADIENTFILL_PREF);
@@ -685,7 +685,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 	// Store 'castshadow' preference
 	{
 		try {
-			CString str(m_bCastShadow ? "1" : "0");
+			CString str(m_bCastShadow ? _T("1") : _T("0"));
 			CComBSTR bstr(str);
 			CComPtr<IMgaRegNode> lfNode;
 			CComBSTR lfName(AN_CASTSHADOW_PREF);
@@ -732,7 +732,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 	// Store 'roundcornerrect' preference
 	{
 		try {
-			CString str(m_bRoundCornerRect ? "1" : "0");
+			CString str(m_bRoundCornerRect ? _T("1") : _T("0"));
 			CComBSTR bstr(str);
 			CComPtr<IMgaRegNode> lfNode;
 			CComBSTR lfName(AN_ROUNDCORNERRECT_PREF);
@@ -796,7 +796,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 					aspValStr = AN_VISIBLE_DEFAULT;
 				}
 				else {
-					aspValStr.Format("%d,%d", m_aspects[aspIdx].m_loc.x, m_aspects[aspIdx].m_loc.y);
+					aspValStr.Format(_T("%d,%d"), m_aspects[aspIdx].m_loc.x, m_aspects[aspIdx].m_loc.y);
 				}
 				CComBSTR  aspVal(aspValStr);
 				COMTHROW(aspNode->put_Value(aspVal));

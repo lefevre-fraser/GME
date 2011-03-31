@@ -25,7 +25,7 @@ STDMETHODIMP CMgaClosure::GetLastClosureId( IMgaProject* p_project, long* p_pMar
 		COMTHROW( rf->get_RegistryValue( CComBSTR( m_projLastClosureNode), PutOut( cst0)));
 		
 		int t_val = -1;
-		if( 1 == _stscanf( (LPCTSTR) cst0, "%i", &t_val))
+		if( 1 == _stscanf( (LPCTSTR) cst0, _T("%i"), &t_val))
 		{
 			*p_pMarkWith = t_val;
 		}
@@ -48,7 +48,7 @@ STDMETHODIMP CMgaClosure::PutLastClosureId( IMgaProject* p_project, long p_iMark
 		COMTHROW( p_project->get_RootFolder( PutOut( rf)));
 
 		CString cst;
-		cst.Format( "%i", p_iMarkWith);
+		cst.Format( _T("%i"), p_iMarkWith);
 
 		COMTHROW( rf->put_RegistryValue( CComBSTR( m_projLastClosureNode), CComBSTR( cst)));
 	}

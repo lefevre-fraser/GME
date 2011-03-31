@@ -138,7 +138,7 @@ BOOL CClosureDlg::OnInitDialog()
 	m_ctrlPartOfFolders.EnableWindow( FALSE);
 	m_ctrlPartOfModels.EnableWindow( FALSE);
 
-	m_strOutputFile = "Closure.xme";
+	m_strOutputFile = _T("Closure.xme");
 
 	m_ctrlOutputFile.EnableWindow( m_outputOption);
 	m_ctrlBrowse.EnableWindow( m_outputOption);
@@ -153,7 +153,7 @@ BOOL CClosureDlg::OnInitDialog()
 	if( m_iMarkVal != -1)
 	{
 		TCHAR buf[12];
-		_stprintf( buf, "%i", m_iMarkVal);
+		_stprintf( buf, _T("%i"), m_iMarkVal);
 		m_ctrlMarkVal.SetWindowText( buf);
 	}
 
@@ -185,7 +185,7 @@ void CClosureDlg::OnOK()
 	TCHAR buf[12];
 	m_ctrlMarkVal.GetWindowText( buf, 11);
 
-	if( 1 != _stscanf( buf, "%i", &m_iMarkVal))
+	if( 1 != _stscanf( buf, _T("%i"), &m_iMarkVal))
 		m_iMarkVal = -1;
 
 	CDialog::OnOK();
@@ -196,9 +196,9 @@ void CClosureDlg::OnBrowse()
 {
 	UpdateData( TRUE);
 	CWaitCursor wait;
-	CFileDialog dlg(FALSE, "xme", "Closure.xme",
+	CFileDialog dlg(FALSE, _T("xme"), _T("Closure.xme"),
 		OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-		"GME Exported Files (*.xme;*.xml)|*.xme; *.xml|All Files (*.*)|*.*||");
+		_T("GME Exported Files (*.xme;*.xml)|*.xme; *.xml|All Files (*.*)|*.*||"));
 	if( dlg.DoModal() == IDOK) 
 	{
 		m_strOutputFile = dlg.GetPathName();

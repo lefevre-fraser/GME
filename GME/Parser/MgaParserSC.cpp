@@ -23,7 +23,7 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 		CloseAll();
 
 		COMTHROW( progress.CoCreateInstance(L"Mga.MgaProgressDlg") );
-		COMTHROW( progress->SetTitle(PutInBstr("Importing SmartCopied XML data...")) );
+		COMTHROW( progress->SetTitle(_bstr_t(L"Importing SmartCopied XML data...")) );
 		COMTHROW( progress->StartProgressDialog(NULL) );
 
 		CComObjPtr<IMgaProject> p;
@@ -47,7 +47,7 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 		m_mergeAllowed = (options & MERGE) != 0;
 		m_target = target;
 		m_resolveDerFuncPtr = &CMgaParser::ResolveClosure4Derivation;
-		m_clVerStr = "4";//end
+		m_clVerStr = _T("4");//end
 
 		project_prefs = project_prefs_orig | MGAPREF_IGNORECONNCHECKS;
 		COMTHROW( p->put_Preferences(project_prefs) );
@@ -80,7 +80,7 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 			ranges.push_front(range_type());
 			ranges.front().begin = 1;
 			ranges.front().end = (counter_type)-1;
-			ranges.front().previous.name = "start";
+			ranges.front().previous.name = _T("start");
 			ranges.front().previous.object = target;
 			skip_element_level = 0;
 			
@@ -101,7 +101,7 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 				// FIXME: better algorithm for infinite loop
 				if( ++pass_count >= 1 )//<!> reduced from 100 to 5
 				{
-					msgSC( CComBSTR("Exception during parsing."), MSG_ERROR);
+					msgSC( CComBSTR(L"Exception during parsing."), MSG_ERROR);
 					HR_THROW(E_TOOMANYPASSES);
 				}
 
@@ -113,8 +113,8 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 
 			if( isNeedFor2ndStep())
 			{
-				CComBSTR bstr1("Some objects were not found during parsing.");
-				CComBSTR bstr2("Invoking 2nd step...");
+				CComBSTR bstr1(L"Some objects were not found during parsing.");
+				CComBSTR bstr2(L"Invoking 2nd step...");
 				msgSC( bstr1, MSG_ERROR);
 				msgSC( bstr2, MSG_INFO);
 				
@@ -164,41 +164,41 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 
 CMgaParser::elementfunc CMgaParser::elementfuncs_scmga[] = // special handlers for all elements
 {
-	//elementfunc("project",  StartProject,      EndNone),
-	elementfunc("name",       StartNone,         EndSCName),
-	//elementfunc("comment",  StartNone,         EndComment),
-	//elementfunc("author",   StartNone,         EndAuthor),
-	elementfunc("value",      StartNone,         EndSCValue),
-	elementfunc("regnode",    StartSCRegNode,    EndSCRegNode),
-	elementfunc("attribute",  StartSCAttribute,  EndNone),
-	elementfunc("constraint", StartNone,         EndSCConstraint),
-	elementfunc("folder",     StartSCFolder,     EndNone),
-	elementfunc("model",      StartSCModel,      EndNone),
-	elementfunc("atom",       StartSCAtom,       EndNone),
-	elementfunc("connection", StartSCConnection, EndSCConnection),
-	elementfunc("connpoint",  StartSCConnPoint,  EndNone),
-	elementfunc("reference",  StartSCReference,  EndNone),
-	elementfunc("set",        StartSCSet,        EndNone),
-	elementfunc("clipboard",  StartBCClipboard,  EndNone),	// common for closures
-	elementfunc("", NULL, NULL)
+	//elementfunc(_T("project"),  StartProject,      EndNone),
+	elementfunc(_T("name"),       StartNone,         EndSCName),
+	//elementfunc(_T("comment"),  StartNone,         EndComment),
+	//elementfunc(_T("author"),   StartNone,         EndAuthor),
+	elementfunc(_T("value"),      StartNone,         EndSCValue),
+	elementfunc(_T("regnode"),    StartSCRegNode,    EndSCRegNode),
+	elementfunc(_T("attribute"),  StartSCAttribute,  EndNone),
+	elementfunc(_T("constraint"), StartNone,         EndSCConstraint),
+	elementfunc(_T("folder"),     StartSCFolder,     EndNone),
+	elementfunc(_T("model"),      StartSCModel,      EndNone),
+	elementfunc(_T("atom"),       StartSCAtom,       EndNone),
+	elementfunc(_T("connection"), StartSCConnection, EndSCConnection),
+	elementfunc(_T("connpoint"),  StartSCConnPoint,  EndNone),
+	elementfunc(_T("reference"),  StartSCReference,  EndNone),
+	elementfunc(_T("set"),        StartSCSet,        EndNone),
+	elementfunc(_T("clipboard"),  StartBCClipboard,  EndNone),	// common for closures
+	elementfunc(_T(""), NULL, NULL)
 };
 
 void CMgaParser::ResolveClosure4Derivation(const attributes_type &attributes, deriv_type &deriv)
 {
-	const std::string *s = GetByNameX(attributes, "derivedfrom");
+	const std::tstring *s = GetByNameX(attributes, _T("derivedfrom"));
 	if( s == NULL )
 	{
-		s = GetByNameX(attributes, "closurelibderivedfrom");
+		s = GetByNameX(attributes, _T("closurelibderivedfrom"));
 		if( s != NULL)
 		{
 			CComObjPtr<IMgaObject> obj;
-			findObjOnAbsPath( project, *s, obj, "archetype");
+			findObjOnAbsPath( project, *s, obj, _T("archetype"));
 			if( obj)
 				COMTHROW( obj.QueryInterface( deriv.from));
 			else
 			{
-				CComBSTR bstr("Archetype can not be found in library. Basetype lost. ");
-				bstr.Append("Search path used: ");
+				CComBSTR bstr(L"Archetype can not be found in library. Basetype lost. ");
+				bstr.Append(L"Search path used: ");
 				bstr.Append( makeViewable(*s).c_str());
 				msgSC( bstr, MSG_ERROR);
 			}
@@ -206,15 +206,15 @@ void CMgaParser::ResolveClosure4Derivation(const attributes_type &attributes, de
 		}
 		else //if( s == NULL)
 		{
-			const std::string* g;
-			g = GetByNameX( attributes, "smartDerivedFromGUID");
-			s = GetByNameX( attributes, "closure2derivedfrom");
+			const std::tstring* g;
+			g = GetByNameX( attributes, _T("smartDerivedFromGUID"));
+			s = GetByNameX( attributes, _T("closure2derivedfrom"));
 
-			std::string rel_path_changed = s? *s: "";
+			std::tstring rel_path_changed = s? *s: _T("");
 			// since the derfrom is calculated relatively to the fco, 
 			// we have to modify the path so that it could be found
 			// with a search starting from its container
-			if( rel_path_changed.substr(0, 4) == "/@..")
+			if( rel_path_changed.substr(0, 4) == _T("/@.."))
 				rel_path_changed = rel_path_changed.substr(4);
 			// else: the object has similar name to its archetype
 			// else: the derfrom object cannot be inside the derived object
@@ -240,14 +240,14 @@ void CMgaParser::ResolveClosure4Derivation(const attributes_type &attributes, de
 			if( !deriv.from && s != NULL)
 			{
 				CComObjPtr<IMgaObject> obj;
-				findObjOnRelPath( CComObjPtr<IMgaObject>(place), rel_path_changed, obj, "archetype");
+				findObjOnRelPath( CComObjPtr<IMgaObject>(place), rel_path_changed, obj, _T("archetype"));
 
 				if( obj)
 					COMTHROW( obj.QueryInterface( deriv.from));
 				else // error report
 				{
-					CComBSTR bstr("Archetype can not be found. Basetype lost. ");
-					bstr.Append("Search path used: ");
+					CComBSTR bstr(L"Archetype can not be found. Basetype lost. ");
+					bstr.Append(L"Search path used: ");
 					bstr.Append( makeViewable(rel_path_changed).c_str());
 					msgSC( bstr, MSG_ERROR);
 				}
@@ -269,11 +269,11 @@ void CMgaParser::ResolveClosure4Derivation(const attributes_type &attributes, de
 			throw pass_exception();
 	}
 
-	s = GetByNameX(attributes, "isinstance");
-	deriv.isinstance = ( s != NULL && *s == "yes" ) ? VARIANT_TRUE : VARIANT_FALSE;
+	s = GetByNameX(attributes, _T("isinstance"));
+	deriv.isinstance = ( s != NULL && *s == _T("yes") ) ? VARIANT_TRUE : VARIANT_FALSE;
 
-	s = GetByNameX(attributes, "isprimary");
-	deriv.isprimary = ( s != NULL && *s == "no" ) ? false : true;
+	s = GetByNameX(attributes, _T("isprimary"));
+	deriv.isprimary = ( s != NULL && *s == _T("no") ) ? false : true;
 }
 
 // ------- Element Handlers
@@ -285,7 +285,7 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 	//ResolveDerivation(attributes, deriv);
 	(*this.*m_resolveDerFuncPtr)(attributes, deriv);
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaFolder> prev;
 		GetPrevObj(prev);
@@ -296,15 +296,15 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 			COMTHROW( prev->DeriveRootObject(deriv.from, deriv.isinstance, PutOut(conn)) );
 
 			// user info
-			CComBSTR msg = makeLink( conn, makeNameViewable( GetByName(attributes, "closurename")), true);
-			msg.Append( " connection derived from ");
+			CComBSTR msg = makeLink( conn, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
+			msg.Append( L" connection derived from ");
 			msg.AppendBSTR( makeLink( deriv.from));
 			msgSC( msg, MSG_INFO);
 		}
 		else
 		{
 			CComObjPtr<IMgaMetaFCO> meta;
-			COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, "kind"), 
+			COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, _T("kind")), 
 				OBJTYPE_CONNECTION, PutOut(meta)) );
 			ASSERT( meta != NULL );
 
@@ -314,15 +314,15 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 	}
 	else
 	{
-		ASSERT( GetPrevName() == "model" );
+		ASSERT( GetPrevName() == _T("model") );
 
 		CComObjPtr<IMgaModel> prev;
 		GetPrevObj(prev);
 
 		CComObjPtr<IMgaMetaRole> role;
 		COMTHROW( resolver->get_RoleByStr(prev, 
-			PutInBstrAttr(attributes, "kind"), OBJTYPE_CONNECTION,
-			PutInBstrAttr(attributes, "role"), NULL, PutOut(role)) );
+			PutInBstrAttr(attributes, _T("kind")), OBJTYPE_CONNECTION,
+			PutInBstrAttr(attributes, _T("role")), NULL, PutOut(role)) );
 		ASSERT( role != NULL );
 
 		if( deriv.from != NULL )
@@ -342,8 +342,8 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 			}
 
 			// user info
-			CComBSTR msg = makeLink( conn, makeNameViewable( GetByName(attributes, "closurename")), true);
-			msg.Append( " connection derived from ");
+			CComBSTR msg = makeLink( conn, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
+			msg.Append( L" connection derived from ");
 			msg.AppendBSTR( makeLink( deriv.from));
 			msgSC( msg, MSG_INFO);
 		}
@@ -366,28 +366,28 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 					assignrelid(conn);
 
 					// user info
-					CComBSTR msg = makeLink( conn, makeNameViewable( GetByName(attributes, "closurename")));
-					msg.Append( " connection created.");
+					CComBSTR msg = makeLink( conn, makeNameViewable( GetByName(attributes, _T("closurename"))));
+					msg.Append( L" connection created.");
 					msgSC( msg, MSG_INFO);
 				}
 				else
 				{
 					// error, could not find a correct reference chain
-					CComBSTR bstr("Connection \"");
-					bstr.Append( makeNameViewable( GetByName(attributes, "closurename")).c_str());
-					bstr.Append("\": could not be created.");
+					CComBSTR bstr(L"Connection \"");
+					bstr.Append( makeNameViewable( GetByName(attributes, _T("closurename"))).c_str());
+					bstr.Append(L"\": could not be created.");
 					msgSC( bstr, MSG_ERROR);
 
 					bstr.Empty();
-					bstr.Append("   Reference chain involved: ");
-					if( !o1) bstr.Append( makeViewable( GetByName( attributes, "smart0RefChain" )).c_str());
-					else if( !o2) bstr.Append( makeViewable( GetByName( attributes, "smart1RefChain" )).c_str());
+					bstr.Append(L"   Reference chain involved: ");
+					if( !o1) bstr.Append( makeViewable( GetByName( attributes, _T("smart0RefChain") )).c_str());
+					else if( !o2) bstr.Append( makeViewable( GetByName( attributes, _T("smart1RefChain") )).c_str());
 					msgSC( bstr, MSG_ERROR);
 
 					bstr.Empty();
-					bstr.Append("   Target path used: ");
-					if( !o1) bstr.Append( makeViewable( GetByName( attributes, "smart0Target" )).c_str());
-					else if( !o2) bstr.Append( makeViewable( GetByName( attributes, "smart1Target" )).c_str());
+					bstr.Append(L"   Target path used: ");
+					if( !o1) bstr.Append( makeViewable( GetByName( attributes, _T("smart0Target") )).c_str());
+					else if( !o2) bstr.Append( makeViewable( GetByName( attributes, _T("smart1Target") )).c_str());
 					msgSC( bstr, MSG_ERROR);
 
 					// to safely pass through hard times (parsing internal connpoints, attributes, regnodes...
@@ -398,7 +398,7 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 					COMTHROW( prev->CreateChildObject(role, PutOut(conn)) );
 					assignrelid(conn);
 					
-					GetCurrent().exstrinfo = "handicapped";
+					GetCurrent().exstrinfo = _T("handicapped");
 				}
 			}
 			else // will skip contained elements/attribute values/regnode entries/constraints/name element
@@ -406,9 +406,9 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 				skip_inner_elements = true;
 
 				// user info
-				CComBSTR msg = "Merging ";
+				CComBSTR msg = L"Merging ";
 				msg.AppendBSTR(makeLink( conn));
-				msg.Append( " connection.");
+				msg.Append( L" connection.");
 				msgSC( msg, MSG_INFO);
 			}
 
@@ -417,26 +417,26 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 	ASSERT( conn != NULL );
 	GetCurrent().object = conn;
 
-	if( GetByName(attributes, "isbound") == "yes" 
+	if( GetByName(attributes, _T("isbound")) == _T("yes") 
 		|| skip_inner_elements) 
-		GetCurrent().exstrinfo = "skip";
+		GetCurrent().exstrinfo = _T("skip");
 
 	RegisterLookup(attributes, conn);
 }
 
 bool CMgaParser::findConnectionEnd
 		( CComObjPtr<IMgaObject> pPrev
-		, const std::string& isbound
-		, const std::string& role
-		, const std::string& targetGUID
-		, const std::string& targetPATH
-		, const std::string& refchainGUID
-		, const std::string& refchainPATH
+		, const std::tstring& isbound
+		, const std::tstring& role
+		, const std::tstring& targetGUID
+		, const std::tstring& targetPATH
+		, const std::tstring& refchainGUID
+		, const std::tstring& refchainPATH
 		, CComObjPtr<IMgaFCO>& pFoundObj
 		, CComObjPtr<IMgaFCOs>& pFoundRefChain
 		)
 {
-	std::vector< std::string> guid_closure_ref_vec;
+	std::vector< std::tstring> guid_closure_ref_vec;
 	if( !refchainGUID.empty())
 	{
 		int pos = refchainGUID.find_first_not_of(' ', 0);
@@ -449,12 +449,12 @@ bool CMgaParser::findConnectionEnd
 			ASSERT( pos2 > pos );
 
 			
-			guid_closure_ref_vec.push_back( std::string(refchainGUID, pos, pos2-pos));
+			guid_closure_ref_vec.push_back( std::tstring(refchainGUID, pos, pos2-pos));
 			pos = pos2+1;
 		}
 	}
 
-	std::vector< std::string> name_closure_ref_vec;
+	std::vector< std::tstring> name_closure_ref_vec;
 	if( !refchainPATH.empty())
 	{
 		int pos = refchainPATH.find_first_not_of(' ', 0);
@@ -467,7 +467,7 @@ bool CMgaParser::findConnectionEnd
 			ASSERT( pos2 > pos );
 
 			
-			name_closure_ref_vec.push_back( std::string(refchainPATH, pos, pos2-pos));
+			name_closure_ref_vec.push_back( std::tstring(refchainPATH, pos, pos2-pos));
 			pos = pos2+1;
 		}
 	}
@@ -544,7 +544,7 @@ bool CMgaParser::findConnectionEnd
 		CComObjPtr<IMgaObject> nx_obj;
 
 		// search based on closurerefs
-		findObjOnRelPath( CComObjPtr<IMgaObject>( pPrev), name_closure_ref_vec[0], nx_obj, "reference chain");
+		findObjOnRelPath( CComObjPtr<IMgaObject>( pPrev), name_closure_ref_vec[0], nx_obj, _T("reference chain"));
 		if( nx_obj) COMTHROW( nx_obj.QueryInterface( next_obj));
 
 		// we will build up the collection of references
@@ -612,7 +612,7 @@ bool CMgaParser::findConnectionEnd
 		if( !pFoundObj && !targetPATH.empty())
 		{
 			CComObjPtr<IMgaObject> t_target;
-			findObjOnRelPath( CComObjPtr<IMgaObject>( pPrev), targetPATH, t_target, "target");
+			findObjOnRelPath( CComObjPtr<IMgaObject>( pPrev), targetPATH, t_target, _T("target"));
 			if( t_target) COMTHROW( t_target.QueryInterface( pFoundObj));
 		}
 	}
@@ -629,23 +629,23 @@ bool CMgaParser::parseConnection
 			, CComObjPtr<IMgaFCOs>& pFoundDstRefChain
 			)
 {
-	const char *role_attr []       = { "smart0Role"         , "smart1Role"         };
-	const char *targetGUID_attr [] = { "smart0TargetGUID"   , "smart1TargetGUID"   };
-	const char *target_attr []     = { "smart0Target"       , "smart1Target"       };
-	const char *refchainGUID_attr[]= { "smart0RefChainGUID" , "smart1RefChainGUID" };
-	const char *refchain_attr []   = { "smart0RefChain"     , "smart1RefChain"     };
-	const char *isbound_attr []    = { "smart0IsBound"      , "smart1IsBound"      };
+	const TCHAR *role_attr []       = { _T("smart0Role")         , _T("smart1Role")         };
+	const TCHAR *targetGUID_attr [] = { _T("smart0TargetGUID")   , _T("smart1TargetGUID")   };
+	const TCHAR *target_attr []     = { _T("smart0Target")       , _T("smart1Target")       };
+	const TCHAR *refchainGUID_attr[]= { _T("smart0RefChainGUID") , _T("smart1RefChainGUID") };
+	const TCHAR *refchain_attr []   = { _T("smart0RefChain")     , _T("smart1RefChain")     };
+	const TCHAR *isbound_attr []    = { _T("smart0IsBound")      , _T("smart1IsBound")      };
 
 	CComObjPtr<IMgaFCO> obj[2];
 	CComObjPtr<IMgaFCOs> coll[2];
 	for( int i = 0 ; i < 2; ++i)
 	{
-		std::string isbound         = GetByName( pAttributes, isbound_attr[i]);
-		std::string role            = GetByName( pAttributes, role_attr[i]);
-		std::string targetGUID      = GetByName( pAttributes, targetGUID_attr[i]);
-		std::string refchainGUID    = GetByName( pAttributes, refchainGUID_attr[i]);
-		std::string target          = GetByName( pAttributes, target_attr[i]);
-		std::string refchain        = GetByName( pAttributes, refchain_attr[i]);
+		std::tstring isbound         = GetByName( pAttributes, isbound_attr[i]);
+		std::tstring role            = GetByName( pAttributes, role_attr[i]);
+		std::tstring targetGUID      = GetByName( pAttributes, targetGUID_attr[i]);
+		std::tstring refchainGUID    = GetByName( pAttributes, refchainGUID_attr[i]);
+		std::tstring target          = GetByName( pAttributes, target_attr[i]);
+		std::tstring refchain        = GetByName( pAttributes, refchain_attr[i]);
 		findConnectionEnd( pPrev, isbound, role, targetGUID, target, refchainGUID, refchain, obj[i], coll[i]);
 	}
 
@@ -676,7 +676,7 @@ void CMgaParser::EndSCConnection()
 
 	CComObjPtrVector<IMgaConnPoint> cps;
 	COMTHROW( fresh_conn->get_ConnPoints( PutOut( cps)));
-	if( cps.size() < 2 || GetCurrent().exstrinfo == "handicapped") // handicapped connection, error must have occurred
+	if( cps.size() < 2 || GetCurrent().exstrinfo == _T("handicapped")) // handicapped connection, error must have occurred
 	{
 		COMTHROW( fresh_conn->DestroyObject());
 		return;
@@ -700,7 +700,7 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 
 	CComObjPtr<IMgaFCO> referred;
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaFolder> prev;
 		GetPrevObj(prev);
@@ -713,8 +713,8 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 			assignrelid(fco);
 
 			// user info
-			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, "closurename")), true);
-			msg.Append( " reference derived from ");
+			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
+			msg.Append( _T(" reference derived from "));
 			msg.AppendBSTR( makeLink( deriv.from));
 			msgSC( msg, MSG_INFO);
 
@@ -728,7 +728,7 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 			if( !found)
 			{
 				CComObjPtr<IMgaMetaFCO> meta;
-				COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, "kind"), 
+				COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, _T("kind")), 
 					OBJTYPE_REFERENCE, PutOut(meta)) );
 				ASSERT( meta != NULL );
 
@@ -737,8 +737,8 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 				assignrelid(fco);
 
 				// user info
-				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, "closurename")));
-				msg.Append( " reference created.");
+				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))));
+				msg.Append( _T(" reference created."));
 				msgSC( msg, MSG_INFO);
 			}
 			else // will skip contained elements/attribute values/regnode entries/constraints/name element
@@ -747,17 +747,17 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 				needs_target = isNullRef( fco);
 
 				// user info
-				CComBSTR msg = "Merging ";
+				CComBSTR msg = L"Merging ";
 				msg.AppendBSTR(makeLink( fco));
-				if( needs_target) msg.Append(" null");
-				msg.Append( " reference.");
+				if( needs_target) msg.Append(L" null");
+				msg.Append( L" reference.");
 				msgSC( msg, MSG_INFO);
 			}
 		}
 	}
 	else
 	{
-		ASSERT( GetPrevName() == "model" );
+		ASSERT( GetPrevName() == _T("model") );
 
 		CComObjPtr<IMgaModel> prev;
 		GetPrevObj(prev);
@@ -765,8 +765,8 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 
 		CComObjPtr<IMgaMetaRole> role;
 		COMTHROW( resolver->get_RoleByStr(prev, 
-			PutInBstrAttr(attributes, "kind"), OBJTYPE_REFERENCE,
-			PutInBstrAttr(attributes, "role"), NULL, PutOut(role)) );
+			PutInBstrAttr(attributes, _T("kind")), OBJTYPE_REFERENCE,
+			PutInBstrAttr(attributes, _T("role")), NULL, PutOut(role)) );
 		ASSERT( role != NULL );
 
 		if( deriv.from != NULL )
@@ -786,8 +786,8 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 			}
 			
 			// user info
-			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, "closurename")), true);
-			msg.Append( " reference derived from ");
+			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
+			msg.Append( L" reference derived from ");
 			msg.AppendBSTR( makeLink( deriv.from));
 			msgSC( msg, MSG_INFO);
 		}
@@ -804,8 +804,8 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 				assignrelid(fco);
 
 				// user info
-				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, "closurename")));
-				msg.Append( " reference created.");
+				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))));
+				msg.Append( L" reference created.");
 				msgSC( msg, MSG_INFO);
 			}
 			else // will skip contained elements/attribute values/regnode entries/constraints/name element
@@ -814,10 +814,10 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 				needs_target = isNullRef( fco);
 
 				// user info
-				CComBSTR msg = "Merging ";
+				CComBSTR msg = "LMerging ";
 				msg.AppendBSTR(makeLink( fco));
-				if( needs_target) msg.Append(" null");
-				msg.Append( " reference.");
+				if( needs_target) msg.Append(L" null");
+				msg.Append( L" reference.");
 				msgSC( msg, MSG_INFO);
 			}
 		}
@@ -826,22 +826,22 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 	ASSERT( fco != NULL );
 	//fco is the reference just created or selected from the already existing ones
 
-	bool bound = GetByName(attributes, "isbound") == "yes"; // if bound it does NOT need referees set by hand
+	bool bound = GetByName(attributes, _T("isbound")) == _T("yes"); // if bound it does NOT need referees set by hand
 	if( needs_target && !bound)
 	{
-		const std::string *s;
-		s = GetByNameX(attributes, "closurelibreferred");
+		const std::tstring *s;
+		s = GetByNameX(attributes, _T("closurelibreferred"));
 		if( s != NULL)
 		{
 			CComObjPtr<IMgaObject> obj;
-			findObjOnAbsPath( project, *s, obj, "referred object");
+			findObjOnAbsPath( project, *s, obj, _T("referred object"));
 
 			if( obj)
 				COMTHROW( obj.QueryInterface( referred));
 			else // report error
 			{
 				CComBSTR bstr("Reference ");
-				bstr.Append( makeLink( fco, makeNameViewable( GetByName( attributes, "closurename")), true));
+				bstr.Append( makeLink( fco, makeNameViewable( GetByName( attributes, _T("closurename"))), true));
 				bstr.Append(": target not found in library. ");
 				bstr.Append("Search path used: ");
 				bstr.Append( makeViewable( *s).c_str());
@@ -852,8 +852,8 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 		if( s == NULL || !referred)
 		{
 			// first try to find referred object based on GUID
-			std::string guid = GetByName(attributes, "smartReferredGUID");
-			std::string path = GetByName(attributes, "closure2referred");
+			std::tstring guid = GetByName(attributes, _T("smartReferredGUID"));
+			std::tstring path = GetByName(attributes, _T("closure2referred"));
 			
 			if( !guid.empty())
 			{
@@ -877,14 +877,14 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 			if( !referred && !path.empty())
 			{
 				CComObjPtr<IMgaObject> obj;
-				findObjOnRelPath( CComObjPtr<IMgaObject>(fco), path, obj, "referred object");
+				findObjOnRelPath( CComObjPtr<IMgaObject>(fco), path, obj, _T("referred object"));
 
 				if ( obj)
 					COMTHROW( obj.QueryInterface( referred));
 				else // report error
 				{
 					CComBSTR bstr("Reference ");
-					bstr.Append( makeLink( fco, makeNameViewable( GetByName( attributes, "closurename")), true));
+					bstr.Append( makeLink( fco, makeNameViewable( GetByName( attributes, _T("closurename"))), true));
 					bstr.Append(": target not found. ");
 					bstr.Append("Search path used: ");
 					bstr.Append( makeViewable( path).c_str());
@@ -908,7 +908,7 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 
 	GetCurrent().object = fco;
 	if( skip_inner_elements)
-		GetCurrent().exstrinfo = "skip";
+		GetCurrent().exstrinfo = _T("skip");
 
 	RegisterLookup(attributes, fco);
 }
@@ -924,7 +924,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 	//ResolveDerivation(attributes, deriv);
 	(*this.*m_resolveDerFuncPtr)(attributes, deriv);
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaFolder> prev;
 		GetPrevObj(prev);
@@ -937,7 +937,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 			assignrelid(fco);
 
 			// user info
-			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, "closurename")), true);
+			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
 			msg.Append( " set derived from ");
 			msg.AppendBSTR( makeLink( deriv.from));
 			msgSC( msg, MSG_INFO);
@@ -951,7 +951,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 			if( !found)
 			{
 				CComObjPtr<IMgaMetaFCO> meta;
-				COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, "kind"), 
+				COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, _T("kind")), 
 					OBJTYPE_SET, PutOut(meta)) );
 				ASSERT( meta != NULL );
 
@@ -960,7 +960,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 				assignrelid(fco);
 
 				// user info
-				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, "closurename")));
+				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))));
 				msg.Append( " set created.");
 				msgSC( msg, MSG_INFO);
 			}
@@ -980,7 +980,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 	}
 	else
 	{
-		ASSERT( GetPrevName() == "model" );
+		ASSERT( GetPrevName() == _T("model") );
 
 		CComObjPtr<IMgaModel> prev;
 		GetPrevObj(prev);
@@ -988,8 +988,8 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 
 		CComObjPtr<IMgaMetaRole> role;
 		COMTHROW( resolver->get_RoleByStr(prev, 
-			PutInBstrAttr(attributes, "kind"), OBJTYPE_SET,
-			PutInBstrAttr(attributes, "role"), NULL, PutOut(role)) );
+			PutInBstrAttr(attributes, _T("kind")), OBJTYPE_SET,
+			PutInBstrAttr(attributes, _T("role")), NULL, PutOut(role)) );
 		ASSERT( role != NULL );
 
 		if( deriv.from != NULL )
@@ -1011,7 +1011,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 			}
 
 			// user info
-			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, "closurename")), true);
+			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
 			msg.Append( " set derived from ");
 			msg.AppendBSTR( makeLink( deriv.from));
 			msgSC( msg, MSG_INFO);
@@ -1029,7 +1029,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 				assignrelid(fco);
 
 				// user info
-				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, "closurename")));
+				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))));
 				msg.Append( " set created.");
 				msgSC( msg, MSG_INFO);
 			}
@@ -1049,26 +1049,26 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 	}
 	ASSERT( fco != NULL );
 
-	bool bound = GetByName(attributes, "isbound") == "yes"; // if bound it does NOT need members added by hand
+	bool bound = GetByName(attributes, _T("isbound")) == _T("yes"); // if bound it does NOT need members added by hand
 	if( needs_members && !bound)
 	{
 		std::list< CComObjPtr<IMgaFCO> > members;//slist
 		
 		// mixed form is used in smartMemberGUIDs
 		// i.e. {E200BEEB-34BC-4271-A134-AA5728C18124}\\/@../@module_ref1|kind=module_ref|relpos=0
-		std::string combineds = GetByName(attributes, "smartMemberGUIDs");
-		std::list< std::string> combinedV = tokenizer( combineds, ' ', false);
+		std::tstring combineds = GetByName(attributes, _T("smartMemberGUIDs"));
+		std::list< std::tstring> combinedV = tokenizer( combineds, ' ', false);
 
 		// not needed currently, because the combined attr contains a series of <guid\\path>s
-		//std::string paths = GetByName(attributes, "closure2members");
-		//std::list< std::string> nameV = tokenizer( paths, ' ', false);
+		//std::tstring paths = GetByName(attributes, _T("closure2members"));
+		//std::list< std::tstring> nameV = tokenizer( paths, ' ', false);
 
-		std::list< std::string>::iterator li = combinedV.begin();
+		std::list< std::tstring>::iterator li = combinedV.begin();
 		for( ; li != combinedV.end(); ++li)
 		{
 			CComObjPtr<IMgaFCO> mem;
 			
-			std::string guid_s, path_s;
+			std::tstring guid_s, path_s;
 			if( (*li).size() >= GLOBAL_ID_LEN && (*li)[0] == '{' && (*li)[GLOBAL_ID_LEN-1] == '}' && (*li)[GLOBAL_ID_LEN] == '\\') // a guid form
 			{
 				guid_s = (*li).substr( 0, GLOBAL_ID_LEN);
@@ -1076,7 +1076,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 			}
 			else
 			{
-				guid_s = "";
+				guid_s = _T("");
 				path_s = *li;
 			}
 
@@ -1090,7 +1090,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 			if( !mem)
 			{
 				CComObjPtr<IMgaObject> obj;
-				findObjOnRelPath( CComObjPtr<IMgaObject>(fco), path_s, obj, "set member");
+				findObjOnRelPath( CComObjPtr<IMgaObject>(fco), path_s, obj, _T("set member"));
 				CComObjPtr<IMgaFCO> mem;
 				if( obj) obj.QueryInterface( mem);
 			}
@@ -1104,7 +1104,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 			else
 			{
 				CComBSTR bstr( "Set ");
-				bstr.Append( makeLink( fco, makeNameViewable( GetByName(attributes, "closurename")), true));
+				bstr.Append( makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true));
 				bstr.Append( ": member not found. ");
 				bstr.Append( "Search path used: ");
 				bstr.Append( makeViewable( path_s).c_str());
@@ -1118,7 +1118,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 		CComObjPtr<IMgaSet> mgaset;
 		COMTHROW( fco.QueryInterface(mgaset) );
 
-		//WAS: if( !(GetByName(attributes, "isbound") == "yes") ) {
+		//WAS: if( !(GetByName(attributes, _T("isbound")) == _T("yes")) ) {
 		{
 			COMTHROW( mgaset->RemoveAll() ); //by ZolMol: if not bound then the members are different, remove the inherited members
 			std::list< CComObjPtr<IMgaFCO> >::iterator i = members.begin();//slist
@@ -1131,7 +1131,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 	}
 	GetCurrent().object = fco;
 	if( skip_inner_elements)
-		GetCurrent().exstrinfo = "skip";
+		GetCurrent().exstrinfo = _T("skip");
 
 	RegisterLookup(attributes, fco);
 }
@@ -1146,7 +1146,7 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 	(*this.*m_resolveDerFuncPtr)(attributes, deriv);
 
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaFolder> prev;
 		GetPrevObj(prev);
@@ -1157,7 +1157,7 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 			COMTHROW( prev->DeriveRootObject(deriv.from, deriv.isinstance, PutOut(model)) );
 
 			// user info
-			CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, "closurename")), true);
+			CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
 			msg.Append( " model derived from ");
 			msg.AppendBSTR( makeLink( deriv.from));
 			msgSC( msg, MSG_INFO);
@@ -1171,14 +1171,14 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 			if( !found)
 			{
 				CComObjPtr<IMgaMetaFCO> meta;
-				COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, "kind"), 
+				COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, _T("kind")), 
 					OBJTYPE_MODEL, PutOut(meta)) );
 				ASSERT( meta != NULL );
 
 				COMTHROW( prev->CreateRootObject(meta, PutOut(model)) );
 
 				// user info
-				CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, "closurename")));
+				CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, _T("closurename"))));
 				msg.Append( " model created.");
 				msgSC( msg, MSG_INFO);
 			}
@@ -1197,15 +1197,15 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 	}
 	else
 	{
-		ASSERT( GetPrevName() == "model" );
+		ASSERT( GetPrevName() == _T("model") );
 
 		CComObjPtr<IMgaModel> prev;
 		GetPrevObj(prev);
 
 		CComObjPtr<IMgaMetaRole> role;
 		COMTHROW( resolver->get_RoleByStr(prev, 
-			PutInBstrAttr(attributes, "kind"), OBJTYPE_MODEL,
-			PutInBstrAttr(attributes, "role"), NULL, PutOut(role)) );
+			PutInBstrAttr(attributes, _T("kind")), OBJTYPE_MODEL,
+			PutInBstrAttr(attributes, _T("role")), NULL, PutOut(role)) );
 		ASSERT( role != NULL );
 
 		if( deriv.from != NULL )
@@ -1225,7 +1225,7 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 			}
 
 			// user info
-			CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, "closurename")), true);
+			CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
 			msg.Append( " model derived from ");
 			msg.AppendBSTR( makeLink( deriv.from));
 			msgSC( msg, MSG_INFO);
@@ -1243,7 +1243,7 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 				assignrelid(model);
 
 				// user info
-				CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, "closurename")));
+				CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, _T("closurename"))));
 				msg.Append( " model created.");
 				msgSC( msg, MSG_INFO);
 			}
@@ -1262,12 +1262,12 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 	ASSERT( model != NULL );
 
 	GetCurrent().object = model;
-	long crid = toLong(GetByName(attributes,"childrelidcntr"));
+	long crid = toLong(GetByName(attributes,_T("childrelidcntr")));
 	GetCurrent().exnuminfo = crid;
 	COMTHROW(CComQIPtr<IMgaModel>(model)->put_ChildRelIDCounter(crid));
 
 	if( skip_inner_elements)
-		GetCurrent().exstrinfo = "skip";
+		GetCurrent().exstrinfo = _T("skip");
 
 	RegisterLookup(attributes, model);
 }
@@ -1281,7 +1281,7 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 	//ResolveDerivation(attributes, deriv);
 	(*this.*m_resolveDerFuncPtr)(attributes, deriv);
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaFolder> prev;
 		GetPrevObj(prev);
@@ -1291,7 +1291,7 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 			COMTHROW( prev->DeriveRootObject(deriv.from, deriv.isinstance, PutOut(atom)) );
 
 			// user info
-			CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, "closurename")), true);
+			CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
 			msg.Append( " atom derived from ");
 			msg.AppendBSTR( makeLink( deriv.from));
 			msgSC( msg, MSG_INFO);
@@ -1305,7 +1305,7 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 			if( !found)
 			{
 				CComObjPtr<IMgaMetaFCO> meta;
-				COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, "kind"),
+				COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, _T("kind")),
 					OBJTYPE_ATOM, PutOut(meta)) );
 				ASSERT( meta != NULL );
 
@@ -1314,7 +1314,7 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 				assignrelid(atom);
 
 				// user info
-				CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, "closurename")));
+				CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, _T("closurename"))));
 				msg.Append( " atom created.");
 				msgSC( msg, MSG_INFO);
 			}
@@ -1332,15 +1332,15 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 	}
 	else
 	{
-		ASSERT( GetPrevName() == "model" );
+		ASSERT( GetPrevName() == _T("model") );
 
 		CComObjPtr<IMgaModel> prev;
 		GetPrevObj(prev);
 
 		CComObjPtr<IMgaMetaRole> role;
 		COMTHROW( resolver->get_RoleByStr(prev, 
-			PutInBstrAttr(attributes, "kind"), OBJTYPE_ATOM,
-			PutInBstrAttr(attributes, "role"), NULL, PutOut(role)) );
+			PutInBstrAttr(attributes, _T("kind")), OBJTYPE_ATOM,
+			PutInBstrAttr(attributes, _T("role")), NULL, PutOut(role)) );
 		ASSERT( role != NULL );
 
 		if( deriv.from != NULL )
@@ -1360,7 +1360,7 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 			}
 
 			// user info
-			CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, "closurename")), true);
+			CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
 			msg.Append( " atom derived from ");
 			msg.AppendBSTR( makeLink( deriv.from));
 			msgSC( msg, MSG_INFO);
@@ -1377,7 +1377,7 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 				assignrelid(atom);
 
 				// user info
-				CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, "closurename")));
+				CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, _T("closurename"))));
 				msg.Append( " atom created.");
 				msgSC( msg, MSG_INFO);
 			}
@@ -1398,7 +1398,7 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 	GetCurrent().object = atom;
 
 	if( skip_inner_elements)
-		GetCurrent().exstrinfo = "skip";
+		GetCurrent().exstrinfo = _T("skip");
 
 	RegisterLookup(attributes, atom);
 }
@@ -1408,7 +1408,7 @@ void CMgaParser::StartSCFolder(const attributes_type &attributes)
 	bool skip_inner_elements = false;
 	CComObjPtr<IMgaFolder> folder;
 
-	//if( GetPrevName() == "project" )
+	//if( GetPrevName() == _T("project") )
 	//{
 	//	COMTHROW( project->get_RootFolder(PutOut(folder)) );
 	//}
@@ -1418,7 +1418,7 @@ void CMgaParser::StartSCFolder(const attributes_type &attributes)
 		GetPrevObj(prev);
 
 		CComObjPtr<IMgaMetaFolder> meta;
-		CComBSTR fname( PutInBstrAttr(attributes, "kind"));
+		_bstr_t fname(PutInBstrAttr(attributes, _T("kind")));
 
 		VARIANT_BOOL previactmode;
 		COMTHROW(resolver->get_IsInteractive(&previactmode));
@@ -1439,7 +1439,7 @@ void CMgaParser::StartSCFolder(const attributes_type &attributes)
 			assignrelid(folder);
 
 			// user info
-			CComBSTR msg = makeLink(CComObjPtr<IMgaObject>(folder), makeNameViewable( GetByName(attributes, "closurename")));
+			CComBSTR msg = makeLink(CComObjPtr<IMgaObject>(folder), makeNameViewable( GetByName(attributes, _T("closurename"))));
 			msg.Append( " folder created.");
 			msgSC( msg, MSG_INFO);
 		}
@@ -1457,9 +1457,9 @@ void CMgaParser::StartSCFolder(const attributes_type &attributes)
 	ASSERT( folder != NULL );
 	GetCurrent().object = folder;
 	if( skip_inner_elements)
-		GetCurrent().exstrinfo = "skip";
+		GetCurrent().exstrinfo = _T("skip");
 
-	long crid = toLong(GetByName(attributes,"childrelidcntr"));
+	long crid = toLong(GetByName(attributes,_T("childrelidcntr")));
 	GetCurrent().exnuminfo = crid;
 	COMTHROW(folder->put_ChildRelIDCounter(crid));
 
@@ -1470,24 +1470,23 @@ void CMgaParser::StartSCRegNode(const attributes_type &attributes)
 {
 	CComObjPtr<IMgaRegNode> regnode;
 
-	CComBstrObj name;
-	CopyTo(GetByName(attributes, "name"), name);
+	_bstr_t name = GetByName(attributes, _T("name")).c_str();
 
-	if( GetPrevName() == "regnode" )
+	if( GetPrevName() == _T("regnode") )
 	{
 		CComObjPtr<IMgaRegNode> prev;
 		GetPrevObj(prev);
 
 		COMTHROW( prev->get_SubNodeByName(name, PutOut(regnode)) );
 	}
-	else if( GetPrevName() == "folder" )
+	else if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaFolder> prev;
 		GetPrevObj(prev);
 
 		COMTHROW( prev->get_RegistryNode(name, PutOut(regnode)) );
 	}
-	else if( GetPrevName() == "attribute" )
+	else if( GetPrevName() == _T("attribute") )
 	{
 		CComObjPtr<IMgaAttribute> prev;
 		GetPrevObj(prev);
@@ -1509,17 +1508,17 @@ void CMgaParser::StartSCRegNode(const attributes_type &attributes)
 	
 	// if MERGE case (skip) and if value is defined HERE, then skip it (don't touch) its value
 	// but the subnodes may change! even in this case if UNDEF, or they may be created if they not exist
-	if( GetPrevious().exstrinfo == "skip" && st == ATTSTATUS_HERE)
+	if( GetPrevious().exstrinfo == _T("skip") && st == ATTSTATUS_HERE)
 	{
-		GetCurrent().exstrinfo = "skip"; // might have subelements so skip those as well
+		GetCurrent().exstrinfo = _T("skip"); // might have subelements so skip those as well
 		GetCurrent().object = regnode;
 		return;
 	}
 
-	if( GetByNameX(attributes, "status") == NULL )
+	if( GetByNameX(attributes, _T("status")) == NULL )
 		COMTHROW( regnode->put_Value(NULL) );
 
-	if( GetByName(attributes, "isopaque") == "yes" )
+	if( GetByName(attributes, _T("isopaque")) == _T("yes") )
 		COMTHROW( regnode->put_Opacity(VARIANT_TRUE) );
 
 	GetCurrent().object = regnode;
@@ -1527,7 +1526,7 @@ void CMgaParser::StartSCRegNode(const attributes_type &attributes)
 
 void CMgaParser::EndSCRegNode()
 {
-	if( GetPrevious().exstrinfo == "skip") // if merge return, deal only with new regnodes
+	if( GetPrevious().exstrinfo == _T("skip")) // if merge return, deal only with new regnodes
 		return;
 
 	CComObjPtr<IMgaRegNode> fresh_regnode;
@@ -1567,7 +1566,7 @@ void CMgaParser::EndSCRegNode()
 	CComPtr<IMgaRegNode> subnd;
 	COMTHROW( fresh_regnode->get_SubNodeByName( CComBSTR(PREV_ID_STR), &subnd));
 
-	if( subnd) COMTHROW( subnd->put_Value( PutInBstr( guid)) );
+	if( subnd) COMTHROW( subnd->put_Value(guid) );
 
 }
 
@@ -1579,7 +1578,7 @@ void CMgaParser::StartSCAttribute(const attributes_type &attributes)
 	GetPrevObj(fco);
 
 	CComObjPtr<IMgaMetaAttribute> metaattr;
-	HRESULT hr = resolver->get_AttrByStr(fco, PutInBstrAttr(attributes, "kind"), PutOut(metaattr));
+	HRESULT hr = resolver->get_AttrByStr(fco, PutInBstrAttr(attributes, _T("kind")), PutOut(metaattr));
 
     if( FAILED(hr) || metaattr == NULL )
     {
@@ -1596,13 +1595,13 @@ void CMgaParser::StartSCAttribute(const attributes_type &attributes)
 	COMTHROW( attr->get_Status( &st));
 
 	// in case parent is merged (skipped) and attr is defined HERE, skip inner contents:
-	if( GetPrevious().exstrinfo == "skip" && st == ATTSTATUS_HERE)
+	if( GetPrevious().exstrinfo == _T("skip") && st == ATTSTATUS_HERE)
 	{
-		GetCurrent().exstrinfo = "skip"; // might have subelements so skip those as well
+		GetCurrent().exstrinfo = _T("skip"); // might have subelements so skip those as well
 		return;
 	}
 
-	if( GetByNameX(attributes, "status") == NULL )
+	if( GetByNameX(attributes, _T("status")) == NULL )
 	{
 		// we set some value, and from the "value" element we set the actual value
 
@@ -1614,15 +1613,15 @@ void CMgaParser::StartSCAttribute(const attributes_type &attributes)
 
 void CMgaParser::EndSCName()
 {
-	if( GetPrevious().exstrinfo == "skip") // has no sub elements
+	if( GetPrevious().exstrinfo == _T("skip")) // has no sub elements
 		return;
 
-	//if( GetPrevName() == "project" )
+	//if( GetPrevName() == _T("project") )
 	//{
 	//	COMTHROW( project->put_Name(PutInBstr(GetCurrData())) );
 	//}
 	//else
-	if( GetPrevName() == "constraint" )
+	if( GetPrevName() == _T("constraint") )
 	{
 		constraint_name = GetCurrData();
 	}
@@ -1636,19 +1635,19 @@ void CMgaParser::EndSCName()
 
 void CMgaParser::EndSCValue()
 {
-	if( GetPrevious().exstrinfo == "skip") // has no sub elements
+	if( GetPrevious().exstrinfo == _T("skip")) // has no sub elements
 		return;
 
 	// skip if the object is ignored
     if( GetPrevious().object == NULL )
         return;
 
-	if( GetPrevName() == "constraint" )
+	if( GetPrevName() == _T("constraint") )
 	{
 		constraint_value = GetCurrData();
 	}
 	else 
-		if( GetPrevName() == "regnode" )
+		if( GetPrevName() == _T("regnode") )
 	{
 		CComObjPtr<IMgaRegNode> regnode;
 		GetPrevObj(regnode);
@@ -1661,7 +1660,7 @@ void CMgaParser::EndSCValue()
 		if( status == 0)
 			COMTHROW( regnode->put_Value(PutInBstr(GetCurrData())) );
 	}
-	else if( GetPrevName() == "attribute" ) 
+	else if( GetPrevName() == _T("attribute") ) 
 	{
 		CComObjPtr<IMgaAttribute> attr;
 		GetPrevObj(attr);
@@ -1687,16 +1686,16 @@ void CMgaParser::EndSCValue()
 		case ATTVAL_STRING:
 		case ATTVAL_ENUM:
 		case ATTVAL_DYNAMIC:
-			CopyTo(GetCurrData(), v);
+			v = GetCurrData().c_str();
 			break;
 
 		case ATTVAL_INTEGER:
-			CopyTo(GetCurrData(), v);
+			v = GetCurrData().c_str();
 			COMTHROW( v.ChangeType(VT_I4) );
 			break;
 
 		case ATTVAL_DOUBLE:
-			CopyTo(GetCurrData(), v);
+			v = GetCurrData().c_str();
 			COMTHROW( v.ChangeType(VT_R8) );
 			break;
 
@@ -1729,15 +1728,15 @@ void CMgaParser::EndSCValue()
 
 void CMgaParser::EndSCConstraint()
 {
-	if( GetPrevious().exstrinfo == "skip")
+	if( GetPrevious().exstrinfo == _T("skip"))
 	{
-		GetCurrent().exstrinfo = "skip"; // might have subelements, so skip those as well
+		GetCurrent().exstrinfo = _T("skip"); // might have subelements, so skip those as well
 		return;
 	}
 
 	CComObjPtr<IMgaConstraint> constraint;
 
-	if( GetPrevName() == "folder" )
+	if( GetPrevName() == _T("folder") )
 	{
 		CComObjPtr<IMgaFolder> folder;
 		GetPrevObj(folder);

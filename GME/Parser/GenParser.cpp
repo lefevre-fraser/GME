@@ -10,9 +10,20 @@
 #include <stdio.h>
 #include <string>
 #include "atlstr.h"
+#include <comutil.h>
 
 // --------------------------- XmlStr
 
+#ifdef UNICODE
+XmlStr::XmlStr(const XMLCh* const input) : std::tstring(input)
+{
+}
+
+XmlStr::XmlStr(const XMLCh* const input, unsigned int len) : std::tstring(input)
+{
+	resize(len);
+}
+#else
 XmlStr::XmlStr(const XMLCh* const input)
 {
 	resize(GetCharLength(input, -1));
@@ -26,37 +37,38 @@ XmlStr::XmlStr(const XMLCh* const input, unsigned int len)
 	resize(GetCharLength(input, len));
 	CopyTo(input, len, &(operator[](0)), length());
 }
+#endif
 
 void CGenParser::SetErrorInfo2(HRESULT hr)
 {
-	std::string str;
-	Format(str, "in file %s at line %ld, char %ld", 
+	std::tstring str;
+	Format(str, _T("in file %s at line %ld, char %ld"), 
 		xmlfile.c_str(), err_line, err_column);
 
-	SetErrorInfo(hr, PutInBstr(str));
+	SetErrorInfo(hr, _bstr_t(str.c_str()));
 }
 
-void CGenParser::ThrowXmlError(const char *format, ...)
+void CGenParser::ThrowXmlError(const TCHAR *format, ...)
 {
 	ASSERT( format != NULL );
 
 	va_list args;
 	va_start(args, format);
 
-	std::string desc;
-	vFormat(desc, format, args);
+	std::tstring desc;
+	Format(desc, format, args);
 
-	std::string str;
+	std::tstring str;
 	if( locator != NULL )
 		Format(str, 
-			"XML parser error in file %s at line %d, char %d : %s",
+			_T("XML parser error in file %s at line %d, char %d : %s"),
 			xmlfile.c_str(), (int)locator->getLineNumber(),
 			(int)locator->getColumnNumber(), desc.c_str());
 	else
 		Format(str,
-			"XML parser error in file %s : %s", xmlfile.c_str(), desc.c_str());
+			_T("XML parser error in file %s : %s"), xmlfile.c_str(), desc.c_str());
 
-	CopyTo(str, errorinfo);
+	errorinfo = str.c_str();
 	HR_THROW(E_XMLPARSER);
 }
 
@@ -67,13 +79,13 @@ InputSource *CGenParser::resolveEntity(const XMLCh* const publicId, const XMLCh*
 	do
 	{
 		XmlStr sysid = systemId;
-		std::string syssid = sysid;
+		std::tstring syssid = sysid;
 
-		HMODULE hm = GetModuleHandle("PARSER.DLL");
+		HMODULE hm = GetModuleHandle(_T("PARSER.DLL"));
 		if( hm == NULL )
 			break;
 
-		HRSRC res = FindResource(hm, syssid.c_str(), "DTD");
+		HRSRC res = FindResource(hm, syssid.c_str(), _T("DTD"));
 		if(res) {
 			XMLByte *bytes = (XMLByte *)LockResource(LoadResource(hm, res));
 			if(!bytes) COMTHROW(E_INVALID_DTD); 
@@ -81,18 +93,18 @@ InputSource *CGenParser::resolveEntity(const XMLCh* const publicId, const XMLCh*
 		}
 
 		
-		char filename[200];
+		TCHAR filename[200];
 		int a = GetModuleFileName(hm, filename, 200);
 		a -= 10;
 		if( a <= 0 )
 			break;
 
-		if( _stricmp(filename + a, "PARSER.DLL") != 0 )
+		if( _tcsicmp(filename + a, _T("PARSER.DLL")) != 0 )
 			break;
 
-		strcpy(filename + a, sysid.c_str());
+		_tcscpy(filename + a, sysid.c_str());
 
-		FILE *file = fopen(filename, "r");
+		FILE *file = _tfopen(filename, _T("r"));
 		if( file == NULL )
 			break;
 
@@ -124,7 +136,7 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 		cur_line = (int)locator->getLineNumber();
 		cur_column = (int)locator->getColumnNumber();
 		// CString msg;
-		// msg.Format("Line %d, Col: %d\n", cur_line, cur_column);
+		// msg.Format(_T("Line %d, Col: %d\n"), cur_line, cur_column);
 		// OutputDebugString(msg);
 	}
 #endif
@@ -136,7 +148,7 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 		unsigned int len = attrlist.getLength();
 		for(unsigned int index = 0; index < len; index++)
 		{
-			attributes.push_back( std::pair<std::string,std::string>(
+			attributes.push_back( std::pair<std::tstring,std::tstring>(
 				XmlStr(attrlist.getName(index)), XmlStr(attrlist.getValue(index))) );
 		}
 
@@ -167,9 +179,9 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 
 			// we compose and set the error message for exceptions
 			// [which come from the MGA layer because of meta incompatibility]
-			std::string str;
-			Format(str, "Improper use of object error in file %s at line %d, char %d.", xmlfile.c_str(), err_line, err_column);
-			CopyTo(str, errorinfo);
+			std::tstring str;
+			Format(str, _T("Improper use of object error in file %s at line %d, char %d."), xmlfile.c_str(), err_line, err_column);
+			errorinfo = str.c_str();
 		}
 
 		throw;
@@ -213,9 +225,9 @@ void CGenParser::endElement(const XMLCh* const name)
 
 			// we compose and set the error message for exceptions
 			// [which come from the MGA layer because of meta incompatibility]
-			std::string str;
-			Format(str, "Improper use of object error in file %s at line %ld, char %ld.", xmlfile.c_str(), err_line, err_column);
-			CopyTo(str, errorinfo);
+			std::tstring str;
+			Format(str, _T("Improper use of object error in file %s at line %ld, char %ld."), xmlfile.c_str(), err_line, err_column);
+			errorinfo = str.c_str();
 		}
 
 		throw;
@@ -232,7 +244,7 @@ void CGenParser::characters(const XMLCh* const chars, const XMLSize_t length)
 void CGenParser::error(const SAXParseException &e)
 {
 	ThrowXmlError(
-		"(at line %d, char %d) %s",
+		_T("(at line %d, char %d) %s"),
 		(int)e.getLineNumber(),(int)e.getColumnNumber(),
 		XmlStr(e.getMessage()).c_str());
 }
@@ -249,7 +261,7 @@ void CGenParser::setDocumentLocator(const Locator *const loc)
 
 // ------- Attributes
 
-const std::string *CGenParser::GetByNameX(const attributes_type &attributes, const char *name)
+const std::tstring *CGenParser::GetByNameX(const attributes_type &attributes, const TCHAR *name)
 {
 	attributes_iterator i = attributes.begin();
 	attributes_iterator e = attributes.end();
@@ -264,12 +276,12 @@ const std::string *CGenParser::GetByNameX(const attributes_type &attributes, con
 	return NULL;
 }
 
-long CGenParser::toLong(std::string s)
+long CGenParser::toLong(std::tstring s)
 {
-	const char *c = s.c_str();
-	char *e;
+	const TCHAR *c = s.c_str();
+	TCHAR *e;
 
-	long a = strtol(c, &e, 0);
+	long a = _tcstol(c, &e, 0);
 
 	if( (e - c) != (int) s.length() )
 		HR_THROW(E_INVALID_XML_LONG);
@@ -277,12 +289,12 @@ long CGenParser::toLong(std::string s)
 	return a;
 }
 
-unsigned long CGenParser::toULong(std::string s)
+unsigned long CGenParser::toULong(std::tstring s)
 {
-	const char *c = s.c_str();
-	char *e;
+	const TCHAR *c = s.c_str();
+	TCHAR *e;
 
-	long a = strtoul(c, &e, 0);
+	long a = _tcstoul(c, &e, 0);
 
 	if( (e - c) != (int) s.length() )
 		HR_THROW(E_INVALID_XML_LONG);

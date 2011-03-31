@@ -822,9 +822,9 @@ BOOL CConsoleCtrl::OnToolTipNotify(UINT id, NMHDR *pNMHDR, LRESULT *pResult)
 	CStringA aTip(tip);
 	CStringW wTip(tip);
 	if( pNMHDR->code == TTN_NEEDTEXTA)
-		StringCchCopyA((char*)pTTTA->szText, sizeof(pTTTA->szText) / sizeof(char) - 1, aTip);
+		StringCchCopyA(pTTTA->szText, sizeof(pTTTA->szText) / sizeof(char) - 1, aTip);
 	else
-		StringCchCopyW((wchar_t*)pTTTW->szText, sizeof(pTTTW->szText) / sizeof(wchar_t) - 1, wTip);
+		StringCchCopyW(pTTTW->szText, sizeof(pTTTW->szText) / sizeof(wchar_t) - 1, wTip);
 
 	*pResult = 0;
 	return TRUE;    // message was handled

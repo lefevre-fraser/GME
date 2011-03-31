@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GUIDCreate.h"
 
-/*static*/ const char * GuidCreate::format_str = "{%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}";
+/*static*/ const TCHAR * GuidCreate::format_str = _T("{%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}");
 
 CComBSTR GuidCreate::newGuid()
 {

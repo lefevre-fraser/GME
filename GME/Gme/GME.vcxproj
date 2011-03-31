@@ -255,7 +255,9 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
     <None Include="AnnotatorEventSink.rgs" />
     <None Include="DecoratorEventSink.rgs" />
     <None Include="aboutpic.bmp" />
-    <None Include="GME.exe.config" />
+    <None Include="GME.exe.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="res\atomport.bmp" />
     <None Include="res\bitmap1.bmp" />
     <None Include="res\bitmap_l.bmp" />

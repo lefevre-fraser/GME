@@ -47,8 +47,8 @@ public:
 // ------- Attributes
 
 public:
-	static const std::string GetNextToken(std::string::const_iterator &i, 
-		std::string::const_iterator &e, std::string::const_iterator end);
+	static const std::tstring GetNextToken(std::tstring::const_iterator &i, 
+		std::tstring::const_iterator &e, std::tstring::const_iterator end);
 
 	typedef CGenParserFunc<CMgaMetaParser> elementfunc;
 
@@ -83,8 +83,8 @@ public:
 	void StartEnumItem(const attributes_type &attributes);
 	void StartConstraint(const attributes_type &attributes);
 	void EndConstraint();
-	void fireStartFunction(const std::string& name, const attributes_type& attributes);
-	void fireEndFunction(const std::string& name);
+	void fireStartFunction(const std::tstring& name, const attributes_type& attributes);
+	void fireEndFunction(const std::tstring& name);
 };
 
 #endif//MGA_MgaMetaParser_H

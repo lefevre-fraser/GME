@@ -26,15 +26,15 @@ STDMETHODIMP CMgaEventLogger::LogEvent(BSTR eventMsg)
 		if(newLine)
 		{
 			CTime time = CTime::GetCurrentTime();
-			CString CurrentTime = time.Format("%b %d, %H:%M:%S ");
-			fprintf(EventLog,CurrentTime);
+			CString CurrentTime = time.Format(_T("%b %d, %H:%M:%S "));
+			_ftprintf(EventLog,CurrentTime);
 			newLine = false;
 		}
-		if(s.Find("\r\n")!=-1)
+		if(s.Find(_T("\r\n"))!=-1)
 		{
 			newLine = true;
 		}
-		fprintf(EventLog,s);
+		_ftprintf(EventLog, _T("%s"), s);
 		fflush(EventLog);
 	}
 	return S_OK;
@@ -45,20 +45,20 @@ STDMETHODIMP CMgaEventLogger::StartLogging()
 	if(!initialized) //if already initialized, don't do anything
 	{
 		CString path;
-		char gmepath[200];
+		TCHAR gmepath[200];
 		if(SHGetSpecialFolderPath( NULL, gmepath, CSIDL_APPDATA, true)) //most likely C:\Documents and Settings\<username>\Application Data
 		{
-			path = CString(gmepath) + "\\GME"; // add \GME to the path
-			_mkdir(path.GetBuffer(4)); //in case GME dir not there, make it, if this function fails because GME already exists, don't care
+			path = CString(gmepath) + _T("\\GME"); // add \GME to the path
+			_tmkdir(path.GetBuffer(4)); //in case GME dir not there, make it, if this function fails because GME already exists, don't care
 			CTime time = CTime::GetCurrentTime(); //to make unique logfile names
-			CString CurrentTime = time.Format( "\\GME_%b-%d_%H.%M.%S.log" );
-			EventLog = fopen(path+CurrentTime,"w");
+			CString CurrentTime = time.Format( _T("\\GME_%b-%d_%H.%M.%S.log") );
+			EventLog = _tfopen(path+CurrentTime,_T("w"));
 
 			if (EventLog != NULL) //fopen succeded
 			{	
 				initialized = true;
 				newLine = true;
-				CComBSTR b = "CMgaEventLogger::StartLogging\r\n";
+				CComBSTR b = L"CMgaEventLogger::StartLogging\r\n";
 				LogEvent(b);
 			}
 		}
@@ -70,7 +70,7 @@ STDMETHODIMP CMgaEventLogger::StopLogging()
 {
 	if(initialized)
 	{
-		CComBSTR b = "CMgaEventLogger::StopLogging\r\n";
+		CComBSTR b = L"CMgaEventLogger::StopLogging\r\n";
 		LogEvent(b);
 		fflush(EventLog);
 		fclose(EventLog);
@@ -82,7 +82,7 @@ STDMETHODIMP CMgaEventLogger::StopLogging()
 
 STDMETHODIMP CMgaEventLogger::EmergencyEvent()
 {
-	CComBSTR b = "CMgaEventLogger::EmergencyEvent\r\n";
+	CComBSTR b = L"CMgaEventLogger::EmergencyEvent\r\n";
 	LogEvent(b);
 	StopLogging();
 	return S_OK;
