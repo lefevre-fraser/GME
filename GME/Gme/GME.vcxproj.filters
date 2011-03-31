@@ -204,9 +204,6 @@
     <ClCompile Include="RecentConnStrList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Regexp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ScrollZoomView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -559,9 +556,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ProjectPropertiesDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Regexp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">

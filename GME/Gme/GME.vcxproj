@@ -237,7 +237,6 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
     <ClCompile Include="PreviewWnd.cpp" />
     <ClCompile Include="ProjectPropertiesDlg.cpp" />
     <ClCompile Include="RecentConnStrList.cpp" />
-    <ClCompile Include="Regexp.cpp" />
     <ClCompile Include="ScrollZoomView.cpp" />
     <ClCompile Include="search.cpp" />
     <ClCompile Include="Splash.cpp" />
@@ -390,7 +389,6 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
     <ClInclude Include="PendingRequest.h" />
     <ClInclude Include="PreviewWnd.h" />
     <ClInclude Include="ProjectPropertiesDlg.h" />
-    <ClInclude Include="Regexp.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScrollZoomView.h" />
     <ClInclude Include="search.h" />
