@@ -381,7 +381,7 @@ BOOL CGMEApp::InitInstance()
 	MSGTRY
 	{
 		CComPtr<IMgaRegistrar> registrar;
-		COMTHROW(registrar.CoCreateInstance(CComBSTR("Mga.MgaRegistrar")));
+		COMTHROW(registrar.CoCreateInstance(CComBSTR(L"Mga.MgaRegistrar")));
 		VARIANT_BOOL enablelogging;
 		COMTHROW( registrar->get_EventLoggingEnabled(REGACCESS_USER, &enablelogging) );
 		if(enablelogging != VARIANT_FALSE)
@@ -867,7 +867,7 @@ void CGMEApp::UpdateComponentToolbar()
 			// Obtaining ToolTip
 			HRESULT errCode;
 			CString toolTip;
-			errCode = registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, componentName, CComBSTR("Tooltip"), PutOut(toolTip));
+			errCode = registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, componentName, CComBSTR(L"Tooltip"), PutOut(toolTip));
 			if(errCode != S_OK || toolTip.IsEmpty())
 			{
 				toolTip = componentName;
@@ -883,7 +883,7 @@ void CGMEApp::UpdateComponentToolbar()
 
 			// Querying icon information
 			CString iconInfo;
-			errCode = registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, componentName, CComBSTR("Icon"), PutOut(iconInfo));
+			errCode = registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, componentName, CComBSTR(L"Icon"), PutOut(iconInfo));
 			if(errCode != S_OK || iconInfo.IsEmpty()) 
 			{
 				continue;
@@ -974,7 +974,7 @@ void CGMEApp::UpdateComponentLists(bool restart_addons)
 		CComBSTR b;
 		COMTHROW(mgaMetaProject->get_Name(&b));
 		CComPtr<IMgaRegistrar> reg;
-		COMTHROW(reg.CoCreateInstance(CComBSTR("Mga.MgaRegistrar")));
+		COMTHROW(reg.CoCreateInstance(CComBSTR(L"Mga.MgaRegistrar")));
 		{
 			CComVariant v;
 			COMTHROW(reg->get_AssociatedComponents(b, COMPONENTTYPE_PLUGIN, REGACCESS_BOTH, &v));
@@ -1191,7 +1191,7 @@ static int versioncmp(CComBSTR &qVer, CComBSTR &pVer) {
 bool DiagnoseParadigm(CString metaname, bool syscheck = false) {
 	CComPtr<IMgaRegistrar> reg;
 	try {
-		HRESULT hr = reg.CoCreateInstance(CComBSTR("Mga.MgaRegistrar"));
+		HRESULT hr = reg.CoCreateInstance(CComBSTR(L"Mga.MgaRegistrar"));
 		if(hr != S_OK) {
 			throw CString("Cannot create the registrar component\n"
 						  "We recommend you to reinstall GME");
@@ -2872,7 +2872,7 @@ void CGMEApp::RegisterDroppedFile( const CString& fname, bool userReg/* = true*/
 	{
 		CWaitCursor wait;
 		CComPtr<IMgaRegistrar> registrar;
-		COMTHROW(registrar.CoCreateInstance(CComBSTR("Mga.MgaRegistrar")));
+		COMTHROW(registrar.CoCreateInstance(CComBSTR(L"Mga.MgaRegistrar")));
 
 		regaccessmode_enum reg_access = REGACCESS_USER;	//REGACCESS_SYSTEM;
 											//REGACCESS_USER;

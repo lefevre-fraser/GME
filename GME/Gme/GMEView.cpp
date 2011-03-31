@@ -599,7 +599,7 @@ CGMEView::CGMEView()
 	ClearConnSpecs();
 
 	CComPtr<IMgaRegistrar> registrar;
-	COMTHROW(registrar.CoCreateInstance(CComBSTR("Mga.MgaRegistrar")));
+	COMTHROW(registrar.CoCreateInstance(CComBSTR(L"Mga.MgaRegistrar")));
 	ASSERT(registrar != NULL);
 	edgesmoothmode_enum edgeSmoothMode;
 	COMTHROW(registrar->get_EdgeSmoothMode(REGACCESS_USER, &edgeSmoothMode));
