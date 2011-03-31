@@ -1904,9 +1904,11 @@ int CMgaProject::getMaxUndoSize()
 		COMTHROW(mgareg.CoCreateInstance(OLESTR("MGA.MgaRegistrar")));
 		CComBSTR undo_size;
 		COMTHROW( mgareg->GetUndoQueueSize( REGACCESS_USER, &undo_size));
-		int val = _wtoi(undo_size);
-		if (val > 0 && val < 100) // requirement is to be above 0 and below 100
-			retval = val;
+		if (undo_size != NULL && undo_size != L"") {
+			int val = _wtoi(undo_size);
+			if (val > 0 && val < 100) // requirement is to be above 0 and below 100
+				retval = val;
+		}
 	}
 	catch( hresult_exception&)
 	{
