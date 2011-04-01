@@ -5,7 +5,6 @@
 #ifndef AFX_INPUT_H
 #define AFX_INPUT_H
 
-//#include "RegExp.h"
 #include <vector>
 #include "attribute.h"
 #include <regex>
