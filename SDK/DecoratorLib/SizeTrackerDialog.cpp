@@ -76,7 +76,7 @@ BOOL CSizeTrackerDialog::OnEraseBkgnd(CDC* pDC)
 CString	CSizeTrackerDialog::GetStrToDisplay(const CRect& location)
 {
 	CString sizeTxt;
-	sizeTxt.Format("size:(%ld,%ld)", location.Width(), location.Height());
+	sizeTxt.Format(_T("size:(%ld,%ld)"), location.Width(), location.Height());
 
 	return sizeTxt;
 }

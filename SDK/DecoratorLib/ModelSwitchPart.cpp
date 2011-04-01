@@ -80,9 +80,7 @@ void ModelSwitchPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaM
 				}
 			}
 
-			CString boolStr;
-			CopyTo(bstrVal, boolStr);
-			if (boolStr == "1")
+			if (bstrVal == L"1")
 				bExpanded = true;
 			else
 				bExpanded = false;

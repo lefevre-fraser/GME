@@ -10,33 +10,38 @@
 
 // --------------------------- CString
 
-inline void CopyTo(const CString &s, BSTR *b) { CopyTo(s, s.GetLength(), b); }
-inline void CopyTo(const CString &s, VARIANT *v) { CopyTo(s, s.GetLength(), v); }
-inline void CopyTo(const CString &s, CComBstrObj &a) { CopyTo(s, s.GetLength(), a); }
-inline void CopyTo(const CString &s, CComVariant &a) { CopyTo(s, s.GetLength(), a); }
+inline void CopyTo(const CStringA &s, BSTR *b) { CopyTo(s, s.GetLength(), b); }
+inline void CopyTo(const CStringA &s, VARIANT *v) { CopyTo(s, s.GetLength(), v); }
+inline void CopyTo(const CStringA &s, CComBstrObj &a) { CopyTo(s, s.GetLength(), a); }
+inline void CopyTo(const CStringW &s, CComBstrObj &a) { a = CComBstrObj(static_cast<const wchar_t*>(s)); }
+inline void CopyTo(const CStringW &s, CComBSTR &a) { a = static_cast<const wchar_t*>(s); }
+inline void CopyTo(const CComBstrObj &s, CStringW &a) { a = static_cast<const wchar_t*>(s); }
+inline void CopyTo(const CStringA &s, CComVariant &a) { CopyTo(s, s.GetLength(), a); }
 
-inline void CopyTo(BSTR b, CString &s)
+inline void CopyTo(BSTR b, CStringA &s)
 {
 	int len = GetCharLength(b);
 	CopyTo(b, s.GetBufferSetLength(len), len);
 	s.ReleaseBuffer(len);
 }
 
-inline void CopyTo(VARIANT &v, CString &s)
+inline void CopyTo(VARIANT &v, CStringA &s)
 {
 	int len = GetCharLength(v);
 	CopyTo(v, s.GetBufferSetLength(len), len);
 	s.ReleaseBuffer(len);
 }
 
-inline void CopyTo(const CString &s, CComBSTR &b) { CopyTo(s, &b); }
+inline void CopyTo(const CStringA &s, CComBSTR &b) { CopyTo(s, &b); }
 
+template<class char_t>
 class PutOutCString
 {
+	typedef ATL::CStringT< char_t, StrTraitMFC_DLL< char_t > > CString_t;
 private:
-	friend PutOutCString PutOut(CString &s);
+	friend PutOutCString PutOut(CString_t &s);
 
-	PutOutCString(CString &a) : s(a)
+	PutOutCString(CString_t &a) : s(a)
 	{
 		ASSERT( &s != NULL ); 
 	}
@@ -56,12 +61,17 @@ private:
 
 private:
 	CComBstrObj b;
-	CString &s;
+	CString_t &s;
 };
 
-inline PutOutCString PutOut(CString &s)
+inline PutOutCString<char> PutOut(CStringA &s)
 {
-	return PutOutCString(s);
+	return PutOutCString<char>(s);
+}
+
+inline PutOutCString<wchar_t> PutOut(CStringW &s)
+{
+	return PutOutCString<wchar_t>(s);
 }
 
 class PutInCString
@@ -70,10 +80,10 @@ public:
 	template<class T>
 	PutInCString(T t) { CopyTo(t, b); }
 
-	operator const CString &() { return b; }
+	operator const CStringA &() { return b; }
 	operator const char *() { return b; }
 
-	CString b;
+	CStringA b;
 };
 
 // --------------------------- CComObjPtrArray

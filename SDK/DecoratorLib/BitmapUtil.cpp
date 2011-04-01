@@ -478,8 +478,8 @@ BitmapMasked::BitmapMasked( UINT nResID, COLORREF crTransparentColor, COLORREF c
 	m_pBMI		(NULL),
 	m_pPalette	(NULL)
 {
-	char chBuffer[10];
-	_ultoa( nResID, chBuffer, 10 );
+	TCHAR chBuffer[10];
+	_ultot( nResID, chBuffer, 10 );
 	setName(chBuffer);
 	ReadFromResource( nResID );
 
@@ -1000,9 +1000,9 @@ void BitmapGen::load( const CString& strName )
 		for ( unsigned int i = 0 ; !success && i < vecPathes.size() ; i++ )
 		{
 			CString imageFileName = vecPathes[ i ] + strFName;
-			bool fileExists = (_access(imageFileName, 0) == 0);	// Uses GetFileAttributes
+			bool fileExists = (_taccess(imageFileName, 0) == 0);	// Uses GetFileAttributes
 			if (fileExists) {
-				m_pImage = Gdiplus::Image::FromFile( CA2W( (LPCTSTR) imageFileName));
+				m_pImage = Gdiplus::Image::FromFile( CStringW( (LPCTSTR) imageFileName));
 				if( m_pImage && m_pImage->GetLastStatus() == Gdiplus::Ok)
 				{
 					UINT widthToSet = m_pImage->GetWidth();

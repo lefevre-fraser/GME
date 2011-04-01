@@ -29,7 +29,7 @@ namespace DecoratorSDK
 
 	bool Convert( const CString& strValue, long& lValue, bool bIsHexa )
 	{
-		return sscanf( strValue, ( bIsHexa ) ? "%x" : "%ld", &lValue ) == 1;
+		return _stscanf( strValue, ( bIsHexa ) ? _T("%x") : _T("%ld"), &lValue ) == 1;
 	}
 
 	bool Convert( const CString& strValue, COLORREF& crValue )
@@ -49,46 +49,46 @@ namespace DecoratorSDK
 	bool Convert( const CString& strValueIn, ELocation& eValue )
 	{
 		int iValue = 0;
-		if ( sscanf( strValueIn, "%d", &iValue ) == 1 ) {
+		if ( _stscanf( strValueIn, _T("%d"), &iValue ) == 1 ) {
 			eValue = (ELocation) iValue;
 			return true;
 		}
 		CString strValue = strValueIn;
 		strValue.TrimLeft( _T("\t ") );
 		strValue.TrimRight( _T("\t ") );
-		if ( strValue == "N") {
+		if ( strValue == _T("N")) {
 			eValue = L_NORTH;
 			return true;
 		}
-		if ( strValue == "NE") {
+		if ( strValue == _T("NE")) {
 			eValue = L_NORTHEAST;
 			return true;
 		}
-		if ( strValue == "E") {
+		if ( strValue == _T("E")) {
 			eValue = L_EAST;
 			return true;
 		}
-		if ( strValue == "SE") {
+		if ( strValue == _T("SE")) {
 			eValue = L_SOUTHEAST;
 			return true;
 		}
-		if ( strValue == "S") {
+		if ( strValue == _T("S")) {
 			eValue = L_SOUTH;
 			return true;
 		}
-		if ( strValue == "SW") {
+		if ( strValue == _T("SW")) {
 			eValue = L_SOUTHWEST;
 			return true;
 		}
-		if ( strValue == "W") {
+		if ( strValue == _T("W")) {
 			eValue = L_WEST;
 			return true;
 		}
-		if ( strValue == "NW") {
+		if ( strValue == _T("NW")) {
 			eValue = L_NORTHWEST;
 			return true;
 		}
-		if ( strValue =="C") {
+		if ( strValue ==_T("C")) {
 			eValue = L_CENTER;
 			return true;
 		}
@@ -119,13 +119,13 @@ Facilities::Facilities()
 	COMTHROW(registrar->get_FontSmoothMode(REGACCESS_USER, &fontSmoothMode));
 	m_eFontAntiAlias = (Gdiplus::TextRenderingHint)fontSmoothMode;
 
-	createFont( FONT_LABEL,			"Arial", FW_NORMAL,		false,	16 );
-	createFont( FONT_PORT,			"Arial", FW_BOLD,		false,	12 );
-	createFont( FONT_TYPE,			"Arial", FW_NORMAL,		false,	12 );
-	createFont( FONT_PORT_OUTSIDE,	"Arial", FW_BOLD,		false,	11 );
-	createFont( FONT_PORTNAME,		"Arial", FW_NORMAL,		false,	15 );
-	createFont( FONT_CONNLABEL,		"Arial", FW_LIGHT,		false,	12 );
-	createFont( FONT_ABSTRACT,		"Arial", FW_NORMAL,		true,	15 );
+	createFont( FONT_LABEL,			_T("Arial"), FW_NORMAL,		false,	16 );
+	createFont( FONT_PORT,			_T("Arial"), FW_BOLD,		false,	12 );
+	createFont( FONT_TYPE,			_T("Arial"), FW_NORMAL,		false,	12 );
+	createFont( FONT_PORT_OUTSIDE,	_T("Arial"), FW_BOLD,		false,	11 );
+	createFont( FONT_PORTNAME,		_T("Arial"), FW_NORMAL,		false,	15 );
+	createFont( FONT_CONNLABEL,		_T("Arial"), FW_LIGHT,		false,	12 );
+	createFont( FONT_ABSTRACT,		_T("Arial"), FW_NORMAL,		true,	15 );
 
 	TileVector* pTileVector = new TileVector();
 
@@ -222,7 +222,7 @@ bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )
 				CComBSTR bstrParadigm;
 				COMTHROW( pProject->get_ParadigmConnStr( &bstrParadigm ) );
 				m_strParadigmPath = CString( bstrParadigm );
-				if ( m_strParadigmPath.Find( "MGA=" ) == 0 ) {
+				if ( m_strParadigmPath.Find( _T("MGA=") ) == 0 ) {
 					int iPos = m_strParadigmPath.ReverseFind( _T('\\') );
 					if( iPos >= 4 ) {
 						m_strParadigmPath = m_strParadigmPath.Mid( 4, iPos - 4 );
@@ -234,7 +234,7 @@ bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )
 				CComBSTR bstrProject;
 				COMTHROW( pProject->get_ProjectConnStr( &bstrProject ) );
 				m_strProjectPath = CString( bstrProject );
-				if ( m_strProjectPath.Find( "MGA=" ) == 0 ) {
+				if ( m_strProjectPath.Find( _T("MGA=") ) == 0 ) {
 					int iPos = m_strProjectPath.ReverseFind( _T('\\') );
 					if( iPos >= 4 ) {
 						m_strProjectPath = m_strProjectPath.Mid( 4, iPos - 4 );
@@ -255,13 +255,13 @@ bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )
 			CComBSTR bstrPath;
 			COMTHROW( spRegistrar->get_IconPath( REGACCESS_BOTH, &bstrPath ) );
 
-			CopyTo( bstrPath, strPath );
+			strPath = bstrPath;
 		}
 		catch ( hresult_exception & ) {
 		}
 
-		strPath.Replace( "$PARADIGMDIR", m_strParadigmPath );
-		strPath.Replace( "$PROJECTDIR", m_strProjectPath );
+		strPath.Replace( _T("$PARADIGMDIR"), m_strParadigmPath );
+		strPath.Replace( _T("$PROJECTDIR"), m_strProjectPath );
 
 		while( ! strPath.IsEmpty() ) {
 			int iPos = strPath.Find( ';' );
@@ -281,10 +281,10 @@ bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )
 			}
 			strDir.Replace( '/', '\\' );
 			if ( strDir.GetAt( strDir.GetLength() - 1 ) != '\\' )
-				strDir += "\\";
+				strDir += _T("\\");
 			m_vecPathes.push_back( strDir );
 		}
-		m_vecPathes.push_back( ".\\" );
+		m_vecPathes.push_back( _T(".\\") );
 
 		m_bArePathesValid = true;
 	}
@@ -380,8 +380,7 @@ bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spM
 		bstrValue.Empty();
 	}
 
-	CString strValueT;
-	CopyTo( bstrValue, strValueT );
+	CString strValueT = bstrValue;
 	if ( ! strValueT.IsEmpty() )
 		strValue = strValueT;
 	return ! strValueT.IsEmpty();
@@ -429,7 +428,7 @@ bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spM
 	if ( ! getPreference( spFCO, spMetaFCO, strName, strValue ) )
 		return false;
 	strValue.MakeLower();
-	bValue = strValue == "t" || strValue == "true" || strValue == "1";
+	bValue = strValue == _T("t") || strValue == _T("true") || strValue == _T("1");
 	return true;
 }
 
@@ -469,8 +468,7 @@ bool Facilities::getAttribute( CComPtr<IMgaFCO> spFCO, const CString& strName, C
 		bstrValue.Empty();
 	}
 
-	CString strValueT;
-	CopyTo( bstrValue, strValueT );
+	CString strValueT = bstrValue;
 	if ( ! strValueT.IsEmpty() )
 		strValue = strValueT;
 	return ! strValueT.IsEmpty();
@@ -632,21 +630,21 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 	CString strID( strName );
 	if ( masked ) {
 		if (nResID != 0) {
-			char chBuffer[ 10 ];
-			_ultoa( nResID, chBuffer, 10 );
+			TCHAR chBuffer[ 10 ];
+			_ultot( nResID, chBuffer, 10 );
 			strID += chBuffer;
 		}
-		strID += "<Masked>";
+		strID += _T("<Masked>");
 	}
 	if ( bHasTC ) {
-		char chBuffer[ 10 ];
-		_ultoa( crTC, chBuffer, 16 );
-		strID += "<TC:" + CString( chBuffer ) + ">";
+		TCHAR chBuffer[ 10 ];
+		_ultot( crTC, chBuffer, 16 );
+		strID += _T("<TC:") + CString( chBuffer ) + _T(">");
 	}
 	if ( bHasBC ) {
-		char chBuffer[ 10 ];
-		_ultoa( crBC, chBuffer, 16 );
-		strID += "<BC:" + CString( chBuffer ) + ">";
+		TCHAR chBuffer[ 10 ];
+		_ultot( crBC, chBuffer, 16 );
+		strID += _T("<BC:") + CString( chBuffer ) + _T(">");
 	}
 
 	std::map<CString,BitmapBase*>::iterator it = m_mapBitmaps.find( strID );
@@ -673,16 +671,16 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 		if( strName.GetLength() >= 5) // in case of ".jpeg"
 			strEx2 = strName.Right(5).MakeLower();
 		
-		if ( strExt != ".bmp" && strExt != ".gif" && strExt != ".png"
-			&& strExt != ".jpg" && strExt != ".jpe" && strEx2 != ".jpeg"
-			&& strExt != ".res"  && strExt != ".wmf" && strExt != ".emf")
-			strExt = "";
+		if ( strExt != _T(".bmp") && strExt != _T(".gif") && strExt != _T(".png")
+			&& strExt != _T(".jpg") && strExt != _T(".jpe") && strEx2 != _T(".jpeg")
+			&& strExt != _T(".res")  && strExt != _T(".wmf") && strExt != _T(".emf"))
+			strExt = _T("");
 	}
 
 	if( strExt.IsEmpty()) // if no extension then try the different formats
 	{
 		bool success = false;
-		static char * exts[] = { ".bmp", ".gif", ".png", ".jpg", ".jpe", ".jpeg", ".wmf", ".emf" };
+		static TCHAR * exts[] = { _T(".bmp"), _T(".gif"), _T(".png"), _T(".jpg"), _T(".jpe"), _T(".jpeg"), _T(".wmf"), _T(".emf") };
 		for( int i = 0; !success && i < 6; ++i)
 		{
 			CString strName2 = strName + exts[i];
@@ -699,7 +697,7 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 			delete pBMP;
 		}
 	}
-	else if( strExt != ".res") // if regular file use name as is
+	else if( strExt != _T(".res")) // if regular file use name as is
 	{
 		BitmapGen* pBMP = NULL;
 		if ( bHasTC )
@@ -713,8 +711,8 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 		delete pBMP;
 	}
 
-	if ( strExt == ".res" || strExt.IsEmpty() ) {
-		int iID = atoi( strName.Left( strName.GetLength() - ( ( strExt.IsEmpty() ) ? 0 : 4 ) ) );
+	if ( strExt == _T(".res") || strExt.IsEmpty() ) {
+		int iID = _ttoi( strName.Left( strName.GetLength() - ( ( strExt.IsEmpty() ) ? 0 : 4 ) ) );
 		if( iID == 0)    // might be true if specified icon filename
 			return NULL; // has no extension and not found yet
 		BitmapRES* pBMP = NULL;
@@ -759,7 +757,7 @@ BitmapBase* Facilities::getMaskedBitmap( const CString& strName, COLORREF crTran
 
 BitmapBase* Facilities::getMaskedBitmap( UINT nResID, COLORREF crTransparent, COLORREF crBackground )
 {
-	return getBitmap( "", true, crTransparent, true, crBackground, true, nResID );
+	return getBitmap( _T(""), true, crTransparent, true, crBackground, true, nResID );
 }
 
 void Facilities::addTileVector( const CString& strName, TileVector* vecTiles )
@@ -817,7 +815,7 @@ GdipFont* Facilities::GetFont( int iFontKey ) const
 Gdiplus::Pen* Facilities::GetPen( COLORREF crColor, int iWidth )
 {
 	CString chBuffer;
-	chBuffer.Format("%x-%ld", crColor, iWidth);
+	chBuffer.Format(_T("%x-%ld"), crColor, iWidth);
 	std::map<CString,Gdiplus::Pen*>::iterator it = m_mapPens.find(chBuffer);
 	if (it != m_mapPens.end())
 		return it->second;
@@ -829,7 +827,7 @@ Gdiplus::Pen* Facilities::GetPen( COLORREF crColor, int iWidth )
 Gdiplus::SolidBrush* Facilities::GetBrush( COLORREF crColor )
 {
 	CString chBuffer;
-	chBuffer.Format("%x", crColor);
+	chBuffer.Format(_T("%x"), crColor);
 	std::map<CString,Gdiplus::SolidBrush*>::iterator it = m_mapBrushes.find(chBuffer);
 	if (it != m_mapBrushes.end())
 		return it->second;
@@ -838,21 +836,21 @@ Gdiplus::SolidBrush* Facilities::GetBrush( COLORREF crColor )
 	return pBrush;
 }
 
-CSize Facilities::MeasureText( Gdiplus::Graphics* gdip, GdipFont* pFont, const CString& strText)
+CSize Facilities::MeasureText( Gdiplus::Graphics* gdip, GdipFont* pFont, const CString& strText) const
 {
 	return MeasureText(gdip, pFont->gdipFont, strText);
 }
 
-CSize Facilities::MeasureText( Gdiplus::Graphics* gdip, Gdiplus::Font* pFont, const CString& strText)
+CSize Facilities::MeasureText( Gdiplus::Graphics* gdip, Gdiplus::Font* pFont, const CString& strText) const
 {
 	Gdiplus::Graphics* gdip2 = gdip;
 	if (gdip == NULL)
 		gdip2 = m_gdip;
 
-	CA2W wcTxt(strText);
 	Gdiplus::PointF origin(0, 0);
 	Gdiplus::RectF rectF;
-	gdip2->MeasureString(wcTxt, strText.GetLength(), pFont, origin, &rectF);
+	CStringW strText2(strText);
+	gdip2->MeasureString(strText2, strText2.GetLength(), pFont, origin, &rectF);
 	Gdiplus::SizeF sizeF;
 	rectF.GetSize(&sizeF);
 	CSize size(static_cast<long> (sizeF.Width), static_cast<long> (sizeF.Height));
@@ -871,7 +869,7 @@ void Facilities::DrawString( Gdiplus::Graphics* gdip, const CString& strText, co
 {
 	CString strText2( strPre + strText + strPost );
 	if ( iLength != -1 && strText2.GetLength() > iLength )
-		strText2 = strPre + strText.Left( iLength ) + ( ( bPeriods ) ? "..." : "" ) + strPost;
+		strText2 = strPre + strText.Left( iLength ) + ( ( bPeriods ) ? _T("...") : _T("") ) + strPost;
 
 	Gdiplus::StringFormat format;
 	Gdiplus::StringAlignment horizontalAlignment;
@@ -903,7 +901,7 @@ void Facilities::DrawString( Gdiplus::Graphics* gdip, const CString& strText, co
 												 GetGValue(textColor),
 												 GetBValue(textColor)));
 
-	CA2W wcTxt(strText2);
+	CStringW wcTxt(strText2);
 	Gdiplus::RectF rectF(static_cast<float> (crBounds.left),
 						 static_cast<float> (crBounds.top),
 						 static_cast<float> (crBounds.Width()),

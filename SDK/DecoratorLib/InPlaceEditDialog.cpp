@@ -85,7 +85,11 @@ bool CInPlaceEditDialog::IsAsciiString(const CString& textToValidate)
 
 bool CInPlaceEditDialog::IsValidString(const CString& textToValidate)
 {
+#ifdef UNICODE
+	return true; // FIXME
+#else
 	return IsAsciiString(textToValidate);
+#endif
 }
 
 void CInPlaceEditDialog::SignalBackToGme(void)
@@ -101,7 +105,7 @@ void CInPlaceEditDialog::SignalBackToGme(void)
 				m_parentPart->ExecuteOperation(m_Text);
 				// transaction operation end
 			} else {
-				m_intendedParentCWnd->MessageBox("Invalid (non ASCII) string data: " + textToValidate, "In-place Editor", MB_ICONERROR);
+				m_intendedParentCWnd->MessageBox(_T("Invalid (non ASCII) string data: ") + textToValidate, _T("In-place Editor"), MB_ICONERROR);
 			}
 		}
 		m_parentPart->LabelEditingFinished(m_initialRect);
@@ -132,7 +136,7 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 	// start font scaling pass 1
 	Gdiplus::Font* originalFont = DecoratorSDK::getFacilities().GetFont(m_iFontKey)->gdipFont;
 	LOGFONT lf1;
-	originalFont->GetLogFontA(DecoratorSDK::getFacilities().getGraphics(), &lf1);
+	originalFont->GetLogFontT(DecoratorSDK::getFacilities().getGraphics(), &lf1);
 	CSize windowExt = dc.GetWindowExt();
 	CSize viewPortExt = dc.GetViewportExt();
 	ASSERT(viewPortExt.cx / windowExt.cx == viewPortExt.cy / windowExt.cy);
@@ -152,7 +156,7 @@ BOOL CInPlaceEditDialog::OnInitDialog()
 
 	// start font scaling pass 2
 	LOGFONT lf2;
-	originalFont->GetLogFontA(DecoratorSDK::getFacilities().getGraphics(), &lf2);
+	originalFont->GetLogFontT(DecoratorSDK::getFacilities().getGraphics(), &lf2);
 	double zoom2 = (double)m_labelRect.Height() * viewZoom / (double)cSize.cy;	// Correction zoom
 	old_lfheight = lf2.lfHeight;
 	lf2.lfHeight = (long)(lf2.lfHeight * viewZoom * zoom2);

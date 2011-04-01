@@ -12,8 +12,8 @@ namespace DecoratorSDK
 {
 	CString createResString( int iID )
 	{
-		char chBuffer[ 10 ];
-		_itoa( iID, chBuffer, 10 );
+		TCHAR chBuffer[ 10 ];
+		_itot( iID, chBuffer, 10 );
 		return CString( chBuffer ) + ".res";
 	}
 

@@ -190,13 +190,13 @@ bool ResizablePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint&
 			CDialogTemplate dlgTemplate(_T("Set size"),
 										DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU,	// Window Styles
 										0,	// Extended Window Styles
-										0, 0, SetSizeDialogWidth, SetSizeDialogHeight, "MS Shell Dlg", 8);
-			dlgTemplate.AddButton("OK", WS_VISIBLE, 0, 6, 42, 50, 14, IDOK);
-			dlgTemplate.AddButton("Cancel", WS_VISIBLE, 0, 60, 42, 50, 14, IDCANCEL);
-			dlgTemplate.AddStatic("Width:", WS_VISIBLE, 0, 6, 6, 26, 8, WidthTextCtrlId);
-			dlgTemplate.AddStatic("Height:", WS_VISIBLE, 0, 6, 24, 26, 8, HeightTextCtrlId);
-			dlgTemplate.AddEditBox("", WS_VISIBLE | ES_AUTOHSCROLL, 0, 36, 6, 72, 14, WidthEditCtrlId);
-			dlgTemplate.AddEditBox("", WS_VISIBLE | ES_AUTOHSCROLL, 0, 36, 24, 72, 14, HeightEditCtrlId);
+										0, 0, SetSizeDialogWidth, SetSizeDialogHeight, _T("MS Shell Dlg"), 8);
+			dlgTemplate.AddButton(_T("OK"), WS_VISIBLE, 0, 6, 42, 50, 14, IDOK);
+			dlgTemplate.AddButton(_T("Cancel"), WS_VISIBLE, 0, 60, 42, 50, 14, IDCANCEL);
+			dlgTemplate.AddStatic(_T("Width:"), WS_VISIBLE, 0, 6, 6, 26, 8, WidthTextCtrlId);
+			dlgTemplate.AddStatic(_T("Height:"), WS_VISIBLE, 0, 6, 24, 26, 8, HeightTextCtrlId);
+			dlgTemplate.AddEditBox(_T(""), WS_VISIBLE | ES_AUTOHSCROLL, 0, 36, 6, 72, 14, WidthEditCtrlId);
+			dlgTemplate.AddEditBox(_T(""), WS_VISIBLE | ES_AUTOHSCROLL, 0, 36, 24, 72, 14, HeightEditCtrlId);
 
 			CSetSizeDialog setSizeDlg;
 			setSizeDlg.SetParameters(this, GetLocation(), point, resizeLogic.DeterminePotentialResize(point),

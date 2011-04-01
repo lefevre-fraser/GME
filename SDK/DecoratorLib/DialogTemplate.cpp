@@ -4,11 +4,11 @@
 #include "stdafx.h"
 #include "DialogTemplate.h"
 
-CDialogTemplate::CDialogTemplate(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h,
-								 LPCSTR font, WORD fontSize)
+CDialogTemplate::CDialogTemplate(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h,
+								 LPCTSTR font, WORD fontSize)
 {
 	usedBufferLength = sizeof(DLGTEMPLATE);
-	totalBufferLength = 4 * usedBufferLength;
+	totalBufferLength = 8 * usedBufferLength; // FIXME: this appears to be a guess
 
 	dialogTemplate = (DLGTEMPLATE*)(new char[totalBufferLength]);
 
@@ -29,8 +29,8 @@ CDialogTemplate::CDialogTemplate(LPCSTR caption, DWORD style, DWORD exStyle, int
 
 	// The dialog box doesn't have a menu or a special class
 
-	AppendData(_T("\0"), 2);
-	AppendData(_T("\0"), 2);
+	AppendData("\0", 2);
+	AppendData("\0", 2);
 
 	// Add the dialog's caption to the template
 
@@ -59,7 +59,7 @@ CDialogTemplate::~CDialogTemplate()
 	delete [] ((char*)dialogTemplate);
 }
 
-void CDialogTemplate::AddButton(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y,
+void CDialogTemplate::AddButton(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y,
 								int w, int h, WORD id)
 {
 	AddStandardComponent(0x0080, caption, style, exStyle, x, y, w, h, id);
@@ -68,7 +68,7 @@ void CDialogTemplate::AddButton(LPCSTR caption, DWORD style, DWORD exStyle, int 
 	AppendData(&creationDataLength, sizeof(WORD));
 }
 
-void CDialogTemplate::AddEditBox(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y,
+void CDialogTemplate::AddEditBox(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y,
 								 int w, int h, WORD id)
 {
 	AddStandardComponent(0x0081, caption, style, exStyle, x, y, w, h, id);
@@ -77,7 +77,7 @@ void CDialogTemplate::AddEditBox(LPCSTR caption, DWORD style, DWORD exStyle, int
 	AppendData(&creationDataLength, sizeof(WORD));
 }
 
-void CDialogTemplate::AddStatic(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y,
+void CDialogTemplate::AddStatic(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y,
 								int w, int h, WORD id)
 {
 	AddStandardComponent(0x0082, caption, style, exStyle, x, y, w, h, id);
@@ -86,7 +86,7 @@ void CDialogTemplate::AddStatic(LPCSTR caption, DWORD style, DWORD exStyle, int 
 	AppendData(&creationDataLength, sizeof(WORD));
 }
 
-void CDialogTemplate::AddListBox(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y,
+void CDialogTemplate::AddListBox(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y,
 								 int w, int h, WORD id)
 {
 	AddStandardComponent(0x0083, caption, style, exStyle, x, y, w, h, id);
@@ -95,7 +95,7 @@ void CDialogTemplate::AddListBox(LPCSTR caption, DWORD style, DWORD exStyle, int
 	AppendData(&creationDataLength, sizeof(WORD));
 }
 
-void CDialogTemplate::AddScrollBar(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y,
+void CDialogTemplate::AddScrollBar(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y,
 								   int w, int h, WORD id)
 {
 	AddStandardComponent(0x0084, caption, style, exStyle, x, y, w, h, id);
@@ -104,7 +104,7 @@ void CDialogTemplate::AddScrollBar(LPCSTR caption, DWORD style, DWORD exStyle, i
 	AppendData(&creationDataLength, sizeof(WORD));
 }
 
-void CDialogTemplate::AddComboBox(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y,
+void CDialogTemplate::AddComboBox(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y,
 								  int w, int h, WORD id)
 {
 	AddStandardComponent(0x0085, caption, style, exStyle, x, y, w, h, id);
@@ -113,7 +113,7 @@ void CDialogTemplate::AddComboBox(LPCSTR caption, DWORD style, DWORD exStyle, in
 	AppendData(&creationDataLength, sizeof(WORD));
 }
 
-void CDialogTemplate::AddRichEdit(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y,
+void CDialogTemplate::AddRichEdit(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y,
 								  int w, int h, WORD id)
 {
 	AddComponent(0x0081, RICHEDIT_CLASS, caption, style, exStyle, x, y, w, h, id);
@@ -122,13 +122,13 @@ void CDialogTemplate::AddRichEdit(LPCSTR caption, DWORD style, DWORD exStyle, in
 	AppendData(&creationDataLength, sizeof(WORD));
 }
 
-void CDialogTemplate::AddStandardComponent(WORD type, LPCSTR caption, DWORD style,
+void CDialogTemplate::AddStandardComponent(WORD type, LPCTSTR caption, DWORD style,
 										   DWORD exStyle, int x, int y, int w, int h, WORD id)
 {
 	AddComponent(type, NULL, caption, style, exStyle, x, y, w, h, id);
 }
 
-void CDialogTemplate::AddComponent(WORD type, LPCSTR classId, LPCSTR caption, DWORD style,
+void CDialogTemplate::AddComponent(WORD type, LPCTSTR classId, LPCTSTR caption, DWORD style,
 								   DWORD exStyle, int x, int y, int w, int h, WORD id)
 {
 	DLGITEMTEMPLATE item;
@@ -175,6 +175,11 @@ void CDialogTemplate::AlignData(int size)
 	}
 }
 
+void CDialogTemplate::AppendString(LPCWSTR string)
+{
+	AppendData(string, (wcslen(string) + 1) * sizeof(wchar_t));
+}
+
 void CDialogTemplate::AppendString(LPCSTR string)
 {
 	int length = MultiByteToWideChar(CP_ACP, 0, string, -1, NULL, 0);
@@ -186,7 +191,7 @@ void CDialogTemplate::AppendString(LPCSTR string)
 	free(wideString);
 }
 
-void CDialogTemplate::AppendData(void* data, int dataLength)
+void CDialogTemplate::AppendData(const void* data, int dataLength)
 {
 	EnsureSpace(dataLength);
 

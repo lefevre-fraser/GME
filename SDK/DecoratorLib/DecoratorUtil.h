@@ -108,8 +108,8 @@ namespace DecoratorSDK
 
 			bool getMetaFCO(const CComPtr<IMgaMetaPart> &metaPart, CComPtr<IMgaMetaFCO> &metaFco) const;
 
-			CSize MeasureText( Gdiplus::Graphics* gdip, GdipFont* pFont, const CString& strText);
-			CSize MeasureText( Gdiplus::Graphics* gdip, Gdiplus::Font* pFont, const CString& strText);
+			CSize MeasureText( Gdiplus::Graphics* gdip, GdipFont* pFont, const CString& strText) const;
+			CSize MeasureText( Gdiplus::Graphics* gdip, Gdiplus::Font* pFont, const CString& strText) const;
 			void DrawString( Gdiplus::Graphics* gdip, const CString& strText, const CRect& crBounds, GdipFont* pFont,
 							 COLORREF crColor, int iAlign, int iLength = -1, const CString& strPre = "",
 							 const CString& strPost = "", bool bPeriods = true ) const;

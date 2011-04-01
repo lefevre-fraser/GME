@@ -48,6 +48,12 @@ extern CComModule _Module;
 #include "DecoratorMfc.h"
 #include <stdio.h>
 
+#ifdef UNICODE
+#define GetLogFontT GetLogFontW
+#else
+#define GetLogFontT GetLogFontA
+#endif
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

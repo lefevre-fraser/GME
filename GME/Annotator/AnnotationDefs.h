@@ -5,30 +5,30 @@
 
 #define AN_DECORATOR_PROGID			"MGA.Decorator.Annotator"
 
-#define AN_PARAM_ROOTNODE			"rootnode"
+#define AN_PARAM_ROOTNODE			_T("rootnode")
 
-#define AN_ROOT						"annotations"
-#define AN_INHERITABLE				"inheritable"
-#define AN_HIDDEN					"hidden"
-#define AN_BROKEN_DERIV				"brokenDeriv"
-#define AN_COLOR_PREF				"color"
-#define AN_BGCOLOR_PREF				"bgcolor"
-#define AN_GRADIENTCOLOR_PREF		"gradientcolor"
-#define AN_SHADOWCOLOR_PREF			"shadowcolor"
-#define AN_FONT_PREF				"logfont"
-#define AN_ASPECTS					"aspects"
-#define AN_DEFASPECT				"*"
-#define AN_GRADIENTFILL_PREF		"gradientfill"
-#define AN_GRADIENTDIRECTION_PREF	"gradientdirection"
-#define AN_CASTSHADOW_PREF			"castshadow"
-#define AN_SHADOWDEPTH_PREF			"shadowdepth"
-#define AN_SHADOWDIRECTION_PREF		"shadowdirection"
-#define AN_ROUNDCORNERRECT_PREF		"roundrectcorner"
-#define AN_ROUNDCORNERRADIUS_PREF	"roundrectcornerradius"
+#define AN_ROOT						_T("annotations")
+#define AN_INHERITABLE				_T("inheritable")
+#define AN_HIDDEN					_T("hidden")
+#define AN_BROKEN_DERIV				_T("brokenDeriv")
+#define AN_COLOR_PREF				_T("color")
+#define AN_BGCOLOR_PREF				_T("bgcolor")
+#define AN_GRADIENTCOLOR_PREF		_T("gradientcolor")
+#define AN_SHADOWCOLOR_PREF			_T("shadowcolor")
+#define AN_FONT_PREF				_T("logfont")
+#define AN_ASPECTS					_T("aspects")
+#define AN_DEFASPECT				_T("*")
+#define AN_GRADIENTFILL_PREF		_T("gradientfill")
+#define AN_GRADIENTDIRECTION_PREF	_T("gradientdirection")
+#define AN_CASTSHADOW_PREF			_T("castshadow")
+#define AN_SHADOWDEPTH_PREF			_T("shadowdepth")
+#define AN_SHADOWDIRECTION_PREF		_T("shadowdirection")
+#define AN_ROUNDCORNERRECT_PREF		_T("roundrectcorner")
+#define AN_ROUNDCORNERRADIUS_PREF	_T("roundrectcornerradius")
 
-#define	AN_VISIBLE_DEFAULT			"DefaultVisibility"
-#define AN_DEFANNOTATION_NAME		"Annotation"
-#define AN_DEFAULTANNOTATION_TXT	"Enter your annotation here"
+#define	AN_VISIBLE_DEFAULT			_T("DefaultVisibility")
+#define AN_DEFANNOTATION_NAME		_T("Annotation")
+#define AN_DEFAULTANNOTATION_TXT	_T("Enter your annotation here")
 
 #define AN_DEFAULT_FONT_HEIGHT			12
 #define AN_DEFAULT_FONT_FACE			_T("Arial")

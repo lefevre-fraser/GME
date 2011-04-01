@@ -5,12 +5,12 @@
 
 // --------------------------- Error
 
-void DisplayError(const char *msg, HRESULT hr)
+void DisplayError(const TCHAR *msg, HRESULT hr)
 {
 	ASSERT( msg != NULL );
 
 	CString a;
-	a.Format(" (0x%x)", hr);
+	a.Format(_T(" (0x%x)"), hr);
 	a.Insert(0, msg);
 
 	CString desc;

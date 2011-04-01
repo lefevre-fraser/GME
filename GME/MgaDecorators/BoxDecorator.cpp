@@ -241,7 +241,7 @@ bool BoxDecorator::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transfor
 				is_dir = (fstatus.st_mode & _S_IFDIR) == _S_IFDIR;
 
 			CString conn(szFileName);
-			if (!is_dir && conn.Right(4).CompareNoCase(".txt") == 0) {
+			if (!is_dir && conn.Right(4).CompareNoCase(_T(".txt")) == 0) {
 				CFile txtFile(conn, CFile::modeRead);
 				char pbufRead[100];
 				UINT readLen = txtFile.Read(pbufRead, sizeof(pbufRead) - 1);
@@ -252,7 +252,7 @@ bool BoxDecorator::DropFile(HDROP p_hDropInfo, const CPoint& point, HDC transfor
 				AfxMessageBox("Decorator drop: '.txt' files may be dropped only. Can't open file: " + conn + "!");
 			}
 		} else {
-			AfxMessageBox("Decorator drop: Can't inquire file information!");
+			AfxMessageBox(_T("Decorator drop: Can't inquire file information!"));
 		}
 	}
 #endif

@@ -121,7 +121,7 @@ void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart
 				COMTHROW(m_spFCO->get_Name(&bstrText));
 		}
 		if (!bTextDefined)
-			CopyTo(bstrText, m_strText);
+			m_strText = bstrText;
 		if (m_strText == "Condition") {
 			m_strText = "Condition";
 		}

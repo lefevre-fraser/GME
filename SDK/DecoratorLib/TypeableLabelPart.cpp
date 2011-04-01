@@ -82,7 +82,7 @@ void TypeableLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 				COMTHROW(m_spFCO->get_DerivedFrom(&spType));
 				CComBSTR bstrName;
 				COMTHROW(spType->get_Name(&bstrName));
-				CopyTo(bstrName, m_strTypeName);
+				m_strTypeName = bstrName;
 			}
 		} else {
 			CComPtr<IMgaFCO> spType;
@@ -92,7 +92,7 @@ void TypeableLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 				// proba [
 				CComBSTR bstrName;
 				COMTHROW(spType->get_Name(&bstrName));
-				CopyTo(bstrName, m_strTypeName);
+				m_strTypeName = bstrName;
 				// ] proba
 			} else {
 				CComPtr<IMgaFCOs> spFCOs;
@@ -134,7 +134,7 @@ CRect TypeableLabelPart::GetTextLocation(CDC* pDC, Gdiplus::Graphics* gdip) cons
 
 	if (m_bTypeNameEnabled && (m_iTypeInfo == 3 || m_iTypeInfo == 2)) {
 		LOGFONT logFont;
-		getFacilities().GetFont(FONT_TYPE)->gdipFont->GetLogFontA(gdip, &logFont);
+		getFacilities().GetFont(FONT_TYPE)->gdipFont->GetLogFontT(gdip, &logFont);
 		ECoordRefPoint eAlign = GetAlignment(m_eTextLocation);
 
 		CSize cSize(logFont.lfWidth * m_strTypeName.GetLength(), logFont.lfHeight);

@@ -24,21 +24,21 @@
 #define GME_MODEL_HEIGHT			70
 //#define GME_3D_BORDER_SIZE			3
 
-#define HELP_PREF					"help"
-#define COLOR_PREF					"color"
-#define CONN_LINE_TYPE_PREF			"lineType"
-#define MODEL_BACKGROUND_COLOR_PREF	"backgroundColor"
-#define MODEL_BORDER_COLOR_PREF		"borderColor"
-#define PORT_NAME_COLOR_PREF		"portColor"
-#define NAME_COLOR_PREF				"nameColor"
-#define NAME_POS_PREF				"namePosition"
-#define ICON_PREF					"icon"
-#define PORTICON_PREF				"porticon"
+#define HELP_PREF					_T("help")
+#define COLOR_PREF					_T("color")
+#define CONN_LINE_TYPE_PREF			_T("lineType")
+#define MODEL_BACKGROUND_COLOR_PREF	_T("backgroundColor")
+#define MODEL_BORDER_COLOR_PREF		_T("borderColor")
+#define PORT_NAME_COLOR_PREF		_T("portColor")
+#define NAME_COLOR_PREF				_T("nameColor")
+#define NAME_POS_PREF				_T("namePosition")
+#define ICON_PREF					_T("icon")
+#define PORTICON_PREF				_T("porticon")
 
 #define	 META_DEFAULT_SHOWABSTRACT		true
 #define	 META_DEFAULT_SHOWATTRIBUTES	true
 
-#define  META_ATTRIBUTE_SEP			" : "
+#define  META_ATTRIBUTE_SEP			_T(" : ")
 
 #define	 META_DECORATOR_MARGINX		6
 #define	 META_DECORATOR_MARGINY		4
@@ -61,53 +61,53 @@
 
 typedef enum {NULLSHAPE, CLASS, CLASSPROXY, CONNECTOR, CONSTRAINT, EQUIVALENCE, INHERITANCE, INTINHERITANCE, IMPINHERITANCE, CONSTRAINTFUNC } ShapeCode;
 
-#define  META_ABSTRACT_ATTR			"IsAbstract"
+#define  META_ABSTRACT_ATTR			_T("IsAbstract")
 
-#define	 META_ATOM_KIND				"Atom"
-#define	 META_ATOMPROXY_KIND		"AtomProxy"
-#define	 META_MODEL_KIND			"Model"
-#define	 META_MODELPROXY_KIND		"ModelProxy"
-#define	 META_REFERENCE_KIND		"Reference"
-#define	 META_REFERENCEPROXY_KIND	"ReferenceProxy"
-#define	 META_SET_KIND				"Set"
-#define	 META_SETPROXY_KIND			"SetProxy"
-#define	 META_CONNECTION_KIND		"Connection"
-#define	 META_CONNECTIONPROXY_KIND	"ConnectionProxy"
-#define	 META_FCO_KIND				"FCO"
-#define	 META_FCOPROXY_KIND			"FCOProxy"
+#define	 META_ATOM_KIND				_T("Atom")
+#define	 META_ATOMPROXY_KIND		_T("AtomProxy")
+#define	 META_MODEL_KIND			_T("Model")
+#define	 META_MODELPROXY_KIND		_T("ModelProxy")
+#define	 META_REFERENCE_KIND		_T("Reference")
+#define	 META_REFERENCEPROXY_KIND	_T("ReferenceProxy")
+#define	 META_SET_KIND				_T("Set")
+#define	 META_SETPROXY_KIND			_T("SetProxy")
+#define	 META_CONNECTION_KIND		_T("Connection")
+#define	 META_CONNECTIONPROXY_KIND	_T("ConnectionProxy")
+#define	 META_FCO_KIND				_T("FCO")
+#define	 META_FCOPROXY_KIND			_T("FCOProxy")
 
-#define	 META_FOLDER_KIND			"Folder"
-#define	 META_FOLDERPROXY_KIND		"FolderProxy"
+#define	 META_FOLDER_KIND			_T("Folder")
+#define	 META_FOLDERPROXY_KIND		_T("FolderProxy")
 
-#define	 META_ASPECT_KIND			"Aspect"
-#define	 META_ASPECTPROXY_KIND		"AspectProxy"
+#define	 META_ASPECT_KIND			_T("Aspect")
+#define	 META_ASPECTPROXY_KIND		_T("AspectProxy")
 
-#define	 META_BOOLEANATTR_KIND		"BooleanAttribute"
-#define	 META_ENUMATTR_KIND			"EnumAttribute"
-#define	 META_FIELDATTR_KIND		"FieldAttribute"
+#define	 META_BOOLEANATTR_KIND		_T("BooleanAttribute")
+#define	 META_ENUMATTR_KIND			_T("EnumAttribute")
+#define	 META_FIELDATTR_KIND		_T("FieldAttribute")
 
-#define	 META_CONSTRAINT_KIND		"Constraint"
-#define	 META_CONSTRAINTFUNC_KIND	"ConstraintFunc"
+#define	 META_CONSTRAINT_KIND		_T("Constraint")
+#define	 META_CONSTRAINTFUNC_KIND	_T("ConstraintFunc")
 
-#define	 META_CONNECTOR_KIND		"Connector"
+#define	 META_CONNECTOR_KIND		_T("Connector")
 
-#define	 META_EQUIVALENCE_KIND		"Equivalence"
-#define	 META_SAMEFOLDER_KIND		"SameFolder"
-#define	 META_SAMEASPECT_KIND		"SameAspect"
+#define	 META_EQUIVALENCE_KIND		_T("Equivalence")
+#define	 META_SAMEFOLDER_KIND		_T("SameFolder")
+#define	 META_SAMEASPECT_KIND		_T("SameAspect")
 
 
-#define	 META_INHERITANCE_KIND		"Inheritance"
-#define	 META_IMPINHERITANCE_KIND	"ImplementationInheritance"
-#define	 META_INTINHERITANCE_KIND	"InterfaceInheritance"
+#define	 META_INHERITANCE_KIND		_T("Inheritance")
+#define	 META_IMPINHERITANCE_KIND	_T("ImplementationInheritance")
+#define	 META_INTINHERITANCE_KIND	_T("InterfaceInheritance")
 
-#define  META_BOOLEANATTR_LABEL		"bool"
-#define  META_ENUMATTR_LABEL		"enum"
-#define  META_FIELDATTR_LABEL		"field"
+#define  META_BOOLEANATTR_LABEL		_T("bool")
+#define  META_ENUMATTR_LABEL		_T("enum")
+#define  META_FIELDATTR_LABEL		_T("field")
 
-#define  META_PARAM_SHOWATTRIBUTES	"showattributes"
-#define  META_PARAM_SHOWABSTRACT	"showabstract"
-#define  META_PARAM_VAL_TRUE		"true"
-#define  META_PARAM_VAL_FALSE		"false"
+#define  META_PARAM_SHOWATTRIBUTES	_T("showattributes")
+#define  META_PARAM_SHOWABSTRACT	_T("showabstract")
+#define  META_PARAM_VAL_TRUE		_T("true")
+#define  META_PARAM_VAL_FALSE		_T("false")
 
 #define  E_METADECORATOR_KINDNOTSUPPORTED	0x80737050
 #define  E_METADECORATOR_INVALID_PARAMVALUE	0x80737051

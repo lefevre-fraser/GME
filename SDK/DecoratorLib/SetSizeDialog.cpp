@@ -140,11 +140,11 @@ bool CSetSizeDialog::GetSizeAndIsValid(void)
 {
 	CString sizeStr;
 	m_widthEditWnd->GetWindowText(sizeStr);
-	m_lWidth = atoi(sizeStr);
+	m_lWidth = _ttoi(sizeStr);
 	m_heightEditWnd->GetWindowText(sizeStr);
-	m_lHeight = atoi(sizeStr);
+	m_lHeight = _ttoi(sizeStr);
 	if (m_lWidth <= 0 || m_lHeight <= 0) {
-		AfxMessageBox("Please provide valid non-negative integer values!", MB_OK | MB_ICONSTOP);
+		AfxMessageBox(_T("Please provide valid non-negative integer values!"), MB_OK | MB_ICONSTOP);
 		return false;
 	}
 	return true;
@@ -166,9 +166,9 @@ void CSetSizeDialog::SetParameters(ResizablePart* parentPart, const CRect& initi
 void CSetSizeDialog::AdjustPositionAndValues(const CPoint& point, const CRect& location)
 {
 	CString sizeStr;
-	sizeStr.Format("%ld", location.Width());
+	sizeStr.Format(_T("%ld"), location.Width());
 	m_widthEditWnd->SetWindowText(sizeStr);
-	sizeStr.Format("%ld", location.Height());
+	sizeStr.Format(_T("%ld"), location.Height());
 	m_heightEditWnd->SetWindowText(sizeStr);
 	CPoint adjPos = GetAdjustedPosition(point);
 	MoveWindow(adjPos.x, adjPos.y, SetSizeDialogWidth, SetSizeDialogHeight);

@@ -17,25 +17,26 @@
 class CDialogTemplate
 {
 public:
-	CDialogTemplate(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h,
-					LPCSTR font = NULL, WORD fontSize = 8);
+	CDialogTemplate(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h,
+					LPCTSTR font = NULL, WORD fontSize = 8);
 	virtual ~CDialogTemplate();
 	operator const DLGTEMPLATE*() const;
 
-	void AddButton		(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
-	void AddEditBox		(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
-	void AddStatic		(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
-	void AddListBox		(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
-	void AddScrollBar	(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
-	void AddComboBox	(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
-	void AddRichEdit	(LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddButton		(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddEditBox		(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddStatic		(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddListBox		(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddScrollBar	(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddComboBox	(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddRichEdit	(LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
 
 protected:
-	void AddStandardComponent(WORD type, LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
-	void AddComponent(WORD type, LPCSTR classId, LPCSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddStandardComponent(WORD type, LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
+	void AddComponent(WORD type, LPCTSTR classId, LPCTSTR caption, DWORD style, DWORD exStyle, int x, int y, int w, int h, WORD id);
 	void AlignData(int size);
+	void AppendString(LPCWSTR string);
 	void AppendString(LPCSTR string);
-	void AppendData(void* data, int dataLength);
+	void AppendData(const void* data, int dataLength);
 	void EnsureSpace(int length);
 
 private:

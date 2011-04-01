@@ -182,28 +182,28 @@ namespace DecoratorSDK
 	static const int GME_3D_BORDER_SIZE		= 3;
 	static const double INHERITANCE_RATIO	= 0.86602540378443864676372317075294;
 
-	static const char* TILE_ATOMDEFAULT		= "$TILE$Atom_Default";
-	static const char* TILE_MODELDEFAULT	= "$TILE$Model_Default";
-	static const char* TILE_PORTDEFAULT		= "$TILE$Port_Default";
+	static const TCHAR* TILE_ATOMDEFAULT		= _T("$TILE$Atom_Default");
+	static const TCHAR* TILE_MODELDEFAULT	= _T("$TILE$Model_Default");
+	static const TCHAR* TILE_PORTDEFAULT		= _T("$TILE$Port_Default");
 
-	static const char* CTX_MENU_STR_RENAME				= "Rename";
-	static const char* CTX_MENU_STR_RESETSIZE			= "Reset to original size";
-	static const char* CTX_MENU_STR_SETSIZE				= "Set size";
-	static const char* CTX_MENU_STR_EXPANDMODEL			= "Expand model";
-	static const char* CTX_MENU_STR_COLLAPSEMODEL		= "Collapse model";
+	static const TCHAR* CTX_MENU_STR_RENAME				= _T("Rename");
+	static const TCHAR* CTX_MENU_STR_RESETSIZE			= _T("Reset to original size");
+	static const TCHAR* CTX_MENU_STR_SETSIZE				= _T("Set size");
+	static const TCHAR* CTX_MENU_STR_EXPANDMODEL			= _T("Expand model");
+	static const TCHAR* CTX_MENU_STR_COLLAPSEMODEL		= _T("Collapse model");
 	static const unsigned int CTX_MENU_ID_RENAME		= DECORATOR_CTX_MENU_MINID + 0;
 	static const unsigned int CTX_MENU_ID_RESETSIZE		= DECORATOR_CTX_MENU_MINID + 1;
 	static const unsigned int CTX_MENU_ID_SETSIZE		= DECORATOR_CTX_MENU_MINID + 2;
 	static const unsigned int CTX_MENU_ID_EXPANDMODEL	= DECORATOR_CTX_MENU_MINID + 3;
 	static const unsigned int CTX_MENU_ID_COLLAPSEMODEL	= DECORATOR_CTX_MENU_MINID + 4;
 
-	static const char* STEREOTYPE_LEFTA					= "<<";
-	static const char* STEREOTYPE_RIGHTA				= ">>";
+	static const TCHAR* STEREOTYPE_LEFTA					= _T("<<");
+	static const TCHAR* STEREOTYPE_RIGHTA				= _T(">>");
 	static const wchar_t* STEREOTYPE_LEFTB				= L"\u226A ";
 	static const wchar_t* STEREOTYPE_RIGHTB				= L" \u226B";
-	static const char* ABSTRACT_ATTR					= "IsAbstract";
-	static const char* ATTRIBUTES_ATTR					= "Attributes";
-	static const char* ATTRIBUTE_SEP					= " : ";
+	static const TCHAR* ABSTRACT_ATTR					= _T("IsAbstract");
+	static const TCHAR* ATTRIBUTES_ATTR					= _T("Attributes");
+	static const TCHAR* ATTRIBUTE_SEP					= _T(" : ");
 
 	static const int DECORATOR_MARGINX					= 6;
 	static const int DECORATOR_MARGINY					= 4;
