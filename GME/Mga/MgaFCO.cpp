@@ -1174,7 +1174,8 @@ HRESULT FCO::Open( openmode mode)  {
 
 HRESULT FCO::Close () {
 	COMTRY {
-		self[ATTRID_LOCK] = LOCKING_NONE;	} COMCATCH(;) 
+		self[ATTRID_LOCK] = LOCKING_NONE;
+	} COMCATCH(;) 
 }
 
 FCOPtr::FCOPtr(FCOPtr const &o) {
