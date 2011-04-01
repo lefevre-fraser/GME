@@ -6,12 +6,16 @@
 #include "mga.h"
 #include "parser.h"
 
+#include <algorithm>
 #include "CommonMfc.h"
 
 #include "GMEstd.h"
 
 #include "GMEOLEData.h"
 
+#ifdef min
+#undef min
+#endif
 
 CLIPFORMAT CGMEDataSource::cfGMEDesc =	(CLIPFORMAT)(RegisterClipboardFormat(_T("GME Descriptor")));
 int CGMEDataSource::myData = 0;
@@ -239,19 +243,16 @@ bool CGMEDataSource::ParseXMLData(COleDataObject *pDataObject, IMgaObject *targe
 		if( file.Open(filename, CFile::modeCreate | CFile::modeWrite | CFile::typeBinary) == 0 )
 			return false;
 
-		const int buffsize = 10240;
-		unsigned char buff[buffsize];
+		wchar_t buff[10240];
 		UINT c;
 		do
 		{
-			c = memfile->Read(buff, buffsize);
+			c = memfile->Read(buff, sizeof(buff));
 
-			UINT new_c = 0; // addition by ZolMol
-			while( buff[new_c] != 0 && new_c < c) ++new_c;
-			c = new_c;		// end
+			c = wcsnlen(buff, c/sizeof(wchar_t)) * sizeof(wchar_t);
 
 			file.Write(buff, c);
-		} while( c == buffsize );
+		} while( c == sizeof(buff) );
 		file.Close();
 
 		// clear the memory file
