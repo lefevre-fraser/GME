@@ -566,7 +566,7 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
 
                 intActualValue = value;
 
-                intSearchValue = atoi(attribute.value);
+                intSearchValue = _ttoi(attribute.value);
                 if(attribute.CheckInteger(intActualValue,intSearchValue))
                     attribute.eval=TRUE;
                 break;
@@ -575,7 +575,7 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
 
                 if( !SUCCEEDED( cObj->get_FloatAttrByName((CBstrIn)strAttribute, &dblActualValue) ) ) attribute.eval=FALSE;
 
-                dblSearchValue = atof(attribute.value);
+                dblSearchValue = _ttof(attribute.value);
                 if(attribute.CheckDouble(dblActualValue,dblSearchValue))
                     attribute.eval=TRUE ;
                 break;
@@ -585,10 +585,10 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
                 if( !SUCCEEDED( cObj->get_BoolAttrByName((CBstrIn)strAttribute, &vb) ) ) attribute.eval=FALSE;
 
                 bActualValue = (vb != 0);			
-                intSearchValue = atoi(attribute.value);
-                if(attribute.value=="false" || attribute.value=="False" || attribute.value=="FALSE" || intSearchValue==0)
+                intSearchValue = _ttoi(attribute.value);
+                if(attribute.value==_T("false") || attribute.value==_T("False") || attribute.value==_T("FALSE") || intSearchValue==0)
                     bSearchValue = false;
-                if(attribute.value=="true" || attribute.value=="True" || attribute.value=="TRUE" || intSearchValue==1)
+                if(attribute.value==_T("true") || attribute.value==_T("True") || attribute.value==_T("TRUE") || intSearchValue==1)
                     bSearchValue = true;
 
                 if(attribute.CheckBool(bActualValue,bSearchValue))
@@ -717,7 +717,7 @@ int CSearch::Matches(IMgaFCO* fco,bool first)
         partName = bstr;
     } 
     else 
-        partName = "";
+        partName = _T("");
 
     //get the name
     CBstr bstrName;

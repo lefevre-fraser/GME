@@ -7,7 +7,7 @@ Attribute::Attribute(void):eval(FALSE)
 }
 Attribute::Attribute(CString &strInput):eval(FALSE)
 {
-    if(strInput=="&" ||strInput=="|")
+    if(strInput==_T("&") ||strInput==_T("|"))
     {
         name =strInput;
         return;
@@ -16,12 +16,12 @@ Attribute::Attribute(CString &strInput):eval(FALSE)
 
     //parse the attribute expressions for operators and operands
     //keep single lettered operators first
-    Parse(strInput,"<");
-    Parse(strInput,">");
-    Parse(strInput,"=");
-    Parse(strInput,">=");
-    Parse(strInput,"<=");
-    Parse(strInput,"!=");
+    Parse(strInput,_T("<"));
+    Parse(strInput,_T(">"));
+    Parse(strInput,_T("="));
+    Parse(strInput,_T(">="));
+    Parse(strInput,_T("<="));
+    Parse(strInput,_T("!="));
  
 }
 
@@ -29,7 +29,7 @@ void Attribute::Parse(const CString& strInput,const CString& operation)
 {
     CString strTemp(strInput);
     int index=strTemp.Find(operation,0);
-    //CString token=temp.Tokenize("<=",index);
+    //CString token=temp.Tokenize(_T("<="),index);
     if(index!=-1)
     {
         name=strTemp.Left(index).Trim();
@@ -49,13 +49,13 @@ BOOL Attribute::Compare(CString& rhs,int type)
     switch(type)
 	{
 		case 0: 
-            return strcmp(value,rhs);
+            return _tcscmp(value,rhs);
             
 		case 1: 
-            return CheckInteger(atoi(value),atoi(rhs));
+            return CheckInteger(_ttoi(value),_ttoi(rhs));
             
 		case 2: 
-            return CheckDouble(atof(value),atof(rhs));
+            return CheckDouble(_ttof(value),_ttof(rhs));
             break;
 		case 3: 
             return value==rhs;
@@ -69,27 +69,27 @@ BOOL Attribute::Compare(CString& rhs,int type)
 //compare the integer values based on operator it has
 BOOL Attribute::CheckInteger(int lhs,int rhs)
 {
-    if(operation==">=")
+    if(operation==_T(">="))
     {
         return lhs>=rhs;
     }
-    if(operation=="<=")
+    if(operation==_T("<="))
     {
         return lhs<=rhs;
     }
-    if(operation=="!=")
+    if(operation==_T("!="))
     {
         return lhs!=rhs;
     }
-    if(operation=="=")
+    if(operation==_T("="))
     {
         return lhs==rhs;
     }
-    if(operation==">")
+    if(operation==_T(">"))
     {
         return lhs>rhs;
     }
-    if(operation=="<")
+    if(operation==_T("<"))
     {
         return lhs<rhs;
     }
@@ -99,27 +99,27 @@ BOOL Attribute::CheckInteger(int lhs,int rhs)
 //Compare the double values best on operator it has
 BOOL Attribute::CheckDouble(double lhs,double rhs)
 {
-    if(operation==">=")
+    if(operation==_T(">="))
     {
         return lhs>=rhs;
     }
-    if(operation=="<=")
+    if(operation==_T("<="))
     {
         return lhs<=rhs;
     }
-    if(operation=="!=")
+    if(operation==_T("!="))
     {
         return lhs!=rhs;
     }
-    if(operation=="=")
+    if(operation==_T("="))
     {
         return lhs==rhs;
     }
-    if(operation==">")
+    if(operation==_T(">"))
     {
         return lhs>rhs;
     }
-    if(operation=="<")
+    if(operation==_T("<"))
     {
         return lhs<rhs;
     }
@@ -128,11 +128,11 @@ BOOL Attribute::CheckDouble(double lhs,double rhs)
 
 BOOL Attribute::CheckBool(BOOL lhs,BOOL rhs)
 {
-    if(operation=="=")
+    if(operation==_T("="))
     {
         return lhs==rhs;
     }
-    else if(operation=="!=")
+    else if(operation==_T("!="))
     {
         return lhs!=rhs;
     }
@@ -141,38 +141,38 @@ BOOL Attribute::CheckBool(BOOL lhs,BOOL rhs)
 
 BOOL Attribute::CheckString(BOOL lhs)
 {
-    if(operation=="=")
+    if(operation==_T("="))
         return lhs;
-    else if(operation=="!=")
+    else if(operation==_T("!="))
         return !lhs;
     return FALSE;
 }
 
 BOOL Attribute::LogicalCompare(BOOL lhs,const Attribute & operation,BOOL rhs)
 {
-    if(operation.name=="&")
+    if(operation.name==_T("&"))
     {
         return lhs&&rhs;
     }
-    if(operation.name=="|")
+    if(operation.name==_T("|"))
     {
         return lhs||rhs;
     }
     return FALSE;
 }
 
-std::tr1::regex Attribute::GetRegExp(CString& str,BOOL full)
+std::tr1::wregex Attribute::GetRegExp(CString& str,BOOL full)
 {
     CString strTemp;
     if(full)
     {
-        strTemp.Append("^");
+        strTemp.Append(_T("^"));
         strTemp.Append(str);
-        strTemp.Append("$");
+        strTemp.Append(_T("$"));
 
     }
     else
         strTemp=str;
 
-    return std::tr1::regex(strTemp);
+    return std::tr1::wregex(strTemp);
 }

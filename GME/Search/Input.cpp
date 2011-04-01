@@ -83,7 +83,7 @@ void CInput::GetInput(CString strNameFirst, CString strRoleFirst, CString strKin
    
 
     //check if nothing is present in the second
-    if(strAttributeSecond.Trim()=="" && strKindSecond.Trim()==""&& strRoleSecond.Trim()=="" && strAttributeSecond.Trim()=="")
+    if(strAttributeSecond.Trim()==_T("") && strKindSecond.Trim()==_T("")&& strRoleSecond.Trim()==_T("") && strAttributeSecond.Trim()==_T(""))
     {
         m_bDoSecond=FALSE;
     }
@@ -122,10 +122,10 @@ void CInput::PrepareExpressionStack(const CString &atrAttributeExpression,std::v
     CString strAttributeExpression(atrAttributeExpression);
 
     //get the index of logical operator
-    int index= strAttributeExpression.FindOneOf("&|");
+    int index= strAttributeExpression.FindOneOf(_T("&|"));
 
     //if no logical operator was found push the whole expression
-    if(index==-1 && strAttributeExpression!="")
+    if(index==-1 && strAttributeExpression!=_T(""))
     {
         stack.push_back(Attribute(strAttributeExpression.Trim()));
     }
@@ -149,7 +149,7 @@ void CInput::PrepareExpressionStack(const CString &atrAttributeExpression,std::v
         strAttributeExpression=strAttributeExpression.Right(strAttributeExpression.GetLength()-index-1);
         
         //again find the logical operator
-        index= strAttributeExpression.FindOneOf("&|");
+        index= strAttributeExpression.FindOneOf(_T("&|"));
 
         //if no more found treat all remaining string as expression
         if(index==-1) stack.push_back(Attribute(strAttributeExpression.Trim()));
@@ -158,20 +158,20 @@ void CInput::PrepareExpressionStack(const CString &atrAttributeExpression,std::v
 
 //Obtain regular expression form of the string
 //supplied
-regex CInput::GetRegExp(CString name)
+wregex CInput::GetRegExp(CString name)
 {
-    CString temp="";
+    CString temp=_T("");
     if(name.IsEmpty())
     {
-        return regex(name);
+        return wregex(name);
     }
     if(m_bFull)
     {
-        temp="^";
+        temp=_T("^");
         temp+=name;
-        temp+="$";
-        return regex(temp);
+        temp+=_T("$");
+        return wregex(temp);
     }
 
-    return regex(name);
+    return wregex(name);
 }

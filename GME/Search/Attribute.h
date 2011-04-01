@@ -13,7 +13,7 @@ public:
     ~Attribute(void);
     BOOL Compare(CString &rhs,int type);
     BOOL LogicalCompare(BOOL lhs,const Attribute & oper,BOOL rhs);
-    std::tr1::regex GetRegExp(CString& str,BOOL full);
+    std::tr1::wregex GetRegExp(CString& str,BOOL full);
     BOOL CheckInteger(int lhs,int rhs);
     BOOL CheckDouble(double lhs,double rhs);
     BOOL CheckBool(BOOL lhs,BOOL rhs);

@@ -45,9 +45,9 @@ ListItemCompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
    CString    strItem2 = pListCtrl->GetItemText(lParam2, sortParam->columnIndex);
 
    if(sortParam->ascending)
-       return strcmp(strItem1,strItem2);
+       return _tcscmp(strItem1,strItem2);
 
-   return strcmp(strItem2, strItem1);
+   return _tcscmp(strItem2, strItem1);
 }
 
 

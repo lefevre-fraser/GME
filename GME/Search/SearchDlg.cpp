@@ -123,10 +123,10 @@ BOOL CSearchDlg::OnInitDialog()
     ascending[0]=ascending[1]=ascending[2]=ascending[3]=true;
 
     //column headers
-    m_lstResults.InsertColumn(1, "Object", LVCFMT_LEFT, 100, 0);
-    m_lstResults.InsertColumn(2, "Path", LVCFMT_LEFT, 210, 1);
-    m_lstResults.InsertColumn(3, "Kind", LVCFMT_LEFT, 95, 2);
-   // m_lstResults.InsertColumn(4, "Value", LVCFMT_LEFT, 210, 3);
+    m_lstResults.InsertColumn(1, _T("Object"), LVCFMT_LEFT, 100, 0);
+    m_lstResults.InsertColumn(2, _T("Path"), LVCFMT_LEFT, 210, 1);
+    m_lstResults.InsertColumn(3, _T("Kind"), LVCFMT_LEFT, 95, 2);
+   // m_lstResults.InsertColumn(4, _T("Value"), LVCFMT_LEFT, 210, 3);
     m_lstResults.SetExtendedStyle(m_lstResults.GetExtendedStyle()|LVS_EX_FULLROWSELECT);
 
     specialSearchFCO = NULL;
@@ -137,7 +137,7 @@ BOOL CSearchDlg::OnInitDialog()
     //load search history from registry
     LoadSearchHistory();
 
-    return true;
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -194,7 +194,7 @@ void CSearchDlg::RemoveZombies()
         if(oStatus != OBJECT_EXISTS)
         {
             specialSearchFCO = NULL;
-            m_stcRefCtrl.SetWindowText("NULL References");
+            m_stcRefCtrl.SetWindowText(_T("NULL References"));
 			m_stcRefCtrl.ShowWindow(TRUE);
         }
     }
@@ -251,7 +251,7 @@ void CSearchDlg::OnButtonGo()
         //show progress on especially long searches
         m_pgsSearch.ShowWindow(SW_RESTORE);
         RemoveAll();
-        //		AfxMessageBox("Searching");
+        //		AfxMessageBox(_T("Searching"));
         m_lstResults.ShowWindow(SW_HIDE);
 
         TheCtrl->BeginTransaction();
@@ -273,9 +273,9 @@ void CSearchDlg::OnButtonGo()
         {
             m_pgsSearch.ShowWindow(SW_HIDE);
             m_pgsSearch.SetPos(1);
-            AfxMessageBox("Make sure your input is correct. If you are using"
-                " regular expression elements\n like *, + etc make sure you are"
-                " following proper syntax");
+            AfxMessageBox(_T("Make sure your input is correct. If you are using")
+                _T(" regular expression elements\n like *, + etc make sure you are")
+                _T(" following proper syntax"));
 
             return;
         }
@@ -283,7 +283,7 @@ void CSearchDlg::OnButtonGo()
 
         CSearch searchGME(inp);
         searchGME.Search(rootInput, ccpObjectsInTerr, specialSearchFCO,results,&m_pgsSearch);
-        //		AfxMessageBox("Finished Searching");
+        //		AfxMessageBox(_T("Finished Searching"));
 
         DisplayResults();
         m_pgsSearch.ShowWindow(SW_HIDE);
@@ -306,14 +306,14 @@ void CSearchDlg::BuildExtendedName(IMgaFCO *named, CString &extName)
         if (parent != NULL)
         {
             BuildExtendedName(parent, extName);
-            extName += " : ";
+            extName += _T(" : ");
         }
         else //parent is a Folder
         {
             CComPtr<IMgaFolder> parentFolder = NULL;
             COMTHROW( named->get_ParentFolder(&parentFolder));
             BuildExtendedName(parentFolder, extName);
-            extName += " : ";
+            extName += _T(" : ");
         }
         CBstr bstr;
         COMTHROW( named->get_Name(bstr));
@@ -332,7 +332,7 @@ void CSearchDlg::BuildExtendedName(IMgaFolder *named, CString &extName)
         if (parent != NULL)
         {
             BuildExtendedName(parent, extName);
-            extName += " : ";
+            extName += _T(" : ");
         }
         CBstr bstr;
         COMTHROW( named->get_Name(bstr));
@@ -350,7 +350,7 @@ void CSearchDlg::DisplayResults()
     if(!m_chkSplSearch) //only want to wipe this out on a regular search
 	{
 		specialSearchFCO = NULL;
-		m_stcRefCtrl.SetWindowText("NULL References");
+		m_stcRefCtrl.SetWindowText(_T("NULL References"));
 		m_stcRefCtrl.ShowWindow(TRUE);
 	}
 
@@ -361,9 +361,9 @@ void CSearchDlg::DisplayResults()
 
     MGACOLL_ITERATE(IMgaFCO, results)
     {
-        path = "";
-        name = "";
-        kind = "";
+        path = _T("");
+        name = _T("");
+        kind = _T("");
         
         CBstr bstr;
         COMTHROW( MGACOLL_ITER->get_Name(bstr) );
@@ -416,8 +416,8 @@ void CSearchDlg::DisplayResults()
 
     if (count==0)
     {
-        m_lstResults.InsertItem(count, "");
-        m_lstResults.SetItemText(count, 1, "No Matching Results");
+        m_lstResults.InsertItem(count, _T(""));
+        m_lstResults.SetItemText(count, 1, _T("No Matching Results"));
     }
 
     //Now that everything is added, allow the display to redraw
@@ -521,7 +521,7 @@ void CSearchDlg::itemClicked()
                 CBstr bstr;
                 CString name;
                 COMTHROW( selectedFCO->get_Name(bstr));
-                name = CString( bstr) + " References";
+                name = CString( bstr) + _T(" References");
                 m_stcRefCtrl.SetWindowText(name);
 				m_stcRefCtrl.ShowWindow(TRUE);
                 specialSearchFCO = selectedFCO;
@@ -588,27 +588,27 @@ void CSearchDlg::itemDblClicked()
 void CSearchDlg::SaveSearchHistory()
 {
     CRegKey key;
-    std::stringstream stream;
+    std::wstringstream stream;
 
     //delete the key first and save new one
-    if(key.Open(HKEY_CURRENT_USER,_TEXT("Software\\GME"),KEY_ALL_ACCESS)==ERROR_SUCCESS)
+    if(key.Open(HKEY_CURRENT_USER,_T("Software\\GME"),KEY_ALL_ACCESS)==ERROR_SUCCESS)
     {
-        key.DeleteSubKey("Search");
+        key.DeleteSubKey(_T("Search"));
     }
-    key.Create(HKEY_CURRENT_USER,_TEXT("Software\\GME\\Search"));
+    key.Create(HKEY_CURRENT_USER,_T("Software\\GME\\Search"));
     HTREEITEM hItem=m_treeSearchHistory.GetRootItem();
     int i=0;
     while(hItem && i<10)
     {
         //the search history are stored as search0, search1 etc 
         //form key string
-        stream<<"search"<<i;
+        stream<<_T("search")<<i;
 
         //set the key and the value
         key.SetStringValue(stream.str().c_str(), m_treeSearchHistory.GetItemText(hItem));
 
         //clear the string stream
-        stream.str("");
+        stream.str(_T(""));
 
         //get next item to be saved
         hItem=m_treeSearchHistory.GetNextSiblingItem(hItem);
@@ -621,23 +621,23 @@ void CSearchDlg::SaveSearchHistory()
 void CSearchDlg::LoadSearchHistory()
 {
     CRegKey key;
-    std::string strKeyName;
-    std::stringstream stream(strKeyName);
+    std::wstring strKeyName;
+    std::wstringstream stream(strKeyName);
     ULONG length;
-    CHAR strValue[1000];
+    TCHAR strValue[1000];
     //CString strValue;
 
     int i=0;
-    if(key.Open(HKEY_CURRENT_USER,_TEXT("Software\\GME\\Search"),KEY_ALL_ACCESS)==ERROR_SUCCESS)
+    if(key.Open(HKEY_CURRENT_USER,_T("Software\\GME\\Search"),KEY_ALL_ACCESS)==ERROR_SUCCESS)
     {
         while(i<10)
         {
             //form the key
-            strKeyName="search";
+            strKeyName=_T("search");
             stream<<int(i);
 
             //buffer size
-            length=sizeof(strValue);
+            length=sizeof(strValue)/sizeof(strValue[0]);
 
             strKeyName+=stream.str();
 
@@ -647,7 +647,7 @@ void CSearchDlg::LoadSearchHistory()
 
             //insert it in the tree control and combo boxes
             InsertHistory(strValue);
-            stream.str("");
+            stream.str(_T(""));
             i++;
         }
     }
@@ -676,18 +676,18 @@ void CSearchDlg::CreateSearchHistory()
     CString strFirstElement=m_treeSearchHistory.GetItemText(m_treeSearchHistory.GetRootItem());
     //insert an dummy item to the tree once the processing of search text is complete
     //it will be renamed to appropriate one
-    HTREEITEM hItem=m_treeSearchHistory.InsertItem("Dummy",NULL,TVI_FIRST);
+    HTREEITEM hItem=m_treeSearchHistory.InsertItem(_T("Dummy"),NULL,TVI_FIRST);
 
     CString strSearch;
 
-    if(m_edtNameFirst!="" || m_edtKindNameFirst!="" || m_edtRoleNameFirst!="" || m_edtAttributeFirst!="")
+    if(m_edtNameFirst!=_T("") || m_edtKindNameFirst!=_T("") || m_edtRoleNameFirst!=_T("") || m_edtAttributeFirst!=_T(""))
     {
-        HTREEITEM hFirstCriteria=m_treeSearchHistory.InsertItem("First Search Criteria",hItem,TVI_FIRST);
+        HTREEITEM hFirstCriteria=m_treeSearchHistory.InsertItem(_T("First Search Criteria"),hItem,TVI_FIRST);
         //First criteria
-        PrepareHistoryString("Name",m_edtNameFirst,hFirstCriteria,strSearch);
-        PrepareHistoryString("Role",m_edtRoleNameFirst,hFirstCriteria,strSearch);
-        PrepareHistoryString("Kind",m_edtKindNameFirst,hFirstCriteria,strSearch);
-        PrepareHistoryString("Attribute",m_edtAttributeFirst,hFirstCriteria,strSearch);
+        PrepareHistoryString(_T("Name"),m_edtNameFirst,hFirstCriteria,strSearch);
+        PrepareHistoryString(_T("Role"),m_edtRoleNameFirst,hFirstCriteria,strSearch);
+        PrepareHistoryString(_T("Kind"),m_edtKindNameFirst,hFirstCriteria,strSearch);
+        PrepareHistoryString(_T("Attribute"),m_edtAttributeFirst,hFirstCriteria,strSearch);
     }
     else
     {
@@ -697,16 +697,16 @@ void CSearchDlg::CreateSearchHistory()
 
     //search criteria separator
 
-    //strSearch.Append(":");
-    if(m_edtNameSecond!="" || m_edtKindNameSecond!="" || m_edtRoleNameSecond!="" || m_edtAttributeSecond!="")
+    //strSearch.Append(_T(":"));
+    if(m_edtNameSecond!=_T("") || m_edtKindNameSecond!=_T("") || m_edtRoleNameSecond!=_T("") || m_edtAttributeSecond!=_T(""))
     {
-        HTREEITEM hSecondCriteria=m_treeSearchHistory.InsertItem("Second Search Criteria",hItem,TVI_LAST);
+        HTREEITEM hSecondCriteria=m_treeSearchHistory.InsertItem(_T("Second Search Criteria"),hItem,TVI_LAST);
 
         //second criteria
-        PrepareHistoryString("Second Name",m_edtNameSecond,hSecondCriteria,strSearch);
-        PrepareHistoryString("Second Role",m_edtRoleNameSecond,hSecondCriteria,strSearch);
-        PrepareHistoryString("Second Kind",m_edtKindNameSecond,hSecondCriteria,strSearch);
-        PrepareHistoryString("Second Attribute",m_edtAttributeSecond,hSecondCriteria,strSearch);
+        PrepareHistoryString(_T("Second Name"),m_edtNameSecond,hSecondCriteria,strSearch);
+        PrepareHistoryString(_T("Second Role"),m_edtRoleNameSecond,hSecondCriteria,strSearch);
+        PrepareHistoryString(_T("Second Kind"),m_edtKindNameSecond,hSecondCriteria,strSearch);
+        PrepareHistoryString(_T("Second Attribute"),m_edtAttributeSecond,hSecondCriteria,strSearch);
     }
     else
     {
@@ -714,18 +714,18 @@ void CSearchDlg::CreateSearchHistory()
     }
 
     //others
-    HTREEITEM hOtherCriteria=m_treeSearchHistory.InsertItem("Others",hItem,TVI_LAST);
-    PrepareHistoryString("Logical",m_radioLogical,hOtherCriteria,strSearch);
-    PrepareHistoryString("Model",m_chkMod,hOtherCriteria,strSearch);
-    PrepareHistoryString("Atom",m_chkAtom,hOtherCriteria,strSearch);
-    PrepareHistoryString("Set",m_chkSet,hOtherCriteria,strSearch);
-    PrepareHistoryString("Reference",m_chkRef,hOtherCriteria,strSearch);
-    PrepareHistoryString("Connection",m_chkConnection,hOtherCriteria,strSearch);
-    PrepareHistoryString("Special",m_chkSplSearch,hOtherCriteria,strSearch);
-    PrepareHistoryString("Case",m_chkMatchCase,hOtherCriteria,strSearch);
-    PrepareHistoryString("WholeWord",m_chkFullWord,hOtherCriteria,strSearch);
-    PrepareHistoryString("Scope",m_radioScope,hOtherCriteria,strSearch);
-    PrepareHistoryString("Results",m_searchResults,hOtherCriteria,strSearch);
+    HTREEITEM hOtherCriteria=m_treeSearchHistory.InsertItem(_T("Others"),hItem,TVI_LAST);
+    PrepareHistoryString(_T("Logical"),m_radioLogical,hOtherCriteria,strSearch);
+    PrepareHistoryString(_T("Model"),m_chkMod,hOtherCriteria,strSearch);
+    PrepareHistoryString(_T("Atom"),m_chkAtom,hOtherCriteria,strSearch);
+    PrepareHistoryString(_T("Set"),m_chkSet,hOtherCriteria,strSearch);
+    PrepareHistoryString(_T("Reference"),m_chkRef,hOtherCriteria,strSearch);
+    PrepareHistoryString(_T("Connection"),m_chkConnection,hOtherCriteria,strSearch);
+    PrepareHistoryString(_T("Special"),m_chkSplSearch,hOtherCriteria,strSearch);
+    PrepareHistoryString(_T("Case"),m_chkMatchCase,hOtherCriteria,strSearch);
+    PrepareHistoryString(_T("WholeWord"),m_chkFullWord,hOtherCriteria,strSearch);
+    PrepareHistoryString(_T("Scope"),m_radioScope,hOtherCriteria,strSearch);
+    PrepareHistoryString(_T("Results"),m_searchResults,hOtherCriteria,strSearch);
 
     m_treeSearchHistory.SetItemText(hItem,strSearch);
 
@@ -751,7 +751,7 @@ void CSearchDlg::InsertTextToControl(CString& strNewTerm,CComboBox& control)
     int n=control.GetLBTextLen(0);
     n=n==-1?1:n;
     control.GetLBText(0,strTerm.GetBuffer(n));
-    if (strNewTerm!="" && strNewTerm!=strTerm) control.InsertString(0,strNewTerm);
+    if (strNewTerm!=_T("") && strNewTerm!=strTerm) control.InsertString(0,strNewTerm);
 }
 
 //prepares history string it is of the form
@@ -761,16 +761,16 @@ void CSearchDlg::InsertTextToControl(CString& strNewTerm,CComboBox& control)
 void CSearchDlg::PrepareHistoryString(const CString &strCriteriaName,CString & strSearchValue,HTREEITEM hParent,CString &strSearch)
 {
     CString strNameValue;
-    if(strSearchValue.Trim()=="")
+    if(strSearchValue.Trim()==_T(""))
         return;
     if(strSearch.GetLength()>0)
-        strSearch.Append(", ");
+        strSearch.Append(_T(", "));
 
     strNameValue.Append(strCriteriaName);
-    strNameValue.Append("=");
-    strNameValue.Append("\"");
+    strNameValue.Append(_T("="));
+    strNameValue.Append(_T("\""));
     strNameValue.Append(strSearchValue);
-    strNameValue.Append("\"");
+    strNameValue.Append(_T("\""));
 
     strSearch.Append(strNameValue);
 
@@ -779,8 +779,8 @@ void CSearchDlg::PrepareHistoryString(const CString &strCriteriaName,CString & s
 
 void CSearchDlg::PrepareHistoryString(const CString &strCriteriaName,int & strSearchValue,HTREEITEM hParent,CString &strSearch)
 {
-    char buffer[10];
-    _itoa(strSearchValue,buffer,10);
+    TCHAR buffer[10];
+    _itot(strSearchValue,buffer,10);
     PrepareHistoryString(strCriteriaName,CString(buffer),hParent,strSearch);
 
 }
@@ -799,28 +799,28 @@ void CSearchDlg::InsertHistory(CString strHistory)
 
     CString readValue;
 
-    HTREEITEM hItem=m_treeSearchHistory.InsertItem("Dummy",NULL,TVI_LAST);
-    HTREEITEM hFirstCriteria=m_treeSearchHistory.InsertItem("First Search Criteria",hItem,TVI_FIRST);
-    HTREEITEM hSecondCriteria=m_treeSearchHistory.InsertItem("Second Search Criteria",hItem,TVI_LAST);
-    HTREEITEM hOtherCriteria=m_treeSearchHistory.InsertItem("Other",hItem,TVI_LAST);
+    HTREEITEM hItem=m_treeSearchHistory.InsertItem(_T("Dummy"),NULL,TVI_LAST);
+    HTREEITEM hFirstCriteria=m_treeSearchHistory.InsertItem(_T("First Search Criteria"),hItem,TVI_FIRST);
+    HTREEITEM hSecondCriteria=m_treeSearchHistory.InsertItem(_T("Second Search Criteria"),hItem,TVI_LAST);
+    HTREEITEM hOtherCriteria=m_treeSearchHistory.InsertItem(_T("Other"),hItem,TVI_LAST);
 
     CString strSearch;
 
-    ReadHistoryValue("Name",strHistory,readValue);
+    ReadHistoryValue(_T("Name"),strHistory,readValue);
     InsertTextToControl(readValue,m_edtNameCtrlFirst);
-    PrepareHistoryString(CString("Name"),readValue,hFirstCriteria,strSearch);
+    PrepareHistoryString(CString(_T("Name")),readValue,hFirstCriteria,strSearch);
 
-    ReadHistoryValue("Role",strHistory,readValue);
+    ReadHistoryValue(_T("Role"),strHistory,readValue);
     InsertTextToControl(readValue,m_edtRoleNameCtrlFirst);
-    PrepareHistoryString(CString("Role"),readValue,hFirstCriteria,strSearch);
+    PrepareHistoryString(CString(_T("Role")),readValue,hFirstCriteria,strSearch);
 
-    ReadHistoryValue("Kind",strHistory,readValue);
+    ReadHistoryValue(_T("Kind"),strHistory,readValue);
     InsertTextToControl(readValue,m_edtKindNameCtrlFirst);
-    PrepareHistoryString(CString("Kind"),readValue,hFirstCriteria,strSearch);
+    PrepareHistoryString(CString(_T("Kind")),readValue,hFirstCriteria,strSearch);
 
-    ReadHistoryValue("Attribute",strHistory,readValue);
+    ReadHistoryValue(_T("Attribute"),strHistory,readValue);
     InsertTextToControl(readValue,m_edtAttributeCtrlFirst);
-    PrepareHistoryString(CString("Attribute"),readValue,hFirstCriteria,strSearch);
+    PrepareHistoryString(CString(_T("Attribute")),readValue,hFirstCriteria,strSearch);
 
     //if no first search criteria items are there delete it
     int length=strSearch.GetLength();
@@ -828,23 +828,23 @@ void CSearchDlg::InsertHistory(CString strHistory)
         m_treeSearchHistory.DeleteItem(hFirstCriteria);
 
     //search criteria separator
-    //strSearch.Append(":");
+    //strSearch.Append(_T(":"));
 
-    ReadHistoryValue("Second Name",strHistory,readValue);
+    ReadHistoryValue(_T("Second Name"),strHistory,readValue);
     InsertTextToControl(readValue,m_edtNameCtrlSecond);
-    PrepareHistoryString(CString("Second Name"),readValue,hSecondCriteria,strSearch);
+    PrepareHistoryString(CString(_T("Second Name")),readValue,hSecondCriteria,strSearch);
 
-    ReadHistoryValue("Second Role",strHistory,readValue);
+    ReadHistoryValue(_T("Second Role"),strHistory,readValue);
     InsertTextToControl(readValue,m_edtRoleNameCtrlSecond);
-    PrepareHistoryString(CString("Second Role"),readValue,hSecondCriteria,strSearch);
+    PrepareHistoryString(CString(_T("Second Role")),readValue,hSecondCriteria,strSearch);
 
-    ReadHistoryValue("Second Kind",strHistory,readValue);
+    ReadHistoryValue(_T("Second Kind"),strHistory,readValue);
     InsertTextToControl(readValue,m_edtKindNameCtrlSecond);
-    PrepareHistoryString(CString("Second Kind"),readValue,hSecondCriteria,strSearch);
+    PrepareHistoryString(CString(_T("Second Kind")),readValue,hSecondCriteria,strSearch);
 
-    ReadHistoryValue("Second Attribute",strHistory,readValue);
+    ReadHistoryValue(_T("Second Attribute"),strHistory,readValue);
     InsertTextToControl(readValue,m_edtAttributeCtrlSecond);
-    PrepareHistoryString(CString("Second Attribute"),readValue,hSecondCriteria,strSearch);
+    PrepareHistoryString(CString(_T("Second Attribute")),readValue,hSecondCriteria,strSearch);
 
     //check if second search criteria has been added
     length=strSearch.GetLength()-length;
@@ -852,38 +852,38 @@ void CSearchDlg::InsertHistory(CString strHistory)
          m_treeSearchHistory.DeleteItem(hSecondCriteria);
 
 
-    ReadHistoryValue("Logical",strHistory,m_radioLogical);
-    PrepareHistoryString("Logical",m_radioLogical,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("Logical"),strHistory,m_radioLogical);
+    PrepareHistoryString(_T("Logical"),m_radioLogical,hOtherCriteria,strSearch);
 
-    ReadHistoryValue("Model",strHistory,m_chkMod);
-    PrepareHistoryString("Model",m_chkMod,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("Model"),strHistory,m_chkMod);
+    PrepareHistoryString(_T("Model"),m_chkMod,hOtherCriteria,strSearch);
 
-    ReadHistoryValue("Atom",strHistory,m_chkAtom);
-    PrepareHistoryString("Atom",m_chkAtom,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("Atom"),strHistory,m_chkAtom);
+    PrepareHistoryString(_T("Atom"),m_chkAtom,hOtherCriteria,strSearch);
 
-    ReadHistoryValue("Set",strHistory,m_chkSet);
-    PrepareHistoryString("Set",m_chkSet,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("Set"),strHistory,m_chkSet);
+    PrepareHistoryString(_T("Set"),m_chkSet,hOtherCriteria,strSearch);
 
-    ReadHistoryValue("Reference",strHistory,m_chkRef);
-    PrepareHistoryString("Reference",m_chkRef,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("Reference"),strHistory,m_chkRef);
+    PrepareHistoryString(_T("Reference"),m_chkRef,hOtherCriteria,strSearch);
 
-    ReadHistoryValue("Connection",strHistory,m_chkConnection);
-    PrepareHistoryString("Connection",m_chkConnection,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("Connection"),strHistory,m_chkConnection);
+    PrepareHistoryString(_T("Connection"),m_chkConnection,hOtherCriteria,strSearch);
 
-    ReadHistoryValue("Special",strHistory,m_chkSplSearch);
-    PrepareHistoryString("Special",m_chkSplSearch,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("Special"),strHistory,m_chkSplSearch);
+    PrepareHistoryString(_T("Special"),m_chkSplSearch,hOtherCriteria,strSearch);
 
-    ReadHistoryValue("Case",strHistory,m_chkMatchCase);
-    PrepareHistoryString("Case",m_chkMatchCase,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("Case"),strHistory,m_chkMatchCase);
+    PrepareHistoryString(_T("Case"),m_chkMatchCase,hOtherCriteria,strSearch);
 
-    ReadHistoryValue("WholeWord",strHistory,m_chkFullWord);
-    PrepareHistoryString("WholeWord",m_chkFullWord,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("WholeWord"),strHistory,m_chkFullWord);
+    PrepareHistoryString(_T("WholeWord"),m_chkFullWord,hOtherCriteria,strSearch);
 
-    ReadHistoryValue("Scope",strHistory,m_radioScope);
-    PrepareHistoryString("Scope",m_radioScope,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("Scope"),strHistory,m_radioScope);
+    PrepareHistoryString(_T("Scope"),m_radioScope,hOtherCriteria,strSearch);
 
-    ReadHistoryValue("Results",strHistory,m_searchResults);
-    PrepareHistoryString("Results",m_searchResults,hOtherCriteria,strSearch);
+    ReadHistoryValue(_T("Results"),strHistory,m_searchResults);
+    PrepareHistoryString(_T("Results"),m_searchResults,hOtherCriteria,strSearch);
 
     m_treeSearchHistory.SetItemText(hItem,strSearch);
 
@@ -897,13 +897,13 @@ void CSearchDlg::InsertHistory(CString strHistory)
 void CSearchDlg::ReadHistoryValue(const CString &strCriteriaName, CString &strHistory, CString &strValue)
 {
     //clear the output string
-    strValue="";
+    strValue=_T("");
     CString strTemp(strCriteriaName);
-    strTemp.Append("=");
+    strTemp.Append(_T("="));
     int indexText,indexComma;
     indexText=strHistory.Find(strTemp);
     if(indexText==-1) return;
-    indexComma=strHistory.Find(",",indexText);
+    indexComma=strHistory.Find(_T(","),indexText);
     indexComma=indexComma==-1?strHistory.GetLength():indexComma;
     int start=indexText + strTemp.GetLength()+1;
     strValue=strHistory.Mid(start,indexComma-start-1);
@@ -914,7 +914,7 @@ void CSearchDlg::ReadHistoryValue(const CString &strCriteriaName,CString &strHis
 {
     CString strValue;
     ReadHistoryValue(strCriteriaName,strHistory,strValue);
-    value=atoi(strValue.GetBuffer());
+    value=_ttoi(strValue.GetBuffer());
 }
 
 void CSearchDlg::SearchResults()
@@ -961,28 +961,28 @@ void CSearchDlg::OnNMDblclkTreeSearchHistory(NMHDR *pNMHDR, LRESULT *pResult)
         strSearchText=m_treeSearchHistory.GetItemText(hItem);
 
     //first search criteria
-    ReadHistoryValue("Name",strSearchText,m_edtNameFirst);
-    ReadHistoryValue("Role",strSearchText,m_edtRoleNameFirst);
-    ReadHistoryValue("Kind",strSearchText,m_edtKindNameFirst);
-    ReadHistoryValue("Attribute",strSearchText,m_edtAttributeFirst);
+    ReadHistoryValue(_T("Name"),strSearchText,m_edtNameFirst);
+    ReadHistoryValue(_T("Role"),strSearchText,m_edtRoleNameFirst);
+    ReadHistoryValue(_T("Kind"),strSearchText,m_edtKindNameFirst);
+    ReadHistoryValue(_T("Attribute"),strSearchText,m_edtAttributeFirst);
 
     //second search criteria
-    ReadHistoryValue("Second Name",strSearchText,m_edtNameSecond);
-    ReadHistoryValue("Second Role",strSearchText,m_edtRoleNameSecond);
-    ReadHistoryValue("Second Kind",strSearchText,m_edtKindNameSecond);
-    ReadHistoryValue("Second Attribute",strSearchText,m_edtAttributeSecond);
+    ReadHistoryValue(_T("Second Name"),strSearchText,m_edtNameSecond);
+    ReadHistoryValue(_T("Second Role"),strSearchText,m_edtRoleNameSecond);
+    ReadHistoryValue(_T("Second Kind"),strSearchText,m_edtKindNameSecond);
+    ReadHistoryValue(_T("Second Attribute"),strSearchText,m_edtAttributeSecond);
 
-    //others ReadHistoryValue("Logical",strHistory,m_radioLogical);
-    ReadHistoryValue("Model",strSearchText,m_chkMod);
-    ReadHistoryValue("Atom",strSearchText,m_chkAtom);
-    ReadHistoryValue("Set",strSearchText,m_chkSet);
-    ReadHistoryValue("Reference",strSearchText,m_chkRef);
-    ReadHistoryValue("Connection",strSearchText,m_chkConnection);
-    ReadHistoryValue("Special",strSearchText,m_chkSplSearch);
-    ReadHistoryValue("Case",strSearchText,m_chkMatchCase);
-    ReadHistoryValue("WholeWord",strSearchText,m_chkFullWord);
-    ReadHistoryValue("Scope",strSearchText,m_radioScope);
-    ReadHistoryValue("Results",strSearchText,m_searchResults);
+    //others ReadHistoryValue(_T("Logical"),strHistory,m_radioLogical);
+    ReadHistoryValue(_T("Model"),strSearchText,m_chkMod);
+    ReadHistoryValue(_T("Atom"),strSearchText,m_chkAtom);
+    ReadHistoryValue(_T("Set"),strSearchText,m_chkSet);
+    ReadHistoryValue(_T("Reference"),strSearchText,m_chkRef);
+    ReadHistoryValue(_T("Connection"),strSearchText,m_chkConnection);
+    ReadHistoryValue(_T("Special"),strSearchText,m_chkSplSearch);
+    ReadHistoryValue(_T("Case"),strSearchText,m_chkMatchCase);
+    ReadHistoryValue(_T("WholeWord"),strSearchText,m_chkFullWord);
+    ReadHistoryValue(_T("Scope"),strSearchText,m_radioScope);
+    ReadHistoryValue(_T("Results"),strSearchText,m_searchResults);
 
     UpdateData(FALSE);  
      // if special search is on disable search for others than reference
@@ -1037,7 +1037,7 @@ void CSearchDlg::OnCheckSplSearch()
 
 		//reset special reference search to NULL
 		specialSearchFCO = NULL;
-		m_stcRefCtrl.SetWindowText("NULL References");
+		m_stcRefCtrl.SetWindowText(_T("NULL References"));
 		m_stcRefCtrl.ShowWindow(TRUE);
 		CWnd::UpdateData(TRUE);
 	}
