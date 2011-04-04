@@ -205,8 +205,12 @@ bool CGMEDataSource::IsGmeNativeDataAvailable(COleDataObject *pDataObject, IMgaP
 		ASSERT( unknown != NULL );
 
 		CComPtr<IMgaProject> source_project;
-		COMTHROW( unknown.QueryInterface(&source_project) );
-		ASSERT( source_project != NULL );
+		// KMS: fixing crashrpt 8895373f-396e-490f-b882-036ba9d42961: this QI may fail
+		HRESULT hr = unknown.QueryInterface(&source_project);
+		if ( source_project == NULL ) {
+			ASSERT(false);
+			return false;
+		}
 
 		return source_project.IsEqualObject(project);
 	}
