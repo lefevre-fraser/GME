@@ -1352,9 +1352,18 @@ void CGMEApp::OpenProject(const CString &conn) {
 					}
 				}
 				if(hr == E_MGA_PARADIGM_NOTREG) {
-					CString msg = _T("Could not find paradigm paradigm '") + CString(parn);
+					CString msg = _T("Could not find paradigm '") + CString(parn) + "'";
+					if (parv != "") {
+						msg += CString(" version ") + static_cast<const wchar_t*>(parv);
+					} else if (parg.vt == (VT_UI1 | VT_ARRAY)) {
+						GUID guid;
+						CopyTo(parg, guid);
+						CComBSTR strGuid;
+						CopyTo(guid, &strGuid);
+						msg += CString(" with GUID ") + static_cast<const wchar_t*>(strGuid);
+					}
 					if (CString(parn) == _T("MetaGME2000"))
-						msg += _T("'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
+						msg += _T("\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
 					msg += _T("\nDo you want to import with an other registered paradigm ?");
 					if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {
 					
@@ -1787,7 +1796,7 @@ void CGMEApp::OnFileNew()
 		COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
 
 	meta_label:
-		HRESULT hr = launcher->MetaDlg(METADLG_NONE);
+		HRESULT hr = launcher->MetaDlg(METADLG_NEWFILE);
 		if( hr == S_FALSE )
 			return;
 		COMTHROW( hr );
@@ -2049,9 +2058,9 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 					TCHAR buf[300];
 					if(h2 != S_OK) {
 						ASSERT(h1 != S_OK);
-						CString msg = _T("Could not find paradigm paradigm '") + CString(paradigm);
+						CString msg = _T("Could not find paradigm paradigm '") + CString(paradigm) + "'";
 						if (CString(paradigm) == _T("MetaGME2000"))
-							msg += _T("'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
+							msg += _T("\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
 						msg += _T("\nDo you want to import with an other registered paradigm ?");
 						if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
 							CComObjPtr<IMgaLauncher> launcher;
@@ -2757,9 +2766,9 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 					TCHAR buf[300];
 					if (h2 != S_OK) {
 						ASSERT(h1 != S_OK);
-						CString msg = _T("Could not find paradigm paradigm '") + CString(paradigm);
+						CString msg = _T("Could not find paradigm paradigm '") + CString(paradigm) + "'";
 						if (CString(paradigm) == _T("MetaGME2000"))
-							msg += _T("'\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
+							msg += _T("\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
 						msg += _T("\nDo you want to import with an other registered paradigm ?");
 						if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
 							CComObjPtr<IMgaLauncher> launcher;
