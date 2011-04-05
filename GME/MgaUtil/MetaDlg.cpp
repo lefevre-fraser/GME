@@ -70,8 +70,12 @@ BOOL CMetaDlg::OnInitDialog()
 
 		ASSERT( registrar != NULL );
 
-		if(flags == METADLG_PARREG) {
-				GetDlgItem(IDOK)->SetWindowText(_T("Components..."));
+		if (flags == METADLG_PARREG) {
+			GetDlgItem(IDOK)->SetWindowText(_T("Components..."));
+		} else if (flags == METADLG_NONE) {
+			GetDlgItem(IDOK)->SetWindowText(_T("Open"));
+		} else if (flags == METADLG_NEWFILE) {
+			GetDlgItem(IDOK)->SetWindowText(_T("Create New"));
 		}
 
 		{
@@ -343,6 +347,8 @@ BOOL CMetaDlg::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 		GetDlgItem(IDOK)->EnableWindow(pos != NULL);
 		m_purge.EnableWindow(pos != NULL);
 		to_select = pos ? m_list.GetItemText(m_list.GetNextSelectedItem(pos),0) : _T("");
+		if (pos != NULL)
+			::SendMessage(GetDlgItem(IDOK)->GetSafeHwnd(), BM_SETSTATE, BST_PUSHED, 0);
 		return TRUE;
 	}
 	else if( wParam == IDC_LIST && ((NMHDR*)lParam)->code == NM_DBLCLK )
