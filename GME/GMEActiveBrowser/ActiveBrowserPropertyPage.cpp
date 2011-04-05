@@ -2299,7 +2299,7 @@ void CAggregatePropertyPage::GotoIUnk(BSTR Id)
 		else  // expand the tree until item reached
 		{
 			_bstr_t id;
-			_bstr_t bId = (char*)Id;
+			_bstr_t bId = Id;
 			CComPtr<IMgaObject> iitem;
 			CComPtr<IMgaFCO> fiitem;
 			_bstr_t item[100];
@@ -2308,14 +2308,14 @@ void CAggregatePropertyPage::GotoIUnk(BSTR Id)
 			
 			pMgaContext->BeginTransaction();
 			CComPtr<IMgaProject> project = pMgaContext->m_ccpProject;
-			COMTHROW(project->GetFCOByID((wchar_t*)bId, &fiitem));
+			COMTHROW(project->GetFCOByID(bId, &fiitem));
 			fiitem.QueryInterface(&iitem);
 			item[itemcount++] = Id;
 			do
 			{
 				COMTHROW(iitem->GetParent(&parent));
-				BSTR bstrid = NULL;
-				COMTHROW(parent->get_ID(&bstrid));
+				_bstr_t bstrid;
+				COMTHROW(parent->get_ID(bstrid.GetAddress()));
 				id = bstrid;
 				item[itemcount++] = id;
 				iitem = parent;
