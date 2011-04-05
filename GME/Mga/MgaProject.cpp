@@ -1052,7 +1052,7 @@ STDMETHODIMP CMgaProject::CreateTerritory(IMgaEventSink *sink, IMgaTerritory **p
 // MUST SUCCEED
 		CComPtr< CMgaTerritory > ster;
 		CreateComObject(ster);
-		ster->coreterr = tt.Detach();
+		ster->coreterr = tt;
 		ster->mgaproject = this;; 
 		allterrs.push_front(ster);
 		ster->handler=sink;
