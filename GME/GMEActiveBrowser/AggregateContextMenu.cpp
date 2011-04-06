@@ -63,7 +63,7 @@ BOOL CAggregateContextMenu::Run(CPoint point)
 	UINT nItemID=pPopup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON |TPM_NONOTIFY|TPM_RETURNCMD, point.x, point.y,
 							m_pParent);
 
-	TRACE1(_T("Selected menu item ID: %d\n"),nItemID);
+	TRACE1("Selected menu item ID: %d\n",nItemID);
 	return DispatchCommand(nItemID);
 }
 

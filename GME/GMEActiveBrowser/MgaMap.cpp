@@ -254,7 +254,7 @@ void CMgaMap::Dump(CDumpContext& dc ) const
 	{
 		m_MapItem2Object.GetNextAssoc(pos,hItem,pUnknown);
 		CString strOut;
-		strOut.Format(" %x  |  %x\n",hItem, pUnknown);
+		strOut.Format(_T(" %x  |  %x\n"),hItem, pUnknown);
 		dc<<strOut;
 	}
 	dc<<"\n";
@@ -271,7 +271,7 @@ void CMgaMap::Dump(CDumpContext& dc ) const
 	{
 		m_MapObject2Item.GetNextAssoc(pos,pUnknown,pMgaObjectProxyMapItem);
 		CString strOut;
-		strOut.Format(" %x  |  %x  |  %d\n", pUnknown, pMgaObjectProxyMapItem->m_hTreeItem,pMgaObjectProxyMapItem->m_TypeInfo);
+		strOut.Format(_T(" %x  |  %x  |  %d\n"), pUnknown, pMgaObjectProxyMapItem->m_hTreeItem,pMgaObjectProxyMapItem->m_TypeInfo);
 		dc<<strOut;
 	}
 	dc<<"\n";
