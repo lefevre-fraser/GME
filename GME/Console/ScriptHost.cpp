@@ -13,6 +13,11 @@ STDMETHODIMP CScriptHost::InitEngine(void* console, BSTR engineProgid)
 	// register app and project 
 	try
 	{
+		if (console == NULL) {
+			m_iscript = NULL;
+			m_iscriptParse = NULL;
+			return S_OK;
+		}
 		m_console = (CConsoleCtrl*)console;
 		_bstr_t newprogid(engineProgid);
 		if (m_enginePID == newprogid)

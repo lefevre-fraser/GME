@@ -30,6 +30,9 @@ public:
 		, m_enginePID("")
 	{
 	}
+	virtual ~CScriptHost()
+	{
+	}
 
 DECLARE_REGISTRY_RESOURCEID(IDR_SCRIPTHOST)
 

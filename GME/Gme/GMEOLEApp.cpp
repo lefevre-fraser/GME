@@ -892,6 +892,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_OleIt( IGMEOLEIt** model)
 	{
 		LPDISPATCH lpDisp = pThis->GetOleIt();
 		lpDisp->QueryInterface(IID_IGMEOLEIt, (LPVOID*)model);
+		lpDisp->Release();
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL

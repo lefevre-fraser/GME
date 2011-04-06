@@ -350,7 +350,7 @@ public:
 
 	typedef stdext::hash_map<CMgaTerritory*, CMgaAtom*, terr_hashfunc> pubfcohash;
 	pubfcohash pubfcos;
-	CMgaProject *mgaproject;
+	CComPtr<CMgaProject> mgaproject;
 	bool simpleconn();
 	partpool ppool;
 	attrpool apool;

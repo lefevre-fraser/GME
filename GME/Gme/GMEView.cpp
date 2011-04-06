@@ -8445,8 +8445,8 @@ void CGMEView::OnCntxLocate()
 			selfco = selected.GetNext(pos)->mgaFco;
 		}
 		BeginTransaction(TRANSACTION_READ_ONLY);
-		BSTR IDObj = NULL;
-		selfco->get_ID(&IDObj);
+		_bstr_t IDObj;
+		selfco->get_ID(IDObj.GetAddress());
 		CommitTransaction();
 		CGMEBrowser::theInstance->FocusItem(IDObj);
 	}

@@ -26,7 +26,7 @@ CScriptEdit::CScriptEdit()
 
 CScriptEdit::~CScriptEdit()
 {
-
+	m_host->InitEngine(NULL, NULL);
 }
 
 bool CScriptEdit::Init(CConsoleCtrl *cons)
