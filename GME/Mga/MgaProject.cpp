@@ -1153,7 +1153,8 @@ STDMETHODIMP CMgaProject::GetClientByName(BSTR name, IMgaClient **pVal) {
 				break;
 			}
 		}
-		if(j == allclients.end()) COMTHROW(E_MGA_NAME_NOT_FOUND);
+		if(j == allclients.end()) 
+			return E_MGA_NAME_NOT_FOUND;
 	}
     COMCATCH(;);
 }
