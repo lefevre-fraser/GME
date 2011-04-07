@@ -894,8 +894,8 @@ void CAggregatePropertyPage::DoCopy()
 
 		CGMEDataSource *pGMEDataSource = new CGMEDataSource( pMgaContext->m_ccpProject);
 		
-		if ( ccpSelectedFCOs)		pGMEDataSource->SetNodes( CComPtr<IMgaFCOs>( ccpSelectedFCOs.Detach()));
-		if ( ccpSelectedFolders)	pGMEDataSource->SetFolders( CComPtr<IMgaFolders>( ccpSelectedFolders.Detach()));
+		if ( ccpSelectedFCOs)		pGMEDataSource->SetNodes( CComPtr<IMgaFCOs>( ccpSelectedFCOs));
+		if ( ccpSelectedFolders)	pGMEDataSource->SetFolders( CComPtr<IMgaFolders>( ccpSelectedFolders));
 		
 		pGMEDataSource->CacheDescriptor(&GMEDataDescriptor);
 
@@ -1355,8 +1355,8 @@ void CAggregatePropertyPage::DoDrag( CPoint ptDrag)
 
 		CGMEDataDescriptor GMEDataDescriptor(rectSelectedList, dummyAnnList,rectFrame.TopLeft(),CPoint(0,0));
 
-		if ( ccpSelectedFCOs)		GMEDataSource.SetNodes( CComPtr<IMgaFCOs>(ccpSelectedFCOs.Detach()));
-		if ( ccpSelectedFolders)	GMEDataSource.SetFolders( CComPtr<IMgaFolders>(ccpSelectedFolders.Detach()));
+		if ( ccpSelectedFCOs)		GMEDataSource.SetNodes( CComPtr<IMgaFCOs>(ccpSelectedFCOs));
+		if ( ccpSelectedFolders)	GMEDataSource.SetFolders( CComPtr<IMgaFolders>(ccpSelectedFolders));
 
 		GMEDataSource.CacheDescriptor(&GMEDataDescriptor);
 
