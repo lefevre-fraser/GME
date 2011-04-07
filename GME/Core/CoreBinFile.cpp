@@ -188,7 +188,6 @@ void BinObject::CreateAttributes(ICoreMetaObject *metaobject)
 		binattrs.emplace_back(ATTRID_NONE);
 		BinAttrUnion& binattrspace = binattrs.back(); 
 		BinAttrBase *binattr = BinAttrBase::Create(binattrspace, valtype);
-		BinAttrBase::Create(binattrspace, valtype);
 
 		ASSERT( attrid != ATTRID_NONE );
 		binattr->attrid = attrid;
