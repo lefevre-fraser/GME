@@ -1312,7 +1312,7 @@ HRESULT FCO::MoveFCOs(IMgaFCOs *movelist, IMgaMetaRoles *rlist,IMgaFCOs **objs) 
 			} MGACOLL_ITERATE_END;
 
 			VARIANT_BOOL is_equal;
-			IMgaFCO * thisptr;
+			CComPtr<IMgaFCO> thisptr;
 			getinterface( &thisptr);
 			COMTHROW( mf->get_IsEqual( thisptr, &is_equal));
 
