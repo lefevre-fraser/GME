@@ -1183,6 +1183,11 @@ FCOPtr::FCOPtr(FCOPtr const &o) {
 	p->AddRef();
 }
 
+FCOPtr::FCOPtr(FCOPtr&& o) {
+	p = o.p;
+	o.p = NULL;
+}
+
 FCOPtr::FCOPtr(FCO *f) {
 	p = f;
 	p->AddRef();

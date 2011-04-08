@@ -173,6 +173,7 @@ public:
 	void operator= (FCO *f);
 	bool operator< (const FCOPtr &o) const;
 	FCOPtr(FCOPtr const &o);
+	FCOPtr(FCOPtr&& o);
 	FCOPtr(FCO *f);
 	FCOPtr();
 	~FCOPtr();
