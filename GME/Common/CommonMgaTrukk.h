@@ -4,16 +4,6 @@
 
 #include <memory>
 
-template < class t >
-class SmartMultiPtr {
-	CComPtr< t > *m_ptr;
-public:
-	SmartMultiPtr(CComPtr< t > *x) : m_ptr(x) { ; }
-	~SmartMultiPtr() { delete[] m_ptr; }
-	operator CComPtr< t > *() { return m_ptr; }
-	t **operator &() { return &(m_ptr[0]); }
-};
-
 #define MGACOLL_ITERATE(iftype, collifptr) \
 { \
 	ASSERT( collifptr != NULL ); \
