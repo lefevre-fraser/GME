@@ -58,6 +58,7 @@ void GMEGraph::fillNodes( IMgaProject *project, IMgaParts* parts )
         COMTHROW( fco->get_ObjType(&type) );
         COMTHROW( part->GetGmeAttrs(&icon,&x,&y) );
 
+		// FIXME what about SET
         if( type == OBJTYPE_ATOM || type == OBJTYPE_MODEL || type == OBJTYPE_REFERENCE )
         {
             CComBSTR decoratorProgID;
@@ -82,6 +83,9 @@ void GMEGraph::fillNodes( IMgaProject *project, IMgaParts* parts )
 						COMTHROW(decorator->Initialize(project, metaPart, fco));
 
 					COMTHROW( decorator->GetPreferredSize( &sx, &sy ) );
+					// round sx and sy up to nearest GME_GRID_SIZE multiple
+					sx = (sx + GME_GRID_SIZE - 1) / GME_GRID_SIZE * GME_GRID_SIZE;
+					sy = (sy + GME_GRID_SIZE - 1) / GME_GRID_SIZE * GME_GRID_SIZE;
 					COMTHROW( decorator->SetLocation( x, y, x+sx, y+sy ) );
 
 					Node * node = new Node( sx, sy );

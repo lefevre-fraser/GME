@@ -7,8 +7,8 @@
 #include "GAOptimizer.h"
 #include "Graph.h"
 
-#define XMARGIN     50
-#define YMARGIN     20
+#define XMARGIN     (GME_GRID_SIZE * 5)
+#define YMARGIN     (GME_GRID_SIZE * 3)
 
 typedef std::vector<int>  IntVec;
 typedef std::set<int>     IntSet;
@@ -18,7 +18,12 @@ class LayoutSolution;
 class LayoutOptimizerListener
 {
 public:
-    virtual bool update( int percentage, LayoutSolution * sol, double score ) = 0;
+	enum ContinueAbortOrCurrent {
+		CONTINUE,
+		ABORT,
+		CURRENT,
+	};
+    virtual ContinueAbortOrCurrent update( int percentage, LayoutSolution * sol, double score ) = 0;
 };
 
 class LayoutOptimizer

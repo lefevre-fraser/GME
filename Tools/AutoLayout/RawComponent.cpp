@@ -64,10 +64,12 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 
             CDlgAutoLayout dlg;
             dlg.initialzie( project, (IMgaModel*)currentobj );
-            if( dlg.DoModal() != IDOK )
-                throw 0;
-
-            COMTHROW( project->CommitTransaction() );
+            INT_PTR dlgResult = dlg.DoModal();
+			if (dlgResult == IDOK ) {
+		        COMTHROW( project->CommitTransaction() );
+			} else {
+	            COMTHROW( project->AbortTransaction() );
+			}
 		}	
         catch(...)         
         { 

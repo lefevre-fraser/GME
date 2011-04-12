@@ -11,6 +11,7 @@
 #define IDC_PROGRESS_ASPECT             209
 #define IDC_CHECK_STARTFROMSCRATCH      210
 #define IDC_BUTTON_ABORT                211
+#define IDC_BUTTON_CURRENT_RESULTS      212
 
 // Next default values for new objects
 // 
@@ -18,7 +19,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        203
 #define _APS_NEXT_COMMAND_VALUE         32768
-#define _APS_NEXT_CONTROL_VALUE         212
+#define _APS_NEXT_CONTROL_VALUE         213
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -27,9 +27,7 @@ public:
 
     void initialzie( IMgaProject * project, IMgaModel* model );
 
-    virtual bool update( int percentage, LayoutSolution * sol, double score );
-
-	bool IsAbortionRequested(void) const;
+	virtual LayoutOptimizerListener::ContinueAbortOrCurrent update( int percentage, LayoutSolution * sol, double score );
 
 // Dialog Data
 	//{{AFX_DATA(CDlgAutoLayout)
@@ -41,6 +39,7 @@ public:
 	BOOL	m_startFromScratch;
 	CButton	m_startButton;
 	CButton	m_abortButton;
+	CButton m_currentResultsButton;
 	//}}AFX_DATA
 
 
@@ -72,6 +71,7 @@ protected:
 
     int                         m_updateTime;
 	bool						m_bAbortionRequested;
+	bool m_bCurrentResults;
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgAutoLayout)
@@ -79,6 +79,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnButtonStart();
 	afx_msg void OnButtonAbort();
+	afx_msg void OnButtonCurrentResults();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

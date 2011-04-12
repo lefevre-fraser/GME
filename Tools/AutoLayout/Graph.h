@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#define GME_GRID_SIZE 7 // from GME GMEStd.h
+
 struct Node;
 struct Edge;
 

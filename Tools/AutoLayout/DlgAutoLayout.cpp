@@ -23,6 +23,7 @@ CDlgAutoLayout::CDlgAutoLayout(CWnd* pParent /*=NULL*/)
 	//}}AFX_DATA_INIT
     m_currentSolution = NULL;
 	m_bAbortionRequested = false;
+	m_bCurrentResults = false;
 }
 
 CDlgAutoLayout::~CDlgAutoLayout()
@@ -38,7 +39,7 @@ void CDlgAutoLayout::initialzie( IMgaProject * project, IMgaModel* model )
     COMTHROW( m_metaModel->get_Aspects( PutOut(m_metaAspects) ) );    
 }
 
-bool CDlgAutoLayout::update( int percentage, LayoutSolution * sol, double score  )
+LayoutOptimizerListener::ContinueAbortOrCurrent CDlgAutoLayout::update( int percentage, LayoutSolution * sol, double score  )
 {
     m_score = score;
     m_currentSolution = sol;
@@ -67,12 +68,8 @@ bool CDlgAutoLayout::update( int percentage, LayoutSolution * sol, double score 
 		}
 	}
 
-	return !IsAbortionRequested();
-}
-
-bool CDlgAutoLayout::IsAbortionRequested(void) const
-{
-	return m_bAbortionRequested;
+	return (m_bAbortionRequested ? LayoutOptimizerListener::ABORT :
+		(m_bCurrentResults ? LayoutOptimizerListener::CURRENT : LayoutOptimizerListener::CONTINUE));
 }
 
 void CDlgAutoLayout::DoDataExchange(CDataExchange* pDX)
@@ -86,6 +83,7 @@ void CDlgAutoLayout::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK_STARTFROMSCRATCH, m_startFromScratch);
 	DDX_Control(pDX, IDC_BUTTON_START, m_startButton);
 	DDX_Control(pDX, IDC_BUTTON_ABORT, m_abortButton);
+	DDX_Control(pDX, IDC_BUTTON_CURRENT_RESULTS, m_currentResultsButton);
 	//}}AFX_DATA_MAP
 }
 
@@ -94,6 +92,7 @@ BEGIN_MESSAGE_MAP(CDlgAutoLayout, CDialog)
 	ON_WM_DRAWITEM()
 	ON_BN_CLICKED(IDC_BUTTON_START, OnButtonStart)
 	ON_BN_CLICKED(IDC_BUTTON_ABORT, OnButtonAbort)
+	ON_BN_CLICKED(IDC_BUTTON_CURRENT_RESULTS, OnButtonCurrentResults)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -129,6 +128,7 @@ BOOL CDlgAutoLayout::OnInitDialog()
     m_progressAspect.ShowWindow( SW_HIDE );
 
 	m_abortButton.EnableWindow(FALSE);
+	m_currentResultsButton.EnableWindow(FALSE);
 
 	return TRUE;
 }
@@ -214,6 +214,7 @@ void CDlgAutoLayout::OnButtonStart()
 			checkBoxWnd->EnableWindow(FALSE);
 		m_startButton.EnableWindow(FALSE);
 		m_abortButton.EnableWindow(TRUE);
+		m_currentResultsButton.EnableWindow(TRUE);
 
         m_progressOptimization.ShowWindow( SW_SHOW );
         m_progressAspect.ShowWindow( SW_SHOW );
@@ -226,7 +227,7 @@ void CDlgAutoLayout::OnButtonStart()
         if( selNum == 0 )
             return;
 
-        for( int i=0; i<m_listAspects.GetCount() && !IsAbortionRequested(); ++i )
+        for( int i=0; i<m_listAspects.GetCount() && !m_bAbortionRequested; ++i )
         {
             if( m_listAspects.GetSel(i) > 0 )
             {
@@ -241,7 +242,7 @@ void CDlgAutoLayout::OnButtonStart()
                 LayoutOptimizer optimizer( &graph );
 				m_updateTime = 0;
 				optimizer.optimize( this, m_startFromScratch>0 );    
-				if ( !IsAbortionRequested() )
+				if ( !m_bAbortionRequested )
 				{
 					m_currentSolution = NULL;
 					m_graph.Invalidate(FALSE);
@@ -281,15 +282,20 @@ void CDlgAutoLayout::OnButtonStart()
         CDialog::OnCancel();
     }
 
-	if (IsAbortionRequested())
+	if (m_bAbortionRequested)
 		CDialog::OnCancel();
 	else
 		CDialog::OnOK();
 }
 
+void CDlgAutoLayout::OnButtonCurrentResults()
+{
+	m_bCurrentResults = true;
+}
+	
 void CDlgAutoLayout::OnButtonAbort()
 {
-	int nRet = ::AfxMessageBox("Are you sure you want to abort the auto-layouting procedure?", MB_YESNO | MB_ICONWARNING);
+	int nRet = IDYES; // ::AfxMessageBox("Are you sure you want to abort the auto-layouting procedure?", MB_YESNO | MB_ICONWARNING);
 	if (nRet == IDYES)
 		m_bAbortionRequested = true;
 	else

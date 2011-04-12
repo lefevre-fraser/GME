@@ -8,6 +8,9 @@
 using GAOptimizer::IGenotype;
 using GAOptimizer::IProblem;
 
+#ifdef max
+#undef max
+#endif
 
 LayoutOptimizer::LayoutOptimizer( Graph * graph )
 {
@@ -19,9 +22,10 @@ void LayoutOptimizer::optimize( LayoutOptimizerListener * listener, bool startFr
     int i,j;
     int x = 0;
     int m = 100;
-	bool noAbort = true;
+	int maxy = 0;
+	LayoutOptimizerListener::ContinueAbortOrCurrent status = LayoutOptimizerListener::ContinueAbortOrCurrent::CONTINUE;
 
-    for( i=0; i<m_graph->getNumberOfSubGraphs() && noAbort; ++i )
+    for( i=0; i<m_graph->getNumberOfSubGraphs() && status == LayoutOptimizerListener::CONTINUE; ++i )
     {
         LayoutOptProblem       problem( m_graph, i, startFromScratch );
         GAOptimizer::Optimizer optimizer;
@@ -29,15 +33,15 @@ void LayoutOptimizer::optimize( LayoutOptimizerListener * listener, bool startFr
         optimizer.init( &problem, 500, 20 );
 
         LayoutSolution * best;
-        for( j=0; j<m && noAbort; ++j )
+		for( j=0; j<m && status == LayoutOptimizerListener::CONTINUE; ++j )
         {
             optimizer.step(800);
             best = (LayoutSolution*)optimizer.getBest();
             if( listener != NULL )
-                noAbort = listener->update( (int)(100 * (i*m+j) / double(m_graph->getNumberOfSubGraphs() * m)), best, optimizer.getMaxFitness() );
+                status = listener->update( (int)(100 * (i*m+j) / double(m_graph->getNumberOfSubGraphs() * m)), best, optimizer.getMaxFitness() );
         }
 
-		if ( noAbort )
+		if ( status != LayoutOptimizerListener::ABORT )
 		{
 			// get best, place it, write back positions to m_graph
 			best->crop();
@@ -47,21 +51,32 @@ void LayoutOptimizer::optimize( LayoutOptimizerListener * listener, bool startFr
 			{
 				best->m_nodes[j].m_node->m_x = best->m_nodes[j].m_x;
 				best->m_nodes[j].m_node->m_y = best->m_nodes[j].m_y;
+				maxy = std::max(maxy, best->m_nodes[j].m_y + m_graph->m_nodes[j]->m_sy);
 			}
 		}
     }
 
-	if ( noAbort )
+	if ( status != LayoutOptimizerListener::ABORT )
 	{
-		// place not connected nodes
-		int y = YMARGIN;
+		// place not connected nodes in rows
+		int y = YMARGIN + maxy;
+		int max_y_size = 0;
+		x = XMARGIN;
 		for( i=0; i<m_graph->m_nodes.size(); ++i )
 		{
 			if( !(m_graph->m_nodes[i]->m_connectedToOthers) )
 			{
+				if ((m_graph->m_nodes[i]->m_sx + XMARGIN + x > 600)
+					&& (x > 100))
+				{
+					x = XMARGIN;
+					y += max_y_size + YMARGIN;
+					max_y_size = 0;
+				}
 				m_graph->m_nodes[i]->m_x = x;
 				m_graph->m_nodes[i]->m_y = y;
-				y += m_graph->m_nodes[i]->m_sy + 2 * YMARGIN;
+				x += m_graph->m_nodes[i]->m_sx + XMARGIN;
+				max_y_size = std::max(max_y_size, m_graph->m_nodes[i]->m_sy);
 			}
 		}
 	}
