@@ -846,9 +846,10 @@ void CAggregatePropertyPage::DoCopy()
 		CMgaObjectProxy ObjectProxy;
 		if(m_TreeAggregate.m_MgaMap.LookupObjectProxy(hItem, ObjectProxy))
 		{
-			if ( ObjectProxy.m_TypeInfo == OBJTYPE_MODEL     ||	// FCOs except connection
+			if ( ObjectProxy.m_TypeInfo == OBJTYPE_MODEL     ||	// FCOs
 			     ObjectProxy.m_TypeInfo == OBJTYPE_ATOM      ||
 			     ObjectProxy.m_TypeInfo == OBJTYPE_REFERENCE ||
+			     ObjectProxy.m_TypeInfo == OBJTYPE_CONNECTION ||
 			     ObjectProxy.m_TypeInfo == OBJTYPE_SET)
 			{
 				CComQIPtr<IMgaFCO> ccpMgaFCO( ObjectProxy.m_pMgaObject);
@@ -899,14 +900,7 @@ void CAggregatePropertyPage::DoCopy()
 		
 		pGMEDataSource->CacheDescriptor(&GMEDataDescriptor);
 
-
 		pGMEDataSource->SetClipboard();
-
-		
-	}
-	else
-	{
-		MessageBox(_T("Connections cannot be  copied."),_T("Copy Error"), MB_ICONERROR);
 	}
 
 	CGMEDataDescriptor::destructList( rectSelectedList);
@@ -1367,7 +1361,7 @@ void CAggregatePropertyPage::DoDrag( CPoint ptDrag)
 	}
 	else
 	{
-		MessageBox(_T("Connections cannot be dropped or copied."),_T("Error"), MB_ICONERROR);
+		MessageBox(_T("Connections cannot be drag-and-dropped."), _T("Error"), MB_ICONERROR);
 	}
 
 	CGMEDataDescriptor::destructList( rectSelectedList);
