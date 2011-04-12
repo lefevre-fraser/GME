@@ -80,7 +80,7 @@ void Component::invoke( Project& project, const std::set<FCO>& setModels, long l
 		invokeEx( project, focus, setModels, lParam );
 	#else
 		if ( m_bIsInteractive )
-			AfxMessageBox("This BON2 Component does not support the obsolete invoke mechanism!");
+			AfxMessageBox(_T("This BON2 Component does not support the obsolete invoke mechanism!"));
 	#endif
 }
 
@@ -108,7 +108,7 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 void Component::objectInvokeEx( Project& project, Object& currentObject, const std::set<Object>& setSelectedObjects, long lParam )
 	{
 		if ( m_bIsInteractive )
-			AfxMessageBox("This BON2 Component does not support objectInvokeEx method!");
+			AfxMessageBox(_T("This BON2 Component does not support objectInvokeEx method!"));
 	}
 
 // ====================================================

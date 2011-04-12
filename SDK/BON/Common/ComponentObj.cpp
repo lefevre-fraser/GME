@@ -168,7 +168,7 @@ STDMETHODIMP COMCLASS::GlobalEvent(globalevent_enum event) {
 			pThis->comp->HandleError( &ex );
 		}
 		catch ( ... ) {
-			AfxMessageBox( "Unhandled and unknown exception was thrown in BON2Component GlobalEvent!" );
+			AfxMessageBox( _T("Unhandled and unknown exception was thrown in BON2Component GlobalEvent!") );
 		}
 		return S_OK;
 	#else
@@ -197,7 +197,7 @@ STDMETHODIMP COMCLASS::ObjectEvent(IMgaObject * obj, unsigned long eventmask, VA
 			pThis->comp->HandleError( &ex );
 		}
 		catch ( ... ) {
-			AfxMessageBox( "Unhandled and unknown exception was thrown in BON2Component ObjectEvent!" );
+			AfxMessageBox( _T("Unhandled and unknown exception was thrown in BON2Component ObjectEvent!") );
 		}
 		return S_OK;
 	#else
@@ -468,11 +468,11 @@ STDMETHODIMP COMCLASS::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,  IM
 	COMTHROW(project->put_Preferences(prefs));
 #else
 		if(pThis->interactive) {
-			AfxMessageBox("This interpreter has been upgraded to the new component interface \n"
-						   "but the user-provided files (Component.cpp and Component.h) \n"
-						   "use the deprecated interface. You can proceed now, but you are adviced to\n"
-						   "#define NEW_BON_INVOKE in Component.h, and implement other\n"
-						   "modifications as described at the top of the ComponentObj.cpp file");
+			AfxMessageBox(_T("This interpreter has been upgraded to the new component interface \n")
+						   _T("but the user-provided files (Component.cpp and Component.h) \n")
+						   _T("use the deprecated interface. You can proceed now, but you are adviced to\n")
+						   _T("#define NEW_BON_INVOKE in Component.h, and implement other\n")
+						   _T("modifications as described at the top of the ComponentObj.cpp file"));
 		}
 		CComPtr<IMgaTerritory> terr;
 		COMTHROW(project->CreateTerritory(NULL, &terr));
@@ -570,11 +570,11 @@ STDMETHODIMP COMCLASS::ObjectsInvokeEx( IMgaProject *project,  IMgaObject *curre
 	COMTHROW(project->put_Preferences(prefs));
 #else
 		if(pThis->interactive) {
-			AfxMessageBox("This interpreter has been upgraded to the new component interface \n"
-						   "but the user-provided files (Component.cpp and Component.h) \n"
-						   "use the deprecated interface.\n"
-						   "#define NEW_BON_INVOKE in Component.h, and implement other\n"
-						   "modifications as described at the top of the ComComponent.cpp file");
+			AfxMessageBox(_T"This interpreter has been upgraded to the new component interface \n")
+						   _T("but the user-provided files (Component.cpp and Component.h) \n")
+						   _T("use the deprecated interface.\n")
+						   _T("#define NEW_BON_INVOKE in Component.h, and implement other\n")
+						   _T("modifications as described at the top of the ComComponent.cpp file"));
 		}
 		return E_MGA_NOT_IMPLEMENTED;
 #endif

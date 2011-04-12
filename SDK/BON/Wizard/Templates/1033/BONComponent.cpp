@@ -18,6 +18,6 @@ void CComponent::InvokeEx(CBuilder &builder,CBuilderObject *focus, CBuilderObjec
 {
 	using namespace GMEConsole;
 	Console::Out::WriteLine("Interpreter started...");
-	AfxMessageBox("GME Component --- Sample rf:" + builder.GetRootFolder()->GetName(), MB_OK | MB_ICONSTOP);
+	AfxMessageBox(_T("GME Component --- Sample rf:") + builder.GetRootFolder()->GetName(), MB_OK | MB_ICONSTOP);
 	Console::Out::WriteLine("Interpreter completed...");
 }
