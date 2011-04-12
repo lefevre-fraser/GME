@@ -36,11 +36,11 @@
 
 
 // This name will appear in the popup window for interpreter selection.
-#define COMPONENT_NAME "[!output COMPONENT_NAME]"
+#define COMPONENT_NAME _T("[!output COMPONENT_NAME]")
 
 
 // This text will appear in the toolbar icon tooltip and in the menu.
-#define TOOLTIP_TEXT "[!output TOOLTIP_TEXT]"
+#define TOOLTIP_TEXT _T("[!output TOOLTIP_TEXT]")
 
 // This macro determines the component type (addon vs. interpreter):
 [!if GME_INTERPRETER]
@@ -56,7 +56,7 @@
 [!if PARADIGM_INDEPENDENT]
 #define PARADIGM_INDEPENDENT
 [!else]
-#define PARADIGMS "[!output PARADIGMS]"
+#define PARADIGMS _T("[!output PARADIGMS]")
 [!endif]
 
 

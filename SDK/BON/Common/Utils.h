@@ -45,6 +45,7 @@ namespace Util
 
 	CComBSTR	Copy( const std::string& str );
 	std::string	Copy( const CComBSTR& bstr );
+	std::wstring CopyW( const CComBSTR& bstr );
 
 //###############################################################################################################################################
 //

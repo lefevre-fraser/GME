@@ -42,7 +42,7 @@ inline void COMCHECK2(const CComPtr<T>& p, const HRESULT hr)
 
 			BSTR bstr;
 			errorInfo->GetDescription(&bstr);
-			CString str( bstr );
+			CStringA str( bstr );
 			std::string strResult( str.GetBuffer( str.GetLength() ) );
 			str.ReleaseBuffer();
 			SysFreeString(bstr);

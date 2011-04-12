@@ -460,7 +460,7 @@ STDMETHODIMP COMCLASS::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,  IM
 			COMTHROW(project->AbortTransaction());
 			throw;
 		} catch(...) {
-			AfxMessageBox( "Unhandled and unknown exception was thrown in BON2Component Invoke!" );
+			AfxMessageBox(_T("Unhandled and unknown exception was thrown in BON2Component Invoke!"));
 			COMTHROW(project->AbortTransaction());
 			COMTHROW(E_FAIL);
 		}
@@ -652,7 +652,7 @@ STDMETHODIMP COMCLASS::Invoke( IMgaProject *gme, IMgaFCOs *psa, long param )
 		pThis->HandleError( &ex );
 	}
 	catch ( ... ) {
-		AfxMessageBox( "Unhandled and unknown exception was thrown in BON2Component Invoke!" );
+		AfxMessageBox( _T("Unhandled and unknown exception was thrown in BON2Component Invoke!") );
 	}
 
 	return S_OK;
@@ -709,7 +709,7 @@ STDMETHODIMP COMCLASS::InvokeEx( IMgaProject *gme,  IMgaFCO *currentobj,  IMgaFC
 		#endif
 	}
 	catch ( ... ) {
-		AfxMessageBox( "Unhandled and unknown exception was thrown in BON2Component InvokeEx!" );
+		AfxMessageBox( _T("Unhandled and unknown exception was thrown in BON2Component InvokeEx!") );
 		#ifndef BON_CUSTOM_TRANSACTIONS
 			COMTHROW( gme->AbortTransaction() );
 		#endif
@@ -759,7 +759,7 @@ STDMETHODIMP COMCLASS::ObjectsInvokeEx( IMgaProject *gme,  IMgaObject *currentob
 		COMTHROW( gme->AbortTransaction() );
 	}
 	catch ( ... ) {
-		AfxMessageBox( "Unhandled and unknown exception was thrown in BON2Component ObjectInvokeEx!" );
+		AfxMessageBox( _T("Unhandled and unknown exception was thrown in BON2Component ObjectInvokeEx!") );
 		COMTHROW( gme->AbortTransaction() );
 	}
 	} COMCATCH(;)
@@ -797,7 +797,7 @@ STDMETHODIMP COMCLASS::Initialize( struct IMgaProject *p )
 			pThis->HandleError( &ex );
 		}
 		catch ( ... ) {
-			AfxMessageBox( "Unhandled and unknown exception was thrown in BON2Component Initialization!" );
+			AfxMessageBox( _T("Unhandled and unknown exception was thrown in BON2Component Initialization!") );
 		}
 
 		COMTHROW( p->CommitTransaction() );
@@ -958,7 +958,7 @@ void CComponentObj::HandleError( Util::Exception* pEx )
 		sprintf_s( chBuffer, "%x", ( (BON::Exception*) pEx)->getHResult() );
 		strOut += "\nException hresult : " + std::string( chBuffer );
 	}
-	AfxMessageBox( strOut.c_str() );
+	AfxMessageBox( CString(strOut.c_str()) );
 }
 
 
@@ -1018,11 +1018,11 @@ CComponentReg::CComponentReg()
 #ifndef PARADIGM_INDEPENDENT
 	while( !pars.IsEmpty() )
 	{
-		CString trash = pars.SpanIncluding(" ,;");
+		CString trash = pars.SpanIncluding(_T(" ,;"));
 		pars = pars.Mid(trash.GetLength());
 		if( pars.IsEmpty() )
 			break;
-		CString par = pars.SpanExcluding(" ,;");
+		CString par = pars.SpanExcluding(_T(" ,;"));
 		pars = pars.Mid(par.GetLength());
 		ASSERT(!par.IsEmpty());
 		paradigms.AddTail(par);

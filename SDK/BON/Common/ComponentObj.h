@@ -160,7 +160,7 @@ public:
 	bool interactive;
 
 #ifdef BUILDER_OBJECT_NETWORK
-	typedef CMap<CString, LPCSTR, CString, LPCSTR> CStringMap;
+	typedef CMap<CString, LPCTSTR, CString, LPCTSTR> CStringMap;
 	CStringMap parmap;
 #endif
 

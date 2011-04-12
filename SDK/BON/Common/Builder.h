@@ -69,7 +69,7 @@ typedef CMap<IUnknown*, IUnknown*, CBuilderObject*, CBuilderObject*> CBuilderObj
 typedef CMap<IUnknown*, IUnknown*, CBuilderConnection*, CBuilderConnection*> CBuilderConnectionLookupTable;
 typedef CMap<IUnknown*, IUnknown*, CBuilderReferencePort*, CBuilderReferencePort*> CBuilderReferencePortLookupTable;
 
-typedef CMap<CString, LPCSTR, CString, LPCSTR> CStringMap;
+typedef CMap<CString, LPCTSTR, CString, LPCTSTR> CStringMap;
 
 typedef CBuilderObject CBuilderAtomicObject;
 typedef CBuilderObjectList CBuilderAtomicObjectList;

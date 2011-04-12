@@ -24,16 +24,16 @@ namespace GMEConsole
 		c+=100;
 
 		CString result;
-		result.Format("<a href=\"mga:id-%04X-%08X\">", c, p);
+		result.Format(_T("<a href=\"mga:id-%04X-%08X\">"), c, p);
 		result+= text;
-		result+="</a>";		
+		result+=_T("</a>");
 		return result;
 	}
 
 	CString Formatter::MakeColored(const CString & text, COLORREF color)
 	{
 		CString result;
-		result.Format("<font color=\"#%02X%02X%02X\"> %s </font>", (int)GetRValue(color), (int)GetGValue(color),(int)GetBValue(color), text);
+		result.Format(_T("<font color=\"#%02X%02X%02X\"> %s </font>"), (int)GetRValue(color), (int)GetGValue(color),(int)GetBValue(color), text);
 		return result;
 	}
 }

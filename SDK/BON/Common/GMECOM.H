@@ -3,15 +3,6 @@
 
 #include "ComponentLib.h"
 
-// TODO: remove it or replace it with SmartMultiPtr from CommonMgaTrukk.h
-template <class TTT>
-class COMArray {
-public:
-	CComPtr<TTT> *array;
-	COMArray(long len)  { array = new CComPtr<TTT>[len]; };
-	~COMArray() { delete[] array; };
-};
-
 #define COM_EQUAL(a, b) (static_cast<IUnknown *>(a) == b ? true : a.IsEqualObject(b))
 
 // from CommonMgaTrukk.h

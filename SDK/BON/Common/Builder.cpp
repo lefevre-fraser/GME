@@ -710,7 +710,7 @@ CBuilderFolder *CBuilderObject::GetFolder() const
 
 void CBuilderObject::GetNamePath(CString &namePath) const
 {
-	GetExtendedName(namePath,"__",true);
+	GetExtendedName(namePath, _T("__"),true);
 }
 
 void CBuilderObject::GetExtendedName(CString &extName,CString separator,bool startWithRoot) const
@@ -784,7 +784,7 @@ void CBuilderObject::DisplayMessage(CString &msg,bool error) const
 {
 	CString namePath;
 	GetNamePath(namePath);
-	AfxMessageBox(msg + "\n" + namePath,error ? MB_OK | MB_ICONSTOP : MB_OK);
+	AfxMessageBox(msg + _T("\n") + namePath,error ? MB_OK | MB_ICONSTOP : MB_OK);
 }
 
 
@@ -2743,7 +2743,7 @@ bool CBuilderSet::RemoveMember(CBuilderObject *member)
 
 int MyMessageBox(LPCTSTR lpszText, UINT nType = MB_OK)
 {
-	return ::MessageBox(NULL, lpszText, "Builder Factory Error", nType);
+	return ::MessageBox(NULL, lpszText, _T("Builder Factory Error"), nType);
 }
 
 CBuilderFactory::~CBuilderFactory()
@@ -2799,17 +2799,17 @@ CBuilderFactory::CBuilderFactory(CString kindnames, CBuilderModelCreateFunction 
 	}
 	while( !kindnames.IsEmpty() )
 	{
-		CString trash = kindnames.SpanIncluding(",;");
+		CString trash = kindnames.SpanIncluding(_T(",;"));
 		kindnames = kindnames.Mid(trash.GetLength());
 		if( kindnames.IsEmpty() )
 			break;
-		CString kindname = kindnames.SpanExcluding(",;");
+		CString kindname = kindnames.SpanExcluding(_T(",;"));
 		kindnames = kindnames.Mid(kindname.GetLength());
 		ASSERT(!kindname.IsEmpty());
 
 		CBuilderModelCreateFunction fn;
 		if(modelBuildFunctions->Lookup(kindname,fn)) {
-			CString msg = "Create function already exists for object type " + kindname;
+			CString msg = _T("Create function already exists for object type ") + kindname;
 			MyMessageBox(msg,MB_OK | MB_ICONSTOP);
 			return;
 		}
@@ -2832,7 +2832,7 @@ CBuilderModel *CBuilderFactory::Create(IMgaModel* iModel, CBuilderModel *aparent
 		if( modelkindnames.Find(kindname) == NULL )
 		{
 			CString msg;
-			msg.Format("Model kindname \"%s\" was not found in paradigm.", (const char*) kindname);
+			msg.Format(_T("Model kindname \"%s\" was not found in paradigm."), kindname);
 			MyMessageBox(msg, MB_OK | MB_ICONSTOP);
 		}
 
@@ -2841,7 +2841,7 @@ CBuilderModel *CBuilderFactory::Create(IMgaModel* iModel, CBuilderModel *aparent
 		if(modelBuildFunctions->Lookup(kindname,fn))
 			return fn(iModel,aparent);
 
-		if(modelBuildFunctions->Lookup("*",fn))
+		if(modelBuildFunctions->Lookup(_T("*"),fn))
 			return fn(iModel,aparent);
 	}
 
@@ -2858,11 +2858,11 @@ CBuilderFactory::CBuilderFactory(CString kindnames, CBuilderAtomCreateFunction c
 	}
 	while( !kindnames.IsEmpty() )
 	{
-		CString trash = kindnames.SpanIncluding(",;");
+		CString trash = kindnames.SpanIncluding(_T(",;"));
 		kindnames = kindnames.Mid(trash.GetLength());
 		if( kindnames.IsEmpty() )
 			break;
-		CString kindname = kindnames.SpanExcluding(",;");
+		CString kindname = kindnames.SpanExcluding(_T(",;"));
 		kindnames = kindnames.Mid(kindname.GetLength());
 		ASSERT(!kindname.IsEmpty());
 
@@ -2891,7 +2891,7 @@ CBuilderAtom *CBuilderFactory::Create(IMgaAtom* iAtom, CBuilderModel *aparent)
 		if( atomkindnames.Find(kindname) == NULL )
 		{
 			CString msg;
-			msg.Format("Atom kindname \"%s\" was not found in paradigm.", (const char*) kindname);
+			msg.Format(_T("Atom kindname \"%s\" was not found in paradigm."), kindname);
 			MyMessageBox(msg, MB_OK | MB_ICONSTOP);
 		}
 
@@ -2900,7 +2900,7 @@ CBuilderAtom *CBuilderFactory::Create(IMgaAtom* iAtom, CBuilderModel *aparent)
 		if(atomBuildFunctions->Lookup(kindname,fn))
 			return fn(iAtom,aparent);
 
-		if(atomBuildFunctions->Lookup("*",fn))
+		if(atomBuildFunctions->Lookup(_T("*"),fn))
 			return fn(iAtom,aparent);
 	}
 
@@ -2919,11 +2919,11 @@ CBuilderFactory::CBuilderFactory(CString kindnames, CBuilderRefCreateFunction cr
 	}
 	while( !kindnames.IsEmpty() )
 	{
-		CString trash = kindnames.SpanIncluding(",;");
+		CString trash = kindnames.SpanIncluding(_T(",;"));
 		kindnames = kindnames.Mid(trash.GetLength());
 		if( kindnames.IsEmpty() )
 			break;
-		CString kindname = kindnames.SpanExcluding(",;");
+		CString kindname = kindnames.SpanExcluding(_T(",;"));
 		kindnames = kindnames.Mid(kindname.GetLength());
 		ASSERT(!kindname.IsEmpty());
 
@@ -2950,11 +2950,11 @@ CBuilderFactory::CBuilderFactory(CString kindnames, CBuilderModelRefCreateFuncti
 	}
 	while( !kindnames.IsEmpty() )
 	{
-		CString trash = kindnames.SpanIncluding(",;");
+		CString trash = kindnames.SpanIncluding(_T(",;"));
 		kindnames = kindnames.Mid(trash.GetLength());
 		if( kindnames.IsEmpty() )
 			break;
-		CString kindname = kindnames.SpanExcluding(",;");
+		CString kindname = kindnames.SpanExcluding(_T(",;"));
 		kindnames = kindnames.Mid(kindname.GetLength());
 		ASSERT(!kindname.IsEmpty());
 
@@ -2978,11 +2978,11 @@ CBuilderFactory::CBuilderFactory(CString kindnames, CBuilderAtomRefCreateFunctio
 	}
 	while( !kindnames.IsEmpty() )
 	{
-		CString trash = kindnames.SpanIncluding(",;");
+		CString trash = kindnames.SpanIncluding(_T(",;"));
 		kindnames = kindnames.Mid(trash.GetLength());
 		if( kindnames.IsEmpty() )
 			break;
-		CString kindname = kindnames.SpanExcluding(",;");
+		CString kindname = kindnames.SpanExcluding(_T(",;"));
 		kindnames = kindnames.Mid(kindname.GetLength());
 		ASSERT(!kindname.IsEmpty());
 
@@ -3031,25 +3031,25 @@ CBuilderReference *CBuilderFactory::Create(IMgaReference* iRef, CBuilderModel *a
 		if( refkindnames.Find(kindname) == NULL )
 		{
 			CString msg;
-			msg.Format("Ref kindname \"%s\" was not found in paradigm.", (const char*) kindname);
+			msg.Format(_T("Ref kindname \"%s\" was not found in paradigm."), kindname);
 			MyMessageBox(msg, MB_OK | MB_ICONSTOP);
 		}
 
 
 		CBuilderRefCreateFunction fn;
-		if(refBuildFunctions && (refBuildFunctions->Lookup(kindname,fn) || refBuildFunctions->Lookup("*",fn)))
+		if(refBuildFunctions && (refBuildFunctions->Lookup(kindname,fn) || refBuildFunctions->Lookup(_T("*"),fn)))
 			return fn(iRef,aparent);
 
 		if(ot == OBJTYPE_MODEL) {
 			CBuilderModelRefCreateFunction fn;
-			if(modelRefBuildFunctions && (modelRefBuildFunctions->Lookup(kindname,fn) || modelRefBuildFunctions->Lookup("*",fn))) {
+			if(modelRefBuildFunctions && (modelRefBuildFunctions->Lookup(kindname,fn) || modelRefBuildFunctions->Lookup(_T("*"),fn))) {
 				return fn(iRef,aparent);
 			}
 			return new CBuilderModelReference(iRef, aparent);
 		}
 		else if (ot == OBJTYPE_ATOM) {
 			CBuilderAtomRefCreateFunction fn;
-			if(atomRefBuildFunctions && (atomRefBuildFunctions->Lookup(kindname,fn) || atomRefBuildFunctions->Lookup("*",fn))) {
+			if(atomRefBuildFunctions && (atomRefBuildFunctions->Lookup(kindname,fn) || atomRefBuildFunctions->Lookup(_T("*"),fn))) {
 				return fn(iRef,aparent);
 			}
 			return new CBuilderAtomReference(iRef, aparent);
@@ -3069,11 +3069,11 @@ CBuilderFactory::CBuilderFactory(CString kindnames, CBuilderConnectionCreateFunc
 	}
 	while( !kindnames.IsEmpty() )
 	{
-		CString trash = kindnames.SpanIncluding(",;");
+		CString trash = kindnames.SpanIncluding(_T(",;"));
 		kindnames = kindnames.Mid(trash.GetLength());
 		if( kindnames.IsEmpty() )
 			break;
-		CString kindname = kindnames.SpanExcluding(",;");
+		CString kindname = kindnames.SpanExcluding(_T(",;"));
 		kindnames = kindnames.Mid(kindname.GetLength());
 		ASSERT(!kindname.IsEmpty());
 
@@ -3102,7 +3102,7 @@ CBuilderConnection *CBuilderFactory::Create(IMgaSimpleConnection* iConnection, C
 		if( connectionkindnames.Find(kindname) == NULL )
 		{
 			CString msg;
-			msg.Format("Connection kindname \"%s\" was not found in paradigm.", (const char*) kindname);
+			msg.Format(_T("Connection kindname \"%s\" was not found in paradigm."), kindname);
 			MyMessageBox(msg, MB_OK | MB_ICONSTOP);
 		}
 
@@ -3111,7 +3111,7 @@ CBuilderConnection *CBuilderFactory::Create(IMgaSimpleConnection* iConnection, C
 		if(connectionBuildFunctions->Lookup(kindname,fn))
 			return fn(iConnection,aparent);
 
-		if(connectionBuildFunctions->Lookup("*",fn))
+		if(connectionBuildFunctions->Lookup(_T("*"),fn))
 			return fn(iConnection,aparent);
 	}
 
@@ -3132,11 +3132,11 @@ CBuilderFactory::CBuilderFactory(CString kindnames, CBuilderSetCreateFunction cr
 	}
 	while( !kindnames.IsEmpty() )
 	{
-		CString trash = kindnames.SpanIncluding(",;");
+		CString trash = kindnames.SpanIncluding(_T(",;"));
 		kindnames = kindnames.Mid(trash.GetLength());
 		if( kindnames.IsEmpty() )
 			break;
-		CString kindname = kindnames.SpanExcluding(",;");
+		CString kindname = kindnames.SpanExcluding(_T(",;"));
 		kindnames = kindnames.Mid(kindname.GetLength());
 		ASSERT(!kindname.IsEmpty());
 
@@ -3165,7 +3165,7 @@ CBuilderSet *CBuilderFactory::Create(IMgaSet* iSet, CBuilderModel *aparent)
 		if( setkindnames.Find(kindname) == NULL )
 		{
 			CString msg;
-			msg.Format("Set kindname \"%s\" was not found in paradigm.", (const char*) kindname);
+			msg.Format(_T("Set kindname \"%s\" was not found in paradigm."), kindname);
 			MyMessageBox(msg, MB_OK | MB_ICONSTOP);
 		}
 
@@ -3174,7 +3174,7 @@ CBuilderSet *CBuilderFactory::Create(IMgaSet* iSet, CBuilderModel *aparent)
 		if(setBuildFunctions->Lookup(kindname,fn))
 			return fn(iSet,aparent);
 
-		if(setBuildFunctions->Lookup("*",fn))
+		if(setBuildFunctions->Lookup(_T("*"),fn))
 			return fn(iSet,aparent);
 	}
 
@@ -3245,7 +3245,7 @@ void CBuilderFactory::CheckKindNames(IMgaFolder* rf)
 			if( modelkindnames.Find(kindname) == NULL && kindname != "*" )
 			{
 				CString msg;
-				msg.Format("Model kindname \"%s\" was not found in paradigm.", (const char*) kindname);
+				msg.Format(_T("Model kindname \"%s\" was not found in paradigm."), kindname);
 				MyMessageBox(msg, MB_OK | MB_ICONSTOP);
 			}
 		}
@@ -3262,7 +3262,7 @@ void CBuilderFactory::CheckKindNames(IMgaFolder* rf)
 			if( atomkindnames.Find(kindname) == NULL && kindname != "*" )
 			{
 				CString msg;
-				msg.Format("Atom kindname \"%s\" was not found in paradigm.", (const char*) kindname);
+				msg.Format(_T("Atom kindname \"%s\" was not found in paradigm."), kindname);
 				MyMessageBox(msg, MB_OK | MB_ICONSTOP);
 			}
 		}
@@ -3281,7 +3281,7 @@ void CBuilderFactory::CheckKindNames(IMgaFolder* rf)
 				if( refkindnames.Find(kindname) == NULL && kindname != "*" )
 				{
 					CString msg;
-					msg.Format("ModelRef kindname \"%s\" was not found in paradigm.", (const char*) kindname);
+					msg.Format(_T("ModelRef kindname \"%s\" was not found in paradigm."), kindname);
 					MyMessageBox(msg, MB_OK | MB_ICONSTOP);
 				}
 			}
@@ -3298,7 +3298,7 @@ void CBuilderFactory::CheckKindNames(IMgaFolder* rf)
 				if( refkindnames.Find(kindname) == NULL && kindname != "*" )
 				{
 					CString msg;
-					msg.Format("AtomRef kindname \"%s\" was not found in paradigm.", (const char*) kindname);
+					msg.Format(_T("AtomRef kindname \"%s\" was not found in paradigm."), kindname);
 					MyMessageBox(msg, MB_OK | MB_ICONSTOP);
 				}
 			}

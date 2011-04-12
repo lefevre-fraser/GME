@@ -38,10 +38,15 @@ namespace Util
 
 	std::string	Copy( const CComBSTR& bstr )
 	{
-		CString str( bstr );
+		CStringA str( bstr );
 		std::string strResult( str.GetBuffer( str.GetLength() ) );
 		str.ReleaseBuffer();
 		return strResult;
+	}
+
+	std::wstring CopyW( const CComBSTR& bstr )
+	{
+		return std::wstring(static_cast<const wchar_t*>(bstr));
 	}
 
 //###############################################################################################################################################

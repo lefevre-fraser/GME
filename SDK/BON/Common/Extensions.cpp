@@ -36,7 +36,7 @@ namespace BON
 {
 	void splitKinds( const std::string& strKinds, std::vector<std::string>& vecKinds )
 	{
-		CString str( strKinds.c_str() );
+		CStringA str( strKinds.c_str() );
 		str.TrimLeft();
 		str.TrimRight();
 		if ( str.IsEmpty() )
@@ -49,7 +49,7 @@ namespace BON
 					str.ReleaseBuffer();
 					break;
 				}
-				CString str2 = str.Left( iPos );
+				CStringA str2 = str.Left( iPos );
 				vecKinds.push_back( str2.GetBuffer( str2.GetLength() ) );
 				str2.ReleaseBuffer();
 				str = str.Right( str.GetLength() - iPos );
