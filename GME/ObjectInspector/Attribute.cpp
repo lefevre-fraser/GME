@@ -315,7 +315,8 @@ bool CAttribute::CreateListItem(CListItem &ListItem, const CComVariant &ccvtValu
 				// Converting to int
 				CString strLineNum(bstrMultiLinePref);
 				int nLineNumMin = _tstoi(strLineNum);
-				const int nLineNumMax = 32;
+				const int nLineNumMax = 15;
+				static_assert(nLineNumMax * INSP_DEFAULT_ITEM_HEIGHT <= 255, "nLineNumMax is too big for SetItemHeight");
 				
 				if(nLineNumMin<2) // Single line edit box
 				{

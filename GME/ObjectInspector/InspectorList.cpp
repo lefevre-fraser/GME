@@ -728,6 +728,7 @@ void CInspectorList::UpdateItems(CArray<CListItem,CListItem&> &ListItemArray)
 
 void CInspectorList::UpdateItem(const CListItem &srcListItem, CListItem &dstListItem, int nIndex)
 {
+	ASSERT(nIndex < GetCount());
 	dstListItem.CopyWithNoState(srcListItem);
 
 
@@ -741,7 +742,7 @@ void CInspectorList::UpdateItem(const CListItem &srcListItem, CListItem &dstList
 		}
 		else
 		{
-			SetItemHeight(nIndex, nLineNum * INSP_DEFAULT_ITEM_HEIGHT);
+			VERIFY(SetItemHeight(nIndex, nLineNum * INSP_DEFAULT_ITEM_HEIGHT) != LB_ERR);
 		}
 
 	}
