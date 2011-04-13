@@ -403,7 +403,6 @@ void CTreeCtrlEx::SelectMultiple( HTREEITEM hClickedItem, UINT nFlags, CPoint po
 			SetItemState( hClickedItem, 0, TVIS_SELECTED );
 		else
 		{
-			SelectItem(hClickedItem);
 			SetItemState( hClickedItem, TVIS_SELECTED, TVIS_SELECTED );
 		}
 
