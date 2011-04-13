@@ -1299,8 +1299,9 @@ void CAggregatePropertyPage::DoDrag( CPoint ptDrag)
 		CMgaObjectProxy ObjectProxy;
 		if(m_TreeAggregate.m_MgaMap.LookupObjectProxy(hItem, ObjectProxy))
 		{
-			if(ObjectProxy.m_TypeInfo==OBJTYPE_MODEL||			// FCOs except connection
+			if(ObjectProxy.m_TypeInfo==OBJTYPE_MODEL||			// FCOs
 			   ObjectProxy.m_TypeInfo==OBJTYPE_ATOM||
+			   ObjectProxy.m_TypeInfo==OBJTYPE_CONNECTION||
 			   ObjectProxy.m_TypeInfo==OBJTYPE_REFERENCE||
 			   ObjectProxy.m_TypeInfo==OBJTYPE_SET)
 			{
@@ -1358,10 +1359,6 @@ void CAggregatePropertyPage::DoDrag( CPoint ptDrag)
 		GMEDataSource.DoDragDrop(DROPEFFECT_COPY | DROPEFFECT_LINK | DROPEFFECT_MOVE);
 		m_TreeAggregate.DeleteDragImageEx();
 		
-	}
-	else
-	{
-		MessageBox(_T("Connections cannot be drag-and-dropped."), _T("Error"), MB_ICONERROR);
 	}
 
 	CGMEDataDescriptor::destructList( rectSelectedList);
