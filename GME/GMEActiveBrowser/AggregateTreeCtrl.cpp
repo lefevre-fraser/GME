@@ -720,34 +720,11 @@ void CAggregateTreeCtrl::MakeSureGUIDIsUniqueForSmartCopy( CComPtr<IMgaFCO>& fco
 
 BOOL CAggregateTreeCtrl::IsRelevantDropTarget(CPoint point,CImageList* pDragImageList)
 {
-	UINT uFlags;	
-	HTREEITEM hItem=HitTest(point, &uFlags);
+	UINT uFlags;
+	HTREEITEM hItem = HitTest(point, &uFlags);
 	
-	// Setting previously selected item to avoid blinking
-	// To avoid the the messed up window we have to turn off the drag image list
-
-	HTREEITEM hSelItem=GetSelectedItem();
-	if(GetSelectedCount()>1)hSelItem=NULL;
-
 	if ((hItem != NULL) && (TVHT_ONITEM & uFlags))
 	{
-		// Selecting
-		if(hItem!=hSelItem)
-		{
-			if(pDragImageList!=NULL)
-			{
-				pDragImageList->DragShowNolock(FALSE);
-				ClearSelection();
-				SelectItem(hItem);
-				pDragImageList->DragShowNolock(TRUE);
-			}
-			else
-			{
-				ClearSelection();
-				SelectItem(hItem);
-			}
-			
-		}
 		CMgaObjectProxy ObjectProxy;
 		if(m_MgaMap.LookupObjectProxy(hItem,ObjectProxy)) // If it is in the map
 		{
@@ -756,22 +733,6 @@ BOOL CAggregateTreeCtrl::IsRelevantDropTarget(CPoint point,CImageList* pDragImag
 				return TRUE;
 			}
 		}		
-	}
-	else
-	{
-		if(GetSelectedCount()>1)
-		{
-			if(pDragImageList!=NULL)
-			{
-					pDragImageList->DragShowNolock(FALSE);
-					ClearSelection();				
-					pDragImageList->DragShowNolock(TRUE);
-			}
-			else
-			{
-				ClearSelection();		
-			}
-		}
 	}
 	return FALSE;
 }
@@ -796,7 +757,13 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 		_t = " COPY MERGE\r\n";
 	MGATREECTRL_LOGEVENT( _t);
 
-	HTREEITEM hItem= GetSelectedItem();
+	HTREEITEM hItem;
+	if (point.x == 0 && point.y == 0) {
+		hItem = GetSelectedItem();
+	} else {
+		hItem = HitTest(point);
+	}
+	
 	CMgaObjectProxy MgaObjectProxy;
 
 	if(hItem==NULL || !m_MgaMap.LookupObjectProxy(hItem,MgaObjectProxy))
