@@ -14,6 +14,8 @@
 #include "globals.h"
 extern Globals global_vars;
 
+#include <iterator>
+
 /*static*/ const std::string ModelRep::IsTypeInfoShown_str = "IsTypeInfoShown";
 
 ModelRep::ModelRep( BON::FCO& ptr, BON::FCO& resp_ptr)
@@ -391,6 +393,7 @@ int ModelRep::howManyAspects() const
 
 AspectRep * ModelRep::getFirstAspect() const
 {
+	// FIXME: use std::min_element instead?
 	unsigned int i;
 	unsigned sel_i = -1;
 	for( i = 0; i < m_finalAspectList.size(); ++i)
@@ -720,7 +723,15 @@ bool ModelRep::checkMyAspects( Sheet * s)
 	bool no = (howManyAspects() >= 1);
 	if (!no) 
 	{
-		global_vars.err << MSG_WARNING << "Warning: Model \"" << m_ptr << "\" has no aspect defined.\n";
+		if (m_finalRoleMap.size() > 0) {
+			std::string name = m_ptr->getName();
+			std::vector<std::string> rolenames;
+			std::transform(m_finalRoleMap.begin(), m_finalRoleMap.end(), std::back_inserter(rolenames),
+				[](const RoleMap::value_type& p){ return p.first->getNamespace() + "::" + p.first->getName(); });
+			global_vars.err << MSG_WARNING << "Warning: Model \"" << m_ptr << "\" has no aspect defined and may contain:";
+			std::for_each(m_finalRoleMap.begin(), m_finalRoleMap.end(),
+				[](const RoleMap::value_type& p) { global_vars.err << MSG_WARNING << " " << p.first->getName() << " "; });
+		}
 		AspectRep * asp = s->createAspectRep( BON::FCO(), BON::FCO());
 		this->addFinalAspect( asp);
 		no = true;
