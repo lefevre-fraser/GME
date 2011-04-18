@@ -5,9 +5,7 @@
 #include "CommonMgaTrukk.h"
 
 #define DIM(x) (sizeof(x)/ sizeof((x)[0]))
-#define PUTINCLEAN(x) ((x) = NULL, &(x))
 
-extern const CComBSTR NULLSTR;
 extern const CoreObj NULLCOREOBJ;
 extern const CComVariant NULLVARIANT;
 
@@ -64,7 +62,8 @@ while(it_i-- != it_b)
 //by ZolMol
 #define CHECK_MYINPTRSPARFOLDER(p) { if(p == NULL)				 COMTHROW( E_MGA_INPTR_NULL); \
 								COMTHROW( mgaproject->CheckFolderCollection(p)); }
-#define CHECK_INSTRPAR(p)	 { if(p == NULL)			p = NULLSTR; }
+// KMS: was "if(p == NULL) p = NULLSTR", but starting with VS2003, that does nothing since NULLSTR.m_str==NULL
+#define CHECK_INSTRPAR(p)	 { }
 #define CHECK_OUTSTRPAR(p)   { if(p == NULL) COMTHROW(E_MGA_OUTPTR_NULL); if(*p != NULL) COMTHROW(E_MGA_OUTPTR_NONEMPTY); }
 #define CHECK_OUTPTRPAR(p)   { if(p == NULL) COMTHROW(E_MGA_OUTPTR_NULL); if(*p != NULL) COMTHROW(E_MGA_OUTPTR_NONEMPTY); }
 #define CHECK_OUTPTRPARVALIDNULL(p)  { if(p != NULL && *p != NULL) COMTHROW(E_MGA_OUTPTR_NONEMPTY); }

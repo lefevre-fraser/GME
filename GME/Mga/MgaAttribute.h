@@ -149,7 +149,7 @@ public:
 	STDMETHOD(get_Name)( BSTR *pVal) { 
 		COMTRY {
 			CHECK_OUTPAR(pVal);
-			LPCOLESTR p = wcsrchr(mypath, '/');
+			LPCOLESTR p = (mypath == NULL ? NULL : wcsrchr(mypath, '/'));
 			if(p) p += 1; // skip '/'
 			else p = mypath;
 			CComBSTR rval(p);

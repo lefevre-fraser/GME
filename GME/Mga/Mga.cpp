@@ -100,7 +100,6 @@ STDAPI DllUnregisterServer(void)
 
 /////////////////////////////////////////////////////////////////////////////
 
-const CComBSTR NULLSTR;
 const CoreObj NULLCOREOBJ;
 const CComVariant NULLVARIANT;
 

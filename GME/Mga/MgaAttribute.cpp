@@ -512,7 +512,9 @@ void MergeRegs(const CoreObj &src, CoreObj &dst) {
 
 
 // throws
-CoreObj findregvalueobj(CoreObj &cur, LPOLESTR obname, long &opacity, bool create) {  //returns NULL if not found
+CoreObj findregvalueobj(CoreObj &cur, LPOLESTR bstrObname, long &opacity, bool create) {  //returns NULL if not found
+	wchar_t* obname = bstrObname;
+	if (obname == NULL) obname = L"";
 	ASSERT(*obname != '/');
 	LPOLESTR endstr = wcschr(obname,'/');
 	size_t len = endstr ? endstr - obname : wcslen(obname);
@@ -546,49 +548,6 @@ CoreObj findregvalueobj(CoreObj &cur, LPOLESTR obname, long &opacity, bool creat
 	}
 	return NULLCOREOBJ;
 }
-
-
-
-#if(0)
-// throws
-CoreObj findregvalueobj(CoreObj &cur, LPOLESTR obname, long &opacity, bool create) {  //returns NULL if not found
-	ASSERT(*obname != '/');
-	LPOLESTR endstr = wcschr(obname,'/');
-	size_t len = endstr ? endstr - obname : wcslen(obname);
-
-	CComBSTR namesegment(len, obname);
-	VARIANT v;
-	v.vt = VT_BSTR;
-	v.bstrVal = namesegment;
-	if(CoreObj node = cur[ATTRID_REGNOWNER+ATTRID_COLLECTION].Search(ATTRID_NAME, v)) {
-		opacity |= (long)node[ATTRID_REGFLAGS];
-		if(!endstr) {
-			return node;
-		}
-		return findregvalueobj(node, endstr +1, opacity, create);
-	}
-
-	if(create) {
-		CComPtr<ICoreProject> p;
-		COMTHROW(cur->get_Project(&p));
-		CoreObj nob;
-		COMTHROW(p->CreateObject(DTID_REGNODE, &nob.ComPtr()));
-		{
-			LPOLESTR z = new OLECHAR[len+1];
-			wcsncpy(z, obname, len);
-			z[len] = '\0';
-			nob[ATTRID_NAME] = z;
-			delete z;
-		}
-		nob[ATTRID_REGFLAGS] = 0; 
-		nob[ATTRID_REGNOWNER] =  cur;
-		if(!endstr) return nob;
-		return findregvalueobj(nob, endstr +1, opacity, create);
-	}
-	return NULLCOREOBJ;
-}
-
-#endif
 
 
 class regnotifytask : public DeriveTreeTask {
@@ -761,7 +720,7 @@ STDMETHODIMP CMgaRegNode::put_FCOValue(IMgaFCO *newVal) {
 			long dummy;
 			valueobj <<= findregvalueobj(fco->self, mypath, dummy, true);
 			load_status = ATTSTATUS_HERE;
-			valueobj[ATTRID_REGNODEVALUE] = NULLSTR;
+			valueobj[ATTRID_REGNODEVALUE] = CComBSTR();
 			valueobj[ATTRID_XREF] = CoreObj(newVal);
 			long flags = valueobj[ATTRID_REGFLAGS];
 			if(!(flags & RFLAG_HASVALUE)) valueobj[ATTRID_REGFLAGS] = flags | RFLAG_HASVALUE;
@@ -839,7 +798,7 @@ STDMETHODIMP CMgaRegNode::get_ParentNode(IMgaRegNode **pVal) {
 			fco->CheckRead();
 			CHECK_OUTPTRPAR(pVal);
       
-			BSTR p = wcsrchr(mypath, L'/');
+			wchar_t* p = (mypath == NULL ? NULL : wcsrchr(mypath, L'/'));
 			if(p) {
 				CComBSTR xpath;
 				xpath.Attach(::SysAllocStringLen(mypath,p-mypath));
@@ -864,7 +823,7 @@ STDMETHODIMP CMgaRegNode::Clear() {
 */
 			long dummy;
 			valueobj <<= findregvalueobj(fco->self, mypath, dummy, true);
-			valueobj[ATTRID_REGNODEVALUE] = NULLSTR;
+			valueobj[ATTRID_REGNODEVALUE] = CComBSTR();
 			long flags = valueobj[ATTRID_REGFLAGS];
 			valueobj[ATTRID_REGFLAGS] = flags & ~RFLAG_HASVALUE;
 			load_status = ATTSTATUS_INVALID;
