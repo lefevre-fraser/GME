@@ -117,7 +117,7 @@ public:
 #ifdef _DEBUG
 	int pad[5];
 #else
-	int pad[3];
+	int pad[2];
 #endif
 };
 
@@ -250,6 +250,7 @@ public:
 	void read(double &a)  { CoreBinFile_read(a, sizeof(double)); }
 	void read(CComBstrObj &a);
 	void read(bindata &a);
+	void read(unsigned char*& b, int& len);
 
 	void write(unsigned char a) { ofs.write((const char*)&a, sizeof(unsigned char)); }
 	void write(short a) { ofs.write((const char*)&a, sizeof(short)); }
@@ -258,6 +259,7 @@ public:
 	void write(double a) { ofs.write((const char*)&a, sizeof(double)); }
 	void write(const CComBstrObj &a);
 	void write(const bindata &a);
+	void write(const unsigned char* a, int len);
 
 // ------- Attribute
 
@@ -405,22 +407,61 @@ public:
 
 // --------------------------- BinAttr<VALTYPE_BINARY>
 
+template<class Type>
+struct free_deleter {
+	void operator()(Type* p) { free(p); }
+};
+
 template<>
 class BinAttr<VALTYPE_BINARY> : public BinAttrBase
 {
 public:
 	BinAttr() { }
 
-	bindata a;
+	typedef std::unique_ptr<unsigned char, free_deleter<unsigned char> > ptr;
+	ptr a;
+	int len;
 
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_BINARY; }
-	virtual void Set(CCoreBinFile *binfile, VARIANT p)
-	{ ASSERT( binfile != NULL ); binfile->modified = true; CopyTo(p, a); }
+	virtual void Set(CCoreBinFile *binfile, VARIANT v)
+	{
+		ASSERT( binfile != NULL );
+		binfile->modified = true; 
+		if( v.vt == (VT_I4 | VT_ARRAY) )
+		{
+			len = sizeof(long) * GetArrayLength(v);
+			a = ptr((unsigned char*) malloc(len));
+			CopyTo(v, (long*)a.get(), (long*)(a.get()) + len/sizeof(long));
+		}
+		else
+		{
+			if (GetArrayLength(v)==0)
+			{
+				len = 0;
+			}
+			else
+			{
+				len = GetArrayLength(v);
+				a = ptr((unsigned char*) malloc(len));
+				CopyTo(v, a.get(), a.get() + len);
+			}
+		}
+	}
 
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { CopyTo(a, p); }
-	virtual void Write(CCoreBinFile *binfile) const { binfile->write(a); }
-	virtual void Read(CCoreBinFile *binfile) { binfile->read(a); }
-	BinAttr(BinAttr<VALTYPE_BINARY>&& that) : BinAttrBase(that.attrid), a(std::move(that.a)) { }
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { 
+		//if (len == 0) {
+		//	unsigned char* pnull=NULL;
+		//	CopyTo(pnull,pnull, p);
+		//} else
+		CopyTo(a.get(), a.get() + len, p);
+	}
+	virtual void Write(CCoreBinFile *binfile) const { binfile->write(a.get(), len); }
+	virtual void Read(CCoreBinFile *binfile) { 
+		unsigned char* p;
+		binfile->read(p, len);
+		a = ptr(p);
+	}
+	BinAttr(BinAttr<VALTYPE_BINARY>&& that) : BinAttrBase(that.attrid), a(std::move(that.a)), len(len) { }
 	virtual void move(BinAttrUnion&& dest) {
 		new (&dest) BinAttr<VALTYPE_BINARY>(std::move(*this));
 	}
@@ -452,9 +493,11 @@ template<>
 class BinAttr<VALTYPE_COLLECTION> : public BinAttrBase
 {
 public:
-	std::vector<objects_iterator> a;
+	std::unique_ptr<std::vector<objects_iterator>> backing;
+	std::vector<objects_iterator>& getbacking() const { return *backing.get(); }
+	__declspec(property(get = getbacking )) std::vector<objects_iterator>& a;
 
-	BinAttr() { }
+	BinAttr() : backing(new std::vector<objects_iterator>()) { }
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_COLLECTION; }
 	virtual void Set(CCoreBinFile *binfile, VARIANT p) { ASSERT(false); }
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const
@@ -476,9 +519,7 @@ public:
 	}
 	virtual void Write(CCoreBinFile *binfile) const { }
 	virtual void Read(CCoreBinFile *binfile) { }
-	// N3126 §23.2.1/9: Every iterator referring to an element in one container before the swap shall refer to the same element in the other container after the swap.
-	// supposing this applies to std::move, BinAttr<VALTYPE_POINTER> iterator should remain valid
-	BinAttr(BinAttr<VALTYPE_COLLECTION>&& that) : BinAttrBase(that.attrid), a(std::move(that.a)) { }
+      BinAttr(BinAttr<VALTYPE_COLLECTION>&& that) : BinAttrBase(that.attrid), backing(std::move(that.backing)) { }
 	virtual void move(BinAttrUnion&& dest) {
 		new (&dest) BinAttr<VALTYPE_COLLECTION>(std::move(*this));
 	}

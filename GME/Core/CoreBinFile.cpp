@@ -596,6 +596,25 @@ void CCoreBinFile::read(bindata &b)
 	}
 }
 
+void CCoreBinFile::read(unsigned char*& b, int& len)
+{
+	read(len);
+	ASSERT( len >= 0 );
+
+	b = (unsigned char*)malloc(len);
+	if (b == NULL) {
+		// KMS: could get here if the project is corrupt and len is incorrect
+		COMTHROW(E_OUTOFMEMORY);
+	}
+	if( len > 0 ) {
+		if (len > cifs_eof - cifs) {
+			HR_THROW(E_FILEOPEN);
+		}
+		memcpy(b, cifs, len);
+		cifs += len;
+	}
+}
+
 void CCoreBinFile::read(CComBstrObj &ss)
 {
 	int len;
@@ -626,6 +645,18 @@ void CCoreBinFile::write(const bindata &b)
 
 	if( len > 0 )
 		ofs.write( (const char *) &b[0], len);
+}
+
+void CCoreBinFile::write(const unsigned char* b, int len)
+{
+	ASSERT( ofs.is_open() );
+
+	ASSERT( len >= 0 );
+	
+	write(len);
+
+	if( len > 0 )
+		ofs.write( (const char *) b, len);
 }
 
 void CCoreBinFile::write(const CComBstrObj &ss)
