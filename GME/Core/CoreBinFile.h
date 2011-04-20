@@ -664,14 +664,8 @@ static_assert(sizeof(BinAttr<VALTYPE_LONG>) <= sizeof(BinAttrUnion), "BinAttrUni
 static_assert(sizeof(BinAttr<VALTYPE_REAL>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
 static_assert(sizeof(BinAttr<VALTYPE_STRING>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
 static_assert(sizeof(BinAttr<VALTYPE_POINTER>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
-#ifndef _DEBUG
-// -4 because vector::_Alval takes up space, but is never read or written to (in Release builds)
-static_assert(sizeof(BinAttr<VALTYPE_BINARY>)-4 <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
-static_assert(sizeof(BinAttr<VALTYPE_COLLECTION>)-4 <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
-#else
 static_assert(sizeof(BinAttr<VALTYPE_BINARY>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
 static_assert(sizeof(BinAttr<VALTYPE_COLLECTION>) <= sizeof(BinAttrUnion), "BinAttrUnion is too small.");
-#endif
 
 
 #endif//MGA_COREBINFILE_H
