@@ -416,7 +416,7 @@ template<>
 class BinAttr<VALTYPE_BINARY> : public BinAttrBase
 {
 public:
-	BinAttr() { }
+	BinAttr() : len(0) { }
 
 	typedef std::unique_ptr<unsigned char, free_deleter<unsigned char> > ptr;
 	ptr a;
@@ -455,7 +455,9 @@ public:
 		//} else
 		CopyTo(a.get(), a.get() + len, p);
 	}
-	virtual void Write(CCoreBinFile *binfile) const { binfile->write(a.get(), len); }
+	virtual void Write(CCoreBinFile *binfile) const { 
+		binfile->write(a.get(), len);
+	}
 	virtual void Read(CCoreBinFile *binfile) { 
 		unsigned char* p;
 		binfile->read(p, len);
@@ -519,7 +521,7 @@ public:
 	}
 	virtual void Write(CCoreBinFile *binfile) const { }
 	virtual void Read(CCoreBinFile *binfile) { }
-      BinAttr(BinAttr<VALTYPE_COLLECTION>&& that) : BinAttrBase(that.attrid), backing(std::move(that.backing)) { }
+    BinAttr(BinAttr<VALTYPE_COLLECTION>&& that) : BinAttrBase(that.attrid), backing(std::move(that.backing)) { }
 	virtual void move(BinAttrUnion&& dest) {
 		new (&dest) BinAttr<VALTYPE_COLLECTION>(std::move(*this));
 	}
