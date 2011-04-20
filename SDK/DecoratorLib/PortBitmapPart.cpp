@@ -65,6 +65,7 @@ void PortBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMe
 	preferences[PREF_TILESDEFAULT]	= PreferenceVariant(getFacilities().getTileVector(TILE_PORTDEFAULT));
 	preferences[PREF_TILESUNDEF]	= PreferenceVariant(getFacilities().getTileVector(TILE_PORTDEFAULT));
 	preferences[PREF_ITEMSHADOWCAST]= PreferenceVariant(false);
+	preferences[PREF_TYPEINFOSHOWN] = PreferenceVariant(false);
 
 	TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 }
