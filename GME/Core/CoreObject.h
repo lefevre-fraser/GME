@@ -110,8 +110,8 @@ public:
 	void RegisterAttribute(CCoreAttribute *attribute) NOTHROW;
 	void UnregisterAttribute(CCoreAttribute *attribute) NOTHROW;
 
-	void GetAttributes(CCoreLockAttribute *lockattribute,
-		std::list<CCoreAttribute*> &controlled) NOTHROW;
+	template<class Functor, class UnwindFunctor>
+	void GetAttributes(CCoreLockAttribute *lockattribute, Functor& f, UnwindFunctor& uf);
 
 	void LoadAttributes(CCoreLockAttribute *lockattribute);
 	void UnloadAttributes(CCoreLockAttribute *lockattribute) NOTHROW;

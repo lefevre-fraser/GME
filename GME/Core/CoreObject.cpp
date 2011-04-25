@@ -437,8 +437,8 @@ void CCoreObject::UnregisterAttribute(CCoreAttribute *attribute)
 	attributes.erase(i);
 }
 
-void CCoreObject::GetAttributes(CCoreLockAttribute *lockattribute, 
-	std::list<CCoreAttribute*> &controlled)
+template<class Functor, class UnwindFunctor>
+void CCoreObject::GetAttributes(CCoreLockAttribute *lockattribute, Functor& f, UnwindFunctor& uf)
 {
 	ASSERT( lockattribute != NULL );
 	ASSERT( controlled.empty() );
@@ -449,51 +449,36 @@ void CCoreObject::GetAttributes(CCoreLockAttribute *lockattribute,
 
 	attributes_iterator i = attributes.begin();
 	attributes_iterator e = attributes.end();
-	while( i != e )
-	{
-
-#ifdef _DEBUG
-		attrid_type lockattrid = ATTRID_NONE;
-		ASSERT( (*i)->GetMetaAttribute()->get_LockAttrID(&lockattrid) == S_OK );
-#endif
-
-		if( (*i)->GetLockAttr() == lockattribute )
-		{
-			ASSERT( lockattrid == attrid );
-			controlled.push_back( *i );
-		}
-
-		++i;
-	}
-}
-
-void CCoreObject::LoadAttributes(CCoreLockAttribute *lockattribute)
-{
-	ASSERT( lockattribute != NULL );
-
-
-	std::list<CCoreAttribute*> controlled;
-	GetAttributes(lockattribute, controlled);
-
-	attributes_iterator i = controlled.begin();
-	attributes_iterator e = controlled.end();
-
 	try
 	{
 		while( i != e )
 		{
-			(*i)->Load();
+
+#ifdef _DEBUG
+			attrid_type lockattrid = ATTRID_NONE;
+			ASSERT( (*i)->GetMetaAttribute()->get_LockAttrID(&lockattrid) == S_OK );
+#endif
+
+			if( (*i)->GetLockAttr() == lockattribute )
+			{
+				ASSERT( lockattrid == attrid );
+				f(*i);
+			}
 
 			++i;
 		}
 	}
-	catch(hresult_exception &)
+	catch(hresult_exception&)
 	{
 		e = i;
-		i = controlled.begin();
+		i = attributes.begin();
 		while( i != e )
 		{
-			(*i)->Unload();
+			if( (*i)->GetLockAttr() == lockattribute )
+			{
+				ASSERT( lockattrid == attrid );
+				uf(*i);
+			}
 
 			++i;
 		}
@@ -502,21 +487,20 @@ void CCoreObject::LoadAttributes(CCoreLockAttribute *lockattribute)
 	}
 }
 
+void CCoreObject::LoadAttributes(CCoreLockAttribute *lockattribute)
+{
+	ASSERT( lockattribute != NULL );
+
+	GetAttributes(lockattribute, [](CCoreAttribute* i){ i->Load(); },
+		[](CCoreAttribute* i){ i->Unload(); }
+	);
+}
+
 void CCoreObject::UnloadAttributes(CCoreLockAttribute *lockattribute)
 {
 	ASSERT( lockattribute != NULL );
 
-	std::list<CCoreAttribute*> controlled;
-	GetAttributes(lockattribute, controlled);
-
-	attributes_iterator i = controlled.begin();
-	attributes_iterator e = controlled.end();
-	while( i != e )
-	{
-		(*i)->Unload();
-
-		++i;
-	}
+	GetAttributes(lockattribute, [](CCoreAttribute* i){ i->Unload(); }, [](CCoreAttribute* i){});
 }
 
 // ------- Status
