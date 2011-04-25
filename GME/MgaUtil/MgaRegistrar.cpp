@@ -1799,7 +1799,7 @@ STDMETHODIMP CMgaRegistrar::get_Components(regaccessmode_enum mode, VARIANT *pro
 }
 
 template<typename Functor>
-void TokenizeParadigmString(const CString& paradigms, Functor x) {
+void TokenizeParadigmString(const CString& paradigms, Functor& x) {
 	CStringList ret;
 	int curPos = 0;
 	CString token = paradigms.Tokenize(_T(" ;,\n\t"), curPos);
