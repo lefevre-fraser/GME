@@ -742,7 +742,7 @@ void CInspectorList::UpdateItem(const CListItem &srcListItem, CListItem &dstList
 		}
 		else
 		{
-			VERIFY(SetItemHeight(nIndex, nLineNum * INSP_DEFAULT_ITEM_HEIGHT) != LB_ERR);
+			VERIFY(SetItemHeight(nIndex, nLineNum * INSP_DEFAULT_ITEM_HEIGHT) == LB_OKAY);
 		}
 
 	}
