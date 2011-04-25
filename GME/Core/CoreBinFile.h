@@ -17,7 +17,7 @@ class membuf
 		{ }
 	
 	int open(const char* filename) {
-		hFile = CreateFileA(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
+		hFile = CreateFileA(filename, GENERIC_READ, FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
 		if (hFile == INVALID_HANDLE_VALUE) {
 			return 1;
 		}
@@ -34,6 +34,10 @@ class membuf
 			return 1;
 		}
 		end = begin + filesize;
+		CloseHandle(hFile);
+		hFile = INVALID_HANDLE_VALUE;
+		CloseHandle(hFileMappingObject);
+		hFileMappingObject = INVALID_HANDLE_VALUE;
 		return 0;
 	}
 
@@ -249,8 +253,10 @@ public:
 	void read(long &a)  { CoreBinFile_read(a, sizeof(long)); }
 	void read(double &a)  { CoreBinFile_read(a, sizeof(double)); }
 	void read(CComBstrObj &a);
+	void read(CComBstrObj &ss, char*& cifs);
 	void read(bindata &a);
 	void read(unsigned char*& b, int& len);
+	void readstring(char*& pos);
 
 	void write(unsigned char a) { ofs.write((const char*)&a, sizeof(unsigned char)); }
 	void write(short a) { ofs.write((const char*)&a, sizeof(short)); }
@@ -260,7 +266,7 @@ public:
 	void write(const CComBstrObj &a);
 	void write(const bindata &a);
 	void write(const unsigned char* a, int len);
-
+	void writestring(const char* pos);
 // ------- Attribute
 
 public:
@@ -314,6 +320,7 @@ public:
 	bool intrans;
 	bool modified;
 
+	membuf file_buffer;
 	bool IsOpened() const { return !filename.empty(); }
 	bool InTransaction() const { return intrans; }
 
@@ -388,18 +395,44 @@ template<>
 class BinAttr<VALTYPE_STRING> : public BinAttrBase
 {
 public:
-	BinAttr() { }
+	BinAttr() : pos(NULL) { }
 
 	CComBstrObj a;
+	// Lazy read: if pos is non-null, a is invalid and 
+	//    pos points to the pascal-style UTF-8 string in the memory-mapped mga file
+	char* pos;
 
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_STRING; }
 	virtual void Set(CCoreBinFile *binfile, VARIANT p)
-	{ ASSERT( binfile != NULL ); binfile->modified = true; CopyTo(p, a); }
+	{ 
+		ASSERT( binfile != NULL ); 
+		binfile->modified = true; 
+		CopyTo(p, a);
+		pos = NULL;
+	}
 
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { CopyTo(a, p); }
-	virtual void Write(CCoreBinFile *binfile) const { binfile->write(a); }
-	virtual void Read(CCoreBinFile *binfile) { binfile->read(a); }
-	BinAttr(BinAttr<VALTYPE_STRING>&& that) : BinAttrBase(that.attrid), a(std::move(that.a)) { }
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const {
+		if (pos != NULL) {
+			BinAttr<VALTYPE_STRING>* this_ = const_cast<BinAttr<VALTYPE_STRING>*>(this);
+			binfile->read(this_->a, this_->pos);
+			this_->pos = NULL;
+		}
+		CopyTo(a, p);
+	}
+	virtual void Write(CCoreBinFile *binfile) const {
+		if (pos == NULL) {
+			binfile->write(a);
+		} else {
+			binfile->writestring(pos);
+		}
+	}
+	virtual void Read(CCoreBinFile *binfile) {
+		binfile->readstring(pos);
+		// to disable lazy read:
+		//binfile->read(a, pos);
+		//pos = NULL;
+	}
+	BinAttr(BinAttr<VALTYPE_STRING>&& that) : BinAttrBase(that.attrid), a(std::move(that.a)), pos(that.pos) { }
 	virtual void move(BinAttrUnion&& dest) {
 		new (&dest) BinAttr<VALTYPE_STRING>(std::move(*this));
 	}

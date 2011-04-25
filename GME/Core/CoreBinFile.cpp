@@ -615,11 +615,26 @@ void CCoreBinFile::read(unsigned char*& b, int& len)
 	}
 }
 
-void CCoreBinFile::read(CComBstrObj &ss)
-{
+void CCoreBinFile::readstring(char*& pos) {
+	pos = cifs;
 	int len;
 
 	read(len);
+	cifs += len;
+}
+
+void CCoreBinFile::read(CComBstrObj &ss)
+{
+	read(ss, cifs);
+}
+
+void CCoreBinFile::read(CComBstrObj &ss, char*& cifs)
+{
+	int len;
+
+	//read(len);
+	// use local cifs
+	CoreBinFile_read(len, 4);
 	ASSERT( len >= 0 );
 
 	if( len > 0 ) {
@@ -678,6 +693,15 @@ void CCoreBinFile::write(const CComBstrObj &ss)
 		ofs.write( (const char *) &s[0], len);
 	delete[] s;
 }
+
+void CCoreBinFile::writestring(const char* pos)
+{
+	int len;
+	memcpy(&len, pos, sizeof(len));
+	write(len);
+	ofs.write(pos+sizeof(int), len);
+}
+
 
 // ------- Attribute
 
@@ -882,6 +906,10 @@ void CCoreBinFile::SaveProject()
 	ASSERT( !ofs.is_open() );
 	ASSERT( metaprojectid.size() == 16 );
 
+	// FIXME: KMS: it could happen that the save fails, and the user loses data. (at least this isn't worse than previous versions)
+	HANDLE hFile = CreateFileA(filename.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_DELETE_ON_CLOSE, NULL);
+	CloseHandle(hFile);
+
 	ofs.clear();
 	ofs.open(filename.c_str(), std::ios::out | std::ios::binary);
 	if( ofs.fail() || !ofs.is_open() ) {
@@ -923,8 +951,6 @@ void CCoreBinFile::LoadProject()
 {
 	InitMaxObjIDs();
 
-	{
-	membuf file_buffer;
 	if (file_buffer.open(filename.c_str()) != 0) {
 		HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
 	}
@@ -1009,13 +1035,10 @@ void CCoreBinFile::LoadProject()
 
 	isEmpty = true;
 	resolvelist.clear();
-	}
 
 	ofs.clear();
-	ofs.open(filename.c_str(), std::ios::app | std::ios::binary);
+	  // FIXME: set read_only correctly
 	read_only = false;
-	if( ofs.fail() || !ofs.is_open() )	read_only = true;
-	else ofs.close();
 }
 
 STDMETHODIMP CCoreBinFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode) {
