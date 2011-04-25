@@ -3,7 +3,7 @@
 
 <project guid="{C38BD239-5394-49DC-813D-01B1BDA80FA0}" cdate="Mon May 04 12:07:33 2009" mdate="Mon May 04 12:07:33 2009" version="" metaguid="{783504B9-9C58-407B-A8F9-9F98B6A24F03}" metaversion="" metaname="MetaGME">
 	<name>UML</name>
-	<comment>Descent into the maelstrom!</comment>
+	<comment></comment>
 	<author>Jonathan M. Sprinkle</author>
 	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x7" kind="RootFolder" guid="{9b5d490d-2653-48fc-a575-9ed8fb86ea3c}">
 		<name>UML</name>
