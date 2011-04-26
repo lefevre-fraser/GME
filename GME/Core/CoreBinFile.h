@@ -483,10 +483,11 @@ public:
 			}
 			else
 			{
+				int len = GetArrayLength(v);
 				if (need_free) free(data);
-				data = (unsigned char*) malloc(sizeof(len) + len);
+				data = (unsigned char*) malloc(sizeof(this->len) + len);
 				need_free = true;
-				len = GetArrayLength(v);
+				this->len = len;
 				CopyTo(v, value, value + len);
 			}
 		}
