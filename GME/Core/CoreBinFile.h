@@ -449,54 +449,73 @@ template<>
 class BinAttr<VALTYPE_BINARY> : public BinAttrBase
 {
 public:
-	BinAttr() : len(0) { }
+	BinAttr() : data(0), need_free(false) { }
+	virtual ~BinAttr() { if (need_free) free(data); }
 
-	typedef std::unique_ptr<unsigned char, free_deleter<unsigned char> > ptr;
-	ptr a;
-	int len;
+	unsigned char* data;
+	// memcpy: if lazy read, data is not guaranteed to be properly aligned for int*
+	int get_len() const { int ret; memcpy(&ret, data, sizeof(int)); return ret; }
+	void put_len(int len) { memcpy(data, &len, sizeof(len)); }
+	__declspec(property(get=get_len, put=put_len)) int len;
+	unsigned char* get_value() const { return (data + sizeof(len)); }
+	__declspec(property(get=get_value)) unsigned char* value;
+	bool need_free;
 
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_BINARY; }
 	virtual void Set(CCoreBinFile *binfile, VARIANT v)
 	{
 		ASSERT( binfile != NULL );
-		binfile->modified = true; 
+		binfile->modified = true;
 		if( v.vt == (VT_I4 | VT_ARRAY) )
 		{
+			if (need_free) free(data);
+			data = (unsigned char*)malloc(sizeof(len) + sizeof(long) * GetArrayLength(v));
+			need_free = true;
 			len = sizeof(long) * GetArrayLength(v);
-			a = ptr((unsigned char*) malloc(len));
-			CopyTo(v, (long*)a.get(), (long*)(a.get()) + len/sizeof(long));
+			CopyTo(v, (long*)(value), (long*)(value) + len/sizeof(long));
 		}
 		else
 		{
 			if (GetArrayLength(v)==0)
 			{
-				len = 0;
+				if (need_free) free(data);
+				data = 0;
 			}
 			else
 			{
+				if (need_free) free(data);
+				data = (unsigned char*) malloc(sizeof(len) + len);
+				need_free = true;
 				len = GetArrayLength(v);
-				a = ptr((unsigned char*) malloc(len));
-				CopyTo(v, a.get(), a.get() + len);
+				CopyTo(v, value, value + len);
 			}
 		}
 	}
 
 	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { 
-		//if (len == 0) {
-		//	unsigned char* pnull=NULL;
-		//	CopyTo(pnull,pnull, p);
-		//} else
-		CopyTo(a.get(), a.get() + len, p);
+		if (data == 0) {
+			unsigned char* pnull=NULL;
+			CopyTo(pnull, pnull, p);
+		} else
+			CopyTo(value, value + len, p);
 	}
 	virtual void Write(CCoreBinFile *binfile) const { 
-		binfile->write(a.get(), len);
+		if (data)
+			binfile->write(value, len);
+		else
+			binfile->write((unsigned char*)NULL, 0);
 	}
 	virtual void Read(CCoreBinFile *binfile) { 
-		unsigned char* p;
-		binfile->read(p, len);
-		a = ptr(p);
+		data = (unsigned char*)binfile->cifs;
+		// to test without lazy read:
+		int len = this->len;
+		data = (unsigned char*)malloc(sizeof(len) + len);
+		need_free = true;
+		this->len = len;
+		memcpy(value, binfile->cifs+sizeof(len), len);
+		binfile->cifs += sizeof(len) + len;
 	}
-	BinAttr(BinAttr<VALTYPE_BINARY>&& that) : BinAttrBase(that.attrid), a(std::move(that.a)), len(len) { }
+	BinAttr(BinAttr<VALTYPE_BINARY>&& that) : BinAttrBase(that.attrid), data(that.data), need_free(that.need_free) { that.need_free = false; }
 	virtual void move(BinAttrUnion&& dest) {
 		new (&dest) BinAttr<VALTYPE_BINARY>(std::move(*this));
 	}
