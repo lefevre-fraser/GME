@@ -488,6 +488,7 @@ CGMEChildFrame
 			// COMTHROW(model->get_IsEqual(view->GetCurrentModel(), &b));  Territory problems
 			// bool b = model.IsEqualObject(view->GetCurrentModel());
 			view->BeginTransaction(TRANSACTION_READ_ONLY);
+			// FIXME: need to adopt when inserting a model from model editor context menu
 			COMTHROW(view->GetCurrentModel()->get_IsEqual(model, &b));
 			view->CommitTransaction();
 			if(b)
