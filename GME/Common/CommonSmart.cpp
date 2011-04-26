@@ -193,6 +193,7 @@ void CopyTo(const unsigned char *start, const unsigned char *end, SAFEARRAY **p)
 		COMTHROW( SafeArrayAccessData(*p, (void**)&q) );
 		ASSERT( q != NULL );
 
+		// FIXME: how about memcpy?
 		while( start < end )
 		{
 			*q = *start;
