@@ -277,6 +277,7 @@ STDMETHODIMP CMgaConnPoint::put_ConnRole(BSTR newVal) {
 		//if(CComBSTR( cobj[ATTRID_NAME] ) = newVal) ... //zolmol: rewritten for VC7
 		//if( (CComBSTR) cobj[ATTRID_NAME] = newVal) ... // also would be ok for vc7
 		if( newVal) { // ... but this is more clear
+			// FIXME: doesn't look good; we don't need a & ?
 			(CComBSTR) cobj[ATTRID_NAME] = newVal;
 			cobj[ATTRID_MASTEROBJ] = NULLCOREOBJ;
 			put_ConnRoleTask(newVal).DoWithDeriveds(cobj);
