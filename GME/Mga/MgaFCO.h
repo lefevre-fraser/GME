@@ -666,9 +666,9 @@ struct CComBSTR_hashfunc : public stdext::hash_compare<CComBSTR>
 {
 	size_t operator()(const CComBSTR &p_ob) const
 	{
-		OLECHAR c = 0;
+		size_t c = 0;
 		for(unsigned int i = 0; i < p_ob.Length(); i+= 3) c += p_ob[i];
-		return c % 5;	
+		return c;
 	}
 	bool operator()(const CComBSTR &p_ob1, const CComBSTR &p_ob2) const
 	{
@@ -680,7 +680,7 @@ struct metaref_hashfunc : public stdext::hash_compare<metaref_type>
 {
 	size_t operator()(const metaref_type &p_ob) const
 	{
-		return p_ob % 5;
+		return p_ob;
 	}
 	bool operator()(const metaref_type &p_ob1, const metaref_type &p_ob2) const
 	{
