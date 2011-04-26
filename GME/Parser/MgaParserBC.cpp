@@ -70,6 +70,7 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 
 		CopyTo(filename, xmlfile);
 
+		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
 			XMLPlatformUtils::Initialize();

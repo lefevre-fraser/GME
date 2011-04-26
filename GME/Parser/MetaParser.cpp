@@ -34,6 +34,7 @@ STDMETHODIMP CMgaMetaParser::Parse(BSTR filename, BSTR connection)
 		CopyTo(filename, xmlfile);
 
 
+		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
 			XMLPlatformUtils::Initialize();

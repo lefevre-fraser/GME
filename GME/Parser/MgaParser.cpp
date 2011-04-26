@@ -53,6 +53,7 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 		CopyTo(filename, xmlfile);
 
 		m_resolveDerFuncPtr = &CMgaParser::ResolveDerivation;
+		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
 			XMLPlatformUtils::Initialize();
@@ -189,6 +190,7 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 		CopyTo(filename, xmlfile);
 
 		m_resolveDerFuncPtr = &CMgaParser::ResolveDerivation;
+		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
 			XMLPlatformUtils::Initialize();
@@ -311,6 +313,7 @@ STDMETHODIMP CMgaParser::GetXMLInfo(BSTR filename, BSTR *paradigm, BSTR* parvers
 
 		CopyTo(filename, xmlfile);
 
+		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
 			XMLPlatformUtils::Initialize();
@@ -1801,6 +1804,7 @@ STDMETHODIMP CMgaParser::GetClipXMLInfo(BSTR filename, IMgaObject *target, VARIA
 
 		CopyTo(filename, xmlfile);
 
+		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
 			XMLPlatformUtils::Initialize();
