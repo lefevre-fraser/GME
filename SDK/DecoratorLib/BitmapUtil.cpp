@@ -622,7 +622,7 @@ WORD  BitmapMasked::NumColors( BITMAPINFOHEADER& bmiHeader ) const
 	case 8:
 		return 256;
 	default:
-		ASSERT(true);
+		ASSERT(false);
 	case 24:
 	case 32:
 		return 0;
@@ -1127,18 +1127,16 @@ void BitmapRES::draw( Gdiplus::Graphics* gdip, CDC* pDC, const CRect& srcRect, c
 					 Gdiplus::UnitPixel, &imgAttribs);
 }
 
+// Accessing the current module's HINSTANCE from a static library http://blogs.msdn.com/b/oldnewthing/archive/2004/10/25/247180.aspx
+EXTERN_C IMAGE_DOS_HEADER __ImageBase;
+#define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
+
 void BitmapRES::load( UINT uiID )
 {
 	// create a GDI+ Bitmap from the resource
-	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(uiID), RT_BITMAP);
-	ASSERT(hInst != NULL);
-	m_pBitmap = new Gdiplus::Bitmap(hInst, (WCHAR*) MAKEINTRESOURCE( uiID));
-	if (!m_pBitmap) {
-		m_pBitmap = NULL;
-		return;
-	}
+	m_pBitmap = new Gdiplus::Bitmap(HINST_THISCOMPONENT, (WCHAR*) MAKEINTRESOURCE( uiID));
 	if (m_pBitmap->GetLastStatus() != Gdiplus::Ok) {
-		ASSERT(true);
+		ASSERT(false);
 	}
 
 	setSize(m_pBitmap->GetWidth(), m_pBitmap->GetHeight());
