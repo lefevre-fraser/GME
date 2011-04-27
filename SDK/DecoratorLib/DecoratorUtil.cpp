@@ -18,6 +18,25 @@
 
 static long stereotypeCharacterType = 0;
 
+namespace {
+	bool isRunningUnderWine() {
+		return true;
+		// http://wiki.winehq.org/DeveloperFaq "How can I detect Wine?" "This is a bad idea."
+		static bool haveRunWineDetection = false;
+		static bool isWine = false;
+		if (!haveRunWineDetection) {
+			haveRunWineDetection = true;
+			HMODULE ntdll = LoadLibrary(_T("ntdll.dll"));
+			if (ntdll != 0) {
+				isWine = GetProcAddress(ntdll, "wine_get_version") != 0;
+				FreeLibrary(ntdll);
+			}
+		}
+		return isWine;
+	}
+
+}
+
 namespace DecoratorSDK
 {
 	Facilities facilities;
@@ -902,11 +921,29 @@ void Facilities::DrawString( Gdiplus::Graphics* gdip, const CString& strText, co
 												 GetBValue(textColor)));
 
 	CStringW wcTxt(strText2);
-	Gdiplus::RectF rectF(static_cast<float> (crBounds.left),
-						 static_cast<float> (crBounds.top),
-						 static_cast<float> (crBounds.Width()),
-						 static_cast<float> (crBounds.Height()));
-	gdip->DrawString(wcTxt, strText2.GetLength(), pFont, rectF, &format, &textBrush);
+	if (isRunningUnderWine()) {
+		// KMS: there's a bug(?) in Wine that clips text with gdip->DrawString(...RectF...) when there's a nonidentity transform (i.e. scroll then refresh or zoom)
+		// FIXME: This drawing is not a perfect replacement
+		CSize size = this->MeasureText(gdip, pFont, strText2);
+		Gdiplus::PointF pointF(static_cast<float> (crBounds.left),
+							 static_cast<float> (crBounds.top));
+		if ((iAlign & TA_CENTER) == TA_CENTER) {
+			pointF.X += (crBounds.Width() - size.cx) / 2;
+		} else if ((iAlign & TA_RIGHT) == TA_RIGHT) {
+			pointF.X += crBounds.Width() - size.cx;
+		}
+
+		format.SetAlignment(Gdiplus::StringAlignmentNear);
+		format.SetLineAlignment(Gdiplus::StringAlignmentNear);
+		gdip->DrawString(wcTxt, strText2.GetLength(), pFont, pointF, &format, &textBrush);
+	} else {
+		Gdiplus::RectF rectF(static_cast<float> (crBounds.left),
+							 static_cast<float> (crBounds.top),
+							 static_cast<float> (crBounds.Width()),
+							 static_cast<float> (crBounds.Height()));
+		gdip->DrawString(wcTxt, strText2.GetLength(), pFont, rectF, &format, &textBrush);
+	}
+
 }
 
 void Facilities::DrawRect( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF crColor, int iWidth,
