@@ -54,6 +54,7 @@ void PartBase::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>&
 		COMTHROW(spRole->get_Kind(&spMetaFCO));
 
 		COMTHROW(spMetaFCO->get_ObjType(&m_eType));
+		m_spMetaFCO = spMetaFCO;
 	}
 
 	m_bHasViolation	= false;

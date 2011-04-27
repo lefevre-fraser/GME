@@ -77,7 +77,7 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	if (it != preferences.end())
 		m_crBorder = it->second.uValue.crValue;
 	else
-		getFacilities().getPreference(pFCO, PREF_BORDERCOLOR, m_crBorder);
+		getFacilities().getPreference(pFCO, spMetaFCO, PREF_BORDERCOLOR, m_crBorder);
 
 	// Check if we should create masked bitmap
 	bool bMasked = false;
