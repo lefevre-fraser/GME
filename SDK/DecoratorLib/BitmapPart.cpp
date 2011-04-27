@@ -154,6 +154,8 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 		}
 	}
 
+	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
+
 	m_bRoundCornerRect = false;
 	it = preferences.find(PREF_ROUNDCORNERRECT);
 	if (it != preferences.end()) {
@@ -169,8 +171,6 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	} else {
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDCORNERRADIUS, m_bRoundCornerRadius, false);
 	}
-
-	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 	if (m_bCastShadow) {
 		SimpleCoordCommand* leftMost		= new SimpleCoordCommand(LeftMost);
