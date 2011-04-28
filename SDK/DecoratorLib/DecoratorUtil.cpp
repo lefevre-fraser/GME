@@ -20,7 +20,6 @@ static long stereotypeCharacterType = 0;
 
 namespace {
 	bool isRunningUnderWine() {
-		return true;
 		// http://wiki.winehq.org/DeveloperFaq "How can I detect Wine?" "This is a bad idea."
 		static bool haveRunWineDetection = false;
 		static bool isWine = false;
