@@ -47,7 +47,7 @@ Release Notes of Release r11.3.23
   - Fixed bug with disabling components in User mode when they are enabled in System mode (GME-320)
   - Fixed bug in Set Mode where unselected Atoms and Models didn't have a name label (GME-305)
   - Installer includes registry entries for more IMga COM interfaces, which fixes "No such interface" errors under Java and other non-STA code (GME-257)
-  - Other bugfixes. See http://escher.isis.vanderbilt.edu/JIRA/browse/GME
+  - Other bugfixes. See escher.isis.vanderbilt.edu/JIRA/browse/GME
 
 Release Notes of Release r10.10.10
 ----------------------------------
