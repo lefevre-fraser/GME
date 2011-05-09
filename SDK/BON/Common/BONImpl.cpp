@@ -398,7 +398,6 @@ namespace BON
 		m_mapObjectsByID.clear();
 		m_mapObjectsByKind.clear();
 		m_spProject = NULL;
-		m_pRootFolder = NULL;
 		m_gme = NULL;
 		m_meta = MON::Project();
 	}
@@ -1053,12 +1052,9 @@ namespace BON
 
 	Folder ProjectImpl::getRootFolder()
 	{
-		if ( m_pRootFolder )
-				return m_pRootFolder;
-
 		FolderPtr spFolder;
 		COMCHECK2( m_spProject, m_spProject->get_RootFolder( spFolder.Addr() ) );
-		return m_pRootFolder = (FolderImpl*) ObjectImpl::attachI( spFolder, this );
+		return (FolderImpl*) ObjectImpl::attachI( spFolder, this );
 	}
 
 	// CHANGED LINE BEGIN

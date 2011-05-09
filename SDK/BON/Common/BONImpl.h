@@ -131,7 +131,6 @@ namespace BON
 			ObjectMap				m_mapObjects;
 			ObjectMapByID			m_mapObjectsByID;
 			ObjectMapByKind			m_mapObjectsByKind;
-			FolderImpl*				m_pRootFolder;
 		// Namespace related member variables
 		private :
 			std::string			m_nmsp;
