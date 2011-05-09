@@ -372,7 +372,7 @@ namespace BON
 	ProjectImpl::ProjectMap ProjectImpl::mapProjects;
 
 	ProjectImpl::ProjectImpl( IMgaProject* spProject )
-		: Util::GenRefCounted( true, NULL ), m_spProject( spProject ), m_bAutoCommit( true ), m_pRootFolder( NULL ), m_bIsDestructionActive( false )
+		: Util::GenRefCounted( true, NULL ), m_spProject( spProject ), m_bAutoCommit( true ), m_bIsDestructionActive( false )
 	{
 		// Insert into ProjectMap
 		mapProjects.insert( ProjectMap::value_type( ProjectPtr( spProject ), this ) );
