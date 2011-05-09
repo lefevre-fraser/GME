@@ -53,7 +53,9 @@ public:
 // call CCoreProject::RegisterUndoItem to register,
 // call it only from CommitFinalTransactionFinish
 
-class ATL_NO_VTABLE CCoreUndoItem
+class ATL_NO_VTABLE CCoreUndoItem : public CCoreTransactionItem
+	// KMS: inherit from CCoreTransactionItem so one less vtable pointer is required in subclasses
+	// (the only subclass is CCoreDataAttribute which also implements CCoreTransactionItem)
 {
 public:
 	// do the work here, called only once for each level

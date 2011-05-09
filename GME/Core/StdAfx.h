@@ -15,6 +15,25 @@
 #define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
 #endif
 
+#define EA_CHAR16_NATIVE 1
+//#include "EASTL/list.h"
+//#include "EASTL/hash_map.h"
+//#include "EASTL/hash_set.h"
+
+#include "hash_set"
+#include "hash_map"
+
+namespace core { 
+//	using eastl::hash_map;
+//	using eastl::hash_set;
+//	using eastl::pair;
+//	using eastl::list;
+using stdext::hash_set;
+using stdext::hash_map;
+using std::list;
+using std::pair;
+}
+
 #include "targetver.h"
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -41,6 +60,7 @@ extern CComModule _Module;
 #include "CommonStl.h"
 #include "CoreUtilities.h"
 
+#include "CoreProject.h"
 
 
 extern HRESULT check_location_compatibility(ICoreMetaObject *newobj, ICoreMetaObject *oldobj);

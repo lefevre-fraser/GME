@@ -2,6 +2,8 @@
 #ifndef MGA_COREATTRIBUTE_H
 #define MGA_COREATTRIBUTE_H
 
+#include "StdAfx.h"
+
 #ifndef MGA_CORETRANSACTIONITEM_H
 #include "CoreTransactionItem.h"
 #endif
@@ -24,12 +26,20 @@ class CCoreCollectionAttribute;
 class CCoreTerritory;
 class CCoreMetaAttribute;
 
+class CCoreAttributeErrorTearOff : 
+	public ISupportErrorInfoImpl<&IID_ICoreAttribute>,
+	public CComTearOffObjectBase<CCoreAttribute>
+{
+BEGIN_COM_MAP(CCoreAttributeErrorTearOff)
+	COM_INTERFACE_ENTRY(ISupportErrorInfo)
+END_COM_MAP()
+};
+
 // --------------------------- CCoreAttribute
 
 class ATL_NO_VTABLE CCoreAttribute : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<ICoreAttribute, &IID_ICoreAttribute, &LIBID_MGACoreLib>,
-	public ISupportErrorInfoImpl<&IID_ICoreAttribute>
+	public IDispatchImpl<ICoreAttribute, &IID_ICoreAttribute, &LIBID_MGACoreLib>
 {
 public:
 	CCoreAttribute();
@@ -46,7 +56,7 @@ DECLARE_GET_CONTROLLING_UNKNOWN()
 BEGIN_COM_MAP(CCoreAttribute)
 	COM_INTERFACE_ENTRY(ICoreAttribute)
 	COM_INTERFACE_ENTRY(IDispatch)
-	COM_INTERFACE_ENTRY(ISupportErrorInfo)
+	COM_INTERFACE_ENTRY_TEAR_OFF(IID_ISupportErrorInfo, CCoreAttributeErrorTearOff)
 END_COM_MAP()
 
 // ------- COM methods
@@ -225,7 +235,7 @@ class ATL_NO_VTABLE CCoreDataAttrBase :
 public:
 	typedef DATA value_type;
 
-	typedef std::list<value_type> values_type;
+	typedef core::list<value_type> values_type;
 	typedef typename values_type::iterator values_iterator;
 
 protected:
@@ -294,7 +304,7 @@ public:
 public:
 	typedef CComObjPtr<CCoreCollectionAttribute> value_type;
 
-	typedef std::list<value_type> values_type;
+	typedef core::list<value_type> values_type;
 	typedef values_type::iterator values_iterator;
 
 	typedef std::set< CCoreObject*, ptr_compare<CCoreObject> > objects_type;
@@ -362,7 +372,7 @@ public:
 template<class BASE, const int VALTYPE>
 class ATL_NO_VTABLE CCoreDataAttribute : 
 	public /*typename*/ BASE,//z!
-	public CCoreTransactionItem,
+	// public CCoreTransactionItem,
 	public CCoreUndoItem
 {
 public:
