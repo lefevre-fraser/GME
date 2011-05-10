@@ -2314,6 +2314,10 @@ STDMETHODIMP CMgaRegistrar::RegisterComponentLibrary(BSTR path, regaccessmode_en
 		{
 			FreeLibrary(hModule);
 			//CLR dll:
+			// If we're being hosted by dllhost.exe (e.g. via UACUtils::CreateElevatedInstance), GME.exe.config doesn't have any effect
+			// Try to load the v4 runtime
+			CComPtr<IUnknown> v4;
+			v4.CoCreateInstance(L"System.Management.Instrumentation.ManagedCommonProvider");
 			using namespace MgaDotNetServices;
 			CComPtr<_Registrar> reg;
 			COMTHROW(reg.CoCreateInstance(L"MGA.DotNetRegistrar"));
