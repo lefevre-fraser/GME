@@ -135,8 +135,8 @@ function AddConfig(proj, strProjectName)
 		// DEBUG CUSTOM BUILD SETTINGS
 		var CBTool = config.Tools('VCCustomBuildTool');
 		CBTool.Description = "Performing registration (requires elevated priviledges on Windows Vista)...";
-		CBTool.CommandLine = "regsvr32 /s /c \"$(TargetPath)\"\necho regsvr32 exec. time > \"$(OutDir)\\regsvr32.trg\"\n";
-		CBTool.Outputs = "$(OutDir)\\regsvr32.trg";
+		CBTool.CommandLine = "regsvr32 /s /c \"$(TargetPath)\"\necho regsvr32 exec. time > \"$(IntDir)\\regsvr32.trg\"\n";
+		CBTool.Outputs = "$(IntDir)\\regsvr32.trg";
 
 		// DEBUG MIDL SETTINGS
 		var MIDLTool = config.Tools('VCMIDLTool');
@@ -188,8 +188,8 @@ function AddConfig(proj, strProjectName)
 		// RELEASE CUSTOM BUILD SETTINGS
 		var CBTool = config.Tools('VCCustomBuildTool');
 		CBTool.Description = "Performing registration (requires elevated priviledges on Windows Vista)...";
-		CBTool.CommandLine = "regsvr32 /s /c \"$(TargetPath)\"\necho regsvr32 exec. time > \"$(OutDir)\\regsvr32.trg\"\n";
-		CBTool.Outputs = "$(OutDir)\\regsvr32.trg";
+		CBTool.CommandLine = "regsvr32 /s /c \"$(TargetPath)\"\necho regsvr32 exec. time > \"$(IntDir)\\regsvr32.trg\"\n";
+		CBTool.Outputs = "$(IntDir)\\regsvr32.trg";
 
 		// RELEASE MIDL SETTINGS
 		var MIDLTool = config.Tools('VCMIDLTool');
