@@ -69,10 +69,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(GME_ROOT)\GME\Lib\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugUnicode|Win32'">$(GME_ROOT)\GME\Lib\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(GME_ROOT)\GME\Lib\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseUnicode|Win32'">$(GME_ROOT)\GME\Lib\</OutDir>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='DebugUnicode|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
@@ -88,6 +84,10 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)D</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugUnicode|Win32'">$(ProjectName)uD</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseUnicode|Win32'">$(ProjectName)u</TargetName>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugUnicode|Win32'">$(SolutionDir)$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseUnicode|Win32'">$(SolutionDir)$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -196,9 +196,7 @@
     <Lib>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
-    <Xdcmake>
-      <OutputFile>$(GME_ROOT)\SDK\DecoratorLib\Release\$(TargetName).xml</OutputFile>
-    </Xdcmake>
+    <Xdcmake />
     <Bscmake />
     <PostBuildEvent>
       <Command>
