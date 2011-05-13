@@ -95,7 +95,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GME_ROOT)\GME\Gme;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;OLD_DECORATOR_LOOKANDFEEL;LIBCOMPILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -123,7 +123,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GME_ROOT)\GME\Gme;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;OLD_DECORATOR_LOOKANDFEEL;LIBCOMPILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -153,7 +153,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GME_ROOT)\GME\Gme;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;OLD_DECORATOR_LOOKANDFEEL;LIBCOMPILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -183,7 +183,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GME_ROOT)\GME\Gme;$(GME_ROOT)\GME\Interfaces;$(GME_ROOT)\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;OLD_DECORATOR_LOOKANDFEEL;LIBCOMPILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -285,6 +285,7 @@
     <ClInclude Include="DiamondVectorPart.h" />
     <ClInclude Include="DIBAPI.H" />
     <ClInclude Include="EllipseVectorPart.h" />
+    <ClInclude Include="GmeApi.h" />
     <ClInclude Include="InheritanceVectorPart.h" />
     <ClInclude Include="InPlaceEditDialog.h" />
     <ClInclude Include="LabelPart.h" />

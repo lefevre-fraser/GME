@@ -71,7 +71,7 @@ CSize ResizablePart::GetPreferredSize(void) const
 			CComPtr<IMgaPart> part;
 			CComBSTR regName(PREF_PREFERREDSIZE);
 			if (!inTrans) {
-				COMTHROW(m_spProject->CreateTerritory(NULL, &terr));
+				COMTHROW(m_spProject->CreateTerritory(NULL, &terr, 0));
 				COMTHROW(m_spProject->BeginTransaction(terr, TRANSACTION_READ_ONLY));
 
 				CComPtr<IMgaFCO> terrFco;
@@ -278,7 +278,7 @@ void ResizablePart::WindowResizingFinished(UINT nFlags, CRect& location)
 			bool inTrans = (status & 0x08L) != 0;
 			CComPtr<IMgaTerritory> terr;
 			if (!inTrans) {
-				COMTHROW(m_spProject->CreateTerritory(NULL, &terr));
+				COMTHROW(m_spProject->CreateTerritory(NULL, &terr, 0));
 				COMTHROW(m_spProject->BeginTransaction(terr, TRANSACTION_GENERAL));
 			} else {
 				COMTHROW(m_spProject->get_ActiveTerritory(&terr));
@@ -296,7 +296,7 @@ void ResizablePart::WindowResizingFinished(UINT nFlags, CRect& location)
 				ASSERT(part);
 				if (part) {
 					CPoint pt = location.TopLeft();
-					COMTHROW(part->SetGmeAttrs(0, pt.x, pt.y));
+					COMTHROW(part->SetGmeAttrs((BSTR)0, pt.x, pt.y));
 					// Save preferred size part
 					CSize size(location.Width(), location.Height());
 					if (size.cx >= 0 && size.cy >= 0) {

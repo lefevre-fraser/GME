@@ -332,6 +332,9 @@
     <ClInclude Include="VectorPart.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GmeApi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\atom.bmp">

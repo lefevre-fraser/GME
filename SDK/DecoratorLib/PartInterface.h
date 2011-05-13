@@ -10,7 +10,7 @@
 
 
 #include "StdAfx.h"
-#include "Gme.h"
+#include "GmeApi.h"
 #include "PreferenceVariant.h"
 
 

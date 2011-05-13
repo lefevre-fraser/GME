@@ -142,7 +142,7 @@ void ModelSwitchButtonPart::InitiateModelExpandStateSwitch(void)
 		bool inTrans = (status & 0x08L) != 0;
 		CComPtr<IMgaTerritory> terr;
 		if (!inTrans) {
-			COMTHROW(m_spProject->CreateTerritory(NULL, &terr));
+			COMTHROW(m_spProject->CreateTerritory(NULL, &terr, 0));
 			COMTHROW(m_spProject->BeginTransaction(terr, TRANSACTION_GENERAL));
 		} else {
 			COMTHROW(m_spProject->get_ActiveTerritory(&terr));

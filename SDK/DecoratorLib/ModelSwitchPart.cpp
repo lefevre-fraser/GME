@@ -56,7 +56,7 @@ void ModelSwitchPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaM
 			CComBSTR bstrVal;
 			CComPtr<IMgaPart> part;
 			if (!inTrans) {
-				COMTHROW(pProject->CreateTerritory(NULL, &terr));
+				COMTHROW(pProject->CreateTerritory(NULL, &terr, 0));
 				COMTHROW(pProject->BeginTransaction(terr, TRANSACTION_READ_ONLY));
 
 				CComPtr<IMgaFCO> terrFco;

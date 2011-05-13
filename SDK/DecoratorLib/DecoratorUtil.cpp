@@ -11,8 +11,7 @@
 #include <math.h>
 
 #include "DecoratorDefs.h"
-#include "Gme.h"
-#include "MgaUtil.h"
+#include "GmeApi.h"
 #include "BitmapUtil.h"
 
 

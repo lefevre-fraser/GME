@@ -10,7 +10,7 @@
 
 
 #include "StdAfx.h"
-#include "Gme.h"
+#include "GmeApi.h"
 #include "DecoratorDefs.h"
 #include "DecoratorUtil.h"
 #include "PartInterface.h"
