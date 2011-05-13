@@ -83,6 +83,7 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
       <RegisterOutput>true</RegisterOutput>
+      <BaseAddress>0x603b0000</BaseAddress>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>
@@ -113,6 +114,7 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
       <RegisterOutput>true</RegisterOutput>
+      <BaseAddress>0x603b0000</BaseAddress>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>

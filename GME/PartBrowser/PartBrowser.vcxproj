@@ -85,6 +85,7 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
       <RegisterOutput>true</RegisterOutput>
+      <BaseAddress>0x60370000</BaseAddress>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>
@@ -118,6 +119,7 @@
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <RegisterOutput>true</RegisterOutput>
+      <BaseAddress>0x60370000</BaseAddress>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>
