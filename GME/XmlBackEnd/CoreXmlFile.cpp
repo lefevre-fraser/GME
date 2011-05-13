@@ -3553,42 +3553,6 @@ void CCoreXmlFile::writeObject(XmlObject * obj, Transcoder& ofs, bool container,
 	ofs << Transcoder::NoEscape << prefix << "</" << metaToken << ">\n";
 }
 
-/*
-Moves to continer and all contained object to disk if possible (all lock values are 0)
-It deletes secondary attributes from memory.
-
-Returns true if the objects have been moved to disk successfully
-*/
-bool CCoreXmlFile::moveContainerToDisk(XmlObject * container)
-{
-	XmlObjVec     objs;
-	XmlObjVecIter it;
-
-	getContainedObjects( container, objs );
-	for( it=objs.begin(); it!=objs.end(); ++it )
-	{
-		XmlObject * obj = *it;
-
-		AttribMapIter it2 = obj->m_attributes.find(ATTRID_LOCK);
-		ASSERT( it2 != obj->m_attributes.end() );
-
-		XmlAttrLock * lock = (XmlAttrLock*)(it2->second);
-		if( lock != 0 )
-			return false;
-	}
-
-	// write all objects to disk
-	writeXMLFile( container );
-
-	// unload secondary attributes from memory
-	for( it=objs.begin(); it!=objs.end(); ++it )
-	{
-		XmlObject * obj = *it;
-		obj->deleteSecondaryAttribs();
-	}
-
-	return false;
-}
 
 void CCoreXmlFile::fullReadContainer(XmlObject * container)
 {

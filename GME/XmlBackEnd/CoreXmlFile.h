@@ -611,8 +611,6 @@ protected:
 
 	void         timeSync               (const char * fileName, XmlObject * container);
 
-	bool         moveContainerToDisk    (XmlObject * container);
-
 	void         fullReadContainer      (XmlObject * container);
 
 	void         readXMLFile            (const char * fileName, UnresolvedPointerVec& pointers, bool fullLoad );
