@@ -50,14 +50,9 @@ namespace GME.CSharp
                 d();
                 CommitTransaction();
             }
-            catch (Exception e)
+            finally
             {
-                try
-                {
-                    AbortTransaction();
-                }
-                catch { }
-                throw e;
+                AbortTransaction();	
             }
         }
         #endregion
