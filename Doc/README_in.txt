@@ -1,5 +1,4 @@
 #include "GMEVersion.h"
-
               Generic Modeling Environment
                  GME v11 GME_VERSION_ID
        Copyright © 2000-2011 Vanderbilt University
@@ -1048,22 +1047,14 @@ because we have used the Java/COM bridge from Microsoft.
 2. System Requirements
 ************************************************
 
-GME has been tested on Windows NT, Windows 2000 and Windows XP.
-
-Note: In order for the database access functionality of GME
-to work under Windows 95, the latest version of the Microsoft Data
-Access Components (MDAC) should be installed prior to installing
-GME.  MDAC may be downloaded from the Microsoft web site at 
-http:
+GME has been tested on Windows XP, Windows Vista, and Windows 7.
 
 ************************************************
 3. Installation
 ************************************************
 
-Uninstall your existing GME before installling this new version!
-Run the self-extracting executable file in a temporary directory.
-Run the setup program and follow the on-screen instructions. The
-temporary installation folder may be deleted after the installation.
+You must uninstall GME versions prior to version
+9.1.12 using the Control Panel before installing GME.
 
 ************************************************
 4. Directories
@@ -1072,20 +1063,19 @@ temporary installation folder may be deleted after the installation.
 The GME root directory contains a copy of this document. The
 bin subdirectory has the GME executable and all necessary
 dlls. The doc directory contains the User's Manual in pdf
-format. The "MS Repository Install" directory contains the runtime
-system for MS Repository. Run the executable to install the
-program. The Meta2000 directory contains the new metamodeling
-environment. The Sample directory contains example paradigms,
-metamodels, models, and a demo and runtime system for the SF2000
+format. The Paradigms/MetaGME directory contains the metamodeling
+environment. The Paradigms directory contains example paradigms,
+metamodels, models, and a demo and runtime system for the SF
 paradigm. The SDK directory contains the BON for interpreter
-developers, the DecoratorKit for decorator writers and the new
-Java interpreter interface (alpha version).
+developers, the DecoratorLib for decorator writers and the
+Java interpreter interface.
 
 ************************************************
 5. Contact info
 ************************************************
 
-Send comments, bug reports, questions to akos.ledeczi@vanderbilt.edu
+Send comments, questions to akos.ledeczi@vanderbilt.edu
+Send bug reports to escher.isis.vanderbilt.edu/JIRA/browse/GME
 
 ************************************************
 6. License
@@ -1189,6 +1179,6 @@ Appendix A. The Apache Software License, Version 1.1
   This software consists of voluntary contributions made by many
   individuals on behalf of the Apache Software Foundation and was
   originally based on software copyright (c) 1999, International
-  Business Machines, Inc., http://www.ibm.com.  For more
+  Business Machines, Inc., www.ibm.com.  For more
   information on the Apache Software Foundation, please see
-  <http://www.apache.org/>.
+  <www.apache.org/>.
