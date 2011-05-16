@@ -21,15 +21,9 @@ namespace GME.CSharp
     {
         public static void RegisterComponentsInGMERegistry()
         {
-            if (ComponentConfig.iconPath == null)
-            {
-                ComponentConfig.iconPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + '\\' + ComponentConfig.iconName;
-            }
-
             MgaRegistrar registrar = new MgaRegistrar();
             CheckGMEInterfaceVersion(registrar);
             registrar.RegisterComponent(ComponentConfig.progID, ComponentConfig.componentType, ComponentConfig.componentName, ComponentConfig.registrationMode);
-            registrar.set_ComponentExtraInfo(ComponentConfig.registrationMode, ComponentConfig.progID, "Icon", ComponentConfig.iconPath);
 
             if (!ComponentConfig.paradigmName.Equals("*"))
             {
