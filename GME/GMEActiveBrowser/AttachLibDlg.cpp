@@ -61,6 +61,18 @@ void CAttachLibDlg::OnBrowse()
 	static TCHAR BASED_CODE szFilter[] = _T("Binary Project Files (*.mga)|*.mga|Multiuser Project Files (*.mgx)|*.mgx|All Files (*.*)|*.*||");
 
 	CFileDialog dlg(TRUE,_T("mga"),NULL,NULL,szFilter, this);
+	TCHAR currentMgaPath[MAX_PATH];
+	if (m_strParentConnection.GetLength() > 4 && m_strParentConnection.Left(4) == "MGA=") {
+		const TCHAR* zsConn = m_strParentConnection;
+		zsConn += 4; // skip MGA=
+		TCHAR* filename;
+		if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &filename) || filename == 0) {
+		} else {
+			*filename = _T('\0');
+			dlg.GetOFN().lpstrInitialDir = currentMgaPath;
+		}
+	}
+
 	if(dlg.DoModal()!=IDOK) return;
 
 	bool is_mga = dlg.GetFileExt().CompareNoCase( _T("mga")) == 0;

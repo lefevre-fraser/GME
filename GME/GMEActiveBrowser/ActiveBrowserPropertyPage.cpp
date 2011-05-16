@@ -1532,6 +1532,9 @@ void CAggregatePropertyPage::AttachLibrary()
 	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 
 	CAttachLibDlg dlg;	
+	_bstr_t conn;
+	COMTHROW(pMgaContext->m_ccpProject->get_ProjectConnStr(conn.GetAddress()));
+	dlg.m_strParentConnection = static_cast<const wchar_t*>(conn);
 	dlg.m_strCaption=_T("Attach Library");
 	
 	if(dlg.DoModal() == IDOK && !dlg.m_strConnString.IsEmpty()) 
@@ -1646,6 +1649,9 @@ void CAggregatePropertyPage::RefreshLibrary()
 			}
 		
 			CAttachLibDlg dlg;
+			_bstr_t conn;
+			COMTHROW(pMgaContext->m_ccpProject->get_ProjectConnStr(conn.GetAddress()));
+			dlg.m_strParentConnection = static_cast<const wchar_t*>(conn);
 			dlg.m_strConnString=bszLibName;
 			dlg.m_strCaption=_T("Refresh Library");
 			dlg.m_bOptimized = was_opt;

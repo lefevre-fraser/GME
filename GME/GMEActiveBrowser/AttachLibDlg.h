@@ -15,6 +15,7 @@ class CAttachLibDlg : public CDialog
 // Construction
 public:
 	CString m_strCaption;
+	CString m_strParentConnection;
 	CAttachLibDlg(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
