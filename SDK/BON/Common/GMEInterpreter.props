@@ -5,12 +5,12 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <Midl>
-      <AdditionalIncludeDirectories>.;$(GME_ROOT)\Gme\$(Configuration);$(GME_ROOT)\bin;$(GME_ROOT)\Interfaces;$(GME_ROOT)\Gme\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(GME_ROOT)\Gme\$(Configuration);$(GME_ROOT)\Gme\Release;$(GME_ROOT)\Gme\Debug;$(GME_ROOT)\bin;$(GME_ROOT)\Interfaces;$(GME_ROOT)\Gme\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <ValidateAllParameters>true</ValidateAllParameters>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;$(GME_ROOT)\Interfaces;$(GME_ROOT)\Gme\Interfaces;$(GME_ROOT)\SDK\BON\Common;$(GME_ROOT)\GME\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(GME_ROOT)\Interfaces;$(GME_ROOT)\Gme\Interfaces;$(GME_ROOT)\Gme\Gme;$(GME_ROOT)\SDK\BON\Common;$(GME_ROOT)\GME\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup />
