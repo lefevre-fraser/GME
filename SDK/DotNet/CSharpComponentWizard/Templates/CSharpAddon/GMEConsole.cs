@@ -155,8 +155,10 @@ namespace GME.CSharp
             }
             else
             {
+                // FIXME: may need to escape, as ConsoleMessage expects HTML
                 console.gme.ConsoleMessage(str, type);
             }
         }
+        // TODO: need methods to link to FCOs
     }
 }
