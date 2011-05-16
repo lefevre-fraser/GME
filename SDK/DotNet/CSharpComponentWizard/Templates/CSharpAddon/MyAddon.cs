@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.IO;
@@ -9,7 +8,7 @@ using MGALib;
 using GmeLib;
 using MGACoreLib;
 
-namespace GME.CSharp.MyAddon
+namespace MyAddon
 {
     [Guid(ComponentConfig.guid),
     ProgId(ComponentConfig.progID),

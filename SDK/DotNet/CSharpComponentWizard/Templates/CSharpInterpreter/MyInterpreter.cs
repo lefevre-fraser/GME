@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 using MGACoreLib;
 using GME.CSharp;
 using GmeLib;
 using MGALib;
 
-namespace GME.CSharp.MyInterpreter
+namespace MyInterpreter
 {
     /// <summary>
     /// This class implements the necessary COM interfaces for a GME interpreter component.
