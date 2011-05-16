@@ -232,6 +232,7 @@ namespace CSharpComponentWizard
                 string ContentString = ComponentConfigReadStream.ReadToEnd();
                 ComponentConfigReadStream.Close();
 
+                ContentString = ContentString.Replace("MyAddon : IMgaComponentEx", SolutionName + "Addon : IMgaComponentEx");
                 ContentString = ContentString.Replace("MyAddon", SolutionName);
 
                 StreamWriter ComponentConfigWriteStream = new StreamWriter(Path.Combine(outputfolder, "MyAddon.cs"));
@@ -263,6 +264,7 @@ namespace CSharpComponentWizard
                 string ContentString = FileReadStream.ReadToEnd();
                 FileReadStream.Close();
 
+                ContentString = ContentString.Replace("MyInterpreter : IMgaComponentEx", SolutionName + "Interpreter : IMgaComponentEx");
                 ContentString = ContentString.Replace("MyInterpreter", SolutionName);
                 ContentString = SolutionGenerator.AddEntryPointCode(ContentString);
 
