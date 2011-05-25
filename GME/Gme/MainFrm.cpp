@@ -93,6 +93,17 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_MULTIUSER_ACTIVEUSERS, OnUpdateViewMultiUserActiveUsers)
 	ON_COMMAND(ID_VIEW_CLEARCONSOLE, OnViewClearConsole)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_CLEARCONSOLE, OnUpdateViewClearConsole)
+
+#define MSG_MAP_VIEW_PANE(ID, class_, member) \
+	ON_COMMAND(ID, (&CMainFrame::OnViewPane<class_, &CMainFrame::member>)) \
+	ON_UPDATE_COMMAND_UI(ID, (&CMainFrame::OnUpdateViewPane<class_, &CMainFrame::member>))
+	MSG_MAP_VIEW_PANE(ID_VIEW_GMEBROWSER,		CGMEBrowser,		m_browser)
+	MSG_MAP_VIEW_PANE(ID_VIEW_OBJECTINSPECTOR,	CGMEObjectInspector,m_objectInspector)
+	MSG_MAP_VIEW_PANE(ID_VIEW_PARTBROWSER,		CGMEPartBrowser,	m_partBrowser)
+	MSG_MAP_VIEW_PANE(ID_VIEW_PANNWIN,			CGMEPanningWindow,	m_panningWindow)
+	MSG_MAP_VIEW_PANE(ID_VIEW_CONSOLE,			CGMEConsole,		m_console)
+	MSG_MAP_VIEW_PANE(ID_VIEW_GMEBROWSER,		CGMEBrowser,		m_browser)
+	MSG_MAP_VIEW_PANE(ID_VIEW_SEARCH,			CGMESearch,			m_search)
 	ON_WM_CLOSE()
 	ON_WM_DROPFILES()
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnUpdateApplicationLook)

@@ -225,7 +225,6 @@
 #define ID_MODE_VISUALIZE               32774
 #define ID_DISPLAY_TYPEMARK             32775
 #define ID_DISPLAY_INSTANCEMARK         32776
-#define ID_VIEW_PARTBROWSER             32777
 #define ID_VIEW_REFRESH                 32778
 #define ID_VIEW_GRID                    32779
 #define ID_VIEW_PARENT                  32780
@@ -374,7 +373,6 @@
 #define ID_SELFCNTX_COPYCLOSURE         32960
 #define ID_CNTX_COPYCLOSURE             32961
 #define ID_EDIT_COPYCLOSURE             32962
-#define ID_VIEW_CONSOLE                 32963
 #define ID_CNTX_COPYSMART               32965
 #define ID_SELFCNTX_COPYSMART           32966
 #define ID_EDIT_COPYSMART               32967
@@ -467,6 +465,13 @@
 #define ID_DELETECONNCUSTOMDATA_THISASPECT 33101
 #define ID_DELETECONNCUSTOMDATA_ALLASPECTS 33102
 #define ID_TRYTOSNAPHORZVERTPATH        33103
+#define ID_Menu33104                    33104
+#define ID_VIEW_PANNING_WINDOW          33105
+#define ID_VIEW_GMEBROWSER              33106
+#define ID_VIEW_OBJECTINSPECTOR         33107
+#define ID_VIEW_PARTBROWSER        33108
+#define ID_VIEW_CONSOLE            33109
+#define ID_VIEW_SEARCH                  33110
 #define ID_VIEW_TOOLBARS                33200
 #define IDW_TOOLBAR_MAIN                0xE820
 #define IDW_TOOLBAR_WINS                0xE821
@@ -481,7 +486,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        225
-#define _APS_NEXT_COMMAND_VALUE         33104
+#define _APS_NEXT_COMMAND_VALUE         33111
 #define _APS_NEXT_CONTROL_VALUE         1132
 #define _APS_NEXT_SYMED_VALUE           119
 #endif

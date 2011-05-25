@@ -135,6 +135,17 @@ protected:
 	afx_msg void OnUpdateViewMultiUserSubversion(CCmdUI* pCmdUI);
 	afx_msg void OnViewClearConsole();
 	afx_msg void OnUpdateViewClearConsole( CCmdUI* pCmdUI);
+
+	template<class paneclass, typename paneclass CMainFrame::* const m_pane> afx_msg void OnViewPane() 
+	{
+		(this->*m_pane).ShowPane(!(this->*m_pane).IsVisible(), FALSE, FALSE);
+	}
+	template<class paneclass, typename paneclass CMainFrame::* const m_pane> afx_msg void OnUpdateViewPane(CCmdUI* pCmdUI) 
+	{
+		pCmdUI->Enable();
+		pCmdUI->SetCheck((this->*m_pane).IsVisible());
+	}
+
 	afx_msg void OnUpdateWindowNew(CCmdUI* pCmdUI);
 	afx_msg void OnClose();
 public:

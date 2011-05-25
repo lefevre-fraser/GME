@@ -14,13 +14,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -102,7 +100,7 @@ IDB_COMPONENTS_TOOLBAR24 BITMAP                  "res\\ToolbarComponents24.bmp"
 // Toolbar
 //
 
-IDR_TOOLBAR_MAIN TOOLBAR  16, 16
+IDR_TOOLBAR_MAIN TOOLBAR 16, 16
 BEGIN
     BUTTON      ID_FILE_OPEN
     BUTTON      ID_FILE_SAVEPROJECT
@@ -120,7 +118,7 @@ BEGIN
     BUTTON      ID_HELP_CONTENTS
 END
 
-IDR_TOOLBAR_MODELING TOOLBAR  16, 16
+IDR_TOOLBAR_MODELING TOOLBAR 16, 16
 BEGIN
     BUTTON      ID_VIEW_REFRESH
     SEPARATOR
@@ -135,7 +133,7 @@ BEGIN
     BUTTON      ID_EDIT_SHOWTYPE
 END
 
-IDR_TOOLBAR_MODE TOOLBAR  16, 16
+IDR_TOOLBAR_MODE TOOLBAR 16, 16
 BEGIN
     BUTTON      ID_MODE_EDIT
     BUTTON      ID_MODE_AUTOCONNECT
@@ -145,13 +143,13 @@ BEGIN
     BUTTON      ID_MODE_VISUALIZE
 END
 
-IDR_TOOLBAR_COMPONENTS TOOLBAR  16, 16
+IDR_TOOLBAR_COMPONENTS TOOLBAR 16, 16
 BEGIN
     BUTTON      ID_FILE_CHECK
     BUTTON      ID_FILE_INTERPRET
 END
 
-IDR_TOOLBAR_WINS TOOLBAR  16, 16
+IDR_TOOLBAR_WINS TOOLBAR 16, 16
 BEGIN
     BUTTON      ID_VIEW_FULLSCREEN
     SEPARATOR
@@ -161,7 +159,7 @@ BEGIN
     BUTTON      ID_APP_ABOUT
 END
 
-IDR_TOOLBAR_NAVIG TOOLBAR  16, 16
+IDR_TOOLBAR_NAVIG TOOLBAR 16, 16
 BEGIN
     BUTTON      ID_BUTTON33020
     BUTTON      ID_BUTTON33021
@@ -182,7 +180,7 @@ END
 // Menu
 //
 
-IDR_MAINFRAME MENU 
+IDR_MAINFRAME MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -224,6 +222,13 @@ BEGIN
         END
         MENUITEM "&Full Screen",                ID_VIEW_FULLSCREEN
         MENUITEM "Cl&ear Console",              ID_VIEW_CLEARCONSOLE
+        MENUITEM SEPARATOR
+        MENUITEM "GME Browser",                 ID_VIEW_GMEBROWSER
+        MENUITEM "Object Inspector",            ID_VIEW_OBJECTINSPECTOR
+        MENUITEM "Part Browser",                ID_VIEW_PARTBROWSER
+        MENUITEM "Panning Window",              ID_VIEW_PANNWIN
+        MENUITEM "Console",                     ID_VIEW_CONSOLE
+        MENUITEM "Search",                      ID_VIEW_SEARCH
     END
     POPUP "&Tools"
     BEGIN
@@ -253,7 +258,7 @@ BEGIN
     END
 END
 
-IDR_GMETYPE MENU 
+IDR_GMETYPE MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -387,7 +392,7 @@ BEGIN
     END
 END
 
-IDR_GMETYPE_CNTR_IP MENU 
+IDR_GMETYPE_CNTR_IP MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -418,7 +423,7 @@ BEGIN
     END
 END
 
-IDR_SELFCONTEXT_MENU MENU 
+IDR_SELFCONTEXT_MENU MENU
 BEGIN
     POPUP "Cntx"
     BEGIN
@@ -472,7 +477,7 @@ BEGIN
     END
 END
 
-IDR_ANNCONTEXT_MENU MENU 
+IDR_ANNCONTEXT_MENU MENU
 BEGIN
     POPUP "Cntx"
     BEGIN
@@ -485,7 +490,7 @@ BEGIN
     END
 END
 
-IDR_CONNCONTEXT_MENU MENU 
+IDR_CONNCONTEXT_MENU MENU
 BEGIN
     POPUP "Cntx"
     BEGIN
@@ -530,7 +535,7 @@ BEGIN
     END
 END
 
-IDR_CONTEXT_MENU MENU 
+IDR_CONTEXT_MENU MENU
 BEGIN
     POPUP "Cntx"
     BEGIN
@@ -594,7 +599,7 @@ BEGIN
     END
 END
 
-IDR_MYTOOLBARS_MENU MENU 
+IDR_MYTOOLBARS_MENU MENU
 BEGIN
     POPUP "Toolbars"
     BEGIN
@@ -605,7 +610,7 @@ BEGIN
     END
 END
 
-IDR_PORTCONTEXT_MENU MENU 
+IDR_PORTCONTEXT_MENU MENU
 BEGIN
     POPUP "PortCntx"
     BEGIN
@@ -617,7 +622,7 @@ BEGIN
     END
 END
 
-IDR_CRASH_TEST_MENU MENU 
+IDR_CRASH_TEST_MENU MENU
 BEGIN
     POPUP "Crash Test"
     BEGIN
@@ -637,7 +642,7 @@ END
 // Accelerator
 //
 
-IDR_MAINFRAME ACCELERATORS 
+IDR_MAINFRAME ACCELERATORS
 BEGIN
     VK_LEFT,        ID_BUTTON33020,         VIRTKEY, ALT, NOINVERT
     VK_RIGHT,       ID_BUTTON33021,         VIRTKEY, ALT, NOINVERT
@@ -659,7 +664,7 @@ BEGIN
     "5",            ID_MODE_ZOOM,           VIRTKEY, CONTROL, NOINVERT
 END
 
-IDR_GMETYPE_CNTR_IP ACCELERATORS 
+IDR_GMETYPE_CNTR_IP ACCELERATORS
 BEGIN
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
@@ -670,7 +675,7 @@ BEGIN
     VK_ESCAPE,      ID_CANCEL_EDIT_CNTR,    VIRTKEY, NOINVERT
 END
 
-IDR_GMEVIEW ACCELERATORS 
+IDR_GMEVIEW ACCELERATORS
 BEGIN
     "h",            ID_BACKALONGCONN,       ASCII,  NOINVERT
     VK_ESCAPE,      ID_EDIT_CANCEL,         VIRTKEY, NOINVERT
@@ -759,7 +764,7 @@ BEGIN
     CONTROL         155,IDC_MGAOPEN_BMP,"Static",SS_BITMAP,7,8,43,39
 END
 
-IDR_MAINFRAME DIALOG  0, 0, 214, 16
+IDR_MAINFRAME DIALOG 0, 0, 214, 16
 STYLE DS_SETFONT | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -816,7 +821,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,195,254,50,14
 END
 
-IDD_DLL_DIALOG DIALOG  0, 0, 252, 186
+IDD_DLL_DIALOG DIALOG 0, 0, 252, 186
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "DLL Info"
 FONT 8, "MS Sans Serif"
@@ -826,7 +831,7 @@ BEGIN
     CONTROL         "List2",IDC_DLL_LIST,"SysListView32",LVS_REPORT | WS_BORDER | WS_TABSTOP,5,15,240,145
 END
 
-IDD_OBJECT_INSPECTOR_DIALOG DIALOG  0, 0, 157, 212
+IDD_OBJECT_INSPECTOR_DIALOG DIALOG 0, 0, 157, 212
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Dialog"
 FONT 8, "MS Sans Serif"
@@ -843,7 +848,7 @@ BEGIN
     CONTROL         "",IDC_SEARCHCTRL,"{E5FE98F1-B7AD-4ABE-89DB-87DDD9DB753E}",WS_TABSTOP,0,0,242,236
 END
 
-IDD_PRINTOPTIONS DIALOG  0, 0, 162, 205
+IDD_PRINTOPTIONS DIALOG 0, 0, 162, 205
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Print Options"
 FONT 8, "MS Sans Serif"
@@ -989,7 +994,7 @@ BEGIN
     LTEXT           "Version:",-1,9,47,26,8
 END
 
-IDD_CONSOLE_DIALOG DIALOG  0, 0, 393, 65
+IDD_CONSOLE_DIALOG DIALOG 0, 0, 393, 65
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Dialog"
 FONT 8, "MS Sans Serif"
@@ -1091,7 +1096,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     CG_IDD_MODELPROPERTIESBAR, DIALOG
     BEGIN
@@ -1320,7 +1325,7 @@ IDR_ANNOTATOREVENTSINK  REGISTRY                "AnnotatorEventSink.rgs"
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDP_FAILED_TO_CREATE    "Failed to create object.  Make sure the object is entered in the system registry."
     ID_INDICATOR_MODE       "EDIT"
@@ -1331,20 +1336,20 @@ BEGIN
                             "Show or hide ModelPropertiesBar\nToggle ModelPropertiesBar"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "GME"
     IDR_GMETYPE             "\nGME\nGME\n\n\nGME.Project\nGME Project"
     ID_WINDOW_MANAGER       """Manages the currently open windows\nWindow List"""
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "GME"
     AFX_IDS_IDLEMESSAGE     "Ready"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_INDICATOR_EXT        "EXT"
     ID_INDICATOR_CAPS       "CAP"
@@ -1354,7 +1359,7 @@ BEGIN
     ID_INDICATOR_REC        "REC"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_NEW             "Create a new project\nNew"
     ID_FILE_OPEN            "Open an existing project\nOpen"
@@ -1367,18 +1372,18 @@ BEGIN
     ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
     ID_APP_EXIT             "Quit the application\nExit"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_VIEW_FULLSCREEN      "Switch to Full Screen (hide panels and toolbars)\nFull Screen"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_TOOLS_EXTERNAL_TOOLS "<User defined tools>\n<User defined tools>"
     ID_WINDOW_NEWHORIZONTALTABGROUP 
@@ -1387,7 +1392,7 @@ BEGIN
                             "New Vertical Tab Group\nNew Vertical Tab Group"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_MRU_FILE1       "Open this document"
     ID_FILE_MRU_FILE2       "Open this document"
@@ -1407,13 +1412,13 @@ BEGIN
     ID_FILE_MRU_FILE16      "Open this document"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
     ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
     ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
@@ -1423,7 +1428,7 @@ BEGIN
     ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_CLEAR           "Erase the selection\nErase"
     ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
@@ -1440,7 +1445,7 @@ BEGIN
     ID_EDIT_REDO            "Redo the previously undone action\nRedo"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDW_TOOLBAR_MAIN        "Show or hide the standard toolbar\nToggle Standard ToolBar"
     IDW_TOOLBAR_WINS        "Show or hide the window toolbar\nToggle Windows ToolBar"
@@ -1449,19 +1454,19 @@ BEGIN
     IDW_TOOLBAR_NAVIG       "Show or hide the navigator toolbar\nToggle Navigator ToolBar"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_OLE_INSERT_NEW       "Insert new embedded object\nNew Object"
     ID_OLE_EDIT_LINKS       "Edit linked objects\nEdit Links"
     ID_OLE_EDIT_CONVERT     "Convert object to different type\nConvert Object"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_OLE_VERB_FIRST       "Activate embedded or linked object"
     57873                   "Activate embedded or linked object"
@@ -1469,7 +1474,7 @@ BEGIN
     57875                   "Activate embedded or linked object"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_SCSIZE          "Change the window size"
     AFX_IDS_SCMOVE          "Change the window position"
@@ -1480,19 +1485,19 @@ BEGIN
     AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_SCRESTORE       "Restore the window to normal size"
     AFX_IDS_SCTASKLIST      "Activate Task List"
     AFX_IDS_MDICHILD        "Activate this window"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_MODE_EDIT            "Edit Mode\nEdit Mode"
     ID_MODE_AUTOCONNECT     "Connect Mode\nConnect Mode"
@@ -1500,19 +1505,18 @@ BEGIN
     ID_MODE_SET             "Set Mode\nSet Mode"
     ID_MODE_ZOOM            "Zoom Mode\nZoom Mode"
     ID_MODE_VISUALIZE       "Visualization Mode\nVisualization Mode"
-    ID_VIEW_PARTBROWSER     "Toggle Part Browser\nPart Browser"
     ID_VIEW_REFRESH         "Repaint Window\nRepaint"
     ID_VIEW_GRID            "Toggle grid\nGrid"
     ID_VIEW_PARENT          "Show parent\nParent"
     ID_EDIT_DELETE          "Delete selected objects\nDelete"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_VIEW_BROWSER         "Toggle Browser\nTree Browser"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_CANCEL          "Cancel operation\nCancel"
     ID_CNTX_DISCONNECTALL   "Disconnect all"
@@ -1523,12 +1527,12 @@ BEGIN
     ID_FILE_SAVEPROJECT     "Save Project\nSave"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_HELP_HELP            "Web-based context-sensitive help\nHelp"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_SHOWBASETYPE    "Show bastype mdoel of current model\nShow Basetype"
     ID_EDIT_SHOWTYPE        "Show type model of current model\nShow Type"
@@ -1541,7 +1545,7 @@ BEGIN
     ID_FILE_CHECK           "Check constraints on the current model\nCheck"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_CNTX_INTERPRET       "Interpret selected models"
     ID_EDIT_SYNC            "Synchronize object positions between aspects\nSynchronize aspects"
@@ -1552,10 +1556,9 @@ BEGIN
     ID_VIEW_ATTRIBUTES      "Toggle attribute panel\nAttribute Panel"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_COPYCLOSURE     "Copy a closure of the selected objects to the Clipboard"
-    ID_VIEW_CONSOLE         "Toggle Console Window\nConsole Window"
     ID_EDIT_COPYSMART       "Copies references/sets/connections to the Clipboard so that it can be reproduced upon Paste"
     ID_VIEW_REFRESH_SOURCECONTROL 
                             "Refreshes checked out status for models and folders\nRefreshes checked out status for models and folders"
@@ -1565,18 +1568,18 @@ BEGIN
                             "Pastes copyclosured/smartcopied data without checking constraints"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_ABORTPROJECT    "Abort Project\nAbort"
     ID_EDIT_PASTESPECIAL    "Paste Special"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_SEARCH          "Search in the Project\nSearch"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_PRINTSEL        "Print the selected models\nPrint Selected"
     ID_FILE_PRINTALL        "Print all models in the document\nPrint All"
@@ -1584,20 +1587,20 @@ BEGIN
     ID_VIEW_PANNWIN         "Toggle Panning Window\nPanning Window"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_MODE_SHORTCONNECT    "Non-Sticky Connect Mode\nNon-Sticky Connect Mode"
     ID_MODE_SHORTDISCONNECT "Non-Sticky Disconnect Mode\nNon-Sticky Disconnect Mode"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_BUTTON33020          "Back\nBack"
     ID_BUTTON33021          "Forward\nForward"
     ID_BUTTON33022          "Home\nHome"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_BUTTON33027          "Close Model\nClose Model"
     ID_BUTTON33028          "Close All Models\nClose All Models"
@@ -1608,7 +1611,7 @@ BEGIN
                             "Displays status of users working on this project\nDisplays status of users working on this project"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_MULTIUSER_SHOWOWNER  "Displays user who controls the active model\nDisplays user who controls the active model"
     ID_BUTTON33044          "Next Window\nNext Window"
@@ -1619,17 +1622,17 @@ BEGIN
     ID_JUMPALONGCONN        "Jump to the destination of an outgoing connection\nJump Along Outgoing Connection"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_BACKALONGCONN        "Jump to the source of an incoming connection\nJump Along Incoming Connection"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_USER_TOOL1           """Activates user-defined tool"""
     ID_USER_TOOL2           """Activates user-defined tool"""
@@ -1643,7 +1646,7 @@ BEGIN
     ID_USER_TOOL10          """Activates user-defined tool"""
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
