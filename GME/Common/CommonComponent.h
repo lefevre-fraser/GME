@@ -1,6 +1,8 @@
 #ifndef COMMONCOMPONENT_H
 #define COMMONCOMPONENT_H
 
+#include "CommonError.h"
+#include "Comdef.h"
 
 inline HRESULT CreateMgaComponent(CComPtr<IMgaComponent> &comp, LPCOLESTR ProgID)
 {
@@ -12,6 +14,7 @@ inline HRESULT CreateMgaComponent(CComPtr<IMgaComponent> &comp, LPCOLESTR ProgID
 	if (SUCCEEDED(hr)) {
 		hr = unk.QueryInterface(&comp);
 		if (FAILED(hr)) {
+			SetStandardOrGMEErrorInfo(hr);
 			CComPtr<IDispatch> disp;
 			hr = unk.QueryInterface(&disp);
 			if (SUCCEEDED(hr)) {
@@ -25,6 +28,8 @@ inline HRESULT CreateMgaComponent(CComPtr<IMgaComponent> &comp, LPCOLESTR ProgID
 				}
 			}
 		}
+	} else {
+		SetStandardOrGMEErrorInfo(hr);
 	}
 	return hr;
 }

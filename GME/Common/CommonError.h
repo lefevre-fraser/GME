@@ -2,6 +2,7 @@
 #define MGA_COMMONERROR_H
 
 #include <exception>
+#include <comdef.h>
 
 // --------------------------- ASSERT and VERIFY
 
@@ -110,6 +111,12 @@ void SetErrorInfo(LPOLESTR desc) NOTHROW;
 void SetErrorInfo(HRESULT hr, LPOLESTR desc2 = NULL) NOTHROW;
 bool GetErrorInfo(BSTR *p) NOTHROW;
 void GetErrorInfo(HRESULT hr, BSTR *p) NOTHROW;
+static void SetStandardOrGMEErrorInfo(HRESULT hr) NOTHROW {
+	_bstr_t error;
+	GetErrorInfo(hr, error.GetAddress());
+	if (static_cast<LPOLESTR>(error))
+		SetErrorInfo(static_cast<LPOLESTR>(error));
+}
 
 //		One or more arguments are invalid
 //*****	E_INVALIDARG
