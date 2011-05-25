@@ -8,9 +8,12 @@
 #include "gme.h"
 
 #include <comdef.h>
+#include "comdefsp.h"
 
 _COM_SMARTPTR_TYPEDEF(IActiveScript, __uuidof(IActiveScript));
 _COM_SMARTPTR_TYPEDEF(IActiveScriptParse, __uuidof(IActiveScriptParse));
+_COM_SMARTPTR_TYPEDEF(IActiveScriptSite, __uuidof(IActiveScriptSite));
+_COM_SMARTPTR_TYPEDEF(IActiveScriptError, __uuidof(IActiveScriptError));
 
 
 class CConsoleCtrl;
