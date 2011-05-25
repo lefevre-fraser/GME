@@ -127,13 +127,12 @@ CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
 			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | 
 			0, filters);
 
-	// if preferred path was set by the user then change to that directory
-	if( !theApp.m_preferredPath.IsEmpty())
+	CString file, dir;
+	if (theApp.isMgaProj() && theApp.mgaProject)
 	{
-		OPENFILENAME &ofn = dlg.GetOFN();
-		// better be successful in order to use in ofn structure
-		if( theApp.SetWorkingDirectory( theApp.m_preferredPath))
-			ofn.lpstrInitialDir = theApp.m_preferredPath;
+		theApp.getMgaPaths(file, dir);
+		if (dir != L"")
+			dlg.GetOFN().lpstrInitialDir = dir;
 	}
 
 	if( dlg.DoModal() == IDOK )	{

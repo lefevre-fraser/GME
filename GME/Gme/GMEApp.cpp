@@ -1943,21 +1943,10 @@ void CGMEApp::OnFileExportxml()
 		CString initialFile;
 		CString initialDir;
 		if (theApp.isMgaProj()) {
-			CString conn = theApp.connString();
-			const TCHAR* zsConn = conn;
-			zsConn += 4; // skip MGA=
-			TCHAR currentMgaPath[MAX_PATH];
-			TCHAR* filename;
-			if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &filename) || filename == 0) {
-			} else {
-				initialFile = filename;
-				if (initialFile.Right(3) == _T("mga")) {
-					initialFile.Truncate(initialFile.GetLength() - 3);
-					initialFile += _T("xme");
-				}
-				filename--;
-				*filename = '\0';
-				initialDir = currentMgaPath;
+			getMgaPaths(initialFile, initialDir);
+			if (initialFile.Right(3) == _T("mga")) {
+				initialFile.Truncate(initialFile.GetLength() - 3);
+				initialFile += _T("xme");
 			}
 		}
 
@@ -3058,7 +3047,6 @@ bool CGMEApp::GetCompFiltering()
 
 bool CGMEApp::SetWorkingDirectory( LPCTSTR pPath)
 {
-	m_preferredPath = pPath;
 	return SetCurrentDirectory( pPath) == TRUE;
 	//int sc = _chdir( pPath);
 	//return sc == 0;

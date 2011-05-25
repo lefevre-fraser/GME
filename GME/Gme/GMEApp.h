@@ -71,6 +71,23 @@ public:
 	inline bool isMgaProj()       const { return proj_type_is_mga; }
 	inline CString connString() const { return currentConnection; }
 
+	void getMgaPaths(CString& filename, CString& dirname) {
+		ASSERT(isMgaProj);
+		ASSERT(mgaProject);
+		CString conn = connString();
+		const TCHAR* zsConn = conn;
+		zsConn += 4; // skip MGA=
+		TCHAR currentMgaPath[MAX_PATH];
+		TCHAR* tcfilename;
+		if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &tcfilename) || tcfilename == 0) {
+		} else {
+			filename = tcfilename;
+			*(tcfilename-1) = '\0';
+			dirname = currentMgaPath;
+		}
+	}
+
+
 private:
 	virtual int Run();
 	void EmergencySave();
@@ -128,8 +145,6 @@ public:
 
 	static const TCHAR * m_no_model_open_string;
 
-	// directory preferred by the user
-	CString m_preferredPath;
 	// called from CGMEOLEAPP:
 	bool SetWorkingDirectory( LPCTSTR pPath);
 
