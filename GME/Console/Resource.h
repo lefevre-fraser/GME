@@ -35,15 +35,13 @@
 #define IDI_BTNUP                       214
 #define IDI_BTNDN                       215
 #define IDI_BTNRET                      216
-#define IDR_ACCELERATOR_HTML_CTRL                216
-#define ID_ACCELERATOR_HTML_CTRL_C        32768
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        217
-#define _APS_NEXT_COMMAND_VALUE         32770
+#define _APS_NEXT_RESOURCE_VALUE        216
+#define _APS_NEXT_COMMAND_VALUE         32768
 #define _APS_NEXT_CONTROL_VALUE         201
 #define _APS_NEXT_SYMED_VALUE           124
 #endif
