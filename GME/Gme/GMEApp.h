@@ -72,7 +72,7 @@ public:
 	inline CString connString() const { return currentConnection; }
 
 	void getMgaPaths(CString& filename, CString& dirname) {
-		ASSERT(isMgaProj);
+		ASSERT(isMgaProj());
 		ASSERT(mgaProject);
 		CString conn = connString();
 		const TCHAR* zsConn = conn;
