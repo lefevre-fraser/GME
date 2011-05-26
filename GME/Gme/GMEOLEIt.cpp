@@ -2552,8 +2552,8 @@ void CGMEOLEIt::Help(  )
 {
 	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::Help\r\n"));
 
-	static const char * htmlhelp = 
-							"Scripting HELP<br>\
+	static const wchar_t * htmlhelp = 
+							L"Scripting HELP<br>\
 							Predefined variables available in this scripting environment: &quot;gme&quot;, &quot;project&quot; and &quot;it&quot;.<br>\
 							<b>gme</b> implements the IGMEOLEApp interface. i.e.: gme.OpenProject('MGA=c:&#92;myproj.mga') <br>\
 							<b>project</b> implements the IMgaProject interface. i.e.: myrootfolder = project.RootFolder<br>\

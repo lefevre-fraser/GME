@@ -59,6 +59,10 @@ BEGIN_DISPATCH_MAP(CConsoleCtrl, COleControl)
 	DISP_FUNCTION(CConsoleCtrl, "SetGMEApp", SetGMEApp, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION(CConsoleCtrl, "SetGMEProj", SetGMEProj, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION_ID(CConsoleCtrl, "NavigateTo", dispidNavigateTo, NavigateTo, VT_EMPTY, VTS_BSTR)
+#ifdef _WIN64
+#error GetCWnd may overflow
+#endif
+	DISP_PROPERTY_EX_ID(CConsoleCtrl, "GetCWnd", 0x43576E64, GetCWnd, SetCWnd, VT_I4)
 	DISP_FUNCTION_ID(CConsoleCtrl, "AboutBox", DISPID_ABOUTBOX, AboutBox, VT_EMPTY, VTS_NONE)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
@@ -830,5 +834,15 @@ BOOL CConsoleCtrl::OnToolTipNotify(UINT id, NMHDR *pNMHDR, LRESULT *pResult)
 	return TRUE;    // message was handled
 }
 
+BOOL CConsoleCtrl::PreTranslateMessage(MSG* pMsg) {
+	HWND h = ::GetFocus();
+	while (h) {
+		if (h == m_browser.GetSafeHwnd()) {
+			return m_browser.PreTranslateMessage(pMsg);
+		}
+		h = ::GetParent(h);
+	}
+	return FALSE;
+}
 
 

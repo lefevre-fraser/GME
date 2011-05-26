@@ -58,6 +58,7 @@ int CGMEConsole::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	
 	if(!m_Console.Create(_T("Console"),WS_CHILD | WS_BORDER | WS_VISIBLE,CRect(0,0,230,300),this,IDC_CONSOLE_CTRL)) {
+		ASSERT(FALSE);
 		return -1;
 	}
 

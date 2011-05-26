@@ -1,12 +1,8 @@
 //{{AFX_INCLUDES()
 #include "console.h"
 //}}AFX_INCLUDES
-#if !defined(AFX_GMECONSOLE_H__C58BF4E8_E3F7_4717_BBDA_B908B0DD4D5E__INCLUDED_)
-#define AFX_GMECONSOLE_H__C58BF4E8_E3F7_4717_BBDA_B908B0DD4D5E__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 // GMEConsole.h : header file
 //
 
@@ -54,9 +50,16 @@ protected:
 	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+virtual BOOL PreTranslateMessage(MSG* pMsg)
+{
+	CWnd* cwnd = 0;
+	m_Console.InvokeHelper(0x43576E64 /* magic from ConsoleCtl.cpp */, DISPATCH_PROPERTYGET, VT_I4, (void*)&cwnd, 0);
+	return cwnd->PreTranslateMessage(pMsg);
+}
+
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_GMECONSOLE_H__C58BF4E8_E3F7_4717_BBDA_B908B0DD4D5E__INCLUDED_)

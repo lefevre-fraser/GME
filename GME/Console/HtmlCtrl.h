@@ -1,9 +1,4 @@
-#if !defined(AFX_HTMLCTRL_H__24472601_5F31_49E1_A4BC_D5855C8786D7__INCLUDED_)
-#define AFX_HTMLCTRL_H__24472601_5F31_49E1_A4BC_D5855C8786D7__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 // HtmlCtrl.h : header file
 //
 
@@ -88,4 +83,3 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_HTMLCTRL_H__24472601_5F31_49E1_A4BC_D5855C8786D7__INCLUDED_)

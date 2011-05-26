@@ -1,9 +1,4 @@
-#if !defined(AFX_CONSOLECTL_H__06A2BBCD_6B16_4C6F_A339_6685CEC1DF65__INCLUDED_)
-#define AFX_CONSOLECTL_H__06A2BBCD_6B16_4C6F_A339_6685CEC1DF65__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "HtmlCtrl.h"
 #include "ScriptEdit.h"
@@ -111,10 +106,11 @@ public:
 	eventidClickMGAID = 1L,
 	//}}AFX_DISP_ID
 	};
-	
+	afx_msg int GetCWnd() { return (int)(void*)(CWnd*)this; }
+	afx_msg void SetCWnd(void*) {  }
+	BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_CONSOLECTL_H__06A2BBCD_6B16_4C6F_A339_6685CEC1DF65__INCLUDED)
