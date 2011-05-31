@@ -1845,7 +1845,7 @@
                 <File Id="RawComponent.ico" Name="RawComponent.ico"  Source="..\SDK\BON\Wizard\RawComponent.ico" />
                 <File Id="RawComponent.vsz" Name="RawComponent.vsz"  Source="..\SDK\BON\Wizard\RawComponent.vsz" />
                 <File Id="setup90.js" Name="setup90.js"  Source="..\SDK\BON\Wizard\setup90.js" />
-                <File Id="setup80.js" Name="setup80.js"  Source="..\SDK\BON\Wizard\setup80.js" />
+                <File Id="setup100.js" Name="setup100.js"  Source="..\SDK\BON\Wizard\setup100.js" />
             </Component>
         </DirectoryRef>
 
