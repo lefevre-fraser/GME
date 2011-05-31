@@ -199,7 +199,7 @@ function AddConfig90(proj, strProjectName)
 		var MIDLTool = config.Tools('VCMIDLTool');
 		MIDLTool.PreprocessorDefinitions="_DEBUG";		
 		MIDLTool.TypeLibraryName = "$(ProjectDir)$(InputName).tlb";
-		MIDLTool.AdditionalIncludeDirectories = "$(ProjectDir);$(GME_ROOT)/Interfaces;$(GME_ROOT)/Gme/Interfaces;$(GME_ROOT)/bin;$(GME_ROOT)/Gme/$(ConfigurationName)";
+		MIDLTool.AdditionalIncludeDirectories = "$(ProjectDir)\.;$(GME_ROOT)/Interfaces;$(GME_ROOT)/Gme/Interfaces;$(GME_ROOT)/bin;$(GME_ROOT)/Gme/$(ConfigurationName)";
 		MIDLTool.HeaderFilename = "";
         
         // DEBUG COMPILER SETTINGS
@@ -247,7 +247,7 @@ function AddConfig90(proj, strProjectName)
 	    var MIDLTool = config.Tools('VCMIDLTool');
 		MIDLTool.PreprocessorDefinitions="NDEBUG";		
 		MIDLTool.TypeLibraryName = "$(ProjectDir)$(InputName).tlb";
-		MIDLTool.AdditionalIncludeDirectories = "$(ProjectDir);$(GME_ROOT)/Interfaces;$(GME_ROOT)/Gme/Interfaces;$(GME_ROOT)/bin;$(GME_ROOT)/Gme/$(ConfigurationName)";
+		MIDLTool.AdditionalIncludeDirectories = "$(ProjectDir)\.;$(GME_ROOT)/Interfaces;$(GME_ROOT)/Gme/Interfaces;$(GME_ROOT)/bin;$(GME_ROOT)/Gme/$(ConfigurationName)";
 		MIDLTool.HeaderFilename = "";
 		
 		// RELEASE COMPILER SETTINGS
