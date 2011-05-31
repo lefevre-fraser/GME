@@ -458,6 +458,9 @@ BOOL CGMEApp::PreTranslateMessage(MSG* pMsg)
 	// CG: The following lines were added by the Splash Screen component.
 	if (CSplashWnd::PreTranslateAppMessage(pMsg))
 		return TRUE;
+	// KMS: m_pMainWnd->PreTranslateMessage here for Alt-F,C. Otherwise, CGMEView::PreTranslateMessage TranslateAccelerator will return TRUE
+	if (m_pMainWnd && m_pMainWnd->PreTranslateMessage(pMsg))
+		return TRUE;
 
 	return CWinAppEx::PreTranslateMessage(pMsg);
 }
