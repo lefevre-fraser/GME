@@ -225,6 +225,21 @@ inline void CopyTo(const CStringArray &array, VARIANT *p)
 	CopyTo(a, p);
 }
 
+static CString CEditGetLine(const CEdit& edit, int line=-1) {
+	int charsInLine = edit.LineLength(edit.LineIndex(line));
+	// n.b. If the edit control is empty, GetLine call returns two null terminators
+	if (charsInLine == 0)
+		return _T("");
+	// n.b. CEdit::GetLine sends EM_GETLINE, so it must set the first word to the buffer size
+	int charsInBuffer = max(sizeof(void*), charsInLine+1);
+	CString ret;
+	// n.b. the CEdit::GetLine MSDN documentation is wrong: GetLine returns the number of characters (not bytes)
+	// CEdit::GetLine returns (int)::SendMessage(...EM_GETLINE...) and the EM_GETLINE docs specify characters
+	VERIFY(edit.GetLine(line, ret.GetBuffer(charsInBuffer), charsInBuffer) == charsInLine);
+	ret.ReleaseBuffer(charsInLine);
+	return ret;
+}
+
 // --------------------------- Error
 
 void DisplayError(const TCHAR *msg, HRESULT hr) NOTHROW;

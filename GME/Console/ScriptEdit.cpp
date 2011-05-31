@@ -37,7 +37,7 @@ bool CScriptEdit::Init(CConsoleCtrl *cons)
 		COMTHROW(m_host.CreateInstance(CLSID_ScriptHost));
 		_bstr_t engine(L"JScript");
 		COMTHROW(m_host->InitEngine((void*)m_console, engine));
-		this->LimitText( 256);     // modify in accordance with GetLine( ..., 256) in OnKeyUp()
+		this->LimitText( 256);
 		this->SetWindowText( defPrompt); // to attract user attention
 	}
 	catch(hresult_exception &e) 
@@ -101,11 +101,7 @@ void CScriptEdit::OnKeyUp( UINT nChar, UINT /*nRepCnt*/, UINT /*nFlags*/ )
 	else if (nChar == VK_RETURN)
 	{
 		lastup = -1;
-		CString inp;
-
-		int nCopied = GetLine(0, inp.GetBuffer(256), 256);
-		inp.ReleaseBuffer( nCopied); // specify how long the string is supposed to be
-		ASSERT( nCopied == inp.GetLength());
+		CString inp = CEditGetLine(*this, 0);
 
 		_bstr_t binp = inp;
 		// echo

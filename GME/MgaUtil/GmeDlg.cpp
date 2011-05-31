@@ -642,8 +642,7 @@ CString CGmeDlg::getZoomValue()
 		edit = (CEdit*)(zoom->GetDlgItem(1001));
 		if (edit)
 		{
-			TCHAR buff[100];
-			edit->GetLine(0, buff, sizeof(buff)-1);
+			CString buff = CEditGetLine(*edit, 0);
 
 			int zv = 0;
 			/* for now accept only positive numbers, commented out, see COMMENT above
@@ -669,7 +668,8 @@ CString CGmeDlg::getZoomValue()
 			if( l != 1 || zv < ZOOM_MIN || zv > ZOOM_MAX)
 				zv = 100;
 
-			_itot(zv, buff, 10);
+			_itot(zv, buff.GetBuffer(35), 10);
+			buff.ReleaseBuffer();
 			res = buff;
 		}
 	}
@@ -734,9 +734,7 @@ CString CGmeDlg::getFmtStrValue()
 		edit = (CEdit*)( combo->GetDlgItem(1001));
 		if( edit)
 		{
-			TCHAR buff[100];
-			edit->GetLine(0, buff, sizeof(buff));
-			res = buff;
+			res = CEditGetLine(*edit, 0);
 		}
 	}
 	return res;
@@ -776,12 +774,11 @@ CString CGmeDlg::getUndoQueueSizeValue()
 	{
 		CEdit* edit = 0;
 		edit = (CEdit*)( combo->GetDlgItem(1001));
-		if( edit)
+		if (edit)
 		{
-			TCHAR buff[100];
-			edit->GetLine(0, buff, sizeof(buff));
-			int value = _ttoi( buff);
-			if( value > 0 && value < 100) // above 0 and below 100
+			CString buff = CEditGetLine(*edit, 0);
+			int value = _ttoi(buff);
+			if (value > 0 && value < 100) // above 0 and below 100
 				res = buff;
 		}
 	}
@@ -828,9 +825,7 @@ edgesmoothmode_enum CGmeDlg::getEdgeSmoothModeValue()
 		edit = (CEdit*)(combo->GetDlgItem(1001));
 		if (edit)
 		{
-			TCHAR buff[100];
-			edit->GetLine(0, buff, sizeof(buff));
-			res = buff;
+			res = CEditGetLine(*edit, 0);
 		}
 	}
 	edgesmoothmode_enum edgeSmoothMode = EdgeSmooth_HighQualityMode;
@@ -889,9 +884,7 @@ fontsmoothmode_enum CGmeDlg::getFontSmoothModeValue()
 		edit = (CEdit*)(combo->GetDlgItem(1001));
 		if (edit)
 		{
-			TCHAR buff[100];
-			edit->GetLine(0, buff, sizeof(buff));
-			res = buff;
+			res = CEditGetLine(*edit, 0);
 		}
 	}
 	fontsmoothmode_enum fontSmoothMode = FontSmooth_AntiAlias;

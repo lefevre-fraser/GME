@@ -73,8 +73,7 @@ void CModelPropertiesDlgBar::OnOK()
 		return;
 	if (fwin->m_hWnd == edit->m_hWnd)
 	{
-		TCHAR buff[100];
-		edit->GetLine(0, buff, sizeof(buff)/sizeof(buff[0])-1);
+		CString buff = CEditGetLine(*edit, 0);
 		int kk = _ttoi(buff);
 		kk = abs(kk);
 		if (!kk)
@@ -159,8 +158,7 @@ void CModelPropertiesDlgBar::NextZoomVal(int &kk)
 	CEdit* edit = (CEdit*)(zoom->GetDlgItem(IDC_TYPENAME));
 	if (!edit)
 		return;
-	TCHAR buff[100];
-	edit->GetLine(0, buff, sizeof(buff)/sizeof(buff[0])-1);
+	CString buff = CEditGetLine(*edit, 0);
 	kk = _ttoi(buff);
 	if (!kk)
 		kk = 100;
@@ -182,8 +180,7 @@ void CModelPropertiesDlgBar::PrevZoomVal(int &kk)
 	CEdit* edit = (CEdit*)(zoom->GetDlgItem(IDC_TYPENAME));
 	if (!edit)
 		return;
-	TCHAR buff[100];
-	edit->GetLine(0, buff, sizeof(buff)/sizeof(buff[0])-1);
+	CString buff = CEditGetLine(*edit, 0);
 	kk = _ttoi(buff);
 	if (!kk)
 		kk = 100;
