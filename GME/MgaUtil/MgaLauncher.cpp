@@ -669,7 +669,7 @@ bool __stdcall InvokeExWithCrashRpt(IMgaComponentEx* compex, IMgaProject* projec
 STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaFCO *focusobj, IMgaFCOs *selectedobjs, long param)
 {
 	if( project == NULL )
-		COMRETURN(E_INVALIDARG);
+		COMRETURN(E_POINTER);
 
 	COMTRY
 	{
