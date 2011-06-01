@@ -77,14 +77,7 @@ public:
 		CString conn = connString();
 		const TCHAR* zsConn = conn;
 		zsConn += 4; // skip MGA=
-		TCHAR currentMgaPath[MAX_PATH];
-		TCHAR* tcfilename;
-		if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &tcfilename) || tcfilename == 0) {
-		} else {
-			filename = tcfilename;
-			*(tcfilename-1) = '\0';
-			dirname = currentMgaPath;
-		}
+		GetFullPathName(zsConn, filename, dirname);
 	}
 
 
