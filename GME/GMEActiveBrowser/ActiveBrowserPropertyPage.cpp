@@ -1548,11 +1548,8 @@ void CAggregatePropertyPage::AttachLibrary()
 		}
 		else // MGA is presumed in this case
 		{
-			// add extension
-			if( dlg.m_strConnString.Find( _T(".")) == -1) dlg.m_strConnString += _T(".mga");  
-
-			// add the 'MGA=' prefix
-			if( dlg.m_strConnString.Left(4) != _T("MGA=")) dlg.m_strConnString.Insert(0, _T("MGA="));
+			if (dlg.relativePath != "")
+				dlg.m_strConnString = dlg.relativePath;
 		}
 
 		MSGTRY {
@@ -1661,7 +1658,11 @@ void CAggregatePropertyPage::RefreshLibrary()
 				pMgaContext->BeginTransaction(false);
 					
 				long errs;
-				COMTHROW(ccpFolder->RefreshLibraryV3( CComBSTR( dlg.m_strConnString), dlg.m_bOptimized, &errs) );
+				if (dlg.relativePath != "") {
+					COMTHROW(ccpFolder->RefreshLibraryV3( CComBSTR( dlg.relativePath), dlg.m_bOptimized, &errs) );
+				} else {
+					COMTHROW(ccpFolder->RefreshLibraryV3( CComBSTR( dlg.m_strConnString), dlg.m_bOptimized, &errs) );
+				}
 				ccpFolder.Release();
 				pMgaContext->CommitTransaction();
 			}

@@ -16,6 +16,8 @@ class CAttachLibDlg : public CDialog
 public:
 	CString m_strCaption;
 	CString m_strParentConnection;
+	CString relativePath;
+	CString currentMgaPath;
 	CAttachLibDlg(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
@@ -23,6 +25,7 @@ public:
 	enum { IDD = IDD_ATTACH_LIB_DIALOG };
 	CString	m_strConnString;
 	BOOL    m_bOptimized;
+	BOOL    m_bRelativePath;
 	//}}AFX_DATA
 
 

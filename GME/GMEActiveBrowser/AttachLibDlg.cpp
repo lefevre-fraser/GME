@@ -25,6 +25,7 @@ CAttachLibDlg::CAttachLibDlg(CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CAttachLibDlg)
 	m_strConnString = _T("");
 	m_bOptimized = FALSE;
+	m_bRelativePath = TRUE;
 	//}}AFX_DATA_INIT
 }
 
@@ -35,6 +36,7 @@ void CAttachLibDlg::DoDataExchange(CDataExchange* pDX)
 	//{{AFX_DATA_MAP(CAttachLibDlg)
 	DDX_Text(pDX, IDC_CONN_STRING, m_strConnString);
 	DDX_Check(pDX, IDC_CHECKOPTIMIZED, m_bOptimized);
+	DDX_Check(pDX, IDC_CHECK_RELATIVE_PATH, m_bRelativePath);
 	//}}AFX_DATA_MAP
 }
 
@@ -51,27 +53,40 @@ END_MESSAGE_MAP()
 void CAttachLibDlg::OnOK() 
 {
 
-	if(!UpdateData(TRUE))return;
+	if(!UpdateData(TRUE)) return;
 	CDialog::OnOK();
+	
+	if (m_strConnString.Right(3).CompareNoCase(_T("mga")) == 0) {
+		CString mgaPath = m_strConnString;
+		if (m_strConnString.Left(4).CompareNoCase(_T("MGA=")) == 0) {
+			mgaPath = m_strConnString.Right(m_strConnString.GetLength() - 4);
+		}
+		if (m_bRelativePath) {
+			if (PathRelativePathTo(relativePath.GetBuffer(MAX_PATH), currentMgaPath, FILE_ATTRIBUTE_DIRECTORY, 
+				mgaPath, FILE_ATTRIBUTE_NORMAL)) {
+				relativePath.ReleaseBuffer();
+			} else {
+				relativePath.ReleaseBufferSetLength(0);
+			}
+		} else {
+			CString filename, dirname;
+			GetFullPathName(mgaPath, filename, dirname);
+			if (filename != "")
+				m_strConnString = _T("MGA=") + dirname + _T("\\") + filename;
+		}
+	}
 }
 
 void CAttachLibDlg::OnBrowse() 
 {
+	UpdateData(TRUE);
 
 	static TCHAR BASED_CODE szFilter[] = _T("Binary Project Files (*.mga)|*.mga|Multiuser Project Files (*.mgx)|*.mgx|All Files (*.*)|*.*||");
 
 	CFileDialog dlg(TRUE,_T("mga"),NULL,NULL,szFilter, this);
-	TCHAR currentMgaPath[MAX_PATH];
-	if (m_strParentConnection.GetLength() > 4 && m_strParentConnection.Left(4) == "MGA=") {
-		const TCHAR* zsConn = m_strParentConnection;
-		zsConn += 4; // skip MGA=
-		TCHAR* filename;
-		if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &filename) || filename == 0) {
-		} else {
-			*filename = _T('\0');
-			dlg.GetOFN().lpstrInitialDir = currentMgaPath;
-		}
-	}
+
+	if (currentMgaPath != "")
+		dlg.GetOFN().lpstrInitialDir = currentMgaPath;
 
 	if(dlg.DoModal()!=IDOK) return;
 
@@ -117,6 +132,17 @@ BOOL CAttachLibDlg::OnInitDialog()
 	{
 		// replace _T("Mga Connection String") with expanded path
 		ptr->SetWindowText( (LPCTSTR) hint);
+	}
+
+	if (m_strParentConnection.GetLength() > 4 && m_strParentConnection.Left(4) == "MGA=") {
+		const TCHAR* zsConn = m_strParentConnection;
+		zsConn += 4; // skip MGA=
+		TCHAR* filename;
+		if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath.GetBuffer(MAX_PATH), &filename) || filename == 0) {
+		} else {
+			*filename = _T('\0');
+		}
+		currentMgaPath.ReleaseBuffer();
 	}
 
 	CDialog::OnInitDialog();

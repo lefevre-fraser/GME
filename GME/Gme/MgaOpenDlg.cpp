@@ -109,31 +109,19 @@ CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
 		filters.Insert( 0, spec_filter);
 	}
 
-	const TCHAR* initialFile = NULL; // NULL or points into currentMgaPath
-	TCHAR currentMgaPath[MAX_PATH];
-	if (theApp.isMgaProj()) {
-		CString conn = theApp.connString();
-		const TCHAR* zsConn = conn;
-		zsConn += 4; // skip MGA=
-		TCHAR* filename;
-		if (!GetFullPathName(zsConn, MAX_PATH, currentMgaPath, &filename) || filename == 0) {
-		} else {
-			initialFile = filename;
-		}
-	}
-
-	CString conn;
-	CFileDialog dlg(flag_isopen ? TRUE : FALSE, NULL, initialFile, 
-			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | 
-			0, filters);
-
 	CString file, dir;
 	if (theApp.isMgaProj() && theApp.mgaProject)
 	{
 		theApp.getMgaPaths(file, dir);
-		if (dir != L"")
-			dlg.GetOFN().lpstrInitialDir = dir;
 	}
+
+	CString conn;
+	CFileDialog dlg(flag_isopen ? TRUE : FALSE, NULL, (file == _T("")) ? NULL : (LPCTSTR)file, 
+			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | 
+			0, filters);
+
+	if (dir != _T(""))
+		dlg.GetOFN().lpstrInitialDir = dir;
 
 	if( dlg.DoModal() == IDOK )	{
 		conn = CString(_T("MGA=")) + dlg.GetPathName();

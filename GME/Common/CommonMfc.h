@@ -240,6 +240,23 @@ static CString CEditGetLine(const CEdit& edit, int line=-1) {
 	return ret;
 }
 
+static void GetFullPathName(const CString& path, CString& filename, CString& dirname) {
+	TCHAR currentMgaPath[MAX_PATH];
+	TCHAR* tcfilename;
+	if (!GetFullPathName(path, MAX_PATH, currentMgaPath, &tcfilename) || tcfilename == 0) {
+	} else {
+		filename = tcfilename;
+		*(tcfilename-1) = '\0';
+		dirname = currentMgaPath;
+	}
+}
+
+static CString ConnStrToMgaPath(const CString& connStr) {
+	ASSERT(connStr.Left(4).CompareNoCase(_T("MGA=")) == 0);
+	return connStr.Right(connStr.GetLength() - 4);
+}
+
+
 // --------------------------- Error
 
 void DisplayError(const TCHAR *msg, HRESULT hr) NOTHROW;

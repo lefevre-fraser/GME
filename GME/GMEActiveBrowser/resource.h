@@ -40,6 +40,7 @@
 #define IDI_LIBRARY                     218
 #define IDC_CONNSTR                     220
 #define IDC_TAB1                        221
+#define IDC_CHECK_RELATIVE_PATH         222
 #define IDC_COMBO_SEARCH_AGGREGATE      1001
 #define IDC_TREE_INHERITANCE            1002
 #define IDC_TREE_AGGREGATE              1002
@@ -91,7 +92,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        220
 #define _APS_NEXT_COMMAND_VALUE         32813
-#define _APS_NEXT_CONTROL_VALUE         222
+#define _APS_NEXT_CONTROL_VALUE         223
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif

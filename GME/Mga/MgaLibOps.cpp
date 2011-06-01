@@ -12,6 +12,27 @@
 /*static*/ const wchar_t* Ozer::StorageMgr::INCLUDES_STR        = L"_includes";
 /*static*/ const wchar_t* Ozer::StorageMgr::INCLUDED_BY_STR     = L"_includedBy";
 
+std::wstring getConnStrForLibName(FCO* fco, const TCHAR* libname) {
+	std::wstring connStr = libname;
+	if (_tcsnicmp(connStr.c_str(), _T("MGA="), 4) != 0 && _tcsnicmp(connStr.c_str(), _T("MGX="), 4) != 0) {
+		CComPtr<IMgaProject> project;
+		COMTHROW(fco->get_Project(&project));
+		_bstr_t bconnStr;
+		COMTHROW(project->get_ProjectConnStr(bconnStr.GetAddress()));
+
+		TCHAR currentMgaPath[MAX_PATH];
+		TCHAR* tcfilename;
+		if (!GetFullPathName(static_cast<const TCHAR*>(bconnStr)+4, MAX_PATH, currentMgaPath, &tcfilename) || tcfilename == 0) {
+		} else {
+			*(tcfilename-1) = '\0';
+			TCHAR combined[MAX_PATH];
+			PathCombine(combined, currentMgaPath, connStr.c_str());
+			connStr = std::wstring(_T("MGA=")) + combined;
+		}
+	}
+	return connStr;
+}
+
 HRESULT FCO::get_LibraryName(BSTR *libname) {
 	COMTRY {
 		CHECK_OUTSTRPAR(libname);
@@ -334,7 +355,7 @@ void LibImgHelper::DoExtTreeCopy::operator ()( const CoreObj& orig, CoreObj& nob
 	} MGACOLL_ITERATE_END;
 }
 									   
-void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgroot, bool p_tolerateOldMga, bool *p_ptrIsOldMga, Typedefs::LIBMAP& p_results, Typedefs::LIBVEC& p_dependentLibs, CComBSTR& p_infoMsg) {
+void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgroot, bool p_tolerateOldMga, bool *p_ptrIsOldMga, Typedefs::LIBMAP& p_results, Typedefs::LIBVEC& p_dependentLibs, CComBSTR& p_infoMsg, const CComBSTR& libname) {
 	CComBSTR connstr = lw.getExpandedConnectionStr();
 	CComPtr<IMgaProject> p;
 	PointerFixup fixup;
@@ -503,7 +524,7 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 			LibImgHelper::deleteSuperfluousLibs( superfluous_libs, reporter);
 		}
 
-		libimgroot[ATTRID_NAME] = lw.getConnectionStr();
+		libimgroot[ATTRID_NAME] = libname;
 		libimgroot[ATTRID_PERMISSIONS] = LIBROOT_FLAG;
 		
 		//*************************************************
@@ -544,7 +565,8 @@ HRESULT FCO::doAttach( BSTR libname, VARIANT_BOOL ungroup, IMgaFolder **f) {
 
 		// 'self' here is the rootfolder of the project
 		Typedefs::LIBMAP top_libs;
-		LibWorker lw( mgaproject, libname, ungroup == VARIANT_TRUE);
+
+		LibWorker lw( mgaproject, CComBSTR(getConnStrForLibName(this, libname).c_str()), ungroup == VARIANT_TRUE);
 		SearchTool::m_optimized = lw.isOptimized();
 		LibImgHelper::recordLibs( false, self, top_libs); // consider existing toplibs only (self = project)
 		
@@ -562,7 +584,7 @@ HRESULT FCO::doAttach( BSTR libname, VARIANT_BOOL ungroup, IMgaFolder **f) {
 		bool is_old_lib( false);
 		Typedefs::LIBVEC dep_libs; // those libraries which are factored out
 		CComBSTR infmsg; // informative message about the lib pairs found
-		CreateLibraryImage(mgaproject, lw, libimgroot, accept_old_lib, &is_old_lib, top_libs, dep_libs, infmsg);
+		CreateLibraryImage(mgaproject, lw, libimgroot, accept_old_lib, &is_old_lib, top_libs, dep_libs, infmsg, CComBSTR(libname));
 		if( lw.isOptimized() && infmsg && infmsg.Length() > 0) // informative message about possible guid duplications in the library
 			reporter.show( infmsg, false);
 
@@ -724,8 +746,6 @@ void redo_derivs(CMgaProject *mgaproject, CoreObj &oldnode, CoreObj &newnode, bo
 	}
 }
 
-
-
 HRESULT FCO::doRefresh( BSTR libname, VARIANT_BOOL ungroup, long *ptrNumOfErrors) {
 	long placeholder;
 	if( !ptrNumOfErrors) // invalid ptr
@@ -746,7 +766,8 @@ HRESULT FCO::doRefresh( BSTR libname, VARIANT_BOOL ungroup, long *ptrNumOfErrors
 				COMTHROW(E_MGA_OP_REFUSED);
 			}
 
-			LibWorker lw( mgaproject, libname, ungroup  == VARIANT_TRUE);
+			std::wstring connStr = getConnStrForLibName(this, libname).c_str();
+			LibWorker lw( mgaproject, CComBSTR(connStr.c_str()), ungroup  == VARIANT_TRUE);
 			SearchTool::m_optimized = lw.isOptimized();
 
 			// examining toplevel libraries in project
@@ -822,7 +843,7 @@ HRESULT FCO::doRefresh( BSTR libname, VARIANT_BOOL ungroup, long *ptrNumOfErrors
 			bool is_old_lib_copy( false);
 			Typedefs::LIBVEC dep_libs; // those libraries which are factored out
 			CComBSTR infmsg;
-			CreateLibraryImage(mgaproject, lw, libimgroot, accept_old_lib, &is_old_lib_copy, lib_results, dep_libs, infmsg);
+			CreateLibraryImage(mgaproject, lw, libimgroot, accept_old_lib, &is_old_lib_copy, lib_results, dep_libs, infmsg, CComBSTR(libname));
 			if( lw.isOptimized() && infmsg && infmsg.Length() > 0) // informative message about possible guid duplications in the library
 				reporter.show( infmsg, false);
 	 
