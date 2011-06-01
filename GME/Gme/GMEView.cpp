@@ -2680,6 +2680,7 @@ void CGMEView::ModeChange()
 	CGuiFco::GrayOutFcos(children,pDoc->GetEditMode() == GME_VISUAL_MODE);
 	CGuiFco::GrayOutFcos(connections,pDoc->GetEditMode() == GME_VISUAL_MODE);
 	tmpConnectMode = false;
+	OnSetCursor(NULL, HTCLIENT, 0);
 	Invalidate();
 	DoPannWinRefresh();
 }
