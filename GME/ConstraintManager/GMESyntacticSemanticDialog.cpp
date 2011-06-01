@@ -87,40 +87,40 @@ BOOL CSyntacticSemanticDialog::OnInitDialog()
 
 	m_lstConstraints.SetImageList( &m_lstConstraintImages, LVSIL_SMALL );
 
-	int iLength = 3 * m_lstConstraints.GetStringWidth("Type") / 2;
-	m_lstConstraints.InsertColumn( 0, "Type", LVCFMT_LEFT, iLength, -1 );
-	iLength = 3 * m_lstConstraints.GetStringWidth("Context") / 2;
-	m_lstConstraints.InsertColumn( 1, "Context", LVCFMT_LEFT, iLength, 1 );
-	iLength = 3 * m_lstConstraints.GetStringWidth("Constraint(Definition)") / 2;
-	m_lstConstraints.InsertColumn( 2, "Name", LVCFMT_LEFT, iLength, 2 );
+	int iLength = 3 * m_lstConstraints.GetStringWidth(_T("Type")) / 2;
+	m_lstConstraints.InsertColumn( 0, _T("Type"), LVCFMT_LEFT, iLength, -1 );
+	iLength = 3 * m_lstConstraints.GetStringWidth(_T("Context")) / 2;
+	m_lstConstraints.InsertColumn( 1, _T("Context"), LVCFMT_LEFT, iLength, 1 );
+	iLength = 3 * m_lstConstraints.GetStringWidth(_T("Constraint(Definition)")) / 2;
+	m_lstConstraints.InsertColumn( 2, _T("Name"), LVCFMT_LEFT, iLength, 2 );
 
 	m_lstConstraints.SetExtendedStyle( LVS_EX_FULLROWSELECT );
 
 	m_lstErrors.SetImageList( &m_lstErrorImages, LVSIL_SMALL );
 
-	iLength = 3 * m_lstErrors.GetStringWidth("Code") / 2;
-	m_lstErrors.InsertColumn( 0, "Code", LVCFMT_LEFT, iLength, -1 );
-	iLength = 3 * m_lstErrors.GetStringWidth("Line") / 2;
-	m_lstErrors.InsertColumn( 1, "Ln.", LVCFMT_LEFT, iLength, 1 );
+	iLength = 3 * m_lstErrors.GetStringWidth(_T("Code")) / 2;
+	m_lstErrors.InsertColumn( 0, _T("Code"), LVCFMT_LEFT, iLength, -1 );
+	iLength = 3 * m_lstErrors.GetStringWidth(_T("Line")) / 2;
+	m_lstErrors.InsertColumn( 1, _T("Ln."), LVCFMT_LEFT, iLength, 1 );
 	/*
 	// This column is commented out because this features is not implemented yet
 	// Be careful with uncommenting -> column numbers
 
-	iLength = 3 * m_lstErrors.GetStringWidth("Column") / 2;
-	m_lstErrors.InsertColumn( 2, "Col.", LVCFMT_LEFT, iLength, 2 );
+	iLength = 3 * m_lstErrors.GetStringWidth(_T("Column")) / 2;
+	m_lstErrors.InsertColumn( 2, _T("Col."), LVCFMT_LEFT, iLength, 2 );
 	*/
 
-	iLength = 3 * m_lstErrors.GetStringWidth("Message") / 2;
-	m_lstErrors.InsertColumn( 2, "Message", LVCFMT_LEFT, iLength, 2 );
+	iLength = 3 * m_lstErrors.GetStringWidth(_T("Message")) / 2;
+	m_lstErrors.InsertColumn( 2, _T("Message"), LVCFMT_LEFT, iLength, 2 );
 
 	m_lstErrors.SetExtendedStyle( LVS_EX_FULLROWSELECT );
 
 	m_lstExpression.SetImageList( &m_lstLineImages, LVSIL_SMALL );
 
-	iLength = 3 * m_lstExpression.GetStringWidth("Line") / 2;
-	m_lstExpression.InsertColumn( 0, "Line", LVCFMT_RIGHT, iLength, -1 );
-	iLength = 3 * m_lstExpression.GetStringWidth("Expression") / 2;
-	m_lstExpression.InsertColumn( 1, "Expression", LVCFMT_LEFT, iLength, 1 );
+	iLength = 3 * m_lstExpression.GetStringWidth(_T("Line")) / 2;
+	m_lstExpression.InsertColumn( 0, _T("Line"), LVCFMT_RIGHT, iLength, -1 );
+	iLength = 3 * m_lstExpression.GetStringWidth(_T("Expression")) / 2;
+	m_lstExpression.InsertColumn( 1, _T("Expression"), LVCFMT_LEFT, iLength, 1 );
 
 	m_lstExpression.SetExtendedStyle( LVS_EX_FULLROWSELECT );
 
@@ -316,12 +316,12 @@ void CSyntacticSemanticDialog::OnClickConstraintsColumn( NMHDR* pNMHDR, LRESULT*
 
 		CStringArray arrText;
 		CString strExpression = OclCommonEx::Convert( ( iPos >= iFunctions ) ? m_vecConstraints[ iPos - iFunctions ]->GetText() : m_vecConstraintFunctions[ iPos ]->GetText() );
-		strExpression.Replace( "\r", "" );
-		strExpression.Replace( "\n", "\r\n" );
-		strExpression.Replace( "\t", "    " );
+		strExpression.Replace( _T("\r"), _T("") );
+		strExpression.Replace( _T("\n"), _T("\r\n") );
+		strExpression.Replace( _T("\t"), _T("    ") );
 		int iFPos = 0;
 		do {
-			iFPos = strExpression.Find( "\r\n" );
+			iFPos = strExpression.Find( _T("\r\n") );
 			if ( iFPos == -1 )
 				arrText.Add( strExpression );
 			else {
@@ -341,7 +341,7 @@ void CSyntacticSemanticDialog::OnClickConstraintsColumn( NMHDR* pNMHDR, LRESULT*
 			lvItem.iImage = 0;
 			lvItem.lParam = i;
 			CString strTemp;
-			strTemp.Format( "%d", i + 1 );
+			strTemp.Format( _T("%d"), i + 1 );
 			lvItem.pszText = strTemp.GetBuffer( strTemp.GetLength() );
 			m_lstExpression.InsertItem( &lvItem );
 
@@ -383,9 +383,9 @@ void CSyntacticSemanticDialog::OnClickConstraintsColumn( NMHDR* pNMHDR, LRESULT*
 			lvItem.lParam = i;
 			CString strTemp;
 			if ( ex.GetCode() == -1 )
-				strTemp = "None";
+				strTemp = _T("None");
 			else
-				strTemp.Format( "%d", ex.GetCode() );
+				strTemp.Format( _T("%d"), ex.GetCode() );
 			lvItem.pszText = strTemp.GetBuffer( strTemp.GetLength() );
 			m_lstErrors.InsertItem( &lvItem );
 
@@ -397,9 +397,9 @@ void CSyntacticSemanticDialog::OnClickConstraintsColumn( NMHDR* pNMHDR, LRESULT*
 			lvItem.mask = LVIF_TEXT;
 			lvItem.iSubItem = 1;
 			if ( ex.GetLine() < 0 )
-				strTemp = "?";
+				strTemp = _T("?");
 			else
-				strTemp.Format( "%d", ex.GetLine() );
+				strTemp.Format( _T("%d"), ex.GetLine() );
 			lvItem.pszText = strTemp.GetBuffer( strTemp.GetLength() );
 			m_lstErrors.SetItem( &lvItem );
 
@@ -413,7 +413,7 @@ void CSyntacticSemanticDialog::OnClickConstraintsColumn( NMHDR* pNMHDR, LRESULT*
 			// Be careful with uncommenting -> column and subitem numbers
 
 			lvItem.iSubItem = 2;
-			strTemp.Format( "%d", ex.GetColumn() );
+			strTemp.Format( _T("%d"), ex.GetColumn() );
 			lvItem.pszText = strTemp.GetBuffer( strTemp.GetLength() );
 			m_lstErrors.SetItem( &lvItem );
 
@@ -478,6 +478,6 @@ void CSyntacticSemanticDialog::OnClickConstraintsColumn( NMHDR* pNMHDR, LRESULT*
 			return ( eType1 < eType2 ) ? -1 : ( eType1 > eType2 ) ? 1 : 0;
 		}
 		if ( pSortInfo->iColumn == 1 )
-			return strcmp( strCtx1, strCtx2 );
-		return strcmp( strName1, strName2 );
+			return _tcscmp( strCtx1, strCtx2 );
+		return _tcscmp( strName1, strName2 );
 	}

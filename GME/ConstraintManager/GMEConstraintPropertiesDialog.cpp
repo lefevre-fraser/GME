@@ -155,9 +155,9 @@ BOOL CConstraintPropertiesDialog::OnInitDialog()
 		m_pageExpression.m_cmbContext.SetCurSel( iPos );
 
 		CString strExpression = OclCommonEx::Convert( m_spConstraintIn->GetExpression() );
-		strExpression.Replace( "\r", "" );
-		strExpression.Replace( "\n", "\r\n" );
-		strExpression.Replace( "\t", "    " );
+		strExpression.Replace( _T("\r"), _T("") );
+		strExpression.Replace( _T("\n"), _T("\r\n") );
+		strExpression.Replace( _T("\t"), _T("    ") );
 		m_pageExpression.m_edtExpression.SetWindowText( strExpression );
 		m_pageExpression.m_edtExpression.SetReadOnly( m_spConstraintIn->GetLocation() != OclGme::ConstraintBase::CL_PROJECT );
 	}
@@ -224,7 +224,7 @@ int CConstraintPropertiesDialog::InsertItem( objtype_enum eType, CString& strIte
 	cbi.pszText = strItem.GetBuffer( strItem.GetLength() );
 	cbi.cchTextMax = strItem.GetLength();
 	if ( eType != OBJTYPE_NULL ) {
-		cbi.iImage = ( eType != OBJTYPE_FOLDER ) ? eType + 10 : ( strItem ==  "meta::RootFolder" ) ? 9 : 10;
+		cbi.iImage = ( eType != OBJTYPE_FOLDER ) ? eType + 10 : ( strItem ==  _T("meta::RootFolder") ) ? 9 : 10;
 		cbi.iSelectedImage = cbi.iImage;
 		cbi.iOverlay = cbi.iImage;
 	}
@@ -273,14 +273,14 @@ void CConstraintPropertiesDialog::OnClickOK()
 	CString strName;
 	m_pageIdentity.m_edtName.GetWindowText( strName );
 	if ( strName.IsEmpty() ) {
-		AfxMessageBox( "Constraint cannot be untitled." );
+		AfxMessageBox( _T("Constraint cannot be untitled.") );
 		return;
 	}
 
 	CString strDescription;
 	m_pageIdentity.m_edtDescription.GetWindowText( strDescription );
 	if ( strDescription.IsEmpty() ) {
-		AfxMessageBox( "Constraint must have description." );
+		AfxMessageBox( _T("Constraint must have description.") );
 		return;
 	}
 
@@ -295,7 +295,7 @@ void CConstraintPropertiesDialog::OnClickOK()
 	CString strExpression;
 	m_pageExpression.m_edtExpression.GetWindowText( strExpression );
 	if ( strExpression.IsEmpty() ) {
-		AfxMessageBox( "Constraint must have expression." );
+		AfxMessageBox( _T("Constraint must have expression.") );
 		return;
 	}
 
@@ -315,7 +315,7 @@ void CConstraintPropertiesDialog::OnClickOK()
 		OclGme::ConstraintVector vecConstraints = (*it).second;
 		for ( unsigned int i = 0 ; i < vecConstraints.size() ; i++ )
 			if ( vecConstraints[ i ]->GetName() == OclCommonEx::Convert( strName ) && vecConstraints[ i ].Ptr() != m_spConstraintIn.Ptr() ) {
-				AfxMessageBox( "Context [ " + strContext + " ] already has a constraint called " + strName + "." );
+				AfxMessageBox( _T("Context [ ") + strContext + _T(" ] already has a constraint called ") + strName + _T(".") );
 				return;
 			}
 	}

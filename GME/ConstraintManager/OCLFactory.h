@@ -82,7 +82,7 @@ namespace OclImplementation
 
 			virtual			~TypeFactory() {};
 
-			virtual void	GetTypes( const std::string& strName, const std::string& strNSpace, std::vector< OclMeta::Type* >& vecTypes, std::string& nameRes ) = 0;
+			virtual void	GetTypes( const std::string& strName, const std::string& strNSpace, std::vector< std::unique_ptr<OclMeta::Type> >& vecTypes, std::string& nameRes ) = 0;
 
 			OclMeta::TypeManager* GetTypeManager() const
 			{

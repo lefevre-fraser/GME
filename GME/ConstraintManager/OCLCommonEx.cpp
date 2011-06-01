@@ -7,7 +7,6 @@
 #include "Solve4786.h"
 #include "OCLCommonEx.h"
 
-#include "Regexp.h"
 #include "TokenEx.h"
 #include <algorithm>
 #include <string>
@@ -23,9 +22,7 @@ namespace OclCommonEx {
 
 	std::string Convert( const CString& strIn )
 	{
-		CString strTemp( strIn );
-		std::string strOut( strTemp.GetBuffer( strTemp.GetLength() ) );
-		strTemp.ReleaseBuffer();
+		std::string strOut( static_cast<const char*>(CStringA(strIn)) );
 		return strOut;
 	}
 
@@ -45,11 +42,11 @@ namespace OclCommonEx {
 		bool bMultiple = false;
 		CStringArray arrElements;
 		CTokenEx	tokenizer;
-		tokenizer.Split( strCardinality, ",", arrElements );
+		tokenizer.Split( strCardinality, _T(","), arrElements );
 
 		for ( int i = 0 ; i < arrElements.GetSize() ; i++ ) {
 			CStringArray arrBounds;
-			tokenizer.Split( arrElements[i], "..", arrBounds);
+			tokenizer.Split( arrElements[i], _T(".."), arrBounds);
 
 			if ( arrBounds.GetSize() == 0 ) {
 				bError = true;
@@ -57,7 +54,7 @@ namespace OclCommonEx {
 			}
 			else if ( arrBounds.GetSize() == 1 ) {
 				int iMultiplicity = 0;
-				if ( _stscanf_s( (LPCTSTR) arrBounds[ 0 ], "%ld", &iMultiplicity ) != 1 ) {
+				if ( _stscanf_s( (LPCTSTR) arrBounds[ 0 ], _T("%ld"), &iMultiplicity ) != 1 ) {
 					bError = true;
 					break;
 				}
@@ -74,7 +71,7 @@ namespace OclCommonEx {
 				int iMultiplicityMin = 0;
 				int iMultiplicityMax = 0;
 
-				if( _stscanf_s( (LPCTSTR) arrBounds[ 0 ], "%ld", &iMultiplicityMin ) != 1 ) {
+				if( _stscanf_s( (LPCTSTR) arrBounds[ 0 ], _T("%ld"), &iMultiplicityMin ) != 1 ) {
 					bError = true;
 					break;
 				}
@@ -87,8 +84,8 @@ namespace OclCommonEx {
 						bMultiple = true;
 				}
 
-				if( _stscanf_s( (LPCTSTR) arrBounds[ 1 ], "%ld", &iMultiplicityMax ) != 1 ) {
-					if ( arrBounds[ 1 ] != "*" ) {
+				if( _stscanf_s( (LPCTSTR) arrBounds[ 1 ], _T("%ld"), &iMultiplicityMax ) != 1 ) {
+					if ( arrBounds[ 1 ] != _T("*") ) {
 						bError = true;
 						break;
 					}
@@ -425,7 +422,7 @@ namespace OclCommonEx {
 		if ( strKind == "FCO" )
 			return true;
 		short sAbstract;
-		if ( ! SUCCEEDED( spFCO->get_BoolAttrByName( CComBSTR( "IsAbstract" ), &sAbstract ) ) )
+		if ( ! SUCCEEDED( spFCO->get_BoolAttrByName( CComBSTR( L"IsAbstract" ), &sAbstract ) ) )
 			return false;
 		return ( sAbstract == 0 ) ? false : true;
 	}
@@ -693,13 +690,13 @@ namespace OclCommonEx {
 				CString strMetaRefs;
 				metaref_type ref;
 				COMTHROW( vecMetas[ i ]->get_MetaRef( &ref ) );
-				strMetaRefs.Format( "#%d , ", ref );
+				strMetaRefs.Format( _T("#%d , "), ref );
 				CComPtr<IMgaMetaRoles> spRoles;
 				COMTHROW( spFCO->get_UsedInRoles( &spRoles ) );
 				MGACOLL_ITERATE( IMgaMetaRole, spRoles ) {
 					COMTHROW( MGACOLL_ITER->get_MetaRef( &ref ) );
 					CString strTemp;
-					strTemp.Format( "#%d , ", ref );
+					strTemp.Format( _T("#%d , "), ref );
 					strMetaRefs += strTemp;
 				} MGACOLL_ITERATE_END;
 

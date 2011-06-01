@@ -22,8 +22,8 @@ namespace OclBasic
 	std::string PrintCollection( const std::string& strTypeName, const OclMeta::ObjectVector& vecElements )
 	{
 		CString chBuffer;
-		chBuffer.Format( "%lu", vecElements.size() );
-		return strTypeName + " { size: " + std::string( chBuffer ) + "; } ";
+		chBuffer.Format( _T("%lu"), vecElements.size() );
+		return strTypeName + " { size: " + std::string( CStringA(chBuffer) ) + "; } ";
 		/*
 		std::string strObject = strTypeName + " { " + std::string( chBuffer ) + " , [ ";
 		for ( int i = 0 ; i < vecElements.size() ; i++ ) {
@@ -265,7 +265,7 @@ namespace OclBasic
 	std::string Real::Print() const
 	{
 		char chBuffer[ 100 ];
-		_stprintf_s( chBuffer, "%lf", m_Value );
+		sprintf_s( chBuffer, "%lf", m_Value );
 		return "ocl::Real { " + std::string( chBuffer ) + " }";
 	}
 
@@ -319,7 +319,7 @@ namespace OclBasic
 		double lValue;
 		Real::GetValue( lValue );
 		char chBuffer[ 100 ];
-		_stprintf_s( chBuffer, "%ld", (long) lValue );
+		sprintf_s( chBuffer, "%ld", (long) lValue );
 		return "ocl::Integer { " + std::string( chBuffer ) + " }";
 	}
 

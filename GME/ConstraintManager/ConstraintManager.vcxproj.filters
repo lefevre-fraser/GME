@@ -132,9 +132,6 @@
     <ClCompile Include="OCLTypeExGMEEC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Regexp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -306,9 +303,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OclViolation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Regexp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">

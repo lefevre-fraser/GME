@@ -8,6 +8,7 @@
 #ifndef OCLTypeExBasic_h
 #define OCLTypeExBasic_h
 
+#include "StdAfx.h"
 #include "OCLCommon.h"
 #include "OCLFactory.h"
 #include "OCLType.h"
@@ -205,7 +206,7 @@ namespace OclBasic
 		: public OclImplementation::TypeFactory
 	{
 		public :
-			virtual void GetTypes( const std::string& strName, const std::string& strNSpace, std::vector<OclMeta::Type*>& vecTypes, std::string& nameRes );
+			virtual void GetTypes( const std::string& strName, const std::string& strNSpace, std::vector<std::unique_ptr<OclMeta::Type>>& vecTypes, std::string& nameRes );
 	};
 
 }; // namespace OclBasic

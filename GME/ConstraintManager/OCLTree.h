@@ -8,6 +8,7 @@
 #ifndef OCLTree_h
 #define OCLTree_h
 
+#include "StdAfx.h"
 #include "OCLCommon.h"
 #include "OCLException.h"
 #include "OCLObject.h"

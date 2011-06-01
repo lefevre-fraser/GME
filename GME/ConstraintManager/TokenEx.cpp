@@ -122,14 +122,14 @@ void CTokenEx::SplitPath (BOOL UsingDirsOnly, CString Path, CString& Drive, CStr
 	int nSecond;
 
 	// Look for a UNC Name!
-	if (Path.Left(2) == "\\\\") {
-		int nFirst = Path.Find("\\",3);
-		nSecond = Path.Find("\\",nFirst + 1);
+	if (Path.Left(2) == _T("\\\\")) {
+		int nFirst = Path.Find(_T("\\"),3);
+		nSecond = Path.Find(_T("\\"),nFirst + 1);
 		if (nSecond == -1) {
 			Drive = Path;
-			Dir = "";
-			FName = "";
-			Ext = "";
+			Dir = _T("");
+			FName = _T("");
+			Ext = _T("");
 		}
 		else if (nSecond > nFirst)
 			Drive = Path.Left(nSecond);
@@ -141,15 +141,15 @@ void CTokenEx::SplitPath (BOOL UsingDirsOnly, CString Path, CString& Drive, CStr
 
 	if (UsingDirsOnly) {
 		Dir = Path.Right((Path.GetLength() - nSecond) - 1);
-		FName = "";
-		Ext = "";
+		FName = _T("");
+		Ext = _T("");
 	}
 	else {
 		int nDirEnd = Path.ReverseFind('\\');
 		if (nDirEnd == Path.GetLength()) {
-			Dir = "";
-			FName = "";
-			Ext = "";
+			Dir = _T("");
+			FName = _T("");
+			Ext = _T("");
 		}
 		else {
 
@@ -160,7 +160,7 @@ void CTokenEx::SplitPath (BOOL UsingDirsOnly, CString Path, CString& Drive, CStr
 				
 				if (nDirEnd > nFileEnd) {
 					FName = Path.Right(Path.GetLength() - nDirEnd);
-					Ext = "";
+					Ext = _T("");
 				}
 				else {
 					FName = Path.Mid(nDirEnd + 1, (nFileEnd - nDirEnd) - 1);
@@ -169,7 +169,7 @@ void CTokenEx::SplitPath (BOOL UsingDirsOnly, CString Path, CString& Drive, CStr
 			}
 			else {
 				FName = Path.Right((Path.GetLength() - nDirEnd) - 1);
-				Ext = "";
+				Ext = _T("");
 			}
 		}
 	}

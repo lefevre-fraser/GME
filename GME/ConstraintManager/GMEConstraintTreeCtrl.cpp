@@ -28,7 +28,7 @@ int static CALLBACK SpecialCompare( LPARAM lParam1, LPARAM lParam2, LPARAM lPara
 		return -1;
 	if ( iImNum1 > iImNum2 )
 		return 1;
-	return strcmp( strCaption1, strCaption2 );
+	return _tcscmp( strCaption1, strCaption2 );
 }
 
 //##############################################################################################################################################

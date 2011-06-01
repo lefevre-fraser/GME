@@ -20,7 +20,7 @@ namespace OclMeta
 	class CompoundType;
 	class TypeManager;
 
-	typedef std::vector< Type* > TypeVector;
+	typedef std::vector< std::unique_ptr<Type> > TypeVector;
 
 	union UCallResult
 	{

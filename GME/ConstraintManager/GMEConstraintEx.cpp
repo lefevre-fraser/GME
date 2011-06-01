@@ -166,13 +166,12 @@ namespace OclGme
 
 		COMTHROW( spRegNode->get_SubNodeByName( CComBSTR( "Priority" ), &spNode ) );
 		COMTHROW( spNode->get_Value( PutOut( strTemp ) ) );
-		m_lPriority = atol( strTemp.GetBuffer( strTemp.GetLength() ) );
+		m_lPriority = _ttol( strTemp );
 		if ( ! vecLibPath.empty() )
 			SetType( ( m_lPriority == 1 ) ? CT_CRITICAL_LIBRARY : CT_NON_CRITICAL_LIBRARY, vecLibPath );
 		else
 			SetType( ( m_lPriority == 1 ) ? CT_CRITICAL_USER : CT_NON_CRITICAL_USER );
 
-		strTemp.ReleaseBuffer();
 		strTemp.Empty();
 		spNode = NULL;
 
@@ -200,10 +199,9 @@ namespace OclGme
 
 		COMTHROW( spRegNode->get_SubNodeByName( CComBSTR( "EventMask" ), &spNode ) );
 		COMTHROW( spNode->get_Value( PutOut( strTemp ) ) );
-		char* pchStop;
-		m_ulEventMask = strtoul( strTemp.GetBuffer( strTemp.GetLength() ), &pchStop, 10 );
+		TCHAR* pchStop;
+		m_ulEventMask = _tcstoul( strTemp, &pchStop, 10 );
 
-		strTemp.ReleaseBuffer();
 		strTemp.Empty();
 		spNode = NULL;
 
@@ -263,18 +261,18 @@ namespace OclGme
 		CComPtr<IMgaRegNode> spNode;
 		CString strTemp;
 
-		COMTHROW( spRegNode->get_SubNodeByName( CComBSTR( "EventMask" ), &spNode ) );
-		strTemp.Format( "%d", m_ulEventMask );
+		COMTHROW( spRegNode->get_SubNodeByName( CComBSTR( L"EventMask" ), &spNode ) );
+		strTemp.Format( _T("%d"), m_ulEventMask );
 		COMTHROW( spNode->put_Value( CComBSTR( strTemp ) ) );
 		strTemp.Empty();
 		spNode = NULL;
 
-		COMTHROW( spRegNode->get_SubNodeByName( CComBSTR( "Description" ), &spNode ) );
+		COMTHROW( spRegNode->get_SubNodeByName( CComBSTR( L"Description" ), &spNode ) );
 		COMTHROW( spNode->put_Value( CComBSTR( OclCommonEx::Convert( m_strMessage ) ) ) );
 		spNode = NULL;
 
-		COMTHROW( spRegNode->get_SubNodeByName( CComBSTR( "Priority" ), &spNode ) );
-		strTemp.Format( "%d", m_lPriority );
+		COMTHROW( spRegNode->get_SubNodeByName( CComBSTR( L"Priority" ), &spNode ) );
+		strTemp.Format( _T("%d"), m_lPriority );
 		COMTHROW( spNode->put_Value( CComBSTR( strTemp ) ) );
 		strTemp.Empty();
 		spNode = NULL;
@@ -382,7 +380,7 @@ namespace OclGme
 		: ConstraintBase()
 	{
 		CString strTemp = OclCommonEx::Convert( strParameterList );
-		strTemp.Replace( ",", ";" );
+		strTemp.Replace( _T(","), _T(";") );
 		m_strParameterList = OclCommonEx::Convert( strTemp );
 		Trim( m_strParameterList );
 
@@ -401,19 +399,19 @@ namespace OclGme
 		m_spFCO = spFCO;
 
 		CString strParameterList;
-		COMTHROW( spFCO->get_StrAttrByName( CComBSTR( "CFuncParamList" ), PutOut( strParameterList ) ) );
-		strParameterList.Replace( ",", ";" );
+		COMTHROW( spFCO->get_StrAttrByName( CComBSTR( L"CFuncParamList" ), PutOut( strParameterList ) ) );
+		strParameterList.Replace( _T(","), _T(";") );
 		m_strParameterList = OclCommonEx::Convert( strParameterList );
 		Trim( m_strParameterList );
 
 		CString strExpression;
-		COMTHROW( spFCO->get_StrAttrByName( CComBSTR( "CFuncDefinition" ), PutOut( strExpression ) ) );
+		COMTHROW( spFCO->get_StrAttrByName( CComBSTR( L"CFuncDefinition" ), PutOut( strExpression ) ) );
 		m_strExpression = OclCommonEx::Convert( strExpression );
 		Trim( m_strExpression );
 
 		CString strAttrStereotype;
-		COMTHROW( spFCO->get_StrAttrByName( CComBSTR( "CFuncStereotype" ), PutOut( strAttrStereotype ) ) );
-		SetType( ( strAttrStereotype == "attribute" ) ? ConstraintBase::CT_ATTRIBUTE_META : ConstraintBase::CT_METHOD_META );
+		COMTHROW( spFCO->get_StrAttrByName( CComBSTR( L"CFuncStereotype" ), PutOut( strAttrStereotype ) ) );
+		SetType( ( strAttrStereotype == _T("attribute") ) ? ConstraintBase::CT_ATTRIBUTE_META : ConstraintBase::CT_METHOD_META );
 		std::string strStereotype = " def" + OclCommonEx::Convert( strAttrStereotype ) + " ";
 
 		std::string strName = OclCommonEx::GetObjectName( spFCO.p );
@@ -459,18 +457,18 @@ namespace OclGme
 			strFunctionData = strFunctionData.Right( strFunctionData.GetLength() - 8 );
 			strFunctionData.TrimLeft();
 
-			int iPos = strFunctionData.Find( "(" );
+			int iPos = strFunctionData.Find( _T("(") );
 			if ( iPos != -1 ) {
 				strTemp = strFunctionData.Left( iPos );
 				strTemp.TrimLeft(); strTemp.TrimRight();
 				strName = OclCommonEx::Convert( strTemp );
 
 				strFunctionData = strFunctionData.Right( strFunctionData.GetLength() - iPos - 1 );
-				iPos = strFunctionData.Find( ")" );
+				iPos = strFunctionData.Find( _T(")") );
 				if ( iPos != -1 ) {
 					strTemp = strFunctionData.Left( iPos );
 					strTemp.TrimLeft(); strTemp.TrimRight();
-					strTemp.Replace( ",", ";" );
+					strTemp.Replace( _T(","), _T(";") );
 					m_strParameterList = OclCommonEx::Convert( strTemp );
 
 					strFunctionData = strFunctionData.Right( strFunctionData.GetLength() - iPos - 1 );
@@ -517,11 +515,11 @@ namespace OclGme
 			strFunctionData = strFunctionData.Right( strFunctionData.GetLength() - iPos - 1 );
 		}
 
-		iPos = strFunctionData.Find( ';' );
+		iPos = strFunctionData.Find( _T(';') );
 		if ( iPos != -1 ) {
 			strTemp = strFunctionData.Left( iPos );
 			strTemp.TrimLeft(); strTemp.TrimRight();
-			strTemp.Replace( ",", ";" );
+			strTemp.Replace( _T(","), _T(";") );
 			m_strParameterList = OclCommonEx::Convert( strTemp );
 			strFunctionData = strFunctionData.Right( strFunctionData.GetLength() - iPos - 1 );
 		}

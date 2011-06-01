@@ -237,8 +237,7 @@ namespace OclGmeCM
 		if ( strTemp.IsEmpty() )
 			m_infoEvaluation.iViolationCount = -2;
 		else {
-			m_infoEvaluation.iViolationCount = atoi( strTemp.GetBuffer( strTemp.GetLength() ) );
-			strTemp.ReleaseBuffer();
+			m_infoEvaluation.iViolationCount = _ttoi( strTemp );
 			if ( m_infoEvaluation.iViolationCount == 0 || m_infoEvaluation.iViolationCount < -2 || m_infoEvaluation.iViolationCount > 999 )
 				m_infoEvaluation.iViolationCount = -2;
 		}
@@ -250,10 +249,9 @@ namespace OclGmeCM
 		if ( strTemp.IsEmpty() )
 			m_infoEvaluation.iModelDepth = 0; // 1; // terge
 		else {
-			m_infoEvaluation.iModelDepth = atoi( strTemp.GetBuffer( strTemp.GetLength() ) );
+			m_infoEvaluation.iModelDepth = _ttoi( strTemp );
 			if ( m_infoEvaluation.iModelDepth < -1 || m_infoEvaluation.iModelDepth > 1 )
 				m_infoEvaluation.iModelDepth = -1;
-			strTemp.ReleaseBuffer();
 		}
 	}
 
@@ -284,10 +282,10 @@ namespace OclGmeCM
 		strTemp = ( info.bEnabledTracking ) ? "yes" : "no";
 		COMTHROW( spRootFolder->put_RegistryValue( CComBSTR( "ConstraintManagerSettings/Tracking" ), CComBSTR( strTemp ) ) );
 
-		strTemp.Empty(); strTemp.Format( "%d", info.iViolationCount );
+		strTemp.Empty(); strTemp.Format( _T("%d"), info.iViolationCount );
 		COMTHROW( spRootFolder->put_RegistryValue( CComBSTR( "ConstraintManagerSettings/ViolationCount" ), CComBSTR( strTemp ) ) );
 
-		strTemp.Empty(); strTemp.Format( "%d", info.iModelDepth );
+		strTemp.Empty(); strTemp.Format( _T("%d"), info.iModelDepth );
 		COMTHROW( spRootFolder->put_RegistryValue( CComBSTR( "ConstraintManagerSettings/ModelDepth" ), CComBSTR( strTemp ) ) );
 	}
 
@@ -309,7 +307,7 @@ namespace OclGmeCM
 			COMTHROW( MGACOLL_ITER->get_Type( &eType ) );
 			if ( eType == CONSTRAINT_TYPE_FUNCTION ) {
 				OclGme::SpConstraintFunction spConstraintFunction( new OclGme::ConstraintFunction( MGACOLL_ITER ) );
-				spConstraintFunction->SetNamespace( (LPCTSTR) strNmspc);
+				spConstraintFunction->SetNamespace( std::string(CStringA(strNmspc)));
 				spConstraintFunction->Register( m_pTreeManager );
 				vecFounds.push_back( spConstraintFunction );
 			}
@@ -458,7 +456,7 @@ namespace OclGmeCM
 				COMTHROW( MGACOLL_ITER->get_Type( &eType ) );
 				if ( eType != CONSTRAINT_TYPE_FUNCTION ) {
 					OclGme::SpConstraint spConstraint( new OclGme::Constraint( strName, MGACOLL_ITER ) );
-					spConstraint->SetNamespace( (LPCTSTR) strNmspc);
+					spConstraint->SetNamespace( std::string(CStringA(strNmspc)));
 					spConstraint->Register( m_pTreeManager );
 					vecFounds.push_back( spConstraint );
 				}

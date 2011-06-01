@@ -229,10 +229,10 @@ namespace OclGmeCM
 		public :
 							TypeFactory( CComPtr<IMgaProject> spProject );
 
-			virtual  void 	GetTypes( const std::string& strName, const std::string& strNSpace, std::vector<OclMeta::Type*>& vecTypes, std::string& strNameRes );
+			virtual  void 	GetTypes( const std::string& strName, const std::string& strNSpace, std::vector<std::unique_ptr<OclMeta::Type>>& vecTypes, std::string& strNameRes );
 		private :
-					void 	GetStereotypes( const std::string& strName, std::vector<OclMeta::Type*>& vecTypes );
-					void 	GetDynamicTypes( const std::string& strName, std::vector<OclMeta::Type*>& vecTypes, std::string& strNameResult );
+					void 	GetStereotypes( const std::string& strName, std::vector<std::unique_ptr<OclMeta::Type>>& vecTypes );
+					void 	GetDynamicTypes( const std::string& strName, std::vector<std::unique_ptr<OclMeta::Type>>& vecTypes, std::string& strNameResult );
 	};
 
 }; // namespace OclGmeCM

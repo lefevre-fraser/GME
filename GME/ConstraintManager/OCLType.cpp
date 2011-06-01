@@ -251,18 +251,16 @@ namespace OclMeta
 			}
 			else {
 				if ( vecTypes.size() > 1 ) {
-					DisposeVector<Type>( vecTypes );
 					typeResult.bIsValid = false;
 					typeResult.uResult.pException = new OclCommon::Exception( OclCommon::Exception::ET_SEMANTIC, EX_TYPE_AMBIGUOUS, strName );
 				}
 				else {
 					typeResult.bIsValid = true;
-					typeResult.uResult.pType = vecTypes[ 0 ];
+					typeResult.uResult.pType = vecTypes[ 0 ].release();
 				}
 			}
 		}
 		catch ( OclCommon::Exception ex ) {
-			DisposeVector<Type>( vecTypes );
 			typeResult.bIsValid = false;
 			typeResult.uResult.pException = new OclCommon::Exception( ex );
 		}

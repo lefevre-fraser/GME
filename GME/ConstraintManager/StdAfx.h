@@ -46,6 +46,12 @@ extern CComModule _Module;
 
 #define XASSERT(x) if(!(x)) COMTHROW( ((x), -1))
 
+#include "string"
+#ifdef UNICODE
+typedef std::wstring tstring;
+#else
+typedef std::string tstring;
+#endif
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

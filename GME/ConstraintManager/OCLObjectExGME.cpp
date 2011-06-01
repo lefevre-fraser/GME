@@ -333,7 +333,7 @@ namespace OclGmeCM
 	{
 		CString strName;
 		COMTHROW( m_Value->get_Name( PutOut( strName ) ) );
-		return std::string("gme::Project { name: ") + (LPCTSTR) strName + "; }";
+		return std::string("gme::Project { name: ") + std::string(CStringA(strName)) + "; }";
 	}
 
 }; // namespace OclGmeCM

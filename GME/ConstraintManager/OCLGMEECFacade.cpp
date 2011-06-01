@@ -198,7 +198,7 @@ namespace OclGmeEC
 			std::string strType = OclCommonEx::GetObjectName( vecFCOs[ i ].p );
 			if ( strType.empty() ) {
 				char chNum[ 100 ];
-				_stprintf_s( chNum, "%lu", i );
+				sprintf_s( chNum, "%lu", i );
 				strType = "UntitledClass_" + std::string( chNum );
 			}
 			OclGme::SpConstraint pConstraint( new OclGme::Constraint( strType, spConstraint, bFieldsMandatory ) );

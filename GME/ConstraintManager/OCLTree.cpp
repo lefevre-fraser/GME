@@ -97,9 +97,8 @@ namespace OclTree
 		}
 		bool bValid = true;
 		for ( unsigned int i = 0 ; i < vecType.size() ; i++ ) {
-			OclMeta::Type* pType = NULL;
 			try {
-				pType = m_pManager->GetTypeManager()->GetType( vecType[ i ], context.m_namespace);
+				OclMeta::Type* pType = m_pManager->GetTypeManager()->GetType( vecType[ i ], context.m_namespace);
 				if ( i != vecType.size() - 1 ) {
 					if ( ! pType->IsCompound() ) {
 						ADDEX( EXCEPTION1( EX_TYPE_ISNT_COMPOUND, vecType[ i ], position ) );

@@ -56,11 +56,11 @@ BOOL CSmallMessageBox::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	m_lblMessage.SetWindowText( "No Constraint violations were found." );
+	m_lblMessage.SetWindowText( _T("No Constraint violations were found.") );
 	m_ctrlProgress.SetRange32( 0, 100 );
 	m_ctrlProgress.SetPos( 100 );
 	m_btnOK.EnableWindow( TRUE );
-	m_btnOK.SetWindowText( "OK" );
+	m_btnOK.SetWindowText( _T("OK") );
 	m_btnOK.ShowWindow( SW_SHOW );
 	m_bModeless = false;
 
@@ -70,7 +70,7 @@ BOOL CSmallMessageBox::OnInitDialog()
 void CSmallMessageBox::OnClickOK()
 {
 	if (m_bModeless) {
-		int nRet = ::AfxMessageBox("Are you sure you want to abort the constraint checking?", MB_YESNO | MB_ICONWARNING);
+		int nRet = ::AfxMessageBox(_T("Are you sure you want to abort the constraint checking?"), MB_YESNO | MB_ICONWARNING);
 		if (nRet == IDYES)
 			m_bCloseRequested = true;
 		else
@@ -109,10 +109,10 @@ void CSmallMessageBox::DoModeless( int iRange )
 	AfxGetApp()->DoWaitCursor( 1 );
 	Create( IDD_PROGRESS_DIALOG );
 	ShowWindow( SW_SHOW );
-	m_lblMessage.SetWindowText( "Evaluation of Constraints is in progress...." );
+	m_lblMessage.SetWindowText( _T("Evaluation of Constraints is in progress....") );
 	m_ctrlProgress.SetRange32( 0, iRange );
 	m_ctrlProgress.SetPos( 0 );
-	m_btnOK.SetWindowText( "Abort" );
+	m_btnOK.SetWindowText( _T("Abort") );
 	m_bModeless = true;
 }
 

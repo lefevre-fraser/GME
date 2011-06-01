@@ -40,7 +40,7 @@ CViolationDialog::CViolationDialog( bool bExpanded, CWnd* pParent /*=NULL*/, IMg
 
 	COMTRY 
 	{	
-		CComBSTR app("GME.Application");
+		CComBSTR app(L"GME.Application");
 		CComPtr<IMgaClient> client;
 		COMTHROW(m_spProject->GetClientByName((BSTR)app, &client));
 
@@ -125,49 +125,49 @@ BOOL CViolationDialog::OnInitDialog()
 
 	m_lstConstraints.SetImageList( &m_lstConstraintImages, LVSIL_SMALL );
 
-	int iLength = 3 * m_lstConstraints.GetStringWidth("Type") / 2;
-	m_lstConstraints.InsertColumn( 0, "Type", LVCFMT_LEFT, iLength, -1 );
-	iLength = 3 * m_lstConstraints.GetStringWidth("Context") / 2;
-	m_lstConstraints.InsertColumn( 1, "Context", LVCFMT_LEFT, iLength, 1 );
-	iLength = 3 * m_lstConstraints.GetStringWidth("Name") / 2;
-	m_lstConstraints.InsertColumn( 2, "Name", LVCFMT_LEFT, iLength, 2 );
+	int iLength = 3 * m_lstConstraints.GetStringWidth(_T("Type")) / 2;
+	m_lstConstraints.InsertColumn( 0, _T("Type"), LVCFMT_LEFT, iLength, -1 );
+	iLength = 3 * m_lstConstraints.GetStringWidth(_T("Context")) / 2;
+	m_lstConstraints.InsertColumn( 1, _T("Context"), LVCFMT_LEFT, iLength, 1 );
+	iLength = 3 * m_lstConstraints.GetStringWidth(_T("Name")) / 2;
+	m_lstConstraints.InsertColumn( 2, _T("Name"), LVCFMT_LEFT, iLength, 2 );
 
 	m_lstConstraints.SetExtendedStyle( LVS_EX_FULLROWSELECT );
 
 	m_lstErrors.SetImageList( &m_lstErrorImages, LVSIL_SMALL );
 
-	iLength = 3 * m_lstErrors.GetStringWidth("Line") / 2;
-	m_lstErrors.InsertColumn( 0, "Ln.", LVCFMT_LEFT, iLength, -1 );
+	iLength = 3 * m_lstErrors.GetStringWidth(_T("Line")) / 2;
+	m_lstErrors.InsertColumn( 0, _T("Ln."), LVCFMT_LEFT, iLength, -1 );
 	/*
 	// This column is commented out because this features is not implemented yet
 	// Be careful with uncommenting -> column numbers
 
-	iLength = 3 * m_lstErrors.GetStringWidth("Column") / 2;
-	m_lstErrors.InsertColumn( 2, "Col.", LVCFMT_LEFT, iLength, 1 );
+	iLength = 3 * m_lstErrors.GetStringWidth(_T("Column")) / 2;
+	m_lstErrors.InsertColumn( 2, _T("Col."), LVCFMT_LEFT, iLength, 1 );
 	*/
 
-	iLength = 3 * m_lstErrors.GetStringWidth("Message") / 2;
-	m_lstErrors.InsertColumn( 1, "Message", LVCFMT_LEFT, iLength, 1 );
-	iLength = 3 * m_lstErrors.GetStringWidth("Signature") / 2;
-	m_lstErrors.InsertColumn( 2, "Signature", LVCFMT_LEFT, iLength, 2 );
+	iLength = 3 * m_lstErrors.GetStringWidth(_T("Message")) / 2;
+	m_lstErrors.InsertColumn( 1, _T("Message"), LVCFMT_LEFT, iLength, 1 );
+	iLength = 3 * m_lstErrors.GetStringWidth(_T("Signature")) / 2;
+	m_lstErrors.InsertColumn( 2, _T("Signature"), LVCFMT_LEFT, iLength, 2 );
 
 	m_lstErrors.SetExtendedStyle( LVS_EX_FULLROWSELECT );
 
 	m_lstExpression.SetImageList( &m_lstLineImages, LVSIL_SMALL );
 
-	iLength = 3 * m_lstExpression.GetStringWidth("Line") / 2;
-	m_lstExpression.InsertColumn( 0, "Line", LVCFMT_RIGHT, iLength, -1 );
-	iLength = 3 * m_lstExpression.GetStringWidth("Expression") / 2;
-	m_lstExpression.InsertColumn( 1, "Expression", LVCFMT_LEFT, iLength, 1 );
+	iLength = 3 * m_lstExpression.GetStringWidth(_T("Line")) / 2;
+	m_lstExpression.InsertColumn( 0, _T("Line"), LVCFMT_RIGHT, iLength, -1 );
+	iLength = 3 * m_lstExpression.GetStringWidth(_T("Expression")) / 2;
+	m_lstExpression.InsertColumn( 1, _T("Expression"), LVCFMT_LEFT, iLength, 1 );
 
 	m_lstExpression.SetExtendedStyle( LVS_EX_FULLROWSELECT );
 
 	m_lstObjects.SetImageList( &m_lstLineImages, LVSIL_SMALL );
 
-	iLength = 3 * m_lstObjects.GetStringWidth("Variable") / 2;
-	m_lstObjects.InsertColumn( 0, "Variable", LVCFMT_RIGHT, iLength, -1 );
-	iLength = 3 * m_lstObjects.GetStringWidth("Object") / 2;
-	m_lstObjects.InsertColumn( 1, "Object", LVCFMT_LEFT, iLength, 1 );
+	iLength = 3 * m_lstObjects.GetStringWidth(_T("Variable")) / 2;
+	m_lstObjects.InsertColumn( 0, _T("Variable"), LVCFMT_RIGHT, iLength, -1 );
+	iLength = 3 * m_lstObjects.GetStringWidth(_T("Object")) / 2;
+	m_lstObjects.InsertColumn( 1, _T("Object"), LVCFMT_LEFT, iLength, 1 );
 
 	m_lstObjects.SetExtendedStyle( LVS_EX_FULLROWSELECT );
 
@@ -252,7 +252,7 @@ void CViolationDialog::OnClickExpand()
 {
 	m_bExpanded = ! m_bExpanded;
 
-	m_btnExpand.SetWindowText( ( m_bExpanded ) ? "Collapse" : "Expand" );
+	m_btnExpand.SetWindowText( ( m_bExpanded ) ? _T("Collapse") : _T("Expand") );
 
 	CRect rectEx;
 	m_btnExpand.GetWindowRect( rectEx );
@@ -437,22 +437,22 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 				CComBSTR bstr, id, nm;
 				COMTHROW( fco->get_ID( &id));
 				COMTHROW( fco->get_Name( &nm));
-				bstr.Append("Constraint Violation: <A HREF=\"mga:");
+				bstr.Append(_T("Constraint Violation: <A HREF=\"mga:"));
 				bstr.AppendBSTR( id);
-				bstr.Append("\">");
+				bstr.Append(_T("\">"));
 				bstr.AppendBSTR( nm);
-				bstr.Append("</A>: ");
+				bstr.Append(_T("</A>: "));
 				bstr.Append(item.spConstraint.Ptr()->GetMessage().c_str());
 				COMTHROW(m_oleapp->ConsoleMessage(bstr, MSG_ERROR));
 			}
 			catch(hresult_exception &)// in case the constraint is not attached to any fco in the metamodel
 			{                         // the constraint becomes project scoped, thus QueryInterface fails
 				CComBSTR bstr;
-				bstr.Append("Constraint ");
+				bstr.Append(_T("Constraint "));
 				bstr.Append(item.spConstraint.Ptr()->GetFullName().c_str());
-				bstr.Append(" Violated! Description: \"");
+				bstr.Append(_T(" Violated! Description: \""));
 				bstr.Append(item.spConstraint.Ptr()->GetMessage().c_str());
-				bstr.Append("\".");
+				bstr.Append(_T("\"."));
 				COMTHROW(m_oleapp->ConsoleMessage(bstr, MSG_ERROR));
 			}
 		}
@@ -542,12 +542,12 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			arrText.RemoveAll();
 			int serial = it->second.serial;
 			CString strExpression = it->second.text.c_str(); // OclCommonEx::Convert(it->second.text);
-			strExpression.Replace( "\r", "" );
-			strExpression.Replace( "\n", "\r\n" );
-			strExpression.Replace( "\t", "    " );
+			strExpression.Replace( _T("\r"), _T("") );
+			strExpression.Replace( _T("\n"), _T("\r\n") );
+			strExpression.Replace( _T("\t"), _T("    ") );
 			int iFPos = 0;
 			do {
-				iFPos = strExpression.Find( "\r\n" );
+				iFPos = strExpression.Find( _T("\r\n") );
 				if ( iFPos == -1 )
 					arrText.Add( strExpression );
 				else {
@@ -569,7 +569,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 				lvItem.iImage = 0;
 				lvItem.lParam = it->second.serial*1000 +i;
 				CString strTemp;
-				strTemp.Format( "%d", it->second.serial*1000 + i + 1 );
+				strTemp.Format( _T("%d"), it->second.serial*1000 + i + 1 );
 				lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
 				m_lstExpression.InsertItem( &lvItem );
 
@@ -601,12 +601,12 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 
 		CStringArray arrText;
 		CString strExpression = m_vecRecords[ m_iSelectedConstraint ].spConstraint->GetText().c_str(); // OclCommonEx::Convert( m_vecRecords[ m_iSelectedConstraint ].spConstraint->GetText() );
-		strExpression.Replace( "\r", "" );
-		strExpression.Replace( "\n", "\r\n" );
-		strExpression.Replace( "\t", "    " );
+		strExpression.Replace( _T("\r"), _T("") );
+		strExpression.Replace( _T("\n"), _T("\r\n") );
+		strExpression.Replace( _T("\t"), _T("    ") );
 		int iFPos = 0;
 		do {
-			iFPos = strExpression.Find( "\r\n" );
+			iFPos = strExpression.Find( _T("\r\n") );
 			if ( iFPos == -1 )
 				arrText.Add( strExpression );
 			else {
@@ -628,7 +628,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			lvItem.iImage = 0;
 			lvItem.lParam = i;
 			CString strTemp;
-			strTemp.Format( "%d", i + 1 );
+			strTemp.Format( _T("%d"), i + 1 );
 			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
 			m_lstExpression.InsertItem( &lvItem );
 
@@ -675,9 +675,9 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			lvItem.lParam = i;
 			CString strTemp;
 			if ( vi.position.iLine < 0 )
-				strTemp = "?";
+				strTemp = _T("?");
 			else
-				strTemp.Format( "%d", vi.position.iLine );
+				strTemp.Format( _T("%d"), vi.position.iLine );
 			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
 			m_lstErrors.InsertItem( &lvItem );
 
@@ -773,7 +773,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 		}
 		CString str1 = ( pSortInfo->iColumn == 1 ) ? spConstraint1->GetContextType().c_str() : spConstraint1->GetName().c_str(); // OclCommonEx::Convert( ( pSortInfo->iColumn == 1 ) ? spConstraint1->GetContextType() : spConstraint1->GetName() );
 		CString str2 = ( pSortInfo->iColumn == 1 ) ? spConstraint2->GetContextType().c_str() : spConstraint2->GetName().c_str(); // OclCommonEx::Convert( ( pSortInfo->iColumn == 1 ) ? spConstraint2->GetContextType() : spConstraint2->GetName() );
-		return strcmp( str1, str2 );
+		return _tcscmp( str1, str2 );
 	}
 
 	void CViolationDialog::GotoObject()

@@ -472,8 +472,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 		else {
 			CString strCount;
 			m_pageSettings.m_edtViolationCount.GetWindowText( strCount );
-			info.iViolationCount = atoi( strCount.GetBuffer( strCount.GetLength() ) );
-			strCount.ReleaseBuffer();
+			info.iViolationCount = _ttoi( strCount );
 		}
 
 		if ( ( (CButton*) m_pageSettings.GetDlgItem( BSEP_RDZERODEPTH ) )->GetCheck() == 1 )
@@ -498,11 +497,11 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 			( (CButton*) m_pageSettings.GetDlgItem( BSEP_RDVIOLCOUNT ) )->SetCheck( 1 );
 			m_pageSettings.m_edtViolationCount.SetReadOnly( false );
 			CString strCount;
-			strCount.Format( "%d", info.iViolationCount );
+			strCount.Format( _T("%d"), info.iViolationCount );
 			m_pageSettings.m_edtViolationCount.SetWindowText( strCount );
 		}
 		else {
-			m_pageSettings.m_edtViolationCount.SetWindowText( "2" );
+			m_pageSettings.m_edtViolationCount.SetWindowText( _T("2") );
 			switch( info.iViolationCount ) {
 				case 1 : ( (CButton*) m_pageSettings.GetDlgItem( BSEP_RDVIOLFIRST ) )->SetCheck( 1 ); break;
 				case -1 : ( (CButton*) m_pageSettings.GetDlgItem( BSEP_RDLEVELFIRST ) )->SetCheck( 1 ); break;
@@ -1069,14 +1068,13 @@ void CSettingsPage::OnViolationCountChanged()
 	CString strCount;
 	m_edtViolationCount.GetWindowText( strCount );
 	if ( strCount.IsEmpty() )
-		m_edtViolationCount.SetWindowText( "2" );
+		m_edtViolationCount.SetWindowText( _T("2") );
 	else {
-		int iCount = atoi( strCount.GetBuffer( strCount.GetLength() ) );
-		strCount.ReleaseBuffer();
+		int iCount = _ttoi( strCount );
 		if ( iCount == 0 )
-			m_edtViolationCount.SetWindowText( "2" );
+			m_edtViolationCount.SetWindowText( _T("2") );
 		if ( iCount > 999 )
-			m_edtViolationCount.SetWindowText( "999" );
+			m_edtViolationCount.SetWindowText( _T("999") );
 	}
 }
 

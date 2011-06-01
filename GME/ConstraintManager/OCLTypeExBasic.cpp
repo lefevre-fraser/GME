@@ -3222,82 +3222,82 @@ namespace OclBasic
 
 	}
 
-	void TypeFactory::GetTypes( const std::string& strName, const std::string& , std::vector<OclMeta::Type*>& vecTypes, std::string& strNameResult )
+	void TypeFactory::GetTypes( const std::string& strName, const std::string& , std::vector<std::unique_ptr<OclMeta::Type>>& vecTypes, std::string& strNameResult )
 	{
 		strNameResult = strName;
 		if ( strName == "ocl::Any" || strName == "Any" ) {
 			StringVector vecSupers;
-			vecTypes.push_back( new OclMeta::Type( "ocl::Any", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TAny_MethodFactory(), false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::Any", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TAny_MethodFactory(), false ) ));
 			return;
 		}
 
 		if ( strName == "ocl::Boolean" || strName == "bool" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Any" );
-			vecTypes.push_back( new OclMeta::Type( "ocl::Boolean", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new OclImplementation::MethodFactory(), false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::Boolean", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new OclImplementation::MethodFactory(), false ) ));
 			return;
 		}
 
 		if ( strName == "ocl::Enumeration" || strName == "enum" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Any" );
-			vecTypes.push_back( new OclMeta::Type( "ocl::Enumeration", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new OclImplementation::MethodFactory(), false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::Enumeration", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new OclImplementation::MethodFactory(), false ) ));
 			return;
 		}
 
 		if ( strName == "ocl::String" || strName == "string" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Any" );
-			vecTypes.push_back( new OclMeta::Type( "ocl::String", vecSupers, new TString_AttributeFactory(), new OclImplementation::AssociationFactory(), new TString_MethodFactory(), false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::String", vecSupers, new TString_AttributeFactory(), new OclImplementation::AssociationFactory(), new TString_MethodFactory(), false ) ));
 			return;
 		}
 
 		if ( strName == "ocl::Real" || strName == "real" || strName == "double" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Any" );
-			vecTypes.push_back( new OclMeta::Type( "ocl::Real", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TReal_MethodFactory(), false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::Real", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TReal_MethodFactory(), false ) ));
 			return;
 		}
 
 		if ( strName == "ocl::Integer" || strName == "int" || strName == "long" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Real" );
-			vecTypes.push_back( new OclMeta::Type( "ocl::Integer", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TInteger_MethodFactory(), false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::Integer", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TInteger_MethodFactory(), false ) ));
 			return;
 		}
 
 		if ( strName == "ocl::Type" || strName == "Type" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Any" );
-			vecTypes.push_back( new OclMeta::Type( "ocl::Type", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new OclImplementation::MethodFactory(), false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::Type", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new OclImplementation::MethodFactory(), false ) ));
 			return;
 		}
 
 		if ( strName == "ocl::Collection" || strName == "Collection" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Any" );
-			vecTypes.push_back( new OclMeta::CompoundType( "ocl::Collection", vecSupers, new TCollection_AttributeFactory(), new OclImplementation::AssociationFactory(), new TCollection_MethodFactory(),new TCollection_IteratorFactory(),  false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::CompoundType( "ocl::Collection", vecSupers, new TCollection_AttributeFactory(), new OclImplementation::AssociationFactory(), new TCollection_MethodFactory(),new TCollection_IteratorFactory(),  false ) ));
 			return;
 		}
 
 		if ( strName == "ocl::Set" || strName == "Set" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Collection" );
-			vecTypes.push_back( new OclMeta::CompoundType( "ocl::Set", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TSet_MethodFactory(),new TSet_IteratorFactory(),  false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::CompoundType( "ocl::Set", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TSet_MethodFactory(),new TSet_IteratorFactory(),  false ) ));
 			return;
 		}
 
 		if ( strName == "ocl::Sequence" || strName == "Sequence" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Collection" );
-			vecTypes.push_back( new OclMeta::CompoundType( "ocl::Sequence", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TSequence_MethodFactory(),new TSequence_IteratorFactory(),  false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::CompoundType( "ocl::Sequence", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TSequence_MethodFactory(),new TSequence_IteratorFactory(),  false ) ));
 			return;
 		}
 
 		if ( strName == "ocl::Bag" || strName == "Bag" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Collection" );
-			vecTypes.push_back( new OclMeta::CompoundType( "ocl::Bag", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TBag_MethodFactory(),new TBag_IteratorFactory(),  false ) );
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::CompoundType( "ocl::Bag", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TBag_MethodFactory(),new TBag_IteratorFactory(),  false ) ));
 			return;
 		}
 	}

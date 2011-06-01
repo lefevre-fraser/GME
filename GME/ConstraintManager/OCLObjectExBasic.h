@@ -8,6 +8,7 @@
 #ifndef OCLObjectExBasic_h
 #define OCLObjectExBasic_h
 
+#include "StdAfx.h"
 #include "OCLCommon.h"
 #include "OCLObject.h"
 
