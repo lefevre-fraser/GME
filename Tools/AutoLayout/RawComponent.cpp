@@ -30,7 +30,7 @@ STDMETHODIMP RawComponent::Invoke(IMgaProject* gme, IMgaFCOs *models, long param
 	return InvokeEx(gme, focus, selected, parvar);
 #else
 	if(interactive) {
-		AfxMessageBox("This component does not support the obsolete invoke mechanism");
+		AfxMessageBox(_T("This component does not support the obsolete invoke mechanism"));
 	}
 	return E_MGA_NOT_SUPPORTED;
 #endif
@@ -58,7 +58,7 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
             COMTHROW(currentobj->get_ObjType(&objType));
             if( objType != OBJTYPE_MODEL )
             {
-                AfxMessageBox("AutoLayout can only run on models. Open a model and try again!");
+                AfxMessageBox(_T("AutoLayout can only run on models. Open a model and try again!"));
                 throw 0;
             }
 
@@ -83,7 +83,7 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 // you only need to implement it if other invokation mechanisms are used
 STDMETHODIMP RawComponent::ObjectsInvokeEx( IMgaProject *project,  IMgaObject *currentobj,  IMgaObjects *selectedobjs,  long param) {
 	if(interactive) {
-		AfxMessageBox("Tho ObjectsInvoke method is not implemented");
+		AfxMessageBox(_T("Tho ObjectsInvoke method is not implemented"));
 	}
 	return E_MGA_NOT_SUPPORTED;
 }
@@ -104,7 +104,7 @@ STDMETHODIMP RawComponent::put_ComponentParameter(BSTR name, VARIANT newVal) {
 // these two functions are the main 
 STDMETHODIMP RawComponent::GlobalEvent(globalevent_enum event) { 
 	if(event == GLOBALEVENT_UNDO) {
-		AfxMessageBox("UNDO!!");
+		AfxMessageBox(_T("UNDO!!"));
 	}
 	return S_OK; 
 }
@@ -113,7 +113,7 @@ STDMETHODIMP RawComponent::ObjectEvent(IMgaObject * obj, unsigned long eventmask
 	if(eventmask & OBJEVENT_CREATED) {
 		CComBSTR objID;
 		COMTHROW(obj->get_ID(&objID));
-		AfxMessageBox( "Object created! ObjID: " + CString(objID)); 
+		AfxMessageBox( _T("Object created! ObjID: ") + CString(objID)); 
 	}		
 	return S_OK;
 }

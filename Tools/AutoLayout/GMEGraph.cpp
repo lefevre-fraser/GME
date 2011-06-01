@@ -220,16 +220,16 @@ void GMEGraph::setRoutingPrefs( Edge * e, CString connPrefs )
     else
     {
         CComBSTR prefs;
-        COMTHROW( e->m_nodeFrom->m_fco->get_RegistryValue( L"autorouterPref", &prefs ) );
+        COMTHROW( e->m_nodeFrom->m_fco->get_RegistryValue( CComBSTR(L"autorouterPref"), &prefs ) );
         CString prefs2(prefs);
         if( connPrefs.GetLength() > 0 )
             prefs2 = connPrefs;
         if( prefs2.GetLength() > 0 )
         {
-            bool N = prefs2.Find("N")!=-1;
-            bool E = prefs2.Find("E")!=-1;
-            bool S = prefs2.Find("S")!=-1;
-            bool W = prefs2.Find("W")!=-1;
+            bool N = prefs2.Find(_T("N"))!=-1;
+            bool E = prefs2.Find(_T("E"))!=-1;
+            bool S = prefs2.Find(_T("S"))!=-1;
+            bool W = prefs2.Find(_T("W"))!=-1;
 
             if( !N && !E &&  S && !W ) e->cannotStartToNorth = true;
             if( !N && !E && !S &&  W ) e->cannotStartToEast  = true;
@@ -248,16 +248,16 @@ void GMEGraph::setRoutingPrefs( Edge * e, CString connPrefs )
     else
     {
         CComBSTR prefs;
-        COMTHROW( e->m_nodeTo->m_fco->get_RegistryValue( L"autorouterPref", &prefs ) );
+        COMTHROW( e->m_nodeTo->m_fco->get_RegistryValue( CComBSTR(L"autorouterPref"), &prefs ) );
         CString prefs2(prefs);
         if( connPrefs.GetLength() > 0 )
             prefs2 = connPrefs;
         if( prefs2.GetLength() > 0 )
         {
-            bool N = prefs2.Find("n")!=-1;
-            bool E = prefs2.Find("e")!=-1;
-            bool S = prefs2.Find("s")!=-1;
-            bool W = prefs2.Find("w")!=-1;
+            bool N = prefs2.Find(_T("n"))!=-1;
+            bool E = prefs2.Find(_T("e"))!=-1;
+            bool S = prefs2.Find(_T("s"))!=-1;
+            bool W = prefs2.Find(_T("w"))!=-1;
 
             if( !N && !E &&  S && !W ) e->cannotEndFromNorth = true;
             if( !N && !E && !S &&  W ) e->cannotEndFromEast  = true;

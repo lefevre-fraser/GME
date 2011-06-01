@@ -187,7 +187,7 @@ void CDlgAutoLayout::drawSolution( CDC * dc, LayoutSolution * sol )
     // draw score
     dc->SetBkMode( TRANSPARENT );
     CString scoreLabel;
-    scoreLabel.Format("Fitness = %.6f", m_score );
+    scoreLabel.Format(_T("Fitness = %.6f"), m_score );
     dc->TextOut( 10, 10, scoreLabel );
 }
 
@@ -278,7 +278,7 @@ void CDlgAutoLayout::OnButtonStart()
     }
     catch(...)
     {
-        AfxMessageBox("An internal error occurred in AutoLayout component. Error code = 1");
+        AfxMessageBox(_T("An internal error occurred in AutoLayout component. Error code = 1"));
         CDialog::OnCancel();
     }
 
@@ -295,7 +295,7 @@ void CDlgAutoLayout::OnButtonCurrentResults()
 	
 void CDlgAutoLayout::OnButtonAbort()
 {
-	int nRet = IDYES; // ::AfxMessageBox("Are you sure you want to abort the auto-layouting procedure?", MB_YESNO | MB_ICONWARNING);
+	int nRet = IDYES; // ::AfxMessageBox(_T("Are you sure you want to abort the auto-layouting procedure?"), MB_YESNO | MB_ICONWARNING);
 	if (nRet == IDYES)
 		m_bAbortionRequested = true;
 	else
