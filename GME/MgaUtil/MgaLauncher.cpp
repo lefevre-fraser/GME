@@ -561,6 +561,22 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 
 			CopyTo(bstrVal,url);
 
+			CComPtr<IMgaProject> project;
+			if (imf)
+				COMTHROW(imf->get_Project(&project));
+			else
+				COMTHROW(imfco->get_Project(&project));
+			_bstr_t paradigmConnStr;
+			COMTHROW(project->get_ParadigmConnStr(paradigmConnStr.GetAddress()));
+			if (_wcsnicmp(_T("MGA="), paradigmConnStr, 4) == 0) {
+				CString filename, dirname;
+				GetFullPathName(CString(static_cast<const TCHAR*>(paradigmConnStr) + 4), filename, dirname);
+
+				if (dirname != "")
+					url.Replace(_T("$PARADIGMDIR"), dirname);
+			}
+
+
 			CString name;
 			COMTHROW(obj->get_Name(PutOut(name)));
 		}
