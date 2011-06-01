@@ -20,13 +20,13 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>Dynamic</UseOfMfc>
     <UseOfAtl>Dynamic</UseOfAtl>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>Dynamic</UseOfMfc>
     <UseOfAtl>Dynamic</UseOfAtl>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -91,7 +91,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>gdiplus.lib;DecoratorLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Release/UMLDecorator.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(GME_ROOT)\GME\Lib;$(GME_ROOT)\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -143,7 +143,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>gdiplus.lib;DecoratorLibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Debug/UMLDecorator.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(GME_ROOT)\GME\Lib;$(GME_ROOT)\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -244,11 +244,6 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
   <ItemGroup>
     <ProjectReference Include="..\..\..\SDK\DecoratorLib\DecoratorLib.vcxproj">
       <Project>{77febd41-cd6c-4d55-b561-3957f7151cc2}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Private>true</Private>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
