@@ -36,6 +36,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PanningView", "PanningView\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MgaDotNetServices", "MgaDotNetServices\MgaDotNetServices.csproj", "{955209A1-8107-43C2-B0A7-729B03908C64}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DotNetPIAs", "DotNetPIAs\DotNetPIAs.vcxproj", "{57E1446E-6F58-44CD-B381-5D6A7F0509EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -188,6 +190,14 @@ Global
 		{955209A1-8107-43C2-B0A7-729B03908C64}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{955209A1-8107-43C2-B0A7-729B03908C64}.Release|Win32.ActiveCfg = Release|Any CPU
 		{955209A1-8107-43C2-B0A7-729B03908C64}.Release|Win32.Build.0 = Release|Any CPU
+		{57E1446E-6F58-44CD-B381-5D6A7F0509EB}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{57E1446E-6F58-44CD-B381-5D6A7F0509EB}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{57E1446E-6F58-44CD-B381-5D6A7F0509EB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{57E1446E-6F58-44CD-B381-5D6A7F0509EB}.Debug|Win32.Build.0 = Debug|Win32
+		{57E1446E-6F58-44CD-B381-5D6A7F0509EB}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{57E1446E-6F58-44CD-B381-5D6A7F0509EB}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{57E1446E-6F58-44CD-B381-5D6A7F0509EB}.Release|Win32.ActiveCfg = Release|Win32
+		{57E1446E-6F58-44CD-B381-5D6A7F0509EB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

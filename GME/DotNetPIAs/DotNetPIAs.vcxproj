@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{57E1446E-6F58-44CD-B381-5D6A7F0509EB}</ProjectGuid>
+    <RootNamespace>DotNetPIAs</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <PropertyGroup>
+    <PIAVersion>0.1.0.0</PIAVersion>
+  </PropertyGroup>
+  <Target Name="CreatePIA">
+    <Exec Command="&quot;$(WindowsSDKDir)bin\tlbimp&quot; /nologo /primary /keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk /asmversion:$(PIAVersion) /out:$(OutFile) $(InFile) "/>
+    <Exec Command="&quot;$(MSBuildBinPath)\regasm&quot; /nologo $(OutFile)" />
+    <Exec Command="&quot;$(WindowsSDKDir)bin\gacutil&quot; /nologo /i $(OutFile)" />
+  </Target>
+  <Target Name="AfterBuild">
+    <MSBuild Properties="InFile=..\Release\Core.dll;OutFile=Interop.MGACoreLib.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+    <MSBuild Properties="InFile=..\Release\Meta.dll;OutFile=Interop.MGAMetaLib.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+    <MSBuild Properties="InFile=..\Release\Mga.dll;OutFile=Interop.MGALib.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+    <MSBuild Properties="InFile=..\Release\MgaUtil.dll;OutFile=Interop.MGAUtilLib.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+    <MSBuild Properties="InFile=..\Release\GME.exe;OutFile=Interop.GmeLib.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+  </Target>
+  <Target Name="uwerwer">
+
+    <Exec Command="gacutil /nologo /i Interop.MGACoreLib.dll Interop.MGAMetaLib.dll Interop.MGALib.dll Interop.MGAUtilLib.dll" />
+    <Exec Command="tlbimp /nologo /primary /keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk /asmversion:$(PIAVersion) /out:Interop.MGAMetaLib.dll ..\Release\Meta.dll "/>
+    <Exec Command="regasm /nologo Interop.MGAMetaLib.dll" />
+    <Exec Command="gacutil /nologo /i Interop.MGACoreLib.dll Interop.MGAMetaLib.dll Interop.MGALib.dll Interop.MGAUtilLib.dll" />
+    <Exec Command="tlbimp /nologo /primary /keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk /asmversion:$(PIAVersion) /out:Interop.MGALib.dll ..\Release\Mga.dll "/>
+    <Exec Command="regasm /nologo Interop.MGALib.dll" />
+    <Exec Command="gacutil /nologo /i Interop.MGACoreLib.dll Interop.MGAMetaLib.dll Interop.MGALib.dll Interop.MGAUtilLib.dll" />
+    <Exec Command="tlbimp /nologo /primary /keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk /asmversion:$(PIAVersion) /out:Interop.MGAUtilLib.dll ..\Release\MgaUtil.dll "/>
+    <Exec Command="gacutil /nologo /i Interop.MGACoreLib.dll Interop.MGAMetaLib.dll Interop.MGALib.dll Interop.MGAUtilLib.dll" />
+    <Exec Command="regasm /nologo Interop.MGAUtilLib.dll" />
+    <Exec Command="gacutil /nologo /i Interop.MGACoreLib.dll Interop.MGAMetaLib.dll Interop.MGALib.dll Interop.MGAUtilLib.dll" />
+
+  </Target>
+</Project>
