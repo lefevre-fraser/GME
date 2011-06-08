@@ -53,6 +53,7 @@
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' RequiredVersion='3.0.4813.0'>
 
     <?include GME_dyn.wxi ?>
+    <?define InteropDir='..\GME\DotNetPIAs' ?>
     
 
     
@@ -2293,6 +2294,8 @@
                 <ComponentRef Id='xerces_c_3_1.dll' />
                 <ComponentRef Id='XmlBackEnd.dll' />
                 <ComponentRef Id='GMEplink.exe' />
+
+                <ComponentRef Id='Interop.MGACoreLib.dll'/>
                 
                 <MergeRef Id='CRT' />
                 <MergeRef Id='CRT Policy' />

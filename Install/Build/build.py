@@ -210,7 +210,8 @@ def build_msi():
     f.close()
    
     # Build the msi file
-    tools.build_WiX(os.path.join(GME_ROOT, "Install", "GME.wxs"))
+    tools.build_WiX([ os.path.join(GME_ROOT, "Install", "GME.wxs"), 
+                      os.path.join(GME_ROOT, "GME", "DotNetPIAS", "MGACoreLib.wxi")])
 
 def zip_pdb():
     "Collect and zip all debug information (*.pdb)"

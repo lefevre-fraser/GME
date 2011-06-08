@@ -16,9 +16,9 @@ from prefs import prefs
 #
 ZIP_PRG = os.path.abspath(os.path.join(os.path.dirname(__file__), "zip.exe"))
 WIX_CANDLE_PRG = "candle.exe"
-WIX_CANDLE_ARG = ""
+WIX_CANDLE_ARG = "-dPIADir=..\GME\DotNetPIAs"
 WIX_LIGHT_PRG = "light.exe"
-WIX_LIGHT_ARG = "-sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension" # See comments in GME.wxs
+WIX_LIGHT_ARG = "-sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension -o GME.msi" # See comments in GME.wxs
 
 #
 # Classes
@@ -175,13 +175,13 @@ def test_WiX():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
     system([exepath])
     
-def build_WiX(wxs_file):
+def build_WiX(wxs_files):
     """
     Builds a WiX project.
     params
         wxs_file : full path to the WiX source (.wxs)
     """
-    fullpath = os.path.normpath(os.path.abspath(wxs_file))
+    fullpath = os.path.normpath(os.path.abspath(wxs_files[0]))
     dirname = os.path.dirname(fullpath)
     filename = os.path.basename(fullpath)
     (projectname, ext) = os.path.splitext(filename)
@@ -191,11 +191,12 @@ def build_WiX(wxs_file):
     exepath = WIX_CANDLE_PRG
     if 'WIX' in os.environ.keys():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
-    cmd_line = [exepath] + WIX_CANDLE_ARG.split() + [filename]
-    system(cmd_line, dirname)
+    for file in wxs_files:
+        cmd_line = [exepath] + WIX_CANDLE_ARG.split() + [file]
+        system(cmd_line, dirname)
     
     exepath = WIX_LIGHT_PRG
     if 'WIX' in os.environ.keys():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
-    cmd_line = [exepath] + WIX_LIGHT_ARG.split() + [projectname + ".wixobj"]
+    cmd_line = [exepath] + WIX_LIGHT_ARG.split() + [ os.path.splitext(os.path.basename(file))[0] + ".wixobj" for file in wxs_files ]
     system(cmd_line, dirname)
