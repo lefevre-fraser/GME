@@ -104,12 +104,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>@for /F "tokens=1,2*" %25%25i in ('reg query "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A" /v "InstallationFolder"') DO (
-       if "%25%25i"=="InstallationFolder" (
-               SET "WindowsSdkDir=%25%25k"
-       )
-)
-"%25WindowsSdkDir%25\bin\NETFX 4.0 Tools\"tlbexp "$(TargetPath)"
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MgaDotNetServices")]
 [assembly: AssemblyDescription("MgaDotNetServices")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("MgaDotNetServices")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
+[assembly: AssemblyCompany("ISIS, Vanderbilt University")]
+[assembly: AssemblyProduct("GME")]
+[assembly: AssemblyCopyright("Copyright © ISIS, Vanderbilt University 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

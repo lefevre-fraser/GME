@@ -5,11 +5,7 @@
 #include "Parser.h"
 
 #import "mscorlib.tlb"
-#ifdef _DEBUG
-#import "../Debug/MgaDotNetServices.tlb"
-#else
-#import "../Release/MgaDotNetServices.tlb"
-#endif
+#import "libid:5f45c5d6-4e11-42fc-a558-cfa0b6c7bea6"
 
 #include "atlsafe.h"
 
