@@ -42,6 +42,7 @@ DECLARE_NOT_AGGREGATABLE(CDecoratorEventSink)
 
 BEGIN_COM_MAP(CDecoratorEventSink)
 	COM_INTERFACE_ENTRY(IMgaElementDecoratorEvents)
+	COM_INTERFACE_ENTRY(IMgaCommonDecoratorEvents)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
 
