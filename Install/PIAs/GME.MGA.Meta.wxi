@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLDIR_BIN" />
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="GME.MGA.Meta">
+            <Component Id="GME.MGA.Meta.dll" Directory="INSTALLDIR_BIN" Guid="{0BE9DD47-1FEB-4492-88E7-0172D9AA4A30}">
+                <File Id="GME.MGA.Meta.dll" KeyPath="yes" Source="$(var.PIADir)\GME.MGA.Meta.dll" Assembly=".net"  />
+                <RegistryValue Root="HKCR" Key="CLSID\{83BA3244-B758-11D3-ABAE-000000000000}\InprocServer32\0.1.0.0" Name="Class" Value="GME.MGA.Meta.MgaMetaProjectClass" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{83BA3244-B758-11D3-ABAE-000000000000}\InprocServer32\0.1.0.0" Name="Assembly" Value="GME.MGA.Meta, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{83BA3244-B758-11D3-ABAE-000000000000}\InprocServer32\0.1.0.0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{83BA3244-B758-11D3-ABAE-000000000000}\InprocServer32\0.1.0.0" Name="CodeBase" Value="file:///[#GME.MGA.Meta.dll]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{83BA3244-B758-11D3-ABAE-000000000000}\InprocServer32" Name="Class" Value="GME.MGA.Meta.MgaMetaProjectClass" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{83BA3244-B758-11D3-ABAE-000000000000}\InprocServer32" Name="Assembly" Value="GME.MGA.Meta, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{83BA3244-B758-11D3-ABAE-000000000000}\InprocServer32" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{83BA3244-B758-11D3-ABAE-000000000000}\InprocServer32" Name="CodeBase" Value="file:///[#GME.MGA.Meta.dll]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{0000384D-6285-3F77-B4C1-D21F454E28D9}\0.1.0.0" Name="Class" Value="GME.MGA.Meta.constraint_type_enum" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{0000384D-6285-3F77-B4C1-D21F454E28D9}\0.1.0.0" Name="Assembly" Value="GME.MGA.Meta, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{0000384D-6285-3F77-B4C1-D21F454E28D9}\0.1.0.0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{0000384D-6285-3F77-B4C1-D21F454E28D9}\0.1.0.0" Name="CodeBase" Value="file:///[#GME.MGA.Meta.dll]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{159EA95E-64BA-3DEC-A793-3966599A7ED9}\0.1.0.0" Name="Class" Value="GME.MGA.Meta.constraint_depth_enum" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{159EA95E-64BA-3DEC-A793-3966599A7ED9}\0.1.0.0" Name="Assembly" Value="GME.MGA.Meta, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{159EA95E-64BA-3DEC-A793-3966599A7ED9}\0.1.0.0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{159EA95E-64BA-3DEC-A793-3966599A7ED9}\0.1.0.0" Name="CodeBase" Value="file:///[#GME.MGA.Meta.dll]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{379DD1BE-7941-3A40-B803-FA7845C4FF4D}\0.1.0.0" Name="Class" Value="GME.MGA.Meta.objtype_enum" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{379DD1BE-7941-3A40-B803-FA7845C4FF4D}\0.1.0.0" Name="Assembly" Value="GME.MGA.Meta, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{379DD1BE-7941-3A40-B803-FA7845C4FF4D}\0.1.0.0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{379DD1BE-7941-3A40-B803-FA7845C4FF4D}\0.1.0.0" Name="CodeBase" Value="file:///[#GME.MGA.Meta.dll]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{6A0D6818-34B2-3AB9-885C-B8E3C6240499}\0.1.0.0" Name="Class" Value="GME.MGA.Meta.attval_enum" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{6A0D6818-34B2-3AB9-885C-B8E3C6240499}\0.1.0.0" Name="Assembly" Value="GME.MGA.Meta, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{6A0D6818-34B2-3AB9-885C-B8E3C6240499}\0.1.0.0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="Record\{6A0D6818-34B2-3AB9-885C-B8E3C6240499}\0.1.0.0" Name="CodeBase" Value="file:///[#GME.MGA.Meta.dll]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="TypeLib\{0ADEEC71-D83A-11D3-B36B-005004D38590}\1.0" Name="PrimaryInteropAssemblyName" Value="GME.MGA.Meta, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="TypeLib\{0ADEEC71-D83A-11D3-B36B-005004D38590}\1.0" Name="PrimaryInteropAssemblyCodeBase" Value="file:///[#GME.MGA.Meta.dll]" Type="string" Action="write" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

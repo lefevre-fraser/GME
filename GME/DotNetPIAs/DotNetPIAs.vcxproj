@@ -73,25 +73,11 @@
     <Exec Command="&quot;$(WindowsSDKDir)bin\gacutil&quot; /nologo /i $(OutFile)" />
   </Target>
   <Target Name="AfterBuild">
-    <MSBuild Properties="InFile=..\Release\Core.dll;OutFile=Interop.MGACoreLib.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
-    <MSBuild Properties="InFile=..\Release\Meta.dll;OutFile=Interop.MGAMetaLib.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
-    <MSBuild Properties="InFile=..\Release\Mga.dll;OutFile=Interop.MGALib.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
-    <MSBuild Properties="InFile=..\Release\MgaUtil.dll;OutFile=Interop.MGAUtilLib.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
-    <MSBuild Properties="InFile=..\Release\GME.exe;OutFile=Interop.GmeLib.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
-  </Target>
-  <Target Name="uwerwer">
-
-    <Exec Command="gacutil /nologo /i Interop.MGACoreLib.dll Interop.MGAMetaLib.dll Interop.MGALib.dll Interop.MGAUtilLib.dll" />
-    <Exec Command="tlbimp /nologo /primary /keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk /asmversion:$(PIAVersion) /out:Interop.MGAMetaLib.dll ..\Release\Meta.dll "/>
-    <Exec Command="regasm /nologo Interop.MGAMetaLib.dll" />
-    <Exec Command="gacutil /nologo /i Interop.MGACoreLib.dll Interop.MGAMetaLib.dll Interop.MGALib.dll Interop.MGAUtilLib.dll" />
-    <Exec Command="tlbimp /nologo /primary /keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk /asmversion:$(PIAVersion) /out:Interop.MGALib.dll ..\Release\Mga.dll "/>
-    <Exec Command="regasm /nologo Interop.MGALib.dll" />
-    <Exec Command="gacutil /nologo /i Interop.MGACoreLib.dll Interop.MGAMetaLib.dll Interop.MGALib.dll Interop.MGAUtilLib.dll" />
-    <Exec Command="tlbimp /nologo /primary /keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk /asmversion:$(PIAVersion) /out:Interop.MGAUtilLib.dll ..\Release\MgaUtil.dll "/>
-    <Exec Command="gacutil /nologo /i Interop.MGACoreLib.dll Interop.MGAMetaLib.dll Interop.MGALib.dll Interop.MGAUtilLib.dll" />
-    <Exec Command="regasm /nologo Interop.MGAUtilLib.dll" />
-    <Exec Command="gacutil /nologo /i Interop.MGACoreLib.dll Interop.MGAMetaLib.dll Interop.MGALib.dll Interop.MGAUtilLib.dll" />
-
+    <MSBuild Properties="InFile=..\Release\Core.dll;OutFile=GME.MGA.Core.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+    <MSBuild Properties="InFile=..\Release\Meta.dll;OutFile=GME.MGA.Meta.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+    <MSBuild Properties="InFile=..\Release\Mga.dll;OutFile=GME.MGA.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+    <MSBuild Properties="InFile=..\Release\Parser.dll;OutFile=GME.MGA.Parser.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+    <MSBuild Properties="InFile=..\Release\MgaUtil.dll;OutFile=GME.Util.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+    <MSBuild Properties="InFile=..\Release\GME.exe;OutFile=GME.dll;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
   </Target>
 </Project>

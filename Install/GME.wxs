@@ -1043,6 +1043,32 @@
                 </File>
             </Component>
         </DirectoryRef>
+
+      <DirectoryRef Id='INSTALLDIR_BIN'>
+        <Component Id='Interop_AssemblyFoldersEx' Guid='45D256B4-C1D9-4548-9849-CBAC42162C01'>
+          <RegistryKey Root='HKLM' Key='Software\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx'>
+            <RegistryKey Key='GME.MGA.Core' >
+              <RegistryValue Type='string' Value='C:\Windows\assembly\GAC_MSIL\GME.MGA.Core\0.1.0.0__f240a760fe751c2e'/>
+            </RegistryKey>
+            <RegistryKey Key='GME.MGA.Meta' >
+              <RegistryValue Type='string' Value='C:\Windows\assembly\GAC_MSIL\GME.MGA.Meta\0.1.0.0__f240a760fe751c2e'/>
+            </RegistryKey>
+            <RegistryKey Key='GME.MGA' >
+              <RegistryValue Type='string' Value='C:\Windows\assembly\GAC_MSIL\GME.MGA\0.1.0.0__f240a760fe751c2e'/>
+            </RegistryKey>
+            <RegistryKey Key='GME.MGA.Parser' >
+              <RegistryValue Type='string' Value='C:\Windows\assembly\GAC_MSIL\GME.MGA.Parser\0.1.0.0__f240a760fe751c2e'/>
+            </RegistryKey>
+            <RegistryKey Key='GME.Util' >
+              <RegistryValue Type='string' Value='C:\Windows\assembly\GAC_MSIL\GME.MGA.Util\0.1.0.0__f240a760fe751c2e'/>
+            </RegistryKey>
+            <RegistryKey Key='GME' >
+              <RegistryValue Type='string' Value='C:\Windows\assembly\GAC_MSIL\GME\0.1.0.0__f240a760fe751c2e'/>
+            </RegistryKey>
+          </RegistryKey>
+        </Component>
+      </DirectoryRef>
+
         
         <DirectoryRef Id="INSTALLDIR_PARADIGMS_SF">
             <Component Id="BON2SFInterpreter.dll" Guid="55102216-6b16-4fcd-b270-69c01d4348c2">
@@ -2295,8 +2321,14 @@
                 <ComponentRef Id='xerces_c_3_1.dll' />
                 <ComponentRef Id='XmlBackEnd.dll' />
                 <ComponentRef Id='GMEplink.exe' />
+              <ComponentRef Id='Interop_AssemblyFoldersEx'/>
 
-                <ComponentRef Id='Interop.MGACoreLib.dll'/>
+                <ComponentRef Id='GME.MGA.Core.dll'/>
+                <ComponentRef Id='GME.MGA.Meta.dll'/>
+                <ComponentRef Id='GME.MGA.dll'/>
+                <ComponentRef Id='GME.MGA.Parser.dll'/>
+                <ComponentRef Id='GME.Util.dll'/>
+                <ComponentRef Id='GME.dll'/>
                 
                 <MergeRef Id='CRT' />
                 <MergeRef Id='CRT Policy' />

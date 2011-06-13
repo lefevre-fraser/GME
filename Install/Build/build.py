@@ -211,7 +211,13 @@ def build_msi():
    
     # Build the msi file
     tools.build_WiX([ os.path.join(GME_ROOT, "Install", "GME.wxs"), 
-                      os.path.join(GME_ROOT, "GME", "DotNetPIAS", "MGACoreLib.wxi")])
+                      os.path.join(GME_ROOT, "Install", "PIAs", "GME.MGA.Core.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs", "GME.MGA.Meta.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs", "GME.MGA.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs", "GME.MGA.Parser.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs", "GME.Util.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs", "GMEPIA.wxi"),
+                      ])
 
 def zip_pdb():
     "Collect and zip all debug information (*.pdb)"
