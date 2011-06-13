@@ -11,7 +11,7 @@
 // the terms of this license. You must not remove this notice, or
 // any other, from this software.
 
-// Setup program for the Decorator Wizard for VC++ 9.0 (Visual Studio 2008)
+// Setup program for the Decorator Wizard for VC++ 10.0 (Visual Studio 2010)
 
 
 main();
@@ -74,19 +74,19 @@ function main()
 
 	try
 	{
-		var strVC9Key = "HKLM\\Software\\Microsoft\\VisualStudio\\9.0\\Setup\\VC\\ProductDir";
-		strValue = WSShell.RegRead(strVC9Key);
+		var strVC10Key = "HKLM\\Software\\Microsoft\\VisualStudio\\10.0\\Setup\\VC\\ProductDir";
+		strValue = WSShell.RegRead(strVC10Key);
 	}
 	catch(e)
 	{
 		try
 		{
-			var strVC9Key_x64 = "HKLM\\Software\\Wow6432Node\\Microsoft\\VisualStudio\\9.0\\Setup\\VC\\ProductDir";
-			strValue = WSShell.RegRead(strVC9Key_x64);
+			var strVC10Key_x64 = "HKLM\\Software\\Wow6432Node\\Microsoft\\VisualStudio\\10.0\\Setup\\VC\\ProductDir";
+			strValue = WSShell.RegRead(strVC10Key_x64);
 		}
 		catch(e)
 		{
-			WScript.Echo("ERROR: Cannot find where Visual Studio 2008 is installed.");
+			WScript.Echo("ERROR: Cannot find where Visual Studio 2010 is installed.");
 			return;
 		}
 	}
@@ -146,9 +146,9 @@ function main()
 		{
 			var strLine = fileSrc.ReadLine();
 			if(strLine.indexOf("Wizard=VsWizard.VsWizardEngine") != -1)
-				strLine = "Wizard=VsWizard.VsWizardEngine.9.0";
+				strLine = "Wizard=VsWizard.VsWizardEngine.10.0";
 			else if(strLine.indexOf("WIZARD_VERSION") != -1)
-				strLine = "Param=\"WIZARD_VERSION = 9.0\"";
+				strLine = "Param=\"WIZARD_VERSION = 10.0\"";
 			else if(strLine.indexOf("ABSOLUTE_PATH") != -1)
 				strLine = "Param=\"ABSOLUTE_PATH = " + strSourceFolder + "\"";
 			fileDest.WriteLine(strLine);
