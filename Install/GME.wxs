@@ -2052,6 +2052,7 @@
                 <File Id="DecoratorWizard.vsdir" Name="DecoratorWizard.vsdir" KeyPath="yes" Source="..\SDK\DecoratorWizard\DecoratorWizard.vsdir" />
                 <File Id="DecoratorWizard_default.vcproj" Name="default.vcproj"  Source="..\SDK\DecoratorWizard\default.vcproj" />
                 <File Id="DecoratorWizard_setup90.js" Name="setup90.js"  Source="..\SDK\DecoratorWizard\setup90.js" />
+                <File Id="DecoratorWizard_setup100.js" Name="setup100.js"  Source="..\SDK\DecoratorWizard\setup100.js" />
             </Component>
         </DirectoryRef>
 
