@@ -4,9 +4,9 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.IO;
 using GME.CSharp;
-using MGALib;
-using GmeLib;
-using MGACoreLib;
+using GME.MGA;
+using GME;
+using GME.MGA.Core;
 
 namespace MyAddon
 {

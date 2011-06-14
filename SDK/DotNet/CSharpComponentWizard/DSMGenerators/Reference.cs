@@ -37,7 +37,7 @@ namespace DSM.Generators
         }
 
 
-        public Reference(MGALib.IMgaAtom mgaObject)
+        public Reference(GME.MGA.IMgaAtom mgaObject)
             : base(mgaObject)
         {
             className = mgaObject.Name;
@@ -51,14 +51,14 @@ namespace DSM.Generators
         {
             get
             {
-                foreach (MGALib.IMgaObject mgaObject in this.MgaObjects)
+                foreach (GME.MGA.IMgaObject mgaObject in this.MgaObjects)
                 {
-                    MGALib.IMgaFCO fco = mgaObject as MGALib.IMgaFCO;
-                    foreach (MGALib.IMgaConnPoint conn in fco.PartOfConns)
+                    GME.MGA.IMgaFCO fco = mgaObject as GME.MGA.IMgaFCO;
+                    foreach (GME.MGA.IMgaConnPoint conn in fco.PartOfConns)
                     {
                         if (conn.Owner.Meta.Name == "ReferTo" && conn.ConnRole == "src")
                         {
-                            foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
+                            foreach (GME.MGA.IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
                                 if (connOther.ConnRole == "dst")
                                 {

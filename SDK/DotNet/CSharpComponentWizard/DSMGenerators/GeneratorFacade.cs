@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using MGALib;
+using GME.MGA;
 using DSM.Generators;
 using System.Diagnostics;
 
@@ -30,20 +30,20 @@ namespace DSM
                 bool ro_mode = true;
                 project.Open("MGA=" + projectPathFull, out ro_mode);
                 territory = project.BeginTransactionInNewTerr(transactiontype_enum.TRANSACTION_READ_ONLY);
-                MGALib.IMgaFolder root = project.RootFolder as MGALib.IMgaFolder;
+                GME.MGA.IMgaFolder root = project.RootFolder as GME.MGA.IMgaFolder;
 
                 Generator.ClassName = root.Name;
                 Generator.NamespaceName = namespaceName;
 
 
-                foreach (MGALib.IMgaFCO fco in root.ChildFCOs)
+                foreach (GME.MGA.IMgaFCO fco in root.ChildFCOs)
                 {
                     ProcessParadigmSheet(fco);
                 }
 
-                foreach (MGALib.IMgaFolder fol in root.ChildFolders)
+                foreach (GME.MGA.IMgaFolder fol in root.ChildFolders)
                 {
-                    foreach (MGALib.IMgaFCO fco in fol.ChildFCOs)
+                    foreach (GME.MGA.IMgaFCO fco in fol.ChildFCOs)
                     {
                         ProcessParadigmSheet(fco);
                     }
@@ -101,18 +101,18 @@ namespace DSM
             Errors.Clear();
             generatedFiles.Clear();
         }
-        private static void ProcessParadigmSheet(MGALib.IMgaFCO fco)
+        private static void ProcessParadigmSheet(GME.MGA.IMgaFCO fco)
         {
             Debug.Assert(fco.Meta.Name == "ParadigmSheet");
-         
-            MGALib.IMgaModel model = fco as MGALib.IMgaModel;
 
-            foreach (MGALib.IMgaObject obj in model.ChildObjects)
+            GME.MGA.IMgaModel model = fco as GME.MGA.IMgaModel;
+
+            foreach (GME.MGA.IMgaObject obj in model.ChildObjects)
             {
                 DSM.Generators.Object object1;
-                if (obj is MGALib.IMgaAtom)
+                if (obj is GME.MGA.IMgaAtom)
                 {
-                    MGALib.IMgaAtom o = obj as MGALib.IMgaAtom;
+                    GME.MGA.IMgaAtom o = obj as GME.MGA.IMgaAtom;
                     switch (o.Meta.Name)
                     {
                         case "Folder":
@@ -146,7 +146,7 @@ namespace DSM
                 {
                     if (obj.MetaBase.Name.Contains("Proxy"))
                     {
-                        MGALib.IMgaReference proxy = obj as MGALib.IMgaReference;
+                        GME.MGA.IMgaReference proxy = obj as GME.MGA.IMgaReference;
 
                         string referred = proxy.Referred.Name;
 

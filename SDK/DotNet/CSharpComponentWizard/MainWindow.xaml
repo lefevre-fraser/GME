@@ -202,7 +202,7 @@
                     <Label Content="Component name:" Height="28" HorizontalAlignment="Left" Margin="21,77,0,0" Name="lbl_ComponentName" VerticalAlignment="Top" FontSize="13" FontFamily="Segoe UI" />
                     <TextBox Height="23" HorizontalAlignment="Left" Margin="25,102,0,0" Name="txb_ComponentName" VerticalAlignment="Top" Width="264" Background="White" TextChanged="txb_ComponentName_TextChanged" />
                     <TextBlock Foreground="#FF9A9A9A" Height="23" Margin="313,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Segoe UI" HorizontalAlignment="Left" Width="145">
-                        <Bold>You can use whitespaces</Bold>
+                        <Bold>You can use whitespace</Bold>
                     </TextBlock>
                     <Label Content="Icon path (32×32, *.ico):" FontFamily="Segoe UI" FontSize="13" Height="28" HorizontalAlignment="Left" Margin="21,173,0,0" Name="lbl_IconPath" VerticalAlignment="Top" />
                     <TextBox Height="23" IsEnabled="True" HorizontalAlignment="Left" Margin="25,198,0,0" Name="txb_IconPath" VerticalAlignment="Top" Width="264" TextChanged="txb_IconPath_TextChanged" />

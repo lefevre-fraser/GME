@@ -48,6 +48,11 @@
 	<Reference Include="Microsoft.CSharp"/>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="GME, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
+    <Reference Include="GME.Util, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
+    <Reference Include="GME.MGA, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
+    <Reference Include="GME.MGA.Core, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
+    <Reference Include="GME.MGA.Meta, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentConfig.cs" />
@@ -62,53 +67,6 @@
     <Content Include="Component.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-	<COMReference Include="CORELib">
-      <Guid>{9E9AAACF-28B8-11D3-B36C-0060082DF884}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="GmeLib">
-      <Guid>{0ADEEC71-D83A-11D3-B36B-005004CC8592}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="METALib">
-      <Guid>{0ADEEC71-D83A-11D3-B36B-005004D38590}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="MGALib">
-      <Guid>{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="MGAUTILLib">
-      <Guid>{461F30AE-3BF0-11D4-B3F0-005004D38590}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <!--DELETE
   <ItemGroup>

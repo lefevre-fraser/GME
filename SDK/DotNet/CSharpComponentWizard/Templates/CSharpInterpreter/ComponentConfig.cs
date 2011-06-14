@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using MGAUtilLib;
-using MGALib;
+using GME.Util;
+using GME.MGA;
 
 namespace GME.CSharp
 {

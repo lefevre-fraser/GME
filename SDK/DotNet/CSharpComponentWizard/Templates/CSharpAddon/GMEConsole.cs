@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using GmeLib;
+using GME;
 
 namespace GME.CSharp
 {
@@ -87,7 +87,7 @@ namespace GME.CSharp
         }
 
 
-        public static GMEConsole CreateFromProject(MGALib.MgaProject project)
+        public static GMEConsole CreateFromProject(GME.MGA.MgaProject project)
         {
             GMEConsole console = new GMEConsole();
             try

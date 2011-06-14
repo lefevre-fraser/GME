@@ -6,7 +6,7 @@ namespace DSM.Generators
 {
     public class Atom : FCO
     {
-        public Atom(MGALib.IMgaAtom mgaObject)
+        public Atom(GME.MGA.IMgaAtom mgaObject)
             : base(mgaObject)
         {
             className = mgaObject.Name;

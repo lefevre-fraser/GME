@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using MGACoreLib;
 using GME.CSharp;
-using GmeLib;
-using MGALib;
+using GME;
+using GME.MGA;
+using GME.MGA.Core;
 
 namespace MyInterpreter
 {

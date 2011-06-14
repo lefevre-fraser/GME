@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using MGAUtilLib;
-using MGALib;
-using GmeLib;
-using MGACoreLib;
+using GME.Util;
+using GME.MGA;
+using GME;
+using GME.MGA.Core;
 using Microsoft.Win32;
 
 namespace GME.CSharp

@@ -25,7 +25,7 @@ namespace DSM.Generators
                 {{
                     if (this.mgaObject.ParentFolder ==MgaGateway.project.RootFolder)
                     {{
-                        return new RootFolder(MgaGateway.project as MGALib.IMgaFolder);
+                        return new RootFolder(MgaGateway.project as GME.MGA.IMgaFolder);
                     }}
                     else
                     {{
@@ -84,7 +84,7 @@ namespace {0}
             #endregion
         }
 
-        public Folder(MGALib.IMgaAtom mgaObject)
+        public Folder(GME.MGA.IMgaAtom mgaObject)
         {            
             baseInterfaceName = "IFolder";
 
@@ -126,14 +126,14 @@ namespace {0}
         {
             get
             {
-                foreach (MGALib.IMgaObject mgaObject in this.MgaObjects)
+                foreach (GME.MGA.IMgaObject mgaObject in this.MgaObjects)
                 {
-                    MGALib.IMgaFCO fco = mgaObject as MGALib.IMgaFCO;
-                    foreach (MGALib.IMgaConnPoint conn in fco.PartOfConns)
+                    GME.MGA.IMgaFCO fco = mgaObject as GME.MGA.IMgaFCO;
+                    foreach (GME.MGA.IMgaConnPoint conn in fco.PartOfConns)
                     {
                         if (conn.Owner.Meta.Name == "FolderContainment" && conn.ConnRole == "dst")
                         {
-                            foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
+                            foreach (GME.MGA.IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
                                 if (connOther.ConnRole == "src")
                                 {

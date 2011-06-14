@@ -61,8 +61,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using MGALib;
-using MGAMetaLib;
+using GME.MGA;
+using GME.MGA.Meta;
 ";
 
             public static readonly string Object =
@@ -144,10 +144,10 @@ namespace {0}
         }
 
         public static Dictionary<string, string> ProxyCache = new Dictionary<string, string>();
-        public static Dictionary<string, MGALib.IMgaReference> ProxyObjects = new Dictionary<string, MGALib.IMgaReference>();
+        public static Dictionary<string, GME.MGA.IMgaReference> ProxyObjects = new Dictionary<string, GME.MGA.IMgaReference>();
         public static Dictionary<string, Object> ElementsByName = new Dictionary<string, Object>();
 
-        protected MGALib.IMgaAtom mgaObject;
+        protected GME.MGA.IMgaAtom mgaObject;
 
         protected string namespaceName = "GME.CSharp.SOMENAME";
         
@@ -195,7 +195,7 @@ namespace {0}
         }
         #endregion
 
-        internal IEnumerable<MGALib.IMgaObject> MgaObjects
+        internal IEnumerable<GME.MGA.IMgaObject> MgaObjects
         {
             get
             {
@@ -217,12 +217,12 @@ namespace {0}
         {
             get
             {
-                foreach (MGALib.IMgaConnPoint conn in mgaObject.PartOfConns)
+                foreach (GME.MGA.IMgaConnPoint conn in mgaObject.PartOfConns)
                 {
                     if ((conn.Owner.Meta.Name == "Containment" || conn.Owner.Meta.Name == "FolderContainment") && 
                         conn.ConnRole == "src")
                     {
-                        foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
+                        foreach (GME.MGA.IMgaConnPoint connOther in conn.Owner.ConnPoints)
                         {
                             if (connOther.ConnRole == "dst")
                             {

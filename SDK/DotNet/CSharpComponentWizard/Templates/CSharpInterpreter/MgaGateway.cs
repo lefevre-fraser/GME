@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MGALib;
-using GmeLib;
-using MGAMetaLib;
-using MGACoreLib;
+using GME;
+using GME.Util;
+using GME.MGA;
+using GME.MGA.Meta;
 
 namespace GME.CSharp
 {

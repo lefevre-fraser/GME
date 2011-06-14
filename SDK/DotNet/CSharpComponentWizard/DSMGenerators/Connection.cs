@@ -57,7 +57,7 @@ namespace DSM.Generators
             #endregion
         }
 
-        public Connection(MGALib.IMgaAtom mgaObject)
+        public Connection(GME.MGA.IMgaAtom mgaObject)
             : base(mgaObject)
         {
             className = mgaObject.Name;
@@ -264,21 +264,21 @@ namespace DSM.Generators
         {
             get
             {
-                foreach (MGALib.IMgaConnPoint conn in mgaObject.PartOfConns)
+                foreach (GME.MGA.IMgaConnPoint conn in mgaObject.PartOfConns)
                 {
                     if (conn.Owner.Meta.Name == "AssociationClass")
                     {
-                        foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
+                        foreach (GME.MGA.IMgaConnPoint connOther in conn.Owner.ConnPoints)
                         {
                             if (connOther.target.ID != mgaObject.ID)
                             {
                                 //connOther.target: Connector
                                 ConnEndPoints ends = new ConnEndPoints();
-                                foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
+                                foreach (GME.MGA.IMgaConnPoint conn2 in connOther.target.PartOfConns)
                                 {   
                                     if (conn2.Owner.Meta.Name == "SourceToConnector")
                                     {
-                                        foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
+                                        foreach (GME.MGA.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                         {
                                             if (connOther2.target.ID != connOther.target.ID)
                                             {
@@ -304,7 +304,7 @@ namespace DSM.Generators
                                     }
                                     else if (conn2.Owner.Meta.Name == "ConnectorToDestination")
                                     {
-                                        foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
+                                        foreach (GME.MGA.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                         {
                                             if (connOther2.target.ID != connOther.target.ID)
                                             {
