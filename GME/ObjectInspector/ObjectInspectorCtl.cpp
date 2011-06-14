@@ -1099,11 +1099,11 @@ void CObjectInspectorCtrl::WriteNameToMga(const CString &strName)
 			this->FireRootFolderNameChanged();
 		}
 	}
-	catch (hresult_exception e)
+	catch (hresult_exception& e)
 	{
-		ASSERT(0);
 		m_project->AbortTransaction();
-		CWnd::MessageBox(_T("Object Inspector could not write object name due to an unexpected MGA error. We apoligize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
+		if (e.hr != E_MGA_CONSTRAINT_VIOLATION)
+			CWnd::MessageBox(_T("Object Inspector could not write object name due to an unexpected MGA error. We apoligize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
 	}
 
 }
