@@ -193,7 +193,9 @@ CRect ClassComplexPart::GetLabelLocation(void) const
 
 void ClassComplexPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	CalcRelPositions(pDC, gdip);
+	// KMS: we don't CalcRelPositions here, as our size is already set, and Draw from DumpWindowsMetaFile calculates
+	// different positions than in InitializeEx
+	//CalcRelPositions(pDC, gdip);
 	VectorPart::Draw(pDC, gdip);
 	if (m_LabelPart != NULL)
 		m_LabelPart->Draw(pDC, gdip);
