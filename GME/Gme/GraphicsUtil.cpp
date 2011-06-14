@@ -480,28 +480,7 @@ void CGraphics::DrawGdipText(Gdiplus::Graphics* gdip, const CString& txt, const 
 	Gdiplus::PointF pointF(static_cast<float> (pt.x),
 						   static_cast<float> (pt.y));
 
-	Gdiplus::RectF rectF;
-	gdip->MeasureString(txt, txt.GetLength(), font, pointF, &rectF);
-	Gdiplus::SizeF size;
-	rectF.GetSize(&size);
-	float xOffset = 0;
-	if ((align & TA_CENTER) == TA_CENTER) {
-		xOffset = -size.Width/2;
-	} else if ((align & TA_RIGHT) == TA_RIGHT) {
-		xOffset = -size.Width;
-	} else {	// TA_LEFT
-		// nothing
-	}
-	float yOffset = 0;
-	if ((align & TA_BASELINE) == TA_BASELINE) {
-		yOffset = -size.Height/2;
-	} else if ((align & TA_BOTTOM) == TA_BOTTOM) {
-		yOffset = -size.Height;
-	} else {	// TA_TOP
-		// nothing
-	}
-	rectF.Offset(xOffset, yOffset);
-	gdip->DrawString(txt, txt.GetLength(), font, rectF, &format, &textBrush);
+	gdip->DrawString(txt, txt.GetLength(), font, pointF, &format, &textBrush);
 }
 
 Gdiplus::RectF CGraphics::MeasureText2(Gdiplus::Graphics* gdip, const CString& txt, const CPoint& pt, Gdiplus::Font* font)
