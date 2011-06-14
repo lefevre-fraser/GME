@@ -22,7 +22,11 @@ public:
 
 // Operations
 public:
-	void SetParams(CPane *control, CString name, IDispatch* interf = NULL){m_control = control;  m_name = name; m_interf = interf;}
+	void SetParams(CPane *control, CString name, IDispatch* interf = NULL) {
+		m_control = control;
+		m_name = name;
+		m_interf = interf;
+	}
 
 // Overrides
 public:

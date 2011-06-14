@@ -117,6 +117,7 @@ IDispatch* CGMEOLEPanel::GetInterface()
 	CSizingControlBar * scb = dynamic_cast<CSizingControlBar *>( m_control);
 	if( scb) interf = scb->GetInterface();
 	*/
+	m_interf->AddRef();
 	return m_interf;
 }
 
@@ -168,9 +169,7 @@ STDMETHODIMP CGMEOLEPanel::XDual::get_Visible(VARIANT_BOOL* isVisible)
 
 	TRY_DUAL(IID_IGMEOLEPanel)
 	{
-#pragma warning(disable: 4310) // cast truncates constant value
 		*isVisible = (pThis->GetVisible() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
-#pragma warning(default: 4310) // cast truncates constant value
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -182,9 +181,7 @@ STDMETHODIMP CGMEOLEPanel::XDual::get_Interface(IDispatch** interf)
 
 	TRY_DUAL(IID_IGMEOLEPanel)
 	{
-#pragma warning(disable: 4310) // cast truncates constant value
 		*interf = pThis->GetInterface();
-#pragma warning(default: 4310) // cast truncates constant value
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
