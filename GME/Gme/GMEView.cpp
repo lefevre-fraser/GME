@@ -833,6 +833,9 @@ void CGMEView::OnDraw(CDC* pDC)
 					// a modified pDC makes old-style (i.e. no DrawEx) decorators render incorrectly (e.g. when the scrollbar is scrolled)
 					gdip.~Graphics();
 					::new ((void*)&gdip) Gdiplus::Graphics(pDC->m_hDC);
+					gdip.SetPageUnit(Gdiplus::UnitPixel);
+					gdip.SetSmoothingMode(m_eEdgeAntiAlias);
+					gdip.SetTextRenderingHint(m_eFontAntiAlias);
 					fco->Draw(pDC->m_hDC, &gdip);
 				}
 			}
