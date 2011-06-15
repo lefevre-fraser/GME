@@ -65,7 +65,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 #endif
     if (dwReason == DLL_PROCESS_ATTACH)
     {
-        _Module.Init(ObjectMap, hInstance, &LIBID_PARSERLib);
+        _Module.Init(ObjectMap, hInstance, &LIBID_MGAParserLib);
         DisableThreadLibraryCalls(hInstance);
     }
     else if (dwReason == DLL_PROCESS_DETACH)

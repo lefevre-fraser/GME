@@ -13,7 +13,7 @@ import "Core.idl";
 	version(1.0),
 	helpstring("MGA Parser Type Library")
 ]
-library PARSERLib
+library MGAParserLib
 {
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");

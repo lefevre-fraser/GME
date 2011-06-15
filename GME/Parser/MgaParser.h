@@ -32,7 +32,7 @@ class ATL_NO_VTABLE CMgaParser :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaParser, &CLSID_MgaParser>,
 	public ISupportErrorInfoImpl<&IID_IMgaParser>,
-	public IDispatchImpl<IMgaParser, &IID_IMgaParser, &LIBID_PARSERLib>,
+	public IDispatchImpl<IMgaParser, &IID_IMgaParser, &LIBID_MGAParserLib>,
 	public IGMEVersionInfoImpl,
 	public CGenParser
 {

@@ -36,7 +36,7 @@ class ATL_NO_VTABLE CMgaDumper :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaDumper, &CLSID_MgaDumper>,
 	public ISupportErrorInfoImpl<&IID_IMgaDumper>,
-	public IDispatchImpl<IMgaDumper, &IID_IMgaDumper, &LIBID_PARSERLib>,
+	public IDispatchImpl<IMgaDumper, &IID_IMgaDumper, &LIBID_MGAParserLib>,
 	public IGMEVersionInfoImpl
 {
 public:
