@@ -829,16 +829,13 @@ void CGMEApp::UpdateComponentToolbar()
 			const CMFCToolBarButton* pCurrent = (const CMFCToolBarButton*) componentButtons.GetNext(pos); 
 			if(pCurrent->m_bUserButton == TRUE)
 			{
+				// FIXME: this doesn't work, so we leak all the icons. Maybe we could m_userImages.UpdateImage instead?
+				// VERIFY(m_userImages.DeleteImage(pCurrent->GetImage()));
 				int buttonIndex = componentBar.ButtonToIndex(pCurrent);
 				componentBar.RemoveButton(buttonIndex);
-				//componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
-				//componentBar.AdjustSizeImmediate(TRUE);
-				//componentBar.RecalcLayout();	// CPane::RecalcLayout
 			}
 		}
 
-		// Clearing user images
-		m_userImages.Clear();
 		componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
 		componentBar.AdjustSizeImmediate(TRUE);
 		componentBar.RecalcLayout();	// CPane::RecalcLayout
