@@ -1,6 +1,3 @@
-#if !defined(AFX_STDAFX_H__A72BCE1F_468F_4b23_A08F_E29356EF3659__INCLUDED_)
-#define AFX_STDAFX_H__A72BCE1F_468F_4b23_A08F_E29356EF3659__INCLUDED_
-
 #pragma once
 
 #ifndef _SECURE_ATL
@@ -33,20 +30,26 @@
 #include <afxcmn.h>			// MFC support for Windows Common Controls
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
-// Delete the two includes below if you do not wish to use the MFC
-//  database classes
-#include <afxdb.h>			// MFC database classes
-#include <afxdao.h>			// MFC DAO database classes
-
 #include <atlbase.h>
 //You may derive a class from CComModule and use it if you want to override
 //something, but do not change the name of _Module
 extern CComModule _Module;
 #include <atlcom.h>
 
-#include "Meta.h"
-#include "MgaUtil.h"
-#include "GME.h"
+#import "Meta.dll" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
+#import "Mga.dll" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
+#import "GME.exe" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
+#import "MgaUtil.dll" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
+
+// Don't load the MIDL-generated headers
+#define __Core_h__
+#define __Meta_h__
+#define __Mga_h__
+#define __MgaUtil_h__
+#define __Gme_h__
+
+#define IID_IMgaDataSource __uuidof(IMgaDataSource)
+
 #include "CommonError.h"
 #include "CommonSmart.h"
 #include "CommonMfc.h"
@@ -65,5 +68,3 @@ extern CComModule _Module;
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // !defined(AFX_STDAFX_H__A72BCE1F_468F_4b23_A08F_E29356EF3659__INCLUDED_)

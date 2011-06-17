@@ -6,7 +6,7 @@
 #include "PartBrowserPaneFrame.h"
 #include "..\Annotator\AnnotationDefs.h"
 #include "..\GME\GMEOLEData.h"
-#include "Gme_i.c"
+#include <algorithm>
 
 
 #ifdef _DEBUG
@@ -45,7 +45,7 @@ CPartBrowserPane::~CPartBrowserPane()
 	txtMetricFont.DeleteObject();
 }
 
-CComBSTR CPartBrowserPane::GetDecoratorProgId(CComPtr<IMgaMetaFCO> metaFCO)
+CComBSTR CPartBrowserPane::GetDecoratorProgId(IMgaMetaFCO* metaFCO)
 {
 	CComBSTR pathBstr(DECORATOR_PREF);
 	CComBSTR bstrVal;
@@ -119,73 +119,63 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				PartWithDecorator tuple;
 				tuple.part = metaPart;
 
-				CComPtr<IMgaMetaRole> mmRole;
-				COMTHROW(metaPart->get_Role(&mmRole));
-				CComPtr<IMgaMetaFCO> mFco;
-				COMTHROW(mmRole->get_Kind(&mFco));
-				CComPtr<IMgaDecorator> decorator;
-				CComPtr<IMgaElementDecorator> newDecorator;
+				IMgaMetaRolePtr mmRole = metaPart->Role;
+				IMgaMetaFCOPtr mFco = mmRole->Kind;
+				IMgaDecoratorPtr decorator;
+				IMgaElementDecoratorPtr newDecorator;
 				CComBSTR decoratorProgId = GetDecoratorProgId(mFco);
 
 				CString nameString;
-				CComBSTR bstrKindName;
-				COMTHROW(mFco->get_Name(&bstrKindName));
-				CComBSTR bstrRoleName;
-				COMTHROW(mmRole->get_Name(&bstrRoleName));
+				_bstr_t bstrKindName = mFco->Name;
+				_bstr_t bstrRoleName = mmRole->Name;
 				if (bstrKindName == bstrRoleName) {
-					CComBSTR bstrDisplayedName;
-					COMTHROW(mFco->get_DisplayedName(&bstrDisplayedName));
-					CopyTo(bstrDisplayedName,nameString);
+					_bstr_t bstrDisplayedName = mFco->DisplayedName;
+					nameString = (const wchar_t*)bstrDisplayedName;
 				}
 				else {
-					CopyTo(bstrRoleName,nameString);
+					nameString = (const wchar_t*)bstrRoleName;
 				}
 				tuple.name = nameString;
 
-				try {
-					HRESULT hres = newDecorator.CoCreateInstance(PutInBstr(decoratorProgId));
-					if (FAILED(hres) && hres != CO_E_CLASSSTRING) {	// might be an old decorator
-						hres = decorator.CoCreateInstance(PutInBstr(decoratorProgId));
-					}
-					if (FAILED(hres)) {	// fall back to default decorator
-						decoratorProgId = GME_DEFAULT_DECORATOR;
-						COMTHROW(newDecorator.CoCreateInstance(PutInBstr(decoratorProgId)));
-					}
-
-					if (newDecorator) {
-						tuple.newDecorator = newDecorator;
-						decorator = CComQIPtr<IMgaDecorator>(newDecorator);
-						COMTHROW(newDecorator->InitializeEx(mgaProject, metaPart, NULL, NULL /*decorEventSinkIface*/, (ULONGLONG)m_hWnd));
-					} else {
-						COMTHROW(decorator->Initialize(mgaProject, metaPart, NULL));
-					}
+				HRESULT hres = newDecorator.CreateInstance((LPCWSTR)decoratorProgId);
+				if (FAILED(hres) && hres != CO_E_CLASSSTRING) {	// might be an old decorator
+					hres = decorator.CreateInstance(PutInBstr(decoratorProgId));
 				}
-				catch (hresult_exception&) {
+				if (FAILED(hres)) {	// fall back to default decorator
+					COMTHROW(newDecorator.CreateInstance(GME_DEFAULT_DECORATOR));
+				}
+
+				if (newDecorator) {
+					tuple.newDecorator = newDecorator;
+					// KMS: this is a workaround for a bug in many decorators: QI(IID_IMgaDecorator) returns E_NOINTERFACE
+					// (Fixed in MetaGME and UML in r1367)
+					decorator = (IMgaDecorator*)(IMgaElementDecorator*)newDecorator;
+					newDecorator->__InitializeEx(mgaProject, metaPart, NULL, NULL /*decorEventSinkIface*/, (ULONGLONG)m_hWnd);
+				} else {
+					decorator->__Initialize(mgaProject, metaPart, NULL);
 				}
 
 				long sx, sy;
-				COMTHROW(decorator->GetPreferredSize(&sx, &sy));
-				COMTHROW(decorator->SetLocation(0, 0, sx, sy));
+				decorator->__GetPreferredSize(&sx, &sy);
+				decorator->__SetLocation(0, 0, sx, sy);
 				tuple.decorator = decorator;
 
-				// Insert/append in alphabetical order
-				std::vector<PartWithDecorator>::iterator ii = pdt.begin();
-				while (ii != pdt.end()) {
-					if ((*ii).name >= tuple.name)
-						break;
-					++ii;
-				}
-				if (ii == pdt.end())
-					pdt.push_back(tuple);
-				else
-					pdt.insert(ii, tuple);
+				pdt.push_back(tuple);
 			}
 		}
 		MGACOLL_ITERATE_END;
 	}
-	catch (hresult_exception&) {
+	catch (hresult_exception& e) {
+		_bstr_t error;
+		GetErrorInfo(e.hr, error.GetAddress());
+		CGMEDataSource::get_GME(CComObjPtr<IMgaProject>(mgaProject))->ConsoleMessage(error, MSG_ERROR);
 		return;
 	}
+	catch (_com_error& e) {
+		CGMEDataSource::get_GME(CComObjPtr<IMgaProject>(mgaProject))->ConsoleMessage(_bstr_t(L"Couldn't initialize decorator: " + e.Description()), MSG_ERROR);
+		return;
+	}
+	std::sort(pdt.begin(), pdt.end(), [](const PartWithDecorator& a, const PartWithDecorator& b){ return a.name < b.name; });
 	pdts.push_back(pdt);
 }
 

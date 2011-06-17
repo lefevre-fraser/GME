@@ -37,7 +37,7 @@ public:
 
 private:
 // Operations
-	CComBSTR	GetDecoratorProgId(CComPtr<IMgaMetaFCO> metaFCO);
+	CComBSTR	GetDecoratorProgId(IMgaMetaFCO* metaFCO);
 	bool		IsPartDisplayable(CComPtr<IMgaMetaPart> metaPart);
 	bool		FindObject(CPoint &pt, PartWithDecorator& pdt);
 	void		CreateDecorators(CComPtr<IMgaMetaParts> metaParts);

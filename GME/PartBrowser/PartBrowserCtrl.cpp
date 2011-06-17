@@ -4,7 +4,6 @@
 #include "PartBrowser.h"
 #include "PartBrowserCtrl.h"
 #include "PartBrowserPropPage.h"
-#include "..\Interfaces\Mga_i.c"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -59,7 +58,7 @@ END_EVENT_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // Native COM interface map - peter
 BEGIN_INTERFACE_MAP(CPartBrowserCtrl, COleControl)
-	INTERFACE_PART(CPartBrowserCtrl, IID_IMgaEventSink, EventSink)
+	INTERFACE_PART(CPartBrowserCtrl, __uuidof(IMgaEventSink), EventSink)
 END_INTERFACE_MAP()
 
 
