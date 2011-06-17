@@ -1494,7 +1494,10 @@ bool CGMEView::SendCloseModelEvent()
 		CommitTransaction();
 	}
 	catch(hresult_exception &e) {
-		AbortTransaction(e.hr);
+		try {
+			AbortTransaction(e.hr);
+		} catch(hresult_exception &e) {
+		} // Our transaction count was wrong. What else can we do?
 		ok = false;
 	}
 	return ok;
