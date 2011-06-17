@@ -321,13 +321,13 @@ interface ICoreStorage : IDispatch
 	// --- Object
 
 	[helpstring("method OpenObject")]
-	HRESULT OpenObject([in] objid_type objid);
+	HRESULT OpenObject([in] objid_type ObjID);
 
 	[helpstring("method CloseObject")]
 	HRESULT CloseObject();
 
 	[helpstring("method CreateObject")]
-	HRESULT CreateObject([out] objid_type *objid);
+	HRESULT CreateObject([out] objid_type *ObjID);
 
 	[helpstring("method DeleteObject")]
 	HRESULT DeleteObject();
@@ -391,11 +391,11 @@ interface ICoreProject : IDispatch
 	// --- Objects
 
 	[propget, id(DISPID_VALUE), helpstring("property Object")]
-	HRESULT Object([in] metaid_type metaid, [in] objid_type objid, 
+	HRESULT Object([in] metaid_type metaid, [in] objid_type ObjID, 
 		[out, retval] ICoreObject **p);
 
 	[helpstring("getter for property Object")]
-	HRESULT GetObjectDisp([in] metaid_type metaid, [in] objid_type objid, 
+	HRESULT GetObjectDisp([in] metaid_type metaid, [in] objid_type ObjID, 
 		[out, retval] ICoreObject **p);
 
 	[helpstring("method CreateObject")]
