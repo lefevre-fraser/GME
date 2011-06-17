@@ -63,7 +63,7 @@ interface IMgaDumper : IDispatch
 interface IMgaParser : IDispatch
 {
 	[helpstring("method GetXMLInfo")]
-	HRESULT GetXMLInfo([in] BSTR xmlfile, [out] BSTR *paradigm, [out] BSTR *parversion, [out] VARIANT *parguid, [out] BSTR *basename, [out] BSTR *ver);
+	HRESULT GetXMLInfo([in] BSTR xmlfile, [out] BSTR *Paradigm, [out] BSTR *parversion, [out] VARIANT *parguid, [out] BSTR *basename, [out] BSTR *ver);
 
 	[helpstring("method ParseProject")]
 	HRESULT ParseProject([in] IMgaProject *p, [in] BSTR xmlfile);
@@ -72,7 +72,7 @@ interface IMgaParser : IDispatch
 	HRESULT ParseFCOs([in] IMgaObject *here, [in] BSTR xmlfile);
 
 	[helpstring("method GetClipXMLInfo")]
-	HRESULT GetClipXMLInfo([in] BSTR xmlfile, [in] IMgaObject *target, [out] VARIANT_BOOL *parguid, [out] BSTR *acckind, [out] BSTR *ver);
+	HRESULT GetClipXMLInfo([in] BSTR xmlfile, [in] IMgaObject *Target, [out] VARIANT_BOOL *parguid, [out] BSTR *acckind, [out] BSTR *ver);
 
 	[helpstring("method ParseCLOSURE version 1 - basic")]
 	HRESULT ParseClos1([in] IMgaObject *here, [in] BSTR xmlfile);

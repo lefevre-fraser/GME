@@ -85,22 +85,22 @@ interface IGMEOLEApp : IDispatch
 	[propget, id(4)] HRESULT VersionMinor([out, retval] short* n);
 	[propget, id(5)] HRESULT VersionPatchLevel([out, retval] short* n);
 	[propget, id(6)] HRESULT Models([out, retval] IGMEOLEColl** coll);
-	[propget, id(7)] HRESULT MgaProject([out, retval] IMgaProject** project);
+	[propget, id(7)] HRESULT MgaProject([out, retval] IMgaProject** p);
 	[propget, id(8)] HRESULT Panels([out, retval] IGMEOLEColl** coll);
 	[propput, id(9)] HRESULT ConsoleContents([in] BSTR contents);
 	[propget, id(9)] HRESULT ConsoleContents([out, retval] BSTR* contents);
 			
 	// methods:
-	[id(10)] HRESULT CreateProject([in] BSTR metaname, [in] BSTR connstr);
-	[id(11)] HRESULT OpenProject([in] BSTR connstr);
+	[id(10)] HRESULT CreateProject([in] BSTR metaname, [in] BSTR ConnStr);
+	[id(11)] HRESULT OpenProject([in] BSTR ConnStr);
 	[id(12)] HRESULT CreateProjectDialog();
 	[id(13)] HRESULT OpenProjectDialog();
 	[id(14)] HRESULT CloseProject([in] VARIANT_BOOL saveOnClose);
 	[id(15)] HRESULT SaveProject();
-	[id(16)] HRESULT SaveProjectAs([in] BSTR connstr);
+	[id(16)] HRESULT SaveProjectAs([in] BSTR ConnStr);
 	[id(17)] HRESULT SaveProjectAsDialog();
-	[id(18)] HRESULT ExportProject([in] BSTR connstr);
-	[id(19)] HRESULT ImportProject([in] BSTR connstr);
+	[id(18)] HRESULT ExportProject([in] BSTR ConnStr);
+	[id(19)] HRESULT ImportProject([in] BSTR ConnStr);
 	[id(20)] HRESULT ConstraintsDialog();
 	[id(21)] HRESULT CheckAllConstraints();
 	[id(22)] HRESULT RegisterParagimsDialog();
@@ -196,19 +196,19 @@ interface IGMEOLEIt : IDispatch // the current/active opened view (model)
 	[helpstring("ShowFCOPtr - changes the view to fco.")]
 	HRESULT ShowFCOPtr( [in] IMgaFCO* fco, [in, defaultvalue(0)] VARIANT_BOOL inParent );
 
-	HRESULT Child( [in] BSTR name, [out,retval] IMgaFCO** child_fco );
-	HRESULT Create( [in] BSTR part, [in] BSTR name, [out,retval] IMgaFCO** new_fco );
+	HRESULT Child( [in] BSTR Name, [out,retval] IMgaFCO** child_fco );
+	HRESULT Create( [in] BSTR part, [in] BSTR Name, [out,retval] IMgaFCO** new_fco );
 	[helpstring("creates a 'part' named 'name' in child_as_parent model")]
-	HRESULT CreateInChild( [in] BSTR child_as_parent, [in] BSTR part, [in] BSTR name, [out,retval] IMgaFCO** new_fco );
-	HRESULT CreateInChildFCO( [in] IMgaFCO* child_as_parent, [in] BSTR part, [in] BSTR name, [out,retval] IMgaFCO** new_fco );
+	HRESULT CreateInChild( [in] BSTR child_as_parent, [in] BSTR part, [in] BSTR Name, [out,retval] IMgaFCO** new_fco );
+	HRESULT CreateInChildFCO( [in] IMgaFCO* child_as_parent, [in] BSTR part, [in] BSTR Name, [out,retval] IMgaFCO** new_fco );
 
 	HRESULT Duplicate([in] BSTR existing_fco_name, [in] BSTR new_fco_name, [out,retval] IMgaFCO** new_fco );
 	HRESULT DuplicateFCO([in] IMgaFCO* existing_fco, [in] BSTR new_fco_name, [out,retval] IMgaFCO** new_fco );
 
 	HRESULT Rename( [in] BSTR oldname, [in] BSTR newname);
-	HRESULT SetName( [in] IMgaFCO*, [in] BSTR name);
+	HRESULT SetName( [in] IMgaFCO*, [in] BSTR Name);
 
-	HRESULT Include( [in] BSTR setname, [in] BSTR name);
+	HRESULT Include( [in] BSTR setname, [in] BSTR Name);
 	HRESULT Exclude( [in] BSTR setname, [in] BSTR membername);
 
 	HRESULT IncludeFCO( [in] IMgaSet* p_set, [in] IMgaFCO* fco);
@@ -226,18 +226,18 @@ interface IGMEOLEIt : IDispatch // the current/active opened view (model)
 	HRESULT ConnectFCOs( [in] IMgaFCO* src_part, [in] IMgaFCO* dst_part, [in] BSTR connection_role, [out, retval] IMgaConnection ** conn );
 	HRESULT DisconnectFCOs( [in] IMgaFCO* src_part, [in] IMgaFCO* dst_part, [in] BSTR connection_name);
 
-	HRESULT Refer( [in] BSTR reference, [in] BSTR referred);
+	HRESULT Refer( [in] BSTR reference, [in] BSTR Referred);
 	HRESULT ClearRef( [in] BSTR reference);
 	HRESULT FollowRef( [in] BSTR reference);
 
-	HRESULT ReferFCO( [in] IMgaReference* reference, [in] IMgaFCO* referred);
+	HRESULT ReferFCO( [in] IMgaReference* reference, [in] IMgaFCO* Referred);
 	HRESULT ClearRefFCO( [in] IMgaReference* reference);
 	HRESULT FollowRefFCO( [in] IMgaReference* reference);
 	HRESULT NullFCO( [out, retval] IMgaFCO** nullobj);
 
 
-	HRESULT SetAttribute( [in] BSTR name, [in] BSTR attr_name, [in] VARIANT value);
-	HRESULT GetAttribute( [in] BSTR name, [in] BSTR attr_name, [out, retval] VARIANT* value);
+	HRESULT SetAttribute( [in] BSTR Name, [in] BSTR attr_name, [in] VARIANT value);
+	HRESULT GetAttribute( [in] BSTR Name, [in] BSTR attr_name, [out, retval] VARIANT* value);
 
 	HRESULT SetAttributeFCO( [in] IMgaFCO* fco, [in] BSTR attr_name, [in] VARIANT value);
 	HRESULT GetAttributeFCO( [in] IMgaFCO* fco, [in] BSTR attr_name, [out, retval] VARIANT* value);
@@ -343,7 +343,7 @@ interface IGMEOLEAspect : IDispatch
 interface IGMEOLEPanel :  IDispatch
 {
 	// properties:
-	[propget, id(1)] HRESULT Name([out, retval] BSTR* name);
+	[propget, id(1)] HRESULT Name([out, retval] BSTR* Name);
 	[propput, id(2)] HRESULT Visible([in] VARIANT_BOOL isVisible);
 	[propget, id(2)] HRESULT Visible([out, retval] VARIANT_BOOL* isVisible);
 	[propget, id(3)] HRESULT Interface([out, retval] IDispatch** interf);
@@ -428,12 +428,12 @@ typedef enum  refresh_mode_enum {
 ]
 interface IMgaDecorator : IUnknown
 {
-	[id(1), helpstring("method Initialize")] HRESULT Initialize([in] IMgaProject* project, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj);
+	[id(1), helpstring("method Initialize")] HRESULT Initialize([in] IMgaProject* p, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj);
 	[id(2), helpstring("method Destroy")] HRESULT Destroy();
 	[id(3), helpstring("method GetMnemonic")] HRESULT GetMnemonic([out] BSTR* mnemonic);
 	[id(4), helpstring("method GetFeatures")] HRESULT GetFeatures([out] feature_code* features);
-	[id(5), helpstring("method SetParam")] HRESULT SetParam([in] BSTR name, [in] VARIANT value);
-	[id(6), helpstring("method GetParam")] HRESULT GetParam([in] BSTR name, [out] VARIANT* value);
+	[id(5), helpstring("method SetParam")] HRESULT SetParam([in] BSTR Name, [in] VARIANT value);
+	[id(6), helpstring("method GetParam")] HRESULT GetParam([in] BSTR Name, [out] VARIANT* value);
 	[id(7), helpstring("method SetActive")] HRESULT SetActive([in] VARIANT_BOOL isActive);
 	[id(8), helpstring("method GetPreferredSize")] HRESULT GetPreferredSize([out] long* sizex, [out] long* sizey);
 	[id(9), helpstring("method SetLocation")] HRESULT SetLocation([in] long sx, [in] long sy, [in] long ex, [in] long ey);
@@ -484,7 +484,7 @@ interface IMgaCommonDecoratorEvents : IUnknown
 ]
 interface IMgaDecoratorCommon : IMgaDecorator
 {
-	[id(20), helpstring("method InitializeEx")] HRESULT InitializeEx([in] IMgaProject* project, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj, [in] IMgaCommonDecoratorEvents* eventSink, [in] ULONGLONG parentWnd);
+	[id(20), helpstring("method InitializeEx")] HRESULT InitializeEx([in] IMgaProject* p, [in] IMgaMetaPart* meta, [in] IMgaFCO* obj, [in] IMgaCommonDecoratorEvents* eventSink, [in] ULONGLONG parentWnd);
 	[id(21), helpstring("method DrawEx")] HRESULT DrawEx([in] ULONG hdc, [in] ULONGLONG gdip);
 	[id(22), helpstring("method SetSelected")] HRESULT SetSelected([in] VARIANT_BOOL isSelected);
 	[id(23), helpstring("method MouseMoved")] HRESULT MouseMoved([in] ULONG nFlags, [in] LONG pointx, [in] LONG pointy, [in] ULONGLONG transformHDC);

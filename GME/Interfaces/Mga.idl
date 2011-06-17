@@ -562,7 +562,7 @@ interface IMgaAddOn : IDispatch
 	[ helpstring("method Destroy: disable further callbacks to this addon")] HRESULT Destroy();
 
 	[ propget,  helpstring("property Project")] HRESULT Project([out, retval] IMgaProject **pVal);
-	[ helpstring("Check if object belongs to a project")]	HRESULT CheckProject([in] IMgaProject *project);
+	[ helpstring("Check if object belongs to a project")]	HRESULT CheckProject([in] IMgaProject *p_project);
 };
 
 
@@ -1029,7 +1029,7 @@ interface IMgaModel : IMgaFCO
 {
 	[ helpstring("method CreateChildObject")] HRESULT CreateChildObject([in] IMgaMetaRole *meta, [out, retval] IMgaFCO **newobj);
 	[ helpstring("method DeriveChildObject")] HRESULT DeriveChildObject([in] IMgaFCO *base, 
-											[in] IMgaMetaRole *role, [in] VARIANT_BOOL instance, [out, retval] IMgaFCO **newobj);
+											[in] IMgaMetaRole *Role, [in] VARIANT_BOOL instance, [out, retval] IMgaFCO **newobj);
 
 	[propget, helpstring("property ChildDerivedFrom")] HRESULT ChildDerivedFrom([in] IMgaFCO *baseobj, [out, retval] IMgaFCO **pVal);
 
@@ -1041,10 +1041,10 @@ interface IMgaModel : IMgaFCO
 					HRESULT GetAspectPartsDisp([in] IMgaMetaAspect * asp, [in] unsigned int filter, [out, retval] IMgaParts **pVal);
 
 	[ helpstring("method CreateSimpleConn")] 
-					HRESULT CreateSimpleConn([in] IMgaMetaRole *meta, [in] IMgaFCO *src, [in] IMgaFCO *dst,
+					HRESULT CreateSimpleConn([in] IMgaMetaRole *meta, [in] IMgaFCO *Src, [in] IMgaFCO *Dst,
 											 [in] IMgaFCOs *srcrefs, [in] IMgaFCOs *dstrefs, [out, retval] IMgaFCO **newobj);
 	[ helpstring("method CreateReference")] 
-					HRESULT CreateReference([in] IMgaMetaRole *meta, [in] IMgaFCO *target, [out, retval] IMgaFCO **newobj);
+					HRESULT CreateReference([in] IMgaMetaRole *meta, [in] IMgaFCO *Target, [out, retval] IMgaFCO **newobj);
 	[ helpstring("method AddInternalConnections")] HRESULT AddInternalConnections([in] IMgaFCOs *inobjs, [out, retval] IMgaFCOs **outobjs);
 
 	[id(0x551), helpstring("method MoveFCOs")] 
@@ -1072,11 +1072,11 @@ interface IMgaModel : IMgaFCO
 
 // Dispatch compatible connection creation
 	[helpstring("method CreateSimpleConn through Dispatch")] 
-		HRESULT CreateSimpleConnDisp([in] IMgaMetaRole *meta, [in] IMgaFCO *src, [in] IMgaFCO *dst,
-							 [in] IMgaFCO *srcref, [in] IMgaFCO *dstref, [out, retval] IMgaFCO **newobj);
+		HRESULT CreateSimpleConnDisp([in] IMgaMetaRole *meta, [in] IMgaFCO *Src, [in] IMgaFCO *Dst,
+							 [in] IMgaFCO *Srcref, [in] IMgaFCO *Dstref, [out, retval] IMgaFCO **newobj);
 
 	[helpstring("method CreateSimpleConn through Dispatch")] 
-		HRESULT CreateSimplerConnDisp([in] IMgaMetaRole *meta, [in] IMgaFCO *src, [in] IMgaFCO *dst, [out, retval] IMgaFCO **newobj);
+		HRESULT CreateSimplerConnDisp([in] IMgaMetaRole *meta, [in] IMgaFCO *Src, [in] IMgaFCO *Dst, [out, retval] IMgaFCO **newobj);
 
 // Dispatch compatible copy/move
 	[helpstring("method MoveFCO through Dispatch")] 
@@ -1229,12 +1229,7 @@ interface IMgaConnection : IMgaFCO
 {
 	[helpstring("property AddConnPoint")] 
 		HRESULT AddConnPoint([in] BSTR rolename, [in] long maxinrole, 
-						[in] IMgaFCO *target, [in] IMgaFCOs *refs, [out] IMgaConnPoint **pVal);
-/*
-	[helpstring("property AddPortConnPoint")] 
-	HRESULT AddConnPoint([in] BSTR rolename, [in] long maxinrole, 
-						[in] IMgaRefPort *port, [out] IMgaConnPoint **pVal);
-*/
+						[in] IMgaFCO *Target, [in] IMgaFCOs *refs, [out] IMgaConnPoint **pVal);
 	[propget, helpstring("property ConnPoints")] HRESULT ConnPoints([out, retval] IMgaConnPoints **pVal);
 
 	[helpstring("method CompareToBase; if connpoint is null, all connpoints are compared")] 
@@ -1256,8 +1251,8 @@ interface IMgaSimpleConnection : IMgaConnection
 	[propget, helpstring("property Dst")] HRESULT Dst([out, retval] IMgaFCO * *pVal);
 	[propget, helpstring("property SrcReferences")] HRESULT SrcReferences([out, retval] IMgaFCOs **pVal);
 	[propget, helpstring("property DstReferences")] HRESULT DstReferences([out, retval] IMgaFCOs **pVal);
-	[helpstring("method SetDst")] HRESULT SetDst([in] IMgaFCOs *references, [in] IMgaFCO *target);
-	[helpstring("method SetSrc")] HRESULT SetSrc([in] IMgaFCOs *references, [in] IMgaFCO *target);
+	[helpstring("method SetDst")] HRESULT SetDst([in] IMgaFCOs *references, [in] IMgaFCO *Target);
+	[helpstring("method SetSrc")] HRESULT SetSrc([in] IMgaFCOs *references, [in] IMgaFCO *Target);
 /*
 	[propget, helpstring("property SrcPort")] HRESULT SrcPort([out, retval] IMgaRefPort **pVal);
 	[propget, helpstring("property DstPort")] HRESULT DstPort([out, retval] IMgaRefPort **pVal);

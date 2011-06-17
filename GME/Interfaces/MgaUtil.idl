@@ -46,54 +46,54 @@ interface IMgaResolver : IDispatch
 
 	[propget, helpstring("property FolderByStr")]
 	HRESULT FolderByStr([in] IMgaFolder *parent,
-		[in] BSTR kind, [out, retval] IMgaMetaFolder **p);
+		[in] BSTR kindname, [out, retval] IMgaMetaFolder **p);
 
 	[helpstring("getter for property FolderByStr")]
 	HRESULT GetFolderByStrDisp([in] IMgaFolder *parent,
-		[in] BSTR kind, [out, retval] IMgaMetaFolder **p);
+		[in] BSTR kindname, [out, retval] IMgaMetaFolder **p);
 
 	[propget, helpstring("property KindByStr")]
 	HRESULT KindByStr([in] IMgaFolder *parent, 
-		[in] BSTR kind, [in] objtype_enum objtype,
+		[in] BSTR kindname, [in] objtype_enum objtype,
 		[out, retval] IMgaMetaFCO **p);
 
 	[helpstring("getter for property KindByStr")]
 	HRESULT GetKindByStrDisp([in] IMgaFolder *parent, 
-		[in] BSTR kind, [in] objtype_enum objtype,
+		[in] BSTR kindname, [in] objtype_enum objtype,
 		[out, retval] IMgaMetaFCO **p);
 
 	[propget, helpstring("property RoleByStr")]
 	HRESULT RoleByStr([in] IMgaModel *parent,
-		[in] BSTR kind, [in] objtype_enum objtype, 
-		[in] BSTR role, [in] BSTR aspect,
+		[in] BSTR kindname, [in] objtype_enum objtype, 
+		[in] BSTR rolename, [in] BSTR aspect,
 		[out, retval] IMgaMetaRole **p);
 
 	[helpstring("getter for property RoleByStr")]
 	HRESULT GetRoleByStrDisp([in] IMgaModel *parent,
-		[in] BSTR kind, [in] objtype_enum objtype, 
-		[in] BSTR role, [in] BSTR aspect,
+		[in] BSTR kindname, [in] objtype_enum objtype, 
+		[in] BSTR rolename, [in] BSTR aspect,
 		[out, retval] IMgaMetaRole **p);
 
 	[propget, helpstring("property AttrByStr")]
 	HRESULT AttrByStr([in] IMgaFCO *parent,
-		[in] BSTR kind, [out, retval] IMgaMetaAttribute **p);
+		[in] BSTR kindname, [out, retval] IMgaMetaAttribute **p);
 
 	[helpstring("getter for property AttrByStr")]
 	HRESULT GetAttrByStrDisp([in] IMgaFCO *parent,
-		[in] BSTR kind, [out, retval] IMgaMetaAttribute **p);
+		[in] BSTR kindname, [out, retval] IMgaMetaAttribute **p);
 
 // --- resolve by meta objects
 
 	[propget, helpstring("property RoleByMeta")]
 	HRESULT RoleByMeta([in] IMgaModel *parent, 
-		[in] IMgaMetaFCO *kind, [in] objtype_enum objtype, 
-		[in] IMgaMetaRole *role, [in] IMgaMetaAspect *aspect,
+		[in] IMgaMetaFCO *p_kind, [in] objtype_enum objtype, 
+		[in] IMgaMetaRole *p_role, [in] IMgaMetaAspect *aspect,
 		[out, retval] IMgaMetaRole **p);
 
 	[helpstring("getter for property RoleByMeta")]
 	HRESULT GetRoleByMetaDisp([in] IMgaModel *parent, 
-		[in] IMgaMetaFCO *kind, [in] objtype_enum objtype, 
-		[in] IMgaMetaRole *role, [in] IMgaMetaAspect *aspect,
+		[in] IMgaMetaFCO *p_kind, [in] objtype_enum objtype, 
+		[in] IMgaMetaRole *p_role, [in] IMgaMetaAspect *aspect,
 		[out, retval] IMgaMetaRole **p);
 
 
@@ -125,12 +125,12 @@ interface IMgaResolver : IDispatch
 
 	[propget, helpstring("property RolesByMetas")]
 	HRESULT RolesByMetas([in] IMgaModel *dst_parent, 
-		[in] IMgaFCOs *src, [in] IMgaMetaAspect * aspect, 
+		[in] IMgaFCOs *Src, [in] IMgaMetaAspect * aspect, 
 		[in] BSTR sz_aspect, [out, retval] IMgaMetaRoles ** p);
 
 	[helpstring("property RolesByMetas")]
 	HRESULT GetRolesByMetasDisp([in] IMgaModel *dst_parent, 
-		[in] IMgaFCOs *src, [in] IMgaMetaAspect * aspect, 
+		[in] IMgaFCOs *Src, [in] IMgaMetaAspect * aspect, 
 		[in] BSTR sz_aspect, [out, retval] IMgaMetaRoles ** p);
 
 
@@ -401,16 +401,16 @@ interface IMgaRegistrar : IDispatch
 	HRESULT GetParadigmsDisp([in] regaccessmode_enum mode, [out, retval] VARIANT *names);
 
 	[helpstring("method RegisterParadigmFromData")]
-	HRESULT RegisterParadigmFromData([in] BSTR connstr, [out] BSTR *newname, [in] regaccessmode_enum mode);
+	HRESULT RegisterParadigmFromData([in] BSTR ConnStr, [out] BSTR *newname, [in] regaccessmode_enum mode);
 
 	[helpstring("method RegisterParadigmFromData - Dispatch compatible signature")]
-	HRESULT RegisterParadigmFromDataDisp([in] BSTR connstr, [in] regaccessmode_enum mode, [out, retval] BSTR *newname);
+	HRESULT RegisterParadigmFromDataDisp([in] BSTR ConnStr, [in] regaccessmode_enum mode, [out, retval] BSTR *newname);
 
 	[helpstring("method RegisterParadigm")]
-	HRESULT RegisterParadigm([in] BSTR name, [in] BSTR connstr, [in] BSTR ver, [in] VARIANT guid, [in] regaccessmode_enum mode);
+	HRESULT RegisterParadigm([in] BSTR name, [in] BSTR ConnStr, [in] BSTR ver, [in] VARIANT guid, [in] regaccessmode_enum mode);
 
 	[helpstring("method QueryParadigm")]
-	HRESULT QueryParadigm([in] BSTR name, [out] BSTR *connstr, [in,out] VARIANT *guid, [in] regaccessmode_enum mode);
+	HRESULT QueryParadigm([in] BSTR name, [out] BSTR *ConnStr, [in,out] VARIANT *guid, [in] regaccessmode_enum mode);
 
 	[propget, helpstring("property QueryParadigmGUIDString")]
 	HRESULT ParadigmGUIDString([in] regaccessmode_enum mode, [in] BSTR name, [out, retval] BSTR *guidstr);
@@ -443,68 +443,68 @@ interface IMgaRegistrar : IDispatch
 	HRESULT GetComponentsDisp([in] regaccessmode_enum mode, [out, retval] VARIANT *progids);
 
 	[helpstring("method RegisterComponent")]
-	HRESULT RegisterComponent([in] BSTR progid, [in] componenttype_enum type, [in] BSTR desc, [in] regaccessmode_enum mode);
+	HRESULT RegisterComponent([in] BSTR ProgID, [in] componenttype_enum type, [in] BSTR desc, [in] regaccessmode_enum mode);
 
 	[helpstring("method QueryComponent")]
-	HRESULT QueryComponent([in] BSTR progid, [out] componenttype_enum *type, [out] BSTR *desc, [in] regaccessmode_enum mode);
+	HRESULT QueryComponent([in] BSTR ProgID, [out] componenttype_enum *type, [out] BSTR *desc, [in] regaccessmode_enum mode);
 
 	[helpstring("method UnregisterComponent")]
-	HRESULT UnregisterComponent([in] BSTR progid, [in] regaccessmode_enum mode);
+	HRESULT UnregisterComponent([in] BSTR ProgID, [in] regaccessmode_enum mode);
 
 	[propput, helpstring("property ComponentExtraInfo")]
 	HRESULT ComponentExtraInfo([in] regaccessmode_enum mode, 
-				[in] BSTR progid, [in] BSTR name, 
+				[in] BSTR ProgID, [in] BSTR name, 
 				[in] BSTR newVal);
 
 	[propget, helpstring("property ComponentExtraInfo")]
 	HRESULT ComponentExtraInfo([in] regaccessmode_enum mode, 
-				[in] BSTR progid, [in] BSTR name, 
+				[in] BSTR ProgID, [in] BSTR name, 
 				[out, retval] BSTR *pVal);
 
 	[helpstring("setter for property ComponentExtraInfo")]
 	HRESULT SetComponentExtraInfoDisp([in] regaccessmode_enum mode, 
-				[in] BSTR progid, [in] BSTR name, 
+				[in] BSTR ProgID, [in] BSTR name, 
 				[in] BSTR newVal);
 
 	[helpstring("getter for property ComponentExtraInfo")]
 	HRESULT GetComponentExtraInfoDisp([in] regaccessmode_enum mode, 
-				[in] BSTR progid, [in] BSTR name, 
+				[in] BSTR ProgID, [in] BSTR name, 
 				[out, retval] BSTR *pVal);
 
 	[propget, helpstring("property LocalDllPath")]
-	HRESULT LocalDllPath([in] BSTR progid, [out, retval] BSTR *pVal);
+	HRESULT LocalDllPath([in] BSTR ProgID, [out, retval] BSTR *pVal);
 
 	[helpstring("getter for property LocalDllPath")]
-	HRESULT GetLocalDllPathDisp([in] BSTR progid, [out, retval] BSTR *pVal);
+	HRESULT GetLocalDllPathDisp([in] BSTR ProgID, [out, retval] BSTR *pVal);
 
 	// --- Associate
 
 	// progids() As String
 	[propget, helpstring("method AssociatedComponents")]
-	HRESULT AssociatedComponents([in] BSTR paradigm, 
+	HRESULT AssociatedComponents([in] BSTR Paradigm, 
 		[in] componenttype_enum type, [in] regaccessmode_enum mode, [out, retval] VARIANT *progids);
 
 	[helpstring("getter for method AssociatedComponents")]
-	HRESULT GetAssociatedComponentsDisp([in] BSTR paradigm, 
+	HRESULT GetAssociatedComponentsDisp([in] BSTR Paradigm, 
 		[in] componenttype_enum type, [in] regaccessmode_enum mode, [out, retval] VARIANT *progids);
 
 	// paradigms() As String
 	[propget, helpstring("method AssociatedParadigms")]
-	HRESULT AssociatedParadigms([in] BSTR progid,
+	HRESULT AssociatedParadigms([in] BSTR ProgID,
 		 [in] regaccessmode_enum mode, [out, retval] VARIANT *paradigms);
 
 	[helpstring("getter for property AssociatedParadigms")]
-	HRESULT GetAssociatedParadigmsDisp([in] BSTR progid,
+	HRESULT GetAssociatedParadigmsDisp([in] BSTR ProgID,
 		 [in] regaccessmode_enum mode, [out, retval] VARIANT *paradigms);
 
 	[helpstring("method Associate")]
-	HRESULT Associate([in] BSTR progid, [in] BSTR paradigm, [in] regaccessmode_enum mode);
+	HRESULT Associate([in] BSTR ProgID, [in] BSTR Paradigm, [in] regaccessmode_enum mode);
 
 	[helpstring("method Disassociate")]
-	HRESULT Disassociate([in] BSTR progid, [in] BSTR paradigm, [in] regaccessmode_enum mode);
+	HRESULT Disassociate([in] BSTR ProgID, [in] BSTR Paradigm, [in] regaccessmode_enum mode);
 
 	[helpstring("method IsAssociated")]
-	HRESULT IsAssociated([in] BSTR progid, [in] BSTR paradigm, 
+	HRESULT IsAssociated([in] BSTR ProgID, [in] BSTR Paradigm, 
 			[out] VARIANT_BOOL *is_ass, [out] VARIANT_BOOL *can_ass, [in] regaccessmode_enum mode);
 	// --- Actions
 
@@ -590,12 +590,8 @@ interface IMgaLauncher : IDispatch
 
 	// --- Other stuff
 
-//	[helpstring("method RunInterpreter")]
-//	HRESULT RunInterpreter([in] IMgaProject *project, 
-//		[in] IMgaFCOs *selectedobjs, [in] long param);
-
 	[helpstring("method RunComponent")]   
-	HRESULT RunComponent([in] BSTR progid, [in] IMgaProject *project, 
+	HRESULT RunComponent([in] BSTR ProgID, [in] IMgaProject *p, 
 		[in] IMgaFCO *focusobj, [in] IMgaFCOs *selectedobjs, [in] long param);
 };
 
@@ -651,12 +647,12 @@ interface IMgaClosure : IDispatch
 {
 	[helpstring("method GetLastClosureId - returns the last closure id stored in the rootfolder's registry")]
 	HRESULT GetLastClosureId
-		( [in] IMgaProject* p_project
+		( [in] IMgaProject* p
 		, [out, retval] long* p_pMarkWith);
 
 	[helpstring("method PutLastClosureId - saves the new last id")]
 	HRESULT PutLastClosureId
-		( [in] IMgaProject* p_project
+		( [in] IMgaProject* p
 		, [in] long  p_iMarkWith);
 
 	[helpstring("method SelectiveClosure")]

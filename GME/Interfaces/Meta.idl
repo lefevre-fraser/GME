@@ -623,7 +623,7 @@ interface IMgaMetaModel : IMgaMetaFCO
 	// --- edit containment
 
 	[helpstring("method CreateRole")]
-	HRESULT CreateRole([in] IMgaMetaFCO *kind, [out, retval] IMgaMetaRole **p);
+	HRESULT CreateRole([in] IMgaMetaFCO *Kind, [out, retval] IMgaMetaRole **p);
 
 	[helpstring("method CreateAspect")]
 	HRESULT CreateAspect([out, retval] IMgaMetaAspect **p);
@@ -646,7 +646,7 @@ interface IMgaMetaModel : IMgaMetaFCO
 		[out, retval] IMgaMetaRoles **p);
 
 	[helpstring("method LegalRoles")]
-	HRESULT LegalRoles([in] IMgaMetaFCO *kind,
+	HRESULT LegalRoles([in] IMgaMetaFCO *k,
 		[out, retval] IMgaMetaRoles **p);
 };
 
@@ -695,7 +695,7 @@ interface IMgaMetaAspect : IMgaMetaBase
 	// --- edit containment
 
 	[helpstring("method CreatePart")]
-	HRESULT CreatePart([in] IMgaMetaRole *role, [out, retval] IMgaMetaPart **p);
+	HRESULT CreatePart([in] IMgaMetaRole *r, [out, retval] IMgaMetaPart **p);
 
 	[helpstring("method AddAttribute")]
 	HRESULT AddAttribute([in] IMgaMetaAttribute *p);
