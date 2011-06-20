@@ -270,34 +270,34 @@ namespace DSM.Generators
                     {
                         foreach (GME.MGA.IMgaConnPoint connOther in conn.Owner.ConnPoints)
                         {
-                            if (connOther.target.ID != mgaObject.ID)
+                            if (connOther.Target.ID != mgaObject.ID)
                             {
                                 //connOther.target: Connector
                                 ConnEndPoints ends = new ConnEndPoints();
-                                foreach (GME.MGA.IMgaConnPoint conn2 in connOther.target.PartOfConns)
+                                foreach (GME.MGA.IMgaConnPoint conn2 in connOther.Target.PartOfConns)
                                 {   
                                     if (conn2.Owner.Meta.Name == "SourceToConnector")
                                     {
                                         foreach (GME.MGA.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                         {
-                                            if (connOther2.target.ID != connOther.target.ID)
+                                            if (connOther2.Target.ID != connOther.Target.ID)
                                             {
                                                 //connOther2.target: Connection
-                                                if (connOther2.target.MetaBase.Name.Contains("Proxy"))
+                                                if (connOther2.Target.MetaBase.Name.Contains("Proxy"))
                                                 {
-                                                    if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                        ends.src = Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO;                                                            
+                                                    if (Object.ProxyCache.ContainsKey(connOther2.Target.Name))
+                                                        ends.src = Object.ElementsByName[Object.ProxyCache[connOther2.Target.Name]] as FCO;                                                            
                                                     else
-                                                        DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
+                                                        DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.Target.Name + "' is not found");
                                                 }
                                                 else
                                                 {
-                                                    if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
+                                                    if (Object.ElementsByName.ContainsKey(connOther2.Target.Name))
                                                     {
-                                                        ends.src = Object.ElementsByName[connOther2.target.Name] as FCO;
+                                                        ends.src = Object.ElementsByName[connOther2.Target.Name] as FCO;
                                                     }
                                                     else
-                                                        DSM.GeneratorFacade.Errors.Add(connOther2.target.Name + " is not found");
+                                                        DSM.GeneratorFacade.Errors.Add(connOther2.Target.Name + " is not found");
                                                 }
                                             }
                                         }
@@ -306,24 +306,24 @@ namespace DSM.Generators
                                     {
                                         foreach (GME.MGA.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                         {
-                                            if (connOther2.target.ID != connOther.target.ID)
+                                            if (connOther2.Target.ID != connOther.Target.ID)
                                             {
-                                                //connOther2.target: Connection
-                                                if (connOther2.target.MetaBase.Name.Contains("Proxy"))
+                                                //connOther2.Target: Connection
+                                                if (connOther2.Target.MetaBase.Name.Contains("Proxy"))
                                                 {
-                                                    if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                        ends.dst = Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO;
+                                                    if (Object.ProxyCache.ContainsKey(connOther2.Target.Name))
+                                                        ends.dst = Object.ElementsByName[Object.ProxyCache[connOther2.Target.Name]] as FCO;
                                                     else
-                                                        DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
+                                                        DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.Target.Name + "' is not found");
                                                 }
                                                 else
                                                 {
-                                                    if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
+                                                    if (Object.ElementsByName.ContainsKey(connOther2.Target.Name))
                                                     {
-                                                        ends.dst = Object.ElementsByName[connOther2.target.Name] as FCO;
+                                                        ends.dst = Object.ElementsByName[connOther2.Target.Name] as FCO;
                                                     }
                                                     else
-                                                        DSM.GeneratorFacade.Errors.Add(connOther2.target.Name + " is not found");
+                                                        DSM.GeneratorFacade.Errors.Add(connOther2.Target.Name + " is not found");
                                                 }
                                             }
                                         }
@@ -401,25 +401,25 @@ namespace DSM.Generators
         //        {
         //            foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
         //            {
-        //                if (connOther.target.ID != mgaObject.ID)
+        //                if (connOther.Target.ID != mgaObject.ID)
         //                {
-        //                    //connOther.target: Connector
-        //                    foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
+        //                    //connOther.Target: Connector
+        //                    foreach (MGALib.IMgaConnPoint conn2 in connOther.Target.PartOfConns)
         //                    {
         //                        if (conn2.Owner.Meta.Name == "SourceToConnector")
         //                        {
         //                            foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
         //                            {
-        //                                if (connOther2.target.ID != connOther.target.ID)
+        //                                if (connOther2.Target.ID != connOther.Target.ID)
         //                                {
-        //                                    //connOther2.target: Connection
-        //                                    if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
+        //                                    //connOther2.Target: Connection
+        //                                    if (Object.ElementsByName.ContainsKey(connOther2.Target.Name))
         //                                    {
         //                                        rolename = conn2.Owner.get_StrAttrByName("srcRolename");
-        //                                        source = Object.ElementsByName[connOther2.target.Name] as FCO;
+        //                                        source = Object.ElementsByName[connOther2.Target.Name] as FCO;
         //                                    }
         //                                    else
-        //                                        throw new Exception(connOther2.target.Name + " is not cached");
+        //                                        throw new Exception(connOther2.Target.Name + " is not cached");
         //                                }
         //                            }
         //                        }
@@ -449,25 +449,25 @@ namespace DSM.Generators
         //        {
         //            foreach (MGALib.IMgaConnPoint connOther in conn.Owner.ConnPoints)
         //            {
-        //                if (connOther.target.ID != mgaObject.ID)
+        //                if (connOther.Target.ID != mgaObject.ID)
         //                {
-        //                    //connOther.target: Connector
-        //                    foreach (MGALib.IMgaConnPoint conn2 in connOther.target.PartOfConns)
+        //                    //connOther.Target: Connector
+        //                    foreach (MGALib.IMgaConnPoint conn2 in connOther.Target.PartOfConns)
         //                    {
         //                        if (conn2.Owner.Meta.Name == "ConnectorToDestination")
         //                        {
         //                            foreach (MGALib.IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
         //                            {
-        //                                if (connOther2.target.ID != connOther.target.ID)
+        //                                if (connOther2.Target.ID != connOther.Target.ID)
         //                                {
-        //                                    //connOther2.target: Connection
-        //                                    if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
+        //                                    //connOther2.Target: Connection
+        //                                    if (Object.ElementsByName.ContainsKey(connOther2.Target.Name))
         //                                    {
         //                                        rolename = conn2.Owner.get_StrAttrByName("dstRolename");
-        //                                        dest = Object.ElementsByName[connOther2.target.Name] as FCO;
+        //                                        dest = Object.ElementsByName[connOther2.Target.Name] as FCO;
         //                                    }
         //                                    else
-        //                                        throw new Exception(connOther2.target.Name + " is not cached");
+        //                                        throw new Exception(connOther2.Target.Name + " is not cached");
         //                                }
         //                            }
         //                        }

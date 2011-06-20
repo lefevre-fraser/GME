@@ -63,21 +63,21 @@ namespace DSM.Generators
                                 if (connOther.ConnRole == "src")
                                 {
                                     //connOther.target: contained
-                                    if (connOther.target.MetaBase.Name.Contains("Proxy"))
+                                    if (connOther.Target.MetaBase.Name.Contains("Proxy"))
                                     {
-                                        if (Object.ProxyCache.ContainsKey(connOther.target.Name))
-                                            yield return Object.ElementsByName[Object.ProxyCache[connOther.target.Name]] as FCO;
+                                        if (Object.ProxyCache.ContainsKey(connOther.Target.Name))
+                                            yield return Object.ElementsByName[Object.ProxyCache[connOther.Target.Name]] as FCO;
                                         else
-                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther.target.Name + "' is not found");
+                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther.Target.Name + "' is not found");
                                     }
                                     else
                                     {
-                                        if (Object.ElementsByName.ContainsKey(connOther.target.Name))
-                                            yield return Object.ElementsByName[connOther.target.Name] as FCO;
+                                        if (Object.ElementsByName.ContainsKey(connOther.Target.Name))
+                                            yield return Object.ElementsByName[connOther.Target.Name] as FCO;
                                         else
                                         {
                                             //todo
-                                            DSM.GeneratorFacade.Errors.Add(connOther.target.Name + " is not found");
+                                            DSM.GeneratorFacade.Errors.Add(connOther.Target.Name + " is not found");
                                             //throw new Exception(connOther.target.Name + " is not cached");
                                         }
                                     }

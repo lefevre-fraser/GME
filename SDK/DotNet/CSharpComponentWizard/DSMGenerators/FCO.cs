@@ -283,17 +283,17 @@ namespace {0}
                         {
                             foreach (IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
-                                if (connOther.target.ID != mgaObject.ID)
+                                if (connOther.Target.ID != mgaObject.ID)
                                 {
                                     //we have found an inheritance: connOther.target
-                                    foreach (IMgaConnPoint conn2 in connOther.target.PartOfConns)
+                                    foreach (IMgaConnPoint conn2 in connOther.Target.PartOfConns)
                                     {
                                         if (conn2.Owner.Meta.Name.Contains("Base") &&
                                             conn2.Owner.Meta.Name.Contains("Inheritance"))
                                         {
                                             foreach (IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                             {
-                                                if (connOther2.target.ID != conn2.target.ID)
+                                                if (connOther2.Target.ID != conn2.Target.ID)
                                                 {
                                                     DerivedWithKind.InhType type = DerivedWithKind.InhType.General;
                                                     if (conn2.Owner.Meta.Name.Contains("Int"))
@@ -301,22 +301,22 @@ namespace {0}
                                                     else if (conn2.Owner.Meta.Name.Contains("Imp"))
                                                         type = DerivedWithKind.InhType.Implementation;
 
-                                                    if (connOther2.target.MetaBase.Name.Contains("Proxy"))
+                                                    if (connOther2.Target.MetaBase.Name.Contains("Proxy"))
                                                     {
-                                                        if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                            yield return new DerivedWithKind(){Rel = Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO, Type= type};
+                                                        if (Object.ProxyCache.ContainsKey(connOther2.Target.Name))
+                                                            yield return new DerivedWithKind(){Rel = Object.ElementsByName[Object.ProxyCache[connOther2.Target.Name]] as FCO, Type= type};
                                                         else
-                                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
+                                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.Target.Name + "' is not found");
                                                     }
                                                     else
                                                     {
-                                                        if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
-                                                            yield return new DerivedWithKind() { Rel = Object.ElementsByName[connOther2.target.Name] as FCO, Type = type };
+                                                        if (Object.ElementsByName.ContainsKey(connOther2.Target.Name))
+                                                            yield return new DerivedWithKind() { Rel = Object.ElementsByName[connOther2.Target.Name] as FCO, Type = type };
                                                         else
                                                         {
                                                             //TODO
                                                             //throw new Exception(connOther2.target.Name + " is not cached");
-                                                            DSM.GeneratorFacade.Errors.Add(connOther2.target.Name + " is not found");
+                                                            DSM.GeneratorFacade.Errors.Add(connOther2.Target.Name + " is not found");
                                                         }
                                                     }
                                                 }
@@ -344,17 +344,17 @@ namespace {0}
                         {
                             foreach (IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
-                                if (connOther.target.ID != mgaObject.ID)
+                                if (connOther.Target.ID != mgaObject.ID)
                                 {
                                     //we have found an inheritance: connOther.target
-                                    foreach (IMgaConnPoint conn2 in connOther.target.PartOfConns)
+                                    foreach (IMgaConnPoint conn2 in connOther.Target.PartOfConns)
                                     {
                                         if (conn2.Owner.Meta.Name.Contains("Derived") &&
                                             conn2.Owner.Meta.Name.Contains("Inheritance"))
                                         {
                                             foreach (IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                             {
-                                                if (connOther2.target.ID != conn2.target.ID)
+                                                if (connOther2.Target.ID != conn2.Target.ID)
                                                 {
                                                     DerivedWithKind.InhType type = DerivedWithKind.InhType.General;
                                                     if (conn2.Owner.Meta.Name.Contains("Int"))
@@ -363,21 +363,21 @@ namespace {0}
                                                         type = DerivedWithKind.InhType.Implementation;
 
 
-                                                    if (connOther2.target.MetaBase.Name.Contains("Proxy"))
+                                                    if (connOther2.Target.MetaBase.Name.Contains("Proxy"))
                                                     {
-                                                        if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                            yield return new DerivedWithKind() { Rel = Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as FCO, Type = type };
+                                                        if (Object.ProxyCache.ContainsKey(connOther2.Target.Name))
+                                                            yield return new DerivedWithKind() { Rel = Object.ElementsByName[Object.ProxyCache[connOther2.Target.Name]] as FCO, Type = type };
                                                         else
-                                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
+                                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.Target.Name + "' is not found");
                                                     }
                                                     else
                                                     {
-                                                        if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
-                                                            yield return new DerivedWithKind() { Rel = Object.ElementsByName[connOther2.target.Name] as FCO, Type = type };
+                                                        if (Object.ElementsByName.ContainsKey(connOther2.Target.Name))
+                                                            yield return new DerivedWithKind() { Rel = Object.ElementsByName[connOther2.Target.Name] as FCO, Type = type };
                                                         else
                                                         {
                                                             //todo
-                                                            DSM.GeneratorFacade.Errors.Add(connOther2.target.Name + " is not found");
+                                                            DSM.GeneratorFacade.Errors.Add(connOther2.Target.Name + " is not found");
                                                             //throw new Exception(connOther2.target.Name + " is not cached");
                                                         }
                                                     }
@@ -452,54 +452,54 @@ namespace {0}
                 {
                     foreach (IMgaConnPoint connOther in conn.Owner.ConnPoints)
                     {
-                        if (connOther.target.ID != mgaObject.ID && connOther.target.Meta.Name.Contains("Attribute"))
+                        if (connOther.Target.ID != mgaObject.ID && connOther.Target.Meta.Name.Contains("Attribute"))
                         {
-                            if (connOther.target.Meta.Name == "FieldAttribute")
+                            if (connOther.Target.Meta.Name == "FieldAttribute")
                             {
-                                foreach (IMgaAttribute attr in connOther.target.Attributes)
+                                foreach (IMgaAttribute attr in connOther.Target.Attributes)
                                 {
                                     if (attr.Meta.Name == "DataType")
                                     {
-                                        if (!names.Contains(connOther.target.Name))
+                                        if (!names.Contains(connOther.Target.Name))
                                         {
                                             if (attr.Value.ToString() == "string")
                                             {
-                                                sb.Append(generateAttribute(connOther.target.Name, "String"));
+                                                sb.Append(generateAttribute(connOther.Target.Name, "String"));
                                                 if (this.HasChildren)
                                                 {
-                                                    forInterface.Append(generateAttributeForInterface(connOther.target.Name, "String"));
+                                                    forInterface.Append(generateAttributeForInterface(connOther.Target.Name, "String"));
                                                 }
                                             }
                                             else if (attr.Value.ToString() == "integer")
                                             {
-                                                sb.Append(generateAttribute(connOther.target.Name, "Int"));
+                                                sb.Append(generateAttribute(connOther.Target.Name, "Int"));
                                                 if (this.HasChildren)
                                                 {
-                                                    forInterface.Append(generateAttributeForInterface(connOther.target.Name, "Int"));
+                                                    forInterface.Append(generateAttributeForInterface(connOther.Target.Name, "Int"));
                                                 }
                                             }
                                             else if (attr.Value.ToString() == "double")
                                             {
-                                                sb.Append(generateAttribute(connOther.target.Name, "Float"));
+                                                sb.Append(generateAttribute(connOther.Target.Name, "Float"));
                                                 if (this.HasChildren)
                                                 {
-                                                    forInterface.Append(generateAttributeForInterface(connOther.target.Name, "Float"));
+                                                    forInterface.Append(generateAttributeForInterface(connOther.Target.Name, "Float"));
                                                 }
                                             }
-                                            names.Add(connOther.target.Name);
+                                            names.Add(connOther.Target.Name);
                                         }
                                     }
                                 }
                             }
-                            else if (connOther.target.Meta.Name == "EnumAttribute")
+                            else if (connOther.Target.Meta.Name == "EnumAttribute")
                             {
-                                if (!names.Contains(connOther.target.Name))
+                                if (!names.Contains(connOther.Target.Name))
                                 {
                                     //generate enum
                                     StringBuilder enum1 = new StringBuilder();
 
                                     StringBuilder stuff = new StringBuilder();
-                                    foreach (MgaAttribute attr in connOther.target.Attributes)
+                                    foreach (MgaAttribute attr in connOther.Target.Attributes)
                                     {
                                         if (attr.Meta.Name == "MenuItems")
                                         {
@@ -512,28 +512,28 @@ namespace {0}
                                         }
                                     }
 
-                                    enum1.AppendFormat(FCO.Template.Enum, connOther.target.Name, stuff);
+                                    enum1.AppendFormat(FCO.Template.Enum, connOther.Target.Name, stuff);
 
-                                    Enum.AddEnum(connOther.target.Name, enum1.ToString());
+                                    Enum.AddEnum(connOther.Target.Name, enum1.ToString());
 
-                                    sb.Append(generateAttribute(connOther.target.Name, connOther.target.Meta.Name));
+                                    sb.Append(generateAttribute(connOther.Target.Name, connOther.Target.Meta.Name));
                                     if (this.HasChildren)
                                     {
-                                        forInterface.Append(generateAttributeForInterface(connOther.target.Name, connOther.target.Meta.Name));
+                                        forInterface.Append(generateAttributeForInterface(connOther.Target.Name, connOther.Target.Meta.Name));
                                     }
-                                    names.Add(connOther.target.Name);
+                                    names.Add(connOther.Target.Name);
                                 }
                             }
                             else
                             {
-                                if (!names.Contains(connOther.target.Name))
+                                if (!names.Contains(connOther.Target.Name))
                                 {
-                                    sb.Append(generateAttribute(connOther.target.Name, connOther.target.Meta.Name));
+                                    sb.Append(generateAttribute(connOther.Target.Name, connOther.Target.Meta.Name));
                                     if (this.HasChildren)
                                     {
-                                        forInterface.Append(generateAttributeForInterface(connOther.target.Name, connOther.target.Meta.Name));
+                                        forInterface.Append(generateAttributeForInterface(connOther.Target.Name, connOther.Target.Meta.Name));
                                     }
-                                    names.Add(connOther.target.Name);
+                                    names.Add(connOther.Target.Name);
                                 }
                             }
                         }
@@ -616,34 +616,34 @@ namespace {0}
                         {
                             foreach (IMgaConnPoint connOther in conn.Owner.ConnPoints)
                             {
-                                if (connOther.target.ID != mgaObject.ID)
+                                if (connOther.Target.ID != mgaObject.ID)
                                 {
                                     //connOther.target: Connector
-                                    foreach (IMgaConnPoint conn2 in connOther.target.PartOfConns)
+                                    foreach (IMgaConnPoint conn2 in connOther.Target.PartOfConns)
                                     {
                                         if (conn2.Owner.Meta.Name == "AssociationClass")
                                         {
                                             foreach (IMgaConnPoint connOther2 in conn2.Owner.ConnPoints)
                                             {
-                                                if (connOther2.target.ID != connOther.target.ID)
+                                                if (connOther2.Target.ID != connOther.Target.ID)
                                                 {
-                                                    //connOther2.target: Connection
-                                                    if (connOther2.target.MetaBase.Name.Contains("Proxy"))
+                                                    //connOther2.Target: Connection
+                                                    if (connOther2.Target.MetaBase.Name.Contains("Proxy"))
                                                     {
-                                                        if (Object.ProxyCache.ContainsKey(connOther2.target.Name))
-                                                            yield return Object.ElementsByName[Object.ProxyCache[connOther2.target.Name]] as Connection;
+                                                        if (Object.ProxyCache.ContainsKey(connOther2.Target.Name))
+                                                            yield return Object.ElementsByName[Object.ProxyCache[connOther2.Target.Name]] as Connection;
                                                         else
-                                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.target.Name + "' is not found");
+                                                            DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther2.Target.Name + "' is not found");
                                                     }
                                                     else
                                                     {
-                                                        if (Object.ElementsByName.ContainsKey(connOther2.target.Name))
-                                                            yield return Object.ElementsByName[connOther2.target.Name] as Connection;
+                                                        if (Object.ElementsByName.ContainsKey(connOther2.Target.Name))
+                                                            yield return Object.ElementsByName[connOther2.Target.Name] as Connection;
                                                         else
                                                         {
                                                             //todo
-                                                            DSM.GeneratorFacade.Errors.Add(connOther2.target.Name + " is not found");
-                                                            //throw new Exception(connOther2.target.Name + " is not cached");
+                                                            DSM.GeneratorFacade.Errors.Add(connOther2.Target.Name + " is not found");
+                                                            //throw new Exception(connOther2.Target.Name + " is not cached");
                                                         }
                                                     }
                                                 }
@@ -757,10 +757,10 @@ namespace {0}
                                 isSrc = true;
                             }
 
-                            IMgaFCO connectionKnot = conn.dst;
+                            IMgaFCO connectionKnot = conn.Dst;
                             if (connectionKnot.Meta.Name != "Connector") // Bidirectional, both directions must be handled
                             {
-                                connectionKnot = conn.src;
+                                connectionKnot = conn.Src;
                             }
 
                             IMgaConnPoints neighborConnPoints = connectionKnot.PartOfConns;
@@ -774,11 +774,11 @@ namespace {0}
                                 if (asscoClassConnPoint.Owner.Meta.Name == "AssociationClass")
                                 {
                                     IMgaSimpleConnection assocClassConnection = (IMgaSimpleConnection)asscoClassConnPoint.Owner;
-                                    IMgaFCO assocClass = assocClassConnection.src;
+                                    IMgaFCO assocClass = assocClassConnection.Src;
 
                                     if (assocClass.Meta.Name != "Connection")
                                     {
-                                        assocClass = assocClassConnection.dst;
+                                        assocClass = assocClassConnection.Dst;
                                     }
 
 
@@ -819,10 +819,10 @@ namespace {0}
                                         {
                                             IMgaSimpleConnection otherSideConn = (IMgaSimpleConnection)otherSideConnPoint.Owner;
 
-                                            IMgaFCO otherFCO = otherSideConn.dst;
+                                            IMgaFCO otherFCO = otherSideConn.Dst;
                                             if (otherFCO.Meta.Name == "Connector")
                                             {
-                                                otherFCO = otherSideConn.src;
+                                                otherFCO = otherSideConn.Src;
                                             }
 
                                             string roleNameAttr = (isSrc ? "dst" : "src") + "Rolename";

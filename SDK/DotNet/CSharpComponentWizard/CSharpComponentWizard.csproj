@@ -78,9 +78,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="PresentationCore" />
     <Reference Include="WindowsBase" />
-    <Reference Include="GME.MGA.Meta, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
-    <Reference Include="GME.MGA, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
-    <Reference Include="GME.MGA.Core, Version=0.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
+    <Reference Include="GME.MGA.Meta, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
+    <Reference Include="GME.MGA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
+    <Reference Include="GME.MGA.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL"/>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

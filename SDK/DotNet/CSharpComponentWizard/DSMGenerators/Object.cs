@@ -227,21 +227,21 @@ namespace {0}
                             if (connOther.ConnRole == "dst")
                             {
                                 //connOther.target: container
-                                if (connOther.target.MetaBase.Name.Contains("Proxy"))
+                                if (connOther.Target.MetaBase.Name.Contains("Proxy"))
                                 {
-                                    if (Object.ProxyCache.ContainsKey(connOther.target.Name))
-                                        yield return Object.ElementsByName[Object.ProxyCache[connOther.target.Name]];
+                                    if (Object.ProxyCache.ContainsKey(connOther.Target.Name))
+                                        yield return Object.ElementsByName[Object.ProxyCache[connOther.Target.Name]];
                                     else
-                                        DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther.target.Name + "' is not found");
+                                        DSM.GeneratorFacade.Errors.Add("Proxy '" + connOther.Target.Name + "' is not found");
                                 }
                                 else
                                 {
-                                    if (Object.ElementsByName.ContainsKey(connOther.target.Name))
-                                        yield return Object.ElementsByName[connOther.target.Name];
+                                    if (Object.ElementsByName.ContainsKey(connOther.Target.Name))
+                                        yield return Object.ElementsByName[connOther.Target.Name];
                                     else
                                     {
                                         //todo
-                                        DSM.GeneratorFacade.Errors.Add(connOther.target.Name + " is not found");
+                                        DSM.GeneratorFacade.Errors.Add(connOther.Target.Name + " is not found");
                                         //throw new Exception(connOther.target.Name + " is not cached");
                                     }
                                 }
