@@ -349,6 +349,13 @@ BEGIN
         END
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
         MENUITEM "&Full Screen",                ID_VIEW_FULLSCREEN
+        MENUITEM SEPARATOR
+        MENUITEM "GME Browser",                 ID_VIEW_GMEBROWSER
+        MENUITEM "Object Inspector",            ID_VIEW_OBJECTINSPECTOR
+        MENUITEM "Part Browser",                ID_VIEW_PARTBROWSER
+        MENUITEM "Panning Window",              ID_VIEW_PANNWIN
+        MENUITEM "Console",                     ID_VIEW_CONSOLE
+        MENUITEM "Search",                      ID_VIEW_SEARCH
     END
     POPUP "&Tools"
     BEGIN
