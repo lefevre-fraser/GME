@@ -107,7 +107,7 @@ public class Dispatch extends ApartmentObject
 	 *	<code>VT_UNKNOWN</code> or <code>VT_UNKNOWN|VT_BYREF</code> holding the new interface pointer.
 	 * @throws ComException is the <code>IUnknown::QueryInterface</code> method fails.
 	 * @throws JAutException if the target Variant does not have its underlying <code>VARIANT</code> created,
-	 *	or it is not of the porper type.
+	 *	or it is not of the proper type.
 	 */
 	public native void attach(Variant target) throws ComException;
 
@@ -164,7 +164,7 @@ public class Dispatch extends ApartmentObject
 
 	/**
 	 * Returns a hash code value for the object. The actual returned value is the <code>IUnknown</code>
-	 * interface pointer of this Dispatch object, obtained by using the </code>IUnknow::QueryInterface</code> 
+	 * interface pointer of this Dispatch object, obtained by using the </code>IUnknown::QueryInterface</code> 
 	 * method.
 	 *
 	 * @return a hash code value for this object.
@@ -191,7 +191,7 @@ public class Dispatch extends ApartmentObject
 	 * functions.
 	 *
 	 * @param iID the interface ID of the new interface, in the format of "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}".
-	 *	The retrived interface must be derived from <code>IDispatch</code>.
+	 *	The retrieved interface must be derived from <code>IDispatch</code>.
 	 * @throws JAutException if the current interface pointer of this object is <code>NULL</code>.
 	 * @throws ComException if either <code>IIDFromString</code> or <code>IUnknown::QueryInterface</code> fails.
 	 */
@@ -232,7 +232,7 @@ public class Dispatch extends ApartmentObject
 
 	/**
 	 * A class context allowing local servers.
-	 * The code that creates and manages obejcts of this class is an executable EXE running in a separate process
+	 * The code that creates and manages objects of this class is an executable EXE running in a separate process
 	 * on the same machine.
 	 *
 	 * @see #attachNewInstance
@@ -273,7 +273,7 @@ public class Dispatch extends ApartmentObject
 	 * Sets the interface pointer of the Dispatch object to a running object. First, the existing interface pointer
 	 * is release. Second, the program ID is transformed to a class ID using the <code>CLSIDFromProgID</code> 
 	 * Automation function. Then the <code>GetActiveObject</code> and <code>IUnknown::QueryInterface</code>
-	 * methods are called to retrive the <code>IDispatch</code> interface pointer of the active object.
+	 * methods are called to retrieve the <code>IDispatch</code> interface pointer of the active object.
 	 * 
 	 * @param progID the program ID of the active object that has been registered.
 	 * @throws ComException if one of the Automation functions fails.
@@ -330,7 +330,7 @@ public class Dispatch extends ApartmentObject
 	public static final int DISPATCH_METHOD = 0x1;
 
 	/**
-	 * The member is retrived as a property or data member. 
+	 * The member is retrieved as a property or data member. 
 	 * If a method has the same name, both this and {@link #DISPATCH_METHOD} flag may be set.
 	 *
 	 * @see #invoke(int, int, Variant[], int[], Variant) invoke
@@ -352,7 +352,7 @@ public class Dispatch extends ApartmentObject
 	public static final int DISPATCH_PROPERTYPUTREF = 0x8;
 
 	/**
-	 * Invokes a method, or sets or retrives a property of an Automation object.
+	 * Invokes a method, or sets or retrieves a property of an Automation object.
 	 * This method is a direct wrapper around the <code>IDispatch::Invoke</code> Automation function.
 	 *
 	 * @param dispID the dispatch ID of the method or property to be invoked.
@@ -360,7 +360,7 @@ public class Dispatch extends ApartmentObject
 	 * {@link #DISPATCH_METHOD}, {@link #DISPATCH_PROPERTYGET}, {@link #DISPATCH_PROPERTYPUT}
 	 * and {@link #DISPATCH_PROPERTYPUTREF}.
 	 * @param arguments the arguments of the method or property. This can be <code>null</code>
-	 *	if there are no arguments. If an element of the <code>arguements</code> list is
+	 *	if there are no arguments. If an element of the <code>arguments</code> list is
 	 *	null, or its underlying <code>VARIANT</code> is not created, then that parameter
 	 *	will be passed as an <code>DISP_E_PARAMNOTFOUND</code> value of type <code>VT_ERROR</code>.
 	 * @param namedArgDispIDs a list of dispatch IDs for named arguments. This can be <code>null</code>
@@ -378,7 +378,7 @@ public class Dispatch extends ApartmentObject
 	public native void invoke(int dispID, int dispFlags, Variant[] arguments, int[] namedArgDispIDs, Variant retval);
 
 	/**
-	 * Invokes a method, or retrives a property of an Automation object.
+	 * Invokes a method, or retrieves a property of an Automation object.
 	 * First, the the non-<code>null</code> arguments are converted to Variants 
 	 * with the {@link Variant#Variant(Object)} constructor, 
 	 * then {@link #invoke(int, int, Variant[], int[], Variant)} is called.
@@ -427,7 +427,7 @@ public class Dispatch extends ApartmentObject
 	}
 
 	/**
-	 * Invokes a subrutine, or sets a property of an Automation object.
+	 * Invokes a subroutine, or sets a property of an Automation object.
 	 * First, the the non-<code>null</code> arguments are converted to Variants 
 	 * with the {@link Variant#Variant(Object)} constructor, 
 	 * then {@link #invoke(int, int, Variant[], int[], Variant)} is called.
@@ -530,7 +530,7 @@ public class Dispatch extends ApartmentObject
 	}
 
 	/**
-	 * Invokes an Automation subrutine with one argument.
+	 * Invokes an Automation subroutine with one argument.
 	 * @see #invokeSub(String, int, Object[], int[])
 	 */
 	public void callSub(String dispName, Object arg0)
@@ -539,7 +539,7 @@ public class Dispatch extends ApartmentObject
 	}
 
 	/**
-	 * Invokes an Automation subrutine with two arguments.
+	 * Invokes an Automation subroutine with two arguments.
 	 * @see #invokeSub(String, int, Object[], int[])
 	 */
 	public void callSub(String dispName, Object arg0, Object arg1)
@@ -548,7 +548,7 @@ public class Dispatch extends ApartmentObject
 	}
 
 	/**
-	 * Invokes an Automation subrutine with three arguments.
+	 * Invokes an Automation subroutine with three arguments.
 	 * @see #invokeSub(String, int, Object[], int[])
 	 */
 	public void callSub(String dispName, Object arg0, Object arg1, Object arg2)
@@ -557,7 +557,7 @@ public class Dispatch extends ApartmentObject
 	}
 
 	/**
-	 * Invokes an Automation subrutine with a list of arguments.
+	 * Invokes an Automation subroutine with a list of arguments.
 	 * @see #invokeSub(String, int, Object[], int[])
 	 */
 	public void callSub(String dispName, Object[] args)
@@ -566,7 +566,7 @@ public class Dispatch extends ApartmentObject
 	}
 
 	/**
-	 * Retrives an Automation property.
+	 * Retrieves an Automation property.
 	 * @see #invoke(String, int, Object[], int[])
 	 */
 	public Object get(String dispName)
@@ -575,7 +575,7 @@ public class Dispatch extends ApartmentObject
 	}
 
 	/**
-	 * Retrives an Automation property with one argument.
+	 * Retrieves an Automation property with one argument.
 	 * @see #invoke(String, int, Object[], int[])
 	 */
 	public Object get(String dispName, Object arg0)

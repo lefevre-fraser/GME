@@ -107,7 +107,7 @@ public class Variant extends ApartmentObject
     
     /**
      * A variant type denoting a date. This is mapped to <code>double</code>, but
-     * the correct Java {@link java.util.Date} can be retrived and set with the methods
+     * the correct Java {@link java.util.Date} can be retrieved and set with the methods
      * {@link #getDate} and {@link #setDate}.
      *
      * @see #getVartype
@@ -160,7 +160,7 @@ public class Variant extends ApartmentObject
     public static final int VT_UNKNOWN = 13;
     
     /**
-     * A decimal value variant type. This is currently not mapped, and cannot be retrived directly.
+     * A decimal value variant type. This is currently not mapped, and cannot be retrieved directly.
      *
      * @see #getVartype
      */
@@ -343,7 +343,7 @@ public class Variant extends ApartmentObject
      * Creates a Variant of from an Object.
      * If <code>value</code> is <code>null</code>, then a Variant of type {@link #VT_EMPTY} is created.
      * Otherwise, a Variant will be created with one of the constructors that accept a single parameter.
-     * Note, that if <code>value</code> is a Variant, then a Variant reffering to the data in <code>value</code>
+     * Note, that if <code>value</code> is a Variant, then a Variant referring to the data in <code>value</code>
      * will be created by {@link #Variant(Variant)}.
      *
      * @param value an Object
@@ -483,7 +483,7 @@ public class Variant extends ApartmentObject
     /**
      * Tests if the underlying <code>VARIANT</code> exists.
      *
-     * @return <code>true</code> if the underlying <code>VARIANT</code> exsists, <code>false</code> otherwise.
+     * @return <code>true</code> if the underlying <code>VARIANT</code> exists, <code>false</code> otherwise.
      * @see #allocate(int)
      */
     public boolean isCreated()
@@ -535,7 +535,7 @@ public class Variant extends ApartmentObject
      * Converts the Variant to another type. This is a direct wrapper method around the <code>VariantChangeType</code>
      * Automation function.
      *
-     * @param destination the destination Variant to hold the coerced value. If <code>destionation</code> is
+     * @param destination the destination Variant to hold the coerced value. If <code>destination</code> is
      *	the same as <code>this</code> or <code>null</code>, the Variant will be converted in place.
      * @param changeFlag flags controlling the coercion. Acceptable values are combined from
      *	the four <code>VARIANT_XXX</code> constants.
@@ -570,7 +570,7 @@ public class Variant extends ApartmentObject
      * like with {@link #clear()}. Then <code>destination</code> receives an exact copy of this Variant
      * and all of its owned resources (in the case of {@link #VT_BSTR}, {@link #VT_UNKNOWN},
      * {@link #VT_DISPATCH} and {@link #VT_ARRAY}). If the Variant is a reference (anything with
-     * {@link #VT_BYREF}), the corresponding resouce is not owned and is not copied.
+     * {@link #VT_BYREF}), the corresponding resource is not owned and is not copied.
      * This method is a direct wrapper around the <code>VariantCopy</code> Automation function.
      *
      * @param destination the destination Variant to hold the copied value.
@@ -599,7 +599,7 @@ public class Variant extends ApartmentObject
     public native void copyInd(Variant destination) throws ComException;
     
     /**
-     * Retrives the <code>boolean</code> value in the Variant.
+     * Retrieves the <code>boolean</code> value in the Variant.
      * The type of the Variant must be {@link #VT_BOOL} or <code>VT_BOOL|VT_BYREF</code>.
      *
      * @return the <code>boolean</code> value in the Variant.
@@ -619,7 +619,7 @@ public class Variant extends ApartmentObject
     public native void setBoolean(boolean value);
     
     /**
-     * Retrives the <code>byte</code> value in the Variant.
+     * Retrieves the <code>byte</code> value in the Variant.
      * The type of the Variant must be {@link #VT_UI1}, {@link #VT_I1},
      * <code>VT_UI1|VT_BYREF</code> or <code>VT_I1|VT_BYREF</code>.
      *
@@ -641,7 +641,7 @@ public class Variant extends ApartmentObject
     public native void setByte(byte value);
     
     /**
-     * Retrives the <code>short</code> value in the Variant.
+     * Retrieves the <code>short</code> value in the Variant.
      * The type of the Variant must be {@link #VT_I2}, {@link #VT_UI1},
      * <code>VT_I1|VT_BYREF</code> or <code>VT_UI1|VT_BYREF</code>.
      *
@@ -663,7 +663,7 @@ public class Variant extends ApartmentObject
     public native void setShort(short value);
     
     /**
-     * Retrives the <code>int</code> value in the Variant.
+     * Retrieves the <code>int</code> value in the Variant.
      * The type of the Variant must be {@link #VT_I4}, {@link #VT_UI4}, {@link #VT_ERROR}, {@link #VT_INT}, {@link #VT_UINT},
      * <code>VT_I1|VT_BYREF</code>, <code>VT_UI1|VT_BYREF</code>, <code>VT_ERROR|VT_BYREF</code>,
      * <code>VT_INT|VT_BYREF</code> or <code>VT_UINT|VT_BYREF</code>.
@@ -687,7 +687,7 @@ public class Variant extends ApartmentObject
     public native void setInt(int value);
     
     /**
-     * Retrives the <code>long</code> value in the Variant.
+     * Retrieves the <code>long</code> value in the Variant.
      * The type of the Variant must be {@link #VT_CY} or <code>VT_CY|VT_BYREF</code>.
      *
      * @return the <code>long</code> value in the Variant.
@@ -709,7 +709,7 @@ public class Variant extends ApartmentObject
     public native void setLong(long value);
     
     /**
-     * Retrives the <code>float</code> value in the Variant.
+     * Retrieves the <code>float</code> value in the Variant.
      * The type of the Variant must be {@link #VT_R4} or <code>VT_R4|VT_BYREF</code>.
      *
      * @return the <code>float</code> value in the Variant.
@@ -729,7 +729,7 @@ public class Variant extends ApartmentObject
     public native void setFloat(float value);
     
     /**
-     * Retrives the <code>double</code> value in the Variant.
+     * Retrieves the <code>double</code> value in the Variant.
      * The type of the Variant must be {@link #VT_R8}, <code>VT_R8|VT_BYREF</code>,
      * {@link #VT_DATE} or <code>VT_DATE|VT_BYREF</code>. Note, that Win32 dates
      * are stored as doubles in a <code>VARIANT</code>.
@@ -753,7 +753,7 @@ public class Variant extends ApartmentObject
     public native void setDouble(double value);
     
     /**
-     * Retrives the <code>String</code> value in the Variant.
+     * Retrieves the <code>String</code> value in the Variant.
      * The type of the Variant must be {@link #VT_BSTR} or <code>VT_BSTR|VT_BYREF</code>.
      *
      * @return the <code>String</code> value in the Variant.
@@ -784,8 +784,8 @@ public class Variant extends ApartmentObject
     static final long MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
     
     /**
-     * Retrives the {@link java.util.Date} in the Variant.
-     * This method performs the neccessary transformation from the Win32 date to the Jave date.
+     * Retrieves the {@link java.util.Date} in the Variant.
+     * This method performs the necessary transformation from the Win32 date to the Jave date.
      * The type of the Variant must be {@link #VT_DATE}, <code>VT_DATE|VT_BYREF</code>,
      * {@link #VT_R8} or <code>VT_R8|VT_BYREF</code>.
      *
@@ -802,7 +802,7 @@ public class Variant extends ApartmentObject
     
     /**
      * Sets the {@link java.util.Date} in the Variant.
-     * This method performs the neccessary transformation from the Java date to the Win32 date.
+     * This method performs the necessary transformation from the Java date to the Win32 date.
      * The returned object is the correct Java date corresponding to the Win32 date in the <code>VARIANT</code>.
      * The type of the Variant must be {@link #VT_DATE}, <code>VT_DATE|VT_BYREF</code>,
      * {@link #VT_R8} or <code>VT_R8|VT_BYREF</code>.
@@ -818,7 +818,7 @@ public class Variant extends ApartmentObject
     }
     
     /**
-     * Retrives the {@link Dispatch} object in the Variant.
+     * Retrieves the {@link Dispatch} object in the Variant.
      * The type of the Variant must be {@link #VT_DISPATCH}, <code>VT_DISPATCH|VT_BYREF</code>,
      * {@link #VT_UNKNOWN} or <code>VT_UNKNOWN|VT_BYREF</code>.
      * The method invokes <code>QueryInterface</code> to obtain the <code>IDispatch</code> interface
@@ -873,7 +873,7 @@ public class Variant extends ApartmentObject
     public native void allocateArray(int vartype, int[] lowerBounds, int[] elements) throws ComException;
     
     /**
-     * Retrives the {@link SafeArray} object in the Variant.
+     * Retrieves the {@link SafeArray} object in the Variant.
      * The underlying <code>SAFEARRAY</code> structure is always owned by the Variant, the
      * {@link SafeArray} object has only access to it. {@link SafeArray} locks the <code>SAFEARRAY</code>
      * with the <code>SafeArrayLock</code> Automation function, until {@link SafeArray#release} is called.
@@ -929,7 +929,7 @@ public class Variant extends ApartmentObject
     public static int defaultChangeFlags = 0;
     
     /**
-     * Coerces the Varian to a {@link #VT_BOOL} and returns the coerced value.
+     * Coerces the Variant to a {@link #VT_BOOL} and returns the coerced value.
      *
      * @return the coerced <code>bool</code> value.
      * @see #changeType
@@ -944,7 +944,7 @@ public class Variant extends ApartmentObject
     }
     
     /**
-     * Coerces the Varian to a {@link #VT_UI1} and returns the coerced value.
+     * Coerces the Variant to a {@link #VT_UI1} and returns the coerced value.
      *
      * @return the coerced <code>byte</code> value.
      * @see #changeType
@@ -959,7 +959,7 @@ public class Variant extends ApartmentObject
     }
     
     /**
-     * Coerces the Varian to a {@link #VT_I2} and returns the coerced value.
+     * Coerces the Variant to a {@link #VT_I2} and returns the coerced value.
      *
      * @return the coerced <code>short</code> value.
      * @see #changeType
@@ -974,7 +974,7 @@ public class Variant extends ApartmentObject
     }
     
     /**
-     * Coerces the Varian to a {@link #VT_I4} and returns the coerced value.
+     * Coerces the Variant to a {@link #VT_I4} and returns the coerced value.
      *
      * @return the coerced <code>int</code> value.
      * @see #changeType
@@ -989,7 +989,7 @@ public class Variant extends ApartmentObject
     }
     
     /**
-     * Coerces the Varian to a {@link #VT_CY} and returns the coerced value.
+     * Coerces the Variant to a {@link #VT_CY} and returns the coerced value.
      *
      * @return the coerced currency as a <code>long</code> value.
      * @see #changeType
@@ -1005,7 +1005,7 @@ public class Variant extends ApartmentObject
     }
     
     /**
-     * Coerces the Varian to a {@link #VT_R4} and returns the coerced value.
+     * Coerces the Variant to a {@link #VT_R4} and returns the coerced value.
      *
      * @return the coerced <code>float</code> value.
      * @see #changeType
@@ -1020,7 +1020,7 @@ public class Variant extends ApartmentObject
     }
     
     /**
-     * Coerces the Varian to a {@link #VT_R8} and returns the coerced value.
+     * Coerces the Variant to a {@link #VT_R8} and returns the coerced value.
      *
      * @return the coerced <code>double</code> value.
      * @see #changeType
@@ -1035,7 +1035,7 @@ public class Variant extends ApartmentObject
     }
     
     /**
-     * Coerces the Varian to a {@link #VT_BSTR} and returns the coerced value.
+     * Coerces the Variant to a {@link #VT_BSTR} and returns the coerced value.
      *
      * @return the coerced <code>String</code> value.
      * @see #changeType
@@ -1050,7 +1050,7 @@ public class Variant extends ApartmentObject
     }
     
     /**
-     * Coerces the Varian to a {@link #VT_DATE} and returns the coerced value.
+     * Coerces the Variant to a {@link #VT_DATE} and returns the coerced value.
      *
      * @return the coerced <code>Data</code> value.
      * @see #changeType
@@ -1065,7 +1065,7 @@ public class Variant extends ApartmentObject
     }
     
     /**
-     * Coerces the Varian to a {@link #VT_DISPATCH} and returns the coerced Automation object.
+     * Coerces the Variant to a {@link #VT_DISPATCH} and returns the coerced Automation object.
      *
      * @return the coerced {@link Dispatch} value.
      * @see #changeType
@@ -1081,8 +1081,8 @@ public class Variant extends ApartmentObject
     
     /**
      * Returns the value of the Variant in a Java object.
-     * If the Variant is of a simple datetype or referes to a simple datatype, then a new inmutable
-     * Java object is returned of the correspnding type (for example {@link java.lang.Double} for {@link #VT_R8}).
+     * If the Variant is of a simple datetype or refers to a simple datatype, then a new immutable
+     * Java object is returned of the corresponding type (for example {@link java.lang.Double} for {@link #VT_R8}).
      * Otherwise, the value is already represented as an Object, and that object is returned.
      * If the type is <code>VT_EMPTY</code> or <code>VT_NULL</code>, then the returned object is <code>null</code>.
      * This method does not work for arrays and Variants of type <code>VT_VARIANT|VT_BYREF</code>.

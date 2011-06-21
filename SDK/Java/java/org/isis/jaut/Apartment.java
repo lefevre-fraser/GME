@@ -73,10 +73,10 @@ public class Apartment
 	/**
 	 * Initialize the COM library for the calling Thread. It sets the Thread concurrency model.
 	 * This function is a direct wrapper around the <code>CoInitializeEx</code> COM function.
-	 * Every succesfull invocation must be matched by a {@link #coUninitialize} call.
+	 * Every successful invocation must be matched by a {@link #coUninitialize} call.
 	 * Do not use <code>coInitialize</code> directly, use {@link #enter} instead.
 	 *
-	 * @param coInit the requested concurreny model. Acceptable values are combined
+	 * @param coInit the requested concurrency model. Acceptable values are combined
 	 *	from the COINIT_XXX constants.
 	 * @throws ComException if <code>CoInitializeEx</code> fails.
 	 * @see #coUninitialize
@@ -114,7 +114,7 @@ public class Apartment
 	/**
 	 * Returns the current Apartment for this Thread.
 	 *
-	 * @return the Apartment that this Thread enetered, or <code>null</code>
+	 * @return the Apartment that this Thread entered, or <code>null</code>
 	 *	if this Thread is not part of any Apartment.
 	 */
 	public static Apartment currentApartment()
@@ -174,7 +174,7 @@ public class Apartment
 	 *
 	 * @param multiThreaded <code>true</code> if the multi threaded apartment is requested
 	 *	({@link #COINIT_MULTITHREADED}), <code>false</code> otherwise ({@link #COINIT_APARTMENTTHREADED}).
-	 * @return the Apartment this Thread enetered.
+	 * @return the Apartment this Thread entered.
 	 * @throws JAutException if this Thread is already part of an apartment
 	 * @throws ComException if {@link #coInitialize} fails. This indicates that
 	 *	this thread is already part of a COM apartment (entered without using this method),
@@ -296,7 +296,7 @@ public class Apartment
 	protected static Apartment multiThreadedApartment;
 
 	/**
-	 * Retrives the multi threaded apartment (MTA) of the process.
+	 * Retrieves the multi threaded apartment (MTA) of the process.
 	 * 
 	 * @return the single multi threaded apartment of the process,
 	 *	or <code>null</code> if no Java thread is part of the MTA.

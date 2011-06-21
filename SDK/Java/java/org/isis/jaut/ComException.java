@@ -91,7 +91,7 @@ public class ComException extends RuntimeException
 	}
 
 	/**
-	 * Retrives the error message of an error code.
+	 * Retrieves the error message of an error code.
 	 * This function wraps the <code>FormatMessage</code> Win32 function.
 	 *
 	 * @param hResult the COM error code (<code>HRESULT</code> or <code>SCODE</code>).

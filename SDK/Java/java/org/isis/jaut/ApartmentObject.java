@@ -48,7 +48,7 @@ public abstract class ApartmentObject
 	protected Apartment apartment;
 
 	/**
-	 * Retrives the {@link Apartment} in which this object was created in.
+	 * Retrieves the {@link Apartment} in which this object was created in.
 	 */
 	public Apartment getApartment()
 	{

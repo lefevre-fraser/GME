@@ -73,7 +73,7 @@ public class InvokeException extends RuntimeException
 	/**
 	 * Returns the detailed message string for this exception.
 	 *
-	 * @return the detailed error message, if avaiable.
+	 * @return the detailed error message, if available.
 	 */
 	public String getMessage()
 	{
