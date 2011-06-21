@@ -41,6 +41,8 @@ public:
 
 	BEGIN_COM_MAP( CBoxDecoratorImpl )
 		COM_INTERFACE_ENTRY( IMgaElementDecorator )
+		COM_INTERFACE_ENTRY( IMgaDecoratorCommon )
+		COM_INTERFACE_ENTRY( IMgaDecorator )
 	END_COM_MAP()
 
 public:
