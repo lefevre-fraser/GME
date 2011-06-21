@@ -1048,22 +1048,22 @@
         <Component Id='Interop_AssemblyFoldersEx' Guid='45D256B4-C1D9-4548-9849-CBAC42162C01'>
           <RegistryKey Root='HKLM' Key='Software\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx'>
             <RegistryKey Key='GME.MGA.Core' >
-              <RegistryValue Type='string' Value='[WindowsFolder]\assembly\GAC_MSIL\GME.MGA.Core\1.0.0.0__f240a760fe751c2e'/>
+              <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.MGA.Core\1.0.0.0__f240a760fe751c2e'/>
             </RegistryKey>
             <RegistryKey Key='GME.MGA.Meta' >
-              <RegistryValue Type='string' Value='[WindowsFolder]\assembly\GAC_MSIL\GME.MGA.Meta\1.0.0.0__f240a760fe751c2e'/>
+              <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.MGA.Meta\1.0.0.0__f240a760fe751c2e'/>
             </RegistryKey>
             <RegistryKey Key='GME.MGA' >
-              <RegistryValue Type='string' Value='[WindowsFolder]\assembly\GAC_MSIL\GME.MGA\1.0.0.0__f240a760fe751c2e'/>
+              <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.MGA\1.0.0.0__f240a760fe751c2e'/>
             </RegistryKey>
             <RegistryKey Key='GME.MGA.Parser' >
-              <RegistryValue Type='string' Value='[WindowsFolder]\assembly\GAC_MSIL\GME.MGA.Parser\1.0.0.0__f240a760fe751c2e'/>
+              <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.MGA.Parser\1.0.0.0__f240a760fe751c2e'/>
             </RegistryKey>
             <RegistryKey Key='GME.Util' >
-              <RegistryValue Type='string' Value='[WindowsFolder]\GAC_MSIL\GME.Util\1.0.0.0__f240a760fe751c2e'/>
+              <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.Util\1.0.0.0__f240a760fe751c2e'/>
             </RegistryKey>
             <RegistryKey Key='GME' >
-              <RegistryValue Type='string' Value='[WindowsFolder]\GAC_MSIL\GME\1.0.0.0__f240a760fe751c2e'/>
+              <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME\1.0.0.0__f240a760fe751c2e'/>
             </RegistryKey>
           </RegistryKey>
         </Component>
