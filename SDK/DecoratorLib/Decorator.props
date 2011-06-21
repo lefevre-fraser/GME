@@ -10,7 +10,7 @@
     <Midl>
       <AdditionalIncludeDirectories>$(GME_ROOT)\bin;$(GME_ROOT)\GME\Gme;$(GME_ROOT)\GME\Release;$(GME_ROOT)\GME\Debug;$(MSBuildThisFileDirectory);$(GME_ROOT)\Interfaces;$(GME_ROOT)\Gme\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <HeaderFileName>%(Filename).h</HeaderFileName>
-      <TypeLibraryName>$(IntDir)DecoratorLib.tlb</TypeLibraryName>
+      <TypeLibraryName>DecoratorLib.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>$(GME_ROOT)\Gme\Gme;$(GME_ROOT)\Interfaces;$(GME_ROOT)\Gme\Interfaces;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
