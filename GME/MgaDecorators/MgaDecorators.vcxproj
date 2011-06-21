@@ -58,7 +58,6 @@
     <CustomBuildStep />
     <Midl>
       <AdditionalIncludeDirectories>../Common;..\Interfaces;..\..\SDK\DecoratorLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TypeLibraryName>%(Identity).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -92,7 +91,6 @@
     <CustomBuildStep />
     <Midl>
       <AdditionalIncludeDirectories>../Common;..\Interfaces;..\..\SDK\DecoratorLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TypeLibraryName>%(Identity).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -136,7 +134,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="MgaDecoratorLib.idl" />
+    <Midl Include="MgaDecoratorLib.idl">
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MgaDecorators.tlb</TypeLibraryName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MgaDecorators.tlb</TypeLibraryName>
+    </Midl>
   </ItemGroup>
   <ItemGroup>
     <None Include="MgaDecorators.def" />

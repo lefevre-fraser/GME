@@ -58,7 +58,6 @@
     <Midl>
       <AdditionalIncludeDirectories>$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <TypeLibraryName>%(Identity).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -95,7 +94,6 @@
     <Midl>
       <AdditionalIncludeDirectories>$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <TypeLibraryName>%(Identity).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -153,7 +151,10 @@
     <None Include="DecoratorApp.def" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="DecoratorLib.idl" />
+    <Midl Include="DecoratorLib.idl">
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Annotator.tlb</TypeLibraryName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Annotator.tlb</TypeLibraryName>
+    </Midl>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnnotationDefs.h" />
