@@ -58,6 +58,7 @@
     <CustomBuildStep />
     <Midl>
       <AdditionalIncludeDirectories>../Common;..\Interfaces;..\..\SDK\DecoratorLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TypeLibraryName>%(Identity).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -91,6 +92,7 @@
     <CustomBuildStep />
     <Midl>
       <AdditionalIncludeDirectories>../Common;..\Interfaces;..\..\SDK\DecoratorLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TypeLibraryName>%(Identity).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>

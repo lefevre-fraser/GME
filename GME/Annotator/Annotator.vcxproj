@@ -58,6 +58,7 @@
     <Midl>
       <AdditionalIncludeDirectories>$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>%(Identity).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -94,6 +95,7 @@
     <Midl>
       <AdditionalIncludeDirectories>$(GME_ROOT)\Interfaces;$(GME_ROOT)\GME\Interfaces</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>%(Identity).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
