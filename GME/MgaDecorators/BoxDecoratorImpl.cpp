@@ -9,7 +9,7 @@
 #include "BoxDecorator.h"
 #include "DecoratorExceptions.h"
 #include "DecoratorInterface.h"
-#include "MgaDecoratorLib_h.h"
+#include "MgaDecoratorLib.h"
 #include "BoxDecoratorImpl.h"
 
 

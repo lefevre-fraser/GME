@@ -9,7 +9,7 @@
 #include "resource.h"
 #include <initguid.h>
 #include "Gme.h"
-#include "MgaDecoratorLib_h.h"
+#include "MgaDecoratorLib.h"
 #include "MgaDecoratorLib_i.c"
 #include "BoxDecoratorImpl.h"
 

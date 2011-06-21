@@ -10,7 +10,7 @@
 #include "Resource.h"
 #include "Gme.h"
 #include "DecoratorConfig.h"
-#include "DecoratorLib_h.h"
+#include "DecoratorLib.h"
 #include "DecoratorLib_i.c"
 #include "AnnotatorDecoratorImpl.h"
 

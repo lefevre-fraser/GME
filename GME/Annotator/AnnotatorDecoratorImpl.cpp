@@ -7,7 +7,7 @@
 
 #include "StdAfx.h"
 #include "DecoratorConfig.h"
-#include "DecoratorLib_h.h"
+#include "DecoratorLib.h"
 #include "AnnotatorDecoratorImpl.h"
 #include "AnnotatorDecorator.h"
 #include "DecoratorExceptions.h"
