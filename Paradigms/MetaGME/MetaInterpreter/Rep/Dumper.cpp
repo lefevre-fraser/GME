@@ -10,6 +10,7 @@
 #include "Token.h"
 #include "algorithm"
 #include <afxdlgs.h>
+#include <comdef.h>
 
 #include "globals.h"
 extern Globals global_vars;
@@ -836,14 +837,14 @@ void Dumper::doDump()
 	// root folder dump
 	std::string mmm= "<?xml version=\"1.0\"?>\n<!DOCTYPE paradigm SYSTEM \"edf.dtd\">"
 	"\n\n<paradigm "
-	"name=\"" + m_projName + "\" " +
-	(m_projVersion.empty() ? "" : "version=\"" + m_projVersion + "\" ") +
+	"name=\"" + xmlFilter(m_projName) + "\" " +
+	(m_projVersion.empty() ? "" : "version=\"" + xmlFilter(m_projVersion) + "\" ") +
 	"guid=\"" + m_projGUID + "\" " +
-	"cdate=\"" + m_projCreated + "\" " +
-	"mdate=\"" + m_projModified + "\" " +
+	"cdate=\"" + xmlFilter(m_projCreated) + "\" " +
+	"mdate=\"" + xmlFilter(m_projModified) + "\" " +
 	">\n\n" +
-	"\t<comment>" + m_projComment + "</comment>\n\n" +
-	"\t<author>" + m_projAuthor + "</author>\n\n";
+	"\t<comment>" + xmlFilter(m_projComment) + "</comment>\n\n" +
+	"\t<author>" + xmlFilter(m_projAuthor) + "</author>\n\n";
 
 	DMP( mmm); mmm = "";
 	
@@ -1666,6 +1667,8 @@ bool Dumper::build()
 			CFileDialog dlg(FALSE, "xmp", def_name,
 				OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
 				"XML Paradigm Files (*.xmp)|*.xmp|");
+			dlg.GetOFN().lpstrInitialDir = proj_path.c_str();
+
 			int dlg_res = IDOK;
 			dlg_res = dlg.DoModal();
 			if( dlg_res == IDOK) 
@@ -1757,11 +1760,22 @@ bool Dumper::build()
 			hr = registrar->RegisterParadigmFromData(path, NULL, REGACCESS_USER);
 		}
 		if (FAILED(hr)) {
-
+			_bstr_t error;
+			CComQIPtr<ISupportErrorInfo> supperr = registrar;
+			if (supperr) {
+				CComPtr<IErrorInfo> errorInfo;
+				if (SUCCEEDED(GetErrorInfo(0, &errorInfo))) {
+					errorInfo->GetDescription(error.GetAddress());
+					error = L"Error occurred while registering new paradigm: " + error;
+				}
+			}
+			if (error == _bstr_t()) {
+				error = L"Error occurred while registering new paradigm.";
+			}
 			if( global_vars.silent_mode)
-				TO("Error occurred while registering new paradigm.");
+				TO(error);
 			else
-				AfxMessageBox("Error occurred while registering new paradigm.", MB_ICONSTOP | MB_OK);
+				AfxMessageBox(error, MB_ICONSTOP | MB_OK);
 		}
 	}
 }
