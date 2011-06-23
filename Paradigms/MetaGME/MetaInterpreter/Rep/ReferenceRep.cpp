@@ -339,13 +339,9 @@ std::string ReferenceRep::doDump()
 	return mmm;
 }
 
-/*
-It checks the m_initialReferees since the descendants of m_initialReferees will be exactly 
-as diverse as the m_initialReferees
-*/
 bool ReferenceRep::checkNotEmpty() const
 {
-	return !m_initialReferees.empty();
+	return !m_allReferees.empty();
 }
 
 /*
