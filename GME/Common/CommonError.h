@@ -67,6 +67,15 @@ do { \
 		SetErrorInfo(e.hr); \
 		return e.hr; \
 	} \
+	catch(_com_error &e) \
+	{ \
+		{ CLEANUP; } \
+		if (e.Description() != _bstr_t()) \
+			SetErrorInfo(e.Description()); \
+		else \
+			SetStandardOrGMEErrorInfo(e.Error()); \
+		return e.Error(); \
+	} \
 	return S_OK;
 
 #define COMRETURN(HR) \
