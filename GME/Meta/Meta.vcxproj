@@ -72,6 +72,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Interfaces;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -108,6 +109,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Interfaces;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -184,20 +186,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="MetaLib.idl">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateStublessProxies>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\MetaLib.tlb</TypeLibraryName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MetaLib.h</HeaderFileName>
-      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MetaLib_i.c</InterfaceIdentifierFileName>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateStublessProxies>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\MetaLib.tlb</TypeLibraryName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MetaLib.h</HeaderFileName>
-      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MetaLib_i.c</InterfaceIdentifierFileName>
-    </Midl>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="CoreMetaDefines.h" />
     <ClInclude Include="MetaUtilities.h" />
     <ClInclude Include="MgaMetaAspect.h" />
@@ -227,14 +215,6 @@
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{bef31e1e-bb02-4687-a543-a6ad5d522869}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Core\Core.vcxproj">
-      <Project>{0b16b893-5512-48b8-b764-ee72c522ead8}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Private>true</Private>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <ProjectReference Include="..\Interfaces\Interfaces.vcxproj">
       <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>

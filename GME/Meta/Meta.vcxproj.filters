@@ -166,11 +166,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="MetaLib.idl">
-      <Filter>Source Files</Filter>
-    </Midl>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="CoreMetaDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>

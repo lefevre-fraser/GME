@@ -17,9 +17,9 @@ library MGAUtilLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
-	importlib("../Core/CoreLib.tlb");
-	importlib("../Meta/MetaLib.tlb");
-	importlib("../Mga/MgaLib.tlb");
+	importlib("CoreLib.tlb");
+	importlib("MetaLib.tlb");
+	importlib("MgaLib.tlb");
 
 	[
 		uuid(461F30B1-3BF0-11D4-B3F0-005004D38590),

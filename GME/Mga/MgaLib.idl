@@ -19,8 +19,8 @@ library MGALib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
-	importlib("..\Meta\MetaLib.tlb");
-	importlib("..\Core\CoreLib.tlb");
+	importlib("MetaLib.tlb");
+	importlib("CoreLib.tlb");
 
 	// Component interfaces (listed here to include them in typelib)
 	interface IMgaComponent;

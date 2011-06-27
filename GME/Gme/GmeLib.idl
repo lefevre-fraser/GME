@@ -14,9 +14,9 @@ library GmeLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
-	importlib("..\Core\CoreLib.tlb");
-	importlib("..\Meta\MetaLib.tlb");
-	importlib("..\Mga\MgaLib.tlb");
+	importlib("CoreLib.tlb");
+	importlib("MetaLib.tlb");
+	importlib("MgaLib.tlb");
 
 	// Decorator interfaces (listed here to include them in typelib)
 	interface IMgaDecorator;

@@ -364,11 +364,6 @@
     <None Include="GME.exe.config" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="GmeLib.idl">
-      <Filter>Source Files</Filter>
-    </Midl>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="AnnotatorEventSink.h">
       <Filter>Header Files</Filter>
     </ClInclude>

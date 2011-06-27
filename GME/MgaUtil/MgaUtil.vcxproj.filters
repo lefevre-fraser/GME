@@ -219,11 +219,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="MgaUtilLib.idl">
-      <Filter>Source Files</Filter>
-    </Midl>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="AlterNmspDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>

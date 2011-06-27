@@ -14,9 +14,9 @@ library CONSTRAINTMANAGERLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
-	importlib("..\Core\CoreLib.tlb");
-	importlib("..\Meta\MetaLib.tlb");
-	importlib("..\Mga\MgaLib.tlb");
+	importlib("CoreLib.tlb");
+	importlib("MetaLib.tlb");
+	importlib("MgaLib.tlb");
 
 	[
 		uuid(44055854-A45B-4357-9D2C-FC66D6C0DFFA),

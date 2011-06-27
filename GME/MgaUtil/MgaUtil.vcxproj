@@ -68,7 +68,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>../Common;../Interfaces;../include/htmlhelp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Common;../Interfaces;$(OutDir);../include/htmlhelp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -80,6 +80,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Interfaces;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>imagehlp.lib;htmlhelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -111,7 +112,7 @@ copy /y /b "$(OutDir)CrashRpt.dll"+,, </Command>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../Common;../Interfaces;../include/htmlhelp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Common;../Interfaces;$(OutDir);../include/htmlhelp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -121,6 +122,7 @@ copy /y /b "$(OutDir)CrashRpt.dll"+,, </Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Interfaces;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>imagehlp.lib;htmlhelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -224,24 +226,6 @@ copy /y /b "$(OutDir)CrashRpt.dll"+,, </Command>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="MgaUtilLib.idl">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <SuppressStartupBanner Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SuppressStartupBanner>
-      <TargetEnvironment Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Win32</TargetEnvironment>
-      <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateStublessProxies>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MgaUtilLib.tlb</TypeLibraryName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MgaUtilLib.h</HeaderFileName>
-      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MgaUtilLib_i.c</InterfaceIdentifierFileName>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <SuppressStartupBanner Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</SuppressStartupBanner>
-      <TargetEnvironment Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Win32</TargetEnvironment>
-      <GenerateStublessProxies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateStublessProxies>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MgaUtilLib.tlb</TypeLibraryName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MgaUtilLib.h</HeaderFileName>
-      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MgaUtilLib_i.c</InterfaceIdentifierFileName>
-    </Midl>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="AlterNmspDlg.h" />
     <ClInclude Include="AnnotationAspectList.h" />
     <ClInclude Include="AnnotationBrowserDlg.h" />
@@ -294,27 +278,13 @@ copy /y /b "$(OutDir)CrashRpt.dll"+,, </Command>
       <Project>{bef31e1e-bb02-4687-a543-a6ad5d522869}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\Core\Core.vcxproj">
-      <Project>{0b16b893-5512-48b8-b764-ee72c522ead8}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Interfaces\Interfaces.vcxproj">
       <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\Meta\Meta.vcxproj">
-      <Project>{3ed3216e-b64c-4d0b-881f-68bff2cb3e83}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\MgaDotNetServices\MgaDotNetServices.csproj">
       <Project>{955209a1-8107-43c2-b0a7-729b03908c64}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Mga\Mga.vcxproj">
-      <Project>{86daef74-2527-41e5-82ce-52c31c5bbe8e}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Private>true</Private>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

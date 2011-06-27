@@ -50,7 +50,7 @@ inline void NOOP_TRACE2(LPCSTR, ...) { }
 
 #undef VARIANT_TRUE
 #define VARIANT_TRUE ((VARIANT_BOOL)-1)
-#include "../Core/CoreLib.h"
+#include "CoreLib.h"
 #include "MgaLib.h"	
 
 #define ASSERT ATLASSERT

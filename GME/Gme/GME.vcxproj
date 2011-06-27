@@ -149,30 +149,6 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
       <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\Meta\Meta.vcxproj">
-      <Project>{3ed3216e-b64c-4d0b-881f-68bff2cb3e83}</Project>
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
-    <ProjectReference Include="..\Mga\Mga.vcxproj">
-      <Project>{86daef74-2527-41e5-82ce-52c31c5bbe8e}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Private>true</Private>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
-    <ProjectReference Include="..\XmlBackEnd\XmlBackEnd.vcxproj">
-      <Project>{1d361b9d-7e8d-4778-a3b2-0f9c3cf0978c}</Project>
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
@@ -312,20 +288,6 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
     <None Include="GME.reg" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="GmeLib.idl">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TargetEnvironment Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Win32</TargetEnvironment>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GmeLib.tlb</TypeLibraryName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GmeLib.h</HeaderFileName>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TargetEnvironment Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Win32</TargetEnvironment>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GmeLib.tlb</TypeLibraryName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GmeLib.h</HeaderFileName>
-    </Midl>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="AnnotatorEventSink.h" />
     <ClInclude Include="AutoRoute\ArEdgeLs.h" />
     <ClInclude Include="AutoRoute\ArGraph.h" />
@@ -401,9 +363,9 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
   <ItemGroup>
     <ResourceCompile Include="GME.rc">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OUTDIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OUTDIR);..\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OUTDIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OUTDIR);..\Interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

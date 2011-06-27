@@ -83,11 +83,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="ParserLib.idl">
-      <Filter>Source Files</Filter>
-    </Midl>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="dlldatax.h">
       <Filter>Header Files</Filter>
     </ClInclude>

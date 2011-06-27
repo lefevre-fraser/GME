@@ -54,6 +54,7 @@
     <Midl>
       <HeaderFileName>
       </HeaderFileName>
+      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
     </Midl>
     <CustomBuild>
       <Command>..\Release\IFChecksumProg.exe InterfaceVersion.h InterfaceVersion.trg</Command>
@@ -72,6 +73,42 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Midl Include="..\Core\CoreLib.idl">
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName).tlb</TypeLibraryName>
+    </Midl>
+    <Midl Include="..\Gme\GmeLib.idl">
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName).tlb</TypeLibraryName>
+    </Midl>
+    <Midl Include="..\Meta\MetaLib.idl">
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName).tlb</TypeLibraryName>
+    </Midl>
+    <Midl Include="..\MgaUtil\MgaUtilLib.idl">
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName).tlb</TypeLibraryName>
+    </Midl>
+    <Midl Include="..\Mga\MgaLib.idl">
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName).tlb</TypeLibraryName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
+    </Midl>
+    <Midl Include="..\Parser\ParserLib.idl">
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName).tlb</TypeLibraryName>
+    </Midl>
     <Midl Include="Core.idl">
       <GenerateTypeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</GenerateTypeLibrary>
       <GenerateTypeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</GenerateTypeLibrary>
@@ -91,6 +128,7 @@
     <Midl Include="Mga.idl">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MGA</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MGA</PreprocessorDefinitions>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(FileName).tlb</TypeLibraryName>
     </Midl>
     <Midl Include="MgaUtil.idl">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MGAUTIL</PreprocessorDefinitions>

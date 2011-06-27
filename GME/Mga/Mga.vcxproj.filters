@@ -118,11 +118,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="MgaLib.idl">
-      <Filter>Source Files</Filter>
-    </Midl>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="MgaAttribute.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -36,10 +36,10 @@
 extern CComModule _Module;
 #include <atlcom.h>
 
-#import "Meta.dll" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
-#import "Mga.dll" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
-#import "GME.exe" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
-#import "MgaUtil.dll" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
+#import "MetaLib.tlb" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
+#import "MgaLib.tlb" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
+#import "GMELib.tlb" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
+#import "MgaUtilLib.tlb" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
 
 // Don't load the MIDL-generated headers
 #define __Core_h__

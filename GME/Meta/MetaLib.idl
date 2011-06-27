@@ -20,7 +20,7 @@ library MGAMetaLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
-	importlib("..\Core\CoreLib.tlb");
+	importlib("CoreLib.tlb");
 
 	enum objtype_enum;
 	enum attval_enum;

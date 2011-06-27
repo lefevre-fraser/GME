@@ -10,7 +10,7 @@
 #include <initguid.h>
 
 #include "Core_i.c"
-#include "../core/CoreLib_i.c"
+#include "CoreLib_i.c"
 #include "Meta_i.c"
 #include "Mga_i.c"
 #include "MgaLib_i.c"

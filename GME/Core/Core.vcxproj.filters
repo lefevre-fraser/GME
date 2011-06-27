@@ -97,11 +97,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="CoreLib.idl">
-      <Filter>Source Files</Filter>
-    </Midl>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="CoreAttribute.h">
       <Filter>Header Files</Filter>
     </ClInclude>

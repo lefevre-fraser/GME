@@ -18,9 +18,9 @@ library MGAParserLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
-	importlib("..\Core\CoreLib.tlb");
-	importlib("..\Meta\MetaLib.tlb");
-	importlib("..\Mga\MgaLib.tlb");
+	importlib("CoreLib.tlb");
+	importlib("MetaLib.tlb");
+	importlib("MgaLib.tlb");
 
 	[
 		uuid(70C41B25-E3CE-11D3-B37A-005004D38590),
