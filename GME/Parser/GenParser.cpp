@@ -69,6 +69,7 @@ void CGenParser::ThrowXmlError(const TCHAR *format, ...)
 			_T("XML parser error in file %s : %s"), xmlfile.c_str(), desc.c_str());
 
 	errorinfo = str.c_str();
+	SetErrorInfo(const_cast<TCHAR*>(str.c_str()));
 	HR_THROW(E_XMLPARSER);
 }
 
