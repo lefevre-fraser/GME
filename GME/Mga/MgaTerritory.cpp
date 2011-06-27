@@ -103,7 +103,11 @@ STDMETHODIMP CMgaTerritory::Flush() {
 */
 
 	COMTRY {
-	   if(coreterr) COMTHROW(coreterr->Clear());
+		if(coreterr) {
+			HRESULT hr = coreterr->Clear();
+			if (FAILED(hr))
+				COMRETURN(hr);
+		}
 	} COMCATCH(;);
 	
 };
@@ -116,7 +120,8 @@ STDMETHODIMP CMgaTerritory::CheckProject(IMgaProject *project) {
 
 STDMETHODIMP CMgaTerritory::Destroy() {
 	COMTRY {
-		if(!coreterr) COMTHROW(E_MGA_TARGET_DESTROYED);
+		if (!coreterr) 
+			return E_MGA_TARGET_DESTROYED;
 		COMTHROW(Flush());
 		CMgaProject::tercoll::iterator i = mgaproject->allterrs.begin(), end = mgaproject->allterrs.end();
 		for(;i != end; ++i) {
