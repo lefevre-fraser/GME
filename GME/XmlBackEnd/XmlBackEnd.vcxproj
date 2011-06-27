@@ -97,7 +97,7 @@ copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)" &amp;&amp; ^
 copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)" &amp;&amp; ^
 copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
       <Message>Copying dependency DLLs...</Message>
-      <Outputs> ..\lib\libeay32.dll</Outputs>
+      <Outputs>$(OutDir)\libeay32.dll</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,7 +147,7 @@ copy ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)" &amp;&amp; ^
 copy ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)" &amp;&amp; ^
 copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
       <Message>Copying dependency DLLs...</Message>
-      <Outputs> ..\lib\libeay32.dll</Outputs>
+      <Outputs>$(OutDir)\libeay32.dll</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
