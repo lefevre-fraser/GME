@@ -171,6 +171,8 @@ STDMETHODIMP CConstraintMgr::ObjectEvent( IMgaObject* obj, unsigned long eventma
 	if ( ! m_Facade.m_bEnabled || ! m_Facade.m_bEnabledInteractions || ! m_Facade.m_bEnabledEvents ) {
 		return S_OK;
 	}
+	if (eventmask == OBJEVENT_MOUSEOVER)
+		return S_OK;
 
 	COMTRY {
 		return m_Facade.Evaluate( obj, eventmask);
