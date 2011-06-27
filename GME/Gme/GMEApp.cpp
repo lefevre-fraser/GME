@@ -805,9 +805,7 @@ void CGMEApp::FindConstraintManager()
 		COMTHROW(MGACOLL_ITER->get_ComponentName(&name));
 		if(name == _T("ConstraintManager")) {
 			mgaConstMgr = CComQIPtr<IMgaComponentEx>(MGACOLL_ITER); 
-#pragma warning(disable: 4310) // cast truncates constant value
 			COMTHROW(mgaConstMgr->put_InteractiveMode(VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 			break;
 		}
 	} MGACOLL_ITERATE_END;
@@ -2881,8 +2879,9 @@ void CGMEApp::RegisterDroppedFile( const CString& fname, bool userReg/* = true*/
 
 		CMainFrame::theInstance->m_console.Message( _T("Done."), 1);
 	}
-	catch( hresult_exception &)
+	catch( hresult_exception &e)
 	{
+		// FIXME: GetErrorINfo
 		CMainFrame::theInstance->m_console.Message( _T("Error while registering paradigm!"), 3);
 	}
 }
