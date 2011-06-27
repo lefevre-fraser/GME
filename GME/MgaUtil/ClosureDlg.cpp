@@ -153,7 +153,7 @@ BOOL CClosureDlg::OnInitDialog()
 	if( m_iMarkVal != -1)
 	{
 		TCHAR buf[12];
-		_stprintf( buf, _T("%i"), m_iMarkVal);
+		_stprintf_s( buf, _T("%i"), m_iMarkVal);
 		m_ctrlMarkVal.SetWindowText( buf);
 	}
 

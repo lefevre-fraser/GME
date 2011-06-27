@@ -1143,6 +1143,8 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
 
 		COMTHROW( parent->get_Meta(&parent_metafco) );
 		ASSERT( parent_metafco != NULL );
+		_bstr_t kindName;
+		COMTHROW(parent_metafco->get_Name(kindName.GetAddress()));
 
 		COMTHROW( 
 			((hr = parent_metafco->get_AttributeByName(kind, &imma)) == E_NOTFOUND) ?
@@ -1191,7 +1193,7 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
 
 				CComPtr<IMgaMetaAttribute> imma_ix;
 				CString sz_dialog_name;
-				sz_dialog_name.Format(_T("Resolve Attribute Kind (for %s):"),kind);
+				sz_dialog_name.Format(_T("Resolve Attribute '%s' for Kind '%s':"), kind, static_cast<BSTR>(kindName));
 				CDialogList cdl( sz_dialog_name, CDialogList::CHKTEXT_ONETIMER, true );
 
 				MGACOLL_ITERATE(IMgaMetaAttribute, mattrs) {
@@ -1211,6 +1213,8 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
                 if( dlgres == IDIGNORE )
                 {
                     *p = NULL;
+					if (cdl.mb_check_once == TRUE)
+						map_put_AttrByStr(parent_metafco.p, kind, NULL);
                     return S_OK;
                 }
                 else if( dlgres == IDCANCEL )

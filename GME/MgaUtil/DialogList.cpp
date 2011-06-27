@@ -96,6 +96,7 @@ void CDialogList::OnOK()
 
 void CDialogList::OnButtonIgnore() 
 {
+	UpdateData(TRUE);
     EndDialog( IDIGNORE );
 }
 
