@@ -4,13 +4,16 @@
 #include "MgaComplexOps.h"
 #include "MgaConnection.h"
 
+#ifdef max
+#undef max
+#endif
+
 #define DONT_OPTIM              0
 // defined in MgaLibOps.cpp
 void steal(CoreObj &o, CoreObj &n, attrid_type ai);
 
 /*static*/
 bool SearchTool::m_optimized = false;
-bool RefreshManager::m_alterRelids = false;
 
 short RefreshManager::distance( CoreObj& derd)
 {
@@ -1528,7 +1531,6 @@ bool RefreshManager::redirectRefWithCare( CComPtr<IMgaReference>& orig, CComPtr<
 			try {
 #ifdef _DEBUG
 				long ci = CoreObj(cn_i)[ATTRID_RELID];
-				++ci;
 #endif
 				//COMTHROW( cn_i->DestroyObject());
 				ObjForCore( CoreObj(cn_i))->inDeleteObject();
@@ -2383,60 +2385,6 @@ void RefreshManager::propObjRelidIncV2( CoreObj& p_obj)
 	}
 }
 
-// obj (with its children, grandchildren) are inner object in a basemodel
-// thus their derivations need relidchange (and are secondary derived)
-void RefreshManager::PropObjRelidIncrease( CoreObj& obj)
-{
-	ASSERT( m_alterRelids);
-	// for all deriveds from obj
-	CoreObjs deriveds = obj[ATTRID_DERIVED + ATTRID_COLLECTION];
-	ITERATE_THROUGH(deriveds) {
-		long brelid = obj[ATTRID_RELID];
-		
-		// increase depth
-		ITER[ATTRID_RELID] = brelid + RELIDSPACE;
-
-		PropObjRelidIncrease( ITER);
-	}
-
-	if( obj.IsContainer())
-	{
-		CoreObjs children = obj[ATTRID_FCOPARENT + ATTRID_COLLECTION];
-		ITERATE_THROUGH(children) 
-		{
-			PropObjRelidIncrease( ITER);
-		}
-	}
-}
-
-// obj is a child object of a model which has been freshly detached from its base
-// thus obj became an inner object with relid < RELIDSPACE (no longer secondary derived)
-// but all derived objects of obj will still be secondary derived and will have a relid < 2*RELIDSPACE
-// the derived ones from these will have a relid < 3*RELIDSPACE and so on
-void RefreshManager::PropObjRelidDecrease( CoreObj& obj, long level)
-{
-	ASSERT( m_alterRelids);
-	// for all deriveds from obj
-	CoreObjs deriveds = obj[ATTRID_DERIVED + ATTRID_COLLECTION];
-	ITERATE_THROUGH(deriveds) {
-		// relid of derd is increased here compared to base's relid
-		long brelid = obj[ATTRID_RELID];
-		ITER[ATTRID_RELID] = brelid + RELIDSPACE;
-
-		PropObjRelidDecrease( ITER, level + 1);
-	}
-
-	if( obj.IsContainer())
-	{
-		// for all children of obj
-		CoreObjs children = obj[ATTRID_FCOPARENT + ATTRID_COLLECTION];
-		ITERATE_THROUGH(children) 
-		{
-			PropObjRelidDecrease( ITER, level);
-		}
-	}
-}
-
 void RefreshManager::DetachObjFromLibBase( const CoreObj& p_baseObj, CoreObj& p_derdObj, unsigned long nextrelid, bool prim)
 {
 	bool has_last_relid_attr = false;
@@ -2478,34 +2426,6 @@ void RefreshManager::DetachObjFromLibBase( const CoreObj& p_baseObj, CoreObj& p_
 					}
 					case ATTRID_RELID:
 					{
-						if( m_alterRelids && !prim) // it was a child of a primary derived, being detached
-						{
-							// since it was called recursively we know for sure that
-							// this object is a secondary derived object along with its
-							// parent. 
-							// (the level of the derivation in its case might have been 
-							// higher than the parent's level of derivation)
-							// but since the parent is detached totally from its
-							// base, these kinds of children (for which the method
-							// has been invoked recursively) will become archetypes
-							// no matter how they have been derived originally
-							// that is why the relid has to be decreased to the
-							// [0, RELIDSPACE) interval
-							
-							// revert a secondary derived objects relid to a normal relid
-							long rid = p_derdObj[ai];
-							if( rid >= RELIDSPACE)
-							{
-								// we just module it down into (0, RELIDSPACE)
-								// we don't care about relid uniqueness
-								p_derdObj[ai] = rid % RELIDSPACE;
-							}
-							else
-							{
-								ASSERT(0); // problem
-								COMTHROW(E_MGA_LONG_DERIVCHAIN);
-							}
-						}
 						break;
 					}
 					case ATTRID_LASTRELID:
@@ -2599,8 +2519,8 @@ void RefreshManager::DetachObjFromLibBase( const CoreObj& p_baseObj, CoreObj& p_
 							}
 
 							long i_relid = ITER[ATTRID_RELID];
-							if( i_relid < RELIDSPACE && max_relid_found < i_relid)
-								max_relid_found = i_relid;
+							if( i_relid < RELIDSPACE)
+								max_relid_found = std::max(max_relid_found, i_relid);
 						}
 						break;
 					}
@@ -2667,18 +2587,14 @@ void RefreshManager::AttachDerObjs( const CoreObj &p_baseObj, CoreObj &p_derdObj
 					}
 					case ATTRID_RELID: 
 					{
-						if( m_alterRelids && !prim)
-						{
-							p_derdObj[ai] = p_derdObj[ai]+RELIDSPACE;//shift its own relid
-							if(p_derdObj[ai] <= 0) COMTHROW(E_MGA_LONG_DERIVCHAIN);  // overflow
-						} else if( !prim) // alterRelids is false but still we check something here
+						if(!prim)
 						{	// Damage Control for GME-145 entry in JIRA
 							// relids were messed up by the other PropObjRelidInc mechanism
 							// because it was invoked to all children of the derd
 							// and children are not always homogeneous
 							unsigned long lb = p_baseObj[ai];
 							unsigned long ld = p_derdObj[ai];
-							if( ld <= lb)
+							if( ld <= lb) // FIXME: is this necessary?
 							{	// Shift relid
 								p_derdObj[ai] = lb + RELIDSPACE;
 								propObjRelidIncV2( p_derdObj);
@@ -2763,8 +2679,8 @@ void RefreshManager::AttachDerObjs( const CoreObj &p_baseObj, CoreObj &p_derdObj
 								ASSERT(0);
 						
 							long i_relid = ITER[ATTRID_RELID];
-							if( i_relid < RELIDSPACE && max_relid_found < i_relid)
-								max_relid_found = i_relid;
+							if( i_relid < RELIDSPACE)
+								max_relid_found = std::max(max_relid_found, i_relid);
 						}
 					}
 				}
@@ -3156,52 +3072,6 @@ void RefreshManager::cutDersFromLib( CoreObj& one_fco)
 			// objects survive the death of bs object
 			CoreObj derd( sub);
 			DetachObjFromLibBase( one_fco, derd, 0, true);
-
-			// shift relids for the subtypes of derdchildren
-			// (by detaching we have inconsistent relids in
-			// the derivation tree of derd's children)
-			// because a secondary derived object's distance from
-			// its topmost basetype is calc'ed based on relid
-			if( m_alterRelids && derd.IsContainer()) 
-			{
-				CoreObjs children = derd[ ATTRID_FCOPARENT + ATTRID_COLLECTION];
-				ITERATE_THROUGH( children)
-				{
-					PropObjRelidDecrease( ITER, 1);
-				}
-			}
-#if(0)
-			CoreObj derd( sub), bs, b2;
-			if( derd)
-			{
-				bs = derd[ATTRID_DERIVED];
-				if(bs) // if self is really derived from something (bs)
-				{
-					// is this needed? No.
-					//while((b2 = bs[ATTRID_DERIVED]) != NULL) 
-					//	bs <<= b2;
-
-					// cut the relationship between derd and bs
-					// by removing the dependency me help derd 
-					// objects survive the death of bs object
-					DetachObjFromLibBase( bs, derd, 0, true);
-
-					// shift relids for the subtypes of derdchildren
-					// (by detaching we have inconsistent relids in
-					// the derivation tree of derd's children)
-					// because a secondary derived object's distance from
-					// its topmost basetype is calc'ed based on relid
-					if( derd.IsContainer()) 
-					{
-						CoreObjs children = derd[ ATTRID_FCOPARENT + ATTRID_COLLECTION];
-						ITERATE_THROUGH( children)
-						{
-							PropObjRelidDecrease( ITER, 1);
-						}
-					}
-				}
-			}
-#endif
 		}
 	}
 }
@@ -3231,18 +3101,6 @@ void RefreshManager::reattachSubtypesInstances()
 		bool is_instance     ( i->second.second);
 		
 		AttachDerObjs( fresh_base, prev_detached, is_instance?VARIANT_TRUE:VARIANT_FALSE, true);
-
-		// relids inside prev_detached have changed
-		// let's propagate them
-		if( m_alterRelids && prev_detached.IsContainer())
-		{
-			CoreObjs children = prev_detached[ATTRID_FCOPARENT + ATTRID_COLLECTION];
-			ITERATE_THROUGH( children) 
-			{
-				// these children are bases (if any derived) of secondary deriveds
-				PropObjRelidIncrease( ITER);
-			}
-		}
 	}
 }
 

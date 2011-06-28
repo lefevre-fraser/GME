@@ -857,14 +857,10 @@ protected:
 	// to the refreshed base objects (found in the library)
 	void reattachSubtypesInstances();// CoreObj& ofolder, CoreObj& nfolder);
 	
-	// relids altered?
-	static bool m_alterRelids;
 	// -after the cut we decrease relids to seem consistent
 	// (to be consistent with the changed hierarchy)
 	// -after the reattach we increase relids to be consistent
 	// with the actual restored hierarchy
-	void PropObjRelidDecrease( CoreObj& orig, long level = 0);
-	void PropObjRelidIncrease( CoreObj& orig);
 	void propObjRelidIncV2( CoreObj& orig);
 
 	// aggregates objects in the project which are 
