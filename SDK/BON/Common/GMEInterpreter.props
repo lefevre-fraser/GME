@@ -10,7 +10,7 @@
       <ValidateAllParameters>true</ValidateAllParameters>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;$(GME_ROOT)\Interfaces;$(GME_ROOT)\Gme\Interfaces;$(GME_ROOT)\Gme\Gme;$(GME_ROOT)\SDK\BON\Common;$(GME_ROOT)\GME\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(GME_ROOT)\Interfaces;$(GME_ROOT)\SDK\BON\Common;$(GME_ROOT)\Gme\Interfaces;$(GME_ROOT)\Gme\Gme;$(GME_ROOT)\GME\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup />

@@ -162,7 +162,7 @@ namespace BON
 	#define PREF_NameColor "/nameColor"
 	#define PREF_NameEnabled "/isNameEnabled"
 	#define PREF_HelpURL "/help"
-	#define PREF_Location1 "/PartRegs/"
+	#define PREF_Location1 "PartRegs/"
 	#define PREF_Location2 "/Position"
 	#define PREF_NamePosition "/namePosition"
 	#define PREF_NameWrap "/nameWrap"
