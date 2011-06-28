@@ -49,7 +49,7 @@ extern CComModule _Module;
 #include <atlcom.h>
 
 
-#include "..\Mga\MgaLib.h"
+#include "MgaLib.h"
 
 #include "CommonError.h"
 #include "CommonSmart.h"
