@@ -342,7 +342,7 @@ void CCompDlg::OnRemove()
 			CComPtr<IMgaRegistrar> registrar;
 			HRESULT registrarHr;
 			if (CUACUtils::isVistaOrLater()) {
-				registrarHr = CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar, GetSafeHwnd());
+				registrarHr = CUACUtils::CreateElevatedInstance(__uuidof(MgaRegistrar), &registrar, GetSafeHwnd());
 			}
 			else {
 				registrarHr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
@@ -391,7 +391,7 @@ void CCompDlg::OnEnableDisable()
 			CComPtr<IMgaRegistrar> registrar;
 			HRESULT registrarHr;
 			if (CUACUtils::isVistaOrLater() && (regacc_translate(m_accessmode) != REGACCESS_USER) ) {
-				registrarHr = CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
+				registrarHr = CUACUtils::CreateElevatedInstance(__uuidof(MgaRegistrar), &registrar);
 			}
 			else {
 				registrarHr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
@@ -464,7 +464,7 @@ void CCompDlg::RegisterDll(const CString &path)
 	CComPtr<IMgaRegistrar> registrar;
 	HRESULT hr;
 	if (CUACUtils::isVistaOrLater()) {
-		hr = CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar, GetSafeHwnd());
+		hr = CUACUtils::CreateElevatedInstance(__uuidof(MgaRegistrar), &registrar, GetSafeHwnd());
 	} else {
 		hr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
 	}
@@ -499,7 +499,7 @@ void CCompDlg::RegisterPattern(const CString &path)
 	CComPtr<IMgaRegistrar> registrar;
 	HRESULT registrarHr;
 	if (CUACUtils::isVistaOrLater() && (acmode != REGACCESS_USER) ) {
-		registrarHr = CUACUtils::CreateElevatedInstance(CLSID_MgaRegistrar, &registrar);
+		registrarHr = CUACUtils::CreateElevatedInstance(__uuidof(MgaRegistrar), &registrar);
 	}
 	else {
 		registrarHr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));

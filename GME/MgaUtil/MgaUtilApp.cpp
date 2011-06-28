@@ -5,9 +5,6 @@
 #include <initguid.h>
 #include "MgaUtilApp.h"
 
-#include "MgaUtil_i.c"
-#include "MgaUtilLib_i.c"
-#include "Core_i.c"
 
 #include "MgaResolver.h"
 #include "MgaRegistrar.h"
@@ -78,13 +75,13 @@ CMgaUtilApp theApp;
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_MgaResolver, CMgaResolver)
-OBJECT_ENTRY(CLSID_MgaRegistrar, CMgaRegistrar)
-OBJECT_ENTRY(CLSID_MgaLauncher, CMgaLauncher)
-OBJECT_ENTRY(CLSID_MgaProgressDlg, CMgaProgressDlg)
-OBJECT_ENTRY(CLSID_ComponentProxy, CComponentProxy)
-OBJECT_ENTRY(CLSID_MgaClosure, CMgaClosure)
-OBJECT_ENTRY(CLSID_MgaEventLogger, CMgaEventLogger)
+OBJECT_ENTRY(__uuidof(MgaResolver), CMgaResolver)
+OBJECT_ENTRY(__uuidof(MgaRegistrar), CMgaRegistrar)
+OBJECT_ENTRY(__uuidof(MgaLauncher), CMgaLauncher)
+OBJECT_ENTRY(__uuidof(MgaProgressDlg), CMgaProgressDlg)
+OBJECT_ENTRY(__uuidof(ComponentProxy), CComponentProxy)
+OBJECT_ENTRY(__uuidof(MgaClosure), CMgaClosure)
+OBJECT_ENTRY(__uuidof(MgaEventLogger), CMgaEventLogger)
 END_OBJECT_MAP()
 
 STDAPI DllCanUnloadNow(void)

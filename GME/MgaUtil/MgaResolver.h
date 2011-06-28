@@ -165,8 +165,8 @@ public:
 // CMgaResolver
 class ATL_NO_VTABLE CMgaResolver : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaResolver, &CLSID_MgaResolver>,
-	public IDispatchImpl<IMgaResolver, &IID_IMgaResolver, &LIBID_MGAUtilLib>
+	public CComCoClass<CMgaResolver, &__uuidof(MgaResolver)>,
+	public IDispatchImpl<IMgaResolver, &__uuidof(IMgaResolver), &__uuidof(__MGAUtilLib)>
 {
 public:
 	CMgaResolver() : mb_is_interactive(true), mb_use_sticky(false)

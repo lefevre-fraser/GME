@@ -6,8 +6,8 @@
 
 class ATL_NO_VTABLE CMgaLauncher : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaLauncher, &CLSID_MgaLauncher>,
-	public IDispatchImpl<IMgaLauncher, &IID_IMgaLauncher, &LIBID_MGAUtilLib>
+	public CComCoClass<CMgaLauncher, &__uuidof(MgaLauncher)>,
+	public IDispatchImpl<IMgaLauncher, &__uuidof(IMgaLauncher), &__uuidof(__MGAUtilLib)>
 {
 public:
 	CMgaLauncher() { }

@@ -9,7 +9,7 @@
 // CComponentProxy
 class ATL_NO_VTABLE CComponentProxy : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CComponentProxy, &CLSID_ComponentProxy>,
+	public CComCoClass<CComponentProxy, &__uuidof(ComponentProxy)>,
 	public IMgaComponentProxy,
 	public IMgaComponentEx,
 	public IGMEVersionInfo

@@ -6,7 +6,7 @@
 
 class ATL_NO_VTABLE CMgaProgressDlg : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaProgressDlg, &CLSID_MgaProgressDlg>,
+	public CComCoClass<CMgaProgressDlg, &__uuidof(MgaProgressDlg)>,
 	public IMgaProgressDlg
 {
 public:

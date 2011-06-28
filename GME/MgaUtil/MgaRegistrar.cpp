@@ -1211,11 +1211,9 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigmFromData(BSTR connstr, BSTR *newname
 			  }
 			}
 
-			CComObjPtr<IMgaMetaParser> parser;
-			COMTHROW( parser.CoCreateInstance(OLESTR("MGA.MgaMetaParser")) );
-			ASSERT( parser != NULL );
-
-			COMTHROW( parser->Parse(PutInBstr(file), PutInBstr(conn)) );
+			IMgaMetaParserPtr parser;
+			COMTHROW(parser.CreateInstance(L"MGA.MgaMetaParser"));
+			parser->__Parse(_bstr_t(file), _bstr_t(conn));
 		}
 
 		CComBstrObj name;
@@ -1296,8 +1294,7 @@ bool ParadigmHasConstraints(BSTR connstr) {
 
 STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR version, VARIANT guid, regaccessmode_enum mode)
 {
-	COLE2CT version2(version);
-	CString cver(version2); 
+	CString cver(version); 
 
 	if( guid.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(guid) != sizeof(GUID) )
 	COMRETURN(E_INVALIDARG);
@@ -1742,7 +1739,7 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigm(BSTR name, regaccessmode_enum mod
 }
 
 // throws hresult_exception
-void GetComponents(HKEY hive, CStringArray& ret) {
+void GetComponents_(HKEY hive, CStringArray& ret) {
 	CRegKey comps;
 	LONG res = comps.Open(hive, rootreg + _T("\\Components"), KEY_READ);
 	if (res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND)
@@ -1786,9 +1783,9 @@ STDMETHODIMP CMgaRegistrar::get_Components(regaccessmode_enum mode, VARIANT *pro
 	{
 		CStringArray ret;
 		if (mode & REGACCESS_USER)
-			GetComponents(HKEY_CURRENT_USER, ret);
+			GetComponents_(HKEY_CURRENT_USER, ret);
 		if (mode & REGACCESS_SYSTEM)
-			GetComponents(HKEY_LOCAL_MACHINE, ret);
+			GetComponents_(HKEY_LOCAL_MACHINE, ret);
 		CopyTo(ret, progids);
 	}
 	COMCATCH(;)
@@ -2116,9 +2113,9 @@ STDMETHODIMP CMgaRegistrar::get_AssociatedComponents(BSTR paradigm,
 
 		CStringArray components;
 		if (mode & REGACCESS_USER)
-			GetComponents(HKEY_CURRENT_USER, components);
+			GetComponents_(HKEY_CURRENT_USER, components);
 		if (mode & REGACCESS_SYSTEM)
-			GetComponents(HKEY_LOCAL_MACHINE, components);
+			GetComponents_(HKEY_LOCAL_MACHINE, components);
 		for (int i = 0; i < components.GetSize(); i++) {
 			componenttype_enum comptype = COMPONENTTYPE_NONE;
 			PutInBstr progid(components.GetAt(i));

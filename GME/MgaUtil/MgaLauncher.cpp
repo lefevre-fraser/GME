@@ -814,8 +814,8 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					try	{
 						COMTHROW(component->Initialize(project));
 						CComPtr<IMgaTerritory> terr;
-						COMTHROW(project->CreateTerritory(NULL, &terr));
-						COMTHROW(project->BeginTransaction(terr));
+						COMTHROW(project->CreateTerritory(NULL, &terr, 0));
+						COMTHROW(project->BeginTransaction(terr, TRANSACTION_GENERAL));
 						try	{
 							COMTHROW( component->Invoke(project, selectedobjs, param) );
 							COMTHROW(project->CommitTransaction());
@@ -848,8 +848,8 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					}
 					else {
 						CComPtr<IMgaTerritory> terr;
-						COMTHROW(project->CreateTerritory(NULL, &terr));
-						COMTHROW(project->BeginTransaction(terr));
+						COMTHROW(project->CreateTerritory(NULL, &terr, 0));
+						COMTHROW(project->BeginTransaction(terr, TRANSACTION_GENERAL));
 						try	{		
 							COMTHROW( component->Invoke(project, selectedobjs, param) );
 							COMTHROW(project->CommitTransaction());
