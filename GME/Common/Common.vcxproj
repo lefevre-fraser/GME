@@ -84,6 +84,7 @@
     <ClInclude Include="CommonCollection.h" />
     <ClInclude Include="CommonComponent.h" />
     <ClInclude Include="CommonError.h" />
+    <ClInclude Include="CommonImport.h" />
     <ClInclude Include="CommonMfc.h" />
     <ClInclude Include="CommonMgaTrukk.h" />
     <ClInclude Include="CommonSmart.h" />
