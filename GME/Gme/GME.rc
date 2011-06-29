@@ -699,6 +699,7 @@ BEGIN
     VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
     "A",            ID_EDIT_SELECTALL,      VIRTKEY, CONTROL, NOINVERT
     "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "W",            ID_FILE_CLOSE,          VIRTKEY, CONTROL
     VK_F1,          ID_HELP_HELP,           VIRTKEY, NOINVERT
     "j",            ID_JUMPALONGCONN,       ASCII,  NOINVERT
     "f",            ID_JUMPTOFIRSTOBJ,      ASCII,  NOINVERT
