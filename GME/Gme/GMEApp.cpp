@@ -9,7 +9,7 @@
 
 #include "Gme_i.c"
 #include "GmeLib_i.c"
-#include "../Mga/MgaLib_i.c"
+#include "MgaLib_i.c"
 #include "Parser.h"
 
 #include "GMEstd.h"
