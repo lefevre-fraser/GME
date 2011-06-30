@@ -43,6 +43,9 @@
     <Midl>
       <HeaderFileName>
       </HeaderFileName>
+      <WarnAsError>true</WarnAsError>
+      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
     </Midl>
     <CustomBuild>
       <Command>..\Release\IFChecksumProg.exe InterfaceVersion.h InterfaceVersion.trg</Command>
@@ -55,6 +58,8 @@
       <HeaderFileName>
       </HeaderFileName>
       <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+      <WarnAsError>true</WarnAsError>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
     </Midl>
     <CustomBuild>
       <Command>..\Release\IFChecksumProg.exe InterfaceVersion.h InterfaceVersion.trg</Command>
@@ -85,7 +90,7 @@
       <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).h</HeaderFileName>
       <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName)_i.c</InterfaceIdentifierFileName>
     </Midl>
-    <Midl Include="..\Gme\GmeLib.idl">
+    <Midl Include="..\Meta\MetaLib.idl">
       <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
@@ -97,7 +102,19 @@
       <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).h</HeaderFileName>
       <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName)_i.c</InterfaceIdentifierFileName>
     </Midl>
-    <Midl Include="..\Meta\MetaLib.idl">
+    <Midl Include="..\Mga\MgaLib.idl">
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName).tlb</TypeLibraryName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
+      <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</OutputDirectory>
+      <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</OutputDirectory>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName).h</HeaderFileName>
+      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName)_i.c</InterfaceIdentifierFileName>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).h</HeaderFileName>
+      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName)_i.c</InterfaceIdentifierFileName>
+    </Midl>
+    <Midl Include="..\Parser\ParserLib.idl">
       <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
@@ -121,19 +138,7 @@
       <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName)_i.c</InterfaceIdentifierFileName>
       <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName)_i.c</InterfaceIdentifierFileName>
     </Midl>
-    <Midl Include="..\Mga\MgaLib.idl">
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName).tlb</TypeLibraryName>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
-      <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</OutputDirectory>
-      <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</OutputDirectory>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName).h</HeaderFileName>
-      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FileName)_i.c</InterfaceIdentifierFileName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).h</HeaderFileName>
-      <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName)_i.c</InterfaceIdentifierFileName>
-    </Midl>
-    <Midl Include="..\Parser\ParserLib.idl">
+    <Midl Include="..\Gme\GmeLib.idl">
       <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FileName).tlb</TypeLibraryName>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.</AdditionalIncludeDirectories>
