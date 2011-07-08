@@ -523,7 +523,7 @@ bool Dumper::am()
 								if( asp_intersect.empty())
 								{
 									// error since the default selection failure means error ignoring what the registry value may have
-									global_vars.err << MSG_WARNING << "Warning: Reference \"" << reference->getPtr() << "\" has no valid aspect. Intersection of aspects the referred models might have is empty.\n";
+									// global_vars.err << MSG_WARNING << "Warning: Reference \"" << reference->getPtr() << "\" has no valid aspect. Intersection of aspects the referred models might have is empty.\n";
 									//aspect_selection_impossible = true; // not used anymore here
 								}
 							}

@@ -728,9 +728,11 @@ bool ModelRep::checkMyAspects( Sheet * s)
 			std::vector<std::string> rolenames;
 			std::transform(m_finalRoleMap.begin(), m_finalRoleMap.end(), std::back_inserter(rolenames),
 				[](const RoleMap::value_type& p){ return p.first->getNamespace() + "::" + p.first->getName(); });
-			global_vars.err << MSG_WARNING << "Warning: Model \"" << m_ptr << "\" has no aspect defined and may contain:";
+			std::string children;
 			std::for_each(m_finalRoleMap.begin(), m_finalRoleMap.end(),
-				[](const RoleMap::value_type& p) { global_vars.err << MSG_WARNING << " " << p.first->getName() << " "; });
+				[&](const RoleMap::value_type& p) { children += p.first->getName() + ", ";  });
+			children = children.substr(0, children.size() - 2);
+			global_vars.err << MSG_WARNING << "Warning: Model \"" << m_ptr << "\" has no aspect defined and may contain: " + children;
 		}
 		AspectRep * asp = s->createAspectRep( BON::FCO(), BON::FCO());
 		this->addFinalAspect( asp);
