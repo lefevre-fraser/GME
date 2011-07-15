@@ -5,6 +5,10 @@
 #include "LayoutOptimization.h"
 #include "GAOptimizer.h"
 
+#define MAX_OPTIMIZATION_TRIES 50
+#define FITNESS_RELATIVE_ERROR_THRESHOLD 0.002
+#define FITNESS_AVERAGE_START -2e5
+
 using GAOptimizer::IGenotype;
 using GAOptimizer::IProblem;
 
@@ -21,7 +25,7 @@ void LayoutOptimizer::optimize( LayoutOptimizerListener * listener, bool startFr
 {
     int i,j;
     int x = 0;
-    int m = 100;
+    int m = MAX_OPTIMIZATION_TRIES;
 	int maxy = 0;
 	LayoutOptimizerListener::ContinueAbortOrCurrent status = LayoutOptimizerListener::ContinueAbortOrCurrent::CONTINUE;
 
@@ -32,13 +36,19 @@ void LayoutOptimizer::optimize( LayoutOptimizerListener * listener, bool startFr
 
         optimizer.init( &problem, 500, 20 );
 
+        double fitnessAverage = FITNESS_AVERAGE_START;
         LayoutSolution * best;
 		for( j=0; j<m && status == LayoutOptimizerListener::CONTINUE; ++j )
         {
             optimizer.step(800);
             best = (LayoutSolution*)optimizer.getBest();
-            if( listener != NULL )
-                status = listener->update( (int)(100 * (i*m+j) / double(m_graph->getNumberOfSubGraphs() * m)), best, optimizer.getMaxFitness() );
+            double maxFitness = optimizer.getMaxFitness();
+
+            if (listener != NULL)
+                status = listener->update( (int)(100 * (i*m+j) / double(m_graph->getNumberOfSubGraphs() * m)), best, maxFitness );
+            fitnessAverage = fitnessAverage / 2 + maxFitness / 2;
+            if (fabs((fitnessAverage - maxFitness) / maxFitness) < FITNESS_RELATIVE_ERROR_THRESHOLD)
+                break;
         }
 
 		if ( status != LayoutOptimizerListener::ABORT )
