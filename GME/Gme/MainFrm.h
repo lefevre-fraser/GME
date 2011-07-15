@@ -147,7 +147,7 @@ protected:
 	}
 
 	afx_msg void OnUpdateWindowNew(CCmdUI* pCmdUI);
-	afx_msg void OnClose();
+	afx_msg void OnNcDestroy();
 public:
 	afx_msg void OnDropFiles(HDROP p_hDropInfo);
 protected:

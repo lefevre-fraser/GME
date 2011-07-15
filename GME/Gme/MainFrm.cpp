@@ -220,11 +220,10 @@ void CMainFrame::clearMgaProj()
 	m_console.SetGMEProj( 0 );
 }
 
-
-void CMainFrame::OnClose()
+void CMainFrame::OnNcDestroy()
 {
 	clearGmeOleApp();
-	CMDIFrameWndEx::OnClose();
+	CMDIFrameWndEx::OnNcDestroy();
 }
 
 int CMainFrame::CreateToolBars()
