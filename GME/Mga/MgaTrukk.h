@@ -97,14 +97,15 @@ void GetAll2(COLLITF *coll, std::vector< CoreObj > &ret)
 // ----------------------------------------
 // STL compatible wrapped for CComBSTR
 // ----------------------------------------
-class CComBSTRNoAt : public CComBSTR {
+/*class CComBSTRNoAt : public CComBSTR {
 public:
 	CComBSTRNoAt() {;};
 	CComBSTRNoAt(const CComBSTR &sss) : CComBSTR(sss) {;}
 	CComBSTRNoAt* const operator&() {
 		return this;
 	}
-};
+};*/
+typedef CComBSTR CComBSTRNoAt;	
 
 
 // ----------------------------------------
@@ -296,6 +297,37 @@ void MgaSetErrorInfo(HRESULT hr);
 		return e.hr; \
 	} \
 	return ttt.Commit(); }
+
+#define MGAPREF_NO_NESTED_TX 0x00000080
+
+#define COMTRY_IN_TRANSACTION_MAYBE \
+long prefmask; \
+HRESULT hr = this->mgaproject->get_Preferences(&prefmask); \
+if (FAILED(hr)) \
+	return hr; \
+Transaction ttt; \
+if (!(prefmask & MGAPREF_NO_NESTED_TX)) { \
+  HRESULT hr = ttt.Begin(mgaproject); \
+  if (hr != S_OK) return hr; \
+} \
+try
+
+#define COMCATCH_IN_TRANSACTION_MAYBE( CLEANUP )  \
+catch(hresult_exception &e) \
+{ \
+	ASSERT( FAILED(e.hr) ); \
+	{ \
+		if(!(prefmask & MGAPREF_NO_NESTED_TX) && ((hr = ttt.Abort()) != S_OK)) return hr; \
+		CLEANUP; \
+	} \
+	MgaSetErrorInfo(e.hr); \
+	return e.hr; \
+} \
+if (!(prefmask & MGAPREF_NO_NESTED_TX)) \
+	return ttt.Commit(); \
+else \
+	return S_OK;
+
 
 #define MODIFIED	{ if(mgaproject->opened < 1000) mgaproject->opened++; }
  

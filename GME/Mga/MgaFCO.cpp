@@ -202,6 +202,7 @@ HRESULT FCO::get_MetaRole(/**/ IMgaMetaRole **pVal) {
 				*pVal = CComQIPtr<IMgaMetaRole>(mgaproject->FindMetaRef(role)).Detach();
 				if(!(*pVal)) COMTHROW(E_MGA_META_INCOMPATIBILITY);
 			}
+			// FIXME: need to return an E_ here
 
 		} COMCATCH(;);
 }
@@ -435,15 +436,15 @@ void  FCO::initialname() {
 }
 
 HRESULT FCO::put_Name(BSTR newVal)    { 
-	COMTRY_IN_TRANSACTION {
-		CheckWrite();
+	COMTRY_IN_TRANSACTION_MAYBE {
+	CheckWrite();
 		CHECK_INPAR(newVal);  
 		if(self[ATTRID_PERMISSIONS] & LIBROOT_FLAG) COMTHROW(E_MGA_LIBOBJECT);
 		if(CComBSTR(self[ATTRID_NAME]) != newVal) {
 			put_NameTask(CComBSTR(self[ATTRID_NAME]), newVal).DoWithDeriveds(self);;
 		}
 	}
-	COMCATCH_IN_TRANSACTION(;);	
+	COMCATCH_IN_TRANSACTION_MAYBE(;);	
 };
 
 void giveme( CMgaProject *mgaproject, CoreObj par, CoreObj cur, CComBSTR cur_kind, int *relpos)

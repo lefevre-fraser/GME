@@ -56,7 +56,7 @@ HRESULT FCO::get_NamedRoleTarget(BSTR rolename, IMgaFCO **pVal) {
 
 
 HRESULT FCO::put_NamedRole(BSTR rolename,  IMgaFCOs *refs, IMgaFCO *endfco) {
-		COMTRY_IN_TRANSACTION {
+	COMTRY_IN_TRANSACTION_MAYBE {
 			CheckWrite();
 			{
 				booltempflag fl(mgaproject->checkofftemporary);
@@ -76,7 +76,7 @@ HRESULT FCO::put_NamedRole(BSTR rolename,  IMgaFCOs *refs, IMgaFCO *endfco) {
 				CComPtr<IMgaConnPoint> tt;
 				COMTHROW(AddConnPoint(rolename, 1, endfco, refs, &tt));
 			}
-		} COMCATCH_IN_TRANSACTION(;)
+	} COMCATCH_IN_TRANSACTION_MAYBE(;)
 }	
 
 HRESULT FCO::CreateSimpleConn( IMgaMetaRole *metar,  IMgaFCO *src,  IMgaFCO *dst, 

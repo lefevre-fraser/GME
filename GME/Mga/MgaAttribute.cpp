@@ -933,7 +933,7 @@ STDMETHODIMP CMgaPart::GetGmeAttrs(BSTR *icon,long *x,long *y) {
 }
 
 STDMETHODIMP CMgaPart::SetGmeAttrs(BSTR icon,long x,long y) { 
-		COMTRY_IN_TRANSACTION {
+	COMTRY_IN_TRANSACTION_MAYBE {
 			fco->CheckWrite();
 			CComBSTR vval;
 			if(icon != NULL) COMTHROW(put_RegistryValue(CComBSTR(L"Icon"), icon));
@@ -943,7 +943,7 @@ STDMETHODIMP CMgaPart::SetGmeAttrs(BSTR icon,long x,long y) {
 				CComBSTR bb(bbc);
 				COMTHROW(put_RegistryValue(CComBSTR(L"Position"), bb));
 			}
-		} COMCATCH_IN_TRANSACTION(;)
+	} COMCATCH_IN_TRANSACTION_MAYBE(;)
 };
 
 
