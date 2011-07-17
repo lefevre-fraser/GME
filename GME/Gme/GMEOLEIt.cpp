@@ -795,6 +795,18 @@ void CGMEOLEIt::DumpWindowsMetaFile(LPCTSTR filePath)
 	if ( hEmf ) {
 		DeleteEnhMetaFile(hEmf);
 	}
+	// XXX DONT COMMIT this only works with Vista/7 (GDI+ 1.1)
+	/*HDC hdc = ::CreateCompatibleDC(NULL);
+	Gdiplus::Graphics g(hdc);
+	g.SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeHighQuality);
+	g.SetTextRenderingHint(Gdiplus::TextRenderingHint::TextRenderingHintAntiAlias);
+	{
+	Gdiplus::Metafile mf(filePath);
+	mf.ConvertToEmfPlus(&g, CString(filePath) + "plus");
+	}
+	MoveFile(CString(filePath) + "plus", filePath);
+	::DeleteDC(hdc);
+	*/
 }
 
 void CGMEOLEIt::CheckConstraints() 
