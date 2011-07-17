@@ -1914,16 +1914,8 @@ void CGuiObject::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 		else
 			COMTHROW(GetCurrentAspect()->GetDecorator()->Draw((ULONG)pDC));
 	}
-	catch (hresult_exception &e) {
-		CComQIPtr<ISupportErrorInfo> errorInfo = GetCurrentAspect()->GetDecorator();
-		_bstr_t error;
-		if (errorInfo) {
-			GetErrorInfo(error.GetAddress());
-		} else {
-			GetErrorInfo(e.hr, error.GetAddress());
-		}
-		// FIXME: KMS: won't Draw() be called after the MessageBox is dismissed?
-		AfxMessageBox(CString(_T("Error in decorator [method Draw()]: ")) + static_cast<const TCHAR*>(error));
+	catch (hresult_exception &) {
+		AfxMessageBox(_T("Error in decorator [method Draw()]"));
 	}
 
 // #define _ARDEBUG

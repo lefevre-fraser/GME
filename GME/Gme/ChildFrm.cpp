@@ -125,7 +125,7 @@ int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 //		int zoomvals[] = {ZOOM_NO, 150, 200, 250, 300, 350, 400, 0}; // for test
 		propBar.SetZoomList(zoomvals);
 		propBar.DockToFrameWindow(CBRS_ALIGN_TOP);
-		propBar.SetMinSize(CSize(50, 25 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96));
+		propBar.SetMinSize(CSize(10, 25));
 
 		ShowPane(&propBar, true, false, true);
 	}

@@ -8,9 +8,6 @@
 
 #pragma once
 
-// XXX DONT COMMIT this only works with Vista/7 (GDI+ 1.1)
-//#define GDIPVER 0x0110
-
 #ifndef _SECURE_ATL
 #define _SECURE_ATL 1
 #endif

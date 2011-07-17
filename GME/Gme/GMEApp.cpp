@@ -1754,7 +1754,7 @@ BOOL CGMEApp::SaveAllModified()
 		long l;
 		COMTHROW(mgaProject->get_ProjectStatus(&l));
 		if (IsUndoPossible() && (l & PROJECT_STATUS_CHANGED))
-			ret = AfxMessageBox(_T("Save project '") + projectName + _T("'?"),  MB_YESNO);
+			ret = AfxMessageBox(_T("Save project '") + projectName + _T("'?"),  MB_YESNOCANCEL);
 		if (ret == IDCANCEL) {
 			return FALSE;
 		} else if (ret == IDNO) {
@@ -1762,10 +1762,9 @@ BOOL CGMEApp::SaveAllModified()
 			OnFileAbortProject();
 		} else {
 			((CMainFrame*)m_pMainWnd)->clearMgaProj();
-			SafeCloseProject();
+			return SafeCloseProject();
 		}
 	}
-    ((CMainFrame*)m_pMainWnd)->clearGmeOleApp();
 	return TRUE;
 }
 
