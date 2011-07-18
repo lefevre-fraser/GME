@@ -306,10 +306,6 @@ STDMETHODIMP CMgaParser::GetXMLInfo(BSTR filename, BSTR *paradigm, BSTR* parvers
 	try
 	{
 		CloseAll();
-		COMTHROW( progress.CoCreateInstance(L"Mga.MgaProgressDlg") );
-		COMTHROW( progress->SetTitle(_bstr_t(L"Analyzing XML file...")) );
-		COMTHROW( progress->StartProgressDialog(NULL) );
-
 
 		CopyTo(filename, xmlfile);
 
@@ -416,7 +412,6 @@ void CMgaParser::CloseAll()
 // ------- Passes
 
 TCHAR progress_msg[512];
-TCHAR refresh_counter;
 
 void CMgaParser::startElement(const XMLCh* const name, AttributeList& attributes)
 {
@@ -424,7 +419,7 @@ void CMgaParser::startElement(const XMLCh* const name, AttributeList& attributes
 
 	++counter;
 
-	if( ++refresh_counter == 0 )
+	if( counter % 2000 == 0 )
 	{
 		_stprintf_s(progress_msg, _T("Phase: %d, number of parsed objects: %ld"), pass_count, (long)counter/2);
 		COMTHROW( progress->SetLine(0, PutInBstr(progress_msg)) );
