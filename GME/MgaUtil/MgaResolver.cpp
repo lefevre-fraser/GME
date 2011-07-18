@@ -1071,30 +1071,24 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 			CString sz_format;
 			CString sz_format_tmp;
 
-			sz_format_tmp.Format(	_T("Paradigm Violation!  Cannot create within parent Model %s\n")
-									_T("of type %s an object\n"),
+			sz_format_tmp.Format(	_T("Paradigm Violation!  Cannot create within parent model '%s' ")
+									_T("of type '%s' a child "),
 									(BSTR) parent_name,
 									(BSTR) mparent_name);
 			sz_format+=sz_format_tmp;
 
 			if (CString(kind) != _T("")) {
-
-				sz_format_tmp.Format(_T("with kind %s\n"),
-								kind);
+				sz_format_tmp.Format(_T("with kind '%s' "), kind);
 				sz_format+=sz_format_tmp;
 			}
 
 			if (objtype != OBJTYPE_NULL) {
-
-				sz_format_tmp.Format(_T("of type %s\n"),
-								helper_ObjTypeStr(objtype));
+				sz_format_tmp.Format(_T("of type %s "), helper_ObjTypeStr(objtype));
 				sz_format+=sz_format_tmp;
 			}
 
 			if (CString(aspect) != _T("")) {
-
-				sz_format_tmp.Format(_T("in aspect %s"),
-								aspect);
+				sz_format_tmp.Format(_T("in aspect '%s'"), aspect);
 				sz_format+=sz_format_tmp;
 			}
 							
