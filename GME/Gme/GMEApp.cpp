@@ -1904,6 +1904,9 @@ void CGMEApp::OnFileSaveAs() {
 void CGMEApp::OnFileSave() 
 {
 	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileSave\r\n"));
+	// GME-307 Focus must be killed to flush ObjectInspector and Browser
+	::SetFocus(NULL);
+
 	BeginWaitCursor();
 	SaveProject(_T(""));
 	EndWaitCursor();
