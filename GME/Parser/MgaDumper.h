@@ -62,7 +62,7 @@ END_COM_MAP()
 // ------- Methods
 
 public:
-	void InitDump(IMgaProject *p, BSTR xmlfile);
+	void InitDump(IMgaProject *p, BSTR xmlfile, BSTR encoding);
 	void DoneDump(bool abort);
 
 	STDMETHOD(DumpProject)(IMgaProject *p, BSTR xmlfile);

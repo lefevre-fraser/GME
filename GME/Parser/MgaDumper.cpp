@@ -85,7 +85,7 @@ bool GmeEqual::operator() ( CComObjPtr<IMgaModel>& op )
 
 // --------------------------- CMgaDumper
 
-void CMgaDumper::InitDump(IMgaProject *p, BSTR xmlfile)
+void CMgaDumper::InitDump(IMgaProject *p, BSTR xmlfile, BSTR encoding)
 {
 	if( p == NULL )
 		HR_THROW(E_INVALIDARG);
@@ -96,7 +96,7 @@ void CMgaDumper::InitDump(IMgaProject *p, BSTR xmlfile)
 	if( filename.empty() )
 		HR_THROW(E_INVALIDARG);
 
-	ofs.init( filename.c_str(), _T("UTF-16"));
+	ofs.init( filename.c_str(), encoding);
 
 	elems.clear();
 
@@ -146,7 +146,7 @@ STDMETHODIMP CMgaDumper::DumpProject(IMgaProject *p, BSTR xmlfile)
 
 	COMTRY
 	{
-		InitDump(p, xmlfile);
+		InitDump(p, xmlfile, _bstr_t(L"UTF-8"));
 
 		ofs << L"<!DOCTYPE project SYSTEM \"mga.dtd\">\n\n";
 
@@ -193,7 +193,7 @@ STDMETHODIMP CMgaDumper::DumpFCOs(IMgaProject *proj, IMgaFCOs *p, IMgaFolders *f
 
 		if( !project) return S_OK;
 
-		InitDump(project, xmlfile);
+		InitDump(project, xmlfile, _bstr_t(L"UTF-16"));
 
 		ofs << L"<!DOCTYPE clipboard SYSTEM \"mga.dtd\" [\r\n";
 		ofs << L"\t<!ELEMENT clipboard (folder|model|atom|reference|set|connection|regnode)*>\r\n";
@@ -1720,7 +1720,7 @@ STDMETHODIMP CMgaDumper::DumpClos( IMgaFCOs *p_sel_fcos, IMgaFolders *p_sel_fold
 			return S_OK;
 
 
-		InitDump( project, xmlfile);
+		InitDump( project, xmlfile, _bstr_t(L"UTF-16"));
 
 		putInTerritory( m_selFcos);
 		putInTerritory( m_selFolders);
@@ -1808,7 +1808,7 @@ STDMETHODIMP CMgaDumper::DumpClosR(
 			return DumpClos( p_sel_fcos, p_sel_folds, xmlfile, dump_options);
 		}
 
-		InitDump( project, xmlfile);
+		InitDump( project, xmlfile, _bstr_t(L"UTF-16"));
 
 		putInTerritory( m_selFcos);
 		putInTerritory( parentless_fcos);

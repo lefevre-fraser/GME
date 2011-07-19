@@ -64,7 +64,10 @@ void Transcoder::init( const TCHAR * f, const TCHAR * const encodingName)
 		HR_THROW(E_INVALID_FILENAME);
 
 	// write BOM
-	*m_pFormatter << (XMLCh) 0xFEFF;
+	if (_tcsicmp(_T("UTF-16"), encodingName) == 0)
+	{
+		*m_pFormatter << (XMLCh) 0xFEFF;
+	}
     *m_pFormatter << gXMLDecl1 << m_pFormatter->getEncodingName() << gXMLDecl2; //will dump '<?xml version="1.0" encoding="UTF-8"?> 
 }
 
