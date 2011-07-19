@@ -88,6 +88,16 @@ public:
 	int skip_element_level;
 	class pass_exception : public std::exception
 	{
+		std::wstring w;
+	public:
+		pass_exception() { }
+		pass_exception(std::wstring what) : w(what) { }
+		virtual const char *what() const {
+			return static_cast<const char*>(_bstr_t(w.c_str()));
+		}
+		virtual const wchar_t *wwhat() const {
+			return w.c_str();
+		}
 	};
 
 	typedef struct librecord {

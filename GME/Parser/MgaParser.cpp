@@ -448,7 +448,7 @@ void CMgaParser::startElement(const XMLCh* const name, AttributeList& attributes
 		{
 			CGenParser::startElement(name, attributes);
 		}
-		catch(pass_exception &)
+		catch(pass_exception &e)
 		{
 			ASSERT( skip_element_level == 0 );
 
@@ -457,6 +457,9 @@ void CMgaParser::startElement(const XMLCh* const name, AttributeList& attributes
 			elements.pop_back();
 			ranges.back().previous = elements.back();
 			skip_element_level = 1;
+			if (pass_count == 99)
+				if (m_GME)
+					m_GME->ConsoleMessage(_bstr_t(e.wwhat()), msgtype_enum::MSG_ERROR);
 		}
 	}
 }
@@ -952,7 +955,7 @@ void CMgaParser::EndValue()
 				LookupByID(GetCurrData(), object);
 
 				if( object == NULL )
-					throw pass_exception();
+					throw pass_exception(std::wstring(L"Referenced FCO ") + GetCurrData() + L" not found");
 
 				CopyTo(object, v);
 			}
@@ -1074,7 +1077,7 @@ void CMgaParser::ResolveDerivation(const attributes_type &attributes, deriv_type
 
 	LookupByID(*s, deriv.from);
 	if( deriv.from == NULL )
-		throw pass_exception();
+		throw pass_exception(std::wstring(L"Subtype/instance ") + *GetByNameX(attributes, _T("id")) + L" cannot find archetype " + *s);
 
 	s = GetByNameX(attributes, _T("isinstance"));
 	deriv.isinstance = ( s != NULL && *s == _T("yes") ) ? VARIANT_TRUE : VARIANT_FALSE;
@@ -1394,7 +1397,7 @@ void CMgaParser::StartConnPoint(const attributes_type &attributes)
 	CComObjPtr<IMgaFCO> target;
 	LookupByID(GetByName(attributes, _T("target")), target);
 	if( target == NULL )
-		throw pass_exception();
+		throw pass_exception(std::wstring(L"Connection end ") + GetByName(attributes, _T("target")) + L" not found");
 
 
 	CComObjPtr<IMgaFCOs> coll;
@@ -1504,7 +1507,7 @@ void CMgaParser::StartReference(const attributes_type &attributes)
 		LookupByID(*s, referred);
 
 		if( referred == NULL )
-			throw pass_exception();
+			throw pass_exception(std::wstring(L"Referenced FCO ") + GetCurrData() + L" not found");
 	}
 
 	if( GetPrevName() == _T("folder") )
@@ -1605,7 +1608,7 @@ void CMgaParser::StartSet(const attributes_type &attributes)
 			LookupByID(std::tstring(*s, pos, pos2-pos), member);
 
 			if( member == NULL )
-				throw pass_exception();
+				throw pass_exception(std::wstring(L"Set member ") + std::tstring(*s, pos, pos2-pos) + L" not found");
 
 			members.push_front(member);
 
