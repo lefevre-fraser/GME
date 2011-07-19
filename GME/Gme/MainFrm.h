@@ -74,6 +74,7 @@ public:
 	//{{AFX_VIRTUAL(CMainFrame)
 	public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	virtual BOOL DestroyWindow();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	//}}AFX_VIRTUAL
 
@@ -146,6 +147,7 @@ protected:
 	}
 
 	afx_msg void OnUpdateWindowNew(CCmdUI* pCmdUI);
+	afx_msg void OnClose();
 public:
 	afx_msg void OnDropFiles(HDROP p_hDropInfo);
 protected:

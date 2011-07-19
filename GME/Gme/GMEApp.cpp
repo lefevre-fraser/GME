@@ -1762,10 +1762,9 @@ BOOL CGMEApp::SaveAllModified()
 			OnFileAbortProject();
 		} else {
 			((CMainFrame*)m_pMainWnd)->clearMgaProj();
-			SafeCloseProject();
+			return SafeCloseProject();
 		}
 	}
-    ((CMainFrame*)m_pMainWnd)->clearGmeOleApp();
 	return TRUE;
 }
 

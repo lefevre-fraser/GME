@@ -104,6 +104,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	MSG_MAP_VIEW_PANE(ID_VIEW_CONSOLE,			CGMEConsole,		m_console)
 	MSG_MAP_VIEW_PANE(ID_VIEW_GMEBROWSER,		CGMEBrowser,		m_browser)
 	MSG_MAP_VIEW_PANE(ID_VIEW_SEARCH,			CGMESearch,			m_search)
+	ON_WM_CLOSE()
 	ON_WM_DROPFILES()
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnUpdateApplicationLook)
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
@@ -217,6 +218,13 @@ void CMainFrame::clearGmeOleApp()
 void CMainFrame::clearMgaProj()
 {
 	m_console.SetGMEProj( 0 );
+}
+
+
+void CMainFrame::OnClose()
+{
+	clearGmeOleApp();
+	CMDIFrameWndEx::OnClose();
 }
 
 int CMainFrame::CreateToolBars()
@@ -907,6 +915,11 @@ BOOL CMainFrame::VerifyBarState(LPCTSTR lpszProfileName)
     }
 
     return TRUE;
+}
+
+BOOL CMainFrame::DestroyWindow()
+{
+	return CMDIFrameWndEx::DestroyWindow();
 }
 
 void CMainFrame::ShowObjectInspector()
