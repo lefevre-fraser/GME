@@ -769,7 +769,7 @@ void CCoreBinFile::InitMaxObjIDs()
 		ASSERT( metaid != METAID_NONE );
 
 		ASSERT( maxobjids.find(metaid) == maxobjids.end() );
-		maxobjids.insert( std::pair<const metaid_type, objid_type>(metaid, OBJID_NONE) );
+		maxobjids.insert( core::pair<const metaid_type, objid_type>(metaid, OBJID_NONE) );
 
 		++i;
 	}
@@ -915,6 +915,7 @@ void CCoreBinFile::SaveProject()
 	if( ofs.fail() || !ofs.is_open() ) {
 		ofs.close();
 		ofs.clear();
+		// FIXME: can we HRESULT_FROM_WIN32(GetLastError) here instead?
 		HR_THROW(E_FILEOPEN);
 	}
 
@@ -1169,8 +1170,8 @@ STDMETHODIMP CCoreBinFile::CommitTransaction()
 
 	CloseObject();
 
-	std::list<objects_iterator>::iterator i = deleted_objects.begin();//slist
-	std::list<objects_iterator>::iterator e = deleted_objects.end();//slist
+	core::list<objects_iterator>::iterator i = deleted_objects.begin();
+	core::list<objects_iterator>::iterator e = deleted_objects.end();
 	while( i != e )
 	{
 		ASSERT( (*i)->second.deleted );
@@ -1207,8 +1208,8 @@ STDMETHODIMP CCoreBinFile::AbortTransaction()
 		++j;
 	}
 
-	std::list<objects_iterator>::iterator i = deleted_objects.begin();//slist
-	std::list<objects_iterator>::iterator e = deleted_objects.end();//slist
+	core::list<objects_iterator>::iterator i = deleted_objects.begin();
+	core::list<objects_iterator>::iterator e = deleted_objects.end();
 	while( i != e )
 	{
 		ASSERT( (*i)->second.deleted );

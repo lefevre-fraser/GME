@@ -79,11 +79,11 @@ protected:
 	CComObjPtr<CCoreMetaObject> metaobject;
 	objid_type objid;
 
-	typedef std::list<CCoreAttribute*> attributes_type;
+	typedef core::list<CCoreAttribute*> attributes_type;
 	typedef attributes_type::iterator attributes_iterator;
 	attributes_type attributes;
 
-	typedef std::list< CComObjPtr<IUnknown> > aggregates_type;//slist
+	typedef core::list< CComObjPtr<IUnknown> > aggregates_type;
 	typedef aggregates_type::iterator aggregates_iterator;
 	aggregates_type aggregates;
 

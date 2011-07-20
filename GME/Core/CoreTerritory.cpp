@@ -69,7 +69,7 @@ STDMETHODIMP CCoreTerritory::get_Attributes(ICoreAttributes **p)
 		CComObjPtr<COMTYPE> q;
 		CreateComObject(q);
 
-		typedef stdext::hash_set< CCoreLockAttribute*
+		typedef core::hash_set< CCoreLockAttribute*
 		                        , ptr_compare<CCoreLockAttribute>
 		                        > join_type;
 
@@ -109,7 +109,7 @@ STDMETHODIMP CCoreTerritory::Clear()
 
 	COMTRY
 	{
-		typedef stdext::hash_set< CCoreLockAttribute*
+		typedef core::hash_set< CCoreLockAttribute*
 		                        , ptr_compare<CCoreLockAttribute>
 		                        > join_type;
 

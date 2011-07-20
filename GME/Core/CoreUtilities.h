@@ -8,11 +8,14 @@ typedef OBJECTID OBJID;
 
 // --------------------------- ID Pair
 
-typedef struct metaobjidpair_type
+struct metaobjidpair_type
 {
 	long metaid;
 	long objid;
-} metaobjidpair_type;
+};
+
+static bool operator==(const metaobjidpair_type& a, const metaobjidpair_type& b) { return a.objid == b.objid && a.metaid == b.metaid; }
+
 
 struct metaobjidpair_hashfunc
 {

@@ -8,7 +8,8 @@
 #include <statreg.h>
 #endif
 
-/*
+
+#ifdef CORE_USE_EASTL
 // EASTL impl
 void* operator new[](size_t size, const char* pName, int flags,
     unsigned debugFlags, const char* file, int line)
@@ -18,7 +19,7 @@ void* operator new[](size_t size, const char* pName, int flags,
 void* operator new[](size_t size, size_t alignment, size_t alignmentOffset,
     const char* pName, int flags, unsigned debugFlags, const char* file, int line)
 {
-    // doesn't support alignment
+    // MSDN: The storage space pointed to by the return value is guaranteed to be suitably aligned for storage of any type of object. 
     return malloc(size);
 }
 
@@ -36,5 +37,4 @@ int Vsnprintf8(char8_t* pDestination, size_t n, const char8_t* pFormat, va_list 
 #include "fixed_pool.cpp"
 #include "hashtable.cpp"
 #include "string.cpp"
-*/
-
+#endif

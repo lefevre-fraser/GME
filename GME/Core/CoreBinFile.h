@@ -285,12 +285,12 @@ public:
 	objects_iterator opened_object;
 	bool isEmpty;
 
-	typedef stdext::hash_map<metaid_type, objid_type> maxobjids_type;
+	typedef core::hash_map<metaid_type, objid_type> maxobjids_type;
 	typedef maxobjids_type::iterator maxobjids_iterator;
 
 	maxobjids_type maxobjids;
-	std::list<objects_iterator> deleted_objects;//slist
-	std::list<objects_iterator> created_objects;//slist
+	core::list<objects_iterator> deleted_objects;
+	core::list<objects_iterator> created_objects;
 
 	struct resolve_type
 	{
@@ -299,7 +299,7 @@ public:
 		metaobjidpair_type idpair;
 	};
 
-	typedef std::list<resolve_type> resolvelist_type;//slist
+	typedef core::list<resolve_type> resolvelist_type;
 	resolvelist_type resolvelist;
 
 	void InitMaxObjIDs();

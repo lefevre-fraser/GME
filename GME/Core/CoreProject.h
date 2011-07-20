@@ -21,7 +21,7 @@ class CCoreMetaProject;
 // --------------------------- typedefs
 
 typedef CCoreTransactionItem *transaction_item_type;
-typedef std::list<transaction_item_type> transaction_items_type;//slist
+typedef core::list<transaction_item_type> transaction_items_type;
 typedef transaction_items_type::iterator transaction_items_iterator;
 
 typedef struct transaction_type
@@ -30,29 +30,29 @@ typedef struct transaction_type
 	bool readonly;
 } transaction_type;
 
-typedef std::list<transaction_type> transactions_type;
+typedef core::list<transaction_type> transactions_type;
 typedef transactions_type::iterator transactions_iterator;
 
 typedef CCoreFinalTrItem *finaltr_item_type;
-typedef std::list<finaltr_item_type> finaltr_items_type;//slist
+typedef core::list<finaltr_item_type> finaltr_items_type;
 typedef finaltr_items_type::iterator finaltr_items_iterator;
 
 typedef CCoreUndoItem *undo_item_type;
-typedef std::list<undo_item_type> undo_items_type;//slist
+typedef core::list<undo_item_type> undo_items_type;
 typedef undo_items_type::iterator undo_items_iterator;
 
 typedef undo_items_type undo_type;
-typedef std::list<undo_type> undos_type;
+typedef core::list<undo_type> undos_type;
 typedef undos_type::iterator undos_iterator;
 
-typedef stdext::hash_map< metaobjidpair_type
+typedef core::hash_map< metaobjidpair_type
                         , CCoreObject*
                         , metaobjid2pair_hashfunc
                         > object_lookup_type;
 typedef object_lookup_type::iterator object_lookup_iterator;
 
-typedef std::list< CComObjPtr<CCoreTerritory> > pushed_territorys_type;//slist
-typedef std::list<CCoreTerritory*> created_territorys_type;//slist
+typedef core::list< CComObjPtr<CCoreTerritory> > pushed_territorys_type;
+typedef core::list<CCoreTerritory*> created_territorys_type;
 
 // --------------------------- CCoreProject
 

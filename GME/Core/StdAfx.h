@@ -15,23 +15,31 @@
 #define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
 #endif
 
-#define EA_CHAR16_NATIVE 1
-//#include "EASTL/list.h"
-//#include "EASTL/hash_map.h"
-//#include "EASTL/hash_set.h"
+// #define CORE_USE_EASTL
 
-#include "hash_set"
-#include "hash_map"
+#ifdef CORE_USE_EASTL
+#define EA_CHAR16_NATIVE 1
+#include "EASTL/list.h"
+#include "EASTL/hash_map.h"
+#include "EASTL/hash_set.h"
+#else
+#include <hash_set>
+#endif
+
+#include <hash_map>
 
 namespace core { 
-//	using eastl::hash_map;
-//	using eastl::hash_set;
-//	using eastl::pair;
-//	using eastl::list;
-using stdext::hash_set;
-using stdext::hash_map;
-using std::list;
-using std::pair;
+#ifdef CORE_USE_EASTL
+	using eastl::hash_map;
+	using eastl::hash_set;
+	using eastl::pair;
+	using eastl::list;
+#else
+	using stdext::hash_set;
+	using stdext::hash_map;
+	using std::list;
+	using std::pair;
+#endif
 }
 
 #include "targetver.h"
