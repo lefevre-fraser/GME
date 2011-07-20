@@ -137,7 +137,9 @@ STDMETHODIMP CCoreTerritory::Clear()
 			++i;
 		}
 
-		COMTHROW( project->BeginTransaction(TRANSTYPE_READANY) );
+		HRESULT hr = project->BeginTransaction(TRANSTYPE_READANY);
+		if (FAILED(hr))
+			COMRETURN(hr);
 
 		try
 		{
