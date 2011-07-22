@@ -66,42 +66,6 @@ STDMETHODIMP CMgaTerritory::CloseObj(IMgaObject *obj) {
 }
 
 STDMETHODIMP CMgaTerritory::Flush() {
-/*
-	bool trwas = false;
-	bool pushwas = false;
-*/
-/*
-	COMTRY {
-		if(!coreterr) COMTHROW(E_MGA_TARGET_DESTROYED);
-
-		MGA_TRACE("Terr flush. Lock count: %d\n", refcnt);
-#ifdef OLD_FLUSH
-		CComPtr<ICoreAttributes> atts;
-		COMTHROW(coreterr->get_Attributes(&atts));
-		long count = 0;
-		COMTHROW( atts->get_Count(&count) );
-		ASSERT( count >= 0 );
-		if(count > 0) {
-			MGACOLL_ITERATE(ICoreAttribute, atts) {
-				CoreObj ob;
-				CComPtr<IMgaObject> mob;
-				COMTHROW(MGACOLL_ITER->get_Object(&ob));
-				ob->QueryInterface(&mob);
-				if(mob) mgaproject->ObjFor(mob)->removeterrfromlist(this);
-			} MGACOLL_ITERATE_END;
-
-		}
-#else	
-		objsetcoll::iterator f;
-		while((f =inobjs.begin()) != inobjs.end()) (*f)->removeterrfromlist(this);
-#endif
-		ASSERT(("Territory is still locked by some objects", refcnt == 0));
-		COMTHROW(coreterr->Clear());
-	} COMCATCH(
-		if(coreterr) coreterr->Clear();
-		);
-*/
-
 	COMTRY {
 		if(coreterr) {
 			HRESULT hr = coreterr->Clear();
