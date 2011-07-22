@@ -52,12 +52,6 @@ public:
 
 	ICoreObject *&ComPtr() { ASSERT(!p); return p; }
 
-	CComVariant CachedAttr(attrid_type id) {   // the compiler is supposed to optimize this!!!
-		CComVariant rv;
-		COMTHROW(p->get_LoadedAttrValue(id, &rv));
-		return rv; 
-	}
-
 	metaid_type GetMetaID() const {
 				metaid_type t;
 				CComPtr<ICoreMetaObject> mmo;
@@ -74,7 +68,8 @@ public:
 
 	bool IsDeleted() const {
 				VARIANT_BOOL pp;
-				if((*this)->get_IsDeleted(&pp) != S_OK) return true;
+				if((*this)->get_IsDeleted(&pp) != S_OK)
+					return true;
 				return pp ? true:false;
 	}
 
@@ -179,11 +174,6 @@ public:
 		COMTHROW(p->get_AttributeValue(i,&k));
 		return k;
 	}; 
-	CComVariant CachedVar() {  
-		CComVariant rv;  // the compiler is supposed to optimize this!!!
-		COMTHROW(p->get_LoadedAttrValue(i, &rv));
-		return rv; 
-	}
 	inline operator CoreObj () const {
 		CComVariant k;
 		COMTHROW(p->get_AttributeValue(i,&k));
@@ -199,14 +189,6 @@ public:
 		ASSERT(k.pdispVal);
 		return CoreObjs(k.pdispVal);
 	}; 
-
-	inline CoreObjs CachedColl() const {
-		CComVariant k;
-		COMTHROW(p->get_LoadedAttrValue(i, &k));
-		if(k.vt != VT_DISPATCH) COMTHROW(E_MGA_MODULE_INCOMPATIBILITY);
-		ASSERT(k.pdispVal);
-		return CoreObjs(k.pdispVal);
-	}
 
 	inline CoreObj Search(attrid_type  attr, VARIANT sval) {
 		CoreObj o;
