@@ -5,25 +5,6 @@
 
 #include "resource.h"       // main symbols
 
-
-
-
-struct metaid_hashfunc
-{
-	size_t operator()(const metaref_type &id) const
-	{
-		return (id % 19);
-	}
-};
-
-struct metaid_equalkey
-{
-	bool operator()(const metaref_type &id1, const metaref_type &id2) const
-	{
-		return id1 == id2;
-	}
-};
-
 class CMgaTerritory;
 class CMgaAddOn;
 class CMgaClient;
