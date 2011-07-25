@@ -2,6 +2,9 @@
 #include "stdafx.h"
 #include "MgaProgressDlg.h"
 
+EXTERN_C IMAGE_DOS_HEADER __ImageBase;
+#define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
+
 // --------------------------- CMgaProgressDlg
 
 CMgaProgressDlg::CMgaProgressDlg() 
@@ -51,7 +54,9 @@ STDMETHODIMP CMgaProgressDlg::StartProgressDialog(HWND hwndParent)
 	AFX_MANAGE_STATE(AfxGetStaticModuleState())
 
 	CWnd *win = hwndParent == NULL ? AfxGetMainWnd() : CWnd::FromHandle(hwndParent);
-	dlg.Create(IDD_PROGRESSDLG, win);
+	// n.b. dlg.Create doesn't load comctl32 6.0
+	dlg.Attach(CreateDialogW(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDD_PROGRESSDLG), hwndParent, NULL));
+	//dlg.Create(IDD_PROGRESSDLG, win);
 	ASSERT( dlg.m_hWnd != NULL );
 
 	dlg.SetWindowText(title);
@@ -59,6 +64,7 @@ STDMETHODIMP CMgaProgressDlg::StartProgressDialog(HWND hwndParent)
 	dlg.GetDlgItem(nIDs[1])->SetWindowText(lines[1]);
 
 	dlg.ShowWindow(SW_SHOWNORMAL);
+	dlg.UpdateWindow();
 
 	return S_OK;
 }
@@ -71,12 +77,33 @@ STDMETHODIMP CMgaProgressDlg::SetProgress(long completed, long total)
 	CProgressCtrl *ctrl = (CProgressCtrl*)dlg.GetDlgItem(IDC_PROGRESS1);
 	ASSERT( ctrl != NULL );
 
-	ctrl->SetRange32(0, total);
-	ctrl->SetPos(completed);
+	if (total == 0) {
+		if (!(ctrl->GetStyle() & PBS_MARQUEE)) {
+			ctrl->ModifyStyle(0, PBS_MARQUEE);
+			ctrl->SetMarquee(TRUE, 30);
+		}
+	} else {
+		if ((ctrl->GetStyle() & PBS_MARQUEE)) {
+			ctrl->ModifyStyle(0, PBS_MARQUEE, 0, 0);
+			ctrl->SetMarquee(FALSE, 30);
+		}
+	}
+	if (!(ctrl->GetStyle() & PBS_MARQUEE)) {
+		ctrl->SetRange32(0, total);
+		ctrl->SetPos(completed);
+	}
 
-//	dlg.Invalidate();
-	dlg.UpdateWindow();
-
+	//dlg.UpdateWindow();
+	MSG msg;
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
+	{
+		if (msg.message == WM_QUIT) {
+			PostQuitMessage((int)msg.wParam);
+			return S_OK;
+		}
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 	return S_OK;
 }
 
@@ -94,8 +121,10 @@ STDMETHODIMP CMgaProgressDlg::StopProgressDialog()
 	if( dlg.m_hWnd == NULL )
 		COMRETURN(E_INVALID_USAGE);
 
-	dlg.DestroyWindow();
+	HWND hwnd = dlg.m_hWnd;
+	dlg.Detach();
 	ASSERT( dlg.m_hWnd == NULL );
+	::DestroyWindow(hwnd);
 
 	return S_OK;
 }

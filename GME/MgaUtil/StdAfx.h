@@ -16,6 +16,8 @@
 #define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
 #endif
 
+#define ISOLATION_AWARE_ENABLED 1
+
 #include "targetver.h"
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -57,6 +59,8 @@
 //something, but do not change the name of _Module
 extern CComModule _Module;
 #include <atlcom.h>
+
+#include <CommCtrl.h>
 
 #define wireHWND HWND
 

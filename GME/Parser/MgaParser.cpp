@@ -419,7 +419,7 @@ void CMgaParser::startElement(const XMLCh* const name, AttributeList& attributes
 
 	++counter;
 
-	if( counter % 2000 == 0 )
+	if( counter % 1000 == 0 )
 	{
 		_stprintf_s(progress_msg, _T("Phase: %d, number of parsed objects: %ld"), pass_count, (long)counter/2);
 		COMTHROW( progress->SetLine(0, PutInBstr(progress_msg)) );
@@ -427,7 +427,7 @@ void CMgaParser::startElement(const XMLCh* const name, AttributeList& attributes
 		if( pass_count == 1 )
 			max_counter = counter + 10000;
 
-		COMTHROW( progress->SetProgress(counter, max_counter) );
+		COMTHROW( progress->SetProgress(counter, 0) );
 	}
 
 	if( skip_element_level > 0 )
