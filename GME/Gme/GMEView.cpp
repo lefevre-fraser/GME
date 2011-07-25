@@ -3802,9 +3802,9 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 			}
 		}
 		catch(hresult_exception& e) {
-			AbortTransaction(e.hr);
 			_bstr_t err;
 			GetErrorInfo(e.hr, err.GetAddress());
+			AbortTransaction(e.hr);
 			AfxMessageBox((std::wstring(L"Unable to insert objects: ") + static_cast<const wchar_t*>(err)).c_str(), MB_ICONSTOP | MB_OK);
 			CGMEEventLogger::LogGMEEvent(_T("    Unable to insert objects.\r\n"));
 			newObjectIDs.RemoveAll();
