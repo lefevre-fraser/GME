@@ -290,14 +290,9 @@
                         <Verb Id='open' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
                     </Extension>
                 </ProgId>
-                <Shortcut Id='UninstallShortcut'       
-		            Name='Uninstall GME'
-			        Description='Uninstalls the Generic Modeling Environment'
-		            Target='[System64Folder]msiexec.exe' Directory='ShortcutFolder'
-		            Arguments='/x [ProductCode]'/>
                 <Environment Id="GME_ROOT" Action="set" System="yes" Name="GME_ROOT" Value="[INSTALLDIR]" />
                 <RemoveFolder Id='RemoveShortcutFolder' On='uninstall' Directory='ShortcutFolder'/>
-                <!-- This is a bit ackward but might helps the user. We clear the (current) user registry from previous entries.
+                <!-- This is a bit awkward but might helps the user. We clear the (current) user registry from previous entries.
                      Not compliant with ICE checks (user registry access from systemwide component). -->
                 <RemoveRegistryKey  Id='RemoveUserGMERegistry' Action='removeOnInstall' Root='HKCU' Key='Software\GME' />
             </Component>
@@ -2466,15 +2461,17 @@
         <!-- =========================================================== -->
         <!-- USER INTERFACE -->
         <!-- =========================================================== -->   
-        <UI>        
-            <UIRef Id="WixUI_FeatureTree" />
-            <UIRef Id="WixUI_ErrorProgressText" />
+        <UI>
+          <UIRef Id="WixUI_Minimal" />
+          <UIRef Id="WixUI_ErrorProgressText" />
             <Publish Dialog="ExitDialog" 
                 Control="Finish" 
                 Event="DoAction" 
                 Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+          <InstallUISequence>
+            <Show Dialog="UserExit" OnExit="cancel">0</Show>
+          </InstallUISequence>
         </UI>
     
     </Product>
 </Wix>
-                    
