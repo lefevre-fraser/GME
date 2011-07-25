@@ -22,7 +22,6 @@ public:
 	CButton	m_purge;
 	CButton	m_remove;
 	CListCtrl	m_list;
-	int		m_accessmode;
 	//}}AFX_DATA
 
 
@@ -42,7 +41,6 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnAddfile();
 	afx_msg void OnRemove();
-	afx_msg void OnAddDB();
 	virtual void OnOK();
 	afx_msg void OnPurge();
 	//}}AFX_MSG

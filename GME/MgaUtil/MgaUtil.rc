@@ -34,23 +34,17 @@ BEGIN
     CONTROL         "",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | BS_LEFT | BS_MULTILINE | WS_GROUP | WS_TABSTOP,7,87,218,12,WS_EX_TRANSPARENT
 END
 
-IDD_METADLG DIALOGEX 0, 0, 302, 230
+IDD_METADLG DIALOGEX 0, 0, 400, 233
 STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "Select Paradigm"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "Create New...",IDOK,15,201,55,15,WS_DISABLED
-    PUSHBUTTON      "Close",IDCANCEL,79,201,55,15
-    PUSHBUTTON      "Purge/Select...",IDC_PURGE,145,202,55,15,WS_DISABLED
-    PUSHBUTTON      "Add from File...",IDC_ADDFILE,15,180,54,15
-    PUSHBUTTON      "Add from DB...",IDC_ADDDB,80,180,55,15
-    PUSHBUTTON      "Remove",IDC_REMOVE,145,180,55,15,WS_DISABLED
-    LTEXT           "Please select a Paradigm from the following list. You can also register  new Paradigms on your local machine or from a database. To parse an XML file containing your paradigm select ""Add File..."" and then the ""XML Files"" file type.",IDC_INFO,5,5,255,30
-    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_NOLABELWRAP | LVS_AUTOARRANGE | WS_BORDER | WS_TABSTOP,5,35,290,135
-    LTEXT           "Register:",IDC_STATIC,210,179,69,10
-    CONTROL         "Systemwide",IDC_RADIOSYS,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,210,189,53,10
-    CONTROL         "For user only",IDC_RADIOUSER,"Button",BS_AUTORADIOBUTTON,210,199,56,10
-    CONTROL         "For both",IDC_RADIOBOTH,"Button",BS_AUTORADIOBUTTON,210,209,42,10
+    DEFPUSHBUTTON   "Create New...",IDOK,7,211,55,15,WS_DISABLED
+    PUSHBUTTON      "Purge/Select...",IDC_PURGE,66,211,55,15,WS_DISABLED
+    PUSHBUTTON      "Add from file...",IDC_ADDFILE,7,192,55,15
+    PUSHBUTTON      "Remove",IDC_REMOVE,66,192,55,15,WS_DISABLED
+    LTEXT           "Please select a Paradigm from the following list. You can also register new Paradigms on your local machine. To parse an XML file containing your paradigm select ""Add File..."" and then the ""XML Files"" file type.",IDC_INFO,7,7,255,40
+    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_NOLABELWRAP | LVS_AUTOARRANGE | WS_BORDER | WS_TABSTOP,7,33,386,155
 END
 
 IDD_GMEDLG DIALOGEX 0, 0, 247, 451

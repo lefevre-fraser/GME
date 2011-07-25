@@ -57,7 +57,6 @@
 #define IDD_COMPDLG                     2009
 #define IDC_ADDFILE                     2010
 #define IDC_MYHELP                      2011
-#define IDC_ADDDB                       2012
 #define IDC_REMOVE                      2013
 #define IDC_INFO                        2014
 #define IDC_ICONPATH                    2015

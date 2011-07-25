@@ -21,7 +21,6 @@ CMetaDlg::CMetaDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CMetaDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CMetaDlg)
-	m_accessmode = 1;
 	//}}AFX_DATA_INIT
 }
 
@@ -33,7 +32,6 @@ void CMetaDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PURGE, m_purge);
 	DDX_Control(pDX, IDC_REMOVE, m_remove);
 	DDX_Control(pDX, IDC_LIST, m_list);
-	DDX_Radio(pDX, IDC_RADIOSYS, m_accessmode);
 	//}}AFX_DATA_MAP
 }
 
@@ -42,7 +40,6 @@ BEGIN_MESSAGE_MAP(CMetaDlg, CDialog)
 	//{{AFX_MSG_MAP(CMetaDlg)
 	ON_BN_CLICKED(IDC_ADDFILE, OnAddfile)
 	ON_BN_CLICKED(IDC_REMOVE, OnRemove)
-	ON_BN_CLICKED(IDC_ADDDB, OnAddDB)
 	ON_BN_CLICKED(IDC_PURGE, OnPurge)
 	//}}AFX_MSG_MAP
 	ON_WM_SIZE()
@@ -76,15 +73,6 @@ BOOL CMetaDlg::OnInitDialog()
 			GetDlgItem(IDOK)->SetWindowText(_T("Open"));
 		} else if (flags == METADLG_NEWFILE) {
 			GetDlgItem(IDOK)->SetWindowText(_T("Create New"));
-		}
-
-		{
-			CRegKey accessTest;
-			if (accessTest.Open(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\GME"), KEY_READ | KEY_WRITE) == ERROR_ACCESS_DENIED) {
-				GetDlgItem(IDC_RADIOSYS)->EnableWindow(false);
-				GetDlgItem(IDC_RADIOUSER)->EnableWindow(false);
-				GetDlgItem(IDC_RADIOBOTH)->EnableWindow(false);
-			}
 		}
 
 		LV_COLUMN lvc;
@@ -255,7 +243,7 @@ void CMetaDlg::OnAddfile()
 
 
 		CComBSTR newname;
-		COMTHROW(registrar->RegisterParadigmFromData(PutInBstr(conn), &newname, regacc_translate(m_accessmode)));
+		COMTHROW(registrar->RegisterParadigmFromData(PutInBstr(conn), &newname, REGACCESS_USER));
 		
 		to_select = newname;
 		ResetItems();
@@ -274,68 +262,15 @@ void CMetaDlg::OnRemove()
 			CString name = m_list.GetItemText(m_list.GetNextSelectedItem(pos), 0);
 
 			ASSERT( registrar != NULL );
-			COMTHROW( registrar->UnregisterParadigm(PutInBstr(name), regacc_translate(m_accessmode)) );
+			COMTHROW( registrar->UnregisterParadigm(PutInBstr(name), REGACCESS_USER) );
 
-			CComBSTR dummyc;
-			CComVariant dummyg;
-			switch(regacc_translate(m_accessmode)) {
-			case REGACCESS_USER: 
-				if(S_OK == registrar->QueryParadigm(PutInBstr(name), &dummyc, &dummyg, REGACCESS_SYSTEM)) {
-					AfxMessageBox(_T("Warning: Paradigm is still present in system registry"));
-				}
-				break;
-			case REGACCESS_SYSTEM: 
-				if(S_OK == registrar->QueryParadigm(PutInBstr(name), &dummyc, &dummyg, REGACCESS_USER)) {
-					AfxMessageBox(_T("Warning: Paradigm is still present in user registry"));
-				}
-				break;
+			if (S_OK == registrar->QueryParadigm(PutInBstr(name), _bstr_t().GetAddress(), _variant_t().GetAddress(), REGACCESS_SYSTEM)) {
+				AfxMessageBox(_T("Warning: Paradigm is still present in system registry"));
 			}
 			ResetItems();
 		}
 	}
 	MSGCATCH(_T("Error while removing paradigm"),;)
-}
-
-void CMetaDlg::OnAddDB() 
-{
-	UpdateData();
-	MSGTRY
-	{
-		CDatabase db;
-		if( db.OpenEx(NULL) )
-		{
-			CString conn = CMgaLauncher::PruneConnectionString(db.GetConnect());
-
-			CComObjPtr<IMgaMetaProject> paradigm;
-			COMTHROW( paradigm.CoCreateInstance(OLESTR("MGA.MgaMetaProject")) );
-			ASSERT( paradigm != NULL );
-
-			COMTHROW( paradigm->Open(PutInBstr(conn)) );
-
-			CComBstrObj name;
-			COMTHROW( paradigm->get_Name(PutOut(name)) );
-
-			CComBstrObj version;
-			COMTHROW( paradigm->get_Version(PutOut(version)) );
-
-			CComVariant guid;
-			COMTHROW( paradigm->get_GUID(PutOut(guid)) );
-
-			COMTHROW( paradigm->Close() );
-
-			ASSERT( registrar != NULL );
-			COMTHROW( registrar->RegisterParadigm(name, PutInBstr(conn), PutInBstr(version), guid, regacc_translate(m_accessmode)) );
-
-			to_select = PutInBstr(name);
-			ResetItems();
-		}
-		db.Close();
-	}
-	MSGCATCH(_T("Error while registering paradigm"),;)
-	catch(...)
-	{
-		DisplayError(_T("Error while registering paradigm"), E_EXCEPTION);
-	}
 }
 
 BOOL CMetaDlg::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult) 
