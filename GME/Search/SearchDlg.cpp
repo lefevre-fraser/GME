@@ -236,6 +236,14 @@ void CSearchDlg::DisableSearch()
 
 void CSearchDlg::OnButtonGo() 
 {
+	// FIXME: why do neither ON_NOTIFY(LVN_ITEMACTIVATE nor NM_RETURN work?
+	HWND h = ::GetFocus();
+	while (h) {
+		if (h == GetDlgItem(IDC_LISTRESULTS)->GetSafeHwnd()) {
+			return itemDblClicked();
+		}
+		h = ::GetParent(h);
+	}
     if(CWnd::UpdateData(TRUE))
     {
         if(m_searchResults)
