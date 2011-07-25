@@ -322,8 +322,14 @@ BOOL CCompDlg::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 		return TRUE;
 	} else if (wParam == IDC_LIST && ((NMHDR*)lParam)->code == NM_DBLCLK )
 	{
-		OnEnableDisable();
-		return TRUE;
+		if (onOKoper == _T("Interpret..."))
+		{
+			OnOK();
+			return TRUE;
+		} else {
+			OnEnableDisable();
+			return TRUE;
+		}
 	}
 	
 	return CDialog::OnNotify(wParam, lParam, pResult);
