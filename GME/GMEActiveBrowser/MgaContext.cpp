@@ -149,7 +149,7 @@ CComPtr<IMgaComponentEx> CMgaContext::FindConstraintManager()
 	{
 		CComBSTR name;
 		COMTHROW(MGACOLL_ITER->get_ComponentName(&name));
-		if(name == "ConstraintManager") 
+		if(name == L"ConstraintManager") 
 		{
 			constrMgr = CComQIPtr<IMgaComponentEx>(MGACOLL_ITER); 
 			break;

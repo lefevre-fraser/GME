@@ -6,7 +6,7 @@
 #include "ActiveBrowserPropertyPage.h"
 #include "GMEActiveBrowser.h"
 #include "GMEActiveBrowserCtl.h"
-#include "..\Interfaces\Meta_i.c"
+#include "Meta_i.c"
 #include "AggregateContextMenu.h"
 #include "..\Gme\GMEOLEData.h"
 #include "AttachLibDlg.h"
@@ -106,10 +106,12 @@ void CAggregatePropertyPage::OnSize(UINT nType, int cx, int cy)
 //	CPropertyPage::OnSize(nType, cx, cy);
 	if(	::IsWindow(m_ComboSearchCtrl.GetSafeHwnd()) )
 	{
+		int ySpace = GetSystemMetrics(SM_CYBORDER);
+		RECT clientRect;
+		m_ComboSearchCtrl.GetClientRect(&clientRect);
 		
-		
-		m_TreeAggregate.MoveWindow(3,25,cx-3,cy-25);
-		m_ComboSearchCtrl.MoveWindow(3,3,cx-3,20);
+		m_TreeAggregate.MoveWindow(0, clientRect.bottom + 2*ySpace, cx-1, cy-clientRect.bottom - 2*ySpace - 1);
+		m_ComboSearchCtrl.MoveWindow(0, ySpace, cx-1, cy-1);
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 		//m_ComboSearchCtrl.MoveWindow(3,3,cx-29,20);
@@ -207,6 +209,7 @@ void CAggregatePropertyPage::OnItemExpandingTreeAggregate(NMHDR* pNMHDR, LRESULT
 					
 				}
 			}
+			m_TreeAggregate.EnsureVisible(hItem);
 			AfxGetApp()->LoadStandardCursor(IDC_ARROW);
 		}
 #ifdef _DEBUG
@@ -2812,9 +2815,12 @@ void CInheritancePropertyPage::OnSize(UINT nType, int cx, int cy)
 	
 	if(	::IsWindow(m_ComboSearchCtrl.GetSafeHwnd()) )
 	{
-		m_ComboSearchCtrl.MoveWindow(3,3,cx-3,20);
-
-		m_TreeInheritance.MoveWindow(3,25,cx-3,cy-25);
+		int ySpace = GetSystemMetrics(SM_CYBORDER);
+		RECT clientRect;
+		m_ComboSearchCtrl.GetClientRect(&clientRect);
+		
+		m_TreeInheritance.MoveWindow(0, clientRect.bottom + 2*ySpace, cx-1, cy-clientRect.bottom - 2*ySpace - 1);
+		m_ComboSearchCtrl.MoveWindow(0, ySpace, cx-1, cy-1);
 	}
 	
 }
@@ -3432,9 +3438,12 @@ void CMetaPropertyPage::OnSize(UINT nType, int cx, int cy)
 	
 	if(	::IsWindow(m_ComboSearchCtrl.GetSafeHwnd()) )
 	{
-		m_ComboSearchCtrl.MoveWindow(3,3,cx-3,20);
-
-		m_TreeMeta.MoveWindow(3,25,cx-3,cy-25);
+		int ySpace = GetSystemMetrics(SM_CYBORDER);
+		RECT clientRect;
+		m_ComboSearchCtrl.GetClientRect(&clientRect);
+		
+		m_TreeMeta.MoveWindow(0, clientRect.bottom + 2*ySpace, cx-1, cy-clientRect.bottom - 2*ySpace - 1);
+		m_ComboSearchCtrl.MoveWindow(0, ySpace, cx-1, cy-1);
 	}
 	
 }
