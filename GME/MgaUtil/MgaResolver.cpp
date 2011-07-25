@@ -1498,7 +1498,7 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 		if (valid_role_count > 0) {
 
 			if ((cdl.DoModal() != IDOK) || (cdl.mn_selection_index == LB_ERR)) {
-				return RESOLV_ERR_get_ConnRoleByMeta;
+				return E_ABORT;
 
 			} else {
 
@@ -1796,7 +1796,7 @@ STDMETHODIMP CMgaResolver::get_RefRoleByMeta(IMgaModel *parent,
 		if (valid_role_count > 0) {
 
 			if (cdl.DoModal() != IDOK) {
-				return RESOLV_ERR_get_ConnRoleByMeta;
+				return E_ABORT;
 
 			} else {
 

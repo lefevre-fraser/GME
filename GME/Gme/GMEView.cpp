@@ -3634,7 +3634,12 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 #pragma warning(disable: 4310) // cast truncates constant value
 								COMTHROW(doc->resolver->put_IsStickyEnabled(::GetKeyState(VK_SHIFT) < 0 ? VARIANT_FALSE :VARIANT_TRUE));
 #pragma warning(default: 4310) // cast truncates constant value
-								COMTHROW(doc->resolver->get_RefRoleByMeta(currentModel,aspect,fco,&role));
+								HRESULT hr = doc->resolver->get_RefRoleByMeta(currentModel,aspect,fco,&role);
+								if (hr == E_ABORT) {
+									return false;
+								} else {
+									COMTHROW(hr);
+								}
 								if(role == 0)
 								{
 									AfxMessageBox(_T("Cannot create reference"));
