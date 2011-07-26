@@ -182,6 +182,7 @@ MGAPREF_FREEINSTANCEREFS =  0x00000008,		// do not bind refs in subtypes/instanc
 MGAPREF_RELAXED_RDATTRTYPES =  0x00000010,	// attributes may be read as types other than the real type
 MGAPREF_RELAXED_WRATTRTYPES =  0x00000020,	// attributes may be written as types other than the real type
 MGAPREF_MANUAL_RELIDS		= 0x00000040,	// relid-s are assigned manually
+MGAPREF_NO_NESTED_TX = 0x00000080 // don't use nested transactions, as they are very slow. If an MGA operation fails, the entire transaction must be aborted.
 } preference_flags;
 
 
