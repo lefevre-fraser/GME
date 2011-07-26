@@ -666,15 +666,11 @@ void CCompDlg::OnSize(UINT nType, int cx, int cy)
 	if (defer) {
 		MoveControl(IDC_REMOVE,					0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDC_INSTALL,				0, deltaHeight, 0, 0, defer, &dwp);
-		MoveControl(IDC_ACTIVEDISP,				0, deltaHeight, 0, 0, defer, &dwp);
-		MoveControl(IDC_ACTIVE_INACTIVE,		0, deltaHeight, 0, 0, defer, &dwp);
-		MoveControl(IDC_ALLCOMPS,				0, deltaHeight, 0, 0, defer, &dwp);
-                MoveControl(IDC_ENABLE_DISABLE,                 0, deltaHeight, 0, 0, defer, &dwp);
+        MoveControl(IDC_ENABLE_DISABLE,                 0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDC_RADIOSYS,				0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDC_RADIOUSER,				0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDC_RADIOBOTH,				0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDC_REGISTERSTATIC,			0, deltaHeight, 0, 0, defer, &dwp);
-		MoveControl(IDC_SHOWCOMPONENTSSTATIC,	0, deltaHeight, 0, 0, defer, &dwp);
 		MoveControl(IDOK,						0, deltaHeight, 0, 0, defer, &dwp);
 	}
 
