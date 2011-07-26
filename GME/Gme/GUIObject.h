@@ -4,6 +4,7 @@
 #include "Autoroute/AutoRouter.h"
 #include "GMEStd.h"
 #include <vector>
+#include <memory>
 
 class CGMEView;
 class CModelGrid;
@@ -430,7 +431,7 @@ class CGuiConnection : public CGuiFco
 {
 public:
 	CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp, bool resolve = true);
-	virtual ~CGuiConnection() { delete visible; }
+	virtual ~CGuiConnection() { }
 
 	// This is a trick to speed up dynamic_cast
 	virtual CGuiConnection*			dynamic_cast_CGuiConnection(void)			{ return this; }
@@ -502,7 +503,7 @@ public:
 private:
 	CAutoRouterPath* routerPath;
 	CGuiConnectionLabelSet labelset;
-	bool* visible;
+	std::unique_ptr<bool[]> visible;
 	GMEConnLineType lineType;
 	int srcStyle;
 	int dstStyle;

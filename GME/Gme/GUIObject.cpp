@@ -1914,8 +1914,16 @@ void CGuiObject::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 		else
 			COMTHROW(GetCurrentAspect()->GetDecorator()->Draw((ULONG)pDC));
 	}
-	catch (hresult_exception &) {
-		AfxMessageBox(_T("Error in decorator [method Draw()]"));
+	catch (hresult_exception &e) {
+		CComQIPtr<ISupportErrorInfo> errorInfo = GetCurrentAspect()->GetDecorator();
+		_bstr_t error;
+		if (errorInfo) {
+			GetErrorInfo(error.GetAddress());
+		} else {
+			GetErrorInfo(e.hr, error.GetAddress());
+		}
+		// FIXME: KMS: won't Draw() be called after the MessageBox is dismissed?
+		AfxMessageBox(CString(_T("Error in decorator [method Draw()]: ")) + static_cast<const TCHAR*>(error));
 	}
 
 // #define _ARDEBUG
@@ -2423,7 +2431,6 @@ CString CGuiConnectionLabelSet::GetLabel(int index) const
 
 CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role, CGMEView* vw, int numAsp, bool resolve):
 	CGuiFco(pt, role, vw, numAsp),
-	visible					(NULL),
 	src						(NULL),
 	srcPort					(NULL),
 	dst						(NULL),
@@ -2559,8 +2566,8 @@ void CGuiConnection::Resolve()
 		VERIFY(conn);
 
 		// Compute visibility
-		visible = new bool[numParentAspects];
-		memset(visible, 0, numParentAspects * sizeof(bool));
+		visible = std::unique_ptr<bool[]>(new bool[numParentAspects]);
+		memset(visible.get(), 0, numParentAspects * sizeof(bool));
 		CComPtr<IMgaMetaParts> mmParts;
 		COMTHROW(metaRole->get_Parts(&mmParts));
 		MGACOLL_ITERATE(IMgaMetaPart,mmParts) {
