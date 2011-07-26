@@ -90,7 +90,6 @@ void FCO::CheckRead() {
 //throws!!
 void FCO::CheckWrite() {
 		CheckRead();
-		ASSERT(mgaproject->alreadynested());
 		if(mgaproject->read_only) COMTHROW(E_MGA_READ_ONLY_ACCESS);
 		if(self[ATTRID_PERMISSIONS] & LIBRARY_FLAG) COMTHROW(E_MGA_LIBOBJECT);
 		if(self[ATTRID_PERMISSIONS] & READONLY_FLAG) COMTHROW(E_MGA_READ_ONLY_ACCESS);

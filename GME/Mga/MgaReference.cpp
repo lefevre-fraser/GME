@@ -58,7 +58,7 @@ bool putreftask::Do(CoreObj self, std::vector<CoreObj> *peers) {
 
 
 HRESULT FCO::put_Referred(IMgaFCO *newVal)	{
-		COMTRY_IN_TRANSACTION {
+		COMTRY_IN_TRANSACTION_MAYBE {
 			CheckWrite();
 			CHECK_MYINPTRPARVALIDNULL(newVal);
 			std::vector<CoreObj> peer(1);
@@ -80,7 +80,7 @@ HRESULT FCO::put_Referred(IMgaFCO *newVal)	{
 			}
 			self[ATTRID_MASTEROBJ] = NULLCOREOBJ;
 			putreftask(false).DoWithDeriveds(self, &peer);
-		} COMCATCH_IN_TRANSACTION(;);
+		} COMCATCH_IN_TRANSACTION_MAYBE(;);
 }
 
 HRESULT FCO::get_RefAspect(IMgaMetaAspect **pVal)

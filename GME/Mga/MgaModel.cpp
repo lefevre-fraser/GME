@@ -9,7 +9,7 @@
 
 HRESULT FCO::CreateChildObject(IMgaMetaRole *metar, IMgaFCO **newobj)
 {
-	COMTRY_IN_TRANSACTION {
+	COMTRY_IN_TRANSACTION_MAYBE { // FIXME: with _MAYBE, e.g. GMEView doesn't get notification that the object was created
 		CheckWrite();
 		CHECK_INPTRPAR(metar);
 		CHECK_OUTPTRPAR(newobj);
@@ -39,7 +39,7 @@ HRESULT FCO::CreateChildObject(IMgaMetaRole *metar, IMgaFCO **newobj)
 		SelfMark(OBJEVENT_NEWCHILD);
 		nfco->getinterface(newobj);
 	}
-	COMCATCH_IN_TRANSACTION(;);	
+	COMCATCH_IN_TRANSACTION_MAYBE(;);	
 
 }
 

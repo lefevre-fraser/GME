@@ -22,7 +22,7 @@ HRESULT FCO::get_MetaFolder(IMgaMetaFolder **pVal) {
 
 HRESULT FCO::CreateFolder(IMgaMetaFolder *meta, IMgaFolder **nf)
 {
-	COMTRY_IN_TRANSACTION {
+	COMTRY_IN_TRANSACTION_MAYBE {
 		CheckWrite();
 		if(self[ATTRID_PERMISSIONS] & LIBROOT_FLAG) COMTHROW(E_MGA_NOT_CHANGEABLE);
 		CHECK_INPTRPAR(meta);
@@ -42,7 +42,7 @@ HRESULT FCO::CreateFolder(IMgaMetaFolder *meta, IMgaFolder **nf)
 		SelfMark(OBJEVENT_NEWCHILD);
 		nff->getinterface(nf);
 	}
-	COMCATCH_IN_TRANSACTION(;);	
+	COMCATCH_IN_TRANSACTION_MAYBE(;);	
 }
 
 
@@ -428,7 +428,7 @@ void FCO::newrelidforchildren(CoreObj &prnt) {
 }
 
 HRESULT FCO::ContainerCreateFCO(IMgaMetaFCO *meta, CoreObj &fco) {
-	COMTRY_IN_TRANSACTION {
+	COMTRY_IN_TRANSACTION_MAYBE {
 		metaref_type rr;
 		objtype_enum tt;
 		COMTHROW(meta->get_MetaRef(&rr));
@@ -439,7 +439,7 @@ HRESULT FCO::ContainerCreateFCO(IMgaMetaFCO *meta, CoreObj &fco) {
 		assignnewchild(fco);
 		fco[ATTRID_META]=rr;
 	}
-	COMCATCH_IN_TRANSACTION(;);	
+	COMCATCH_IN_TRANSACTION_MAYBE(;);	
 
 }
 

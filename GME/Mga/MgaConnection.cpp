@@ -199,7 +199,7 @@ bool AddConnPTask::Do(CoreObj self, std::vector<CoreObj> *peers) {
 }
 
 HRESULT FCO::AddConnPoint(BSTR rolename, long maxinrole, IMgaFCO *target, IMgaFCOs *refs, IMgaConnPoint **pVal) {
-	COMTRY_IN_TRANSACTION {
+	COMTRY_IN_TRANSACTION_MAYBE {
 	   CheckWrite();
 	   long c = 0;
 	   if(refs) COMTHROW(refs->get_Count(&c));
@@ -221,7 +221,7 @@ HRESULT FCO::AddConnPoint(BSTR rolename, long maxinrole, IMgaFCO *target, IMgaFC
 	   peers[pos] = NULLCOREOBJ;		
 	   AddConnPTask(maxinrole, rolename).DoWithDeriveds(self, &peers);
 	   CMgaConnPoint::GetConnPoint(this, peers[pos], pVal);
-	} COMCATCH_IN_TRANSACTION(;);
+	} COMCATCH_IN_TRANSACTION_MAYBE(;);
 }
 
 HRESULT FCO::get_ConnPoints(IMgaConnPoints **pVal) {

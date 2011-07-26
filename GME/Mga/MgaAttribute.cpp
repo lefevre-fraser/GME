@@ -183,7 +183,7 @@ STDMETHODIMP CMgaAttribute::Clear() {
 
 
 STDMETHODIMP CMgaAttribute::put_Value(VARIANT newVal) {
-		COMTRY_IN_TRANSACTION {
+		COMTRY_IN_TRANSACTION_MAYBE {
 			CHECK_INPAR(newVal);
 			fco->CheckWrite();
 			if(load_status == ATTSTATUS_INVALID) {
@@ -238,7 +238,7 @@ STDMETHODIMP CMgaAttribute::put_Value(VARIANT newVal) {
 				COMTHROW(get_Owner(&p));
 				attrnotifytask().DoWithDeriveds(fco->self);
 			}
-		} COMCATCH_IN_TRANSACTION(;)
+		} COMCATCH_IN_TRANSACTION_MAYBE(;)
 }
 
 
@@ -699,7 +699,7 @@ STDMETHODIMP CMgaRegNode::put_Opacity( VARIANT_BOOL newVal) {
 
 
 STDMETHODIMP CMgaRegNode::put_Value(BSTR newVal) {
-		COMTRY_IN_TRANSACTION {
+		COMTRY_IN_TRANSACTION_MAYBE {
 			CHECK_INSTRPAR(newVal);
 			fco->CheckWrite();
 			long dummy;
@@ -710,7 +710,7 @@ STDMETHODIMP CMgaRegNode::put_Value(BSTR newVal) {
 			long flags = valueobj[ATTRID_REGFLAGS];
 			if(!(flags & RFLAG_HASVALUE)) valueobj[ATTRID_REGFLAGS] = flags | RFLAG_HASVALUE;
 			markchg();
-		} COMCATCH_IN_TRANSACTION(;)
+		} COMCATCH_IN_TRANSACTION_MAYBE(;)
 }
 
 STDMETHODIMP CMgaRegNode::put_FCOValue(IMgaFCO *newVal) {
@@ -985,14 +985,14 @@ STDMETHODIMP CMgaPart::get_RegistryValue( BSTR path,  BSTR *pVal) {
 }
 
 STDMETHODIMP CMgaPart::put_RegistryValue( BSTR path,  BSTR newval) {  
-		COMTRY_IN_TRANSACTION {
+		COMTRY_IN_TRANSACTION_MAYBE {
 			fco->CheckWrite();
 			CHECK_INSTRPAR(path);
 			CHECK_INSTRPAR(newval);
 			CComPtr<IMgaRegNode> p;
 			COMTHROW(get_RegistryNode(path, &p));
 			COMTHROW(p->put_Value(newval));
-		} COMCATCH_IN_TRANSACTION(;)
+		} COMCATCH_IN_TRANSACTION_MAYBE(;)
 }
 	
 
