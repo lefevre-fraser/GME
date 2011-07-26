@@ -527,11 +527,15 @@ int CGMEApp::Run()
 	info.pszAppVersion = _T(GME_VERSION_ID);
 	info.pszEmailSubject = _T("GME CrashRpt");
 	info.pszEmailTo = _T("gme-supp@isis.vanderbilt.edu");
+	info.pszUrl = _T("http://symbols.isis.vanderbilt.edu/GME/crashrpt.php");
+	info.dwFlags = CR_INST_SEH_EXCEPTION_HANDLER | CR_INST_PURE_CALL_HANDLER | CR_INST_SECURITY_ERROR_HANDLER
+		| CR_INST_INVALID_PARAMETER_HANDLER | CR_INST_SIGABRT_HANDLER | CR_INST_SIGINT_HANDLER | CR_INST_SIGTERM_HANDLER;
+		// missing: CR_INST_NEW_OPERATOR_ERROR_HANDLER: the default std::bad_alloc is fine (sometimes we handle it)
 	if (!bNoProtect) {
 		if (crInstall(&info) != 0)
 		{
-			TCHAR buff[256];
-			crGetLastErrorMsg(buff, 256);
+			TCHAR buff[1024];
+			crGetLastErrorMsg(buff, 1024);
 			AfxMessageBox(buff);
 			return FALSE;
 		}
@@ -914,6 +918,7 @@ void CGMEApp::UpdateComponentToolbar()
 						{
 							loadedConmponent.CoCreateInstance(componentName); // GetModuleHandle works for loaded DLLs only
 							hModule = ::GetModuleHandle(modulePath);
+							// FIXME: this is more efficient: hModule = LoadLibraryEx(modulePath, NULL, LOAD_LIBRARY_AS_DATAFILE | LOAD_LIBRARY_AS_IMAGE_RESOURCE);
 						}
 					}
 				}
