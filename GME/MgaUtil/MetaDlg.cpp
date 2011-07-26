@@ -171,7 +171,6 @@ static TCHAR filter[] =
 	_T("Paradigm Files (*.xmp)|*.xmp|")
 	_T("Exported Files (*.xme;*.xml)|*.xme; *.xml|")
 	_T("MGA Meta Files (*.mta)|*.mta|")
-	_T("Microsoft Access Files (*.mdb)|*.mdb|")
 	_T("All Files (*.*)|*.*||");
 
 
@@ -203,10 +202,6 @@ void CMetaDlg::OnAddfile()
 			case 2:
 				conn = CString(_T("MGA=")) + dlg.GetPathName() + _T(".mta");
 				break;
-
-			case 3:
-				conn = CString(_T("DBQ=")) + dlg.GetPathName() + _T(".mdb");
-				break;
 			}
 
 		}
@@ -214,8 +209,6 @@ void CMetaDlg::OnAddfile()
 			conn = CString(_T("XML=")) + dlg.GetPathName();
 		else if( ext == _T("mta") )
 			conn = CString(_T("MGA=")) + dlg.GetPathName();
-		else if( ext == _T("mdb") )
-			conn = CString(_T("DBQ=")) + dlg.GetPathName();
 		else
 		{
 			switch( dlg.m_ofn.nFilterIndex )
@@ -227,10 +220,6 @@ void CMetaDlg::OnAddfile()
 
 			case 3:
 				conn = CString(_T("MGA=")) + dlg.GetPathName();
-				break;
-
-			case 4:
-				conn = CString(_T("DBQ=")) + dlg.GetPathName();
 				break;
 			}
 		}
