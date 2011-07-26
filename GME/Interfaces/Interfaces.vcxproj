@@ -47,11 +47,6 @@
       <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </Midl>
-    <CustomBuild>
-      <Command>..\Release\IFChecksumProg.exe InterfaceVersion.h InterfaceVersion.trg</Command>
-      <Message>Calculating Interface Version Checksum</Message>
-      <Outputs>InterfaceVersion.trg</Outputs>
-    </CustomBuild>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -61,21 +56,10 @@
       <WarnAsError>true</WarnAsError>
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </Midl>
-    <CustomBuild>
-      <Command>..\Release\IFChecksumProg.exe InterfaceVersion.h InterfaceVersion.trg</Command>
-      <Message>Calculating Interface Version Checksum</Message>
-      <Outputs>InterfaceVersion.trg</Outputs>
-    </CustomBuild>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="InterfaceColl.h" />
     <ClInclude Include="InterfaceVersion.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IFChecksumProg\IFChecksumProg.vcxproj">
-      <Project>{3a2c69fe-cf8a-4911-aba3-74f0cb560ce6}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="..\Core\CoreLib.idl">
