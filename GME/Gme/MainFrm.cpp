@@ -794,10 +794,7 @@ BOOL CMainFrame::InitStatusBar(UINT *pIndicators, int nSize, int nSeconds)
 
 void CMainFrame::OnEditSearch()
 {
-	if(!m_search.IsVisible())
-	{
-		m_search.ShowPane(TRUE, FALSE, TRUE);
-	}
+	m_search.ShowPane(TRUE, FALSE, TRUE);
 /*	CRect searchWindowRect;
 	m_search.GetWindowRect(&searchWindowRect);
 	if (m_search.CanBeResized() && searchWindowRect.Height() <= searchWindowRect.GetCaptionHeight()) {
