@@ -72,7 +72,7 @@ BOOL CMetaDlg::OnInitDialog()
 		} else if (flags == METADLG_NONE) {
 			GetDlgItem(IDOK)->SetWindowText(_T("Open"));
 		} else if (flags == METADLG_NEWFILE) {
-			GetDlgItem(IDOK)->SetWindowText(_T("Create New"));
+			GetDlgItem(IDOK)->SetWindowText(_T("Create new"));
 		}
 
 		LV_COLUMN lvc;
