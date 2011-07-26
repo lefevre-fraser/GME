@@ -21,7 +21,7 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 	: CDialog(CMgaOpenDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CMgaOpenDlg)
-	m_radio = 1;
+	m_radio = 0;
 	//}}AFX_DATA_INIT
 
 	switch (dType){
@@ -143,26 +143,9 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 
 	try
 	{
-		if( (allowXme && (m_radio = 1)) || (DoModal() == IDOK && !pressed_back) )
+		if( (allowXme && (m_radio = 0)) || (DoModal() == IDOK && !pressed_back) )
 		{
-			if( m_radio == 0 || m_radio == 2)
-			{
-				CDatabase db;
-				
-				CString hint = fileNameHint;
-				int pos = hint.ReverseFind('\\');
-				if(pos >= 0) hint = hint.Mid(pos+1);
-				pos = hint.Find('.');
-				if(pos >= 0) hint = hint.Left(pos);
-
-				if( db.OpenEx(_T("DSN=")+hint, CDatabase::forceOdbcDialog) ) {
-					conn.Empty();
-					if(m_radio == 2) conn = _T("ODBC;");
-					conn += PruneConnectionString(db.GetConnect());
-				}
-				db.Close();
-			}
-			else if( m_radio == 1 )
+			if( m_radio == 0 )
 			{
 				CFileDialog dlg(true, NULL, fileNameHint.IsEmpty() ? NULL : (LPCTSTR)fileNameHint,
 					OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
@@ -181,13 +164,11 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 						conn = CString(_T("MGX=")) + dlg.GetPathName();
 					else if( (ext == _T("xml")) || (ext == _T("xme")) || (ext == _T("xmp")) )
 						conn = CString(_T("XML=")) + dlg.GetPathName();
-					else if( ext == _T("mdb") )
-						conn = CString(_T("DBQ=")) + dlg.GetPathName();
 					else if( ext == _T("") )
 					{
 						switch( dlg.m_ofn.nFilterIndex )
 						{
-						case 4:
+						case 3:
 						case 1:
 							conn = CString(_T("MGA=")) + dlg.GetPathName() + _T(".mga");
 							break;
@@ -195,17 +176,13 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 						case 2:
 							conn = CString(_T("XML=")) + dlg.GetPathName() + _T(".xme");
 							break;
-
-						case 3:
-							conn = CString(_T("DBQ=")) + dlg.GetPathName() + _T(".mdb");
-							break;
 						}
 					}
 					else
 					{
 						switch( dlg.m_ofn.nFilterIndex )
 						{
-						case 4:
+						case 3:
 						case 1:
 							conn = CString(_T("MGA=")) + dlg.GetPathName();
 							break;
@@ -213,15 +190,11 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 						case 2:
 							conn = CString(_T("XML=")) + dlg.GetPathName();
 							break;
-
-						case 3:
-							conn = CString(_T("DBQ=")) + dlg.GetPathName();
-							break;
 						}
 					}
 				}
 			}
-            else if( m_radio == 3 )
+            else if( m_radio == 1 )
             {
                 if( flag_create )
                 {
@@ -332,7 +305,7 @@ void CMgaOpenDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CMgaOpenDlg)
-	DDX_Radio(pDX, IDC_RADIO1, m_radio);
+	DDX_Radio(pDX, IDC_RADIO2, m_radio);
 	//}}AFX_DATA_MAP
 }
 

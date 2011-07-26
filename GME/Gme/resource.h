@@ -127,9 +127,7 @@
 #define IDC_METAID                      1023
 #define IDC_SEARCHBOX                   1024
 #define IDC_DEPENDENCY                  1025
-#define IDC_RADIO1                      1026
 #define IDC_RADIO2                      1027
-#define IDC_RADIO3                      1028
 #define IDC_RADIO4                      1029
 #define IDC_CONNTYPE                    1035
 #define IDC_CONNID                      1038

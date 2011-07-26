@@ -766,11 +766,9 @@ BEGIN
     DEFPUSHBUTTON   "&Next >",IDC_NEXT,52,52,46,14
     PUSHBUTTON      "Cancel",IDCANCEL,114,52,46,14
     PUSHBUTTON      "< &Back",IDC_BACK,7,52,46,14,WS_DISABLED
-    CONTROL         "Connect to database",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_DISABLED | WS_GROUP | WS_TABSTOP,58,1,102,10
-    CONTROL         "Open project file",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,58,18,102,10
-    CONTROL         "Open ODBC data",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_DISABLED | WS_TABSTOP,58,6,102,10
-    CONTROL         "Open multi user project",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,58,32,102,10
-    CONTROL         156,IDC_METAOPEN_BMP,"Static",SS_BITMAP,15,8,43,39
+    CONTROL         "Open project file",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP | WS_GROUP,58,18,102,10
+    CONTROL         "Open multi-user project",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,58,32,102,10
+    CONTROL         156,IDC_METAOPEN_BMP,"Static",SS_BITMAP,19,8,43,39
     CONTROL         155,IDC_MGAOPEN_BMP,"Static",SS_BITMAP,7,8,43,39
 END
 
@@ -1084,10 +1082,10 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "FileDescription", "GME MFC Application"
+            VALUE "FileDescription", "GME"
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "GME"
-            VALUE "LegalCopyright", "Copyright (C) 1999"
+            VALUE "LegalCopyright", "Copyright (C) 1999-2011 ISIS, Vanderbilt University"
             VALUE "OriginalFilename", "GME.EXE"
             VALUE "ProductName", "GME Application"
             VALUE "ProductVersion", "1, 0, 0, 1"
