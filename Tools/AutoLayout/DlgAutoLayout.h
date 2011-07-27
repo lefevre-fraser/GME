@@ -25,7 +25,7 @@ public:
 
     virtual ~CDlgAutoLayout();
 
-    void initialzie( IMgaProject * project, IMgaModel* model );
+    void initialize( IMgaProject * project, IMgaModel* model );
 
 	virtual LayoutOptimizerListener::ContinueAbortOrCurrent update( int percentage, LayoutSolution * sol, double score );
 
@@ -50,6 +50,9 @@ public:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
+public:
+	void OptimizeAllAspects();
+	void Optimize(CComObjPtr<IMgaMetaAspect>& aspect);
 // Implementation
 protected:    
     void drawSolution( CDC * dc, LayoutSolution * sol );

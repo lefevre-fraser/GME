@@ -30,7 +30,7 @@ CDlgAutoLayout::~CDlgAutoLayout()
 {
 }
 
-void CDlgAutoLayout::initialzie( IMgaProject * project, IMgaModel* model )
+void CDlgAutoLayout::initialize( IMgaProject * project, IMgaModel* model )
 {
     m_project = project;
     m_model   = model;
@@ -204,6 +204,54 @@ void CDlgAutoLayout::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
     }
 }
 
+void CDlgAutoLayout::OptimizeAllAspects() {
+	long count;
+	COMTHROW(m_metaAspects->get_Count(&count));
+	for (int i = 1; i <= count; i++) 
+	{
+		CComObjPtr<IMgaMetaAspect> aspect;
+		COMTHROW(m_metaAspects->get_Item(i, &aspect.p));
+		Optimize(aspect);
+	}
+}
+
+void CDlgAutoLayout::Optimize(CComObjPtr<IMgaMetaAspect>& aspect) {
+    // optimize aspect layout
+    GMEGraph graph( m_project, m_model, aspect );
+    LayoutOptimizer optimizer( &graph );
+	m_updateTime = 0;
+	optimizer.optimize( (this->GetSafeHwnd() ? this : NULL), m_startFromScratch>0 );    
+	if ( !m_bAbortionRequested )
+	{
+		m_currentSolution = NULL;
+		if (m_graph.GetSafeHwnd())
+			m_graph.Invalidate(FALSE);
+
+		// write back results to gme
+		CComObjPtr<IMgaParts> parts;
+		long   n;
+		COMTHROW( m_model->get_AspectParts(aspect, 0, PutOut(parts)) );
+		COMTHROW( parts->get_Count(&n) );
+
+		for( int i=0; i<n; ++i )
+		{
+			CComObjPtr<IMgaPart>     part;
+			CComObjPtr<IMgaFCO>      fco;
+
+			COMTHROW( parts->get_Item(i+1, PutOut(part)) );
+			COMTHROW( part->get_FCO(PutOut(fco)) );
+
+			for( unsigned int j=0; j<graph.m_nodes.size(); ++j )
+			{
+				if( fco == graph.m_nodes[j]->m_fco )
+				{
+					COMTHROW( part->SetGmeAttrs(0, graph.m_nodes[j]->m_x, graph.m_nodes[j]->m_y) );
+				}
+			}
+		}
+	}
+}
+
 void CDlgAutoLayout::OnButtonStart()
 {
     try
@@ -237,39 +285,6 @@ void CDlgAutoLayout::OnButtonStart()
                 CComObjPtr<IMgaMetaAspect>  aspect;
                 COMTHROW( m_metaAspects->get_Item( i+1, PutOut(aspect) ) );
 
-                // oprimize aspect layout
-                GMEGraph graph( m_project, m_model, aspect );
-                LayoutOptimizer optimizer( &graph );
-				m_updateTime = 0;
-				optimizer.optimize( this, m_startFromScratch>0 );    
-				if ( !m_bAbortionRequested )
-				{
-					m_currentSolution = NULL;
-					m_graph.Invalidate(FALSE);
-
-					// write back results to gme
-					CComObjPtr<IMgaParts> parts;
-					long   n;
-					COMTHROW( m_model->get_AspectParts(aspect, 0, PutOut(parts)) );
-					COMTHROW( parts->get_Count(&n) );
-
-					for( int i=0; i<n; ++i )
-					{
-						CComObjPtr<IMgaPart>     part;
-						CComObjPtr<IMgaFCO>      fco;
-
-						COMTHROW( parts->get_Item(i+1, PutOut(part)) );
-						COMTHROW( part->get_FCO(PutOut(fco)) );
-
-						for( unsigned int j=0; j<graph.m_nodes.size(); ++j )
-						{
-							if( fco == graph.m_nodes[j]->m_fco )
-							{
-								COMTHROW( part->SetGmeAttrs(0, graph.m_nodes[j]->m_x, graph.m_nodes[j]->m_y) );
-							}
-						}
-					}
-				}
             }
         }
 

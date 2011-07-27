@@ -6,6 +6,9 @@
 ///////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 
+#include <Gdiplus.h>
+#pragma comment(lib, "gdiplus.lib")
+
 //#include "ComHelp.h"
 //#include "GMECOM.h"
 #include "ComponentLib.h"
@@ -63,12 +66,34 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
             }
 
             CDlgAutoLayout dlg;
-            dlg.initialzie( project, (IMgaModel*)currentobj );
-            INT_PTR dlgResult = dlg.DoModal();
-			if (dlgResult == IDOK ) {
-		        COMTHROW( project->CommitTransaction() );
+            dlg.initialize( project, (IMgaModel*)currentobj );
+			if (param == 128)
+			{
+				Gdiplus::GdiplusStartupInput  gdiplusStartupInput;
+				Gdiplus::GdiplusStartupOutput  gdiplusStartupOutput;
+				ULONG_PTR gdiplusToken;
+				ULONG_PTR gdiplusHookToken;
+
+				// Initializing GDI+
+				// See "Special CWinApp Services" MSDN topic http://msdn.microsoft.com/en-us/library/001tckck.aspx
+				gdiplusStartupInput.SuppressBackgroundThread = TRUE;
+				VERIFY(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, &gdiplusStartupOutput) == Gdiplus::Ok);
+				gdiplusStartupOutput.NotificationHook(&gdiplusHookToken);
+
+				dlg.OptimizeAllAspects();
+				// n.b. need to unload decorators before shutting down GDI+
+				CoFreeUnusedLibraries();
+				// Closing GDI+
+				gdiplusStartupOutput.NotificationUnhook(gdiplusHookToken);
+				Gdiplus::GdiplusShutdown(gdiplusToken);
+				COMTHROW( project->CommitTransaction() );
 			} else {
-	            COMTHROW( project->AbortTransaction() );
+				INT_PTR dlgResult = dlg.DoModal();
+				if (dlgResult == IDOK ) {
+					COMTHROW( project->CommitTransaction() );
+				} else {
+					COMTHROW( project->AbortTransaction() );
+				}
 			}
 		}	
         catch(...)         

@@ -132,6 +132,9 @@ void GMEGraph::fillNodes( IMgaProject *project, IMgaParts* parts )
 			}
 			catch (hresult_exception&) {
 			}
+			if (decorator) {
+				decorator->Destroy();
+			}
         }
     }
 }
