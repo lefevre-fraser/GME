@@ -697,7 +697,7 @@ STDMETHODIMP CMgaProject::AllFCOs(IMgaFilter *filter, IMgaFCOs ** fcos) {
 
 		CREATEEXCOLLECTION_FOR(MgaFCO, q);
 		CComPtr<IMgaFolder> rootf;
-		get_RootFolder(&rootf);
+		COMTHROW(get_RootFolder(&rootf));
 		recursefolders(CoreObj(rootf), reinterpret_cast<CMgaFilter *>(filter),  q);
 		*fcos = q.Detach();
     }
@@ -1310,7 +1310,9 @@ STDMETHODIMP CMgaProject::BeginTransaction(IMgaTerritory *ter, transactiontype_e
 		checkofftemporary = false;
 		in_nested = false;
 		must_abort = false;
-		COMTHROW(dataproject->PushTerritory(t->coreterr));
+		HRESULT hr = dataproject->PushTerritory(t->coreterr);
+		if (FAILED(hr))
+			COMRETURN(hr);
 		baseterr = activeterr = t;
 		notifyqueueprocessed = false;
 		MARKSIG('3');
