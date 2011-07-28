@@ -27,6 +27,19 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r11.7.28
+----------------------------------
+  - Binary compatibility with r10.8.18
+  - Added .NET Primary Interop Assemblies: GME.dll, GME.MGA, GME.MGA.Meta, GME.Util, GME.MGA.Core, GME.MGA.Parser.
+    - PIAs allow .NET interpreters to be strongly named, and allow interpreters to interoperate
+  - Corrected some capitalization in GME COM Type Libraries.
+  - Add Visual Studio 2010 project wizards
+  - AutoLayout speedup
+  - Minor GUI fixes
+  - Memory leak and memory usage fixes
+  - Other bugfixes. See escher.isis.vanderbilt.edu/JIRA/browse/GME
+
+
 Release Notes of Release r11.3.23
 ----------------------------------
   - Binary compatibility with r10.8.18
