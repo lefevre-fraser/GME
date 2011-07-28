@@ -612,9 +612,7 @@ void CGMEApp::Autosave()
 
 	// Save the project
 	try {
-#pragma warning(disable: 4310) // cast truncates constant value
 		COMTHROW(mgaProject->Save(CComBSTR(conn), VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 		CGMEEventLogger::LogGMEEvent(_T("CGMEApp::Autosave succeeded ") + 
 			conn + _T("\r\n"));
 	}
