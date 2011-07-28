@@ -314,6 +314,7 @@ ResizeType ResizeLogic::DeterminePotentialResize(CPoint cursorPoint) const
 	long actualSensitivity = 0;
 	long targetWidth = m_targetLocation.Width();
 	long targetHeight = m_targetLocation.Height();
+	// FIXME: should use GetSystemMetrics(SM_CXSIZEFRAME) ?
 	if (targetWidth <= 35 || targetHeight <= 25) {
 		actualSensitivity = DECORATOR_MINSENSITIVITYDISTANCE;
 	} else if (targetWidth >= 80 && targetHeight >= 40) {
