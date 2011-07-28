@@ -66,10 +66,8 @@ STDMETHODIMP CBoxDecoratorImpl::Destroy()
 	}
 
 	m_bLocationSet = false;
-	if (m_pElementDecorator) {
-		delete m_pElementDecorator;
-		m_pElementDecorator = NULL;
-	}
+	delete m_pElementDecorator;
+	m_pElementDecorator = NULL;
 
 	return retVal;
 }
