@@ -16,10 +16,10 @@ library DecoratorLib
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
-	importlib("..\Core\CoreLib.tlb");
-	importlib("..\Meta\MetaLib.tlb");
-	importlib("..\Mga\MgaLib.tlb");
-	importlib("..\Gme\GmeLib.tlb");
+	importlib("..\Interfaces\CoreLib.tlb");
+	importlib("..\Interfaces\MetaLib.tlb");
+	importlib("..\Interfaces\MgaLib.tlb");
+	importlib("..\Interfaces\GmeLib.tlb");
 
 	[
 		uuid(COCLASS_UUID),
