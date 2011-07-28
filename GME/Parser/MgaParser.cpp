@@ -1795,10 +1795,6 @@ STDMETHODIMP CMgaParser::GetClipXMLInfo(BSTR filename, IMgaObject *target, VARIA
 	try
 	{
 		CloseAll();
-		COMTHROW( progress.CoCreateInstance(L"Mga.MgaProgressDlg") );
-		COMTHROW( progress->SetTitle(_bstr_t(L"Analyzing clipboard data...")) );
-		COMTHROW( progress->StartProgressDialog(NULL) );
-
 
 		CopyTo(filename, xmlfile);
 
