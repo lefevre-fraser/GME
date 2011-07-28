@@ -4,6 +4,7 @@
 #include <map>
 #include "MgaComplexOps.h"
 #include "MgaSet.h"
+#include "limits.h"
 #define DETACHED_FROM "_detachedFrom"
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////// DELETE //////////////////////////////////////////////////////////
@@ -293,6 +294,7 @@ void ObjTreeCopy(CMgaProject *mgaproject, CoreObj self, CoreObj &nobj, coreobjpa
 			COMTHROW(mattr->get_AttrID(&ai));
 			if(ai < ATTRID_COLLECTION) {
 				// remove library flags from a copy
+				// FIXME this looks wrong
 				if(ai == ATTRID_PERMISSIONS) nobj[ai] = self[ai] & INSTANCE_FLAG;
 				else if( ai == ATTRID_GUID1 // don't copy these
 					|| ai == ATTRID_GUID2
@@ -335,6 +337,7 @@ void ObjTreeCopyFoldersToo(CMgaProject *mgaproject, CoreObj self, CoreObj &nobj,
 			COMTHROW(mattr->get_AttrID(&ai));
 			if(ai < ATTRID_COLLECTION) {
 				// remove library flags from a copy
+				// FIXME this looks wrong
 				if(ai == ATTRID_PERMISSIONS) nobj[ai] = self[ai] & INSTANCE_FLAG;
 				else nobj[ai] = static_cast<CComVariant>(self[ai]);
 			}
@@ -383,6 +386,7 @@ void ObjTreeDist(CoreObj self, int derdist) {
 				}
 				CoreObj p;
 				self[ai] = p = self.FollowChain(ai, derdist+1);
+				// FIXME this looks wrong
 				if(p) self[ATTRID_PERMISSIONS] = p[ATTRID_PERMISSIONS] & INSTANCE_FLAG;
 				else self[ATTRID_PERMISSIONS] = 0;
 			}
@@ -448,8 +452,11 @@ void ObjTreeDerive(CMgaProject *mgaproject, const CoreObj &origobj, CoreObj &new
 					break;
 				case ATTRID_RELID: 
 					{
+					// if newobj[ai] + RELIDSPACE > LONG_MAX
+					if (newobj[ai] > LONG_MAX - RELIDSPACE) 
+						COMTHROW(E_MGA_LONG_DERIVCHAIN);
 					long relid = origobj[ai]+RELIDSPACE;
-					if(relid <= 0) COMTHROW(E_MGA_LONG_DERIVCHAIN);  // overflow
+					ASSERT(relid > 0);
 					newobj[ai] = relid;
 					}
 					break;
@@ -1772,6 +1779,7 @@ void ObjDetachAndMerge( CMgaProject *mgaproject, CoreObj orig, CoreObj &nobj, co
 									// detach it as well from its base
 									ObjDetachAndMerge(mgaproject, base, ITER, crealist, ++cur_max_relid, false);
 									// increase the cur_max_relid for the next child
+									// FIXME: should this be max?
 									nobj[ATTRID_LASTRELID] = last_relid_set = cur_max_relid;
 								}
 								else 
@@ -1835,8 +1843,11 @@ void ObjAttach(CMgaProject *mgaproject, const CoreObj &origobj, CoreObj &newobj,
 					{
 						if( !prim)
 						{
-							newobj[ai] = newobj[ai]+RELIDSPACE;//shift its own relid
-							if(newobj[ai] <= 0) COMTHROW(E_MGA_LONG_DERIVCHAIN);  // overflow
+							// if newobj[ai] + RELIDSPACE > LONG_MAX
+							if (newobj[ai] > LONG_MAX - RELIDSPACE)
+								COMTHROW(E_MGA_LONG_DERIVCHAIN);
+							newobj[ai] = newobj[ai]+RELIDSPACE; //shift its own relid
+							ASSERT(newobj[ai] >= 0);
 						}
 					}
 					break;
