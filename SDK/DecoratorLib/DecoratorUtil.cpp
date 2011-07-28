@@ -218,6 +218,8 @@ bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )
 {
 	if (m_gdip == NULL) {
 		m_gdip = new Gdiplus::Graphics(m_nullDC.m_hDC);
+		if (m_gdip == NULL)
+			throw hresult_exception(E_NOT_VALID_STATE);
 		m_gdip->SetPageUnit(Gdiplus::UnitPixel);
 		m_gdip->SetSmoothingMode(m_eEdgeAntiAlias);
 		m_gdip->SetTextRenderingHint(m_eFontAntiAlias);
