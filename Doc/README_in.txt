@@ -27,6 +27,10 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r11.8.1
+----------------------------------
+  - Fixed bug where AutoLayout didn't do anything
+
 Release Notes of Release r11.7.28
 ----------------------------------
   - Binary compatibility with r10.8.18
