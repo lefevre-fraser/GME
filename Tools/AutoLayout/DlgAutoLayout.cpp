@@ -285,6 +285,7 @@ void CDlgAutoLayout::OnButtonStart()
                 CComObjPtr<IMgaMetaAspect>  aspect;
                 COMTHROW( m_metaAspects->get_Item( i+1, PutOut(aspect) ) );
 
+				Optimize(aspect);
             }
         }
 
