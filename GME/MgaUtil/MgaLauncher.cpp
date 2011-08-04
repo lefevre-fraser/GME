@@ -739,7 +739,8 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 
 
 		componenttype_enum type;
-		COMTHROW(registrar->QueryComponent(prgid, &type, NULL, REGACCESS_PRIORITY)); 
+		if (FAILED(registrar->QueryComponent(prgid, &type, NULL, REGACCESS_PRIORITY)))
+			type = COMPONENTTYPE_INTERPRETER;
 		CComPtr<IMgaComponent> component;
 		// Before DispatchProxy: CComObjPtr<IMgaComponent> component;
 		CString compname = prgid;
@@ -866,10 +867,9 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 				}
 			}				
 		}
-//		component.Release();
-//		CoFreeUnusedLibraries();
-//	} COMCATCH(CoFreeUnusedLibraries(););
-	} COMCATCH(;);
+		component.Release();
+		CoFreeUnusedLibraries();
+	} COMCATCH(CoFreeUnusedLibraries(););
 }
 
 // ------ Helper functions
