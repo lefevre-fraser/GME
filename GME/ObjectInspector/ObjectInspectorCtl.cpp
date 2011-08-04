@@ -552,12 +552,10 @@ void CObjectInspectorCtrl::RefreshReferencePanel()
 		if(nCount==0)
 		{
 			m_inspectorDlg.ShowPanel(INSP_PREF_PANEL,false);
-			m_inspectorDlg.GetDlgItem(IDC_CHECK_KIND)->EnableWindow(false);
 		}
 		else
 		{
 			m_inspectorDlg.ShowPanel(INSP_PREF_PANEL,true);
-			m_inspectorDlg.GetDlgItem(IDC_CHECK_KIND)->EnableWindow(true);
 		}
 
 		m_Preference.CreateList(m_FCOList);
@@ -782,6 +780,7 @@ void CObjectInspectorCtrl::OnMgaGlobalEvent(globalevent_enum event)
 
 		// Send message to UI
 		PropagateMgaMessages();
+		return;
 	}
 
 	else if(event==GLOBALEVENT_ABORT_TRANSACTION)
