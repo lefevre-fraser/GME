@@ -219,7 +219,7 @@ namespace BON
 	//}
 
 	Exception::Exception( std::string strMessage, const StringVector& vecParameters )
-		: Util::Exception( strMessage, vecParameters ), m_hResult( -1 )
+		: Util::Exception( strMessage, vecParameters ), m_hResult( E_FAIL )
 	{
 	}
 
@@ -272,7 +272,7 @@ namespace MON
 	//}
 
 	Exception::Exception( std::string strMessage, const StringVector& vecParameters )
-		: Util::Exception( strMessage, vecParameters ), m_hResult( -1 )
+		: Util::Exception( strMessage, vecParameters ), m_hResult( E_FAIL )
 	{
 	}
 
