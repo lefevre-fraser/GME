@@ -46,13 +46,11 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 									IMgaFCOs *selectedobjs,  long param) {
 	COMTRY 
     {
-	  if(interactive) 
-      {
 		CComBSTR projname;
 		CComObjPtr<IMgaTerritory> terr;
 		COMTHROW(project->CreateTerritory(NULL, PutOut(terr)));
 		COMTHROW(project->BeginTransaction(terr));
-		try 
+		try
         {
             if(currentobj==NULL)
                 throw 0;
@@ -61,13 +59,23 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
             COMTHROW(currentobj->get_ObjType(&objType));
             if( objType != OBJTYPE_MODEL )
             {
-                AfxMessageBox(_T("AutoLayout can only run on models. Open a model and try again!"));
+				if (param != GME_SILENT_MODE)
+					AfxMessageBox(_T("AutoLayout can only run on models."));
                 throw 0;
             }
 
-            CDlgAutoLayout dlg;
+			VARIANT_BOOL isInstance;
+			COMTHROW(currentobj->get_IsInstance(&isInstance));
+			if (isInstance != VARIANT_FALSE)
+			{
+				if (param != GME_SILENT_MODE)
+					AfxMessageBox(_T("AutoLayout cannot run on instances. Please AutoLayout run on the basetype instead."));
+				throw 0;
+			}
+			
+			CDlgAutoLayout dlg;
             dlg.initialize( project, (IMgaModel*)currentobj );
-			if (param == 128)
+			if (param == GME_SILENT_MODE)
 			{
 				Gdiplus::GdiplusStartupInput  gdiplusStartupInput;
 				Gdiplus::GdiplusStartupOutput  gdiplusStartupOutput;
@@ -100,7 +108,6 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
         { 
             project->AbortTransaction(); 
         }		
-	  } 
 	} COMCATCH(;);
 }
 
