@@ -118,7 +118,7 @@ STDMETHODIMP CViewDriver::GlobalEvent(globalevent_enum event)
 		}
 		viewsToKill.RemoveAll();
 		if(view->alive && view->needsReset) {
-			view->Reset(true);
+			view->Reset(true); // FIXME KMS: maybe post a message instead?
 			view->needsReset = false;
 		}
 		if(attrNeedsRefresh) {
@@ -8567,9 +8567,17 @@ void CGMEView::OnEditSync()
 {
 	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditSync in ")+path+name+_T("\r\n"));
 	CAspectSyncDlg dlg;
-
+	VARIANT_BOOL isInstance = VARIANT_TRUE;
+	BeginTransaction();
+	HRESULT hr = currentModel->get_IsInstance(&isInstance);
+	AbortTransaction(E_FAIL);
+	ASSERT(SUCCEEDED(hr));
+	if (isInstance != VARIANT_FALSE) {
+		AfxMessageBox(L"Cannot synchronize aspects for instances", MB_ICONEXCLAMATION);
+		return;
+	}
+	dlg.m_srcAspect = currentAspect;
 	POSITION apos = guiMeta->aspects.GetHeadPosition();
-	dlg.m_srcAspect = (apos ? guiMeta->aspects.GetAt(apos) : NULL);
 	while (apos) {
 		CGuiMetaAspect *metaAspect = guiMeta->aspects.GetNext(apos);
 		dlg.m_allAspects.AddTail(metaAspect);
@@ -9777,9 +9785,13 @@ LRESULT CGMEView::OnExecutePendingRequests(WPARAM wParam, LPARAM lParam)
 	
 	executingPendingRequests = true;
 	try {
-		BeginTransaction();
+		CComPtr<IMgaTerritory> terr;
+		COMTHROW(theApp.mgaProject->get_ActiveTerritory(&terr));
+		if (!terr)
+			BeginTransaction();
 		TryToExecutePendingRequests();
-		CommitTransaction();
+		if (!terr)
+			CommitTransaction();
 	}
 	catch(hresult_exception &e) {
 		// silent failure (not critical)
