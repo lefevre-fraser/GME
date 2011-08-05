@@ -3914,7 +3914,7 @@ void CGMEView::FillModelGrid()
 				return;
 			}
 			// obj->SetCenter(pt);
-			if (!executingPendingRequests) {
+			if (!executingPendingRequests && !IsInstance()) {
 				CPendingObjectPosRequest *req = new CPendingObjectPosRequest(obj, pt, obj->GetLocation(), obj->GetParentAspect());
 				pendingRequests.AddHead(req);
 				postPendingRequestEvent = true;
