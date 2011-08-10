@@ -1539,11 +1539,6 @@ HRESULT FCO::DeriveFCO(IMgaFCO *base, IMgaMetaRole *role, VARIANT_BOOL binstance
 		}
 
 
-
-// ERROR If new base is already an instance
-		VARIANT_BOOL parentinst;
-		COMTHROW(base->get_IsInstance(&parentinst));
-		if(parentinst) COMTHROW(E_MGA_NOT_DERIVABLE);
 // Check if object to be created or any of its children will become children of their own basetypes
 		int targetlevel = 0;
 		if(targettype != DTID_FOLDER) {
@@ -1565,8 +1560,8 @@ HRESULT FCO::DeriveFCO(IMgaFCO *base, IMgaMetaRole *role, VARIANT_BOOL binstance
 		ObjTreeDerive(mgaproject, cbase, newcoreobj, crealist, binstance ? INSTANCE_FLAG : 0);  // copy
 		assignnewchild(newcoreobj);
 
-		if(targettype == DTID_FOLDER) newcoreobj[ATTRID_ROLEMETA] = METAREF_NULL;
-
+		if (targettype == DTID_FOLDER)
+			newcoreobj[ATTRID_ROLEMETA] = METAREF_NULL;
 		else {
 			metaref_type t;
 			if(!role)  COMTHROW(E_MGA_INVALID_ROLE);
@@ -1577,7 +1572,7 @@ HRESULT FCO::DeriveFCO(IMgaFCO *base, IMgaMetaRole *role, VARIANT_BOOL binstance
 				CComPtr<IMgaMetaFCO> mfco;
 				COMTHROW(role->get_Kind(&mfco));
 				COMTHROW(mfco->get_MetaRef(&kt));
-				if(kt != newcoreobj[ATTRID_META]) COMTHROW(E_MGA_META_INCOMPATIBILITY);
+				if(kt != newcoreobj[ATTRID_META])COMTHROW(E_MGA_META_INCOMPATIBILITY);
 			}
 
 			newcoreobj[ATTRID_ROLEMETA] = t;
