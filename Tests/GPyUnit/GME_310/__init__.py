@@ -45,6 +45,7 @@ class TestFolderCopy(unittest.TestCase):
         self.project.CommitTransaction()
         self.project.Save("MGA=" + _adjacent_file(self.output_file))
         self.territory.Destroy()
+        self.project.Close()
 
         win32com.client.gencache.GetClassForCLSID = _savedGetClassForCLSID
         import util.mgadiff as mgadiff

@@ -15,7 +15,7 @@ class TestCase2( unittest.TestCase ):
 
 
 	def setUp( self ):		## hook method: creates a new mga file all the times, and deletes one if existing
-		self.project = win32com.client.Dispatch("Mga.MgaProject")
+		self.project = win32com.client.DispatchEx("Mga.MgaProject")
 		
 		self.mganame = "_tc2_all_sf.mga"
 

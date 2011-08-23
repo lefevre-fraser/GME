@@ -25,7 +25,7 @@ class TestCase3( unittest.TestCase ):
 
 		# this file will be created:
 		mganame = "_tc3_A_sf.mga"
-		project = win32com.client.Dispatch("Mga.MgaProject")
+		project = win32com.client.DispatchEx("Mga.MgaProject")
 
 		try:
 			project.Create( "MGA=" + mganame, "SF")
@@ -63,7 +63,7 @@ class TestCase3( unittest.TestCase ):
 
 		# this file will be created:
 		mganame = "_tc4_B_sf.mga"
-		project = win32com.client.Dispatch("Mga.MgaProject")
+		project = win32com.client.DispatchEx("Mga.MgaProject")
 
 		try:
 			project.Create( "MGA=" + mganame, "SF")

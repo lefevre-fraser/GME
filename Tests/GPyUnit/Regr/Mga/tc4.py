@@ -618,7 +618,7 @@ class TestCase4( unittest.TestCase ):
 		"""
 		mganame = "_tc4_E2_sf.mga"
 
-		self.project = project = win32com.client.Dispatch("Mga.MgaProject")
+		self.project = project = win32com.client.DispatchEx("Mga.MgaProject")
 
 		charform_guid = self.register_old_sf_par()
 		
