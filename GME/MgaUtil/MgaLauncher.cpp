@@ -808,8 +808,9 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 							} else {
 								DisplayError(_T("Interpreter returned error"), hr);
 							}
-							project->AbortTransaction();
 						}
+						// Sometimes interpreters forget to close transactions, even when returning S_OK
+						project->AbortTransaction();
 					}
 				} else {
 					try	{
@@ -865,6 +866,7 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 				catch(hresult_exception &e)	{
 					DisplayError(_T("Interpreter returned error"), e.hr);
 				}
+				project->AbortTransaction();
 			}				
 		}
 		component.Release();
