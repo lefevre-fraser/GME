@@ -136,9 +136,14 @@ void CMgaConnPoint::GetConnPoint(FCO *f, CoreObj &c, IMgaConnPoint **cp) {
 
 CMgaConnPoint::~CMgaConnPoint() {
 	MARKSIG('9');
-	FCO::cphash::iterator ii = fco->connpointhash.find(cobj.GetObjID());
-	ASSERT(ii != fco->connpointhash.end());
-    fco->connpointhash.erase(ii);
+	// n.b. don't use GetObjId, it can COMTHROW when the project is closed
+	objid_type t;
+	HRESULT hr = cobj->get_ObjID(&t);
+	if (SUCCEEDED(hr)) {
+		FCO::cphash::iterator ii = fco->connpointhash.find(t);
+		ASSERT(ii != fco->connpointhash.end());
+		fco->connpointhash.erase(ii);
+	}
 }	
 
 
