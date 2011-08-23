@@ -6,6 +6,7 @@ import os
 import utils.Builder
 bd = utils.Builder
 
+from util import dec_disable_early_binding
 
 class TestCase1( unittest.TestCase ):
 	"""
@@ -50,6 +51,7 @@ class TestCase1( unittest.TestCase ):
 		ap2b.Referred = at2
 		
 
+	@dec_disable_early_binding
 	def testA( self ):
 		"""    testA References
 			testing getproperties of IMgaFCO
@@ -147,6 +149,7 @@ class TestCase1( unittest.TestCase ):
 		# atom2 added to aspect2
 		asp2.addMember(at2)
 
+	@dec_disable_early_binding
 	def testB( self ):
 		"""    testB Sets
 			testing getproperties of IMgaFCO
@@ -286,6 +289,7 @@ class TestCase1( unittest.TestCase ):
 		 raise
 
 
+	@dec_disable_early_binding
 	def testC( self ):
 		"""    testC connections in MetaGME
 			testing getproperties of IMgaFCO
@@ -491,6 +495,7 @@ class TestCase1( unittest.TestCase ):
 		 raise
 		pass
 
+	@dec_disable_early_binding
 	def testD( self ):
 		"""    testD Connections in SF
 			testing getproperties of IMgaFCO
@@ -583,222 +588,6 @@ class TestCase1( unittest.TestCase ):
 		
 		project.Save()
 		project.Close(0)
-		
-		pass
-
-	def populateE(self, p):
-		folder1 = p.RootFolder.CreateFolder( bd.folder( p, 'TOSFolder'))
-		folder1.Name = 'TOSF_1'
-		
-		folder2 = p.RootFolder.CreateFolder( bd.folder( p, 'TOSFolder'))
-		folder2.Name = 'TOSF_2'
-
-		conf1 = folder1.CreateRootObject( bd.kind( p, 'configuration'))
-		conf1.Name = 'Conf1'
-		
-		conf2 = folder2.CreateRootObject( bd.kind( p, 'configuration'))
-		conf2.Name = 'Conf2'
-		
-		intf2 = folder2.CreateRootObject( bd.kind( p, 'interface'))
-		intf2.Name = 'Intf2'
-		
-		modu2 = folder2.CreateRootObject( bd.kind( p, 'module'))
-		modu2.Name = 'Modu2'
-		
-		cr1 = bd.new( p, conf1, 'configuration_ref')
-		cr1.Name = 'cr1'
-
-		ir1 = bd.new( p, conf1, 'interface_ref')
-		ir1.Name = 'ir1'
-		
-		mr1 = bd.new( p, conf1, 'module_ref')
-		mr1.Name = 'mr1'
-		
-		fbi1 = bd.new( p, conf2, 'FunctionByInterface')
-		fbi1.Name = 'f1'
-		fbi2 = bd.new( p, conf2, 'FunctionByInterface')
-		fbi2.Name = 'f2'
-
-		fbi3 = bd.new( p, modu2, 'FunctionByInterface')
-		fbi3.Name = 'f3'
-
-		iref1 = bd.new( p, conf2, 'interface_ref')
-		iref1.Name = 'i1'
-		iref2 = bd.new( p, conf2, 'interface_ref')
-		iref2.Name = 'i2'
-
-		iref3 = bd.new( p, modu2, 'interface_ref')
-		iref3.Name = 'i3'
-
-		cr1.Referred = conf2
-		ir1.Referred = intf2
-		mr1.Referred = modu2
-		
-		clf = bd.connectRefP( p, conf1, fbi1, fbi3, cr1, mr1, "LINK_Functions")
-		clf.Name = 'LinkFunc_1_3'
-		
-		cef = bd.connectRefP( p, conf1, fbi2, fbi3, cr1, mr1, "EQUATE_Functions")
-		cef.Name = 'EquateFunc_2_3'
-		
-		cei = bd.connectRefP( p, conf1, iref2, iref3, cr1, mr1, "EQUATE_Interfaces")
-		cei.Name = 'EquateInt_2_3'
-		
-		cli = bd.connectRefP( p, conf1, iref1, iref3, cr1, mr1, "LINK_Interfaces")
-		cli.Name = 'LinkIntA_1_3'
-		
-		# create a connection, where only one end is referenceport, that is why 0 is used 
-		cl2 = bd.connectRefP( p, conf1, ir1, iref3, 0, mr1, "LINK_Interfaces")
-		cl2.Name = 'LinkIntB_1_3'
-
-		pass
-
-	def testE( self ):
-		"""    testE Connections in SF
-			testing getproperties of IMgaFCO
-			 PartOfConns([out, retval] IMgaConnPoints **pVal)
-			
-			and getproperties of IMgaConnPoint
-			  Owner([out, retval] IMgaConnection **pVal)
-			  ConnRole([out, retval] BSTR *pVal)
-			  Target([out, retval] IMgaFCO **pVal)
-			  References([out, retval] IMgaFCOs **pVal)
-		"""
-		
-		mganame = "_tc1_E_gr.mga"
-
-		# create the project with the needed kinds
-		project = bd.creaP( mganame, "GRATISII")
-		if not project:
-			self.fail("Create failed")
-		try:
-			self.populateE( project)
-		except:
-			bd.saveP( project)
-			raise
-		bd.saveP( project)
-
-
-		# open the created project
-		self.project = project
-		try:
-			project.Open( "MGA=" + mganame )
-		except:
-			project.Close(0)
-			raise
-			
-		terr = project.CreateTerritory( None, None, None)
-		trans = project.BeginTransaction( terr)
-
-		conf1 = bd.findInProj( project,'Conf1')
-		conf2 = bd.findInProj( project,'Conf2')
-		intf2 = bd.findInProj( project,'Intf2')
-		modu2 = bd.findInProj( project,'Modu2')
-		cr1   = bd.findInProj( project,'cr1')
-		ir1   = bd.findInProj( project,'ir1')
-		mr1   = bd.findInProj( project,'mr1')
-		fbi1  = bd.findInProj( project,'f1')
-		fbi2  = bd.findInProj( project,'f2')
-		fbi3  = bd.findInProj( project,'f3')
-		iref1 = bd.findInProj( project,'i1')
-		iref2 = bd.findInProj( project,'i2')
-		iref3 = bd.findInProj( project,'i3')
-		clf   = bd.findInProj( project,'LinkFunc_1_3')
-		cef   = bd.findInProj( project,'EquateFunc_2_3')
-		cei   = bd.findInProj( project,'EquateInt_2_3')
-		cli   = bd.findInProj( project,'LinkIntA_1_3')
-		cl2   = bd.findInProj( project,'LinkIntB_1_3')
-		
-		# test cr1, mr1 with no conns
-		assert cr1.PartOfConns.Count == 0
-		assert mr1.PartOfConns.Count == 0
-
-		# test the LinkIntB_1_3 connection
-		# created like: cl2 = bd.connectRefP( p, conf1, ir1, iref3, 0, mr1, "LINK_Interfaces")
-		assert ir1.PartOfConns.Count == 1
-		assert ir1.PartOfConns.Item( 1 ).Target == ir1
-		assert ir1.PartOfConns.Item( 1 ).Owner      == cl2
-		assert ir1.PartOfConns.Item( 1 ).Owner.Name == "LinkIntB_1_3"
-		assert ir1.PartOfConns.Item( 1 ).ConnRole == "src"
-		assert ir1.PartOfConns.Item( 1 ).References.Count == 0
-		
-		for cp in ir1.PartOfConns.Item( 1 ).Owner.ConnPoints:
-			assert cp.Owner == cl2
-			if cp.ConnRole == "src":
-				assert cp.Target == ir1
-				assert cp.References.Count == 0
-			elif cp.ConnRole == "dst":
-				assert cp.Target == iref3
-				assert cp.References.Count == 1
-				assert cp.References.Item( 1 ) == mr1
-			else:
-				self.fail("How?")
-
-		
-		# test 'LinkFunc_1_3'
-		# created like:
-		# clf = bd.connectRefP( p, conf1, fbi1, fbi3, cr1, mr1, "LINK_Functions")
-		for cp in clf.ConnPoints:
-			assert cp.Owner == clf
-			assert cp.References.Count == 1
-			if cp.ConnRole == "src":
-				assert cp.Target == fbi1
-				assert cp.References.Item( 1 ) == cr1
-			elif cp.ConnRole == "dst":
-				assert cp.Target == fbi3
-				assert cp.References.Item( 1 ) == mr1
-			else: self.fail("How?")
-		
-		# test 'EquateFunc_2_3'
-		# created like:
-		# cef = bd.connectRefP( p, conf1, fbi2, fbi3, cr1, mr1, "EQUATE_Functions")
-		for cp in cef.ConnPoints:
-			assert cp.Owner == cef
-			assert cp.References.Count == 1
-			if cp.ConnRole == "src":
-				assert cp.Target == fbi2
-				assert cp.References.Item( 1 ) == cr1
-			elif cp.ConnRole == "dst":
-				assert cp.Target == fbi3
-				assert cp.References.Item( 1 ) == mr1
-			else: self.fail("How?")
-		
-		
-		# test 'EquateInt_2_3'
-		# created like:
-		# cei = bd.connectRefP( p, conf1, iref2, iref3, cr1, mr1, "EQUATE_Interfaces")
-		for cp in cei.ConnPoints:
-			assert cp.Owner == cei
-			assert cp.References.Count == 1
-			if cp.ConnRole == "src":
-				assert cp.Target == iref2
-				assert cp.References.Item( 1 ) == cr1
-			elif cp.ConnRole == "dst":
-				assert cp.Target == iref3
-				assert cp.References.Item( 1 ) == mr1
-			else: self.fail("How?")
-
-		# test 'LinkIntA_1_3'
-		# created like:
-		# cli = bd.connectRefP( p, conf1, iref1, iref3, cr1, mr1, "LINK_Interfaces")
-		for cp in cli.ConnPoints:
-			assert cp.Owner == cli
-			assert cp.References.Count == 1
-			if cp.ConnRole == "src":
-				assert cp.Target == iref1
-				assert cp.References.Item( 1 ) == cr1
-			elif cp.ConnRole == "dst":
-				assert cp.Target == iref3
-				assert cp.References.Item( 1 ) == mr1
-			else: self.fail("How?")
-
-
-		# abort trans (thus revert any changes)
-		project.AbortTransaction()
-		
-		project.Save()
-		project.Close(0)
-		
-		pass
 
 """
 	Let's produce the test suites

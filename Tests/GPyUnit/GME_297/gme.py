@@ -337,7 +337,7 @@ def cast(fco):
 # KMS I'm not sure why gen_py lowercases these (for GME<VS2010). Create aliases:
 if mga_module.IMgaReference._prop_map_get_.has_key("referred"):
     mga_module.IMgaReference._prop_map_get_["Referred"] = mga_module.IMgaReference._prop_map_get_["referred"]
-mga_module.IMgaConnPoint._prop_map_get_["Target"] = mga_module.IMgaConnPoint._prop_map_get_["target"]
+#mga_module.IMgaConnPoint._prop_map_get_["Target"] = mga_module.IMgaConnPoint._prop_map_get_["target"]
 # Make IMgaFolder behave more like IMgaFCO
 mga_module.IMgaFolder._prop_map_get_["Meta"] = mga_module.IMgaFolder._prop_map_get_["MetaFolder"]
 

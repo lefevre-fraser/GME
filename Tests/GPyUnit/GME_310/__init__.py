@@ -19,6 +19,9 @@ class TestFolderCopy(unittest.TestCase):
         '''
         Regression test: given self.input_file, move self.folder_to_copy to self.destination_folder. Then check self.output_file against self.correct_file
         '''
+        def _adjacent_file(file):
+            import os.path
+            return os.path.join(os.path.dirname(__file__), file)
         # This script depends on late binding. win32com.client.dynamic.Dispatch forces late binding when creating an object,
         # but early-bound objects may be returned from function calls. Disable late binding completely.
         import win32com.client.gencache
@@ -26,7 +29,7 @@ class TestFolderCopy(unittest.TestCase):
         win32com.client.gencache.GetClassForCLSID = lambda x: None
 
         self.project = win32com.client.DispatchEx("Mga.MgaProject")
-        self.project.Open("MGA=" + self.input_file)
+        self.project.Open("MGA=" + _adjacent_file(self.input_file))
         self.territory = self.project.BeginTransactionInNewTerr()
 
         modelb = self.project.ObjectByPath(self.folder_to_copy)
@@ -37,12 +40,12 @@ class TestFolderCopy(unittest.TestCase):
         self.project.RootFolder.CopyFolders(tomove, None)
 
         self.project.CommitTransaction()
-        self.project.Save("MGA=" + self.output_file)
+        self.project.Save("MGA=" + _adjacent_file(self.output_file))
         self.territory.Destroy()
 
         win32com.client.gencache.GetClassForCLSID = _savedGetClassForCLSID
         import mgadiff
-        if not mgadiff.compare(self.correct_file, self.output_file):
+        if not mgadiff.compare(_adjacent_file(self.correct_file), _adjacent_file(self.output_file)):
             self.fail("Reference file '%s' does not match output '%s'" % (self.correct_file, self.output_file))
         #print "Reference file '%s' matches output '%s'" % (self.correct_file, self.output_file)
 

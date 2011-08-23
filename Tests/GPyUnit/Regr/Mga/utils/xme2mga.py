@@ -55,8 +55,6 @@ def doit( source, target):
 			    p = j[ u + 1 : ]
 			    if p == 'sf':
 			        paradigm = "SF"
-			    elif p == 'gr':
-			        paradigm = "GRATISII"
 			    elif p == 'fl':
 			        paradigm = "FloatAttr"
 			    elif p == 'me':

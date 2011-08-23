@@ -122,12 +122,9 @@ def creaP(mganame, parad):
 	# if os.path.isfile( mganame):
 	#	os.remove( mganame)
 
-	try:
-		project.Create( "MGA=" + mganame, parad)
-		project.BeginTransaction( project.CreateTerritory( None, None, None), 0)
-		return project
-	except:
-		return 0
+	project.Create( "MGA=" + mganame, parad)
+	project.BeginTransaction( project.CreateTerritory( None, None, None), 0)
+	return project
 
 def saveP(project):
 	try:

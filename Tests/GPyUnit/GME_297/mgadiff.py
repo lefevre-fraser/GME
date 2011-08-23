@@ -48,7 +48,7 @@ def compare2(project1, project2):
             connectionEndpointsEqual = True
             if current1.ObjType == 4 and current2.ObjType == 4:
                 def mapConnpoints(conn):
-                    ret = map(lambda point: (point.ConnRole, [fco_path(point.target), map(fco_path, point.References)]), conn.ConnPoints)
+                    ret = map(lambda point: (point.ConnRole, [fco_path(point.Target), map(fco_path, point.References)]), conn.ConnPoints)
                     return dict(ret)
                 connectionEndpointsEqual = mapConnpoints(current1) == mapConnpoints(current2)
                 # Debugging aid:
@@ -203,7 +203,7 @@ def compareAssoc(*current):
     for index in range(len(current)):
         array.append(dict())
         for point in current[index]:
-            array[index][point.ConnRole]="%s %s" % (point.target.Name,point.target.AbsPath)
+            array[index][point.ConnRole]="%s %s" % (point.Target.Name,point.Target.AbsPath)
     
     for index in range(len(current)-1):
         if(array[index] != array[index+1]):
