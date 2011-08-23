@@ -86,7 +86,9 @@ STDMETHODIMP CMgaTerritory::Destroy() {
 	COMTRY {
 		if (!coreterr) 
 			return E_MGA_TARGET_DESTROYED;
-		COMTHROW(Flush());
+		// n.b. Flush fails if the project has been closed, but if we're being destructed, we must still remove
+		// this from allterrs, or MgaProject::~MgaProject will crash (as allterrs does not count references)
+		HRESULT hr = Flush();
 		CMgaProject::tercoll::iterator i = mgaproject->allterrs.begin(), end = mgaproject->allterrs.end();
 		for(;i != end; ++i) {
 			if(*i == this) {
@@ -94,11 +96,12 @@ STDMETHODIMP CMgaTerritory::Destroy() {
 				coreterr = NULL;   // release CoreTerritory object
 				handler = NULL;	// release sink
 				rwhandler = NULL;	// release sink
-				return S_OK;
+				COMRETURN(hr);
 			}
 			
 		}
 		ASSERT(false);	// not found among project territories
+		COMRETURN(hr);
 	} COMCATCH(;)
 }
 
