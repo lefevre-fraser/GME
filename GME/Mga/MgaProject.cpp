@@ -314,6 +314,7 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 					CComPtr<IMgaFolder> rf;
 					COMTHROW(get_RootFolder(&rf));
 					COMTHROW(ObjFor(rf)->CheckTree());
+					rf = 0;
 					COMTHROW(CommitTransaction());
 				} catch(hresult_exception &e) {
 					lm->Flush();
@@ -427,6 +428,7 @@ STDMETHODIMP CMgaProject::Open(BSTR projectname, VARIANT_BOOL *ro_mode)
 				CComPtr<IMgaFolder> rf;
 				COMTHROW(get_RootFolder(&rf));
 				COMTHROW(ObjFor(rf)->CheckTree());
+				rf = 0;
 				COMTHROW(CommitTransaction());
 			} catch(hresult_exception &e) {
 				lm->Flush();
@@ -1306,11 +1308,14 @@ STDMETHODIMP CMgaProject::BeginTransaction(IMgaTerritory *ter, transactiontype_e
 		if(!t->coreterr) COMTHROW(E_MGA_TARGET_DESTROYED);
 		read_only = (mode == TRANSACTION_READ_ONLY);
 		non_nestable = (mode == TRANSACTION_NON_NESTED);
-		COMTHROW(dataproject->BeginTransaction(read_only? TRANSTYPE_READFIRST : TRANSTYPE_FIRST));
+		// this call fails if the project has been closed (maybe we're being called by an FCO destructor)
+		HRESULT hr = dataproject->BeginTransaction(read_only? TRANSTYPE_READFIRST : TRANSTYPE_FIRST);
+		if (FAILED(hr))
+			COMRETURN(hr);
 		checkofftemporary = false;
 		in_nested = false;
 		must_abort = false;
-		HRESULT hr = dataproject->PushTerritory(t->coreterr);
+		hr = dataproject->PushTerritory(t->coreterr);
 		if (FAILED(hr))
 			COMRETURN(hr);
 		baseterr = activeterr = t;
