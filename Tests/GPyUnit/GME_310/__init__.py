@@ -22,6 +22,9 @@ class TestFolderCopy(unittest.TestCase):
         def _adjacent_file(file):
             import os.path
             return os.path.join(os.path.dirname(__file__), file)
+        import util
+        util.register_xmp(_adjacent_file('GME310ModelRefportTest.xmp'))
+        # TODO with util.disable_early_binding()
         # This script depends on late binding. win32com.client.dynamic.Dispatch forces late binding when creating an object,
         # but early-bound objects may be returned from function calls. Disable late binding completely.
         import win32com.client.gencache
@@ -44,7 +47,7 @@ class TestFolderCopy(unittest.TestCase):
         self.territory.Destroy()
 
         win32com.client.gencache.GetClassForCLSID = _savedGetClassForCLSID
-        import mgadiff
+        import util.mgadiff as mgadiff
         if not mgadiff.compare(_adjacent_file(self.correct_file), _adjacent_file(self.output_file)):
             self.fail("Reference file '%s' does not match output '%s'" % (self.correct_file, self.output_file))
         #print "Reference file '%s' matches output '%s'" % (self.correct_file, self.output_file)

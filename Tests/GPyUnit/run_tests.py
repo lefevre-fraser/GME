@@ -7,8 +7,9 @@ _tests = unittest.defaultTestLoader.loadTestsFromNames((
  'Regr.Mga.tc1.TestCase1',
 ))
 
-import sys
-sys.stdin.readline()
+# For debugging
+#import sys
+#sys.stdin.readline()
 
 if __name__=='__main__':
     import optparse
@@ -21,7 +22,7 @@ if __name__=='__main__':
         import os.path
         with open("tests.xml", "w") as output:
             output.write("<testsuites>")
-            for test in suite(options, args)._tests:
+            for test in _tests:
                 runner = xmlrunner.XMLTestRunner(output)
                 runner.run(test)
             output.write("</testsuites>")

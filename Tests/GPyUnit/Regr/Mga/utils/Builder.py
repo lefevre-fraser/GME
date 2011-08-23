@@ -116,7 +116,9 @@ def connectRefP(p, cont, s, d, r1, r2, role_str):
 
 
 def creaP(mganame, parad):
-	project = win32com.client.Dispatch("Mga.MgaProject")
+	import util
+	util.register_xmp(parad)
+	project = win32com.client.DispatchEx("Mga.MgaProject")
 
 	# may delete old file if exists
 	# if os.path.isfile( mganame):

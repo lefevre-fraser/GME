@@ -16,3 +16,12 @@ def dec_disable_early_binding(f):
             f(*args, **kwargs)
     ret.__name__ = f.__name__
     return ret
+
+def register_xmp(xmpfile):
+    import os.path
+    predef = { 'SF': os.path.join(os.environ['GME_ROOT'], "Paradigms", "SF", "SF.xmp"), 
+    'MetaGME': os.path.join(os.environ['GME_ROOT'], "Paradigms", "MetaGME", "Paradigm", "MetaGME.xmp") }
+    if not os.path.isfile(xmpfile):
+        xmpfile = predef[xmpfile]
+    import gme
+    gme.register_if_not_registered(xmpfile)

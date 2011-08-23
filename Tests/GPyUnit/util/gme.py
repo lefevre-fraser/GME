@@ -150,7 +150,7 @@ DONT_REGISTER = 0
 def register_if_not_registered(file):
 	"Register an xme or mga if it has not already been registered"
 	if os.path.splitext(file)[1] == ".xmp":
-		if not is_registered(os.path.splitext(file)[0]):
+		if not is_registered(os.path.basename(os.path.splitext(file)[0])):
 			regxmp(file)
 		return
 	
