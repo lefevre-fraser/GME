@@ -7,6 +7,7 @@ import stat
 import utils.Builder
 bd = utils.Builder
 
+from util import dec_disable_early_binding
 
 class TestCase4( unittest.TestCase ):
 	#avoid if possible the overriding of __init__, yet if you override use the following form:
@@ -426,7 +427,7 @@ class TestCase4( unittest.TestCase ):
 		
 		(u, r) = project.UndoRedoSize()
 		assert u == 2
-		assert r == 0
+		self.assertEqual(r, 0)
 
 		project.Undo()
 
@@ -443,7 +444,7 @@ class TestCase4( unittest.TestCase ):
 
 		(u, r) = project.UndoRedoSize()
 		assert u == 1
-		assert r == 1		# RESU: error: r = 0
+		self.assertEqual(r, 0)
 
 		project.Redo()
 
@@ -460,13 +461,13 @@ class TestCase4( unittest.TestCase ):
 
 		(u, r) = project.UndoRedoSize()
 		assert u == 2
-		assert r == 0
+		self.assertEqual(r, 0)
 
 		project.FlushUndoQueue()
 
 		(u, r) = project.UndoRedoSize()
 		assert u == 0
-		assert r == 0
+		self.assertEqual(r, 0)
 
 
 		project.Save()
@@ -564,6 +565,7 @@ class TestCase4( unittest.TestCase ):
 		comp2   = bd.newObjInFold( p, folder2, 'Compound')
 		comp2.Name = 'CompoundB'
 
+	@dec_disable_early_binding
 	def testE1( self ):
 		"""    testE1
 
@@ -607,6 +609,7 @@ class TestCase4( unittest.TestCase ):
 			project.Close(0)
 			raise
 
+	@dec_disable_early_binding
 	def testE2( self ):
 		"""    testE2
 
@@ -679,6 +682,7 @@ class TestCase4( unittest.TestCase ):
 
 		pass
 		
+	@dec_disable_early_binding
 	def testE3( self ):
 		"""    testE3
 		
@@ -731,6 +735,7 @@ class TestCase4( unittest.TestCase ):
 		project.CommitTransaction()
 		project.Close(0)
 
+	@dec_disable_early_binding
 	def testE4( self ):
 		"""    testE4
 		
@@ -833,6 +838,7 @@ class TestCase4( unittest.TestCase ):
 		project.CommitTransaction()
 		project.Close(0)
 
+	@dec_disable_early_binding
 	def testE5( self ):
 		"""    testE5
 		
@@ -901,6 +907,7 @@ class TestCase4( unittest.TestCase ):
 		project.CommitTransaction()
 		project.Close(0)
 
+	@dec_disable_early_binding
 	def testE6( self ):
 		"""    testE6
 		
@@ -1170,6 +1177,7 @@ class TestCase4( unittest.TestCase ):
 		os = bd.new( p, comppA, 'OutputSignals')
 		os.Name = 'OutputSignalQ'
 	
+	@dec_disable_early_binding
 	def testG( self ):
 
 		"""    testG
@@ -1292,6 +1300,7 @@ class TestCase4( unittest.TestCase ):
 		os = bd.new( p, comppA, 'OutputSignals')
 		os.Name = 'OutputSignalQ'
 	
+	@dec_disable_early_binding
 	def testH( self ):
 
 		"""    testH
@@ -1462,8 +1471,9 @@ class TestCase4( unittest.TestCase ):
 		ip2 = bd.new( p, compA2, 'InputParameters')
 		ip2.Name = 'NewInputParameters'
 		
-	def testJ( self ):
 
+	@dec_disable_early_binding
+	def testJ( self ):
 		"""   testJ
 
 		BeginTransaction

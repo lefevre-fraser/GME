@@ -4,7 +4,11 @@ _tests = unittest.defaultTestLoader.loadTestsFromNames((
  'test_registrar',
  'GME_297.suite',
  'GME_310.suite',
- 'Regr.Mga.tc1.TestCase1',
+ 'Regr.Mga.tc1',
+ 'Regr.Mga.tc2',
+ 'Regr.Mga.tc3',
+ 'Regr.Mga.tc5',
+ 'Regr.Mga.tc6',
 ))
 
 # For debugging

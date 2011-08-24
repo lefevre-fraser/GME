@@ -6,6 +6,7 @@ import os
 import utils.Builder
 bd = utils.Builder
 
+from util import dec_disable_early_binding
 
 class TestCase5( unittest.TestCase ):
 	"""
@@ -51,6 +52,7 @@ class TestCase5( unittest.TestCase ):
 		s2 = bd.new( p, ppM1, 'OutputSignals')
 		s2.Name = 'ouSig'
 
+	@dec_disable_early_binding
 	def testB( self ):
 
 		"""    testB
@@ -167,6 +169,7 @@ class TestCase5( unittest.TestCase ):
 		
 		
 
+	@dec_disable_early_binding
 	def testC( self ):
 
 		"""    testC

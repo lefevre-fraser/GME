@@ -37,7 +37,7 @@ class TestCase3( unittest.TestCase ):
 		project.Close(0)
 
 		t = list( project.QueryProjectInfo( "MGA=" + mganame))
-		assert t[0] == 1	# mgaversion
+		self.assertEqual(t[0], 2) # mgaversion
 		assert t[1] == "SF"	# par name
 		assert t[2] == ""	# par version
 		assert t[4] == 0	# readonly access ?
@@ -85,7 +85,7 @@ class TestCase3( unittest.TestCase ):
 		project.Close(0)
 
 		t = list( project.QueryProjectInfo( "MGA=" + mganame))
-		assert t[0] == 1	# mgaversion
+		self.assertEqual(t[0], 2) # mgaversion
 		assert t[1] == "SF"	# par name
 		assert t[2] == ""	# par version
 		assert t[4] == 0	# readonly access ?
