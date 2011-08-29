@@ -505,6 +505,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_VIEW_FOCUSBROWSER, OnFocusBrowser)
 	ON_COMMAND(ID_VIEW_FOCUSINSPECTOR, OnFocusInspector)
 	ON_COMMAND(ID_VIEW_CYCLEASPECTKEY, OnCycleAspect)
+	ON_COMMAND(ID_VIEW_CYCLEASPECTBACKWARDSKEY, OnCycleAspectBackwards)
 	ON_COMMAND(ID_VIEW_CYCLEALLASPECTS, OnCycleAllAspects)
 	ON_COMMAND(ID_VIEW_HISTORYBACKKEY, OnHistoryBack)
 	ON_COMMAND(ID_VIEW_HISTORYFORWKEY, OnHistoryForw)
@@ -10164,6 +10165,22 @@ void CGMEView::OnCycleAspect()
 	if( aspNum <= 1) return; // if 1 aspect no reason for continuing
 
 	ChangeAspect( (currentAspect->index + 1) % aspNum);
+	// statement above changes the currentAspect->index to the new value
+	if( CMainFrame::theInstance)
+		CMainFrame::theInstance->ChangePartBrowserAspect( currentAspect->index);
+}
+
+// called when TAB is pressed
+void CGMEView::OnCycleAspectBackwards()
+{
+	ASSERT( currentAspect);
+	ASSERT( guiMeta);
+	if( !currentAspect || !guiMeta) return;
+	int aspNum = guiMeta->aspects.GetCount();
+	ASSERT( aspNum >= 1);
+	if( aspNum <= 1) return; // if 1 aspect no reason for continuing
+
+	ChangeAspect( (currentAspect->index - 1 + aspNum) % aspNum);
 	// statement above changes the currentAspect->index to the new value
 	if( CMainFrame::theInstance)
 		CMainFrame::theInstance->ChangePartBrowserAspect( currentAspect->index);

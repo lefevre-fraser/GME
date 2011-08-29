@@ -636,6 +636,7 @@ protected:
 	afx_msg void OnFocusBrowser();
 	afx_msg void OnFocusInspector();
 	afx_msg void OnCycleAspect();
+	afx_msg void OnCycleAspectBackwards();
 	afx_msg void OnCycleAllAspects();
 	afx_msg void OnHistoryBack();
 	afx_msg void OnHistoryForw();
