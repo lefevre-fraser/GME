@@ -1304,7 +1304,11 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 			hres = decor.CoCreateInstance(PutInBstr(progId));
 		}
 		if (FAILED(hres)) {	// fall back to default decorator
-			CMainFrame::theInstance->m_console.Message(_T("Cannot create ") + progId + _T(" decorator! Trying default (") + GME_DEFAULT_DECORATOR + _T(") decorator."), 3);
+			if (this->view->uncreatableDecorators.find(progId) == this->view->uncreatableDecorators.end())
+			{
+				CMainFrame::theInstance->m_console.Message(_T("Cannot create ") + progId + _T(" decorator! Trying default (") + GME_DEFAULT_DECORATOR + _T(") decorator."), 3);
+				this->view->uncreatableDecorators.insert(progId);
+			}
 			progId = GME_DEFAULT_DECORATOR;
 			COMTHROW(newDecor.CoCreateInstance(PutInBstr(progId)));
 		}

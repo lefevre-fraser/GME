@@ -141,6 +141,7 @@ public:
 	CPoint					dragPoint;
 	CPoint					dragOffset;
 	CPoint					contextMenuLocation;
+	std::set<CString> uncreatableDecorators;
 
 	CComPtr<IMgaTerritory>	terry;
 	CComPtr<IMgaModel>		currentModel;
