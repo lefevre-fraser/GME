@@ -17,6 +17,8 @@ namespace GME.CSharp
 		// Specify an icon path
 		public const string iconName = "$iconname$";
         
+		public const string tooltip = "$progid$";
+
 		// If null, updated with the assembly path + the iconName dynamically on registration
         public static string iconPath = $iconpath$; 
         
