@@ -2141,10 +2141,12 @@ STDMETHODIMP CMgaRegistrar::get_AssociatedParadigms(BSTR progid, regaccessmode_e
 		CString progidstr = PutInCString(progid);
 
 		VARIANT all_paradigms_;
+		VariantInit(&all_paradigms_);
 		COMTHROW(get_Paradigms(REGACCESS_BOTH, &all_paradigms_));
 		ATL::CComSafeArray<BSTR> all_paradigms;
 		all_paradigms.Attach(all_paradigms_.parray);
-		for (ULONG i = 0; i < all_paradigms.GetCount(); i++) {
+		ASSERT(all_paradigms.GetDimensions() == 1);
+		for (LONG i = all_paradigms.GetLowerBound(); i <= all_paradigms.GetUpperBound(); i++) {
 			BSTR paradigm = all_paradigms.GetAt(i);
 			if (IsAssociated_regaccess(progidstr, PutInCString(paradigm), mode)) {
 				ret.Add(static_cast<const CString&>(PutInCString(paradigm)));
@@ -2306,20 +2308,11 @@ STDMETHODIMP CMgaRegistrar::RegisterComponentLibrary(BSTR path, regaccessmode_en
 		if( DLLRegisterServer == NULL )
 		{
 			FreeLibrary(hModule);
-			//CLR dll:
-			// If we're being hosted by dllhost.exe (e.g. via UACUtils::CreateElevatedInstance), GME.exe.config doesn't have any effect
-			// Try to load the v4 runtime
-			CComPtr<IUnknown> v4;
-			v4.CoCreateInstance(L"System.Management.Instrumentation.ManagedCommonProvider");
-			using namespace MgaDotNetServices;
-			CComPtr<_Registrar> reg;
-			COMTHROW(reg.CoCreateInstance(L"MGA.DotNetRegistrar"));
-			try {
-				reg->Register(_bstr_t(path));
-			} catch (_com_error& e) {
-				SetErrorInfo(e.Error(), e.Description());
-				return e.Error();
-			}
+		    using namespace MgaDotNetServices;
+			_RegistrarPtr reg;
+			COMTHROW(reg.CreateInstance(L"MGA.DotNetRegistrar"));
+			//COMTHROW(reg.CreateInstance(L"{0BB0C371-6835-4F09-A156-0BD8E3DF8216}", NULL, CLSCTX_INPROC));
+			reg->Register(_bstr_t(path));
 
 			return S_OK;
 		}
