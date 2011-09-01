@@ -7,6 +7,7 @@
 #endif
 
 #include "afxtempl.h"
+#include "comdef.h"
 
 // --------------------------- CString
 
@@ -268,6 +269,15 @@ void DisplayError(const TCHAR *msg, HRESULT hr) NOTHROW;
 	{ \
 		{ CLEANUP; } \
 		DisplayError(MSG, e.hr); \
+	} \
+	catch(_com_error &e) { \
+		{ CLEANUP; } \
+		_bstr_t error; \
+		if (e.Description() != _bstr_t()) \
+			error = e.Description(); \
+		else \
+			GetErrorInfo(e.Error(), error.GetAddress()); \
+		AfxMessageBox(_bstr_t(MSG) + ": " + error, MB_OK | MB_ICONSTOP); \
 	}
 
 #endif//MGA_COMMONMFC_H

@@ -7134,8 +7134,8 @@ void CGMEView::RunComponent(CString compname)
 	GMEEVENTLOG_GUIFCOS(selected);
 	MSGTRY
 	{
-		CComObjPtr<IMgaLauncher> launcher;
-		COMTHROW( launcher.CoCreateInstance(L"Mga.MgaLauncher") );
+		IMgaLauncherPtr launcher;
+		COMTHROW( launcher.CreateInstance(L"Mga.MgaLauncher") );
 		if(!launcher) {
 			AfxMessageBox(_T("Cannot start up component launcher"));
 			CGMEEventLogger::LogGMEEvent(_T("    Cannot start up component launcher.\r\n"));
@@ -7152,10 +7152,7 @@ void CGMEView::RunComponent(CString compname)
 			}
 
 			if(theApp.bNoProtect) COMTHROW( launcher->put_Parameter(CComVariant(true)));
-			if(launcher->RunComponent(NULL, theApp.mgaProject, focus, selfcos, GME_MAIN_START) != S_OK) {
-				AfxMessageBox(_T("Component execution failed"));
-				CGMEEventLogger::LogGMEEvent(_T("    Component execution failed.\r\n"));
-			}
+			launcher->__RunComponent(_bstr_t(), theApp.mgaProject, focus, selfcos, GME_MAIN_START);
 		}
 	}
 	MSGCATCH(_T("Error while trying to run the interpreter"),;)

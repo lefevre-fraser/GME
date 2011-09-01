@@ -2641,8 +2641,8 @@ void CGMEApp::OnRunInterpreter(UINT nID) {
 void CGMEApp::RunComponent(const CString &compname)
 {
 
-	CComPtr<IMgaLauncher> launcher;
-	launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher") );
+	IMgaLauncherPtr launcher;
+	launcher.CreateInstance(L"Mga.MgaLauncher");
 	if(!launcher) {
 		AfxMessageBox(_T("Cannot start up component launcher"));
 	}
