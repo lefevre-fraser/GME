@@ -139,3 +139,46 @@ enum mgaerrors
 enum mgautil_error
     {	E_MGAUTIL_COMPONENTPROXY_NOTINITIALIZED	= 0x80737001
     } 	mgautil_error;
+
+
+typedef unsigned long feature_code;
+const unsigned long F_RESIZABLE	= 1<<0;
+const unsigned long	F_MOUSEEVENTS =	1<<1;
+const unsigned long	F_HASLABEL =	1<<2;
+const unsigned long	F_HASSTATE = 1<<3;
+const unsigned long	F_HASPORTS = 1<<4;
+const unsigned long	F_ANIMATION = 1<<5;
+const unsigned long	F_IMGPATH = 1<<6;
+const unsigned long	F_RESIZEAFTERMOD = 1<<7;
+
+
+typedef enum decorator_error {
+	E_DECORATOR_UNKNOWN_PARAMETER	=	0x80737001,
+	E_DECORATOR_INIT_WITH_NULL	=	0x80737002,
+	E_DECORATOR_UNINITIALIZED	=	0x80737003,
+	E_DECORATOR_LOCISNOTSET = 0x80737004,
+	E_DECORATOR_PORTNOTFOUND	=	0x80737005,
+	E_DECORATOR_USING_DEPRECATED_FUNCTION	= 0x80737006,
+	E_DECORATOR_NOT_IMPLEMENTED	= 0x80737007,
+	S_DECORATOR_EVENT_HANDLED	= 0x00737001,
+	S_DECORATOR_EVENT_NOT_HANDLED	= 0x00737002
+} decorator_error;
+
+
+typedef enum component_startmode_enum {
+	GME_MAIN_START		= 0,
+	GME_BROWSER_START	= 1,
+	GME_CONTEXT_START	= 2,
+	GME_EMBEDDED_START  = 3,
+	GME_MENU_START		= 16,
+	GME_BGCONTEXT_START = 18,
+	GME_ICON_START		= 32, 
+	METAMODEL_CHECK_SYNTAX  = 101,
+	CONSTMGR_SHOW_CONSTRAINTS = 102,
+	GME_SILENT_MODE		= 128
+} component_startmode_enum;
+
+typedef enum inserttype_enum {
+	ADDITION = 0,
+	MERGE    = 1
+} inserttype_enum;

@@ -29,8 +29,8 @@ class CGuiAnnotator;
 
 class ATL_NO_VTABLE CAnnotatorEventSink :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CAnnotatorEventSink, &CLSID_AnnotatorEventSink>,
-	public ISupportErrorInfoImpl<&IID_IMgaElementDecoratorEvents>,
+	public CComCoClass<CAnnotatorEventSink, &__uuidof(AnnotatorEventSink)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaElementDecoratorEvents)>,
 	public IMgaElementDecoratorEvents
 {
 protected:

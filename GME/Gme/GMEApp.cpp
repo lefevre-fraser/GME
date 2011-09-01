@@ -7,9 +7,6 @@
 #include "GMEVersion.h"
 
 
-#include "Gme_i.c"
-#include "GmeLib_i.c"
-#include "MgaLib_i.c"
 #include "Parser.h"
 
 #include "GMEstd.h"
@@ -173,7 +170,7 @@ public:
 			else { AfxMessageBox(_T("Registration error: ") + hr); exit(-1); }
 		}
 		else if(bFlag && !strcmp(pszParam, "UNREGSERVER")) {
-			HRESULT hr = UnRegisterTypeLib(LIBID_GmeLib, 1, 0, LANG_NEUTRAL, SYS_WIN32);
+			HRESULT hr = UnRegisterTypeLib(__uuidof(__GmeLib), 1, 0, LANG_NEUTRAL, SYS_WIN32);
 			if(hr == S_OK) { AfxMessageBox(_T("Unregistered")); exit(0); }
 			else { AfxMessageBox(_T("Unregistration error: ") + hr); exit(-1); }
 		}
@@ -417,7 +414,7 @@ BOOL CGMEApp::InitInstance()
 	COleObjectFactory::UpdateRegistryAll();
 	
 	// Make sure the type library is registered or dual interface won't work.
-	AfxOleRegisterTypeLib(AfxGetInstanceHandle(), LIBID_GmeLib);
+	AfxOleRegisterTypeLib(AfxGetInstanceHandle(), __uuidof(__GmeLib));
 
 	// We don't want a new document at startup
 	if( cmdInfo.m_nShellCommand == CCommandLineInfo::FileNew )
@@ -744,7 +741,7 @@ void CGMEApp::UpdateProjectName(bool retrievePath) {
 
 
 		CComObjPtr<IMgaTerritory> terry;
-		COMTHROW(mgaProject->CreateTerritory(NULL, PutOut(terry)) );
+		COMTHROW(mgaProject->CreateTerritory(NULL, PutOut(terry), NULL) );
 		CComBSTR nm;
 	
 		MSGTRY
@@ -1433,7 +1430,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 				int answer = AfxMessageBox(_T("The paradigm used to open this file is not the current version\n")
 								_T("Do you want to upgrade to the current paradigm?")	,MB_YESNO);
 				if(answer == IDYES) {
-					COMTHROW(mgaProject->Close());
+					COMTHROW(mgaProject->Close(VARIANT_FALSE));
 
 					// PETER: Create new MgaProject COM object (workaround MGA addon bug)
 					mgaProject.Release();
@@ -1512,7 +1509,7 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 
 void CGMEApp::SaveProject(const CString &conn) {
 	if( mgaProject != NULL ) {
-		HRESULT hr = mgaProject->Save(CComBSTR(conn));
+		HRESULT hr = mgaProject->Save(CComBSTR(conn), VARIANT_FALSE);
 		if(hr != S_OK) {
 			AfxMessageBox(_T("ERROR: Could not save project\nCheck access permissions"));
 		}
@@ -1857,7 +1854,7 @@ bool CGMEApp::SafeCloseProject() {
 // In case of an MGA file, try to save it first to find out 
 	abort_on_close = false;
 	if(mgaProject != NULL && (proj_type_is_mga||proj_type_is_xmlbackend)) {
-		HRESULT hr = mgaProject->Save(NULL);
+		HRESULT hr = mgaProject->Save(NULL, VARIANT_FALSE);
 		if(hr != S_OK) {
 			AfxMessageBox(_T("ERROR: Could not save project\nCheck access permissions"));
 			return false;
@@ -3083,7 +3080,7 @@ void CGMEApp::OnFocusBrowser()
 	if( !mgaProject) return;
 
 	CComObjPtr<IMgaTerritory> terry;
-	COMTHROW(mgaProject->CreateTerritory(NULL, PutOut(terry)) );
+	COMTHROW(mgaProject->CreateTerritory(NULL, PutOut(terry), NULL) );
 
 	LPUNKNOWN objs = CGMEObjectInspector::theInstance->GetObjects();
 	CComQIPtr<IMgaObjects> one_obj_coll( objs);

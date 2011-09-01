@@ -1134,6 +1134,7 @@ void CAutoRouterEdgeList::Insert(CAutoRouterEdge* edge)
 	ASSERT( ED_MINCOORD <= y && y <= ED_MAXCOORD );
 
 	CAutoRouterEdge* insert = order_first;
+	// FIXME: std::sort would be better than insertion sort
 	while( insert && insert->GetPositionY() < y )
 		insert = insert->GetOrderNext();
 

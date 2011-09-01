@@ -997,7 +997,7 @@ void CGMEView::OnInitialUpdate()
 	CComPtr<IMgaFCO> centerObj;
 
 	try {
-		COMTHROW(theApp.mgaProject->CreateTerritory(driver,&terry));
+		COMTHROW(theApp.mgaProject->CreateTerritory(driver,&terry, NULL));
 		BeginTransaction(TRANSACTION_READ_ONLY);
 
 		{
@@ -1007,7 +1007,7 @@ void CGMEView::OnInitialUpdate()
 		   COMTHROW(ob->QueryInterface(&currentModel));
 		}
 
-		COMTHROW(currentModel->Open());
+		COMTHROW(currentModel->Open(OPEN_READ));
 		COMTHROW(currentModel->get_Name(PutOut(name)));
 		CComPtr<IMgaMetaFCO> meta;
 		COMTHROW(currentModel->get_Meta(&meta));
@@ -2335,7 +2335,7 @@ void CGMEView::RetrievePath()
 		CComPtr<IMgaObject> spObject = currentModel.p;
 		while ( true ) {
 			CComPtr<IMgaObject> spParent;
-			if ( SUCCEEDED( spObject->GetParent( &spParent ) ) && spParent ) {;
+			if ( SUCCEEDED( spObject->GetParent( &spParent, NULL ) ) && spParent ) {;
 				CComBSTR bstrName;
 				COMTHROW( spParent->get_Name( &bstrName ) );
 				path = CString( bstrName ) + _T("/") + path;
@@ -5405,7 +5405,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 						COMTHROW(ref->get_Referred(&referred));
 						if(referred)
 						{
-							COMTHROW(referred->GetParent(&obj));
+							COMTHROW(referred->GetParent(&obj, NULL));
 							COMTHROW(referred->get_ID( &referred_id));
 						}
 						CommitTransaction();
@@ -10108,7 +10108,7 @@ void CGMEView::OnShowSelectedModel()
 							else
 							{
 								CComPtr<IMgaObject> parent;
-								COMTHROW( next_fco->GetParent( &parent));
+								COMTHROW( next_fco->GetParent( &parent, NULL));
 								
 								if( parent)
 								{

@@ -29,8 +29,8 @@ class CGuiObject;
 
 class ATL_NO_VTABLE CDecoratorEventSink :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDecoratorEventSink, &CLSID_DecoratorEventSink>,
-	public ISupportErrorInfoImpl<&IID_IMgaElementDecoratorEvents>,
+	public CComCoClass<CDecoratorEventSink, &__uuidof(DecoratorEventSink)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaElementDecoratorEvents)>,
 	public IMgaElementDecoratorEvents
 {
 protected:

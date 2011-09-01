@@ -53,7 +53,7 @@ BOOL CParadigmPropertiesDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	CComObjPtr<IMgaTerritory> terry;
-	COMTHROW( theApp.mgaProject->CreateTerritory(NULL, PutOut(terry)) );
+	COMTHROW( theApp.mgaProject->CreateTerritory(NULL, PutOut(terry), NULL) );
 	try {
 		theApp.mgaProject->BeginTransaction(terry,TRANSACTION_READ_ONLY);
 		CComPtr<IMgaMetaProject> metaProject;

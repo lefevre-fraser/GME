@@ -651,7 +651,7 @@ protected:
 
 class ATL_NO_VTABLE CViewDriver :
 		public CComObjectRootEx<CComSingleThreadModel>,
-		public IDispatchImpl<IMgaEventSink, &IID_IMgaEventSink, &LIBID_MGALib>
+		public IDispatchImpl<IMgaEventSink, &__uuidof(IMgaEventSink), &__uuidof(__MGALib)>
 {
 public:
 	CViewDriver() { }

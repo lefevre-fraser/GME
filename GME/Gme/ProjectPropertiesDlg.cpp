@@ -56,7 +56,7 @@ END_MESSAGE_MAP()
 void CProjectPropertiesDlg::OnOK() 
 {
 	CComObjPtr<IMgaTerritory> terry;
-	COMTHROW( theApp.mgaProject->CreateTerritory(NULL, PutOut(terry)) );
+	COMTHROW( theApp.mgaProject->CreateTerritory(NULL, PutOut(terry), NULL) );
 	try {
 		COMTHROW(theApp.mgaProject->BeginTransaction(terry,TRANSACTION_GENERAL));
 		{
@@ -106,7 +106,7 @@ BOOL CProjectPropertiesDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	CComObjPtr<IMgaTerritory> terry;
-	COMTHROW( theApp.mgaProject->CreateTerritory(NULL, PutOut(terry)) );
+	COMTHROW( theApp.mgaProject->CreateTerritory(NULL, PutOut(terry), NULL) );
 	try {
 		theApp.mgaProject->BeginTransaction(terry,TRANSACTION_READ_ONLY);
 		{

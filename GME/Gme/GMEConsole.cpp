@@ -103,6 +103,7 @@ void CGMEConsole::Clear()
 
 void CGMEConsole::Message(CString str, short type)
 {
+	// ShowPane(TRUE, FALSE, TRUE);
 	m_Console.Message(str, type);
 }
 

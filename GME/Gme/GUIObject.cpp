@@ -2837,7 +2837,7 @@ void CGuiConnection::RefreshAttributeCache()
 		else if (tp == ATTVAL_REFERENCE) {
 			aval = _T("Reference attr. label not supported");	// Sorry, maybe later
 		}
-		else if (tp == ATTVAL_ENUM) {
+		else if (tp == _attval_enum) {
 			VERIFY(attrValue.vt == VT_BSTR);
 			CString attrValueStr(attrValue.bstrVal);
 			/* CGuiMenuCtrl *guiMenuCtrl = dynamic_cast<CGuiMenuCtrl *>(guiMetaAttr->depCtrl);

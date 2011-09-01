@@ -66,7 +66,7 @@ END_DISPATCH_MAP()
 
 
 BEGIN_INTERFACE_MAP(CGMEOLEPanel, CCmdTarget)
-	INTERFACE_PART(CGMEOLEPanel, IID_IGMEOLEPanel, Dual)
+	INTERFACE_PART(CGMEOLEPanel, __uuidof(IGMEOLEPanel), Dual)
 	DUAL_ERRORINFO_PART(CGMEOLEPanel)
 END_INTERFACE_MAP()
 
@@ -133,14 +133,14 @@ DELEGATE_DUAL_INTERFACE(CGMEOLEPanel, Dual)
 
 // Implement ISupportErrorInfo to indicate we support the
 // OLE Automation error handler.
-IMPLEMENT_DUAL_ERRORINFO(CGMEOLEPanel, IID_IGMEOLEAspect)
+IMPLEMENT_DUAL_ERRORINFO(CGMEOLEPanel, __uuidof(IGMEOLEPanel))
 
 
 STDMETHODIMP CGMEOLEPanel::XDual::get_Name(BSTR* name)
 {
 	METHOD_PROLOGUE(CGMEOLEPanel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEPanel)
+	TRY_DUAL(__uuidof(IGMEOLEPanel))
 	{
 		CString str = pThis->GetName();
 		str.SetSysString(name);
@@ -154,7 +154,7 @@ STDMETHODIMP CGMEOLEPanel::XDual::put_Visible(VARIANT_BOOL isVisible)
 {
 	METHOD_PROLOGUE(CGMEOLEPanel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEPanel)
+	TRY_DUAL(__uuidof(IGMEOLEPanel))
 	{
 		pThis->SetVisible(isVisible);
 		return NOERROR;
@@ -167,7 +167,7 @@ STDMETHODIMP CGMEOLEPanel::XDual::get_Visible(VARIANT_BOOL* isVisible)
 {
 	METHOD_PROLOGUE(CGMEOLEPanel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEPanel)
+	TRY_DUAL(__uuidof(IGMEOLEPanel))
 	{
 		*isVisible = (pThis->GetVisible() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
 		return NOERROR;
@@ -179,7 +179,7 @@ STDMETHODIMP CGMEOLEPanel::XDual::get_Interface(IDispatch** interf)
 {
 	METHOD_PROLOGUE(CGMEOLEPanel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEPanel)
+	TRY_DUAL(__uuidof(IGMEOLEPanel))
 	{
 		*interf = pThis->GetInterface();
 		return NOERROR;

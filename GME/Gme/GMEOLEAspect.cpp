@@ -91,7 +91,7 @@ END_DISPATCH_MAP()
 
 
 BEGIN_INTERFACE_MAP(CGMEOLEAspect, CCmdTarget)
-	INTERFACE_PART(CGMEOLEAspect, IID_IGMEOLEAspect, Dual)
+	INTERFACE_PART(CGMEOLEAspect, __uuidof(IGMEOLEAspect), Dual)
 	DUAL_ERRORINFO_PART(CGMEOLEAspect)
 END_INTERFACE_MAP()
 
@@ -156,16 +156,16 @@ DELEGATE_DUAL_INTERFACE(CGMEOLEAspect, Dual)
 
 // Implement ISupportErrorInfo to indicate we support the
 // OLE Automation error handler.
-IMPLEMENT_DUAL_ERRORINFO(CGMEOLEAspect, IID_IGMEOLEAspect)
+IMPLEMENT_DUAL_ERRORINFO(CGMEOLEAspect, __uuidof(IGMEOLEAspect))
 
 STDMETHODIMP CGMEOLEAspect::XDual::get_MgaAspect(IMgaMetaAspect** aspect)
 {
 	METHOD_PROLOGUE(CGMEOLEAspect, Dual)
 
-	TRY_DUAL(IID_IGMEOLEAspect)
+	TRY_DUAL(__uuidof(IGMEOLEAspect))
 	{
 		LPDISPATCH lpDisp = pThis->GetMgaAspect();
-		lpDisp->QueryInterface(IID_IMgaMetaAspect, (LPVOID*)aspect);
+		lpDisp->QueryInterface(__uuidof(IMgaMetaAspect), (LPVOID*)aspect);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -175,7 +175,7 @@ STDMETHODIMP CGMEOLEAspect::XDual::put_Active(VARIANT_BOOL isActive)
 {
 	METHOD_PROLOGUE(CGMEOLEAspect, Dual)
 
-	TRY_DUAL(IID_IGMEOLEAspect)
+	TRY_DUAL(__uuidof(IGMEOLEAspect))
 	{
 		pThis->SetActive(isActive);
 		return NOERROR;
@@ -187,7 +187,7 @@ STDMETHODIMP CGMEOLEAspect::XDual::get_Active(VARIANT_BOOL* isActive)
 {
 	METHOD_PROLOGUE(CGMEOLEAspect, Dual)
 
-	TRY_DUAL(IID_IGMEOLEAspect)
+	TRY_DUAL(__uuidof(IGMEOLEAspect))
 	{
 #pragma warning(disable: 4310) // cast truncates constant value
 		*isActive = (pThis->GetActive() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
@@ -201,7 +201,7 @@ STDMETHODIMP CGMEOLEAspect::XDual::get_Valid(VARIANT_BOOL* isValid)
 {
 	METHOD_PROLOGUE(CGMEOLEAspect, Dual)
 
-	TRY_DUAL(IID_IGMEOLEAspect)
+	TRY_DUAL(__uuidof(IGMEOLEAspect))
 	{
 #pragma warning(disable: 4310) // cast truncates constant value
 		*isValid = (pThis->GetValid() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;

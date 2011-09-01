@@ -102,7 +102,7 @@ END_DISPATCH_MAP()
 
 
 BEGIN_INTERFACE_MAP(CGMEOLEModel, CCmdTarget)
-	INTERFACE_PART(CGMEOLEModel, IID_IGMEOLEModel, Dual)
+	INTERFACE_PART(CGMEOLEModel, __uuidof(IGMEOLEModel), Dual)
 	DUAL_ERRORINFO_PART(CGMEOLEModel)
 END_INTERFACE_MAP()
 
@@ -519,14 +519,14 @@ DELEGATE_DUAL_INTERFACE(CGMEOLEModel, Dual)
 
 // Implement ISupportErrorInfo to indicate we support the
 // OLE Automation error handler.
-IMPLEMENT_DUAL_ERRORINFO(CGMEOLEModel, IID_IGMEOLEModel)
+IMPLEMENT_DUAL_ERRORINFO(CGMEOLEModel, __uuidof(IGMEOLEModel))
 
 
 STDMETHODIMP CGMEOLEModel::XDual::put_Active(VARIANT_BOOL isActive)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->SetActive(isActive);
 		return NOERROR;
@@ -538,7 +538,7 @@ STDMETHODIMP CGMEOLEModel::XDual::get_Active(VARIANT_BOOL* isActive)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 #pragma warning(disable: 4310) // cast truncates constant value
 		*isActive = (pThis->GetActive() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
@@ -552,10 +552,10 @@ STDMETHODIMP CGMEOLEModel::XDual::get_Aspects(IGMEOLEColl** coll)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		LPDISPATCH lpDisp = pThis->GetAspects();
-		lpDisp->QueryInterface(IID_IGMEOLEColl, (LPVOID*)coll);
+		lpDisp->QueryInterface(__uuidof(IGMEOLEColl), (LPVOID*)coll);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -565,10 +565,10 @@ STDMETHODIMP CGMEOLEModel::XDual::get_MgaModel(IMgaModel** model)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		LPDISPATCH lpDisp = pThis->GetMgaModel();
-		lpDisp->QueryInterface(IID_IMgaModel, (LPVOID*)model);
+		lpDisp->QueryInterface(__uuidof(IMgaModel), (LPVOID*)model);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -578,7 +578,7 @@ STDMETHODIMP CGMEOLEModel::XDual::get_Valid(VARIANT_BOOL* isValid)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 #pragma warning(disable: 4310) // cast truncates constant value
 		*isValid = (pThis->GetValid() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
@@ -592,7 +592,7 @@ STDMETHODIMP CGMEOLEModel::XDual::Print()
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->Print();
 		return NOERROR;
@@ -604,7 +604,7 @@ STDMETHODIMP CGMEOLEModel::XDual::PrintDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->PrintDialog();
 		return NOERROR;
@@ -617,7 +617,7 @@ STDMETHODIMP CGMEOLEModel::XDual::DumpWindowsMetaFile(BSTR filePath)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->DumpWindowsMetaFile(CString(filePath));
 		return NOERROR;
@@ -630,7 +630,7 @@ STDMETHODIMP CGMEOLEModel::XDual::CheckConstraints()
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->CheckConstraints();
 		return NOERROR;
@@ -643,7 +643,7 @@ STDMETHODIMP CGMEOLEModel::XDual::RunComponent(BSTR appID)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->RunComponent(CString(appID));
 		return NOERROR;
@@ -656,7 +656,7 @@ STDMETHODIMP CGMEOLEModel::XDual::RunComponentDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->RunComponentDialog();
 		return NOERROR;
@@ -669,7 +669,7 @@ STDMETHODIMP CGMEOLEModel::XDual::Close()
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->Close();
 		return NOERROR;
@@ -682,7 +682,7 @@ STDMETHODIMP CGMEOLEModel::XDual::GrayOutFCO(VARIANT_BOOL bGray, VARIANT_BOOL bN
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		LPDISPATCH lpDisp = NULL;
 		mgaFCO->QueryInterface(IID_IDispatch, (LPVOID*)&lpDisp);
@@ -698,7 +698,7 @@ STDMETHODIMP CGMEOLEModel::XDual::GrayOutHide()
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->GrayOutHide();
 		return NOERROR;
@@ -710,7 +710,7 @@ STDMETHODIMP CGMEOLEModel::XDual::ShowSetMembers(IMgaFCO* mgaFCO)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		LPDISPATCH lpDisp = NULL;
 		mgaFCO->QueryInterface(IID_IDispatch, (LPVOID*)&lpDisp);
@@ -726,7 +726,7 @@ STDMETHODIMP CGMEOLEModel::XDual::HideSetMembers()
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->HideSetMembers();
 		return NOERROR;
@@ -738,7 +738,7 @@ STDMETHODIMP CGMEOLEModel::XDual::Zoom(DWORD percent)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->Zoom(percent);
 		return NOERROR;
@@ -750,7 +750,7 @@ STDMETHODIMP CGMEOLEModel::XDual::ZoomTo(IMgaFCOs* mgaFCOs)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->ZoomTo(mgaFCOs);
 		return NOERROR;
@@ -762,7 +762,7 @@ STDMETHODIMP CGMEOLEModel::XDual::Scroll(bar_enum bar, scroll_enum scroll)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->Scroll(bar, scroll);
 		return NOERROR;
@@ -775,7 +775,7 @@ STDMETHODIMP CGMEOLEModel::XDual::DumpModelGeometryXML(BSTR filePath)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		return pThis->DumpModelGeometryXML(CString(filePath));
 	}
@@ -786,7 +786,7 @@ STDMETHODIMP CGMEOLEModel::XDual::GetCurrentAspect(BSTR* aspectName)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		CComBSTR string_asp = pThis->GetCurrentAspect();
 		*aspectName = string_asp.Detach();
@@ -799,7 +799,7 @@ STDMETHODIMP CGMEOLEModel::XDual::SetCurrentAspect(BSTR aspectName)
 {
 	METHOD_PROLOGUE(CGMEOLEModel, Dual)
 
-	TRY_DUAL(IID_IGMEOLEModel)
+	TRY_DUAL(__uuidof(IGMEOLEModel))
 	{
 		pThis->SetCurrentAspect(CString(aspectName));
 		return S_OK;

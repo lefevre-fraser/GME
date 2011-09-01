@@ -330,7 +330,7 @@ void CGuiMetaFco::SetAttributes()
 			case ATTVAL_BOOLEAN:
 				mAttr = new CGuiMetaToggleAttribute(mmAttr,this);
 				break;
-			case ATTVAL_ENUM:
+			case _attval_enum:
 				mAttr = new CGuiMetaMenuAttribute(mmAttr,this);
 				break;
 			case ATTVAL_REFERENCE:

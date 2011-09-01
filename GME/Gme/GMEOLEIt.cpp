@@ -697,7 +697,7 @@ END_DISPATCH_MAP()
 
 
 BEGIN_INTERFACE_MAP(CGMEOLEIt, CCmdTarget)
-	INTERFACE_PART(CGMEOLEIt, IID_IGMEOLEIt, Dual)
+	INTERFACE_PART(CGMEOLEIt, __uuidof(IGMEOLEIt), Dual)
 	DUAL_ERRORINFO_PART(CGMEOLEIt)
 END_INTERFACE_MAP()
 
@@ -2702,7 +2702,7 @@ void CGMEOLEIt::SetSelectedFCOs( LPDISPATCH p_dispColl)
 	try
 	{
 		CComPtr<IMgaFCOs> coll;
-		p_dispColl->QueryInterface(IID_IMgaFCOs, (LPVOID*)&coll);
+		p_dispColl->QueryInterface(__uuidof(IMgaFCOs), (LPVOID*)&coll);
 		
 		long l = 0;
 		COMTHROW( coll->get_Count( &l ));
@@ -2964,17 +2964,17 @@ DELEGATE_DUAL_INTERFACE(CGMEOLEIt, Dual)
 
 // Implement ISupportErrorInfo to indicate we support the
 // OLE Automation error handler.
-IMPLEMENT_DUAL_ERRORINFO(CGMEOLEIt, IID_IGMEOLEIt)
+IMPLEMENT_DUAL_ERRORINFO(CGMEOLEIt, __uuidof(IGMEOLEIt))
 
 
 STDMETHODIMP CGMEOLEIt::XDual::get_Aspects(IGMEOLEColl** coll)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->GetAspects();
-		lpDisp->QueryInterface(IID_IGMEOLEColl, (LPVOID*)coll);
+		lpDisp->QueryInterface(__uuidof(IGMEOLEColl), (LPVOID*)coll);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -2984,7 +2984,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Print()
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Print();
 		return NOERROR;
@@ -2996,7 +2996,7 @@ STDMETHODIMP CGMEOLEIt::XDual::PrintDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->PrintDialog();
 		return NOERROR;
@@ -3009,7 +3009,7 @@ STDMETHODIMP CGMEOLEIt::XDual::DumpWindowsMetaFile(BSTR filePath)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->DumpWindowsMetaFile(CString(filePath));
 		return NOERROR;
@@ -3022,7 +3022,7 @@ STDMETHODIMP CGMEOLEIt::XDual::CheckConstraints()
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->CheckConstraints();
 		return NOERROR;
@@ -3035,7 +3035,7 @@ STDMETHODIMP CGMEOLEIt::XDual::RunComponent(BSTR appID)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->RunComponent(CString(appID));
 		return NOERROR;
@@ -3048,7 +3048,7 @@ STDMETHODIMP CGMEOLEIt::XDual::RunComponentDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->RunComponentDialog();
 		return NOERROR;
@@ -3061,7 +3061,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Close()
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Close();
 		return NOERROR;
@@ -3074,7 +3074,7 @@ STDMETHODIMP CGMEOLEIt::XDual::GrayOutFCO(VARIANT_BOOL bGray, VARIANT_BOOL bNeig
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = NULL;
 		mgaFCO->QueryInterface(IID_IDispatch, (LPVOID*)&lpDisp);
@@ -3090,7 +3090,7 @@ STDMETHODIMP CGMEOLEIt::XDual::GrayOutHide()
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->GrayOutHide();
 		return NOERROR;
@@ -3102,7 +3102,7 @@ STDMETHODIMP CGMEOLEIt::XDual::ShowSetMembers(IMgaFCO* mgaFCO)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = NULL;
 		mgaFCO->QueryInterface(IID_IDispatch, (LPVOID*)&lpDisp);
@@ -3118,7 +3118,7 @@ STDMETHODIMP CGMEOLEIt::XDual::HideSetMembers()
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->HideSetMembers();
 		return NOERROR;
@@ -3130,7 +3130,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Zoom(DWORD percent)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Zoom(percent);
 		return NOERROR;
@@ -3142,7 +3142,7 @@ STDMETHODIMP CGMEOLEIt::XDual::ZoomTo(IMgaFCOs* mgaFCOs)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->ZoomTo(mgaFCOs);
 		return NOERROR;
@@ -3154,7 +3154,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Scroll(bar_enum bar, scroll_enum scroll)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Scroll(bar, scroll);
 		return NOERROR;
@@ -3167,7 +3167,7 @@ STDMETHODIMP CGMEOLEIt::XDual::DumpModelGeometryXML(BSTR filePath)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		return pThis->DumpModelGeometryXML(CString(filePath));
 	}
@@ -3179,7 +3179,7 @@ STDMETHODIMP CGMEOLEIt::XDual::get_Valid(VARIANT_BOOL* p_isActive)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 #pragma warning(disable: 4310) // cast truncates constant value
 		*p_isActive = (pThis->GetValid() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
@@ -3193,10 +3193,10 @@ STDMETHODIMP CGMEOLEIt::XDual::get_MgaModel(IMgaModel** p_pModel)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->GetMgaModel();
-		lpDisp->QueryInterface(IID_IMgaModel, (LPVOID*)p_pModel);
+		lpDisp->QueryInterface(__uuidof(IMgaModel), (LPVOID*)p_pModel);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -3206,7 +3206,7 @@ STDMETHODIMP CGMEOLEIt::XDual::ShowFCO( BSTR directory, VARIANT_BOOL inParent)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->ShowFCO( (LPCTSTR) directory, inParent);
 		return NOERROR;
@@ -3218,7 +3218,7 @@ STDMETHODIMP CGMEOLEIt::XDual::ShowFCOPtr( IMgaFCO* child, VARIANT_BOOL inParent
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->ShowFCOPtr( child, inParent);
 		return NOERROR;
@@ -3230,10 +3230,10 @@ STDMETHODIMP CGMEOLEIt::XDual::Child( BSTR child_name, IMgaFCO** new_fco)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->Child( (LPCTSTR) child_name);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) new_fco);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) new_fco);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -3243,10 +3243,10 @@ STDMETHODIMP CGMEOLEIt::XDual::Create( BSTR part, BSTR name, IMgaFCO** new_fco)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->Create( (LPCTSTR)part, (LPCTSTR)name);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) new_fco);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) new_fco);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -3256,10 +3256,10 @@ STDMETHODIMP CGMEOLEIt::XDual::CreateInChild( BSTR child_as_parent, BSTR part, B
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->CreateInChild( (LPCTSTR) child_as_parent, (LPCTSTR) part, (LPCTSTR) name);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) new_fco);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) new_fco);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -3269,10 +3269,10 @@ STDMETHODIMP CGMEOLEIt::XDual::CreateInChildFCO( IMgaFCO* child_as_parent, BSTR 
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->CreateInChildFCO( child_as_parent, (LPCTSTR) part, (LPCTSTR) name);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) new_fco);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) new_fco);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -3282,10 +3282,10 @@ STDMETHODIMP CGMEOLEIt::XDual::Duplicate(THIS_ BSTR existing_fco_name, BSTR new_
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->Duplicate( (LPCTSTR)existing_fco_name, (LPCTSTR)new_fco_name);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) new_fco);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) new_fco);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -3295,10 +3295,10 @@ STDMETHODIMP CGMEOLEIt::XDual::DuplicateFCO(THIS_ IMgaFCO* existing_fco, BSTR ne
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->DuplicateFCO( existing_fco, (LPCTSTR)new_fco_name);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) new_fco);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) new_fco);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -3308,7 +3308,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Rename(THIS_ BSTR oldname, BSTR newname)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Rename( (LPCTSTR)oldname, (LPCTSTR)newname);
 	}
@@ -3319,7 +3319,7 @@ STDMETHODIMP CGMEOLEIt::XDual::SetName(THIS_ IMgaFCO* fco, BSTR name)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->SetName( fco, (LPCTSTR)name);
 	}
@@ -3330,7 +3330,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Include(THIS_ BSTR setname, BSTR fconame)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Include( (LPCTSTR) setname, (LPCTSTR) fconame );
 	}
@@ -3341,7 +3341,7 @@ STDMETHODIMP CGMEOLEIt::XDual::IncludeFCO(THIS_ IMgaSet* set, IMgaFCO* fco)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->IncludeFCO( set, fco );
 	}
@@ -3352,7 +3352,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Exclude(THIS_ BSTR setname, BSTR fconame)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Exclude( (LPCTSTR) setname, (LPCTSTR) fconame );
 	}
@@ -3363,7 +3363,7 @@ STDMETHODIMP CGMEOLEIt::XDual::ExcludeFCO(THIS_ IMgaSet* set, IMgaFCO* fco)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->ExcludeFCO( set, fco );
 	}
@@ -3374,10 +3374,10 @@ STDMETHODIMP CGMEOLEIt::XDual::Connect(THIS_ BSTR name1, BSTR name2, BSTR connec
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->Connect( (LPCTSTR) name1, (LPCTSTR) name2, (LPCTSTR) connection );
-		lpDisp->QueryInterface(IID_IMgaConnection, (LPVOID*) conn);
+		lpDisp->QueryInterface(__uuidof(IMgaConnection), (LPVOID*) conn);
 
 	}
 	CATCH_ALL_DUAL
@@ -3387,7 +3387,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Disconnect(THIS_  BSTR part1, BSTR part2, BSTR co
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Disconnect( (LPCTSTR) part1, (LPCTSTR) part2, (LPCTSTR) connection );
 	}
@@ -3398,10 +3398,10 @@ STDMETHODIMP CGMEOLEIt::XDual::ConnectThruPort(THIS_ BSTR part1, BSTR port1, BST
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->ConnectThruPort( (LPCTSTR) part1, (LPCTSTR) port1, (LPCTSTR) part2, (LPCTSTR) port2, (LPCTSTR) connection);
-		lpDisp->QueryInterface(IID_IMgaConnection, (LPVOID*) conn);
+		lpDisp->QueryInterface(__uuidof(IMgaConnection), (LPVOID*) conn);
 	}
 	CATCH_ALL_DUAL
 }
@@ -3410,10 +3410,10 @@ STDMETHODIMP CGMEOLEIt::XDual::ConnectThruPortFCO(THIS_ IMgaFCO* src_part, IMgaF
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->ConnectThruPortFCO( src_part, src_ref, dst_part, dst_ref, (LPCTSTR) connection_role);
-		lpDisp->QueryInterface(IID_IMgaConnection, (LPVOID*) conn);
+		lpDisp->QueryInterface(__uuidof(IMgaConnection), (LPVOID*) conn);
 	}
 	CATCH_ALL_DUAL
 }
@@ -3422,7 +3422,7 @@ STDMETHODIMP CGMEOLEIt::XDual::DisconnectThruPort(THIS_ BSTR part1, BSTR port1, 
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->DisconnectThruPort( (LPCTSTR) part1, (LPCTSTR) port1, (LPCTSTR) part2, (LPCTSTR) port2, (LPCTSTR) connection );
 	}
@@ -3433,10 +3433,10 @@ STDMETHODIMP CGMEOLEIt::XDual::ConnectFCOs(THIS_  IMgaFCO* part1,  IMgaFCO* part
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->ConnectFCOs( part1, part2, (LPCTSTR) connection );
-		lpDisp->QueryInterface(IID_IMgaConnection, (LPVOID*) conn);
+		lpDisp->QueryInterface(__uuidof(IMgaConnection), (LPVOID*) conn);
 	}
 	CATCH_ALL_DUAL
 }
@@ -3445,7 +3445,7 @@ STDMETHODIMP CGMEOLEIt::XDual::DisconnectFCOs(THIS_  IMgaFCO* part1,  IMgaFCO* p
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->DisconnectFCOs( part1, part2, (LPCTSTR) connection );
 	}
@@ -3456,7 +3456,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Refer(THIS_  BSTR reference,  BSTR referred)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Refer( (LPCTSTR) reference, (LPCTSTR) referred );
 	}
@@ -3467,7 +3467,7 @@ STDMETHODIMP CGMEOLEIt::XDual::ReferFCO(THIS_  IMgaReference* reference,  IMgaFC
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->ReferFCO( reference, referred );
 	}
@@ -3478,7 +3478,7 @@ STDMETHODIMP CGMEOLEIt::XDual::ClearRef(THIS_  BSTR reference)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->ClearRef( (LPCTSTR) reference);
 	}
@@ -3489,7 +3489,7 @@ STDMETHODIMP CGMEOLEIt::XDual::ClearRefFCO(THIS_  IMgaReference* reference)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->ClearRefFCO( reference);
 	}
@@ -3500,7 +3500,7 @@ STDMETHODIMP CGMEOLEIt::XDual::FollowRef(THIS_  BSTR reference)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->FollowRef( (LPCTSTR) reference);
 	}
@@ -3511,7 +3511,7 @@ STDMETHODIMP CGMEOLEIt::XDual::FollowRefFCO(THIS_  IMgaReference* reference)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->FollowRefFCO( reference);
 	}
@@ -3522,10 +3522,10 @@ STDMETHODIMP CGMEOLEIt::XDual::NullFCO(THIS_ IMgaFCO** nullobj)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->NullFCO();
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) nullobj);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) nullobj);
 	}
 	CATCH_ALL_DUAL
 }
@@ -3534,7 +3534,7 @@ STDMETHODIMP CGMEOLEIt::XDual::SetAttribute(THIS_ BSTR name,  BSTR attr_name,  V
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->SetAttribute( (LPCTSTR) name, (LPCTSTR) attr_name, value );
 	}
@@ -3545,7 +3545,7 @@ STDMETHODIMP CGMEOLEIt::XDual::GetAttribute(THIS_ BSTR name,  BSTR attr_name, VA
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		CComVariant p = pThis->GetAttribute( (LPCTSTR) name, (LPCTSTR) attr_name );
 		*value = p;
@@ -3557,7 +3557,7 @@ STDMETHODIMP CGMEOLEIt::XDual::SetAttributeFCO(THIS_ IMgaFCO* fco,  BSTR attr_na
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->SetAttributeFCO( fco, (LPCTSTR) attr_name, value);
 	}
@@ -3568,7 +3568,7 @@ STDMETHODIMP CGMEOLEIt::XDual::GetAttributeFCO(THIS_ IMgaFCO* fco,  BSTR attr_na
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		CComVariant p = pThis->GetAttributeFCO( fco, (LPCTSTR) attr_name );
 		*value = p;
@@ -3580,10 +3580,10 @@ STDMETHODIMP CGMEOLEIt::XDual::SubType(THIS_ BSTR base, BSTR name_of_subtype, IM
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->SubType( (LPCTSTR) base, (LPCTSTR) name_of_subtype);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) subtype);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) subtype);
 	}
 	CATCH_ALL_DUAL
 }
@@ -3592,10 +3592,10 @@ STDMETHODIMP CGMEOLEIt::XDual::Instantiate(THIS_ BSTR base, BSTR name_of_instanc
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->Instantiate( (LPCTSTR) base, (LPCTSTR) name_of_instance);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) instance);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) instance);
 	}
 	CATCH_ALL_DUAL
 }
@@ -3604,10 +3604,10 @@ STDMETHODIMP CGMEOLEIt::XDual::SubTypeFCO(THIS_ IMgaFCO* base_ptr, BSTR name_of_
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->SubTypeFCO( base_ptr, (LPCTSTR) name_of_subtype);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) subtype);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) subtype);
 	}
 	CATCH_ALL_DUAL
 }
@@ -3616,10 +3616,10 @@ STDMETHODIMP CGMEOLEIt::XDual::InstantiateFCO(THIS_ IMgaFCO* base_ptr, BSTR name
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->InstantiateFCO( base_ptr, (LPCTSTR) name_of_instance);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) instance);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) instance);
 	}
 	CATCH_ALL_DUAL
 }
@@ -3628,7 +3628,7 @@ STDMETHODIMP CGMEOLEIt::XDual::BeginTransaction()
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->BeginTransaction();
 	}
@@ -3639,7 +3639,7 @@ STDMETHODIMP CGMEOLEIt::XDual::CommitTransaction()
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->CommitTransaction();
 	}
@@ -3650,7 +3650,7 @@ STDMETHODIMP CGMEOLEIt::XDual::AbortTransaction()
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->AbortTransaction();
 	}
@@ -3661,7 +3661,7 @@ STDMETHODIMP CGMEOLEIt::XDual::IsInTransaction(THIS_ VARIANT_BOOL* intrans)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		*intrans = pThis->IsInTransaction();
 	}
@@ -3672,10 +3672,10 @@ STDMETHODIMP CGMEOLEIt::XDual::PutInTerritory(THIS_ IMgaFCO* fco, IMgaFCO** newf
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		LPDISPATCH lpDisp = pThis->PutInTerritory( fco);
-		lpDisp->QueryInterface(IID_IMgaFCO, (LPVOID*) newfco);
+		lpDisp->QueryInterface(__uuidof(IMgaFCO), (LPVOID*) newfco);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -3685,7 +3685,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Help(THIS)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Help();
 		return NOERROR;
@@ -3697,7 +3697,7 @@ STDMETHODIMP CGMEOLEIt::XDual::SetSelected(THIS_ BSTR space_delimited_string )
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->SetSelected( (LPCTSTR) space_delimited_string);
 		return NOERROR;
@@ -3709,7 +3709,7 @@ STDMETHODIMP CGMEOLEIt::XDual::GetSelected(THIS_ BSTR * space_delimited_string )
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		CComBSTR p = pThis->GetSelected();
 		*space_delimited_string = p.Detach();
@@ -3722,7 +3722,7 @@ STDMETHODIMP CGMEOLEIt::XDual::SetSelectedFCOs(THIS_ IMgaFCOs* fcos_to_select)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		TRACE( _T("XDual::SetSelectedFCOs"));
 		pThis->SetSelectedFCOs( fcos_to_select);
@@ -3735,11 +3735,11 @@ STDMETHODIMP CGMEOLEIt::XDual::GetSelectedFCOs(THIS_ IMgaFCOs** selected_fcos)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		TRACE( _T("XDual::GetSelectedFCOs"));
 		LPDISPATCH lpDisp = pThis->GetSelectedFCOs();
-		lpDisp->QueryInterface(IID_IMgaFCOs, (LPVOID*)selected_fcos);
+		lpDisp->QueryInterface(__uuidof(IMgaFCOs), (LPVOID*)selected_fcos);
 
 		return NOERROR;
 	}
@@ -3750,7 +3750,7 @@ STDMETHODIMP CGMEOLEIt::XDual::GetCurrentAspect(THIS_ BSTR* aspectName)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		CComBSTR string_asp = pThis->GetCurrentAspect();
 		*aspectName = string_asp.Detach();
@@ -3763,7 +3763,7 @@ STDMETHODIMP CGMEOLEIt::XDual::SetCurrentAspect(THIS_ BSTR aspectName)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->SetCurrentAspect(CString(aspectName));
 		return S_OK;
@@ -3775,7 +3775,7 @@ STDMETHODIMP CGMEOLEIt::XDual::NextAspect(THIS)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->NextAspect();
 		return NOERROR;
@@ -3787,7 +3787,7 @@ STDMETHODIMP CGMEOLEIt::XDual::PrevAspect(THIS)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->PrevAspect();
 		return NOERROR;
@@ -3799,7 +3799,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Next(THIS)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Next();
 		return NOERROR;
@@ -3811,7 +3811,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Prev(THIS)
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Prev();
 		return NOERROR;
@@ -3823,7 +3823,7 @@ STDMETHODIMP CGMEOLEIt::XDual::Position(THIS_ BSTR pChildName, BSTR pAspectName,
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->Position( (LPCTSTR) pChildName, (LPCTSTR) pAspectName, parX, parY);
 		return NOERROR;
@@ -3835,7 +3835,7 @@ STDMETHODIMP CGMEOLEIt::XDual::PositionFCO(THIS_ IMgaFCO* pChildPtr, BSTR pAspec
 {
 	METHOD_PROLOGUE(CGMEOLEIt, Dual)
 
-	TRY_DUAL(IID_IGMEOLEIt)
+	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
 		pThis->PositionFCO( pChildPtr, (LPCTSTR) pAspectName, parX, parY);
 		return NOERROR;

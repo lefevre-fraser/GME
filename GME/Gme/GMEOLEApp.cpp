@@ -141,7 +141,7 @@ END_DISPATCH_MAP()
 
 
 BEGIN_INTERFACE_MAP(CGMEOLEApp, CCmdTarget)
-	INTERFACE_PART(CGMEOLEApp, IID_IGMEOLEApp, Dual)
+	INTERFACE_PART(CGMEOLEApp, __uuidof(IGMEOLEApp), Dual)
 	DUAL_ERRORINFO_PART(CGMEOLEApp)
 END_INTERFACE_MAP()
 
@@ -779,13 +779,13 @@ DELEGATE_DUAL_INTERFACE(CGMEOLEApp, Dual)
 
 // Implement ISupportErrorInfo to indicate we support the
 // OLE Automation error handler.
-IMPLEMENT_DUAL_ERRORINFO(CGMEOLEApp, IID_IGMEOLEApp)
+IMPLEMENT_DUAL_ERRORINFO(CGMEOLEApp, __uuidof(IGMEOLEApp))
 
 STDMETHODIMP CGMEOLEApp::XDual::put_Visible( VARIANT_BOOL isVisible)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->SetVisible(isVisible);
 		return NOERROR;
@@ -798,7 +798,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_Visible( VARIANT_BOOL* isVisible)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 #pragma warning(disable: 4310) // cast truncates constant value
 		*isVisible = (pThis->GetVisible() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
@@ -812,7 +812,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_Version( BSTR* versionStr)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		// CString str = pThis->GetVersion();
 		// str.SetSysString(versionStr);
@@ -826,7 +826,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_VersionMajor( short* n)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		*n = pThis->GetVersionMajor();
 		return NOERROR;
@@ -838,7 +838,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_VersionMinor( short* n)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		*n = pThis->GetVersionMinor();
 		return NOERROR;
@@ -850,7 +850,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_VersionPatchLevel( short* n)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		*n = pThis->GetVersionPatchLevel();
 		return NOERROR;
@@ -862,10 +862,10 @@ STDMETHODIMP CGMEOLEApp::XDual::get_Models( IGMEOLEColl** coll)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		LPDISPATCH lpDisp = pThis->GetModels();
-		lpDisp->QueryInterface(IID_IGMEOLEColl, (LPVOID*)coll);
+		lpDisp->QueryInterface(__uuidof(IGMEOLEColl), (LPVOID*)coll);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -875,10 +875,10 @@ STDMETHODIMP CGMEOLEApp::XDual::get_MgaProject( IMgaProject** project)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		LPDISPATCH lpDisp = pThis->GetMgaProject();
-		lpDisp->QueryInterface(IID_IMgaProject, (LPVOID*)project);
+		lpDisp->QueryInterface(__uuidof(IMgaProject), (LPVOID*)project);
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -888,10 +888,10 @@ STDMETHODIMP CGMEOLEApp::XDual::get_OleIt( IGMEOLEIt** model)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		LPDISPATCH lpDisp = pThis->GetOleIt();
-		lpDisp->QueryInterface(IID_IGMEOLEIt, (LPVOID*)model);
+		lpDisp->QueryInterface(__uuidof(IGMEOLEIt), (LPVOID*)model);
 		lpDisp->Release();
 		return NOERROR;
 	}
@@ -902,10 +902,10 @@ STDMETHODIMP CGMEOLEApp::XDual::get_Panels( IGMEOLEColl** coll)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		LPDISPATCH lpDisp = pThis->GetPanels();
-		lpDisp->QueryInterface(IID_IGMEOLEColl, (LPVOID*)coll);
+		lpDisp->QueryInterface(__uuidof(IGMEOLEColl), (LPVOID*)coll);
 		lpDisp->Release();
 		return NOERROR;
 	}
@@ -916,7 +916,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_ConsoleContents( BSTR* contents)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		*contents = pThis->GetConsoleContents();
 		return NOERROR;
@@ -929,7 +929,7 @@ STDMETHODIMP CGMEOLEApp::XDual::put_ConsoleContents( BSTR contents)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->SetConsoleContents(CString(contents));
 		return NOERROR;
@@ -941,7 +941,7 @@ STDMETHODIMP CGMEOLEApp::XDual::CreateProject( BSTR metaname, BSTR connstr)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->CreateProject(CString(metaname), CString(connstr));
 		return NOERROR;
@@ -953,7 +953,7 @@ STDMETHODIMP CGMEOLEApp::XDual::OpenProject( BSTR connstr)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->OpenProject(CString(connstr));
 		return NOERROR;
@@ -965,7 +965,7 @@ STDMETHODIMP CGMEOLEApp::XDual::CreateProjectDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->CreateProjectDialog();
 		return NOERROR;
@@ -977,7 +977,7 @@ STDMETHODIMP CGMEOLEApp::XDual::OpenProjectDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->OpenProjectDialog();
 		return NOERROR;
@@ -989,7 +989,7 @@ STDMETHODIMP CGMEOLEApp::XDual::CloseProject( VARIANT_BOOL saveOnClose)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->CloseProject(saveOnClose);
 		return NOERROR;
@@ -1001,7 +1001,7 @@ STDMETHODIMP CGMEOLEApp::XDual::SaveProject()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->SaveProject();
 		return NOERROR;
@@ -1014,7 +1014,7 @@ STDMETHODIMP CGMEOLEApp::XDual::SaveProjectAs( BSTR connstr)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->SaveProjectAs(CString(connstr));
 		return NOERROR;
@@ -1026,7 +1026,7 @@ STDMETHODIMP CGMEOLEApp::XDual::SaveProjectAsDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->SaveProjectAsDialog();
 		return NOERROR;
@@ -1039,7 +1039,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ExportProject( BSTR connstr)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ExportProject(CString(connstr));
 		return NOERROR;
@@ -1051,7 +1051,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ImportProject( BSTR connstr)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ImportProject(CString(connstr));
 		return NOERROR;
@@ -1063,7 +1063,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ConstraintsDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ConstraintsDialog();
 		return NOERROR;
@@ -1076,7 +1076,7 @@ STDMETHODIMP CGMEOLEApp::XDual::CheckAllConstraints()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->CheckAllConstraints();
 		return NOERROR;
@@ -1089,7 +1089,7 @@ STDMETHODIMP CGMEOLEApp::XDual::RegisterParagimsDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->RegisterParagimsDialog();
 		return NOERROR;
@@ -1102,7 +1102,7 @@ STDMETHODIMP CGMEOLEApp::XDual::RegisterComponentsDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->RegisterComponentsDialog();
 		return NOERROR;
@@ -1115,7 +1115,7 @@ STDMETHODIMP CGMEOLEApp::XDual::RunComponent( BSTR progID)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->RunComponent(CString(progID));
 		return NOERROR;
@@ -1128,7 +1128,7 @@ STDMETHODIMP CGMEOLEApp::XDual::RunComponentDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->RunComponentDialog();
 		return NOERROR;
@@ -1141,7 +1141,7 @@ STDMETHODIMP CGMEOLEApp::XDual::SettingsDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->SettingsDialog();
 		return NOERROR;
@@ -1154,7 +1154,7 @@ STDMETHODIMP CGMEOLEApp::XDual::Undo()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->Undo();
 		return NOERROR;
@@ -1167,7 +1167,7 @@ STDMETHODIMP CGMEOLEApp::XDual::Redo()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->Redo();
 		return NOERROR;
@@ -1180,7 +1180,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ClearUndoQueue()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ClearUndoQueue();
 		return NOERROR;
@@ -1193,7 +1193,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ProjectPropertiesDialog()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ProjectPropertiesDialog();
 		return NOERROR;
@@ -1206,7 +1206,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ShowHelpContents()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ShowHelpContents();
 		return NOERROR;
@@ -1219,7 +1219,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ShowAbout()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ShowAbout();
 		return NOERROR;
@@ -1232,7 +1232,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ShowFCO( IMgaFCO* mgaFCO, VARIANT_BOOL inParent)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		LPDISPATCH lpDisp = NULL;
 		mgaFCO->QueryInterface(IID_IDispatch, (LPVOID*)&lpDisp);
@@ -1247,7 +1247,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ConsoleMessage(BSTR msg, msgtype_enum type)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ConsoleMessage(CString(msg), type);
 		return NOERROR;
@@ -1259,7 +1259,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ConsoleClear()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ConsoleClear();
 		return NOERROR;
@@ -1271,7 +1271,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ConsoleNavigateTo(BSTR url)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ConsoleNavigateTo(CString(url));
 		return NOERROR;
@@ -1284,7 +1284,7 @@ STDMETHODIMP CGMEOLEApp::XDual::ChangeEditmode(editmode_enum mode)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->ChangeEditmode((long)mode);
 		return NOERROR;
@@ -1296,7 +1296,7 @@ STDMETHODIMP CGMEOLEApp::XDual::GridShow(VARIANT_BOOL show)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->GridShow(show);
 		return NOERROR;
@@ -1308,7 +1308,7 @@ STDMETHODIMP CGMEOLEApp::XDual::AttributepanelPage(attribpanel_page page)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->AttributepanelPage((long)page);
 		return NOERROR;
@@ -1320,7 +1320,7 @@ STDMETHODIMP CGMEOLEApp::XDual::DisableComp(BSTR pCompName, VARIANT_BOOL pHide)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->DisableComp( CString( pCompName), pHide);
 		return NOERROR;
@@ -1332,7 +1332,7 @@ STDMETHODIMP CGMEOLEApp::XDual::DisableCompForKinds(BSTR pCompName, BSTR pKindSe
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->DisableCompForKinds( CString( pCompName), CString( pKindSequence));
 		return NOERROR;
@@ -1344,7 +1344,7 @@ STDMETHODIMP CGMEOLEApp::XDual::SetCompFiltering( VARIANT_BOOL pOn)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->SetCompFiltering( pOn);
 		return NOERROR;
@@ -1356,7 +1356,7 @@ STDMETHODIMP CGMEOLEApp::XDual::GetCompFiltering( VARIANT_BOOL* pOn)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		*pOn = (pThis->GetCompFiltering())?VARIANT_TRUE:VARIANT_FALSE;
 		return NOERROR;
@@ -1368,7 +1368,7 @@ STDMETHODIMP CGMEOLEApp::XDual::SetWorkingDirectory(BSTR pPath)
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->SetWorkingDirectory( CString( pPath));
 		return NOERROR;
@@ -1380,7 +1380,7 @@ STDMETHODIMP CGMEOLEApp::XDual::Exit()
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		pThis->Exit();
 		return NOERROR;
@@ -1392,7 +1392,7 @@ STDMETHODIMP CGMEOLEApp::XDual::RefreshLib( BSTR pLibName, VARIANT_BOOL pUngroup
 {
 	METHOD_PROLOGUE(CGMEOLEApp, Dual)
 
-	TRY_DUAL(IID_IGMEOLEApp)
+	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
 		long res = pThis->RefreshLib( CString( pLibName), pUngroup);
 		*pNumOfErrors = res;

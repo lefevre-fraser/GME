@@ -580,8 +580,8 @@ void CGMEDoc::ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent)
 			
 			try {
 				if (!inTrans) {
-					COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr));
-					COMTHROW(theApp.mgaProject->BeginTransaction(terr));
+					COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr, NULL));
+					COMTHROW(theApp.mgaProject->BeginTransaction(terr, TRANSACTION_GENERAL));
 				}
 				else {
 					COMTHROW(theApp.mgaProject->get_ActiveTerritory(&terr));
@@ -596,7 +596,7 @@ void CGMEDoc::ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent)
 
 			try {
 				CComPtr<IMgaObject> parent;
-				COMTHROW(fco->GetParent(&parent));
+				COMTHROW(fco->GetParent(&parent, NULL));
 				model = NULL;
 				COMTHROW(parent.QueryInterface(&model));
 			}
@@ -618,8 +618,8 @@ void CGMEDoc::ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent)
 		try 
 		{
 			if (!inTrans) {
-				COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr));
-				COMTHROW(theApp.mgaProject->BeginTransaction(terr));
+				COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr, NULL));
+				COMTHROW(theApp.mgaProject->BeginTransaction(terr, TRANSACTION_GENERAL));
 				CComPtr<IMgaModel> tmpmod = model; // put model into the active territory
 				model = NULL;
 				CComPtr<IMgaFCO> fco_mod;
@@ -627,7 +627,7 @@ void CGMEDoc::ShowObject(CComPtr<IUnknown> alienObject, BOOL inParent)
 				COMTHROW( fco_mod.QueryInterface( &model));// casted to IMgaModel
 			}
 			CComPtr<IMgaObject> parent;
-			COMTHROW(model->GetParent(&parent));
+			COMTHROW(model->GetParent(&parent, NULL));
 			COMTHROW(model.QueryInterface(&fco));
 			model = NULL;
 			COMTHROW(parent.QueryInterface(&model));
@@ -691,8 +691,8 @@ void CGMEDoc::ShowObject(LPCTSTR objectID)
 		inTrans = (status & 0x08L) != 0;
 		CComPtr<IMgaTerritory> terr;
 		if (!inTrans) {
-			COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr));
-			COMTHROW(theApp.mgaProject->BeginTransaction(terr));
+			COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr, NULL));
+			COMTHROW(theApp.mgaProject->BeginTransaction(terr, TRANSACTION_GENERAL));
 		}
 		else {
 			COMTHROW(theApp.mgaProject->get_ActiveTerritory(&terr));
@@ -1178,7 +1178,7 @@ void CGMEDoc::tellHistorian( CComPtr<IMgaModel>& model, CString asp)
 		bool inTrans = (status & 0x08L) != 0;
 		CComPtr<IMgaTerritory> terr;
 		if (!inTrans) {
-			COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr));
+			COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr, NULL));
 			COMTHROW(theApp.mgaProject->BeginTransaction(terr, TRANSACTION_READ_ONLY));
 		}
 		else {
@@ -1234,7 +1234,7 @@ void CGMEDoc::presentModel( LPCTSTR p_objectId, LPCTSTR p_aspectName)
 		inTrans = (status & 0x08L) != 0;
 		CComPtr<IMgaTerritory> terr;
 		if (!inTrans) {
-			COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr));
+			COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr, NULL));
 			COMTHROW(theApp.mgaProject->BeginTransaction(terr, TRANSACTION_READ_ONLY));
 		}
 		else

@@ -27,6 +27,7 @@ END_MESSAGE_MAP()
 
 void CModelPropertiesDlgBar::ShowType()
 {
+	// FIXME: fix for DPI
 	GetDlgItem(IDC_TYPEMARK)->MoveWindow(6,8,16,16);
 	GetDlgItem(IDC_TYPEMARK)->ShowWindow(SW_SHOW);
 	GetDlgItem(IDC_INSTANCEMARK)->ShowWindow(SW_HIDE);
@@ -35,6 +36,7 @@ void CModelPropertiesDlgBar::ShowType()
 
 void CModelPropertiesDlgBar::ShowInstance()
 {
+	// FIXME: fix for DPI
 	GetDlgItem(IDC_TYPEMARK)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_INSTANCEMARK)->MoveWindow(6,8,16,16);
 	GetDlgItem(IDC_INSTANCEMARK)->ShowWindow(SW_SHOW);

@@ -77,7 +77,7 @@ END_DISPATCH_MAP()
 // dispinterface in the .ODL file.
 
 BEGIN_INTERFACE_MAP(CGMEOLEColl, CCmdTarget)
-	INTERFACE_PART(CGMEOLEColl, IID_IGMEOLEColl, Dual)
+	INTERFACE_PART(CGMEOLEColl, __uuidof(IGMEOLEColl), Dual)
 	DUAL_ERRORINFO_PART(CGMEOLEColl)
 END_INTERFACE_MAP()
 
@@ -205,14 +205,14 @@ DELEGATE_DUAL_INTERFACE(CGMEOLEColl, Dual)
 
 // Implement ISupportErrorInfo to indicate we support the
 // OLE Automation error handler.
-IMPLEMENT_DUAL_ERRORINFO(CGMEOLEColl, IID_IGMEOLEColl)
+IMPLEMENT_DUAL_ERRORINFO(CGMEOLEColl, __uuidof(IGMEOLEColl))
 
 
 STDMETHODIMP CGMEOLEColl::XDual::get_Count(long *cnt)
 {
 	METHOD_PROLOGUE(CGMEOLEColl, Dual)
 
-	TRY_DUAL(IID_IGMEOLEColl)
+	TRY_DUAL(__uuidof(IGMEOLEColl))
 	{
 		*cnt = pThis->GetCount();
 		return NOERROR;
@@ -224,7 +224,7 @@ STDMETHODIMP CGMEOLEColl::XDual::Add(IDispatch* newValue)
 {
 	METHOD_PROLOGUE(CGMEOLEColl, Dual)
 
-	TRY_DUAL(IID_IGMEOLEColl)
+	TRY_DUAL(__uuidof(IGMEOLEColl))
 	{
 		pThis->Add(newValue);
 		return NOERROR;
@@ -236,7 +236,7 @@ STDMETHODIMP CGMEOLEColl::XDual::Find(IDispatch* findValue, long *cnt)
 {
 	METHOD_PROLOGUE(CGMEOLEColl, Dual)
 
-	TRY_DUAL(IID_IGMEOLEColl)
+	TRY_DUAL(__uuidof(IGMEOLEColl))
 	{
 		*cnt = pThis->Find(findValue);
 		return NOERROR;
@@ -248,7 +248,7 @@ STDMETHODIMP CGMEOLEColl::XDual::Remove(VARIANT removeValue)
 {
 	METHOD_PROLOGUE(CGMEOLEColl, Dual)
 
-	TRY_DUAL(IID_IGMEOLEColl)
+	TRY_DUAL(__uuidof(IGMEOLEColl))
 	{
 		pThis->Remove(removeValue);
 		return NOERROR;
@@ -260,7 +260,7 @@ STDMETHODIMP CGMEOLEColl::XDual::RemoveAll()
 {
 	METHOD_PROLOGUE(CGMEOLEColl, Dual)
 
-	TRY_DUAL(IID_IGMEOLEColl)
+	TRY_DUAL(__uuidof(IGMEOLEColl))
 	{
 		pThis->RemoveAll();
 		return NOERROR;
@@ -272,7 +272,7 @@ STDMETHODIMP CGMEOLEColl::XDual::get_Item(long nIndex, IDispatch** val)
 {
 	METHOD_PROLOGUE(CGMEOLEColl, Dual)
 
-	TRY_DUAL(IID_IGMEOLEColl)
+	TRY_DUAL(__uuidof(IGMEOLEColl))
 	{
 		*val = pThis->GetItem(nIndex);
 		return NOERROR;
@@ -284,7 +284,7 @@ STDMETHODIMP CGMEOLEColl::XDual::put_Item(long nIndex, IDispatch* newValue)
 {
 	METHOD_PROLOGUE(CGMEOLEColl, Dual)
 
-	TRY_DUAL(IID_IGMEOLEColl)
+	TRY_DUAL(__uuidof(IGMEOLEColl))
 	{
 		pThis->SetItem(nIndex, newValue);
 		return NOERROR;
@@ -296,7 +296,7 @@ STDMETHODIMP CGMEOLEColl::XDual::get__NewEnum(IUnknown** e)
 {
 	METHOD_PROLOGUE(CGMEOLEColl, Dual)
 
-	TRY_DUAL(IID_IGMEOLEColl)
+	TRY_DUAL(__uuidof(IGMEOLEColl))
 	{
 		*e = pThis->GetNewEnum();
 		return NOERROR;
