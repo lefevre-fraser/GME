@@ -64,7 +64,7 @@ do { \
 	{ \
 		ASSERT( FAILED(e.hr) ); \
 		{ CLEANUP; } \
-		SetErrorInfo(e.hr); \
+		SetStandardOrGMEErrorInfo(e.hr); \
 		return e.hr; \
 	} \
 	catch(_com_error &e) \
