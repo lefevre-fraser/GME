@@ -19,17 +19,17 @@ namespace GMEConsole
 				gmeoleapp.Release();
 		}
 
-		static void WriteLine(const CString& message, msgtype_enum type)
+		static void WriteLine(const CString& message, msgtype_enum type=MSG_INFO)
 		{
 			if (gmeoleapp == 0) {
 				switch (type) {
 				case MSG_NORMAL:
 				case MSG_INFO:
 				case MSG_WARNING:
-					_tprintf(message);
+					_tprintf("%s\n", message);
 					break;
 				case MSG_ERROR:
-					_ftprintf(stderr, message);
+					_ftprintf(stderr, "%s\n", message);
 					break;
 				}
 			}
