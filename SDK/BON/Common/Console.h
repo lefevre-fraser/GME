@@ -26,10 +26,10 @@ namespace GMEConsole
 				case MSG_NORMAL:
 				case MSG_INFO:
 				case MSG_WARNING:
-					_tprintf("%s\n", message);
+					_tprintf(T("%s\n"), message);
 					break;
 				case MSG_ERROR:
-					_ftprintf(stderr, "%s\n", message);
+					_ftprintf(stderr, _T("%s\n"), message);
 					break;
 				}
 			}
