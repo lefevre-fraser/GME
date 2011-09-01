@@ -14,9 +14,7 @@
 #define GME_BUILDER_H
 
 #include "GMECOM.h"
-#ifndef __COMHELP_H
 #include "ComHelp.h"
-#endif
 
 class CBuilder;
 class CBuilderFolder;
