@@ -749,35 +749,31 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 			COMTHROW(registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, prgid, CComBSTR(L"ExecEngine"), &engine));
 			COMTHROW(registrar->get_ComponentExtraInfo(REGACCESS_PRIORITY, prgid, CComBSTR(L"ScriptFile"), &scriptfile));
 			if(!engine || !scriptfile) {
-				AfxMessageBox(_T("Incomplete registration for script component ")+ compname);
+				ThrowCOMError(E_FAIL, _T("Incomplete registration for script component ") + compname);
 			}
 			compname += _T(" (") + CString(engine) + _T(")");
 			COMTHROW( component.CoCreateInstance(engine) );
 			CComQIPtr<IMgaComponentEx> compex = component;
 			if(!compex) {
-				AfxMessageBox(_T("Exec.engine is only supported with extended component interface"));
-				COMRETURN(E_MGA_NOT_SUPPORTED);
+				ThrowCOMError(E_MGA_NOT_SUPPORTED, L"Exec.engine is only supported with extended component interface");
 			}
 			if(scriptfile) {
-				COMTHROW(compex->put_ComponentParameter(CComBSTR(L"script"), CComVariant(scriptfile)));
+				compex->ComponentParameter[_bstr_t(L"script")] = CComVariant(scriptfile);
 			}
 		}
 		else COMTHROW(CreateMgaComponent(component, prgid));  // Before DispatchProxy: COMTHROW(component.CoCreateInstance(prgid));
 
 
 		if(component == NULL) {
-			AfxMessageBox(CString(_T("Could not start component ")) + compname);
+			ThrowCOMError(E_FAIL, L"Could not start component '" + compname + "'");
 		}
 		else {
-			CComQIPtr<IGMEVersionInfo> vi = component;
+			IGMEVersionInfoPtr vi = (IMgaComponent*) component;
 			if(!vi) {
-					if(AfxMessageBox(	_T("This component does not provide interface version information\n")
-										_T("It is probably incompatible with GME\n")
-										_T("Do you want to proceed anyway?") , MB_YESNO) !=IDYES) return S_OK;
+				ThrowCOMError(E_NOINTERFACE, L"This component does not provide interface version information\n");
 			}
 			else {
-				GMEInterfaceVersion vv;
-				COMTHROW(vi->get_version(&vv));
+				GMEInterfaceVersion vv = vi->version;
 				if(vv != INTERFACE_VERSION) {
 					CString aa;
 					aa.Format(_T("The interface version number of this component (%d.%d) differs from the GME version (%d.%d)\n")
@@ -794,7 +790,7 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					// Need to catch SEH exceptions (especially for Win7 x64: see GME-318)
 					if (SUCCEEDED(hr) && !InvokeExWithCrashRpt(compex, project, focusobj, selectedobjs, param, hr)) {
 						project->AbortTransaction();
-						AfxMessageBox(_T("An error has occurred in component ") + compname + _T(".\n")
+						ThrowCOMError(E_POINTER, _T("An error has occurred in component ") + compname + _T(".\n")
 							_T("GME may not be in a stable state.\n")
 							_T("Please save your work and restart GME."));
 					} else {
@@ -803,10 +799,9 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 							if (supportErrorInfo && GetErrorInfo(desc.GetAddress())) {
 								CString msg = static_cast<const TCHAR*>(desc);
 								msg = "Interpreter returned error: " + msg;
-								AfxMessageBox(msg, MB_OK | MB_ICONSTOP);
-								SysFreeString(desc);
+								ThrowCOMError(hr, msg);
 							} else {
-								DisplayError(_T("Interpreter returned error"), hr);
+								ThrowCOMError(hr, _T("Interpreter returned error"));
 							}
 						}
 						// Sometimes interpreters forget to close transactions, even when returning S_OK
@@ -830,7 +825,7 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					}
 					catch(hresult_exception &e)	{
 						project->AbortTransaction();
-						DisplayError(_T("Interpreter returned error"), e.hr);
+						ThrowCOMError(e.hr, _T("Interpreter returned error"));
 					}
 					catch(...)
 					{
@@ -844,9 +839,9 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 			else {		// running unprotected
 				try	{
 					COMTHROW(component->Initialize(project));
-					CComQIPtr<IMgaComponentEx> compex = component;
+					IMgaComponentExPtr compex = (IMgaComponent*)component;
 					if(compex) {
-						COMTHROW(compex->InvokeEx(project, focusobj, CComQIPtr<IMgaFCOs>(selectedobjs), param));
+						compex->__InvokeEx(project, focusobj, CComQIPtr<IMgaFCOs>(selectedobjs), param);
 					}
 					else {
 						CComPtr<IMgaTerritory> terr;

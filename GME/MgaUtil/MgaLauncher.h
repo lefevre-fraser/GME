@@ -57,6 +57,23 @@ public:
 	STDMETHOD(RunComponent)(BSTR progid, IMgaProject *project, IMgaFCO *focusobj, IMgaFCOs *selectedobjs, long param);
 // ------- Helper functions
 
+	void ThrowCOMError(HRESULT hr, const wchar_t* err)
+	{
+		ICreateErrorInfoPtr errCreate;
+		if (SUCCEEDED(CreateErrorInfo(&errCreate))
+			&& SUCCEEDED(errCreate->SetDescription(const_cast<wchar_t*>(err)))
+			&& SUCCEEDED(errCreate->SetGUID(__uuidof(IMgaLauncher)))
+			)
+		{
+			IErrorInfoPtr errorInfo = errCreate;
+			if (errorInfo)
+			{
+				throw _com_error(hr, errorInfo.Detach());
+			}
+		}
+		throw _com_error(hr);
+	}
+
 public:
 	static CString PruneConnectionString(const CString &conn);
 };
