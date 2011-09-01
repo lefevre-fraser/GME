@@ -623,7 +623,7 @@ HRESULT FCO::get_ObjectByPath(BSTR path, IMgaObject ** pVal) {
 
 				bool similar = n == name_b;
 				similar = similar || ITER[ATTRID_PERMISSIONS] == LIBROOT_FLAG && libraryNameEqual(n, name_b);
-				similar = similar && kind == kind_b;
+				similar = similar && (kind_b == L"" || kind == kind_b);
 				if( similar && !found)
 				{
 					if ( *p2 != 0)
