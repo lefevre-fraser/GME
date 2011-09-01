@@ -28,6 +28,7 @@
 #include <StdAfx.h>
 #include <string>
 #include <vector>
+#include <comdef.h>
 
 
 template<class T>
@@ -40,15 +41,11 @@ inline void COMCHECK2(const CComPtr<T>& p, const HRESULT hr)
 			CComQIPtr<IErrorInfo> errorInfo;
 			GetErrorInfo(0, &errorInfo);
 
-			BSTR bstr;
-			errorInfo->GetDescription(&bstr);
-			CStringA str( bstr );
-			std::string strResult( str.GetBuffer( str.GetLength() ) );
-			str.ReleaseBuffer();
-			SysFreeString(bstr);
+			_bstr_t bstr;
+			errorInfo->GetDescription(bstr.GetAddress());
 
 			BON::Exception exception(hr, "?");
-			exception << strResult;
+			exception << static_cast<const TCHAR*>(bstr);
 			throw exception;
 		} else {
 			BON::Exception exception(hr);
