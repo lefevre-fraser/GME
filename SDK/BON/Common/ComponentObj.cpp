@@ -48,6 +48,7 @@
 #include "GMECOM.h"
 
 #ifdef BUILDER_OBJECT_NETWORK
+#include "Mga.h"
 #include <BONComponent.h>
 #include "Builder.h"
 #endif
@@ -62,6 +63,8 @@
 
 #include "Console.h"
 
+
+#include "Gme.h"
 
 #include "ComponentLib_i.c"
 #include "Core_i.c"
@@ -270,7 +273,7 @@ CComponentObj::~CComponentObj()
 	// 	with OLE automation, the destructor calls AfxOleUnlockApp.
 
 	ASSERT( registeractiveobjectret == 0 );
-	GMEConsole::Console::ReleaseConsole();
+	GMEConsole::Console::gmeoleapp.Release();
 
 	AfxOleUnlockApp();
 }
