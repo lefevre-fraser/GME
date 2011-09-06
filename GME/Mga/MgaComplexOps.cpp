@@ -1146,8 +1146,12 @@ HRESULT FCO::CopyFCODisp(IMgaFCO *copiedobj, IMgaMetaRole *role, IMgaFCO **nobj)
 		CREATEEXCOLLECTION_FOR(MgaFCO, q);
 		q->Add( CComPtr<IMgaFCO>( copiedobj));
 
+		CComPtr<IMgaMetaRoles> roles;
+		COMTHROW(roles.CoCreateInstance(L"Mga.MgaMetaRoles", NULL, CLSCTX_INPROC));
+		COMTHROW(roles->Append(CComPtr<IMgaMetaRole>(role)));
+
 		CComPtr<IMgaFCOs> newfcos;
-		CopyFCOs( q, 0, &newfcos);
+		COMTHROW(CopyFCOs( q, roles, &newfcos));
 		
 		// extract ret value from returned coll
 		long cnt = 0; 
@@ -1477,8 +1481,12 @@ HRESULT FCO::MoveFCODisp(IMgaFCO *movedobj, IMgaMetaRole *role, IMgaFCO **nobj)
 		CREATEEXCOLLECTION_FOR(MgaFCO, q);
 		q->Add( CComPtr<IMgaFCO>( movedobj));
 
+		CComPtr<IMgaMetaRoles> roles;
+		COMTHROW(roles.CoCreateInstance(L"Mga.MgaMetaRoles", NULL, CLSCTX_INPROC));
+		COMTHROW(roles->Append(CComPtr<IMgaMetaRole>(role)));
+
 		CComPtr<IMgaFCOs> newfcos;
-		MoveFCOs( q, 0, &newfcos);
+		COMTHROW(MoveFCOs( q, roles, &newfcos));
 		
 		// extract ret value from returned coll
 		long cnt = 0; 
