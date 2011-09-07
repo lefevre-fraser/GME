@@ -37,7 +37,8 @@ library MGALib
 	enum opmask_codes;
 	enum opmask_shifts;
 	enum GMEInterfaceVersion_enum;
-
+	enum mgaerrors;
+	enum component_startmode_enum;
 
 	[
 		uuid(270B4F93-B17C-11D3-9AD1-00AA00B6FE26),

@@ -24,6 +24,7 @@ library GmeLib
 	interface IMgaDecoratorCommon;
 	interface IMgaElementDecoratorEvents;
 	interface IMgaElementDecorator;
+	enum decorator_error;
 
 
 	//  Class information for CMgaDataSource

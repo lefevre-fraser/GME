@@ -22,6 +22,8 @@ library MGAParserLib
 	importlib("MetaLib.tlb");
 	importlib("MgaLib.tlb");
 
+	enum inserttype_enum;
+
 	[
 		uuid(70C41B25-E3CE-11D3-B37A-005004D38590),
 		helpstring("MgaMetaParser Class")

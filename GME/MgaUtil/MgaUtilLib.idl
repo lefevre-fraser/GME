@@ -21,6 +21,8 @@ library MGAUtilLib
 	importlib("MetaLib.tlb");
 	importlib("MgaLib.tlb");
 
+	enum mgautil_error;
+
 	[
 		uuid(461F30B1-3BF0-11D4-B3F0-005004D38590),
 		helpstring("MgaResolver Class")

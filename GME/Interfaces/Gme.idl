@@ -399,6 +399,7 @@ typedef enum decorator_error {
 } decorator_error;
 
 // Feature codes
+// FIXME should be an enum
 typedef unsigned long feature_code;
 const unsigned long F_RESIZABLE	= 1<<0;
 const unsigned long	F_MOUSEEVENTS =	1<<1;
