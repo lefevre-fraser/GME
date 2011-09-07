@@ -179,6 +179,7 @@ public:
 	public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
+	virtual void OnAppExit();
 	virtual BOOL SaveAllModified();
 	//}}AFX_VIRTUAL
 

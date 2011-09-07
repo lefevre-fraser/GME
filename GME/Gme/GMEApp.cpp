@@ -1747,6 +1747,17 @@ void CGMEApp::OnFileOpen()
 
 #define PROJECT_STATUS_CHANGED 4
 
+void CGMEApp::OnAppExit()
+{
+	if (SaveAllModified())
+	{
+		// n.b. C# interpreters may not Release() IGMEOLEApp, which keeps us ::Run()ing forever
+		// TerminateProcess will be unpleasant for DCOM (but the user asked for it)
+		TerminateProcess(GetCurrentProcess(), 0);
+	}
+	// n.b. don't call CWinAppEx::OnAppExit
+}
+
 BOOL CGMEApp::SaveAllModified() 
 {
 	if (mgaProject != NULL && (proj_type_is_mga || proj_type_is_xmlbackend)) {
@@ -1754,7 +1765,7 @@ BOOL CGMEApp::SaveAllModified()
 		long l;
 		COMTHROW(mgaProject->get_ProjectStatus(&l));
 		if (IsUndoPossible() && (l & PROJECT_STATUS_CHANGED))
-			ret = AfxMessageBox(_T("Save project '") + projectName + _T("'?"),  MB_YESNO);
+			ret = AfxMessageBox(_T("Save project '") + projectName + _T("'?"),  MB_YESNOCANCEL);
 		if (ret == IDCANCEL) {
 			return FALSE;
 		} else if (ret == IDNO) {
