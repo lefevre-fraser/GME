@@ -63,6 +63,7 @@ public:
 		if (SUCCEEDED(CreateErrorInfo(&errCreate))
 			&& SUCCEEDED(errCreate->SetDescription(const_cast<wchar_t*>(err)))
 			&& SUCCEEDED(errCreate->SetGUID(__uuidof(IMgaLauncher)))
+			&& SUCCEEDED(errCreate->SetSource(L"Mga.MgaLauncher"))
 			)
 		{
 			IErrorInfoPtr errorInfo = errCreate;
