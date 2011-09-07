@@ -1153,7 +1153,8 @@ interface IMgaReference : IMgaFCO
 	[propput, helpstring("property RefAspect: NOP for non-model refs")] 
 												HRESULT RefAspect([in] IMgaMetaAspect * newVal);
 
-	[propget, helpstring("property UsedByConns")]	HRESULT UsedByConns([out, retval] IMgaConnPoints **pVal);
+	[propget, helpstring("property UsedByConns: get ConnPoints that connect to this Reference's RefPorts")]
+	HRESULT UsedByConns([out, retval] IMgaConnPoints **pVal);
 /*
 	[propget, helpstring("property RefPorts")] HRESULT RefPorts([out, retval] IMgaRefPorts **pVal);
 	[propget, helpstring("property RefPortFor")] HRESULT RefPortFor([in] IMgaFCO* target, [out, retval] IMgaRefPorts *pVal);
