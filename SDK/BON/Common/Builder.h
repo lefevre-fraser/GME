@@ -15,6 +15,7 @@
 
 #include "GMECOM.h"
 #include "ComHelp.h"
+#include "Mga.h"
 
 class CBuilder;
 class CBuilderFolder;
