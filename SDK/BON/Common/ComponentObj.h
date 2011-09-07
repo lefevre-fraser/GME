@@ -1,5 +1,4 @@
-#if !defined(AFX_INTERPRETEROBJ_H__1DBDD345_023D_11D2_BBB3_0040051F7117__INCLUDED_)
-#define AFX_INTERPRETEROBJ_H__1DBDD345_023D_11D2_BBB3_0040051F7117__INCLUDED_
+#pragma once
 
 
 #include "ComHelp.h"
@@ -7,6 +6,8 @@
 #include <ComponentConfig.h>
 #include "Exceptions.h"
 #include "MgaUtil.h"
+#include "Core.h"
+#include "Mga.h"
 
 #if defined(BUILDER_OBJECT_NETWORK)
 #else
@@ -335,5 +336,3 @@ public:
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line.
-
-#endif // !defined(AFX_INTERPRETEROBJ_H__1DBDD345_023D_11D2_BBB3_0040051F7117__INCLUDED_)

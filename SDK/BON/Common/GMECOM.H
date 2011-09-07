@@ -1,7 +1,8 @@
 #ifndef GMECOM_H
 #define GMECOM_H
 
-#include "ComponentLib.h"
+
+#include "Comdef.h"
 
 #define COM_EQUAL(a, b) (static_cast<IUnknown *>(a) == b ? true : a.IsEqualObject(b))
 
@@ -47,6 +48,16 @@ do { \
 		{ CLEANUP; } \
 		return hr; \
 	} \
+	catch(_com_error &e) \
+	{ \
+		{ CLEANUP; } \
+		if (e.Description() != _bstr_t()) \
+			SetErrorInfo(e.Error(), e.Description()); \
+		return e.Error(); \
+	} \
 	return S_OK;
+
+	// Defined in ComHelp.cpp
+	void SetErrorInfo(HRESULT hr, const wchar_t* err);
 
 #endif // GMECOM_H

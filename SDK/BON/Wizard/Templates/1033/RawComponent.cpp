@@ -10,6 +10,13 @@
 #include <GMECOM.h>
 #include <Console.h>
 #include "ComponentConfig.h"
+#import "progid:Mga.MgaMetaFolder" no_implementation auto_search no_namespace no_search_namespace
+#import "progid:Mga.MgaFolders" no_implementation auto_search no_namespace no_search_namespace
+#import "progid:Mga.MgaMetaFolder" implementation_only auto_search no_namespace no_search_namespace
+#import "progid:Mga.MgaFolders" implementation_only auto_search no_namespace no_search_namespace
+// Sometimes IntelliSense has a hard time picking up the above lines. Try this:
+//#include "Debug/Mga.tlh"
+
 #include "RawComponent.h"
 
 // this method is called after all the generic initialization is done
@@ -35,28 +42,24 @@ STDMETHODIMP RawComponent::Invoke(IMgaProject* gme, IMgaFCOs *models, long param
 
 
 // This is the main component method for interpereters and plugins. 
-// May als be used in case of invokeable addons
+// May also be used in case of invokeable addons
 STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,  
 									IMgaFCOs *selectedobjs,  long param) {
 	COMTRY {
-	  if(interactive) {
-		CComBSTR projname;
-		CComBSTR focusname = "<nothing>";
-		CComPtr<IMgaTerritory> terr;
-		COMTHROW(project->CreateTerritory(NULL, &terr));
-		COMTHROW(project->BeginTransaction(terr));
+		_bstr_t focusname = "<nothing>";
+		IMgaTerritoryPtr terr;
+		project->CreateTerritory(NULL, &terr, NULL);
+		project->BeginTransaction(terr, TRANSACTION_GENERAL);
 		try {
-			COMTHROW(project->get_Name(&projname));
-			if(currentobj) COMTHROW(currentobj->get_Name(&focusname));
+			if (currentobj)
+				focusname = currentobj->Name;
 			using namespace GMEConsole;
 			Console::Out::WriteLine("Interpreter started...");
-			AfxMessageBox(_T("RAW Com Component --- Plugin!!!! Sample (project: ") + CString(projname) +
-						_T(", focus: ") + CString(focusname));
-			COMTHROW(project->CommitTransaction());
+			AfxMessageBox(_T("RAW Com Component --- Plugin!!!! Sample (project: ") + project->Name +
+						_T(", focus: ") + focusname);
+			project->CommitTransaction();
 			Console::Out::WriteLine(_T("Interpreter completed..."));
 		}	catch(...) { project->AbortTransaction(); throw; }
-		
-	  } 
 	} COMCATCH(;);
 }
 
@@ -85,16 +88,14 @@ STDMETHODIMP RawComponent::put_ComponentParameter(BSTR name, VARIANT newVal) {
 // these two functions are the main 
 STDMETHODIMP RawComponent::GlobalEvent(globalevent_enum event) { 
 	if(event == GLOBALEVENT_UNDO) {
-		AfxMessageBox(_T("UNDO!!"));
+		AfxMessageBox(_T("Undo));
 	}
 	return S_OK; 
 }
 
 STDMETHODIMP RawComponent::ObjectEvent(IMgaObject * obj, unsigned long eventmask, VARIANT v) {
 	if(eventmask & OBJEVENT_CREATED) {
-		CComBSTR objID;
-		COMTHROW(obj->get_ID(&objID));
-		AfxMessageBox(_T("Object created! ObjID: ") + CString(objID)); 
+		AfxMessageBox(_T("Object created: ObjID=") + obj->ID); 
 	}		
 	return S_OK;
 }
