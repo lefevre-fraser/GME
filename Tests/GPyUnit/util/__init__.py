@@ -14,12 +14,14 @@ def dec_disable_early_binding(f):
     def ret(*args, **kwargs):
         with disable_early_binding():
             f(*args, **kwargs)
+    # n.b. unittest reads __name__
     ret.__name__ = f.__name__
     return ret
 
 def register_xmp(xmpfile):
     import os.path
     predef = { 'SF': os.path.join(os.environ['GME_ROOT'], "Paradigms", "SF", "SF.xmp"), 
+    # FIXME: doesn't work with GME from installer
     'MetaGME': os.path.join(os.environ['GME_ROOT'], "Paradigms", "MetaGME", "Paradigm", "MetaGME.xmp") }
     if not os.path.isfile(xmpfile):
         xmpfile = predef[xmpfile]
