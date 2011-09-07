@@ -104,6 +104,7 @@ public:
  STDMETHOD(get_ParentModel)( IMgaModel **pVal)		{ return inFCO->get_ParentModel(pVal); }
  STDMETHOD(get_ParentFolder)( IMgaFolder **pVal)		{ return inFCO->get_ParentFolder(pVal); }
  STDMETHOD(get_MetaBase)( IMgaMetaBase **pVal)		{ return inFCO->get_MetaBase(pVal); }
+ STDMETHOD(get_MetaRef)( metaref_type *pVal)		{ return inFCO->get_MetaRef(pVal); }
  STDMETHOD(get_ObjType)( objtype_enum *pVal)		{ return inFCO->get_ObjType(pVal); }
  STDMETHOD(GetAbsMetaPath)(BSTR *abspath)			{ return inFCO->GetAbsMetaPath(abspath); }
  STDMETHOD(GetRelMetaPath)(IMgaFCO *begfco, BSTR *relpath, IMgaFCOs *refs)
@@ -384,6 +385,7 @@ public:
 	HRESULT get_ParentModel(IMgaModel **pVal);
 	HRESULT get_ParentFolder(IMgaFolder **pVal);
 	HRESULT get_MetaBase(IMgaMetaBase **pVal);
+	HRESULT get_MetaRef(metaref_type *pVal);
 	HRESULT get_Name(BSTR *pVal);
 		void initialname();  // add inital name to object
 	HRESULT put_Name(BSTR newVal);

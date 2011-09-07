@@ -230,6 +230,15 @@ HRESULT FCO::get_MetaBase(IMgaMetaBase **pVal) {
 	} COMCATCH(;)
 }
 
+HRESULT FCO::get_MetaRef(metaref_type *pVal) { 
+	COMTRY {
+		CheckDeletedRead();
+		CHECK_OUTPTRPAR(pVal);
+		mgaproject->SetNmspaceInMeta();
+		*pVal = self[ATTRID_META];
+	} COMCATCH(;)
+}
+
 // ----------------------------------------
 // Parent and grandparent access
 // ----------------------------------------
