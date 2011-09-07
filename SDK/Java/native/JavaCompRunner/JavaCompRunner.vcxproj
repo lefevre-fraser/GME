@@ -63,7 +63,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(GME_ROOT)\GME\Common;$(JAVA_HOME)\include;$(JAVA_HOME)\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GME_ROOT)\SDK\BON\Common\;$(JAVA_HOME)\include;$(JAVA_HOME)\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -100,7 +100,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(GME_ROOT)\GME\Common;$(JAVA_HOME)\include;$(JAVA_HOME)\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GME_ROOT)\SDK\BON\Common\;$(JAVA_HOME)\include;$(JAVA_HOME)\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -120,7 +120,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ComHelp.cpp" />
+    <ClCompile Include="$(GME_ROOT)\SDK\BON\Common\ComHelp.cpp" />
     <ClCompile Include="$(GME_ROOT)\GME\Common\CommonError.cpp" />
     <ClCompile Include="$(GME_ROOT)\GME\Common\CommonSmart.cpp" />
     <ClCompile Include="$(GME_ROOT)\SDK\BON\Common\ComponentDll.cpp">
@@ -153,14 +153,14 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
     </Midl>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ComHelp.h" />
+    <ClInclude Include="$(GME_ROOT)\SDK\BON\Common\ComHelp.h" />
     <ClInclude Include="ComponentConfig.h" />
     <ClInclude Include="ComponentDll.h" />
     <ClInclude Include="ComponentLib_h.h" />
     <ClInclude Include="ComponentObj.h" />
     <ClInclude Include="$(GME_ROOT)\SDK\BON\Common\Console.h" />
     <ClInclude Include="$(GME_ROOT)\SDK\BON\Common\Formatter.h" />
-    <ClInclude Include="GMECOM.H" />
+    <ClInclude Include="$(GME_ROOT)\SDK\BON\Common\GMECOM.H" />
     <ClInclude Include="RawComponent.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="StdAfx.h" />

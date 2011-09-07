@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ComHelp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="$(GME_ROOT)\GME\Common\CommonError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,6 +45,9 @@
     <ClCompile Include="ComponentDll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(GME_ROOT)\SDK\BON\Common\ComHelp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="component.def">
@@ -68,9 +68,6 @@
     </Midl>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ComHelp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -81,9 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(GME_ROOT)\SDK\BON\Common\Formatter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GMECOM.H">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RawComponent.h">
@@ -102,6 +96,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ComponentObj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(GME_ROOT)\SDK\BON\Common\ComHelp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(GME_ROOT)\SDK\BON\Common\GMECOM.H">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,7 +7,6 @@
 #include "stdafx.h"
 #include "ComHelp.h"
 #include "GMECOM.h"
-#include "CommonError.h"
 #include "ComponentConfig.h"
 #include "RawComponent.h"
 #include "ComponentDll.h"

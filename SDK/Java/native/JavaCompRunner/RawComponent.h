@@ -3,6 +3,7 @@
 
 #include <jni.h>
 #include <string>
+#include "Mga.h"
 
 // Declaration of the main RAW COM component interface class
 

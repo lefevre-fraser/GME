@@ -7,8 +7,15 @@
 #include "ComponentDll.h"
 #include "ComponentObj.h"
 #include "ComponentConfig.h"
-#include "CommonError.h"
 #include "MgaUtil.h"
+
+#define COMRETURN(hr) { HRESULT res; if((res = (hr)) != S_OK) return res; }
+#define VERIFYTHROW(FUNC) \
+do { \
+	if( !(bool)(FUNC) ) { \
+		COMTHROW(E_FAIL); \
+	} \
+} while(false)
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
