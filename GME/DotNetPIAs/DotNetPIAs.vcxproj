@@ -105,7 +105,7 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <PropertyGroup>
-    <PIAVersion>1.0.0.0</PIAVersion>
+    <PIAVersion>1.0.1.0</PIAVersion>
   </PropertyGroup>
   <Target Name="CreatePIA">
     <Exec Command="&quot;$(WindowsSDKDir)bin\tlbimp&quot; /nologo /primary /keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk /asmversion:$(PIAVersion) /out:$(OutName).dll $(InFile) " />
