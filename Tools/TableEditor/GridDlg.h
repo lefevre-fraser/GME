@@ -11,6 +11,7 @@
 #include "GridCtrl_src/GridCtrl.h"
 #include "ComHelp.h"
 #include "GMECOM.h"
+#include "Mga.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CGridDlg dialog

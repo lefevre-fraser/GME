@@ -10,6 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "GMECOM.h"
+#include "Mga.h"
 #include <xercesc/sax/HandlerBase.hpp>
 XERCES_CPP_NAMESPACE_USE
 

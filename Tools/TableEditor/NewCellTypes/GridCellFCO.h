@@ -1,5 +1,6 @@
 #include "../GridCtrl_src/GridCell.h"
 #include "GMECOM.h"
+#include "Mga.h"
 
 class CGridCellFCO : public CGridCell  
 {

@@ -1,6 +1,7 @@
 #ifndef RAWCOMPONENT_H
 #define RAWCOMPONENT_H
 
+#include "Mga.h"
 
 // Declaration of the main RAW COM component interface class
 
