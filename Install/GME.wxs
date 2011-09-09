@@ -2326,6 +2326,12 @@
                 <ComponentRef Id='GME.MGA.Parser.dll'/>
                 <ComponentRef Id='GME.Util.dll'/>
                 <ComponentRef Id='GME.dll'/>
+                <ComponentRef Id='cmp43D10C69FA68348ED1D503B4D997B09A'/>
+                <ComponentRef Id='cmp4D3DABE643C1E5F8C94A9C33F1E1BAA9'/>
+                <ComponentRef Id='cmp1D1602EEEE2DA94C4F88B4DAC0EBDB6F'/>
+                <ComponentRef Id='cmp885AB1B6320D6C1595A4F6BC54D799BD'/>
+                <ComponentRef Id='cmpBF781B59FC218D303B4729104C1E4234'/>
+                <ComponentRef Id='cmpE40AF75B165037629E65E9C4D227EEF2'/>
                 
                 <MergeRef Id='CRT' />
                 <MergeRef Id='CRT Policy' />

@@ -217,6 +217,12 @@ def build_msi():
                       os.path.join(GME_ROOT, "Install", "PIAs", "GME.MGA.Parser.wxi"),
                       os.path.join(GME_ROOT, "Install", "PIAs", "GME.Util.wxi"),
                       os.path.join(GME_ROOT, "Install", "PIAs", "GMEPIA.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GME.MGA.Core.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GME.MGA.Meta.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GME.MGA.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GME.MGA.Parser.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GME.Util.wxi"),
+                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GMEPIA.wxi"),
                       ])
 
 def zip_pdb():
