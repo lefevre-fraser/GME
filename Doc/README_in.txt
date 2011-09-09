@@ -27,8 +27,22 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r11.9.9
+----------------------------------
+  - Binary compatibility with r10.8.18
+  - Existing Raw COM interpreters will need #include "Mga.h" added to RawComponent.h
+    - Alternatively, RawComponent.cpp may #import the type libraries. See a newly-generated Raw Component for an example
+  - Fixed bug where .NET interpreters may cause GME.exe to run after the GUI has been closed
+    - If you script GME via out-of-proc COM, closing the GME window will invalidate the IGMEOLEApp handle
+  - Fixed bug with registering .NET v4.0 components
+  - Added some missing enums to the GME type libraries
+  - GME now allows multiple instances of the same archetype
+  - Fix some SEH exceptions when scripting with Python
+  - Fixed bug where the position of an FCO within an instance model would be set
+
 Release Notes of Release r11.8.1
 ----------------------------------
+  - Binary compatibility with r10.8.18
   - Fixed bug where AutoLayout didn't do anything
 
 Release Notes of Release r11.7.28
