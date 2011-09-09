@@ -223,8 +223,12 @@ void CMainFrame::clearMgaProj()
 
 void CMainFrame::OnClose()
 {
+#ifdef _DEBUG
 	clearGmeOleApp();
 	CMDIFrameWndEx::OnClose();
+#else
+	theApp.OnAppExit();
+#endif
 }
 
 int CMainFrame::CreateToolBars()
