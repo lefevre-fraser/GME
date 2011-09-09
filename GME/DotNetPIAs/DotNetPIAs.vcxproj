@@ -10,6 +10,11 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Interfaces\Interfaces.vcxproj">
+      <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{57E1446E-6F58-44CD-B381-5D6A7F0509EB}</ProjectGuid>
     <RootNamespace>DotNetPIAs</RootNamespace>
@@ -59,48 +64,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Core.vcxproj">
-      <Project>{0b16b893-5512-48b8-b764-ee72c522ead8}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
-    <ProjectReference Include="..\Gme\GME.vcxproj">
-      <Project>{10471163-556b-4be1-a12e-c917f90f8346}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
-    <ProjectReference Include="..\MgaUtil\MgaUtil.vcxproj">
-      <Project>{ca09ab5c-bfac-4152-ae0b-d5afc400a5e7}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
-    <ProjectReference Include="..\Mga\Mga.vcxproj">
-      <Project>{86daef74-2527-41e5-82ce-52c31c5bbe8e}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
-    <ProjectReference Include="..\Parser\Parser.vcxproj">
-      <Project>{73a7151a-1044-417b-acc8-88c48f0afdcc}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
@@ -109,17 +72,25 @@
   </PropertyGroup>
   <Target Name="CreatePIA">
     <Exec Command="&quot;$(WindowsSDKDir)bin\tlbimp&quot; /nologo /primary /keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk /asmversion:$(PIAVersion) /out:$(OutName).dll $(InFile) " />
+  </Target>
+  <Target Name="RegisterPIA">
     <Exec Command="&quot;$(MSBuildBinPath)\regasm&quot; /nologo $(OutName).dll" />
     <Exec Command="&quot;$(WindowsSDKDir)bin\gacutil&quot; /nologo /i $(OutName).dll" />
     <!-- nb must execute 32bit -->
-    <Exec Command="reg add HKLM\SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\$(OutName) /ve /d c:\WINDOWS\assembly\GAC_MSIL\$(OutName)\$(PIAVersion)__f240a760fe751c2e /f" />
+    <Exec Command="reg add HKLM\SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\$([System.IO.Path]::GetFileName($(OutName))) /ve /d c:\WINDOWS\assembly\GAC_MSIL\$([System.IO.Path]::GetFileName($(OutName)))\$(PIAVersion)__f240a760fe751c2e /f" />
   </Target>
   <Target Name="AfterBuild">
-    <MSBuild Properties="InFile=..\$(Configuration)\Core.dll;OutName=GME.MGA.Core;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
-    <MSBuild Properties="InFile=..\$(Configuration)\Meta.dll;OutName=GME.MGA.Meta;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
-    <MSBuild Properties="InFile=..\$(Configuration)\Mga.dll;OutName=GME.MGA;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
-    <MSBuild Properties="InFile=..\$(Configuration)\Parser.dll;OutName=GME.MGA.Parser;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
-    <MSBuild Properties="InFile=..\$(Configuration)\MgaUtil.dll;OutName=GME.Util;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
-    <MSBuild Properties="InFile=..\$(Configuration)\GME.exe;OutName=GME;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA" />
+    <MSBuild Properties="InFile=..\Interfaces\CoreLib.tlb;OutName=GME.MGA.Core;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA;RegisterPIA" />
+    <MSBuild Properties="InFile=..\Interfaces\MetaLib.tlb;OutName=GME.MGA.Meta;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA;RegisterPIA" />
+    <MSBuild Properties="InFile=..\Interfaces\MgaLib.tlb;OutName=GME.MGA;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA;RegisterPIA" />
+    <MSBuild Properties="InFile=..\Interfaces\ParserLib.tlb;OutName=GME.MGA.Parser;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA;RegisterPIA" />
+    <MSBuild Properties="InFile=..\Interfaces\MgaUtilLib.tlb;OutName=GME.Util;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA;RegisterPIA" />
+    <MSBuild Properties="InFile=..\Interfaces\GMELib.tlb;OutName=GME;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA;RegisterPIA" />
+    <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME.MGA.Core;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
+    <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME.MGA.Meta;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
+    <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME.MGA;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
+    <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME.MGA.Parser;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
+    <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME.Util;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
+    <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
   </Target>
 </Project>
