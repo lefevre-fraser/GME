@@ -701,6 +701,9 @@ void CGMEDoc::ShowObject(LPCTSTR objectID)
 		COMTHROW(theApp.mgaProject->GetObjectByID(bstrID, &object));
 		COMTHROW(object.QueryInterface(&unk));
 
+		// CheckRead() to see if this object was deleted
+		long relid;
+		COMTHROW(object->get_RelID(&relid));
 		if (!inTrans) {
 			theApp.mgaProject->CommitTransaction();
 		}
