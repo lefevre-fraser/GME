@@ -1749,6 +1749,8 @@ void CGMEApp::OnFileOpen()
 
 void CGMEApp::OnAppExit()
 {
+	// Focus must be killed to flush ObjectInspector and Browser
+	::SetFocus(NULL);
 	if (SaveAllModified())
 	{
 		// n.b. C# interpreters may not Release() IGMEOLEApp, which keeps us ::Run()ing forever
