@@ -6,12 +6,13 @@ import unittest
 import win32com.client
 
 class TestRefportConnectionInvariantUnderMoves(unittest.TestCase):
-    def __init__(self, input_file, fco_to_move, destination_model, name=None, use_disp=None):
-        unittest.TestCase.__init__(self, 'test')
+    def __init__(self, input_file, fco_to_move, destination_model, name=None, use_disp=None, **kwds):
+        super(TestRefportConnectionInvariantUnderMoves, self).__init__('test', **kwds)
         self.input_file = input_file
         self.fco_to_move = fco_to_move
         self.destination_model = destination_model
         name = name if name else os.path.splitext(self.input_file)[0]
+        self._testMethodDoc = name
         self.output_file = name + "-output.mga"
         self.correct_file = name + "-correct.mga"
         if use_disp:
@@ -19,9 +20,9 @@ class TestRefportConnectionInvariantUnderMoves(unittest.TestCase):
 
 
     def test(self):
-        '''
+        """
         Regression test: given self.input_file, move self.fco_to_move to self.destination_model. Then check self.output_file against self.correct_file
-        '''
+        """
         def _adjacent_file(file):
             import os.path
             return os.path.join(os.path.dirname(__file__), file)
