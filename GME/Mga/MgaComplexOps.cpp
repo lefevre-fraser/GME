@@ -1147,8 +1147,11 @@ HRESULT FCO::CopyFCODisp(IMgaFCO *copiedobj, IMgaMetaRole *role, IMgaFCO **nobj)
 		q->Add( CComPtr<IMgaFCO>( copiedobj));
 
 		CComPtr<IMgaMetaRoles> roles;
-		COMTHROW(roles.CoCreateInstance(L"Mga.MgaMetaRoles", NULL, CLSCTX_INPROC));
-		COMTHROW(roles->Append(CComPtr<IMgaMetaRole>(role)));
+		if (role)
+		{
+			COMTHROW(roles.CoCreateInstance(L"Mga.MgaMetaRoles", NULL, CLSCTX_INPROC));
+			COMTHROW(roles->Append(CComPtr<IMgaMetaRole>(role)));
+		}
 
 		CComPtr<IMgaFCOs> newfcos;
 		COMTHROW(CopyFCOs( q, roles, &newfcos));
@@ -1482,8 +1485,11 @@ HRESULT FCO::MoveFCODisp(IMgaFCO *movedobj, IMgaMetaRole *role, IMgaFCO **nobj)
 		q->Add( CComPtr<IMgaFCO>( movedobj));
 
 		CComPtr<IMgaMetaRoles> roles;
-		COMTHROW(roles.CoCreateInstance(L"Mga.MgaMetaRoles", NULL, CLSCTX_INPROC));
-		COMTHROW(roles->Append(CComPtr<IMgaMetaRole>(role)));
+		if (role)
+		{
+			COMTHROW(roles.CoCreateInstance(L"Mga.MgaMetaRoles", NULL, CLSCTX_INPROC));
+			COMTHROW(roles->Append(CComPtr<IMgaMetaRole>(role)));
+		}
 
 		CComPtr<IMgaFCOs> newfcos;
 		COMTHROW(MoveFCOs( q, roles, &newfcos));
