@@ -26,6 +26,7 @@ if __name__=='__main__':
     (options, args) = parser.parse_args()
     if options.xml:
         import os.path
+        import xmlrunner
         with open("tests.xml", "w") as output:
             output.write("<testsuites>")
             for test in _tests:
