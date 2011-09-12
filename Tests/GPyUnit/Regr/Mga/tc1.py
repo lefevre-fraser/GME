@@ -74,7 +74,6 @@ class TestCase1( unittest.TestCase ):
 
 		# open the created project
 		self.project = project
-		print project
 		try:
 			project.Open( "MGA=" + mganame )
 		except:

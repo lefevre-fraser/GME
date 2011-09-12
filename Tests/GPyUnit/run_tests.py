@@ -33,6 +33,6 @@ if __name__=='__main__':
                 runner.run(test)
             output.write("</testsuites>")
     else:
-        runner = unittest.TextTestRunner()
+        runner = unittest.TextTestRunner(verbosity=2 if options.verbose else 1)
         runner.run(_tests)
 
