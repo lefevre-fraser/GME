@@ -356,6 +356,7 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 	// ======================
 	// Insert application specific code here
 	global_vars.silent_mode = (lParam == GME_SILENT_MODE);
+	global_vars.silent_mode |= (bool)(GetKeyState(VK_CONTROL) & 0x8000);
 	//global_vars.silent_mode = true;
 	initMembers( project);
 
