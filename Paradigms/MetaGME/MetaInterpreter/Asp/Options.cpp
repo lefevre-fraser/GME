@@ -285,7 +285,7 @@ void Options::OnOK()
 void Options::OnDontAskClick() 
 {
 	if( ((CButton * ) GetDlgItem( IDC_CHECK1))->GetCheck())
-		if( IDCANCEL == MessageBox( CString("If you leave this option checked you can access this dialog later only if you modify the \"") + OptionsRegistrySubNode_str.c_str() + "\" value in the RootFolder's registry to something else than \"" + DontAsk_str.c_str() + "\"!", "Warning!", MB_OKCANCEL | MB_ICONWARNING))
+		if( IDCANCEL == MessageBox( CString("To modify these options at a later time, set the \"") + OptionsRegistrySubNode_str.c_str() + "\" value in the RootFolder's registry to something else than \"" + DontAsk_str.c_str() + "\".", "MetaInterpreter - Options", MB_OKCANCEL))
 			((CButton *) GetDlgItem( IDC_CHECK1))->SetCheck( 0);
 	
 }
