@@ -1021,7 +1021,7 @@ void ReDeriveNewObj(CMgaProject *mgaproject, CoreObj &orignobj, int targetlevel)
 
 
 HRESULT FCO::CopyFCOs(IMgaFCOs *copylist, IMgaMetaRoles *rlist,IMgaFCOs **objs) {
-	COMTRY_IN_TRANSACTION {
+	COMTRY_IN_TRANSACTION_MAYBE {
 		CheckWrite();
 		CHECK_MYINPTRSPAR(copylist);
 		long cnt;
@@ -1134,12 +1134,12 @@ HRESULT FCO::CopyFCOs(IMgaFCOs *copylist, IMgaMetaRoles *rlist,IMgaFCOs **objs) 
 
 		SelfMark(OBJEVENT_NEWCHILD);
 
-	} COMCATCH_IN_TRANSACTION(;);
+	} COMCATCH_IN_TRANSACTION_MAYBE(;);
 }
 
 HRESULT FCO::CopyFCODisp(IMgaFCO *copiedobj, IMgaMetaRole *role, IMgaFCO **nobj)
 {
-	COMTRY_IN_TRANSACTION {
+	COMTRY_IN_TRANSACTION_MAYBE {
 		CComPtr<IMgaFCO> new_fco;
 
 		// copy in param to a folder coll
@@ -1164,7 +1164,7 @@ HRESULT FCO::CopyFCODisp(IMgaFCO *copiedobj, IMgaMetaRole *role, IMgaFCO **nobj)
 		if( nobj) {
 			*nobj = new_fco.Detach();
 		}
-	} COMCATCH_IN_TRANSACTION(;);
+	} COMCATCH_IN_TRANSACTION_MAYBE(;);
 }
 
 
@@ -1309,7 +1309,7 @@ void DeriveMoveds(CMgaProject *mgaproject, std::vector<CoreObj> &orignobjs, std:
 
 
 HRESULT FCO::MoveFCOs(IMgaFCOs *movelist, IMgaMetaRoles *rlist,IMgaFCOs **objs) {
-	COMTRY_IN_TRANSACTION {
+	COMTRY_IN_TRANSACTION_MAYBE {
 		CheckWrite();
 		CHECK_MYINPTRSPAR(movelist);
 		long cnt;
@@ -1472,12 +1472,12 @@ HRESULT FCO::MoveFCOs(IMgaFCOs *movelist, IMgaMetaRoles *rlist,IMgaFCOs **objs) 
 			SelfMark(OBJEVENT_NEWCHILD);
 		} // if valid
 
-	} COMCATCH_IN_TRANSACTION(;);
+	} COMCATCH_IN_TRANSACTION_MAYBE(;);
 }
 
 HRESULT FCO::MoveFCODisp(IMgaFCO *movedobj, IMgaMetaRole *role, IMgaFCO **nobj)
 {
-	COMTRY_IN_TRANSACTION {
+	COMTRY_IN_TRANSACTION_MAYBE {
 		CComPtr<IMgaFCO> new_fco;
 
 		// copy in param to a folder coll
@@ -1502,7 +1502,7 @@ HRESULT FCO::MoveFCODisp(IMgaFCO *movedobj, IMgaMetaRole *role, IMgaFCO **nobj)
 		if( nobj) {
 			*nobj = new_fco.Detach();
 		}
-	} COMCATCH_IN_TRANSACTION(;);
+	} COMCATCH_IN_TRANSACTION_MAYBE(;);
 }
 
 
