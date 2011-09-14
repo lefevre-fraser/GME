@@ -482,6 +482,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// enable Visual Studio 2005 style docking window behavior
 	CDockingManager::SetDockingMode(DT_SMART);
+	CMDIFrameWndEx::EnableMDITabsLastActiveActivation(TRUE);
 
 	// enable Visual Studio 2005 style docking window auto-hide behavior
 //	EnableAutoHidePanes(CBRS_ALIGN_ANY);
