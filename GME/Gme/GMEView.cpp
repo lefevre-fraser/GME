@@ -66,10 +66,7 @@ int setZoomPercents[GME_ZOOM_LEVEL_NUM] = {
 
 // #define END_SCROLL_OFFSET 50 // not used - instead EXTENT_ERROR_CORR
 
-#ifdef _DEBUG
-//#define CONSIDER_ONLY_FIRST_ACTIVATE
-#endif
-
+#define CONSIDER_ONLY_FIRST_ACTIVATE
 
 /////////////////////////////////////////////////////////////////////////////
 // CViewDriver
@@ -1073,7 +1070,16 @@ void CGMEView::OnInitialUpdate()
 
 	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnInitialUpdate() - opened model: ")+path+name+_T("\r\n"));
 
-	// AutoRoute();
+	modelGrid.Clear();
+	FillModelGrid();
+	AutoRoute();
+	ClearConnSpecs();
+	if(guiMeta) {
+		theApp.UpdateCompList4CurrentKind( guiMeta->name);
+		CMainFrame::theInstance->SetPartBrowserMetaModel(guiMeta);
+		CMainFrame::theInstance->SetPartBrowserBg(bgColor);
+		CMainFrame::theInstance->ChangePartBrowserAspect(currentAspect->index);
+	}
 	TRACE(_T("CGMEView::OnInitialUpdate DoPannWinRefresh\n"));
 	DoPannWinRefresh(); // terge - new window opened
 	SetScroll();
@@ -7044,6 +7050,7 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 			CMainFrame::theInstance->SetPartBrowserBg(bgColor);
 			CMainFrame::theInstance->ChangePartBrowserAspect(currentAspect->index);
 		}
+		DoPannWinRefresh();
 	}
 	else if(tmpConnectMode) {
 		tmpConnectMode = false;
@@ -7061,9 +7068,8 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 	if (bActivate)
 	{
 //		if (gmeviewA  &&  guiMeta)
-		{
+            {
 			TRACE(_T("CGMEView::OnActivateView DoPannWinRefresh\n"));
-			DoPannWinRefresh();
 		}
 	}
 	TRACE(_T("CGMEView::OnActivateView final false\n"));
