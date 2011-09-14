@@ -2973,7 +2973,7 @@ CPoint CGuiConnection::GetCenter(void) const
 }
 
 bool CGuiConnection::AdjustCoordLimits(CPointList& points, int edgeIndex, bool isPathEnd, bool xOrY, POSITION pos,
-									   int ptCoord, int lastlastCoord, int& coordMinLimit, int& coordMaxLimit) const
+									   int ptCoord, int lastlastCoord, long& coordMinLimit, long& coordMaxLimit) const
 {
 	if (!isPathEnd) {
 		// Internal edge
@@ -3024,7 +3024,7 @@ bool CGuiConnection::AdjustCoordLimits(CPointList& points, int edgeIndex, bool i
 
 int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint& endPoint, CPoint& thirdPoint,
 								 ConnectionPartMoveType& connectionMoveMethod, bool& horizontalOrVerticalEdge,
-								 bool& isPartFixed, int& xMinLimit, int& xMaxLimit, int& yMinLimit, int& yMaxLimit,
+								 bool& isPartFixed, long& xMinLimit, long& xMaxLimit, long& yMinLimit, long& yMaxLimit,
 								 bool checkPointOnEdge) const
 {
 	CPointList points;
@@ -3179,10 +3179,10 @@ int CGuiConnection::IsPathAt(const CPoint& point, ConnectionPartMoveType& connec
 	CPoint customizeConnectionEdgeStartPoint;
 	CPoint customizeConnectionEdgeEndPoint;
 	CPoint customizeConnectionEdgeThirdPoint;
-	int customizeConnectionEdgeXMinLimit;
-	int customizeConnectionEdgeXMaxLimit;
-	int customizeConnectionEdgeYMinLimit;
-	int customizeConnectionEdgeYMaxLimit;
+	long customizeConnectionEdgeXMinLimit;
+	long customizeConnectionEdgeXMaxLimit;
+	long customizeConnectionEdgeYMinLimit;
+	long customizeConnectionEdgeYMaxLimit;
 
 	return GetEdgeIndex(point, customizeConnectionEdgeStartPoint, customizeConnectionEdgeEndPoint, customizeConnectionEdgeThirdPoint,
 						connectionMoveMethod, horizontalOrVerticalEdge,

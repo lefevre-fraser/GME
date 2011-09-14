@@ -451,11 +451,11 @@ public:
 	CRect GetBounds(void) const;
 	CPoint GetCenter(void) const;
 	bool AdjustCoordLimits(CPointList& points, int edgeIndex, bool isPathEnd, bool xOrY, POSITION pos,
-						   int ptCoord, int lastlastCoord, int& coordMinLimit, int& coordMaxLimit) const;
+						   int ptCoord, int lastlastCoord, long& coordMinLimit, long& coordMaxLimit) const;
 	int GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint& endPoint, CPoint& thirdPoint,
 					 ConnectionPartMoveType& connectionMoveMethod, bool& horizontalOrVerticalEdge,
-					 bool& isPartFixed, int& xMinLimit, int& xMaxLimit,
-					 int& yMinLimit, int& yMaxLimit, bool checkPointOnEdge = true) const;
+					 bool& isPartFixed, long& xMinLimit, long& xMaxLimit,
+					 long& yMinLimit, long& yMaxLimit, bool checkPointOnEdge = true) const;
 	int IsPathAt(const CPoint& point, ConnectionPartMoveType& connectionMoveMethod, bool& horizontalOrVerticalEdge,
 				 bool& isPartFixed) const;
 	long IsPointOnSectionAndDeletable(long edgeIndex, const CPoint& point);

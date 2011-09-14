@@ -118,10 +118,10 @@ public:
 	CPoint					customizeConnectionEdgeStartPoint;
 	CPoint					customizeConnectionEdgeEndPoint;
 	CPoint					customizeConnectionEdgeThirdPoint;
-	int						customizeConnectionEdgeXMinLimit;
-	int						customizeConnectionEdgeXMaxLimit;
-	int						customizeConnectionEdgeYMinLimit;
-	int						customizeConnectionEdgeYMaxLimit;
+	long						customizeConnectionEdgeXMinLimit;
+	long						customizeConnectionEdgeXMaxLimit;
+	long						customizeConnectionEdgeYMinLimit;
+	long						customizeConnectionEdgeYMaxLimit;
 	CPoint					customizeConnectionOrigCursor;
 	CPoint					customizeConnectionCurrCursor;
 	bool					isCursorChangedByEdgeCustomize;
