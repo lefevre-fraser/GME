@@ -27,6 +27,10 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r11.9.14
+----------------------------------
+  - Fixed bug with CopyFCODisp, MoveFCODisp, CopyFolderDisp, MoveFolderDisp
+
 Release Notes of Release r11.9.9
 ----------------------------------
   - Binary compatibility with r10.8.18
