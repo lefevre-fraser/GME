@@ -2015,6 +2015,7 @@ void CGMEView::Reset(bool doInvalidate)
 			CGuiObject* obj = fco->dynamic_cast_CGuiObject();
 			if(obj && obj->IsVisible()) {
 				if(obj->GetRouterBox())					// it may be a new object not yet routed
+					// FIXME: so slow. Can't we just create a new router?
 					obj->RemoveFromRouter(router);
 			}
 			delete obj;
