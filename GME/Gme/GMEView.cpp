@@ -823,13 +823,38 @@ void CGMEView::OnDraw(CDC* pDC)
 			}
 		}
 
+		CRect visible;
+		{
+			CRect clientRect;
+			GetClientRect(clientRect);
+			CPoint clientSize = clientRect.Size();
+			clientSize = CPoint(clientSize.x * m_scalePercent / 100, clientSize.y * m_scalePercent / 100);
+
+			CPoint scrollpos = GetDeviceScrollPosition();
+			visible = CRect(scrollpos, scrollpos + clientSize);
+			visible.InflateRect(m_scalePercent * 5, m_scalePercent * 5);
+			visible = CRect(std::max(0l, visible.left), std::max(0l, visible.top),
+				visible.right, visible.bottom);
+		}
+
 		pos = children.GetHeadPosition();
+		int miss = 0;
 		while (pos) {
 			CGuiFco* fco = children.GetNext(pos);
                   ASSERT(fco != NULL);
 			if (fco->IsVisible()) {
 				CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
-				if (!conn) {
+
+				CRect loc(0, 0, INT_MAX, INT_MAX);
+				if (fco->dynamic_cast_CGuiObject())
+				{
+					CRect fcoLoc = fco->dynamic_cast_CGuiObject()->GetCurrentAspect()->GetLocation();
+					fcoLoc = fcoLoc.MulDiv(m_scalePercent, 100);
+					CRect labelLoc = fco->dynamic_cast_CGuiObject()->GetCurrentAspect()->GetNameLocation();
+					labelLoc = labelLoc.MulDiv(m_scalePercent, 100);
+					loc.UnionRect(fcoLoc, labelLoc);
+				}
+				if (!conn && CRect().IntersectRect(visible, loc)) {
 					// GME-339: Gdiplus::Graphics may modify pDC (e.g. SetViewportOrgEx) when a new-style decorator runs
 					// a modified pDC makes old-style (i.e. no DrawEx) decorators render incorrectly (e.g. when the scrollbar is scrolled)
 					gdip.~Graphics();
@@ -839,6 +864,8 @@ void CGMEView::OnDraw(CDC* pDC)
 					gdip.SetTextRenderingHint(m_eFontAntiAlias);
 					fco->Draw(pDC->m_hDC, &gdip);
 				}
+				else
+					miss++;
 			}
 		}
 		DrawConnections(pDC->m_hDC, &gdip);
