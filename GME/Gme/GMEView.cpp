@@ -45,6 +45,9 @@
 #endif
 #include <xercesc/util/OutOfMemoryException.hpp>
 
+#undef min
+#undef max
+
 CGraphics graphics;
 static CViewList viewsToKill;
 
