@@ -1,6 +1,6 @@
 import unittest
 
-# it is also possible to run tests like this:
+# it is also possible to run tests like this on Python 2.7:
 # python -m unittest Regr.Mga.tc7
 _tests = unittest.defaultTestLoader.loadTestsFromNames((
  'test_registrar',
