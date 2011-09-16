@@ -296,6 +296,17 @@ void MgaSetErrorInfo(HRESULT hr);
 		MgaSetErrorInfo(e.hr); \
 		return e.hr; \
 	} \
+	catch(_com_error &e) \
+	{ \
+		ASSERT(FAILED(e.Error())); \
+		if ((hr = ttt.Abort()) != S_OK) return hr; \
+		{ CLEANUP; } \
+		if (e.Description() != _bstr_t()) \
+			SetErrorInfo(e.Description()); \
+		else \
+			SetStandardOrGMEErrorInfo(e.Error()); \
+		return e.Error(); \
+	} \
 	return ttt.Commit(); }
 
 #define MGAPREF_NO_NESTED_TX 0x00000080
@@ -319,6 +330,18 @@ catch(hresult_exception &e) \
 	} \
 	MgaSetErrorInfo(e.hr); \
 	return e.hr; \
+} \
+catch(_com_error &e) \
+{ \
+	ASSERT(FAILED(e.Error())); \
+	HRESULT hr; \
+	if(!(this->mgaproject->preferences & MGAPREF_NO_NESTED_TX) && ((hr = ttt.Abort()) != S_OK)) return hr; \
+	{ CLEANUP; } \
+	if (e.Description() != _bstr_t()) \
+		SetErrorInfo(e.Description()); \
+	else \
+		SetStandardOrGMEErrorInfo(e.Error()); \
+	return e.Error(); \
 } \
 if (!(this->mgaproject->preferences & MGAPREF_NO_NESTED_TX)) \
 	return ttt.Commit(); \
