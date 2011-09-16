@@ -697,6 +697,8 @@ void CGMEView::DoPannWinRefresh()
 	extent.bottom = (int)(extent.bottom * EXTENT_ERROR_CORR); // ??
 
 	CRect target = CRect(0, 0, extent.Width() / PANNING_RATIO_MIN, extent.Height() / PANNING_RATIO_MIN);
+	// FIXME: if we detected Panning Window size change, we could do this and waste less:
+	// target = main->m_panningWindow.GetWindowRect(&rectt);
 
 	// make a bitmap DC
 	HDC tmpDC = ::GetWindowDC(this->m_hWnd);
