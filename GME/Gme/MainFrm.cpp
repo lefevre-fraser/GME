@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "ChildFrm.h"
+#include "GMEView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -662,14 +663,30 @@ void CMainFrame::CreateNewView(CView *view, CComPtr<IMgaModel>& model)
 		CDocument *pDocument = CGMEDoc::theInstance;
 		ASSERT( pDocument );
 
+		// KMS: WM_MDIACTIVATE is sent 3 times for tabs after the first: once for the new CChildFrame, once for the old,
+		// and again for the new. Disable panning window refresh, since it can be expensive.
+		CGMEView* oldGmeview = CGMEView::GetActiveView();
+		if (oldGmeview)
+			oldGmeview->m_bEnablePannWindowRefresh = false;
 		CFrameWnd *pFrame = docTemplate->CreateNewFrame(pDocument, NULL);
 		if(pFrame == NULL) {
 			AfxMessageBox(_T("Failed to create window"),MB_OK | MB_ICONSTOP);
 			return;
 		}
 		docTemplate->InitialUpdateFrame(pFrame,pDocument);
-		m_wndClientArea.UpdateMDITabbedGroups(TRUE);  // The framework by default calls this via OnUpdateFrameTitle 
+		HWND hwndActive = (HWND) m_wndClientArea.SendMessage(WM_MDIGETACTIVE);
+
+		m_wndClientArea.UpdateMDITabbedGroups(FALSE);  // The framework by default calls this via OnUpdateFrameTitle 
 		                                              // (overloaded in our implementation without calling the base class intentionally)
+
+		CGMEView* newGmeview = CGMEView::GetActiveView();
+
+		if (oldGmeview)
+		{
+			oldGmeview->m_bEnablePannWindowRefresh = true;
+		}
+		newGmeview->m_bEnablePannWindowRefresh = true;
+		newGmeview->DoPannWinRefresh();
 
 #if defined(ACTIVEXGMEVIEW)
 		CMainFrame* pMainFrame = (CMainFrame*)theApp.m_pMainWnd;

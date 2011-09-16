@@ -54,9 +54,6 @@ public:
 	void DoPannWinRefresh();
 
 public:
-	bool m_refreshpannwin;
-
-public:
 	void PrepareAspectPrn(CPrintInfo* pInfo);
 	bool ChangePrnAspect(CString aspect);
 	void SaveCurrAsp() { m_prevcurrasp = currentAspect; }
@@ -97,6 +94,7 @@ private:
 	CGuiObject*				objectInDecoratorOperation;
 	CGuiAnnotator*			annotatorInDecoratorOperation;
 public:
+	bool m_bEnablePannWindowRefresh;
 	struct ContextClickState {
 		UINT		nFlags;
 		CPoint		lpoint;

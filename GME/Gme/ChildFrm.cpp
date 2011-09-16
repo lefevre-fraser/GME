@@ -5,6 +5,7 @@
 #include "GMEApp.h"
 
 #include "ChildFrm.h"
+#include "MainFrm.h"
 
 #include "GMEView.h"
 
@@ -25,6 +26,7 @@ BEGIN_MESSAGE_MAP(CChildFrame, CMDIChildWndEx)
 	ON_UPDATE_COMMAND_UI(CG_ID_VIEW_MODELPROPERTIESBAR, OnUpdateControlBarMenu)
 	//{{AFX_MSG_MAP(CChildFrame)
 	ON_WM_CLOSE()
+	ON_WM_MDIACTIVATE()
 	//}}AFX_MSG_MAP
 	ON_WM_SIZE()
 END_MESSAGE_MAP()
@@ -189,4 +191,12 @@ BOOL CChildFrame::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CMDIChildWndEx::PreTranslateMessage(pMsg);
+}
+
+void CChildFrame::OnMDIActivate(BOOL bActivate,
+		CWnd* pActivateWnd, CWnd* pDeactivateWnd)
+{
+	CMDIChildWndEx::OnMDIActivate(bActivate, pActivateWnd, pDeactivateWnd);
+	if (pActivateWnd == this)
+		((CGMEView*)GetActiveView())->DoPannWinRefresh();
 }

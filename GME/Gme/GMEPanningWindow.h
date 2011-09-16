@@ -64,6 +64,8 @@ public:
 public:
 	void SetBitmapDC(HWND owner, HDC bdc, HBITMAP oldBmp, CRect& ori, CRect& rect, COLORREF& bkgrnd);
 	void SetViewRect(CRect vrect);
+
+	virtual void ShowPane(BOOL bShow, BOOL bDelay, BOOL bActivate/* = TRUE*/);
 };
 
 //{{AFX_INSERT_LOCATION}}

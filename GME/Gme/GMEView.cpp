@@ -530,7 +530,7 @@ CGMEView::CGMEView()
 	m_prnpos						= NULL;
 	m_lastPrnPage					= 0;
 	m_zoomVal						= ZOOM_NO;
-	m_refreshpannwin				= false;
+	m_bEnablePannWindowRefresh = false;
 
 	initDone						= false;
 	isModelAutoRouted				= theApp.useAutoRouting;
@@ -682,6 +682,8 @@ BOOL CGMEView::PreCreateWindow(CREATESTRUCT& cs)
 #define PANNING_RATIO_MIN	4 // ??
 void CGMEView::DoPannWinRefresh()
 {
+	if (!m_bEnablePannWindowRefresh)
+		return;
 //	CMainFrame* main = (CMainFrame*)AfxGetMainWnd();
 	CMainFrame* main = (CMainFrame*)theApp.m_pMainWnd;
 
@@ -993,11 +995,6 @@ void CGMEView::OnDraw(CDC* pDC)
 			onScreen->StretchBlt(pt.x - 5, pt.y - 5, r.Width() + 10, r.Height() + 10, offScreen, pt.x - 5, pt.y - 5, r.Width() + 10, r.Height() + 10, SRCCOPY);
 		else
 			onScreen->BitBlt(pt.x - 5, pt.y - 5, r.Width() + 10, r.Height() + 10, offScreen, pt.x - 5, pt.y - 5, SRCCOPY);
-		if (m_refreshpannwin)
-		{
-			m_refreshpannwin = false;
-			DoPannWinRefresh();
-		}
 	}
 }
 
@@ -1111,8 +1108,6 @@ void CGMEView::OnInitialUpdate()
 		CMainFrame::theInstance->SetPartBrowserBg(bgColor);
 		CMainFrame::theInstance->ChangePartBrowserAspect(currentAspect->index);
 	}
-	TRACE(_T("CGMEView::OnInitialUpdate DoPannWinRefresh\n"));
-	DoPannWinRefresh(); // terge - new window opened
 	SetScroll();
 	SetCenterObject(centerObj);
 	initDone = true;
@@ -1985,7 +1980,6 @@ void CGMEView::Reset(bool doInvalidate)
 	if (m_isActive)
 	{
 		TRACE(_T("CGMEView::Reset GetActiveView\n"));
-		/*gmeviewA->*/m_refreshpannwin = true; 
 	}
 	CComPtr<IMgaFCO> selConn;
 	if (selectedConnection != NULL)
@@ -2209,6 +2203,7 @@ void CGMEView::Reset(bool doInvalidate)
 
 	Invalidate(doInvalidate);
 	AutoRoute();
+	DoPannWinRefresh();
 
 	EndWaitCursor();
 
@@ -4295,7 +4290,7 @@ void CGMEView::ChangeAspect(CString aspName, bool p_eraseStack /*=true*/)
 			if (m_isActive)
 			{
 				TRACE(_T("CGMEView::ChangeAspect activeView\n"));
-				/*gmeviewA->*/m_refreshpannwin = true; 
+				DoPannWinRefresh();
 			}
 			Invalidate();
 		}
@@ -4549,7 +4544,6 @@ void CGMEView::OnSelChangeAspectProp()
 		ClearConnectionSelection();
 
 		TRACE(_T("CGMEView::OnSelChangeAspectProp\n"));
-		m_refreshpannwin = true;
 		Invalidate();
 	}
 }
@@ -7048,11 +7042,9 @@ void CGMEView::OnActivateFrame( UINT nState, CFrameWnd* pFrameWnd )
 	if (m_isActive)
 	{
 		TRACE(_T("CGMEView::OnActivateFrame\n"));
-		/*gmeviewA->*/m_refreshpannwin = true; 
 	}
 	CScrollZoomView::OnActivateFrame(nState, pFrameWnd);
 }
-
 
 void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView)
 {
@@ -7082,7 +7074,7 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 			CMainFrame::theInstance->SetPartBrowserBg(bgColor);
 			CMainFrame::theInstance->ChangePartBrowserAspect(currentAspect->index);
 		}
-		DoPannWinRefresh();
+		needsReset = false;
 	}
 	else if(tmpConnectMode) {
 		tmpConnectMode = false;
@@ -7105,7 +7097,6 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 		}
 	}
 	TRACE(_T("CGMEView::OnActivateView final false\n"));
-	m_refreshpannwin = false;
 	if (bActivate)
 		theApp.UpdateMainTitle();
 	CScrollZoomView::OnActivateView(bActivate, pActivateView, pDeactiveView);

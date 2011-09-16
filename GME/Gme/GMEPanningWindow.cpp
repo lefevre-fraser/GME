@@ -6,6 +6,7 @@
 #include "GMEPanningWindow.h"
 #include "GMEApp.h"
 #include "MainFrm.h"
+#include "GMEView.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -131,4 +132,22 @@ void CGMEPanningWindow::SetBitmapDC(HWND owner, HDC bdc, HBITMAP oldBmp, CRect& 
 void CGMEPanningWindow::SetViewRect(CRect vrect)
 {
 	m_PanningWindowWrapper.SetViewRect(vrect.left, vrect.top, vrect.Width(), vrect.Height());
+}
+
+void CGMEPanningWindow::ShowPane(BOOL bShow, BOOL bDelay, BOOL bActivate/* = TRUE*/)
+{
+	CDockablePane::ShowPane(bShow, bDelay, bActivate);
+	if (bShow)
+	{
+		CMDIChildWnd *pChild  = CMainFrame::theInstance->MDIGetActive();
+		if (pChild) 
+		{
+			CGMEView *view = (CGMEView*)pChild->GetActiveView();
+			if (view) 
+			{
+				view->DoPannWinRefresh();
+				view->notifyPanning(view->GetDeviceScrollPosition());
+			}
+		}
+	}
 }

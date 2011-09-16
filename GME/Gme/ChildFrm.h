@@ -32,6 +32,7 @@ public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	//}}AFX_VIRTUAL
 
+
 // Implementation
 public:
 	virtual ~CChildFrame();
@@ -42,6 +43,8 @@ public:
 	void SetAppTitle(const CString& appTitle);
 	void SetSendEvent(bool sendEventParam);
 	void SetView(CView* viewParam);
+	afx_msg void OnMDIActivate(BOOL bActivate,
+		CWnd* pActivateWnd, CWnd* pDeactivateWnd);
 
 #ifdef _DEBUG
 	virtual void AssertValid() const;
