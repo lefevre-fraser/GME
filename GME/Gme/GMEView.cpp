@@ -78,6 +78,8 @@ STDMETHODIMP CViewDriver::GlobalEvent(globalevent_enum event)
 
 	if(view == 0)
 		return S_OK;
+	if (view->executingPendingRequests)
+		return S_OK;
 
 	CGMEView::inEventHandler = true;
 	switch(event) {
