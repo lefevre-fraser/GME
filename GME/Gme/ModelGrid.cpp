@@ -91,6 +91,8 @@ bool CModelGrid::IsAvailableG(CPoint &pt,CSize &halfSize)  // centerpoint!
 	int starty = pt.y - halfSize.cy;
 	int endx = pt.x + halfSize.cx;
 	int endy = pt.y + halfSize.cy;
+	// Hack to prevent labels from overlapping
+	starty -= 2;
 	if(startx < 0 || starty < 0 || endx >= GME_MAX_GRID_DIM || endy >= GME_MAX_GRID_DIM)
 		return false;
 	for(int i = starty; i < endy; i++)
