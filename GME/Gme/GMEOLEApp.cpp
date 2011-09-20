@@ -767,7 +767,10 @@ void CGMEOLEApp::SetWorkingDirectory( LPCTSTR pPath)
 
 void CGMEOLEApp::Exit()
 {
-	theApp.exit();
+	theApp.CloseProject(false);
+	// n.b. Post here, since this call could be out-of-proc, and it won't succeed 
+	// if TerminateProcess is called
+	CMainFrame::theInstance->PostMessage(WM_CLOSE, 0, 0);
 }
 
 long CGMEOLEApp::RefreshLib( LPCTSTR pLibName, BOOL pUngroup)

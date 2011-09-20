@@ -1751,6 +1751,13 @@ void CGMEApp::OnAppExit()
 {
 	// Focus must be killed to flush ObjectInspector and Browser
 	::SetFocus(NULL);
+#ifdef _DEBUG
+	if (SaveAllModified())
+	{
+		CWinAppEx::OnAppExit();
+		return;
+	}
+#else
 	if (SaveAllModified())
 	{
 		// n.b. C# interpreters may not Release() IGMEOLEApp, which keeps us ::Run()ing forever
@@ -1758,6 +1765,7 @@ void CGMEApp::OnAppExit()
 		TerminateProcess(GetCurrentProcess(), 0);
 	}
 	// n.b. don't call CWinAppEx::OnAppExit
+#endif
 }
 
 BOOL CGMEApp::SaveAllModified() 

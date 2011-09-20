@@ -225,8 +225,11 @@ void CMainFrame::clearMgaProj()
 void CMainFrame::OnClose()
 {
 #ifdef _DEBUG
-	clearGmeOleApp();
-	CMDIFrameWndEx::OnClose();
+	if (theApp.SaveAllModified())
+	{
+		clearGmeOleApp();
+		CMDIFrameWndEx::OnClose();
+	}
 #else
 	theApp.OnAppExit();
 #endif
