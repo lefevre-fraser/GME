@@ -740,8 +740,7 @@ void CScrollZoomView::UpdateBars()
 		m_noHscroll = false; // hack terge
 		info.nPage = sizeClient.cx;
 		info.nMax = m_totalDev.cx-1;
-		if (!SetScrollInfo(SB_HORZ, &info, TRUE)) ///dsfsd fds
-			SetScrollRange(SB_HORZ, 0, sizeRange.cx, TRUE);
+		SetScrollInfo(SB_HORZ, &info, TRUE);
 	}
 	else
 	{
@@ -770,8 +769,8 @@ void CScrollZoomView::UpdateBars()
 		m_noVscroll = false; // hack terge
 		info.nPage = sizeClient.cy;
 		info.nMax = m_totalDev.cy-1;
-		if (!SetScrollInfo(SB_VERT, &info, TRUE))
-			SetScrollRange(SB_VERT, 0, sizeRange.cy, TRUE);
+		SetScrollInfo(SB_VERT, &info, TRUE);
+			//SetScrollRange(SB_VERT, 0, sizeRange.cy, TRUE);
 	}
 	else
 	{
@@ -847,18 +846,43 @@ void CScrollZoomView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	// ignore scroll bar msgs from other controls
 	if (pScrollBar != NULL  &&  pScrollBar != GetScrollBarCtrl(SB_HORZ))
 		return;
+	//  GetScrollInfo http://msdn.microsoft.com/en-us/library/bb787583%28VS.85%29.aspx
+	// "The messages that indicate scroll bar position, WM_HSCROLL and WM_VSCROLL, provide only 16 bits of position data"
+	if (nSBCode == SB_THUMBTRACK || nSBCode == SB_THUMBPOSITION)
+	{
+		SCROLLINFO si = {0};
+		if (!GetScrollInfo(SB_HORZ, &si, SIF_TRACKPOS))
+		{
+			ASSERT(false);
+			return;
+		}
+		nPos = si.nTrackPos;
+	}
 
 	OnScroll(MAKEWORD(nSBCode, -1), nPos);
 }
 
 void CScrollZoomView::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
+	CView::OnVScroll(nSBCode, nPos, pScrollBar);
 	if (pScrollBar != NULL && pScrollBar->SendChildNotifyLastMsg())
 		return;     // eat it
 
 	// ignore scroll bar msgs from other controls
 	if (pScrollBar != NULL  &&  pScrollBar != GetScrollBarCtrl(SB_VERT))
 		return;
+	//  GetScrollInfo http://msdn.microsoft.com/en-us/library/bb787583%28VS.85%29.aspx
+	// "The messages that indicate scroll bar position, WM_HSCROLL and WM_VSCROLL, provide only 16 bits of position data"
+	if (nSBCode == SB_THUMBTRACK || nSBCode == SB_THUMBPOSITION)
+	{
+		SCROLLINFO si = {0};
+		if (!GetScrollInfo(SB_VERT, &si, SIF_TRACKPOS))
+		{
+			ASSERT(false);
+			return;
+		}
+		nPos = si.nTrackPos;
+	}
 
 	OnScroll(MAKEWORD(-1, nSBCode), nPos);
 }
