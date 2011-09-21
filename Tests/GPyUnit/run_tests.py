@@ -4,6 +4,7 @@ import unittest
 # python -m unittest Regr.Mga.tc7
 _tests = unittest.defaultTestLoader.loadTestsFromNames((
  'test_registrar',
+ 'test_gmeoleapp',
  'GME_297.suite',
  'GME_310.suite',
  'Regr.Mga.tc1',
