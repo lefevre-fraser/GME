@@ -224,15 +224,19 @@ void CMainFrame::clearMgaProj()
 
 void CMainFrame::OnClose()
 {
-#ifdef _DEBUG
 	if (theApp.SaveAllModified())
 	{
+#ifdef _DEBUG
 		clearGmeOleApp();
 		CMDIFrameWndEx::OnClose();
-	}
 #else
-	theApp.OnAppExit();
+		// n.b. this saves pane positions
+		CMDIFrameWndEx::OnClose();
+		// n.b. C# interpreters may not Release() IGMEOLEApp, which keeps us ::Run()ing forever
+		// TerminateProcess will be unpleasant for DCOM (but the user asked for it)
+		TerminateProcess(GetCurrentProcess(), 0);
 #endif
+	}
 }
 
 int CMainFrame::CreateToolBars()

@@ -1752,27 +1752,17 @@ void CGMEApp::OnFileOpen()
 
 void CGMEApp::OnAppExit()
 {
-	// Focus must be killed to flush ObjectInspector and Browser
-	::SetFocus(NULL);
-#ifdef _DEBUG
 	if (SaveAllModified())
 	{
 		CWinAppEx::OnAppExit();
 		return;
 	}
-#else
-	if (SaveAllModified())
-	{
-		// n.b. C# interpreters may not Release() IGMEOLEApp, which keeps us ::Run()ing forever
-		// TerminateProcess will be unpleasant for DCOM (but the user asked for it)
-		TerminateProcess(GetCurrentProcess(), 0);
-	}
-	// n.b. don't call CWinAppEx::OnAppExit
-#endif
 }
 
 BOOL CGMEApp::SaveAllModified() 
 {
+	// Focus must be killed to flush ObjectInspector and Browser
+	::SetFocus(NULL);
 	if (mgaProject != NULL && (proj_type_is_mga || proj_type_is_xmlbackend)) {
 		int ret = IDNO;
 		long l;
