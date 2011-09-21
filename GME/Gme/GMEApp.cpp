@@ -528,6 +528,9 @@ int CGMEApp::Run()
 	info.dwFlags = CR_INST_SEH_EXCEPTION_HANDLER | CR_INST_PURE_CALL_HANDLER | CR_INST_SECURITY_ERROR_HANDLER
 		| CR_INST_INVALID_PARAMETER_HANDLER | CR_INST_SIGABRT_HANDLER | CR_INST_SIGINT_HANDLER | CR_INST_SIGTERM_HANDLER;
 		// missing: CR_INST_NEW_OPERATOR_ERROR_HANDLER: the default std::bad_alloc is fine (sometimes we handle it)
+#ifdef _DEBUG
+	bNoProtect = true;
+#endif
 	if (!bNoProtect) {
 		if (crInstall(&info) != 0)
 		{
