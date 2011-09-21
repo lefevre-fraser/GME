@@ -28,7 +28,6 @@ CMgaProject::CMgaProject()	{
 			preferences = 0;
 			opmask = 0x0026662A;
 			mgaproject = this;
-			rot = 0;
 			checkoff = false;
 			transactioncount = 0;
 			autoaddons = false;
@@ -209,7 +208,6 @@ STDMETHODIMP CMgaProject::CreateEx(BSTR projectname, BSTR paradigmname, VARIANT 
 		}
 		COMTHROW(dataproject->FlushUndoQueue());
 		COMTHROW(suhr);
-		COMTHROW(RegisterActiveObject((IMgaProject *)this,CLSID_MgaProject,ACTIVEOBJECT_STRONG,&rot));
 		projconn = projectname;
 		StartAutoAddOns();
 		try {
@@ -343,7 +341,6 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 			}
 		}
 		else COMTHROW(E_INVALID_USAGE);
-		COMTHROW(RegisterActiveObject((IMgaProject *)this,CLSID_MgaProject,ACTIVEOBJECT_STRONG,&rot));
 		StartAutoAddOns();
 		try {
 			COMTHROW(BeginTransaction(lm, TRANSACTION_READ_ONLY));
@@ -453,7 +450,6 @@ STDMETHODIMP CMgaProject::Open(BSTR projectname, VARIANT_BOOL *ro_mode)
 			}
 		}
 
-		COMTHROW(RegisterActiveObject((IMgaProject *)this,CLSID_MgaProject,ACTIVEOBJECT_STRONG,&rot));
 		StartAutoAddOns();
 
 		try {
@@ -611,7 +607,6 @@ STDMETHODIMP CMgaProject::Close(VARIANT_BOOL abort)
 		StopAutoAddOns();  // PETER: Moved these two lines here, otherwise addons won't receive notifications
 		RemoveClients();   //
 
-	 	if(rot) COMTHROW(RevokeActiveObject(rot,NULL));
 		if(dataproject) COMTHROW(dataproject->CloseProject(abort));
 
 		if(metapr) {

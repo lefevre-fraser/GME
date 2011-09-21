@@ -25,7 +25,6 @@ class ATL_NO_VTABLE CMgaProject :
     DEFSIG;
 	CComPtr<IUnknown> inner;
 	CMgaProject *mgaproject;
-	unsigned long rot;
 public:
 	CMgaProject();
 	STDMETHOD(FinalConstruct)();
