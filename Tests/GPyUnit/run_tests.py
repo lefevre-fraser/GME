@@ -7,6 +7,7 @@ _tests = unittest.defaultTestLoader.loadTestsFromNames((
  'test_gmeoleapp',
  'GME_297.suite',
  'GME_310.suite',
+ 'GME_371',
  'Regr.Mga.tc1',
  'Regr.Mga.tc2',
  'Regr.Mga.tc3',
