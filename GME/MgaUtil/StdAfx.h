@@ -61,12 +61,12 @@ extern CComModule _Module;
 #define wireHWND HWND
 
 // Imports
-#import "CoreLib.tlb" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
-#import "MetaLib.tlb" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
-#import "MgaLib.tlb" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
-#import "ParserLib.tlb" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
-#import "GMELib.tlb" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
-#import "MgaUtilLib.tlb" no_implementation auto_search no_namespace no_search_namespace raw_method_prefix("") high_method_prefix("__")
+#import "CoreLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__")
+#import "MetaLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__")
+#import "MgaLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__")
+#import "ParserLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__")
+#import "GMELib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__")
+#import "MgaUtilLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__")
 
 #include "CommonImport.h"
 
