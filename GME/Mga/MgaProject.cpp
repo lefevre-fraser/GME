@@ -1258,7 +1258,6 @@ void CMgaProject::StopAutoAddOns() {
 			ASSERT(!(*j)->IsAutomatic());
 		}
 #endif
-	CoFreeUnusedLibraries();
 }
 
 void CMgaProject::RemoveClients() {
