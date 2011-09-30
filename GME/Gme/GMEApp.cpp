@@ -893,31 +893,21 @@ void CGMEApp::UpdateComponentToolbar()
 			HICON hIcon = NULL; //, hictofree = NULL;
 			int commaPos;
 			HMODULE hModule = NULL;
-			CComPtr<IMgaComponent> loadedConmponent; // GetModuleHandle works with loaded DLL only
 			if((commaPos = iconInfo.Find(',')) >= 0)  //Format:   <modulename>,<resourceID>
 			{
 				if(commaPos)  // module name present;
 				{
-					hModule = GetModuleHandle(iconInfo.Left(commaPos));
-					if(!hModule)
-					{
-						loadedConmponent.CoCreateInstance(componentName); // GetModuleHandle works for loaded DLLs only
-						hModule = GetModuleHandle(iconInfo.Left(commaPos));
-					}
+					// XP doesn't support LOAD_LIBRARY_AS_IMAGE_RESOURCE
+					hModule = LoadLibraryEx(iconInfo.Left(commaPos), NULL, LOAD_LIBRARY_AS_DATAFILE);
 				}
 				else // No module name provided,
 				{
-					CString modulePath;
-					registrar->get_LocalDllPath(componentName, PutOut(modulePath));
-					if(modulePath) 
+					_bstr_t modulePath;
+					registrar->get_LocalDllPath(componentName, modulePath.GetAddress());
+					if(modulePath.length() != 0)
 					{
-						hModule = ::GetModuleHandle(modulePath);
-						if(!hModule)
-						{
-							loadedConmponent.CoCreateInstance(componentName); // GetModuleHandle works for loaded DLLs only
-							hModule = ::GetModuleHandle(modulePath);
-							// FIXME: this is more efficient: hModule = LoadLibraryEx(modulePath, NULL, LOAD_LIBRARY_AS_DATAFILE | LOAD_LIBRARY_AS_IMAGE_RESOURCE);
-						}
+						// XP doesn't support LOAD_LIBRARY_AS_IMAGE_RESOURCE
+						hModule = LoadLibraryEx(modulePath, NULL, LOAD_LIBRARY_AS_DATAFILE);
 					}
 				}
 			}
@@ -950,6 +940,7 @@ void CGMEApp::UpdateComponentToolbar()
 			CMFCToolBarButton toolBarButton(commandID, nIndex, componentName + '\n' + toolTip, TRUE);
 
 			componentBar.InsertButton(toolBarButton);
+			FreeLibrary(hModule);
 		}
 		if (plugins.GetSize() + interpreters.GetSize() != 0) {
 			componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
