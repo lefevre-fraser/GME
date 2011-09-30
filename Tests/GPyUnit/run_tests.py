@@ -5,6 +5,7 @@ import unittest
 _tests = unittest.defaultTestLoader.loadTestsFromNames((
  'test_registrar',
  'test_gmeoleapp',
+ 'test_parser',
  'GME_297.suite',
  'GME_310.suite',
  'GME_371',
