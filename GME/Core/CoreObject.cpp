@@ -441,7 +441,6 @@ template<class Functor, class UnwindFunctor>
 void CCoreObject::GetAttributes(CCoreLockAttribute *lockattribute, Functor& f, UnwindFunctor& uf)
 {
 	ASSERT( lockattribute != NULL );
-	ASSERT( controlled.empty() );
 
 #ifdef _DEBUG
 	attrid_type attrid = lockattribute->GetAttrID();
@@ -476,7 +475,6 @@ void CCoreObject::GetAttributes(CCoreLockAttribute *lockattribute, Functor& f, U
 		{
 			if( (*i)->GetLockAttr() == lockattribute )
 			{
-				ASSERT( lockattrid == attrid );
 				uf(*i);
 			}
 
