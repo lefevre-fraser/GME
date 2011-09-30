@@ -5517,7 +5517,7 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 					}
 					else
 					{
-						AfxMessageBox(_T("Unable to show referred object of null reference!"));
+						AfxMessageBox(_T("Unable to show referred object of null reference."));
 						CGMEEventLogger::LogGMEEvent(_T("    Unable to show referred object of null reference.\r\n"));
 					}
 				}
