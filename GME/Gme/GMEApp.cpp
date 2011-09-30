@@ -2553,7 +2553,7 @@ void CGMEApp::OnEditClearUndo()
 	if( mgaProject == NULL )
 		return;
 
-	if(AfxMessageBox(_T("You are about to loose all Undo/Redo information. Proceed?"),MB_YESNO | MB_ICONQUESTION) == IDYES) {
+	if(AfxMessageBox(_T("You are about to lose all Undo/Redo information. Proceed?"),MB_YESNO | MB_ICONQUESTION) == IDYES) {
 		MSGTRY
 		{
 			COMTHROW( mgaProject->FlushUndoQueue() );
