@@ -168,6 +168,7 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 	catch (hresult_exception& e) {
 		_bstr_t error;
 		GetErrorInfo(e.hr, error.GetAddress());
+		error = L"Part Browser decorator error: " + error;
 		CGMEDataSource::get_GME(CComObjPtr<IMgaProject>(mgaProject))->ConsoleMessage(error, MSG_ERROR);
 		return;
 	}
