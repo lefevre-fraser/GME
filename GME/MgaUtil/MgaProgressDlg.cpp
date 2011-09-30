@@ -124,7 +124,7 @@ STDMETHODIMP CMgaProgressDlg::StopProgressDialog()
 	HWND hwnd = dlg.m_hWnd;
 	dlg.Detach();
 	ASSERT( dlg.m_hWnd == NULL );
-	::DestroyWindow(hwnd);
+	VERIFY(::DestroyWindow(hwnd));
 
 	return S_OK;
 }
