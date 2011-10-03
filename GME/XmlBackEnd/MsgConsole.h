@@ -6,9 +6,9 @@ class MsgConsole
 {
 	CComPtr<IGMEOLEApp>   m_gme;
 public:
-	MsgConsole( bool p_create);
-	void          sendMsg  ( const std::string&, int mtype );
-	
-	static void   ssendMsg ( const std::string&, int mtype );
+	MsgConsole(bool gme);
+	void sendMsg(const std::string&, int mtype);
+	void sendMsg(const char* p_msg, int p_mtype);
+
 };
 

@@ -262,7 +262,7 @@ void Util::assembleErrorMessage(svn_error_t *err, int depth,
 		buffer.erase( p, 1);
 		p = buffer.find( "\r");
 	}
-	MsgConsole::ssendMsg( buffer, MSG_ERROR);
+	// FIXME: MsgConsole::ssendMsg( buffer, MSG_ERROR);
 	//std::cout << "Error " << buffer << std::endl;
 
 	//if( p_err->apr_err == SVN_ERR_RA_ILLEGAL_URL)

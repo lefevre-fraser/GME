@@ -3,32 +3,23 @@
 
 
 // MsgConsole
-MsgConsole::MsgConsole( bool p_create)
+MsgConsole::MsgConsole(bool p_create)
 {
 	if( p_create)
 		m_gme.CoCreateInstance( L"GME.Application");
 }
 
-void MsgConsole::sendMsg( const std::string& p_msg, int p_mtype)
+void MsgConsole::sendMsg( const char* p_msg, int p_mtype)
 {
 	if( m_gme)
 	{
 		m_gme->put_Visible( VARIANT_TRUE);
-		CComBSTR msg( p_msg.c_str());
-		m_gme->ConsoleMessage( msg, (msgtype_enum) p_mtype);
+		m_gme->ConsoleMessage( _bstr_t(p_msg), (msgtype_enum) p_mtype);
 	}
 }
 
-//static
-void MsgConsole::ssendMsg( const std::string& p_msg, int p_mtype)
+void MsgConsole::sendMsg( const std::string& p_msg, int p_mtype)
 {
-	CComPtr<IGMEOLEApp> gme;
-	gme.CoCreateInstance( L"GME.Application");
-	if( gme)
-	{
-		gme->put_Visible( VARIANT_TRUE);
-		CComBSTR msg( p_msg.c_str());
-		gme->ConsoleMessage( msg, (msgtype_enum) p_mtype);
-	}
+	sendMsg(p_msg.c_str(), p_mtype);
 }
 

@@ -26,7 +26,6 @@ bool DOMErrorPrinter::handleError(const DOMError &domError)
 
 	// send msg
 	if( m_consolePtr) m_consolePtr->sendMsg( msg, mt);
-	else               MsgConsole::ssendMsg( msg, mt);
 	
 
 	// location info available?
@@ -42,7 +41,6 @@ bool DOMErrorPrinter::handleError(const DOMError &domError)
 
 		// send msg
 		if( m_consolePtr) m_consolePtr->sendMsg( linfo, mt);
-		else               MsgConsole::ssendMsg( linfo, mt);
 	}
 
     // Instructs the serializer to continue serialization if possible.
