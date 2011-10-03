@@ -568,14 +568,17 @@ void XmlObject::createAttributes(ICoreMetaObject *metaobject, int attrSet )
 
 void XmlObject::deleteSecondaryAttribs()
 {
-    for( AttribMapIter it = m_attributes.begin(); it != m_attributes.end(); ++it )
+    for( AttribMapIter it = m_attributes.begin(); it != m_attributes.end(); )
     {
         valtype_type type =it->second->getType();
         if( type!=VALTYPE_LOCK && type!=VALTYPE_POINTER && type!=VALTYPE_COLLECTION )
         {
             delete it->second;
-            m_attributes.erase(it);
+            m_attributes.erase(it++);
         }
+		else
+			++it;
+
     }
 }
 
