@@ -120,8 +120,8 @@ STDMETHODIMP CCoreMetaObject::AddAttribute(attrid_type attrid, BSTR token, BSTR 
 
 		q->object = this;
 		q->attrid = attrid;
-		CopyTo(token, q->token);
-		CopyTo(name, q->name);
+		q->token = token;
+		q->name = name;
 		q->valtype = valtype;
 	
 		attributes.push_front(q);

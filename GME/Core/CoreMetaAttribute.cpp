@@ -34,7 +34,9 @@ STDMETHODIMP CCoreMetaAttribute::get_Token(BSTR *p)
 {
 	CHECK_OUT(p);
 
-	CopyTo(token, p);
+	*p = SysAllocString(token.c_str());
+	if (*p == NULL)
+		return E_OUTOFMEMORY;
 	return S_OK;
 }
 
@@ -42,7 +44,9 @@ STDMETHODIMP CCoreMetaAttribute::get_Name(BSTR *p)
 {
 	CHECK_OUT(p);
 
-	CopyTo(name, p);
+	*p = SysAllocString(name.c_str());
+	if (*p == NULL)
+		return E_OUTOFMEMORY;
 	return S_OK;
 }
 
