@@ -424,7 +424,6 @@ void XmlAttrBinary::fromString(const char * str)
         m_value.clear();
     else
     {
-        // TODO: optimize this code
         int             len  = strlen(str)/2;
         unsigned char * buff = new unsigned char[len];
         string2bin( str, buff );
@@ -539,6 +538,8 @@ bool XmlObject::isContainer()
 
 void XmlObject::createAttributes(ICoreMetaObject *metaobject, int attrSet )
 {
+    // TODO: memoize
+
     ASSERT( metaobject != NULL );
     ASSERT( attrSet>=ATTR_PRIMARY && attrSet<=ATTR_ALL );
 
@@ -561,6 +562,7 @@ void XmlObject::createAttributes(ICoreMetaObject *metaobject, int attrSet )
             attrid_type attrId = ATTRID_NONE;
             COMTHROW( (*i)->get_AttrID(&attrId) );
             ASSERT( attrId != ATTRID_NONE );
+			// TODO: remove indirection from AttribMap::value_type::value (too many mallocs)
             m_attributes.insert( AttribMap::value_type(attrId,XmlAttrBase::create(valtype)) );
         }
     }
@@ -3732,6 +3734,7 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 		CComBSTR                        attribToken;
 
 		COMTHROW( metaobject->get_Attribute( it2->first, PutOut(metaAttrib) ) );
+		// TODO: memoize
 		COMTHROW( metaAttrib->get_Token( &attribToken ));        
 
 		// see http://escher.isis.vanderbilt.edu/JIRA/browse/GME-152
