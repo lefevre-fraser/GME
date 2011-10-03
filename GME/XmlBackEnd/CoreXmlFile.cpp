@@ -3694,10 +3694,10 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 #pragma warning( default: 4244) // conversion from 'long' to 'short', possible loss of data
 
 	CComBSTR metaobj_token;
-	COMTHROW( metaobject->get_Token( &metaobj_token));
+	COMTHROW(metaobject->get_Token(&metaobj_token));
 
 	// the multiline case?  -----  for details see writeObject()
-	bool          spec_care = metaobj_token == L"StrAttr" || metaobj_token == L"RegNode" || metaobj_token == L"Root";
+	bool          spec_care = !wcscmp(metaobj_token, L"StrAttr") || !wcscmp(metaobj_token, L"RegNode") || !wcscmp(metaobj_token, L"Root");
 	std::string   spec_value;
 
 	// find or create object
@@ -3741,7 +3741,7 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 
 		// multiline case?
 		bool spec_value_found = false; // will ensure smooth upgrade from old style xmlbackend
-		bool spec_attr = spec_care && ( attribToken == L"StrValue" || attribToken == L"RegNodeValue" || attribToken == L"Comment");
+		bool spec_attr = spec_care && ( !wcscmp(attribToken, L"StrValue") || !wcscmp(attribToken, L"RegNodeValue") || !wcscmp(attribToken, L"Comment"));
 		if( spec_attr)
 		{
 			// the implementation below with getChildNodes() is more tolerant of XML COMMENTs, XML Whitespaces...
@@ -3784,7 +3784,7 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 			// use the spec_value only if really found the CDATA node
 			if( spec_attr && spec_value_found) // spec_care is also true
 			{
-				if( attribToken == L"Comment")
+				if (!wcscmp(attribToken, L"Comment"))
 				{
 					const std::string comm_spec = "Comment=";
 					if( 0 == spec_value.find( comm_spec)) // CDATA section looks like this: <![CDATA[Comment=....]]>
