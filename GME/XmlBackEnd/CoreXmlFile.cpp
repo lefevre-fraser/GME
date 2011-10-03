@@ -112,25 +112,25 @@ UseBulkCommit = true \n\
 /*static*/ const char * HelperFiles::protFileName = "list_";
 /*static*/ const char * HelperFiles::protFileExt  = ".txt";
 
-/*static*/ const char * ParserLiterals::Main::deleted = "deleted";
-/*static*/ const char * ParserLiterals::Main::metaId  = "MetaId";
-/*static*/ const char * ParserLiterals::Main::id      = "Id";
-/*static*/ const char * ParserLiterals::Main::parent  = "Parent";
+/*static*/ const XMLCh * ParserLiterals::Main::deleted = L"deleted";
+/*static*/ const XMLCh * ParserLiterals::Main::metaId  = L"MetaId";
+/*static*/ const XMLCh * ParserLiterals::Main::id      = L"Id";
+/*static*/ const XMLCh * ParserLiterals::Main::parent  = L"Parent";
 
-/*static*/ const char * ParserLiterals::Signer::users = "users";
-/*static*/ const char * ParserLiterals::Signer::user  = "user";
-/*static*/ const char * ParserLiterals::Signer::name  = "name";
-/*static*/ const char * ParserLiterals::Signer::since = "since";
-/*static*/ const char * ParserLiterals::Signer::until = "until";
+/*static*/ const XMLCh * ParserLiterals::Signer::users = L"users";
+/*static*/ const XMLCh * ParserLiterals::Signer::user  = L"user";
+/*static*/ const XMLCh * ParserLiterals::Signer::name  = L"name";
+/*static*/ const XMLCh * ParserLiterals::Signer::since = L"since";
+/*static*/ const XMLCh * ParserLiterals::Signer::until = L"until";
 
-/*static*/ const char * ParserLiterals::Protector::item    = "item";
-/*static*/ const char * ParserLiterals::Protector::when    = "when";
-/*static*/ const char * ParserLiterals::Protector::oper    = "oper";
-/*static*/ const char * ParserLiterals::Protector::gd      = "gd";
-/*static*/ const char * ParserLiterals::Protector::objects = "objects";
+/*static*/ const XMLCh * ParserLiterals::Protector::item    = L"item";
+/*static*/ const XMLCh * ParserLiterals::Protector::when    = L"when";
+/*static*/ const XMLCh * ParserLiterals::Protector::oper    = L"oper";
+/*static*/ const XMLCh * ParserLiterals::Protector::gd      = L"gd";
+/*static*/ const XMLCh * ParserLiterals::Protector::objects = L"objects";
 
-/*static*/ const char * ParserLiterals::newln = "\n";
-/*static*/ const char * ParserLiterals::empty = "";
+/*static*/ const XMLCh * ParserLiterals::newln = L"\n";
+/*static*/ const XMLCh * ParserLiterals::empty = L"";
 
 /*static*/ const char * CCoreXmlFile::m_contentConst = "contents";
 
@@ -3653,7 +3653,7 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 #ifdef DEBUG
 	// if the object is deleted do not deal with it
 	// possible optimization: limit analysis to ( parent == 0) case only (when incoming parameter is 0)
-	smart_XMLCh x_deleted = XMLString::transcode( ParserLiterals::Main::deleted);
+	XMLCh* x_deleted = ParserLiterals::Main::deleted;
 	smart_Ch deletedStr = XMLString::transcode( e->getAttribute( x_deleted));
 	bool deleted = (strcmp( deletedStr, "true" ) == 0);
 	if( deleted)
@@ -3663,8 +3663,8 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 	}
 #endif
 
-	smart_XMLCh x_metaId = XMLString::transcode( ParserLiterals::Main::metaId);
-	smart_XMLCh x_id     = XMLString::transcode( ParserLiterals::Main::id);
+	const XMLCh* x_metaId = ParserLiterals::Main::metaId;
+	const XMLCh* x_id     = ParserLiterals::Main::id;
 
 	// get metaid, and id
 	smart_Ch metaIdStr  = XMLString::transcode( e->getAttribute( x_metaId));
@@ -3678,7 +3678,7 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 	if( metaid != METAID_ROOT && parent == 0)
 	{
 		// is its XML Parent attribute empty
-		smart_XMLCh x_parent       = XMLString::transcode( ParserLiterals::Main::parent);
+		const XMLCh* x_parent       = ParserLiterals::Main::parent;
 		smart_Ch parent_xml_attr = XMLString::transcode( e->getAttribute( x_parent));
 
 		// is object obsolete?
@@ -4390,18 +4390,18 @@ void SignManager::update( bool p_in, const SignFileEntry& p_entry)
 			HR_THROW(E_FILEOPEN);
 		}
 
-		smart_XMLCh x_users = XMLString::transcode( ParserLiterals::Signer::users);
+		const XMLCh* x_users = ParserLiterals::Signer::users;
 		ASSERT( XMLString::equals( x_users, doc_e->getTagName()));
 
-		smart_XMLCh x_user = XMLString::transcode( ParserLiterals::Signer::user);
+		const XMLCh* x_user = ParserLiterals::Signer::user;
 
 		DOMNodeList *uss = doc_e->getElementsByTagName( x_user);
 
-		smart_XMLCh x_name = XMLString::transcode( ParserLiterals::Signer::name);
-		smart_XMLCh x_since= XMLString::transcode( ParserLiterals::Signer::since);
-		smart_XMLCh x_until= XMLString::transcode( ParserLiterals::Signer::until);
-		smart_XMLCh x_empty= XMLString::transcode( ParserLiterals::empty);
-		smart_XMLCh x_newln= XMLString::transcode( ParserLiterals::newln);
+		const XMLCh* x_name = ParserLiterals::Signer::name;
+		const XMLCh* x_since= ParserLiterals::Signer::since;
+		const XMLCh* x_until= ParserLiterals::Signer::until;
+		const XMLCh* x_empty= ParserLiterals::empty;
+		const XMLCh* x_newln= ParserLiterals::newln;
 
 		smart_XMLCh x_time = XMLString::transcode( (LPCTSTR) p_entry.m_time.Format( _T("[%Y-%m-%d %H:%M:%S]")));
 		smart_XMLCh x_username = XMLString::transcode( p_entry.m_username.c_str());
@@ -4532,13 +4532,13 @@ SignManager::SignFileDataVec SignManager::getUserData()
 			HR_THROW(E_FILEOPEN);
 		}
 
-		smart_XMLCh x_users = XMLString::transcode( ParserLiterals::Signer::users);
+		const XMLCh* x_users = ParserLiterals::Signer::users;
 		ASSERT( XMLString::equals( x_users, doc_e->getTagName()));
 
-		smart_XMLCh x_user = XMLString::transcode( ParserLiterals::Signer::user);
-		smart_XMLCh x_name = XMLString::transcode( ParserLiterals::Signer::name);
-		smart_XMLCh x_since= XMLString::transcode( ParserLiterals::Signer::since);
-		smart_XMLCh x_until= XMLString::transcode( ParserLiterals::Signer::until);
+		const XMLCh* x_user = ParserLiterals::Signer::user;
+		const XMLCh* x_name = ParserLiterals::Signer::name;
+		const XMLCh* x_since= ParserLiterals::Signer::since;
+		const XMLCh* x_until= ParserLiterals::Signer::until;
 
 		DOMNodeList *uss = doc_e->getElementsByTagName( x_user);
 
@@ -4698,11 +4698,11 @@ void ProtectList::writeProtList()
 			HR_THROW(E_FILEOPEN);
 		}
 
-		smart_XMLCh ITEM_xiteral = XMLString::transcode( ParserLiterals::Protector::item);
-		smart_XMLCh WHEN_xiteral = XMLString::transcode( ParserLiterals::Protector::when);
-		smart_XMLCh OPER_xiteral = XMLString::transcode( ParserLiterals::Protector::oper);
-		smart_XMLCh GUID_xiteral = XMLString::transcode( ParserLiterals::Protector::gd);
-		smart_XMLCh OBJS_xiteral = XMLString::transcode( ParserLiterals::Protector::objects);
+		const XMLCh* ITEM_xiteral = ParserLiterals::Protector::item;
+		const XMLCh* WHEN_xiteral = ParserLiterals::Protector::when;
+		const XMLCh* OPER_xiteral = ParserLiterals::Protector::oper;
+		const XMLCh* GUID_xiteral = ParserLiterals::Protector::gd;
+		const XMLCh* OBJS_xiteral = ParserLiterals::Protector::objects;
 
 		ASSERT( XMLString::equals( OBJS_xiteral, doc_e->getTagName()));
 
@@ -4791,10 +4791,10 @@ void ProtectList::purgeProtList( CTime& p_lastSyncTime)
 			HR_THROW(E_FILEOPEN);
 		}
 
-		smart_XMLCh ITEM_xiteral = XMLString::transcode( ParserLiterals::Protector::item);
-		smart_XMLCh WHEN_xiteral = XMLString::transcode( ParserLiterals::Protector::when);
-		smart_XMLCh OBJS_xiteral = XMLString::transcode( ParserLiterals::Protector::objects);
-		smart_XMLCh x_newline    = XMLString::transcode( ParserLiterals::newln);
+		const XMLCh* ITEM_xiteral = ParserLiterals::Protector::item;
+		const XMLCh* WHEN_xiteral = ParserLiterals::Protector::when;
+		const XMLCh* OBJS_xiteral = ParserLiterals::Protector::objects;
+		const XMLCh* x_newline    = ParserLiterals::newln;
 
 		ASSERT( XMLString::equals( OBJS_xiteral, doc_e->getTagName()));
 

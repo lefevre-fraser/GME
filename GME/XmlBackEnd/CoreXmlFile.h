@@ -34,32 +34,32 @@ public:
 	class Signer
 	{
 	public:
-		static const char * users;
-		static const char * user;
-		static const char * name;
-		static const char * since;
-		static const char * until;
+		static const XMLCh * users;
+		static const XMLCh * user;
+		static const XMLCh * name;
+		static const XMLCh * since;
+		static const XMLCh * until;
 	};
 	class Protector
 	{
 	public:
-		static const char * item;
-		static const char * when;
-		static const char * oper;
-		static const char * gd;
-		static const char * objects;
+		static const XMLCh * item;
+		static const XMLCh * when;
+		static const XMLCh * oper;
+		static const XMLCh * gd;
+		static const XMLCh * objects;
 	};
 	class Main
 	{
 	public:
-		static const char * deleted;
-		static const char * metaId;
-		static const char * id;
-		static const char * parent;
+		static const XMLCh * deleted;
+		static const XMLCh * metaId;
+		static const XMLCh * id;
+		static const XMLCh * parent;
 	};
 
-	static const char * newln;
-	static const char * empty;
+	static const XMLCh * newln;
+	static const XMLCh * empty;
 };
 
 class HelperFiles
