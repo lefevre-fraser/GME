@@ -31,7 +31,6 @@ public:
 	bool                 m_doConnSegmentLock;
 	bool                 m_doModelParentLock;
 	bool                 m_doBaseTypeLock;
-	bool                 m_optimizedParsing;
 	bool                 m_partialLoad;
 	bool                 m_useAccountInfo;
 	bool                 m_automaticLogin;

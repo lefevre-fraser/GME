@@ -598,10 +598,6 @@ CCoreXmlFile::CCoreXmlFile()
 	m_hashFileNames         = false;
 	m_hashInfoFound         = false;
 	m_hashVal               = -1;
-	m_domImpl               = 0;
-	m_domParser             = 0;
-	m_domErrHandler         = 0;
-	m_strategyShared        = false;
 	m_needsSessionRefresh   = true;
 	fillParentMap();
 
@@ -611,9 +607,6 @@ CCoreXmlFile::CCoreXmlFile()
 CCoreXmlFile::~CCoreXmlFile()
 {
 	clearAll();
-	if (m_strategyShared) {
-		deleteParser(&m_domParser, &m_domErrHandler);
-	}
 	XMLPlatformUtils::Terminate();
 }
 
@@ -3579,21 +3572,22 @@ void CCoreXmlFile::readXMLFile( const char * fileName, UnresolvedPointerVec& poi
 
 	CTime lastWriteTime( attr.ftLastWriteTime );
 
-	DOMLSParser * parser = NULL;
-	DOMErrorHandler* err_handler = 0;
+	std::auto_ptr<DOMLSParser> parser;
+	std::auto_ptr<DOMErrorHandler> err_handler;
 	try
 	{
 		DOMImplementationLS * domimpl = 0;
-		giveDOMObjs( &domimpl, &parser, &err_handler);
+		newDOMObjs( &domimpl, parser, err_handler);
 
-		if( !domimpl || !parser)
+		if( !domimpl || !parser.get())
 		{
 			sendMsg( std::string( "Could not create parser for file ") + fileName + "!", MSG_ERROR);
 			HR_THROW(E_FILEOPEN);
 		}
 
 		bool suc;
-		XERCES_CPP_NAMESPACE::DOMDocument * doc = enclosedParse( fileName, parser, &suc);
+		// TODO: a good candidate for another thread...
+		XERCES_CPP_NAMESPACE::DOMDocument * doc = enclosedParse( fileName, parser.get(), &suc);
 		if( !doc || !suc)
 		{
 			sendMsg( std::string( "Could not parse file ") + fileName + "!", MSG_ERROR);
@@ -3637,14 +3631,9 @@ void CCoreXmlFile::readXMLFile( const char * fileName, UnresolvedPointerVec& poi
 		}
 
 		readObject( doc_e, pointers, NULL, fullLoad, lastWriteTime );
-
-		deleteParser( &parser, &err_handler);//delete parser;
 	}
 	catch(...)
 	{
-		if( parser != NULL )
-			deleteParser( &parser, &err_handler);//delete parser;
-
 		sendMsg( std::string( "Exception during reading ") + fileName + " file!", MSG_ERROR);
 		HR_THROW(E_FILEOPEN);
 	}
@@ -3896,13 +3885,8 @@ void CCoreXmlFile::readAll( bool fullLoad )
 
 	clearAll();
 
-	m_strategyShared = m_userOpts.m_optimizedParsing;
-	initParsers(); // shows a message and throws if can't create parser objects
-
 	// load all dirs
 	loadDirs( m_folderPath, pointers, fullLoad);
-
-	finiParsers();
 
 #ifdef _DEBUG
 #if(DETAILS_ABOUT_XMLBACKEND)
@@ -5978,53 +5962,7 @@ std::string CCoreXmlFile::makelink( XmlObject * ptr)
 	return std::string( "<A HREF=\"mga:") + id + "\">" + (nm.size()>0?nm:"noname") + "</A>";
 }
 
-void CCoreXmlFile::initParsers()
-{
-	m_domImpl = 0;
-	m_domParser = 0;
-	m_domErrHandler = 0;
-
-	if( m_strategyShared) // reusable objects are intended
-	{
-		newDOMObjs( &m_domImpl, &m_domParser, &m_domErrHandler);
-		
-		if( !m_domImpl || !m_domParser || !m_domErrHandler)
-		{
-			sendMsg( "Could not create parser and related objects!", MSG_ERROR);
-			HR_THROW(E_FILEOPEN);
-		}
-	}
-}
-
-void CCoreXmlFile::finiParsers()
-{
-	if( m_domParser) 
-	{
-		delete m_domParser;
-		m_domParser = 0;
-	}
-
-	if( m_domErrHandler)
-	{
-		delete m_domErrHandler;
-		m_domErrHandler = 0;
-	}
-}
-
-// pretends to delete a parser 
-// but deletes it only in unique strategy case
-void CCoreXmlFile::deleteParser( DOMLSParser* *p_parser, DOMErrorHandler* *p_err_handler)
-{
-	if( !m_strategyShared)
-	{
-		delete *p_parser;
-		*p_parser = 0;
-		delete *p_err_handler;
-		*p_err_handler = 0;
-	}
-}
-
-void CCoreXmlFile::newDOMObjs(  XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMLSParser* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler)
+void CCoreXmlFile::newDOMObjs(  XERCES_CPP_NAMESPACE::DOMImplementationLS** p_domImpl, std::auto_ptr<XERCES_CPP_NAMESPACE::DOMLSParser>& p_domParser, std::auto_ptr<XERCES_CPP_NAMESPACE::DOMErrorHandler>& p_domErrHandler)
 {
 	DOMImplementationLS * domimpl = DOMImplementationRegistry::getDOMImplementation( smart_XMLCh(XMLString::transcode("XML 1.0")));//NULL
 	ASSERT( domimpl != NULL );
@@ -6038,50 +5976,10 @@ void CCoreXmlFile::newDOMObjs(  XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_do
 		parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, err_handler);
 
 	*p_domImpl = domimpl;
-	*p_domParser = parser;
-	*p_domErrHandler = err_handler;
+	p_domParser = std::auto_ptr<XERCES_CPP_NAMESPACE::DOMLSParser>(parser);
+	p_domErrHandler = std::auto_ptr<XERCES_CPP_NAMESPACE::DOMErrorHandler>(err_handler);
 }
 
-void CCoreXmlFile::giveDOMObjs( XERCES_CPP_NAMESPACE::DOMImplementationLS* *p_domImpl, XERCES_CPP_NAMESPACE::DOMLSParser* *p_domParser, XERCES_CPP_NAMESPACE::DOMErrorHandler* *p_domErrHandler)
-{
-	if( m_strategyShared)
-	{
-		// reuse the current set
-		*p_domImpl = m_domImpl;
-		*p_domParser = m_domParser;
-		*p_domErrHandler = m_domErrHandler;
-	}
-	else
-	{
-		// create a new set of objects
-		newDOMObjs( p_domImpl, p_domParser, p_domErrHandler);
-	}
-}
-
-//DOMImplementationLS * CCoreXmlFile::giveDomImpl()
-//{
-//	if( m_strategyShared)
-//		return m_domImpl;
-//	else
-//	{
-//		DOMImplementationLS * domimpl = DOMImplementationRegistry::getDOMImplementation( XMLString::transcode("XML 1.0"));//NULL
-//		ASSERT( domimpl != NULL );
-//		return domimpl;
-//	}
-//}
-//
-//DOMBuilder * CCoreXmlFile::giveDomParser( DOMImplementationLS * domimpl)
-//{
-//	if( m_strategyShared)
-//		return m_domParser;
-//	else
-//	{
-//		DOMBuilder *parser = !domimpl? 0: domimpl->createDOMBuilder( DOMImplementationLS::MODE_SYNCHRONOUS, NULL );
-//		ASSERT( parser != NULL );
-//		return parser;
-//	}
-//}
-//
 XERCES_CPP_NAMESPACE::DOMDocument* CCoreXmlFile::enclosedParse( const std::string& p_fileName, DOMLSParser* p_parser, bool *p_success)
 {
 	ASSERT( p_parser);

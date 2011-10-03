@@ -18,7 +18,6 @@ OperatingOptions::OperatingOptions()
 , m_doConnSegmentLock( true)
 , m_doModelParentLock( true)
 , m_doBaseTypeLock( true)
-, m_optimizedParsing( false)
 , m_partialLoad( false)
 , m_useAccountInfo( false)
 , m_automaticLogin( false)
@@ -51,7 +50,6 @@ void OperatingOptions::reset()
 	m_doConnSegmentLock     = true;
 	m_doModelParentLock     = true;
 	m_doBaseTypeLock        = true;
-	m_optimizedParsing      = false;
 	m_partialLoad           = false;
 	m_useAccountInfo        = false;
 	m_automaticLogin        = false;
@@ -130,10 +128,6 @@ void OperatingOptions::loadSettings( const std::string& p_folder, const std::str
 			else if( 0 == line.find( "DefCheckOutOnAction"))//=true"))
 			{
 				m_defCheckOutOnAction = parseBool( line, "DefCheckOutOnAction"); //m_defCheckOutOnAction = true;
-			}
-			else if( 0 == line.find( "OptimizedParsing"))
-			{
-				m_optimizedParsing = parseBool( line, "OptimizedParsing");
 			}
 			else if( 0 == line.find( "PartialLoad"))//=true"))
 			{
@@ -245,7 +239,6 @@ void OperatingOptions::display( CCoreXmlFile * const parent)
 #ifdef _DEBUG
 	//parent->sendMsg( std::string( "[DebugMode]Log=")                   + (m_createLog?"true":"false"), MSG_INFO);
 #endif
-	if( m_optimizedParsing) parent->sendMsg( std::string( "OptimizedParsing=") + (m_optimizedParsing?"true":"false"), MSG_INFO);
 	parent->sendMsg( std::string( "PartialLoad=")           + (m_partialLoad?"true":"false"), MSG_INFO);
 	//parent->sendMsg( std::string( "Adv. Settings {RTgt, CEnd, CSeg, ModP, BasT}=") 
 	//	+ (m_doRefTargetLock?"{true,":"{false,")
