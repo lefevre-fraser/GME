@@ -230,7 +230,7 @@ bool CGMEDataSource::ParseXMLData(COleDataObject *pDataObject, IMgaObject *targe
 	ASSERT( target != NULL );
 
 	// create a temporary filename
-      TCHAR *fname = _ttempnam(_T("c:\\temp"), _T("tmp"));
+      TCHAR *fname = _ttempnam(_T("c:\\temp"), _T("GMEtmp"));
 	CString filename = fname;
 	free(fname);
 
@@ -240,7 +240,7 @@ bool CGMEDataSource::ParseXMLData(COleDataObject *pDataObject, IMgaObject *targe
 		CFile *memfile = pDataObject->GetFileData(CF_UNICODETEXT);
 		if( memfile == NULL )
 			return false;
-		memfile->SeekToBegin();
+		// FIXME: memfile->GetLength() isn't the same as pFile->GetLength() in OnRenderFileData
 
 		// copy
 		CFile file;
@@ -410,6 +410,7 @@ BOOL CGMEDataSource::OnRenderFileData(LPFORMATETC lpFormatEtc, CFile* pFile)
 				c = file.Read(buff, buffsize);
 				pFile->Write(buff, c);
 			} while( c == buffsize );
+			pFile->Write(L"", sizeof(wchar_t));
 
 			file.Close();
 			CFile::Remove(filename);
@@ -491,8 +492,7 @@ BOOL CGMEClosureDataSource::OnRenderFileData(LPFORMATETC lpFormatEtc, CFile* pFi
 				pFile->Write(buff, c);
 			} while( c == buffsize );
 
-			buff[0] = 0;
-			pFile->Write(buff, 1);
+			pFile->Write(L"", sizeof(wchar_t));
 
 			file.Close();
 			CFile::Remove(filename);
