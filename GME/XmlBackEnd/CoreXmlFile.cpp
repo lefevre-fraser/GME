@@ -3655,7 +3655,7 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 #ifdef DEBUG
 	// if the object is deleted do not deal with it
 	// possible optimization: limit analysis to ( parent == 0) case only (when incoming parameter is 0)
-	XMLCh* x_deleted = ParserLiterals::Main::deleted;
+	const XMLCh* x_deleted = ParserLiterals::Main::deleted;
 	smart_Ch deletedStr = XMLString::transcode( e->getAttribute( x_deleted));
 	bool deleted = (strcmp( deletedStr, "true" ) == 0);
 	if( deleted)
