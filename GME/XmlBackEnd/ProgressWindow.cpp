@@ -156,6 +156,7 @@ void UpdateProgress(LPCTSTR msg)
 		pThread->ResumeThread();
 		pThread->initDone.Lock();
 	}
+	return;
 	LPCTSTR str = (LPCTSTR)msg;
 	size_t len = _tcsclen(str) + 1;
 	LPTSTR strnew = new TCHAR[len]; // will be freed in the progress thread
