@@ -749,6 +749,7 @@ svn_client_ctx_t * Client::getContext(const char *p_strMessage, apr_pool_t *pool
 		svn_config_set(cfg, SVN_CONFIG_SECTION_TUNNELS, "ssh", tsvn_ssh);
 	}
 
+	svn_config_set(cfg, SVN_CONFIG_SECTION_MISCELLANY, SVN_CONFIG_OPTION_ENABLE_AUTO_PROPS, false);
 
 	return ctx;
 }
