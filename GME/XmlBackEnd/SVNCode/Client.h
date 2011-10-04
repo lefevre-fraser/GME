@@ -27,6 +27,7 @@
 #include "svn_client.h"
 #include "Prompter.h"
 #include "ClientUtil.h"
+#include "Pool.h"
 
 // class mimicing subversion/bindings/java/javahl/native/svnclient.cpp
 class CommitMessage;
@@ -74,6 +75,10 @@ protected:
 	long sub_mkdir( Targets& targets, const char * p_msg);
 	long sub_mkdir2( Targets& targets, const char * p_msg);
 
+	std::auto_ptr<Pool> m_ctxPool;
+	svn_client_ctx_t* m_ctx;
+	std::string m_commitMessage;
+	svn_client_ctx_t * createContext(const char *p_message, apr_pool_t *pool);
 	svn_client_ctx_t * getContext(const char *p_message, apr_pool_t *pool);
 
 	//void * getCommitMessageBaton(const char *message);

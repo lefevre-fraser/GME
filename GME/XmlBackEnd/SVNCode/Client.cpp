@@ -46,6 +46,8 @@ Client::Client( const std::string& p_userName, const std::string& p_passWord)
 	setPrompt( Prompter::makePrompter( new GPromptImpl()));
 	// we set this:
 	notification2( new ClientUtil::NotifyHelp());
+	m_ctx = NULL;
+	m_ctxPool = std::auto_ptr<Pool>(new Pool());
 }
 
 Client::~Client(void)
@@ -618,6 +620,17 @@ ClientUtil::StatusExtInfoVec Client::sub_extended_status( const char *p_path, bo
 
 
 svn_client_ctx_t * Client::getContext(const char *p_strMessage, apr_pool_t *pool)
+{
+	if (m_ctx == NULL)
+	{
+		m_ctx = createContext(NULL, m_ctxPool->pool());
+	}
+	m_commitMessage = p_strMessage ? p_strMessage : "Empty";
+	((ClientUtil::CommitHelp::LogMsgBaton*)m_ctx->log_msg_baton2)->m_message = m_commitMessage.c_str();
+	return m_ctx;
+}
+
+svn_client_ctx_t * Client::createContext(const char *p_strMessage, apr_pool_t *pool)
 {
 	svn_auth_baton_t *ab;
 	svn_client_ctx_t *ctx;
