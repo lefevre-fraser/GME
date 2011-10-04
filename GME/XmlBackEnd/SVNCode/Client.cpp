@@ -354,8 +354,8 @@ bool Client::sub_propertySet(const char *path, const char *name,
 
 
 	//propertySet(path, name, val->data, recurse, force);                     // modified from val to val->data
-    Path intPath(path, reqPool.pool());
-    svn_error_t *Err = intPath.error_occured();
+    //Path intPath(path, reqPool.pool());
+    svn_error_t *Err = NULL; // intPath.error_occured();
     if(Err != NULL)
     {
         Util::handleSVNError(Err);
@@ -366,7 +366,7 @@ bool Client::sub_propertySet(const char *path, const char *name,
     if(ctx == NULL)
         return false;
     Err = svn_client_propset2 (name, val, 
-                                intPath.c_str(),
+                                path,
                                 recurse, 
                                 force,
                                 ctx,
