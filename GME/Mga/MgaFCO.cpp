@@ -1088,6 +1088,7 @@ HRESULT FCO::objnotify() {
 				if(t->handler && (mmask = (t->eventmask & chmask)) != 0) {
 					COMTHROW(mgaproject->pushterr(*t));
 					if(t->handler->ObjectEvent(obj, mmask, ud) != S_OK) {
+						// FIXME: allow addons to return constraint error, don't silently swallow error
 						ASSERT(("Notification failed", false));
 					}
 					COMTHROW(mgaproject->popterr());
