@@ -3399,6 +3399,7 @@ void CCoreXmlFile::writeXMLFile(XmlObject * container)
 		// add to source control if not added yet
 		try
 		{
+			// TODO: a good candidate for another thread
 			addToSourceControl( container, f_existed );
 		}
 		catch(...)
@@ -4114,6 +4115,7 @@ void CCoreXmlFile::addToSourceControl(XmlObject * container, bool p_fileExisted)
 		{
 			sc_add = addSVN( fileName);
 			sc_pro = lockablePropertySVN( fileName);
+			// TODO: use svn_client_propset_local to add locking to all the files
 		}
 		
 		if( !m_userOpts.m_useBulkCommit)                         // if bulk commit then avoid individual commits
@@ -5643,6 +5645,7 @@ bool CCoreXmlFile::bulkCommitSVN( const std::string& p_dir, const std::string& p
 				continue; // file exists, is read-only, means no lock on it
 
 			// unlock one file at a time
+			// FIXME: fails for newly-added files when the commit fails
 			bool succ = m_svn->unLock(fileName);
 			if(!succ)
 				AfxMessageBox( "Commit/Unlock pair failed");

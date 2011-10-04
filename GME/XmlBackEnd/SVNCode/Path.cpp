@@ -78,6 +78,12 @@ Path::init(const char * pi_path, apr_pool_t* pool)
 	}
 	else
 	{
+		// FIXME: hits the disk a lot
+		//21	XmlBackEnd.dll	Util::preprocessPath + 0xf0, c:\users\ksmyth\git\gmesrc\gme\xmlbackend\svncode\util.cpp(317)	0x6f9f4a0	C:\Users\ksmyth\git\GMESRC\GME\Release\XmlBackEnd.dll
+		//22	XmlBackEnd.dll	Path::Path + 0x6d, c:\users\ksmyth\git\gmesrc\gme\xmlbackend\svncode\path.cpp(39)	0x6f9b82d	C:\Users\ksmyth\git\GMESRC\GME\Release\XmlBackEnd.dll
+		//23	XmlBackEnd.dll	Client::sub_propertySet + 0xb5, c:\users\ksmyth\git\gmesrc\gme\xmlbackend\svncode\client.cpp(357)	0x6f97945	C:\Users\ksmyth\git\GMESRC\GME\Release\XmlBackEnd.dll
+		//24	XmlBackEnd.dll	HiClient::lockableProp + 0xd8, c:\users\ksmyth\git\gmesrc\gme\xmlbackend\svncode\hiclient.cpp(320)	0x6f98cc8	C:\Users\ksmyth\git\GMESRC\GME\Release\XmlBackEnd.dll
+
 		m_error_occured = Util::preprocessPath(pi_path, m_pool);
 
 		m_path = pi_path;
