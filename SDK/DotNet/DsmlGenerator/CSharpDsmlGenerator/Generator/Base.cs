@@ -60,12 +60,12 @@ namespace CSharpDSMLGenerator.Generator
 			GeneratedClass = new CodeNamespace(Configuration.GetClassNamespace(Subject));
 			GeneratedInterface = new CodeNamespace(Configuration.GetInterfaceNamespace(Subject));
 
-			GeneratedClass.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
-			GeneratedClass.Imports.Add(new CodeNamespaceImport("System.Linq"));
+			GeneratedClass.Imports.Add(new CodeNamespaceImport("global::System.Collections.Generic"));
+			GeneratedClass.Imports.Add(new CodeNamespaceImport("global::System.Linq"));
 			GeneratedClass.Imports.Add(new CodeNamespaceImport("global::GME.MGA"));
 
-			GeneratedInterface.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
-			GeneratedInterface.Imports.Add(new CodeNamespaceImport("System.Linq"));
+			GeneratedInterface.Imports.Add(new CodeNamespaceImport("global::System.Collections.Generic"));
+			GeneratedInterface.Imports.Add(new CodeNamespaceImport("global::System.Linq"));
 			GeneratedInterface.Imports.Add(new CodeNamespaceImport("global::GME.MGA"));
 
 			GenerateClassCode();

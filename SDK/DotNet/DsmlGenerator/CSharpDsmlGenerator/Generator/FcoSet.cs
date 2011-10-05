@@ -97,7 +97,7 @@ namespace CSharpDSMLGenerator.Generator
 							"IEnumerable<" + Configuration.GetInterfaceName(item as MgaObject) + "> result = null;"));
 
 					sb.Clear();
-					sb.AppendLine("result = ISIS.GME.Common.Utils.CastSetMembers(Impl as global::GME.MGA.MgaSet, new Dictionary<int, System.Type>() {");
+					sb.AppendLine("result = ISIS.GME.Common.Utils.CastSetMembers(Impl as global::GME.MGA.MgaSet, new Dictionary<int, global::System.Type>() {");
 
 					List<int> metaRefs = new List<int>();
 
@@ -149,7 +149,7 @@ namespace CSharpDSMLGenerator.Generator
 						"IEnumerable <" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + "> result = null;"));
 
 				StringBuilder sb2 = new StringBuilder();
-				sb2.AppendLine("result = ISIS.GME.Common.Utils.CastSetMembers(Impl as global::GME.MGA.MgaSet, new Dictionary<int, System.Type>() {");
+				sb2.AppendLine("result = ISIS.GME.Common.Utils.CastSetMembers(Impl as global::GME.MGA.MgaSet, new Dictionary<int, global::System.Type>() {");
 
 				List<int> metaRefs2 = new List<int>();
 
@@ -341,7 +341,7 @@ namespace CSharpDSMLGenerator.Generator
 					//    Configuration.GetInterfaceName(item as MgaObject) + " result = null;"));
 
 					sb.Clear();
-					sb.AppendLine("ISIS.GME.Common.Utils.CastMembersOfSet(Impl as global::GME.MGA.MgaFCO, new Dictionary<int, System.Type>() {");
+					sb.AppendLine("ISIS.GME.Common.Utils.CastMembersOfSet(Impl as global::GME.MGA.MgaFCO, new Dictionary<int, global::System.Type>() {");
 
 					List<int> metaRefs = new List<int>();
 
@@ -387,7 +387,7 @@ namespace CSharpDSMLGenerator.Generator
 				newAllReferred.Comments.Add(new CodeCommentStatement("", true));
 
 				StringBuilder sb2 = new StringBuilder();
-				sb2.AppendLine("IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + "> result = ISIS.GME.Common.Utils.CastMembersOfSet(Impl as global::GME.MGA.MgaFCO, new Dictionary<int, System.Type>() {");
+				sb2.AppendLine("IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + "> result = ISIS.GME.Common.Utils.CastMembersOfSet(Impl as global::GME.MGA.MgaFCO, new Dictionary<int, global::System.Type>() {");
 
 				List<int> metaRefs2 = new List<int>();
 

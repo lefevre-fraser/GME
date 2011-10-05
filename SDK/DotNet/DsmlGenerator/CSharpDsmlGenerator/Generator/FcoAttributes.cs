@@ -250,7 +250,7 @@ namespace CSharpDSMLGenerator.Generator
 
 						// create the get statement
 						attr.GetStatements.Add(
-							new CodeSnippetExpression("System.Array a = System.Enum.GetValues(typeof(" +
+							new CodeSnippetExpression("global::System.Array a = global::System.Enum.GetValues(typeof(" +
 								Configuration.GetClassName(Subject) + ".AttributesClass." + attribute.Name  + "_enum))"));
 
 						attr.GetStatements.Add(

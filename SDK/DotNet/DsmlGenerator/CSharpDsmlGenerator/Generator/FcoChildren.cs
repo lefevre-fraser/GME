@@ -424,7 +424,7 @@ namespace CSharpDSMLGenerator.Generator
 
 							//  }
 							StringBuilder sb = new StringBuilder();
-							sb.AppendLine("IEnumerable<ISIS.GME.Common.Interfaces.Base> result = ISIS.GME.Common.Utils.CastMgaChildren(Impl.ChildObjects, new Dictionary<int, System.Type>() { ");
+							sb.AppendLine("IEnumerable<ISIS.GME.Common.Interfaces.Base> result = ISIS.GME.Common.Utils.CastMgaChildren(Impl.ChildObjects, new Dictionary<int, global::System.Type>() { ");
 							foreach (var item in allChildren)
 							{
 								sb.Append("{ ");
