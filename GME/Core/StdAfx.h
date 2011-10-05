@@ -24,6 +24,7 @@
 #include "EASTL/hash_set.h"
 #else
 #include <hash_set>
+#include <forward_list>
 #endif
 
 #include <hash_map>
@@ -38,6 +39,7 @@ namespace core {
 	using stdext::hash_set;
 	using stdext::hash_map;
 	using std::list;
+	using std::forward_list;
 	using std::pair;
 #endif
 }

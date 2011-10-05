@@ -1170,8 +1170,8 @@ STDMETHODIMP CCoreBinFile::CommitTransaction()
 
 	CloseObject();
 
-	core::list<objects_iterator>::iterator i = deleted_objects.begin();
-	core::list<objects_iterator>::iterator e = deleted_objects.end();
+	auto i = deleted_objects.begin();
+	auto e = deleted_objects.end();
 	while( i != e )
 	{
 		ASSERT( (*i)->second.deleted );
@@ -1208,8 +1208,8 @@ STDMETHODIMP CCoreBinFile::AbortTransaction()
 		++j;
 	}
 
-	core::list<objects_iterator>::iterator i = deleted_objects.begin();
-	core::list<objects_iterator>::iterator e = deleted_objects.end();
+	auto i = deleted_objects.begin();
+	auto e = deleted_objects.end();
 	while( i != e )
 	{
 		ASSERT( (*i)->second.deleted );

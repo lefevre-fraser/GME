@@ -888,7 +888,10 @@ void CCoreProject::CommitFinalTr(bool undo)
 	i = finaltr_items.begin();
 	ASSERT( e == finaltr_items.end() );
 #ifdef _DEBUG
-	int finaltr_count = finaltr_items.size(); 
+	// int finaltr_count = finaltr_items.size();
+	finaltr_items_type::size_type finaltr_count = 0;
+	std::for_each(finaltr_items.begin(), finaltr_items.end(), 
+		[&finaltr_count](const finaltr_items_type::value_type& e) { finaltr_count++; });
 #endif
 	while( i != e )
 	{

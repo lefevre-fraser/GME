@@ -243,6 +243,12 @@ public:
 		Fill(col.begin(), col.end());
 	}
 
+	template<class COLLTYPE2>
+	void FillAllNoReserve(COLLTYPE2& col)
+	{
+		Fill(col.begin(), col.end());
+	}
+
 	void Add(OBJTYPE *i)
 	{
 		ASSERT( i != NULL );

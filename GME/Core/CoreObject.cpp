@@ -89,7 +89,7 @@ HRESULT CCoreObject::AggregatedInterfaceLookup(void *pvThis, REFIID riid, LPVOID
 	HRESULT hr = E_NOINTERFACE;
 
 	aggregates_type &aggregates = ((CCoreObject*)pvThis)->aggregates;
-	ASSERT( aggregates.size() >= 0 );
+	ASSERT( aggregates.cbegin() != aggregates.cend() );
 
 	aggregates_iterator i = aggregates.begin();
 	aggregates_iterator e = aggregates.end();
@@ -169,7 +169,8 @@ STDMETHODIMP CCoreObject::get_Attributes(ICoreAttributes **p)
 		CComObjPtr<COMTYPE> q;
 		CreateComObject(q);
 
-		q->FillAll(attributes);
+		// forward_list doesn't have size(), so we can't reserve
+		q->FillAllNoReserve(attributes);
 		MoveTo(q,p);
 	}
 	COMCATCH(;)
@@ -434,7 +435,8 @@ void CCoreObject::UnregisterAttribute(CCoreAttribute *attribute)
 	attributes_iterator i = std::find(attributes.begin(), attributes.end(), attribute);
 	ASSERT( i != attributes.end() );
 
-	attributes.erase(i);
+	//attributes.erase(i);
+	attributes.remove(attribute);
 }
 
 template<class Functor, class UnwindFunctor>
@@ -590,8 +592,11 @@ void CCoreObject::Dump()
 	std::string metaname;
 	CopyTo(metabstr, metaname);
 
+	attributes_type::size_type size = 0;
+	std::for_each(attributes.begin(), attributes.end(), 
+		[&size](const attributes_type::value_type& e) { size++; });
 	AtlTrace("object_dump metaid=%d metaname=\"%s\" objid=%d, #attrs: %d\n",
-		(int)GetMetaID(), metaname.begin(), (int)objid, attributes.size());
+		(int)GetMetaID(), metaname.begin(), (int)objid, size);
 
 	attributes_iterator i = attributes.begin();
 	attributes_iterator e = attributes.end();

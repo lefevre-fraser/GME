@@ -21,7 +21,7 @@ class CCoreMetaProject;
 // --------------------------- typedefs
 
 typedef CCoreTransactionItem *transaction_item_type;
-typedef core::list<transaction_item_type> transaction_items_type;
+typedef core::forward_list<transaction_item_type> transaction_items_type;
 typedef transaction_items_type::iterator transaction_items_iterator;
 
 typedef struct transaction_type
@@ -34,7 +34,7 @@ typedef core::list<transaction_type> transactions_type;
 typedef transactions_type::iterator transactions_iterator;
 
 typedef CCoreFinalTrItem *finaltr_item_type;
-typedef core::list<finaltr_item_type> finaltr_items_type;
+typedef core::forward_list<finaltr_item_type> finaltr_items_type;
 typedef finaltr_items_type::iterator finaltr_items_iterator;
 
 typedef CCoreUndoItem *undo_item_type;

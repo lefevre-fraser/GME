@@ -44,7 +44,7 @@ public:
 // ------- Properties
 
 public:
-	typedef std::list<CCoreMetaAttribute*> attributes_type;//slist
+	typedef std::forward_list<CCoreMetaAttribute*> attributes_type;
 
 	CCoreMetaProject *project;
 	attributes_type attributes;

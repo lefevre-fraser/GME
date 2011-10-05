@@ -49,7 +49,7 @@ public:
 
 public:
 
-	typedef std::list<CCoreMetaObject*> objects_type;//slist
+	typedef std::forward_list<CCoreMetaObject*> objects_type;
 	typedef objects_type::iterator objects_iterator;
 
 	objects_type objects;

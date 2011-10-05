@@ -289,8 +289,8 @@ public:
 	typedef maxobjids_type::iterator maxobjids_iterator;
 
 	maxobjids_type maxobjids;
-	core::list<objects_iterator> deleted_objects;
-	core::list<objects_iterator> created_objects;
+	core::forward_list<objects_iterator> deleted_objects;
+	core::forward_list<objects_iterator> created_objects;
 
 	struct resolve_type
 	{
@@ -299,7 +299,7 @@ public:
 		metaobjidpair_type idpair;
 	};
 
-	typedef core::list<resolve_type> resolvelist_type;
+	typedef core::forward_list<resolve_type> resolvelist_type;
 	resolvelist_type resolvelist;
 
 	void InitMaxObjIDs();
