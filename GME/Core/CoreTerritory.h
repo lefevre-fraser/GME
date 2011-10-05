@@ -2,9 +2,7 @@
 #ifndef MGA_CORETERRITORY_H
 #define MGA_CORETERRITORY_H
 
-#ifndef MGA_CORETRANSACTIONITEM_H
 #include "CoreTransactionItem.h"
-#endif
 
 #include <list>
 #include <hash_map>

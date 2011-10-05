@@ -4,17 +4,9 @@
 
 #include "StdAfx.h"
 
-#ifndef MGA_CORETRANSACTIONITEM_H
 #include "CoreTransactionItem.h"
-#endif
-
-#ifndef MGA_COREMETAATTRIBUTE_H
 #include "CoreMetaAttribute.h"
-#endif
-
-#ifndef MGA_COREOBJECT_H
 #include "CoreObject.h"
-#endif
 
 #include <list>
 #include <set>

@@ -2,13 +2,8 @@
 #ifndef MGA_COREOBJECT_H
 #define MGA_COREOBJECT_H
 
-#ifndef MGA_CORETRANSACTIONITEM_H
 #include "CoreTransactionItem.h"
-#endif
-
-#ifndef MGA_COREMETAOBJECT_H
 #include "CoreMetaObject.h"
-#endif
 
 #include <list>
 //#include <slist>
