@@ -1561,7 +1561,7 @@ namespace BON
 //###############################################################################################################################################
 
 	RegistryNodeImpl::RegistryNodeImpl( IMgaRegNode* spNode, ObjectImpl* pObject )
-		: Util::GenRefCounted( _isAddOn(), pObject ), m_spNode( spNode ), m_pObject( pObject )
+		: Util::GenRefCounted( !_isAddOn(), pObject ), m_spNode( spNode ), m_pObject( pObject )
 	{
 		pObject->m_mapNodes.insert( ObjectImpl::RegistryMap::value_type( spNode, this ) );
 	}
