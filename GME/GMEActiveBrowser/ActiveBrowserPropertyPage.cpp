@@ -2303,7 +2303,7 @@ void CAggregatePropertyPage::GotoIUnk(BSTR Id)
 			_bstr_t bId = Id;
 			CComPtr<IMgaObject> iitem;
 			CComPtr<IMgaFCO> fiitem;
-			_bstr_t item[100];
+			std::vector<_bstr_t> item;
 			int itemcount = 0;
 			CComPtr<IMgaObject> parent;
 			
@@ -2311,14 +2311,16 @@ void CAggregatePropertyPage::GotoIUnk(BSTR Id)
 			CComPtr<IMgaProject> project = pMgaContext->m_ccpProject;
 			COMTHROW(project->GetFCOByID(bId, &fiitem));
 			fiitem.QueryInterface(&iitem);
-			item[itemcount++] = Id;
+			item.push_back(Id);
+			itemcount++;
 			do
 			{
 				COMTHROW(iitem->GetParent(&parent));
 				_bstr_t bstrid;
 				COMTHROW(parent->get_ID(bstrid.GetAddress()));
 				id = bstrid;
-				item[itemcount++] = id;
+				item.push_back(id);
+				itemcount++;
 				iitem = parent;
 				parent.Release();
 			} while (!m_TreeAggregate.m_MgaMap.SearchTreeItem(id,hNewItem, pUnknown));
