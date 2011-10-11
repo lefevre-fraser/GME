@@ -87,11 +87,12 @@ void CMgaFilter::init() {
 		wchar_t *finish = name + wcslen(name);
 		bool inquotes = false;
 		wchar_t *begin = name;
-		wchar_t *end = wcschr(begin, L'\"');
-		if (!end) {
-			end = finish;
-		}
+		wchar_t *end;
 		while (begin < finish) {
+			end = wcschr(begin, L'\"');
+			if (!end) {
+				end = finish;
+			}
 			*end = L'\0';
 			if (inquotes) {
 				names.insert(CComBSTR(begin));
@@ -104,10 +105,6 @@ void CMgaFilter::init() {
 				inquotes = true;
 			}
 			begin = end + 1;
-			end = wcschr(begin, L'\"');
-			if (!end) {
-				end = finish;
-			}
 		}
 
 		MGA_TRACE("Names at init");
