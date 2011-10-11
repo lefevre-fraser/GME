@@ -2260,23 +2260,22 @@ void CGMEApp::OnFileXMLUpdate()
 	    if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
 	    COMTHROW(parser->ParseProject(mgaProject, PutInBstr(CString(xmlname))) );
 		{
-			TCHAR buf[200];
-			_stprintf_s(buf, _T("The model has been updated\nCurrent ID: %s\nThe original model has been saved to %s"), 
-					PutInCString(currentguid), backupname);
+			CString buf = CString(_T("The model has been updated\nCurrent ID: "))
+				+ currentguid + L"\nThe original model has been saved to " + backupname;
 			AfxMessageBox(buf);
 		}
 	}
 	catch(hresult_exception &e)	{
 		TCHAR buf[200];
 		if(backupname.IsEmpty()) {
-			_stprintf_s(buf, _T("The upgrade failed: %ld\nThe model has not been closed"), e.hr);
+			_stprintf_s(buf, _T("The upgrade failed: 0x%x\nThe model has not been closed"), e.hr);
 			AfxMessageBox(buf);
 		}
 		else {
 			if(backupname.Compare(fname)) {
 				if(MoveFile(backupname, fname)) backupname = fname;
 			}
-			_stprintf_s(buf, _T("The upgrade failed: %ld\nThe original model is in file %s"), e.hr, backupname);
+			_stprintf_s(buf, _T("The upgrade failed: 0x%x\nThe original model is in file %s"), e.hr, backupname);
 			AfxMessageBox(buf);
 		}
 	}
