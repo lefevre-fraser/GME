@@ -1088,10 +1088,11 @@ void CGMEView::OnInitialUpdate()
 		}
 	}
 	catch(hresult_exception &e) {
+		// CrashRpt c51312b4-866b-4a9f-a18d-9928ef9905ef: Close before MessageBox
+		frame->SendMessage(WM_CLOSE);
 		AbortTransaction(e.hr);
 		AfxMessageBox(_T("Unable to open model"),MB_OK | MB_ICONSTOP);
 		CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnInitialUpdate - Unable to open model.\r\n"));
-		frame->PostMessage(WM_CLOSE);
 		EndWaitCursor();
 		return;
 	}
@@ -9890,7 +9891,7 @@ void CGMEView::UpdateNamePositionMenuItem( CCmdUI* pCmdUI, int p_this_value)
 	try {
 		BeginTransaction(TRANSACTION_READ_ONLY);
 
-		bool first_value( true), res;
+		bool first_value( true), res(true);
 		POSITION pos = selected.GetHeadPosition();
 		while(pos && all_equal) {
 			CGuiObject *obj = selected.GetNext(pos);
