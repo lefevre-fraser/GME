@@ -219,7 +219,6 @@ function AddConfig90(proj, strProjectName)
 		CLTool.RuntimeLibrary = runtimeLibraryOption.rtMultiThreadedDebugDLL;
           CLTool.WarningLevel = "3";
 		CLTool.DebugInformationFormat = debugOption.debugEditAndContinue;
-		CLTool.BrowseInformation = browseInfoOption.brAllInfo;
 
         // DEBUG RESOURCE COMPILER SETTINGS
 		var RCTool = config.Tools('VCResourceCompilerTool');
@@ -266,7 +265,6 @@ function AddConfig90(proj, strProjectName)
 		CLTool.RuntimeLibrary = runtimeLibraryOption.rtMultiThreadedDLL;
 		CLTool.WarningLevel = "3";
 		CLTool.DebugInformationFormat = debugOption.debugEnabled;
-		CLTool.BrowseInformation = browseInfoOption.brAllInfo;
 		
 		// RELEASE RESOURCE COMPILER SETTINGS
 		var RCTool = config.Tools('VCResourceCompilerTool');
