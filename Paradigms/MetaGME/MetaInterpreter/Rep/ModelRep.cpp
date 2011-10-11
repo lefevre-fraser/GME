@@ -260,7 +260,7 @@ void ModelRep::inherit()
 	for( ; model_it != model_descendants.rend(); ++model_it)
 	{
 		if ( (*model_it)->getMyKind() != Any::MODEL)
-			global_vars.err << MSG_ERROR << "Error: nonmodel kind " << (*model_it)->getPtr() << " as model descendant\n";
+			throw std::string("Error: nonmodel kind ") + (*model_it)->getPtr()->getName() + " has model descendant " + this->getName();
 		ModelRep * mod_desc_ptr = dynamic_cast<ModelRep*>(*model_it);
 		if (!mod_desc_ptr) global_vars.err << MSG_ERROR << "Error: model descendant badly casted to model\n";
 					
