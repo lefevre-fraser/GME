@@ -882,7 +882,7 @@ HRESULT get_Modifications(FCO *fco, unsigned long changemask, CComVariant *mods)
 			if (vt == ATTVAL_ENUM) vt = ATTVAL_STRING;
 			attrid_type aid = ATTRID_ATTRTYPESBASE + vt;
 			CComVariant current = ITER[aid];
-			static const VARTYPE vartypes[] = { VT_NULL, VT_BSTR, VT_I4, VT_R8, VT_BOOL, VT_DISPATCH, VT_BSTR };
+			static const VARTYPE vartypes[] = { VT_NULL, VT_BSTR, VT_I4, VT_R8, VT_BOOL, VT_DISPATCH, VT_BSTR, VT_NULL };
 			if(vartypes[vt] != current.vt) {
 				COMTHROW(current.ChangeType(vartypes[vt]));
 			}

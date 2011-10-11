@@ -18,6 +18,7 @@ class CEnumVariant : public CCmdTarget
 	DECLARE_DYNCREATE(CEnumVariant)
 public:
 	CEnumVariant();         // protected constructor used by dynamic creation
+	virtual ~CEnumVariant();
 
 // Attributes
 public:
@@ -38,7 +39,6 @@ public:
 
 // Implementation
 protected:
-	virtual ~CEnumVariant();
 	CEnumVariant* m_pClonedFrom;
 
 	// Generated message map functions

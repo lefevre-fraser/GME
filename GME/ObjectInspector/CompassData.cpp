@@ -358,7 +358,7 @@ void CCompassData::toMgaStringOption(CString& strValue, UINT uData)
 {
 	ASSERT(bIsSingle(uData));
 
-	UINT uMgaValue;
+	UINT uMgaValue = CMPS_SOUTH;
 
 	if(uData&CMPS_NORTH)
 	{

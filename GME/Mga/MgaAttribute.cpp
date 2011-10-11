@@ -539,7 +539,7 @@ CoreObj findregvalueobj(CoreObj &cur, LPOLESTR bstrObname, long &opacity, bool c
 			wcsncpy(z, obname, len);
 			z[len] = '\0';
 			nob[ATTRID_NAME] = z;
-			delete z;
+			delete[] z;
 		}
 		nob[ATTRID_REGFLAGS] = 0; 
 		nob[ATTRID_REGNOWNER] =  cur;

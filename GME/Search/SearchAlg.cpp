@@ -538,7 +538,7 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
             //User supplied values
             int intSearchValue;
             double dblSearchValue;
-            bool bSearchValue;	
+            bool bSearchValue = false;
 
             CBstr bstrS;
             long value;

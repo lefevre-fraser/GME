@@ -36,7 +36,7 @@ bool DOMErrorPrinter::handleError(const DOMError &domError)
 		memset( line_nmbs, 0, sizeof(line_nmbs));
 
 		smart_Ch f_str = XMLString::transcode(loc->getURI());
-		sprintf( line_nmbs, "Line: %u Column: %u of File: ", loc->getLineNumber(), loc->getColumnNumber());
+		sprintf( line_nmbs, "Line: %u Column: %u of File: ", (unsigned)loc->getLineNumber(), (unsigned)loc->getColumnNumber());
 		std::string linfo = std::string( line_nmbs) + f_str;
 
 		// send msg

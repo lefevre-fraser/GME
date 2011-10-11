@@ -428,7 +428,7 @@ void CGMEOLEIt::refPortFinderAndChainBuilder( LPCTSTR p_portRole, CComPtr<IMgaFC
 			p_portResult = getChildInByName( model, p_portRole);
 
 			if( !p_refChainResult)
-				p_refChainResult.CoCreateInstance( L"Mga.MgaFCOs");
+				COMTHROW(p_refChainResult.CoCreateInstance( L"Mga.MgaFCOs"));
 
 			COMTHROW( p_refChainResult->Append( ref ));
 
@@ -443,7 +443,7 @@ void CGMEOLEIt::refPortFinderAndChainBuilder( LPCTSTR p_portRole, CComPtr<IMgaFC
 			if( ref2) //yes it seems
 			{
 				if( !p_refChainResult)
-					p_refChainResult.CoCreateInstance( L"Mga.MgaFCOs");
+					COMTHROW(p_refChainResult.CoCreateInstance( L"Mga.MgaFCOs"));
 
 				COMTHROW( p_refChainResult->Append( ref ));
 				ref = ref2;
@@ -474,7 +474,8 @@ bool CGMEOLEIt::refChainBuilder2( CComPtr<IMgaFCO> p_ref, CComPtr<IMgaFCO> p_por
 {
 	CComQIPtr<IMgaReference> ref( p_ref);
 	CComPtr<IMgaFCO> tgt;
-	if( !coll) coll.CoCreateInstance( L"Mga.MgaFCOs");
+	if( !coll) 
+		COMTHROW(coll.CoCreateInstance( L"Mga.MgaFCOs"));
 	VERIFY( coll);
 
 	bool valid = ref != 0;
@@ -2584,7 +2585,7 @@ void CGMEOLEIt::SetSelected( LPCTSTR list)
 		CComQIPtr<IMgaModel> model( putInTerr( m_theMgaModel));
 
 		CComPtr<IMgaFCOs> coll;
-		coll.CoCreateInstance( L"Mga.MgaFCOs");
+		COMTHROW(coll.CoCreateInstance( L"Mga.MgaFCOs"));
 		
 		CString tok,m = list;
 		int i = 0;

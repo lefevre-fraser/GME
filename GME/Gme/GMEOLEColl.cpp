@@ -92,9 +92,9 @@ void CGMEOLEColl::CheckIndex(long nIndex)
 
 LPUNKNOWN CGMEOLEColl::GetNewEnum()
 {
-	CEnumVariant* pEnum = new CEnumVariant;
+	std::unique_ptr<CEnumVariant> pEnum(new CEnumVariant);
 	int nCount = m_ptrArray.GetSize();
-	VARIANT* pContents = new VARIANT[nCount];
+	std::unique_ptr<VARIANT[]> pContents(new VARIANT[nCount]);
 	int i;
 
 	TRY
@@ -117,9 +117,9 @@ LPUNKNOWN CGMEOLEColl::GetNewEnum()
 		THROW_LAST();
 	}
 	END_CATCH_ALL
-	pEnum->SetContents(pContents, nCount);
+	pEnum->SetContents(pContents.release(), nCount);
 
-	return pEnum->GetInterface(&IID_IUnknown);
+	return pEnum.release()->GetInterface(&IID_IUnknown);
 }
 
 long CGMEOLEColl::GetCount()

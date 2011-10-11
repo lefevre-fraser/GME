@@ -940,7 +940,8 @@ void CGMEApp::UpdateComponentToolbar()
 			CMFCToolBarButton toolBarButton(commandID, nIndex, componentName + '\n' + toolTip, TRUE);
 
 			componentBar.InsertButton(toolBarButton);
-			FreeLibrary(hModule);
+			if (hModule)
+				FreeLibrary(hModule);
 		}
 		if (plugins.GetSize() + interpreters.GetSize() != 0) {
 			componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
@@ -1477,7 +1478,7 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 	    if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
 			TCHAR buf[200];
 		    _stprintf_s(buf, _T("Could not open current version of paradigm %s"), 
-				metaname);
+				static_cast<const TCHAR*>(metaname));
 
 			AfxMessageBox(buf);
 			DiagnoseParadigm(metaname);
@@ -2087,7 +2088,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 						if(h1 != S_OK) {
 							_stprintf_s(buf, _T("Could not locate paradigm %s\nVersion ID: %s\n")
 										 _T("Do you want to upgrade to the current version instead?\nCurrent ID: %s"), 
-										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
+										 static_cast<const TCHAR*>(paradigm), static_cast<const TCHAR*>(parguid1), static_cast<const TCHAR*>(parguid2));
 										 if(AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
 											parguid = pg2;
 										 }
@@ -2100,7 +2101,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 						else if(parguid1.Compare(parguid2)) {
 							_stprintf_s(buf, _T("This model was exported using paradigm %s\nVersion ID: %s\n")
 										 _T("Do you want to upgrade to the current version?\nCurrent ID: %s"), 
-										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
+										 static_cast<const TCHAR*>(paradigm), static_cast<const TCHAR*>(parguid1), static_cast<const TCHAR*>(parguid2));
 										 int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
 										 if(answer == IDYES) {
 											parguid = pg2;
@@ -2124,7 +2125,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 					CopyTo(parguid,gg);
 					CopyTo(gg, parguid1);
 					_stprintf_s(buf, _T("Could not open paradigm %s\nVersion ID: %s"), 
-						PutInCString(paradigm), PutInCString(parguid1));
+						static_cast<const TCHAR*>(paradigm), static_cast<const TCHAR*>(parguid1));
 
 					AfxMessageBox(buf);
 				}
@@ -2213,7 +2214,7 @@ void CGMEApp::OnFileXMLUpdate()
 			if(!parguid1.Compare(currentguid)) {
 				TCHAR buf[200];
 				_stprintf_s(buf, _T("There is no need to upgrade this model\nIts Meta Version ID is the current ID\nCurrent ID: %s"), 
-					PutInCString(currentguid));
+					static_cast<const TCHAR*>(currentguid));
 				AfxMessageBox(buf);
 				return;
 			}
@@ -2237,7 +2238,8 @@ void CGMEApp::OnFileXMLUpdate()
 		if(!MoveFile(fname, backupname)) {
 			backupname = fname;
 			TCHAR buf[300];
-			_stprintf_s( buf, _T("Could not save original file '%s' to '%s'"), fname, backupname); 
+			_stprintf_s( buf, _T("Could not save original file '%s' to '%s'"), 
+				static_cast<const TCHAR*>(fname), static_cast<const TCHAR*>(backupname)); 
 			AfxMessageBox(buf);
 			COMTHROW(E_NOTFOUND);
 		}
@@ -2275,7 +2277,8 @@ void CGMEApp::OnFileXMLUpdate()
 			if(backupname.Compare(fname)) {
 				if(MoveFile(backupname, fname)) backupname = fname;
 			}
-			_stprintf_s(buf, _T("The upgrade failed: 0x%x\nThe original model is in file %s"), e.hr, backupname);
+			_stprintf_s(buf, _T("The upgrade failed: 0x%x\nThe original model is in file %s"), e.hr, 
+				static_cast<const TCHAR*>(backupname));
 			AfxMessageBox(buf);
 		}
 	}
@@ -2794,7 +2797,7 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 						if(h1 != S_OK) {
 							_stprintf_s(buf, _T("Could not locate paradigm %s\nVersion ID: %s\n")
 										 _T("Do you want to upgrade to the current version instead?\nCurrent ID: %s"), 
-							PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
+							static_cast<const TCHAR*>(paradigm), static_cast<const TCHAR*>(parguid1), static_cast<const TCHAR*>(parguid2));
 							if (AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
 								parguid = pg2;
 							} else {
@@ -2805,7 +2808,7 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 						else if(parguid1.Compare(parguid2)) {
 							_stprintf_s(buf, _T("This model was exported using paradigm %s\nVersion ID: %s\n")
 										 _T("Do you want to upgrade to the current version?\nCurrent ID: %s"), 
-										 PutInCString(paradigm), PutInCString(parguid1), PutInCString(parguid2));
+										 static_cast<const TCHAR*>(paradigm), static_cast<const TCHAR*>(parguid1), static_cast<const TCHAR*>(parguid2));
 							int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
 							if (answer == IDYES) {
 								parguid = pg2;
@@ -2828,7 +2831,7 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 					CopyTo(parguid,gg);
 					CopyTo(gg, parguid1);
 					_stprintf_s(buf, _T("Could not open paradigm %s\nVersion ID: %s"), 
-						PutInCString(paradigm), PutInCString(parguid1));
+						static_cast<const TCHAR*>(paradigm), static_cast<const TCHAR*>(parguid1));
 
 					AfxMessageBox(buf);
 				}

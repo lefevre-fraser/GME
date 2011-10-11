@@ -34,7 +34,7 @@ STDMETHODIMP CMgaEventLogger::LogEvent(BSTR eventMsg)
 		{
 			newLine = true;
 		}
-		_ftprintf(EventLog, _T("%s"), s);
+		_ftprintf(EventLog, _T("%s"), static_cast<const TCHAR*>(s));
 		fflush(EventLog);
 	}
 	return S_OK;
@@ -45,7 +45,7 @@ STDMETHODIMP CMgaEventLogger::StartLogging()
 	if(!initialized) //if already initialized, don't do anything
 	{
 		CString path;
-		TCHAR gmepath[200];
+		TCHAR gmepath[MAX_PATH];
 		if(SHGetSpecialFolderPath( NULL, gmepath, CSIDL_APPDATA, true)) //most likely C:\Documents and Settings\<username>\Application Data
 		{
 			path = CString(gmepath) + _T("\\GME"); // add \GME to the path

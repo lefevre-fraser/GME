@@ -90,11 +90,10 @@ HRESULT DualHandleException(REFIID riidSource, const CException* pAnyException)
 
 		// Set up ErrInfo object
 		pcerrinfo->SetGUID(guid);
-		CT2COLE strDescription(pszDescription);
-		pcerrinfo->SetDescription(::SysAllocString(strDescription));
+		pcerrinfo->SetDescription(const_cast<LPOLESTR>(pszDescription));
 		pcerrinfo->SetHelpContext(dwHelpContext);
-		pcerrinfo->SetHelpFile(bstrHelpFile);
-		pcerrinfo->SetSource(bstrSource);
+		pcerrinfo->SetHelpFile(bstrHelpFile ? bstrHelpFile : L"");
+		pcerrinfo->SetSource(bstrSource ? bstrSource : L"");
 
 		TRACE("\tSource = %ws\n", bstrSource);
 		TRACE("\tDescription = %s\n", pszDescription);

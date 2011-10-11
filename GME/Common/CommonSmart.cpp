@@ -11,6 +11,8 @@ int CComBstrObj::Compare(BSTR q) const
 
 	if( pl != ql )
 		return pl - ql;
+	if (pl == NULL && ql == NULL)
+		return 0;
 
 	return wcsncmp(p, q, pl);
 }

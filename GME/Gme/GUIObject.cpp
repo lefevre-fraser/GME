@@ -1546,7 +1546,7 @@ void CGuiObject::WriteLocation(int aspect)
 		CGuiMetaAspect *guiAsp = GetGuiMetaParent()->FindAspect(aspect);
 		CComPtr<IMgaMetaBase> mBase = guiAsp->mgaMeta;
 		CComPtr<IMgaMetaAspect> mAspect;
-		mBase.QueryInterface(&mAspect);
+		COMTHROW(mBase.QueryInterface(&mAspect));
 		COMTHROW(mgaFco->get_Part(mAspect,&part));
 		CRect r = guiAspects[aspect]->GetLocation();
 		// Save position part

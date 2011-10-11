@@ -789,7 +789,8 @@ HRESULT FCO::get_NthObjectByPath(long n_th, BSTR path, IMgaObject ** pVal) {
 			CopyTo( relpos_b, relpos_str);
 
 			int relpos;
-			sscanf( relpos_str.c_str(), "%d", &relpos);
+			if (sscanf( relpos_str.c_str(), "%d", &relpos) != 1)
+				return E_INVALIDARG;
 
 			// take from the samename_objs map the element at relpos relative position
 			std::map< objid_type, std::vector<CoreObj> >::iterator ii = samename_objs.begin();

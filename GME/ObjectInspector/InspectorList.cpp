@@ -70,7 +70,7 @@ void CInspectorList::PreSubclassWindow()
 	logFont.lfCharSet = DEFAULT_CHARSET;
 	logFont.lfHeight = INSP_ENTRY_FONT_PTSIZE;
 	logFont.lfWeight = FW_BOLD;
-	lstrcpyn(logFont.lfFaceName, INSP_ENTRY_FONT_FACE, sizeof(logFont.lfFaceName));
+	lstrcpyn(logFont.lfFaceName, INSP_ENTRY_FONT_FACE, sizeof(logFont.lfFaceName) / sizeof(TCHAR));
 
 	VERIFY(m_entryBoldFont.CreatePointFontIndirect(&logFont, NULL));
 

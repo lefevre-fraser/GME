@@ -1542,9 +1542,9 @@ STDMETHODIMP CMgaRegistrar::VersionFromGUID(BSTR name, VARIANT guid, BSTR *ver, 
 				mode = REGACCESS_USER;
 				for(int index = 0;; ++index) {
 					TCHAR name[512];
-					DWORD namesize = sizeof(name);
+					DWORD namesize = sizeof(name) / sizeof(name[0]);
 					BYTE value[512];
-					DWORD valuesize = sizeof(value);
+					DWORD valuesize = sizeof(value) / sizeof(value[0]);
 					DWORD valtype;
 
 					LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, value, &valuesize);
@@ -1660,9 +1660,9 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigmGUID(BSTR name, VARIANT v, regacce
 			
 			for(int index = 0;; ++index) {
 				TCHAR name[512];
-				DWORD namesize = sizeof(name);
+				DWORD namesize = sizeof(name) / sizeof(name[0]);
 				BYTE value[512];
-				DWORD valuesize = sizeof(value);
+				DWORD valuesize = sizeof(value) / sizeof(value[0]);
 				DWORD valtype;
 
 				LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, value, &valuesize);
@@ -1875,7 +1875,7 @@ STDMETHODIMP CMgaRegistrar::QueryComponent(BSTR progid, componenttype_enum *type
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				comp.QueryDWORDValue(_T("Type"), dwType);
-				ULONG count;
+				ULONG count = 0;
 				res = comp.QueryStringValue(_T("Description"), NULL, &count);
 				if (strDesc == _T("") && res == ERROR_SUCCESS) {
 					CString ret;
@@ -1985,7 +1985,7 @@ STDMETHODIMP CMgaRegistrar::get_ComponentExtraInfo(regaccessmode_enum mode,
 			LONG res = comp.Open(hives[i], rootreg+_T("\\Components\\")+progidstr, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
-				ULONG count;
+				ULONG count = 0;
 				res = comp.QueryStringValue(PutInCString(name), NULL, &count);
 				if (res == ERROR_SUCCESS) {
 					CString ret;
@@ -2071,7 +2071,7 @@ Tristate_t IsAssociated_hive(const CString& progidstr, const CString& paradigmst
 	if (acomp.Open(hive, rootreg + _T("\\Components\\") + progidstr + _T("\\Associated"), KEY_READ) != ERROR_SUCCESS) {
 		return Tristate_Not_Specified;
 	}
-	ULONG count;
+	ULONG count = 0;
 	DWORD res = acomp.QueryValue(paradigmstr, NULL, NULL, &count);
 	if (res != ERROR_SUCCESS) {
 		return Tristate_Not_Specified;

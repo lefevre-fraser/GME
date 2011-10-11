@@ -33,7 +33,7 @@ HTREEITEM CMetaTreeCtrl::InsertItem(HTREEITEM hParent, CString strObjectName, LP
 
 	if(hParent==NULL)	// Root folder
 	{
-		HTREEITEM hItem=CTreeCtrlEx::InsertItem(strObjectName,0,0,hParent,TVI_SORT);	
+		HTREEITEM hItem=CTreeCtrlEx::InsertItem(strObjectName,0,0,TVI_ROOT,TVI_SORT);	
 		CMgaObjectProxy ObjectProxy(pUnknown,otObjectType);
 		m_MgaMap.AddEntry(hItem,ObjectProxy);
 		SetItemData(hItem,(DWORD)0);

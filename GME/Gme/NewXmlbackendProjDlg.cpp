@@ -151,7 +151,7 @@ void CNewXmlbackendProjDlg::OnOK()
 		m_connectionString += _T(" svn=\"");
 		m_connectionString += m_svnUrl;
 		m_connectionString += _T("\"");
-		TCHAR gmepath[200];
+		TCHAR gmepath[MAX_PATH];
 		if(SHGetSpecialFolderPath( NULL, gmepath, CSIDL_APPDATA, true)) //most likely C:\Documents and Settings\<username>\Application Data
 		{
 			WIN32_FILE_ATTRIBUTE_DATA attr;

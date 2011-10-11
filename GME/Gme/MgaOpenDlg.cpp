@@ -143,7 +143,7 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme)
 
 	try
 	{
-		if( (allowXme && (m_radio = 0)) || (DoModal() == IDOK && !pressed_back) )
+		if( (allowXme && (m_radio /*n.b. = */ = 0)) || (DoModal() == IDOK && !pressed_back) )
 		{
 			if( m_radio == 0 )
 			{

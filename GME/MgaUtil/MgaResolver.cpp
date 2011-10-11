@@ -184,7 +184,7 @@ STDMETHODIMP CMgaResolver::get_FolderByStr(IMgaFolder *parent,
 		ASSERT(parent_mfolder != NULL);
 
 		COMTHROW( 
-			(hr = parent_mfolder->get_LegalChildFolderByName(kind, &mfolder)) ? // == E_NOTFOUND???
+			(hr = parent_mfolder->get_LegalChildFolderByName(kind, &mfolder)) == E_NOTFOUND ?
 			S_OK : hr
 		);
 
@@ -197,7 +197,7 @@ STDMETHODIMP CMgaResolver::get_FolderByStr(IMgaFolder *parent,
 				CComBSTR kind2 = prefixIt( kind);
 				// try with prefixed name
 				COMTHROW( 
-					(hr = parent_mfolder->get_LegalChildFolderByName(kind2, &mfolder)) ? // == E_NOTFOUND???
+					(hr = parent_mfolder->get_LegalChildFolderByName(kind2, &mfolder)) == E_NOTFOUND ?
 					S_OK : hr
 				);
 			}
@@ -206,7 +206,7 @@ STDMETHODIMP CMgaResolver::get_FolderByStr(IMgaFolder *parent,
 				CComBSTR kind2 = truncIt( kind);
 				// try with truncated name
 				COMTHROW( 
-					(hr = parent_mfolder->get_LegalChildFolderByName(kind2, &mfolder)) ? // == E_NOTFOUND???
+					(hr = parent_mfolder->get_LegalChildFolderByName(kind2, &mfolder)) == E_NOTFOUND ?
 					S_OK : hr
 				);
 			}
@@ -216,7 +216,7 @@ STDMETHODIMP CMgaResolver::get_FolderByStr(IMgaFolder *parent,
 				CComBSTR kind2 = prefixIt( kind1);
 				// try with migrated name from one namespace to another
 				COMTHROW( 
-					(hr = parent_mfolder->get_LegalChildFolderByName(kind2, &mfolder)) ? // == E_NOTFOUND???
+					(hr = parent_mfolder->get_LegalChildFolderByName(kind2, &mfolder)) == E_NOTFOUND ?
 					S_OK : hr
 				);
 			}

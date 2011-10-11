@@ -1372,6 +1372,7 @@ void CGMEDoc::Historian::erasePrevOccurencesB( const HistoryElem& elem)
 			++it;
 	}
 
+	// FIXME: MAX_LEN != MAX_LEN is always false
 	const int MAX_LEN = -1;
 	while( MAX_LEN != -1 && m_backStack.size() > MAX_LEN)
 	{

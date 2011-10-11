@@ -135,7 +135,7 @@ public:
  STDMETHOD(get_CurrentAssociation)( VARIANT *udp)  { 
 														COMTRY {
 															CHECK_OUTPAR(udp);
-															VariantCopy(udp, &userdata); 
+															COMTHROW(VariantCopy(udp, &userdata)); 
 														} COMCATCH(;)
 													}
  STDMETHOD(GetParent)( IMgaContainer **pVal,  objtype_enum *l)  { return inFCO->GetParent(pVal,l); }
