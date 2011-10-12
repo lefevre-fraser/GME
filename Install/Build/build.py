@@ -96,6 +96,7 @@ def compile_meta():
         
 def compile_JBON():
     "Compile Java component support (JBON)"
+    if prefs['arch'] == 'x64': return
     sln_file = os.path.join(GME_ROOT, "SDK", "Java", "native", "JavaSupport.sln");
     tools.build_VS( sln_file, "Release" )
 
@@ -103,12 +104,13 @@ def compile_JBON():
 def compile_tools():
     "Compile external tool components"
     
-    # Table Editor
-    sln_file = os.path.join(GME_ROOT, "Tools", "TableEditor", "TableEditor.sln");
-    tools.build_VS( sln_file, "Release" )
-    
     # Auto Layout
     sln_file = os.path.join(GME_ROOT, "Tools", "AutoLayout", "AutoLayout.sln");
+    tools.build_VS( sln_file, "Release" )
+    if prefs['arch'] == 'x64': return
+
+    # Table Editor
+    sln_file = os.path.join(GME_ROOT, "Tools", "TableEditor", "TableEditor.sln");
     tools.build_VS( sln_file, "Release" )
     
     # GMEplink
@@ -120,6 +122,12 @@ def compile_tools():
 
 def compile_samples():
     "Compile sample components"
+    
+    # UML Paradigm
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "UML", "decorator", "UMLDecorator.sln");
+    tools.build_VS( sln_file, "Release" )
+
+    if prefs['arch'] == 'x64': return
 
     sln_file = os.path.join(GME_ROOT, "SDK", "PatternProcessor", "PatternProcessor.sln");
     tools.build_VS( sln_file, "Release" )
@@ -134,10 +142,6 @@ def compile_samples():
     
     # HFSM Paradigm
     sln_file = os.path.join(GME_ROOT, "Paradigms", "HFSM", "HFSMSimulator", "HFSMSimulator.sln");
-    tools.build_VS( sln_file, "Release" )
-    
-    # UML Paradigm
-    sln_file = os.path.join(GME_ROOT, "Paradigms", "UML", "decorator", "UMLDecorator.sln");
     tools.build_VS( sln_file, "Release" )
     
 
