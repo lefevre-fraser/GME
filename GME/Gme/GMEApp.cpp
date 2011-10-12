@@ -285,7 +285,7 @@ BOOL CGMEApp::InitInstance()
 		setlocale(LC_ALL, "");
 	}
 
-	if(CheckInterfaceVersions()) return FALSE;
+	//if(CheckInterfaceVersions()) return FALSE;
 
 
 	// Initialize OLE libraries
@@ -939,7 +939,7 @@ void CGMEApp::UpdateComponentToolbar()
 			ASSERT(succ == TRUE);
 
 			// Adding button
-			int commandID = (i < plugins.GetSize()) ? ID_FILE_RUNPLUGIN1 + i : ID_FILE_INTERPRET1 + i - plugins.GetSize();
+			INT_PTR commandID = (i < plugins.GetSize()) ? ID_FILE_RUNPLUGIN1 + i : ID_FILE_INTERPRET1 + i - plugins.GetSize();
 			CMFCToolBarButton toolBarButton(commandID, nIndex, componentName + '\n' + toolTip, TRUE);
 
 			componentBar.InsertButton(toolBarButton);
