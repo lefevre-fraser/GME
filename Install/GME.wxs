@@ -276,7 +276,6 @@
 		                </Class>
 			        </TypeLib>
 			     </File>
-              <File Id='GME.exe.config' Name='GME.exe.config' DiskId='1' Source='..\GME\GME\GME.exe.config'/>
                 <RegistryKey Root='HKLM' Key='Software\GME'>
                     <RegistryValue Name='IconPath' Type='string' Value='$PARADIGMDIR\icons;$PROJECTDIR\icons'/>
 		        </RegistryKey>
