@@ -288,6 +288,7 @@ Build an installation image (msi) for GME.
   -V, --version=MAJOR.MINOR.PATCHLEVEL
                       set build version (default: %d.%d.%d)
 
+  -a, --arch=ARCH     set architecture (x64 or x86)
 \tBuild steps:
 
 \t%s
@@ -303,10 +304,10 @@ Build an installation image (msi) for GME.
        )
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'hvcs:e:i:x:V:',
+    opts, args = getopt.getopt(sys.argv[1:], 'hvcs:e:i:x:V:a:',
                                ["help", "verbose", "clean",
                                 "start=", "end=", "include=", "exclude=",
-                                "version="])
+                                "version=", "arch="])
     include_steps = []
     exclude_steps = []
     if args:
@@ -337,6 +338,8 @@ try:
             prefs["version_major"] = int(M)
             prefs["version_minor"] = int(m)
             prefs["version_patch"] = int(p)
+        if opt in ("-a", "--arch"):
+            prefs["arch"] = val
             
 except (getopt.GetoptError, ValueError, AttributeError), e:
     print e
@@ -347,7 +350,7 @@ prefs["version_string"] = ".".join([str(prefs["version_major"]),
                                    str(prefs["version_minor"]),
                                    str(prefs["version_patch"])])
 
-print "Building GME version " + prefs["version_string"]
+print "Building GME version " + prefs["version_string"] + " " + prefs["arch"]
 
 try:
     for i in range(len(build_steps)):

@@ -113,7 +113,7 @@ def build_VS(sln_path, config_name):
 
     import subprocess
     # , '/fl', '/flp:Verbosity=diagnostic'
-    args = ['msbuild', sln_path, '/t:' + ("Clean;" * prefs['clean']) + 'Build', '/p:Configuration=' + config_name]
+    args = ['msbuild', sln_path, '/t:' + ("Clean;" * prefs['clean']) + 'Build', '/p:Configuration=' + config_name + (';Platform=x64' if prefs['arch'] == 'x64' else '') ]
     with open(os.devnull, "w") as nulfp:
         # n.b. stderr=subprocess.STDOUT fails mysteriously
         import sys

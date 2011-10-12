@@ -16,5 +16,6 @@ prefs = {
 	"verbose" : False,
 	"version_major" : (time.localtime()[0] - 2000),
 	"version_minor" : time.localtime()[1],
-	"version_patch" : time.localtime()[2]
+	"version_patch" : time.localtime()[2],
+	"arch" : "x86",
 	}
