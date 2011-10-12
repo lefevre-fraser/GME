@@ -89,7 +89,7 @@ HRESULT CCoreObject::AggregatedInterfaceLookup(void *pvThis, REFIID riid, LPVOID
 	HRESULT hr = E_NOINTERFACE;
 
 	aggregates_type &aggregates = ((CCoreObject*)pvThis)->aggregates;
-	ASSERT( aggregates.cbegin() != aggregates.cend() );
+	//ASSERT( aggregates.cbegin() != aggregates.cend() );
 
 	aggregates_iterator i = aggregates.begin();
 	aggregates_iterator e = aggregates.end();
