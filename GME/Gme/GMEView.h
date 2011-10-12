@@ -181,7 +181,7 @@ public:
 	bool					alive;
 
 	unsigned long			animRefCnt;
-	UINT					timerID;
+	UINT_PTR				timerID;
 
 
 	CAutoRouter				router;
@@ -374,7 +374,7 @@ public:
 	bool					IsInstance(void) const;
 	void					TryToExecutePendingRequests(void);
 
-	virtual int				OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
+	virtual INT_PTR			OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
 
 	static bool				IsHugeModel()	{ return false; } // HACK
 	static CGMEView*		GetActiveView();
@@ -552,7 +552,7 @@ protected:
 	afx_msg void OnResetSticky();
 	afx_msg void OnNcMouseMove(UINT nHitTest, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnTimer(UINT nIDEvent);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnUpdateCntxInsertannotation(CCmdUI* pCmdUI);
 	afx_msg void OnCntxInsertannotation();
 	afx_msg void OnCntxAnnotations();

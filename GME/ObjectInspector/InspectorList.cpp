@@ -903,7 +903,7 @@ bool CInspectorList::SelectNextItem(void)
 }
 
 
-LONG CInspectorList::OnEditEndOK(UINT /*lParam*/, LONG /*wParam*/)
+LRESULT CInspectorList::OnEditEndOK(WPARAM /*lParam*/, LPARAM /*wParam*/)
 {
 
 	m_InPlaceManager.OnEditEnd();

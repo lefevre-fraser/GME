@@ -645,11 +645,13 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 				if (mainWnd != NULL)
 					hwndCaller = mainWnd->m_hWnd;
 				HWND helpWnd = NULL;
+#ifndef _M_X64
 				helpWnd = ::HtmlHelp(hwndCaller, fullUrl, HH_DISPLAY_TOPIC, 0);
 				if (helpWnd == NULL && url != GME_UMAN_CONTENTS) {
 					fullUrl = CString(_T("ms-its:")) + gmeRoot + GME_UMAN_HOME + GME_UMAN_CONTENTS;
 					helpWnd = ::HtmlHelp(hwndCaller, fullUrl, HH_DISPLAY_TOPIC, 0);
 				}
+#endif
 				if (helpWnd == NULL)
 					AfxMessageBox(_T("Couldn't find help file or help topic: ") + fullUrl, MB_OK | MB_ICONSTOP);
 			}

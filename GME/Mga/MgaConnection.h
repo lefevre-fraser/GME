@@ -19,7 +19,7 @@ class ATL_NO_VTABLE CMgaConnection :
 	public ISupportErrorInfoImpl<&IID_IMgaConnection>
 {
 public:
-	static HRESULT WINAPI simpletest(void* pv, REFIID riid, LPVOID* ppv, DWORD dw) {
+	static HRESULT WINAPI simpletest(void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw) {
 				FCO *f = reinterpret_cast<CMgaConnection*>(pv)->innFCO;
 				if(!f->simpleconn()) return E_NOINTERFACE;
 				IUnknown* pUnk = (IUnknown*)((int)pv+dw);

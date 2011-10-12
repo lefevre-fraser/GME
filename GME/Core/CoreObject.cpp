@@ -81,7 +81,7 @@ CCoreObject::~CCoreObject()
 #endif
 }
 
-HRESULT CCoreObject::AggregatedInterfaceLookup(void *pvThis, REFIID riid, LPVOID *ppv, DWORD dw)
+HRESULT CCoreObject::AggregatedInterfaceLookup(void *pvThis, REFIID riid, LPVOID *ppv, DWORD_PTR dw)
 {
 	ASSERT( ppv != NULL && *ppv == NULL );
 	ASSERT( dw == 0 );

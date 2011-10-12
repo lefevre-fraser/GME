@@ -49,7 +49,7 @@ void CInspectorSheet::OnSize(UINT nType, int cx, int cy)
 	}	
 }
 
-LONG CInspectorSheet::OnItemChanged(WPARAM wParam, LPARAM /*lParam*/)
+LRESULT CInspectorSheet::OnItemChanged(WPARAM wParam, LPARAM /*lParam*/)
 {
 /*
 #ifdef _DEBUG

@@ -51,7 +51,7 @@ protected:
 	//{{AFX_MSG(CComboBoxSelectDlg)
 	afx_msg BOOL OnNcActivate(BOOL bActive);
 	virtual BOOL OnInitDialog();
-	afx_msg LONG OnComboSelEnd(UINT lParam, LONG wParam);
+	afx_msg LRESULT OnComboSelEnd(WPARAM lParam, LPARAM);
 	void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

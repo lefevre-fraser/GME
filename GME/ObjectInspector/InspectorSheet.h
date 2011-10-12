@@ -43,7 +43,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-	afx_msg LONG OnItemChanged(WPARAM  wParam, LPARAM lParam);	
+	afx_msg LRESULT OnItemChanged(WPARAM  wParam, LPARAM lParam);	
 
 protected:
 	CInspectorList	**m_inspectorLists;

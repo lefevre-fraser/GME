@@ -113,7 +113,7 @@ void CComboBoxSelectDlg::OnOK()
 	CDialog::OnOK();
 }
 
-LONG CComboBoxSelectDlg::OnComboSelEnd( UINT lParam, LONG /*wParam*/)
+LRESULT CComboBoxSelectDlg::OnComboSelEnd( WPARAM lParam, LPARAM /*wParam*/)
 {
 	// m_uiSelItem = lParam;
 	OnOK();

@@ -53,8 +53,9 @@ protected:
 
 virtual BOOL PreTranslateMessage(MSG* pMsg)
 {
-	CWnd* cwnd = 0;
-	m_Console.InvokeHelper(0x43576E64 /* magic from ConsoleCtl.cpp */, DISPATCH_PROPERTYGET, VT_I4, (void*)&cwnd, 0);
+	__int64 ret = 0;
+	m_Console.InvokeHelper(0x43576E64 /* magic from ConsoleCtl.cpp */, DISPATCH_PROPERTYGET, VT_I8, (void*)&ret, 0);
+	CWnd* cwnd = (CWnd*)(void*)ret;
 	return cwnd->PreTranslateMessage(pMsg);
 }
 

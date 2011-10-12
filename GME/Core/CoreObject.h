@@ -40,7 +40,7 @@ BEGIN_COM_MAP(CCoreObject)
 	COM_INTERFACE_ENTRY_FUNC_BLIND(0, &CCoreObject::AggregatedInterfaceLookup)
 END_COM_MAP()
 
-	static HRESULT WINAPI AggregatedInterfaceLookup(void *pvThis, REFIID riid, LPVOID *ppv, DWORD dw);		
+	static HRESULT WINAPI AggregatedInterfaceLookup(void *pvThis, REFIID riid, LPVOID *ppv, DWORD_PTR dw);		
 
 // ------- COM methods
 

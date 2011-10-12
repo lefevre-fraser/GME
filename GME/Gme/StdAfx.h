@@ -81,9 +81,16 @@ typedef GMEInterfaceVersion_enum GMEInterfaceVersion;
 #include "CommonMfc.h"
 #include "CommonMgaTrukk.h"
 
-#pragma comment(linker,"/manifestdependency:\"type='win32'  name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#if defined(_M_IX86)
+#define PROCESSOR_ARCHITECTURE "x86"
+#elif defined(_M_X64)
+#define PROCESSOR_ARCHITECTURE "amd64"
+#endif
+#pragma comment(linker,"/manifestdependency:\"type='win32'  name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='" PROCESSOR_ARCHITECTURE "' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
-
+#include "AutoRoute\AutoRouterGraph.h"
+#include "DynMenu.h"
+#include "RecentConnStrList.h"
 
 #define WM_USER_ZOOM					(WM_USER + 111)
 #define WM_PANN_SCROLL					(WM_USER + 112)

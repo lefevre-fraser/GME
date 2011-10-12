@@ -60,7 +60,7 @@ public:
 
 	afx_msg void OnArrowClicked();
 	afx_msg void OnEditorClicked();
-	afx_msg LONG OnEditEndOK(UINT lParam, LONG wParam);
+	afx_msg LRESULT OnEditEndOK(WPARAM lParam, LPARAM wParam);
 // Implementation
 public:
 	void GetItem(int nIndex, CListItem &ListItem);

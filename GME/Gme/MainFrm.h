@@ -115,7 +115,7 @@ protected:  // control bar embedded members
 	CGMEObjectInspector	m_objectInspector;
 	CGMESearch			m_search;
 
-	UINT				m_autosaveTimerID;
+	UINT_PTR			m_autosaveTimerID;
 
 // Generated message map functions
 protected:
@@ -126,7 +126,7 @@ protected:
 	afx_msg void OnViewFullScreen();
 	afx_msg void OnEditSearch();
 	afx_msg void OnUpdateEditSearch(CCmdUI* pCmdUI);
-	afx_msg void OnTimer(UINT nIDEvent);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnDestroy();
 	afx_msg void OnViewMultiUserRefreshSourceControl();
 	afx_msg void OnUpdateViewMultiUserRefreshSourceControl(CCmdUI* pCmdUI);

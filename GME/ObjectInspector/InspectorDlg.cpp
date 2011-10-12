@@ -396,7 +396,7 @@ void CInspectorDlg::SetHelp(const CString &strTitle, const CString &strText)
 	}
 }
 
-LONG CInspectorDlg::OnItemChanged(WPARAM wParam, LPARAM lParam)
+LRESULT CInspectorDlg::OnItemChanged(WPARAM wParam, LPARAM lParam)
 {
 /*
 #ifdef _DEBUG
@@ -503,7 +503,7 @@ void CInspectorDlg::OnItemChangedPreference(int nItem)
 
 
 
-afx_msg LONG CInspectorDlg::OnNameEditEndOK(UINT /*wParam*/, LONG /*lParam*/)
+afx_msg LRESULT CInspectorDlg::OnNameEditEndOK(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	if(m_NameCtrl.GetModify())
 	{
@@ -516,7 +516,7 @@ afx_msg LONG CInspectorDlg::OnNameEditEndOK(UINT /*wParam*/, LONG /*lParam*/)
 }
 
 
-afx_msg LONG CInspectorDlg::OnNameEditEndCancel(UINT /*wParam*/, LONG /*lParam*/)
+afx_msg LRESULT CInspectorDlg::OnNameEditEndCancel(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 
 	if(m_NameCtrl.GetModify())

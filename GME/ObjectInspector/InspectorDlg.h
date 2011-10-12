@@ -65,10 +65,10 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
-	afx_msg LONG OnNameEditEndOK(UINT wParam, LONG lParam);
-	afx_msg LONG OnNameEditEndCancel(UINT wParam, LONG lParam);
+	afx_msg LRESULT OnNameEditEndOK(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnNameEditEndCancel(WPARAM wParam, LPARAM lParam);
 
-	afx_msg LONG OnItemChanged(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnItemChanged(WPARAM wParam, LPARAM lParam);
 	void OnItemChangedPreference(int nItem);
 	void OnItemChangedAttribute(int nItem);
 

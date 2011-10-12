@@ -26,7 +26,7 @@ static char THIS_FILE[] = __FILE__;
 
 afx_msg BOOL CComponentBar::OnTT(UINT, NMHDR * pNMHDR, LRESULT * ) {
 	TOOLTIPTEXT *pTTT = (TOOLTIPTEXT *)pNMHDR;
-	UINT nIndex =pNMHDR->idFrom;
+	UINT_PTR nIndex =pNMHDR->idFrom;
 
 	if(nIndex == 1)
 	{
@@ -964,7 +964,7 @@ void CMainFrame::HideFindDlg()
 	m_search.ShowWindow( SW_HIDE);
 }
 
-void CMainFrame::OnTimer(UINT nIDEvent)
+void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 {
 	if (nIDEvent == GME_AUTOSAVE_EVENT_ID) {
 		theApp.Autosave();

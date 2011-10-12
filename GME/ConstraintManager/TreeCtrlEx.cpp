@@ -789,7 +789,7 @@ void CTreeCtrlEx::OnLButtonDblClk(UINT nFlags, CPoint point)
 	CTreeCtrl::OnLButtonDblClk(nFlags, point);
 }
 
-void CTreeCtrlEx::OnTimer(UINT nIDEvent)
+void CTreeCtrlEx::OnTimer(UINT_PTR nIDEvent)
 {
 	if (nIDEvent == TCEX_EDITLABEL)
 	{

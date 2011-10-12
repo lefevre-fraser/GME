@@ -106,7 +106,7 @@ public:
 	eventidClickMGAID = 1L,
 	//}}AFX_DISP_ID
 	};
-	afx_msg int GetCWnd() { return (int)(void*)(CWnd*)this; }
+	afx_msg __int64 GetCWnd() { return (__int64)(void*)(CWnd*)this; }
 	afx_msg void SetCWnd(void*) {  }
 	BOOL PreTranslateMessage(MSG* pMsg);
 };

@@ -2729,7 +2729,7 @@ void CGMEView::ModeChange()
 	DoPannWinRefresh();
 }
 
-int CGMEView::OnToolHitTest( CPoint point, TOOLINFO* pTI ) const
+INT_PTR CGMEView::OnToolHitTest( CPoint point, TOOLINFO* pTI ) const
 {
 	static CGuiObject *oldObject = 0;
 	static CGuiPort *oldPort = 0;
@@ -9315,7 +9315,7 @@ void CGMEView::ClearConnSpecs()
 	connTmpHotSide = GME_CENTER;
 }
 
-void CGMEView::OnTimer(UINT nIDEvent)
+void CGMEView::OnTimer(UINT_PTR nIDEvent)
 {
 	if (nIDEvent == GME_ANIM_EVENT_ID) {
 		Invalidate();

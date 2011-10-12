@@ -5,7 +5,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalLibraryDirectories>..\lib\CrashRpt\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib\CrashRpt\lib\$(Platform);..\lib\CrashRpt\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>../Lib/CrashRpt/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
