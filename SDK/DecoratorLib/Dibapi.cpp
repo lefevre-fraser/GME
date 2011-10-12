@@ -473,7 +473,7 @@ HGLOBAL WINAPI CopyHandle (HGLOBAL h)
 	if (h == NULL)
 		return NULL;
 
-	DWORD dwLen = ::GlobalSize((HGLOBAL) h);
+	SIZE_T dwLen = ::GlobalSize((HGLOBAL) h);
 	HGLOBAL hCopy = ::GlobalAlloc(GHND, dwLen);
 
 	if (hCopy != NULL)

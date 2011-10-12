@@ -202,7 +202,7 @@ bool ResizablePart::MenuItemSelected(UINT menuItemId, UINT nFlags, const CPoint&
 			setSizeDlg.SetParameters(this, GetLocation(), point, resizeLogic.DeterminePotentialResize(point),
 									 cWnd, isPermanentCWnd, transformHDC, nFlags);
 			BOOL success = setSizeDlg.InitModalIndirect(dlgTemplate, cWnd);
-			INT retVal = 0;
+			INT_PTR retVal = 0;
 			if (success != FALSE) {
 				inSizeDlgProcedure = true;
 				m_setSizeDlg = &setSizeDlg;

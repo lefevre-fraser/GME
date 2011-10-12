@@ -60,7 +60,7 @@ public:
 
 	std::string m_currSelConfigStr;
 
-	void getDescsAncs( bool which, int changed, std::vector< int > & res);
+	void getDescsAncs( bool which, DWORD_PTR changed, std::vector< int > & res);
 	bool addPossibleAncestors( CStringList& list, int changed);
 	
 	static int m_sortOrder;

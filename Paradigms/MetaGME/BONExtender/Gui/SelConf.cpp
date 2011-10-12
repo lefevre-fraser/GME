@@ -329,7 +329,7 @@ bool SelConf::addPossibleAncestors( CStringList& list, int changed)
 }
 
 // which: true if the user selected NO, false if the user selected YES
-void SelConf::getDescsAncs( bool which, int changed, std::vector< int > & res)
+void SelConf::getDescsAncs( bool which, DWORD_PTR changed, std::vector< int > & res)
 {
 	POSITION pos = m_entries.GetHeadPosition();
 	entry	*e = 0;

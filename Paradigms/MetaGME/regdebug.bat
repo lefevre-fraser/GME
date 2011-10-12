@@ -6,22 +6,22 @@ REM	Please consult with Peter before editing this file
 REM 
 
 echo MetaDecorator.dll:
-regsvr32 /s "MetaDecorator\Debug\MetaDecorator.dll"
+regsvr32 /s "Debug\MetaDecorator.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo BonExtender.dll:
-regsvr32 /s "BonExtender\Debug\BonExtender.dll"
+regsvr32 /s "Debug\BonExtender.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo MetaInterpreter.dll:
-regsvr32 /s "MetaInterpreter\Debug\MetaInterpreter.dll"
+regsvr32 /s "Debug\MetaInterpreter.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
 echo NamespaceConfig.dll:
-regsvr32 /s "NamespaceConfig\Debug\NamespaceConfig.dll"
+regsvr32 /s "Debug\NamespaceConfig.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 

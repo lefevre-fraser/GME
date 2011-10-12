@@ -350,7 +350,7 @@ void CTable::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 			else if(colnum==RSP_COLNUM)
 			{
-				int rowID = GetItemData( index);
+				DWORD_PTR rowID = GetItemData( index);
 				CString role, repr; bool ext;
 				if( getRow( rowID, role, ext, repr) && ext == false) // if not intended for extension
 				{

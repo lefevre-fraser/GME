@@ -316,7 +316,7 @@ bool TextPart::HandleTextEditOperation(bool isDoubleClick, const CPoint& point, 
 									 m_iFontKey, inflateToRight, m_bMultiLine);
 		BOOL success = ::AfxInitRichEdit2();	// See http://support.microsoft.com/kb/166132
 		success = inPlaceEditDlg.InitModalIndirect(dlgTemplate, cWnd);
-		INT retVal = 0;
+		INT_PTR retVal = 0;
 		if (success != FALSE)
 			retVal = inPlaceEditDlg.DoModal();
 
