@@ -283,13 +283,18 @@
 		            <RegistryValue Type='string' Value='[INSTALLDIR]GME.exe'/>
 		            <RegistryValue Name='Path' Type='string' Value='[INSTALLDIR]'/>	    
 		        </RegistryKey>
-		        
-		        <ProgId Id='GME.mgafile' Description='GME project file'>
-                    <Extension Id='mga' ContentType='application/x-mga'>
-                        <Verb Id='open' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
-                    </Extension>
-                </ProgId>
-                <Environment Id="GME_ROOT" Action="set" System="yes" Name="GME_ROOT" Value="[INSTALLDIR]" />
+
+              <ProgId Id='GME.mgafile' Description='GME project file'>
+                <Extension Id='mga' ContentType='application/x-mga'>
+                  <Verb Id='open' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
+                </Extension>
+              </ProgId>
+              <ProgId Id='GME.xmefile' Description='GME XML project file'>
+                <Extension Id='xme' ContentType='application/x-xme'>
+                  <Verb Id='open' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
+                </Extension>
+              </ProgId>
+              <Environment Id="GME_ROOT" Action="set" System="yes" Name="GME_ROOT" Value="[INSTALLDIR]" />
                 <RemoveFolder Id='RemoveShortcutFolder' On='uninstall' Directory='ShortcutFolder'/>
                 <!-- This is a bit awkward but might helps the user. We clear the (current) user registry from previous entries.
                      Not compliant with ICE checks (user registry access from systemwide component). -->

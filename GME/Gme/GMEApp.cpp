@@ -422,7 +422,10 @@ BOOL CGMEApp::InitInstance()
 	if( cmdInfo.m_nShellCommand == CCommandLineInfo::FileOpen ) {
 		CString conn = cmdInfo.m_strFileName;
 		if(conn.Find(_T("=")) < 0) {
-			conn.Insert(0,_T("MGA="));
+			if (conn.Right(4).CompareNoCase(_T(".xme")) == 0)
+				conn.Insert(0, _T("XML="));
+			else
+				conn.Insert(0,_T("MGA="));
 		}
 		OpenProject(conn);
 
@@ -1276,6 +1279,20 @@ void CGMEApp::OpenProject(const CString &conn) {
 
 	MSGTRY
 	{
+		if (conn.Left(4) == _T("XML=")) {
+			CString fullPath = conn.Right(conn.GetLength() - 4);
+			TCHAR buffer[MAX_PATH];
+			TCHAR* filepart = NULL;
+			GetFullPathName(fullPath, MAX_PATH, buffer, &filepart);
+			if (filepart == NULL) {
+				COMTHROW(E_FILEOPEN);
+			}
+			CString filename = filepart;
+			CString title = filename.Left(filename.ReverseFind('.'));
+			Importxml(fullPath, filepart, title);
+			return;
+		}
+
 		CWaitCursor wait;
 
 		ASSERT( mgaProject == 0 );
@@ -1317,11 +1334,10 @@ void CGMEApp::OpenProject(const CString &conn) {
 				return; // ensures no more exception handlers or explanatory messages (or QueryProjectInfo calls)
 			}
 
-			if(S_OK != mgaProject->QueryProjectInfo(PutInBstr(conn), &version, &parn, &parv, &parg, &ro_mode)) {
-				AfxMessageBox(_T("Cannot query project information. Possible cause: missing/corrupt project file or database"));
+			if (FAILED(hr = mgaProject->QueryProjectInfo(PutInBstr(conn), &version, &parn, &parv, &parg, &ro_mode))) {
 				COMTHROW(hr);
 			}
-			while(hr) {
+			while (true) {
 				CString msg;
 				CComVariant guidpar;
 				CString newparname;
@@ -1705,38 +1721,22 @@ void CGMEApp::OnFileOpen()
 	if( mgaProject != NULL )
 		CloseProject();
 
-	if (conn.Left(4) == _T("XML=")) {
-		MSGTRY {
-			CString fullPath = conn.Right(conn.GetLength() - 4);
-			TCHAR buffer[MAX_PATH];
-			TCHAR* filepart = NULL;
-			GetFullPathName(fullPath, MAX_PATH, buffer, &filepart);
-			if (filepart == NULL) {
-				COMTHROW(E_FILEOPEN);
-			}
-			CString filename = filepart;
-			CString title = filename.Left(filename.ReverseFind('.'));
-			Importxml(fullPath, filepart, title);
-		} MSGCATCH(_T("Error opening XME file"),;)
-	} else {
-		if (conn.Left(4) == _T("MGX=")) {
-			CString fullPath = conn.Right(conn.GetLength() - 4);
-			TCHAR buffer[MAX_PATH];
-			TCHAR* filepart = NULL;
-			GetFullPathName(fullPath, MAX_PATH, buffer, &filepart);
-			if (filepart == NULL) {
-				DisplayError(_T("Error opening MGX file"), E_FILEOPEN);
-				return;
-			}
-			// FIXME: KMS: yes, the quotes are necessary...
-			conn = _T("MGX=\"");
-			// FIXME: KMS: yes, a trailing slash makes it not work
-			conn += fullPath.Left(fullPath.GetLength() - _tcslen(filepart) - 1);
-			conn += _T("\"");
+	if (conn.Left(4) == _T("MGX=")) {
+		CString fullPath = conn.Right(conn.GetLength() - 4);
+		TCHAR buffer[MAX_PATH];
+		TCHAR* filepart = NULL;
+		GetFullPathName(fullPath, MAX_PATH, buffer, &filepart);
+		if (filepart == NULL) {
+			DisplayError(_T("Error opening MGX file"), E_FILEOPEN);
+			return;
 		}
-		OpenProject(conn);
+		// FIXME: KMS: yes, the quotes are necessary...
+		conn = _T("MGX=\"");
+		// FIXME: KMS: yes, a trailing slash makes it not work
+		conn += fullPath.Left(fullPath.GetLength() - _tcslen(filepart) - 1);
+		conn += _T("\"");
 	}
-
+	OpenProject(conn);
 }
 
 
