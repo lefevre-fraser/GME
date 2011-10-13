@@ -665,7 +665,7 @@ void CConsoleCtrl::LoadScript(BSTR p_fileName)
 
 	// open file
 	if( _file.Open( p_fileName, CFile::modeRead | CFile::typeBinary) == 0) {
-		Message( _T("Unable to open file."), MSG_ERROR);
+		Message( CString(_T("Unable to open file '")) + static_cast<const TCHAR*>(p_fileName) + _T("'"), MSG_ERROR);
 		return;
 	}
 
