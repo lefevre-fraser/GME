@@ -394,14 +394,6 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
       <Project>{bef31e1e-bb02-4687-a543-a6ad5d522869}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\Core\Core.vcxproj">
-      <Project>{0b16b893-5512-48b8-b764-ee72c522ead8}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Private>true</Private>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
     <ProjectReference Include="..\Interfaces\Interfaces.vcxproj">
       <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
