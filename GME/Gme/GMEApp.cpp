@@ -1337,7 +1337,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 			if (FAILED(hr = mgaProject->QueryProjectInfo(PutInBstr(conn), &version, &parn, &parv, &parg, &ro_mode))) {
 				COMTHROW(hr);
 			}
-			while (true) {
+			while (FAILED(HR)) {
 				CString msg;
 				CComVariant guidpar;
 				CString newparname;
