@@ -18,7 +18,7 @@ ZIP_PRG = os.path.abspath(os.path.join(os.path.dirname(__file__), "zip.exe"))
 WIX_CANDLE_PRG = "candle.exe"
 WIX_CANDLE_ARG = "-dPIADir=..\GME\DotNetPIAs_1.0.0.0 -dPIADir.1.0.1.0=..\GME\DotNetPIAs"
 WIX_LIGHT_PRG = "light.exe"
-WIX_LIGHT_ARG = "-sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension -o GME.msi" # See comments in GME.wxs
+WIX_LIGHT_ARG = "-sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension" # See comments in GME.wxs
 
 #
 # Classes
@@ -187,8 +187,10 @@ def build_WiX(wxs_files):
     (projectname, ext) = os.path.splitext(filename)
     
     toolmsg("Building " + filename + " in " + dirname)
+    def x64_suffix(str):
+        return str + '_x64' if prefs['arch'] == 'x64' else str
     def get_wixobj(file):
-        return os.path.splitext(file)[0] + ".wixobj"
+        return x64_suffix(os.path.splitext(file)[0]) + ".wixobj"
     
     exepath = WIX_CANDLE_PRG
     if 'WIX' in os.environ.keys():
@@ -200,5 +202,5 @@ def build_WiX(wxs_files):
     exepath = WIX_LIGHT_PRG
     if 'WIX' in os.environ.keys():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
-    cmd_line = [exepath] + WIX_LIGHT_ARG.split() + [ get_wixobj(file) for file in wxs_files ]
+    cmd_line = [exepath] + WIX_LIGHT_ARG.split() + ['-o', x64_suffix('GME') + '.msi'] + [ get_wixobj(file) for file in wxs_files ]
     system(cmd_line, dirname)
