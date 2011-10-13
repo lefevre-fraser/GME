@@ -182,7 +182,6 @@
     <Link>
       <AdditionalDependencies>gdiplus.lib</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\Debug/Annotator.pdb</ProgramDatabaseFile>
       <BaseAddress>0x60100000</BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
@@ -217,7 +216,6 @@
     <Link>
       <AdditionalDependencies>gdiplus.lib</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\Debug/Annotator.pdb</ProgramDatabaseFile>
       <BaseAddress>0x60100000</BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>

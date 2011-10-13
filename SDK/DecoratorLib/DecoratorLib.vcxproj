@@ -179,9 +179,7 @@
     <Lib>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
-    <Xdcmake>
-      <OutputFile>$(GME_ROOT)\SDK\DecoratorLib\Debug\$(TargetName).xml</OutputFile>
-    </Xdcmake>
+    <Xdcmake />
     <Bscmake />
     <PostBuildEvent>
       <Command>
@@ -205,9 +203,7 @@
     </ClCompile>
     <ResourceCompile />
     <Lib />
-    <Xdcmake>
-      <OutputFile>$(GME_ROOT)\SDK\DecoratorLib\Debug\$(TargetName).xml</OutputFile>
-    </Xdcmake>
+    <Xdcmake />
     <Bscmake />
     <PostBuildEvent>
       <Command>
@@ -236,9 +232,7 @@
     <Lib>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
-    <Xdcmake>
-      <OutputFile>$(GME_ROOT)\SDK\DecoratorLib\Debug\$(TargetName).xml</OutputFile>
-    </Xdcmake>
+    <Xdcmake />
     <Bscmake />
     <PostBuildEvent>
       <Command>
@@ -262,9 +256,7 @@
     </ClCompile>
     <ResourceCompile />
     <Lib />
-    <Xdcmake>
-      <OutputFile>$(GME_ROOT)\SDK\DecoratorLib\Debug\$(TargetName).xml</OutputFile>
-    </Xdcmake>
+    <Xdcmake />
     <Bscmake />
     <PostBuildEvent>
       <Command>
@@ -295,9 +287,7 @@
     <Lib>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
-    <Xdcmake>
-      <OutputFile>$(GME_ROOT)\SDK\DecoratorLib\Release\$(TargetName).xml</OutputFile>
-    </Xdcmake>
+    <Xdcmake />
     <Bscmake />
     <PostBuildEvent>
       <Command>
@@ -323,9 +313,7 @@
     </ClCompile>
     <ResourceCompile />
     <Lib />
-    <Xdcmake>
-      <OutputFile>$(GME_ROOT)\SDK\DecoratorLib\Release\$(TargetName).xml</OutputFile>
-    </Xdcmake>
+    <Xdcmake />
     <Bscmake />
     <PostBuildEvent>
       <Command>

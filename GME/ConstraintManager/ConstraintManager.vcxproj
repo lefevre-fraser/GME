@@ -180,8 +180,6 @@
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\ConstraintManager.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapFileName>.\Release/ConstraintManager.map</MapFileName>
       <SubSystem>Windows</SubSystem>
       <BaseAddress>0x60200000</BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -218,8 +216,6 @@
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\ConstraintManager.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapFileName>.\Release/ConstraintManager.map</MapFileName>
       <SubSystem>Windows</SubSystem>
       <BaseAddress>0x60200000</BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
