@@ -7,7 +7,7 @@ import stat
 import utils.Builder
 bd = utils.Builder
 
-from util import dec_disable_early_binding
+from GPyUnit.util import dec_disable_early_binding
 
 class TestCase6( unittest.TestCase ):
 	def __init__(self, methodName='runTest'):

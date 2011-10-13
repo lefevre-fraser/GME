@@ -17,7 +17,7 @@ class TestGMEOLEApp(unittest.TestCase):
         
         def _adjacent_file(file):
             import os.path
-            return os.path.join(os.path.dirname(__file__), file)
+            return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
         self.gme = win32com.client.DispatchEx("GME.Application")
         self.gme.Version
         console = filter(lambda p: p.Name == "Console", self.gme.Panels)[0]

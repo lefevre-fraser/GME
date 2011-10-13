@@ -23,7 +23,7 @@ class TestFolderCopy(unittest.TestCase):
         def _adjacent_file(file):
             import os.path
             return os.path.join(os.path.dirname(__file__), file)
-        import util
+        from GPyUnit import util
         util.register_xmp(_adjacent_file('GME310ModelRefportTest.xmp'))
 
         with util.disable_early_binding():
@@ -43,7 +43,7 @@ class TestFolderCopy(unittest.TestCase):
             self.territory.Destroy()
             self.project.Close()
 
-        import util.mgadiff as mgadiff
+        import GPyUnit.util.mgadiff as mgadiff
         if not mgadiff.compare(_adjacent_file(self.correct_file), _adjacent_file(self.output_file)):
             self.fail("Reference file '%s' does not match output '%s'" % (self.correct_file, self.output_file))
         #print "Reference file '%s' matches output '%s'" % (self.correct_file, self.output_file)

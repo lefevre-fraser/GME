@@ -6,7 +6,7 @@ import os
 import utils.Builder
 bd = utils.Builder
 
-from util import dec_disable_early_binding
+from GPyUnit.util import dec_disable_early_binding
 
 class TestCase5( unittest.TestCase ):
 	"""

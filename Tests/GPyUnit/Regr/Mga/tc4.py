@@ -7,7 +7,7 @@ import stat
 import utils.Builder
 bd = utils.Builder
 
-from util import dec_disable_early_binding
+from GPyUnit.util import dec_disable_early_binding
 
 class TestCase4( unittest.TestCase ):
 	#avoid if possible the overriding of __init__, yet if you override use the following form:

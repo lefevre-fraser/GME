@@ -116,7 +116,7 @@ def connectRefP(p, cont, s, d, r1, r2, role_str):
 
 
 def creaP(mganame, parad):
-	import util
+	from GPyUnit import util
 	util.register_xmp(parad)
 	project = win32com.client.DispatchEx("Mga.MgaProject")
 
