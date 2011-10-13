@@ -28,7 +28,7 @@ public:
 // Implementation
 // protected:
 	~CConsoleCtrl();
-	void LoadScript( const CString& fileName);
+	void LoadScript(BSTR fileName);
 	void RunScript();
 
 	CHtmlCtrl   m_browser;

@@ -45,6 +45,9 @@ library CONSOLELib
 			[id(5)] void SetGMEApp(IDispatch *disp);
 			[id(6)] void SetGMEProj(IDispatch *disp);
 			[id(7)] void NavigateTo(BSTR url);
+			[id(8)] void LoadScript(BSTR filename);
+			[id(9)] void RunLoadedScript();
+			[id(10)] void SetContents(BSTR Contents);
 			[id(DISPID_ABOUTBOX)] void AboutBox();
 	};
 

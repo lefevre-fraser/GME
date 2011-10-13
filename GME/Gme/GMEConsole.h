@@ -23,7 +23,6 @@ public:
 	void SetGMEApp(IDispatch *idp);
 	void SetGMEProj(IDispatch *idp);
 	void NavigateTo(CString url);
-	IDispatch * GetInterface() {return NULL;};
 
 // Dialog Data
 	//{{AFX_DATA(CGMEConsole)
@@ -32,6 +31,17 @@ public:
 	//}}AFX_DATA
 
 	static CGMEConsole *theInstance;
+	
+	IDispatch * GetInterface()
+	{
+		LPUNKNOWN pUnk = m_Console.GetControlUnknown();
+
+		// From there get the IDispatch interface of control.
+		LPDISPATCH pDisp = NULL;
+		pUnk->QueryInterface(IID_IDispatch, (LPVOID*)&pDisp);
+		return pDisp;
+	};
+
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CGMEConsole)

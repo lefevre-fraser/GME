@@ -112,6 +112,8 @@ IDispatch* CGMEOLEPanel::GetInterface()
 	CGMEEventLogger::LogGMEEvent("CGMEOLEPanel::GetInterface()\r\n");
 	
 	PRECONDITION_VALID_PANEL
+	if (m_interf == NULL)
+		AfxThrowOleDispatchException(ID_ERROR_PTR_INVALID, _T("GUI panel is invalid."));
 /*
 	IDispatch* interf = NULL;
 	CSizingControlBar * scb = dynamic_cast<CSizingControlBar *>( m_control);

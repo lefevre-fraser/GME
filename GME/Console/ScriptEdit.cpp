@@ -140,9 +140,9 @@ void CScriptEdit::OnKeyUp( UINT nChar, UINT /*nRepCnt*/, UINT /*nFlags*/ )
 		bool             handled = false;
 
 		if(      inp == run_c) handled = true, m_console->RunScript();
-		else if( inp == lod_c) handled = true, m_console->LoadScript( inp.Mid( _tcslen( lod_c)));
-		else if( inp == rel_c) handled = true, m_console->LoadScript( m_loadedFileName);
-		else if( inp == rlr_c) handled = true, m_console->LoadScript( m_loadedFileName), m_console->RunScript();
+		else if( inp == lod_c) handled = true, m_console->LoadScript( _bstr_t(inp.Mid( _tcslen( lod_c))));
+		else if( inp == rel_c) handled = true, m_console->LoadScript( _bstr_t(m_loadedFileName));
+		else if( inp == rlr_c) handled = true, m_console->LoadScript( _bstr_t(m_loadedFileName)), m_console->RunScript();
 		else if( inp == cls_c) handled = true, m_console->Clear();
 		
 		if( handled) {

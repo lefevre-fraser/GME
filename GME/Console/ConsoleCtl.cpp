@@ -59,6 +59,9 @@ BEGIN_DISPATCH_MAP(CConsoleCtrl, COleControl)
 	DISP_FUNCTION(CConsoleCtrl, "SetGMEApp", SetGMEApp, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION(CConsoleCtrl, "SetGMEProj", SetGMEProj, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION_ID(CConsoleCtrl, "NavigateTo", dispidNavigateTo, NavigateTo, VT_EMPTY, VTS_BSTR)
+    DISP_FUNCTION(CConsoleCtrl, "LoadScript", LoadScript, VT_EMPTY, VTS_BSTR)
+	DISP_FUNCTION(CConsoleCtrl, "RunLoadedScript", RunScript, VT_EMPTY, VTS_NONE)
+	DISP_FUNCTION(CConsoleCtrl, "SetContents", SetContents, VT_EMPTY, VTS_BSTR)
 	DISP_PROPERTY_EX_ID(CConsoleCtrl, "GetCWnd", 0x43576E64, GetCWnd, SetCWnd, VT_I8)
 	DISP_FUNCTION_ID(CConsoleCtrl, "AboutBox", DISPID_ABOUTBOX, AboutBox, VT_EMPTY, VTS_NONE)
 	//}}AFX_DISPATCH_MAP
@@ -654,27 +657,43 @@ void CConsoleCtrl::RunScript()
 		Message( _T("Script not found!"), MSG_INFO);
 }
 
-void CConsoleCtrl::LoadScript( const CString& p_fileName)
+void CConsoleCtrl::LoadScript(BSTR p_fileName)
 {
 	m_edit.SetLoadedScript(_T("")); // erase old loaded script contents
 
 	CStdioFile _file;
 
 	// open file
-	if( _file.Open( p_fileName, CFile::modeRead | CFile::typeText) == 0) {
+	if( _file.Open( p_fileName, CFile::modeRead | CFile::typeBinary) == 0) {
 		Message( _T("Unable to open file."), MSG_ERROR);
 		return;
 	}
 
-	CString script_buf;
-	unsigned int sizeof_file = (unsigned int) _file.GetLength();
-	sizeof_file = _file.Read( script_buf.GetBufferSetLength( sizeof_file), sizeof_file);
-	// sizeof_file was modified above because of newline handling
-	if( sizeof_file > 0) script_buf.ReleaseBufferSetLength( sizeof_file); 
-	else script_buf.ReleaseBuffer(0);
-	_file.Close();
+	unsigned char utf16_bom[] = { 0xFF, 0xFE };
+	unsigned char bytes[2];
+	_file.Read(bytes, 2);
+	if (memcmp(utf16_bom, bytes, 2) == 0)
+	{
+		CString script_buf;
+		unsigned int sizeof_file = _file.GetLength();
+		// skipping BOM
+		sizeof_file -= 2;
+		sizeof_file = _file.Read(script_buf.GetBuffer(sizeof_file / sizeof(wchar_t)), sizeof_file);
+		script_buf.ReleaseBuffer();
+		_file.Close();
+		m_edit.SetLoadedScript(script_buf);
+	}
+	else
+	{
+		_file.SeekToBegin();
+		CStringA script_buf;
+		unsigned int sizeof_file = _file.GetLength();
+		sizeof_file = _file.Read(script_buf.GetBuffer(sizeof_file), sizeof_file);
+		script_buf.ReleaseBuffer();
+		_file.Close();
+		m_edit.SetLoadedScript(CString(script_buf));
+	}
 
-	m_edit.SetLoadedScript( script_buf);
 	m_edit.SetScriptFileName( p_fileName);
 
 	Message( CString( _T("Loaded script: ")) + p_fileName, MSG_INFO);
@@ -702,7 +721,7 @@ void CConsoleCtrl::LoadScriptDlg()
 			return;
 		}
 
-		LoadScript( fpath);
+		LoadScript(_bstr_t(fpath));
 
 		if( m_recent1.IsEmpty())
 			m_recent1 = fpath;
@@ -742,12 +761,12 @@ void CConsoleCtrl::runScript()
 
 void CConsoleCtrl::relScript() // reload
 {
-	LoadScript( m_edit.GetLoadedScriptFileName());
+	LoadScript(_bstr_t(m_edit.GetLoadedScriptFileName()));
 }
 
 void CConsoleCtrl::rlrScript() // reload & run
 {
-	LoadScript( m_edit.GetLoadedScriptFileName());
+	LoadScript(_bstr_t(m_edit.GetLoadedScriptFileName()));
 	RunScript();
 }
 
@@ -766,11 +785,11 @@ void CConsoleCtrl::selectEngine()
 void CConsoleCtrl::loadRecent( UINT which)
 {
 	switch( which) {
-	case IDC_RECENT_SCRIPT1: LoadScript( m_recent1);break;
-	case IDC_RECENT_SCRIPT2: LoadScript( m_recent2);break;
-	case IDC_RECENT_SCRIPT3: LoadScript( m_recent3);break;
-	case IDC_RECENT_SCRIPT4: LoadScript( m_recent4);break;
-	case IDC_RECENT_SCRIPT5: LoadScript( m_recent5);break;
+	case IDC_RECENT_SCRIPT1: LoadScript(_bstr_t(m_recent1));break;
+	case IDC_RECENT_SCRIPT2: LoadScript(_bstr_t(m_recent2));break;
+	case IDC_RECENT_SCRIPT3: LoadScript(_bstr_t(m_recent3));break;
+	case IDC_RECENT_SCRIPT4: LoadScript(_bstr_t(m_recent4));break;
+	case IDC_RECENT_SCRIPT5: LoadScript(_bstr_t(m_recent5));break;
 	}
 }
 
