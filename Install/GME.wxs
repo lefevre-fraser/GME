@@ -658,7 +658,7 @@
 
       <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME">
         <Component Id="MetaGME.mta">
-          <File Id="MetaGME.mta" Name="MetaGME.mta" Source="..\Paradigms\MetaGME\Paradigm\MetaGME.mta" />
+          <File Id="MetaGME.mta" Name="MetaGME.mta" Source="..\Paradigms\MetaGME\MetaGME.mta" />
           <RegistryKey Root='HKLM' Key='Software\GME\Paradigms\MetaGME'>
             <RegistryValue Name='CurrentVersion' Type='string' Value='$(var.GUIDSTRMETAGME)'/>
             <RegistryKey Key='$(var.GUIDSTRMETAGME)'>
