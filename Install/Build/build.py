@@ -162,7 +162,7 @@ def zip_scriptSDK():
 
 def generate_meta_files():
     "Generate meta files (mta/mga)"
-    meta_root = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "Paradigm")
+    meta_root = os.path.join(GME_ROOT, "Paradigms", "MetaGME")
     meta_file = os.path.join(meta_root, "MetaGME.xmp")
     tools.xmp2mta(meta_file, "MetaGME")
     meta_file = os.path.join(meta_root, "MetaGME-model.xme")

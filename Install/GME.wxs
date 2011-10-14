@@ -1110,9 +1110,9 @@
 
       <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME">
         <Component Id="MetaParadigmFiles" Guid="18535c6e-aeff-4e89-b262-f3eb0a7854ee">
-          <File Id="MetaGME.xmp" Name="MetaGME.xmp" KeyPath="yes" Source="..\Paradigms\MetaGME\Paradigm\MetaGME.xmp" />
-          <File Id="MetaGME_model.xme" Name="MetaGME-model.xme" Source="..\Paradigms\MetaGME\Paradigm\MetaGME-model.xme" />
-          <File Id="MetaGME_model.mga" Name="MetaGME-model.mga" Source="..\Paradigms\MetaGME\Paradigm\MetaGME-model.mga" />
+          <File Id="MetaGME.xmp" Name="MetaGME.xmp" KeyPath="yes" Source="..\Paradigms\MetaGME\MetaGME.xmp" />
+          <File Id="MetaGME_model.xme" Name="MetaGME-model.xme" Source="..\Paradigms\MetaGME\MetaGME-model.xme" />
+          <File Id="MetaGME_model.mga" Name="MetaGME-model.mga" Source="..\Paradigms\MetaGME\MetaGME-model.mga" />
         </Component>
       </DirectoryRef>
 
