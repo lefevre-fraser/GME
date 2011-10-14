@@ -346,6 +346,10 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
       <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UMLDecoratorLib.h</HeaderFileName>
       <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UMLDecoratorLib_i.c</InterfaceIdentifierFileName>
       <InterfaceIdentifierFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UMLDecoratorLib_i.c</InterfaceIdentifierFileName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UMLDecoratorLib.tlb</TypeLibraryName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UMLDecoratorLib.tlb</TypeLibraryName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UMLDecoratorLib.tlb</TypeLibraryName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UMLDecoratorLib.tlb</TypeLibraryName>
     </Midl>
   </ItemGroup>
   <ItemGroup>
