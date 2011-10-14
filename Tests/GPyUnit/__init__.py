@@ -6,6 +6,7 @@ import GPyUnit.Regr.Mga.tc1
 # python -m unittest GPyUnit.Regr.Mga.tc7
 _tests = unittest.defaultTestLoader.loadTestsFromNames(
 [ 'GPyUnit.' + test for test in (
+ 'test_PIAs',
  'test_registrar',
  'test_gmeoleapp',
  'test_parser',
