@@ -1893,7 +1893,7 @@
 
         <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME">
             <Component Id="BONExtender.dll">
-                <File Id="BONExtender.dll" Name="BONExtender.dll" KeyPath="yes" Source="..\Paradigms\MetaGME\BONExtender\$(var.Release)\BONExtender.dll">
+                <File Id="BONExtender.dll" Name="BONExtender.dll" KeyPath="yes" Source="..\Paradigms\MetaGME\$(var.Release)\BONExtender.dll">
                     <TypeLib Id="9EB1F214-EFE1-4B6D-BDA9-7BCD498F2E2C" Description="MGA Interpreter TypeLibrary (BONExtender)" Language="0" MajorVersion="1" MinorVersion="0">
                         <Class Id="{EE00B878-7208-44AB-8106-1A8320C019A3}" Context="InprocServer32" Description="MGA.Interpreter.BONExtender">
                             <ProgId Id="MGA.Interpreter.BONExtender" Description="MGA.Interpreter.BONExtender" />
