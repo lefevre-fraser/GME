@@ -27,6 +27,21 @@ guaranteed.
 1. Release Notes
 ************************************************
 
+Release Notes of Release r11.10.14
+----------------------------------
+  - Binary compatibility with r10.8.18
+  - Fixed issue with copy-and-paste between GMEs
+  - Fixed issue with loading scripts in the Console
+  - GME.exe is now compiled with /LARGEADDRESSAWARE, which increases the maximum model size
+  - Fixed model editor scroll bar for very large models
+  - Performance improvements for very large models
+  - Multi-user backend performance improvements, including Subversion1.7.0rc4
+    - Existing Multi-user backend working copies will be faster if checked out again to upgrade the working copy version to 1.7
+
+Release Notes of Release r11.9.20
+----------------------------------
+  - Fixed bug with out-of-proc GMEOLEApp use, which prevented Udm and GReAT from installing
+
 Release Notes of Release r11.9.14
 ----------------------------------
   - Fixed bug with CopyFCODisp, MoveFCODisp, CopyFolderDisp, MoveFolderDisp
