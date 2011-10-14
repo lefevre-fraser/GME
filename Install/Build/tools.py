@@ -153,19 +153,21 @@ def xmp2mta(xml_file, paradigm):
     regsitrar.RegisterParadigmFromData( "XML=" + xml_file, paradigm, 2 )
 
 
-def query_GUID(paradigm ):
+def query_GUID(mta_file):
     """
     Queries the current GUID of the specified paradigm.
-    In order to work properly the paradigm must be registered (system-wide)
-    before (see: xmp2mta).
     params
         paradigm    : the name of the paradigm to be queried
     
     returns the GUID as a string
     """ 
-    regsitrar = win32com.client.Dispatch( "MGA.MgaRegistrar" )
-    return regsitrar.ParadigmGUIDString(2, paradigm)
-
+    metaproject = win32com.client.Dispatch("MGA.MgaMetaProject")
+    metaproject.Open('MGA=' + mta_file)
+    try:
+        import uuid
+        return '{' + str(uuid.UUID(bytes_le=metaproject.GUID)).upper() + '}'
+    finally:
+        metaproject.Close()
 
 def test_WiX():
     "Test for WiX. Raises exception if not found."
