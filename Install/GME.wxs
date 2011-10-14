@@ -256,7 +256,7 @@
              
 	        <Directory Id='ProgramMenuFolder'>
 	            <Directory Id='ShortcutFolder' Name='GME'>
-                <?if $(sys.BUILDARCH)='x86' ?>
+                <?if $(sys.BUILDARCH)=x86 ?>
                 <Directory Id='ShortcutDocFolder' Name='Documentation'>
 	                    <Directory Id='ShortcutTutorialsFolder' Name='Tutorials' />
 	                </Directory>
@@ -269,7 +269,7 @@
         <!-- MERGE MODULES -->
         <!-- =========================================================== -->
         <DirectoryRef Id='TARGETDIR'>
-          <?if $(sys.BUILDARCH)='x86' ?>
+          <?if $(sys.BUILDARCH)=x86 ?>
             <Merge Id="CRT" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC90_CRT_$(sys.BUILDARCH).msm" DiskId="1" />
             <Merge Id="CRT Policy" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\policy_9_0_Microsoft_VC90_CRT_$(sys.BUILDARCH).msm" DiskId="1" />
             <Merge Id="MFC" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC90_MFC_$(sys.BUILDARCH).msm" DiskId="1" />
@@ -1006,7 +1006,7 @@
             </Component>
         </DirectoryRef>
 
-      <?if $(sys.BUILDARCH)='x86' ?>
+      <?if $(sys.BUILDARCH)=x86 ?>
       <DirectoryRef Id="INSTALLDIR_BIN">
         <Component Id="ssleay32.dll">
           <File Id="ssleay32.dll" Name="ssleay32.dll" KeyPath="yes" Source="..\GME\lib\ssleay32.dll" />
@@ -2377,7 +2377,7 @@
               <ComponentRef Id='Search.ocx' />
               <ComponentRef Id='xerces_c_3_1.dll' />
 
-              <?if $(sys.BUILDARCH)='x86' ?>
+              <?if $(sys.BUILDARCH)=x86 ?>
               <ComponentRef Id='ssleay32.dll' />
                 <ComponentRef Id='TableEditor.dll' />
                 <ComponentRef Id='XmlBackEnd.dll' />
@@ -2418,7 +2418,7 @@
             <Feature Id='Samples' Title='Samples' Description='These are sample paradigms and interpreters with source code'
                 Level='1'>
 
-              <?if $(sys.BUILDARCH)='x86' ?>
+              <?if $(sys.BUILDARCH)=x86 ?>
               <ComponentRef Id='BON2SFInterpreter.dll' />
                 <ComponentRef Id='BON2SFInterpreterSource' />
                 <ComponentRef Id='BON2SFSample.dll' />
@@ -2445,7 +2445,7 @@
                 <ComponentRef Id='UMLDecorator.dll' />
             </Feature>
 
-          <?if $(sys.BUILDARCH)='x86' ?>
+          <?if $(sys.BUILDARCH)=x86 ?>
           <Feature Id='Documentation' Title='Documentation' Description='It contains the user manual and some developer documentation in PDF format'
               Level='1' Display='collapse'>
 
