@@ -33,6 +33,7 @@ void DiamondVectorPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMg
 {
 	VectorPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
+	ASSERT(m_coordCommands.size() == 0); // if this ASSERT fails, InitializeEx was called twice
 	SimpleCoordCommand* leftMost	= new SimpleCoordCommand(LeftMost);
 	SimpleCoordCommand* topMost		= new SimpleCoordCommand(TopMost);
 	SimpleCoordCommand* rightMost	= new SimpleCoordCommand(RightMost);
