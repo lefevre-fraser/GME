@@ -90,24 +90,15 @@ static TCHAR mgafilter[] = _T("MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.x
 static TCHAR xmemgafilter[] = _T("GME Model Files (*.mga;*.xme;*.mgx)|*.mga; *.xme; *.mgx|MGA Files (*.mga)|*.mga|Exported Files (*.xme;*.xml)|*.xme; *.xml|")
 	_T("Multi-user files (*.mgx)|*.mgx|All files (*.*)|*.*||");
 
-static TCHAR mgaonlyfilter[] = _T("MGA Files (*.mga)|*.mga||");
+static TCHAR mgaonlyfilter[] = _T("MGA Files (*.mga)|*.mga|All files (*.*)|*.*||");
 
 static TCHAR metafilter[] = _T("MGA Meta Files (*.mta)|*.mta|XML Paradigm Files (*.xmp)|*.xmp|")
 	_T("All files (*.*)|*.*||");
 
 
-CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
+CString CMgaOpenDlg::AskMGAConnectionString()
 {
 	CString filters = mgaonlyfilter;
-	if( !spec_ext.IsEmpty())
-	{
-		CString SPEC_EXT = spec_ext; SPEC_EXT.MakeUpper();
-		CString spec_filter;
-		// as "MGA Files (*.mga)|*.mga|"
-		spec_filter.Format( _T("%s Files (*.%s)|*.%s|"), SPEC_EXT, spec_ext, spec_ext);
-		// insert this filter at the beginning (thus preferred)
-		filters.Insert( 0, spec_filter);
-	}
 
 	CString file, dir;
 	if (theApp.isMgaProj() && theApp.mgaProject)
@@ -116,7 +107,7 @@ CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
 	}
 
 	CString conn;
-	CFileDialog dlg(flag_isopen ? TRUE : FALSE, NULL, (file == _T("")) ? NULL : (LPCTSTR)file, 
+	CFileDialog dlg(flag_isopen ? TRUE : FALSE, _T("mga"), (file == _T("")) ? NULL : (LPCTSTR)file, 
 			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | 
 			0, filters);
 
@@ -125,14 +116,6 @@ CString CMgaOpenDlg::AskMGAConnectionString(const CString& spec_ext)
 
 	if( dlg.DoModal() == IDOK )	{
 		conn = CString(_T("MGA=")) + dlg.GetPathName();
-		if(dlg.GetFileExt() == _T("")) // no extension specified by the user
-		{
-			conn += _T(".");
-			// if spec_ext is NOT empty then 
-			// filterindex = 1 stands for special extension
-			//             = 2 is the MGA
-			conn += dlg.m_ofn.nFilterIndex == 1 && !spec_ext.IsEmpty() ? spec_ext:_T("mga");
-		}
 	}
 	return conn;
 }

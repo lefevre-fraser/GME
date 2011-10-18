@@ -32,7 +32,7 @@ public:
 	bool pressed_back;
 
 	CString AskConnectionString(bool allowXme);
-	CString AskMGAConnectionString(const CString& spec_ext = "");
+	CString AskMGAConnectionString();
 private:
 	CString PruneConnectionString(const CString& conn);
 	CString FilterInvalidCharacters(const CString& path, bool isPath = false);

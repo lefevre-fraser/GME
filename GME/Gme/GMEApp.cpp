@@ -1884,18 +1884,7 @@ void CGMEApp::OnFileCloseproject()
 
 void CGMEApp::OnFileSaveAs() {
 	CMgaOpenDlg dlg(CMgaOpenDlg::SaveAsDialog);
-	CString spec_ext;
-	if( currentConnection.Left(4) == _T("MGA=")) // if MGA format
-	{
-		int rps = currentConnection.ReverseFind('.');
-		if( rps != -1 && rps < currentConnection.GetLength())
-		{
-			spec_ext = currentConnection.Mid( rps + 1);
-			if( spec_ext.CompareNoCase( _T("mga")) == 0)    // oh, just the plain 'mga' extension
-				spec_ext = _T("");                          // we need not have specific behaviour
-		}
-	}
-	CString conn = dlg.AskMGAConnectionString( spec_ext);
+	CString conn = dlg.AskMGAConnectionString();
 
 	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileSaveAs ")+conn+_T("\r\n"));
 
