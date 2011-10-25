@@ -44,10 +44,8 @@ STDMETHODIMP CScriptHost::InitEngine(void* console, BSTR engineProgid)
 		}
 		COMTHROW(m_iscript->SetScriptState(SCRIPTSTATE_CONNECTED));
 	}
-	catch(hresult_exception &e) 
-	{ 
-		return e.hr;
-	}
+	COMCATCH(;)
+
 	return S_OK;
 }
 

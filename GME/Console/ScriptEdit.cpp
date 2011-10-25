@@ -45,6 +45,7 @@ bool CScriptEdit::Init(CConsoleCtrl *cons)
 		TCHAR s[200];
 		_stprintf_s(s, _T("Scripting Initialization Error: 0x%x"), e.hr);
 		m_console->Message(s, MSG_ERROR);
+		_ftprintf(stderr, _T("%s"), s);
 		return false;
 	}
 
@@ -166,6 +167,13 @@ void CScriptEdit::SetGMEApp(IDispatch *disp)
 		TCHAR s[1000];
 		_stprintf_s(s, _T("Scripting Error: 0x%x"), e.hr);
 		m_console->Message((LPCTSTR)s, MSG_ERROR);
+		_ftprintf(stderr, _T("%s"), s);
+	}
+	catch(_com_error &e) 
+	{ 
+		TCHAR s[1000];
+		_stprintf_s(s, _T("Scripting Error: 0x%x"), e.Error());
+		_ftprintf(stderr, _T("%s"), s);
 	}
 }
 
