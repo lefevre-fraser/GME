@@ -389,12 +389,9 @@ BOOL CGMEApp::InitInstance()
 	}
 	MSGCATCH(_T("Error while trying to get logfile settings"),;);
 
-	if( (CMainFrame*)m_pMainWnd)
-	{
-		CGMEOLEApp *t_pGmeOleApp = new CGMEOLEApp();
-		((CMainFrame*)m_pMainWnd)->setGmeOleApp( t_pGmeOleApp );
-	}
-	else ASSERT(0);
+	ASSERT((CMainFrame*)m_pMainWnd);
+	CGMEOLEApp *t_pGmeOleApp = new CGMEOLEApp();
+	((CMainFrame*)m_pMainWnd)->setGmeOleApp( t_pGmeOleApp );
 
 	// Check to see if launched as OLE server
 	if (cmdInfo.m_bRunEmbedded || cmdInfo.m_bRunAutomated)
