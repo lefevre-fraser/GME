@@ -179,7 +179,7 @@ void CMainFrame::setGmeOleApp( CGMEOLEApp * the_ole_app)
 
 	// decrement the refcount, relying on the other components maintaining the correct refcounts
 	//this line is needed either in setGmeOleApp or here
-	ULONG ul = mGmeOleApp->GetIDispatch(FALSE)->Release();
+	// ULONG ul = mGmeOleApp->GetIDispatch(FALSE)->Release();
 	//ul = mGmeOleApp->GetIDispatch(FALSE)->Release(); //decrement the refcount to 1
 
 	// later when a project is opened the "mGmeOleApp" will be registered as a client of the "MgaProject", thus
@@ -210,7 +210,7 @@ void CMainFrame::clearGmeOleApp()
 	m_console.SetGMEApp( 0 );
 
 	//this line is needed either in setGmeOleApp or here
-	//mGmeOleApp->GetIDispatch(FALSE)->Release();
+	mGmeOleApp->GetIDispatch(FALSE)->Release();
 
 	// make sure
 	mGmeOleApp = 0;
