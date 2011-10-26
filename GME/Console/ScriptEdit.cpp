@@ -173,6 +173,7 @@ void CScriptEdit::SetGMEApp(IDispatch *disp)
 	{ 
 		TCHAR s[1000];
 		_stprintf_s(s, _T("Scripting Error: 0x%x"), e.Error());
+		m_console->Message(s, MSG_ERROR);
 		_ftprintf(stderr, _T("%s"), s);
 	}
 }
@@ -188,6 +189,14 @@ void CScriptEdit::SetGMEProj(IDispatch *disp)
 		TCHAR s[1000];
 		_stprintf_s(s, _T("Scripting Error: 0x%x"), e.hr);
 		m_console->Message(s, MSG_ERROR);
+		_ftprintf(stderr, _T("%s"), s);
+	}
+	catch(_com_error &e) 
+	{ 
+		TCHAR s[1000];
+		_stprintf_s(s, _T("Scripting Error: 0x%x"), e.Error());
+		m_console->Message(s, MSG_ERROR);
+		_ftprintf(stderr, _T("%s"), s);
 	}
 }
 
