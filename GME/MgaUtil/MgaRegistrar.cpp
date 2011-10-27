@@ -1543,11 +1543,11 @@ STDMETHODIMP CMgaRegistrar::VersionFromGUID(BSTR name, VARIANT guid, BSTR *ver, 
 				for(int index = 0;; ++index) {
 					TCHAR name[512];
 					DWORD namesize = sizeof(name) / sizeof(name[0]);
-					BYTE value[512];
+					TCHAR value[512];
 					DWORD valuesize = sizeof(value) / sizeof(value[0]);
 					DWORD valtype;
 
-					LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, value, &valuesize);
+					LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, (LPBYTE)value, &valuesize);
 					if( err == ERROR_NO_MORE_ITEMS )
 						break;
 					ERRTHROW( err );
