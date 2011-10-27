@@ -361,9 +361,10 @@ BOOL CGMEApp::InitInstance()
 
 	// create main MDI Frame window
 	CMainFrame* pMainFrame = new CMainFrame;
-	if (!pMainFrame || !pMainFrame->LoadFrame(IDR_MAINFRAME))
+	if (!pMainFrame->LoadFrame(IDR_MAINFRAME))
 	{
-		delete pMainFrame;
+		// n.b. if LoadFrame fails, CFrameWnd::PostNcDestroy is called which does `delete this`
+		// delete pMainFrame;
 		return FALSE;
 	}
 	m_pMainWnd = pMainFrame;
