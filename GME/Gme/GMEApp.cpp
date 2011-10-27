@@ -126,6 +126,16 @@ CGMEApp theApp;
 
 /*static*/ const TCHAR * CGMEApp::m_no_model_open_string = _T("_NO_MODEL_IS_OPEN_");
 
+static CComBSTR StringFromGUID2(const CComVariant& guid)
+{
+	ASSERT(guid.vt == (VT_UI1 | VT_ARRAY));
+	GUID guid2;
+	CopyTo(guid, guid2);
+	CComBSTR strGuid;
+	CopyTo(guid2, &strGuid.m_str);
+	return strGuid;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CGMEApp construction
 
@@ -1363,11 +1373,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 					if (parv != "") {
 						msg += CString(" version ") + static_cast<const wchar_t*>(parv);
 					} else if (parg.vt == (VT_UI1 | VT_ARRAY)) {
-						GUID guid;
-						CopyTo(parg, guid);
-						CComBSTR strGuid;
-						CopyTo(guid, &strGuid);
-						msg += CString(" with GUID ") + static_cast<const wchar_t*>(strGuid);
+						msg += CString(" with GUID ") + StringFromGUID2(parg);
 					}
 					if (CString(parn) == _T("MetaGME2000"))
 						msg += _T("\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
@@ -1436,8 +1442,17 @@ void CGMEApp::OpenProject(const CString &conn) {
 				mgareg->VersionFromGUID(pname, g2, &pver2, REGACCESS_PRIORITY);
 			}
 			if(guidcmp(g, g2) && versioncmp(pver, pver2)) {
-				int answer = AfxMessageBox(_T("The paradigm used to open this file is not the current version\n")
-								_T("Do you want to upgrade to the current paradigm?")	,MB_YESNO);
+				CString project_version = pver;
+				if (project_version == _T(""))
+					project_version = StringFromGUID2(g);
+				CString registered_paradigm_version = pver2;
+				if (pver2 == _T(""))
+					registered_paradigm_version = StringFromGUID2(g2);
+				CString prompt;
+				prompt.Format(_T("The '%s' paradigm version used to save this file, '%s', is not the currently-registered version, '%s'.\n\n")
+								_T("Do you want to upgrade to the current paradigm?"),
+								static_cast<const TCHAR*>(pname), project_version, registered_paradigm_version);
+				int answer = AfxMessageBox(prompt, MB_YESNO);
 				if(answer == IDYES) {
 					COMTHROW(mgaProject->Close(VARIANT_FALSE));
 
