@@ -432,13 +432,11 @@ int CConsoleCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	
 	CRect rect(0,0,0,0);
-	// create an input controll too
-	m_browser.Create(NULL, 
-		_T("GME Console"), 
-		(WS_VISIBLE | WS_CHILD), 
-		rect, 
-		this, 
-		IDD_BROWSER);
+	// create an input control too
+	if (!m_browser.Create(NULL, _T("GME Console"), (WS_VISIBLE | WS_CHILD), 
+		rect, this, IDD_BROWSER))
+		// FIXME: warn user that GME requires IE (e.g. Windows Server Core 2008R2)
+		return -1;
 	m_browser.LoadFromResource(_T("BLANK.HTML"));
 
 	m_edit.Create((ES_AUTOHSCROLL | WS_VISIBLE | WS_CHILD), rect, this, IDD_EDIT);
