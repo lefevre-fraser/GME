@@ -1342,10 +1342,8 @@ void CGMEApp::OpenProject(const CString &conn) {
 				return; // ensures no more exception handlers or explanatory messages (or QueryProjectInfo calls)
 			}
 
-			if (FAILED(hr = mgaProject->QueryProjectInfo(PutInBstr(conn), &version, &parn, &parv, &parg, &ro_mode))) {
-				COMTHROW(hr);
-			}
-			while (FAILED(hr)) {
+			COMTHROW(mgaProject->QueryProjectInfo(PutInBstr(conn), &version, &parn, &parv, &parg, &ro_mode));
+			while (true) {
 				CString msg;
 				CComVariant guidpar;
 				CString newparname;
