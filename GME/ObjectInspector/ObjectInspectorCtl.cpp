@@ -953,7 +953,7 @@ void CObjectInspectorCtrl::WritePreferenceItemToMga(CListItem ListItem, bool bIs
 
 		
 	}
-	catch (hresult_exception e)
+	catch (hresult_exception& e)
 	{
 		ASSERT(0);
 		m_project->AbortTransaction();
@@ -961,7 +961,10 @@ void CObjectInspectorCtrl::WritePreferenceItemToMga(CListItem ListItem, bool bIs
 		{
 			ccpMetaProject->AbortTransaction();
 		}
-		CWnd::MessageBox(_T("Object Inspector could not write object preference data due to an unexpected MGA error. We apoligize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
+		if (e.hr == E_MGA_LIBOBJECT)
+			CWnd::MessageBox(_T("Library objects cannot be modified."), _T("GME"), MB_ICONERROR);
+		else
+			CWnd::MessageBox(_T("GME could not write object preference data due to an unexpected MGA error. We apologize for the inconvenience."), _T("GME"), MB_ICONERROR);
 	}
 	
 }
