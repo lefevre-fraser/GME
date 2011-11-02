@@ -87,6 +87,7 @@
             <UpgradeVersion Minimum="$(var.VERSIONSTR)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/>
             <UpgradeVersion OnlyDetect="no" Minimum="1.0.0" IncludeMinimum="yes" Maximum="$(var.VERSIONSTR)" IncludeMaximum="no" Property="PREVIOUSFOUND"/>
         </Upgrade>
+        <CustomActionRef Id="WixExitEarlyWithSuccess"/>
         
         <InstallExecuteSequence>
             <RemoveExistingProducts After="InstallValidate" />
