@@ -205,8 +205,8 @@ def generate_sample_files():
     tools.xmp2mta(UML_XMP, "UML")
 
 
-def build_msi():
-    "Build WiX installer (msi file)"
+def build_msms():
+    "Build WiX merge modules (msm files)"
     
     # Prepare include file with dynamic data
     f = open(os.path.join(GME_ROOT, "Install", "GME_dyn.wxi"), 'w')
@@ -223,11 +223,18 @@ def build_msi():
     import glob
     # Build the msi file
     tools.build_WiX([]
-        + glob.glob(os.path.join(GME_ROOT, "Install", "*.wxs"))
-       # + glob.glob(os.path.join(GME_ROOT, "Install", "*.wxi"))
+        + [file for file in glob.glob(os.path.join(GME_ROOT, "Install", "*.wxs")) if file.find('GME.wxs') == -1 ]
         + glob.glob(os.path.join(GME_ROOT, "Install", "PIAs", "*.wxi"))
         + glob.glob(os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "*.wxi"))
         )
+
+def build_msi():
+    "Build WiX installer (msi file)"
+
+    import glob
+    # Build the msi file
+    tools.build_WiX([os.path.join(GME_ROOT, "Install", "GME.wxs")])
+   
 
 def zip_pdb():
     "Collect and zip all debug information (*.pdb)"
@@ -268,6 +275,7 @@ build_steps = [
     zip_scriptSDK, 
     generate_meta_files,
     generate_sample_files, 
+    build_msms,
     build_msi,
     zip_pdb,
     publish,
