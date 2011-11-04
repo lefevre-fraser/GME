@@ -85,7 +85,7 @@ def update_version_str():
     with file(os.path.join(GME_ROOT, 'GME/Gme/GMEVersion.h.tmpl')) as template:
         template_text = "".join(file.readlines(template))
     with file(os.path.join(GME_ROOT, 'GME/Gme/GMEVersion.h'), 'w') as header:
-        header.write(template_text % (prefs["version_major"], prefs["version_minor"], prefs["version_patch"]))
+        header.write(template_text % (prefs["version_major"], prefs["version_minor"], prefs["version_patch"], prefs["version_build"]))
 
 def compile_GME():
     "Compile GME core components"
@@ -296,8 +296,8 @@ Build an installation image (msi) for GME.
   -i, --include=NUM   include build step 'NUM' explicitly
   -x, --exclude=NUM   exclude build step 'NUM' explicitly
   
-  -V, --version=MAJOR.MINOR.PATCHLEVEL
-                      set build version (default: %d.%d.%d)
+  -V, --version=MAJOR.MINOR.PATCHLEVEL.BUILD
+                      set build version (default: %d.%d.%d.%d)
 
   -a, --arch=ARCH     set architecture (x64 or x86)
 \tBuild steps:
@@ -311,6 +311,7 @@ Build an installation image (msi) for GME.
        prefs["version_major"],
        prefs["version_minor"],
        prefs["version_patch"],
+       prefs["version_build"],
        "\n\t".join([str(build_steps.index(s)) + ": " + s.__doc__ for s in build_steps])
        )
 
@@ -345,10 +346,11 @@ try:
             if val not in exclude_steps:
                 exclude_steps.append(step)
         if opt in ("-V", "--version"):
-            (M, m, p) = val.split(".")
+            (M, m, p, b) = val.split(".")
             prefs["version_major"] = int(M)
             prefs["version_minor"] = int(m)
             prefs["version_patch"] = int(p)
+            prefs["version_build"] = int(b)
         if opt in ("-a", "--arch"):
             prefs["arch"] = val
             
@@ -359,7 +361,8 @@ except (getopt.GetoptError, ValueError, AttributeError), e:
     
 prefs["version_string"] = ".".join([str(prefs["version_major"]),
                                    str(prefs["version_minor"]),
-                                   str(prefs["version_patch"])])
+                                   str(prefs["version_patch"])] +
+                                   ( [ str(prefs["version_build"]) ] if prefs["version_build"] != 0 else [] ))
 
 print "Building GME version " + prefs["version_string"] + " " + prefs["arch"]
 

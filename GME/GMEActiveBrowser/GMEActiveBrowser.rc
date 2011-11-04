@@ -8,6 +8,7 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "afxres.h"
+#include "..\GME\GMEVersion.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -51,8 +52,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION GME_VERSION_RC
+ PRODUCTVERSION GME_VERSION_RC
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +70,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "ISIS, Vanderbilt University"
             VALUE "FileDescription", "GMEActiveBrowser ActiveX Control Module"
-            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "FileVersion", GME_VERSION_STR
             VALUE "InternalName", "GMEActiveBrowser"
             VALUE "LegalCopyright", "Copyright (C) 2001"
             VALUE "OriginalFilename", "GMEActiveBrowser.OCX"
             VALUE "ProductName", "GMEActiveBrowser ActiveX Control Module"
-            VALUE "ProductVersion", "1, 0, 0, 1"
+            VALUE "ProductVersion", GME_VERSION_STR
         END
     END
     BLOCK "VarFileInfo"

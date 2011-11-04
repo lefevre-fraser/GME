@@ -8,6 +8,7 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "winres.h"
+#include "..\GME\GMEVersion.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -54,8 +55,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION GME_VERSION_RC
+ PRODUCTVERSION GME_VERSION_RC
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -72,12 +73,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "ISIS, Vanderbilt University"
             VALUE "FileDescription", "Mga Module\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "FileVersion", GME_VERSION_STR
             VALUE "InternalName", "Mga\0"
             VALUE "LegalCopyright", "Copyright 1999\0"
             VALUE "OriginalFilename", "Mga.DLL\0"
             VALUE "ProductName", "Mga Module\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "ProductVersion", GME_VERSION_STR
             VALUE "OLESelfRegister", "\0"
         END
     END

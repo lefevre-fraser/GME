@@ -17,5 +17,6 @@ prefs = {
 	"version_major" : (time.localtime()[0] - 2000),
 	"version_minor" : time.localtime()[1],
 	"version_patch" : time.localtime()[2],
+	"version_build" : 0,
 	"arch" : "x86",
 	}

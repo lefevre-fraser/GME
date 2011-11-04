@@ -362,6 +362,9 @@
     <None Include="GME.reg" />
     <None Include="..\..\Install\GME.wxs" />
     <None Include="GME.exe.config" />
+    <None Include="GMEVersion.h.tmpl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnnotatorEventSink.h">
