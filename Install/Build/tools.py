@@ -152,7 +152,8 @@ def xmp2mta(xml_file, paradigm):
     toolmsg("Parsing and registering " + xml_file + " (" + paradigm + ")")
     registrar = win32com.client.Dispatch( "MGA.MgaRegistrar" )
     # KMS: registering user fails if system is already registered. TODO: remove so we dont need elevation
-    registrar.UnregisterParadigm(paradigm, 2)
+    if paradigm in registrar.GetParadigmsDisp(2):
+        registrar.UnregisterParadigm(paradigm, 2)
     registrar.RegisterParadigmFromData( "XML=" + xml_file, paradigm, 1 )
 
 
