@@ -94,7 +94,7 @@ def compile_GME():
     sln_file = os.path.join(GME_ROOT, "GME", "GMEDecorators.sln");
     tools.build_VS( sln_file, "Release" )
     cmd_dir = os.path.join(GME_ROOT, "GME");
-    tools.system( "call regrelease.bat <NUL".split(), cmd_dir)
+    tools.system( ['call', 'regrelease.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
 
 
 def compile_meta():
@@ -102,7 +102,7 @@ def compile_meta():
     sln_file = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "MetaGME.sln");
     tools.build_VS( sln_file, "Release" )
     cmd_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME");
-    tools.system( "call regrelease.bat <NUL".split(), cmd_dir)
+    tools.system( ['call', 'regrelease.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
 
         
 def compile_JBON():
