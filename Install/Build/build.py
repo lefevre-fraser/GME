@@ -220,21 +220,14 @@ def build_msi():
     print >> f, "</Include>" 
     f.close()
    
+    import glob
     # Build the msi file
-    tools.build_WiX([ os.path.join(GME_ROOT, "Install", "GME.wxs"), 
-                      os.path.join(GME_ROOT, "Install", "PIAs", "GME.MGA.Core.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs", "GME.MGA.Meta.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs", "GME.MGA.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs", "GME.MGA.Parser.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs", "GME.Util.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs", "GMEPIA.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GME.MGA.Core.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GME.MGA.Meta.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GME.MGA.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GME.MGA.Parser.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GME.Util.wxi"),
-                      os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "GMEPIA.wxi"),
-                      ])
+    tools.build_WiX([]
+        + glob.glob(os.path.join(GME_ROOT, "Install", "*.wxs"))
+       # + glob.glob(os.path.join(GME_ROOT, "Install", "*.wxi"))
+        + glob.glob(os.path.join(GME_ROOT, "Install", "PIAs", "*.wxi"))
+        + glob.glob(os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "*.wxi"))
+        )
 
 def zip_pdb():
     "Collect and zip all debug information (*.pdb)"

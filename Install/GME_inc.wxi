@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='windows-1252'?>
+
+<Include>
+  <?if $(sys.BUILDARCH)=x64 ?>
+  <?define UpgradeCode='D69F58AC-2B74-4B5B-B7E7-EB9AB90A7056'?>
+  <?define GME_bin_Package_Id='58F9967F-6402-4090-A2B6-502D015E9A64'?>
+  <?define ProgramFilesNativeFolder='ProgramFiles64Folder'?>
+  <?define Win64='yes'?>
+  <?define ProductName='GME (64 bit)'?>
+  <?define Release='x64\Release'?>
+  <?define lib='lib\x64'?>
+  <?define bin='bin\x64'?>
+  <?else ?>
+  <?define UpgradeCode='dfdd761e-0979-4897-ac89-71f006d92bf8'?>
+  <?define GME_bin_Package_Id='A36F0A48-C4DB-4361-AC95-C9A20F0365F4'?>
+  <?define ProgramFilesNativeFolder='ProgramFilesFolder'?>
+  <?define Win64='no'?>
+  <?define ProductName='GME'?>
+  <?define Release='Release'?>
+  <?define lib='lib'?>
+  <?define bin='bin'?>
+  <?endif ?>
+
+  <?define InteropDir='..\GME\DotNetPIAs' ?>
+</Include>

@@ -85,6 +85,7 @@ def system(args, dirname=None):
         dirname : if set, execute the command within this directory
     """
     toolmsg("Executing " + str(args))
+    #toolmsg(" ".join(map(lambda x: '"' + x + '"', args)))
     import subprocess
     with open(os.devnull, "w") as nulfp:
         # n.b. stderr=subprocess.STDOUT fails mysteriously
@@ -177,13 +178,13 @@ def test_WiX():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
     system([exepath])
     
-def build_WiX(wxs_files):
+def build_WiX(wix_files):
     """
     Builds a WiX project.
     params
         wxs_file : full path to the WiX source (.wxs)
     """
-    fullpath = os.path.normpath(os.path.abspath(wxs_files[0]))
+    fullpath = os.path.normpath(os.path.abspath(wix_files[0]))
     dirname = os.path.dirname(fullpath)
     filename = os.path.basename(fullpath)
     (projectname, ext) = os.path.splitext(filename)
@@ -193,16 +194,23 @@ def build_WiX(wxs_files):
         return str + '_x64' if prefs['arch'] == 'x64' else str
     def get_wixobj(file):
         return x64_suffix(os.path.splitext(file)[0]) + ".wixobj"
+    wxi_files = filter(lambda file: file.find(".wxi") != -1, wix_files)
+    mm_files = filter(lambda file: file.find(".wxs") != -1 and file.find("GME.wxs") == -1, wix_files)
+    gme_wxs_file = filter(lambda file: file.find("GME.wxs") != -1, wix_files)[0]
     
     exepath = WIX_CANDLE_PRG
     if 'WIX' in os.environ.keys():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
-    for file in wxs_files:
+    for file in wix_files:
         cmd_line = [exepath] + WIX_CANDLE_ARG.split() + ['-arch', prefs['arch'], '-out', get_wixobj(file), file]
         system(cmd_line, dirname)
     
     exepath = WIX_LIGHT_PRG
     if 'WIX' in os.environ.keys():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
-    cmd_line = [exepath] + WIX_LIGHT_ARG.split() + ['-o', x64_suffix('GME') + '.msi'] + [ get_wixobj(file) for file in wxs_files ]
+    for wxs in mm_files:
+        cmd_line = [exepath] + WIX_LIGHT_ARG.split() + ['-o', x64_suffix(os.path.splitext(wxs)[0]) + ".msm", get_wixobj(wxs)]
+        system(cmd_line, dirname)
+        
+    cmd_line = [exepath] + WIX_LIGHT_ARG.split() + ['-o', x64_suffix('GME') + '.msi'] + [ get_wixobj(file) for file in wxi_files ] + [ get_wixobj(gme_wxs_file) ]
     system(cmd_line, dirname)
