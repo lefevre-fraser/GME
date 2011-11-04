@@ -295,9 +295,11 @@ Build an installation image (msi) for GME.
   -e, --end=NUM       stop at build step 'NUM' (default: %d)
   -i, --include=NUM   include build step 'NUM' explicitly
   -x, --exclude=NUM   exclude build step 'NUM' explicitly
-  
+
   -V, --version=MAJOR.MINOR.PATCHLEVEL.BUILD
-                      set build version (default: %d.%d.%d.%d)
+                      set version (default: %d.%d.%d.%d)
+  -b, --build_version=BUILD
+                      set only the build version  
 
   -a, --arch=ARCH     set architecture (x64 or x86)
 \tBuild steps:
@@ -316,10 +318,10 @@ Build an installation image (msi) for GME.
        )
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'hvcs:e:i:x:V:a:',
+    opts, args = getopt.getopt(sys.argv[1:], 'hvcs:e:i:x:V:b:a:',
                                ["help", "verbose", "clean",
                                 "start=", "end=", "include=", "exclude=",
-                                "version=", "arch="])
+                                "version=", "build_version=", "arch="])
     include_steps = []
     exclude_steps = []
     if args:
@@ -345,6 +347,8 @@ try:
             step = int(val)
             if val not in exclude_steps:
                 exclude_steps.append(step)
+        if opt in ("-b", "--build_version"):
+            prefs["version_build"] = int(val)
         if opt in ("-V", "--version"):
             (M, m, p, b) = val.split(".")
             prefs["version_major"] = int(M)
