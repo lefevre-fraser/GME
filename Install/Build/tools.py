@@ -27,6 +27,15 @@ class BuildException(Exception):
     "General Exception Class for all build problems"
     pass
 
+def Dispatch(progid):
+    from pythoncom import CLSCTX_ALL, CLSCTX_LOCAL_SERVER
+    CLSCTX_ACTIVATE_32_BIT_SERVER = 0x40000
+    CLSCTX_ACTIVATE_64_BIT_SERVER = 0x80000
+    if prefs['arch'] == 'x64':
+        return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER)
+    else:
+        return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER)
+
 #
 # Tools/utilities
 #
@@ -131,8 +140,8 @@ def xme2mga(xml_file, paradigm):
     extension.
     """
     toolmsg("Parsing " + xml_file + " with paradigm " + paradigm)
-    parser  = win32com.client.Dispatch( "MGA.MgaParser" )
-    project = win32com.client.Dispatch( "MGA.MgaProject" )
+    parser  = Dispatch( "MGA.MgaParser" )
+    project = Dispatch( "MGA.MgaProject" )
     mga_file = os.path.splitext(xml_file)[0] + ".mga"
     project.Create( "MGA="+mga_file, paradigm )
     parser.ParseProject( project, xml_file )
@@ -150,7 +159,7 @@ def xmp2mta(xml_file, paradigm):
     extension.
     """
     toolmsg("Parsing and registering " + xml_file + " (" + paradigm + ")")
-    registrar = win32com.client.Dispatch( "MGA.MgaRegistrar" )
+    registrar = Dispatch( "MGA.MgaRegistrar" )
     # KMS: registering user fails if system is already registered. TODO: remove so we dont need elevation
     if paradigm in registrar.GetParadigmsDisp(2):
         registrar.UnregisterParadigm(paradigm, 2)
@@ -165,7 +174,7 @@ def query_GUID(mta_file):
     
     returns the GUID as a string
     """ 
-    metaproject = win32com.client.Dispatch("MGA.MgaMetaProject")
+    metaproject = Dispatch("MGA.MgaMetaProject")
     metaproject.Open('MGA=' + mta_file)
     try:
         import uuid

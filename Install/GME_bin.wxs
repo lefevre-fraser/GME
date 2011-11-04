@@ -267,11 +267,13 @@
                 <ProgId Id="Mga.MgaMetaConstraint" Description="MgaMetaConstraint Class" />
               </ProgId>
             </Class>
-            <Class Id="{83BA3244-B758-11D3-ABAE-000000000000}" Context="InprocServer32" Description="MgaMetaProject Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Mga.MgaMetaProject.1" Description="MgaMetaProject Class">
-                <ProgId Id="Mga.MgaMetaProject" Description="MgaMetaProject Class" />
-              </ProgId>
-            </Class>
+            <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
+              <Class Id="{83BA3244-B758-11D3-ABAE-000000000000}" Context="InprocServer32" Description="MgaMetaProject Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Mga.MgaMetaProject.1" Description="MgaMetaProject Class">
+                  <ProgId Id="Mga.MgaMetaProject" Description="MgaMetaProject Class" />
+                </ProgId>
+              </Class>
+            </AppId>
             <Class Id="{83BA3246-B758-11D3-ABAE-000000000000}" Context="InprocServer32" Description="MgaMetaFolder Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.MgaMetaFolder.1" Description="MgaMetaFolder Class">
                 <ProgId Id="Mga.MgaMetaFolder" Description="MgaMetaFolder Class" />
@@ -463,11 +465,13 @@
                 <ProgId Id="Mga.MgaO" Description="MgaO Class" />
               </ProgId>
             </Class>
-            <Class Id="{270B4F93-B17C-11D3-9AD1-00AA00B6FE26}" Context="InprocServer32" Description="MgaProject Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Mga.MgaProject.1" Description="MgaProject Class">
-                <ProgId Id="Mga.MgaProject" Description="MgaProject Class" />
-              </ProgId>
-            </Class>
+            <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
+              <Class Id="{270B4F93-B17C-11D3-9AD1-00AA00B6FE26}" Context="InprocServer32" Description="MgaProject Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Mga.MgaProject.1" Description="MgaProject Class">
+                  <ProgId Id="Mga.MgaProject" Description="MgaProject Class" />
+                </ProgId>
+              </Class>
+            </AppId>
             <Class Id="{C592F6F0-C1FD-11D3-9AD2-00AA00B6FE26}" Context="InprocServer32" Description="MgaFolders Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.MgaFolders.1" Description="MgaFolders Class">
                 <ProgId Id="Mga.MgaFolders" Description="MgaFolders Class" />
@@ -682,11 +686,13 @@
                 <ProgId Id="Mga.MgaMetaParser" Description="MetaParser Class" />
               </ProgId>
             </Class>
-            <Class Id="{94D6FB54-1F7C-11D4-B3D0-005004D38590}" Context="InprocServer32" Description="MgaParser Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Mga.MgaParser.1" Description="MgaParser Class">
-                <ProgId Id="Mga.MgaParser" Description="MgaParser Class" />
-              </ProgId>
-            </Class>
+            <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
+              <Class Id="{94D6FB54-1F7C-11D4-B3D0-005004D38590}" Context="InprocServer32" Description="MgaParser Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Mga.MgaParser.1" Description="MgaParser Class">
+                  <ProgId Id="Mga.MgaParser" Description="MgaParser Class" />
+                </ProgId>
+              </Class>
+            </AppId>
             <Class Id="{A5D0DAE7-16EE-11D4-B3C2-005004D38590}" Context="InprocServer32" Description="MgaDumper Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.MgaDumper.1" Description="MgaDumper Class">
                 <ProgId Id="Mga.MgaDumper" Description="MgaDumper Class" />

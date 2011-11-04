@@ -20,6 +20,7 @@ HKCR
 			{
 				val ThreadingModel = s 'Apartment'
 			}
+			val AppID = s '{461F30AF-3BF0-11D4-B3F0-005004D38590}'
 			'TypeLib' = s '{70C41B15-E3CE-11D3-B37A-005004D38590}'
 		}
 	}
