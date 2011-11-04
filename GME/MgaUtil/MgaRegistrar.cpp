@@ -21,6 +21,12 @@ void ERRTHROW(LONG err)
 }
 #endif
 
+void WIN32THROW(LONG err)
+{
+	if (err != ERROR_SUCCESS)
+		HR_THROW(HRESULT_FROM_WIN32(err));
+}
+
 const CString rootreg(_T("SOFTWARE\\GME"));
 
 
@@ -1329,37 +1335,37 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR versi
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey mga;
-			ERRTHROW(mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
+			WIN32THROW(mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
 
 			CRegKey pars;
-			ERRTHROW( pars.Create(mga, _T("Paradigms")) );
+			WIN32THROW( pars.Create(mga, _T("Paradigms")) );
 
 			CRegKey par;
 
 			if(mode & RM_SYS) {
-				ERRTHROW( par.Create(pars, CString(name)) );
+				WIN32THROW( par.Create(pars, CString(name)) );
 				CString gg	= QueryValue(par, _T("GUID"));
 				CString gc	= QueryValue(par, _T("ConnStr"));
 				par.DeleteValue(_T("GUID"));
 				par.DeleteValue(_T("ConnStr"));
 				if(!gc.IsEmpty() && !gg.IsEmpty()) {
 					CRegKey parg2;
-					ERRTHROW( parg2.Create(par, gg) );
-					ERRTHROW( parg2.SetStringValue( _T("ConnStr"), gc) );
+					WIN32THROW( parg2.Create(par, gg) );
+					WIN32THROW( parg2.SetStringValue( _T("ConnStr"), gc) );
 				}
 
-				ERRTHROW( par.SetStringValue( _T("CurrentVersion"), PutInCString(guid3)));
+				WIN32THROW( par.SetStringValue( _T("CurrentVersion"), PutInCString(guid3)));
 				if (!cver.IsEmpty()) {
-					ERRTHROW( par.SetStringValue( cver, PutInCString(guid3)));
+					WIN32THROW( par.SetStringValue( cver, PutInCString(guid3)));
 				}
 				CRegKey parg;
-				ERRTHROW( parg.Create(par, PutInCString(guid3)) );
+				WIN32THROW( parg.Create(par, PutInCString(guid3)) );
 	
-				ERRTHROW( parg.SetStringValue( _T("ConnStr"), CString(connstr)));
+				WIN32THROW( parg.SetStringValue( _T("ConnStr"), CString(connstr)));
 			}
 			else {
 				LONG res = par.Open(pars, CString(name));
-				if(res != ERROR_SUCCESS && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+				if(res != ERROR_SUCCESS && res != ERROR_FILE_NOT_FOUND) WIN32THROW(res);
 			}
 		}
 		
