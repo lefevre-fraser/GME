@@ -150,8 +150,10 @@ def xmp2mta(xml_file, paradigm):
     extension.
     """
     toolmsg("Parsing and registering " + xml_file + " (" + paradigm + ")")
-    regsitrar = win32com.client.Dispatch( "MGA.MgaRegistrar" )
-    regsitrar.RegisterParadigmFromData( "XML=" + xml_file, paradigm, 2 )
+    registrar = win32com.client.Dispatch( "MGA.MgaRegistrar" )
+    # KMS: registering user fails if system is already registered. TODO: remove so we dont need elevation
+    registrar.UnregisterParadigm(paradigm, 2)
+    registrar.RegisterParadigmFromData( "XML=" + xml_file, paradigm, 1 )
 
 
 def query_GUID(mta_file):
