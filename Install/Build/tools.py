@@ -34,7 +34,8 @@ def Dispatch(progid):
     if prefs['arch'] == 'x64':
         return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER)
     else:
-        return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER)
+        return win32com.client.DispatchEx(progid)
+        # return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER)
 
 #
 # Tools/utilities
