@@ -70,7 +70,7 @@ if errorlevel 1 goto errorlabel
 echo    OK
 
 echo XmlBackEnd.dll:
-if %1 NEQ x64 ( regsvr32 /s "%~dp0%1\Release\XmlBackEnd.dll" )
+if %1x NEQ x64x ( regsvr32 /s "%~dp0%1\Release\XmlBackEnd.dll" )
 if errorlevel 1 goto errorlabel
 echo    OK
 
