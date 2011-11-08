@@ -2259,12 +2259,19 @@ void CGMEView::ChangeAttrPrefObjs(CGuiObjectList &objlist)
 {
 	CComPtr<IMgaObjects> mgaobjs;
 	COMTHROW(mgaobjs.CoCreateInstance(L"Mga.MgaObjects"));
-	POSITION pos = objlist.GetHeadPosition();
-	while (pos) {
-		CGuiObject *guiObj = objlist.GetNext(pos);
-		CComPtr<IMgaObject> mgaobj;
-		COMTHROW(guiObj->mgaFco.QueryInterface(&mgaobj));
-		COMTHROW(mgaobjs->Append(mgaobj));
+	if (objlist.GetCount() == 0)
+	{
+		COMTHROW(mgaobjs->Append(currentModel));
+	}
+	else
+	{
+		POSITION pos = objlist.GetHeadPosition();
+		while (pos) {
+			CGuiObject *guiObj = objlist.GetNext(pos);
+			CComPtr<IMgaObject> mgaobj;
+			COMTHROW(guiObj->mgaFco.QueryInterface(&mgaobj));
+			COMTHROW(mgaobjs->Append(mgaobj));
+		}
 	}
 
 	CGMEObjectInspector::theInstance->SetObjects(mgaobjs);
@@ -2716,6 +2723,7 @@ void CGMEView::ModeChange()
 	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ModeChange in ")+path+name+_T("\r\n"));
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
+	ChangeAttrPrefObjs(selected);
 	RemoveAllAnnotationFromSelection();
 	ClearConnectionSelection();
 	ClearConnSpecs();
@@ -4285,6 +4293,8 @@ void CGMEView::ChangeAspect(CString aspName, bool p_eraseStack /*=true*/)
 			selected.RemoveAll();
 			RemoveAllAnnotationFromSelection();
 			ClearConnectionSelection();
+			ChangeAttrPrefObjs(selected);
+
 
 //			CGMEView* gmeviewA = (CGMEView*)GetActiveView();
 //			if (gmeviewA)
@@ -5144,9 +5154,9 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 								annotation = selectedAnnotations.GetHead();
 								// ANNTODO: ChangeAttrPrefFco...
 							}
-							ChangeAttrPrefObjs(selected);
 						}
 					}
+					ChangeAttrPrefObjs(selected);
 				}
 				bool succ = this->SendNow();
 				Invalidate( succ);
@@ -8815,6 +8825,7 @@ void CGMEView::OnEditSelectall()
 
 	GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
 	Invalidate();
+	ChangeAttrPrefObjs(selected);
 	this->SendNow();
 }
 

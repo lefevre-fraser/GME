@@ -198,5 +198,18 @@ void CChildFrame::OnMDIActivate(BOOL bActivate,
 {
 	CMDIChildWndEx::OnMDIActivate(bActivate, pActivateWnd, pDeactivateWnd);
 	if (pActivateWnd == this)
-		((CGMEView*)GetActiveView())->DoPannWinRefresh();
+	{
+		CGMEView* view = ((CGMEView*)GetActiveView());
+		view->DoPannWinRefresh();
+		if (view->guiMeta) {
+			theApp.UpdateCompList4CurrentKind( view->guiMeta->name);
+			CMainFrame::theInstance->SetPartBrowserMetaModel(view->guiMeta);
+			CMainFrame::theInstance->SetPartBrowserBg(view->bgColor);
+			CMainFrame::theInstance->ChangePartBrowserAspect(view->currentAspect->index);
+
+			view->ChangeAttrPrefObjs(view->selected);
+
+		}
+		view->SetScroll();
+	}
 }
