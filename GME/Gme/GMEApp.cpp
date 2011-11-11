@@ -1720,7 +1720,7 @@ HINSTANCE GotoURL(LPCTSTR url, int showcmd)
 void CGMEApp::OnFileOpen() 
 {
 	CMgaOpenDlg dlg(CMgaOpenDlg::OpenDialog);
-	CString conn = dlg.AskConnectionString(true);
+	CString conn = dlg.AskConnectionString(true, true);
 
 	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileOpen ")+conn+_T("\r\n"));
 
@@ -1819,7 +1819,7 @@ void CGMEApp::OnFileNew()
 		metaname.Empty();
 		COMTHROW( launcher->get_ParadigmName(PutOut(metaname)) );
 
-		dataconn = dlg.AskConnectionString(false);
+		dataconn = dlg.AskConnectionString(false, false);
 
 		if( dlg.pressed_back )
 			goto meta_label;
@@ -2037,7 +2037,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 				else
 					opdlg.SetFileNameHint(ftitle);
 				opdlg.SetFolderPathHint(folderPath);
-				dataconn = opdlg.AskConnectionString(false);
+				dataconn = opdlg.AskConnectionString(false, false);
 				if (dataconn.IsEmpty()) {
 				   CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileImportxml exited because empty connection string has been given"));
 				   return;
@@ -2345,7 +2345,7 @@ void CGMEApp::OnFileClearLocks()
 	MSGTRY
 	{
 		CMgaOpenDlg dlg(CMgaOpenDlg::ClearLocksDialog);
-		CString conn = dlg.AskConnectionString(false);
+		CString conn = dlg.AskConnectionString(false, true);
 
 		if( conn.IsEmpty() )
 			return;
@@ -2747,7 +2747,7 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 				else
 					opdlg.SetFileNameHint(ftitle);
 				opdlg.SetFolderPathHint(fpath);
-				dataconn = opdlg.AskConnectionString(false);
+				dataconn = opdlg.AskConnectionString(false, false);
 				if (dataconn.IsEmpty()) {
 				   return;
 				}

@@ -31,7 +31,7 @@ public:
 
 	bool pressed_back;
 
-	CString AskConnectionString(bool allowXme);
+	CString AskConnectionString(bool allowXme, bool openFileDialog);
 	CString AskMGAConnectionString();
 private:
 	CString PruneConnectionString(const CString& conn);
