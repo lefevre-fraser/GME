@@ -367,6 +367,7 @@
     </None>
     <None Include="..\..\Install\GME_bin.wxs" />
     <None Include="..\..\Install\GME_SDK.wxs" />
+    <None Include="..\..\Install\GME_paradigms.wxs" />
     <None Include="..\..\Install\GME_inc.wxi" />
   </ItemGroup>
   <ItemGroup>

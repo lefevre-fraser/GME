@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='windows-1252'?>
+
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' RequiredVersion='3.0.4813.0'>
+
+  <?include GME_dyn.wxi ?>
+  <?include GME_inc.wxi ?>
+
+  <Module Id='GME_paradigms' Language='1033' Codepage='1252' Version='$(var.VERSIONSTR)'>
+
+    <Package Id='ABD398DE-2F52-4FD6-B372-C323D941EB65' Keywords='GME, MIC, modeling, domain specific languages' Description='Generic Modeling Environment Installer'
+        Manufacturer='Vanderbilt University, ISIS'
+        InstallerVersion='300' Languages='1033' SummaryCodepage='1252'
+        InstallPrivileges='elevated' InstallScope='perMachine'/>
+
+    <!-- =========================================================== -->
+    <!-- DIRECTORY STRUCTURE -->
+    <!-- =========================================================== -->
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder'>
+        <Directory Id='installdir32' Name='GME'>
+          <Directory Id='INSTALLDIR_PARADIGMS32' Name='Paradigms'>
+            <Directory Id='INSTALLDIR_PARADIGMS_METAGME_PARADIGM' Name='MetaGME'/>
+            <Directory Id='INSTALLDIR_PARADIGMS_UML_PARADIGM' Name='UML'/>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME_PARADIGM">
+      <Component Id="MetaGME.mta" Win64="no">
+        <File Id="MetaGME.mta" Name="MetaGME.mta" Source="..\Paradigms\MetaGME\MetaGME.mta" />
+        <RegistryKey Root='HKLM' Key='Software\GME\Paradigms\MetaGME'>
+          <RegistryValue Name='CurrentVersion' Type='string' Value='$(var.GUIDSTRMETAGME)'/>
+          <RegistryKey Key='$(var.GUIDSTRMETAGME)'>
+            <RegistryValue Name='ConnStr' Type='string' Value='MGA=[#MetaGME.mta]'/>
+          </RegistryKey>
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="INSTALLDIR_PARADIGMS_UML_PARADIGM">
+      <Component Id="UML.mta" Win64="no">
+        <File Id="UML.mta" Name="UML.mta"  Source="..\Paradigms\UML\UML.mta" />
+        <RegistryKey Root='HKLM' Key='Software\GME\Paradigms\UML'>
+          <RegistryValue Name='CurrentVersion' Type='string' Value='$(var.GUIDSTRUML)'/>
+          <RegistryKey Key='$(var.GUIDSTRUML)'>
+            <RegistryValue Name='ConnStr' Type='string' Value='MGA=[#UML.mta]'/>
+          </RegistryKey>
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
+  </Module>
+</Wix>

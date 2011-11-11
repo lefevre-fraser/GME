@@ -1088,7 +1088,7 @@ STDMETHODIMP CMgaRegistrar::get_Paradigms(regaccessmode_enum mode, VARIANT *name
 
 		if(mode & RM_SYSDOREAD) {
 			CRegKey pars;
-			LONG res = pars.Open(HKEY_LOCAL_MACHINE, rootreg+_T("\\Paradigms"), KEY_READ);
+			LONG res = pars.Open(HKEY_LOCAL_MACHINE, rootreg+_T("\\Paradigms"), KEY_READ | KEY_WOW64_32KEY);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				for(int index = 0;; ++index) {
@@ -1338,7 +1338,7 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR versi
 			WIN32THROW(mga.Create(HKEY_LOCAL_MACHINE, rootreg) );
 
 			CRegKey pars;
-			WIN32THROW( pars.Create(mga, _T("Paradigms")) );
+			WIN32THROW( pars.Create(mga, _T("Paradigms"), 0, 0, KEY_READ | KEY_WRITE | KEY_WOW64_32KEY) );
 
 			CRegKey par;
 
@@ -1404,7 +1404,7 @@ STDMETHODIMP CMgaRegistrar::QueryParadigmAllGUIDs(BSTR parname, VARIANT *guidstr
 
 		if(mode & RM_SYSDOREAD) {
 			CRegKey par;
-			LONG res = par.Open(HKEY_LOCAL_MACHINE, rootreg+_T("\\Paradigms\\") + pname, KEY_READ);
+			LONG res = par.Open(HKEY_LOCAL_MACHINE, rootreg+_T("\\Paradigms\\") + pname, KEY_READ | KEY_WOW64_32KEY);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				CString cur = QueryValue(par, _T("CurrentVersion"));
@@ -1481,7 +1481,7 @@ STDMETHODIMP CMgaRegistrar::QueryParadigm(BSTR parname, BSTR *connstr, VARIANT *
 
 		if(mode & RM_SYSDOREAD) {
 			CRegKey par;
-			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\") + pname, KEY_READ);
+			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\") + pname, KEY_READ | KEY_WOW64_32KEY);
 			if(res == ERROR_SUCCESS) {
 				CString cur = QueryValue(par, _T("CurrentVersion"));
 				if(cur.IsEmpty()) {
@@ -1572,7 +1572,7 @@ STDMETHODIMP CMgaRegistrar::VersionFromGUID(BSTR name, VARIANT guid, BSTR *ver, 
 		}
 		if(mode & (RM_SYSDOREAD)) {
 			CRegKey par;
-			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\")+name, KEY_READ);
+			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\")+name, KEY_READ | KEY_WOW64_32KEY);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) {
 				for(int index = 0;; ++index) {
@@ -1628,7 +1628,7 @@ STDMETHODIMP CMgaRegistrar::GUIDFromVersion(BSTR name, BSTR ver, VARIANT* guid, 
 		}
 		if(mode & (RM_SYSDOREAD)) {
 			CRegKey par;
-			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\")+name, KEY_READ);
+			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\")+name, KEY_READ | KEY_WOW64_32KEY);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 			if(res == ERROR_SUCCESS) { 
 				gstr = QueryValue(par, verstr);
@@ -1687,7 +1687,7 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigmGUID(BSTR name, VARIANT v, regacce
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey par;
-			ERRTHROW( par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\")+name) );
+			ERRTHROW( par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\")+name, KEY_READ | KEY_WRITE | KEY_WOW64_32KEY) );
 			CString cur = QueryValue(par, _T("CurrentVersion"));
 			if(cur.Compare(PutInCString(guidbstr)) == 0) {
 				COMTHROW(E_INVALID_USAGE);
@@ -1732,7 +1732,7 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigm(BSTR name, regaccessmode_enum mod
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
 			CRegKey pars;
-			LONG res = pars.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms"));
+			LONG res = pars.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms"), KEY_READ | KEY_WRITE | KEY_WOW64_32KEY);
 			if(!res) {
 				if(mode & RM_SYS) res = pars.RecurseDeleteKey(PutInCString(name));
 				if(mode & RM_TEST) res = pars.Open(pars, PutInCString(name));

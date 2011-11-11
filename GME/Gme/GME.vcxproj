@@ -357,6 +357,7 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
       <SubType>Designer</SubType>
     </None>
     <None Include="..\..\Install\GME_inc.wxi" />
+    <None Include="..\..\Install\GME_paradigms.wxs" />
     <None Include="..\..\Install\GME_SDK.wxs">
       <SubType>Designer</SubType>
     </None>

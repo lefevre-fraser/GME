@@ -418,18 +418,6 @@
       </Component>
     </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME">
-      <Component Id="MetaGME.mta">
-        <File Id="MetaGME.mta" Name="MetaGME.mta" Source="..\Paradigms\MetaGME\MetaGME.mta" />
-        <RegistryKey Root='HKLM' Key='Software\GME\Paradigms\MetaGME'>
-          <RegistryValue Name='CurrentVersion' Type='string' Value='$(var.GUIDSTRMETAGME)'/>
-          <RegistryKey Key='$(var.GUIDSTRMETAGME)'>
-            <RegistryValue Name='ConnStr' Type='string' Value='MGA=[INSTALLDIR_PARADIGMS_METAGME]MetaGME.mta'/>
-          </RegistryKey>
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id="INSTALLDIR_PARADIGMS_UML">
       <Component Id="UMLDecorator.dll">
         <File Id="UMLDecorator.dll" Name="UMLDecorator.dll" KeyPath="yes" Source="..\Paradigms\UML\decorator\$(var.Release)\UMLDecorator.dll">
@@ -443,19 +431,6 @@
         </File>
       </Component>
     </DirectoryRef>
-
-    <DirectoryRef Id="INSTALLDIR_PARADIGMS_UML">
-      <Component Id="UML.mta">
-        <File Id="UML.mta" Name="UML.mta"  Source="..\Paradigms\UML\UML.mta" />
-        <RegistryKey Root='HKLM' Key='Software\GME\Paradigms\UML'>
-          <RegistryValue Name='CurrentVersion' Type='string' Value='$(var.GUIDSTRUML)'/>
-          <RegistryKey Key='$(var.GUIDSTRUML)'>
-            <RegistryValue Name='ConnStr' Type='string' Value='MGA=[INSTALLDIR_PARADIGMS_UML]UML.mta'/>
-          </RegistryKey>
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
 
     <DirectoryRef Id="INSTALLDIR_BIN">
       <Component Id="Mga.dll">
