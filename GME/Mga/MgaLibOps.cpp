@@ -1039,10 +1039,10 @@ CComBSTR LibWorker::getExpandedConnectionStr() const
 	CopyTo( m_libName, v);
 
 	// replacing the found environment variable, %Name% syntax used
-	unsigned int pos = v.find( '%');
+	size_t pos = v.find( '%');
 	if( pos != std::string::npos) // found
 	{
-		unsigned int npos = v.find( '%', pos + 1); //next occurence of '%'
+		size_t npos = v.find( '%', pos + 1); //next occurence of '%'
 		if( npos != -1 && npos > pos + 1)
 		{
 			// get the value of the environment variable between the two %'s

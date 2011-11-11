@@ -94,7 +94,7 @@ bool OperatingOptions::parseBool( const std::string& p_line, const std::string& 
 std::string OperatingOptions::parseStr( const std::string& p_line, const std::string& p_optStr)
 {
 	std::string ret;
-	int pos = p_line.find_first_not_of( "\t =", p_optStr.length()); // skip whitespaces, equal sign
+	size_t pos = p_line.find_first_not_of( "\t =", p_optStr.length()); // skip whitespaces, equal sign
 	if( pos != std::string::npos) // found
 	{
 		int cpos = p_line.find_first_of( "\t #", pos); // find comments at the end of line, skip whitespaces too

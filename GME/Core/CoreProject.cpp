@@ -154,7 +154,7 @@ std::string CCoreProject::GetFirstToken(BSTR connection)
 	std::string con;
 	CopyTo(connection, con);
 
-	int pos = con.find('=');
+	size_t pos = con.find('=');
 	if( pos != std::string::npos )
 		con.resize(pos);
 

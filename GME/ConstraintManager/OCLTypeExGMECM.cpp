@@ -2391,13 +2391,13 @@ GMEMETHOD( TFCO_AttrByDefault )
 
 	void TypeFactory::GetDynamicTypes( const std::string& strName, std::vector<unique_ptr<OclMeta::Type>>& vecTypes, std::string& strNameResult )
 	{
-		int jPos = strName.find( "gme::" );
-		int kPos = strName.find( "ocl::" );
+		size_t jPos = strName.find( "gme::" );
+		size_t kPos = strName.find( "ocl::" );
 		if( jPos == std::string::npos             // neither 'gme::' 
 		 && kPos == std::string::npos)            // nor     'ocl::' is found
 		{
 			// lookup in meta:
-			int iPos = strName.find( "meta::");
+			size_t iPos = strName.find( "meta::");
 			std::string strN = strName;
 			std::string strNS;
 			if( iPos != std::string::npos)        // if 'meta::' found

@@ -175,7 +175,7 @@ namespace OclCommonEx {
 	std::string ParseLibraryName( const std::string& strFullName )
 	{
 		std::string strName;
-		int iPos = strFullName.rfind( "\\" );
+		size_t iPos = strFullName.rfind( "\\" );
 		if ( iPos != std::string::npos )
 			strName = strFullName.substr( iPos + 1 );
 		iPos = strName.rfind( "." );
@@ -276,7 +276,7 @@ namespace OclCommonEx {
 	{
 		eType = OBJTYPE_NULL;
 		strKind = "";
-		int iPos = strFullName.find( "::" );
+		size_t iPos = strFullName.find( "::" );
 		if ( iPos == std::string::npos ) {
 			strKind = strFullName;
 			return true;
@@ -617,7 +617,7 @@ namespace OclCommonEx {
 	{
 		StringVector vecKinds;
 		for ( unsigned int i = 0 ; i < vecDescriptions.size() ; i++ ) {
-			int iPos = vecDescriptions[ i ].find( ' ' );
+			size_t iPos = vecDescriptions[ i ].find( ' ' );
 			if ( iPos == std::string::npos ) {
 				if ( std::find( vecKinds.begin(), vecKinds.end(), vecDescriptions[ i ] ) == vecKinds.end() )
 					vecKinds.push_back( vecDescriptions[ i ] );

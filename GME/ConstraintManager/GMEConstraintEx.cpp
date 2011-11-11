@@ -71,7 +71,7 @@ namespace OclGme
 		}
 
 		std::string strDName = GetDefinedName();
-		int iPos = strDName.rfind( "::" );
+		size_t iPos = strDName.rfind( "::" );
 
 		if ( iPos == std::string::npos ) {
 			strContext = "?";

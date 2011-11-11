@@ -762,7 +762,7 @@ operationContext [ const TokenSet& setFollow, OclTree::ContextNode*& pCNode, Pos
 	<< INSLINE0( LID_CONTEXT_TYPE ); >>
 	<< INSLINE0( LID_FEATURE_NAME ); >>
 	<<
-		int iPos = strName.rfind( ':' );
+		size_t iPos = strName.rfind( ':' );
 		if ( iPos != string::npos )
 			{ strType = strName.substr( 0, iPos - 1 ); strName = strName.substr( iPos + 1, strName.length() - iPos - 1 ); }
 		else

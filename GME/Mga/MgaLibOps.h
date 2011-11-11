@@ -484,8 +484,8 @@ public:
 		std::string getCurrentStr();
 
 	protected:
-		unsigned int          m_pos;
-		unsigned int          m_nextPos;
+		size_t          m_pos;
+		size_t          m_nextPos;
 		std::string           m_tokenizable;
 	};
 

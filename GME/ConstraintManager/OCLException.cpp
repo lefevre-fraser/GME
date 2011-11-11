@@ -86,7 +86,7 @@ namespace OclCommon
 			}
 		}
 		unsigned int iCnt = 0;
-		int iPos = strMessage.find( '?' );
+		size_t iPos = strMessage.find( '?' );
 		while ( iPos != std::string::npos && iCnt < m_vecParameters.size() ) {
 			strMessage = strMessage.substr( 0, iPos ) + m_vecParameters[ iCnt++ ] + strMessage.substr( iPos + 1, strMessage.length() - iPos - 1 );
 			iPos = strMessage.find( '?' );

@@ -52,7 +52,7 @@ namespace OclCommon {
 
 	int convertR( std::string& s, TypeSeq& si, int i )
 	{
-		int p = s.find( '(' );
+		size_t p = s.find( '(' );
 		if ( p == std::string::npos ) {
 			si.push_back( s );
 			return 0;

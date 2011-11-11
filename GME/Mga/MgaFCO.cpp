@@ -963,6 +963,7 @@ HRESULT FCO::objrwnotify() {
 						getinterface(&tt);
 
 #if(REQUIRE_NOTIFICATION_SUCCESS)
+						// FIXME: if this throws, user has no idea the addon failed
 						COMTHROW(t->handler->ObjectEvent(tt, mmask, mods));
 #else
 						if((s = t->handler->ObjectEvent(tt, mmask, mods)) != S_OK) {

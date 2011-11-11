@@ -23,7 +23,7 @@ HRESULT CMgaMetaRegNodes::get_RegistryNode(IUnknown *me, BSTR bpath, IMgaMetaReg
 
 		for(;;)
 		{
-			int pos = path.find('/');//pos will be either in range 0..len-1 or will be equal with string::npos 
+			size_t pos = path.find('/');//pos will be either in range 0..len-1 or will be equal with string::npos 
 			std::string name(path, 0, pos);
 
 			CComBstrObj bname;
