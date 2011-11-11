@@ -61,6 +61,7 @@
         </File>
         <RegistryKey Root='HKLM' Key='Software\GME'>
           <RegistryValue Name='IconPath' Type='string' Value='$PARADIGMDIR\icons;$PROJECTDIR\icons'/>
+          <RegistryValue Name='Version' Type='string' Value='$(var.VERSIONSTR)' />
         </RegistryKey>
         <RegistryKey Root='HKLM' Key='Software\Microsoft\Windows\CurrentVersion\App Paths\GME.exe'>
           <RegistryValue Type='string' Value='[INSTALLDIR]GME.exe'/>
