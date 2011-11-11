@@ -5155,8 +5155,8 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 								// ANNTODO: ChangeAttrPrefFco...
 							}
 						}
+						ChangeAttrPrefObjs(selected);
 					}
-					ChangeAttrPrefObjs(selected);
 				}
 				bool succ = this->SendNow();
 				Invalidate( succ);
