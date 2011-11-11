@@ -28,6 +28,7 @@ STDMETHODIMP CScriptHost::InitEngine(void* console, BSTR engineProgid)
 			m_iscript.Release();
 		}
 		m_enginePID = newprogid;
+		// FIXME: throw a better error message
 		COMTHROW(m_iscript.CreateInstance((BSTR)m_enginePID));
 		m_iscriptParse = m_iscript;
 		IActiveScriptSitePtr scs(this);
