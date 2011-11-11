@@ -353,6 +353,13 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
     <None Include="..\..\Install\GME.wxs">
       <SubType>Designer</SubType>
     </None>
+    <None Include="..\..\Install\GME_bin.wxs">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="..\..\Install\GME_inc.wxi" />
+    <None Include="..\..\Install\GME_SDK.wxs">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="AnnotatorEventSink.rgs" />
     <None Include="DecoratorEventSink.rgs" />
     <None Include="aboutpic.bmp" />
