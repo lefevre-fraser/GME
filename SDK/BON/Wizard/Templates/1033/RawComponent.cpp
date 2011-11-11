@@ -10,12 +10,23 @@
 #include <GMECOM.h>
 #include <Console.h>
 #include "ComponentConfig.h"
+#ifndef __INTELLISENSE__
 #import "progid:Mga.MgaMetaFolder" no_implementation auto_search no_namespace no_search_namespace
 #import "progid:Mga.MgaFolders" no_implementation auto_search no_namespace no_search_namespace
 #import "progid:Mga.MgaMetaFolder" implementation_only auto_search no_namespace no_search_namespace
 #import "progid:Mga.MgaFolders" implementation_only auto_search no_namespace no_search_namespace
-// Sometimes IntelliSense has a hard time picking up the above lines. Try this:
-//#include "Debug/Mga.tlh"
+#else
+// IntelliSense has a known issue with the above lines.
+//  http://connect.microsoft.com/VisualStudio/feedback/details/533526/vc-2010-intellisense-import-directive-using-libid-does-not-work
+#ifdef _DEBUG
+// If IntelliSense reports "Cannot open source file", compile then reopen the project
+#include "Debug\Meta.tlh"
+#include "Debug\Mga.tlh"
+#else
+#include "Release\Meta.tlh"
+#include "Release\Mga.tlh"
+#endif
+#endif
 
 #include "RawComponent.h"
 
