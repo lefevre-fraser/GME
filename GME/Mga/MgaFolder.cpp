@@ -541,13 +541,13 @@ bool libraryNameEqual( CComBSTR n1, CComBSTR n2)
 
 void str_scan_name( OLECHAR ** p_ptr, int len_of, CComBSTR& p_name, CComBSTR& p_kind, CComBSTR& p_relpos)
 {
-	char str_to_find1[] = "|kind=";
-	char str_to_find2[] = "|relpos=";
+	wchar_t str_to_find1[] = L"|kind=";
+	wchar_t str_to_find2[] = L"|relpos=";
 
 	OLECHAR * pi = *p_ptr;
-	std::string id;
+	std::wstring id;
 
-	while( len_of > 0 && *pi != '/') // goes to the next separator
+	while( len_of > 0 && *pi != L'/') // goes to the next separator
 	{
 		id += *pi;
 		++pi;--len_of;
@@ -557,23 +557,23 @@ void str_scan_name( OLECHAR ** p_ptr, int len_of, CComBSTR& p_name, CComBSTR& p_
 	if( std::string::npos == f) // kind not found
 	{
 		p_name = id.c_str(); // only name is present
-		id = "";
+		id = L"";
 	}
 	else
 	{
 		p_name = id.substr( 0, f).c_str(); // f might be 0, so p_name might be ""
-		id = id.substr( f + strlen( str_to_find1));
+		id = id.substr( f + wcslen( str_to_find1));
 
 		std::string::size_type k = id.find( str_to_find2);
 		if( std::string::npos == k) // relid not found
 		{
 			p_kind = id.c_str(); // the remaining part is the kind
-			id = "";
+			id = L"";
 		}
 		else
 		{
 			p_kind = id.substr( 0, k).c_str();
-			id = id.substr( k + strlen( str_to_find2));
+			id = id.substr( k + wcslen( str_to_find2));
 			
 			// the remaining part is the relpos
 			p_relpos = id.c_str();
