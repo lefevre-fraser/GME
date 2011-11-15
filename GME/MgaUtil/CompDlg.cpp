@@ -519,7 +519,7 @@ void CCompDlg::RegisterPattern(const CString &path)
 	CCompInfoDlg dlg(registrar);
 	dlg.m_filename = path;
 
-	TCHAR paren, info[200];
+	TCHAR paren, info[200] = {0};
 	if(_stscanf_s(CString(buf), _T(" $!COMMENT( %[^)]%c"), info, &paren) != 2 || paren != ')') {
 nothing_understood:
 		AfxMessageBox("Cannot read component info in file " + path);

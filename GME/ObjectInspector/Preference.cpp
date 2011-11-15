@@ -504,7 +504,7 @@ void CPreference::CreateList(const CMgaFCOPtrList& MgaFCOPtrList)
 		bool bFirstRun=true;
 		bool bSameValuefOrAll=true;
 		bool bIsDefault=true;
-		objtype_enum oeFirstType;
+		objtype_enum oeFirstType = OBJTYPE_ATOM;
 		CString strFirstValue;
 
 		while(posFCOs)

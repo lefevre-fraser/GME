@@ -130,7 +130,8 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 		CloseAll();
 		// in case we rethrew the [probably MGA originated] exception 
 		// we have set into errorinfo the location info
-		if( m_GME) m_GME->ConsoleMessage( errorinfo, MSG_ERROR);
+		if( m_GME)
+			COMTHROW(m_GME->ConsoleMessage( errorinfo, MSG_ERROR));
 		clear_GME( m_GME);
 
 		ASSERT( FAILED(e.hr) );
@@ -280,7 +281,8 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 		CloseAll();
 		// in case we rethrew the [probably MGA originated] exception 
 		// we have set into errorinfo the location info
-		if( m_GME) m_GME->ConsoleMessage( errorinfo, MSG_ERROR);
+		if( m_GME)
+			COMTHROW(m_GME->ConsoleMessage( errorinfo, MSG_ERROR));
 		clear_GME( m_GME);
 
 		ASSERT( FAILED(e.hr) );
@@ -382,7 +384,7 @@ void CMgaParser::CloseAll()
 
 	if( progress != NULL )
 	{
-		progress->StopProgressDialog();
+		COMTHROW(progress->StopProgressDialog());
 		progress = NULL;
 	}
 
@@ -390,13 +392,13 @@ void CMgaParser::CloseAll()
 
 	if( project != NULL )
 	{
-		project->put_Preferences(project_prefs_orig);
-		project->AbortTransaction();
-		project->Notify(APPEVENT_XML_IMPORT_END);
+		COMTHROW(project->put_Preferences(project_prefs_orig));
+		COMTHROW(project->AbortTransaction());
+		COMTHROW(project->Notify(APPEVENT_XML_IMPORT_END));
 	}
 
 	if( territory != NULL )
-		territory->Destroy();
+		COMTHROW(territory->Destroy());
 
 	territory = NULL;
 	project = NULL;
@@ -461,7 +463,7 @@ void CMgaParser::startElement(const XMLCh* const name, AttributeList& attributes
 			skip_element_level = 1;
 			if (pass_count == 99)
 				if (m_GME)
-					m_GME->ConsoleMessage(_bstr_t(e.wwhat()), msgtype_enum::MSG_ERROR);
+					COMTHROW(m_GME->ConsoleMessage(_bstr_t(e.wwhat()), msgtype_enum::MSG_ERROR));
 		}
 	}
 }
@@ -527,8 +529,10 @@ void CMgaParser::LookupByID(const std::tstring &id, CComObjPtr<IMgaObject> &ret)
 	id_lookup_iterator i = id_lookup.find(id);
 	if( i != id_lookup.end() )
 	{
-		// we intentionally do not check the HRSULT
-		project->GetObjectByID((*i).second, PutOut(ret));
+		HRESULT hr = project->GetObjectByID((*i).second, PutOut(ret));
+		if (hr != E_MGA_BAD_ID)
+			// FIXME: test and enable
+			; // COMTHROW(hr);
 	}
 }
 
@@ -541,8 +545,10 @@ void CMgaParser::LookupByID(const std::tstring &id, CComObjPtr<IMgaFCO> &ret)
 	id_lookup_iterator i = id_lookup.find(id);
 	if( i != id_lookup.end() )
 	{
-		// we intentionally do not check the HRSULT
-		project->GetFCOByID((*i).second, PutOut(ret));
+		HRESULT hr = project->GetFCOByID((*i).second, PutOut(ret));
+		if (hr != E_MGA_BAD_ID)
+			// FIXME: test and enable
+			; // COMTHROW(hr);
 	}
 }
 
@@ -572,7 +578,7 @@ void CMgaParser::RegisterLookup(const attributes_type &attributes, IMgaObject *o
 		{
 				// when fco was created already got a fresh GUID, but we need to maintain
 				// the old guid, thus we overwrite the old value with the parsed one
-			object->PutGuidDisp( CComBSTR( (*i).second.c_str()));
+			COMTHROW(object->PutGuidDisp( CComBSTR( (*i).second.c_str())));
 		}
 		else if( (*i).first == _T("perm") )
 		{
@@ -789,7 +795,7 @@ void CMgaParser::StartProject(const attributes_type &attributes)
 			{
 				if( int_mode == VARIANT_TRUE) // if interactive
 				{
-					resolver->getUserOptions();
+					COMTHROW(resolver->getUserOptions());
 				}
 			}
 		}
@@ -839,7 +845,7 @@ void CMgaParser::StartClipboard(const attributes_type &attributes)
 	{
 		if( int_mode == VARIANT_TRUE)
 		{
-			resolver->getUserOptions();
+			COMTHROW(resolver->getUserOptions());
 		}
 	}
 }

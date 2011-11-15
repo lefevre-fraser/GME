@@ -185,17 +185,19 @@ public:
 	template<class T>
 	void appendLink( const T& ptr)
 	{
-		if( ptr) appendLink( ObjForCore( CoreObj(ptr)));
-		else     Append( L"NullObject");
+		if( ptr)
+			appendLink( ObjForCore( CoreObj(ptr)));
+		else
+			COMTHROW(Append( L"NullObject"));
 	}
 
-	void appendLink( const CComBSTR& id, const CComBSTR& nm = "NonameObject")
+	void appendLink( const CComBSTR& id, const CComBSTR& nm = L"NonameObject")
 	{
-		Append(L"<A HREF=\"mga:");
-		AppendBSTR( id);
-		Append(L"\">");
-		AppendBSTR( nm);
-		Append(L"</A>");
+		COMTHROW(Append(L"<A HREF=\"mga:"));
+		COMTHROW(AppendBSTR( id));
+		COMTHROW(Append(L"\">"));
+		COMTHROW(AppendBSTR( nm));
+		COMTHROW(Append(L"</A>"));
 	}
 
 	void appendLink( FCO* fco)
@@ -203,12 +205,12 @@ public:
 		CComBSTR id, nm;
 		if( fco)
 		{
-			fco->get_ID( &id);
-			fco->get_Name( &nm);
+			COMTHROW(fco->get_ID( &id));
+			COMTHROW(fco->get_Name( &nm));
 			appendLink( id, nm);
 		}
 		else
-			Append(L"NullObject");
+			COMTHROW(Append(L"NullObject"));
 	}
 
 	void appendGuid( const GUID& t_guid)
@@ -219,7 +221,7 @@ public:
 			t_guid.Data4[0], t_guid.Data4[1], t_guid.Data4[2], t_guid.Data4[3],
 			t_guid.Data4[4], t_guid.Data4[5], t_guid.Data4[6], t_guid.Data4[7]);
 
-		Append( buff);
+		COMTHROW(Append( buff));
 	}
 
 	void appendGuid( const BinGuid& p_guid)
@@ -233,7 +235,7 @@ public:
 	void appendGuid( const UniqueId& p_uid)
 	{
 		appendGuid( p_uid.objectId);
-		Append( L" in library ");
+		COMTHROW(Append( L" in library "));
 		appendGuid( p_uid.libId);
 	}
 };
@@ -399,7 +401,7 @@ public:
 		if( error) ++m_counter;
 		if( m_gme)
 		{
-			m_gme->ConsoleMessage( msg, error?MSG_ERROR:MSG_INFO);
+			COMTHROW(m_gme->ConsoleMessage( msg, error?MSG_ERROR:MSG_INFO));
 		}
 	}
 
@@ -414,7 +416,7 @@ public:
 
 		if( t_gme)
 		{
-			t_gme->ConsoleMessage( msg, error?MSG_ERROR:MSG_INFO);
+			COMTHROW(t_gme->ConsoleMessage( msg, error?MSG_ERROR:MSG_INFO));
 		}
 	}
 };

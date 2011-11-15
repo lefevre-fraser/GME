@@ -159,7 +159,7 @@ void CInheritanceTreeCtrl::StoreState()
 			if(ccpMgaObject) // succesful conversion
 			{
 				CComBSTR IDObj;
-				ccpMgaObject->get_ID(&IDObj);
+				COMTHROW(ccpMgaObject->get_ID(&IDObj));
 
 				// Put Object id and item state in the buffer
 				CString strID(IDObj);
@@ -217,7 +217,7 @@ void CInheritanceTreeCtrl::RestoreState()
 			if(ccpMgaObject) // succesful conversion
 			{
 				CComBSTR IDObj;
-				ccpMgaObject->get_ID(&IDObj);
+				COMTHROW(ccpMgaObject->get_ID(&IDObj));
 
 				// Get Object id and item state from the map
 				CString strID(IDObj);

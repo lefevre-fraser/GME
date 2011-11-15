@@ -277,7 +277,7 @@ void CAggregateTreeCtrl::LoadItemStateFromRegistry(CString& strProjectName, HTRE
 			if(ccpMgaObject) // succesful conversion
 			{
 				CComBSTR IDObj;
-				ccpMgaObject->get_ID(&IDObj);
+				COMTHROW(ccpMgaObject->get_ID(&IDObj));
 
 				// Get Object id and item state in the registry
 				CString strID(IDObj);				
@@ -377,7 +377,7 @@ void CAggregateTreeCtrl::SaveTreeStateToRegistry(CString& strProjectName)
 			if(ccpMgaObject) // succesful conversion
 			{
 				CComBSTR IDObj;
-				ccpMgaObject->get_ID(&IDObj);
+				COMTHROW(ccpMgaObject->get_ID(&IDObj));
 
 				// Put Object id and item state in the registry
 				CString strID(IDObj);
@@ -441,7 +441,7 @@ void CAggregateTreeCtrl::StoreState()
 			if(ccpMgaObject) // succesful conversion
 			{
 				CComBSTR IDObj;
-				ccpMgaObject->get_ID(&IDObj);
+				COMTHROW(ccpMgaObject->get_ID(&IDObj));
 
 				// Put Object id and item state in the buffer
 				CString strID(IDObj);
@@ -499,7 +499,7 @@ void CAggregateTreeCtrl::RestoreState()
 			if(ccpMgaObject) // succesful conversion
 			{
 				CComBSTR IDObj;
-				ccpMgaObject->get_ID(&IDObj);
+				COMTHROW(ccpMgaObject->get_ID(&IDObj));
 
 				// Get Object id and item state from the map
 				CString strID(IDObj);
@@ -926,8 +926,8 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 							{
 								CComBSTR msg( L"Object '"), nm;
 								COMTHROW( MGACOLL_ITER->get_Name( &nm));
-								msg.Append( nm);
-								msg.Append( _T("' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]"));
+								COMTHROW(msg.Append( nm));
+								COMTHROW(msg.Append( _T("' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]")));
 								Utils::put2Console( Utils::get_GME( pMgaContext->m_ccpProject), msg, MSG_ERROR);
 									pMgaContext->AbortTransaction();//COMTHROW( hr);
 								return FALSE;//break; // although it was inside a MGACOLL_ITERATE, we aborted the trans
@@ -951,8 +951,8 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 							{
 								CComBSTR msg( L"Object '"), nm;
 								COMTHROW( MGACOLL_ITER->get_Name( &nm));
-								msg.Append( nm);
-								msg.Append( L"' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]");
+								COMTHROW(msg.Append( nm));
+								COMTHROW(msg.Append( L"' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]"));
 								Utils::put2Console( Utils::get_GME( pMgaContext->m_ccpProject), msg, MSG_ERROR);
 									pMgaContext->AbortTransaction();//COMTHROW( hr);
 								return FALSE;//break; // although it was inside a MGACOLL_ITERATE, we aborted the trans
@@ -1169,8 +1169,8 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 								{
 									CComBSTR msg( L"Object '"), nm;
 									COMTHROW( ccpFCO->get_Name( &nm));
-									msg.Append( nm);
-									msg.Append( L"' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]");
+									COMTHROW(msg.Append( nm));
+									COMTHROW(msg.Append( L"' could not be derived. Some of its ancestors or descendants may be already derived! [Error code E_MGA_NOT_DERIVABLE]"));
 									Utils::put2Console( Utils::get_GME( pMgaContext->m_ccpProject), msg, MSG_ERROR);
 
 									pMgaContext->AbortTransaction();//COMTHROW( hr);

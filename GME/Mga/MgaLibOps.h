@@ -309,9 +309,9 @@ public:
 									ObjForCore( base_con2)->get_ID( &idofcon2);
 								}
 
-								idofcon2.Append( ";");
-								idofcon2.AppendBSTR( nmofcon2);
-								idofcon2.Append( ".");
+								COMTHROW(idofcon2.Append( ";"));
+								COMTHROW(idofcon2.AppendBSTR( nmofcon2));
+								COMTHROW(idofcon2.Append( "."));
 #endif
 								CoreObj role_cntpt;
 								if( base_con2)

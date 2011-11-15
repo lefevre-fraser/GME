@@ -1129,8 +1129,11 @@ void CObjectInspectorCtrl::PropagateMgaMessages()
 void CObjectInspectorCtrl::UndoRedo( bool undo /*= true*/)
 {
 	short usz( 0), rsz( 0);
-	if( m_project) m_project->UndoRedoSize( &usz, &rsz);
-	if( undo && usz > 0) COMTHROW( m_project->Undo());
-	else if( !undo && rsz > 0) COMTHROW( m_project->Redo());
+	if( m_project)
+		COMTHROW(m_project->UndoRedoSize( &usz, &rsz));
+	if( undo && usz > 0)
+		COMTHROW( m_project->Undo());
+	else if( !undo && rsz > 0)
+		COMTHROW( m_project->Redo());
 }
 

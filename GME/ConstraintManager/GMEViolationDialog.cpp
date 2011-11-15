@@ -437,12 +437,12 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 				CComBSTR bstr, id, nm;
 				COMTHROW( fco->get_ID( &id));
 				COMTHROW( fco->get_Name( &nm));
-				bstr.Append(_T("Constraint Violation: <A HREF=\"mga:"));
-				bstr.AppendBSTR( id);
-				bstr.Append(_T("\">"));
-				bstr.AppendBSTR( nm);
-				bstr.Append(_T("</A>: "));
-				bstr.Append(item.spConstraint.Ptr()->GetMessage().c_str());
+				COMTHROW(bstr.Append(_T("Constraint Violation: <A HREF=\"mga:")));
+				COMTHROW(bstr.AppendBSTR( id));
+				COMTHROW(bstr.Append(_T("\">")));
+				COMTHROW(bstr.AppendBSTR( nm));
+				COMTHROW(bstr.Append(_T("</A>: ")));
+				COMTHROW(bstr.Append(item.spConstraint.Ptr()->GetMessage().c_str()));
 				COMTHROW(m_oleapp->ConsoleMessage(bstr, MSG_ERROR));
 			}
 			catch(hresult_exception &)// in case the constraint is not attached to any fco in the metamodel

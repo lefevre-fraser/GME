@@ -375,7 +375,7 @@ void CCoreBinFile::OpenMetaProject()
 	ASSERT( metaproject != NULL );
 
 	CComVariant tmp;
-	metaproject->get_GUID(PutOut(tmp));
+	COMTHROW(metaproject->get_GUID(PutOut(tmp)));
 	CopyTo(tmp, metaprojectid);
 }
 

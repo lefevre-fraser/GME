@@ -375,17 +375,17 @@ void CMgaParser::findObjOnAbsPath( CComObjPtr<IMgaProject> p_project, const std:
 			if( m_GME) 
 			{
 				CComBSTR bstr;
-				bstr.Append(_T("Name ambiguity, selected: "));
-				bstr.AppendBSTR( makeLink( p_obj));
+				COMTHROW(bstr.Append(_T("Name ambiguity, selected: ")));
+				COMTHROW(bstr.AppendBSTR( makeLink( p_obj)));
 				
 				if( !text.empty())
 				{
-					bstr.Append(" as ");
-					bstr.Append( text.c_str());
+					COMTHROW(bstr.Append(L" as "));
+					COMTHROW(bstr.Append( text.c_str()));
 				}
 
-				bstr.Append(". Search path used: ");
-				bstr.Append( makeViewable(p_absPath).c_str());
+				COMTHROW(bstr.Append(L". Search path used: "));
+				COMTHROW(bstr.Append( makeViewable(p_absPath).c_str()));
 				msgSC( bstr, MSG_WARNING);
 			}
 		}
@@ -456,16 +456,16 @@ void CMgaParser::findObjOnRelPath( CComObjPtr<IMgaObject> obj_rel_to, const std:
 			if( m_GME) 
 			{
 				CComBSTR bstr;
-				bstr.Append("Name ambiguity, selected: ");
-				bstr.AppendBSTR( makeLink( obj));
+				COMTHROW(bstr.Append(L"Name ambiguity, selected: "));
+				COMTHROW(bstr.AppendBSTR( makeLink( obj)));
 				if( !text.empty())
 				{
-					bstr.Append(" as ");
-					bstr.Append( text.c_str());
+					COMTHROW(bstr.Append(L" as "));
+					COMTHROW(bstr.Append( text.c_str()));
 				}
 
-				bstr.Append(". Search path used: ");
-				bstr.Append( makeViewable(relpath).c_str());
+				COMTHROW(bstr.Append(L". Search path used: "));
+				COMTHROW(bstr.Append( makeViewable(relpath).c_str()));
 				msgSC( bstr, MSG_WARNING);
 			}
 		}
@@ -520,12 +520,12 @@ bool CMgaParser::findPlaceForElem(
 		place = m_target;//<!> let's try this
 		
 		CComBSTR bstr("Correct place not found for object: ");
-		bstr.Append( makeNameViewable( GetByName( attributes, _T("closurename"))).c_str());
-		bstr.Append(". Search path used: ");
-		bstr.Append( makeViewable( GetByName(attributes, _T("closurepath"))).c_str());
-		bstr.Append(". Trying to insert into the target object: ");
-		bstr.AppendBSTR( makeLink( place));
-		bstr.Append(".");
+		COMTHROW(bstr.Append( makeNameViewable( GetByName( attributes, _T("closurename"))).c_str()));
+		COMTHROW(bstr.Append(". Search path used: "));
+		COMTHROW(bstr.Append( makeViewable( GetByName(attributes, _T("closurepath"))).c_str()));
+		COMTHROW(bstr.Append(". Trying to insert into the target object: "));
+		COMTHROW(bstr.AppendBSTR( makeLink( place)));
+		COMTHROW(bstr.Append("."));
 		msgSC(bstr, MSG_ERROR);
 
 		place.QueryInterface( place_folder);
@@ -561,83 +561,6 @@ bool CMgaParser::findPlaceForElem(
 	p_GME = CComPtr<IGMEOLEApp>();
 }
 
-//void CMgaParser::popInfo()
-//{
-//	if( m_parsed1.empty() || m_parsed2.empty()) return; // empty stack of informations
-//
-//	CComObjPtr<IMgaObject> obj = m_parsed1[0]; m_parsed1.pop_back();
-//	CComObjPtr<IMgaObject> fco1 = m_parsed2[0]; m_parsed2.pop_back();
-//	CComObjPtr<IMgaObject> fco2 = m_parsed3[0]; m_parsed3.pop_back();
-//
-//	writeInfo( obj, fco1, fco2);
-//}
-//
-//void CMgaParser::pushInfo( const CComObjPtr<IMgaFolder>& place_fld, const CComObjPtr<IMgaModel>& place_mdl, const CComObjPtr<IMgaFCO>& fco1, const CComObjPtr<IMgaFCO>& fco2)
-//{
-//	CComObjPtr<IMgaObject> obj;
-//	if( place_fld)
-//		obj = place_fld;
-//	else if( place_mdl)
-//		obj = place_mdl;
-//	else ASSERT(0);
-//
-//	//m_parsed.push_back( pair< CComObjPtr<IMgaObject>, CComObjPtr<IMgaObject>( obj, fco1) );
-//	m_parsed1.push_back( obj);
-//	m_parsed2.push_back( CComObjPtr<IMgaObject>( fco1));
-//	m_parsed3.push_back( CComObjPtr<IMgaObject>( fco2));
-//}
-//
-//void CMgaParser::writeInfo( const CComObjPtr<IMgaObject>& obj, const CComObjPtr<IMgaObject>& fco1, const CComObjPtr<IMgaObject>& fco2, bool normal_msg)
-//{
-//	if( obj && fco1 )
-//	{
-//		CComBSTR bstr, id2, nm2, id1, nm1, id0, nm0;
-//		COMTHROW( obj->get_ID( &id0));
-//		COMTHROW( obj->get_Name( &nm0));
-//		COMTHROW( fco1->get_ID( &id1));
-//		COMTHROW( fco1->get_Name( &nm1));
-//		if( fco2) COMTHROW( fco2->get_ID( &id2));
-//		if( fco2) COMTHROW( fco2->get_Name( &nm2));
-//
-//		bstr.Append("[Smartcopy Parser] <A HREF=\"mga:");
-//		bstr.AppendBSTR( id1);
-//		bstr.Append("\">");
-//
-//		if( nm1.Length() != 0)	bstr.AppendBSTR( nm1);
-//		else					bstr.Append("emptyname");
-//
-//		bstr.Append( "</A>");
-//
-//		if( fco2) 
-//		{
-//			bstr.Append( " derived from <A HREF=\"mga:");
-//			bstr.AppendBSTR( id2);
-//			bstr.Append("\">");
-//
-//			if( nm2.Length() != 0)	bstr.AppendBSTR( nm2);
-//			else					bstr.Append("emptyname");
-//
-//			bstr.Append("</A>");
-//		}
-//
-//		if( !normal_msg)
-//			bstr.Append(" could not be");
-//		bstr.Append( " inserted into <A HREF=\"mga:");
-//		bstr.AppendBSTR( id0);
-//		bstr.Append( "\">");
-//
-//		if( nm0.Length() != 0)	bstr.AppendBSTR( nm0);
-//		else					bstr.Append("emptyname");
-//
-//		bstr.Append( "</A>.");
-//		if( m_GME) 
-//		{
-//			if( normal_msg) COMTHROW( m_GME->ConsoleMessage(bstr, MSG_INFO));
-//			else			COMTHROW( m_GME->ConsoleMessage(bstr, MSG_ERROR));
-//		}
-//	}
-//}
-
 
 bool CMgaParser::isNeedFor2ndStep()
 {
@@ -667,10 +590,10 @@ void CMgaParser::tryToFindMissedReferreds()
 				COMTHROW( ref->put_Referred( fco_target));
 
 				CComBSTR bstr( "Reference ");
-				bstr.AppendBSTR( makeLink( ref));
-				bstr.Append( " set to refer to ");
-				bstr.AppendBSTR( makeLink( fco_target));
-				bstr.Append(" in 2nd step successfully.");
+				COMTHROW(bstr.AppendBSTR( makeLink( ref)));
+				COMTHROW(bstr.Append( " set to refer to "));
+				COMTHROW(bstr.AppendBSTR( makeLink( fco_target)));
+				COMTHROW(bstr.Append(" in 2nd step successfully."));
 				msgSC(bstr, MSG_INFO);
 			}
 			else
@@ -682,10 +605,10 @@ void CMgaParser::tryToFindMissedReferreds()
 		if( error)
 		{
 			CComBSTR bstr( "Reference ");
-			bstr.AppendBSTR( makeLink( it->first ));
-			bstr.Append( ": target not found in 2nd step. ");
-			bstr.Append("Search path used: ");
-			bstr.Append( makeViewable( it->second).c_str());
+			COMTHROW(bstr.AppendBSTR( makeLink( it->first )));
+			COMTHROW(bstr.Append( ": target not found in 2nd step. "));
+			COMTHROW(bstr.Append("Search path used: "));
+			COMTHROW(bstr.Append( makeViewable( it->second).c_str()));
 			msgSC(bstr, MSG_ERROR);
 		}
 	}
@@ -723,10 +646,10 @@ void CMgaParser::tryToFindMissedSetMembers()
 					COMTHROW( set->AddMember( fco_member));
 
 					CComBSTR bstr( "Member");
-					bstr.AppendBSTR( makeLink( fco_member));
-					bstr.Append( " added to set ");
-					bstr.AppendBSTR( makeLink( set));
-					bstr.Append(" in 2nd step successfully.");
+					COMTHROW(bstr.AppendBSTR( makeLink( fco_member)));
+					COMTHROW(bstr.Append( " added to set "));
+					COMTHROW(bstr.AppendBSTR( makeLink( set)));
+					COMTHROW(bstr.Append(" in 2nd step successfully."));
 					msgSC(bstr, MSG_INFO);
 				}
 				else
@@ -738,10 +661,10 @@ void CMgaParser::tryToFindMissedSetMembers()
 			if( error)
 			{
 				CComBSTR bstr( "Set ");
-				bstr.AppendBSTR( makeLink( set));
-				bstr.Append(": member not found in 2nd step. ");
-				bstr.Append("Search path used: ");
-				bstr.Append( makeViewable( *member_it).c_str());
+				COMTHROW(bstr.AppendBSTR( makeLink( set)));
+				COMTHROW(bstr.Append(": member not found in 2nd step. "));
+				COMTHROW(bstr.Append("Search path used: "));
+				COMTHROW(bstr.Append( makeViewable( *member_it).c_str()));
 				msgSC(bstr, MSG_ERROR);
 			}
 		}
@@ -791,8 +714,8 @@ void CMgaParser::msgSC( CComBSTR& msg, msgtype_enum type)
 	CopyTo( msg, t);
 	if( t.substr( 0, _tcslen( sc_text)) != sc_text)
 	{
-		m2.Append( sc_text);
-		m2.AppendBSTR( msg);
+		COMTHROW(m2.Append( sc_text));
+		COMTHROW(m2.AppendBSTR( msg));
 	}
 	else
 		m2 = msg;

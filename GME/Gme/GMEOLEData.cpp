@@ -280,31 +280,31 @@ bool CGMEDataSource::ParseXMLData(COleDataObject *pDataObject, IMgaObject *targe
 		CComPtr<IGMEOLEApp> t_GME = CGMEDataSource::get_GME( t_project);
 		
 		CComBSTR msg, done;
-		done.Append(_T("Done."));
+		COMTHROW(done.Append(_T("Done.")));
 		if( ver == _T("0"))
 		{
-			msg.Append(_T("Inserting XML data..."));
+			COMTHROW(msg.Append(_T("Inserting XML data...")));
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( msg, MSG_INFO));
 			COMTHROW( parser->ParseFCOs(target, PutInBstr(filename)) );
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( done, MSG_INFO));
 		}
 		else if( ver == _T("4"))
 		{
-			msg.Append(_T("Inserting XML SmartCopied data..."));
+			COMTHROW(msg.Append(_T("Inserting XML SmartCopied data...")));
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( msg, MSG_INFO));
 			COMTHROW( parser->ParseClos4( target, PutInBstr(filename), merge?MERGE:ADDITION ));
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( done, MSG_INFO));
 		}
 		else if ( ver == _T("1") || ver == _T(""))
 		{
-			msg.Append(_T("Inserting XML CopyClosured data..."));
+			COMTHROW(msg.Append(_T("Inserting XML CopyClosured data...")));
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( msg, MSG_INFO));
 			COMTHROW( parser->ParseClos1(target, PutInBstr(filename)) );
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( done, MSG_INFO));
 		}
 		else
 		{
-			msg.Append(_T("Error: Unknown clipboard closure format"));
+			COMTHROW(msg.Append(_T("Error: Unknown clipboard closure format")));
 			if( t_GME) COMTHROW( t_GME->ConsoleMessage( msg, MSG_INFO));
 
 			ASSERT(0);
@@ -656,7 +656,7 @@ LPDISPATCH CGMEDataSource::DispGetProject()
 {
 	CComPtr<IDispatch> p;
 	if( project != NULL ) {
-		project.QueryInterface(&p);
+		COMTHROW(project.QueryInterface(&p));
 	}
 
 	return p.Detach();

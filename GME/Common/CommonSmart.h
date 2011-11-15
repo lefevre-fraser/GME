@@ -189,8 +189,11 @@ inline void CopyTo(BSTR p, BSTR *q)
 {
 	ASSERT( q != NULL );
 
-	if(*q) SysFreeString(*q);
+	if (*q)
+		SysFreeString(*q);
 	*q = SysAllocStringLen(p, SysStringLen(p));
+	if (*q == NULL && p != NULL)
+		COMTHROW(E_OUTOFMEMORY);
 }
 
 inline void CopyTo(const CComBstrObj &b, BSTR *q) { CopyTo(b.p, q); }

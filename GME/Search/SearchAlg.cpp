@@ -63,7 +63,7 @@ void CSearch::Search(IMgaFolder *root, IMgaObjects* scopeColl, IMgaFCO *selected
                     CComQIPtr<IMgaFCO> an_fco( MGACOLL_ITER);
                     if( an_fco && non_container_coll) 
                     {
-                        non_container_coll->Append( an_fco);
+                        COMTHROW(non_container_coll->Append( an_fco));
                         ++nExtra;
                     }
             } // switch

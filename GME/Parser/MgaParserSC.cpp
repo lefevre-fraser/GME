@@ -149,7 +149,8 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 		CloseAll();
 		// in case we rethrew the [probably MGA originated] exception 
 		// we have set into errorinfo the location info
-		if( m_GME) m_GME->ConsoleMessage( errorinfo, MSG_ERROR);
+		if( m_GME)
+			COMTHROW(m_GME->ConsoleMessage( errorinfo, MSG_ERROR));
 		clear_GME( m_GME);
 
 		ASSERT( FAILED(e.hr) );
@@ -199,8 +200,8 @@ void CMgaParser::ResolveClosure4Derivation(const attributes_type &attributes, de
 			else
 			{
 				CComBSTR bstr(L"Archetype can not be found in library. Basetype lost. ");
-				bstr.Append(L"Search path used: ");
-				bstr.Append( makeViewable(*s).c_str());
+				COMTHROW(bstr.Append(L"Search path used: "));
+				COMTHROW(bstr.Append( makeViewable(*s).c_str()));
 				msgSC( bstr, MSG_ERROR);
 			}
 
@@ -248,8 +249,8 @@ void CMgaParser::ResolveClosure4Derivation(const attributes_type &attributes, de
 				else // error report
 				{
 					CComBSTR bstr(L"Archetype can not be found. Basetype lost. ");
-					bstr.Append(L"Search path used: ");
-					bstr.Append( makeViewable(rel_path_changed).c_str());
+					COMTHROW(bstr.Append(L"Search path used: "));
+					COMTHROW(bstr.Append( makeViewable(rel_path_changed).c_str()));
 					msgSC( bstr, MSG_ERROR);
 				}
 			}
@@ -298,8 +299,8 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 
 			// user info
 			CComBSTR msg = makeLink( conn, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
-			msg.Append( L" connection derived from ");
-			msg.AppendBSTR( makeLink( deriv.from));
+			COMTHROW(msg.Append( L" connection derived from "));
+			COMTHROW(msg.AppendBSTR( makeLink( deriv.from)));
 			msgSC( msg, MSG_INFO);
 		}
 		else
@@ -344,8 +345,8 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 
 			// user info
 			CComBSTR msg = makeLink( conn, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
-			msg.Append( L" connection derived from ");
-			msg.AppendBSTR( makeLink( deriv.from));
+			COMTHROW(msg.Append( L" connection derived from "));
+			COMTHROW(msg.AppendBSTR( makeLink( deriv.from)));
 			msgSC( msg, MSG_INFO);
 		}
 		else
@@ -368,27 +369,31 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 
 					// user info
 					CComBSTR msg = makeLink( conn, makeNameViewable( GetByName(attributes, _T("closurename"))));
-					msg.Append( L" connection created.");
+					COMTHROW(msg.Append( L" connection created."));
 					msgSC( msg, MSG_INFO);
 				}
 				else
 				{
 					// error, could not find a correct reference chain
 					CComBSTR bstr(L"Connection \"");
-					bstr.Append( makeNameViewable( GetByName(attributes, _T("closurename"))).c_str());
-					bstr.Append(L"\": could not be created.");
+					COMTHROW(bstr.Append( makeNameViewable( GetByName(attributes, _T("closurename"))).c_str()));
+					COMTHROW(bstr.Append(L"\": could not be created."));
 					msgSC( bstr, MSG_ERROR);
 
 					bstr.Empty();
-					bstr.Append(L"   Reference chain involved: ");
-					if( !o1) bstr.Append( makeViewable( GetByName( attributes, _T("smart0RefChain") )).c_str());
-					else if( !o2) bstr.Append( makeViewable( GetByName( attributes, _T("smart1RefChain") )).c_str());
+					COMTHROW(bstr.Append(L"   Reference chain involved: "));
+					if( !o1) 
+						COMTHROW(bstr.Append( makeViewable( GetByName( attributes, _T("smart0RefChain") )).c_str()));
+					else if( !o2) 
+						COMTHROW(bstr.Append( makeViewable( GetByName( attributes, _T("smart1RefChain") )).c_str()));
 					msgSC( bstr, MSG_ERROR);
 
 					bstr.Empty();
-					bstr.Append(L"   Target path used: ");
-					if( !o1) bstr.Append( makeViewable( GetByName( attributes, _T("smart0Target") )).c_str());
-					else if( !o2) bstr.Append( makeViewable( GetByName( attributes, _T("smart1Target") )).c_str());
+					COMTHROW(bstr.Append(L"   Target path used: "));
+					if( !o1)
+						COMTHROW(bstr.Append( makeViewable( GetByName( attributes, _T("smart0Target") )).c_str()));
+					else if( !o2) 
+						COMTHROW(bstr.Append( makeViewable( GetByName( attributes, _T("smart1Target") )).c_str()));
 					msgSC( bstr, MSG_ERROR);
 
 					// to safely pass through hard times (parsing internal connpoints, attributes, regnodes...
@@ -408,8 +413,8 @@ void CMgaParser::StartSCConnection(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = L"Merging ";
-				msg.AppendBSTR(makeLink( conn));
-				msg.Append( L" connection.");
+				COMTHROW(msg.AppendBSTR(makeLink( conn)));
+				COMTHROW(msg.Append( L" connection."));
 				msgSC( msg, MSG_INFO);
 			}
 
@@ -715,8 +720,8 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 
 			// user info
 			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
-			msg.Append( _T(" reference derived from "));
-			msg.AppendBSTR( makeLink( deriv.from));
+			COMTHROW(msg.Append( _T(" reference derived from ")));
+			COMTHROW(msg.AppendBSTR( makeLink( deriv.from)));
 			msgSC( msg, MSG_INFO);
 
 		}
@@ -739,7 +744,7 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))));
-				msg.Append( _T(" reference created."));
+				COMTHROW(msg.Append( _T(" reference created.")));
 				msgSC( msg, MSG_INFO);
 			}
 			else // will skip contained elements/attribute values/regnode entries/constraints/name element
@@ -749,9 +754,10 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = L"Merging ";
-				msg.AppendBSTR(makeLink( fco));
-				if( needs_target) msg.Append(L" null");
-				msg.Append( L" reference.");
+				COMTHROW(msg.AppendBSTR(makeLink( fco)));
+				if( needs_target)
+					COMTHROW(msg.Append(L" null"));
+				COMTHROW(msg.Append( L" reference."));
 				msgSC( msg, MSG_INFO);
 			}
 		}
@@ -788,8 +794,8 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 			
 			// user info
 			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
-			msg.Append( L" reference derived from ");
-			msg.AppendBSTR( makeLink( deriv.from));
+			COMTHROW(msg.Append( L" reference derived from "));
+			COMTHROW(msg.AppendBSTR( makeLink( deriv.from)));
 			msgSC( msg, MSG_INFO);
 		}
 		else
@@ -806,7 +812,7 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))));
-				msg.Append( L" reference created.");
+				COMTHROW(msg.Append( L" reference created."));
 				msgSC( msg, MSG_INFO);
 			}
 			else // will skip contained elements/attribute values/regnode entries/constraints/name element
@@ -816,9 +822,10 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = "LMerging ";
-				msg.AppendBSTR(makeLink( fco));
-				if( needs_target) msg.Append(L" null");
-				msg.Append( L" reference.");
+				COMTHROW(msg.AppendBSTR(makeLink( fco)));
+				if( needs_target)
+					COMTHROW(msg.Append(L" null"));
+				COMTHROW(msg.Append( L" reference."));
 				msgSC( msg, MSG_INFO);
 			}
 		}
@@ -842,10 +849,10 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 			else // report error
 			{
 				CComBSTR bstr("Reference ");
-				bstr.Append( makeLink( fco, makeNameViewable( GetByName( attributes, _T("closurename"))), true));
-				bstr.Append(": target not found in library. ");
-				bstr.Append("Search path used: ");
-				bstr.Append( makeViewable( *s).c_str());
+				COMTHROW(bstr.Append( makeLink( fco, makeNameViewable( GetByName( attributes, _T("closurename"))), true)));
+				COMTHROW(bstr.Append(": target not found in library. "));
+				COMTHROW(bstr.Append("Search path used: "));
+				COMTHROW(bstr.Append( makeViewable( *s).c_str()));
 				msgSC(bstr, MSG_ERROR);
 			}
 		}
@@ -885,10 +892,10 @@ void CMgaParser::StartSCReference(const attributes_type &attributes)
 				else // report error
 				{
 					CComBSTR bstr("Reference ");
-					bstr.Append( makeLink( fco, makeNameViewable( GetByName( attributes, _T("closurename"))), true));
-					bstr.Append(": target not found. ");
-					bstr.Append("Search path used: ");
-					bstr.Append( makeViewable( path).c_str());
+					COMTHROW(bstr.Append( makeLink( fco, makeNameViewable( GetByName( attributes, _T("closurename"))), true)));
+					COMTHROW(bstr.Append(": target not found. "));
+					COMTHROW(bstr.Append("Search path used: "));
+					COMTHROW(bstr.Append( makeViewable( path).c_str()));
 					msgSC(bstr, MSG_ERROR);
 
 					// store data to process in 2nd step
@@ -939,8 +946,8 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 
 			// user info
 			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
-			msg.Append( " set derived from ");
-			msg.AppendBSTR( makeLink( deriv.from));
+			COMTHROW(msg.Append( " set derived from "));
+			COMTHROW(msg.AppendBSTR( makeLink( deriv.from)));
 			msgSC( msg, MSG_INFO);
 		}
 		else
@@ -962,7 +969,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))));
-				msg.Append( " set created.");
+				COMTHROW(msg.Append( " set created."));
 				msgSC( msg, MSG_INFO);
 			}
 			else // will skip contained connpoints/elements/attribute values/regnode entries/constraints/name element
@@ -972,9 +979,9 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = "Merging ";
-				msg.AppendBSTR(makeLink( fco));
+				COMTHROW(msg.AppendBSTR(makeLink( fco)));
 				//if( needs_members) msg.Append(" empty");
-				msg.Append( " set.");
+				COMTHROW(msg.Append( " set."));
 				msgSC( msg, MSG_INFO);
 			}
 		}
@@ -1013,8 +1020,8 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 
 			// user info
 			CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
-			msg.Append( " set derived from ");
-			msg.AppendBSTR( makeLink( deriv.from));
+			COMTHROW(msg.Append( " set derived from "));
+			COMTHROW(msg.AppendBSTR( makeLink( deriv.from)));
 			msgSC( msg, MSG_INFO);
 		}
 		else
@@ -1031,7 +1038,7 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))));
-				msg.Append( " set created.");
+				COMTHROW(msg.Append( " set created."));
 				msgSC( msg, MSG_INFO);
 			}
 			else // will skip contained connpoints/elements/attribute values/regnode entries/constraints/name element
@@ -1041,9 +1048,9 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = "Merging ";
-				msg.AppendBSTR(makeLink( fco));
+				COMTHROW(msg.AppendBSTR(makeLink( fco)));
 				//if( needs_members) msg.Append(" empty");
-				msg.Append( " set.");
+				COMTHROW(msg.Append( " set."));
 				msgSC( msg, MSG_INFO);
 			}
 		}
@@ -1105,10 +1112,10 @@ void CMgaParser::StartSCSet(const attributes_type &attributes)
 			else
 			{
 				CComBSTR bstr( "Set ");
-				bstr.Append( makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true));
-				bstr.Append( ": member not found. ");
-				bstr.Append( "Search path used: ");
-				bstr.Append( makeViewable( path_s).c_str());
+				COMTHROW(bstr.Append( makeLink( fco, makeNameViewable( GetByName(attributes, _T("closurename"))), true)));
+				COMTHROW(bstr.Append( ": member not found. "));
+				COMTHROW(bstr.Append( "Search path used: "));
+				COMTHROW(bstr.Append( makeViewable( path_s).c_str()));
 				msgSC(bstr, MSG_ERROR);
 
 				// insert data to process in 2nd step
@@ -1159,8 +1166,8 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 
 			// user info
 			CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
-			msg.Append( " model derived from ");
-			msg.AppendBSTR( makeLink( deriv.from));
+			COMTHROW(msg.Append( " model derived from "));
+			COMTHROW(msg.AppendBSTR( makeLink( deriv.from)));
 			msgSC( msg, MSG_INFO);
 		}
 		else
@@ -1180,7 +1187,7 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, _T("closurename"))));
-				msg.Append( " model created.");
+				COMTHROW(msg.Append( " model created."));
 				msgSC( msg, MSG_INFO);
 			}
 			else // will use the object found
@@ -1189,8 +1196,8 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = "Merging ";
-				msg.AppendBSTR(makeLink( model));
-				msg.Append( " model.");
+				COMTHROW(msg.AppendBSTR(makeLink( model)));
+				COMTHROW(msg.Append( " model."));
 				msgSC( msg, MSG_INFO);
 			}
 		}
@@ -1227,8 +1234,8 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 
 			// user info
 			CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
-			msg.Append( " model derived from ");
-			msg.AppendBSTR( makeLink( deriv.from));
+			COMTHROW(msg.Append( " model derived from "));
+			COMTHROW(msg.AppendBSTR( makeLink( deriv.from)));
 			msgSC( msg, MSG_INFO);
 		}
 		else
@@ -1245,7 +1252,7 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = makeLink( model, makeNameViewable( GetByName(attributes, _T("closurename"))));
-				msg.Append( " model created.");
+				COMTHROW(msg.Append( " model created."));
 				msgSC( msg, MSG_INFO);
 			}
 			else // will use the object found
@@ -1254,8 +1261,8 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = "Merging ";
-				msg.AppendBSTR(makeLink( model));
-				msg.Append( " model.");
+				COMTHROW(msg.AppendBSTR(makeLink( model)));
+				COMTHROW(msg.Append( " model."));
 				msgSC( msg, MSG_INFO);
 			}
 		}
@@ -1293,8 +1300,8 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 
 			// user info
 			CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
-			msg.Append( " atom derived from ");
-			msg.AppendBSTR( makeLink( deriv.from));
+			COMTHROW(msg.Append( " atom derived from "));
+			COMTHROW(msg.AppendBSTR( makeLink( deriv.from)));
 			msgSC( msg, MSG_INFO);
 		}
 		else
@@ -1316,7 +1323,7 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, _T("closurename"))));
-				msg.Append( " atom created.");
+				COMTHROW(msg.Append( L" atom created."));
 				msgSC( msg, MSG_INFO);
 			}
 			else // will use the object found
@@ -1324,9 +1331,9 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 				skip_inner_elements = true;
 
 				// user info
-				CComBSTR msg = "Merging ";
-				msg.AppendBSTR(makeLink( atom));
-				msg.Append( " atom.");
+				CComBSTR msg = L"Merging ";
+				COMTHROW(msg.AppendBSTR(makeLink( atom)));
+				COMTHROW(msg.Append( L" atom."));
 				msgSC( msg, MSG_INFO);
 			}
 		}
@@ -1362,8 +1369,8 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 
 			// user info
 			CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, _T("closurename"))), true);
-			msg.Append( " atom derived from ");
-			msg.AppendBSTR( makeLink( deriv.from));
+			COMTHROW(msg.Append( L" atom derived from "));
+			COMTHROW(msg.AppendBSTR( makeLink( deriv.from)));
 			msgSC( msg, MSG_INFO);
 		}
 		else
@@ -1379,7 +1386,7 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 
 				// user info
 				CComBSTR msg = makeLink( atom, makeNameViewable( GetByName(attributes, _T("closurename"))));
-				msg.Append( " atom created.");
+				COMTHROW(msg.Append( L" atom created."));
 				msgSC( msg, MSG_INFO);
 			}
 			else // will skip contained elements
@@ -1387,9 +1394,9 @@ void CMgaParser::StartSCAtom(const attributes_type &attributes)
 				skip_inner_elements = true;
 
 				// user info
-				CComBSTR msg = "Merging ";
-				msg.AppendBSTR(makeLink( atom));
-				msg.Append( " atom.");
+				CComBSTR msg = L"Merging ";
+				COMTHROW(msg.AppendBSTR(makeLink( atom)));
+				COMTHROW(msg.Append( L" atom."));
 				msgSC( msg, MSG_INFO);
 			}
 		}
@@ -1441,7 +1448,7 @@ void CMgaParser::StartSCFolder(const attributes_type &attributes)
 
 			// user info
 			CComBSTR msg = makeLink(CComObjPtr<IMgaObject>(folder), makeNameViewable( GetByName(attributes, _T("closurename"))));
-			msg.Append( " folder created.");
+			COMTHROW(msg.Append(L" folder created."));
 			msgSC( msg, MSG_INFO);
 		}
 		else // will use the object found
@@ -1449,9 +1456,9 @@ void CMgaParser::StartSCFolder(const attributes_type &attributes)
 			skip_inner_elements = true;
 
 			// user info
-			CComBSTR msg = "Merging ";
-			msg.AppendBSTR(makeLink( CComObjPtr<IMgaObject>(folder)));
-			msg.Append( " folder.");
+			CComBSTR msg = L"Merging ";
+			COMTHROW(msg.AppendBSTR(makeLink( CComObjPtr<IMgaObject>(folder))));
+			COMTHROW(msg.Append( L" folder."));
 			msgSC( msg, MSG_INFO);
 		}
 	}

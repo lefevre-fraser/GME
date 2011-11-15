@@ -65,7 +65,8 @@ public:
 
 	static void put2Console( CComPtr<IGMEOLEApp> gme, CComBSTR msg, msgtype_enum typ)
 	{
-		if(gme) gme->ConsoleMessage( msg, typ);
+		if(gme)
+			gme->ConsoleMessage( msg, typ);
 	}
 };
 

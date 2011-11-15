@@ -5,7 +5,7 @@
 
 CComBSTR GuidCreate::newGuid()
 {
-	char res[39];
+	char res[39] = {0};
 	GUID t_guid = GUID_NULL;
 	::CoCreateGuid(&t_guid);
 		

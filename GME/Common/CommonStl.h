@@ -33,6 +33,8 @@ inline void CopyTo(BSTR b, std::string &s)
 {
 	int l = GetCharLength(b);
 	char *tmp = (char*)malloc(l);
+	if (tmp == NULL)
+		COMTHROW(E_OUTOFMEMORY);
 	CopyTo(b, tmp, l);
 	s.assign(tmp, l);
 	free(tmp);
@@ -42,6 +44,8 @@ inline void CopyTo(VARIANT &v, std::string &s)
 {
 	int l = GetCharLength(v);
 	char *tmp = (char*)malloc(l);
+	if (tmp == NULL)
+		COMTHROW(E_OUTOFMEMORY);
 	CopyTo(v, tmp, l);
 	s.assign(tmp, l);
 	free(tmp);
@@ -75,7 +79,11 @@ inline bstr_const_iterator end(BSTR p) { return reinterpret_cast<wchar_t*>(p) ? 
 inline void CopyTo(bstr_const_iterator i, bstr_const_iterator e, CComBstrObj &b)
 {
 	ASSERT( i <= e );
-	b.Attach(SysAllocStringLen(i, e - i));
+	BSTR tmpb = SysAllocStringLen(i, e - i);
+	if (tmpb == NULL)
+		COMTHROW(E_OUTOFMEMORY);
+
+	b.Attach(tmpb);
 }
 
 // --------------------------- bindata

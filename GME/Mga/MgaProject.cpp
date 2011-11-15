@@ -513,8 +513,9 @@ STDMETHODIMP CMgaProject::QueryProjectInfo(BSTR projectname, long *mgaversion,
 		    *parversion = CComBSTR(dataroot[ATTRID_PARVERSION]).Detach();
 		    CComVariant(dataroot[ATTRID_PARGUID]).Detach(paradigmGUID);
 			*mgaversion = dataroot[ATTRID_MGAVERSION];
-			dp->PopTerritory();
+			COMTHROW(dp->PopTerritory());
 		} catch(hresult_exception &) {
+			// FIXME
 			;
 		}
 		dp->AbortTransaction();
@@ -641,8 +642,8 @@ STDMETHODIMP CMgaProject::get_RootFolder(IMgaFolder **pVal)
 		ITERATE_THROUGH(s) {
 			CComPtr<ICoreMetaObject> m;
 			metaid_type t;
-			ITER->get_MetaObject(&m);
-			m->get_MetaID(&t);
+			COMTHROW(ITER->get_MetaObject(&m));
+			COMTHROW(m->get_MetaID(&t));
 			if(t == DTID_FOLDER) {
 				ObjForCore(ITER)->getinterface(pVal);
 				break;
@@ -722,8 +723,10 @@ STDMETHODIMP CMgaProject::GetObjectByID(BSTR id, IMgaObject **pVal)
 			mm < DTID_MODEL || mm > DTID_FOLDER) COMTHROW(E_MGA_BAD_ID);
 		CoreObj obj;
 		COMTHROW(dataproject->get_Object(mm,ss,&obj.ComPtr()));
-		if(obj) ObjForCore(obj)->getinterface(pVal);
-		else COMTHROW(E_MGA_BAD_ID);
+		if (obj)
+			ObjForCore(obj)->getinterface(pVal);
+		else
+			COMTHROW(E_MGA_BAD_ID);
     } COMCATCH(;);
 }
 
@@ -1297,10 +1300,12 @@ STDMETHODIMP CMgaProject::BeginTransaction(IMgaTerritory *ter, transactiontype_e
 		}
 		ASSERT(mode == TRANSACTION_GENERAL || mode == TRANSACTION_READ_ONLY  || mode == TRANSACTION_NON_NESTED);
 		CComPtr<IMgaProject> p;
-		ter->get_Project(&p);
-		if( p != this) COMTHROW(E_MGA_FOREIGN_OBJECT);
+		COMTHROW(ter->get_Project(&p));
+		if (p != this)
+			COMTHROW(E_MGA_FOREIGN_OBJECT);
 		CMgaTerritory *t = static_cast<CMgaTerritory *>(ter);
-		if(!t->coreterr) COMTHROW(E_MGA_TARGET_DESTROYED);
+		if (!t->coreterr)
+			COMTHROW(E_MGA_TARGET_DESTROYED);
 		read_only = (mode == TRANSACTION_READ_ONLY);
 		non_nestable = (mode == TRANSACTION_NON_NESTED);
 		// this call fails if the project has been closed (maybe we're being called by an FCO destructor)
@@ -1352,7 +1357,7 @@ STDMETHODIMP CMgaProject::CommitTransaction()
 		COMTHROW(CommitNotify());		
 		COMTHROW(dataproject->PopTerritory());
 		short nestedCount;
-		dataproject->get_NestedTransactionCount(&nestedCount);
+		COMTHROW(dataproject->get_NestedTransactionCount(&nestedCount));
 		if (nestedCount == 1 && !read_only)
 			COMTHROW(GlobalNotify(GLOBALEVENT_COMMIT_TRANSACTION));
 		COMTHROW(dataproject->CommitTransaction(read_only ? TRANSTYPE_READFIRST: TRANSTYPE_FIRST));
@@ -1647,7 +1652,7 @@ STDMETHODIMP CMgaProject::UpdateSourceControlInfo( BSTR param)
 		CComBSTR hack_str = "UpdateSourceControlInfo";
 		CComBSTR para_str( param);
 		if( para_str.Length() > 0)
-			hack_str.Append( para_str);
+			COMTHROW(hack_str.Append( para_str));
 		CoreObj  dataroot;
 		COMTHROW(dataproject->get_RootObject(&dataroot.ComPtr()));
 		dataroot[ATTRID_MDATE] = hack_str;
@@ -1688,7 +1693,7 @@ STDMETHODIMP CMgaProject::SourceControlObjectOwner( BSTR p_optionalID)
 		CComBSTR hack_str = "WhoControlsThisObj";
 		CComBSTR para_str( p_optionalID);
 		if( para_str.Length() > 0)
-			hack_str.Append( para_str);
+			COMTHROW(hack_str.Append( para_str));
 		CoreObj  dataroot;
 		COMTHROW(dataproject->get_RootObject(&dataroot.ComPtr()));
 		dataroot[ATTRID_MDATE] = hack_str;
@@ -1766,11 +1771,11 @@ CComBSTR CMgaProject::prefixWNmspc( CComBSTR pKindname)
 	CComBSTR nm = getNmspc();
 	if( nm.Length() > 0)// or if not found('::')
 	{
-		kindname_m.AppendBSTR( nm);
-		kindname_m.Append( "::");
+		COMTHROW(kindname_m.AppendBSTR( nm));
+		COMTHROW(kindname_m.Append( "::"));
 	}
 
-	kindname_m.AppendBSTR( pKindname);
+	COMTHROW(kindname_m.AppendBSTR( pKindname));
 
 	return kindname_m;
 }
@@ -1837,14 +1842,15 @@ void ClearLocks(ICoreStorage * storage, std::set<metaobjidpair_type> &mset, shor
 	COMTHROW(mp->get_Object(mi, &mo));
 	CComPtr<ICoreMetaAttributes> atts;
 	COMTHROW(mo->get_Attributes(&atts));
-	long count = 0;								
-	COMTHROW( atts->get_Count(&count) );		
-	CComPtr<ICoreMetaAttribute> *arrptr, *arrend, *array = new CComPtr<ICoreMetaAttribute>[count]; 
+	long count = 0;
+	COMTHROW( atts->get_Count(&count) );
+	std::unique_ptr<CComPtr<ICoreMetaAttribute>[]> array(new CComPtr<ICoreMetaAttribute>[count]);
+	CComPtr<ICoreMetaAttribute> *arrptr, *arrend = array.get();
 	if(count > 0) { 
-		COMTHROW( atts->GetAll((unsigned long)count, &(*array)) ); 
+		COMTHROW( atts->GetAll((unsigned long)count, &(*array.get())) ); 
 	} 
-	arrend = array+count; 
-	for(arrptr = array; arrptr != arrend; arrptr++)  {
+	arrend = array.get()+count; 
+	for(arrptr = array.get(); arrptr != arrend; arrptr++)  {
 		unsigned char t;
 		COMTHROW((*arrptr)->get_ValueType(&t)); 
 		switch(t) {
@@ -1878,7 +1884,6 @@ void ClearLocks(ICoreStorage * storage, std::set<metaobjidpair_type> &mset, shor
 				}
 		}
 	}
-	delete []array;
 }
 
 

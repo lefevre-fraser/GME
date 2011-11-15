@@ -52,11 +52,11 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 			CComBSTR bstr, id, nm;
 			COMTHROW( m_target->get_ID( &id));
 			COMTHROW( m_target->get_Name( &nm));
-			bstr.Append(L"[Closure Parser] Inserting copy closured data into: <A HREF=\"mga:");
-			bstr.AppendBSTR( id);
-			bstr.Append(L"\">");
-			bstr.AppendBSTR( nm);
-			bstr.Append(L"</A>");
+			COMTHROW(bstr.Append(L"[Closure Parser] Inserting copy closured data into: <A HREF=\"mga:"));
+			COMTHROW(bstr.AppendBSTR( id));
+			COMTHROW(bstr.Append(L"\">"));
+			COMTHROW(bstr.AppendBSTR( nm));
+			COMTHROW(bstr.Append(L"</A>"));
 			COMTHROW( m_GME->ConsoleMessage(bstr, MSG_INFO));
 		}
 
@@ -146,7 +146,8 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 		CloseAll();
 		// in case we rethrew the [probably MGA originated] exception 
 		// we have set into errorinfo the location info
-		if( m_GME) m_GME->ConsoleMessage( errorinfo, MSG_ERROR);
+		if( m_GME)
+			COMTHROW(m_GME->ConsoleMessage( errorinfo, MSG_ERROR));
 		clear_GME( m_GME);
 
 		ASSERT( FAILED(e.hr) );
@@ -235,11 +236,12 @@ void CMgaParser::StartBCClipboard(const attributes_type &attributes)
 		else if( !findExact( *acceptingkinds, kind_nm))
 		{
 			CComBSTR bstr(L"[Parser] Target kind \"");
-			bstr.Append( kind_nm.c_str());
-			bstr.Append(L"\" not found among accepting kinds: \"");
-			bstr.Append( acceptingkinds->c_str());
-			bstr.Append(L"\". If you'd like to avoid this check remove or modify to \"\" the \"acceptingkind\" attribute of \"clipboard\" element in an editor.");
-			if( m_GME) COMTHROW( m_GME->ConsoleMessage(bstr, MSG_ERROR));
+			COMTHROW(bstr.Append( kind_nm.c_str()));
+			COMTHROW(bstr.Append(L"\" not found among accepting kinds: \""));
+			COMTHROW(bstr.Append( acceptingkinds->c_str()));
+			COMTHROW(bstr.Append(L"\". If you'd like to avoid this check remove or modify to \"\" the \"acceptingkind\" attribute of \"clipboard\" element in an editor."));
+			if( m_GME)
+				COMTHROW( m_GME->ConsoleMessage(bstr, MSG_ERROR));
 			HR_THROW(E_INVALID_MGA);
 		}
 
@@ -275,12 +277,12 @@ void CMgaParser::ResolveClosure1Derivation(const attributes_type &attributes, de
 				CComBSTR bstr, id, nm;
 				COMTHROW( obj->get_ID( &id));
 				COMTHROW( obj->get_Name( &nm));
-				bstr.Append(L"[Closure Parser] Name ambiguity found. Selected: <A HREF=\"mga:");
-				bstr.AppendBSTR( id);
-				bstr.Append(L"\">");
-				bstr.AppendBSTR( nm);
-				bstr.Append(L"</A> as basetype. Search path used: ");
-				bstr.Append( makeViewable(*s).c_str());
+				COMTHROW(bstr.Append(L"[Closure Parser] Name ambiguity found. Selected: <A HREF=\"mga:"));
+				COMTHROW(bstr.AppendBSTR( id));
+				COMTHROW(bstr.Append(L"\">"));
+				COMTHROW(bstr.AppendBSTR( nm));
+				COMTHROW(bstr.Append(L"</A> as basetype. Search path used: "));
+				COMTHROW(bstr.Append( makeViewable(*s).c_str()));
 
 				COMTHROW( m_GME->ConsoleMessage(bstr, MSG_ERROR));
 			}
@@ -338,12 +340,12 @@ void CMgaParser::StartBCConnPoint(const attributes_type &attributes)
 				CComBSTR bstr, id, nm;
 				COMTHROW( obj->get_ID( &id));
 				COMTHROW( obj->get_Name( &nm));
-				bstr.Append(L"[Closure Parser] Name ambiguity found. Selected: <A HREF=\"mga:");
-				bstr.AppendBSTR( id);
-				bstr.Append(L"\">");
-				bstr.AppendBSTR( nm);
-				bstr.Append(L"</A> as connection target. Search path used: ");
-				bstr.Append( makeViewable(*libtg).c_str());
+				COMTHROW(bstr.Append(L"[Closure Parser] Name ambiguity found. Selected: <A HREF=\"mga:"));
+				COMTHROW(bstr.AppendBSTR( id));
+				COMTHROW(bstr.Append(L"\">"));
+				COMTHROW(bstr.AppendBSTR( nm));
+				COMTHROW(bstr.Append(L"</A> as connection target. Search path used: "));
+				COMTHROW(bstr.Append( makeViewable(*libtg).c_str()));
 
 				COMTHROW( m_GME->ConsoleMessage(bstr, MSG_ERROR));
 			}
@@ -431,12 +433,12 @@ void CMgaParser::StartBCReference(const attributes_type &attributes)
 					CComBSTR bstr, id, nm;
 					COMTHROW( obj->get_ID( &id));
 					COMTHROW( obj->get_Name( &nm));
-					bstr.Append(L"[Closure Parser] Name ambiguity found. Selected: <A HREF=\"mga:");
-					bstr.AppendBSTR( id);
-					bstr.Append(L"\">");
-					bstr.AppendBSTR( nm);
-					bstr.Append(L"</A> as library reference. Search path used: ");
-					bstr.Append( makeViewable(*s).c_str());
+					COMTHROW(bstr.Append(L"[Closure Parser] Name ambiguity found. Selected: <A HREF=\"mga:"));
+					COMTHROW(bstr.AppendBSTR( id));
+					COMTHROW(bstr.Append(L"\">"));
+					COMTHROW(bstr.AppendBSTR( nm));
+					COMTHROW(bstr.Append(L"</A> as library reference. Search path used: "));
+					COMTHROW(bstr.Append( makeViewable(*s).c_str()));
 
 					COMTHROW( m_GME->ConsoleMessage(bstr, MSG_ERROR));
 				}

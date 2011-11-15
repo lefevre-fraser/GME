@@ -531,9 +531,9 @@ struct CComBstrObj_lightequal
 		else if( m_nmspc.Length() > 0)
 		{
 			CComBSTR longername;
-			longername.AppendBSTR( m_nmspc);
-			longername.Append( _T("::"));
-			longername.AppendBSTR( pUnknownFormat);
+			COMTHROW(longername.AppendBSTR( m_nmspc));
+			COMTHROW(longername.Append( _T("::")));
+			COMTHROW(longername.AppendBSTR( pUnknownFormat));
 			return pFullNmInParadigm == longername;
 		}
 		else

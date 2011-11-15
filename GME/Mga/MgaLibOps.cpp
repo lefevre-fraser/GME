@@ -129,8 +129,9 @@ void FCO::prepareColl2DepInfo( IMgaFolders* pColl, CComBSTR& pResBstr)
 			COMTHROW( ele->GetGuidDisp( &gd));
 			
 			// '\n' delimited list created (no '\n' at the end)
-			if( pResBstr && pResBstr.Length() > 0) pResBstr.Append( "\n");
-			pResBstr.AppendBSTR( gd);
+			if( pResBstr && pResBstr.Length() > 0)
+				COMTHROW(pResBstr.Append( "\n"));
+			COMTHROW(pResBstr.AppendBSTR( gd));
 		}
 	}
 }
@@ -419,10 +420,10 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 				COMTHROW(dumper->put_FormatVersion(0));
 				COMTHROW(dumper->DumpProject( p, PutInBstr( szTempXmeFileName)) );
 
-				p->Close();
+				COMTHROW(p->Close());
 
 				// Create a new 'paradigmname' project
-				connstr_upgraded.Append( szTempMgaFileName); // connection string prepared
+				COMTHROW(connstr_upgraded.Append( szTempMgaFileName)); // connection string prepared
 				hr = p->CreateEx( PutInBstr( connstr_upgraded), PutInBstr( paradigmname), paradigmGUID);
 				if( SUCCEEDED( hr)) {
 					CComPtr<IMgaParser> parser;
@@ -430,7 +431,7 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 					ASSERT( parser != NULL );
 
 					COMTHROW(parser->ParseProject( p, PutInBstr( szTempXmeFileName)) );
-					p->Close();
+					COMTHROW(p->Close());
 					upgraded = true;
 				}
 				else if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
@@ -446,13 +447,13 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 		{
 			if( p_tolerateOldMga)
 			{
-				MyCComBSTR msg( "Library copy is in old MGA format. Library Refresh feature ver.1 (old) can be used only!");
-				msg.Append( "To benefit from the new Library Refresh ver.2 feature please open/save the library with GME, then reattach it to this project.");
+				MyCComBSTR msg( L"Library copy is in old MGA format. Library Refresh feature ver.1 (old) can be used only!");
+				COMTHROW(msg.Append( L"To benefit from the new Library Refresh ver.2 feature please open/save the library with GME, then reattach it to this project."));
 				reporter.show( msg);
 			}
 			else
 			{
-				MyCComBSTR msg( "Library is in old MGA format. To update please open it as a project, save it and only then can be attached!");
+				MyCComBSTR msg( L"Library is in old MGA format. To update please open it as a project, save it and only then can be attached!");
 				reporter.show( msg);
 				
 				COMTHROW(E_MGA_NOT_SUPPORTED);
@@ -491,8 +492,8 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 				lib_results.clear();
 
 				CComBSTR msg( "Exception while analyzing library ");
-				msg.Append( connstr);
-				msg.Append( " !");
+				COMTHROW(msg.Append( connstr));
+				COMTHROW(msg.Append( " !"));
 				
 				reporter.show( msg);
 
@@ -509,8 +510,8 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 		catch(...)
 		{
 			CComBSTR msg( "Exception while loading external library ");
-			msg.Append( connstr);
-			msg.Append( " !");
+			COMTHROW(msg.Append( connstr));
+			COMTHROW(msg.Append( " ."));
 			reporter.show( msg);
 
 			throw hresult_exception( -1); // fail
@@ -547,9 +548,11 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 		matching_libs.clear();
 		if(p) {
 			long st;
-			p->get_ProjectStatus(&st);
-			if(st & 8) p->AbortTransaction();
-			if(st & 1) p->Close();
+			COMTHROW(p->get_ProjectStatus(&st));
+			if(st & 8)
+				p->AbortTransaction();
+			if(st & 1)
+				p->Close();
 		};
 		throw;
 	}
@@ -573,10 +576,10 @@ HRESULT FCO::doAttach( BSTR libname, VARIANT_BOOL ungroup, IMgaFolder **f) {
 		// examining the attachable library
 		CComBSTR msg( "--------------------- Creating ");
 		if( lw.isOptimized())
-			msg.Append( "optimized ");
-		msg.Append("library image from [");
-		msg.Append( lw.getExpandedConnectionStr());
-		msg.Append("]--");
+			COMTHROW(msg.Append( "optimized "));
+		COMTHROW(msg.Append("library image from ["));
+		COMTHROW(msg.Append( lw.getExpandedConnectionStr()));
+		COMTHROW(msg.Append("]--"));
 		reporter.show( msg, false);
 
 		CoreObj libimgroot;
@@ -787,10 +790,10 @@ HRESULT FCO::doRefresh( BSTR libname, VARIANT_BOOL ungroup, long *ptrNumOfErrors
 			// examining the refreshable library
 			CComBSTR msg( "--------------------- Creating ");
 			if( lw.isOptimized())
-				msg.Append( "optimized ");
-			msg.Append("library image from [");
-			msg.Append( lw.getExpandedConnectionStr());
-			msg.Append("]--");
+				COMTHROW(msg.Append( "optimized "));
+			COMTHROW(msg.Append("library image from ["));
+			COMTHROW(msg.Append( lw.getExpandedConnectionStr()));
+			COMTHROW(msg.Append("]--"));
 			reporter.show( msg, false);
 //
 //  If required another logic could be introduced later:
@@ -853,7 +856,8 @@ HRESULT FCO::doRefresh( BSTR libname, VARIANT_BOOL ungroup, long *ptrNumOfErrors
 			if( is_old_lib_copy) // do a plain old refresh
 			{
 				MyCComBSTR msg( "Old version of Library refresh started [");
-				msg.AppendBSTR( libname); msg.Append( "] --");
+				COMTHROW(msg.AppendBSTR( libname));
+				COMTHROW(msg.Append( "] --"));
 				reporter.show( msg, false);
 
 				redo_derivs(mgaproject, self, libimgroot, false);
@@ -863,7 +867,8 @@ HRESULT FCO::doRefresh( BSTR libname, VARIANT_BOOL ungroup, long *ptrNumOfErrors
 			else // do a uid based refresh
 			{
 				MyCComBSTR msg( "---------------------Library refresh v2 started [");
-				msg.AppendBSTR( libname); msg.Append( "] --");
+				COMTHROW(msg.AppendBSTR( libname));
+				COMTHROW(msg.Append( "] --"));
 				reporter.show( msg, false);
 				
 				RefreshManager rm( mgaproject, self, libimgroot, Ozer::isIncluded( self));
@@ -897,12 +902,12 @@ HRESULT FCO::doRefresh( BSTR libname, VARIANT_BOOL ungroup, long *ptrNumOfErrors
 					docheck(mgaproject);
 
 					MyCComBSTR msg;
-					msg.Append( "----------------------Library refresh done [");
-					msg.AppendBSTR( libname);
-					msg.Append("]--------");
+					COMTHROW(msg.Append( "----------------------Library refresh done ["));
+					COMTHROW(msg.AppendBSTR( libname));
+					COMTHROW(msg.Append("]--------"));
 					int num = rm.getNumOfErrors( msg);
 					*ptrNumOfErrors = num;
-					msg.Append( "--");
+					COMTHROW(msg.Append( "--"));
 					reporter.show( msg, false);
 
 				} catch(hresult_exception& ) {
@@ -1059,7 +1064,7 @@ void LibWorker::showDetails( CoreObj&  p_container, std::map< BinGuid, std::vect
 {
 	CComBSTR oid;
 	LibImgHelper::GetItsGuid( p_container, &oid);
-	oid.Append( L" lib recorded");
+	COMTHROW(oid.Append( L" lib recorded"));
 	if( m_mgaProject) Reporter::showIt( m_mgaProject, oid, false);
 
 	for( std::map< BinGuid, std::vector< CoreObj > >::iterator it = p_results.begin()
@@ -1071,7 +1076,7 @@ void LibWorker::showDetails( CoreObj&  p_container, std::map< BinGuid, std::vect
 			BinGuid bf = it->first;
 			MyCComBSTR m;
 			m.appendGuid( bf);
-			m.Append( L" duplicate lib");
+			COMTHROW(m.Append( L" duplicate lib"));
 			if( m_mgaProject) Reporter::showIt( m_mgaProject, m, false);
 		}
 	}
@@ -1180,65 +1185,65 @@ void LibImgHelper::logCreator( CComBSTR& p_log
 {
 	if( !p_log || !p_log.Length())
 	{
-		p_log.Append( "Opportunities for optimization found.");
+		COMTHROW(p_log.Append( "Opportunities for optimization found."));
 	}
 	
-	p_log.Append( "<br> ...(External, Hosted) library pairs found: ");
+	COMTHROW(p_log.Append( "<br> ...(External, Hosted) library pairs found: "));
 
 	if( p_libsToBe.size() > 1)
 	{
-		p_log.Append( "<br>! ! ! Warning: attached library contains two or more (sub)libraries with similar guids! ! !");
+		COMTHROW(p_log.Append( "<br>Warning: attached library contains two or more (sub)libraries with similar guids!"));
 	}
 
 	for( Typedefs::LIBVEC_CITER it = p_libsToBe.begin(), endit = p_libsToBe.end(); it != endit; ++it)
 	{
-		p_log.Append( "<br>External library in attachment:");
+		COMTHROW(p_log.Append( "<br>External library in attachment:"));
 		//p_log.Append( "<br>External library being attached");
 		//p_log.Append( "<br>External library:");
 		FCO* it_lib( ObjForCore( *it));
 		CComBSTR nm, id, gd;
 		if( it_lib) 
 		{
-			it_lib->get_Name( &nm);//nm = (*it)[ATTRID_NAME];
-			it_lib->get_ID( &id);
-			it_lib->GetGuidDisp( &gd);
-			p_log.Append( " [");
-			p_log.Append( id);
-			p_log.Append( "] GUID=");
-			p_log.Append( gd);
-			p_log.Append( " ");
-			p_log.Append( nm);
+			COMTHROW(it_lib->get_Name( &nm));//nm = (*it)[ATTRID_NAME];
+			COMTHROW(it_lib->get_ID( &id));
+			COMTHROW(it_lib->GetGuidDisp( &gd));
+			COMTHROW(p_log.Append( L" ["));
+			COMTHROW(p_log.Append( id));
+			COMTHROW(p_log.Append( L"] GUID="));
+			COMTHROW(p_log.Append( gd));
+			COMTHROW(p_log.Append( L" "));
+			COMTHROW(p_log.Append( nm));
 		}
 		else
 		{
 			ASSERT( 0);
-			p_log.Append( "libNull");
+			COMTHROW(p_log.Append( L"libNull"));
 		}
 	}
 
 	for( Typedefs::LIBVEC_CITER jt = p_libsHosted.begin(), endjt = p_libsHosted.end(); jt != endjt; ++jt)
 	{
-		p_log.Append( "<br>Hosted library already present:");
+		COMTHROW(p_log.Append( "<br>Hosted library already present:"));
 		//p_log.Append( "<br>A hosted library:");
 
 		FCO* jt_lib( ObjForCore( *jt));
 		CComBSTR nm, id, gd;
 		if( jt_lib) 
 		{
-			jt_lib->get_Name( &nm);//nm = (*it)[ATTRID_NAME];
-			jt_lib->get_ID( &id);
-			jt_lib->GetGuidDisp( &gd);
-			p_log.Append( " [");
-			p_log.Append( id);
-			p_log.Append( "] GUID=");
-			p_log.Append( gd);
-			p_log.Append( " ");
-			p_log.Append( nm);
+			COMTHROW(jt_lib->get_Name( &nm));//nm = (*it)[ATTRID_NAME];
+			COMTHROW(jt_lib->get_ID( &id));
+			COMTHROW(jt_lib->GetGuidDisp( &gd));
+			COMTHROW(p_log.Append( " ["));
+			COMTHROW(p_log.Append( id));
+			COMTHROW(p_log.Append( "] GUID="));
+			COMTHROW(p_log.Append( gd));
+			COMTHROW(p_log.Append( " "));
+			COMTHROW(p_log.Append( nm));
 		}
 		else 
 		{
 			ASSERT( 0);
-			p_log.Append( "libNull");
+			COMTHROW(p_log.Append(L"libNull"));
 		}
 	}
 }
@@ -1264,16 +1269,17 @@ void LibImgHelper::collectDep( Typedefs::LIBPAIRVEC&         p_matchingLibs
 				CComBSTR nm, id;
 				nm = (iiit->second)[ATTRID_NAME];
 				FCO* lib = ObjForCore( iiit->second);
-				if( lib) lib->get_ID( &id);
+				if( lib)
+					COMTHROW(lib->get_ID( &id));
 				
-				msg.AppendBSTR( nm);
-				msg.Append( " [ ");
-				msg.AppendBSTR( id);
-				msg.Append( " ] !");
+				COMTHROW(msg.AppendBSTR( nm));
+				COMTHROW(msg.Append( " [ "));
+				COMTHROW(msg.AppendBSTR( id));
+				COMTHROW(msg.Append( " ] !"));
 			} 
 			catch( ... ) 
 			{ 
-				msg.Append( "!");
+				COMTHROW(msg.Append( "!"));
 			}
 			p_reporter.show( msg);
 		}
@@ -1299,14 +1305,14 @@ void LibImgHelper::deleteSuperfluousLibs( Typedefs::LIBVEC& p_superfluousLibs, R
 				FCO* lib = ObjForCore( *it);
 				if( lib) lib->get_ID( &id);
 				
-				msg.AppendBSTR( nm);
-				msg.Append( " [ ");
-				msg.AppendBSTR( id);
-				msg.Append( " ] !");
+				COMTHROW(msg.AppendBSTR( nm));
+				COMTHROW(msg.Append( " [ "));
+				COMTHROW(msg.AppendBSTR( id));
+				COMTHROW(msg.Append( " ] !"));
 			} 
 			catch( ... ) 
 			{ 
-				msg.Append( "!");
+				COMTHROW(msg.Append( "!"));
 			}
 
 			reporter.show( msg);
@@ -1453,8 +1459,9 @@ bool Ozer::addRelation( CoreObj&           p_fldCore
 	else              Ozer::StorageMgr::getIncludes( p_fldCore, valu);
 	
 	// value appended
-	if( valu && valu.Length() > 0) valu.Append( L"\n");
-	valu.AppendBSTR( p_idToAddToReg); // p_idToAddToReg might be a list of ids !!!
+	if( valu && valu.Length() > 0)
+		COMTHROW(valu.Append( L"\n"));
+	COMTHROW(valu.AppendBSTR( p_idToAddToReg)); // p_idToAddToReg might be a list of ids !!!
 
 	// save value
 	if( p_incByOrInc) Ozer::StorageMgr::setIncludedBy( p_fldCore, valu);
@@ -1482,9 +1489,9 @@ bool Ozer::removeFromList( const CComBSTR&     p_erasableVal
 		else
 		{
 			if( p_valueList && p_valueList.Length() > 0)  // if not empty
-				p_valueList.Append( L"\n");               // use separator 
+				COMTHROW(p_valueList.Append( L"\n"));               // use separator 
 
-			p_valueList.Append( it.getCurrentBstr());
+			COMTHROW(p_valueList.Append( it.getCurrentBstr()));
 		}
 	}
 
@@ -1507,8 +1514,8 @@ void Ozer::copyIncludedBy( CoreObj&     p_oldLib
 		Ozer::StorageMgr::getIncludedBy( p_newLib, val);
 		if( val && val.Length() > 0)
 		{
-			list.Append( L"\n");
-			list.AppendBSTR( val);
+			COMTHROW(list.Append( L"\n"));
+			COMTHROW(list.AppendBSTR( val));
 		}
 		Ozer::StorageMgr::setIncludedBy( p_newLib, list);
 	}

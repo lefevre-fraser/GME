@@ -105,6 +105,8 @@ void CopyTo(const GUID &guid, BSTR *p)
 	
 	*p = SysAllocString(q);
 	CoTaskMemFree(q);
+	if (*p == NULL)
+		HR_THROW(E_OUTOFMEMORY);
 }
 
 // --------------------------- CComSafeArray
@@ -529,6 +531,11 @@ void CopyTo(BSTR b, VARIANT *v)
 
 	v->bstrVal = SysAllocStringLen(b, SysStringLen(b));
 	v->vt = VT_BSTR;
+	if (v->bstrVal == NULL && b != NULL)
+	{
+		v->vt = VT_EMPTY;
+		COMTHROW(E_OUTOFMEMORY);
+	}
 }
 
 void CopyTo(IDispatch *p, VARIANT *v)
@@ -627,7 +634,11 @@ void CopyTo(const VARIANT &v, BSTR *a)
 	}
 
 	if( v.vt == VT_BSTR )
+	{
 		*a = SysAllocStringLen(v.bstrVal, SysStringLen(v.bstrVal));
+		if (*a == NULL && v.bstrVal != NULL)
+			COMTHROW(E_OUTOFMEMORY);
+	}
 	else if( v.vt != VT_EMPTY )
 	{
 		CComVariant w;

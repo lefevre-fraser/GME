@@ -126,7 +126,7 @@ bool RefreshManager::isDerivedRef( CComPtr<IMgaFCO>& p_ref, CComPtr<IMgaFCO>& p_
 	*p_isSecondaryDerd    = false;
 
 	CComPtr<IMgaFCO> base;
-	ref->get_DerivedFrom( &base);
+	ref->get_DerivedFrom( &base); // ignore failure
 
 	if( base)
 	{
@@ -152,9 +152,9 @@ bool RefreshManager::isDerivedRef( CComPtr<IMgaFCO>& p_ref, CComPtr<IMgaFCO>& p_
 		COMTHROW( baseRef->get_Referred( &baseTarg));*/
 		
 		CComBSTR nm;
-		derdRef->get_Name( &nm);
+		COMTHROW(derdRef->get_Name( &nm));
 		short st;
-		derdRef->CompareToBase( &st);
+		COMTHROW(derdRef->CompareToBase( &st));
 		/*bool x = COM_EQUAL( baseTarg, derdTarg);
 		ASSERT( x == (st==0));
 		if(x != (st==0))
@@ -436,7 +436,7 @@ void RefreshManager::collectFreshConnection( const CoreObj& p_coreConn
 		derconn_details.derd_parent = d_model;
 		derconn_details.b_conn      = conn;
 
-		conn->get_MetaRole( &derconn_details.b_conn_role);
+		COMTHROW(conn->get_MetaRole( &derconn_details.b_conn_role));
 
 		getConnectionDetails( conn, derconn_details.b_conn_struct);
 		
@@ -587,9 +587,14 @@ void RefreshManager::restoreMixedConns( CoreObj& folder)
 				MyCComBSTR msg;
 				msg.appendLink( new_conn); 
 #ifdef _DEBUG
-				CComBSTR ncid; new_conn->get_ID( &ncid); msg.AppendBSTR( ncid);if( current_i.is_derived && current_i.is_sec_derived) msg.Append( L" napofsec "); else msg.Append( L" reg ");
+				CComBSTR ncid; COMTHROW(new_conn->get_ID( &ncid));
+				COMTHROW(msg.AppendBSTR( ncid));
+				if( current_i.is_derived && current_i.is_sec_derived) 
+					COMTHROW(msg.Append( L" napofsec "));
+				else 
+					COMTHROW(msg.Append( L" reg "));
 #endif
-				msg.Append( L" reconstructed in "); 
+				COMTHROW(msg.Append( L" reconstructed in "));
 				msg.appendLink( pM);
 				m_reporter.show( msg, false);
 
@@ -641,15 +646,19 @@ void RefreshManager::restoreMixedConns( CoreObj& folder)
 			prepareConnErrMsg( pM, s, d, sref_chain, dref_chain, current_i, msg);
 			if( chain1_rb_ok && chain2_rb_ok) // buildRefChainColl succeeded, verifyChain failed
 			{
-				msg.Append( L"<br>");
-				if( !chain1_vf_ok) msg.Append( L"Reason: SrcChain verification failed. ");
-				if( !chain2_vf_ok) msg.Append( L"Reason: DstChain verification failed. ");
+				COMTHROW(msg.Append( L"<br>"));
+				if( !chain1_vf_ok)
+					COMTHROW(msg.Append( L"Reason: SrcChain verification failed. "));
+				if( !chain2_vf_ok)
+					COMTHROW(msg.Append( L"Reason: DstChain verification failed. "));
 			}
 			else // buildRefChainColl failed
 			{
-				msg.Append( L"<br>");
-				if( !chain1_rb_ok) msg.Append( L"Reason: SrcChain rebuilding failed. ");
-				if( !chain2_rb_ok) msg.Append( L"Reason: DstChain rebuilding failed. ");
+				COMTHROW(msg.Append( L"<br>"));
+				if( !chain1_rb_ok) 
+					COMTHROW(msg.Append( L"Reason: SrcChain rebuilding failed. "));
+				if( !chain2_rb_ok)
+					COMTHROW(msg.Append( L"Reason: DstChain rebuilding failed. "));
 			}
 			m_reporter.show( msg);
 		}
@@ -1034,7 +1043,8 @@ bool RefreshManager::verifyChain( const CComPtr<IMgaModel>& pM, const CComPtr<IM
 
 	bool ret = true;
 	long c = 0;
-	if( sref_chain) sref_chain->get_Count( &c);
+	if( sref_chain)
+		COMTHROW(sref_chain->get_Count( &c));
 	if( c == 0)
 	{
 		// s must be pM's child, or its grandchild (but in this case must be a port)
@@ -1051,7 +1061,7 @@ bool RefreshManager::verifyChain( const CComPtr<IMgaModel>& pM, const CComPtr<IM
 	else if( c >= 1)
 	{
 		CComPtr<IMgaFCO> next;
-		sref_chain->get_Item( 1, &next);
+		COMTHROW(sref_chain->get_Item( 1, &next));
 		// next must be pM's child
 		CComPtr<IMgaModel> par;
 		HRESULT hr = E_FAIL;
@@ -1062,7 +1072,7 @@ bool RefreshManager::verifyChain( const CComPtr<IMgaModel>& pM, const CComPtr<IM
 			for( i = 2; ret && i <= c; ++i)
 			{
 				CComPtr<IMgaFCO> chain_elem;
-				sref_chain->get_Item( i, &chain_elem);
+				COMTHROW(sref_chain->get_Item( i, &chain_elem));
 
 				CComQIPtr<IMgaReference> next_as_ref( next);
 				if( next_as_ref)
@@ -1085,7 +1095,7 @@ bool RefreshManager::verifyChain( const CComPtr<IMgaModel>& pM, const CComPtr<IM
 			if( i == c+1 && ret) // ret is still ok, went through the chain
 			{
 				CComPtr<IMgaFCO> last;
-				sref_chain->get_Item(c, &last);
+				COMTHROW(sref_chain->get_Item(c, &last));
 				CComQIPtr<IMgaReference> last_ref( last);
 				if( last_ref)
 				{
@@ -1123,43 +1133,53 @@ void RefreshManager::prepareConnErrMsg(
 	//
 	// prepare error message
 	//msg.appendLink( current_i.connid, current_i.connname);
-	msg.Append( current_i.connname);
-	msg.Append( L" [");
-	msg.Append( current_i.connid);
-	msg.Append( L"]");
-	msg.Append( L" connection could not be reconstructed in ");
-	if( pM)      msg.appendLink( pM); 
-	else         msg.Append( L"Null");
+	COMTHROW(msg.Append( current_i.connname));
+	COMTHROW(msg.Append( L" ["));
+	COMTHROW(msg.Append( current_i.connid));
+	COMTHROW(msg.Append( L"]"));
+	COMTHROW(msg.Append( L" connection could not be reconstructed in "));
+	if( pM)
+		msg.appendLink( pM);
+	else
+		COMTHROW(msg.Append( L"Null"));
 
-	msg.Append( L"<br>\tSrc: ");
-	if( s)       msg.appendLink( s);
-	else         msg.Append( L"Null");
+	COMTHROW(msg.Append( L"<br>\tSrc: "));
+	if( s)
+		msg.appendLink( s);
+	else
+		COMTHROW(msg.Append( L"Null"));
 
-	msg.Append( L" Dst: ");
-	if( d)       msg.appendLink( d);
-	else         msg.Append( L"Null");
+	COMTHROW(msg.Append( L" Dst: "));
+	if( d)
+		msg.appendLink( d);
+	else
+		COMTHROW(msg.Append( L"Null"));
 
-	msg.Append( L"<br>\tSrcRefs:");
+	COMTHROW(msg.Append( L"<br>\tSrcRefs:"));
 	long c_len = 0;
-	if( sref_chain) sref_chain->get_Count( &c_len);
+	if( sref_chain)
+		COMTHROW(sref_chain->get_Count( &c_len));
 	for( long i = 1; i <= c_len; ++i)
 	{
-		if( i != 1) msg.Append( L",");
-		msg.Append( L" ");
+		if( i != 1)
+			COMTHROW(msg.Append( L","));
+		COMTHROW(msg.Append( L" "));
 		CComPtr<IMgaFCO> r_i;
-		sref_chain->get_Item( i, &r_i);
+		COMTHROW(sref_chain->get_Item( i, &r_i));
 		msg.appendLink( r_i);
 	}
 
-	msg.Append( L" DstRefs:");
+	COMTHROW(msg.Append( L" DstRefs:"));
 	c_len = 0;
-	if( dref_chain) dref_chain->get_Count( &c_len);
+	if( dref_chain) 
+		COMTHROW(dref_chain->get_Count( &c_len));
 	for( long i = 1; i <= c_len; ++i)
 	{
-		if( i != 1) msg.Append( L",");
-		msg.Append( L" ");
+		if( i != 1)
+			COMTHROW(msg.Append( L","));
+		COMTHROW(msg.Append( L" "));
 		CComPtr<IMgaFCO> r_i;
-		dref_chain->get_Item( i, &r_i);
+		COMTHROW(dref_chain->get_Item( i, &r_i));
 		msg.appendLink( r_i);
 	}
 }
@@ -1221,10 +1241,15 @@ void RefreshManager::syncFreshConns()
 				
 				MyCComBSTR msg;
 				msg.appendLink( new_conn); 
-				msg.Append( L" reconstructed in "); 
+				COMTHROW(msg.Append( L" reconstructed in "));
 				msg.appendLink( pM);
 #ifdef _DEBUG
-				CComBSTR ncid, pmid; new_conn->get_ID( &ncid); msg.AppendBSTR( ncid); msg.Append( " "); pM->get_ID( &pmid); msg.AppendBSTR( pmid);
+				CComBSTR ncid, pmid;
+				COMTHROW(new_conn->get_ID( &ncid));
+				COMTHROW(msg.AppendBSTR( ncid));
+				COMTHROW(msg.Append( " "));
+				COMTHROW(pM->get_ID( &pmid));
+				COMTHROW(msg.AppendBSTR( pmid));
 #endif
 				m_reporter.show( msg, false);
 
@@ -1272,9 +1297,11 @@ void RefreshManager::syncFreshConns()
 			prepareConnErrMsg( pM, s, d, sref_chain, dref_chain, current_i, msg);
 			if( valid)
 			{
-				msg.Append( L"<br>");
-				if( !chain1_ok) msg.Append( L"Reason: SrcChain verification failed. ");
-				if( !chain2_ok) msg.Append( L"Reason: DstChain verification failed. ");
+				COMTHROW(msg.Append( L"<br>"));
+				if( !chain1_ok)
+					COMTHROW(msg.Append( L"Reason: SrcChain verification failed. "));
+				if( !chain2_ok)
+					COMTHROW(msg.Append( L"Reason: DstChain verification failed. "));
 			}
 				
 			m_reporter.show( msg);
@@ -1466,9 +1493,11 @@ bool RefreshManager::redirectRefWithCare( CComPtr<IMgaReference>& orig, CComPtr<
 			// success
 			MyCComBSTR msg;
 			msg.appendLink( orig);
-			msg.Append( L" stand alone reference retargeted to ");
-			if( ref_tgt_newlib) msg.appendLink( ref_tgt_newlib);
-			else                msg.Append( L"Null");
+			COMTHROW(msg.Append( L" stand alone reference retargeted to "));
+			if( ref_tgt_newlib)
+				msg.appendLink( ref_tgt_newlib);
+			else
+				COMTHROW(msg.Append( L"Null"));
 			m_reporter.show( msg, false);
 
 		} catch( hresult_exception&) {
@@ -1476,9 +1505,11 @@ bool RefreshManager::redirectRefWithCare( CComPtr<IMgaReference>& orig, CComPtr<
 			// failure
 			MyCComBSTR msg;
 			msg.appendLink( orig);
-			msg.Append( L" stand alone reference could not be retargeted to ");
-			if( ref_tgt_newlib) msg.appendLink( ref_tgt_newlib);
-			else                msg.Append( L"Null");
+			COMTHROW(msg.Append( L" stand alone reference could not be retargeted to "));
+			if( ref_tgt_newlib)
+				msg.appendLink( ref_tgt_newlib);
+			else
+				COMTHROW(msg.Append( L"Null"));
 			m_reporter.show( msg);
 		}
 	}
@@ -1507,10 +1538,10 @@ bool RefreshManager::redirectRefWithCare( CComPtr<IMgaReference>& orig, CComPtr<
 				// connpoint is 0 already
 				//COMTHROW( cn->DestroyObject());
 				long pos = 0;
-				coll_of_conns->Find( cn, 1, &pos);
+				coll_of_conns->Find( cn, 1, &pos); // ignore failure
 				if( pos < 1)
 				{
-					coll_of_conns->Append( cn);
+					COMTHROW(coll_of_conns->Append( cn));
 					// save it
 					saveConnection( CComPtr<IMgaFCO>(cn));
 				}
@@ -1537,18 +1568,18 @@ bool RefreshManager::redirectRefWithCare( CComPtr<IMgaReference>& orig, CComPtr<
 
 
 				MyCComBSTR msg;
-				msg.Append( L"Connection ");
+				COMTHROW(msg.Append( L"Connection "));
 				msg.appendLink( cn_i);
-				msg.Append( L" deleted while retargeting reference ");
+				COMTHROW(msg.Append( L" deleted while retargeting reference "));
 				msg.appendLink( orig);
 				m_reporter.show( msg, false);
 
 			} catch(hresult_exception&) {
 
 				MyCComBSTR msg;
-				msg.Append( L"Connection ");
+				COMTHROW(msg.Append( L"Connection "));
 				msg.appendLink( cn_i);
-				msg.Append( L" could not be deleted while retargeting reference ");
+				COMTHROW(msg.Append( L" could not be deleted while retargeting reference "));
 				msg.appendLink( orig);
 				m_reporter.show( msg);
 			}
@@ -1565,7 +1596,7 @@ bool RefreshManager::redirectRefWithCare( CComPtr<IMgaReference>& orig, CComPtr<
 			// success
 			MyCComBSTR msg;
 			msg.appendLink( orig);
-			msg.Append( L" retargeted to ");
+			COMTHROW(msg.Append( L" retargeted to "));
 			msg.appendLink( ref_tgt_newlib);
 			m_reporter.show( msg, false);
 
@@ -1574,7 +1605,7 @@ bool RefreshManager::redirectRefWithCare( CComPtr<IMgaReference>& orig, CComPtr<
 			// failure
 			MyCComBSTR msg;
 			msg.appendLink( orig);
-			msg.Append( L" could not be retargeted to ");
+			COMTHROW(msg.Append( L" could not be retargeted to "));
 			msg.appendLink( ref_tgt_newlib);
 			m_reporter.show( msg);
 		}
@@ -1615,9 +1646,11 @@ void RefreshManager::restoreRefsToLib()
 			// target element of ref not found in library
 			lib_target = SearchTool::findLibObj( m_oldLib, guid_of_target);
 			MyCComBSTR msg( "Reference target "); 
-			if( lib_target) msg.appendLink( lib_target);
-			else            msg.appendGuid( guid_of_target);
-			msg.Append( L" not found in new library!");
+			if( lib_target)
+				msg.appendLink( lib_target);
+			else
+				msg.appendGuid( guid_of_target);
+			COMTHROW(msg.Append( L" not found in new library!"));
 			m_reporter.show( msg);
 
 			continue;
@@ -1625,7 +1658,7 @@ void RefreshManager::restoreRefsToLib()
 
 		
 		MyCComBSTR mm;
-		mm.Append( L"Redirect refs to target: ");
+		COMTHROW(mm.Append( L"Redirect refs to target: "));
 		mm.appendLink( lib_target);
 		m_reporter.show( mm, false);
 		for( CORE_REFERENCES_VEC::iterator jt = refs.begin();
@@ -1659,7 +1692,7 @@ void RefreshManager::restoreRefsToLib()
 				ASSERT(0);
 				MyCComBSTR msg( "Could not find reference "); 
 				msg.appendLink( elem_in_proj);
-				msg.Append( L" in project!");
+				COMTHROW(msg.Append( L" in project!"));
 				m_reporter.show( msg);
 			}
 		}
@@ -1686,7 +1719,7 @@ void RefreshManager::restoreRefsToLib()
 			MyCComBSTR msg( "Reference target "); 
 			if( lib_target) msg.appendLink( lib_target);
 			else            msg.appendGuid( guid_of_target);
-			msg.Append( L" not found in new library!");
+			COMTHROW(msg.Append( L" not found in new library!"));
 			m_reporter.show( msg);
 
 			continue;
@@ -1719,7 +1752,7 @@ void RefreshManager::restoreRefsToLib()
 				ASSERT(0);
 				MyCComBSTR msg( "Could not find "); 
 				msg.appendLink( elem_in_proj);
-				msg.Append( L" in project!");
+				COMTHROW(msg.Append( L" in project!"));
 				m_reporter.show( msg);
 			}
 		}
@@ -2004,9 +2037,9 @@ void RefreshManager::removeObsoleteChildren( const CoreObj& masterObj, CoreObj& 
 			{
 //#ifdef _DEBUG
 				MyCComBSTR msg;
-				msg.Append( L"Orphan child ");
+				COMTHROW(msg.Append( L"Orphan child "));
 				msg.appendLink( ObjForCore(ITER));
-				msg.Append( L" deleted.");
+				COMTHROW(msg.Append( L" deleted."));
 				m_reporter.show( msg, false);
 //#endif
 				ObjForCore(ITER)->inDeleteObject();
@@ -2045,9 +2078,9 @@ void RefreshManager::SyncDerSets( const CoreObj &p_frMasterSet, CoreObj &p_adapt
 		else
 		{
 			MyCComBSTR msg;
-			msg.Append( L"Could not find derived peer of ");
+			COMTHROW(msg.Append( L"Could not find derived peer of "));
 			msg.appendLink( b_memb);
-			msg.Append( L" in order to add as a member in ");
+			COMTHROW(msg.Append( L" in order to add as a member in "));
 			msg.appendLink( adaptvSet);
 			m_reporter.show( msg);
 		}
@@ -2076,9 +2109,9 @@ void RefreshManager::SyncDerRefs( const CoreObj &p_frMasterRef, CoreObj &p_adapt
 		else
 		{
 			MyCComBSTR msg;
-			msg.Append( L"Could not find derived peer of ");
+			COMTHROW(msg.Append( L"Could not find derived peer of "));
 			msg.appendLink( b_tgt);
-			msg.Append( L" in order to set as target of ");
+			COMTHROW(msg.Append( L" in order to set as target of "));
 			msg.appendLink( adaptvRef);
 			m_reporter.show( msg);
 		}
@@ -2284,7 +2317,7 @@ void RefreshManager::syncStructureFromLib()
 
 					MyCComBSTR msg;
 					msg.appendLink( ObjForCore(frsh_base));
-					msg.Append( L" derived to ");
+					COMTHROW(msg.Append( L" derived to "));
 					msg.appendLink( ObjForCore(prev_detached));
 					m_reporter.show( msg, false);
 				}
@@ -2292,7 +2325,7 @@ void RefreshManager::syncStructureFromLib()
 				{
 					ASSERT(0); // error
 					MyCComBSTR msg(" Could not find detached object "); msg.appendLink( jt->subt_ptr);
-					msg.Append( L" while trying to re-attach to base!");
+					COMTHROW(msg.Append( L" while trying to re-attach to base!"));
 					m_reporter.show( msg);
 				}
 			}
@@ -2319,10 +2352,12 @@ void RefreshManager::syncStructureFromLib()
 //#ifdef _DEBUG
 					MyCComBSTR msg;
 					msg.appendLink( prev_detached_obj);
-					msg.Append( L" deleted as ");
-					if( jt->is_instance) msg.Append( L"an instance");
-					else                 msg.Append( L"a subtype");
-					msg.Append( L" of an obsolete library object.");
+					COMTHROW(msg.Append( L" deleted as "));
+					if( jt->is_instance)
+						COMTHROW(msg.Append( L"an instance"));
+					else
+						COMTHROW(msg.Append( L"a subtype"));
+					COMTHROW(msg.Append( L" of an obsolete library object."));
 					m_reporter.show( msg, false);
 //#endif
 					ObjForCore(CoreObj(prev_detached_obj))->inDeleteObject();
@@ -2923,9 +2958,9 @@ void RefreshManager::collectDersFromLib( CoreObj& one_fco)
 				mapOfDeriveds[ elem_self.uid].push_back( sp);
 #ifdef _DEBUG
 				//MyCComBSTR msg ("mapOfDeriveds ");
-				//CComBSTR oid, sid; ObjForCore( one_fco)->get_ID( &oid); sub->get_ID( &sid);
-				//msg.AppendBSTR( oid);msg.Append( L" base of "); msg.AppendBSTR( sid);
-				//msg.appendLink( one_fco); msg.appendLink( sub);
+				//CComBSTR oid, sid; COMTHROW(ObjForCore( one_fco)->get_ID( &oid)); COMTHROW(sub->get_ID( &sid));
+				//COMTHROW(msg.AppendBSTR( oid));COMTHROW(msg.Append( L" base of ")); COMTHROW(msg.AppendBSTR( sid));
+				//COMTHROW(msg.appendLink( one_fco)); COMTHROW(msg.appendLink( sub));
 				//m_reporter.show( msg);
 #endif
 
@@ -3206,8 +3241,8 @@ int RefreshManager::getNumOfErrors( MyCComBSTR& msg)
 	int k = m_reporter.getErrors();
 	TCHAR buf[32];
 	_stprintf_s( buf, _T("%d"), k);
-	msg.Append( L"Warnings: ");
-	msg.Append( buf);
+	COMTHROW(msg.Append( L"Warnings: "));
+	COMTHROW(msg.Append( buf));
 
 	return k;
 }

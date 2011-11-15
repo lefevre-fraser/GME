@@ -358,11 +358,11 @@ HRESULT FCO::CheckRCS() {
 						get_relmetapath(end, relpath2, curp);
 						COMTHROW(relpath2.Append(", FCO name: "));
 						CComBSTR fcoName;
-						endfco->get_Name(&fcoName);
+						COMTHROW(endfco->get_Name(&fcoName));
 						COMTHROW(relpath2.Append(fcoName));
 						COMTHROW(relpath2.Append(", FCO ID: "));
 						CComBSTR fcoID;
-						endfco->get_ID(&fcoID);
+						COMTHROW(endfco->get_ID(&fcoID));
 						COMTHROW(relpath2.Append(fcoID));
 						separator2 = "\n";
 					}

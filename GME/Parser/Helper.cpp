@@ -118,14 +118,14 @@ CComBSTR makeLink( CComObjPtr<IMgaObject> p_obj, const std::tstring& nm2, bool u
 	COMTHROW( p_obj->get_Name( &nm));
 	if( nm == 0 || nm == _T("") || use_anyway_nm_2) // if called from the Start... (or just derived) then the name its not yet parsed
 		nm = nm2.c_str();
-	bstr.Append(L"<A HREF=\"mga:");
-	bstr.AppendBSTR( id);
-	bstr.Append(L"\">");
+	COMTHROW(bstr.Append(L"<A HREF=\"mga:"));
+	COMTHROW(bstr.AppendBSTR( id));
+	COMTHROW(bstr.Append(L"\">"));
 	if( nm.Length() != 0)
-		bstr.AppendBSTR( nm);
+		COMTHROW(bstr.AppendBSTR( nm));
 	else
-		bstr.Append(L"emptyname");
-	bstr.Append(L"</A>");
+		COMTHROW(bstr.Append(L"emptyname"));
+	COMTHROW(bstr.Append(L"</A>"));
 
 	return bstr;
 }

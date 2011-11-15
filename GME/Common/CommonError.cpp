@@ -144,9 +144,9 @@ void SetErrorInfo(HRESULT hr, LPOLESTR desc2)
 	{
 		CComBSTR d(desc);
 		if( desc != NULL )
-			d.Append(OLESTR(" :"));
+			COMTHROW(d.Append(L" :"));
 
-		d.Append(desc2);
+		COMTHROW(d.Append(desc2));
 		SetErrorInfo(d);
 	}
 }

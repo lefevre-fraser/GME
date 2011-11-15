@@ -508,11 +508,11 @@ bool CMakeClosure::isValidConnection( IMgaConnection * connection)
 					CComBSTR bstr, id, nm;
 					COMTHROW( connection->get_ID( &id));
 					COMTHROW( connection->get_Name( &nm));
-					bstr.Append("Closure: <A HREF=\"mga:");
-					bstr.AppendBSTR( id);
-					bstr.Append("\">");
-					bstr.AppendBSTR( nm);
-					bstr.Append("</A> disregarded. Connection involving reference ports. Use the \"Connection thru refport\" option to include it.");
+					COMTHROW(bstr.Append("Closure: <A HREF=\"mga:"));
+					COMTHROW(bstr.AppendBSTR( id));
+					COMTHROW(bstr.Append("\">"));
+					COMTHROW(bstr.AppendBSTR( nm));
+					COMTHROW(bstr.Append("</A> disregarded. Connection involving reference ports. Use the \"Connection thru refport\" option to include it."));
 
 					COMTHROW(m_GME->ConsoleMessage(bstr, MSG_ERROR));
 				}
@@ -703,7 +703,7 @@ void CMakeClosure::markObj( CComObjPtr<T> obj)
 		
 		if( str_buf.find( new_mrk) == std::string::npos) // if marker not present
 		{
-			buf0.Append( buf1); // insert new marker into list & update
+			COMTHROW(buf0.Append( buf1)); // insert new marker into list & update
 			COMTHROW( obj->put_RegistryValue( CComBSTR( m_markerNode), buf0));
 		}
 	}

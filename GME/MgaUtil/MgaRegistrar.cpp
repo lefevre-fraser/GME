@@ -1577,12 +1577,12 @@ STDMETHODIMP CMgaRegistrar::VersionFromGUID(BSTR name, VARIANT guid, BSTR *ver, 
 			if(res == ERROR_SUCCESS) {
 				for(int index = 0;; ++index) {
 					TCHAR name[512];
-					DWORD namesize = sizeof(name);
-					BYTE value[512];
+					DWORD namesize = sizeof(name) / sizeof(name[0]);
+					TCHAR value[512];
 					DWORD valuesize = sizeof(value);
 					DWORD valtype;
 
-					LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, value, &valuesize);
+					LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, (BYTE*)value, &valuesize);
 					if( err == ERROR_NO_MORE_ITEMS )
 						break;
 					ERRTHROW( err );
@@ -1667,11 +1667,11 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigmGUID(BSTR name, VARIANT v, regacce
 			for(int index = 0;; ++index) {
 				TCHAR name[512];
 				DWORD namesize = sizeof(name) / sizeof(name[0]);
-				BYTE value[512];
-				DWORD valuesize = sizeof(value) / sizeof(value[0]);
+				TCHAR value[512];
+				DWORD valuesize = sizeof(value);
 				DWORD valtype;
 
-				LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, value, &valuesize);
+				LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, (BYTE*)value, &valuesize);
 				if( err == ERROR_NO_MORE_ITEMS )
 					break;
 				ERRTHROW( err );
@@ -1696,12 +1696,12 @@ STDMETHODIMP CMgaRegistrar::UnregisterParadigmGUID(BSTR name, VARIANT v, regacce
 				ERRTHROW( par.RecurseDeleteKey(PutInCString(guidbstr)) );
 				for(int index = 0;; ++index) {
 					TCHAR name[512];
-					DWORD namesize = sizeof(name);
-					BYTE value[512];
+					DWORD namesize = sizeof(name) / sizeof(name[0]);
+					TCHAR value[512];
 					DWORD valuesize = sizeof(value);
 					DWORD valtype;
 
-					LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, value, &valuesize);
+					LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, (BYTE*)value, &valuesize);
 					if( err == ERROR_NO_MORE_ITEMS )
 						break;
 					ERRTHROW( err );

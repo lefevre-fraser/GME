@@ -165,9 +165,10 @@ STDMETHODIMP CMgaAttribute::Clear() {
 				CComQIPtr<IMgaMetaAttribute> ma(mgaproject->FindMetaRef(mref));
 				CComBSTR name;
 				COMTHROW(ma->get_Name(&name));
-				CComBSTR desc = "ATTR,";
-				desc.Append(name);
-				desc.Append(",Cleared");
+				CComBSTR desc = L"ATTR,";
+				COMTHROW(desc.Append(name));
+				COMTHROW(desc.Append(L",Cleared"));
+				// FIXME: COMTHROW?
 				fco->PreNotify(OBJEVENT_PRE_STATUS, CComVariant(desc));
 				//---------------------------------------------------------------------------------------
 				COMTHROW(ITER->Delete());
@@ -205,9 +206,9 @@ STDMETHODIMP CMgaAttribute::put_Value(VARIANT newVal) {
 					CComQIPtr<IMgaMetaAttribute> ma(mgaproject->FindMetaRef(mref));
 					CComBSTR name;
 					COMTHROW(ma->get_Name(&name));
-					CComBSTR desc = "ATTR,";
-					desc.Append(name);
-					desc.Append(",Defined");
+					CComBSTR desc = L"ATTR,";
+					COMTHROW(desc.Append(name));
+					COMTHROW(desc.Append(L",Defined"));
 					fco->PreNotify(OBJEVENT_PRE_STATUS, CComVariant(desc));
 					//-----------------------------------------------------------------------------------------
 					valueobj[ATTRID_META]=mref;
@@ -385,7 +386,7 @@ STDMETHODIMP CMgaAttribute::get_RegistryNode( BSTR path,  IMgaRegNode **pVal) {
 			CHECK_INSTRPAR(path);
       
 			CComBSTR xpath(regprefix);
-			xpath.Append("/");
+			COMTHROW(xpath.Append(L"/"));
 			COMTHROW(xpath.AppendBSTR(path));
 			COMTHROW(fco->get_RegistryNode(xpath, pVal));
 		} COMCATCH(;)
@@ -745,7 +746,7 @@ STDMETHODIMP CMgaRegNode::get_SubNodes( VARIANT_BOOL virtuals, IMgaRegNodes **pV
 
 				ITERATE_THROUGH(children) {
 					CComBSTR subpath(mypath);
-					subpath.Append("/");
+					COMTHROW(subpath.Append(L"/"));
 					CComBSTR path = ITER[ATTRID_NAME];
 					COMTHROW(subpath.Append(path));
 					if(virtuals) {
@@ -769,7 +770,7 @@ STDMETHODIMP CMgaRegNode::get_SubNodes( VARIANT_BOOL virtuals, IMgaRegNodes **pV
 							COMTHROW(MGACOLL_ITER->get_Name(&path));
 							if(match.find(path) != match.end()) continue;
 							CComBSTR subpath(mypath);
-							subpath.Append("/");
+							COMTHROW(subpath.Append("/"));
 							COMTHROW(subpath.Append(path));
 							q->Add(fco->rpool.getpoolobj(subpath, fco, mgaproject));
 						} MGACOLL_ITERATE_END;
@@ -787,7 +788,7 @@ STDMETHODIMP CMgaRegNode::get_SubNodeByName(BSTR name, IMgaRegNode **pVal) {
 			CHECK_INSTRPAR(name);
       
 			CComBSTR xpath(mypath);
-			xpath.Append("/");
+			COMTHROW(xpath.Append(L"/"));
 			COMTHROW(xpath.AppendBSTR(name));
 			COMTHROW(fco->get_RegistryNode(xpath, pVal));
 		} COMCATCH(;)
@@ -838,9 +839,9 @@ STDMETHODIMP CMgaRegNode::RemoveTree() {
 			valueobj <<= findregvalueobj(fco->self, mypath, dummy, false);
 			if(valueobj) {
 				// lph: Pre-Notification PRE_STATUS (the registry node is being destroyed)
-				CComBSTR desc = "REGISTRY,";
-				desc.Append(mypath);
-				desc.Append(",Removed");
+				CComBSTR desc = L"REGISTRY,";
+				COMTHROW(desc.Append(mypath));
+				COMTHROW(desc.Append(L",Removed"));
 				fco->PreNotify(OBJEVENT_PRE_STATUS, CComVariant(desc));
 				//--------------------------------------------------------------------------
 				RegistryChildrenRemove(valueobj);
@@ -957,7 +958,7 @@ STDMETHODIMP CMgaPart::get_RegistryNode( BSTR path,  IMgaRegNode **pVal) {
 			CHECK_INSTRPAR(path);
       
 			CComBSTR xpath(regprefix);
-			xpath.Append("/");
+			COMTHROW(xpath.Append(L"/"));
 			COMTHROW(xpath.AppendBSTR(path));
 			COMTHROW(fco->get_RegistryNode(xpath, pVal));
 		} COMCATCH(;)

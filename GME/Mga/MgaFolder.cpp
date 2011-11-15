@@ -523,7 +523,8 @@ HRESULT FCO::get_ChildObjectByRelID(long relid, IMgaObject ** pVal) {
 // MGA=tMp2.MGA
 bool libraryNameEqual( CComBSTR n1, CComBSTR n2)
 {
-	n1.ToUpper(); n2.ToUpper();
+	COMTHROW(n1.ToUpper());
+	COMTHROW(n2.ToUpper());
 	std::string s1, s2;
 	CopyTo( n1, s1); CopyTo( n2, s2);
 
@@ -607,7 +608,9 @@ HRESULT FCO::get_ObjectByPath(BSTR path, IMgaObject ** pVal) {
 			p++;
 
 			CComBSTR name_b, kind_b, relpos_b;
-			name_b.Append("");//prepare for empty names, name_b.p is not 0 anymore
+			name_b.Attach(SysAllocString(L""));//prepare for empty names, name_b.p is not 0 anymore
+			if (name_b.m_str == NULL)
+				COMTHROW(E_OUTOFMEMORY);
 			OLECHAR * p2 = p;
 
 			str_scan_name( &p2, lenOf + path - p2, name_b, kind_b, relpos_b); // 2nd parameter = the # of characters left
@@ -676,7 +679,9 @@ HRESULT FCO::get_ObjectByPath(BSTR path, IMgaObject ** pVal) {
 		else // regular name
 		{
 			CComBSTR name_b;
-			name_b.Append("");//prepare for empty names, name_b.p is not 0 anymore
+			name_b.Attach(SysAllocString(L""));//prepare for empty names, name_b.p is not 0 anymore
+			if (name_b.m_str == NULL)
+				COMTHROW(E_OUTOFMEMORY);
 			OLECHAR * p2 = p;
 
 			str_scan_name( &p2, lenOf + path - p2, name_b, CComBSTR(), CComBSTR()); // disregard kind and relpos
@@ -748,7 +753,9 @@ HRESULT FCO::get_NthObjectByPath(long n_th, BSTR path, IMgaObject ** pVal) {
 			p++;
 
 			CComBSTR name_b, kind_b, relpos_b;
-			name_b.Append("");//prepare for empty names, name_b.p is not 0 anymore
+			name_b.Attach(SysAllocString(L""));//prepare for empty names, name_b.p is not 0 anymore
+			if (name_b.m_str == NULL)
+				COMTHROW(E_OUTOFMEMORY);
 			OLECHAR * p2 = p;
 
 			str_scan_name( &p2, lenOf + path - p2, name_b, kind_b, relpos_b);

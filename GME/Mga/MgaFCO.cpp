@@ -252,7 +252,8 @@ HRESULT FCO::GetParent(IMgaContainer **pVal, objtype_enum *l) {
 			par = self[ATTRID_PARENT];
 			if(par.GetMetaID() != DTID_ROOT) {
 				ObjForCore(par)->getinterface(&pv);
-				if(l != NULL) pv->get_ObjType(l);
+				if (l != NULL)
+					COMTHROW(pv->get_ObjType(l));
 				if(pVal != NULL) {
 					*pVal = pv.Detach();
 					COMTHROW((*pVal)->Open());
@@ -423,7 +424,8 @@ void  FCO::initialname() {
 					CComBSTR n = ITER[ATTRID_NAME];
 					if(!wcsncmp(nname, n, len)) {
 						unsigned int f = 0;
-						if(n.Length() == len) f = 1;
+						if (n.Length() == len)
+							f = 1;
 						else {
 							swscanf(n+len,L"-%d", &f);
 							f++;
@@ -436,7 +438,7 @@ void  FCO::initialname() {
 			if(freenum) {
 				OLECHAR p[10];
 				swprintf(p, 10, L"-%d",freenum);
-				nname.Append(p);
+				COMTHROW(nname.Append(p));
 			}
 		}
 		self[ATTRID_NAME] = nname;
@@ -491,20 +493,21 @@ HRESULT FCO::get_AbsPath(BSTR *pVal)		{
 		while( !par.IsRootFolder())
 		{
 			CComBSTR tp("/@");
-			tp.Append( cur[ATTRID_NAME]);
+			COMTHROW(tp.Append( cur[ATTRID_NAME]));
 
-			tp.Append("|kind=");
+			COMTHROW(tp.Append("|kind="));
 			CComBSTR metakind;
 			COMTHROW( mgaproject->FindMetaRef( cur[ATTRID_META])->get_Name( &metakind));
-			tp.Append( metakind);
+			COMTHROW(tp.Append( metakind));
 
 			int n;
 			giveme( mgaproject, par, cur, metakind, &n);
 			char p[10]; sprintf( p, "%d", n);
 			CComBSTR relative_pos;
-			tp.Append("|relpos=");tp.Append( p);
+			COMTHROW(tp.Append("|relpos="));
+			COMTHROW(tp.Append( p));
 
-			tp.Append( path);
+			COMTHROW(tp.Append( path));
 			path = tp;
 			cur = par;
 			par = par[ATTRID_PARENT];
@@ -849,7 +852,7 @@ void getRegistryModifications(CoreObj &cobj, CComBSTR &path, ModificationsVector
 	COMTHROW(cobj->get_PreviousAttrValue(ATTRID_REGNODEVALUE, &previous));
 	if (previous != current) {
 		CComBSTR label = "REGISTRY:";
-		label.Append(path);
+		COMTHROW(label.Append(path));
 		CComVariant ident = label;
 		mv.push_back(ident);
 		mv.push_back(previous);
@@ -857,13 +860,14 @@ void getRegistryModifications(CoreObj &cobj, CComBSTR &path, ModificationsVector
 	ITERATE_THROUGH(cobj[ATTRID_REGNOWNER+ATTRID_COLLECTION]) {
 		CComBSTR cname = ITER[ATTRID_NAME];
 		CComBSTR cpath = path;
-		cpath.Append("/");
-		cpath.Append(cname);
+		COMTHROW(cpath.Append("/"));
+		COMTHROW(cpath.Append(cname));
 		getRegistryModifications(ITER, cpath, mv);
 	}
 }
 
 HRESULT get_Modifications(FCO *fco, unsigned long changemask, CComVariant *mods) {
+	COMTRY {
 	ModificationsVector modifications;
 	if (changemask & OBJEVENT_REGISTRY) {
 		ITERATE_THROUGH(fco->self[ATTRID_REGNOWNER+ATTRID_COLLECTION]) {
@@ -895,7 +899,7 @@ HRESULT get_Modifications(FCO *fco, unsigned long changemask, CComVariant *mods)
 				CComBSTR name;
 				COMTHROW(ma->get_Name(&name));
 				CComBSTR label = "ATTR:";
-				label.Append(name);
+				COMTHROW(label.Append(name));
 				CComVariant ident = label;
 				modifications.push_back(ident);
 				modifications.push_back(previous);
@@ -905,7 +909,7 @@ HRESULT get_Modifications(FCO *fco, unsigned long changemask, CComVariant *mods)
 	if (changemask & OBJEVENT_PROPERTIES) {
 		CComVariant name = fco->self[ATTRID_NAME];
 		CComVariant pname;
-		fco->self->get_PreviousAttrValue(ATTRID_NAME, &pname);
+		COMTHROW(fco->self->get_PreviousAttrValue(ATTRID_NAME, &pname));
 		if (pname != name) {
 			CComVariant ident = "PROPERTIES:Name";
 			modifications.push_back(ident);
@@ -929,13 +933,14 @@ HRESULT get_Modifications(FCO *fco, unsigned long changemask, CComVariant *mods)
 		rgsabound[0].cElements = modifications.size();
 		pVariantsArray = SafeArrayCreate(VT_VARIANT, 1, rgsabound);
 		for (LONG i=0; i<LONG(modifications.size()); i++) {
-			SafeArrayPutElement(pVariantsArray, &i, &modifications[i]);
+			COMTHROW(SafeArrayPutElement(pVariantsArray, &i, &modifications[i]));
 		}
 		CComVariant varOut;
 		varOut.vt = VT_ARRAY | VT_VARIANT;
 		varOut.parray = pVariantsArray;
 		varOut.Detach(mods);
 	}
+	} COMCATCH(;)
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------

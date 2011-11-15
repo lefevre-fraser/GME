@@ -379,7 +379,7 @@ LPUNKNOWN CGMEActiveBrowserCtrl::GetSelectedMgaObjects()
 			CComQIPtr<IMgaObject> ccpMgaObject(pUnknown);
 			
 			ASSERT(ccpMgaObject!=NULL);
-			ccpSelectedObjects->Append(ccpMgaObject);
+			COMTHROW(ccpSelectedObjects->Append(ccpMgaObject));
 
 			hItem=pTreeCtrl->GetNextSelectedItem(hItem);
 		}
@@ -387,7 +387,7 @@ LPUNKNOWN CGMEActiveBrowserCtrl::GetSelectedMgaObjects()
 
 		pMgaContext->CommitTransaction();
 	}
-	catch (hresult_exception)
+	catch (hresult_exception& )
 	{
 		pMgaContext->AbortTransaction();
 	}

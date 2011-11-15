@@ -352,7 +352,7 @@ void CAggregatePropertyPage::SetupTree()
 
 	// Setting Project name
 	CComBSTR bszProjectName;
-	pMgaContext->m_ccpProject->get_Name(&bszProjectName);
+	COMTHROW(pMgaContext->m_ccpProject->get_Name(&bszProjectName));
 	m_strProjectName=bszProjectName;
 
 	// Getting RootFolder
@@ -867,7 +867,7 @@ void CAggregatePropertyPage::DoCopy()
 					rectSelectedList.AddTail(new CRect( rectItem));
 
 					// Append to the selected FCO list
-					ccpSelectedFCOs->Append( ccpMgaFCO);
+					COMTHROW(ccpSelectedFCOs->Append( ccpMgaFCO));
 				}
 			}
 			else if ( ObjectProxy.m_TypeInfo == OBJTYPE_FOLDER )
@@ -884,7 +884,7 @@ void CAggregatePropertyPage::DoCopy()
 					rectSelectedList.AddTail( new CRect( rectItem));
 
 					// Append to the selected FCO list
-					ccpSelectedFolders->Append( ccpMgaFolder);
+					COMTHROW(ccpSelectedFolders->Append( ccpMgaFolder));
 				}
 			}
 		}		
@@ -952,7 +952,7 @@ void CAggregatePropertyPage::DoCopyClosure()
 					rectSelectedList.AddTail( new CRect( rectItem));
 					
 					// Append to the selected FCO list
-					ccpSelectedFCOs->Append( ccpMgaFCO);
+					COMTHROW(ccpSelectedFCOs->Append( ccpMgaFCO));
 				}
 			}
 			else if ( ObjectProxy.m_TypeInfo == OBJTYPE_FOLDER )
@@ -970,7 +970,7 @@ void CAggregatePropertyPage::DoCopyClosure()
 						rectSelectedList.AddTail( new CRect( rectItem));
 						
 						// Append to the selected FCO list
-						ccpSelectedFolders->Append( ccpMgaFolder);
+						COMTHROW(ccpSelectedFolders->Append( ccpMgaFolder));
 						is_any_folder_selected = true;
 					}
 				}
@@ -1179,7 +1179,7 @@ void CAggregatePropertyPage::DoCopySmart( int k /*= 0*/)
 					rectSelectedList.AddTail( new CRect( rectItem));
 					
 					// Append to the selected FCO list
-					ccpSelectedFCOs->Append( ccpMgaFCO);
+					COMTHROW(ccpSelectedFCOs->Append( ccpMgaFCO));
 				}
 			}
 			else if ( ObjectProxy.m_TypeInfo == OBJTYPE_FOLDER )
@@ -1197,7 +1197,7 @@ void CAggregatePropertyPage::DoCopySmart( int k /*= 0*/)
 						rectSelectedList.AddTail( new CRect( rectItem));
 						
 						// Append to the selected FCO list
-						ccpSelectedFolders->Append( ccpMgaFolder);
+						COMTHROW(ccpSelectedFolders->Append( ccpMgaFolder));
 						is_any_folder_selected = true;
 					}
 				}
@@ -1320,7 +1320,7 @@ void CAggregatePropertyPage::DoDrag( CPoint ptDrag)
 					rectSelectedList.AddTail(new CRect(rectItem));
 					
 					// Append to the selected FCO list
-					ccpSelectedFCOs->Append(ccpMgaFCO);
+					COMTHROW(ccpSelectedFCOs->Append(ccpMgaFCO));
 				}
 			}
 			else if ( ObjectProxy.m_TypeInfo == OBJTYPE_FOLDER )
@@ -1337,7 +1337,7 @@ void CAggregatePropertyPage::DoDrag( CPoint ptDrag)
 					rectSelectedList.AddTail( new CRect( rectItem));
 
 					// Append to the selected FCO list
-					ccpSelectedFolders->Append( ccpMgaFolder);
+					COMTHROW(ccpSelectedFolders->Append( ccpMgaFolder));
 				}
 			}
 			else
@@ -1595,7 +1595,8 @@ void CAggregatePropertyPage::AttachLibrary()
 					}
 
 					CComBSTR msg( L"Library attached: ");
-					msg.Append( dlg.m_strConnString); msg.Append( L" (Note: Constraint Manager was turned off during attach to speed it up.)");
+					COMTHROW(msg.Append( dlg.m_strConnString));
+					COMTHROW(msg.Append( L" (Note: Constraint Manager was turned off during attach to speed it up.)"));
 					Utils::put2Console( Utils::get_GME( pMgaContext->m_ccpProject)
 						, msg
 						, MSG_INFO);
@@ -1763,7 +1764,7 @@ bool CAggregatePropertyPage::askUserAndDeleteLibrary( CComPtr<IMgaFolder> p_ccpF
 	if( IDYES == AfxMessageBox( deps, MB_YESNO))
 	{
 		//p_ccpFolder->PutReadOnlyAccess( VARIANT_FALSE);
-		p_ccpFolder->DestroyObject();
+		COMTHROW(p_ccpFolder->DestroyObject());
 		return true;
 	}
 
@@ -2310,7 +2311,7 @@ void CAggregatePropertyPage::GotoIUnk(BSTR Id)
 			pMgaContext->BeginTransaction();
 			CComPtr<IMgaProject> project = pMgaContext->m_ccpProject;
 			COMTHROW(project->GetFCOByID(bId, &fiitem));
-			fiitem.QueryInterface(&iitem);
+			COMTHROW(fiitem.QueryInterface(&iitem));
 			item.push_back(Id);
 			itemcount++;
 			do
@@ -2551,7 +2552,7 @@ void CAggregatePropertyPage::OnKeyDownTreeAggregate(NMHDR* pNMHDR, LRESULT* pRes
 				CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 				
 				short nRedoSize,nUndoSize;
-				pMgaContext->m_ccpProject->UndoRedoSize(&nUndoSize,&nRedoSize);
+				COMTHROW(pMgaContext->m_ccpProject->UndoRedoSize(&nUndoSize,&nRedoSize));
 
 				if( nRedoSize > 0)
 				{
@@ -2567,7 +2568,7 @@ void CAggregatePropertyPage::OnKeyDownTreeAggregate(NMHDR* pNMHDR, LRESULT* pRes
 				CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 				
 				short nRedoSize,nUndoSize;
-				pMgaContext->m_ccpProject->UndoRedoSize(&nUndoSize,&nRedoSize);
+				COMTHROW(pMgaContext->m_ccpProject->UndoRedoSize(&nUndoSize,&nRedoSize));
 
 				if( nUndoSize > 0)
 				{
@@ -4091,13 +4092,14 @@ void CAggregatePropertyPage::LibraryAmbiguityChk()
 			{
 				if( it->second.size() > 1) // duplicates found
 				{
-					if( msg.Length() > 0) msg.Append( _T("\n\n"));
-					msg.AppendBSTR( it->first);
-					msg.Append( _T("\nShared by multiple toplevel libraries:"));
+					if (msg.Length() > 0)
+						COMTHROW(msg.Append( _T("\n\n")));
+					COMTHROW(msg.AppendBSTR( it->first));
+					COMTHROW(msg.Append( _T("\nShared by multiple toplevel libraries:")));
 					for( unsigned int i = 0; i < it->second.size(); ++i)
 					{
-						msg.Append( _T("\n\t"));
-						msg.AppendBSTR( it->second[i]);
+						COMTHROW(msg.Append( _T("\n\t")));
+						COMTHROW(msg.AppendBSTR( it->second[i]));
 					}
 				}
 			}

@@ -193,9 +193,8 @@ BOOL CMgaMap::SearchTreeItem(BSTR Id, HTREEITEM &hTreeItem, IUnknown* &punk)
 	  IUnknownPtr punkptr(nKey);
 
 	  punk = punkptr;
-	  BSTR oid = NULL;
-	  mgao->get_ID(&oid);
-	  _bstr_t boid(oid, false);
+	  _bstr_t boid;
+	  COMTHROW(mgao->get_ID(boid.GetAddress()));
 	  _bstr_t bid = Id;
 	  if (bid == boid)
 	  {

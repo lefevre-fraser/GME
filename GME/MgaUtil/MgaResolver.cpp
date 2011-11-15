@@ -50,8 +50,8 @@ CString helper_ObjTypeStr(objtype_enum objtype) {
 CComBSTR CMgaResolver::prefixIt(CComBSTR pIn)
 {
 	CComBSTR rval;
-	rval.AppendBSTR( m_prefix); 
-	rval.AppendBSTR( pIn);
+	COMTHROW(rval.AppendBSTR( m_prefix));
+	COMTHROW(rval.AppendBSTR( pIn));
 
 	return rval;
 }
@@ -65,7 +65,7 @@ CComBSTR CMgaResolver::truncIt(CComBSTR pIn)
 
 	if( crole.Left( trunc.GetLength()) == trunc)
 	{
-		rval.Append( crole.Right( crole.GetLength() - trunc.GetLength()));
+		COMTHROW(rval.Append( crole.Right( crole.GetLength() - trunc.GetLength())));
 	}
 
 	return rval;

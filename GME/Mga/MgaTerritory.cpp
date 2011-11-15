@@ -120,7 +120,7 @@ STDMETHODIMP CMgaTerritory::GetNamespace( BSTR * pNmsp)
 		if( m_bstrCurrNamespace.Length() > 0) // namespace set
 		{
 			CComBSTR res;
-			res.AppendBSTR( m_bstrCurrNamespace);
+			COMTHROW(res.AppendBSTR( m_bstrCurrNamespace));
 			*pNmsp = res.Detach();
 		}
 	} COMCATCH(;)

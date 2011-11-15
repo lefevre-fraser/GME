@@ -441,6 +441,8 @@ void CInPlaceManager::OnClickEditorButton()
 			launched = ::CreateProcess(szAppPath,szCommandLine.GetBuffer(nCommandLineLength),
 				NULL,NULL,FALSE,0,NULL,NULL,&startUpInfo,&processInfo);
 			szCommandLine.ReleaseBuffer();
+			CloseHandle(processInfo.hProcess);
+			CloseHandle(processInfo.hThread);
 		}
 
 		if( !launched)
@@ -482,6 +484,8 @@ void CInPlaceManager::OnClickEditorButton()
 		launched = ::CreateProcess(szAppPath,szCommandLine.GetBuffer(nCommandLineLength),
 			NULL,NULL,FALSE,0,NULL,NULL,&startUpInfo,&processInfo);
 		szCommandLine.ReleaseBuffer();
+		CloseHandle(processInfo.hProcess);
+		CloseHandle(processInfo.hThread);
 	}
 
 	// DWORD h = ::WaitForSingleObject(processInfo.hProcess, INFINITE);

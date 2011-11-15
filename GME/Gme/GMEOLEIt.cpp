@@ -271,10 +271,10 @@ CComPtr<IMgaMetaRole> CGMEOLEIt::connMetaRolePtrInBetween( CComPtr<IMgaModel> p_
 	CComBSTR to_connect_as_src = roleNameOf( p_srcRole1);
 	CComBSTR to_connect_as_dst = roleNameOf( p_dstRole1);
 
-	to_connect_as_src.Append(_T(" "));
-	to_connect_as_src.AppendBSTR( roleNameOf( p_srcRole2)); // now we have a path like: "model port" composed of roles
-	to_connect_as_dst.Append(_T(" "));
-	to_connect_as_dst.AppendBSTR( roleNameOf( p_dstRole2));
+	COMTHROW(to_connect_as_src.Append(_T(" ")));
+	COMTHROW(to_connect_as_src.AppendBSTR( roleNameOf( p_srcRole2))); // now we have a path like: "model port" composed of roles
+	COMTHROW(to_connect_as_dst.Append(_T(" ")));
+	COMTHROW(to_connect_as_dst.AppendBSTR( roleNameOf( p_dstRole2)));
 
 	return connMetaRolePtrInBetween( p_model, to_connect_as_src, to_connect_as_dst);
 }
@@ -2679,8 +2679,9 @@ BSTR CGMEOLEIt::GetSelected( )
 				CComBSTR nm;
 				COMTHROW( tfco->get_Name( &nm));
 				TRACE( _T("setselectedFCO input collection: %s"), nm);
-				if( !string_res.Length() == 0) string_res.Append(_T(" "));
-				string_res.AppendBSTR( nm);
+				if (!string_res.Length() == 0) 
+					COMTHROW(string_res.Append(_T(" ")));
+				COMTHROW(string_res.AppendBSTR( nm));
 			}
 		}
 	}

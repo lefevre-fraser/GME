@@ -118,15 +118,15 @@ void CMgaDumper::DoneDump(bool abort)
 	elems.clear();
 
 	if( territory != NULL )
-		territory->Destroy();
+		COMTHROW(territory->Destroy());
 	territory = NULL;
 
 	if( project != NULL )
 	{
 		if( abort )
-			project->AbortTransaction();
+			COMTHROW(project->AbortTransaction());
 		else
-			project->CommitTransaction();
+			COMTHROW(project->CommitTransaction());
 	}
 	
 	m_selFcos.clear();

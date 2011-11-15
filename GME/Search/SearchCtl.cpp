@@ -466,7 +466,8 @@ CComPtr<IMgaObjects> CSearchCtrl::PutInMyTerritory(CComPtr<IMgaObjects> &p_inCol
 	coll_in_active_terr.CoCreateInstance( L"Mga.MgaObjects");
 
 	long c = 0;
-	if( p_inColl) p_inColl->get_Count( &c);
+	if( p_inColl)
+		COMTHROW(p_inColl->get_Count( &c));
 
 	// nothing to copy? no territory? failed to create out coll? or no transaction active?
 	if( c > 0 && m_territory && coll_in_active_terr && m_transactionCnt > 0) 
@@ -474,10 +475,10 @@ CComPtr<IMgaObjects> CSearchCtrl::PutInMyTerritory(CComPtr<IMgaObjects> &p_inCol
 		for( long i = 1; i <= c; ++i)                 // for all items in coll
 		{
 			CComPtr<IMgaObject> obj, item;
-			p_inColl->get_Item( i, &item);
+			COMTHROW(p_inColl->get_Item( i, &item));
 
-			m_territory->OpenObj( item, &obj);        // puts in our territory
-			coll_in_active_terr->Append( obj);
+			COMTHROW(m_territory->OpenObj( item, &obj));        // puts in our territory
+			COMTHROW(coll_in_active_terr->Append( obj));
 		}
 	}
 

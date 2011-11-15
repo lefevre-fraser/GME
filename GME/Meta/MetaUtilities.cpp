@@ -381,7 +381,7 @@ CComBSTR truncateName( IUnknown *p_bs, CComBSTR pIn)
 	if( nmspc && nmspc.Length() > 0) // some namespace is set
 	{
 		bool nm_match = false;
-		nmspc.Append( L"::");
+		COMTHROW(nmspc.Append( L"::"));
 		unsigned int nms_len = nmspc.Length();
 		unsigned int pin_len = pIn.Length();
 		if( nms_len < pin_len
@@ -390,7 +390,7 @@ CComBSTR truncateName( IUnknown *p_bs, CComBSTR pIn)
 			unsigned int i = nms_len;
 			while( i < pin_len)
 			{
-				truncated_name.Append( pIn[i]);
+				COMTHROW(truncated_name.Append( pIn[i]));
 				++i;
 			}
 
