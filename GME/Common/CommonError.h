@@ -76,6 +76,19 @@ do { \
 			SetStandardOrGMEErrorInfo(e.Error()); \
 		return e.Error(); \
 	} \
+	catch (const std::bad_alloc& ) \
+	{ \
+		try { CLEANUP; } catch (const std::bad_alloc& ) { } \
+		SetStandardOrGMEErrorInfo(E_OUTOFMEMORY); \
+		return E_OUTOFMEMORY; \
+	} \
+	catch (CMemoryException* e) \
+	{ \
+		try { CLEANUP; } catch (const std::bad_alloc& ) { } \
+		e->Delete(); \
+		SetStandardOrGMEErrorInfo(E_OUTOFMEMORY); \
+		return E_OUTOFMEMORY; \
+	} \
 	return S_OK;
 
 #define COMRETURN(HR) \
