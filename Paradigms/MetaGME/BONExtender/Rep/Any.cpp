@@ -360,7 +360,7 @@ BON::RegistryNode Any::getMIRegistry() const // the metainterpreter registry
 void Any::prepareMacros()
 {
 	std::string h, s, n = getValidNmspc();
-	int c = (n.length() < 15) ? 15-n.length():(
+	std::string::size_type c = (n.length() < 15) ? 15-n.length():(
 	        (n.length() < 30) ? 30-n.length():(
 	        (n.length() < 45) ? 45-n.length():(
 			0
@@ -429,7 +429,7 @@ void Any::createAcceptMethod( bool pWithTraversalOfKids, bool pSpecialized, bool
 	std::string ind0 = std::string( 2 - 1, '\t'), ind = std::string( 2, '\t'), more_ind = std::string( 2 + 1, '\t');
 
 	std::string res, ctor_signature, ctor_inilist, ctor_body, class_body, name;
-	unsigned int beg = 0, nwl = exc_str.find('\n');
+	std::string::size_type beg = 0, nwl = exc_str.find('\n');
 	name = exc_str.substr(0, nwl);
 
 	while( nwl != std::string::npos)
@@ -440,7 +440,7 @@ void Any::createAcceptMethod( bool pWithTraversalOfKids, bool pSpecialized, bool
 		if( nwl > beg && beg < exc_str.length() - 1)
 		{
 			std::string par_line = exc_str.substr( beg, nwl - beg);
-			int type_end = par_line.find('\t');
+			std::string::size_type type_end = par_line.find('\t');
 			std::string par_type, par_name;
 			par_type = par_line.substr(0, type_end);
 			par_name = par_line.substr( type_end + 1);

@@ -390,7 +390,7 @@ void ConnJoint::createConstraints( Sheet* s, const std::string& conn_name)
 	std::string src_cons_name, dst_cons_name;
 	src_cons_name = "Valid" + conn_name + m_srcLabel + "Cardinality" + cons_id1_str;
 	dst_cons_name = "Valid" + conn_name + m_dstLabel + "Cardinality" + cons_id2_str;
-	int pos = 0;
+	std::string::size_type pos = 0;
 	pos = src_cons_name.find( "::");
 	if( pos != std::string::npos) 
 		src_cons_name.replace( pos, 2, 2, '_');

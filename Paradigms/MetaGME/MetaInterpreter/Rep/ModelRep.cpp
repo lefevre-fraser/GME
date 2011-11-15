@@ -794,7 +794,7 @@ void ModelRep::createConstraints( Sheet * s)
 
 					std::string str_cons_name;
 					str_cons_name = "Valid" + getName() + "PartCardinality" + std::string(str_id);
-					int pos = str_cons_name.find( "::");
+					std::string::size_type pos = str_cons_name.find( "::");
 					if( pos != std::string::npos) 
 						str_cons_name.replace( pos, 2, 2, '_');
 

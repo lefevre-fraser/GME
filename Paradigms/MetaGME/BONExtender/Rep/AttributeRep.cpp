@@ -96,21 +96,21 @@ using special characters like: & < > " ' is not an error any more: are replaced 
 	std::string items = Dumper::xmlFilter( m_ptr->getAttribute("MenuItems")->getStringValue());
 
 	items += '\n'; // like an EOF sign
-	int len = items.length();
+	std::string::size_type len = items.length();
 
 	std::string whitespace = "\r\n\t ";
-	int start_i = 0;
+	std::string::size_type start_i = 0;
 	while (start_i < len && whitespace.find(items[start_i]) != std::string::npos )
 		++start_i;//skip heading multiple newlines
 
-	int i = start_i, comma_i = 0;
+	std::string::size_type i = start_i, comma_i = 0;
 	while( i < len )
 	{
 		if ( items[i] == '\n' && i - start_i > 0) // pass till end of line
 		{ 
 			if ( comma_i != 0) // there is value also
 			{
-				int st,end;
+				std::string::size_type st,end;
 				// from start_i, to comma_i
 				st = start_i;
 				while( st < comma_i && whitespace.find( items[st]) != std::string::npos) ++st; //leading whsp
@@ -143,7 +143,7 @@ using special characters like: & < > " ' is not an error any more: are replaced 
 			}
 			else // no comma means no value
 			{
-				int st,end;
+				std::string::size_type st,end;
 				// from start_i to i
 				st = start_i;
 				while( st < i && whitespace.find( items[st]) != std::string::npos) ++st; //leading whsp

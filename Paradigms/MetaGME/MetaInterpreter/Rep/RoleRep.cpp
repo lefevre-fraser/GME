@@ -14,13 +14,13 @@
 // finds and returns the value after the "token" token
 std::string get_name( const std::string& line, const std::string & token = "name")
 {
-	int start_of_token = line.find(token);
+	std::string::size_type start_of_token = line.find(token);
 	if (start_of_token == std::string::npos) return "";
 	
-	int first_quote = line.substr( start_of_token).find( "\"");
+	std::string::size_type first_quote = line.substr( start_of_token).find( "\"");
 	if (first_quote == std::string::npos) return "";
 	// find the second '"'
-	int len_of_name = line.substr(start_of_token + first_quote + 1).find("\"");
+	std::string::size_type len_of_name = line.substr(start_of_token + first_quote + 1).find("\"");
 	if ( len_of_name == std::string::npos) return "";
 
 	std::string pp = line.substr( start_of_token + first_quote + 1, len_of_name);

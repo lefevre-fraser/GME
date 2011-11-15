@@ -76,7 +76,7 @@ bool fileExists( const char * file)
 
 std::string shortFileName( const std::string& long_name)
 {
-	int pos = long_name.rfind( '\\');
+	std::string::size_type pos = long_name.rfind( '\\');
 	if ( pos != std::string::npos)
 	{
 		std::string short_name;
@@ -93,7 +93,7 @@ std::string shortFileName( const std::string& long_name)
 
 std::string cutExtension( const std::string& filename)
 {
-	int p = filename.rfind( ".");
+	std::string::size_type p = filename.rfind( ".");
 	if ( p != std::string::npos)
 		return filename.substr( 0, p);
 

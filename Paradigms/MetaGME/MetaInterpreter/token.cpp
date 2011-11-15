@@ -4,8 +4,8 @@
 void Tokenizer::split( const std::string& source, const std::string& delimiter, std::vector< std::string> & result)
 {
 	if ( delimiter.length() <= 0) return;
-	unsigned int curr_token_start = 0;
-	unsigned int curr_token_end = source.find( delimiter, curr_token_start);
+	std::string::size_type curr_token_start = 0;
+	std::string::size_type curr_token_end = source.find( delimiter, curr_token_start);
 
 	while ( curr_token_end != std::string::npos) // more delimiters found
 	{
