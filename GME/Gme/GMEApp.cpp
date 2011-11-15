@@ -490,6 +490,10 @@ void CGMEApp::EmergencySave(void)
 		static int emnum;
 		emcode.Format(_T("-emergency%ld"), ++emnum);
 		embackupname.Insert(p, emcode);
+		long status = 0;
+		mgaProject->get_ProjectStatus(&status); // ignore failure
+		if (status == 3 || status == 4) // i.e. in tx
+			mgaProject->AbortTransaction(); // ignore failure
 		HRESULT hr = mgaProject->Save(PutInBstr(embackupname), VARIANT_TRUE);
 		if (proj_type_is_xmlbackend) {
 			AfxMessageBox(_T("Your current work can be found in the local checkout directory."));
@@ -3151,4 +3155,20 @@ void CGMEApp::consoleMessage( const CString& p_msg, short p_type)
 		CMainFrame::theInstance->m_console.Message( p_msg, p_type);
 	else
 		AfxMessageBox( p_msg);
+}
+
+void* alloc10() {
+	return malloc(10 * 1024 * 1024);
+}
+void* alloc100() {
+	return malloc(100 * 1024 * 1024);
+}
+void* alloc1000() {
+	return malloc(1000 * 1024 * 1024);
+}
+
+void allocstr() {
+	//while (SysAllocString(L"11111111111111111111111111111111111111111111111111"))
+	while (SysAllocStringLen(0, 4096))
+		;
 }
