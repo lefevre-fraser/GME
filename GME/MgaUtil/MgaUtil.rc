@@ -229,7 +229,7 @@ BEGIN
     DEFPUSHBUTTON   "Close",IDCLOSE,308,7,56,14
     PUSHBUTTON      "Purge selected",IDC_PURGE2,308,24,56,14
     CONTROL         "List2",IDC_PURGELIST,"SysListView32",LVS_REPORT | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,7,292,168
-    LTEXT           "Select versions no more needed. \nThe current version (*) cannot be purged.",IDC_STATIC,310,67,54,61
+    LTEXT           "Select versions no longer needed. \nThe current version (*) cannot be purged.",IDC_STATIC,310,67,54,61
     CONTROL         "Delete files",IDC_DELFILES,"Button",BS_AUTORADIOBUTTON | WS_GROUP,307,132,51,10
     CONTROL         "Unregister\nonly",IDC_NODELFILES,"Button",BS_AUTORADIOBUTTON | BS_MULTILINE,307,141,50,21
     PUSHBUTTON      "Set Current",IDC_SETCURRENT,308,41,56,14
