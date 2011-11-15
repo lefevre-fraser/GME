@@ -1302,6 +1302,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 		ASSERT( mgaProject == 0 );
 		COMTHROW( mgaProject.CoCreateInstance(OLESTR("Mga.MgaProject")) );
 
+		VARIANT_BOOL enableAutoAddOns = VARIANT_TRUE;
 		VARIANT_BOOL readable_only;
 
 		COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
@@ -1393,6 +1394,18 @@ void CGMEApp::OpenProject(const CString &conn) {
 						newparname = parn;
 					}
 				}
+				if(hr == E_MGA_COMPONENT_ERROR) {
+					_bstr_t errorInfo;
+					GetErrorInfo(errorInfo.GetAddress());
+					_bstr_t err(_T("ERROR: automatic addon components could not start up:\n"));
+					err += errorInfo;
+					err += "\nDo you want to open the project without addons?";
+					if (AfxMessageBox(err, MB_YESNO) == IDYES) {
+						enableAutoAddOns = VARIANT_FALSE;
+						mgaProject->EnableAutoAddOns(enableAutoAddOns);
+						tryit = true;
+					}
+				}
 				if(tryit) {
 					hr = mgaProject->OpenEx(PutInBstr(conn), CComBSTR(newparname), guidpar);
 					if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
@@ -1400,13 +1413,6 @@ void CGMEApp::OpenProject(const CString &conn) {
 					}
 				}
 				else break;
-			}
-			if(hr == E_MGA_COMPONENT_ERROR) {
-				BSTR errorInfo;
-				GetErrorInfo(&errorInfo);
-				_bstr_t err(_T("ERROR: automatic addon components could not start up:\n"));
-				err += errorInfo;
-				AfxMessageBox(err);
 			}
 			COMTHROW(hr);
 		}
@@ -1451,7 +1457,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 					// PETER: Create new MgaProject COM object (workaround MGA addon bug)
 					mgaProject.Release();
 					COMTHROW( mgaProject.CoCreateInstance(OLESTR("Mga.MgaProject")) );
-					COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
+					COMTHROW( mgaProject->EnableAutoAddOns(enableAutoAddOns));
 					
 					HRESULT hr = mgaProject->OpenEx(PutInBstr(conn), pname, g2);
 					if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
@@ -1502,12 +1508,16 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 			AfxMessageBox(buf);
 			DiagnoseParadigm(metaname);
 		}
-	    if(hr == E_MGA_COMPONENT_ERROR) {
-				BSTR errorInfo;
-				GetErrorInfo(&errorInfo);
-				_bstr_t err(L"ERROR: automatic addon components could not start up:\n");
-				err += errorInfo;
-				AfxMessageBox(err);
+		if(hr == E_MGA_COMPONENT_ERROR) {
+			_bstr_t errorInfo;
+			GetErrorInfo(errorInfo.GetAddress());
+			_bstr_t err(_T("ERROR: automatic addon components could not start up:\n"));
+			err += errorInfo;
+			err += "\nDo you want to create the project without addons?";
+			if (AfxMessageBox(err, MB_YESNO) == IDYES) {
+				mgaProject->EnableAutoAddOns(VARIANT_FALSE);
+				hr = mgaProject->Create(PutInBstr(conn), PutInBstr(metaname)) ;
+			}
 		}
 		if( hr == E_UNKNOWN_STORAGE && conn.Left(5) == _T("MGX=\"")) {
 			CloseProject();
@@ -2120,11 +2130,15 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 					AfxMessageBox(buf);
 				}
 				if(hr == E_MGA_COMPONENT_ERROR) {
-					CComBSTR errorInfo;
-					GetErrorInfo(&errorInfo);
-					_bstr_t err(L"ERROR: automatic addon components could not start up:\n");
-					err += (BSTR)errorInfo;
-					AfxMessageBox(err);
+					_bstr_t errorInfo;
+					GetErrorInfo(errorInfo.GetAddress());
+					_bstr_t err(_T("ERROR: automatic addon components could not start up:\n"));
+					err += errorInfo;
+					err += "\nDo you want to create the project without addons?";
+					if (AfxMessageBox(err, MB_YESNO) == IDYES) {
+						mgaProject->EnableAutoAddOns(VARIANT_FALSE);
+						hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
+					}
 				}
 				COMTHROW(hr);
 				AfterOpenOrCreateProject(dataconn); 
@@ -2822,11 +2836,15 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 					AfxMessageBox(buf);
 				}
 				if(hr == E_MGA_COMPONENT_ERROR) {
-					BSTR errorInfo;
-					GetErrorInfo(&errorInfo);
-					_bstr_t err(L"ERROR: automatic addon components could not start up:\n");
+					_bstr_t errorInfo;
+					GetErrorInfo(errorInfo.GetAddress());
+					_bstr_t err(_T("ERROR: automatic addon components could not start up:\n"));
 					err += errorInfo;
-					AfxMessageBox(err);
+					err += "\nDo you want to create the project without addons?";
+					if (AfxMessageBox(err, MB_YESNO) == IDYES) {
+						mgaProject->EnableAutoAddOns(VARIANT_FALSE);
+						hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
+					}
 				}
 				COMTHROW(hr);
 				AfterOpenOrCreateProject(dataconn); 

@@ -286,7 +286,7 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 		CComBSTR soldname = s;
 		CComVariant soldguid = pGUID;
 
-		if(paradigmname) {
+		if(SysStringLen(paradigmname) != 0) {
 			ver.Empty();
 			s = paradigmname;
 		}
@@ -299,6 +299,7 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 			if (ver.Length()) {
 				// Version string has precedence
 				COMTHROW(OpenParadigm(s,ver));
+				pGUID.Clear();
 				COMTHROW(metapr->get_GUID(&pGUID));
 			}
 			else {
