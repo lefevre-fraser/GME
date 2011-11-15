@@ -320,9 +320,7 @@ bool CGuiPort::IsVisible()			// called on a tmp obj that only exists to get this
 	COMTHROW(fco->get_RegistryNode(bstr,&root));
 	CComPtr<IMgaRegNodes> nodes;
 
-#pragma warning(disable: 4310) // cast truncates constant value
 	VARIANT_BOOL vb = VARIANT_TRUE;
-#pragma warning(default: 4310) // cast truncates constant value
 	COMTHROW(root->get_SubNodes(vb,&nodes));
 	MGACOLL_ITERATE(IMgaRegNode,nodes) {
 		CComPtr<IMgaRegNode> reg;
@@ -463,9 +461,7 @@ CGuiAnnotator::CGuiAnnotator(CComPtr<IMgaModel>& pModel, CComPtr<IMgaRegNode>& m
 
 		if (aspRootNode) {
 			CComPtr<IMgaRegNodes>	aspNodes;
-#pragma warning(disable: 4310) // cast truncates constant value
 			COMTHROW(aspRootNode->get_SubNodes(VARIANT_TRUE, &aspNodes));
-#pragma warning(default: 4310) // cast truncates constant value
 			MGACOLL_ITERATE(IMgaRegNode, aspNodes) {
 				CComPtr<IMgaRegNode>	aspNode;
 				aspNode = MGACOLL_ITER;
@@ -612,9 +608,7 @@ void CGuiAnnotator::GrayOut(bool set)
 	if (decoratorData[parentAspect]->decorator) {
 		grayedOut = set;
 		try {
-#pragma warning(disable: 4310) // cast truncates constant value
 			COMTHROW(decoratorData[parentAspect]->decorator->SetActive(set ? VARIANT_FALSE : VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 		}
 		catch (hresult_exception &) {
 		}
@@ -1954,9 +1948,7 @@ void CGuiObject::GrayOut(bool set)
 
 	for (int i = 0; i< guiAspects.GetSize(); i++) {
 		if (IsVisible(i)) {
-#pragma warning(disable: 4310) // cast truncates constant value
 			COMTHROW(guiAspects[i]->GetDecorator()->SetActive(set ? VARIANT_FALSE : VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 		}
 	}
 }

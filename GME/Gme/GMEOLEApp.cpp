@@ -803,9 +803,7 @@ STDMETHODIMP CGMEOLEApp::XDual::get_Visible( VARIANT_BOOL* isVisible)
 
 	TRY_DUAL(__uuidof(IGMEOLEApp))
 	{
-#pragma warning(disable: 4310) // cast truncates constant value
 		*isVisible = (pThis->GetVisible() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
-#pragma warning(default: 4310) // cast truncates constant value
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL

@@ -490,9 +490,7 @@ void CGMEApp::EmergencySave(void)
 		static int emnum;
 		emcode.Format(_T("-emergency%ld"), ++emnum);
 		embackupname.Insert(p, emcode);
-#pragma warning(disable: 4310) // cast truncates constant value
 		HRESULT hr = mgaProject->Save(PutInBstr(embackupname), VARIANT_TRUE);
-#pragma warning(default: 4310) // cast truncates constant value
 		if (proj_type_is_xmlbackend) {
 			AfxMessageBox(_T("Your current work can be found in the local checkout directory."));
 		} else {
@@ -1007,9 +1005,7 @@ void CGMEApp::UpdateComponentLists(bool restart_addons)
 				}
 				if(redo && AfxMessageBox(_T("AddOn configuration has changed.\nRestart addons?"), MB_YESNO) == IDYES) {
 					COMTHROW(mgaProject->EnableAutoAddOns(VARIANT_FALSE));
-#pragma warning(disable: 4310) // cast truncates constant value
 					COMTHROW(mgaProject->EnableAutoAddOns(VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 				}
 			}
 		}
@@ -1308,9 +1304,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 
 		VARIANT_BOOL readable_only;
 
-#pragma warning(disable: 4310) // cast truncates constant value
 		COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 		HRESULT hr = mgaProject->Open(PutInBstr(conn), &readable_only);
 		if(hr != S_OK) {
 			CComBSTR parn;
@@ -1497,9 +1491,7 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 		COMTHROW( mgaProject.CoCreateInstance(L"Mga.MgaProject") );
 		ASSERT( mgaProject != NULL );
 
-#pragma warning(disable: 4310) // cast truncates constant value
 		COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 		msg = _T("Could not create project");
 		HRESULT hr = mgaProject->Create(PutInBstr(conn), PutInBstr(metaname)) ;
 	    if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
@@ -2114,9 +2106,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 					}
 				}
 				COMTHROW( mgaProject.CoCreateInstance(L"Mga.MgaProject") );
-#pragma warning(disable: 4310) // cast truncates constant value
 				COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 				HRESULT hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
 				if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
 					TCHAR buf[300];
@@ -2355,9 +2345,7 @@ void CGMEApp::OnFileClearLocks()
 		CComObjPtr<IMgaProject> project;
 		COMTHROW( project.CoCreateInstance(OLESTR("MGA.MgaProject")) );
 		ASSERT( project != NULL );
-#pragma warning(disable: 4310) // cast truncates constant value
 		COMTHROW( project->CheckLocks(PutInBstr(conn), VARIANT_TRUE) );
-#pragma warning(default: 4310) // cast truncates constant value
 
 		AfxMessageBox(_T("Database locks are cleared"));
 	}
@@ -2820,9 +2808,7 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 					}
 				}
 				COMTHROW( mgaProject.CoCreateInstance(L"Mga.MgaProject") );
-#pragma warning(disable: 4310) // cast truncates constant value
 				COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 				HRESULT hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
 				if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
 					TCHAR buf[300];

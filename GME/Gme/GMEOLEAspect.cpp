@@ -189,9 +189,7 @@ STDMETHODIMP CGMEOLEAspect::XDual::get_Active(VARIANT_BOOL* isActive)
 
 	TRY_DUAL(__uuidof(IGMEOLEAspect))
 	{
-#pragma warning(disable: 4310) // cast truncates constant value
 		*isActive = (pThis->GetActive() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
-#pragma warning(default: 4310) // cast truncates constant value
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL
@@ -203,9 +201,7 @@ STDMETHODIMP CGMEOLEAspect::XDual::get_Valid(VARIANT_BOOL* isValid)
 
 	TRY_DUAL(__uuidof(IGMEOLEAspect))
 	{
-#pragma warning(disable: 4310) // cast truncates constant value
 		*isValid = (pThis->GetValid() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
-#pragma warning(default: 4310) // cast truncates constant value
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL

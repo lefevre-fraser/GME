@@ -69,9 +69,7 @@ VARIANT_BOOL CCoreObjectPtr::GetBoolValue(attrid_type attrid) const
 	COMTHROW( p->get_LoadedAttrValue(attrid, PutOut(v)) );
 	ASSERT( v.vt == VT_I4 );
 
-#pragma warning( disable: 4244) // conversion from 'long' to 'short', possible loss of data
-	return v.lVal;
-#pragma warning( default: 4244) // conversion from 'long' to 'short', possible loss of data
+	return v.lVal ? VARIANT_TRUE : VARIANT_FALSE;
 }
 
 void CCoreObjectPtr::GetPointerValue(attrid_type attrid, CCoreObjectPtr &ret) const

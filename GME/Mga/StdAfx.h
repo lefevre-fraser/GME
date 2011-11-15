@@ -39,8 +39,6 @@ extern CComModule _Module;
 #include <hash_map>
 #pragma warning(pop)
 
-#pragma warning(disable : 4100 4239 4244)
-
 #ifdef _DEBUG
 #define MGA_TRACE AtlTrace
 #else

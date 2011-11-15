@@ -949,7 +949,6 @@ bool CAutoRouterGraph::SimplifyPaths()
 	return was;
 }
 
-#pragma warning(disable: 4700)
 void CAutoRouterGraph::CenterStairsInPathPoints(CAutoRouterPath* path, RoutingDirection hintstartdir, RoutingDirection hintenddir)
 {
 	ASSERT( path != NULL );
@@ -1140,7 +1139,6 @@ void CAutoRouterGraph::SimplifyPathPoints(CAutoRouterPath* path)
 	path->AssertValidPoints();
 #endif
 }
-#pragma warning(default: 4700)
 
 void CAutoRouterGraph::ConnectAllDisconnectedPaths()
 {

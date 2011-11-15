@@ -3182,9 +3182,7 @@ STDMETHODIMP CGMEOLEIt::XDual::get_Valid(VARIANT_BOOL* p_isActive)
 
 	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
-#pragma warning(disable: 4310) // cast truncates constant value
 		*p_isActive = (pThis->GetValid() == FALSE) ? VARIANT_FALSE : VARIANT_TRUE;
-#pragma warning(default: 4310) // cast truncates constant value
 		return NOERROR;
 	}
 	CATCH_ALL_DUAL

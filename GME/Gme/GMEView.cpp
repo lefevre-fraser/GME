@@ -1955,9 +1955,7 @@ void CGMEView::CreateAnnotators()
 		COMTHROW(currentModel->get_RegistryNode(path, &anRoot));
 		if (anRoot != NULL) {
 			CComPtr<IMgaRegNodes> anNodes;
-#pragma warning(disable: 4310) // cast truncates constant value
 			COMTHROW(anRoot->get_SubNodes(VARIANT_TRUE, &anNodes));
-#pragma warning(default: 4310) // cast truncates constant value
 			CreateAnnotators(anNodes, annotators);
 		}
 	}
@@ -3589,9 +3587,7 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 						}
 						else {
 							CComPtr<IMgaFCO> obj;
-#pragma warning(disable: 4310) // cast truncates constant value
 							VARIANT_BOOL inst = instance ? VARIANT_TRUE : VARIANT_FALSE;
-#pragma warning(default: 4310) // cast truncates constant value
 							if((hr = currentModel->DeriveChildObject(fco,newRole,inst,&obj)) != S_OK) {
 								CString msg( (LPCTSTR) fcoName); msg += _T(" cannot be derived! Some of its ancestors or descendants may be already derived!");
 								if( hr == E_MGA_NOT_DERIVABLE)
@@ -3677,9 +3673,7 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 							CComPtr<IMgaConnection> conn;
 							if(fco.QueryInterface(&conn) != S_OK) { // skip connections, they cannot be referenced
 								CComPtr<IMgaMetaRole> role;
-#pragma warning(disable: 4310) // cast truncates constant value
 								COMTHROW(doc->resolver->put_IsStickyEnabled(::GetKeyState(VK_SHIFT) < 0 ? VARIANT_FALSE :VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 								HRESULT hr = doc->resolver->get_RefRoleByMeta(currentModel,aspect,fco,&role);
 								if (hr == E_ABORT) {
 									return false;
@@ -4056,9 +4050,7 @@ bool CGMEView::Connect(CGuiObject *src,CGuiPort *srcPort, int srcHotSide, CGuiOb
 			dstPort = dstPort->IsRealPort() ? dstPort : NULL;
 			if (dstPort) CGMEEventLogger::LogGMEEvent(_T("    dstPort=")+dstPort->GetName()+_T(" ")+dstPort->GetID()+_T("\r\n"));
 		}
-#pragma warning(disable: 4310) // cast truncates constant value
 		COMTHROW(doc->resolver->put_IsStickyEnabled(nosticky ? VARIANT_FALSE :VARIANT_TRUE));
-#pragma warning(default: 4310) // cast truncates constant value
 		COMTHROW(doc->resolver->get_ConnRoleByMeta(	currentModel,
 													aspect,
 													src->mgaFco,
