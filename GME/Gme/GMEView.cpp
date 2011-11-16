@@ -834,11 +834,9 @@ void CGMEView::OnDraw(CDC* pDC)
 			CRect clientRect;
 			GetClientRect(clientRect);
 			CPoint clientSize = clientRect.Size();
-			clientSize = CPoint(clientSize.x * m_scalePercent / 100, clientSize.y * m_scalePercent / 100);
-
 			CPoint scrollpos = GetDeviceScrollPosition();
 			visible = CRect(scrollpos, scrollpos + clientSize);
-			visible.InflateRect(m_scalePercent * 5, m_scalePercent * 5);
+			visible.InflateRect(10 * 100 / m_scalePercent, 10 * 100 / m_scalePercent);
 			visible = CRect(std::max(0l, visible.left), std::max(0l, visible.top),
 				visible.right, visible.bottom);
 		}
