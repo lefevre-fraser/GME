@@ -569,6 +569,8 @@ int CGMEApp::Run()
 			TerminateProcess(GetCurrentProcess(), GetExceptionCode());
 		}
 	}
+	// KMS: need to unload decorators before closing GDI+: e.g. ~Facilities() does GDI+ ops
+	CoFreeUnusedLibraries();
 	// Closing GDI+
 	graphics.Uninitialize();
 	gdiplusStartupOutput.NotificationUnhook(gdiplusHookToken);
