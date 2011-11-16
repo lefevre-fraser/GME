@@ -59,6 +59,20 @@ do { \
 
 #define COMTRY try
 
+#ifdef __AFX_H__
+#define CATCH_CMEMORY_EXCEPTION(CLEANUP) \
+    catch (CMemoryException* e) \
+	{ \
+		try { CLEANUP; } catch (const std::bad_alloc& ) { } \
+		e->Delete(); \
+		SetStandardOrGMEErrorInfo(E_OUTOFMEMORY); \
+		return E_OUTOFMEMORY; \
+	}
+#else
+#define CATCH_CMEMORY_EXCEPTION(CLEANUP)
+#endif
+
+
 #define COMCATCH(CLEANUP) \
 	catch(hresult_exception &e) \
 	{ \
@@ -82,13 +96,7 @@ do { \
 		SetStandardOrGMEErrorInfo(E_OUTOFMEMORY); \
 		return E_OUTOFMEMORY; \
 	} \
-	catch (CMemoryException* e) \
-	{ \
-		try { CLEANUP; } catch (const std::bad_alloc& ) { } \
-		e->Delete(); \
-		SetStandardOrGMEErrorInfo(E_OUTOFMEMORY); \
-		return E_OUTOFMEMORY; \
-	} \
+    CATCH_CMEMORY_EXCEPTION(CLEANUP) \
 	return S_OK;
 
 #define COMRETURN(HR) \
