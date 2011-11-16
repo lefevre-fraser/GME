@@ -18,6 +18,8 @@ GME/XmlBackEnd/XmlBackEnd.h
 GME/XmlBackEnd/Release
 GME/Search/Release
 GME/Release
+GME/ReleaseUnicode
+GME/DebugUnicode
 GME/PartBrowser/Release
 GME/PartBrowser/PartBrowser_h.h
 GME/Parser/Release
@@ -83,7 +85,6 @@ Tests/GPyUnit/*.mga
 Tests/GPyUnit/GME_310/test1-output.mga
 GME/DecoratorLib
 GME/MgaDecorators/MgaDecoratorLib.h
-GME/ReleaseUnicode
 Paradigms/MetaGME/DecoratorLib
 Paradigms/MetaGME/ReleaseUnicode
 Tests/GPyUnit/BigModelTest
