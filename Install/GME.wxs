@@ -124,6 +124,9 @@
       <Merge Id="GME_paradigms" Language="1033" SourceFile="GME_paradigms.msm" DiskId="1"/>
       <?if $(sys.BUILDARCH)=x64 ?>
       <Merge Id="GME_bin_x64" Language="1033" SourceFile="GME_bin_x64.msm" DiskId="1" />
+      <Merge Id="CRT100_x86" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_CRT_x86.msm" DiskId="1" />
+      <Merge Id="MFC100_x86" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_MFC_x86.msm" DiskId="1" />
+      <Merge Id="ATL100_x86" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_ATL_x86.msm" DiskId="1" />
       <?endif?>
     </DirectoryRef>
 
@@ -141,6 +144,9 @@
         <MergeRef Id='GME_paradigms' />
         <?if $(sys.BUILDARCH)=x64 ?>
         <MergeRef Id='GME_bin_x64'/>
+        <MergeRef Id='CRT100_x86' />
+        <MergeRef Id='MFC100_x86' />
+        <MergeRef Id='ATL100_x86' />
         <?endif?>
 
         <?if $(sys.BUILDARCH)=x86 ?>
