@@ -50,9 +50,11 @@
     <DirectoryRef Id='INSTALLDIR_BIN'>
       <Component Id='GME.exe'>
         <File Id='GME.exe' Name='GME.exe' DiskId='1' Source='..\GME\$(var.Release)\GME.exe' KeyPath='yes' Checksum='yes'>
-          <Shortcut Id='ApplicationStartMenuShortcut' Name='GME' Icon='GME.ico'
-      Description='Generic Modeling Environment' Directory='ShortcutFolder'
-    Advertise="yes" />
+          <?if $(sys.BUILDARCH)=x86 ?>
+          <Shortcut Id='ApplicationStartMenuShortcut' Name='GME' Icon='GME.ico' Description='Generic Modeling Environment' Directory='ShortcutFolder' Advertise="yes" />
+          <?else?>
+          <Shortcut Id='ApplicationStartMenuShortcut' Name='GME (64 bit)' Icon='GME.ico' Description='Generic Modeling Environment' Directory='ShortcutFolder' Advertise="yes" />
+          <?endif?>
           <TypeLib Id="{0ADEEC71-D83A-11D3-B36B-005004CC8592}" Description="GME Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id='C7DCCC2E-1642-4a40-8060-51A7B9FAE488' Context='LocalServer32' Server='GME.exe' Handler='2'>
               <ProgId Id='GME.Application' />
