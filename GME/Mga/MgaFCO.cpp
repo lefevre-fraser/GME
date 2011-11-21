@@ -777,9 +777,9 @@ HRESULT FCO::ClearAttrByName( BSTR name) {
 
 HRESULT FCO::get_RegistryNode( BSTR path,  IMgaRegNode **pVal) {  
 	COMTRY {
-			CheckRead();
-			CHECK_INSTRPAR(path);
-			CHECK_OUTPTRPAR(pVal);
+		CheckRead();
+		CHECK_INSTRPAR(path);
+		CHECK_OUTPTRPAR(pVal);
 
 		CComPtr<CMgaRegNode> s;
 		CreateComObject(s);
