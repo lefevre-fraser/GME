@@ -176,7 +176,6 @@ bool IsInternalRelation(CoreObj src) {
 	case DTID_CONNROLE:	 a = ATTRID_XREF; break;	
 	case DTID_SETNODE:	 a = ATTRID_XREF; break;	
 	case DTID_REFATTR:	 a = ATTRID_XREF; break;	
-	case DTID_REGNODE:	 a = ATTRID_XREF; break;	
 	case DTID_CONNROLESEG:   a = ATTRID_SEGREF;	break;
 	default: COMTHROW(E_MGA_DATA_INCONSISTENCY);
 	}

@@ -122,11 +122,6 @@ void FCO::inDeleteObject() {
 						ITER[ATTRID_XREF] = nil;
 						CoreObjMark(ITER[ATTRID_ATTRPARENT], OBJEVENT_ATTR);
 						break;
-					case DTID_REGNODE:
-// registry REF attribute:  set it to NIL
-						ITER[ATTRID_XREF] = nil;
-						CoreObjMark(ITER[ATTRID_REGNOWNER], OBJEVENT_REGISTRY);
-						break;
 					default:	
 										COMTHROW(E_MGA_META_INCOMPATIBILITY);
 					}
@@ -473,7 +468,7 @@ void ObjTreeDerive(CMgaProject *mgaproject, const CoreObj &origobj, CoreObj &new
 			}
 			else {
 				ai -= ATTRID_COLLECTION;
-				if(LINKREF_ATTR(ai) && ai != ATTRID_ATTRPARENT && ai != ATTRID_REGNOWNER) {
+				if(LINKREF_ATTR(ai) && ai != ATTRID_ATTRPARENT) {
 					CoreObjs collmembers = origobj[ai + ATTRID_COLLECTION];
 					ITERATE_THROUGH(collmembers) {
 						CoreObj nchild;
@@ -1643,12 +1638,13 @@ void ObjDetachAndMerge( CMgaProject *mgaproject, CoreObj orig, CoreObj &nobj, co
 					case ATTRID_MASTEROBJ:
 					{
 						CoreObj nmas = nobj[ai];
-						if( nobj.IsFCO() && nmas.IsFCO()) // save its master's guid into registry
+						if( nobj.IsFCO() && nmas && nmas.IsFCO()) // save its master's guid into registry
 						{
 							CComBSTR bstr;
 							ObjForCore( nmas)->GetGuidDisp( &bstr);
 							if( bstr) ObjForCore( nobj)->put_RegistryValue( CComBSTR( DETACHED_FROM), bstr);
 						}
+						MergeRegs(orig, nobj);
 						nobj[ai] = CComVariant( (IDispatch*) 0);//an empty value;
 						break;
 					}
@@ -1711,16 +1707,6 @@ void ObjDetachAndMerge( CMgaProject *mgaproject, CoreObj orig, CoreObj &nobj, co
 				ai -= ATTRID_COLLECTION;
 
 				switch( ai) {
-					case ATTRID_REGNOWNER: // merge registry
-					{ 
-						CoreObjs collmembers = orig[ai + ATTRID_COLLECTION]; // copy the base's entries
-						ITERATE_THROUGH(collmembers) {
-							CoreObj nchild;
-							ObjTreeCopy(mgaproject, ITER, nchild, crealist);
-							nchild[ai] = nobj;
-						}
-						break;
-					}
 					case ATTRID_ATTRPARENT: // copy the unfilled attributes
 					{
 						unsigned int owned_attrs(0), inherited_attrs(0), l3(0);
@@ -1871,7 +1857,6 @@ void ObjAttach(CMgaProject *mgaproject, const CoreObj &origobj, CoreObj &newobj,
 				ai -= ATTRID_COLLECTION;
 				if(LINKREF_ATTR(ai))  {
 					if( ai == ATTRID_ATTRPARENT) { } // no need to copy attr values since the newobj already had its own
-					else if( ai == ATTRID_REGNOWNER) { } // automatic
 					else if( ai == ATTRID_CONSTROWNER) { }
 					else if( ai == ATTRID_CONNROLE) { }
 					else if( ai == ATTRID_SETMEMBER) { }

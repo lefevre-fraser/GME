@@ -3,6 +3,12 @@
 #include "MgaAttribute.h"
 #include "MgaFCO.h"
 
+#include "atlsafe.h"
+
+#include <unordered_map>
+
+#include "Core.h"
+
 /////////////////////////////////////////////////////////////////////////////
 // CMgaAttribute
 
@@ -456,20 +462,6 @@ void MergeAttrs(const CoreObj &src, CoreObj &dst) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#define RFLAG_HASVALUE 1
-#define RFLAG_OPAQUE 2
-
-
-// THROWS!!!
-// RECURSIVE!!!
-void RegistryChildrenRemove(CoreObj &t) {
-		CoreObjs children = CoreObj(t)[ATTRID_REGNOWNER + ATTRID_COLLECTION];
-		ITERATE_THROUGH(children) {
-			RegistryChildrenRemove(ITER);
-			COMTHROW(ITER->Delete());
-		}
-}
-
 
 // THROWS!!!
 // RECURSIVE!!!
@@ -479,77 +471,40 @@ void RegistryChildrenRemove(CoreObj &t) {
 // If dst node is opaque, src is not copied and recursion also stops.
 
 void MergeRegs(const CoreObj &src, CoreObj &dst) {
-	CoreObjs dstcoll = dst[ATTRID_REGNOWNER+ATTRID_COLLECTION];
-	ITERATE_THROUGH(src[ATTRID_REGNOWNER+ATTRID_COLLECTION]) {
-		CoreObj &srcn = ITER;
-		CoreObj dstn;
-		CComBSTR srcname = srcn[ATTRID_NAME];
-		long dstflags, srcflags = ITER[ATTRID_REGFLAGS];
-		ITERATE_THROUGH(dstcoll) {
-			if(srcname == CComBSTR(ITER[ATTRID_NAME])) {
-				dstn = ITER;
-				break;
-			}
-		}
-		if(!dstn) {
-			CComPtr<ICoreProject> p;
-			COMTHROW(dst->get_Project(&p));
-			COMTHROW(p->CreateObject(DTID_REGNODE, &dstn.ComPtr()));
-			dstn[ATTRID_NAME] = srcn[ATTRID_NAME];
-			dstn[ATTRID_REGNOWNER] = dst;
-			dstflags = 0;
-		}
-		else dstflags = ITER[ATTRID_REGFLAGS];
-		if(!(dstflags & RFLAG_OPAQUE)) {
-			if(!(dstflags & RFLAG_HASVALUE) && (srcflags & RFLAG_HASVALUE)) {
-				dstn[ATTRID_REGNODEVALUE] = srcn[ATTRID_REGNODEVALUE];
-				dstn[ATTRID_XREF] = srcn[ATTRID_XREF];
-			}
-			dstn[ATTRID_REGFLAGS] = dstflags | srcflags;
-			MergeRegs(srcn, dstn);
-		}
+	{
+		// KMS: need to set ATTRID_REGNODE for write ops
+		CComVariant attr = dst[ATTRID_REGNODE];
+		dst[ATTRID_REGNODE] = attr;
 	}
-}
 
+	CComVariant attr = dst[ATTRID_REGNODE];
+	CComPtr<ICoreDictionaryAttributeValue> dictval;
+	COMTHROW(attr.pdispVal->QueryInterface(&dictval));
+	VARIANT vmap;
+	COMTHROW(dictval->get_Map(&vmap));
+	CMgaRegNode::map_type* map = (CMgaRegNode::map_type*)(void*)vmap.llVal;
 
-// throws
-CoreObj findregvalueobj(CoreObj &cur, LPOLESTR bstrObname, long &opacity, bool create) {  //returns NULL if not found
-	wchar_t* obname = bstrObname;
-	if (obname == NULL) obname = L"";
-	ASSERT(*obname != '/');
-	LPOLESTR endstr = wcschr(obname,'/');
-	size_t len = endstr ? endstr - obname : wcslen(obname);
-	CoreObjs snodes = cur[ATTRID_REGNOWNER+ATTRID_COLLECTION];
-	ITERATE_THROUGH(snodes) {
-		CComBSTR nm = ITER[ATTRID_NAME];
-		if(nm.Length()==len && wcsncmp(nm,obname, len) == 0) {
-			opacity |= (long)ITER[ATTRID_REGFLAGS];
-			if(!endstr) {
-				return ITER;
-			}
-			return findregvalueobj(ITER, endstr +1, opacity, create);
-		}
-	}
-	if(create) {
-		CComPtr<ICoreProject> p;
-		COMTHROW(cur->get_Project(&p));
-		CoreObj nob;
-		COMTHROW(p->CreateObject(DTID_REGNODE, &nob.ComPtr()));
+	CoreObj s = src;
+	do {
+		CComVariant sattr = s[ATTRID_REGNODE];
+		CComPtr<ICoreDictionaryAttributeValue> sdictval;
+		COMTHROW(sattr.pdispVal->QueryInterface(&sdictval));
+		VARIANT svmap;
+		COMTHROW(sdictval->get_Map(&svmap));
+		CMgaRegNode::map_type* smap = (CMgaRegNode::map_type*)(void*)svmap.llVal;
+
+		for (auto it = smap->begin(); it != smap->end(); it++)
 		{
-			LPOLESTR z = new OLECHAR[len+1];
-			wcsncpy(z, obname, len);
-			z[len] = '\0';
-			nob[ATTRID_NAME] = z;
-			delete[] z;
+			if (map->find(it->first) == map->end())
+			{
+				map->insert(CMgaRegNode::map_type::value_type(it->first, it->second));
+			}
 		}
-		nob[ATTRID_REGFLAGS] = 0; 
-		nob[ATTRID_REGNOWNER] =  cur;
-		if(!endstr) return nob;
-		return findregvalueobj(nob, endstr +1, opacity, create);
-	}
-	return NULLCOREOBJ;
-}
 
+		if (!s.IsFCO())
+			break;
+	} while (s = s[ATTRID_DERIVED]);
+}
 
 class regnotifytask : public DeriveTreeTask {
 	bool Do(CoreObj self, std::vector<CoreObj> *peers = NULL) {
@@ -558,6 +513,66 @@ class regnotifytask : public DeriveTreeTask {
 	}
 };
 
+
+template<class F>
+void CMgaRegNode::WalkKeyValues(CoreObj& obj, F& f, long status, bool& continue_)
+{
+	CComVariant attr = obj[ATTRID_REGNODE];
+	CComPtr<ICoreDictionaryAttributeValue> oldval;
+	COMTHROW(attr.pdispVal->QueryInterface(&oldval));
+	VARIANT vmap;
+	COMTHROW(oldval->get_Map(&vmap));
+	map_type* map = (map_type*)(void*)vmap.llVal;
+
+	for (auto it = map->begin(); it != map->end(); it++)
+	{
+		f(*map, it, status, continue_);
+	}
+}
+
+template<class F>
+void CMgaRegNode::WalkKeyValuesInher(F& f)
+{
+	bool continue_ = true;
+	CoreObj s = fco->self;
+	long status = ATTSTATUS_HERE;
+	do {
+		WalkKeyValues(s, f, status, continue_);
+		status = min(ATTSTATUS_IN_ARCHETYPE4, status + 1);
+		if (!continue_)
+			break;
+		if (!s.IsFCO())
+			break;
+	} while (s = s[ATTRID_DERIVED]);
+}
+
+void CMgaRegNode::SetValue(const wchar_t* path, const wchar_t* value)
+{
+	{
+		// KMS: need to set ATTRID_REGNODE for write ops
+		CComVariant attr = fco->self[ATTRID_REGNODE];
+		fco->self[ATTRID_REGNODE] = attr;
+	}
+
+	CComVariant attr = fco->self[ATTRID_REGNODE];
+	CComPtr<ICoreDictionaryAttributeValue> oldval;
+	COMTHROW(attr.pdispVal->QueryInterface(&oldval));
+
+	CComPtr<ICoreDictionaryAttributeValue> newval = oldval;
+	//COMTHROW(oldval->Clone(&newval));
+	VARIANT vmap;
+	COMTHROW(newval->get_Map(&vmap));
+	map_type* map = (map_type*)(void*)vmap.llVal;
+
+	if (value == NULL_SENTINEL) {
+		auto ent = map->find(CComBSTR(path));
+		if (ent != map->end())
+			map->erase(ent);
+	} else
+		(*map)[CComBSTR(path)] = CComBSTR(value);
+}
+
+const wchar_t* CMgaRegNode::NULL_SENTINEL = (const wchar_t*) "\0xFF\0xFE\0";
 
 
 void CMgaRegNode::markchg() {
@@ -569,7 +584,7 @@ void CMgaRegNode::markchg() {
 
 
 STDMETHODIMP CMgaRegNode::get_Object( IMgaObject **pVal) {  
-	COMTRY { 
+	COMTRY {
 		CHECK_OUTPTRPAR(pVal);
 		IMgaFCO *p;
 		fco->getinterface(&p); 
@@ -582,11 +597,45 @@ STDMETHODIMP CMgaRegNode::get_Status( long *status) {
 			fco->CheckRead();
 			CHECK_OUTPAR(status);
 
-			if(load_status == ATTSTATUS_INVALID) {
-				CComBSTR v;
-				COMTHROW(get_Value(&v));
+			*status = ATTSTATUS_UNDEFINED;
+			CoreObj s = fco->self;
+			long _status = ATTSTATUS_HERE;
+			do {
+				CComVariant attr = s[ATTRID_REGNODE];
+				CComPtr<ICoreDictionaryAttributeValue> oldval;
+				COMTHROW(attr.pdispVal->QueryInterface(&oldval));
+
+				CComPtr<ICoreDictionaryAttributeValue> newval = oldval;
+				VARIANT vmap;
+				COMTHROW(newval->get_Map(&vmap));
+				map_type* map = (map_type*)(void*)vmap.llVal;
+				if (map->find(mypath) != map->end())
+				{
+					*status = _status;
+					return S_OK;
+				}
+
+				_status = min(ATTSTATUS_IN_ARCHETYPE4, _status + 1);
+				if (!s.IsFCO())
+					break;
+			} while (s = s[ATTRID_DERIVED]);
+
+			metaref_type mref = fco->self[ATTRID_META];
+			if(mref) {
+				CComQIPtr<IMgaMetaBase> m(mgaproject->FindMetaRef(mref));
+				CComPtr<IMgaMetaRegNode> rn;
+				HRESULT hr = m->get_RegistryNode(mypath, &rn);
+				if (hr == E_NOTFOUND) {
+					*status = ATTSTATUS_UNDEFINED;
+				}
+				else if (SUCCEEDED(hr)) {
+					*status = ATTSTATUS_METADEFAULT;
+				}
+				else if(hr != E_NOTFOUND)
+					COMTHROW(hr);
 			}
-			*status = load_status;
+
+			return S_OK;
 		} COMCATCH(;)
 }
 
@@ -594,55 +643,38 @@ STDMETHODIMP CMgaRegNode::get_Status( long *status) {
 STDMETHODIMP CMgaRegNode::get_Value(BSTR *pVal) {
 		COMTRY {
 			CHECK_OUTVARIANTPAR(pVal);
-			fco->CheckRead();
-			CComVariant var;
-			long opacity = 0;
-			if(load_status == ATTSTATUS_INVALID) {
-				long ls = ATTSTATUS_HERE;
-				CoreObj cur = fco->self;
-				valueobj = NULL;
-				while(cur) {
-					valueobj <<= findregvalueobj(cur, mypath, opacity, false);
-					if(valueobj != NULL) {
-					   long flags = valueobj[ATTRID_REGFLAGS];
-					   if(flags & RFLAG_HASVALUE) {
-  							load_status = ls;
-							break;				// breaks here with >= HERE 
-					   }
-					}
-					if((opacity & RFLAG_OPAQUE) != 0) {  // opaque node hit.
-						load_status = ATTSTATUS_UNDEFINED;
-						break;
-					}
-					CComPtr<ICoreMetaObject> mo;
-					if(GetMetaID(cur) == DTID_FOLDER) break;  // folders do not inherit
-					cur = cur[ATTRID_DERIVED];
-					ls++;
-				}
-			}
 
-			if(load_status >= ATTSTATUS_HERE) {
-				*pVal = CComBSTR(valueobj[ATTRID_REGNODEVALUE]).Detach();
-			}
-			else if(load_status != ATTSTATUS_UNDEFINED) {    // INVALID || INMETA
-				load_status = ATTSTATUS_UNDEFINED;
-				metaref_type mref = fco->self[ATTRID_META];
-				if(mref) {
-					CComQIPtr<IMgaMetaBase> m(mgaproject->FindMetaRef(mref));
-					CComPtr<IMgaMetaRegNode> rn;
-					HRESULT hr = m->get_RegistryNode(mypath, &rn);
-					if(hr == S_OK) {
-						load_status = ATTSTATUS_METADEFAULT;
-						COMTHROW(rn->get_Value( pVal));
-					}
-					else if(hr != E_NOTFOUND) COMTHROW(hr);
+			CoreObj s = fco->self;
+			do {
+				CComVariant attr = s[ATTRID_REGNODE];
+				CComPtr<ICoreDictionaryAttributeValue> dict;
+				COMTHROW(attr.pdispVal->QueryInterface(&dict));
+				VARIANT vmap;
+				COMTHROW(dict->get_Map(&vmap));
+				map_type* map = (map_type*)(void*)vmap.llVal;
+
+				map_type::iterator it = map->find(mypath);
+				if (it != map->end()) {
+					*pVal = CComBSTR(it->second).Detach();
+					return S_OK;
 				}
+				if (!s.IsFCO())
+					break;
+			} while (s = s[ATTRID_DERIVED]);
+
+			metaref_type mref = fco->self[ATTRID_META];
+			if(mref) {
+				CComQIPtr<IMgaMetaBase> m(mgaproject->FindMetaRef(mref));
+				CComPtr<IMgaMetaRegNode> rn;
+				HRESULT hr = m->get_RegistryNode(mypath, &rn);
+				if(hr == S_OK) {
+					COMTHROW(rn->get_Value(pVal));
+					return S_OK;
+				}
+				else if(hr != E_NOTFOUND)
+					COMTHROW(hr);
 			}
-			if(load_status == ATTSTATUS_UNDEFINED) {
-				// n.b. this is a fancy way of saying *pVal = NULL;
-				// FIXME: *pVal is NULL here and we return S_OK
-				CComBSTR x;   *pVal = x.Detach();
-			}
+			*pVal = NULL;
 
 		} COMCATCH(;)
 }
@@ -652,16 +684,7 @@ STDMETHODIMP CMgaRegNode::get_FCOValue(IMgaFCO **pVal) {
 			fco->CheckRead();
 			CHECK_OUTPTRPAR(pVal);
 
-			if(load_status == ATTSTATUS_INVALID) {
-				CComBSTR v;
-				COMTHROW(get_Value(&v));
-			}
-			if(load_status >= ATTSTATUS_HERE) {
-				CoreObj v = valueobj[ATTRID_XREF];
-				if(v) {
-					ObjForCore(v)->getinterface(pVal);
-				}
-			}
+			fco->getinterface(pVal);
 		} COMCATCH(;)
 }
 
@@ -670,61 +693,33 @@ STDMETHODIMP CMgaRegNode::get_Opacity( VARIANT_BOOL *pVal) {
 			fco->CheckRead();
 			CHECK_OUTPAR(pVal)
 			*pVal = VARIANT_FALSE;
-			long opa;
-			CoreObj vobj;
-			vobj <<= findregvalueobj(fco->self, mypath, opa, false);
-			if(vobj) {
-				long flags = vobj[ATTRID_REGFLAGS];
-				if(flags & ~RFLAG_OPAQUE) 
-					*pVal = VARIANT_TRUE;
-			}
 		} COMCATCH(;);
 }
 
 STDMETHODIMP CMgaRegNode::put_Opacity( VARIANT_BOOL newVal) {
+	return S_OK;
+	return E_NOTIMPL;
 		COMTRY_IN_TRANSACTION {
 			fco->CheckWrite();
 			CHECK_INPAR(newVal);
-			long opa;
-			CoreObj vobj;
-			vobj <<= findregvalueobj(fco->self, mypath, opa, true);
-			long newmask = newVal ? RFLAG_OPAQUE : 0;
-			long flags = vobj[ATTRID_REGFLAGS];
-			if((flags & RFLAG_OPAQUE) != newmask) {
-				vobj[ATTRID_REGFLAGS] = (flags & ~RFLAG_OPAQUE) | newmask;
-				if(load_status != ATTSTATUS_HERE) load_status = ATTSTATUS_INVALID;
-				markchg();
-			}
 		} COMCATCH_IN_TRANSACTION(;);
 }
 
 
 STDMETHODIMP CMgaRegNode::put_Value(BSTR newVal) {
-		COMTRY_IN_TRANSACTION_MAYBE {
+		COMTRY {
 			CHECK_INSTRPAR(newVal);
 			fco->CheckWrite();
-			long dummy;
-			valueobj <<= findregvalueobj(fco->self, mypath, dummy, true);
-			load_status = ATTSTATUS_HERE;
-			valueobj[ATTRID_REGNODEVALUE] = newVal;
-			valueobj[ATTRID_XREF] = NULLCOREOBJ;
-			long flags = valueobj[ATTRID_REGFLAGS];
-			if(!(flags & RFLAG_HASVALUE)) valueobj[ATTRID_REGFLAGS] = flags | RFLAG_HASVALUE;
+			SetValue(mypath, newVal);
 			markchg();
-		} COMCATCH_IN_TRANSACTION_MAYBE(;)
+		} COMCATCH(;)
 }
 
 STDMETHODIMP CMgaRegNode::put_FCOValue(IMgaFCO *newVal) {
+	return E_NOTIMPL;
 		COMTRY_IN_TRANSACTION {
 			CHECK_MYINPTRPAR(newVal);
 			fco->CheckWrite();
-			long dummy;
-			valueobj <<= findregvalueobj(fco->self, mypath, dummy, true);
-			load_status = ATTSTATUS_HERE;
-			valueobj[ATTRID_REGNODEVALUE] = CComBSTR();
-			valueobj[ATTRID_XREF] = CoreObj(newVal);
-			long flags = valueobj[ATTRID_REGFLAGS];
-			if(!(flags & RFLAG_HASVALUE)) valueobj[ATTRID_REGFLAGS] = flags | RFLAG_HASVALUE;
 			markchg();
 		} COMCATCH_IN_TRANSACTION(;)
 }
@@ -733,49 +728,64 @@ STDMETHODIMP CMgaRegNode::get_SubNodes( VARIANT_BOOL virtuals, IMgaRegNodes **pV
 		COMTRY {
 			fco->CheckRead();
 			CHECK_OUTPTRPAR(pVal);
-			long dummy;
-			stdext::hash_set<CComBSTRNoAt, CComBSTR_hashfunc> match;
-			CoreObj s = fco->self;
-			if(!s.IsFCO()) virtuals = VARIANT_FALSE;
-			CREATEEXCOLLECTION_FOR(MgaRegNode,q);
-			do {
-				CoreObj vobj;
-				vobj <<= findregvalueobj(s, mypath, dummy, false);
-				if(!vobj)  continue;
-				CoreObjs children = vobj[ATTRID_REGNOWNER+ATTRID_COLLECTION];
 
-				ITERATE_THROUGH(children) {
-					CComBSTR subpath(mypath);
-					COMTHROW(subpath.Append(L"/"));
-					CComBSTR path = ITER[ATTRID_NAME];
-					COMTHROW(subpath.Append(path));
-					if(virtuals) {
-						if(match.find(path) != match.end()) continue;
-						match.insert(path);
-					}
-					q->Add(fco->rpool.getpoolobj(subpath, fco, mgaproject));
+			CoreObj s = fco->self;
+			if(!s.IsFCO())
+				virtuals = VARIANT_FALSE;
+			CREATEEXCOLLECTION_FOR(MgaRegNode,q);
+			std::set<std::wstring> paths;
+			WalkKeyValuesInher([&](map_type& map, map_type::iterator& it, int inher, bool& continue_) {
+				if (virtuals == VARIANT_FALSE && inher != ATTSTATUS_HERE)
+				{
+					continue_ = false;
+					return;
 				}
-			} while(virtuals && (s = s[ATTRID_DERIVED]));
+				if (wcsncmp(it->first, mypath, mypath.Length()) == 0)
+				{
+					std::wstring path = it->first;
+					if (path.length() > mypath.Length())
+					{
+						size_t end = path.find(L'/', mypath.Length() + 1);
+						if (end != std::wstring::npos)
+							path = path.substr(0, end);
+						paths.insert(std::move(path));
+					}
+				}
+			});
 			if(virtuals) {
 				metaref_type mref = fco->self[ATTRID_META];
 				if(mref) {
 					CComQIPtr<IMgaMetaBase> m(mgaproject->FindMetaRef(mref));
 					CComPtr<IMgaMetaRegNode> rn;
-					HRESULT hr = m->get_RegistryNode(mypath, &rn);
+					HRESULT hr;
+					if (mypath == L"")
+						hr = S_OK;
+					else
+						hr = m->get_RegistryNode(mypath, &rn);
 					CComPtr<IMgaMetaRegNodes> rns;
 					if(hr == S_OK) {
-						COMTHROW(hr = rn->get_RegistryNodes(&rns));
+						if (mypath == L"")
+							COMTHROW(m->get_RegistryNodes(&rns));
+						else
+							COMTHROW(rn->get_RegistryNodes(&rns));
 						MGACOLL_ITERATE(IMgaMetaRegNode, rns) {
 							CComBSTR path;
 							COMTHROW(MGACOLL_ITER->get_Name(&path));
-							if(match.find(path) != match.end()) continue;
 							CComBSTR subpath(mypath);
-							COMTHROW(subpath.Append("/"));
+							if (mypath != L"")
+								COMTHROW(subpath.Append("/"));
 							COMTHROW(subpath.Append(path));
-							q->Add(fco->rpool.getpoolobj(subpath, fco, mgaproject));
+							paths.insert(subpath);
 						} MGACOLL_ITERATE_END;
 					}
 				}
+			}
+			for (std::set<std::wstring>::iterator pathsIt = paths.begin(); pathsIt != paths.end(); pathsIt++)
+			{
+				CComPtr<CMgaRegNode> regnode;
+				CreateComObject(regnode);
+				regnode->Initialize(CComBSTR(pathsIt->c_str()), fco, mgaproject);
+				q->Append(regnode.Detach());
 			}
 			*pVal = q.Detach();
 		} COMCATCH(;)
@@ -812,58 +822,45 @@ STDMETHODIMP CMgaRegNode::get_ParentNode(IMgaRegNode **pVal) {
 STDMETHODIMP CMgaRegNode::Clear() {
 		COMTRY_IN_TRANSACTION {
 			fco->CheckWrite();
-/*  // old implementation: did not create object if it was not already there
-			long l;
-			COMTHROW(get_Status(&l));
-			if(l == ATTSTATUS_HERE) {
-				long flags = valueobj[ATTRID_REGFLAGS];
-				valueobj[ATTRID_REGFLAGS] = flags & ~RFLAG_HASVALUE;
-				load_status = ATTSTATUS_INVALID;
-				markchg();
-			}
-*/
-			long dummy;
-			valueobj <<= findregvalueobj(fco->self, mypath, dummy, true);
-			valueobj[ATTRID_REGNODEVALUE] = CComBSTR();
-			long flags = valueobj[ATTRID_REGFLAGS];
-			valueobj[ATTRID_REGFLAGS] = flags & ~RFLAG_HASVALUE;
-			load_status = ATTSTATUS_INVALID;
+			SetValue(mypath, NULL_SENTINEL);
+
 			markchg();
 		} COMCATCH_IN_TRANSACTION(;);
 }
 
 STDMETHODIMP CMgaRegNode::RemoveTree() {
-	COMTRY_IN_TRANSACTION {
-			fco->CheckWrite();
-			long dummy;
-			valueobj <<= findregvalueobj(fco->self, mypath, dummy, false);
-			if(valueobj) {
-				// lph: Pre-Notification PRE_STATUS (the registry node is being destroyed)
-				CComBSTR desc = L"REGISTRY,";
-				COMTHROW(desc.Append(mypath));
-				COMTHROW(desc.Append(L",Removed"));
-				fco->PreNotify(OBJEVENT_PRE_STATUS, CComVariant(desc));
-				//--------------------------------------------------------------------------
-				RegistryChildrenRemove(valueobj);
-				COMTHROW(valueobj->Delete());			
-				load_status = ATTSTATUS_INVALID;
-				markchg();
+	COMTRY {
+		fco->CheckWrite();
+		// lph: Pre-Notification PRE_STATUS (the registry node is being destroyed)
+		CComBSTR desc = L"REGISTRY,";
+		COMTHROW(desc.Append(mypath));
+		COMTHROW(desc.Append(L",Removed"));
+		fco->PreNotify(OBJEVENT_PRE_STATUS, CComVariant(desc));
+
+		{
+		// KMS: need to set ATTRID_REGNODE for write ops
+		CComVariant attr = fco->self[ATTRID_REGNODE];
+		fco->self[ATTRID_REGNODE] = attr;
+		}
+
+		CComVariant attr = fco->self[ATTRID_REGNODE];
+		CComPtr<ICoreDictionaryAttributeValue> oldval;
+		COMTHROW(attr.pdispVal->QueryInterface(&oldval));
+		VARIANT vmap;
+		COMTHROW(oldval->get_Map(&vmap));
+		map_type* map = (map_type*)(void*)vmap.llVal;
+
+		for (auto it = map->begin(); it != map->end(); it++)
+		{
+			if (wcsncmp(it->first, mypath, mypath.Length()) == 0)
+			{
+				map->erase(it);
 			}
-	} COMCATCH_IN_TRANSACTION(;);
+		}
+		// TODO
+		markchg();
+	} COMCATCH(;);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

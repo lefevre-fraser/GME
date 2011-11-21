@@ -73,16 +73,17 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 /*=false*
 		CREATE_ATTRIBUTE(ATTRID_CONSTRPRIORITY, "ConstrPriority", "Constraint Priority",VALTYPE_STRING);
 		CREATE_POINTER(ATTRID_CONSTROWNER, "ConstraintOf", "Owner Kind");
 
+// Old REGNODE format. Upgraded to new format in CoreBinFile
 //REGNODE
-		CREATE_OBJECT(DTID_REGNODE, "RegNode", "Template For Registry Node");
-		COMMON_DEF
-
-		CREATE_ATTRIBUTE(ATTRID_NAME, "Name", "RegNode Name",		VALTYPE_STRING);
-		CREATE_ATTRIBUTE(ATTRID_REGFLAGS, "RegistryFlags", "Registry Flags", VALTYPE_LONG);
-		CREATE_POINTER(ATTRID_REGNOWNER, "RegNodeOf", "Parent Object/Regnode");
-		CREATE_COLLECTION(ATTRID_REGNOWNER, "RegNodes", "Registry Nodes");
-		CREATE_ATTRIBUTE(ATTRID_REGNODEVALUE, "RegNodeValue", "RegNode Value",VALTYPE_STRING);
-		CREATE_POINTER(ATTRID_XREF,	"FCOref", "Referenced FCO");
+//		CREATE_OBJECT(DTID_REGNODE, "RegNode", "Template For Registry Node");
+//		COMMON_DEF
+//
+//		CREATE_ATTRIBUTE(ATTRID_NAME, "Name", "RegNode Name",		VALTYPE_STRING);
+//		CREATE_ATTRIBUTE(ATTRID_REGFLAGS, "RegistryFlags", "Registry Flags", VALTYPE_LONG);
+//		CREATE_POINTER(ATTRID_REGNOWNER, "RegNodeOf", "Parent Object/Regnode");
+//		CREATE_COLLECTION(ATTRID_REGNOWNER, "RegNodes", "Registry Nodes");
+//		CREATE_ATTRIBUTE(ATTRID_REGNODEVALUE, "RegNodeValue", "RegNode Value",VALTYPE_STRING);
+//		CREATE_POINTER(ATTRID_XREF,	"FCOref", "Referenced FCO");
 
 //////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// DATA ///////////////////////////////////////////////////
@@ -109,7 +110,8 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 /*=false*
 		CREATE_POINTER(ATTRID_PARENT, "Parent", "Parent Object");
 		CREATE_COLLECTION(ATTRID_PARENT, "Children", "Child Objects");
 		CREATE_COLLECTION(ATTRID_CONSTROWNER, "Constraints", "Constraints");
-		CREATE_COLLECTION(ATTRID_REGNOWNER, "RegNodes", "Registry Nodes");
+		//CREATE_COLLECTION(ATTRID_REGNOWNER, "RegNodes", "Registry Nodes");
+		CREATE_ATTRIBUTE(ATTRID_REGNODE, "RegNodes", "Registry Nodes", VALTYPE_DICT);
 		CREATE_ATTRIBUTE(ATTRID_PERMISSIONS, "Permissions", "Permissions", VALTYPE_LONG);
 
 		if( v2) GUID_ATTRS_DEFS;
@@ -125,13 +127,12 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 /*=false*
 		CREATE_ATTRIBUTE(ATTRID_ROLEMETA, "RoleMeta", "Role Meta Identifier",VALTYPE_METAREF);\
 		CREATE_POINTER(ATTRID_FCOPARENT, "Parent", "Parent Object");\
 		CREATE_COLLECTION(ATTRID_CONSTROWNER, "Constraints", "Constraints");\
-		CREATE_COLLECTION(ATTRID_REGNOWNER, "RegNodes", "Registry Nodes");\
+		CREATE_ATTRIBUTE(ATTRID_REGNODE, "RegNodes", "Registry Nodes", VALTYPE_DICT); \
 		CREATE_COLLECTION(ATTRID_REFERENCE, "References", "Referenced by");\
 		CREATE_COLLECTION(ATTRID_XREF,		"XReferences", "Cross refs");\
 		CREATE_COLLECTION(ATTRID_ATTRPARENT,"Attributes", "Attributes");\
 		CREATE_POINTER(ATTRID_DERIVED, "BaseType", "BaseType");\
 		CREATE_COLLECTION(ATTRID_DERIVED, "SubTypes", "SubTypes/Instances"); \
-/*		CREATE_COLLECTION(ATTRID_REALOBJECT, "Aliases", "Aliases"); */ \
 		CREATE_ATTRIBUTE(ATTRID_PERMISSIONS, "Permissions", "Permissions", VALTYPE_LONG);
 
 //MODEL
@@ -178,19 +179,6 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 /*=false*
 		if( v2) GUID_ATTRS_DEFS;
 		CLSID_PUSH(  CLSID_MgaO );  
 
-/*
-//ALIAS		
-		CREATE_OBJECT(DTID_ALIASNODE, "AliasNode", "Template For Aliases");
-		COMMON_DEF
-
-		CREATE_ATTRIBUTE(ATTRID_ROLEMETA, "RoleMeta", "Role Meta Identifier",VALTYPE_METAREF);\
-		CREATE_POINTER(ATTRID_FCOPARENT, "Parent", "Parent of FCO");\
-		CREATE_COLLECTION(ATTRID_REGNOWNER, "RegNodes", "Registry Nodes");\
-		CREATE_POINTER(ATTRID_REALOBJECT, "RealObject", "Real Object");\
-		CREATE_POINTER(ATTRID_DERIVED, "BaseType", "BaseType");\
-		CREATE_COLLECTION(ATTRID_DERIVED, "SubTypes", "SubTypes/Instances"); \
-		CREATE_ATTRIBUTE(ATTRID_PERMISSIONS, "IsInstance", "Is instance?", VALTYPE_LONG);
-*/
 
 //SETNODE		
 		CREATE_OBJECT(DTID_SETNODE, "SetNode", "Template For Set Member");
@@ -235,9 +223,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 /*=false*
 #define ATTR_DEF \
 		COMMON_DEF\
 		CREATE_ATTRIBUTE(ATTRID_META, "Meta", "Meta Identifier",VALTYPE_METAREF);\
-		CREATE_POINTER(ATTRID_ATTRPARENT,"Owner", "Owner FCO");\
-//		CREATE_COLLECTION(ATTRID_CONSTROWNER, "Constraints", "Constraints");\
-//		CREATE_COLLECTION(ATTRID_REGNOWNER, "RegNodes", "Registry Nodes");\
+		CREATE_POINTER(ATTRID_ATTRPARENT,"Owner", "Owner FCO");
 
 //STRATTR
 		CREATE_OBJECT(DTID_STRATTR, "StrAttr", "String Attribute");

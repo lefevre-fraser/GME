@@ -2,6 +2,9 @@
 // Tricks, macros, definitions used throughout the Mga library
 //
 
+#pragma once
+
+#include "MgaCoreObj.h"
 #include "CommonMgaTrukk.h"
 
 #define DIM(x) (sizeof(x)/ sizeof((x)[0]))

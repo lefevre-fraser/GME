@@ -45,6 +45,7 @@ typedef CCoreDataAttribute<CCoreDataAttrBase<long>, VALTYPE_LONG> CCoreLongAttri
 typedef CCoreDataAttribute<CCoreDataAttrBase<CComBstrObj>, VALTYPE_STRING> CCoreStringAttribute;
 typedef CCoreDataAttribute<CCoreDataAttrBase<bindata>, VALTYPE_BINARY> CCoreBinaryAttribute;
 typedef CCoreDataAttribute<CCoreDataAttrBase<double>, VALTYPE_REAL> CCoreRealAttribute;
+typedef CCoreDataAttribute<CCoreDataAttrBase<CComPtr<CCoreDictionaryAttributeValue>>, VALTYPE_DICT> CCoreDictAttribute;
 
 void CCoreAttribute::Create(CCoreObject *object, CCoreMetaAttribute *metaattribute)
 {
@@ -80,6 +81,17 @@ void CCoreAttribute::Create(CCoreObject *object, CCoreMetaAttribute *metaattribu
 	case VALTYPE_LONG:
 		{
 			typedef CComPartObject< CCoreLongAttribute > COMTYPE;
+
+			COMTYPE *p = NULL;
+			COMTHROW( COMTYPE::CreateInstance(CastToUnknown(object), &p) );
+			attribute = p;
+
+			break;
+		}
+
+		case VALTYPE_DICT:
+		{
+			typedef CComPartObject< CCoreDictAttribute > COMTYPE;
 
 			COMTYPE *p = NULL;
 			COMTHROW( COMTYPE::CreateInstance(CastToUnknown(object), &p) );
@@ -819,13 +831,36 @@ inline void CCoreDataAttrBase<DATA>::ChangeFrontValue(VARIANT &v)
 	CopyTo(v, values.front());
 }
 
+template<>
+inline void CCoreDataAttrBase<CComPtr<CCoreDictionaryAttributeValue>>::ChangeFrontValue(VARIANT &v)
+{
+	ASSERT( values.size() >= 2 );
+}
+
+
+template<class DATA>
+DATA CCoreDataAttrBase<DATA>::CreateValue()
+{
+	return value_type();
+}
+
+template<>
+CComPtr<CCoreDictionaryAttributeValue> CCoreDataAttrBase<CComPtr<CCoreDictionaryAttributeValue>>::CreateValue()
+{
+	CCoreDictionaryAttributeValue *val = NULL;
+	typedef CComObject< CCoreDictionaryAttributeValue > COMTYPE;
+	// FIXME: is this necessary?
+	COMTHROW( COMTYPE::CreateInstance((COMTYPE **)&val) );
+	return CComPtr<CCoreDictionaryAttributeValue>(val);
+}
+
 template<class DATA>
 void CCoreDataAttrBase<DATA>::InsertFrontValue(VARIANT &v)
 {
 	if( limited_size(values, 2) == 1 )
 	{
 		LockSelfTry();
-		values.push_front(value_type());
+		values.push_front(CreateValue());
 		try
 		{
 			CopyTo(v, values.front());
@@ -840,7 +875,7 @@ void CCoreDataAttrBase<DATA>::InsertFrontValue(VARIANT &v)
 	}
 	else
 	{
-		values.push_front(value_type());
+		values.push_front(CreateValue());
 		try
 		{
 			CopyTo(v, values.front());

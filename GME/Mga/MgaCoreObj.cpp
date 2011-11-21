@@ -130,7 +130,6 @@ CoreObj CoreObj::GetMgaObj() {
 		case DTID_CONNROLESEG:  ai = ATTRID_CONNSEG; break;
 		case DTID_SETNODE:		ai = ATTRID_SETMEMBER; break;
 		case DTID_CONSTRAINT:   ai = ATTRID_CONSTROWNER; break;
-		case DTID_REGNODE:      ai = ATTRID_REGNOWNER; break;
 		default:				ai = ATTRID_ATTRPARENT;
 		}
 		r = r[ai];

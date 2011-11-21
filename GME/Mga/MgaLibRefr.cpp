@@ -205,7 +205,6 @@ void RefreshManager::saveOwnedStuff( CComPtr<IMgaConnection>& p_owner, connEnds_
 	COMTHROW(m_mgaproject->dataproject->CreateObject( GetMetaID(owner), &p_one_conn.saver.ComPtr()));
 
 	steal( owner, p_one_conn.saver, ATTRID_ATTRPARENT);
-	steal( owner, p_one_conn.saver, ATTRID_REGNOWNER);
 	steal( owner, p_one_conn.saver, ATTRID_CONSTROWNER);
 }
 
@@ -213,7 +212,6 @@ void RefreshManager::loadSavedStuff( CComPtr<IMgaFCO>& p_nConn, connEnds_struct&
 {
 	CoreObj inheritor( p_nConn);
 	steal( p_one_conn.saver, inheritor, ATTRID_ATTRPARENT);
-	steal( p_one_conn.saver, inheritor, ATTRID_REGNOWNER);
 	steal( p_one_conn.saver, inheritor, ATTRID_CONSTROWNER);
 
 	SingleObjTreeDelete( p_one_conn.saver, true);
@@ -2164,7 +2162,6 @@ void RefreshManager::SyncDerObjs( const CoreObj &masterobj, CoreObj &adaptiveobj
 				ai -= ATTRID_COLLECTION;
 				if(LINKREF_ATTR(ai))  {
 					if( ai == ATTRID_ATTRPARENT)       { } // don't care
-					else if( ai == ATTRID_REGNOWNER)   { } // don't care
 					else if( ai == ATTRID_CONSTROWNER) { } // don't care
 					else if( ai == ATTRID_CONNROLE)    { } // manually propagated, see collectFreshConnection below
 					else if( ai == ATTRID_SETMEMBER)   { } // manually set, see SyncDerSets below
@@ -2481,7 +2478,6 @@ void RefreshManager::DetachObjFromLibBase( const CoreObj& p_baseObj, CoreObj& p_
 
 				switch( ai) {
 					case ATTRID_CONSTROWNER:        // the subobjects which are owned by p_derdObj
-					case ATTRID_REGNOWNER:          // will be preserved automatically
 					case ATTRID_ATTRPARENT:         // p_baseObj's subobjects will be forgotten
                             break;                  // and when the new version is reattached
                                                     // then those will be propagated down to p_derdObj
@@ -2665,7 +2661,6 @@ void RefreshManager::AttachDerObjs( const CoreObj &p_baseObj, CoreObj &p_derdObj
 				ai -= ATTRID_COLLECTION;
 				if(LINKREF_ATTR(ai))  {
 					//if( ai == ATTRID_ATTRPARENT)       { } // no need to copy these since the
-					//else if( ai == ATTRID_REGNOWNER)   { } // attachment provides the propagation
 					//else if( ai == ATTRID_CONSTROWNER) { } // automatically
 					if(ai == ATTRID_CONNROLE) {
 						// ConnRoles also depend on their base with ATTRID_MASTEROBJ

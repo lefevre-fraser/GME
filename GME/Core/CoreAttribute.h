@@ -7,6 +7,7 @@
 #include "CoreTransactionItem.h"
 #include "CoreMetaAttribute.h"
 #include "CoreObject.h"
+#include "CoreDictionaryAttributeValue.h"
 
 #include <list>
 #include <set>
@@ -252,6 +253,7 @@ public:
 
 public:
 	void ChangeFrontValue(VARIANT &v);
+	DATA CreateValue();
 	void InsertFrontValue(VARIANT &v);
 
 	void SpliceValue(values_iterator before, values_iterator pos) NOTHROW;

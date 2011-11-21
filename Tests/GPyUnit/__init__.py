@@ -10,6 +10,7 @@ _tests = unittest.defaultTestLoader.loadTestsFromNames(
  'test_registrar',
  'test_gmeoleapp',
  'test_parser',
+ 'test_registry',
  'GME_297.suite',
  'GME_310.suite',
  'GME_371',

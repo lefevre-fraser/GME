@@ -355,7 +355,6 @@ public:
 	bool simpleconn();
 	partpool ppool;
 	attrpool apool;
-	regnpool rpool;
 	typedef stdext::hash_map<objid_type, CMgaConnPoint *, cp_hashfunc> cphash;
 	cphash connpointhash;
 	typedef stdext::hash_map<objid_type, CMgaConstraint *, cp_hashfunc> cshash;

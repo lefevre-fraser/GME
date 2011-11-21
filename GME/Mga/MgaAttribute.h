@@ -5,7 +5,15 @@
 
 #include "resource.h"       // main symbols
 
+#include "MgaProject.h"
 
+#include <unordered_map>
+
+struct CComBSTR_Length {
+	::std::size_t operator ()(const CComBSTR& bstr) const {
+		return bstr.Length();
+	}
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // CMgaAttribute
@@ -146,11 +154,11 @@ END_COM_MAP()
 // IMgaRegNode
 	void markchg();
 public:
-	STDMETHOD(get_Name)( BSTR *pVal) { 
+	STDMETHOD(get_Name)(BSTR *pVal) { 
 		COMTRY {
 			CHECK_OUTPAR(pVal);
 			LPCOLESTR p = (mypath == NULL ? NULL : wcsrchr(mypath, '/'));
-			if(p) p += 1; // skip '/'
+			if (p) p += 1; // skip '/'
 			else p = mypath;
 			CComBSTR rval(p);
 			*pVal = rval.Detach();
@@ -179,72 +187,32 @@ public:
 	STDMETHOD(Clear)();
 	STDMETHOD(RemoveTree)();
 
-	typedef CMgaRegNode *hashobp;
-	hashobp *prevptr, next;
-	CMgaRegNode()	: prevptr(NULL), next(NULL), load_status(ATTSTATUS_INVALID) {	}
-	~CMgaRegNode() {						// remove object from hash
-		if(next) next->prevptr = prevptr;
-		*prevptr = next;
-	}
-	void Initialize(BSTR path, FCO *o, CMgaProject *p) {   // Throws!!!
-		mypath = path;		
+	CMgaRegNode() { }
+	~CMgaRegNode() { }
+
+	void Initialize(BSTR path, FCO *o, CMgaProject* mgaproject) {
+		mypath = path;
 		fco = o;
-		mgaproject = p;
+		this->mgaproject = mgaproject;
 	}
 
-	long load_status;
-	CoreObj valueobj;
+	template<class F>
+	void WalkKeyValues(CoreObj& obj, F& f, long status, bool& continue_);
+
+	template<class F>
+	void WalkKeyValuesInher(F& f);
+
+	void SetValue(const wchar_t* path, const wchar_t* value);
+	const static wchar_t* NULL_SENTINEL;
+
 	FCOPtr fco;
 	CComBSTR mypath;
-	CMgaProject *mgaproject;
+	CMgaProject* mgaproject;
+
+	typedef std::unordered_map<CComBSTR, CComBSTR, CComBSTR_Length> map_type;
 };
 
 
-#define RPOOL_HASHSIZE 8
-
-
-class regnpool {
-	CMgaRegNode::hashobp pool[RPOOL_HASHSIZE];
-public:
-	regnpool() { 
-		int i; 
-		for(i = 0; i < RPOOL_HASHSIZE;i++) pool[i] = NULL;
-	}
-
-	~regnpool() {
-		int i; 
-		for(i = 0; i < RPOOL_HASHSIZE;i++) ASSERT(pool[i] == NULL);
-	}
-
-	int rpool_hash(BSTR nam) {
-		int i = SysStringLen(nam);
-		int hash = i;
-		while(i) hash ^= nam[--i];
-		return hash % RPOOL_HASHSIZE;
-	}
-
-	// Throws (allocates)!!!!
-	CComPtr<IMgaRegNode>  getpoolobj(BSTR nam, FCO *o, CMgaProject *pr) {
-		CMgaRegNode::hashobp &k = pool[rpool_hash(nam)], *kk;
-		for(kk = &k; *kk != NULL; kk = &((*kk)->next)) {
-			if((*kk)->mypath == nam) {
-				return (*kk);
-			}
-		}
-		CComPtr<CMgaRegNode > s;
-		CreateComObject(s);
-		s->prevptr = &k;				// Insert to the front
-		s->next = k;
-		if(k) k->prevptr = &(s->next);
-		k = s;
-
-		s->Initialize(nam, o, pr);  
-		CComPtr<IMgaRegNode> retval = s;
-		return retval;
-	}
-};
-
-void RegistryChildrenRemove(CoreObj &t);
 void MergeRegs(const CoreObj &src, CoreObj &dst);
 
 

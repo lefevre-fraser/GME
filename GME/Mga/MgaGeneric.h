@@ -1,3 +1,4 @@
+#pragma once
 
 void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 = false);
 
@@ -71,10 +72,10 @@ static inline attrid_type _gen_rangetest(attrid_type s) { ASSERT(s < ATTRID_COLL
 #define	ATTRID_CONSTRPRIORITY			451
 #define	ATTRID_CONSTROWNER				652
 
-#define	ATTRID_REGNOWNER				655
-#define	ATTRID_REGNODENAME				456
-#define	ATTRID_REGNODEVALUE				457
-#define	ATTRID_REGFLAGS					458
+#define	ATTRID_REGNOWNER				655 // <! deprecated
+#define	ATTRID_REGNODEVALUE				457 // <! deprecated
+#define	ATTRID_REGFLAGS					458 // <! deprecated
+#define	ATTRID_REGNODE				457
 
 
 // OBJECT ID'S
@@ -105,7 +106,7 @@ static inline attrid_type _gen_rangetest(attrid_type s) { ASSERT(s < ATTRID_COLL
 // contigious block ends
 	
 #define DTID_CONSTRAINT			120	
-#define DTID_REGNODE			121	
+#define DTID_REGNODE			121	 // <! deprecated
 #define DTID_SETNODE			122	
 
 

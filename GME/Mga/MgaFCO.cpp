@@ -780,7 +780,15 @@ HRESULT FCO::get_RegistryNode( BSTR path,  IMgaRegNode **pVal) {
 			CheckRead();
 			CHECK_INSTRPAR(path);
 			CHECK_OUTPTRPAR(pVal);
-			*pVal = rpool.getpoolobj(path, this, mgaproject).Detach();
+
+		CComPtr<CMgaRegNode> s;
+		CreateComObject(s);
+
+		s->Initialize(path, this, mgaproject);
+
+		CComPtr<IMgaRegNode> retval = s;
+
+		*pVal = s.Detach();
 	} COMCATCH(;)
 }
 
@@ -792,36 +800,16 @@ HRESULT FCO::get_Registry(VARIANT_BOOL virtuals, IMgaRegNodes **pVal) {
 	COMTRY {  
 		CheckRead();
 		CHECK_OUTPTRPAR(pVal);
-		CREATEEXCOLLECTION_FOR(MgaRegNode,q);
-		CoreObj s = self;
-		if(!s.IsFCO()) virtuals = VARIANT_FALSE;
-		stdext::hash_set<CComBSTRNoAt, CComBSTR_hashfunc> match;
-		do {
-			CoreObjs children = s[ATTRID_REGNOWNER+ATTRID_COLLECTION];
-			ITERATE_THROUGH(children) {
-				CComBSTR path;
-				path	= ITER[ATTRID_NAME];
-				if(virtuals) {
-					if(match.find(path) != match.end()) continue;
-					match.insert(path);
-				}
-				q->Add(rpool.getpoolobj(path, this, mgaproject));
-			}
-		} while(virtuals && (s = s[ATTRID_DERIVED]));
-		if(virtuals) {
-			CComQIPtr<IMgaMetaBase> m;
-			COMTHROW(get_MetaBase(&m));
-			CComPtr<IMgaMetaRegNodes> rns;
-			COMTHROW(m->get_RegistryNodes(&rns));
-			MGACOLL_ITERATE(IMgaMetaRegNode, rns) {
-				CComBSTR path;
-				COMTHROW(MGACOLL_ITER->get_Name(&path));
-				if(match.find(path) != match.end()) continue;
-				q->Add(rpool.getpoolobj(path, this, mgaproject));
-			} MGACOLL_ITERATE_END;
-		}
 
-		*pVal = q.Detach();
+		if(!self.IsFCO())
+			virtuals = VARIANT_FALSE;
+
+		CComPtr<CMgaRegNode> regnode;
+		CreateComObject(regnode);
+
+		regnode->Initialize(CComBSTR(L""), this, mgaproject);
+
+		COMTHROW(regnode->get_SubNodes(virtuals, pVal));
 	} COMCATCH(;);
 }
 HRESULT FCO::get_RegistryValue( BSTR path,  BSTR *pVal) {  
@@ -847,33 +835,14 @@ HRESULT FCO::put_RegistryValue( BSTR path,  BSTR newval) {
 typedef std::vector<CComVariant> ModificationsVector;
 
 void getRegistryModifications(CoreObj &cobj, CComBSTR &path, ModificationsVector &mv) {
-	CComVariant current  = cobj[ATTRID_REGNODEVALUE];
-	CComVariant previous;
-	COMTHROW(cobj->get_PreviousAttrValue(ATTRID_REGNODEVALUE, &previous));
-	if (previous != current) {
-		CComBSTR label = "REGISTRY:";
-		COMTHROW(label.Append(path));
-		CComVariant ident = label;
-		mv.push_back(ident);
-		mv.push_back(previous);
-	}
-	ITERATE_THROUGH(cobj[ATTRID_REGNOWNER+ATTRID_COLLECTION]) {
-		CComBSTR cname = ITER[ATTRID_NAME];
-		CComBSTR cpath = path;
-		COMTHROW(cpath.Append("/"));
-		COMTHROW(cpath.Append(cname));
-		getRegistryModifications(ITER, cpath, mv);
-	}
+	// TODO
 }
 
 HRESULT get_Modifications(FCO *fco, unsigned long changemask, CComVariant *mods) {
 	COMTRY {
 	ModificationsVector modifications;
 	if (changemask & OBJEVENT_REGISTRY) {
-		ITERATE_THROUGH(fco->self[ATTRID_REGNOWNER+ATTRID_COLLECTION]) {
-			CComBSTR path = ITER[ATTRID_NAME];
-			getRegistryModifications(ITER, path, modifications);
-		}
+		// TODO
 	}
 	if (changemask & OBJEVENT_ATTR) {
 		CComPtr<IMgaMetaFCO> mfco;

@@ -85,8 +85,9 @@ typedef enum valtype_enum
 	[helpstring("Real (double precision)")] 
 	VALTYPE_REAL = 7,
 
+	VALTYPE_DICT = 8,
 	[helpstring("Last value type")] 
-	VALTYPE_MAX = 7
+	VALTYPE_MAX = 8,
 } valtype_enum;
 
 typedef enum transtype_enum
@@ -595,6 +596,32 @@ interface IGMEVersionInfo : IUnknown
 {
 	[propget, helpstring("property version")]
 	HRESULT version([out, retval] GMEInterfaceVersion_enum *pVal);
+};
+
+[
+	object,
+	uuid(FAB8C11E-747A-45A5-BF05-1A8FB353B03B),
+	dual,
+	pointer_default(unique)
+]
+interface ICoreDictionaryAttributeValue : IDispatch
+{
+	[propget, id(DISPID_VALUE)]
+	HRESULT Value([in] BSTR Key, [out, retval] BSTR *Value);
+
+	[propput, id(DISPID_VALUE)]
+	HRESULT Value([in] BSTR Key, [in] BSTR Value);
+
+	[propget]
+	HRESULT Keys([out, retval] VARIANT *Keys);
+
+	[propget]
+	HRESULT Map([out, retval] VARIANT* Map);
+
+	[propput]
+	HRESULT Map([in] VARIANT Map);
+
+	HRESULT Clone([out] ICoreDictionaryAttributeValue** Clone);
 };
 
 //-------------------------------------------------------------------------------

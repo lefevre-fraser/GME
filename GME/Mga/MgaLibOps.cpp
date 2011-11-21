@@ -280,9 +280,6 @@ void LibImgHelper::DoExtTreeCopy::operator ()( const CoreObj& orig, CoreObj& nob
 	metaid_type s;
 	COMTHROW( m_mgaproject->dataproject->CreateObject(s = orig.GetMetaID(), &nobj.ComPtr()));
 
-	if( s != DTID_REGNODE )		// speedup, no references to regnodes
-		m_fixup.identify(orig, nobj);
-
 	bool skip_this = false;
 	if(s >= DTID_MODEL && s <= DTID_FOLDER) {
 		setcheck( m_mgaproject, nobj, CHK_NEW);
@@ -701,7 +698,6 @@ void redo_derivs(CMgaProject *mgaproject, CoreObj &oldnode, CoreObj &newnode, bo
 	if(oldnode.IsContainer()) {
 		newnode[ATTRID_LASTRELID] = oldnode[ATTRID_LASTRELID];
 	}
-	steal(oldnode, newnode, ATTRID_REGNOWNER);
 	steal(oldnode, newnode, ATTRID_CONSTROWNER);
 
 	if(oldnode.IsFCO()) {

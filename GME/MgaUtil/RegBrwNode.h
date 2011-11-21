@@ -13,7 +13,6 @@ class CRegBrwNode;
 class CRegBrwNode  
 {
 public:
-	bool opacity;
 	long status;
 	void* handle;
 	CRegBrwNode* parent;

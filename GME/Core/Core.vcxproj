@@ -440,6 +440,7 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="CoreAttribute.cpp" />
     <ClCompile Include="CoreBinFile.cpp" />
+    <ClCompile Include="CoreDictionaryAttributeValue.cpp" />
     <ClCompile Include="CoreMetaAttribute.cpp" />
     <ClCompile Include="CoreMetaObject.cpp" />
     <ClCompile Include="CoreMetaProject.cpp" />
@@ -497,6 +498,7 @@
   <ItemGroup>
     <ClInclude Include="CoreAttribute.h" />
     <ClInclude Include="CoreBinFile.h" />
+    <ClInclude Include="CoreDictionaryAttributeValue.h" />
     <ClInclude Include="CoreMetaAttribute.h" />
     <ClInclude Include="CoreMetaObject.h" />
     <ClInclude Include="CoreMetaProject.h" />

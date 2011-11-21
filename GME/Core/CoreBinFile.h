@@ -2,6 +2,8 @@
 #ifndef MGA_COREBINFILE_H
 #define MGA_COREBINFILE_H
 
+#include "CoreDictionaryAttributeValue.h"
+
 #include <fstream>//fstream.h
 #include <list>//slist
 #include <map>
@@ -143,9 +145,10 @@ public:
 	binattrs_type binattrs;
 	bool deleted;
 
-	bool HasGuidAndStatAttributes( bool* p_guidFound, bool* p_statusFound);
+	bool HasGuidAndStatAttributes( bool* p_guidFound, bool* p_statusFound, bool* p_oldRegFound);
 	void CreateGuidAttributes( CCoreBinFile* p_bf);
 	void CreateStatusAttribute( CCoreBinFile* p_bf);
+	void UpgradeRegistryIfNecessary(CCoreBinFile* binFile);
 
 	BinAttrBase *Find(attrid_type attrid)
 	{
@@ -266,6 +269,9 @@ public:
 	void write(const CComBstrObj &a);
 	void write(const bindata &a);
 	void write(const unsigned char* a, int len);
+	void write(const wchar_t* a, int len) {
+		write((const unsigned char*)a, len * sizeof(wchar_t));
+	}
 	void writestring(const char* pos);
 // ------- Attribute
 
@@ -519,6 +525,107 @@ public:
 	BinAttr(BinAttr<VALTYPE_BINARY>&& that) : BinAttrBase(that.attrid), data(that.data), need_free(that.need_free) { that.need_free = false; }
 	virtual void move(BinAttrUnion&& dest) {
 		new (&dest) BinAttr<VALTYPE_BINARY>(std::move(*this));
+	}
+};
+
+// --------------------------- BinAttr<VALTYPE_DICT>
+
+template<>
+class BinAttr<VALTYPE_DICT> : public BinAttrBase
+{
+public:
+	BinAttr() : data(0) {
+		CCoreDictionaryAttributeValue *val = NULL;
+		typedef CComObject< CCoreDictionaryAttributeValue > COMTYPE;
+		HRESULT hr = COMTYPE::CreateInstance((COMTYPE **)&val);
+		COMTHROW(hr);
+		dict = val;
+	}
+	virtual ~BinAttr() { }
+
+	char* data;
+	// memcpy: if lazy read, data is not guaranteed to be properly aligned for int*
+	int read_len(char*& offset) const { int ret; memcpy(&ret, offset, sizeof(int)); offset += sizeof(int); return ret; }
+
+	CComPtr<ICoreDictionaryAttributeValue> dict;
+
+	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_DICT; }
+	virtual void Set(CCoreBinFile *binfile, VARIANT v)
+	{
+		ASSERT( binfile != NULL );
+		ASSERT(v.vt = VT_DISPATCH);
+		binfile->modified = true;
+		dict = 0;
+		v.pdispVal->QueryInterface(&dict);
+	}
+
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const {
+		if (dict == 0) {
+			// lazy read
+			CCoreDictionaryAttributeValue* val = NULL;
+			typedef CComObject< CCoreDictionaryAttributeValue > COMTYPE;
+			HRESULT hr = COMTYPE::CreateInstance((COMTYPE **)&val);
+			COMTHROW(hr);
+
+			char* data = this->data;
+			int size = read_len(data);
+			while (data < this->data + size)
+			{
+				int keysize = read_len(data);
+				CComBSTR key(keysize / sizeof(wchar_t));
+				memcpy(key.m_str, data, keysize);
+				data += keysize;
+				int valuesize = read_len(data);
+				CComBSTR value(valuesize / sizeof(wchar_t));
+				memcpy(value.m_str, data, valuesize);
+				data += valuesize;
+				val->m_dict.emplace(
+					std::unordered_map<CComBSTR, CComBSTR, CComBSTR_Length>::value_type(std::move(key), std::move(value)));
+			}
+
+			BinAttr<VALTYPE_DICT>* _this = const_cast<BinAttr<VALTYPE_DICT>*>(this);
+			_this->dict = val;
+			_this->data = 0;
+		}
+		CComVariant ret = dict;
+		COMTHROW(ret.Detach(p));
+	}
+	virtual void Write(CCoreBinFile *binfile) const {
+		int size = 0;
+
+		if (dict == NULL)
+		{
+			// need to read before write
+			// TODO: could just blit it
+			CComVariant p;
+			Get(binfile, &p);
+		}
+
+		const CCoreDictionaryAttributeValue* cdict = (const CCoreDictionaryAttributeValue*)(const ICoreDictionaryAttributeValue*)dict;
+		for (auto it = cdict->m_dict.begin(); it != cdict->m_dict.end(); it++) {
+			size += sizeof(int);
+			size += it->first.Length() * sizeof(wchar_t);
+			size += sizeof(int);
+			size += it->second.Length() * sizeof(wchar_t);
+		}
+		binfile->write(size);
+
+		for (auto it = cdict->m_dict.begin(); it != cdict->m_dict.end(); it++) {
+			// binfile->write((int)it->first.Length());
+			binfile->write(it->first, it->first.Length());
+			// binfile->write((int)it->second.Length());
+			binfile->write(it->second, it->second.Length());
+		}
+	}
+	virtual void Read(CCoreBinFile *binfile) { 
+		dict = 0;
+		data = (char*)binfile->cifs;
+		int len = read_len(binfile->cifs);
+		binfile->cifs += len;
+	}
+	BinAttr(BinAttr<VALTYPE_DICT>&& that) : BinAttrBase(that.attrid), data(that.data), dict(std::move(that.dict)) { }
+	virtual void move(BinAttrUnion&& dest) {
+		new (&dest) BinAttr<VALTYPE_DICT>(std::move(*this));
 	}
 };
 

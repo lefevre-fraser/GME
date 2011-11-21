@@ -4,7 +4,7 @@
 #define __MGAPROJECT_H_
 
 #include "resource.h"       // main symbols
-
+#include "MgaTrukk.h"
 class CMgaTerritory;
 class CMgaAddOn;
 class CMgaClient;

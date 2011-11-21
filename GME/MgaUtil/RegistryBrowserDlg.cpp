@@ -250,10 +250,6 @@ void CRegistryBrowserDlg::AddNodes(CRegBrwNode *parent, CComPtr<IMgaRegNodes> &r
 
 		COMTHROW(regNode->get_Status(&(brNode->status)));
 
-		VARIANT_BOOL op;
-		COMTHROW(regNode->get_Opacity(&op));
-		brNode->opacity = (op == VARIANT_TRUE);
-
 		HTREEITEM hnd;
 		if (parent) {
 			hnd = m_wndRegistryTree.InsertItem(brNode->name, (HTREEITEM)(parent->handle));

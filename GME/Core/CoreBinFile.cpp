@@ -44,6 +44,9 @@ BinAttrBase *BinAttrBase::Create(BinAttrBase& attr, valtype_type valtype)
 		binattr = new ((void*)(&attr)) BinAttr<VALTYPE_COLLECTION>;
 		break;
 
+	case VALTYPE_DICT:
+		binattr = new ((void*)(&attr)) BinAttr<VALTYPE_DICT>;
+		break;
 	case VALTYPE_REAL:
 		binattr = new ((void*)(&attr)) BinAttr<VALTYPE_REAL>;
 		break;
@@ -79,7 +82,70 @@ void getMeAGuid( long *p_l1, long *p_l2, long *p_l3, long *p_l4)
 	*p_l4 = (((((t_guid.Data4[4] << 8) + t_guid.Data4[5]) << 8) + t_guid.Data4[6]) << 8) + t_guid.Data4[7];
 }
 
-bool BinObject::HasGuidAndStatAttributes( bool* p_guidFound, bool* p_statusFound)
+void WalkRegistry(CCoreDictionaryAttributeValue::map_type& map, CComBSTR& path, CCoreBinFile* p_bf, BinObject& node)
+{
+	binattrs_iterator i = node.binattrs.begin();
+	binattrs_iterator e = node.binattrs.end();
+	while( i != e)
+	{
+		if( i->attrid == ATTRID_REGNOWNER + ATTRID_COLLECTION) {
+			// Copy, since we're going to remove from it
+			std::vector<objects_iterator> a = ((BinAttr<VALTYPE_COLLECTION>*)(void*)&(*i))->a;
+			for (auto it = a.begin(); it != a.end(); it++)
+			{
+				objects_type::iterator regnode = p_bf->objects.find((*it)->first);
+				if (regnode == p_bf->objects.end())
+					throw E_BINFILE;
+
+				CComVariant name;
+				regnode->second.Find(ATTRID_NAME)->Get(p_bf, &name);
+#define RFLAG_HASVALUE 1
+#define RFLAG_OPAQUE 2
+				CComVariant flag;
+				regnode->second.Find(ATTRID_REGFLAGS)->Get(p_bf, &flag);
+
+				CComBSTR newPath(path);
+				if (path != L"")
+					newPath += L"/";
+				newPath += name.bstrVal;
+				if (flag.intVal & RFLAG_HASVALUE) {
+					CComVariant value;
+					regnode->second.Find(ATTRID_REGNODEVALUE)->Get(p_bf, &value);
+					map[newPath] = CComBSTR(value.bstrVal);
+				}
+				WalkRegistry(map, newPath, p_bf, regnode->second);
+				p_bf->opened_object = regnode;
+				regnode->second.Find(ATTRID_REGNOWNER)->Set(p_bf, CComVariant());
+			}
+			return;
+		}
+		++i;
+	}
+}
+
+void BinObject::UpgradeRegistryIfNecessary(CCoreBinFile* p_bf)
+{
+	binattrs_iterator i = binattrs.begin();
+	binattrs_iterator e = binattrs.end();
+	while( i != e)
+	{
+		if( i->attrid == ATTRID_REGNOWNER + ATTRID_COLLECTION) {
+			CCoreDictionaryAttributeValue::map_type map;
+			
+			WalkRegistry(map, CComBSTR(), p_bf, *this);
+
+			BinAttrBase::Create(*i, VALTYPE_DICT);
+			i->attrid = ATTRID_REGNODE;
+			CComVariant dict;
+			i->Get(p_bf, &dict);
+			((CCoreDictionaryAttributeValue*)dict.pdispVal)->m_dict = map;
+			return;
+		}
+		++i;
+	}
+}
+
+bool BinObject::HasGuidAndStatAttributes( bool* p_guidFound, bool* p_statusFound, bool* p_oldRegFound)
 {
 	int a1( 0), a2( 0), a3( 0), a4( 0);
 
@@ -94,6 +160,8 @@ bool BinObject::HasGuidAndStatAttributes( bool* p_guidFound, bool* p_statusFound
 			case ATTRID_GUID3: ++a3;break;
 			case ATTRID_GUID4: ++a4;break;
 			case ATTRID_FILESTATUS: *p_statusFound = true; break;
+			case ATTRID_REGNOWNER + ATTRID_COLLECTION:
+				*p_oldRegFound = true; break;
 		};
 
 		++i;
@@ -232,6 +300,7 @@ void BinObject::Read(CCoreBinFile *binfile)
 			{ int len; binfile->read(len); binfile->cifs += len; } // FIXME maybe cifs > cifs_eof
 			break;
 
+		case VALTYPE_DICT:
 		case VALTYPE_BINARY:
 			{ int len; binfile->read(len); binfile->cifs += len; } // FIXME maybe cifs > cifs_eof
 			break;
@@ -965,6 +1034,7 @@ void CCoreBinFile::LoadProject()
 		HR_THROW(E_PROJECT_MISMATCH);
 
 	ASSERT( resolvelist.empty() );
+	bool oldReg_found = false;
 
 	for(;;)
 	{
@@ -1001,7 +1071,7 @@ void CCoreBinFile::LoadProject()
 		{
 			bool stat_found( false), guid_found( false);
 
-			opened_object->second.HasGuidAndStatAttributes( &guid_found, &stat_found);
+			opened_object->second.HasGuidAndStatAttributes( &guid_found, &stat_found, &oldReg_found);
 
 			if( !guid_found) // we will create guid attributes for it
 				opened_object->second.CreateGuidAttributes( this);
@@ -1036,6 +1106,23 @@ void CCoreBinFile::LoadProject()
 
 	isEmpty = true;
 	resolvelist.clear();
+
+	if (oldReg_found) {
+		for (auto it = objects.begin(); it != objects.end(); it++)
+		{
+			if (it->first.metaid >= DTID_MODEL && it->first.metaid <= DTID_FOLDER)	// 101 .. 106
+			{
+				it->second.UpgradeRegistryIfNecessary(this);
+			}
+		}
+		for (auto it = objects.begin(); it != objects.end(); )
+		{
+			if (it->first.metaid == DTID_REGNODE)
+				objects.erase(it++);
+			else
+				it++;
+		}
+	}
 
 	ofs.clear();
 	  // FIXME: set read_only correctly
