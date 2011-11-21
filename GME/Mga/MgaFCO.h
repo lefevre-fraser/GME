@@ -77,7 +77,14 @@ public:
 				}
 			 }
 		 }
-		 else inFCO->Close();
+		 else
+		 {
+#ifdef _DEBUG
+			 innFCO->Close();
+#else
+			 inFCO->Close();
+#endif
+		 }
 	 }
 
 	 FCO::pubfcohash::iterator ii = innFCO->pubfcos.find(territory);
