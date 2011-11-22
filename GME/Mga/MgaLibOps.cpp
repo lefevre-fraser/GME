@@ -280,6 +280,9 @@ void LibImgHelper::DoExtTreeCopy::operator ()( const CoreObj& orig, CoreObj& nob
 	metaid_type s;
 	COMTHROW( m_mgaproject->dataproject->CreateObject(s = orig.GetMetaID(), &nobj.ComPtr()));
 
+	m_fixup.identify(orig, nobj);
+
+
 	bool skip_this = false;
 	if(s >= DTID_MODEL && s <= DTID_FOLDER) {
 		setcheck( m_mgaproject, nobj, CHK_NEW);
