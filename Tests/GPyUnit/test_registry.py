@@ -88,6 +88,9 @@ class TestRegistry(unittest.TestCase):
             self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest/blank').Value, '')
             ATTSTATUS_HERE = 0
             self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest/blank').Status(), ATTSTATUS_HERE)
+            
+            self.project.RootFolder.GetRegistryNodeDisp('xtest123/zt').Value = 'xxxx'
+            self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/zt').GetSubNodesDisp().Count, 0)
             self.project.CommitTransaction()
             self.project.Close(True)
 
