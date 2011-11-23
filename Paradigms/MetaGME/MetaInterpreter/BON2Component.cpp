@@ -353,6 +353,7 @@ void Component::deleteSheet()
 // May also be used in case of invokeable Add-Ons
 void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>& setSelectedFCOs, long lParam )
 {
+	project->setAutoCommit(false);
 	// ======================
 	// Insert application specific code here
 	global_vars.silent_mode = (lParam == GME_SILENT_MODE);
@@ -455,7 +456,10 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 			
 			global_vars.dmp.close();
 			if (success)
+			{
+				project->commit();
 				Dumper::registerIt( global_vars.xmp_file_name);
+			}
 		}
 		else
 			global_vars.err << MSG_ERROR << "Exited before populating the Merged Paradigm Sheet. Proxy or other problem may exist.\n";
