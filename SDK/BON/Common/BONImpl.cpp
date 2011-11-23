@@ -1669,7 +1669,8 @@ namespace BON
 
 	long RegistryNodeImpl::getIntegerValue() const
 	{
-		return (long) Util::Variant( getValue() );
+		long ret = (long) Util::Variant( getValue() );
+		return ret;
 	}
 
 	void RegistryNodeImpl::setIntegerValue( long lValue )
