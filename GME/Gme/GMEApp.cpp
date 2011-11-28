@@ -2034,14 +2034,15 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 		if (newproject) {
 			CString dataconn;
 			COMTRY {
-				CComBstrObj paradigm, parversion, basename, version;
-				CComVariant parguid;
+				CComBstrObj xmeparadigm, xmeparversion, xmebasename, xmeversion;
+				CComVariant xmeparguid, parguid;
 
-				COMTHROW( parser->GetXMLInfo(PutInBstr(fullPath), PutOut(paradigm), PutOut(parversion), &parguid, PutOut(basename), PutOut(version)) );
+				COMTHROW( parser->GetXMLInfo(PutInBstr(fullPath), PutOut(xmeparadigm), PutOut(xmeparversion), &xmeparguid, PutOut(xmebasename), PutOut(xmeversion)) );
+				parguid = xmeparguid;
 
 				CMgaOpenDlg opdlg(CMgaOpenDlg::ImportDialog);
 				if (ftitle.IsEmpty())
-					opdlg.SetFileNameHint(PutInCString(basename));
+					opdlg.SetFileNameHint(PutInCString(xmebasename));
 				else
 					opdlg.SetFileNameHint(ftitle);
 				opdlg.SetFolderPathHint(folderPath);
@@ -2055,15 +2056,33 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 					CComPtr<IMgaRegistrar> reg;
 					COMTHROW( reg.CoCreateInstance(L"Mga.MgaRegistrar") );
 					CComBstrObj conn;
-					HRESULT h1 = reg->QueryParadigm(paradigm, PutOut(conn), &parguid, REGACCESS_PRIORITY);
-					CComVariant pg2;
+					HRESULT h1 = reg->QueryParadigm(xmeparadigm, PutOut(conn), &xmeparguid, REGACCESS_PRIORITY);
+					CComVariant regparguid;
 					conn.Empty();
-					HRESULT h2 = reg->QueryParadigm(paradigm, PutOut(conn), &pg2, REGACCESS_PRIORITY);
+					HRESULT h2 = reg->QueryParadigm(xmeparadigm, PutOut(conn), &regparguid, REGACCESS_PRIORITY);
+					CComBstrObj regCurrentVersion;
+					if (SUCCEEDED(h2)) {
+						reg->VersionFromGUID(xmeparadigm, regparguid, &regCurrentVersion.p, REGACCESS_PRIORITY);
+					}
+
+					CComVariant regGuidFromVersion;
+					HRESULT h3GuidFromVersion = E_FAIL;
+					if (xmeparversion.Length() != 0) {
+						h3GuidFromVersion = reg->GUIDFromVersion(xmeparadigm, xmeparversion, &regGuidFromVersion, REGACCESS_PRIORITY);
+						if (SUCCEEDED(h3GuidFromVersion))
+						{
+							xmeparguid = regGuidFromVersion;
+						} else
+						{
+							h1 = E_MGA_PARADIGM_NOTREG;
+						}
+					}
+
 					TCHAR buf[300];
 					if(h2 != S_OK) {
 						ASSERT(h1 != S_OK);
-						CString msg = _T("Could not find paradigm paradigm '") + CString(paradigm) + "'";
-						if (CString(paradigm) == _T("MetaGME2000"))
+						CString msg = _T("Could not find paradigm paradigm '") + CString(xmeparadigm) + "'";
+						if (CString(xmeparadigm) == _T("MetaGME2000"))
 							msg += _T("\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
 						msg += _T("\nDo you want to import with an other registered paradigm ?");
 						if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {	
@@ -2072,8 +2091,8 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 							if (SUCCEEDED(launcher->MetaDlg(METADLG_NONE))) {
 								// parguid = true;
 								parguid.Clear();
-								paradigm.Empty();
-								COMTHROW( launcher->get_ParadigmName(PutOut(paradigm)) );
+								xmeparadigm.Empty();
+								COMTHROW( launcher->get_ParadigmName(PutOut(xmeparadigm)) );
 							}
 							else {
 								return;   // safe before create
@@ -2084,46 +2103,50 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 						}
 					}
 					else {
-						CComBstrObj parguid1, parguid2;
+						CComBstrObj bstrxmeparguid, bstrregparguid;
 						GUID gg;
 
-						CopyTo(parguid,gg);
-						CopyTo(gg, parguid1);
+						CopyTo(xmeparguid,gg);
+						CopyTo(gg, bstrxmeparguid);
 
-						CopyTo(pg2,gg);
-						CopyTo(gg, parguid2);
+						CopyTo(regparguid,gg);
+						CopyTo(gg, bstrregparguid);
 
 						if(h1 != S_OK) {
-							_stprintf_s(buf, _T("Could not locate paradigm %s\nVersion ID: %s\n")
-										 _T("Do you want to upgrade to the current version instead?\nCurrent ID: %s"), 
-										 static_cast<const TCHAR*>(paradigm), static_cast<const TCHAR*>(parguid1), static_cast<const TCHAR*>(parguid2));
-										 if(AfxMessageBox(buf,MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
-											parguid = pg2;
-										 }
-										 else {
-											AfxMessageBox(_T("Import canceled"));
-											return; // safe before create
-										 }	
+							_stprintf_s(buf, _T("Could not locate paradigm %s, version '%s'.\n\n")
+										 _T("Do you want to upgrade to the current version ('%s') instead?"),
+										 static_cast<const TCHAR*>(xmeparadigm),
+										 static_cast<const TCHAR*>(xmeparversion.Length() != 0 ? xmeparversion : bstrxmeparguid),
+										 static_cast<const TCHAR*>(regCurrentVersion.Length() != 0 ? regCurrentVersion : bstrregparguid));
+							if(AfxMessageBox(buf, MB_OKCANCEL | MB_ICONQUESTION) == IDOK) {
+								parguid = regparguid;
+							}
+							else {
+								// AfxMessageBox(_T("Import canceled"));
+								return; // safe before create
+							}	
 
 						}
-						else if(parguid1.Compare(parguid2)) {
-							_stprintf_s(buf, _T("This model was exported using paradigm %s\nVersion ID: %s\n")
-										 _T("Do you want to upgrade to the current version?\nCurrent ID: %s"), 
-										 static_cast<const TCHAR*>(paradigm), static_cast<const TCHAR*>(parguid1), static_cast<const TCHAR*>(parguid2));
-										 int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
-										 if(answer == IDYES) {
-											parguid = pg2;
-										 }
-										 else if(answer == IDCANCEL) {
-											AfxMessageBox(_T("Import canceled"));
-											return;  // safe before create
-										 }
+						else if(bstrxmeparguid.Compare(bstrregparguid)) {
+							_stprintf_s(buf, _T("This model was exported using paradigm %s, version '%s'.\n\n")
+										 _T("Do you want to upgrade to the current version ('%s')?"),
+										 static_cast<const TCHAR*>(xmeparadigm),
+										 static_cast<const TCHAR*>(xmeparversion.Length() != 0 ? xmeparversion : bstrxmeparguid),
+										 static_cast<const TCHAR*>(regCurrentVersion.Length() != 0 ? regCurrentVersion : bstrregparguid));
+							int answer = AfxMessageBox(buf,MB_YESNOCANCEL | MB_ICONQUESTION);
+							if(answer == IDYES) {
+								parguid = regparguid;
+							}
+							else if(answer == IDCANCEL) {
+								// AfxMessageBox(_T("Import canceled"));
+								return;  // safe before create
+							}
 						}
 					}
 				}
 				COMTHROW( mgaProject.CoCreateInstance(L"Mga.MgaProject") );
 				COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
-				HRESULT hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
+				HRESULT hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(xmeparadigm), parguid);
 				if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
 					TCHAR buf[300];
 					CComBstrObj parguid1;
@@ -2131,7 +2154,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 					CopyTo(parguid,gg);
 					CopyTo(gg, parguid1);
 					_stprintf_s(buf, _T("Could not open paradigm %s\nVersion ID: %s"), 
-						static_cast<const TCHAR*>(paradigm), static_cast<const TCHAR*>(parguid1));
+						static_cast<const TCHAR*>(xmeparadigm), static_cast<const TCHAR*>(parguid1));
 
 					AfxMessageBox(buf);
 				}
@@ -2143,7 +2166,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 					err += "\nDo you want to create the project without addons?";
 					if (AfxMessageBox(err, MB_YESNO) == IDYES) {
 						mgaProject->EnableAutoAddOns(VARIANT_FALSE);
-						hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(paradigm), parguid);
+						hr = mgaProject->CreateEx(PutInBstr(dataconn), PutInBstr(xmeparadigm), parguid);
 					}
 				}
 				COMTHROW(hr);
