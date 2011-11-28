@@ -1185,8 +1185,8 @@ STDMETHODIMP CCoreBinFile::CreateProject(BSTR connection)
 		t.first->second.deleted = false;
 		t.first->second.CreateAttributes(mo);
 
-		if(filename.empty()) filename = ".";
-		else SaveProject();
+		if (filename.empty())
+			filename = ".";
 
 		modified = false;
 
