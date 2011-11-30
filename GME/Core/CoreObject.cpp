@@ -56,8 +56,8 @@ CComObjPtr<CCoreObject> CCoreObject::Create(CCoreProject *project, metaid_type m
 
 CCoreObject::~CCoreObject()
 {
-	ASSERT( (objid == OBJID_NONE && project == NULL && metaobject == NULL ) ||
-		(objid != OBJID_NONE && project != NULL && metaobject != NULL) );
+	//ASSERT( (objid == OBJID_NONE && project == NULL && metaobject == NULL ) ||
+	//	(objid != OBJID_NONE && project != NULL && metaobject != NULL) );
 
 	// If this assertion fails, then we have killed the CCoreObject already.
 	// Probably the reference count on this is wrong.
