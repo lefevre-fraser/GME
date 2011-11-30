@@ -689,20 +689,15 @@ STDMETHODIMP CMgaRegNode::get_FCOValue(IMgaFCO **pVal) {
 }
 
 STDMETHODIMP CMgaRegNode::get_Opacity( VARIANT_BOOL *pVal) {
-		COMTRY {
-			fco->CheckRead();
-			CHECK_OUTPAR(pVal)
-			*pVal = VARIANT_FALSE;
-		} COMCATCH(;);
+	COMTRY {
+		long status;
+		COMTHROW(get_Status(&status));
+		*pVal = status == ATTSTATUS_HERE ? VARIANT_TRUE : VARIANT_FALSE;
+	} COMCATCH(;);
 }
 
 STDMETHODIMP CMgaRegNode::put_Opacity( VARIANT_BOOL newVal) {
 	return S_OK;
-	return E_NOTIMPL;
-		COMTRY_IN_TRANSACTION {
-			fco->CheckWrite();
-			CHECK_INPAR(newVal);
-		} COMCATCH_IN_TRANSACTION(;);
 }
 
 
