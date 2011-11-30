@@ -82,15 +82,27 @@ class TestRegistry(unittest.TestCase):
             
             self.project.Open("MGA=" + _adjacent_file(self.output_file))
             terr = self.project.BeginTransactionInNewTerr()
-            self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123').Value, 'xxx')
-            self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('ytest123').Value, 'yyy')
-            self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest').Value, 'zzz')
-            self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest/blank').Value, '')
-            ATTSTATUS_HERE = 0
-            self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest/blank').Status(), ATTSTATUS_HERE)
+            def testxtest():
+                self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123').Value, 'xxx')
+                self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('ytest123').Value, 'yyy')
+                self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest').Value, 'zzz')
+                self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest/blank').Value, '')
+                ATTSTATUS_HERE = 0
+                self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest/blank').Status(), ATTSTATUS_HERE)
+            testxtest()
             
             self.project.RootFolder.GetRegistryNodeDisp('xtest123/zt').Value = 'xxxx'
             self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/zt').GetSubNodesDisp().Count, 0)
+            self.assertEqual(self.project.RootFolder.GetRegistryDisp(False).Count, 2)
+            self.project.CommitTransaction()
+            self.project.Close(True)
+            
+            import util.gme
+            util.gme.mga2xme(_adjacent_file(self.output_file))
+            util.gme.xme2mga(os.path.splitext(_adjacent_file(self.output_file))[0] + ".xme")
+            self.project.Open("MGA=" + _adjacent_file(self.output_file))
+            terr = self.project.BeginTransactionInNewTerr()
+            testxtest()
             self.project.CommitTransaction()
             self.project.Close(True)
 
@@ -117,7 +129,9 @@ class TestRegistry(unittest.TestCase):
             self.assertEqual(sheet4.GetRegistryValueDisp('test123'), 'test')
             sheet3.DetachFromArcheType()
             self.assertEqual(sheet4.GetRegistryValueDisp('test123'), 'test')
-            self.assertEqual(sheet2.GetRegistryDisp(False).Count, 0)
+            self.assertEqual(sheet.GetRegistryDisp(False).Count, 1)
+            self.assertEqual(sheet4.GetRegistryDisp(False).Count, 0)
+            self.assertEqual(sheet3.GetRegistryDisp(False).Count, 2) # detaching adds a regnode
             self.assertEqual(sheet4.GetRegistryDisp(False).Count, 0)
             self.project.CommitTransaction()
             self.project.Save()

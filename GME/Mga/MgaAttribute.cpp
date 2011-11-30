@@ -743,7 +743,7 @@ STDMETHODIMP CMgaRegNode::get_SubNodes( VARIANT_BOOL virtuals, IMgaRegNodes **pV
 				if (wcsncmp(it->first, mypath, mypath.Length()) == 0)
 				{
 					std::wstring path = it->first;
-					if (path.length() > mypath.Length() && path[mypath.Length()] == L'/')
+					if (path.length() > mypath.Length() && (mypath.Length() == 0 || path[mypath.Length()] == L'/'))
 					{
 						size_t end = path.find(L'/', mypath.Length() + 1);
 						if (end != std::wstring::npos)
