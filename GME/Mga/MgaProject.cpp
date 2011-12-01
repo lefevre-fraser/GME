@@ -1349,6 +1349,10 @@ STDMETHODIMP CMgaProject::CommitTransaction()
 		ASSERT(!in_nested);
 		if(!baseterr) COMTHROW(E_MGA_NOT_IN_TRANSACTION);
 		if(checkoff) COMTHROW(CheckSupress(VARIANT_FALSE));
+		while (!temporalobjs.empty()) {
+			temporalobjs.front()->objrecordchange();
+			temporalobjs.pop();
+		}
 		if(!notifyobjs.empty()) {
 			CoreObj self;
 			COMTHROW(dataproject->get_RootObject(&self.ComPtr()));
