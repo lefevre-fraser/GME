@@ -1202,12 +1202,12 @@ void CMainFrame::OnViewMultiUserActiveUsers()
 
 void CMainFrame::OnUpdateViewMultiUserActiveUsers(CCmdUI* pCmdUI) 
 {
-	pCmdUI->Enable( !CGMEDoc::theInstance || !theApp.isMgaProj()); // always TRUE (also when no project is open) except when mga_proj is open
+	pCmdUI->Enable(theApp.mgaProject && (!CGMEDoc::theInstance || !theApp.isMgaProj())); // always TRUE (also when no project is open) except when mga_proj is open
 }
 
 void CMainFrame::OnUpdateViewMultiUserSubversion(CCmdUI* pCmdUI) 
 {
-	pCmdUI->Enable( !CGMEDoc::theInstance || !theApp.isMgaProj()); // always TRUE (also when no project is open) except when mga_proj is open
+	pCmdUI->Enable(theApp.mgaProject && (!CGMEDoc::theInstance || !theApp.isMgaProj())); // always TRUE (also when no project is open) except when mga_proj is open
 }
 
 void CMainFrame::OnViewClearConsole() 
