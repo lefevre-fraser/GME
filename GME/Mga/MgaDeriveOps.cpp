@@ -244,7 +244,8 @@ void GetDerivedEquivalent(CoreObj const &objinbase, CoreObj const &subtype, Core
 // ----------------------------------------
 void DeriveTreeTask::_DoWithDeriveds(CoreObj self, std::vector<CoreObj> *peers) {
 		CoreObjs chds = self[masterattr + ATTRID_COLLECTION];  // do it first to enable delete operations...
-		if(!Do(self, peers)) return;
+		if(!Do(self, peers))
+			return;
 		ITERATE_THROUGH(chds) {
 			if(peercnt) {
 				CoreObj r = ITER.FollowChain(ATTRID_FCOPARENT, selfdepth);

@@ -712,11 +712,6 @@ STDMETHODIMP CMgaRegNode::put_Value(BSTR newVal) {
 
 STDMETHODIMP CMgaRegNode::put_FCOValue(IMgaFCO *newVal) {
 	return E_NOTIMPL;
-		COMTRY_IN_TRANSACTION {
-			CHECK_MYINPTRPAR(newVal);
-			fco->CheckWrite();
-			markchg();
-		} COMCATCH_IN_TRANSACTION(;)
 }
 
 STDMETHODIMP CMgaRegNode::get_SubNodes( VARIANT_BOOL virtuals, IMgaRegNodes **pVal) {
