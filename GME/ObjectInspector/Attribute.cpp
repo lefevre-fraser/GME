@@ -315,8 +315,6 @@ bool CAttribute::CreateListItem(CListItem &ListItem, const CComVariant &ccvtValu
 				// Converting to int
 				CString strLineNum(bstrMultiLinePref);
 				int nLineNumMin = _tstoi(strLineNum);
-				const int nLineNumMax = 15;
-				static_assert(nLineNumMax * INSP_DEFAULT_ITEM_HEIGHT <= 255, "nLineNumMax is too big for SetItemHeight");
 				
 				if(nLineNumMin<2) // Single line edit box
 				{
@@ -333,14 +331,14 @@ bool CAttribute::CreateListItem(CListItem &ListItem, const CComVariant &ccvtValu
 					CString strValue=CComBSTR(ccvtValue.bstrVal);
 					CStringArray strValueArray;
 					str_split(strValue, strValueArray);
-					int nLineNum = min(max(nLineNumMin, strValueArray.GetCount()),nLineNumMax);
+					int nLineNum = max(nLineNumMin, strValueArray.GetCount());
 					ListItem.Value.SetStringValue(strValueArray, nLineNum);
 
 					// Setting default value
 					CString strDefValue=CComBSTR(ccvtDefValue.bstrVal);
 					CStringArray strDefValueArray;
 					strDefValueArray.Add(strDefValue);
-					nLineNum = max(nLineNum,min(max(nLineNumMin, strDefValueArray.GetCount()),nLineNumMax));
+					nLineNum = max(nLineNum, max(nLineNumMin, strDefValueArray.GetCount()));
 					ListItem.DefValue.SetStringValue(strDefValueArray, nLineNum);
 
 				}

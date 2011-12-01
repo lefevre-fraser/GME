@@ -19,6 +19,13 @@ static char THIS_FILE[] = __FILE__;
 CInspectorList::CInspectorList(bool bCategories):m_bCategories(bCategories),m_InPlaceManager(this)
 {
 	m_bIsDividerDrag=FALSE;
+	m_ItemHeight = 16;
+	HDC hdc = ::GetDC(NULL);
+	if (hdc)
+	{
+		m_ItemHeight = m_ItemHeight * GetDeviceCaps(hdc, LOGPIXELSY) / 96;
+		::ReleaseDC(NULL, hdc);
+	}
 }
 
 CInspectorList::~CInspectorList()
@@ -295,17 +302,17 @@ void CInspectorList::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 		int nLineNum=m_ListItemArray[nIndex].Value.cLineNum;
 		if(nLineNum==1)
 		{
-			lpMeasureItemStruct->itemHeight = INSP_DEFAULT_ITEM_HEIGHT;
+			lpMeasureItemStruct->itemHeight = m_ItemHeight;
 		}
 		else
 		{
-			lpMeasureItemStruct->itemHeight = nLineNum*INSP_MULTIEDIT_LINE_HEIGHT+INSP_MULTIEDIT_OFFSET;
+			lpMeasureItemStruct->itemHeight = min(255, nLineNum * m_ItemHeight);
 		}
 
 	}
 	else
 	{
-		lpMeasureItemStruct->itemHeight = INSP_DEFAULT_ITEM_HEIGHT;
+		lpMeasureItemStruct->itemHeight = m_ItemHeight;
 	}
 
 }
@@ -738,17 +745,17 @@ void CInspectorList::UpdateItem(const CListItem &srcListItem, CListItem &dstList
 		int nLineNum=srcListItem.Value.cLineNum;
 		if(nLineNum==1)
 		{
-			SetItemHeight(nIndex, INSP_DEFAULT_ITEM_HEIGHT);
+			SetItemHeight(nIndex, m_ItemHeight);
 		}
 		else
 		{
-			VERIFY(SetItemHeight(nIndex, nLineNum * INSP_DEFAULT_ITEM_HEIGHT) == LB_OKAY);
+			VERIFY(SetItemHeight(nIndex, min(255, nLineNum * m_ItemHeight)) == LB_OKAY);
 		}
 
 	}
 	else
 	{
-		SetItemHeight(nIndex, INSP_DEFAULT_ITEM_HEIGHT);
+		SetItemHeight(nIndex, m_ItemHeight);
 	}
 	// Modification End - Volgyesi
 }
