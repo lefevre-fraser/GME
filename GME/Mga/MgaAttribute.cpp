@@ -845,12 +845,13 @@ STDMETHODIMP CMgaRegNode::RemoveTree() {
 		COMTHROW(oldval->get_Map(&vmap));
 		map_type* map = (map_type*)(void*)vmap.llVal;
 
-		for (auto it = map->begin(); it != map->end(); it++)
+		for (auto it = map->begin(); it != map->end();)
 		{
 			if (wcsncmp(it->first, mypath, mypath.Length()) == 0)
 			{
-				map->erase(it);
-			}
+				map->erase(it++);
+			} else
+				it++;
 		}
 		// TODO
 		markchg();
