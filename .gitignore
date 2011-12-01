@@ -14,6 +14,7 @@ ipch
 *.msi
 *.msm
 *.mta
+*.log
 GME/XmlBackEnd/XmlBackEnd.h
 GME/XmlBackEnd/Release
 GME/Search/Release
@@ -181,6 +182,8 @@ Paradigms/HFSM/HFSM-Demo02.mga
 Paradigms/HFSM/HFSM-Meta.mga
 Paradigms/MetaGME/MetaGME-model.mga
 Paradigms/MetaGME/x64/
+Paradigms/MetaGME/DebugUnicode/
+Paradigms/MetaGME/ReleaseUnicode/
 Paradigms/SF/SFDemo.mga
 Paradigms/SF/SFMeta.mga
 Paradigms/UML/UMLMeta.mga
