@@ -505,6 +505,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_MESSAGE(WM_USER_EXECUTEPENDINGREQUESTS, OnExecutePendingRequests)
 	ON_COMMAND(ID_VIEW_SHOWSELMODEL, OnShowSelectedModel)
 	ON_COMMAND(ID_VIEW_FOCUSBROWSER, OnFocusBrowser)
+	ON_COMMAND(ID_VIEW_RENAME, OnRename)
 	ON_COMMAND(ID_VIEW_FOCUSINSPECTOR, OnFocusInspector)
 	ON_COMMAND(ID_VIEW_CYCLEASPECTKEY, OnCycleAspect)
 	ON_COMMAND(ID_VIEW_CYCLEASPECTBACKWARDSKEY, OnCycleAspectBackwards)
@@ -10171,6 +10172,11 @@ void CGMEView::OnShowSelectedModel()
 			}
 		}
 	}
+}
+
+void CGMEView::OnRename()
+{
+	CGMEObjectInspector::theInstance->m_ObjectInspector.EditName();
 }
 
 // called when VK_B + CTRL is pressed

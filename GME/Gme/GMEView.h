@@ -632,6 +632,7 @@ protected:
 #endif
 	afx_msg void OnShowSelectedModel();
 	afx_msg void OnFocusBrowser();
+	afx_msg void OnRename();
 	afx_msg void OnFocusInspector();
 	afx_msg void OnCycleAspect();
 	afx_msg void OnCycleAspectBackwards();
