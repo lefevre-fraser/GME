@@ -118,6 +118,7 @@ private:
 	CListItemArray m_ListItemArray;
 
 	int m_ItemHeight;
+	int m_ComboboxLineHeight;
 };
 
 /////////////////////////////////////////////////////////////////////////////

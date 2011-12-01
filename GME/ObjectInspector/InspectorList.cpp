@@ -20,10 +20,12 @@ CInspectorList::CInspectorList(bool bCategories):m_bCategories(bCategories),m_In
 {
 	m_bIsDividerDrag=FALSE;
 	m_ItemHeight = 16;
+	m_ComboboxLineHeight = 13;
 	HDC hdc = ::GetDC(NULL);
 	if (hdc)
 	{
 		m_ItemHeight = m_ItemHeight * GetDeviceCaps(hdc, LOGPIXELSY) / 96;
+		m_ComboboxLineHeight = m_ComboboxLineHeight * GetDeviceCaps(hdc, LOGPIXELSY) / 96;
 		::ReleaseDC(NULL, hdc);
 	}
 }

@@ -204,7 +204,7 @@ BOOL CInspectorDlg::OnInitDialog()
 		m_inspectorSheet.GetClientRect(&listRect);
 		m_inspectorSheet.AdjustRect(FALSE, &listRect);
 		m_inspectorLists[i]->Create(WS_CHILD | WS_VISIBLE, listRect,&m_inspectorSheet,IDC_INSPECTOR_LIST0+i);
-		m_inspectorLists[i]->ShowWindow(FALSE);
+		m_inspectorLists[i]->ShowWindow(SW_HIDE);
 	}
 
 
@@ -348,7 +348,7 @@ void CInspectorDlg::SwitchPanel(int panel)
 {
 	CWnd *checkBox = GetDlgItem(IDC_CHECK_KIND);
 
-	m_inspectorLists[m_currentPanel]->ShowWindow(FALSE);
+	m_inspectorLists[m_currentPanel]->ShowWindow(SW_HIDE);
 
 	if(m_bIsPanelVisible[panel])
 	{

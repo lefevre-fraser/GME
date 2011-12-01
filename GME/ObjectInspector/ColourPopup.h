@@ -24,6 +24,7 @@
 
 #include "resource.h"
 
+#define DEFAULT_BOX_VALUE -3
 
 // To hold the colours and their names
 typedef struct {

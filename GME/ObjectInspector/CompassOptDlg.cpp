@@ -92,7 +92,7 @@ BOOL CCompassOptDlg::OnNcActivate(BOOL bActive)
 			m_bClosed = true;
 			EndDialog(IDCANCEL);
 			DWORD pos = GetMessagePos();
-			CPoint msgPoint(LOWORD(pos), HIWORD(pos));
+			CPoint msgPoint(GET_X_LPARAM(pos), GET_Y_LPARAM(pos));
 			RelayMouseClickToInspectorList(m_pParentWnd, msgPoint);
 		}
 		// OnOK();

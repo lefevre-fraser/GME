@@ -228,8 +228,15 @@ void CInPlaceManager::DisplayColorCombo(CRect rectBound, bool rightSideClick)
 
 	if(dlg.DoModal()==IDOK)
 	{
-		ListItem.Value.SetColorValue(dlg.GetSelectedColor());
-		ListItem.SetDirty();
+		if (dlg.m_nCurrentSel == DEFAULT_BOX_VALUE)
+		{
+			ListItem.RestoreDefault();
+		}
+		else
+		{
+			ListItem.Value.SetColorValue(dlg.GetSelectedColor());
+			ListItem.SetDirty();
+		}
 
 		m_pInspectorList->NotifyParent(m_nCurrentIndex);
 
@@ -545,13 +552,13 @@ void CInPlaceManager::OnClickArrowButton(bool rightSideClick)
 
 	case ITEMDATA_BOOLEAN:
 		{
-			rectWnd.bottom+=2*INSP_COMBOBOX_LINE_HEIGHT + 2; // +INSP_COMBOBOX_OFFSET;
+			rectWnd.bottom += 2 * m_pInspectorList->m_ComboboxLineHeight + 2;
 			DisplayCombo(rectWnd);
 		}break;
 	case ITEMDATA_FIXED_LIST:
 		{
-			rectWnd.bottom+=
-			  min( ListItem.Value.stringVal.GetSize(), 6 )*INSP_COMBOBOX_LINE_HEIGHT + 2; //+INSP_COMBOBOX_OFFSET;
+			rectWnd.bottom += min(ListItem.Value.stringVal.GetSize(), 8) 
+				* m_pInspectorList->m_ComboboxLineHeight + 2;
 			DisplayCombo(rectWnd);
 		}break;
 
