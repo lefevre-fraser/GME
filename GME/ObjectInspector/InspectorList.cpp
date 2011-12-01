@@ -728,6 +728,7 @@ void CInspectorList::UpdateItems(CArray<CListItem,CListItem&> &ListItemArray)
 	{
 		CInspectorList::AddItem(ListItemArray.ElementAt(k));
 	}
+	m_InPlaceManager.m_ArrowButton.ShowWindow(SW_HIDE);
 
 	Invalidate();
 }
