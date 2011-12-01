@@ -84,6 +84,10 @@ regsvr32 /s "%~dp0%1\Release\PanningView.ocx"
 if errorlevel 1 goto errorlabel
 echo    OK
 
+echo GME.exe
+%windir%\Microsoft.NET\Framework\v4.0.30319\regtlibv12.exe "%~dp0%1\Release\GME.exe"
+if errorlevel 1 goto errorlabel
+
 goto eof
 
 :errorlabel
