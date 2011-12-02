@@ -73,7 +73,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
@@ -97,6 +96,7 @@
     <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep />
@@ -106,7 +106,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../Interfaces;../Common;../Core;../Include;../Include/subversion;../Include/apr;../Include/apr-util;svncode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../Interfaces;../Common;../Core;../Include;../Include/subversion;../Include/apr;../Include/apr-util;svncode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -117,7 +117,7 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3D.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mfcs100d.lib;xerces-c_3.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib\subv_$(Configuration);../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\XmlBackEnd.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -148,7 +148,7 @@ copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../Interfaces;../Common;../Core;../Include;../Include/subversion;../Include/apr;../Include/apr-util;svncode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../Interfaces;../Common;../Core;../Include;../Include/subversion;../Include/apr;../Include/apr-util;svncode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -192,7 +192,7 @@ copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>../Interfaces;../Common;../Core;../Include;../Include/subversion;../Include/apr;../Include/apr-util;svncode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../Interfaces;../Common;../Core;../Include;../Include/subversion;../Include/apr;../Include/apr-util;svncode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -206,7 +206,7 @@ copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mfcs100.lib;xerces-c_3.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib\subv_$(Configuration);../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -242,7 +242,7 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>../Interfaces;../Common;../Core;../Include;../Include/subversion;../Include/apr;../Include/apr-util;svncode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../Interfaces;../Common;../Core;../Include;../Include/subversion;../Include/apr;../Include/apr-util;svncode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -305,6 +305,7 @@ copy ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
     </Midl>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Core\CoreDictionaryAttributeValue.cpp" />
     <ClCompile Include="CertificateDlg.cpp" />
     <ClCompile Include="CommitDialog.cpp" />
     <ClCompile Include="..\Common\CommonError.cpp" />

@@ -1,5 +1,7 @@
 #ifndef MGA_COREXMLFILE_H
 #define MGA_COREXMLFILE_H
+
+#include "StdAfx.h"
 #include "resource.h"
 #include <fstream>//fstream.h
 #include <list>
@@ -8,6 +10,7 @@
 #include <set>
 #include <xercesc/dom/dom.hpp>
 #include "..\Mga\MgaGeneric.h"
+#include "CoreDictionaryAttributeValue.h"
 #include "XmlBackEnd.h" // for EXTERN_C const CLSID CLSID_CoreXmlFile;
 #include "OperOptions.h"
 #include "MsgConsole.h"
@@ -175,6 +178,23 @@ public:
     virtual void         toString    (std::string& str) const;
 protected:
     double  m_value;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// XmlAttrDict class
+////////////////////////////////////////////////////////////////////////////////
+
+class XmlAttrDict: public XmlAttrBase
+{
+public:
+	XmlAttrDict();
+
+	virtual valtype_type getType() const { return VALTYPE_DICT; };
+    virtual void fromVariant(VARIANT p);
+	virtual void toVariant(VARIANT *p) const;
+    virtual void fromString(const char * str);
+    virtual void toString(std::string& str) const;
+    CComPtr<ICoreDictionaryAttributeValue> m_value;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

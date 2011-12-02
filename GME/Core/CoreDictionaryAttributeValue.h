@@ -1,7 +1,5 @@
 #pragma once
 
-#include "StdAfx.h"
-
 #include <unordered_map>
 
 struct CComBSTR_Length {

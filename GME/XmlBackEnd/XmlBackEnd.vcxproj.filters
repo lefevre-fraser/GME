@@ -110,6 +110,9 @@
     <ClCompile Include="SVNCode\Util.cpp">
       <Filter>Source Files\SVNCode</Filter>
     </ClCompile>
+    <ClCompile Include="..\Core\CoreDictionaryAttributeValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="XmlBackEnd.def">

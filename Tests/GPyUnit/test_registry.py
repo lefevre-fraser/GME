@@ -8,16 +8,25 @@ class TestRegistry(unittest.TestCase):
     def __init__(self, name, **kwds):
         super(TestRegistry, self).__init__(name, **kwds)
         self.output_file = "TestRegistry-output.mga"
+        
+    def tearDown(self):
+        if not self.project is None:
+            self.project.Close(True)
+    
+    def _adjacent_file(file):
+        import os.path
+        return os.path.join(os.path.dirname(__file__), file)
+
+    @property
+    def connstr(self):
+        return "MGA=" + self._adjacent_file(self.output_file)
 
     def test(self):
-        def _adjacent_file(file):
-            import os.path
-            return os.path.join(os.path.dirname(__file__), file)
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
             self.project = win32com.client.DispatchEx("Mga.MgaProject")
-            self.project.Create("MGA=" + _adjacent_file(self.output_file), "MetaGME")
+            self.project.Create(self.connstr, "MetaGME")
             self.project.BeginTransactionInNewTerr()
             
             rootregs = self.project.RootFolder.GetRegistryDisp(True)
@@ -71,7 +80,7 @@ class TestRegistry(unittest.TestCase):
             self.project.CommitTransaction()
             
             terr = self.project.BeginTransactionInNewTerr()
-            self.project.RootFolder.GetRegistryNodeDisp('xtest123').Value = 'xxx'
+            self.project.RootFolder.GetRegistryNodeDisp('xtest123').Value = 'xxx&<'
             self.project.RootFolder.GetRegistryNodeDisp('ytest123').Value = 'yyy'
             self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest').Value = 'zzz'
             self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest/blank').Value = ''
@@ -80,10 +89,10 @@ class TestRegistry(unittest.TestCase):
             self.project.Save()
             self.project.Close(True)
             
-            self.project.Open("MGA=" + _adjacent_file(self.output_file))
+            self.project.Open(self.connstr)
             terr = self.project.BeginTransactionInNewTerr()
             def testxtest():
-                self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123').Value, 'xxx')
+                self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123').Value, 'xxx&<')
                 self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('ytest123').Value, 'yyy')
                 self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest').Value, 'zzz')
                 self.assertEqual(self.project.RootFolder.GetRegistryNodeDisp('xtest123/ztest/blank').Value, '')
@@ -96,15 +105,15 @@ class TestRegistry(unittest.TestCase):
             self.assertEqual(self.project.RootFolder.GetRegistryDisp(False).Count, 2)
             self.project.CommitTransaction()
             self.project.Close(True)
-            
-            import util.gme
-            util.gme.mga2xme(_adjacent_file(self.output_file))
-            util.gme.xme2mga(os.path.splitext(_adjacent_file(self.output_file))[0] + ".xme")
-            self.project.Open("MGA=" + _adjacent_file(self.output_file))
-            terr = self.project.BeginTransactionInNewTerr()
-            testxtest()
-            self.project.CommitTransaction()
-            self.project.Close(True)
+            if self.connstr.find("MGA=") == 0:
+                import util.gme
+                util.gme.mga2xme(_adjacent_file(self.output_file))
+                util.gme.xme2mga(os.path.splitext(_adjacent_file(self.output_file))[0] + ".xme")
+                self.project.Open(self.connstr)
+                terr = self.project.BeginTransactionInNewTerr()
+                testxtest()
+                self.project.CommitTransaction()
+                self.project.Close(True)
 
     def test_derived(self):
         def _adjacent_file(file):
@@ -114,7 +123,7 @@ class TestRegistry(unittest.TestCase):
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
             self.project = win32com.client.DispatchEx("Mga.MgaProject")
-            self.project.Create("MGA=" + _adjacent_file(self.output_file), "MetaGME")
+            self.project.Create(self.connstr, "MetaGME")
             self.project.BeginTransactionInNewTerr()
             
             for i in range(1, self.project.RootMeta.RootFolder.DefinedFCOs.Count+1):
@@ -146,7 +155,7 @@ class TestRegistry(unittest.TestCase):
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
             self.project = win32com.client.DispatchEx("Mga.MgaProject")
-            self.project.Create("MGA=" + _adjacent_file(self.output_file), "MetaGME")
+            self.project.Create(self.connstr, "MetaGME")
             self.project.BeginTransactionInNewTerr()
             
             for i in range(1, self.project.RootMeta.RootFolder.DefinedFCOs.Count+1):
@@ -171,6 +180,24 @@ class TestRegistry(unittest.TestCase):
             self.project.Open("MGA=" + r"C:\Users\ksmyth\Documents\META\meta\CyPhyML\CyPhyML.mga")
             self.project.BeginTransactionInNewTerr()
             self.project.RootFolder.ChildFolders
+
+class TestMURegistry(TestRegistry):
+    def __init__(self, name, **kwds):
+        super(TestMURegistry, self).__init__(name, **kwds)
+        import os.path
+        self.mgxdir = os.path.abspath(os.path.join(os.path.dirname(__file__), "TestMURegistry"))
+
+    def setUp(self):
+        import os.path
+        if os.path.isdir(self.mgxdir):
+            import shutil
+            assert len(self.mgxdir) > 10 # sanity check
+            shutil.rmtree(self.mgxdir)
+    
+    @property
+    def connstr(self):
+        return "MGX=\"" + self.mgxdir + "\""
+
 
 if __name__ == "__main__":
     unittest.main()

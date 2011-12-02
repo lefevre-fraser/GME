@@ -271,6 +271,10 @@ XmlAttrBase * XmlAttrBase::create(valtype_type valtype)
         xmlattr = new XmlAttrReal();
         break;
 
+	case VALTYPE_DICT:
+		xmlattr = new XmlAttrDict();
+		break;
+
     default:
         HR_THROW(E_METAPROJECT);
     }
@@ -288,6 +292,39 @@ XmlAttrBase::XmlAttrBase()
 XmlAttrBase::~XmlAttrBase() 
 { 
 }
+
+XmlAttrDict::XmlAttrDict()
+{
+	CCoreDictionaryAttributeValue *val = NULL;
+	typedef CComObject< CCoreDictionaryAttributeValue > COMTYPE;
+	HRESULT hr = COMTYPE::CreateInstance((COMTYPE **)&val);
+	COMTHROW(hr);
+	m_value = val;
+}
+
+void XmlAttrDict::fromVariant(VARIANT v)
+{
+	ASSERT(v.vt = VT_DISPATCH);
+	m_value = 0;
+	v.pdispVal->QueryInterface(&m_value);
+}
+
+void XmlAttrDict::toVariant(VARIANT* v) const
+{
+	CComVariant ret = m_value;
+	COMTHROW(ret.Detach(v));
+}
+
+void XmlAttrDict::fromString(const char* str)
+{
+	DebugBreak();
+}
+
+void XmlAttrDict::toString(std::string& str) const
+{
+	DebugBreak();
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // XmlAttrLong class
@@ -1333,7 +1370,7 @@ STDMETHODIMP CCoreXmlFile::put_AttributeValue(VARIANT p)
 
 			//TODO: if locks go down to 0 it could be written out to the file
 		}
-		else // VALTYPE_BIN, VALTYPE_STR, VALTYPE_LONG, VALTYPE_REAL
+		else // VALTYPE_BIN, VALTYPE_STR, VALTYPE_LONG, VALTYPE_REAL, VALTYPE_DICT
 		{
 #ifdef _DEBUG
 #if(DETAILS_ABOUT_XMLBACKEND)
@@ -1578,7 +1615,8 @@ STDMETHODIMP CCoreXmlFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode)
 				HR_THROW(E_FILEOPEN);
 			}
 			// add to server
-			succ = addSVN( sessionFolder, true /*=recursive*/); 
+			if (m_sourceControl == SC_SUBVERSION)
+				succ = addSVN( sessionFolder, true /*=recursive*/); 
 			if( !succ) {
 				sendMsg( "Exception: Could not add session folder to server.", MSG_ERROR);
 				AfxMessageBox( "Could not add session folder to server.");
@@ -1586,7 +1624,8 @@ STDMETHODIMP CCoreXmlFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode)
 			}
 
 			// initial commit
-			succ = commitSVN( m_contentPath, std::string("auto: OpenProject()"), true);
+			if (m_sourceControl == SC_SUBVERSION)
+				succ = commitSVN( m_contentPath, std::string("auto: OpenProject()"), true);
 			if( !succ) {
 				sendMsg( "Exception: Could not commit session folder.", MSG_ERROR);
 				AfxMessageBox( "Could not commit session folder.");
@@ -3297,15 +3336,11 @@ void CCoreXmlFile::readProjectFile()
 
 		// upon Open, the connection string might not have the full URL in it, so 
 		// that information is only available after readProjectFile (m_svnUrl)
-
-		_chdir( m_folderPath.c_str()); // change to the newly created local dir
 	}
 }
 
 void CCoreXmlFile::writeAll()
 {
-	chdir( m_folderPath.c_str()); // change to the local main dir (a file dialog may have changed the local dir)
-
 	for( XmlObjVecIter it=m_objects.begin(); it!=m_objects.end(); ++it )
 	{
 		XmlObject * obj = (*it);
@@ -3486,7 +3521,8 @@ void CCoreXmlFile::writeObject(XmlObject * obj, Transcoder& ofs, bool container,
 					guid2str( pointer->m_parent->m_guid, attrVal );
 			}
 		}
-		else if( attr->getType() != VALTYPE_COLLECTION && attr->getType() != VALTYPE_LOCK )
+		else if( attr->getType() != VALTYPE_COLLECTION && attr->getType() != VALTYPE_LOCK
+			&& attr->getType() != VALTYPE_DICT)
 		{
 			XmlAttrBase * attr = it->second;
 			attr->toString(attrVal);
@@ -3546,7 +3582,30 @@ void CCoreXmlFile::writeObject(XmlObject * obj, Transcoder& ofs, bool container,
 						writeObject( obj2, ofs, false, newPrefix.c_str(), lastWriteTime );
 				}
 			}
+		} 
+		else if (attr->getType() == VALTYPE_DICT)
+		{
+			CComObjPtr<ICoreMetaAttribute> metaAttrib;
+			CComBSTR attribToken;
+			std::string attrVal;
+
+			COMTHROW( metaobject->get_Attribute( it->first, PutOut(metaAttrib) ) );
+			metaAttrib->get_Token( &attribToken );
+			XmlAttrDict* dict = (XmlAttrDict*)it->second;
+			CCoreDictionaryAttributeValue* dictValue = (CCoreDictionaryAttributeValue*)(ICoreDictionaryAttributeValue*)dict->m_value;
+			ofs << Transcoder::NoEscape << "<Dict token=\"" << attribToken << "\">";
+			for (auto i = dictValue->m_dict.begin(); i != dictValue->m_dict.end(); i++)
+			{
+				ofs << Transcoder::NoEscape << "<Key>";
+				ofs << Transcoder::StdEscape << static_cast<const char*>(_bstr_t(i->first));
+				ofs << Transcoder::NoEscape << "</Key>";
+				ofs << Transcoder::NoEscape << "<Value>";
+				ofs << Transcoder::StdEscape << static_cast<const char*>(_bstr_t(i->second));
+				ofs << Transcoder::NoEscape << "</Value>";
+			}
+			ofs << Transcoder::NoEscape << "</Dict>";
 		}
+
 	}
 
 	ofs << Transcoder::NoEscape << prefix << "</" << metaToken << ">\n";
@@ -3781,7 +3840,8 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 				p.m_pointedObjGuid = str2guid( attrVal );
 			pointers.push_back( p );
 		}
-		else if( attr->getType() != VALTYPE_LOCK && attr->getType() != VALTYPE_COLLECTION )
+		else if( attr->getType() != VALTYPE_LOCK && attr->getType() != VALTYPE_COLLECTION
+			&& attr->getType() != VALTYPE_DICT)
 		{
 			it2->second->fromString(attrVal);
 
@@ -3820,7 +3880,41 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 		DOMNode * node = children->item(i);
 		//if spec_care was true the first child was CDATA, but we process anyway the ELEMENTs only
 		if( node->getNodeType() == DOMNode::ELEMENT_NODE )
-			readObject( (DOMElement*)node, pointers, obj, fullLoad, lastWriteTime );
+		{
+			if (wcscmp(node->getLocalName(), L"Dict") == 0)
+			{
+				// TODO: read token attribute (but only regnodes are stored in Dict for now)
+				auto it = obj->m_attributes.find(ATTRID_REGNODE);
+				if (it == obj->m_attributes.end())
+					COMTHROW(E_FILEOPEN);
+				XmlAttrDict* dict = (XmlAttrDict*)it->second;
+				CCoreDictionaryAttributeValue* dictValue = (CCoreDictionaryAttributeValue*)(ICoreDictionaryAttributeValue*)dict->m_value;
+				DOMNodeList* dictEntries = node->getChildNodes();
+				for (XMLSize_t i = 0; i+1 < dictEntries->getLength(); i += 2)
+				{
+					if (dictEntries->item(i)->getNodeType() != DOMNode::ELEMENT_NODE)
+						COMTHROW(E_FILEOPEN);
+					if (dictEntries->item(i+1)->getNodeType() != DOMNode::ELEMENT_NODE)
+						COMTHROW(E_FILEOPEN);
+					if (((DOMElement*)dictEntries->item(i))->getChildNodes()->getLength() != 1)
+						COMTHROW(E_FILEOPEN);
+					CComBSTR value;
+					if (((DOMElement*)dictEntries->item(i+1))->getChildNodes()->getLength() == 1)
+					{
+						if (((DOMElement*)dictEntries->item(i+1))->getChildNodes()->item(0)->getNodeType() != DOMNode::TEXT_NODE)
+							COMTHROW(E_FILEOPEN);
+						DOMText* valueText = (DOMText*)((DOMElement*)dictEntries->item(i+1))->getChildNodes()->item(0);
+						value = valueText->getData();
+					}
+					if (((DOMElement*)dictEntries->item(i))->getChildNodes()->item(0)->getNodeType() != DOMNode::TEXT_NODE)
+						COMTHROW(E_FILEOPEN);
+					DOMText* key = (DOMText*)((DOMElement*)dictEntries->item(i))->getChildNodes()->item(0);
+					dictValue->m_dict.insert(CCoreDictionaryAttributeValue::map_type::value_type(key->getData(), std::move(value)));
+				}
+			}
+			else
+				readObject( (DOMElement*)node, pointers, obj, fullLoad, lastWriteTime );
+		}
 	}
 }
 
@@ -4161,7 +4255,6 @@ void PublicStorage::init( const std::string& p_initialContent)
 	if( !m_parent->makeSureFileExistsInVerSys( m_fileName, p_initialContent))
 	{
 		m_parent->sendMsg( "Could not find files in Versioning System", MSG_ERROR);
-		ASSERT(0);
 		return;
 	}
 
@@ -5139,7 +5232,6 @@ bool CCoreXmlFile::makeSureFileExistsInVerSys( const std::string& p_fname, const
 	{
 		char buff[200]; sprintf( buff, "Could not get \"%s\" file from source control. Exception code: 0x%x", fulllocalfname.c_str(), e.hr);
 		sendMsg( buff, MSG_ERROR);
-		AfxMessageBox( buff);
 		return false;
 	}
 	return found;
@@ -5380,8 +5472,6 @@ void CCoreXmlFile::createSubversionedFolder()
 	}
 
 
-	chdir( m_folderPath.c_str()); // change to the newly created local dir
-
 	// session folder
 	std::string sessionFolder =  m_folderPath + "\\" + HelperFiles::sessionFolderName;
 	BOOL  succ = ::CreateDirectory( sessionFolder.c_str(), NULL);
@@ -5582,8 +5672,6 @@ HRESULT UseTheseStrings( short size, BSTR names[])
 
 void CCoreXmlFile::findAllRwObjs( const std::string& p_folderPath, std::vector< std::string>& rw_file_vec)
 {
-	chdir( m_folderPath.c_str()); // change to the local main dir (a file dialog may have changed the local dir)
-
 	for( XmlObjVecIter it=m_objects.begin(); it!=m_objects.end(); ++it )
 	{
 		XmlObject * obj = (*it);
