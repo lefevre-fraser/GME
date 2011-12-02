@@ -201,7 +201,7 @@ def _candle(file):
     exepath = WIX_CANDLE_PRG
     if 'WIX' in os.environ.keys():
         exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
-    cmd_line = [exepath] + WIX_CANDLE_ARG.split() + ['-arch', prefs['arch'], '-out', _get_wixobj(file), file]
+    cmd_line = [exepath] + WIX_CANDLE_ARG.split() + ['-dVERSIONSTR=' + prefs['version_string'], '-arch', prefs['arch'], '-out', _get_wixobj(file), file]
     system(cmd_line, os.path.dirname(file))
 
 def build_WiX(wix_files):
