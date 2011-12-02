@@ -1,6 +1,5 @@
-#include "GMEVersion.h"
               Generic Modeling Environment
-                 GME v11 GME_VERSION_ID
+                 GME v11.12.2
        Copyright © 2000-2011 Vanderbilt University
 
 
@@ -8,24 +7,35 @@
 0. Important Upgrade Information
 ************************************************
 
+The GME_x64.msi installers include both 64 bit and
+32 bit GME.
+
+.mga files saved with GME r11.12.2 cannot be opened with
+previous versions of GME. GME r11.12.2 can open .mga files
+saved with previous versions of GME.
+
+GME r11.12.2 uses a different format for the Multi-user
+backend. Please export your Multi-user projects to .xme and
+reimport after upgrading GME.
+
 You must uninstall GME versions prior to version
 9.1.12 using the Control Panel before installing GME.
-
-Every new release of GME may introduce changes to its
-COM interfaces and to the Builder Object Network (C++ 
-interpreter framework). Therefore, it is recommended to
-update the source code of all user implemented interpreters, 
-to recompile and to re-register these interpreters after
-upgrading GME.
-
-As your first step in the upgrade process, please export
-all your important projects (to XML format). Binary
-compatibility between different GME versions is not
-guaranteed.
 
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Release r11.12.2
+----------------------------------
+  - Interpreter binary compatibility with r10.8.18
+  - Backwards compatibility with .mga files from r9
+  - Fixed bugs with Part Browser and Panning Window not updating sometimes
+  - Memory usage improvements
+  - Fixes for Object Inspector display on high DPI machines
+  - Fixes for matching .mga and .xme files with their metamodel version
+  - Fix FCOs not drawn at zoom <100
+  - Fix some out-of-memory handling issues
+
 
 Release Notes of Release r11.10.14
 ----------------------------------
