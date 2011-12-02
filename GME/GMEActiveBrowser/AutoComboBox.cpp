@@ -47,6 +47,9 @@ void CAutoComboBox::OnEditKeyDown(int nVKeyCode)
 		case VK_DELETE:;break;
 		case VK_BACK:;break;
 		case VK_ESCAPE:;break;
+		case VK_DOWN:
+			this->ShowDropDown();
+			break;
 		case VK_TAB: 
 			{
 				if( ::GetKeyState( VK_CONTROL) < 0) {
