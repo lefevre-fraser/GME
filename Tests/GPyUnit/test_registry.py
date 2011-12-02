@@ -4,6 +4,10 @@ import os.path
 import unittest
 import win32com.client
 
+def _adjacent_file(file):
+    import os.path
+    return os.path.join(os.path.dirname(__file__), file)
+
 class TestRegistry(unittest.TestCase):
     def __init__(self, name, **kwds):
         super(TestRegistry, self).__init__(name, **kwds)
@@ -13,13 +17,10 @@ class TestRegistry(unittest.TestCase):
         if not self.project is None:
             self.project.Close(True)
     
-    def _adjacent_file(file):
-        import os.path
-        return os.path.join(os.path.dirname(__file__), file)
 
     @property
     def connstr(self):
-        return "MGA=" + self._adjacent_file(self.output_file)
+        return "MGA=" + _adjacent_file(self.output_file)
 
     def test(self):
         from GPyUnit import util
@@ -116,9 +117,6 @@ class TestRegistry(unittest.TestCase):
                 self.project.Close(True)
 
     def test_derived(self):
-        def _adjacent_file(file):
-            import os.path
-            return os.path.join(os.path.dirname(__file__), file)
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
@@ -148,9 +146,6 @@ class TestRegistry(unittest.TestCase):
 
 
     def test_copy(self):
-        def _adjacent_file(file):
-            import os.path
-            return os.path.join(os.path.dirname(__file__), file)
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
@@ -170,9 +165,6 @@ class TestRegistry(unittest.TestCase):
             self.project.Close()
 
     def xxxtestupgrade(self):
-        def _adjacent_file(file):
-            import os.path
-            return os.path.join(os.path.dirname(__file__), file)
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
