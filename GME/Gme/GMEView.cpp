@@ -688,7 +688,7 @@ void CGMEView::DoPannWinRefresh()
 //	CMainFrame* main = (CMainFrame*)AfxGetMainWnd();
 	CMainFrame* main = (CMainFrame*)theApp.m_pMainWnd;
 
-	if (!main || !main->m_panningWindow.IsVisible())
+	if (!main || !main->m_panningWindow.IsVisible() || CGMEView::GetActiveView() != this)
 		return;
 
 	// the original size of the image
@@ -6146,8 +6146,8 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 				CPoint diff = point - CPoint(left,top);
 				CGuiObject::ShiftModels(selected, diff);
 				CGuiAnnotator::ShiftAnnotations(selectedAnnotations,diff);
-				CommitTransaction();
 				ResetParent();
+				CommitTransaction();
 			}
 			catch(hresult_exception e) {                
 				AbortTransaction(e.hr);
