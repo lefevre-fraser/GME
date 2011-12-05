@@ -126,9 +126,9 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme, bool openFileDialog)
 
 	try
 	{
-		if( (allowXme && (m_radio /*n.b. = */ = 0)) || (DoModal() == IDOK && !pressed_back) )
+		if (openFileDialog || (DoModal() == IDOK && !pressed_back) )
 		{
-			if( m_radio == 0 )
+			if (openFileDialog || m_radio == 0)
 			{
 				CFileDialog dlg(openFileDialog, NULL, fileNameHint.IsEmpty() ? NULL : (LPCTSTR)fileNameHint,
 					OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
