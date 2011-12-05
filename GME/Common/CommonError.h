@@ -35,7 +35,6 @@ public:
 do { \
 	HRESULT _hr = (FUNC); \
 	if( FAILED(_hr) ) { \
-		ASSERT(("COMTHROW: Throwing HRESULT exception. Press IGNORE", false)); \
 		throw hresult_exception(_hr); \
 	} \
 } while(false)
@@ -43,7 +42,6 @@ do { \
 #define VERIFYTHROW(FUNC) \
 do { \
 	if( !(bool)(FUNC) ) { \
-		ASSERT(("VERIFYTHROW: Throwing VERIFY exception. Press IGNORE", false)); \
 		throw hresult_exception(E_VERIFY); \
 	} \
 } while(false)
@@ -53,7 +51,6 @@ do { \
 
 #define HR_THROW(_hr) \
 do { \
-	ASSERT(("HR_THROW: Throwing HRESULT exception. Press IGNORE", false)); \
 	throw hresult_exception(_hr); \
 } while(false)
 
