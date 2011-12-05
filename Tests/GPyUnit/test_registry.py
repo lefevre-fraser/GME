@@ -16,7 +16,6 @@ class TestRegistry(unittest.TestCase):
     def tearDown(self):
         if not self.project is None:
             self.project.Close(True)
-    
 
     @property
     def connstr(self):
@@ -173,23 +172,10 @@ class TestRegistry(unittest.TestCase):
             self.project.BeginTransactionInNewTerr()
             self.project.RootFolder.ChildFolders
 
-class TestMURegistry(TestRegistry):
+import GPyUnit.util
+class TestMURegistry(GPyUnit.util.MUTestMixin, TestRegistry):
     def __init__(self, name, **kwds):
         super(TestMURegistry, self).__init__(name, **kwds)
-        import os.path
-        self.mgxdir = os.path.abspath(os.path.join(os.path.dirname(__file__), "TestMURegistry"))
-
-    def setUp(self):
-        import os.path
-        if os.path.isdir(self.mgxdir):
-            import shutil
-            assert len(self.mgxdir) > 10 # sanity check
-            shutil.rmtree(self.mgxdir)
-    
-    @property
-    def connstr(self):
-        return "MGX=\"" + self.mgxdir + "\""
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,6 @@
 
+import unittest
+
 class disable_early_binding(object):
 	def __enter__(self):
 		import win32com.client.gencache
@@ -27,3 +29,21 @@ def register_xmp(xmpfile):
         xmpfile = predef[xmpfile]
     import gme
     gme.register_if_not_registered(xmpfile)
+
+class MUTestMixin(unittest.TestCase): # need to inherit from TestCase so __mro__ works, since TestCase.__init__ doesn't call super().__init__
+    def __init__(self, name, **kwds):
+        super(MUTestMixin, self).__init__(name, **kwds)
+        import os.path
+        self.mgxdir = os.path.abspath(os.path.join(os.path.dirname(__file__), "MUTest"))
+
+    def setUp(self):
+        super(MUTestMixin, self).setUp()
+        import os.path
+        if os.path.isdir(self.mgxdir):
+            import shutil
+            assert len(self.mgxdir) > 10 # sanity check
+            shutil.rmtree(self.mgxdir)
+    
+    @property
+    def connstr(self):
+        return "MGX=\"" + self.mgxdir + "\""
