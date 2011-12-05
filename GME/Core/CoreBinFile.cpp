@@ -1048,7 +1048,11 @@ void CCoreBinFile::LoadProject()
 		ASSERT( objid != OBJID_NONE );
 
 		maxobjids_iterator i = maxobjids.find(metaid);
-		ASSERT( i != maxobjids.end() );
+		if (i == maxobjids.end())
+		{
+			// e.g. 0x79==121: registry node from old-style registry
+			i = maxobjids.insert(maxobjids_type::value_type(metaid, 1)).first;
+		}
 
 		if( i->second < objid )
 			i->second = objid;
