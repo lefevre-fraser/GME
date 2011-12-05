@@ -1091,6 +1091,7 @@
         <File Id="DecoratorLib_DIBRead.cpp" Name="DIBRead.cpp"  Source="..\SDK\DecoratorLib\DIBRead.cpp" />
         <File Id="EllipseVectorPart.cpp" Name="EllipseVectorPart.cpp"  Source="..\SDK\DecoratorLib\EllipseVectorPart.cpp" />
         <File Id="EllipseVectorPart.h" Name="EllipseVectorPart.h"  Source="..\SDK\DecoratorLib\EllipseVectorPart.h" />
+        <File Source="..\SDK\DecoratorLib\GmeApi.h" />
         <File Id="InheritanceVectorPart.cpp" Name="InheritanceVectorPart.cpp"  Source="..\SDK\DecoratorLib\InheritanceVectorPart.cpp" />
         <File Id="InheritanceVectorPart.h" Name="InheritanceVectorPart.h"  Source="..\SDK\DecoratorLib\InheritanceVectorPart.h" />
         <File Id="InPlaceEditDialog.cpp" Name="InPlaceEditDialog.cpp"  Source="..\SDK\DecoratorLib\InPlaceEditDialog.cpp" />
