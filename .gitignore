@@ -15,6 +15,7 @@ ipch
 *.msm
 *.mta
 *.log
+Release_PGO
 GME/XmlBackEnd/XmlBackEnd.h
 GME/XmlBackEnd/Release
 GME/Search/Release
