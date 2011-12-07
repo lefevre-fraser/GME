@@ -30,6 +30,11 @@ extern CComModule _Module;
 
 #include "DecoratorError.h"
 
+#include "Core.h"
+#include "Mga.h"
+#include "Parser.h"
+#include "Gme.h"
+
 #include <stdio.h>
 
 #define GENERATEDLIBHEADER	"DecoratorLib.h"

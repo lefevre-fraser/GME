@@ -304,7 +304,7 @@ STDMETHODIMP CDecoratorImpl::GetPorts(IMgaFCOs** portFCOs)
 	return retVal;
 }
 
-STDMETHODIMP CDecoratorImpl::Draw(HDC hdc)
+STDMETHODIMP CDecoratorImpl::Draw(ULONG hdc)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -360,7 +360,7 @@ STDMETHODIMP CDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart* p
 	return retVal;
 }
 
-STDMETHODIMP CDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
+STDMETHODIMP CDecoratorImpl::DrawEx(ULONG hdc, ULONGLONG gdipGraphics)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -373,7 +373,7 @@ STDMETHODIMP CDecoratorImpl::DrawEx(HDC hdc, ULONGLONG gdipGraphics)
 	HRESULT retVal = S_OK;
 
 	CDC dc;
-	dc.Attach(hdc);
+	dc.Attach((HDC)hdc);
 	{
 		try {
 			m_pElementDecorator->Draw(&dc, (Gdiplus::Graphics*)gdipGraphics);

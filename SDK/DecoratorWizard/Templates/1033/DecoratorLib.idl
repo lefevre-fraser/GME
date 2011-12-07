@@ -27,7 +27,7 @@ library DecoratorLib
 	coclass Decorator
 	{
 		[default] interface IMgaElementDecorator;
-		interface IMgaVersionInfo;
+		interface IGMEVersionInfo;
 	};
 
 };

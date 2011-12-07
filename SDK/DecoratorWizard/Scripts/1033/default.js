@@ -1,14 +1,35 @@
-
 function OnFinish(selProj, selObj)
+{
+    try
+    {
+        if (dte.Version == '10.0') {
+		    OnFinish100(selProj, selObj);
+		}
+		else {
+		    OnFinish90(selProj, selObj);
+		}
+    }
+    catch(e)
+	{
+		if (e.description.length != 0)
+			SetErrorInfo(e);
+		return e.number
+	}
+}
+
+function OnFinish100(selProj, selObj)
 {
 	try
 	{
-		var strProjectPath = wizard.FindSymbol('PROJECT_PATH');
-		var strProjectName = wizard.FindSymbol('PROJECT_NAME');
+		var strProjectPath = wizard.FindSymbol("PROJECT_PATH");
+		var strProjectName = wizard.FindSymbol("PROJECT_NAME");
 
-		selProj = CreateCustomProject(strProjectName, strProjectPath);
+		selProj = CreateProject(strProjectName, strProjectPath);
+
+		AddCommonConfig(selProj, strProjectName);
 		AddConfig(selProj, strProjectName);
-		AddFilters(selProj);
+
+		SetupFilters(selProj);
 
 		var InfFile = CreateCustomInfFile();
 		AddFilesToCustomProj(selProj, strProjectName, strProjectPath, InfFile);
@@ -25,7 +46,33 @@ function OnFinish(selProj, selObj)
 	}
 }
 
-function CreateCustomProject(strProjectName, strProjectPath)
+function OnFinish90(selProj, selObj)
+{
+	try
+	{
+		var strProjectPath = wizard.FindSymbol('PROJECT_PATH');
+		var strProjectName = wizard.FindSymbol('PROJECT_NAME');
+
+		selProj = CreateCustomProject90(strProjectName, strProjectPath);
+		AddConfig(selProj, strProjectName);
+		AddFilters90(selProj);
+
+		var InfFile = CreateCustomInfFile();
+		AddFilesToCustomProj(selProj, strProjectName, strProjectPath, InfFile);
+		PchSettings(selProj);
+		InfFile.Delete();
+
+		selProj.Object.Save();
+	}
+	catch(e)
+	{
+		if (e.description.length != 0)
+			SetErrorInfo(e);
+		return e.number
+	}
+}
+
+function CreateCustomProject90(strProjectName, strProjectPath)
 {
 	try
 	{
@@ -97,7 +144,7 @@ function CreateCustomProject(strProjectName, strProjectPath)
 	}
 }
 
-function AddFilters(proj)
+function AddFilters90(proj)
 {
 	try
 	{
@@ -125,18 +172,16 @@ function AddConfig(proj, strProjectName)
 
 		// DEBUG GENERAL SETTINGS
 		var config = proj.Object.Configurations('Debug');
-		config.IntermediateDirectory = '$(ConfigurationName)';
-		config.OutputDirectory = '$(ConfigurationName)';
 		config.ConfigurationType = ConfigurationTypes.typeDynamicLibrary;
 		config.useOfMfc = useOfMfc.useMfcDynamic;
 		config.useOfATL = useOfATL.useATLDynamic;
 		config.CharacterSet = charSet.charSetMBCS;
-
-		// DEBUG CUSTOM BUILD SETTINGS
-		var CBTool = config.Tools('VCCustomBuildTool');
-		CBTool.Description = "Performing registration (requires elevated priviledges on Windows Vista)...";
-		CBTool.CommandLine = "regsvr32 /s /c \"$(TargetPath)\"\necho regsvr32 exec. time > \"$(IntDir)\\regsvr32.trg\"\n";
-		CBTool.Outputs = "$(IntDir)\\regsvr32.trg";
+	    if (dte.Version == '10.0') {
+	    	var rule = config.Rules.Item("ConfigurationGeneral");
+	    	rule.SetPropertyValue("TargetName", "$(ProjectName)D");
+            var PreBuild = config.Tools('VCPreBuildEventTool');
+            PreBuild.CommandLine = "msbuild \"$(GME_ROOT)\\SDK\\DecoratorLib\\DecoratorLib.vcxproj\" /p:Configuration=$(Configuration) \"/p:SolutionDir=$(SolutionDir)\\\" /p:Platform=$(Platform)"
+	    }
 
 		// DEBUG MIDL SETTINGS
 		var MIDLTool = config.Tools('VCMIDLTool');
@@ -144,13 +189,16 @@ function AddConfig(proj, strProjectName)
 		MIDLTool.MkTypLibCompatible="false";
 		MIDLTool.ValidateParameters="true";
 		MIDLTool.TypeLibraryName = ".\\DecoratorLib.tlb";
-		MIDLTool.AdditionalIncludeDirectories = ".;$(GME_ROOT)/SDK/DecoratorLib;$(GME_ROOT)/Gme/Interfaces;$(GME_ROOT)/Interfaces";
-		MIDLTool.HeaderFileName = "";
+		MIDLTool.AdditionalIncludeDirectories = ".;$(GME_ROOT)\\SDK\\DecoratorLib;$(GME_ROOT)\\bin;$(GME_ROOT)\\Gme\\Release;$(GME_ROOT)\\Gme\\Debug;$(GME_ROOT)\\Gme\\Interfaces;$(GME_ROOT)\\Interfaces";
+	    if (dte.Version == '10.0')
+	    	MIDLTool.HeaderFileName = "%(Filename).h";
+	    else
+	    	MIDLTool.HeaderFileName = "$(InputName).h";
 
 		// DEBUG COMPILER SETTINGS
 		var CLTool = config.Tools('VCCLCompilerTool');
 		CLTool.Optimization = optimizeOption.optimizeDisabled;
-		CLTool.AdditionalIncludeDirectories = ".;$(GME_ROOT)/Gme/Interfaces;$(GME_ROOT)/Interfaces;$(GME_ROOT)/SDK/DecoratorLib";
+		CLTool.AdditionalIncludeDirectories = ".;$(GME_ROOT)\\Gme/Interfaces;$(GME_ROOT)\\Interfaces;$(GME_ROOT)\\SDK\\DecoratorLib";
 		CLTool.PreprocessorDefinitions = "WIN32;_DEBUG;_WINDOWS;_USRDLL;_ATL_DLL";
 		CLTool.BasicRuntimeChecks = basicRuntimeCheckOption.runtimeBasicCheckAll;
 		CLTool.RuntimeLibrary = runtimeLibraryOption.rtMultiThreadedDebugDLL;
@@ -167,29 +215,28 @@ function AddConfig(proj, strProjectName)
 		// DEBUG LINKER SETTINGS
 		var LinkTool = config.Tools('VCLinkerTool');
 		LinkTool.AdditionalDependencies = "gdiplus.lib DecoratorLibD.lib";
-		LinkTool.AdditionalLibraryDirectories = "$(GME_ROOT)/GME/Lib;$(GME_ROOT)/Lib";
+		LinkTool.AdditionalLibraryDirectories = "$(Configuration)";
 		LinkTool.LinkIncremental = linkIncrementalType.linkIncrementalYes;
 		LinkTool.GenerateDebugInformation = "true";
+		LinkTool.RegisterOutput = true;
 		LinkTool.SubSystem = subSystemOption.subSystemWindows;
 		LinkTool.TargetMachine = machineTypeOption.machineX86;
 		LinkTool.ModuleDefinitionFile = 'DecoratorApp.def';
+	    if (dte.Version != '10.0')
+	    	LinkTool.OutputFile = "$(OutDir)\\$(ProjectName)D.dll"
 
 	// --------------------------- RELEASE SETTINGS --------------------------- //
 
 		// RELEASE GENERAL SETTINGS
 		config = proj.Object.Configurations('Release');
-		config.IntermediateDirectory = '$(ConfigurationName)';
-		config.OutputDirectory = '$(ConfigurationName)';
 		config.ConfigurationType = ConfigurationTypes.typeDynamicLibrary;
 		config.useOfMfc  = useOfMfc.useMfcDynamic;
 		config.useOfATL = useOfATL.useATLDynamic;
 		config.CharacterSet = charSet.charSetMBCS;
-
-		// RELEASE CUSTOM BUILD SETTINGS
-		var CBTool = config.Tools('VCCustomBuildTool');
-		CBTool.Description = "Performing registration (requires elevated priviledges on Windows Vista)...";
-		CBTool.CommandLine = "regsvr32 /s /c \"$(TargetPath)\"\necho regsvr32 exec. time > \"$(IntDir)\\regsvr32.trg\"\n";
-		CBTool.Outputs = "$(IntDir)\\regsvr32.trg";
+	    if (dte.Version == '10.0') {
+            var PreBuild = config.Tools('VCPreBuildEventTool');
+            PreBuild.CommandLine = "msbuild \"$(GME_ROOT)\\SDK\\DecoratorLib\\DecoratorLib.vcxproj\" /p:Configuration=$(Configuration) \"/p:SolutionDir=$(SolutionDir)\\\" /p:Platform=$(Platform)"
+	    }
 
 		// RELEASE MIDL SETTINGS
 		var MIDLTool = config.Tools('VCMIDLTool');
@@ -197,8 +244,11 @@ function AddConfig(proj, strProjectName)
 		MIDLTool.MkTypLibCompatible = "false";
 		MIDLTool.ValidateParameters = "true";
 		MIDLTool.TypeLibraryName = ".\\DecoratorLib.tlb";
-		MIDLTool.AdditionalIncludeDirectories = ".;$(GME_ROOT)/SDK/DecoratorLib;$(GME_ROOT)/Gme/Interfaces;$(GME_ROOT)/Interfaces";
-		MIDLTool.HeaderFileName = "";
+		MIDLTool.AdditionalIncludeDirectories = ".;$(GME_ROOT)\\SDK\\DecoratorLib;$(GME_ROOT)\\bin;$(GME_ROOT)\\Gme\\Release;$(GME_ROOT)\\Gme\\Debug;$(GME_ROOT)\\Gme\\Interfaces;$(GME_ROOT)\\Interfaces";
+	    if (dte.Version == '10.0')
+	    	MIDLTool.HeaderFileName = "%(Filename).h";
+	    else
+	    	MIDLTool.HeaderFileName = "$(InputName).h";
 
 		// RELEASE COMPILER SETTINGS
 		var CLTool = config.Tools('VCCLCompilerTool');
@@ -206,7 +256,7 @@ function AddConfig(proj, strProjectName)
 		CLTool.InlineFunctionExpansion = inlineExpansionOption.expandAnySuitable;
 		CLTool.EnableIntrinsicFunctions = true;
 		CLTool.FavorSizeOrSpeed = favorSizeOrSpeedOption.favorSpeed;
-		CLTool.AdditionalIncludeDirectories = ".;$(GME_ROOT)/Gme/Interfaces;$(GME_ROOT)/Interfaces;$(GME_ROOT)/SDK/DecoratorLib";
+		CLTool.AdditionalIncludeDirectories = ".;$(GME_ROOT)\\Gme\\Interfaces;$(GME_ROOT)\\Interfaces;$(GME_ROOT)\\SDK\\DecoratorLib";
 		CLTool.PreprocessorDefinitions = "WIN32;NDEBUG;_WINDOWS;_USRDLL;_ATL_DLL";
 		CLTool.RuntimeLibrary = runtimeLibraryOption.rtMultiThreadedDLL;
 		CLTool.RuntimeTypeInfo = "true";
@@ -222,12 +272,15 @@ function AddConfig(proj, strProjectName)
 		// RELASE LINKER SETTINGS
 		var LinkTool = config.Tools('VCLinkerTool');
 		LinkTool.AdditionalDependencies = "gdiplus.lib DecoratorLib.lib";
-		LinkTool.AdditionalLibraryDirectories = "$(GME_ROOT)/GME/Lib;$(GME_ROOT)/Lib";
+		LinkTool.AdditionalLibraryDirectories = "$(Configuration)";
 		LinkTool.LinkIncremental = linkIncrementalType.linkIncrementalNo;
 		LinkTool.GenerateDebugInformation = "false";
 		LinkTool.SubSystem = subSystemOption.subSystemWindows;
 		LinkTool.TargetMachine = machineTypeOption.machineX86;
 		LinkTool.ModuleDefinitionFile = 'DecoratorApp.def';
+		LinkTool.RegisterOutput = true;
+	    if (dte.Version != '10.0')
+	    	LinkTool.OutputFile = "$(OutDir)\\$(ProjectName).dll"
 	}
 	catch(e)
 	{

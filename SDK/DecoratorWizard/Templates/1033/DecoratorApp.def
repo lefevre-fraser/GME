@@ -1,7 +1,5 @@
 ; DecoratorApp.def : Declares the module parameters.
 
-LIBRARY      "Decorator.DLL"
-
 EXPORTS
 	DllCanUnloadNow     PRIVATE
 	DllGetClassObject   PRIVATE
