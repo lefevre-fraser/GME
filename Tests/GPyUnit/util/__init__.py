@@ -23,7 +23,6 @@ def dec_disable_early_binding(f):
 def register_xmp(xmpfile):
     import os.path
     predef = { 'SF': os.path.join(os.environ['GME_ROOT'], "Paradigms", "SF", "SF.xmp"), 
-    # FIXME: doesn't work with GME from installer
     'MetaGME': os.path.join(os.environ['GME_ROOT'], "Paradigms", "MetaGME", "Paradigm", "MetaGME.xmp") }
     if not os.path.isfile(xmpfile):
         xmpfile = predef[xmpfile]
