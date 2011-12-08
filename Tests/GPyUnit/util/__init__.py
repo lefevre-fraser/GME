@@ -1,4 +1,6 @@
 
+import os
+import sys
 import unittest
 
 class disable_early_binding(object):
@@ -29,6 +31,26 @@ def register_xmp(xmpfile):
     import gme
     gme.register_if_not_registered(xmpfile)
 
+# From pathutils by Michael Foord: http://www.voidspace.org.uk/python/pathutils.html
+def onerror(func, path, exc_info):
+    """
+    Error handler for ``shutil.rmtree``.
+
+    If the error is due to an access error (read only file)
+    it attempts to add write permission and then retries.
+
+    If the error is for another reason it re-raises the error.
+
+    Usage : ``shutil.rmtree(path, onerror=onerror)``
+    """
+    import stat
+    if not os.access(path, os.W_OK):
+        # Is the error an access error ?
+        os.chmod(path, stat.S_IWUSR)
+        func(path)
+    else:
+        raise
+
 class MUTestMixin(unittest.TestCase): # need to inherit from TestCase so __mro__ works, since TestCase.__init__ doesn't call super().__init__
     def __init__(self, name, **kwds):
         super(MUTestMixin, self).__init__(name, **kwds)
@@ -41,8 +63,39 @@ class MUTestMixin(unittest.TestCase): # need to inherit from TestCase so __mro__
         if os.path.isdir(self.mgxdir):
             import shutil
             assert len(self.mgxdir) > 10 # sanity check
-            shutil.rmtree(self.mgxdir)
+            shutil.rmtree(self.mgxdir, onerror=onerror)
     
     @property
     def connstr(self):
         return "MGX=\"" + self.mgxdir + "\""
+
+class MUSVNTestMixin(MUTestMixin):
+    def setUp(self):
+        super(MUSVNTestMixin, self).setUp()
+        svn_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "MUTestRepo"))
+        self.svn_url = "file:///" + svn_file
+        if os.path.isdir(svn_file):
+            import shutil
+            assert len(svn_file) > 10 # sanity check
+            shutil.rmtree(svn_file, onerror=onerror)
+        import subprocess
+        subprocess.check_call(['svnadmin', 'create', svn_file])
+        with open(os.environ['USERPROFILE'] + '\\GME_MU_config.opt', 'w') as file:
+            file.write('''
+AutomaticLogin=true
+UseAccountInfo=true
+AutoCommit=true
+account=''' + os.environ['USERNAME'])
+    
+    @property
+    def connstr(self):
+        print 'opts: ' + self.opts()
+        return "MGX=\"" + self.mgxdir + "\" svn=\"" + self.svn_url + "\"" + self.opts()
+
+def MUGenerator(module, test):
+    module[test.__name__ + "MU"] = type(test.__name__ + "MU", (MUTestMixin, test), {})
+    #return
+    def opts_f(opts):
+        return lambda self: opts
+    for name, opts in (('MUSVN', ''), ('MUSVNHashed', ' hash=\"true\" hval=\"256\"')):
+        module[test.__name__ + name] = type(test.__name__ + name, (MUSVNTestMixin, test), {'opts': opts_f(opts)})

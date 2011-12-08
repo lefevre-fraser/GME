@@ -173,9 +173,7 @@ class TestRegistry(unittest.TestCase):
             self.project.RootFolder.ChildFolders
 
 import GPyUnit.util
-class TestMURegistry(GPyUnit.util.MUTestMixin, TestRegistry):
-    def __init__(self, name, **kwds):
-        super(TestMURegistry, self).__init__(name, **kwds)
+GPyUnit.util.MUGenerator(globals(), TestRegistry)
 
 if __name__ == "__main__":
     unittest.main()

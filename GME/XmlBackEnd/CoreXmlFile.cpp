@@ -5276,7 +5276,9 @@ void CCoreXmlFile::checkInAll( bool keepCheckedOut )
 		}
 		std::string comment;
 		CCommitDialog cDlg;
-		if (cDlg.DoModal() == IDOK) {
+		if (m_userOpts.m_autoCommit) {
+			comment = "AutoCommit";
+		} else if (cDlg.DoModal() == IDOK) {
 			CT2CA comment_str(cDlg.m_comment);
 			comment = comment_str;
 		}

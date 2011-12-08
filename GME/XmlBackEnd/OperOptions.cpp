@@ -6,6 +6,7 @@
 // OperatingOptions
 OperatingOptions::OperatingOptions()
 : m_defCheckInOnSave( false)
+, m_autoCommit(false)
 , m_defCheckOutOnAction( false)
 , m_alwaysFullLock( false)
 , m_onDeleteAlwaysFullLock( false)
@@ -33,11 +34,17 @@ OperatingOptions::OperatingOptions()
 , m_prefUrl()
 , m_prefAccessMethod()
 {
+	const char* userprofile = getenv("USERPROFILE");
+	if (userprofile)
+	{
+		loadSettings(userprofile, "GME_MU_config.opt");
+	}
 }
 
 void OperatingOptions::reset()
 {
 	m_defCheckInOnSave      = false;
+	m_autoCommit = false;
 	m_defCheckOutOnAction   = false;
 	m_alwaysFullLock        = false;
 	m_onDeleteAlwaysFullLock= false;
@@ -69,6 +76,11 @@ void OperatingOptions::reset()
 void OperatingOptions::load( const std::string& p_folder)
 {
 	reset();
+	const char* userprofile = getenv("USERPROFILE");
+	if (userprofile)
+	{
+		loadSettings(userprofile, "GME_MU_config.opt");
+	}
 	loadSettings( p_folder, m_sysConfName);
 	loadSettings( p_folder, m_usrConfName);
 }
@@ -124,6 +136,10 @@ void OperatingOptions::loadSettings( const std::string& p_folder, const std::str
 			else if( 0 == line.find( "DefCheckInOnSave"))//=true"))
 			{
 				m_defCheckInOnSave = parseBool( line, "DefCheckInOnSave");//m_defCheckInOnSave = true;
+			}
+			else if( 0 == line.find("AutoCommit"))//=true"))
+			{
+				m_autoCommit = parseBool(line, "AutoCommit");
 			}
 			else if( 0 == line.find( "DefCheckOutOnAction"))//=true"))
 			{

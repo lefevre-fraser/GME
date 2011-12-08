@@ -19,6 +19,7 @@ public:
 	static const char *  m_sysConfDefContentsSvn;
 	static const char *  m_sysConfDefContentsPlain;
 	bool                 m_defCheckInOnSave;
+	bool m_autoCommit;
 	bool                 m_defCheckOutOnAction;
 	bool                 m_alwaysFullLock;
 	bool                 m_onDeleteAlwaysFullLock;
