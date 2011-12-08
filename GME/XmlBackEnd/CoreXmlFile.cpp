@@ -1625,7 +1625,7 @@ STDMETHODIMP CCoreXmlFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode)
 
 			// initial commit
 			if (m_sourceControl == SC_SUBVERSION)
-				succ = commitSVN( m_contentPath, std::string("auto: OpenProject()"), true);
+				succ = commitSVN( m_folderPath, std::string("auto: OpenProject()"), true);
 			if( !succ) {
 				sendMsg( "Exception: Could not commit session folder.", MSG_ERROR);
 				AfxMessageBox( "Could not commit session folder.");
@@ -5454,15 +5454,12 @@ void CCoreXmlFile::createSubversionedFolder()
 		AfxMessageBox( (std::string( "Location directory '") + m_svnUrl + "' does not exist on the SVN server").c_str());
 		HR_THROW(E_FILEOPEN);
 	}
-#if(USESERF) // serf does not like the test below
-#else
 	if( isVersionedInSVN( m_svnUrl + "/" + m_projectName, /*isDir = */true, /* suppressErrorMsg = */true))
 	{
 		sendMsg( "Exception: Project '" + m_projectName + "' already found at '" + m_svnUrl + "'. Project creation aborted.", MSG_ERROR);
 		AfxMessageBox( (std::string( "Project '") + m_projectName + "' already found at '" + m_svnUrl + "'. Project creation aborted.").c_str());
 		HR_THROW(E_FILEOPEN);
 	}
-#endif
 	bool main_created = mkdirSVN( m_svnUrl, m_projectName, m_folderPath);
 	if( !main_created)
 	{
@@ -5482,17 +5479,16 @@ void CCoreXmlFile::createSubversionedFolder()
 		HR_THROW(E_FILEOPEN);
 	}
 
+	// add session folder to server
+	succ = addSVN( sessionFolder, true /*=recursive*/); 
+	if( !succ) {
+		sendMsg( "Exception: Could not add session folder to server.", MSG_ERROR);
+		AfxMessageBox( "Could not add session folder to server.");
+		HR_THROW(E_FILEOPEN);
+	}
 	// hashed folder structure (optional)
 	if( m_hashFileNames)
 	{
-		// add session folder to server (if no hash folders are used, the session folder will be added
-		// by the content folder - see later)
-		succ = addSVN( sessionFolder, true /*=recursive*/); 
-		if( !succ) {
-			sendMsg( "Exception: Could not add session folder to server.", MSG_ERROR);
-			AfxMessageBox( "Could not add session folder to server.");
-			HR_THROW(E_FILEOPEN);
-		}
 
 		// commit session folder (see previous comment)
 		succ = commitSVN( sessionFolder, std::string("auto: createSubversionedFolder()"), true);
@@ -5508,18 +5504,18 @@ void CCoreXmlFile::createSubversionedFolder()
 			AfxMessageBox( "Could not create initial directory structure.");
 			HR_THROW(E_FILEOPEN);
 		}
-	}
 
-	// add to server
-	succ = addSVN( m_contentPath, true /*=recursive*/); 
-	if( !succ) {
-		sendMsg( "Exception: Could not add initial directory structure to server.", MSG_ERROR);
-		AfxMessageBox( "Could not add initial directory structure to server.");
-		HR_THROW(E_FILEOPEN);
+		// add to server
+		succ = addSVN( m_contentPath, true /*=recursive*/); 
+		if( !succ) {
+			sendMsg( std::string("Exception: Could not add initial directory '") + m_folderPath + "' to server.", MSG_ERROR);
+			AfxMessageBox( "Could not add initial directory structure to server.");
+			HR_THROW(E_FILEOPEN);
+		}
 	}
 
 	// initial commit
-	succ = commitSVN( m_contentPath, std::string("auto: createSubversionedFolder()"), true);
+	succ = commitSVN( m_folderPath, std::string("auto: createSubversionedFolder()"), true);
 	if( !succ) {
 		sendMsg( "Exception: Could not commit initial directory structure.", MSG_ERROR);
 		AfxMessageBox( "Could not commit initial directory structure.");
