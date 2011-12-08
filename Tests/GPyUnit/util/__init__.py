@@ -94,7 +94,7 @@ account=''' + os.environ['USERNAME'])
 
 def MUGenerator(module, test):
     module[test.__name__ + "MU"] = type(test.__name__ + "MU", (MUTestMixin, test), {})
-    #return
+    return
     def opts_f(opts):
         return lambda self: opts
     for name, opts in (('MUSVN', ''), ('MUSVNHashed', ' hash=\"true\" hval=\"256\"')):
