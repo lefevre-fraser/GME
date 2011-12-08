@@ -275,7 +275,7 @@ STDMETHODIMP CCoreProject::CreateProject(BSTR connection, ICoreMetaProject *p)
         else if( con == "MGX" )
 		{
 			CComObjPtr<ICoreStorage> xmlfile;
-            xmlfile.CoCreateInstance( L"Mga.CoreXmlFile" );
+            COMTHROW(xmlfile.CoCreateInstance(L"Mga.CoreXmlFile"));
 			
 			corestorage = xmlfile;
 		}

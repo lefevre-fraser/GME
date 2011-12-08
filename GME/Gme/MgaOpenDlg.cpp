@@ -311,6 +311,9 @@ BOOL CMgaOpenDlg::OnInitDialog()
 	SetWindowText(title);
 	GetDlgItem(IDC_RADIO2)->SetWindowText(filemsg);
     GetDlgItem(IDC_RADIO4)->SetWindowText(xmlfilemsg);
+#if defined(_M_X64)
+	GetDlgItem(IDC_RADIO4)->EnableWindow(false);
+#endif
 
 	if( flag_meta )
 	{
