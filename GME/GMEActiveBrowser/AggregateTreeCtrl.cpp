@@ -49,7 +49,7 @@ HTREEITEM CAggregateTreeCtrl::InsertItem(HTREEITEM hParent, CString strObjectNam
 
 	TVINSERTSTRUCT tvInsert;
 	tvInsert.hParent = hParent;
-	tvInsert.hInsertAfter = NULL;
+	tvInsert.hInsertAfter = NULL; // FIXME: does this mean we're doing insertion sort?
 	tvInsert.item.pszText = strObjectName.GetBuffer(0);
 
 	tvInsert.item.state=0;
