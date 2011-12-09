@@ -220,7 +220,6 @@ def build_msms():
     f.close()
    
     import glob
-    # Build the msi file
     tools.build_WiX([]
         + [file for file in glob.glob(os.path.join(GME_ROOT, "Install", "*.wxs")) if file.find('GME.wxs') == -1 ]
         + glob.glob(os.path.join(GME_ROOT, "Install", "PIAs", "*.wxi"))

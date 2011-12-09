@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
-        <DirectoryRef Id="INSTALLDIR_BIN" />
+        <DirectoryRef Id="INSTALLDIR_PARADIGMS32" />
     </Fragment>
     <Fragment>
         <ComponentGroup Id="GME.MGA">
-            <Component Id="GME.MGA.dll" Directory="INSTALLDIR_BIN" Guid="{4C5478E1-D9FF-4E93-B87C-B847F398408A}">
+            <Component Id="GME.MGA.dll" Directory="INSTALLDIR_PARADIGMS32" Guid="{4C5478E1-D9FF-4E93-B87C-B847F398408A}">
                 <File Id="GME.MGA.dll" KeyPath="yes" Source="$(var.PIADir)\GME.MGA.dll" Assembly=".net" />
             </Component>
         </ComponentGroup>

@@ -49,5 +49,18 @@
         </RegistryKey>
       </Component>
     </DirectoryRef>
+
+    <ComponentGroupRef Id='GME.1.0.1.0'/>
+    <ComponentGroupRef Id='GME.MGA.1.0.1.0'/>
+    <ComponentGroupRef Id='GME.MGA.Core.1.0.1.0'/>
+    <ComponentGroupRef Id='GME.MGA.Meta.1.0.1.0'/>
+    <ComponentGroupRef Id='GME.MGA.Parser.1.0.1.0'/>
+    <ComponentGroupRef Id='GME.Util.1.0.1.0'/>
+    <ComponentGroupRef Id='GME'/>
+    <ComponentGroupRef Id='GME.MGA'/>
+    <ComponentGroupRef Id='GME.MGA.Core'/>
+    <ComponentGroupRef Id='GME.MGA.Meta'/>
+    <ComponentGroupRef Id='GME.MGA.Parser'/>
+    <ComponentGroupRef Id='GME.Util'/>
   </Module>
 </Wix>

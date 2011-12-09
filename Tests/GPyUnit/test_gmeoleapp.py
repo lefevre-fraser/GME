@@ -8,7 +8,11 @@ class TestGMEOLEApp(unittest.TestCase):
         gme.Exit()
         # under _DEBUG, GME.exe does not exit until Release()ed
         del(gme)
-        
+    
+    def test_PIAs(self):
+        import os.path
+        self.assertTrue(os.path.isfile(r"c:\Windows\assembly\GAC_MSIL\GME\1.0.0.0__f240a760fe751c2e\GME.dll"))
+
     def test_Console(self):
         import win32com.client
 

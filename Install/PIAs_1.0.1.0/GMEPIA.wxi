@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
-        <DirectoryRef Id="INSTALLDIR_BIN">
+        <DirectoryRef Id="INSTALLDIR_PARADIGMS32">
             <Directory Id="PIADIR.1.0.1.0" Name="PIA1.0.1.0"/>
         </DirectoryRef>
     </Fragment>
