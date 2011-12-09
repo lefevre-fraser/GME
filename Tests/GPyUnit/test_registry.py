@@ -2,6 +2,7 @@
 import sys
 import os.path
 import unittest
+import GPyUnit.util
 import win32com.client
 
 def _adjacent_file(file):
@@ -12,6 +13,7 @@ class TestRegistry(unittest.TestCase):
     def __init__(self, name, **kwds):
         super(TestRegistry, self).__init__(name, **kwds)
         self.output_file = "TestRegistry-output.mga"
+        self.project = None
         
     def tearDown(self):
         if not self.project is None:
@@ -25,7 +27,7 @@ class TestRegistry(unittest.TestCase):
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
-            self.project = win32com.client.DispatchEx("Mga.MgaProject")
+            self.project = GPyUnit.util.DispatchEx("Mga.MgaProject")
             self.project.Create(self.connstr, "MetaGME")
             self.project.BeginTransactionInNewTerr()
             
@@ -119,7 +121,7 @@ class TestRegistry(unittest.TestCase):
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
-            self.project = win32com.client.DispatchEx("Mga.MgaProject")
+            self.project = GPyUnit.util.DispatchEx("Mga.MgaProject")
             self.project.Create(self.connstr, "MetaGME")
             self.project.BeginTransactionInNewTerr()
             
@@ -148,7 +150,7 @@ class TestRegistry(unittest.TestCase):
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
-            self.project = win32com.client.DispatchEx("Mga.MgaProject")
+            self.project = GPyUnit.util.DispatchEx("Mga.MgaProject")
             self.project.Create(self.connstr, "MetaGME")
             self.project.BeginTransactionInNewTerr()
             
@@ -167,7 +169,7 @@ class TestRegistry(unittest.TestCase):
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
-            self.project = win32com.client.DispatchEx("Mga.MgaProject")
+            self.project = GPyUnit.util.DispatchEx("Mga.MgaProject")
             self.project.Open("MGA=" + r"C:\Users\ksmyth\Documents\META\meta\CyPhyML\CyPhyML.mga")
             self.project.BeginTransactionInNewTerr()
             self.project.RootFolder.ChildFolders

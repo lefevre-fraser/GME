@@ -2,18 +2,23 @@
 import os
 import sys
 import unittest
+import win32com.client
 
-_Dispatch_x64 = False
+_opts = type("Options", (object,), {
+'Dispatch_x64': False,
+'Run_SVN': False,
+})
 
-def Dispatch(progid):
+def DispatchEx(progid):
     from pythoncom import CLSCTX_ALL, CLSCTX_LOCAL_SERVER
     CLSCTX_ACTIVATE_32_BIT_SERVER = 0x40000
     CLSCTX_ACTIVATE_64_BIT_SERVER = 0x80000
-    if _Dispatch_x64:
+    if _opts.Dispatch_x64:
         return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER)
     else:
+        # FIXME: wrong on x64 python.exe
         return win32com.client.DispatchEx(progid)
-        # return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER)
+        # This doesn't work on x86 python.exe on x86 Windows: return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER)
 
 class disable_early_binding(object):
 	def __enter__(self):
@@ -23,7 +28,6 @@ class disable_early_binding(object):
 		return self
 	
 	def __exit__(self, exc_type, exc_value, traceback):
-		import win32com.client
 		win32com.client.gencache.GetClassForCLSID = self._savedGetClassForCLSID
 
 def dec_disable_early_binding(f):
@@ -47,12 +51,11 @@ def parse_xme(connstr, xme=None, project=None):
     testdir = os.path.dirname(os.path.abspath(__file__))
     if xme is None:
         xme = os.environ['GME_ROOT'] + r"\Paradigms\MetaGME\MetaGME-model.xme"
-    import win32com.client
-    parser = win32com.client.DispatchEx("Mga.MgaParser")
+    parser = DispatchEx("Mga.MgaParser")
 
     if project is None:
         (paradigm, parversion, parguid, basename, ver) = parser.GetXMLInfo(xme)
-        project = win32com.client.DispatchEx("Mga.MgaProject")
+        project = DispatchEx("Mga.MgaProject")
         project.Create(connstr, paradigm)
     parser.ParseProject(project, xme)
     return project
@@ -119,8 +122,10 @@ account=''' + os.environ['USERNAME'])
         return "MGX=\"" + self.mgxdir + "\" svn=\"" + self.svn_url + "\"" + self.opts()
 
 def MUGenerator(module, test):
+    # XMLBackend on x64 is unsupported
+    if _opts.Dispatch_x64: return
     module[test.__name__ + "MU"] = type(test.__name__ + "MU", (MUTestMixin, test), {})
-    return
+    if not _opts.Run_SVN: return
     def opts_f(opts):
         return lambda self: opts
     for name, opts in (('MUSVN', ''), ('MUSVNHashed', ' hash=\"true\" hval=\"256\"')):
