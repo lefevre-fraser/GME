@@ -3,6 +3,18 @@ import os
 import sys
 import unittest
 
+_Dispatch_x64 = False
+
+def Dispatch(progid):
+    from pythoncom import CLSCTX_ALL, CLSCTX_LOCAL_SERVER
+    CLSCTX_ACTIVATE_32_BIT_SERVER = 0x40000
+    CLSCTX_ACTIVATE_64_BIT_SERVER = 0x80000
+    if _Dispatch_x64:
+        return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER)
+    else:
+        return win32com.client.DispatchEx(progid)
+        # return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER)
+
 class disable_early_binding(object):
 	def __enter__(self):
 		import win32com.client.gencache
@@ -30,6 +42,20 @@ def register_xmp(xmpfile):
         xmpfile = predef[xmpfile]
     import gme
     gme.register_if_not_registered(xmpfile)
+
+def parse_xme(connstr, xme=None, project=None):
+    testdir = os.path.dirname(os.path.abspath(__file__))
+    if xme is None:
+        xme = os.environ['GME_ROOT'] + r"\Paradigms\MetaGME\MetaGME-model.xme"
+    import win32com.client
+    parser = win32com.client.DispatchEx("Mga.MgaParser")
+
+    if project is None:
+        (paradigm, parversion, parguid, basename, ver) = parser.GetXMLInfo(xme)
+        project = win32com.client.DispatchEx("Mga.MgaProject")
+        project.Create(connstr, paradigm)
+    parser.ParseProject(project, xme)
+    return project
 
 # From pathutils by Michael Foord: http://www.voidspace.org.uk/python/pathutils.html
 def onerror(func, path, exc_info):

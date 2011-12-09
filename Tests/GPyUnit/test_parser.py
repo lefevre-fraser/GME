@@ -8,19 +8,9 @@ def _adjacent_file(file):
 
 class TestParser(unittest.TestCase):
     def test_ParseMetaGME(self):
-        testdir = os.path.dirname(os.path.abspath(__file__))
-        inputfile = os.environ['GME_ROOT'] + r"\Paradigms\MetaGME\MetaGME-model.xme"
-        import win32com.client
-        xme = win32com.client.DispatchEx("Mga.MgaParser")
-        (paradigm, parversion, parguid, basename, ver) = xme.GetXMLInfo(inputfile)
-        mga = win32com.client.DispatchEx("Mga.MgaProject")
-
-        mga.Create(self.connstr, paradigm)
-        xme.ParseProject(mga, inputfile)
+        mga = GPyUnit.util.parse_xme(self.connstr)
         mga.Save()
         mga.Close()
-        del(mga)
-        del(xme)
     
     @property
     def connstr(self):
