@@ -348,7 +348,7 @@ void CCompDlg::OnRemove()
 			CComPtr<IMgaRegistrar> registrar;
 			HRESULT registrarHr;
 			if (CUACUtils::isVistaOrLater()) {
-				registrarHr = CUACUtils::CreateElevatedInstance(__uuidof(MgaRegistrar), &registrar, GetSafeHwnd());
+				registrarHr = GetElevatedRegistrar(&registrar);
 			}
 			else {
 				registrarHr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
@@ -397,7 +397,7 @@ void CCompDlg::OnEnableDisable()
 			CComPtr<IMgaRegistrar> registrar;
 			HRESULT registrarHr;
 			if (CUACUtils::isVistaOrLater() && (regacc_translate(m_accessmode) != REGACCESS_USER) ) {
-				registrarHr = CUACUtils::CreateElevatedInstance(__uuidof(MgaRegistrar), &registrar);
+				registrarHr = GetElevatedRegistrar(&registrar);
 			}
 			else {
 				registrarHr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
@@ -470,7 +470,7 @@ void CCompDlg::RegisterDll(const CString &path)
 	CComPtr<IMgaRegistrar> registrar;
 	HRESULT hr;
 	if (CUACUtils::isVistaOrLater()) {
-		hr = CUACUtils::CreateElevatedInstance(__uuidof(MgaRegistrar), &registrar, GetSafeHwnd());
+		hr = GetElevatedRegistrar(&registrar);
 	} else {
 		hr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));
 	}
@@ -483,6 +483,16 @@ void CCompDlg::RegisterDll(const CString &path)
 	if (FAILED(hr)) {
 		DisplayError(_T("Unable to register component"), hr);
 	}
+}
+
+HRESULT CCompDlg::GetElevatedRegistrar(IMgaRegistrar** registrar)
+{
+	HRESULT hr = S_OK;
+	if (m_elevatedRegistrar == NULL)
+		hr = CUACUtils::CreateElevatedInstance(__uuidof(MgaRegistrar), &m_elevatedRegistrar);
+	if (m_elevatedRegistrar != NULL)
+		m_elevatedRegistrar.CopyTo(registrar);
+	return hr;
 }
 
 
@@ -505,7 +515,7 @@ void CCompDlg::RegisterPattern(const CString &path)
 	CComPtr<IMgaRegistrar> registrar;
 	HRESULT registrarHr;
 	if (CUACUtils::isVistaOrLater() && (acmode != REGACCESS_USER) ) {
-		registrarHr = CUACUtils::CreateElevatedInstance(__uuidof(MgaRegistrar), &registrar);
+		registrarHr = GetElevatedRegistrar(&registrar);
 	}
 	else {
 		registrarHr = registrar.CoCreateInstance(OLESTR("Mga.MgaRegistrar"));

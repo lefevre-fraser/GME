@@ -63,6 +63,9 @@ protected:
 	void RegisterUnknownFile(const CString &path);
 	void UpdateEnableDisable();
 
+	CComPtr<IMgaRegistrar> m_elevatedRegistrar;
+	HRESULT GetElevatedRegistrar(IMgaRegistrar** registrar);
+
 public:
 	CString paradigm;
 	componenttype_enum type;
