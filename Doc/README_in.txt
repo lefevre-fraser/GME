@@ -8,11 +8,12 @@
 ************************************************
 
 The GME_x64.msi installers include both 64 bit and
-32 bit GME.
+32 bit GME. 64 bit GME does not support Multi-user projects.
 
-.mga files saved with GME r11.12.2 cannot be opened with
-previous versions of GME. GME r11.12.2 can open .mga files
-saved with previous versions of GME.
+.mga files saved with GME r11.12.2 and later cannot
+be opened with previous versions of GME.
+GME r11.12.2 and later can open .mga files saved with
+previous versions of GME.
 
 GME r11.12.2 uses a different format for the Multi-user
 backend. Please export your Multi-user projects to .xme and
@@ -24,6 +25,13 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Release r11.12.20
+----------------------------------
+  - Binary compatibility with r11.12.2
+  - Fixed bug where PIAs weren't included in 11.12.2
+  - Multi-user bugfixes
+
 
 Release Notes of Release r11.12.2
 ----------------------------------
