@@ -7186,7 +7186,7 @@ void CGMEView::RunComponent(CString compname)
 			}
 
 			if(theApp.bNoProtect) COMTHROW( launcher->put_Parameter(CComVariant(true)));
-			launcher->__RunComponent(_bstr_t(), theApp.mgaProject, focus, selfcos, GME_MAIN_START);
+			launcher->__RunComponent(_bstr_t(compname), theApp.mgaProject, focus, selfcos, GME_MAIN_START);
 		}
 	}
 	MSGCATCH(_T("Error while trying to run the interpreter"),;)
