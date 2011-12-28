@@ -659,23 +659,23 @@
       <Component Id="Parser.dll">
         <File Id="Parser.dll" Name="Parser.dll" KeyPath="yes" Source="..\GME\$(var.Release)\Parser.dll">
           <TypeLib Id="{70C41B15-E3CE-11D3-B37A-005004D38590}" Description="MGA Parser Type Library" Language="0" MajorVersion="1" MinorVersion="0">
-            <Class Id="{70C41B25-E3CE-11D3-B37A-005004D38590}" Context="InprocServer32" Description="MgaMetaParser Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Mga.MgaMetaParser.1" Description="MetaParser Class">
-                <ProgId Id="Mga.MgaMetaParser" Description="MetaParser Class" />
-              </ProgId>
-            </Class>
             <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
+              <Class Id="{70C41B25-E3CE-11D3-B37A-005004D38590}" Context="InprocServer32" Description="MgaMetaParser Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Mga.MgaMetaParser.1" Description="MetaParser Class">
+                  <ProgId Id="Mga.MgaMetaParser" Description="MetaParser Class" />
+                </ProgId>
+              </Class>
               <Class Id="{94D6FB54-1F7C-11D4-B3D0-005004D38590}" Context="InprocServer32" Description="MgaParser Class" ThreadingModel="apartment" Programmable="yes">
                 <ProgId Id="Mga.MgaParser.1" Description="MgaParser Class">
                   <ProgId Id="Mga.MgaParser" Description="MgaParser Class" />
                 </ProgId>
               </Class>
+              <Class Id="{A5D0DAE7-16EE-11D4-B3C2-005004D38590}" Context="InprocServer32" Description="MgaDumper Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Mga.MgaDumper.1" Description="MgaDumper Class">
+                  <ProgId Id="Mga.MgaDumper" Description="MgaDumper Class" />
+                </ProgId>
+              </Class>
             </AppId>
-            <Class Id="{A5D0DAE7-16EE-11D4-B3C2-005004D38590}" Context="InprocServer32" Description="MgaDumper Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Mga.MgaDumper.1" Description="MgaDumper Class">
-                <ProgId Id="Mga.MgaDumper" Description="MgaDumper Class" />
-              </ProgId>
-            </Class>
             <Interface Id="{70C41B24-E3CE-11D3-B37A-005004D38590}" Name="IMgaMetaParser" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
             <Interface Id="{94D6FB53-1F7C-11D4-B3D0-005004D38590}" Name="IMgaParser" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
             <Interface Id="{A5D0DAE6-16EE-11D4-B3C2-005004D38590}" Name="IMgaDumper" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
