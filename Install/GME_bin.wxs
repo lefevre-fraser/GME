@@ -449,27 +449,27 @@
                   <ProgId Id="Mga.MgaProject" Description="MgaProject Class" />
                 </ProgId>
               </Class>
+              <Class Id="{C592F6F0-C1FD-11D3-9AD2-00AA00B6FE26}" Context="InprocServer32" Description="MgaFolders Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Mga.MgaFolders.1" Description="MgaFolders Class">
+                  <ProgId Id="Mga.MgaFolders" Description="MgaFolders Class" />
+                </ProgId>
+              </Class>
+              <Class Id="{C795ED20-C1FD-11D3-9AD2-00AA00B6FE26}" Context="InprocServer32" Description="MgaRegNodes Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Mga.MgaRegNodes.1" Description="MgaRegNodes Class">
+                  <ProgId Id="Mga.MgaRegNodes" Description="MgaRegNodes Class" />
+                </ProgId>
+              </Class>
+              <Class Id="{C81DECD0-C1FD-11D3-9AD2-00AA00B6FE26}" Context="InprocServer32" Description="MgaFCOs Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Mga.MgaFCOs.1" Description="MgaFCOs Class">
+                  <ProgId Id="Mga.MgaFCOs" Description="MgaFCOs Class" />
+                </ProgId>
+              </Class>
+              <Class Id="{C996E971-C1FD-11D3-9AD2-00AA00B6FE26}" Context="InprocServer32" Description="MgaObjects Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Mga.MgaObjects.1" Description="MgaObjects Class">
+                  <ProgId Id="Mga.MgaObjects" Description="MgaObjects Class" />
+                </ProgId>
+              </Class>
             </AppId>
-            <Class Id="{C592F6F0-C1FD-11D3-9AD2-00AA00B6FE26}" Context="InprocServer32" Description="MgaFolders Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Mga.MgaFolders.1" Description="MgaFolders Class">
-                <ProgId Id="Mga.MgaFolders" Description="MgaFolders Class" />
-              </ProgId>
-            </Class>
-            <Class Id="{C795ED20-C1FD-11D3-9AD2-00AA00B6FE26}" Context="InprocServer32" Description="MgaRegNodes Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Mga.MgaRegNodes.1" Description="MgaRegNodes Class">
-                <ProgId Id="Mga.MgaRegNodes" Description="MgaRegNodes Class" />
-              </ProgId>
-            </Class>
-            <Class Id="{C81DECD0-C1FD-11D3-9AD2-00AA00B6FE26}" Context="InprocServer32" Description="MgaFCOs Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Mga.MgaFCOs.1" Description="MgaFCOs Class">
-                <ProgId Id="Mga.MgaFCOs" Description="MgaFCOs Class" />
-              </ProgId>
-            </Class>
-            <Class Id="{C996E971-C1FD-11D3-9AD2-00AA00B6FE26}" Context="InprocServer32" Description="MgaObjects Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Mga.MgaObjects.1" Description="MgaObjects Class">
-                <ProgId Id="Mga.MgaObjects" Description="MgaObjects Class" />
-              </ProgId>
-            </Class>
             <Interface Id="{11BB02D9-2E2C-11D3-B36D-0060082DF884}" Name="IMgaComponent" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
             <Interface Id="{270B4F92-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaProject" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
             <Interface Id="{270B4F96-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaFolder" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
