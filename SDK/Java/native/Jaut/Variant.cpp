@@ -35,6 +35,7 @@ author: Miklos Maroti
 
 #include "StdAfx.h"
 #include "Variant.h"
+#include <atlsafe.h>
 
 extern "C"
 {
@@ -192,8 +193,8 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Variant_allocate
 	}
 
 	V_VT(v) = vt;
-
-	if( vt == VT_UNKNOWN || vt == VT_DISPATCH || vt == VT_BSTR )
+//xxx
+	if( vt == VT_UNKNOWN || vt == VT_DISPATCH || vt & VT_BSTR )
 		V_UNKNOWN(v) = NULL;
 }
 
@@ -577,6 +578,41 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Variant_setString
 		env->ReleaseStringChars(val, s);
 	}
 }
+
+JNIEXPORT jarray JNICALL Java_org_isis_jaut_Variant_getStringArray
+  (JNIEnv *env, jobject obj)
+{
+	VARIANT *v = (VARIANT*)env->GetIntField(obj, JAUT_Variant_Pointer);
+	if( v == NULL )
+	{
+		ThrowJAutException(env, ERR_VariantPointer);
+		return NULL;
+	}
+
+	SAFEARRAY* parray = NULL;
+	if( V_VT(v) == (VT_BSTR | VT_ARRAY))
+		parray = v->parray;
+	//else if( V_VT(v) == (VT_BSTR|VT_BYREF) )
+	//	b = *V_BSTRREF(v);
+
+	ATL::CComSafeArray<BSTR> array;
+	if (parray == NULL || parray->cDims != 1 || FAILED(array.Attach(parray)))
+	{
+		ThrowJAutException(env, ERR_InvalidType);
+		return NULL;
+	}
+	jclass stringClass = env->FindClass("java/lang/String");
+	long size = array.GetUpperBound(0) - array.GetLowerBound(0) + 1;
+	jobjectArray jarray = env->NewObjectArray(size, stringClass, 0);
+    for (jsize i = 0; i + array.GetLowerBound(0) <= array.GetUpperBound(); ++i) {
+		BSTR element = array.GetAt(i + array.GetLowerBound(0));
+		env->SetObjectArrayElement(jarray, i, env->NewString((jchar*)element, SysStringLen(element)));
+    }
+	array.Detach();
+
+    return jarray;
+}
+
 
 JNIEXPORT void JNICALL Java_org_isis_jaut_Variant_setDispatch
   (JNIEnv *env, jobject obj, jobject val)

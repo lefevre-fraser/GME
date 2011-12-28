@@ -773,7 +773,9 @@ public class Variant extends ApartmentObject
      * @throws OutOfMemoryError if memory could not be allocated for the string.
      */
     public native void setString(String value);
-    
+
+    public native String[] getStringArray(); 
+   
     /**
      * Dec 30 1899 is 0 in Win32 date
      * Jan 1 1970 is 0 in Java date
@@ -1097,7 +1099,7 @@ public class Variant extends ApartmentObject
     public Object toObject() throws ComException
     {
         if( !isCreated() )
-            throw new JAutException("The unerlying VARIANT is not created");
+            throw new JAutException("The underlying VARIANT is not created");
         
         switch( getVartype() & ~VT_BYREF )
         {
@@ -1138,6 +1140,9 @@ public class Variant extends ApartmentObject
             case VT_DATE:
                 return getDate();
                 
+            case VT_BSTR | VT_ARRAY:
+            	return getStringArray();
+
             case VT_DISPATCH:
             case VT_UNKNOWN:
                 return getDispatch();

@@ -44,6 +44,7 @@ JNIEXPORT jstring JNICALL Java_org_isis_jaut_ComException_formatMessage
 {
 	char *msg = NULL;
 
+	// FIXME: use FormatMessageW and env->NewString
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS |
 		FORMAT_MESSAGE_FROM_SYSTEM, NULL, hr, NULL, (char*)&msg, 0, NULL);
 	

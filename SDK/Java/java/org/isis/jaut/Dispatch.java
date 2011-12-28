@@ -402,7 +402,10 @@ public class Dispatch extends ApartmentObject
 			for(int i = 0; i < arguments.length; ++i)
 			{
 				if( arguments[i] != null )
-					args[i] = new Variant(arguments[i]);
+					if (arguments[i] instanceof Variant)
+						args[i] = (Variant) arguments[i];
+					else
+						args[i] = new Variant(arguments[i]);
 			}
 		}
 
@@ -410,15 +413,6 @@ public class Dispatch extends ApartmentObject
 		retval.allocate(Variant.VT_EMPTY);
 
 		invoke(dispID, dispFlags, args, namedArgDispIDs, retval);
-
-		if( args != null )
-		{
-			for(int i = 0; i < arguments.length; ++i)
-			{
-				if( args[i] != null )
-					args[i].release();
-			}
-		}
 
 		Object obj = retval.toObject();
 		retval.release();
@@ -450,20 +444,16 @@ public class Dispatch extends ApartmentObject
 			for(int i = 0; i < arguments.length; ++i)
 			{
 				if( arguments[i] != null )
-					args[i] = new Variant(arguments[i]);
+				{
+					if (arguments[i] instanceof Variant)
+						args[i] = (Variant)arguments[i];
+					else
+						args[i] = new Variant(arguments[i]);
+				}
 			}
 		}
 
 		invoke(dispID, dispFlags, args, namedArgDispIDs, null);
-
-		if( args != null )
-		{
-			for(int i = 0; i < arguments.length; ++i)
-			{
-				if( args[i] != null )
-					args[i].release();
-			}
-		}
 	}
 
 	/**

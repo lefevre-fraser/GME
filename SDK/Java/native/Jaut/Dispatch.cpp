@@ -462,10 +462,15 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Dispatch_invoke
 			if( arg != NULL )
 				v = (VARIANT*)env->GetIntField(arg, JAUT_Variant_Pointer);
 
-			if( v != NULL )
+			if (v != NULL && v->vt == (VT_BSTR | VT_BYREF)) // FIXME: remove VT_BSTR and test
 			{
 				params.rgvarg[i] = *v;
-				V_VT(v) = VT_EMPTY;
+				params.rgvarg[i].vt = VT_BSTR | VT_BYREF;
+				//params.rgvarg
+			} else if (v != NULL )
+			{
+				params.rgvarg[i] = *v;
+				V_VT(v) = VT_EMPTY; //KMS: why this?
 			}
 			else
 			{
@@ -503,7 +508,7 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Dispatch_invoke
 	if( params.rgdispidNamedArgs != NULL )
 		env->ReleaseIntArrayElements(nameids, params.rgdispidNamedArgs, JNI_ABORT);
 
-	if( params.rgvarg != NULL )
+	if( params.rgvarg != NULL && varresult == NULL || varresult->vt == VT_EMPTY )
 	{
 		for(unsigned int i = 0; i < params.cArgs; ++i)
 		{
@@ -513,10 +518,10 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Dispatch_invoke
 			if( arg != NULL )
 				v = (VARIANT*)env->GetIntField(arg, JAUT_Variant_Pointer);
 
-			if( v != NULL )
+			if (v != NULL)
 			{
-				params.rgvarg[i] = *v;
-				V_VT(v) = VT_EMPTY;
+				*v = params.rgvarg[i];
+				params.rgvarg[i].vt = VT_EMPTY;
 			}
 			else
 				VariantClear(&params.rgvarg[i]);
