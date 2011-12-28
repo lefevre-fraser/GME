@@ -1,4 +1,5 @@
 # tests for GME-310
+from __future__ import with_statement
 
 import sys
 import os.path
@@ -22,7 +23,7 @@ class TestFolderCopy(unittest.TestCase):
         """
         def _adjacent_file(file):
             import os.path
-            return os.path.join(os.path.dirname(__file__), file)
+            return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
         from GPyUnit import util
         util.register_xmp(_adjacent_file('GME310ModelRefportTest.xmp'))
 
@@ -36,7 +37,7 @@ class TestFolderCopy(unittest.TestCase):
             tomove = win32com.client.DispatchEx("Mga.MgaFolders")
             tomove.Append(modelb)
             #self.project.ObjectByPath(self.destination_folder).CopyFolders(tomove, None)
-            self.project.RootFolder.CopyFolders(tomove, None)
+            self.project.RootFolder.CopyFolderDisp(modelb)
 
             self.project.CommitTransaction()
             self.project.Save("MGA=" + _adjacent_file(self.output_file))

@@ -4,7 +4,7 @@ class TestRegistrar(unittest.TestCase):
 	def test_GetAssociatedParadigmsDisp(self):
 		import win32com.client
 		x = win32com.client.DispatchEx("MGA.MgaRegistrar")
-		self.assertEqual(x.GetAssociatedParadigmsDisp("MGA.Interpreter.MetaInterpreter", 1), (u'MetaGME',))
+		self.assertEqual(list(x.GetAssociatedParadigmsDisp("MGA.Interpreter.MetaInterpreter", 1)), [u'MetaGME'])
 
 #suite = (TestRegistrar(),)
 

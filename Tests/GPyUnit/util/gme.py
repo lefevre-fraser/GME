@@ -1,15 +1,18 @@
 #!/bin/python
 
+from __future__ import with_statement
+
 import re
 import sys
 import os.path
-import pythoncom
 import win32com.client
 import StringIO
+import platform
+
 # For py2exe support
 # To generate the exe, be sure to rename or delete .../Python/lib/site-packages/win32com/gen_py
 # See http://www.py2exe.org/index.cgi/UsingEnsureDispatch
-if win32com.client.gencache.is_readonly == True:
+if hasattr(win32com.client, "gencache") and win32com.client.gencache.is_readonly == True:
 	#allow gencache to create the cached wrapper objects
 	win32com.client.gencache.is_readonly = False
 	# under p2exe the call in gencache to __init__() does not happen
@@ -25,7 +28,6 @@ if win32com.client.gencache.is_readonly == True:
 		print output.getvalue()
 		raise
 
-import pywintypes
 import subprocess
 import itertools
 
@@ -66,7 +68,7 @@ def is_elevated():
 
 def maybe_elevate():
 	def decorator(func):
-		if sys.getwindowsversion()[0] < 6:
+		if not hasattr(sys, "getwindowsversion") or sys.getwindowsversion()[0] < 6:
 			wrap = func
 		else:
 			def wrap(*args, **kwargs):
@@ -84,15 +86,7 @@ def elevated_check_call(*args):
 
 # GME functions
 def create_project(project, connection, paradigm):
-		try:
-			return project.Create(connection, paradigm)
-		except pywintypes.com_error as err:
-# from Mga.idl:
-#[helpstring("The paradigm is not registered")]
-#		E_MGA_PARADIGM_NOTREG			= 0x87650011,
-			if err.excepinfo and err.excepinfo[5] == -2023423983:
-				raise Exception("Paradigm '%s' not registered; can't open file '%s'" % (paradigm, connection), err)
-			raise err
+	return project.Create(connection, paradigm)
 
 # aka CreateMga.vbs
 def xme2mga(xmefile, mgafile=None):
@@ -110,9 +104,12 @@ def run_interpreter(interpreter, file, focusobj=None, selectedobj=None, param=0,
 def get_paradigm_file(paradigm, regaccess=3):
 	"Returns the .mta file for a given registered paradigm"
 	registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
-	guid = registrar.ParadigmGUIDString(regaccess, paradigm)
+	guid = registrar.GetParadigmGUIDStringDisp(regaccess, paradigm)
 	import uuid
-	buf = buffer(uuid.UUID(guid).bytes_le, 0, 16)
+	if platform.system() != 'Java':
+		buf = buffer(uuid.UUID(guid).bytes_le, 0, 16)
+	else:
+		buf = str(uuid.UUID(guid).bytes_le[0:16])
 	(connstr, guid) = registrar.QueryParadigm(paradigm, None, buf, regaccess)
 	# >>> constr
 	# "MGA=....mta"
@@ -140,9 +137,9 @@ def is_registered(paradigm):
 	registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
 	paradigms = []
 	# REGACCESS_USER = 1
-	paradigms.extend(registrar.Paradigms(1))
+	paradigms.extend(registrar.GetParadigmsDisp(1))
 	# REGACCESS_SYSTEM = 2
-	paradigms.extend(registrar.Paradigms(2))
+	paradigms.extend(registrar.GetParadigmsDisp(2))
 	return filter(lambda p: p == paradigm, paradigms)
 
 REGISTER = 128
@@ -150,7 +147,7 @@ DONT_REGISTER = 0
 def register_if_not_registered(file):
 	"Register an xme or mga if it has not already been registered"
 	if os.path.splitext(file)[1] == ".xmp":
-		if not is_registered(os.path.basename(os.path.splitext(file)[0])) or not os.path.isfile(get_paradigm_file(os.path.splitext(os.path.basename(file))[0])):
+		if not is_registered(os.path.basename(os.path.splitext(file)[0])) or (platform.system() != 'Java' and not os.path.isfile(get_paradigm_file(os.path.splitext(os.path.basename(file))[0]))):
 			regxmp(file)
 		return
 	
@@ -224,16 +221,7 @@ def register_component(file, warn_on_tlb_error=None):
 # TODO: on Vista or 7 we need to start an elevated registrar
 	registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
 	# REGACCESS_BOTH	= 3,
-	try:
-		registrar.RegisterComponentLibrary(file, 3)
-	except pywintypes.com_error as err:
-# KMS: GME assumes that the .dll has a type library. If it is a CLR component, it will not.
-# Warn if the type library registration fails
-# #define TYPE_E_CANTLOADLIBRARY _HRESULT_TYPEDEF_(0x80029C4AL)
-		if warn_on_tlb_error and err.excepinfo and (err.excepinfo[5] & 0xffffffff == 0x80029c4a):
-			sys.stderr.write("Type library registration for %s failed" % file);
-		else:
-			raise err
+	registrar.RegisterComponentLibrary(file, 3)
 
 
 # UDM functions
@@ -305,118 +293,121 @@ def context_menu_reg():
 			reg.write(str)
 	elevated_check_call("regedit", regname)
 
+if platform.system() != 'Java':
+	# GME Project functions
+	import win32com.client.gencache
+	# Generate .py's for GME Type Library
+	# n.b. we don't use EnsureModule here because we don't properly version the typelib
+	#   A change in the typelib may invalidate the cache, but gencache doesn't know it, e.g. GMESRC r947
+	meta_module = win32com.client.gencache.MakeModuleForTypelib('{0ADEEC71-D83A-11D3-B36B-005004D38590}', 0, 1, 0)
+	mga_module = win32com.client.gencache.MakeModuleForTypelib('{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}', 0, 1, 0)
 
-# GME Project functions
-import win32com.client.gencache
-# Generate .py's for GME Type Library
-# n.b. we don't use EnsureModule here because we don't properly version the typelib
-#   A change in the typelib may invalidate the cache, but gencache doesn't know it, e.g. GMESRC r947
-meta_module = win32com.client.gencache.MakeModuleForTypelib('{0ADEEC71-D83A-11D3-B36B-005004D38590}', 0, 1, 0)
-mga_module = win32com.client.gencache.MakeModuleForTypelib('{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}', 0, 1, 0)
+	gme_constants = getattr(meta_module, "constants")
 
-gme_constants = getattr(meta_module, "constants")
+	OBJTYPE_INTERFACE_MAP = {
+		gme_constants.OBJTYPE_MODEL: "IMgaModel",
+		# Seems IMgaAtom isn't generated because it defines no new methods
+	#	2: "IMgaAtom",
+		gme_constants.OBJTYPE_ATOM: "IMgaFCO",
+		gme_constants.OBJTYPE_REFERENCE: "IMgaReference",
+		gme_constants.OBJTYPE_CONNECTION: "IMgaConnection",
+		gme_constants.OBJTYPE_SET: "IMgaSet",
+		gme_constants.OBJTYPE_FOLDER: "IMgaFolder",
+	#	gme_constants.OBJTYPE_ASPECT: "IMgaAspect",
+	#	gme_constants.OBJTYPE_ROLE: "IMgaRole",
+		gme_constants.OBJTYPE_ATTRIBUTE: "IMgaAttribute",
+		gme_constants.OBJTYPE_PART: "IMgaPart",
+	}
 
-OBJTYPE_INTERFACE_MAP = {
-	gme_constants.OBJTYPE_MODEL: "IMgaModel",
-	# Seems IMgaAtom isn't generated because it defines no new methods
-#	2: "IMgaAtom",
-	gme_constants.OBJTYPE_ATOM: "IMgaFCO",
-	gme_constants.OBJTYPE_REFERENCE: "IMgaReference",
-	gme_constants.OBJTYPE_CONNECTION: "IMgaConnection",
-	gme_constants.OBJTYPE_SET: "IMgaSet",
-	gme_constants.OBJTYPE_FOLDER: "IMgaFolder",
-#	gme_constants.OBJTYPE_ASPECT: "IMgaAspect",
-#	gme_constants.OBJTYPE_ROLE: "IMgaRole",
-	gme_constants.OBJTYPE_ATTRIBUTE: "IMgaAttribute",
-	gme_constants.OBJTYPE_PART: "IMgaPart",
-}
+	def cast(fco):
+		return win32com.client.CastTo(fco, OBJTYPE_INTERFACE_MAP.get(fco.ObjType))
 
-def cast(fco):
-	return win32com.client.CastTo(fco, OBJTYPE_INTERFACE_MAP.get(fco.ObjType))
-
-# KMS I'm not sure why gen_py lowercases these (for GME<VS2010). Create aliases:
-if mga_module.IMgaReference._prop_map_get_.has_key("referred"):
-    mga_module.IMgaReference._prop_map_get_["Referred"] = mga_module.IMgaReference._prop_map_get_["referred"]
-#mga_module.IMgaConnPoint._prop_map_get_["Target"] = mga_module.IMgaConnPoint._prop_map_get_["target"]
-# Make IMgaFolder behave more like IMgaFCO
-mga_module.IMgaFolder._prop_map_get_["Meta"] = mga_module.IMgaFolder._prop_map_get_["MetaFolder"]
+	# KMS I'm not sure why gen_py lowercases these (for GME<VS2010). Create aliases:
+	if mga_module.IMgaReference._prop_map_get_.has_key("referred"):
+	    mga_module.IMgaReference._prop_map_get_["Referred"] = mga_module.IMgaReference._prop_map_get_["referred"]
+	#mga_module.IMgaConnPoint._prop_map_get_["Target"] = mga_module.IMgaConnPoint._prop_map_get_["target"]
+	# Make IMgaFolder behave more like IMgaFCO
+	mga_module.IMgaFolder._prop_map_get_["Meta"] = mga_module.IMgaFolder._prop_map_get_["MetaFolder"]
 
 
-def monkeypatch_method(classes):
-    def decorator(func):
-    	for name in classes:
-        	setattr(getattr(mga_module, name), func.__name__, func)
-        return func
-    return decorator
+	def monkeypatch_method(classes):
+	    def decorator(func):
+	    	for name in classes:
+	        	setattr(getattr(mga_module, name), func.__name__, func)
+	        return func
+	    return decorator
 
-# ConnPoints([out, retval] IMgaConnPoints **pVal);
-@monkeypatch_method(["IMgaConnection"])
-def get_end(self, role):
-	ends = filter(lambda cp: cp.ConnRole == role, self.ConnPoints)
-	if ends:
-		return ends[0].Target
-	else:
-		raise Exception(self.Name + " has no connection point " + role)
-
-@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
-def kind(self):
-    return self.Meta.Name
-
-OBJTYPE_MAP = {
-	gme_constants.OBJTYPE_MODEL: "Model",
-	gme_constants.OBJTYPE_ATOM: "Atom",
-	gme_constants.OBJTYPE_REFERENCE: "Reference",
-	gme_constants.OBJTYPE_CONNECTION: "Connection",
-	gme_constants.OBJTYPE_SET: "Set",
-	gme_constants.OBJTYPE_FOLDER: "Folder",
-	gme_constants.OBJTYPE_ASPECT: "Aspect",
-	gme_constants.OBJTYPE_ROLE: "Role",
-	gme_constants.OBJTYPE_ATTRIBUTE: "Attribute",
-	gme_constants.OBJTYPE_PART: "Part",
-}
-
-@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
-def mga_type(self):
-	return OBJTYPE_MAP.get(self.ObjType)
-
-@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
-def parent(self):
-	if self.mga_type() == "Folder":
-		return self.ParentFolder
-	parent = self.ParentFolder
-	if not parent:
-		parent = self.ParentModel
-	return parent
-
-@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
-def parents(self):
-	parents = []
-	current = self
-	while True:
-		parent = current.parent()
-		if not parent:
-			return parents
+	# ConnPoints([out, retval] IMgaConnPoints **pVal);
+	@monkeypatch_method(["IMgaConnection"])
+	def get_end(self, role):
+		ends = filter(lambda cp: cp.ConnRole == role, self.ConnPoints)
+		if ends:
+			return ends[0].Target
 		else:
-			current = parent
-			parents.append(parent)
+			raise Exception(self.Name + " has no connection point " + role)
 
-@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
-def in_library(self):
-	return filter(lambda x: x.mga_type() == "Folder" and x.LibraryName != "", self.parents())
+	@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
+	def kind(self):
+	    return self.Meta.Name
 
-@monkeypatch_method(["IMgaFolder"])
-def children(self):
-	children = []
-	children.extend(self.ChildFolders)
-	children.extend(self.ChildFCOs)
-	return children
+	OBJTYPE_MAP = {
+		gme_constants.OBJTYPE_MODEL: "Model",
+		gme_constants.OBJTYPE_ATOM: "Atom",
+		gme_constants.OBJTYPE_REFERENCE: "Reference",
+		gme_constants.OBJTYPE_CONNECTION: "Connection",
+		gme_constants.OBJTYPE_SET: "Set",
+		gme_constants.OBJTYPE_FOLDER: "Folder",
+		gme_constants.OBJTYPE_ASPECT: "Aspect",
+		gme_constants.OBJTYPE_ROLE: "Role",
+		gme_constants.OBJTYPE_ATTRIBUTE: "Attribute",
+		gme_constants.OBJTYPE_PART: "Part",
+	}
 
-@monkeypatch_method(["IMgaModel"])
-def children(self):
-	return self.ChildFCOs
+	@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
+	def mga_type(self):
+		return OBJTYPE_MAP.get(self.ObjType)
 
-def is_container(fco):
-	return fco.ObjType == gme_constants.OBJTYPE_MODEL or fco.ObjType == gme_constants.OBJTYPE_FOLDER
+	@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
+	def parent(self):
+		if self.mga_type() == "Folder":
+			return self.ParentFolder
+		parent = self.ParentFolder
+		if not parent:
+			parent = self.ParentModel
+		return parent
+
+	@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
+	def parents(self):
+		parents = []
+		current = self
+		while True:
+			parent = current.parent()
+			if not parent:
+				return parents
+			else:
+				current = parent
+				parents.append(parent)
+
+	@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
+	def in_library(self):
+		return filter(lambda x: x.mga_type() == "Folder" and x.LibraryName != "", self.parents())
+
+	@monkeypatch_method(["IMgaFolder"])
+	def children(self):
+		children = []
+		children.extend(self.ChildFolders)
+		children.extend(self.ChildFCOs)
+		return children
+
+	@monkeypatch_method(["IMgaModel"])
+	def children(self):
+		return self.ChildFCOs
+
+	def is_container(fco):
+		return fco.ObjType == gme_constants.OBJTYPE_MODEL or fco.ObjType == gme_constants.OBJTYPE_FOLDER
+else:
+	def cast(fco):
+		return fco
 
 import tempfile
 class Project():

@@ -1,4 +1,5 @@
 # tests for GME-311 and GME-297
+from __future__ import with_statement
 
 import sys
 import os.path
@@ -25,7 +26,7 @@ class TestRefportConnectionInvariantUnderMoves(unittest.TestCase):
         """
         def _adjacent_file(file):
             import os.path
-            return os.path.join(os.path.dirname(__file__), file)
+            return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
         from GPyUnit import util
         util.register_xmp(_adjacent_file('GME297ModelRefportTest.xmp'))
         with util.disable_early_binding():
@@ -43,7 +44,7 @@ class TestRefportConnectionInvariantUnderMoves(unittest.TestCase):
 
             destination = self.project.ObjectByPath(self.destination_model)
             if destination.ObjType == OBJTYPE_FOLDER:
-                destination.MoveFolders(tomove, None)
+                destination.MoveFolderDisp(fco_to_move)
             else:
                 self._move_fcos(destination, fco_to_move, tomove)
                 #destination.MoveFCOs(tomove, None, None)
@@ -59,10 +60,20 @@ class TestRefportConnectionInvariantUnderMoves(unittest.TestCase):
         # print "Reference file '%s' matches output '%s'" % (self.correct_file, self.output_file)
     
     def _move_fcos(self, destination, fco_to_move, col_to_move):
-        destination.MoveFCOs(col_to_move, None, None)
+        import platform
+        if platform.system() == 'Java':
+            import org.isis.jaut.Variant
+            destination.MoveFCODisp(fco_to_move, org.isis.jaut.Variant.create(org.isis.jaut.Variant.VT_UNKNOWN))
+        else:
+            destination.MoveFCOs(col_to_move, None, None)
 
     def _move_fcos_disp(self, destination, fco_to_move, col_to_move):
-        destination.MoveFCODisp(fco_to_move, None)
+        import platform
+        if platform.system() == 'Java':
+            import org.isis.jaut.Variant
+            destination.MoveFCODisp(fco_to_move, org.isis.jaut.Variant.create(org.isis.jaut.Variant.VT_UNKNOWN))
+        else:
+            destination.MoveFCODisp(fco_to_move, None)
 
 def suite():
     suite = unittest.TestSuite()

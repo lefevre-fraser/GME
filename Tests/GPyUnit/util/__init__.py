@@ -1,8 +1,8 @@
+from __future__ import with_statement
 
 import os
 import sys
 import unittest
-import win32com.client
 
 _opts = type("Options", (object,), {
 'Dispatch_x64': False,
@@ -10,9 +10,9 @@ _opts = type("Options", (object,), {
 })
 
 def DispatchEx(progid):
-    from pythoncom import CLSCTX_ALL, CLSCTX_LOCAL_SERVER
-    CLSCTX_ACTIVATE_32_BIT_SERVER = 0x40000
-    CLSCTX_ACTIVATE_64_BIT_SERVER = 0x80000
+    import win32com.client
+    CLSCTX_ALL = 23
+    CLSCTX_LOCAL_SERVER = 4
     if _opts.Dispatch_x64:
         return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER)
     else:
@@ -28,7 +28,19 @@ class disable_early_binding(object):
 		return self
 	
 	def __exit__(self, exc_type, exc_value, traceback):
+		import win32com.client.gencache
 		win32com.client.gencache.GetClassForCLSID = self._savedGetClassForCLSID
+
+class NoopUsing(object):
+	def __enter__(self):
+		return self
+	
+	def __exit__(self, exc_type, exc_value, traceback):
+		pass
+
+import platform
+if platform.system() == 'Java':
+	disable_early_binding = NoopUsing
 
 def dec_disable_early_binding(f):
     def ret(*args, **kwargs):
@@ -41,7 +53,7 @@ def dec_disable_early_binding(f):
 def register_xmp(xmpfile):
     import os.path
     predef = { 'SF': os.path.join(os.environ['GME_ROOT'], "Paradigms", "SF", "SF.xmp"), 
-    'MetaGME': os.path.join(os.environ['GME_ROOT'], "Paradigms", "MetaGME", "Paradigm", "MetaGME.xmp") }
+    'MetaGME': os.path.join(os.environ['GME_ROOT'], "Paradigms", "MetaGME", "MetaGME.xmp") }
     if not os.path.isfile(xmpfile):
         xmpfile = predef[xmpfile]
     import gme
@@ -55,6 +67,8 @@ def parse_xme(connstr, xme=None, project=None):
 
     if project is None:
         (paradigm, parversion, parguid, basename, ver) = parser.GetXMLInfo(xme)
+        import sys
+        #sys.stderr.write("xxx'" + paradigm + "'")
         project = DispatchEx("Mga.MgaProject")
         project.Create(connstr, paradigm)
     parser.ParseProject(project, xme)
@@ -84,7 +98,7 @@ class MUTestMixin(unittest.TestCase): # need to inherit from TestCase so __mro__
     def __init__(self, name, **kwds):
         super(MUTestMixin, self).__init__(name, **kwds)
         import os.path
-        self.mgxdir = os.path.abspath(os.path.join(os.path.dirname(__file__), "MUTest"))
+        self.mgxdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "MUTest")
 
     def setUp(self):
         super(MUTestMixin, self).setUp()
@@ -101,7 +115,7 @@ class MUTestMixin(unittest.TestCase): # need to inherit from TestCase so __mro__
 class MUSVNTestMixin(MUTestMixin):
     def setUp(self):
         super(MUSVNTestMixin, self).setUp()
-        svn_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "MUTestRepo"))
+        svn_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "MUTestRepo")
         self.svn_url = "file:///" + svn_file
         if os.path.isdir(svn_file):
             import shutil

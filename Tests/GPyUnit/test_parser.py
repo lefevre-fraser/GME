@@ -11,10 +11,12 @@ class TestParser(unittest.TestCase):
         mga = GPyUnit.util.parse_xme(self.connstr)
         mga.Save()
         mga.Close()
+        if type(self) == TestParser:
+            self.assertTrue(os.path.isfile(_adjacent_file("parsertest.mga")))
     
     @property
     def connstr(self):
-        return "MGA=" + _adjacent_file("tmp.mga")
+        return "MGA=" + _adjacent_file("parsertest.mga")
 
 GPyUnit.util.MUGenerator(globals(), TestParser)
 

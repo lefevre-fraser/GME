@@ -1,3 +1,5 @@
+from __future__ import with_statement
+
 import sys
 import gme
 import gc
@@ -14,12 +16,28 @@ def compare (file1, file2):
 def iter_parents(fco):
     while fco:
         yield fco
-        fco = fco.parent()
+        if fco.ObjType == 6:
+            fco = fco.ParentFolder
+        else:
+            if fco.ParentFolder:
+                fco = fco.ParentFolder
+            else:
+                fco = fco.ParentModel
 
 def fco_path(fco):
     parents = list(iter_parents(fco))
     parents.reverse()
     return "/".join(map(lambda x: x.Name, parents))
+
+def _get_Meta(object):
+    if object.ObjType == 6:
+        return object.MetaFolder
+    return object.Meta
+
+def _get_children(object):
+    if object.ObjType == 6:
+        return list(object.ChildFolders) + list(object.ChildFCOs)
+    return list(object.ChildFCOs)
 
 def compare2(project1, project2):
     toProcess1=[]
@@ -44,7 +62,7 @@ def compare2(project1, project2):
         for index in range(len(toProcess2)):
             current2 = gme.cast(toProcess2[index])
             namesEqual = current1.Name == current2.Name
-            kindsEqual = current1.Meta.Name == current2.Meta.Name
+            kindsEqual = _get_Meta(current1).Name == _get_Meta(current2).Name
             connectionEndpointsEqual = True
             if current1.ObjType == 4 and current2.ObjType == 4:
                 def mapConnpoints(conn):
@@ -70,7 +88,7 @@ def compare2(project1, project2):
             print "'%s' has differing object types" % current1.AbsPath
             return False
 
-        if current1.Meta.Name != current2.Meta.Name:
+        if _get_Meta(current1).Name != _get_Meta(current2).Name:
             print "'%s' has differing kinds" % current1.AbsPath
             return False
 
@@ -149,15 +167,15 @@ def compare2(project1, project2):
             continue
         
         
-        childrenSet1=current1.children()
-        childrenSet2=current2.children()
+        childrenSet1 = _get_children(current1)
+        childrenSet2 = _get_children(current2)
         toProcess1.extend(childrenSet1)
         toProcess2.extend(childrenSet2)
         
         if len(childrenSet1)!= len(childrenSet2):
             print "LENGTH of childrenSet FAILED for " + fco_path(current1)
-            print "\t" + "File 1: " + ", ".join([child.Name for child in current1.children()])
-            print "\t" + "File 2: " + ", ".join([child.Name for child in current2.children()])
+            print "\t" + "File 1: " + ", ".join([child.Name for child in _get_children(current1)])
+            print "\t" + "File 2: " + ", ".join([child.Name for child in _get_children(current2)])
             return False
         
         if current1.ObjType == 6 and current2.ObjType == 6:

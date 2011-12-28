@@ -1,13 +1,15 @@
+from __future__ import with_statement
 
 import sys
 import os.path
 import unittest
 import GPyUnit.util
+import GPyUnit.util.gme
 import win32com.client
 
 def _adjacent_file(file):
     import os.path
-    return os.path.join(os.path.dirname(__file__), file)
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
 
 class TestRegistry(unittest.TestCase):
     def __init__(self, name, **kwds):
@@ -29,7 +31,7 @@ class TestRegistry(unittest.TestCase):
         with util.disable_early_binding():
             self.project = GPyUnit.util.DispatchEx("Mga.MgaProject")
             self.project.Create(self.connstr, "MetaGME")
-            self.project.BeginTransactionInNewTerr()
+            self.project.BeginTransactionInNewTerr(0)
             
             rootregs = self.project.RootFolder.GetRegistryDisp(True)
             self.assertEqual(rootregs.Count, 0)
@@ -108,7 +110,6 @@ class TestRegistry(unittest.TestCase):
             self.project.CommitTransaction()
             self.project.Close(True)
             if self.connstr.find("MGA=") == 0:
-                import util.gme
                 util.gme.mga2xme(_adjacent_file(self.output_file))
                 util.gme.xme2mga(os.path.splitext(_adjacent_file(self.output_file))[0] + ".xme")
                 self.project.Open(self.connstr)
@@ -159,7 +160,7 @@ class TestRegistry(unittest.TestCase):
                     sheet_meta = self.project.RootMeta.RootFolder.DefinedFCOs.Item(i)
             sheet = self.project.RootFolder.CreateRootObject(sheet_meta)
             sheet.SetRegistryValueDisp('test123', 'test')
-            sheet2 = self.project.RootFolder.CopyFCOs(self.project.RootFolder.ChildFCOs).Item(1)
+            sheet2 = self.project.RootFolder.CopyFCODisp(sheet)
             self.assertEqual(sheet2.GetRegistryValueDisp('test123'), 'test')
             self.project.CommitTransaction()
             self.project.Save()
