@@ -1,6 +1,6 @@
               Generic Modeling Environment
                  GME v11.12.2
-       Copyright © 2000-2011 Vanderbilt University
+       Copyright © 2000-2012 Vanderbilt University
 
 
 ************************************************
