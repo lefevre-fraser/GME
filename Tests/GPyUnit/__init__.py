@@ -30,11 +30,11 @@ _tests = [
  'GME_297.suite',
  'GME_310.suite',
  'GME_371',
+'Regr.Mga.tc1',
 ]
 
 if platform.system() != 'Java':
     _tests = _tests + [
-'Regr.Mga.tc1',
 'Regr.Mga.tc2',
 'Regr.Mga.tc3',
 'Regr.Mga.tc5',

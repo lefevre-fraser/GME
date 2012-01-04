@@ -1,7 +1,5 @@
 import unittest
 import win32com.client
-import win32ui
-import pythoncom
 import os
 
 def findInProj( project, obj_name = "", obj_kind = ""):
@@ -22,9 +20,9 @@ def findInProj( project, obj_name = "", obj_kind = ""):
 		else:
 			print "findInProj >> Object not found : name = '" + obj_name + "' kind = '" + obj_kind + "'"
 			assert 0
-	except:
+	except:	
 		print "findInProj >> Exception : name = '" + obj_name + "' kind = '" + obj_kind + "'"
-		assert 0
+		raise
 
 	pass
 
@@ -33,7 +31,7 @@ def folder( project, kind):
 	metaproj = project.RootMeta		# an IMgaMetaProject
 	metaroot = metaproj.RootFolder		# an IMgaMetaFolder
 	
-	assert project.RootFolder.MetaFolder == metaroot
+	#assert project.RootFolder.MetaFolder == metaroot
 	
 	mfol = metaroot.LegalChildFolderByName(kind)
 	return mfol
@@ -43,7 +41,7 @@ def kind(project, kind):
 	metaproj = project.RootMeta		# an IMgaMetaProject
 	metaroot = metaproj.RootFolder		# an IMgaMetaFolder
 	
-	assert project.RootFolder.MetaFolder == metaroot
+	#assert project.RootFolder.MetaFolder == metaroot
 	
 	mfco = metaroot.DefinedFCOByName(kind, 1)
 	return mfco
@@ -95,7 +93,7 @@ def newFolder(p, parent, folder_kind_str):
 def connect(p, cont, s, d, role_str):
 	""" Helper method connecting plain fcos/ports, when no references are involved
 	"""
-	z0 = win32com.client.Dispatch("Mga.MgaFCOs")
+	z0 = win32com.client.DispatchEx("Mga.MgaFCOs")
 	return cont.CreateSimpleConn( role(p, cont, role_str), s, d, z0, z0)
 
 def connectRefP(p, cont, s, d, r1, r2, role_str):
@@ -106,8 +104,8 @@ def connectRefP(p, cont, s, d, r1, r2, role_str):
 	r2: modelreference, 'containing' d
 	r1 or r2 might be 0, when that end of the connection is an fco or modelport (no reference involved)
 	"""
-	z1 = win32com.client.Dispatch("Mga.MgaFCOs")
-	z2 = win32com.client.Dispatch("Mga.MgaFCOs")
+	z1 = win32com.client.DispatchEx("Mga.MgaFCOs")
+	z2 = win32com.client.DispatchEx("Mga.MgaFCOs")
 	if r1:
 		z1.Append( r1)
 	if r2:
@@ -125,7 +123,7 @@ def creaP(mganame, parad):
 	#	os.remove( mganame)
 
 	project.Create( "MGA=" + mganame, parad)
-	project.BeginTransaction( project.CreateTerritory( None, None, None), 0)
+	project.BeginTransactionInNewTerr(0)
 	return project
 
 def saveP(project):
