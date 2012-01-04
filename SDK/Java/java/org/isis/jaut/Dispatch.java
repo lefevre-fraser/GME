@@ -406,6 +406,8 @@ public class Dispatch extends ApartmentObject
 						args[i] = (Variant) arguments[i];
 					else
 						args[i] = new Variant(arguments[i]);
+				else
+					args[i] = Variant.create(Variant.VT_EMPTY);
 			}
 		}
 

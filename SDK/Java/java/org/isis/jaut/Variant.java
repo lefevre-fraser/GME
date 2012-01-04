@@ -416,7 +416,7 @@ public class Variant extends ApartmentObject
             setDate((Date)value);
         }
         else
-            throw new JAutException("Invalid object");
+            throw new JAutException("Invalid object " + value.getClass());
     }
     
     /**
