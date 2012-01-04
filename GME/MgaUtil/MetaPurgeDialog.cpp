@@ -53,7 +53,7 @@ BOOL CMetaPurgeDialog::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	CListCtrl* listctrl = (CListCtrl*)GetDlgItem(IDC_PURGELIST);
-    DWORD dwStyle = listctrl->SendMessage(LVM_GETEXTENDEDLISTVIEWSTYLE,0,0);
+    LRESULT dwStyle = listctrl->SendMessage(LVM_GETEXTENDEDLISTVIEWSTYLE,0,0);
     dwStyle |= LVS_EX_FULLROWSELECT;
     listctrl->SendMessage(LVM_SETEXTENDEDLISTVIEWSTYLE, 0, dwStyle);
 

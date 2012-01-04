@@ -811,7 +811,7 @@ BOOL CConsoleCtrl::OnToolTipNotify(UINT id, NMHDR *pNMHDR, LRESULT *pResult)
 	// need to handle both ANSI and UNICODE versions of the message
 	TOOLTIPTEXTA* pTTTA = (TOOLTIPTEXTA*)pNMHDR;
 	TOOLTIPTEXTW* pTTTW = (TOOLTIPTEXTW*)pNMHDR;
-	UINT            nID = pNMHDR->idFrom;
+	UINT_PTR nID = pNMHDR->idFrom;
 	
 	CString tip;
 
