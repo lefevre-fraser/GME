@@ -1,6 +1,4 @@
-#ifndef GMECOM_H
-#define GMECOM_H
-
+#pragma once
 
 #include "Comdef.h"
 
@@ -60,4 +58,3 @@ do { \
 	// Defined in ComHelp.cpp
 	void SetErrorInfo(HRESULT hr, const wchar_t* err);
 
-#endif // GMECOM_H

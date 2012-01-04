@@ -45,7 +45,38 @@
 
 #include "stdafx.h"
 
+#include "MgaUtil.h"
+#include "ComponentConfig.h"
+
 #include "GMECOM.h"
+
+#include "ComponentDll.h"
+#include "ComponentObj.h"
+
+#define _OLESTR(x) OLESTR(x)
+extern const char* g_COCLASS_PROGID = COCLASS_PROGID;
+extern const wchar_t* g_COCLASS_PROGIDW = _OLESTR(COCLASS_PROGID);
+extern const char* g_COMPONENT_NAME = COMPONENT_NAME;
+extern const wchar_t* g_COMPONENT_NAMEW = _OLESTR(COMPONENT_NAME);
+#ifdef REGISTER_SYSTEMWIDE
+extern const bool g_REGISTER_SYSTEMWIDE = true;
+#else
+extern const bool g_REGISTER_SYSTEMWIDE = false;
+#endif
+#ifdef GME_ADDON
+extern const bool g_GME_ADDON = true;
+#else
+extern const bool g_GME_ADDON = false;
+#endif
+#ifdef TEST_META_CONFORMANCE_INSIDE_BON
+extern const bool g_TEST_META_CONFORMANCE_INSIDE_BON = true;
+#else
+extern const bool g_TEST_META_CONFORMANCE_INSIDE_BON = false;
+#endif
+
+#include "Core_i.c"
+#include "Mga_i.c"
+#include "ComponentLib_i.c"
 
 #ifdef BUILDER_OBJECT_NETWORK
 #include "Mga.h"
@@ -57,8 +88,6 @@
 
 #include "ComponentLib.h"
 
-#include <ComponentConfig.h>
-
 #include "ComponentObj.h"
 
 #include "Console.h"
@@ -66,9 +95,6 @@
 
 #include "Gme.h"
 
-#include "ComponentLib_i.c"
-#include "Core_i.c"
-#include "Mga_i.c"
 
 
 #ifdef _DEBUG

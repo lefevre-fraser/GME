@@ -4,9 +4,11 @@
 #include "stdafx.h"
 //#include <afxctl.h>
 
+#include "MgaUtil.h"
 #include "ComponentDll.h"
-#include "ComponentObj.h"
-#include "ComponentConfig.h"
+
+extern bool const g_REGISTER_SYSTEMWIDE;
+extern const char* g_COMPONENT_NAME;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -54,7 +56,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CComponentApp construction
 
-CComponentApp::CComponentApp() : CWinApp(COMPONENT_NAME)
+CComponentApp::CComponentApp() : CWinApp(g_COMPONENT_NAME)
 {
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
@@ -151,16 +153,14 @@ STDAPI DllRegisterServer(void)
 	// or from the resources. But the resource ID of the 
 	// TYPELIB must be 1 !!!
 /*
-	if( !AfxOleRegisterTypeLib(AfxGetInstanceHandle(),
-		LIBID_MgaComponentLib, NULL) )
+	if( !AfxOleRegisterTypeLib(AfxGetInstanceHandle(), LIBID_MgaComponentLib, NULL) )
 		return E_FAIL;
 */
 	CComponentReg reg;
-#ifdef REGISTER_SYSTEMWIDE
-	COMRETURN( reg.RegisterParadigms(REGACCESS_SYSTEM));
-#else
-	COMRETURN( reg.RegisterParadigms());
-#endif
+	if (g_REGISTER_SYSTEMWIDE)
+		COMRETURN(reg.RegisterParadigms(REGACCESS_SYSTEM))
+	else
+		COMRETURN(reg.RegisterParadigms())
 	
 
 	return S_OK;
@@ -178,11 +178,10 @@ STDAPI DllUnregisterServer(void)
 		return SELFREG_E_CLASS;
 
 	CComponentReg reg;
-#ifdef REGISTER_SYSTEMWIDE
-	COMRETURN( reg.UnregisterParadigms(REGACCESS_SYSTEM));
-#else
-	COMRETURN( reg.UnregisterParadigms());
-#endif
+    if (g_REGISTER_SYSTEMWIDE)
+		COMRETURN(reg.UnregisterParadigms(REGACCESS_SYSTEM))
+	else
+		COMRETURN(reg.UnregisterParadigms())
 	
 	return S_OK;
 }

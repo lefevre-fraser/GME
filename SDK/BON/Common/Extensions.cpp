@@ -24,7 +24,6 @@
 #include "stdafx.h"
 
 #include "BONImpl.h"
-#include "Bon2component.h"
 #include "Extensions.h"
 
 

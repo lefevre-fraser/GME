@@ -1,13 +1,3 @@
-/////////////////////////////////////////////////
-// GME v0.5 Alpha Release                      //
-// Copyright (c) 1998, Vanderbilt University   //
-// All Rights Reserved						   //
-/////////////////////////////////////////////////
-
-#ifndef BUILDER_OBJECT_NETWORK
-#error   This file should only be included in the BON configurations
-#endif
-
 #define BUILDER_CAST(CLASS,PTR) (DYNAMIC_DOWNCAST(CLASS,PTR))
 
 #ifndef GME_BUILDER_H

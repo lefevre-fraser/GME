@@ -22,10 +22,11 @@
 #include "stdafx.h"
 #include "BONImpl.h"
 #include "Extensions.h"
-#include <ComponentConfig.h>
 // Utils.h uses COMTHROW but doesn't define it
 #define COMTHROW(x) BONCOMTHROW(x)
 
+extern const bool g_GME_ADDON;
+extern const bool g_TEST_META_CONFORMANCE_INSIDE_BON;
 
 #ifndef NAMESPACE_PREF
     #define NAMESPACE_PREF ""
@@ -80,19 +81,13 @@ namespace BON
 
 	inline void _checkIsCallable( ObjectImpl* pObject )
 	{
-		#ifdef GME_ADDON
-			if ( pObject->getStatus() != OST_Exists )
-				ASSERTTHROW( Exception( "Object is already deleted. Operation is illegal!" ) );
-		#endif
+		if (g_GME_ADDON && pObject->getStatus() != OST_Exists )
+			ASSERTTHROW( Exception( "Object is already deleted. Operation is illegal!" ) );
 	}
 
 	inline bool _isAddOn()
 	{
-		#ifdef GME_ADDON
-			return true;
-		#else
-			return false;
-		#endif
+		return g_GME_ADDON;
 	}
 
 	template < class T >
@@ -2643,12 +2638,13 @@ namespace BON
 		MON::Connection meta;
 		if ( ! strConnection.empty() ) {
 			meta = MON::Connection( getProject()->getProjectMeta().findByName( strConnection ) );
-#ifdef TEST_META_CONFORMANCE_INSIDE_BON
-			THROW_METAPROJECT_DOES_NOT_HAVE( meta, Connection, strConnection );
-#else
+			if (g_TEST_META_CONFORMANCE_INSIDE_BON)
+			{
+				THROW_METAPROJECT_DOES_NOT_HAVE( meta, Connection, strConnection );
+			}
+			else
 			if( !meta)
 				return std::set<Connection>();
-#endif
 		}
 		return getConnLinks( meta, strRole, bAsFCO, aspect );
 	}
@@ -2716,7 +2712,8 @@ namespace BON
 			}
 			if ( ! bFound )
 			{
-#ifdef TEST_META_CONFORMANCE_INSIDE_BON
+			if (g_TEST_META_CONFORMANCE_INSIDE_BON)
+			{
 				if ( strRole.empty() ) {
 					MON::Exception exc( "? cannot be target of ?!");
 					exc << getFCOHelper()->getObjectMeta().infoString() << meta.infoString(); 
@@ -2727,9 +2724,11 @@ namespace BON
 					exc << getFCOHelper()->getObjectMeta().infoString() << meta.infoString() << strRole; 
 					ASSERTTHROW( exc);
 				}
-#else
+			}
+			else
+			{
 				return std::multiset<ConnectionEnd>();
-#endif
+			}
 			}
 
 			specs = meta.specifications();
@@ -2811,12 +2810,15 @@ namespace BON
 		MON::Connection meta;
 		if ( ! strConnection.empty() ) {
 			meta = MON::Connection( getProject()->getProjectMeta().findByName( strConnection ) );
-#ifdef TEST_META_CONFORMANCE_INSIDE_BON
+			if (g_TEST_META_CONFORMANCE_INSIDE_BON)
+			{
 			THROW_METAPROJECT_DOES_NOT_HAVE( meta, Connection, strConnection );
-#else
+			}
+			else
+			{
 			if( !meta)
 				return std::multiset<ConnectionEnd>();
-#endif
+			}
 		}
 		return getConnEndsAs( meta, strRole, bAsFCO, aspect );
 	}
@@ -2944,13 +2946,16 @@ namespace BON
 			}
 			if ( ! bFound )
 			{
-#ifdef TEST_META_CONFORMANCE_INSIDE_BON
+			if (g_TEST_META_CONFORMANCE_INSIDE_BON)
+			{
 				MON::Exception exc( "? cannot be target of ?!");
 				exc << getFCOHelper()->getObjectMeta().infoString() << meta.infoString();
 				ASSERTTHROW( exc);
-#else				
+			}
+			else
+			{
 				return std::multiset<ConnectionEnd>();
-#endif
+			}
 			}
 
 			specs = meta.specifications();
@@ -3042,12 +3047,15 @@ namespace BON
 		MON::Connection meta;
 		if ( ! strConnection.empty() ) {
 			meta = MON::Connection( getProject()->getProjectMeta().findByName( strConnection ) );
-#ifdef TEST_META_CONFORMANCE_INSIDE_BON
+			if (g_TEST_META_CONFORMANCE_INSIDE_BON)
+			{
 			THROW_METAPROJECT_DOES_NOT_HAVE( meta, Connection, strConnection );
-#else
+			}
+			else
+			{
 			if( !meta)
 				return std::multiset<ConnectionEnd>();
-#endif
+			}
 		}
 		return getConnEnds( meta, strRole, bAsFCO, aspect );
 	}
@@ -6154,15 +6162,12 @@ namespace BON
 		if ( meta ) {
 			THROW_METAPROJECT_BELONG( meta );
 
-#ifdef TEST_META_CONFORMANCE_INSIDE_BON
-			if ( ! getReferenceMeta().isReferenced( meta ) )
+			if (g_TEST_META_CONFORMANCE_INSIDE_BON && !getReferenceMeta().isReferenced(meta))
 			{
 				MON::Exception exc( "? cannot be referenced by ?!");
 				exc << meta.infoString() << getObjectMeta().infoString(); 
 				ASSERTTHROW( exc);
 			}
-#endif
-
 		}
 		return getReferredFCOI( meta );
 	}
@@ -6182,7 +6187,8 @@ namespace BON
 		if ( fco ) {
 			THROW_PROJECT_BELONG( fco );
 
-#ifdef TEST_META_CONFORMANCE_INSIDE_BON
+			if (g_TEST_META_CONFORMANCE_INSIDE_BON)
+			{
 			// added by ZolMol
 			MON::FCO meta = fco->getFCOMeta();
 			if ( ! getReferenceMeta().isReferenced( meta ) )
@@ -6212,7 +6218,7 @@ namespace BON
 					ASSERTTHROW( MON::Exception( "? cannot be referenced by ?!", "ss", fco->getObjectMeta().infoString().c_str(), getObjectMeta().infoString().c_str() ) );
 			} end commended part*/
 			// CHANGED LINES END
-#endif
+			}
 		}
 		if ( ! _isAddOn() ) {
 			if  ( m_referredFCO.second )
@@ -6581,8 +6587,8 @@ namespace BON
 				ASSERTTHROW( exc);
 			}
 
-#ifdef TEST_META_CONFORMANCE_INSIDE_BON
-
+		if (g_TEST_META_CONFORMANCE_INSIDE_BON)
+		{
 		bool bOK = false;
 		for ( int i = 0 ; i < MON::Connection( meta.child() ).specificationCount() && ! bOK ; i++ ) {
 			bOK = true;
@@ -6609,7 +6615,7 @@ namespace BON
 			ASSERTTHROW( MON::Exception( strEx, vecParams ) );
 		}
 
-#endif
+		}
 
 		FCOPtr spFCO;
 		COMCHECK2( parent->getModelI(), parent->getModelI()->CreateSimpleConn( meta.getContainmentI(), mapEnds[ "src" ]->getFCOI(), mapEnds[ "dst" ]->getFCOI(), mapRefSeqs[ "src" ], mapRefSeqs[ "dst" ], spFCO.Addr() ) );
@@ -6722,8 +6728,8 @@ namespace BON
 		if ( meta )
 			THROW_METAPROJECT_BELONG( meta );
 
-#ifdef TEST_META_CONFORMANCE_INSIDE_BON
-
+		if (g_TEST_META_CONFORMANCE_INSIDE_BON)
+		{
 		bool bRoleFound  = false;
 		bool bFound = false;
 		for ( int i = 0 ; i < getConnectionMeta().specificationCount() ; i++ ) {
@@ -6754,7 +6760,7 @@ namespace BON
 			ASSERTTHROW( exc);
 		}
 
-#endif
+		}
 
 		return getConnectionEndI( strRole, meta );
 	}
