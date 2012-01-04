@@ -171,6 +171,10 @@ STDMETHODIMP CScriptHost::OnScriptError(
 	{ 
 		return e.hr;
 	}
+	catch(_com_error &e) 
+	{ 
+		return e.Error();
+	}
 
 	return S_OK;
 }
@@ -224,6 +228,10 @@ STDMETHODIMP CScriptHost::SetGMEApp(IDispatch *gmeapp)
 	catch(hresult_exception &e) 
 	{ 
 		return e.hr;
+	}
+	catch(_com_error &e) 
+	{ 
+		return e.Error();
 	}
 	return S_OK;
 }

@@ -438,10 +438,33 @@ int CConsoleCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		// FIXME: warn user that GME requires IE (e.g. Windows Server Core 2008R2)
 		return -1;
 	m_browser.LoadFromResource(_T("BLANK.HTML"));
+	
+	// KMS: need to pump messages here, since m_browser loads in a different thread and 
+	// posts messages to initialize. If RPC wins the race, it can call SetContents et al and
+	// get_body will return NULL
+	// (out-of-proc CoCreateInstance("GMEOleApp") will block until after this method returns)
+	CComPtr<IHTMLDocument2> pHtmlDoc;
+	CComPtr<IDispatch> pDispatch = m_browser.GetHtmlDocument();
+	COMTHROW(pDispatch.QueryInterface(&pHtmlDoc));
+	ASSERT(pHtmlDoc != NULL);
+	MSG msg;
+	while (GetMessage(&msg, NULL, 0, 0)) 
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		CComPtr<IHTMLElement> pElement;
+		COMTHROW(pHtmlDoc->get_body( &pElement ));
+		if (pElement != NULL)
+			break;
+	}
 
 	m_edit.Create((ES_AUTOHSCROLL | WS_VISIBLE | WS_CHILD), rect, this, IDD_EDIT);
 	m_edit.LimitText(300);
 	bool ret = m_edit.Init(this);
+	if (!ret) {
+		ASSERT(false);
+		return -1;
+	}
 
 	m_hIco1 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_LOADSCR),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
 	m_hIco2 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_EXECSCR),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);

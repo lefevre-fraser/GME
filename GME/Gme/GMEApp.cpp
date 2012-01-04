@@ -358,15 +358,6 @@ BOOL CGMEApp::InitInstance()
 	pDocTemplate->SetContainerInfo(IDR_GMETYPE_CNTR_IP);
 	AddDocTemplate(pDocTemplate);
 
-	// Register all OLE server factories as running.  This enables the
-	//  OLE libraries to create objects from other applications.
-	COleObjectFactory::RegisterAll();
-		// Note: MDI applications register all server objects without regard
-		//  to the /Embedding or /Automation on the command line.
-	// Note: we switched the default REGCLS_MULTIPLEUSE behavior to REGCLS_SINGLEUSE,
-	// see GMEOLEApp.cpp's MY_IMPLEMENT_OLECREATE macro, and
-	// "How to use single or multiple instances of an OLE object in MFC by using Visual C++" KB article:
-	// http://support.microsoft.com/kb/141154
 
 
 	// create main MDI Frame window
@@ -403,6 +394,16 @@ BOOL CGMEApp::InitInstance()
 	ASSERT((CMainFrame*)m_pMainWnd);
 	CGMEOLEApp *t_pGmeOleApp = new CGMEOLEApp();
 	((CMainFrame*)m_pMainWnd)->setGmeOleApp( t_pGmeOleApp );
+
+	// Register all OLE server factories as running.  This enables the
+	//  OLE libraries to create objects from other applications.
+	COleObjectFactory::RegisterAll();
+		// Note: MDI applications register all server objects without regard
+		//  to the /Embedding or /Automation on the command line.
+	// Note: we switched the default REGCLS_MULTIPLEUSE behavior to REGCLS_SINGLEUSE,
+	// see GMEOLEApp.cpp's MY_IMPLEMENT_OLECREATE macro, and
+	// "How to use single or multiple instances of an OLE object in MFC by using Visual C++" KB article:
+	// http://support.microsoft.com/kb/141154
 
 	// Check to see if launched as OLE server
 	if (cmdInfo.m_bRunEmbedded || cmdInfo.m_bRunAutomated)

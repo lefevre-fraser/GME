@@ -237,10 +237,11 @@ void CScriptEdit::ExecuteScript( CString& p_str)
 		CComPtr<IMgaRegistrar> registrar;
 		COMTHROW(registrar.CoCreateInstance(L"Mga.MgaRegistrar"));
 		ASSERT( registrar != NULL );
-		BSTR eng = NULL;
-		COMTHROW( registrar->get_ScriptEngine(REGACCESS_USER, &eng) );
+		_bstr_t eng;
+		COMTHROW(registrar->get_ScriptEngine(REGACCESS_USER, eng.GetAddress()));
 		_bstr_t engine(L"JScript");
-		if (eng != NULL  &&  ((_bstr_t)eng).length() != 0)
+		int len = eng.length();
+		if (eng.length() != 0)
 			engine = eng;
 
 		_bstr_t input = p_str;
@@ -250,6 +251,12 @@ void CScriptEdit::ExecuteScript( CString& p_str)
 	catch(hresult_exception& e) {
 		TCHAR s[1000];
 		_stprintf_s(s, _T("Scripting Error: 0x%x"), e.hr);
+		m_console->Message(s, MSG_ERROR);
+	}
+	catch(_com_error& e) {
+		TCHAR s[1000];
+		COMTHROW(e.Error());
+		_stprintf_s(s, _T("Execute Script Error: 0x%x"), e.Error());
 		m_console->Message(s, MSG_ERROR);
 	}
 	catch(...) {
