@@ -4,6 +4,7 @@
 *.tlb
 *_i.c
 *_p.c
+*.class
 ipch
 *.opensdf
 *.sdf
@@ -214,3 +215,6 @@ Tests/_tc6_C_readonly_sf.mga
 Tests/_tc6_D_sf.mga
 Tests/tmp.mga
 projs
+Tests/GPyUnit/TestRegistry-output.xme
+Tests/GPyUnit/util/MUTest/
+Tests/GPyUnit/util/MUTestRepo/
