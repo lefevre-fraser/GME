@@ -50,7 +50,7 @@ END_COM_MAP()
 // IScriptHost
 public:
 	STDMETHOD(ProcessString)(/*[in]*/ BSTR input);
-	STDMETHOD(InitEngine)(/*[in]*/ void* console, /*[in]*/ BSTR engineProgid);
+	STDMETHOD(InitEngine)(/*[in]*/ IDispatch* console, /*[in]*/ BSTR engineProgid);
 
 // IActiveScriptSite
  public:
@@ -74,7 +74,7 @@ public:
 	STDMETHOD(OnLeaveScript)(void);
 
 private:
-	CConsoleCtrl *m_console;
+	IDispatchPtr m_console;
 	IActiveScriptPtr m_iscript;
 	IActiveScriptParsePtr m_iscriptParse;
 	_bstr_t m_enginePID;
@@ -83,6 +83,7 @@ private:
 	CComPtr<IMgaProject> m_mgaproj;
 	CComPtr<IGMEOLEIt>   m_actMod;
 
+	void Message(BSTR message, msgtype_enum level);
 };
 
 #endif //__SCRIPTHOST_H_

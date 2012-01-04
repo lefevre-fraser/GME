@@ -8,7 +8,7 @@
 // CScriptHost
 
 
-STDMETHODIMP CScriptHost::InitEngine(void* console, BSTR engineProgid)
+STDMETHODIMP CScriptHost::InitEngine(IDispatch* console, BSTR engineProgid)
 {
 	// register app and project 
 	try
@@ -16,9 +16,11 @@ STDMETHODIMP CScriptHost::InitEngine(void* console, BSTR engineProgid)
 		if (console == NULL) {
 			m_iscript = NULL;
 			m_iscriptParse = NULL;
+			m_console = NULL;
 			return S_OK;
 		}
-		m_console = (CConsoleCtrl*)console;
+		m_console = NULL;
+		m_console = console;
 		_bstr_t newprogid(engineProgid);
 		if (m_enginePID == newprogid)
 			return S_OK;
@@ -67,10 +69,17 @@ STDMETHODIMP CScriptHost::ProcessString(BSTR input)
 	}
 	catch(hresult_exception &e) 
 	{ 
-		m_console->Message( _T("Input parsing failed!"), MSG_ERROR);
+		Message( _bstr_t(_T("Input parsing failed!")), MSG_ERROR);
 		return e.hr;
 	}
 	return S_OK;
+}
+
+void CScriptHost::Message(BSTR message, msgtype_enum level)
+{
+	static BYTE params[] = VTS_BSTR VTS_I2;
+	COleDispatchDriver disp(m_console, false);
+	disp.InvokeHelper(2, DISPATCH_METHOD, VT_EMPTY, 0, params, message, level);
 }
 
 STDMETHODIMP CScriptHost::GetLCID(/*[out]*/ LCID *plcid)
@@ -156,7 +165,7 @@ STDMETHODIMP CScriptHost::OnScriptError(
 
 		TCHAR err[5000];
 		_stprintf_s(err, _T("Scripting Error at Position: %ld Line: %lu<br>%s"), ch, line, (const TCHAR*)desc);
-		m_console->Message((LPCTSTR)err, MSG_ERROR);
+		Message(_bstr_t(err), MSG_ERROR);
 	}
 	catch(hresult_exception &e) 
 	{ 

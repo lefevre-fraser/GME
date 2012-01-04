@@ -69,14 +69,14 @@ library CONSOLELib
 	};
 	[
 		object,
-		uuid(390D5505-7202-4565-991A-F3A03DBAEF88),
+		uuid(FC0BDA3C-1D12-4E75-BA73-49BCFBB0BFD1),
 		dual,
 		helpstring("IScriptHost Interface"),
 		pointer_default(unique)
 	]
 	interface IScriptHost : IDispatch
 	{
-		[id(1), helpstring("method InitEngine")] HRESULT InitEngine([in] void* m_console, [in] BSTR engineProgid);
+		[id(1), helpstring("method InitEngine")] HRESULT InitEngine([in] IDispatch* m_console, [in] BSTR engineProgid);
 		[id(2), helpstring("method ProcessString")] HRESULT ProcessString([in] BSTR input);
 		[id(3), helpstring("method SetGMEApp")] HRESULT SetGMEApp([in] IDispatch* gmeapp);
 		[id(4), helpstring("method SetGMEProj")] HRESULT SetGMEProj([in] IDispatch* gmeproj);

@@ -133,11 +133,13 @@
         <File Id="Console.ocx" Name="Console.ocx" KeyPath="yes" Source="..\GME\$(var.Release)\Console.ocx">
           <TypeLib Id="{339FD307-717B-4698-AC13-4ACCCF5D4C91}" Description="Console ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
             <Class Id="{A9B2B82A-B753-4FB0-8F0B-3661BC307053}" Context="InprocServer32" Description="GME Console Property Page" />
-            <Class Id="{CD42B6DD-CCC7-4D4A-A82D-124AF08A6737}" Context="InprocServer32" Description="ScriptHost Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Console.ScriptHost.1" Description="ScriptHost Class">
-                <ProgId Id="Console.ScriptHost" Description="ScriptHost Class" />
-              </ProgId>
-            </Class>
+            <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
+              <Class Id="{CD42B6DD-CCC7-4D4A-A82D-124AF08A6737}" Context="InprocServer32" Description="ScriptHost Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Console.ScriptHost.1" Description="ScriptHost Class">
+                  <ProgId Id="Console.ScriptHost" Description="ScriptHost Class" />
+                </ProgId>
+              </Class>
+            </AppId>
             <Class Id="{E4EB8324-13F0-46CB-96A3-F539DF7F79D4}" Context="InprocServer32" Description="GME Console Control" ThreadingModel="apartment" Version="1.0" Control="yes">
               <ProgId Id="GME.Console.1" Description="GME Console Control" />
             </Class>
