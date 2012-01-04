@@ -984,7 +984,11 @@ void Facilities::DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF 
 												 GetGValue(endColor),
 												 GetBValue(endColor));
 
-	if (bRoundRect && iCornerRadius > 0) {
+	if (isRunningUnderWine()) {
+		// Wine doesn't work well with either of the two routines below
+		Gdiplus::SolidBrush brush(lighterColor);
+		gdip->FillRectangle(&brush, cRect.left, cRect.top, cRect.right - cRect.left, cRect.bottom - cRect.top);
+	} else if (bRoundRect && iCornerRadius > 0) {
 		long diameter = 2 * iCornerRadius;
 		Gdiplus::GraphicsPath buttonPath;
 		buttonPath.AddArc(cRect.left, cRect.top, diameter, diameter, 180.0, 90.0);
