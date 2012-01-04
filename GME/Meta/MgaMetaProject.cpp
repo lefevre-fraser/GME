@@ -387,6 +387,9 @@ void CMgaMetaProject::RegisterMetaBase(metaref_type metaref, IMgaMetaBase *obj)
 void CMgaMetaProject::UnregisterMetaBase(metaref_type metaref, IMgaMetaBase *obj)
 {
 	ASSERT( obj != NULL );
+	// Under GC, we may be here via ~CMgaMetaBase after Close clear()s the map
+	if (metaobj_lookup.size() == 0)
+		return;
 	ASSERT( metaobj_lookup.find(metaref) != metaobj_lookup.end() );
 	ASSERT( metaobj_lookup[metaref] == obj );
 
