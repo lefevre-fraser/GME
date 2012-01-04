@@ -1116,6 +1116,7 @@ because we have used the Java/COM bridge from Microsoft.
 ************************************************
 
 GME has been tested on Windows XP, Windows Vista, and Windows 7.
+GME does not work on Windows Server Core.
 
 ************************************************
 3. Installation
