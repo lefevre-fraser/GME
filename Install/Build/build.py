@@ -91,11 +91,38 @@ def compile_GME():
     "Compile GME core components"
     sln_file = os.path.join(GME_ROOT, "GME", "GME.sln");
     tools.build_VS( sln_file, "Release" )
-    sln_file = os.path.join(GME_ROOT, "GME", "GMEDecorators.sln");
+    sln_file = os.path.join(GME_ROOT, "GME", "GMEDecorators.sln")
     tools.build_VS( sln_file, "Release" )
-    cmd_dir = os.path.join(GME_ROOT, "GME");
+    cmd_dir = os.path.join(GME_ROOT, "GME")
+    if prefs['arch'] == 'x64':
+        # Need x86 Console on x64 to be able to run the tests, since we use 32bit out-of-proc activation for ScriptHost
+        tools.build_VS(os.path.join(GME_ROOT, 'GME', 'Console', 'Console.vcxproj'), 'Release', 'Win32')
     tools.system( ['call', 'regrelease.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
 
+def compile_GME_PGO_Instrument():
+    "Compile GME core components (PGO Instrument)"
+    sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
+    tools.build_VS(sln_file, "Release_PGO_Instrument")
+    cmd_dir = os.path.join(GME_ROOT, "GME")
+    tools.system( ['call', 'regPGO.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
+    import shutil
+    if prefs['arch'] == 'x64':
+        shutil.copyfile(r"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\pgort100.dll", os.path.join(GME_ROOT, 'GME', 'x64', 'Release', 'pgort100.dll'))
+    else:
+        shutil.copyfile(r"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\pgort100.dll", os.path.join(GME_ROOT, 'GME', 'Release', 'pgort100.dll'))
+
+def compile_GME_PGO_Optimize():
+    "Compile GME core components (PGO Optimize)"
+    sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
+    tools.build_VS( sln_file, "Release_PGO_Optimize" )
+
+def PGO_train():
+    "Run tests/Create training data for the PGO binaries"
+    import glob
+    for file in glob.glob(GME_ROOT + '\\GME' + ('\\x64' if prefs['arch'] == 'x64' else '') + '\\Release_PGO\\*.pgc'):
+        os.remove(file)
+    import subprocess
+    subprocess.check_call([sys.executable, '-m', 'GPyUnit.__main__', '-x'] + (['-a', 'x64'] if prefs['arch'] == 'x64' else []), cwd=os.path.join(GME_ROOT, 'Tests'))
 
 def compile_meta():
     "Compile MetaGME components"
@@ -273,6 +300,9 @@ build_steps = [
     zip_scriptSDK, 
     generate_meta_files,
     generate_sample_files, 
+    compile_GME_PGO_Instrument,
+    PGO_train,
+    compile_GME_PGO_Optimize,
     build_msms,
     build_msi,
     zip_pdb,

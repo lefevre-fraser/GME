@@ -109,7 +109,7 @@ def test_VS():
     toolmsg("Trying to create VisualStudio.DTE object")
     win32com.client.Dispatch("VisualStudio.DTE.10.0")
 
-def build_VS(sln_path, config_name):
+def build_VS(sln_path, config_name, arch=None):
     """
     Builds a Microsoft Visual Studio 2010 project or entire solution.
     It cleans the project/solution before building it if the global 'clean' preference
@@ -121,10 +121,12 @@ def build_VS(sln_path, config_name):
     msg = "Cleaning and " * prefs['clean']
     msg += "Compiling " + sln_path + "(" + config_name + ") "
     toolmsg(msg)
+    arch = arch or prefs['arch']
 
     import subprocess
     # , '/fl', '/flp:Verbosity=diagnostic'
-    args = ['msbuild', sln_path, '/t:' + ("Clean;" * prefs['clean']) + 'Build', '/p:Configuration=' + config_name + (';Platform=x64' if prefs['arch'] == 'x64' else '') ]
+    # , '/m'
+    args = ['msbuild', sln_path, '/t:' + ("Clean;" * prefs['clean']) + 'Build', '/p:Configuration=' + config_name + (';Platform=x64' if arch == 'x64' else '') ]
     with open(os.devnull, "w") as nulfp:
         # n.b. stderr=subprocess.STDOUT fails mysteriously
         import sys

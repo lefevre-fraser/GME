@@ -15,6 +15,11 @@ regsvr32 /s "%~dp0%1\Release_PGO\Mga.dll"
 if errorlevel 1 goto errorlabel
 echo    OK
 
+echo Meta.dll:
+regsvr32 /s "%~dp0%1\Release_PGO\Meta.dll"
+if errorlevel 1 goto errorlabel
+echo    OK
+
 goto eof
 
 :errorlabel
