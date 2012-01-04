@@ -343,7 +343,7 @@ Build an installation image (msi) for GME.
        prefs["version_minor"],
        prefs["version_patch"],
        prefs["version_build"],
-       "\n\t".join([str(build_steps.index(s)) + ": " + s.__doc__ for s in build_steps])
+       "\n\t".join([str(build_steps.index(s)) + ": " + s.__doc__ + ' (' + s.__name__ + ')' for s in build_steps])
        )
 
 try:
@@ -356,6 +356,11 @@ try:
     if args:
         print usage
         sys.exit()
+    def get_step(arg):
+        try:
+            return int(arg)
+        except ValueError, e:
+            return [step.__name__ for step in build_steps].index(arg)
     for opt, val in opts:
         if opt in ("-h", "--help"):
             print usage
@@ -365,15 +370,15 @@ try:
         if opt in ("-c", "--clean"):
             prefs["clean"] = True
         if opt in ("-s", "--start"):
-            start_step = int(val)
+            start_step = get_step(val)
         if opt in ("-e", "--end"):
-            end_step = int(val)
+            end_step = get_step(val)
         if opt in ("-i", "--include"):
-            step = int(val)
+            step = get_step(val)
             if val not in include_steps:
                 include_steps.append(step)
         if opt in ("-x", "--exclude"):
-            step = int(val)
+            step = get_step(val)
             if val not in exclude_steps:
                 exclude_steps.append(step)
         if opt in ("-b", "--build_version"):
