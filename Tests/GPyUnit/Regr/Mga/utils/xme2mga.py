@@ -7,7 +7,7 @@
 #
 #
 import sys
-import win32com.client
+from GPyUnit.util import DispatchEx
 import os
 
 def xmefiles( dir, begin_pattern = "", end_pattern = "" ):
@@ -43,7 +43,7 @@ def doit( source, target):
 		xmename = os.path.abspath( os.path.join( os.path.curdir, i))
 
 		try:
-			gme = win32com.client.Dispatch("GME.Application")
+			gme = DispatchEx("GME.Application")
 			gme.Visible = 0
 			
 			paradigm = "MetaGME"

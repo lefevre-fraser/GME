@@ -12,18 +12,14 @@ if __name__=='__main__':
     parser = optparse.OptionParser()
     parser.add_option("-x", "--xml", action="store_true", dest="xml")
     parser.add_option("-v", action="store_true", dest="verbose")
+    parser.add_option('-a', '--arch', dest='arch')
 
     (options, args) = parser.parse_args()
+    import GPyUnit.util
+    if options.arch and options.arch == 'x64':
+        GPyUnit.util._opts.Dispatch_x64 = True
     if options.xml:
-        import os.path
-        import xmlrunner
-        with open("tests.xml", "w") as output:
-            output.write("<testsuites>")
-            for test in GPyUnit._tests:
-                runner = xmlrunner.XMLTestRunner(output)
-                runner.run(test)
-            output.write("</testsuites>")
+        GPyUnit.run_xmlrunner('tests.xml')
     else:
         runner = unittest.TextTestRunner(verbosity=2 if options.verbose else 1)
-        runner.run(GPyUnit._tests)
-
+        runner.run(GPyUnit._tests())

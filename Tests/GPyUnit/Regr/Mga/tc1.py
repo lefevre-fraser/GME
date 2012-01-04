@@ -3,6 +3,7 @@ import win32com.client
 import os
 import GPyUnit.Regr.Mga.utils.Builder
 bd = GPyUnit.Regr.Mga.utils.Builder
+from GPyUnit.util import DispatchEx
 
 from GPyUnit.util import dec_disable_early_binding
 
@@ -243,7 +244,7 @@ class TestCase1( unittest.TestCase ):
 		#			 [in] IMgaFCOs *srcrefs, [in] IMgaFCOs *dstrefs, [out] IMgaFCO **newobj);
 		
 		# this dummy collection will be used for those connections which do not involve connections
-		z0 = win32com.client.DispatchEx("Mga.MgaFCOs")
+		z0 = DispatchEx("Mga.MgaFCOs")
 		
 		try:
 		 # create a containment relation between atom1 and model1
@@ -454,7 +455,7 @@ class TestCase1( unittest.TestCase ):
 		portOpB.Name = 'OpB1'
 
 		# this dummy collection will be used for those connections which do not involve connections
-		z0 = win32com.client.DispatchEx("Mga.MgaFCOs")
+		z0 = DispatchEx("Mga.MgaFCOs")
 		
 		try:
 		 # create a DFC relation between is1 and os1

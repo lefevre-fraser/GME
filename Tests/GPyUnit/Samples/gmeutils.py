@@ -1,7 +1,7 @@
 """
 Helper methods for developing Python testcases for GME
 """
-import win32com.client
+from GPyUnit.util import DispatchEx
 import os
 
 regNodePositionStartTag = '<regnode name="PartRegs"'
@@ -92,7 +92,7 @@ def mga2xme( mganame, xmename = ''):
             xmename = mganame + '.xme'
 
         try:
-                gme = win32com.client.Dispatch("GME.Application")
+                gme = DispatchEx("GME.Application")
         except:
                 raise 'Could not create GME.Application'
 

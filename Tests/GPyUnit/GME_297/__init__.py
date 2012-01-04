@@ -4,7 +4,7 @@ from __future__ import with_statement
 import sys
 import os.path
 import unittest
-import win32com.client
+from GPyUnit.util import DispatchEx
 
 class TestRefportConnectionInvariantUnderMoves(unittest.TestCase):
     def __init__(self, input_file, fco_to_move, destination_model, name=None, use_disp=None, **kwds):
@@ -30,16 +30,16 @@ class TestRefportConnectionInvariantUnderMoves(unittest.TestCase):
         from GPyUnit import util
         util.register_xmp(_adjacent_file('GME297ModelRefportTest.xmp'))
         with util.disable_early_binding():
-            self.project = win32com.client.DispatchEx("Mga.MgaProject")
+            self.project = DispatchEx("Mga.MgaProject")
             self.project.Open("MGA=" + _adjacent_file(self.input_file))
             self.territory = self.project.BeginTransactionInNewTerr()
 
             fco_to_move = self.project.ObjectByPath(self.fco_to_move)
             OBJTYPE_FOLDER = 6
             if fco_to_move.ObjType == OBJTYPE_FOLDER:
-                tomove = win32com.client.DispatchEx("Mga.MgaFolders")
+                tomove = DispatchEx("Mga.MgaFolders")
             else:
-                tomove = win32com.client.DispatchEx("Mga.MgaFCOs")
+                tomove = DispatchEx("Mga.MgaFCOs")
             tomove.Append(fco_to_move)
 
             destination = self.project.ObjectByPath(self.destination_model)

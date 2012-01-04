@@ -21,7 +21,9 @@ import GPyUnit.test_PIAs
 
 # it is also possible to run tests like this on Python 2.7:
 # python -m unittest GPyUnit.Regr.Mga.tc7
-_tests = [
+
+def _test_names():
+    _test_names = [
  'test_PIAs',
  'test_registrar',
  'test_gmeoleapp',
@@ -30,16 +32,35 @@ _tests = [
  'GME_297.suite',
  'GME_310.suite',
  'GME_371',
-'Regr.Mga.tc1',
 ]
 
-if platform.system() != 'Java':
-    _tests = _tests + [
-'Regr.Mga.tc2',
-'Regr.Mga.tc3',
-'Regr.Mga.tc5',
-'Regr.Mga.tc6',
-]
+    if not GPyUnit.util._opts.Dispatch_x64:
+        _test_names += [
+        'Regr.Mga.tc1',
+        ]
+        if platform.system() != 'Java':
+            _test_names += [
+            'Regr.Mga.tc2',
+            'Regr.Mga.tc3',
+            'Regr.Mga.tc5',
+            'Regr.Mga.tc6',
+            ]
+    return _test_names
 
-_tests = unittest.defaultTestLoader.loadTestsFromNames(['GPyUnit.' + test for test in _tests])
+def _tests():
+    # print _test_names()
+    # can't find tc2 with \python27\python -m GPyUnit if we don't do this
+    import GPyUnit.Regr.Mga.tc2
+    return unittest.defaultTestLoader.loadTestsFromNames(['GPyUnit.' + test for test in _test_names()])
+
+def run_xmlrunner(output_filename):
+    import os.path
+    import xmlrunner
+    results = []
+    with open(output_filename, "w") as output:
+        output.write("<testsuites>")
+        for test in GPyUnit._tests():
+            runner = xmlrunner.XMLTestRunner(output)
+            runner.run(test)
+        output.write("</testsuites>")
 

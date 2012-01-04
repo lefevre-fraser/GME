@@ -5,7 +5,7 @@ import os.path
 import unittest
 import GPyUnit.util
 import GPyUnit.util.gme
-import win32com.client
+from GPyUnit.util import DispatchEx
 
 def _adjacent_file(file):
     import os.path
@@ -29,7 +29,7 @@ class TestRegistry(unittest.TestCase):
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
-            self.project = GPyUnit.util.DispatchEx("Mga.MgaProject")
+            self.project = DispatchEx("Mga.MgaProject")
             self.project.Create(self.connstr, "MetaGME")
             self.project.BeginTransactionInNewTerr(0)
             
@@ -122,7 +122,7 @@ class TestRegistry(unittest.TestCase):
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
-            self.project = GPyUnit.util.DispatchEx("Mga.MgaProject")
+            self.project = DispatchEx("Mga.MgaProject")
             self.project.Create(self.connstr, "MetaGME")
             self.project.BeginTransactionInNewTerr()
             
@@ -151,7 +151,7 @@ class TestRegistry(unittest.TestCase):
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
-            self.project = GPyUnit.util.DispatchEx("Mga.MgaProject")
+            self.project = DispatchEx("Mga.MgaProject")
             self.project.Create(self.connstr, "MetaGME")
             self.project.BeginTransactionInNewTerr()
             
@@ -170,7 +170,7 @@ class TestRegistry(unittest.TestCase):
         from GPyUnit import util
         util.register_xmp('MetaGME')
         with util.disable_early_binding():
-            self.project = GPyUnit.util.DispatchEx("Mga.MgaProject")
+            self.project = DispatchEx("Mga.MgaProject")
             self.project.Open("MGA=" + r"C:\Users\ksmyth\Documents\META\meta\CyPhyML\CyPhyML.mga")
             self.project.BeginTransactionInNewTerr()
             self.project.RootFolder.ChildFolders

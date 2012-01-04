@@ -1,14 +1,14 @@
 import unittest
 import os
+from GPyUnit.util import DispatchEx
 
 class TestParser(unittest.TestCase):
     def test_ParseMetaGME(self):
         testdir = os.path.dirname(os.path.abspath(__file__))
         inputfile = os.environ['GME_ROOT'] + r"\Paradigms\MetaGME\MetaGME-model.xme"
-        import win32com.client
-        xme = win32com.client.DispatchEx("Mga.MgaParser")
+        xme = DispatchEx("Mga.MgaParser")
         (paradigm, parversion, parguid, basename, ver) = xme.GetXMLInfo(inputfile)
-        mga = win32com.client.DispatchEx("Mga.MgaProject")
+        mga = DispatchEx("Mga.MgaProject")
 
         mga.Create("MGA=tmp.mga", paradigm)
         terr = mga.BeginTransactionInNewTerr()

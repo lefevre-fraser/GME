@@ -1,11 +1,12 @@
 from __future__ import with_statement
 
 import unittest
+from GPyUnit.util import DispatchEx
 
 class TestGMEOLEApp(unittest.TestCase):
     def test_Exit(self):
         import win32com.client
-        gme = win32com.client.DispatchEx("GME.Application")
+        gme = DispatchEx("GME.Application")
         gme.Version
         gme.Exit()
         # under _DEBUG, GME.exe does not exit until Release()ed
@@ -18,13 +19,13 @@ class TestGMEOLEApp(unittest.TestCase):
     def test_Console(self):
         import win32com.client
 
-        registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
+        registrar = DispatchEx("Mga.MgaRegistrar")
         registrar.SetScriptEngineDisp(1, "Python.AXScript.2")
         
         def _adjacent_file(file):
             import os.path
             return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
-        self.gme = win32com.client.DispatchEx("GME.Application")
+        self.gme = DispatchEx("GME.Application")
         self.gme.Version
         console = filter(lambda p: p.Name == "Console", self.gme.Panels)[0]
         intf = console.Interface

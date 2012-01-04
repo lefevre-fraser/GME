@@ -4,7 +4,7 @@ from __future__ import with_statement
 import sys
 import os.path
 import unittest
-import win32com.client
+from GPyUnit.util import DispatchEx
 
 class TestFolderCopy(unittest.TestCase):
     def __init__(self, input_file, folder_to_copy, destination_folder, name=None, **kwds):
@@ -28,13 +28,13 @@ class TestFolderCopy(unittest.TestCase):
         util.register_xmp(_adjacent_file('GME310ModelRefportTest.xmp'))
 
         with util.disable_early_binding():
-            self.project = win32com.client.DispatchEx("Mga.MgaProject")
+            self.project = DispatchEx("Mga.MgaProject")
             self.project.Open("MGA=" + _adjacent_file(self.input_file))
             self.territory = self.project.BeginTransactionInNewTerr()
 
             modelb = self.project.ObjectByPath(self.folder_to_copy)
             modelb.Name
-            tomove = win32com.client.DispatchEx("Mga.MgaFolders")
+            tomove = DispatchEx("Mga.MgaFolders")
             tomove.Append(modelb)
             #self.project.ObjectByPath(self.destination_folder).CopyFolders(tomove, None)
             self.project.RootFolder.CopyFolderDisp(modelb)

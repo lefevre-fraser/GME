@@ -13,6 +13,8 @@ def DispatchEx(progid):
     import win32com.client
     CLSCTX_ALL = 23
     CLSCTX_LOCAL_SERVER = 4
+    CLSCTX_ACTIVATE_32_BIT_SERVER = 0x40000
+    CLSCTX_ACTIVATE_64_BIT_SERVER = 0x80000
     if _opts.Dispatch_x64:
         return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER)
     else:
