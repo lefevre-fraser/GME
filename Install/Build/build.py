@@ -99,17 +99,29 @@ def compile_GME():
         tools.build_VS(os.path.join(GME_ROOT, 'GME', 'Console', 'Console.vcxproj'), 'Release', 'Win32')
     tools.system( ['call', 'regrelease.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
 
+def _Release_PGO_dir():
+    if prefs['arch'] == 'x64':
+        return os.path.join(GME_ROOT, 'GME', 'x64', 'Release_PGO')
+    else:
+        return os.path.join(GME_ROOT, 'GME', 'Release_PGO')
+    
 def compile_GME_PGO_Instrument():
     "Compile GME core components (PGO Instrument)"
+    import shutil
+    import errno
+    try:
+        os.makedirs(_Release_PGO_dir())
+    except OSError as exc:
+        if exc.errno != errno.EEXIST:
+            raise
+    if prefs['arch'] == 'x64':
+        shutil.copyfile(r"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\pgort100.dll", os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
+    else:
+        shutil.copyfile(r"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\pgort100.dll", os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
     sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
     tools.build_VS(sln_file, "Release_PGO_Instrument")
     cmd_dir = os.path.join(GME_ROOT, "GME")
     tools.system( ['call', 'regPGO.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
-    import shutil
-    if prefs['arch'] == 'x64':
-        shutil.copyfile(r"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\pgort100.dll", os.path.join(GME_ROOT, 'GME', 'x64', 'Release', 'pgort100.dll'))
-    else:
-        shutil.copyfile(r"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\pgort100.dll", os.path.join(GME_ROOT, 'GME', 'Release', 'pgort100.dll'))
 
 def compile_GME_PGO_Optimize():
     "Compile GME core components (PGO Optimize)"
