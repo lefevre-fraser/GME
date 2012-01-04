@@ -56,6 +56,9 @@ void CMgaFilter::init() {
 	if(newkind) {
 		kindnums.clear();
 		kindnames.clear();
+		wchar_t* kind = this->kind;
+		if (kind == NULL)
+			kind = L"";
 		for(OLECHAR *p = wcstok(kind, L" "); p; p = wcstok(NULL,L" ")) {
 			unsigned int code;
 			if(swscanf(p,L"#%u", &code) == 1) kindnums.insert(code);
