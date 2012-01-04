@@ -28,10 +28,14 @@ CLSCTX_FROM_DEFAULT_CONTEXT = 131072
 _argkludge = { 'GetXMLInfo': (jaut.Variant.VT_BSTR, jaut.Variant.VT_BSTR, jaut.Variant.VT_NULL, jaut.Variant.VT_BSTR, jaut.Variant.VT_BSTR),
 'QueryParadigm': (jaut.Variant.VT_BSTR, jaut.Variant.VT_NULL),
 'OpenObj': (jaut.Variant.VT_UNKNOWN,),
+'CreateTerritory': (jaut.Variant.VT_NULL, jaut.Variant.VT_UNKNOWN),
 }
 _getterkludge = { 'Item': 1,
 'Status': 1,
 'ObjectByPath': 1,
+'LegalChildFolderByName': 1,
+'DefinedFCOByName': 1,
+'RoleByName': 1,
 }
 
 _debug = False
@@ -48,7 +52,7 @@ def __nonzero__(self):
     if vt in _vt_falses:
         return False
     return True
-org.isis.jaut.Variant.__nonzero__ = __nonzero__
+#org.isis.jaut.Variant.__nonzero__ = __nonzero__
 del __nonzero__
 
 def _translate_variant(v):
@@ -75,6 +79,11 @@ def _translate_variant(v):
 		return v.getInt()
 	# print 'yyy' + repr(v) + repr(type(v)) + '...' + str(vt)
 	return v
+
+def _arg_map(arg):
+	if isinstance(arg, JautDispatch):
+		return arg.dispatch
+	return arg
 
 class JautDispatch(object):
 	@staticmethod
@@ -115,7 +124,7 @@ class JautDispatch(object):
 		return iter
 
 	def __setattr__(self, name, value):
-		self.dispatch.put(name, value)
+		self.dispatch.put(name, _arg_map(value))
 	
 	def __getattr__(self, name):
 		# fail fast
@@ -131,11 +140,7 @@ class JautDispatch(object):
 			_dbgout.write('__getattr__: name ' + name + "\n")
 		def invoke(*args):
 			import time
-			def arg_map(arg):
-				if isinstance(arg, JautDispatch):
-					return arg.dispatch
-				return arg
-			args = [arg_map(arg) for arg in args]
+			args = [_arg_map(arg) for arg in args]
 			if name == 'Status': # workaround error in typelib: propget without retval
 				args = (jaut.Variant(jaut.Variant.create(jaut.Variant.VT_I4)),)
 				self.dispatch.invoke(name, jaut.Dispatch.DISPATCH_PROPERTYGET, args, None)
