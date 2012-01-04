@@ -96,9 +96,19 @@ def xme2mga(xmefile, mgafile=None):
 		project.save(project.mgafile)
 		return project.mgafile
 
-def run_interpreter(interpreter, file, focusobj=None, selectedobj=None, param=0, mga_to_save=None):
+def run_interpreter(interpreter, file, focusobj=None, selectedobj=None, param=0, mga_to_save=None, save=True):
 	with Project.open(file, mga_to_save=mga_to_save) as project:
 		project.run_interpreter(interpreter, focusobj, selectedobj, param)
+		if not save:
+			project.project.Close(True)
+
+def run_interpreter_with_focusobj(interpreter, file, focusobj=None, selectedobj=None, param=0, mga_to_save=None, save=True):
+	with Project.open(file, mga_to_save=mga_to_save) as project:
+		if focusobj:
+			focusobj = project.project.GetFCOByID(focusobj)
+		project.run_interpreter(interpreter, focusobj, selectedobj, param)
+		if not save:
+			project.project.Close(True)
 
 # MGAUTILLib.regaccessmode_enum.REGACCESS_BOTH = 3
 def get_paradigm_file(paradigm, regaccess=3):
@@ -153,6 +163,8 @@ def register_if_not_registered(file):
 	
 	# if we don't give GME an absolute path, it registers the mta with a relative path (which is bad)
 	with Project.open(os.path.abspath(file), mga_to_save=True) as project:
+		# KMS FIXME: build systems need to run this before MetaInterpreter. a new build_customization is needed
+		# project.run_interpreter("MGA.Interpreter.MetaGME2Uml", mgafile, None, None, 128)
 		paradigm = project.project.RootFolder.Name
 		if not is_registered(paradigm):
 			project.run_interpreter("MGA.Interpreter.MetaInterpreter", param=REGISTER)
@@ -168,19 +180,29 @@ def register_if_not_registered(file):
 
 def mga2xmp(mgafile, register=REGISTER):
 	# if we don't give GME an absolute path, it registers the mta with a relative path (which is bad)
-	run_interpreter("MGA.Interpreter.MetaInterpreter", os.path.abspath(mgafile), param=register, mga_to_save=True)
+	run_interpreter("MGA.Interpreter.MetaInterpreter", os.path.abspath(mgafile), param=register, mga_to_save=True, save=False)
 
 def xme2xmp(xmefile, register=REGISTER):
 	mgafile = xme2mga(xmefile)
 	mga2xmp(mgafile, register)
 	return mgafile
 
+def regmta(mtafile, regaccess=1):
+	regaccess = int(regaccess)
+	if regaccess != 1:
+		_regxmp_elevated(mtafile, regaccess)
+	else:
+		_regxmp(mtafile, regaccess)
+
 def _regxmp(xmpfile, regaccess):
 	REG_USER = 1
 	REG_SYSTEM = 2
 	REG_BOTH = 3
 	registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
-	registrar.RegisterParadigmFromData("XML=" + os.path.abspath(xmpfile), "", regaccess)
+	if os.path.splitext(xmpfile)[1].lower() == ".xmp":
+		registrar.RegisterParadigmFromData("XML=" + os.path.abspath(xmpfile), "", regaccess)
+	else:
+		registrar.RegisterParadigmFromData("MGA=" + os.path.abspath(xmpfile), "", regaccess)
 
 @maybe_elevate()
 def _regxmp_elevated(xmpfile, regaccess):
@@ -195,7 +217,7 @@ def regxmp(xmpfile, regaccess=1):
 
 def _reggmexmps(regaccess):
 	regaccess = int(regaccess)
-	for file in [ 'HFSM/HFSM.xmp', 'MetaGME/Paradigm/MetaGME.xmp', 'SF/SF.xmp', 'UML/UML.xmp' ]:
+	for file in [ 'HFSM/HFSM.xmp', 'MetaGME/MetaGME.xmp', 'SF/SF.xmp', 'UML/UML.xmp' ]:
 		regxmp(os.path.join(os.path.join(os.environ['GME_ROOT'], 'Paradigms'), file), regaccess)
 
 @maybe_elevate()
@@ -218,6 +240,7 @@ def mga2xme(mgafile, xmefile=None):
 	return xmefile
 
 def register_component(file, warn_on_tlb_error=None):
+	'''Register a GME component .dll'''
 # TODO: on Vista or 7 we need to start an elevated registrar
 	registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
 	# REGACCESS_BOTH	= 3,
@@ -229,25 +252,32 @@ def meta2uml(mgafile, umlfile=None):
 	if not os.path.isfile(mgafile):
 		raise Exception("'" + mgafile + "' not found")
 	
-	if not umlfile:
-		umlfile = os.path.splitext(mgafile)[0] + "_uml.mga"
-	subprocess.check_call(["MetaGME2UML.exe", mgafile, umlfile])
+	# n.b. this uses the SxS config in gmepy-setup.py under gmepy.exe (but not gme.py)
+	with Project.open(mgafile) as project:
+		project.run_interpreter("MGA.Interpreter.MetaGME2Uml", None, None, 128)
+		output_path = os.path.join(os.path.dirname(mgafile), project.project.RootFolder.Name + "_uml.mga")
+		# project.project.Save("MGA=" + os.path.splitext(mgafile)[0] + "_after_MetaGME2Uml.mga")
+		project.project.Close(True)
+	if umlfile and os.path.normcase(os.path.abspath(umlfile)) != os.path.normcase(os.path.abspath(output_path)):
+		import shutil
+		try:
+			os.remove(umlfile)
+		except OSError:
+			pass
+		shutil.move(output_path, umlfile)
+	#subprocess.check_call(["MetaGME2UML.exe", mgafile, umlfile])
 
 # aka CreateUdmXml.vbs
 def mga2udmxml(mgafile):
-	run_interpreter("MGA.Interpreter.UML2XML", mgafile, None, None, 128)
+	run_interpreter("MGA.Interpreter.UML2XML", mgafile, param=128, save=False)
 
 # GReAT functions
 def RunGreatMasterInt(file):
 	file = os.path.abspath(file)
-	with Project.open(file) as project:
-		project.run_interpreter("MGA.Interpreter.GReAT Master Interpreter", param=128)
-# touch(1) the generated .udm file so incremental build works
-		configurations = (cast(fco) for fco in project.project.RootFolder.children() if fco.kind() == "Configurations").next()
-		configuration = (cast(fco) for fco in configurations.children() if fco.kind() == "Configuration").next()
-		metainformation = (cast(fco) for fco in configuration.children() if fco.kind() == "MetaInformation").next()
-		udmfile = os.path.dirname(file) + "/" + metainformation.AttributeByName("UdmProjectFile")
-		mtime = os.stat(udmfile).st_mtime
+	mtime = os.stat(file).st_mtime
+	# The interpreter updates the GReAT config path, so we need to save the .mga
+	run_interpreter("MGA.Interpreter.GReAT Master Interpreter", file, param=128, save=True)
+	# Let's lie and modify the timestamp so incremental build behaves better
 	os.utime(file, (mtime, mtime))
 
 # Explorer context menu
@@ -293,14 +323,50 @@ def context_menu_reg():
 			reg.write(str)
 	elevated_check_call("regedit", regname)
 
+class Mutex:
+    def __init__(self, name):
+        import win32event
+        self.mutex = win32event.CreateMutex(None, False, name)
+
+    def __enter__(self):
+        import win32event
+        win32event.WaitForSingleObject(self.mutex, win32event.INFINITE)
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        import win32event
+        win32event.ReleaseMutex(self.mutex)
+
 if platform.system() != 'Java':
 	# GME Project functions
 	import win32com.client.gencache
 	# Generate .py's for GME Type Library
-	# n.b. we don't use EnsureModule here because we don't properly version the typelib
-	#   A change in the typelib may invalidate the cache, but gencache doesn't know it, e.g. GMESRC r947
-	meta_module = win32com.client.gencache.MakeModuleForTypelib('{0ADEEC71-D83A-11D3-B36B-005004D38590}', 0, 1, 0)
-	mga_module = win32com.client.gencache.MakeModuleForTypelib('{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}', 0, 1, 0)
+	# Don't allow two gme.pys to step on each other
+	with Mutex("Global\\gmepygencache") as mutex:
+	    # n.b. we don't always use EnsureModule here because we don't properly version the typelib
+	    #   A change in the typelib may invalidate the cache, but gencache doesn't know it, e.g. GMESRC r947
+	    # n.b. we can't just always regenerate, as python holds a lock on the opened module
+	    regenerate = True
+	    try:
+	        import win32com.client
+	        import os.path
+	        mga_py_name = win32com.client.gencache.GetGeneratedFileName('{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}', 0, 1, 0) + ".py"
+	        mga_py_path = os.path.join(win32com.client.gencache.GetGeneratePath(), mga_py_name)
+	        import _winreg
+	        mga_dll_path = _winreg.QueryValue(_winreg.HKEY_CLASSES_ROOT, r"TypeLib\{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}\1.0\0\win32")
+	        import stat
+	        if os.stat(mga_dll_path)[stat.ST_MTIME] < os.stat(mga_py_path)[stat.ST_MTIME]:
+	            regenerate = False
+	    except (e, WindowsError):
+	        #print repr(e)
+	        pass
+	    
+	    if regenerate:
+	        meta_module = win32com.client.gencache.MakeModuleForTypelib('{0ADEEC71-D83A-11D3-B36B-005004D38590}', 0, 1, 0)
+	        mga_module = win32com.client.gencache.MakeModuleForTypelib('{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}', 0, 1, 0)
+	    else:
+	        meta_module = win32com.client.gencache.EnsureModule('{0ADEEC71-D83A-11D3-B36B-005004D38590}', 0, 1, 0)
+	        mga_module = win32com.client.gencache.EnsureModule('{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}', 0, 1, 0)
 
 	gme_constants = getattr(meta_module, "constants")
 
@@ -323,9 +389,11 @@ if platform.system() != 'Java':
 		return win32com.client.CastTo(fco, OBJTYPE_INTERFACE_MAP.get(fco.ObjType))
 
 	# KMS I'm not sure why gen_py lowercases these (for GME<VS2010). Create aliases:
+	# KMS: the answer is http://support.microsoft.com/kb/q220137/ "MIDL changes the case of identifier in generated type library"
 	if mga_module.IMgaReference._prop_map_get_.has_key("referred"):
 	    mga_module.IMgaReference._prop_map_get_["Referred"] = mga_module.IMgaReference._prop_map_get_["referred"]
-	#mga_module.IMgaConnPoint._prop_map_get_["Target"] = mga_module.IMgaConnPoint._prop_map_get_["target"]
+	if mga_module.IMgaConnPoint._prop_map_get_.has_key("target"):
+	    mga_module.IMgaConnPoint._prop_map_get_["Target"] = mga_module.IMgaConnPoint._prop_map_get_["target"]
 	# Make IMgaFolder behave more like IMgaFCO
 	mga_module.IMgaFolder._prop_map_get_["Meta"] = mga_module.IMgaFolder._prop_map_get_["MetaFolder"]
 
@@ -427,7 +495,8 @@ class Project():
 			if self.territory:
 				self.territory.Destroy()
 				self.territory = None
-		self.project.Close()
+		if self.project.ProjectStatus != 0:
+			self.project.Close()
 
 	def get_fco(self, path):
 		path_a = path.split("/")
@@ -472,46 +541,21 @@ class Project():
 			self.territory.Destroy()
 			self.territory = None
 	
-	def run_interpreter_raw(self, interpreter, focusobj=None, selectedobj=None, param=0):
-		import ctypes
-		import comtypes.client
-		import comtypes.automation
-		import _ctypes
-		comtypes.client.GetModule(['{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}', 1, 0]) # Mga Mga
-		comtypes.client.GetModule(["{461F30AE-3BF0-11D4-B3F0-005004D38590}", 1, 0]) # MgaUtil
-		#TODO: check for GME version compatibility
-		#TODO: CreateMgaComponent supports IDispatch wrapper ComponentProxy. do the same here
-		comp = comtypes.client.CreateObject(interpreter, interface=comtypes.gen.MGAUTILLib.IMgaComponentEx)
-		if interpreter == "MGA.Interpreter.MetaInterpreter":
-			# http://escher.isis.vanderbilt.edu/JIRA/browse/GME-252
-			comp.AddRef()
-
-		comp.InteractiveMode = False
-		p = get_ctypes_dispatch_from_win32com(self.project)
-
-		#TODO: convert and use focusobj and selectedobj
-		fcos = comtypes.client.CreateObject("Mga.MgaFCOs")
-		self.commit_transaction()
-		try:
-			# FIXME: does this leak p ?
-			comp.InvokeEx(p.QueryInterface(comtypes.gen.MGALib.IMgaProject), None, fcos, 128)
-		finally:
-			self.begin_transaction()
-
+	def abort_transaction(self):
+		self.project.AbortTransaction()
+		if self.territory:
+			self.territory.Destroy()
+			self.territory = None
 	
 	def run_interpreter(self, interpreter, focusobj=None, selectedobj=None, param=0):
 		if not selectedobj:
 			selectedobj=win32com.client.DispatchEx("Mga.MgaFCOs")
+		self.commit_transaction()
 		try:
-			self.run_interpreter_raw(interpreter, focusobj, selectedobj, param)
-		except ImportError:
-			print "Warning: no comtypes library. Running interpreter through MgaLauncher; interpreter return code will be lost"
-			self.commit_transaction()
-			try:
-				launcher = win32com.client.DispatchEx("Mga.MgaLauncher")
-				launcher.RunComponent(interpreter, self.project, focusobj, selectedobj, param)
-			finally:
-				self.begin_transaction()
+			launcher = win32com.client.DispatchEx("Mga.MgaLauncher")
+			launcher.RunComponent(interpreter, self.project, focusobj, selectedobj, param)
+		finally:
+			self.begin_transaction()
 
 	@staticmethod
 	def create(mgafile, paradigm):
@@ -574,18 +618,27 @@ def print_paradigm(xmefile):
 	print xmefile
 	print paradigm
 
+def run_module(name):
+	import sys
+	sys.path.append('.')
+	import runpy
+	runpy.run_module(name)
+
+def usage():
+	gme_dict = sys.modules[__name__].__dict__
+	names = []
+	names.extend(gme_dict.keys())
+	for name in filter(lambda name: type(gme_dict[name]) == type(print_paradigm), names):
+		if gme_dict[name].__doc__:
+			print name
+			print "\t" + gme_dict[name].__doc__
+	sys.exit(2)
+
 import traceback
 if __name__ == '__main__':
 	try:
-		if sys.argv[1] not in dir():
-			gme_dict = sys.modules[__name__].__dict__
-			names = []
-			names.extend(gme_dict.keys())
-			for name in filter(lambda name: type(gme_dict[name]) == type(print_paradigm), names):
-				if gme_dict[name].__doc__:
-					print name
-					print "\t" + gme_dict[name].__doc__
-			sys.exit(1)
+		if len(sys.argv) < 2 or sys.argv[1] not in dir():
+			usage()
 		else:
 			# TRY:
 			# sys.modules[__name__].__getattribute__(sys.argv[1]).__call__(*sys.argv[2:])
