@@ -8,6 +8,8 @@
 #include "Core.h"
 #include "Mga.h"
 
+#include "ComponentConfig.h"
+
 #if defined(BUILDER_OBJECT_NETWORK)
 #else
 // BY PAKA BEGIN
