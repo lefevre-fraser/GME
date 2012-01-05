@@ -28,7 +28,7 @@
 
 
 // This name will appear in the popup window for interpreter selection.
-#define COMPONENT_NAME L"AutoLayout"
+#define COMPONENT_NAME "AutoLayout"
 
 
 // This text will appear in the toolbar icon tooltip and in the menu.

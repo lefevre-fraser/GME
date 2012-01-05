@@ -54,10 +54,15 @@
 #include "ComponentObj.h"
 
 #define _OLESTR(x) OLESTR(x)
-extern const char* g_COCLASS_PROGID = COCLASS_PROGID;
+extern const char* g_COCLASS_PROGIDA = COCLASS_PROGID;
 extern const wchar_t* g_COCLASS_PROGIDW = _OLESTR(COCLASS_PROGID);
-extern const char* g_COMPONENT_NAME = COMPONENT_NAME;
+extern const char* g_COMPONENT_NAMEA = COMPONENT_NAME;
 extern const wchar_t* g_COMPONENT_NAMEW = _OLESTR(COMPONENT_NAME);
+#ifdef UNICODE
+extern const TCHAR* g_COMPONENT_NAME = g_COMPONENT_NAMEW;
+#else
+extern const TCHAR* g_COMPONENT_NAME = g_COMPONENT_NAMEA;
+#endif
 #ifdef REGISTER_SYSTEMWIDE
 extern const bool g_REGISTER_SYSTEMWIDE = true;
 #else

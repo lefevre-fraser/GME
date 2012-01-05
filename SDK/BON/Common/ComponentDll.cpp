@@ -8,7 +8,7 @@
 #include "ComponentDll.h"
 
 extern bool const g_REGISTER_SYSTEMWIDE;
-extern const char* g_COMPONENT_NAME;
+extern const TCHAR* g_COMPONENT_NAME;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
