@@ -114,10 +114,11 @@ def compile_GME_PGO_Instrument():
     except OSError as exc:
         if exc.errno != errno.EEXIST:
             raise
+    pfx86 = os.environ.get('ProgramFiles(x86)', os.environ['ProgramFiles'])
     if prefs['arch'] == 'x64':
-        shutil.copyfile(r"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\pgort100.dll", os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
+        shutil.copyfile(os.path.join(pfx86, r"Microsoft Visual Studio 10.0\VC\bin\amd64\pgort100.dll"), os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
     else:
-        shutil.copyfile(r"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\pgort100.dll", os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
+        shutil.copyfile(os.path.join(pfx86, r"Microsoft Visual Studio 10.0\VC\bin\pgort100.dll"), os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
     sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
     tools.build_VS(sln_file, "Release_PGO_Instrument")
     cmd_dir = os.path.join(GME_ROOT, "GME")
@@ -428,5 +429,5 @@ try:
 
     print "Build SUCCEEDED."
 except:
-    print "!!! Build FAILED !!!"
+    print "!!! Build FAILED: step " + build_steps[i].__name__
     raise
