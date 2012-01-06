@@ -730,9 +730,9 @@ STDMETHODIMP CMgaRegNode::get_SubNodes( VARIANT_BOOL virtuals, IMgaRegNodes **pV
 					continue_ = false;
 					return;
 				}
-				if (wcsncmp(it->first, mypath, mypath.Length()) == 0)
+				if (wcsncmp(it->first ? it->first : L"", mypath, mypath.Length()) == 0)
 				{
-					std::wstring path = it->first;
+					std::wstring path = it->first ? it->first : L"";
 					if (path.length() > mypath.Length() && (mypath.Length() == 0 || path[mypath.Length()] == L'/'))
 					{
 						size_t end = path.find(L'/', mypath.Length() + 1);
@@ -842,7 +842,7 @@ STDMETHODIMP CMgaRegNode::RemoveTree() {
 
 		for (auto it = map->begin(); it != map->end();)
 		{
-			if (wcsncmp(it->first, mypath, mypath.Length()) == 0)
+			if (wcsncmp(it->first ? it->first : L"", mypath, mypath.Length()) == 0)
 			{
 				map->erase(it++);
 			} else
