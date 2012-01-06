@@ -151,8 +151,7 @@ def PGO_train():
     import glob
     for file in glob.glob(GME_ROOT + '\\GME' + ('\\x64' if prefs['arch'] == 'x64' else '') + '\\Release_PGO\\*.pgc'):
         os.remove(file)
-    import subprocess
-    subprocess.check_call([sys.executable, '-m', 'GPyUnit.__main__', '-x'] + (['-a', 'x64'] if prefs['arch'] == 'x64' else []), cwd=os.path.join(GME_ROOT, 'Tests'))
+    tools.system([sys.executable, '-m', 'GPyUnit.__main__', '-x'] + (['-a', 'x64'] if prefs['arch'] == 'x64' else []), os.path.join(GME_ROOT, 'Tests'))
 
 def compile_meta():
     "Compile MetaGME components"
