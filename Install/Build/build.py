@@ -152,6 +152,10 @@ def PGO_train():
     for file in glob.glob(GME_ROOT + '\\GME' + ('\\x64' if prefs['arch'] == 'x64' else '') + '\\Release_PGO\\*.pgc'):
         os.remove(file)
     tools.system([sys.executable, '-m', 'GPyUnit.__main__', '-x'] + (['-a', 'x64'] if prefs['arch'] == 'x64' else []), os.path.join(GME_ROOT, 'Tests'))
+    if prefs['arch'] == 'x64':
+        # wait for dllhost.exe to exit
+        import time
+        time.sleep(31)
 
 def compile_meta():
     "Compile MetaGME components"
