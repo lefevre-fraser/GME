@@ -93,10 +93,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
-      <Command>copy /y ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
-copy /y ..\Lib\CrashRpt\bin\CrashSender.exe "$(OutDir)" &amp;&amp; ^
-copy /y ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)" &amp;&amp; ^
-copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashSender.exe "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
 </Command>
       <Outputs>$(OutDir)crashrpt_lang.ini;%(Outputs)</Outputs>
     </CustomBuildStep>
@@ -139,10 +138,9 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
-      <Command>copy /y ..\Lib\CrashRpt\bin\x64\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
-copy /y ..\Lib\CrashRpt\bin\x64\CrashSender.exe "$(OutDir)" &amp;&amp; ^
-copy /y ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)" &amp;&amp; ^
-copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashSender.exe "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
 </Command>
       <Outputs>$(OutDir)crashrpt_lang.ini;%(Outputs)</Outputs>
     </CustomBuildStep>
@@ -184,10 +182,9 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
-      <Command>copy /y ..\Lib\CrashRpt\bin\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
-copy /y ..\Lib\CrashRpt\bin\CrashSenderd.exe "$(OutDir)" &amp;&amp; ^
-copy /y ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)" &amp;&amp; ^
-copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashSenderd.exe "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
 </Command>
       <Outputs>$(OutDir)crashrpt_lang.ini;%(Outputs)</Outputs>
     </CustomBuildStep>
@@ -226,10 +223,9 @@ copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
-      <Command>copy /y ..\Lib\CrashRpt\bin\x64\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
-copy /y ..\Lib\CrashRpt\bin\x64\CrashSenderd.exe "$(OutDir)" &amp;&amp; ^
-copy /y ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)" &amp;&amp; ^
-copy /y /b "$(OutDir)crashrpt_lang.ini"+,, "$(OutDir)crashrpt_lang.ini"
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashSenderd.exe "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
 </Command>
       <Outputs>$(OutDir)crashrpt_lang.ini;%(Outputs)</Outputs>
     </CustomBuildStep>

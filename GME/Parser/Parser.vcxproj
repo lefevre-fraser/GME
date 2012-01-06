@@ -132,7 +132,7 @@
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
-      <Command>copy ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Command>
+      <Command>xcopy /Y/D/F ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Command>
       <Message>copy ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Message>
       <Outputs>$(OutDir)\xerces-c_3_1.dll</Outputs>
     </CustomBuildStep>
@@ -174,7 +174,7 @@
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
-      <Command>copy ..\Lib\$(Platform)\xerces-c_3_1.dll "$(OutDir)"</Command>
+      <Command>xcopy /Y/D/F ..\Lib\$(Platform)\xerces-c_3_1.dll "$(OutDir)"</Command>
       <Message>copy ..\Lib\$(Platform)\xerces-c_3_1.dll "$(OutDir)"</Message>
       <Outputs>$(OutDir)\xerces-c_3_1.dll</Outputs>
     </CustomBuildStep>
@@ -215,7 +215,7 @@
     <CustomBuildStep>
       <Outputs>$(OutDir)\xerces-c_3_1.dll</Outputs>
       <Message>copy ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Message>
-      <Command>copy ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Command>
+      <Command>xcopy /Y/D/F ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -253,7 +253,7 @@
     <CustomBuildStep>
       <Outputs>$(OutDir)\xerces-c_3_1.dll</Outputs>
       <Message>copy ..\Lib\$(Platform)\xerces-c_3_1.dll "$(OutDir)"</Message>
-      <Command>copy ..\Lib\$(Platform)\xerces-c_3_1.dll "$(OutDir)"</Command>
+      <Command>xcopy /Y/D/F ..\Lib\$(Platform)\xerces-c_3_1.dll "$(OutDir)"</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>

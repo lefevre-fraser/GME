@@ -134,8 +134,7 @@
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
-      <Command>copy /y ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
-copy /y /b "$(OutDir)CrashRpt.dll"+,, </Command>
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>$(OutDir)CrashRpt.dll</Outputs>
@@ -180,8 +179,7 @@ copy /y /b "$(OutDir)CrashRpt.dll"+,, </Command>
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
-      <Command>copy /y ..\Lib\CrashRpt\bin\x64\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
-copy /y /b "$(OutDir)CrashRpt.dll"+,, </Command>
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRpt.dll "$(OutDir)"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>$(OutDir)CrashRpt.dll</Outputs>
@@ -222,8 +220,7 @@ copy /y /b "$(OutDir)CrashRpt.dll"+,, </Command>
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
-      <Command>copy /y ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
-copy /y /b "$(OutDir)CrashRpt.dll"+,, </Command>
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>$(OutDir)CrashRpt.dll</Outputs>
@@ -263,8 +260,7 @@ copy /y /b "$(OutDir)CrashRpt.dll"+,, </Command>
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
-      <Command>copy /y ..\Lib\CrashRpt\bin\x64\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
-copy /y /b "$(OutDir)CrashRptd.dll"+,, </Command>
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRptd.dll "$(OutDir)"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>$(OutDir)CrashRpt.dll</Outputs>
