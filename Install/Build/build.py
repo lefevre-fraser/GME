@@ -94,9 +94,6 @@ def compile_GME():
     sln_file = os.path.join(GME_ROOT, "GME", "GMEDecorators.sln")
     tools.build_VS( sln_file, "Release" )
     cmd_dir = os.path.join(GME_ROOT, "GME")
-    if prefs['arch'] == 'x64':
-        # Need x86 Console on x64 to be able to run the tests, since we use 32bit out-of-proc activation for ScriptHost
-        tools.build_VS(os.path.join(GME_ROOT, 'GME', 'Console', 'Console.vcxproj'), 'Release', 'Win32')
     tools.system( ['call', 'regrelease.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
 
 def _Release_PGO_dir():

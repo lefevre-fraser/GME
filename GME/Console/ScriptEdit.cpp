@@ -36,14 +36,8 @@ bool CScriptEdit::Init(CConsoleCtrl *cons)
 		m_console = cons;
 
 		HRESULT hr;
-#if defined(_M_IX86)
 		COMTHROW(hr = m_host.CreateInstance(CLSID_ScriptHost, 0, CLSCTX_ALL));
-#elif defined(_M_AMD64)
-		// CLSCTX_ACTIVATE_32_BIT_SERVER to activate 32-bit scripting servers
-		COMTHROW(hr = m_host.CreateInstance(CLSID_ScriptHost, 0, CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER));
-#else
-#error Unknown arch
-#endif
+
 		_bstr_t engine(L"JScript");
 //		_bstr_t engine(L"Python.AXScript.2");
 		COMTHROW(m_host->InitEngine(m_console->GetIDispatch(false), engine));
