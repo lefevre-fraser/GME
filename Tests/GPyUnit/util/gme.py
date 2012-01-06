@@ -357,7 +357,7 @@ if platform.system() != 'Java':
 	        import stat
 	        if os.stat(mga_dll_path)[stat.ST_MTIME] < os.stat(mga_py_path)[stat.ST_MTIME]:
 	            regenerate = False
-	    except (e, WindowsError):
+	    except WindowsError, e:
 	        #print repr(e)
 	        pass
 	    
