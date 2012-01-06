@@ -6483,28 +6483,6 @@ void CGMEView::OnContextProperties()
 		ShowProperties();
 	contextSelection = 0;
 	contextPort = 0;
-
-	/*CComPtr<IMgaFCO> fco;
-	try {
-		BeginTransaction();
-		if (contextSelection)
-			fco = contextSelection->mgaFco;
-		else
-			COMTHROW(currentModel.QueryInterface(&fco));
-
-		VERIFY(fco);
-		CComObjPtr<IMgaLauncher>	launcher;
-		COMTHROW(launcher.CoCreateInstance(L"Mga.MgaLauncher") );
-
-		launcher->PropDlg(fco);
-		CommitTransaction();
-	}
-	catch(hresult_exception e) {
-		AbortTransaction(e.hr);
-		AfxMessageBox("Internal Program Error in CGMEView::OnContextProperties()");
-		contextSelection = 0;
-		return;
-	}*/
 }
 
 void CGMEView::AttributepanelPage(long page)

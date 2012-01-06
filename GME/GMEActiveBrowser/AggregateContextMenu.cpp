@@ -498,30 +498,9 @@ void CAggregateContextMenu::OnProperties()
 
 	if(m_pParent->m_TreeAggregate.m_MgaMap.LookupObjectUnknown(hItem,pUnknown))
 	{
-#ifdef OLD_ATTRIBUTE_PANEL
-		CComQIPtr<IMgaObject> ccpMgaObject(pUnknown);
-		if(ccpMgaObject!=NULL)
-		{
-			// Creating launcher
-			CComObjPtr<IMgaLauncher> ccpMgaLauncher;
-			COMTHROW( ccpMgaLauncher.CoCreateInstance(L"Mga.MgaLauncher") );
-
-			CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
-			CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
-			
-			// Starting transaction
-			pMgaContext->BeginTransaction(false);
-			COMTHROW( ccpMgaLauncher->PropDlg(ccpMgaObject));
-			// Ending transaction
-			pMgaContext->CommitTransaction();
-		}
-#else
 		// Firing the event
 		CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 		pApp->GetCtrl()->FireShowProperties();
-
-#endif
-
 	}
 }
 

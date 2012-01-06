@@ -75,16 +75,10 @@
     <ClCompile Include="ComponentProxy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ConnPropertiesDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DialogList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DirDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FolderPropertiesDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GmeDlg.cpp">
@@ -127,9 +121,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MgaUtilApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PropertiesDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RegBrwNode.cpp">
@@ -273,16 +264,10 @@
     <ClInclude Include="ComponentProxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ConnPropertiesDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DialogList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DirDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FolderPropertiesDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GmeDlg.h">
@@ -325,9 +310,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MgaUtilApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PropertiesDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RegBrwNode.h">

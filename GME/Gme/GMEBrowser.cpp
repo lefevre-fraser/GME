@@ -216,65 +216,6 @@ void CGMEBrowser::ShowAttrPref(bool isAttr, LPUNKNOWN selected) {
 
 	CComPtr<IUnknown> sunk = selected;
 
-#ifdef GME_OLD_ATTRIBUTE_PANEL
-
-	CGuiMetaFco *guiMeta = NULL;
-	if(sunk == 0)
-		return;
-
-	CComPtr<IMgaFCO> fco;
-	
-	if (!theApp.mgaProject) 
-		return;
-	
-	
-	if (SUCCEEDED(sunk.QueryInterface(&fco))) {
-		long status;
-		COMTHROW(theApp.mgaProject->get_ProjectStatus(&status));
-		bool inTrans = (status & 0x08L) != 0;
-		CComPtr<IMgaTerritory> terr;
-		if (!inTrans) {
-			try {
-				COMTHROW(theApp.mgaProject->CreateTerritory(NULL, &terr));
-				COMTHROW(theApp.mgaProject->BeginTransaction(terr));
-			}
-			catch (hresult_exception e) {
-				return;
-			}
-		}
-
-		try {
-			CComPtr<IMgaMetaFCO> metaFco;
-			COMTHROW(fco->get_Meta(&metaFco));
-			VERIFY(metaFco);
-			metaref_type metaref;
-			COMTHROW(metaFco->get_MetaRef(&metaref));
-			guiMeta = CGuiMetaProject::theInstance->GetGuiMetaFco(metaref);
-
-
-		}
-		catch (hresult_exception e) {
-			if (!inTrans) {
-				theApp.mgaProject->AbortTransaction();
-			}
-		}
-		if (!inTrans) {
-			theApp.mgaProject->CommitTransaction();
-		}
-
-	}
-	if (guiMeta) {
-		CMainFrame::theInstance->GetPreferencePanel().SetFco(fco,&(guiMeta->attrs));	
-		if (isAttr) {
-			CMainFrame::theInstance->GetAttributePanel().ShowAttrDlg();
-		}
-		else {
-			CMainFrame::theInstance->GetPreferencePanel().ShowPrefDlg();
-		}
-	}
-
-#else
-// Tih@mer Object Inspector /////////////////////////////////////////////////////////		
 	/* Converting single selection to multiple 
 	CComPtr<IMgaObjects> ccpSelectedObjects;
 	COMTHROW(ccpSelectedObjects.CoCreateInstance(L"Mga.MgaObjects"));
@@ -286,13 +227,6 @@ void CGMEBrowser::ShowAttrPref(bool isAttr, LPUNKNOWN selected) {
 	
 	SetCurrObject(selected);
 	CGMEObjectInspector::theInstance->ShowPanel(!isAttr);
-
-#endif
-
-
-/////////////////////////////////////////////////////////////////////////////////////
-
-
 }
 
 void CGMEBrowser::SetCurrObject(LPUNKNOWN pMgaObject)

@@ -291,10 +291,8 @@ copy /y /b "$(OutDir)CrashRptd.dll"+,, </Command>
     <ClCompile Include="CompDlg.cpp" />
     <ClCompile Include="CompInfoDlg.cpp" />
     <ClCompile Include="ComponentProxy.cpp" />
-    <ClCompile Include="ConnPropertiesDlg.cpp" />
     <ClCompile Include="DialogList.cpp" />
     <ClCompile Include="DirDialog.cpp" />
-    <ClCompile Include="FolderPropertiesDlg.cpp" />
     <ClCompile Include="GmeDlg.cpp" />
     <ClCompile Include="GUIDCreate.cpp" />
     <ClCompile Include="MakeClosure.cpp" />
@@ -309,7 +307,6 @@ copy /y /b "$(OutDir)CrashRptd.dll"+,, </Command>
     <ClCompile Include="MgaRegistrar.cpp" />
     <ClCompile Include="MgaResolver.cpp" />
     <ClCompile Include="MgaUtilApp.cpp" />
-    <ClCompile Include="PropertiesDlg.cpp" />
     <ClCompile Include="RegBrwNode.cpp" />
     <ClCompile Include="RegistryBrowserDlg.cpp" />
     <ClCompile Include="RegistryPanel.cpp" />
@@ -375,10 +372,8 @@ copy /y /b "$(OutDir)CrashRptd.dll"+,, </Command>
     <ClInclude Include="CompDlg.h" />
     <ClInclude Include="CompInfoDlg.h" />
     <ClInclude Include="ComponentProxy.h" />
-    <ClInclude Include="ConnPropertiesDlg.h" />
     <ClInclude Include="DialogList.h" />
     <ClInclude Include="DirDialog.h" />
-    <ClInclude Include="FolderPropertiesDlg.h" />
     <ClInclude Include="GmeDlg.h" />
     <ClInclude Include="GUIDCreate.h" />
     <ClInclude Include="MakeClosure.h" />
@@ -393,7 +388,6 @@ copy /y /b "$(OutDir)CrashRptd.dll"+,, </Command>
     <ClInclude Include="MgaRegistrar.h" />
     <ClInclude Include="MgaResolver.h" />
     <ClInclude Include="MgaUtilApp.h" />
-    <ClInclude Include="PropertiesDlg.h" />
     <ClInclude Include="RegBrwNode.h" />
     <ClInclude Include="RegistryBrowserDlg.h" />
     <ClInclude Include="RegistryPanel.h" />

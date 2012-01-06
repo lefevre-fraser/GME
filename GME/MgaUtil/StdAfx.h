@@ -105,9 +105,6 @@ typedef GMEInterfaceVersion_enum GMEInterfaceVersion;
 #endif
 
 #include "Resource.h"
-#include "PropertiesDlg.h"
-#include "ConnPropertiesDlg.h"
-#include "FolderPropertiesDlg.h"
 
 regaccessmode_enum regacc_translate(int x);
 //{{AFX_INSERT_LOCATION}}

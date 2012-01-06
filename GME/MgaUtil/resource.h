@@ -3,20 +3,9 @@
 // Used by MgaUtil.rc
 //
 #define IDD_CLOSUREPROPPAGE             107
-#define IDD_PROPERTIES_DIALOG           141
-#define IDD_CONNPROPERTIES_DIALOG       157
 #define IDD_REGISTRY_BROWSER            169
 #define IDC_ZOOMS                       1008
 #define IDC_UNDOSIZE                    1009
-#define IDC_OBJECTID                    1016
-#define IDC_LIBRARY                     1017
-#define IDC_MODELETC                    1018
-#define IDC_CONNDST                     1019
-#define IDC_ROLENAME                    1020
-#define IDC_CONNDSTPORT                 1022
-#define IDC_METAID                      1023
-#define IDC_RELID                       1024
-#define IDC_DEPENDENCY                  1025
 #define IDC_RADIO1                      1026
 #define IDC_DELFILES                    1026
 #define IDC_RADIOSYS                    1026
@@ -30,20 +19,14 @@
 #define IDC_WRAPAUTO                    1028
 #define IDC_ACTIVEDISP                  1029
 #define IDC_OUTPUTTOCLIPBOARD           1029
-#define IDC_CONNSRC                     1030
 #define IDC_ACTIVE_INACTIVE             1031
 #define IDC_OUTPUTTOFILE                1031
-#define IDC_CONNSRCPORT                 1032
 #define IDC_ALLCOMPS                    1033
 #define IDC_DIRECTIONUP                 1033
 #define IDC_DIRECTIONDN                 1034
-#define IDC_CONNTYPE                    1035
 #define IDC_LIBR1                       1036
-#define IDC_CONNROLE                    1037
 #define IDC_LIBR2                       1037
 #define IDC_CONNID                      1038
-#define IDC_CONNOBJID                   1038
-#define IDC_CONNNAME                    1044
 #define IDR_MGAUTIL                     2000
 #define IDD_DIALOG_LIST                 2001
 #define IDC_LIST                        2002
@@ -74,7 +57,6 @@
 #define IDB_BITMAP1                     2054
 #define IDB_BITMAP2                     2055
 #define IDD_COMPINFODLG                 2056
-#define IDD_FOLDERPROPERTIES_DIALOG     2057
 #define IDD_ANNOTATION_BROWSER          2058
 #define IDD_XSLTDIAL                    2059
 #define IDD_CLOSUREDLG                  2063
@@ -119,10 +101,6 @@
 #define IDC_VERSION                     2181
 #define IDC_FILENAME                    2182
 #define IDC_ENGINECOMBO                 2185
-#define IDC_SETRELID                    2186
-#define IDC_KIND                        2187
-#define IDC_TYPE                        2188
-#define IDC_ASPECT                      2189
 #define IDC_MODELNAME                   2190
 #define IDC_MODELKIND                   2191
 #define IDC_MODELROLE                   2192
