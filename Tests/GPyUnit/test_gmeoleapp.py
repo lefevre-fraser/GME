@@ -37,13 +37,13 @@ class TestGMEOLEApp(unittest.TestCase):
         with open(_adjacent_file('_console_utf16.js'), 'wb') as file:
            file.write('\xFF\xFE')
            file.write(unicode(jscode).encode('utf-16le'))
-        intf.LoadScript(_adjacent_file('_console_utf16.py'))
+        intf.LoadScript(_adjacent_file('_console_utf16.js'))
         intf.RunLoadedScript()
         self.assertTrue(intf.Contents.find('magic2string') != -1, 'Console contents: "' + intf.Contents + '"')
         
-        with open(_adjacent_file('_console_ansi.py'), 'wb') as file:
+        with open(_adjacent_file('_console_ansi.js'), 'wb') as file:
             file.write(jscode.replace('magic2string', 'magic3string'))
-        intf.LoadScript(_adjacent_file('_console_ansi.py'))
+        intf.LoadScript(_adjacent_file('_console_ansi.js'))
         intf.RunLoadedScript()
         self.assertTrue(intf.Contents.find('magic3string') != -1, 'Console contents: "' + intf.Contents + '"')
         
