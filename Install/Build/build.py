@@ -101,7 +101,27 @@ def _Release_PGO_dir():
         return os.path.join(GME_ROOT, 'GME', 'x64', 'Release_PGO')
     else:
         return os.path.join(GME_ROOT, 'GME', 'Release_PGO')
-    
+
+def newer (source, target):
+    """Return true if 'source' exists and is more recently modified than
+       'target', or if 'source' exists and 'target' doesn't.  Return
+       false if both exist and 'target' is the same age or younger than
+       'source'. """
+
+    if not os.path.exists (target):
+        return 1
+
+    from stat import ST_MTIME
+    mtime1 = os.stat(source)[ST_MTIME]
+    mtime2 = os.stat(target)[ST_MTIME]
+
+    return mtime1 > mtime2
+
+def copy_if_newer(source, target):
+    import shutil
+    if newer(source, target):
+        shutil.copyfile(source, target)
+
 def compile_GME_PGO_Instrument():
     "Compile GME core components (PGO Instrument)"
     import shutil
@@ -113,9 +133,9 @@ def compile_GME_PGO_Instrument():
             raise
     pfx86 = os.environ.get('ProgramFiles(x86)', os.environ['ProgramFiles'])
     if prefs['arch'] == 'x64':
-        shutil.copyfile(os.path.join(pfx86, r"Microsoft Visual Studio 10.0\VC\bin\amd64\pgort100.dll"), os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
+        copy_if_newer(os.path.join(pfx86, r"Microsoft Visual Studio 10.0\VC\bin\amd64\pgort100.dll"), os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
     else:
-        shutil.copyfile(os.path.join(pfx86, r"Microsoft Visual Studio 10.0\VC\bin\pgort100.dll"), os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
+        copy_if_newer(os.path.join(pfx86, r"Microsoft Visual Studio 10.0\VC\bin\pgort100.dll"), os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
     sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
     tools.build_VS(sln_file, "Release_PGO_Instrument")
     cmd_dir = os.path.join(GME_ROOT, "GME")
