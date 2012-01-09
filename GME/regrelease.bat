@@ -88,6 +88,11 @@ echo GME.exe
 %windir%\Microsoft.NET\Framework\v4.0.30319\regtlibv12.exe "%~dp0%1\Release\GME.exe"
 if errorlevel 1 goto errorlabel
 
+echo GME.exe
+"%~dp0%1\Release\GME.exe" /regserver
+if errorlevel 1 goto errorlabel
+echo    OK
+
 goto eof
 
 :errorlabel
@@ -97,3 +102,4 @@ pause
 exit /b %tlevel%
 
 :eof
+	
