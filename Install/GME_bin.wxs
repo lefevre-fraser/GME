@@ -188,7 +188,7 @@
 
     <DirectoryRef Id="INSTALLDIR_BIN">
       <Component Id="Core.dll">
-        <File Id="Core.dll" Name="Core.dll" KeyPath="yes" Source="..\GME\$(var.Release)\Core.dll">
+        <File Id="Core.dll" Name="Core.dll" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Core.dll">
           <TypeLib Id="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" Description="MGA Core Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{7281C07A-3E09-11D3-B2F7-005004D38590}" Context="InprocServer32" Description="CoreBinFile Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.CoreBinFile.1" Description="CoreBinFile Class">
@@ -250,7 +250,7 @@
 
     <DirectoryRef Id="INSTALLDIR_BIN">
       <Component Id="Meta.dll">
-        <File Id="Meta.dll" Name="Meta.dll" KeyPath="yes" Source="..\GME\$(var.Release)\Meta.dll">
+        <File Id="Meta.dll" Name="Meta.dll" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Meta.dll">
           <TypeLib Id="{0ADEEC71-D83A-11D3-B36B-005004D38590}" Description="MGA Meta Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{8216325A-B7C8-1AD3-ABAE-000000000000}" Context="InprocServer32" Description="MgaMetaEnumItem Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.MgaMetaEnumItem.1" Description="MgaMetaEnumItem Class">
@@ -438,7 +438,7 @@
 
     <DirectoryRef Id="INSTALLDIR_BIN">
       <Component Id="Mga.dll">
-        <File Id="Mga.dll" Name="Mga.dll" KeyPath="yes" Source="..\GME\$(var.Release)\Mga.dll">
+        <File Id="Mga.dll" Name="Mga.dll" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Mga.dll">
           <TypeLib Id="{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}" Description="MGA Mga Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{1DF52E42-BCC0-4439-B3CD-75610AC372A3}" Context="InprocServer32" Description="MgaO Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.MgaO.1" Description="MgaO Class">
