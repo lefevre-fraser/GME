@@ -1067,9 +1067,9 @@ HRESULT FCO::CopyFCOs(IMgaFCOs *copylist, IMgaMetaRoles *rlist,IMgaFCOs **objs) 
 				ASSERT(targettype == DTID_MODEL);
 				CComPtr<IMgaMetaRole> r;
 				if(rlist) COMTHROW(rlist->get_Item(i+1, &r));
+				CComPtr<IMgaMetaFCO> mf; 
+				COMTHROW(get_Meta(&mf));
 				if(!r) {   // NO metarole given, inherit that of original object
-					CComPtr<IMgaMetaFCO> mf; 
-					COMTHROW(get_Meta(&mf));
 					CComQIPtr<IMgaMetaModel> parentmeta = mf;
 					if(!parentmeta) COMTHROW(E_MGA_META_INCOMPATIBILITY);
 					metaref_type t;
@@ -1081,14 +1081,18 @@ HRESULT FCO::CopyFCOs(IMgaFCOs *copylist, IMgaMetaRoles *rlist,IMgaFCOs **objs) 
 					COMTHROW(metar->get_Name(&rolename));
 					COMTHROW(parentmeta->get_RoleByName(rolename, &r));
 					if(!r) COMTHROW(E_MGA_NO_ROLE);
-
 				}
 				{
 					metaref_type kt;
 					CComPtr<IMgaMetaFCO> mfco;
 					COMTHROW(r->get_Kind(&mfco));
 					COMTHROW(mfco->get_MetaRef(&kt));
-					if(kt != (nobjs[i])[ATTRID_META]) COMTHROW(E_MGA_NO_ROLE);
+					if(kt != (nobjs[i])[ATTRID_META])
+						COMTHROW(E_MGA_NO_ROLE);
+					CComPtr<IMgaMetaModel> mmodel;
+					COMTHROW(r->get_ParentModel(&mmodel));
+					if (!mf.IsEqualObject(mmodel))
+						COMTHROW(E_MGA_INVALID_ROLE);
 				}
 
 				COMTHROW(r->get_MetaRef(&trole));
