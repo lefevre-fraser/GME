@@ -33,7 +33,7 @@ def _test_names():
  'GME_310.suite',
  'GME_371',
 ]
-
+    import GPyUnit.util
     if not GPyUnit.util._opts.Dispatch_x64:
         _test_names += [
         'Regr.Mga.tc1',
