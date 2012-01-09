@@ -18,9 +18,11 @@ def DispatchEx(progid):
     if _opts.Dispatch_x64:
         return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_64_BIT_SERVER)
     else:
-        # FIXME: wrong on x64 python.exe
+        import platform
+        # FIXME: does this work with 64bit Jython?
+        if '64bit' in platform.architecture():
+            return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER)
         return win32com.client.DispatchEx(progid)
-        # This doesn't work on x86 python.exe on x86 Windows: return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER)
 
 class disable_early_binding(object):
 	def __enter__(self):
