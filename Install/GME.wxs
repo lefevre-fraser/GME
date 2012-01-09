@@ -69,7 +69,16 @@
       <UpgradeVersion Minimum="$(var.VERSIONSTR)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/>
       <UpgradeVersion OnlyDetect="no" Minimum="1.0.0" IncludeMinimum="yes" Maximum="$(var.VERSIONSTR)" IncludeMaximum="no" Property="PREVIOUSFOUND"/>
     </Upgrade>
+    <?if $(sys.BUILDARCH)=x64 ?>
+    <Upgrade Id="dfdd761e-0979-4897-ac89-71f006d92bf8">
+      <UpgradeVersion Minimum="$(var.VERSIONSTR)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED_X86"/>
+      <UpgradeVersion OnlyDetect="no" Minimum="1.0.0" IncludeMinimum="yes" Maximum="$(var.VERSIONSTR)" IncludeMaximum="no" Property="PREVIOUSFOUND_X86"/>
+    </Upgrade>
+    <?endif?>
     <CustomActionRef Id="WixExitEarlyWithSuccess"/>
+    <?if $(sys.BUILDARCH)=x64 ?>
+    <SetProperty Id="NEWERVERSIONDETECTED" Value="1" After="FindRelatedProducts">NEWERVERSION_DETECTED_X86</SetProperty>
+    <?endif?>
 
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallValidate" />
