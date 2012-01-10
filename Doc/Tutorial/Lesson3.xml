@@ -376,6 +376,7 @@
 
       <para>In <filename>BONComponent.cpp</filename>, insert:<programlisting>void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, CBuilderObjectList &amp;selected, long param) 
 {
+  using namespace GMEConsole;
   Console::Out::WriteLine("Interpreter started...");
 
   Console::Out::WriteLine(CString("Router list for network") + builder.GetRootFolder()-&gt;GetName()); 
@@ -396,6 +397,7 @@
 
       <programlisting>void CComponent::ProcessDiagram(CBuilderModel *d) 
 { 
+  using namespace GMEConsole;
   ASSERT(d-&gt;GetKindName() == "NetDiagram"); 
   const CBuilderModelList *diags = d-&gt;GetModels("NetDiagram"); 
   POSITION pos = diags-&gt;GetHeadPosition(); 
@@ -439,7 +441,7 @@
 
       <para>Do not forget to add <code>ProcessDiagram</code> and
       <code>ProcessRouter</code> to the <code>CComponent</code> declaration in
-      <filename>BONComponent.h</filename>.</para>
+      <filename>BONComponent.h</filename>. Add #include "Formatter.h" to BONComponent.cpp</para>
 
       <para>The compilation should run smoothly unless there are typos in your
       code. If you encounter assertions when running the interpreter for the

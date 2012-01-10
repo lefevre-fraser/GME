@@ -91,7 +91,7 @@ void Component::ProcessDiagram(BON::Model& diagram)
 		}
 	}
 	
-	childModels = diagram->getChildFCOs("GenNet");
+//	childModels = diagram->getChildFCOs("GenNet");
 //	for (std::set<BON::FCO>::iterator it = childModels.begin(); it != childModels.end(); it++) {
 //		ProcessDiagram(BON::Model(*it));
 //	}
@@ -201,7 +201,7 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 	std::set<BON::Model> rootModels = project->getRootFolder()->getChildModels();
 	for (std::set<BON::Model>::iterator it = rootModels.begin(); it != rootModels.end(); it++) {
 		if ((*it)->getObjectMeta().name()== "NetDiagram") {
-			ProcessDiagram(*it);
+			ProcessDiagram(BON::Model(*it));
 		}
 	}
 	std::set<BON::Folder> folders = project->getRootFolder()->getChildFolders();
@@ -209,7 +209,7 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 		std::set<BON::Model> models = (*it)->getChildModels();
 		for (std::set<BON::Model>::iterator it2 = models.begin(); it2 != models.end(); it2++) {
 			if ((*it2)->getObjectMeta().name()== "NetDiagram") {
-				ProcessDiagram(*it2);
+				ProcessDiagram(BON::Model(*it2));
 			}
 		}
 	}

@@ -4,6 +4,7 @@
 #include <Formatter.h>
 #include "BONComponent.h"
 
+#include "Formatter.h"
 
 /* 
 // This method is usually no longer in use and does not need to be implemented,
@@ -19,6 +20,7 @@ using namespace GMEConsole;
 
 void CComponent::InvokeEx(CBuilder &builder,CBuilderObject *focus, CBuilderObjectList &selected, long param) 
 {
+	using namespace GMEConsole;
 	Console::Out::WriteLine("Interpreter started...");
 
 	Console::Out::WriteLine(CString("Router list for network") + builder.GetRootFolder()->GetName()); 
@@ -45,6 +47,7 @@ void CComponent::ProcessDiagram(CBuilderModel *d)
 
 void CComponent::ProcessRouter(CBuilderModel *r) 
 { 
+	using namespace GMEConsole;
 	ASSERT(r->GetKindName() == "Router"); 
 	CString fam; 
 	r->GetAttribute("Family", fam); 
