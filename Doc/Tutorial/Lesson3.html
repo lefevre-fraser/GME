@@ -155,6 +155,7 @@
       subfolders, so it is relatively easy to travel through all the root
       models in the diagram.</p><div class="figure"><a name="N101E0"></a><p class="title"><b>Figure&nbsp;5.&nbsp;<span class="emphasis"><em>Networking</em></span> metamodel</b></p><div class="figure-contents"><div class="mediaobject"><img src="L3/networking meta.png" alt="Networking metamodel"></div></div></div><br class="figure-break"><p>In <code class="filename">BONComponent.cpp</code>, insert:</p><pre class="programlisting">void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, CBuilderObjectList &amp;selected, long param) 
 {
+  using namespace GMEConsole;
   Console::Out::WriteLine("Interpreter started...");
 
   Console::Out::WriteLine(CString("Router list for network") + builder.GetRootFolder()-&gt;GetName()); 
@@ -171,6 +172,7 @@
       <code class="code">CComponent::ProcessDiagram</code> is that the latter is recursive
       and processes different children in a different way.</p><pre class="programlisting">void CComponent::ProcessDiagram(CBuilderModel *d) 
 { 
+  using namespace GMEConsole;
   ASSERT(d-&gt;GetKindName() == "NetDiagram"); 
   const CBuilderModelList *diags = d-&gt;GetModels("NetDiagram"); 
   POSITION pos = diags-&gt;GetHeadPosition(); 
@@ -208,7 +210,7 @@
   } 
 }</pre><p>Do not forget to add <code class="code">ProcessDiagram</code> and
       <code class="code">ProcessRouter</code> to the <code class="code">CComponent</code> declaration in
-      <code class="filename">BONComponent.h</code>.</p><p>The compilation should run smoothly unless there are typos in your
+      <code class="filename">BONComponent.h</code>. Add #include "Formatter.h" to BONComponent.cpp</p><p>The compilation should run smoothly unless there are typos in your
       code. If you encounter assertions when running the interpreter for the
       first time, make sure that you used the exact same names (kindnames,
       rolenames and attribute names) in your paradigm that you are using in
