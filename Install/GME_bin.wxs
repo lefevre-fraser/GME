@@ -80,7 +80,9 @@
             <Verb Id='open' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
           </Extension>
         </ProgId>
+        <?if $(sys.BUILDARCH)=x86 ?>
         <Environment Id="GME_ROOT" Action="set" System="yes" Name="GME_ROOT" Value="[INSTALLDIR]" />
+        <?endif?>
         <RemoveFolder Id='RemoveShortcutFolder' On='uninstall' Directory='ShortcutFolder'/>
       </Component>
 
