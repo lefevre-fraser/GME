@@ -78,6 +78,9 @@
     <CustomActionRef Id="WixExitEarlyWithSuccess"/>
     <?if $(sys.BUILDARCH)=x64 ?>
     <SetProperty Id="NEWERVERSIONDETECTED" Value="1" After="FindRelatedProducts">NEWERVERSION_DETECTED_X86</SetProperty>
+    <InstallExecuteSequence>
+      <Custom Action="WixExitEarlyWithSuccess" After="SetNEWERVERSIONDETECTED">NEWERVERSIONDETECTED AND VersionNT &gt; 400</Custom>
+    </InstallExecuteSequence>
     <?endif?>
 
     <InstallExecuteSequence>
