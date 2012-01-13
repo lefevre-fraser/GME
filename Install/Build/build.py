@@ -191,6 +191,9 @@ def compile_tools():
     sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "CSharpComponentWizard", "CSharpComponentWizard.sln");
     tools.build_VS( sln_file, "Release" )
 
+    sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "DsmlGenerator", "DsmlGenerator.sln");
+    tools.build_VS( sln_file, "Release" )
+
 def compile_samples():
     "Compile sample components"
     
