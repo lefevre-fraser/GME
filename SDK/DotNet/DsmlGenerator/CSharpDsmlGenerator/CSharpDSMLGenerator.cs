@@ -87,24 +87,17 @@ namespace CSharpDSMLGenerator
 			MgaFCOs selectedobjs,
 			ComponentStartMode startMode)
 		{
-			try
-			{
 				System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 
 				GMEConsole.Out.WriteLine("Running interpreter...");
 
 				if (project.RootMeta.Name == "MetaGME")
 				{
-					GMEConsole.Out.WriteLine("Generating .NET API mode");
+					GMEConsole.Out.WriteLine("Generating .NET API code");
 					GenerateDotNetCode(project, currentobj, selectedobjs, startMode);
 				}
 
 				GMEConsole.Out.WriteLine("Elapsed time: {0}", sw.Elapsed.ToString("c"));
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
 		}
 
 
@@ -121,16 +114,23 @@ namespace CSharpDSMLGenerator
 			string projectDir = Path.GetDirectoryName(project.ProjectConnStr.Substring("MGA=".Length));
 			string paradigmXmpFile = Path.Combine(projectDir, project.RootFolder.Name);
 			paradigmXmpFile = Path.ChangeExtension(paradigmXmpFile, "xmp");
-			if (File.Exists(paradigmXmpFile))
+			if (!File.Exists(paradigmXmpFile))
 			{
-				//paradigm = MgaMeta.DsmlModel.GetParadigm(paradigmXmpFile);
-				Generator.Configuration.DsmlModel = new MgaMeta.DsmlModel(paradigmXmpFile);
+                string error = String.Format("Paradigm file '{0}' does not exist.", paradigmXmpFile);
+                if (startMode == ComponentStartMode.GME_SILENT_MODE)
+				    throw new Exception(error);
+                DialogResult yesno = MessageBox.Show(error + "\n\nDo you want to run the Meta Interpreter?",
+                    "Paradigm file missing", MessageBoxButtons.YesNo);
+                if (yesno != DialogResult.Yes)
+                    throw new Exception(error);
+                MgaGateway.AbortTransaction();
+                IMgaComponentEx metaInterpreter = (IMgaComponentEx)Activator.CreateInstance(Type.GetTypeFromProgID("MGA.Interpreter.MetaInterpreter"));
+                metaInterpreter.InvokeEx(project, null, null, (int)ComponentStartMode.GME_SILENT_MODE);
+                MgaGateway.BeginTransaction();
 			}
-			else
-			{
-				throw new Exception(String.Format("Paradigm file does not exist. {0}", paradigmXmpFile));
-			}
-			// Important step
+            //paradigm = MgaMeta.DsmlModel.GetParadigm(paradigmXmpFile);
+            Generator.Configuration.DsmlModel = new MgaMeta.DsmlModel(paradigmXmpFile);
+            // Important step
 			//Generator.Configuration.LocalFactory.Clear();
 			Generator.Configuration.DsmlName = project.RootFolder.Name;
 			List<MgaObject> all = new List<MgaObject>();
@@ -212,12 +212,22 @@ namespace CSharpDSMLGenerator
 				}
 			}
 
-			ApiGenerator apiForm = new ApiGenerator();
-			apiForm.txtOutputDir.Text =
-				Path.GetDirectoryName(project.ProjectConnStr.Substring("MGA=".Length));
+            GeneratorMode mode;
+            if (startMode != ComponentStartMode.GME_SILENT_MODE)
+            {
+                ApiGenerator apiForm = new ApiGenerator();
+                apiForm.txtOutputDir.Text =
+                    Path.GetDirectoryName(project.ProjectConnStr.Substring("MGA=".Length));
 
-			DialogResult dr = apiForm.ShowDialog();
-			if (dr == DialogResult.OK)
+                DialogResult dr = apiForm.ShowDialog();
+                if (dr != DialogResult.OK)
+                    return;
+                mode = ((ApiGenerator.ModeItem)apiForm.cbMode.SelectedItem).Mode;
+            }
+            else
+            {
+                mode = GeneratorMode.Namespaces;
+            }
 			{
 				// TODO: a lot of parameters must be set based on the user's choice.
 
@@ -234,9 +244,9 @@ namespace CSharpDSMLGenerator
 					CodeDomProvider.CreateProvider(language),
 					compileunit,
 					project.Name,
-					((ApiGenerator.ModeItem)apiForm.cbMode.SelectedItem).Mode);
+					mode);
 
-				GMEConsole.Info.WriteLine("API has generated.");
+				GMEConsole.Info.WriteLine("API has been generated.");
 
 				string dllFile = Generator.Configuration.ProjectNamespace + ".dll";
 
@@ -273,7 +283,7 @@ namespace CSharpDSMLGenerator
 				CompilerResults cr = CodeDomProvider.CreateProvider(language).
 					CompileAssemblyFromFile(cp, sourceFile.ToArray());
 
-				GMEConsole.Info.WriteLine("===> Compiling source code <===");
+				GMEConsole.Info.WriteLine("Compiling source code.");
 
 				cr.Errors.Cast<CompilerError>().ToList().
 					ForEach(x => System.Diagnostics.Debug.WriteLine(x.ErrorText));
@@ -336,7 +346,7 @@ namespace CSharpDSMLGenerator
 			string outputFileName = "",
 			GeneratorMode mode = GeneratorMode.OneFile)
 		{
-			GMEConsole.Info.WriteLine("===> Generating source code <===");
+			GMEConsole.Info.WriteLine("Generating source code.");
 
 			List<string> sourceFiles = new List<string>();
 

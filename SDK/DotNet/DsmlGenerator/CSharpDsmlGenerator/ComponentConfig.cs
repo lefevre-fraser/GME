@@ -13,6 +13,7 @@ namespace GME.CSharp
 		
 		// Set the human readable name of the interpreter. You can use white space characters.
         public const string componentName = "CSharp (.Net) Dsml API Generator";
+        public const string tooltip = componentName;
         
 		// Specify an icon path
 		public const string iconName = "Component.ico";
