@@ -5,7 +5,7 @@
     </Fragment>
     <Fragment>
         <ComponentGroup Id="GME.MGA.Parser">
-            <Component Id="GME.MGA.Parser.dll" Directory="INSTALLDIR_PARADIGMS32" Guid="{9DF42C34-5F58-4158-BD50-454864B9DFD6}">
+            <Component Id="GME.MGA.Parser.dll" Directory="INSTALLDIR_PARADIGMS32" Guid="{9DF42C34-5F58-4158-BD50-454864B9DFD6}" Permanent="yes">
                 <File Id="GME.MGA.Parser.dll" KeyPath="yes" Source="$(var.PIADir)\GME.MGA.Parser.dll" Assembly=".net" />
             </Component>
         </ComponentGroup>

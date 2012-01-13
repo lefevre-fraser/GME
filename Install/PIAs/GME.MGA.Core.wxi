@@ -5,7 +5,7 @@
     </Fragment>
     <Fragment>
         <ComponentGroup Id="GME.MGA.Core">
-            <Component Id="GME.MGA.Core.dll" Directory="INSTALLDIR_PARADIGMS32" Guid="{3BDD7F38-DCF5-46C1-B07E-CF70772C882F}">
+            <Component Id="GME.MGA.Core.dll" Directory="INSTALLDIR_PARADIGMS32" Guid="{3BDD7F38-DCF5-46C1-B07E-CF70772C882F}" Permanent="yes">
                 <File Id="GME.MGA.Core.dll" KeyPath="yes" Source="$(var.PIADir)\GME.MGA.Core.dll" Assembly=".net" />
             </Component>
         </ComponentGroup>

@@ -5,7 +5,7 @@
     </Fragment>
     <Fragment>
         <ComponentGroup Id="GME.MGA.1.0.1.0">
-            <Component Id="cmpBF781B59FC218D303B4729104C1E4234" Directory="PIADIR.1.0.1.0" Guid="{141067BE-706F-482F-8B1B-CF4DC339A091}">
+            <Component Id="cmpBF781B59FC218D303B4729104C1E4234" Directory="PIADIR.1.0.1.0" Guid="{141067BE-706F-482F-8B1B-CF4DC339A091}" Permanent="yes">
                 <File Id="fil9EB57CB8D9FC1B5084EE2E2D2B5FE97F" KeyPath="yes" Source="$(var.PIADir.1.0.1.0)\GME.MGA.dll" Assembly=".net"/>
                 <RegistryValue Root="HKCR" Key="CLSID\{1DF52E42-BCC0-4439-B3CD-75610AC372A3}\InprocServer32\1.0.1.0" Name="Class" Value="GME.MGA.MgaOClass" Type="string" Action="write" />
                 <RegistryValue Root="HKCR" Key="CLSID\{1DF52E42-BCC0-4439-B3CD-75610AC372A3}\InprocServer32\1.0.1.0" Name="Assembly" Value="GME.MGA, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />

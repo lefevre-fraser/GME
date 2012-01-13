@@ -5,7 +5,7 @@
     </Fragment>
     <Fragment>
         <ComponentGroup Id="GME.Util.1.0.1.0">
-            <Component Id="cmp885AB1B6320D6C1595A4F6BC54D799BD" Directory="PIADIR.1.0.1.0" Guid="{3FDF9D4A-688C-48D8-9E03-331B8C7C43D4}">
+            <Component Id="cmp885AB1B6320D6C1595A4F6BC54D799BD" Directory="PIADIR.1.0.1.0" Guid="{3FDF9D4A-688C-48D8-9E03-331B8C7C43D4}" Permanent="yes">
                 <File Id="fil37E4282FA6433FAB0E7388BDE800E258" KeyPath="yes" Source="$(var.PIADir.1.0.1.0)\GME.Util.dll" Assembly=".net"/>
                 <RegistryValue Root="HKCR" Key="CLSID\{461F30B1-3BF0-11D4-B3F0-005004D38590}\InprocServer32\1.0.1.0" Name="Class" Value="GME.Util.MgaResolverClass" Type="string" Action="write" />
                 <RegistryValue Root="HKCR" Key="CLSID\{461F30B1-3BF0-11D4-B3F0-005004D38590}\InprocServer32\1.0.1.0" Name="Assembly" Value="GME.Util, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
