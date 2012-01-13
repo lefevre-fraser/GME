@@ -17,6 +17,7 @@ ipch
 *.mta
 *.log
 Release_PGO
+obj/
 GME/XmlBackEnd/XmlBackEnd.h
 GME/XmlBackEnd/Release
 GME/Search/Release
@@ -67,7 +68,6 @@ GME/Interfaces/Release/
 GME/Interfaces/dlldata.c
 GME/Meta/Release/
 GME/Mga/Release/
-GME/MgaDotNetServices/obj/
 GME/MgaUtil/CrashRpt.dll
 GME/MgaUtil/Release/
 GME/Common/Debug
