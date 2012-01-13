@@ -293,7 +293,7 @@ namespace CSharpDSMLGenerator
 				if (cr.Errors.Count == 0)
 				{
 					GMEConsole.Info.WriteLine(
-						"{0} was generated and ready to use.",
+						"{0} was generated and is ready to use.",
 						Path.GetFullPath(cr.PathToAssembly));
 				}
 			}
