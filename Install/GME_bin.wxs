@@ -240,7 +240,7 @@
 
     <DirectoryRef Id="INSTALLDIR_BIN">
       <Component Id="CrashSender.exe">
-        <File Id="CrashSender.exe" Name="CrashSender.exe" KeyPath="yes" Source="..\GME\lib\CrashRpt\bin\CrashSender.exe" />
+        <File Id="CrashSender.exe" Name="CrashSender.exe" KeyPath="yes" Source="..\GME\lib\CrashRpt\$(var.bin)\CrashSender.exe" />
       </Component>
     </DirectoryRef>
 
