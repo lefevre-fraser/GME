@@ -8,28 +8,16 @@ import os.path
 import win32com.client
 import StringIO
 import platform
-
-# For py2exe support
-# To generate the exe, be sure to rename or delete .../Python/lib/site-packages/win32com/gen_py
-# See http://www.py2exe.org/index.cgi/UsingEnsureDispatch
-if hasattr(win32com.client, "gencache") and win32com.client.gencache.is_readonly == True:
-	#allow gencache to create the cached wrapper objects
-	win32com.client.gencache.is_readonly = False
-	# under p2exe the call in gencache to __init__() does not happen
-	# so we use Rebuild() to force the creation of the gen_py folder
-	try:
-		saveout = sys.stdout
-		try:
-			sys.stdout = output = StringIO.StringIO()
-			win32com.client.gencache.Rebuild()
-		finally:
-			sys.stdout = saveout
-	except:
-		print output.getvalue()
-		raise
-
+import runpy
 import subprocess
 import itertools
+
+
+# Disable early binding: full of race conditions writing the cache files,
+# and changes the semantics since inheritance isn't handled correctly
+import win32com.client.gencache
+_savedGetClassForCLSID = win32com.client.gencache.GetClassForCLSID
+win32com.client.gencache.GetClassForCLSID = lambda x: None
 
 # Elevation helpers
 def execute_elevated(*args):
@@ -96,13 +84,17 @@ def xme2mga(xmefile, mgafile=None):
 		project.save(project.mgafile)
 		return project.mgafile
 
-def run_interpreter(interpreter, file, focusobj=None, selectedobj=None, param=0, mga_to_save=None, save=True):
+def run_interpreter(interpreter, file, focusobj=None, selectedobj=None, param=None, mga_to_save=None, save=True):
+	if param is None:
+		param = 128
 	with Project.open(file, mga_to_save=mga_to_save) as project:
 		project.run_interpreter(interpreter, focusobj, selectedobj, param)
 		if not save:
 			project.project.Close(True)
 
-def run_interpreter_with_focusobj(interpreter, file, focusobj=None, selectedobj=None, param=0, mga_to_save=None, save=True):
+def run_interpreter_with_focusobj(interpreter, file, focusobj=None, selectedobj=None, param=None, mga_to_save=None, save=True):
+	if param is None:
+		param = 128
 	with Project.open(file, mga_to_save=mga_to_save) as project:
 		if focusobj:
 			focusobj = project.project.GetFCOByID(focusobj)
@@ -323,159 +315,14 @@ def context_menu_reg():
 			reg.write(str)
 	elevated_check_call("regedit", regname)
 
-class Mutex:
-    def __init__(self, name):
-        import win32event
-        self.mutex = win32event.CreateMutex(None, False, name)
-
-    def __enter__(self):
-        import win32event
-        win32event.WaitForSingleObject(self.mutex, win32event.INFINITE)
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        import win32event
-        win32event.ReleaseMutex(self.mutex)
-
-if platform.system() != 'Java':
-	# GME Project functions
-	import win32com.client.gencache
-	# Generate .py's for GME Type Library
-	# Don't allow two gme.pys to step on each other
-	with Mutex("Global\\gmepygencache") as mutex:
-	    # n.b. we don't always use EnsureModule here because we don't properly version the typelib
-	    #   A change in the typelib may invalidate the cache, but gencache doesn't know it, e.g. GMESRC r947
-	    # n.b. we can't just always regenerate, as python holds a lock on the opened module
-	    regenerate = True
-	    try:
-	        import win32com.client
-	        import os.path
-	        mga_py_name = win32com.client.gencache.GetGeneratedFileName('{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}', 0, 1, 0) + ".py"
-	        mga_py_path = os.path.join(win32com.client.gencache.GetGeneratePath(), mga_py_name)
-	        import _winreg
-	        mga_dll_path = _winreg.QueryValue(_winreg.HKEY_CLASSES_ROOT, r"TypeLib\{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}\1.0\0\win32")
-	        import stat
-	        if os.stat(mga_dll_path)[stat.ST_MTIME] < os.stat(mga_py_path)[stat.ST_MTIME]:
-	            regenerate = False
-	    except WindowsError, e:
-	        #print repr(e)
-	        pass
-	    
-	    if regenerate:
-	        meta_module = win32com.client.gencache.MakeModuleForTypelib('{0ADEEC71-D83A-11D3-B36B-005004D38590}', 0, 1, 0)
-	        mga_module = win32com.client.gencache.MakeModuleForTypelib('{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}', 0, 1, 0)
-	    else:
-	        meta_module = win32com.client.gencache.EnsureModule('{0ADEEC71-D83A-11D3-B36B-005004D38590}', 0, 1, 0)
-	        mga_module = win32com.client.gencache.EnsureModule('{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}', 0, 1, 0)
-
-	gme_constants = getattr(meta_module, "constants")
-
-	OBJTYPE_INTERFACE_MAP = {
-		gme_constants.OBJTYPE_MODEL: "IMgaModel",
-		# Seems IMgaAtom isn't generated because it defines no new methods
-	#	2: "IMgaAtom",
-		gme_constants.OBJTYPE_ATOM: "IMgaFCO",
-		gme_constants.OBJTYPE_REFERENCE: "IMgaReference",
-		gme_constants.OBJTYPE_CONNECTION: "IMgaConnection",
-		gme_constants.OBJTYPE_SET: "IMgaSet",
-		gme_constants.OBJTYPE_FOLDER: "IMgaFolder",
-	#	gme_constants.OBJTYPE_ASPECT: "IMgaAspect",
-	#	gme_constants.OBJTYPE_ROLE: "IMgaRole",
-		gme_constants.OBJTYPE_ATTRIBUTE: "IMgaAttribute",
-		gme_constants.OBJTYPE_PART: "IMgaPart",
-	}
-
-	def cast(fco):
-		return win32com.client.CastTo(fco, OBJTYPE_INTERFACE_MAP.get(fco.ObjType))
-
-	# KMS I'm not sure why gen_py lowercases these (for GME<VS2010). Create aliases:
-	# KMS: the answer is http://support.microsoft.com/kb/q220137/ "MIDL changes the case of identifier in generated type library"
-	if mga_module.IMgaReference._prop_map_get_.has_key("referred"):
-	    mga_module.IMgaReference._prop_map_get_["Referred"] = mga_module.IMgaReference._prop_map_get_["referred"]
-	if mga_module.IMgaConnPoint._prop_map_get_.has_key("target"):
-	    mga_module.IMgaConnPoint._prop_map_get_["Target"] = mga_module.IMgaConnPoint._prop_map_get_["target"]
-	# Make IMgaFolder behave more like IMgaFCO
-	mga_module.IMgaFolder._prop_map_get_["Meta"] = mga_module.IMgaFolder._prop_map_get_["MetaFolder"]
-
-
-	def monkeypatch_method(classes):
-	    def decorator(func):
-	    	for name in classes:
-	        	setattr(getattr(mga_module, name), func.__name__, func)
-	        return func
-	    return decorator
-
-	# ConnPoints([out, retval] IMgaConnPoints **pVal);
-	@monkeypatch_method(["IMgaConnection"])
-	def get_end(self, role):
-		ends = filter(lambda cp: cp.ConnRole == role, self.ConnPoints)
-		if ends:
-			return ends[0].Target
-		else:
-			raise Exception(self.Name + " has no connection point " + role)
-
-	@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
-	def kind(self):
-	    return self.Meta.Name
-
-	OBJTYPE_MAP = {
-		gme_constants.OBJTYPE_MODEL: "Model",
-		gme_constants.OBJTYPE_ATOM: "Atom",
-		gme_constants.OBJTYPE_REFERENCE: "Reference",
-		gme_constants.OBJTYPE_CONNECTION: "Connection",
-		gme_constants.OBJTYPE_SET: "Set",
-		gme_constants.OBJTYPE_FOLDER: "Folder",
-		gme_constants.OBJTYPE_ASPECT: "Aspect",
-		gme_constants.OBJTYPE_ROLE: "Role",
-		gme_constants.OBJTYPE_ATTRIBUTE: "Attribute",
-		gme_constants.OBJTYPE_PART: "Part",
-	}
-
-	@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
-	def mga_type(self):
-		return OBJTYPE_MAP.get(self.ObjType)
-
-	@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
-	def parent(self):
-		if self.mga_type() == "Folder":
-			return self.ParentFolder
-		parent = self.ParentFolder
-		if not parent:
-			parent = self.ParentModel
-		return parent
-
-	@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
-	def parents(self):
-		parents = []
-		current = self
-		while True:
-			parent = current.parent()
-			if not parent:
-				return parents
-			else:
-				current = parent
-				parents.append(parent)
-
-	@monkeypatch_method(itertools.chain(["IMgaFCO"], OBJTYPE_INTERFACE_MAP.itervalues()))
-	def in_library(self):
-		return filter(lambda x: x.mga_type() == "Folder" and x.LibraryName != "", self.parents())
-
-	@monkeypatch_method(["IMgaFolder"])
-	def children(self):
-		children = []
-		children.extend(self.ChildFolders)
-		children.extend(self.ChildFCOs)
-		return children
-
-	@monkeypatch_method(["IMgaModel"])
-	def children(self):
-		return self.ChildFCOs
-
-	def is_container(fco):
-		return fco.ObjType == gme_constants.OBJTYPE_MODEL or fco.ObjType == gme_constants.OBJTYPE_FOLDER
-else:
-	def cast(fco):
-		return fco
+OBJTYPE_MODEL = 1
+OBJTYPE_ATOM = 2
+OBJTYPE_REFERENCE = 3
+OBJTYPE_CONNECTION = 4
+OBJTYPE_SET = 5
+OBJTYPE_FOLDER = 6
+def is_container(fco):
+	return fco.ObjType == OBJTYPE_MODEL or fco.ObjType == OBJTYPE_FOLDER
 
 import tempfile
 class Project():
@@ -502,15 +349,19 @@ class Project():
 		path_a = path.split("/")
 		current = self.project.RootFolder
 		for name in path_a[0:-1]:
-			containers = filter(is_container, current.children())
+			containers = list(filter(is_container, current.ChildFCOs))
+			if current.ObjType == OBJTYPE_FOLDER:
+				containers += list(filter(is_container, current.ChildFolders))
 			matches = filter(lambda x: x.Name == name, containers)
 			if matches:
-				current = cast(matches[0])
+				current = matches[0]
 			else:
 				raise Exception("Cant find %s in path %s" % (name, path))
-		matches = filter(lambda x: x.Name == path_a[-1], current.children())
+		matches = array(filter(lambda x: x.Name == path_a[-1], current.ChildFCOs))
+		if current.ObjType == OBJTYPE_FOLDER:
+			matches += array(filter(lambda x: x.Name == path_a[-1], current.ChildFolders))
 		if matches:
-			return cast(matches[0])
+			return matches[0]
 		else:
 			raise Exception("Cant find %s in path %s" % (path_a[-1], path))
 
@@ -595,21 +446,6 @@ class Project():
 		p.mgafile = mga_to_save
 		return p
 
-def get_ctypes_dispatch_from_win32com(disp):
-	# http://mail.python.org/pipermail/python-win32/2008-April/007302.html
-	import win32com.client.dynamic
-	import ctypes
-	import comtypes
-	disp = win32com.client.dynamic.DumbDispatch(disp)
-	x = disp._oleobj_
-	addr = int(repr(x).split()[-1][2:-1], 16)
-	#print hex(addr)
-	
-	pnt = ctypes.POINTER(comtypes.automation.IDispatch)()
-	ctypes.cast(ctypes.byref(pnt), ctypes.POINTER(ctypes.c_void_p))[0] = addr
-	pnt.AddRef()
-	return pnt
-
 
 def print_paradigm(xmefile):
 	"Print the input file and paradigm of a given xme"
@@ -619,9 +455,7 @@ def print_paradigm(xmefile):
 	print paradigm
 
 def run_module(name):
-	import sys
 	sys.path.append('.')
-	import runpy
 	runpy.run_module(name)
 
 def usage():

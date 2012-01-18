@@ -6,7 +6,6 @@ import gc
 import os
 
 
-
 def compare (file1, file2):
     with gme.Project.open(file1) as project1:
         with gme.Project.open(file2) as project2:
@@ -54,13 +53,13 @@ def compare2(project1, project2):
     current1=toProcess1.pop()
 
     while current1!=None:
-        current1 = gme.cast(current1)
+        current1 = current1
         if len(toProcess2)==0:
             print "Print nothing to process for " + current2.Name
             return False
 
         for index in range(len(toProcess2)):
-            current2 = gme.cast(toProcess2[index])
+            current2 = toProcess2[index]
             namesEqual = current1.Name == current2.Name
             kindsEqual = _get_Meta(current1).Name == _get_Meta(current2).Name
             connectionEndpointsEqual = True
@@ -76,7 +75,7 @@ def compare2(project1, project2):
                 toProcess2.remove(current2)
                 break
         else:
-            print "Found nothing corresponding to " + fco_path(current1) +" of kind \"" +gme.kind(current1) +"\""
+            print "Found nothing corresponding to " + fco_path(current1) +" of kind \"" + current1.MetaBase.Name +"\""
             return False
         
         if current1.AbsPath!=current2.AbsPath and current1.Name !=current2.Name :
@@ -179,8 +178,8 @@ def compare2(project1, project2):
             return False
         
         if current1.ObjType == 6 and current2.ObjType == 6:
-            toProcess1.extend(gme.cast(current1).ChildFolders)
-            toProcess2.extend(gme.cast(current2).ChildFolders)
+            toProcess1.extend(current1.ChildFolders)
+            toProcess2.extend(current2.ChildFolders)
 
         try:
             current1=toProcess1.pop(0)
