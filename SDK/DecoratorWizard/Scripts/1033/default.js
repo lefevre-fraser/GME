@@ -33,6 +33,7 @@ function OnFinish100(selProj, selObj)
 
 		var InfFile = CreateCustomInfFile();
 		AddFilesToCustomProj(selProj, strProjectName, strProjectPath, InfFile);
+		AddDecoratorLibRc(selProj);
 		PchSettings(selProj);
 		InfFile.Delete();
 
@@ -59,6 +60,7 @@ function OnFinish90(selProj, selObj)
 
 		var InfFile = CreateCustomInfFile();
 		AddFilesToCustomProj(selProj, strProjectName, strProjectPath, InfFile);
+		AddDecoratorLibRc(selProj);
 		PchSettings(selProj);
 		InfFile.Delete();
 
@@ -69,6 +71,17 @@ function OnFinish90(selProj, selObj)
 		if (e.description.length != 0)
 			SetErrorInfo(e);
 		return e.number
+	}
+}
+
+function AddDecoratorLibRc(proj)
+{
+	var strFile = '$(GME_ROOT)\\SDK\\DecoratorLib\\DecoratorLib.rc';
+	vcfile = proj.Object.AddFile(strFile);
+
+	if (dte.Version != '10.0') {
+	    // This is needed to remove the '.' from the beginning of the relative path (added by default)
+	    vcfile.RelativePath = strFile;
 	}
 }
 

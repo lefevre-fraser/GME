@@ -991,6 +991,10 @@ void Facilities::DrawBox( Gdiplus::Graphics* gdip, const CRect& cRect, COLORREF 
 	} else if (bRoundRect && iCornerRadius > 0) {
 		long diameter = 2 * iCornerRadius;
 		Gdiplus::GraphicsPath buttonPath;
+		CRect tmpRect = cRect;
+		CRect cRect = tmpRect;
+		cRect.right -= 1;
+		cRect.top -= 1;
 		buttonPath.AddArc(cRect.left, cRect.top, diameter, diameter, 180.0, 90.0);
 		buttonPath.AddLine(cRect.left + iCornerRadius, cRect.top, cRect.right - iCornerRadius, cRect.top);
 		buttonPath.AddArc(cRect.right - diameter, cRect.top, diameter, diameter, 270.0, 90.0);

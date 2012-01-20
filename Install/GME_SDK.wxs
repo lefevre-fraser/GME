@@ -1128,7 +1128,7 @@
         <File Id="ResizablePart.h" Name="ResizablePart.h"  Source="..\SDK\DecoratorLib\ResizablePart.h" />
         <File Id="ResizeLogic.cpp" Name="ResizeLogic.cpp"  Source="..\SDK\DecoratorLib\ResizeLogic.cpp" />
         <File Id="ResizeLogic.h" Name="ResizeLogic.h"  Source="..\SDK\DecoratorLib\ResizeLogic.h" />
-        <File Id="resource.h" Name="resource.h"  Source="..\SDK\DecoratorLib\resource.h" />
+        <File Id="DecoratorLibResource.h" Name="DecoratorLibResource.h"  Source="..\SDK\DecoratorLib\DecoratorLibResource.h" />
         <File Id="SetBitmapPart.cpp" Name="SetBitmapPart.cpp"  Source="..\SDK\DecoratorLib\SetBitmapPart.cpp" />
         <File Id="SetBitmapPart.h" Name="SetBitmapPart.h"  Source="..\SDK\DecoratorLib\SetBitmapPart.h" />
         <File Id="DecoratorLib_Stdafx.cpp" Name="Stdafx.cpp"  Source="..\SDK\DecoratorLib\Stdafx.cpp" />
@@ -1186,7 +1186,6 @@
         <File Id="Decorator.vsz" Name="Decorator.vsz"  Source="..\SDK\DecoratorWizard\Decorator.vsz" />
         <File Id="DecoratorWizard.vsdir" Name="DecoratorWizard.vsdir" KeyPath="yes" Source="..\SDK\DecoratorWizard\DecoratorWizard.vsdir" />
         <File Id="DecoratorWizard_default.vcproj" Name="default.vcproj"  Source="..\SDK\DecoratorWizard\default.vcproj" />
-        <File Id="DecoratorWizard_setup90.js" Name="setup90.js"  Source="..\SDK\DecoratorWizard\setup90.js" />
         <File Id="DecoratorWizard_setup100.js" Name="setup100.js"  Source="..\SDK\DecoratorWizard\setup100.js" />
       </Component>
     </DirectoryRef>
