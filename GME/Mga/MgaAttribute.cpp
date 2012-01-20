@@ -555,11 +555,9 @@ void CMgaRegNode::SetValue(const wchar_t* path, const wchar_t* value)
 	}
 
 	CComVariant attr = fco->self[ATTRID_REGNODE];
-	CComPtr<ICoreDictionaryAttributeValue> oldval;
-	COMTHROW(attr.pdispVal->QueryInterface(&oldval));
+	CComPtr<ICoreDictionaryAttributeValue> newval;
+	COMTHROW(attr.pdispVal->QueryInterface(&newval));
 
-	CComPtr<ICoreDictionaryAttributeValue> newval = oldval;
-	//COMTHROW(oldval->Clone(&newval));
 	VARIANT vmap;
 	COMTHROW(newval->get_Map(&vmap));
 	map_type* map = (map_type*)(void*)vmap.llVal;
