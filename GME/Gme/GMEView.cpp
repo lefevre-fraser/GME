@@ -4466,7 +4466,9 @@ void CGMEView::OnDropFiles(HDROP p_hDropInfo)
 							   retVal != E_DECORATOR_NOT_IMPLEMENTED)
 					{
 						CancelDecoratorOperation();
-						COMTHROW(retVal);
+						// FIXME: how to handle this error?
+						// COMTHROW(retVal);
+						return;
 					}
 					if (IsInElementDecoratorOperation()) {
 						if (IsDecoratorOrAnnotator())
@@ -4645,7 +4647,9 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 								   retVal != E_DECORATOR_NOT_IMPLEMENTED)
 						{
 							CancelDecoratorOperation();
-							COMTHROW(retVal);
+							// FIXME: how to handle this error?
+							// COMTHROW(retVal);
+							return;
 						}
 					}
 				} else if (isInConnectionCustomizeOperation) {
@@ -4751,7 +4755,9 @@ void CGMEView::OnLButtonUp(UINT nFlags, CPoint point)
 							retVal != E_DECORATOR_NOT_IMPLEMENTED)
 						{
 							CancelDecoratorOperation();
-							COMTHROW(retVal);
+							// FIXME: how to handle this error?
+							// COMTHROW(retVal);
+							return;
 						}
 						if (IsInElementDecoratorOperation()) {
 							if (IsDecoratorOrAnnotator())
@@ -4852,7 +4858,9 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 								   retVal != E_DECORATOR_NOT_IMPLEMENTED)
 						{
 							CancelDecoratorOperation();
-							COMTHROW(retVal);
+							// FIXME: how to handle this error?
+							// COMTHROW(retVal);
+							return;
 						}
 						CScrollZoomView::OnLButtonDown(nFlags, ppoint);
 						return;
@@ -4958,7 +4966,9 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 								   retVal != E_DECORATOR_NOT_IMPLEMENTED)
 						{
 							CancelDecoratorOperation();
-							COMTHROW(retVal);
+							// FIXME: how to handle this error?
+							// COMTHROW(retVal);
+							return;
 						}
 						if (IsInElementDecoratorOperation()) {
 							if (IsDecoratorOrAnnotator())
@@ -5409,7 +5419,9 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 						   retVal != E_DECORATOR_NOT_IMPLEMENTED)
 				{
 					CancelDecoratorOperation();
-					COMTHROW(retVal);
+					// FIXME: how to handle this error?
+					// COMTHROW(retVal);
+					return;
 				}
 				if (IsInElementDecoratorOperation()) {
 					if (IsDecoratorOrAnnotator())
@@ -6426,7 +6438,9 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 								retVal != E_DECORATOR_NOT_IMPLEMENTED)
 					{
 						CancelDecoratorOperation();
-						COMTHROW(retVal);
+						// FIXME: how to handle this error?
+						// COMTHROW(retVal);
+						return TRUE;
 					}
 				}
 			}
@@ -9163,7 +9177,9 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 						   retVal != E_DECORATOR_NOT_IMPLEMENTED)
 				{
 					CancelDecoratorOperation();
-					COMTHROW(retVal);
+					// FIXME: how to handle this error?
+					// COMTHROW(retVal);
+					return;
 				}
 			}
 		} else if (isInConnectionCustomizeOperation) {
