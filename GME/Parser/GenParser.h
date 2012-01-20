@@ -21,6 +21,7 @@ public:
 	XmlStr() { };
 	XmlStr(const XMLCh* const input);
 	XmlStr(const XMLCh* const input, unsigned int len);
+	XmlStr(XmlStr&& input) : std::tstring(std::move(input)) { }
 };
 
 // --------------------------- CGenParser
