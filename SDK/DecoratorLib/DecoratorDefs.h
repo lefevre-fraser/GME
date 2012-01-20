@@ -11,7 +11,7 @@
 #pragma warning( disable : 4786 )
 
 #include "StdAfx.h"
-#include "resource.h"
+#include "DecoratorLibResource.h"
 
 
 //################################################################################################

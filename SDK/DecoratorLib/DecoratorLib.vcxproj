@@ -485,7 +485,7 @@
     <ClInclude Include="ReferenceBitmapPart.h" />
     <ClInclude Include="ResizablePart.h" />
     <ClInclude Include="ResizeLogic.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="DecoratorLibResource.h" />
     <ClInclude Include="SetBitmapPart.h" />
     <ClInclude Include="SetSizeDialog.h" />
     <ClInclude Include="SizeTrackerDialog.h" />

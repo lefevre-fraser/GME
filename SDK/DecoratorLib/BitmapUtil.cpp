@@ -9,7 +9,7 @@
 #include "BitmapUtil.h"
 
 #include "DecoratorUtil.h"
-#include "resource.h"
+#include "DecoratorLibResource.h"
 #include "DecoratorDefs.h"
 #include <io.h>
 

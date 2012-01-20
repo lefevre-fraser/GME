@@ -8,7 +8,7 @@
 #include "StdAfx.h"
 #include "ModelSwitchButtonPart.h"
 #include "DecoratorExceptions.h"
-#include "Resource.h"
+#include "DecoratorLibResource.h"
 
 
 namespace DecoratorSDK {

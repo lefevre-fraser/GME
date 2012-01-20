@@ -293,9 +293,6 @@
     <ClInclude Include="ResizeLogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SetBitmapPart.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -333,6 +330,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GmeApi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DecoratorLibResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
