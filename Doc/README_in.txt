@@ -26,6 +26,13 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes of Release r12.1.20
+----------------------------------
+  - Fixed crash when exporting xme
+  - GME_x64.msi: GME_ROOT pointed to the wrong place
+  - Use PGO for increased performance
+
+
 Release Notes of Release r11.12.20
 ----------------------------------
   - Binary compatibility with r11.12.2
