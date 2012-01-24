@@ -26,7 +26,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes of Release r12.1.20
+Release Notes of Release r12.1.24
 ----------------------------------
   - Fixed crash when exporting xme
   - GME_x64.msi: GME_ROOT pointed to the wrong place
