@@ -415,6 +415,9 @@ dlg -C2 -i -CC -cl OCLLexer OCLParser.dlg
       <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\MgaDotNetServices\MgaDotNetServices.csproj">
+      <Project>{955209a1-8107-43c2-b0a7-729b03908c64}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\MgaUtil\MgaUtil.vcxproj">
       <Project>{ca09ab5c-bfac-4152-ae0b-d5afc400a5e7}</Project>
     </ProjectReference>
