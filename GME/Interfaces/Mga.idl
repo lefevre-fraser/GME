@@ -447,7 +447,7 @@ interface IMgaProject : IDispatch
 	[ helpstring("method BeginTransactionInNewTerr with Territory creation")] 
 				HRESULT BeginTransactionInNewTerr([in, defaultvalue(TRANSACTION_GENERAL)] transactiontype_enum mode, [out, retval] IMgaTerritory **terr);
 
-	[ propget, helpstring("property ProjectStatus mask bits: 0:is open? 1:open r/o? 2:has changed? 3:in transaction?, 4:transaction r/o?, 31:error?")] 
+	[ propget, helpstring("property ProjectStatus mask bits: bit 0 set:project is open. bit 2 set: project has changed. bit 3 set: in transaction. bit 4 set: transaction is read only. bit 31 set: error state")] 
 				HRESULT ProjectStatus([out, retval] long *stat);
 
 	[ helpstring("method Notify: Send global notification")] HRESULT Notify([in] globalevent_enum event);
