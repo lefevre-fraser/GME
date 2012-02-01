@@ -431,7 +431,7 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 		COMTHROW( registrar.CoCreateInstance(OLESTR("MGA.MgaRegistrar")) );
 	
 		CComBSTR prgid = progid;
-		if(!prgid) {
+		if (prgid.Length() == 0) {
 			CComObjPtr<IMgaMetaProject> paradigm;
 			COMTHROW( project->get_RootMeta(PutOut(paradigm)) );
 			ASSERT( paradigm != NULL );
@@ -470,7 +470,8 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 				prgid = dlg.progid;
 			}
 
-			if( !prgid)	COMRETURN(S_FALSE);
+			if (prgid.Length() == 0)
+				COMRETURN(S_FALSE);
 		}
 
 
