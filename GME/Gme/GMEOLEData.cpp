@@ -66,7 +66,7 @@ void CGMEDataDescriptor::Reset()
 void CGMEDataDescriptor::Serialize(CArchive& ar)
 {
 	if(ar.IsStoring()) {
-		ar << rects.GetCount();
+		ar << (int)rects.GetCount();
 		POSITION pos = rects.GetHeadPosition();
 		while(pos)
 			ar << *(rects.GetNext(pos));
