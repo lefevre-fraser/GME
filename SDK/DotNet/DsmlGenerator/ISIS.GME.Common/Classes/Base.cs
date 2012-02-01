@@ -259,5 +259,25 @@ namespace ISIS.GME.Common.Classes
 			get { return Impl.MetaBase.Name; }
 		}
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (!(obj is Base))
+                return false;
+            Base that = obj as Base;
+            if (Impl == null && that.Impl == null)
+                return true;
+            if (Impl == null || that.Impl == null)
+                return false;
+            return Impl.ID == that.Impl.ID;
+        }
+
+        public override int GetHashCode()
+        {
+            if (Impl == null)
+                return 0;
+            return Impl.ID.GetHashCode();
+        }
 	}
 }
