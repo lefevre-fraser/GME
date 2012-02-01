@@ -526,7 +526,8 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 					HRESULT hr = component->Initialize(project);
 					// Need to catch SEH exceptions (especially for Win7 x64: see GME-318)
 					if (SUCCEEDED(hr) && !InvokeExWithCrashRpt(compex, project, focusobj, selectedobjs, param, hr)) {
-						project->AbortTransaction();
+						if (project->ProjectStatus & 8)
+							project->AbortTransaction();
 						ThrowCOMError(E_POINTER, _T("An error has occurred in component ") + compname + _T(".\n")
 							_T("GME may not be in a stable state.\n")
 							_T("Please save your work and restart GME."));
