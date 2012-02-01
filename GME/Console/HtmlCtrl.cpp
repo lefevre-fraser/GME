@@ -145,3 +145,12 @@ void CHtmlCtrl::OnMgaURL(LPCTSTR lpszWhere)
 		ctrl->FireClickMGAID(lpszWhere);
 	}
 }
+
+void CHtmlCtrl::OnDocumentComplete(LPCTSTR lpszURL)
+{
+	CWnd *wnd = GetParent();
+	if (wnd->IsKindOf(RUNTIME_CLASS(CConsoleCtrl))) {
+		CConsoleCtrl *ctrl = STATIC_DOWNCAST(CConsoleCtrl, wnd);
+		ctrl->AddGMEToScript();
+	}
+}

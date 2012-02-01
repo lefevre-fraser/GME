@@ -109,6 +109,8 @@ public:
 	afx_msg __int64 GetCWnd() { return (__int64)(void*)(CWnd*)this; }
 	afx_msg void SetCWnd(void*) {  }
 	BOOL PreTranslateMessage(MSG* pMsg);
+	HRESULT AddGMEToScript();
+	CComPtr<IDispatch> m_gmeptr;
 };
 
 //{{AFX_INSERT_LOCATION}}

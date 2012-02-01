@@ -55,9 +55,7 @@ public:
 
 	// override to handle links to "app:mumble...". lpszWhere will be "mumble"
     virtual void OnMgaURL(LPCTSTR lpszWhere);
-
-
-
+	virtual void OnDocumentComplete(LPCTSTR lpszURL);
 
 // Implementation
 protected:

@@ -410,6 +410,8 @@ void CConsoleCtrl::SetGMEApp(IDispatch *disp)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 	m_edit.SetGMEApp(disp);
+	m_gmeptr = disp;
+	AddGMEToScript();
 }
 
 void CConsoleCtrl::SetGMEProj(IDispatch *disp)
@@ -882,4 +884,42 @@ BOOL CConsoleCtrl::PreTranslateMessage(MSG* pMsg) {
 	return FALSE;
 }
 
+HRESULT CConsoleCtrl::AddGMEToScript()
+{
+	HRESULT hr;
+
+	CComPtr<IHTMLDocument2> pHtmlDoc;
+	CComPtr<IDispatch> pDispatch = m_browser.GetHtmlDocument();
+	COMTHROW(pDispatch.QueryInterface(&pHtmlDoc));
+
+	CComPtr<IDispatch> script;
+	pHtmlDoc->get_Script(&script);
+	CComPtr<IDispatchEx> scriptex;
+	if (script)
+	{
+		script->QueryInterface(IID_IDispatchEx, (void**)&scriptex);
+	}
+	
+	if(script == NULL) // || m_gmeptr == NULL)
+		return E_INVALIDARG;
+
+	DISPID dispIdThis = 0;
+	hr = scriptex->GetDispID(_bstr_t(L"gme"), fdexNameEnsure | fdexNameCaseSensitive, &dispIdThis);
+	if (FAILED(hr))
+		return hr;
+	if (dispIdThis == 0)
+		return E_FAIL;
+
+	DISPID dispIdPut = DISPID_PROPERTYPUT;
+	DISPPARAMS params = {0};
+	EXCEPINFO ei;
+			
+	CComVariant arg = m_gmeptr;
+	params.cArgs = 1;
+	params.rgvarg = &arg;
+	params.cNamedArgs = 1;
+	params.rgdispidNamedArgs = &dispIdPut;
+			
+	return scriptex->InvokeEx(dispIdThis, LOCALE_SYSTEM_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, &ei, NULL);
+}
 
