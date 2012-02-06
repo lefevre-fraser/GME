@@ -831,6 +831,11 @@ void CGMEView::OnDraw(CDC* pDC)
 		}
 
 		CRect visible;
+		if (pDC->IsPrinting())
+		{
+			visible = CRect(0, 0, INT_MAX, INT_MAX);
+		}
+		else
 		{
 			CRect clientRect;
 			GetClientRect(clientRect);
