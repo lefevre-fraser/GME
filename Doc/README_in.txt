@@ -26,6 +26,10 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes of Release r12.2.7
+----------------------------------
+  - Fixed bug where elements using the default decorator had 0 size, unless an icon was specified
+
 Release Notes of Release r12.1.24
 ----------------------------------
   - Fixed crash when exporting xme
