@@ -99,6 +99,9 @@
     <ResourceCompile Include="MgaDecorators.rc">
       <Filter>Source Files</Filter>
     </ResourceCompile>
+    <ResourceCompile Include="..\..\SDK\DecoratorLib\DecoratorLib.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoxDecorator.h">

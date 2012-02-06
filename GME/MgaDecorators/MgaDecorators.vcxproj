@@ -270,6 +270,7 @@
     <None Include="res\setport.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="..\..\SDK\DecoratorLib\DecoratorLib.rc" />
     <ResourceCompile Include="MgaDecorators.rc">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
