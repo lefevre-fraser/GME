@@ -7,8 +7,9 @@ if platform.system() == 'Java':
 	import os
 	import os.path
 	import sys
-	sys.path.append(os.path.join(os.environ['GME_ROOT'], 'SDK', 'Java'))
-	sys.path.append(os.path.join(os.environ['GME_ROOT'], 'SDK', 'Java', 'gme.jar'))
+	sys.path.append(os.path.join(os.environ['GME_ROOT'], 'SDK', 'Java', 'Jython'))
+	sys.path[0:0] = (os.path.join(os.environ['GME_ROOT'], 'SDK', 'Java', 'gme.jar'),)
+	sys.add_package("org.isis.jaut")
 	#sys.registry['java.library.path'] = sys.registry['java.library.path'] + r';C:\Users\ksmyth\git\GMESRC\SDK\Java\native\Jaut\Release'
 	#print sys.registry['java.library.path']
 	#import java.lang
