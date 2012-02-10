@@ -421,7 +421,9 @@ JNIEXPORT jint JNICALL Java_org_isis_jaut_Dispatch_getIDOfName
 
 	env->ReleaseStringChars(name, (const jchar*)n);
 	
-	if( FAILED(hr) )
+	if (hr == DISP_E_UNKNOWNNAME)
+		ThrowComExceptionString(env, hr, name);
+	else if( FAILED(hr) )
 		ThrowComException(env, hr);
 
 	return id;

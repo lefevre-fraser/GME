@@ -51,6 +51,8 @@ public class ComException extends RuntimeException
 	 * The <code>HRESULT</code> value.
 	 */
 	protected int hResult;
+	
+	protected final String detail;
 
 	/**
 	 * Creates an exception for a COM error code.
@@ -60,6 +62,13 @@ public class ComException extends RuntimeException
 	public ComException(int hResult)
 	{
 		this.hResult = hResult;
+		this.detail = null;
+	}
+
+	public ComException(int hResult, String detail)
+	{
+		this.hResult = hResult;
+		this.detail = detail;
 	}
 
 	/**
@@ -87,7 +96,7 @@ public class ComException extends RuntimeException
 
 //		msg = msg.replaceAll("\r\n", " ");
 
-		return msg + "(0x" + Integer.toHexString(hResult) +")";
+		return msg + "(0x" + Integer.toHexString(hResult) + ")" + (detail == null ? "" : " " + detail);
 	}
 
 	/**

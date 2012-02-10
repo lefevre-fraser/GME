@@ -48,6 +48,7 @@ jmethodID JAUT_JAutException_Constructor;
 
 jclass JAUT_ComException_Class = NULL;
 jmethodID JAUT_ComException_Constructor;
+jmethodID JAUT_ComException_Constructor_IString;
 
 jclass JAUT_InvokeException_Class = NULL;
 jmethodID JAUT_InvokeException_Constructor;
@@ -94,6 +95,10 @@ JNI_OnLoad(JavaVM *vm, void *reserved)
 	if( JAUT_ComException_Class != NULL )
 		JAUT_ComException_Constructor = env->GetMethodID(JAUT_ComException_Class, 
 			"<init>", "(I)V");
+
+	if( JAUT_ComException_Class != NULL )
+		JAUT_ComException_Constructor_IString = env->GetMethodID(JAUT_ComException_Class, 
+			"<init>", "(ILjava/lang/String;)V");
 
 	if( JAUT_ComException_Class == NULL || JAUT_ComException_Constructor == NULL )
 		return JNI_ERR;
@@ -199,7 +204,7 @@ void ThrowJAutException(JNIEnv *env, const char *desc)
 		env->Throw(exc);
 }
 
-void ThrowComException(JNIEnv *env, HRESULT hr)
+void ThrowComExceptionString(JNIEnv *env, HRESULT hr, jstring detail)
 {
 	if( hr == E_OUTOFMEMORY )
 	{
@@ -207,11 +212,19 @@ void ThrowComException(JNIEnv *env, HRESULT hr)
 		return;
 	}
 
-	jthrowable exc = (jthrowable)env->NewObject(JAUT_ComException_Class, 
-		JAUT_ComException_Constructor, (jint)hr);
+	jthrowable exc;
+	if (detail != NULL && JAUT_ComException_Constructor_IString != NULL)
+		exc = (jthrowable)env->NewObject(JAUT_ComException_Class, JAUT_ComException_Constructor_IString, (jint)hr, detail);
+	else 
+		exc = (jthrowable)env->NewObject(JAUT_ComException_Class, JAUT_ComException_Constructor, (jint)hr);
 
 	if( exc != NULL )
 		env->Throw(exc);
+}
+
+void ThrowComException(JNIEnv *env, HRESULT hr)
+{
+	ThrowComExceptionString(env, hr, NULL);
 }
 
 void ThrowInvokeException(JNIEnv* env, EXCEPINFO *info)

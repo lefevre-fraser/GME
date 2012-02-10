@@ -75,6 +75,7 @@ JNI_OnUnload(JavaVM *vm, void *reserved);
 
 void ThrowJAutException(JNIEnv *env, const char *desc);
 void ThrowComException(JNIEnv *env, HRESULT hr);
+void ThrowComExceptionString(JNIEnv *env, HRESULT hr, jstring detail);
 void ThrowInvokeException(JNIEnv* env, EXCEPINFO *info);
 void ThrowOutOfMemoryError(JNIEnv* env);
 void ThrowNullPointerException(JNIEnv* env);
