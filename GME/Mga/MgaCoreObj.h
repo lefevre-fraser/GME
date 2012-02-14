@@ -129,7 +129,7 @@ private:
 
 // ----------------------------------------
 // CoreAttribute: Represents an attribute within a coreobject 
-// This is intended to be used as a short-livewd object (des not store references)
+// This is intended to be used as a short-lived object (does not store references)
 // ----------------------------------------
 class CoreAttr {
 	attrid_type i;
@@ -157,7 +157,7 @@ public:
 	};
 
 	operator CComBSTR() const {
-		CComBSTR v;				// It vill be optimized by the compiler!!!!
+		CComBSTR v;				// It will be optimized by the compiler!!!!
 		CComVariant k;
 		COMTHROW(p->get_AttributeValue(i,&k));
 		ASSERT(k.vt == VT_BSTR);
