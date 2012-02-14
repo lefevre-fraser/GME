@@ -543,7 +543,8 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 							}
 						}
 						// Sometimes interpreters forget to close transactions, even when returning S_OK
-						project->AbortTransaction();
+						if (project->ProjectStatus & 8)
+							project->AbortTransaction();
 					}
 				} else {
 					try	{
