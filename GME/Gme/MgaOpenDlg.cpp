@@ -53,7 +53,7 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 		flag_meta = false;
 		break;
 	case NewDialog:
-		title = _T("New");
+		title = _T("New Project");
 		filemsg = _T("Create project file");
         xmlfilemsg = _T("Create multi user project");
 		flag_isopen = true;
@@ -188,6 +188,7 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme, bool openFileDialog)
                 }
                 else
                 {
+					// KMS: FIXME: I think this is dead code
                     // open existing multiuser project
                     BROWSEINFO bi;
 

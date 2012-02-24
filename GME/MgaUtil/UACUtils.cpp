@@ -5,18 +5,6 @@
 #define BCM_FIRST               0x1600      // Button control messages
 #define BCM_SETSHIELD            (BCM_FIRST + 0x000C)
 
-bool CUACUtils::isVistaOrLater()
-{ 
-	OSVERSIONINFO osvi;
-
-	::ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-
-    GetVersionEx(&osvi);
-
-	return (osvi.dwMajorVersion >= 6);
-}
-
 void CUACUtils::SetShieldIcon(const CButton& button, bool on)
 {
 	/*

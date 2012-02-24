@@ -315,6 +315,12 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
     <ClCompile Include="GmePrintDialog.cpp" />
     <ClCompile Include="GMESearch.cpp" />
     <ClCompile Include="GMEView.cpp" />
+    <ClCompile Include="GMEVistaUtil.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="GraphicsUtil.cpp" />
     <ClCompile Include="GuiMeta.cpp" />
     <ClCompile Include="GUIObject.cpp" />

@@ -222,6 +222,9 @@
     <ClCompile Include="SyncObjsListCtrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GMEVistaUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="AnnotatorEventSink.rgs">

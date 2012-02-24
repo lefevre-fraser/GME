@@ -7,6 +7,8 @@
 #include "GmeDlg.h"
 #include "DirDialog.h"
 #include "comcat.h"
+#include "UACUtils.h"
+
 //#include "basetyps.h"
 const GUID CATID_ActiveScript = { 0xf0b7a1a1, 0x9847, 0x11cf, { 0x8f, 0x20, 0x0, 0x80, 0x5f, 0x2c, 0xd0, 0x64} };
 
@@ -114,9 +116,18 @@ static TCHAR exefilter[] = _T("Executable files (*.exe)|*.exe|All Files (*.*)|*.
 
 //AFX_MANAGE_STATE( AfxGetStaticModuleState()); 
 
+// GMEVistaUtil.cpp:
+HRESULT VistaBrowseDirectory(CString& directory);
 
 CString CGmeDlg::getDirectory( const CString& text = _T("Specify the icons directory"))
 {
+	if (CUACUtils::isVistaOrLater())
+	{
+		CString ret;
+		HRESULT hr = VistaBrowseDirectory(ret);
+		return ret;
+	}
+
 	BROWSEINFO bi;
 	TCHAR szDir[MAX_PATH];
 	CString Dir = _T("");

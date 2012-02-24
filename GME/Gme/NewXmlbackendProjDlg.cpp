@@ -5,6 +5,8 @@
 #include "gme.h"
 #include "NewXmlbackendProjDlg.h"
 #include <direct.h>
+#include "../MgaUtil/UACUtils.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -71,8 +73,19 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CNewXmlbackendProjDlg message handlers
 
+// GMEVistaUtil.cpp:
+HRESULT VistaBrowseDirectory(CString& directory);
+
 void CNewXmlbackendProjDlg::OnButtonBrowseLoc() 
 {
+	if (CUACUtils::isVistaOrLater())
+	{
+		UpdateData();
+		HRESULT hr = VistaBrowseDirectory(m_location);
+		UpdateData(FALSE);
+		return;
+	}
+
 	BROWSEINFO bi;
 
 	TCHAR szDisplayName[MAX_PATH];

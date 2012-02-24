@@ -5,7 +5,16 @@
 class CUACUtils
 {
 public:
-	static bool isVistaOrLater();
+	static bool isVistaOrLater() {
+		OSVERSIONINFO osvi;
+
+		::ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+
+		GetVersionEx(&osvi);
+
+		return (osvi.dwMajorVersion >= 6);
+	}
 
 	template <typename T>
 	static HRESULT CreateElevatedInstance(REFCLSID classId,
