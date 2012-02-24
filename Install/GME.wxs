@@ -142,6 +142,10 @@
       <?endif?>
     </DirectoryRef>
 
+    <CustomAction Id="SetWindowsFolder" Property="WindowsFolder.$(var.GME_bin_Package_Id_Underscores)" Value="[WindowsFolder]"/>
+    <InstallExecuteSequence>
+        <Custom Action="SetWindowsFolder" Before="AppSearch" />
+    </InstallExecuteSequence>
 
     <!-- =========================================================== -->
     <!-- FEATURES -->
