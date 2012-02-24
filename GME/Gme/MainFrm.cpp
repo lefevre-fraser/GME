@@ -1286,8 +1286,13 @@ void CMainFrame::OnDropFiles(HDROP p_hDropInfo)
 				else
 					m_console.Message( _T("Can't register paradigm file while project is open!"), 3);
 			}
+			else if (conn.Right(4).CompareNoCase(_T(".htm")) == 0 || conn.Right(5).CompareNoCase(_T(".html")) == 0)
+			{
+				m_console.NavigateTo(conn);
+			}
+
 			else
-				m_console.Message( _T(".MGX, .MGA, .XME, .MTA, .XMP files may be dropped only. Can't open file: ") + conn + _T("!"), 3);
+				m_console.Message( _T("Only .MGX, .MGA, .XME, .MTA, .XMP, and .html files may be dropped. Can't open file: ") + conn + _T("."), 3);
 		}
 		else
 			m_console.Message( _T("Can't inquire file information!"), 3);
