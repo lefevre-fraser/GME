@@ -1548,7 +1548,7 @@ HRESULT FCO::DeriveFCO(IMgaFCO *base, IMgaMetaRole *role, VARIANT_BOOL binstance
 		GetRootOfDeriv(cbase, rr, &lev);
 		if( lev > 0 ||
 			lev == -1 && IsAnythingDerivedFromChildren(cbase) ) {
-				COMTHROW(E_MGA_NOT_DERIVABLE);
+				// COMTHROW(E_MGA_NOT_DERIVABLE);
 		}
 
 
