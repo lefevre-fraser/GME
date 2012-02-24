@@ -92,7 +92,7 @@ void CAggregateOptionsDlg::OnOK()
 	
 	
 	pParentPage->m_Options.m_bStoreTreeInRegistry=m_bStoreTreeInRegistry;
-	
+	pParentPage->m_Options.SaveToRegistry();
 
 
 	CDialog::OnOK();
