@@ -1191,6 +1191,12 @@ void CMgaDumper::Dump(IMgaConnPoint *connpoint)
 
 	StartElem(_T("connpoint"));
 
+#ifdef _DEBUG
+	CComBSTR rolename;
+	connpoint->get_ConnRole(&rolename);
+	ASSERT(rolename.Length() != 0);
+#endif
+
 	Attr(_T("role"), connpoint, &IMgaConnPoint::get_ConnRole);
 	
 	CComObjPtr<IMgaFCO> target;
