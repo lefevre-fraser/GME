@@ -1300,6 +1300,12 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id="INSTALLDIR_SDK_DECORATOREXAMPLES">
+      <Component>
+        <File Source="..\SDK\Decorator Examples\SampleDecorator.cs" />
+      </Component>
+    </DirectoryRef>
+
     <DirectoryRef Id="INSTALLDIR_SDK_DOTNET">
       <Component Id="CSharpComponentWizard.exe" Guid="DB3B2614-7590-4F6D-8BCA-AEB8EB9A47FC">
         <File Id="CSharpComponentWizard.exe" Source="..\SDK\DotNet\CSharpComponentWizard\bin\Release\CSharpComponentWizard.exe"/>
