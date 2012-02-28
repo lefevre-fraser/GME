@@ -19,11 +19,11 @@ namespace CSharpDSMLGenerator.Generator
 				Subject.MetaBase.Name == "Reference" ||
 				Subject.MetaBase.Name == "Model")
 			{
-				//if ((Subject as MgaFCO).BoolAttrByName["IsAbstract"])
-				//{
-				//  // do not generate roles for abstract types
-				//  return;
-				//}
+				if ((Subject as MgaFCO).BoolAttrByName["IsAbstract"])
+				{
+					// do not generate roles for abstract types
+					return;
+				}
 
 				CodeTypeDeclaration newDefaultRole = new CodeTypeDeclaration()
 				{

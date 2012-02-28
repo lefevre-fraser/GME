@@ -503,7 +503,8 @@ namespace ISIS.GME.Common
 				Replace("-", "_dash_").
 				Replace(".", "_dot_").
 				Replace(":", "_").
-				Replace(' ', '_');
+				Replace(' ', '_').
+				Replace("&", "_and_");
 		}
 
 		//public static bool IsObjectCacheEnabled = true;
