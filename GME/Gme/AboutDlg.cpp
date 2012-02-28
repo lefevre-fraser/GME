@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "GMEVersion.h"
 #include "GMEApp.h"
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
@@ -70,6 +71,17 @@ BOOL CAboutDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
+	CStatic* version = (CStatic*)GetWindow(GW_CHILD);
+	ASSERT(version);
+
+#if defined(_M_IX86)
+	version->SetWindowTextW(CString(GME_VERSION_STR) + " x86");
+#elif defined(_M_X64)
+	version->SetWindowTextW(CString(GME_VERSION_STR) + " x64");
+#else
+#error Unknown arch
+#endif
+
 	CRect rectAbout;
 	GetClientRect( rectAbout );
 	CBitmap bmpAbout;
