@@ -796,6 +796,7 @@ interface IMgaFCO : IMgaObject
 				HRESULT PartByMetaPart([in] IMgaMetaPart * part, [out, retval] IMgaPart **pVal);
 	[helpstring("getter for property PartByMetaPart")] 
 				HRESULT GetPartByMetaPartDisp([in] IMgaMetaPart * part, [out, retval] IMgaPart **pVal);
+// TODO: GetPartByAspectName([in] BSTR *AspectName, [out, retval] IMgaPart **pVal);
 
 
 // Style #1: some may like it better
