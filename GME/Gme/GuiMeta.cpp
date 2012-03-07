@@ -632,6 +632,14 @@ CGuiMetaAspect::CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt, CGuiMetaModel* o,
 	}
 	catch(hresult_exception &) {
 	}
+	if (insertModelMenu)
+		insertModelMenu->Sort();
+	if (insertAtomMenu)
+		insertAtomMenu->Sort();
+	if (insertReferenceMenu)
+		insertReferenceMenu->Sort();
+	if (insertSetMenu)
+		insertSetMenu->Sort();
 
 	try {
 		CComPtr<IMgaMetaAttributes> mmAttrs;

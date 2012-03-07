@@ -216,7 +216,6 @@ typedef CTypedPtrList<CPtrList, CGuiPort*> 								CGuiPortList;
 typedef CTypedPtrList<CPtrList, CGuiAnnotator*>							CGuiAnnotatorList;
 typedef CTypedPtrList<CPtrList, CGuiConnection*> 						CGuiConnectionList;
 
-typedef CTypedPtrList<CPtrList, CDynMenuItem*>							CDynMenuItemList;
 typedef CTypedPtrList<CPtrList, CGuiDepCtrlDesc*>	 					CGuiDepCtrlDescList;
 
 typedef CTypedPtrMap<CMapStringToPtr, CString, CGuiPreference *>		CGuiPreferenceTable;

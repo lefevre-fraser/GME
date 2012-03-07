@@ -22,7 +22,7 @@ protected:
 	int id;
 	int minID, maxID;
 	CString name;
-	CDynMenuItemList items;
+	std::vector<std::unique_ptr<CDynMenuItem> > items;
 	CMenu menu;
 public:
 	void SetName(CString nm)	{ name = nm; }
@@ -30,11 +30,12 @@ public:
 	CMenu& GetMenu()			{ return menu; }
 	int GetMinID() const		{ return minID; }
 	int GetMaxID() const		{ return maxID; }
-	bool IsEmpty() const		{ return items.GetCount() == 0; }
-	int GetCount() const		{ return items.GetCount(); }
+	bool IsEmpty() const		{ return items.size() == 0; }
+	int GetCount() const		{ return items.size(); }
 
 	void AddItem(int id, const CString& roleName, const CString& displayName, const CString& helpMsg);
 	CDynMenuItem* FindItem(int id);
+	void Sort();
 };
 
 #endif // whole file

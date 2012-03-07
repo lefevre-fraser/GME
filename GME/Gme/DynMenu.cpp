@@ -12,9 +12,6 @@ CDynMenu::CDynMenu(int iden, char* nm) : id(iden), name(nm)
 
 CDynMenu::~CDynMenu()
 {
-	POSITION pos = items.GetHeadPosition();
-	while(pos)
-		delete items.GetNext(pos);
 }
 
 void CDynMenu::AddItem(int id, const CString& roleName, const CString& displayName, const CString& helpMsg)
@@ -22,16 +19,26 @@ void CDynMenu::AddItem(int id, const CString& roleName, const CString& displayNa
 	if(minID < 0)
 		minID = id;
 	maxID = id;
-	CDynMenuItem* item = new CDynMenuItem(id, roleName, helpMsg);
-	items.AddTail(item);
-	menu.AppendMenu(MF_ENABLED | MF_UNCHECKED | MF_STRING, id, displayName);
+	std::unique_ptr<CDynMenuItem> item(new CDynMenuItem(id, roleName, helpMsg));
+	items.push_back(std::move(item));
+}
+
+void CDynMenu::Sort()
+{
+	std::sort(items.begin(), items.end(),
+		[](const std::unique_ptr<CDynMenuItem>& a, const std::unique_ptr<CDynMenuItem>& b)
+	{ return a->GetLabel() < b->GetLabel(); }
+	);
+	for (auto it = items.begin(); it != items.end(); it++)
+	{
+		menu.AppendMenu(MF_ENABLED | MF_UNCHECKED | MF_STRING, (**it).id, (**it).label);
+	}
 }
 
 CDynMenuItem* CDynMenu::FindItem(int id)
 {
-	POSITION pos = items.GetHeadPosition();
-	while(pos) {
-		CDynMenuItem* item = items.GetNext(pos);
+	for (auto it = items.begin(); it != items.end(); it++) {
+		CDynMenuItem* item = it->get();
 		if(item->id == id)
 			return item;
 	}
