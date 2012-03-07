@@ -8,6 +8,7 @@
 #pragma once
 
 #define TEST_META_CONFORMANCE_INSIDE_BON // by ZolMol
+#define BON_CUSTOM_TRANSACTIONS 1
 
 #ifndef VC_EXTRALEAN
 #define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
@@ -30,6 +31,8 @@ extern CComModule _Module;
 
 #include "BON.h"
 #include "BONImpl.h"
+
+
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

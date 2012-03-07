@@ -457,10 +457,15 @@ namespace BON
 
 	void ProjectImpl::beginOnly()
 	{
+		beginOnly(TRANSACTION_GENERAL);
+	}
+
+	void ProjectImpl::beginOnly(transactiontype_enum mode)
+	{
 		if (!m_spTerritory) {
 			COMCHECK2( m_spProject, m_spProject->CreateTerritory( NULL, m_spTerritory.Addr() ) );
 		}
-		COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ) );
+		COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory, mode ) );
 	}
 
 	void ProjectImpl::abort()
@@ -471,6 +476,11 @@ namespace BON
 			COMCHECK2( m_spProject, m_spProject->CreateTerritory( NULL, m_spTerritory.Addr() ) );
 		}
 		COMCHECK2( m_spProject, m_spProject->BeginTransaction( m_spTerritory ) );
+	}
+
+	void ProjectImpl::abortOnly()
+	{
+		COMCHECK2( m_spProject, m_spProject->AbortTransaction() );
 	}
 
 	bool ProjectImpl::isDestructionActive() const

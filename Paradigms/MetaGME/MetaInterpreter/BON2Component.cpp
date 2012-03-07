@@ -354,6 +354,7 @@ void Component::deleteSheet()
 void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>& setSelectedFCOs, long lParam )
 {
 	project->setAutoCommit(false);
+	project->beginOnly(TRANSACTION_GENERAL);
 	// ======================
 	// Insert application specific code here
 	global_vars.silent_mode = (lParam == GME_SILENT_MODE);
@@ -372,13 +373,16 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 			if( AfxMessageBox( (LPCTSTR)msg, MB_YESNO | MB_ICONWARNING) != IDYES)
 			{
 				project->consoleMsg("[MetaInterpreter] Intepretation stopped by the user.", MSG_NORMAL);
+				project->abortOnly();
 				return;
 			}
 		}
 	}
 	if ( Dumper::selectOutputFiles( project, m_projectName, m_dir) > 1)
 	{
-		if( !global_vars.silent_mode) project->consoleMsg("[MetaInterpreter] Output file name selection cancelled by the user or other file operation failed.", MSG_NORMAL);
+		if (!global_vars.silent_mode)
+			project->consoleMsg("[MetaInterpreter] Output file name selection cancelled by the user or other file operation failed.", MSG_NORMAL);
+		project->abortOnly();
 		return;
 	}
 
@@ -477,6 +481,10 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 	global_vars.err.flushit();
 	global_vars.err.close();
 	global_vars.err.m_proj = (Project) 0;
+	project->commit();
+	CComPtr<IMgaProject> pproject = (IMgaProject*)project->getProjectI();
+	project = NULL;
+	pproject->CommitTransaction();
 }
 
 // ====================================================

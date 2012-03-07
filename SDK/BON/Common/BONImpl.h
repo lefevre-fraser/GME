@@ -152,7 +152,9 @@ namespace BON
 			void 					commit();
 			void 					commitOnly();
 			void 					beginOnly();
+			void 					beginOnly(transactiontype_enum mode);
 			void					abort();
+			void					abortOnly();
 			bool 					isDestructionActive() const;
 
 			ProjectPtr				getProjectI() const;
