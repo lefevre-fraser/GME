@@ -294,7 +294,8 @@ HRESULT FCO::CheckRCS() {
 				get_absmetapath(target, abspath);
 				VARIANT_BOOL good;
 				COMTHROW(refmeta->CheckPath(abspath, &good));
-				if(!good) COMTHROW(E_MGA_META_VIOLATION);
+				if(!good)
+					COMTHROW(E_MGA_META_VIOLATION);
 			}
 		}
 		else if(typ == OBJTYPE_SET) {
@@ -306,7 +307,8 @@ HRESULT FCO::CheckRCS() {
 				get_relmetapath(CoreObj(MGACOLL_ITER), relpath, CoreObj(self[ATTRID_FCOPARENT]));
 				VARIANT_BOOL good;
 				COMTHROW(setmeta->CheckPath(relpath, &good));
-				if(!good) COMTHROW(E_MGA_META_VIOLATION);
+				if(!good)
+					COMTHROW(E_MGA_META_VIOLATION);
 			} MGACOLL_ITERATE_END;
 		}
 		else if(typ == OBJTYPE_CONNECTION) {
