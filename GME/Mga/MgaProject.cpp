@@ -1347,8 +1347,10 @@ STDMETHODIMP CMgaProject::CommitTransaction()
 {
 	COMTRY {
 		ASSERT(!in_nested);
-		if(!baseterr) COMTHROW(E_MGA_NOT_IN_TRANSACTION);
-		if(checkoff) COMTHROW(CheckSupress(VARIANT_FALSE));
+		if (!baseterr)
+			COMTHROW(E_MGA_NOT_IN_TRANSACTION);
+		if (checkoff)
+			COMTHROW(CheckSupress(VARIANT_FALSE));
 		while (!temporalobjs.empty()) {
 			temporalobjs.front()->objrecordchange();
 			temporalobjs.pop();
@@ -1525,11 +1527,14 @@ HRESULT CMgaProject::beginnested() {
 	objstocheck.clear();		
 
 	HRESULT hr;
-	if(non_nestable) hr = must_abort ? E_MGA_MUST_ABORT : S_OK;
-	else hr = dataproject->BeginTransaction(TRANSTYPE_NESTED);
+	if (non_nestable)
+		hr = must_abort ? E_MGA_MUST_ABORT : S_OK;
+	else
+		hr = dataproject->BeginTransaction(TRANSTYPE_NESTED);
 
     MARKSIG('4');
-	if(hr == 0) in_nested = true;
+	if (hr == S_OK)
+		in_nested = true;
 	return hr;
 }
 
@@ -1540,9 +1545,11 @@ HRESULT CMgaProject::commitnested() {
 	objstocheck.clear();
 
 	HRESULT hr = S_OK;
-	if(!non_nestable) hr = dataproject->CommitTransaction(TRANSTYPE_NESTED);
+	if (!non_nestable)
+		hr = dataproject->CommitTransaction(TRANSTYPE_NESTED);
     MARKSIG('6');
-	if(hr != S_OK) 	abortnested();
+	if (hr != S_OK)
+		abortnested();
 	else { 
 		in_nested = false;
 		while(!temporalobjs.empty()) {
@@ -1563,7 +1570,10 @@ HRESULT CMgaProject::abortnested() {
 	}
     MARKSIG('5');
 	must_abort = true;
-	return dataproject->AbortTransaction(TRANSTYPE_NESTED);
+	if (non_nestable)
+		return S_OK;
+	else
+		return dataproject->AbortTransaction(TRANSTYPE_NESTED);
 }
 
 
