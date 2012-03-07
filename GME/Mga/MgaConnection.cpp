@@ -97,17 +97,31 @@ HRESULT FCO::CreateSimpleConn( IMgaMetaRole *metar,  IMgaFCO *src,  IMgaFCO *dst
 	} COMCATCH_IN_TRANSACTION(;)
 }
 
+static CComPtr<IMgaFCOs> GetRefChain(IMgaFCO* fco)
+{
+	CREATEEXCOLLECTION_FOR(MgaFCO, srcrefs);
+
+	CComQIPtr<IMgaReference> ref = fco;
+	while (srcrefs && ref)
+	{
+		srcrefs->Add(ref);
+		CComPtr<IMgaFCO> referred;
+		COMTHROW(ref->get_Referred(&referred));
+		if (referred)
+		{
+			ref.Release();
+			ref = referred;
+		}
+	}
+	return CComQIPtr<IMgaFCOs>(srcrefs);
+}
+
 HRESULT FCO::CreateSimpleConnDisp( IMgaMetaRole *metar
                                   , IMgaFCO *srcobj, IMgaFCO *dstobj
                                   , IMgaFCO *srcref, IMgaFCO *dstref
                                   , IMgaFCO **newobj) 
 {
-	CREATEEXCOLLECTION_FOR(MgaFCO, srcrefs);
-	CREATEEXCOLLECTION_FOR(MgaFCO, dstrefs);
-	if( srcrefs && srcref) srcrefs->Add( CComPtr<IMgaFCO>( srcref));
-	if( dstrefs && dstref) dstrefs->Add( CComPtr<IMgaFCO>( dstref));
-
-	return CreateSimpleConn( metar, srcobj, dstobj, srcrefs, dstrefs, newobj);
+	return CreateSimpleConn( metar, srcobj, dstobj, GetRefChain(srcref), GetRefChain(dstref), newobj);
 }
 
 
