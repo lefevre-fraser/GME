@@ -513,25 +513,17 @@ void CPreference::CreateList(const CMgaFCOPtrList& MgaFCOPtrList)
 
 			/*** Getting value belonging to the current registry path from MGA ***/
 			CString strRegValue;
-			int nMeta=GetRegistryValue(ccpMgaFCO,strCurrPath,strRegValue);
+			int status = GetRegistryValue(ccpMgaFCO,strCurrPath,strRegValue);
 
-			if(strRegValue.IsEmpty())
+			if (status == ATTSTATUS_INVALID)
 			{
 				// get default value from table
 				objtype_enum oeType;
 				COMTHROW(ccpMgaFCO->get_ObjType(&oeType));
-				GetDefaultValue(strCurrPath,oeType,strRegValue);
-			}
-			else
-			{
-				bIsDefault=false;
+				GetDefaultValue(strCurrPath, oeType, strRegValue);
 			}
 
-			// If the value cames from meta it must be considered default
-			if(nMeta)
-			{
-				bIsDefault=true;
-			}
+			bIsDefault = (status != ATTSTATUS_HERE);
 
 			if(bFirstRun)
 			{
@@ -627,7 +619,7 @@ int CPreference::GetRegistryValue(CComPtr<IMgaFCO>&ccpMgaFCO,CString strPath, CS
 
 
 	//Status of definition: 0: this node, -1: in meta, >=1: inherited
-	if(lRegNodeStatus==0)
+	if(lRegNodeStatus == ATTSTATUS_HERE)
 	{
 		/* Getting the value of the registry node */
 
@@ -637,7 +629,7 @@ int CPreference::GetRegistryValue(CComPtr<IMgaFCO>&ccpMgaFCO,CString strPath, CS
 		strRegValue=bstrRegValue;
 
 	}
-	else if(lRegNodeStatus==-1)
+	else if(lRegNodeStatus == ATTSTATUS_METADEFAULT)
 	{
 		/* Getting value from meta */
 
@@ -650,10 +642,8 @@ int CPreference::GetRegistryValue(CComPtr<IMgaFCO>&ccpMgaFCO,CString strPath, CS
 		COMTHROW(ccpMetaFCO->get_RegistryValue(bstrRegPath,&bstrRegValue));
 
 		strRegValue=bstrRegValue;
-		return 1;
-
 	}
-	else if(lRegNodeStatus>=1)
+	else if(lRegNodeStatus >= ATTSTATUS_IN_ARCHETYPE1)
 	{
 		/* Getting inherited value */
 
@@ -667,17 +657,15 @@ int CPreference::GetRegistryValue(CComPtr<IMgaFCO>&ccpMgaFCO,CString strPath, CS
 
 		strRegValue=bstrRegValue;
 	}
-
-	else if(lRegNodeStatus==-2)  // ATTRSTATUS_INVALID - It does happen.
+	else if(lRegNodeStatus == ATTSTATUS_INVALID)  //  - It does happen.
 	{
 		strRegValue=_T("");
 	}
-
 	else
 	{
 		ASSERT((_T("Undocumented(and undesired) MGA feature"),false));
 	}
-	return 0;
+	return lRegNodeStatus;
 }
 
 
