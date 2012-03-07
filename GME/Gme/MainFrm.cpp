@@ -46,11 +46,11 @@ afx_msg BOOL CComponentBar::OnTT(UINT, NMHDR * pNMHDR, LRESULT * ) {
 	if (pButton) {
 		UINT nID = pButton->m_nID;
 
-		if(nID >= ID_FILE_RUNPLUGIN1 && nID <= ID_FILE_RUNPLUGIN8) {
+		if(nID >= ID_FILE_RUNPLUGIN1 && nID <= ID_FILE_RUNPLUGIN_LAST) {
 			_tcsncpy(pTTT->szText, theApp.pluginTooltips[nID-ID_FILE_RUNPLUGIN1], 79);
 			return FALSE;
 		}
-		if(nID >= ID_FILE_INTERPRET1 && nID <= ID_FILE_INTERPRET18) {
+		if(nID >= ID_FILE_INTERPRET1 && nID <= ID_FILE_INTERPRET_LAST) {
 			_tcsncpy(pTTT->szText, theApp.interpreterTooltips[nID-ID_FILE_INTERPRET1], 79);
 				return FALSE;
 		}

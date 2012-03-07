@@ -107,10 +107,10 @@ BEGIN_MESSAGE_MAP(CGMEApp, CWinAppEx)
 	// MRU - most recently used project menu
 	ON_UPDATE_COMMAND_UI(ID_FILE_MRU_PRJ1, OnUpdateRecentProjectMenu)
 	ON_COMMAND_EX_RANGE(ID_FILE_MRU_PRJ1, ID_FILE_MRU_PRJ16, OnOpenRecentProject)
-	ON_COMMAND_RANGE(ID_FILE_RUNPLUGIN1, ID_FILE_RUNPLUGIN8, OnRunPlugin)
-	ON_COMMAND_RANGE(ID_FILE_INTERPRET1, ID_FILE_INTERPRET18, OnRunInterpreter)
-	ON_UPDATE_COMMAND_UI_RANGE( ID_FILE_RUNPLUGIN1, ID_FILE_RUNPLUGIN8, OnUpdateFilePluginX)
-	ON_UPDATE_COMMAND_UI_RANGE( ID_FILE_INTERPRET1, ID_FILE_INTERPRET18, OnUpdateFileInterpretX)
+	ON_COMMAND_RANGE(ID_FILE_RUNPLUGIN1, ID_FILE_RUNPLUGIN_LAST, OnRunPlugin)
+	ON_COMMAND_RANGE(ID_FILE_INTERPRET1, ID_FILE_INTERPRET_LAST, OnRunInterpreter)
+	ON_UPDATE_COMMAND_UI_RANGE( ID_FILE_RUNPLUGIN1, ID_FILE_RUNPLUGIN_LAST, OnUpdateFilePluginX)
+	ON_UPDATE_COMMAND_UI_RANGE( ID_FILE_INTERPRET1, ID_FILE_INTERPRET_LAST, OnUpdateFileInterpretX)
 	ON_COMMAND(ID_FOCUS_BROWSER, OnFocusBrowser)
 	ON_COMMAND(ID_FOCUS_INSPECTOR, OnFocusInspector)
 END_MESSAGE_MAP()
@@ -867,17 +867,19 @@ void CGMEApp::UpdateComponentToolbar()
 
 
 		// Traversing  the plugins and interpreters
-		for(int i = 0; i < plugins.GetSize() + interpreters.GetSize(); ++i)
+		int plugins_size = min(plugins.GetSize(), ID_FILE_RUNPLUGIN_LAST - ID_FILE_RUNPLUGIN1);
+		int interpreters_size = min(interpreters.GetSize(), ID_FILE_INTERPRET_LAST - ID_FILE_INTERPRET1);
+		for(int i = 0; i < plugins_size + interpreters_size; ++i)
 		{
 			// Querying component name
 			CComBSTR componentName;
-			if(i < plugins.GetSize()) // if it is a plugin
+			if(i < plugins_size) // if it is a plugin
 			{
 				componentName = plugins[i];
 			}
 			else					// if it is an interpreter
 			{
-				componentName = interpreters[i-plugins.GetSize()];
+				componentName = interpreters[i-plugins_size];
 			}
 
 			// Obtaining ToolTip
@@ -888,7 +890,7 @@ void CGMEApp::UpdateComponentToolbar()
 			{
 				toolTip = componentName;
 			}
-			if(i < plugins.GetSize())
+			if(i < plugins_size)
 			{
 				pluginTooltips.Add(toolTip);
 			}
@@ -952,14 +954,14 @@ void CGMEApp::UpdateComponentToolbar()
 			ASSERT(succ == TRUE);
 
 			// Adding button
-			INT_PTR commandID = (i < plugins.GetSize()) ? ID_FILE_RUNPLUGIN1 + i : ID_FILE_INTERPRET1 + i - plugins.GetSize();
+			INT_PTR commandID = (i < plugins_size) ? ID_FILE_RUNPLUGIN1 + i : ID_FILE_INTERPRET1 + i - plugins_size;
 			CMFCToolBarButton toolBarButton(commandID, nIndex, componentName + '\n' + toolTip, TRUE);
 
-			componentBar.InsertButton(toolBarButton);
+			VERIFY(componentBar.InsertButton(toolBarButton) != -1);
 			if (hModule)
 				FreeLibrary(hModule);
 		}
-		if (plugins.GetSize() + interpreters.GetSize() != 0) {
+		if (plugins_size + interpreters_size != 0) {
 			componentBar.AdjustLayout();	// CMFCToolBar::AdjustLayout
 			componentBar.AdjustSizeImmediate(TRUE);
 			componentBar.RecalcLayout();	// CPane::RecalcLayout
@@ -1081,7 +1083,7 @@ void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 				} else {
 					CMenu pluginmenu;
 					pluginmenu.CreatePopupMenu();
-					for(int i = 0; i < plugins.GetSize(); ++i) {
+					for(int i = 0; i < min(plugins.GetSize(), ID_FILE_RUNPLUGIN_LAST - ID_FILE_RUNPLUGIN1); ++i) {
 						pluginmenu.AppendMenu(MF_ENABLED, ID_FILE_RUNPLUGIN1 + i, pluginTooltips[i]);
 					}
 					toolmenu->InsertMenu(idx,
@@ -1101,7 +1103,7 @@ void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 				} else {
 					CMenu pluginmenu;
 					pluginmenu.CreatePopupMenu();
-					for(int i = 0; i < interpreters.GetSize(); ++i) {
+					for(int i = 0; i < min(interpreters.GetSize(), ID_FILE_INTERPRET1 - ID_FILE_INTERPRET_LAST); ++i) {
 						pluginmenu.AppendMenu(MF_ENABLED, ID_FILE_INTERPRET1 + i, interpreterTooltips[i]);
 					}
 					toolmenu->InsertMenu(idx,
@@ -2933,14 +2935,14 @@ void CGMEApp::RegisterDroppedFile( const CString& fname, bool userReg/* = true*/
 void CGMEApp::OnUpdateFilePluginX(CCmdUI* pCmdUI)
 {
 	bool enabled = m_vecDisabledPlugIns.find( pCmdUI->m_nID) == m_vecDisabledPlugIns.end();
-	if( pCmdUI->m_nID >= ID_FILE_RUNPLUGIN1 && pCmdUI->m_nID <= ID_FILE_RUNPLUGIN8)
+	if( pCmdUI->m_nID >= ID_FILE_RUNPLUGIN1 && pCmdUI->m_nID <= ID_FILE_RUNPLUGIN_LAST)
 		pCmdUI->Enable( enabled );
 }
 
 void CGMEApp::OnUpdateFileInterpretX(CCmdUI* pCmdUI)
 {
 	bool enabled = m_vecDisabledComps.find( pCmdUI->m_nID) == m_vecDisabledComps.end();
-	if( pCmdUI->m_nID >= ID_FILE_INTERPRET1 && pCmdUI->m_nID <= ID_FILE_INTERPRET18)
+	if( pCmdUI->m_nID >= ID_FILE_INTERPRET1 && pCmdUI->m_nID <= ID_FILE_INTERPRET_LAST)
 		pCmdUI->Enable( enabled );
 }
 
