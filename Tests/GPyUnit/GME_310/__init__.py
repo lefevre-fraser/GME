@@ -82,7 +82,7 @@ class TestRefportAPI(unittest.TestCase):
 
 def suite():
     suite = unittest.TestSuite()
-    #suite.addTest(TestFolderCopy(input_file="test1.mga", folder_to_copy="/Test1", destination_folder=""))
+    suite.addTest(TestFolderCopy(input_file="test1.mga", folder_to_copy="/Test1", destination_folder=""))
     suite.addTest(TestRefportAPI("test"))
     return suite
 
