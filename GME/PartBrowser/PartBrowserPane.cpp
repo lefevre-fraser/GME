@@ -323,7 +323,9 @@ void CPartBrowserPane::SetMetaModel(CComPtr<IMgaMetaModel> meta)
 	mgaMetaModel = meta;
 
 	DestroyDecorators();
-	// Store parts and crate & initialize decorators
+	// Store parts and create & initialize decorators
+	// FIXME: don't do this if PartBrowser is not displayed, it is expensive
+	// FIXME: lazily instantiate when aspect is changed
 	if (meta) {
 		CComPtr<IMgaMetaAspects> mmAspects;
 		COMTHROW(mgaMetaModel->get_Aspects(&mmAspects));

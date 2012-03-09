@@ -45,6 +45,7 @@ void CPartBrowserDlg::SetCurrentProject(CComPtr<IMgaProject> project)
 
 void CPartBrowserDlg::SetMetaModel(CComPtr<IMgaMetaModel> meta)
 {
+	// FIXME: check if mgaMetaModel == meta
 	if (mgaMetaModel != NULL)
 		mgaMetaModel.Release();
 	mgaMetaModel = meta;
