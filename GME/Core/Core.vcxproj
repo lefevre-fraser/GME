@@ -167,12 +167,12 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|x64'" />
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|Win32'">$(SolutionDir)Release_PGO\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|x64'">$(SolutionDir)$(Platform)\Release_PGO\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|Win32'">Release_PGO\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|x64'">Release_PGO\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|Win32'">$(Platform)\Release_PGO\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|x64'">$(Platform)\Release_PGO\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|Win32'">$(SolutionDir)Release_PGO\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|x64'">$(SolutionDir)$(Platform)\Release_PGO\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|Win32'">Release_PGO\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|x64'">Release_PGO\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|Win32'">$(Platform)\Release_PGO\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|x64'">$(Platform)\Release_PGO\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep />
