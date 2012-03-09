@@ -44,9 +44,12 @@ class membuf
 	}
 
 	~membuf() {
-		UnmapViewOfFile(begin);
-		CloseHandle(hFileMappingObject);
-		CloseHandle(hFile);
+		if (begin)
+			UnmapViewOfFile(begin);
+		if (hFileMappingObject != INVALID_HANDLE_VALUE)
+			CloseHandle(hFileMappingObject);
+		if (hFile != INVALID_HANDLE_VALUE)
+			CloseHandle(hFile);
 	}
 
 	char* getBegin() const {
