@@ -71,6 +71,8 @@ IDR_GMETYPE             ICON                    "res\\GMEDoc.ico"
 IDI_TYPEMARK_ICON       ICON                    "res\\icon1.ico"
 IDI_INSTANCEMARK_ICON   ICON                    "res\\typemark.ico"
 IDI_COMPNOTFOUND        ICON                    "res\\compnotfound.ico"
+// If this changes from ,5, change GME_bin.wxs
+ID_FILE_IMPORTXML       ICON                    "res\\XME.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

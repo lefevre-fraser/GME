@@ -72,14 +72,27 @@
 
         <ProgId Id='GME.mgafile' Description='GME project file'>
           <Extension Id='mga' ContentType='application/x-mga'>
+            <?if $(sys.BUILDARCH)=x86 ?>
             <Verb Id='open' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
+            <Verb Id='open_x86' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
+            <?else?>
+            <Verb Id='open_x64' Command='Open with 64bit GME' TargetFile='GME.exe' Argument='"%1"' />
+            <?endif?>
           </Extension>
         </ProgId>
         <ProgId Id='GME.xmefile' Description='GME XML project file'>
           <Extension Id='xme' ContentType='application/x-xme'>
+            <?if $(sys.BUILDARCH)=x86 ?>
             <Verb Id='open' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
+            <Verb Id='open_x86' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
+            <?else?>
+            <Verb Id='open_x64' Command='Open with 64bit GME' TargetFile='GME.exe' Argument='"%1"' />
+            <?endif?>
           </Extension>
         </ProgId>
+        <Registry Id='MGADesc' Root='HKCR' Key='GME.mgafile' Action='write' Type='string' Value='GME model file' />
+        <Registry Id='XMEDesc' Root='HKCR' Key='GME.xmefile' Action='write' Type='string' Value='GME XML model file' />
+        <Registry Id='XMEIcon' Root='HKCR' Key='GME.xmefile\DefaultIcon' Action='write' Type='string' Value='[#GME.exe],5' />
         <?if $(sys.BUILDARCH)=x86 ?>
         <Environment Id="GME_ROOT" Action="set" System="yes" Name="GME_ROOT" Value="[INSTALLDIR]" />
         <?endif?>
