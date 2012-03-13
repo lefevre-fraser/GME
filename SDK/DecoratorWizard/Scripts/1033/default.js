@@ -228,7 +228,7 @@ function AddConfig(proj, strProjectName)
 		// DEBUG LINKER SETTINGS
 		var LinkTool = config.Tools('VCLinkerTool');
 		LinkTool.AdditionalDependencies = "gdiplus.lib DecoratorLibD.lib";
-		LinkTool.AdditionalLibraryDirectories = "$(Configuration)";
+		LinkTool.AdditionalLibraryDirectories = "$(Configuration);$(SolutionDir)$(Configuration)";
 		LinkTool.LinkIncremental = linkIncrementalType.linkIncrementalYes;
 		LinkTool.GenerateDebugInformation = "true";
 		LinkTool.RegisterOutput = true;
@@ -285,7 +285,7 @@ function AddConfig(proj, strProjectName)
 		// RELASE LINKER SETTINGS
 		var LinkTool = config.Tools('VCLinkerTool');
 		LinkTool.AdditionalDependencies = "gdiplus.lib DecoratorLib.lib";
-		LinkTool.AdditionalLibraryDirectories = "$(Configuration)";
+		LinkTool.AdditionalLibraryDirectories = "$(Configuration);$(SolutionDir)$(Configuration)";
 		LinkTool.LinkIncremental = linkIncrementalType.linkIncrementalNo;
 		LinkTool.GenerateDebugInformation = "false";
 		LinkTool.SubSystem = subSystemOption.subSystemWindows;
