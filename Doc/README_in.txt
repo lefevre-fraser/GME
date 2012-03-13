@@ -26,6 +26,21 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes or Release r12.3.13
+----------------------------------
+  - Binary compatibility with r11.12.2
+  - Show architecture of currently-running GME in the About box
+  - Fix drag-to-move bug in Model Editor under x64
+  - Decorators compiled against this version and later should include DecoratorLib.rc in the project (if the decorator uses any default icons)
+  - Increased the maximum number of interpreters on the toolbar
+  - Fix registration of .NET PIAs in Visual Studio
+  - Fix IMgaModel::CreateSimpleConnDisp for Ref->Ref->Model case
+  - Fix display of non-default empty value in Object Inspector
+  - Fix the IErrorInfo when there's an Mga error under TRANSACTION_NON_NESTED
+  - Implement Equals and GetHashCode in CSharpDsmlGenerator base class
+  - Don't return E_MGA_NOT_DERIVABLE when trying to make an instance of something whose children has an instance 
+  - Open drag-n-dropped .html files in console
+
 Release Notes of Release r12.2.7
 ----------------------------------
   - Fixed bug where elements using the default decorator had 0 size, unless an icon was specified
