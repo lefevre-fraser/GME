@@ -356,7 +356,7 @@ void CAggregateContextMenu::OnEditDelete()
 	    // Starting transaction
 	    CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 	    pMgaContext = &pApp->m_CurrentProject.m_MgaContext;
-	    pMgaContext->BeginTransaction(false);
+	    pMgaContext->BeginTransaction(TRANSACTION_NON_NESTED);
 
 	    while(hSelItem)
 	    {

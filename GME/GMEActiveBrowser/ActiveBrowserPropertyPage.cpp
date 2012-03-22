@@ -1581,7 +1581,7 @@ void CAggregatePropertyPage::AttachLibrary()
 							COMTHROW(pMgaContext->m_ccpProject->Notify(APPEVENT_LIB_ATTACH_BEGIN));
 					}
 
-					pMgaContext->BeginTransaction(false);
+					pMgaContext->BeginTransaction(TRANSACTION_NON_NESTED);
 
 					COMTHROW(ccpFolder->AttachLibraryV3( CComBSTR( dlg.m_strConnString), dlg.m_bOptimized, NULL));
 					pMgaContext->CommitTransaction();
@@ -1659,7 +1659,7 @@ void CAggregatePropertyPage::RefreshLibrary()
 
 			if(dlg.DoModal() == IDOK) 
 			{
-				pMgaContext->BeginTransaction(false);
+				pMgaContext->BeginTransaction(TRANSACTION_NON_NESTED);
 					
 				long errs;
 				if (dlg.relativePath != "") {

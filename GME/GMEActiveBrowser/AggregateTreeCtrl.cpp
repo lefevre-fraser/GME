@@ -871,7 +871,7 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 	BOOL bRetVal=FALSE;
 
 	MSGTRY{
-		pMgaContext->BeginTransaction(false); // Read/Write Transaction
+		pMgaContext->BeginTransaction(TRANSACTION_NON_NESTED); // Read/Write Transaction
 		if(MgaObjectProxy.m_TypeInfo==OBJTYPE_FOLDER) // If the drop target is a folder
 		{
 			CComQIPtr<IMgaFolder> ccpTargetFolder(MgaObjectProxy.m_pMgaObject);

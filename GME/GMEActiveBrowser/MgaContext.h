@@ -31,6 +31,7 @@ public:
 	bool AbortTransaction();
 	bool CommitTransaction();
 	bool BeginTransaction(bool bIsReadOnly = true);
+	bool BeginTransaction(transactiontype_enum type);
 	bool IsInTransaction();
 	CMgaContext();
 	virtual ~CMgaContext();

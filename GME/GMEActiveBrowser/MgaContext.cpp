@@ -40,21 +40,21 @@ bool CMgaContext::IsInTransaction()
 
 bool CMgaContext::BeginTransaction(bool bIsReadOnly)
 {
+	return BeginTransaction(bIsReadOnly ? TRANSACTION_READ_ONLY : TRANSACTION_GENERAL);
+}
+
+bool CMgaContext::BeginTransaction(transactiontype_enum type)
+{
 	// In the event handlers we are already in transaction
-	if(m_bEventTransactionMode)return true;
+	if(m_bEventTransactionMode)
+		return true;
 
 	
 	if(m_nPendingTransactions==0) // Not in transactions
 	{		
 		try
 		{
-			COMTHROW(
-				m_ccpProject->BeginTransaction(
-					m_ccpTerritory, 	
-					bIsReadOnly ? TRANSACTION_READ_ONLY : TRANSACTION_GENERAL
-				) 
-			);
-			
+			COMTHROW(m_ccpProject->BeginTransaction(m_ccpTerritory, type));
 		}
 		catch (hresult_exception)
 		{
