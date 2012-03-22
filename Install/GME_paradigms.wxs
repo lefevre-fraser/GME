@@ -12,6 +12,12 @@
         InstallerVersion='300' Languages='1033' SummaryCodepage='1252'
         InstallPrivileges='elevated' InstallScope='perMachine'/>
 
+
+    <PropertyRef Id="NETFRAMEWORK20"/>
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
+    <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
+    <Property Id="NETFRAMEWORK">NETFRAMEWORK20 OR NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Property>
+
     <!-- =========================================================== -->
     <!-- DIRECTORY STRUCTURE -->
     <!-- =========================================================== -->

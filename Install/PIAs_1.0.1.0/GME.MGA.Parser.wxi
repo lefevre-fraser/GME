@@ -7,6 +7,7 @@
         <ComponentGroup Id="GME.MGA.Parser.1.0.1.0">
             <Component Id="cmpE40AF75B165037629E65E9C4D227EEF2" Directory="PIADIR.1.0.1.0" Guid="{05BC0228-9FDD-4268-B50D-3A0ABB7A41CE}" Permanent="yes">
                 <File Id="fil05C908F8792B3BFF822569A500C199D0" KeyPath="yes" Source="$(var.PIADir.1.0.1.0)\GME.MGA.Parser.dll" Assembly=".net"/>
+                <Condition>NETFRAMEWORK</Condition>
                 <RegistryValue Root="HKCR" Key="CLSID\{70C41B25-E3CE-11D3-B37A-005004D38590}\InprocServer32\1.0.1.0" Name="Class" Value="GME.MGA.Parser.MgaMetaParserClass" Type="string" Action="write" />
                 <RegistryValue Root="HKCR" Key="CLSID\{70C41B25-E3CE-11D3-B37A-005004D38590}\InprocServer32\1.0.1.0" Name="Assembly" Value="GME.MGA.Parser, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
                 <RegistryValue Root="HKCR" Key="CLSID\{70C41B25-E3CE-11D3-B37A-005004D38590}\InprocServer32\1.0.1.0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />

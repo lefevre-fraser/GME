@@ -7,6 +7,7 @@
         <ComponentGroup Id="GME.MGA.Core.1.0.1.0">
             <Component Id="cmp4D3DABE643C1E5F8C94A9C33F1E1BAA9" Directory="PIADIR.1.0.1.0" Guid="{995757FA-C2F0-406F-BAED-0E97374BCE82}" Permanent="yes">
                 <File Id="filC56702691135417471E3DD618EFF6E78" KeyPath="yes" Source="$(var.PIADir.1.0.1.0)\GME.MGA.Core.dll" Assembly=".net"/>
+                <Condition>NETFRAMEWORK</Condition>
                 <RegistryValue Root="HKCR" Key="CLSID\{7281C07A-3E09-11D3-B2F7-005004D38590}\InprocServer32\1.0.1.0" Name="Class" Value="GME.MGA.Core.CoreBinFileClass" Type="string" Action="write" />
                 <RegistryValue Root="HKCR" Key="CLSID\{7281C07A-3E09-11D3-B2F7-005004D38590}\InprocServer32\1.0.1.0" Name="Assembly" Value="GME.MGA.Core, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
                 <RegistryValue Root="HKCR" Key="CLSID\{7281C07A-3E09-11D3-B2F7-005004D38590}\InprocServer32\1.0.1.0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />

@@ -7,6 +7,7 @@
         <ComponentGroup Id="GME.Util">
             <Component Id="GME.Util.dll" Directory="INSTALLDIR_PARADIGMS32" Guid="{074746CF-EA1A-4B45-899E-D4D6C5B6FEB0}" Permanent="yes">
                 <File Id="GME.Util.dll" KeyPath="yes" Source="$(var.PIADir)\GME.Util.dll" Assembly=".net" />
+                <Condition>NETFRAMEWORK</Condition>
             </Component>
         </ComponentGroup>
     </Fragment>

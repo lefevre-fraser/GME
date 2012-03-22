@@ -8,6 +8,7 @@ done
 mv GME.wxi GMEPIA.wxi
 
 # then add Assembly=".net" to <File
+# and <Condition>NETFRAMEWORK</Condition> under <Component>
 # then remove <RegistryValues from previous versions (for the same version of the typelib)
 #  <DirectoryRef Id="INSTALLDIR_BIN">
 #<Directory Id="PIADIR.1.0.1.0" Name="PIA1.0.1.0"/>

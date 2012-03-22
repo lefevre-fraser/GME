@@ -18,7 +18,7 @@ ZIP_PRG = os.path.abspath(os.path.join(os.path.dirname(__file__), "zip.exe"))
 WIX_CANDLE_PRG = "candle.exe"
 WIX_CANDLE_ARG = "-dPIADir=..\GME\DotNetPIAs_1.0.0.0 -dPIADir.1.0.1.0=..\GME\DotNetPIAs"
 WIX_LIGHT_PRG = "light.exe"
-WIX_LIGHT_ARG = "-sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension" # See comments in GME.wxs
+WIX_LIGHT_ARG = "-sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension -ext WiXNetFxExtension" # See comments in GME.wxs
 
 #
 # Classes
