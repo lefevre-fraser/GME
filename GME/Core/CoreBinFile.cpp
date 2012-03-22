@@ -970,22 +970,42 @@ void CCoreBinFile::CancelProject()
 	objects.clear();
 }
 
-void CCoreBinFile::SaveProject()
+static DWORD __stdcall prog(LARGE_INTEGER TotalFileSize, LARGE_INTEGER TotalBytesTransferred,LARGE_INTEGER StreamSize,
+LARGE_INTEGER StreamBytesTransferred, DWORD dwStreamNumber, DWORD dwCallbackReason, HANDLE hSourceFile, HANDLE hDestinationFile, LPVOID lpData)
+{
+	return PROGRESS_STOP;
+}
+
+
+void CCoreBinFile::SaveProject(const std::string& origfname, bool keepoldname)
 {
 	ASSERT( !ofs.is_open() );
 	ASSERT( metaprojectid.size() == 16 );
 
-	// FIXME: KMS: it could happen that the save fails, and the user loses data. (at least this isn't worse than previous versions)
-	HANDLE hFile = CreateFileA(filename.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_DELETE_ON_CLOSE, NULL);
-	CloseHandle(hFile);
+	BOOL cancel = FALSE;
+
+	std::string filenameout = filename;
+	// origfname == filename => file_buffer has filename locked FILE_SHARE_READ
+	// CopyFile because:
+	// SetEndOfFileInformationFile
+	// Preserves extended attributes, NTFS alternate streams, file attributes (and newer Windows: security attributes)
+	if (origfname == filename)
+	{
+		filenameout += "tmp";
+		BOOL succ = CopyFileExA(origfname.c_str(), filenameout.c_str(), &prog, NULL, &cancel, 0);
+		if (!succ && GetLastError() != ERROR_REQUEST_ABORTED)
+			HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
+	}
+	// TODO:
+	// GetNamedSecurityInfo(source, GROUP_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION)
+	// SetNamedSecurityInfo(target, GROUP_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION)
 
 	ofs.clear();
-	ofs.open(filename.c_str(), std::ios::out | std::ios::binary);
+	ofs.open(filenameout.c_str(), std::ios::out | std::ios::binary);
 	if( ofs.fail() || !ofs.is_open() ) {
 		ofs.close();
 		ofs.clear();
-		// FIXME: can we HRESULT_FROM_WIN32(GetLastError) here instead?
-		HR_THROW(E_FILEOPEN);
+		HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
 	}
 
 	write(metaprojectid);
@@ -1015,6 +1035,25 @@ void CCoreBinFile::SaveProject()
 		HR_THROW(E_FILEOPEN);
 
 	ofs.close();
+
+	file_buffer.~membuf();
+	new ((void*)&file_buffer) membuf();
+
+	if (origfname == filename)
+	{
+		BOOL succ = MoveFileExA(filenameout.c_str(), filename.c_str(), MOVEFILE_REPLACE_EXISTING);
+		if (!succ)
+		{
+			//CloseProject(VARIANT_TRUE);
+			HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
+		}
+	}
+
+	if (file_buffer.open((keepoldname ? origfname : filename).c_str()) != 0) {
+		HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
+	}
+	cifs = file_buffer.getBegin();
+	cifs_eof = file_buffer.getEnd();
 }
 
 void CCoreBinFile::LoadProject()
@@ -1216,9 +1255,11 @@ STDMETHODIMP CCoreBinFile::SaveProject(BSTR connection, VARIANT_BOOL keepoldname
 			filename = fn;
 			if(filename.empty()) filename = ".";
 		}
-		if(filename == ".") COMTHROW(E_NAMEMISSING);
-		SaveProject();
-		if(keepoldname == VARIANT_TRUE) filename = origfname;
+		if (filename == ".")
+			COMTHROW(E_NAMEMISSING);
+		SaveProject(origfname, keepoldname != VARIANT_FALSE);
+		if (keepoldname != VARIANT_FALSE)
+			filename = origfname;
 	}
 	COMCATCH( filename = origfname;)
 }

@@ -1544,7 +1544,17 @@ void CGMEApp::SaveProject(const CString &conn) {
 	if( mgaProject != NULL ) {
 		HRESULT hr = mgaProject->Save(CComBSTR(conn), VARIANT_FALSE);
 		if(hr != S_OK) {
-			AfxMessageBox(_T("ERROR: Could not save project\nCheck access permissions"));
+			CComBSTR error;
+			if (GetErrorInfo(&error)) {
+				CString errmsg = _T("Could not save project: ");
+				errmsg += error;
+				if (hr == HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED)) {
+					errmsg += _T("\nCheck that no other GME has this file open");
+				}
+				AfxMessageBox(errmsg);
+			} else {
+				AfxMessageBox(_T("ERROR: Could not save project\nCheck access permissions"));
+			}
 		}
 	}
 

@@ -19,7 +19,8 @@ class membuf
 		{ }
 	
 	int open(const char* filename) {
-		hFile = CreateFileA(filename, GENERIC_READ, FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
+		ASSERT(hFile == INVALID_HANDLE_VALUE);
+		hFile = CreateFileA(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
 		if (hFile == INVALID_HANDLE_VALUE) {
 			return 1;
 		}
@@ -36,10 +37,6 @@ class membuf
 			return 1;
 		}
 		end = begin + filesize;
-		CloseHandle(hFile);
-		hFile = INVALID_HANDLE_VALUE;
-		CloseHandle(hFileMappingObject);
-		hFileMappingObject = INVALID_HANDLE_VALUE;
 		return 0;
 	}
 
@@ -334,7 +331,7 @@ public:
 	bool InTransaction() const { return intrans; }
 
 	void CancelProject() NOTHROW;
-	void SaveProject();
+	void SaveProject(const std::string& origfname, bool keepoldname);
 	void LoadProject();
 
 public:
@@ -429,11 +426,12 @@ public:
 		CopyTo(a, p);
 	}
 	virtual void Write(CCoreBinFile *binfile) const {
-		if (pos == NULL) {
-			binfile->write(a);
-		} else {
-			binfile->writestring(pos);
+		if (pos != NULL) {
+			BinAttr<VALTYPE_STRING>* this_ = const_cast<BinAttr<VALTYPE_STRING>*>(this);
+			binfile->read(this_->a, this_->pos);
+			this_->pos = NULL;
 		}
+		binfile->write(a);
 	}
 	virtual void Read(CCoreBinFile *binfile) {
 		binfile->readstring(pos);
@@ -511,18 +509,31 @@ public:
 	}
 	virtual void Write(CCoreBinFile *binfile) const { 
 		if (data)
+		{
+			if (!need_free)
+			{
+				// need to get data off the disk; the file is going away
+				BinAttr<VALTYPE_BINARY>* this_ = const_cast<BinAttr<VALTYPE_BINARY>*>(this);
+				unsigned char* olddata = this_->data;
+				int len = this->len;
+				this_->data = (unsigned char*)malloc(sizeof(len) + len);
+				this_->need_free = true;
+				this_->len = len;
+				memcpy(value, olddata+sizeof(len), len);
+			}
 			binfile->write(value, len);
+		}
 		else
 			binfile->write((unsigned char*)NULL, 0);
 	}
 	virtual void Read(CCoreBinFile *binfile) { 
 		data = (unsigned char*)binfile->cifs;
-		// to test without lazy read:
 		int len = this->len;
-		data = (unsigned char*)malloc(sizeof(len) + len);
-		need_free = true;
-		this->len = len;
-		memcpy(value, binfile->cifs+sizeof(len), len);
+		// to test without lazy read:
+		//data = (unsigned char*)malloc(sizeof(len) + len);
+		//need_free = true;
+		//this->len = len;
+		//memcpy(value, binfile->cifs+sizeof(len), len);
 		binfile->cifs += sizeof(len) + len;
 	}
 	BinAttr(BinAttr<VALTYPE_BINARY>&& that) : BinAttrBase(that.attrid), data(that.data), need_free(that.need_free) { that.need_free = false; }
@@ -598,8 +609,7 @@ public:
 
 		if (dict == NULL)
 		{
-			// need to read before write
-			// TODO: could just blit it
+			// need to read before write, since the file is going away
 			CComVariant p;
 			Get(binfile, &p);
 		}
