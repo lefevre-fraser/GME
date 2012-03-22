@@ -4551,6 +4551,10 @@ void CGMEView::OnSelChangeAspectProp()
 		selected.RemoveAll();
 		RemoveAllAnnotationFromSelection();
 		ClearConnectionSelection();
+		if (m_isActive)
+		{
+			DoPannWinRefresh();
+		}
 
 		TRACE(_T("CGMEView::OnSelChangeAspectProp\n"));
 		Invalidate();
