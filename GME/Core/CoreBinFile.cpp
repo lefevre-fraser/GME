@@ -982,19 +982,20 @@ void CCoreBinFile::SaveProject(const std::string& origfname, bool keepoldname)
 	ASSERT( !ofs.is_open() );
 	ASSERT( metaprojectid.size() == 16 );
 
-	BOOL cancel = FALSE;
 
 	std::string filenameout = filename;
 	// origfname == filename => file_buffer has filename locked FILE_SHARE_READ
 	// CopyFile because:
 	// SetEndOfFileInformationFile
 	// Preserves extended attributes, NTFS alternate streams, file attributes (and newer Windows: security attributes)
-	if (origfname == filename)
+	if (origfname == filename && GetFileAttributesA(origfname.c_str()) != INVALID_FILE_ATTRIBUTES)
 	{
 		filenameout += "tmp";
+		BOOL cancel = FALSE;
 		BOOL succ = CopyFileExA(origfname.c_str(), filenameout.c_str(), &prog, NULL, &cancel, 0);
 		if (!succ && GetLastError() != ERROR_REQUEST_ABORTED)
 			HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
+
 	}
 	// TODO:
 	// GetNamedSecurityInfo(source, GROUP_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION)
@@ -1044,7 +1045,6 @@ void CCoreBinFile::SaveProject(const std::string& origfname, bool keepoldname)
 		BOOL succ = MoveFileExA(filenameout.c_str(), filename.c_str(), MOVEFILE_REPLACE_EXISTING);
 		if (!succ)
 		{
-			//CloseProject(VARIANT_TRUE);
 			HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
 		}
 	}
