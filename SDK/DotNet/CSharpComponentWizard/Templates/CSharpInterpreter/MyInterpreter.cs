@@ -46,19 +46,20 @@ namespace MyInterpreter
 
         /// <summary>
         /// The main entry point of the interpreter. A transaction is already open,
-        /// GMEConsole is avaliable. A general try-catch block catches all the exceptions
+        /// GMEConsole is available. A general try-catch block catches all the exceptions
         /// coming from this function, you don't need to add it. For more information, see InvokeEx.
         /// </summary>
         /// <param name="project">The handle of the project opened in GME, for which the interpreter was called.</param>
         /// <param name="currentobj">The model open in the active tab in GME. Its value is null if no model is open (no GME modeling windows open). </param>
         /// <param name="selectedobjs">
-        /// A collection for the selected  model elements. It is never null.
+        /// A collection for the selected model elements. It is never null.
         /// If the interpreter is invoked by the context menu of the GME Tree Browser, then the selected items in the tree browser. Folders
         /// are never passed (they are not FCOs).
         /// If the interpreter is invoked by clicking on the toolbar icon or the context menu of the modeling window, then the selected items 
         /// in the active GME modeling window. If nothing is selected, the collection is empty (contains zero elements).
         /// </param>
         /// <param name="startMode">Contains information about the GUI event that initiated the invocation.</param>
+        [ComVisible(false)]
         public void Main(MgaProject project, MgaFCO currentobj, MgaFCOs selectedobjs, ComponentStartMode startMode)
         {
             // TODO: Add your interpreter code
