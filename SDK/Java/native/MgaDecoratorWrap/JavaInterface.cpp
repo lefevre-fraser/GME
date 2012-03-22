@@ -7,6 +7,8 @@
 #include "Gme_i.c"
 #include "JavaInterface.h"
 
+#include <string>
+
 #define COMCHECK( hr ) if( FAILED(hr) ) ThrowCOMException( env, hr )
 
 void ThrowCOMException(JNIEnv* env, int hresult)
@@ -40,8 +42,11 @@ JNIEXPORT jint JNICALL Java_org_isis_gme_mgadecorator_MgaDecorator_createNative_
 {   
     const jchar * chars = env->GetStringChars( progid, false );
 
-    CLSID clsid;
-    HRESULT hr = CLSIDFromProgID((LPCOLESTR)chars, &clsid);
+	std::wstring strUni;
+	strUni.append((const wchar_t*)chars, env->GetStringLength(progid));
+
+	CLSID clsid;
+    HRESULT hr = CLSIDFromProgID(strUni.c_str(), &clsid);
     env->ReleaseStringChars( progid, chars );
     COMCHECK( hr );
 

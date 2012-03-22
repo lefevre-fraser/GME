@@ -36,6 +36,8 @@ author: Miklos Maroti
 #include "StdAfx.h"
 #include "Dispatch.h"
 
+#include <string>
+
 extern "C"
 {
 
@@ -203,9 +205,11 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Dispatch_changeInterface
 		ThrowOutOfMemoryError(env);
 		return;
 	}
+	std::wstring strUni;
+	strUni.append((const wchar_t*)uni, env->GetStringLength(itf));
 
 	IID iid;
-	HRESULT hr = IIDFromString((LPOLESTR)uni, &iid);
+	HRESULT hr = IIDFromString(strUni.c_str(), &iid);
 	env->ReleaseStringChars(itf, uni);
 	
 	if( FAILED(hr) )
@@ -242,9 +246,11 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Dispatch_attachNewInstance
 		ThrowOutOfMemoryError(env);
 		return;
 	}
+	std::wstring strUni;
+	strUni.append((const wchar_t*)uni, env->GetStringLength(progid));
 	
 	CLSID clsid;
-	HRESULT hr = CLSIDFromProgID((LPCOLESTR)uni, &clsid);
+	HRESULT hr = CLSIDFromProgID(strUni.c_str(), &clsid);
 	env->ReleaseStringChars(progid, uni);
 
 	if( FAILED(hr) )
@@ -284,9 +290,11 @@ JNIEXPORT void JNICALL Java_org_isis_jaut_Dispatch_attachActiveObject
 		ThrowOutOfMemoryError(env);
 		return;
 	}
+	std::wstring strUni;
+	strUni.append((const wchar_t*)uni, env->GetStringLength(progid));
 	
 	CLSID clsid;
-	HRESULT hr = CLSIDFromProgID((LPCOLESTR)uni, &clsid);
+	HRESULT hr = CLSIDFromProgID(strUni.c_str(), &clsid);
 	env->ReleaseStringChars(progid, uni);
 
 	if( FAILED(hr) )
@@ -343,9 +351,9 @@ JNIEXPORT jintArray JNICALL Java_org_isis_jaut_Dispatch_getIDsOfNames
 
 	jintArray dispids = env->NewIntArray(size);
 
-	const OLECHAR **ns = NULL;
+	OLECHAR **ns = NULL;
 	if( dispids != NULL )
-		ns = (const OLECHAR**)CoTaskMemAlloc(sizeof(OLECHAR*) * size);
+		ns = (OLECHAR**)CoTaskMemAlloc(sizeof(OLECHAR*) * size);
 
 	int index = 0;
 	if( ns != NULL )
@@ -355,8 +363,12 @@ JNIEXPORT jintArray JNICALL Java_org_isis_jaut_Dispatch_getIDsOfNames
 			jstring name = (jstring)env->GetObjectArrayElement(names, index);
 			if( name == NULL )
 				break;
-
-			ns[index] = (const OLECHAR*)env->GetStringChars(name, NULL);
+			jsize len = env->GetStringLength(name);
+			ns[index] = new wchar_t[len+1];
+			const jchar* str = env->GetStringChars(name, NULL);
+			wcsncpy(ns[index], (const wchar_t*)str, len);
+			ns[index][len] = L'\0';
+			env->ReleaseStringChars(name, str);
 			env->DeleteLocalRef(name);
 
 			if( ns[index] == NULL )
@@ -372,7 +384,7 @@ JNIEXPORT jintArray JNICALL Java_org_isis_jaut_Dispatch_getIDsOfNames
 
 	HRESULT hr = S_OK;
 	if( ds != NULL )
-		hr = p->GetIDsOfNames(IID_NULL, (OLECHAR**)ns, size, NULL, ds);
+		hr = p->GetIDsOfNames(IID_NULL, ns, size, NULL, ds);
 
 	if( ds != NULL )
 		env->ReleaseIntArrayElements(dispids, ds, 0);
@@ -380,7 +392,8 @@ JNIEXPORT jintArray JNICALL Java_org_isis_jaut_Dispatch_getIDsOfNames
 	while( --index >= 0 )
 	{
 		jstring name = (jstring)env->GetObjectArrayElement(names, index);
-		env->ReleaseStringChars(name, (const jchar*)ns[index]);
+		delete[] ns[index];
+		// FIXME: don't we do this above?
 		env->DeleteLocalRef(name);
 	}
 
@@ -412,12 +425,15 @@ JNIEXPORT jint JNICALL Java_org_isis_jaut_Dispatch_getIDOfName
 		return NULL;
 	}
 
-	const OLECHAR *n = (const OLECHAR*)env->GetStringChars(name, NULL);
+	const jchar *n = env->GetStringChars(name, NULL);
 	if( n == NULL )
 		return NULL;
 
+	std::wstring strUni;
+	strUni.append((const wchar_t*)n, env->GetStringLength(name));
+	const wchar_t* names = strUni.c_str();
 	long id = 0;
-	HRESULT hr = p->GetIDsOfNames(IID_NULL, (OLECHAR**)&n, 1, NULL, &id);
+	HRESULT hr = p->GetIDsOfNames(IID_NULL, const_cast<wchar_t**>(&names), 1, NULL, &id);
 
 	env->ReleaseStringChars(name, (const jchar*)n);
 	
