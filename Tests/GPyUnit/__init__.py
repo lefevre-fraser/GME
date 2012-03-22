@@ -47,7 +47,8 @@ def _test_names():
 def _tests():
     # print _test_names()
     # can't find tc2 with \python27\python -m GPyUnit if we don't do this
-    import GPyUnit.Regr.Mga.tc2
+    if platform.system() != 'Java':
+        import GPyUnit.Regr.Mga.tc2
     return unittest.defaultTestLoader.loadTestsFromNames(['GPyUnit.' + test for test in _test_names()])
 
 def run_xmlrunner(output_filename):

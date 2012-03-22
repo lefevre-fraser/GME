@@ -13,11 +13,12 @@ import subprocess
 import itertools
 
 
-# Disable early binding: full of race conditions writing the cache files,
-# and changes the semantics since inheritance isn't handled correctly
-import win32com.client.gencache
-_savedGetClassForCLSID = win32com.client.gencache.GetClassForCLSID
-win32com.client.gencache.GetClassForCLSID = lambda x: None
+if platform.system() != 'Java':
+    # Disable early binding: full of race conditions writing the cache files,
+    # and changes the semantics since inheritance isn't handled correctly
+    import win32com.client.gencache
+    _savedGetClassForCLSID = win32com.client.gencache.GetClassForCLSID
+    win32com.client.gencache.GetClassForCLSID = lambda x: None
 
 # Elevation helpers
 def execute_elevated(*args):

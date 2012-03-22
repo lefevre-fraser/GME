@@ -20,7 +20,7 @@ def DispatchEx(progid):
     else:
         import platform
         # FIXME: does this work with 64bit Jython?
-        if '64bit' in platform.architecture():
+        if platform.system() != 'Java' and '64bit' in platform.architecture():
             return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER|CLSCTX_ACTIVATE_32_BIT_SERVER)
         return win32com.client.DispatchEx(progid)
 
