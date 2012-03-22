@@ -171,8 +171,8 @@ STDMETHODIMP CConstraintMgr::ObjectEvent( IMgaObject* obj, unsigned long eventma
 	if ( ! m_Facade.m_bEnabled || ! m_Facade.m_bEnabledInteractions || ! m_Facade.m_bEnabledEvents ) {
 		return S_OK;
 	}
-	if (eventmask == OBJEVENT_MOUSEOVER)
-		return S_OK;
+	ASSERT(!(eventmask | OBJEVENT_MOUSEOVER)); // shouldn't receive these events because of put_EventMask
+	ASSERT(!(eventmask | OBJEVENT_PRE_DESTROYED));
 
 	COMTRY {
 		return m_Facade.Evaluate( obj, eventmask);
@@ -192,7 +192,7 @@ STDMETHODIMP CConstraintMgr::Initialize( IMgaProject *p )
 
 	COMTRY {
 		COMTHROW( m_spProject->CreateAddOn( m_spEventSink, &m_spAddOn ) );
-		COMTHROW( m_spAddOn->put_EventMask( 0xFFFFFFFF ) );
+		COMTHROW( m_spAddOn->put_EventMask( ~(OBJEVENT_MOUSEOVER | OBJEVENT_PRE_DESTROYED) )  );
 
 		CComPtr<IMgaTerritory> spTerritory;
 		COMTHROW( m_spProject->CreateTerritory( NULL, &spTerritory ) );

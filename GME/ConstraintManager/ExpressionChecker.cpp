@@ -156,7 +156,8 @@ STDMETHODIMP CExpressionChecker::ObjectEvent( IMgaObject *obj, unsigned long eve
 				}
 				m_Facade.Finalize();
 			}
-		}
+		} else
+			ASSERT(false); // Shouldn't get other events because of put_EventMask
 
 	} COMCATCH( ASSERT( 0 ); )
 
@@ -175,7 +176,7 @@ STDMETHODIMP CExpressionChecker::Initialize( IMgaProject *p )
 	m_spAddOn = NULL;
 	COMTRY {
 		COMTHROW( m_spProject->CreateAddOn( m_spEventSink, &m_spAddOn ) );
-		COMTHROW( m_spAddOn->put_EventMask( 0xFFFFFFFF ) );
+		COMTHROW( m_spAddOn->put_EventMask( ~(OBJEVENT_ATTR | OBJEVENT_CONNECTED) ) );
 
 		m_Facade.Initialize( p );
 	} COMCATCH( ASSERT( 0 ); )
