@@ -145,7 +145,7 @@ namespace OclMeta
 	{
 		for ( unsigned int i = 0 ; i < vecSuperTypes.size() ; i++ ) {
 			try {
-				Type* pType = pManager->GetType( vecSuperTypes[ i ], NILNAMESPACE );
+				std::shared_ptr<Type> pType = pManager->GetType( vecSuperTypes[ i ], NILNAMESPACE );
 				callResult = pType->GetResults( signature );
 				if ( callResult.bIsValid )
 					vecArg.push_back( (TFeature*) callResult.uResult.pFeature );
@@ -197,11 +197,6 @@ namespace OclMeta
 
 	void TypeManager::ClearTypes()
 	{
-		for ( TypeResultMap::iterator i = m_mapTypes.begin() ; i != m_mapTypes.end() ; ++i )
-			if ( (*i).second.bIsValid )
-				delete (*i).second.uResult.pType;
-			else
-				delete (*i).second.uResult.pException;
 		m_mapTypes.clear();
 	}
 
@@ -211,12 +206,12 @@ namespace OclMeta
 		m_mapTypes.clear();
 		for ( TypeResultMap::iterator i = mapTypes.begin() ; i != mapTypes.end() ; ++i )
 			if ( ! (*i).second.bIsValid )
-				delete (*i).second.uResult.pException;
+				i->second.pException.reset();
 			else
-				if ( (*i).second.uResult.pType->IsDynamic() )
-					delete (*i).second.uResult.pType;
+				if ( (*i).second.pType->IsDynamic() )
+					i->second.pType.reset();
 				else
-					m_mapTypes.insert( TypeResultMap::value_type( (*i).first, (*i).second ) );
+					m_mapTypes.insert( TypeResultMap::value_type( std::move((*i).first), std::move((*i).second) ) );
 	}
 
 	void TypeManager::ClearGlobals()
@@ -231,15 +226,15 @@ namespace OclMeta
 		ClearGlobals();
 	}
 
-	Type* TypeManager::GetType( const std::string& strName, const std::string& strNSpace  )
+	std::shared_ptr<Type> TypeManager::GetType( const std::string& strName, const std::string& strNSpace  )
 	{
 		std::string nameResult;
 		TypeResultMap::iterator i = m_mapTypes.find( strName );
 		if ( i != m_mapTypes.end() ) {
 			if ( (*i).second.bIsValid )
-				return (*i).second.uResult.pType;
+				return (*i).second.pType;
 			else
-				throw OclCommon::Exception( *(*i).second.uResult.pException );
+				throw OclCommon::Exception( *(*i).second.pException );
 		}
 		TypeVector vecTypes;
 		TypeResult typeResult;
@@ -247,34 +242,35 @@ namespace OclMeta
 			m_pTypeFactory->GetTypes( strName, strNSpace, vecTypes, nameResult );
 			if ( vecTypes.empty() ) {
 				typeResult.bIsValid = false;
-				typeResult.uResult.pException = new OclCommon::Exception( OclCommon::Exception::ET_SEMANTIC, EX_TYPE_DOESNT_EXIST, strName );
+				typeResult.pException = std::shared_ptr<OclCommon::Exception>(new OclCommon::Exception( OclCommon::Exception::ET_SEMANTIC, EX_TYPE_DOESNT_EXIST, strName ));
 			}
 			else {
 				if ( vecTypes.size() > 1 ) {
 					typeResult.bIsValid = false;
-					typeResult.uResult.pException = new OclCommon::Exception( OclCommon::Exception::ET_SEMANTIC, EX_TYPE_AMBIGUOUS, strName );
+					typeResult.pException = std::shared_ptr<OclCommon::Exception>(new OclCommon::Exception( OclCommon::Exception::ET_SEMANTIC, EX_TYPE_AMBIGUOUS, strName ));
 				}
 				else {
 					typeResult.bIsValid = true;
-					typeResult.uResult.pType = vecTypes[ 0 ].release();
+					typeResult.pType = std::shared_ptr<Type>(vecTypes[ 0 ].release());
 				}
 			}
 		}
 		catch ( OclCommon::Exception ex ) {
 			typeResult.bIsValid = false;
-			typeResult.uResult.pException = new OclCommon::Exception( ex );
+			typeResult.pException = std::shared_ptr<OclCommon::Exception>(new OclCommon::Exception( ex ));
 		}
-		m_mapTypes.insert( TypeResultMap::value_type( nameResult, typeResult ) ); // WAS: m_mapTypes.insert( TypeResultMap::value_type( strName, typeResult ) );
+		TypeResultMap::iterator it = m_mapTypes.insert( TypeResultMap::value_type( std::move(nameResult), std::move(typeResult) ) ).first; 
+		// WAS: m_mapTypes.insert( TypeResultMap::value_type( strName, typeResult ) );
 		RegisterType( typeResult );
 		if ( typeResult.bIsValid )
-			return typeResult.uResult.pType;
+			return typeResult.pType;
 		else
-			throw OclCommon::Exception( *typeResult.uResult.pException );
+			throw OclCommon::Exception( *typeResult.pException );
 	}
 
 	int TypeManager::IsTypeAR( const std::string& strName1, const std::string& strName2, int iLevel )
 	{
-		Type* pType1 = GetType( strName1, NILNAMESPACE );
+		std::shared_ptr<Type> pType1 = GetType( strName1, NILNAMESPACE );
 		if ( pType1->GetName() == strName2 )
 			return iLevel;
 		const StringVector& vecSuperTypes = pType1->GetSuperTypeNames();
@@ -289,13 +285,13 @@ namespace OclMeta
 
 	int TypeManager::IsTypeA( const std::string& strName1, const std::string& strName2 )
 	{
-		Type* pType2 = GetType( strName2, NILNAMESPACE );
+		std::shared_ptr<Type> pType2 = GetType( strName2, NILNAMESPACE );
 		return IsTypeAR( strName1, pType2->GetName(), 0 );
 	}
 
 	int TypeManager::GetTypeDistance( const std::string& strName )
 	{
-		Type* pType = GetType( ( strName.empty() ) ? "ocl::Any" : strName, NILNAMESPACE );
+		std::shared_ptr<Type> pType = GetType( ( strName.empty() ) ? "ocl::Any" : strName, NILNAMESPACE );
 		const StringVector& vecSuperTypes = pType->GetSuperTypeNames();
 		if ( vecSuperTypes.empty() )
 			return 0;
@@ -469,12 +465,12 @@ namespace OclMeta
 	void TypeManager::RegisterType( TypeResult& typeResult )
 	{
 		if ( typeResult.bIsValid ) {
-			typeResult.uResult.pType->m_pTypeManager = this;
-			typeResult.uResult.pType->m_pAttributeFactory->m_pTypeManager = this;
-			typeResult.uResult.pType->m_pAssociationFactory->m_pTypeManager = this;
-			typeResult.uResult.pType->m_pMethodFactory->m_pTypeManager = this;
-			if ( typeResult.uResult.pType->IsCompound() )
-				( (CompoundType*) typeResult.uResult.pType )->m_pIteratorFactory->m_pTypeManager = this;
+			typeResult.pType->m_pTypeManager = this;
+			typeResult.pType->m_pAttributeFactory->m_pTypeManager = this;
+			typeResult.pType->m_pAssociationFactory->m_pTypeManager = this;
+			typeResult.pType->m_pMethodFactory->m_pTypeManager = this;
+			if ( typeResult.pType->IsCompound() )
+				( (CompoundType*) typeResult.pType.get() )->m_pIteratorFactory->m_pTypeManager = this;
 		}
 	}
 

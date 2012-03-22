@@ -34,16 +34,11 @@ namespace OclMeta
 		UCallResult	uResult;
 	};
 
-	union UTypeResult
-	{
-		Type* 						pType;
-		OclCommon::Exception*	pException;
-	};
-
 	struct TypeResult
 	{
 		bool			bIsValid;
-		UTypeResult	uResult;
+		std::shared_ptr<Type> pType;
+		std::shared_ptr<OclCommon::Exception> pException;
 	};
 
 	typedef std::map< std::string , CallResult > CallResultMap;
@@ -81,7 +76,7 @@ namespace OclMeta
 			void 		ClearDynamicTypes();
 			void 		ClearGlobals();
 
-			Type* 		GetType( const std::string& strName, const std::string& strNSpace );
+			std::shared_ptr<Type> GetType( const std::string& strName, const std::string& strNSpace );
 
 			int 			GetTypeDistance( const std::string& strName );
 			int 			IsTypeA( const std::string& strName1, const std::string& strName2 );

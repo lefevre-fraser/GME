@@ -304,6 +304,7 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 			}
 			else {
 				COMTHROW(OpenParadigm(s,&pGUID));
+				ver.Empty();
 				COMTHROW(metapr->get_Version(&ver));
 			}
 			bool guidchanged = false;

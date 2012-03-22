@@ -98,7 +98,7 @@ namespace OclTree
 		bool bValid = true;
 		for ( unsigned int i = 0 ; i < vecType.size() ; i++ ) {
 			try {
-				OclMeta::Type* pType = m_pManager->GetTypeManager()->GetType( vecType[ i ], context.m_namespace);
+				std::shared_ptr<OclMeta::Type> pType = m_pManager->GetTypeManager()->GetType( vecType[ i ], context.m_namespace);
 				if ( i != vecType.size() - 1 ) {
 					if ( ! pType->IsCompound() ) {
 						ADDEX( EXCEPTION1( EX_TYPE_ISNT_COMPOUND, vecType[ i ], position ) );
@@ -1183,7 +1183,7 @@ namespace OclTree
 	bool IteratorNode::CheckIterator( TypeContext& context )
 	{
 
-		OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( m_pThisNode->m_vecType[ 0 ], context.m_namespace );
+		std::shared_ptr<OclMeta::Type> pType = GetTreeManager()->GetTypeManager()->GetType( m_pThisNode->m_vecType[ 0 ], context.m_namespace );
 
 		// Not compound Type cannot have iterators
 
@@ -1260,7 +1260,7 @@ namespace OclTree
 				// It is predefined iterator
 
 				try {
-					OclMeta::CompoundType* pCType = (OclMeta::CompoundType*) pType;
+					OclMeta::CompoundType* pCType = (OclMeta::CompoundType*) pType.get();
 					OclMeta::Iterator* pIterator = pCType->GetIterator(0, OclSignature::Iterator( m_strName, m_pThisNode->m_vecType[ 0 ], m_pArgumentNode->m_vecType[ 0 ] ) );
 					GetParametralTypeSeq( m_pThisNode->m_vecType, m_pArgumentNode->m_vecType, pIterator->GetReturnTypeSeq() );
 				}
@@ -1316,7 +1316,7 @@ namespace OclTree
 		EVALTRY {
 			OclImplementation::Iterator* pIIterator = NULL;
 			if ( ! m_pAccuNode ) {
-				OclMeta::CompoundType* pCType = (OclMeta::CompoundType*) GetTreeManager()->GetTypeManager()->GetType( objectThis.GetStaticTypeName(), NILNAMESPACE );
+				OclMeta::CompoundType* pCType = (OclMeta::CompoundType*) GetTreeManager()->GetTypeManager()->GetType( objectThis.GetStaticTypeName(), NILNAMESPACE ).get();
 				OclMeta::Iterator* pIterator = pCType->GetIterator(m_iteratorLevel, signature );
 				pIIterator = pIterator->GetImplementation();
 				if ( ! pIIterator )
@@ -1467,7 +1467,7 @@ namespace OclTree
 
 		if ( bThisValid ) {
 
-			OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( m_pThisNode->m_vecType[ 0 ], context.m_namespace );
+			OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( m_pThisNode->m_vecType[ 0 ], context.m_namespace ).get();
 
 			// Check if Object Node is callable
 
@@ -1695,7 +1695,7 @@ namespace OclTree
 				return OclMeta::Object::UNDEFINED;
 
 		EVALTRY {
-			OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( objectThis.GetStaticTypeName(), NILNAMESPACE );
+			OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( objectThis.GetStaticTypeName(), NILNAMESPACE ).get();
 			OclMeta::Method* pMethod = pType->GetMethod( signature );
 			OclImplementation::Method* pIMethod = pMethod->GetImplementation();
 			if ( ! pIMethod )
@@ -1991,7 +1991,7 @@ namespace OclTree
 
 	bool AssociationNode::CheckAssociation( TypeContext& context )
 	{
-		OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( m_pThisNode->m_vecType[ 0 ], context.m_namespace );
+		OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( m_pThisNode->m_vecType[ 0 ], context.m_namespace ).get();
 
 		// Check static object can be called
 
@@ -2032,7 +2032,7 @@ namespace OclTree
 			return objectThis;
 
 		EVALTRY {
-			OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( objectThis.GetStaticTypeName(), NILNAMESPACE );
+			OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( objectThis.GetStaticTypeName(), NILNAMESPACE ).get();
 			OclMeta::Association* pAssociation = pType->GetAssociation( signature );
 			OclImplementation::Association* pIAssociation = pAssociation->GetImplementation();
 			if ( ! pIAssociation )
@@ -2119,7 +2119,7 @@ namespace OclTree
 
 		if ( bThisValid ) {
 
-			OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( m_pThisNode->m_vecType[ 0 ], context.m_namespace );
+			OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( m_pThisNode->m_vecType[ 0 ], context.m_namespace ).get();
 
 			// Type is not compound
 
@@ -2187,7 +2187,7 @@ namespace OclTree
 
 				// Create Feature Call Check
 
-				OclMeta::Type* pTypeInner = GetTreeManager()->GetTypeManager()->GetType( m_pThisNode->m_vecType[ 1 ], context.m_namespace );
+				OclMeta::Type* pTypeInner = GetTreeManager()->GetTypeManager()->GetType( m_pThisNode->m_vecType[ 1 ], context.m_namespace ).get();
 
 				std::vector<OclMeta::Type*> vecTypes( 2, pType ); vecTypes[ 1 ] = pTypeInner;
 
@@ -2269,7 +2269,7 @@ namespace OclTree
 			return objectThis;
 
 		EVALTRY {
-			OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( objectThis.GetStaticTypeName(), NILNAMESPACE );
+			OclMeta::Type* pType = GetTreeManager()->GetTypeManager()->GetType( objectThis.GetStaticTypeName(), NILNAMESPACE ).get();
 			OclMeta::Attribute* pAttribute = pType->GetAttribute( signature );
 			OclImplementation::Attribute* pIAttribute = pAttribute->GetImplementation();
 			if ( ! pIAttribute )
@@ -2700,7 +2700,7 @@ namespace OclTree
 		// Check if this object is Compound
 
 		if ( bValid ) {
-			OclMeta::Type* pType = pNode->GetTreeManager()->GetTypeManager()->GetType( pNode->m_vecType[ 0 ], context.m_namespace );
+			OclMeta::Type* pType = pNode->GetTreeManager()->GetTypeManager()->GetType( pNode->m_vecType[ 0 ], context.m_namespace ).get();
 			if ( ! pType->IsCompound() ) {
 				ADDEX( EXCEPTION1( EX_TYPE_ISNT_COMPOUND, pNode->m_vecType[ 0 ], pNode->m_mapPositions[ LID_NODE_START ] ) );
 				bValid = false;

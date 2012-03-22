@@ -40,8 +40,8 @@ public:
 			}
 		}
 		clear();
-		int lenx = vect.size();
-		for (int kk=0; kk<lenx; kk++)
+		size_t lenx = vect.size();
+		for (size_t kk=0; kk<lenx; kk++)
 		{
 			IUnknown *ptr = vect[kk];
 			if (ptr)
