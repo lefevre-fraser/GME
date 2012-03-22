@@ -1103,7 +1103,7 @@ void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 				} else {
 					CMenu pluginmenu;
 					pluginmenu.CreatePopupMenu();
-					for(int i = 0; i < min(interpreters.GetSize(), ID_FILE_INTERPRET1 - ID_FILE_INTERPRET_LAST); ++i) {
+					for(int i = 0; i < min(interpreters.GetSize(), ID_FILE_INTERPRET_LAST - ID_FILE_INTERPRET1); ++i) {
 						pluginmenu.AppendMenu(MF_ENABLED, ID_FILE_INTERPRET1 + i, interpreterTooltips[i]);
 					}
 					toolmenu->InsertMenu(idx,
