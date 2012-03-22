@@ -310,6 +310,15 @@ void MgaSetErrorInfo(HRESULT hr);
 			SetStandardOrGMEErrorInfo(e.Error()); \
 		return e.Error(); \
 	} \
+	catch(std::bad_alloc&) \
+	{ \
+		{ \
+			if((hr = ttt.Abort()) != S_OK) return hr; \
+			CLEANUP; \
+		} \
+		MgaSetErrorInfo(E_OUTOFMEMORY); \
+		return E_OUTOFMEMORY; \
+	} \
 	return ttt.Commit(); }
 
 #define MGAPREF_NO_NESTED_TX 0x00000080
@@ -346,6 +355,16 @@ catch(_com_error &e) \
 		SetStandardOrGMEErrorInfo(e.Error()); \
 	return e.Error(); \
 } \
+catch(std::bad_alloc&) \
+{ \
+	{ \
+		HRESULT hr; \
+		if(!(this->mgaproject->preferences & MGAPREF_NO_NESTED_TX) && ((hr = ttt.Abort()) != S_OK)) return hr; \
+		CLEANUP; \
+	} \
+	MgaSetErrorInfo(E_OUTOFMEMORY); \
+	return E_OUTOFMEMORY; \
+} \
 if (!(this->mgaproject->preferences & MGAPREF_NO_NESTED_TX)) \
 	return ttt.Commit(); \
 else \
@@ -363,6 +382,15 @@ else \
 			CLEANUP; \
 		} \
 		MgaSetErrorInfo(e.hr); \
+		return e.hr; \
+	} \
+	catch(std::bad_alloc&) \
+	{ \
+		struct { HRESULT hr; } e = { E_OUTOFMEMORY }; \
+		{ \
+			CLEANUP; \
+		} \
+		SetStandardOrGMEErrorInfo(e.hr); \
 		return e.hr; \
 	} \
 	return S_OK;
