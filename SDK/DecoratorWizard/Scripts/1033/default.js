@@ -233,7 +233,6 @@ function AddConfig(proj, strProjectName)
 		LinkTool.GenerateDebugInformation = "true";
 		LinkTool.RegisterOutput = true;
 		LinkTool.SubSystem = subSystemOption.subSystemWindows;
-		LinkTool.TargetMachine = machineTypeOption.machineX86;
 		LinkTool.ModuleDefinitionFile = 'DecoratorApp.def';
 	    if (dte.Version != '10.0')
 	    	LinkTool.OutputFile = "$(OutDir)\\$(ProjectName)D.dll"
@@ -287,9 +286,8 @@ function AddConfig(proj, strProjectName)
 		LinkTool.AdditionalDependencies = "gdiplus.lib DecoratorLib.lib";
 		LinkTool.AdditionalLibraryDirectories = "$(Configuration);$(SolutionDir)$(Configuration)";
 		LinkTool.LinkIncremental = linkIncrementalType.linkIncrementalNo;
-		LinkTool.GenerateDebugInformation = "false";
+		LinkTool.GenerateDebugInformation = "true";
 		LinkTool.SubSystem = subSystemOption.subSystemWindows;
-		LinkTool.TargetMachine = machineTypeOption.machineX86;
 		LinkTool.ModuleDefinitionFile = 'DecoratorApp.def';
 		LinkTool.RegisterOutput = true;
 	    if (dte.Version != '10.0')
