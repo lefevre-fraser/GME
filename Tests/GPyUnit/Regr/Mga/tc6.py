@@ -12,13 +12,14 @@ from GPyUnit.util import dec_disable_early_binding
 class TestCase6( unittest.TestCase ):
 	def __init__(self, methodName='runTest'):
 		unittest.TestCase.__init__(self, methodName)
+		self.project = None
 
 	def setUp( self ):		## hook method
 		pass
 
 	def tearDown( self ):		## hook method
-		self.project.Close( 0 )
-		pass
+		if self.project:
+			self.project.Close( 0 )
 
 	def populate6A(self, p):
 		f1 = bd.newFolder( p, p.RootFolder, 'Folder')
@@ -202,12 +203,12 @@ class TestCase6( unittest.TestCase ):
 		mg1name = "_tc6_C_readonly_sf.mga"
 
 		# if file exists from previous testing remove its readonly flag and delete the file
-		if os.path.isfile( mg1name):
-			# revert to read/write permission in order to delete it seamlessly
-			os.chmod( mg1name, stat.S_IWUSR)
-
-			#delete:
-			#os.remove( mg1name)
+		for file in (mg1name, mg1name + "tmp"):
+			if os.path.isfile(file):
+				# revert to read/write permission in order to delete it seamlessly
+				os.chmod(file, stat.S_IWUSR)
+				#delete:
+				#os.remove( mg1name)
 		
 
 		# create the project with the needed kinds
