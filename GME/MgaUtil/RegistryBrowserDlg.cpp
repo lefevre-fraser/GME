@@ -5,6 +5,9 @@
 #include "mgautil.h"
 #include "RegistryBrowserDlg.h"
 
+EXTERN_C IMAGE_DOS_HEADER __ImageBase;
+#define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -62,6 +65,7 @@ BEGIN_MESSAGE_MAP(CRegistryBrowserDlg, CDialog)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
+
 /////////////////////////////////////////////////////////////////////////////
 // CRegistryBrowserDlg message handlers
 
@@ -79,34 +83,45 @@ BOOL CRegistryBrowserDlg::OnInitDialog()
 
 
 	CWinApp *pApp = AfxGetApp();
-	m_imageList.Create(::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), ILC_COLOR4 | ILC_MASK, 5, 1);
+	int cx = ::GetSystemMetrics(SM_CXSMICON);
+	int cy = ::GetSystemMetrics(SM_CYSMICON);
+	m_imageList.Create(cx, cy, ILC_COLOR4 | ILC_MASK, 5, 1);
 	m_imageMap.InitHashTable(10);
 	
-	HICON hIcon = pApp->LoadIcon(IDI_ICON_REGHERE);
+	HICON hIcon;
+
+	hIcon = (HICON)::LoadImage(HINST_THISCOMPONENT, 
+		MAKEINTRESOURCE(IDI_ICON_REGHERE), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR);
+	ASSERT(hIcon);
 	if (hIcon) {
 		m_imageMap[IDI_ICON_REGHERE] = m_imageList.Add(hIcon);
 		::DeleteObject(hIcon);
 	}
 
-	hIcon = pApp->LoadIcon(IDI_ICON_REGINHERIT);
+	hIcon = (HICON)::LoadImage(HINST_THISCOMPONENT, 
+		MAKEINTRESOURCE(IDI_ICON_REGINHERIT), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR);
+	ASSERT(hIcon);
 	if (hIcon) {
 		m_imageMap[IDI_ICON_REGINHERIT] = m_imageList.Add(hIcon);
 		::DeleteObject(hIcon);
 	}
 
-	hIcon = pApp->LoadIcon(IDI_ICON_REGINVALID);
+	hIcon = (HICON)::LoadImage(HINST_THISCOMPONENT, 
+		MAKEINTRESOURCE(IDI_ICON_REGINVALID), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR);
 	if (hIcon) {
 		m_imageMap[IDI_ICON_REGINVALID] = m_imageList.Add(hIcon);
 		::DeleteObject(hIcon);
 	}
 
-	hIcon = pApp->LoadIcon(IDI_ICON_REGMETA);
+	hIcon = (HICON)::LoadImage(HINST_THISCOMPONENT, 
+		MAKEINTRESOURCE(IDI_ICON_REGMETA), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR);
 	if (hIcon) {
 		m_imageMap[IDI_ICON_REGMETA] = m_imageList.Add(hIcon);
 		::DeleteObject(hIcon);
 	}
 	
-	hIcon = pApp->LoadIcon(IDI_ICON_REGUNDEF);
+	hIcon = (HICON)::LoadImage(HINST_THISCOMPONENT, 
+		MAKEINTRESOURCE(IDI_ICON_REGUNDEF), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR);
 	if (hIcon) {
 		m_imageMap[IDI_ICON_REGUNDEF] = m_imageList.Add(hIcon);
 		::DeleteObject(hIcon);
@@ -281,7 +296,7 @@ void CRegistryBrowserDlg::AddNodes(CRegBrwNode *parent, CComPtr<IMgaRegNodes> &r
 		}
 		
 
-		m_wndRegistryTree.SetItemImage(hnd,imageNum,imageNum);
+		VERIFY(m_wndRegistryTree.SetItemImage(hnd,imageNum,imageNum));
 		
 		CComPtr<IMgaRegNodes> subRegNodes;
 		COMTHROW(regNode->get_SubNodes(VARIANT_TRUE, &subRegNodes));
