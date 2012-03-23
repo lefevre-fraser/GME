@@ -886,10 +886,12 @@ BOOL CConsoleCtrl::PreTranslateMessage(MSG* pMsg) {
 
 HRESULT CConsoleCtrl::AddGMEToScript()
 {
+	COMTRY {
 	HRESULT hr;
 
 	CComPtr<IHTMLDocument2> pHtmlDoc;
 	CComPtr<IDispatch> pDispatch = m_browser.GetHtmlDocument();
+	// This QI fails on Win7 if the link is to file:///folder
 	COMTHROW(pDispatch.QueryInterface(&pHtmlDoc));
 
 	CComPtr<IDispatch> script;
@@ -921,5 +923,6 @@ HRESULT CConsoleCtrl::AddGMEToScript()
 	params.rgdispidNamedArgs = &dispIdPut;
 			
 	return scriptex->InvokeEx(dispIdThis, LOCALE_SYSTEM_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, &ei, NULL);
+	} COMCATCH(;)
 }
 
