@@ -124,3 +124,27 @@ BOOL CParadigmPropertiesDlg::OnInitDialog()
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
+
+BOOL CParadigmPropertiesDlg::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		switch (pMsg->wParam)
+		{
+		case 'A':
+			{
+				if (GetKeyState(VK_CONTROL) & 0x8000)
+				{
+					CWnd* focus = GetFocus();
+					if (focus && focus->IsKindOf(RUNTIME_CLASS(CEdit)))
+					{
+						((CEdit*)GetFocus())->SetSel(0, 1000);
+						return TRUE;
+					}
+				}
+			}
+			break;
+		}
+	}
+	return __super::PreTranslateMessage(pMsg);
+}

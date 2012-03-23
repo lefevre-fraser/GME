@@ -997,13 +997,13 @@ BEGIN
     EDITTEXT        IDC_PARADIGM_MODIFIED,43,80,161,14,ES_AUTOHSCROLL | ES_READONLY
     EDITTEXT        IDC_PARADIGM_COMMENT,43,98,161,52,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY
     EDITTEXT        IDC_PARADIGM_GUID,43,155,161,14,ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "Name:",-1,9,10,21,8
-    LTEXT           "Author:",-1,9,28,29,8
-    LTEXT           "Created:",-1,9,65,27,8
-    LTEXT           "Modified:",-1,9,83,29,8
-    LTEXT           "Comment:",-1,9,101,31,8
-    LTEXT           "GUID:",-1,10,158,30,8
-    LTEXT           "Version:",-1,9,47,26,8
+    LTEXT           "Name:",-1,7,10,21,8
+    LTEXT           "Author:",-1,7,28,29,8
+    LTEXT           "Created:",-1,7,65,27,8
+    LTEXT           "Modified:",-1,7,83,29,8
+    LTEXT           "Comment:",-1,7,101,31,8
+    LTEXT           "GUID:",-1,7,158,30,8
+    LTEXT           "Version:",-1,7,47,26,8
 END
 
 IDD_CONSOLE_DIALOG DIALOG 0, 0, 393, 65
