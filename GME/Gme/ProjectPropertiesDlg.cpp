@@ -215,3 +215,27 @@ void CProjectPropertiesDlg::OnButtonParadigm()
 	CParadigmPropertiesDlg dlg;
 	dlg.DoModal();
 }
+
+BOOL CProjectPropertiesDlg::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		switch (pMsg->wParam)
+		{
+		case 'A':
+			{
+				if (GetKeyState(VK_CONTROL) & 0x8000)
+				{
+					CWnd* focus = GetFocus();
+					if (focus && focus->IsKindOf(RUNTIME_CLASS(CEdit)))
+					{
+						((CEdit*)GetFocus())->SetSel(0, 1000);
+						return TRUE;
+					}
+				}
+			}
+			break;
+		}
+	}
+	return __super::PreTranslateMessage(pMsg);
+}

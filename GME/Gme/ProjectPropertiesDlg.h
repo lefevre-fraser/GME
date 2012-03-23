@@ -49,6 +49,8 @@ protected:
 	afx_msg void OnButtonParadigm();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 //{{AFX_INSERT_LOCATION}}
