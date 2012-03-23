@@ -14,6 +14,16 @@ class TestParser(unittest.TestCase):
         if type(self) == TestParser:
             self.assertTrue(os.path.isfile(_adjacent_file("parsertest.mga")))
     
+    def test_ParseInTx(self):
+        project = GPyUnit.util.DispatchEx("Mga.MgaProject")
+        project.Create(self.connstr, "MetaGME")
+        project.BeginTransactionInNewTerr()
+        try:
+            mga = GPyUnit.util.parse_xme(self.connstr, project=project)
+        except Exception, e:
+            self.assertTrue(str(e).find("already in transaction") != -1)
+        project.Close(True)
+    
     @property
     def connstr(self):
         return "MGA=" + _adjacent_file("parsertest.mga")

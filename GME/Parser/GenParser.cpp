@@ -41,9 +41,16 @@ XmlStr::XmlStr(const XMLCh* const input, unsigned int len)
 
 void CGenParser::SetErrorInfo2(HRESULT hr)
 {
+	_bstr_t bstr;
+	GetErrorInfo(hr, bstr.GetAddress());
 	std::tstring str;
 	Format(str, _T("in file %s at line %ld, char %ld"), 
 		xmlfile.c_str(), err_line, err_column);
+
+	if (bstr.length())
+	{
+		str = std::tstring(static_cast<const TCHAR*>(bstr)) + _T(": ") + str;
+	}
 
 	SetErrorInfo(hr, _bstr_t(str.c_str()));
 }
