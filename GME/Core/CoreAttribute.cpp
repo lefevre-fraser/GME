@@ -265,6 +265,8 @@ inline bool CCoreAttribute::IsZombie() const
 
 CCoreLockAttribute::CCoreLockAttribute()
 {
+	original_locking = 0;
+	others_lockval = 0;
 	read_count = 0;
 	write_count = 0;
 	others_lockval = 0;
