@@ -50,8 +50,6 @@ inline void NOOP_TRACE2(LPCSTR, ...) { }
 #define MGA_TRACE 1 ? void(0) : NOOP_TRACE2
 #endif
 
-#undef VARIANT_TRUE
-#define VARIANT_TRUE ((VARIANT_BOOL)-1)
 #include "CoreLib.h"
 #include "MgaLib.h"	
 
