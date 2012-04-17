@@ -8,6 +8,10 @@
 
 #pragma once
 
+//#define _ATL_DEBUG_INTERFACES
+// If you find a leak, put this in DllMain to DebugBreak on every AddRef/Release on that interface pointer
+// _AtlDebugInterfacesModule.m_nIndexBreakAt = 42;
+
 #ifndef _SECURE_ATL
 #define _SECURE_ATL 1
 #endif

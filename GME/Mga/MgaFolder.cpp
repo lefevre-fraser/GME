@@ -35,7 +35,7 @@ HRESULT FCO::CreateFolder(IMgaMetaFolder *meta, IMgaFolder **nf)
 		metaref_type mr;
 		COMTHROW(meta->get_MetaRef(&mr));
 		subfolder[ATTRID_META]=mr;
-		FCO *nff = ObjForCore(subfolder);
+		auto nff = ObjForCore(subfolder);
 		nff->initialname();
 		COMTHROW(nff->Check());
 		nff->SelfMark(OBJEVENT_CREATED);
@@ -323,7 +323,7 @@ HRESULT FCO::CreateRootObject(IMgaMetaFCO *meta, IMgaFCO **nobj) {
 		if(self[ATTRID_PERMISSIONS] & LIBROOT_FLAG) COMTHROW(E_MGA_NOT_CHANGEABLE);
 		CoreObj newobj;
 		COMTHROW(ContainerCreateFCO(meta, newobj));
-		FCO *nfco = ObjForCore(newobj);
+		auto nfco = ObjForCore(newobj);
 		nfco->initialname();
 		COMTHROW(nfco->Check());
 		nfco->SelfMark(OBJEVENT_CREATED);

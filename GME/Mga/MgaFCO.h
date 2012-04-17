@@ -21,7 +21,11 @@ template <class T1, class T2>
 class ATL_NO_VTABLE IMgaFCOImpl : public T1, public T2 {
 protected:
  friend class FCO;
+#ifdef _ATL_DEBUG_INTERFACES
+ friend CComPtr<FCO> ObjFor(IMgaObject *s);
+#else
  friend FCO *ObjFor(IMgaObject *s);
+#endif
  DEFSIG;
 #ifdef DEBUG
 // in DEBUG, inFCO is transformed to a macro, which checks territory compatibility
@@ -656,14 +660,31 @@ public:
 
 
 
+#ifdef _ATL_DEBUG_INTERFACES
+inline FCOPtr ObjForCore(ICoreObject *s) {
+#else
 inline FCO *ObjForCore(ICoreObject *s) {
+#endif
 		CComQIPtr<IMgaO> p = s;
 		if(!p) COMTHROW(E_MGA_MODULE_INCOMPATIBILITY);
+#ifdef _ATL_DEBUG_INTERFACES
+		IUnknown* pUnk = ((ATL::_QIThunk *)(p.p))->m_pUnk;
+		return (FCO*)((ATL::CComContainedObject<FCO>*)pUnk);
+#else
 		return (FCO *)(p.p);
+#endif
 }
+
+#ifdef _ATL_DEBUG_INTERFACES
+inline CComPtr<FCO> ObjFor(IMgaObject *s) {
+	IUnknown* pUnk = ((ATL::_QIThunk *)(s))->m_pUnk;
+	return ((CMgaAtom*)pUnk)->innFCO;
+}
+#else
 inline FCO *ObjFor(IMgaObject *s) {
 		return (static_cast<CMgaAtom *>(s)->innFCO);
 }
+#endif
 
 void CoreObjMark(CoreObj const &o, long mask);
 

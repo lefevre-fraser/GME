@@ -331,7 +331,7 @@ void RefreshManager::addChangedLib( elem_struct& elem)
 
 void RefreshManager::collectMixedConns( CoreObj& one_fco)
 {
-	FCO * obj = ObjForCore(one_fco);
+	auto obj = ObjForCore(one_fco);
 	if( obj)
 	{
 		CComPtr<IMgaConnPoints> cps1;
@@ -417,7 +417,7 @@ void RefreshManager::collectFreshConnection( const CoreObj& p_coreConn
                                            , const CoreObj& p_base, const CoreObj& p_derd)
 {
 	CComPtr<IMgaFCO> fco;
-	FCO * c = ObjForCore( p_coreConn);
+	auto c = ObjForCore( p_coreConn);
 	if( c) c->getinterface( &fco);
 	CComQIPtr<IMgaConnection> conn( fco);
 
@@ -2866,7 +2866,7 @@ void RefreshManager::saveTopAdaptiveRef( CoreObj& one_ref, CoreObj& bas_ref)
 // 
 void RefreshManager::collectDersFromLib( CoreObj& one_fco)
 {
-	FCO * obj = ObjForCore(one_fco);
+	auto obj = ObjForCore(one_fco);
 	if( obj)
 	{
 		elem_struct elem_self;
@@ -2968,7 +2968,7 @@ void RefreshManager::collectDersFromLib( CoreObj& one_fco)
 
 void RefreshManager::collectRefsToLib( CoreObj& one_fco)
 {
-	FCO * obj = ObjForCore(one_fco);
+	auto obj = ObjForCore(one_fco);
 	if( obj)
 	{
 		short dist_self = distance( one_fco); // the distance to the archetype of target (one_fco)
@@ -3061,7 +3061,7 @@ void RefreshManager::collectRefsToLib( CoreObj& one_fco)
 // thus when one_fco is destroyed it won't be followed by them
 void RefreshManager::cutDersFromLib( CoreObj& one_fco)
 {
-	FCO * obj = ObjForCore(one_fco);
+	auto obj = ObjForCore(one_fco);
 	if( obj)
 	{
 		CComPtr<IMgaFCOs> subs;
@@ -3290,12 +3290,12 @@ HRESULT Creator::Child( CMgaProject* p_mgaProject, CComPtr<IMgaFCO>& p_parent, C
 		COMTHROW( p_metar->get_Kind( &meta));
 
 		CoreObj a_self( p_parent);
-		FCO* parent( ObjForCore( a_self));
+		auto parent = ObjForCore(a_self);
 
 		COMTHROW( parent->ContainerCreateFCO( meta, nobj));
 
 		nobj[ATTRID_ROLEMETA]=rr;
-		FCO *nfco = ObjForCore(nobj);
+		auto nfco = ObjForCore(nobj);
 		nfco->initialname();
 
 		setcheck( p_mgaProject, nobj, CHK_NEW);
@@ -3369,7 +3369,7 @@ HRESULT Creator::AddConnPoint( CMgaProject* p_mgaProject, CComPtr<IMgaFCO>& p_co
 		peers[pos] = NULLCOREOBJ;
 
 		CoreObj a_self( p_conn);
-		FCO* this_conn( ObjForCore( a_self));
+		auto this_conn( ObjForCore( a_self));
 
 		AddConnPTask( p_maxinrole, p_rolename).DoWithDeriveds( a_self, &peers);
 		CMgaConnPoint::GetConnPoint( this_conn, peers[pos], pVal);

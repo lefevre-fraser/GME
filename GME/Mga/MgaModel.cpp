@@ -23,7 +23,7 @@ HRESULT FCO::CreateChildObject(IMgaMetaRole *metar, IMgaFCO **newobj)
 		COMTHROW(ContainerCreateFCO(meta, nobj));
 
 		nobj[ATTRID_ROLEMETA]=rr;
-		FCO *nfco = ObjForCore(nobj);
+		auto nfco = ObjForCore(nobj);
 		nfco->initialname();
 
 		setcheck(mgaproject, nobj, CHK_NEW);

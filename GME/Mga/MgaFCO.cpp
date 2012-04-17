@@ -30,7 +30,15 @@ STDMETHODIMP FCO::FinalConstruct() {
 			}
 			CComPtr<ICoreProject> cp;
 			COMTHROW(self->get_Project(&cp));
+#ifdef _ATL_DEBUG_INTERFACES
+			CComPtr<IMgaProject> proj;
+			COMTHROW(cp->QueryInterface(IID_IMgaProject,(void **)&proj));
+			IUnknown* pUnk = ((ATL::_QIThunk *)(proj.p))->m_pUnk;
+			pUnk->AddRef();
+			mgaproject.Attach((CMgaProject*)(IDispatchImpl<IMgaProject, &IID_IMgaProject, &LIBID_MGALib>*)(pUnk));
+#else
 			COMTHROW(cp->QueryInterface(IID_IMgaProject,(void **)&mgaproject));
+#endif
 	} COMCATCH(;);
 }
 
@@ -953,7 +961,8 @@ HRESULT FCO::objrwnotify() {
 				// send message to all territories that contain parent, 
 				CoreObj parent = self[ATTRID_PARENT];
 				if(parent.IsContainer()) {
-					FCO &p = *ObjForCore(parent);
+					auto objforcore = ObjForCore(parent);
+					FCO &p = *objforcore;
 					
 					// if parent is also new, notify it first
 					if(p.notifymask & OBJEVENT_CREATED) COMTHROW(p.objnotify());
@@ -1024,7 +1033,8 @@ HRESULT FCO::objnotify() {
 				// send message to all territories that contain parent, 
 				CoreObj parent = self[ATTRID_PARENT];
 				if(parent.IsContainer()) {
-					FCO &p = *ObjForCore(parent);
+					auto objforcore = ObjForCore(parent);
+					FCO &p = *objforcore;
 					
 					// if parent is also new, notify it first
 					if(p.notifymask & OBJEVENT_CREATED) COMTHROW(p.objnotify());

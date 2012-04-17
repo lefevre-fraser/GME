@@ -1915,6 +1915,21 @@ void CGMEApp::OnFileCloseproject()
 {
 	CGMEEventLogger::LogGMEEvent(_T("CGMEApp::OnFileCloseproject\r\n"));
 	SaveAllModified();
+#ifdef _DEBUG
+	//CoFreeUnusedLibraries();
+	HMODULE mga = GetModuleHandle(L"Mga.dll");
+	if (mga)
+	{
+		typedef HRESULT (__stdcall *DllCanUnloadNow)(void);
+		DllCanUnloadNow proc = (DllCanUnloadNow)GetProcAddress(mga, "DllCanUnloadNow");
+		if (proc && (*proc)() != S_OK)
+		{
+			DebugBreak();
+			// If Mga.dll is compiled with /D_ATL_DEBUG_INTERFACES, this will dump the leaks via OutputDebugString (then crash later)
+			FreeLibrary(mga);
+		}
+	}
+#endif
 }
 
 

@@ -68,13 +68,7 @@ void CMgaMap::DestroyMap()
 // Retreives the corresponding TreeItem handle from an Object Proxy
 BOOL CMgaMap::LookupTreeItem(CMgaObjectProxy MgaObjectProxy, HTREEITEM &hTreeItem)
 {
-	CMgaObjectProxyMapItem* pMgaObjectProxyMapItem;
-
-	BOOL bResult=m_MapObject2Item.Lookup(MgaObjectProxy.m_pMgaObject,pMgaObjectProxyMapItem);
-
-	if(bResult) hTreeItem=pMgaObjectProxyMapItem->m_hTreeItem;
-
-	return bResult;
+	return LookupTreeItem(MgaObjectProxy.m_pMgaObject, hTreeItem);
 }
 
 
@@ -129,7 +123,9 @@ BOOL CMgaMap::RemoveObjectProxy(CMgaObjectProxy MgaObjectProxy)
 {	
 	CMgaObjectProxyMapItem* pObjectProxyMapItem;
 
-	if(!m_MapObject2Item.Lookup(MgaObjectProxy.m_pMgaObject,pObjectProxyMapItem))
+	CComPtr<IUnknown> pUnk;
+	MgaObjectProxy.m_pMgaObject->QueryInterface(IID_IUnknown, (void**)&pUnk);
+	if(!m_MapObject2Item.Lookup(pUnk, pObjectProxyMapItem))
 	{
 		return FALSE;
 	}
@@ -154,10 +150,12 @@ void CMgaMap::AddEntry(HTREEITEM hTreeItem, CMgaObjectProxy MgaObjectProxy)
 // the value belonging to the already existing key 
 // resulting an inconsistency with the other map. 
 	RemoveTreeItem(hTreeItem);
-	RemoveObjectProxy(MgaObjectProxy);	
+	RemoveObjectProxy(MgaObjectProxy);
 	
 	// Increase reference counter for this map
-	MgaObjectProxy.m_pMgaObject->AddRef();
+	IUnknown* pUnk = MgaObjectProxy.m_pMgaObject;
+	MgaObjectProxy.m_pMgaObject = NULL;
+	pUnk->QueryInterface(IID_IUnknown, (void**)&MgaObjectProxy.m_pMgaObject);
 
 	m_MapItem2Object.SetAt(hTreeItem,MgaObjectProxy.m_pMgaObject);
 
@@ -212,11 +210,14 @@ BOOL CMgaMap::SearchTreeItem(BSTR Id, HTREEITEM &hTreeItem, IUnknown* &punk)
 
 BOOL CMgaMap::LookupTreeItem(LPUNKNOWN pUnknown, HTREEITEM &hTreeItem)
 {
+	CComPtr<IUnknown> pUnk;
+	pUnknown->QueryInterface(IID_IUnknown, (void**)&pUnk);
 	CMgaObjectProxyMapItem* pMgaObjectProxyMapItem;
 
-	BOOL bResult=m_MapObject2Item.Lookup(pUnknown,pMgaObjectProxyMapItem);
+	BOOL bResult=m_MapObject2Item.Lookup(pUnk,pMgaObjectProxyMapItem);
 
-	if(bResult) hTreeItem=pMgaObjectProxyMapItem->m_hTreeItem;
+	if (bResult)
+		hTreeItem=pMgaObjectProxyMapItem->m_hTreeItem;
 
 	return bResult;
 }
@@ -225,8 +226,11 @@ BOOL CMgaMap::LookupTreeItem(LPUNKNOWN pUnknown, HTREEITEM &hTreeItem)
 
 BOOL CMgaMap::bIsInMap(LPUNKNOWN pUnknown)
 {
+	CComPtr<IUnknown> pUnk;
+	pUnknown->QueryInterface(IID_IUnknown, (void**)&pUnk);
+
 	CMgaObjectProxyMapItem* pMgaObjectProxyMapItem;
-	return m_MapObject2Item.Lookup(pUnknown,pMgaObjectProxyMapItem);
+	return m_MapObject2Item.Lookup(pUnk,pMgaObjectProxyMapItem);
 }
 
 BOOL CMgaMap::bIsInMap(HTREEITEM hTreeItem)

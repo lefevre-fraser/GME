@@ -42,7 +42,7 @@ HRESULT FCO::get_IsMember(IMgaFCO *obj, VARIANT_BOOL *pVal) {
 
 bool addmember::Do(CoreObj self, std::vector<CoreObj> *peers) {
 	CoreObjs members = self[ATTRID_SETMEMBER + ATTRID_COLLECTION];
-	FCO *fco = ObjForCore(self);
+	auto fco = ObjForCore(self);
 	ITERATE_THROUGH(members) {
 		if(COM_EQUAL((*peers)[0], CoreObj(ITER[ATTRID_XREF]))) { // Already there !!!
 			ASSERT(!CoreObj(ITER[ATTRID_MASTEROBJ]));

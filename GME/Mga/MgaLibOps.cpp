@@ -945,7 +945,7 @@ CoreObj PointerFixup::findLibRoot( const CoreObj& p_elem)
 #ifdef _DEBUG
 		CComBSTR nm;
 		try {
-			FCO *f = ObjForCore(cur);
+			auto f = ObjForCore(cur);
 			if( f)
 				f->get_Name( &nm);
 		} catch( hresult_exception& ) {
@@ -1199,7 +1199,7 @@ void LibImgHelper::logCreator( CComBSTR& p_log
 		COMTHROW(p_log.Append( "<br>External library in attachment:"));
 		//p_log.Append( "<br>External library being attached");
 		//p_log.Append( "<br>External library:");
-		FCO* it_lib( ObjForCore( *it));
+		auto it_lib = ObjForCore( *it);
 		CComBSTR nm, id, gd;
 		if( it_lib) 
 		{
@@ -1225,7 +1225,7 @@ void LibImgHelper::logCreator( CComBSTR& p_log
 		COMTHROW(p_log.Append( "<br>Hosted library already present:"));
 		//p_log.Append( "<br>A hosted library:");
 
-		FCO* jt_lib( ObjForCore( *jt));
+		auto jt_lib = ObjForCore( *jt);
 		CComBSTR nm, id, gd;
 		if( jt_lib) 
 		{
@@ -1267,7 +1267,7 @@ void LibImgHelper::collectDep( Typedefs::LIBPAIRVEC&         p_matchingLibs
 			try {
 				CComBSTR nm, id;
 				nm = (iiit->second)[ATTRID_NAME];
-				FCO* lib = ObjForCore( iiit->second);
+				auto lib = ObjForCore(iiit->second);
 				if( lib)
 					COMTHROW(lib->get_ID( &id));
 				
@@ -1291,7 +1291,7 @@ void LibImgHelper::deleteSuperfluousLibs( Typedefs::LIBVEC& p_superfluousLibs, R
 	for( Typedefs::LIBVEC_ITER it = p_superfluousLibs.begin(), en = p_superfluousLibs.end(); it != en; ++it)
 	{
 		try {
-			FCO* lib = ObjForCore(*it);
+			auto lib = ObjForCore(*it);
 			if( lib) lib->inDeleteObject();
 			else     throw hresult_exception( -1);
 		} 
@@ -1301,7 +1301,7 @@ void LibImgHelper::deleteSuperfluousLibs( Typedefs::LIBVEC& p_superfluousLibs, R
 			try {
 				CComBSTR nm, id;
 				nm = (*it)[ATTRID_NAME];
-				FCO* lib = ObjForCore( *it);
+				auto lib = ObjForCore(*it);
 				if( lib) lib->get_ID( &id);
 				
 				COMTHROW(msg.AppendBSTR( nm));

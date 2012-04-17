@@ -191,6 +191,12 @@ public:
 			COMTHROW(Append( L"NullObject"));
 	}
 
+	template<>
+	void appendLink<FCOPtr>( const FCOPtr& ptr)
+	{
+		appendLink(static_cast<FCO*>(ptr));
+	}
+
 	void appendLink( const CComBSTR& id, const CComBSTR& nm = L"NonameObject")
 	{
 		COMTHROW(Append(L"<A HREF=\"mga:"));
@@ -604,7 +610,7 @@ public:
 				metaid_type mtyp = ITER.GetMetaID(); 
 				if( mtyp == DTID_FOLDER) 
 				{
-					FCO* kid = ObjForCore( ITER);
+					auto kid = ObjForCore( ITER);
 					if( !kid) continue;
 
 					CComBSTR id;

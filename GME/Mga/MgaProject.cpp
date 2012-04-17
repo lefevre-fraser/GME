@@ -1956,7 +1956,7 @@ STDMETHODIMP CMgaProject::GetTopLibraries(BSTR pDispGuid, IMgaFolders **pVal)
 			long perm = ITER[ATTRID_PERMISSIONS];
 			if( perm & LIBROOT_FLAG)
 			{
-				FCO *lib = ObjForCore( ITER);
+				auto lib = ObjForCore(ITER);
 				if( lib) 
 				{
 					CComBSTR gd;
