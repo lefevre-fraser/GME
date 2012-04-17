@@ -518,12 +518,13 @@ void CSearchDlg::itemClicked()
         {
             TheCtrl->BeginTransaction();
 
-            long selected = m_lstResults.GetSelectionMark() + 1; //IMgaFCOs 1 based, GetSelectionMark 0 based
+            int selected = m_lstResults.GetSelectionMark() + 1; //IMgaFCOs 1 based, GetSelectionMark 0 based
+            long lParam = m_lstResults.GetItemData(selected-1);
             CComPtr<IMgaFCO> selectedFCO;
             // selected might be 0 because GeSelectionMark might have returned -1
             if( selected >= 1 && selected <= count)
             {
-                COMTHROW(results->get_Item(selected,&selectedFCO)); // crashed probably when called with 0
+                COMTHROW(results->get_Item(lParam+1, &selectedFCO)); // crashed probably when called with 0
 
                 //want to be able to search for references to this object in the special search
                 CBstr bstr;
@@ -565,7 +566,7 @@ void CSearchDlg::itemDblClicked()
 
             TheCtrl->BeginTransaction();
 
-            long selected = m_lstResults.GetSelectionMark() + 1; //IMgaFCOs 1 based, GetSelectionMark 0 based
+            int selected = m_lstResults.GetSelectionMark() + 1; //IMgaFCOs 1 based, GetSelectionMark 0 based
             //LVITEM lvItem;
             long lParam = m_lstResults.GetItemData(selected-1);
            // m_lstResults.GetItem(&lvItem);
