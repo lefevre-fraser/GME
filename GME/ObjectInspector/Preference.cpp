@@ -515,7 +515,7 @@ void CPreference::CreateList(const CMgaFCOPtrList& MgaFCOPtrList)
 			CString strRegValue;
 			int status = GetRegistryValue(ccpMgaFCO,strCurrPath,strRegValue);
 
-			if (status == ATTSTATUS_INVALID)
+			if (status == ATTSTATUS_INVALID || status == ATTSTATUS_UNDEFINED)
 			{
 				// get default value from table
 				objtype_enum oeType;
@@ -660,6 +660,9 @@ int CPreference::GetRegistryValue(CComPtr<IMgaFCO>&ccpMgaFCO,CString strPath, CS
 	else if(lRegNodeStatus == ATTSTATUS_INVALID)  //  - It does happen.
 	{
 		strRegValue=_T("");
+	}
+	else if (lRegNodeStatus == ATTSTATUS_UNDEFINED)
+	{
 	}
 	else
 	{
