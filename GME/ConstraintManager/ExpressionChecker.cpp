@@ -33,6 +33,7 @@ STDMETHODIMP CExpEventSink::ObjectEvent( IMgaObject *obj, unsigned long eventmas
 
 STDMETHODIMP CExpressionChecker::ObjectsInvokeEx( IMgaProject *p, IMgaObject *o, IMgaObjects* os, long k )
 {
+	HRESULT ret = E_ABORT;
 	AFX_MANAGE_STATE( AfxGetStaticModuleState());//z
 	if ( ! m_Facade.m_bEnabled )
 		return S_OK;
@@ -57,15 +58,18 @@ STDMETHODIMP CExpressionChecker::ObjectsInvokeEx( IMgaProject *p, IMgaObject *o,
 			for ( unsigned int i = 0 ; i < vecConstraints.size() ; i++ )
 				dlgErrors.AddItem( vecConstraints[ i ] );
 			dlgErrors.DoModal();
+			ret = S_FALSE;
 		}
 		else
+		{
 			CSmallMessageBox().DoModal();
+			ret = S_OK;
+		}
 
 		m_Facade.Finalize();
 
+		return ret;
 	} COMCATCH( ASSERT( 0 ); )
-
-	return S_OK;
 }
 
 STDMETHODIMP CExpressionChecker::GlobalEvent( globalevent_enum event )
@@ -160,8 +164,6 @@ STDMETHODIMP CExpressionChecker::ObjectEvent( IMgaObject *obj, unsigned long eve
 			ASSERT(false); // Shouldn't get other events because of put_EventMask
 
 	} COMCATCH( ASSERT( 0 ); )
-
-	return S_OK;
 }
 
 STDMETHODIMP CExpressionChecker::Initialize( IMgaProject *p )
@@ -272,8 +274,10 @@ STDMETHODIMP CExpressionChecker::Invoke( IMgaProject *p, IMgaFCOs *os, long k )
 		CComPtr<IMgaTerritory> t;
 		COMTHROW(p->get_ActiveTerritory(&t));
 		COMTHROW(p->AbortTransaction());
-		COMTHROW(ObjectsInvokeEx(p, o, NULL, k));
+		HRESULT ret = ObjectsInvokeEx(p, o, NULL, k);
+		COMTHROW(ret);
 		COMTHROW(p->BeginTransaction(t, TRANSACTION_GENERAL));
+		return ret;
 	} COMCATCH(;)
 }
 
