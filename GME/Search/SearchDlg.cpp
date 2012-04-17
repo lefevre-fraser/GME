@@ -153,12 +153,15 @@ void CSearchDlg::RemoveAll()
     results = NULL;
     COMTHROW(results.CoCreateInstance(L"Mga.MgaFCOs"));
     DisplayResults();
+	results = NULL;
 }
 
 // Must remove results belong to zombie objects
 void CSearchDlg::RemoveZombies()
 {
     bool zombieFound = false;
+	if (results == NULL)
+		return;
 
     CSearchCtrl *TheCtrl = GetCtrl();
     TheCtrl->BeginTransaction();
