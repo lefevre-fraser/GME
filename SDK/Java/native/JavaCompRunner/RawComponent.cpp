@@ -74,7 +74,7 @@ void RawComponent::loadJavaVM()
     RegCloseKey(regkey);
     if( strlen(buf)==0 )
     {        
-        AfxMessageBox("Error loading java. Cannot query jvm.dll path from registry.");
+        AfxMessageBox("Error loading java. Cannot query jvm.dll path from registry. (Is Java installed?)");
         unloadJavaVM();
 		throw regkey;        
     }    
