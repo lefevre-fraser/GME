@@ -68,7 +68,7 @@ bool CGMEBrowser::GetSelectedItem(CComPtr<IMgaObject>&)
 }
 //#pragma warning ( default : 4100 ) // Unreferenced formal param
 
-void CGMEBrowser::SetProject(CComPtr<IMgaProject> mgaProject)
+void CGMEBrowser::SetProject(CComPtr<IMgaProject>& mgaProject)
 {
 	m_GMEActiveBrowser.SetCurrentProject(mgaProject);
 }

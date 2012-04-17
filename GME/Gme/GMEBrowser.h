@@ -22,7 +22,7 @@ public:
 
 	bool GetSelectedItem(CComPtr<IMgaObject> &item);
 	bool GetSelectedItems(CComPtr<IMgaObjects> &items);
-	void SetProject(CComPtr<IMgaProject> mgaProject);
+	void SetProject(CComPtr<IMgaProject>& mgaProject);
 	void CloseProject();
 	void RefreshAll();
 	void ShowObject(LPUNKNOWN selected);

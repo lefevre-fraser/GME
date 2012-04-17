@@ -131,7 +131,7 @@ BOOL CGMEPartBrowser::PreTranslateMessage(MSG* pMsg)
 }
 
 
-void CGMEPartBrowser::SetProject(CComPtr<IMgaProject> mgaProject)
+void CGMEPartBrowser::SetProject(CComPtr<IMgaProject>& mgaProject)
 {
 	m_PartBrowserWrapper.SetCurrentProject(mgaProject);
 }

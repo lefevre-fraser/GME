@@ -60,7 +60,7 @@ public:
 public:
 	void SetObjects(LPUNKNOWN pUnknown);
 	LPUNKNOWN GetObjects();
-	void SetProject(CComPtr<IMgaProject> mgaProject);
+	void SetProject(CComPtr<IMgaProject>& mgaProject);
 	void CloseProject();
 	void ShowPanel(long panelID);
 	void CyclePanel(VARIANT_BOOL frwd);

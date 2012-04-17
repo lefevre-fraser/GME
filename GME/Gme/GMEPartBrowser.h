@@ -64,7 +64,7 @@ public:
 
 // Implementation
 public:
-	void SetProject(CComPtr<IMgaProject> mgaProject);
+	void SetProject(CComPtr<IMgaProject>& mgaProject);
 	void SetMetaModel(CGuiMetaModel* meta);
 	void SetBgColor(COLORREF bgColor);
 	void ChangeAspect(int ind);

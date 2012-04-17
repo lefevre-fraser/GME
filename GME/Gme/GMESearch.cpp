@@ -141,7 +141,7 @@ void CGMESearch::OnSize(UINT nType, int cx, int cy)
 /////////////////////////////////////////////////////////////////////////////
 // CGMESearch public methods
 
-void CGMESearch::SetProject(CComPtr<IMgaProject> mgaProject)
+void CGMESearch::SetProject(CComPtr<IMgaProject>& mgaProject)
 {
   	m_search.SetMgaProject(mgaProject);    
 }

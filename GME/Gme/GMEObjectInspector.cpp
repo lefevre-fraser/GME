@@ -71,7 +71,7 @@ void CGMEObjectInspector::OnSize(UINT nType, int cx, int cy)
 }
 
 
-void CGMEObjectInspector::SetProject(CComPtr<IMgaProject> mgaProject)
+void CGMEObjectInspector::SetProject(CComPtr<IMgaProject>& mgaProject)
 {
 	m_ObjectInspector.SetMgaProject(mgaProject);
 }

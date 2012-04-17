@@ -54,7 +54,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	void SetProject(CComPtr<IMgaProject> mgaProject);
+	void SetProject(CComPtr<IMgaProject>& mgaProject);
 	void SetSelMgaObjects(CComPtr<IMgaObjects> p_mgaObjects);
 	void CloseProject();
 	void ShowObject(LPUNKNOWN selected);
