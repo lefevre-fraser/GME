@@ -594,6 +594,7 @@ BSTR CConsoleCtrl::GetContents()
 			CComPtr<IHTMLElement> pElement;
 			COMTHROW(pHtmlDoc->get_body( &pElement ));
 			ASSERT(pElement != NULL);
+			// FIXME: under wine, access violation in ieframe.dll
 			COMTHROW(pElement->get_innerHTML(&contents));
 		}
 		catch (hresult_exception &)

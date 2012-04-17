@@ -16,7 +16,7 @@
     <PropertyRef Id="NETFRAMEWORK20"/>
     <PropertyRef Id="NETFRAMEWORK40FULL"/>
     <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
-    <Property Id="NETFRAMEWORK">NETFRAMEWORK20 OR NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Property>
+    <Property Id="NETFRAMEWORK">NETFRAMEWORK20 OR NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Property><!-- FIXME: doesnt work -->
 
     <!-- =========================================================== -->
     <!-- DIRECTORY STRUCTURE -->

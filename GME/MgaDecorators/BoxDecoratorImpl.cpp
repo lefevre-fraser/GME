@@ -302,6 +302,7 @@ STDMETHODIMP CBoxDecoratorImpl::InitializeEx(IMgaProject* pProject, IMgaMetaPart
 	catch(DecoratorException& e) {
 		retVal = e.GetHResult();
 	}
+	// TODO: catch bad_alloc et al
 
 	return retVal;
 }

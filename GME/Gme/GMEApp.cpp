@@ -1553,6 +1553,7 @@ void CGMEApp::SaveProject(const CString &conn) {
 				CString errmsg = _T("Could not save project: ");
 				errmsg += error;
 				if (hr == HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED)) {
+					// FIXME: KMS: not too sure why this is ACCESS_DENIED from MoveFile instead of SHARING_VIOLATION
 					errmsg += _T("\nCheck that no other GME has this file open");
 				}
 				AfxMessageBox(errmsg);
