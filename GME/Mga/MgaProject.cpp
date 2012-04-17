@@ -1726,6 +1726,7 @@ void CMgaProject::FixupGUID(bool write) {
 	if (guidstat == DIRTY) {
 		GUID newGUID;
 		COMTHROW(CoCreateGuid(&newGUID));
+		pendingguid.Clear();
 		CopyTo(newGUID, pendingguid);
 		guidstat = PENDING;
 	}

@@ -165,6 +165,13 @@ namespace BON
 	ExtensionManager::FunctionVector* ExtensionManager::_vecKindFunctions( NULL );
 	int ExtensionManager::_vecKindFunctions_refCnt( 0 );
 
+	struct ExtensionsCleanup {
+		~ExtensionsCleanup() {
+			delete ExtensionManager::_vecKindFunctions;
+			ExtensionManager::_vecKindFunctions = NULL;
+		}
+	} cleanup;
+
 	ExtensionManager::ExtensionManager( const std::vector<std::string>& vecKinds, CastFunction pFnCast, CreateFunction pFnCreate )
 	{
 		_vecKindFunctions_refCnt++;

@@ -30,6 +30,7 @@
 
 namespace BON
 {
+	struct ExtensionsCleanup;
 	
 	enum ExtensionType {EXT_None = 0, EXT_MetaKind = 1, EXT_Kind = 2, EXT_Role = 3};
 	typedef std::pair<ExtensionType,int> ExtensionInfo;
@@ -158,6 +159,7 @@ namespace BON
 
 		// Friends
 			friend ObjectImpl;
+			friend ExtensionsCleanup;
 	};
 
 //###############################################################################################################################################

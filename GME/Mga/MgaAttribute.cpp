@@ -773,7 +773,7 @@ STDMETHODIMP CMgaRegNode::get_SubNodes( VARIANT_BOOL virtuals, IMgaRegNodes **pV
 				CComPtr<CMgaRegNode> regnode;
 				CreateComObject(regnode);
 				regnode->Initialize(CComBSTR(pathsIt->c_str()), fco, mgaproject);
-				q->Append(regnode.Detach());
+				q->Append(regnode);
 			}
 			*pVal = q.Detach();
 		} COMCATCH(;)
