@@ -930,14 +930,17 @@ void CGMEApp::UpdateComponentToolbar()
 				}
 			}
 
+			int cx = m_userImages.GetImageSize().cx;
+			int cy = m_userImages.GetImageSize().cy;
+
 			if( hModule != NULL )
 			{
-				hIcon = (HICON)::LoadImage(hModule, iconInfo.Mid(commaPos+1), IMAGE_ICON, 16,16, LR_DEFAULTCOLOR);
+				hIcon = (HICON)::LoadImage(hModule, iconInfo.Mid(commaPos+1), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR);
 			}
 			else
 			{
 				// simple .ico file with path
-				hIcon =(HICON)LoadImage(NULL, iconInfo, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
+				hIcon =(HICON)LoadImage(NULL, iconInfo, IMAGE_ICON, cx, cy, LR_LOADFROMFILE);
 			}
 			
 			// If icon is not found either in the DLL or a standalone file
