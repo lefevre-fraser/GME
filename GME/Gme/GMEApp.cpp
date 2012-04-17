@@ -545,6 +545,7 @@ int CGMEApp::Run()
 #ifdef _DEBUG
 	bNoProtect = true;
 #endif
+	bNoProtect = bNoProtect || static_cast<bool>(IsDebuggerPresent());
 	if (!bNoProtect) {
 		if (crInstall(&info) != 0)
 		{
