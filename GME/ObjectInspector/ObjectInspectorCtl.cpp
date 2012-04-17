@@ -963,7 +963,7 @@ void CObjectInspectorCtrl::WritePreferenceItemToMga(CListItem ListItem, bool bIs
 		}
 		if (e.hr == E_MGA_LIBOBJECT)
 			CWnd::MessageBox(_T("Library objects cannot be modified."), _T("GME"), MB_ICONERROR);
-		else
+		else if (e.hr != E_MGA_CONSTRAINT_VIOLATION)
 			CWnd::MessageBox(_T("GME could not write object preference data due to an unexpected MGA error. We apologize for the inconvenience."), _T("GME"), MB_ICONERROR);
 	}
 	
