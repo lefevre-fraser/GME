@@ -1653,6 +1653,8 @@ STDMETHODIMP CCoreXmlFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode)
 			*ro_mode = VARIANT_FALSE;
 
 		CloseProgressWindow();
+		if (m_root == NULL)
+			return E_FILEOPEN;
 
 	}
 	COMCATCH(CloseProgressWindow();)
