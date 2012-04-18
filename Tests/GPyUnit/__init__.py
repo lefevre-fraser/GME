@@ -29,6 +29,7 @@ def _test_names():
  'GME_297.suite',
  'GME_310.suite',
  'GME_371',
+ 'GME_391',
 ]
     import GPyUnit.util
     if not GPyUnit.util._opts.Dispatch_x64:

@@ -135,7 +135,7 @@ public:
     virtual valtype_type getType     () const            = 0;
     virtual void         fromVariant (VARIANT p)         {}
     virtual void         toVariant   (VARIANT *p) const  {}
-    virtual void         fromString  (const char * str)  {}
+    virtual void         fromString  (const char * str, const wchar_t* strw)  {}
     virtual void         toString    (std::string& str) const {}
 };
 
@@ -154,7 +154,7 @@ public:
     virtual valtype_type getType     () const;
     virtual void         fromVariant (VARIANT p);
 	virtual void         toVariant   (VARIANT *p) const;
-    virtual void         fromString  (const char * str);
+    virtual void         fromString  (const char * str, const wchar_t* strw);
     virtual void         toString    (std::string& str) const;
 protected:
     long    m_value;
@@ -174,7 +174,7 @@ public:
     virtual valtype_type getType     () const;
     virtual void         fromVariant (VARIANT p);
 	virtual void         toVariant   (VARIANT *p) const;
-    virtual void         fromString  (const char * str);
+    virtual void         fromString  (const char * str, const wchar_t* strw);
     virtual void         toString    (std::string& str) const;
 protected:
     double  m_value;
@@ -192,7 +192,7 @@ public:
 	virtual valtype_type getType() const { return VALTYPE_DICT; };
     virtual void fromVariant(VARIANT p);
 	virtual void toVariant(VARIANT *p) const;
-    virtual void fromString(const char * str);
+    virtual void fromString(const char * str, const wchar_t* strw);
     virtual void toString(std::string& str) const;
     CComPtr<ICoreDictionaryAttributeValue> m_value;
 };
@@ -207,7 +207,7 @@ public:
     virtual valtype_type getType     () const;
     virtual void         fromVariant (VARIANT p);
 	virtual void         toVariant   (VARIANT *p) const;
-    virtual void         fromString  (const char * str);
+    virtual void         fromString  (const char * str, const wchar_t* strw);
     virtual void         toString    (std::string& str) const;
 protected:
     std::string  m_value;
@@ -223,7 +223,7 @@ public:
     virtual valtype_type getType     () const;
     virtual void         fromVariant (VARIANT p);
 	virtual void         toVariant   (VARIANT *p) const;
-    virtual void         fromString  (const char * str);
+    virtual void         fromString  (const char * str, const wchar_t* strw);
     virtual void         toString    (std::string& str) const;
 protected:
     bindata m_value;
@@ -241,7 +241,7 @@ public:
     virtual valtype_type getType     () const;
     virtual void         fromVariant (VARIANT p);
 	virtual void         toVariant   (VARIANT *p) const;
-    virtual void         fromString  (const char * str);
+    virtual void         fromString  (const char * str, const wchar_t* strw);
     virtual void         toString    (std::string& str) const;
 protected:
     lockval_type    m_value;

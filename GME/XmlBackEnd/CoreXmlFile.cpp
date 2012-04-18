@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "CommonMath.h"
 #include <algorithm>
 #include <stdio.h>
 #include <io.h>
@@ -315,7 +316,7 @@ void XmlAttrDict::toVariant(VARIANT* v) const
 	COMTHROW(ret.Detach(v));
 }
 
-void XmlAttrDict::fromString(const char* str)
+void XmlAttrDict::fromString(const char* str, const wchar_t* strw)
 {
 	DebugBreak();
 }
@@ -350,7 +351,7 @@ void XmlAttrLong::toVariant(VARIANT *p) const
     CopyTo(m_value, p);
 }
 
-void XmlAttrLong::fromString(const char * str)
+void XmlAttrLong::fromString(const char * str, const wchar_t* strw)
 {
     if( str == NULL || strlen(str)==0 )
         m_value = 0;
@@ -389,18 +390,21 @@ void XmlAttrReal::toVariant(VARIANT *p) const
     CopyTo(m_value, p);
 }
 
-void XmlAttrReal::fromString(const char * str)
+void XmlAttrReal::fromString(const char * str, const wchar_t* strw)
 {
     if( str == NULL || strlen(str)==0 )
         m_value = 0;
     else
-        m_value = atof( str );
+	{
+		if (!ParseSpecialDouble(strw, m_value))
+			m_value = atof( str );
+	}
 }
 
 void XmlAttrReal::toString(std::string& str) const
 {
     char buf[100];
-    sprintf( buf, "%.6f", m_value );
+    sprintf(buf, "%.17g", m_value);
     str = buf;
 }
 
@@ -423,7 +427,7 @@ void XmlAttrString::toVariant(VARIANT *p) const
     CopyTo(m_value, p);
 }
 
-void XmlAttrString::fromString(const char * str)
+void XmlAttrString::fromString(const char * str, const wchar_t* strw)
 {
     if( str == NULL )
         m_value = "";
@@ -455,7 +459,7 @@ void XmlAttrBinary::toVariant(VARIANT *p) const
     CopyTo(m_value, p);
 }
 
-void XmlAttrBinary::fromString(const char * str)
+void XmlAttrBinary::fromString(const char * str, const wchar_t* strw)
 {   
     if( str == NULL || strlen(str) == 0 )
         m_value.clear();
@@ -505,7 +509,7 @@ void XmlAttrLock::toVariant(VARIANT *p) const
     CopyTo(m_value, p);
 }
 
-void XmlAttrLock::fromString(const char * str)
+void XmlAttrLock::fromString(const char * str, const wchar_t* strw)
 {   
     if( str == NULL || strlen(str) == 0 )
         m_value = LOCKING_NONE;
@@ -3761,6 +3765,7 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 	// the multiline case?  -----  for details see writeObject()
 	bool          spec_care = !wcscmp(metaobj_token, L"StrAttr") || !wcscmp(metaobj_token, L"RegNode") || !wcscmp(metaobj_token, L"Root");
 	std::string   spec_value;
+	std::wstring  spec_valuew;
 
 	// find or create object
 	XmlObject * obj = NULL;
@@ -3800,7 +3805,8 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 		// see http://escher.isis.vanderbilt.edu/JIRA/browse/GME-152
 		// it won't find 'MGA Version' of rootfolder if space2underscore and
 		// underscore2space conversions are in effect
-		smart_Ch attrVal = XMLString::transcode(e->getAttribute(attribToken));
+		const wchar_t* attrValW = e->getAttribute(attribToken);
+		smart_Ch attrVal = XMLString::transcode(attrValW);
 
 		// multiline case?
 		bool spec_value_found = false; // will ensure smooth upgrade from old style xmlbackend
@@ -3816,8 +3822,10 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 				DOMNode * node = children->item(i);
 				if( node->getNodeType() == DOMNode::CDATA_SECTION_NODE ) // the first CDATA element is taken
 				{
-					smart_Ch sp_va = XMLString::transcode( ((DOMCDATASection*)node)->getTextContent());
+					const XMLCh* text = ((DOMCDATASection*)node)->getTextContent();
+					smart_Ch sp_va = XMLString::transcode(text);
 
+					spec_valuew = text;
 					spec_value = sp_va;
 					spec_value_found = true;
 
@@ -3843,7 +3851,7 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 		else if( attr->getType() != VALTYPE_LOCK && attr->getType() != VALTYPE_COLLECTION
 			&& attr->getType() != VALTYPE_DICT)
 		{
-			it2->second->fromString(attrVal);
+			it2->second->fromString(attrVal, attrValW);
 
 			// use the spec_value only if really found the CDATA node
 			if( spec_attr && spec_value_found) // spec_care is also true
@@ -3852,12 +3860,12 @@ void CCoreXmlFile::readObject(DOMElement * e, UnresolvedPointerVec& pointers, Xm
 				{
 					const std::string comm_spec = "Comment=";
 					if( 0 == spec_value.find( comm_spec)) // CDATA section looks like this: <![CDATA[Comment=....]]>
-						it2->second->fromString( spec_value.substr( comm_spec.length()).c_str());
+						it2->second->fromString( spec_value.substr( comm_spec.length()).c_str(), NULL);
 					else
 						ASSERT(0);
 				}
 				else
-					it2->second->fromString( spec_value.c_str());
+					it2->second->fromString( spec_value.c_str(), NULL);
 			}
 		}
 	}
