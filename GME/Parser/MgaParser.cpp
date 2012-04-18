@@ -1,5 +1,6 @@
 
 #include "stdafx.h"
+#include "CommonMath.h"
 #include "Parser.h"
 #include "MgaParser.h"
 #include <xercesc/util/PlatformUtils.hpp>
@@ -946,8 +947,19 @@ void CMgaParser::EndValue()
 			break;
 
 		case ATTVAL_DOUBLE:
-			v = GetCurrData().c_str();
-			COMTHROW( v.ChangeType(VT_R8) );
+			{
+			const wchar_t* val = GetCurrData().c_str();
+			double special;
+			if (ParseSpecialDouble(val, special))
+			{
+				v = special;
+			}
+			else
+			{
+				v = val;
+				COMTHROW( v.ChangeType(VT_R8) );
+			}
+			}
 			break;
 
 		case ATTVAL_BOOLEAN:

@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "CommonMath.h"
 #include "objectinspector.h"
 #include "ItemData.h"
 #include "MgaUtil.h"
@@ -191,12 +192,21 @@ bool CItemData::Validate()
 				if(stringVal.GetSize()==1)				
 				{
 					TCHAR* endptr;
-					double d = _tcstod(stringVal[0], &endptr);
-					if(*endptr == _T('\0'))
+					double d;
+					if (ParseSpecialDouble(stringVal[0], d))
 					{
-						doubleVal=d;
-						retVal=true;
-					}				
+						doubleVal = d;
+						retVal = true;
+					}
+					else
+					{
+						d = _tcstod(stringVal[0], &endptr);
+						if (*endptr == _T('\0'))
+						{
+							doubleVal = d;
+							retVal = true;
+						}
+					}
 				}
 				else
 				{

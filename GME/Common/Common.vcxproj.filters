@@ -61,5 +61,8 @@
     <ClInclude Include="CommonImport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CommonMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

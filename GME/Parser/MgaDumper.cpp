@@ -982,7 +982,7 @@ void CMgaDumper::Dump(IMgaAttribute *attribute)
 		{
 			double d;
 			COMTHROW( attribute->get_FloatValue(&d) );
-			Format(data, _T("%g"), d);
+			Format(data, _T("%.17g"), d);
 			break;
 		}
 
