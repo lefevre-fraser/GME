@@ -139,11 +139,11 @@ inline HRESULT EDEF(HRESULT hr, HRESULT to) { HRESULT h = hr; if(h != S_OK) h = 
 STDMETHODIMP CMgaProject::OpenParadigm(BSTR s, VARIANT *pGUID) {
 	COMTRY {
 		CComPtr<IMgaRegistrar> mgareg;
-		COMTHROW(mgareg.CoCreateInstance(OLESTR("MGA.MgaRegistrar")));
+		COMTHROW(mgareg.CoCreateInstance(OLESTR("Mga.MgaRegistrar")));
 		CComBSTR connstr;
 		COMTHROW(EDEF(mgareg->QueryParadigm(s, &connstr, pGUID, REGACCESS_PRIORITY), E_MGA_PARADIGM_NOTREG));
 		ASSERT(connstr);
-		COMTHROW(metapr.CoCreateInstance(	OLESTR("MGA.MgaMetaProject")));
+		COMTHROW(metapr.CoCreateInstance(	OLESTR("Mga.MgaMetaProject")));
 		COMTHROW(EDEF(metapr->Open(connstr), E_MGA_PARADIGM_NOTREG));
 		CComVariant metaGUID;
 		COMTHROW(metapr->get_GUID(&metaGUID));
@@ -158,7 +158,7 @@ STDMETHODIMP CMgaProject::OpenParadigm(BSTR s, BSTR ver) {
 		CComVariant vguid;
 		{
 			CComPtr<IMgaRegistrar> mgareg;
-			COMTHROW(mgareg.CoCreateInstance(OLESTR("MGA.MgaRegistrar")));
+			COMTHROW(mgareg.CoCreateInstance(OLESTR("Mga.MgaRegistrar")));
 			COMTHROW(EDEF(mgareg->GUIDFromVersion(s, ver, &vguid, REGACCESS_PRIORITY), E_MGA_PARADIGM_NOTREG));
 		}
 		COMTHROW(OpenParadigm(s,&vguid));
@@ -1209,7 +1209,7 @@ void CMgaProject::StartAutoAddOns() {
 	CComBSTR paradigm;
 	COMTHROW(metapr->get_Name(&paradigm));
 	CComVariant progids;
-	COMTHROW(reg.CoCreateInstance(OLESTR("MGA.MgaRegistrar")));
+	COMTHROW(reg.CoCreateInstance(OLESTR("Mga.MgaRegistrar")));
 	COMTHROW(reg->get_AssociatedComponents(paradigm, COMPONENTTYPE_ADDON, REGACCESS_BOTH, &progids));
 	long p = GetArrayLength(progids);
 	ASSERT(p >= 0);
@@ -1909,7 +1909,7 @@ STDMETHODIMP CMgaProject::CheckLocks(BSTR filename, VARIANT_BOOL clearlocks) {
   CComPtr<ICoreMetaProject> genericproject;
   COMTRY {
 	CreateCoreMetaProject(genericproject); // use mgaversion = 1 project model
-	COMTHROW(storage.CoCreateInstance(	OLESTR("MGA.CoreRepository")));
+	COMTHROW(storage.CoCreateInstance(	OLESTR("Mga.CoreRepository")));
 	COMTHROW(storage->put_MetaProject(genericproject));
 	COMTHROW(storage->OpenProject(filename, NULL));
 	COMTHROW(storage->BeginTransaction());
@@ -1925,7 +1925,7 @@ int CMgaProject::getMaxUndoSize()
 	try
 	{
 		CComPtr<IMgaRegistrar> mgareg;
-		COMTHROW(mgareg.CoCreateInstance(OLESTR("MGA.MgaRegistrar")));
+		COMTHROW(mgareg.CoCreateInstance(OLESTR("Mga.MgaRegistrar")));
 		CComBSTR undo_size;
 		COMTHROW( mgareg->GetUndoQueueSize( REGACCESS_USER, &undo_size));
 		if (undo_size != NULL && undo_size != L"") {
