@@ -1095,7 +1095,7 @@ class TestFloatingPoint(unittest.TestCase):
  
         self.setUp()
         self.project = GPyUnit.util.parse_xme(self.connstr, xme=xme)
-#KMS: kludge to test Udm       
+#KMS: kludge to test Udm
 #udmcopy parsertest.mga parsertest.xml GME391FloatingPointTest.xml && udmcopy parsertest.xml parsertest2.xml GME391FloatingPointTest.xml && udmcopy parsertest2.xml udmparsertest.mga GME391FloatingPointTest.xml
         #self.project = DispatchEx('Mga.MgaProject')
         #self.project.Open('MGA=' + 'udmparsertest.mga')
@@ -1120,6 +1120,7 @@ GPyUnit.util.MUGenerator(globals(), TestFloatingPoint)
 if __name__ == "__main__":
     import sys
     runner = unittest.TextTestRunner()
-    #runner.run(sys.modules['__main__'])
-    runner.run(TestFloatingPoint("testXME"))
+    runner.run(unittest.defaultTestLoader.loadTestsFromNames(('__main__',)))
+    # loadTestsFromModule(globals())
+    #runner.run(TestFloatingPoint("testXME"))
     #runner.run(TestFloatingPointMU("testXME"))
