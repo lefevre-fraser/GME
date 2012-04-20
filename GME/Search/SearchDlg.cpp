@@ -46,9 +46,6 @@ CSearchDlg::CSearchDlg()
 
 , m_chkSplSearch(FALSE)
 {
-    //create an empty IMgaFCOs list. it gets filled by the searchbutton
-    //and emptied by RemoveAll(), cleaned up by RemoveZombies()
-    COMTHROW(results.CoCreateInstance(L"Mga.MgaFCOs"));
 }
 
 void CSearchDlg::DoDataExchange(CDataExchange* pDX)
@@ -292,6 +289,8 @@ void CSearchDlg::OnButtonGo()
         }
 
 
+		if (results == NULL)
+			COMTHROW(results.CoCreateInstance(L"Mga.MgaFCOs"));
         CSearch searchGME(inp);
         searchGME.Search(rootInput, ccpObjectsInTerr, specialSearchFCO,results,&m_pgsSearch);
         //		AfxMessageBox(_T("Finished Searching"));
