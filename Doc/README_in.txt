@@ -26,7 +26,23 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes or Release r12.3.13
+Release Notes of Release r12.4.20
+----------------------------------
+  - Binary compatibility with r11.12.2
+  - Fix rare data loss in .mga files (most likely names and connection roles) (GME-395)
+  - Fix truncation of real attributes in XME files (GME-391)
+  - Fix compile errors when compiling GME for the first time
+  - Fix preference display for undefined (meta-meta default) preferences in Object Inspector
+  - Fix registry editor icons under non-standard DPI
+  - Fix wrong FCO is shown in Object Inspector when selecting in Search with sorted elements (GME-392)
+  - Fix crash when clicking on file: link in the Console
+  - Fix JAUT.dll under gcj
+  - Fix out-of-memory crashes
+  - Fix: Panning Window didn't refresh when clicking on Aspect dropdown
+  - 
+
+
+Release Notes of Release r12.3.13
 ----------------------------------
   - Binary compatibility with r11.12.2
   - Show architecture of currently-running GME in the About box
