@@ -4,6 +4,6 @@
 
 #include "stdafx.h"
 
-#import "MgaUtilLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__")
+#import "MgaUtilLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
 
 

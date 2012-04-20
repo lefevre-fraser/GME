@@ -10,10 +10,10 @@
 #include <statreg.h>
 #endif
 
-#import "CoreLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__")
-#import "MgaLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__")
-#import "MetaLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__")
-#import "ParserLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__")
+#import "CoreLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#import "MgaLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#import "MetaLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#import "ParserLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
 
 #if defined(_M_IX86)
 #define PROCESSOR_ARCHITECTURE "x86"
