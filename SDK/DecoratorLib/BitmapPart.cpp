@@ -136,7 +136,7 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 			if (strIcon.Right(4) == ".emf" || strIcon.Right(4) == ".wmf")
 				preferences[PREF_ITEMRESIZABLE] = PreferenceVariant(true);
 		}
-		if (!m_pBitmap) {
+		if (!m_pBitmap && preferences.find(PREF_ICONDEFAULT) != preferences.end()) {
 			strIcon = *preferences.find(PREF_ICONDEFAULT)->second.uValue.pstrValue;
 #ifndef OLD_DECORATOR_LOOKANDFEEL
 			if (m_bOverlay)
@@ -151,6 +151,9 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 				m_pTileVector = tileIt->second.uValue.pTiles;
 			else
 				m_pTileVector = getFacilities().getTileVector(TILE_ATOMDEFAULT);
+		}
+		if (!m_pBitmap) {
+			m_pBitmap = getFacilities().getBitmap("2160.res");
 		}
 	}
 
