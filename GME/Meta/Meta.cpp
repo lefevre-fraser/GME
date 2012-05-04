@@ -35,8 +35,6 @@
 #include "MgaMetaEnumItem.h"
 #include "MgaMetaConstraint.h"
 
-#pragma comment(linker, "\"/manifestdependency:type='win32' name='Core' version='1.0.0.0' language='*'\"")
-
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)

@@ -2,6 +2,12 @@
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
   <assemblyIdentity type="win32" name="Meta" version="1.0.0.0" />
 
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity type="win32" name="Core" version="1.0.0.0" language="*"></assemblyIdentity>
+    </dependentAssembly>
+  </dependency>
+
   <file name="Meta.dll" hashalg="SHA1">
     <comClass clsid="{83BA323E-B758-11D3-ABAE-000000000000}" tlbid="{0ADEEC71-D83A-11D3-B36B-005004D38590}" description="MgaMetaRegNode Class" threadingModel="Apartment"/>
     <comClass clsid="{83BA3242-B758-11D3-ABAE-000000000000}" tlbid="{0ADEEC71-D83A-11D3-B36B-005004D38590}" description="MgaMetaConstraint Class" threadingModel="Apartment"/>
