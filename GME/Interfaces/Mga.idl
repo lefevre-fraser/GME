@@ -1172,7 +1172,7 @@ interface IMgaReference : IMgaFCO
 /*
 [
 	object,
-	uuid(270B4F93-B17C-11D3-9AD1-00AA00B6FE26),
+	uuid(),
 	dual,
 	helpstring("IMgaRefPort Interface"),
 	pointer_default(unique)

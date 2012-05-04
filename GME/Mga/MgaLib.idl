@@ -202,7 +202,7 @@ library MGALib
 		interface ISupportErrorInfo;
 	};
 	[
-		uuid(83BA323E-B758-11D3-ABAE-000000000000),
+		uuid(15ABD2C3-65C9-4B9A-8D01-A03D0BB794EB),
 		helpstring("MgaRegNode Class")
 	]
 	coclass MgaRegNode
@@ -211,7 +211,7 @@ library MGALib
 		interface ISupportErrorInfo;
 	};
 	[
-		uuid(83BA3242-B758-11D3-ABAE-000000000000),
+		uuid(63379445-4F8D-4DAA-8687-2933DC679BCF),
 		helpstring("MgaConstraint Class")
 	]
 	coclass MgaConstraint
