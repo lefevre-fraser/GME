@@ -34,6 +34,9 @@
 #pragma comment(lib, "CrashRpt.lib")
 #endif
 
+#pragma comment(linker, "\"/manifestdependency:type='win32' name='Core' version='1.0.0.0' language='*'\"")
+#pragma comment(linker, "\"/manifestdependency:type='win32' name='Meta' version='1.0.0.0' language='*'\"")
+
 #include "CrashTest.h"
 #include <Gdiplus.h>
 #include "GraphicsUtil.h"

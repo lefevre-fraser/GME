@@ -173,6 +173,14 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|x64'">$(SolutionDir)$(Platform)\Release_PGO\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|Win32'">$(Platform)\Release_PGO\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|x64'">$(Platform)\Release_PGO\</IntDir>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|Win32'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|Win32'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|x64'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|x64'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep />
@@ -265,6 +273,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
+      <ManifestFile>$(IntDir)$(TargetName)$(TargetExt).intermediate.manifest2</ManifestFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

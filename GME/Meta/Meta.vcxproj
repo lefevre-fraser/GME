@@ -175,6 +175,14 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|x64'">$(Platform)\Release_PGO\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|Win32'">$(Platform)\Release_PGO\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|x64'">$(Platform)\Release_PGO\</IntDir>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|Win32'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|Win32'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Instrument|x64'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_PGO_Optimize|x64'">false</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep />
@@ -500,6 +508,11 @@
       <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="Meta.dll.manifest">
+      <SubType>Designer</SubType>
+    </Manifest>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
