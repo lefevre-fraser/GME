@@ -667,6 +667,9 @@ void CGMEApp::CloseProject(bool updateStatusBar)
 	if(CGMESearch::theInstance!=NULL)
 		CGMESearch::theInstance->CloseProject();
 
+	if (CGMEPartBrowser::theInstance)
+		CGMEPartBrowser::theInstance->SetProject(CComPtr<IMgaProject>(0));
+
 
 
 	if( guiMetaProject != NULL )
