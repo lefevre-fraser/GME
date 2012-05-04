@@ -200,6 +200,9 @@ void CChildFrame::OnMDIActivate(BOOL bActivate,
 	if (pActivateWnd == this)
 	{
 		CGMEView* view = ((CGMEView*)GetActiveView());
+		if (!view->alive)
+			return;
+		
 		view->DoPannWinRefresh();
 		if (view->guiMeta) {
 			theApp.UpdateCompList4CurrentKind( view->guiMeta->name);
