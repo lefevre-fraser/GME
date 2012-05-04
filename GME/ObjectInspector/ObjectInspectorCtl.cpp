@@ -476,7 +476,7 @@ void CObjectInspectorCtrl::SetMgaObjects(LPUNKNOWN newValue)
 		m_FolderList.RemoveAll();
 		m_objects=NULL;
 
-		CWnd::MessageBox(_T("Object Inspector could not hand over the project data due to an unexpected error. We apoligize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
+		CWnd::MessageBox(_T("Object Inspector could not hand over the project data due to an unexpected error. We apologize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
 
 	}
 	SetModifiedFlag();
@@ -519,7 +519,7 @@ void CObjectInspectorCtrl::RefreshPanels()
 	{
 		ASSERT(0);
 		m_project->AbortTransaction();
-		CWnd::MessageBox(_T("Object Inspector could not load object data due to an unexpected MGA error. We apoligize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
+		CWnd::MessageBox(_T("Object Inspector could not load object data due to an unexpected MGA error. We apologize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
 	}
 
 	m_inspectorDlg.Refresh();
@@ -1105,7 +1105,7 @@ void CObjectInspectorCtrl::WriteNameToMga(const CString &strName)
 	{
 		m_project->AbortTransaction();
 		if (e.hr != E_MGA_CONSTRAINT_VIOLATION)
-			CWnd::MessageBox(_T("Object Inspector could not write object name due to an unexpected MGA error. We apoligize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
+			CWnd::MessageBox(_T("Object Inspector could not write object name due to an unexpected MGA error. We apologize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
 	}
 
 }
