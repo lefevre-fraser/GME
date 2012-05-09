@@ -1713,8 +1713,6 @@ namespace BON
 	std::string	RegistryNodeImpl::getValueByPath( const std::string& strPath ) const
 	{
 		std::string strPath2 = getPath().substr( 1 ) + strPath;
-		if ( ! m_spNode )
-			strPath2 = strPath2.substr( 1 );
 
 		CComBSTR bstrValue;
 		CComQIPtr<IMgaFCO> spFCO = m_pObject->getObjectI();
