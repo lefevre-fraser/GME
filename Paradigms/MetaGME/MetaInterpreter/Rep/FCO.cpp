@@ -9,6 +9,7 @@
 #include "Token.h"
 #include "list"
 #include "algorithm"
+#include <iterator>
 
 #include "globals.h"
 extern Globals global_vars;
@@ -841,25 +842,17 @@ std::string FCO::dumpAttributes()
 // dumps out sorted attribute name list 
 std::string FCO::dumpAttributeList( bool check_viewable /* = false */ )
 {
-	std::list<AttributeRep*> temp_list;
-	std::list<AttributeRep*>::iterator t_it;
 	std::string mmm = "";
 
-	AttributeRepPtrList_Iterator it;
-	
-	it = m_finalAttributeList.begin();
-	for( ; it != m_finalAttributeList.end(); ++it)
-		if ( !check_viewable || (*it)->isViewable())
-		{
-			t_it = temp_list.begin();
-			while( t_it != temp_list.end() && (*t_it)->lessThan(*it))
-				++t_it;
-			temp_list.insert( t_it, *it);
-		}
+	std::vector<AttributeRep*> temp_list;
+	std::copy_if(m_finalAttributeList.begin(), m_finalAttributeList.end(),
+		std::back_inserter(temp_list), [&](AttributeRep* p) { return !check_viewable || p->isViewable(); });
+	std::sort(temp_list.begin(), temp_list.end(), [](AttributeRep* a, AttributeRep* b) { return a->lessThan(b); });
 
 	if ( !temp_list.empty())
 	{
 		mmm = " attributes = \"";
+		std::vector<AttributeRep*>::iterator t_it;
 		for( t_it = temp_list.begin(); t_it != temp_list.end(); ++t_it)
 		{
 			if (t_it != temp_list.begin()) mmm += " ";
