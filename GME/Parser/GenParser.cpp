@@ -63,7 +63,7 @@ void CGenParser::ThrowXmlError(const TCHAR *format, ...)
 	va_start(args, format);
 
 	std::tstring desc;
-	Format(desc, format, args);
+	vFormat(desc, format, args);
 
 	std::tstring str;
 	if( locator != NULL )
