@@ -2951,21 +2951,28 @@ void CGMEApp::RegisterDroppedFile( const CString& fname, bool userReg/* = true*/
 	try
 	{
 		CWaitCursor wait;
-		CComPtr<IMgaRegistrar> registrar;
-		COMTHROW(registrar.CoCreateInstance(CComBSTR(L"Mga.MgaRegistrar")));
+		IMgaRegistrarPtr registrar;
+		COMTHROW(registrar.CreateInstance(L"Mga.MgaRegistrar"));
 
-		regaccessmode_enum reg_access = REGACCESS_USER;	//REGACCESS_SYSTEM;
-											//REGACCESS_USER;
-											//REGACCESS_BOTH;
-		CComBSTR newname;
-		COMTHROW(registrar->RegisterParadigmFromData(PutInBstr( fname), &newname, reg_access));
+		regaccessmode_enum reg_access = REGACCESS_USER;
+
+		_bstr_t newname;
+		registrar->__RegisterParadigmFromData(_bstr_t(fname), newname.GetAddress(), reg_access);
 
 		CMainFrame::theInstance->m_console.Message( _T("Done."), 1);
 	}
 	catch( hresult_exception &e)
 	{
-		// FIXME: GetErrorINfo
-		CMainFrame::theInstance->m_console.Message( _T("Error while registering paradigm!"), 3);
+		CMainFrame::theInstance->m_console.Message( _T("Error while registering paradigm."), 3);
+	}
+	catch(_com_error &e)
+	{
+		_bstr_t error(L"");
+		if (e.Description() != _bstr_t())
+			error = e.Description();
+		else
+			GetErrorInfo(e.Error(), error.GetAddress());
+		CMainFrame::theInstance->m_console.Message(CString("Error while registering paradigm: ") + static_cast<const wchar_t*>(error), 3);
 	}
 }
 
