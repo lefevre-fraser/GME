@@ -30,6 +30,7 @@ def _test_names():
  'GME_310.suite',
  'GME_371',
  'GME_391',
+ 'test_MetaInterpreter',
 ]
     import GPyUnit.util
     if not GPyUnit.util._opts.Dispatch_x64:
