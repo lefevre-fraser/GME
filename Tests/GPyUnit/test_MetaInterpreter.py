@@ -51,7 +51,10 @@ class TestMetaInterpreter(unittest.TestCase):
 GPyUnit.util.MUGenerator(globals(), TestMetaInterpreter)
 def _muoutdir(self):
     return os.path.abspath(os.getcwd())
-TestMetaInterpreterMU.outdir = _muoutdir
+try:
+    TestMetaInterpreterMU.outdir = _muoutdir
+except NameError:
+    pass # MU isn't tested under x64
 
 if __name__ == "__main__":
     unittest.main()
