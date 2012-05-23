@@ -615,7 +615,7 @@
 
     <DirectoryRef Id="INSTALLDIR_DOC_TUTORIALS">
       <Component Id="Tutorial" Guid="{E63A315C-9884-4AF0-B832-3765839CF68B}">
-        <File Id="Intro.html" Name="Intro.html" KeyPath="yes" Source="..\Doc\Tutorial\Intro.html">
+        <File Id="index.html" Name="index.html" KeyPath="yes" Source="..\Doc\Tutorial\index.html">
           <Shortcut Id='TutorialShortcut' Name='Tutorial'
         Description='Comprehensive tutorial in HTML' Directory='ShortcutTutorialsFolder'/>
         </File>
