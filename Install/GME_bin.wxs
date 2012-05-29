@@ -592,11 +592,13 @@
                 <ProgId Id="Mga.MgaProgressDlg" Description="MgaProgressDlg Class" />
               </ProgId>
             </Class>
-            <Class Id="{D03EC327-447B-11D4-B3F6-005004D38590}" Context="InprocServer32" Description="MgaLauncher Class" ThreadingModel="apartment" Programmable="yes">
-              <ProgId Id="Mga.MgaLauncher.1" Description="MgaLauncher Class">
-                <ProgId Id="Mga.MgaLauncher" Description="MgaLauncher Class" />
-              </ProgId>
-            </Class>
+            <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
+              <Class Id="{D03EC327-447B-11D4-B3F6-005004D38590}" Context="InprocServer32" Description="MgaLauncher Class" ThreadingModel="apartment" Programmable="yes">
+                <ProgId Id="Mga.MgaLauncher.1" Description="MgaLauncher Class">
+                  <ProgId Id="Mga.MgaLauncher" Description="MgaLauncher Class" />
+                </ProgId>
+              </Class>
+            </AppId>
             <Class Id="{D6F2FBC5-3405-40FD-8880-7E99DD10F0BA}" Context="InprocServer32" Description="MgaClosure Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.MgaClosure.1" Description="MgaClosure Class">
                 <ProgId Id="Mga.MgaClosure" Description="MgaClosure Class" />
