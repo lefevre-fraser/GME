@@ -38,7 +38,7 @@ class TestMetaInterpreter(unittest.TestCase):
             if os.path.isfile(os.path.join(self.outdir(), file)):
                 os.unlink(os.path.join(self.outdir(), file))
         registrar = DispatchEx("Mga.MgaRegistrar")
-        registrar.RegisterParadigmFromData("XML=" + os.path.abspath(_adjacent_file("..\\..\\Paradigms\\MetaGME\\MetaGME.xmp")), "MetaGME", 1)
+        registrar.RegisterParadigmFromData("XML=" + os.path.abspath(os.path.join(os.environ['GME_ROOT'], "Paradigms\\MetaGME\\MetaGME.xmp")), "MetaGME", 1)
     setUp = tearDown
 
     @property
