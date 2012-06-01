@@ -26,6 +26,14 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes
+----------------------------------
+  - Binary compatibility with r11.12.2
+  - Fix MetaInterpreter bug where attributes were unordered
+  - Fixed bug with deleting opened models ("Unable to refresh model")
+  - Fix out-of-proc activation for MgaLauncher
+  - Fix error message during xme parse 
+
 Release Notes of Release r12.4.20
 ----------------------------------
   - Binary compatibility with r11.12.2
@@ -39,7 +47,6 @@ Release Notes of Release r12.4.20
   - Fix JAUT.dll under gcj
   - Fix out-of-memory crashes
   - Fix: Panning Window didn't refresh when clicking on Aspect dropdown
-  - 
 
 
 Release Notes of Release r12.3.13
