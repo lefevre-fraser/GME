@@ -589,7 +589,7 @@ for (std::set&lt;BON::Connection&gt;::iterator it2 = conns.begin(); it2 != conns
 
     <para><ulink url="Lesson2.html">&lt;&lt; Previous Lesson</ulink></para>
 
-    <para><ulink url="Index.html#toc">Complete List</ulink></para>
+    <para><ulink url="index.html#toc">Complete List</ulink></para>
 
     <para><ulink type="" url="Lesson4.html">Next Lesson
     &gt;&gt;</ulink></para>
