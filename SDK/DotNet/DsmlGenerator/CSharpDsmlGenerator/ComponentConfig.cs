@@ -16,7 +16,7 @@ namespace GME.CSharp
         public const string tooltip = componentName;
         
 		// Specify an icon path
-		public const string iconName = "Component.ico";
+		public const string iconName = "CSharpDSMLGenerator.ico";
         
 		// If null, updated with the assembly path + the iconName dynamically on registration
         public static string iconPath = null; 

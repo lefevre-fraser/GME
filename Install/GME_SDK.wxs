@@ -141,7 +141,9 @@
               <Directory Id='INSTALLDIR_SDK_DECORATOREXAMPLES_PLAINSAMPLE' Name='PlainSample' />
             </Directory>
             <Directory Id='INSTALLDIR_SDK_JAVA' Name='Java' />
-            <Directory Id='INSTALLDIR_SDK_DOTNET' Name='DotNet' />
+            <Directory Id='INSTALLDIR_SDK_DOTNET' Name='DotNet'>
+              <Directory Id='INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR' Name='CSharpDSMLGenerator'/>
+            </Directory>
             <Directory Id='INSTALLDIR_SDK_PATTERNPROCESSOR' Name='PatternProcessor' />
             <Directory Id='INSTALLDIR_SDK_SCRIPTS' Name='Scripts' />
           </Directory>
@@ -172,6 +174,42 @@
       </Component>
     </DirectoryRef>
 
+    <Component Id="CSharpDSMLGenerator.dll" Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
+      <File Id="CSharpDSMLGenerator.dll" Name="CSharpDSMLGenerator.dll" KeyPath="yes" Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\CSharpDSMLGenerator.dll" />
+      <Class Id="{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}" Context="InprocServer32" Description="MGA.Interpreter.CSharpDSMLGenerator" ThreadingModel="both" ForeignServer="mscoree.dll">
+        <ProgId Id="MGA.Interpreter.CSharpDSMLGenerator" Description="MGA.Interpreter.CSharpDSMLGenerator" />
+      </Class>
+      <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+      <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32\1.0.1.0" Name="Class" Value="CSharpDSMLGenerator.CSharpDSMLGeneratorInterpreter" Type="string" Action="write" />
+      <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32\1.0.1.0" Name="Assembly" Value="CSharpDSMLGenerator, Version=1.0.1.0, Culture=neutral" Type="string" Action="write" />
+      <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32\1.0.1.0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+      <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32\1.0.1.0" Name="CodeBase" Value="file:///[#CSharpDSMLGenerator.dll]" Type="string" Action="write" />
+      <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32" Name="Class" Value="CSharpDSMLGenerator.CSharpDSMLGeneratorInterpreter" Type="string" Action="write" />
+      <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32" Name="Assembly" Value="CSharpDSMLGenerator, Version=1.0.1.0, Culture=neutral" Type="string" Action="write" />
+      <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+      <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32" Name="CodeBase" Value="file:///[#CSharpDSMLGenerator.dll]" Type="string" Action="write" />
+      <RegistryValue Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" Action="write" />
+      <RegistryKey Root='HKLM' Key='Software\GME\Components\MGA.Interpreter.CSharpDSMLGenerator'>
+        <RegistryValue Name='Description' Type='string' Value='CSharp (.Net) Dsml API Generator'/>
+        <RegistryValue Name='Icon' Type='string' Value='[#CSharpDSMLGenerator.ico]'/>
+        <RegistryValue Name='Paradigm' Type='string' Value='MetaGME'/>
+        <RegistryValue Name='Tooltip' Type='string' Value='CSharp (.Net) Dsml API Generator'/>
+        <RegistryValue Name='Type' Type='integer' Value='1'/>
+
+        <RegistryKey Key='Associated'>
+          <RegistryValue Name='MetaGME' Type='string' Value=''/>
+        </RegistryKey>
+      </RegistryKey>
+    </Component>
+    <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
+      <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\CSharpDSMLGenerator.ico" />
+    </Component>
+    <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
+      <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\ISIS.GME.Common.dll" />
+    </Component>
+    <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
+      <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\MgaMeta.dll" />
+    </Component>
 
     <DirectoryRef Id="INSTALLDIR_PARADIGMS_SF">
       <Component Id="BON2SFInterpreter.dll">

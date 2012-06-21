@@ -117,7 +117,7 @@
     <!--$ADDITIONALFILES$-->
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Component.ico">
+    <Content Include="CSharpDSMLGenerator.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
