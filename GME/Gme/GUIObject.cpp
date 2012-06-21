@@ -2523,7 +2523,7 @@ CGuiConnection::CGuiConnection(CComPtr<IMgaFCO>& pt, CComPtr<IMgaMetaRole>& role
 	RefreshAttributeCache();
 }
 
-void CGuiConnection::GiveConnectionEndErroMessage(const CString& mainMsg, const CGuiPort* otherPort) const
+void CGuiConnection::GiveConnectionEndErroMessage(const TCHAR* mainMsg, const TCHAR* srcOrDst, const CGuiPort* otherPort) const
 {
 	if (!view->ShouldSupressConnectionCheckAlert()) {
 		CString msgEx;
@@ -2536,7 +2536,9 @@ void CGuiConnection::GiveConnectionEndErroMessage(const CString& mainMsg, const 
 		msgEx.Append(roleDisplayedName);
 		msgEx.Append(_T("\nID: "));
 		msgEx.Append(id);
-		msgEx.Append(_T("\nEndpoint properties:"));
+		msgEx.Append(_T("\nDirection: "));
+		msgEx.Append(srcOrDst);
+		msgEx.Append(_T("\nOther endpoint properties:"));
 		if (otherPort) {
 			msgEx.Append(_T("\n\tName: "));
 			msgEx.Append(otherPort->name);
@@ -2702,9 +2704,9 @@ void CGuiConnection::Resolve()
 			}
 			if (src_err || dst_err) {
 				if (src_err) {
-					GiveConnectionEndErroMessage(_T("Source endpoint error"), dstPort);
+					GiveConnectionEndErroMessage(_T("Source endpoint error"), _T("src"), dstPort);
 				} else if (dst_err) {
-					GiveConnectionEndErroMessage(_T("Destination endpoint error"), srcPort);
+					GiveConnectionEndErroMessage(_T("Destination endpoint error"), _T("dst"), srcPort);
 				}
 			} else
 
