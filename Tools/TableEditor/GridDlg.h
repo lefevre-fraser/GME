@@ -89,12 +89,14 @@ protected:
 
 	BOOL GetMultiLine(CComPtr<IMgaMetaAttribute> p_Meta);
 	void InitGrid();
+	HRESULT ShowItemsRecursively();
 
 	// Generated message map functions
 	//{{AFX_MSG(CGridDlg)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnBtnExport();
+	afx_msg void OnRecursivelyShowItems();
 	afx_msg void OnButtonDisplay();
 	afx_msg void OnCheckAllKinds();
 	afx_msg void OnChkAllTypes();

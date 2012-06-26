@@ -12,6 +12,8 @@
 #include "NewCellTypes/GridCellAttrName.h"
 #include "TableEditorParser.h"
 #include "TableEditorDumper.h"
+#include <queue>
+#include "Console.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -470,6 +472,69 @@ void CGridDlg::InitGrid() //really long function to init the grid, in the future
 	}MGACOLL_ITERATE_END;	
 }
 
+HRESULT CGridDlg::ShowItemsRecursively()
+{
+	COMTRY {
+		std::queue< CComPtr<IMgaFCO> > fcoq;
+
+		CComPtr<IMgaFCOs> recursiveFCOs = NULL;
+		COMTHROW(recursiveFCOs.CoCreateInstance(L"Mga.MgaFCOs"));
+
+		long count = 0;
+		COMTHROW(this->m_FCOs->get_Count(&count));
+
+		for (int idx = 1; idx <= count; idx++) {
+			CComPtr<IMgaFCO> fco;
+			COMTHROW(this->m_FCOs->get_Item(idx, &fco));
+			fcoq.push(fco);
+		}
+
+		while (! fcoq.empty()) {
+			CComPtr<IMgaFCO> parent = fcoq.front();
+			fcoq.pop();
+
+			COMTHROW(recursiveFCOs->Append(parent));
+
+			objtype_enum type;
+			COMTHROW(parent->get_ObjType(&type));
+			if (type != OBJTYPE_MODEL && type != OBJTYPE_FOLDER)
+				continue;
+
+			CComPtr<IMgaObjects> children = NULL;
+			COMTHROW(parent->get_ChildObjects(&children));
+
+			long count = 0;
+			COMTHROW(children->get_Count(&count));
+
+			for (int idx = 1; idx <= count; idx++) {
+				CComPtr<IMgaObject> child;
+				COMTHROW(children->get_Item(idx, &child));
+
+				objtype_enum type = OBJTYPE_NULL;
+				COMTHROW(child->get_ObjType(&type));
+
+				switch (type) {
+				case OBJTYPE_MODEL:
+				case OBJTYPE_ATOM:
+				case OBJTYPE_REFERENCE:
+				case OBJTYPE_CONNECTION:
+				case OBJTYPE_SET:
+					CComPtr<IMgaFCO> fco = NULL;
+					fco = static_cast<IMgaFCO*>(child.p);
+					fcoq.push(fco);
+					break;
+				}
+			}
+		}
+
+		this->m_FCOs = recursiveFCOs;
+		this->InitGrid();
+
+		return S_OK;
+	}
+	COMCATCH(;);
+}
+
 void CGridDlg::GetMetaObjectNames(IMgaMetaBase *metaBase) //based on GetMetaObjectsR in OCLCommonEx.cpp
 {
 		CComPtr<IMgaMetaFCOs> p_FCOs;
@@ -566,6 +631,9 @@ void CGridDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CGridDlg, CDialog)
 	//{{AFX_MSG_MAP(CGridDlg)
+	ON_COMMAND(ID_FILE_IMPORT, OnBtnImport)
+	ON_COMMAND(ID_FILE_EXPORT, OnBtnExport)
+	ON_COMMAND(ID_VIEW_RECURSIVELYSHOWITEMS, OnRecursivelyShowItems)
 	ON_WM_SIZE()
 	ON_BN_CLICKED(IDC_BTNEXPORT, OnBtnExport)
 	ON_BN_CLICKED(IDC_BTNDISP, OnButtonDisplay)
@@ -985,6 +1053,11 @@ void CGridDlg::OnBtnExport()
 		dumper.DoneDump();
 
 	}
+}
+
+void CGridDlg::OnRecursivelyShowItems()
+{
+	ShowItemsRecursively();
 }
 
 void CGridDlg::OnBtnImport() 
