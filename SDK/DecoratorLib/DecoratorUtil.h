@@ -19,6 +19,8 @@
 
 #include "DecoratorDefs.h"
 
+#include "PathUtil.h"
+
 namespace DecoratorSDK
 {
 	class BitmapBase;
@@ -39,10 +41,7 @@ namespace DecoratorSDK
 	{
 		private :
 			CComPtr<IMgaProject>				m_spProject;
-			std::vector<CString> 				m_vecPathes;
-			bool								m_bArePathesValid;
-			CString								m_strParadigmPath;
-			CString								m_strProjectPath;
+			PathUtil m_pathUtil;
 			CDC									m_nullDC;
 			Gdiplus::Graphics*					m_gdip;
 			Gdiplus::SmoothingMode				m_eEdgeAntiAlias;		// Edge smoothing mode

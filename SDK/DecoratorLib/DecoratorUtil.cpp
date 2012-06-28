@@ -119,7 +119,7 @@ namespace DecoratorSDK
 //################################################################################################
 
 Facilities::Facilities()
-	: m_bArePathesValid( false ), m_spProject( NULL )
+	: m_spProject( NULL )
 {
 	m_nullDC.CreateCompatibleDC(NULL);
 	m_gdip = NULL;	// Create the Gdiplus::Graphics object later, cause at this point GdiplusStartup may not be called by GMEApp
@@ -225,100 +225,22 @@ bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )
 		m_gdip->SetTextRenderingHint(m_eFontAntiAlias);
 	}
 
-	if ( ! m_spProject || ! m_spProject.IsEqualObject( pProject ) )
+	if (!m_spProject || !m_spProject.IsEqualObject(pProject))
 		m_spProject = pProject;
-	else
-		return m_bArePathesValid = true;
+	else if (m_pathUtil.arePathesValid())
+		return true;
 
-	if ( bRefresh ) {
-		m_vecPathes.clear();
-		m_bArePathesValid = false;
-
-		if ( pProject ) {
-			long lStatus;
-			COMTHROW( pProject->get_ProjectStatus( &lStatus ) );
-			if ( (lStatus & 0x01L) != 0 ) {
-				CComBSTR bstrParadigm;
-				COMTHROW( pProject->get_ParadigmConnStr( &bstrParadigm ) );
-				m_strParadigmPath = CString( bstrParadigm );
-				if ( m_strParadigmPath.Find( _T("MGA=") ) == 0 ) {
-					int iPos = m_strParadigmPath.ReverseFind( _T('\\') );
-					if( iPos >= 4 ) {
-						m_strParadigmPath = m_strParadigmPath.Mid( 4, iPos - 4 );
-						if( m_strParadigmPath.IsEmpty() )
-							m_strParadigmPath = '\\';
-					}
-				}
-
-				CComBSTR bstrProject;
-				COMTHROW( pProject->get_ProjectConnStr( &bstrProject ) );
-				m_strProjectPath = CString( bstrProject );
-				if ( m_strProjectPath.Find( _T("MGA=") ) == 0 ) {
-					int iPos = m_strProjectPath.ReverseFind( _T('\\') );
-					if( iPos >= 4 ) {
-						m_strProjectPath = m_strProjectPath.Mid( 4, iPos - 4 );
-						if( m_strProjectPath.IsEmpty() )
-							m_strProjectPath = '\\';
-					}
-				}
-			}
-		}
-	}
-
-	if ( ! m_bArePathesValid ) {
-
-		CString strPath;
-		try {
-			CComPtr<IMgaRegistrar> spRegistrar;
-			COMTHROW( spRegistrar.CoCreateInstance( OLESTR( "Mga.MgaRegistrar" ) ) );
-			CComBSTR bstrPath;
-			COMTHROW( spRegistrar->get_IconPath( REGACCESS_BOTH, &bstrPath ) );
-
-			strPath = bstrPath;
-		}
-		catch ( hresult_exception & ) {
-		}
-
-		strPath.Replace( _T("$PARADIGMDIR"), m_strParadigmPath );
-		strPath.Replace( _T("$PROJECTDIR"), m_strProjectPath );
-
-		while( ! strPath.IsEmpty() ) {
-			int iPos = strPath.Find( ';' );
-			if( iPos == 0) // zolmol: if accidentaly there are two semicolons, or the path starts with a semicolon
-			{
-				strPath = strPath.Right( strPath.GetLength() - 1 );
-				continue;
-			}
-			CString strDir;
-			if ( iPos != -1 ) {
-				strDir = strPath.Left( iPos );
-				strPath = strPath.Right( strPath.GetLength() - iPos - 1 );
-			}
-			else {
-				strDir = strPath;
-				strPath.Empty();
-			}
-			strDir.Replace( '/', '\\' );
-			if ( strDir.GetAt( strDir.GetLength() - 1 ) != '\\' )
-				strDir += _T("\\");
-			m_vecPathes.push_back( strDir );
-		}
-		m_vecPathes.push_back( _T(".\\") );
-
-		m_bArePathesValid = true;
-	}
-
-	return m_bArePathesValid;
+	return m_pathUtil.loadPaths(pProject, bRefresh);
 }
 
 bool Facilities::arePathesValid() const
 {
-	return m_bArePathesValid;
+	return m_pathUtil.arePathsValid();
 }
 
 std::vector<CString> Facilities::getPathes() const
 {
-	return m_vecPathes;
+	return m_pathUtil.getPaths();
 }
 
 Gdiplus::Graphics* Facilities::getGraphics(void) const

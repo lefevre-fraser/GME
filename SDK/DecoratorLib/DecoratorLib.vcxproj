@@ -478,6 +478,7 @@
     <ClInclude Include="ObjectAndTextPart.h" />
     <ClInclude Include="PartBase.h" />
     <ClInclude Include="PartInterface.h" />
+    <ClInclude Include="PathUtil.h" />
     <ClInclude Include="PortBitmapPart.h" />
     <ClInclude Include="PortLabelPart.h" />
     <ClInclude Include="PortPart.h" />

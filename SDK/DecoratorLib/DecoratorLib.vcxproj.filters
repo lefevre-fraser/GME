@@ -335,6 +335,9 @@
     <ClInclude Include="DecoratorLibResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PathUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\atom.bmp">
