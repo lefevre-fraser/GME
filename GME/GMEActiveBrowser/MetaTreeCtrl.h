@@ -11,7 +11,7 @@
 
 #include "MgaMappedTreeCtrl.h"
 
-class CMetaTreeCtrl : public CMgaMappedTreeCtrl  
+class CMetaTreeCtrl : public CMgaMappedTreeCtrl<CMgaObjectProxy>
 {
 	friend class CMetaPropertyPage;
 public:

@@ -11,7 +11,14 @@
 
 #include "MgaMappedTreeCtrl.h"
 
-class CAggregateTreeCtrl : public CMgaMappedTreeCtrl  
+struct CAggregateMgaObjectProxy : public CMgaObjectProxy
+{
+	CAggregateMgaObjectProxy() : CMgaObjectProxy() { };
+	CAggregateMgaObjectProxy(LPUNKNOWN pMgaObject, objtype_enum type) : CMgaObjectProxy(pMgaObject, type) {};
+	CAggregateMgaObjectProxy(CMgaObjectProxy& proxy) : CMgaObjectProxy(proxy) {};
+};
+
+class CAggregateTreeCtrl : public CMgaMappedTreeCtrl<CAggregateMgaObjectProxy>
 {
 	friend class CAggregatePropertyPage;
 	friend class CAggregateContextMenu;
@@ -44,6 +51,10 @@ public:
 	CAggregateTreeCtrl();
 	virtual ~CAggregateTreeCtrl();
 
+
+	afx_msg void OnPaint();
+protected:
+	DECLARE_MESSAGE_MAP()
 };
 
 #endif // !defined(AFX_AGGREGATETREECTRL_H__BAA3D537_E504_4801_B793_6F96B703380C__INCLUDED_)

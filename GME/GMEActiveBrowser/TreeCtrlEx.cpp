@@ -979,7 +979,7 @@ int CTreeCtrlEx::FindTextInItems(CString &strText, HTREEITEM hStartAtItem,
 ///////////////////////////////////////////////////////////////////////////////
 // Retreives a tree ctrl item given the item's data
 
-HTREEITEM CTreeCtrlEx::ItemFromData(DWORD dwData, HTREEITEM hStartAtItem/*=NULL*/) const
+HTREEITEM CTreeCtrlEx::ItemFromData(DWORD_PTR dwData, HTREEITEM hStartAtItem/*=NULL*/) const
 {
 	// Traverse all items in tree control
 	HTREEITEM hItem;
@@ -990,7 +990,7 @@ HTREEITEM CTreeCtrlEx::ItemFromData(DWORD dwData, HTREEITEM hStartAtItem/*=NULL*
 
 	while ( hItem )
 	{
-		if ( dwData == (DWORD)GetItemData( hItem ) )
+		if ( dwData == GetItemData( hItem ) )
 			return hItem;
 
 		// Get first child node
@@ -1024,7 +1024,7 @@ HTREEITEM CTreeCtrlEx::ItemFromData(DWORD dwData, HTREEITEM hStartAtItem/*=NULL*
 // Global function to retreive a HTREEITEM from a tree control, given the 
 // item's itemdata.
 
-HTREEITEM GetTreeItemFromData(CTreeCtrl& treeCtrl, DWORD dwData, HTREEITEM hStartAtItem /*=NULL*/)
+HTREEITEM GetTreeItemFromData(CTreeCtrl& treeCtrl, DWORD_PTR dwData, HTREEITEM hStartAtItem /*=NULL*/)
 {
 	// Traverse from given item (or all items if hFromItem is NULL)
 	HTREEITEM hItem;
@@ -1035,7 +1035,7 @@ HTREEITEM GetTreeItemFromData(CTreeCtrl& treeCtrl, DWORD dwData, HTREEITEM hStar
 
 	while ( hItem )
 	{
-		if ( dwData == (DWORD)treeCtrl.GetItemData( hItem ) )
+		if ( dwData == treeCtrl.GetItemData( hItem ) )
 			return hItem;
 
 		// Get first child node

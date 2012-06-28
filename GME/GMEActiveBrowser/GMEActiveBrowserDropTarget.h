@@ -19,7 +19,7 @@
 	} \
 } \
 
-class CMgaMappedTreeCtrl;
+class CMgaMappedTreeCtrlBase;
 
 class CGMEActiveBrowserDropTarget : public COleDropTarget  
 {
@@ -33,11 +33,13 @@ public:
 	void OnDragLeave( CWnd* pWnd );
 	DROPEFFECT OnDragOver( CWnd* pWnd, COleDataObject* pDataObject, DWORD dwKeyState, CPoint point );
 	DROPEFFECT OnDragEnter( CWnd* pWnd, COleDataObject* pDataObject, DWORD dwKeyState, CPoint point );
-	CGMEActiveBrowserDropTarget(CMgaMappedTreeCtrl*);
+	CGMEActiveBrowserDropTarget(CMgaMappedTreeCtrlBase*);
 	virtual ~CGMEActiveBrowserDropTarget();
-	CMgaMappedTreeCtrl* m_pParent;
+	CMgaMappedTreeCtrlBase* m_pParent;
 	CComPtr<IMgaEventLogger> m_EventLogger;
 
+private:
+	CGMEActiveBrowserDropTarget(const CGMEActiveBrowserDropTarget&);
 };
 
 #endif // !defined(AFX_GMEACTIVEBROWSERDROPTARGET_H__4A7D8C14_58DA_4785_932F_1BB960E09EF6__INCLUDED_)

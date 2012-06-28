@@ -140,7 +140,7 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 	{
 		m_pParent->m_bIsBrowserCreatedNewObject=TRUE;
 		HTREEITEM hItem=m_pParent->m_TreeAggregate.GetSelectedItem();
-		CMgaObjectProxy MgaObjectProxy;
+		CAggregateMgaObjectProxy MgaObjectProxy;
 
 		if(m_pParent->m_TreeAggregate.m_MgaMap.LookupObjectProxy(hItem,MgaObjectProxy))
 		{
@@ -616,7 +616,7 @@ void CAggregateContextMenu::CreateForSingleItem()
 
 
 	HTREEITEM hItem=m_pParent->m_TreeAggregate.GetSelectedItem();
-	CMgaObjectProxy MgaObjectProxy;
+	CAggregateMgaObjectProxy MgaObjectProxy;
 
 	if(m_pParent->m_TreeAggregate.m_MgaMap.LookupObjectProxy(hItem,MgaObjectProxy))
 	{
@@ -733,7 +733,7 @@ void CAggregateContextMenu::CreateForSingleItem()
 		if( OBJTYPE_FOLDER != MgaObjectProxy.m_TypeInfo) // for folders we already deleted the feature
 		{
 			HTREEITEM hItemsParent = m_pParent->m_TreeAggregate.GetParentItem( hItem);
-			CMgaObjectProxy MgaParentProxy; // if parent is a model, then enable
+			CAggregateMgaObjectProxy MgaParentProxy; // if parent is a model, then enable
 			if(m_pParent->m_TreeAggregate.m_MgaMap.LookupObjectProxy(hItemsParent,MgaParentProxy))
 				EnableMenuItem( ID_POPUP_SHOWINPARENT, OBJTYPE_MODEL == MgaParentProxy.m_TypeInfo?MF_ENABLED:MF_GRAYED);
 		}

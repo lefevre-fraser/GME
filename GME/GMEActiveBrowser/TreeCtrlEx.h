@@ -40,7 +40,7 @@ public:
 	HTREEITEM GetFirstSelectedItem();
 	HTREEITEM GetNextSelectedItem(HTREEITEM hItem);
 	HTREEITEM GetPrevSelectedItem(HTREEITEM hItem);
-	HTREEITEM ItemFromData(DWORD dwData, HTREEITEM hStartAtItem=NULL) const;
+	HTREEITEM ItemFromData(DWORD_PTR dwData, HTREEITEM hStartAtItem=NULL) const;
 
 	BOOL SelectItemEx(HTREEITEM hItem, BOOL bSelect=TRUE);
 
@@ -105,9 +105,12 @@ protected:
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()
+
+private:
+	CTreeCtrlEx(const CTreeCtrlEx&);
 };
 
 
-HTREEITEM GetTreeItemFromData(CTreeCtrl& treeCtrl, DWORD dwData, HTREEITEM hStartAtItem=NULL);
+HTREEITEM GetTreeItemFromData(CTreeCtrl& treeCtrl, DWORD_PTR dwData, HTREEITEM hStartAtItem=NULL);
 
 #endif

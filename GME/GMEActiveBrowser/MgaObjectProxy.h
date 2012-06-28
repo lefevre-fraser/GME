@@ -13,7 +13,6 @@
 
 class CMgaObjectProxy  
 {
-	friend class CMgaMap;
 public:
 	CMgaObjectProxy(){};
 	CMgaObjectProxy(LPUNKNOWN pMgaObject, objtype_enum type);

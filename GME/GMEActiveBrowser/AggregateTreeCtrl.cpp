@@ -14,6 +14,10 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
+
+BEGIN_MESSAGE_MAP(CAggregateTreeCtrl, CTreeCtrl)
+	ON_WM_PAINT()
+END_MESSAGE_MAP()
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -286,7 +290,7 @@ void CAggregateTreeCtrl::LoadItemStateFromRegistry(CString& strProjectName, HTRE
 		
 				if(nItemState!=0xffffffff)
 				{
-					CMgaMappedTreeCtrl::SetItemState(hItem,nItemState);
+					__super::SetItemState(hItem,nItemState);
 				}
 
 			}
@@ -508,7 +512,7 @@ void CAggregateTreeCtrl::RestoreState()
 				{
 					TCHAR* pszEndPtr=NULL;
 					UINT nItemState=_tcstoul(strItemState,&pszEndPtr,10);														
-					CMgaMappedTreeCtrl::SetItemState(hItem,nItemState);
+					__super::SetItemState(hItem,nItemState);
 				}
 			}
 		}
@@ -567,8 +571,8 @@ int CAggregateTreeCtrl::ItemCompareProc(LPARAM lParamItem1, LPARAM lParamItem2, 
 			}break;
 		case SORT_BYTYPE:
 			{
-				CMgaObjectProxy MgaObjectProxyItem1;
-				CMgaObjectProxy MgaObjectProxyItem2;
+				CAggregateMgaObjectProxy MgaObjectProxyItem1;
+				CAggregateMgaObjectProxy MgaObjectProxyItem2;
 				if(
 					pTreeCtrl->m_MgaMap.LookupObjectProxy(hItem1,MgaObjectProxyItem1) &&
 					pTreeCtrl->m_MgaMap.LookupObjectProxy(hItem2,MgaObjectProxyItem2))
@@ -605,8 +609,8 @@ int CAggregateTreeCtrl::ItemCompareProc(LPARAM lParamItem1, LPARAM lParamItem2, 
 		case SORT_BYCREATION:
 			{
 				
-				CMgaObjectProxy MgaObjectProxyItem1;
-				CMgaObjectProxy MgaObjectProxyItem2;
+				CAggregateMgaObjectProxy MgaObjectProxyItem1;
+				CAggregateMgaObjectProxy MgaObjectProxyItem2;
 
 				if(
 					pTreeCtrl->m_MgaMap.LookupObjectProxy(hItem1,MgaObjectProxyItem1) &&
@@ -725,7 +729,7 @@ BOOL CAggregateTreeCtrl::IsRelevantDropTarget(CPoint point,CImageList* pDragImag
 	
 	if ((hItem != NULL) && (TVHT_ONITEM & uFlags))
 	{
-		CMgaObjectProxy ObjectProxy;
+		CAggregateMgaObjectProxy ObjectProxy;
 		if(m_MgaMap.LookupObjectProxy(hItem,ObjectProxy)) // If it is in the map
 		{
 			if(ObjectProxy.m_TypeInfo==OBJTYPE_FOLDER || ObjectProxy.m_TypeInfo==OBJTYPE_MODEL)
@@ -764,7 +768,7 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 		hItem = HitTest(point);
 	}
 	
-	CMgaObjectProxy MgaObjectProxy;
+	CAggregateMgaObjectProxy MgaObjectProxy;
 
 	if(hItem==NULL || !m_MgaMap.LookupObjectProxy(hItem,MgaObjectProxy))
 	{
@@ -1222,13 +1226,15 @@ void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentStat
 {
 
 
-	CMgaObjectProxy ObjectProxy;
+	CAggregateMgaObjectProxy ObjectProxy;
 
-	if(!m_MgaMap.LookupObjectProxy(hItem, ObjectProxy))return;
+	if(!m_MgaMap.LookupObjectProxy(hItem, ObjectProxy))
+		return;
 
 	CComQIPtr<IMgaObject> ccpObject(ObjectProxy.m_pMgaObject);
 
-	if(!ccpObject)return; // Not an MgaObject
+	if(!ccpObject)
+		return; // Not an MgaObject
 	
 
 	BYTE cState=0;
@@ -1377,4 +1383,30 @@ bool CAggregateTreeCtrl::IsUngroupedLibrary(CComPtr<IMgaFolder> pLibPtr)
 	}
 
 	return retv;
+}
+
+void CAggregateTreeCtrl::OnPaint()
+{
+	__super::OnPaint();
+
+	CDC* dc = GetDC();
+	CRect rClient;
+	this->GetClientRect( rClient );
+
+	HTREEITEM	hItem = NULL;
+	CRect		rItem;
+	
+	// Get the current top item, if any...
+	hItem = GetFirstVisibleItem();
+
+	// Work through them one at a time...
+	while ( hItem )
+	{
+
+		this->GetItemRect(hItem, rItem, TRUE);
+		rItem += rClient;
+		rItem.left -= 16;
+		//dc->DrawText(L"xx", 2, rItem, DT_LEFT | DT_BOTTOM);
+		hItem = this->GetNextVisibleItem(hItem);
+	}
 }

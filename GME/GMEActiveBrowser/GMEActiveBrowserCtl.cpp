@@ -356,7 +356,7 @@ LPUNKNOWN CGMEActiveBrowserCtrl::GetSelectedMgaObjects()
 	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 
-	CMgaMappedTreeCtrl* pTreeCtrl = &m_pPropFrame->m_pModelessPropSheet->m_PageAggregate.m_TreeAggregate;
+	CMgaMappedTreeCtrlBase* pTreeCtrl = &m_pPropFrame->m_pModelessPropSheet->m_PageAggregate.m_TreeAggregate;
 
 	if( 1 == m_pPropFrame->m_pModelessPropSheet->GetActiveIndex()) // if the INHER tree is active use that tree
 		pTreeCtrl = &m_pPropFrame->m_pModelessPropSheet->m_PageInheritance.m_TreeInheritance;
@@ -375,7 +375,7 @@ LPUNKNOWN CGMEActiveBrowserCtrl::GetSelectedMgaObjects()
 		while(hItem)
 		{
 			LPUNKNOWN pUnknown;
-			pTreeCtrl->m_MgaMap.LookupObjectUnknown(hItem,pUnknown);
+			pTreeCtrl->LookupObjectUnknown(hItem, pUnknown);
 			CComQIPtr<IMgaObject> ccpMgaObject(pUnknown);
 			
 			ASSERT(ccpMgaObject!=NULL);

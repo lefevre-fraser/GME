@@ -846,7 +846,7 @@ void CAggregatePropertyPage::DoCopy()
 	for(HTREEITEM hItem=m_TreeAggregate.GetFirstSelectedItem();hItem;
 						hItem=m_TreeAggregate.GetNextSelectedItem(hItem))
 	{
-		CMgaObjectProxy ObjectProxy;
+		CAggregateMgaObjectProxy ObjectProxy;
 		if(m_TreeAggregate.m_MgaMap.LookupObjectProxy(hItem, ObjectProxy))
 		{
 			if ( ObjectProxy.m_TypeInfo == OBJTYPE_MODEL     ||	// FCOs
@@ -931,7 +931,7 @@ void CAggregatePropertyPage::DoCopyClosure()
 		hItem; 
 		hItem = m_TreeAggregate.GetNextSelectedItem( hItem))
 	{
-		CMgaObjectProxy ObjectProxy;
+		CAggregateMgaObjectProxy ObjectProxy;
 		if( m_TreeAggregate.m_MgaMap.LookupObjectProxy( hItem, ObjectProxy))
 		{
 			if ( ObjectProxy.m_TypeInfo == OBJTYPE_MODEL			// FCOs: connection too
@@ -1148,7 +1148,7 @@ void CAggregatePropertyPage::DoCopySmart( int k /*= 0*/)
 		hItem; 
 		hItem = m_TreeAggregate.GetNextSelectedItem( hItem))
 	{
-		CMgaObjectProxy ObjectProxy;
+		CAggregateMgaObjectProxy ObjectProxy;
 		if( m_TreeAggregate.m_MgaMap.LookupObjectProxy( hItem, ObjectProxy))
 		{
 			all_containers &= (ObjectProxy.m_TypeInfo == OBJTYPE_MODEL || ObjectProxy.m_TypeInfo == OBJTYPE_FOLDER);
@@ -1299,7 +1299,7 @@ void CAggregatePropertyPage::DoDrag( CPoint ptDrag)
 	for(HTREEITEM hItem=m_TreeAggregate.GetFirstSelectedItem();hItem;
 						hItem=m_TreeAggregate.GetNextSelectedItem(hItem))
 	{
-		CMgaObjectProxy ObjectProxy;
+		CAggregateMgaObjectProxy ObjectProxy;
 		if(m_TreeAggregate.m_MgaMap.LookupObjectProxy(hItem, ObjectProxy))
 		{
 			if(ObjectProxy.m_TypeInfo==OBJTYPE_MODEL||			// FCOs
@@ -3071,7 +3071,7 @@ void CInheritancePropertyPage::SetupTree()
 	CActiveBrowserPropertySheet* pParent=(CActiveBrowserPropertySheet*)GetParent();
 	
 	// Getting selection from aggregate tree
-	CMgaObjectProxy MgaObjectProxy;
+	CAggregateMgaObjectProxy MgaObjectProxy;
 	
 
 	// condition modified> inheritance tree empty for all folders

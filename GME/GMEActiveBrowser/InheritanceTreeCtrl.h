@@ -11,7 +11,7 @@
 
 #include "MgaMappedTreeCtrl.h"
 
-class CInheritanceTreeCtrl : public CMgaMappedTreeCtrl  
+class CInheritanceTreeCtrl : public CMgaMappedTreeCtrl<CMgaObjectProxy>
 {
 	friend class CInheritancePropertyPage;
 public:

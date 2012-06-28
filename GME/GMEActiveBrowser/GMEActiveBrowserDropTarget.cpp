@@ -20,7 +20,7 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CGMEActiveBrowserDropTarget::CGMEActiveBrowserDropTarget(CMgaMappedTreeCtrl* pParent)
+CGMEActiveBrowserDropTarget::CGMEActiveBrowserDropTarget(CMgaMappedTreeCtrlBase* pParent)
 {
 	m_pParent=pParent;
 	m_bCreatedDragImageList=FALSE;
