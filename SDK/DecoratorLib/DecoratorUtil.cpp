@@ -227,7 +227,7 @@ bool Facilities::loadPathes( IMgaProject* pProject, bool bRefresh )
 
 	if (!m_spProject || !m_spProject.IsEqualObject(pProject))
 		m_spProject = pProject;
-	else if (m_pathUtil.arePathesValid())
+	else if (m_pathUtil.arePathsValid())
 		return true;
 
 	return m_pathUtil.loadPaths(pProject, bRefresh);
