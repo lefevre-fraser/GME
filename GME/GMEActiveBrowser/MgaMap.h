@@ -21,7 +21,6 @@ class CMgaMap
 	class CMgaObjectProxyMapItem : public ObjectProxy
 	{
 	public:
-		CMgaObjectProxyMapItem(LPUNKNOWN pMgaObject, objtype_enum type, HTREEITEM hTreeItem) : ObjectProxy(pMgaObject,type),m_hTreeItem(hTreeItem) {};
 		CMgaObjectProxyMapItem(CMgaObjectProxy& rSourceMgaObjectProxy, HTREEITEM hTreeItem) : ObjectProxy(rSourceMgaObjectProxy),m_hTreeItem(hTreeItem) {};
 		virtual ~CMgaObjectProxyMapItem() {}
 		HTREEITEM m_hTreeItem;
@@ -135,7 +134,7 @@ public:
 
 
 	// Adds a new TreeItem Handle - ObjectProxy pair to the map
-	void AddEntry(HTREEITEM hTreeItem, ObjectProxy MgaObjectProxy)
+	ObjectProxy& AddEntry(HTREEITEM hTreeItem, ObjectProxy MgaObjectProxy)
 	{
 
 	// Removing the elements from the maps with the keys, because CMap::SetAt would overwrite
@@ -154,6 +153,7 @@ public:
 		CMgaObjectProxyMapItem* pMgaObjectProxyMapItem= new CMgaObjectProxyMapItem(MgaObjectProxy, hTreeItem);
 		m_MapObject2Item.SetAt(MgaObjectProxy.m_pMgaObject,pMgaObjectProxyMapItem);
 
+		return *pMgaObjectProxyMapItem;
 	}
 
 

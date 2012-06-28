@@ -15,10 +15,20 @@ class CMgaObjectProxy
 {
 public:
 	CMgaObjectProxy(){};
-	CMgaObjectProxy(LPUNKNOWN pMgaObject, objtype_enum type);
-	CMgaObjectProxy(CMgaObjectProxy&);
-	virtual ~CMgaObjectProxy();
-	void CMgaObjectProxy::operator =(CMgaObjectProxy &rSourceObjectProxy);
+	CMgaObjectProxy(LPUNKNOWN pMgaObject, objtype_enum type) :
+		m_pMgaObject(pMgaObject),
+		m_TypeInfo(type)
+	{
+	}
+
+	CMgaObjectProxy(const CMgaObjectProxy& that) { *this = that; }
+	virtual ~CMgaObjectProxy() {}
+
+	void CMgaObjectProxy::operator =(const CMgaObjectProxy &rSourceObjectProxy)
+	{
+		m_pMgaObject = rSourceObjectProxy.m_pMgaObject;
+		m_TypeInfo = rSourceObjectProxy.m_TypeInfo;
+	}
 
 	LPUNKNOWN m_pMgaObject;
 	objtype_enum m_TypeInfo;

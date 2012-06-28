@@ -90,9 +90,6 @@
     <ClCompile Include="MgaObjectEventList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MgaObjectProxy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectEventWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

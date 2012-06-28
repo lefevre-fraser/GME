@@ -11,11 +11,17 @@
 
 #include "MgaMappedTreeCtrl.h"
 
+#include <GdiPlus.h>
+#include <memory>
+
 struct CAggregateMgaObjectProxy : public CMgaObjectProxy
 {
 	CAggregateMgaObjectProxy() : CMgaObjectProxy() { };
-	CAggregateMgaObjectProxy(LPUNKNOWN pMgaObject, objtype_enum type) : CMgaObjectProxy(pMgaObject, type) {};
-	CAggregateMgaObjectProxy(CMgaObjectProxy& proxy) : CMgaObjectProxy(proxy) {};
+	CAggregateMgaObjectProxy(const CMgaObjectProxy& proxy) : CMgaObjectProxy(proxy) {};
+	CAggregateMgaObjectProxy(LPUNKNOWN pMgaObject, objtype_enum type) :
+	    CMgaObjectProxy(pMgaObject, type) {};
+
+	std::shared_ptr<Gdiplus::Bitmap> treeIcon;
 };
 
 class CAggregateTreeCtrl : public CMgaMappedTreeCtrl<CAggregateMgaObjectProxy>
@@ -23,7 +29,7 @@ class CAggregateTreeCtrl : public CMgaMappedTreeCtrl<CAggregateMgaObjectProxy>
 	friend class CAggregatePropertyPage;
 	friend class CAggregateContextMenu;
 
-	
+	// TODO std::map<_bstr_t, std::shared_ptr<Gdiplus::Bitmap>> treeIconCache;
 	CMapStringToString m_StateBuffer;
 
 	BOOL m_bIsStateStored;
@@ -32,7 +38,7 @@ public:
 	static bool IsUngroupedLibrary(CComPtr<IMgaFolder> ptr);
 
     
-	void SetItemProperties(HTREEITEM hItem, int p_fileLatentState = 0);
+	void SetItemProperties(HTREEITEM hItem, int p_fileLatentState=0, CAggregateMgaObjectProxy* insertedProxy=nullptr);
 	BOOL DoDrop(eDragOperation doDragOp, COleDataObject *pDataObject, CPoint point);
 	BOOL DoDropWithoutChecking(eDragOperation doDragOp, COleDataObject *pDataObject, CPoint point);
 	void MakeSureGUIDIsUniqueForSmartCopy( CComPtr<IMgaFCO>& fco);

@@ -8,6 +8,10 @@
 #include "ActiveBrowserPropertyPage.h"
 #include "..\gme\GMEOLEData.h"
 
+#include <GdiPlus.h>
+#pragma comment(lib, "gdiplus.lib")
+#include "..\..\SDK\DecoratorLib\PathUtil.h"
+
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
@@ -113,18 +117,17 @@ HTREEITEM CAggregateTreeCtrl::InsertItem(HTREEITEM hParent, CString strObjectNam
 	}
 
 	// Inserting item into the tree control
-	HTREEITEM hItem=CTreeCtrl::InsertItem(&tvInsert);
+	HTREEITEM hItem = CTreeCtrl::InsertItem(&tvInsert);
 	strObjectName.ReleaseBuffer();
 
 	SetItemData(hItem,(DWORD)hItem);
 	
-	CMgaObjectProxy ObjectProxy(pUnknown,otObjectType);
-	m_MgaMap.AddEntry(hItem,ObjectProxy);
+	CAggregateMgaObjectProxy ObjectProxy(pUnknown, otObjectType);
+	CAggregateMgaObjectProxy& insertedProxy = m_MgaMap.AddEntry(hItem, ObjectProxy);
 
-	SetItemProperties(hItem, sourceControlLatentState);
+	SetItemProperties(hItem, sourceControlLatentState, &insertedProxy);
 	
 	return hItem;
-
 }
 
 
@@ -208,10 +211,10 @@ HTREEITEM CAggregateTreeCtrl::InsertItemUpdate(HTREEITEM hParent, CString strObj
 
 	SetItemData(hItem,(DWORD)hItem);
 	
-	CMgaObjectProxy ObjectProxy(pUnknown,otObjectType);
-	m_MgaMap.AddEntry(hItem,ObjectProxy);
+	CAggregateMgaObjectProxy ObjectProxy(pUnknown,otObjectType);
+	CAggregateMgaObjectProxy& insertedProxy = m_MgaMap.AddEntry(hItem, ObjectProxy);
 
-	SetItemProperties(hItem, sourceControlLatentState);
+	SetItemProperties(hItem, sourceControlLatentState, &insertedProxy);
 	
 	return hItem;
 
@@ -1222,7 +1225,7 @@ BOOL CAggregateTreeCtrl::DoDropWithoutChecking(eDragOperation doDragOp, COleData
 	return res;
 }
 
-void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentState)
+void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentState, CAggregateMgaObjectProxy* insertedProxy)
 {
 
 
@@ -1289,6 +1292,33 @@ void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentStat
 
 		
 		pMgaContext->BeginTransaction();
+
+		if (insertedProxy != nullptr)
+		{
+			CComPtr<IMgaMetaFCO> meta;
+			COMTHROW(ccpMgaFCO->get_Meta(&meta));
+			_bstr_t treeIcon;
+			meta->get_RegistryValue(CComBSTR(L"treeIcon"), treeIcon.GetAddress());
+			CComPtr<IMgaProject> project;
+			COMTHROW(ccpMgaFCO->get_Project(&project));
+			PathUtil pathUtil;
+			if (treeIcon.length() && pathUtil.loadPaths(project, true))
+			{
+				std::vector<CString> paths = pathUtil.getPaths();
+				for (auto pathsIt = paths.begin(); pathsIt != paths.end(); pathsIt++)
+				{
+					std::shared_ptr<Gdiplus::Bitmap> bmp = 
+						std::shared_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(treeIcon)));
+					if (bmp->GetLastStatus() == Gdiplus::Ok)
+					{
+						insertedProxy->treeIcon = (bmp);
+						break;
+					}
+				}
+			}
+		}
+
+
 		// Is it instance?
 		VARIANT_BOOL vtbIsInstance=VARIANT_FALSE;
 		COMTHROW(ccpMgaFCO->get_IsInstance(&vtbIsInstance));
@@ -1396,17 +1426,22 @@ void CAggregateTreeCtrl::OnPaint()
 	HTREEITEM	hItem = NULL;
 	CRect		rItem;
 	
-	// Get the current top item, if any...
 	hItem = GetFirstVisibleItem();
-
-	// Work through them one at a time...
 	while ( hItem )
 	{
-
-		this->GetItemRect(hItem, rItem, TRUE);
-		rItem += rClient;
-		rItem.left -= 16;
-		//dc->DrawText(L"xx", 2, rItem, DT_LEFT | DT_BOTTOM);
+		CAggregateMgaObjectProxy MgaObjectProxyItem;
+		if (m_MgaMap.LookupObjectProxy(hItem,MgaObjectProxyItem) &&
+			MgaObjectProxyItem.treeIcon)
+		{
+			this->GetItemRect(hItem, rItem, TRUE);
+			rItem += rClient;
+			// FIXME: fix for high DPI
+			rItem.left -= 16 + 2;
+			Gdiplus::Graphics plus(*dc);
+			// FIXME: fix for high DPI
+			Gdiplus::Rect dst(rItem.left, rItem.top, 16, 16);
+			plus.DrawImage(MgaObjectProxyItem.treeIcon.get(), dst, 0, 0, 16, 16, Gdiplus::UnitPixel);
+		}
 		hItem = this->GetNextVisibleItem(hItem);
 	}
 }
