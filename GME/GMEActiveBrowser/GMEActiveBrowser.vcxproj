@@ -268,11 +268,9 @@
     <ClCompile Include="MetaConnectionDlg.cpp" />
     <ClCompile Include="MetaTreeCtrl.cpp" />
     <ClCompile Include="MgaContext.cpp" />
-    <ClCompile Include="MgaMap.cpp" />
     <ClCompile Include="MgaMappedTreeCtrl.cpp" />
     <ClCompile Include="MgaObjectEventList.cpp" />
     <ClCompile Include="MgaObjectProxy.cpp" />
-    <ClCompile Include="MgaObjectProxyMapItem.cpp" />
     <ClCompile Include="ObjectEventWrapper.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
