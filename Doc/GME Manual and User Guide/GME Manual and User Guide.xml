@@ -13119,19 +13119,6 @@ gme::Reference::usedByConnPoints( { kind : ocl::Type } ) : ocl::Set( gme::Connec
         <sect3>
           <title>Methods</title>
 
-          <para><programlisting format="linespecific">gme::Model::models( { kind : ocl::String } ) : ocl::Set( gme::Model ) (D) 
-gme::Model::models( { kind : ocl::Type } ) : ocl::Set( gme::Model ) 
-gme::Model::atoms( { kind : ocl::String } ) : ocl::Set( gme::Atom ) (D) 
-gme::Model::atoms( { kind : ocl::Type } ) : ocl::Set( gme::Atom )  </programlisting>These
-          methods have the same functionality as parts has, the exception that
-          they return objects whose meta-kind is the same as the method's
-          prefix.</para>
-
-          <para>These methods return the set of contained objects which are
-          contained recursively by the model ( its immediate children and its
-          descendants’ models’ children). The returned set will contain
-          objects that have the appropriate meta-kind.</para>
-
           <para><programlisting format="linespecific">gme::Model::atomParts( { role : ocl::String } ) : ocl::Set( gme::Atom )  
 gme::Model::modelParts( { role : ocl::String } ) : ocl::Set( gme::Model )  
 gme::Model::connectionParts( { role : ocl::String } ) : ocl::Set( gme::Connection ) 
@@ -13144,8 +13131,7 @@ gme::Model::connectionParts( kind : ocl::Type ) : ocl::Set( gme::Connection )
 gme::Model::referenceParts( kind : ocl::Type ) : ocl::Set( gme::Reference ) 
 gme::Model::setParts( kind : ocl::Type ) : ocl::Set( gme::Set ) 
 gme::Model::parts( kind : ocl::Type ) : ocl::Set( gme::FCO ) </programlisting>These
-          methods return a <code>set</code> which contains the parts (i.e.
-          immediate children) of the model.</para>
+          methods return a <code>set</code> which contains the immediate children of the model. ("part" here is not consistent with other uses in GME)</para>
 
           <para>For these methods we can specify a role name, which is the
           containment role of the object as it is contained by the model. This
@@ -13158,6 +13144,16 @@ gme::Model::parts( kind : ocl::Type ) : ocl::Set( gme::FCO ) </programlisting>Th
           <para>If the kind of <code>kind</code> (i.e. the meta-kind) does not
           correspond to the method name, then an exception is thrown and
           <code>undefined</code> is returned.</para>
+
+          <para><programlisting format="linespecific">gme::Model::models( { kind : ocl::String } ) : ocl::Set( gme::Model ) (D) 
+gme::Model::models( { kind : ocl::Type } ) : ocl::Set( gme::Model ) 
+gme::Model::atoms( { kind : ocl::String } ) : ocl::Set( gme::Atom ) (D) 
+gme::Model::atoms( { kind : ocl::Type } ) : ocl::Set( gme::Atom )  </programlisting>These
+          methods have the same functionality as the parts methods have, except these methods return the set of contained objects which are
+          contained recursively by the model (its immediate children and its
+          descendants’ models’ children). The returned set will contain
+          objects that have the appropriate meta-kind.</para>
+
         </sect3>
       </sect2>
 
