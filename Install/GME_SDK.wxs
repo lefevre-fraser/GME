@@ -204,8 +204,9 @@
     <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
       <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\CSharpDSMLGenerator.ico" />
     </Component>
-    <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
-      <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\ISIS.GME.Common.dll" />
+    <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR" Permanent="yes">
+      <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\ISIS.GME.Common.dll" Assembly=".net" />
+      <Condition>NETFRAMEWORK</Condition>
     </Component>
     <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
       <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\MgaMeta.dll" />
