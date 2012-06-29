@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME v11.12.2
+                 GME 12.6.29
        Copyright © 2000-2012 Vanderbilt University
 
 
@@ -26,13 +26,16 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes
+Release Notes of Release 12.6.29
 ----------------------------------
   - Binary compatibility with r11.12.2
   - Fix MetaInterpreter bug where attributes were unordered
+  - Added CSharpDsmlGenerator: generates a .NET API for MetaGME models
   - Fixed bug with deleting opened models ("Unable to refresh model")
+  - Added treeIcon and expandedTreeIcon options to General Preferences.
+      Icons show in the Tree Browser, and should be 16x16
+  - Fix error message during xme parse
   - Fix out-of-proc activation for MgaLauncher
-  - Fix error message during xme parse 
 
 Release Notes of Release r12.4.20
 ----------------------------------
