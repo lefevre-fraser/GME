@@ -13131,7 +13131,7 @@ gme::Model::connectionParts( kind : ocl::Type ) : ocl::Set( gme::Connection )
 gme::Model::referenceParts( kind : ocl::Type ) : ocl::Set( gme::Reference ) 
 gme::Model::setParts( kind : ocl::Type ) : ocl::Set( gme::Set ) 
 gme::Model::parts( kind : ocl::Type ) : ocl::Set( gme::FCO ) </programlisting>These
-          methods return a <code>set</code> which contains the immediate children of the model. ("part" here is not consistent with other uses in GME)</para>
+          methods return a <code>set</code> which contains the immediate children of the model.</para>
 
           <para>For these methods we can specify a role name, which is the
           containment role of the object as it is contained by the model. This
