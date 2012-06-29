@@ -22,6 +22,7 @@ struct CAggregateMgaObjectProxy : public CMgaObjectProxy
 	    CMgaObjectProxy(pMgaObject, type) {};
 
 	std::shared_ptr<Gdiplus::Bitmap> treeIcon;
+	std::shared_ptr<Gdiplus::Bitmap> expandedTreeIcon;
 };
 
 class CAggregateTreeCtrl : public CMgaMappedTreeCtrl<CAggregateMgaObjectProxy>

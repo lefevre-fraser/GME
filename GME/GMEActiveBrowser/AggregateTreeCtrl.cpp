@@ -1299,6 +1299,8 @@ void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentStat
 			COMTHROW(ccpMgaFCO->get_Meta(&meta));
 			_bstr_t treeIcon;
 			meta->get_RegistryValue(CComBSTR(L"treeIcon"), treeIcon.GetAddress());
+			_bstr_t expandedTreeIcon;
+			meta->get_RegistryValue(CComBSTR(L"expandedTreeIcon"), expandedTreeIcon.GetAddress());
 			CComPtr<IMgaProject> project;
 			COMTHROW(ccpMgaFCO->get_Project(&project));
 			PathUtil pathUtil;
@@ -1307,12 +1309,23 @@ void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentStat
 				std::vector<CString> paths = pathUtil.getPaths();
 				for (auto pathsIt = paths.begin(); pathsIt != paths.end(); pathsIt++)
 				{
-					std::shared_ptr<Gdiplus::Bitmap> bmp = 
-						std::shared_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(treeIcon)));
-					if (bmp->GetLastStatus() == Gdiplus::Ok)
+					if (insertedProxy->treeIcon == nullptr)
 					{
-						insertedProxy->treeIcon = (bmp);
-						break;
+						std::shared_ptr<Gdiplus::Bitmap> bmp = 
+							std::shared_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(treeIcon)));
+						if (bmp->GetLastStatus() == Gdiplus::Ok)
+						{
+							insertedProxy->treeIcon = bmp;
+						}
+					}
+					if (expandedTreeIcon.length() != 0 && insertedProxy->expandedTreeIcon == nullptr)
+					{
+						std::shared_ptr<Gdiplus::Bitmap> expandedBmp = 
+							std::shared_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(expandedTreeIcon)));
+						if (expandedBmp->GetLastStatus() == Gdiplus::Ok)
+						{
+							insertedProxy->expandedTreeIcon = expandedBmp;
+						}
 					}
 				}
 			}
@@ -1440,7 +1453,9 @@ void CAggregateTreeCtrl::OnPaint()
 			Gdiplus::Graphics plus(*dc);
 			// FIXME: fix for high DPI
 			Gdiplus::Rect dst(rItem.left, rItem.top, 16, 16);
-			plus.DrawImage(MgaObjectProxyItem.treeIcon.get(), dst, 0, 0, 16, 16, Gdiplus::UnitPixel);
+			bool expanded = GetItemState(hItem, TVIS_EXPANDED) & TVIS_EXPANDED;
+			std::shared_ptr<Gdiplus::Bitmap>& icon = (expanded && MgaObjectProxyItem.expandedTreeIcon) ? MgaObjectProxyItem.expandedTreeIcon : MgaObjectProxyItem.treeIcon;
+			plus.DrawImage(icon.get(), dst, 0, 0, 16, 16, Gdiplus::UnitPixel);
 		}
 		hItem = this->GetNextVisibleItem(hItem);
 	}
