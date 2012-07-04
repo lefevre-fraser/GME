@@ -19,7 +19,7 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 
-BEGIN_MESSAGE_MAP(CAggregateTreeCtrl, CTreeCtrl)
+BEGIN_MESSAGE_MAP(CAggregateTreeCtrl, CMgaMappedTreeCtrl<CAggregateMgaObjectProxy>)
 	ON_WM_PAINT()
 END_MESSAGE_MAP()
 //////////////////////////////////////////////////////////////////////
