@@ -26,6 +26,11 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes of Release 12.7.5
+----------------------------------
+  - Binary compatibility with r11.12.2
+  - Critical TreeBrowser fix
+
 Release Notes of Release 12.6.29
 ----------------------------------
   - Binary compatibility with r11.12.2
