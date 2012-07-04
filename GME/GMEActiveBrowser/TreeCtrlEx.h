@@ -63,7 +63,7 @@ private:
 	HTREEITEM	m_hFirstSelectedItem;
 	BOOL		m_bSelectionComplete;
 	BOOL		m_bEditLabelPending;
-	UINT		m_idTimer;
+	UINT_PTR		m_idTimer;
     //TCHAR *     m_pchTip ;
 	//WCHAR *     m_pwchTip;
 
