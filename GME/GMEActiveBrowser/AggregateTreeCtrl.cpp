@@ -1281,56 +1281,53 @@ void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentStat
 
 	}
 
-	pMgaContext->CommitTransaction();
+
+	CComQIPtr<IMgaObject> ccpMgaObject(ObjectProxy.m_pMgaObject);
+	if (ccpMgaObject != nullptr && insertedProxy != nullptr)
+	{
+		CComPtr<IMgaMetaBase> meta;
+		COMTHROW(ccpMgaObject->get_MetaBase(&meta));
+		_bstr_t treeIcon;
+		meta->get_RegistryValue(CComBSTR(L"treeIcon"), treeIcon.GetAddress());
+		_bstr_t expandedTreeIcon;
+		meta->get_RegistryValue(CComBSTR(L"expandedTreeIcon"), expandedTreeIcon.GetAddress());
+		CComPtr<IMgaProject> project;
+		COMTHROW(ccpMgaObject->get_Project(&project));
+		PathUtil pathUtil;
+		if (treeIcon.length() && pathUtil.loadPaths(project, true))
+		{
+			std::vector<CString> paths = pathUtil.getPaths();
+			for (auto pathsIt = paths.begin(); pathsIt != paths.end(); pathsIt++)
+			{
+				if (insertedProxy->treeIcon == nullptr)
+				{
+					std::shared_ptr<Gdiplus::Bitmap> bmp = 
+						std::shared_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(treeIcon)));
+					if (bmp->GetLastStatus() == Gdiplus::Ok)
+					{
+						insertedProxy->treeIcon = bmp;
+					}
+				}
+				if (expandedTreeIcon.length() != 0 && insertedProxy->expandedTreeIcon == nullptr)
+				{
+					std::shared_ptr<Gdiplus::Bitmap> expandedBmp = 
+						std::shared_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(expandedTreeIcon)));
+					if (expandedBmp->GetLastStatus() == Gdiplus::Ok)
+					{
+						insertedProxy->expandedTreeIcon = expandedBmp;
+					}
+				}
+			}
+		}
+	}
 
 	/////////////// If it is an FCO cast it //////////////
 	// If not an Folder deal with Subtype/instance flags
 	if(ObjectProxy.m_TypeInfo!=OBJTYPE_FOLDER) 
 	{
 		CComQIPtr<IMgaFCO> ccpMgaFCO(ObjectProxy.m_pMgaObject);
-		if(!ccpMgaFCO)return; // Not an FCO
-
-		
-		pMgaContext->BeginTransaction();
-
-		if (insertedProxy != nullptr)
-		{
-			CComPtr<IMgaMetaFCO> meta;
-			COMTHROW(ccpMgaFCO->get_Meta(&meta));
-			_bstr_t treeIcon;
-			meta->get_RegistryValue(CComBSTR(L"treeIcon"), treeIcon.GetAddress());
-			_bstr_t expandedTreeIcon;
-			meta->get_RegistryValue(CComBSTR(L"expandedTreeIcon"), expandedTreeIcon.GetAddress());
-			CComPtr<IMgaProject> project;
-			COMTHROW(ccpMgaFCO->get_Project(&project));
-			PathUtil pathUtil;
-			if (treeIcon.length() && pathUtil.loadPaths(project, true))
-			{
-				std::vector<CString> paths = pathUtil.getPaths();
-				for (auto pathsIt = paths.begin(); pathsIt != paths.end(); pathsIt++)
-				{
-					if (insertedProxy->treeIcon == nullptr)
-					{
-						std::shared_ptr<Gdiplus::Bitmap> bmp = 
-							std::shared_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(treeIcon)));
-						if (bmp->GetLastStatus() == Gdiplus::Ok)
-						{
-							insertedProxy->treeIcon = bmp;
-						}
-					}
-					if (expandedTreeIcon.length() != 0 && insertedProxy->expandedTreeIcon == nullptr)
-					{
-						std::shared_ptr<Gdiplus::Bitmap> expandedBmp = 
-							std::shared_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(expandedTreeIcon)));
-						if (expandedBmp->GetLastStatus() == Gdiplus::Ok)
-						{
-							insertedProxy->expandedTreeIcon = expandedBmp;
-						}
-					}
-				}
-			}
-		}
-
+		if(!ccpMgaFCO)
+			return; // Not an FCO
 
 		// Is it instance?
 		VARIANT_BOOL vtbIsInstance=VARIANT_FALSE;
@@ -1359,8 +1356,8 @@ void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentStat
 
 		}
 
-		pMgaContext->CommitTransaction();
 	} // if not folder
+	pMgaContext->CommitTransaction();
 	
 
 	if(cState)
