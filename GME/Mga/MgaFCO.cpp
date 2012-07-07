@@ -809,9 +809,6 @@ HRESULT FCO::get_Registry(VARIANT_BOOL virtuals, IMgaRegNodes **pVal) {
 		CheckRead();
 		CHECK_OUTPTRPAR(pVal);
 
-		if(!self.IsFCO())
-			virtuals = VARIANT_FALSE;
-
 		CComPtr<CMgaRegNode> regnode;
 		CreateComObject(regnode);
 

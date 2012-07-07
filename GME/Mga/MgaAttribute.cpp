@@ -718,8 +718,6 @@ STDMETHODIMP CMgaRegNode::get_SubNodes( VARIANT_BOOL virtuals, IMgaRegNodes **pV
 			CHECK_OUTPTRPAR(pVal);
 
 			CoreObj s = fco->self;
-			if(!s.IsFCO())
-				virtuals = VARIANT_FALSE;
 			CREATEEXCOLLECTION_FOR(MgaRegNode,q);
 			std::set<std::wstring> paths;
 			WalkKeyValuesInher([&](map_type& map, map_type::iterator& it, int inher, bool& continue_) {
