@@ -1450,6 +1450,10 @@ void CAggregateTreeCtrl::OnPaint()
 			Gdiplus::Graphics plus(*dc);
 			// FIXME: fix for high DPI
 			Gdiplus::Rect dst(rItem.left, rItem.top, 16, 16);
+			// FIXME: fix background color
+			Gdiplus::Color white(Gdiplus::Color::White);
+			Gdiplus::SolidBrush whiteBrush(white);
+			plus.FillRectangle(&whiteBrush, dst);
 			bool expanded = GetItemState(hItem, TVIS_EXPANDED) & TVIS_EXPANDED;
 			std::shared_ptr<Gdiplus::Bitmap>& icon = (expanded && MgaObjectProxyItem.expandedTreeIcon) ? MgaObjectProxyItem.expandedTreeIcon : MgaObjectProxyItem.treeIcon;
 			plus.DrawImage(icon.get(), dst, 0, 0, 16, 16, Gdiplus::UnitPixel);
