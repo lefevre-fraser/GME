@@ -1133,7 +1133,8 @@ void CMgaDumper::Dump(IMgaConnection *connection)
 
 	DumpFCO(connection);
 
-	if(!skipdump) Dump(connection, &IMgaConnection::get_ConnPoints);
+	if(!skipdump)
+		Dump(connection, &IMgaConnection::get_ConnPoints);
 
 	EndElem();
 }
@@ -1471,6 +1472,10 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaConnPoint> *v)
 		COMTHROW(fco->get_ID(&bstr));
 		std::tstring s;
 		CopyTo(bstr,s);
+		// Tie-break sort on role, for self-connections
+		CComBSTR role;
+		COMTHROW((*v)[i]->get_ConnRole(&role));
+		s += role;
 		vPrime.push_back(s);
 	}
 	
