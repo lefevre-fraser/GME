@@ -17,7 +17,7 @@
 
 #include "GmeApi.h"
 
-#include "DecoratorDefs.h"
+#include <DecoratorDefs.h>
 
 #include "PathUtil.h"
 
