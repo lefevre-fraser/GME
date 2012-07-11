@@ -15,7 +15,7 @@
 #include <vector>
 #include <map>
 
-#include "GmeApi.h"
+#include <GmeApi.h>
 
 #include <DecoratorDefs.h>
 
