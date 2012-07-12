@@ -32,6 +32,10 @@ public:
 					  const CString& nameStr, const CString& typeStr, const CPoint& boxPos, CComPtr<IMgaFCO>& pFCO);
 	virtual ~MetaAttributePart();
 
+
+	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
+												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, DecoratorSDK::PreferenceMap& preferences);
+
 	virtual void	ExecuteOperation			(const CString& newString);
 	virtual bool	IsLesser					(const AttributePart* other);
 
