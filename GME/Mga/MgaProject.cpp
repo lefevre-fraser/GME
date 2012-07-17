@@ -1294,7 +1294,8 @@ STDMETHODIMP CMgaProject::BeginTransaction(IMgaTerritory *ter, transactiontype_e
 {
 	COMTRY {
 		CComPtr<IMgaTerritory> ttemp;
-		if(baseterr) COMTHROW(E_MGA_ALREADY_IN_TRANSACTION);
+		if(baseterr)
+			COMTHROW(E_MGA_ALREADY_IN_TRANSACTION);
 		if(!ter) {
 			COMTHROW(CreateTerritory(NULL,&ttemp));
 			ter = ttemp;
