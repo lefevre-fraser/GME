@@ -3228,19 +3228,3 @@ void CGMEApp::consoleMessage( const CString& p_msg, short p_type)
 	else
 		AfxMessageBox( p_msg);
 }
-
-void* alloc10() {
-	return malloc(10 * 1024 * 1024);
-}
-void* alloc100() {
-	return malloc(100 * 1024 * 1024);
-}
-void* alloc1000() {
-	return malloc(1000 * 1024 * 1024);
-}
-
-void allocstr() {
-	//while (SysAllocString(L"11111111111111111111111111111111111111111111111111"))
-	while (SysAllocStringLen(0, 4096))
-		;
-}
