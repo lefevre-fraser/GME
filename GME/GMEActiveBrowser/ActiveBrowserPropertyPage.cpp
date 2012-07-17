@@ -133,14 +133,6 @@ BOOL CAggregatePropertyPage::OnInitDialog()
 
 	m_ImageList.Create(16,16,ILC_MASK|ILC_COLOR24,0,0);
 	
-	CBitmap bm;
-	bm.LoadBitmap(IDB_IMAGELIST_AGGREGATE);
-
-
-	m_ImageList.Add(&bm,RGB(128, 158, 8));  // Pretty natural transparency color 
-											// provided by Tamas Paka
-	m_TreeAggregate.SetImageList(&m_ImageList,TVSIL_NORMAL);
-
 	// Creating the state image list
 	PrepareStateImageList();
 
@@ -220,8 +212,10 @@ void CAggregatePropertyPage::OnItemExpandingTreeAggregate(NMHDR* pNMHDR, LRESULT
 		int nImage,nSelectedImage;
 		m_TreeAggregate.GetItemImage(pNMTreeView->itemNew.hItem,nImage,nSelectedImage);
 
-		ASSERT(nImage+ICON_NUMBER<8*ICON_NUMBER);//WAS 6*ICON_NUMBER, but we have added new images for freshly created objects
-		m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem,nImage+ICON_NUMBER,nSelectedImage+ICON_NUMBER);
+		if (nImage+ICON_NUMBER<8*ICON_NUMBER)
+			m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem,nImage+ICON_NUMBER,nSelectedImage+ICON_NUMBER);
+		else
+			m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem, nImage+1, nSelectedImage+1);
 
 	}
 	else // Collapsing
@@ -236,7 +230,10 @@ void CAggregatePropertyPage::OnItemExpandingTreeAggregate(NMHDR* pNMHDR, LRESULT
 		m_TreeAggregate.GetItemImage(pNMTreeView->itemNew.hItem,nImage,nSelectedImage);
 		
 		ASSERT(nImage-ICON_NUMBER>=0);
-		m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem,nImage-ICON_NUMBER,nSelectedImage-ICON_NUMBER);
+		if (nImage+ICON_NUMBER<8*ICON_NUMBER)
+			m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem,nImage-ICON_NUMBER,nSelectedImage-ICON_NUMBER);
+		else
+			m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem, nImage-1, nSelectedImage-1);
 	}
 
 	
@@ -344,6 +341,15 @@ void CAggregatePropertyPage::SetupTree()
 	
 	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
+
+	m_TreeAggregate.treeIcons.clear();
+	m_ImageList.DeleteImageList();
+	m_ImageList.Create(16,16,ILC_MASK|ILC_COLOR24,0,0);
+	CBitmap bm;
+	bm.LoadBitmap(IDB_IMAGELIST_AGGREGATE);
+	m_ImageList.Add(&bm,RGB(128, 158, 8));  // Pretty natural transparency color 
+											// provided by Tamas Paka
+	m_TreeAggregate.SetImageList(&m_ImageList,TVSIL_NORMAL);
 
 
 	// Getting Project

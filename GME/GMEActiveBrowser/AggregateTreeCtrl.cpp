@@ -19,9 +19,6 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 
-BEGIN_MESSAGE_MAP(CAggregateTreeCtrl, CMgaMappedTreeCtrl<CAggregateMgaObjectProxy>)
-	ON_WM_PAINT()
-END_MESSAGE_MAP()
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -115,6 +112,9 @@ HTREEITEM CAggregateTreeCtrl::InsertItem(HTREEITEM hParent, CString strObjectNam
 			}
 		}
 	}
+	CComPtr<IMgaObject> ccpObject;
+	QueryInterface(pUnknown, &ccpObject);
+	GetCustomTreeIcon(ccpObject, &tvInsert.item);
 
 	// Inserting item into the tree control
 	HTREEITEM hItem = CTreeCtrl::InsertItem(&tvInsert);
@@ -209,6 +209,7 @@ HTREEITEM CAggregateTreeCtrl::InsertItemUpdate(HTREEITEM hParent, CString strObj
 	HTREEITEM hItem=CTreeCtrl::InsertItem(&tvInsert);
 	strObjectName.ReleaseBuffer();
 
+	tvInsert.item.iImage = 0;
 	SetItemData(hItem,(DWORD)hItem);
 	
 	CAggregateMgaObjectProxy ObjectProxy(pUnknown,otObjectType);
@@ -1225,6 +1226,111 @@ BOOL CAggregateTreeCtrl::DoDropWithoutChecking(eDragOperation doDragOp, COleData
 	return res;
 }
 
+static void ImageList_AddGdiplusBitmap(HIMAGELIST imageList, Gdiplus::Bitmap& bmp, Gdiplus::Color color=Gdiplus::Color(Gdiplus::Color::White))
+{
+	using namespace Gdiplus;
+	RectF bounds;
+	Unit unit(UnitPixel);
+	VERIFY(bmp.GetBounds(&bounds, &unit) == Ok);
+	HBITMAP hBmp;
+
+	if (bounds.X == 16 && bounds.Y == 16)
+	{
+		VERIFY(bmp.GetHBITMAP(color, &hBmp) == Ok);
+	}
+	else
+	{
+		Image* thumb = bmp.GetThumbnailImage(16, 16);
+		Bitmap bmpThumb(16, 16);
+		Graphics* graphics = Graphics::FromImage(&bmpThumb);
+		VERIFY(graphics->GetLastStatus() == Ok);
+		VERIFY(graphics->Clear(color) == Ok);
+		VERIFY(graphics->DrawImage(thumb, 0, 0, 0, 0, 16, 16, UnitPixel) == Ok);
+		VERIFY(bmpThumb.GetHBITMAP(color, &hBmp) == Ok);
+		delete thumb;
+		delete graphics;
+	}
+	
+	ImageList_Add(imageList, hBmp, 0);
+	DeleteObject(hBmp);
+}
+
+void CAggregateTreeCtrl::GetCustomTreeIcon(IMgaObject* ccpMgaObject, TVITEM* tvItem)
+{
+	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
+	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
+	pMgaContext->BeginTransaction();
+	CComPtr<IMgaMetaBase> meta;
+	COMTHROW(ccpMgaObject->get_MetaBase(&meta));
+	_bstr_t treeIcon;
+	meta->get_RegistryValue(CComBSTR(L"treeIcon"), treeIcon.GetAddress());
+	_bstr_t expandedTreeIcon;
+	meta->get_RegistryValue(CComBSTR(L"expandedTreeIcon"), expandedTreeIcon.GetAddress());
+	pMgaContext->CommitTransaction();
+
+
+	CComPtr<IMgaProject> project;
+	COMTHROW(ccpMgaObject->get_Project(&project));
+	PathUtil pathUtil;
+
+	std::unique_ptr<Gdiplus::Bitmap> treeIconBmp(nullptr);
+	std::unique_ptr<Gdiplus::Bitmap> expandedTreeIconBmp(nullptr);
+	if (treeIcon.length())
+	{
+		auto it = treeIcons.find(treeIcon);
+		if (it != treeIcons.end())
+		{
+			auto expandedIt = treeIcons.end();
+			if (expandedTreeIcon.length() != 0)
+				expandedIt = treeIcons.find(expandedTreeIcon);
+			if (expandedIt == treeIcons.end())
+				expandedIt = it;
+
+			tvItem->iSelectedImage = tvItem->iImage = it->second;
+			return;
+		}
+	}
+
+	if (treeIcon.length() && pathUtil.loadPaths(project, true))
+	{
+		std::vector<CString> paths = pathUtil.getPaths();
+		for (auto pathsIt = paths.begin(); pathsIt != paths.end(); pathsIt++)
+		{
+			if (treeIconBmp == nullptr)
+			{
+				treeIconBmp = 
+					std::unique_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(treeIcon)));
+				if (treeIconBmp->GetLastStatus() != Gdiplus::Ok)
+				{
+					treeIconBmp = nullptr;
+				}
+			}
+			if (expandedTreeIcon.length() != 0 && expandedTreeIconBmp == nullptr)
+			{
+				expandedTreeIconBmp = 
+					std::unique_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(expandedTreeIcon)));
+				if (expandedTreeIconBmp->GetLastStatus() != Gdiplus::Ok)
+				{
+					expandedTreeIconBmp = nullptr;
+				}
+			}
+		}
+	}
+	if (treeIconBmp != nullptr)
+	{
+		CImageList* imageList = GetImageList(TVSIL_NORMAL);
+
+		ImageList_AddGdiplusBitmap(static_cast<HIMAGELIST>(*imageList), *treeIconBmp.get());
+		ImageList_AddGdiplusBitmap(static_cast<HIMAGELIST>(*imageList), expandedTreeIconBmp != nullptr ? *expandedTreeIconBmp.get() : *treeIconBmp.get());
+
+		tvItem->iSelectedImage = tvItem->iImage = imageList->GetImageCount() - 2;
+		treeIcons.insert(std::make_pair(treeIcon, imageList->GetImageCount() - 2));
+		if (expandedTreeIcon.length() != 0)
+			treeIcons.insert(std::make_pair(treeIcon, imageList->GetImageCount()));
+	}
+}
+
+
 void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentState, CAggregateMgaObjectProxy* insertedProxy)
 {
 
@@ -1283,43 +1389,6 @@ void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentStat
 
 
 	CComQIPtr<IMgaObject> ccpMgaObject(ObjectProxy.m_pMgaObject);
-	if (ccpMgaObject != nullptr && insertedProxy != nullptr)
-	{
-		CComPtr<IMgaMetaBase> meta;
-		COMTHROW(ccpMgaObject->get_MetaBase(&meta));
-		_bstr_t treeIcon;
-		meta->get_RegistryValue(CComBSTR(L"treeIcon"), treeIcon.GetAddress());
-		_bstr_t expandedTreeIcon;
-		meta->get_RegistryValue(CComBSTR(L"expandedTreeIcon"), expandedTreeIcon.GetAddress());
-		CComPtr<IMgaProject> project;
-		COMTHROW(ccpMgaObject->get_Project(&project));
-		PathUtil pathUtil;
-		if (treeIcon.length() && pathUtil.loadPaths(project, true))
-		{
-			std::vector<CString> paths = pathUtil.getPaths();
-			for (auto pathsIt = paths.begin(); pathsIt != paths.end(); pathsIt++)
-			{
-				if (insertedProxy->treeIcon == nullptr)
-				{
-					std::shared_ptr<Gdiplus::Bitmap> bmp = 
-						std::shared_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(treeIcon)));
-					if (bmp->GetLastStatus() == Gdiplus::Ok)
-					{
-						insertedProxy->treeIcon = bmp;
-					}
-				}
-				if (expandedTreeIcon.length() != 0 && insertedProxy->expandedTreeIcon == nullptr)
-				{
-					std::shared_ptr<Gdiplus::Bitmap> expandedBmp = 
-						std::shared_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(*pathsIt + L"\\" + static_cast<const wchar_t*>(expandedTreeIcon)));
-					if (expandedBmp->GetLastStatus() == Gdiplus::Ok)
-					{
-						insertedProxy->expandedTreeIcon = expandedBmp;
-					}
-				}
-			}
-		}
-	}
 
 	/////////////// If it is an FCO cast it //////////////
 	// If not an Folder deal with Subtype/instance flags
@@ -1425,39 +1494,3 @@ bool CAggregateTreeCtrl::IsUngroupedLibrary(CComPtr<IMgaFolder> pLibPtr)
 	return retv;
 }
 
-void CAggregateTreeCtrl::OnPaint()
-{
-	__super::OnPaint();
-
-	CDC* dc = GetDC();
-	CRect rClient;
-	this->GetClientRect( rClient );
-
-	HTREEITEM	hItem = NULL;
-	CRect		rItem;
-	
-	hItem = GetFirstVisibleItem();
-	while ( hItem )
-	{
-		CAggregateMgaObjectProxy MgaObjectProxyItem;
-		if (m_MgaMap.LookupObjectProxy(hItem,MgaObjectProxyItem) &&
-			MgaObjectProxyItem.treeIcon)
-		{
-			this->GetItemRect(hItem, rItem, TRUE);
-			rItem += rClient;
-			// FIXME: fix for high DPI
-			rItem.left -= 16 + 2;
-			Gdiplus::Graphics plus(*dc);
-			// FIXME: fix for high DPI
-			Gdiplus::Rect dst(rItem.left, rItem.top, 16, 16);
-			// FIXME: fix background color
-			Gdiplus::Color white(Gdiplus::Color::White);
-			Gdiplus::SolidBrush whiteBrush(white);
-			plus.FillRectangle(&whiteBrush, dst);
-			bool expanded = GetItemState(hItem, TVIS_EXPANDED) & TVIS_EXPANDED;
-			std::shared_ptr<Gdiplus::Bitmap>& icon = (expanded && MgaObjectProxyItem.expandedTreeIcon) ? MgaObjectProxyItem.expandedTreeIcon : MgaObjectProxyItem.treeIcon;
-			plus.DrawImage(icon.get(), dst, 0, 0, 16, 16, Gdiplus::UnitPixel);
-		}
-		hItem = this->GetNextVisibleItem(hItem);
-	}
-}

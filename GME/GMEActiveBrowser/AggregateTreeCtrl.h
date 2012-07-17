@@ -13,6 +13,7 @@
 
 #include <GdiPlus.h>
 #include <memory>
+#include <map>
 
 struct CAggregateMgaObjectProxy : public CMgaObjectProxy
 {
@@ -40,6 +41,8 @@ public:
 
     
 	void SetItemProperties(HTREEITEM hItem, int p_fileLatentState=0, CAggregateMgaObjectProxy* insertedProxy=nullptr);
+	std::map<_bstr_t, int> treeIcons;
+	void GetCustomTreeIcon(IMgaObject* ccpMgaObject, TVITEM* tvItem);
 	BOOL DoDrop(eDragOperation doDragOp, COleDataObject *pDataObject, CPoint point);
 	BOOL DoDropWithoutChecking(eDragOperation doDragOp, COleDataObject *pDataObject, CPoint point);
 	void MakeSureGUIDIsUniqueForSmartCopy( CComPtr<IMgaFCO>& fco);
@@ -58,10 +61,6 @@ public:
 	CAggregateTreeCtrl();
 	virtual ~CAggregateTreeCtrl();
 
-
-	afx_msg void OnPaint();
-protected:
-	DECLARE_MESSAGE_MAP()
 };
 
 #endif // !defined(AFX_AGGREGATETREECTRL_H__BAA3D537_E504_4801_B793_6F96B703380C__INCLUDED_)
