@@ -19,6 +19,7 @@ WIX_CANDLE_PRG = "candle.exe"
 WIX_CANDLE_ARG = "-dPIADir=..\GME\DotNetPIAs_1.0.0.0 -dPIADir.1.0.1.0=..\GME\DotNetPIAs"
 WIX_LIGHT_PRG = "light.exe"
 WIX_LIGHT_ARG = "-sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension -ext WiXNetFxExtension" # See comments in GME.wxs
+MSBUILD = r"c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
 
 #
 # Classes
@@ -126,7 +127,7 @@ def build_VS(sln_path, config_name, arch=None):
     import subprocess
     # , '/fl', '/flp:Verbosity=diagnostic'
     # , '/m'
-    args = ['msbuild', sln_path, '/t:' + ("Clean;" * prefs['clean']) + 'Build', '/p:Configuration=' + config_name + (';Platform=x64' if arch == 'x64' else '') ]
+    args = [MSBUILD, sln_path, '/t:' + ("Clean;" * prefs['clean']) + 'Build', '/p:Configuration=' + config_name + (';Platform=x64' if arch == 'x64' else '') ]
     with open(os.devnull, "w") as nulfp:
         # n.b. stderr=subprocess.STDOUT fails mysteriously
         import sys
