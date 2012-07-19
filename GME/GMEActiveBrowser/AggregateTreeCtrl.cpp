@@ -114,7 +114,7 @@ HTREEITEM CAggregateTreeCtrl::InsertItem(HTREEITEM hParent, CString strObjectNam
 	}
 	CComPtr<IMgaObject> ccpObject;
 	QueryInterface(pUnknown, &ccpObject);
-	GetCustomTreeIcon(ccpObject, &tvInsert.item);
+	GetCustomTreeIcon(ccpObject, tvInsert.item);
 
 	// Inserting item into the tree control
 	HTREEITEM hItem = CTreeCtrl::InsertItem(&tvInsert);
@@ -204,6 +204,10 @@ HTREEITEM CAggregateTreeCtrl::InsertItemUpdate(HTREEITEM hParent, CString strObj
 			
 
 	}
+
+	CComPtr<IMgaObject> ccpObject;
+	QueryInterface(pUnknown, &ccpObject);
+	GetCustomTreeIcon(ccpObject, tvInsert.item);
 
 	// Inserting item into the tree control
 	HTREEITEM hItem=CTreeCtrl::InsertItem(&tvInsert);
@@ -1255,7 +1259,7 @@ static void ImageList_AddGdiplusBitmap(HIMAGELIST imageList, Gdiplus::Bitmap& bm
 	DeleteObject(hBmp);
 }
 
-void CAggregateTreeCtrl::GetCustomTreeIcon(IMgaObject* ccpMgaObject, TVITEM* tvItem)
+void CAggregateTreeCtrl::GetCustomTreeIcon(IMgaObject* ccpMgaObject, TVITEM& tvItem)
 {
 	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
@@ -1286,7 +1290,7 @@ void CAggregateTreeCtrl::GetCustomTreeIcon(IMgaObject* ccpMgaObject, TVITEM* tvI
 			if (expandedIt == treeIcons.end())
 				expandedIt = it;
 
-			tvItem->iSelectedImage = tvItem->iImage = it->second;
+			tvItem.iSelectedImage = tvItem.iImage = it->second;
 			return;
 		}
 	}
@@ -1323,7 +1327,7 @@ void CAggregateTreeCtrl::GetCustomTreeIcon(IMgaObject* ccpMgaObject, TVITEM* tvI
 		ImageList_AddGdiplusBitmap(static_cast<HIMAGELIST>(*imageList), *treeIconBmp.get());
 		ImageList_AddGdiplusBitmap(static_cast<HIMAGELIST>(*imageList), expandedTreeIconBmp != nullptr ? *expandedTreeIconBmp.get() : *treeIconBmp.get());
 
-		tvItem->iSelectedImage = tvItem->iImage = imageList->GetImageCount() - 2;
+		tvItem.iSelectedImage = tvItem.iImage = imageList->GetImageCount() - 2;
 		treeIcons.insert(std::make_pair(treeIcon, imageList->GetImageCount() - 2));
 		if (expandedTreeIcon.length() != 0)
 			treeIcons.insert(std::make_pair(treeIcon, imageList->GetImageCount()));
