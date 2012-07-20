@@ -581,49 +581,37 @@ CGuiMetaAspect::CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt, CGuiMetaModel* o,
 			VARIANT_BOOL prim;
 			COMTHROW(mmPart->get_IsPrimary(&prim));
 			if(prim != VARIANT_FALSE) {
-				CComPtr<IMgaMetaRole> mmRole;
-				COMTHROW(mmPart->get_Role(&mmRole));
-				CComPtr<IMgaMetaFCO> kind;
-				COMTHROW(mmRole->get_Kind(&kind));
 
+				CString roleName = static_cast<const TCHAR*>(mmPart->Role->Name);
 				CString label;
-				CComBSTR bstrKindName;
-				COMTHROW(kind->get_Name(&bstrKindName));
-				CComBSTR bstrRoleName;
-				COMTHROW(mmRole->get_Name(&bstrRoleName));
-				if (bstrKindName == bstrRoleName) {
-					CComBSTR bstrDisplayedName;
-					COMTHROW(kind->get_DisplayedName(&bstrDisplayedName));
-					CopyTo(bstrDisplayedName,label);
+				if (mmPart->Role->Kind->Name == mmPart->Role->Name) {
+					label = static_cast<const TCHAR*>(mmPart->Role->Kind->DisplayedName);
 				}
 				else {
-					CopyTo(bstrRoleName,label);
+					label = static_cast<const TCHAR*>(mmPart->Role->Name);
 				}
-				CString roleName;
-				CopyTo(bstrRoleName, roleName);
 
-				objtype_enum type;
-				COMTHROW(kind->get_ObjType(&type));
+				objtype_enum type = mmPart->Role->Kind->ObjType;
 				switch(type) {
 					case OBJTYPE_MODEL:
 						if (!insertModelMenu)
-							insertModelMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Model");
-						insertModelMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), roleName, label, "Help");
+							insertModelMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), _T("Insert New Model"));
+						insertModelMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), std::move(roleName), std::move(label), CString(_T("Help")));
 						break;
 					case OBJTYPE_ATOM:
 						if (!insertAtomMenu)
-							insertAtomMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Atom");
-						insertAtomMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), roleName, label, "Help");
+							insertAtomMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), _T("Insert New Atom"));
+						insertAtomMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), std::move(roleName), std::move(label), CString(_T("Help")));
 						break;
 					case OBJTYPE_REFERENCE:
 						if (!insertReferenceMenu)
-							insertReferenceMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Reference");
-						insertReferenceMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), roleName, label, "Help");
+							insertReferenceMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), _T("Insert New Reference"));
+						insertReferenceMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), std::move(roleName), std::move(label), CString(_T("Help")));
 						break;
 					case OBJTYPE_SET:
 						if (!insertSetMenu)
-							insertSetMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), "Insert New Set");
-						insertSetMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), roleName, label, "Help");
+							insertSetMenu = new CDynMenu(CGuiMetaProject::theInstance->GetNewMenuCmdID(), _T("Insert New Set"));
+						insertSetMenu->AddItem(CGuiMetaProject::theInstance->GetNewMenuCmdID(), std::move(roleName), std::move(label), CString(_T("Help")));
 						break;
 				}
 			}
@@ -631,6 +619,10 @@ CGuiMetaAspect::CGuiMetaAspect(CComPtr<IMgaMetaAspect> &mgaPt, CGuiMetaModel* o,
 		MGACOLL_ITERATE_END;
 	}
 	catch(hresult_exception &) {
+		// FIXME
+	}
+	catch (_com_error& ) {
+		// FIXME
 	}
 	if (insertModelMenu)
 		insertModelMenu->Sort();

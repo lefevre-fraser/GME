@@ -4,7 +4,7 @@
 
 ////////////////////////////// CDynMenu /////////////////////////////
 
-CDynMenu::CDynMenu(int iden, char* nm) : id(iden), name(nm)
+CDynMenu::CDynMenu(int iden, TCHAR* nm) : id(iden), name(nm)
 {
 	menu.CreatePopupMenu();
 	minID = maxID = -1;
@@ -14,12 +14,12 @@ CDynMenu::~CDynMenu()
 {
 }
 
-void CDynMenu::AddItem(int id, const CString& roleName, const CString& displayName, const CString& helpMsg)
+void CDynMenu::AddItem(int id, CString&& roleName, CString&& displayName, CString&& helpMsg)
 {
 	if(minID < 0)
 		minID = id;
 	maxID = id;
-	std::unique_ptr<CDynMenuItem> item(new CDynMenuItem(id, roleName, helpMsg));
+	std::unique_ptr<CDynMenuItem> item(new CDynMenuItem(id, std::move(roleName), std::move(displayName), std::move(helpMsg)));
 	items.push_back(std::move(item));
 }
 
@@ -31,7 +31,7 @@ void CDynMenu::Sort()
 	);
 	for (auto it = items.begin(); it != items.end(); it++)
 	{
-		menu.AppendMenu(MF_ENABLED | MF_UNCHECKED | MF_STRING, (**it).id, (**it).label);
+		menu.AppendMenu(MF_ENABLED | MF_UNCHECKED | MF_STRING, (**it).id, (**it).displayName);
 	}
 }
 
