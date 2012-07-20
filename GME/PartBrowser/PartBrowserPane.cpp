@@ -340,7 +340,8 @@ void CPartBrowserPane::SetMetaModel(CComPtr<IMgaMetaModel> meta)
 			CreateDecorators(metaParts);
 		}
 		MGACOLL_ITERATE_END;
-	}
+	} else
+		Invalidate(TRUE);
 }
 
 void CPartBrowserPane::SetBgColor(COLORREF bgColor)

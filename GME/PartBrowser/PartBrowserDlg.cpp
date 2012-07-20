@@ -123,8 +123,8 @@ void CPartBrowserDlg::SetTabs()
 		}
 		catch (hresult_exception&) {
 		}
-		Resize();
 	}
+	Resize();
 }
 
 void CPartBrowserDlg::Resize()
