@@ -1401,6 +1401,7 @@ STDMETHODIMP CMgaProject::AbortTransaction() {
 		checkoff = false;
 		while(!changedobjs.empty()) {
 			changedobjs.front()->objforgetrwnotify();
+			changedobjs.front()->apool.clear();
 			changedobjs.pop();
 		}
 		while(!notifyobjs.empty()) {

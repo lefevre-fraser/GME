@@ -128,6 +128,23 @@ public:
 		CComPtr<IMgaAttribute> retval = s;
 		return retval;
 	}
+
+	void clear()
+	{
+		return;
+		size_t mref = 0;
+		for (size_t mref = 0; mref < sizeof(pool) / sizeof(pool[0]); mref++)
+		{
+			CMgaAttribute::hashobp *kk;
+			for (kk = &pool[mref]; *kk != NULL; kk = &(*kk)->next)
+			{
+				if ((*(*kk)->prevptr)->next)
+					(*(*kk)->prevptr)->next = NULL;
+				(*kk)->prevptr = NULL;
+			}
+			pool[mref] = NULL;
+		}
+	}
 };
 
 void MergeAttrs(const CoreObj &src, CoreObj &dst);
