@@ -131,7 +131,6 @@ public:
 
 	void clear()
 	{
-		return;
 		size_t mref = 0;
 		for (size_t mref = 0; mref < sizeof(pool) / sizeof(pool[0]); mref++)
 		{
