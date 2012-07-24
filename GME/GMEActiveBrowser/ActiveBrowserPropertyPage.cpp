@@ -212,10 +212,10 @@ void CAggregatePropertyPage::OnItemExpandingTreeAggregate(NMHDR* pNMHDR, LRESULT
 		int nImage,nSelectedImage;
 		m_TreeAggregate.GetItemImage(pNMTreeView->itemNew.hItem,nImage,nSelectedImage);
 
-		if (nImage+ICON_NUMBER<8*ICON_NUMBER)
+		if (nImage<8*ICON_NUMBER)
 			m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem,nImage+ICON_NUMBER,nSelectedImage+ICON_NUMBER);
 		else
-			m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem, nImage+1, nSelectedImage+1);
+			m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem, (nImage & ~1) + 1, (nImage & ~1) + 1);
 
 	}
 	else // Collapsing
@@ -230,10 +230,10 @@ void CAggregatePropertyPage::OnItemExpandingTreeAggregate(NMHDR* pNMHDR, LRESULT
 		m_TreeAggregate.GetItemImage(pNMTreeView->itemNew.hItem,nImage,nSelectedImage);
 		
 		ASSERT(nImage-ICON_NUMBER>=0);
-		if (nImage+ICON_NUMBER<8*ICON_NUMBER)
+		if (nImage<8*ICON_NUMBER)
 			m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem,nImage-ICON_NUMBER,nSelectedImage-ICON_NUMBER);
 		else
-			m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem, nImage-1, nSelectedImage-1);
+			m_TreeAggregate.SetItemImage(pNMTreeView->itemNew.hItem, (nImage & ~1), (nImage & ~1));
 	}
 
 	
@@ -2036,22 +2036,28 @@ void CAggregatePropertyPage::OnMgaEvent(CComPtr<IMgaObject> ccpMgaObject, unsign
 				int nImage,nSelectedImage;
 				m_TreeAggregate.GetItemImage(hParentItem,nImage,nSelectedImage);				
 
-				if(tvItem.cChildren)
+				bool bIsExpanded =!!(m_TreeAggregate.GetItemState(hParentItem,TVIS_EXPANDED)&TVIS_EXPANDED);
+				if (nImage >= ICON_NUMBER * 8)
 				{
-					bool bIsExpanded=!!(m_TreeAggregate.GetItemState(hParentItem,TVIS_EXPANDED)&TVIS_EXPANDED);
-					if(bIsExpanded && nImage<ICON_NUMBER)
-					{
-						m_TreeAggregate.SetItemImage(hParentItem,nImage+ICON_NUMBER,nSelectedImage+ICON_NUMBER);
-					}
+					bIsExpanded &= !!tvItem.cChildren;
+					m_TreeAggregate.SetItemImage(hParentItem, (nImage & ~1) + (bIsExpanded ? 1 : 0), (nImage & ~1) + (bIsExpanded ? 1 : 0));
 				}
 				else
-				{	if(nImage>=ICON_NUMBER)
+				{
+					if(tvItem.cChildren)
 					{
-						m_TreeAggregate.SetItemImage(hParentItem,nImage-ICON_NUMBER,nSelectedImage-ICON_NUMBER);
+						if(bIsExpanded && nImage<ICON_NUMBER)
+						{
+							m_TreeAggregate.SetItemImage(hParentItem,nImage+ICON_NUMBER,nSelectedImage+ICON_NUMBER);
+						}
 					}
-
+					else
+					{	if (nImage>=ICON_NUMBER)
+						{
+							m_TreeAggregate.SetItemImage(hParentItem,nImage-ICON_NUMBER,nSelectedImage-ICON_NUMBER);
+						}
+					}
 				}
-
 
 				m_TreeAggregate.SetItem(&tvItem);
 			}
@@ -2092,19 +2098,27 @@ void CAggregatePropertyPage::OnMgaEvent(CComPtr<IMgaObject> ccpMgaObject, unsign
 				int nImage,nSelectedImage;
 				m_TreeAggregate.GetItemImage(hParentItem,nImage,nSelectedImage);
 
-				if(tvItem.cChildren)
+				bool bIsExpanded = !!(m_TreeAggregate.GetItemState(hParentItem,TVIS_EXPANDED)&TVIS_EXPANDED);
+				if (nImage >= ICON_NUMBER * 8)
 				{
-					bool bIsExpanded=!!(m_TreeAggregate.GetItemState(hParentItem,TVIS_EXPANDED)&TVIS_EXPANDED);
-					if(bIsExpanded && nImage<ICON_NUMBER)
-					{
-						m_TreeAggregate.SetItemImage(hParentItem,nImage+ICON_NUMBER,nSelectedImage+ICON_NUMBER);
-					}
+					bIsExpanded &= !!tvItem.cChildren;
+					m_TreeAggregate.SetItemImage(hParentItem, (nImage & ~1) + (bIsExpanded ? 1 : 0), (nImage & ~1) + (bIsExpanded ? 1 : 0));
 				}
 				else
-				{	
-					if(nImage>=ICON_NUMBER)
+				{
+					if(tvItem.cChildren)
 					{
-						m_TreeAggregate.SetItemImage(hParentItem,nImage-ICON_NUMBER,nSelectedImage-ICON_NUMBER);
+						if(bIsExpanded && nImage<ICON_NUMBER)
+						{
+							m_TreeAggregate.SetItemImage(hParentItem,nImage+ICON_NUMBER,nSelectedImage+ICON_NUMBER);
+						}
+					}
+					else
+					{	
+						if(nImage>=ICON_NUMBER)
+						{
+							m_TreeAggregate.SetItemImage(hParentItem,nImage-ICON_NUMBER,nSelectedImage-ICON_NUMBER);
+						}
 					}
 				}
 
@@ -2137,19 +2151,26 @@ void CAggregatePropertyPage::OnMgaEvent(CComPtr<IMgaObject> ccpMgaObject, unsign
 				int nImage,nSelectedImage;
 				m_TreeAggregate.GetItemImage(hParentItem,nImage,nSelectedImage);				
 
-				if(tvItem.cChildren)
+				if (nImage >= ICON_NUMBER * 8)
 				{
-					if(bIsExpanded && nImage<ICON_NUMBER)
-					{
-						m_TreeAggregate.SetItemImage(hParentItem,nImage+ICON_NUMBER,nSelectedImage+ICON_NUMBER);
-					}
+					m_TreeAggregate.SetItemImage(hParentItem, (nImage & ~1) + (bIsExpanded ? 1 : 0), (nImage & ~1) + (bIsExpanded ? 1 : 0));
 				}
 				else
-				{	if(nImage>=ICON_NUMBER)
+				{
+					if(tvItem.cChildren)
 					{
-						m_TreeAggregate.SetItemImage(hParentItem,nImage-ICON_NUMBER,nSelectedImage-ICON_NUMBER);
+						if(bIsExpanded && nImage<ICON_NUMBER)
+						{
+							m_TreeAggregate.SetItemImage(hParentItem,nImage+ICON_NUMBER,nSelectedImage+ICON_NUMBER);
+						}
 					}
+					else
+					{	if(nImage>=ICON_NUMBER)
+						{
+							m_TreeAggregate.SetItemImage(hParentItem,nImage-ICON_NUMBER,nSelectedImage-ICON_NUMBER);
+						}
 
+					}
 				}
 
 				m_TreeAggregate.SetItem(&tvItem);
@@ -2184,15 +2205,13 @@ void CAggregatePropertyPage::OnMgaEvent(CComPtr<IMgaObject> ccpMgaObject, unsign
 					int nImage,nSelectedImage;
 					m_TreeAggregate.GetItemImage(hParentItem,nImage,nSelectedImage);				
 
-					// NOTE: the if branch is totally useless, since bIsExpanded is false
-					if(tvItem.cChildren)
+					if (nImage >= ICON_NUMBER * 8)
 					{
-						if(bIsExpanded && nImage<ICON_NUMBER) // change to opened icon
-						{
-							m_TreeAggregate.SetItemImage(hParentItem,nImage+ICON_NUMBER,nSelectedImage+ICON_NUMBER);
-						}
+						bIsExpanded &= !!tvItem.cChildren;
+						m_TreeAggregate.SetItemImage(hParentItem, (nImage & ~1) + (bIsExpanded ? 1 : 0), (nImage & ~1) + (bIsExpanded ? 1 : 0));
 					}
-					else // if no children then if opened icon used previously, change it to the closed icon
+					else
+					// if no children then if opened icon used previously, change it to the closed icon
 					{	
 						if(nImage>=ICON_NUMBER)
 						{
