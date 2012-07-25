@@ -139,6 +139,7 @@ public:
 			{
 				if ((*(*kk)->prevptr)->next)
 					(*(*kk)->prevptr)->next = NULL;
+				(*kk)->load_status = ATTSTATUS_INVALID;
 				(*kk)->prevptr = NULL;
 			}
 			pool[mref] = NULL;
