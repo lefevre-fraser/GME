@@ -16,6 +16,7 @@ ipch
 *.msm
 *.mta
 *.log
+*-emergency*.mga
 Release_PGO
 obj/
 GME/XmlBackEnd/XmlBackEnd.h
@@ -31,6 +32,10 @@ GME/PanningView/Release
 GME/PanningView/PanningView_h.h
 GME/ObjectInspector/Release
 Doc/README.txt
+Doc/GME Manual and User Guide/GME Manual and User Guide.fo
+Doc/GME Manual and User Guide/htmlhelp.hhp
+Doc/GME Manual and User Guide/toc.hhc
+Doc/GME Manual and User Guide/unused
 GME/Common/Release/
 GME/Console/Release/
 GME/ConstraintManager/ConstraintManager.h
@@ -200,19 +205,16 @@ SDK/ScriptSDK/ScriptSDK.zip
 Tests/GPyUnit/XMLBackend/
 Tests/GPyUnit/_console_ansi.py
 Tests/GPyUnit/_console_utf16.py
-Tests/_tc1_A_me.mga
-Tests/_tc1_B_me.mga
-Tests/_tc1_C_me.mga
-Tests/_tc1_D_sf.mga
-Tests/_tc2_all_sf.mga
-Tests/_tc3_A_sf.mga
-Tests/_tc4_B_sf.mga
-Tests/_tc5_B_sf.mga
-Tests/_tc5_C_sf.mga
-Tests/_tc6_A_sf.mga
-Tests/_tc6_C_libuser_sf.mga
-Tests/_tc6_C_readonly_sf.mga
-Tests/_tc6_D_sf.mga
+Tests/tests.xml
+Tests/tests_x64.xml
+ Tests/GPyUnit/GME_310/TestRefportAPI.mga
+Tests/GPyUnit/GME_391/parsertest.mga
+Tests/GPyUnit/GME_391/parsertest.xme
+Tests/GPyUnit/GME_391/parsertest.xml
+Tests/GPyUnit/GME_391/parsertest2.xml
+Tests/GPyUnit/GME_391/testXME.xme
+_tc*.mga
+_tc*.mgatmp
 Tests/tmp.mga
 projs
 Tests/GPyUnit/TestRegistry-output.xme
