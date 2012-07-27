@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 12.7.5
+                 GME 12.7.27
        Copyright © 2000-2012 Vanderbilt University
 
 
@@ -25,6 +25,17 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Release 12.7.27
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Added treeIcon and expandedTreeIcon option to Folders
+  - Fix bug under CLR interpreters: get attribute fails or returns old data after default value is overridden and AbortTransaction is called
+  - Fix bug where PartBrowser isn't empty after last model editor is closed (GME-405)
+  - Display DispayName under "Insert New Model" (if there is only one role)
+  - MetaDecorator: don't try to edit names under libraries
+  - DecoratorLib: allow use of #import by clients
+  - XME export: export src/dst in a predicatable order for self-connections
 
 Release Notes of Release 12.7.5
 ----------------------------------
