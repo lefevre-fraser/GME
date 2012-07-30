@@ -31,19 +31,15 @@ def _test_names():
  'GME_371',
  'GME_391',
  'test_MetaInterpreter',
+ 'Regr.Mga.tc1',
 ]
-    import GPyUnit.util
-    if not GPyUnit.util._opts.Dispatch_x64:
+    if platform.system() != 'Java':
         _test_names += [
-        'Regr.Mga.tc1',
+        'Regr.Mga.tc2',
+        'Regr.Mga.tc3',
+        'Regr.Mga.tc5',
+        'Regr.Mga.tc6',
         ]
-        if platform.system() != 'Java':
-            _test_names += [
-            'Regr.Mga.tc2',
-            'Regr.Mga.tc3',
-            'Regr.Mga.tc5',
-            'Regr.Mga.tc6',
-            ]
     return _test_names
 
 def _tests():

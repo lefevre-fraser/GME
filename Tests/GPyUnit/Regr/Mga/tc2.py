@@ -5,7 +5,7 @@ import pythoncom
 import os
 import utils.Builder
 bd = utils.Builder
-
+from GPyUnit.util import DispatchEx
 
 """
 tests properties of IMgaProject
@@ -15,7 +15,7 @@ class TestCase2( unittest.TestCase ):
 
 
 	def setUp( self ):		## hook method: creates a new mga file all the times, and deletes one if existing
-		self.project = win32com.client.DispatchEx("Mga.MgaProject")
+		self.project = DispatchEx("Mga.MgaProject")
 		
 		self.mganame = "_tc2_all_sf.mga"
 

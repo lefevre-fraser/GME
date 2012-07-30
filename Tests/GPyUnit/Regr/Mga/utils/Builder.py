@@ -1,6 +1,7 @@
 import unittest
 import win32com.client
 import os
+from GPyUnit.util import DispatchEx
 
 def findInProj( project, obj_name = "", obj_kind = ""):
 	""" Returns an object in project, satisfying the obj_name and obj_kind criteria, if speficied 
@@ -93,7 +94,7 @@ def newFolder(p, parent, folder_kind_str):
 def connect(p, cont, s, d, role_str):
 	""" Helper method connecting plain fcos/ports, when no references are involved
 	"""
-	z0 = win32com.client.DispatchEx("Mga.MgaFCOs")
+	z0 = DispatchEx("Mga.MgaFCOs")
 	return cont.CreateSimpleConn( role(p, cont, role_str), s, d, z0, z0)
 
 def connectRefP(p, cont, s, d, r1, r2, role_str):
@@ -104,8 +105,8 @@ def connectRefP(p, cont, s, d, r1, r2, role_str):
 	r2: modelreference, 'containing' d
 	r1 or r2 might be 0, when that end of the connection is an fco or modelport (no reference involved)
 	"""
-	z1 = win32com.client.DispatchEx("Mga.MgaFCOs")
-	z2 = win32com.client.DispatchEx("Mga.MgaFCOs")
+	z1 = DispatchEx("Mga.MgaFCOs")
+	z2 = DispatchEx("Mga.MgaFCOs")
 	if r1:
 		z1.Append( r1)
 	if r2:
@@ -116,7 +117,7 @@ def connectRefP(p, cont, s, d, r1, r2, role_str):
 def creaP(mganame, parad):
 	from GPyUnit import util
 	util.register_xmp(parad)
-	project = win32com.client.DispatchEx("Mga.MgaProject")
+	project = DispatchEx("Mga.MgaProject")
 
 	# may delete old file if exists
 	# if os.path.isfile( mganame):

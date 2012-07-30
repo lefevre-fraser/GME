@@ -7,6 +7,7 @@ import stat
 import utils.Builder
 bd = utils.Builder
 
+from GPyUnit.util import DispatchEx
 from GPyUnit.util import dec_disable_early_binding
 
 class TestCase4( unittest.TestCase ):
@@ -481,7 +482,7 @@ class TestCase4( unittest.TestCase ):
 		par_con2_str = "XML=" + curdir + "used_paradigms\\SF\\SF_older.xmp"
 		ori_conn_str = "MGA=" + curdir + "used_paradigms\\SF\\SF_orig.mta"
 		
-		registrar = win32com.client.Dispatch("Mga.MgaRegistrar")
+		registrar = DispatchEx("Mga.MgaRegistrar")
 		
 		# 1: user registry 
 		# 2: system registry
@@ -621,7 +622,7 @@ class TestCase4( unittest.TestCase ):
 		"""
 		mganame = "_tc4_E2_sf.mga"
 
-		self.project = project = win32com.client.DispatchEx("Mga.MgaProject")
+		self.project = project = DispatchEx("Mga.MgaProject")
 
 		charform_guid = self.register_old_sf_par()
 		

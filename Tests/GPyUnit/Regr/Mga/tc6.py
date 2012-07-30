@@ -7,6 +7,7 @@ import stat
 import utils.Builder
 bd = utils.Builder
 
+from GPyUnit.util import DispatchEx
 from GPyUnit.util import dec_disable_early_binding
 
 class TestCase6( unittest.TestCase ):
