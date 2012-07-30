@@ -82,10 +82,18 @@ def check_prerequisites():
 
 def update_version_str():
     "Update version strings in source files"
-    with file(os.path.join(GME_ROOT, 'GME/Gme/GMEVersion.h.tmpl')) as template:
-        template_text = "".join(file.readlines(template))
-    with file(os.path.join(GME_ROOT, 'GME/Gme/GMEVersion.h'), 'w') as header:
-        header.write(template_text % (prefs["version_major"], prefs["version_minor"], prefs["version_patch"], prefs["version_build"]))
+    with open(os.path.join(GME_ROOT, 'GME/Gme/GMEVersion.h.tmpl')) as template:
+        template_text = "".join(template.readlines())
+    old_text = None
+    try:
+        with open(os.path.join(GME_ROOT, 'GME/Gme/GMEVersion.h')) as header:
+            old_text = "".join(header.readlines())
+    except:
+        pass
+    text = template_text % (prefs["version_major"], prefs["version_minor"], prefs["version_patch"], prefs["version_build"])
+    if text != old_text:
+        with open(os.path.join(GME_ROOT, 'GME/Gme/GMEVersion.h'), 'w') as header:
+            header.write(text)
 
 def compile_GME():
     "Compile GME core components"
