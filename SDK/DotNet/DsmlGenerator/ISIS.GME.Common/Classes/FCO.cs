@@ -18,7 +18,7 @@ namespace ISIS.GME.Common.Classes
 		{
 			get
 			{
-				if ((Impl as MgaFCO).ArcheType == null)
+				if ((Impl as IMgaFCO).ArcheType == null)
 				{
 					return null;
 				}
@@ -37,7 +37,7 @@ namespace ISIS.GME.Common.Classes
 		{
 			get
 			{
-				return Utils.CastSrcConnections<Connection, MgaFCO>(Impl as MgaFCO);
+				return Utils.CastSrcConnections<Connection, IMgaFCO>(Impl as IMgaFCO);
 			}
 		}
 
@@ -48,31 +48,31 @@ namespace ISIS.GME.Common.Classes
 		{
 			get
 			{
-				return Utils.CastDstConnections<Connection, MgaFCO>(Impl as MgaFCO);
+				return Utils.CastDstConnections<Connection, IMgaFCO>(Impl as IMgaFCO);
 			}
 		}
 
 		public bool IsInstance
 		{
-			get { return (Impl as MgaFCO).IsInstance; }
+			get { return (Impl as IMgaFCO).IsInstance; }
 		}
 
 		public bool IsSubtype
 		{
 			get { return 
-				(Impl as MgaFCO).IsInstance ? 
+				(Impl as IMgaFCO).IsInstance ? 
 				false : 
-				(Impl as MgaFCO).ArcheType != null; }
+				(Impl as IMgaFCO).ArcheType != null; }
 		}
 
 		public IEnumerable<Interfaces.Set> GenericMembersOfSet
 		{
-			get { return Utils.MembersOfSet<Classes.Set>(Impl as MgaFCO); }
+			get { return Utils.MembersOfSet<Classes.Set>(Impl as IMgaFCO); }
 		}
 
 		public IEnumerable<Interfaces.Reference> GenericReferencedBy
 		{
-			get { return Utils.ReferencedBy<Classes.Reference>(Impl as MgaFCO); }
+			get { return Utils.ReferencedBy<Classes.Reference>(Impl as IMgaFCO); }
 		}
 
 		///// <summary>

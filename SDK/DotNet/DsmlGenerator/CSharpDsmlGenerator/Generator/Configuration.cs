@@ -335,5 +335,10 @@ namespace CSharpDSMLGenerator.Generator
 		{
 			return GetClassName(item as MgaObject);
 		}
-	}
+
+        internal static string GetClassName(string p)
+        {
+            return p.Replace("::", ".Classes.");
+        }
+    }
 }

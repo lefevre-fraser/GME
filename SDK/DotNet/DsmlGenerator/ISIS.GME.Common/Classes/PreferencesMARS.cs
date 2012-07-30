@@ -230,7 +230,7 @@ namespace ISIS.GME.Common.Classes
 		}
 
 
-		public PreferencesMARS(global::GME.MGA.MgaFCO impl)
+		public PreferencesMARS(global::GME.MGA.IMgaFCO impl)
 			: base(impl)
 		{
 		}

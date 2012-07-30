@@ -10,112 +10,141 @@ using System.Diagnostics.Contracts;
 
 namespace CSharpDSMLGenerator.Generator
 {
-	public partial class FCO : Base
-	{
-		public FCO(
-			MgaObject subject,
-			CodeTypeReferenceCollection baseTypes,
-			CodeTypeReferenceCollection attributes) :
-			base(subject, baseTypes, attributes)
-		{
-		}
+    public partial class FCO : Base
+    {
+        public FCO(
+            MgaObject subject,
+            CodeTypeReferenceCollection baseTypes,
+            CodeTypeReferenceCollection attributes) :
+            base(subject, baseTypes, attributes)
+        {
+        }
 
-		public override void GenerateClassCode()
-		{
+        public override void GenerateClassCode()
+        {
 
-			base.GenerateClassCode();
+            base.GenerateClassCode();
 
-			string ClassName = Subject.Name;
+            string ClassName = Subject.Name;
 
-			if (Subject.MetaBase.Name == "RootFolder")
-			{
-				ClassName = "RootFolder";
-			}
+            if (Subject.MetaBase.Name == "RootFolder")
+            {
+                ClassName = "RootFolder";
+            }
 
-			ClassCodeGetRootFolder();
+            ClassCodeGetRootFolder();
 
-			ClassCodeArcheType();
+            ClassCodeArcheType();
 
-			ClassCodeRoles();
+            ClassCodeRoles();
 
-			ClassCodeSrcDstConnections();
+            ClassCodeSrcDstConnections();
 
-			ClassCodeSrcDstEnd();
+            ClassCodeSrcDstEnd();
 
-			ClassCodeParentContainer();
+            ClassCodeParentContainer();
 
-			ClassCodeAttributes();
+            ClassCodeAttributes();
 
-			ClassCodeChildren();
+            ClassCodeChildren();
 
-			ClassCodeMakeConnection();
+            ClassCodeMakeConnection();
 
-			ClassCodeCreateObject();
+            ClassCodeCreateObject();
 
-			ClassCodeReferred();
+            ClassCodeCast();
 
-			ClassCodeReferencedBy();
+            ClassCodeReferred();
 
-			ClassCodeSetMembers();
+            ClassCodeReferencedBy();
 
-			ClassCodeMemberOfSets();
-		}
+            ClassCodeSetMembers();
 
-		public override void GenerateInterfaceCode()
-		{
-			base.GenerateInterfaceCode();
+            ClassCodeMemberOfSets();
+        }
 
+        private void ClassCodeCast()
+        {
+            if (Subject.MetaBase.Name != "RootFolder")
+            {
+                CodeMemberMethod newCast = new CodeMemberMethod()
+                {
+                    Attributes = MemberAttributes.Public | MemberAttributes.Static,
+                    Name = "Cast",
+                    ReturnType = new CodeTypeReference(
+                        Configuration.GetInterfaceName(Subject as MgaObject)),
+                };
+                newCast.Comments.Add(
+                    new CodeCommentStatement("Gets a domain specific object from a COM object.", true));
 
-			if (Subject.MetaBase.Name == "RootFolder")
-			{
-				// rootfolder specific properties
-				CodeMemberProperty libraryName = new CodeMemberProperty()
-				{
-					Attributes = MemberAttributes.Public,
-					HasGet = true,
-					Name = "LibraryName",
-					Type = new CodeTypeReference(typeof(string)),
-				};
+                newCast.Parameters.Add(
+                    new CodeParameterDeclarationExpression("global::" + typeof(IMgaObject).FullName, "subject"));
 
-				libraryName.Comments.Add(
-					new CodeCommentStatement(Configuration.Comments.LibraryName, true));
+                newCast.Statements.Add(
+                    new CodeMethodReturnStatement(
+                        new CodeSnippetExpression(
+                        typeof(ISIS.GME.Common.Utils).FullName + ".CreateObject<" +
+                        Configuration.GetClassName(Subject as MgaObject) + ">(subject)")));
 
-				GeneratedInterface.Types[0].Members.Add(libraryName);
+                GeneratedClass.Types[0].Members.Add(newCast);
+            }
+        }
 
-				CodeMemberProperty library = new CodeMemberProperty()
-				{
-					Attributes = MemberAttributes.Public,
-					HasGet = true,
-					Name = "LibraryCollection",
-					Type = new CodeTypeReference(
-						"IEnumerable<" + Configuration.ProjectIntefaceNamespace +
-						".RootFolder" + ">"),
-				};
-
-				library.Comments.Add(
-					new CodeCommentStatement(Configuration.Comments.LibraryCollection, true));
-
-				GeneratedInterface.Types[0].Members.Add(library);
-			}
+        public override void GenerateInterfaceCode()
+        {
+            base.GenerateInterfaceCode();
 
 
-			InterfaceCodeSrcDstConnections();
+            if (Subject.MetaBase.Name == "RootFolder")
+            {
+                // rootfolder specific properties
+                CodeMemberProperty libraryName = new CodeMemberProperty()
+                {
+                    Attributes = MemberAttributes.Public,
+                    HasGet = true,
+                    Name = "LibraryName",
+                    Type = new CodeTypeReference(typeof(string)),
+                };
 
-			IntefaceCodeSrcDstEnd();
+                libraryName.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.LibraryName, true));
 
-			InterfaceCodeArcheType();
+                GeneratedInterface.Types[0].Members.Add(libraryName);
 
-			InterfaceCodeAttributes();
+                CodeMemberProperty library = new CodeMemberProperty()
+                {
+                    Attributes = MemberAttributes.Public,
+                    HasGet = true,
+                    Name = "LibraryCollection",
+                    Type = new CodeTypeReference(
+                        "IEnumerable<" + Configuration.ProjectIntefaceNamespace +
+                        ".RootFolder" + ">"),
+                };
 
-			InterfaceCodeChildren();
+                library.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.LibraryCollection, true));
 
-			InterfaceCodeReferred();
+                GeneratedInterface.Types[0].Members.Add(library);
+            }
 
-			InterfaceCodeReferencedBy();
 
-			InterfaceCodeSetMembers();
+            InterfaceCodeSrcDstConnections();
 
-			InterfaceCodeMemberOfSets();
-		}
-	}
+            IntefaceCodeSrcDstEnd();
+
+            InterfaceCodeArcheType();
+
+            InterfaceCodeAttributes();
+
+            InterfaceCodeChildren();
+
+            InterfaceCodeReferred();
+
+            InterfaceCodeReferencedBy();
+
+            InterfaceCodeSetMembers();
+
+            InterfaceCodeMemberOfSets();
+        }
+    }
 }

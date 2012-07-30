@@ -96,7 +96,7 @@ namespace ISIS.GME.Common.Classes
 			set { Preferences.SetIntValueByName("portLabelLength", Impl, value); }
 		}
 
-		public PreferencesModel(global::GME.MGA.MgaFCO impl)
+		public PreferencesModel(global::GME.MGA.IMgaFCO impl)
 			: base (impl)
 		{
 		}

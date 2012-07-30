@@ -16,7 +16,7 @@ namespace ISIS.GME.Common.Classes
 		/// </summary>
 		public string LibraryName { get { throw new NotImplementedException(); } }
 
-		public PropertiesFolder(global::GME.MGA.MgaObject impl)
+		public PropertiesFolder(global::GME.MGA.IMgaObject impl)
 			: base(impl)
 		{
 		}

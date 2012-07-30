@@ -16,7 +16,7 @@ namespace ISIS.GME.Common.Classes
 			try
 			{
 				RootFolder rf = new RootFolder();
-				rf.Impl = Impl.Project.RootFolder.AttachLibraryV3(connectionString, true) as MgaObject;
+				rf.Impl = Impl.Project.RootFolder.AttachLibraryV3(connectionString, true) as IMgaObject;
 				return rf;
 			}
 			catch (Exception ex)
@@ -40,7 +40,15 @@ namespace ISIS.GME.Common.Classes
 
 		public static Interfaces.RootFolder GetRootFolder(MgaProject project)
 		{
-			return ISIS.GME.Common.Utils.CreateObject<RootFolder>(project.RootFolder as MgaObject);
+			return ISIS.GME.Common.Utils.CreateObject<RootFolder>(project.RootFolder as IMgaObject);
 		}
+
+        public virtual System.Collections.Generic.Dictionary<int, System.Type> MetaRefs
+        {
+            get
+            {
+                return new Dictionary<int, Type>();
+            }
+        }
 	}
 }

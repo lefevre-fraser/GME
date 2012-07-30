@@ -159,7 +159,7 @@ namespace ISIS.GME.Common.Classes
 		#region Helper functions for the COM interface
 		public static string GetStrValueByName(
 			string regName,
-			global::GME.MGA.MgaFCO subject)
+			global::GME.MGA.IMgaFCO subject)
 		{
 			string regValue = subject.RegistryValue[regName];
 
@@ -175,7 +175,7 @@ namespace ISIS.GME.Common.Classes
 
 		public static void SetStrValueByName(
 			string regName,
-			global::GME.MGA.MgaFCO subject,
+			global::GME.MGA.IMgaFCO subject,
 			string value)
 		{
 			subject.RegistryValue[regName] = value;
@@ -183,7 +183,7 @@ namespace ISIS.GME.Common.Classes
 
 		public static bool GetBoolValueByName(
 			string regName,
-			global::GME.MGA.MgaFCO subject)
+			global::GME.MGA.IMgaFCO subject)
 		{
 			string regValue = subject.RegistryValue[regName];
 			bool result;
@@ -209,7 +209,7 @@ namespace ISIS.GME.Common.Classes
 
 		public static void SetBoolValueByName(
 			string regName,
-			global::GME.MGA.MgaFCO subject,
+			global::GME.MGA.IMgaFCO subject,
 			bool value)
 		{
 			subject.RegistryValue[regName] = value.ToString().ToLowerInvariant();
@@ -218,7 +218,7 @@ namespace ISIS.GME.Common.Classes
 
 		public static int GetIntValueByName(
 			string regName,
-			global::GME.MGA.MgaFCO subject)
+			global::GME.MGA.IMgaFCO subject)
 		{
 			string regValue = subject.RegistryValue[regName];
 			int result;
@@ -244,13 +244,13 @@ namespace ISIS.GME.Common.Classes
 
 		public static void SetIntValueByName(
 			string regName,
-			global::GME.MGA.MgaFCO subject,
+			global::GME.MGA.IMgaFCO subject,
 			int value)
 		{
 			subject.RegistryValue[regName] = value.ToString();
 		}
 
-		public static NamePosition GetNamePosition(string regName, global::GME.MGA.MgaFCO subject)
+		public static NamePosition GetNamePosition(string regName, global::GME.MGA.IMgaFCO subject)
 		{
 			string regValue = subject.RegistryValue[regName];
 			NamePosition result;
@@ -280,7 +280,7 @@ namespace ISIS.GME.Common.Classes
 
 		public static System.Drawing.Color GetColorValueByName(
 			string regName,
-			global::GME.MGA.MgaFCO subject)
+			global::GME.MGA.IMgaFCO subject)
 		{
 			string regValue = subject.RegistryValue[regName];
 			System.Drawing.Color result = System.Drawing.Color.Gray;
@@ -297,7 +297,7 @@ namespace ISIS.GME.Common.Classes
 
 		public static void SetColorValueByName(
 			string regName,
-			global::GME.MGA.MgaFCO subject,
+			global::GME.MGA.IMgaFCO subject,
 			System.Drawing.Color value)
 		{
 			subject.RegistryValue[regName] = String.Format(

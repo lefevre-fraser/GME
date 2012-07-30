@@ -19,7 +19,7 @@ namespace ISIS.GME.Common.Classes
 		{
 			get
 			{
-				return new Aspect(Impl as MgaFCO);
+				return new Aspect(Impl as IMgaFCO);
 			}
 		}
 
@@ -27,17 +27,17 @@ namespace ISIS.GME.Common.Classes
 		{
 			get
 			{
-				return Aspect.GetAspects(Impl as MgaFCO);
+				return Aspect.GetAspects(Impl as IMgaFCO);
 			}
 			set
 			{
-				Aspect.SetAspects(Impl as MgaFCO, value);
+				Aspect.SetAspects(Impl as IMgaFCO, value);
 			}
 		}
 
 		public PreferencesReference Preferences
 		{
-			get { return new PreferencesReference(Impl as global::GME.MGA.MgaFCO); }
+			get { return new PreferencesReference(Impl as global::GME.MGA.IMgaFCO); }
 		}
 
 
@@ -49,14 +49,14 @@ namespace ISIS.GME.Common.Classes
 			get
 			{
 				Contract.Requires(Impl != null);
-				Contract.Requires(Impl is MgaFCO);
+				Contract.Requires(Impl is IMgaFCO);
 
-				foreach (MgaFCO item in (Impl as MgaFCO).DerivedObjects)
+				foreach (IMgaFCO item in (Impl as IMgaFCO).DerivedObjects)
 				{
 					if (item.IsInstance)
 					{
 						ISIS.GME.Common.Classes.Reference result = new Reference();
-						result.Impl = item as MgaObject;
+						result.Impl = item as IMgaObject;
 						yield return result;
 					}
 				}
@@ -71,15 +71,15 @@ namespace ISIS.GME.Common.Classes
 			get
 			{
 				Contract.Requires(Impl != null);
-				Contract.Requires(Impl is MgaFCO);
+				Contract.Requires(Impl is IMgaFCO);
 
-				foreach (MgaFCO item in (Impl as MgaFCO).DerivedObjects)
+				foreach (IMgaFCO item in (Impl as IMgaFCO).DerivedObjects)
 				{
 					if (item.IsInstance ? false : item.ArcheType != null)
 					{
 						// if subtype
 						ISIS.GME.Common.Classes.Reference result = new Reference();
-						result.Impl = item as MgaObject;
+						result.Impl = item as IMgaObject;
 						yield return result;
 					}
 				}
@@ -91,10 +91,10 @@ namespace ISIS.GME.Common.Classes
 		{
 			get
 			{
-				MgaFCO Referred = (Impl as MgaReference).Referred;
+				IMgaFCO Referred = (Impl as MgaReference).Referred;
 				if (Referred != null)
 				{
-					return Utils.CreateObject<FCO>(Referred as MgaObject);
+					return Utils.CreateObject<FCO>(Referred as IMgaObject);
 				}
 				else
 				{
@@ -105,9 +105,9 @@ namespace ISIS.GME.Common.Classes
 			{
 				Contract.Requires(Impl is MgaReference);
 				Contract.Requires(value != null);
-				Contract.Requires(value.Impl is MgaFCO);
+				Contract.Requires(value.Impl is IMgaFCO);
 				
-				MgaFCO fco = value.Impl as MgaFCO;
+				IMgaFCO fco = value.Impl as IMgaFCO;
 				MgaReference reference = Impl as MgaReference;
 
 				try
@@ -122,7 +122,7 @@ namespace ISIS.GME.Common.Classes
 
 					if (item != null)
 					{
-						reference.Referred = fco;
+						reference.Referred = fco as MgaFCO;
 					}
 					else
 					{

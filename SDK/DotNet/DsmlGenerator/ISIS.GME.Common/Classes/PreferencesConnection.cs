@@ -130,7 +130,7 @@ namespace ISIS.GME.Common.Classes
 			set { Preferences.SetBoolValueByName("isAutoRouted", Impl, value); }
 		}
 
-		public PreferencesConnection(global::GME.MGA.MgaFCO impl)
+		public PreferencesConnection(global::GME.MGA.IMgaFCO impl)
 			: base(impl)
 		{
 		}

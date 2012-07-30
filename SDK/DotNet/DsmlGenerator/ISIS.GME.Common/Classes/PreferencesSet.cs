@@ -32,7 +32,7 @@ namespace ISIS.GME.Common.Classes
 			set { Preferences.SetStrValueByName("instanceIcon", Impl, value); }
 		}
 
-		public PreferencesSet(global::GME.MGA.MgaFCO impl)
+		public PreferencesSet(global::GME.MGA.IMgaFCO impl)
 			: base(impl)
 		{
 		}

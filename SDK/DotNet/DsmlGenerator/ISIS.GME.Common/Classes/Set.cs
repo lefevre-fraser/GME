@@ -18,7 +18,7 @@ namespace ISIS.GME.Common.Classes
 		{
 			get
 			{
-				return new Aspect(Impl as MgaFCO);
+				return new Aspect(Impl as IMgaFCO);
 			}
 		}
 
@@ -26,11 +26,11 @@ namespace ISIS.GME.Common.Classes
 		{
 			get
 			{
-				return Aspect.GetAspects(Impl as MgaFCO);
+				return Aspect.GetAspects(Impl as IMgaFCO);
 			}
 			set
 			{
-				Aspect.SetAspects(Impl as MgaFCO, value);
+				Aspect.SetAspects(Impl as IMgaFCO, value);
 			}
 		}
 
@@ -42,7 +42,7 @@ namespace ISIS.GME.Common.Classes
 
 		public PreferencesSet Preferences
 		{
-			get { return new PreferencesSet(Impl as global::GME.MGA.MgaFCO); }
+			get { return new PreferencesSet(Impl as global::GME.MGA.IMgaFCO); }
 		}
 
 		/// <summary>
@@ -53,14 +53,14 @@ namespace ISIS.GME.Common.Classes
 			get
 			{
 				Contract.Requires(Impl != null);
-				Contract.Requires(Impl is MgaFCO);
+				Contract.Requires(Impl is IMgaFCO);
 
-				foreach (MgaFCO item in (Impl as MgaFCO).DerivedObjects)
+				foreach (IMgaFCO item in (Impl as IMgaFCO).DerivedObjects)
 				{
 					if (item.IsInstance)
 					{
 						ISIS.GME.Common.Classes.Set result = new Set();
-						result.Impl = item as MgaObject;
+						result.Impl = item as IMgaObject;
 						yield return result;
 					}
 				}
@@ -75,15 +75,15 @@ namespace ISIS.GME.Common.Classes
 			get
 			{
 				Contract.Requires(Impl != null);
-				Contract.Requires(Impl is MgaFCO);
+				Contract.Requires(Impl is IMgaFCO);
 
-				foreach (MgaFCO item in (Impl as MgaFCO).DerivedObjects)
+				foreach (IMgaFCO item in (Impl as IMgaFCO).DerivedObjects)
 				{
 					if (item.IsInstance ? false : item.ArcheType != null)
 					{
 						// if subtype
 						ISIS.GME.Common.Classes.Set result = new Set();
-						result.Impl = item as MgaObject;
+						result.Impl = item as IMgaObject;
 						yield return result;
 					}
 				}

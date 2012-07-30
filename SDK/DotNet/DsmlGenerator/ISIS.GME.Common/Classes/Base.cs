@@ -11,7 +11,7 @@ namespace ISIS.GME.Common.Classes
 	/// </summary>
 	public class Base : ISIS.GME.Common.Interfaces.Base
 	{
-		public global::GME.MGA.MgaObject Impl { get; set; }
+		public global::GME.MGA.IMgaObject Impl { get; set; }
 
 		public virtual void Delete()
 		{
@@ -50,11 +50,11 @@ namespace ISIS.GME.Common.Classes
 				{
 					return null;
 				}
-				else if (parent is global::GME.MGA.MgaFolder)
+				else if (parent is global::GME.MGA.IMgaFolder)
 				{
 					return Utils.CreateObject<Folder>(parent);
 				}
-				else if (parent is global::GME.MGA.MgaModel)
+				else if (parent is global::GME.MGA.IMgaModel)
 				{
 					return Utils.CreateObject<Model>(parent);
 				}

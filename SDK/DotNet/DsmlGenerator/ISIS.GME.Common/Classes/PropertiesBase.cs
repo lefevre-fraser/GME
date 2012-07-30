@@ -10,7 +10,7 @@ namespace ISIS.GME.Common.Classes
 	/// </summary>
 	public class PropertiesBase
 	{
-		protected global::GME.MGA.MgaObject Impl;
+		protected global::GME.MGA.IMgaObject Impl;
 
 		/// <summary>
 		/// Type of the object.
@@ -44,7 +44,7 @@ namespace ISIS.GME.Common.Classes
 		public Guid Guid { get { return new Guid(Impl.GetGuidDisp()); } }
 
 
-		public PropertiesBase(global::GME.MGA.MgaObject impl)
+		public PropertiesBase(global::GME.MGA.IMgaObject impl)
 		{
 			// TODO: Complete member initialization
 			this.Impl = impl;

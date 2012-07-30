@@ -9,7 +9,7 @@ namespace ISIS.GME.Common.Classes
 {
 	public class Aspect
 	{
-		protected MgaFCO Impl;
+		protected IMgaFCO Impl;
 
 		public string Icon
 		{
@@ -184,7 +184,7 @@ namespace ISIS.GME.Common.Classes
 			}
 		}
 
-		public Aspect(MgaFCO impl, string aspectName = "")
+		public Aspect(IMgaFCO impl, string aspectName = "")
 		{
 			Contract.Requires(impl != null);
 
@@ -192,7 +192,7 @@ namespace ISIS.GME.Common.Classes
 			Name = aspectName;
 		}
 
-		public static IEnumerable<Aspect> GetAspects(MgaFCO impl)
+		public static IEnumerable<Aspect> GetAspects(IMgaFCO impl)
 		{
 			Contract.Requires(impl != null);
 			if (impl.ParentModel != null)
@@ -204,7 +204,7 @@ namespace ISIS.GME.Common.Classes
 			}
 		}
 
-		internal static void SetAspects(MgaFCO impl, IEnumerable<Aspect> value)
+		internal static void SetAspects(IMgaFCO impl, IEnumerable<Aspect> value)
 		{
 			Contract.Requires(impl != null);
 			if (impl.ParentModel != null)

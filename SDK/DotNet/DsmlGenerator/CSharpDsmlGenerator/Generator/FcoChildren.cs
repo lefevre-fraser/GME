@@ -23,7 +23,7 @@ namespace CSharpDSMLGenerator.Generator
 					TypeAttributes = System.Reflection.TypeAttributes.NestedPublic,
 				};
 
-				CodeMemberField impl = new CodeMemberField("global::GME.MGA.MgaObject", "Impl");
+				CodeMemberField impl = new CodeMemberField("global::GME.MGA.IMgaObject", "Impl");
 				newChildrenClass.Members.Add(impl);
 
 				CodeFieldReferenceExpression implReferenceObject =
@@ -53,7 +53,7 @@ namespace CSharpDSMLGenerator.Generator
 						new CodeArgumentReferenceExpression("impl")));
 
 				ctorFolder.Statements.Add(new CodeAssignStatement(implReferenceObject,
-					new CodeCastExpression("global::GME.MGA.MgaObject", new CodeArgumentReferenceExpression("impl"))));
+					new CodeCastExpression("global::GME.MGA.IMgaObject", new CodeArgumentReferenceExpression("impl"))));
 
 				newChildrenClass.Members.Add(ctorFolder);
 
@@ -66,7 +66,7 @@ namespace CSharpDSMLGenerator.Generator
 						new CodeArgumentReferenceExpression("impl")));
 
 				ctorModel.Statements.Add(new CodeAssignStatement(implReferenceObject,
-					new CodeCastExpression("global::GME.MGA.MgaObject", new CodeArgumentReferenceExpression("impl"))));
+					new CodeCastExpression("global::GME.MGA.IMgaObject", new CodeArgumentReferenceExpression("impl"))));
 
 				newChildrenClass.Members.Add(ctorModel);
 

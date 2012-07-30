@@ -12,7 +12,7 @@ namespace ISIS.GME.Common.Classes
 		/// <para>COM object, use this if some functionality is not
 		/// implemented in the class.</para>
 		/// </summary>
-		public global::GME.MGA.MgaFCO Impl { get; set; }
+		public global::GME.MGA.IMgaFCO Impl { get; set; }
 
 		/// <summary>
 		/// <para>Help URL</para>
@@ -37,7 +37,7 @@ namespace ISIS.GME.Common.Classes
 		}
 
 
-		public PreferencesFCO(global::GME.MGA.MgaFCO impl)
+		public PreferencesFCO(global::GME.MGA.IMgaFCO impl)
 		{
 			Contract.Requires(impl != null);
 
