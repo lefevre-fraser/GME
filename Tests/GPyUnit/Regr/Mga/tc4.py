@@ -10,6 +10,10 @@ bd = utils.Builder
 from GPyUnit.util import DispatchEx
 from GPyUnit.util import dec_disable_early_binding
 
+def _adjacent_file(file):
+    import os.path
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+
 class TestCase4( unittest.TestCase ):
 	#avoid if possible the overriding of __init__, yet if you override use the following form:
 	#def __init__(self, methodName='runTest'):
@@ -53,7 +57,7 @@ class TestCase4( unittest.TestCase ):
 		
 		"""
 
-		mganame = "_tc4_A_sf.mga"
+		mganame = _adjacent_file("_tc4_A_sf.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
@@ -139,7 +143,7 @@ class TestCase4( unittest.TestCase ):
 		
 		"""
 
-		mganame = "_tc4_B_sf.mga"
+		mganame = _adjacent_file("_tc4_B_sf.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
@@ -230,7 +234,7 @@ class TestCase4( unittest.TestCase ):
 
 		"""
 
-		mganame = "_tc4_C_sf.mga"
+		mganame = _adjacent_file("_tc4_C_sf.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
@@ -375,7 +379,7 @@ class TestCase4( unittest.TestCase ):
 		
 		"""
 
-		mganame = "_tc4_D_sf.mga"
+		mganame = _adjacent_file("_tc4_D_sf.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
@@ -573,7 +577,7 @@ class TestCase4( unittest.TestCase ):
 		Open				for a readonly project
 		"""
 
-		mganame = "_tc4_E1_readonly_sf.mga"
+		mganame = _adjacent_file("_tc4_E1_readonly_sf.mga")
 
 		# if file exists from previous testing remove its readonly flag and delete the file
 		if os.path.isfile( mganame):
@@ -620,7 +624,7 @@ class TestCase4( unittest.TestCase ):
 		Close( abort )
 
 		"""
-		mganame = "_tc4_E2_sf.mga"
+		mganame = _adjacent_file("_tc4_E2_sf.mga")
 
 		self.project = project = DispatchEx("Mga.MgaProject")
 
@@ -689,8 +693,8 @@ class TestCase4( unittest.TestCase ):
 		
 		SaveAs 		under a different name, with "Don't keep oldname" option
 		"""
-		mganame = "_tc4_E3_sf.mga"
-		mganame_SavedAs = "_tc4_E3_savedAs_sf.mga"
+		mganame = _adjacent_file("_tc4_E3_sf.mga")
+		mganame_SavedAs = _adjacent_file("_tc4_E3_savedAs_sf.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
@@ -743,8 +747,8 @@ class TestCase4( unittest.TestCase ):
 		SaveAs 		under a different name, with "Don't keep oldname" option
 		Apply changes	after the SaveAs operation
 		"""
-		mganame = "_tc4_E4_sf.mga"
-		mganame_SavedAs = "_tc4_E4_savedAs_sf.mga"
+		mganame = _adjacent_file("_tc4_E4_sf.mga")
+		mganame_SavedAs = _adjacent_file("_tc4_E4_savedAs_sf.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
@@ -845,8 +849,8 @@ class TestCase4( unittest.TestCase ):
 		
 		SaveAs 		under a different name, with "Keep oldname" option
 		"""
-		mganame = "_tc4_E5_sf.mga"
-		mganame_SavedAs = "_tc4_E5_savedAs_sf.mga"
+		mganame = _adjacent_file("_tc4_E5_sf.mga")
+		mganame_SavedAs = _adjacent_file("_tc4_E5_savedAs_sf.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
@@ -915,8 +919,8 @@ class TestCase4( unittest.TestCase ):
 		SaveAs 		under a different name, with "Keep oldname" option
 		Apply changes	after the SaveAs operation
 		"""
-		mganame = "_tc4_E6_sf.mga"
-		mganame_SavedAs = "_tc4_E6_savedAs_sf.mga"
+		mganame = _adjacent_file("_tc4_E6_sf.mga")
+		mganame_SavedAs = _adjacent_file("_tc4_E6_savedAs_sf.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
@@ -1052,7 +1056,7 @@ class TestCase4( unittest.TestCase ):
 
 		"""
 		
-		mganame = "_tc4_F_sf.mga"
+		mganame = _adjacent_file("_tc4_F_sf.mga")
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
 		if not project:
@@ -1187,7 +1191,7 @@ class TestCase4( unittest.TestCase ):
 
 		"""
 
-		mganame = "_tc4_G_sf.mga"
+		mganame = _adjacent_file("_tc4_G_sf.mga")
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
 		if not project:
@@ -1311,7 +1315,7 @@ class TestCase4( unittest.TestCase ):
 
 		"""
 
-		mganame = "_tc4_H_sf.mga"
+		mganame = _adjacent_file("_tc4_H_sf.mga")
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
 		if not project:
@@ -1401,7 +1405,7 @@ class TestCase4( unittest.TestCase ):
 
 		"""
 
-		mganame = "_tc4_I_sf.mga"
+		mganame = _adjacent_file("_tc4_I_sf.mga")
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
 		if not project:
@@ -1486,7 +1490,7 @@ class TestCase4( unittest.TestCase ):
 
 		"""
 
-		mganame = "_tc4_J_sf.mga"
+		mganame = _adjacent_file("_tc4_J_sf.mga")
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
 		if not project:

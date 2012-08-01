@@ -9,6 +9,10 @@ bd = utils.Builder
 from GPyUnit.util import DispatchEx
 from GPyUnit.util import dec_disable_early_binding
 
+def _adjacent_file(file):
+    import os.path
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+
 class TestCase5( unittest.TestCase ):
 	"""
 	avoid if possible the overriding of __init__, yet if you override use the following form:
@@ -60,7 +64,7 @@ class TestCase5( unittest.TestCase ):
 			CreateCollection([in,out] IMgaFCOs **pVal)
 		"""
 		
-		mganame = "_tc5_B_sf.mga"
+		mganame = _adjacent_file("_tc5_B_sf.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
@@ -180,7 +184,7 @@ class TestCase5( unittest.TestCase ):
 			it should return the first object which is in the hierarchy ( below folders )
 		"""
 		
-		mganame = "_tc5_C_sf.mga"
+		mganame = _adjacent_file("_tc5_C_sf.mga")
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")
 		if not project:

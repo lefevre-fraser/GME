@@ -8,6 +8,10 @@ bd = utils.Builder
 
 from GPyUnit.util import DispatchEx
 
+def _adjacent_file(file):
+    import os.path
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+
 class TestCase7( unittest.TestCase ):
     """
     avoid if possible the overriding of __init__, yet if you override use the following form:
@@ -76,7 +80,7 @@ class TestCase7( unittest.TestCase ):
                         ParentFolder
         """
                 
-        mganame = "_tc7_A_sf.mga"
+        mganame = _adjacent_file("_tc7_A_sf.mga")
 
         # create the project with the needed kinds
         project = bd.creaP( mganame, "SF")
@@ -172,7 +176,7 @@ class TestCase7( unittest.TestCase ):
                         ParentFolder
         """
 
-        mganame = "_tc7_B_sf.mga"
+        mganame = _adjacent_file("_tc7_B_sf.mga")
 
         # create the project with the needed kinds
         project = bd.creaP( mganame, "SF")
@@ -307,7 +311,7 @@ class TestCase7( unittest.TestCase ):
                         PartByMetaPart
         """
         
-        mganame = "_tc7_C_sf.mga"
+        mganame = _adjacent_file("_tc7_C_sf.mga")
 
         # create the project with the needed kinds
         project = bd.creaP( mganame, "SF")
@@ -410,7 +414,7 @@ class TestCase7( unittest.TestCase ):
                 then modify and inquire once again using the variant put/getter AttributeByName
         """
 
-        mganame = "_tc7_D_sf.mga"
+        mganame = _adjacent_file("_tc7_D_sf.mga")
 
         # create the project with the needed kinds
         project = bd.creaP( mganame, "SF")
@@ -524,7 +528,7 @@ class TestCase7( unittest.TestCase ):
                 test put/get methods on double type FieldAttributes on a custom (FloatAttr) paradigm
         """
 
-        mganame = "_tc7_F_fl.mga"
+        mganame = _adjacent_file("_tc7_F_fl.mga")
 
         # create the project with the needed kinds
         project = bd.creaP( mganame, "FloatAttr")

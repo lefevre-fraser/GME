@@ -7,6 +7,10 @@ from GPyUnit.util import DispatchEx
 
 from GPyUnit.util import dec_disable_early_binding
 
+def _adjacent_file(file):
+    import os.path
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+
 class TestCase1( unittest.TestCase ):
 	"""
 	avoid if possible the overriding of __init__, yet if you override use the following form:
@@ -57,7 +61,7 @@ class TestCase1( unittest.TestCase ):
 			 ReferencedBy([out, retval] IMgaFCOs **pVal)
 		"""
 		
-		mganame = "_tc1_A_me.mga"
+		mganame = _adjacent_file("_tc1_A_me.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "MetaGME")
@@ -154,7 +158,7 @@ class TestCase1( unittest.TestCase ):
 			 MemberOfSets([out, retval] IMgaFCOs **pVal)
 		"""
 		
-		mganame = "_tc1_B_me.mga"
+		mganame = _adjacent_file("_tc1_B_me.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "MetaGME")
@@ -299,7 +303,7 @@ class TestCase1( unittest.TestCase ):
 			  References([out, retval] IMgaFCOs **pVal)
 
 		"""
-		mganame = "_tc1_C_me.mga"
+		mganame = _adjacent_file("_tc1_C_me.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "MetaGME")
@@ -504,7 +508,7 @@ class TestCase1( unittest.TestCase ):
 			  References([out, retval] IMgaFCOs **pVal)
 		"""
 		
-		mganame = "_tc1_D_sf.mga"
+		mganame = _adjacent_file("_tc1_D_sf.mga")
 
 		# create the project with the needed kinds
 		project = bd.creaP( mganame, "SF")

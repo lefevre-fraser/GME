@@ -7,6 +7,10 @@ import utils.Builder
 bd = utils.Builder
 from GPyUnit.util import DispatchEx
 
+def _adjacent_file(file):
+    import os.path
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+
 """
 tests properties of IMgaProject
 """
@@ -17,7 +21,7 @@ class TestCase2( unittest.TestCase ):
 	def setUp( self ):		## hook method: creates a new mga file all the times, and deletes one if existing
 		self.project = DispatchEx("Mga.MgaProject")
 		
-		self.mganame = "_tc2_all_sf.mga"
+		self.mganame = _adjacent_file("_tc2_all_sf.mga")
 
 		try:
 			os.remove( self.mganame)

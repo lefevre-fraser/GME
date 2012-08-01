@@ -7,6 +7,9 @@ import utils.Builder
 from GPyUnit.util import DispatchEx
 bd = utils.Builder
 
+def _adjacent_file(file):
+    import os.path
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
 
 class TestCase3( unittest.TestCase ):
 	def setUp( self ):		## hook method
@@ -25,7 +28,7 @@ class TestCase3( unittest.TestCase ):
 		"""
 
 		# this file will be created:
-		mganame = "_tc3_A_sf.mga"
+		mganame = _adjacent_file("_tc3_A_sf.mga")
 		project = DispatchEx("Mga.MgaProject")
 
 		try:
@@ -63,7 +66,7 @@ class TestCase3( unittest.TestCase ):
 		"""
 
 		# this file will be created:
-		mganame = "_tc4_B_sf.mga"
+		mganame = _adjacent_file("_tc4_B_sf.mga")
 		project = DispatchEx("Mga.MgaProject")
 
 		try:
