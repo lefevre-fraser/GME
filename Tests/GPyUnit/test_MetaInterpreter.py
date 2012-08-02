@@ -4,9 +4,9 @@ import os.path
 import GPyUnit.util
 from GPyUnit.util import DispatchEx
 
+_filedir = os.path.dirname(os.path.abspath(__file__))
 def _adjacent_file(file):
-    import os.path
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+    return os.path.join(_filedir, file)
 
 class TestMetaInterpreter(unittest.TestCase):
     def test_AttributeOrdering(self):
@@ -56,6 +56,40 @@ try:
 except NameError:
     pass # MU isn't tested under x64
 
+class TestCSharpDSMLGenerator(unittest.TestCase):
+    def test_run(self):
+        mga = GPyUnit.util.parse_xme(self.connstr)
+        try:
+            mga.Save()
+            selectedobj = DispatchEx("Mga.MgaFCOs")
+            launcher = DispatchEx("Mga.MgaLauncher")
+            launcher.RunComponent("Mga.Interpreter.MetaInterpreter", mga, None, selectedobj, 128)
+            launcher.RunComponent("Mga.Interpreter.CSharpDSMLGenerator", mga, None, selectedobj, 128)
+        finally:
+            mga.Close()
+        self.assertTrue(os.path.isfile(os.path.join(self.dsml_outdir, "ISIS.GME.Dsml.MetaGME.dll")))
+
+            
+    def tearDown(self):
+        for file in ("MetaGME.xmp", "MetaGME.mta", "MetaGME.xmp.log"):
+            if os.path.isfile(os.path.join(self.outdir(), file)):
+                os.unlink(os.path.join(self.outdir(), file))
+        for filename in ("AssemblySignature.snk", "ISIS.GME.Dsml.MetaGME.Classes.cs", "ISIS.GME.Dsml.MetaGME.dll", "ISIS.GME.Dsml.MetaGME.Interfaces.cs", "ISIS.GME.Dsml.MetaGME.xml", "ISIS.GME.Dsml.pdb"):
+            path = os.path.join(self.dsml_outdir, filename)
+            if os.path.isfile(path):
+                os.unlink(path)
+    setUp = tearDown
+    
+    @property
+    def dsml_outdir(self):
+        return os.getcwd()
+
+    @property
+    def connstr(self):
+        return "MGA=" + _adjacent_file("MetaInterpretertest.mga")
+    
+    def outdir(self):
+        return os.path.abspath(_adjacent_file('.'))
+
 if __name__ == "__main__":
     unittest.main()
-
