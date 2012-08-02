@@ -188,7 +188,10 @@ def compile_tools():
 
     sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "DsmlGenerator", "DsmlGenerator.sln")
     tools.build_VS(sln_file, "Release", arch='Any CPU')
-    if prefs['arch'] == 'x64': return
+    if prefs['arch'] == 'x64':
+        tools.system([r'%windir%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe', '/codebase',
+                      os.path.join(GME_ROOT, 'SDK', 'DotNet', 'DsmlGenerator', 'CSharpDsmlGenerator', 'bin', 'Release', 'CSharpDSMLGenerator.dll')])
+        return
 
     # Table Editor
     sln_file = os.path.join(GME_ROOT, "Tools", "TableEditor", "TableEditor.sln")
