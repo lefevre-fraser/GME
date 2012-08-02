@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright (c) 2006-2008 ISIS, Vanderbilt Univeristy 
+# Copyright (c) 2006-2008 ISIS, Vanderbilt University
 #
 # Author: Peter Volgyesi (peter.volgyesi@vanderbilt.edu)
 #
@@ -97,7 +97,7 @@ def update_version_str():
 
 def compile_GME():
     "Compile GME core components"
-    sln_file = os.path.join(GME_ROOT, "GME", "GME.sln");
+    sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
     tools.build_VS( sln_file, "Release" )
     sln_file = os.path.join(GME_ROOT, "GME", "GMEDecorators.sln")
     tools.build_VS( sln_file, "Release" )
@@ -132,7 +132,6 @@ def copy_if_newer(source, target):
 
 def compile_GME_PGO_Instrument():
     "Compile GME core components (PGO Instrument)"
-    import shutil
     import errno
     try:
         os.makedirs(_Release_PGO_dir())
@@ -167,16 +166,16 @@ def PGO_train():
 
 def compile_meta():
     "Compile MetaGME components"
-    sln_file = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "MetaGME.sln");
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "MetaGME", "MetaGME.sln")
     tools.build_VS( sln_file, "Release" )
-    cmd_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME");
+    cmd_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME")
     tools.system( ['call', 'regrelease.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
 
         
 def compile_JBON():
     "Compile Java component support (JBON)"
     if prefs['arch'] == 'x64': return
-    sln_file = os.path.join(GME_ROOT, "SDK", "Java", "native", "JavaSupport.sln");
+    sln_file = os.path.join(GME_ROOT, "SDK", "Java", "native", "JavaSupport.sln")
     tools.build_VS( sln_file, "Release" )
 
         
@@ -184,7 +183,7 @@ def compile_tools():
     "Compile external tool components"
     
     # Auto Layout
-    sln_file = os.path.join(GME_ROOT, "Tools", "AutoLayout", "AutoLayout.sln");
+    sln_file = os.path.join(GME_ROOT, "Tools", "AutoLayout", "AutoLayout.sln")
     tools.build_VS( sln_file, "Release" )
 
     sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "DsmlGenerator", "DsmlGenerator.sln")
@@ -192,11 +191,11 @@ def compile_tools():
     if prefs['arch'] == 'x64': return
 
     # Table Editor
-    sln_file = os.path.join(GME_ROOT, "Tools", "TableEditor", "TableEditor.sln");
+    sln_file = os.path.join(GME_ROOT, "Tools", "TableEditor", "TableEditor.sln")
     tools.build_VS( sln_file, "Release" )
     
     # GMEplink
-    sln_file = os.path.join(GME_ROOT, "Tools", "GMEplink", "GMEplink.sln");
+    sln_file = os.path.join(GME_ROOT, "Tools", "GMEplink", "GMEplink.sln")
     tools.build_VS( sln_file, "Release" )
 
     sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "CSharpComponentWizard", "CSharpComponentWizard.sln")
@@ -206,24 +205,24 @@ def compile_samples():
     "Compile sample components"
     
     # UML Paradigm
-    sln_file = os.path.join(GME_ROOT, "Paradigms", "UML", "decorator", "UMLDecorator.sln");
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "UML", "decorator", "UMLDecorator.sln")
     tools.build_VS( sln_file, "Release" )
 
     if prefs['arch'] == 'x64': return
 
-    sln_file = os.path.join(GME_ROOT, "SDK", "PatternProcessor", "PatternProcessor.sln");
+    sln_file = os.path.join(GME_ROOT, "SDK", "PatternProcessor", "PatternProcessor.sln")
     tools.build_VS( sln_file, "Release" )
     
     # SF Paradigm
-    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "SFInterpreter", "SFInterpreter.sln");
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "SFInterpreter", "SFInterpreter.sln")
     tools.build_VS( sln_file, "Release" )
-    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2SFSample", "BON2SFSample.sln");
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2SFSample", "BON2SFSample.sln")
     tools.build_VS( sln_file, "Release" )
-    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2SFInterpreter", "BON2SFInterpreter.sln");
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2SFInterpreter", "BON2SFInterpreter.sln")
     tools.build_VS( sln_file, "Release" )
     
     # HFSM Paradigm
-    sln_file = os.path.join(GME_ROOT, "Paradigms", "HFSM", "HFSMSimulator", "HFSMSimulator.sln");
+    sln_file = os.path.join(GME_ROOT, "Paradigms", "HFSM", "HFSMSimulator", "HFSMSimulator.sln")
     tools.build_VS( sln_file, "Release" )
     
 
@@ -300,7 +299,6 @@ def build_msms():
 def build_msi():
     "Build WiX installer (msi file)"
 
-    import glob
     # Build the msi file
     tools.build_WiX([os.path.join(GME_ROOT, "Install", "GME.wxs")])
    
@@ -455,7 +453,7 @@ try:
             continue
         if i in exclude_steps:
             continue
-        if start_step <= i and i <= end_step:
+        if start_step <= i <= end_step:
             do_step(i, build_steps[i])
 
     print "Build SUCCEEDED."

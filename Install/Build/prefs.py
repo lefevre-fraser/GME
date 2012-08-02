@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright (c) 2006-2008 ISIS, Vanderbilt Univeristy 
+# Copyright (c) 2006-2008 ISIS, Vanderbilt University
 #
 # Author: Peter Volgyesi (peter.volgyesi@vanderbilt.edu)
 #

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright (c) 2006 ISIS, Vanderbilt Univeristy 
+# Copyright (c) 2006 ISIS, Vanderbilt University
 #
 # Author: Peter Volgyesi (peter.volgyesi@vanderbilt.edu)
 #
@@ -214,8 +214,7 @@ def build_WiX(wix_files):
     fullpath = os.path.normpath(os.path.abspath(wix_files[0]))
     dirname = os.path.dirname(fullpath)
     filename = os.path.basename(fullpath)
-    (projectname, ext) = os.path.splitext(filename)
-    
+
     toolmsg("Building " + filename + " in " + dirname)
     wxi_files = filter(lambda file: file.find(".wxi") != -1, wix_files)
     mm_files = filter(lambda file: file.find(".wxs") != -1, wix_files)
