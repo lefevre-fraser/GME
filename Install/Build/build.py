@@ -186,6 +186,9 @@ def compile_tools():
     # Auto Layout
     sln_file = os.path.join(GME_ROOT, "Tools", "AutoLayout", "AutoLayout.sln");
     tools.build_VS( sln_file, "Release" )
+
+    sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "DsmlGenerator", "DsmlGenerator.sln")
+    tools.build_VS(sln_file, "Release", arch='Any CPU')
     if prefs['arch'] == 'x64': return
 
     # Table Editor
@@ -196,10 +199,7 @@ def compile_tools():
     sln_file = os.path.join(GME_ROOT, "Tools", "GMEplink", "GMEplink.sln");
     tools.build_VS( sln_file, "Release" )
 
-    sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "CSharpComponentWizard", "CSharpComponentWizard.sln");
-    tools.build_VS( sln_file, "Release" )
-
-    sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "DsmlGenerator", "DsmlGenerator.sln");
+    sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "CSharpComponentWizard", "CSharpComponentWizard.sln")
     tools.build_VS( sln_file, "Release" )
 
 def compile_samples():
