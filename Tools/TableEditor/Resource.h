@@ -23,9 +23,6 @@
 #define IDC_STATIC_SELECTION            224
 #define IDC_STATIC_FILTERS              225
 #define IDC_BTNIMPORT                   226
-#define ID_FILE_EXPORTAS                32768
-#define ID_FILE_IMPORT                  32769
-#define ID_FILE_EXPORT                  32770
 #define ID_VIEW_RECURSIVELYSHOWITEMS    32771
 
 // Next default values for new objects

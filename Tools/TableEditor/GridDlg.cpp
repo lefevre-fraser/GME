@@ -10,8 +10,8 @@
 #include "NewCellTypes/GridCellFCO.h"
 #include "NewCellTypes/GridCellMultiLine.h"
 #include "NewCellTypes/GridCellAttrName.h"
-#include "TableEditorParser.h"
-#include "TableEditorDumper.h"
+//#include "TableEditorParser.h"
+//#include "TableEditorDumper.h"
 #include <queue>
 #include "Console.h"
 
@@ -631,11 +631,8 @@ void CGridDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CGridDlg, CDialog)
 	//{{AFX_MSG_MAP(CGridDlg)
-	ON_COMMAND(ID_FILE_IMPORT, OnBtnImport)
-	ON_COMMAND(ID_FILE_EXPORT, OnBtnExport)
 	ON_COMMAND(ID_VIEW_RECURSIVELYSHOWITEMS, OnRecursivelyShowItems)
 	ON_WM_SIZE()
-	ON_BN_CLICKED(IDC_BTNEXPORT, OnBtnExport)
 	ON_BN_CLICKED(IDC_BTNDISP, OnButtonDisplay)
 	ON_BN_CLICKED(IDC_CHECKALLKINDS, OnCheckAllKinds)
 	ON_BN_CLICKED(IDC_CHKALLTYPES, OnChkAllTypes)
@@ -644,7 +641,6 @@ BEGIN_MESSAGE_MAP(CGridDlg, CDialog)
 	ON_BN_CLICKED(IDC_CHKMODEL, OnChkModel)
 	ON_BN_CLICKED(IDC_CHKREF, OnChkRef)
 	ON_BN_CLICKED(IDC_CHKSET, OnChkSet)
-	ON_BN_CLICKED(IDC_BTNIMPORT, OnBtnImport)
 	//}}AFX_MSG_MAP
     ON_NOTIFY(NM_DBLCLK, IDC_GRID, OnGridDblClick)
     ON_NOTIFY(NM_CLICK, IDC_GRID, OnGridClick)
@@ -997,96 +993,10 @@ void CGridDlg::MoveWndDown(CWnd *wnd, int offset)
 	wnd->MoveWindow(rect.left, rect.top+offset, rect.Width(), rect.Height(), FALSE);
 }
 
-
-
-void CGridDlg::OnBtnExport() 
-{
-	//Export to .xml file for use in MS Excel
-	CFileDialog FileSelector(FALSE,"xml",NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,"Excel formatted XML (*.xml)|*.xml||");
-	if(FileSelector.DoModal() == IDOK)
-	{
-		int MaxRows = m_Grid.GetRowCount();
-		int MaxCols = m_Grid.GetColumnCount();
-		CString cell_type;
-
-		TableEditorDumper dumper;  // creates dumper 
-		dumper.InitDump(FileSelector.GetPathName(),MaxCols,MaxRows); // adds in proper excel header
-		for( int i=0; i<MaxRows; i++ )
-		{
-			dumper.StartElem("Row");
-			for( int j=0; j<MaxCols; j++ )
-			{
-				CString ClassName = m_Grid.GetCell(i,j)->GetRuntimeClass()->m_lpszClassName; 
-				CString cell_entry = m_Grid.GetItemText(i,j);
-				CString cell_type = "String"; //default to String.
-				BOOL multi = FALSE;
-				BOOL boolean = FALSE;
-				
-				if( ClassName == "CGridCellComboBool" ) 
-				{
-					cell_type = "Boolean";
-					boolean = TRUE;
-				}
-				
-				if( ClassName == "CGridCellNumeric" || ClassName == "CGridCellDouble" ) 
-				{
-					cell_type = "Number";
-				}
-				
-				if( ClassName == "CGridCell" ) 
-				{
-					cell_type = "String";
-				}
-				
-				if( ClassName == "CGridCellMultiLine" ) 
-				{
-					cell_type = "String";
-					multi = TRUE;
-				}
-				
-				dumper.DumpCell(cell_type, cell_entry, multi, boolean);
-			}
-			
-			dumper.EndElem("Row");
-		}
-		
-		dumper.DoneDump();
-
-	}
-}
-
 void CGridDlg::OnRecursivelyShowItems()
 {
 	ShowItemsRecursively();
 }
-
-void CGridDlg::OnBtnImport() 
-{
-	CFileDialog FileSelector(TRUE,"xml",NULL, NULL,"EXCEL Exported XML (*.xml)|*.xml||");
-	if(FileSelector.DoModal() == IDOK)
-	{
-		try
-		{
-			CTableEditorParser parser(m_Project);
-			m_FCOs =  parser.ParseExcelXML(m_Project,FileSelector.GetPathName());
-			InitGrid();
-		}
-		catch(HRESULT)
-		{
-			//need better error handling
-			AfxMessageBox("A GME COM error occurred on import. Does this file match the current project?");
-			CDialog::OnCancel();
-			throw; //rethrow, for the user to get a more detailed message from GME
-		}
-		catch(const XMLException &)
-		{
-			CDialog::OnCancel();
-		}
-	
-	}
-	
-}
-
 
 	
 BOOL CGridDlg::GetMultiLine(CComPtr<IMgaMetaAttribute> p_Meta) 

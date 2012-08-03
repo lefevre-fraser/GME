@@ -95,7 +95,6 @@ protected:
 	//{{AFX_MSG(CGridDlg)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnBtnExport();
 	afx_msg void OnRecursivelyShowItems();
 	afx_msg void OnButtonDisplay();
 	afx_msg void OnCheckAllKinds();
@@ -105,7 +104,6 @@ protected:
 	afx_msg void OnChkModel();
 	afx_msg void OnChkRef();
 	afx_msg void OnChkSet();
-	afx_msg void OnBtnImport();
 	//}}AFX_MSG
 	afx_msg void OnGridDblClick(NMHDR *pNotifyStruct, LRESULT* pResult);
     afx_msg void OnGridClick(NMHDR *pNotifyStruct, LRESULT* pResult);
