@@ -67,7 +67,8 @@ void ClassLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMe
 		m_iFontKey = FONT_ABSTRACT;
 
 	VARIANT_BOOL isLibObject = VARIANT_TRUE;
-	pFCO->get_IsLibObject(&isLibObject);
+	if (pFCO)
+		pFCO->get_IsLibObject(&isLibObject);
 	m_bTextEditable = isLibObject == VARIANT_FALSE;
 }
 
