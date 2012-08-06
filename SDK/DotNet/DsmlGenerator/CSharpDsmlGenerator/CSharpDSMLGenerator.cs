@@ -242,16 +242,20 @@ namespace CSharpDSMLGenerator
                 //language = "javascript";
                 //language = "vj#";
 
-                // TODO: output dir....
+                string outputDir = ".";
+                if (project.ProjectConnStr.StartsWith("MGA="))
+                {
+                    outputDir = Path.GetDirectoryName(project.ProjectConnStr.Substring(4));
+                }
                 List<string> sourceFile = CodeDomGenerateCode(
                     CodeDomProvider.CreateProvider(language),
                     compileunit,
-                    project.Name,
+                    Path.Combine(outputDir, project.Name),
                     mode);
 
                 GMEConsole.Info.WriteLine("API has been generated.");
 
-                string dllFile = Generator.Configuration.ProjectNamespace + ".dll";
+                string dllFile = Path.Combine(outputDir, Generator.Configuration.ProjectNamespace + ".dll");
 
                 // Configure a CompilerParameters that links System.dll
                 // and produces the specified dll file.
@@ -268,7 +272,7 @@ namespace CSharpDSMLGenerator
                 // Generate a DLL file.
                 cp.GenerateExecutable = false;
 
-                using (FileStream fs = File.Create("AssemblySignature.snk"))
+                using (FileStream fs = File.Create(Path.Combine(outputDir, "AssemblySignature.snk")))
                 {
                     fs.Write(
                         CSharpDSMLGenerator.Properties.Resources.AssemblySignature,
@@ -276,9 +280,9 @@ namespace CSharpDSMLGenerator
                         CSharpDSMLGenerator.Properties.Resources.AssemblySignature.Length);
                 }
 
-                cp.CompilerOptions += " /debug /pdb:" + Generator.Configuration.ProjectNamespace;
-                cp.CompilerOptions += " /doc:" + Generator.Configuration.ProjectNamespace + ".xml";
-                cp.CompilerOptions += " /keyfile:AssemblySignature.snk";
+                cp.CompilerOptions += " /debug /pdb:" + Path.Combine(outputDir, Generator.Configuration.ProjectNamespace);
+                cp.CompilerOptions += " /doc:" + Path.Combine(outputDir, Generator.Configuration.ProjectNamespace) + ".xml";
+                cp.CompilerOptions += " /keyfile:" + Path.Combine(outputDir, "AssemblySignature.snk");
                 //cp.CompilerOptions += " /optimize";
 
                 // Invoke compilation.
@@ -349,6 +353,7 @@ namespace CSharpDSMLGenerator
             GeneratorMode mode = GeneratorMode.OneFile)
         {
             GMEConsole.Info.WriteLine("Generating source code.");
+            string outputDir = Path.GetDirectoryName(outputFileName);
 
             List<string> sourceFiles = new List<string>();
 
@@ -405,6 +410,7 @@ namespace CSharpDSMLGenerator
                     {
                         sourceFile = ns.Name + "." + provider.FileExtension;
                     }
+                    sourceFile = Path.Combine(outputDir, sourceFile);
 
                     CodeCompileUnit ccu = new CodeCompileUnit();
                     ccu.Namespaces.Add(ns);
@@ -449,6 +455,7 @@ namespace CSharpDSMLGenerator
                         {
                             sourceFile = nsNew.Name + "." + ctd.Name + "." + provider.FileExtension;
                         }
+                        sourceFile = Path.Combine(outputDir, sourceFile);
 
                         CodeCompileUnit ccu = new CodeCompileUnit();
                         ccu.Namespaces.Add(nsNew);

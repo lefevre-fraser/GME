@@ -67,22 +67,21 @@ class TestCSharpDSMLGenerator(unittest.TestCase):
             launcher.RunComponent("Mga.Interpreter.CSharpDSMLGenerator", mga, None, selectedobj, 128)
         finally:
             mga.Close()
-        self.assertTrue(os.path.isfile(os.path.join(self.dsml_outdir, "ISIS.GME.Dsml.MetaGME.dll")))
+        self.assertTrue(os.path.isfile(os.path.join(self.outdir(), "ISIS.GME.Dsml.MetaGME.Classes.cs")))
+        self.assertTrue(os.path.isfile(os.path.join(self.outdir(), "ISIS.GME.Dsml.MetaGME.dll")))
 
             
     def tearDown(self):
         for file in ("MetaGME.xmp", "MetaGME.mta", "MetaGME.xmp.log"):
             if os.path.isfile(os.path.join(self.outdir(), file)):
                 os.unlink(os.path.join(self.outdir(), file))
+        registrar = DispatchEx("Mga.MgaRegistrar")
+        registrar.RegisterParadigmFromData("XML=" + os.path.abspath(os.path.join(os.environ['GME_ROOT'], "Paradigms\\MetaGME\\MetaGME.xmp")), "MetaGME", 1)
         for filename in ("AssemblySignature.snk", "ISIS.GME.Dsml.MetaGME.Classes.cs", "ISIS.GME.Dsml.MetaGME.dll", "ISIS.GME.Dsml.MetaGME.Interfaces.cs", "ISIS.GME.Dsml.MetaGME.xml", "ISIS.GME.Dsml.pdb"):
-            path = os.path.join(self.dsml_outdir, filename)
+            path = os.path.join(self.outdir(), filename)
             if os.path.isfile(path):
                 os.unlink(path)
     setUp = tearDown
-    
-    @property
-    def dsml_outdir(self):
-        return os.getcwd()
 
     @property
     def connstr(self):
