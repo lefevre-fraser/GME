@@ -280,14 +280,15 @@ namespace CSharpDSMLGenerator
                         CSharpDSMLGenerator.Properties.Resources.AssemblySignature.Length);
                 }
 
-                cp.CompilerOptions += " /debug /pdb:" + Path.Combine(outputDir, Generator.Configuration.ProjectNamespace);
-                cp.CompilerOptions += " /doc:" + Path.Combine(outputDir, Generator.Configuration.ProjectNamespace) + ".xml";
-                cp.CompilerOptions += " /keyfile:" + Path.Combine(outputDir, "AssemblySignature.snk");
+                cp.CompilerOptions += " /debug /pdb:\"" + Path.Combine(outputDir, Generator.Configuration.ProjectNamespace) + "\"";
+                cp.CompilerOptions += " /doc:\"" + Path.Combine(outputDir, Generator.Configuration.ProjectNamespace) + ".xml\"";
+                cp.CompilerOptions += " /keyfile:\"" + Path.Combine(outputDir, "AssemblySignature.snk") + "\"";
                 //cp.CompilerOptions += " /optimize";
 
                 // Invoke compilation.
-                CompilerResults cr = CodeDomProvider.CreateProvider(language).
-                    CompileAssemblyFromFile(cp, sourceFile.ToArray());
+                //CompilerResults cr = CodeDomProvider.CreateProvider(language).
+                //CompileAssemblyFromFile(cp, sourceFile.ToArray());
+                CompilerResults cr = CodeDomProvider.CreateProvider(language).CompileAssemblyFromDom(cp, compileunit);
 
                 GMEConsole.Info.WriteLine("Compiling source code.");
 
