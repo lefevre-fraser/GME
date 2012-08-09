@@ -679,9 +679,11 @@ bool Component::nameSelector()
 		FCO resp( it_1->getRespPointer());
 		
 		EquivBag_Iterator it_2 = m_equivBag.find( fco);
-		if( it_2 == m_equivBag.end()) continue;
+		if( it_2 == m_equivBag.end())
+			continue;
 		
-		if( !resp) resp = fco;
+		if( !resp)
+			resp = fco;
 
 		// m_equivBag[ fco] already exists , is not empty
 		// it_2->first = fco
@@ -706,6 +708,7 @@ bool Component::nameSelector()
 		bool is_any_alternative = false;
 		bool is_def_among_names = false; // when the equivalance's name is used, that is not among the equivs
 		bool is_reg_among_names = false; // check whether the registry value is among the valid choices
+		std::string anyDispName;
 		std::set < ObjPointer >::iterator jt = it_2->second.begin();
 		for( ; jt != it_2->second.end(); ++jt)
 		{
@@ -720,6 +723,16 @@ bool Component::nameSelector()
 
 				if( eqname == regname)
 					is_reg_among_names = true;
+
+				std::string tmpDispName = (*jt)->getAttribute( Any::DisplayedName_str)->getStringValue();
+				if (tmpDispName != "")
+				{
+					if (anyDispName != "" && anyDispName != tmpDispName)
+					{
+						is_any_alternative = true;
+					}
+					anyDispName = tmpDispName;
+				}
 			}
 		}
 
@@ -747,6 +760,10 @@ bool Component::nameSelector()
 					dlg->m_map[ fco].insert( *jt);
 				}
 			}
+		}
+		else if (is_def_among_names)
+		{
+			it_1->setDispName(anyDispName);
 		}
 	}
 
