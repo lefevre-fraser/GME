@@ -90,5 +90,9 @@ class TestCSharpDSMLGenerator(unittest.TestCase):
     def outdir(self):
         return os.path.abspath(_adjacent_file('.'))
 
+if GPyUnit.util._opts.Dispatch_x64:
+    del TestCSharpDSMLGenerator
+    #FIXME: TestCSharpDSMLGenerator on x64 make PGO fail
+        
 if __name__ == "__main__":
     unittest.main()

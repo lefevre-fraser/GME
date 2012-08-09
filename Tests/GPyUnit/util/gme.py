@@ -12,6 +12,8 @@ import runpy
 import subprocess
 import itertools
 
+from GPyUnit.util import DispatchEx
+
 
 if platform.system() != 'Java':
     # Disable early binding: full of race conditions writing the cache files,
@@ -106,7 +108,7 @@ def run_interpreter_with_focusobj(interpreter, file, focusobj=None, selectedobj=
 # MGAUTILLib.regaccessmode_enum.REGACCESS_BOTH = 3
 def get_paradigm_file(paradigm, regaccess=3):
 	"Returns the .mta file for a given registered paradigm"
-	registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
+	registrar = DispatchEx("Mga.MgaRegistrar")
 	guid = registrar.GetParadigmGUIDStringDisp(regaccess, paradigm)
 	import uuid
 	if platform.system() != 'Java':
@@ -120,7 +122,7 @@ def get_paradigm_file(paradigm, regaccess=3):
 
 
 def _associate(progid, paradigm, regaccess):
-	registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
+	registrar = DispatchEx("Mga.MgaRegistrar")
 	registrar.Associate(progid, paradigm, regaccess)
 
 @maybe_elevate()
@@ -137,7 +139,7 @@ def associate(progid, paradigm, regaccess=1):
 
 
 def is_registered(paradigm):
-	registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
+	registrar = DispatchEx("Mga.MgaRegistrar")
 	paradigms = []
 	# REGACCESS_USER = 1
 	paradigms.extend(registrar.GetParadigmsDisp(1))
@@ -191,7 +193,7 @@ def _regxmp(xmpfile, regaccess):
 	REG_USER = 1
 	REG_SYSTEM = 2
 	REG_BOTH = 3
-	registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
+	registrar = DispatchEx("Mga.MgaRegistrar")
 	if os.path.splitext(xmpfile)[1].lower() == ".xmp":
 		registrar.RegisterParadigmFromData("XML=" + os.path.abspath(xmpfile), "", regaccess)
 	else:
@@ -235,7 +237,7 @@ def mga2xme(mgafile, xmefile=None):
 def register_component(file, warn_on_tlb_error=None):
 	'''Register a GME component .dll'''
 # TODO: on Vista or 7 we need to start an elevated registrar
-	registrar = win32com.client.DispatchEx("Mga.MgaRegistrar")
+	registrar = DispatchEx("Mga.MgaRegistrar")
 	# REGACCESS_BOTH	= 3,
 	registrar.RegisterComponentLibrary(file, 3)
 
@@ -378,7 +380,7 @@ class Project():
 		if extension == ".mga":
 			self.project.Save("MGA=" + filename)
 		elif extension == ".xme":
-			dumper = win32com.client.DispatchEx("Mga.MgaDumper")
+			dumper = DispatchEx("Mga.MgaDumper")
 			dumper.DumpProject(self.project, filename)
 		else:
 			raise Exception("Don't know how to save '%s'" % filename)
@@ -401,17 +403,17 @@ class Project():
 	
 	def run_interpreter(self, interpreter, focusobj=None, selectedobj=None, param=0):
 		if not selectedobj:
-			selectedobj=win32com.client.DispatchEx("Mga.MgaFCOs")
+			selectedobj=DispatchEx("Mga.MgaFCOs")
 		self.commit_transaction()
 		try:
-			launcher = win32com.client.DispatchEx("Mga.MgaLauncher")
+			launcher = DispatchEx("Mga.MgaLauncher")
 			launcher.RunComponent(interpreter, self.project, focusobj, selectedobj, param)
 		finally:
 			self.begin_transaction()
 
 	@staticmethod
 	def create(mgafile, paradigm):
-		project = win32com.client.DispatchEx("Mga.MgaProject")
+		project = DispatchEx("Mga.MgaProject")
 		create_project(project, "MGA=" + mgafile, paradigm)
 		p = Project(project)
 		p.filename = mgafile
@@ -425,15 +427,15 @@ class Project():
 		extension = os.path.splitext(file)[1]
 		mga = None
 		if extension == ".mga":
-			mga = win32com.client.DispatchEx("Mga.MgaProject")
+			mga = DispatchEx("Mga.MgaProject")
 			mga.Open("MGA=" + file)
 			mga_to_save = file
 		elif extension == ".xme":
-			xme = win32com.client.DispatchEx("Mga.MgaParser")
+			xme = DispatchEx("Mga.MgaParser")
 			(paradigm, parversion, parguid, basename, ver) = xme.GetXMLInfo(file)
 
-			mga = win32com.client.DispatchEx("Mga.MgaProject")
-			xme = win32com.client.DispatchEx("Mga.MgaParser")
+			mga = DispatchEx("Mga.MgaProject")
+			xme = DispatchEx("Mga.MgaParser")
 			if mga_to_save == True:
 				mga_to_save = os.path.splitext(file)[0] + ".mga"
 			elif not mga_to_save:
@@ -450,7 +452,7 @@ class Project():
 
 def print_paradigm(xmefile):
 	"Print the input file and paradigm of a given xme"
-	xme = win32com.client.DispatchEx("Mga.MgaParser")
+	xme = DispatchEx("Mga.MgaParser")
 	(paradigm, parversion, parguid, basename, ver) = xme.GetXMLInfo(xmefile)
 	print xmefile
 	print paradigm
