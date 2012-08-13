@@ -1408,6 +1408,10 @@ STDMETHODIMP CMgaProject::AbortTransaction() {
 			notifyobjs.front()->objforgetnotify();
 			notifyobjs.pop();
 		}
+		while(!temporalobjs.empty()) {
+			temporalobjs.front()->objforgetchange();
+			temporalobjs.pop();
+		}
 		read_only = true;
 		{
 			CComPtr<IMgaTerritory> t;
