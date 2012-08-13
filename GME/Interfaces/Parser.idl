@@ -55,6 +55,19 @@ interface IMgaDumper : IDispatch
 
 [
 	object,
+	uuid(3813768B-5A4C-477D-BCD5-1776089948EC),
+	dual,
+	helpstring("IMgaDumper2 Interface"),
+	pointer_default(unique)
+]
+interface IMgaDumper2 : IMgaDumper
+{
+	HRESULT DumpProject2([in] IMgaProject *p, [in] BSTR xmlfile, ULONGLONG hwndParent);
+	HRESULT DumpFCOs2([in] IMgaProject *proj,[in] IMgaFCOs *p, [in] IMgaFolders *f, [in] IMgaRegNodes *r, [in] BSTR xmlfile, ULONGLONG hwndParent);
+}
+
+[
+	object,
 	uuid(94D6FB53-1F7C-11D4-B3D0-005004D38590),
 	dual,
 	helpstring("IMgaParser Interface"),
@@ -82,3 +95,16 @@ interface IMgaParser : IDispatch
 
 };
 
+[
+	object,
+	uuid("E39BEA37-384D-423B-ADDF-2BB13550F577"),
+	dual,
+	helpstring("IMgaParser2 Interface"),
+	pointer_default(unique)
+]
+interface IMgaParser2 : IMgaParser
+{
+	HRESULT ParseProject2([in] IMgaProject *p, [in] BSTR xmlfile, ULONGLONG hwndParent);
+	HRESULT ParseFCOs2([in] IMgaObject *here, [in] BSTR xmlfile, ULONGLONG hwndParent);
+	HRESULT GetXMLParadigm([in] BSTR xmlfile, [out] BSTR *Paradigm);
+};

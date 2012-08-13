@@ -136,6 +136,12 @@ void CMgaDumper::DoneDump(bool abort)
 
 STDMETHODIMP CMgaDumper::DumpProject(IMgaProject *p, BSTR xmlfile)
 {
+	return DumpProject2(p, xmlfile, NULL);
+}
+
+STDMETHODIMP CMgaDumper::DumpProject2(IMgaProject *p, BSTR xmlfile, ULONGLONG hwndParent)
+{
+	// TODO: progress bar
 	CHECK_IN(p);
 	m_dumpGuids = true; // dump GUIDs with the whole project
 	m_closureDump = false;
@@ -158,6 +164,11 @@ STDMETHODIMP CMgaDumper::DumpProject(IMgaProject *p, BSTR xmlfile)
 }
 
 STDMETHODIMP CMgaDumper::DumpFCOs(IMgaProject *proj, IMgaFCOs *p, IMgaFolders *f, IMgaRegNodes *r, BSTR xmlfile)
+{
+	return DumpFCOs2(proj, p, f, r, xmlfile, NULL);
+}
+
+STDMETHODIMP CMgaDumper::DumpFCOs2(IMgaProject *proj, IMgaFCOs *p, IMgaFolders *f, IMgaRegNodes *r, BSTR xmlfile, ULONGLONG hwndParent)
 {
 	m_dumpGuids = false; // while dumping selected FCOs do NOT dump guids of the fco's
 	m_closureDump = false;

@@ -2020,7 +2020,11 @@ void CGMEApp::OnFileExportxml()
 		CGMEEventLogger::LogGMEEvent(dlg.GetPathName()+_T("\r\n"));
 
 		CWaitCursor wait;
-		COMTHROW( dumper->DumpProject(theApp.mgaProject,PutInBstr(dlg.GetPathName())) );
+		IMgaDumper2Ptr dumper2 = (IMgaDumper*)dumper;
+		if (dumper2 && m_pMainWnd)
+			dumper2->__DumpProject2(theApp.mgaProject, _bstr_t(dlg.GetPathName()), (ULONGLONG)(m_pMainWnd->GetSafeHwnd()));
+		else
+			dumper->__DumpProject(theApp.mgaProject, _bstr_t(dlg.GetPathName()));
 
 		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( _T("Project successfully exported into ")) + dlg.GetPathName() + _T("."), 1);
 	}
@@ -2225,7 +2229,11 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 
 		CString file_name = fullPath;
 		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( _T("Importing ")) + file_name + _T("..."), 1);
-		COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(fullPath)) );
+		IMgaParser2Ptr parser2 = (IMgaParser*)parser;
+		if (parser2 && m_pMainWnd)
+			COMTHROW(parser2->ParseProject2(theApp.mgaProject,PutInBstr(fullPath), (ULONGLONG)(m_pMainWnd->GetSafeHwnd())));
+		else
+			COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(fullPath)) );
 		
 		// mgaproject has been filled with data, let's update title:
 		UpdateProjectName();
@@ -2333,7 +2341,11 @@ void CGMEApp::OnFileXMLUpdate()
 		COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
 		ASSERT( parser != NULL );
 	    if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
-	    COMTHROW(parser->ParseProject(mgaProject, PutInBstr(CString(xmlname))) );
+		IMgaParser2Ptr parser2 = (IMgaParser*)parser;
+		if (parser2 && m_pMainWnd)
+			COMTHROW(parser2->ParseProject2(mgaProject,PutInBstr(CString(xmlname)), (ULONGLONG)(m_pMainWnd->GetSafeHwnd())));
+		else
+			COMTHROW(parser->ParseProject(mgaProject,PutInBstr(CString(xmlname))) );
 		{
 			CString buf = CString(_T("The model has been updated\nCurrent ID: "))
 				+ currentguid + L"\nThe original model has been saved to " + backupname;
@@ -2929,7 +2941,12 @@ void CGMEApp::ImportDroppedFile(const CString& fname)
 		CWaitCursor wait;
 		if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
 
-		COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(file_name)) );
+
+		IMgaParser2Ptr parser2 = (IMgaParser*)parser;
+		if (parser2 && m_pMainWnd)
+			COMTHROW(parser2->ParseProject2(theApp.mgaProject,PutInBstr(file_name), (ULONGLONG)(m_pMainWnd->GetSafeHwnd())));
+		else
+			COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(file_name)) );
 		
 		// mgaproject has been filled with data, let's update title:
 		UpdateProjectName();

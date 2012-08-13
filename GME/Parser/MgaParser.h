@@ -31,8 +31,8 @@ class CompareCComObj
 class ATL_NO_VTABLE CMgaParser : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaParser, &CLSID_MgaParser>,
-	public ISupportErrorInfoImpl<&IID_IMgaParser>,
-	public IDispatchImpl<IMgaParser, &IID_IMgaParser, &LIBID_MGAParserLib>,
+	public ISupportErrorInfoImpl2<&IID_IMgaParser, &IID_IMgaParser2>,
+	public IDispatchImpl<IMgaParser2, &IID_IMgaParser2, &LIBID_MGAParserLib, 1, 1>,
 	public IGMEVersionInfoImpl,
 	public CGenParser
 {
@@ -47,8 +47,9 @@ DECLARE_REGISTRY_RESOURCEID(IDR_MGAPARSER)
 DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 BEGIN_COM_MAP(CMgaParser)
-	COM_INTERFACE_ENTRY(IMgaParser)
-	COM_INTERFACE_ENTRY(IDispatch)
+	COM_INTERFACE_ENTRY2(IMgaParser, IMgaParser2)
+	COM_INTERFACE_ENTRY2(IDispatch, IMgaParser2)
+	COM_INTERFACE_ENTRY(IMgaParser2)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
@@ -57,11 +58,14 @@ END_COM_MAP()
 
 public:
 	STDMETHOD(GetXMLInfo)(BSTR filename, BSTR *paradigm, BSTR* parversion, VARIANT *parguid, BSTR* basename, BSTR* version);
+	STDMETHOD(GetXMLParadigm)(BSTR filename, BSTR *paradigm);
 	STDMETHOD(GetClipXMLInfo)(BSTR filename, IMgaObject *target, VARIANT_BOOL *isacceptable, BSTR* p_acckind, BSTR* p_version);
 	STDMETHOD(ParseFCOs)(IMgaObject *p, BSTR filename);
+	STDMETHOD(ParseFCOs2)(IMgaObject *p, BSTR filename, ULONGLONG hwndParent);
 	STDMETHOD(ParseClos1)(IMgaObject *p, BSTR filename); // basic
 	STDMETHOD(ParseClos4)(IMgaObject *p, BSTR filename, int options); // smart
 	STDMETHOD(ParseProject)(IMgaProject *p, BSTR filename);
+	STDMETHOD(ParseProject2)(IMgaProject *p, BSTR filename, ULONGLONG hwndParent);
 
 	std::tstring GetClipXMLInfo2();
 

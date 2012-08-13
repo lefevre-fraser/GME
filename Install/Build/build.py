@@ -295,8 +295,7 @@ def build_msms():
     import glob
     tools.build_WiX([]
         + [file for file in glob.glob(os.path.join(GME_ROOT, "Install", "*.wxs")) if file.find('GME.wxs') == -1 ]
-        + glob.glob(os.path.join(GME_ROOT, "Install", "PIAs", "*.wxi"))
-        + glob.glob(os.path.join(GME_ROOT, "Install", "PIAs_1.0.1.0", "*.wxi"))
+        + glob.glob(os.path.join(GME_ROOT, "Install", "PIA*/*.wxi"))
         )
 
 def build_msi():

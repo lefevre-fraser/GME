@@ -15,6 +15,11 @@ const TCHAR * magic_exit_str = _T("Analysis done.Quit parsing.");
 
 STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 {
+	return ParseFCOs2(here, filename, NULL);
+}
+
+STDMETHODIMP CMgaParser::ParseFCOs2(IMgaObject *here, BSTR filename, ULONGLONG hwndParent_)
+{
 	CHECK_IN(here);
 	m_maintainGuids = false;
 
@@ -22,9 +27,13 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 	{
 		CloseAll();
 
-		COMTHROW( progress.CoCreateInstance(L"Mga.MgaProgressDlg") );
-		COMTHROW( progress->SetTitle(_bstr_t(L"Importing XML file...")) );
-		COMTHROW( progress->StartProgressDialog(NULL) );
+		HWND hwndParent = (HWND)hwndParent_;
+		if (hwndParent != 0)
+		{
+			COMTHROW( progress.CoCreateInstance(L"Mga.MgaProgressDlg") );
+			COMTHROW( progress->SetTitle(_bstr_t(L"Importing XML file...")) );
+			COMTHROW( progress->StartProgressDialog(hwndParent) );
+		}
 
 		CComObjPtr<IMgaProject> p;
 		COMTHROW( here->get_Project(PutOut(p)) );
@@ -146,7 +155,14 @@ STDMETHODIMP CMgaParser::ParseFCOs(IMgaObject *here, BSTR filename)
 	return S_OK;
 }
 
+
+
 STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
+{
+	return ParseProject2(p, filename, 0);
+}
+
+STDMETHODIMP CMgaParser::ParseProject2(IMgaProject *p, BSTR filename, ULONGLONG hwndParent_)
 {
 	CHECK_IN(p);
 	m_maintainGuids = true; //will be set to false if p is NOT empty
@@ -155,9 +171,13 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 	{
 		CloseAll();
 
-		COMTHROW( progress.CoCreateInstance(L"Mga.MgaProgressDlg") );
-		COMTHROW( progress->SetTitle(_bstr_t(L"Importing XML file...")) );
-		COMTHROW( progress->StartProgressDialog(NULL) );
+		HWND hwndParent = (HWND)hwndParent_;
+		if (hwndParent != 0)
+		{
+			COMTHROW( progress.CoCreateInstance(L"Mga.MgaProgressDlg") );
+			COMTHROW( progress->SetTitle(_bstr_t(L"Importing XML file...")) );
+			COMTHROW( progress->StartProgressDialog(hwndParent) );
+		}
 
 
 		project = p;
@@ -295,6 +315,11 @@ STDMETHODIMP CMgaParser::ParseProject(IMgaProject *p, BSTR filename)
 		return e.hr;
 	}
 	return S_OK;
+}
+
+STDMETHODIMP CMgaParser::GetXMLParadigm(BSTR filename, BSTR *paradigm)
+{
+	return GetXMLInfo(filename, paradigm, _bstr_t().GetAddress(), _variant_t().GetAddress(), _bstr_t().GetAddress(), _bstr_t().GetAddress());
 }
 
 STDMETHODIMP CMgaParser::GetXMLInfo(BSTR filename, BSTR *paradigm, BSTR* parversion, VARIANT *parguid, BSTR* basename, BSTR* version) {

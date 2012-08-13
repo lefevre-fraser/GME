@@ -22,6 +22,4 @@
   <?define lib='lib'?>
   <?define bin='bin'?>
   <?endif ?>
-
-  <?define InteropDir='..\GME\DotNetPIAs' ?>
 </Include>

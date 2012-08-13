@@ -73,6 +73,18 @@ public:
 	~XMLPlatformUtilsTerminate_RAII() { xercesc_3_1::XMLPlatformUtils::Terminate(); }
 };
 
+template <const IID* piid1, const IID* piid2>
+class ATL_NO_VTABLE ISupportErrorInfoImpl2 : 
+	public ISupportErrorInfo
+{
+public:
+	STDMETHOD(InterfaceSupportsErrorInfo)(_In_ REFIID riid)
+	{
+		return (InlineIsEqualGUID(riid,*piid1) || InlineIsEqualGUID(riid,*piid2)) ? S_OK : S_FALSE;
+	}
+};
+
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

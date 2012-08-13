@@ -295,7 +295,11 @@ void CGMEOLEApp::ImportProject(LPCTSTR connstr)
 
 		if(theApp.mgaConstMgr) COMTHROW(theApp.mgaConstMgr->Enable(false));
 
-		COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(CString(connstr))) );
+		IMgaParser2Ptr parser2 = (IMgaParser*)parser;
+		if (parser2 && theApp.m_pMainWnd)
+			COMTHROW(parser2->ParseProject2(theApp.mgaProject,PutInBstr(CString(connstr)), (ULONGLONG)(theApp.m_pMainWnd->GetSafeHwnd())));
+		else
+			COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(CString(connstr))) );
 
 	}
 	catch (hresult_exception &){

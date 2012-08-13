@@ -1,6 +1,7 @@
 import unittest
 import os
 import GPyUnit.util
+from GPyUnit.util import DispatchEx
 
 def _adjacent_file(file):
     import os.path
@@ -28,6 +29,17 @@ class TestParser(unittest.TestCase):
     def connstr(self):
         return "MGA=" + _adjacent_file("parsertest.mga")
 
+    def test_GetXMLParadigm(self):
+        parser = DispatchEx("Mga.MgaParser")
+        paradigm = parser.GetXMLParadigm(os.environ['GME_ROOT'] + r"\Paradigms\MetaGME\MetaGME-model.xme")
+        assert paradigm == "MetaGME"
+       
+    def test_GetXMLInfo(self):
+        parser = DispatchEx("Mga.MgaParser")
+        xme = os.environ['GME_ROOT'] + r"\Paradigms\MetaGME\MetaGME-model.xme"
+        (paradigm, parversion, parguid, basename, ver) = parser.GetXMLInfo(xme)
+        assert paradigm == "MetaGME"
+    
 GPyUnit.util.MUGenerator(globals(), TestParser)
 
 if __name__ == "__main__":

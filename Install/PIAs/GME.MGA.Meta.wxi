@@ -6,7 +6,7 @@
     <Fragment>
         <ComponentGroup Id="GME.MGA.Meta">
             <Component Id="GME.MGA.Meta.dll" Directory="INSTALLDIR_PARADIGMS32" Guid="{0BE9DD47-1FEB-4492-88E7-0172D9AA4A30}" Permanent="yes">
-                <File Id="GME.MGA.Meta.dll" KeyPath="yes" Source="$(var.PIADir)\GME.MGA.Meta.dll" Assembly=".net"  />
+                <File Id="GME.MGA.Meta.dll" KeyPath="yes" Source="$(var.PIADir.1.0.0.0)\GME.MGA.Meta.dll" Assembly=".net"  />
                 <Condition>NETFRAMEWORK</Condition>
             </Component>
         </ComponentGroup>

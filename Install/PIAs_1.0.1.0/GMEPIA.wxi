@@ -8,7 +8,7 @@
     <Fragment>
         <ComponentGroup Id="GME.1.0.1.0">
             <Component Id="cmp1D1602EEEE2DA94C4F88B4DAC0EBDB6F" Directory="PIADIR.1.0.1.0" Guid="{0CD246D6-8928-4F46-B85C-876EE769BCDE}" Permanent="yes">
-                <File Id="fil389AF60539FC47530EE6BAEE49125C9D" KeyPath="yes" Source="$(var.PIADir.1.0.1.0)\GME.dll" Assembly=".net"/>
+                <File Id="fil389AF60539FC47530EE6BAEE49125C9D" KeyPath="yes" Source="$(var.PIADir)\GME.dll" Assembly=".net"/>
                 <Condition>NETFRAMEWORK</Condition>
                 <RegistryValue Root="HKCR" Key="CLSID\{05403CF4-5C53-49D4-8F63-ED37870ABF1F}\InprocServer32\1.0.1.0" Name="Class" Value="GME.CollectionClass" Type="string" Action="write" />
                 <RegistryValue Root="HKCR" Key="CLSID\{05403CF4-5C53-49D4-8F63-ED37870ABF1F}\InprocServer32\1.0.1.0" Name="Assembly" Value="GME, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />

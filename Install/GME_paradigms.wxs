@@ -11,6 +11,12 @@
         Manufacturer='Vanderbilt University, ISIS'
         InstallerVersion='300' Languages='1033' SummaryCodepage='1252'
         InstallPrivileges='elevated' InstallScope='perMachine'/>
+    
+        <PropertyRef Id="NETFRAMEWORK20"/>
+        <PropertyRef Id="NETFRAMEWORK40FULL"/>
+        <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
+        <!-- used by PIAs -->
+        <Property Id="NETFRAMEWORK">NETFRAMEWORK20 OR NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Property><!-- FIXME: doesnt work -->
 
     <!-- =========================================================== -->
     <!-- DIRECTORY STRUCTURE -->
@@ -55,6 +61,7 @@
     <ComponentGroupRef Id='GME.MGA.Core.1.0.1.0'/>
     <ComponentGroupRef Id='GME.MGA.Meta.1.0.1.0'/>
     <ComponentGroupRef Id='GME.MGA.Parser.1.0.1.0'/>
+    <ComponentGroupRef Id='GME.MGA.Parser.1.1.0.0'/>
     <ComponentGroupRef Id='GME.Util.1.0.1.0'/>
     <ComponentGroupRef Id='GME'/>
     <ComponentGroupRef Id='GME.MGA'/>

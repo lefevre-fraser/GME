@@ -48,9 +48,6 @@ STDMETHODIMP CMgaProgressDlg::SetLine(int line, BSTR msg)
 
 STDMETHODIMP CMgaProgressDlg::StartProgressDialog(HWND hwndParent)
 {
-	if( dlg.m_hWnd != NULL )
-		COMRETURN(E_INVALID_USAGE);
-
 	AFX_MANAGE_STATE(AfxGetStaticModuleState())
 
 	CWnd *win = hwndParent == NULL ? AfxGetMainWnd() : CWnd::FromHandle(hwndParent);
@@ -63,8 +60,26 @@ STDMETHODIMP CMgaProgressDlg::StartProgressDialog(HWND hwndParent)
 	dlg.GetDlgItem(nIDs[0])->SetWindowText(lines[0]);
 	dlg.GetDlgItem(nIDs[1])->SetWindowText(lines[1]);
 
+	// center the dialog
+	if (win->GetSafeHwnd() != NULL)
+	{
+		CRect rcOwner, rcDlg, rc;
+		dlg.GetWindowRect(rcDlg);
+		win->GetWindowRect(rcOwner);
+		CopyRect(&rc, &rcOwner); 
+
+		OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top); 
+		OffsetRect(&rc, -rc.left, -rc.top); 
+		OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom); 
+
+		SetWindowPos(dlg.GetSafeHwnd(), HWND_TOP, rcOwner.left + (rc.right / 2), rcOwner.top + (rc.bottom / 2), 0, 0, SWP_NOSIZE); 
+	}
+
 	dlg.ShowWindow(SW_SHOWNORMAL);
 	dlg.UpdateWindow();
+
+	if (hwndParent)
+		dlg.GetParent()->EnableWindow(FALSE);
 
 	return S_OK;
 }
@@ -120,6 +135,8 @@ STDMETHODIMP CMgaProgressDlg::StopProgressDialog()
 {
 	if( dlg.m_hWnd == NULL )
 		COMRETURN(E_INVALID_USAGE);
+
+	dlg.GetParent()->EnableWindow(TRUE);
 
 	HWND hwnd = dlg.m_hWnd;
 	dlg.Detach();

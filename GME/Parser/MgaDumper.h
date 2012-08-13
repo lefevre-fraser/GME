@@ -35,8 +35,8 @@ class GmeEqual
 class ATL_NO_VTABLE CMgaDumper : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaDumper, &CLSID_MgaDumper>,
-	public ISupportErrorInfoImpl<&IID_IMgaDumper>,
-	public IDispatchImpl<IMgaDumper, &IID_IMgaDumper, &LIBID_MGAParserLib>,
+	public ISupportErrorInfoImpl2<&IID_IMgaDumper, &IID_IMgaDumper2>,
+	public IDispatchImpl<IMgaDumper2, &IID_IMgaDumper2, &LIBID_MGAParserLib, 1, 1>,
 	public IGMEVersionInfoImpl
 {
 public:
@@ -50,11 +50,10 @@ public:
 	{ }
 
 DECLARE_REGISTRY_RESOURCEID(IDR_MGADUMPER)
-DECLARE_PROTECT_FINAL_CONSTRUCT()
-
 BEGIN_COM_MAP(CMgaDumper)
-	COM_INTERFACE_ENTRY(IMgaDumper)
-	COM_INTERFACE_ENTRY(IDispatch)
+	COM_INTERFACE_ENTRY2(IMgaDumper, IMgaDumper2)
+	COM_INTERFACE_ENTRY2(IDispatch, IMgaDumper2)
+	COM_INTERFACE_ENTRY(IMgaDumper2)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
@@ -66,7 +65,9 @@ public:
 	void DoneDump(bool abort);
 
 	STDMETHOD(DumpProject)(IMgaProject *p, BSTR xmlfile);
+	STDMETHOD(DumpProject2)(IMgaProject *p, BSTR xmlfile, ULONGLONG hwndParent);
 	STDMETHOD(DumpFCOs)(IMgaProject *proj, IMgaFCOs *p, IMgaFolders *f, IMgaRegNodes *r, BSTR xmlfile);
+	STDMETHOD(DumpFCOs2)(IMgaProject *proj, IMgaFCOs *p, IMgaFolders *f, IMgaRegNodes *r, BSTR xmlfile, ULONGLONG hwndParent);
 	STDMETHOD(DumpClos)( IMgaFCOs *sel_fco, IMgaFolders *sel_fold, BSTR xmlfile, int lib_stub);
 	STDMETHOD(DumpClosR)( IMgaFCOs *sel_fco, IMgaFolders *sel_fold, BSTR xmlfile, IMgaFCOs *top_fco, IMgaFolders *top_fold, int options, BSTR abspath, BSTR acceptingkinds);
 	STDMETHOD(put_FormatVersion)(long p) { dumpversion = p; return S_OK; }
