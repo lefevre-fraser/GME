@@ -19,6 +19,8 @@ namespace MyAddon
 
         private MgaAddOn addon;
         private bool componentEnabled = true;
+        private bool handleEvents = true;
+        GMEConsole GMEConsole { get; set; }
 
         // Event handlers for addons
         #region MgaEventSink members
@@ -26,8 +28,36 @@ namespace MyAddon
         {
             if (@event == globalevent_enum.GLOBALEVENT_CLOSE_PROJECT)
             {
+                if (GMEConsole != null)
+                {
+                    if (GMEConsole.gme != null)
+                    {
+                        Marshal.FinalReleaseComObject(GMEConsole.gme);
+                    }
+                    GMEConsole = null;
+                }
                 Marshal.FinalReleaseComObject(addon);
                 addon = null;
+            }
+            if (@event == globalevent_enum.APPEVENT_XML_IMPORT_BEGIN)
+            {
+                handleEvents = false;
+                addon.EventMask = 0;
+            }
+            else if (@event == globalevent_enum.APPEVENT_XML_IMPORT_END)
+            {
+                unchecked { addon.EventMask = (uint)ComponentConfig.eventMask; }
+                handleEvents = true;
+            }
+            else if (@event == globalevent_enum.APPEVENT_LIB_ATTACH_BEGIN)
+            {
+                addon.EventMask = 0;
+                handleEvents = false;
+            }
+            else if (@event == globalevent_enum.APPEVENT_LIB_ATTACH_END)
+            {
+                unchecked { addon.EventMask = (uint)ComponentConfig.eventMask; }
+                handleEvents = true;
             }
             if (!componentEnabled)
             {
@@ -46,15 +76,27 @@ namespace MyAddon
         /// <param name="param">extra information provided for cetertain event types</param>
         public void ObjectEvent(MgaObject subject, uint eventMask, object param)
         {
-            if (!componentEnabled)
+            if (!componentEnabled || !handleEvents)
             {
                 return;
+            }
+            if (GMEConsole == null)
+            {
+                GMEConsole = GMEConsole.CreateFromProject(subject.Project);
             }
 
             // TODO: Handle object events (OR eventMask with the members of objectevent_enum)
             // Warning: Only those events are received that you have subscribed for by setting ComponentConfig.eventMask
 
+            // If the event is OBJEVENT_DESTROYED, most operations on subject will fail
+            //   Safe operations: getting Project, ObjType, ID, MetaRole, Meta, MetaBase, Name, AbsPath
+            //   Operations that will fail: all others, including attribute access and graph navigation
+            //     Try handling OBJEVENT_PRE_DESTROYED if these operations are necessary
+
+            // Be careful not to modify Library objects (check subject.IsLibObject)
+
             // MessageBox.Show(eventMask.ToString());
+            // GMEConsole.Out.WriteLine(subject.Name);
 
         }
 
@@ -62,10 +104,10 @@ namespace MyAddon
 
         #region IMgaComponentEx Members
 
-        public void Initialize(MgaProject p)
+        public void Initialize(MgaProject project)
         {
             // Creating addon
-            p.CreateAddOn(this, out addon);
+            project.CreateAddOn(this, out addon);
             // Setting event mask (see ComponentConfig.eventMask)
             unchecked
             {

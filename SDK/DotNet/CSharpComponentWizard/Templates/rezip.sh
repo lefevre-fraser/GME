@@ -1,1 +1,1 @@
-rm *zip &&  ( cd CSharpInterpreter && /c/Program\ Files\ \(x86\)/7-Zip/7z.exe a -x\!.svn -r ../CSharpInterpreter.zip * )  && ( cd CSharpAddon/ && /c/Program\ Files\ \(x86\)/7-Zip/7z.exe a -x\!.svn -r ../CSharpAddon.zip * )
+rm *zip ;  ( cd CSharpInterpreter && /cygdrive/c/Program\ Files/7-Zip/7z.exe a -x\!.svn -r ../CSharpInterpreter.zip * )  && ( cd CSharpAddon/ && /cygdrive/c/Program\ Files/7-Zip/7z.exe a -x\!.svn -r ../CSharpAddon.zip * )
