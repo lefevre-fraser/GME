@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 12.7.27
+                 GME 12.8.14
        Copyright © 2000-2012 Vanderbilt University
 
 
@@ -25,6 +25,17 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Release 12.8.14
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Fixed crash when opening UML models
+  - Fix bug where a derived reference with CompareToBase()==true could become an invalid ref when setting the basetype reference. This operation now throws.
+  - Fix bug in AbortTransaction where AddOns would get notified of aborted changes (usually resulting in error "Meta incompatibility")
+  - Fix bug in MetaInterpreter: name selection dialog should appear if Aspects linked by SameAspect have different DisplayName, but same Name
+  - CSharpDSMLGenerator: output next to .mga file
+  - CSharpDSMLGenerator: use interfaces instead of coclasses
+
 
 Release Notes of Release 12.7.27
 ----------------------------------
