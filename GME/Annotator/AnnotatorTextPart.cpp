@@ -192,7 +192,7 @@ void AnnotatorTextPart::ReadPreferences(void)
 			unsigned int b = val & 0xff;
 			m_crText = RGB(r,g,b);
 		} else {
-			throw hresult_exception();
+			m_crText = AN_DEFAULT_COLOR;
 		}
 	}
 	catch (hresult_exception&) {
