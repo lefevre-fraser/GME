@@ -297,6 +297,22 @@ HRESULT FCO::CheckRCS() {
 				if(!good)
 					COMTHROW(E_MGA_META_VIOLATION);
 			}
+			// inherited ref can only refer to a derived instance of the target
+			// of its base. (Derived null ref is also rejected, but null ref in archetype is accepted)
+			CoreObj basetype = self[ATTRID_DERIVED];
+			if (basetype && !(mgaproject->preferences & MGAPREF_FREEINSTANCEREFS))
+			{
+				CoreObj base_target = basetype[ATTRID_REFERENCE];
+				if (base_target)
+				{
+					for ( ; target; target = target[ATTRID_DERIVED]) {
+						if (COM_EQUAL(base_target, target))
+							break;
+					}
+					if (!target)
+						COMTHROW(E_MGA_INVALID_TARGET);
+				}
+			}
 		}
 		else if(typ == OBJTYPE_SET) {
 			CComQIPtr<IMgaMetaSet> setmeta = meta;

@@ -52,32 +52,31 @@ bool putreftask::Do(CoreObj self, std::vector<CoreObj> *peers) {
 		if(t) ObjForCore(t)->SelfMark(OBJEVENT_REFERENCED);
 		ObjForCore(self)->SelfMark(OBJEVENT_RELATION);
 		COMTHROW(ObjForCore(self)->Check());
+
+		ITERATE_THROUGH(self[ATTRID_DERIVED + ATTRID_COLLECTION])
+		{
+			if (!ITER[ATTRID_MASTEROBJ])
+			{
+				COMTHROW(ObjForCore(ITER)->Check());
+			}
+		}
 	}
 	return true;
 }
 
 
 HRESULT FCO::put_Referred(IMgaFCO *newVal)	{
+		// Inherited ref can only refer to a derived instance of the target
+		// of its base. This is checked in FCO::CheckRCS
 		COMTRY_IN_TRANSACTION_MAYBE {
 			CheckWrite();
 			CHECK_MYINPTRPARVALIDNULL(newVal);
 			std::vector<CoreObj> peer(1);
 			peer[0] = CoreObj(newVal);
-			if(!(mgaproject->preferences & MGAPREF_FREEINSTANCEREFS)) {
-			  // inherited ref can only refer to a derived instance of the target
-			  // of its base. (Null ref is also rejected)
- 			  CoreObj d = self[ATTRID_DERIVED];
-			  if(d) {
-				CoreObj dt = d[ATTRID_REFERENCE];
-				if(dt) {
-					CoreObj t(peer[0]);
-					for( ; t; t = t[ATTRID_DERIVED]) {
-						if(COM_EQUAL(dt, t)) break;
-					}
-					if(!t) COMTHROW(E_MGA_INVALID_TARGET);
-				}
-              }
-			}
+			CoreObj t = self[ATTRID_REFERENCE];
+
+			// FIXME: this is suspect; it makes ref.Referred = ref.Referred a mutating operation (i.e. => CompareToBase() == true)
+			// fix: if(!COM_EQUAL(t, peer[0])) {
 			self[ATTRID_MASTEROBJ] = NULLCOREOBJ;
 			putreftask(false).DoWithDeriveds(self, &peer);
 		} COMCATCH_IN_TRANSACTION_MAYBE(;);

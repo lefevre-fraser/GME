@@ -9,6 +9,7 @@ def _adjacent_file(file):
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
 
 class TestInstances(unittest.TestCase):
+    project = None
     def __init__(self, name, **kwds):
         super(TestInstances, self).__init__(name, **kwds)
 
@@ -29,4 +30,68 @@ class TestInstances(unittest.TestCase):
                 self.project.RootFolder.DeriveRootObject(model, True)
         self.project.CommitTransaction()
 
-GPyUnit.util.MUGenerator(globals(), TestInstances)
+    @dec_disable_early_binding
+    def test_RedirectBaseReference(self):
+        self.project = GPyUnit.util.parse_xme(self.connstr)
+        self.project.BeginTransactionInNewTerr()
+        aspects = self.project.RootFolder.GetObjectByPathDisp("/@Aspects")
+        allproxy = self.project.RootFolder.GetObjectByPathDisp("/@Aspects/@AllRef")
+        aspects_instance = self.project.RootFolder.DeriveRootObject(aspects, True)
+        aspects_subtype = self.project.RootFolder.DeriveRootObject(aspects, False)
+        attributes = self.project.RootFolder.GetObjectByPathDisp("/@Stereotypes/@Attributes")
+        allproxy.Referred = attributes
+        for asp in (aspects_instance, aspects_subtype):
+            self.assertEqual(asp.GetObjectByPathDisp("/@AllRef").Referred.Name, attributes.Name)
+            self.assertEqual(asp.GetObjectByPathDisp("/@AllRef").Referred.ID, attributes.ID)
+        self.project.CommitTransaction()
+
+    @dec_disable_early_binding
+    def test_RedirectBaseReference2(self):
+        self.project = GPyUnit.util.parse_xme(self.connstr)
+        self.project.BeginTransactionInNewTerr()
+        aspects = self.project.RootFolder.GetObjectByPathDisp("/@Aspects")
+        allproxy = self.project.RootFolder.GetObjectByPathDisp("/@Aspects/@AllRef")
+        instances = []
+        for inst_flag in (True, False, True, False):
+            instances.append(aspects.DeriveChildObject(allproxy, allproxy.MetaRole, inst_flag))
+        attributes = self.project.RootFolder.GetObjectByPathDisp("/@Stereotypes/@Attributes")
+        allproxy.Referred = attributes
+        try:
+            instances[0].Referred = self.project.RootFolder.GetObjectByPathDisp("/@Constraints/@Constraints|kind=Aspect")
+        except Exception, e:
+            pass
+        else:
+            self.fail()
+        for asp in instances:
+            self.assertEqual(asp.Referred.Name, attributes.Name)
+            self.assertEqual(asp.Referred.ID, attributes.ID)
+        self.project.CommitTransaction()
+
+    @dec_disable_early_binding
+    def test_RedirectBaseReference3(self):
+        self.project = GPyUnit.util.parse_xme(self.connstr)
+        self.project.BeginTransactionInNewTerr()
+        aspects = self.project.RootFolder.GetObjectByPathDisp("/@Aspects")
+        allproxy = self.project.RootFolder.GetObjectByPathDisp("/@Aspects/@AllRef")
+        instances = []
+        for inst_flag in (True, False, True, False):
+            instances.append(aspects.DeriveChildObject(allproxy, allproxy.MetaRole, inst_flag))
+        self.assertFalse(instances[3].CompareToBase())
+        instances[3].Referred = instances[3].Referred
+        self.assertTrue(instances[3].CompareToBase())
+        attributes = self.project.RootFolder.GetObjectByPathDisp("/@Stereotypes/@Attributes")
+        try:
+            allproxy.Referred = attributes
+        except Exception, e:
+            pass
+        else:
+            self.fail()
+        instances[3].RevertToBase()
+        self.assertFalse(instances[3].CompareToBase())
+        allproxy.Referred = attributes
+        for asp in instances:
+            self.assertEqual(asp.Referred.Name, attributes.Name)
+            self.assertEqual(asp.Referred.ID, attributes.ID)
+        self.project.CommitTransaction()
+
+#GPyUnit.util.MUGenerator(globals(), TestInstances)
