@@ -65,6 +65,7 @@ namespace MyInterpreter
             // TODO: Add your interpreter code
             GMEConsole.Out.WriteLine("Running interpreter...");
 			
+			// TODO: show how to initialize DSML-generated classes
 			// Get RootFolder
 			$GET_ROOTFOLDER_CODE$
 			
