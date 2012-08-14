@@ -585,15 +585,15 @@ void str_scan_name( OLECHAR ** p_ptr, int len_of, CComBSTR& p_name, CComBSTR& p_
 }
 
 
-// The FCO::get_ObjectByPath ignores all the time the leading '/'
-//
-// main delimiter in the path is the slash character: '/'
-// searches based on name and kind: "/@MyFolder|kind=OneFolder/@MySubFolder|kind=AnotherFolder" (the project name must not be included)
+// Delimiter in the path is the slash character: '/'
+// searches based on name and kind: "/@MyFolder|kind=OneFolder/@MySubFolder|kind=AnotherFolder" (the project or root folder name must not be included)
 //       or based on plain name:    "/MyFolder/MySubFolder"
 //       or based on relid:         "/#1/#3"
 // these may be mixed like:         "/@MyFolder|kind=OneFolder|relpos=1/#2" which means that look for MyFolder, then select its child with Relid = 2
 // incoming path may contain 'misleading' relpos tokens as well: /@MyFolder|kind=OneFolder|relpos=1/@MySubFolder|kind=AnotherFolder|relpos=2" these are disregarded
-// if several objects are found 0 is returned !
+// If several objects are found, NULL is returned
+//
+// FCO::get_ObjectByPath ignores the leading '/'
 HRESULT FCO::get_ObjectByPath(BSTR path, IMgaObject ** pVal) {
 	COMTRY {
 		CHECK_OUTPTRPAR(pVal);
@@ -641,7 +641,7 @@ HRESULT FCO::get_ObjectByPath(BSTR path, IMgaObject ** pVal) {
 					if ( *pVal)
 						found = true;
 				}
-				else if( similar && found) // found at least two objects with similar names at this level (samename syblings) and the first sibling contains the needed object already
+				else if( similar && found) // found at least two objects with similar names at this level (samename siblings) and the first sibling contains the needed object already
 				{
 					if ( *p2 != 0)
 					{
