@@ -81,8 +81,8 @@ public:
 
 	virtual valtype_type GetValType() const NOTHROW = 0;
 	virtual void Set(CCoreBinFile *binfile, VARIANT p) = 0;
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const = 0;
-	virtual void Write(CCoreBinFile *binfile) const = 0;
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) = 0;
+	virtual void Write(CCoreBinFile *binfile) = 0;
 	virtual void Read(CCoreBinFile *binfile) = 0;
 	// virtual move constructor
 	virtual void move(BinAttrUnion&& dest) = 0;
@@ -97,8 +97,8 @@ public:
 
 	virtual valtype_type GetValType() const NOTHROW { DebugBreak(); return 0; }
 	virtual void Set(CCoreBinFile *binfile, VARIANT p) { DebugBreak(); }
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { DebugBreak(); }
-	virtual void Write(CCoreBinFile *binfile) const { DebugBreak(); }
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) { DebugBreak(); }
+	virtual void Write(CCoreBinFile *binfile) { DebugBreak(); }
 	virtual void Read(CCoreBinFile *binfile) { DebugBreak(); }
 	virtual void move(BinAttrUnion&& dest) { DebugBreak(); }
 
@@ -362,8 +362,8 @@ public:
 	virtual void Set(CCoreBinFile *binfile, VARIANT p)
 	{ ASSERT( binfile != NULL ); binfile->modified = true; CopyTo(p, a); }
 
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { CopyTo(a, p); }
-	virtual void Write(CCoreBinFile *binfile) const { binfile->write(a); }
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) { CopyTo(a, p); }
+	virtual void Write(CCoreBinFile *binfile) { binfile->write(a); }
 	virtual void Read(CCoreBinFile *binfile) { binfile->read(a); }
 
     BinAttr(BinAttr<VALTYPE_LONG>&& that) : BinAttrBase(that.attrid), a(that.a) { }
@@ -386,8 +386,8 @@ public:
 	virtual void Set(CCoreBinFile *binfile, VARIANT p)
 	{ ASSERT( binfile != NULL ); binfile->modified = true; CopyTo(p, a); }
 
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { CopyTo(a, p); }
-	virtual void Write(CCoreBinFile *binfile) const { binfile->write(a); }
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) { CopyTo(a, p); }
+	virtual void Write(CCoreBinFile *binfile) { binfile->write(a); }
 	virtual void Read(CCoreBinFile *binfile) { binfile->read(a); }
 	BinAttr(BinAttr<VALTYPE_REAL>&& that) : BinAttrBase(that.attrid), a(that.a) { }
 	virtual void move(BinAttrUnion&& dest) {
@@ -417,19 +417,17 @@ public:
 		pos = NULL;
 	}
 
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const {
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) {
 		if (pos != NULL) {
-			BinAttr<VALTYPE_STRING>* this_ = const_cast<BinAttr<VALTYPE_STRING>*>(this);
-			binfile->read(this_->a, this_->pos);
-			this_->pos = NULL;
+			binfile->read(this->a, this->pos);
+			this->pos = NULL;
 		}
 		CopyTo(a, p);
 	}
-	virtual void Write(CCoreBinFile *binfile) const {
+	virtual void Write(CCoreBinFile *binfile) {
 		if (pos != NULL) {
-			BinAttr<VALTYPE_STRING>* this_ = const_cast<BinAttr<VALTYPE_STRING>*>(this);
-			binfile->read(this_->a, this_->pos);
-			this_->pos = NULL;
+			binfile->read(this->a, this->pos);
+			this->pos = NULL;
 		}
 		binfile->write(a);
 	}
@@ -500,25 +498,24 @@ public:
 		}
 	}
 
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { 
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) { 
 		if (data == 0) {
 			unsigned char* pnull=NULL;
 			CopyTo(pnull, pnull, p);
 		} else
 			CopyTo(value, value + len, p);
 	}
-	virtual void Write(CCoreBinFile *binfile) const { 
+	virtual void Write(CCoreBinFile *binfile) { 
 		if (data)
 		{
 			if (!need_free)
 			{
 				// need to get data off the disk; the file is going away
-				BinAttr<VALTYPE_BINARY>* this_ = const_cast<BinAttr<VALTYPE_BINARY>*>(this);
-				unsigned char* olddata = this_->data;
+				unsigned char* olddata = this->data;
 				int len = this->len;
-				this_->data = (unsigned char*)malloc(sizeof(len) + len);
-				this_->need_free = true;
-				this_->len = len;
+				this->data = (unsigned char*)malloc(sizeof(len) + len);
+				this->need_free = true;
+				this->len = len;
 				memcpy(value, olddata+sizeof(len), len);
 			}
 			binfile->write(value, len);
@@ -573,7 +570,7 @@ public:
 		v.pdispVal->QueryInterface(&dict);
 	}
 
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const {
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) {
 		if (dict == 0) {
 			// lazy read
 			CCoreDictionaryAttributeValue* val = NULL;
@@ -597,14 +594,13 @@ public:
 					std::unordered_map<CComBSTR, CComBSTR, CComBSTR_Length>::value_type(std::move(key), std::move(value)));
 			}
 
-			BinAttr<VALTYPE_DICT>* _this = const_cast<BinAttr<VALTYPE_DICT>*>(this);
-			_this->dict = val;
-			_this->data = 0;
+			this->dict = val;
+			this->data = 0;
 		}
 		CComVariant ret = dict;
 		COMTHROW(ret.Detach(p));
 	}
-	virtual void Write(CCoreBinFile *binfile) const {
+	virtual void Write(CCoreBinFile *binfile) {
 		int size = 0;
 
 		if (dict == NULL)
@@ -654,8 +650,8 @@ public:
 
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_LOCK; }
 	virtual void Set(CCoreBinFile *binfile, VARIANT p) { CopyTo(p, a); }
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const { CopyTo(a, p); }
-	virtual void Write(CCoreBinFile *binfile) const { }
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p) { CopyTo(a, p); }
+	virtual void Write(CCoreBinFile *binfile) { }
 	virtual void Read(CCoreBinFile *binfile) { a = 0; }
 	BinAttr(BinAttr<VALTYPE_LOCK>&& that) : BinAttrBase(that.attrid), a(that.a) { }
 	virtual void move(BinAttrUnion&& dest) {
@@ -675,7 +671,7 @@ public:
 	BinAttr() : backing(new std::vector<objects_iterator>()) { }
 	virtual valtype_type GetValType() const NOTHROW { return VALTYPE_COLLECTION; }
 	virtual void Set(CCoreBinFile *binfile, VARIANT p) { ASSERT(false); }
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p)
 	{
 		ASSERT( p != NULL && p->vt == VT_EMPTY );
 
@@ -692,7 +688,7 @@ public:
 
 		CopyTo(idpairs, p);
 	}
-	virtual void Write(CCoreBinFile *binfile) const { }
+	virtual void Write(CCoreBinFile *binfile) { }
 	virtual void Read(CCoreBinFile *binfile) { }
     BinAttr(BinAttr<VALTYPE_COLLECTION>&& that) : BinAttrBase(that.attrid), backing(std::move(that.backing)) { }
 	virtual void move(BinAttrUnion&& dest) {
@@ -774,7 +770,7 @@ public:
 			Set(binfile, binfile->objects.find(idpair));
 		}
 	}
-	virtual void Get(CCoreBinFile *binfile, VARIANT *p) const
+	virtual void Get(CCoreBinFile *binfile, VARIANT *p)
 	{
 		if( isEmpty )
 		{
@@ -787,7 +783,7 @@ public:
 			CopyTo(a->first, p);
 	}
 
-	virtual void Write(CCoreBinFile *binfile) const
+	virtual void Write(CCoreBinFile *binfile)
 	{
 		if( isEmpty )
 		{
