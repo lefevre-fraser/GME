@@ -9,11 +9,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // CMgaReference
 class ATL_NO_VTABLE CMgaReference : 
-	public CComCoClass<CMgaReference, &CLSID_MgaReference>,
+	public CComCoClass<CMgaReference, &__uuidof(MgaReference)>,
 	public IMgaFCOImpl< 
 		CComObjectRootEx<CComSingleThreadModel>,
-	    IDispatchImpl<IMgaReference, &IID_IMgaReference, &LIBID_MGALib> >,
-	public ISupportErrorInfoImpl<&IID_IMgaReference>   {
+	    IDispatchImpl<IMgaReference, &__uuidof(IMgaReference), &__uuidof(__MGALib)> >,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaReference)>   {
 public:
 	CMgaReference()
 	{
@@ -24,8 +24,8 @@ DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 BEGIN_COM_MAP(CMgaReference)
 	COM_INTERFACE_ENTRY(IMgaReference)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaObject,IMgaReference)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaFCO,IMgaReference)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaObject),IMgaReference)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaFCO),IMgaReference)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY_IID(IID_ISupportErrorInfo, IMyErrorInfoBase)
 END_COM_MAP()

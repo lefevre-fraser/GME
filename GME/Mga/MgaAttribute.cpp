@@ -986,7 +986,7 @@ CMgaPart::~CMgaPart() {						// remove object from hash
 		if(next) next->prevptr = prevptr;
 		*prevptr = next;
 }
-void CMgaPart::Initialize(metaref_type mr, FCO *o, CMgaProject *p) {   // Throws!!!
+void CMgaPart::Initialize(metaref_type mr, ::FCO *o, CMgaProject *p) {   // Throws!!!
 		mref = mr;		
 		fco = o;
 		mgaproject = p;

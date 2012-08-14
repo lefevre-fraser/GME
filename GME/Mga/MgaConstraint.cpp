@@ -1,6 +1,6 @@
 // MgaConstraint.cpp : Implementation of CMgaConstraint
-#include "stdafx.h"
-#include "Mga.h"
+
+#include "StdAfx.h"
 #include "MgaFCO.h"
 #include "MgaConstraint.h"
 

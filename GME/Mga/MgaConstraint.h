@@ -9,8 +9,8 @@
 // CMgaConstraint
 class ATL_NO_VTABLE CMgaConstraint : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaConstraint, &CLSID_MgaConstraint>,
-	public IDispatchImpl<IMgaConstraint, &IID_IMgaConstraint, &LIBID_MGALib>
+	public CComCoClass<CMgaConstraint, &__uuidof(MgaConstraint)>,
+	public IDispatchImpl<IMgaConstraint, &__uuidof(IMgaConstraint), &__uuidof(__MGALib)>
 {
 public:
 	CComBSTR name, expression;

@@ -367,7 +367,7 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 	Reporter reporter( mgaproject);
 
 	try {
-		COMTHROW(p.CoCreateInstance(CLSID_MgaProject));
+		COMTHROW(p.CoCreateInstance(__uuidof(MgaProject)));
 		
 		CComBSTR paradigmname;
 		CComVariant paradigmGUID;
@@ -420,7 +420,7 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 				COMTHROW(dumper->put_FormatVersion(0));
 				COMTHROW(dumper->DumpProject( p, PutInBstr( szTempXmeFileName)) );
 
-				COMTHROW(p->Close());
+				COMTHROW(p->Close(VARIANT_FALSE));
 
 				// Create a new 'paradigmname' project
 				COMTHROW(connstr_upgraded.Append( szTempMgaFileName)); // connection string prepared
@@ -431,7 +431,7 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 					ASSERT( parser != NULL );
 
 					COMTHROW(parser->ParseProject( p, PutInBstr( szTempXmeFileName)) );
-					COMTHROW(p->Close());
+					COMTHROW(p->Close(VARIANT_FALSE));
 					upgraded = true;
 				}
 				else if(hr == E_MGA_PARADIGM_NOTREG || hr == E_MGA_PARADIGM_INVALID) {
@@ -541,7 +541,7 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 		matching_libs.clear();
 
 		COMTHROW(p->AbortTransaction());
-		COMTHROW(p->Close());
+		COMTHROW(p->Close(VARIANT_FALSE));
 	} catch(...) { 
 		fixup.clear();
 		superfluous_libs.clear();
@@ -552,7 +552,7 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 			if(st & 8)
 				p->AbortTransaction();
 			if(st & 1)
-				p->Close();
+				p->Close(VARIANT_FALSE);
 		};
 		throw;
 	}

@@ -12,9 +12,9 @@
 // CMgaFilter
 class ATL_NO_VTABLE CMgaFilter : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaFilter, &CLSID_MgaFilter>,
-	public IDispatchImpl<IMgaFilter, &IID_IMgaFilter, &LIBID_MGALib>,
-	public ISupportErrorInfoImpl<&IID_IMgaFilter>
+	public CComCoClass<CMgaFilter, &__uuidof(MgaFilter)>,
+	public IDispatchImpl<IMgaFilter, &__uuidof(IMgaFilter), &__uuidof(__MGALib)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaFilter)>
 {
 public:
 	CMgaFilter()

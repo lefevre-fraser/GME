@@ -25,7 +25,7 @@ STDMETHODIMP FCO::FinalConstruct() {
 	COMTRY {
 			{
 				CoreObj myself;
-				QueryInterface(IID_ICoreObject,(void **)&myself);
+				QueryInterface(__uuidof(ICoreObject),(void **)&myself);
 				self = myself;  // self does not hold reference!!!
 			}
 			CComPtr<ICoreProject> cp;
@@ -37,7 +37,7 @@ STDMETHODIMP FCO::FinalConstruct() {
 			pUnk->AddRef();
 			mgaproject.Attach((CMgaProject*)(IDispatchImpl<IMgaProject, &IID_IMgaProject, &LIBID_MGALib>*)(pUnk));
 #else
-			COMTHROW(cp->QueryInterface(IID_IMgaProject,(void **)&mgaproject));
+			COMTHROW(cp->QueryInterface(__uuidof(IMgaProject),(void **)&mgaproject));
 #endif
 	} COMCATCH(;);
 }
@@ -264,7 +264,7 @@ HRESULT FCO::GetParent(IMgaContainer **pVal, objtype_enum *l) {
 					COMTHROW(pv->get_ObjType(l));
 				if(pVal != NULL) {
 					*pVal = pv.Detach();
-					COMTHROW((*pVal)->Open());
+					COMTHROW((*pVal)->Open(OPEN_READ));
 				}
 			}
 			else {
@@ -285,7 +285,7 @@ HRESULT FCO::get_ParentModel(IMgaModel **pVal) {
 				CComPtr<IMgaModel> pv;
 				ObjForCore(par)->getinterface(&pv);
 				*pVal = pv.Detach();
-				COMTHROW((*pVal)->Open());
+				COMTHROW((*pVal)->Open(OPEN_READ));
 			}
 		} COMCATCH(;);
 }
@@ -300,7 +300,7 @@ HRESULT FCO::get_ParentFolder(IMgaFolder **pVal) {
 				CComPtr<IMgaFolder> pv;
 				ObjForCore(par)->getinterface(&pv);
 				*pVal = pv.Detach();
-				COMTHROW((*pVal)->Open());
+				COMTHROW((*pVal)->Open(OPEN_READ));
 			}
 		} COMCATCH(;);
 }

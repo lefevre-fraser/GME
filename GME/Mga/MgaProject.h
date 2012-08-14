@@ -16,9 +16,9 @@ class FCO;
 // CMgaProject
 class ATL_NO_VTABLE CMgaProject : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaProject, &CLSID_MgaProject>,
-	public IDispatchImpl<IMgaProject, &IID_IMgaProject, &LIBID_MGALib>,
-	public ISupportErrorInfoImpl<&IID_IMgaProject>,
+	public CComCoClass<CMgaProject, &__uuidof(MgaProject)>,
+	public IDispatchImpl<IMgaProject, &__uuidof(IMgaProject), &__uuidof(__MGALib)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaProject)>,
 	public IGMEVersionInfoImpl
 {
 
@@ -39,7 +39,7 @@ BEGIN_COM_MAP(CMgaProject)
 	COM_INTERFACE_ENTRY(IMgaProject)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY_IID(IID_ISupportErrorInfo, IMyErrorInfoBase)
-	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IGMEVersionInfo), IGMEVersionInfoImpl)
 END_COM_MAP()
 
 
@@ -232,8 +232,8 @@ public:
 // CMgaClient
 class ATL_NO_VTABLE CMgaClient : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaClient, &CLSID_MgaClient>,
-	public IDispatchImpl<IMgaClient, &IID_IMgaClient, &LIBID_MGALib>
+	public CComCoClass<CMgaClient, &__uuidof(MgaClient)>,
+	public IDispatchImpl<IMgaClient, &__uuidof(IMgaClient), &__uuidof(__MGALib)>
 {
 	
 public:

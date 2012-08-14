@@ -40,7 +40,7 @@ CMgaProject::CMgaProject()	{
 STDMETHODIMP CMgaProject::FinalConstruct()	{
 		COMTRY {
 //			IDispatchImpl<IMgaProject, &IID_IMgaProject, &LIBID_MGALib> *xthis = this;
-			COMTHROW( CoCreateInstance(CLSID_CoreProject, (IMgaProject *)this, CLSCTX_ALL, IID_IUnknown, (LPVOID *) &inner) );
+			COMTHROW( CoCreateInstance(__uuidof(CoreProject), (IMgaProject *)this, CLSCTX_ALL, IID_IUnknown, (LPVOID *) &inner) );
 			COMTHROW(inner.QueryInterface(&dataproject));
 			dataproject->Release();   // release reference to ourselves
 		} COMCATCH(;);
@@ -225,7 +225,7 @@ STDMETHODIMP CMgaProject::CreateEx(BSTR projectname, BSTR paradigmname, VARIANT 
 	COMCATCH(
 		opened = CLOSED;
 		guidstat = CLEAN;
-		if(dataproject) dataproject->CloseProject();
+		if(dataproject) dataproject->CloseProject(VARIANT_FALSE);
 		if(metapr) metapr->Close();
 		metapr = 0;
 		projconn.Empty(); 
@@ -359,7 +359,7 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 	COMCATCH(
 		opened = CLOSED;
 		guidstat = CLEAN;
-		if(dataproject) dataproject->CloseProject();
+		if(dataproject) dataproject->CloseProject(VARIANT_FALSE);
 		if(metapr) metapr->Close();
 		metapr = 0;
 		projconn.Empty(); 
@@ -468,7 +468,7 @@ STDMETHODIMP CMgaProject::Open(BSTR projectname, VARIANT_BOOL *ro_mode)
 	} 
 	COMCATCH(
 		opened = CLOSED;
-		if(dataproject) dataproject->CloseProject();
+		if(dataproject) dataproject->CloseProject(VARIANT_FALSE);
 		if(metapr) metapr->Close();
 		metapr = 0;
 		projconn.Empty(); 
@@ -498,7 +498,7 @@ STDMETHODIMP CMgaProject::QueryProjectInfo(BSTR projectname, long *mgaversion,
 		CComPtr<ICoreMetaProject> genericproject;
 		CreateCoreMetaProject(genericproject); // use mgaversion = 1 project model 
 
-		COMTHROW(dp.CoCreateInstance(CLSID_CoreProject));
+		COMTHROW(dp.CoCreateInstance(__uuidof(CoreProject)));
 		COMTHROW(dp->OpenProject(projectname, genericproject, ro_mode));
 		
 		CComPtr<ICoreTerritory> tt;
@@ -519,11 +519,11 @@ STDMETHODIMP CMgaProject::QueryProjectInfo(BSTR projectname, long *mgaversion,
 			// FIXME
 			;
 		}
-		dp->AbortTransaction();
-		dp->CloseProject();
+		dp->AbortTransaction(TRANSTYPE_ANY);
+		dp->CloseProject(VARIANT_FALSE);
 	}
 	COMCATCH(
-		if(dp) dp->CloseProject();
+		if(dp) dp->CloseProject(VARIANT_FALSE);
 	)
 }
 
@@ -846,7 +846,7 @@ STDMETHODIMP CMgaProject::get_MetaGUID(VARIANT *pVal)
 
 		if( p.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(p) != sizeof(GUID) )
 		{
-			GUID guid;
+			::GUID guid;
 			memset(&guid, 0, sizeof(GUID));
 
 			CopyTo(guid, p);
@@ -906,7 +906,7 @@ STDMETHODIMP CMgaProject::get_GUID(VARIANT *pVal)
 		
 		if( p.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(p) != sizeof(GUID) )
 		{
-			GUID guid;
+			::GUID guid;
 			memset(&guid, 0, sizeof(GUID));
 
 			CopyTo(guid, p);
@@ -1494,7 +1494,8 @@ STDMETHODIMP CMgaProject::CommitNotify() {
                 return S_OK;
   }
   COMTRY {
-                if(!baseterr) COMTHROW(E_MGA_NOT_IN_TRANSACTION);
+                if(!baseterr)
+					COMTHROW(E_MGA_NOT_IN_TRANSACTION);
 
                 if(!changedobjs.empty()) notifyqueueprocessed = true;
                 while(!changedobjs.empty()) {
@@ -1730,7 +1731,7 @@ void CMgaProject::ObjMark(IMgaObject *s, long mask) {
 
 void CMgaProject::FixupGUID(bool write) {
 	if (guidstat == DIRTY) {
-		GUID newGUID;
+		::GUID newGUID;
 		COMTHROW(CoCreateGuid(&newGUID));
 		pendingguid.Clear();
 		CopyTo(newGUID, pendingguid);

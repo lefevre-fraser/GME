@@ -12,16 +12,16 @@
 
 
 class ATL_NO_VTABLE CMgaConnection : 
-	public CComCoClass<CMgaConnection, &CLSID_MgaSimpleConnection>,
+	public CComCoClass<CMgaConnection, &__uuidof(MgaSimpleConnection)>,
 	public IMgaFCOImpl< 
 		CComObjectRootEx<CComSingleThreadModel>,
-		IDispatchImpl<IMgaSimpleConnection, &IID_IMgaSimpleConnection, &LIBID_MGALib> >,
-	public ISupportErrorInfoImpl<&IID_IMgaConnection>
+		IDispatchImpl<IMgaSimpleConnection, &__uuidof(IMgaSimpleConnection), &__uuidof(__MGALib)> >,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaConnection)>
 {
 public:
 	static HRESULT WINAPI simpletest(void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw) {
 				FCO *f = reinterpret_cast<CMgaConnection*>(pv)->innFCO;
-				if(!f->simpleconn()) return E_NOINTERFACE;
+				if(!f->simpleconn()) return E_NOINTERFACE; // this breaks COM rules
 				IUnknown* pUnk = (IUnknown*)((int)pv+dw);
 				pUnk->AddRef();
 				*ppv = pUnk;
@@ -36,10 +36,10 @@ DECLARE_PROTECT_FINAL_CONSTRUCT()
 BEGIN_COM_MAP(CMgaConnection)
 	COM_INTERFACE_ENTRY(IMgaConnection)
 	COM_INTERFACE_ENTRY(IDispatch)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaFCO,IMgaConnection)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaObject,IMgaConnection)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaFCO),IMgaConnection)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaObject),IMgaConnection)
 	COM_INTERFACE_ENTRY_IID(IID_ISupportErrorInfo, IMyErrorInfoBase)
-	COM_INTERFACE_ENTRY_FUNC(IID_IMgaSimpleConnection, offsetofclass(IMgaSimpleConnection, _ComMapClass), simpletest)
+	COM_INTERFACE_ENTRY_FUNC(__uuidof(IMgaSimpleConnection), offsetofclass(IMgaSimpleConnection, _ComMapClass), simpletest)
 END_COM_MAP()
 
 // IMgaSimpleConnection
@@ -74,10 +74,10 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // CMgaConnPoint
 class ATL_NO_VTABLE CMgaConnPoint : 
-	public CComCoClass<CMgaConnPoint, &CLSID_MgaConnPoint>,
+	public CComCoClass<CMgaConnPoint, &__uuidof(MgaConnPoint)>,
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IMgaConnPoint, &IID_IMgaConnPoint, &LIBID_MGALib>,
-	public ISupportErrorInfoImpl<&IID_IMgaConnPoint>
+	public IDispatchImpl<IMgaConnPoint, &__uuidof(IMgaConnPoint), &__uuidof(__MGALib)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaConnPoint)>
 {
 public:
 	DEFSIG;

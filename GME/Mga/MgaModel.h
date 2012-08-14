@@ -11,11 +11,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // CMgaModel
 class ATL_NO_VTABLE CMgaModel : 
-	public CComCoClass<CMgaModel, &CLSID_MgaModel>,
+	public CComCoClass<CMgaModel, &__uuidof(MgaModel)>,
 	public IMgaContainerImpl< IMgaFCOImpl< 
 												CComObjectRootEx<CComSingleThreadModel>,
-											    IDispatchImpl<IMgaModel, &IID_IMgaModel, &LIBID_MGALib> > >,
-	public ISupportErrorInfoImpl<&IID_IMgaModel>
+											    IDispatchImpl<IMgaModel, &__uuidof(IMgaModel), &__uuidof(__MGALib)> > >,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaModel)>
 {
 public:
 	CMgaModel()
@@ -28,8 +28,8 @@ DECLARE_PROTECT_FINAL_CONSTRUCT()
 BEGIN_COM_MAP(CMgaModel)
 	COM_INTERFACE_ENTRY(IMgaModel)
 	COM_INTERFACE_ENTRY(IDispatch)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaFCO,IMgaModel)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaObject,IMgaModel)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaFCO),IMgaModel)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaObject),IMgaModel)
 	COM_INTERFACE_ENTRY_IID(IID_ISupportErrorInfo, IMyErrorInfoBase)
 //	COM_INTERFACE_ENTRY_IID(IID_IMgaContainer,IMgaModel)
 END_COM_MAP()

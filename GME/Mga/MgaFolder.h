@@ -27,10 +27,10 @@ public:
 
 // CMgaFolder
 class ATL_NO_VTABLE CMgaFolder : 
-	public CComCoClass<CMgaFolder, &CLSID_MgaFolder>,
+	public CComCoClass<CMgaFolder, &__uuidof(MgaFolder)>,
 	public IMgaContainerImpl < IMgaFCOImpl <CComObjectRootEx<CComSingleThreadModel> ,
-											 IDispatchImpl<IMgaFolder, &IID_IMgaFolder, &LIBID_MGALib> > >,
-	public ISupportErrorInfoImpl<&IID_IMgaFolder>
+											 IDispatchImpl<IMgaFolder, &__uuidof(IMgaFolder), &__uuidof(__MGALib)> > >,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaFolder)>
 {
 public:
 
@@ -40,7 +40,7 @@ DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 BEGIN_COM_MAP(CMgaFolder)
 	COM_INTERFACE_ENTRY(IMgaFolder)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaObject,IMgaFolder)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaObject),IMgaFolder)
 //	COM_INTERFACE_ENTRY_IID(IID_IMgaContainer,IMgaFolder)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY_IID(IID_ISupportErrorInfo, IMyErrorInfoBase)

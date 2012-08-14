@@ -11,8 +11,9 @@
 
 class ATL_NO_VTABLE CMgaTerritory : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaTerritory, &CLSID_MgaTerritory>,
-	public IDispatchImpl<IMgaTerritory, &IID_IMgaTerritory, &LIBID_MGALib>
+	public CComCoClass<CMgaTerritory, &__uuidof(MgaTerritory)>,
+	public IDispatchImpl<IMgaTerritory, &__uuidof(IMgaTerritory), &__uuidof(__MGALib)>
+	// TODO: ISupportErrorInfo
 {
 public:
     DEFSIG;
@@ -90,8 +91,8 @@ public:
 // CMgaAddOn
 class ATL_NO_VTABLE CMgaAddOn : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaAddOn, &CLSID_MgaAddOn>,
-	public IDispatchImpl<IMgaAddOn, &IID_IMgaAddOn, &LIBID_MGALib>
+	public CComCoClass<CMgaAddOn, &__uuidof(MgaAddOn)>,
+	public IDispatchImpl<IMgaAddOn, &__uuidof(IMgaAddOn), &__uuidof(__MGALib)>
 {
     DEFSIG;
 	bool active;

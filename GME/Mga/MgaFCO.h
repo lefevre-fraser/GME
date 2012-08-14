@@ -270,11 +270,11 @@ public:
 // MgaAtom is defined here (it is empty)
 // ----------------------------------------
 class ATL_NO_VTABLE CMgaAtom : 
-	public CComCoClass<CMgaAtom, &CLSID_MgaAtom>,
+	public CComCoClass<CMgaAtom, &__uuidof(MgaAtom)>,
 	public IMgaFCOImpl< 
 		CComObjectRootEx<CComSingleThreadModel>,
-		IDispatchImpl<IMgaAtom, &IID_IMgaAtom, &LIBID_MGALib> >,
-	public ISupportErrorInfoImpl<&IID_IMgaAtom>
+		IDispatchImpl<IMgaAtom, &__uuidof(IMgaAtom), &__uuidof(__MGALib)> >,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaAtom)>
 {
 public:
 	CMgaAtom()	{}
@@ -284,8 +284,8 @@ DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 BEGIN_COM_MAP(CMgaAtom)
 	COM_INTERFACE_ENTRY(IMgaAtom)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaObject,IMgaAtom)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaFCO,IMgaAtom)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaObject),IMgaAtom)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaFCO),IMgaAtom)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY_IID(IID_ISupportErrorInfo, IMyErrorInfoBase)
 END_COM_MAP()
@@ -328,8 +328,8 @@ class CMgaConstraint;
 
 class ATL_NO_VTABLE FCO : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<FCO, &CLSID_MgaO>,
-	public IDispatchImpl<IMgaO, &IID_IMgaO, &LIBID_MGALib>
+	public CComCoClass<FCO, &__uuidof(MgaO)>,
+	public IDispatchImpl<IMgaO, &__uuidof(IMgaO), &__uuidof(__MGALib)>
 {
 public:
 	DEFSIG;
@@ -747,10 +747,10 @@ void ObjAttach(CMgaProject *mgaproject, const CoreObj &origobj, CoreObj &newobj,
 
 /* ******************* CollectionEx *************************************** */
 
-typedef CCoreCollectionEx<IMgaFCOs, std::vector<IMgaFCO*>, IMgaFCO, IMgaFCO, &CLSID_MgaFCOs, IDR_MGAFCOS> CMgaFCOs;
-typedef CCoreCollectionEx<IMgaFolders, std::vector<IMgaFolder*>, IMgaFolder, IMgaFolder, &CLSID_MgaFolders, IDR_MGAFOLDERS> CMgaFolders;
-typedef CCoreCollectionEx<IMgaObjects, std::vector<IMgaObject*>, IMgaObject, IMgaObject, &CLSID_MgaObjects, IDR_MGAOBJECTS> CMgaObjects;
-typedef CCoreCollectionEx<IMgaRegNodes, std::vector<IMgaRegNode*>, IMgaRegNode, IMgaRegNode, &CLSID_MgaRegNodes, IDR_MGAREGNODES> CMgaRegNodes;
+typedef CCoreCollectionEx<IMgaFCOs, std::vector<IMgaFCO*>, IMgaFCO, IMgaFCO, &__uuidof(MgaFCOs), IDR_MGAFCOS> CMgaFCOs;
+typedef CCoreCollectionEx<IMgaFolders, std::vector<IMgaFolder*>, IMgaFolder, IMgaFolder, &__uuidof(MgaFolders), IDR_MGAFOLDERS> CMgaFolders;
+typedef CCoreCollectionEx<IMgaObjects, std::vector<IMgaObject*>, IMgaObject, IMgaObject, &__uuidof(MgaObjects), IDR_MGAOBJECTS> CMgaObjects;
+typedef CCoreCollectionEx<IMgaRegNodes, std::vector<IMgaRegNode*>, IMgaRegNode, IMgaRegNode, &__uuidof(MgaRegNodes), IDR_MGAREGNODES> CMgaRegNodes;
 #define CREATEEXCOLLECTION_FOR(x, q) CComPtr<C##x##s> q; CreateComObject(q);
 #define EXCOLLECTIONTYPE_FOR(x) C##x##s 
 #endif //__MGAFCO_H_

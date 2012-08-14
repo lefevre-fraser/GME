@@ -116,7 +116,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 /*=false*
 
 		if( v2) GUID_ATTRS_DEFS;
 		if( v2) STATUS_ATTR_DEF;
-		CLSID_PUSH(  CLSID_MgaO );  
+		CLSID_PUSH(  __uuidof(MgaO) );  
 		
 //FCO
 #define FCO_DEF \
@@ -147,14 +147,14 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 /*=false*
 		if( v2) GUID_ATTRS_DEFS;
 		if( v2) STATUS_ATTR_DEF;
 
-		CLSID_PUSH(  CLSID_MgaO );  
+		CLSID_PUSH(  __uuidof(MgaO) );  
 
 //ATOM		
 		CREATE_OBJECT(DTID_ATOM, "Atom", "Template For Atom");
 		FCO_DEF
 
 		if( v2) GUID_ATTRS_DEFS;
-		CLSID_PUSH(  CLSID_MgaO );  
+		CLSID_PUSH(  __uuidof(MgaO) );  
 
 //REFERENCE		
 		CREATE_OBJECT(DTID_REFERENCE, "Reference", "Template For Reference");
@@ -167,7 +167,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 /*=false*
 		CREATE_ATTRIBUTE(ATTRID_REFASPECT, "RefAspect", "Ref Aspect", VALTYPE_METAREF);
 
 		if( v2) GUID_ATTRS_DEFS;
-		CLSID_PUSH(  CLSID_MgaO );  
+		CLSID_PUSH(  __uuidof(MgaO) );  
 		
 //SET		
 		CREATE_OBJECT(DTID_SET, "Set", "Template For Set");
@@ -177,7 +177,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 /*=false*
 		CREATE_COLLECTION(ATTRID_SETMEMBER, "Members", "Set Members");
 
 		if( v2) GUID_ATTRS_DEFS;
-		CLSID_PUSH(  CLSID_MgaO );  
+		CLSID_PUSH(  __uuidof(MgaO) );  
 
 
 //SETNODE		
@@ -197,7 +197,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project, bool v2 /*=false*
 		CREATE_COLLECTION(ATTRID_CONNROLE, "ConnRoles", "ConnRoles");
 
 		if( v2) GUID_ATTRS_DEFS;
-		CLSID_PUSH(  CLSID_MgaO );  
+		CLSID_PUSH(  __uuidof(MgaO) );  
 		
 //CONNECTION ROLE		
 		CREATE_OBJECT(DTID_CONNROLE, "ConnRole", "Template for Connection Role");

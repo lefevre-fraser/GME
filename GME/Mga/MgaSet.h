@@ -9,11 +9,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // CMgaSet
 class ATL_NO_VTABLE CMgaSet : 
-	public CComCoClass<CMgaSet, &CLSID_MgaSet>,
+	public CComCoClass<CMgaSet, &__uuidof(MgaSet)>,
 	public IMgaFCOImpl< 
 		CComObjectRootEx<CComSingleThreadModel>,
-	     IDispatchImpl<IMgaSet, &IID_IMgaSet, &LIBID_MGALib> >,
-	public ISupportErrorInfoImpl<&IID_IMgaSet>
+	     IDispatchImpl<IMgaSet, &__uuidof(IMgaSet), &__uuidof(__MGALib)> >,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaSet)>
 {
 public:
 	CMgaSet()
@@ -25,8 +25,8 @@ DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 BEGIN_COM_MAP(CMgaSet)
 	COM_INTERFACE_ENTRY(IMgaSet)
-	COM_INTERFACE_ENTRY_IID(IID_IMgaFCO,IMgaSet)		
-	COM_INTERFACE_ENTRY_IID(IID_IMgaObject,IMgaSet)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaFCO),IMgaSet)		
+	COM_INTERFACE_ENTRY_IID(__uuidof(IMgaObject),IMgaSet)
 	COM_INTERFACE_ENTRY_IID(IID_ISupportErrorInfo, IMyErrorInfoBase)
 	COM_INTERFACE_ENTRY(IDispatch)
 END_COM_MAP()

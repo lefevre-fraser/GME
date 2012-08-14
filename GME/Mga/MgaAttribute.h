@@ -6,6 +6,7 @@
 #include "resource.h"       // main symbols
 
 #include "MgaProject.h"
+#include "MgaFCO.h"
 
 #include <unordered_map>
 
@@ -19,9 +20,9 @@ struct CComBSTR_Length {
 // CMgaAttribute
 class ATL_NO_VTABLE CMgaAttribute : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaAttribute, &CLSID_MgaAttribute>,
-	public IDispatchImpl<IMgaAttribute, &IID_IMgaAttribute, &LIBID_MGALib>,
-	public ISupportErrorInfoImpl<&IID_IMgaAttribute>
+	public CComCoClass<CMgaAttribute, &__uuidof(MgaAttribute)>,
+	public IDispatchImpl<IMgaAttribute, &__uuidof(IMgaAttribute), &__uuidof(__MGALib)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaAttribute)>
 {
 public:
 	CMgaAttribute()	: prevptr(NULL), next(NULL), load_status(ATTSTATUS_INVALID) {	}
@@ -154,9 +155,9 @@ void MergeAttrs(const CoreObj &src, CoreObj &dst);
 // CMgaRegNode
 class ATL_NO_VTABLE CMgaRegNode : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaRegNode, &CLSID_MgaRegNode>,
-	public IDispatchImpl<IMgaRegNode, &IID_IMgaRegNode, &LIBID_MGALib>,
-	public ISupportErrorInfoImpl<&IID_IMgaRegNode>
+	public CComCoClass<CMgaRegNode, &__uuidof(MgaRegNode)>,
+	public IDispatchImpl<IMgaRegNode, &__uuidof(IMgaRegNode), &__uuidof(__MGALib)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaRegNode)>
 {
 public:
 
@@ -240,9 +241,9 @@ void MergeRegs(const CoreObj &src, CoreObj &dst);
 
 class ATL_NO_VTABLE CMgaPart : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaPart, &CLSID_MgaPart>,
-	public IDispatchImpl<IMgaPart, &IID_IMgaPart, &LIBID_MGALib>,
-	public ISupportErrorInfoImpl<&IID_IMgaPart>
+	public CComCoClass<CMgaPart, &__uuidof(MgaPart)>,
+	public IDispatchImpl<IMgaPart, &__uuidof(IMgaPart), &__uuidof(__MGALib)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaPart)>
 {
 public:
 
@@ -279,7 +280,7 @@ public:
 	STDMETHOD(SetRegistryValueDisp)( BSTR path,  BSTR newval) { return put_RegistryValue( path, newval); }
 	CMgaPart();
 	~CMgaPart();
-	void Initialize(metaref_type mr, FCO *o, CMgaProject *p);
+	void Initialize(metaref_type mr, ::FCO *o, CMgaProject *p);
 	typedef CMgaPart *hashobp;
 	hashobp *prevptr, next;
 	metaref_type mref;
