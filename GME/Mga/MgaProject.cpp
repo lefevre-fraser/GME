@@ -102,7 +102,7 @@ HRESULT CMgaProject::CreateSetupData(BSTR rootname, BSTR paradigmname, VARIANT g
 			COMTHROW(metapr->get_Version(&parversion));
 			dataroot[ATTRID_PARVERSION] = parversion;
 			dataroot[ATTRID_NAME]    = rootname;
-			if( guid.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(guid) != sizeof(GUID) )
+			if( guid.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(guid) != sizeof(::GUID) )
 					COMTHROW(E_INVALIDARG);
 			dataroot[ATTRID_PARGUID] = guid;
 			dataroot[ATTRID_VERSION] = CComBSTR(""); // default version string
@@ -125,7 +125,7 @@ HRESULT CMgaProject::CreateSetupData(BSTR rootname, BSTR paradigmname, VARIANT g
 
 
 static int guidcmp(VARIANT &qGUID, VARIANT &pGUID)	{
-	GUID g1, g2;
+	::GUID g1, g2;
 	CopyTo(qGUID, g1);
 	CopyTo(pGUID, g2);
 	return memcmp(&g1, &g2, sizeof(g1));
@@ -844,10 +844,10 @@ STDMETHODIMP CMgaProject::get_MetaGUID(VARIANT *pVal)
 		COMTHROW(dataproject->get_RootObject(&self.ComPtr()));
 		CComVariant p = self[ATTRID_PARGUID];
 
-		if( p.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(p) != sizeof(GUID) )
+		if( p.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(p) != sizeof(::GUID) )
 		{
 			::GUID guid;
-			memset(&guid, 0, sizeof(GUID));
+			memset(&guid, 0, sizeof(::GUID));
 
 			CopyTo(guid, p);
 		}
@@ -904,10 +904,10 @@ STDMETHODIMP CMgaProject::get_GUID(VARIANT *pVal)
 			p = pendingguid;
 		}
 		
-		if( p.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(p) != sizeof(GUID) )
+		if( p.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(p) != sizeof(::GUID) )
 		{
 			::GUID guid;
-			memset(&guid, 0, sizeof(GUID));
+			memset(&guid, 0, sizeof(::GUID));
 
 			CopyTo(guid, p);
 		}
@@ -924,7 +924,7 @@ STDMETHODIMP CMgaProject::put_GUID(VARIANT newVal)
 		CoreObj self;
 		COMTHROW(dataproject->get_RootObject(&self.ComPtr()));
 
-		if( newVal.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(newVal) != sizeof(GUID) )
+		if( newVal.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(newVal) != sizeof(::GUID) )
 			COMTHROW(E_INVALIDARG);
 
 		self[ATTRID_GUID] = newVal;
