@@ -21,6 +21,8 @@ library MGACoreLib
 	enum locking_enum;
 	enum valtype_enum;
 
+	interface ICoreDictionaryAttributeValue;
+
 	[
 		uuid(AD9DFA4F-2A3B-11D3-B36C-0060082DF884),
 		helpstring("CoreProject Class")

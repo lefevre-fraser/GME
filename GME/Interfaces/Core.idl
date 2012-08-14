@@ -621,7 +621,7 @@ interface ICoreDictionaryAttributeValue : IDispatch
 	[propput]
 	HRESULT Map([in] VARIANT Map);
 
-	HRESULT Clone([out] ICoreDictionaryAttributeValue** Clone);
+	HRESULT Clone([out] ICoreDictionaryAttributeValue** ret);
 };
 
 //-------------------------------------------------------------------------------
