@@ -1282,14 +1282,8 @@ void CAggregateTreeCtrl::GetCustomTreeIcon(IMgaObject* ccpMgaObject, TVITEM& tvI
 	if (treeIcon.length())
 	{
 		auto it = treeIcons.find(treeIcon);
-		if (it != treeIcons.end())
+		if (it != treeIcons.end() && it->second != 0)
 		{
-			auto expandedIt = treeIcons.end();
-			if (expandedTreeIcon.length() != 0)
-				expandedIt = treeIcons.find(expandedTreeIcon);
-			if (expandedIt == treeIcons.end())
-				expandedIt = it;
-
 			tvItem.iSelectedImage = tvItem.iImage = it->second;
 			return;
 		}
@@ -1331,7 +1325,12 @@ void CAggregateTreeCtrl::GetCustomTreeIcon(IMgaObject* ccpMgaObject, TVITEM& tvI
 		treeIcons.insert(std::make_pair(treeIcon, imageList->GetImageCount() - 2));
 		if (expandedTreeIcon.length() != 0)
 			treeIcons.insert(std::make_pair(treeIcon, imageList->GetImageCount()));
+	} 
+	else
+	{
+		treeIcons.insert(std::make_pair(treeIcon, 0));
 	}
+
 }
 
 

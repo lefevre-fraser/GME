@@ -21,9 +21,6 @@ struct CAggregateMgaObjectProxy : public CMgaObjectProxy
 	CAggregateMgaObjectProxy(const CMgaObjectProxy& proxy) : CMgaObjectProxy(proxy) {};
 	CAggregateMgaObjectProxy(LPUNKNOWN pMgaObject, objtype_enum type) :
 	    CMgaObjectProxy(pMgaObject, type) {};
-
-	std::shared_ptr<Gdiplus::Bitmap> treeIcon;
-	std::shared_ptr<Gdiplus::Bitmap> expandedTreeIcon;
 };
 
 class CAggregateTreeCtrl : public CMgaMappedTreeCtrl<CAggregateMgaObjectProxy>
@@ -31,7 +28,6 @@ class CAggregateTreeCtrl : public CMgaMappedTreeCtrl<CAggregateMgaObjectProxy>
 	friend class CAggregatePropertyPage;
 	friend class CAggregateContextMenu;
 
-	// TODO std::map<_bstr_t, std::shared_ptr<Gdiplus::Bitmap>> treeIconCache;
 	CMapStringToString m_StateBuffer;
 
 	BOOL m_bIsStateStored;
