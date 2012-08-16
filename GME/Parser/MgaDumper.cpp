@@ -139,9 +139,8 @@ STDMETHODIMP CMgaDumper::DumpProject(IMgaProject *p, BSTR xmlfile)
 	return DumpProject2(p, xmlfile, NULL);
 }
 
-STDMETHODIMP CMgaDumper::DumpProject2(IMgaProject *p, BSTR xmlfile, ULONGLONG hwndParent)
+STDMETHODIMP CMgaDumper::DumpProject2(IMgaProject *p, BSTR xmlfile, ULONGLONG hwndParent_)
 {
-	// TODO: progress bar
 	CHECK_IN(p);
 	m_dumpGuids = true; // dump GUIDs with the whole project
 	m_closureDump = false;
@@ -152,6 +151,13 @@ STDMETHODIMP CMgaDumper::DumpProject2(IMgaProject *p, BSTR xmlfile, ULONGLONG hw
 
 	COMTRY
 	{
+		HWND hwndParent = (HWND)hwndParent_;
+		if (hwndParent != 0)
+		{
+			COMTHROW( m_progress.CoCreateInstance(L"Mga.MgaProgressDlg") );
+			COMTHROW( m_progress->SetTitle(_bstr_t(L"Exporting XME file...")) );
+			COMTHROW( m_progress->StartProgressDialog(hwndParent) );
+		}
 		InitDump(p, xmlfile, _bstr_t(L"UTF-8"));
 
 		ofs << L"<!DOCTYPE project SYSTEM \"mga.dtd\">\n\n";
@@ -159,8 +165,20 @@ STDMETHODIMP CMgaDumper::DumpProject2(IMgaProject *p, BSTR xmlfile, ULONGLONG hw
 		Dump(p);
 
 		DoneDump(false);
+		if (m_progress != NULL )
+		{
+			COMTHROW(m_progress->StopProgressDialog());
+			m_progress = NULL;
+		}
 	}
-	COMCATCH( DoneDump(true); )
+	COMCATCH(
+		DoneDump(true);
+		if (m_progress != NULL )
+		{
+			COMTHROW(m_progress->StopProgressDialog());
+			m_progress = NULL;
+		}
+	)
 }
 
 STDMETHODIMP CMgaDumper::DumpFCOs(IMgaProject *proj, IMgaFCOs *p, IMgaFolders *f, IMgaRegNodes *r, BSTR xmlfile)
@@ -726,15 +744,24 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 {
 	ASSERT( fco != NULL );
 
-	if( ++fco_count > FLUSH_LIMIT )
+	if (fco_count++ % FLUSH_LIMIT == 0)
 	{
 		ASSERT( territory != NULL );
 
-		COMTHROW( territory->Flush() );
-		COMTHROW( project->CommitTransaction() );
-		COMTHROW( project->BeginTransaction(territory, TRANSACTION_READ_ONLY) );
+		if (fco_count >= FLUSH_LIMIT)
+		{
+			COMTHROW( territory->Flush() );
+			COMTHROW( project->CommitTransaction() );
+			COMTHROW( project->BeginTransaction(territory, TRANSACTION_READ_ONLY) );
+		}
 
-		fco_count = 0;
+		if (m_progress)
+		{
+			static TCHAR progress_msg[512];
+			_stprintf_s(progress_msg, _T("Number of exported FCOs: %ld"), (long)fco_count);
+			COMTHROW(m_progress->SetLine(0, PutInBstr(progress_msg)));
+			COMTHROW(m_progress->SetProgress(fco_count, 0));
+		}
 	}
 
 	if( dump_attrs )

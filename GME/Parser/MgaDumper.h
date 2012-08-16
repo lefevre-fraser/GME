@@ -7,6 +7,7 @@
 #include "CommonVersionInfo.h"
 #include "Transcoder.h"
 #include "helper.h"
+#include "MgaUtil.h"
 
 class GmeEqual
 {
@@ -258,6 +259,7 @@ public:
 	std::tstring m_currAbsPath;//? it is needed any more?
 	//std::tstring m_currParAbsPath; // used for 'closurepath' calc
 	bool m_v2;
+	CComPtr<IMgaProgressDlg> m_progress;
 
 };
 
