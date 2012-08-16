@@ -87,7 +87,7 @@ namespace CSharpComponentWizard
                 RegistryKey masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
                 if (masterKey == null)
                 {
-                    throw new Exception("Cannot locate ProjectTemplate folder. Visual Studio 2010 is not installed!");
+                    throw new Exception("Cannot locate ProjectTemplate folder. Is Visual Studio 2010 installed?");
                 }
                 else
                 {
@@ -299,7 +299,7 @@ namespace CSharpComponentWizard
             RegistryKey masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.MSSDK_REGISTRY_KEYPATH);
             if (masterKey == null)
             {
-                throw new Exception("Cannot locate sn.exe! VS2010 SDK is not installed!");
+                throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
             }
             else
             {
@@ -366,7 +366,7 @@ namespace CSharpComponentWizard
             }
             catch (Exception)
             {
-                MessageBox.Show("Error occured: Cannot find the previously generated VS projectfile in the specified folder with the specified solutionname!");
+                MessageBox.Show("Error occured: Cannot find the previously generated VS projectfile in the specified folder with the specified solutionname.");
                 throw;
             }
             

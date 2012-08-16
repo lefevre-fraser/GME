@@ -56,7 +56,7 @@
             <TabItem>
                 <Grid Background="{StaticResource TabBrush}">
                     <TextBlock Height="22" HorizontalAlignment="Left" Margin="16,26,0,0" VerticalAlignment="Top" TextWrapping="Wrap" Width="380" FontWeight="Bold" FontSize="13" FontFamily="Segoe UI">
-                        Welcome to the GME C# Component Wizard!
+                        Welcome to the GME C# Component Wizard.
                     </TextBlock>
 
                     <TextBlock Height="37" HorizontalAlignment="Left" Margin="16,50,0,0" VerticalAlignment="Top" TextWrapping="Wrap" Width="413" FontFamily="Segoe UI" FontSize="13">
@@ -70,7 +70,7 @@
                     </TextBlock>
 
                     <TextBlock Foreground="#FF9A9A9A" Height="17" Margin="26,226,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI" HorizontalAlignment="Left" Width="180">
-                        Please choose an existing folder!
+                        Please choose an existing folder.
                     </TextBlock>
                     <Label Content="Folder path:" FontFamily="Segoe UI" FontSize="13" Height="28" HorizontalAlignment="Left" Margin="21,173,0,0" Name="lbl_Path" VerticalAlignment="Top" />
                     <TextBox Height="23" Margin="25,199,0,0" Name="txb_TargetFolder" VerticalAlignment="Top" Background="White" TextChanged="txb_TargetFolder_TextChanged" HorizontalAlignment="Left" Width="194" />
@@ -139,7 +139,7 @@
             <TabItem>
                 <Grid Background="{StaticResource TabBrush}">
                     <TextBlock Height="22" HorizontalAlignment="Left" Margin="16,14,0,0" VerticalAlignment="Top" TextWrapping="Wrap" Width="380" FontWeight="Bold" FontSize="13" FontFamily="Segoe UI">
-                        Please choose your component type!
+                        Please choose your component type.
                     </TextBlock>
 
                     <TextBlock Height="37" HorizontalAlignment="Left" Margin="16,38,0,0" VerticalAlignment="Top" TextWrapping="Wrap" Width="429" FontFamily="Segoe UI" FontSize="13">
