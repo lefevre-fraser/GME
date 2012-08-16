@@ -171,8 +171,8 @@ STDMETHODIMP CConstraintMgr::ObjectEvent( IMgaObject* obj, unsigned long eventma
 	if ( ! m_Facade.m_bEnabled || ! m_Facade.m_bEnabledInteractions || ! m_Facade.m_bEnabledEvents ) {
 		return S_OK;
 	}
-	ASSERT(!(eventmask | OBJEVENT_MOUSEOVER)); // shouldn't receive these events because of put_EventMask
-	ASSERT(!(eventmask | OBJEVENT_PRE_DESTROYED));
+	ASSERT(!(eventmask & OBJEVENT_MOUSEOVER)); // shouldn't receive these events because of put_EventMask
+	ASSERT(!(eventmask & OBJEVENT_PRE_DESTROYED));
 
 	COMTRY {
 		return m_Facade.Evaluate( obj, eventmask);
