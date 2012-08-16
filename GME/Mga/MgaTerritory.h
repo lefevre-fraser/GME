@@ -148,6 +148,7 @@ public:
 	unsigned long eventmask;
 	bool notified;
 	CMgaProject *mgaproject;
+	_bstr_t progid;
 	CComPtr<IMgaEventSink> handler;    // non-null if object active 
 };
 

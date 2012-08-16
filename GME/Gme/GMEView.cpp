@@ -1495,6 +1495,17 @@ void CGMEView::CommitTransaction()
 	inRWTransaction = false;
 }
 
+void CGMEView::__CommitTransaction()
+{
+	if(inEventHandler)
+		return;
+	VERIFY(inTransaction > 0);
+	if(inTransaction == 1)
+		theApp.mgaProject->__CommitTransaction();
+	inTransaction--;
+	inRWTransaction = false;
+}
+
 void CGMEView::AbortTransaction(HRESULT hr)
 {
 	if(inEventHandler)
@@ -3189,12 +3200,23 @@ void CGMEView::DisconnectAll(CGuiObject *end,CGuiPort *endPort,bool onlyVisible)
 				COMTHROW(guiConn->mgaFco->get_Status(&status));
 				if(status == OBJECT_EXISTS)
 					DeleteConnection(guiConn,false);
-				CommitTransaction();
+				__CommitTransaction();
 			}
 			catch(hresult_exception e) {
 				AbortTransaction(e.hr);
-				AfxMessageBox(_T("Unable to delete connection"),MB_ICONSTOP | MB_OK);
+				AfxMessageBox(_T("Unable to delete connection"), MB_ICONSTOP | MB_OK);
 				CGMEEventLogger::LogGMEEvent(_T("    Unable to delete connection.\r\n"));
+			}
+			catch(_com_error& e) {
+				AbortTransaction(e.Error());
+				CString error = _T("Unable to delete connection");
+				if (e.Description().length() != 0)
+				{
+					error += _T(": ");
+					error += static_cast<const TCHAR*>(e.Description());
+				}
+				CGMEEventLogger::LogGMEEvent(error + _T("\r\n"));
+				AfxMessageBox(error,MB_ICONSTOP | MB_OK);
 			}
 		}
 	}
@@ -4226,13 +4248,26 @@ void CGMEView::InsertNewPart(const CString& roleName, const CPoint& pt)
 		newObjectIDs.AddHead(newID);
 
 		SetObjectLocation(child, role, pt);
-		CommitTransaction();
+		__CommitTransaction();
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
 		newObjectIDs.RemoveAll();
 		AfxMessageBox(_T("Unable to insert new part"),MB_ICONSTOP | MB_OK);
 		CGMEEventLogger::LogGMEEvent(_T("    Unable to insert new part.\r\n"));
+		return;
+	}
+	catch(_com_error& e) {                
+		AbortTransaction(e.Error());
+		newObjectIDs.RemoveAll();
+		CString error = _T("Unable to insert new part");
+		if (e.Description().length() != 0)
+		{
+			error += _T(": ");
+			error += static_cast<const TCHAR*>(e.Description());
+		}
+		CGMEEventLogger::LogGMEEvent(error + _T("\r\n"));
+		AfxMessageBox(error,MB_ICONSTOP | MB_OK);
 		return;
 	}
 	ChangeAttrPrefObjs(selected);
@@ -6168,12 +6203,25 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 				CGuiObject::ShiftModels(selected, diff);
 				CGuiAnnotator::ShiftAnnotations(selectedAnnotations,diff);
 				ResetParent();
-				CommitTransaction();
+				__CommitTransaction();
 			}
 			catch(hresult_exception e) {                
 				AbortTransaction(e.hr);
 				CGMEEventLogger::LogGMEEvent(_T("    Unable to complete drop operation.\r\n"));
 				AfxMessageBox(_T("Unable to complete drop operation"),MB_ICONSTOP | MB_OK);
+				Reset(true);
+				return FALSE;
+			}
+			catch(_com_error& e) {                
+				AbortTransaction(e.Error());
+				CString error = _T("Unable to complete drop operation");
+				if (e.Description().length() != 0)
+				{
+					error += _T(": ");
+					error += static_cast<const TCHAR*>(e.Description());
+				}
+				CGMEEventLogger::LogGMEEvent(error + _T("\r\n"));
+				AfxMessageBox(error,MB_ICONSTOP | MB_OK);
 				Reset(true);
 				return FALSE;
 			}
@@ -6562,12 +6610,23 @@ void CGMEView::OnCntxDisconnectall()
 				}
 				contextSelection = 0;
 				contextPort = 0;
-				CommitTransaction();
+				__CommitTransaction();
 			}
 			catch(hresult_exception e) {
 				AbortTransaction(e.hr);
 				AfxMessageBox(_T("Could not complete disconnect operation"),MB_OK | MB_ICONSTOP);
 				CGMEEventLogger::LogGMEEvent(_T("    Could not complete disconnect operation.\r\n"));
+			}
+			catch(_com_error& e) {                
+				AbortTransaction(e.Error());
+				CString error = _T("Could not complete disconnect operation");
+				if (e.Description().length() != 0)
+				{
+					error += _T(": ");
+					error += static_cast<const TCHAR*>(e.Description());
+				}
+				CGMEEventLogger::LogGMEEvent(error + _T("\r\n"));
+				AfxMessageBox(error,MB_ICONSTOP | MB_OK);
 			}
 		}
 	}
@@ -8757,7 +8816,7 @@ void CGMEView::SyncAspects(CGuiMetaAspect *srcAspect, CGuiMetaAspectList &dstAsp
 
 		needsReset = true;
 		EndWaitCursor();
-		CommitTransaction();
+		__CommitTransaction();
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
@@ -8765,6 +8824,18 @@ void CGMEView::SyncAspects(CGuiMetaAspect *srcAspect, CGuiMetaAspectList &dstAsp
 		CGMEEventLogger::LogGMEEvent(_T("    Unable to synchronize aspects.\r\n"));
 		EndWaitCursor();
 		return;
+	}
+	catch(_com_error& e) {                
+		AbortTransaction(e.Error());
+		CString error = _T("Unable to synchronize aspects");
+		if (e.Description().length() != 0)
+		{
+			error += _T(": ");
+			error += static_cast<const TCHAR*>(e.Description());
+		}
+		CGMEEventLogger::LogGMEEvent(error + _T("\r\n"));
+		AfxMessageBox(error, MB_ICONSTOP | MB_OK);
+		EndWaitCursor();
 	}
 
 }

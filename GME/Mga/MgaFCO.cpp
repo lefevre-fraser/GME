@@ -919,8 +919,6 @@ HRESULT get_Modifications(FCO *fco, unsigned long changemask, CComVariant *mods)
 }
 //-------------------------------------------------------------------------------------
 
-#define REQUIRE_NOTIFICATION_SUCCESS 1   // return with error if addons/rwhandlers fail
-
 HRESULT FCO::objrwnotify() {
 	COMTRY {
 			unsigned long chmask = changemask;
@@ -941,14 +939,27 @@ HRESULT FCO::objrwnotify() {
 						CComPtr<IMgaObject> tt;
 						getinterface(&tt);
 
-#if(REQUIRE_NOTIFICATION_SUCCESS)
-						// FIXME: if this throws, user has no idea the addon failed
-						COMTHROW(t->handler->ObjectEvent(tt, mmask, mods));
-#else
-						if((s = t->handler->ObjectEvent(tt, mmask, mods)) != S_OK) {
-							ASSERT(("Notification failed", false));
+						try
+						{
+							t->handler->__ObjectEvent(tt, mmask, mods);
 						}
-#endif
+						catch (_com_error& e)
+						{
+							if (t->progid.length() == 0)
+								throw;
+							_bstr_t error = e.Description();
+							if (!error.length())
+							{
+								GetErrorInfo(e.Error(), error.GetAddress());
+								if (error.length() == 0)
+								{
+									error = L"Unknown error";
+								}
+							}
+							error = _bstr_t(L"Error in Addon '") + t->progid + _bstr_t("'. Addon returned error: ") + error;
+							SetErrorInfo(error);
+							_com_issue_errorex(e.Error(), t->handler, __uuidof(t->handler));
+						}
 					    t->notified = true;
 					}
 				}
@@ -976,13 +987,7 @@ HRESULT FCO::objrwnotify() {
 							{
 								CComPtr<IMgaObject> newoo;
 								getinterface(&newoo, t);
-#if(REQUIRE_NOTIFICATION_SUCCESS)
 								COMTHROW(t->rwhandler->ObjectEvent(newoo, (unsigned long)OBJEVENT_CREATED, dummy));
-#else
-								if(t->rwhandler->ObjectEvent(newoo, (unsigned long)OBJEVENT_CREATED, dummy) != S_OK) {
-									ASSERT(("Notification failed", false));
-								}
-#endif
 							}
 							COMTHROW(mgaproject->popterr());
 							t->notified = true;
@@ -1001,13 +1006,7 @@ HRESULT FCO::objrwnotify() {
 				long mmask;
 				if(t->rwhandler && (mmask = (t->rweventmask & chmask)) != 0) {
 					COMTHROW(mgaproject->pushterr(*t));
-#if(REQUIRE_NOTIFICATION_SUCCESS)
 					COMTHROW(t->rwhandler->ObjectEvent(obj, mmask,ud));
-#else
-					if(t->rwhandler->ObjectEvent(obj, mmask,ud) != S_OK) {
-						ASSERT(("Notification failed", false));
-					}
-#endif
 					t->notified = true;
 					COMTHROW(mgaproject->popterr());  // this may release the territory!!!
 				}

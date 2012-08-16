@@ -195,6 +195,7 @@ private:
 	HRESULT  commitnested();
 	bool autoaddons;         // automatic addon instantiation enabled
 	bool inautoaddoncreate;	 // addons are just being instantiated
+	_bstr_t autoaddoncreate_progid;
 #ifdef DEBUG
 public:
 #endif

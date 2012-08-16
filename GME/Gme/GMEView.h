@@ -297,7 +297,8 @@ public:
 	bool					IsConnectionConversionNeeded(void);
 	void					ConvertNeededConnections(void);
 	void					BeginTransaction(transactiontype_enum mode = TRANSACTION_GENERAL);
-	void					CommitTransaction();
+	void					CommitTransaction(); // throws hresult_exception
+	void					__CommitTransaction(); // throws _com_error
 	void					AbortTransaction(HRESULT hr);
 	void					PasteAnnotations(CComPtr<IMgaModel>& targetModel, CComPtr<IMgaRegNodes>& regNodes,
 											 CComPtr<IMgaRegNodes>& newRegNodes, bool isMove);

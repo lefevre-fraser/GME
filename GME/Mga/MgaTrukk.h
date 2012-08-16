@@ -384,6 +384,16 @@ else \
 		MgaSetErrorInfo(e.hr); \
 		return e.hr; \
 	} \
+	catch(_com_error &err) \
+	{ \
+		struct { HRESULT hr; } e = { err.Error() }; \
+		{ CLEANUP; } \
+		if (err.Description() != _bstr_t()) \
+			SetErrorInfo(err.Description()); \
+		else \
+			SetStandardOrGMEErrorInfo(err.Error()); \
+		return e.hr; \
+	} \
 	catch(std::bad_alloc&) \
 	{ \
 		struct { HRESULT hr; } e = { E_OUTOFMEMORY }; \

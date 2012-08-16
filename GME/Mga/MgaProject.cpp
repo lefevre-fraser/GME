@@ -1084,6 +1084,7 @@ STDMETHODIMP CMgaProject::CreateAddOn(IMgaEventSink *sink, IMgaAddOn **pp) {
 		CComPtr< CMgaAddOn > saddon;
 		CreateComObject(saddon);
 		saddon->mgaproject = this;
+		saddon->progid = autoaddoncreate_progid;
 		alladdons.push_front(saddon);
 		saddon->handler=sink;
 		if(inautoaddoncreate) {
@@ -1222,6 +1223,7 @@ void CMgaProject::StartAutoAddOns() {
 		for(std::vector<CComBstrObj>::iterator i = vec.begin(); i < vec.end(); ++i) {
 			try {
 				CComPtr<IMgaComponent> addon;
+				autoaddoncreate_progid = *i;
 				COMTHROW(CreateMgaComponent(addon, *i)); // Was: COMTHROW( addon.CoCreateInstance(*i) );
 				ASSERT( addon != NULL );
 				CComQIPtr<IGMEVersionInfo> vv=addon;
@@ -1242,6 +1244,7 @@ void CMgaProject::StartAutoAddOns() {
 			}
 		}
 		inautoaddoncreate = false;
+		autoaddoncreate_progid = L"";
 		if(errs) {
 				SetErrorInfo(errs);
 				COMTHROW(E_MGA_COMPONENT_ERROR); // change error type
@@ -1362,7 +1365,9 @@ STDMETHODIMP CMgaProject::CommitTransaction()
 			COMTHROW(dataproject->get_RootObject(&self.ComPtr()));
 //			self[ATTRID_MDATE] = Now();
 		}
-		COMTHROW(CommitNotify());		
+		HRESULT hr = CommitNotify();
+		if (FAILED(hr))
+			return hr;
 		COMTHROW(dataproject->PopTerritory());
 		short nestedCount;
 		COMTHROW(dataproject->get_NestedTransactionCount(&nestedCount));
@@ -1502,13 +1507,12 @@ STDMETHODIMP CMgaProject::CommitNotify() {
                                 FCOPtr f = changedobjs.front();
                                 changedobjs.pop();
 
-#if(1)
-                                COMTHROW(f->objrwnotify());
-#else
-                                if(f->objrwnotify() != S_OK) {
-                                        ASSERT(("Notification failed", false));
-                                }
-#endif
+								HRESULT hr = f->objrwnotify();
+								if (FAILED(hr))
+								{
+									read_only = false;
+									return hr;
+								}
                 }
 
                 read_only = true;
