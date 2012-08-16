@@ -79,7 +79,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // CComponentObj command target
 
-class CComponentObj : public CCmdTarget
+class __declspec(uuid(COCLASS_UUID)) CComponentObj : public CCmdTarget
 {
 
 	DECLARE_DYNCREATE(CComponentObj)
