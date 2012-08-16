@@ -289,7 +289,7 @@ BOOL CGMEApp::InitInstance()
 	CGMECommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
 	
-	if( cmdInfo.m_nShellCommand == CCommandLineInfo::FileOpen )
+	if( cmdInfo.m_nShellCommand == CCommandLineInfo::FileOpen || cmdInfo.m_nShellCommand == CCommandLineInfo::AppRegister)
 		cmdInfo.m_bShowSplash = false;
 
 	CSplashWnd::EnableSplashScreen(cmdInfo.m_bShowSplash);
@@ -429,6 +429,10 @@ BOOL CGMEApp::InitInstance()
 	// Make sure the type library is registered or dual interface won't work.
 	AfxOleRegisterTypeLib(AfxGetInstanceHandle(), __uuidof(__GmeLib));
 
+	// Dispatch commands specified on the command line
+	if ((cmdInfo.m_nShellCommand == CCommandLineInfo::AppRegister || cmdInfo.m_nShellCommand == CCommandLineInfo::AppUnregister) && !ProcessShellCommand(cmdInfo))
+		return FALSE;
+
 	// The main window has been initialized, so show and update it.
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
@@ -499,6 +503,8 @@ BOOL CGMEApp::OpenCommandLineProject()
 	// We don't want a new document at startup
 	if(cmdInfo.m_nShellCommand == CCommandLineInfo::FileNew)
 		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
+	if (cmdInfo.m_nShellCommand == CCommandLineInfo::AppRegister)
+		cmdInfo.bOpenLast = true;
 	if(cmdInfo.m_nShellCommand == CCommandLineInfo::FileOpen)
 	{
 		CString conn = cmdInfo.m_strFileName;
