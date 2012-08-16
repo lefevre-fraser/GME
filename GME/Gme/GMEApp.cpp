@@ -429,30 +429,6 @@ BOOL CGMEApp::InitInstance()
 	// Make sure the type library is registered or dual interface won't work.
 	AfxOleRegisterTypeLib(AfxGetInstanceHandle(), __uuidof(__GmeLib));
 
-	// We don't want a new document at startup
-	if( cmdInfo.m_nShellCommand == CCommandLineInfo::FileNew )
-		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
-	if( cmdInfo.m_nShellCommand == CCommandLineInfo::FileOpen ) {
-		CString conn = cmdInfo.m_strFileName;
-		if(conn.Find(_T("=")) < 0) {
-			if (conn.Right(4).CompareNoCase(_T(".xme")) == 0)
-				conn.Insert(0, _T("XML="));
-			else
-				conn.Insert(0,_T("MGA="));
-		}
-		OpenProject(conn);
-
-		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
-	}
- 	else if(cmdInfo.bOpenLast && !m_RecentProjectList[0].IsEmpty()) {
- 		OpenProject(m_RecentProjectList[0]);
- 		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
- 	}
-
-	// Dispatch commands specified on the command line
-	if (!ProcessShellCommand(cmdInfo))
-		return FALSE;
-
 	// The main window has been initialized, so show and update it.
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
@@ -516,6 +492,38 @@ void CGMEApp::EmergencySave(void)
 	}
 }
 
+BOOL CGMEApp::OpenCommandLineProject()
+{
+	CGMECommandLineInfo cmdInfo;
+	ParseCommandLine(cmdInfo);
+	// We don't want a new document at startup
+	if(cmdInfo.m_nShellCommand == CCommandLineInfo::FileNew)
+		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
+	if(cmdInfo.m_nShellCommand == CCommandLineInfo::FileOpen)
+	{
+		CString conn = cmdInfo.m_strFileName;
+		if(conn.Find(_T("=")) < 0) {
+			if (conn.Right(4).CompareNoCase(_T(".xme")) == 0)
+				conn.Insert(0, _T("XML="));
+			else
+				conn.Insert(0,_T("MGA="));
+		}
+		OpenProject(conn);
+
+		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
+	}
+ 	else if(cmdInfo.bOpenLast && !m_RecentProjectList[0].IsEmpty())
+	{
+ 		OpenProject(m_RecentProjectList[0]);
+ 		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
+ 	}
+
+	// Dispatch commands specified on the command line
+	//if (!ProcessShellCommand(cmdInfo))
+	//	return FALSE;
+	return TRUE;
+}
+
 int CGMEApp::Run()
 {
 	CoFreeUnusedLibraries();	// JIRA 221: GME 9.12.15 Crashing
@@ -560,6 +568,7 @@ int CGMEApp::Run()
 		}
 	}
 
+	OpenCommandLineProject();
 
 	int retVal = 0;
 	if (bNoProtect) {

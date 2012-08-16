@@ -80,6 +80,7 @@ public:
 		GetFullPathName(zsConn, filename, dirname);
 	}
 
+	BOOL OpenCommandLineProject();
 
 private:
 	virtual int Run();
