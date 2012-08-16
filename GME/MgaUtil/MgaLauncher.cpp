@@ -600,7 +600,8 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 				catch(hresult_exception &e)	{
 					DisplayError(_T("Interpreter returned error"), e.hr);
 				}
-				project->AbortTransaction();
+				if (project->ProjectStatus & 8)
+					project->AbortTransaction();
 			}				
 		}
 		component.Release();
