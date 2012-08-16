@@ -619,137 +619,70 @@ void CMgaParser::RegisterLookup(const attributes_type &attributes, IMgaObject *o
 	readonly_stack.push_back( perm_present); // we insert a value anyway into the stack
 }
 
-void CMgaParser::fireStartFunction(const std::tstring& namestr, const attributes_type& attributes)
+template<typename F>
+static void fire(const std::tstring& namestr, CMgaParser::elementfunc elementfuncs[], F& f)
 {
-	if(funcTableState == MGA)
+	// TODO: replace with binary search or perfect hash
+	for(unsigned int index = 0; !elementfuncs[index].name.empty(); index++)
 	{
-		for(unsigned int index = 0; !elementfuncs_mga[index].name.empty(); index++)
+		if( namestr == elementfuncs[index].name )
 		{
-				if( namestr == elementfuncs_mga[index].name )
-				{
-					elementfuncs_mga[index].Start(this, attributes);
-					break;
-				}
+			f(elementfuncs[index]);
+			break;
 		}
 	}
-	else if (funcTableState == MGA_INFO)
-	{
-		for(unsigned int index = 0; !elementfuncs_mgainfo[index].name.empty(); index++)
-		{
-			if( namestr == elementfuncs_mgainfo[index].name )
-				{
-					elementfuncs_mgainfo[index].Start(this, attributes);
-					break;
-				}
-		}
-
-	}
-	else if (funcTableState == BC_MGA)
-	{
-		for(unsigned int index = 0; !elementfuncs_bcmga[index].name.empty(); index++)
-		{
-				if( namestr == elementfuncs_bcmga[index].name )
-				{
-					elementfuncs_bcmga[index].Start(this, attributes);
-					break;
-				}
-		}
-
-	}
-	else if(funcTableState == SC_MGA)
-	{
-		for(unsigned int index = 0; !elementfuncs_scmga[index].name.empty(); index++)
-		{
-				if( namestr == elementfuncs_scmga[index].name )
-				{
-					elementfuncs_scmga[index].Start(this, attributes);
-					break;
-				}
-		}
-
-	}
-	else /* CLIP_MGA_INFO*/
-	{
-		for(unsigned int index = 0; !elementfuncs_clipmgainfo[index].name.empty(); index++)
-		{
-				if( namestr == elementfuncs_clipmgainfo[index].name )
-				{
-					elementfuncs_clipmgainfo[index].Start(this, attributes);
-					break;
-				}
-		}
-
-	}
-
 }
 
+static void fireStart(CMgaParser* that, const std::tstring& namestr, const CMgaParser::attributes_type& attributes,
+	CMgaParser::elementfunc elementfuncs[])
+{
+	fire(namestr, elementfuncs, [&](CMgaParser::elementfunc& f) { f.Start(that, attributes); });
+}
+
+static void fireEnd(CMgaParser* that, const std::tstring& namestr, CMgaParser::elementfunc elementfuncs[])
+{
+	fire(namestr, elementfuncs, [&](CMgaParser::elementfunc& f) { f.End(that); });
+}
+
+void CMgaParser::fireStartFunction(const std::tstring& namestr, const attributes_type& attributes)
+{
+	switch (funcTableState) {
+	case MGA:
+		fireStart(this, namestr, attributes, elementfuncs_mga);
+		break;
+	case MGA_INFO:
+		fireStart(this, namestr, attributes, elementfuncs_mgainfo);
+		break;
+	case BC_MGA:
+		fireStart(this, namestr, attributes, elementfuncs_bcmga);
+		break;
+	case SC_MGA:
+		fireStart(this, namestr, attributes, elementfuncs_scmga);
+		break;
+	default: /* CLIP_MGA_INFO */
+		fireStart(this, namestr, attributes, elementfuncs_clipmgainfo);
+	}
+}
 
 void CMgaParser::fireEndFunction(const std::tstring& namestr)
 {
-	if(funcTableState == MGA)
-	{
-		for(unsigned int index = 0; !elementfuncs_mga[index].name.empty(); index++)
-		{
-				if( namestr == elementfuncs_mga[index].name )
-				{
-					elementfuncs_mga[index].End(this);
-					break;
-				}
-		}
+	switch (funcTableState) {
+	case MGA:
+		fireEnd(this, namestr, elementfuncs_mga);
+		break;
+	case MGA_INFO:
+		fireEnd(this, namestr, elementfuncs_mgainfo);
+		break;
+	case BC_MGA:
+		fireEnd(this, namestr, elementfuncs_bcmga);
+		break;
+	case SC_MGA:
+		fireEnd(this, namestr, elementfuncs_scmga);
+		break;
+	default: /* CLIP_MGA_INFO */
+		fireEnd(this, namestr, elementfuncs_clipmgainfo);
 	}
-	else if (funcTableState == MGA_INFO)
-	{
-		for(unsigned int index = 0; !elementfuncs_mgainfo[index].name.empty(); index++)
-		{
-			if( namestr == elementfuncs_mgainfo[index].name )
-				{
-					elementfuncs_mgainfo[index].End(this);
-					break;
-				}
-		}
-
-	}
-	else if (funcTableState == BC_MGA)
-	{
-		for(unsigned int index = 0; !elementfuncs_bcmga[index].name.empty(); index++)
-		{
-				if( namestr == elementfuncs_bcmga[index].name )
-				{
-					elementfuncs_bcmga[index].End(this);
-					break;
-				}
-		}
-
-	}
-	else if(funcTableState == SC_MGA)
-	{
-		for(unsigned int index = 0; !elementfuncs_scmga[index].name.empty(); index++)
-		{
-				if( namestr == elementfuncs_scmga[index].name )
-				{
-					elementfuncs_scmga[index].End(this);
-					break;
-				}
-		}
-
-	}
-	else /* CLIP_MGA_INFO*/
-	{
-		for(unsigned int index = 0; !elementfuncs_clipmgainfo[index].name.empty(); index++)
-		{
-				if( namestr == elementfuncs_clipmgainfo[index].name )
-				{
-					elementfuncs_clipmgainfo[index].End(this);
-					break;
-				}
-		}
-
-	}
-
 }
-
-
-
 
 CMgaParser::elementfunc CMgaParser::elementfuncs_mga[] = 
 {
