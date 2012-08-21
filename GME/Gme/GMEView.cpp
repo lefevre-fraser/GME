@@ -1526,11 +1526,23 @@ bool CGMEView::SendOpenModelEvent()
 
 		COMTHROW(currentModel->SendEvent(OBJEVENT_OPENMODEL));
 
-		CommitTransaction();
+		__CommitTransaction();
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
 		ok = false;
+	}
+	catch(_com_error& e) {
+		AbortTransaction(e.Error());
+		ok = false;
+		CString error = _T("Notifying Addons of OpenModel failed");
+		if (e.Description().length() != 0)
+		{
+			error += _T(": ");
+			error += static_cast<const TCHAR*>(e.Description());
+		}
+		CGMEEventLogger::LogGMEEvent(error + _T("\r\n"));
+		AfxMessageBox(error,MB_ICONSTOP | MB_OK);
 	}
 	return ok;
 }
@@ -1551,6 +1563,18 @@ bool CGMEView::SendCloseModelEvent()
 		} catch(hresult_exception &e) {
 		} // Our transaction count was wrong. What else can we do?
 		ok = false;
+	}
+	catch(_com_error& e) {
+		AbortTransaction(e.Error());
+		ok = false;
+		CString error = _T("Notifying Addons of CloseModel failed");
+		if (e.Description().length() != 0)
+		{
+			error += _T(": ");
+			error += static_cast<const TCHAR*>(e.Description());
+		}
+		CGMEEventLogger::LogGMEEvent(error + _T("\r\n"));
+		AfxMessageBox(error,MB_ICONSTOP | MB_OK);
 	}
 	return ok;
 }
