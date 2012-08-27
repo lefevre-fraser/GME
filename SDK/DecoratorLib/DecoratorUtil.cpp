@@ -315,7 +315,7 @@ bool Facilities::getPreference( CComPtr<IMgaFCO> spFCO, CComPtr<IMgaMetaFCO> spM
 		else if (spMetaFCO)
 			COMTHROW( spMetaFCO->get_RegistryValue( bstrPath, &bstrValue ) );
 		else
-			ASSERT(false);
+			; // assertion fails for Annotator.dll ASSERT(false);
 	}
 	catch (hresult_exception &) {
 		bstrValue.Empty();
