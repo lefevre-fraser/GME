@@ -661,6 +661,8 @@ void CMgaDumper::Dump(IMgaRegNode *regnode)
 	Data(regnode, &IMgaRegNode::get_Value);
 	EndElem();
 
+	// FIXME: MetaGME uses many regnodes on rootfolder, which makes progress bar freeze
+
 	// dumping the subnodes
 	CComObjPtrVector<IMgaRegNode> v;
 	COMTHROW( regnode->get_SubNodes(VARIANT_FALSE, PutOut(v)) );
