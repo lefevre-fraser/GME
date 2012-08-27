@@ -45,11 +45,6 @@ class TestDecorators(unittest.TestCase):
     @property
     def connstr(self):
         return "MGA=" + _adjacent_file("TestDecorators.mga")
-    
-
-if GPyUnit.util._opts.Dispatch_x64:
-    del TestCSharpDSMLGenerator
-    #FIXME: TestCSharpDSMLGenerator on x64 make PGO fail
         
 if __name__ == "__main__":
     unittest.main()
