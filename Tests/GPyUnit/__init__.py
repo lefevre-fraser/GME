@@ -33,6 +33,7 @@ def _test_names():
  'GME_391',
  'test_MetaInterpreter',
  'Regr.Mga.tc1',
+ 'test_decorators',
 ]
     if platform.system() != 'Java':
         _test_names += [
