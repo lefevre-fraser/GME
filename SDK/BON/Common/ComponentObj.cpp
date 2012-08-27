@@ -352,17 +352,17 @@ END_INTERFACE_MAP()
 // CLSID_MGAComponentClass
 
 IMPLEMENT_OLECREATE(CComponentObj, COCLASS_PROGID, 
-						   __uuidof(CComponentObj).Data1,
-						   __uuidof(CComponentObj).Data2,
-						   __uuidof(CComponentObj).Data3,
-						   __uuidof(CComponentObj).Data4[0],
-						   __uuidof(CComponentObj).Data4[1],
-						   __uuidof(CComponentObj).Data4[2],
-						   __uuidof(CComponentObj).Data4[3],
-						   __uuidof(CComponentObj).Data4[4],
-						   __uuidof(CComponentObj).Data4[5],
-						   __uuidof(CComponentObj).Data4[6],
-						   __uuidof(CComponentObj).Data4[7])
+						   COCLASS_UUID_EXPLODED1,
+						   COCLASS_UUID_EXPLODED2,
+						   COCLASS_UUID_EXPLODED3,
+						   COCLASS_UUID_EXPLODED4,
+						   COCLASS_UUID_EXPLODED5,
+						   COCLASS_UUID_EXPLODED6,
+						   COCLASS_UUID_EXPLODED7,
+						   COCLASS_UUID_EXPLODED8,
+						   COCLASS_UUID_EXPLODED9,
+						   COCLASS_UUID_EXPLODED10,
+						   COCLASS_UUID_EXPLODED11)
 
 /////////////////////////////////////////////////////////////////////////////
 // CComponentObj::XInterface
