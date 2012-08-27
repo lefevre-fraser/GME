@@ -29,42 +29,17 @@ CModelGrid modelGrid;
 
 void SetLocation(CRect& location, CPoint pt)
 {
-	CSize size = location.Size();
-	int cx = pt.x + size.cx / 2;
-	int cy = pt.y + size.cy / 2;
-	cx = (cx / GME_GRID_SIZE) * GME_GRID_SIZE;
-	cy = (cy / GME_GRID_SIZE) * GME_GRID_SIZE;
-	while((cx - (size.cx / 2)) <= 0)
-		cx += GME_GRID_SIZE;
-	while((cy - (size.cy / 2)) <= 0)
-		cy += GME_GRID_SIZE;
-	pt.x = cx - size.cx / 2;
-	pt.y = cy - size.cy / 2;
-	location.right += pt.x - location.left;
-	location.left = pt.x;
-	location.bottom += pt.y - location.top;
+	CSize s = location.Size();
 	location.top = pt.y;
+	location.left = pt.x;
+	SetSize(location, s);
 }
 
 void SetSize(CRect& location, CSize s)
 {
-	if((s.cx % 2) == 0)
-		s.cx--;
-	if((s.cy % 2) == 0)
-		s.cy--;
-
-	CPoint pt = location.CenterPoint();
-	int cx = pt.x;
-	int cy = pt.y;
-	pt.x = (cx / GME_GRID_SIZE) * GME_GRID_SIZE;
-	pt.y = (cy / GME_GRID_SIZE) * GME_GRID_SIZE;
-	while((pt.x - (s.cx / 2)) <= 0)
-		pt.x += GME_GRID_SIZE;
-	while((pt.y - (s.cy / 2)) <= 0)
-		pt.y += GME_GRID_SIZE;
-	location.left = pt.x - s.cx / 2;
+	location.left = max(GME_GRID_SIZE, location.left / GME_GRID_SIZE * GME_GRID_SIZE);
+	location.top = max(GME_GRID_SIZE, location.top / GME_GRID_SIZE * GME_GRID_SIZE);
 	location.right = location.left + s.cx;
-	location.top = pt.y - s.cy / 2;
 	location.bottom = location.top + s.cy;
 }
 
@@ -1368,7 +1343,7 @@ void CGuiObject::SetSize(CSize& s, int aspect, bool doMga)
 		aspect = parentAspect;
 	VERIFY(aspect >= 0);
 	VERIFY(guiAspects[aspect] != NULL);
-		CRect loc = guiAspects[aspect]->GetLocation();
+	CRect loc = guiAspects[aspect]->GetLocation();
 	::SetSize(loc,s);
 	guiAspects[aspect]->SetLocation(loc);
 	if(IsReal() && doMga)
@@ -1848,10 +1823,9 @@ bool CGuiObject::NudgeObjects(CGuiObjectList& modelList, int right, int down)
 		POSITION pos = modelList.GetHeadPosition();
 		while(pos) {
 			CGuiObject *model = modelList.GetNext(pos);
-			CPoint point = model->GetCenter() + CPoint(right * GME_GRID_SIZE, down * GME_GRID_SIZE);
-			ASSERT(point.x % GME_GRID_SIZE == 0);
-			ASSERT(point.y % GME_GRID_SIZE == 0);
-			model->SetCenter(point);
+			CRect loc = model->GetLocation();
+			loc.OffsetRect(CPoint(right * GME_GRID_SIZE, down * GME_GRID_SIZE));
+			model->SetLocation(loc);
 			ASSERT(modelGrid.IsAvailable(model));
 			modelGrid.Set(model);
 		}
