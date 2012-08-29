@@ -188,7 +188,13 @@ def compile_tools():
 
     sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "DsmlGenerator", "DsmlGenerator.sln")
     tools.build_VS(sln_file, "Release", arch='Any CPU', msbuild=(prefs['arch'] == 'x64' and tools.MSBUILD.replace('Framework', 'Framework64') or tools.MSBUILD))
+
+    sln_file = os.path.join(GME_ROOT, "Tools", "DumpWMF", "DumpWMF.sln")
+    tools.build_VS(sln_file, "Release", arch='Any CPU', msbuild=(prefs['arch'] == 'x64' and tools.MSBUILD.replace('Framework', 'Framework64') or tools.MSBUILD))
+
     if prefs['arch'] == 'x64':
+        tools.system([r'%windir%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe', '/codebase',
+                      os.path.join(GME_ROOT, 'Tools', 'DumpWMF', 'bin', 'Release', 'DumpWMF.dll')])
         tools.system([r'%windir%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe', '/codebase',
                       os.path.join(GME_ROOT, 'SDK', 'DotNet', 'DsmlGenerator', 'CSharpDsmlGenerator', 'bin', 'Release', 'CSharpDSMLGenerator.dll')])
         return
@@ -202,9 +208,6 @@ def compile_tools():
     tools.build_VS( sln_file, "Release" )
 
     sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "CSharpComponentWizard", "CSharpComponentWizard.sln")
-    tools.build_VS( sln_file, "Release" )
-
-    sln_file = os.path.join(GME_ROOT, "Tools", "DumpWMF", "DumpWMF.sln")
     tools.build_VS( sln_file, "Release" )
 
 def compile_samples():
